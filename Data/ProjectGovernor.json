@@ -4072,6 +4072,37 @@
       ],
       "evidence_boundary": "Execution architecture/source authorization only. Individual pack cars promote only to the states their receipts/logs actually prove. No automatic UE import, integration, PIE, device, visual or performance acceptance.",
       "authority": "USER_EXPLICIT_DIRECTION"
+    },
+    {
+      "id": "DEC-055",
+      "title": "Increase chapter-scale material source throughput with bounded item quarantine",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-PROD-011",
+        "REQ-WAREHOUSE-001",
+        "REQ-STABILITY-003",
+        "REQ-STABILITY-004",
+        "REQ-PERF-003"
+      ],
+      "resolution": "Keep P1C01 material source promotion large and coherent without letting one oversized source abort the whole material car. The exporter uses a 32 MiB per-source ceiling and 256 MiB per generated-branch batch ceiling, quarantines individual over-budget sources, and may complete when at least six receipt-verified materials remain. Runtime texture sampling, UE import and target-device acceptance remain separate exact-head evidence lanes.",
+      "implementation_contract": [
+        "MATERIAL_SOURCE_EXPORT receives its byte budgets from Data/P1C01MegaChapterPackV1.json.",
+        "Default chapter-pack budget is 32 MiB per source and 256 MiB per generated branch batch with minimum six exported materials.",
+        "An individual source that exceeds the single-file or remaining batch budget is recorded in P1C01MaterialSourceReceipt.json quarantine and does not abort the car unless the minimum exported count is no longer met.",
+        "PNG stays Git LFS tracked. TGA source export is quarantined until the repository has an explicit *.tga LFS rule in the binary promotion wave that first requires it.",
+        "Low-spec runtime material rule remains one base-color sample plus scalar Roughness/Metallic/Specular; this source-promotion budget does not authorize extra runtime texture samples.",
+        "No source-promotion success implies UE import, runtime binding, PIE, device, visual or performance acceptance."
+      ],
+      "rationale": "Warehouse #278 proved the chapter pack itself can continue past a blocked car, but MATERIAL_SOURCE_EXPORT stopped on one SH_DIRT_SOIL base-color file exceeding the old 16 MiB limit after eight materials had already passed intake QC. A larger bounded source budget plus item-level quarantine preserves coherent high-throughput promotion while retaining explicit failure accounting.",
+      "evidence": [
+        "Warehouse Stage #278: P1C01_MEGA_CHAPTER_PACK_PASS passed=3 quarantined=1 hard=0",
+        "Warehouse Stage #278: P1C01_MATERIAL_INTAKE_PASS prepared=8 pending=8 manual=0",
+        "Warehouse Stage #278: SH_DIRT_SOIL source exceeded the former 16 MiB single-source ceiling",
+        "Scripts/export_p1c01_material_source_branch.ps1",
+        "Data/P1C01MegaChapterPackV1.json"
+      ],
+      "evidence_boundary": "SOURCE/CONTROL-PLANE DECISION. Exact-head Pre-Unreal and post-merge Warehouse execution are required before the revised export path is machine-proven.",
+      "authority": "USER_EXPLICIT_DIRECTION"
     }
   ],
   "open_conflicts": [],

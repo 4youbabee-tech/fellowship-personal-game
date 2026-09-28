@@ -1,3 +1,23 @@
+## 2026-09-28 - PR #141 static guard follow-up
+
+- Pre-Unreal #1309: **FAILED STATIC VALIDATION** on stale PG-184 text requirement `128 MB bounded limit`.
+- Exporter/runtime evidence: **NOT REACHED / NOT IMPLIED BY THIS FAILURE**.
+- Stale PG-184 literal: **SOURCE-FIXED** to validate `MaxBatchSourceBytes` while PG-188 owns the exact 32/256 MiB budget contract.
+- Next evidence: **EXACT-HEAD PRE-UNREAL RE-RUN PENDING**.
+
+## 2026-09-28 - Warehouse #278 Mega Chapter Pack evidence / larger bounded material source batch
+
+- PR #140 merge head `14d34d28...`: **PRE-UNREAL #1308 SUCCESS / WAREHOUSE #278 SUCCESS**.
+- Chapter-pack result: **RUN-PROVEN** at `passed=3 quarantined=1 hard=0`.
+- Inventory: **RUN-PROVEN** at 18,676 payload files / 6,622,954,088 bytes / 14 receipts / 667 receipt records / 215 duplicate groups.
+- Mega promotion: **RUN-PROVEN WITH MANUAL QUEUE** at `prepared=36 intakeQC=34 pending=3 manual=2 badReceipts=0`.
+- Material intake: **RUN-PROVEN** at `prepared=8 pending=8 manual=0`.
+- Old 16 MiB material source cap: **REAL BLOCKER OBSERVED** on SH_DIRT_SOIL base color.
+- DEC-055 revised source-promotion budget: **SOURCE-IMPLEMENTED** at 32 MiB/source + 256 MiB/batch + minimum six exported items.
+- Oversize behavior: **ITEM-LEVEL QUARANTINE SOURCE-IMPLEMENTED**; whole material car fails only if the post-quarantine export count falls below the manifest minimum.
+- Generated material branch after revised budget: **PENDING WAREHOUSE RE-RUN**.
+- UE4.27 import/runtime binding/PIE/device/visual/performance acceptance: **NOT CLAIMED**.
+
 ## 2026-09-28 - P1C01 Mega Chapter Pack / workflow consolidation
 
 - Governor chapter-pack policy (DEC-054): **SOURCE-REGISTERED / OWNER-AUTHORIZED**.

@@ -108,7 +108,16 @@ foreach($car in @($manifest.cars | Sort-Object order)){
       Invoke-Car $car {
         $childManifest = [string]$car.manifest
         if(-not [IO.Path]::IsPathRooted($childManifest)){ $childManifest = Join-Path $ProjectRoot $childManifest }
-        & powershell.exe -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot "export_p1c01_material_source_branch.ps1") -ManifestPath $childManifest -WarehouseRoot $WarehouseRoot -GeneratedBranch ([string]$car.generated_branch)
+        $maxSingle=[int64]33554432
+        $maxBatch=[int64]268435456
+        $minimumExported=[int]6
+        if($null -ne $car.PSObject.Properties["export_budget"]){
+          $budget=$car.export_budget
+          if($null -ne $budget.PSObject.Properties["max_single_source_bytes"]){ $maxSingle=[int64]$budget.max_single_source_bytes }
+          if($null -ne $budget.PSObject.Properties["max_batch_source_bytes"]){ $maxBatch=[int64]$budget.max_batch_source_bytes }
+          if($null -ne $budget.PSObject.Properties["minimum_exported_materials"]){ $minimumExported=[int]$budget.minimum_exported_materials }
+        }
+        & powershell.exe -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot "export_p1c01_material_source_branch.ps1") -ManifestPath $childManifest -WarehouseRoot $WarehouseRoot -GeneratedBranch ([string]$car.generated_branch) -MaxSingleSourceBytes $maxSingle -MaxBatchSourceBytes $maxBatch -MinimumExportedMaterials $minimumExported
       }
     }
     "CHARACTER_INTAKE" {
