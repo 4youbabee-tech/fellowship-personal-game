@@ -1,3 +1,12 @@
+## 2026-09-28 - Warehouse #282 parser failure converted into a permanent prevention gate
+
+- Develop `0adc090f1caa92425322ac15d44b08b031f2ece0` passed Pre-Unreal #1317, but Warehouse #282 failed before material execution because `Scripts/export_p1c01_material_source_branch.ps1` contained an unterminated PowerShell expression/string around the explicit remote-SHA lease block.
+- This exposed a validation gap: Pre-Unreal checked policy/semantic markers but did not parse all PowerShell scripts.
+- The exporter publish block is repaired on the active P1C01 Closure Pack V2 branch.
+- DEC-059 adds `Scripts/test_powershell_syntax.ps1`, which recursively parses every `Scripts/**/*.ps1` with `System.Management.Automation.Language.Parser` on the hosted Windows Pre-Unreal lane and fails with file/line/column details on any parser error.
+- The parser guard is tooling-only and is excluded from Unreal Build triggers.
+- Current maturity for this repair: **SOURCE-FIXED / EXACT-HEAD PRE-UNREAL PROOF PENDING / WAREHOUSE RE-RUN PENDING**.
+
 ## 2026-09-28 - P1C01 Chapter Closure Mega Pack V2 launched
 
 - DEC-058 encodes maximum P1C01 source throughput while keeping raw Warehouse, Git/LFS promotion and UE import as separate bounded layers.
