@@ -201,7 +201,22 @@ try{
       throw "generated material remote-head parse failed: $remoteLine"
     }
     $remoteGeneratedSha=([string]$parts[0]).Trim()
-    if($remoteGeneratedSha -notmatch '^[0-9a-fA-F]{40}
+    if($remoteGeneratedSha.Length -ne 40 -or $remoteGeneratedSha -notmatch '^[0-9a-fA-F]+$'){
+      throw "generated material remote-head SHA invalid: $remoteGeneratedSha"
+    }
+  }
+
+  if([string]::IsNullOrWhiteSpace($remoteGeneratedSha)){
+    Write-Host ("P1C01_MATERIAL_SOURCE_PUBLISH_CREATE branch="+$GeneratedBranch+" local="+$generatedSha)
+    & $git -c credential.helper= -C $worktree push origin ("HEAD:"+$remoteRef)
+  } else {
+    $leaseArg="--force-with-lease="+$remoteRef+":"+$remoteGeneratedSha
+    Write-Host ("P1C01_MATERIAL_SOURCE_PUBLISH_LEASE branch="+$GeneratedBranch+" remote="+$remoteGeneratedSha+" local="+$generatedSha)
+    & $git -c credential.helper= -C $worktree push $leaseArg origin ("HEAD:"+$remoteRef)
+  }
+  if($LASTEXITCODE -ne 0){
+    throw "generated material branch push failed after explicit remote-SHA lease"
+  }
 
   if($quarantined.Count -gt 0){
     foreach($entry in $quarantined){ Write-Host ("P1C01_MATERIAL_SOURCE_QUARANTINE "+($entry|ConvertTo-Json -Compress -Depth 6)) }
