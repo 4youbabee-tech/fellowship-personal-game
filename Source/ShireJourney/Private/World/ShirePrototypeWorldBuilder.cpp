@@ -204,6 +204,7 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     ProductionFlowerBoxMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShFlowerBox.SM_ShFlowerBox"));
     ProductionLampPostMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShLampPost.SM_ShLampPost"));
     ProductionPicnicTableMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShPicnicTable.SM_ShPicnicTable"));
+    ProductionPicnicCanopyMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShPicnicCanopy.SM_ShPicnicCanopy"));
     ProductionLoadedCartMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShCartLoaded.SM_ShCartLoaded"));
     ProductionCommonTerracedHillMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonTerracedHill.SM_CommonTerracedHill"));
     ProductionCommonVillageSlopeMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonVillageSlope.SM_CommonVillageSlope"));
@@ -1106,7 +1107,21 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
     // Party Field is a distinct destination north of the village center.
     const FVector PartyCenter(280.0f,1320.0f,0.0f);
     SpawnTree(PartyCenter,1.45f);
-    SpawnShape(CubeMesh,PartyCenter+FVector(300,20,50),FVector(1.6f,0.9f,0.5f),FLinearColor(0.70f,0.62f,0.38f));
+    if (ProductionPicnicCanopyMesh)
+    {
+        SpawnShape(
+            ProductionPicnicCanopyMesh,
+            PartyCenter + FVector(300,20,0),
+            FVector(0.92f),
+            FLinearColor::White,
+            FRotator(0.0f,-4.0f,0.0f),
+            true);
+    }
+    else
+    {
+        // Traversal-era canopy proxy remains only when the authored canopy is absent.
+        SpawnShape(CubeMesh,PartyCenter+FVector(300,20,50),FVector(1.6f,0.9f,0.5f),FLinearColor(0.70f,0.62f,0.38f));
+    }
     SpawnLabel(TEXT("Party Field"),PartyCenter+FVector(0,0,390),FLinearColor::White);
     if (!ProductionPicnicTableMesh)
     {
@@ -1878,7 +1893,7 @@ void AShirePrototypeWorldBuilder::SpawnHobbitonArchitecturePass()
 
     UStaticMesh* GardenArch = ResolveShire(TEXT("/Game/Production/World/Shire/SM_ShGardenArch.SM_ShGardenArch"));
     UStaticMesh* Mailbox = ResolveShire(TEXT("/Game/Production/World/Shire/SM_ShMailbox.SM_ShMailbox"));
-    UStaticMesh* PicnicCanopy = ResolveShire(TEXT("/Game/Production/World/Shire/SM_ShPicnicCanopy.SM_ShPicnicCanopy"));
+    UStaticMesh* PicnicCanopy = ProductionPicnicCanopyMesh;
     UStaticMesh* ProduceStand = ResolveShire(TEXT("/Game/Production/World/Shire/SM_ShProduceStand.SM_ShProduceStand"));
     UStaticMesh* PumpWell = ResolveShire(TEXT("/Game/Production/World/Shire/SM_ShPumpWell.SM_ShPumpWell"));
     UStaticMesh* WashLine = ResolveShire(TEXT("/Game/Production/World/Shire/SM_ShWashLine.SM_ShWashLine"));
