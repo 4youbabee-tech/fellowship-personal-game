@@ -1,3 +1,12 @@
+## 2026-09-29 - #1082 direct-PID/CIM stale-commandlet recovery refinement
+
+- Unreal #1082 proved the stale CI commandlet still survived `Stop-Process -Force` and `taskkill /T /F`.
+- The blocker remained PID 14144, `UE4Editor-Cmd.exe` running the repository's unattended `Automation RunTests ShireJourney.QA;Quit` command against the active ShireJourney workspace under the same interactive owner.
+- Recovery now avoids tree-mode as the first Windows fallback because the commandlet's recorded parent is already dead. The sequence is now: `Stop-Process -Id -Force` -> direct `taskkill /PID <pid> /F` -> `Win32_Process.Terminate` via CIM, with explicit result markers.
+- The recovery path remains available only after the previously recorded workspace/project/unattended/recognized-commandlet/same-owner/orphan/age proof passes.
+- Interactive `UE4Editor` remains protected from kill-by-name recovery.
+- Evidence boundary: **SOURCE-IMPLEMENTED / fresh exact-head validation pending**.
+
 ## 2026-09-29 - #1358/#1080 follow-up: proven stale CI commandlet + bounded tree recovery
 
 - Pre-Unreal #1358 failed only at legacy `PG-015` because that validator still expected the historical editor-only wait implementation.
