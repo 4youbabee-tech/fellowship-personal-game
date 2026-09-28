@@ -1368,7 +1368,7 @@ void AShirePlayerCharacter::RestoreTransactionalPlayerState(
 
 void AShirePlayerCharacter::UseSupply()
 {
-    if (bCinematicInputLocked || bWorldTransitionHeld || !IsCurrentWorldCommitted())
+    if (bCinematicInputLocked || bGraphicsSettingsOpen || bWorldTransitionHeld || !IsCurrentWorldCommitted())
     {
         return;
     }
@@ -1483,7 +1483,7 @@ void AShirePlayerCharacter::GraphicsSettingsPrevious()
     {
         return;
     }
-    constexpr int32 RowCount = 11;
+    constexpr int32 RowCount = 13;
     GraphicsSettingsSelectionIndex =
         (GraphicsSettingsSelectionIndex - 1 + RowCount) % RowCount;
 }
@@ -1494,7 +1494,7 @@ void AShirePlayerCharacter::GraphicsSettingsNext()
     {
         return;
     }
-    constexpr int32 RowCount = 11;
+    constexpr int32 RowCount = 13;
     GraphicsSettingsSelectionIndex =
         (GraphicsSettingsSelectionIndex + 1) % RowCount;
 }
@@ -1554,6 +1554,60 @@ void AShirePlayerCharacter::AdjustGraphicsSetting(int32 Delta)
         break;
     }
     case 1:
+    {
+        static const EWindowMode::Type Modes[] = {
+            EWindowMode::Fullscreen,
+            EWindowMode::WindowedFullscreen,
+            EWindowMode::Windowed
+        };
+        int32 CurrentIndex = 0;
+        for (int32 Index = 0; Index < UE_ARRAY_COUNT(Modes); ++Index)
+        {
+            if (Modes[Index] == Settings->GetFullscreenMode())
+            {
+                CurrentIndex = Index;
+                break;
+            }
+        }
+        const int32 NextIndex =
+            (CurrentIndex + Delta + UE_ARRAY_COUNT(Modes)) % UE_ARRAY_COUNT(Modes);
+        Settings->ApplyDisplayModeAndResolution(
+            Modes[NextIndex],
+            Settings->GetScreenResolution(),
+            true);
+        break;
+    }
+    case 2:
+    {
+        static const FIntPoint Resolutions[] = {
+            FIntPoint(1280, 720),
+            FIntPoint(1600, 900),
+            FIntPoint(1920, 1080)
+        };
+        const FIntPoint Current = Settings->GetScreenResolution();
+        int32 ClosestIndex = 0;
+        int64 ClosestDistance = TNumericLimits<int64>::Max();
+        for (int32 Index = 0; Index < UE_ARRAY_COUNT(Resolutions); ++Index)
+        {
+            const int64 DX = static_cast<int64>(Current.X) - Resolutions[Index].X;
+            const int64 DY = static_cast<int64>(Current.Y) - Resolutions[Index].Y;
+            const int64 Distance = DX * DX + DY * DY;
+            if (Distance < ClosestDistance)
+            {
+                ClosestDistance = Distance;
+                ClosestIndex = Index;
+            }
+        }
+        const int32 NextIndex =
+            (ClosestIndex + Delta + UE_ARRAY_COUNT(Resolutions)) %
+            UE_ARRAY_COUNT(Resolutions);
+        Settings->ApplyDisplayModeAndResolution(
+            Settings->GetFullscreenMode(),
+            Resolutions[NextIndex],
+            true);
+        break;
+    }
+    case 3:
         ApplyCustom(
             Settings->GetViewDistanceQuality(),
             Settings->GetAntiAliasingQuality(),
@@ -1564,14 +1618,14 @@ void AShirePlayerCharacter::AdjustGraphicsSetting(int32 Delta)
             Settings->GetFoliageQuality(),
             FMath::Clamp(ScaleValue + 5.0f * Delta, FMath::Max(70.0f, MinScale), FMath::Min(100.0f, MaxScale)));
         break;
-    case 2:
+    case 4:
         ApplyCustom(
             FMath::Clamp(Settings->GetViewDistanceQuality() + Delta, 0, 3),
             Settings->GetAntiAliasingQuality(), Settings->GetShadowQuality(),
             Settings->GetPostProcessingQuality(), Settings->GetTextureQuality(),
             Settings->GetVisualEffectQuality(), Settings->GetFoliageQuality(), ScaleValue);
         break;
-    case 3:
+    case 5:
         ApplyCustom(
             Settings->GetViewDistanceQuality(),
             FMath::Clamp(Settings->GetAntiAliasingQuality() + Delta, 0, 3),
@@ -1579,14 +1633,14 @@ void AShirePlayerCharacter::AdjustGraphicsSetting(int32 Delta)
             Settings->GetTextureQuality(), Settings->GetVisualEffectQuality(),
             Settings->GetFoliageQuality(), ScaleValue);
         break;
-    case 4:
+    case 6:
         ApplyCustom(
             Settings->GetViewDistanceQuality(), Settings->GetAntiAliasingQuality(),
             FMath::Clamp(Settings->GetShadowQuality() + Delta, 0, 3),
             Settings->GetPostProcessingQuality(), Settings->GetTextureQuality(),
             Settings->GetVisualEffectQuality(), Settings->GetFoliageQuality(), ScaleValue);
         break;
-    case 5:
+    case 7:
         ApplyCustom(
             Settings->GetViewDistanceQuality(), Settings->GetAntiAliasingQuality(),
             Settings->GetShadowQuality(),
@@ -1594,14 +1648,14 @@ void AShirePlayerCharacter::AdjustGraphicsSetting(int32 Delta)
             Settings->GetTextureQuality(), Settings->GetVisualEffectQuality(),
             Settings->GetFoliageQuality(), ScaleValue);
         break;
-    case 6:
+    case 8:
         ApplyCustom(
             Settings->GetViewDistanceQuality(), Settings->GetAntiAliasingQuality(),
             Settings->GetShadowQuality(), Settings->GetPostProcessingQuality(),
             FMath::Clamp(Settings->GetTextureQuality() + Delta, 0, 3),
             Settings->GetVisualEffectQuality(), Settings->GetFoliageQuality(), ScaleValue);
         break;
-    case 7:
+    case 9:
         ApplyCustom(
             Settings->GetViewDistanceQuality(), Settings->GetAntiAliasingQuality(),
             Settings->GetShadowQuality(), Settings->GetPostProcessingQuality(),
@@ -1609,20 +1663,20 @@ void AShirePlayerCharacter::AdjustGraphicsSetting(int32 Delta)
             FMath::Clamp(Settings->GetVisualEffectQuality() + Delta, 0, 3),
             Settings->GetFoliageQuality(), ScaleValue);
         break;
-    case 8:
+    case 10:
         ApplyCustom(
             Settings->GetViewDistanceQuality(), Settings->GetAntiAliasingQuality(),
             Settings->GetShadowQuality(), Settings->GetPostProcessingQuality(),
             Settings->GetTextureQuality(), Settings->GetVisualEffectQuality(),
             FMath::Clamp(Settings->GetFoliageQuality() + Delta, 0, 3), ScaleValue);
         break;
-    case 9:
+    case 11:
         Settings->ApplyDisplayPreferences(
             !Settings->IsVSyncEnabled(),
             Settings->GetFrameRateLimit(),
             true);
         break;
-    case 10:
+    case 12:
     {
         static const float Limits[] = { 30.0f, 60.0f, 90.0f, 120.0f, 0.0f };
         const float CurrentLimit = Settings->GetFrameRateLimit();
@@ -1630,8 +1684,7 @@ void AShirePlayerCharacter::AdjustGraphicsSetting(int32 Delta)
         float ClosestDistance = TNumericLimits<float>::Max();
         for (int32 Index = 0; Index < UE_ARRAY_COUNT(Limits); ++Index)
         {
-            const float Distance =
-                FMath::Abs(CurrentLimit - Limits[Index]);
+            const float Distance = FMath::Abs(CurrentLimit - Limits[Index]);
             if (Distance < ClosestDistance)
             {
                 ClosestDistance = Distance;
@@ -2906,6 +2959,7 @@ bool AShirePlayerCharacter::RunSaveRoundtripAudit()
 
 void AShirePlayerCharacter::QuickSave()
 {
+    if (bGraphicsSettingsOpen) return;
     if (FParse::Param(FCommandLine::Get(), TEXT("ShireCIRuntimeAudit"))) return;
     if (bWorldTransitionHeld || !IsCurrentWorldCommitted()) return;
     UShireSaveGame* Save = CreateSaveSnapshot(NAME_None, false);
@@ -2927,6 +2981,7 @@ void AShirePlayerCharacter::QuickSave()
 
 void AShirePlayerCharacter::QuickLoad()
 {
+    if (bGraphicsSettingsOpen) return;
     if (FParse::Param(FCommandLine::Get(), TEXT("ShireCIRuntimeAudit"))) return;
     if (bWorldTransitionHeld) return;
     if (!UGameplayStatics::DoesSaveGameExist(
@@ -2969,7 +3024,7 @@ void AShirePlayerCharacter::QuickLoad()
 
 void AShirePlayerCharacter::DebugToggleParallelRoute()
 {
-    if (bCinematicInputLocked)
+    if (bCinematicInputLocked || bGraphicsSettingsOpen)
     {
         return;
     }
@@ -3022,6 +3077,11 @@ void AShirePlayerCharacter::DebugStartChapterByIndex(int32 ChapterIndex)
 
 void AShirePlayerCharacter::DebugPreviousChapter()
 {
+    if (bGraphicsSettingsOpen)
+    {
+        return;
+    }
+
     UGameInstance* GI = GetGameInstance();
     UShireQuestSubsystem* QuestSubsystem = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
     if (!QuestSubsystem)
@@ -3045,6 +3105,11 @@ void AShirePlayerCharacter::DebugPreviousChapter()
 
 void AShirePlayerCharacter::DebugNextChapter()
 {
+    if (bGraphicsSettingsOpen)
+    {
+        return;
+    }
+
     UGameInstance* GI = GetGameInstance();
     UShireQuestSubsystem* QuestSubsystem = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
     if (!QuestSubsystem)
