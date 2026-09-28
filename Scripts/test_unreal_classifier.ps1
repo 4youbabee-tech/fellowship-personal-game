@@ -33,6 +33,7 @@ $program = [scriptblock]::Create($source.Replace($marker, $mocks + [Environment]
 $cases = @(
     @{Name='onboarding'; Paths=@('README.md','Scripts/new_developer_onboarding.ps1','Scripts/pre_unreal_validate.py'); Proof=$true; Mode='inherit'; TreeProof=$false},
     @{Name='handoff'; Paths=@('Scripts/governor_handoff.py','Scripts/test_governor_handoff.py'); Proof=$true; Mode='inherit'; TreeProof=$false},
+    @{Name='p1c01-material-tooling'; Paths=@('Scripts/prepare_p1c01_material_intake.ps1','Scripts/promote_p1c01_material_intake.ps1','Scripts/run_p1c01_material_pipeline.ps1','Scripts/export_p1c01_material_source_branch.ps1','Scripts/pre_unreal_validate.py','Docs/CURRENT_PROJECT_STATE.md'); Proof=$true; Mode='inherit'; TreeProof=$false},
     @{Name='no-proof'; Paths=@('README.md','Scripts/pre_unreal_validate.py'); Proof=$false; Mode='full'; TreeProof=$false},
     @{Name='mixed-story'; Paths=@('README.md','Scripts/pre_unreal_validate.py','Source/ShireJourney/ShireQuestSubsystem.cpp'); Proof=$true; Mode='core'; TreeProof=$false},
     @{Name='config'; Paths=@('README.md','Config/DefaultGame.ini'); Proof=$true; Mode='full'; Reset=$false; TreeProof=$false},
