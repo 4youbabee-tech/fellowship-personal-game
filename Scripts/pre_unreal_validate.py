@@ -2942,6 +2942,18 @@ for pg184_hobbit_shell_symbol in [
 if "old Cube/Sphere/Cylinder door/window/chimney proxy kit" not in pg184_shire_world:
     fail("PG-184 production Hobbit shell must document suppression of primitive overlay kit")
 
+for pg184_instanced_garden_symbol in [
+    "GardenPlanterInstances",
+    "CultivatedRowInstances",
+    "Three authored planters replace the old 30-proxy Cube/Sphere garden cluster.",
+    "GardenPlanterInstances->AddInstance",
+    "CultivatedRowInstances->AddInstance",
+    "SetCullDistances(700, 4200)",
+    "SetCullDistances(2200, 9000)",
+]:
+    if pg184_instanced_garden_symbol not in pg184_shire_world:
+        fail(f"PG-184 P1C01 garden/farm HISM consolidation missing: {pg184_instanced_garden_symbol}")
+
 for pg184_world_proxy_symbol in [
     "ProductionCommonDockSegmentMesh",
     "SM_CommonDockSegment",
