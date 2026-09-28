@@ -1,84 +1,32 @@
 name: OpenCodeReview Advisory
 
 on:
-  pull_request_target:
+  pull_request:
     branches: [develop]
-    types: [opened, synchronize, reopened]
-  issue_comment:
-    types: [created]
+    types: [opened, synchronize, reopened, ready_for_review]
 
-concurrency:
-  group: >-
-    ${{
-      (
-        github.event_name == 'pull_request_target'
-        || (
-          github.event_name == 'issue_comment'
-          && github.event.issue.pull_request
-          && github.event.comment.user.type != 'Bot'
-          && (
-            github.event.comment.author_association == 'MEMBER'
-            || github.event.comment.author_association == 'OWNER'
-            || github.event.comment.author_association == 'COLLABORATOR'
-          )
-          && (
-            startsWith(github.event.comment.body, '/open-code-review')
-            || startsWith(github.event.comment.body, '@open-code-review')
-          )
-        )
-      )
-      && format('ocr-{0}', github.event.pull_request.number || github.event.issue.number)
-      || format('noop-{0}', github.run_id)
-    }}
-  cancel-in-progress: true
-
-# Advisory reviewer only:
-# - repository contents are read-only
-# - no code execution from PR head
-# - no commit/push/merge permission
-# - pull-request write is used only to publish review comments
+# This reviewer is advisory only.
+# It can read repository contents and publish PR review comments.
+# It has no repository-content write permission, no push permission,
+# no merge permission, and it never runs code from the PR head.
 permissions:
   contents: read
   pull-requests: write
 
+concurrency:
+  group: ocr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
   advisory-review:
-    # Keep OCR off the persistent UE4 self-hosted workspace.
+    # Secrets are intentionally available only to same-repository PRs.
+    # Fork PRs are skipped instead of widening trust.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    # Keep OCR completely off the persistent UE4.27 self-hosted workspace.
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    if: |
-      github.event_name == 'pull_request_target'
-      || (
-        github.event_name == 'issue_comment'
-        && github.event.issue.pull_request
-        && github.event.comment.user.type != 'Bot'
-        && (
-          github.event.comment.author_association == 'MEMBER'
-          || github.event.comment.author_association == 'OWNER'
-          || github.event.comment.author_association == 'COLLABORATOR'
-        )
-        && (
-          startsWith(github.event.comment.body, '/open-code-review')
-          || startsWith(github.event.comment.body, '@open-code-review')
-        )
-      )
 
     steps:
-      - name: Resolve PR context
-        id: pr-context
-        if: github.event_name == 'issue_comment'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const prNumber = context.issue.number;
-            const { data: pullRequest } = await github.rest.pulls.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: prNumber
-            });
-            core.setOutput('base_ref', pullRequest.base.ref);
-            core.setOutput('head_sha', pullRequest.head.sha);
-
       - name: Run OpenCodeReview in advisory mode
         uses: alibaba/open-code-review@main
         with:
@@ -88,11 +36,13 @@ jobs:
           llm_use_anthropic: ${{ vars.OCR_LLM_USE_ANTHROPIC }}
           language: English
           effort: medium
+
+          # Evidence only. Never mutate project files or old review threads.
           upload_artifacts: 'true'
           sticky_summary: 'true'
           incremental: 'true'
           checkpoint_range: 'false'
           resolve_outdated: 'false'
+
+          # Keep low-value style/docs notes out of inline code noise.
           route_categories: style,documentation
-          base_ref: ${{ steps.pr-context.outputs.base_ref }}
-          head_sha: ${{ steps.pr-context.outputs.head_sha }}
