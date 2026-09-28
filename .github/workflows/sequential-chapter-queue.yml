@@ -1,0 +1,79 @@
+name: Sequential Chapter Queue
+
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - 'Data/P1C01Gate67AcceptanceChecklistV1.json'
+      - 'Data/P1C02ShadowPastChapterPackV1.json'
+      - 'Scripts/run_sequential_chapter_queue.ps1'
+      - 'Scripts/run_p1c02_shadow_past_prep.ps1'
+  workflow_dispatch:
+
+concurrency:
+  group: sequential-chapter-queue-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  queue:
+    name: Release next chapter after predecessor acceptance
+    runs-on:
+      - self-hosted
+      - Windows
+      - X64
+      - ue4-27
+    timeout-minutes: 120
+    env:
+      TARGET_SHA: ${{ github.sha }}
+
+    steps:
+      - name: Checkout exact queue head into isolated temp source
+        shell: cmd
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          @echo off
+          setlocal EnableExtensions EnableDelayedExpansion
+          set "GITEXE="
+          for /f "delims=" %%G in ('where git.exe 2^>nul') do if not defined GITEXE set "GITEXE=%%G"
+          if not defined GITEXE if exist "C:\Program Files\Git\cmd\git.exe" set "GITEXE=C:\Program Files\Git\cmd\git.exe"
+          if not defined GITEXE exit /b 22
+          set "QUEUE_SRC=%RUNNER_TEMP%\shire-chapter-queue-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
+          if exist "!QUEUE_SRC!" rmdir /S /Q "!QUEUE_SRC!"
+          mkdir "!QUEUE_SRC!"
+          cd /d "!QUEUE_SRC!"
+          "!GITEXE!" init
+          if errorlevel 1 exit /b 70
+          "!GITEXE!" -c credential.helper= remote add origin "https://x-access-token:!GH_TOKEN!@github.com/%GITHUB_REPOSITORY%.git"
+          if errorlevel 1 exit /b 71
+          "!GITEXE!" -c credential.helper= fetch --no-tags --depth=2 origin !TARGET_SHA!
+          if errorlevel 1 exit /b 72
+          "!GITEXE!" checkout -f FETCH_HEAD
+          if errorlevel 1 exit /b 73
+          echo SHIRE_QUEUE_SOURCE=!QUEUE_SRC!>>"%GITHUB_ENV%"
+
+      - name: Verify runner session health
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_QUEUE_SOURCE%\Scripts\verify_runner_session.ps1"
+
+      - name: Fast queue preflight
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_QUEUE_SOURCE%\Scripts\test_powershell_syntax.ps1"
+
+      - name: Check predecessor Gate 6/7
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_QUEUE_SOURCE%\Scripts\run_sequential_chapter_queue.ps1"
+
+      - name: Prepare P1C02 source train
+        if: env.P1C02_QUEUE_RELEASE == 'true'
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_QUEUE_SOURCE%\Scripts\run_p1c02_shadow_past_prep.ps1"
+
+      - name: Remove isolated queue checkout
+        if: always()
+        shell: cmd
+        run: |
+          @echo off
+          if defined SHIRE_QUEUE_SOURCE if exist "%SHIRE_QUEUE_SOURCE%" rmdir /S /Q "%SHIRE_QUEUE_SOURCE%"
+          exit /b 0
