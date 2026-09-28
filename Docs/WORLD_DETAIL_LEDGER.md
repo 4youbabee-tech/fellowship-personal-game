@@ -1,3 +1,16 @@
+## 2026-09-28 - P1C01 Party Field light de-duplication and Ferry identity cleanup
+
+Registered before implementation inside the active W01/P1C01 visible-world cleanup lane.
+
+Purpose:
+- Prevent Party Field from stacking legacy lantern actors over authored production lamp posts at the same destination.
+- Make authored `SM_ShLampPost` ownership exclusive when available; older lantern/primitive light silhouettes remain fallback-only.
+- Remove the nearby generic common river boat from the Bucklebury Ferry composition so it cannot be mistaken for the canonical ferry transport.
+- Keep the actual ferry crossing/platform proxy unchanged until a canon-appropriate authored ferry mesh exists.
+- No story route, quest anchor, NPC ownership or density expansion is introduced.
+
+Status: **REGISTERED / RUNNERLESS IMPLEMENTATION STARTED**.
+
 ## 2026-09-28 - P1C01 domestic-garden and East-Fields proxy consolidation
 
 Registered before implementation inside the existing W01/P1C01 visible-world cleanup lane.
