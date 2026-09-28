@@ -5452,6 +5452,30 @@ if "integration/comprehensive-foundation-v1" in pg168:
     fail("PG-168 warehouse push trigger still points at an obsolete integration branch")
 
 
+# PG-186: professional graphics settings must remain persistent, scalable and image-first by default.
+pg186_h = read(resolve_source("ShireGameUserSettings.h"))
+pg186_cpp = read(resolve_source("ShireGameUserSettings.cpp"))
+pg186_engine = read(ROOT / "Config" / "DefaultEngine.ini")
+pg186_scalability = read(ROOT / "Config" / "DefaultScalability.ini")
+pg186_plan = json.loads(read(ROOT / "Data" / "GraphicsSettingsPlanV1.json"))
+for pg186_symbol in [
+    "EShireGraphicsPreset", "Performance", "Recommended", "High", "Ultra", "Custom",
+    "ApplyGraphicsPreset", "ApplyCustomGraphicsQuality", "ApplyDisplayPreferences",
+    "SetResolutionScaleValueEx(100.0f)", "SetTextureQuality(2)", "SetShadowQuality(1)",
+]:
+    if pg186_symbol not in (pg186_h + pg186_cpp):
+        fail(f"PG-186 professional graphics settings contract missing: {pg186_symbol}")
+if "GameUserSettingsClassName=/Script/ShireJourney.ShireGameUserSettings" not in pg186_engine:
+    fail("PG-186 engine is not wired to UShireGameUserSettings")
+for pg186_scalability_symbol in ["[TextureQuality@3]","[ShadowQuality@3]","[FoliageQuality@3]","[ViewDistanceQuality@3]"]:
+    if pg186_scalability_symbol not in pg186_scalability:
+        fail(f"PG-186 four-tier scalability ladder missing: {pg186_scalability_symbol}")
+if pg186_plan.get("status") != "SOURCE_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF":
+    fail("PG-186 graphics settings evidence boundary changed")
+if pg186_plan.get("presets", {}).get("Recommended", {}).get("resolution_scale_percent") != 100:
+    fail("PG-186 Recommended preset must preserve 100 percent render scale in source design")
+
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
