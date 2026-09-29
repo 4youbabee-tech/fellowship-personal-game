@@ -1,3 +1,9 @@
+## 2026-09-29 - F2-02 exact-head CI routing repair
+
+- The first reconciled Pre-Unreal run failed at PG-203 tooling-filter coverage, not at canon/runtime/source-content validation.
+- Unreal source-only filters are corrected for both push and PR paths.
+- No chapter completeness or runtime acceptance status changes.
+
 ## 2026-09-29 - F2-02 reconciliation note
 
 - F2-02 source-preparation metadata/tooling is reconciled with the permanent story/source rules without changing runtime chapter maturity.
