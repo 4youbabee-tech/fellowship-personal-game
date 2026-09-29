@@ -1,3 +1,14 @@
+## 2026-09-30 - P1C01 Maximum-Safe Mega Build V1
+
+- Owner authorizes one large P1C01 production train with many bounded work cars instead of repeated tiny approvals.
+- Source basis rechecked before expansion: F1-01 covers Ring-history stakes, Bilbo birthday preparation, Gandalf arrival, party/social/fireworks safe window and Bilbo departure/Ring handoff; F1-02 covers Bag End Ring-danger confirmation and Frodo leaving the Shire; F1-03 owns road danger/stealth/ferry material in the source bibles.
+- Current repository runtime compresses more Shire material into `P1C01` than the source chapter split. This wave **does not silently renumber runtime topology**. It preserves source-locked outcomes/windows inside the current vertical slice until a dedicated mapping migration is approved.
+- New mega execution contract: `Data/P1C01MaximumSafeMegaBuildV1.json` with 12 bounded cars covering defect safety, cache regression, save-schema audit, canon disposition, Shire density, Bag End, party/social loop, living world, character presentation, audio identity, quest/cinematic polish and target-device/Gate 6/7 evidence.
+- The first active code car is the LivingWorld member-local distance-cull defect repair. Runtime feature expansion cars remain gated behind W00 exact-head Unreal acceptance.
+- P1C01 life ownership stays decoupled: `ALivingWorldDirector` owns population/event budgets and pooling; `UShireNPCContextSubsystem` owns bounded NPC context/knowledge/schedules; `UShireQuestSubsystem` owns story/progression truth; world builders own geometry/dressing/story placement.
+- Low-spec contract remains mandatory: pooled crowd-scale actors, soft/async heavy assets through FStreamableManager, repeated detail via ISM/HISM + LOD/culling, animated production assets FBX-only, production textures PNG/TGA.
+- Evidence boundary: MEGA BUILD REGISTERED / DEFECT REPAIR SOURCE-IMPLEMENTED / exact-head CI pending. No new PIE/device/FPS/visual acceptance is claimed.
+
 ## 2026-09-30 - P1C01 mega build train + living-world member-local retirement safety
 
 - Owner authorized one approval for a very large P1C01 production train containing many bounded tasks/cars. Registered under DEC-090 and `Data/P1C01OvernightMegaBuildTrainV1.json`.
