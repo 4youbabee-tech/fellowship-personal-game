@@ -110,6 +110,29 @@ $outPath = Join-Path $Root "warehouse_inventory_latest.json"
 $inventory | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $outPath -Encoding UTF8
 
 if($missing.Count -gt 0 -or $hashMismatch.Count -gt 0 -or $licenseHashMismatch.Count -gt 0 -or $dangerous.Count -gt 0 -or $badReceipt.Count -gt 0){
+  foreach($row in $hashMismatch | Select-Object -First 20){
+    Write-Host ("WAREHOUSE_HASH_MISMATCH provider="+[string]$row.provider+
+      " batch="+[string]$row.batch_id+
+      " asset="+[string]$row.asset_id+
+      " kind="+[string]$row.record_kind+
+      " path="+[string]$row.path+
+      " declared="+[string]$row.declared_sha256+
+      " actual="+[string]$row.sha256)
+  }
+  foreach($row in $licenseHashMismatch | Select-Object -First 20){
+    Write-Host ("WAREHOUSE_LICENSE_HASH_MISMATCH provider="+[string]$row.provider+
+      " batch="+[string]$row.batch_id+
+      " asset="+[string]$row.asset_id+
+      " path="+[string]$row.path+
+      " declared="+[string]$row.declared_sha256+
+      " actual="+[string]$row.actual_sha256)
+  }
+  foreach($row in $missing | Select-Object -First 20){
+    Write-Host ("WAREHOUSE_MISSING_REFERENCE provider="+[string]$row.provider+
+      " batch="+[string]$row.batch_id+
+      " kind="+[string]$row.record_kind+
+      " path="+[string]$row.path)
+  }
   Write-Host ("WAREHOUSE_INVENTORY_AUDIT_FAIL missing="+$missing.Count+" hashMismatch="+$hashMismatch.Count+" licenseHashMismatch="+$licenseHashMismatch.Count+" dangerous="+$dangerous.Count+" badReceipts="+$badReceipt.Count+" report="+$outPath)
   exit 2
 }
