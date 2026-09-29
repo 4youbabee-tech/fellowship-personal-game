@@ -1,3 +1,17 @@
+## 2026-09-29 - F1-04 Bree & Weathertop Mega Source Superpack V1
+
+- New source-preparation lane registered for canonical **F1-04 Bree & Weathertop**, consumed by legacy runtime chapters **P1C02 + P1C03** under the existing F1/P1 reconciliation.
+- Canonical story boundary remains: Aragorn becomes guide; Ring use increases danger; Frodo is wounded; locked postcondition is the party racing for Rivendell.
+- Bree production grammar: timber/stone, rain, gates, crowded inn; social stealth, supplies, rumors and pursuit pressure; night-arrival/departure variants.
+- Weathertop production grammar: ruined hilltop watchtower, ancient stone ring, exposed skyline; camp tension and defensive encounter support; calm-approach/night-attack variants.
+- `Data/F104BreeWeathertopMegaSourceSuperpackV1.json` defines 16 source categories with a total candidate ceiling of 9000 and per-category ceiling of 1200.
+- `Scripts/run_f104_bree_weathertop_mega_source.ps1` indexes shared warehouse stock without duplicating payloads; animated categories accept FBX only and BMP textures are blocked.
+- `.github/workflows/f104-bree-weathertop-mega-source.yml` provides an isolated 180-minute source-preparation lane with exact-head checkout, runner-health gate and PowerShell syntax preflight.
+- F1-04 tooling-only paths are excluded from expensive Unreal validation.
+- Governor `DEC-070` records the permanent architecture/scope contract.
+- Runtime integration for P1C02/P1C03 remains **GATED behind predecessor acceptance**.
+- Evidence boundary: **SOURCE-IMPLEMENTED / exact-head validation pending**. No PIE/device/visual/performance acceptance is claimed.
+
 ## 2026-09-29 - Develop production-train failures isolated and repaired in source
 
 - Develop merge head `d012f4c68f4e9d83b4b8ec4043b5df06c7a4d9a0` retained green core validation: Pre-Unreal #1363 SUCCESS and Unreal #1085 SUCCESS.
