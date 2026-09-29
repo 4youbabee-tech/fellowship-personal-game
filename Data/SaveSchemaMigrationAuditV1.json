@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "audit_id": "SAVE_SCHEMA_MIGRATION_AUDIT_V1",
+  "status": "HISTORY_NOT_RECOVERED_DO_NOT_INVENT_MIGRATIONS",
+  "current_schema_version": 6,
+  "observed_runtime_behavior": {
+    "rejects_newer_than_current": true,
+    "accepts_older_or_equal": true,
+    "explicit_legacy_identity_repair": true,
+    "generic_per_schema_migration_pipeline": false
+  },
+  "evidence": [
+    "Source/ShireJourney/Public/SaveGame/ShireSaveGame.h: CurrentSchemaVersion = 6",
+    "Source/ShireJourney/Private/Characters/ShirePlayerCharacter.cpp: RestoreSaveSnapshot rejects only newer schema versions and then restores/canonicalizes current fields",
+    "Repository commit search did not return documented schema-version transition commits by schema/save-version terms"
+  ],
+  "decision": "Do not fabricate version-by-version migration semantics. Recover historical schema changes from reachable commit history or authoritative documentation first; then implement explicit migrations only for documented field changes.",
+  "safe_followups": [
+    "Add structural/static guard that newer schemas remain rejected.",
+    "Require explicit schema-history table before adding MinSupportedSchemaVersion or migration switch cases.",
+    "Preserve existing legacy terminal-state canonicalization tests.",
+    "When history is recovered, add fixture-based old-save tests per supported schema transition."
+  ],
+  "evidence_boundary": "AUDIT ONLY. No claim that every older schema is safely migratable or fully backward compatible."
+}
