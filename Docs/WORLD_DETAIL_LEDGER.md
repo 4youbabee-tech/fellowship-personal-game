@@ -1,3 +1,28 @@
+## 2026-09-29 - P1C01 Graphics/Video Visual-Economy Doctrine V1
+
+Registered before runtime/settings implementation.
+
+Scope and authority:
+- Applies only to **W01_P1C01_PRODUCTION_VERTICAL_SLICE** until Gate 6/7 releases later runtime chapters.
+- ProjectGovernor remains the sole requirement/decision authority; this ledger entry registers the visual/world-detail idea before implementation.
+- The target floor remains **DX11, 1280x720, Low-Medium, 30 FPS** on the i7 Gen6 / 8 GB RAM / ~2 GB VRAM laptop class. Higher-quality presets may scale upward but must not weaken that floor.
+
+Permanent visual-economy doctrine:
+- Maximize visible beauty per measured CPU/GPU/VRAM cost.
+- Protect first: silhouette, composition, hero materials, lighting hierarchy, atmosphere, landmark framing, readable characters and near-field detail.
+- Recover cost first from duplicate actors, far shadows, overdraw/translucency, redundant lights, uninstanced repetition, unnecessary Tick, and invisible/far detail.
+- Repeated decorative detail should prefer ISM/HISM + LOD/culling; crowds stay pooled; heavy assets stay soft-referenced and asynchronously loaded through FStreamableManager.
+- Animated final assets remain FBX; production textures remain PNG/TGA/channel-packed where appropriate.
+
+Graphics/Video settings direction:
+- Presets: **Performance**, **Cinematic Balanced** (visually strong default), **High**, **Ultra**, plus **Custom**.
+- Custom/display controls include resolution, fullscreen/borderless/windowed mode, VSync, frame-rate limit and render scale, with engine scalability controls exposed without bypassing the target-floor budgets.
+- Risky display changes must use a reversible **preview -> confirm -> revert** transaction, with the UI owning the visible countdown.
+- Existing lower-tier anchors remain protected until measured evidence supports change, including the current **600 / 800 / 1000 MB** texture-pool tiers and foliage density tier 2 at **0.70**.
+- No setting or preset may be described as a performance improvement until exact measurement evidence exists.
+
+Status: **REGISTERED / GOVERNOR REGISTRATION NEXT / RUNTIME IMPLEMENTATION NOT YET AUTHORIZED**.
+
 ## 2026-09-29 - Part I Landmark Identity Plan V1 + F1-06 Caradhras & Moria Landmark Mega Source Superpack
 
 Registered before any runtime implementation.
