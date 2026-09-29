@@ -51,7 +51,15 @@
     "production/p1c01-frodo-gandalf-skeletal-candidate-v1",
     "repair/p1c01-material-intake-return-v1",
     "repair/p1c01-pr145-preunreal-contract-v1",
-    "repair/warehouse-critical-gap-receipt-supersession-v1"
+    "repair/warehouse-critical-gap-receipt-supersession-v1",
+    "maintenance/lineage-duplicate-branch-cleanup-20260930",
+    "production/p1c01-visual-economy-settings-v1",
+    "production/p1c01-visual-economy-settings-v2",
+    "production/p1c01-visual-economy-settings-v3",
+    "production/p1c01-visual-economy-settings-static-gate-v1",
+    "production/p1c01-visual-economy-settings-static-gate-v3",
+    "production/p1c01-visual-economy-settings-static-gate-v5",
+    "production/part1-finale-f107-f108-mega-train-v1"
   ],
   "safety_rules": [
     "Never delete develop or main.",
@@ -229,5 +237,33 @@
       "repair/warehouse-critical-gap-receipt-supersession-v1": "SUPERSEDED Governor-only repair snapshot; current Governor and warehouse semantics are newer."
     },
     "safety": "Unique production/art/provenance/settings branches are explicitly preserved for focused salvage instead of being deleted by age."
+  },
+  "lineage_duplicate_cleanup_2026_09_30": {
+    "action": "DELETE_AFTER_THIS_MERGE",
+    "branches": [
+      "maintenance/lineage-duplicate-branch-cleanup-20260930",
+      "production/p1c01-visual-economy-settings-v1",
+      "production/p1c01-visual-economy-settings-v2",
+      "production/p1c01-visual-economy-settings-v3",
+      "production/p1c01-visual-economy-settings-static-gate-v1",
+      "production/p1c01-visual-economy-settings-static-gate-v3",
+      "production/p1c01-visual-economy-settings-static-gate-v5",
+      "production/part1-finale-f107-f108-mega-train-v1"
+    ],
+    "evidence": {
+      "maintenance/lineage-duplicate-branch-cleanup-20260930": "maintenance branch itself; must be deleted after merge",
+      "production/p1c01-visual-economy-settings-v1": "strict ancestor of preserved visual-economy v4",
+      "production/p1c01-visual-economy-settings-v2": "strict ancestor of preserved visual-economy v4",
+      "production/p1c01-visual-economy-settings-v3": "strict ancestor of preserved visual-economy v4",
+      "production/p1c01-visual-economy-settings-static-gate-v1": "exact-head alias of preserved visual-economy v4",
+      "production/p1c01-visual-economy-settings-static-gate-v3": "exact-head alias of preserved visual-economy v4",
+      "production/p1c01-visual-economy-settings-static-gate-v5": "exact-head alias of preserved visual-economy v4",
+      "production/part1-finale-f107-f108-mega-train-v1": "exact-head duplicate of preserved f106 caradhras-moria mega-source history"
+    },
+    "preserved_survivors": [
+      "production/p1c01-visual-economy-settings-v4",
+      "production/f106-caradhras-moria-mega-source-v1"
+    ],
+    "safety": "Only strict ancestry/exact-head duplicates are removed; diverged production branches remain for salvage review."
   }
 }
