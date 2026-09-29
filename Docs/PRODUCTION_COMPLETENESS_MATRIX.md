@@ -1,3 +1,18 @@
+## 2026-09-29 - Production train root-repair wave
+
+- develop Pre-Unreal #1363: **SUCCESS**.
+- develop Unreal #1085: **SUCCESS**.
+- P1C01 Chapter Closure Pack #1: **FAILED AFTER STORAGE PASS / TOOLING EXIT-STATE DEFECT**.
+- Warehouse #283 material intake: **8 PREPARED / LOCAL GENERATED COMMIT CREATED / REMOTE LOOKUP FAILED BEFORE PUBLISH**.
+- Part I Chapter Preparation Train #1: **FAILED DURING POWERSHELL 5.1 REPORT MATERIALIZATION**.
+- Sequential Chapter Queue #1: **SUCCESS / WAIT STATE HONORED / P1C02 RUNTIME NOT RELEASED**.
+- Deterministic closure child-process exit handling: **SOURCE-IMPLEMENTED**.
+- Generated-branch ls-remote retry/exit capture: **SOURCE-IMPLEMENTED**.
+- Part I generic-list ToArray serialization guard: **SOURCE-IMPLEMENTED**.
+- PG-196 static regression coverage: **SOURCE-IMPLEMENTED**.
+- Fresh exact-head validation/reruns: **PENDING**.
+- PIE/device/visual/pacing/performance acceptance: **NOT CLAIMED**.
+
 ## 2026-09-29 - #1082 direct-PID/CIM recovery refinement
 
 - Pre-Unreal #1360 on prior exact head `98dcb4d...`: **SUCCESS**.
