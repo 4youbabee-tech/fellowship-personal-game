@@ -1,26 +1,17 @@
-## 2026-09-30 - P1C01 Maximum-Safe Mega Build V1
+## 2026-09-30 - P1C01 Maximum-Safe Mega Build V1 + LivingWorld cull safety
 
-- Owner authorizes one large P1C01 production train with many bounded work cars instead of repeated tiny approvals.
-- Source basis rechecked before expansion: F1-01 covers Ring-history stakes, Bilbo birthday preparation, Gandalf arrival, party/social/fireworks safe window and Bilbo departure/Ring handoff; F1-02 covers Bag End Ring-danger confirmation and Frodo leaving the Shire; F1-03 owns road danger/stealth/ferry material in the source bibles.
-- Current repository runtime compresses more Shire material into `P1C01` than the source chapter split. This wave **does not silently renumber runtime topology**. It preserves source-locked outcomes/windows inside the current vertical slice until a dedicated mapping migration is approved.
-- New mega execution contract: `Data/P1C01MaximumSafeMegaBuildV1.json` with 12 bounded cars covering defect safety, cache regression, save-schema audit, canon disposition, Shire density, Bag End, party/social loop, living world, character presentation, audio identity, quest/cinematic polish and target-device/Gate 6/7 evidence.
-- The first active code car is the LivingWorld member-local distance-cull defect repair. Runtime feature expansion cars remain gated behind W00 exact-head Unreal acceptance.
-- P1C01 life ownership stays decoupled: `ALivingWorldDirector` owns population/event budgets and pooling; `UShireNPCContextSubsystem` owns bounded NPC context/knowledge/schedules; `UShireQuestSubsystem` owns story/progression truth; world builders own geometry/dressing/story placement.
-- Low-spec contract remains mandatory: pooled crowd-scale actors, soft/async heavy assets through FStreamableManager, repeated detail via ISM/HISM + LOD/culling, animated production assets FBX-only, production textures PNG/TGA.
-- Evidence boundary: MEGA BUILD REGISTERED / DEFECT REPAIR SOURCE-IMPLEMENTED / exact-head CI pending. No new PIE/device/FPS/visual acceptance is claimed.
-
-## 2026-09-30 - P1C01 mega build train + living-world member-local retirement safety
-
-- Owner authorized one approval for a very large P1C01 production train containing many bounded tasks/cars. Registered under DEC-090 and `Data/P1C01OvernightMegaBuildTrainV1.json`.
-- Source references preserve the distinction between canonical F1-01 (party/Ring handoff), F1-02 (Bag End/Shadow of the Past departure), and F1-03 (Shire roads/Bucklebury pursuit), while the existing runtime P1C01 remains a wider vertical-slice composition. No silent renumbering is introduced.
-- Confirmed defect: one distant member of a multi-member LivingWorld micro-event could previously retire every grouped member, including a nearby interaction.
-- Approved repair: event lifetime expiry remains event-wide; distance retirement is member-local. Each far member is returned through the existing `ALivingWorldDirector` pool path and the event survives while any member remains.
-- `ShireNPCContextSubsystem`, `LivingWorldDirector`, and `ShireQuestSubsystem` ownership remains decoupled and unchanged.
-- Current AmbientNPC player lookup already centralizes the direct engine lookup inside `GetPlayerPawnCached()`; no redundant cache layer is added.
-- Save-schema migration is deferred until historical schema transforms are source-documented; existing legacy identity repair is preserved.
-- Mega-build cars cover W00 closure, world density/route life, party/Bag End interaction density, NPC routines/social memory, fauna/environment motion, character presentation, quest/side-activity coherence, cinematic handoff, Shire audio identity, long-session save/load, and target-device Gate 6/7 evidence.
-- Performance contract remains: target 6th-gen i7 / 8 GB RAM / ~2 GB VRAM; FBX animated assets, PNG/TGA textures, soft/async heavy loading, pooled transient populations, ISM/HISM + LOD/culling.
-- Evidence boundary: source implementation/authorization only until the relevant exact-head UE4/PIE/device/human evidence exists.
+- Registered before further runtime expansion: owner authorizes one large P1C01 production train with many bounded work cars under one approval, rather than repeated tiny approvals.
+- Source basis rechecked from the supplied Story/Timeline, World/Locations, Gameplay/Side Activities, Mission Matrix and Master Production Systems PDFs.
+- Source boundary: F1-01 owns Ring-history/birthday/Gandalf/party material; F1-02 owns Bag End Ring-danger/departure; F1-03 owns Shire-road/Black Rider/ferry material. Current runtime P1C01 is broader than source F1-01, so this wave preserves current topology while explicitly recording the mismatch instead of silently redefining canon chapters.
+- Confirmed programmer finding: grouped micro-event distance cleanup could retire nearby event members because one roaming member exceeded EventCullDistance.
+- Registered and implemented repair: event lifetime expiry stays event-wide; distance retirement is member-local through existing ALivingWorldDirector pool ownership. No second world-life brain is created.
+- Audit correction: ShireAmbientNPC already centralizes its only direct UGameplayStatics::GetPlayerPawn call in GetPlayerPawnCached(); no redundant cache rewrite is authorized.
+- Save-schema work is evidence-gated: schema 6/newer-save rejection and legacy canonicalization are present, but no verified v1-v6 transform history exists. No migration ladder may be invented until history/fixtures are recovered.
+- Machine-readable train: Data/P1C01MaximumSafeMegaBuildV1.json + Data/P1C01OvernightMegaBuildTrainV1.json. Source disposition: Data/P1C01SourceToRuntimeDispositionV1.json. Save boundary: Data/SaveSchemaMigrationAuditV1.json.
+- Architecture remains decoupled: ALivingWorldDirector owns population/event budgets and pooling; UShireNPCContextSubsystem owns bounded NPC context/knowledge/schedules; UShireQuestSubsystem owns story/progression; world builders own geometry/dressing/story placement.
+- Low-spec rules remain mandatory: FBX for animated production assets; PNG/TGA production textures; soft references + FStreamableManager for heavy assets; pooled transient crowds; ISM/HISM + LOD/culling for repeated detail.
+- Runtime feature cars beyond the defect repair remain gated by W00 exact-head UE4 evidence and later Gate 6/7 requirements. Source/QC/data/static/documentation preparation may proceed in parallel.
+- Evidence boundary: SOURCE IMPLEMENTATION/PREPARATION ONLY until exact-head CI/UE4 and later chapter-specific PIE/device/human evidence exist.
 
 ## 2026-09-29 - F2-04 Road & Helm's Deep Prep Maximum-Safe Source V1
 
@@ -784,13 +775,3 @@ Purpose: retain visual, material, life, ambience and world-detail ideas discover
 - Mega Asset Promotion reuses `Data/P1C01WarehousePromotionQueueV1.json` and `Data/ProductionAssetPromotionPolicyV1.json`; this is not a second inventory. Work may advance through staging/intake QC, but no item is promoted to `READY_FOR_IMPORT` without provider/source/license, local staging receipt, SHA256 and class-specific QC.
 - Final animated production assets remain FBX-only. Final production textures remain PNG/TGA; BMP cannot be accepted as final promotion evidence. Heavy runtime assets stay soft-referenced/asynchronously owned; crowds remain pooled and repeated detail remains ISM/HISM + LOD/culling.
 - Evidence boundary: **EXECUTION AUTHORIZED / NOT YET VALIDATED**. C4 candidate exact head passed Pre-Unreal #1070 and Unreal Build #875 before merge. D needs its own exact-head machine proof plus later rendered/device evidence; no PIE/device/visual/performance acceptance is claimed here.
-
-
-## P1C01 comprehensive night-build authorization - 2026-09-30
-- Owner authorized one approval to cover a large set of coordinated P1C01 production tasks, with W00/CI and source-preparation lanes allowed to proceed in parallel. This does not waive Gate 6/7 or exact-head engine proof.
-- Source-grounded P1C01 content basis: Shire/Hobbiton is pastoral hills, lanes, farms and Hobbit-holes with warm domestic scale, circular doors and gardens; gameplay emphasizes onboarding, social play and low-threat exploration. Bag End is a dense lived-in narrative hub. F1-01 safe optional content includes party setup, social onboarding and fireworks; activity references include tables/food/decorations/guest interactions, fireworks and the Merry/Pippin firework mishap.
-- Canon/runtime mapping note: the supplied production bibles separate F1-01 Prologue & Ring History, F1-02 Shadow of the Past and F1-03 Road to Bree, while the current runtime P1C01 quest chain already spans ShireArrival -> LongExpectedParty -> RingSecret -> LeavingHome -> FerryEscape. The current topology is therefore an implementation aggregation and must not be silently presented as a one-to-one source chapter mapping.
-- Living-world safety prerequisite: pooled micro-event distance retirement must remain **member-local**. A roaming NPC/fauna/motion member cannot retire a nearby interaction or other participant; event-wide cleanup is reserved for authored lifetime expiry.
-- Comprehensive build families registered for the coordinated P1C01 train: world traversal/readability, Hobbiton/Bag End/party-field dressing, materials/foliage, lighting/sky/fog/water, character presentation, pooled living-world routines/social life/fauna, party-side activities, quest/cinematic handoffs, ambience/foley/music-routing preparation, save/checkpoint continuity, accessibility/readability, low-spec culling/LOD/async residency, and Gate 6/7 evidence collection.
-- Performance contract remains i7 6th-gen / 8 GB RAM / ~2 GB VRAM / DX11 / 1280x720 Low-Medium / 30 FPS floor. Repeated detail uses ISM/HISM; crowds remain pooled; heavy assets remain soft/async; final animated assets are FBX and final textures PNG/TGA/channel-packed where appropriate.
-- Evidence boundary: registration + source/runtime safety repair only. No new PIE/device/visual/performance acceptance is implied.
