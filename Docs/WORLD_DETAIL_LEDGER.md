@@ -1,5 +1,6 @@
 ## 2026-09-30 - P1C01 Maximum-Safe Mega Build V1 + LivingWorld cull safety
 
+- P1C01 legacy mega-pack path drift found during the train audit was corrected to the D-backed Warehouse authority; this is infrastructure consistency only, not content/runtime acceptance.
 - Registered before further runtime expansion: owner authorizes one large P1C01 production train with many bounded work cars under one approval, rather than repeated tiny approvals.
 - Source basis rechecked from the supplied Story/Timeline, World/Locations, Gameplay/Side Activities, Mission Matrix and Master Production Systems PDFs.
 - Source boundary: F1-01 owns Ring-history/birthday/Gandalf/party material; F1-02 owns Bag End Ring-danger/departure; F1-03 owns Shire-road/Black Rider/ferry material. Current runtime P1C01 is broader than source F1-01, so this wave preserves current topology while explicitly recording the mismatch instead of silently redefining canon chapters.
