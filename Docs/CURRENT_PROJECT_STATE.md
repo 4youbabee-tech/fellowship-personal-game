@@ -1,3 +1,12 @@
+## 2026-09-30 - Final legacy-ref retirement before build resume
+
+- Recovery archive created at `archive/pre-build-salvage-20260930@a47eda59f31352676de44777845fbc01c38d2d0d`.
+- The archive commit captures all **26** remaining non-canonical legacy branch heads as commit parents; it is recovery-only and must never become an execution trunk.
+- All 26 captured legacy working refs are now explicitly queued for guarded deletion after this maintenance merge.
+- Canonical survivors after cleanup are `develop`, `main`, and the recovery-only archive branch.
+- Build-resume rule: once Branch Cleanup reports success and the canonical/archive refs remain present, branch cleanup is complete and substantive game construction resumes from `develop`.
+- Evidence boundary: repository/process hygiene only; no compile, PIE, device, visual or performance acceptance is claimed.
+
 ## 2026-09-30 - Final runner-path and branch-lifecycle reconciliation
 
 - Owner-side cleanup finished with `OLD_C_RESIDUE_EXISTS=False` and `D_RUNNER_EXISTS=True`; the active persistent runner authority remains `D:\\actions-runner` and Warehouse authority remains `D:\\actions-runner\\_warehouse\\ShireJourney`.

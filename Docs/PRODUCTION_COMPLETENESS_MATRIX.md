@@ -1,3 +1,11 @@
+## 2026-09-30 - Final branch-hygiene gate before construction resume
+
+- Legacy branch histories captured in recovery archive: **26 / 26 heads captured**.
+- Recovery archive: **`archive/pre-build-salvage-20260930@a47eda59f31352676de44777845fbc01c38d2d0d`**.
+- Captured legacy working refs: **QUEUED FOR GUARDED POST-MERGE DELETE**.
+- Expected persistent refs after cleanup: **develop + main + recovery archive**.
+- Production/PIE/device/visual/performance maturity: **UNCHANGED / NOT CLAIMED**.
+
 ## 2026-09-30 - Infrastructure hygiene closeout
 
 - Active runner root: **RUN-PROVEN on `D:\\actions-runner`** from prior GitHub health evidence; owner-side final cleanup reports old C runner residue absent.

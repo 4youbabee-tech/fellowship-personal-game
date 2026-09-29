@@ -59,7 +59,33 @@
     "production/p1c01-visual-economy-settings-static-gate-v1",
     "production/p1c01-visual-economy-settings-static-gate-v3",
     "production/p1c01-visual-economy-settings-static-gate-v5",
-    "production/part1-finale-f107-f108-mega-train-v1"
+    "production/part1-finale-f107-f108-mega-train-v1",
+    "generated/p1c01-material-source-v1",
+    "production/f106-caradhras-moria-landmark-mega-v1",
+    "production/f106-caradhras-moria-mega-source-v1",
+    "production/f107-lothlorien-anduin-mega-source-v1",
+    "production/f108-breaking-fellowship-landmark-mega-source-v1",
+    "production/p1c01-acceptance-closure-train-v1",
+    "production/p1c01-architecture-audio-intake-hardening-v1",
+    "production/p1c01-architecture-interiors-props-megabatch-v1",
+    "production/p1c01-audio-provenance-capture-v1",
+    "production/p1c01-fauna-license-capture-v1",
+    "production/p1c01-graphics-settings-authority-v1",
+    "production/p1c01-graphics-settings-v7",
+    "production/p1c01-graphics-settings-v10",
+    "production/p1c01-graphics-settings-v11",
+    "production/p1c01-graphics-settings-v13",
+    "production/p1c01-graphics-settings-v14",
+    "production/p1c01-graphics-settings-v15",
+    "production/p1c01-graphics-settings-visual-economy-v1",
+    "production/p1c01-hero-rig-source-recovery-v2",
+    "production/p1c01-material-visual-binding-v1",
+    "production/p1c01-mega-prep-train-char-audio-fauna-v1",
+    "production/p1c01-salvage-from-develop-v1",
+    "production/p1c01-visual-economy-settings-v4",
+    "production/p1c01-warehouse-runnerless-backlog-v1",
+    "tooling/opencodereview-readonly",
+    "warehouse/p1c01-ready-review-v1"
   ],
   "safety_rules": [
     "Never delete develop or main.",
@@ -72,54 +98,25 @@
     "Cleanup runs only from an exact-head develop merge checkout on GitHub-hosted Windows."
   ],
   "final_audit": {
-    "status": "LEGACY_UNIQUE_ROOTS_RESOLVED_PENDING_POST_MERGE_DELETE",
-    "rule": "After this consolidation merge, all reviewed legacy unique branches are explicitly deleted because their meaningful content is either already integrated or deliberately superseded by current Governor/CI/warehouse truth. Normal future cleanup returns to automatic post-merge zero-ahead pruning.",
+    "status": "FINAL_LEGACY_REF_RETIREMENT_AUTHORIZED",
+    "rule": "After this maintenance merge, retire every captured legacy working ref. Their commit histories remain reachable through archive/pre-build-salvage-20260930. develop stays canonical and main stays stable; the archive is recovery-only and must never become an execution trunk.",
     "current_active_runtime_pr": "Volatile PR state is read live from GitHub and is not stored as cleanup truth.",
-    "completed_preparation_prs": [
-      "PR #81 superseded by consolidation",
-      "PR #83 superseded by consolidation",
-      "PR #87 C2 merged after exact-head Pre-Unreal #1030 + Unreal #837"
-    ],
-    "physical_cleanup": "Branch Cleanup runs automatically after every merged PR, uses one remote-ref enumeration per run, protects live PR/protected/salvage branches, deletes explicit refs when present, auto-deletes zero-ahead refs by GitHub compare, preserves unique commits, and verifies canonical/protected refs.",
-    "truth_boundary": "Branch/process hygiene only; no PIE/device/visual/performance acceptance implied.",
+    "archive_branch": "archive/pre-build-salvage-20260930",
+    "archive_commit": "a47eda59f31352676de44777845fbc01c38d2d0d",
+    "captured_legacy_ref_count": 26,
+    "physical_cleanup": "Branch Cleanup will delete the exact merged maintenance head, then delete all captured legacy refs from delete_after_merge. The archive branch is plan-protected.",
+    "truth_boundary": "Repository/process hygiene only; no PIE/device/visual/performance acceptance implied.",
     "expected_survivors": [
       "develop",
-      "main"
+      "main",
+      "archive/pre-build-salvage-20260930"
     ]
   },
   "active_work_branches": [],
   "preserve_pending_salvage": [
     {
-      "branch": "generated/p1c01-material-source-v1",
-      "reason": "unique generated P1C01 material source payload/receipt; preserve until asset salvage decision"
-    },
-    {
-      "branch": "production/p1c01-material-visual-binding-v1",
-      "reason": "large unique C++/config/material/settings wave; requires dedicated salvage review"
-    },
-    {
-      "branch": "production/p1c01-audio-provenance-capture-v1",
-      "reason": "unique audio provenance data; preserve until merged/salvaged"
-    },
-    {
-      "branch": "production/p1c01-architecture-audio-intake-hardening-v1",
-      "reason": "unique runnerless source backlog data; preserve until disposition"
-    },
-    {
-      "branch": "production/p1c01-warehouse-runnerless-backlog-v1",
-      "reason": "unique runnerless backlog document; preserve until disposition"
-    },
-    {
-      "branch": "production/p1c01-hero-rig-source-recovery-v2",
-      "reason": "unique Quaternius hero-rig recovery data; preserve until disposition"
-    },
-    {
-      "branch": "warehouse/p1c01-ready-review-v1",
-      "reason": "warehouse readiness deltas require exact current-data comparison"
-    },
-    {
-      "branch": "production/p1c01-acceptance-closure-train-v1",
-      "reason": "runtime code is integrated but branch has unique acceptance/test material; preserve for one focused salvage pass"
+      "branch": "archive/pre-build-salvage-20260930",
+      "reason": "non-execution recovery anchor containing the captured legacy branch heads as commit parents; preserve for selective forensic recovery only"
     }
   ],
   "completed_integration_branches": [
@@ -273,5 +270,41 @@
       "production/p1c01-visual-economy-settings-v4",
       "production/f106-caradhras-moria-mega-source-v1"
     ]
+  },
+  "final_legacy_ref_retirement_2026_09_30": {
+    "action": "DELETE_ALL_CAPTURED_LEGACY_WORKING_REFS_AFTER_THIS_MERGE",
+    "archive_branch": "archive/pre-build-salvage-20260930",
+    "archive_commit": "a47eda59f31352676de44777845fbc01c38d2d0d",
+    "captured_branch_count": 26,
+    "branches": [
+      "generated/p1c01-material-source-v1",
+      "production/f106-caradhras-moria-landmark-mega-v1",
+      "production/f106-caradhras-moria-mega-source-v1",
+      "production/f107-lothlorien-anduin-mega-source-v1",
+      "production/f108-breaking-fellowship-landmark-mega-source-v1",
+      "production/p1c01-acceptance-closure-train-v1",
+      "production/p1c01-architecture-audio-intake-hardening-v1",
+      "production/p1c01-architecture-interiors-props-megabatch-v1",
+      "production/p1c01-audio-provenance-capture-v1",
+      "production/p1c01-fauna-license-capture-v1",
+      "production/p1c01-graphics-settings-authority-v1",
+      "production/p1c01-graphics-settings-v7",
+      "production/p1c01-graphics-settings-v10",
+      "production/p1c01-graphics-settings-v11",
+      "production/p1c01-graphics-settings-v13",
+      "production/p1c01-graphics-settings-v14",
+      "production/p1c01-graphics-settings-v15",
+      "production/p1c01-graphics-settings-visual-economy-v1",
+      "production/p1c01-hero-rig-source-recovery-v2",
+      "production/p1c01-material-visual-binding-v1",
+      "production/p1c01-mega-prep-train-char-audio-fauna-v1",
+      "production/p1c01-salvage-from-develop-v1",
+      "production/p1c01-visual-economy-settings-v4",
+      "production/p1c01-warehouse-runnerless-backlog-v1",
+      "tooling/opencodereview-readonly",
+      "warehouse/p1c01-ready-review-v1"
+    ],
+    "recovery_rule": "Recover only selectively from the archive commit ancestry against current develop. Never merge the archive wholesale.",
+    "build_resume_rule": "After cleanup success and canonical-ref verification, administrative branch cleanup is complete and substantive build work resumes from develop."
   }
 }
