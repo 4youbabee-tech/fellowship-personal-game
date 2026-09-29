@@ -4503,6 +4503,37 @@
         "Scripts/pre_unreal_validate.py PG-196"
       ],
       "evidence_boundary": "SOURCE-IMPLEMENTED repair contract. Fresh exact-head static validation and rerun of the affected production workflows are still required."
+    },
+    {
+      "id": "DEC-070",
+      "title": "F1-04 Bree & Weathertop uses one shared mega source superpack for P1C02 and P1C03",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WORLD-001",
+        "REQ-WORLD-002",
+        "REQ-NPC-001",
+        "REQ-PERF-001"
+      ],
+      "resolution": "Prepare one large shared source index for canonical mission F1-04 Bree & Weathertop, consumed by legacy runtime implementation chapters P1C02 and P1C03. Source preparation may run before P1C01 Gate 6/7 acceptance; runtime integration remains serialized and gated.",
+      "implementation_contract": [
+        "Canonical mission authority remains F1-04 Bree & Weathertop; do not reinterpret the source package as the old P1C02 Shadow-of-the-Past label.",
+        "Bree source coverage includes crossroads-town timber/stone/rain/gates/crowded-inn grammar, social-stealth/supplies/rumors/pursuit-pressure support, and night-arrival/departure state dressing.",
+        "Weathertop source coverage includes ruined hilltop watchtower, ancient stone ring, exposed skyline, camp tension, defensive encounter support, and calm-approach/night-attack state dressing.",
+        "The pack reuses persistent warehouse stock and stores indexes/reports rather than duplicating multi-gigabyte payloads for P1C02 and P1C03.",
+        "Animated candidates must be FBX. Production textures are PNG/TGA; BMP is blocked. Static source meshes may include existing FBX/OBJ stock but OBJ is never accepted as an animated candidate.",
+        "Runtime heavy assets stay soft-referenced and asynchronously streamed; background populations stay pooled; repeated static dressing uses ISM/HISM with LOD/culling.",
+        "No candidate index, warehouse count, or source score opens P1C02/P1C03 runtime integration or satisfies Gate 6/7."
+      ],
+      "rationale": "The owner requested a substantially larger next chapter immediately. The canonical source files define F1-04 as Bree & Weathertop, while the current runtime split consumes that source package across P1C02 and P1C03. A shared pack maximizes throughput without duplicating storage or violating serialized runtime gates.",
+      "evidence": [
+        "Docs/WORLD_DETAIL_LEDGER.md — F1-04 Bree & Weathertop Mega Source Superpack V1",
+        "Data/F104BreeWeathertopMegaSourceSuperpackV1.json",
+        "Scripts/run_f104_bree_weathertop_mega_source.ps1",
+        ".github/workflows/f104-bree-weathertop-mega-source.yml",
+        "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX — F1-04 Bree & Weathertop",
+        "03_WORLD_LOCATIONS_AND_MAP_BIBLE — Bree / Weathertop production specifications"
+      ],
+      "evidence_boundary": "SOURCE PREPARATION ARCHITECTURE ONLY. No UE integration, PIE, device, visual, pacing or performance acceptance is claimed."
     }
   ],
   "open_conflicts": [],
