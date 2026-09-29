@@ -5,6 +5,7 @@ on:
     branches:
       - develop
     paths:
+      - 'Scripts/audit_warehouse_inventory.ps1'
       - 'Data/P1C01MaterialImportWaveV2.json'
       - 'Data/WarehouseP1C01ClosurePromotionTrainV2.json'
       - 'Data/P1C01ChapterClosureMegaPackV2.json'
