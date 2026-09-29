@@ -5127,6 +5127,30 @@
       ],
       "evidence_boundary": "Repository lifecycle governance only. No gameplay, PIE, device, visual, pacing or performance acceptance is implied.",
       "authority": "USER_EXPLICIT_DIRECTION"
+    },
+    {
+      "id": "DEC-089",
+      "title": "Retire legacy working refs behind one non-execution salvage archive",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-EXEC-002",
+        "REQ-STABILITY-003"
+      ],
+      "resolution": "Before resuming substantive construction, all remaining legacy working branches are captured as parents of one recovery-only archive commit, then their remote working refs are deleted. develop remains the sole canonical integration branch, main remains stable release, and archive/pre-build-salvage-20260930 is preserved only for selective forensic recovery.",
+      "implementation_contract": [
+        "Capture every remaining non-canonical legacy branch head in archive commit a47eda59f31352676de44777845fbc01c38d2d0d before deleting its remote ref.",
+        "Preserve archive/pre-build-salvage-20260930 as a non-execution recovery anchor; never use it as a runtime/integration trunk.",
+        "Delete all captured legacy working refs after this maintenance merge through the guarded Branch Cleanup workflow.",
+        "Recover any later-needed content only by selective file/commit inspection against current develop; never wholesale-merge the archive.",
+        "After cleanup succeeds and develop/main/archive refs are present, branch-hygiene work yields to substantive game construction."
+      ],
+      "evidence": [
+        "archive/pre-build-salvage-20260930 exists at a47eda59f31352676de44777845fbc01c38d2d0d.",
+        "Archive/PreBuildLegacyBranchSalvage_2026_09_30.json records the captured branch heads inside the archive tree.",
+        "Data/BranchCleanupPlan.json queues all 26 captured working refs for guarded post-merge deletion."
+      ],
+      "evidence_boundary": "Repository recovery and branch hygiene only. No compile, PIE, device, visual, pacing or performance acceptance is implied.",
+      "authority": "USER_EXPLICIT_DIRECTION"
     }
   ],
   "open_conflicts": [],
