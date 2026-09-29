@@ -358,7 +358,7 @@
       ]
     },
     {
-      "id": "ENT_DELiberate_MOVEMENT_ANIMATION",
+      "id": "ENT_DELIBERATE_MOVEMENT_ANIMATION",
       "bank": "BANK03_ENT_TRAVERSAL_SCALE",
       "kind": "animated",
       "landmark": false,
