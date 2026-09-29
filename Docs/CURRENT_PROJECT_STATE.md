@@ -1,3 +1,16 @@
+## 2026-09-29 - Warehouse latest-receipt authority repair
+
+- Warehouse #285 identified the exact blocker: `ambientCG\PLASTER\Plaster007_2K-PNG.zip`.
+- Historical batch `WAREHOUSE_AMBIENTCG_P1C01_V1` declared SHA256 `3aa7dd9257286e0f7c219ebc7934c7ee826f11626a29e46a82563c258d857237`; the current payload SHA256 is `7c486a9f0f058adf3e412ea5b3c91834cdb7d3a75b06ce6e840bf5414ab05b9e`.
+- Earlier Closure #2 evidence showed this archive had become structurally unreadable, was purged, downloaded again, validated as a readable ZIP, and then written into newer ambientCG batch `WAREHOUSE_AMBIENTCG_TRILOGY_FOUNDATION_V2`.
+- Inventory semantics now treat the **latest receipt with a declared hash for a path** as current authority. Older mismatching receipts remain immutable provenance and are emitted as `WAREHOUSE_SUPERSEDED_HASH_RECORD` instead of current corruption.
+- A mismatch against the latest hashed receipt remains a hard failure.
+- License snapshots use the same latest-receipt rule.
+- New regression test `Scripts/test_warehouse_inventory_supersession.ps1` proves both branches: latest-match PASS + superseded warning, and post-receipt mutation hard FAIL.
+- Pre-Unreal `PG-200` guards the semantics and requires the regression test step.
+- Governor `DEC-075` records the permanent warehouse integrity contract.
+- Evidence boundary: **SOURCE-IMPLEMENTED / fresh exact-head validation and real warehouse rerun pending**. Warehouse clean state is not yet claimed.
+
 ## 2026-09-29 - F1-06 landmark scoring strengthened
 
 - F1-06 landmark categories now use a manifest-driven **landmark score bonus = 6** instead of a fixed small inline boost.
