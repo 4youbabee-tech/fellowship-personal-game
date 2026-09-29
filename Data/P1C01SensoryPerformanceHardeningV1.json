@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "hardening_id": "P1C01_SENSORY_PERFORMANCE_HARDENING_V1",
+  "status": "PREPARED_RUNTIME_CHANGES_SERIALIZED_BEHIND_CULL_PROOF",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/P1C01MaximumSafeMegaBuildV1.json",
+    "Data/P1C01C4FoliageLodCullOverdrawPlanV1.json",
+    "Data/P1C01HeroSkeletalCandidateWaveV1.json",
+    "Data/CharacterVisualProductionWaveV7.json",
+    "Source/ShireJourney/Private/Characters/ShireFootstepComponent.cpp",
+    "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp",
+    "Source/ShireJourney/Private/World/FellowshipChapterWorldBuilder.cpp",
+    "Source/ShireJourney/Private/World/FellowshipMythicThreat.cpp"
+  ],
+  "review_dispositions": [
+    {
+      "id": "CHARACTER_STATIC_PROXY_TRAP",
+      "finding": "CONFIRMED_KNOWN_NOT_NEW",
+      "repository_truth": "Existing modular/static OBJ character pieces are prototype/static fallback only. Final animated delivery is already FBX-only with real skeleton/skin/deformation/AnimBP requirements.",
+      "action": "Continue the existing Frodo/Gandalf/Sam skeletal candidate/intake lane; do not fake-rig or container-convert OBJ assets.",
+      "runtime_gate": "Character presentation remains separately UE-import/PIE/device gated."
+    },
+    {
+      "id": "PBR_DEPTH_GAP",
+      "finding": "PARTIALLY_CONFIRMED_BUDGET_GATED",
+      "repository_truth": "Current P1C01 low-spec material wave intentionally uses one albedo texture plus authored scalar Roughness/Metallic/Specular. Normal/AO/Roughness/Metallic textures are known future inputs but extra texture samples are explicitly blocked before target-device measurement.",
+      "action": "Prepare PBR upgrades as optional measured variants. Prefer a normal map plus channel-packed AO/Roughness/Metallic texture when evidence shows visual gain within the ~2 GB VRAM budget; never add separate high-resolution maps blindly.",
+      "runtime_gate": "No PBR sample-count increase before target-device/profile evidence."
+    },
+    {
+      "id": "DETAILS_INSTANCING",
+      "finding": "PARTIALLY_CONFIRMED_EXISTING_HISM_WITH_RESIDUAL_ACTOR_DETAIL",
+      "repository_truth": "ShirePrototypeWorldBuilder already owns multiple HISM banks and explicit cull distances; FellowshipChapterWorldBuilder already uses WorldDetailCluster/HISM for dense micro-detail. Some small Shire decoration still goes through SpawnProd actor placement.",
+      "action": "After the living-world cull repair is exact-head engine-green, audit repeated non-interactive Shire SpawnProd detail and migrate eligible repeated fern/mushroom/decorative groups to HISM/WorldDetailCluster without moving story-critical collision actors.",
+      "runtime_gate": "Do not increase density while converting; preserve current counts/cull budgets first."
+    },
+    {
+      "id": "PHYSICAL_AUDIO_SYNC",
+      "finding": "PARTIALLY_CONFIRMED_EXISTING_PHYS_MATERIAL_AWARE_FALLBACK",
+      "repository_truth": "ShireFootstepComponent already traces with bReturnPhysicalMaterial=true and consumes PhysMaterial identity, mesh/material names and tags, with dirt fallback.",
+      "action": "Prepare an authored surface-identity contract for grass/dirt/stone/wood and bind production Physical Materials during the next approved runtime/audio car. Keep the current heuristic fallback for un-authored surfaces.",
+      "runtime_gate": "No runtime footstep rewrite until the cull-repair exact-head engine gate is green."
+    },
+    {
+      "id": "BALROG_WHIP_PHYSICS",
+      "finding": "NO_CURRENT_RUNTIME_PHYSICS_BOTTLENECK_POLICY_ACCEPTED",
+      "repository_truth": "Current FellowshipMythicThreat Balrog presentation does not simulate a whip chain or PhysicsConstraint/CableComponent path. It uses bounded visual threat motion.",
+      "action": "If a whip is later promoted, use authored skeletal/spline/controlled visual animation or trails; do not create a many-body real-time physics chain on the target CPU.",
+      "runtime_gate": "Future Moria presentation work only; no current P1C01 runtime work."
+    }
+  ],
+  "permanent_guards": [
+    "Animated production character delivery is FBX-only; OBJ remains static fallback/reference.",
+    "Production texture upgrades remain PNG/TGA and low-spec measured; prefer channel packing over independent AO/Roughness/Metallic textures.",
+    "Repeated non-interactive decorative detail uses HISM/ISM/WorldDetailCluster with LOD/culling where practical.",
+    "Footstep surface identity prefers authored Physical Materials while preserving a safe fallback.",
+    "No real-time multi-body Balrog whip chain on the target profile."
+  ],
+  "target_profile": "6th-gen i7 / 8 GB RAM / ~2 GB VRAM / DX11 / 1280x720 Low-Medium / 30 FPS floor target",
+  "evidence_boundary": "STATIC SOURCE REVIEW + PREPARATION CONTRACT ONLY. No new runtime/PIE/device/visual/performance acceptance is claimed."
+}
