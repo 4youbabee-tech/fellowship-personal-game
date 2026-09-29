@@ -48,7 +48,9 @@
     "part2_source_train": {
       "F201": "SOURCE_ARCHITECTURE_MERGED_RUNTIME_MAPPING_UNASSIGNED",
       "F202": "ACTIVE_MAXIMUM_SAFE_SOURCE_WAVE_RUNTIME_MAPPING_UNASSIGNED"
-    }
+    },
+    "character_preparation_wave": "P1C01_FRODO_GANDALF_SKELETAL_CANDIDATE_V1",
+    "character_preparation_rule": "Source/intake/QC only until explicit UE4 import/runtime integration lane; modular fallback remains active."
   },
   "bundles": [
     {
