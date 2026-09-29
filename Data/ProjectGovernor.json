@@ -5176,10 +5176,14 @@
       ],
       "rationale": "The owner explicitly authorized a very large chapter-scale build with one approval covering many coordinated tasks. The gated-car model preserves speed without bypassing the project Governor or the low-spec/runtime safety contracts.",
       "evidence": [
+        "Data/P1C01MaximumSafeMegaBuildV1.json",
         "Data/P1C01OvernightMegaBuildTrainV1.json",
+        "Data/P1C01SourceToRuntimeDispositionV1.json",
         "Docs/WORLD_DETAIL_LEDGER.md",
         "Programmer review confirmed living-world grouped-event cull defect",
-        "Scripts/pre_unreal_validate.py PG-208"
+        "Scripts/pre_unreal_validate.py PG-207 member-local event culling",
+        "Scripts/pre_unreal_validate.py PG-208 ambient player-pawn cache centralization",
+        "Scripts/pre_unreal_validate.py PG-209 P1C01 mega-train contract"
       ],
       "evidence_boundary": "EXECUTION AUTHORIZATION + SOURCE/RUNTIME REPAIR CONTRACT. No PIE/device/visual/performance acceptance is implied.",
       "authority": "USER_EXPLICIT_DIRECTION"
