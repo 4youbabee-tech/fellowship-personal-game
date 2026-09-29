@@ -1,3 +1,21 @@
+## 2026-09-29 - F1-07 Lórien & Anduin landmark source preparation
+
+- Canonical F1-07 scope / P1C07 mapping: **REGISTERED**.
+- F1-08 Fellowship-break boundary: **EXPLICITLY PRESERVED**.
+- 26-category / 18,000-candidate shared source manifest: **SOURCE-IMPLEMENTED**.
+- 2,000/category ceiling / landmark score bonus 7: **SOURCE-IMPLEMENTED**.
+- Minimum 10 populated landmark categories: **SOURCE-IMPLEMENTED / EXECUTION PENDING**.
+- Lothlórien vertical flet/canopy landmark identity: **SOURCE-IMPLEMENTED**.
+- Anduin river-axis/cliff/stone-monument/Amon Hen approach identity: **SOURCE-IMPLEMENTED**.
+- FBX-only animated candidate filter / BMP rejection: **SOURCE-IMPLEMENTED**.
+- Inventory-clean hard gate: **SOURCE-IMPLEMENTED**.
+- Dedicated 180-minute F1-07 workflow: **SOURCE-IMPLEMENTED**.
+- PG-200 regression coverage: **SOURCE-IMPLEMENTED**.
+- Heavy source workflow execution: **BLOCKED UNTIL WAREHOUSE INVENTORY CLEAN**.
+- P1C07 runtime integration: **BLOCKED UNTIL PREDECESSOR GATE ACCEPTED**.
+- Exact-head static validation: **PENDING**.
+- PIE/device/visual/pacing/performance acceptance: **NOT CLAIMED**.
+
 ## 2026-09-29 - Warehouse active-provenance supersession repair
 
 - Historical receipt preservation: **RETAINED / NO RECEIPT REWRITE**.
