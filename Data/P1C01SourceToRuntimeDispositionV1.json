@@ -4,342 +4,289 @@
   "status": "PREPARATION_COMPLETE_RUNTIME_CARS_GATED",
   "authority": [
     "Data/ProjectGovernor.json",
-    "Data/P1C01MaximumSafeMegaBuildV1.json",
     "01_STORY_AND_TIMELINE_BIBLE",
     "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
     "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE",
     "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
     "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX"
   ],
-  "purpose": "Prevent silent omission during the large P1C01 build by mapping source-required Shire/Bag End/party/road content to current runtime evidence and explicit follow-up status.",
-  "mapping_rule": "Source F1-01/F1-02/F1-03 remain distinct source mission packages. Current runtime P1C01 is an implementation aggregation; this file records that mapping and does not renumber canon chapters.",
-  "status_values": [
-    "RUNTIME_FOUNDATION_PRESENT",
-    "RUNTIME_PARTIAL_NEEDS_POLISH",
-    "PREPARED_GATED",
-    "CONTENT_ASSET_BLOCKED",
-    "HUMAN_ACCEPTANCE_PENDING",
-    "OUTSIDE_CURRENT_RUNTIME_SCOPE"
-  ],
-  "items": [
+  "purpose": "Prevent silent omission while the current broad P1C01 vertical slice is expanded. Every source-supported Shire/Bag End/party/road requirement is either mapped to current runtime, queued behind the active gate, or explicitly excluded from this runtime wave.",
+  "source_runtime_boundary": {
+    "source_chapters": {
+      "F1-01": "Prologue & Ring history: Shire; Bilbo/Frodo/Gandalf; party setup/social onboarding/fireworks; locked postcondition Bilbo leaves and Ring passes to Frodo.",
+      "F1-02": "Shadow of the Past: Bag End/Shire; Frodo/Gandalf/Sam; investigation/packing/stealth departure; locked postcondition Frodo leaves the Shire.",
+      "F1-03": "Road to Bree: Shire roads/Bucklebury; Frodo/Sam/Merry/Pippin; Black Rider pursuit, road stealth, ferry escape, environmental hiding; locked postcondition Hobbits reach Bree."
+    },
+    "current_runtime": "P1C01 currently composes ShireArrival, LongExpectedParty, RingSecret, LeavingHome, Shortcut, KeepOffRoad and FerryEscape before P1C02/Bree.",
+    "rule": "Do not silently redefine the supplied source chapter boundaries. Preserve current runtime topology until an explicit mapping migration is separately approved."
+  },
+  "dispositions": [
     {
-      "id": "SRC_F101_SHIRE_OPENING",
-      "source_package": "F1-01",
-      "source_requirement": "Middle-earth / Shire opening establishes safety and scale before later threat.",
-      "runtime_evidence": [
-        "Data/StoryBeatPlan.csv: ShireOpening",
-        "Data/Part1ProductionAtlas.json: P1C01 domestic warmth before danger"
+      "id": "SHIRE_HOBBITON_WORLD",
+      "source": "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+      "source_requirement": "Pastoral hills, lanes, farms, Hobbit-holes; warm domestic scale; circular doors; gardens; onboarding/social play/low-threat exploration; deterministic birthday/departure/post-war state variants.",
+      "current_runtime": [
+        "ShirePrototypeWorldBuilder",
+        "ShireArrival",
+        "LongExpectedParty"
       ],
-      "status": "RUNTIME_FOUNDATION_PRESENT",
-      "next": "Preserve player-led opening readability during later art polish."
+      "state": "IMPLEMENTED_PARTIAL_NEEDS_VISUAL_ACCEPTANCE",
+      "next_car": "SHIRE_WORLD_DENSITY"
     },
     {
-      "id": "SRC_F101_GANDALF_ARRIVAL",
-      "source_package": "F1-01",
-      "source_requirement": "Gandalf arrives during the birthday preparation chapter.",
-      "runtime_evidence": [
-        "Data/StoryBeatPlan.csv: GandalfArrival",
-        "ShireArrival quest references meeting Gandalf"
+      "id": "BAG_END_WORLD",
+      "source": "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+      "source_requirement": "Dense lived-in props, round geometry; narrative hub, inventory tutorial and Ring revelation; Bilbo occupied/Frodo departure/epilogue variants.",
+      "current_runtime": [
+        "RingSecret",
+        "LeavingHome",
+        "Bag End world geometry"
       ],
-      "status": "RUNTIME_FOUNDATION_PRESENT",
-      "next": "Character/animation/audio presentation remains a later gated polish car."
+      "state": "IMPLEMENTED_PARTIAL_NEEDS_DRESSING_AND_ACCEPTANCE",
+      "next_car": "BAG_END_LIVED_IN_PASS"
     },
     {
-      "id": "SRC_F101_BIRTHDAY_PREP",
-      "source_package": "F1-01",
-      "source_requirement": "Bilbo prepares the birthday; optional safe window includes party setup.",
-      "runtime_evidence": [
-        "LongExpectedParty quest",
-        "Data/StoryBeatPlan.csv: PartyArrival"
+      "id": "F1_01_PARTY_SETUP",
+      "source": "01_STORY_AND_TIMELINE_BIBLE + 06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE",
+      "source_requirement": "Party setup, social onboarding; tables, food, decorations, guest interactions; safe abandon/retry and idempotent completion.",
+      "current_runtime": [
+        "LongExpectedParty",
+        "party field",
+        "ambient PartyGuest role"
       ],
-      "status": "RUNTIME_PARTIAL_NEEDS_POLISH",
-      "next": "Party setup density car must add readable preparation state without changing locked outcome."
+      "state": "IMPLEMENTED_PARTIAL",
+      "next_car": "PARTY_AND_SOCIAL_LOOP"
     },
     {
-      "id": "SRC_F101_TABLES_FOOD_DECOR",
-      "source_package": "ACT_F1_01",
-      "source_requirement": "Birthday setup loop uses tables, food, decorations and guest interactions.",
-      "runtime_evidence": [
-        "Party Field exists in Part1ProductionAtlas",
-        "current party/social world systems"
+      "id": "F1_01_FIREWORKS",
+      "source": "01_STORY_AND_TIMELINE_BIBLE + 06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE",
+      "source_requirement": "Gandalf fireworks safe optional window; spectacle/reactions; cannot alter locked canon outcomes.",
+      "current_runtime": [
+        "existing party/firework presentation hooks where present"
       ],
-      "status": "PREPARED_GATED",
-      "next": "Integrate only after the relevant exact-head runtime gate; interactions must be idempotent and safely abandonable."
+      "state": "REQUIRES_RUNTIME_AUDIT_BEFORE_EXPANSION",
+      "next_car": "PARTY_AND_SOCIAL_LOOP"
     },
     {
-      "id": "SRC_F101_SOCIAL_ONBOARDING",
-      "source_package": "F1-01",
-      "source_requirement": "Safe optional window includes social onboarding.",
-      "runtime_evidence": [
-        "LivingWorld social moments",
-        "ambient NPC conversations",
-        "PartyArrival"
+      "id": "F1_01_LOCKED_OUTCOME",
+      "source": "01_STORY_AND_TIMELINE_BIBLE + 07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+      "source_requirement": "Bilbo leaves; Ring passes to Frodo; entry/pre-set-piece/postcondition save strategy.",
+      "current_runtime": [
+        "LongExpectedParty",
+        "RingSecret"
       ],
-      "status": "RUNTIME_PARTIAL_NEEDS_POLISH",
-      "next": "Use existing ShireNPCContextSubsystem knowledge limits and LivingWorldDirector population ownership; no second AI brain."
+      "state": "IMPLEMENTED_LOGIC_REQUIRES_GATE_EVIDENCE",
+      "next_car": "QUEST_CINEMATIC_POLISH"
     },
     {
-      "id": "SRC_F101_FIREWORKS",
-      "source_package": "ACT_F1_02",
-      "source_requirement": "Gandalf fireworks are an optional film-moment activity: select/place-or-aim/time safely.",
-      "runtime_evidence": [
-        "Data/StoryBeatPlan.csv: PartyArrival references fireworks distance"
+      "id": "F1_02_RING_DANGER",
+      "source": "01_STORY_AND_TIMELINE_BIBLE + 07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+      "source_requirement": "Bag End/Shire Ring danger confirmation with Frodo/Gandalf/Sam; investigation/packing/stealth departure; Frodo leaves the Shire.",
+      "current_runtime": [
+        "RingSecret",
+        "LeavingHome"
       ],
-      "status": "PREPARED_GATED",
-      "next": "Gameplay interaction/spectacle implementation remains gated; use original effects/audio design."
+      "state": "IMPLEMENTED_LOGIC_REQUIRES_PACING_ACCEPTANCE",
+      "next_car": "QUEST_SIDE_ACTIVITY_COHERENCE"
     },
     {
-      "id": "SRC_F101_DRAGON_FIREWORK_MISHAP",
-      "source_package": "ACT_F1_03",
-      "source_requirement": "Merry/Pippin comic stealth/interact sequence has a fixed outcome.",
-      "runtime_evidence": [
-        "P1C01 required cast includes Merry and Pippin"
+      "id": "F1_03_FIELD_SHORTCUT",
+      "source": "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+      "source_requirement": "Shire-road/Buckland progression with companions converging before road danger.",
+      "current_runtime": [
+        "Shortcut"
       ],
-      "status": "PREPARED_GATED",
-      "next": "Implement only if current story/side-activity contract contains a stable activity ID; never invent a conflicting outcome."
+      "state": "IMPLEMENTED_LOGIC",
+      "next_car": "SHIRE_WORLD_DENSITY"
     },
     {
-      "id": "SRC_F101_BILBO_DISAPPEARANCE",
-      "source_package": "F1-01",
-      "source_requirement": "Locked chapter progression leads to Bilbo leaving and Ring passing to Frodo.",
-      "runtime_evidence": [
-        "Data/StoryBeatPlan.csv: BilboDisappearance",
-        "LongExpectedParty quest post-party transition"
+      "id": "F1_03_ROAD_HIDING",
+      "source": "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE + 07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+      "source_requirement": "Hide, control movement/noise, wait for Rider; stealth tutorial mastery.",
+      "current_runtime": [
+        "KeepOffRoad"
       ],
-      "status": "RUNTIME_FOUNDATION_PRESENT",
-      "next": "Cinematic/control handoff polish remains gated."
+      "state": "IMPLEMENTED_LOGIC_REQUIRES_PIE_STEALTH_REVIEW",
+      "next_car": "QUEST_SIDE_ACTIVITY_COHERENCE"
     },
     {
-      "id": "SRC_F101_RING_HANDOFF",
-      "source_package": "F1-01",
-      "source_requirement": "Locked postcondition: Bilbo leaves; Ring passes to Frodo.",
-      "runtime_evidence": [
-        "Data/StoryBeatPlan.csv: RingWarning",
-        "RingSecret quest"
+      "id": "F1_03_FERRY_ESCAPE",
+      "source": "01_STORY_AND_TIMELINE_BIBLE + 07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+      "source_requirement": "Ferry escape and environmental hiding before Bree handoff.",
+      "current_runtime": [
+        "FerryEscape"
       ],
-      "status": "RUNTIME_FOUNDATION_PRESENT",
-      "next": "Validate save/postcondition continuity under chapter-specific PIE later."
+      "state": "IMPLEMENTED_LOGIC_REQUIRES_ROUTE_COLLISION_PIE",
+      "next_car": "QUEST_CINEMATIC_POLISH"
     },
     {
-      "id": "SRC_F102_BAG_END_HUB",
-      "source_package": "F1-02 / WORLD",
-      "source_requirement": "Bag End is a Hobbit interior with dense lived-in props and round geometry; narrative hub for Ring revelation.",
-      "runtime_evidence": [
-        "Part1ProductionAtlas landmark: Hobbiton / Bag End",
-        "ShirePrototypeWorldBuilder Bag End anchor"
+      "id": "SHIRE_LIVING_WORLD",
+      "source": "03_WORLD_LOCATIONS_AND_MAP_BIBLE + 11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX",
+      "source_requirement": "Population/schedules/dialogue knowledge as chapter-state data; world life should include birds, hedges/breeze, farm work, distant laughter, carts and warm interiors.",
+      "current_runtime": [
+        "LivingWorldDirector",
+        "ShireNPCContextSubsystem",
+        "ShireAmbientNPC",
+        "LivingWorldEventPlan",
+        "WorldLifeSaturationPlan"
       ],
-      "status": "RUNTIME_PARTIAL_NEEDS_POLISH",
-      "next": "Bag End lived-in pass must improve props/readability without heavy resident memory or synchronous loads."
+      "state": "RUNTIME_PARTIAL",
+      "next_car": "LIVING_SHIRE"
     },
     {
-      "id": "SRC_F102_RING_DANGER",
-      "source_package": "F1-02",
-      "source_requirement": "Gandalf confirms the Ring danger; story knowledge remains chronology-gated.",
-      "runtime_evidence": [
-        "RingSecret quest",
-        "Data/StoryBeatPlan.csv: RingWarning",
-        "ShireNPCContextSubsystem bounded knowledge system"
+      "id": "SHIRE_AUDIO_IDENTITY",
+      "source": "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX",
+      "source_requirement": "Birds, breeze in hedges, farm work, distant laughter, carts, warm interiors, fire and cutlery.",
+      "current_runtime": [
+        "ShireAudioSubsystem logical routing"
       ],
-      "status": "RUNTIME_FOUNDATION_PRESENT",
-      "next": "Keep original dialogue only and preserve knowledge limits."
+      "state": "CONTENT_PENDING_REAL_PLAYBACK",
+      "next_car": "AUDIO_SONIC_IDENTITY"
     },
     {
-      "id": "SRC_F102_PACKING_DEPARTURE",
-      "source_package": "F1-02",
-      "source_requirement": "Optional investigation/packing/stealth-departure window; locked outcome Frodo leaves the Shire.",
-      "runtime_evidence": [
-        "LeavingHome quest",
-        "Data/StoryBeatPlan.csv: LeavingHomeRoad"
+      "id": "CHECKPOINT_AND_RETRY",
+      "source": "01_STORY_AND_TIMELINE_BIBLE + 07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+      "source_requirement": "Entry checkpoint, pre-set-piece checkpoint and postcondition save; fresh start, migrated save, death/retry, skip, optional abandon, backtrack, low-performance tier.",
+      "current_runtime": [
+        "ShireQuestSubsystem",
+        "ShireSaveGame",
+        "ChapterWorldRouter"
       ],
-      "status": "RUNTIME_PARTIAL_NEEDS_POLISH",
-      "next": "Optional interaction breadth may expand only within current quest-owned outcome."
+      "state": "RUNTIME_FOUNDATION_PRESENT_ACCEPTANCE_PENDING",
+      "next_car": "SAVE_LOAD_LONG_SESSION"
     },
     {
-      "id": "SRC_F103_BLACK_RIDER_APPROACH",
-      "source_package": "F1-03-compatible current P1C01 runtime",
-      "source_requirement": "Black Riders hunt the hobbits on Shire roads.",
-      "runtime_evidence": [
-        "Data/StoryBeatPlan.csv: BlackRiderApproach",
-        "Part1ProductionAtlas major threat Black Rider / Nazgul pursuit"
+      "id": "BREE_RUNTIME",
+      "source": "F1-03 locked postcondition",
+      "source_requirement": "Hobbits reach Bree only after F1-03 completion.",
+      "current_runtime": [
+        "P1C02 exists separately"
       ],
-      "status": "RUNTIME_FOUNDATION_PRESENT",
-      "next": "Threat readability/stealth pacing requires later PIE evidence."
+      "state": "OUTSIDE_CURRENT_MEGA_RUNTIME_EXPANSION",
+      "next_car": "NONE"
     },
     {
-      "id": "SRC_F103_ROOT_HIDE",
-      "source_package": "ACT_F1_04 / F1-03-compatible current P1C01 runtime",
-      "source_requirement": "Road hiding loop: hide, control movement/noise and wait for Rider.",
-      "runtime_evidence": [
-        "Data/StoryBeatPlan.csv: RootHide"
-      ],
-      "status": "RUNTIME_FOUNDATION_PRESENT",
-      "next": "Human stealth readability and collision/pacing review remain pending."
+      "id": "POST_WAR_SHIRE",
+      "source": "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+      "source_requirement": "Post-war Shire state variant.",
+      "current_runtime": [],
+      "state": "DEFERRED_LATER_TRILOGY_STATE",
+      "next_car": "NONE"
     },
     {
-      "id": "SRC_F103_FERRY_ESCAPE",
-      "source_package": "F1-03-compatible current P1C01 runtime",
-      "source_requirement": "Shire-road optional window includes ferry escape/environmental hiding.",
-      "runtime_evidence": [
-        "Data/StoryBeatPlan.csv: FerryEscape",
-        "Part1ProductionAtlas: Bucklebury Ferry / Brandywine",
-        "Part1WorldMap: MAP_BUCKLEBURY_FERRY"
+      "id": "F1_01_GANDALF_ARRIVAL",
+      "source": "01_STORY_AND_TIMELINE_BIBLE + StoryBeatPlan",
+      "source_requirement": "Gandalf arrives during birthday preparation and remains chronology-gated.",
+      "current_runtime": [
+        "ShireArrival",
+        "GandalfArrival story beat"
       ],
-      "status": "RUNTIME_FOUNDATION_PRESENT",
-      "next": "Preserve geography and performance-safe escape presentation."
+      "state": "IMPLEMENTED_FOUNDATION_PRESENTATION_PENDING",
+      "next_car": "CHARACTER_PRESENTATION"
     },
     {
-      "id": "WORLD_SHIRE_PASTORAL_GRAMMAR",
-      "source_package": "WORLD",
-      "source_requirement": "Pastoral hills, lanes, farms and Hobbit-holes; warm domestic scale; circular doors; gardens.",
-      "runtime_evidence": [
-        "ShirePrototypeWorldBuilder world geometry/landmarks",
-        "Part1ProductionAtlas P1C01 hero vistas"
+      "id": "F1_01_BILBO_DISAPPEARANCE",
+      "source": "01_STORY_AND_TIMELINE_BIBLE + StoryBeatPlan",
+      "source_requirement": "Bilbo disappearance leads into the locked Ring handoff without changing canon outcome.",
+      "current_runtime": [
+        "BilboDisappearance story beat",
+        "LongExpectedParty"
       ],
-      "status": "RUNTIME_PARTIAL_NEEDS_POLISH",
-      "next": "World-density car should enrich via instancing/culling, not raw actor count."
+      "state": "IMPLEMENTED_LOGIC_REQUIRES_CINEMATIC_ACCEPTANCE",
+      "next_car": "QUEST_CINEMATIC_POLISH"
     },
     {
-      "id": "WORLD_SHIRE_LOW_THREAT_EXPLORATION",
-      "source_package": "WORLD",
-      "source_requirement": "Shire gameplay role is onboarding, social play and low-threat exploration.",
-      "runtime_evidence": [
-        "ShireArrival route",
-        "LivingWorld high-density peaceful contract before danger"
+      "id": "F1_02_PACKING_DEPARTURE",
+      "source": "01_STORY_AND_TIMELINE_BIBLE + 07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+      "source_requirement": "Investigation/packing/stealth-departure safe window precedes Frodo leaving the Shire.",
+      "current_runtime": [
+        "RingSecret",
+        "LeavingHome"
       ],
-      "status": "RUNTIME_FOUNDATION_PRESENT",
-      "next": "Human exploration/readability review pending."
+      "state": "IMPLEMENTED_PARTIAL_NEEDS_OPTIONAL_WINDOW_AUDIT",
+      "next_car": "QUEST_SIDE_ACTIVITY_COHERENCE"
     },
     {
-      "id": "WORLD_SHIRE_STATE_VARIANTS",
-      "source_package": "WORLD",
-      "source_requirement": "Shire/Hobbiton requires birthday, departure and post-war state variants.",
-      "runtime_evidence": [
-        "Current P1C01 story-state systems",
-        "world-state/story beat infrastructure"
-      ],
-      "status": "PREPARED_GATED",
-      "next": "This train covers birthday/departure only; post-war variant remains outside current Part I runtime scope."
-    },
-    {
-      "id": "WORLD_BAG_END_STATE_VARIANTS",
-      "source_package": "WORLD",
-      "source_requirement": "Bag End variants include Bilbo occupied, Frodo departure and epilogue.",
-      "runtime_evidence": [
-        "current P1C01 Bag End/Ring progression"
-      ],
-      "status": "PREPARED_GATED",
-      "next": "Only current chronology variants may be integrated now; epilogue is outside current runtime scope."
-    },
-    {
-      "id": "WORLD_TRAVERSAL_GRAPH",
-      "source_package": "WORLD",
-      "source_requirement": "Document primary on-foot path, optional branches and companion catch-up links.",
-      "runtime_evidence": [
-        "Part1WorldMap P1C01 nodes/edges",
+      "id": "SHIRE_TRAVERSAL_GRAPH",
+      "source": "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+      "source_requirement": "Primary on-foot path and optional branches remain readable with safe backtracking and companion recovery.",
+      "current_runtime": [
+        "Part1WorldMap P1C01 nodes",
         "Part1ProductionAtlas landmark sequence"
       ],
-      "status": "RUNTIME_PARTIAL_NEEDS_POLISH",
-      "next": "Backtracking/companion recovery/collision need chapter-specific PIE."
+      "state": "FOUNDATION_PRESENT_PIE_TRAVERSAL_PENDING",
+      "next_car": "SHIRE_WORLD_DENSITY"
     },
     {
-      "id": "WORLD_POPULATION_SCHEDULES",
-      "source_package": "WORLD",
-      "source_requirement": "Population, schedules, dialogue knowledge and faction presence are chapter-state data.",
-      "runtime_evidence": [
-        "WorldLifeSaturationPlan P1C01 target=18",
-        "NPCSocialModel",
+      "id": "SHIRE_POPULATION_SCHEDULES",
+      "source": "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+      "source_requirement": "Population/schedules/dialogue knowledge remain chapter-state data rather than independent global AI.",
+      "current_runtime": [
+        "LivingWorldDirector",
         "ShireNPCContextSubsystem",
-        "LivingWorldDirector"
+        "NPCSocialModel",
+        "WorldLifeSaturationPlan"
       ],
-      "status": "RUNTIME_FOUNDATION_PRESENT",
-      "next": "Do not increase established target counts before device profiling; improve role/spatial variety first."
+      "state": "RUNTIME_PARTIAL_DEVICE_DENSITY_PENDING",
+      "next_car": "LIVING_SHIRE"
     },
     {
-      "id": "WORLD_MICRO_EVENT_CULL_SAFETY",
-      "source_package": "SYSTEM SAFETY",
-      "source_requirement": "Nearby interactions must not disappear because another grouped event member wandered out of range.",
-      "runtime_evidence": [
-        "PR mega-train LivingWorldDirector member-local cull repair",
-        "PG-208"
+      "id": "SHIRE_FAUNA_MOTION",
+      "source": "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE + living-world contracts",
+      "source_requirement": "Region-appropriate fauna/environment motion enriches traversal without blocking story.",
+      "current_runtime": [
+        "Bird",
+        "Rabbit",
+        "Butterfly",
+        "LivingWorldEventPlan"
       ],
-      "status": "RUNTIME_PARTIAL_NEEDS_POLISH",
-      "next": "Requires exact-head Pre-Unreal + UE4/runtime proof before promotion."
+      "state": "RUNTIME_PARTIAL",
+      "next_car": "FAUNA_ENVIRONMENTAL_MOTION"
     },
     {
-      "id": "AUDIO_SHIRE_BIRDS_HEDGES",
-      "source_package": "MASTER SYSTEMS",
-      "source_requirement": "Shire sonic identity includes birds and breeze in hedges.",
-      "runtime_evidence": [
-        "StoryBeatPlan ShireOpening audio intent",
-        "existing audio subsystem routing"
+      "id": "SHIRE_AUDIO_BIRDS_HEDGES",
+      "source": "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX",
+      "source_requirement": "Birds and breeze in hedges establish Shire exterior identity.",
+      "current_runtime": [
+        "ShireAudioSubsystem logical routing",
+        "StoryBeatPlan audio intents"
       ],
-      "status": "CONTENT_ASSET_BLOCKED",
-      "next": "Prepared approved offline assets + real playback without -NoSound required."
+      "state": "CONTENT_PENDING_REAL_PLAYBACK",
+      "next_car": "AUDIO_SONIC_IDENTITY"
     },
     {
-      "id": "AUDIO_SHIRE_FARM_LAUGHTER_CARTS",
-      "source_package": "MASTER SYSTEMS",
-      "source_requirement": "Shire sonic identity includes farm work, distant laughter and carts.",
-      "runtime_evidence": [
-        "StoryBeatPlan opening/party/departure intents"
+      "id": "SHIRE_AUDIO_FARM_CARTS_LAUGHTER",
+      "source": "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX",
+      "source_requirement": "Farm work, distant laughter and carts support inhabited exterior soundscape.",
+      "current_runtime": [
+        "StoryBeatPlan ambience intents"
       ],
-      "status": "CONTENT_ASSET_BLOCKED",
-      "next": "Integrate with attenuation/concurrency after complete approved bank is ready."
+      "state": "CONTENT_PENDING_REAL_PLAYBACK",
+      "next_car": "AUDIO_SONIC_IDENTITY"
     },
     {
-      "id": "AUDIO_SHIRE_INTERIORS",
-      "source_package": "MASTER SYSTEMS",
-      "source_requirement": "Warm interiors include fire and cutlery language.",
-      "runtime_evidence": [
-        "RingWarning Bag End audio intent includes interior fire"
+      "id": "BAG_END_AUDIO_INTERIOR",
+      "source": "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX",
+      "source_requirement": "Warm interiors use fire/cutlery and quiet domestic room tone.",
+      "current_runtime": [
+        "RingWarning audio intent"
       ],
-      "status": "CONTENT_ASSET_BLOCKED",
-      "next": "Bag End audio layer remains gated behind authored bank presence/listening proof."
+      "state": "CONTENT_PENDING_REAL_PLAYBACK",
+      "next_car": "AUDIO_SONIC_IDENTITY"
     },
     {
-      "id": "CHAR_FRODO",
-      "source_package": "CHARACTERS / P1C01",
-      "source_requirement": "Frodo is core playable P1C01 focus.",
-      "runtime_evidence": [
-        "Part1ProductionAtlas required cast",
-        "current player runtime"
+      "id": "P1C01_CHARACTER_PRESENTATION",
+      "source": "02_CHARACTERS_AND_RELATIONSHIPS_BIBLE + Part1ProductionAtlas",
+      "source_requirement": "Frodo/Gandalf/Sam/Merry/Pippin/Bilbo remain visually readable at correct role/scale through P1C01.",
+      "current_runtime": [
+        "required_cast P1C01",
+        "modular/proxy runtime"
       ],
-      "status": "RUNTIME_PARTIAL_NEEDS_POLISH",
-      "next": "Real skeletal FBX/AnimBP presentation remains gated and requires rig/deformation QC."
-    },
-    {
-      "id": "CHAR_GANDALF",
-      "source_package": "CHARACTERS / P1C01",
-      "source_requirement": "Gandalf is present in opening/birthday/Ring context.",
-      "runtime_evidence": [
-        "GandalfArrival story beat",
-        "Part1ProductionAtlas required cast"
-      ],
-      "status": "RUNTIME_PARTIAL_NEEDS_POLISH",
-      "next": "FBX production candidate/animation/audio presentation remains gated."
-    },
-    {
-      "id": "CHAR_SAM_MERRY_PIPPIN",
-      "source_package": "CHARACTERS / P1C01",
-      "source_requirement": "Sam participates in departure; Merry/Pippin join road material in current runtime aggregation.",
-      "runtime_evidence": [
-        "Part1ProductionAtlas required cast",
-        "current P1C01 quest/story beats"
-      ],
-      "status": "RUNTIME_PARTIAL_NEEDS_POLISH",
-      "next": "Presentation and companion recovery require exact-head engine + later human review."
-    },
-    {
-      "id": "ACCEPT_P1C01_HUMAN",
-      "source_package": "GATE 6/7",
-      "source_requirement": "QA includes fresh start, migrated save, death/retry, cinematic skip, optional abandon, backtrack and low-performance tier.",
-      "runtime_evidence": [
-        "P1C01Gate67AcceptanceChecklistV1"
-      ],
-      "status": "HUMAN_ACCEPTANCE_PENDING",
-      "next": "Collect chapter-specific PIE/device/human evidence; static/compile proof cannot substitute."
+      "state": "FOUNDATION_PRESENT_FINAL_SKELETAL_PRESENTATION_GATED",
+      "next_car": "CHARACTER_PRESENTATION"
     }
   ],
-  "zero_silent_omission_rule": "Every item must remain represented until it is RUNTIME_FOUNDATION_PRESENT with its remaining acceptance explicitly tracked, PREPARED_GATED, CONTENT_ASSET_BLOCKED, or explicitly OUTSIDE_CURRENT_RUNTIME_SCOPE. Deletion from this ledger requires a source/canon disposition update.",
-  "evidence_boundary": "Preparation/disposition contract. It does not by itself prove runtime behavior, PIE, device performance, audio playback or visual acceptance."
+  "zero_silent_omission_rule": "Every future P1C01 mega-build change must update a disposition entry or add a new source-grounded entry before runtime implementation.",
+  "evidence_boundary": "Source-to-runtime disposition and preparation evidence only. Runtime/PIE/device/audio/visual/performance claims remain separately gated.",
+  "last_refresh": "2026-09-30"
 }
