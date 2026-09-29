@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "batch_id": "WAREHOUSE_P1C01_HERO_RIG_QUATERNIUS_V1",
+  "status": "AUTHORIZED_FOR_STAGING_FOCUSED",
+  "provider": "QUATERNIUS",
+  "license": "PER_PACK_PAGE_LICENSE_CAPTURE_REQUIRED",
+  "purpose": "Focused staging attempt for the four CC0 Quaternius character/animation packs used by the P1C01 Frodo/Gandalf skeletal-candidate wave.",
+  "staging_root": "C:\\actions-runner\\_warehouse\\ShireJourney\\Quaternius",
+  "source_pages": [
+    {
+      "id": "QTN_UNIVERSAL_BASE_CHARACTERS",
+      "url": "https://quaternius.com/packs/universalbasecharacters.html",
+      "category": "CHARACTER_BASE",
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_PACK_PAGE_VERIFIED_2026-09-27"
+    },
+    {
+      "id": "QTN_FANTASY_OUTFITS",
+      "url": "https://quaternius.com/packs/modularcharacteroutfitsfantasy.html",
+      "category": "CHARACTER_OUTFITS",
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_PACK_PAGE_VERIFIED_2026-09-27"
+    },
+    {
+      "id": "QTN_RPG_CHARACTERS",
+      "url": "https://quaternius.com/packs/rpgcharacters.html",
+      "category": "NPC_CHARACTER_BASE",
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_PACK_PAGE_VERIFIED_2026-09-27"
+    },
+    {
+      "id": "QTN_UNIVERSAL_ANIMATION_LIBRARY",
+      "url": "https://quaternius.com/packs/universalanimationlibrary.html",
+      "category": "ANIMATION",
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_PACK_PAGE_VERIFIED_2026-09-27"
+    }
+  ],
+  "rules": [
+    "Capture the license shown on each official pack page; do not infer a blanket provider license for older/newer packs.",
+    "Only public downloads discovered from the official Quaternius pack pages are eligible.",
+    "Animated production-character output accepted by the project remains FBX only even if the source pack also contains OBJ/glTF/Blend.",
+    "Creature/monster packs are pipeline/support stock only; canonical hero creatures still require species-specific art, real rigs, deformation review and visual acceptance.",
+    "If a pack resolves only to an interactive store page, record it as unresolved/manual-source rather than inventing a direct URL.",
+    "Downloaded archives stay STAGED until extracted/scanned and FBX/PNG/TGA intake checks pass.",
+    "Observed CC0 capture authorizes staging attempts only; public-download discovery and receipt/SHA256 evidence are still required before STAGED."
+  ],
+  "notes": "Focused subset only. Store/manual-only links remain unresolved; no bypass is allowed. Staging success does not imply rig/skin/deformation or READY_FOR_IMPORT."
+}
