@@ -84,10 +84,11 @@
     {
       "order": 4,
       "id": "CANON_ZERO_SILENT_OMISSION",
-      "state": "PREPARED",
+      "state": "SOURCE_DISPOSITION_EXTENDED_RUNTIME_GATED",
       "scope": "Disposition every meaningful Shire/Bag End/party/road detail from supplied sources into implemented/deferred/blocked/later categories.",
       "proof": [
-        "source-to-runtime disposition table"
+        "Data/P1C01SourceToProductionBridgeV1.json comprehensive rows",
+        "further item-level disposition during runtime cars"
       ]
     },
     {
