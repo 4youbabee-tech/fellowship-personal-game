@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "archive_id": "PRE_BUILD_LEGACY_BRANCH_SALVAGE_2026_09_30",
+  "purpose": "Non-execution recovery anchor preserving all legacy branch histories before remote branch ref cleanup.",
+  "canonical_develop_at_capture": "e6b0fecf7663e31869b02afcd3e1feea09956134",
+  "rules": [
+    "This archive is not an integration branch and must never be used as an execution trunk.",
+    "Develop remains the sole canonical integration branch; main remains stable release.",
+    "Legacy branch trees/commits remain reachable through this octopus archive commit after their remote refs are deleted.",
+    "Recover content only by selective file/commit inspection against current develop; never wholesale merge this archive."
+  ],
+  "captured_branches": [
+    {
+      "branch": "generated/p1c01-material-source-v1",
+      "head_sha": "46507ae529a006d6635e3567116c78ff8ce8c78e"
+    },
+    {
+      "branch": "production/f106-caradhras-moria-landmark-mega-v1",
+      "head_sha": "cdb9ce69f75136e64c26bf6f4055da365f0c5a08"
+    },
+    {
+      "branch": "production/f106-caradhras-moria-mega-source-v1",
+      "head_sha": "5f6c0d00385876a8a7c56a95daaaec0dc4703932"
+    },
+    {
+      "branch": "production/f107-lothlorien-anduin-mega-source-v1",
+      "head_sha": "1969aa9bca44d11386a53ead22b16cbb12ccdec1"
+    },
+    {
+      "branch": "production/f108-breaking-fellowship-landmark-mega-source-v1",
+      "head_sha": "bccbd7c20c6b25a57a7a1699724b33815f30d27f"
+    },
+    {
+      "branch": "production/p1c01-acceptance-closure-train-v1",
+      "head_sha": "aec2f347335ce4dc3c4f365bdf3b59714b6e1562"
+    },
+    {
+      "branch": "production/p1c01-architecture-audio-intake-hardening-v1",
+      "head_sha": "f64a511a20a23bde94fc95d1d38cb29773adc3fb"
+    },
+    {
+      "branch": "production/p1c01-architecture-interiors-props-megabatch-v1",
+      "head_sha": "6d0f8923754bd36e69c52b3fa22775a566168eba"
+    },
+    {
+      "branch": "production/p1c01-audio-provenance-capture-v1",
+      "head_sha": "c5bdb162e0b25d8a4f480b81d29bdc02fc19e8e2"
+    },
+    {
+      "branch": "production/p1c01-fauna-license-capture-v1",
+      "head_sha": "c78afa01a9932b01c70702bdcfa12537fbc1e078"
+    },
+    {
+      "branch": "production/p1c01-graphics-settings-authority-v1",
+      "head_sha": "17571e58ae14773ab8c9b7a61618577c986a2c2b"
+    },
+    {
+      "branch": "production/p1c01-graphics-settings-v7",
+      "head_sha": "68b6ac8c55997c7ee41037f7cab88d46b91c4427"
+    },
+    {
+      "branch": "production/p1c01-graphics-settings-v10",
+      "head_sha": "0459f3d81a3a01ccd5a953bacd00f38b8be2ea9c"
+    },
+    {
+      "branch": "production/p1c01-graphics-settings-v11",
+      "head_sha": "7859b66e230f2df36003e239c03dd6f818ab6db8"
+    },
+    {
+      "branch": "production/p1c01-graphics-settings-v13",
+      "head_sha": "617a7318c1a83e25063ea390feaf89e40a2fa355"
+    },
+    {
+      "branch": "production/p1c01-graphics-settings-v14",
+      "head_sha": "92135fb68d60ab55cb501b76fbe8f31b9be43296"
+    },
+    {
+      "branch": "production/p1c01-graphics-settings-v15",
+      "head_sha": "cdc798e10419e0757cc81ff7e469af42c83da9e1"
+    },
+    {
+      "branch": "production/p1c01-graphics-settings-visual-economy-v1",
+      "head_sha": "008ecae35356c19da8c5483ecfa5b2cb06608345"
+    },
+    {
+      "branch": "production/p1c01-hero-rig-source-recovery-v2",
+      "head_sha": "90a92819d6ff657f8fc34ef36dc36e55201d40d9"
+    },
+    {
+      "branch": "production/p1c01-material-visual-binding-v1",
+      "head_sha": "b1af1087fc16709bb2c5955529d2bf951dccdf3f"
+    },
+    {
+      "branch": "production/p1c01-mega-prep-train-char-audio-fauna-v1",
+      "head_sha": "8beb19484e933edb75e0ffc3600800c594ae5d9c"
+    },
+    {
+      "branch": "production/p1c01-salvage-from-develop-v1",
+      "head_sha": "970a52f73ed5242d371ae7061011093765af42f6"
+    },
+    {
+      "branch": "production/p1c01-visual-economy-settings-v4",
+      "head_sha": "c23c8754d922a205be20e56c4b0512ceb9652e77"
+    },
+    {
+      "branch": "production/p1c01-warehouse-runnerless-backlog-v1",
+      "head_sha": "694eacb279c1b2b343b013b6bf6330bfa6d954d2"
+    },
+    {
+      "branch": "tooling/opencodereview-readonly",
+      "head_sha": "e533a282094b4da62889a0c2e03f4e48c8b89bca"
+    },
+    {
+      "branch": "warehouse/p1c01-ready-review-v1",
+      "head_sha": "022c0aa9c88d40940af691c6dfb0c64cb93288d5"
+    }
+  ]
+}
