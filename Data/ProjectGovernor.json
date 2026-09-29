@@ -4654,6 +4654,37 @@
         "03_WORLD_LOCATIONS_AND_MAP_BIBLE — Caradhras and Moria production specifications"
       ],
       "evidence_boundary": "SOURCE ARCHITECTURE ONLY. Heavy execution is inventory-gated; no UE integration, PIE, device, visual, pacing or performance acceptance is claimed."
+    },
+    {
+      "id": "DEC-075",
+      "title": "Warehouse payload authority follows the latest hashed receipt per path while preserving older provenance",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-STABILITY-001",
+        "REQ-STABILITY-003",
+        "REQ-PERF-001"
+      ],
+      "resolution": "For a warehouse payload path referenced by multiple receipts over time, the latest receipt with a declared hash is authoritative for current integrity. Older mismatching receipt records remain immutable historical provenance and are reported as superseded warnings. If the latest hashed receipt does not match the current payload, inventory audit remains a hard failure.",
+      "implementation_contract": [
+        "Receipt authority is ordered by staged_at_utc, falling back to receipt file LastWriteTimeUtc when a receipt timestamp is unavailable.",
+        "Only receipt records with a declared hash participate in current hash authority.",
+        "A latest hashed receipt mismatch remains WAREHOUSE_HASH_MISMATCH and hard-stops the inventory gate.",
+        "An older mismatch is classified WAREHOUSE_SUPERSEDED_HASH_RECORD only when the latest hashed receipt for that same path matches the current payload.",
+        "License snapshot hash records use the same latest-receipt authority semantics.",
+        "Historical receipt files are never deleted or rewritten by inventory audit.",
+        "Inventory JSON records hard mismatches and superseded records separately.",
+        "Pre-Unreal runs a two-case regression: latest matching receipt must pass with superseded warning; mutation after latest receipt must hard-fail."
+      ],
+      "rationale": "Warehouse #285 identified the sole blocker as ambientCG Plaster007: old batch WAREHOUSE_AMBIENTCG_P1C01_V1 declared 3aa7dd9257286e0f7c219ebc7934c7ee826f11626a29e46a82563c258d857237 while the current payload is 7c486a9f0f058adf3e412ea5b3c91834cdb7d3a75b06ce6e840bf5414ab05b9e. Closure #2 had already detected the prior archive as structurally corrupt, removed it, downloaded a fresh readable archive, and completed the newer WAREHOUSE_AMBIENTCG_TRILOGY_FOUNDATION_V2 stage. The ambientCG stager computes SHA256 only after ZIP structural validation, so historical receipts must not be treated as current authority after a legitimate refresh.",
+      "evidence": [
+        "Warehouse #285 — WAREHOUSE_HASH_MISMATCH provider=AMBIENTCG batch=WAREHOUSE_AMBIENTCG_P1C01_V1 asset=Plaster007",
+        "P1C01 Closure Pack #2 — WAREHOUSE_REUSE_PURGE_CORRUPT_ZIP followed by successful Plaster007 download and WAREHOUSE_AMBIENTCG_TRILOGY_FOUNDATION_V2 receipt",
+        "Scripts/stage_ambientcg_warehouse.ps1 — validates ZIP then computes Get-FileHash before appending receipt.files",
+        "Scripts/audit_warehouse_inventory.ps1",
+        "Scripts/test_warehouse_inventory_supersession.ps1",
+        "Scripts/pre_unreal_validate.py PG-200"
+      ],
+      "evidence_boundary": "SOURCE/INTEGRITY SEMANTICS CHANGE. Fresh exact-head Pre-Unreal and Warehouse rerun are required before claiming the persistent warehouse is clean."
     }
   ],
   "open_conflicts": [],
