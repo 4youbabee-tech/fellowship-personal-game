@@ -8246,6 +8246,76 @@ for symbol in ["P1C01_MATERIAL_SOURCE_REMOTE_LOOKUP","for($attempt=1; $attempt -
         fail(f"PG-196 generated-branch lookup retry/exit contract missing: {symbol}")
 
 
+# PG-197: F1-04 Bree & Weathertop source superpack must remain large, shared and runtime-gated.
+pg197_manifest = json.loads(read(ROOT / "Data" / "F104BreeWeathertopMegaSourceSuperpackV1.json"))
+pg197_runner = read(ROOT / "Scripts" / "run_f104_bree_weathertop_mega_source.ps1")
+pg197_workflow = read(ROOT / ".github" / "workflows" / "f104-bree-weathertop-mega-source.yml")
+pg197_unreal = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+
+if pg197_manifest.get("status") != "SOURCE_PREPARATION_READY_RUNTIME_GATED":
+    fail("PG-197 F1-04 superpack must remain source-ready and runtime-gated")
+if pg197_manifest.get("canonical_mission_id") != "F1-04":
+    fail("PG-197 F1-04 canonical mission ID drifted")
+if pg197_manifest.get("runtime_consumers") != ["P1C02", "P1C03"]:
+    fail("PG-197 F1-04 runtime consumers must remain P1C02 + P1C03")
+policy = pg197_manifest.get("source_policy", {})
+if int(policy.get("max_total_candidates", 0)) < 8000:
+    fail("PG-197 F1-04 total candidate ceiling unexpectedly reduced")
+if int(policy.get("max_candidates_per_category", 0)) < 1000:
+    fail("PG-197 F1-04 per-category throughput unexpectedly reduced")
+if policy.get("animated_candidate_extension") != ".fbx":
+    fail("PG-197 animated F1-04 candidates must remain FBX-only")
+if ".bmp" not in policy.get("forbidden_texture_extensions", []):
+    fail("PG-197 F1-04 source pack must continue blocking BMP textures")
+if not policy.get("reuse_existing_warehouse_first", False):
+    fail("PG-197 F1-04 source pack must reuse persistent warehouse stock first")
+if policy.get("duplicate_payloads_per_runtime_chapter", True):
+    fail("PG-197 F1-04 source pack may not duplicate payloads across P1C02/P1C03")
+categories = pg197_manifest.get("categories", [])
+if len(categories) < 16:
+    fail("PG-197 F1-04 source pack lost required category breadth")
+category_ids = {x.get("id") for x in categories}
+for required in [
+    "BREE_ARCHITECTURE",
+    "BREE_INN_INTERIORS",
+    "BREE_WEATHER_AUDIO",
+    "BREE_POPULATION_SUPPORT",
+    "WEATHERTOP_TERRAIN",
+    "WEATHERTOP_RUINS",
+    "WEATHERTOP_ENCOUNTER_SUPPORT",
+    "F104_CHARACTER_ANIMATION_SUPPORT",
+    "F104_FAUNA_AMBIENCE",
+]:
+    if required not in category_ids:
+        fail(f"PG-197 F1-04 category missing: {required}")
+for symbol in [
+    "F104_MEGA_SOURCE_BEGIN",
+    "F104_MEGA_SOURCE_CATEGORY_PASS",
+    "F104_MEGA_SOURCE_PASS",
+    "$matches.ToArray()",
+    "blockedBmp",
+    'if($kind -eq "animated" -and $ext -ne $animatedExt)',
+]:
+    if symbol not in pg197_runner:
+        fail(f"PG-197 F1-04 source runner marker missing: {symbol}")
+for symbol in [
+    "name: F1-04 Bree Weathertop Mega Source",
+    "cancel-in-progress: false",
+    "timeout-minutes: 180",
+    "Fast F1-04 PowerShell preflight",
+    "Build Bree Weathertop mega source indexes",
+]:
+    if symbol not in pg197_workflow:
+        fail(f"PG-197 F1-04 workflow contract missing: {symbol}")
+for ignored in [
+    "Data/F104BreeWeathertopMegaSourceSuperpackV1.json",
+    "Scripts/run_f104_bree_weathertop_mega_source.ps1",
+    ".github/workflows/f104-bree-weathertop-mega-source.yml",
+]:
+    if pg197_unreal.count(ignored) < 2:
+        fail(f"PG-197 F1-04 tooling path must stay off Unreal push+PR filters: {ignored}")
+
+
 # PG-195: Unreal import must not trust an editor-only wait while a commandlet remains alive.
 pg195_wait = read(ROOT / "Scripts" / "wait_for_unreal_processes.ps1")
 pg195_wait_cmd = read(ROOT / "Scripts" / "ci_wait_for_unreal_editor.cmd")
