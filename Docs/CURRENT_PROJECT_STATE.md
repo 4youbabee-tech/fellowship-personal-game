@@ -1,3 +1,12 @@
+## 2026-09-30 - Living-world pooled event cull repair
+
+- Confirmed defect: one distant member of a grouped micro-event could previously retire every member, including a nearby player interaction.
+- `LivingWorldDirector::CleanupExpiredEvents` now separates event lifetime expiry from distance culling: lifetime expiry retires the event, while distance culling retires only the distant member and removes the event only when no members remain.
+- PG-207 protects the member-local rule against regression.
+- `ShireAmbientNPC` already uses `GetPlayerPawnCached()`; no additional pawn-lookup rewrite was made.
+- Save schema migration is not being invented without documented old-schema transforms; existing canonical legacy repair remains untouched.
+- Status: **SOURCE-IMPLEMENTED / STATIC-PROOF PENDING**. No compile/PIE/device/visual/performance claim yet.
+
 ## 2026-09-30 - Final zero-ahead maintenance sweep before construction resume
 
 - PR #180 merged the last orphan-ref closeout after exact-head hosted Pre-Unreal SUCCESS.
