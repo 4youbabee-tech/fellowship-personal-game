@@ -1,3 +1,10 @@
+## 2026-09-29 - Inventory repair auto-rearm
+
+- P1C01 Chapter Closure, F1-05 Rivendell/Fellowship source prep, and F1-06 Caradhras/Moria landmark source prep now include `Scripts/audit_warehouse_inventory.ps1` in their develop push triggers.
+- Therefore an accepted warehouse-audit semantics repair automatically rearms all three inventory-gated production waves without another owner "continue" prompt.
+- `PG-200` statically guards the rearm trigger on all three workflows.
+- Evidence boundary: **SOURCE-IMPLEMENTED / exact-head validation pending**.
+
 ## 2026-09-29 - Warehouse latest-receipt authority repair
 
 - Warehouse #285 identified the exact blocker: `ambientCG\PLASTER\Plaster007_2K-PNG.zip`.
