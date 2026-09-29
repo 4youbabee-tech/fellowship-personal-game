@@ -9340,6 +9340,30 @@ for symbol in [
         fail(f"PG-195 production-import process diagnostics missing: {symbol}")
 
 
+# PG-208: living-world distance retirement must remain member-local.
+# One roaming event actor may not retire a nearby interaction or participant.
+pg208_living_cpp = read(resolve_source("LivingWorldDirector.cpp"))
+pg208_start = pg208_living_cpp.find("void ALivingWorldDirector::CleanupExpiredEvents()")
+pg208_end = pg208_living_cpp.find("FName ALivingWorldDirector::ChooseEventType()", pg208_start)
+if pg208_start < 0 or pg208_end < 0:
+    fail("PG-208 CleanupExpiredEvents function boundary missing")
+else:
+    pg208_cleanup = pg208_living_cpp[pg208_start:pg208_end]
+    for pg208_symbol in [
+        "distance-policy=member-local",
+        "Event.Actors.RemoveAtSwap",
+        "if (Event.ExpiresAt <= Now)",
+        "if (Event.Actors.Num() == 0)",
+    ]:
+        if pg208_symbol not in pg208_cleanup:
+            fail(f"PG-208 member-local event retirement invariant missing: {pg208_symbol}")
+    if re.search(
+        r"FVector::DistSquared2D\([^\n]+\)[\s\S]{0,260}?bExpired\s*=\s*true",
+        pg208_cleanup,
+    ):
+        fail("PG-208 distance culling may not expire an entire micro-event from one far member")
+
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
