@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "plan_id": "P1C01_GRAPHICS_SETTINGS_V7_RUNNERLESS_PREPARATION",
+  "status": "PREPARED_NOT_IMPLEMENTED",
+  "base_develop_sha": "ac5aeab33b8e537fd9a8b3eec1074d76a3601976",
+  "branch": "production/p1c01-graphics-settings-v7",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Docs/WORLD_DETAIL_LEDGER.md"
+  ],
+  "governor_sequence_observed": {
+    "latest_decision_id": "DEC-074",
+    "reserved_settings_decision_id": "DEC-075",
+    "planned_requirement_id": "REQ-PERF-004"
+  },
+  "scope": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
+  "runtime_scope": "P1C01_ONLY",
+  "implementation_block": "WORLD_DETAIL_LEDGER registration must land before runtime/settings implementation.",
+  "visual_economy": {
+    "protect_first": [
+      "silhouette",
+      "composition",
+      "hero materials",
+      "lighting",
+      "atmosphere",
+      "landmark framing",
+      "readable characters",
+      "near-field detail"
+    ],
+    "recover_cost_first": [
+      "duplicate actors",
+      "far shadows",
+      "overdraw and translucency",
+      "redundant lights",
+      "uninstanced repetition",
+      "unnecessary Tick",
+      "invisible or far detail"
+    ]
+  },
+  "target_floor": {
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "quality_class": "Low-Medium",
+    "fps_target": 30,
+    "cpu_class": "Intel i7 Gen6",
+    "ram_gb": 8,
+    "vram_gb_class": 2
+  },
+  "presets": [
+    "Performance",
+    "CinematicBalanced",
+    "High",
+    "Ultra",
+    "Custom"
+  ],
+  "display_controls": [
+    "resolution",
+    "fullscreen_borderless_windowed",
+    "vsync",
+    "frame_rate_limit",
+    "render_scale"
+  ],
+  "display_safety": "preview_confirm_revert_with_ui_owned_countdown",
+  "preserve_existing_low_medium_budgets": {
+    "texture_pool_mb": [600, 800, 1000],
+    "foliage_density_tier_2": 0.70,
+    "shadow_tiers": "unchanged_until_measured",
+    "view_distance_tiers": "unchanged_until_measured"
+  },
+  "required_runtime_patterns": [
+    "Public/Private C++ layout",
+    "soft references plus FStreamableManager for heavy assets",
+    "HISM/ISM plus LOD/culling for repeated decorative detail",
+    "object pooling for crowds"
+  ],
+  "evidence_boundary": "Preparation record only. No compile, PIE, device, visual, FPS, VRAM, hitch, or performance verification is claimed."
+}
