@@ -1,3 +1,14 @@
+## 2026-09-30 - P1C01 maximum-safe mega train / automated W00 green
+
+- W00 packaged machine closure: **RUN-PROVEN** on PR #184 exact head `d6ca8aac03f5a1da07609e61e790ddf8faad8eed` with Pre-Unreal #1435 SUCCESS and Unreal Build #1108 SUCCESS.
+- Packaged Runtime Data: **37/37 VERIFIED + RUNTIME-CONSUMED**, evidenced by `NPCContext: ready=yes`.
+- Packaged startup: **RUN-PROVEN for 6-second observation window**; this is not chapter-specific human PIE acceptance.
+- Living-world grouped-event distance retirement: **SOURCE-REPAIRED to member-local / exact-head proof pending on mega-train branch**.
+- Ambient player lookup: **existing cached path guarded by PG-210**; no redundant rewrite applied.
+- Save-schema compatibility: **AUDITED / no generic historical migration invented without evidence**.
+- P1C01 mega production breadth: **AUTHORIZED_PREPARATION_RUNTIME_GATED** across world density, Bag End/party interaction density, NPC life, fauna, characters, quest/cinematic/audio, reliability and target-device acceptance.
+- P1C01 PIE/device/performance/visual maturity is **not promoted** by these machine/source results.
+
 ## 2026-09-30 - W00 packaged runtime Data-read proof guard
 
 - Packaged RuntimeDependencies staging/JSON syntax guard: **IMPLEMENTED**.
