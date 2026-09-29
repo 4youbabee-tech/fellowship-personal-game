@@ -1,4 +1,5 @@
 import unittest
+from pathlib import Path
 
 from source_contracts import (
     first_member_assignment_position,
@@ -118,6 +119,20 @@ class SourceContractTests(unittest.TestCase):
             build_cs,
             "Data/NPCSocialModel.json",
         ))
+
+
+    def test_living_world_distance_cull_is_member_local(self):
+        root = Path(__file__).resolve().parents[1]
+        director = (root / "Source" / "ShireJourney" / "Private" / "World" / "LivingWorldDirector.cpp").read_text(encoding="utf-8")
+        start = director.index("void ALivingWorldDirector::CleanupExpiredEvents()")
+        end = director.index("FName ALivingWorldDirector::ChooseEventType()", start)
+        cleanup = director[start:end]
+
+        self.assertIn("LivingWorldEventMemberCull", cleanup)
+        self.assertIn("Event.Actors.RemoveAtSwap", cleanup)
+        self.assertIn("if (Event.ExpiresAt <= Now)", cleanup)
+        self.assertNotIn("bool bExpired = ActiveEvents[Index].ExpiresAt <= Now", cleanup)
+        self.assertNotIn("bExpired = true;", cleanup)
 
 
 if __name__ == "__main__":
