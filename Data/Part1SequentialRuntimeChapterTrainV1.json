@@ -1,0 +1,304 @@
+{
+  "schema_version": 1,
+  "train_id": "PART1_SEQUENTIAL_RUNTIME_CHAPTER_TRAIN_V1",
+  "status": "PREPARATION_OPEN_RUNTIME_SERIALIZED",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Docs/DEVELOPMENT_GATES.md",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "Data/FilmExperiencePlan.json",
+    "Data/WholeGameProductionExecutionQueueV1.json"
+  ],
+  "purpose": "Prepare every Part I runtime chapter from shared warehouse stock now while allowing runtime-changing work for only one accepted predecessor chain at a time.",
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_class": 2
+  },
+  "id_reconciliation": {
+    "rule": "Canonical mission IDs F1-01..F1-08 remain the story/source authority. Existing P1C01..P1C08 runtime chapter IDs are preserved as legacy implementation boundaries until an explicit save/quest-safe migration is accepted.",
+    "source_note": "The current runtime split does not match the canonical mission-package split one-to-one.",
+    "mappings": [
+      {
+        "runtime_chapter": "P1C01",
+        "canonical_missions": [
+          "F1-01",
+          "F1-02",
+          "F1-03"
+        ],
+        "scope": "Shire through Bucklebury/Ferry",
+        "status": "ACTIVE_RUNTIME_BENCHMARK"
+      },
+      {
+        "runtime_chapter": "P1C02",
+        "canonical_missions": [
+          "F1-04"
+        ],
+        "scope": "Bree / Prancing Pony portion",
+        "status": "PREP_OPEN_RUNTIME_GATED"
+      },
+      {
+        "runtime_chapter": "P1C03",
+        "canonical_missions": [
+          "F1-04"
+        ],
+        "scope": "Weathertop / Ford portion",
+        "status": "PREP_OPEN_RUNTIME_GATED"
+      },
+      {
+        "runtime_chapter": "P1C04",
+        "canonical_missions": [
+          "F1-05"
+        ],
+        "scope": "Rivendell / Fellowship formation",
+        "status": "PREP_OPEN_RUNTIME_GATED"
+      },
+      {
+        "runtime_chapter": "P1C05",
+        "canonical_missions": [
+          "F1-06"
+        ],
+        "scope": "Fellowship road / Caradhras / West Gate portion",
+        "status": "PREP_OPEN_RUNTIME_GATED"
+      },
+      {
+        "runtime_chapter": "P1C06",
+        "canonical_missions": [
+          "F1-06"
+        ],
+        "scope": "Moria portion",
+        "status": "PREP_OPEN_RUNTIME_GATED"
+      },
+      {
+        "runtime_chapter": "P1C07",
+        "canonical_missions": [
+          "F1-07"
+        ],
+        "scope": "Lothlorien / Anduin",
+        "status": "PREP_OPEN_RUNTIME_GATED"
+      },
+      {
+        "runtime_chapter": "P1C08",
+        "canonical_missions": [
+          "F1-08"
+        ],
+        "scope": "Amon Hen / Breaking of the Fellowship",
+        "status": "PREP_OPEN_RUNTIME_GATED"
+      }
+    ]
+  },
+  "runtime_rules": [
+    "Exactly one runtime-changing chapter lane at a time.",
+    "A successor runtime chapter opens only after its predecessor chapter Gate 6/7 is ACCEPTED with real evidence.",
+    "Source/warehouse preparation for all downstream Part I chapters may run in advance.",
+    "Preparation never implies UE import, runtime integration, PIE, device, visual, pacing or performance acceptance.",
+    "Animated final production candidates require FBX.",
+    "Production textures use PNG/TGA; BMP is rejected.",
+    "Heavy runtime assets use soft references and asynchronous FStreamableManager ownership.",
+    "Crowd/background NPC populations use object pooling.",
+    "Repeated static detail uses ISM/HISM with LOD/culling."
+  ],
+  "shared_preparation": {
+    "reuse_first": true,
+    "copy_shared_assets_per_chapter": false,
+    "index_shared_warehouse_stock": true,
+    "output_root": "C:\\actions-runner\\_warehouse\\ShireJourney\\_part1_runtime_chapter_prep_v1",
+    "allowed_extensions": [
+      ".fbx",
+      ".png",
+      ".tga",
+      ".wav",
+      ".json",
+      ".mtl"
+    ],
+    "blocked_extensions": [
+      ".bmp",
+      ".obj",
+      ".exe",
+      ".dll",
+      ".bat",
+      ".cmd",
+      ".ps1"
+    ],
+    "max_candidates_per_chapter": 1200
+  },
+  "chapters": [
+    {
+      "runtime_chapter": "P1C02",
+      "predecessor": "P1C01",
+      "story_scope": "Bree / Prancing Pony",
+      "keywords": [
+        "bree",
+        "inn",
+        "tavern",
+        "town",
+        "gate",
+        "stable",
+        "horse",
+        "ranger",
+        "nazgul",
+        "rain",
+        "night",
+        "wood",
+        "plaster",
+        "stone",
+        "lantern",
+        "door",
+        "crowd",
+        "footstep",
+        "ambient"
+      ]
+    },
+    {
+      "runtime_chapter": "P1C03",
+      "predecessor": "P1C02",
+      "story_scope": "Weathertop / Ford",
+      "keywords": [
+        "weathertop",
+        "ruin",
+        "hill",
+        "rock",
+        "camp",
+        "fire",
+        "nazgul",
+        "black rider",
+        "sword",
+        "forest",
+        "ford",
+        "river",
+        "water",
+        "horse",
+        "wilderness",
+        "wind",
+        "night"
+      ]
+    },
+    {
+      "runtime_chapter": "P1C04",
+      "predecessor": "P1C03",
+      "story_scope": "Rivendell",
+      "keywords": [
+        "rivendell",
+        "elven",
+        "elf",
+        "valley",
+        "waterfall",
+        "stone",
+        "wood",
+        "council",
+        "library",
+        "book",
+        "lantern",
+        "bridge",
+        "garden",
+        "cloth",
+        "harp",
+        "ambient"
+      ]
+    },
+    {
+      "runtime_chapter": "P1C05",
+      "predecessor": "P1C04",
+      "story_scope": "Fellowship road / Caradhras / West Gate",
+      "keywords": [
+        "caradhras",
+        "snow",
+        "mountain",
+        "cliff",
+        "rock",
+        "ice",
+        "wind",
+        "camp",
+        "fellowship",
+        "crow",
+        "crebain",
+        "moria",
+        "west gate",
+        "lake",
+        "door",
+        "survival"
+      ]
+    },
+    {
+      "runtime_chapter": "P1C06",
+      "predecessor": "P1C05",
+      "story_scope": "Moria",
+      "keywords": [
+        "moria",
+        "dwarf",
+        "dwarven",
+        "cave",
+        "mine",
+        "stone",
+        "pillar",
+        "hall",
+        "tomb",
+        "bridge",
+        "chain",
+        "debris",
+        "orc",
+        "troll",
+        "balrog",
+        "fire",
+        "dark",
+        "metal"
+      ]
+    },
+    {
+      "runtime_chapter": "P1C07",
+      "predecessor": "P1C06",
+      "story_scope": "Lothlorien / Anduin",
+      "keywords": [
+        "lothlorien",
+        "lorien",
+        "elf",
+        "gold",
+        "tree",
+        "forest",
+        "leaf",
+        "lantern",
+        "boat",
+        "river",
+        "anduin",
+        "water",
+        "gift",
+        "rope",
+        "paddle",
+        "ambient"
+      ]
+    },
+    {
+      "runtime_chapter": "P1C08",
+      "predecessor": "P1C07",
+      "story_scope": "Amon Hen",
+      "keywords": [
+        "amon hen",
+        "anduin",
+        "forest",
+        "ruin",
+        "uruk",
+        "uruk-hai",
+        "bow",
+        "sword",
+        "horn",
+        "rock",
+        "slope",
+        "boat",
+        "river",
+        "pursuit",
+        "combat",
+        "woodland"
+      ]
+    }
+  ],
+  "evidence_boundary": "Preparation/indexing contract only. P1C01 remains the active runtime chapter until real Gate 6/7 acceptance.",
+  "runtime_release_contract": {
+    "required_predecessor_gate_status": "ACCEPTED",
+    "current_gate_file": "Data/P1C01Gate67AcceptanceChecklistV1.json",
+    "current_successor": "P1C02",
+    "release_rule": "Only the immediate successor runtime chapter may open after the current predecessor Gate 6/7 is ACCEPTED. Downstream source preparation may already exist."
+  }
+}

@@ -1,3 +1,94 @@
+## 2026-09-29 - #1082 direct-PID/CIM stale-commandlet recovery refinement
+
+- Unreal #1082 proved the stale CI commandlet still survived `Stop-Process -Force` and `taskkill /T /F`.
+- The blocker remained PID 14144, `UE4Editor-Cmd.exe` running the repository's unattended `Automation RunTests ShireJourney.QA;Quit` command against the active ShireJourney workspace under the same interactive owner.
+- Recovery now avoids tree-mode as the first Windows fallback because the commandlet's recorded parent is already dead. The sequence is now: `Stop-Process -Id -Force` -> direct `taskkill /PID <pid> /F` -> `Win32_Process.Terminate` via CIM, with explicit result markers.
+- The recovery path remains available only after the previously recorded workspace/project/unattended/recognized-commandlet/same-owner/orphan/age proof passes.
+- Interactive `UE4Editor` remains protected from kill-by-name recovery.
+- Evidence boundary: **SOURCE-IMPLEMENTED / fresh exact-head validation pending**.
+
+## 2026-09-29 - #1358/#1080 follow-up: proven stale CI commandlet + bounded tree recovery
+
+- Pre-Unreal #1358 failed only at legacy `PG-015` because that validator still expected the historical editor-only wait implementation.
+- Unreal Build #1080 produced concrete blocker identity for PID 14144: `UE4Editor-Cmd.exe`, owner `IDEAPAD320\user`, session 2, age ~4699 seconds, command line running the repository's unattended `Automation RunTests ShireJourney.QA;Quit` against the active ShireJourney workspace.
+- The parent PID reported by the process snapshot was no longer alive, satisfying the stale/orphan branch of the bounded recovery contract.
+- Initial `Stop-Process -Force` did not remove PID 14144 within the original 750 ms window; the source repair now waits longer and uses `taskkill /PID <pid> /T /F` only as a fallback after the same workspace/project/unattended/recognized-commandlet/same-owner/orphan/age proof succeeds.
+- Interactive `UE4Editor` is still never terminated by name.
+- `PG-015` now recognizes the shared editor+commandlet waiter and `PG-195` requires same-owner proof plus the bounded taskkill fallback marker.
+- Evidence boundary: **SOURCE-IMPLEMENTED / fresh exact-head validation pending**. This is not PIE/device/visual/performance acceptance.
+
+## 2026-09-29 - Continuous Part I train + Unreal #1068 root repair
+
+- Owner granted standing authorization for safe routine reversible production work without repeated "continue" prompts; real login/purchase/licensing/canon/destructive/human-acceptance boundaries still require owner action.
+- Unreal Build #1068 compiled `ShireJourneyEditor` successfully, then failed before import on `PRODUCTION_IMPORT_PREFLIGHT_EDITOR_RUNNING pids=14144`.
+- Root cause in the CI contract: `ci_wait_for_unreal_editor.cmd` observed only `UE4Editor` while production-import preflight observed `UE4Editor` and `UE4Editor-Cmd`. A false-clear path therefore existed for commandlets.
+- New `Scripts/wait_for_unreal_processes.ps1` observes both process families and emits PID/PPID/session/owner/age/command-line evidence. It never kills an interactive editor by name; bounded stale-commandlet recovery requires workspace ownership, unattended recognized CI commandlet, age threshold and no live parent.
+- `preflight_production_asset_import.ps1` now emits the same ownership diagnostics when a blocker survives.
+- `PG-195` statically guards this process-ownership contract.
+- Part I downstream preparation is now represented by `Data/Part1SequentialRuntimeChapterTrainV1.json` and `Scripts/run_part1_runtime_chapter_prep.ps1`.
+- Canonical source mission IDs remain F1-01..F1-08; existing runtime P1C01..P1C08 IDs remain legacy implementation boundaries. Current reconciliation: P1C01 spans F1-01/F1-02/F1-03; P1C02+P1C03 split F1-04; P1C04 maps F1-05; P1C05+P1C06 split F1-06; P1C07 maps F1-07; P1C08 maps F1-08.
+- `.github/workflows/part1-chapter-preparation.yml` prepares shared-stock candidate indexes for P1C02-P1C08 without duplicating warehouse payloads.
+- Runtime remains serialized. P1C01 is still active; P1C02 may open only after P1C01 Gate 6/7 becomes genuinely ACCEPTED.
+- Governor decisions `DEC-066`, `DEC-067` and `DEC-068` record these rules.
+- Evidence boundary: **SOURCE-IMPLEMENTED / fresh exact-head Pre-Unreal + Unreal validation pending**. No new PIE/device/visual/pacing/performance acceptance is claimed.
+
+## 2026-09-29 - Governor sync: sequential two-chapter queue + systemic reactivity direction
+
+- `DEC-064` now records the sequential production queue: **P1C01 remains the sole active runtime closure chapter; P1C02 Shadow of the Past may prepare source/warehouse work in advance but runtime integration stays closed until the official P1C01 Gate 6/7 acceptance record is ACCEPTED.**
+- Expected waiting state before that gate: `SEQUENTIAL_CHAPTER_QUEUE_WAIT`; waiting is not a workflow failure and does not imply P1C02 runtime progress.
+- `DEC-065` now records the durable production direction: **AAA Visual Quality + Systemic Reactivity + Intelligent NPCs + Living World + Strict Optimization**.
+- The new systemic-reactivity direction extends existing ownership (`ALivingWorldDirector`, `UShireNPCContextSubsystem`, `UShireQuestSubsystem` and world-router committed context). It explicitly rejects a second parallel world/NPC brain.
+- The identified future gap is a bounded environmental reaction contract for supported trees/foliage, water, doors/tools/props, fauna and NPC observers. Runtime implementation remains deferred behind the active P1C01 closure/integration sequence and target-device gates.
+- Documentation/governance status: **SOURCE-IMPLEMENTED / NOT ENGINE-VALIDATED BY THIS DOC CHANGE**.
+- No PIE, device, visual, pacing or performance acceptance is created by these records.
+
+## 2026-09-28 - Pre-Unreal #1332 seven-failure root fix
+
+- Pre-Unreal #1332 passed the repository-wide PowerShell parser gate: `POWERSHELL_SYNTAX_PASS files=47 errors=0`.
+- It then failed seven static contracts. Five were watchdog service-guard symbols removed by the earlier clean-source restoration; one was the new closure preflight missing from Unreal `paths-ignore`; one was PG-193 checking a doubly escaped workflow path literal.
+- The watchdog is now rebuilt from the clean single-body source with continuous service exclusion restored: `ServiceGuardPath`, `Invoke-ServiceOwnershipGuard`, `Invoke-RunnerServiceGuard`, and `SHIRE_RUNNER_WATCHDOG_SERVICE_GUARD_TRIGGER`. The guard executes at boot and every watchdog loop.
+- `Scripts/preflight_p1c01_chapter_closure_pack_v2.ps1` is now excluded from Unreal Build in both push and PR filters.
+- PG-193 now checks the real `test_powershell_syntax.ps1` workflow reference.
+- Unreal Build #1054 on the previous exact head completed **SUCCESS** after the new production-import preflight/retry changes; this does not validate the newer static fixes above.
+- Current maturity: **SOURCE-FIXED / EXACT-HEAD PRE-UNREAL RE-RUN PENDING / PR #145 NOT MERGED**.
+
+## 2026-09-28 - Red CI failures root-caused and architecture split
+
+- Pre-Unreal #1325 reached the new PowerShell parser gate successfully (`POWERSHELL_SYNTAX_PASS files=45 errors=0`) and then failed on PG-168 because the normal Warehouse workflow had been changed from its proven `cancel-in-progress: true` contract.
+- Root fix: the normal Warehouse workflow is restored to **60 minutes + cancellable**, while the large P1C01 Closure Pack moves to a dedicated `p1c01-chapter-closure.yml` workflow with its own concurrency group, **180-minute timeout**, and **cancel-in-progress: false**.
+- A cheap `preflight_p1c01_chapter_closure_pack_v2.ps1` now validates required scripts, parses the closure PowerShell set, validates child JSON manifests, and checks the disk reserve before any heavy acquisition car starts.
+- Unreal Build #1047 compiled `ShireJourneyEditor` successfully. Production import then reported `376 files, 0 failures`, but UE emitted a file-system save failure for `Content/Production/Textures/T_Cloth_Green.uasset` and the workflow correctly stopped.
+- The log does **not** prove whether that file was read-only or exclusively locked. DEC-062 therefore adds a measured preflight: no active editor process, write/delete probe, tracked-vs-untracked protection, read-only repair only for untracked generated uassets, and exclusive write-open checks. A save/delete-class importer failure gets exactly one bounded retry after re-preflight; all other importer failures fail immediately.
+- Current maturity: **SOURCE-REPAIRED / ROOT-CAUSE GUARDS IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UNREAL RE-RUN PENDING / NO PIE OR DEVICE CLAIM**.
+
+## 2026-09-28 - PR #145 root-cause hardening after Pre-Unreal #1318
+
+- Pre-Unreal #1318 **FAILED** at the new repository-wide PowerShell parser gate. This is expected fail-closed behavior: the new guard found real syntax corruption before merge.
+- It found two source defects: a duplicated tail in `export_p1c01_material_source_branch.ps1`, plus an older duplicated/corrupted `runner_watchdog.ps1`.
+- The exporter duplicate tail is removed. The watchdog is restored from exact historical commit `1066cf022723fcdef9bfac66519f5b0f9c1e03a4`, the newest inspected clean watchdog revision retaining later stale-worker protection.
+- DEC-060 records the watchdog restoration provenance; DEC-059 parser coverage remains active.
+- Maximum-throughput execution is hardened further: Warehouse Stage timeout is now 180 minutes and `cancel-in-progress=false`, so a large closure pack is allowed to finish while newer pushes queue instead of killing the active train.
+- Current PR #145 maturity after these fixes: **SOURCE-REPAIRED / EXACT-HEAD PRE-UNREAL RE-RUN PENDING / WAREHOUSE V2 EXECUTION PENDING / UE IMPORT NOT CLAIMED**.
+
+## 2026-09-28 - Warehouse #282 parser failure converted into a permanent prevention gate
+
+- Develop `0adc090f1caa92425322ac15d44b08b031f2ece0` passed Pre-Unreal #1317, but Warehouse #282 failed before material execution because `Scripts/export_p1c01_material_source_branch.ps1` contained an unterminated PowerShell expression/string around the explicit remote-SHA lease block.
+- This exposed a validation gap: Pre-Unreal checked policy/semantic markers but did not parse all PowerShell scripts.
+- The exporter publish block is repaired on the active P1C01 Closure Pack V2 branch.
+- DEC-059 adds `Scripts/test_powershell_syntax.ps1`, which recursively parses every `Scripts/**/*.ps1` with `System.Management.Automation.Language.Parser` on the hosted Windows Pre-Unreal lane and fails with file/line/column details on any parser error.
+- The parser guard is tooling-only and is excluded from Unreal Build triggers.
+- Current maturity for this repair: **SOURCE-FIXED / EXACT-HEAD PRE-UNREAL PROOF PENDING / WAREHOUSE RE-RUN PENDING**.
+
+## 2026-09-28 - P1C01 Chapter Closure Mega Pack V2 launched
+
+- DEC-058 encodes maximum P1C01 source throughput while keeping raw Warehouse, Git/LFS promotion and UE import as separate bounded layers.
+- One closure pack covers 37 Poly Haven assets, 17 ambientCG search lanes, 17 Quaternius packs, 12 Kenney packs, 8 KayKit packs and 17 OpenGameArt assets.
+- Internal promotion selector ceiling is 187 candidates across surfaces, architecture/props, nature, audio, fauna and character/animation support.
+- Material closure wave expands from 16 to 26 explicit Shire/Bag End materials. Generated-source promotion remains bounded at 48 MiB/source and 640 MiB/batch with minimum 18 exported items.
+- Closure Pack V2 enforces a 6 GiB free-disk reserve, never deletes original Warehouse payloads for space, and quarantines provider/asset/source failures while allowing independent cars to continue.
+- Overlapping legacy P1C01 Warehouse steps are suppressed while V2 owns the run. Unreal Build ignores the new control-plane manifests/scripts; actual binary/content integration remains a later bounded engine lane.
+- Current maturity: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING / V2 WAREHOUSE EXECUTION PENDING / UE IMPORT NOT CLAIMED**.
+
 ## 2026-09-28 - Warehouse #281 root-cause publish-race repair
 
 - Pre-Unreal #1315: **SUCCESS** on develop `a8f78c897c838a82a12ed61ddfb899a4c1ded03a`.

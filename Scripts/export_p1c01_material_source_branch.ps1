@@ -201,19 +201,7 @@ try{
       throw "generated material remote-head parse failed: $remoteLine"
     }
     $remoteGeneratedSha=([string]$parts[0]).Trim()
-    if($remoteGeneratedSha -notmatch '^[0-9a-fA-F]{40}
-
-  if($quarantined.Count -gt 0){
-    foreach($entry in $quarantined){ Write-Host ("P1C01_MATERIAL_SOURCE_QUARANTINE "+($entry|ConvertTo-Json -Compress -Depth 6)) }
-    Write-Host ("P1C01_MATERIAL_SOURCE_BRANCH_PASS_WITH_QUARANTINE branch="+$GeneratedBranch+" sha="+$generatedSha+" materials="+$outRows.Count+" quarantined="+$quarantined.Count+" bytes="+$totalBytes)
-  } else {
-    Write-Host ("P1C01_MATERIAL_SOURCE_BRANCH_PASS branch="+$GeneratedBranch+" sha="+$generatedSha+" materials="+$outRows.Count+" bytes="+$totalBytes)
-  }
-}
-finally{
-  & $git -C $ProjectRoot worktree remove --force $worktree 2>$null
-}
-){
+    if($remoteGeneratedSha.Length -ne 40 -or $remoteGeneratedSha -notmatch '^[0-9a-fA-F]+$'){
       throw "generated material remote-head SHA invalid: $remoteGeneratedSha"
     }
   }

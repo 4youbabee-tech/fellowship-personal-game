@@ -1,0 +1,82 @@
+name: P1C01 Chapter Closure Pack
+
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - 'Data/P1C01MaterialImportWaveV2.json'
+      - 'Data/WarehouseP1C01ClosurePromotionTrainV2.json'
+      - 'Data/P1C01ChapterClosureMegaPackV2.json'
+      - 'Scripts/preflight_p1c01_chapter_closure_pack_v2.ps1'
+      - 'Scripts/run_p1c01_chapter_closure_pack_v2.ps1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: p1c01-chapter-closure-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  closure:
+    name: Run P1C01 closure source train
+    runs-on:
+      - self-hosted
+      - Windows
+      - X64
+      - ue4-27
+    timeout-minutes: 180
+    env:
+      TARGET_SHA: ${{ github.sha }}
+
+    steps:
+      - name: Checkout exact closure head into isolated temp source
+        shell: cmd
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          @echo off
+          setlocal EnableExtensions EnableDelayedExpansion
+          set "GITEXE="
+          for /f "delims=" %%G in ('where git.exe 2^>nul') do if not defined GITEXE set "GITEXE=%%G"
+          if not defined GITEXE if exist "C:\Program Files\Git\cmd\git.exe" set "GITEXE=C:\Program Files\Git\cmd\git.exe"
+          if not defined GITEXE if exist "C:\Program Files (x86)\Git\cmd\git.exe" set "GITEXE=C:\Program Files (x86)\Git\cmd\git.exe"
+          if not defined GITEXE exit /b 22
+          set "CLOSURE_SRC=%RUNNER_TEMP%\shire-closure-src-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
+          if exist "!CLOSURE_SRC!" rmdir /S /Q "!CLOSURE_SRC!"
+          mkdir "!CLOSURE_SRC!"
+          cd /d "!CLOSURE_SRC!"
+          "!GITEXE!" init
+          if errorlevel 1 exit /b 70
+          "!GITEXE!" -c credential.helper= remote add origin "https://x-access-token:!GH_TOKEN!@github.com/%GITHUB_REPOSITORY%.git"
+          if errorlevel 1 exit /b 71
+          "!GITEXE!" -c credential.helper= -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=20 fetch --no-tags --depth=2 origin !TARGET_SHA!
+          if errorlevel 1 exit /b 72
+          "!GITEXE!" checkout -f FETCH_HEAD
+          if errorlevel 1 exit /b 73
+          for /f "delims=" %%H in ('"!GITEXE!" rev-parse HEAD') do set "CHECKED_SHA=%%H"
+          if /I not "!CHECKED_SHA!"=="!TARGET_SHA!" exit /b 74
+          echo SHIRE_CLOSURE_SOURCE=!CLOSURE_SRC!>>"%GITHUB_ENV%"
+          echo P1C01_CLOSURE_EXACT_CHECKOUT_PASS sha=!CHECKED_SHA!
+
+      - name: Verify runner session health
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_CLOSURE_SOURCE%\Scripts\verify_runner_session.ps1"
+
+      - name: Fast closure preflight
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_CLOSURE_SOURCE%\Scripts\preflight_p1c01_chapter_closure_pack_v2.ps1" -ManifestPath "%SHIRE_CLOSURE_SOURCE%\Data\P1C01ChapterClosureMegaPackV2.json"
+
+      - name: Run P1C01 Chapter Closure Mega Pack V2
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_CLOSURE_SOURCE%\Scripts\run_p1c01_chapter_closure_pack_v2.ps1" -ManifestPath "%SHIRE_CLOSURE_SOURCE%\Data\P1C01ChapterClosureMegaPackV2.json"
+
+      - name: Remove isolated closure source checkout
+        if: always()
+        shell: cmd
+        run: |
+          @echo off
+          if defined SHIRE_CLOSURE_SOURCE if exist "%SHIRE_CLOSURE_SOURCE%" rmdir /S /Q "%SHIRE_CLOSURE_SOURCE%"
+          exit /b 0

@@ -1,3 +1,108 @@
+## 2026-09-29 - #1082 direct-PID/CIM recovery refinement
+
+- Pre-Unreal #1360 on prior exact head `98dcb4d...`: **SUCCESS**.
+- Unreal #1082: **FAILED AT STALE CI COMMANDLET RECOVERY** after `taskkill /T /F` could not terminate PID 14144.
+- Direct PID taskkill fallback: **SOURCE-IMPLEMENTED**.
+- CIM `Win32_Process.Terminate` fallback + return-value evidence: **SOURCE-IMPLEMENTED**.
+- Fresh exact-head Pre-Unreal: **PENDING**.
+- Fresh exact-head Unreal Build/import: **PENDING**.
+- P1C01 Chapter Closure Mega Pack: **NOT YET RELEASED; EXACT-HEAD UNREAL GATE STILL REQUIRED**.
+- PIE/device/visual/pacing/performance acceptance: **NOT CLAIMED**.
+
+## 2026-09-29 - #1358/#1080 stale commandlet recovery refinement
+
+- Pre-Unreal #1358: **FAILED ONLY AT LEGACY PG-015 WAITER SHAPE CHECK**.
+- Unreal #1080 blocker PID 14144: **CI COMMANDLET IDENTITY CAPTURED** (`UE4Editor-Cmd` / ShireJourney QA / same interactive owner / orphaned parent / >20 min old).
+- Bounded stale-commandlet process-tree recovery: **SOURCE-IMPLEMENTED**.
+- Interactive editor kill-by-name: **FORBIDDEN / NOT INTRODUCED**.
+- PG-015 + PG-195 static regression coverage: **SOURCE-UPDATED**.
+- Fresh exact-head Pre-Unreal: **PENDING**.
+- Fresh exact-head Unreal Build/import: **PENDING**.
+- P1C01 Chapter Closure Mega Pack execution: **BLOCKED UNTIL REQUIRED EXACT-HEAD GATES TURN GREEN**.
+- PIE/device/visual/pacing/performance acceptance: **NOT CLAIMED**.
+
+## 2026-09-29 - Continuous Part I preparation train / Unreal #1068 process ownership repair
+
+- Unreal Build #1068 Editor compile: **COMPILE STEP SUCCESS** on prior exact head `c76e521e...`.
+- Unreal Build #1068 production import: **BLOCKED BEFORE IMPORT** by `PRODUCTION_IMPORT_PREFLIGHT_EDITOR_RUNNING pids=14144`.
+- Editor/commandlet wait mismatch root repair (`DEC-066` / `PG-195`): **SOURCE-IMPLEMENTED**.
+- Fresh exact-head Pre-Unreal validation after repair: **PENDING**.
+- Fresh exact-head Unreal Build/import validation after repair: **PENDING**.
+- Part I canonical/runtime ID reconciliation (`DEC-067`): **REGISTERED**.
+- P1C02-P1C08 shared warehouse candidate indexing: **SOURCE-IMPLEMENTED / POST-MERGE EXECUTION PENDING**.
+- Downstream runtime integration: **SERIALIZED / BLOCKED UNTIL PREDECESSOR GATE ACCEPTED**.
+- Standing routine execution authorization (`DEC-068`): **RECORDED; DOES NOT WAIVE QUALITY GATES**.
+- PIE/device/visual/pacing/performance acceptance: **NOT CLAIMED**.
+
+## 2026-09-29 - Two-chapter queue + systemic living-world architecture registration
+
+- P1C01 -> P1C02 sequential queue governance (`DEC-064`): **SOURCE-IMPLEMENTED**.
+- P1C02 source/warehouse preparation before P1C01 acceptance: **AUTHORIZED WHEN QUEUED**.
+- P1C02 runtime integration before P1C01 Gate 6/7 acceptance: **BLOCKED BY CONTRACT**.
+- Core production direction / systemic environmental reactivity (`DEC-065`): **ARCHITECTURE REGISTERED**.
+- Existing LivingWorld/NPC context/memory/relationship/pooling systems: **REUSED; NO PARALLEL BRAIN AUTHORIZED**.
+- Generic bounded environmental reaction contract (trees/foliage, water, doors/tools/props, fauna/NPC observers): **PLANNED / RUNTIME NOT STARTED**.
+- Exact-head Pre-Unreal/Unreal evidence after these documentation/governance commits: **PENDING**.
+- PIE/device/visual/performance acceptance: **NOT CLAIMED**.
+
+## 2026-09-28 - Pre-Unreal #1332 root-fix matrix
+
+- PowerShell parser gate: **PASS on #1332 — 47 files / 0 parser errors**.
+- Watchdog service-guard contract: **SOURCE-REBUILT ON CLEAN SINGLE-BODY SCRIPT**.
+- Closure preflight Unreal exclusion: **SOURCE-FIXED**.
+- PG-193 workflow reference assertion: **SOURCE-FIXED**.
+- Unreal Build #1054: **SUCCESS on previous exact head 61d629c4...**.
+- Current exact-head static validation after commits `609c7eb...`, `c8271d8...`, `5f016df...`: **PENDING**.
+- P1C01 Closure Pack V2 Warehouse execution: **PENDING MERGE + DEDICATED WORKFLOW RUN**.
+- PIE/device/visual/performance acceptance: **NOT CLAIMED**.
+
+## 2026-09-28 - CI red-run root-cause closure
+
+- Pre-Unreal #1325 PowerShell parser gate: **PASS — files=45, errors=0**.
+- Pre-Unreal #1325 PG-168 failure: **ROOT CAUSE IDENTIFIED** — long-pack cancellation policy was incorrectly applied to the normal Warehouse workflow.
+- Normal Warehouse workflow: **RESTORED TO 60 MIN / cancel-in-progress=true**.
+- Dedicated P1C01 closure workflow: **SOURCE-IMPLEMENTED — 180 MIN / cancel-in-progress=false / isolated concurrency**.
+- Closure fast preflight: **SOURCE-IMPLEMENTED**.
+- Unreal Build #1047 editor compile: **COMPILE-TESTED SUCCESS for that exact run/head**.
+- Unreal Build #1047 production commandlet: **376 files processed / 0 commandlet import failures**, but workflow **FAILED** on `T_Cloth_Green.uasset` delete/save error.
+- UE production import destination preflight + bounded single retry: **SOURCE-IMPLEMENTED / EXACT-HEAD RE-RUN PENDING**.
+- PIE/device/visual/performance acceptance: **NOT CLAIMED**.
+
+## 2026-09-28 - PR #145 parser-gate findings and long-pack execution hardening
+
+- Pre-Unreal #1318: **FAILED AT POWERSHELL PARSER GATE**; merge correctly blocked.
+- `export_p1c01_material_source_branch.ps1` duplicated-tail corruption: **SOURCE-REPAIRED**.
+- `runner_watchdog.ps1` latent duplicated/corrupted source: **RESTORED FROM 1066cf022723fcdef9bfac66519f5b0f9c1e03a4** under DEC-060.
+- Repository-wide PowerShell parser prevention (DEC-059): **ACTIVE IN SOURCE / EXACT-HEAD GREEN RE-RUN PENDING**.
+- Warehouse large-pack timeout: **SOURCE-SET TO 180 MINUTES**.
+- Warehouse cancellation policy: **SOURCE-SET TO QUEUE NEW WORK, DO NOT CANCEL ACTIVE PACK**.
+- P1C01 Closure Pack V2 Warehouse execution: **PENDING**.
+- UE4.27 import/runtime binding/PIE/device/visual/performance acceptance: **NOT CLAIMED**.
+
+## 2026-09-28 - Warehouse #282 parser root-cause prevention
+
+- Pre-Unreal #1317: **SUCCESS**, but missing repository-wide PowerShell parse coverage.
+- Warehouse #282: **FAILED BEFORE MATERIAL EXECUTION** with a PowerShell `ParserError` in `export_p1c01_material_source_branch.ps1`.
+- Exporter publish block: **SOURCE-REPAIRED** on the active closure-pack branch.
+- DEC-059 repository-wide PowerShell parser gate: **SOURCE-IMPLEMENTED**.
+- `Scripts/test_powershell_syntax.ps1`: **SOURCE-IMPLEMENTED**.
+- Hosted Pre-Unreal parser step: **SOURCE-IMPLEMENTED / EXACT-HEAD RUN PENDING**.
+- Warehouse/material publish after repair: **PENDING RE-RUN**.
+- UE/PIE/device/visual/performance status: **UNCHANGED / NOT CLAIMED**.
+
+## 2026-09-28 - P1C01 maximum-throughput Chapter Closure Mega Pack V2
+
+- DEC-058 maximum-throughput chapter source pack: **SOURCE-IMPLEMENTED**.
+- Single Warehouse closure-pack trigger: **SOURCE-IMPLEMENTED**.
+- Provider/source capacity: **37 Poly Haven + 17 ambientCG lanes + 17 Quaternius + 12 Kenney + 8 KayKit + 17 OpenGameArt**.
+- Promotion selector ceiling: **187**.
+- Material closure wave: **26 requested materials**.
+- Material generated-branch budget: **48 MiB/source / 640 MiB/batch / minimum 18 exported**.
+- Storage guard: **6 GiB free-space reserve / no source deletion for space**.
+- Provider/asset/source blocker behavior: **QUARANTINE_AND_CONTINUE**.
+- Infrastructure/inventory/storage corruption: **HARD_FAILURE**.
+- UE4.27 import/runtime binding/PIE/device/visual/performance acceptance: **NOT CLAIMED**.
+
 ## 2026-09-28 - Warehouse #281 generated-branch publish root cause
 
 - Pre-Unreal #1315: **SUCCESS**.

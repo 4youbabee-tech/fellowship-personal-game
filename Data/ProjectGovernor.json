@@ -164,14 +164,16 @@
       "missing_work": [
         "production-quality terrain/material/art replacement beyond current procedural detail",
         "batch integration PIE/device/performance/visual review",
-        "additional fauna variety beyond the CP55 bird/rabbit/butterfly set remains optional future polish"
+        "additional fauna variety beyond the CP55 bird/rabbit/butterfly set remains optional future polish",
+        "Bounded systemic environmental reaction contract for meaningful physical interactions (trees/foliage, water, doors/tools/props, fauna and NPC observers) using event-driven responders rather than per-object full simulation."
       ],
       "acceptance_criteria": [
         "Ordinary traversal repeatedly reveals believable activity or environmental storytelling",
         "Activity responds to region/story state",
         "Target laptop performance remains acceptable",
         "Each chapter records living-world acceptance separately",
-        "Sparse/danger regions must still feel authored through environment/wildlife/threat motion without inventing unsupported civilian populations."
+        "Sparse/danger regions must still feel authored through environment/wildlife/threat motion without inventing unsupported civilian populations.",
+        "Meaningful supported player/environment contacts produce bounded visible/audible responses without violating story authority or the target-laptop performance budget."
       ],
       "dependencies": [
         "REQ-WORLD-002",
@@ -4162,6 +4164,315 @@
       ],
       "evidence_boundary": "CONTROL-PLANE ROOT-CAUSE FIX. Exact-head Pre-Unreal and post-merge Warehouse rerun are required before publish is run-proven.",
       "authority": "USER_EXPLICIT_DIRECTION"
+    },
+    {
+      "id": "DEC-058",
+      "title": "Run P1C01 closure as one maximum-throughput chapter source pack",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-PROD-011",
+        "REQ-WAREHOUSE-001",
+        "REQ-PERF-003",
+        "REQ-STABILITY-003",
+        "REQ-STABILITY-004"
+      ],
+      "resolution": "Move P1C01 source acquisition/preparation to one large closure pack that stages all currently authorized public/open provider stock needed for Shire world, materials, props, nature, audio, fauna and character/animation support, then prepares/promotes it through bounded internal cars. Maximize raw Warehouse throughput, but keep Git/LFS source promotion and UE import bounded separately.",
+      "implementation_contract": [
+        "One P1C01 Chapter Closure Mega Pack V2 may stage Poly Haven, ambientCG, Quaternius, Kenney, KayKit and authorized OpenGameArt stock in one Warehouse workflow.",
+        "Provider/asset/source blockers quarantine only their car; infrastructure/storage/inventory corruption remains hard-fail.",
+        "Persistent Warehouse may grow by multiple GB; minimum free-disk reserve is enforced and original staged payloads are never deleted to make room.",
+        "Large material source promotion is capped at 640 MiB with 48 MiB per source and at least 18 receipt-verified materials; raw Warehouse size is not copied wholesale into Git.",
+        "Runtime import remains a later bounded lane; no chapter pack may force UE to synchronously load the raw Warehouse.",
+        "Animated final candidates remain FBX; production textures PNG/TGA; heavy runtime assets soft+async; crowds/fauna pooled; repeated world detail ISM/HISM+LOD+culling.",
+        "Legacy overlapping P1C01 staging/promotion/export/intake workflow steps are suppressed while Closure Pack V2 runs.",
+        "Part II/III runtime remains closed; only reusable source stock may be prepared outside P1C01."
+      ],
+      "rationale": "The owner explicitly authorized maximum practical batch size to accelerate Shire construction. Current Warehouse already holds multi-GB stock and the V1 chapter pack proved car-level quarantine. The safe acceleration path is larger source acquisition/preparation, not one unbounded UE import or a monolithic hard-reference content dump.",
+      "evidence": [
+        "Warehouse #278: V1 chapter-pack quarantine architecture passed 3 cars / 1 quarantined / 0 hard.",
+        "Warehouse #279: V1 chapter pack passed 4 / 0 / 0 and generated 8 material sources.",
+        "Warehouse #281: material intake passed prepared=8 pending=8 manual=0 before publish-control failure.",
+        "Data/P1C01ChapterClosureMegaPackV2.json",
+        "Scripts/run_p1c01_chapter_closure_pack_v2.ps1"
+      ],
+      "evidence_boundary": "SOURCE/CONTROL-PLANE DECISION. Exact-head static validation and a post-merge Warehouse V2 run are required before the large closure pack is RUN-PROVEN. UE import/PIE/device/visual/performance remain separate.",
+      "authority": "USER_EXPLICIT_DIRECTION"
+    },
+    {
+      "id": "DEC-059",
+      "title": "Parse every repository PowerShell script before merge",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-STABILITY-001",
+        "REQ-STABILITY-003",
+        "REQ-STABILITY-004"
+      ],
+      "resolution": "Add a hosted Pre-Unreal parser gate that parses every Scripts/**/*.ps1 file with the Windows PowerShell parser before project validation. Parser errors are merge blockers and must be fixed at source.",
+      "implementation_contract": [
+        "Pre-Unreal runs Scripts/test_powershell_syntax.ps1 on every exact head.",
+        "The parser gate recursively covers repository PowerShell scripts under Scripts.",
+        "Any parser error reports file, line, column, message and offending text, then exits non-zero.",
+        "PowerShell parser-gate changes remain tooling-only and do not wake Unreal Build.",
+        "A syntax failure is never classified as an asset/provider blocker; it is control-plane/source failure and must be repaired before merge."
+      ],
+      "rationale": "Warehouse #282 failed before material execution because the generated-branch exporter contained an unterminated PowerShell string/if block. Pre-Unreal #1317 had passed because repository validation checked semantic markers but never invoked the PowerShell parser on all scripts. The durable fix is a parser gate, not another one-off string repair.",
+      "evidence": [
+        "Pre-Unreal #1317 SUCCESS on develop 0adc090f1caa92425322ac15d44b08b031f2ece0",
+        "Warehouse #282 ParserError in Scripts/export_p1c01_material_source_branch.ps1 line 204",
+        "Scripts/test_powershell_syntax.ps1",
+        ".github/workflows/pre-unreal-validation.yml"
+      ],
+      "evidence_boundary": "SOURCE/CI PREVENTION. The new parser gate requires exact-head Pre-Unreal proof. It does not imply Warehouse, UE, PIE, device or visual acceptance.",
+      "authority": "USER_EXPLICIT_DIRECTION"
+    },
+    {
+      "id": "DEC-060",
+      "title": "Restore corrupted runner watchdog from last known-good exact source",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-STABILITY-001",
+        "REQ-STABILITY-003",
+        "REQ-STABILITY-004"
+      ],
+      "resolution": "The new repository-wide PowerShell parser exposed a pre-existing duplicated/corrupted runner_watchdog.ps1. Restore that file from exact historical commit 1066cf022723fcdef9bfac66519f5b0f9c1e03a4, the newest checked revision in this investigation that parsed cleanly and retained the later stale-worker protections, instead of hand-reconstructing the damaged duplicated blocks.",
+      "implementation_contract": [
+        "Restore Scripts/runner_watchdog.ps1 byte-for-byte from commit 1066cf022723fcdef9bfac66519f5b0f9c1e03a4.",
+        "Keep the repository-wide parser gate active so any future PowerShell corruption blocks merge.",
+        "Do not infer current runtime/watchdog acceptance from historical source restoration; exact-head static validation is required."
+      ],
+      "rationale": "Pre-Unreal #1318 reported parser errors in runner_watchdog.ps1 unrelated to the new closure pack. Live source inspection showed duplicated function bodies and a broken service-owner regex. Historical checks found 1066cf022723fcdef9bfac66519f5b0f9c1e03a4 as a clean later watchdog revision (single broker-state function, no duplicated corrupted tail).",
+      "evidence": [
+        "Pre-Unreal #1318: POWERSHELL_SYNTAX_FAIL in Scripts/runner_watchdog.ps1",
+        "Historical source 1066cf022723fcdef9bfac66519f5b0f9c1e03a4 parses structurally and is 10,847 bytes versus corrupted 21,955-byte duplicated source",
+        "Scripts/test_powershell_syntax.ps1"
+      ],
+      "evidence_boundary": "SOURCE RESTORATION. Exact-head Pre-Unreal must pass before this source is STATIC-VALIDATED; no runner/device/gameplay acceptance is implied.",
+      "authority": "PROJECT_GOVERNOR_ROOT_CAUSE_REPAIR"
+    },
+    {
+      "id": "DEC-061",
+      "title": "Isolate long P1C01 closure execution from the normal Warehouse train",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WAREHOUSE-001",
+        "REQ-STABILITY-003",
+        "REQ-STABILITY-004"
+      ],
+      "resolution": "Keep the normal Warehouse workflow on its proven short/cancellable contract and move the 180-minute non-cancelling P1C01 closure train into a dedicated workflow with its own concurrency group and fast preflight.",
+      "implementation_contract": [
+        "warehouse-stage.yml retains timeout-minutes: 60 and cancel-in-progress: true.",
+        "p1c01-chapter-closure.yml owns Closure Pack V2 with timeout-minutes: 180 and cancel-in-progress: false.",
+        "The dedicated closure workflow uses an isolated exact-head checkout.",
+        "Fast closure preflight parses required PowerShell scripts, validates child manifests and checks the disk reserve before any provider/acquisition car starts.",
+        "The long closure workflow and normal selective Warehouse workflow have separate concurrency groups.",
+        "No closure source-control file should wake Unreal Build unless it directly changes runtime/import CI behavior."
+      ],
+      "rationale": "Pre-Unreal #1325 correctly rejected the earlier attempt to mutate the proven PG-168 normal Warehouse cancellation contract. The conflict was architectural, not a reason to weaken the old guard. Separation preserves fast ordinary CI while allowing the large chapter pack to finish without cancellation.",
+      "evidence": [
+        "Pre-Unreal #1325: PG-168 warehouse execution contract missing cancel-in-progress: true",
+        ".github/workflows/p1c01-chapter-closure.yml",
+        "Scripts/preflight_p1c01_chapter_closure_pack_v2.ps1"
+      ],
+      "evidence_boundary": "SOURCE/CI ARCHITECTURE. Exact-head Pre-Unreal and post-merge dedicated closure workflow evidence are still required."
+    },
+    {
+      "id": "DEC-062",
+      "title": "Preflight and bounded-retry UE production asset saves",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-STABILITY-001",
+        "REQ-STABILITY-003",
+        "REQ-STABILITY-004"
+      ],
+      "resolution": "Before UE production import, perform a cheap destination-health check that rejects active editor processes, verifies Content/Production write/delete ability, clears read-only only on untracked generated uassets, and exclusive-opens existing uassets. If the importer still exits on a file delete/save error, run the same preflight once and retry the importer exactly once.",
+      "implementation_contract": [
+        "Never delete tracked production assets as part of recovery.",
+        "Never clear read-only on tracked Content/Production assets; fail with explicit evidence instead.",
+        "Retry only for importer file-save/delete failures and at most once.",
+        "Non-save/delete importer failures fail immediately.",
+        "A successful import still requires the commandlet's explicit 0 failures marker."
+      ],
+      "rationale": "Unreal Build #1047 compiled ShireJourneyEditor successfully and imported 376 source files with the commandlet reporting 0 import failures, but the workflow still failed because UE could not delete/save Content/Production/Textures/T_Cloth_Green.uasset. The log does not prove whether the cause was read-only state or an exclusive file lock, so the durable fix is to measure both conditions before import and retry only the proven save/delete failure class.",
+      "evidence": [
+        "Unreal Build #1047: Build ShireJourneyEditor SUCCESS",
+        "Unreal Build #1047: ShireProductionImport: 376 files, 0 failures",
+        "Unreal Build #1047: Error deleting/saving Content/Production/Textures/T_Cloth_Green.uasset",
+        "Scripts/preflight_production_asset_import.ps1",
+        "Scripts/ci_import_production_assets.cmd"
+      ],
+      "evidence_boundary": "SOURCE-IMPLEMENTED. Exact-head Unreal rerun is required before COMPILE/IMPORT success can be claimed."
+    },
+    {
+      "id": "DEC-063",
+      "title": "Rebuild watchdog service guard on clean source and keep closure preflight off Unreal",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-STABILITY-001",
+        "REQ-STABILITY-003",
+        "REQ-STABILITY-004",
+        "REQ-PROD-011"
+      ],
+      "resolution": "Use the clean watchdog body as the base, then reapply only the required continuous service-ownership guard hooks. Keep closure-only preflight scripts in Unreal paths-ignore and fix the PG-193 workflow-path assertion to match the actual workflow text.",
+      "implementation_contract": [
+        "runner_watchdog.ps1 contains ServiceGuardPath, Invoke-ServiceOwnershipGuard, Invoke-RunnerServiceGuard and SHIRE_RUNNER_WATCHDOG_SERVICE_GUARD_TRIGGER on a single non-duplicated script body.",
+        "The service guard runs once at watchdog boot and once per watchdog loop before listener recovery logic.",
+        "p1c01 closure preflight tooling remains excluded from Unreal Build push and pull_request filters.",
+        "PG-193 checks for the actual test_powershell_syntax.ps1 workflow reference rather than a doubly escaped literal.",
+        "Exact-head Pre-Unreal must pass before this repair is considered STATIC-VALIDATED."
+      ],
+      "rationale": "Pre-Unreal #1332 showed seven static failures after the earlier watchdog restoration. Five were expected because the clean historical watchdog lacked later service-guard hooks; one was a missing Unreal paths-ignore entry for the new closure preflight; one was a validator string-escaping bug. The correct repair is to reconstruct the required service guard on top of the clean source instead of restoring the previously corrupted later file.",
+      "evidence": [
+        "Pre-Unreal #1332: POWERSHELL_SYNTAX_PASS files=47 errors=0",
+        "Pre-Unreal #1332: PG-145B/PG-183 watchdog service-guard contract failures",
+        "Pre-Unreal #1332: PG-192 missing closure preflight Unreal paths-ignore",
+        "Pre-Unreal #1332: PG-193 parser-step string mismatch",
+        "Scripts/runner_watchdog.ps1",
+        ".github/workflows/unreal-build-validation.yml",
+        "Scripts/pre_unreal_validate.py"
+      ],
+      "evidence_boundary": "SOURCE-FIXED only until exact-head Pre-Unreal rerun succeeds.",
+      "authority": "PROJECT_GOVERNOR_ROOT_CAUSE_REPAIR"
+    },
+    {
+      "id": "DEC-064",
+      "title": "Sequential two-chapter production queue keeps P1C01 active and P1C02 gated behind Gate 6/7",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-VISION-001",
+        "REQ-WORLD-001",
+        "REQ-PERF-001"
+      ],
+      "resolution": "Keep P1C01 Shire/Hobbiton/Bag End as the sole active runtime closure chapter. P1C02 Shadow of the Past may have source/warehouse preparation queued in advance, but its runtime integration stays closed until the official P1C01 Gate 6/7 acceptance record is ACCEPTED. Once that gate is accepted, the sequential queue may automatically begin P1C02 source preparation without another owner continue prompt.",
+      "implementation_contract": [
+        "P1C01 remains the active runtime chapter until its real chapter acceptance gate closes.",
+        "P1C02 source/warehouse preparation may exist early; P1C02 runtime integration may not.",
+        "Reuse valid Shire/Bag End stock before acquiring duplicate P1C02 assets.",
+        "Every queued heavy wave starts with a cheap preflight.",
+        "SEQUENTIAL_CHAPTER_QUEUE_WAIT is an expected green waiting state while P1C01 Gate 6/7 is not ACCEPTED.",
+        "No queue state may reinterpret source preparation as chapter completion or runtime acceptance."
+      ],
+      "rationale": "The owner requested a long-running two-chapter production train that continues without hourly confirmation while preserving strict scope discipline. The queue therefore pipelines preparation without allowing the next runtime chapter to bypass the Shire quality gate.",
+      "evidence": [
+        "Docs/WORLD_DETAIL_LEDGER.md — Sequential two-chapter production queue: P1C01 -> P1C02",
+        "Data/P1C02ShadowPastChapterPackV1.json",
+        "Scripts/run_sequential_chapter_queue.ps1",
+        "Scripts/run_p1c02_shadow_past_prep.ps1",
+        ".github/workflows/sequential-chapter-queue.yml"
+      ],
+      "evidence_boundary": "SOURCE/QUEUE CONTRACT. This records gating and automation intent; it is not P1C01 or P1C02 PIE/device/visual/performance acceptance."
+    },
+    {
+      "id": "DEC-065",
+      "title": "Extend existing living-world architecture with bounded systemic environmental reactions",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WORLD-001",
+        "REQ-WORLD-002",
+        "REQ-NPC-001",
+        "REQ-PERF-001"
+      ],
+      "resolution": "Adopt AAA Visual Quality + Systemic Reactivity + Intelligent NPCs + Living World + Strict Optimization as the durable production direction. Preserve the existing LivingWorldDirector/NPCContext/Quest/WorldRouter ownership split and add future environmental reaction capability as a small bounded event/responder contract rather than a second world-intelligence brain.",
+      "implementation_contract": [
+        "Do not create a competing WorldIntelligenceSystem or second NPC brain.",
+        "LivingWorldDirector owns coarse population/event budgets, pooling, activation and chapter-aware world activity; it does not own every object's local reaction.",
+        "ShireNPCContextSubsystem owns bounded NPC context projection; ShireQuestSubsystem remains quest/story/memory truth.",
+        "World/story systems may publish bounded events such as Hit, Interact, PlayerNear, WeatherChanged, DangerChanged and StoryStateChanged; supported responders own local visual/audio reaction.",
+        "No full-rate Tick or full physics simulation for every tree, plant, prop or ambient actor.",
+        "Prefer WPO/material response, pooled transient FX/audio, delegates/timers and distance/activity budgets.",
+        "Runtime implementation is deferred until the active P1C01 closure train reaches the appropriate integration step and remains subject to Gate 6/7 and target-device performance evidence."
+      ],
+      "rationale": "The external programmer direction largely matches systems already present in the repository. The real uncovered gap is broad environmental reactivity. Recording it as an extension of current ownership avoids duplicate authority and preserves the low-spec performance contract.",
+      "evidence": [
+        "Docs/WORLD_DETAIL_LEDGER.md — Core production direction + systemic environmental reactivity contract",
+        "Source/ShireJourney/Private/World/LivingWorldDirector.cpp",
+        "Source/ShireJourney/Private/Subsystems/ShireNPCContextSubsystem.cpp",
+        "Data/LivingNPCIntelligenceRoadmap.json",
+        "Data/LivingWorldMasterCoverageMapV1.json",
+        "Data/P1C01FLivingShirePlanV1.json"
+      ],
+      "evidence_boundary": "ARCHITECTURE DIRECTION / SOURCE AUDIT ONLY. No new runtime, PIE, device, visual or performance acceptance is claimed."
+    },
+    {
+      "id": "DEC-066",
+      "title": "Unreal validation waits on editor and commandlet ownership before production import",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-STABILITY-001",
+        "REQ-STABILITY-003",
+        "REQ-STABILITY-004"
+      ],
+      "resolution": "Replace the editor-only wait assumption with a shared UE4 process wait/diagnostic contract that observes both UE4Editor and UE4Editor-Cmd. Never kill an interactive editor by name. Recover only a bounded stale CI-owned commandlet when workspace ownership, unattended commandlet signature, age and orphan-parent evidence all agree.",
+      "implementation_contract": [
+        "Observe both UE4Editor and UE4Editor-Cmd before build/import-sensitive steps.",
+        "Emit PID, parent PID, session, owner, age and command line for blocking Unreal processes.",
+        "Never terminate UE4Editor by process name or merely because validation wants the machine.",
+        "A UE4Editor-Cmd may be force-stopped only when it is an old workspace-owned unattended ShireJourney CI commandlet with a recognized CI signature and no live parent.",
+        "Production-import preflight remains fail-closed if any Unreal process survives the wait/recovery contract.",
+        "Add a static regression guard so an editor-only wait cannot silently return."
+      ],
+      "rationale": "Unreal Build #1068 compiled successfully, the wait step reported the editor closed, then production-import preflight immediately found PID 14144. Source inspection showed the wait step checked only UE4Editor while preflight checked UE4Editor and UE4Editor-Cmd. The mismatch explains the false-clear path without assuming PID ownership.",
+      "evidence": [
+        "Unreal Build #1068: Build ShireJourneyEditor SUCCESS",
+        "Unreal Build #1068: PRODUCTION_IMPORT_PREFLIGHT_EDITOR_RUNNING pids=14144",
+        "Scripts/wait_for_unreal_processes.ps1",
+        "Scripts/ci_wait_for_unreal_editor.cmd",
+        "Scripts/preflight_production_asset_import.ps1",
+        "Scripts/pre_unreal_validate.py PG-195"
+      ],
+      "evidence_boundary": "SOURCE-IMPLEMENTED. Fresh exact-head Pre-Unreal and Unreal validation are required before claiming the repair validated."
+    },
+    {
+      "id": "DEC-067",
+      "title": "Prepare all Part I runtime chapters now while preserving canonical mission IDs and serialized runtime gates",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-VISION-001",
+        "REQ-WORLD-001",
+        "REQ-WORLD-002",
+        "REQ-PERF-001"
+      ],
+      "resolution": "Prepare shared-stock source indexes for downstream P1C02-P1C08 immediately, but preserve one runtime-changing chapter lane at a time. Treat F1-01..F1-08 from the supplied mission matrix as canonical story package IDs and P1C01..P1C08 as legacy runtime implementation boundaries until an explicit save/quest-safe migration is accepted.",
+      "implementation_contract": [
+        "P1C01 remains the active runtime benchmark until real Gate 6/7 acceptance.",
+        "P1C02-P1C08 source/warehouse candidate indexing may run now from shared stock without duplicate per-chapter copies.",
+        "Only the immediate runtime successor opens after its predecessor Gate 6/7 status is ACCEPTED.",
+        "Current reconciliation is P1C01 -> F1-01/F1-02/F1-03; P1C02+P1C03 -> F1-04; P1C04 -> F1-05; P1C05+P1C06 -> F1-06; P1C07 -> F1-07; P1C08 -> F1-08.",
+        "Do not rename or renumber existing runtime chapter IDs in place until save, quest, checkpoint and story-state migration is explicitly implemented and validated.",
+        "Preparation never becomes a READY_FOR_IMPORT or acceptance claim by metadata alone."
+      ],
+      "rationale": "The owner requested that all chapters be prepared at maximum throughput and then enter runtime one after another. The supplied mission matrix and current FilmExperiencePlan reveal a non-one-to-one ID split, so a recorded reconciliation is required before automation can safely scale.",
+      "evidence": [
+        "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX — Part I F1-01..F1-08",
+        "Data/FilmExperiencePlan.json",
+        "Data/Part1SequentialRuntimeChapterTrainV1.json",
+        "Scripts/run_part1_runtime_chapter_prep.ps1",
+        ".github/workflows/part1-chapter-preparation.yml",
+        ".github/workflows/sequential-chapter-queue.yml"
+      ],
+      "evidence_boundary": "SOURCE/PREPARATION ARCHITECTURE. No downstream runtime, PIE, device, visual or performance acceptance is claimed."
+    },
+    {
+      "id": "DEC-068",
+      "title": "Standing owner authorization for safe routine production execution",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-GOV-001",
+        "REQ-STABILITY-001"
+      ],
+      "resolution": "Routine reversible project work may continue without repeated owner 'continue/allow' prompts: inspection, safe fixes, branches, commits, PR updates, documentation, CI reruns, source/warehouse preparation and gate-compliant merges. Stop for owner input only at genuine human/external authority boundaries.",
+      "implementation_contract": [
+        "Do not request repeated confirmation for safe reversible routine work already inside approved project scope.",
+        "Still require owner action for login/OAuth, purchase/entitlement, unresolved licensing/canon conflicts, destructive no-rollback actions, or human Gate 6/7 evidence that cannot be manufactured by CI.",
+        "Platform-generated permission dialogs cannot be suppressed by repository policy; minimize operations that trigger them but never bypass platform authorization.",
+        "All runtime chapter advancement remains subject to existing quality gates regardless of standing execution authorization."
+      ],
+      "rationale": "The owner explicitly asked for continuous overnight progress without having to repeatedly authorize each routine step.",
+      "evidence": [
+        "Owner direction 2026-09-29",
+        "Docs/WORLD_DETAIL_LEDGER.md",
+        "Docs/DEVELOPMENT_GATES.md"
+      ],
+      "evidence_boundary": "Operational authorization only; it does not waive CI, canon, licensing, device, visual or human acceptance gates."
     }
   ],
   "open_conflicts": [],

@@ -3462,6 +3462,8 @@ unreal_ci = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
 editor_probe_marker = "echo Unreal Editor is closed.\n          exit /b 0"
 editor_wait_script_path = ROOT / "Scripts" / "ci_wait_for_unreal_editor.cmd"
 editor_wait_script = read(editor_wait_script_path) if editor_wait_script_path.exists() else ""
+shared_waiter_path = ROOT / "Scripts" / "wait_for_unreal_processes.ps1"
+shared_waiter = read(shared_waiter_path) if shared_waiter_path.exists() else ""
 editor_wait_contract_ok = (
     (
         "Get-Process -Name UE4Editor" in unreal_ci
@@ -3471,10 +3473,12 @@ editor_wait_contract_ok = (
     )
     or (
         "ci_wait_for_unreal_editor.cmd" in unreal_ci
-        and "Get-Process -Name UE4Editor" in editor_wait_script
-        and "AddMinutes(20)" in editor_wait_script
-        and "Start-Sleep -Seconds 10" in editor_wait_script
-        and "exit 40" in editor_wait_script
+        and "wait_for_unreal_processes.ps1" in editor_wait_script
+        and '@("UE4Editor","UE4Editor-Cmd")' in shared_waiter
+        and "UNREAL_PROCESS_WAIT_TIMEOUT" in shared_waiter
+        and "policy=never-kill-interactive-editor" in shared_waiter
+        and "Test-StaleOwnedCommandlet" in shared_waiter
+        and "sameOwner" in shared_waiter
     )
 )
 if editor_probe_marker not in unreal_ci and not editor_wait_contract_ok:
@@ -8072,6 +8076,187 @@ for pg191_symbol in [
         fail(f"PG-191 explicit generated-branch publish contract missing: {pg191_symbol}")
 if "push --force-with-lease origin" in pg191_export:
     fail("PG-191 implicit force-with-lease returned; generated branches must lease the exact remote SHA")
+
+
+# PG-192: P1C01 Chapter Closure Mega Pack V2 maximum-throughput contract.
+pg192_pack = json.loads(read(ROOT / "Data" / "P1C01ChapterClosureMegaPackV2.json"))
+pg192_promo = json.loads(read(ROOT / "Data" / "WarehouseP1C01ClosurePromotionTrainV2.json"))
+pg192_mat = json.loads(read(ROOT / "Data" / "P1C01MaterialImportWaveV2.json"))
+pg192_runner = read(ROOT / "Scripts" / "run_p1c01_chapter_closure_pack_v2.ps1")
+pg192_preflight = read(ROOT / "Scripts" / "preflight_p1c01_chapter_closure_pack_v2.ps1")
+pg192_closure_workflow = read(ROOT / ".github" / "workflows" / "p1c01-chapter-closure.yml")
+pg192_warehouse = read(ROOT / ".github" / "workflows" / "warehouse-stage.yml")
+pg192_unreal = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+
+if pg192_pack.get("status") != "RUNNER_EXECUTION_READY":
+    fail("PG-192 closure pack must remain RUNNER_EXECUTION_READY")
+if int(pg192_pack.get("source_capacity", {}).get("promotion_selector_ceiling", 0)) < 150:
+    fail("PG-192 closure promotion ceiling unexpectedly reduced below chapter-scale throughput")
+if int(pg192_pack.get("storage_policy", {}).get("minimum_free_disk_reserve_bytes", 0)) < 4294967296:
+    fail("PG-192 closure pack must retain at least a 4 GiB free-space reserve")
+pg192_cars = {x.get("id"): x for x in pg192_pack.get("cars", [])}
+for required in ["PREFLIGHT_STORAGE","STAGE_POLYHAVEN","STAGE_AMBIENTCG","STAGE_QUATERNIUS","STAGE_KENNEY","STAGE_KAYKIT","STAGE_AUDIO","INVENTORY_AUDIT","CRITICAL_GAP_PREP","MEGA_PROMOTION","MATERIAL_SOURCE_EXPORT","CHARACTER_INTAKE","FINAL_INVENTORY_AUDIT"]:
+    if required not in pg192_cars:
+        fail(f"PG-192 closure pack car missing: {required}")
+pg192_budget = pg192_cars.get("MATERIAL_SOURCE_EXPORT", {}).get("export_budget", {})
+if int(pg192_budget.get("max_batch_source_bytes", 0)) != 671088640:
+    fail("PG-192 material source promotion must remain bounded at 640 MiB")
+if int(pg192_budget.get("minimum_exported_materials", 0)) < 18:
+    fail("PG-192 large material wave minimum unexpectedly reduced")
+if len(pg192_mat.get("immediate_open_source_items", [])) < 24:
+    fail("PG-192 material closure wave must remain chapter-scale")
+if int(pg192_promo.get("selector_ceiling_total", 0)) < 150:
+    fail("PG-192 promotion selector ceiling unexpectedly reduced")
+for symbol in ["P1C01_CHAPTER_CLOSURE_PACK_V2_PASS","QUARANTINED_CONTINUE","P1C01_CLOSURE_PACK_STORAGE_PASS"]:
+    if symbol not in pg192_runner:
+        fail(f"PG-192 closure runner marker missing: {symbol}")
+for symbol in ["P1C01_CLOSURE_PREFLIGHT_PASS","CLOSURE_PREFLIGHT_DISK_RESERVE_FAIL","System.Management.Automation.Language.Parser"]:
+    if symbol not in pg192_preflight:
+        fail(f"PG-192 closure preflight marker missing: {symbol}")
+for symbol in [
+    "name: P1C01 Chapter Closure Pack",
+    "cancel-in-progress: false",
+    "timeout-minutes: 180",
+    "Fast closure preflight",
+    "Run P1C01 Chapter Closure Mega Pack V2",
+]:
+    if symbol not in pg192_closure_workflow:
+        fail(f"PG-192 dedicated closure workflow contract missing: {symbol}")
+for symbol in [
+    "group: warehouse-stage-${{ github.repository }}",
+    "cancel-in-progress: true",
+    "timeout-minutes: 60",
+]:
+    if symbol not in pg192_warehouse:
+        fail(f"PG-192 normal Warehouse workflow must remain short/cancellable: {symbol}")
+for ignored in [
+    "Data/P1C01MaterialImportWaveV2.json",
+    "Data/P1C01ChapterClosureMegaPackV2.json",
+    "Scripts/preflight_p1c01_chapter_closure_pack_v2.ps1",
+    "Scripts/run_p1c01_chapter_closure_pack_v2.ps1",
+]:
+    if ignored not in pg192_unreal:
+        fail(f"PG-192 tooling-only V2 path missing from Unreal paths-ignore: {ignored}")
+
+
+# PG-193: Pre-Unreal must parse every PowerShell script.
+pg193_parser = read(ROOT / "Scripts" / "test_powershell_syntax.ps1")
+pg193_pre = read(ROOT / ".github" / "workflows" / "pre-unreal-validation.yml")
+pg193_unreal = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+for symbol in [
+    "System.Management.Automation.Language.Parser",
+    "POWERSHELL_SYNTAX_FAIL",
+    "POWERSHELL_SYNTAX_PASS",
+    'Get-ChildItem -LiteralPath $Root -Recurse -File -Filter "*.ps1"',
+]:
+    if symbol not in pg193_parser:
+        fail(f"PG-193 PowerShell parser gate marker missing: {symbol}")
+if "Parse all PowerShell scripts" not in pg193_pre or "test_powershell_syntax.ps1" not in pg193_pre:
+    fail("PG-193 Pre-Unreal PowerShell parser step missing")
+if "Scripts/test_powershell_syntax.ps1" not in pg193_unreal:
+    fail("PG-193 PowerShell parser guard must remain tooling-only in Unreal paths-ignore")
+
+
+# PG-194: Sequential Part I queue must remain predecessor-gated while downstream prep stays source-only.
+pg194_legacy = json.loads(read(ROOT / "Data" / "P1C02ShadowPastChapterPackV1.json"))
+pg194_train = json.loads(read(ROOT / "Data" / "Part1SequentialRuntimeChapterTrainV1.json"))
+pg194_queue = read(ROOT / "Scripts" / "run_sequential_chapter_queue.ps1")
+pg194_prep = read(ROOT / "Scripts" / "run_part1_runtime_chapter_prep.ps1")
+pg194_workflow = read(ROOT / ".github" / "workflows" / "sequential-chapter-queue.yml")
+pg194_prep_workflow = read(ROOT / ".github" / "workflows" / "part1-chapter-preparation.yml")
+pg194_unreal = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+
+if pg194_legacy.get("status") != "QUEUED_BEHIND_P1C01_GATE67":
+    fail("PG-194 legacy Shadow-of-the-Past source packet status changed unexpectedly")
+if pg194_train.get("status") != "PREPARATION_OPEN_RUNTIME_SERIALIZED":
+    fail("PG-194 Part I train must keep prep open and runtime serialized")
+release = pg194_train.get("runtime_release_contract", {})
+if release.get("required_predecessor_gate_status") != "ACCEPTED":
+    fail("PG-194 runtime successor release must require ACCEPTED predecessor gate")
+if release.get("current_successor") != "P1C02":
+    fail("PG-194 first runtime successor must remain P1C02")
+mappings = pg194_train.get("id_reconciliation", {}).get("mappings", [])
+runtime_ids = [x.get("runtime_chapter") for x in mappings]
+if runtime_ids != ["P1C01","P1C02","P1C03","P1C04","P1C05","P1C06","P1C07","P1C08"]:
+    fail("PG-194 Part I runtime mapping order drifted")
+if mappings and mappings[0].get("canonical_missions") != ["F1-01","F1-02","F1-03"]:
+    fail("PG-194 P1C01 canonical coverage reconciliation missing")
+for symbol in [
+    "SEQUENTIAL_CHAPTER_QUEUE_WAIT",
+    "SEQUENTIAL_CHAPTER_QUEUE_RELEASE",
+    "P1C02_QUEUE_RELEASE=true",
+    "Part1SequentialRuntimeChapterTrainV1.json",
+]:
+    if symbol not in pg194_queue:
+        fail(f"PG-194 queue controller marker missing: {symbol}")
+for symbol in [
+    "PART1_CHAPTER_PREP_BEGIN",
+    "PART1_CHAPTER_PREP_PASS",
+    "PART1_CHAPTER_PREP_COMPLETE",
+    "SOURCE_CANDIDATE_INDEX_PREPARED",
+]:
+    if symbol not in pg194_prep:
+        fail(f"PG-194 Part I prep marker missing: {symbol}")
+for symbol in [
+    "name: Sequential Chapter Queue",
+    "cancel-in-progress: false",
+    "Fast queue preflight",
+    "Prepare P1C02 source train",
+    "run_part1_runtime_chapter_prep.ps1",
+]:
+    if symbol not in pg194_workflow:
+        fail(f"PG-194 sequential queue workflow marker missing: {symbol}")
+for symbol in [
+    "name: Part I Chapter Preparation Train",
+    "cancel-in-progress: false",
+    "Prepare P1C02-P1C08 shared-stock indexes",
+]:
+    if symbol not in pg194_prep_workflow:
+        fail(f"PG-194 Part I preparation workflow marker missing: {symbol}")
+for ignored in [
+    "Data/Part1SequentialRuntimeChapterTrainV1.json",
+    "Scripts/run_part1_runtime_chapter_prep.ps1",
+    "Scripts/run_sequential_chapter_queue.ps1",
+]:
+    if pg194_unreal.count(ignored) < 2:
+        fail(f"PG-194 queued chapter prep must stay off Unreal push+PR filters: {ignored}")
+
+
+# PG-195: Unreal import must not trust an editor-only wait while a commandlet remains alive.
+pg195_wait = read(ROOT / "Scripts" / "wait_for_unreal_processes.ps1")
+pg195_wait_cmd = read(ROOT / "Scripts" / "ci_wait_for_unreal_editor.cmd")
+pg195_preflight = read(ROOT / "Scripts" / "preflight_production_asset_import.ps1")
+for symbol in [
+    '@("UE4Editor","UE4Editor-Cmd")',
+    "UNREAL_PROCESS_DIAGNOSTIC",
+    "UNREAL_STALE_CI_COMMANDLET_RECOVERED",
+    "policy=never-kill-interactive-editor",
+    "ParentProcessId",
+    "CommandLine",
+    "sameOwner",
+    "UNREAL_STALE_CI_COMMANDLET_TASKKILL_DIRECT",
+    "UNREAL_STALE_CI_COMMANDLET_CIM_TERMINATE",
+]:
+    if symbol not in pg195_wait:
+        fail(f"PG-195 Unreal process wait/diagnostic marker missing: {symbol}")
+for forbidden in [
+    'Stop-Process -Name UE4Editor',
+    'Stop-Process -Name "UE4Editor"',
+]:
+    if forbidden in pg195_wait:
+        fail("PG-195 interactive UE4Editor must never be killed by name")
+if "wait_for_unreal_processes.ps1" not in pg195_wait_cmd:
+    fail("PG-195 legacy wait wrapper must delegate to the shared Unreal process waiter")
+for symbol in [
+    "PRODUCTION_IMPORT_PREFLIGHT_PROCESS",
+    "owner=",
+    "ppid=",
+    "sessionId=",
+    "commandLine=",
+]:
+    if symbol not in pg195_preflight:
+        fail(f"PG-195 production-import process diagnostics missing: {symbol}")
+
 
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")

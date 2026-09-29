@@ -1,3 +1,68 @@
+## 2026-09-29 - Part I full sequential runtime train and canonical-ID reconciliation
+
+Registered for the owner's continuous overnight production direction.
+
+Purpose:
+- Keep P1C01 as the active runtime benchmark while preparing shared warehouse/source indexes for P1C02-P1C08 immediately.
+- Runtime remains serialized: only the immediate successor may open after the predecessor Gate 6/7 is genuinely ACCEPTED.
+- Canonical mission IDs from the supplied Mission & Chapter Implementation Matrix remain F1-01 through F1-08.
+- Existing runtime chapter IDs P1C01-P1C08 are legacy implementation boundaries and do not map one-to-one to canonical mission packages.
+- Current reconciliation: P1C01 spans F1-01/F1-02/F1-03; P1C02 and P1C03 split F1-04; P1C04 maps to F1-05; P1C05 and P1C06 split F1-06; P1C07 maps to F1-07; P1C08 maps to F1-08.
+- Do not rename runtime IDs in place until a dedicated save/quest/state migration is source-checked and validated.
+- Shared warehouse stock is indexed rather than copied per chapter to avoid disk duplication.
+- Preparation status never implies READY_FOR_IMPORT, UE import, runtime integration, PIE/device/visual/performance acceptance.
+
+Status: **REGISTERED / SOURCE PREPARATION AUTOMATION IMPLEMENTED / RUNTIME SERIALIZED**.
+
+## 2026-09-29 - Unreal process ownership root repair after #1068
+
+- Unreal Build #1068 exact-head editor compile succeeded, then production-import preflight failed on PID 14144.
+- The preceding wait step had reported the editor closed because it checked only UE4Editor, while the import preflight checked both UE4Editor and UE4Editor-Cmd.
+- The wait contract now observes both process families and emits owner/session/start-time/command-line/parent-PID diagnostics.
+- Interactive UE4Editor processes are never killed by name.
+- Bounded recovery is allowed only for an old, workspace-owned, unattended UE4Editor-Cmd with a recognized CI commandlet signature and no live parent process.
+- Production-import preflight also emits process ownership evidence if a process still blocks import.
+
+Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**.
+
+## 2026-09-29 - Core production direction + systemic environmental reactivity contract
+
+Registered before any new runtime implementation.
+
+Purpose:
+- Keep the project formula explicit: **AAA Visual Quality + Systemic Reactivity + Intelligent NPCs + Living World + Strict Optimization**.
+- Extend the existing `ALivingWorldDirector`, `UShireNPCContextSubsystem`, `UShireQuestSubsystem`, chapter router and interaction contracts; do **not** create a second parallel world brain or NPC brain.
+- Add the missing long-term capability as a **bounded systemic environmental reaction contract** so meaningful player/world events can produce appropriate visible/audible responses across supported trees/foliage, water, doors/tools/props, fauna and NPC observers.
+- Candidate event families include `Hit`, `Interact`, `PlayerNear`, `WeatherChanged`, `DangerChanged` and `StoryStateChanged`; the authoritative world/story systems publish context while each responder owns its local reaction.
+- `ALivingWorldDirector` remains responsible for coarse population budgets, activation/culling, pooling and chapter-aware micro-events; it must not become a per-object God Object.
+- `UShireNPCContextSubsystem` remains responsible for bounded NPC context projection; `UShireQuestSubsystem` remains story/quest/memory truth.
+- Low-spec rule: no full physics or full-rate Actor Tick for every tree/plant/prop. Prefer material/WPO responses, pooled transient FX/audio, bounded timers/delegates and distance/activity budgets.
+- This direction is **not** permission to bypass P1C01 closure. Runtime implementation waits behind the active #145 repair/merge, Closure Pack execution and Shire integration/character/living-world work, and must still satisfy Gate 6/7 and target-device evidence.
+
+Status: **REGISTERED / ARCHITECTURE DIRECTION ACCEPTED / RUNTIME IMPLEMENTATION DEFERRED**.
+
+## 2026-09-28 - Sequential two-chapter production queue: P1C01 -> P1C02
+
+Registered before implementation under the active Part I production lane.
+
+Purpose:
+- Keep the current maximum-throughput P1C01 Shire/Hobbiton/Bag End closure pack as the active runtime chapter.
+- Prepare the next canonical chapter, F1-02 Shadow of the Past, as a queued source/production packet without opening its runtime lane early.
+- Reuse Bag End/Shire assets where valid instead of downloading or importing duplicate stock.
+- Allow P1C02 source/warehouse preparation to exist in advance, but keep runtime integration blocked until P1C01 satisfies the real Gate 6/7 acceptance contract and the F1-01 canonical postcondition is validated.
+- Once the gate record becomes accepted, the sequential queue may start P1C02 automatically without requiring another owner "continue" prompt.
+- Every queued chapter keeps a cheap preflight before any heavy source/import wave.
+
+Canon boundary for P1C02:
+- Owner location: Bag End / Shire.
+- Playable roster: Frodo, Gandalf, Sam.
+- Critical path: Gandalf confirms the Ring danger and Sauron connection.
+- Optional window: investigation tutorial, packing, stealth departure.
+- Locked postcondition: Frodo leaves the Shire.
+- Runtime work remains blocked until the previous chapter is accepted.
+
+Status: **REGISTERED / IMPLEMENTATION QUEUED / P1C02 RUNTIME CLOSED UNTIL P1C01 GATE 6/7**.
+
 ## 2026-09-28 - P1C01 Mega Chapter Pack production batching
 
 Registered before execution under W01_P1C01_PRODUCTION_VERTICAL_SLICE.

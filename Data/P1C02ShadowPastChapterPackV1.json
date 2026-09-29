@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "pack_id": "P1C02_SHADOW_OF_THE_PAST_PREP_V1",
+  "status": "QUEUED_BEHIND_P1C01_GATE67",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/P1C01Gate67AcceptanceChecklistV1.json",
+    "Docs/WORLD_DETAIL_LEDGER.md",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "01_STORY_AND_TIMELINE_BIBLE"
+  ],
+  "canon_contract": {
+    "mission_id": "F1-02",
+    "chapter": "Shadow of the Past",
+    "owner_location": "Bag End / Shire",
+    "playable_roster": [
+      "Frodo",
+      "Gandalf",
+      "Sam"
+    ],
+    "critical_path": "Gandalf confirms the Ring danger and Sauron connection.",
+    "optional_window": [
+      "investigation tutorial",
+      "packing",
+      "stealth departure"
+    ],
+    "canonical_postcondition": "Frodo leaves the Shire.",
+    "precondition": "Previous chapter complete; legal roster; correct world-state variant; knowledge flags validated."
+  },
+  "queue_contract": {
+    "predecessor": "P1C01",
+    "predecessor_gate_file": "Data/P1C01Gate67AcceptanceChecklistV1.json",
+    "required_gate_status": "ACCEPTED",
+    "runtime_before_gate": "FORBIDDEN",
+    "source_preparation_before_gate": "ALLOWED",
+    "activation_rule": "When P1C01 Gate 6/7 is accepted on develop, start P1C02 preparation automatically without another owner prompt."
+  },
+  "reuse_policy": {
+    "reuse_first": true,
+    "duplicate_downloads_forbidden_when_equivalent_stock_exists": true,
+    "warehouse_root": "C:\\actions-runner\\_warehouse\\ShireJourney",
+    "output_root": "C:\\actions-runner\\_warehouse\\ShireJourney\\_p1c02_shadow_past_prep_v1",
+    "allowed_extensions": [
+      ".fbx",
+      ".png",
+      ".tga",
+      ".wav",
+      ".json",
+      ".mtl"
+    ],
+    "blocked_extensions": [
+      ".bmp",
+      ".obj",
+      ".exe",
+      ".dll",
+      ".bat",
+      ".cmd",
+      ".ps1"
+    ]
+  },
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_class": 2
+  },
+  "preparation_classes": [
+    {
+      "id": "BAG_END_SURFACES",
+      "keywords": [
+        "wood",
+        "plaster",
+        "stone",
+        "leather",
+        "floor",
+        "wall"
+      ],
+      "max_files": 500,
+      "use": [
+        "Bag End interior surface support"
+      ]
+    },
+    {
+      "id": "DOMESTIC_PACKING_PROPS",
+      "keywords": [
+        "furniture",
+        "food",
+        "crate",
+        "basket",
+        "bag",
+        "book",
+        "lantern",
+        "candle",
+        "table",
+        "chair"
+      ],
+      "max_files": 700,
+      "use": [
+        "packing/investigation/domestic prop support"
+      ]
+    },
+    {
+      "id": "SHIRE_STEALTH_DEPARTURE",
+      "keywords": [
+        "grass",
+        "hedge",
+        "tree",
+        "fence",
+        "path",
+        "ground",
+        "bark",
+        "rock"
+      ],
+      "max_files": 700,
+      "use": [
+        "stealth departure traversal dressing"
+      ]
+    },
+    {
+      "id": "CHARACTER_ANIMATION_SUPPORT",
+      "keywords": [
+        "character",
+        "animation",
+        "adventurer",
+        "outfit",
+        "rig"
+      ],
+      "max_files": 300,
+      "use": [
+        "generic rig/animation support only; named hero identity remains separate"
+      ]
+    },
+    {
+      "id": "AUDIO_FOLEY_AMBIENCE",
+      "keywords": [
+        "audio",
+        "footstep",
+        "bird",
+        "fire",
+        "door",
+        "wood",
+        "ambient",
+        "night"
+      ],
+      "max_files": 300,
+      "use": [
+        "Bag End/Shire ambience and movement support"
+      ]
+    }
+  ],
+  "runtime_rules": [
+    "Heavy runtime assets use soft references and asynchronous loading.",
+    "Animated final production candidates require FBX.",
+    "Production textures are PNG/TGA; no BMP.",
+    "Crowd/background NPC populations use pooling.",
+    "Repeated static detail uses ISM/HISM with LOD/culling.",
+    "No runtime integration starts until P1C01 Gate 6/7 acceptance is real."
+  ],
+  "evidence_boundary": "Preparation/indexing only. Does not imply UE import, runtime integration, PIE, device, visual, performance or Gate 6/7 acceptance."
+}

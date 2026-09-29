@@ -1,0 +1,175 @@
+{
+  "schema_version": 2,
+  "pack_id": "P1C01_CHAPTER_CLOSURE_MEGA_PACK_V2",
+  "status": "RUNNER_EXECUTION_READY",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/WarehouseP1C01ClosurePromotionTrainV2.json",
+    "Data/P1C01MaterialImportWaveV2.json",
+    "Data/P1C01CharacterRigAnimationPrepV1.json",
+    "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+  ],
+  "scope": [
+    "P1C01",
+    "SHIRE_HOBBITON",
+    "BAG_END",
+    "PARTY_FIELD"
+  ],
+  "objective": "Drive one chapter-scale acquisition/preparation train at the largest safe throughput practical on the persistent runner, with internal quarantine so provider or asset blockers do not stop independent cars.",
+  "operating_model": {
+    "strategy": "ONE_CHAPTER_CLOSURE_PACK_MANY_LARGE_BOUNDED_CARS",
+    "package_rule": "One Warehouse workflow owns the P1C01 closure train. Raw stock may grow by multiple GB; Git/LFS and UE import remain separately bounded.",
+    "quarantine_rule": "Provider/asset/source failures quarantine only that car. Infrastructure/inventory/storage corruption is hard-fail.",
+    "no_duplicate_rule": "Legacy overlapping P1C01 staging/promotion/export/intake steps are suppressed while this pack runs.",
+    "runtime_boundary": "Source acquisition and intake-QC only. Runtime promotion remains serialized behind exact-head engine gates."
+  },
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_class": 2
+  },
+  "storage_policy": {
+    "minimum_free_disk_reserve_bytes": 6442450944,
+    "target_additional_warehouse_capacity_bytes": 8589934592,
+    "behavior": "Preflight requires the reserve. Provider cars may quarantine on source/network/space blockers; originals are never deleted to make room."
+  },
+  "source_capacity": {
+    "polyhaven_assets": 37,
+    "ambientcg_search_lanes": 17,
+    "quaternius_packs": 17,
+    "kenney_packs": 12,
+    "kaykit_packs": 8,
+    "opengameart_assets": 17,
+    "promotion_selector_ceiling": 187,
+    "material_wave_items": 26
+  },
+  "cars": [
+    {
+      "order": 1,
+      "id": "PREFLIGHT_STORAGE",
+      "enabled": true,
+      "criticality": "INFRASTRUCTURE",
+      "purpose": "Verify persistent warehouse volume and minimum free-space reserve."
+    },
+    {
+      "order": 2,
+      "id": "STAGE_POLYHAVEN",
+      "enabled": true,
+      "criticality": "CONTINUE_ON_SOURCE_BLOCKER",
+      "command": "Scripts/stage_polyhaven_warehouse.ps1",
+      "manifest": "Data/WarehouseAcquisitionBatchV1.json"
+    },
+    {
+      "order": 3,
+      "id": "STAGE_AMBIENTCG",
+      "enabled": true,
+      "criticality": "CONTINUE_ON_SOURCE_BLOCKER",
+      "command": "Scripts/stage_ambientcg_warehouse.ps1",
+      "manifest": "Data/WarehouseAmbientCGAcquisitionBatchV1.json"
+    },
+    {
+      "order": 4,
+      "id": "STAGE_QUATERNIUS",
+      "enabled": true,
+      "criticality": "CONTINUE_ON_SOURCE_BLOCKER",
+      "command": "Scripts/stage_quaternius_warehouse.ps1",
+      "manifest": "Data/WarehouseQuaterniusAcquisitionBatchV1.json"
+    },
+    {
+      "order": 5,
+      "id": "STAGE_KENNEY",
+      "enabled": true,
+      "criticality": "CONTINUE_ON_SOURCE_BLOCKER",
+      "command": "Scripts/stage_kenney_warehouse.ps1",
+      "manifest": "Data/WarehouseKenneyAcquisitionBatchV1.json"
+    },
+    {
+      "order": 6,
+      "id": "STAGE_KAYKIT",
+      "enabled": true,
+      "criticality": "CONTINUE_ON_SOURCE_BLOCKER",
+      "command": "Scripts/stage_kaykit_github_warehouse.ps1",
+      "manifest": "Data/WarehouseKayKitGitHubAcquisitionBatchV1.json"
+    },
+    {
+      "order": 7,
+      "id": "STAGE_AUDIO",
+      "enabled": true,
+      "criticality": "CONTINUE_ON_SOURCE_BLOCKER",
+      "command": "Scripts/stage_opengameart_audio.ps1",
+      "manifest": "Data/WarehouseAudioAcquisitionBatchV1.json"
+    },
+    {
+      "order": 8,
+      "id": "INVENTORY_AUDIT",
+      "enabled": true,
+      "criticality": "INFRASTRUCTURE",
+      "command": "Scripts/audit_warehouse_inventory.ps1"
+    },
+    {
+      "order": 9,
+      "id": "SATURATION_REPORT",
+      "enabled": true,
+      "criticality": "CONTINUE_ON_SOURCE_BLOCKER",
+      "command": "Scripts/run_warehouse_saturation_train.ps1",
+      "manifest": "Data/WarehouseSaturationTrainV1.json"
+    },
+    {
+      "order": 10,
+      "id": "CRITICAL_GAP_PREP",
+      "enabled": true,
+      "criticality": "CONTINUE_ON_SOURCE_BLOCKER",
+      "command": "Scripts/run_warehouse_critical_gap_preparation.ps1",
+      "manifest": "Data/WarehouseCriticalGapPreparationTrainV2.json"
+    },
+    {
+      "order": 11,
+      "id": "PROVIDER_RESOLUTION",
+      "enabled": true,
+      "criticality": "CONTINUE_ON_SOURCE_BLOCKER",
+      "command": "Scripts/run_warehouse_provider_resolution.ps1",
+      "manifest": "Data/WarehouseProviderResolutionTrainV3.json"
+    },
+    {
+      "order": 12,
+      "id": "MEGA_PROMOTION",
+      "enabled": true,
+      "criticality": "CONTINUE_ON_SOURCE_BLOCKER",
+      "command": "Scripts/run_warehouse_p1c01_mega_promotion.ps1",
+      "manifest": "Data/WarehouseP1C01ClosurePromotionTrainV2.json"
+    },
+    {
+      "order": 13,
+      "id": "MATERIAL_SOURCE_EXPORT",
+      "enabled": true,
+      "criticality": "CONTINUE_ON_SOURCE_BLOCKER",
+      "command": "Scripts/export_p1c01_material_source_branch.ps1",
+      "manifest": "Data/P1C01MaterialImportWaveV2.json",
+      "generated_branch": "generated/p1c01-chapter-closure-material-source-v2",
+      "export_budget": {
+        "max_single_source_bytes": 50331648,
+        "max_batch_source_bytes": 671088640,
+        "minimum_exported_materials": 18
+      }
+    },
+    {
+      "order": 14,
+      "id": "CHARACTER_INTAKE",
+      "enabled": true,
+      "criticality": "CONTINUE_ON_SOURCE_BLOCKER",
+      "command": "Scripts/prepare_p1c01_character_rig_intake.ps1",
+      "manifest": "Data/P1C01CharacterRigAnimationPrepV1.json"
+    },
+    {
+      "order": 15,
+      "id": "FINAL_INVENTORY_AUDIT",
+      "enabled": true,
+      "criticality": "INFRASTRUCTURE",
+      "command": "Scripts/audit_warehouse_inventory.ps1"
+    }
+  ],
+  "evidence_boundary": "Pack success proves only emitted source/preparation car outputs. It never implies UE import, integration, PIE, visual, device or performance acceptance."
+}
