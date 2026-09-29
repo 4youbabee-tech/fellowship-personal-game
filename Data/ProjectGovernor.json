@@ -5033,6 +5033,45 @@
         "Data/P1C01CharacterRigAnimationPrepV1.json"
       ],
       "evidence_boundary": "SOURCE/INTAKE/QC TOOLING ONLY. No character is claimed imported, rigged, PIE-tested, device-tested, visually accepted or performance accepted."
+    },
+    {
+      "id": "DEC-086",
+      "title": "F2-04 Road and Helm's Deep Prep uses a maximum-safe source wave without assigning a Part II runtime ID",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-PROD-011",
+        "REQ-WORLD-001",
+        "REQ-WORLD-002",
+        "REQ-NPC-001",
+        "REQ-PERF-001",
+        "REQ-STABILITY-001"
+      ],
+      "resolution": "Prepare canonical F2-04 Road & Helm's Deep Prep as a source-only maximum-safe wave. Preserve the locked postcondition that the Uruk army arrives, while keeping the actual F2-05 siege outside this pack and Part II runtime identity unassigned.",
+      "implementation_contract": [
+        "The chapter remains preparation/travel/refuge/fortification focused rather than collapsing straight into battle.",
+        "Critical path remains refugees move under threat; defenses are prepared.",
+        "Safe optional window remains escort, rescue, armory, wall prep and civilians.",
+        "Locked postcondition remains Uruk army arrives.",
+        "F2-05 siege phases, breach response, retreat, mounted sortie and dawn counterattack stay outside this pack.",
+        "Use 9 source banks, at least 36 categories and at least 19 landmark-tagged categories.",
+        "At least 8 banks and 16 landmark categories must have source coverage before source-run success.",
+        "Candidate scheduling remains fair-share inside a 34,000 total candidate ceiling.",
+        "Animated production candidates remain FBX-only; production textures PNG/TGA; BMP blocked.",
+        "Persistent warehouse inventory must be clean and 6 GiB free-space reserve remains mandatory.",
+        "Transient civilians/defenders use pooling when runtime integration is eventually approved; repeated fortress detail uses ISM/HISM + LOD/culling.",
+        "runtime_consumers remains empty and runtime_mapping_status remains NOT_ASSIGNED_DO_NOT_INVENT."
+      ],
+      "rationale": "F2-04 is the next canonical preparation chapter after Edoras. The full-journey story rule requires preserving refugee movement, Helm's Deep orientation, civilians, supplies and fortification preparation instead of skipping directly into F2-05 combat.",
+      "evidence": [
+        "01_STORY_AND_TIMELINE_BIBLE — F2-04 Road & Helm's Deep Prep",
+        "Tolkien The Lord of the Rings — Helm's Deep geography/refuge/preparation detail",
+        "Data/F204RoadHelmsDeepPrepMaximumSafeMegaSourceV1.json",
+        "Scripts/run_f204_road_helms_deep_prep_maximum_safe_source.ps1",
+        ".github/workflows/f204-road-helms-deep-prep-maximum-safe-source.yml",
+        "Scripts/pre_unreal_validate.py PG-206",
+        "Docs/WORLD_DETAIL_LEDGER.md — F2-04 Road & Helm's Deep Prep Maximum-Safe Source V1"
+      ],
+      "evidence_boundary": "SOURCE ARCHITECTURE ONLY. Exact-head static validation is required. No Part II runtime ID/runtime integration and no PIE/device/visual/pacing/performance acceptance is claimed."
     }
   ],
   "open_conflicts": [],
