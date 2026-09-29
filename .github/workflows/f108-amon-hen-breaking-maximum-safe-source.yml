@@ -1,0 +1,79 @@
+name: F1-08 Amon Hen Breaking Maximum Safe Mega Source
+
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - 'Data/Part1LandmarkIdentityPlanV1.json'
+      - 'Data/F108AmonHenBreakingMaximumSafeMegaSourceV1.json'
+      - 'Scripts/run_f108_amon_hen_breaking_maximum_safe_source.ps1'
+      - '.github/workflows/f108-amon-hen-breaking-maximum-safe-source.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: f108-amon-hen-breaking-maximum-safe-source-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    name: Build F1-08 Amon Hen Breaking maximum-safe source superpack
+    runs-on:
+      - self-hosted
+      - Windows
+      - X64
+      - ue4-27
+    timeout-minutes: 180
+    env:
+      TARGET_SHA: ${{ github.sha }}
+
+    steps:
+      - name: Checkout exact F1-08 preparation head
+        shell: cmd
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          @echo off
+          setlocal EnableExtensions EnableDelayedExpansion
+          set "GITEXE="
+          for /f "delims=" %%G in ('where git.exe 2^>nul') do if not defined GITEXE set "GITEXE=%%G"
+          if not defined GITEXE if exist "C:\Program Files\Git\cmd\git.exe" set "GITEXE=C:\Program Files\Git\cmd\git.exe"
+          if not defined GITEXE exit /b 22
+
+          set "F108_SRC=%RUNNER_TEMP%\shire-f108-source-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
+          if exist "!F108_SRC!" rmdir /S /Q "!F108_SRC!"
+          mkdir "!F108_SRC!"
+          cd /d "!F108_SRC!"
+
+          "!GITEXE!" init
+          if errorlevel 1 exit /b 70
+          "!GITEXE!" -c credential.helper= remote add origin "https://x-access-token:!GH_TOKEN!@github.com/%GITHUB_REPOSITORY%.git"
+          if errorlevel 1 exit /b 71
+          "!GITEXE!" -c credential.helper= fetch --no-tags --depth=2 origin !TARGET_SHA!
+          if errorlevel 1 exit /b 72
+          "!GITEXE!" checkout -f FETCH_HEAD
+          if errorlevel 1 exit /b 73
+          for /f "delims=" %%H in ('"!GITEXE!" rev-parse HEAD') do set "CHECKED_SHA=%%H"
+          if /I not "!CHECKED_SHA!"=="!TARGET_SHA!" exit /b 74
+          echo SHIRE_F108_SOURCE=!F108_SRC!>>"%GITHUB_ENV%"
+          echo F108_EXACT_CHECKOUT_PASS sha=!CHECKED_SHA!
+
+      - name: Verify runner session health
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_F108_SOURCE%\Scripts\verify_runner_session.ps1"
+
+      - name: Fast F1-08 PowerShell preflight
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_F108_SOURCE%\Scripts\test_powershell_syntax.ps1"
+
+      - name: Build Amon Hen Breaking maximum-safe mega source indexes
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_F108_SOURCE%\Scripts\run_f108_amon_hen_breaking_maximum_safe_source.ps1" -ManifestPath "%SHIRE_F108_SOURCE%\Data\F108AmonHenBreakingMaximumSafeMegaSourceV1.json"
+
+      - name: Remove isolated F1-08 checkout
+        if: always()
+        shell: cmd
+        run: |
+          @echo off
+          if defined SHIRE_F108_SOURCE if exist "%SHIRE_F108_SOURCE%" rmdir /S /Q "%SHIRE_F108_SOURCE%"
+          exit /b 0
