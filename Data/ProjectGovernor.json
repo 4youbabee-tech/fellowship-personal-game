@@ -4870,7 +4870,7 @@
       "evidence_boundary": "SOURCE ARCHITECTURE ONLY. No Part II runtime ID or runtime integration is approved; no PIE/device/visual/pacing/performance acceptance is claimed."
     },
     {
-      "id": "DEC-081",
+      "id": "DEC-083",
       "title": "F2-02 Fangorn & Gandalf Returned uses a 9-bank maximum-safe source wave without assigning a Part II runtime ID",
       "status": "ACCEPTED",
       "requirements": [
