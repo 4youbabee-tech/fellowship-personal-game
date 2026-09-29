@@ -1,3 +1,12 @@
+## 2026-09-30 - P1C01 living-world member-local culling safety repair
+
+- Programmer review finding confirmed against canonical develop: `CleanupExpiredEvents` retired an entire micro-event when any one grouped actor crossed `EventCullDistance`, allowing a roaming NPC or motion actor to make a nearby interaction disappear in front of the player.
+- Registered repair: event lifetime expiry remains event-wide, but distance retirement is actor/member-local. Far members are individually pooled/released; the event remains active while any member remains.
+- Pool ownership stays with `ALivingWorldDirector`; this does not create a second life system or change quest/save authority.
+- `ShireAmbientNPC` player lookup review found one direct `UGameplayStatics::GetPlayerPawn` call inside `GetPlayerPawnCached()`; normal runtime consumers already use that cache. No redundant caching rewrite is authorized.
+- Save-schema review found newer-save rejection plus existing legacy/canonicalization repair, but no documented per-version migration history sufficient to safely invent a general migration pipeline. Schema migration remains a separately designed task, not part of this repair.
+- Evidence boundary: SOURCE IMPLEMENTATION + STATIC GUARD ONLY until exact-head CI/UE evidence exists. No PIE/device/visual/performance acceptance is claimed.
+
 ## 2026-09-29 - F2-04 Road & Helm's Deep Prep Maximum-Safe Source V1
 
 - Canonical mission: F2-04 Road & Helm's Deep Prep.
