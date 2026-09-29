@@ -1,3 +1,12 @@
+## 2026-09-30 - P1C01 mega integration evidence boundary
+
+- Living-world grouped-event distance cleanup: **SOURCE-IMPLEMENTED / EXACT-HEAD PROOF PENDING**; distance retirement is member-local while authored lifetime expiry stays event-wide.
+- Ambient player-pawn lookup: **CACHE CENTRALIZATION GUARDED** by PG-208; no new runtime feature is claimed.
+- P1C01 mega train: **AUTHORIZED + SOURCE/DATA PREPARATION ACTIVE / RUNTIME CARS GATED** by W00 and per-car exact-head engine proof.
+- Source-to-runtime disposition: **REGISTERED**, including F1-01/F1-02/F1-03 versus current P1C01 aggregation and explicit deferred/out-of-scope rows.
+- Save migration: **AUDITED / GENERIC HISTORICAL MIGRATION NOT CLAIMED** because authoritative per-version field history has not been recovered.
+- P1C01 production maturity, PIE, target-device, FPS, visual and audio-listening acceptance: **UNCHANGED** pending their required evidence.
+
 ## 2026-09-30 - P1C01 maximum-safe mega build train + living-world cull safety
 
 - W00 packaged-runtime Data consumption: **MACHINE-GREEN on merged PR #184 / Unreal #1108**; human/device/visual Gate 6/7 evidence remains separate.
