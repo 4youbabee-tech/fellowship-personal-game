@@ -1,0 +1,192 @@
+{
+  "schema_version": 1,
+  "plan_id": "P1C01_MAXIMUM_SAFE_MEGA_BUILD_V1",
+  "status": "PREP_AND_DEFECT_REPAIR_ACTIVE_RUNTIME_EXPANSION_GATED_BY_W00",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Docs/WORLD_DETAIL_LEDGER.md",
+    "01_STORY_AND_TIMELINE_BIBLE",
+    "02_CHARACTERS_AND_RELATIONSHIPS_BIBLE",
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+    "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX"
+  ],
+  "objective": "Execute one very large P1C01 vertical-slice train with many bounded work cars, while preserving exact-head gates, low-spec budgets, canon chronology and current system ownership.",
+  "canon_scope": {
+    "runtime_identity": "P1C01",
+    "repository_reality": "Current P1C01 vertical slice already spans ShireArrival, LongExpectedParty, RingSecret, LeavingHome and FerryEscape-style progression.",
+    "source_boundary_note": "The supplied production bibles separate F1-01 Prologue & Ring History, F1-02 Shadow of the Past and F1-03 Road to Bree. This mega wave does not silently renumber or rewrite runtime topology; it records the compression and preserves each source-locked outcome and optional window inside the current P1C01 implementation until a dedicated mapping migration is approved.",
+    "required_source_beats": [
+      "F1-01: Ring history stakes; Bilbo birthday preparation; Gandalf arrival; optional party/social/fireworks; Bilbo leaves and Ring passes to Frodo.",
+      "F1-02: Bag End/Shire Ring-danger confirmation; investigation/packing/stealth-departure window; Frodo leaves the Shire.",
+      "F1-03-compatible current-runtime material only where already owned by P1C01: Shire-road danger, hiding and ferry escape. Do not unlock Bree or later runtime chapters early."
+    ],
+    "original_dialogue_only": true
+  },
+  "gate_policy": {
+    "current_gate": "W00 packaged/runtime acceptance",
+    "runtime_expansion_rule": "No new runtime feature implementation starts until W00 exact-head Unreal acceptance evidence is green and Governor prerequisites permit the next P1C01 car.",
+    "allowed_in_parallel_now": [
+      "source review and zero-silent-omission disposition",
+      "warehouse/source candidate preparation",
+      "data contracts",
+      "static validators and regression guards",
+      "documentation",
+      "defect fixes required to protect existing runtime"
+    ]
+  },
+  "architecture": {
+    "LivingWorldDirector": "Region population budgets, pooled admission/retirement, micro-events and coarse world-state response.",
+    "ShireNPCContextSubsystem": "Bounded NPC profile/context/knowledge/schedule/relationship projection.",
+    "ShireQuestSubsystem": "Quest, story, route and progression truth.",
+    "WorldBuilder": "Geometry, authored landmarks, world dressing and named/story actor placement only.",
+    "rules": [
+      "No parallel AI brain.",
+      "No heavy synchronous LoadObject path.",
+      "Crowd-scale actors remain pooled.",
+      "Heavy assets use soft references and FStreamableManager.",
+      "Repeated world detail prefers ISM/HISM with LOD/culling.",
+      "Animated production characters are FBX-only; production textures PNG/TGA with packed masks where useful."
+    ]
+  },
+  "work_cars": [
+    {
+      "order": 1,
+      "id": "DEFECT_EVENT_MEMBER_CULL",
+      "state": "ACTIVE",
+      "scope": "Fix micro-event distance retirement so one far member cannot remove nearby interaction/event members.",
+      "proof": [
+        "PG-208 static guard",
+        "exact-head UE4 compile/runtime"
+      ]
+    },
+    {
+      "order": 2,
+      "id": "CACHE_REGRESSION_GUARD",
+      "state": "PREPARED",
+      "scope": "Guard AShireAmbientNPC so UGameplayStatics::GetPlayerPawn remains centralized in GetPlayerPawnCached only.",
+      "proof": [
+        "static direct-call count guard"
+      ]
+    },
+    {
+      "order": 3,
+      "id": "SAVE_SCHEMA_HISTORY_AUDIT",
+      "state": "PREPARED",
+      "scope": "Reconstruct schema-version changes before adding migration code; do not invent historical field semantics.",
+      "proof": [
+        "documented version map or explicit unsupported boundary"
+      ]
+    },
+    {
+      "order": 4,
+      "id": "CANON_ZERO_SILENT_OMISSION",
+      "state": "PREPARED",
+      "scope": "Disposition every meaningful Shire/Bag End/party/road detail from supplied sources into implemented/deferred/blocked/later categories.",
+      "proof": [
+        "source-to-runtime disposition table"
+      ]
+    },
+    {
+      "order": 5,
+      "id": "SHIRE_WORLD_DENSITY",
+      "state": "GATED",
+      "scope": "Strengthen Hobbiton/fields/party-area lived-in density using current builders and instanced detail without raising unsafe resident budgets.",
+      "proof": [
+        "UE4 exact-head",
+        "later PIE/device density review"
+      ]
+    },
+    {
+      "order": 6,
+      "id": "BAG_END_LIVED_IN_PASS",
+      "state": "GATED",
+      "scope": "Dense lived-in round-geometry narrative-hub dressing, interaction readability and deterministic story-state variants.",
+      "proof": [
+        "UE4 exact-head",
+        "later PIE visual/collision review"
+      ]
+    },
+    {
+      "order": 7,
+      "id": "PARTY_AND_SOCIAL_LOOP",
+      "state": "GATED",
+      "scope": "Birthday setup/social onboarding/firework-safe-window presentation using current quest ownership and bounded optional activities.",
+      "proof": [
+        "quest idempotence",
+        "PIE pacing later"
+      ]
+    },
+    {
+      "order": 8,
+      "id": "LIVING_SHIRE",
+      "state": "GATED",
+      "scope": "Expand role/routine/social/fauna/environmental motion breadth through existing LivingWorldDirector + ShireNPCContextSubsystem ownership.",
+      "proof": [
+        "pool/state-leak regression",
+        "NPC behavior observation later"
+      ]
+    },
+    {
+      "order": 9,
+      "id": "CHARACTER_PRESENTATION",
+      "state": "GATED",
+      "scope": "Promote legal FBX Frodo/Gandalf/Sam Shire presentation candidates behind modular fallback and async rig loading.",
+      "proof": [
+        "rig/skin/deformation/AnimBP QC",
+        "UE import",
+        "PIE later"
+      ]
+    },
+    {
+      "order": 10,
+      "id": "AUDIO_SONIC_IDENTITY",
+      "state": "GATED",
+      "scope": "Shire birds, hedge breeze, farm work, distant laughter, carts, warm interiors, fire/cutlery; localized foley/concurrency under audio subsystem.",
+      "proof": [
+        "authored asset presence",
+        "playback without -NoSound",
+        "mix review later"
+      ]
+    },
+    {
+      "order": 11,
+      "id": "QUEST_CINEMATIC_POLISH",
+      "state": "GATED",
+      "scope": "Bounded set pieces, exact postconditions, checkpoint continuity, clean return to embodied player control; no copied film/book dialogue.",
+      "proof": [
+        "save/route/cinematic skip equivalence",
+        "human pacing later"
+      ]
+    },
+    {
+      "order": 12,
+      "id": "TARGET_DEVICE_AND_GATE67",
+      "state": "GATED",
+      "scope": "DX11 1280x720 Low-Medium target-class profiling plus P1C01 Gate 6/7 evidence collection.",
+      "proof": [
+        "FPS/frame time",
+        "RAM/VRAM",
+        "hitches",
+        "PIE chapter-specific notes",
+        "human visual acceptance"
+      ]
+    }
+  ],
+  "performance_budget": {
+    "target": "6th-gen i7 / 8GB RAM / ~2GB VRAM / Windows DX11 / 1280x720 Low-Medium",
+    "fps_floor": 30,
+    "population_target_p1c01": 18,
+    "max_active_micro_events_near_player": 3,
+    "max_active_fauna_groups_near_player": 2,
+    "event_cull_policy": "member-local distance retirement; event-wide retirement only on authored expiry/reset"
+  },
+  "acceptance_boundary": [
+    "STATIC-VALIDATED and COMPILE-TESTED may be promoted only from exact evidence.",
+    "PIE-TESTED requires chapter-specific P1C01 evidence.",
+    "DEVICE-TESTED requires target-class device measurements.",
+    "VISUALLY-ACCEPTED requires explicit human review.",
+    "This plan itself authorizes no acceptance promotion."
+  ]
+}
