@@ -8316,6 +8316,78 @@ for ignored in [
         fail(f"PG-197 F1-04 tooling path must stay off Unreal push+PR filters: {ignored}")
 
 
+# PG-198: F1-05 Rivendell & Fellowship source superpack must remain large, inventory-gated and runtime-gated.
+pg198_manifest = json.loads(read(ROOT / "Data" / "F105RivendellFellowshipMegaSourceSuperpackV1.json"))
+pg198_runner = read(ROOT / "Scripts" / "run_f105_rivendell_fellowship_mega_source.ps1")
+pg198_workflow = read(ROOT / ".github" / "workflows" / "f105-rivendell-fellowship-mega-source.yml")
+pg198_unreal = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+
+if pg198_manifest.get("status") != "SOURCE_ARCHITECTURE_READY_INVENTORY_GATED_RUNTIME_GATED":
+    fail("PG-198 F1-05 superpack must remain inventory-gated and runtime-gated")
+if pg198_manifest.get("canonical_mission_id") != "F1-05":
+    fail("PG-198 F1-05 canonical mission ID drifted")
+if pg198_manifest.get("runtime_consumers") != ["P1C04"]:
+    fail("PG-198 F1-05 runtime consumer must remain P1C04")
+policy = pg198_manifest.get("source_policy", {})
+safety = pg198_manifest.get("safety_gate", {})
+if int(policy.get("max_total_candidates", 0)) < 12000:
+    fail("PG-198 F1-05 total candidate ceiling unexpectedly reduced")
+if int(policy.get("max_candidates_per_category", 0)) < 1500:
+    fail("PG-198 F1-05 per-category throughput unexpectedly reduced")
+if policy.get("animated_candidate_extension") != ".fbx":
+    fail("PG-198 animated F1-05 candidates must remain FBX-only")
+if ".bmp" not in policy.get("forbidden_texture_extensions", []):
+    fail("PG-198 F1-05 source pack must continue blocking BMP textures")
+if not safety.get("requires_clean_warehouse_inventory", False):
+    fail("PG-198 F1-05 heavy execution must require clean warehouse inventory")
+for key in ["hard_stop_on_hash_mismatch","hard_stop_on_license_hash_mismatch","hard_stop_on_dangerous_file","hard_stop_on_bad_receipt"]:
+    if not safety.get(key, False):
+        fail(f"PG-198 F1-05 warehouse safety gate weakened: {key}")
+categories = pg198_manifest.get("categories", [])
+if len(categories) < 20:
+    fail("PG-198 F1-05 source pack lost required category breadth")
+for required in [
+    "RIVENDELL_TERRACES_ARCHITECTURE",
+    "COUNCIL_SPACE",
+    "FELLOWSHIP_CHARACTER_SUPPORT",
+    "FELLOWSHIP_ANIMATION_LIBRARY",
+    "RIVENDELL_ELVEN_POPULATION",
+    "RELATIONSHIP_SCENE_SUPPORT",
+    "HEALING_RECOVERY_SUPPORT",
+    "FELLOWSHIP_DEPARTURE_SUPPORT",
+    "SYSTEMIC_INTERACTION_SUPPORT",
+]:
+    if required not in {x.get("id") for x in categories}:
+        fail(f"PG-198 F1-05 category missing: {required}")
+for symbol in [
+    "F105_MEGA_SOURCE_INVENTORY_GATE_BEGIN",
+    "F105_MEGA_SOURCE_INVENTORY_GATE_PASS",
+    "F105_MEGA_SOURCE_INVENTORY_GATE_FAIL",
+    "audit_warehouse_inventory.ps1",
+    "F105_MEGA_SOURCE_CATEGORY_PASS",
+    "F105_MEGA_SOURCE_PASS",
+    'if($kind -eq "animated" -and $ext -ne $animatedExt)',
+]:
+    if symbol not in pg198_runner:
+        fail(f"PG-198 F1-05 runner marker missing: {symbol}")
+for symbol in [
+    "name: F1-05 Rivendell Fellowship Mega Source",
+    "cancel-in-progress: false",
+    "timeout-minutes: 180",
+    "Fast F1-05 PowerShell preflight",
+    "Build Rivendell Fellowship mega source indexes",
+]:
+    if symbol not in pg198_workflow:
+        fail(f"PG-198 F1-05 workflow contract missing: {symbol}")
+for ignored in [
+    "Data/F105RivendellFellowshipMegaSourceSuperpackV1.json",
+    "Scripts/run_f105_rivendell_fellowship_mega_source.ps1",
+    ".github/workflows/f105-rivendell-fellowship-mega-source.yml",
+]:
+    if pg198_unreal.count(ignored) < 2:
+        fail(f"PG-198 F1-05 tooling path must stay off Unreal push+PR filters: {ignored}")
+
+
 # PG-195: Unreal import must not trust an editor-only wait while a commandlet remains alive.
 pg195_wait = read(ROOT / "Scripts" / "wait_for_unreal_processes.ps1")
 pg195_wait_cmd = read(ROOT / "Scripts" / "ci_wait_for_unreal_editor.cmd")
