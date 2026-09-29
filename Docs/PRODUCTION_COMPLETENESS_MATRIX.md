@@ -1,22 +1,13 @@
-## 2026-09-30 - P1C01 mega-build / LivingWorld member-cull safety
+## 2026-09-30 - P1C01 maximum-safe mega train / living-world safety
 
-- LivingWorld event member-local distance retirement: **SOURCE-IMPLEMENTED / exact-head CI pending**.
-- Whole-event authored lifetime expiry: **PRESERVED**.
-- Ambient player-pawn caching regression guard: **SOURCE-IMPLEMENTED**; current direct UGameplayStatics lookup count in ShireAmbientNPC is one and centralized in the cache helper.
-- Generic save-schema migration: **NOT CLAIMED**; history audit registered before any version-specific migration code.
-- P1C01 12-car maximum-safe mega build: **REGISTERED / runtime expansion gated by W00**.
-- Chapter maturity remains unchanged until exact-head UE4 and later chapter-specific PIE/device/human evidence exist.
-
-## 2026-09-30 - P1C01 maximum-safe mega build train + living-world cull safety
-
-- Owner-authorized P1C01 mega train: **PREPARATION ACTIVE / RUNTIME EXPANSION GATED BY W00**.
-- Living-world grouped-event distance retirement: **SOURCE-REPAIRED to member-local**.
-- Event authored lifetime expiry: **PRESERVED event-wide**.
-- Regression protection: **PG-208 + source-contract unit coverage IMPLEMENTED / exact-head CI pending**.
-- Ambient player-pawn lookup claim rechecked: **one direct engine lookup inside the cache helper; no hot-path rewrite required**.
-- Save schema migration: **AUDITED / HISTORY INCOMPLETE / NO SPECULATIVE MIGRATION ADDED**.
-- AI/Life, Gameplay, Character, Audio, Cinematic and Performance production maturity remain unchanged until their individual exact-head/runtime/human evidence exists.
-- No P1C01 PIE/device/FPS/visual/performance acceptance is promoted by this branch.
+- LivingWorld grouped-event distance retirement: **SOURCE-REPAIRED to member-local**.
+- Authored event lifetime expiry: **PRESERVED event-wide**.
+- Regression protection: **PG-208 + source-contract test implemented / exact-head CI pending**.
+- Ambient player lookup centralization: **SOURCE-VERIFIED; PG-210 guards one direct engine lookup inside GetPlayerPawnCached**.
+- Generic save-schema migration: **NOT CLAIMED**; evidence boundary recorded in Data/SaveSchemaMigrationAuditV1.json and PG-211.
+- P1C01 source-to-runtime zero-silent-omission disposition: **PREPARED / PG-212**.
+- Owner-authorized 12-car P1C01 mega train: **PREPARATION ACTIVE / NEW RUNTIME EXPANSION GATED BY W00**.
+- Chapter production maturity is unchanged until exact-head UE4 plus chapter-specific PIE/device/human evidence exists.
 
 ## 2026-09-30 - Final zero-ahead maintenance sweep
 
