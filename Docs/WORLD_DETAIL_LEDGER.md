@@ -1,3 +1,11 @@
+## 2026-09-30 - Living-world member-local retirement safety
+
+- Programmer review identified a real long-session living-world defect: one far actor inside a multi-member micro-event could retire the entire event, including a nearby player interaction or participant.
+- Approved repair direction: event lifetime expiry remains event-wide, but distance retirement is actor-local. Each far member is released to its existing pool independently; the event record survives while any member remains active.
+- Interaction/ambient-motion/NPC pooling ownership remains in `ALivingWorldDirector`; no parallel world-life system is introduced.
+- The repair keeps story/save/quest ownership unchanged and adds a static regression guard against restoring event-wide distance culling.
+- Evidence boundary: source implementation only until exact-head Pre-Unreal and UE4.27.2 gates succeed. No PIE/device/visual/performance acceptance is claimed.
+
 ## 2026-09-30 - P1C01 living-world member-local culling safety repair
 
 - Programmer review finding confirmed against canonical develop: `CleanupExpiredEvents` retired an entire micro-event when any one grouped actor crossed `EventCullDistance`, allowing a roaming NPC or motion actor to make a nearby interaction disappear in front of the player.
