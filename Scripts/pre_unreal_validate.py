@@ -5814,22 +5814,22 @@ for pg212_id in [
 
 
 
-# PG-209: P1C01 mega train remains gate-safe and source-grounded.
+# PG-213: combined P1C01 overnight train/source-disposition contract remains gate-safe.
 pg209_max = json.loads(read(ROOT / "Data" / "P1C01MaximumSafeMegaBuildV1.json"))
 pg209_train = json.loads(read(ROOT / "Data" / "P1C01OvernightMegaBuildTrainV1.json"))
 pg209_disp = json.loads(read(ROOT / "Data" / "P1C01SourceToRuntimeDispositionV1.json"))
 if pg209_max.get("status") != "PREP_AND_DEFECT_REPAIR_ACTIVE_RUNTIME_EXPANSION_GATED_BY_W00":
-    fail("PG-209 P1C01 maximum-safe build lost W00 runtime gate")
+    fail("PG-213 P1C01 maximum-safe build lost W00 runtime gate")
 if pg209_train.get("execution_policy", {}).get("one_approval_many_cars") is not True:
-    fail("PG-209 one-approval many-cars contract missing")
+    fail("PG-213 one-approval many-cars contract missing")
 if "synchronous heavy asset loads" not in pg209_train.get("execution_policy", {}).get("forbidden", []):
-    fail("PG-209 synchronous heavy-load prohibition missing")
+    fail("PG-213 synchronous heavy-load prohibition missing")
 if "OBJ for animated production assets" not in pg209_train.get("execution_policy", {}).get("forbidden", []):
-    fail("PG-209 animated OBJ prohibition missing")
+    fail("PG-213 animated OBJ prohibition missing")
 if "BMP as final production texture" not in pg209_train.get("execution_policy", {}).get("forbidden", []):
-    fail("PG-209 BMP final-texture prohibition missing")
+    fail("PG-213 BMP final-texture prohibition missing")
 if pg209_disp.get("zero_silent_omission_rule", "") == "":
-    fail("PG-209 source-to-runtime zero-silent-omission rule missing")
+    fail("PG-213 source-to-runtime zero-silent-omission rule missing")
 pg209_ids = {str(x.get("id") or "") for x in pg209_max.get("work_cars", []) if isinstance(x, dict)}
 for pg209_required in [
     "DEFECT_EVENT_MEMBER_CULL",
@@ -5842,7 +5842,7 @@ for pg209_required in [
     "TARGET_DEVICE_AND_GATE67",
 ]:
     if pg209_required not in pg209_ids:
-        fail(f"PG-209 P1C01 mega-build car missing: {pg209_required}")
+        fail(f"PG-213 P1C01 mega-build car missing: {pg209_required}")
 
 
 if errors:
