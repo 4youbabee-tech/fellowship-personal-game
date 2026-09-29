@@ -1,3 +1,18 @@
+## 2026-09-29 - F1-06 Caradhras & Moria landmark mega source preparation
+
+- Canonical F1-06 source scope: **REGISTERED**.
+- Runtime P1C05/P1C06 mapping: **RECORDED**.
+- 24-category / 16,000-candidate source manifest: **SOURCE-IMPLEMENTED**.
+- Landmark-first scoring and silhouette/vista contract: **SOURCE-IMPLEMENTED**.
+- Caradhras + Moria distinct identity lanes: **SOURCE-IMPLEMENTED**.
+- Clean-inventory hard gate: **SOURCE-IMPLEMENTED**.
+- FBX-only animated candidate filter / BMP rejection: **SOURCE-IMPLEMENTED**.
+- Dedicated 180-minute F1-06 workflow: **SOURCE-IMPLEMENTED**.
+- Heavy workflow execution: **BLOCKED UNTIL WAREHOUSE INVENTORY CLEAN**.
+- P1C05/P1C06 runtime integration: **BLOCKED UNTIL PREDECESSOR GATE ACCEPTED**.
+- Exact-head static validation: **PENDING**.
+- PIE/device/visual/pacing/performance acceptance: **NOT CLAIMED**.
+
 ## 2026-09-29 - F1-05 Rivendell & Fellowship mega source preparation
 
 - Canonical F1-05 source scope: **REGISTERED**.
