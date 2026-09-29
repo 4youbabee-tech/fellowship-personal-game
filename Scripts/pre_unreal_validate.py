@@ -8593,6 +8593,117 @@ for ignored in [
     if pg200_unreal.count(ignored) < 2:
         fail(f"PG-200 F1-07 tooling path must stay off Unreal push+PR filters: {ignored}")
 
+
+# PG-201: F1-08 must remain maximum-safe, source-large, canon-bounded and streamed-bank planned.
+pg201_landmarks = json.loads(read(ROOT / "Data" / "Part1LandmarkIdentityPlanV1.json"))
+pg201_plan = json.loads(read(ROOT / "Data" / "F108AmonHenMaximumSafeChapterPlanV1.json"))
+pg201_manifest = json.loads(read(ROOT / "Data" / "F108AmonHenMaximumSafeSourceSuperpackV1.json"))
+pg201_runner = read(ROOT / "Scripts" / "run_f108_amon_hen_maximum_safe_source.ps1")
+pg201_workflow = read(ROOT / ".github" / "workflows" / "f108-amon-hen-maximum-safe-source.yml")
+pg201_unreal = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+
+if "AMON_HEN_F108_BREAK" not in {x.get("id") for x in pg201_landmarks.get("regions", [])}:
+    fail("PG-201 F1-08 Amon Hen landmark identity missing")
+if pg201_plan.get("status") != "SOURCE_ARCHITECTURE_READY_RUNTIME_GATED":
+    fail("PG-201 F1-08 chapter plan must remain runtime-gated")
+if pg201_plan.get("canonical_mission_id") != "F1-08" or pg201_plan.get("runtime_consumer") != "P1C08":
+    fail("PG-201 F1-08 canonical/runtime mapping drifted")
+story = pg201_plan.get("story_contract", {})
+if story.get("locked_postcondition") != "Three parallel campaigns begin.":
+    fail("PG-201 F1-08 locked postcondition drifted")
+if "F2-01" not in str(story.get("successor_boundary", "")):
+    fail("PG-201 F1-08 must preserve the F2-01 successor boundary")
+
+maxsafe = pg201_plan.get("maximum_safe_runtime_design", {})
+if maxsafe.get("model") != "MULTI_BANK_ZONE_STREAMING":
+    fail("PG-201 F1-08 must remain multi-bank streamed")
+if not maxsafe.get("synchronous_heavy_loads_forbidden", False):
+    fail("PG-201 F1-08 synchronous heavy loads must remain forbidden")
+if int(maxsafe.get("planned_max_transition_overlap_banks", 99)) > 2:
+    fail("PG-201 F1-08 planned transition overlap exceeded two banks")
+if len(pg201_plan.get("banks", [])) < 8:
+    fail("PG-201 F1-08 streamed bank breadth unexpectedly reduced")
+
+if pg201_manifest.get("status") != "SOURCE_ARCHITECTURE_READY_INVENTORY_GATED_RUNTIME_GATED":
+    fail("PG-201 F1-08 source pack must remain inventory/runtime gated")
+if pg201_manifest.get("canonical_mission_id") != "F1-08" or pg201_manifest.get("runtime_consumers") != ["P1C08"]:
+    fail("PG-201 F1-08 source runtime mapping drifted")
+
+policy = pg201_manifest.get("source_policy", {})
+safety = pg201_manifest.get("safety_gate", {})
+if int(policy.get("max_total_candidate_assignments", 0)) < 22000:
+    fail("PG-201 F1-08 assignment ceiling unexpectedly reduced")
+if int(policy.get("max_candidates_per_category", 0)) < 2400:
+    fail("PG-201 F1-08 per-category throughput unexpectedly reduced")
+reuse_cap = int(policy.get("max_category_reuse_per_source_path", 99))
+if reuse_cap < 1 or reuse_cap > 3:
+    fail("PG-201 F1-08 source-path reuse cap must remain between 1 and 3")
+if int(policy.get("landmark_score_bonus", 0)) < 8 or int(policy.get("story_critical_score_bonus", 0)) < 5:
+    fail("PG-201 F1-08 source priority bonuses unexpectedly reduced")
+if int(policy.get("minimum_populated_categories", 0)) < 20 or int(policy.get("minimum_landmark_categories", 0)) < 10:
+    fail("PG-201 F1-08 coverage minimums unexpectedly reduced")
+if policy.get("animated_candidate_extension") != ".fbx":
+    fail("PG-201 F1-08 animated candidates must remain FBX-only")
+if ".bmp" not in policy.get("forbidden_texture_extensions", []):
+    fail("PG-201 F1-08 BMP rejection removed")
+for key in ["requires_clean_warehouse_inventory", "hard_stop_on_hash_mismatch", "hard_stop_on_license_hash_mismatch", "hard_stop_on_dangerous_file", "hard_stop_on_bad_receipt"]:
+    if not safety.get(key, False):
+        fail(f"PG-201 F1-08 warehouse safety gate weakened: {key}")
+
+categories = pg201_manifest.get("categories", [])
+if len(categories) < 36:
+    fail("PG-201 F1-08 category breadth unexpectedly reduced")
+required_categories = {
+    "AMON_HEN_SEEING_SEAT_LANDMARK",
+    "AMON_HEN_SUMMIT_RUINS",
+    "AMON_HEN_ANCIENT_PILLARS_BLOCKS",
+    "ANDUIN_SHORE_BOAT_EXIT",
+    "URUK_HAI_COMBAT_ANIMATION",
+    "BOROMIR_LAST_STAND_ANIMATION",
+    "MERRY_PIPPIN_ESCAPE_CAPTURE",
+    "FRODO_ESCAPE_STEALTH_MOVEMENT",
+    "SAM_SHORE_WATER_BOAT",
+    "F108_DISTANCE_PROXY_LOD_SUPPORT",
+    "F108_THREE_CAMPAIGN_EXIT_SUPPORT",
+}
+present_categories = {x.get("id") for x in categories}
+for required in required_categories:
+    if required not in present_categories:
+        fail(f"PG-201 F1-08 required category missing: {required}")
+
+for symbol in [
+    "F108_MAX_SAFE_INVENTORY_GATE_BEGIN",
+    "F108_MAX_SAFE_INVENTORY_GATE_PASS",
+    "max_category_reuse_per_source_path",
+    "F108_MAX_SAFE_SOFT_GAP",
+    "F108_MAX_SAFE_COVERAGE_PASS",
+    "F108_MAX_SAFE_SOURCE_PASS",
+    '$matches.ToArray()',
+    '-Root $WarehouseRoot',
+    'if($kind -eq "animated" -and $ext -ne $animatedExt)',
+]:
+    if symbol not in pg201_runner:
+        fail(f"PG-201 F1-08 runner marker missing: {symbol}")
+
+for symbol in [
+    "name: F1-08 Amon Hen Maximum Safe Source",
+    "cancel-in-progress: false",
+    "timeout-minutes: 180",
+    "Fast F1-08 PowerShell preflight",
+    "Build Amon Hen maximum-safe source indexes",
+]:
+    if symbol not in pg201_workflow:
+        fail(f"PG-201 F1-08 workflow contract missing: {symbol}")
+
+for ignored in [
+    "Data/F108AmonHenMaximumSafeChapterPlanV1.json",
+    "Data/F108AmonHenMaximumSafeSourceSuperpackV1.json",
+    "Scripts/run_f108_amon_hen_maximum_safe_source.ps1",
+    ".github/workflows/f108-amon-hen-maximum-safe-source.yml",
+]:
+    if pg201_unreal.count(ignored) < 2:
+        fail(f"PG-201 F1-08 tooling path must stay off Unreal push+PR filters: {ignored}")
+
 # PG-195: Unreal import must not trust an editor-only wait while a commandlet remains alive.
 pg195_wait = read(ROOT / "Scripts" / "wait_for_unreal_processes.ps1")
 pg195_wait_cmd = read(ROOT / "Scripts" / "ci_wait_for_unreal_editor.cmd")
