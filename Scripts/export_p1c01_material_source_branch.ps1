@@ -191,8 +191,20 @@ try{
   # generated branches, so that ref can be stale even when the remote is healthy.
   # Read the authoritative remote head and lease against that exact SHA instead.
   $remoteRef="refs/heads/"+$GeneratedBranch
-  $remoteLine=(& $git -c credential.helper= -C $worktree ls-remote --heads origin $remoteRef | Select-Object -First 1)
-  if($LASTEXITCODE -ne 0){ throw "generated material remote-head lookup failed" }
+  $remoteLines=@()
+  $lookupExit=1
+  for($attempt=1; $attempt -le 3; $attempt++){
+    Write-Host ("P1C01_MATERIAL_SOURCE_REMOTE_LOOKUP attempt="+$attempt+" branch="+$GeneratedBranch)
+    $remoteLines=@(& $git -c credential.helper= -C $worktree ls-remote --heads origin $remoteRef)
+    $lookupExit=[int]$LASTEXITCODE
+    if($lookupExit -eq 0){ break }
+    if($attempt -lt 3){ Start-Sleep -Seconds 3 }
+  }
+  if($lookupExit -ne 0){
+    throw ("generated material remote-head lookup failed exit="+$lookupExit+" attempts=3")
+  }
+  $remoteLine=""
+  if($remoteLines.Count -gt 0){ $remoteLine=[string]$remoteLines[0] }
 
   $remoteGeneratedSha=""
   if(-not [string]::IsNullOrWhiteSpace([string]$remoteLine)){
