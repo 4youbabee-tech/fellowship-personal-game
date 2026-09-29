@@ -1,3 +1,16 @@
+## 2026-09-30 - P1C01 maximum-safe mega build + living-world cull repair
+
+- W00 packaged-runtime Data-read gate is now machine-green on merged PR #184 / Unreal Build Validation #1108; this does not by itself satisfy human/device/visual Gate 6/7 evidence.
+- Owner authorized one large P1C01 production train with many bounded work cars under one approval. Machine-readable authorities: `Data/P1C01MaximumSafeMegaBuildV1.json` and `Data/P1C01OvernightMegaBuildTrainV1.json`.
+- Supplied source bibles were checked before registration. Source F1-01 owns Ring-history/birthday/Gandalf/party material; F1-02 owns Bag End Ring-danger/departure; F1-03 owns Shire-road/Black Rider/ferry escape. Current runtime `P1C01` compresses material across those source packages; this wave preserves current runtime topology and records that mismatch instead of silently redefining canon chapters.
+- Programmer proposal audit confirmed a real grouped-event culling defect. `ALivingWorldDirector::CleanupExpiredEvents` now keeps authored lifetime expiry event-wide but makes distance retirement member-local, pooling/removing only the far actor while nearby event members remain active.
+- Regression protection: `PG-208` plus `test_living_world_distance_cull_is_member_local`. `PG-209` protects the W00-gated mega-build architecture.
+- The reported six direct ambient `GetPlayerPawn` lookups are not present on current source: one direct `UGameplayStatics::GetPlayerPawn` call remains inside `GetPlayerPawnCached()`; runtime call sites use the cache helper.
+- Save-schema review is recorded in `Data/SaveSchemaMigrationAuditV1.json`: schema 6 rejects newer saves and existing legacy identity repair is present, but no authoritative version-by-version field history was recovered, so no speculative migration ladder was added.
+- `Data/P1C01SourceToRuntimeDispositionV1.json` and the expanded source-to-production bridge implement the zero-silent-omission preparation pass for Shire/Hobbiton, Bag End, party/fireworks, Ring danger, road hiding/ferry, living-world/audio and checkpoint/retry requirements.
+- Legacy `Scripts/run_p1c01_mega_chapter_pack.ps1` Warehouse default is reconciled from retired C runner storage to `D:\actions-runner\_warehouse\ShireJourney`.
+- Current integration status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4 PROOF PENDING FOR THIS NEW HEAD**. No PIE/device/FPS/visual/performance acceptance is claimed.
+
 ## 2026-09-30 - W00 packaged runtime Data-read proof guard
 
 - Remote branch-salvage cleanup is closed machine-wise: the 26 legacy heads are recoverable from `archive/pre-build-salvage-20260930`, and the final cleanup pass reduced persistent refs to `develop`, `main`, and the recovery-only archive before this short-lived validation branch was opened.
