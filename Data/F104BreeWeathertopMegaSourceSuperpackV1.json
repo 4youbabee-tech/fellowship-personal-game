@@ -1,0 +1,476 @@
+{
+  "schema_version": 1,
+  "pack_id": "F104_BREE_WEATHERTOP_MEGA_SOURCE_SUPERPACK_V1",
+  "status": "SOURCE_PREPARATION_READY_RUNTIME_GATED",
+  "canonical_mission_id": "F1-04",
+  "canonical_title": "Bree & Weathertop",
+  "runtime_consumers": [
+    "P1C02",
+    "P1C03"
+  ],
+  "authority": [
+    "01_STORY_AND_TIMELINE_BIBLE",
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "Data/ProjectGovernor.json",
+    "Docs/WORLD_DETAIL_LEDGER.md"
+  ],
+  "story_contract": {
+    "entry": "Previous package resolves with the Hobbits reaching Bree.",
+    "critical_path": [
+      "Aragorn becomes guide.",
+      "Ring use draws danger.",
+      "Frodo is wounded."
+    ],
+    "safe_optional_window": [
+      "tavern attention",
+      "travel",
+      "camp decisions",
+      "defensive combat"
+    ],
+    "locked_postcondition": "Party races for Rivendell."
+  },
+  "world_contract": {
+    "bree": {
+      "location_type": "Crossroads town",
+      "visual_grammar": [
+        "timber",
+        "stone",
+        "rain",
+        "gates",
+        "crowded inn"
+      ],
+      "gameplay_roles": [
+        "social stealth",
+        "supplies",
+        "rumors",
+        "pursuit pressure"
+      ],
+      "state_variants": [
+        "night arrival",
+        "departure"
+      ]
+    },
+    "weathertop": {
+      "location_type": "Ruined hilltop watchtower",
+      "visual_grammar": [
+        "ancient stone ring",
+        "ruined masonry",
+        "exposed skyline",
+        "wind",
+        "darkness"
+      ],
+      "gameplay_roles": [
+        "camp tension",
+        "travel decisions",
+        "defensive combat",
+        "Nazgul encounter support"
+      ],
+      "state_variants": [
+        "calm approach",
+        "night attack"
+      ]
+    }
+  },
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_class": 2
+  },
+  "source_policy": {
+    "reuse_existing_warehouse_first": true,
+    "duplicate_payloads_per_runtime_chapter": false,
+    "index_only": true,
+    "heavy_runtime_references": "TSoftObjectPtr/TSoftClassPtr + FStreamableManager async",
+    "crowd_runtime_policy": "Object pooling",
+    "repeated_static_runtime_policy": "ISM/HISM + LOD/culling",
+    "animated_candidate_extension": ".fbx",
+    "texture_extensions": [
+      ".png",
+      ".tga"
+    ],
+    "forbidden_texture_extensions": [
+      ".bmp"
+    ],
+    "static_source_extensions": [
+      ".fbx",
+      ".obj"
+    ],
+    "audio_extensions": [
+      ".wav"
+    ],
+    "metadata_extensions": [
+      ".json",
+      ".mtl"
+    ],
+    "max_total_candidates": 9000,
+    "max_candidates_per_category": 1200,
+    "minimum_free_disk_reserve_bytes": 6442450944
+  },
+  "categories": [
+    {
+      "id": "BREE_ARCHITECTURE",
+      "runtime": "P1C02",
+      "kind": "static",
+      "keywords": [
+        "bree",
+        "town",
+        "village",
+        "timber",
+        "stone",
+        "plaster",
+        "wall",
+        "roof",
+        "gate",
+        "arch",
+        "door",
+        "window",
+        "inn",
+        "tavern",
+        "stable",
+        "fence",
+        "sign",
+        "chimney",
+        "beam"
+      ]
+    },
+    {
+      "id": "BREE_INN_INTERIORS",
+      "runtime": "P1C02",
+      "kind": "static",
+      "keywords": [
+        "inn",
+        "tavern",
+        "bar",
+        "table",
+        "chair",
+        "bench",
+        "mug",
+        "cup",
+        "bottle",
+        "barrel",
+        "crate",
+        "fireplace",
+        "candle",
+        "lantern",
+        "bed",
+        "rug",
+        "shelf",
+        "kitchen",
+        "food"
+      ]
+    },
+    {
+      "id": "BREE_STREETS_MARKET",
+      "runtime": "P1C02",
+      "kind": "static",
+      "keywords": [
+        "street",
+        "road",
+        "mud",
+        "cobble",
+        "path",
+        "cart",
+        "wagon",
+        "wheel",
+        "market",
+        "stall",
+        "rope",
+        "sack",
+        "crate",
+        "barrel",
+        "sign",
+        "gate",
+        "stable"
+      ]
+    },
+    {
+      "id": "BREE_SURFACES",
+      "runtime": "P1C02",
+      "kind": "surface",
+      "keywords": [
+        "mud",
+        "soil",
+        "dirt",
+        "cobble",
+        "stone",
+        "plaster",
+        "timber",
+        "wood",
+        "roof",
+        "thatch",
+        "moss",
+        "wet",
+        "rain",
+        "path"
+      ]
+    },
+    {
+      "id": "BREE_WEATHER_AUDIO",
+      "runtime": "P1C02",
+      "kind": "audio",
+      "keywords": [
+        "rain",
+        "storm",
+        "wind",
+        "night",
+        "town",
+        "crowd",
+        "tavern",
+        "inn",
+        "fire",
+        "door",
+        "horse",
+        "hoof",
+        "footstep",
+        "ambient",
+        "murmur"
+      ]
+    },
+    {
+      "id": "BREE_POPULATION_SUPPORT",
+      "runtime": "P1C02",
+      "kind": "animated",
+      "keywords": [
+        "human",
+        "villager",
+        "town",
+        "merchant",
+        "traveller",
+        "traveler",
+        "innkeeper",
+        "guard",
+        "ranger",
+        "horse",
+        "pony",
+        "crowd",
+        "civilian",
+        "idle",
+        "walk",
+        "talk"
+      ]
+    },
+    {
+      "id": "BREE_SYSTEMIC_INTERACTION",
+      "runtime": "P1C02",
+      "kind": "mixed",
+      "keywords": [
+        "door",
+        "gate",
+        "bell",
+        "sign",
+        "lantern",
+        "chair",
+        "bench",
+        "barrel",
+        "crate",
+        "fireplace",
+        "cart",
+        "stable",
+        "rain",
+        "puddle",
+        "horse"
+      ]
+    },
+    {
+      "id": "WEATHERTOP_TERRAIN",
+      "runtime": "P1C03",
+      "kind": "static",
+      "keywords": [
+        "weathertop",
+        "hill",
+        "mountain",
+        "rock",
+        "cliff",
+        "slope",
+        "terrain",
+        "grass",
+        "heath",
+        "dirt",
+        "soil",
+        "path",
+        "ridge",
+        "boulder"
+      ]
+    },
+    {
+      "id": "WEATHERTOP_RUINS",
+      "runtime": "P1C03",
+      "kind": "static",
+      "keywords": [
+        "ruin",
+        "tower",
+        "watchtower",
+        "stone",
+        "ring",
+        "wall",
+        "arch",
+        "column",
+        "pillar",
+        "broken",
+        "rubble",
+        "masonry",
+        "stair",
+        "ancient"
+      ]
+    },
+    {
+      "id": "WEATHERTOP_CAMP",
+      "runtime": "P1C03",
+      "kind": "static",
+      "keywords": [
+        "camp",
+        "fire",
+        "campfire",
+        "bedroll",
+        "blanket",
+        "pot",
+        "pan",
+        "pack",
+        "bag",
+        "rope",
+        "wood",
+        "torch",
+        "food",
+        "travel"
+      ]
+    },
+    {
+      "id": "WEATHERTOP_VEGETATION",
+      "runtime": "P1C03",
+      "kind": "static",
+      "keywords": [
+        "grass",
+        "fern",
+        "bush",
+        "shrub",
+        "heath",
+        "weed",
+        "moss",
+        "tree",
+        "branch",
+        "leaf",
+        "rock",
+        "ground"
+      ]
+    },
+    {
+      "id": "WEATHERTOP_WEATHER_AUDIO",
+      "runtime": "P1C03",
+      "kind": "audio",
+      "keywords": [
+        "wind",
+        "night",
+        "storm",
+        "rain",
+        "thunder",
+        "fire",
+        "campfire",
+        "footstep",
+        "stone",
+        "sword",
+        "horse",
+        "ambient",
+        "whisper"
+      ]
+    },
+    {
+      "id": "WEATHERTOP_ENCOUNTER_SUPPORT",
+      "runtime": "P1C03",
+      "kind": "animated",
+      "keywords": [
+        "nazgul",
+        "wraith",
+        "rider",
+        "horse",
+        "sword",
+        "combat",
+        "attack",
+        "defend",
+        "dodge",
+        "hit",
+        "fall",
+        "idle",
+        "walk",
+        "run"
+      ]
+    },
+    {
+      "id": "F104_CHARACTER_ANIMATION_SUPPORT",
+      "runtime": "SHARED",
+      "kind": "animated",
+      "keywords": [
+        "hobbit",
+        "aragorn",
+        "ranger",
+        "human",
+        "nazgul",
+        "wraith",
+        "horse",
+        "pony",
+        "walk",
+        "run",
+        "idle",
+        "talk",
+        "combat",
+        "sword",
+        "hurt",
+        "injury",
+        "camp"
+      ]
+    },
+    {
+      "id": "F104_CINEMATIC_DRESSING",
+      "runtime": "SHARED",
+      "kind": "mixed",
+      "keywords": [
+        "lantern",
+        "rain",
+        "fog",
+        "mist",
+        "torch",
+        "fire",
+        "ruin",
+        "inn",
+        "gate",
+        "sign",
+        "horse",
+        "crowd",
+        "night",
+        "wind",
+        "smoke"
+      ]
+    },
+    {
+      "id": "F104_FAUNA_AMBIENCE",
+      "runtime": "SHARED",
+      "kind": "animated",
+      "keywords": [
+        "bird",
+        "crow",
+        "raven",
+        "bat",
+        "rabbit",
+        "hare",
+        "horse",
+        "pony",
+        "insect",
+        "ambient",
+        "wildlife"
+      ]
+    }
+  ],
+  "provider_preferences": [
+    "Existing persistent warehouse stock",
+    "Poly Haven CC0",
+    "ambientCG",
+    "Quaternius",
+    "Kenney",
+    "KayKit public GitHub packs",
+    "OpenGameArt assets that pass existing license/QC policy"
+  ],
+  "acceptance_boundary": "Source candidate preparation only. No UE integration, PIE, device, visual, pacing or performance acceptance."
+}

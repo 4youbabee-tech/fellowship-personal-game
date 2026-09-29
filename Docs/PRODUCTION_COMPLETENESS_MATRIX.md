@@ -1,3 +1,17 @@
+## 2026-09-29 - F1-04 Bree & Weathertop mega source preparation
+
+- Canonical F1-04 source scope: **REGISTERED**.
+- Runtime consumers P1C02 + P1C03 mapping: **RECORDED / NO RUNTIME RENUMBERING**.
+- 16-category shared warehouse source manifest: **SOURCE-IMPLEMENTED**.
+- Shared-stock indexer with 9000 total candidate ceiling: **SOURCE-IMPLEMENTED**.
+- Animated candidate FBX-only filter: **SOURCE-IMPLEMENTED**.
+- BMP texture rejection: **SOURCE-IMPLEMENTED**.
+- Isolated 180-minute F1-04 preparation workflow: **SOURCE-IMPLEMENTED**.
+- Runtime integration P1C02/P1C03: **BLOCKED UNTIL PREDECESSOR GATE ACCEPTED**.
+- Exact-head Pre-Unreal validation: **PENDING**.
+- Source workflow execution on develop: **PENDING**.
+- PIE/device/visual/pacing/performance acceptance: **NOT CLAIMED**.
+
 ## 2026-09-29 - Production train root-repair wave
 
 - develop Pre-Unreal #1363: **SUCCESS**.
