@@ -1,3 +1,19 @@
+## 2026-09-29 - F2-02 Fangorn & Gandalf Returned Maximum-Safe Source V1
+
+- F2-02 is now the active **Part II maximum-safe source-production wave**.
+- Canonical source scope: Ents introduced; Gandalf returns transformed; locked postcondition is **Gandalf leads hunters to Edoras**.
+- Safe optional focus remains exploration, dialogue and Ent traversal.
+- Fangorn production grammar remains ancient forest / dense trunks / roots / mist / living environment with quiet and Ent-mobilization source-state support.
+- Treebeard guardrail is preserved: movement, traversal and destruction must feel massive and deliberate.
+- Gandalf guardrail is preserved: returned-strategist magic remains rare and purposeful, not spam-casting.
+- `Data/F202FangornGandalfReturnedMaximumSafeMegaSourceV1.json` defines **40 categories**, **20 landmark-oriented categories**, **9 source banks**, **32,000 total candidate ceiling**, **2,800/category hard ceiling**, fair-share scheduling and landmark bonus 9.
+- Source success requires at least **16 populated landmark categories** and **8 ready banks**.
+- The pack excludes F2-08 Isengard assault resolution and Edoras court resolution.
+- No Part II runtime ID is invented: `runtime_consumers=[]`, `runtime_mapping_status=NOT_ASSIGNED_DO_NOT_INVENT`.
+- `PG-203` protects canonical outcome, character guardrails, Fangorn grammar, 40-category breadth, bank minimums, format rules, warehouse gate and the unassigned runtime-ID boundary.
+- Exact-head validation and heavy source execution are **pending**.
+- Evidence boundary: **SOURCE-IMPLEMENTED / STATIC-VALIDATION PENDING**. No runtime integration, PIE, device, visual, pacing or performance acceptance is claimed.
+
 ## 2026-09-29 - F2-01 Three Hunters / Captives Maximum-Safe Source V1
 
 - F2-01 is now the active **Part II maximum-safe source-production wave** after F1-08.
