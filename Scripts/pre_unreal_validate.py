@@ -8388,6 +8388,84 @@ for ignored in [
         fail(f"PG-198 F1-05 tooling path must stay off Unreal push+PR filters: {ignored}")
 
 
+# PG-199: F1-06 Caradhras & Moria landmark superpack must remain large, landmark-first, inventory-gated and runtime-gated.
+pg199_manifest = json.loads(read(ROOT / "Data" / "F106CaradhrasMoriaMegaLandmarkSourceSuperpackV1.json"))
+pg199_runner = read(ROOT / "Scripts" / "run_f106_caradhras_moria_mega_landmark_source.ps1")
+pg199_workflow = read(ROOT / ".github" / "workflows" / "f106-caradhras-moria-mega-landmark-source.yml")
+pg199_unreal = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+
+if pg199_manifest.get("status") != "SOURCE_ARCHITECTURE_READY_LANDMARK_FIRST_INVENTORY_GATED_RUNTIME_GATED":
+    fail("PG-199 F1-06 superpack status/gating drifted")
+if pg199_manifest.get("canonical_mission_id") != "F1-06":
+    fail("PG-199 F1-06 canonical mission ID drifted")
+if pg199_manifest.get("runtime_consumers") != ["P1C05", "P1C06"]:
+    fail("PG-199 F1-06 runtime consumers must remain P1C05 + P1C06")
+policy = pg199_manifest.get("source_policy", {})
+safety = pg199_manifest.get("safety_gate", {})
+landmarks = pg199_manifest.get("landmark_identity_contract", {})
+if int(policy.get("max_total_candidates", 0)) < 16000:
+    fail("PG-199 F1-06 total candidate ceiling unexpectedly reduced")
+if int(policy.get("max_candidates_per_category", 0)) < 1800:
+    fail("PG-199 F1-06 per-category throughput unexpectedly reduced")
+if int(policy.get("landmark_score_bonus", 0)) < 6:
+    fail("PG-199 F1-06 landmark scoring weakened")
+if policy.get("animated_candidate_extension") != ".fbx":
+    fail("PG-199 animated F1-06 candidates must remain FBX-only")
+if ".bmp" not in policy.get("forbidden_texture_extensions", []):
+    fail("PG-199 F1-06 must continue blocking BMP textures")
+if not safety.get("requires_clean_warehouse_inventory", False):
+    fail("PG-199 F1-06 heavy execution must require clean inventory")
+if not landmarks.get("required", False):
+    fail("PG-199 F1-06 landmark identity contract must remain required")
+categories = pg199_manifest.get("categories", [])
+if len(categories) < 24:
+    fail("PG-199 F1-06 source pack lost required category breadth")
+category_ids = {x.get("id") for x in categories}
+for required in [
+    "CARADHRAS_LANDMARK_SILHOUETTES",
+    "CARADHRAS_STORM_ROUTE_SPINE",
+    "MORIA_GATE_LANDMARK",
+    "DOORS_OF_MORIA_PUZZLE_SUPPORT",
+    "MORIA_MONUMENTAL_HALLS",
+    "MORIA_TOMB_ALERT_SPACE",
+    "MORIA_ESCAPE_CHASM_GEOMETRY",
+    "BALROG_PURSUIT_SUPPORT",
+    "F106_CINEMATIC_LANDMARK_DRESSING",
+]:
+    if required not in category_ids:
+        fail(f"PG-199 F1-06 landmark category missing: {required}")
+if sum(1 for x in categories if x.get("landmark")) < 8:
+    fail("PG-199 F1-06 landmark category count unexpectedly reduced")
+for symbol in [
+    "F106_MEGA_SOURCE_INVENTORY_GATE_BEGIN",
+    "F106_MEGA_SOURCE_INVENTORY_GATE_PASS",
+    "F106_MEGA_SOURCE_INVENTORY_GATE_FAIL",
+    "landmarkSelected",
+    "landmark_score_bonus",
+    "F106_MEGA_SOURCE_CATEGORY_PASS",
+    "F106_MEGA_SOURCE_PASS",
+    'if($kind -eq "animated" -and $ext -ne $animatedExt)',
+]:
+    if symbol not in pg199_runner:
+        fail(f"PG-199 F1-06 runner marker missing: {symbol}")
+for symbol in [
+    "name: F1-06 Caradhras Moria Mega Landmark Source",
+    "cancel-in-progress: false",
+    "timeout-minutes: 180",
+    "Fast F1-06 PowerShell preflight",
+    "Build Caradhras Moria landmark source indexes",
+]:
+    if symbol not in pg199_workflow:
+        fail(f"PG-199 F1-06 workflow contract missing: {symbol}")
+for ignored in [
+    "Data/F106CaradhrasMoriaMegaLandmarkSourceSuperpackV1.json",
+    "Scripts/run_f106_caradhras_moria_mega_landmark_source.ps1",
+    ".github/workflows/f106-caradhras-moria-mega-landmark-source.yml",
+]:
+    if pg199_unreal.count(ignored) < 2:
+        fail(f"PG-199 F1-06 tooling path must stay off Unreal push+PR filters: {ignored}")
+
+
 # PG-195: Unreal import must not trust an editor-only wait while a commandlet remains alive.
 pg195_wait = read(ROOT / "Scripts" / "wait_for_unreal_processes.ps1")
 pg195_wait_cmd = read(ROOT / "Scripts" / "ci_wait_for_unreal_editor.cmd")
