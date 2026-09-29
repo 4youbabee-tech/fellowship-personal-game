@@ -1,3 +1,11 @@
+## 2026-09-30 - Stale PR branch cleanup authorization
+
+- Closed stale PRs #171, #163, #167, #154, #159, #162 and #125 after live supersession/integration review.
+- Branch cleanup plan now explicitly authorizes deletion of their remote heads after this maintenance merge.
+- PR #125 runtime changes were checked by current-source symbols before closure: player pawn caching, pooled world interactions/ambient motion, SFX repeat guard and bounded character-rig availability retry are already present on develop.
+- PR #154 latest-receipt/supersession behavior is present in the current warehouse audit and regression test.
+- Evidence boundary: repository/branch hygiene only; no PIE/device/visual/performance acceptance is claimed.
+
 ## 2026-09-30 - Runner root migration C -> D
 
 - Persistent self-hosted runner authority is now `D:\\actions-runner`; persistent Warehouse authority is `D:\\actions-runner\\_warehouse\\ShireJourney`.
