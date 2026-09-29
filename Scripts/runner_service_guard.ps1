@@ -1,5 +1,5 @@
 param(
-    [string]$RunnerRoot = "C:\actions-runner"
+    [string]$RunnerRoot = "D:\actions-runner"
 )
 
 Set-StrictMode -Version Latest

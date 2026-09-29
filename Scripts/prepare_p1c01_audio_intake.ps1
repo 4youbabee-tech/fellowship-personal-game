@@ -1,6 +1,6 @@
 param(
   [string]$ManifestPath = "Data/P1C01AudioFoleyAmbiencePrepV1.json",
-  [string]$WarehouseRoot = "C:\actions-runner\_warehouse\ShireJourney",
+  [string]$WarehouseRoot = "D:\actions-runner\_warehouse\ShireJourney",
   [string]$OutputRoot = ""
 )
 Set-StrictMode -Version Latest

@@ -1,3 +1,11 @@
+## 2026-09-30 - Runner root migration evidence
+
+- Self-hosted runner root: **RUN-PROVEN on `D:\\actions-runner`**.
+- Warehouse default root: **MIGRATED to `D:\\actions-runner\\_warehouse\\ShireJourney`**.
+- Interactive watchdog/service-exclusion topology remains the required execution model.
+- GitHub health evidence includes `RUNNER_HEALTH_WORKSPACE_PASS temp=D:\\actions-runner\\_work\\_temp` and `RUNNER_HEALTH_PASS`.
+- This infrastructure evidence does not promote any gameplay, PIE, visual, device-performance, or chapter maturity status.
+
 ## 2026-09-29 - Hero skeletal candidate diagnostic note
 
 - First post-merge candidate workflow failed during candidate construction after checkout/runner/preflight success.

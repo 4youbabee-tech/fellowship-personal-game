@@ -1,6 +1,6 @@
 param(
   [string]$ManifestPath = "Data/P1C02ShadowPastChapterPackV1.json",
-  [string]$WarehouseRoot = "C:\actions-runner\_warehouse\ShireJourney"
+  [string]$WarehouseRoot = "D:\actions-runner\_warehouse\ShireJourney"
 )
 
 Set-StrictMode -Version Latest

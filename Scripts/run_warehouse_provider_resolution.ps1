@@ -2,7 +2,7 @@ param(
   [string]$ManifestPath="Data/WarehouseProviderResolutionTrainV3.json",
   [string]$RegistryPath="Data/GlobalWarehouseSourceRegistryV2.json",
   [string]$PolicyPath="Data/WarehouseProviderAccessPolicyV1.json",
-  [string]$WarehouseRoot="C:\actions-runner\_warehouse\ShireJourney",
+  [string]$WarehouseRoot="D:\actions-runner\_warehouse\ShireJourney",
   [string]$OutputRoot=""
 )
 

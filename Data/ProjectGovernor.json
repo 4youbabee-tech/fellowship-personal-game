@@ -5072,6 +5072,32 @@
         "Docs/WORLD_DETAIL_LEDGER.md — F2-04 Road & Helm's Deep Prep Maximum-Safe Source V1"
       ],
       "evidence_boundary": "SOURCE ARCHITECTURE ONLY. Exact-head static validation is required. No Part II runtime ID/runtime integration and no PIE/device/visual/pacing/performance acceptance is claimed."
+    },
+    {
+      "id": "DEC-087",
+      "title": "Migrate the persistent self-hosted runner and Warehouse authority from C to D",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-PERF-001",
+        "REQ-STABILITY-001"
+      ],
+      "resolution": "D:\\actions-runner is the persistent self-hosted runner root and D:\\actions-runner\\_warehouse\\ShireJourney is the persistent Warehouse root. Repository scripts/workflows must not use C:\\actions-runner as an active default. C-side copies are rollback/retirement residue only.",
+      "implementation_contract": [
+        "Interactive-user watchdog ownership remains unchanged; service-mode execution stays forbidden.",
+        "Runner.Listener/Runner.Worker execute from D:\\actions-runner.",
+        "Warehouse scripts default to D:\\actions-runner\\_warehouse\\ShireJourney.",
+        "No active workflow/script may hardcode C:\\actions-runner as the current runner or Warehouse authority.",
+        "Historical documentation may retain old C paths only when explicitly describing past evidence.",
+        "Retired C-side runner data may be deleted only after D-root health has been run-proven and a complete quarantine/backup exists."
+      ],
+      "rationale": "The original C root consumed system-drive space and left source/build/warehouse concerns mixed. The D migration preserves the proven watchdog topology while separating persistent CI payloads from the developer source clone.",
+      "evidence": [
+        "RUNNER_HEALTH_WORKSPACE_PASS temp=D:\\actions-runner\\_work\\_temp",
+        "RUNNER_HEALTH_PASS identity=IDEAPAD320\\user sessionId=2 listenerPid=5332 workerCount=1",
+        "Quarantine baseline 28,252 files / 7,604,599,440 bytes",
+        "Scripts and warehouse workflow migrated to D-root defaults"
+      ],
+      "evidence_boundary": "RUNNER ROOT / WORKSPACE / TOPOLOGY RUN-PROVEN. No PIE/device/visual/performance acceptance is claimed."
     }
   ],
   "open_conflicts": [],
@@ -7667,6 +7693,21 @@
         ]
       },
       "proof_boundary": "This proves runner ownership/topology and health on the machine for this exact run. Unreal #1021 took the governance/docs-only fast path, so it does not prove C++ compile, PIE, packaged runtime, target-device gameplay, visual or performance acceptance."
+    },
+    "runner_root": "D:\\actions-runner",
+    "warehouse_root": "D:\\actions-runner\\_warehouse\\ShireJourney",
+    "migration_2026_09_29": {
+      "status": "RUNNER_ROOT_MIGRATED_AND_RUN_PROVEN",
+      "old_root": "C:\\actions-runner",
+      "new_root": "D:\\actions-runner",
+      "warehouse_root": "D:\\actions-runner\\_warehouse\\ShireJourney",
+      "evidence": [
+        "Owner-side migration preserved 28,252 files / 7,604,599,440 bytes before retiring the C root.",
+        "GitHub self-hosted job reported RUNNER_HEALTH_WORKSPACE_PASS temp=D:\\actions-runner\\_work\\_temp.",
+        "GitHub self-hosted job reported RUNNER_HEALTH_PASS under IDEAPAD320\\user with legacyService=absent.",
+        "Any remaining C:\\actions-runner_delete_pending path is retirement residue only and is not an execution authority."
+      ],
+      "proof_boundary": "Runner ownership/root/workspace health only. No PIE, packaged gameplay, visual, device-performance or chapter acceptance is claimed."
     }
   },
   "story_source_execution_contract": {

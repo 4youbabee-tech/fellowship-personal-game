@@ -5708,6 +5708,28 @@ for ignored in [
         fail(f"PG-206 F2-04 tooling path must stay off Unreal push+PR filters: {ignored}")
 
 
+
+# PG-207: the persistent runner/Warehouse authority lives on D after the 2026-09-29 migration.
+pg207_forbidden_runner_root = "C:\\actions-runner"
+pg207_active_files = []
+for pg207_pattern in ("*.ps1", "*.cmd"):
+    pg207_active_files.extend((ROOT / "Scripts").glob(pg207_pattern))
+for pg207_pattern in ("*.yml", "*.yaml"):
+    pg207_active_files.extend((ROOT / ".github" / "workflows").glob(pg207_pattern))
+for pg207_path in pg207_active_files:
+    pg207_text = read(pg207_path)
+    if pg207_forbidden_runner_root in pg207_text:
+        fail(f"PG-207 active runner/Warehouse path still targets retired C root: {pg207_path.relative_to(ROOT)}")
+for pg207_path, pg207_symbol in [
+    (ROOT / "Scripts" / "install_runner_watchdog.ps1", 'D:\\actions-runner'),
+    (ROOT / "Scripts" / "runner_watchdog.ps1", 'D:\\actions-runner'),
+    (ROOT / "Scripts" / "runner_service_guard.ps1", 'D:\\actions-runner'),
+    (ROOT / "Scripts" / "audit_warehouse_inventory.ps1", 'D:\\actions-runner\\_warehouse\\ShireJourney'),
+]:
+    if pg207_symbol not in read(pg207_path):
+        fail(f"PG-207 D-root authority marker missing: {pg207_path.relative_to(ROOT)}")
+
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
