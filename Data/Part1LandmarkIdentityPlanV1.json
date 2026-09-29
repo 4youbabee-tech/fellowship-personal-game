@@ -182,6 +182,29 @@
         "Amon Hen approach"
       ],
       "runtime_status": "SOURCE_ARCHITECTURE_ONLY"
+    },
+    {
+      "id": "AMON_HEN_F108_BREAK",
+      "canonical_location": "Amon Hen / Parth Galen",
+      "runtime_chapter": "P1C08",
+      "visual_grammar": [
+        "river corridor",
+        "ancient ruins",
+        "forest slopes",
+        "stone monuments",
+        "seeing-seat summit",
+        "battle-state damage"
+      ],
+      "identity_anchor": "Amon Hen seeing-seat / ancient-stone summit silhouette connected to forested ruin battle lanes and the river shore.",
+      "visibility_goal": "The seeing-seat/summit landmark remains navigationally readable through calm, pursuit, Uruk attack and aftermath states without depending on dense geometry.",
+      "state_variants": [
+        "calm arrival",
+        "separation/temptation",
+        "Uruk attack",
+        "Boromir aftermath",
+        "Frodo/Sam departure"
+      ],
+      "runtime_status": "SOURCE_ARCHITECTURE_ONLY"
     }
   ],
   "acceptance_boundary": "Source/visual identity planning only. No landmark is VISUALLY-ACCEPTED until chapter-specific observation evidence exists."
