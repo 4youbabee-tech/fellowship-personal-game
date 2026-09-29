@@ -8071,6 +8071,9 @@ for pg191_symbol in [
     "P1C01_MATERIAL_SOURCE_PUBLISH_CREATE",
     "generated material branch push failed after explicit remote-SHA lease",
     "-c credential.helper=",
+    "P1C01_MATERIAL_SOURCE_REMOTE_LOOKUP",
+    "attempts=3",
+    "$remoteLines=@(& $git",
 ]:
     if pg191_symbol not in pg191_export:
         fail(f"PG-191 explicit generated-branch publish contract missing: {pg191_symbol}")
@@ -8107,7 +8110,7 @@ if len(pg192_mat.get("immediate_open_source_items", [])) < 24:
     fail("PG-192 material closure wave must remain chapter-scale")
 if int(pg192_promo.get("selector_ceiling_total", 0)) < 150:
     fail("PG-192 promotion selector ceiling unexpectedly reduced")
-for symbol in ["P1C01_CHAPTER_CLOSURE_PACK_V2_PASS","QUARANTINED_CONTINUE","P1C01_CLOSURE_PACK_STORAGE_PASS"]:
+for symbol in ["P1C01_CHAPTER_CLOSURE_PACK_V2_PASS","QUARANTINED_CONTINUE","P1C01_CLOSURE_PACK_STORAGE_PASS","Invoke-ChildPowerShell","child PowerShell failed exit="]:
     if symbol not in pg192_runner:
         fail(f"PG-192 closure runner marker missing: {symbol}")
 for symbol in ["P1C01_CLOSURE_PREFLIGHT_PASS","CLOSURE_PREFLIGHT_DISK_RESERVE_FAIL","System.Management.Automation.Language.Parser"]:
@@ -8191,6 +8194,8 @@ for symbol in [
         fail(f"PG-194 queue controller marker missing: {symbol}")
 for symbol in [
     "PART1_CHAPTER_PREP_BEGIN",
+    "$matches.ToArray()",
+    "[object[]]$candidateRows",
     "PART1_CHAPTER_PREP_PASS",
     "PART1_CHAPTER_PREP_COMPLETE",
     "SOURCE_CANDIDATE_INDEX_PREPARED",
@@ -8220,6 +8225,25 @@ for ignored in [
 ]:
     if pg194_unreal.count(ignored) < 2:
         fail(f"PG-194 queued chapter prep must stay off Unreal push+PR filters: {ignored}")
+
+
+# PG-196: production trains must be PowerShell 5.1/native-command safe.
+pg196_closure = read(ROOT / "Scripts" / "run_p1c01_chapter_closure_pack_v2.ps1")
+pg196_part1 = read(ROOT / "Scripts" / "run_part1_runtime_chapter_prep.ps1")
+pg196_export = read(ROOT / "Scripts" / "export_p1c01_material_source_branch.ps1")
+if "$code=$LASTEXITCODE" in pg196_closure:
+    fail("PG-196 closure cars may not read ambient LASTEXITCODE after non-native scriptblocks")
+for symbol in ["Invoke-ChildPowerShell","Exception.Data[\"ExitCode\"]"]:
+    if symbol not in pg196_closure:
+        fail(f"PG-196 deterministic closure exit contract missing: {symbol}")
+for symbol in ["$matches.ToArray()","[object[]]$candidateRows","candidates = $candidateRows"]:
+    if symbol not in pg196_part1:
+        fail(f"PG-196 PowerShell 5.1 Part I candidate materialization missing: {symbol}")
+if "ls-remote --heads origin $remoteRef | Select-Object -First 1" in pg196_export:
+    fail("PG-196 native git ls-remote may not be truncated inside the pipeline before exit capture")
+for symbol in ["P1C01_MATERIAL_SOURCE_REMOTE_LOOKUP","for($attempt=1; $attempt -le 3; $attempt++)","$lookupExit=[int]$LASTEXITCODE"]:
+    if symbol not in pg196_export:
+        fail(f"PG-196 generated-branch lookup retry/exit contract missing: {symbol}")
 
 
 # PG-195: Unreal import must not trust an editor-only wait while a commandlet remains alive.
