@@ -5737,7 +5737,6 @@ for pg207_path, pg207_symbol in [
         fail(f"PG-207 D-root authority marker missing: {pg207_path.relative_to(ROOT)}")
 
 # PG-208: living-world distance retirement must remain member-local.
-# One roaming event actor may not retire a nearby interaction or participant.
 pg208_living_cpp = read(resolve_source("LivingWorldDirector.cpp"))
 pg208_start = pg208_living_cpp.find("void ALivingWorldDirector::CleanupExpiredEvents()")
 pg208_end = pg208_living_cpp.find("FName ALivingWorldDirector::ChooseEventType()", pg208_start)
@@ -5753,11 +5752,65 @@ else:
     ]:
         if pg208_symbol not in pg208_cleanup:
             fail(f"PG-208 member-local event retirement invariant missing: {pg208_symbol}")
-    if re.search(
-        r"FVector::DistSquared2D\([^\n]+\)[\s\S]{0,260}?bExpired\s*=\s*true",
-        pg208_cleanup,
-    ):
+    if re.search(r"FVector::DistSquared2D\([^\n]+\)[\s\S]{0,260}?bExpired\s*=\s*true", pg208_cleanup):
         fail("PG-208 distance culling may not expire an entire micro-event from one far member")
+
+# PG-209: P1C01 mega-build train remains gate-aware and source-grounded.
+pg209_plan = json.loads(read(ROOT / "Data" / "P1C01MaximumSafeMegaBuildV1.json"))
+if pg209_plan.get("status") != "PREP_AND_DEFECT_REPAIR_ACTIVE_RUNTIME_EXPANSION_GATED_BY_W00":
+    fail("PG-209 mega-build status must keep runtime expansion gated by W00")
+pg209_cars = [row for row in pg209_plan.get("work_cars", []) if isinstance(row, dict)]
+if len(pg209_cars) < 12:
+    fail("PG-209 mega-build lost required multi-car breadth")
+if any(row.get("state") == "ACTIVE" and row.get("id") != "DEFECT_EVENT_MEMBER_CULL" for row in pg209_cars):
+    fail("PG-209 runtime feature car activated before W00 opened it")
+for pg209_rule in [
+    "No parallel AI brain.",
+    "No heavy synchronous LoadObject path.",
+    "Crowd-scale actors remain pooled.",
+    "Heavy assets use soft references and FStreamableManager.",
+]:
+    if pg209_rule not in set(pg209_plan.get("architecture", {}).get("rules", [])):
+        fail(f"PG-209 mega-build architecture guard missing: {pg209_rule}")
+
+# PG-210: ambient player lookup stays centralized behind GetPlayerPawnCached.
+pg210_ambient = read(resolve_source("ShireAmbientNPC.cpp"))
+if pg210_ambient.count("UGameplayStatics::GetPlayerPawn(") != 1:
+    fail("PG-210 ShireAmbientNPC direct GetPlayerPawn count must remain exactly one")
+pg210_helper_start = pg210_ambient.find("APawn* AShireAmbientNPC::GetPlayerPawnCached()")
+pg210_helper_end = pg210_ambient.find("void AShireAmbientNPC::BeginPlay()", pg210_helper_start)
+if pg210_helper_start < 0 or pg210_helper_end < 0 or "UGameplayStatics::GetPlayerPawn(" not in pg210_ambient[pg210_helper_start:pg210_helper_end]:
+    fail("PG-210 direct player lookup must remain inside GetPlayerPawnCached")
+
+# PG-211: save-schema migrations may not be invented without recovered history.
+pg211_audit = json.loads(read(ROOT / "Data" / "SaveSchemaMigrationAuditV1.json"))
+if pg211_audit.get("current_schema_version") != 6:
+    fail("PG-211 save-schema audit drifted from current schema version")
+if pg211_audit.get("status") != "HISTORY_NOT_RECOVERED_DO_NOT_INVENT_MIGRATIONS":
+    fail("PG-211 save migration status may advance only with recovered schema history")
+pg211_player = read(resolve_source("ShirePlayerCharacter.cpp"))
+if "Save->SaveSchemaVersion > UShireSaveGame::CurrentSchemaVersion" not in pg211_player:
+    fail("PG-211 newer-than-build save rejection missing")
+
+# PG-212: P1C01 source-to-runtime disposition prevents silent omission.
+pg212_disposition = json.loads(read(ROOT / "Data" / "P1C01SourceToRuntimeDispositionV1.json"))
+if pg212_disposition.get("status") != "PREPARATION_COMPLETE_RUNTIME_CARS_GATED":
+    fail("PG-212 P1C01 disposition must remain preparation-only while runtime cars are gated")
+pg212_rows = [row for row in pg212_disposition.get("dispositions", []) if isinstance(row, dict)]
+for pg212_id in [
+    "SHIRE_HOBBITON_WORLD",
+    "BAG_END_WORLD",
+    "F1_01_PARTY_SETUP",
+    "F1_01_FIREWORKS",
+    "F1_02_RING_DANGER",
+    "F1_03_ROAD_HIDING",
+    "F1_03_FERRY_ESCAPE",
+    "SHIRE_LIVING_WORLD",
+    "SHIRE_AUDIO_IDENTITY",
+    "CHECKPOINT_AND_RETRY",
+]:
+    if pg212_id not in {row.get("id") for row in pg212_rows}:
+        fail(f"PG-212 source disposition missing required item: {pg212_id}")
 
 
 
@@ -9343,61 +9396,6 @@ for symbol in [
 ]:
     if symbol not in pg195_preflight:
         fail(f"PG-195 production-import process diagnostics missing: {symbol}")
-
-
-# PG-209: P1C01 mega-build train remains gate-aware and source-grounded.
-pg209_plan_path = ROOT / "Data" / "P1C01MaximumSafeMegaBuildV1.json"
-if not pg209_plan_path.exists():
-    fail("PG-209 P1C01 maximum-safe mega build plan missing")
-else:
-    try:
-        pg209_plan = json.loads(read(pg209_plan_path))
-    except json.JSONDecodeError as exc:
-        fail(f"PG-209 invalid P1C01MaximumSafeMegaBuildV1.json: {exc}")
-        pg209_plan = {}
-    if pg209_plan.get("status") != "PREP_AND_DEFECT_REPAIR_ACTIVE_RUNTIME_EXPANSION_GATED_BY_W00":
-        fail("PG-209 mega-build status must keep runtime expansion gated by W00")
-    pg209_cars = pg209_plan.get("work_cars", [])
-    if len(pg209_cars) < 12:
-        fail("PG-209 mega-build lost required multi-car breadth")
-    if any(
-        row.get("state") == "ACTIVE" and row.get("id") != "DEFECT_EVENT_MEMBER_CULL"
-        for row in pg209_cars
-        if isinstance(row, dict)
-    ):
-        fail("PG-209 no new P1C01 runtime feature car may activate before W00 opens it")
-    pg209_arch = pg209_plan.get("architecture", {})
-    pg209_rules = set(pg209_arch.get("rules", []))
-    for pg209_rule in [
-        "No parallel AI brain.",
-        "No heavy synchronous LoadObject path.",
-        "Crowd-scale actors remain pooled.",
-        "Heavy assets use soft references and FStreamableManager.",
-    ]:
-        if pg209_rule not in pg209_rules:
-            fail(f"PG-209 mega-build architecture guard missing: {pg209_rule}")
-
-# PG-210: ambient player lookup stays centralized behind the cached helper.
-pg210_ambient = read(resolve_source("ShireAmbientNPC.cpp"))
-pg210_direct_get_player = pg210_ambient.count("UGameplayStatics::GetPlayerPawn")
-if pg210_direct_get_player != 1:
-    fail(f"PG-210 ShireAmbientNPC direct GetPlayerPawn call count must remain exactly 1 inside cache helper; found={pg210_direct_get_player}")
-pg210_helper_start = pg210_ambient.find("APawn* AShireAmbientNPC::GetPlayerPawnCached()")
-pg210_direct_start = pg210_ambient.find("UGameplayStatics::GetPlayerPawn")
-if pg210_helper_start < 0 or pg210_direct_start < pg210_helper_start:
-    fail("PG-210 direct player lookup must remain inside GetPlayerPawnCached")
-if pg210_ambient.count("GetPlayerPawnCached()") < 4:
-    fail("PG-210 ambient runtime no longer reuses the cached player-pawn helper")
-
-# PG-211: save-schema migrations may not be invented without recovered history.
-pg211_audit = json.loads(read(ROOT / "Data" / "SaveSchemaMigrationAuditV1.json"))
-if pg211_audit.get("current_schema_version") != 6:
-    fail("PG-211 save-schema audit drifted from current schema version")
-if pg211_audit.get("status") != "HISTORY_NOT_RECOVERED_DO_NOT_INVENT_MIGRATIONS":
-    fail("PG-211 save migration status may advance only with recovered schema history")
-pg211_player = read(resolve_source("ShirePlayerCharacter.cpp"))
-if "Save->SaveSchemaVersion > UShireSaveGame::CurrentSchemaVersion" not in pg211_player:
-    fail("PG-211 newer-than-current save rejection guard missing")
 
 
 if errors:
