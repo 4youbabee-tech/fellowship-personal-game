@@ -1,0 +1,345 @@
+{
+  "schema_version": 1,
+  "disposition_id": "P1C01_SOURCE_TO_RUNTIME_DISPOSITION_V1",
+  "status": "PREPARATION_ACTIVE_RUNTIME_EXPANSION_GATED",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/P1C01MaximumSafeMegaBuildV1.json",
+    "01_STORY_AND_TIMELINE_BIBLE",
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+    "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX"
+  ],
+  "purpose": "Prevent silent omission during the large P1C01 build by mapping source-required Shire/Bag End/party/road content to current runtime evidence and explicit follow-up status.",
+  "mapping_rule": "Source F1-01/F1-02/F1-03 remain distinct source mission packages. Current runtime P1C01 is an implementation aggregation; this file records that mapping and does not renumber canon chapters.",
+  "status_values": [
+    "RUNTIME_FOUNDATION_PRESENT",
+    "RUNTIME_PARTIAL_NEEDS_POLISH",
+    "PREPARED_GATED",
+    "CONTENT_ASSET_BLOCKED",
+    "HUMAN_ACCEPTANCE_PENDING",
+    "OUTSIDE_CURRENT_RUNTIME_SCOPE"
+  ],
+  "items": [
+    {
+      "id": "SRC_F101_SHIRE_OPENING",
+      "source_package": "F1-01",
+      "source_requirement": "Middle-earth / Shire opening establishes safety and scale before later threat.",
+      "runtime_evidence": [
+        "Data/StoryBeatPlan.csv: ShireOpening",
+        "Data/Part1ProductionAtlas.json: P1C01 domestic warmth before danger"
+      ],
+      "status": "RUNTIME_FOUNDATION_PRESENT",
+      "next": "Preserve player-led opening readability during later art polish."
+    },
+    {
+      "id": "SRC_F101_GANDALF_ARRIVAL",
+      "source_package": "F1-01",
+      "source_requirement": "Gandalf arrives during the birthday preparation chapter.",
+      "runtime_evidence": [
+        "Data/StoryBeatPlan.csv: GandalfArrival",
+        "ShireArrival quest references meeting Gandalf"
+      ],
+      "status": "RUNTIME_FOUNDATION_PRESENT",
+      "next": "Character/animation/audio presentation remains a later gated polish car."
+    },
+    {
+      "id": "SRC_F101_BIRTHDAY_PREP",
+      "source_package": "F1-01",
+      "source_requirement": "Bilbo prepares the birthday; optional safe window includes party setup.",
+      "runtime_evidence": [
+        "LongExpectedParty quest",
+        "Data/StoryBeatPlan.csv: PartyArrival"
+      ],
+      "status": "RUNTIME_PARTIAL_NEEDS_POLISH",
+      "next": "Party setup density car must add readable preparation state without changing locked outcome."
+    },
+    {
+      "id": "SRC_F101_TABLES_FOOD_DECOR",
+      "source_package": "ACT_F1_01",
+      "source_requirement": "Birthday setup loop uses tables, food, decorations and guest interactions.",
+      "runtime_evidence": [
+        "Party Field exists in Part1ProductionAtlas",
+        "current party/social world systems"
+      ],
+      "status": "PREPARED_GATED",
+      "next": "Integrate only after the relevant exact-head runtime gate; interactions must be idempotent and safely abandonable."
+    },
+    {
+      "id": "SRC_F101_SOCIAL_ONBOARDING",
+      "source_package": "F1-01",
+      "source_requirement": "Safe optional window includes social onboarding.",
+      "runtime_evidence": [
+        "LivingWorld social moments",
+        "ambient NPC conversations",
+        "PartyArrival"
+      ],
+      "status": "RUNTIME_PARTIAL_NEEDS_POLISH",
+      "next": "Use existing ShireNPCContextSubsystem knowledge limits and LivingWorldDirector population ownership; no second AI brain."
+    },
+    {
+      "id": "SRC_F101_FIREWORKS",
+      "source_package": "ACT_F1_02",
+      "source_requirement": "Gandalf fireworks are an optional film-moment activity: select/place-or-aim/time safely.",
+      "runtime_evidence": [
+        "Data/StoryBeatPlan.csv: PartyArrival references fireworks distance"
+      ],
+      "status": "PREPARED_GATED",
+      "next": "Gameplay interaction/spectacle implementation remains gated; use original effects/audio design."
+    },
+    {
+      "id": "SRC_F101_DRAGON_FIREWORK_MISHAP",
+      "source_package": "ACT_F1_03",
+      "source_requirement": "Merry/Pippin comic stealth/interact sequence has a fixed outcome.",
+      "runtime_evidence": [
+        "P1C01 required cast includes Merry and Pippin"
+      ],
+      "status": "PREPARED_GATED",
+      "next": "Implement only if current story/side-activity contract contains a stable activity ID; never invent a conflicting outcome."
+    },
+    {
+      "id": "SRC_F101_BILBO_DISAPPEARANCE",
+      "source_package": "F1-01",
+      "source_requirement": "Locked chapter progression leads to Bilbo leaving and Ring passing to Frodo.",
+      "runtime_evidence": [
+        "Data/StoryBeatPlan.csv: BilboDisappearance",
+        "LongExpectedParty quest post-party transition"
+      ],
+      "status": "RUNTIME_FOUNDATION_PRESENT",
+      "next": "Cinematic/control handoff polish remains gated."
+    },
+    {
+      "id": "SRC_F101_RING_HANDOFF",
+      "source_package": "F1-01",
+      "source_requirement": "Locked postcondition: Bilbo leaves; Ring passes to Frodo.",
+      "runtime_evidence": [
+        "Data/StoryBeatPlan.csv: RingWarning",
+        "RingSecret quest"
+      ],
+      "status": "RUNTIME_FOUNDATION_PRESENT",
+      "next": "Validate save/postcondition continuity under chapter-specific PIE later."
+    },
+    {
+      "id": "SRC_F102_BAG_END_HUB",
+      "source_package": "F1-02 / WORLD",
+      "source_requirement": "Bag End is a Hobbit interior with dense lived-in props and round geometry; narrative hub for Ring revelation.",
+      "runtime_evidence": [
+        "Part1ProductionAtlas landmark: Hobbiton / Bag End",
+        "ShirePrototypeWorldBuilder Bag End anchor"
+      ],
+      "status": "RUNTIME_PARTIAL_NEEDS_POLISH",
+      "next": "Bag End lived-in pass must improve props/readability without heavy resident memory or synchronous loads."
+    },
+    {
+      "id": "SRC_F102_RING_DANGER",
+      "source_package": "F1-02",
+      "source_requirement": "Gandalf confirms the Ring danger; story knowledge remains chronology-gated.",
+      "runtime_evidence": [
+        "RingSecret quest",
+        "Data/StoryBeatPlan.csv: RingWarning",
+        "ShireNPCContextSubsystem bounded knowledge system"
+      ],
+      "status": "RUNTIME_FOUNDATION_PRESENT",
+      "next": "Keep original dialogue only and preserve knowledge limits."
+    },
+    {
+      "id": "SRC_F102_PACKING_DEPARTURE",
+      "source_package": "F1-02",
+      "source_requirement": "Optional investigation/packing/stealth-departure window; locked outcome Frodo leaves the Shire.",
+      "runtime_evidence": [
+        "LeavingHome quest",
+        "Data/StoryBeatPlan.csv: LeavingHomeRoad"
+      ],
+      "status": "RUNTIME_PARTIAL_NEEDS_POLISH",
+      "next": "Optional interaction breadth may expand only within current quest-owned outcome."
+    },
+    {
+      "id": "SRC_F103_BLACK_RIDER_APPROACH",
+      "source_package": "F1-03-compatible current P1C01 runtime",
+      "source_requirement": "Black Riders hunt the hobbits on Shire roads.",
+      "runtime_evidence": [
+        "Data/StoryBeatPlan.csv: BlackRiderApproach",
+        "Part1ProductionAtlas major threat Black Rider / Nazgul pursuit"
+      ],
+      "status": "RUNTIME_FOUNDATION_PRESENT",
+      "next": "Threat readability/stealth pacing requires later PIE evidence."
+    },
+    {
+      "id": "SRC_F103_ROOT_HIDE",
+      "source_package": "ACT_F1_04 / F1-03-compatible current P1C01 runtime",
+      "source_requirement": "Road hiding loop: hide, control movement/noise and wait for Rider.",
+      "runtime_evidence": [
+        "Data/StoryBeatPlan.csv: RootHide"
+      ],
+      "status": "RUNTIME_FOUNDATION_PRESENT",
+      "next": "Human stealth readability and collision/pacing review remain pending."
+    },
+    {
+      "id": "SRC_F103_FERRY_ESCAPE",
+      "source_package": "F1-03-compatible current P1C01 runtime",
+      "source_requirement": "Shire-road optional window includes ferry escape/environmental hiding.",
+      "runtime_evidence": [
+        "Data/StoryBeatPlan.csv: FerryEscape",
+        "Part1ProductionAtlas: Bucklebury Ferry / Brandywine",
+        "Part1WorldMap: MAP_BUCKLEBURY_FERRY"
+      ],
+      "status": "RUNTIME_FOUNDATION_PRESENT",
+      "next": "Preserve geography and performance-safe escape presentation."
+    },
+    {
+      "id": "WORLD_SHIRE_PASTORAL_GRAMMAR",
+      "source_package": "WORLD",
+      "source_requirement": "Pastoral hills, lanes, farms and Hobbit-holes; warm domestic scale; circular doors; gardens.",
+      "runtime_evidence": [
+        "ShirePrototypeWorldBuilder world geometry/landmarks",
+        "Part1ProductionAtlas P1C01 hero vistas"
+      ],
+      "status": "RUNTIME_PARTIAL_NEEDS_POLISH",
+      "next": "World-density car should enrich via instancing/culling, not raw actor count."
+    },
+    {
+      "id": "WORLD_SHIRE_LOW_THREAT_EXPLORATION",
+      "source_package": "WORLD",
+      "source_requirement": "Shire gameplay role is onboarding, social play and low-threat exploration.",
+      "runtime_evidence": [
+        "ShireArrival route",
+        "LivingWorld high-density peaceful contract before danger"
+      ],
+      "status": "RUNTIME_FOUNDATION_PRESENT",
+      "next": "Human exploration/readability review pending."
+    },
+    {
+      "id": "WORLD_SHIRE_STATE_VARIANTS",
+      "source_package": "WORLD",
+      "source_requirement": "Shire/Hobbiton requires birthday, departure and post-war state variants.",
+      "runtime_evidence": [
+        "Current P1C01 story-state systems",
+        "world-state/story beat infrastructure"
+      ],
+      "status": "PREPARED_GATED",
+      "next": "This train covers birthday/departure only; post-war variant remains outside current Part I runtime scope."
+    },
+    {
+      "id": "WORLD_BAG_END_STATE_VARIANTS",
+      "source_package": "WORLD",
+      "source_requirement": "Bag End variants include Bilbo occupied, Frodo departure and epilogue.",
+      "runtime_evidence": [
+        "current P1C01 Bag End/Ring progression"
+      ],
+      "status": "PREPARED_GATED",
+      "next": "Only current chronology variants may be integrated now; epilogue is outside current runtime scope."
+    },
+    {
+      "id": "WORLD_TRAVERSAL_GRAPH",
+      "source_package": "WORLD",
+      "source_requirement": "Document primary on-foot path, optional branches and companion catch-up links.",
+      "runtime_evidence": [
+        "Part1WorldMap P1C01 nodes/edges",
+        "Part1ProductionAtlas landmark sequence"
+      ],
+      "status": "RUNTIME_PARTIAL_NEEDS_POLISH",
+      "next": "Backtracking/companion recovery/collision need chapter-specific PIE."
+    },
+    {
+      "id": "WORLD_POPULATION_SCHEDULES",
+      "source_package": "WORLD",
+      "source_requirement": "Population, schedules, dialogue knowledge and faction presence are chapter-state data.",
+      "runtime_evidence": [
+        "WorldLifeSaturationPlan P1C01 target=18",
+        "NPCSocialModel",
+        "ShireNPCContextSubsystem",
+        "LivingWorldDirector"
+      ],
+      "status": "RUNTIME_FOUNDATION_PRESENT",
+      "next": "Do not increase established target counts before device profiling; improve role/spatial variety first."
+    },
+    {
+      "id": "WORLD_MICRO_EVENT_CULL_SAFETY",
+      "source_package": "SYSTEM SAFETY",
+      "source_requirement": "Nearby interactions must not disappear because another grouped event member wandered out of range.",
+      "runtime_evidence": [
+        "PR mega-train LivingWorldDirector member-local cull repair",
+        "PG-208"
+      ],
+      "status": "RUNTIME_PARTIAL_NEEDS_POLISH",
+      "next": "Requires exact-head Pre-Unreal + UE4/runtime proof before promotion."
+    },
+    {
+      "id": "AUDIO_SHIRE_BIRDS_HEDGES",
+      "source_package": "MASTER SYSTEMS",
+      "source_requirement": "Shire sonic identity includes birds and breeze in hedges.",
+      "runtime_evidence": [
+        "StoryBeatPlan ShireOpening audio intent",
+        "existing audio subsystem routing"
+      ],
+      "status": "CONTENT_ASSET_BLOCKED",
+      "next": "Prepared approved offline assets + real playback without -NoSound required."
+    },
+    {
+      "id": "AUDIO_SHIRE_FARM_LAUGHTER_CARTS",
+      "source_package": "MASTER SYSTEMS",
+      "source_requirement": "Shire sonic identity includes farm work, distant laughter and carts.",
+      "runtime_evidence": [
+        "StoryBeatPlan opening/party/departure intents"
+      ],
+      "status": "CONTENT_ASSET_BLOCKED",
+      "next": "Integrate with attenuation/concurrency after complete approved bank is ready."
+    },
+    {
+      "id": "AUDIO_SHIRE_INTERIORS",
+      "source_package": "MASTER SYSTEMS",
+      "source_requirement": "Warm interiors include fire and cutlery language.",
+      "runtime_evidence": [
+        "RingWarning Bag End audio intent includes interior fire"
+      ],
+      "status": "CONTENT_ASSET_BLOCKED",
+      "next": "Bag End audio layer remains gated behind authored bank presence/listening proof."
+    },
+    {
+      "id": "CHAR_FRODO",
+      "source_package": "CHARACTERS / P1C01",
+      "source_requirement": "Frodo is core playable P1C01 focus.",
+      "runtime_evidence": [
+        "Part1ProductionAtlas required cast",
+        "current player runtime"
+      ],
+      "status": "RUNTIME_PARTIAL_NEEDS_POLISH",
+      "next": "Real skeletal FBX/AnimBP presentation remains gated and requires rig/deformation QC."
+    },
+    {
+      "id": "CHAR_GANDALF",
+      "source_package": "CHARACTERS / P1C01",
+      "source_requirement": "Gandalf is present in opening/birthday/Ring context.",
+      "runtime_evidence": [
+        "GandalfArrival story beat",
+        "Part1ProductionAtlas required cast"
+      ],
+      "status": "RUNTIME_PARTIAL_NEEDS_POLISH",
+      "next": "FBX production candidate/animation/audio presentation remains gated."
+    },
+    {
+      "id": "CHAR_SAM_MERRY_PIPPIN",
+      "source_package": "CHARACTERS / P1C01",
+      "source_requirement": "Sam participates in departure; Merry/Pippin join road material in current runtime aggregation.",
+      "runtime_evidence": [
+        "Part1ProductionAtlas required cast",
+        "current P1C01 quest/story beats"
+      ],
+      "status": "RUNTIME_PARTIAL_NEEDS_POLISH",
+      "next": "Presentation and companion recovery require exact-head engine + later human review."
+    },
+    {
+      "id": "ACCEPT_P1C01_HUMAN",
+      "source_package": "GATE 6/7",
+      "source_requirement": "QA includes fresh start, migrated save, death/retry, cinematic skip, optional abandon, backtrack and low-performance tier.",
+      "runtime_evidence": [
+        "P1C01Gate67AcceptanceChecklistV1"
+      ],
+      "status": "HUMAN_ACCEPTANCE_PENDING",
+      "next": "Collect chapter-specific PIE/device/human evidence; static/compile proof cannot substitute."
+    }
+  ],
+  "zero_silent_omission_rule": "Every item must remain represented until it is RUNTIME_FOUNDATION_PRESENT with its remaining acceptance explicitly tracked, PREPARED_GATED, CONTENT_ASSET_BLOCKED, or explicitly OUTSIDE_CURRENT_RUNTIME_SCOPE. Deletion from this ledger requires a source/canon disposition update.",
+  "evidence_boundary": "Preparation/disposition contract. It does not by itself prove runtime behavior, PIE, device performance, audio playback or visual acceptance."
+}
