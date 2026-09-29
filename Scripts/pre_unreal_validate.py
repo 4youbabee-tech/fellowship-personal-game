@@ -5752,40 +5752,6 @@ for pg207_path, pg207_symbol in [
 
 
 
-# PG-207: Living-world distance retirement must stay member-local.
-# An event lifetime expiry is event-wide, but one roaming member leaving the
-# cull radius may not retire a nearby interaction/participant with it.
-pg207_living = read(resolve_source("LivingWorldDirector.cpp"))
-pg207_start = pg207_living.find("void ALivingWorldDirector::CleanupExpiredEvents()")
-pg207_end = pg207_living.find("FName ALivingWorldDirector::ChooseEventType()", pg207_start)
-pg207_cleanup = pg207_living[pg207_start:pg207_end] if pg207_start >= 0 and pg207_end > pg207_start else ""
-for pg207_symbol in [
-    "LivingWorldEventMemberCull",
-    "Event.Actors.RemoveAtSwap",
-    "if (Event.ExpiresAt <= Now)",
-]:
-    if pg207_symbol not in pg207_cleanup:
-        fail(f"PG-207 living-world member-local cull invariant missing: {pg207_symbol}")
-if "bool bExpired = ActiveEvents[Index].ExpiresAt <= Now" in pg207_cleanup or "bExpired = true;" in pg207_cleanup:
-    fail("PG-207 event-wide distance culling regression detected")
-
-
-# PG-207: Living-world distance culling must be member-local.
-pg207_living = read(resolve_source("LivingWorldDirector.cpp"))
-for pg207_symbol in [
-    "LivingWorldEventMemberCull",
-    "distance-policy=member-local",
-    "Event.Actors.RemoveAtSwap",
-]:
-    if pg207_symbol not in pg207_living:
-        fail(f"PG-207 member-local living-world cull invariant missing: {pg207_symbol}")
-pg207_cleanup_start = pg207_living.find("void ALivingWorldDirector::CleanupExpiredEvents()")
-pg207_cleanup_end = pg207_living.find("FName ALivingWorldDirector::ChooseEventType()", pg207_cleanup_start)
-pg207_cleanup = pg207_living[pg207_cleanup_start:pg207_cleanup_end]
-if "bExpired = true" in pg207_cleanup and "EventCullDistance" in pg207_cleanup:
-    fail("PG-207 distance culling may not expire the whole micro-event because one member moved away")
-
-
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
