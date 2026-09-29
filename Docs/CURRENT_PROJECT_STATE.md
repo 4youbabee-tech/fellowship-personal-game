@@ -1,3 +1,10 @@
+## 2026-09-29 - F2-02 exact-head static repair
+
+- Pre-Unreal #1401 reached the project-structure validator and failed because PG-203 requires every F2-02 tooling-only path to be ignored in both Unreal push and pull-request filters, while the reconciliation branch contained each path only once.
+- The Unreal workflow filter is corrected so all three F2-02 tooling paths are present in both filter lists.
+- This is a CI routing repair only; F2-02 story/source scope and runtime boundaries are unchanged.
+- Evidence boundary: fresh exact-head static validation is pending on the repaired head. No runtime or human acceptance promotion is claimed.
+
 ## 2026-09-29 - F2-02 reconciled after permanent story/source governance
 
 - F2-02 Fangorn & Gandalf Returned source architecture is reconciled onto the post-PR #164 governance baseline.
