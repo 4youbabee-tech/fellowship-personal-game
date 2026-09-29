@@ -8388,6 +8388,107 @@ for ignored in [
         fail(f"PG-198 F1-05 tooling path must stay off Unreal push+PR filters: {ignored}")
 
 
+# PG-199: Part I landmark identity + F1-06 Caradhras/Moria superpack must stay large, landmark-centered and gated.
+pg199_landmarks = json.loads(read(ROOT / "Data" / "Part1LandmarkIdentityPlanV1.json"))
+pg199_manifest = json.loads(read(ROOT / "Data" / "F106CaradhrasMoriaLandmarkMegaSourceSuperpackV1.json"))
+pg199_runner = read(ROOT / "Scripts" / "run_f106_caradhras_moria_landmark_mega_source.ps1")
+pg199_workflow = read(ROOT / ".github" / "workflows" / "f106-caradhras-moria-landmark-mega-source.yml")
+pg199_unreal = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+
+if pg199_landmarks.get("status") != "SOURCE_ARCHITECTURE_READY_RUNTIME_GATED":
+    fail("PG-199 Part I landmark plan must remain source-ready and runtime-gated")
+regions = pg199_landmarks.get("regions", [])
+region_ids = [x.get("id") for x in regions]
+for required in ["SHIRE_HOBBITON","BAG_END","BREE","WEATHERTOP","RIVENDELL","CARADHRAS","MORIA"]:
+    if required not in region_ids:
+        fail(f"PG-199 Part I landmark region missing: {required}")
+if len(pg199_landmarks.get("global_rules", [])) < 6:
+    fail("PG-199 Part I landmark global rules unexpectedly reduced")
+
+if pg199_manifest.get("status") != "SOURCE_ARCHITECTURE_READY_INVENTORY_GATED_RUNTIME_GATED":
+    fail("PG-199 F1-06 superpack must remain inventory-gated and runtime-gated")
+if pg199_manifest.get("canonical_mission_id") != "F1-06":
+    fail("PG-199 F1-06 canonical mission ID drifted")
+if pg199_manifest.get("runtime_consumers") != ["P1C05","P1C06"]:
+    fail("PG-199 F1-06 runtime consumers must remain P1C05 + P1C06")
+
+policy = pg199_manifest.get("source_policy", {})
+safety = pg199_manifest.get("safety_gate", {})
+landmark_policy = pg199_manifest.get("landmark_policy", {})
+if int(policy.get("max_total_candidates", 0)) < 16000:
+    fail("PG-199 F1-06 total candidate ceiling unexpectedly reduced")
+if int(policy.get("max_candidates_per_category", 0)) < 1800:
+    fail("PG-199 F1-06 per-category throughput unexpectedly reduced")
+if int(policy.get("landmark_score_bonus", 0)) < 6:
+    fail("PG-199 F1-06 landmark score bonus unexpectedly reduced")
+if policy.get("animated_candidate_extension") != ".fbx":
+    fail("PG-199 animated F1-06 candidates must remain FBX-only")
+if ".bmp" not in policy.get("forbidden_texture_extensions", []):
+    fail("PG-199 F1-06 source pack must continue blocking BMP textures")
+if not safety.get("requires_clean_warehouse_inventory", False):
+    fail("PG-199 F1-06 heavy execution must require clean warehouse inventory")
+for key in ["hard_stop_on_hash_mismatch","hard_stop_on_license_hash_mismatch","hard_stop_on_dangerous_file","hard_stop_on_bad_receipt"]:
+    if not safety.get(key, False):
+        fail(f"PG-199 F1-06 warehouse safety gate weakened: {key}")
+if int(landmark_policy.get("minimum_landmark_categories", 0)) < 8:
+    fail("PG-199 F1-06 landmark minimum unexpectedly reduced")
+if not landmark_policy.get("require_dominant_vista_per_location", False):
+    fail("PG-199 F1-06 dominant vista requirement removed")
+
+categories = pg199_manifest.get("categories", [])
+if len(categories) < 24:
+    fail("PG-199 F1-06 source pack lost required category breadth")
+landmark_categories = [x for x in categories if x.get("landmark")]
+if len(landmark_categories) < 8:
+    fail("PG-199 F1-06 configured landmark category count too small")
+for required in [
+    "CARADHRAS_RIDGE_LANDMARK",
+    "CARADHRAS_PASS_TRAVERSAL",
+    "CARADHRAS_STORM_VISIBILITY",
+    "MORIA_ENTRANCE_THRESHOLD",
+    "MORIA_MONUMENTAL_HALL_AXIS",
+    "MORIA_ROUTEFINDING_LANDMARKS",
+    "MORIA_TOMB_ALERT_SPACE",
+    "MORIA_BALROG_ESCAPE_VISTA",
+    "F106_LANDMARK_DISTANCE_PROXY_SUPPORT",
+]:
+    if required not in {x.get("id") for x in categories}:
+        fail(f"PG-199 F1-06 landmark/source category missing: {required}")
+
+for symbol in [
+    "F106_MEGA_SOURCE_INVENTORY_GATE_BEGIN",
+    "F106_MEGA_SOURCE_INVENTORY_GATE_PASS",
+    "F106_LANDMARK_SOURCE_PASS",
+    "F106_LANDMARK_SOURCE_COVERAGE_FAIL",
+    "landmarkBonus",
+    "F106_MEGA_SOURCE_CATEGORY_PASS",
+    "F106_MEGA_SOURCE_PASS",
+    "$matches.ToArray()",
+    'if($kind -eq "animated" -and $ext -ne $animatedExt)',
+]:
+    if symbol not in pg199_runner:
+        fail(f"PG-199 F1-06 runner marker missing: {symbol}")
+
+for symbol in [
+    "name: F1-06 Caradhras Moria Landmark Mega Source",
+    "cancel-in-progress: false",
+    "timeout-minutes: 180",
+    "Fast F1-06 PowerShell preflight",
+    "Build Caradhras Moria landmark mega source indexes",
+]:
+    if symbol not in pg199_workflow:
+        fail(f"PG-199 F1-06 workflow contract missing: {symbol}")
+
+for ignored in [
+    "Data/Part1LandmarkIdentityPlanV1.json",
+    "Data/F106CaradhrasMoriaLandmarkMegaSourceSuperpackV1.json",
+    "Scripts/run_f106_caradhras_moria_landmark_mega_source.ps1",
+    ".github/workflows/f106-caradhras-moria-landmark-mega-source.yml",
+]:
+    if pg199_unreal.count(ignored) < 2:
+        fail(f"PG-199 F1-06 tooling path must stay off Unreal push+PR filters: {ignored}")
+
+
 # PG-195: Unreal import must not trust an editor-only wait while a commandlet remains alive.
 pg195_wait = read(ROOT / "Scripts" / "wait_for_unreal_processes.ps1")
 pg195_wait_cmd = read(ROOT / "Scripts" / "ci_wait_for_unreal_editor.cmd")

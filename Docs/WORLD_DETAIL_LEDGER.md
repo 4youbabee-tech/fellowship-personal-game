@@ -1,3 +1,38 @@
+## 2026-09-29 - Part I Landmark Identity Plan V1 + F1-06 Caradhras & Moria Landmark Mega Source Superpack
+
+Registered before any runtime implementation.
+
+Part I landmark identity direction:
+- Every production region must expose at least one dominant silhouette/vista or interior focal vista that supports navigation and cinematic continuity.
+- This is a visual-identity/streaming/source-preparation contract, not permission to bypass chapter runtime gates.
+- Current Part I anchors:
+  - The Shire / Hobbiton: pastoral hill / Hobbit-hole / circular-door garden vista language.
+  - Bag End: dominant round-geometry interior focal vista using dense lived-in dressing.
+  - Bree: town-gate + timber/stone/crowded-inn identity.
+  - Weathertop: ancient stone ring against exposed skyline.
+  - Rivendell: layered terraces with stone/wood integration and waterfall vista.
+  - Caradhras: high mountain-pass ridge silhouette readable through snow/wind/low-visibility states.
+  - Moria: monumental underground geometry with entrance threshold / hall-axis / tomb-alert / escape-state landmark sequencing.
+- Landmark visibility must survive low-spec constraints. Prefer strong composition, silhouette, LOD/HLOD or simplified distance proxies, instancing for repeated dressing, bounded lighting/fog layers, and preloaded critical vistas rather than brute-force geometry density.
+
+F1-06 canonical source scope:
+- Mission package: **F1-06 Caradhras & Moria**.
+- Runtime consumers: legacy implementation chapters **P1C05 + P1C06** under the recorded F1/P1 reconciliation.
+- Critical path: mountain route fails; Moria reveals Balin's fate; Balrog attacks.
+- Safe optional window: survival, puzzle door, routefinding, tomb battle, escape.
+- Locked postcondition: Gandalf falls; Fellowship escapes.
+- Caradhras world grammar: high mountain pass; snow, rock, wind, low visibility; survival traversal and group assists; storm escalation.
+- Moria world grammar: Dwarven underground kingdom; monumental geometry, darkness, mines and halls; puzzle/navigation/combat escalation/horror; entrance/tomb-alert/Balrog-escape variants.
+
+Production intent:
+- Build the largest Part I source-preparation pack so far, centered on landmark readability and traversal/cinematic continuity.
+- Reuse persistent warehouse stock first and index rather than duplicate payloads.
+- Heavy execution is inventory-clean gated while the current warehouse hash mismatch remains unresolved.
+- Animated candidates remain FBX-only; production textures PNG/TGA; BMP blocked; heavy runtime assets remain soft-referenced/asynchronously streamed; background populations remain pooled; repeated static dressing uses ISM/HISM + LOD/culling.
+- Runtime integration for P1C05/P1C06 remains blocked until predecessor Gate 6/7 acceptance.
+
+Status: **REGISTERED / LANDMARK ARCHITECTURE AUTHORIZED / SOURCE ARCHITECTURE AUTHORIZED / HEAVY EXECUTION INVENTORY-GATED / RUNTIME GATED**.
+
 ## 2026-09-29 - F1-05 Rivendell & Fellowship Mega Source Superpack V1
 
 Registered before any runtime implementation.

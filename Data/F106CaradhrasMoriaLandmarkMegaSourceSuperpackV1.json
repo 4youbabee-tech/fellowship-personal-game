@@ -1,0 +1,531 @@
+{
+  "schema_version": 1,
+  "pack_id": "F106_CARADHRAS_MORIA_LANDMARK_MEGA_SOURCE_SUPERPACK_V1",
+  "status": "SOURCE_ARCHITECTURE_READY_INVENTORY_GATED_RUNTIME_GATED",
+  "canonical_mission_id": "F1-06",
+  "canonical_title": "Caradhras & Moria",
+  "runtime_consumers": [
+    "P1C05",
+    "P1C06"
+  ],
+  "authority": [
+    "01_STORY_AND_TIMELINE_BIBLE",
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+    "05_BATTLES_WEAPONS_ARMIES_AND_CREATURES",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "Data/Part1LandmarkIdentityPlanV1.json",
+    "Data/ProjectGovernor.json",
+    "Docs/WORLD_DETAIL_LEDGER.md"
+  ],
+  "story_contract": {
+    "critical_path": [
+      "Mountain route fails.",
+      "Moria reveals Balin's fate.",
+      "Balrog attacks."
+    ],
+    "safe_optional_window": [
+      "survival",
+      "puzzle door",
+      "routefinding",
+      "tomb battle",
+      "escape"
+    ],
+    "locked_postcondition": "Gandalf falls; Fellowship escapes."
+  },
+  "world_contract": {
+    "caradhras": {
+      "location_type": "High mountain pass",
+      "visual_grammar": [
+        "snow",
+        "rock",
+        "wind",
+        "low visibility"
+      ],
+      "gameplay_roles": [
+        "survival traversal",
+        "group assists"
+      ],
+      "state_variants": [
+        "storm escalation"
+      ],
+      "landmark_contract": "Dominant high-pass ridge silhouette remains readable through low visibility."
+    },
+    "moria": {
+      "location_type": "Dwarven underground kingdom",
+      "visual_grammar": [
+        "monumental geometry",
+        "darkness",
+        "mines",
+        "halls"
+      ],
+      "gameplay_roles": [
+        "puzzle",
+        "navigation",
+        "combat escalation",
+        "horror"
+      ],
+      "state_variants": [
+        "entrance",
+        "tomb alert",
+        "Balrog escape"
+      ],
+      "landmark_contract": "Monumental entrance/hall axis plus state-specific tomb-alert and escape focal vistas."
+    }
+  },
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_class": 2
+  },
+  "safety_gate": {
+    "requires_clean_warehouse_inventory": true,
+    "hard_stop_on_hash_mismatch": true,
+    "hard_stop_on_license_hash_mismatch": true,
+    "hard_stop_on_dangerous_file": true,
+    "hard_stop_on_bad_receipt": true
+  },
+  "source_policy": {
+    "reuse_existing_warehouse_first": true,
+    "duplicate_payloads_per_runtime_chapter": false,
+    "index_only": true,
+    "animated_candidate_extension": ".fbx",
+    "texture_extensions": [
+      ".png",
+      ".tga"
+    ],
+    "forbidden_texture_extensions": [
+      ".bmp"
+    ],
+    "static_source_extensions": [
+      ".fbx",
+      ".obj"
+    ],
+    "audio_extensions": [
+      ".wav"
+    ],
+    "metadata_extensions": [
+      ".json",
+      ".mtl"
+    ],
+    "max_total_candidates": 16000,
+    "max_candidates_per_category": 1800,
+    "minimum_free_disk_reserve_bytes": 6442450944,
+    "landmark_score_bonus": 6
+  },
+  "landmark_policy": {
+    "minimum_landmark_categories": 8,
+    "require_dominant_vista_per_location": true,
+    "low_visibility_readability_required_for_caradhras": true,
+    "negative_space_and_lighting_hierarchy_required_for_moria": true,
+    "distance_proxy_or_lod_required_for_large_landmark_meshes": true,
+    "critical_vista_preload_required": true
+  },
+  "categories": [
+    {
+      "id": "CARADHRAS_RIDGE_LANDMARK",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "caradhras",
+        "mountain",
+        "ridge",
+        "peak",
+        "cliff",
+        "pass",
+        "rock",
+        "snow",
+        "silhouette",
+        "vista"
+      ]
+    },
+    {
+      "id": "CARADHRAS_PASS_TRAVERSAL",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "mountain",
+        "pass",
+        "trail",
+        "path",
+        "ledge",
+        "slope",
+        "cliff",
+        "ridge",
+        "snow",
+        "rock"
+      ]
+    },
+    {
+      "id": "CARADHRAS_SNOW_ICE_SURFACES",
+      "kind": "surface",
+      "landmark": false,
+      "keywords": [
+        "snow",
+        "ice",
+        "frozen",
+        "rock",
+        "cliff",
+        "mountain",
+        "ground",
+        "windblown"
+      ]
+    },
+    {
+      "id": "CARADHRAS_STORM_VISIBILITY",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "snow",
+        "storm",
+        "wind",
+        "mist",
+        "fog",
+        "cloud",
+        "whiteout",
+        "particle",
+        "weather"
+      ]
+    },
+    {
+      "id": "CARADHRAS_GROUP_ASSIST_SUPPORT",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "walk",
+        "climb",
+        "help",
+        "assist",
+        "push",
+        "pull",
+        "carry",
+        "stumble",
+        "fall",
+        "recover",
+        "group"
+      ]
+    },
+    {
+      "id": "CARADHRAS_SURVIVAL_PROPS",
+      "kind": "static",
+      "landmark": false,
+      "keywords": [
+        "pack",
+        "rope",
+        "blanket",
+        "cloak",
+        "camp",
+        "torch",
+        "food",
+        "supply",
+        "travel"
+      ]
+    },
+    {
+      "id": "CARADHRAS_AUDIO",
+      "kind": "audio",
+      "landmark": false,
+      "keywords": [
+        "wind",
+        "storm",
+        "snow",
+        "rock",
+        "footstep",
+        "breath",
+        "ambient",
+        "mountain"
+      ]
+    },
+    {
+      "id": "CARADHRAS_CINEMATIC_VISTA",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "mountain",
+        "ridge",
+        "cliff",
+        "snow",
+        "storm",
+        "vista",
+        "wide",
+        "horizon",
+        "silhouette"
+      ]
+    },
+    {
+      "id": "MORIA_ENTRANCE_THRESHOLD",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "moria",
+        "entrance",
+        "door",
+        "gate",
+        "arch",
+        "stone",
+        "threshold",
+        "wall",
+        "puzzle"
+      ]
+    },
+    {
+      "id": "MORIA_PUZZLE_DOOR_SUPPORT",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "door",
+        "puzzle",
+        "rune",
+        "inscription",
+        "stone",
+        "arch",
+        "gate",
+        "symbol",
+        "light"
+      ]
+    },
+    {
+      "id": "MORIA_MONUMENTAL_HALL_AXIS",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "moria",
+        "hall",
+        "column",
+        "pillar",
+        "arch",
+        "monumental",
+        "vault",
+        "chamber",
+        "stone",
+        "dwarven"
+      ]
+    },
+    {
+      "id": "MORIA_MINES_TUNNELS",
+      "kind": "static",
+      "landmark": false,
+      "keywords": [
+        "mine",
+        "tunnel",
+        "shaft",
+        "cave",
+        "stone",
+        "rock",
+        "rail",
+        "debris",
+        "passage"
+      ]
+    },
+    {
+      "id": "MORIA_DWARVEN_SURFACES",
+      "kind": "surface",
+      "landmark": false,
+      "keywords": [
+        "stone",
+        "granite",
+        "basalt",
+        "metal",
+        "iron",
+        "rust",
+        "rock",
+        "dwarf",
+        "dwarven",
+        "masonry"
+      ]
+    },
+    {
+      "id": "MORIA_ROUTEFINDING_LANDMARKS",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "hall",
+        "arch",
+        "column",
+        "stair",
+        "bridge",
+        "door",
+        "torch",
+        "marker",
+        "path",
+        "route"
+      ]
+    },
+    {
+      "id": "MORIA_TOMB_ALERT_SPACE",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "tomb",
+        "crypt",
+        "chamber",
+        "stone",
+        "coffin",
+        "sarcophagus",
+        "pillar",
+        "hall",
+        "alert"
+      ]
+    },
+    {
+      "id": "MORIA_COMBAT_ENCOUNTER_SUPPORT",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "combat",
+        "attack",
+        "defend",
+        "sword",
+        "axe",
+        "bow",
+        "orc",
+        "goblin",
+        "troll",
+        "enemy",
+        "hit",
+        "dodge"
+      ]
+    },
+    {
+      "id": "MORIA_BALROG_ESCAPE_VISTA",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "escape",
+        "fire",
+        "shadow",
+        "bridge",
+        "chasm",
+        "hall",
+        "flame",
+        "smoke",
+        "dark",
+        "vista"
+      ]
+    },
+    {
+      "id": "MORIA_DARKNESS_LIGHTING",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "dark",
+        "torch",
+        "fire",
+        "light",
+        "shadow",
+        "glow",
+        "smoke",
+        "mist",
+        "hall",
+        "cave"
+      ]
+    },
+    {
+      "id": "MORIA_FIRE_SHADOW_AUDIO",
+      "kind": "audio",
+      "landmark": false,
+      "keywords": [
+        "fire",
+        "flame",
+        "rumble",
+        "stone",
+        "roar",
+        "echo",
+        "cave",
+        "hall",
+        "combat",
+        "ambient"
+      ]
+    },
+    {
+      "id": "F106_FELLOWSHIP_ANIMATION_SUPPORT",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "fellowship",
+        "walk",
+        "run",
+        "climb",
+        "combat",
+        "assist",
+        "hurt",
+        "escape",
+        "idle",
+        "talk",
+        "weapon"
+      ]
+    },
+    {
+      "id": "F106_SURVIVAL_ROUTE_PROPS",
+      "kind": "static",
+      "landmark": false,
+      "keywords": [
+        "rope",
+        "pack",
+        "torch",
+        "map",
+        "food",
+        "blanket",
+        "weapon",
+        "supply",
+        "travel",
+        "camp"
+      ]
+    },
+    {
+      "id": "F106_CINEMATIC_DRESSING",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "vista",
+        "wide",
+        "silhouette",
+        "snow",
+        "fire",
+        "shadow",
+        "hall",
+        "column",
+        "mountain",
+        "escape"
+      ]
+    },
+    {
+      "id": "F106_SYSTEMIC_REACTION_SUPPORT",
+      "kind": "mixed",
+      "landmark": false,
+      "keywords": [
+        "snow",
+        "rock",
+        "door",
+        "torch",
+        "fire",
+        "debris",
+        "bridge",
+        "chain",
+        "dust",
+        "impact",
+        "water"
+      ]
+    },
+    {
+      "id": "F106_LANDMARK_DISTANCE_PROXY_SUPPORT",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "lod",
+        "proxy",
+        "silhouette",
+        "vista",
+        "mountain",
+        "hall",
+        "arch",
+        "column",
+        "cliff",
+        "distant"
+      ]
+    }
+  ],
+  "acceptance_boundary": "Source architecture/index preparation only. No landmark or chapter is visually accepted until chapter-specific runtime observation exists."
+}

@@ -1,3 +1,32 @@
+## 2026-09-29 - F1-06 landmark scoring priority
+
+- Configurable landmark score bonus (6): **SOURCE-IMPLEMENTED**.
+- PG-199 minimum landmark-score regression guard: **SOURCE-IMPLEMENTED**.
+- Duplicate PR #152: **CLOSED / NOT MERGED**.
+- PR #153 exact-head Pre-Unreal/Unreal after scoring update: **PENDING**.
+- Visual acceptance: **NOT CLAIMED**.
+
+## 2026-09-29 - PG-199 landmark/F1-06 guard
+
+- Part I landmark/F1-06 static regression guard: **SOURCE-IMPLEMENTED**.
+- Exact-head Pre-Unreal validation after PG-199: **PENDING**.
+- Visual/runtime acceptance: **NOT CLAIMED**.
+
+## 2026-09-29 - Part I landmark identity / F1-06 Caradhras-Moria source mega pack
+
+- Part I landmark identity plan: **SOURCE-IMPLEMENTED**.
+- Shire/Hobbiton + Bag End landmark anchors: **PLANNED / CURRENT-CHAPTER VISUAL ACCEPTANCE PENDING**.
+- Bree/Weathertop landmark anchors: **SOURCE-PREPARED / VISUAL ACCEPTANCE NOT CLAIMED**.
+- Rivendell landmark anchor: **SOURCE-ARCHITECTURE READY / HEAVY EXECUTION INVENTORY-GATED**.
+- Caradhras/Moria landmark anchors: **SOURCE-ARCHITECTURE READY / HEAVY EXECUTION INVENTORY-GATED**.
+- F1-06 24-category / 16,000-candidate manifest: **SOURCE-IMPLEMENTED**.
+- Landmark coverage report + minimum-source gate: **SOURCE-IMPLEMENTED**.
+- FBX-only animated candidate filter / BMP rejection: **SOURCE-IMPLEMENTED**.
+- Dedicated 180-minute F1-06 workflow: **SOURCE-IMPLEMENTED**.
+- P1C05/P1C06 runtime integration: **BLOCKED UNTIL PREDECESSOR GATE ACCEPTED**.
+- Exact-head static validation: **PENDING**.
+- PIE/device/visual/pacing/performance acceptance: **NOT CLAIMED**.
+
 ## 2026-09-29 - Warehouse mismatch diagnostic hardening
 
 - P1C01 Closure Pack #2 inventory audit: **HARD STOP / hashMismatch=1**.

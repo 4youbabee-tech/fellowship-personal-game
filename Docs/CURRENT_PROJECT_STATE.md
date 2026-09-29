@@ -1,3 +1,31 @@
+## 2026-09-29 - F1-06 landmark scoring strengthened
+
+- F1-06 landmark categories now use a manifest-driven **landmark score bonus = 6** instead of a fixed small inline boost.
+- The source indexer therefore prioritizes strong landmark candidates ahead of generic dressing when keyword evidence is otherwise comparable.
+- `PG-199` now rejects a landmark score bonus below 6 and guards the runtime marker that consumes the configured bonus.
+- Duplicate older PR #152 was closed without merge; PR #153 is the single F1-06 path and is based on current develop with warehouse diagnostics preserved.
+- Evidence boundary: **SOURCE-IMPLEMENTED / fresh exact-head checks pending / no visual acceptance claimed**.
+
+## 2026-09-29 - PG-199 landmark/F1-06 regression guard
+
+- `PG-199` now statically guards the Part I landmark identity plan and F1-06 superpack.
+- It prevents silent reduction of the 16,000 total candidate ceiling, 1,800/category throughput, FBX-only animated rule, BMP block, inventory-clean gate, minimum landmark coverage, required Caradhras/Moria landmark categories, and tooling-only Unreal filter contract.
+- Evidence boundary remains **SOURCE-IMPLEMENTED / exact-head validation pending**.
+
+## 2026-09-29 - Part I Landmark Identity + F1-06 Caradhras/Moria Mega Source V1
+
+- New `Data/Part1LandmarkIdentityPlanV1.json` defines recognizable visual anchors for Shire/Hobbiton, Bag End, Bree, Weathertop, Rivendell, Caradhras and Moria.
+- The landmark rule is source/visual architecture: each production region must expose at least one dominant silhouette/vista or interior focal vista supporting navigation and cinematic continuity.
+- Low-spec landmark strategy prioritizes composition, silhouette, lighting/fog hierarchy, critical-vista preloading, LOD/HLOD or simplified distance proxies, and instanced repeated dressing over brute-force geometry.
+- Canonical **F1-06 Caradhras & Moria** now has `Data/F106CaradhrasMoriaLandmarkMegaSourceSuperpackV1.json` with **24 categories**, **16,000 total candidate ceiling** and **1,800/category**.
+- Runtime consumers remain legacy `P1C05 + P1C06` under the recorded F1/P1 reconciliation.
+- Caradhras identity centers high mountain-pass ridge readability under snow/wind/low visibility and storm escalation.
+- Moria identity centers monumental entrance/hall-axis geometry, routefinding landmarks, tomb-alert space and Balrog-escape visual hierarchy.
+- `Scripts/run_f106_caradhras_moria_landmark_mega_source.ps1` produces category indexes plus a separate landmark coverage report and fails if the configured landmark-source minimum is not populated.
+- Heavy F1-06 execution remains **WAREHOUSE-INVENTORY-GATED** while the current hash mismatch is unresolved.
+- Governor `DEC-073` and `DEC-074` record these contracts.
+- Evidence boundary: **SOURCE-IMPLEMENTED / exact-head validation pending / no visual acceptance claimed**.
+
 ## 2026-09-29 - Warehouse hash-mismatch diagnostics hardening
 
 - P1C01 Closure Pack #2 reached inventory audit after seven successful cars, then hard-stopped on `hashMismatch=1` with no missing references, license mismatch, dangerous payload or bad receipt count.
