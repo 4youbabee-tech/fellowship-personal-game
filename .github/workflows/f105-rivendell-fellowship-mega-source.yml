@@ -5,6 +5,7 @@ on:
     branches:
       - develop
     paths:
+      - 'Scripts/audit_warehouse_inventory.ps1'
       - 'Data/F105RivendellFellowshipMegaSourceSuperpackV1.json'
       - 'Scripts/run_f105_rivendell_fellowship_mega_source.ps1'
       - '.github/workflows/f105-rivendell-fellowship-mega-source.yml'
