@@ -5736,6 +5736,114 @@ for pg207_path, pg207_symbol in [
     if pg207_symbol not in read(pg207_path):
         fail(f"PG-207 D-root authority marker missing: {pg207_path.relative_to(ROOT)}")
 
+# PG-208: living-world distance retirement must remain member-local.
+pg208_living_cpp = read(resolve_source("LivingWorldDirector.cpp"))
+pg208_start = pg208_living_cpp.find("void ALivingWorldDirector::CleanupExpiredEvents()")
+pg208_end = pg208_living_cpp.find("FName ALivingWorldDirector::ChooseEventType()", pg208_start)
+if pg208_start < 0 or pg208_end < 0:
+    fail("PG-208 CleanupExpiredEvents function boundary missing")
+else:
+    pg208_cleanup = pg208_living_cpp[pg208_start:pg208_end]
+    for pg208_symbol in [
+        "distance-policy=member-local",
+        "Event.Actors.RemoveAtSwap",
+        "if (Event.ExpiresAt <= Now)",
+        "if (Event.Actors.Num() == 0)",
+    ]:
+        if pg208_symbol not in pg208_cleanup:
+            fail(f"PG-208 member-local event retirement invariant missing: {pg208_symbol}")
+    if re.search(r"FVector::DistSquared2D\([^\n]+\)[\s\S]{0,260}?bExpired\s*=\s*true", pg208_cleanup):
+        fail("PG-208 distance culling may not expire an entire micro-event from one far member")
+
+# PG-209: P1C01 mega-build train remains gate-aware and source-grounded.
+pg209_plan = json.loads(read(ROOT / "Data" / "P1C01MaximumSafeMegaBuildV1.json"))
+if pg209_plan.get("status") != "PREP_AND_DEFECT_REPAIR_ACTIVE_RUNTIME_EXPANSION_GATED_BY_W00":
+    fail("PG-209 mega-build status must keep runtime expansion gated by W00")
+pg209_cars = [row for row in pg209_plan.get("work_cars", []) if isinstance(row, dict)]
+if len(pg209_cars) < 12:
+    fail("PG-209 mega-build lost required multi-car breadth")
+if any(row.get("state") == "ACTIVE" and row.get("id") != "DEFECT_EVENT_MEMBER_CULL" for row in pg209_cars):
+    fail("PG-209 runtime feature car activated before W00 opened it")
+for pg209_rule in [
+    "No parallel AI brain.",
+    "No heavy synchronous LoadObject path.",
+    "Crowd-scale actors remain pooled.",
+    "Heavy assets use soft references and FStreamableManager.",
+]:
+    if pg209_rule not in set(pg209_plan.get("architecture", {}).get("rules", [])):
+        fail(f"PG-209 mega-build architecture guard missing: {pg209_rule}")
+
+# PG-210: ambient player lookup stays centralized behind GetPlayerPawnCached.
+pg210_ambient = read(resolve_source("ShireAmbientNPC.cpp"))
+if pg210_ambient.count("UGameplayStatics::GetPlayerPawn(") != 1:
+    fail("PG-210 ShireAmbientNPC direct GetPlayerPawn count must remain exactly one")
+pg210_helper_start = pg210_ambient.find("APawn* AShireAmbientNPC::GetPlayerPawnCached()")
+pg210_helper_end = pg210_ambient.find("void AShireAmbientNPC::BeginPlay()", pg210_helper_start)
+if pg210_helper_start < 0 or pg210_helper_end < 0 or "UGameplayStatics::GetPlayerPawn(" not in pg210_ambient[pg210_helper_start:pg210_helper_end]:
+    fail("PG-210 direct player lookup must remain inside GetPlayerPawnCached")
+
+# PG-211: save-schema migrations may not be invented without recovered history.
+pg211_audit = json.loads(read(ROOT / "Data" / "SaveSchemaMigrationAuditV1.json"))
+if pg211_audit.get("current_schema_version") != 6:
+    fail("PG-211 save-schema audit drifted from current schema version")
+if pg211_audit.get("status") != "HISTORY_NOT_RECOVERED_DO_NOT_INVENT_MIGRATIONS":
+    fail("PG-211 save migration status may advance only with recovered schema history")
+pg211_player = read(resolve_source("ShirePlayerCharacter.cpp"))
+if "Save->SaveSchemaVersion > UShireSaveGame::CurrentSchemaVersion" not in pg211_player:
+    fail("PG-211 newer-than-build save rejection missing")
+
+# PG-212: P1C01 source-to-runtime disposition prevents silent omission.
+pg212_disposition = json.loads(read(ROOT / "Data" / "P1C01SourceToRuntimeDispositionV1.json"))
+if pg212_disposition.get("status") != "PREPARATION_COMPLETE_RUNTIME_CARS_GATED":
+    fail("PG-212 P1C01 disposition must remain preparation-only while runtime cars are gated")
+pg212_rows = [row for row in pg212_disposition.get("dispositions", []) if isinstance(row, dict)]
+for pg212_id in [
+    "SHIRE_HOBBITON_WORLD",
+    "BAG_END_WORLD",
+    "F1_01_PARTY_SETUP",
+    "F1_01_FIREWORKS",
+    "F1_02_RING_DANGER",
+    "F1_03_ROAD_HIDING",
+    "F1_03_FERRY_ESCAPE",
+    "SHIRE_LIVING_WORLD",
+    "SHIRE_AUDIO_IDENTITY",
+    "CHECKPOINT_AND_RETRY",
+]:
+    if pg212_id not in {row.get("id") for row in pg212_rows}:
+        fail(f"PG-212 source disposition missing required item: {pg212_id}")
+
+
+
+# PG-213: combined P1C01 overnight train/source-disposition contract remains gate-safe.
+pg209_max = json.loads(read(ROOT / "Data" / "P1C01MaximumSafeMegaBuildV1.json"))
+pg209_train = json.loads(read(ROOT / "Data" / "P1C01OvernightMegaBuildTrainV1.json"))
+pg209_disp = json.loads(read(ROOT / "Data" / "P1C01SourceToRuntimeDispositionV1.json"))
+if pg209_max.get("status") != "PREP_AND_DEFECT_REPAIR_ACTIVE_RUNTIME_EXPANSION_GATED_BY_W00":
+    fail("PG-213 P1C01 maximum-safe build lost W00 runtime gate")
+if pg209_train.get("execution_policy", {}).get("one_approval_many_cars") is not True:
+    fail("PG-213 one-approval many-cars contract missing")
+if "synchronous heavy asset loads" not in pg209_train.get("execution_policy", {}).get("forbidden", []):
+    fail("PG-213 synchronous heavy-load prohibition missing")
+if "OBJ for animated production assets" not in pg209_train.get("execution_policy", {}).get("forbidden", []):
+    fail("PG-213 animated OBJ prohibition missing")
+if "BMP as final production texture" not in pg209_train.get("execution_policy", {}).get("forbidden", []):
+    fail("PG-213 BMP final-texture prohibition missing")
+if pg209_disp.get("zero_silent_omission_rule", "") == "":
+    fail("PG-213 source-to-runtime zero-silent-omission rule missing")
+pg209_ids = {str(x.get("id") or "") for x in pg209_max.get("work_cars", []) if isinstance(x, dict)}
+for pg209_required in [
+    "DEFECT_EVENT_MEMBER_CULL",
+    "SAVE_SCHEMA_HISTORY_AUDIT",
+    "CANON_ZERO_SILENT_OMISSION",
+    "LIVING_SHIRE",
+    "CHARACTER_PRESENTATION",
+    "AUDIO_SONIC_IDENTITY",
+    "QUEST_CINEMATIC_POLISH",
+    "TARGET_DEVICE_AND_GATE67",
+]:
+    if pg209_required not in pg209_ids:
+        fail(f"PG-213 P1C01 mega-build car missing: {pg209_required}")
+
 
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
