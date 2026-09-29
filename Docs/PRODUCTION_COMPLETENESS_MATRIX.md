@@ -1,32 +1,13 @@
-## 2026-09-30 - P1C01 mega train / living-world cull safety
+## 2026-09-30 - P1C01 maximum-safe mega build train + living-world cull safety
 
-- Living-world event distance cleanup: **SOURCE-IMPLEMENTED / PROOF PENDING**. Distance culling is member-local; authored event lifetime expiry remains event-wide.
-- Regression guard: **PG-207 ADDED** in Pre-Unreal validation.
-- Ambient player lookup note: current source has one direct `UGameplayStatics::GetPlayerPawn` call inside the cache helper, not six independent direct lookups.
-- P1C01 mega production train: **AUTHORIZED + REGISTERED / RUNTIME CARS GATED**.
-- P1C01 production maturity, PIE, target-device, FPS, audio-listening and visual acceptance: **UNCHANGED** until corresponding evidence exists.
-
-## 2026-09-30 - Living-world pooled-event cull safety
-
-- Event lifetime cleanup: **PRESERVED event-wide**.
-- Distance cleanup: **CHANGED to member-local** so one wandering member cannot despawn a nearby interaction/participant.
-- Regression guard: **PG-207 SOURCE-IMPLEMENTED / exact-head static validation pending**.
-- AI/Life maturity remains unchanged until real UE4/runtime observation; no PIE/device/visual/performance promotion is made.
-
-## 2026-09-30 - Living-world pooled-event cull repair candidate
-
-- AI/Life reliability: grouped micro-event distance cleanup corrected from event-wide retirement to member-local retirement while preserving event-wide lifetime expiry.
-- Regression guards: PG-207 + source-contract unit coverage added.
-- Production maturity is unchanged until exact-head UE4/runtime evidence exists.
-- No P1C01 PIE/device/performance/visual acceptance is promoted by this source repair.
-
-## 2026-09-30 - Living-world pooled event cull safety
-
-- Grouped micro-event distance retirement: **SOURCE-REPAIRED** to member-local release.
-- Event lifetime expiry: **UNCHANGED / event-wide**.
-- Pool reuse architecture: **PRESERVED**.
-- Static regression guard PG-207: **IMPLEMENTED / exact-head CI pending**.
-- AI/Life maturity is not promoted until UE/runtime evidence exists; PIE/device/visual/performance remain pending.
+- Owner-authorized P1C01 mega train: **PREPARATION ACTIVE / RUNTIME EXPANSION GATED BY W00**.
+- Living-world grouped-event distance retirement: **SOURCE-REPAIRED to member-local**.
+- Event authored lifetime expiry: **PRESERVED event-wide**.
+- Regression protection: **PG-208 + source-contract unit coverage IMPLEMENTED / exact-head CI pending**.
+- Ambient player-pawn lookup claim rechecked: **one direct engine lookup inside the cache helper; no hot-path rewrite required**.
+- Save schema migration: **AUDITED / HISTORY INCOMPLETE / NO SPECULATIVE MIGRATION ADDED**.
+- AI/Life, Gameplay, Character, Audio, Cinematic and Performance production maturity remain unchanged until their individual exact-head/runtime/human evidence exists.
+- No P1C01 PIE/device/FPS/visual/performance acceptance is promoted by this branch.
 
 ## 2026-09-30 - Final zero-ahead maintenance sweep
 
