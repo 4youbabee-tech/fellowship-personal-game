@@ -1,3 +1,12 @@
+## 2026-09-30 - Final pre-build repository cleanout
+
+- Legacy execution-branch heads captured in one recovery anchor: **26 / 26 RECORDED**.
+- Recovery anchor: **`archive/pre-build-salvage-20260930@a47eda59f31352676de44777845fbc01c38d2d0d`**.
+- Legacy remote execution refs: **QUEUED FOR GUARDED POST-MERGE DELETE**.
+- Canonical integration branch: **`develop`**; stable release branch: **`main`**.
+- Future temporary-branch lifecycle: **EXACT-HEAD VALIDATE -> MERGE -> AUTO DELETE**.
+- Gameplay/compile/PIE/device/visual/performance maturity: **UNCHANGED / NOT CLAIMED**.
+
 ## 2026-09-30 - Infrastructure hygiene closeout
 
 - Active runner root: **RUN-PROVEN on `D:\\actions-runner`** from prior GitHub health evidence; owner-side final cleanup reports old C runner residue absent.

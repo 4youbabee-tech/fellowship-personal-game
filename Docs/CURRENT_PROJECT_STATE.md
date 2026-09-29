@@ -1,3 +1,13 @@
+## 2026-09-30 - Final pre-build branch cleanout
+
+- All 26 remaining legacy execution-branch heads were captured before deletion in recovery anchor `archive/pre-build-salvage-20260930` at commit `a47eda59f31352676de44777845fbc01c38d2d0d`.
+- The archive commit records every legacy head SHA as a parent and carries `Archive/PreBuildLegacyBranchSalvage_2026_09_30.json`; it is recovery-only and is not an alternate integration trunk.
+- `Data/BranchCleanupPlan.json` now queues all 26 legacy execution refs for guarded post-merge deletion. No archived branch tree is wholesale-merged into `develop`.
+- Expected live branch set after cleanup: `develop`, `main`, and the single protected archive recovery ref.
+- Permanent future lifecycle remains exact-head validation -> merge into `develop` -> automatic merged-head deletion under DEC-042/DEC-088.
+- Build/production resumes from canonical `develop` after this hygiene closeout; no gameplay status is promoted by branch cleanup.
+- Evidence boundary: repository/history hygiene only. No compile/PIE/device/visual/performance acceptance is claimed.
+
 ## 2026-09-30 - Final runner-path and branch-lifecycle reconciliation
 
 - Owner-side cleanup finished with `OLD_C_RESIDUE_EXISTS=False` and `D_RUNNER_EXISTS=True`; the active persistent runner authority remains `D:\\actions-runner` and Warehouse authority remains `D:\\actions-runner\\_warehouse\\ShireJourney`.

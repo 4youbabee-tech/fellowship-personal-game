@@ -5127,6 +5127,32 @@
       ],
       "evidence_boundary": "Repository lifecycle governance only. No gameplay, PIE, device, visual, pacing or performance acceptance is implied.",
       "authority": "USER_EXPLICIT_DIRECTION"
+    },
+    {
+      "id": "DEC-089",
+      "title": "Archive legacy branch histories and retire all stale execution refs before build resume",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-EXEC-002",
+        "REQ-STABILITY-003"
+      ],
+      "resolution": "Before substantive build work resumes, preserve all remaining legacy branch heads in one non-execution archive commit/ref, then delete their remote execution refs. develop remains the only integration trunk and main remains the stable release branch. The archive ref is recovery-only and must never become an alternate development lane.",
+      "implementation_contract": [
+        "Capture every remaining non-develop/non-main legacy branch head SHA before deletion.",
+        "Preserve those heads as parents of one archive commit and record them in Archive/PreBuildLegacyBranchSalvage_2026_09_30.json on archive/pre-build-salvage-20260930.",
+        "Do not wholesale-merge archived branch trees into develop; recovery is selective only.",
+        "Queue all 26 legacy execution refs for deletion through the guarded Branch Cleanup workflow.",
+        "Protect the single archive ref from automatic cleanup as a recovery anchor.",
+        "After cleanup, normal production branches are short-lived: exact-head validate, merge to develop, then automatic delete under DEC-042/DEC-088.",
+        "Resume substantive build/production work only from current develop after this repository-hygiene closeout."
+      ],
+      "evidence": [
+        "archive/pre-build-salvage-20260930 commit a47eda59f31352676de44777845fbc01c38d2d0d captures 26 legacy head SHAs as commit parents.",
+        "BranchCleanupPlan final_prebuild_cleanup_2026_09_30 queues the 26 legacy refs for guarded deletion.",
+        "Prior Branch Cleanup execution proved exact merged-head deletion and guarded branch deletion on PR #177."
+      ],
+      "evidence_boundary": "Repository-history preservation and branch hygiene only. No compile, PIE, device, visual, pacing or performance acceptance is implied.",
+      "authority": "USER_EXPLICIT_DIRECTION"
     }
   ],
   "open_conflicts": [],
