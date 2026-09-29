@@ -1,3 +1,13 @@
+## 2026-09-29 - Warehouse mismatch diagnostic hardening
+
+- P1C01 Closure Pack #2 inventory audit: **HARD STOP / hashMismatch=1**.
+- Exact hash-mismatch log evidence: **SOURCE-IMPLEMENTED**.
+- Exact license-hash/missing-reference log evidence: **SOURCE-IMPLEMENTED**.
+- Automatic deletion/quarantine/receipt rewrite: **NOT AUTHORIZED / NOT IMPLEMENTED**.
+- Mismatch record identification by rerun: **PENDING**.
+- Warehouse clean state: **NOT CLAIMED**.
+- P1C01 closure continuation: **BLOCKED UNTIL INVENTORY REPAIRED OR EVIDENCE-QUARANTINED**.
+
 ## 2026-09-29 - F1-04 Bree & Weathertop mega source preparation
 
 - Canonical F1-04 source scope: **REGISTERED**.
