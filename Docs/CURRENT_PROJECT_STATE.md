@@ -1,5 +1,6 @@
 ## 2026-09-30 - P1C01 maximum-safe mega train + LivingWorld safety repair
 
+- Legacy `Scripts/run_p1c01_mega_chapter_pack.ps1` default Warehouse root was reconciled from retired `C:\\actions-runner` to authoritative `D:\\actions-runner\\_warehouse\\ShireJourney`; closure-pack V2 already used D.
 - Programmer review was checked against current source. Confirmed defect: one distant member of a grouped LivingWorld micro-event could retire the whole event, including a nearby pooled interaction or participant.
 - Runtime repair: authored lifetime expiry remains event-wide; distance retirement is now member-local, releases only the far actor through the existing pool ownership path, and removes the event record only when no members remain.
 - PG-208 protects this cleanup contract and a source-contract regression test covers the same failure mode.
