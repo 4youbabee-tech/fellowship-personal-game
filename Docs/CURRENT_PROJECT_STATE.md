@@ -1,3 +1,17 @@
+## 2026-09-29 - F1-06 Caradhras & Moria Mega Landmark Source Superpack V1
+
+- Canonical scope: **F1-06 Caradhras & Moria**; legacy runtime consumers **P1C05 + P1C06**.
+- Critical path: mountain route fails; Moria reveals Balin's fate; Balrog attacks. Locked postcondition: Gandalf falls; Fellowship escapes.
+- New landmark-first source architecture defines **24 categories**, **16,000 total candidate ceiling**, **1,800/category**.
+- Caradhras landmark lanes: dominant mountain-pass silhouette, storm-route spine, snow choke points and exposed rock walls.
+- Moria landmark lanes: gate/Doors approach, monumental halls, mine corridors, tomb-alert space and escape-scale bridge/chasm geometry.
+- Landmark candidates receive a bounded score bonus to prioritize readable navigation/cinematic anchors over generic dressing.
+- Heavy execution remains **warehouse-inventory-clean gated**.
+- Animated candidates remain FBX-only; BMP blocked; shared indexing avoids duplicate multi-GB payloads.
+- Governor `DEC-073` records the permanent contract.
+- P1C05/P1C06 runtime integration remains **GATED**.
+- Evidence boundary: **SOURCE-IMPLEMENTED / exact-head validation pending / no PIE-device-visual-performance acceptance**.
+
 ## 2026-09-29 - F1-05 Rivendell & Fellowship Mega Source Superpack V1
 
 - Canonical scope: **F1-05 Rivendell & Fellowship**; legacy runtime consumer **P1C04**.
