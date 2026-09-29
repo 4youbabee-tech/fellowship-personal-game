@@ -131,8 +131,8 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("LivingWorldEventMemberCull", cleanup)
         self.assertIn("Event.Actors.RemoveAtSwap", cleanup)
         self.assertIn("if (Event.ExpiresAt <= Now)", cleanup)
-        self.assertNotIn("bool bExpired = ActiveEvents[Index].ExpiresAt <= Now", cleanup)
-        self.assertNotIn("bExpired = true;", cleanup)
+        self.assertIn("if (Event.Actors.Num() == 0)", cleanup)
+        self.assertNotIn("bExpired = true", cleanup)
 
 
 if __name__ == "__main__":
