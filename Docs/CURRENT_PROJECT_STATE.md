@@ -1,3 +1,12 @@
+## 2026-09-30 - Living-world grouped-event cull repair
+
+- Direct source review confirmed the programmer's grouped-event culling report on canonical `develop`: one actor beyond `EventCullDistance` could set the whole micro-event expired and release nearby members with it.
+- Fix branch `fix/living-world-member-cull-safety-v1` changes distance retirement to member-local while preserving event-wide authored lifetime expiry.
+- `Scripts/pre_unreal_validate.py` and `Scripts/test_source_contracts.py` guard the new invariant. The duplicate draft guard was removed so one authoritative static contract remains.
+- Separate review found the reported ambient player-pawn regression is not present in current source: `UGameplayStatics::GetPlayerPawn` is centralized inside `GetPlayerPawnCached()`; callers consume the cache helper.
+- Save schema handling remains a separate review item: newer schemas are rejected, while legacy identity repair exists; no speculative historical-schema migration is being invented without version-specific contracts.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. No PIE/device/visual/performance acceptance is claimed.
+
 ## 2026-09-30 - Living-world event member-cull safety repair
 
 - Direct code review confirmed a real pooled-event lifecycle defect in `ALivingWorldDirector::CleanupExpiredEvents`: one distant member could retire the entire event and hide/recycle a still-near interaction or participant.
