@@ -2800,18 +2800,21 @@
     },
     {
       "id": "REQ-PROD-011",
-      "title": "High-throughput multi-lane production with strict runtime smart fence",
+      "title": "Adaptive maximum-safe multi-lane production with strict runtime smart fence",
       "category": "ProductionPipeline",
       "priority": "CRITICAL",
-      "status": "PARTIAL",
+      "status": "IMPLEMENTED",
       "origin": "Owner explicitly requested the massive build continue on multiple parallel lanes, use the supplied source PDFs, import game materials faster, and relax administrative constraints without creating future runtime errors.",
-      "intent": "Allow source/PDF indexing, warehouse acquisition, material/audio/character preparation and later-region authoring to advance in parallel while exactly one runtime-changing integration lane remains serialized and all crash/save/streaming/memory/performance/runtime-dependency guards stay fail-closed.",
+      "intent": "Drive every independent source, warehouse, asset-preparation and authoring lane at the highest throughput allowed by current measured safety guards, while keeping exactly one runtime-changing integration lane serialized and preserving canon, provenance, save, streaming, memory, performance and Gate 6/7 fail-closed boundaries.",
       "acceptance_criteria": [
-        "Supplied source PDFs are indexed by stable hash, page count and authority role without adding large binaries to Git.",
-        "P1C01 material intake can prepare 1K/2K PNG/TGA sources and deterministic MTL files for the existing production importer.",
-        "Missing candidate downloads and non-final naming do not fail unrelated preparation work.",
-        "Dangerous/corrupt payloads, BMP, invalid final animation format, provider-access bypass, runtime dependency gaps, synchronous heavy loading, pooling violations and critical gameplay-state defects remain blocking.",
-        "Only one runtime-changing PR is active while source/warehouse/tooling lanes advance in parallel."
+        "Independent preparation lanes remain saturated whenever they have eligible work; they do not wait on unrelated long-running CI or runtime gates.",
+        "Persistent warehouse-mutating operations remain serialized against the single inventory truth while non-mutating source/index preparation may proceed independently.",
+        "Production waves are large coherent batches rather than one-small-idea commits, and shared authority/docs are synchronized in the same wave.",
+        "Warehouse production stops only on concrete integrity/storage/provenance/format blockers; provider-local failures quarantine and continue where policy allows.",
+        "Animated production assets use FBX only; production textures use PNG/TGA; BMP remains blocked.",
+        "Heavy runtime content uses soft references plus FStreamableManager async loading; crowds remain pooled and repeated detail uses ISM/HISM with LOD/culling.",
+        "Exactly one runtime-changing integration lane is active, and runtime promotion never advances past predecessor Gate 6/7 or measured target-device safety.",
+        "Capacity growth is adaptive: candidate/source libraries may grow aggressively, while runtime residency expands only after measured RAM/VRAM/frame-time evidence."
       ],
       "dependencies": [
         "REQ-WAREHOUSE-001",
@@ -4743,6 +4746,40 @@
         "03_WORLD_LOCATIONS_AND_MAP_BIBLE — Lothlórien and Anduin / Amon Hen production specifications"
       ],
       "evidence_boundary": "SOURCE ARCHITECTURE ONLY. Heavy execution remains inventory-gated and runtime remains predecessor-gated; no UE integration, PIE, device, visual, pacing or performance acceptance is claimed."
+    },
+    {
+      "id": "DEC-078",
+      "title": "Operate Shire Journey in Adaptive Maximum Safe Production mode",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-PROD-011",
+        "REQ-WAREHOUSE-001",
+        "REQ-PERF-001",
+        "REQ-STABILITY-001"
+      ],
+      "resolution": "Production throughput is now a first-class project objective. Saturate all independent preparation lanes with large coherent waves up to the current evidence-based safety guards. Do not impose artificial small-batch pacing when no real guard is active. Keep persistent warehouse mutation serialized and keep exactly one runtime-changing integration lane behind existing chapter and Gate 6/7 boundaries.",
+      "implementation_contract": [
+        "Use the existing whole-game production queue as the master preparation map; do not create a competing authority.",
+        "Run source/PDF indexing, candidate selection, later-region authoring, material/audio/character preparation and other non-runtime lanes in parallel whenever dependencies permit.",
+        "Serialize writes to the persistent warehouse because one inventory/provenance truth is shared; index-only readers may proceed independently.",
+        "Prefer large coherent waves that update implementation, Governor, CURRENT_PROJECT_STATE and PRODUCTION_COMPLETENESS_MATRIX together.",
+        "Do not use arbitrary candidate/file-count ceilings as runtime limits; source libraries may be large while runtime residency remains chapter/zone bounded.",
+        "Runtime content remains soft-referenced and asynchronously loaded; release obsolete handles after stable world-state commit.",
+        "Maintain at least the existing 6 GiB warehouse free-space reserve until a later measured storage policy supersedes it.",
+        "Provider-local/source-local failures quarantine and continue where existing policy permits; inventory corruption, dangerous payloads, provenance failure, runtime dependency failure and storage-reserve breach remain hard stops.",
+        "Do not delay safe independent production because another CI job is queued or in progress; DEC-075 bounded polling remains active.",
+        "P1C01 remains the active runtime benchmark until real Gate 6/7 acceptance, but preparation for all later regions continues at maximum safe throughput.",
+        "Target-device RAM/VRAM/frame-time evidence, not warehouse size, defines the final runtime density ceiling."
+      ],
+      "rationale": "The owner explicitly directed the project to stop operating at tiny incremental throughput and use the already-built warehouse, CI, streaming, provenance and gating infrastructure to maximize actual production. Live evidence shows the persistent warehouse already supports 18,697 payload files / 6.688 GB with a clean inventory audit; the remaining blocker in Warehouse #286 was a report-tool StrictMode defect rather than capacity exhaustion.",
+      "evidence": [
+        "Warehouse #286: WAREHOUSE_INVENTORY_AUDIT_PASS payloadFiles=18697 bytes=6688457009 receipts=14 receiptRecords=667 activeRecords=239 superseded=428 duplicateGroups=0",
+        "Data/WholeGameProductionExecutionQueueV1.json",
+        "Data/WholeGameStreamingResidencyPlanV1.json",
+        "Data/P1C01ChapterClosureMegaPackV2.json",
+        "Docs/WORLD_DETAIL_LEDGER.md — Maximum Safe Production Mode V1"
+      ],
+      "evidence_boundary": "PRODUCTION GOVERNANCE + EXECUTION MODE. Does not waive runtime/PIE/device/visual/pacing/performance acceptance."
     }
   ],
   "open_conflicts": [],
