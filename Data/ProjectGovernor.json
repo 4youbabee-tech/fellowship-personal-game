@@ -4534,6 +4534,40 @@
         "03_WORLD_LOCATIONS_AND_MAP_BIBLE — Bree / Weathertop production specifications"
       ],
       "evidence_boundary": "SOURCE PREPARATION ARCHITECTURE ONLY. No UE integration, PIE, device, visual, pacing or performance acceptance is claimed."
+    },
+    {
+      "id": "DEC-071",
+      "title": "F1-05 Rivendell & Fellowship uses an inventory-clean gated mega source superpack",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WORLD-001",
+        "REQ-WORLD-002",
+        "REQ-NPC-001",
+        "REQ-PERF-001",
+        "REQ-STABILITY-001"
+      ],
+      "resolution": "Prepare a very large shared source index for canonical F1-05 Rivendell & Fellowship, consumed by legacy runtime chapter P1C04. Authoring may proceed before predecessor acceptance, but heavy execution hard-stops unless persistent warehouse inventory is clean.",
+      "implementation_contract": [
+        "Canonical mission authority remains F1-05 Rivendell & Fellowship.",
+        "Rivendell visual grammar remains stone/wood integration, waterfalls and layered terraces; gameplay support centers lore, relationships, equipment and council transition.",
+        "The pack covers Council space, Fellowship character/animation support, lore/library, equipment/armory, healing/recovery, sanctuary ambience, traversal, mounts, departure dressing, fauna and systemic interactions.",
+        "Warehouse inventory audit must pass before F1-05 heavy indexing; hash mismatch, license hash mismatch, dangerous file or bad receipt remains a hard stop.",
+        "Animated candidates remain FBX-only; PNG/TGA production textures; BMP blocked.",
+        "Runtime heavy assets remain soft-referenced/asynchronously streamed; background populations remain pooled; repeated static dressing uses ISM/HISM with LOD/culling.",
+        "P1C04 runtime integration remains blocked until predecessor Gate 6/7 acceptance.",
+        "Source candidate counts do not constitute runtime or visual acceptance."
+      ],
+      "rationale": "The owner requested another larger chapter immediately. P1C01 Closure #2 simultaneously exposed a warehouse hash mismatch, so the safe high-throughput design is to author the F1-05 source architecture now while making heavy execution conditional on a clean inventory.",
+      "evidence": [
+        "Docs/WORLD_DETAIL_LEDGER.md — F1-05 Rivendell & Fellowship Mega Source Superpack V1",
+        "Data/F105RivendellFellowshipMegaSourceSuperpackV1.json",
+        "Scripts/run_f105_rivendell_fellowship_mega_source.ps1",
+        ".github/workflows/f105-rivendell-fellowship-mega-source.yml",
+        "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX — F1-05 Rivendell & Fellowship",
+        "03_WORLD_LOCATIONS_AND_MAP_BIBLE — Rivendell production specification",
+        "P1C01 Chapter Closure Pack #2 — warehouse inventory hashMismatch=1"
+      ],
+      "evidence_boundary": "SOURCE ARCHITECTURE ONLY. Heavy execution is inventory-gated; no UE integration, PIE, device, visual, pacing or performance acceptance is claimed."
     }
   ],
   "open_conflicts": [],

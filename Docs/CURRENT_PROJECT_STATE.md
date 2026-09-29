@@ -1,3 +1,16 @@
+## 2026-09-29 - F1-05 Rivendell & Fellowship Mega Source Superpack V1
+
+- Canonical scope: **F1-05 Rivendell & Fellowship**; legacy runtime consumer **P1C04**.
+- Critical path: Council chooses destruction of the Ring; Fellowship forms. Locked postcondition: Nine depart.
+- Rivendell world grammar: stone/wood integration, waterfalls, layered terraces; lore/relationships/equipment/council transition; arrival-wounded/Fellowship-formed variants.
+- New manifest defines **20 categories**, **12,000 total candidate ceiling**, **1,500/category**.
+- Coverage includes architecture/terraces, waterfalls/river, gardens, interiors, Council space, lore/library, equipment/armory, Fellowship characters/animations, Elven population, relationship scenes, healing/recovery, sanctuary audio/lighting, traversal, mounts, cinematic dressing, departure support, fauna and systemic interactions.
+- Heavy execution is inventory-clean gated because P1C01 Closure #2 reported `hashMismatch=1`.
+- Animated candidates remain FBX-only; BMP blocked; shared-stock indexing avoids multi-GB duplication.
+- Governor `DEC-071` records the permanent contract.
+- Runtime integration remains **GATED**.
+- Evidence boundary: **SOURCE-IMPLEMENTED / exact-head validation pending / heavy workflow not yet authorized until inventory clean**.
+
 ## 2026-09-29 - F1-04 Bree & Weathertop Mega Source Superpack V1
 
 - New source-preparation lane registered for canonical **F1-04 Bree & Weathertop**, consumed by legacy runtime chapters **P1C02 + P1C03** under the existing F1/P1 reconciliation.

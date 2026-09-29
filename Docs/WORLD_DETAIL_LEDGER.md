@@ -1,3 +1,25 @@
+## 2026-09-29 - F1-05 Rivendell & Fellowship Mega Source Superpack V1
+
+Registered before any runtime implementation.
+
+Canonical source scope:
+- Mission package: **F1-05 Rivendell & Fellowship**.
+- Runtime consumer: legacy implementation chapter **P1C04** under the recorded F1/P1 reconciliation.
+- Critical path: the Council chooses destruction of the Ring; the Fellowship forms.
+- Safe optional window: exploration, lore, equipment and relationship scenes.
+- Locked postcondition: Nine depart.
+- Rivendell world grammar: Elven valley sanctuary; stone/wood integration; waterfalls; layered terraces; lore/relationships/equipment/council transition; arrival-wounded and Fellowship-formed state variants.
+
+Production intent:
+- Build a very large shared source-preparation pack for Rivendell world layers, Council/Fellowship presentation, equipment, lore-space dressing, relationship-scene support, sanctuary ambience, traversal, cinematic support, fauna and systemic interaction.
+- Reuse persistent warehouse stock first; index and score existing candidates rather than duplicate multi-gigabyte payloads.
+- Because P1C01 Closure #2 exposed a warehouse hash mismatch, this pack is **inventory-clean gated**: heavy execution must hard-stop unless the warehouse inventory audit is clean.
+- Animated candidates remain FBX-only; production textures PNG/TGA; BMP blocked; heavy runtime assets remain soft-referenced/asynchronously streamed; background populations remain pooled; repeated static dressing remains ISM/HISM + LOD/culling.
+- Source preparation may be authored before predecessor Gate 6/7 acceptance; P1C04 runtime integration remains blocked behind predecessor acceptance.
+- No source index or warehouse score is evidence of PIE/device/visual/performance acceptance.
+
+Status: **REGISTERED / SOURCE ARCHITECTURE AUTHORIZED / HEAVY EXECUTION INVENTORY-GATED / RUNTIME GATED**.
+
 ## 2026-09-29 - F1-04 Bree & Weathertop Mega Source Superpack V1
 
 Registered before any runtime implementation.

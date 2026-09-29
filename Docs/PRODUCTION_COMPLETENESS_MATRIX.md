@@ -1,3 +1,17 @@
+## 2026-09-29 - F1-05 Rivendell & Fellowship mega source preparation
+
+- Canonical F1-05 source scope: **REGISTERED**.
+- Runtime consumer P1C04 mapping: **RECORDED**.
+- 20-category / 12,000-candidate shared source manifest: **SOURCE-IMPLEMENTED**.
+- Inventory-clean hard gate: **SOURCE-IMPLEMENTED**.
+- FBX-only animated candidate filter: **SOURCE-IMPLEMENTED**.
+- BMP texture rejection: **SOURCE-IMPLEMENTED**.
+- Dedicated 180-minute F1-05 workflow: **SOURCE-IMPLEMENTED**.
+- Heavy workflow execution: **BLOCKED UNTIL WAREHOUSE INVENTORY CLEAN**.
+- P1C04 runtime integration: **BLOCKED UNTIL PREDECESSOR GATE ACCEPTED**.
+- Exact-head static validation: **PENDING**.
+- PIE/device/visual/pacing/performance acceptance: **NOT CLAIMED**.
+
 ## 2026-09-29 - F1-04 Bree & Weathertop mega source preparation
 
 - Canonical F1-04 source scope: **REGISTERED**.
