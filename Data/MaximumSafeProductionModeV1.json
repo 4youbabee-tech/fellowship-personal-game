@@ -123,15 +123,15 @@
     ]
   },
   "execution_order": [
-    "Repair Warehouse #286 saturation-report StrictMode defect and add regression coverage.",
-    "Rerun selective Warehouse audit/saturation/prep; inventory must remain clean.",
-    "Resume P1C01 Chapter Closure Pack from the clean inventory gate.",
-    "Complete/merge F1-07 source architecture after exact-head validation.",
-    "Open F1-08 Amon Hen / Breaking of the Fellowship maximum-safe landmark mega source pack.",
-    "Keep Part II/III world-source preparation moving through the existing 28-region whole-game queue where canon authority is sufficient.",
+    "Complete F1-08 Amon Hen / Breaking of the Fellowship maximum-safe multi-bank source wave and exact-head validation.",
+    "Execute F1-08 source indexing only while persistent warehouse inventory remains clean.",
+    "Resume P1C01 Chapter Closure Pack from the clean inventory/reporting gate.",
+    "Keep later-region source/material/audio/character/world preparation moving through the existing 28-region queue where canon authority is sufficient.",
     "Convert later chapters to multi-bank streamed chapter plans before high-density runtime promotion.",
     "Use P1C01 H target-device profiling to replace inferred residency ceilings with measured budgets."
   ],
   "success_definition": "Production lanes remain saturated without violating any hard stop, while runtime integration stays serialized and evidence-backed.",
-  "evidence_boundary": "Execution architecture and current live warehouse evidence only. No PIE/device/visual/pacing/performance acceptance is implied."
+  "evidence_boundary": "Execution architecture and current live warehouse evidence only. No PIE/device/visual/pacing/performance acceptance is implied.",
+  "active_source_wave": "F1-08 Amon Hen / Breaking of the Fellowship",
+  "active_source_wave_status": "SOURCE_ARCHITECTURE_IMPLEMENTATION_ACTIVE"
 }

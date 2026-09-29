@@ -1,3 +1,16 @@
+## 2026-09-29 - F1-08 Amon Hen / Breaking of the Fellowship Maximum-Safe Mega Source V1
+
+- Canonical mission authority: **F1-08 Breaking of the Fellowship**. Legacy runtime consumer remains **P1C08** under DEC-067; no runtime renumbering is introduced.
+- Source-verified critical path: Boromir falls; Merry/Pippin are captured; Frodo chooses Mordor; Sam follows. Locked postcondition: **three parallel campaigns begin**.
+- Mission package requires stable-ID objective graph, documented encounter spawn/role/escalation/cleanup/fail rules, identical cinematic skip postconditions, entry + pre-set-piece + postcondition save coverage, and postcondition validation before unlocking the next campaign state.
+- Amon Hen world grammar: river corridor / ancient ruins; water, cliffs, stone monuments and forest; gameplay roles include scouting and the Fellowship break; required world-state variants include river journey and Uruk attack.
+- Canon/character guardrail: Boromir's arc remains tragic redemption after temptation, never generic villainization. Dialogue/loadout/state support remains chapter-aware and future-event safe.
+- Tolkien cross-reference is used only for compatible landscape/landmark detail: Amon Hen high-seat/watchwork, ancient stone road/stairs, Parth Galen shore/lawn, Rauros/Tol Brandir sightline language. The film-first mission outcome remains authoritative.
+- Maximum-safe source architecture will use bounded multi-bank preparation rather than one giant future resident set: calm arrival, decision/Seat route, Uruk attack, Boromir defense/aftermath, Merry-Pippin capture/pursuit, Sam/Frodo departure, and campaign-split aftermath support.
+- Runtime promotion remains blocked behind predecessor Gate 6/7. Source/candidate preparation may proceed now under DEC-078.
+- Existing low-spec rules remain mandatory: animated candidates FBX-only; production textures PNG/TGA, BMP blocked; heavy runtime assets soft-referenced/asynchronously loaded; crowds pooled; repeated dressing ISM/HISM + LOD/culling.
+- Evidence boundary: **SOURCE ARCHITECTURE REGISTRATION ONLY**. No UE integration, PIE, device, visual, pacing or performance acceptance is implied.
+
 ## 2026-09-29 - Maximum Safe Production Mode V1
 
 - Owner direction: production speed becomes a first-class project objective. The project should run at the **maximum safe throughput** allowed by current evidence instead of advancing through tiny isolated preparation increments.

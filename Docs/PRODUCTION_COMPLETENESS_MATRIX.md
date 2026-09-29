@@ -1,3 +1,22 @@
+## 2026-09-29 - F1-08 Amon Hen / Breaking of the Fellowship maximum-safe source wave
+
+- Canonical F1-08 / P1C08 mapping: **REGISTERED / NO RUNTIME RENUMBERING**.
+- Mission/story/world/character source verification: **SOURCE-REVIEWED**.
+- Boromir tragic/redemptive guardrail: **PRESERVED**.
+- 34-category / 7-bank / 24,000-candidate manifest: **SOURCE-IMPLEMENTED**.
+- 18 configured landmark categories / minimum 14 ready: **SOURCE-IMPLEMENTED / EXECUTION PENDING**.
+- Minimum 6 of 7 banks ready: **SOURCE-IMPLEMENTED / EXECUTION PENDING**.
+- Fair-share candidate scheduling: **SOURCE-IMPLEMENTED**.
+- Multi-bank future runtime residency blueprint: **SOURCE-IMPLEMENTED / RUNTIME NOT OPEN**.
+- FBX-only animated candidates / PNG-TGA texture policy / BMP rejection: **SOURCE-IMPLEMENTED**.
+- Clean warehouse inventory + 6 GiB reserve gate: **SOURCE-IMPLEMENTED**.
+- Dedicated 180-minute source workflow: **SOURCE-IMPLEMENTED**.
+- PG-201 regression guard: **SOURCE-IMPLEMENTED**.
+- P1C08 runtime integration: **BLOCKED UNTIL P1C07 GATE 6/7 ACCEPTED**.
+- Exact-head Pre-Unreal: **PENDING**.
+- Heavy F1-08 source execution: **PENDING CLEAN-INVENTORY RUN**.
+- PIE/device/visual/pacing/performance acceptance: **NOT CLAIMED**.
+
 ## 2026-09-29 - Adaptive Maximum Safe Production Mode V1
 
 - Maximum-safe production governance (`DEC-078` / `REQ-PROD-011`): **SOURCE-IMPLEMENTED**.

@@ -8593,6 +8593,143 @@ for ignored in [
     if pg200_unreal.count(ignored) < 2:
         fail(f"PG-200 F1-07 tooling path must stay off Unreal push+PR filters: {ignored}")
 
+
+# PG-201: F1-08 Amon Hen maximum-safe source wave must preserve canon, bank breadth and runtime gating.
+pg201_landmarks = json.loads(read(ROOT / "Data" / "Part1LandmarkIdentityPlanV1.json"))
+pg201_manifest = json.loads(read(ROOT / "Data" / "F108AmonHenBreakingMaximumSafeMegaSourceV1.json"))
+pg201_runner = read(ROOT / "Scripts" / "run_f108_amon_hen_breaking_maximum_safe_source.ps1")
+pg201_workflow = read(ROOT / ".github" / "workflows" / "f108-amon-hen-breaking-maximum-safe-source.yml")
+pg201_unreal = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+
+pg201_region_ids = [x.get("id") for x in pg201_landmarks.get("regions", [])]
+if "AMON_HEN_BREAKING" not in pg201_region_ids:
+    fail("PG-201 Part I landmark region missing: AMON_HEN_BREAKING")
+
+if pg201_manifest.get("status") != "SOURCE_ARCHITECTURE_READY_INVENTORY_GATED_RUNTIME_GATED":
+    fail("PG-201 F1-08 superpack must remain inventory-gated and runtime-gated")
+if pg201_manifest.get("canonical_mission_id") != "F1-08":
+    fail("PG-201 F1-08 canonical mission ID drifted")
+if pg201_manifest.get("runtime_consumers") != ["P1C08"]:
+    fail("PG-201 F1-08 runtime consumer must remain P1C08")
+
+pg201_story = pg201_manifest.get("story_contract", {})
+if pg201_story.get("locked_postcondition") != "Three parallel campaigns begin.":
+    fail("PG-201 F1-08 locked postcondition drifted")
+pg201_critical = " ".join(str(x) for x in pg201_story.get("critical_path", []))
+for required in ["Boromir", "Merry", "Pippin", "Frodo", "Sam"]:
+    if required not in pg201_critical:
+        fail(f"PG-201 F1-08 critical path missing canonical participant/outcome token: {required}")
+pg201_guardrails = " ".join(str(x) for x in pg201_story.get("character_guardrails", [])).lower()
+if "tragic" not in pg201_guardrails or "villain" not in pg201_guardrails:
+    fail("PG-201 Boromir tragic/redemptive guardrail missing")
+
+pg201_policy = pg201_manifest.get("source_policy", {})
+pg201_safety = pg201_manifest.get("safety_gate", {})
+pg201_landmark_policy = pg201_manifest.get("landmark_policy", {})
+pg201_bank_policy = pg201_manifest.get("bank_policy", {})
+
+if pg201_policy.get("throughput_mode") != "ADAPTIVE_MAXIMUM_SAFE":
+    fail("PG-201 F1-08 must remain in Adaptive Maximum Safe production mode")
+if int(pg201_policy.get("max_total_candidates", 0)) < 24000:
+    fail("PG-201 F1-08 total candidate ceiling unexpectedly reduced")
+if int(pg201_policy.get("max_candidates_per_category", 0)) < 2400:
+    fail("PG-201 F1-08 per-category throughput unexpectedly reduced")
+if int(pg201_policy.get("landmark_score_bonus", 0)) < 8:
+    fail("PG-201 F1-08 landmark score bonus unexpectedly reduced")
+if not pg201_policy.get("fair_share_across_categories", False):
+    fail("PG-201 F1-08 fair-share category scheduling removed")
+if pg201_policy.get("animated_candidate_extension") != ".fbx":
+    fail("PG-201 animated F1-08 candidates must remain FBX-only")
+if ".bmp" not in pg201_policy.get("forbidden_texture_extensions", []):
+    fail("PG-201 F1-08 source pack must continue blocking BMP textures")
+if not pg201_safety.get("requires_clean_warehouse_inventory", False):
+    fail("PG-201 F1-08 heavy execution must require clean warehouse inventory")
+for key in ["hard_stop_on_hash_mismatch", "hard_stop_on_license_hash_mismatch", "hard_stop_on_dangerous_file", "hard_stop_on_bad_receipt"]:
+    if not pg201_safety.get(key, False):
+        fail(f"PG-201 F1-08 warehouse safety gate weakened: {key}")
+
+if int(pg201_bank_policy.get("minimum_ready_banks", 0)) < 6:
+    fail("PG-201 F1-08 minimum ready bank count unexpectedly reduced")
+pg201_banks = pg201_bank_policy.get("banks", [])
+if len(pg201_banks) < 7:
+    fail("PG-201 F1-08 multi-bank source architecture lost required breadth")
+
+if int(pg201_landmark_policy.get("minimum_landmark_categories", 0)) < 14:
+    fail("PG-201 F1-08 landmark minimum unexpectedly reduced")
+for key in [
+    "require_dominant_vista_per_state",
+    "amon_hen_high_seat_readability_required",
+    "river_cliff_monument_readability_required",
+    "battle_route_landmarks_required",
+    "distance_proxy_or_lod_required_for_large_landmark_meshes",
+    "critical_vista_preload_required",
+]:
+    if not pg201_landmark_policy.get(key, False):
+        fail(f"PG-201 F1-08 landmark contract weakened: {key}")
+
+pg201_categories = pg201_manifest.get("categories", [])
+if len(pg201_categories) < 34:
+    fail("PG-201 F1-08 source pack lost required category breadth")
+pg201_landmark_categories = [x for x in pg201_categories if x.get("landmark")]
+if len(pg201_landmark_categories) < 18:
+    fail("PG-201 F1-08 configured landmark category count too small")
+if any(not str(x.get("bank") or "").strip() for x in pg201_categories):
+    fail("PG-201 every F1-08 source category must belong to a streaming/source bank")
+
+for required in [
+    "AMON_HEN_HIGH_SEAT_LANDMARK",
+    "AMON_HEN_PARTH_GALEN_SHORE_LANDMARK",
+    "AMON_HEN_ANCIENT_ROAD_STAIRS",
+    "URUK_ATTACK_APPROACH_LANDMARK",
+    "URUK_ATTACK_COMBAT_SPACE",
+    "BOROMIR_FINAL_DEFENSE_LANDMARK",
+    "BOROMIR_AFTERMATH_DRESSING",
+    "MERRY_PIPPIN_CAPTURE_ROUTE",
+    "FRODO_DECISION_ROUTE",
+    "SAM_SHORE_PURSUIT_ROUTE",
+    "SAM_FRODO_BOAT_DEPARTURE",
+    "F108_CAMPAIGN_SPLIT_CINEMATIC_VISTAS",
+    "F108_LANDMARK_DISTANCE_PROXY_SUPPORT",
+]:
+    if required not in {x.get("id") for x in pg201_categories}:
+        fail(f"PG-201 F1-08 landmark/source category missing: {required}")
+
+for symbol in [
+    "F108_MEGA_SOURCE_INVENTORY_GATE_BEGIN",
+    "F108_MEGA_SOURCE_INVENTORY_GATE_PASS",
+    "F108_BANK_SOURCE_PASS",
+    "F108_BANK_SOURCE_COVERAGE_FAIL",
+    "F108_LANDMARK_SOURCE_PASS",
+    "F108_LANDMARK_SOURCE_COVERAGE_FAIL",
+    "$effectivePerCategory",
+    "landmarkBonus",
+    "F108_MEGA_SOURCE_CATEGORY_PASS",
+    "F108_MEGA_SOURCE_PASS",
+    "$matches.ToArray()",
+    '-Root $WarehouseRoot',
+    'if($kind -eq "animated" -and $ext -ne $animatedExt)',
+]:
+    if symbol not in pg201_runner:
+        fail(f"PG-201 F1-08 runner marker missing: {symbol}")
+
+for symbol in [
+    "name: F1-08 Amon Hen Breaking Maximum Safe Mega Source",
+    "cancel-in-progress: false",
+    "timeout-minutes: 180",
+    "Fast F1-08 PowerShell preflight",
+    "Build Amon Hen Breaking maximum-safe mega source indexes",
+]:
+    if symbol not in pg201_workflow:
+        fail(f"PG-201 F1-08 workflow contract missing: {symbol}")
+
+for ignored in [
+    "Data/F108AmonHenBreakingMaximumSafeMegaSourceV1.json",
+    "Scripts/run_f108_amon_hen_breaking_maximum_safe_source.ps1",
+    ".github/workflows/f108-amon-hen-breaking-maximum-safe-source.yml",
+]:
+    if pg201_unreal.count(ignored) < 2:
+        fail(f"PG-201 F1-08 tooling path must stay off Unreal push+PR filters: {ignored}")
+
 # PG-195: Unreal import must not trust an editor-only wait while a commandlet remains alive.
 pg195_wait = read(ROOT / "Scripts" / "wait_for_unreal_processes.ps1")
 pg195_wait_cmd = read(ROOT / "Scripts" / "ci_wait_for_unreal_editor.cmd")

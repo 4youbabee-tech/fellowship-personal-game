@@ -1,0 +1,756 @@
+{
+  "schema_version": 1,
+  "pack_id": "F108_AMON_HEN_BREAKING_MAXIMUM_SAFE_MEGA_SOURCE_V1",
+  "status": "SOURCE_ARCHITECTURE_READY_INVENTORY_GATED_RUNTIME_GATED",
+  "canonical_mission_id": "F1-08",
+  "canonical_title": "Breaking of the Fellowship",
+  "runtime_consumers": [
+    "P1C08"
+  ],
+  "authority": [
+    "01_STORY_AND_TIMELINE_BIBLE",
+    "02_CHARACTERS_AND_RELATIONSHIPS_BIBLE",
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+    "04_PEOPLES_LORE_ARTIFACTS_AND_CULTURES",
+    "05_BATTLES_WEAPONS_ARMIES_AND_CREATURES",
+    "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "Tolkien-J.-The-lord-of-the-rings-HarperCollins-ebooks-2010",
+    "the-lord-of-the-rings-the-fellowship-of-the-ring-2001",
+    "Data/MaximumSafeProductionModeV1.json",
+    "Data/Part1LandmarkIdentityPlanV1.json",
+    "Data/ProjectGovernor.json",
+    "Docs/WORLD_DETAIL_LEDGER.md"
+  ],
+  "story_contract": {
+    "critical_path": [
+      "Boromir falls.",
+      "Merry and Pippin are captured.",
+      "Frodo chooses Mordor.",
+      "Sam follows."
+    ],
+    "safe_optional_window": [
+      "multi-character combat",
+      "pursuit handoff"
+    ],
+    "locked_postcondition": "Three parallel campaigns begin.",
+    "character_guardrails": [
+      "Boromir remains tragic and redemptive after temptation, never a generic villain.",
+      "Frodo remains burdened and choice-driven rather than a conventional power-fantasy fighter.",
+      "Sam support becomes active courage and pursuit/companionship rather than comic-only behavior."
+    ],
+    "save_contract": [
+      "clean entry autosave",
+      "pre-set-piece checkpoint",
+      "postcondition save after state commit",
+      "cinematic skip produces identical postconditions"
+    ]
+  },
+  "world_contract": {
+    "location": "Amon Hen",
+    "location_type": "River corridor / ancient ruins",
+    "visual_grammar": [
+      "water",
+      "cliffs",
+      "stone monuments",
+      "forest"
+    ],
+    "gameplay_roles": [
+      "scouting",
+      "Fellowship break",
+      "multi-character combat",
+      "pursuit handoff"
+    ],
+    "state_variants": [
+      "river journey carry-over",
+      "calm decision state",
+      "Uruk attack",
+      "battle aftermath",
+      "campaign split"
+    ],
+    "landmark_contract": "At least one dominant Amon Hen silhouette/vista remains readable for navigation and cinematic continuity in every state.",
+    "compatible_tolkien_landmark_support": [
+      "ancient high-seat/watchwork",
+      "old stone road and stairs",
+      "Parth Galen shore/lawn",
+      "Rauros/Tol Brandir sightline language"
+    ]
+  },
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_class": 2
+  },
+  "safety_gate": {
+    "requires_clean_warehouse_inventory": true,
+    "hard_stop_on_hash_mismatch": true,
+    "hard_stop_on_license_hash_mismatch": true,
+    "hard_stop_on_dangerous_file": true,
+    "hard_stop_on_bad_receipt": true,
+    "predecessor_runtime_gate": "P1C07 Gate 6/7 ACCEPTED before P1C08 runtime integration"
+  },
+  "source_policy": {
+    "throughput_mode": "ADAPTIVE_MAXIMUM_SAFE",
+    "reuse_existing_warehouse_first": true,
+    "duplicate_payloads_per_runtime_chapter": false,
+    "index_only": true,
+    "animated_candidate_extension": ".fbx",
+    "texture_extensions": [
+      ".png",
+      ".tga"
+    ],
+    "forbidden_texture_extensions": [
+      ".bmp"
+    ],
+    "static_source_extensions": [
+      ".fbx",
+      ".obj"
+    ],
+    "audio_extensions": [
+      ".wav"
+    ],
+    "metadata_extensions": [
+      ".json",
+      ".mtl"
+    ],
+    "max_total_candidates": 24000,
+    "max_candidates_per_category": 2400,
+    "minimum_free_disk_reserve_bytes": 6442450944,
+    "landmark_score_bonus": 8,
+    "fair_share_across_categories": true
+  },
+  "bank_policy": {
+    "minimum_ready_banks": 6,
+    "banks": [
+      {
+        "id": "BANK01_CALM_ARRIVAL",
+        "purpose": "Amon Hen arrival, shore, forest and readable ancient-landmark setup"
+      },
+      {
+        "id": "BANK02_DECISION_SEAT_ROUTE",
+        "purpose": "Frodo decision route, ancient stairs/high-seat and pressure-state support"
+      },
+      {
+        "id": "BANK03_URUK_ATTACK",
+        "purpose": "Uruk threat, attack routes, combat space, cover and combat audio"
+      },
+      {
+        "id": "BANK04_BOROMIR_DEFENSE_AFTERMATH",
+        "purpose": "Boromir defense, sword/shield support, tragic aftermath and recovery staging"
+      },
+      {
+        "id": "BANK05_CAPTURE_PURSUIT",
+        "purpose": "Merry/Pippin capture route and multi-character pursuit handoff"
+      },
+      {
+        "id": "BANK06_SAM_FRODO_DEPARTURE",
+        "purpose": "shore pursuit, boats, waterline and departure support"
+      },
+      {
+        "id": "BANK07_CAMPAIGN_SPLIT_AFTERMATH",
+        "purpose": "aftermath state, cinematic vistas and transition into three campaign lanes"
+      }
+    ]
+  },
+  "landmark_policy": {
+    "minimum_landmark_categories": 14,
+    "require_dominant_vista_per_state": true,
+    "amon_hen_high_seat_readability_required": true,
+    "river_cliff_monument_readability_required": true,
+    "battle_route_landmarks_required": true,
+    "distance_proxy_or_lod_required_for_large_landmark_meshes": true,
+    "critical_vista_preload_required": true
+  },
+  "categories": [
+    {
+      "id": "AMON_HEN_HIGH_SEAT_LANDMARK",
+      "bank": "BANK02_DECISION_SEAT_ROUTE",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "amon",
+        "hen",
+        "seat",
+        "watch",
+        "high",
+        "stone",
+        "pillar",
+        "stair",
+        "ruin",
+        "hill"
+      ]
+    },
+    {
+      "id": "AMON_HEN_PARTH_GALEN_SHORE_LANDMARK",
+      "bank": "BANK01_CALM_ARRIVAL",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "parth",
+        "galen",
+        "shore",
+        "lawn",
+        "grass",
+        "river",
+        "forest",
+        "landing",
+        "water",
+        "camp"
+      ]
+    },
+    {
+      "id": "AMON_HEN_RIVER_CLIFF_VISTA",
+      "bank": "BANK01_CALM_ARRIVAL",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "river",
+        "cliff",
+        "water",
+        "valley",
+        "shore",
+        "vista",
+        "silhouette",
+        "anduin",
+        "rock"
+      ]
+    },
+    {
+      "id": "AMON_HEN_ANCIENT_ROAD_STAIRS",
+      "bank": "BANK02_DECISION_SEAT_ROUTE",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "ancient",
+        "road",
+        "stair",
+        "step",
+        "stone",
+        "path",
+        "ruin",
+        "hill",
+        "route"
+      ]
+    },
+    {
+      "id": "AMON_HEN_RUINED_WATCHWORKS",
+      "bank": "BANK02_DECISION_SEAT_ROUTE",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "ruin",
+        "watch",
+        "tower",
+        "battlement",
+        "stone",
+        "pillar",
+        "platform",
+        "ancient",
+        "monument"
+      ]
+    },
+    {
+      "id": "AMON_HEN_FOREST_SLOPES",
+      "bank": "BANK01_CALM_ARRIVAL",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "forest",
+        "slope",
+        "tree",
+        "root",
+        "hill",
+        "trail",
+        "wood",
+        "rock",
+        "path"
+      ]
+    },
+    {
+      "id": "AMON_HEN_STONE_SURFACES",
+      "bank": "BANK01_CALM_ARRIVAL",
+      "kind": "surface",
+      "landmark": false,
+      "keywords": [
+        "stone",
+        "rock",
+        "ruin",
+        "moss",
+        "weathered",
+        "ancient",
+        "cliff",
+        "ground"
+      ]
+    },
+    {
+      "id": "AMON_HEN_FOREST_SURFACES",
+      "bank": "BANK01_CALM_ARRIVAL",
+      "kind": "surface",
+      "landmark": false,
+      "keywords": [
+        "bark",
+        "leaf",
+        "forest",
+        "moss",
+        "root",
+        "ground",
+        "wood",
+        "fern"
+      ]
+    },
+    {
+      "id": "AMON_HEN_WATER_SHORE_SURFACES",
+      "bank": "BANK06_SAM_FRODO_DEPARTURE",
+      "kind": "surface",
+      "landmark": false,
+      "keywords": [
+        "water",
+        "river",
+        "shore",
+        "wet",
+        "rock",
+        "mud",
+        "foam",
+        "ripple",
+        "bank"
+      ]
+    },
+    {
+      "id": "AMON_HEN_CALM_AMBIENCE",
+      "bank": "BANK01_CALM_ARRIVAL",
+      "kind": "audio",
+      "landmark": false,
+      "keywords": [
+        "forest",
+        "river",
+        "water",
+        "bird",
+        "wind",
+        "leaf",
+        "ambient",
+        "shore"
+      ]
+    },
+    {
+      "id": "AMON_HEN_THREAT_AMBIENCE",
+      "bank": "BANK03_URUK_ATTACK",
+      "kind": "audio",
+      "landmark": false,
+      "keywords": [
+        "threat",
+        "forest",
+        "horn",
+        "orc",
+        "uruk",
+        "footstep",
+        "branch",
+        "battle",
+        "tension"
+      ]
+    },
+    {
+      "id": "URUK_ATTACK_APPROACH_LANDMARK",
+      "bank": "BANK03_URUK_ATTACK",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "uruk",
+        "orc",
+        "attack",
+        "forest",
+        "route",
+        "ridge",
+        "path",
+        "approach",
+        "ambush"
+      ]
+    },
+    {
+      "id": "URUK_ATTACK_COMBAT_SPACE",
+      "bank": "BANK03_URUK_ATTACK",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "combat",
+        "battle",
+        "forest",
+        "clearing",
+        "slope",
+        "ruin",
+        "stone",
+        "path",
+        "arena"
+      ]
+    },
+    {
+      "id": "URUK_ATTACK_COVER_OBSTACLES",
+      "bank": "BANK03_URUK_ATTACK",
+      "kind": "static",
+      "landmark": false,
+      "keywords": [
+        "cover",
+        "tree",
+        "log",
+        "rock",
+        "ruin",
+        "barricade",
+        "stump",
+        "forest",
+        "stone"
+      ]
+    },
+    {
+      "id": "URUK_HAI_CHARACTER_SUPPORT",
+      "bank": "BANK03_URUK_ATTACK",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "uruk",
+        "orc",
+        "warrior",
+        "enemy",
+        "soldier",
+        "humanoid",
+        "fighter",
+        "armor"
+      ]
+    },
+    {
+      "id": "URUK_HAI_COMBAT_ANIMATION",
+      "bank": "BANK03_URUK_ATTACK",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "attack",
+        "slash",
+        "strike",
+        "charge",
+        "run",
+        "hit",
+        "death",
+        "combat",
+        "sword",
+        "enemy"
+      ]
+    },
+    {
+      "id": "BOROMIR_SWORD_SHIELD_SUPPORT",
+      "bank": "BANK04_BOROMIR_DEFENSE_AFTERMATH",
+      "kind": "static",
+      "landmark": false,
+      "keywords": [
+        "sword",
+        "shield",
+        "gondor",
+        "armor",
+        "weapon",
+        "captain",
+        "leather",
+        "metal"
+      ]
+    },
+    {
+      "id": "BOROMIR_DEFENSE_ANIMATION",
+      "bank": "BANK04_BOROMIR_DEFENSE_AFTERMATH",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "defend",
+        "block",
+        "shield",
+        "sword",
+        "fight",
+        "protect",
+        "hit",
+        "wounded",
+        "kneel",
+        "stand"
+      ]
+    },
+    {
+      "id": "BOROMIR_FINAL_DEFENSE_LANDMARK",
+      "bank": "BANK04_BOROMIR_DEFENSE_AFTERMATH",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "forest",
+        "battle",
+        "clearing",
+        "tree",
+        "slope",
+        "defense",
+        "vista",
+        "combat",
+        "horn"
+      ]
+    },
+    {
+      "id": "BOROMIR_AFTERMATH_DRESSING",
+      "bank": "BANK04_BOROMIR_DEFENSE_AFTERMATH",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "aftermath",
+        "forest",
+        "fallen",
+        "weapon",
+        "shield",
+        "arrow",
+        "ground",
+        "quiet",
+        "memorial"
+      ]
+    },
+    {
+      "id": "MERRY_PIPPIN_CAPTURE_ANIMATION",
+      "bank": "BANK05_CAPTURE_PURSUIT",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "capture",
+        "grab",
+        "carry",
+        "struggle",
+        "hobbit",
+        "prisoner",
+        "run",
+        "fall",
+        "escort"
+      ]
+    },
+    {
+      "id": "MERRY_PIPPIN_CAPTURE_ROUTE",
+      "bank": "BANK05_CAPTURE_PURSUIT",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "capture",
+        "route",
+        "forest",
+        "slope",
+        "trail",
+        "path",
+        "escape",
+        "pursuit",
+        "ridge"
+      ]
+    },
+    {
+      "id": "FRODO_DECISION_ROUTE",
+      "bank": "BANK02_DECISION_SEAT_ROUTE",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "path",
+        "stairs",
+        "hill",
+        "forest",
+        "stone",
+        "route",
+        "seat",
+        "ruin",
+        "trail"
+      ]
+    },
+    {
+      "id": "FRODO_HIGH_SEAT_ATMOSPHERE",
+      "bank": "BANK02_DECISION_SEAT_ROUTE",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "seat",
+        "high",
+        "mist",
+        "vision",
+        "wind",
+        "stone",
+        "sky",
+        "vista",
+        "hill",
+        "light"
+      ]
+    },
+    {
+      "id": "FRODO_RING_STATE_VFX_SUPPORT",
+      "bank": "BANK02_DECISION_SEAT_ROUTE",
+      "kind": "mixed",
+      "landmark": false,
+      "keywords": [
+        "ring",
+        "shadow",
+        "mist",
+        "vision",
+        "distortion",
+        "light",
+        "dark",
+        "vfx",
+        "spectral"
+      ]
+    },
+    {
+      "id": "SAM_SHORE_PURSUIT_ROUTE",
+      "bank": "BANK06_SAM_FRODO_DEPARTURE",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "shore",
+        "boat",
+        "river",
+        "path",
+        "run",
+        "pursuit",
+        "bank",
+        "forest",
+        "water"
+      ]
+    },
+    {
+      "id": "SAM_FRODO_BOAT_DEPARTURE",
+      "bank": "BANK06_SAM_FRODO_DEPARTURE",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "boat",
+        "canoe",
+        "river",
+        "water",
+        "shore",
+        "departure",
+        "paddle",
+        "oar",
+        "landing"
+      ]
+    },
+    {
+      "id": "ARAGORN_PURSUIT_COMBAT_ANIMATION",
+      "bank": "BANK05_CAPTURE_PURSUIT",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "aragorn",
+        "ranger",
+        "sword",
+        "combat",
+        "run",
+        "pursuit",
+        "track",
+        "attack",
+        "defend"
+      ]
+    },
+    {
+      "id": "F108_BATTLE_FOLEY_AUDIO",
+      "bank": "BANK03_URUK_ATTACK",
+      "kind": "audio",
+      "landmark": false,
+      "keywords": [
+        "battle",
+        "sword",
+        "shield",
+        "impact",
+        "footstep",
+        "armor",
+        "arrow",
+        "horn",
+        "combat"
+      ]
+    },
+    {
+      "id": "F108_AFTERMATH_AUDIO",
+      "bank": "BANK07_CAMPAIGN_SPLIT_AFTERMATH",
+      "kind": "audio",
+      "landmark": false,
+      "keywords": [
+        "aftermath",
+        "wind",
+        "forest",
+        "river",
+        "quiet",
+        "distant",
+        "water",
+        "ambient"
+      ]
+    },
+    {
+      "id": "F108_CAMPAIGN_SPLIT_CINEMATIC_VISTAS",
+      "bank": "BANK07_CAMPAIGN_SPLIT_AFTERMATH",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "vista",
+        "river",
+        "forest",
+        "hill",
+        "shore",
+        "distant",
+        "silhouette",
+        "departure",
+        "aftermath"
+      ]
+    },
+    {
+      "id": "F108_CAMPAIGN_SPLIT_ROUTE_SUPPORT",
+      "bank": "BANK07_CAMPAIGN_SPLIT_AFTERMATH",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "route",
+        "trail",
+        "river",
+        "shore",
+        "forest",
+        "east",
+        "west",
+        "path",
+        "departure"
+      ]
+    },
+    {
+      "id": "F108_SYSTEMIC_REACTION_SUPPORT",
+      "bank": "BANK03_URUK_ATTACK",
+      "kind": "mixed",
+      "landmark": false,
+      "keywords": [
+        "leaf",
+        "branch",
+        "cloth",
+        "water",
+        "impact",
+        "arrow",
+        "weapon",
+        "prop",
+        "wind",
+        "debris"
+      ]
+    },
+    {
+      "id": "F108_LANDMARK_DISTANCE_PROXY_SUPPORT",
+      "bank": "BANK07_CAMPAIGN_SPLIT_AFTERMATH",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "lod",
+        "proxy",
+        "silhouette",
+        "vista",
+        "hill",
+        "ruin",
+        "cliff",
+        "river",
+        "monument",
+        "distant"
+      ]
+    }
+  ],
+  "runtime_residency_blueprint": {
+    "mode": "MULTI_BANK_STREAMED_CHAPTER",
+    "rule": "Future P1C08 runtime integration loads the active bank plus bounded transition overlap only; the full source pack is never one resident set.",
+    "preload": "Preload the next critical bank before irreversible transition.",
+    "unload": "Release obsolete bank handles only after stable destination state commit.",
+    "no_runtime_promotion_before_gate": true
+  },
+  "acceptance_boundary": "Source architecture/index preparation only. Runtime integration remains predecessor-gated; no landmark, encounter, pacing or performance acceptance is claimed from candidate counts."
+}

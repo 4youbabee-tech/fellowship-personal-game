@@ -182,6 +182,28 @@
         "Amon Hen approach"
       ],
       "runtime_status": "SOURCE_ARCHITECTURE_ONLY"
+    },
+    {
+      "id": "AMON_HEN_BREAKING",
+      "canonical_location": "Amon Hen",
+      "runtime_chapter": "P1C08",
+      "visual_grammar": [
+        "river corridor",
+        "ancient ruins",
+        "water",
+        "cliffs",
+        "stone monuments",
+        "forest"
+      ],
+      "identity_anchor": "Amon Hen ancient high-seat/stone-route focal vista above the Parth Galen river shore",
+      "visibility_goal": "The hill, ancient stone route/watchwork and river relationship remain readable across calm, attack and aftermath states while combat routes never erase the canonical landmark hierarchy.",
+      "state_variants": [
+        "calm decision state",
+        "Uruk attack",
+        "battle aftermath",
+        "campaign split"
+      ],
+      "runtime_status": "SOURCE_ARCHITECTURE_ONLY"
     }
   ],
   "acceptance_boundary": "Source/visual identity planning only. No landmark is VISUALLY-ACCEPTED until chapter-specific observation evidence exists."
