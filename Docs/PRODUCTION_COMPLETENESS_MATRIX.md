@@ -1,3 +1,10 @@
+## 2026-09-30 - Final orphan-ref sweep
+
+- Remaining orphan maintenance refs: **2**, both **ahead=0 / behind=0** versus `develop`.
+- Deletion: **QUEUED THROUGH GUARDED BRANCH CLEANUP**.
+- Expected persistent refs after sweep: **develop + main + recovery archive**.
+- Gameplay/PIE/device/visual/performance maturity: **UNCHANGED / NOT CLAIMED**.
+
 ## 2026-09-30 - Final branch-hygiene gate before construction resume
 
 - Legacy branch histories captured in recovery archive: **26 / 26 heads captured**.

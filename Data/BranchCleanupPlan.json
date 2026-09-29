@@ -85,7 +85,9 @@
     "production/p1c01-visual-economy-settings-v4",
     "production/p1c01-warehouse-runnerless-backlog-v1",
     "tooling/opencodereview-readonly",
-    "warehouse/p1c01-ready-review-v1"
+    "warehouse/p1c01-ready-review-v1",
+    "maintenance/final-orphan-ref-closeout-v1",
+    "maintenance/final-prebuild-branch-cleanout-v1"
   ],
   "safety_rules": [
     "Never delete develop or main.",
@@ -306,5 +308,18 @@
     ],
     "recovery_rule": "Recover only selectively from the archive commit ancestry against current develop. Never merge the archive wholesale.",
     "build_resume_rule": "After cleanup success and canonical-ref verification, administrative branch cleanup is complete and substantive build work resumes from develop."
+  },
+  "final_zero_ahead_sweep_2026_09_30": {
+    "action": "DELETE_ZERO_AHEAD_ORPHAN_MAINTENANCE_REFS",
+    "branches": [
+      "maintenance/final-orphan-ref-closeout-v1",
+      "maintenance/final-prebuild-branch-cleanout-v1"
+    ],
+    "evidence": "Both refs compare identical to current develop (ahead=0, behind=0) before this sweep.",
+    "expected_survivors": [
+      "develop",
+      "main",
+      "archive/pre-build-salvage-20260930"
+    ]
   }
 }

@@ -1,3 +1,10 @@
+## 2026-09-30 - Final zero-ahead orphan sweep
+
+- Two leftover maintenance refs were rechecked against current `develop`: `maintenance/final-orphan-ref-closeout-v1` and `maintenance/final-prebuild-branch-cleanout-v1`.
+- Both compare **ahead=0 / behind=0** and contain no unique files, so they are queued for immediate guarded deletion.
+- Expected persistent refs after this sweep: `develop`, `main`, and recovery-only `archive/pre-build-salvage-20260930`.
+- Evidence boundary: repository hygiene only; no compile, PIE, device, visual or performance acceptance is claimed.
+
 ## 2026-09-30 - Final legacy-ref retirement before build resume
 
 - Recovery archive created at `archive/pre-build-salvage-20260930@a47eda59f31352676de44777845fbc01c38d2d0d`.
