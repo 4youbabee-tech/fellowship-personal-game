@@ -57,17 +57,17 @@
       "state": "ACTIVE",
       "scope": "Fix micro-event distance retirement so one far member cannot remove nearby interaction/event members.",
       "proof": [
-        "PG-208 static guard",
+        "PG-207 static guard",
         "exact-head UE4 compile/runtime"
       ]
     },
     {
       "order": 2,
       "id": "CACHE_REGRESSION_GUARD",
-      "state": "PREPARED",
+      "state": "SOURCE_IMPLEMENTED_PROOF_PENDING",
       "scope": "Guard AShireAmbientNPC so UGameplayStatics::GetPlayerPawn remains centralized in GetPlayerPawnCached only.",
       "proof": [
-        "static direct-call count guard"
+        "PG-208 static direct-call centralization guard"
       ]
     },
     {
