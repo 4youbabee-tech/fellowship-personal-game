@@ -112,7 +112,8 @@
     ],
     "max_total_candidates": 16000,
     "max_candidates_per_category": 1800,
-    "minimum_free_disk_reserve_bytes": 6442450944
+    "minimum_free_disk_reserve_bytes": 6442450944,
+    "landmark_score_bonus": 6
   },
   "landmark_policy": {
     "minimum_landmark_categories": 8,
