@@ -1,3 +1,14 @@
+## 2026-09-30 - P1C01 maximum-safe mega train integration
+
+- Owner standing approval is recorded by Governor DEC-090: one approval covers the coordinated P1C01 mega train; safe source/QC/data/documentation work may proceed in parallel, while runtime-changing cars remain serialized behind W00 and exact-head engine gates.
+- Source review preserves the explicit mapping boundary: supplied sources separate F1-01, F1-02 and F1-03, while current runtime P1C01 aggregates Shire party, Ring/Bag End departure and Shire-road/ferry material. No silent chapter renumbering is introduced.
+- Programmer proposal audit confirmed one real defect: `ALivingWorldDirector::CleanupExpiredEvents` could retire an entire pooled micro-event when one member exceeded `EventCullDistance`. The candidate repair keeps authored lifetime expiry event-wide but makes distance retirement member-local, preventing a roaming member from recycling a nearby interaction/participant.
+- PG-207 guards member-local event culling; `test_living_world_distance_cull_is_member_local` provides source-contract regression coverage. PG-208 guards that direct `UGameplayStatics::GetPlayerPawn` remains centralized in `GetPlayerPawnCached()`; current source has one direct lookup, not six independent lookups.
+- Save schema is audited separately in `Data/SaveSchemaMigrationAuditV1.json`: current schema is 6, newer saves are rejected, legacy identity repair exists, and no undocumented per-version migration ladder is invented.
+- PG-209 guards the mega-train contract, including W00 runtime gating, no synchronous heavy loads, FBX-only animated production delivery, BMP rejection, and zero-silent-omission source disposition.
+- `Scripts/run_p1c01_mega_chapter_pack.ps1` now defaults to the authoritative `D:\\actions-runner\\_warehouse\\ShireJourney` root instead of the retired C root.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC + UE4 PROOF PENDING** for this integration branch. P1C01 PIE/device/FPS/visual/audio-listening acceptance remains unchanged.
+
 ## 2026-09-30 - P1C01 maximum-safe mega build + living-world cull repair
 
 - W00 packaged-runtime Data-read gate is now machine-green on merged PR #184 / Unreal Build Validation #1108; this does not by itself satisfy human/device/visual Gate 6/7 evidence.
