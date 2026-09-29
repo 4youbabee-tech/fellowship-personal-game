@@ -1,0 +1,227 @@
+{
+  "schema_version": 1,
+  "plan_id": "F108_AMON_HEN_MAXIMUM_SAFE_CHAPTER_PLAN_V1",
+  "status": "SOURCE_ARCHITECTURE_READY_RUNTIME_GATED",
+  "canonical_mission_id": "F1-08",
+  "canonical_title": "Breaking of the Fellowship",
+  "runtime_consumer": "P1C08",
+  "authority": [
+    "01_STORY_AND_TIMELINE_BIBLE",
+    "02_CHARACTERS_AND_RELATIONSHIPS_BIBLE",
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "the-lord-of-the-rings-the-fellowship-of-the-ring-2001",
+    "Data/ProjectGovernor.json",
+    "Data/MaximumSafeProductionModeV1.json",
+    "Docs/WORLD_DETAIL_LEDGER.md"
+  ],
+  "story_contract": {
+    "primary_location": "Amon Hen",
+    "playable_or_present_focus": [
+      "Frodo",
+      "Sam",
+      "Aragorn",
+      "Boromir",
+      "Uruk-hai"
+    ],
+    "canonical_critical_path": [
+      "Boromir falls.",
+      "Merry and Pippin are captured.",
+      "Frodo chooses Mordor.",
+      "Sam follows."
+    ],
+    "safe_optional_window": [
+      "multi-character combat",
+      "pursuit handoff"
+    ],
+    "locked_postcondition": "Three parallel campaigns begin.",
+    "successor_boundary": "F2-01 Three Hunters / Captives owns the pursuit/captive campaign after the F1-08 postcondition commits."
+  },
+  "checkpoint_contract": {
+    "entry_checkpoint": true,
+    "pre_irreversible_setpiece_checkpoint": true,
+    "postcondition_save": true,
+    "cinematic_skip_must_match_postconditions": true
+  },
+  "world_contract": {
+    "location_type": "River corridor / ancient ruins",
+    "visual_grammar": [
+      "water",
+      "cliffs",
+      "stone monuments",
+      "forest"
+    ],
+    "gameplay_roles": [
+      "scouting",
+      "Fellowship break",
+      "multi-character combat",
+      "pursuit handoff"
+    ],
+    "state_variants": [
+      "calm/arrival",
+      "isolation/temptation",
+      "Uruk attack",
+      "battle",
+      "aftermath",
+      "departure"
+    ],
+    "dominant_landmark": "Amon Hen seeing-seat / ancient-stone summit silhouette framed by forest and river approach."
+  },
+  "maximum_safe_runtime_design": {
+    "model": "MULTI_BANK_ZONE_STREAMING",
+    "runtime_status": "PLANNED_NOT_IMPLEMENTED",
+    "heavy_reference_policy": "TSoftObjectPtr/TSoftClassPtr/FSoftObjectPath only",
+    "load_policy": "FStreamableManager asynchronous loading",
+    "synchronous_heavy_loads_forbidden": true,
+    "planned_max_transition_overlap_banks": 2,
+    "transition_rule": "Preload the next critical bank before transition; retain current bank until destination story/world commit is stable; then release obsolete handles.",
+    "repeated_world_detail": "ISM/HISM + LOD/culling",
+    "crowd_pressure": "Object pooling; no dense Spawn/Destroy churn.",
+    "measurement_gate": [
+      "resident RAM",
+      "texture/VRAM footprint",
+      "frame time",
+      "streaming hitch",
+      "draw calls",
+      "audio concurrency",
+      "active pooled actors"
+    ],
+    "evidence_boundary": "Bank count/overlap is an architecture plan, not a measured device acceptance."
+  },
+  "banks": [
+    {
+      "id": "F108_CORE_MINIMAL",
+      "role": "Small always-needed state/common identity bank",
+      "heavy": false,
+      "content": [
+        "stable story IDs",
+        "checkpoint/state metadata",
+        "minimal shared hero identity refs",
+        "shared UI/audio cues"
+      ],
+      "preload_from": []
+    },
+    {
+      "id": "F108_A_PARTH_GALEN_CALM",
+      "role": "Arrival/camp/forest orientation before irreversible split",
+      "heavy": true,
+      "content": [
+        "Parth Galen forest and camp dressing",
+        "river/shore support",
+        "calm ambience",
+        "Fellowship idle/dialogue support"
+      ],
+      "preload_from": [
+        "F108_CORE_MINIMAL"
+      ]
+    },
+    {
+      "id": "F108_B_AMON_HEN_SLOPES",
+      "role": "Forest slopes and separation/temptation traversal",
+      "heavy": true,
+      "content": [
+        "forest slopes",
+        "routefinding",
+        "ancient stone approach",
+        "Frodo/Boromir relationship animation support"
+      ],
+      "preload_from": [
+        "F108_A_PARTH_GALEN_CALM"
+      ]
+    },
+    {
+      "id": "F108_C_SEEING_SEAT_SUMMIT",
+      "role": "Amon Hen summit/seeing-seat landmark and isolation climax",
+      "heavy": true,
+      "content": [
+        "seeing-seat/summit ruins",
+        "vista proxies",
+        "cinematic framing",
+        "Frodo escape support"
+      ],
+      "preload_from": [
+        "F108_B_AMON_HEN_SLOPES"
+      ]
+    },
+    {
+      "id": "F108_D_URUK_ATTACK_CORE",
+      "role": "Uruk attack across ancient stone/forest battle lanes",
+      "heavy": true,
+      "content": [
+        "Uruk pooled combat sets",
+        "ancient pillars/blocks",
+        "battle audio",
+        "impact/projectile support",
+        "Aragorn/Legolas/Gimli combat support"
+      ],
+      "preload_from": [
+        "F108_C_SEEING_SEAT_SUMMIT"
+      ]
+    },
+    {
+      "id": "F108_E_CAPTURE_BOROMIR_DEFENSE",
+      "role": "Merry/Pippin flight/capture and Boromir defense",
+      "heavy": true,
+      "content": [
+        "capture/pursuit animations",
+        "Boromir sword/shield and defense support",
+        "Uruk pressure",
+        "horn/battle cues"
+      ],
+      "preload_from": [
+        "F108_D_URUK_ATTACK_CORE"
+      ]
+    },
+    {
+      "id": "F108_F_BOROMIR_AFTERMATH",
+      "role": "Tragic/redemptive aftermath and state handoff",
+      "heavy": true,
+      "content": [
+        "aftermath dressing",
+        "relationship/cinematic support",
+        "damage-state variants",
+        "quiet aftermath audio"
+      ],
+      "preload_from": [
+        "F108_E_CAPTURE_BOROMIR_DEFENSE"
+      ]
+    },
+    {
+      "id": "F108_G_FRODO_SAM_DEPARTURE",
+      "role": "River-shore departure and Frodo/Sam campaign split",
+      "heavy": true,
+      "content": [
+        "shore/boat assets",
+        "water ambience",
+        "Sam water/boat animation support",
+        "Frodo/Sam departure framing"
+      ],
+      "preload_from": [
+        "F108_F_BOROMIR_AFTERMATH"
+      ]
+    },
+    {
+      "id": "F108_H_THREE_CAMPAIGN_HANDOFF",
+      "role": "Postcondition transition anchors only",
+      "heavy": false,
+      "content": [
+        "hunter trail handoff",
+        "captives handoff state",
+        "Frodo/Sam outbound state",
+        "campaign synchronization metadata"
+      ],
+      "preload_from": [
+        "F108_F_BOROMIR_AFTERMATH",
+        "F108_G_FRODO_SAM_DEPARTURE"
+      ]
+    }
+  ],
+  "forbidden_runtime_shortcuts": [
+    "Do not load the entire F1-08 asset set as one resident hard-reference graph.",
+    "Do not open F2-01 pursuit progression before the F1-08 postcondition commits.",
+    "Do not randomize named character equipment or canonical outcomes.",
+    "Do not turn Boromir into a generic villain or power-fantasy encounter.",
+    "Do not treat source/prep success as Gate 6/7 or visual acceptance."
+  ],
+  "acceptance_boundary": "Source/runtime architecture only. Runtime integration remains predecessor-gated and requires later compile, PIE, target-device, visual/pacing and performance evidence."
+}
