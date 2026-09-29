@@ -1,3 +1,21 @@
+## 2026-09-29 - F2-02 Fangorn & Gandalf Returned Maximum-Safe Source V1
+
+- Canonical mission authority: **F2-02 Fangorn & Gandalf Returned**.
+- Owner location: **Fangorn**.
+- Playable/present focus: Merry, Pippin, Treebeard; Hunters, Gandalf.
+- Canonical critical path: **Ents introduced; Gandalf returns transformed.**
+- Safe optional window: exploration, dialogue and Ent traversal.
+- Locked postcondition: **Gandalf leads hunters to Edoras.**
+- Mission package requires stable-ID objective graph, encounter spawn/role/escalation/cleanup/fail documentation, identical cinematic-skip postconditions, clean-entry + pre-set-piece + postcondition saves, and postcondition validation before next chapter unlock.
+- Fangorn production grammar: ancient forest; dense trunks, roots, mist and living environment; gameplay roles are exploration, Ent interactions and disorientation; required state variants are quiet / Ent mobilization.
+- Treebeard guardrail: traversal/destruction must feel **massive and deliberate**; his arc is slow deliberation becoming action.
+- Gandalf guardrail: returned strategist presentation must keep magic **rare and purposeful, not spam-casting**.
+- F2-08 Ent/Isengard assault resolution is not opened here. Fangorn mobilization-state source support may be prepared, but the later assault outcome remains outside F2-02.
+- This remains a **source/preparation wave only**. No Part II runtime chapter ID is invented until an explicit runtime-ID mapping/migration decision exists.
+- Maximum-safe architecture uses independent preparation banks for quiet Fangorn exploration, Ent social/dialogue, deliberate Ent traversal, Merry/Pippin companion play, Hunter search/disorientation, Gandalf-return reveal, forest audio/lighting/mist, mobilization-state support and Edoras transition handoff.
+- Existing low-spec rules remain mandatory: animated candidates FBX-only; production textures PNG/TGA, BMP blocked; heavy runtime assets soft-referenced/asynchronously loaded; crowds pooled; repeated dressing ISM/HISM + LOD/culling.
+- Evidence boundary: **SOURCE ARCHITECTURE REGISTRATION ONLY**. No runtime integration, PIE, device, visual, pacing or performance acceptance is implied.
+
 ## 2026-09-29 - F2-01 Three Hunters / Captives Maximum-Safe Source V1
 
 - Canonical mission authority: **F2-01 Three Hunters / Captives**.
