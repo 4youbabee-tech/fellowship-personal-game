@@ -4707,6 +4707,38 @@
         ".github/workflows/pre-unreal-validation.yml"
       ],
       "evidence_boundary": "SOURCE-IMPLEMENTED repair contract. Fresh exact-head Pre-Unreal plus persistent warehouse inventory rerun are required before claiming the mismatch repaired or inventory clean."
+    },
+    {
+      "id": "DEC-077",
+      "title": "F1-07 Lothlorien and Anduin departure advances as shared-stock source architecture",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WORLD-001",
+        "REQ-WORLD-002",
+        "REQ-NPC-001",
+        "REQ-PERF-001",
+        "REQ-STABILITY-001"
+      ],
+      "resolution": "Prepare canonical F1-07 source architecture for legacy runtime chapter P1C07 from shared warehouse stock without duplicate chapter payloads. This is preparation only; P1C07 runtime integration remains predecessor-gated.",
+      "implementation_contract": [
+        "Canonical source authority remains F1-07 under the recorded reconciliation P1C07 -> F1-07; no runtime chapter renumbering or downstream runtime opening is created by this preparation lane.",
+        "Source scope follows existing FilmExperiencePlan anchors: post-Moria grief, Galadriel pressure around Frodo and the Ring, the Mirror vision, farewell/gifts, and river departure.",
+        "Reuse persistent warehouse stock first and produce indexes/reports only; do not duplicate multi-gigabyte payloads per chapter.",
+        "Warehouse integrity and provenance/license checks remain fail-closed before heavy source execution.",
+        "Animated candidates remain FBX-only; production textures remain PNG/TGA; BMP remains blocked.",
+        "Future heavy runtime use remains soft-referenced and asynchronously streamed through FStreamableManager; background populations remain pooled; repeated static dressing uses ISM/HISM with LOD/culling.",
+        "P1C07 runtime integration remains blocked until predecessor Gate 6/7 acceptance is genuinely ACCEPTED with chapter-specific evidence.",
+        "Source preparation status must not be relabeled PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED or verified without exact evidence."
+      ],
+      "rationale": "The Part I preparation train is allowed to advance downstream canonical source/warehouse readiness while P1C01 remains the only active runtime chapter. F1-07 is the next canonical mission package after F1-06 source architecture and can progress safely as shared-stock, index-only preparation.",
+      "evidence": [
+        "Data/F107LothlorienAnduinMegaSourceSuperpackV1.json",
+        "Data/FilmExperiencePlan.json",
+        "Data/Part1SequentialRuntimeChapterTrainV1.json",
+        "Scripts/run_part1_runtime_chapter_prep.ps1",
+        ".github/workflows/part1-chapter-preparation.yml"
+      ],
+      "evidence_boundary": "SOURCE ARCHITECTURE ONLY. Source execution, runtime integration, PIE, device, visual, pacing and performance acceptance remain separate evidence gates."
     }
   ],
   "open_conflicts": [],

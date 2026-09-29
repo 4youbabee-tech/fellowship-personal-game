@@ -1,3 +1,17 @@
+## 2026-09-29 - F1-07 Lothlorien / Anduin departure source architecture
+
+- Canonical mission package: **F1-07**.
+- Recorded runtime mapping: **P1C07 -> F1-07**; P1C01 remains the only active runtime chapter.
+- Shared-stock F1-07 source manifest: **SOURCE-IMPLEMENTED / INDEX-ONLY / NO WAREHOUSE PAYLOAD COPIES**.
+- Canon scope is restricted to existing FilmExperiencePlan anchors: post-Moria grief, Galadriel pressure around Frodo and the Ring, Mirror vision, farewell/gifts and river departure.
+- Generic Part I preparation train remains the execution path; no second runtime lane is opened.
+- Warehouse integrity/provenance/license gates remain **FAIL-CLOSED** before heavy source execution.
+- Final animated candidates remain **FBX-ONLY**; production textures remain **PNG/TGA**; BMP remains **BLOCKED**.
+- Future heavy runtime use remains **soft-reference + asynchronous FStreamableManager**; background populations remain pooled; repeated static dressing remains ISM/HISM + LOD/culling.
+- P1C07 runtime integration: **BLOCKED UNTIL PREDECESSOR GATE 6/7 ACCEPTED**.
+- Exact-head validation of this source-architecture branch: **PENDING**.
+- PIE/device/visual/pacing/performance acceptance: **NOT CLAIMED**.
+
 ## 2026-09-29 - Warehouse receipt supersession semantics
 
 - Warehouse #285 isolated the current inventory blocker to `ambientCG\PLASTER\Plaster007_2K-PNG.zip`: historical batch `WAREHOUSE_AMBIENTCG_P1C01_V1` declares the old payload hash while the refreshed current payload is represented by the newer trilogy-foundation receipt path.

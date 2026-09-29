@@ -1,0 +1,441 @@
+{
+  "schema_version": 1,
+  "pack_id": "F107_LOTHLORIEN_ANDUIN_MEGA_SOURCE_SUPERPACK_V1",
+  "status": "SOURCE_ARCHITECTURE_READY_INVENTORY_GATED_RUNTIME_GATED",
+  "canonical_mission_id": "F1-07",
+  "canonical_title": "Lothlorien & Anduin Departure",
+  "runtime_consumers": [
+    "P1C07"
+  ],
+  "authority": [
+    "01_STORY_AND_TIMELINE_BIBLE",
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "Data/FilmExperiencePlan.json",
+    "Data/Part1SequentialRuntimeChapterTrainV1.json",
+    "Data/ProjectGovernor.json"
+  ],
+  "story_contract": {
+    "critical_path": [
+      "The Fellowship processes the loss after Moria.",
+      "Galadriel applies psychological pressure around Frodo and the Ring.",
+      "The Mirror vision deepens Frodo's burden.",
+      "The Fellowship receives its farewell and departs by river."
+    ],
+    "safe_optional_window": [
+      "grief and companionship",
+      "forest exploration",
+      "farewell social interaction",
+      "river departure preparation"
+    ],
+    "locked_postcondition": "The Fellowship departs Lothlorien by river."
+  },
+  "world_contract": {
+    "lothlorien": {
+      "location_type": "Lothlorien forest",
+      "visual_grammar": [
+        "gold",
+        "tree",
+        "forest",
+        "leaf",
+        "lantern",
+        "elf"
+      ],
+      "gameplay_roles": [
+        "social interaction",
+        "ambient world",
+        "interactive cinematic support"
+      ],
+      "state_variants": [
+        "grief arrival",
+        "Galadriel and Mirror scenes",
+        "farewell"
+      ],
+      "landmark_contract": "Forest orientation and scene focal points remain readable without brute-force density."
+    },
+    "anduin_departure": {
+      "location_type": "River departure",
+      "visual_grammar": [
+        "boat",
+        "river",
+        "water",
+        "rope",
+        "paddle",
+        "shore"
+      ],
+      "gameplay_roles": [
+        "playable departure",
+        "transition support"
+      ],
+      "state_variants": [
+        "farewell departure"
+      ],
+      "landmark_contract": "Shoreline and boat-departure direction remain readable at the low-spec target."
+    }
+  },
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_class": 2
+  },
+  "safety_gate": {
+    "requires_clean_warehouse_inventory": true,
+    "hard_stop_on_hash_mismatch": true,
+    "hard_stop_on_license_hash_mismatch": true,
+    "hard_stop_on_dangerous_file": true,
+    "hard_stop_on_bad_receipt": true
+  },
+  "source_policy": {
+    "reuse_existing_warehouse_first": true,
+    "duplicate_payloads_per_runtime_chapter": false,
+    "index_only": true,
+    "animated_candidate_extension": ".fbx",
+    "texture_extensions": [
+      ".png",
+      ".tga"
+    ],
+    "forbidden_texture_extensions": [
+      ".bmp"
+    ],
+    "static_source_extensions": [
+      ".fbx",
+      ".obj"
+    ],
+    "audio_extensions": [
+      ".wav"
+    ],
+    "metadata_extensions": [
+      ".json",
+      ".mtl"
+    ],
+    "max_total_candidates": 15000,
+    "max_candidates_per_category": 1600,
+    "minimum_free_disk_reserve_bytes": 6442450944,
+    "landmark_score_bonus": 6
+  },
+  "landmark_policy": {
+    "minimum_landmark_categories": 6,
+    "require_dominant_vista_per_location": true,
+    "distance_proxy_or_lod_required_for_large_landmark_meshes": true,
+    "critical_vista_preload_required": true
+  },
+  "categories": [
+    {
+      "id": "LORIEN_FOREST_CANOPY_LANDMARK",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "lothlorien",
+        "lorien",
+        "forest",
+        "tree",
+        "canopy",
+        "leaf",
+        "gold",
+        "woodland",
+        "vista",
+        "silhouette"
+      ]
+    },
+    {
+      "id": "LORIEN_PATH_ORIENTATION_LANDMARK",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "lothlorien",
+        "lorien",
+        "forest",
+        "tree",
+        "path",
+        "trail",
+        "route",
+        "bridge",
+        "lantern",
+        "landmark"
+      ]
+    },
+    {
+      "id": "LORIEN_GOLDEN_FOREST_SURFACES",
+      "kind": "surface",
+      "landmark": false,
+      "keywords": [
+        "gold",
+        "leaf",
+        "forest",
+        "tree",
+        "bark",
+        "wood",
+        "ground",
+        "moss",
+        "grass",
+        "foliage"
+      ]
+    },
+    {
+      "id": "LORIEN_LANTERN_LIGHTING",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "lantern",
+        "light",
+        "glow",
+        "forest",
+        "tree",
+        "gold",
+        "night",
+        "ambient",
+        "path",
+        "vista"
+      ]
+    },
+    {
+      "id": "LORIEN_GALADRIEL_SCENE_SUPPORT",
+      "kind": "mixed",
+      "landmark": false,
+      "keywords": [
+        "galadriel",
+        "elf",
+        "elven",
+        "talk",
+        "idle",
+        "robe",
+        "forest",
+        "light",
+        "portrait",
+        "cinematic"
+      ]
+    },
+    {
+      "id": "LORIEN_MIRROR_SCENE_FOCAL",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "mirror",
+        "water",
+        "basin",
+        "reflection",
+        "vision",
+        "stone",
+        "light",
+        "glow",
+        "forest",
+        "focal"
+      ]
+    },
+    {
+      "id": "LORIEN_GRIEF_SOCIAL_SUPPORT",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "grief",
+        "sad",
+        "idle",
+        "sit",
+        "kneel",
+        "talk",
+        "comfort",
+        "fellowship",
+        "elf",
+        "social"
+      ]
+    },
+    {
+      "id": "LORIEN_GIFT_FAREWELL_PROPS",
+      "kind": "static",
+      "landmark": false,
+      "keywords": [
+        "gift",
+        "rope",
+        "cloak",
+        "pack",
+        "bow",
+        "dagger",
+        "brooch",
+        "farewell",
+        "travel",
+        "elven"
+      ]
+    },
+    {
+      "id": "LORIEN_AMBIENT_AUDIO",
+      "kind": "audio",
+      "landmark": false,
+      "keywords": [
+        "forest",
+        "leaf",
+        "wind",
+        "bird",
+        "water",
+        "river",
+        "ambient",
+        "night",
+        "elf",
+        "woodland"
+      ]
+    },
+    {
+      "id": "ANDUIN_DEPARTURE_SHORE_LANDMARK",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "anduin",
+        "river",
+        "shore",
+        "bank",
+        "water",
+        "boat",
+        "departure",
+        "forest",
+        "rock",
+        "vista"
+      ]
+    },
+    {
+      "id": "ANDUIN_BOAT_DEPARTURE_LANDMARK",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "boat",
+        "canoe",
+        "river",
+        "anduin",
+        "water",
+        "paddle",
+        "shore",
+        "departure",
+        "travel",
+        "landmark"
+      ]
+    },
+    {
+      "id": "ANDUIN_RIVER_WATER_SURFACES",
+      "kind": "surface",
+      "landmark": false,
+      "keywords": [
+        "river",
+        "water",
+        "shore",
+        "bank",
+        "wet",
+        "rock",
+        "mud",
+        "sand",
+        "reflection",
+        "flow"
+      ]
+    },
+    {
+      "id": "ANDUIN_PADDLE_ROPE_PROPS",
+      "kind": "static",
+      "landmark": false,
+      "keywords": [
+        "paddle",
+        "rope",
+        "boat",
+        "pack",
+        "supply",
+        "travel",
+        "river",
+        "wood",
+        "oar",
+        "gear"
+      ]
+    },
+    {
+      "id": "F107_FELLOWSHIP_ANIMATION_SUPPORT",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "fellowship",
+        "walk",
+        "idle",
+        "talk",
+        "grief",
+        "farewell",
+        "boat",
+        "paddle",
+        "sit",
+        "travel"
+      ]
+    },
+    {
+      "id": "F107_CINEMATIC_DRESSING",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "forest",
+        "gold",
+        "lantern",
+        "mirror",
+        "river",
+        "boat",
+        "vista",
+        "wide",
+        "silhouette",
+        "cinematic"
+      ]
+    },
+    {
+      "id": "F107_SYSTEMIC_REACTION_SUPPORT",
+      "kind": "mixed",
+      "landmark": false,
+      "keywords": [
+        "leaf",
+        "tree",
+        "water",
+        "boat",
+        "rope",
+        "lantern",
+        "wind",
+        "ripple",
+        "foliage",
+        "impact"
+      ]
+    },
+    {
+      "id": "F107_LANDMARK_DISTANCE_PROXY_SUPPORT",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "lod",
+        "proxy",
+        "silhouette",
+        "vista",
+        "forest",
+        "tree",
+        "river",
+        "shore",
+        "boat",
+        "distant"
+      ]
+    },
+    {
+      "id": "F107_AMBIENT_FOLEY",
+      "kind": "audio",
+      "landmark": false,
+      "keywords": [
+        "leaf",
+        "footstep",
+        "wood",
+        "water",
+        "paddle",
+        "rope",
+        "boat",
+        "forest",
+        "river",
+        "ambient"
+      ]
+    }
+  ],
+  "runtime_policy": {
+    "heavy_assets_soft_referenced": true,
+    "async_streaming_owner": "FStreamableManager",
+    "crowd_background_population_pooling": true,
+    "repeated_static_detail": "ISM/HISM with LOD/culling",
+    "runtime_integration_gate": "P1C07 runtime work remains blocked until predecessor Gate 6/7 acceptance."
+  },
+  "acceptance_boundary": "Source architecture/index preparation only. No P1C07 runtime integration, PIE, device, visual, pacing or performance acceptance is claimed."
+}

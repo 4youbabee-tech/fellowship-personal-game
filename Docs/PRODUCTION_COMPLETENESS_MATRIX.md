@@ -1,3 +1,16 @@
+## 2026-09-29 - F1-07 Lothlorien / Anduin departure source architecture
+
+- F1-07 canonical/runtime reconciliation: **P1C07 -> F1-07 PRESERVED**.
+- Shared warehouse reuse / duplicate payload copies: **INDEX-ONLY / DUPLICATION FORBIDDEN**.
+- Lothlorien grief / Galadriel / Mirror / farewell source categories: **SOURCE-IMPLEMENTED**.
+- Anduin departure boat / river / shoreline / paddle-rope source categories: **SOURCE-IMPLEMENTED**.
+- Generic Part I preparation train reuse: **RETAINED**.
+- Warehouse integrity and provenance/license failure policy: **HARD GATE RETAINED**.
+- Async soft-reference / pooling / ISM-HISM low-spec contracts: **RETAINED**.
+- P1C07 runtime integration: **NOT OPEN; PREDECESSOR GATE 6/7 REQUIRED**.
+- Exact-head static validation: **PENDING**.
+- PIE/device/visual/pacing/performance acceptance: **NOT CLAIMED**.
+
 ## 2026-09-29 - Warehouse active-provenance supersession repair
 
 - Historical receipt preservation: **RETAINED / NO RECEIPT REWRITE**.
