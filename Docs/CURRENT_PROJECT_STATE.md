@@ -1,3 +1,13 @@
+## 2026-09-30 - P1C01 mega-build train + LivingWorld safety repair
+
+- Programmer proposal audit confirmed a real defect in `ALivingWorldDirector::CleanupExpiredEvents`: one far event member could retire the whole micro-event, including a nearby interaction.
+- Fix branch now uses event-wide cleanup only for authored lifetime expiry; distance retirement is member-local and removes only the far actor. Empty events are then removed normally. Marker: `LivingWorldEventMemberCull ... distance-policy=member-local`.
+- PG-208 protects the member-local cleanup contract.
+- The reported ShireAmbientNPC player-pawn issue is not current: there is one direct `UGameplayStatics::GetPlayerPawn` call, inside `GetPlayerPawnCached()`; PG-210 now protects that caching architecture.
+- Save-schema review confirmed CurrentSchemaVersion=6 and newer-save rejection, plus existing legacy identity repair, but no documented generic version-by-version migration history was recovered. `Data/SaveSchemaMigrationAuditV1.json` records the boundary and PG-211 forbids invented migrations.
+- `Data/P1C01MaximumSafeMegaBuildV1.json` registers the owner-authorized 12-car P1C01 mega train. Preparation and defect repair may run now; new runtime expansion remains gated by W00/ProjectGovernor evidence.
+- Current evidence status: **SOURCE-IMPLEMENTED / STATIC CI PENDING** for this branch. No PIE/device/visual/performance promotion.
+
 ## 2026-09-30 - P1C01 maximum-safe mega build + living-world cull repair
 
 - Owner authorized one large P1C01 production train with many bounded work cars under one approval. Machine-readable authorities: `Data/P1C01MaximumSafeMegaBuildV1.json` and `Data/P1C01OvernightMegaBuildTrainV1.json`.
