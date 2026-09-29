@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "scope": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
+  "status": "READY_FOR_PROJECT_GOVERNOR_APPLY",
+  "base_governor_blob_sha": "54177c574201a8ee34bd90b11c8608c5202d1bef",
+  "collision_check": {
+    "req_perf_004_free_on_base": true,
+    "max_decision_on_base": "DEC-086",
+    "candidate_decision": "DEC-087"
+  },
+  "requirement": {
+    "id": "REQ-PERF-004",
+    "title": "Professional graphics/video settings preserve visible quality across scalable low-spec budgets",
+    "category": "GraphicsSettings",
+    "priority": "CRITICAL",
+    "status": "PARTIAL",
+    "origin": "Owner-directed P1C01 visual-economy and professional Graphics/Video Settings requirement",
+    "intent": "Provide a production-grade Graphics/Video settings system with a strong CinematicBalanced default, scalable Performance/High/Ultra presets and Custom controls while preserving the 1280x720 Low-Medium 30 FPS floor on the target i7 Gen6/8 GB/~2 GB VRAM laptop class.",
+    "evidence": [
+      "Docs/WORLD_DETAIL_LEDGER.md — P1C01 Graphics/Video Visual-Economy Doctrine V4",
+      "Config/DefaultScalability.ini",
+      "Data/P1C01GraphicsSettingsV15Preparation.json",
+      "REQ-PERF-001",
+      "REQ-PERF-003"
+    ],
+    "implementation_refs": [
+      "CinematicBalanced is the visually strong default direction; Performance, High, Ultra and Custom remain explicit alternatives.",
+      "Existing lower-tier scalability anchors are protected until measured evidence authorizes change.",
+      "Visual-economy protects silhouette/composition/hero materials/lighting/atmosphere/near-field detail and recovers cost first from duplicate actors/far shadows/overdraw/translucency/redundant lights/uninstanced repetition/unnecessary Tick/invisible or far detail.",
+      "Display-mode changes require preview, explicit confirm and timed/manual revert semantics.",
+      "Heavy visual assets remain soft-referenced/asynchronously loaded; repeated decorative detail remains ISM/HISM + LOD/culling and crowds remain pooled."
+    ],
+    "missing_work": [
+      "Land this requirement and DEC-087 in Data/ProjectGovernor.json.",
+      "Implement the bounded UE4.27 GameUserSettings/runtime settings architecture inside P1C01 only.",
+      "Add exact-head static validation and UE4.27 compile proof.",
+      "PIE-test preset application, Custom transitions and display preview/confirm/revert.",
+      "Measure representative P1C01 frame time, VRAM/streaming pool and hitch behavior on the target laptop class.",
+      "Obtain human visual acceptance before calling the default or higher presets visually accepted."
+    ],
+    "acceptance_criteria": [
+      "CinematicBalanced is a coherent visually strong default rather than an unbounded maximum-quality preset.",
+      "Performance preserves the existing 1280x720 Low-Medium 30 FPS floor contract and does not silently raise lower-tier scalability anchors.",
+      "High and Ultra scale upward without changing story/gameplay behavior or bypassing streaming/residency rules.",
+      "Custom exposes supported quality controls without creating invalid combinations or weakening fail-safe display reversion.",
+      "No performance or visual-quality improvement is claimed without exact measured evidence."
+    ],
+    "dependencies": [
+      "REQ-PERF-001",
+      "REQ-PERF-003",
+      "REQ-WORLD-002",
+      "REQ-QA-002"
+    ],
+    "checkpoint": "P1C01_GRAPHICS_SETTINGS_V1",
+    "notes": "Governance payload only; runtime source stays closed until ProjectGovernor authority lands."
+  },
+  "decision": {
+    "id": "DEC-087",
+    "title": "P1C01 Graphics/Video settings use visual-economy presets with CinematicBalanced default",
+    "status": "ACCEPTED",
+    "requirements": [
+      "REQ-PERF-001",
+      "REQ-PERF-003",
+      "REQ-PERF-004",
+      "REQ-WORLD-002"
+    ],
+    "resolution": "Authorize P1C01-only implementation of a professional Graphics/Video settings system whose default is CinematicBalanced, whose lower-cost Performance preset protects the existing 720p Low-Medium 30 FPS floor, and whose High/Ultra/Custom modes scale quality without discarding the permanent visual-economy doctrine.",
+    "implementation_contract": [
+      "Runtime scope is W01_P1C01_PRODUCTION_VERTICAL_SLICE only until predecessor Gates 6/7 authorize later runtime chapters.",
+      "Preset surface is Performance, CinematicBalanced, High, Ultra and Custom; CinematicBalanced is the default direction.",
+      "Existing lower-tier anchors remain protected: texture pools 600/800/1000 MB; shadow max resolution 512/768/1024; cascades 1/2/2; shadow distance 0.45/0.65/0.80; foliage and grass density 0.30/0.50/0.70; view distance 0.45/0.65/0.80.",
+      "The target floor remains UE4.27.2 DX11 at 1280x720 Low-Medium 30 FPS on i7 Gen6/8 GB/~2 GB VRAM class hardware.",
+      "Protect silhouette, composition, hero materials, lighting, atmosphere and near-field detail before reducing visible hero value.",
+      "Recover cost first from duplicate actors, far shadows, overdraw, translucency, redundant lights, uninstanced repetition, unnecessary Tick and invisible/far detail.",
+      "Display changes use preview -> confirm -> revert; failure or timeout returns to the last confirmed safe mode.",
+      "Heavy assets remain soft references with FStreamableManager async loading; crowds remain pooled; repeated decorative detail remains ISM/HISM + LOD/culling.",
+      "Animated final assets remain FBX and production textures remain PNG/TGA, including channel-packed textures.",
+      "No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED or performance-improvement claim is permitted without exact evidence."
+    ],
+    "rationale": "The P1C01 benchmark needs a strong visual default and scalable quality path without sacrificing the strict target-laptop floor. Bounded presets plus permanent cost-recovery priorities make visual ambition scalable instead of flattening the whole scene.",
+    "evidence": [
+      "Docs/WORLD_DETAIL_LEDGER.md — P1C01 Graphics/Video Visual-Economy Doctrine V4",
+      "Config/DefaultScalability.ini",
+      "Data/P1C01GraphicsSettingsV15Preparation.json"
+    ],
+    "evidence_boundary": "GOVERNANCE AUTHORITY PAYLOAD ONLY. Runtime settings implementation, UE compile, PIE, target-device, visual acceptance and performance measurement remain separate gates."
+  }
+}
