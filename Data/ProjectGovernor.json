@@ -4707,6 +4707,42 @@
         ".github/workflows/pre-unreal-validation.yml"
       ],
       "evidence_boundary": "SOURCE-IMPLEMENTED repair contract. Fresh exact-head Pre-Unreal plus persistent warehouse inventory rerun are required before claiming the mismatch repaired or inventory clean."
+    },
+    {
+      "id": "DEC-077",
+      "title": "F1-07 Lórien & Anduin uses a landmark-first source superpack with an explicit F1-08 boundary",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WORLD-001",
+        "REQ-WORLD-002",
+        "REQ-NPC-001",
+        "REQ-PERF-001",
+        "REQ-STABILITY-001"
+      ],
+      "resolution": "Prepare a 26-category landmark-centered shared source pack for canonical F1-07 Lórien & Anduin, consumed by legacy runtime chapter P1C07. The source lane may prepare the Anduin journey and Amon Hen approach required to reach the F1-07 locked postcondition, but the Breaking of the Fellowship/Uruk-attack set piece remains F1-08 and is not opened by this pack.",
+      "implementation_contract": [
+        "Canonical F1-07 critical path remains grief/recovery, rest/gifts and river journey under increasing group pressure; locked postcondition remains Fellowship reaches Amon Hen.",
+        "Lothlórien coverage centers golden forest sanctuary identity, vertical flets, organic bridges, luminous forest, recovery/gifts/reflection/exploration and night-arrival/departure states.",
+        "Anduin coverage centers river-axis readability, cliffs, stone monuments, forest, boats, scouting and the Amon Hen approach.",
+        "Do not execute or label the F1-08 Breaking of the Fellowship / Uruk attack resolution as F1-07 content.",
+        "The pack indexes shared warehouse stock and does not duplicate payloads per runtime chapter.",
+        "Animated candidates remain FBX-only; production textures remain PNG/TGA; BMP is blocked.",
+        "Heavy runtime assets remain soft-referenced/asynchronously streamed; background populations remain pooled; repeated static dressing uses ISM/HISM with LOD/culling.",
+        "Landmark categories receive a source-index priority bonus of at least 7, with at least 10 populated landmark categories required for source success.",
+        "Warehouse inventory must be clean before heavy indexing.",
+        "P1C07 runtime integration remains predecessor-gated by Gate 6/7 and source preparation never counts as runtime/visual acceptance."
+      ],
+      "rationale": "The supplied F1-07 mission and world sources distinguish a sanctuary-to-river journey whose locked outcome is reaching Amon Hen from the later Fellowship-break mission. A landmark-first shared pack can prepare Lothlórien and the Anduin approach at high throughput without collapsing that canon/runtime boundary or bypassing P1C01 serialization.",
+      "evidence": [
+        "Docs/WORLD_DETAIL_LEDGER.md — F1-07 Lórien & Anduin Mega Landmark Source Pack V1",
+        "Data/F107LorienAnduinLandmarkMegaSourceSuperpackV1.json",
+        "Data/Part1LandmarkIdentityPlanV1.json",
+        "Scripts/run_f107_lorien_anduin_landmark_mega_source.ps1",
+        ".github/workflows/f107-lorien-anduin-landmark-mega-source.yml",
+        "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX — F1-07 Lórien & Anduin",
+        "03_WORLD_LOCATIONS_AND_MAP_BIBLE — Lothlórien and Anduin / Amon Hen production specifications"
+      ],
+      "evidence_boundary": "SOURCE ARCHITECTURE ONLY. Heavy execution remains inventory-gated and runtime remains predecessor-gated; no UE integration, PIE, device, visual, pacing or performance acceptance is claimed."
     }
   ],
   "open_conflicts": [],
