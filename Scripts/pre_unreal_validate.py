@@ -5472,6 +5472,95 @@ for pg190_symbol in [
     if pg190_symbol not in pg190_intake:
         fail(f"PG-190 PowerShell-compatible base-color selector return missing: {pg190_symbol}")
 
+
+# PG-204: F2-03 Edoras maximum-safe source wave must preserve canon, source breadth and unassigned Part II runtime identity.
+pg204_manifest = json.loads(read(ROOT / "Data" / "F203EdorasMaximumSafeMegaSourceV1.json"))
+pg204_runner = read(ROOT / "Scripts" / "run_f203_edoras_maximum_safe_source.ps1")
+pg204_workflow = read(ROOT / ".github" / "workflows" / "f203-edoras-maximum-safe-source.yml")
+pg204_unreal = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+
+if pg204_manifest.get("status") != "SOURCE_ARCHITECTURE_READY_INVENTORY_GATED_RUNTIME_MAPPING_UNASSIGNED":
+    fail("PG-204 F2-03 source wave status drifted")
+if pg204_manifest.get("canonical_mission_id") != "F2-03":
+    fail("PG-204 F2-03 canonical mission ID drifted")
+if pg204_manifest.get("canonical_title") != "Edoras":
+    fail("PG-204 F2-03 canonical title drifted")
+if pg204_manifest.get("runtime_consumers") not in ([], None):
+    fail("PG-204 F2-03 must not invent a Part II runtime consumer")
+if pg204_manifest.get("runtime_mapping_status") != "NOT_ASSIGNED_DO_NOT_INVENT":
+    fail("PG-204 F2-03 runtime mapping boundary weakened")
+
+pg204_story = pg204_manifest.get("story_contract", {})
+if pg204_story.get("locked_postcondition") != "Rohan evacuates toward Helm's Deep.":
+    fail("PG-204 F2-03 locked postcondition drifted")
+critical = " ".join(str(x) for x in pg204_story.get("critical_path", []))
+for required in ["Theoden restored", "Political and military crisis clarified"]:
+    if required not in critical:
+        fail(f"PG-204 F2-03 critical path missing: {required}")
+for required in ["court exploration", "stables", "equipment", "social scenes"]:
+    if required not in pg204_story.get("safe_optional_window", []):
+        fail(f"PG-204 F2-03 optional window missing: {required}")
+excluded = " ".join(str(x) for x in pg204_story.get("excluded_from_this_pack", []))
+for required in ["F2-04", "F2-05"]:
+    if required not in excluded:
+        fail(f"PG-204 F2-03 later-chapter boundary missing: {required}")
+
+pg204_world = pg204_manifest.get("world_contract", {})
+if pg204_world.get("primary_location") != "Rohan / Edoras":
+    fail("PG-204 F2-03 location drifted")
+if len(pg204_manifest.get("categories", [])) < 32:
+    fail("PG-204 F2-03 category breadth below 32")
+if len(pg204_manifest.get("bank_policy", {}).get("banks", [])) < 8:
+    fail("PG-204 F2-03 bank breadth below 8")
+if pg204_manifest.get("bank_policy", {}).get("minimum_ready_banks", 0) < 7:
+    fail("PG-204 F2-03 minimum ready bank contract weakened")
+landmarks = [x for x in pg204_manifest.get("categories", []) if x.get("landmark")]
+if len(landmarks) < 20:
+    fail("PG-204 F2-03 configured landmark breadth below 20")
+if pg204_manifest.get("landmark_policy", {}).get("minimum_landmark_categories", 0) < 14:
+    fail("PG-204 F2-03 landmark readiness threshold weakened")
+
+policy = pg204_manifest.get("source_policy", {})
+if policy.get("animated_candidate_extension") != ".fbx":
+    fail("PG-204 F2-03 animated candidate extension must remain FBX")
+if ".bmp" not in policy.get("forbidden_texture_extensions", []):
+    fail("PG-204 F2-03 BMP rejection missing")
+if policy.get("minimum_free_disk_reserve_bytes", 0) < 6442450944:
+    fail("PG-204 F2-03 warehouse reserve below 6 GiB")
+if policy.get("max_total_candidates", 0) < 32000:
+    fail("PG-204 F2-03 total candidate ceiling unexpectedly reduced")
+if not policy.get("fair_share_across_categories"):
+    fail("PG-204 F2-03 fair-share scheduling disabled")
+
+for symbol in [
+    "F203_MEGA_SOURCE_INVENTORY_GATE_BEGIN",
+    "F203_MEGA_SOURCE_INVENTORY_GATE_PASS",
+    "F203_BANK_SOURCE_PASS",
+    "F203_LANDMARK_SOURCE_PASS",
+    "F203_MEGA_SOURCE_PASS",
+    'if($kind -eq "animated" -and $ext -ne $animatedExt)',
+]:
+    if symbol not in pg204_runner:
+        fail(f"PG-204 F2-03 runner marker missing: {symbol}")
+
+for symbol in [
+    "name: F2-03 Edoras Maximum Safe Mega Source",
+    "cancel-in-progress: false",
+    "timeout-minutes: 180",
+    "Build F2-03 Edoras maximum-safe source superpack",
+]:
+    if symbol not in pg204_workflow:
+        fail(f"PG-204 F2-03 workflow marker missing: {symbol}")
+
+for ignored in [
+    "Data/F203EdorasMaximumSafeMegaSourceV1.json",
+    "Scripts/run_f203_edoras_maximum_safe_source.ps1",
+    ".github/workflows/f203-edoras-maximum-safe-source.yml",
+]:
+    if pg204_unreal.count(ignored) < 2:
+        fail(f"PG-204 F2-03 tooling path must stay off Unreal push+PR filters: {ignored}")
+
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
