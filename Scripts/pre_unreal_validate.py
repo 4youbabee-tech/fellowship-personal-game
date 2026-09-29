@@ -5752,6 +5752,27 @@ for pg207_path, pg207_symbol in [
 
 
 
+# PG-207: living-world event distance culling must remain member-local.
+# A roaming event member may not retire a nearby interaction or other member.
+pg207_living = read(resolve_source("LivingWorldDirector.cpp"))
+pg207_start = pg207_living.find("void ALivingWorldDirector::CleanupExpiredEvents()")
+pg207_end = pg207_living.find("FName ALivingWorldDirector::ChooseEventType()", pg207_start)
+if pg207_start < 0 or pg207_end < 0:
+    fail("PG-207 CleanupExpiredEvents source boundary missing")
+else:
+    pg207_cleanup = pg207_living[pg207_start:pg207_end]
+    for pg207_symbol in [
+        "distance-policy=member-local",
+        "Event.Actors.RemoveAtSwap(ActorIndex, 1, false)",
+        "if (Event.ExpiresAt <= Now)",
+        "if (Event.Actors.Num() == 0)",
+    ]:
+        if pg207_symbol not in pg207_cleanup:
+            fail(f"PG-207 member-local cleanup invariant missing: {pg207_symbol}")
+    if "bExpired = true;" in pg207_cleanup:
+        fail("PG-207 event-wide distance expiry regression detected")
+
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
