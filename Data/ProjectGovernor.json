@@ -4568,6 +4568,67 @@
         "P1C01 Chapter Closure Pack #2 — warehouse inventory hashMismatch=1"
       ],
       "evidence_boundary": "SOURCE ARCHITECTURE ONLY. Heavy execution is inventory-gated; no UE integration, PIE, device, visual, pacing or performance acceptance is claimed."
+    },
+    {
+      "id": "DEC-073",
+      "title": "Part I regions require explicit landmark identity anchors for navigation and cinematic continuity",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WORLD-001",
+        "REQ-WORLD-002",
+        "REQ-PERF-001"
+      ],
+      "resolution": "Adopt a Part I Landmark Identity Plan so each production region owns at least one dominant silhouette/vista or interior focal vista. Landmark readability is achieved through composition, silhouette, material family, lighting/fog state, streaming and LOD strategy before brute-force geometry density.",
+      "implementation_contract": [
+        "The Shire/Hobbiton uses pastoral hill, Hobbit-hole, circular-door and garden vista language.",
+        "Bag End uses a dominant round-geometry interior focal vista rather than dense props alone.",
+        "Bree uses a town-gate/timber-stone/inn approach identity.",
+        "Weathertop uses the ancient stone-ring silhouette against the exposed skyline.",
+        "Rivendell uses layered terraces, stone/wood integration and waterfall vista identity.",
+        "Caradhras uses a high mountain-pass ridge silhouette that remains readable under storm/low-visibility states.",
+        "Moria uses monumental entrance/hall-axis identity with state-specific tomb-alert and escape focal vistas.",
+        "Landmark-heavy assets remain soft-referenced/asynchronously streamed; repeated dressing remains instanced and culled; large landmarks require LOD/HLOD or simplified distance-proxy strategy where appropriate.",
+        "The plan is source/visual architecture only until chapter-specific observation evidence exists."
+      ],
+      "rationale": "The owner explicitly requested that the game's recognizable landmarks become visible rather than continuing as undifferentiated asset accumulation. The world-location bible already requires at least one dominant silhouette/vista per location for navigation and cinematic continuity.",
+      "evidence": [
+        "Data/Part1LandmarkIdentityPlanV1.json",
+        "Docs/WORLD_DETAIL_LEDGER.md — Part I Landmark Identity Plan V1 + F1-06 Caradhras & Moria Landmark Mega Source Superpack",
+        "03_WORLD_LOCATIONS_AND_MAP_BIBLE — per-location Landmark rule"
+      ],
+      "evidence_boundary": "SOURCE/VISUAL IDENTITY ARCHITECTURE ONLY. No region is VISUALLY-ACCEPTED without runtime observation evidence."
+    },
+    {
+      "id": "DEC-074",
+      "title": "F1-06 Caradhras & Moria uses the largest Part I landmark-centered source superpack so far",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WORLD-001",
+        "REQ-WORLD-002",
+        "REQ-NPC-001",
+        "REQ-PERF-001",
+        "REQ-STABILITY-001"
+      ],
+      "resolution": "Prepare a 24-category, landmark-centered shared source pack for canonical F1-06 Caradhras & Moria, consumed by legacy runtime chapters P1C05 and P1C06. Heavy execution remains inventory-clean gated and runtime integration remains predecessor-gated.",
+      "implementation_contract": [
+        "Canonical critical path remains mountain route failure, Moria discovery of Balin's fate, and Balrog attack; locked postcondition remains Gandalf falls and the Fellowship escapes.",
+        "Caradhras coverage includes dominant ridge/pass landmark, snow/ice surfaces, storm visibility, survival/group-assist support, audio and cinematic vista support.",
+        "Moria coverage includes entrance threshold/puzzle-door support, monumental hall axis, mines/tunnels, routefinding landmarks, tomb-alert space, combat support, Balrog-escape vista, darkness/lighting and fire/shadow audio.",
+        "The pack indexes shared warehouse stock and does not duplicate multi-gigabyte payloads between P1C05 and P1C06.",
+        "Animated candidates remain FBX-only; production textures remain PNG/TGA; BMP is blocked.",
+        "The source run must produce enough populated landmark categories to satisfy the configured landmark-source minimum before it reports source success.",
+        "Warehouse inventory audit remains a hard gate before heavy indexing while the current mismatch is unresolved.",
+        "P1C05/P1C06 runtime integration remains blocked until predecessor Gate 6/7 acceptance."
+      ],
+      "rationale": "F1-06 spans the strongest environment contrast in early Part I: exposed low-visibility mountain traversal followed by monumental underground halls. A landmark-centered pack makes world identity and navigation visible while keeping the low-spec performance contract intact.",
+      "evidence": [
+        "Data/F106CaradhrasMoriaLandmarkMegaSourceSuperpackV1.json",
+        "Scripts/run_f106_caradhras_moria_landmark_mega_source.ps1",
+        ".github/workflows/f106-caradhras-moria-landmark-mega-source.yml",
+        "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX — F1-06 Caradhras & Moria",
+        "03_WORLD_LOCATIONS_AND_MAP_BIBLE — Caradhras and Moria production specifications"
+      ],
+      "evidence_boundary": "SOURCE ARCHITECTURE ONLY. Heavy execution is inventory-gated; no UE integration, PIE, device, visual, pacing or performance acceptance is claimed."
     }
   ],
   "open_conflicts": [],
