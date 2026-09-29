@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "plan_id": "PART1_LANDMARK_IDENTITY_PLAN_V1",
+  "status": "SOURCE_ARCHITECTURE_READY_RUNTIME_GATED",
+  "purpose": "Make Part I regions visually readable at a glance through dominant silhouette/vista anchors while preserving low-spec performance and chapter gates.",
+  "authority": [
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "Data/ProjectGovernor.json",
+    "Docs/WORLD_DETAIL_LEDGER.md"
+  ],
+  "global_rules": [
+    "Every production region owns at least one dominant silhouette/vista or interior focal vista used for navigation and cinematic continuity.",
+    "Landmark identity comes from composition, silhouette, material family, lighting/fog state and traversal framing before raw polygon density.",
+    "Critical landmark visibility must survive Low/Medium 720p target presentation.",
+    "Repeated dressing around landmarks uses ISM/HISM and LOD/culling.",
+    "Heavy landmark assets remain soft-referenced and asynchronously streamed.",
+    "Critical next-area vista data should be preloaded before the player reaches a transition.",
+    "Landmark planning never unlocks a downstream runtime chapter before predecessor Gate 6/7 acceptance."
+  ],
+  "regions": [
+    {
+      "id": "SHIRE_HOBBITON",
+      "canonical_location": "The Shire / Hobbiton",
+      "runtime_chapter": "P1C01",
+      "visual_grammar": [
+        "pastoral hills",
+        "lanes",
+        "farms",
+        "Hobbit-holes",
+        "warm domestic scale",
+        "circular doors",
+        "gardens"
+      ],
+      "identity_anchor": "Pastoral hill and Hobbit-hole/circular-door garden vista",
+      "visibility_goal": "Readable as a warm low-threat domestic landscape from traversal approaches.",
+      "state_variants": [
+        "birthday",
+        "departure",
+        "post-war"
+      ],
+      "runtime_status": "CURRENT_ACTIVE_CHAPTER"
+    },
+    {
+      "id": "BAG_END",
+      "canonical_location": "Bag End",
+      "runtime_chapter": "P1C01",
+      "visual_grammar": [
+        "dense lived-in props",
+        "round geometry"
+      ],
+      "identity_anchor": "Dominant round-geometry interior focal vista",
+      "visibility_goal": "Interior composition remains immediately recognizable without depending on dense prop count alone.",
+      "state_variants": [
+        "Bilbo occupied",
+        "Frodo departure",
+        "epilogue"
+      ],
+      "runtime_status": "CURRENT_ACTIVE_CHAPTER"
+    },
+    {
+      "id": "BREE",
+      "canonical_location": "Bree",
+      "runtime_chapter": "P1C02",
+      "visual_grammar": [
+        "timber",
+        "stone",
+        "rain",
+        "gates",
+        "crowded inn"
+      ],
+      "identity_anchor": "Town-gate approach framed toward timber/stone inn district",
+      "visibility_goal": "Arrival silhouette remains readable through rain/night states.",
+      "state_variants": [
+        "night arrival",
+        "departure"
+      ],
+      "runtime_status": "SOURCE_PREP_ONLY"
+    },
+    {
+      "id": "WEATHERTOP",
+      "canonical_location": "Weathertop",
+      "runtime_chapter": "P1C03",
+      "visual_grammar": [
+        "ancient stone ring",
+        "exposed skyline"
+      ],
+      "identity_anchor": "Ancient stone ring silhouette against exposed skyline",
+      "visibility_goal": "Ruined hilltop reads from approach and remains the cinematic horizon anchor.",
+      "state_variants": [
+        "calm approach",
+        "night attack"
+      ],
+      "runtime_status": "SOURCE_PREP_ONLY"
+    },
+    {
+      "id": "RIVENDELL",
+      "canonical_location": "Rivendell",
+      "runtime_chapter": "P1C04",
+      "visual_grammar": [
+        "stone/wood integration",
+        "waterfalls",
+        "layered terraces"
+      ],
+      "identity_anchor": "Layered terrace and waterfall valley vista",
+      "visibility_goal": "Vertical layered sanctuary composition reads before fine architectural detail.",
+      "state_variants": [
+        "arrival wounded",
+        "Fellowship formed"
+      ],
+      "runtime_status": "SOURCE_ARCHITECTURE_ONLY"
+    },
+    {
+      "id": "CARADHRAS",
+      "canonical_location": "Caradhras",
+      "runtime_chapter": "P1C05",
+      "visual_grammar": [
+        "snow",
+        "rock",
+        "wind",
+        "low visibility"
+      ],
+      "identity_anchor": "High mountain-pass ridge silhouette",
+      "visibility_goal": "Primary ridge/pass direction remains readable under storm escalation without high-frequency clutter.",
+      "state_variants": [
+        "storm escalation"
+      ],
+      "runtime_status": "SOURCE_ARCHITECTURE_ONLY"
+    },
+    {
+      "id": "MORIA",
+      "canonical_location": "Moria",
+      "runtime_chapter": "P1C06",
+      "visual_grammar": [
+        "monumental geometry",
+        "darkness",
+        "mines",
+        "halls"
+      ],
+      "identity_anchor": "Monumental entrance/hall axis with state-specific tomb-alert and escape focal vistas",
+      "visibility_goal": "Scale and direction are readable through silhouette, columns/arches, lighting hierarchy and negative space.",
+      "state_variants": [
+        "entrance",
+        "tomb alert",
+        "Balrog escape"
+      ],
+      "runtime_status": "SOURCE_ARCHITECTURE_ONLY"
+    }
+  ],
+  "acceptance_boundary": "Source/visual identity planning only. No landmark is VISUALLY-ACCEPTED until chapter-specific observation evidence exists."
+}
