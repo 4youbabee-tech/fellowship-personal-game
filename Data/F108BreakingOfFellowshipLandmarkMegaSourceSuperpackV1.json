@@ -1,0 +1,595 @@
+{
+  "schema_version": 1,
+  "pack_id": "F108_BREAKING_FELLOWSHIP_LANDMARK_MEGA_SOURCE_SUPERPACK_V1",
+  "status": "SOURCE_ARCHITECTURE_READY_INVENTORY_GATED_RUNTIME_GATED",
+  "canonical_mission_id": "F1-08",
+  "canonical_title": "Breaking of the Fellowship",
+  "runtime_consumers": [
+    "P1C08"
+  ],
+  "authority": [
+    "01_STORY_AND_TIMELINE_BIBLE",
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+    "04_PEOPLES_LORE_ARTIFACTS_AND_CULTURES",
+    "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "Data/StoryBeatPlan.csv",
+    "Data/ExplorationEnvelopePlan.json",
+    "Data/Part1LandmarkIdentityPlanV1.json",
+    "Data/ProjectGovernor.json",
+    "Docs/WORLD_DETAIL_LEDGER.md"
+  ],
+  "story_contract": {
+    "required_story_beats": [
+      "AnduinDeparture",
+      "ArgonathReveal",
+      "AmonHenArrival",
+      "BoromirPressure",
+      "UrukAttack",
+      "BoromirDefense",
+      "BoromirFall",
+      "FrodoSamDeparture",
+      "Part1End"
+    ],
+    "safe_optional_windows": [
+      "P1C08_RIVER_COMPANY",
+      "P1C08_AMON_HEN_CAMP"
+    ],
+    "locked_postcondition": "Frodo and Sam depart; Part I closes and Part II routes may open.",
+    "canon_outcome_mutation": "FORBIDDEN",
+    "runtime_unlock_rule": "P1C08 runtime integration remains predecessor Gate 6/7 gated; source preparation never unlocks runtime."
+  },
+  "world_contract": {
+    "anduin_argonath": {
+      "location_type": "River corridor / monumental stone reveal",
+      "visual_grammar": [
+        "water",
+        "cliffs",
+        "forest",
+        "monumental stone figures",
+        "wide river-axis vista"
+      ],
+      "gameplay_roles": [
+        "river travel",
+        "companion spacing",
+        "landmark reveal",
+        "rising tension"
+      ],
+      "state_variants": [
+        "river departure",
+        "Argonath reveal"
+      ],
+      "landmark_contract": "River-axis and monumental stone silhouettes remain readable at Low/Medium 720p without brute-force geometry density."
+    },
+    "amon_hen": {
+      "location_type": "Forested hill / ancient ruin fracture space",
+      "visual_grammar": [
+        "forest",
+        "ancient stone ruins",
+        "hill routes",
+        "river edge",
+        "broken sightlines"
+      ],
+      "gameplay_roles": [
+        "camp tension",
+        "confrontation isolation",
+        "attack readability",
+        "defense routes",
+        "aftermath",
+        "river departure"
+      ],
+      "state_variants": [
+        "arrival",
+        "pressure",
+        "attack",
+        "aftermath",
+        "departure"
+      ],
+      "landmark_contract": "Amon Hen hill/ruin anchors, combat lanes and river-return direction remain readable through the Fellowship fracture sequence."
+    }
+  },
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_class": 2
+  },
+  "safety_gate": {
+    "requires_clean_warehouse_inventory": true,
+    "hard_stop_on_hash_mismatch": true,
+    "hard_stop_on_license_hash_mismatch": true,
+    "hard_stop_on_dangerous_file": true,
+    "hard_stop_on_bad_receipt": true
+  },
+  "source_policy": {
+    "reuse_existing_warehouse_first": true,
+    "duplicate_payloads_per_runtime_chapter": false,
+    "index_only": true,
+    "animated_candidate_extension": ".fbx",
+    "texture_extensions": [
+      ".png",
+      ".tga"
+    ],
+    "forbidden_texture_extensions": [
+      ".bmp"
+    ],
+    "static_source_extensions": [
+      ".fbx",
+      ".obj"
+    ],
+    "audio_extensions": [
+      ".wav"
+    ],
+    "metadata_extensions": [
+      ".json",
+      ".mtl"
+    ],
+    "max_total_candidates": 20000,
+    "max_candidates_per_category": 2200,
+    "minimum_free_disk_reserve_bytes": 6442450944,
+    "landmark_score_bonus": 8
+  },
+  "runtime_policy": {
+    "heavy_asset_reference": "SOFT_REFERENCE_ONLY",
+    "loading": "ASYNC_FSTREAMABLEMANAGER",
+    "background_actor_reuse": "POOL_WHERE_APPLICABLE",
+    "repeated_static_dressing": "ISM_HISM_WITH_LOD_CULLING",
+    "critical_vista_preload": true,
+    "civilian_population_invention": "FORBIDDEN",
+    "source_index_is_runtime_acceptance": false
+  },
+  "landmark_policy": {
+    "minimum_landmark_categories": 11,
+    "require_dominant_vista_per_location": true,
+    "argonath_reveal_readability_required": true,
+    "amon_hen_route_readability_required": true,
+    "battle_lane_readability_required": true,
+    "distance_proxy_or_lod_required_for_large_landmark_meshes": true,
+    "critical_vista_preload_required": true
+  },
+  "categories": [
+    {
+      "id": "ANDUIN_FINAL_RIVER_AXIS",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "anduin",
+        "river",
+        "water",
+        "cliff",
+        "forest",
+        "shore",
+        "vista",
+        "channel",
+        "boat",
+        "silhouette"
+      ]
+    },
+    {
+      "id": "ARGONATH_REVEAL_LANDMARK",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "argonath",
+        "monument",
+        "statue",
+        "stone",
+        "giant",
+        "river",
+        "cliff",
+        "pillar",
+        "ancient",
+        "landmark"
+      ]
+    },
+    {
+      "id": "ARGONATH_MONUMENT_SURFACES",
+      "kind": "surface",
+      "landmark": true,
+      "keywords": [
+        "stone",
+        "weathered",
+        "rock",
+        "monument",
+        "statue",
+        "ancient",
+        "moss",
+        "cliff",
+        "erosion"
+      ]
+    },
+    {
+      "id": "AMON_HEN_LANDING_THRESHOLD",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "amon",
+        "hen",
+        "landing",
+        "shore",
+        "boat",
+        "river",
+        "stone",
+        "forest",
+        "threshold",
+        "camp"
+      ]
+    },
+    {
+      "id": "AMON_HEN_HILL_RUINS_LANDMARK",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "amon",
+        "hen",
+        "hill",
+        "ruin",
+        "stone",
+        "stair",
+        "forest",
+        "ancient",
+        "watch",
+        "landmark"
+      ]
+    },
+    {
+      "id": "AMON_HEN_SEAT_WATCH_VISTA",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "seat",
+        "watch",
+        "ruin",
+        "stone",
+        "hill",
+        "vista",
+        "overlook",
+        "forest",
+        "ancient",
+        "platform"
+      ]
+    },
+    {
+      "id": "AMON_HEN_FOREST_ROUTE",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "forest",
+        "path",
+        "trail",
+        "tree",
+        "hill",
+        "route",
+        "root",
+        "rock",
+        "marker",
+        "ruin"
+      ]
+    },
+    {
+      "id": "AMON_HEN_RUIN_SURFACES",
+      "kind": "surface",
+      "landmark": false,
+      "keywords": [
+        "stone",
+        "moss",
+        "dirt",
+        "rock",
+        "ruin",
+        "forest",
+        "weathered",
+        "ground",
+        "root"
+      ]
+    },
+    {
+      "id": "AMON_HEN_CAMP_DRESSING",
+      "kind": "static",
+      "landmark": false,
+      "keywords": [
+        "camp",
+        "pack",
+        "bedroll",
+        "boat",
+        "rope",
+        "gear",
+        "supply",
+        "forest",
+        "travel",
+        "crate"
+      ]
+    },
+    {
+      "id": "BOROMIR_PRESSURE_ISOLATION_SPACE",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "forest",
+        "clearing",
+        "path",
+        "stone",
+        "isolate",
+        "tension",
+        "ring",
+        "ruin",
+        "hill",
+        "shadow"
+      ]
+    },
+    {
+      "id": "FELLOWSHIP_SEPARATION_ROUTEFINDING",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "path",
+        "fork",
+        "trail",
+        "forest",
+        "marker",
+        "ridge",
+        "river",
+        "stone",
+        "route",
+        "escape"
+      ]
+    },
+    {
+      "id": "URUK_ATTACK_ENTRY_LANES",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "forest",
+        "attack",
+        "ambush",
+        "trail",
+        "ridge",
+        "ruin",
+        "cover",
+        "combat",
+        "lane",
+        "choke"
+      ]
+    },
+    {
+      "id": "URUK_HAI_CHARACTER_ANIMATION",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "uruk",
+        "orc",
+        "enemy",
+        "run",
+        "attack",
+        "combat",
+        "bow",
+        "sword",
+        "shield",
+        "charge"
+      ]
+    },
+    {
+      "id": "URUK_WEAPON_PROP_SUPPORT",
+      "kind": "static",
+      "landmark": false,
+      "keywords": [
+        "sword",
+        "shield",
+        "bow",
+        "arrow",
+        "weapon",
+        "armor",
+        "uruk",
+        "orc",
+        "quiver",
+        "combat"
+      ]
+    },
+    {
+      "id": "BOROMIR_DEFENSE_COMBAT_SUPPORT",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "boromir",
+        "defense",
+        "sword",
+        "shield",
+        "combat",
+        "block",
+        "attack",
+        "hit",
+        "hero",
+        "guard"
+      ]
+    },
+    {
+      "id": "MERRY_PIPPIN_DEFENSE_CAPTURE_SUPPORT",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "hobbit",
+        "merry",
+        "pippin",
+        "defense",
+        "capture",
+        "struggle",
+        "run",
+        "fall",
+        "combat",
+        "companion"
+      ]
+    },
+    {
+      "id": "FRODO_ESCAPE_STEALTH_SUPPORT",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "frodo",
+        "hobbit",
+        "run",
+        "crouch",
+        "stealth",
+        "forest",
+        "escape",
+        "ring",
+        "hide",
+        "climb"
+      ]
+    },
+    {
+      "id": "SAM_RIVER_DEPARTURE_SUPPORT",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "sam",
+        "frodo",
+        "river",
+        "water",
+        "boat",
+        "shore",
+        "depart",
+        "crossing",
+        "eastern",
+        "farewell"
+      ]
+    },
+    {
+      "id": "BATTLE_AUDIO_FOLEY",
+      "kind": "audio",
+      "landmark": false,
+      "keywords": [
+        "battle",
+        "combat",
+        "arrow",
+        "sword",
+        "shield",
+        "footstep",
+        "forest",
+        "horn",
+        "impact",
+        "breathing"
+      ]
+    },
+    {
+      "id": "AFTERMATH_STORY_DRESSING",
+      "kind": "mixed",
+      "landmark": false,
+      "keywords": [
+        "aftermath",
+        "forest",
+        "battle",
+        "broken",
+        "arrow",
+        "weapon",
+        "silence",
+        "river",
+        "stone",
+        "loss"
+      ]
+    },
+    {
+      "id": "F108_COMPANION_ANIMATION",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "fellowship",
+        "walk",
+        "run",
+        "fight",
+        "gesture",
+        "look",
+        "kneel",
+        "carry",
+        "talk",
+        "companion"
+      ]
+    },
+    {
+      "id": "F108_CINEMATIC_DRESSING",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "wide",
+        "vista",
+        "silhouette",
+        "river",
+        "monument",
+        "forest",
+        "ruin",
+        "battle",
+        "departure",
+        "cinematic"
+      ]
+    },
+    {
+      "id": "F108_SYSTEMIC_REACTION_SUPPORT",
+      "kind": "mixed",
+      "landmark": false,
+      "keywords": [
+        "leaf",
+        "branch",
+        "water",
+        "boat",
+        "cloth",
+        "impact",
+        "weapon",
+        "wind",
+        "prop",
+        "reaction"
+      ]
+    },
+    {
+      "id": "F108_FAUNA_DANGER_SUPPORT",
+      "kind": "mixed",
+      "landmark": false,
+      "keywords": [
+        "bird",
+        "fauna",
+        "forest",
+        "scatter",
+        "danger",
+        "wing",
+        "flight",
+        "ambient",
+        "aftermath",
+        "river"
+      ]
+    },
+    {
+      "id": "F108_LANDMARK_DISTANCE_PROXY_SUPPORT",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "lod",
+        "proxy",
+        "silhouette",
+        "vista",
+        "monument",
+        "ruin",
+        "hill",
+        "forest",
+        "river",
+        "distant"
+      ]
+    },
+    {
+      "id": "F108_FINAL_EASTERN_SHORE_VISTA",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "eastern",
+        "shore",
+        "river",
+        "mountain",
+        "road",
+        "distance",
+        "vista",
+        "departure",
+        "forest",
+        "silhouette"
+      ]
+    }
+  ],
+  "acceptance_boundary": "Source architecture/index preparation only. P1C08 runtime stays predecessor-gated. No PIE, device, visual, pacing or performance acceptance is implied by source coverage."
+}
