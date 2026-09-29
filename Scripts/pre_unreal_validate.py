@@ -9345,6 +9345,61 @@ for symbol in [
         fail(f"PG-195 production-import process diagnostics missing: {symbol}")
 
 
+# PG-209: P1C01 mega-build train remains gate-aware and source-grounded.
+pg209_plan_path = ROOT / "Data" / "P1C01MaximumSafeMegaBuildV1.json"
+if not pg209_plan_path.exists():
+    fail("PG-209 P1C01 maximum-safe mega build plan missing")
+else:
+    try:
+        pg209_plan = json.loads(read(pg209_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-209 invalid P1C01MaximumSafeMegaBuildV1.json: {exc}")
+        pg209_plan = {}
+    if pg209_plan.get("status") != "PREP_AND_DEFECT_REPAIR_ACTIVE_RUNTIME_EXPANSION_GATED_BY_W00":
+        fail("PG-209 mega-build status must keep runtime expansion gated by W00")
+    pg209_cars = pg209_plan.get("work_cars", [])
+    if len(pg209_cars) < 12:
+        fail("PG-209 mega-build lost required multi-car breadth")
+    if any(
+        row.get("state") == "ACTIVE" and row.get("id") != "DEFECT_EVENT_MEMBER_CULL"
+        for row in pg209_cars
+        if isinstance(row, dict)
+    ):
+        fail("PG-209 no new P1C01 runtime feature car may activate before W00 opens it")
+    pg209_arch = pg209_plan.get("architecture", {})
+    pg209_rules = set(pg209_arch.get("rules", []))
+    for pg209_rule in [
+        "No parallel AI brain.",
+        "No heavy synchronous LoadObject path.",
+        "Crowd-scale actors remain pooled.",
+        "Heavy assets use soft references and FStreamableManager.",
+    ]:
+        if pg209_rule not in pg209_rules:
+            fail(f"PG-209 mega-build architecture guard missing: {pg209_rule}")
+
+# PG-210: ambient player lookup stays centralized behind the cached helper.
+pg210_ambient = read(resolve_source("ShireAmbientNPC.cpp"))
+pg210_direct_get_player = pg210_ambient.count("UGameplayStatics::GetPlayerPawn")
+if pg210_direct_get_player != 1:
+    fail(f"PG-210 ShireAmbientNPC direct GetPlayerPawn call count must remain exactly 1 inside cache helper; found={pg210_direct_get_player}")
+pg210_helper_start = pg210_ambient.find("APawn* AShireAmbientNPC::GetPlayerPawnCached()")
+pg210_direct_start = pg210_ambient.find("UGameplayStatics::GetPlayerPawn")
+if pg210_helper_start < 0 or pg210_direct_start < pg210_helper_start:
+    fail("PG-210 direct player lookup must remain inside GetPlayerPawnCached")
+if pg210_ambient.count("GetPlayerPawnCached()") < 4:
+    fail("PG-210 ambient runtime no longer reuses the cached player-pawn helper")
+
+# PG-211: save-schema migrations may not be invented without recovered history.
+pg211_audit = json.loads(read(ROOT / "Data" / "SaveSchemaMigrationAuditV1.json"))
+if pg211_audit.get("current_schema_version") != 6:
+    fail("PG-211 save-schema audit drifted from current schema version")
+if pg211_audit.get("status") != "HISTORY_NOT_RECOVERED_DO_NOT_INVENT_MIGRATIONS":
+    fail("PG-211 save migration status may advance only with recovered schema history")
+pg211_player = read(resolve_source("ShirePlayerCharacter.cpp"))
+if "Save->SaveSchemaVersion > UShireSaveGame::CurrentSchemaVersion" not in pg211_player:
+    fail("PG-211 newer-than-current save rejection guard missing")
+
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
