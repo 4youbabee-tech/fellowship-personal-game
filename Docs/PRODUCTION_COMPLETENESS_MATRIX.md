@@ -1,3 +1,10 @@
+## 2026-09-30 - Living-world pooled-event cull repair candidate
+
+- AI/Life reliability: grouped micro-event distance cleanup corrected from event-wide retirement to member-local retirement while preserving event-wide lifetime expiry.
+- Regression guards: PG-207 + source-contract unit coverage added.
+- Production maturity is unchanged until exact-head UE4/runtime evidence exists.
+- No P1C01 PIE/device/performance/visual acceptance is promoted by this source repair.
+
 ## 2026-09-30 - Living-world pooled event cull safety
 
 - Grouped micro-event distance retirement: **SOURCE-REPAIRED** to member-local release.
