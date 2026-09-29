@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "registration_id": "P1C01_GRAPHICS_SETTINGS_GOVERNANCE_REGISTRATION_V1",
+  "status": "PREPARED_NOT_AUTHORITY",
+  "target_file": "Data/ProjectGovernor.json",
+  "expected_develop_governor_blob_sha": "4726ba78dd1fb50f155789fe8da1cf3a839ba6b8",
+  "prerequisite_ledger_marker": "P1C01 Graphics/Video Visual-Economy Doctrine V1",
+  "collision_observation": {
+    "DEC-075": "Long CI waits must use bounded polling and asynchronous continuation",
+    "DEC-076": "Warehouse provenance uses the latest valid receipt per normalized payload path",
+    "REQ-PERF-004": "FREE_AT_PREPARATION_TIME"
+  },
+  "requirement": {
+    "id": "REQ-PERF-004",
+    "title": "Professional Graphics/Video settings with permanent visual-economy protection",
+    "category": "PerformanceArchitecture",
+    "priority": "HIGH",
+    "status": "PARTIAL",
+    "origin": "Owner standing P1C01 production directive, reconciled against live ProjectGovernor on 2026-09-29",
+    "intent": "Provide a professional scalable Graphics/Video settings system whose visually strong default and opt-in higher presets preserve the DX11 1280x720 Low-Medium 30 FPS floor on the target i7 Gen6 / 8 GB RAM / ~2 GB VRAM laptop class, while recovering cost first from low-value CPU/GPU/VRAM work.",
+    "evidence": [
+      "Data/P1C01GraphicsSettingsV10Preparation.json",
+      "Data/P1C01GraphicsSettingsImplementationContractV2.json",
+      "Docs/WORLD_DETAIL_LEDGER.md",
+      "Config/DefaultScalability.ini"
+    ],
+    "implementation_refs": [
+      "CinematicBalanced remains the visually strong default direction; Performance, High, Ultra and Custom scale around it.",
+      "Display changes require preview-confirm-revert with the first pre-preview state preserved until confirm/revert.",
+      "Lower-tier texture, shadow, view-distance and foliage anchors remain unchanged until measured evidence supports revision.",
+      "Heavy assets remain soft/asynchronous, crowds pooled, and repeated decorative detail instanced/cullable."
+    ],
+    "missing_work": [
+      "Land the WORLD_DETAIL_LEDGER registration on the current production branch.",
+      "Register REQ-PERF-004 and DEC-077 in ProjectGovernor.",
+      "Implement Public/Private UGameUserSettings source plus static contract tests.",
+      "Synchronize CURRENT_PROJECT_STATE and PRODUCTION_COMPLETENESS_MATRIX in the same real-code increment.",
+      "Obtain exact-head Unreal compile proof and later PIE/device/visual/performance evidence before acceptance claims."
+    ],
+    "acceptance_criteria": [
+      "The target-laptop floor remains DX11 1280x720 Low-Medium 30 FPS.",
+      "CinematicBalanced is the visually strong default; High and Ultra remain opt-in.",
+      "Custom exposes resolution/window mode/VSync/frame-rate limit/render scale plus per-domain scalability controls.",
+      "Risky display changes are reversible before persistence.",
+      "Existing 600/800/1000 MB texture-pool anchors and tier-2 foliage density 0.70 remain unchanged until measured evidence supports change.",
+      "No performance improvement is claimed without exact measurement evidence."
+    ],
+    "dependencies": [
+      "REQ-PERF-003",
+      "REQ-QA-002",
+      "REQ-STABILITY-001"
+    ],
+    "checkpoint": "P1C01_GRAPHICS_VIDEO_SETTINGS_V1",
+    "notes": "Runtime implementation remains P1C01-only and waits for ledger + Governor authority. This registration payload is not itself ProjectGovernor authority."
+  },
+  "decision": {
+    "id": "DEC-077",
+    "title": "P1C01 Graphics/Video uses a visually strong default with permanent visual-economy cost recovery",
+    "status": "ACCEPTED",
+    "requirements": [
+      "REQ-PERF-004",
+      "REQ-PERF-003",
+      "REQ-QA-002",
+      "REQ-STABILITY-001"
+    ],
+    "resolution": "Implement P1C01 Graphics/Video settings around Performance, CinematicBalanced, High, Ultra and Custom. Protect the low-spec 1280x720 Low-Medium 30 FPS floor and recover cost first from duplicate actors, far shadows, overdraw/translucency, redundant lights, uninstanced repetition, unnecessary Tick and invisible/far detail before sacrificing high-value composition and near-field presentation.",
+    "implementation_contract": [
+      "CinematicBalanced is the visually strong default direction; Performance protects the floor; High and Ultra are opt-in; Custom exposes per-domain controls.",
+      "Preserve current low/medium/high texture pools at 600/800/1000 MB, current shadow/view-distance tiers, and foliage tier 2 at 0.70 until measured evidence justifies change.",
+      "Risky resolution/window-mode changes use preview-confirm-revert and preserve the first pre-preview snapshot across repeated preview changes.",
+      "The UI owns the visible confirmation countdown; engine settings code owns snapshot/application/confirm/rollback.",
+      "Keep P1C01 runtime scope only until Gate 6/7 permits later runtime chapters.",
+      "Heavy assets use soft references plus FStreamableManager; crowds remain pooled; repeated decorative detail prefers ISM/HISM plus LOD/culling.",
+      "Do not claim compile, PIE, device, visual or performance acceptance without exact evidence."
+    ],
+    "rationale": "The project needs professional user-facing scalability without trading away the visual hierarchy that makes the Shire benchmark convincing or silently raising the target-laptop baseline.",
+    "evidence": [
+      "Data/P1C01GraphicsSettingsV10Preparation.json",
+      "Data/P1C01GraphicsSettingsImplementationContractV2.json",
+      "Docs/WORLD_DETAIL_LEDGER.md",
+      "Config/DefaultScalability.ini"
+    ],
+    "evidence_boundary": "GOVERNANCE REGISTRATION PAYLOAD ONLY until inserted into Data/ProjectGovernor.json after ledger registration. No runtime/device/visual/performance acceptance is implied."
+  }
+}
