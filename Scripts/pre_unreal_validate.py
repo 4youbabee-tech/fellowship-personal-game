@@ -8730,6 +8730,145 @@ for ignored in [
     if pg201_unreal.count(ignored) < 2:
         fail(f"PG-201 F1-08 tooling path must stay off Unreal push+PR filters: {ignored}")
 
+
+# PG-202: F2-01 maximum-safe source wave must preserve canon, bank breadth and the unassigned Part II runtime-ID boundary.
+pg202_manifest = json.loads(read(ROOT / "Data" / "F201ThreeHuntersCaptivesMaximumSafeMegaSourceV1.json"))
+pg202_runner = read(ROOT / "Scripts" / "run_f201_three_hunters_captives_maximum_safe_source.ps1")
+pg202_workflow = read(ROOT / ".github" / "workflows" / "f201-three-hunters-captives-maximum-safe-source.yml")
+pg202_unreal = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+
+if pg202_manifest.get("status") != "SOURCE_ARCHITECTURE_READY_INVENTORY_GATED_RUNTIME_MAPPING_UNASSIGNED":
+    fail("PG-202 F2-01 source wave status drifted")
+if pg202_manifest.get("canonical_mission_id") != "F2-01":
+    fail("PG-202 F2-01 canonical mission ID drifted")
+if pg202_manifest.get("canonical_title") != "Three Hunters / Captives":
+    fail("PG-202 F2-01 canonical title drifted")
+if pg202_manifest.get("runtime_consumers") not in ([], None):
+    fail("PG-202 F2-01 must not invent a Part II runtime consumer before migration mapping exists")
+if pg202_manifest.get("runtime_mapping_status") != "NOT_ASSIGNED_DO_NOT_INVENT":
+    fail("PG-202 F2-01 runtime mapping boundary weakened")
+
+pg202_story = pg202_manifest.get("story_contract", {})
+if pg202_story.get("locked_postcondition") != "Paths converge around Fangorn/Rohan.":
+    fail("PG-202 F2-01 locked postcondition drifted")
+pg202_critical = " ".join(str(x) for x in pg202_story.get("critical_path", []))
+for required in ["Aragorn", "Legolas", "Gimli", "Merry", "Pippin", "Uruk", "Fangorn"]:
+    if required not in pg202_critical:
+        fail(f"PG-202 F2-01 critical path missing canonical token: {required}")
+pg202_excluded = " ".join(str(x) for x in pg202_story.get("excluded_from_this_pack", []))
+for required in ["F2-02", "Ent mobilization", "Gandalf"]:
+    if required not in pg202_excluded:
+        fail(f"PG-202 F2-01 must explicitly exclude later-chapter content: {required}")
+
+pg202_policy = pg202_manifest.get("source_policy", {})
+pg202_safety = pg202_manifest.get("safety_gate", {})
+pg202_landmark_policy = pg202_manifest.get("landmark_policy", {})
+pg202_bank_policy = pg202_manifest.get("bank_policy", {})
+
+if pg202_policy.get("throughput_mode") != "ADAPTIVE_MAXIMUM_SAFE":
+    fail("PG-202 F2-01 must remain in Adaptive Maximum Safe production mode")
+if int(pg202_policy.get("max_total_candidates", 0)) < 28000:
+    fail("PG-202 F2-01 total candidate ceiling unexpectedly reduced")
+if int(pg202_policy.get("max_candidates_per_category", 0)) < 2600:
+    fail("PG-202 F2-01 per-category throughput unexpectedly reduced")
+if int(pg202_policy.get("landmark_score_bonus", 0)) < 8:
+    fail("PG-202 F2-01 landmark score bonus unexpectedly reduced")
+if not pg202_policy.get("fair_share_across_categories", False):
+    fail("PG-202 F2-01 fair-share category scheduling removed")
+if pg202_policy.get("animated_candidate_extension") != ".fbx":
+    fail("PG-202 animated F2-01 candidates must remain FBX-only")
+if ".bmp" not in pg202_policy.get("forbidden_texture_extensions", []):
+    fail("PG-202 F2-01 source pack must continue blocking BMP textures")
+if not pg202_safety.get("requires_clean_warehouse_inventory", False):
+    fail("PG-202 F2-01 heavy execution must require clean warehouse inventory")
+if pg202_safety.get("runtime_integration_allowed", True):
+    fail("PG-202 F2-01 runtime integration must remain disabled until explicit Part II runtime mapping exists")
+if not pg202_safety.get("runtime_mapping_required_before_runtime_work", False):
+    fail("PG-202 F2-01 runtime mapping requirement removed")
+for key in ["hard_stop_on_hash_mismatch", "hard_stop_on_license_hash_mismatch", "hard_stop_on_dangerous_file", "hard_stop_on_bad_receipt"]:
+    if not pg202_safety.get(key, False):
+        fail(f"PG-202 F2-01 warehouse safety gate weakened: {key}")
+
+if int(pg202_bank_policy.get("minimum_ready_banks", 0)) < 7:
+    fail("PG-202 F2-01 minimum ready bank count unexpectedly reduced")
+pg202_banks = pg202_bank_policy.get("banks", [])
+if len(pg202_banks) < 8:
+    fail("PG-202 F2-01 multi-bank source architecture lost required breadth")
+
+if int(pg202_landmark_policy.get("minimum_landmark_categories", 0)) < 14:
+    fail("PG-202 F2-01 landmark minimum unexpectedly reduced")
+for key in [
+    "require_open_to_dense_transition_readability",
+    "rohan_route_silhouette_required",
+    "fangorn_threshold_silhouette_required",
+    "tracking_landmarks_required",
+    "distance_proxy_or_lod_required_for_large_landmark_meshes",
+    "critical_vista_preload_required",
+]:
+    if not pg202_landmark_policy.get(key, False):
+        fail(f"PG-202 F2-01 landmark contract weakened: {key}")
+
+pg202_categories = pg202_manifest.get("categories", [])
+if len(pg202_categories) < 38:
+    fail("PG-202 F2-01 source pack lost required category breadth")
+pg202_landmark_categories = [x for x in pg202_categories if x.get("landmark")]
+if len(pg202_landmark_categories) < 17:
+    fail("PG-202 F2-01 configured landmark category count too small")
+if any(not str(x.get("bank") or "").strip() for x in pg202_categories):
+    fail("PG-202 every F2-01 source category must belong to a source bank")
+
+for required in [
+    "ROHAN_OPEN_PLAINS_ROUTE",
+    "ROHAN_DISTANT_RIDGE_LANDMARK",
+    "TRACKS_FOOTPRINT_EVIDENCE",
+    "URUK_TRAIL_ROUTE_LANDMARK",
+    "URUK_CAMP_REMAINS",
+    "CAPTIVE_ESCAPE_ROUTE_LANDMARK",
+    "FANGORN_EDGE_WALL_OF_TREES",
+    "FANGORN_ROOTS_THRESHOLD",
+    "FANGORN_MIST_THRESHOLD",
+    "F201_CONVERGENCE_VISTA",
+    "F201_LANDMARK_DISTANCE_PROXY_SUPPORT",
+]:
+    if required not in {x.get("id") for x in pg202_categories}:
+        fail(f"PG-202 F2-01 landmark/source category missing: {required}")
+
+for symbol in [
+    "F201_MEGA_SOURCE_INVENTORY_GATE_BEGIN",
+    "F201_MEGA_SOURCE_INVENTORY_GATE_PASS",
+    "F201_BANK_SOURCE_PASS",
+    "F201_BANK_SOURCE_COVERAGE_FAIL",
+    "F201_LANDMARK_SOURCE_PASS",
+    "F201_LANDMARK_SOURCE_COVERAGE_FAIL",
+    "$effectivePerCategory",
+    "landmarkBonus",
+    "F201_MEGA_SOURCE_CATEGORY_PASS",
+    "F201_MEGA_SOURCE_PASS",
+    "$matches.ToArray()",
+    '-Root $WarehouseRoot',
+    'if($kind -eq "animated" -and $ext -ne $animatedExt)',
+]:
+    if symbol not in pg202_runner:
+        fail(f"PG-202 F2-01 runner marker missing: {symbol}")
+
+for symbol in [
+    "name: F2-01 Three Hunters Captives Maximum Safe Mega Source",
+    "cancel-in-progress: false",
+    "timeout-minutes: 180",
+    "Fast F2-01 PowerShell preflight",
+    "Build Three Hunters Captives maximum-safe mega source indexes",
+]:
+    if symbol not in pg202_workflow:
+        fail(f"PG-202 F2-01 workflow contract missing: {symbol}")
+
+for ignored in [
+    "Data/F201ThreeHuntersCaptivesMaximumSafeMegaSourceV1.json",
+    "Scripts/run_f201_three_hunters_captives_maximum_safe_source.ps1",
+    ".github/workflows/f201-three-hunters-captives-maximum-safe-source.yml",
+]:
+    if pg202_unreal.count(ignored) < 2:
+        fail(f"PG-202 F2-01 tooling path must stay off Unreal push+PR filters: {ignored}")
+
 # PG-195: Unreal import must not trust an editor-only wait while a commandlet remains alive.
 pg195_wait = read(ROOT / "Scripts" / "wait_for_unreal_processes.ps1")
 pg195_wait_cmd = read(ROOT / "Scripts" / "ci_wait_for_unreal_editor.cmd")
