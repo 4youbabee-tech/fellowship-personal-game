@@ -4534,6 +4534,30 @@
         "03_WORLD_LOCATIONS_AND_MAP_BIBLE — Bree / Weathertop production specifications"
       ],
       "evidence_boundary": "SOURCE PREPARATION ARCHITECTURE ONLY. No UE integration, PIE, device, visual, pacing or performance acceptance is claimed."
+    },
+    {
+      "id": "DEC-072",
+      "title": "Warehouse inventory corruption must emit exact mismatch evidence before repair",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-STABILITY-001",
+        "REQ-STABILITY-003"
+      ],
+      "resolution": "When warehouse inventory audit detects hash/license/missing-reference corruption, emit bounded exact evidence in the job log before failing. Do not auto-delete or rewrite payloads from a count-only failure.",
+      "implementation_contract": [
+        "Hash mismatch log includes provider, batch, asset, record kind, path, declared hash and actual hash.",
+        "License hash mismatch log includes provider, batch, asset, path, declared hash and actual hash.",
+        "Missing reference log includes provider, batch, record kind and path.",
+        "Only the first 20 rows per defect class are emitted to keep logs bounded.",
+        "Audit still exits nonzero and remains a hard stop until the corruption is explicitly repaired or quarantined with evidence.",
+        "No automatic payload deletion or receipt rewriting is authorized by diagnostics alone."
+      ],
+      "rationale": "P1C01 Closure Pack #2 failed with hashMismatch=1 but the Actions log exposed only aggregate counts, while detailed mismatch evidence remained inside runner-local warehouse_inventory_latest.json. The project requires evidence before destructive or provenance-changing repair.",
+      "evidence": [
+        "P1C01 Chapter Closure Pack #2 — WAREHOUSE_INVENTORY_AUDIT_FAIL missing=0 hashMismatch=1 licenseHashMismatch=0 dangerous=0 badReceipts=0",
+        "Scripts/audit_warehouse_inventory.ps1"
+      ],
+      "evidence_boundary": "DIAGNOSTIC SOURCE CHANGE ONLY. Warehouse corruption remains unresolved until a rerun identifies and repairs/quarantines the exact record."
     }
   ],
   "open_conflicts": [],
