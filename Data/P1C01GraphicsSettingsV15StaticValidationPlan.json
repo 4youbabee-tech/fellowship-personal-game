@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "scope": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
+  "status": "RUNNERLESS_STATIC_VALIDATION_PLAN_READY",
+  "preparation_manifest": "Data/P1C01GraphicsSettingsV15Preparation.json",
+  "governor_payload": "Data/P1C01GraphicsSettingsV15GovernorPayload.json",
+  "candidate_requirement_id": "REQ-PERF-004",
+  "candidate_decision_id": "DEC-087",
+  "default_preset": "CinematicBalanced",
+  "preset_surface": [
+    "Performance",
+    "CinematicBalanced",
+    "High",
+    "Ultra",
+    "Custom"
+  ],
+  "authority_state_expected_before_runtime": {
+    "ledger_registered": true,
+    "governor_requirement_and_decision_must_land_together": true,
+    "runtime_source_must_remain_absent_until_authority_lands": true
+  },
+  "static_checks": [
+    "Preparation and Governor payload must agree on scope, preset surface, REQ-PERF-004 and DEC-087.",
+    "WORLD_DETAIL_LEDGER must retain P1C01 Graphics/Video Visual-Economy Doctrine V4.",
+    "ProjectGovernor may contain neither authority record or both authority records; a half-applied pair is invalid.",
+    "Before Governor authority lands, no P1C01 GameUserSettings/GraphicsSettings runtime source may appear.",
+    "Config/DefaultScalability.ini lower-tier anchors must stay at texture pools 600/800/1000 MB, shadow max 512/768/1024, cascades 1/2/2, shadow and view scales 0.45/0.65/0.80, foliage and grass 0.30/0.50/0.70.",
+    "Static checks must never promote compile, PIE, device, visual-acceptance, FPS, VRAM, hitch or target-laptop performance claims."
+  ],
+  "visual_economy": {
+    "protect_first": [
+      "silhouette",
+      "composition",
+      "hero materials",
+      "lighting",
+      "atmosphere",
+      "near-field detail"
+    ],
+    "recover_cost_first": [
+      "duplicate actors",
+      "far shadows",
+      "overdraw",
+      "translucency",
+      "redundant lights",
+      "uninstanced repetition",
+      "unnecessary Tick",
+      "invisible or far detail"
+    ]
+  },
+  "future_runtime_contract_after_authority": {
+    "scope": "P1C01 only until Gates 6/7 authorize later runtime chapters",
+    "display_apply": [
+      "preview",
+      "confirm",
+      "revert"
+    ],
+    "heavy_assets": "soft references plus async FStreamableManager",
+    "crowds": "object pooling",
+    "repeated_detail": "ISM/HISM plus LOD and culling",
+    "animated_final_assets": "FBX",
+    "production_textures": "PNG/TGA including channel-packed textures",
+    "source_layout": "Public/Private C++"
+  },
+  "evidence_boundary": "PLAN_ONLY_NO_ENGINE_OR_PERFORMANCE_PROOF"
+}
