@@ -1,3 +1,20 @@
+## 2026-09-29 - F2-02 Fangorn & Gandalf Returned Maximum-Safe Source V1
+
+- Canonical mission authority: **F2-02 Fangorn & Gandalf Returned**.
+- Owner location: **Fangorn**.
+- Playable/present focus: Merry, Pippin, Treebeard; Hunters, Gandalf.
+- Canonical critical path: **Ents introduced; Gandalf returns transformed.**
+- Safe optional window: exploration, dialogue, Ent traversal.
+- Locked postcondition: **Gandalf leads hunters to Edoras.**
+- Entry contract: previous chapter complete; legal roster; correct Fangorn world-state variant; knowledge flags validated.
+- Fangorn production grammar: ancient forest; dense trunks, roots, mist and living environment; exploration, Ent interactions and disorientation.
+- Required Fangorn state variants: **Quiet / Ent mobilization**.
+- Treebeard hard guardrail: movement, traversal and destruction must feel massive and deliberate; slow deliberation becomes action.
+- This remains a **source/preparation wave only**. No Part II runtime chapter ID is invented until a dedicated runtime-ID migration/mapping decision exists.
+- Maximum-safe architecture separates quiet forest exploration, Ent introduction/dialogue, Treebeard traversal, Gandalf-return reveal, hunter reunion, Ent mobilization state, audio/lighting and Edoras handoff into bounded source banks.
+- Existing low-spec rules remain mandatory: animated candidates FBX-only; production textures PNG/TGA, BMP blocked; heavy runtime assets soft-referenced/asynchronously loaded; crowds pooled; repeated dressing ISM/HISM + LOD/culling.
+- Evidence boundary: **SOURCE ARCHITECTURE REGISTRATION ONLY**. No runtime integration, PIE, device, visual, pacing or performance acceptance is implied.
+
 ## 2026-09-29 - F2-01 Three Hunters / Captives Maximum-Safe Source V1
 
 - Canonical mission authority: **F2-01 Three Hunters / Captives**.
