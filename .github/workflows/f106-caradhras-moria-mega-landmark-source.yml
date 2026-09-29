@@ -1,0 +1,76 @@
+name: F1-06 Caradhras Moria Mega Landmark Source
+
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - 'Data/F106CaradhrasMoriaMegaLandmarkSourceSuperpackV1.json'
+      - 'Scripts/run_f106_caradhras_moria_mega_landmark_source.ps1'
+      - '.github/workflows/f106-caradhras-moria-mega-landmark-source.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: f106-caradhras-moria-landmark-source-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    name: Build F1-06 Caradhras Moria landmark superpack
+    runs-on:
+      - self-hosted
+      - Windows
+      - X64
+      - ue4-27
+    timeout-minutes: 180
+    env:
+      TARGET_SHA: ${{ github.sha }}
+
+    steps:
+      - name: Checkout exact F1-06 preparation head
+        shell: cmd
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          @echo off
+          setlocal EnableExtensions EnableDelayedExpansion
+          set "GITEXE="
+          for /f "delims=" %%G in ('where git.exe 2^>nul') do if not defined GITEXE set "GITEXE=%%G"
+          if not defined GITEXE if exist "C:\Program Files\Git\cmd\git.exe" set "GITEXE=C:\Program Files\Git\cmd\git.exe"
+          if not defined GITEXE exit /b 22
+          set "F106_SRC=%RUNNER_TEMP%\shire-f106-source-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
+          if exist "!F106_SRC!" rmdir /S /Q "!F106_SRC!"
+          mkdir "!F106_SRC!"
+          cd /d "!F106_SRC!"
+          "!GITEXE!" init
+          if errorlevel 1 exit /b 70
+          "!GITEXE!" -c credential.helper= remote add origin "https://x-access-token:!GH_TOKEN!@github.com/%GITHUB_REPOSITORY%.git"
+          if errorlevel 1 exit /b 71
+          "!GITEXE!" -c credential.helper= fetch --no-tags --depth=2 origin !TARGET_SHA!
+          if errorlevel 1 exit /b 72
+          "!GITEXE!" checkout -f FETCH_HEAD
+          if errorlevel 1 exit /b 73
+          for /f "delims=" %%H in ('"!GITEXE!" rev-parse HEAD') do set "CHECKED_SHA=%%H"
+          if /I not "!CHECKED_SHA!"=="!TARGET_SHA!" exit /b 74
+          echo SHIRE_F106_SOURCE=!F106_SRC!>>"%GITHUB_ENV%"
+          echo F106_EXACT_CHECKOUT_PASS sha=!CHECKED_SHA!
+
+      - name: Verify runner session health
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_F106_SOURCE%\Scripts\verify_runner_session.ps1"
+
+      - name: Fast F1-06 PowerShell preflight
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_F106_SOURCE%\Scripts\test_powershell_syntax.ps1"
+
+      - name: Build Caradhras Moria landmark source indexes
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_F106_SOURCE%\Scripts\run_f106_caradhras_moria_mega_landmark_source.ps1" -ManifestPath "%SHIRE_F106_SOURCE%\Data\F106CaradhrasMoriaMegaLandmarkSourceSuperpackV1.json"
+
+      - name: Remove isolated F1-06 checkout
+        if: always()
+        shell: cmd
+        run: |
+          @echo off
+          if defined SHIRE_F106_SOURCE if exist "%SHIRE_F106_SOURCE%" rmdir /S /Q "%SHIRE_F106_SOURCE%"
+          exit /b 0
