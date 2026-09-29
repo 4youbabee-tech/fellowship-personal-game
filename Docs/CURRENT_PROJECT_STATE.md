@@ -1,3 +1,13 @@
+## 2026-09-29 - Warehouse hash-mismatch diagnostics hardening
+
+- P1C01 Closure Pack #2 reached inventory audit after seven successful cars, then hard-stopped on `hashMismatch=1` with no missing references, license mismatch, dangerous payload or bad receipt count.
+- Existing `warehouse_inventory_latest.json` already contains detailed mismatch rows, but the workflow log exposed only aggregate counts.
+- `Scripts/audit_warehouse_inventory.ps1` now emits bounded exact mismatch evidence (provider, batch, asset, kind, path, declared hash, actual hash) before failing.
+- Missing-reference and license-hash mismatch evidence are also emitted, capped at 20 rows per defect class.
+- No auto-delete, auto-quarantine or receipt rewrite is introduced.
+- Governor `DEC-072` records the evidence-first repair rule.
+- Evidence boundary: **SOURCE-IMPLEMENTED / mismatch itself unresolved until rerun evidence identifies the record**.
+
 ## 2026-09-29 - F1-04 Bree & Weathertop Mega Source Superpack V1
 
 - New source-preparation lane registered for canonical **F1-04 Bree & Weathertop**, consumed by legacy runtime chapters **P1C02 + P1C03** under the existing F1/P1 reconciliation.
