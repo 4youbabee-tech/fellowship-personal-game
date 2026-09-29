@@ -92,6 +92,23 @@ function Remove-RemoteBranch {
     return $true
 }
 
+$deletedMergedHead = 0
+$mergedHeadRef = [string]$env:MERGED_HEAD_REF
+if (-not [string]::IsNullOrWhiteSpace($mergedHeadRef)) {
+    $mergedHeadRef = $mergedHeadRef.Trim()
+    if ($planProtectedBranches.Contains($mergedHeadRef)) {
+        Write-Host "BRANCH_CLEANUP_KEEP_MERGED_HEAD_PROTECTED branch=$mergedHeadRef"
+    }
+    elseif ($activeHeads -contains $mergedHeadRef) {
+        throw "Merged PR head is unexpectedly still active: $mergedHeadRef"
+    }
+    else {
+        if (Remove-RemoteBranch -Branch $mergedHeadRef -Reason "merged-pr-head") {
+            $deletedMergedHead = 1
+        }
+    }
+}
+
 $deletedExplicit = 0
 foreach ($branch in $deleteBranches) {
     if (Remove-RemoteBranch -Branch $branch -Reason "explicit-plan") {
@@ -167,4 +184,4 @@ foreach ($protected in @($planProtectedBranches | Where-Object { $_ -notin @("de
         throw "Plan-protected branch missing after cleanup: $protected"
     }
 }
-Write-Host ("BRANCH_CLEANUP_PASS deletedPlanCount=" + $deleteBranches.Count + " deletedExplicit=" + $deletedExplicit + " deletedAutoZeroAhead=" + $deletedAuto + " keptUnique=" + $keptUnique + " activePrHeads=" + $activeHeads.Count + " planProtected=" + $planProtectedBranches.Count + " canonical=develop stable=main")
+Write-Host ("BRANCH_CLEANUP_PASS deletedPlanCount=" + $deleteBranches.Count + " deletedExplicit=" + $deletedExplicit + " deletedMergedHead=" + $deletedMergedHead + " deletedAutoZeroAhead=" + $deletedAuto + " keptUnique=" + $keptUnique + " activePrHeads=" + $activeHeads.Count + " planProtected=" + $planProtectedBranches.Count + " canonical=develop stable=main")

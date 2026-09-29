@@ -1,3 +1,9 @@
+## 2026-09-30 - Branch lifecycle enforcement
+
+- **POST-MERGE BRANCH RETIREMENT: STATIC-VALIDATED.** Branch Cleanup now deletes the merged PR head ref automatically unless explicitly protected.
+- Historical diverged branches still require salvage/supersession review before deletion.
+- No gameplay or runtime maturity is promoted by this infrastructure change.
+
 ## 2026-09-30 - Runner root migration evidence
 
 - Self-hosted runner root: **RUN-PROVEN on `D:\\actions-runner`**.

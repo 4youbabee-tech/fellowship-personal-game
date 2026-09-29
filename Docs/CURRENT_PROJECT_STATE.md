@@ -1,3 +1,10 @@
+## 2026-09-30 - Post-merge branch deletion enforcement
+
+- Root cause of branch accumulation identified: repository setting `delete_branch_on_merge=false` plus the conservative cleanup script retaining any branch still ahead of `develop`.
+- Branch Cleanup now receives the merged PR head ref and deletes that head immediately after a successful merge unless it is explicitly protected by the cleanup plan/Governor.
+- Existing conservative zero-ahead and open-PR protections remain in place for historical branches.
+- Evidence boundary: repository hygiene automation only; no PIE/device/visual/performance acceptance is claimed.
+
 ## 2026-09-30 - Second branch-hygiene pass
 
 - Eight clearly superseded remote branches are approved for post-merge deletion: duplicate main-entry workflow experiments, obsolete Warehouse diagnostic/supersession repairs, the pre-reconciliation hero skeletal candidate branch, and three stale repair branches.
