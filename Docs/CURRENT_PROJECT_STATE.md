@@ -1,3 +1,18 @@
+## 2026-09-29 - F1-08 Amon Hen / Breaking of the Fellowship Maximum Safe Chapter V1
+
+- Adaptive Maximum Safe Production is now the permanent default on develop through merged PR #158 / DEC-078.
+- F1-08 is the first full chapter package built under that default. Canonical mapping is **F1-08 -> P1C08**, with P1C08 runtime still predecessor Gate 6/7 gated.
+- Supplied mission/story sources lock the critical path to Boromir falls, Merry/Pippin captured, Frodo chooses Mordor and Sam follows; locked postcondition is **three parallel campaigns begin**. F2-01 owns successor pursuit/captive progression.
+- Film-script verification supports production zoning around Parth Galen forest/camp, Amon Hen slopes/seeing-seat summit, ancient-stone Uruk battle lanes, Merry/Pippin flight + Boromir defense, aftermath and the river-shore Frodo/Sam departure.
+- `Data/F108AmonHenMaximumSafeChapterPlanV1.json` defines an **8-bank streamed chapter architecture** plus a minimal core bank. Planned transition overlap is at most two heavy banks; heavy references remain soft and asynchronous.
+- `Data/F108AmonHenMaximumSafeSourceSuperpackV1.json` defines **36 categories**, **22,000 candidate assignments**, **2,400/category**, path reuse cap **3**, landmark bonus **8**, story-critical bonus **5**, minimum **20 populated categories** and minimum **10 populated landmark categories**.
+- `Scripts/run_f108_amon_hen_maximum_safe_source.ps1` preserves clean-inventory and 6 GiB reserve gates, FBX-only animated candidates, BMP rejection, bounded source-path reuse, hard overall/landmark coverage and soft non-blocking group gap reports.
+- Dedicated F1-08 workflow is 180 minutes / cancel-in-progress=false and uses exact-head isolated checkout on the UE4 runner.
+- `PG-201` guards the F1-08 canon boundary, streamed-bank contract, source throughput, reuse cap, formats, coverage minima and tooling isolation from the expensive Unreal lane.
+- Governor `DEC-079` records F1-08 as the first complete Adaptive Maximum Safe streamed chapter package.
+- MaximumSafeProductionMode, MasterExecutionRoadmap and WholeGameProductionExecutionQueue now mark F1-08 / ANDUIN_AMON_HEN as the active source wave.
+- Evidence boundary: **SOURCE-IMPLEMENTED / exact-head static validation pending / heavy source workflow execution pending**. No P1C08 runtime integration, PIE, device, visual, pacing or performance acceptance is claimed.
+
 ## 2026-09-29 - Adaptive Maximum Safe Production Mode V1
 
 - Owner direction is now permanent project policy through `DEC-078` and `REQ-PROD-011`: use the already-built CI/warehouse/streaming/governance infrastructure to maximize real production throughput instead of advancing in tiny isolated increments.
