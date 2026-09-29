@@ -666,3 +666,20 @@ Purpose: retain visual, material, life, ambience and world-detail ideas discover
 - Mega Asset Promotion reuses `Data/P1C01WarehousePromotionQueueV1.json` and `Data/ProductionAssetPromotionPolicyV1.json`; this is not a second inventory. Work may advance through staging/intake QC, but no item is promoted to `READY_FOR_IMPORT` without provider/source/license, local staging receipt, SHA256 and class-specific QC.
 - Final animated production assets remain FBX-only. Final production textures remain PNG/TGA; BMP cannot be accepted as final promotion evidence. Heavy runtime assets stay soft-referenced/asynchronously owned; crowds remain pooled and repeated detail remains ISM/HISM + LOD/culling.
 - Evidence boundary: **EXECUTION AUTHORIZED / NOT YET VALIDATED**. C4 candidate exact head passed Pre-Unreal #1070 and Unreal Build #875 before merge. D needs its own exact-head machine proof plus later rendered/device evidence; no PIE/device/visual/performance acceptance is claimed here.
+
+## P1C01 Graphics/Video Visual-Economy Doctrine V2
+
+**Status:** REGISTERED FOR P1C01 SOURCE/RUNTIME IMPLEMENTATION. This entry is production authority for the Graphics/Video settings lane but is not compile, PIE, device, visual, FPS, VRAM, hitch, or performance acceptance.
+
+- **Scope:** `W01_P1C01_PRODUCTION_VERTICAL_SLICE` runtime integration only. Later runtime chapters remain closed until P1C01 Gates 6/7 permit advancement.
+- **Target floor:** Windows DX11, 1280x720, Low-Medium, 30 FPS on the target Intel i7 Gen6 / 8 GB RAM / ~2 GB VRAM laptop class. No preset or default may weaken this floor without measured target-device evidence and a new Governor decision.
+- **Default presentation:** `CinematicBalanced` is the visually strong default direction. `Performance`, `High`, `Ultra`, and `Custom` scale around it; High/Ultra are opt-in and never redefine the target-floor baseline.
+- **Permanent visual-economy doctrine:** maximize visible beauty per measured CPU/GPU/VRAM cost. Protect silhouette, composition, hero materials, lighting, atmosphere, landmark framing, readable characters, and near-field detail first.
+- **Recover cost first from:** duplicate actors; far shadows; overdraw/translucency; redundant lights; uninstanced repetition; unnecessary Tick; invisible or far detail. Only reduce protected presentation after these lower-value costs are exhausted and evidence shows the need.
+- **Preserved lower-tier anchors until measured:** texture streaming pools 600/800/1000 MB; shadow max resolutions 512/768/1024 with cascades 1/2/2 and distance scales 0.45/0.65/0.80; view-distance scales 0.45/0.65/0.80; foliage/grass tier 2 density 0.70.
+- **Display safety:** resolution/window mode/VSync/frame-rate-limit/render-scale changes use a reversible preview -> confirm -> revert transaction. The first pre-preview display snapshot survives repeated preview changes; UI owns the visible countdown, engine settings own snapshot/apply/persist/rollback.
+- **Runtime architecture:** heavy assets remain soft-referenced and asynchronously loaded through `FStreamableManager`; crowds remain object-pooled; repeated decorative detail uses ISM/HISM + LOD + culling; animated final assets remain FBX; production textures remain PNG/TGA with channel packing where appropriate; C++ remains Public/Private by domain.
+- **Governance reservation:** `REQ-PERF-004` is reserved for the professional Graphics/Video settings requirement. Because live `develop` already uses DEC-075 through DEC-078, this lane reserves **DEC-079** subject to exact-head collision check at Governor write time.
+- **Implementation ordering:** this ledger registration lands first; ProjectGovernor authority lands second; only then may `UGameUserSettings` runtime source open. Real code changes must synchronize `Docs/CURRENT_PROJECT_STATE.md` and `Docs/PRODUCTION_COMPLETENESS_MATRIX.md` in the same increment.
+- **Evidence boundary:** runnerless/source preparation may be statically validated on GitHub-hosted CI. Exact-head Unreal compile proof is required before any COMPILE-TESTED claim; PIE/device/visual/performance claims require their own direct evidence.
+
