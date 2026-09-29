@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "P1C01_MAXIMUM_SAFE_MEGA_BUILD_V1",
-  "status": "PREP_AND_DEFECT_REPAIR_ACTIVE_RUNTIME_EXPANSION_GATED_BY_W00",
+  "status": "W01_ACTIVE_DEFECT_REPAIR_VALIDATION_RUNTIME_CARS_SERIALIZED",
   "authority": [
     "Data/ProjectGovernor.json",
     "Docs/WORLD_DETAIL_LEDGER.md",
@@ -25,8 +25,8 @@
     "original_dialogue_only": true
   },
   "gate_policy": {
-    "current_gate": "W00 packaged/runtime acceptance",
-    "runtime_expansion_rule": "No new runtime feature implementation starts until W00 exact-head Unreal acceptance evidence is green and Governor prerequisites permit the next P1C01 car.",
+    "current_gate": "W01/P1C01 vertical slice",
+    "runtime_expansion_rule": "W00 packaged/runtime machine closure is green via merged PR #184. New runtime cars now advance one at a time: each dependent runtime car starts only after the previous runtime-changing car earns exact-head Pre-Unreal + UE4.27.2 proof and no concrete regression reopens repair.",
     "allowed_in_parallel_now": [
       "source review and zero-silent-omission disposition",
       "warehouse/source candidate preparation",
@@ -34,7 +34,16 @@
       "static validators and regression guards",
       "documentation",
       "defect fixes required to protect existing runtime"
-    ]
+    ],
+    "w00_closure_evidence": {
+      "pr": 184,
+      "merged_develop_sha": "4fb15dfff70bfda5a2c023c3d82b3008fb831edc",
+      "pre_unreal": "#1435 SUCCESS",
+      "unreal": "#1108 SUCCESS",
+      "packaged_data": "W00_PACKAGED_DATA_PASS expected=37 verified=37",
+      "packaged_runtime_read": "W00_PACKAGED_RUNTIME_DATA_READ_PASS marker=NPCContext: ready=yes",
+      "packaged_startup": "W00_PACKAGED_STARTUP_PASS observed=6s"
+    }
   },
   "architecture": {
     "LivingWorldDirector": "Region population budgets, pooled admission/retirement, micro-events and coarse world-state response.",
@@ -65,7 +74,7 @@
     {
       "order": 2,
       "id": "CACHE_REGRESSION_GUARD",
-      "state": "SOURCE_IMPLEMENTED_PROOF_PENDING",
+      "state": "SOURCE_IMPLEMENTED_PENDING_EXACT_HEAD",
       "scope": "Guard AShireAmbientNPC so UGameplayStatics::GetPlayerPawn remains centralized in GetPlayerPawnCached only.",
       "proof": [
         "PG-210 direct-call centralization guard"
@@ -74,7 +83,7 @@
     {
       "order": 3,
       "id": "SAVE_SCHEMA_HISTORY_AUDIT",
-      "state": "PREPARED",
+      "state": "AUDIT_COMPLETE_NO_MIGRATION_AUTHORIZED",
       "scope": "Reconstruct schema-version changes before adding migration code; do not invent historical field semantics.",
       "proof": [
         "PG-211 save-schema audit guard",
@@ -84,7 +93,7 @@
     {
       "order": 4,
       "id": "CANON_ZERO_SILENT_OMISSION",
-      "state": "SOURCE_DISPOSITION_EXTENDED_RUNTIME_GATED",
+      "state": "SOURCE_DISPOSITION_PREPARED",
       "scope": "Disposition every meaningful Shire/Bag End/party/road detail from supplied sources into implemented/deferred/blocked/later categories.",
       "proof": [
         "Data/P1C01SourceToProductionBridgeV1.json comprehensive rows",
@@ -94,7 +103,7 @@
     {
       "order": 5,
       "id": "SHIRE_WORLD_DENSITY",
-      "state": "GATED",
+      "state": "QUEUED_BEHIND_DEFECT_CAR_EXACT_HEAD",
       "scope": "Strengthen Hobbiton/fields/party-area lived-in density using current builders and instanced detail without raising unsafe resident budgets.",
       "proof": [
         "UE4 exact-head",
@@ -104,7 +113,7 @@
     {
       "order": 6,
       "id": "BAG_END_LIVED_IN_PASS",
-      "state": "GATED",
+      "state": "QUEUED_BEHIND_DEFECT_CAR_EXACT_HEAD",
       "scope": "Dense lived-in round-geometry narrative-hub dressing, interaction readability and deterministic story-state variants.",
       "proof": [
         "UE4 exact-head",
@@ -114,7 +123,7 @@
     {
       "order": 7,
       "id": "PARTY_AND_SOCIAL_LOOP",
-      "state": "GATED",
+      "state": "QUEUED_BEHIND_DEFECT_CAR_EXACT_HEAD",
       "scope": "Birthday setup/social onboarding/firework-safe-window presentation using current quest ownership and bounded optional activities.",
       "proof": [
         "quest idempotence",
@@ -124,7 +133,7 @@
     {
       "order": 8,
       "id": "LIVING_SHIRE",
-      "state": "GATED",
+      "state": "QUEUED_BEHIND_DEFECT_CAR_EXACT_HEAD",
       "scope": "Expand role/routine/social/fauna/environmental motion breadth through existing LivingWorldDirector + ShireNPCContextSubsystem ownership.",
       "proof": [
         "pool/state-leak regression",
@@ -134,7 +143,7 @@
     {
       "order": 9,
       "id": "CHARACTER_PRESENTATION",
-      "state": "GATED",
+      "state": "QUEUED_BEHIND_DEFECT_CAR_EXACT_HEAD",
       "scope": "Promote legal FBX Frodo/Gandalf/Sam Shire presentation candidates behind modular fallback and async rig loading.",
       "proof": [
         "rig/skin/deformation/AnimBP QC",
@@ -145,7 +154,7 @@
     {
       "order": 10,
       "id": "AUDIO_SONIC_IDENTITY",
-      "state": "GATED",
+      "state": "QUEUED_BEHIND_DEFECT_CAR_EXACT_HEAD",
       "scope": "Shire birds, hedge breeze, farm work, distant laughter, carts, warm interiors, fire/cutlery; localized foley/concurrency under audio subsystem.",
       "proof": [
         "authored asset presence",
@@ -156,7 +165,7 @@
     {
       "order": 11,
       "id": "QUEST_CINEMATIC_POLISH",
-      "state": "GATED",
+      "state": "QUEUED_BEHIND_DEFECT_CAR_EXACT_HEAD",
       "scope": "Bounded set pieces, exact postconditions, checkpoint continuity, clean return to embodied player control; no copied film/book dialogue.",
       "proof": [
         "save/route/cinematic skip equivalence",
@@ -166,7 +175,7 @@
     {
       "order": 12,
       "id": "TARGET_DEVICE_AND_GATE67",
-      "state": "GATED",
+      "state": "QUEUED_BEHIND_DEFECT_CAR_EXACT_HEAD",
       "scope": "DX11 1280x720 Low-Medium target-class profiling plus P1C01 Gate 6/7 evidence collection.",
       "proof": [
         "FPS/frame time",
