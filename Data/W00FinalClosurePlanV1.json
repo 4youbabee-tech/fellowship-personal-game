@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "W00_FINAL_CLOSURE_WAVE_V1",
-  "status": "FINAL_WORKFLOW_REPAIR_COMMITTED_PROOF_PENDING",
+  "status": "AUTOMATED_FINAL_CLOSURE_GREEN_HUMAN_AUDIO_DEVICE_GATES_PENDING",
   "authority": "Data/ProjectGovernor.json",
   "base_green_head": "31b6e1c9958b6121ec7a00c07e038fec4ab36408",
   "purpose": "Close every remaining automatable W00 acceptance blocker in one large evidence wave so the deferred W01-W11 production program can start on an unobstructed foundation.",
@@ -66,7 +66,7 @@
     "Data/CompletionWaveMapV1.json"
   ],
   "next_large_program": "W01-W06 Part I large production build, followed by W07-W11 Part II/III and trilogy final integration.",
-  "last_refresh": "2026-09-25",
+  "last_refresh": "2026-09-30",
   "grounding_pie_evidence": {
     "tested_commit": "2427e6594f5adb3ea81f143dc19d4ecede8eecc9",
     "chapter": "P1C01",
@@ -92,10 +92,26 @@
     ]
   },
   "packaged_runtime_data_read_guard": {
-    "status": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
+    "status": "EXACT_HEAD_RUN_PROVEN",
     "verifier": "Scripts/verify_packaged_startup.ps1",
     "required_marker": "NPCContext: ready=yes",
     "purpose": "Close the gap between proving Data JSON files are staged and proving the packaged executable actually consumes required NPC context Data at runtime.",
-    "evidence_boundary": "This guard can prove packaged runtime Data consumption when its exact-head workflow succeeds. It does not prove final audio playback, target-device performance, human PIE traversal, pacing or visual acceptance."
+    "evidence_boundary": "This guard can prove packaged runtime Data consumption when its exact-head workflow succeeds. It does not prove final audio playback, target-device performance, human PIE traversal, pacing or visual acceptance.",
+    "proof": {
+      "pr": 184,
+      "head_sha": "d6ca8aac03f5a1da07609e61e790ddf8faad8eed",
+      "pre_unreal": "#1435 SUCCESS",
+      "unreal_build": "#1108 SUCCESS",
+      "packaged_data_marker": "W00_PACKAGED_DATA_PASS expected=37 verified=37",
+      "runtime_read_marker": "W00_PACKAGED_RUNTIME_DATA_READ_PASS marker=NPCContext: ready=yes",
+      "startup_marker": "W00_PACKAGED_STARTUP_PASS observed=6s",
+      "runner_hardware_marker": "W00_RUNNER_HARDWARE_SNAPSHOT_PASS cpu=Intel(R) Core(TM) i7-6498DU CPU @ 2.50GHz ramBytes=8457560064 gpuCount=5"
+    }
+  },
+  "remaining_acceptance": {
+    "audio": "Prepared/approved authored bank playback without -NoSound and listening/mix evidence remains pending.",
+    "device_performance": "Target-class 720p Low-Medium FPS/frame-time/hitch/RAM/VRAM measurements remain pending.",
+    "human": "Chapter-specific traversal, pacing, NPC believability and visual review remain pending.",
+    "boundary": "Automated W00 closure is green; this does not promote DEVICE-TESTED, PERFORMANCE-ACCEPTED or VISUALLY-ACCEPTED."
   }
 }
