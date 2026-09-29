@@ -40,7 +40,8 @@
     "Temporary branches must merge meaningful completed work into develop immediately, then delete the branch ref; only active work or unresolved unique-content salvage may remain outside develop.",
     "Parallel source/PDF/warehouse/asset-preparation lanes may advance without repeating engine gates for administrative-only changes; promotion into runtime remains serialized and technical safety/performance/runtime-data gates stay fail-closed.",
     "Permanent branch closeout invariant: every completed temporary branch is exact-head validated, merged into develop immediately, and its remote ref is deleted after merge so develop never lags completed work. Only an active PR head or a branch with verified unique unsalvaged commits may remain temporarily.",
-    "Maximum Safe Production is the default for all eligible project production work even when the owner does not explicitly say 'start chapter' or repeat the throughput instruction."
+    "Maximum Safe Production is the default for all eligible project production work even when the owner does not explicitly say 'start chapter' or repeat the throughput instruction.",
+    "Story scope is experience-first, not summary-first: the Timeline organizes sequence but never caps detail; compatible Tolkien book-only events/details should be playable when safe, and meaningful discovered source material may not be silently omitted."
   ],
   "requirement_status_values": [
     "REQUESTED",
@@ -478,22 +479,31 @@
         "Film-first canon policy already exists",
         "P1C01-P1C08 Part I route follows the film continuity",
         "Gandalf/Isengard parallel route fills a film-canon event outside Frodo's viewpoint",
-        "Owner reaffirmed on 2026-09-20 that exact film scenario order/character presence/outcomes are non-negotiable; FILM_CORE changes must be source-checked rather than recalled from memory."
+        "Owner reaffirmed on 2026-09-20 that exact film scenario order/character presence/outcomes are non-negotiable; FILM_CORE changes must be source-checked rather than recalled from memory.",
+        "The Story & Timeline Bible is the trilogy-wide navigation spine, not a ceiling on playable story/world detail.",
+        "Compatible Tolkien book-only events and journey detail may become real gameplay when they preserve required film chronology/outcomes.",
+        "Meaningful source-backed detail discovered during chapter review uses explicit disposition tracking rather than silent omission."
       ],
       "missing_work": [
         "Continue chapter-by-chapter implementation and acceptance against the existing FilmExperiencePlan",
-        "Part II and Part III remain roadmap/design rather than production-complete"
+        "Part II and Part III remain roadmap/design rather than production-complete",
+        "Build and maintain the F1-01 through F3-07 timeline-to-screenplay-to-Tolkien-to-domain-source chapter crosswalk/source packets.",
+        "Audit meaningful book-only compatible events/details for playable treatment instead of automatic compression or omission."
       ],
       "acceptance_criteria": [
         "Every major implemented story beat maps to film continuity or an explicitly tagged compatible gap-fill",
         "No game-authored side content changes required film outcomes",
         "Chapter handoffs preserve the known chronology",
         "Part I coverage gaps are visible in repository data rather than hidden in chat",
-        "Track all three films explicitly; audit the film opening/prologue and character viewpoints as well as later chapter anchors. Part II/III remain roadmap until Part I is stable."
+        "Track all three films explicitly; audit the film opening/prologue and character viewpoints as well as later chapter anchors. Part II/III remain roadmap until Part I is stable.",
+        "The game does not compress the journey merely to connect major film set pieces; meaningful travel, social, world and character detail is preserved or explicitly dispositioned.",
+        "Compatible Tolkien material omitted/compressed by the films may be implemented as playable content when it does not alter required film outcomes or future knowledge.",
+        "No meaningful discovered source-backed detail is silently dropped; non-implementation has an explicit recorded disposition/reason.",
+        "Gate 6/7 may delay runtime implementation but never authorizes deletion of story/detail coverage from the source plan."
       ],
       "dependencies": [],
       "checkpoint": "FILM_EXPERIENCE_CONTRACT",
-      "notes": "Books/lore may enrich the world only when they do not silently overwrite film continuity."
+      "notes": "Film continuity remains the mandatory main-story spine. The owner explicitly wants the journey experienced in depth rather than summarized: Tolkien-compatible book-only events/details should enrich playable exploration when safe, with no silent omission."
     },
     {
       "id": "REQ-EXP-001",
@@ -519,13 +529,16 @@
         "Chapter-by-chapter film-experience coverage and treatment audit",
         "Many major scenes are still prototype or compressed",
         "Final cinematic/gameplay blends, character performances and production environments",
-        "Focused PIE/device/visual acceptance"
+        "Focused PIE/device/visual acceptance",
+        "Expand chapter treatment audits beyond film anchors to include compatible Tolkien journey/detail coverage."
       ],
       "acceptance_criteria": [
         "Major film anchors are experienced through appropriate gameplay or interactive presentation",
         "Player agency exists where it does not contradict required story outcomes",
         "Important emotional/story moments are not skipped merely to connect quests",
-        "Each chapter records which film anchors are covered, partial or missing"
+        "Each chapter records which film anchors are covered, partial or missing",
+        "Travel, companionship, local-life and source-grounded journey detail are not skipped solely because they are absent or compressed in the film edit.",
+        "Compatible Tolkien book-only sequences can be delivered as traversal, exploration, interaction, encounter, puzzle, social scene or quest when they preserve the film-locked outcome."
       ],
       "dependencies": [
         "REQ-VISION-001"
@@ -557,7 +570,8 @@
         "film-compatible chapter progression",
         "Data/ExplorationEnvelopePlan.json defines free-roam windows and return-to-story rules for FrodoMain P1C01-P1C08 plus GandalfParallel P1C01.",
         "PG-060 machine-checks anchor ordering, optional discovery bounds and no-story-mutation rules.",
-        "ContextualSideActivityPlan defines original gap-fill mini-games between film anchors; side content is plausible within the same time/place/character context and cannot alter canon."
+        "ContextualSideActivityPlan defines original gap-fill mini-games between film anchors; side content is plausible within the same time/place/character context and cannot alter canon.",
+        "Canon-safe exploration windows may contain compatible Tolkien book-only events/details, not only original filler."
       ],
       "missing_work": [
         "Wire the declared optional discoveries and return guidance into chapter runtime where still absent",
@@ -568,7 +582,8 @@
         "Player can meaningfully explore between mandatory story beats",
         "Optional content does not overwrite film chronology",
         "Returning to the main route remains readable",
-        "No free-roam shortcut can silently bypass a required story outcome"
+        "No free-roam shortcut can silently bypass a required story outcome",
+        "Exploration rewards source-grounded discovery and does not reduce omitted Tolkien material to text-only lore when it is suitable for gameplay."
       ],
       "dependencies": [
         "REQ-VISION-001",
@@ -4868,6 +4883,66 @@
         "Docs/WORLD_DETAIL_LEDGER.md — F2-01 Three Hunters / Captives Maximum-Safe Source V1"
       ],
       "evidence_boundary": "SOURCE ARCHITECTURE ONLY. No Part II runtime ID or runtime integration is approved; no PIE/device/visual/pacing/performance acceptance is claimed."
+    },
+    {
+      "id": "DEC-081",
+      "title": "Experience the full journey: timeline navigation, Tolkien depth and zero silent omission",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-VISION-001",
+        "REQ-EXP-001",
+        "REQ-EXP-002",
+        "REQ-SOURCE-001",
+        "REQ-MEM-001"
+      ],
+      "resolution": "The game is not a shortened recap of LOTR. The Story & Timeline Bible organizes the trilogy route and locked outcomes; the supplied film/screenplays preserve the film-driven spine; Tolkien supplies deeper compatible journey/world detail and book-only events. Compatible Tolkien material omitted or compressed by the films should become real playable content when it fits without breaking film continuity. Every meaningful discovered source detail is implemented or explicitly dispositioned; it is never silently lost.",
+      "implementation_contract": [
+        "Use Data/OwnerSourceReferenceIndex.json chapter_binding_policy and ProjectGovernor.story_source_execution_contract as the permanent routing contract.",
+        "Maintain chapter source packets for F1-01 through F3-07 linking Timeline -> film/screenplay -> Tolkien narrative -> Appendix B/other appendices -> Sources 02-11 -> implementation/disposition.",
+        "Do not treat the Timeline summary as the maximum story/content scope.",
+        "Do not compress travel, companionship, local life, exploration or source-grounded detail merely to connect major film scenes.",
+        "Book-only Tolkien events/details that are compatible with the film-locked outcome are playable-content candidates, including substantial sequences where appropriate.",
+        "Incompatible book-only differences are tagged BLOCKED_BY_FILM_CONTINUITY rather than silently substituted.",
+        "Every meaningful discovered detail receives IMPLEMENTED, LINKED_FOR_LATER, DEFERRED_PERFORMANCE, BOOK_ONLY_COMPATIBLE, BLOCKED_BY_FILM_CONTINUITY, NOT_APPLICABLE or NEEDS_SOURCE_RESOLUTION.",
+        "Performance constraints change streaming/residency/LOD/pooling strategy; they do not delete source coverage from the design record.",
+        "Gate 6/7 controls runtime opening order only; it does not authorize narrative shortening.",
+        "Dialogue remains original/non-verbatim and must respect source-grounded knowledge boundaries."
+      ],
+      "rationale": "The owner explicitly wants maximum enjoyment from the journey and source richness, including Tolkien material not shown in the films when it can be integrated safely.",
+      "evidence": [
+        "Data/OwnerSourceReferenceIndex.json",
+        "Docs/WORLD_DETAIL_LEDGER.md",
+        "01_STORY_AND_TIMELINE_BIBLE",
+        "Tolkien-J.-The-lord-of-the-rings-HarperCollins-ebooks-2010",
+        "Supplied Fellowship / Two Towers / Return of the King screenplays"
+      ],
+      "evidence_boundary": "SOURCE/STORY GOVERNANCE ONLY. Does not claim every source detail is already implemented and does not promote compile, PIE, device, visual, pacing or performance acceptance."
+    },
+    {
+      "id": "DEC-082",
+      "title": "Arabic text localization with English voice and canonical English map labels",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-MEM-001",
+        "REQ-QA-001"
+      ],
+      "resolution": "Keep spoken voice in English. Provide Arabic subtitles and Arabic player-facing UI/objective text. Preserve canonical Middle-earth place names on the map in their original English form. Treat proper RTL rendering, subtitle synchronization and text integrity as production/QA requirements.",
+      "implementation_contract": [
+        "English VO remains the shipped voice baseline; Arabic dubbing is not required.",
+        "Arabic localization covers subtitles, objectives/quest directions, menus, settings, HUD/system guidance and tutorial/instructional text.",
+        "Map location labels retain original English canonical names; Arabic UI and objectives can reference those names without replacing the map label.",
+        "Arabic rendering requires correct RTL shaping, layout, wrapping and UE4.27-compatible font coverage.",
+        "Subtitle timing/readability follows the English VO without changing story meaning or character knowledge.",
+        "Localization QA checks truncation, RTL ordering, wrapping, subtitle timing, objective clarity and canonical map-label preservation.",
+        "This decision registers the permanent product rule; runtime implementation and device/visual acceptance remain separate evidence."
+      ],
+      "rationale": "The owner wants Arabic readability for play without losing the original English voice or the recognizable English identity of Middle-earth map locations.",
+      "evidence": [
+        "Data/ProjectGovernor.json localization_contract",
+        "Master External Resource Bible Arabic/UI sourcing lane",
+        "REQ-QA-001 localization integrity work"
+      ],
+      "evidence_boundary": "LOCALIZATION PRODUCT CONTRACT ONLY. Runtime localization completeness, PIE/device and visual acceptance are not claimed."
     }
   ],
   "open_conflicts": [],
@@ -6513,7 +6588,29 @@
       "SRC_FILM_ROTK_SCREENPLAY",
       "SRC_TOLKIEN_LOTR_2010"
     ],
-    "policy": "Do not create Source 12+ by default. Extend the relevant existing source or Source 11 unless a genuinely new domain cannot be maintained safely inside the current library."
+    "policy": "Do not create Source 12+ by default. Extend the relevant existing source or Source 11 unless a genuinely new domain cannot be maintained safely inside the current library.",
+    "completeness_scope": "STRUCTURALLY_COMPLETE_FOR_CURRENT_FILM_TRILOGY_LOTR_GAME_SCOPE_NOT_ALL_TOLKIEN_PUBLICATIONS",
+    "chapter_binding_contract": {
+      "status": "ACTIVE",
+      "canonical_index": "Data/OwnerSourceReferenceIndex.json#chapter_binding_policy",
+      "navigation_spine": "01_STORY_AND_TIMELINE_BIBLE",
+      "primary_story_layer": "Peter Jackson film trilogy + supplied trilogy screenplays",
+      "primary_deep_detail_layer": "Tolkien The Lord of the Rings including Appendices, when compatible with film continuity",
+      "production_layers": "Sources 02-11 by domain",
+      "source_packet_scope": "F1-01 through F3-07",
+      "no_story_shortcuts": true,
+      "no_silent_omission": true,
+      "runtime_promotion_rule": "Source organization/preparation may advance independently, but runtime integration remains serialized behind predecessor Gate 6/7, save/story integrity and target-device performance rules.",
+      "detail_disposition_values": [
+        "IMPLEMENTED",
+        "LINKED_FOR_LATER",
+        "DEFERRED_PERFORMANCE",
+        "BOOK_ONLY_COMPATIBLE",
+        "BLOCKED_BY_FILM_CONTINUITY",
+        "NOT_APPLICABLE",
+        "NEEDS_SOURCE_RESOLUTION"
+      ]
+    }
   },
   "source_review_opinion": {
     "date": "2026-09-21",
@@ -6521,7 +6618,8 @@
     "Source10": "Very useful for modeling breakdown, silhouette, costume/gear/material study and world architecture mood. It is strongest as a production visual atlas, not as canon evidence. Generated visual details must always be checked against film/source canon before modeling.",
     "Source11": "Extremely useful and should be treated as the operational cross-discipline index. It closes important gaps in audio, cinematics, UI/UX, living-world AI, UE4.27.2 architecture, performance, QA/save safety and branch/integration rules while explicitly preventing source-library sprawl.",
     "ROTK": "Major upgrade because Part III is now screenplay-backed instead of relying on shorthand/secondary summaries. It enables source-verified Part III planning while still requiring scene-level verification before implementation.",
-    "Tolkien": "Major upgrade for deeper lore, geography, cultures, lineages, historical detail and Appendices. It should enrich the living world and side content without replacing film continuity in film-driven scenes."
+    "Tolkien": "Major upgrade for deeper lore, geography, cultures, lineages, historical detail and Appendices. It should enrich the living world and side content without replacing film continuity in film-driven scenes.",
+    "TimelineBinding": "The Story & Timeline Bible is the trilogy-wide navigation spine. Each chapter must route into film/screenplay continuity, Tolkien narrative/Appendices and Sources 02-11; its summary wording is not permission to omit deeper compatible detail."
   },
   "programmer_review_consolidation_2026_09_21": {
     "status": "VERIFIED_AGAINST_LIVE_DEVELOP_AND_PROJECT_SOURCE_RULES",
@@ -7198,9 +7296,11 @@
     "reading_order": [
       "Docs/PROJECT_GOVERNOR.md",
       "Data/ProjectGovernor.json",
+      "Data/OwnerSourceReferenceIndex.json",
       "Docs/CURRENT_PROJECT_STATE.md",
       "Docs/DEVELOPMENT_GATES.md",
-      "Docs/PROJECT_GUARDIAN.md"
+      "Docs/PROJECT_GUARDIAN.md",
+      "Docs/WORLD_DETAIL_LEDGER.md"
     ],
     "rule": "A new human programmer or AI session enters through README/onboarding script, then follows ProjectGovernor. Chat history and stale PR text are never required to discover current direction.",
     "live_state_rule": "GitHub owns current branch/PR/check status; do not duplicate volatile transport metadata as fail-closed governance.",
@@ -7218,7 +7318,13 @@
       "Run Scripts/new_developer_onboarding.ps1 when working locally"
     ],
     "stale_copy_rule": "No README or guide may hard-code a copied 'next drop' as execution authority. Current execution order must be read from ProjectGovernor.current_focus + execution_control.",
-    "runner_critical_rule": "Runner service mode is forbidden. actions.runner.* should not exist; if Windows still exposes a pending-deletion service it must be Stopped+Disabled. The only supported runner is the interactive-user ShireJourney-GitHubRunner-Watchdog, which continuously removes any recreated service mode. Do not alter runner topology without explicit owner authorization."
+    "runner_critical_rule": "Runner service mode is forbidden. actions.runner.* should not exist; if Windows still exposes a pending-deletion service it must be Stopped+Disabled. The only supported runner is the interactive-user ShireJourney-GitHubRunner-Watchdog, which continuously removes any recreated service mode. Do not alter runner topology without explicit owner authorization.",
+    "story_source_entry": {
+      "required_for": "Any story, world, mission, character, dialogue, exploration or chapter-content work.",
+      "rule": "Read ProjectGovernor.story_source_execution_contract and Data/OwnerSourceReferenceIndex.json before implementation. Use the Timeline as navigation, film/screenplays for locked film continuity, Tolkien for deeper compatible detail/book-only events, and Sources 02-11 for production execution.",
+      "anti_shortcut": "A new programmer must not infer that the Timeline summary is the full story/content scope.",
+      "anti_chat_dependency": "The source-routing rule must be recoverable from the repository without prior chat history."
+    }
   },
   "handoff_metadata_policy": {
     "evidence_authority": "session_handoff.validation_snapshot",
@@ -7432,5 +7538,56 @@
       },
       "proof_boundary": "This proves runner ownership/topology and health on the machine for this exact run. Unreal #1021 took the governance/docs-only fast path, so it does not prove C++ compile, PIE, packaged runtime, target-device gameplay, visual or performance acceptance."
     }
+  },
+  "story_source_execution_contract": {
+    "status": "ACTIVE_PERMANENT_RULE",
+    "owner_intent": "Let the player live the LOTR journey in depth rather than consume a shortened chain of major scenes.",
+    "timeline_role": "Navigation/order spine for the whole trilogy; never a maximum-detail specification.",
+    "film_screenplay_role": "Primary authority for film-driven chronology, visible staging, participating characters, knowledge ceilings and locked outcomes.",
+    "tolkien_role": "Primary supplied source for deeper compatible lore, geography, cultures, chronology, relationships, material culture, journey detail and book-only events.",
+    "book_only_gameplay_rule": "If Tolkien contains an event/detail omitted or compressed by the films and it can fit without changing a required film outcome, chronology, character knowledge or route integrity, treat it as a playable-content candidate rather than discarding it by default.",
+    "implementation_forms": [
+      "main-path journey detail",
+      "optional exploration",
+      "traversal",
+      "NPC/social sequence",
+      "quest or encounter",
+      "puzzle",
+      "environmental storytelling",
+      "relationship/companion scene",
+      "world-state/detail"
+    ],
+    "source_packet_required_layers": [
+      "Timeline chapter ID, critical beat, safe window and locked outcome",
+      "Matching film/screenplay scene order, cast presence, knowledge state and required outcome",
+      "Matching Tolkien narrative chapter(s)",
+      "Appendix B chronology/date state where applicable",
+      "Relevant Tolkien appendices",
+      "Relevant Sources 02-11",
+      "Implementation/disposition record for meaningful extracted details"
+    ],
+    "no_silent_omission_rule": "Every meaningful source-backed detail discovered during chapter review must be implemented or receive an explicit disposition and reason.",
+    "no_story_shortcut_rule": "Do not shorten or skip journey/story detail merely to connect major film anchors. Performance pressure changes streaming/residency strategy, not source coverage.",
+    "gate_rule": "Gate 6/7 controls when runtime scope opens; it does not authorize narrative compression or deletion from the source plan.",
+    "dialogue_rule": "Runtime dialogue remains original and non-verbatim while preserving source-grounded intent, relationships and knowledge boundaries.",
+    "conflict_rule": "Film/screenplay continuity controls film-driven outcomes; incompatible book-only differences are explicitly tagged rather than silently substituted."
+  },
+  "localization_contract": {
+    "status": "ACTIVE_PERMANENT_RULE_RUNTIME_IMPLEMENTATION_PENDING",
+    "voice": "English original VO; Arabic dubbing is not required.",
+    "arabic_text_scope": [
+      "subtitles",
+      "objectives and quest directions",
+      "menus",
+      "settings",
+      "HUD/system guidance",
+      "tutorial/instructional text"
+    ],
+    "map_rule": "Canonical Middle-earth place labels on the map remain in their original English names (for example Hobbiton, Bree, Rivendell, Moria, Lothlorien, Minas Tirith). Arabic UI/objective text may refer to those labels without replacing the map label itself.",
+    "rtl_rule": "Arabic UI/subtitles must use proper RTL layout, shaping, wrapping and fonts that render correctly in UE4.27.2.",
+    "subtitle_rule": "Arabic subtitles must remain synchronized with English VO and preserve speaker/story meaning and knowledge limits.",
+    "quality_rule": "Localization QA covers truncation, RTL ordering, line wrapping, subtitle timing/readability, objective clarity and preservation of canonical English map labels.",
+    "authority_rule": "Localization must not alter canon, locked outcomes, character knowledge or objective meaning.",
+    "evidence_boundary": "This contract is governance/design truth. It does not claim the runtime localization pipeline is already fully implemented or device-tested."
   }
 }

@@ -1,3 +1,17 @@
+## 2026-09-29 - Permanent full-journey story/source + Arabic localization contract
+
+- Owner direction is now permanent project memory: **Shire Journey must be experienced as a rich journey, not a shortened recap connecting only major film set pieces.**
+- `01_STORY_AND_TIMELINE_BIBLE` is the F1-F3 navigation/order spine and locked-outcome guide. It is **not** the maximum amount of story/world detail allowed in a chapter.
+- Film trilogy + supplied screenplays remain primary for film-driven chronology, visible staging, cast presence, character knowledge and required outcomes.
+- Tolkien *The Lord of the Rings* + Appendices is the primary supplied deep-detail source for compatible lore, geography, culture, chronology, relationships, material culture, travel detail and book-only events.
+- Tolkien events/details omitted or compressed by the films are eligible for **real playable treatment** when they fit without breaking a locked film outcome, chronology, knowledge boundary, save/route integrity or required story handoff. They are not automatically reduced to text lore.
+- Required source packet for each F1-01 through F3-07 chapter: Timeline -> film/screenplay -> Tolkien narrative chapter(s) -> Appendix B/other appendices -> Sources 02-11 -> implementation/disposition.
+- **Zero Silent Omission:** every meaningful source-backed detail discovered in chapter review is IMPLEMENTED, LINKED_FOR_LATER, DEFERRED_PERFORMANCE, BOOK_ONLY_COMPATIBLE, BLOCKED_BY_FILM_CONTINUITY, NOT_APPLICABLE or NEEDS_SOURCE_RESOLUTION. Non-implementation must have a reason.
+- Gate 6/7 may delay runtime integration, but it never authorizes deleting story/detail coverage from the source plan.
+- Low-spec performance is solved through soft/async residency, pooling, ISM/HISM, LOD/culling and bounded simulation rather than by silently shrinking the designed journey.
+- Localization contract: English spoken VO stays English; Arabic covers subtitles, objectives/quest directions, menus, settings, HUD/system guidance and tutorial text; map location labels keep their canonical English Middle-earth names. Arabic requires proper RTL/shaping/wrapping/font support and subtitle synchronization.
+- Evidence boundary: **GOVERNANCE/SOURCE/LOCALIZATION CONTRACT REGISTERED.** This does not claim all source details or Arabic runtime UI are already implemented, and it does not promote COMPILE/PIE/device/visual/pacing/performance acceptance.
+
 ## 2026-09-29 - F2-01 Three Hunters / Captives Maximum-Safe Source V1
 
 - Canonical mission authority: **F2-01 Three Hunters / Captives**.

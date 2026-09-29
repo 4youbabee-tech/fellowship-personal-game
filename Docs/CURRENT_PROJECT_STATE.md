@@ -1,3 +1,13 @@
+## 2026-09-29 - permanent full-journey story/source and Arabic localization governance
+
+- Owner direction is captured as permanent repository governance: the game is experience-first, not a shortened recap. Timeline is navigation/order only; film/screenplays lock film-driven continuity; Tolkien supplies compatible deeper detail and book-only events; Sources 02-11 drive production.
+- Compatible Tolkien material omitted/compressed by the films is a playable-content candidate when it preserves locked outcomes, chronology and character knowledge.
+- Zero-silent-omission disposition tracking is now part of the source contract for F1-01 through F3-07 chapter packets.
+- Localization product rule is fixed: English VO; Arabic subtitles/objectives/menus/settings/HUD/tutorial guidance; canonical Middle-earth map location labels remain in English; proper RTL/shaping/wrapping/font support is required.
+- New-developer entry is strengthened so story/source routing is discoverable from repository onboarding without chat history.
+- `Scripts/new_developer_onboarding.ps1` now exposes the source index/story rule/localization rule. This is tooling/onboarding code only; no gameplay runtime behavior or chapter maturity is promoted.
+- Evidence boundary: **SOURCE/GOVERNANCE/ONBOARDING IMPLEMENTED ON CANDIDATE BRANCH; exact-head static validation required before merge.** No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED claim is made.
+
 ## 2026-09-29 - F2-01 Three Hunters / Captives Maximum-Safe Source V1
 
 - F2-01 is now the active **Part II maximum-safe source-production wave** after F1-08.

@@ -1,3 +1,10 @@
+## 2026-09-29 — Story/source completeness and localization governance note
+
+- Story/source completeness definition is strengthened without promoting runtime maturity: chapter planning must route Timeline -> film/screenplay -> Tolkien narrative/Appendices -> Sources 02-11 and explicitly disposition meaningful discovered detail.
+- Compatible Tolkien book-only content may be real gameplay when it preserves required film outcomes; the Timeline is not a detail ceiling and Gate 6/7 is not permission to shorten planned story coverage.
+- Localization contract is now explicit: English VO, Arabic subtitles/UI/objectives, canonical English map location labels, correct RTL rendering.
+- This governance/onboarding wave changes **no chapter production status** in the matrix and supplies no new PIE/device/visual/performance evidence.
+
 ## 2026-09-29 - F2-01 Three Hunters / Captives maximum-safe source wave
 
 - Canonical F2-01 scope: **REGISTERED**.

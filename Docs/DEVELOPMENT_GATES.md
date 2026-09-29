@@ -61,6 +61,8 @@ Relevant files:
 - `Source/ShireJourney/README.md`
 - `Data/SourceArchitecturePlan.json`
 - `Docs/STORY_CANON_BIBLE.md`
+- `Data/OwnerSourceReferenceIndex.json`
+- `Docs/WORLD_DETAIL_LEDGER.md`
 - `Docs/PART1_FELLOWSHIP_MASTERPLAN.md`
 - `Data/WorldCheckpointPlan.csv`
 - `Data/StoryBeatPlan.csv`
@@ -70,6 +72,12 @@ Relevant files:
 Source-layout changes must update the source handoff README, architecture plan and static-validator path assumptions in the same logical change.
 
 Do not knowingly create "we will fix docs later" debt.
+
+Source/story coverage rule:
+- story/world/mission/chapter changes must preserve the Timeline -> film/screenplay -> Tolkien -> Sources 02-11 routing contract;
+- meaningful discovered source detail must be implemented or explicitly dispositioned rather than silently omitted;
+- compatible Tolkien book-only events/details may be playable when they preserve locked film outcomes and knowledge boundaries;
+- story compression is not an optimization technique.
 
 Single-authority rule:
 - `Data/ProjectGovernor.json` is the only project-management decision authority;
@@ -104,6 +112,7 @@ Other chapters may exist as prototype skeletons, but that does not make them pro
 
 ## Gate 7 — Scope control
 Until current Part I is stable:
+- Gate 6/7 may delay when a chapter/runtime lane opens, but it does not authorize deleting or shortening planned source-backed story/detail coverage.
 - Part II / Part III stay roadmap/design only,
 - do not implement a large system only because it is interesting,
 - do not add a playable route without a strong story reason,

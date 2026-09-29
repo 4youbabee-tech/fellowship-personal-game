@@ -20,6 +20,22 @@ A new worker may run `Scripts/new_developer_onboarding.ps1` from the repository 
 
 This script is a reader, not a second manager. It derives durable direction from ProjectGovernor and live transport state from Git/GitHub.
 
+## Permanent story/source contract
+
+For story, mission, world, character, dialogue or exploration work, the worker must also read `Data/OwnerSourceReferenceIndex.json`.
+
+The permanent hierarchy is:
+- the Timeline Bible organizes F1-F3 sequence, safe windows and locked outcomes; it is not a detail ceiling,
+- the film trilogy and supplied screenplays control film-driven chronology/staging/outcomes,
+- Tolkien's supplied *The Lord of the Rings* + Appendices supplies compatible deeper lore, geography, culture, chronology, journey detail and book-only events,
+- Sources 02-11 convert that material into production/gameplay/technical execution.
+
+The project is **experience-first, not summary-first**. Compatible Tolkien material omitted/compressed by the films can be implemented as real gameplay when it preserves locked film outcomes and knowledge boundaries. Every meaningful discovered source detail must be implemented or explicitly dispositioned; Gate 6/7 may delay runtime scope but does not authorize narrative compression.
+
+## Permanent localization contract
+
+Spoken VO remains English. Arabic covers subtitles, objectives/quest directions, menus, settings, HUD/system guidance and tutorial text. Canonical Middle-earth location labels on the map remain in their original English names. Arabic production requires correct RTL shaping/layout/wrapping/font support and subtitle synchronization. Runtime/device acceptance remains separate from registering this product rule.
+
 ## Why one authority
 
 This project is large, chat history can disappear, and different human/automated programmers may work on it.

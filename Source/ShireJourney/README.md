@@ -10,19 +10,20 @@
 Read these in order:
 
 1. `Data/ProjectGovernor.json` — **single project authority** for requirements, priorities, conflicts, decisions, active gate and region quality.
-2. `Docs/CURRENT_PROJECT_STATE.md` — operational snapshot, proof level and exact next hard gate.
-3. `Docs/PROJECT_GOVERNOR.md` — explains how the single authority is used.
-4. `Docs/PROJECT_MEMORY_SYSTEM.md` — persistence/recovery rules.
-5. `Docs/CHECKPOINTS.md` — chronological development history.
-6. `Docs/WORLD_PRODUCTION_BLUEPRINT.md` — world/chapter/checkpoint engineering map.
-7. `Docs/LIVING_WORLD_AI_BLUEPRINT.md` — NPC/world-life intelligence design.
-8. `Data/LivingWorldFeaturePlan.json` — living-world implementation/detail plan.
-9. `Docs/PRODUCTION_COMPLETENESS_MATRIX.md` — production-pillar completeness.
-10. `Docs/DEVELOPMENT_GATES.md` — build/PIE/device discipline.
-11. `Docs/PROJECT_GUARDIAN.md` — regression memory.
-12. `Docs/STORY_CANON_BIBLE.md` — story/canon detail.
-13. `Data/SourceArchitecturePlan.json` — runtime source ownership/target paths.
-14. `Data/WorldCheckpointPlan.csv` — player/world checkpoint detail.
+2. `Data/OwnerSourceReferenceIndex.json` — canonical source hierarchy/routing for Timeline, film/screenplays, Tolkien and Sources 01-11.
+3. `Docs/CURRENT_PROJECT_STATE.md` — operational snapshot, proof level and exact next hard gate.
+4. `Docs/PROJECT_GOVERNOR.md` — explains how the single authority is used.
+5. `Docs/PROJECT_MEMORY_SYSTEM.md` — persistence/recovery rules.
+6. `Docs/CHECKPOINTS.md` — chronological development history.
+7. `Docs/WORLD_PRODUCTION_BLUEPRINT.md` — world/chapter/checkpoint engineering map.
+8. `Docs/LIVING_WORLD_AI_BLUEPRINT.md` — NPC/world-life intelligence design.
+9. `Data/LivingWorldFeaturePlan.json` — living-world implementation/detail plan.
+10. `Docs/PRODUCTION_COMPLETENESS_MATRIX.md` — production-pillar completeness.
+11. `Docs/DEVELOPMENT_GATES.md` — build/PIE/device discipline.
+12. `Docs/PROJECT_GUARDIAN.md` — regression memory.
+13. `Docs/STORY_CANON_BIBLE.md` — story/canon detail.
+14. `Data/SourceArchitecturePlan.json` — runtime source ownership/target paths.
+15. `Data/WorldCheckpointPlan.csv` — player/world checkpoint detail.
 
 If code, data, and documentation disagree, stop and reconcile them in the same logical change.
 
@@ -33,6 +34,21 @@ Before implementing a meaningful feature request, find or create its stable ID i
 After implementation, update the same Governor entry with repository evidence, remaining gaps and actual proof level.
 Never mark a request complete merely because the conversation moved on.
 
+
+## Story/source implementation rule
+
+The runtime module must not infer story scope from a short Timeline row alone.
+
+For any story/world/chapter implementation:
+- read the matching Timeline chapter for order/safe window/locked outcome,
+- verify the film/screenplay scene order and character knowledge,
+- inspect matching Tolkien narrative/Appendix detail,
+- inspect relevant Sources 02-11,
+- record meaningful discovered detail in the project source/detail disposition flow.
+
+Compatible Tolkien book-only events/details can become real gameplay when they preserve the film-locked outcome. Do not shorten the journey merely to connect major set pieces. Performance is handled through the project's soft/async loading, pooling, ISM/HISM and LOD/culling rules rather than silent source-detail deletion.
+
+Localization runtime target is English VO with Arabic subtitles/UI/objectives. Canonical map location labels remain English and Arabic text must render correctly RTL.
 
 ## Current runtime module state
 
