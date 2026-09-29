@@ -543,53 +543,79 @@ void ALivingWorldDirector::CleanupExpiredEvents()
     const float Now = GetWorld()->GetTimeSeconds();
     APawn* Player = ResolvePlayerPawn();
 
-    for (int32 Index = ActiveEvents.Num() - 1; Index >= 0; --Index)
+    auto ReleaseEventActor = [this](AActor* Actor)
     {
-        bool bExpired = ActiveEvents[Index].ExpiresAt <= Now;
-
-        for (TWeakObjectPtr<AActor>& ActorPtr : ActiveEvents[Index].Actors)
+        if (!Actor)
         {
-            AActor* Actor = ActorPtr.Get();
-            if (!Actor)
-            {
-                continue;
-            }
-
-            if (Player && FVector::DistSquared2D(Actor->GetActorLocation(), Player->GetActorLocation()) >
-                FMath::Square(EventCullDistance))
-            {
-                bExpired = true;
-            }
+            return;
         }
 
-        if (!bExpired)
+        if (AShireAmbientNPC* AmbientNPC = Cast<AShireAmbientNPC>(Actor))
         {
+            ReleaseAmbientNPCToPool(AmbientNPC);
+        }
+        else if (AShireWorldEventInteraction* Interaction = Cast<AShireWorldEventInteraction>(Actor))
+        {
+            ReleaseInteractionToPool(Interaction);
+        }
+        else if (AWorldAmbientMotionActor* MotionActor = Cast<AWorldAmbientMotionActor>(Actor))
+        {
+            ReleaseAmbientMotionToPool(MotionActor);
+        }
+        else
+        {
+            Actor->Destroy();
+        }
+    };
+
+    for (int32 Index = ActiveEvents.Num() - 1; Index >= 0; --Index)
+    {
+        FActiveMicroEvent& Event = ActiveEvents[Index];
+
+        // Lifetime expiry is event-wide: once the authored event window ends, every
+        // remaining member is retired together.
+        if (Event.ExpiresAt <= Now)
+        {
+            for (TWeakObjectPtr<AActor>& ActorPtr : Event.Actors)
+            {
+                ReleaseEventActor(ActorPtr.Get());
+            }
+            ActiveEvents.RemoveAt(Index);
             continue;
         }
 
-        for (TWeakObjectPtr<AActor>& ActorPtr : ActiveEvents[Index].Actors)
+        // Distance culling is member-local. A roaming NPC or motion actor may leave
+        // the event radius while an interaction or another participant remains beside
+        // the player. Never retire the whole event because one member wandered away.
+        for (int32 ActorIndex = Event.Actors.Num() - 1; ActorIndex >= 0; --ActorIndex)
         {
-            if (AActor* Actor = ActorPtr.Get())
+            AActor* Actor = Event.Actors[ActorIndex].Get();
+            if (!Actor)
             {
-                if (AShireAmbientNPC* AmbientNPC = Cast<AShireAmbientNPC>(Actor))
-                {
-                    ReleaseAmbientNPCToPool(AmbientNPC);
-                }
-                else if (AShireWorldEventInteraction* Interaction = Cast<AShireWorldEventInteraction>(Actor))
-                {
-                    ReleaseInteractionToPool(Interaction);
-                }
-                else if (AWorldAmbientMotionActor* MotionActor = Cast<AWorldAmbientMotionActor>(Actor))
-                {
-                    ReleaseAmbientMotionToPool(MotionActor);
-                }
-                else
-                {
-                    Actor->Destroy();
-                }
+                Event.Actors.RemoveAtSwap(ActorIndex, 1, false);
+                continue;
+            }
+
+            if (Player &&
+                FVector::DistSquared2D(Actor->GetActorLocation(), Player->GetActorLocation()) >
+                    FMath::Square(EventCullDistance))
+            {
+                UE_LOG(
+                    LogTemp,
+                    Verbose,
+                    TEXT("LivingWorldEventMemberCull: event=%s actor=%s distance-policy=member-local"),
+                    *Event.EventId.ToString(),
+                    *Actor->GetName());
+
+                ReleaseEventActor(Actor);
+                Event.Actors.RemoveAtSwap(ActorIndex, 1, false);
             }
         }
-        ActiveEvents.RemoveAt(Index);
+
+        if (Event.Actors.Num() == 0)
+        {
+            ActiveEvents.RemoveAt(Index);
+        }
     }
 }
 
