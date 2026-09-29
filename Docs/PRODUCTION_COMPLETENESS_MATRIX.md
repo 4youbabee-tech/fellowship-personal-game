@@ -1,5 +1,6 @@
 ## 2026-09-30 - P1C01 mega integration evidence boundary
 
+- Superseded divergent PR #185 branch: **QUEUED FOR GUARDED POST-MERGE DELETE**; clean integration continues only through PR #186.
 - Living-world grouped-event distance cleanup: **SOURCE-IMPLEMENTED / EXACT-HEAD PROOF PENDING**; distance retirement is member-local while authored lifetime expiry stays event-wide.
 - Ambient player-pawn lookup: **CACHE CENTRALIZATION GUARDED** by PG-208; no new runtime feature is claimed.
 - P1C01 mega train: **AUTHORIZED + SOURCE/DATA PREPARATION ACTIVE / RUNTIME CARS GATED** by W00 and per-car exact-head engine proof.
