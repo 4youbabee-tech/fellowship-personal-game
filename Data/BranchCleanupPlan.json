@@ -87,7 +87,8 @@
     "tooling/opencodereview-readonly",
     "warehouse/p1c01-ready-review-v1",
     "maintenance/final-prebuild-branch-cleanout-v1",
-    "maintenance/final-zero-ahead-sweep-v1"
+    "maintenance/final-zero-ahead-sweep-v1",
+    "fix/living-world-member-cull-safety-v1"
   ],
   "safety_rules": [
     "Never delete develop or main.",
@@ -333,6 +334,13 @@
     ],
     "rule": "After this merge, Branch Cleanup deletes this merged head exactly and deletes the superseded final-prebuild maintenance ref if still present. The archive ref remains recovery-only.",
     "build_resume": "Once Branch Cleanup succeeds and only develop/main/archive remain, repository cleanup is closed and substantive construction resumes from develop.",
+    "evidence_boundary": "Repository hygiene only; no gameplay/compile/PIE/device/visual/performance acceptance."
+  },
+  "p1c01_mega_superseded_branch_closeout_2026_09_30": {
+    "action": "DELETE_SUPERSEDED_DIVERGENT_BRANCH_AFTER_CLEAN_INTEGRATION_MERGES",
+    "branch": "fix/living-world-member-cull-safety-v1",
+    "superseded_by": "integration/p1c01-maximum-safe-mega-v1 / PR #186",
+    "disposition": "PR #185 was closed unmerged after its intended 13-file payload was rebuilt selectively on top of merged W00 develop. Do not merge the divergent 64-commit branch wholesale.",
     "evidence_boundary": "Repository hygiene only; no gameplay/compile/PIE/device/visual/performance acceptance."
   }
 }
