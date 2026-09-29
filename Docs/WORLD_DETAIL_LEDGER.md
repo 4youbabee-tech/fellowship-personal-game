@@ -1,3 +1,18 @@
+## 2026-09-29 - F2-04 Road & Helm's Deep Prep Maximum-Safe Source V1
+
+- Canonical mission: F2-04 Road & Helm's Deep Prep.
+- Primary location: Rohan / Helm's Deep.
+- Present focus: Rohan party.
+- Canonical beat: refugees move under threat; defenses are prepared.
+- Safe optional window: escort, rescue, armory, wall prep, civilians.
+- Locked postcondition: Uruk army arrives.
+- Tolkien-compatible source detail supports the Westfold approach, Helm's Dike, Hornburg, Deeping Wall, Deeping-stream/culvert, caves/refuge, stored food/animals, sentinels, scouts, guard placement and preparation of defenders.
+- Permanent story rule applies: preserve source-grounded road/refugee/fortification/civilian/defense-preparation detail instead of jumping directly from Edoras to siege combat.
+- F2-05 siege phases, breach response, retreat, mounted sortie and dawn counterattack remain outside this pack.
+- Source/preparation only. Do not invent a Part II runtime ID.
+- Low-spec rules remain mandatory: FBX animated candidates, PNG/TGA textures, soft/async heavy loading, pooled transient crowds, repeated fortification dressing through ISM/HISM + LOD/culling.
+- Evidence boundary: SOURCE ARCHITECTURE REGISTRATION ONLY. No runtime integration, PIE, device, visual, pacing or performance acceptance is implied.
+
 ## 2026-09-29 - P1C01 Frodo/Gandalf skeletal candidate production wave V1
 
 - Existing owner priority remains unchanged: replace proxy/modular character bodies with real skeletal FBX production characters, beginning with Frodo and Gandalf inside the active P1C01 runtime benchmark.

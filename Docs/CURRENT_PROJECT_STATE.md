@@ -1,3 +1,17 @@
+## 2026-09-29 - F2-04 Road & Helm's Deep Prep Maximum-Safe Source V1
+
+- F2-04 is now the active Part II source/preparation wave after merged F2-03 Edoras.
+- Canonical chapter contract: refugees move under threat; defenses are prepared; optional window is escort/rescue/armory/wall prep/civilians; locked postcondition is Uruk army arrives.
+- Permanent full-journey governance applies: preserve road/refugee/fortress/civilian/preparation detail rather than jumping directly into siege combat.
+- Data/F204RoadHelmsDeepPrepMaximumSafeMegaSourceV1.json defines 36 categories, 19 landmark-tagged categories and 9 source banks under a 34,000-candidate fair-share ceiling.
+- Source success requires at least 16 populated landmark categories and 8 ready banks.
+- F2-05 siege phases/breach/retreat/mounted sortie/dawn counterattack remain outside this pack.
+- runtime_consumers=[] and runtime_mapping_status=NOT_ASSIGNED_DO_NOT_INVENT remain hard boundaries.
+- PG-206 protects canon, chapter boundaries, source breadth, format rules, warehouse reserve and runtime-ID safety.
+- DEC-086 owns this source wave.
+- P1C01 remains the sole runtime-changing chapter lane; Frodo/Gandalf skeletal-candidate preparation can continue in parallel as source/QC work.
+- Evidence boundary: SOURCE-IMPLEMENTED / STATIC-VALIDATION PENDING. No runtime integration, PIE, device, visual, pacing or performance acceptance is claimed.
+
 ## 2026-09-29 - P1C01 Frodo/Gandalf skeletal candidate wave V1
 
 - The active P1C01 character-production path now includes a bounded Frodo/Gandalf skeletal candidate discovery/QC wave.

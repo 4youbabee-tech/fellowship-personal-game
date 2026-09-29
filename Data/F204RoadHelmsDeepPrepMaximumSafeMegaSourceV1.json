@@ -1,0 +1,630 @@
+{
+  "schema_version": 1,
+  "pack_id": "F204_ROAD_HELMS_DEEP_PREP_MAXIMUM_SAFE_MEGA_SOURCE_V1",
+  "status": "SOURCE_ARCHITECTURE_READY_INVENTORY_GATED_RUNTIME_MAPPING_UNASSIGNED",
+  "canonical_mission_id": "F2-04",
+  "canonical_title": "Road & Helm's Deep Prep",
+  "runtime_consumers": [],
+  "runtime_mapping_status": "NOT_ASSIGNED_DO_NOT_INVENT",
+  "authority": [
+    "01_STORY_AND_TIMELINE_BIBLE",
+    "02_CHARACTERS_AND_RELATIONSHIPS_BIBLE",
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+    "04_PEOPLES_LORE_ARTIFACTS_AND_CULTURES",
+    "05_BATTLES_WEAPONS_ARMIES_AND_CREATURES",
+    "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "Tolkien The Lord of the Rings + Appendices",
+    "Data/ProjectGovernor.json",
+    "Docs/WORLD_DETAIL_LEDGER.md"
+  ],
+  "story_contract": {
+    "critical_path": [
+      "Refugees move under threat.",
+      "Defenses are prepared."
+    ],
+    "safe_optional_window": [
+      "escort",
+      "rescue",
+      "armory",
+      "wall prep",
+      "civilians"
+    ],
+    "locked_postcondition": "Uruk army arrives.",
+    "excluded_from_this_pack": [
+      "F2-05 siege phases",
+      "F2-05 breach response",
+      "F2-05 retreat",
+      "F2-05 mounted sortie",
+      "F2-05 dawn counterattack"
+    ],
+    "save_contract": [
+      "clean entry autosave",
+      "pre-arrival checkpoint",
+      "postcondition save after Uruk-arrival state commit"
+    ]
+  },
+  "world_contract": {
+    "primary_location": "Rohan / Helm's Deep",
+    "visual_grammar": [
+      "Westfold road pressure",
+      "Helm's Dike approach",
+      "Hornburg focal fortress",
+      "Deeping Wall and culvert",
+      "caves/refuge and supplies",
+      "night defensive preparation"
+    ],
+    "gameplay_roles": [
+      "escort",
+      "rescue",
+      "armory interaction",
+      "wall preparation",
+      "civilian/refuge interaction",
+      "fortress orientation"
+    ],
+    "state_variants": [
+      "refugee road movement",
+      "fortress preparation",
+      "final pre-siege alarm"
+    ],
+    "landmark_contract": "Hornburg, Deeping Wall and Helm's Dike remain readable as separate navigation anchors before siege combat begins.",
+    "streaming_contract": "Source preparation only; future runtime uses bounded fortification/refuge/arrival banks with critical-vista preloading."
+  },
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_class": 2
+  },
+  "safety_gate": {
+    "requires_clean_warehouse_inventory": true,
+    "hard_stop_on_hash_mismatch": true,
+    "hard_stop_on_license_hash_mismatch": true,
+    "hard_stop_on_dangerous_file": true,
+    "hard_stop_on_bad_receipt": true,
+    "runtime_integration_allowed": false,
+    "runtime_mapping_required_before_runtime_work": true
+  },
+  "source_policy": {
+    "throughput_mode": "ADAPTIVE_MAXIMUM_SAFE",
+    "reuse_existing_warehouse_first": true,
+    "duplicate_payloads_per_runtime_chapter": false,
+    "index_only": true,
+    "animated_candidate_extension": ".fbx",
+    "texture_extensions": [
+      ".png",
+      ".tga"
+    ],
+    "forbidden_texture_extensions": [
+      ".bmp"
+    ],
+    "static_source_extensions": [
+      ".fbx",
+      ".obj"
+    ],
+    "audio_extensions": [
+      ".wav"
+    ],
+    "metadata_extensions": [
+      ".json",
+      ".mtl"
+    ],
+    "max_total_candidates": 34000,
+    "max_candidates_per_category": 2800,
+    "fair_share_across_categories": true,
+    "minimum_free_disk_reserve_bytes": 6442450944,
+    "landmark_score_bonus": 9
+  },
+  "bank_policy": {
+    "minimum_ready_banks": 8,
+    "banks": [
+      {
+        "id": "BANK01_ROHAN_REFUGEE_ROAD",
+        "purpose": "Refugee movement, convoy readability, escort/rescue and threatened road travel"
+      },
+      {
+        "id": "BANK02_WESTFOLD_THREAT_SCOUTS",
+        "purpose": "Scouts, scattered defenders, threat evidence and approach pressure without opening siege combat"
+      },
+      {
+        "id": "BANK03_HELMS_DIKE_APPROACH",
+        "purpose": "Helm's Dike, Deeping-coomb approach, sentinels and entry readability"
+      },
+      {
+        "id": "BANK04_HORNBURG_INNER_COURT",
+        "purpose": "Hornburg gate, causeway, inner court, horse handling and command preparation"
+      },
+      {
+        "id": "BANK05_DEEPING_WALL_PREP",
+        "purpose": "Deeping Wall, parapet, firing clefts, culvert and defender positioning"
+      },
+      {
+        "id": "BANK06_CAVES_CIVILIANS_SUPPLIES",
+        "purpose": "Deep caves/refuge, civilians, food, animals, shelter and safety preparation"
+      },
+      {
+        "id": "BANK07_ARMORY_DEFENSE_PREP",
+        "purpose": "Armory, shields, spears, arrows, repair tools, wall readiness and distribution"
+      },
+      {
+        "id": "BANK08_AUDIO_WEATHER_NIGHT",
+        "purpose": "Rohan wind, horn calls, scout alarms, fortress ambience and night tension"
+      },
+      {
+        "id": "BANK09_URUK_ARRIVAL_HANDOFF",
+        "purpose": "Enemy-host approach readability and chapter handoff ending at Uruk army arrival"
+      }
+    ]
+  },
+  "landmark_policy": {
+    "minimum_landmark_categories": 16,
+    "hornburg_landmark_required": true,
+    "deeping_wall_readability_required": true,
+    "helms_dike_readability_required": true,
+    "cave_refuge_readability_required": true,
+    "enemy_arrival_handoff_required": true,
+    "distance_proxy_or_lod_required_for_large_landmark_meshes": true,
+    "critical_vista_preload_required": true
+  },
+  "categories": [
+    {
+      "id": "REFUGEE_CONVOY_ROAD",
+      "bank": "BANK01_ROHAN_REFUGEE_ROAD",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "refugee",
+        "road",
+        "rohan",
+        "convoy",
+        "cart"
+      ]
+    },
+    {
+      "id": "REFUGEE_CART_SUPPLY",
+      "bank": "BANK01_ROHAN_REFUGEE_ROAD",
+      "kind": "static",
+      "landmark": false,
+      "keywords": [
+        "cart",
+        "supply",
+        "bundle",
+        "rohan",
+        "road"
+      ]
+    },
+    {
+      "id": "CIVILIAN_ESCORT_GROUP",
+      "bank": "BANK01_ROHAN_REFUGEE_ROAD",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "civilian",
+        "escort",
+        "refugee",
+        "rohan"
+      ]
+    },
+    {
+      "id": "ROAD_RESCUE_HAZARD",
+      "bank": "BANK01_ROHAN_REFUGEE_ROAD",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "road",
+        "rescue",
+        "hazard",
+        "rohan",
+        "threat"
+      ]
+    },
+    {
+      "id": "WESTFOLD_SCOUT_RIDER",
+      "bank": "BANK02_WESTFOLD_THREAT_SCOUTS",
+      "kind": "animated",
+      "landmark": true,
+      "keywords": [
+        "scout",
+        "rider",
+        "westfold",
+        "rohan"
+      ]
+    },
+    {
+      "id": "THREATENED_VALLEY_ROUTE",
+      "bank": "BANK02_WESTFOLD_THREAT_SCOUTS",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "valley",
+        "westfold",
+        "route",
+        "rohan",
+        "threat"
+      ]
+    },
+    {
+      "id": "SCATTERED_DEFENDER_SUPPORT",
+      "bank": "BANK02_WESTFOLD_THREAT_SCOUTS",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "defender",
+        "rohan",
+        "westfold",
+        "soldier"
+      ]
+    },
+    {
+      "id": "ENEMY_TRACE_SUPPORT",
+      "bank": "BANK02_WESTFOLD_THREAT_SCOUTS",
+      "kind": "mixed",
+      "landmark": false,
+      "keywords": [
+        "orc",
+        "uruk",
+        "trace",
+        "road",
+        "threat"
+      ]
+    },
+    {
+      "id": "HELMS_DIKE_LANDMARK",
+      "bank": "BANK03_HELMS_DIKE_APPROACH",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "helms dike",
+        "dike",
+        "rampart",
+        "helm",
+        "rohan"
+      ]
+    },
+    {
+      "id": "DEEPING_COOMB_APPROACH",
+      "bank": "BANK03_HELMS_DIKE_APPROACH",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "deeping coomb",
+        "coomb",
+        "valley",
+        "helm",
+        "approach"
+      ]
+    },
+    {
+      "id": "SENTINEL_CHALLENGE_POST",
+      "bank": "BANK03_HELMS_DIKE_APPROACH",
+      "kind": "mixed",
+      "landmark": false,
+      "keywords": [
+        "sentinel",
+        "gate",
+        "watch",
+        "helm",
+        "rohan"
+      ]
+    },
+    {
+      "id": "DEEPING_STREAM_APPROACH",
+      "bank": "BANK03_HELMS_DIKE_APPROACH",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "deeping stream",
+        "stream",
+        "helm",
+        "rohan"
+      ]
+    },
+    {
+      "id": "HORNBURG_GATE_LANDMARK",
+      "bank": "BANK04_HORNBURG_INNER_COURT",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "hornburg",
+        "gate",
+        "fortress",
+        "helm"
+      ]
+    },
+    {
+      "id": "HORNBURG_TOWER_LANDMARK",
+      "bank": "BANK04_HORNBURG_INNER_COURT",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "hornburg",
+        "tower",
+        "helm",
+        "fortress"
+      ]
+    },
+    {
+      "id": "INNER_COURT_PREP",
+      "bank": "BANK04_HORNBURG_INNER_COURT",
+      "kind": "mixed",
+      "landmark": false,
+      "keywords": [
+        "inner court",
+        "horse",
+        "guard",
+        "hornburg",
+        "prep"
+      ]
+    },
+    {
+      "id": "HORSE_HOLDING_AREA",
+      "bank": "BANK04_HORNBURG_INNER_COURT",
+      "kind": "mixed",
+      "landmark": false,
+      "keywords": [
+        "horse",
+        "guard",
+        "deep",
+        "hornburg"
+      ]
+    },
+    {
+      "id": "DEEPING_WALL_LANDMARK",
+      "bank": "BANK05_DEEPING_WALL_PREP",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "deeping wall",
+        "wall",
+        "helm",
+        "fortification"
+      ]
+    },
+    {
+      "id": "PARAPET_WALKWAY",
+      "bank": "BANK05_DEEPING_WALL_PREP",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "parapet",
+        "wall",
+        "walkway",
+        "helm"
+      ]
+    },
+    {
+      "id": "FIRING_CLEFTS_SUPPORT",
+      "bank": "BANK05_DEEPING_WALL_PREP",
+      "kind": "static",
+      "landmark": false,
+      "keywords": [
+        "cleft",
+        "arrow",
+        "wall",
+        "defense"
+      ]
+    },
+    {
+      "id": "CULVERT_LANDMARK",
+      "bank": "BANK05_DEEPING_WALL_PREP",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "culvert",
+        "deeping stream",
+        "wall",
+        "helm"
+      ]
+    },
+    {
+      "id": "CAVE_REFUGE_LANDMARK",
+      "bank": "BANK06_CAVES_CIVILIANS_SUPPLIES",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "cave",
+        "refuge",
+        "helm",
+        "deep"
+      ]
+    },
+    {
+      "id": "CIVILIAN_SHELTER_GROUP",
+      "bank": "BANK06_CAVES_CIVILIANS_SUPPLIES",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "civilian",
+        "children",
+        "refuge",
+        "cave"
+      ]
+    },
+    {
+      "id": "FOOD_FODDER_STORES",
+      "bank": "BANK06_CAVES_CIVILIANS_SUPPLIES",
+      "kind": "static",
+      "landmark": false,
+      "keywords": [
+        "food",
+        "fodder",
+        "store",
+        "cave",
+        "supply"
+      ]
+    },
+    {
+      "id": "REFUGE_ANIMAL_SUPPORT",
+      "bank": "BANK06_CAVES_CIVILIANS_SUPPLIES",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "animal",
+        "horse",
+        "livestock",
+        "refuge"
+      ]
+    },
+    {
+      "id": "ARMORY_RACKS",
+      "bank": "BANK07_ARMORY_DEFENSE_PREP",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "armory",
+        "spear",
+        "shield",
+        "bow",
+        "helm"
+      ]
+    },
+    {
+      "id": "ARROW_BUNDLE_SUPPORT",
+      "bank": "BANK07_ARMORY_DEFENSE_PREP",
+      "kind": "static",
+      "landmark": false,
+      "keywords": [
+        "arrow",
+        "quiver",
+        "defense",
+        "wall"
+      ]
+    },
+    {
+      "id": "WALL_REPAIR_TOOLS",
+      "bank": "BANK07_ARMORY_DEFENSE_PREP",
+      "kind": "static",
+      "landmark": false,
+      "keywords": [
+        "repair",
+        "tool",
+        "stone",
+        "wall",
+        "defense"
+      ]
+    },
+    {
+      "id": "DEFENDER_MUSTER_GROUP",
+      "bank": "BANK07_ARMORY_DEFENSE_PREP",
+      "kind": "animated",
+      "landmark": true,
+      "keywords": [
+        "defender",
+        "muster",
+        "rohan",
+        "helm"
+      ]
+    },
+    {
+      "id": "ROHAN_NIGHT_WIND",
+      "bank": "BANK08_AUDIO_WEATHER_NIGHT",
+      "kind": "audio",
+      "landmark": false,
+      "keywords": [
+        "wind",
+        "night",
+        "rohan",
+        "helm"
+      ]
+    },
+    {
+      "id": "HORN_CALL_SUPPORT",
+      "bank": "BANK08_AUDIO_WEATHER_NIGHT",
+      "kind": "audio",
+      "landmark": false,
+      "keywords": [
+        "horn",
+        "signal",
+        "rohan",
+        "helm"
+      ]
+    },
+    {
+      "id": "FORTRESS_PREP_AMBIENCE",
+      "bank": "BANK08_AUDIO_WEATHER_NIGHT",
+      "kind": "audio",
+      "landmark": false,
+      "keywords": [
+        "fortress",
+        "prep",
+        "ambience",
+        "helm"
+      ]
+    },
+    {
+      "id": "SCOUT_ALARM_AUDIO",
+      "bank": "BANK08_AUDIO_WEATHER_NIGHT",
+      "kind": "audio",
+      "landmark": false,
+      "keywords": [
+        "alarm",
+        "scout",
+        "horn",
+        "threat"
+      ]
+    },
+    {
+      "id": "URUK_HOST_DISTANT_SILHOUETTE",
+      "bank": "BANK09_URUK_ARRIVAL_HANDOFF",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "uruk",
+        "army",
+        "host",
+        "distant",
+        "helm"
+      ]
+    },
+    {
+      "id": "VALLEY_ENEMY_APPROACH",
+      "bank": "BANK09_URUK_ARRIVAL_HANDOFF",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "enemy",
+        "valley",
+        "approach",
+        "uruk",
+        "helm"
+      ]
+    },
+    {
+      "id": "FINAL_PREP_VISTA",
+      "bank": "BANK09_URUK_ARRIVAL_HANDOFF",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "wall",
+        "fortress",
+        "army",
+        "night",
+        "vista"
+      ]
+    },
+    {
+      "id": "CHAPTER_HANDOFF_ALARM_STATE",
+      "bank": "BANK09_URUK_ARRIVAL_HANDOFF",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "alarm",
+        "arrival",
+        "uruk",
+        "chapter",
+        "handoff"
+      ]
+    }
+  ],
+  "runtime_residency_blueprint": {
+    "mode": "MULTI_BANK_SOURCE_PREP_ONLY",
+    "rule": "No Part II runtime chapter is opened until explicit Part II runtime mapping/migration exists.",
+    "heavy_references": "TSoftObjectPtr/TSoftClassPtr/FSoftObjectPath",
+    "heavy_loading": "FStreamableManager asynchronous",
+    "crowds": "Object pooling for transient civilians/defenders; no dense Spawn/Destroy loops.",
+    "repeated_detail": "ISM/HISM + LOD/culling for repeated fortification/refuge dressing."
+  },
+  "acceptance_boundary": "Source architecture/index preparation only. No Part II runtime ID is invented and no runtime/PIE/device/visual/pacing/performance acceptance is claimed."
+}

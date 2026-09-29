@@ -44,7 +44,7 @@
     },
     "maximum_safe_plan": "Data/MaximumSafeProductionModeV1.json",
     "proof_boundary": "No source/preparation success is promoted to PIE/device/visual/performance acceptance.",
-    "active_source_wave": "F2-03 EDORAS_MAXIMUM_SAFE",
+    "active_source_wave": "F2-04 ROAD_HELMS_DEEP_PREP_MAXIMUM_SAFE",
     "part2_source_train": {
       "F201": "SOURCE_ARCHITECTURE_MERGED_RUNTIME_MAPPING_UNASSIGNED",
       "F202": "ACTIVE_MAXIMUM_SAFE_SOURCE_WAVE_RUNTIME_MAPPING_UNASSIGNED"
@@ -512,11 +512,11 @@
     "WORK-WORLD-003"
   ],
   "immediate_next_large_actions": [
-    "Complete F2-03 Edoras maximum-safe source architecture and exact-head validation.",
-    "Execute the F2-03 source workflow only against a clean persistent warehouse inventory.",
-    "Keep Part II runtime integration disabled until an explicit runtime-ID mapping/migration decision exists.",
+    "Complete F2-04 Road & Helm's Deep Prep maximum-safe source architecture and exact-head validation.",
+    "Execute F2-04 source indexing only against a clean persistent warehouse inventory.",
+    "Keep F2-05 siege/runtime work closed until F2-04 source boundaries and normal runtime gates permit it.",
     "Continue P1C01 runtime closure as the sole runtime-changing lane.",
-    "Advance the next canon-safe Part II source wave after F2-03 without waiting on unrelated long CI."
+    "Continue Frodo/Gandalf skeletal candidate preparation and later-region source preparation in parallel without opening another runtime lane."
   ],
   "last_reconciliation": "2026-09-29 MAXIMUM_SAFE_PRODUCTION_V1"
 }

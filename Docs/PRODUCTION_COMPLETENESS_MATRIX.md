@@ -1,3 +1,11 @@
+## 2026-09-29 - F2-04 Road & Helm's Deep Prep source-preparation note
+
+- F2-04 has a maximum-safe source architecture with 36 categories / 19 landmarks / 9 banks and PG-206 protection.
+- This wave preserves refugee movement, fortress orientation, civilians, supplies and defense preparation while keeping F2-05 combat closed.
+- It does not promote Part II runtime chapter maturity or Gate 6/7 status.
+- Runtime ID remains NOT_ASSIGNED_DO_NOT_INVENT.
+- No PIE/device/visual/performance acceptance is added by this wave.
+
 ## 2026-09-29 - P1C01 hero skeletal candidate preparation
 
 - Frodo/Gandalf real-character work advances from generic rig staging to an explicit ranked FBX candidate/QC wave.
