@@ -1,3 +1,16 @@
+## 2026-09-29 - F1-07 Lórien & Anduin Landmark Mega Source V1
+
+- Canonical F1-07 source architecture is now registered for legacy runtime consumer `P1C07`.
+- Canon boundary is explicit: F1-07 prepares grief/recovery, rest/gifts, river journey, Lothlórien and the Anduin/Amon Hen approach; **Breaking of the Fellowship / Uruk-attack resolution remains F1-08**.
+- `Data/F107LorienAnduinLandmarkMegaSourceSuperpackV1.json` defines **26 categories**, an **18,000 total candidate ceiling**, **2,000/category**, **landmark score bonus 7**, and at least **10 populated landmark categories** before source success.
+- Lothlórien identity centers a golden/luminous sanctuary with vertical flets and organic bridges. Anduin identity centers river-axis readability, cliffs, ancient stone monuments and a readable Amon Hen approach.
+- `Data/Part1LandmarkIdentityPlanV1.json` now records `LOTHLORIEN` and `ANDUIN_F107_APPROACH` without renumbering runtime chapters.
+- `Scripts/run_f107_lorien_anduin_landmark_mega_source.ps1` reuses the proven inventory-gated shared-stock index architecture; animated candidates remain FBX-only and BMP is blocked.
+- `PG-200` guards size, landmark breadth, source formats, inventory gate, F1-08 exclusion, workflow contract and Unreal tooling isolation.
+- Governor `DEC-077` records the durable scope/architecture contract.
+- Heavy source execution remains blocked until persistent warehouse inventory is clean. P1C07 runtime integration remains predecessor Gate 6/7 gated.
+- Evidence boundary: **SOURCE-IMPLEMENTED / exact-head static validation pending**. No UE runtime, PIE, device, visual, pacing or performance acceptance is claimed.
+
 ## 2026-09-29 - Warehouse receipt supersession semantics
 
 - Warehouse #285 isolated the current inventory blocker to `ambientCG\PLASTER\Plaster007_2K-PNG.zip`: historical batch `WAREHOUSE_AMBIENTCG_P1C01_V1` declares the old payload hash while the refreshed current payload is represented by the newer trilogy-foundation receipt path.

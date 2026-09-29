@@ -1,0 +1,558 @@
+{
+  "schema_version": 1,
+  "pack_id": "F107_LORIEN_ANDUIN_LANDMARK_MEGA_SOURCE_SUPERPACK_V1",
+  "status": "SOURCE_ARCHITECTURE_READY_INVENTORY_GATED_RUNTIME_GATED",
+  "canonical_mission_id": "F1-07",
+  "canonical_title": "Lórien & Anduin",
+  "runtime_consumers": [
+    "P1C07"
+  ],
+  "authority": [
+    "01_STORY_AND_TIMELINE_BIBLE",
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+    "04_PEOPLES_LORE_ARTIFACTS_AND_CULTURES",
+    "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "Data/Part1LandmarkIdentityPlanV1.json",
+    "Data/ProjectGovernor.json",
+    "Docs/WORLD_DETAIL_LEDGER.md"
+  ],
+  "story_contract": {
+    "critical_path": [
+      "Grief and recovery.",
+      "Rest and gifts.",
+      "River journey under increasing group pressure."
+    ],
+    "safe_optional_window": [
+      "quiet exploration",
+      "provisioning",
+      "boats"
+    ],
+    "locked_postcondition": "Fellowship reaches Amon Hen.",
+    "excluded_from_this_pack": [
+      "F1-08 Breaking of the Fellowship runtime set piece",
+      "F1-08 Uruk attack resolution"
+    ]
+  },
+  "world_contract": {
+    "lothlorien": {
+      "location_type": "Golden forest sanctuary",
+      "visual_grammar": [
+        "vertical flets",
+        "organic bridges",
+        "luminous forest"
+      ],
+      "gameplay_roles": [
+        "recovery",
+        "gifts",
+        "reflection",
+        "exploration"
+      ],
+      "state_variants": [
+        "night arrival",
+        "departure"
+      ],
+      "landmark_contract": "Dominant vertical flet/tree-canopy sanctuary vista remains readable through luminous forest layering."
+    },
+    "anduin": {
+      "location_type": "River corridor / ancient ruins approach",
+      "visual_grammar": [
+        "water",
+        "cliffs",
+        "stone monuments",
+        "forest"
+      ],
+      "gameplay_roles": [
+        "boat traversal",
+        "scouting",
+        "journey pressure"
+      ],
+      "state_variants": [
+        "river journey",
+        "Amon Hen approach"
+      ],
+      "landmark_contract": "River-axis, cliff and stone-monument silhouettes guide boat traversal toward a readable Amon Hen approach without executing the F1-08 break set piece."
+    }
+  },
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_class": 2
+  },
+  "safety_gate": {
+    "requires_clean_warehouse_inventory": true,
+    "hard_stop_on_hash_mismatch": true,
+    "hard_stop_on_license_hash_mismatch": true,
+    "hard_stop_on_dangerous_file": true,
+    "hard_stop_on_bad_receipt": true
+  },
+  "source_policy": {
+    "reuse_existing_warehouse_first": true,
+    "duplicate_payloads_per_runtime_chapter": false,
+    "index_only": true,
+    "animated_candidate_extension": ".fbx",
+    "texture_extensions": [
+      ".png",
+      ".tga"
+    ],
+    "forbidden_texture_extensions": [
+      ".bmp"
+    ],
+    "static_source_extensions": [
+      ".fbx",
+      ".obj"
+    ],
+    "audio_extensions": [
+      ".wav"
+    ],
+    "metadata_extensions": [
+      ".json",
+      ".mtl"
+    ],
+    "max_total_candidates": 18000,
+    "max_candidates_per_category": 2000,
+    "minimum_free_disk_reserve_bytes": 6442450944,
+    "landmark_score_bonus": 7
+  },
+  "landmark_policy": {
+    "minimum_landmark_categories": 10,
+    "require_dominant_vista_per_location": true,
+    "lothlorien_vertical_readability_required": true,
+    "anduin_river_axis_readability_required": true,
+    "amon_hen_approach_only_before_f108": true,
+    "distance_proxy_or_lod_required_for_large_landmark_meshes": true,
+    "critical_vista_preload_required": true
+  },
+  "categories": [
+    {
+      "id": "LORIEN_GOLDEN_CANOPY_LANDMARK",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "lorien",
+        "lothlorien",
+        "golden",
+        "forest",
+        "tree",
+        "canopy",
+        "ancient",
+        "silhouette",
+        "vista"
+      ]
+    },
+    {
+      "id": "LORIEN_VERTICAL_FLETS",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "treehouse",
+        "flet",
+        "platform",
+        "elevated",
+        "wood",
+        "tree",
+        "canopy",
+        "bridge",
+        "elven"
+      ]
+    },
+    {
+      "id": "LORIEN_ORGANIC_BRIDGES",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "bridge",
+        "wood",
+        "branch",
+        "tree",
+        "rope",
+        "organic",
+        "walkway",
+        "elevated",
+        "forest"
+      ]
+    },
+    {
+      "id": "LORIEN_LUMINOUS_FOREST",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "golden",
+        "glow",
+        "luminous",
+        "forest",
+        "light",
+        "mist",
+        "leaf",
+        "tree",
+        "canopy",
+        "ambient"
+      ]
+    },
+    {
+      "id": "LORIEN_FOREST_SURFACES",
+      "kind": "surface",
+      "landmark": false,
+      "keywords": [
+        "bark",
+        "wood",
+        "moss",
+        "leaf",
+        "ground",
+        "forest",
+        "golden",
+        "stone",
+        "root"
+      ]
+    },
+    {
+      "id": "LORIEN_SANCTUARY_ARCHITECTURE",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "elven",
+        "sanctuary",
+        "pavilion",
+        "arch",
+        "column",
+        "platform",
+        "tree",
+        "wood",
+        "stone",
+        "terrace"
+      ]
+    },
+    {
+      "id": "LORIEN_GIFTS_PROVISIONING",
+      "kind": "static",
+      "landmark": false,
+      "keywords": [
+        "gift",
+        "cloak",
+        "rope",
+        "bread",
+        "pack",
+        "provision",
+        "bottle",
+        "boat",
+        "supply",
+        "travel"
+      ]
+    },
+    {
+      "id": "LORIEN_REFLECTION_RELATIONSHIP_SUPPORT",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "talk",
+        "idle",
+        "sit",
+        "stand",
+        "grief",
+        "comfort",
+        "gift",
+        "conversation",
+        "gesture",
+        "fellowship"
+      ]
+    },
+    {
+      "id": "LORIEN_ELVEN_POPULATION",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "elf",
+        "elven",
+        "guard",
+        "archer",
+        "walk",
+        "idle",
+        "patrol",
+        "citizen",
+        "forest"
+      ]
+    },
+    {
+      "id": "LORIEN_NIGHT_ARRIVAL_LIGHTING",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "night",
+        "moon",
+        "light",
+        "glow",
+        "lantern",
+        "forest",
+        "mist",
+        "golden",
+        "arrival"
+      ]
+    },
+    {
+      "id": "LORIEN_DEPARTURE_BOAT_THRESHOLD",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "boat",
+        "river",
+        "shore",
+        "dock",
+        "landing",
+        "departure",
+        "forest",
+        "water",
+        "canoe"
+      ]
+    },
+    {
+      "id": "LORIEN_AUDIO_AMBIENCE",
+      "kind": "audio",
+      "landmark": false,
+      "keywords": [
+        "forest",
+        "bird",
+        "leaf",
+        "wind",
+        "water",
+        "night",
+        "ambient",
+        "river",
+        "wood"
+      ]
+    },
+    {
+      "id": "ANDUIN_RIVER_AXIS_LANDMARK",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "anduin",
+        "river",
+        "water",
+        "cliff",
+        "valley",
+        "shore",
+        "vista",
+        "channel",
+        "silhouette"
+      ]
+    },
+    {
+      "id": "ANDUIN_BOAT_TRAVERSAL",
+      "kind": "static",
+      "landmark": false,
+      "keywords": [
+        "boat",
+        "canoe",
+        "oar",
+        "paddle",
+        "river",
+        "water",
+        "shore",
+        "dock",
+        "travel"
+      ]
+    },
+    {
+      "id": "ANDUIN_CLIFFS_SHORES",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "cliff",
+        "rock",
+        "shore",
+        "bank",
+        "river",
+        "stone",
+        "forest",
+        "valley",
+        "vista"
+      ]
+    },
+    {
+      "id": "ANDUIN_STONE_MONUMENTS",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "monument",
+        "statue",
+        "stone",
+        "ruin",
+        "pillar",
+        "ancient",
+        "river",
+        "cliff",
+        "landmark"
+      ]
+    },
+    {
+      "id": "ANDUIN_FOREST_RIVER_DRESSING",
+      "kind": "static",
+      "landmark": false,
+      "keywords": [
+        "forest",
+        "tree",
+        "shore",
+        "river",
+        "rock",
+        "reed",
+        "root",
+        "bank",
+        "wood"
+      ]
+    },
+    {
+      "id": "ANDUIN_WATER_SURFACES",
+      "kind": "surface",
+      "landmark": false,
+      "keywords": [
+        "water",
+        "river",
+        "wet",
+        "rock",
+        "shore",
+        "foam",
+        "ripple",
+        "mud",
+        "stone"
+      ]
+    },
+    {
+      "id": "ANDUIN_SCOUTING_SUPPORT",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "scout",
+        "look",
+        "watch",
+        "point",
+        "walk",
+        "row",
+        "paddle",
+        "kneel",
+        "stand",
+        "fellowship"
+      ]
+    },
+    {
+      "id": "ANDUIN_JOURNEY_AUDIO",
+      "kind": "audio",
+      "landmark": false,
+      "keywords": [
+        "river",
+        "water",
+        "oar",
+        "paddle",
+        "wind",
+        "forest",
+        "bird",
+        "shore",
+        "ambient"
+      ]
+    },
+    {
+      "id": "AMON_HEN_APPROACH_VISTA",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "amon",
+        "hen",
+        "ruin",
+        "hill",
+        "stone",
+        "forest",
+        "river",
+        "vista",
+        "approach",
+        "monument"
+      ]
+    },
+    {
+      "id": "AMON_HEN_APPROACH_ROUTEFINDING",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "path",
+        "stair",
+        "ruin",
+        "stone",
+        "hill",
+        "trail",
+        "forest",
+        "marker",
+        "approach"
+      ]
+    },
+    {
+      "id": "F107_FELLOWSHIP_TRAVEL_ANIMATION",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "fellowship",
+        "walk",
+        "row",
+        "paddle",
+        "carry",
+        "talk",
+        "idle",
+        "travel",
+        "boat",
+        "gesture"
+      ]
+    },
+    {
+      "id": "F107_CINEMATIC_DRESSING",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "vista",
+        "wide",
+        "silhouette",
+        "golden",
+        "forest",
+        "river",
+        "cliff",
+        "monument",
+        "boat",
+        "approach"
+      ]
+    },
+    {
+      "id": "F107_SYSTEMIC_REACTION_SUPPORT",
+      "kind": "mixed",
+      "landmark": false,
+      "keywords": [
+        "leaf",
+        "branch",
+        "water",
+        "boat",
+        "rope",
+        "cloth",
+        "wind",
+        "impact",
+        "door",
+        "prop"
+      ]
+    },
+    {
+      "id": "F107_LANDMARK_DISTANCE_PROXY_SUPPORT",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "lod",
+        "proxy",
+        "silhouette",
+        "vista",
+        "tree",
+        "canopy",
+        "cliff",
+        "monument",
+        "river",
+        "distant"
+      ]
+    }
+  ],
+  "acceptance_boundary": "Source architecture/index preparation only. F1-08 Fellowship-break runtime content is excluded, and no landmark/chapter is visually accepted until chapter-specific runtime observation exists."
+}

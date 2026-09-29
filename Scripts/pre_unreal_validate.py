@@ -8489,6 +8489,110 @@ for ignored in [
         fail(f"PG-199 F1-06 tooling path must stay off Unreal push+PR filters: {ignored}")
 
 
+
+# PG-200: F1-07 Lorien/Anduin landmark superpack must stay large, canon-bounded and runtime-gated.
+pg200_landmarks = json.loads(read(ROOT / "Data" / "Part1LandmarkIdentityPlanV1.json"))
+pg200_manifest = json.loads(read(ROOT / "Data" / "F107LorienAnduinLandmarkMegaSourceSuperpackV1.json"))
+pg200_runner = read(ROOT / "Scripts" / "run_f107_lorien_anduin_landmark_mega_source.ps1")
+pg200_workflow = read(ROOT / ".github" / "workflows" / "f107-lorien-anduin-landmark-mega-source.yml")
+pg200_unreal = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+
+pg200_region_ids = [x.get("id") for x in pg200_landmarks.get("regions", [])]
+for required in ["LOTHLORIEN", "ANDUIN_F107_APPROACH"]:
+    if required not in pg200_region_ids:
+        fail(f"PG-200 Part I landmark region missing: {required}")
+
+if pg200_manifest.get("status") != "SOURCE_ARCHITECTURE_READY_INVENTORY_GATED_RUNTIME_GATED":
+    fail("PG-200 F1-07 superpack must remain inventory-gated and runtime-gated")
+if pg200_manifest.get("canonical_mission_id") != "F1-07":
+    fail("PG-200 F1-07 canonical mission ID drifted")
+if pg200_manifest.get("runtime_consumers") != ["P1C07"]:
+    fail("PG-200 F1-07 runtime consumer must remain P1C07")
+
+pg200_policy = pg200_manifest.get("source_policy", {})
+pg200_safety = pg200_manifest.get("safety_gate", {})
+pg200_landmark_policy = pg200_manifest.get("landmark_policy", {})
+if int(pg200_policy.get("max_total_candidates", 0)) < 18000:
+    fail("PG-200 F1-07 total candidate ceiling unexpectedly reduced")
+if int(pg200_policy.get("max_candidates_per_category", 0)) < 2000:
+    fail("PG-200 F1-07 per-category throughput unexpectedly reduced")
+if int(pg200_policy.get("landmark_score_bonus", 0)) < 7:
+    fail("PG-200 F1-07 landmark score bonus unexpectedly reduced")
+if pg200_policy.get("animated_candidate_extension") != ".fbx":
+    fail("PG-200 animated F1-07 candidates must remain FBX-only")
+if ".bmp" not in pg200_policy.get("forbidden_texture_extensions", []):
+    fail("PG-200 F1-07 source pack must continue blocking BMP textures")
+if not pg200_safety.get("requires_clean_warehouse_inventory", False):
+    fail("PG-200 F1-07 heavy execution must require clean warehouse inventory")
+for key in ["hard_stop_on_hash_mismatch", "hard_stop_on_license_hash_mismatch", "hard_stop_on_dangerous_file", "hard_stop_on_bad_receipt"]:
+    if not pg200_safety.get(key, False):
+        fail(f"PG-200 F1-07 warehouse safety gate weakened: {key}")
+if int(pg200_landmark_policy.get("minimum_landmark_categories", 0)) < 10:
+    fail("PG-200 F1-07 landmark minimum unexpectedly reduced")
+if not pg200_landmark_policy.get("require_dominant_vista_per_location", False):
+    fail("PG-200 F1-07 dominant vista requirement removed")
+if not pg200_landmark_policy.get("amon_hen_approach_only_before_f108", False):
+    fail("PG-200 F1-07 must preserve the F1-08 boundary at Amon Hen")
+
+pg200_excluded = " ".join(str(x) for x in pg200_manifest.get("story_contract", {}).get("excluded_from_this_pack", []))
+if "F1-08" not in pg200_excluded:
+    fail("PG-200 F1-07 pack must explicitly exclude the F1-08 Fellowship-break set piece")
+
+pg200_categories = pg200_manifest.get("categories", [])
+if len(pg200_categories) < 26:
+    fail("PG-200 F1-07 source pack lost required category breadth")
+pg200_landmark_categories = [x for x in pg200_categories if x.get("landmark")]
+if len(pg200_landmark_categories) < 10:
+    fail("PG-200 F1-07 configured landmark category count too small")
+for required in [
+    "LORIEN_GOLDEN_CANOPY_LANDMARK",
+    "LORIEN_VERTICAL_FLETS",
+    "LORIEN_ORGANIC_BRIDGES",
+    "LORIEN_LUMINOUS_FOREST",
+    "LORIEN_DEPARTURE_BOAT_THRESHOLD",
+    "ANDUIN_RIVER_AXIS_LANDMARK",
+    "ANDUIN_CLIFFS_SHORES",
+    "ANDUIN_STONE_MONUMENTS",
+    "AMON_HEN_APPROACH_VISTA",
+    "AMON_HEN_APPROACH_ROUTEFINDING",
+    "F107_LANDMARK_DISTANCE_PROXY_SUPPORT",
+]:
+    if required not in {x.get("id") for x in pg200_categories}:
+        fail(f"PG-200 F1-07 landmark/source category missing: {required}")
+
+for symbol in [
+    "F107_MEGA_SOURCE_INVENTORY_GATE_BEGIN",
+    "F107_MEGA_SOURCE_INVENTORY_GATE_PASS",
+    "F107_LANDMARK_SOURCE_PASS",
+    "F107_LANDMARK_SOURCE_COVERAGE_FAIL",
+    "landmarkBonus",
+    "F107_MEGA_SOURCE_CATEGORY_PASS",
+    "F107_MEGA_SOURCE_PASS",
+    "$matches.ToArray()",
+    '-Root $WarehouseRoot',
+    'if($kind -eq "animated" -and $ext -ne $animatedExt)',
+]:
+    if symbol not in pg200_runner:
+        fail(f"PG-200 F1-07 runner marker missing: {symbol}")
+
+for symbol in [
+    "name: F1-07 Lórien Anduin Landmark Mega Source",
+    "cancel-in-progress: false",
+    "timeout-minutes: 180",
+    "Fast F1-07 PowerShell preflight",
+    "Build Lórien Anduin landmark mega source indexes",
+]:
+    if symbol not in pg200_workflow:
+        fail(f"PG-200 F1-07 workflow contract missing: {symbol}")
+
+for ignored in [
+    "Data/F107LorienAnduinLandmarkMegaSourceSuperpackV1.json",
+    "Scripts/run_f107_lorien_anduin_landmark_mega_source.ps1",
+    ".github/workflows/f107-lorien-anduin-landmark-mega-source.yml",
+]:
+    if pg200_unreal.count(ignored) < 2:
+        fail(f"PG-200 F1-07 tooling path must stay off Unreal push+PR filters: {ignored}")
+
 # PG-195: Unreal import must not trust an editor-only wait while a commandlet remains alive.
 pg195_wait = read(ROOT / "Scripts" / "wait_for_unreal_processes.ps1")
 pg195_wait_cmd = read(ROOT / "Scripts" / "ci_wait_for_unreal_editor.cmd")
