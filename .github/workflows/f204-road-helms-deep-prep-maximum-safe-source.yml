@@ -28,7 +28,7 @@ jobs:
       TARGET_SHA: ${{ github.sha }}
 
     steps:
-      - name: Checkout exact F2-03 preparation head
+      - name: Checkout exact F2-04 preparation head
         shell: cmd
         env:
           GH_TOKEN: ${{ github.token }}
