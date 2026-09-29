@@ -1,0 +1,465 @@
+{
+  "schema_version": 1,
+  "pack_id": "F105_RIVENDELL_FELLOWSHIP_MEGA_SOURCE_SUPERPACK_V1",
+  "status": "SOURCE_ARCHITECTURE_READY_INVENTORY_GATED_RUNTIME_GATED",
+  "canonical_mission_id": "F1-05",
+  "canonical_title": "Rivendell & Fellowship",
+  "runtime_consumers": [
+    "P1C04"
+  ],
+  "authority": [
+    "01_STORY_AND_TIMELINE_BIBLE",
+    "02_CHARACTERS_AND_RELATIONSHIPS_BIBLE",
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "Data/ProjectGovernor.json",
+    "Docs/WORLD_DETAIL_LEDGER.md"
+  ],
+  "story_contract": {
+    "critical_path": [
+      "Council chooses destruction of the Ring.",
+      "Fellowship forms."
+    ],
+    "safe_optional_window": [
+      "exploration",
+      "lore",
+      "equipment",
+      "relationship scenes"
+    ],
+    "locked_postcondition": "Nine depart."
+  },
+  "world_contract": {
+    "location_type": "Elven valley sanctuary",
+    "visual_grammar": [
+      "stone/wood integration",
+      "waterfalls",
+      "layered terraces"
+    ],
+    "gameplay_roles": [
+      "lore",
+      "relationships",
+      "equipment",
+      "council transition"
+    ],
+    "state_variants": [
+      "arrival wounded",
+      "Fellowship formed"
+    ]
+  },
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_class": 2
+  },
+  "safety_gate": {
+    "requires_clean_warehouse_inventory": true,
+    "hard_stop_on_hash_mismatch": true,
+    "hard_stop_on_license_hash_mismatch": true,
+    "hard_stop_on_dangerous_file": true,
+    "hard_stop_on_bad_receipt": true
+  },
+  "source_policy": {
+    "reuse_existing_warehouse_first": true,
+    "duplicate_payloads_per_runtime_chapter": false,
+    "index_only": true,
+    "animated_candidate_extension": ".fbx",
+    "texture_extensions": [
+      ".png",
+      ".tga"
+    ],
+    "forbidden_texture_extensions": [
+      ".bmp"
+    ],
+    "static_source_extensions": [
+      ".fbx",
+      ".obj"
+    ],
+    "audio_extensions": [
+      ".wav"
+    ],
+    "metadata_extensions": [
+      ".json",
+      ".mtl"
+    ],
+    "max_total_candidates": 12000,
+    "max_candidates_per_category": 1500,
+    "minimum_free_disk_reserve_bytes": 6442450944
+  },
+  "fellowship_presentation_guardrails": [
+    "Character availability remains chapter-driven.",
+    "Relationship state may affect optional dialogue/assists but not fixed outcomes.",
+    "Named equipment is story-state data, not randomized loot.",
+    "Gandalf magic remains rare and purposeful.",
+    "Aragorn combat remains grounded and decisive.",
+    "Legolas precision/mobility must not become supernatural flight.",
+    "Gimli impact remains heavy without cartoon movement.",
+    "Boromir remains tragic rather than villainized.",
+    "Elrond remains primarily narrative/lore authority."
+  ],
+  "categories": [
+    {
+      "id": "RIVENDELL_TERRACES_ARCHITECTURE",
+      "kind": "static",
+      "keywords": [
+        "rivendell",
+        "elven",
+        "terrace",
+        "stone",
+        "wood",
+        "arch",
+        "bridge",
+        "column",
+        "balcony",
+        "hall",
+        "stair",
+        "roof",
+        "courtyard"
+      ]
+    },
+    {
+      "id": "RIVENDELL_WATERFALLS_RIVER",
+      "kind": "mixed",
+      "keywords": [
+        "waterfall",
+        "river",
+        "stream",
+        "water",
+        "wet",
+        "rock",
+        "mist",
+        "spray",
+        "bank",
+        "bridge",
+        "pool"
+      ]
+    },
+    {
+      "id": "RIVENDELL_GARDENS_VEGETATION",
+      "kind": "static",
+      "keywords": [
+        "garden",
+        "flower",
+        "tree",
+        "leaf",
+        "fern",
+        "moss",
+        "vine",
+        "bush",
+        "grass",
+        "forest",
+        "shrub"
+      ]
+    },
+    {
+      "id": "RIVENDELL_INTERIORS",
+      "kind": "static",
+      "keywords": [
+        "hall",
+        "library",
+        "study",
+        "room",
+        "bed",
+        "table",
+        "chair",
+        "shelf",
+        "book",
+        "scroll",
+        "rug",
+        "fireplace",
+        "candle",
+        "lantern"
+      ]
+    },
+    {
+      "id": "COUNCIL_SPACE",
+      "kind": "static",
+      "keywords": [
+        "council",
+        "circle",
+        "seat",
+        "chair",
+        "stone",
+        "platform",
+        "pedestal",
+        "table",
+        "banner",
+        "ring",
+        "courtyard"
+      ]
+    },
+    {
+      "id": "LORE_LIBRARY_SUPPORT",
+      "kind": "static",
+      "keywords": [
+        "book",
+        "scroll",
+        "map",
+        "library",
+        "shelf",
+        "desk",
+        "quill",
+        "ink",
+        "parchment",
+        "lore",
+        "archive"
+      ]
+    },
+    {
+      "id": "EQUIPMENT_FORGE_ARMORY",
+      "kind": "static",
+      "keywords": [
+        "sword",
+        "shield",
+        "bow",
+        "knife",
+        "axe",
+        "quiver",
+        "armor",
+        "armour",
+        "forge",
+        "anvil",
+        "rack",
+        "weapon",
+        "gear"
+      ]
+    },
+    {
+      "id": "FELLOWSHIP_CHARACTER_SUPPORT",
+      "kind": "animated",
+      "keywords": [
+        "frodo",
+        "sam",
+        "merry",
+        "pippin",
+        "gandalf",
+        "aragorn",
+        "legolas",
+        "gimli",
+        "boromir",
+        "hobbit",
+        "human",
+        "elf",
+        "dwarf",
+        "wizard",
+        "ranger"
+      ]
+    },
+    {
+      "id": "FELLOWSHIP_ANIMATION_LIBRARY",
+      "kind": "animated",
+      "keywords": [
+        "idle",
+        "walk",
+        "run",
+        "talk",
+        "sit",
+        "stand",
+        "gesture",
+        "equip",
+        "draw",
+        "sheath",
+        "bow",
+        "sword",
+        "axe",
+        "staff",
+        "injured",
+        "recover"
+      ]
+    },
+    {
+      "id": "RIVENDELL_ELVEN_POPULATION",
+      "kind": "animated",
+      "keywords": [
+        "elf",
+        "elven",
+        "civilian",
+        "guard",
+        "archer",
+        "healer",
+        "scholar",
+        "musician",
+        "walk",
+        "idle",
+        "talk"
+      ]
+    },
+    {
+      "id": "RELATIONSHIP_SCENE_SUPPORT",
+      "kind": "mixed",
+      "keywords": [
+        "conversation",
+        "talk",
+        "gesture",
+        "bench",
+        "balcony",
+        "garden",
+        "walk",
+        "sit",
+        "camp",
+        "gift",
+        "relationship",
+        "dialogue"
+      ]
+    },
+    {
+      "id": "HEALING_RECOVERY_SUPPORT",
+      "kind": "mixed",
+      "keywords": [
+        "healing",
+        "healer",
+        "bed",
+        "linen",
+        "cloth",
+        "bottle",
+        "herb",
+        "medicine",
+        "wounded",
+        "injury",
+        "recovery",
+        "room"
+      ]
+    },
+    {
+      "id": "SANCTUARY_AUDIO",
+      "kind": "audio",
+      "keywords": [
+        "waterfall",
+        "river",
+        "stream",
+        "bird",
+        "wind",
+        "forest",
+        "harp",
+        "string",
+        "choir",
+        "ambient",
+        "fire",
+        "footstep",
+        "hall"
+      ]
+    },
+    {
+      "id": "SANCTUARY_LIGHTING_DRESSING",
+      "kind": "mixed",
+      "keywords": [
+        "lantern",
+        "candle",
+        "torch",
+        "window",
+        "sun",
+        "light",
+        "mist",
+        "water",
+        "fire",
+        "glow",
+        "curtain"
+      ]
+    },
+    {
+      "id": "TRAVERSAL_BRIDGES_PATHS",
+      "kind": "static",
+      "keywords": [
+        "bridge",
+        "path",
+        "stair",
+        "terrace",
+        "balcony",
+        "walkway",
+        "gate",
+        "arch",
+        "road",
+        "trail",
+        "cliff"
+      ]
+    },
+    {
+      "id": "MOUNTS_TRAVEL_SUPPORT",
+      "kind": "animated",
+      "keywords": [
+        "horse",
+        "pony",
+        "saddle",
+        "bridle",
+        "stable",
+        "mount",
+        "ride",
+        "walk",
+        "trot"
+      ]
+    },
+    {
+      "id": "CINEMATIC_COUNCIL_DRESSING",
+      "kind": "mixed",
+      "keywords": [
+        "council",
+        "seat",
+        "banner",
+        "pedestal",
+        "ring",
+        "table",
+        "stone",
+        "robe",
+        "book",
+        "sword",
+        "staff",
+        "wide",
+        "vista"
+      ]
+    },
+    {
+      "id": "FELLOWSHIP_DEPARTURE_SUPPORT",
+      "kind": "mixed",
+      "keywords": [
+        "pack",
+        "bag",
+        "rope",
+        "cloak",
+        "weapon",
+        "horse",
+        "pony",
+        "travel",
+        "supply",
+        "food",
+        "map",
+        "path"
+      ]
+    },
+    {
+      "id": "FAUNA_AMBIENCE",
+      "kind": "animated",
+      "keywords": [
+        "bird",
+        "deer",
+        "rabbit",
+        "hare",
+        "butterfly",
+        "insect",
+        "horse",
+        "pony",
+        "wildlife"
+      ]
+    },
+    {
+      "id": "SYSTEMIC_INTERACTION_SUPPORT",
+      "kind": "mixed",
+      "keywords": [
+        "door",
+        "gate",
+        "book",
+        "map",
+        "weapon",
+        "chair",
+        "bench",
+        "lantern",
+        "water",
+        "bridge",
+        "bell",
+        "fireplace"
+      ]
+    }
+  ],
+  "acceptance_boundary": "Source architecture/index preparation only. No UE integration, PIE, device, visual, pacing or performance acceptance."
+}
