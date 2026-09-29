@@ -205,17 +205,17 @@
     {
       "order": 9,
       "region_id": "ANDUIN_AMON_HEN",
-      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
-      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "current_state": "F108_MAXIMUM_SAFE_SOURCE_ARCHITECTURE_ACTIVE",
+      "runtime_gate": "P1C08_PREP_ONLY_UNTIL_PREDECESSOR_GATE_6_7",
       "preparation_tracks": {
         "surfaces_materials": "ACTIVE_SOURCE_QC",
         "vegetation_biome": "ACTIVE_SOURCE_QC",
-        "architecture_interiors": "ACTIVE_SOURCE_QC",
-        "characters_animation_fauna": "ACTIVE_SOURCE_QC",
-        "audio_foley": "ACTIVE_SOURCE_QC",
+        "architecture_interiors": "MAXIMUM_SAFE_SOURCE_ARCHITECTURE_ACTIVE",
+        "characters_animation_fauna": "MAXIMUM_SAFE_SOURCE_ARCHITECTURE_ACTIVE",
+        "audio_foley": "MAXIMUM_SAFE_SOURCE_ARCHITECTURE_ACTIVE",
         "vfx_atmosphere": "ACTIVE_SOURCE_QC",
-        "collision_navmesh": "DESIGN_PREP",
-        "streaming_memory": "BUDGET_PREP",
+        "collision_navmesh": "ROUTE_AND_BANK_DESIGN_PREP",
+        "streaming_memory": "MULTI_BANK_STREAMING_PLAN_READY_SOURCE_ONLY",
         "profiling": "BLOCKED_UNTIL_RUNTIME_INTEGRATION",
         "human_acceptance": "BLOCKED_UNTIL_PLAYABLE_BUILD"
       }
