@@ -29,10 +29,12 @@ $start = Get-Date
 $proc = Start-Process -FilePath $exe -ArgumentList $args -PassThru
 $readyAt = $null
 $failure = $null
+$runtimeDataReadyMarker = "NPCContext: ready=yes"
 $required = @(
     "ShirePlayableStartup: GameMode ready",
     "ShireStartupGrounding: PASS chapter=P1C01",
-    "ShirePlayableStartup: chapter=P1C01 route=FrodoMain"
+    "ShirePlayableStartup: chapter=P1C01 route=FrodoMain",
+    $runtimeDataReadyMarker
 )
 
 try {
@@ -82,4 +84,5 @@ if ($failure) {
     if (Test-Path -LiteralPath $log) { Get-Content -LiteralPath $log -Tail 300 }
     exit 3
 }
+Write-Host ("W00_PACKAGED_RUNTIME_DATA_READ_PASS marker=" + $runtimeDataReadyMarker)
 Write-Host ("W00_PACKAGED_STARTUP_PASS observed=" + $ObservationSeconds + "s log=" + $log)

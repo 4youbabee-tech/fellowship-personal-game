@@ -1,3 +1,11 @@
+## 2026-09-30 - W00 packaged runtime Data-read proof guard
+
+- Remote branch-salvage cleanup is closed machine-wise: the 26 legacy heads are recoverable from `archive/pre-build-salvage-20260930`, and the final cleanup pass reduced persistent refs to `develop`, `main`, and the recovery-only archive before this short-lived validation branch was opened.
+- Construction resume is following the Governor's current W00 acceptance order rather than opening a new gameplay feature prematurely.
+- `Scripts/verify_packaged_startup.ps1` now requires the packaged executable to emit `NPCContext: ready=yes` in addition to startup/grounding/route markers. This closes the evidence gap between staged/parseable RuntimeDependencies and actual runtime consumption by `UShireNPCContextSubsystem`.
+- `Data/W00FinalClosurePlanV1.json` now defines W00-DATA-001 as staging + JSON syntax + packaged runtime consumption.
+- Current status: **SOURCE-IMPLEMENTED / EXACT-HEAD CI PROOF PENDING**. No PIE, device, FPS, audio-playback, pacing, or visual acceptance is claimed by this change.
+
 ## 2026-09-30 - Final zero-ahead maintenance sweep before construction resume
 
 - PR #180 merged the last orphan-ref closeout after exact-head hosted Pre-Unreal SUCCESS.

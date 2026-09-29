@@ -20,9 +20,9 @@
     },
     {
       "id": "W00-DATA-001",
-      "name": "Packaged runtime Data JSON staging and syntax",
-      "evidence": "verify_packaged_runtime_data.ps1",
-      "pass": "All RuntimeDependencies declared by ShireJourney.Build.cs exist in staged package and parse as JSON"
+      "name": "Packaged runtime Data JSON staging, syntax and runtime consumption",
+      "evidence": "verify_packaged_runtime_data.ps1 + verify_packaged_startup.ps1",
+      "pass": "All RuntimeDependencies declared by ShireJourney.Build.cs exist in the staged package and parse as JSON, and the packaged executable emits NPCContext: ready=yes after UShireNPCContextSubsystem consumes its required runtime Data contracts"
     },
     {
       "id": "W00-BOOT-001",
@@ -90,5 +90,12 @@
       "fresh real UE4.27.2 build success",
       "fresh P1C01 no-fall PIE confirmation on canonical develop"
     ]
+  },
+  "packaged_runtime_data_read_guard": {
+    "status": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
+    "verifier": "Scripts/verify_packaged_startup.ps1",
+    "required_marker": "NPCContext: ready=yes",
+    "purpose": "Close the gap between proving Data JSON files are staged and proving the packaged executable actually consumes required NPC context Data at runtime.",
+    "evidence_boundary": "This guard can prove packaged runtime Data consumption when its exact-head workflow succeeds. It does not prove final audio playback, target-device performance, human PIE traversal, pacing or visual acceptance."
   }
 }
