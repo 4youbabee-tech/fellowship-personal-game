@@ -1,3 +1,23 @@
+## 2026-09-29 - F2-02 Fangorn & Gandalf Returned maximum-safe source wave
+
+- Canonical F2-02 scope: **REGISTERED**.
+- Part II runtime ID mapping: **UNASSIGNED / DO NOT INVENT**.
+- Mission/story/world/character source verification: **SOURCE-REVIEWED**.
+- Treebeard massive/deliberate guardrail: **PRESERVED**.
+- Gandalf rare/purposeful-magic guardrail: **PRESERVED**.
+- 40-category / 9-bank / 32,000-candidate manifest: **SOURCE-IMPLEMENTED**.
+- 20 configured landmark categories / minimum 16 ready: **SOURCE-IMPLEMENTED / EXECUTION PENDING**.
+- Minimum 8 of 9 banks ready: **SOURCE-IMPLEMENTED / EXECUTION PENDING**.
+- Fair-share candidate scheduling: **SOURCE-IMPLEMENTED**.
+- FBX-only animated candidates / PNG-TGA texture policy / BMP rejection: **SOURCE-IMPLEMENTED**.
+- Clean warehouse inventory + 6 GiB reserve gate: **SOURCE-IMPLEMENTED**.
+- Dedicated 180-minute source workflow: **SOURCE-IMPLEMENTED**.
+- PG-203 source/runtime-ID regression guard: **SOURCE-IMPLEMENTED**.
+- Part II runtime integration: **BLOCKED UNTIL EXPLICIT RUNTIME-ID MAPPING + EXISTING RUNTIME GATES**.
+- Exact-head Pre-Unreal: **PENDING**.
+- Heavy F2-02 source execution: **PENDING CLEAN-INVENTORY RUN**.
+- PIE/device/visual/pacing/performance acceptance: **NOT CLAIMED**.
+
 ## 2026-09-29 - F2-01 Three Hunters / Captives maximum-safe source wave
 
 - Canonical F2-01 scope: **REGISTERED**.
