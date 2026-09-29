@@ -16,51 +16,34 @@
     "No PR #53 merge until the exact candidate head passes the required validation chain."
   ],
   "execution_policy": {
-    "batch_size": "LARGE_COHERENT_BATCHES",
-    "rule": "Prefer substantial coherent batches over tiny isolated edits, but each batch must list the requirements/work items it advances and must preserve the exact-head validation gate.",
-    "request_capture": "Every accepted new user request must first/also enter ProjectGovernor, then be assigned here in the same batch. PG-078 rejects orphan work.",
-    "evidence": "Each bundle closes only from repository/engine/device/human evidence matching its exit criteria."
+    "batch_size": "MAXIMUM_SAFE_COHERENT_WAVES",
+    "rule": "Keep dependency-independent preparation lanes saturated and prefer the largest coherent batch allowed by current safety guards. Runtime-changing integration remains serialized and exact-head validated.",
+    "request_capture": "Accepted scope changes enter ProjectGovernor and are mapped into the existing whole-game queue; do not create parallel authority files.",
+    "evidence": "Source/preparation completion uses repository/CI evidence; runtime/device/visual/pacing acceptance still requires matching engine/device/human evidence.",
+    "long_ci_behavior": "DEC-075 bounded polling. Continue unrelated safe work instead of interactively waiting."
   },
   "current_control_state": {
-    "pull_request": 67,
-    "branch": "integration/comprehensive-foundation-v1",
-    "integration_baseline_head": "8d7247d229b5cd51e8aea5617e1e2030b38229bf",
-    "integration_baseline_pre_unreal": "SUCCESS #532",
-    "integration_baseline_unreal": "SUCCESS #367",
-    "latest_observed_candidate_head": "f524a83cd39510b956e4977571448d43100b628d",
-    "latest_observed_pre_unreal": "FAIL #789 on f524a83: PG-078 only, tracked unfinished snapshot stale after REQ-ORG-001 became VALIDATED.",
-    "latest_observed_unreal": "SUCCESS #624 on f524a83 through full UE4.27.2 headless chain.",
-    "merge_policy": "Newest PR head must pass exact-head Pre-Unreal and full UE4.27.2 validation before develop integration; after merge, develop must return green.",
-    "deep_audit": {
-      "status": "V5_EXACT_HEAD_VALIDATION_ACTIVE",
-      "artifact": "Data/DeepProjectAudit.json",
-      "rule": "Repair only demonstrated exact-head failures. Performance promotion additionally requires representative target-device hitch/memory measurement."
-    },
-    "active_wave": "W00_ARCHITECTURAL_STABILIZATION_FINAL_REPAIR_CLOSURE",
-    "source_baseline": "f4886b39feea29973543bf6cfb1be4659f10ff9d",
-    "proof_boundary": "No post-#547 hardening commit is COMPILE/PIE/device/visual accepted until the fresh exact-head chain completes.",
-    "integration_baseline": "fb7afb8e39a4186245063ddf2a46fc0df8ba6c56",
-    "current_scope": [
-      "startup grounding",
-      "two-phase chapter asset commit",
-      "transactional chapter world swap/rollback",
-      "committed-world living-world synchronization",
-      "V10 regional density/roles/dialogue",
-      "Unreal Automation QA foundation",
-      "visual-performance guardrails"
-    ],
-    "active_production_lane": "CP_W00_155_FINAL_REPAIR_ONLY",
+    "develop_head": "df90f41bbb0dae15c7774afcbb3db21a3acd0cf2",
+    "active_wave": "MAXIMUM_SAFE_PRODUCTION_V1",
+    "active_production_lane": "P1C01_RUNTIME_CLOSURE_PLUS_PARALLEL_WHOLE_GAME_PREPARATION",
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
+    "runtime_rule": "Exactly one runtime-changing chapter lane; P1C01 remains active until Gate 6/7.",
     "warehouse_iteration": {
-      "status": "FINAL_PRE_RUNNER_BATCH_STAGED_AND_AUDITED",
-      "exact_head": "17689b194ddca281aa9881b9ac50594712a65df6",
-      "warehouse_run": "#99 SUCCESS",
-      "inventory": "payloadFiles=240 payloadBytes=3816657674 receipts=8 receiptRecords=278 duplicateGroups=22",
-      "total_footprint": "files=249 bytes=3816866382",
-      "kaykit": "8 files staged, 0 skipped",
-      "quaternius": "0 files staged, 14 unresolved; do not invent direct links",
-      "next_priority": "Repair W00 runner Engine Content ACL blocker; broad sourcing expansion is paused."
-    }
+      "latest_run": "#286",
+      "inventory_status": "PASS_BEFORE_LATER_TOOLING_FAILURE",
+      "inventory": "payloadFiles=18697 bytes=6688457009 receipts=14 receiptRecords=667 activeRecords=239 superseded=428 duplicateGroups=0",
+      "later_failure": "run_warehouse_saturation_train.ps1 StrictMode empty Measure-Object Sum property",
+      "next_priority": "Repair saturation reporting, rerun selective warehouse train, then resume P1C01 closure."
+    },
+    "part1_source_train": {
+      "F104": "SOURCE_PREPARED",
+      "F105": "SOURCE_ARCHITECTURE_READY",
+      "F106": "MERGED_SOURCE_ARCHITECTURE",
+      "F107": "PR #157 exact-head validation active",
+      "F108": "NEXT_MAXIMUM_SAFE_MEGA_SOURCE_WAVE"
+    },
+    "maximum_safe_plan": "Data/MaximumSafeProductionModeV1.json",
+    "proof_boundary": "No source/preparation success is promoted to PIE/device/visual/performance acceptance."
   },
   "bundles": [
     {
@@ -419,6 +402,23 @@
         "ensure no active work or unfinished requirement becomes orphaned",
         "keep deep audit findings synchronized with exact-head evidence"
       ]
+    },
+    {
+      "id": "CONTINUOUS_MAXIMUM_SAFE_PRODUCTION",
+      "status": "ACTIVE",
+      "requirement_ids": [
+        "REQ-PROD-011",
+        "REQ-WAREHOUSE-001",
+        "REQ-PERF-001",
+        "REQ-STABILITY-001"
+      ],
+      "duties": [
+        "keep independent preparation lanes saturated",
+        "serialize persistent warehouse writers",
+        "quarantine local source/provider failures and continue independent work",
+        "preserve one runtime-changing lane",
+        "measure and record real capacity guards instead of inventing arbitrary small ceilings"
+      ]
     }
   ],
   "tracked_unfinished_requirement_ids": [
@@ -505,16 +505,13 @@
     "WORK-WORLD-003"
   ],
   "immediate_next_large_actions": [
-    "Run one final CP-W00-155 exact-head static + Unreal proof because this wave changes CI/runtime audit contracts.",
-    "After CP155 green, stop repair cleanup unless a concrete regression appears.",
-    "Validate packaged Data JSON, real audio, target-device profiling and human PIE/pacing/visual acceptance."
+    "Repair Warehouse #286 saturation-report StrictMode defect and add regression coverage.",
+    "Rerun selective Warehouse audit/saturation/prep and preserve the clean active-receipt inventory result.",
+    "Resume P1C01 Chapter Closure Pack after the inventory/reporting train is green.",
+    "Complete and merge F1-07 source architecture after exact-head validation.",
+    "Open F1-08 Amon Hen / Breaking of the Fellowship maximum-safe landmark mega source wave.",
+    "Keep later-region source/material/audio/character/world preparation moving through the 28-region whole-game queue without opening another runtime lane.",
+    "Use P1C01 target-device profiling to turn inferred runtime residency limits into measured RAM/VRAM/frame-time budgets."
   ],
-  "last_reconciliation": {
-    "date": "2026-09-24",
-    "reason": "Remove VALIDATED REQ-ORG-001 from tracked unfinished snapshot after Pre #789 PG-078 and align the roadmap with final W00 repair closure.",
-    "exact_head_before_fix": "f524a83cd39510b956e4977571448d43100b628d",
-    "pre_unreal": "#789 FAILURE PG-078 only",
-    "unreal": "#624 SUCCESS",
-    "warehouse": "#205 SUCCESS"
-  }
+  "last_reconciliation": "2026-09-29 MAXIMUM_SAFE_PRODUCTION_V1"
 }
