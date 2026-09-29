@@ -5151,6 +5151,42 @@
       ],
       "evidence_boundary": "Repository recovery and branch hygiene only. No compile, PIE, device, visual, pacing or performance acceptance is implied.",
       "authority": "USER_EXPLICIT_DIRECTION"
+    },
+    {
+      "id": "DEC-090",
+      "title": "One-approval P1C01 mega build train with gated runtime cars",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-STABILITY-001",
+        "REQ-PERF-001",
+        "REQ-WORLD-001",
+        "REQ-NPC-001",
+        "REQ-QA-001"
+      ],
+      "resolution": "One owner approval authorizes the P1C01 mega train as a sequence of many bounded cars. Source/QC/documentation/warehouse preparation may proceed in parallel, while runtime-changing cars remain serialized behind W00 and exact-head engine gates.",
+      "implementation_contract": [
+        "P1C01 remains the only runtime-changing chapter lane until Gate 6/7 permits wider rollout.",
+        "The train preserves the current runtime P1C01 topology while explicitly recording that source F1-01/F1-02/F1-03 are distinct canonical mission packages.",
+        "LivingWorldDirector remains population/pool/event-budget authority; ShireNPCContextSubsystem remains NPC context/knowledge/schedule authority; ShireQuestSubsystem remains quest/progression authority.",
+        "No wholesale legacy-branch merge is allowed.",
+        "Animated production assets remain FBX-only; final production textures PNG/TGA; BMP blocked.",
+        "Heavy production assets use soft references and asynchronous loading; transient crowd-scale actors use pooling; repeated world detail uses ISM/HISM plus LOD/culling.",
+        "Each runtime car requires exact-head Pre-Unreal and UE4.27.2 proof before the next dependent runtime car starts.",
+        "PIE/device/visual/performance acceptance remains evidence-specific and cannot be inherited from static or compile success."
+      ],
+      "rationale": "The owner explicitly authorized a very large chapter-scale build with one approval covering many coordinated tasks. The gated-car model preserves speed without bypassing the project Governor or the low-spec/runtime safety contracts.",
+      "evidence": [
+        "Data/P1C01MaximumSafeMegaBuildV1.json",
+        "Data/P1C01OvernightMegaBuildTrainV1.json",
+        "Data/P1C01SourceToRuntimeDispositionV1.json",
+        "Docs/WORLD_DETAIL_LEDGER.md",
+        "Programmer review confirmed living-world grouped-event cull defect",
+        "Scripts/pre_unreal_validate.py PG-207 member-local event culling",
+        "Scripts/pre_unreal_validate.py PG-208 ambient player-pawn cache centralization",
+        "Scripts/pre_unreal_validate.py PG-209 P1C01 mega-train contract"
+      ],
+      "evidence_boundary": "EXECUTION AUTHORIZATION + SOURCE/RUNTIME REPAIR CONTRACT. No PIE/device/visual/performance acceptance is implied.",
+      "authority": "USER_EXPLICIT_DIRECTION"
     }
   ],
   "open_conflicts": [],
