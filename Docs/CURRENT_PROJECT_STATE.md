@@ -1,3 +1,9 @@
+## 2026-09-29 - PG-199 landmark/F1-06 regression guard
+
+- `PG-199` now statically guards the Part I landmark identity plan and F1-06 superpack.
+- It prevents silent reduction of the 16,000 total candidate ceiling, 1,800/category throughput, FBX-only animated rule, BMP block, inventory-clean gate, minimum landmark coverage, required Caradhras/Moria landmark categories, and tooling-only Unreal filter contract.
+- Evidence boundary remains **SOURCE-IMPLEMENTED / exact-head validation pending**.
+
 ## 2026-09-29 - Part I Landmark Identity + F1-06 Caradhras/Moria Mega Source V1
 
 - New `Data/Part1LandmarkIdentityPlanV1.json` defines recognizable visual anchors for Shire/Hobbiton, Bag End, Bree, Weathertop, Rivendell, Caradhras and Moria.
