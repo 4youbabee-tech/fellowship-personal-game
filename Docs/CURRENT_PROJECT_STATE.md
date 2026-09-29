@@ -1,3 +1,14 @@
+## 2026-09-29 - Develop production-train failures isolated and repaired in source
+
+- Develop merge head `d012f4c68f4e9d83b4b8ec4043b5df06c7a4d9a0` retained green core validation: Pre-Unreal #1363 SUCCESS and Unreal #1085 SUCCESS.
+- P1C01 Chapter Closure Pack #1 fast preflight passed with `cars=15`, ~23.3 GiB free and 6 GiB reserve, then the first storage car incorrectly hard-failed because `$LASTEXITCODE` had never been initialized after a pure PowerShell scriptblock.
+- Warehouse #283 prepared `8` material sources, created local generated commit `ef65959`, then failed during generated-branch remote-head lookup. The lookup used native `git ls-remote` inside a truncating PowerShell pipeline before checking the native exit code.
+- Part I Chapter Preparation Train #1 reached `chapters=7` and ignored `2964` blocked-format stock entries as designed, then Windows PowerShell 5.1 raised `Argument types do not match` while embedding a generic `List[object]` into the ordered report.
+- Source repairs now provide deterministic child-process exit handling, bounded non-pipelined remote lookup retries, and explicit `ToArray()` candidate materialization.
+- Governor `DEC-069` and Pre-Unreal `PG-196` lock the regression contract.
+- Sequential Chapter Queue #1 was SUCCESS and correctly skipped P1C02 source release because P1C01 Gate 6/7 is not ACCEPTED.
+- Evidence boundary: **SOURCE-IMPLEMENTED / rerun validation pending**. No PIE/device/visual/performance acceptance is claimed.
+
 ## 2026-09-29 - #1082 direct-PID/CIM stale-commandlet recovery refinement
 
 - Unreal #1082 proved the stale CI commandlet still survived `Stop-Process -Force` and `taskkill /T /F`.
