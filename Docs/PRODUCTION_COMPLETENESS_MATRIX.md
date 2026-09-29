@@ -1,3 +1,10 @@
+## 2026-09-29 - P1C01 hero skeletal candidate preparation
+
+- Frodo/Gandalf real-character work advances from generic rig staging to an explicit ranked FBX candidate/QC wave.
+- This is not a visual-completion promotion: all candidates remain QC_REQUIRED and not READY_FOR_IMPORT by default.
+- P1C01 stays the sole runtime-changing chapter lane; candidate discovery stays preparation-only until an explicit bounded UE4 import/integration step.
+- No PIE/device/visual/performance acceptance is added by this wave.
+
 ## 2026-09-29 - F2-03 Edoras source-preparation note
 
 - F2-03 has a maximum-safe source architecture with 32 categories / 20 landmarks / 8 banks and PG-204 protection.
