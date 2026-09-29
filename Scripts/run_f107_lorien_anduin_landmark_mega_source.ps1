@@ -1,6 +1,6 @@
 param(
   [string]$ManifestPath = "Data/F107LorienAnduinLandmarkMegaSourceSuperpackV1.json",
-  [string]$WarehouseRoot = "C:\actions-runner\_warehouse\ShireJourney",
+  [string]$WarehouseRoot = "D:\actions-runner\_warehouse\ShireJourney",
   [string]$OutputRoot = ""
 )
 
