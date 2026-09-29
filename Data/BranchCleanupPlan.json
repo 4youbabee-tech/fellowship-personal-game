@@ -4,7 +4,7 @@
   "authority": "Data/ProjectGovernor.json",
   "canonical_branch": "develop",
   "stable_release_branch": "main",
-  "status": "AUTOMATIC_POST_MERGE_ZERO_AHEAD_PRUNE",
+  "status": "AUTOMATIC_EXACT_MERGED_HEAD_DELETE_PLUS_ZERO_AHEAD_PRUNE",
   "truth_boundary": "This plan records branch hygiene only. It does not claim PIE/device/visual acceptance.",
   "preserve": [
     {
@@ -51,17 +51,25 @@
     "production/p1c01-frodo-gandalf-skeletal-candidate-v1",
     "repair/p1c01-material-intake-return-v1",
     "repair/p1c01-pr145-preunreal-contract-v1",
-    "repair/warehouse-critical-gap-receipt-supersession-v1"
+    "repair/warehouse-critical-gap-receipt-supersession-v1",
+    "maintenance/lineage-duplicate-branch-cleanup-20260930",
+    "production/p1c01-visual-economy-settings-v1",
+    "production/p1c01-visual-economy-settings-v2",
+    "production/p1c01-visual-economy-settings-v3",
+    "production/p1c01-visual-economy-settings-static-gate-v1",
+    "production/p1c01-visual-economy-settings-static-gate-v3",
+    "production/p1c01-visual-economy-settings-static-gate-v5",
+    "production/part1-finale-f107-f108-mega-train-v1"
   ],
   "safety_rules": [
     "Never delete develop or main.",
     "Never delete an active PR head.",
-    "Delete a branch immediately after its meaningful content is merged into develop.",
-    "Every cleanup run automatically enumerates live remote refs and deletes non-protected branches only when GitHub reports zero commits ahead of develop.",
-    "delete_after_merge is an explicit deletion supplement, not the sole source of dead-branch discovery.",
+    "On every merged PR close event, delete the exact merged head ref immediately only when the remote SHA still equals the merged PR head SHA; if the ref moved, preserve it as new work.",
+    "After exact merged-head closeout, enumerate live refs once and delete non-protected, non-active-PR branches only when GitHub reports zero commits ahead of develop.",
+    "delete_after_merge is an explicit deletion supplement for reviewed superseded/divergent refs, not the sole discovery source.",
     "Never bulk-merge or auto-delete a divergent branch with unique commits; selectively salvage or explicitly supersede it first.",
     "Branches with unresolved unique commits remain protected until reviewed.",
-    "Cleanup runs only from an exact-head develop checkout."
+    "Cleanup runs only from an exact-head develop merge checkout on GitHub-hosted Windows."
   ],
   "final_audit": {
     "status": "LEGACY_UNIQUE_ROOTS_RESOLVED_PENDING_POST_MERGE_DELETE",
@@ -229,5 +237,41 @@
       "repair/warehouse-critical-gap-receipt-supersession-v1": "SUPERSEDED Governor-only repair snapshot; current Governor and warehouse semantics are newer."
     },
     "safety": "Unique production/art/provenance/settings branches are explicitly preserved for focused salvage instead of being deleted by age."
+  },
+  "permanent_closeout_policy_2026_09_30": {
+    "status": "ENFORCED",
+    "trigger": "pull_request closed with merged == true",
+    "exact_head_delete": "Delete merged head when origin/<head> still equals github.event.pull_request.head.sha.",
+    "moved_head_guard": "If the remote head moved after merge, keep it; never delete new work.",
+    "fallback": "Run automatic zero-ahead prune plus explicit reviewed delete_after_merge cleanup.",
+    "repository_setting_note": "Repository delete_branch_on_merge may remain disabled; the governed workflow enforces the same lifecycle with stronger SHA/active-PR/protected-branch guards.",
+    "authority": "DEC-042 + DEC-088"
+  },
+  "lineage_duplicate_cleanup_2026_09_30": {
+    "action": "DELETE_AFTER_NEXT_MERGE",
+    "branches": [
+      "maintenance/lineage-duplicate-branch-cleanup-20260930",
+      "production/p1c01-visual-economy-settings-v1",
+      "production/p1c01-visual-economy-settings-v2",
+      "production/p1c01-visual-economy-settings-v3",
+      "production/p1c01-visual-economy-settings-static-gate-v1",
+      "production/p1c01-visual-economy-settings-static-gate-v3",
+      "production/p1c01-visual-economy-settings-static-gate-v5",
+      "production/part1-finale-f107-f108-mega-train-v1"
+    ],
+    "evidence": {
+      "maintenance/lineage-duplicate-branch-cleanup-20260930": "identical to develop (ahead=0/behind=0) at audit time.",
+      "production/p1c01-visual-economy-settings-v1": "strict ancestor of preserved visual-economy v4.",
+      "production/p1c01-visual-economy-settings-v2": "strict ancestor of preserved visual-economy v4.",
+      "production/p1c01-visual-economy-settings-v3": "strict ancestor of preserved visual-economy v4.",
+      "production/p1c01-visual-economy-settings-static-gate-v1": "exact-head alias of preserved visual-economy v4.",
+      "production/p1c01-visual-economy-settings-static-gate-v3": "exact-head alias of preserved visual-economy v4.",
+      "production/p1c01-visual-economy-settings-static-gate-v5": "exact-head alias of preserved visual-economy v4.",
+      "production/part1-finale-f107-f108-mega-train-v1": "exact-head duplicate of preserved production/f106-caradhras-moria-mega-source-v1."
+    },
+    "preserved_survivors": [
+      "production/p1c01-visual-economy-settings-v4",
+      "production/f106-caradhras-moria-mega-source-v1"
+    ]
   }
 }

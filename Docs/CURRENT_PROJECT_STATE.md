@@ -1,3 +1,12 @@
+## 2026-09-30 - Final runner-path and branch-lifecycle reconciliation
+
+- Owner-side cleanup finished with `OLD_C_RESIDUE_EXISTS=False` and `D_RUNNER_EXISTS=True`; the active persistent runner authority remains `D:\\actions-runner` and Warehouse authority remains `D:\\actions-runner\\_warehouse\\ShireJourney`.
+- Quick repository audit confirmed current runner/watchdog/service-guard defaults point to D, Warehouse Stage remains self-hosted on the D-backed persistent Warehouse, and hosted Pre-Unreal / Branch Cleanup remain off the UE4 device lane.
+- Governor drift is reconciled: REQ-STABILITY-003 / DEC-043 / DEC-047 now describe the current hosted static/admin architecture instead of the retired self-hosted static/admin design.
+- DEC-042 is strengthened by DEC-088: every merged temporary branch is closed by exact remote-head SHA deletion first, then guarded zero-ahead pruning. If the remote branch moved after merge, it is preserved as new work.
+- The next cleanup run explicitly removes strict ancestor/exact-head duplicate refs while unique production/provenance/material/graphics branches remain preserved for selective salvage.
+- Evidence boundary: infrastructure and repository hygiene only. No PIE/device/visual/performance or chapter acceptance is claimed.
+
 ## 2026-09-30 - Second branch-hygiene pass
 
 - Eight clearly superseded remote branches are approved for post-merge deletion: duplicate main-entry workflow experiments, obsolete Warehouse diagnostic/supersession repairs, the pre-reconciliation hero skeletal candidate branch, and three stale repair branches.

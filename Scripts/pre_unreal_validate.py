@@ -5289,6 +5289,10 @@ for pg167_post_merge_symbol in [
     "- closed",
     "github.event.pull_request.merged == true",
     "github.event.pull_request.merge_commit_sha",
+    "github.event.pull_request.head.ref",
+    "github.event.pull_request.head.sha",
+    "MERGED_HEAD_REF",
+    "MERGED_HEAD_SHA",
     "group: branch-cleanup-${{ github.repository }}",
 ]:
     if pg167_post_merge_symbol not in pg167_cleanup:
@@ -5316,6 +5320,9 @@ for pg167_cleanup_guard in [
     "Plan-protected branch missing after cleanup",
     "BRANCH_CLEANUP_AUTO_ZERO_AHEAD",
     "BRANCH_CLEANUP_KEEP_UNIQUE",
+    "BRANCH_CLEANUP_MERGED_HEAD_DELETE",
+    "BRANCH_CLEANUP_MERGED_HEAD_MOVED",
+    "MERGED_HEAD_SHA is required",
     "compare/develop...",
 ]:
     if pg167_cleanup_guard not in pg167_cleanup_script:

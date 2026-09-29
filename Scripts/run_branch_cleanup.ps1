@@ -1,6 +1,8 @@
 param(
     [string]$PlanPath = "Data/BranchCleanupPlan.json",
-    [string]$Repository = $env:GITHUB_REPOSITORY
+    [string]$Repository = $env:GITHUB_REPOSITORY,
+    [string]$MergedHeadRef = $env:MERGED_HEAD_REF,
+    [string]$MergedHeadSha = $env:MERGED_HEAD_SHA
 )
 
 Set-StrictMode -Version Latest
@@ -92,6 +94,49 @@ function Remove-RemoteBranch {
     return $true
 }
 
+# DEC-042/DEC-088: close the lifecycle of the exact merged PR head first.
+# This is independent of the repository-level delete_branch_on_merge setting.
+$deletedMergedHead = 0
+if (-not [string]::IsNullOrWhiteSpace($MergedHeadRef)) {
+    $mergedBranch = $MergedHeadRef.Trim()
+    $mergedSha = ([string]$MergedHeadSha).Trim()
+
+    if ($mergedBranch -in @("develop", "main")) {
+        Write-Host "BRANCH_CLEANUP_MERGED_HEAD_SKIP_CANONICAL branch=$mergedBranch"
+    }
+    elseif ($activeHeads -contains $mergedBranch) {
+        Write-Host "BRANCH_CLEANUP_MERGED_HEAD_KEEP_ACTIVE branch=$mergedBranch"
+    }
+    else {
+        $remoteRef = "refs/heads/$mergedBranch"
+        $existing = @(& git ls-remote --heads origin $remoteRef)
+        if ($LASTEXITCODE -ne 0) {
+            throw "Unable to query merged PR head branch: $mergedBranch"
+        }
+
+        if ($existing.Count -eq 0) {
+            Write-Host "BRANCH_CLEANUP_MERGED_HEAD_ALREADY_ABSENT branch=$mergedBranch"
+        }
+        else {
+            $remoteSha = (($existing[0] -split "\s+")[0]).Trim()
+            if ([string]::IsNullOrWhiteSpace($mergedSha)) {
+                throw "MERGED_HEAD_SHA is required when MERGED_HEAD_REF is present."
+            }
+            if (-not $remoteSha.Equals($mergedSha, [System.StringComparison]::OrdinalIgnoreCase)) {
+                Write-Host "BRANCH_CLEANUP_MERGED_HEAD_MOVED branch=$mergedBranch remoteSha=$remoteSha mergedSha=$mergedSha"
+            }
+            else {
+                Write-Host "BRANCH_CLEANUP_MERGED_HEAD_DELETE branch=$mergedBranch sha=$remoteSha"
+                & git push origin --delete $mergedBranch
+                if ($LASTEXITCODE -ne 0) {
+                    throw "Failed to delete exact merged PR head branch: $mergedBranch"
+                }
+                $deletedMergedHead = 1
+            }
+        }
+    }
+}
+
 $deletedExplicit = 0
 foreach ($branch in $deleteBranches) {
     if (Remove-RemoteBranch -Branch $branch -Reason "explicit-plan") {
@@ -167,4 +212,4 @@ foreach ($protected in @($planProtectedBranches | Where-Object { $_ -notin @("de
         throw "Plan-protected branch missing after cleanup: $protected"
     }
 }
-Write-Host ("BRANCH_CLEANUP_PASS deletedPlanCount=" + $deleteBranches.Count + " deletedExplicit=" + $deletedExplicit + " deletedAutoZeroAhead=" + $deletedAuto + " keptUnique=" + $keptUnique + " activePrHeads=" + $activeHeads.Count + " planProtected=" + $planProtectedBranches.Count + " canonical=develop stable=main")
+Write-Host ("BRANCH_CLEANUP_PASS mergedHeadDeleted=" + $deletedMergedHead + " deletedPlanCount=" + $deleteBranches.Count + " deletedExplicit=" + $deletedExplicit + " deletedAutoZeroAhead=" + $deletedAuto + " keptUnique=" + $keptUnique + " activePrHeads=" + $activeHeads.Count + " planProtected=" + $planProtectedBranches.Count + " canonical=develop stable=main")
