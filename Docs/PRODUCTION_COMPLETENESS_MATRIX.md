@@ -1,3 +1,11 @@
+## 2026-09-30 - P1C01 mega train / living-world cull safety
+
+- Living-world event distance cleanup: **SOURCE-IMPLEMENTED / PROOF PENDING**. Distance culling is member-local; authored event lifetime expiry remains event-wide.
+- Regression guard: **PG-207 ADDED** in Pre-Unreal validation.
+- Ambient player lookup note: current source has one direct `UGameplayStatics::GetPlayerPawn` call inside the cache helper, not six independent direct lookups.
+- P1C01 mega production train: **AUTHORIZED + REGISTERED / RUNTIME CARS GATED**.
+- P1C01 production maturity, PIE, target-device, FPS, audio-listening and visual acceptance: **UNCHANGED** until corresponding evidence exists.
+
 ## 2026-09-30 - Living-world pooled-event cull safety
 
 - Event lifetime cleanup: **PRESERVED event-wide**.
