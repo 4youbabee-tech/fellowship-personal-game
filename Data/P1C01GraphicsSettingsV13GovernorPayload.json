@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "payload_id": "P1C01_GRAPHICS_SETTINGS_V13_GOVERNOR_PAYLOAD",
+  "prepared_against": {
+    "develop_sha": "ea07f5b46f097fc9fb4ea2afc3d2f206c9fa298a",
+    "project_governor_blob_sha": "64feb2283f7c63356f3ee2b9efee602556a9ea2d",
+    "highest_existing_decision": "DEC-080",
+    "requirement_id_free": true,
+    "decision_id_free": true
+  },
+  "requirement": {
+    "id": "REQ-PERF-004",
+    "title": "Professional scalable Graphics/Video Settings with low-spec floor protection",
+    "category": "Performance",
+    "priority": "CRITICAL",
+    "status": "PLANNED",
+    "origin": "Owner explicitly requested a professional Graphics/Video Settings system with a visually strong default, scalable higher-quality presets and Custom controls without weakening the 720p Low-Medium 30 FPS target-laptop floor.",
+    "intent": "Give players safe, reversible control over presentation quality while preserving P1C01 visual identity and the permanent visual-economy doctrine: maximize visible beauty per measured CPU/GPU/VRAM cost and recover waste before sacrificing hero readability.",
+    "acceptance_criteria": [
+      "Presets include Performance, Cinematic Balanced, High, Ultra and Custom.",
+      "Cinematic Balanced is the visually strong default direction; higher presets are opt-in.",
+      "The Windows DX11 1280x720 Low-Medium 30 FPS floor remains protected on the i7 Gen6 / 8 GB RAM / ~2 GB VRAM target class.",
+      "Display-mode changes use a preview, confirm, revert transaction and can recover from an unconfirmed mode.",
+      "Custom controls cover resolution/display mode, VSync/frame cap and the governed scalability groups without silently exceeding the chosen preset.",
+      "Lower-tier texture/shadow/view-distance/foliage anchors cannot drift without an explicit governed decision and exact-device evidence.",
+      "Runtime settings integration remains P1C01-only until Gate 6/7 allows later runtime chapters."
+    ],
+    "dependencies": [
+      "REQ-PERF-001",
+      "REQ-STABILITY-001",
+      "REQ-ORG-001"
+    ]
+  },
+  "decision": {
+    "id": "DEC-081",
+    "title": "P1C01 Graphics/Video settings use a visual-economy preset stack with reversible display transactions",
+    "status": "ACCEPTED",
+    "requirements": [
+      "REQ-PERF-004",
+      "REQ-PERF-001",
+      "REQ-WORLD-002",
+      "REQ-STABILITY-001"
+    ],
+    "resolution": "Implement the P1C01 Graphics/Video settings architecture around Performance, Cinematic Balanced, High, Ultra and Custom. Protect the current low-tier scalability floor and recover GPU/CPU/VRAM cost from waste before reducing hero silhouette, composition, hero materials, lighting, atmosphere or near-field detail.",
+    "implementation_contract": [
+      "Preserve Windows / DX11 / 1280x720 Low-Medium / 30 FPS as the target-laptop floor contract.",
+      "Cinematic Balanced is the visually strong default; Performance is the recovery preset; High and Ultra are opt-in quality tiers; Custom exposes individual governed controls.",
+      "Preserve the existing lower-tier anchors: texture pool 600/800/1000 MB, shadow max resolution 512/768/1024, shadow/view-distance scale 0.45/0.65/0.80 and foliage tier-2 density 0.70 until measured evidence justifies a governed change.",
+      "Display resolution/window-mode changes use preview -> confirm -> revert; an unconfirmed or failed preview must restore the previous known-good mode.",
+      "Recover cost first from duplicate actors, far shadows, overdraw, translucency, redundant lights, uninstanced repetition, unnecessary Tick and invisible/far detail.",
+      "Protect silhouette, composition, hero materials, lighting, atmosphere and near-field detail ahead of indiscriminate detail reduction.",
+      "Heavy runtime assets remain soft referenced and asynchronously loaded through FStreamableManager; crowds stay pooled; repeated decorative detail stays ISM/HISM + LOD/culling.",
+      "Final animated assets remain FBX; production textures remain PNG/TGA/channel-packed.",
+      "Runtime implementation remains P1C01-only; later runtime chapters remain closed until Gate 6/7.",
+      "Ledger registration and this Governor authority must both be landed before runtime settings source opens."
+    ],
+    "rationale": "The project needs a player-facing quality system that preserves the established low-spec floor while spending performance budget where it creates the most visible cinematic value. A governed preset stack plus reversible display transaction prevents quality drift and unsafe display changes.",
+    "evidence": [
+      "Data/P1C01GraphicsSettingsV13Preparation.json",
+      "Docs/WORLD_DETAIL_LEDGER.md — P1C01 Graphics/Video Visual-Economy Doctrine V3 (must land before runtime implementation)"
+    ],
+    "evidence_boundary": "GOVERNANCE ARCHITECTURE ONLY. No compile, PIE, device, visual or performance acceptance is claimed."
+  },
+  "apply_rule": "Fail closed if develop SHA, ProjectGovernor blob SHA, requirement availability, decision availability or required ledger registration has changed."
+}
