@@ -1,3 +1,10 @@
+## 2026-09-29 - F2-02 reconciliation note
+
+- F2-02 source-preparation metadata/tooling is reconciled with the permanent story/source rules without changing runtime chapter maturity.
+- F2-02 remains SOURCE/PREPARATION ONLY and is not assigned a Part II runtime ID.
+- DEC-083 owns the F2-02 source wave after DEC-081/DEC-082 were assigned to permanent story/source and localization governance.
+- No production-completeness row is promoted to PIE/device/visual/performance accepted by this reconciliation.
+
 ## 2026-09-29 — Story/source completeness and localization governance note
 
 - Story/source completeness definition is strengthened without promoting runtime maturity: chapter planning must route Timeline -> film/screenplay -> Tolkien narrative/Appendices -> Sources 02-11 and explicitly disposition meaningful discovered detail.
