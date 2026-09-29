@@ -1,0 +1,79 @@
+name: F2-02 Fangorn Gandalf Returned Maximum Safe Mega Source
+
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - 'Data/Part1LandmarkIdentityPlanV1.json'
+      - 'Data/F202FangornGandalfReturnedMaximumSafeMegaSourceV1.json'
+      - 'Scripts/run_f202_fangorn_gandalf_returned_maximum_safe_source.ps1'
+      - '.github/workflows/f202-fangorn-gandalf-returned-maximum-safe-source.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: f202-fangorn-gandalf-returned-maximum-safe-source-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    name: Build F2-02 Fangorn Gandalf Returned maximum-safe source superpack
+    runs-on:
+      - self-hosted
+      - Windows
+      - X64
+      - ue4-27
+    timeout-minutes: 180
+    env:
+      TARGET_SHA: ${{ github.sha }}
+
+    steps:
+      - name: Checkout exact F2-02 preparation head
+        shell: cmd
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          @echo off
+          setlocal EnableExtensions EnableDelayedExpansion
+          set "GITEXE="
+          for /f "delims=" %%G in ('where git.exe 2^>nul') do if not defined GITEXE set "GITEXE=%%G"
+          if not defined GITEXE if exist "C:\Program Files\Git\cmd\git.exe" set "GITEXE=C:\Program Files\Git\cmd\git.exe"
+          if not defined GITEXE exit /b 22
+
+          set "F202_SRC=%RUNNER_TEMP%\shire-f202-source-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
+          if exist "!F202_SRC!" rmdir /S /Q "!F202_SRC!"
+          mkdir "!F202_SRC!"
+          cd /d "!F202_SRC!"
+
+          "!GITEXE!" init
+          if errorlevel 1 exit /b 70
+          "!GITEXE!" -c credential.helper= remote add origin "https://x-access-token:!GH_TOKEN!@github.com/%GITHUB_REPOSITORY%.git"
+          if errorlevel 1 exit /b 71
+          "!GITEXE!" -c credential.helper= fetch --no-tags --depth=2 origin !TARGET_SHA!
+          if errorlevel 1 exit /b 72
+          "!GITEXE!" checkout -f FETCH_HEAD
+          if errorlevel 1 exit /b 73
+          for /f "delims=" %%H in ('"!GITEXE!" rev-parse HEAD') do set "CHECKED_SHA=%%H"
+          if /I not "!CHECKED_SHA!"=="!TARGET_SHA!" exit /b 74
+          echo SHIRE_F202_SOURCE=!F202_SRC!>>"%GITHUB_ENV%"
+          echo F202_EXACT_CHECKOUT_PASS sha=!CHECKED_SHA!
+
+      - name: Verify runner session health
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_F202_SOURCE%\Scripts\verify_runner_session.ps1"
+
+      - name: Fast F2-02 PowerShell preflight
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_F202_SOURCE%\Scripts\test_powershell_syntax.ps1"
+
+      - name: Build Fangorn Gandalf Returned maximum-safe mega source indexes
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_F202_SOURCE%\Scripts\run_f202_fangorn_gandalf_returned_maximum_safe_source.ps1" -ManifestPath "%SHIRE_F202_SOURCE%\Data\F202FangornGandalfReturnedMaximumSafeMegaSourceV1.json"
+
+      - name: Remove isolated F2-02 checkout
+        if: always()
+        shell: cmd
+        run: |
+          @echo off
+          if defined SHIRE_F202_SOURCE if exist "%SHIRE_F202_SOURCE%" rmdir /S /Q "%SHIRE_F202_SOURCE%"
+          exit /b 0
