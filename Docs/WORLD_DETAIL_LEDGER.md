@@ -1,3 +1,19 @@
+## 2026-09-30 - P1C01 Maximum-Safe Mega Build V1 + LivingWorld cull safety
+
+- P1C01 legacy mega-pack path drift found during the train audit was corrected to the D-backed Warehouse authority; this is infrastructure consistency only, not content/runtime acceptance.
+- Registered before further runtime expansion: owner authorizes one large P1C01 production train with many bounded work cars under one approval, rather than repeated tiny approvals.
+- Source basis rechecked from the supplied Story/Timeline, World/Locations, Gameplay/Side Activities, Mission Matrix and Master Production Systems PDFs.
+- Source boundary: F1-01 owns Ring-history/birthday/Gandalf/party material; F1-02 owns Bag End Ring-danger/departure; F1-03 owns Shire-road/Black Rider/ferry material. Current runtime P1C01 is broader than source F1-01, so this wave preserves current topology while explicitly recording the mismatch instead of silently redefining canon chapters.
+- Confirmed programmer finding: grouped micro-event distance cleanup could retire nearby event members because one roaming member exceeded EventCullDistance.
+- Registered and implemented repair: event lifetime expiry stays event-wide; distance retirement is member-local through existing ALivingWorldDirector pool ownership. No second world-life brain is created.
+- Audit correction: ShireAmbientNPC already centralizes its only direct UGameplayStatics::GetPlayerPawn call in GetPlayerPawnCached(); no redundant cache rewrite is authorized.
+- Save-schema work is evidence-gated: schema 6/newer-save rejection and legacy canonicalization are present, but no verified v1-v6 transform history exists. No migration ladder may be invented until history/fixtures are recovered.
+- Machine-readable train: Data/P1C01MaximumSafeMegaBuildV1.json + Data/P1C01OvernightMegaBuildTrainV1.json. Source disposition: Data/P1C01SourceToRuntimeDispositionV1.json. Save boundary: Data/SaveSchemaMigrationAuditV1.json.
+- Architecture remains decoupled: ALivingWorldDirector owns population/event budgets and pooling; UShireNPCContextSubsystem owns bounded NPC context/knowledge/schedules; UShireQuestSubsystem owns story/progression; world builders own geometry/dressing/story placement.
+- Low-spec rules remain mandatory: FBX for animated production assets; PNG/TGA production textures; soft references + FStreamableManager for heavy assets; pooled transient crowds; ISM/HISM + LOD/culling for repeated detail.
+- Runtime feature cars beyond the defect repair remain gated by W00 exact-head UE4 evidence and later Gate 6/7 requirements. Source/QC/data/static/documentation preparation may proceed in parallel.
+- Evidence boundary: SOURCE IMPLEMENTATION/PREPARATION ONLY until exact-head CI/UE4 and later chapter-specific PIE/device/human evidence exist.
+
 ## 2026-09-29 - F2-04 Road & Helm's Deep Prep Maximum-Safe Source V1
 
 - Canonical mission: F2-04 Road & Helm's Deep Prep.
