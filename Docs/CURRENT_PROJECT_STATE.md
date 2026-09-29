@@ -1,3 +1,11 @@
+## 2026-09-29 - F1-06 landmark scoring strengthened
+
+- F1-06 landmark categories now use a manifest-driven **landmark score bonus = 6** instead of a fixed small inline boost.
+- The source indexer therefore prioritizes strong landmark candidates ahead of generic dressing when keyword evidence is otherwise comparable.
+- `PG-199` now rejects a landmark score bonus below 6 and guards the runtime marker that consumes the configured bonus.
+- Duplicate older PR #152 was closed without merge; PR #153 is the single F1-06 path and is based on current develop with warehouse diagnostics preserved.
+- Evidence boundary: **SOURCE-IMPLEMENTED / fresh exact-head checks pending / no visual acceptance claimed**.
+
 ## 2026-09-29 - PG-199 landmark/F1-06 regression guard
 
 - `PG-199` now statically guards the Part I landmark identity plan and F1-06 superpack.
