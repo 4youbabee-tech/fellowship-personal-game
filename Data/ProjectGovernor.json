@@ -2849,18 +2849,19 @@
     },
     {
       "id": "REQ-STABILITY-003",
-      "title": "Zero-step GitHub-hosted failure bypass without weakening validation",
+      "title": "Hosted static/admin isolation without weakening validation",
       "category": "EngineeringStability",
       "priority": "CRITICAL",
       "status": "IMPLEMENTED",
       "origin": "Repeated GitHub-hosted Pre-Unreal and Branch Cleanup jobs failed before step execution with steps=null and BlobNotFound logs; owner requires uninterrupted production without recurring false-red Actions.",
-      "intent": "Remove scheduled/hosted CI dependencies that generate infrastructure reds, reserve the UE4 device lane for runtime deltas, and keep the exact same validation commands available on the supervised Windows build machine and through a one-command local static runner.",
+      "intent": "Keep lightweight static validation and repository administration off the supervised UE4 machine while preserving exact-head fail-closed validation; keep persistent Warehouse/Unreal work on the supervised runner only where local state is required.",
       "acceptance_criteria": [
-        "Pre-Unreal has no schedule and does not use GitHub-hosted runners.",
-        "Branch Cleanup does not use GitHub-hosted runners.",
+        "Pre-Unreal is event-driven on GitHub-hosted windows-latest and uses an exact isolated checkout.",
+        "Branch Cleanup runs on GitHub-hosted windows-latest after merged PR closeout and never occupies the UE4 runner.",
+        "Branch Cleanup deletes the exact merged PR head only when the live remote SHA still equals the merged PR head SHA, then performs guarded zero-ahead pruning.",
+        "Warehouse Stage remains self-hosted because it requires persistent D:\\actions-runner\\_warehouse\\ShireJourney state.",
         "Preparation/docs-only changes do not enqueue Unreal Build Validation.",
-        "Local static validation can run the same project/governor/audit/unit-test chain without Actions.",
-        "Runtime/engine gates remain required for runtime-changing promotion."
+        "Local static validation remains available as a direct fallback without weakening runtime gates."
       ],
       "dependencies": [
         "REQ-STABILITY-001"
@@ -3761,12 +3762,13 @@
       "requirements": [
         "REQ-EXEC-002"
       ],
-      "resolution": "develop is the canonical and continuously current integration branch. Every completed temporary branch must be exact-head validated, merged into develop immediately, then have its remote ref deleted automatically. develop must never be left behind completed work. The only temporary exceptions are an active PR head or a branch with verified unique unsalvaged commits; those branches remain protected only until selective salvage or explicit supersession is complete.",
+      "resolution": "develop is the canonical and continuously current integration branch. Every completed temporary branch must be exact-head validated, merged into develop immediately, then have its remote ref deleted automatically. Post-merge cleanup must delete the exact merged PR head when its live remote SHA still equals the merged head SHA, then prune other zero-ahead refs. A moved remote head is preserved as new work. The only temporary exceptions are active PR heads or branches with verified unique unsalvaged commits.",
       "implementation_contract": [
         "Use one short-lived single-purpose branch/PR for a coherent engineering wave; batch related multi-file changes before publishing to avoid superseded runs.",
         "After exact-head required validation succeeds, merge the completed branch into develop immediately; do not accumulate completed branches waiting for later consolidation.",
-        "Branch Cleanup runs automatically after every merged PR, targets the merge commit, and deletes the merged branch ref when it has no unique commits and is no longer an active PR head.",
-        "Branch Cleanup enumerates live remote refs once per run and auto-deletes every non-protected, non-active-PR zero-ahead branch; historical absent-ref lists are not recurring work.",
+        "Branch Cleanup runs automatically after every merged PR close event on GitHub-hosted Windows.",
+        "The exact merged PR head ref is deleted immediately when the live remote SHA still equals github.event.pull_request.head.sha; if the ref moved, preserve it as new work.",
+        "After exact-head closeout, Branch Cleanup enumerates live remote refs once and auto-deletes every non-protected, non-active-PR zero-ahead branch.",
         "Branches with ahead_by > 0 are retained only for selective salvage/supersession and must not become alternate trunks.",
         "GitHub is the live authority for PR/branch/workflow transport state; the Governor stores durable policy, execution order and evidence boundaries only."
       ],
@@ -3795,13 +3797,13 @@
     },
     {
       "id": "DEC-043",
-      "title": "Route static/cleanup CI around recurrent hosted zero-step failures",
+      "title": "Route static and repository-administration CI off the supervised UE4 runner",
       "status": "ACCEPTED",
       "requirements": [
         "REQ-STABILITY-003"
       ],
-      "resolution": "Pre-Unreal and Branch Cleanup are event-driven on the supervised self-hosted Windows UE4 runner; periodic polling is removed. Unreal Build Validation ignores preparation/docs/CI-only deltas so the single device lane is reserved for runtime-relevant work. Scripts/run_local_static_validation.ps1 mirrors the static validation chain for direct local execution.",
-      "evidence_boundary": "Workflow/source configuration only until the supervised runner executes the new jobs. No compile/PIE/device/visual/performance claim.",
+      "resolution": "Pre-Unreal and Branch Cleanup are event-driven on GitHub-hosted windows-latest using exact isolated checkouts. Unreal Build Validation and persistent Warehouse work remain on the supervised Windows runner where engine or persistent local state is required. This supersedes the earlier self-hosted static/admin routing while preserving the same fail-closed project validation and branch-safety contracts.",
+      "evidence_boundary": "Current workflow/source configuration is guarded by PG-167/PG-176; runtime/PIE/device/visual/performance acceptance is unchanged.",
       "authority": "USER_EXPLICIT_DIRECTION"
     },
     {
@@ -3884,12 +3886,12 @@
         "REQ-EXEC-002",
         "REQ-PROD-011"
       ],
-      "resolution": "The dedicated UE4 runner keeps one persistent Unreal workspace for incremental C++/asset/runtime validation. Every static, administration, health and warehouse source checkout is isolated under RUNNER_TEMP and may not delete or replace GITHUB_WORKSPACE. Administrative changes are removed from the Unreal trigger where safe, superseded same-PR work is cancelled, and exact-tree proof reuse avoids rebuilding byte-identical merge content.",
+      "resolution": "The dedicated UE4 runner keeps one persistent Unreal workspace for incremental C++/asset/runtime validation. GitHub-hosted Pre-Unreal and Branch Cleanup use isolated RUNNER_TEMP checkouts; Runner Health and self-hosted Warehouse source checkouts remain isolated from the persistent Unreal workspace. Administrative changes are removed from the Unreal trigger where safe, superseded same-PR work is cancelled, and exact-tree proof reuse avoids rebuilding byte-identical merge content.",
       "implementation_contract": [
-        "Pre-Unreal remains self-hosted for zero additional hosted-runner dependency/cost, but uses an exact isolated RUNNER_TEMP checkout and never touches Unreal build intermediates, binaries or root Git metadata.",
-        "Runner Health uses an isolated RUNNER_TEMP source checkout and never deletes the Unreal workspace.",
-        "Branch Cleanup uses an isolated RUNNER_TEMP source checkout and never deletes the Unreal workspace.",
-        "Warehouse Stage uses an isolated RUNNER_TEMP source checkout while persistent downloaded payloads remain under C:\\actions-runner\\_warehouse\\ShireJourney.",
+        "Pre-Unreal runs on GitHub-hosted windows-latest with an exact isolated RUNNER_TEMP checkout and never touches the supervised Unreal workspace.",
+        "Runner Health uses an isolated source checkout and never deletes the Unreal workspace.",
+        "Branch Cleanup runs on GitHub-hosted windows-latest with an isolated exact-head checkout and never consumes the UE4 runner.",
+        "Warehouse Stage remains self-hosted, uses an isolated source checkout, and keeps persistent downloaded payloads under D:\\actions-runner\\_warehouse\\ShireJourney.",
         "Only Unreal Build Validation owns the persistent project workspace used by UBT incremental detection.",
         "Every coherent engineering wave should be committed atomically when tooling permits; avoid multiple sequential commits that create superseded CI runs.",
         "Failure triage must classify GAME_RUNTIME, VALIDATOR_POLICY, CI_INFRA or ADMIN_GOVERNANCE before runtime code is changed.",
@@ -5081,7 +5083,7 @@
         "REQ-PERF-001",
         "REQ-STABILITY-001"
       ],
-      "resolution": "D:\\actions-runner is the persistent self-hosted runner root and D:\\actions-runner\\_warehouse\\ShireJourney is the persistent Warehouse root. Repository scripts/workflows must not use C:\\actions-runner as an active default. C-side copies are rollback/retirement residue only.",
+      "resolution": "D:\\actions-runner is the persistent self-hosted runner root and D:\\actions-runner\\_warehouse\\ShireJourney is the persistent Warehouse root. Repository scripts/workflows must not use C:\\actions-runner as an active default. The retired C runner root has been removed after D-root health proof and quarantine preservation.",
       "implementation_contract": [
         "Interactive-user watchdog ownership remains unchanged; service-mode execution stays forbidden.",
         "Runner.Listener/Runner.Worker execute from D:\\actions-runner.",
@@ -5095,9 +5097,36 @@
         "RUNNER_HEALTH_WORKSPACE_PASS temp=D:\\actions-runner\\_work\\_temp",
         "RUNNER_HEALTH_PASS identity=IDEAPAD320\\user sessionId=2 listenerPid=5332 workerCount=1",
         "Quarantine baseline 28,252 files / 7,604,599,440 bytes",
-        "Scripts and warehouse workflow migrated to D-root defaults"
+        "Scripts and warehouse workflow migrated to D-root defaults",
+        "Owner-side final audit: C:\\actions-runner_delete_pending absent; D:\\actions-runner present."
       ],
       "evidence_boundary": "RUNNER ROOT / WORKSPACE / TOPOLOGY RUN-PROVEN. No PIE/device/visual/performance acceptance is claimed."
+    },
+    {
+      "id": "DEC-088",
+      "title": "Permanent exact-head branch closeout after merge",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-EXEC-002",
+        "REQ-STABILITY-003"
+      ],
+      "resolution": "Every temporary work branch ends at merge. Branch Cleanup must delete the exact merged PR head when the live remote SHA still equals the merged head SHA, independent of the repository-level delete_branch_on_merge setting, then perform guarded zero-ahead pruning. A moved ref is treated as new work and is never deleted automatically.",
+      "implementation_contract": [
+        "Workflow trigger is pull_request closed and executes automatic cleanup only when merged == true.",
+        "MERGED_HEAD_REF and MERGED_HEAD_SHA are taken directly from the merged pull_request event.",
+        "Canonical develop/main refs are never deleted.",
+        "An exact merged head is deleted only when origin/<head> still equals MERGED_HEAD_SHA and it is not a live open-PR head.",
+        "If origin/<head> moved after merge, preserve it and report BRANCH_CLEANUP_MERGED_HEAD_MOVED.",
+        "After exact merged-head closeout, prune only zero-ahead non-protected non-active branches; divergent unique branches remain for selective salvage or explicit supersession.",
+        "PG-167 statically guards the hosted cleanup lane and exact merged-head delete contract."
+      ],
+      "evidence": [
+        "Branch Cleanup workflow uses windows-latest and merged-PR closeout.",
+        "Branch cleanup script guards active PRs, canonical refs, exact merged-head SHA equality, zero-ahead pruning and unique-branch preservation.",
+        "BranchCleanupPlan permanent_closeout_policy_2026_09_30."
+      ],
+      "evidence_boundary": "Repository lifecycle governance only. No gameplay, PIE, device, visual, pacing or performance acceptance is implied.",
+      "authority": "USER_EXPLICIT_DIRECTION"
     }
   ],
   "open_conflicts": [],
@@ -7697,7 +7726,7 @@
     "runner_root": "D:\\actions-runner",
     "warehouse_root": "D:\\actions-runner\\_warehouse\\ShireJourney",
     "migration_2026_09_29": {
-      "status": "RUNNER_ROOT_MIGRATED_AND_RUN_PROVEN",
+      "status": "RUNNER_ROOT_MIGRATED_RUN_PROVEN_AND_C_ROOT_RETIRED",
       "old_root": "C:\\actions-runner",
       "new_root": "D:\\actions-runner",
       "warehouse_root": "D:\\actions-runner\\_warehouse\\ShireJourney",
@@ -7705,7 +7734,7 @@
         "Owner-side migration preserved 28,252 files / 7,604,599,440 bytes before retiring the C root.",
         "GitHub self-hosted job reported RUNNER_HEALTH_WORKSPACE_PASS temp=D:\\actions-runner\\_work\\_temp.",
         "GitHub self-hosted job reported RUNNER_HEALTH_PASS under IDEAPAD320\\user with legacyService=absent.",
-        "Any remaining C:\\actions-runner_delete_pending path is retirement residue only and is not an execution authority."
+        "Owner-side final audit reported OLD_C_RESIDUE_EXISTS=False and D_RUNNER_EXISTS=True."
       ],
       "proof_boundary": "Runner ownership/root/workspace health only. No PIE, packaged gameplay, visual, device-performance or chapter acceptance is claimed."
     }

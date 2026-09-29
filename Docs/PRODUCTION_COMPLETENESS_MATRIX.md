@@ -1,3 +1,11 @@
+## 2026-09-30 - Infrastructure hygiene closeout
+
+- Active runner root: **RUN-PROVEN on `D:\\actions-runner`** from prior GitHub health evidence; owner-side final cleanup reports old C runner residue absent.
+- Persistent Warehouse root: **`D:\\actions-runner\\_warehouse\\ShireJourney`**.
+- Hosted Pre-Unreal / Branch Cleanup routing: **SOURCE/GOVERNANCE RECONCILED** with current workflow truth.
+- Exact merged-head branch deletion + moved-head guard + zero-ahead prune: **SOURCE-IMPLEMENTED / exact-head CI proof pending on this maintenance wave**.
+- Gameplay/PIE/device/visual/performance maturity: **UNCHANGED / NOT CLAIMED**.
+
 ## 2026-09-30 - Runner root migration evidence
 
 - Self-hosted runner root: **RUN-PROVEN on `D:\\actions-runner`**.
