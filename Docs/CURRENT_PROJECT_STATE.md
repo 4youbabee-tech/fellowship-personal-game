@@ -1,3 +1,13 @@
+## 2026-09-30 - Living-world member-cull safety + P1C01 mega train
+
+- Programmer proposal was checked against current `develop`. The living-world cleanup defect is real: one distant actor could previously expire an entire multi-actor micro-event and therefore hide/repool a nearby interaction.
+- Fix branch changes distance retirement to **member-local** while keeping authored lifetime expiry event-wide. Empty events are removed only after their members are individually retired.
+- New static guard `PG-207` requires the member-local culling marker and rejects regression toward event-wide distance expiry.
+- The separate claim that `ShireAmbientNPC.cpp` performs six direct `UGameplayStatics::GetPlayerPawn` lookups is not true on current source: there is one direct lookup inside `GetPlayerPawnCached()`; runtime call sites use the cache wrapper.
+- Save schema review confirms newer-than-supported saves are rejected and legacy canonicalization exists, but there is no generic per-schema migration ladder. No speculative migration was added without documented historical schema transforms.
+- Registered `Data/P1C01OvernightMegaBuildTrainV1.json` for the owner-authorized large P1C01 build. Runtime expansion remains gated behind W00 and exact-head engine proof.
+- Current status: **SOURCE-IMPLEMENTED / STATIC + UE4 PROOF PENDING** for the cull repair. No PIE/device/visual/performance acceptance is claimed.
+
 ## 2026-09-30 - Living-world grouped-event cull repair
 
 - Direct source review confirmed the programmer's grouped-event culling report on canonical `develop`: one actor beyond `EventCullDistance` could set the whole micro-event expired and release nearby members with it.
