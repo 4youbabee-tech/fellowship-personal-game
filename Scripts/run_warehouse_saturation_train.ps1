@@ -36,6 +36,18 @@ function Get-OptionalPropertyValue {
   return $prop.Value
 }
 
+function Get-Int64PropertySum {
+  param(
+    [object[]]$Rows,
+    [string]$Property
+  )
+
+  if ($null -eq $Rows -or @($Rows).Count -eq 0) { return [int64]0 }
+  $measurement = @($Rows) | Measure-Object -Property $Property -Sum
+  if ($null -eq $measurement -or $null -eq $measurement.Sum) { return [int64]0 }
+  return [int64]$measurement.Sum
+}
+
 if ($StagePublicLanes) {
   $stageJobs = @(
     @{ script="stage_polyhaven_warehouse.ps1"; manifest="Data/WarehouseAcquisitionBatchV1.json"; label="Poly Haven" },
@@ -180,7 +192,7 @@ foreach ($car in @($manifest.cars | Sort-Object order)) {
     receipt_matches = $matches.Count
     verified_receipt_files = $verified.Count
     unverified_receipt_files = $unverified.Count
-    verified_bytes = [int64](($verified | Measure-Object -Property size -Sum).Sum)
+    verified_bytes = Get-Int64PropertySum -Rows $verified -Property "size"
     state = $state
   }
 }
@@ -190,7 +202,7 @@ $providerSummary = @($records | Group-Object provider | ForEach-Object {
     provider = $_.Name
     receipt_records = $_.Count
     verified_records = @($_.Group | Where-Object { $_.hash_ok }).Count
-    bytes = [int64](($_.Group | Measure-Object -Property size -Sum).Sum)
+    bytes = Get-Int64PropertySum -Rows @($_.Group) -Property "size"
   }
 })
 
