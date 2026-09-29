@@ -1,0 +1,161 @@
+{
+  "schema_version": 2,
+  "contract_id": "P1C01_GRAPHICS_SETTINGS_IMPLEMENTATION_CONTRACT_V2",
+  "scope": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
+  "status": "SOURCE_PREPARATION_ONLY",
+  "authority": {
+    "governor_requirement": "REQ-PERF-004",
+    "governor_decision_reserved": "DEC-077",
+    "ledger_registration": "Docs/WORLD_DETAIL_LEDGER.md",
+    "ledger_write_state": "PENDING_PLATFORM_ACCEPTANCE",
+    "prior_collision": "DEC-075 is already accepted for bounded CI polling; do not reuse it."
+  },
+  "target_floor": {
+    "platform": "Windows",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "quality_class": "Low-Medium",
+    "fps_target": 30,
+    "cpu_class": "Intel i7 Gen6",
+    "ram_gb": 8,
+    "vram_gb_class": 2
+  },
+  "presets": {
+    "Performance": {
+      "intent": "protect target-floor stability",
+      "baseline_scalability_tier": 0
+    },
+    "CinematicBalanced": {
+      "intent": "visually strong default with bounded cost",
+      "baseline_scalability_tier": 1
+    },
+    "High": {
+      "intent": "opt-in higher fidelity",
+      "baseline_scalability_tier": 2
+    },
+    "Ultra": {
+      "intent": "opt-in highest prepared fidelity; never baseline",
+      "baseline_scalability_tier": 3
+    },
+    "Custom": {
+      "intent": "per-domain user control",
+      "baseline_scalability_tier": null
+    }
+  },
+  "display_controls": [
+    "resolution",
+    "window_mode",
+    "vsync",
+    "frame_rate_limit",
+    "render_scale"
+  ],
+  "quality_domains": [
+    "view_distance",
+    "anti_aliasing",
+    "shadows",
+    "post_process",
+    "textures",
+    "effects",
+    "foliage"
+  ],
+  "display_transaction": {
+    "states": [
+      "idle",
+      "preview_pending",
+      "confirmed",
+      "reverted"
+    ],
+    "engine_owns": [
+      "pre_preview_snapshot",
+      "preview_application",
+      "confirm_persistence",
+      "rollback"
+    ],
+    "ui_owns": [
+      "confirmation_dialog",
+      "visible_countdown",
+      "timeout_to_revert_call"
+    ],
+    "must_preserve_first_snapshot_across_repeated_preview_changes": true
+  },
+  "visual_economy": {
+    "protect_first": [
+      "silhouette",
+      "composition",
+      "hero_materials",
+      "lighting",
+      "atmosphere",
+      "landmark_framing",
+      "readable_characters",
+      "near_field_detail"
+    ],
+    "recover_cost_first": [
+      "duplicate_actors",
+      "far_shadows",
+      "overdraw",
+      "translucency",
+      "redundant_lights",
+      "uninstanced_repetition",
+      "unnecessary_tick",
+      "invisible_or_far_detail"
+    ]
+  },
+  "preserve_until_measured": {
+    "texture_pool_mb_by_low_medium_high": [
+      600,
+      800,
+      1000
+    ],
+    "shadow_tiers": {
+      "0": {
+        "max_resolution": 512,
+        "cascades": 1,
+        "distance_scale": 0.45
+      },
+      "1": {
+        "max_resolution": 768,
+        "cascades": 2,
+        "distance_scale": 0.65
+      },
+      "2": {
+        "max_resolution": 1024,
+        "cascades": 2,
+        "distance_scale": 0.8
+      }
+    },
+    "view_distance_scale": {
+      "0": 0.45,
+      "1": 0.65,
+      "2": 0.8
+    },
+    "foliage_density_tier_2": 0.7
+  },
+  "runtime_patterns": {
+    "heavy_assets": "soft references plus FStreamableManager asynchronous loading",
+    "repeated_decorative_detail": "ISM/HISM plus LOD and culling",
+    "crowds": "object pooling",
+    "animated_final_assets": "FBX",
+    "textures": "PNG/TGA; channel-pack where appropriate",
+    "source_layout": "Public/Private by domain"
+  },
+  "planned_files_after_governance_lands": [
+    "Source/ShireJourney/Public/Settings/ShireGameUserSettings.h",
+    "Source/ShireJourney/Private/Settings/ShireGameUserSettings.cpp",
+    "Scripts/test_p1c01_graphics_settings_contract.py"
+  ],
+  "same_run_sync_required_for_real_code": [
+    "Docs/CURRENT_PROJECT_STATE.md",
+    "Docs/PRODUCTION_COMPLETENESS_MATRIX.md",
+    "Data/SourceArchitecturePlan.json"
+  ],
+  "static_acceptance": [
+    "reject literal escaped-newline corruption in C++ source",
+    "require every preset and display-control token",
+    "require preview-confirm-revert contract",
+    "require settings source registration in Data/SourceArchitecturePlan.json",
+    "require lower-tier scalability anchors to remain unchanged",
+    "require REQ-PERF-004 and DEC-077 with collision check",
+    "require ledger registration before runtime source may exist"
+  ],
+  "evidence_boundary": "Source preparation only. Not compile, PIE, device, visual, FPS, VRAM, hitch, or performance verification."
+}
