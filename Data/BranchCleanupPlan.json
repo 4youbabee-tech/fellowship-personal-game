@@ -36,7 +36,14 @@
     "planning/mega-production-resume-v1",
     "planning/w01-localization-prototype-v1",
     "planning/w01-p1c01-mega-prep-v1",
-    "warehouse/p1c01-mega-promotion-audit-v1"
+    "warehouse/p1c01-mega-promotion-audit-v1",
+    "fix/p1c01-hero-rig-diagnostics-v1",
+    "production/f202-fangorn-gandalf-returned-maximum-safe-source-v1",
+    "production/f203-edoras-maximum-safe-source-v1",
+    "fix/warehouse-latest-receipt-authority-v1",
+    "production/f108-amon-hen-maximum-safe-v1",
+    "production/f202-fangorn-gandalf-maximum-safe-source-v1",
+    "production/p1c01-runtime-completion-train-v1"
   ],
   "safety_rules": [
     "Never delete develop or main.",
@@ -127,6 +134,32 @@
       "warehouse/p1c01-mega-promotion-audit-v1": "SUPERSEDED: its audit explicitly recorded staged_proven=0/intake_qc_proven=0, while later Warehouse #264 succeeded with persistent inventory evidence; older audit-script delta is not promoted over the proven current warehouse path."
     },
     "safety": "No branch is deleted merely because it is old. Each reviewed branch received an explicit integrated-or-superseded disposition before entering delete_after_merge.",
+    "target_survivors": [
+      "develop",
+      "main"
+    ]
+  },
+  "stale_pr_cleanup_2026_09_30": {
+    "action": "DELETE_AFTER_THIS_MERGE",
+    "reviewed_prs": [
+      171,
+      163,
+      167,
+      154,
+      159,
+      162,
+      125
+    ],
+    "dispositions": {
+      "fix/p1c01-hero-rig-diagnostics-v1": "SUPERSEDED by merged PR #172; diagnostic script delta landed on develop and newer docs/state are authoritative.",
+      "production/f202-fangorn-gandalf-returned-maximum-safe-source-v1": "INTEGRATED/SUPERSEDED by reconciled PR #166; key workflow/data/runner blobs are byte-identical on develop.",
+      "production/f203-edoras-maximum-safe-source-v1": "INTEGRATED/SUPERSEDED by PR #168; key workflow/data/runner blobs are byte-identical on develop.",
+      "fix/warehouse-latest-receipt-authority-v1": "INTEGRATED/SUPERSEDED: current audit uses latest-valid-receipt authority, records superseded rows, and exact regression coverage exists in test_warehouse_inventory_receipt_supersession.ps1.",
+      "production/f108-amon-hen-maximum-safe-v1": "SUPERSEDED by merged F1-08 Breaking maximum-safe mega source path; canonical mission/title/runtime consumer/locked postcondition remain current under the newer source architecture.",
+      "production/f202-fangorn-gandalf-maximum-safe-source-v1": "SUPERSEDED by the later Fangorn & Gandalf Returned source architecture and reconciliation; canonical mission/title/runtime mapping/locked postcondition and required bank/landmark gates remain current.",
+      "production/p1c01-runtime-completion-train-v1": "INTEGRATED/SUPERSEDED: runtime production changes (player pawn cache, interaction pool, ambient motion pool, SFX repeat guard, bounded rig availability retry) are present on develop; old CI/quarantine diagnostics and branch-local train/governance snapshots are superseded by current runner, validator and Governor truth."
+    },
+    "safety": "All seven PRs were closed only after live comparison against develop/current successor waves. No active PR heads remain at plan creation.",
     "target_survivors": [
       "develop",
       "main"
