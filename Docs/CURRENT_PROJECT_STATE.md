@@ -1,3 +1,14 @@
+## 2026-09-29 - Warehouse receipt supersession semantics
+
+- Warehouse #285 isolated the current inventory blocker to `ambientCG\PLASTER\Plaster007_2K-PNG.zip`: historical batch `WAREHOUSE_AMBIENTCG_P1C01_V1` declares the old payload hash while the refreshed current payload is represented by the newer trilogy-foundation receipt path.
+- `Scripts/audit_warehouse_inventory.ps1` now resolves **one active provenance record per normalized payload path**. Newer parseable receipt provenance is active; older receipts stay preserved as `superseded` history instead of being treated as simultaneous hash authorities.
+- Windows path case/slash variants are normalized before grouping. Active-record hash, missing-reference and license checks remain fail-closed.
+- The inventory report now records total/active/superseded provenance counts and the old-to-new receipt relationship without rewriting or deleting historical receipts.
+- New `Scripts/test_warehouse_inventory_receipt_supersession.ps1` proves that a stale V1 hash is superseded by a valid newer V2 receipt, then proves a tampered active V2 payload still fails.
+- Pre-Unreal runs this synthetic regression on `windows-latest`.
+- Governor `DEC-076` records the permanent provenance rule.
+- Evidence boundary: **SOURCE-IMPLEMENTED / exact-head Pre-Unreal pending / persistent warehouse rerun pending**. Warehouse clean state and P1C01 closure continuation are not yet claimed.
+
 ## 2026-09-29 - Interactive CI orchestration anti-hang rule
 
 - PR #153 is merged on develop; exact-head Pre-Unreal #1379 and Unreal #1095 both completed SUCCESS.
