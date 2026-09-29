@@ -1,3 +1,17 @@
+## 2026-09-29 - Warehouse latest-receipt authority repair
+
+- Exact blocker identification (Plaster007): **EVIDENCE CAPTURED**.
+- Historical-vs-current receipt separation: **SOURCE-IMPLEMENTED**.
+- Latest hashed receipt current-authority rule: **SOURCE-IMPLEMENTED**.
+- Superseded receipt warnings retained in inventory report: **SOURCE-IMPLEMENTED**.
+- Latest receipt mismatch remains hard stop: **SOURCE-IMPLEMENTED**.
+- License snapshot supersession semantics: **SOURCE-IMPLEMENTED**.
+- Two-case warehouse supersession regression test: **SOURCE-IMPLEMENTED**.
+- PG-200 static regression guard + Pre-Unreal execution step: **SOURCE-IMPLEMENTED**.
+- Fresh exact-head Pre-Unreal: **PENDING**.
+- Persistent warehouse clean rerun: **PENDING**.
+- P1C01 Closure / F1-05 / F1-06 heavy execution release: **STILL BLOCKED UNTIL REAL WAREHOUSE PASS**.
+
 ## 2026-09-29 - F1-06 landmark scoring priority
 
 - Configurable landmark score bonus (6): **SOURCE-IMPLEMENTED**.
