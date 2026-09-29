@@ -1,33 +1,14 @@
-## 2026-09-30 - P1C01 mega-build train + LivingWorld safety repair
+## 2026-09-30 - P1C01 maximum-safe mega train + LivingWorld safety repair
 
-- Programmer proposal audit confirmed a real defect in `ALivingWorldDirector::CleanupExpiredEvents`: one far event member could retire the whole micro-event, including a nearby interaction.
-- Fix branch now uses event-wide cleanup only for authored lifetime expiry; distance retirement is member-local and removes only the far actor. Empty events are then removed normally. Marker: `LivingWorldEventMemberCull ... distance-policy=member-local`.
-- PG-208 protects the member-local cleanup contract.
-- The reported ShireAmbientNPC player-pawn issue is not current: there is one direct `UGameplayStatics::GetPlayerPawn` call, inside `GetPlayerPawnCached()`; PG-210 now protects that caching architecture.
-- Save-schema review confirmed CurrentSchemaVersion=6 and newer-save rejection, plus existing legacy identity repair, but no documented generic version-by-version migration history was recovered. `Data/SaveSchemaMigrationAuditV1.json` records the boundary and PG-211 forbids invented migrations.
-- `Data/P1C01MaximumSafeMegaBuildV1.json` registers the owner-authorized 12-car P1C01 mega train. Preparation and defect repair may run now; new runtime expansion remains gated by W00/ProjectGovernor evidence.
-- Current evidence status: **SOURCE-IMPLEMENTED / STATIC CI PENDING** for this branch. No PIE/device/visual/performance promotion.
-
-## 2026-09-30 - P1C01 mega-build train + LivingWorld safety repair
-
-- Programmer proposal audit confirmed a real defect in `ALivingWorldDirector::CleanupExpiredEvents`: one far event member could retire the whole micro-event, including a nearby interaction.
-- Fix branch now uses event-wide cleanup only for authored lifetime expiry; distance retirement is member-local and removes only the far actor. Empty events are then removed normally. Marker: `LivingWorldEventMemberCull ... distance-policy=member-local`.
-- PG-208 protects the member-local cleanup contract.
-- The reported ShireAmbientNPC player-pawn issue is not current: there is one direct `UGameplayStatics::GetPlayerPawn` call, inside `GetPlayerPawnCached()`; PG-210 now protects that caching architecture.
-- Save-schema review confirmed CurrentSchemaVersion=6 and newer-save rejection, plus existing legacy identity repair, but no documented generic version-by-version migration history was recovered. `Data/SaveSchemaMigrationAuditV1.json` records the boundary and PG-211 forbids invented migrations.
-- `Data/P1C01MaximumSafeMegaBuildV1.json` registers the owner-authorized 12-car P1C01 mega train. Preparation and defect repair may run now; new runtime expansion remains gated by W00/ProjectGovernor evidence.
-- Current evidence status: **SOURCE-IMPLEMENTED / STATIC CI PENDING** for this branch. No PIE/device/visual/performance promotion.
-
-## 2026-09-30 - P1C01 maximum-safe mega build + living-world cull repair
-
-- Owner authorized one large P1C01 production train with many bounded work cars under one approval. Machine-readable authorities: `Data/P1C01MaximumSafeMegaBuildV1.json` and `Data/P1C01OvernightMegaBuildTrainV1.json`.
-- Supplied source bibles were checked before the train was registered. Source F1-01 owns Ring-history/birthday/Gandalf/party material; F1-02 owns Bag End Ring-danger/departure; F1-03 owns Shire-road/Black Rider/ferry escape. Current runtime `P1C01` already compresses material across those source packages, so this train preserves current runtime topology and records the mismatch instead of silently redefining canon chapters.
-- Programmer proposal audit: the grouped-event culling defect is confirmed. `ALivingWorldDirector::CleanupExpiredEvents` previously allowed one far event member to retire every grouped member. The repair keeps authored lifetime expiry event-wide but makes distance retirement member-local, individually pooling/removing only the far actor and retaining the event while members remain.
-- Regression protection: `PG-207` protects member-local event culling; `test_living_world_distance_cull_is_member_local` covers the same source contract. `PG-208` separately protects player-pawn lookup centralization.
-- The reported six direct ambient `GetPlayerPawn` lookups are not present on current source: the only direct `UGameplayStatics::GetPlayerPawn` call is centralized inside `GetPlayerPawnCached()`; normal runtime call sites use the cache helper.
-- Save-schema review is recorded in `Data/SaveSchemaMigrationAuditV1.json`: schema 6 rejects newer saves and existing legacy identity repair is present, but no authoritative version-by-version field history was recovered, so no speculative migration ladder was added.
-- Mega-train runtime cars remain gated behind W00/exact-head engine proof; source/QC, warehouse, data contracts, documentation and static regression preparation may proceed in parallel.
-- Status of this branch: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC + UE4 PROOF PENDING**. No PIE/device/FPS/visual/performance acceptance is claimed.
+- Owner authorized one large P1C01 production train with many bounded work cars under one approval. Machine-readable authorities: `Data/P1C01MaximumSafeMegaBuildV1.json`, `Data/P1C01OvernightMegaBuildTrainV1.json`, and DEC-090.
+- Source bibles were rechecked before registration. F1-01 owns Ring-history/birthday/Gandalf/party material; F1-02 owns Bag End Ring-danger/departure; F1-03 owns Shire-road/Black Rider/ferry material. Current runtime `P1C01` already aggregates material across those source packages, so this train preserves current runtime topology and records the mapping explicitly instead of silently redefining canon chapters.
+- Programmer proposal audit confirmed a real defect in `ALivingWorldDirector::CleanupExpiredEvents`: one far event member could retire the whole micro-event, including a nearby interaction. The fix keeps authored lifetime expiry event-wide but makes distance retirement member-local.
+- Static protection is now unambiguous: **PG-208** = member-local event culling, **PG-209** = mega-build gate/canonical architecture, **PG-210** = AmbientNPC player-pawn cache centralization, **PG-211** = save-schema migration audit boundary.
+- The reported six direct AmbientNPC `GetPlayerPawn` lookups are not present on current source. The only direct `UGameplayStatics::GetPlayerPawn` call is inside `GetPlayerPawnCached()`; normal runtime call sites use the cache helper.
+- Save-schema review confirms CurrentSchemaVersion=6, future-schema rejection and existing legacy identity repair. No generic historical migration ladder is invented because authoritative per-version field transforms have not been recovered.
+- `Data/P1C01SourceToRuntimeDispositionV1.json` records zero-silent-omission dispositions for Shire/Hobbiton, Bag End, party setup/fireworks, Ring/departure, road hiding/ferry, living-world/audio and checkpoint/retry requirements.
+- Runtime expansion cars remain gated behind W00/exact-head engine proof. Source/QC, warehouse, data contracts, documentation and static preparation may proceed in parallel.
+- Current status: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC + UE4 PROOF PENDING** for this branch. No PIE/device/FPS/visual/performance acceptance is claimed.
 
 ## 2026-09-30 - Final zero-ahead maintenance sweep before construction resume
 
