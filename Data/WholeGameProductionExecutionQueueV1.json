@@ -241,7 +241,7 @@
     {
       "order": 11,
       "region_id": "EDORAS_MEDUSELD",
-      "current_state": "F203_MAXIMUM_SAFE_SOURCE_ACTIVE_NOT_RUNTIME_MAPPED",
+      "current_state": "F203_SOURCE_PREP_INTEGRATED_NOT_RUNTIME_MAPPED",
       "runtime_gate": "PREP_ONLY_UNTIL_EXPLICIT_PART_II_RUNTIME_ID_MAPPING",
       "preparation_tracks": {
         "surfaces_materials": "ACTIVE_SOURCE_QC",
@@ -259,8 +259,8 @@
     {
       "order": 12,
       "region_id": "HELMS_DEEP",
-      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
-      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "current_state": "F204_MAXIMUM_SAFE_SOURCE_ACTIVE_NOT_RUNTIME_MAPPED",
+      "runtime_gate": "PREP_ONLY_UNTIL_EXPLICIT_PART_II_RUNTIME_ID_MAPPING",
       "preparation_tracks": {
         "surfaces_materials": "ACTIVE_SOURCE_QC",
         "vegetation_biome": "ACTIVE_SOURCE_QC",
@@ -268,8 +268,8 @@
         "characters_animation_fauna": "ACTIVE_SOURCE_QC",
         "audio_foley": "ACTIVE_SOURCE_QC",
         "vfx_atmosphere": "ACTIVE_SOURCE_QC",
-        "collision_navmesh": "DESIGN_PREP",
-        "streaming_memory": "BUDGET_PREP",
+        "collision_navmesh": "DESIGN_PREP_FOR_ROAD_REFUGE_FORTRESS_PRE_SIEGE_STATES",
+        "streaming_memory": "NINE_BANK_SOURCE_BLUEPRINT_ACTIVE",
         "profiling": "BLOCKED_UNTIL_RUNTIME_INTEGRATION",
         "human_acceptance": "BLOCKED_UNTIL_PLAYABLE_BUILD"
       }
@@ -565,5 +565,5 @@
   ],
   "evidence_boundary": "Preparation execution only. No new runtime acceptance claim.",
   "maximum_safe_production_plan": "Data/MaximumSafeProductionModeV1.json",
-  "active_chapter_source_wave": "F2-03 Edoras"
+  "active_chapter_source_wave": "F2-04 Road & Helm's Deep Prep"
 }
