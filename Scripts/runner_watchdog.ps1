@@ -1,5 +1,5 @@
 param(
-    [string]$RunnerRoot = "C:\actions-runner",
+    [string]$RunnerRoot = "D:\actions-runner",
     [int]$PollSeconds = 15,
     [int]$AcquireHangSeconds = 150,
     [int]$WorkerIdleHangSeconds = 300,

@@ -76,7 +76,7 @@ Package ACL or CI-policy repairs should not cause C++ compile + import + eight c
 ### Lane C — Warehouse
 - Self-hosted because it needs persistent local warehouse storage.
 - Source checkout under RUNNER_TEMP.
-- Downloaded warehouse payload stays under C:\actions-runner\_warehouse\ShireJourney.
+- Downloaded warehouse payload stays under D:\actions-runner\_warehouse\ShireJourney.
 - Never mutates Unreal project .git or build intermediates.
 
 ### Lane D — Runner health / branch administration

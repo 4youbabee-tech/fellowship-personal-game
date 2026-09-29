@@ -153,7 +153,7 @@ jobs:
       - name: Prepare P1C01 character archive intake
         if: env.WH_RUN_CHARACTER_INTAKE == 'true' && env.WH_RUN_P1C01_CHAPTER_PACK != 'true'
         shell: cmd
-        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\prepare_p1c01_character_rig_intake.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\P1C01CharacterRigAnimationPrepV1.json" -OutputRoot "C:\actions-runner\_warehouse\ShireJourney\_p1c01_character_intake"
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\prepare_p1c01_character_rig_intake.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\P1C01CharacterRigAnimationPrepV1.json" -OutputRoot "D:\actions-runner\_warehouse\ShireJourney\_p1c01_character_intake"
 
       - name: Audit persistent warehouse inventory
         if: env.WH_RUN_AUDIT == 'true' && env.WH_RUN_P1C01_CHAPTER_PACK != 'true'
@@ -198,7 +198,7 @@ jobs:
         shell: cmd
         run: >-
           powershell.exe -NoProfile -ExecutionPolicy Bypass -Command
-          "$root='C:\actions-runner\_warehouse\ShireJourney';
+          "$root='D:\actions-runner\_warehouse\ShireJourney';
           if (!(Test-Path -LiteralPath $root -PathType Container)) { throw 'Persistent warehouse root missing: ' + $root };
           $files=Get-ChildItem -LiteralPath $root -Recurse -File;
           $bytes=($files | Measure-Object -Property Length -Sum).Sum;
