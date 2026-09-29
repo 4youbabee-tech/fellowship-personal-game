@@ -1,3 +1,11 @@
+## 2026-09-29 - F2-03 Edoras source-preparation note
+
+- F2-03 has a maximum-safe source architecture with 32 categories / 20 landmarks / 8 banks and PG-204 protection.
+- This wave expands source preparation only. It does not promote Part II runtime chapter maturity or Gate 6/7 status.
+- The chapter is governed by the permanent no-story-shortcuts / zero-silent-omission contract.
+- Runtime ID remains NOT_ASSIGNED_DO_NOT_INVENT.
+- No PIE/device/visual/performance acceptance is added by this wave.
+
 ## 2026-09-29 — Story/source completeness and localization governance note
 
 - Story/source completeness definition is strengthened without promoting runtime maturity: chapter planning must route Timeline -> film/screenplay -> Tolkien narrative/Appendices -> Sources 02-11 and explicitly disposition meaningful discovered detail.
