@@ -5620,6 +5620,94 @@ for ignored in [
 
 
 
+
+# PG-206: F2-04 Road & Helm's Deep Prep maximum-safe source wave must preserve prep/siege boundaries and unassigned Part II runtime identity.
+pg206_manifest = json.loads(read(ROOT / "Data" / "F204RoadHelmsDeepPrepMaximumSafeMegaSourceV1.json"))
+pg206_runner = read(ROOT / "Scripts" / "run_f204_road_helms_deep_prep_maximum_safe_source.ps1")
+pg206_workflow = read(ROOT / ".github" / "workflows" / "f204-road-helms-deep-prep-maximum-safe-source.yml")
+pg206_unreal = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+
+if pg206_manifest.get("status") != "SOURCE_ARCHITECTURE_READY_INVENTORY_GATED_RUNTIME_MAPPING_UNASSIGNED":
+    fail("PG-206 F2-04 source wave status drifted")
+if pg206_manifest.get("canonical_mission_id") != "F2-04":
+    fail("PG-206 F2-04 mission ID drifted")
+if pg206_manifest.get("canonical_title") != "Road & Helm's Deep Prep":
+    fail("PG-206 F2-04 title drifted")
+if pg206_manifest.get("runtime_consumers") not in ([], None):
+    fail("PG-206 F2-04 must not invent a Part II runtime consumer")
+if pg206_manifest.get("runtime_mapping_status") != "NOT_ASSIGNED_DO_NOT_INVENT":
+    fail("PG-206 F2-04 runtime mapping boundary weakened")
+
+story = pg206_manifest.get("story_contract", {})
+if story.get("locked_postcondition") != "Uruk army arrives.":
+    fail("PG-206 F2-04 locked postcondition drifted")
+critical = " ".join(str(x) for x in story.get("critical_path", []))
+for required in ["Refugees move under threat", "Defenses are prepared"]:
+    if required not in critical:
+        fail(f"PG-206 F2-04 critical path missing: {required}")
+for required in ["escort","rescue","armory","wall prep","civilians"]:
+    if required not in story.get("safe_optional_window", []):
+        fail(f"PG-206 F2-04 optional window missing: {required}")
+excluded = " ".join(str(x) for x in story.get("excluded_from_this_pack", []))
+for required in ["F2-05", "siege", "breach", "dawn counterattack"]:
+    if required not in excluded:
+        fail(f"PG-206 F2-04 siege boundary missing: {required}")
+
+world = pg206_manifest.get("world_contract", {})
+if world.get("primary_location") != "Rohan / Helm's Deep":
+    fail("PG-206 F2-04 location drifted")
+if len(pg206_manifest.get("categories", [])) < 36:
+    fail("PG-206 F2-04 category breadth below 36")
+if len(pg206_manifest.get("bank_policy", {}).get("banks", [])) < 9:
+    fail("PG-206 F2-04 bank breadth below 9")
+if pg206_manifest.get("bank_policy", {}).get("minimum_ready_banks", 0) < 8:
+    fail("PG-206 F2-04 ready-bank threshold weakened")
+landmarks = [x for x in pg206_manifest.get("categories", []) if x.get("landmark")]
+if len(landmarks) < 19:
+    fail("PG-206 F2-04 configured landmark breadth below 19")
+if pg206_manifest.get("landmark_policy", {}).get("minimum_landmark_categories", 0) < 16:
+    fail("PG-206 F2-04 landmark readiness threshold weakened")
+
+policy = pg206_manifest.get("source_policy", {})
+if policy.get("animated_candidate_extension") != ".fbx":
+    fail("PG-206 F2-04 animated candidates must remain FBX-only")
+if ".bmp" not in policy.get("forbidden_texture_extensions", []):
+    fail("PG-206 F2-04 BMP rejection missing")
+if policy.get("minimum_free_disk_reserve_bytes", 0) < 6442450944:
+    fail("PG-206 F2-04 warehouse reserve below 6 GiB")
+if policy.get("max_total_candidates", 0) < 34000:
+    fail("PG-206 F2-04 total candidate ceiling unexpectedly reduced")
+if not policy.get("fair_share_across_categories"):
+    fail("PG-206 F2-04 fair-share scheduling disabled")
+
+for symbol in [
+    "F204_MEGA_SOURCE_INVENTORY_GATE_BEGIN",
+    "F204_MEGA_SOURCE_INVENTORY_GATE_PASS",
+    "F204_BANK_SOURCE_PASS",
+    "F204_LANDMARK_SOURCE_PASS",
+    "F204_MEGA_SOURCE_PASS",
+    'if($kind -eq "animated" -and $ext -ne $animatedExt)',
+]:
+    if symbol not in pg206_runner:
+        fail(f"PG-206 F2-04 runner marker missing: {symbol}")
+
+for symbol in [
+    "name: F2-04 Road Helm's Deep Prep Maximum Safe Mega Source",
+    "cancel-in-progress: false",
+    "Build F2-04 Road Helm's Deep Prep maximum-safe source superpack",
+]:
+    if symbol not in pg206_workflow:
+        fail(f"PG-206 F2-04 workflow marker missing: {symbol}")
+
+for ignored in [
+    "Data/F204RoadHelmsDeepPrepMaximumSafeMegaSourceV1.json",
+    "Scripts/run_f204_road_helms_deep_prep_maximum_safe_source.ps1",
+    ".github/workflows/f204-road-helms-deep-prep-maximum-safe-source.yml",
+]:
+    if pg206_unreal.count(ignored) < 2:
+        fail(f"PG-206 F2-04 tooling path must stay off Unreal push+PR filters: {ignored}")
+
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
