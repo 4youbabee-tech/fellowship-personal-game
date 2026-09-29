@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "payload_id": "P1C01_GRAPHICS_SETTINGS_V11_GOVERNOR_PAYLOAD",
+  "status": "READY_FOR_GOVERNOR_APPLY",
+  "scope": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
+  "observed_governor_blob_sha": "ba55f2d4e59d6db6a891a54fc454a6a866c7d8d7",
+  "collision_preflight": {
+    "requirement_id": "REQ-PERF-004",
+    "requirement_present": false,
+    "decision_id": "DEC-079",
+    "decision_present": false,
+    "observed_max_decision_id": "DEC-078"
+  },
+  "requirement": {
+    "id": "REQ-PERF-004",
+    "title": "Professional Graphics/Video settings with visual-economy presets",
+    "category": "PerformanceArchitecture",
+    "priority": "CRITICAL",
+    "status": "PARTIAL",
+    "origin": "Owner-directed P1C01 production requirement for a professional scalable Graphics/Video system without weakening the target-laptop floor.",
+    "intent": "Provide a visually strong default Graphics/Video experience plus scalable higher-quality presets and Custom controls while preserving the Windows DX11 1280x720 Low-Medium 30 FPS floor on the i7 Gen6 / 8 GB RAM / ~2 GB VRAM target and making visible beauty per measured cost the permanent tuning rule.",
+    "implementation_refs": [
+      "Docs/WORLD_DETAIL_LEDGER.md — P1C01 Graphics/Video Visual-Economy Doctrine V2",
+      "Data/P1C01GraphicsSettingsV11Preparation.json",
+      "Scripts/test_p1c01_graphics_settings_v11_preflight.py"
+    ],
+    "missing_work": [
+      "Register this requirement and DEC-079 in Data/ProjectGovernor.json.",
+      "Implement the P1C01-only UGameUserSettings-backed runtime settings layer in the existing Public/Private C++ architecture.",
+      "Add Performance, CinematicBalanced, High, Ultra and Custom behavior without raising existing lower-tier scalability anchors.",
+      "Implement reversible resolution/window-mode/VSync/frame-cap/render-scale preview -> confirm -> revert behavior.",
+      "Synchronize Data/SourceArchitecturePlan.json, Docs/CURRENT_PROJECT_STATE.md and Docs/PRODUCTION_COMPLETENESS_MATRIX.md in the same real-code increment.",
+      "Obtain exact-head UE4 compile/static proof, then focused PIE/device/performance/human visual acceptance before promotion."
+    ],
+    "acceptance_criteria": [
+      "CinematicBalanced is the visually strong default direction while Performance preserves the target-laptop safety floor.",
+      "The 1280x720 DX11 Low-Medium 30 FPS target remains explicit and is not weakened by higher-quality presets.",
+      "Existing lower-tier anchors remain 600/800/1000 MB texture pools, 512/768/1024 shadow max resolution, 1/2/2 cascades, 0.45/0.65/0.80 shadow-distance and view-distance scales, and foliage tier 2 density 0.70 unless later measured evidence authorizes a change.",
+      "Display changes are reversible through preview, confirm and revert while preserving the first pre-preview snapshot.",
+      "Custom exposes bounded control over resolution, window mode, VSync, frame-rate limit, render scale and supported scalability groups.",
+      "Optimization recovers cost first from duplicate actors, far shadows, overdraw, translucency, redundant lights, uninstanced repetition, unnecessary Tick and invisible/far detail before degrading silhouette, composition, hero materials, lighting, atmosphere, landmark framing, readable characters or near-field detail.",
+      "No compile, PIE, device, visual or performance status is claimed without exact evidence."
+    ],
+    "dependencies": [
+      "REQ-PERF-001",
+      "REQ-PERF-003",
+      "REQ-WORLD-002",
+      "REQ-STABILITY-001"
+    ],
+    "checkpoint": "W01_P1C01_PRODUCTION_VERTICAL_SLICE"
+  },
+  "decision": {
+    "id": "DEC-079",
+    "title": "P1C01 Graphics/Video settings use a permanent visual-economy preset architecture",
+    "status": "ACCEPTED",
+    "requirements": [
+      "REQ-PERF-004",
+      "REQ-PERF-001",
+      "REQ-PERF-003",
+      "REQ-WORLD-002"
+    ],
+    "resolution": "Build the professional Graphics/Video settings system only inside the active P1C01 runtime lane. Use CinematicBalanced as the visually strong default direction, Performance as the target-laptop safety preset, High and Ultra as opt-in higher-quality presets, and Custom for bounded user control. Preserve the existing lower-tier anchors until measured evidence supports a change.",
+    "implementation_contract": [
+      "Runtime scope remains W01_P1C01_PRODUCTION_VERTICAL_SLICE only; do not open later runtime chapters before Gate 6/7.",
+      "Target floor remains Windows DX11 at 1280x720 Low-Medium with a 30 FPS target on i7 Gen6 / 8 GB RAM / approximately 2 GB VRAM.",
+      "Preset family is Performance, CinematicBalanced, High, Ultra and Custom.",
+      "Existing lower-tier anchors remain texture pools 600/800/1000 MB; shadow max resolution 512/768/1024; shadow cascades 1/2/2; shadow-distance scale 0.45/0.65/0.80; view-distance scale 0.45/0.65/0.80; foliage tier 2 density 0.70.",
+      "Supported display controls include resolution, window mode, VSync, frame-rate limit and render scale.",
+      "Display changes use preview -> confirm -> revert and preserve the first snapshot across repeated previews.",
+      "Protect silhouette, composition, hero materials, lighting, atmosphere, landmark framing, readable characters and near-field detail.",
+      "Recover cost first from duplicate actors, far shadows, overdraw, translucency, redundant lights, uninstanced repetition, unnecessary Tick and invisible/far detail.",
+      "Heavy assets continue to use soft references plus async FStreamableManager loading; repeated decoration uses ISM/HISM with LOD/culling; crowds remain pooled; animated final assets remain FBX and production textures PNG/TGA/channel-packed.",
+      "Real code changes must update Data/SourceArchitecturePlan.json, Docs/CURRENT_PROJECT_STATE.md and Docs/PRODUCTION_COMPLETENESS_MATRIX.md in the same increment.",
+      "No runtime implementation may be labeled compile-, PIE-, device-, visual- or performance-validated without exact-head evidence."
+    ],
+    "evidence_boundary": "GOVERNANCE + RUNNERLESS STATIC PREPARATION ONLY."
+  },
+  "apply_rule": "Fail closed unless the Governor blob is still the observed SHA and both IDs remain absent. After Governor commit, update the V11 preparation authority_state and only then open runtime settings source."
+}
