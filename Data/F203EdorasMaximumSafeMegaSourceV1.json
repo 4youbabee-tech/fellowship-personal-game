@@ -1,0 +1,546 @@
+{
+  "schema_version": 1,
+  "pack_id": "F203_EDORAS_MAXIMUM_SAFE_MEGA_SOURCE_V1",
+  "status": "SOURCE_ARCHITECTURE_READY_INVENTORY_GATED_RUNTIME_MAPPING_UNASSIGNED",
+  "canonical_mission_id": "F2-03",
+  "canonical_title": "Edoras",
+  "runtime_consumers": [],
+  "runtime_mapping_status": "NOT_ASSIGNED_DO_NOT_INVENT",
+  "authority": [
+    "01_STORY_AND_TIMELINE_BIBLE",
+    "02_CHARACTERS_AND_RELATIONSHIPS_BIBLE",
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+    "04_PEOPLES_LORE_ARTIFACTS_AND_CULTURES",
+    "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "Tolkien The Lord of the Rings + Appendices",
+    "Data/ProjectGovernor.json",
+    "Docs/WORLD_DETAIL_LEDGER.md"
+  ],
+  "story_contract": {
+    "critical_path": [
+      "Theoden restored.",
+      "Political and military crisis clarified."
+    ],
+    "safe_optional_window": [
+      "court exploration",
+      "stables",
+      "equipment",
+      "social scenes"
+    ],
+    "locked_postcondition": "Rohan evacuates toward Helm's Deep.",
+    "excluded_from_this_pack": [
+      "F2-04 road and Helm's Deep preparation gameplay",
+      "F2-05 Helm's Deep battle resolution"
+    ],
+    "save_contract": [
+      "clean entry autosave",
+      "pre-set-piece checkpoint",
+      "postcondition save after committed state"
+    ]
+  },
+  "world_contract": {
+    "primary_location": "Rohan / Edoras",
+    "visual_grammar": [
+      "hill settlement",
+      "Meduseld Golden Hall focal landmark",
+      "Rohan timber settlement",
+      "horse and stable culture",
+      "open grassland approach"
+    ],
+    "gameplay_roles": [
+      "court exploration",
+      "social scenes",
+      "stables and equipment",
+      "muster and evacuation preparation"
+    ],
+    "state_variants": [
+      "arrival and court pressure",
+      "restored king and muster",
+      "evacuation and departure"
+    ],
+    "landmark_contract": "Meduseld remains the dominant navigation landmark from approach through departure.",
+    "streaming_contract": "Source preparation only; future runtime uses bounded bank residency and critical-vista preloading."
+  },
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_class": 2
+  },
+  "safety_gate": {
+    "requires_clean_warehouse_inventory": true,
+    "hard_stop_on_hash_mismatch": true,
+    "hard_stop_on_license_hash_mismatch": true,
+    "hard_stop_on_dangerous_file": true,
+    "hard_stop_on_bad_receipt": true,
+    "runtime_integration_allowed": false,
+    "runtime_mapping_required_before_runtime_work": true
+  },
+  "source_policy": {
+    "throughput_mode": "ADAPTIVE_MAXIMUM_SAFE",
+    "reuse_existing_warehouse_first": true,
+    "duplicate_payloads_per_runtime_chapter": false,
+    "index_only": true,
+    "animated_candidate_extension": ".fbx",
+    "texture_extensions": [
+      ".png",
+      ".tga"
+    ],
+    "forbidden_texture_extensions": [
+      ".bmp"
+    ],
+    "static_source_extensions": [
+      ".fbx",
+      ".obj"
+    ],
+    "audio_extensions": [
+      ".wav"
+    ],
+    "metadata_extensions": [
+      ".json",
+      ".mtl"
+    ],
+    "max_total_candidates": 32000,
+    "max_candidates_per_category": 2800,
+    "fair_share_across_categories": true,
+    "minimum_free_disk_reserve_bytes": 6442450944,
+    "landmark_score_bonus": 9
+  },
+  "bank_policy": {
+    "minimum_ready_banks": 7,
+    "banks": [
+      {
+        "id": "BANK01_EDORAS_APPROACH",
+        "purpose": "Approach, hill settlement, gate, houses and arrival readability"
+      },
+      {
+        "id": "BANK02_MEDUSELD_COURT",
+        "purpose": "Golden Hall exterior/interior, court circulation and formal staging"
+      },
+      {
+        "id": "BANK03_RESTORATION",
+        "purpose": "Theoden restoration sequence support and restrained Gandalf presentation"
+      },
+      {
+        "id": "BANK04_CHARACTER_SOCIAL",
+        "purpose": "Named-character social, relationship and original-dialogue staging"
+      },
+      {
+        "id": "BANK05_HORSE_STABLE_EQUIPMENT",
+        "purpose": "Rohan horse culture, stables, tack and equipment"
+      },
+      {
+        "id": "BANK06_EVACUATION_MUSTER",
+        "purpose": "Heralds, townsfolk preparation, supplies and departure organization"
+      },
+      {
+        "id": "BANK07_AUDIO_LIGHT_WEATHER",
+        "purpose": "Rohan wind, hall/stable ambience, horns and daylight atmosphere"
+      },
+      {
+        "id": "BANK08_HELMS_DEEP_HANDOFF",
+        "purpose": "Departure route and transition support without opening F2-04 gameplay"
+      }
+    ]
+  },
+  "landmark_policy": {
+    "minimum_landmark_categories": 14,
+    "meduseld_dominant_landmark_required": true,
+    "approach_readability_required": true,
+    "departure_state_readability_required": true,
+    "distance_proxy_or_lod_required_for_large_landmark_meshes": true,
+    "critical_vista_preload_required": true
+  },
+  "categories": [
+    {
+      "id": "EDORAS_HILL_SETTLEMENT",
+      "bank": "BANK01_EDORAS_APPROACH",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "edoras",
+        "hill",
+        "settlement",
+        "rohan"
+      ]
+    },
+    {
+      "id": "EDORAS_GATE_WALL",
+      "bank": "BANK01_EDORAS_APPROACH",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "edoras",
+        "gate",
+        "wall",
+        "rohan"
+      ]
+    },
+    {
+      "id": "EDORAS_HOUSE_CLUSTER",
+      "bank": "BANK01_EDORAS_APPROACH",
+      "kind": "static",
+      "landmark": false,
+      "keywords": [
+        "rohan",
+        "house",
+        "timber",
+        "edoras"
+      ]
+    },
+    {
+      "id": "EDORAS_APPROACH_ROAD",
+      "bank": "BANK01_EDORAS_APPROACH",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "road",
+        "hill",
+        "edoras",
+        "approach"
+      ]
+    },
+    {
+      "id": "MEDUSELD_EXTERIOR",
+      "bank": "BANK02_MEDUSELD_COURT",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "meduseld",
+        "golden hall",
+        "rohan"
+      ]
+    },
+    {
+      "id": "MEDUSELD_GREAT_DOOR",
+      "bank": "BANK02_MEDUSELD_COURT",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "meduseld",
+        "door",
+        "hall",
+        "golden"
+      ]
+    },
+    {
+      "id": "MEDUSELD_INTERIOR",
+      "bank": "BANK02_MEDUSELD_COURT",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "meduseld",
+        "hall",
+        "hearth",
+        "court"
+      ]
+    },
+    {
+      "id": "MEDUSELD_THRONE_DAIS",
+      "bank": "BANK02_MEDUSELD_COURT",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "throne",
+        "dais",
+        "theoden",
+        "court"
+      ]
+    },
+    {
+      "id": "THEODEN_RESTORATION_STAGING",
+      "bank": "BANK03_RESTORATION",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "theoden",
+        "gandalf",
+        "restoration",
+        "hall"
+      ]
+    },
+    {
+      "id": "GANDALF_RESTRAINED_FX",
+      "bank": "BANK03_RESTORATION",
+      "kind": "vfx",
+      "landmark": false,
+      "keywords": [
+        "gandalf",
+        "light",
+        "staff",
+        "reveal"
+      ]
+    },
+    {
+      "id": "GRIMA_EXIT_SUPPORT",
+      "bank": "BANK03_RESTORATION",
+      "kind": "mixed",
+      "landmark": false,
+      "keywords": [
+        "grima",
+        "wormtongue",
+        "court",
+        "exit"
+      ]
+    },
+    {
+      "id": "COURT_GUARD_SUPPORT",
+      "bank": "BANK03_RESTORATION",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "guard",
+        "rohan",
+        "court",
+        "spear"
+      ]
+    },
+    {
+      "id": "THEODEN_CHARACTER",
+      "bank": "BANK04_CHARACTER_SOCIAL",
+      "kind": "animated",
+      "landmark": true,
+      "keywords": [
+        "theoden",
+        "king",
+        "rohan",
+        "character"
+      ]
+    },
+    {
+      "id": "EOWYN_CHARACTER",
+      "bank": "BANK04_CHARACTER_SOCIAL",
+      "kind": "animated",
+      "landmark": true,
+      "keywords": [
+        "eowyn",
+        "rohan",
+        "character"
+      ]
+    },
+    {
+      "id": "EOMER_CHARACTER",
+      "bank": "BANK04_CHARACTER_SOCIAL",
+      "kind": "animated",
+      "landmark": true,
+      "keywords": [
+        "eomer",
+        "rohan",
+        "character"
+      ]
+    },
+    {
+      "id": "ARAGORN_GANDALF_SOCIAL",
+      "bank": "BANK04_CHARACTER_SOCIAL",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "aragorn",
+        "gandalf",
+        "dialogue",
+        "court"
+      ]
+    },
+    {
+      "id": "ROHAN_STABLE",
+      "bank": "BANK05_HORSE_STABLE_EQUIPMENT",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "stable",
+        "horse",
+        "rohan",
+        "edoras"
+      ]
+    },
+    {
+      "id": "ROHAN_HORSE_TACK",
+      "bank": "BANK05_HORSE_STABLE_EQUIPMENT",
+      "kind": "static",
+      "landmark": false,
+      "keywords": [
+        "saddle",
+        "bridle",
+        "horse",
+        "rohan"
+      ]
+    },
+    {
+      "id": "ROHAN_EQUIPMENT",
+      "bank": "BANK05_HORSE_STABLE_EQUIPMENT",
+      "kind": "static",
+      "landmark": false,
+      "keywords": [
+        "shield",
+        "spear",
+        "equipment",
+        "rohan"
+      ]
+    },
+    {
+      "id": "ROHAN_HORSE_ANIMATION",
+      "bank": "BANK05_HORSE_STABLE_EQUIPMENT",
+      "kind": "animated",
+      "landmark": true,
+      "keywords": [
+        "horse",
+        "mount",
+        "ride",
+        "rohan"
+      ]
+    },
+    {
+      "id": "EVACUATION_SUPPLIES",
+      "bank": "BANK06_EVACUATION_MUSTER",
+      "kind": "static",
+      "landmark": false,
+      "keywords": [
+        "supplies",
+        "bundle",
+        "evacuation",
+        "rohan"
+      ]
+    },
+    {
+      "id": "TOWNSFOLK_PREPARATION",
+      "bank": "BANK06_EVACUATION_MUSTER",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "townsfolk",
+        "evacuation",
+        "rohan",
+        "preparation"
+      ]
+    },
+    {
+      "id": "HERALD_HORN",
+      "bank": "BANK06_EVACUATION_MUSTER",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "herald",
+        "horn",
+        "muster",
+        "rohan"
+      ]
+    },
+    {
+      "id": "MOUNTED_MUSTER",
+      "bank": "BANK06_EVACUATION_MUSTER",
+      "kind": "animated",
+      "landmark": true,
+      "keywords": [
+        "mounted",
+        "horse",
+        "muster",
+        "rohan"
+      ]
+    },
+    {
+      "id": "ROHAN_WIND",
+      "bank": "BANK07_AUDIO_LIGHT_WEATHER",
+      "kind": "audio",
+      "landmark": false,
+      "keywords": [
+        "wind",
+        "grassland",
+        "rohan"
+      ]
+    },
+    {
+      "id": "MEDUSELD_AMBIENCE",
+      "bank": "BANK07_AUDIO_LIGHT_WEATHER",
+      "kind": "audio",
+      "landmark": false,
+      "keywords": [
+        "hall",
+        "hearth",
+        "meduseld",
+        "ambience"
+      ]
+    },
+    {
+      "id": "STABLE_AMBIENCE",
+      "bank": "BANK07_AUDIO_LIGHT_WEATHER",
+      "kind": "audio",
+      "landmark": false,
+      "keywords": [
+        "stable",
+        "horse",
+        "hoof",
+        "ambience"
+      ]
+    },
+    {
+      "id": "EDORAS_DAYLIGHT",
+      "bank": "BANK07_AUDIO_LIGHT_WEATHER",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "daylight",
+        "golden",
+        "edoras",
+        "atmosphere"
+      ]
+    },
+    {
+      "id": "DEPARTURE_GATE_STATE",
+      "bank": "BANK08_HELMS_DEEP_HANDOFF",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "departure",
+        "gate",
+        "edoras",
+        "rohan"
+      ]
+    },
+    {
+      "id": "WESTWARD_ROAD",
+      "bank": "BANK08_HELMS_DEEP_HANDOFF",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "road",
+        "west",
+        "departure",
+        "rohan"
+      ]
+    },
+    {
+      "id": "MOUNTED_DEPARTURE",
+      "bank": "BANK08_HELMS_DEEP_HANDOFF",
+      "kind": "animated",
+      "landmark": true,
+      "keywords": [
+        "mounted",
+        "departure",
+        "horse",
+        "rohan"
+      ]
+    },
+    {
+      "id": "HANDOFF_VISTA",
+      "bank": "BANK08_HELMS_DEEP_HANDOFF",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "rohan",
+        "mountains",
+        "road",
+        "vista"
+      ]
+    }
+  ],
+  "runtime_residency_blueprint": {
+    "mode": "MULTI_BANK_SOURCE_PREP_ONLY",
+    "rule": "No Part II runtime chapter is opened until an explicit Part II runtime mapping/migration decision exists.",
+    "heavy_references": "TSoftObjectPtr/TSoftClassPtr/FSoftObjectPath",
+    "heavy_loading": "FStreamableManager asynchronous"
+  },
+  "acceptance_boundary": "Source architecture/index preparation only. No Part II runtime ID is invented and no runtime/PIE/device/visual/pacing/performance acceptance is claimed."
+}
