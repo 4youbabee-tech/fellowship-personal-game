@@ -1,3 +1,15 @@
+## 2026-09-30 - P1C01 maximum-safe mega train / living-world safety
+
+- P1C01 legacy mega-pack Warehouse default: **RECONCILED to D runner authority**; no runtime/gameplay maturity promotion.
+- LivingWorld grouped-event distance retirement: **SOURCE-REPAIRED to member-local**.
+- Authored event lifetime expiry: **PRESERVED event-wide**.
+- Regression protection: **PG-208 + source-contract test implemented / exact-head CI pending**.
+- Ambient player lookup centralization: **SOURCE-VERIFIED; PG-210 guards one direct engine lookup inside GetPlayerPawnCached**.
+- Generic save-schema migration: **NOT CLAIMED**; evidence boundary recorded in Data/SaveSchemaMigrationAuditV1.json and PG-211.
+- P1C01 source-to-runtime zero-silent-omission disposition: **PREPARED / PG-212**.
+- Owner-authorized 12-car P1C01 mega train: **PREPARATION ACTIVE / NEW RUNTIME EXPANSION GATED BY W00**.
+- Chapter production maturity is unchanged until exact-head UE4 plus chapter-specific PIE/device/human evidence exists.
+
 ## 2026-09-30 - W00 packaged runtime Data-read proof guard
 
 - Packaged RuntimeDependencies staging/JSON syntax guard: **IMPLEMENTED**.
