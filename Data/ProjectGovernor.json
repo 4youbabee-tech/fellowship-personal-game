@@ -4473,6 +4473,36 @@
         "Docs/DEVELOPMENT_GATES.md"
       ],
       "evidence_boundary": "Operational authorization only; it does not waive CI, canon, licensing, device, visual or human acceptance gates."
+    },
+    {
+      "id": "DEC-069",
+      "title": "Production trains must use deterministic PowerShell 5.1 and native-command exit contracts",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-STABILITY-001",
+        "REQ-STABILITY-003",
+        "REQ-PERF-001"
+      ],
+      "resolution": "Closure/source-preparation trains may not depend on ambient LASTEXITCODE after non-native PowerShell work, may not truncate native git output inside a pipeline before exit capture, and must materialize generic-list output explicitly before JSON serialization on Windows PowerShell 5.1.",
+      "implementation_contract": [
+        "P1C01 closure cars treat pure PowerShell scriptblocks as success unless they throw; native child PowerShell processes are wrapped by a helper that captures their explicit exit code and throws a typed failure.",
+        "Generated material branch remote-head lookup captures the complete git ls-remote output first, records the native exit code, retries at most three times, then parses the stored output.",
+        "Part I shared-stock candidate lists call ToArray() and bind to object[] before ordered-hashtable/JSON serialization.",
+        "Pre-Unreal PG-196 statically guards these three contracts.",
+        "Provider/source blockers may still quarantine and continue; infrastructure failures remain hard-stop.",
+        "No change in this decision weakens Gate 6/7, runtime serialization, canon authority or target-device acceptance requirements."
+      ],
+      "rationale": "Develop runs after PR #145 exposed three deterministic production-train defects: closure storage preflight passed but StrictMode read an unset LASTEXITCODE; Warehouse #283 prepared and committed eight materials but remote-head lookup failed through a native-command pipeline; Part I prep failed in PowerShell 5.1 while embedding a generic List[object] into an ordered report. These are infrastructure/tooling defects, not content failures.",
+      "evidence": [
+        "P1C01 Chapter Closure Pack #1: P1C01_CLOSURE_PACK_STORAGE_PASS followed by unset LASTEXITCODE hard failure",
+        "Warehouse #283: P1C01_MATERIAL_INTAKE_PASS prepared=8 and local generated commit ef65959 followed by generated material remote-head lookup failed",
+        "Part I Chapter Preparation Train #1: PART1_CHAPTER_PREP_BEGIN chapters=7 followed by Argument types do not match at report construction",
+        "Scripts/run_p1c01_chapter_closure_pack_v2.ps1",
+        "Scripts/export_p1c01_material_source_branch.ps1",
+        "Scripts/run_part1_runtime_chapter_prep.ps1",
+        "Scripts/pre_unreal_validate.py PG-196"
+      ],
+      "evidence_boundary": "SOURCE-IMPLEMENTED repair contract. Fresh exact-head static validation and rerun of the affected production workflows are still required."
     }
   ],
   "open_conflicts": [],
