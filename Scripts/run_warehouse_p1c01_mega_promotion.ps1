@@ -1,6 +1,6 @@
 param(
   [string]$ManifestPath = "Data/WarehouseP1C01MegaPromotionTrainV1.json",
-  [string]$WarehouseRoot = "C:\actions-runner\_warehouse\ShireJourney",
+  [string]$WarehouseRoot = "D:\actions-runner\_warehouse\ShireJourney",
   [string]$OutputRoot = ""
 )
 
