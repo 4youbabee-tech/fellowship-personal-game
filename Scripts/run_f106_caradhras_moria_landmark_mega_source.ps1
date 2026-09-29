@@ -57,6 +57,7 @@ foreach($file in $allFiles){
 
 $perCategory=[int]$manifest.source_policy.max_candidates_per_category
 $totalCeiling=[int]$manifest.source_policy.max_total_candidates
+$landmarkBonus=[int]$manifest.source_policy.landmark_score_bonus
 $totalSelected=0
 $categoryReports=@()
 $landmarkReports=@()
@@ -89,7 +90,7 @@ foreach($category in @($manifest.categories)){
     if($matches.Count -eq 0){ continue }
 
     $score=[int]$matches.Count
-    if($isLandmark){ $score+=2 }
+    if($isLandmark){ $score+=$landmarkBonus }
     if($haystack.Contains("production")){ $score+=2 }
     if($haystack.Contains("imported")){ $score+=1 }
     if($ext -eq ".fbx"){ $score+=2 }
