@@ -6,6 +6,9 @@ on:
       - develop
     paths-ignore:
       - '.github/workflows/**'
+      - 'Data/F107LorienAnduinLandmarkMegaSourceSuperpackV1.json'
+      - 'Scripts/run_f107_lorien_anduin_landmark_mega_source.ps1'
+      - '.github/workflows/f107-lorien-anduin-landmark-mega-source.yml'
       - 'Docs/**'
       - '.gitignore'
       - 'README.md'
@@ -106,6 +109,9 @@ on:
       - develop
     paths-ignore:
       - '.github/workflows/**'
+      - 'Data/F107LorienAnduinLandmarkMegaSourceSuperpackV1.json'
+      - 'Scripts/run_f107_lorien_anduin_landmark_mega_source.ps1'
+      - '.github/workflows/f107-lorien-anduin-landmark-mega-source.yml'
       - 'Docs/**'
       - '.gitignore'
       - 'README.md'
