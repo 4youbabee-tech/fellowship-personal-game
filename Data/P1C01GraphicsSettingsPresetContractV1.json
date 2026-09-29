@@ -1,0 +1,41 @@
+{
+  "scope": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
+  "status": "PREPARED_NOT_RUNTIME",
+  "default_preset": "CinematicBalanced",
+  "presets": ["Performance", "CinematicBalanced", "High", "Ultra", "Custom"],
+  "floor": {
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "quality": "Low-Medium",
+    "fps": 30,
+    "ram_gb": 8,
+    "vram_class_gb": 2
+  },
+  "display_apply": ["preview", "confirm", "revert"],
+  "protected_visual_value": [
+    "silhouette",
+    "composition",
+    "hero materials",
+    "lighting",
+    "atmosphere",
+    "near-field detail"
+  ],
+  "cost_recovery_order": [
+    "duplicate actors",
+    "far shadows",
+    "overdraw",
+    "translucency",
+    "redundant lights",
+    "uninstanced repetition",
+    "unnecessary Tick",
+    "invisible or far detail"
+  ],
+  "runtime_constraints": {
+    "heavy_assets": "soft references plus async FStreamableManager",
+    "crowds": "object pooling",
+    "repeated_detail": "ISM or HISM plus LOD and culling",
+    "animated_final_assets": "FBX",
+    "final_textures": "PNG or TGA, including channel-packed textures"
+  },
+  "evidence_boundary": "DESIGN_PREPARATION_ONLY"
+}
