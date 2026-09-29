@@ -8419,6 +8419,8 @@ if int(policy.get("max_total_candidates", 0)) < 16000:
     fail("PG-199 F1-06 total candidate ceiling unexpectedly reduced")
 if int(policy.get("max_candidates_per_category", 0)) < 1800:
     fail("PG-199 F1-06 per-category throughput unexpectedly reduced")
+if int(policy.get("landmark_score_bonus", 0)) < 6:
+    fail("PG-199 F1-06 landmark score bonus unexpectedly reduced")
 if policy.get("animated_candidate_extension") != ".fbx":
     fail("PG-199 animated F1-06 candidates must remain FBX-only")
 if ".bmp" not in policy.get("forbidden_texture_extensions", []):
@@ -8458,6 +8460,7 @@ for symbol in [
     "F106_MEGA_SOURCE_INVENTORY_GATE_PASS",
     "F106_LANDMARK_SOURCE_PASS",
     "F106_LANDMARK_SOURCE_COVERAGE_FAIL",
+    "landmarkBonus",
     "F106_MEGA_SOURCE_CATEGORY_PASS",
     "F106_MEGA_SOURCE_PASS",
     "$matches.ToArray()",
