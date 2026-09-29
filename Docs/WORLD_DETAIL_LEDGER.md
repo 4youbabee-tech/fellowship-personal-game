@@ -1,11 +1,15 @@
-## 2026-09-30 - P1C01 living-world member-local culling safety repair
+## 2026-09-30 - P1C01 mega build train + living-world member-local retirement safety
 
-- Programmer review finding confirmed against canonical develop: `CleanupExpiredEvents` retired an entire micro-event when any one grouped actor crossed `EventCullDistance`, allowing a roaming NPC or motion actor to make a nearby interaction disappear in front of the player.
-- Registered repair: event lifetime expiry remains event-wide, but distance retirement is actor/member-local. Far members are individually pooled/released; the event remains active while any member remains.
-- Pool ownership stays with `ALivingWorldDirector`; this does not create a second life system or change quest/save authority.
-- `ShireAmbientNPC` player lookup review found one direct `UGameplayStatics::GetPlayerPawn` call inside `GetPlayerPawnCached()`; normal runtime consumers already use that cache. No redundant caching rewrite is authorized.
-- Save-schema review found newer-save rejection plus existing legacy/canonicalization repair, but no documented per-version migration history sufficient to safely invent a general migration pipeline. Schema migration remains a separately designed task, not part of this repair.
-- Evidence boundary: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. No PIE/device/visual/performance acceptance is claimed.
+- Owner authorized one approval for a very large P1C01 production train containing many bounded tasks/cars. Registered under DEC-090 and `Data/P1C01OvernightMegaBuildTrainV1.json`.
+- Source references preserve the distinction between canonical F1-01 (party/Ring handoff), F1-02 (Bag End/Shadow of the Past departure), and F1-03 (Shire roads/Bucklebury pursuit), while the existing runtime P1C01 remains a wider vertical-slice composition. No silent renumbering is introduced.
+- Confirmed defect: one distant member of a multi-member LivingWorld micro-event could previously retire every grouped member, including a nearby interaction.
+- Approved repair: event lifetime expiry remains event-wide; distance retirement is member-local. Each far member is returned through the existing `ALivingWorldDirector` pool path and the event survives while any member remains.
+- `ShireNPCContextSubsystem`, `LivingWorldDirector`, and `ShireQuestSubsystem` ownership remains decoupled and unchanged.
+- Current AmbientNPC player lookup already centralizes the direct engine lookup inside `GetPlayerPawnCached()`; no redundant cache layer is added.
+- Save-schema migration is deferred until historical schema transforms are source-documented; existing legacy identity repair is preserved.
+- Mega-build cars cover W00 closure, world density/route life, party/Bag End interaction density, NPC routines/social memory, fauna/environment motion, character presentation, quest/side-activity coherence, cinematic handoff, Shire audio identity, long-session save/load, and target-device Gate 6/7 evidence.
+- Performance contract remains: target 6th-gen i7 / 8 GB RAM / ~2 GB VRAM; FBX animated assets, PNG/TGA textures, soft/async heavy loading, pooled transient populations, ISM/HISM + LOD/culling.
+- Evidence boundary: source implementation/authorization only until the relevant exact-head UE4/PIE/device/human evidence exists.
 
 ## 2026-09-29 - F2-04 Road & Helm's Deep Prep Maximum-Safe Source V1
 
