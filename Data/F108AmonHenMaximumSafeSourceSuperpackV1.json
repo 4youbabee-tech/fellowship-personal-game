@@ -1,0 +1,773 @@
+{
+  "schema_version": 1,
+  "pack_id": "F108_AMON_HEN_MAXIMUM_SAFE_SOURCE_SUPERPACK_V1",
+  "status": "SOURCE_ARCHITECTURE_READY_INVENTORY_GATED_RUNTIME_GATED",
+  "canonical_mission_id": "F1-08",
+  "canonical_title": "Breaking of the Fellowship",
+  "runtime_consumers": [
+    "P1C08"
+  ],
+  "chapter_plan": "Data/F108AmonHenMaximumSafeChapterPlanV1.json",
+  "authority": [
+    "01_STORY_AND_TIMELINE_BIBLE",
+    "02_CHARACTERS_AND_RELATIONSHIPS_BIBLE",
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "the-lord-of-the-rings-the-fellowship-of-the-ring-2001",
+    "Data/ProjectGovernor.json",
+    "Data/MaximumSafeProductionModeV1.json",
+    "Docs/WORLD_DETAIL_LEDGER.md"
+  ],
+  "story_contract": {
+    "primary_location": "Amon Hen",
+    "playable_or_present_focus": [
+      "Frodo",
+      "Sam",
+      "Aragorn",
+      "Boromir",
+      "Uruk-hai"
+    ],
+    "canonical_critical_path": [
+      "Boromir falls.",
+      "Merry and Pippin are captured.",
+      "Frodo chooses Mordor.",
+      "Sam follows."
+    ],
+    "safe_optional_window": [
+      "multi-character combat",
+      "pursuit handoff"
+    ],
+    "locked_postcondition": "Three parallel campaigns begin.",
+    "successor_boundary": "F2-01 Three Hunters / Captives owns the pursuit/captive campaign after the F1-08 postcondition commits."
+  },
+  "world_contract": {
+    "location_type": "River corridor / ancient ruins",
+    "visual_grammar": [
+      "water",
+      "cliffs",
+      "stone monuments",
+      "forest"
+    ],
+    "gameplay_roles": [
+      "scouting",
+      "Fellowship break",
+      "multi-character combat",
+      "pursuit handoff"
+    ],
+    "state_variants": [
+      "calm/arrival",
+      "isolation/temptation",
+      "Uruk attack",
+      "battle",
+      "aftermath",
+      "departure"
+    ],
+    "dominant_landmark": "Amon Hen seeing-seat / ancient-stone summit silhouette framed by forest and river approach."
+  },
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_class": 2
+  },
+  "safety_gate": {
+    "requires_clean_warehouse_inventory": true,
+    "hard_stop_on_hash_mismatch": true,
+    "hard_stop_on_license_hash_mismatch": true,
+    "hard_stop_on_dangerous_file": true,
+    "hard_stop_on_bad_receipt": true,
+    "minimum_free_disk_reserve_bytes": 6442450944
+  },
+  "source_policy": {
+    "reuse_existing_warehouse_first": true,
+    "duplicate_payloads_per_runtime_chapter": false,
+    "index_only": true,
+    "animated_candidate_extension": ".fbx",
+    "texture_extensions": [
+      ".png",
+      ".tga"
+    ],
+    "forbidden_texture_extensions": [
+      ".bmp"
+    ],
+    "static_source_extensions": [
+      ".fbx",
+      ".obj"
+    ],
+    "audio_extensions": [
+      ".wav"
+    ],
+    "metadata_extensions": [
+      ".json",
+      ".mtl"
+    ],
+    "max_total_candidate_assignments": 22000,
+    "max_candidates_per_category": 2400,
+    "max_category_reuse_per_source_path": 3,
+    "landmark_score_bonus": 8,
+    "story_critical_score_bonus": 5,
+    "minimum_populated_categories": 20,
+    "minimum_landmark_categories": 10
+  },
+  "coverage_targets": {
+    "hard_minimums": {
+      "populated_categories": 20,
+      "landmark_categories": 10
+    },
+    "soft_group_targets": {
+      "landmark": 10,
+      "world": 8,
+      "combat": 7,
+      "character": 5,
+      "audio": 3,
+      "systemic": 2,
+      "cinematic": 2,
+      "streaming": 1
+    },
+    "rule": "Soft group targets produce explicit gap reporting but do not stop independent source preparation; hard landmark/overall minimums remain fail-closed."
+  },
+  "categories": [
+    {
+      "id": "AMON_HEN_SEEING_SEAT_LANDMARK",
+      "kind": "static",
+      "coverage_group": "landmark",
+      "landmark": true,
+      "story_critical": true,
+      "keywords": [
+        "amon",
+        "hen",
+        "seeing",
+        "seat",
+        "summit",
+        "ruin",
+        "stone",
+        "monument",
+        "hill",
+        "vista"
+      ]
+    },
+    {
+      "id": "AMON_HEN_SUMMIT_RUINS",
+      "kind": "static",
+      "coverage_group": "landmark",
+      "landmark": true,
+      "story_critical": true,
+      "keywords": [
+        "summit",
+        "ruin",
+        "stone",
+        "ancient",
+        "hill",
+        "platform",
+        "stair",
+        "monument",
+        "vista"
+      ]
+    },
+    {
+      "id": "AMON_HEN_ANCIENT_PILLARS_BLOCKS",
+      "kind": "static",
+      "coverage_group": "landmark",
+      "landmark": true,
+      "story_critical": true,
+      "keywords": [
+        "pillar",
+        "column",
+        "block",
+        "ruin",
+        "ancient",
+        "stone",
+        "battle",
+        "amon"
+      ]
+    },
+    {
+      "id": "PARTH_GALEN_FOREST_CAMP",
+      "kind": "mixed",
+      "coverage_group": "world",
+      "landmark": true,
+      "story_critical": false,
+      "keywords": [
+        "forest",
+        "camp",
+        "shore",
+        "river",
+        "tree",
+        "clearing",
+        "parth",
+        "galen",
+        "fellowship"
+      ]
+    },
+    {
+      "id": "PARTH_GALEN_HILLSIDE_ROUTES",
+      "kind": "static",
+      "coverage_group": "world",
+      "landmark": true,
+      "story_critical": true,
+      "keywords": [
+        "hill",
+        "hillside",
+        "slope",
+        "forest",
+        "path",
+        "route",
+        "rock",
+        "tree",
+        "clearing"
+      ]
+    },
+    {
+      "id": "AMON_HEN_FOREST_ROUTEFINDING",
+      "kind": "static",
+      "coverage_group": "world",
+      "landmark": true,
+      "story_critical": true,
+      "keywords": [
+        "forest",
+        "path",
+        "trail",
+        "stair",
+        "marker",
+        "ruin",
+        "stone",
+        "route",
+        "hill"
+      ]
+    },
+    {
+      "id": "ANDUIN_SHORE_BOAT_EXIT",
+      "kind": "mixed",
+      "coverage_group": "landmark",
+      "landmark": true,
+      "story_critical": true,
+      "keywords": [
+        "river",
+        "shore",
+        "boat",
+        "canoe",
+        "water",
+        "departure",
+        "bank",
+        "landing",
+        "anduin"
+      ]
+    },
+    {
+      "id": "AMON_HEN_CLIFF_RIVER_VISTAS",
+      "kind": "mixed",
+      "coverage_group": "landmark",
+      "landmark": true,
+      "story_critical": false,
+      "keywords": [
+        "cliff",
+        "river",
+        "water",
+        "vista",
+        "valley",
+        "forest",
+        "stone",
+        "shore",
+        "distant"
+      ]
+    },
+    {
+      "id": "AMON_HEN_STONE_SURFACES",
+      "kind": "surface",
+      "coverage_group": "world",
+      "landmark": false,
+      "story_critical": false,
+      "keywords": [
+        "stone",
+        "rock",
+        "ruin",
+        "moss",
+        "wet",
+        "ancient",
+        "cliff",
+        "pillar"
+      ]
+    },
+    {
+      "id": "AMON_HEN_FOREST_SURFACES",
+      "kind": "surface",
+      "coverage_group": "world",
+      "landmark": false,
+      "story_critical": false,
+      "keywords": [
+        "forest",
+        "ground",
+        "moss",
+        "leaf",
+        "bark",
+        "root",
+        "mud",
+        "grass",
+        "soil"
+      ]
+    },
+    {
+      "id": "AMON_HEN_FOLIAGE_DRESSING",
+      "kind": "static",
+      "coverage_group": "world",
+      "landmark": false,
+      "story_critical": false,
+      "keywords": [
+        "tree",
+        "forest",
+        "fern",
+        "bush",
+        "shrub",
+        "root",
+        "branch",
+        "leaf",
+        "foliage"
+      ]
+    },
+    {
+      "id": "AMON_HEN_BATTLE_DAMAGE_AFTERMATH",
+      "kind": "mixed",
+      "coverage_group": "world",
+      "landmark": false,
+      "story_critical": true,
+      "keywords": [
+        "broken",
+        "damage",
+        "debris",
+        "arrow",
+        "battle",
+        "aftermath",
+        "ruin",
+        "impact",
+        "fallen"
+      ]
+    },
+    {
+      "id": "URUK_HAI_BODY_ARMOR_WEAPONS",
+      "kind": "static",
+      "coverage_group": "combat",
+      "landmark": false,
+      "story_critical": true,
+      "keywords": [
+        "uruk",
+        "orc",
+        "armor",
+        "sword",
+        "shield",
+        "bow",
+        "weapon",
+        "helmet",
+        "battle"
+      ]
+    },
+    {
+      "id": "URUK_HAI_COMBAT_ANIMATION",
+      "kind": "animated",
+      "coverage_group": "combat",
+      "landmark": false,
+      "story_critical": true,
+      "keywords": [
+        "uruk",
+        "orc",
+        "attack",
+        "combat",
+        "sword",
+        "bow",
+        "run",
+        "hit",
+        "death"
+      ]
+    },
+    {
+      "id": "URUK_HAI_PURSUIT_CAPTURE_ANIMATION",
+      "kind": "animated",
+      "coverage_group": "combat",
+      "landmark": false,
+      "story_critical": true,
+      "keywords": [
+        "uruk",
+        "orc",
+        "pursuit",
+        "capture",
+        "grab",
+        "carry",
+        "run",
+        "chase",
+        "prisoner"
+      ]
+    },
+    {
+      "id": "BOROMIR_SWORD_SHIELD_SUPPORT",
+      "kind": "static",
+      "coverage_group": "character",
+      "landmark": false,
+      "story_critical": true,
+      "keywords": [
+        "boromir",
+        "sword",
+        "shield",
+        "gondor",
+        "warrior",
+        "horn",
+        "equipment"
+      ]
+    },
+    {
+      "id": "BOROMIR_LAST_STAND_ANIMATION",
+      "kind": "animated",
+      "coverage_group": "character",
+      "landmark": false,
+      "story_critical": true,
+      "keywords": [
+        "boromir",
+        "defend",
+        "combat",
+        "sword",
+        "shield",
+        "hit",
+        "wounded",
+        "kneel",
+        "stand"
+      ]
+    },
+    {
+      "id": "ARAGORN_COMBAT_ANIMATION",
+      "kind": "animated",
+      "coverage_group": "character",
+      "landmark": false,
+      "story_critical": true,
+      "keywords": [
+        "aragorn",
+        "ranger",
+        "combat",
+        "sword",
+        "run",
+        "attack",
+        "parry",
+        "kill"
+      ]
+    },
+    {
+      "id": "LEGOLAS_GIMLI_COMBAT_SUPPORT",
+      "kind": "animated",
+      "coverage_group": "character",
+      "landmark": false,
+      "story_critical": false,
+      "keywords": [
+        "legolas",
+        "gimli",
+        "elf",
+        "dwarf",
+        "bow",
+        "axe",
+        "combat",
+        "attack",
+        "run"
+      ]
+    },
+    {
+      "id": "MERRY_PIPPIN_ESCAPE_CAPTURE",
+      "kind": "animated",
+      "coverage_group": "character",
+      "landmark": false,
+      "story_critical": true,
+      "keywords": [
+        "merry",
+        "pippin",
+        "hobbit",
+        "run",
+        "escape",
+        "capture",
+        "grab",
+        "fear",
+        "gesture"
+      ]
+    },
+    {
+      "id": "FRODO_ESCAPE_STEALTH_MOVEMENT",
+      "kind": "animated",
+      "coverage_group": "character",
+      "landmark": false,
+      "story_critical": true,
+      "keywords": [
+        "frodo",
+        "hobbit",
+        "stealth",
+        "run",
+        "hide",
+        "escape",
+        "crouch",
+        "climb",
+        "fall"
+      ]
+    },
+    {
+      "id": "SAM_SHORE_WATER_BOAT",
+      "kind": "animated",
+      "coverage_group": "character",
+      "landmark": false,
+      "story_critical": true,
+      "keywords": [
+        "sam",
+        "hobbit",
+        "water",
+        "swim",
+        "boat",
+        "shore",
+        "run",
+        "reach",
+        "paddle"
+      ]
+    },
+    {
+      "id": "FELLOWSHIP_RELATIONSHIP_GESTURE",
+      "kind": "animated",
+      "coverage_group": "character",
+      "landmark": false,
+      "story_critical": false,
+      "keywords": [
+        "talk",
+        "gesture",
+        "kneel",
+        "comfort",
+        "farewell",
+        "grief",
+        "relationship",
+        "fellowship",
+        "idle"
+      ]
+    },
+    {
+      "id": "URUK_PROJECTILES_IMPACTS",
+      "kind": "mixed",
+      "coverage_group": "combat",
+      "landmark": false,
+      "story_critical": true,
+      "keywords": [
+        "arrow",
+        "bow",
+        "projectile",
+        "impact",
+        "hit",
+        "wood",
+        "stone",
+        "blood",
+        "battle"
+      ]
+    },
+    {
+      "id": "AMON_HEN_CALM_FOREST_AUDIO",
+      "kind": "audio",
+      "coverage_group": "audio",
+      "landmark": false,
+      "story_critical": false,
+      "keywords": [
+        "forest",
+        "bird",
+        "wind",
+        "leaf",
+        "river",
+        "ambient",
+        "calm",
+        "water"
+      ]
+    },
+    {
+      "id": "URUK_THREAT_BATTLE_AUDIO",
+      "kind": "audio",
+      "coverage_group": "audio",
+      "landmark": false,
+      "story_critical": true,
+      "keywords": [
+        "battle",
+        "orc",
+        "uruk",
+        "shout",
+        "sword",
+        "impact",
+        "run",
+        "combat",
+        "horn"
+      ]
+    },
+    {
+      "id": "BOROMIR_HORN_AUDIO",
+      "kind": "audio",
+      "coverage_group": "audio",
+      "landmark": false,
+      "story_critical": true,
+      "keywords": [
+        "horn",
+        "signal",
+        "battle",
+        "call",
+        "boromir",
+        "war"
+      ]
+    },
+    {
+      "id": "RIVER_SHORE_DEPARTURE_AUDIO",
+      "kind": "audio",
+      "coverage_group": "audio",
+      "landmark": false,
+      "story_critical": true,
+      "keywords": [
+        "river",
+        "water",
+        "shore",
+        "boat",
+        "paddle",
+        "splash",
+        "departure",
+        "ambient"
+      ]
+    },
+    {
+      "id": "F108_CINEMATIC_VISTA_DRESSING",
+      "kind": "mixed",
+      "coverage_group": "cinematic",
+      "landmark": true,
+      "story_critical": true,
+      "keywords": [
+        "vista",
+        "wide",
+        "summit",
+        "forest",
+        "ruin",
+        "river",
+        "stone",
+        "silhouette",
+        "cinematic"
+      ]
+    },
+    {
+      "id": "F108_AFTERTHM_CINEMATIC_SUPPORT",
+      "kind": "mixed",
+      "coverage_group": "cinematic",
+      "landmark": true,
+      "story_critical": true,
+      "keywords": [
+        "aftermath",
+        "quiet",
+        "forest",
+        "fallen",
+        "stone",
+        "tree",
+        "cinematic",
+        "farewell",
+        "battle"
+      ]
+    },
+    {
+      "id": "F108_DYNAMIC_FOLIAGE_REACTION",
+      "kind": "mixed",
+      "coverage_group": "systemic",
+      "landmark": false,
+      "story_critical": false,
+      "keywords": [
+        "leaf",
+        "branch",
+        "foliage",
+        "bush",
+        "tree",
+        "wind",
+        "impact",
+        "reaction",
+        "forest"
+      ]
+    },
+    {
+      "id": "F108_BATTLE_TRANSIENT_FX",
+      "kind": "mixed",
+      "coverage_group": "systemic",
+      "landmark": false,
+      "story_critical": false,
+      "keywords": [
+        "dust",
+        "impact",
+        "debris",
+        "spark",
+        "blood",
+        "arrow",
+        "battle",
+        "fx",
+        "smoke"
+      ]
+    },
+    {
+      "id": "F108_DISTANCE_PROXY_LOD_SUPPORT",
+      "kind": "static",
+      "coverage_group": "streaming",
+      "landmark": true,
+      "story_critical": false,
+      "keywords": [
+        "lod",
+        "proxy",
+        "distant",
+        "silhouette",
+        "vista",
+        "ruin",
+        "hill",
+        "forest",
+        "cliff"
+      ]
+    },
+    {
+      "id": "F108_CHECKPOINT_ROUTE_ANCHORS",
+      "kind": "static",
+      "coverage_group": "world",
+      "landmark": false,
+      "story_critical": false,
+      "keywords": [
+        "marker",
+        "path",
+        "checkpoint",
+        "trail",
+        "stone",
+        "tree",
+        "route",
+        "camp",
+        "shore"
+      ]
+    },
+    {
+      "id": "F108_CAPTURE_HANDOFF_SUPPORT",
+      "kind": "mixed",
+      "coverage_group": "combat",
+      "landmark": false,
+      "story_critical": true,
+      "keywords": [
+        "capture",
+        "prisoner",
+        "trail",
+        "uruk",
+        "orc",
+        "hobbit",
+        "carry",
+        "pursuit",
+        "handoff"
+      ]
+    },
+    {
+      "id": "F108_THREE_CAMPAIGN_EXIT_SUPPORT",
+      "kind": "mixed",
+      "coverage_group": "streaming",
+      "landmark": false,
+      "story_critical": true,
+      "keywords": [
+        "trail",
+        "boat",
+        "shore",
+        "forest",
+        "departure",
+        "pursuit",
+        "camp",
+        "handoff",
+        "transition"
+      ]
+    }
+  ],
+  "acceptance_boundary": "Maximum-safe source/index architecture only. Runtime banks are planned but not integrated; no Gate 6/7, PIE, device, visual, pacing or performance acceptance is claimed."
+}
