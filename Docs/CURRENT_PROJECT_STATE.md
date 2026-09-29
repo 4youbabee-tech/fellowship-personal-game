@@ -1,3 +1,18 @@
+## 2026-09-29 - F1-08 Amon Hen / Breaking of the Fellowship Maximum-Safe Source V1
+
+- F1-08 is now the active **maximum-safe source-production wave** under `DEC-078`; legacy runtime consumer remains `P1C08` and runtime integration is still blocked behind P1C07 Gate 6/7.
+- Canonical mission scope was rechecked against the supplied Mission, Story, Character and World PDFs plus the supplied Fellowship screenplay. Locked outcome remains: Boromir falls; Merry/Pippin are captured; Frodo chooses Mordor; Sam follows; **three parallel campaigns begin**.
+- Boromir's character guardrail is preserved: his fall is tragic/redemptive after temptation, not generic villainization.
+- `Data/F108AmonHenBreakingMaximumSafeMegaSourceV1.json` defines **34 categories**, **18 landmark-oriented categories**, **7 source/streaming banks**, **24,000 total candidate ceiling**, **2,400/category hard ceiling**, and **landmark score bonus 8**.
+- Candidate selection uses a fair-share effective per-category budget so early broad categories cannot consume the whole pack before combat/capture/departure/aftermath banks receive coverage.
+- F1-08 banks cover calm arrival, decision/high-seat route, Uruk attack, Boromir defense/aftermath, capture/pursuit, Sam/Frodo departure and campaign-split aftermath.
+- Source success requires at least **14 populated landmark categories** and **6 ready banks**.
+- Amon Hen landmark identity now distinguishes the F1-07 river approach from the F1-08 break state: ancient high-seat/stone-route focal vista above the Parth Galen river shore, with calm/attack/aftermath state variants.
+- Tolkien material is used only as compatible landscape/landmark support (high-seat/watchwork, old stone route/stairs, Parth Galen, Rauros/Tol Brandir sightline language); the project film-first mission outcome remains authoritative.
+- `PG-201` guards canon outcome, Boromir guardrail, 34-category breadth, bank coverage, landmark minimums, FBX-only animation, BMP rejection, inventory gate, fair-share scheduling and tooling isolation from the Unreal build lane.
+- Exact-head validation and heavy source execution are **pending** for this branch.
+- Evidence boundary: **SOURCE-IMPLEMENTED / STATIC-VALIDATION PENDING**. No UE integration, PIE, device, visual, pacing or performance acceptance is claimed.
+
 ## 2026-09-29 - Adaptive Maximum Safe Production Mode V1
 
 - Owner direction is now permanent project policy through `DEC-078` and `REQ-PROD-011`: use the already-built CI/warehouse/streaming/governance infrastructure to maximize real production throughput instead of advancing in tiny isolated increments.
