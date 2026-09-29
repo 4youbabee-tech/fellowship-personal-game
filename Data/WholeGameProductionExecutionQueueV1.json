@@ -223,14 +223,14 @@
     {
       "order": 10,
       "region_id": "FANGORN",
-      "current_state": "F201_MAXIMUM_SAFE_SOURCE_ACTIVE_NOT_RUNTIME_MAPPED",
+      "current_state": "F202_MAXIMUM_SAFE_SOURCE_ACTIVE_NOT_RUNTIME_MAPPED",
       "runtime_gate": "PREP_ONLY_UNTIL_EXPLICIT_PART_II_RUNTIME_ID_MAPPING",
       "preparation_tracks": {
         "surfaces_materials": "ACTIVE_SOURCE_QC",
         "vegetation_biome": "ACTIVE_SOURCE_QC",
         "architecture_interiors": "ACTIVE_SOURCE_QC",
-        "characters_animation_fauna": "ACTIVE_SOURCE_QC",
-        "audio_foley": "ACTIVE_SOURCE_QC",
+        "characters_animation_fauna": "TREEBEARD_GANDALF_F202_SOURCE_ACTIVE",
+        "audio_foley": "QUIET_REVEAL_MOBILIZATION_AUDIO_SOURCE_ACTIVE",
         "vfx_atmosphere": "ACTIVE_SOURCE_QC",
         "collision_navmesh": "DESIGN_PREP_FOR_FANGORN_THRESHOLD_ONLY",
         "streaming_memory": "MULTI_BANK_SOURCE_BLUEPRINT_ACTIVE",
@@ -565,5 +565,5 @@
   ],
   "evidence_boundary": "Preparation execution only. No new runtime acceptance claim.",
   "maximum_safe_production_plan": "Data/MaximumSafeProductionModeV1.json",
-  "active_chapter_source_wave": "F2-01 Three Hunters / Captives"
+  "active_chapter_source_wave": "F2-02 Fangorn & Gandalf Returned"
 }
