@@ -1,14 +1,14 @@
 ## 2026-09-30 - P1C01 maximum-safe mega train + LivingWorld safety repair
 
-- Owner authorized one large P1C01 production train with many bounded work cars under one approval. Machine-readable authorities: `Data/P1C01MaximumSafeMegaBuildV1.json`, `Data/P1C01OvernightMegaBuildTrainV1.json`, and DEC-090.
-- Source bibles were rechecked before registration. F1-01 owns Ring-history/birthday/Gandalf/party material; F1-02 owns Bag End Ring-danger/departure; F1-03 owns Shire-road/Black Rider/ferry material. Current runtime `P1C01` already aggregates material across those source packages, so this train preserves current runtime topology and records the mapping explicitly instead of silently redefining canon chapters.
-- Programmer proposal audit confirmed a real defect in `ALivingWorldDirector::CleanupExpiredEvents`: one far event member could retire the whole micro-event, including a nearby interaction. The fix keeps authored lifetime expiry event-wide but makes distance retirement member-local.
-- Static protection is now unambiguous: **PG-208** = member-local event culling, **PG-209** = mega-build gate/canonical architecture, **PG-210** = AmbientNPC player-pawn cache centralization, **PG-211** = save-schema migration audit boundary.
-- The reported six direct AmbientNPC `GetPlayerPawn` lookups are not present on current source. The only direct `UGameplayStatics::GetPlayerPawn` call is inside `GetPlayerPawnCached()`; normal runtime call sites use the cache helper.
-- Save-schema review confirms CurrentSchemaVersion=6, future-schema rejection and existing legacy identity repair. No generic historical migration ladder is invented because authoritative per-version field transforms have not been recovered.
-- `Data/P1C01SourceToRuntimeDispositionV1.json` records zero-silent-omission dispositions for Shire/Hobbiton, Bag End, party setup/fireworks, Ring/departure, road hiding/ferry, living-world/audio and checkpoint/retry requirements.
-- Runtime expansion cars remain gated behind W00/exact-head engine proof. Source/QC, warehouse, data contracts, documentation and static preparation may proceed in parallel.
-- Current status: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC + UE4 PROOF PENDING** for this branch. No PIE/device/FPS/visual/performance acceptance is claimed.
+- Programmer review was checked against current source. Confirmed defect: one distant member of a grouped LivingWorld micro-event could retire the whole event, including a nearby pooled interaction or participant.
+- Runtime repair: authored lifetime expiry remains event-wide; distance retirement is now member-local, releases only the far actor through the existing pool ownership path, and removes the event record only when no members remain.
+- PG-208 protects this cleanup contract and a source-contract regression test covers the same failure mode.
+- The reported repeated direct player-pawn lookup issue is not current: ShireAmbientNPC has one direct UGameplayStatics::GetPlayerPawn call inside GetPlayerPawnCached(); PG-210 protects that centralization.
+- Save review: CurrentSchemaVersion is 6, newer saves are rejected, and legacy identity/canonicalization repair exists. No authoritative v1-v6 field-transition history is currently documented, so no speculative generic migration was added. Data/SaveSchemaMigrationAuditV1.json + PG-211 record this boundary.
+- Owner authorization for one approval / many bounded tasks is registered as Data/P1C01MaximumSafeMegaBuildV1.json and Data/P1C01OvernightMegaBuildTrainV1.json. The train has 12 cars spanning world density, Bag End/party, living NPCs/fauna, characters, quest/cinematics/audio, long-session reliability, target-device profiling and Gate 6/7.
+- Source/runtime mapping is explicit in Data/P1C01SourceToRuntimeDispositionV1.json: the supplied bibles separate F1-01/F1-02/F1-03 while current runtime P1C01 compresses Shire material across them. PG-212 prevents silent omission; no runtime renumbering is introduced.
+- Preparation/static/source cars may proceed in parallel. New runtime-expansion cars remain gated behind W00 exact-head UE4 evidence and Governor prerequisites.
+- Current branch evidence status: SOURCE-IMPLEMENTED / EXACT-HEAD CI PENDING. No PIE/device/visual/performance acceptance is claimed.
 
 ## 2026-09-30 - Final zero-ahead maintenance sweep before construction resume
 
