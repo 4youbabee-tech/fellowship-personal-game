@@ -4789,6 +4789,47 @@
         "Docs/WORLD_DETAIL_LEDGER.md — Maximum Safe Production Mode V1"
       ],
       "evidence_boundary": "PRODUCTION GOVERNANCE + EXECUTION MODE. Does not waive runtime/PIE/device/visual/pacing/performance acceptance."
+    },
+    {
+      "id": "DEC-079",
+      "title": "F1-08 Amon Hen uses a maximum-safe multi-bank landmark source superpack",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-PROD-011",
+        "REQ-WORLD-001",
+        "REQ-WORLD-002",
+        "REQ-NPC-001",
+        "REQ-PERF-001",
+        "REQ-STABILITY-001"
+      ],
+      "resolution": "Prepare canonical F1-08 Breaking of the Fellowship as a 34-category, 7-bank, landmark-first maximum-safe shared source wave for legacy runtime chapter P1C08. Source preparation runs now under DEC-078; P1C08 runtime integration remains predecessor Gate 6/7 gated.",
+      "implementation_contract": [
+        "Canonical F1-08 critical path remains Boromir falls; Merry/Pippin are captured; Frodo chooses Mordor; Sam follows. Locked postcondition remains three parallel campaigns begin.",
+        "Boromir remains a tragic/redemptive character after temptation and must not be reframed as a generic villain.",
+        "Amon Hen visual grammar remains river corridor / ancient ruins with water, cliffs, stone monuments and forest, plus calm/attack/aftermath state variants.",
+        "Compatible Tolkien landmark detail may support the film-first location identity: high-seat/watchwork, old stone road/stairs, Parth Galen shore/lawn and Rauros/Tol Brandir sightline language.",
+        "The source wave is partitioned into seven banks: calm arrival, decision/high-seat route, Uruk attack, Boromir defense/aftermath, capture/pursuit, Sam/Frodo departure and campaign-split aftermath.",
+        "At least six banks and fourteen landmark categories must have source coverage before the source runner reports success.",
+        "Candidate scheduling uses fair-share category budgeting inside a 24,000 total candidate ceiling so early categories cannot starve later banks.",
+        "Animated candidates remain FBX-only; production textures PNG/TGA; BMP blocked; no duplicated warehouse payloads per chapter.",
+        "Future P1C08 runtime integration uses soft references and FStreamableManager asynchronous loading and loads only active bank plus bounded transition overlap.",
+        "Persistent warehouse inventory must be clean and the existing 6 GiB free-space reserve remains mandatory.",
+        "Source preparation never satisfies Gate 6/7 or runtime/PIE/device/visual/pacing/performance acceptance."
+      ],
+      "rationale": "F1-08 is the first Part I source wave started after Adaptive Maximum Safe Production became the default. The chapter combines a canonical story split with combat, pursuit, character tragedy and a visually dominant Amon Hen location, so maximizing production safely requires both higher source breadth and banked future residency rather than one giant resident asset set.",
+      "evidence": [
+        "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX — F1-08 Breaking of the Fellowship",
+        "01_STORY_AND_TIMELINE_BIBLE — F1-08 production specification",
+        "02_CHARACTERS_AND_RELATIONSHIPS_BIBLE — Boromir production specification",
+        "03_WORLD_LOCATIONS_AND_MAP_BIBLE — Anduin / Amon Hen production specification",
+        "Tolkien source cross-reference — Amon Hen / Parth Galen / ancient high-seat and stone-route landscape detail",
+        "Fellowship screenplay cross-check — Amon Hen / Uruk attack / Boromir / Merry-Pippin / Frodo-Sam scene order",
+        "Data/F108AmonHenBreakingMaximumSafeMegaSourceV1.json",
+        "Scripts/run_f108_amon_hen_breaking_maximum_safe_source.ps1",
+        ".github/workflows/f108-amon-hen-breaking-maximum-safe-source.yml",
+        "Scripts/pre_unreal_validate.py PG-201"
+      ],
+      "evidence_boundary": "SOURCE ARCHITECTURE ONLY. Heavy source execution still requires clean inventory; P1C08 runtime remains predecessor-gated. No PIE/device/visual/pacing/performance acceptance is claimed."
     }
   ],
   "open_conflicts": [],
