@@ -4568,6 +4568,42 @@
         "P1C01 Chapter Closure Pack #2 — warehouse inventory hashMismatch=1"
       ],
       "evidence_boundary": "SOURCE ARCHITECTURE ONLY. Heavy execution is inventory-gated; no UE integration, PIE, device, visual, pacing or performance acceptance is claimed."
+    },
+    {
+      "id": "DEC-073",
+      "title": "F1-06 Caradhras & Moria uses a landmark-first inventory-gated mega source superpack",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WORLD-001",
+        "REQ-WORLD-002",
+        "REQ-NPC-001",
+        "REQ-PERF-001",
+        "REQ-STABILITY-001"
+      ],
+      "resolution": "Prepare the largest Part I source pack so far for canonical F1-06 Caradhras & Moria, consumed by legacy runtime P1C05/P1C06, with explicit landmark-first scoring and a hard clean-inventory gate before heavy execution.",
+      "implementation_contract": [
+        "Caradhras must preserve high-mountain-pass identity: snow, rock, wind, low visibility, storm escalation, survival traversal and group assists.",
+        "Moria must preserve monumental Dwarven-underground identity: monumental geometry, darkness, mines, halls, puzzle/navigation/combat escalation/horror.",
+        "Each location must expose at least one dominant silhouette/vista for navigation and cinematic continuity.",
+        "Doors of Moria remains an observation/puzzle progression landmark and may not rewrite canonical entrances, exits, deaths or required discoveries.",
+        "Balrog support remains pursuit/catastrophic-obstacle presentation; not a loot-boss pipeline and canonical outcome stays fixed.",
+        "Landmark source categories receive a bounded score bonus but gameplay identity never depends on source filenames.",
+        "Warehouse inventory must be clean before heavy F1-06 indexing. Hash/license/dangerous/bad-receipt defects remain hard-stop.",
+        "Animated candidates remain FBX-only; production textures PNG/TGA; BMP blocked.",
+        "Runtime heavy assets remain soft-referenced/asynchronously streamed; crowds pooled; repeated static dressing ISM/HISM + LOD/culling.",
+        "P1C05/P1C06 runtime integration remains blocked until predecessor Gate 6/7 acceptance."
+      ],
+      "rationale": "The owner requested the third step to be larger again and specifically wants visible game landmarks. The location bible mandates dominant silhouettes/vistas for Caradhras and Moria, so the source architecture now promotes landmark identity rather than only increasing raw asset volume.",
+      "evidence": [
+        "Docs/WORLD_DETAIL_LEDGER.md — F1-06 Caradhras & Moria Mega Landmark Source Superpack V1",
+        "Data/F106CaradhrasMoriaMegaLandmarkSourceSuperpackV1.json",
+        "Scripts/run_f106_caradhras_moria_mega_landmark_source.ps1",
+        ".github/workflows/f106-caradhras-moria-mega-landmark-source.yml",
+        "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX — F1-06",
+        "03_WORLD_LOCATIONS_AND_MAP_BIBLE — Caradhras and Moria specifications",
+        "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE — Caradhras Survival / Doors of Moria"
+      ],
+      "evidence_boundary": "SOURCE ARCHITECTURE ONLY. Heavy execution is inventory-gated; no UE integration, PIE, device, visual, pacing or performance acceptance is claimed."
     }
   ],
   "open_conflicts": [],
