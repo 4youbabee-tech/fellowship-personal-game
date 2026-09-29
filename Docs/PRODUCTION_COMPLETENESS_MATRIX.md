@@ -1,3 +1,24 @@
+## 2026-09-29 - F1-08 Amon Hen Maximum Safe Chapter V1
+
+- Canonical F1-08 -> P1C08 mapping: **REGISTERED / RUNTIME GATED**.
+- F2-01 pursuit/captive successor boundary: **EXPLICITLY PRESERVED**.
+- Boromir tragic/redemptive guardrail: **RECORDED**.
+- 8-bank streamed chapter architecture + minimal core: **SOURCE-IMPLEMENTED / RUNTIME NOT STARTED**.
+- Planned heavy-bank transition overlap <= 2: **ARCHITECTURE RECORDED / DEVICE MEASUREMENT PENDING**.
+- 36-category maximum-safe source manifest: **SOURCE-IMPLEMENTED**.
+- 22,000 assignment ceiling / 2,400 per category / source-path reuse cap 3: **SOURCE-IMPLEMENTED**.
+- Landmark bonus 8 / story-critical bonus 5: **SOURCE-IMPLEMENTED**.
+- Minimum 20 populated categories / 10 populated landmark categories: **SOURCE-IMPLEMENTED / EXECUTION PENDING**.
+- Clean warehouse + 6 GiB reserve hard gate: **SOURCE-IMPLEMENTED**.
+- FBX-only animated candidate filter / PNG-TGA texture policy / BMP rejection: **SOURCE-IMPLEMENTED**.
+- Soft coverage-group gap reporting: **SOURCE-IMPLEMENTED**.
+- Dedicated 180-minute F1-08 workflow: **SOURCE-IMPLEMENTED**.
+- PG-201 regression coverage: **SOURCE-IMPLEMENTED**.
+- F1-08 heavy source workflow execution: **PENDING MERGE / DEVELOP RUN**.
+- P1C08 runtime integration: **BLOCKED UNTIL PREDECESSOR GATE 6/7 ACCEPTED**.
+- Exact-head Pre-Unreal validation: **PENDING**.
+- PIE/device/visual/pacing/performance acceptance: **NOT CLAIMED**.
+
 ## 2026-09-29 - Adaptive Maximum Safe Production Mode V1
 
 - Maximum-safe production governance (`DEC-078` / `REQ-PROD-011`): **SOURCE-IMPLEMENTED**.
