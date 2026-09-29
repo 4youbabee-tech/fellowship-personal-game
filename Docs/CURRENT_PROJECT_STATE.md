@@ -1,3 +1,10 @@
+## 2026-09-30 - Last orphan cleanup trigger
+
+- The last leftover maintenance ref `maintenance/final-zero-ahead-sweep-v1` is reset to current `develop` and has no unique work.
+- It is explicitly queued for guarded deletion by this final cleanup trigger.
+- Expected persistent refs after cleanup: `develop`, `main`, and recovery-only `archive/pre-build-salvage-20260930`.
+- Evidence boundary: repository hygiene only; no compile, PIE, device, visual or performance acceptance is claimed.
+
 ## 2026-09-30 - Last orphan maintenance ref closeout
 
 - PR #178 merged the final legacy-ref retirement policy before PR #179 could merge; PR #179 therefore became a superseded maintenance branch rather than production work.

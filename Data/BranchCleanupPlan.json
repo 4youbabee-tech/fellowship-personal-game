@@ -86,7 +86,8 @@
     "production/p1c01-warehouse-runnerless-backlog-v1",
     "tooling/opencodereview-readonly",
     "warehouse/p1c01-ready-review-v1",
-    "maintenance/final-prebuild-branch-cleanout-v1"
+    "maintenance/final-prebuild-branch-cleanout-v1",
+    "maintenance/final-zero-ahead-sweep-v1"
   ],
   "safety_rules": [
     "Never delete develop or main.",
@@ -318,5 +319,15 @@
       "archive/pre-build-salvage-20260930"
     ],
     "evidence_boundary": "Repository hygiene only; no gameplay/compile/PIE/device/visual/performance claim."
+  },
+  "final_cleanup_trigger_2026_09_30": {
+    "action": "DELETE_LAST_ZERO_AHEAD_ORPHAN",
+    "branch": "maintenance/final-zero-ahead-sweep-v1",
+    "evidence": "Closed superseded PR branch reset to current develop; no unique commits remain.",
+    "expected_survivors": [
+      "develop",
+      "main",
+      "archive/pre-build-salvage-20260930"
+    ]
   }
 }
