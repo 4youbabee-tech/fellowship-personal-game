@@ -6580,6 +6580,27 @@ for pg83_marker in [
         fail(f"PG-083 environmental puzzle placement missing: {pg83_marker}")
 
 
+# PG-207: micro-event distance retirement must remain member-local.
+# A roaming member leaving EventCullDistance must never retire a nearby interaction or peer.
+pg207_living = read(resolve_source("LivingWorldDirector.cpp"))
+pg207_start = pg207_living.find("void ALivingWorldDirector::CleanupExpiredEvents()")
+pg207_end = pg207_living.find("FName ALivingWorldDirector::ChooseEventType()", pg207_start)
+if pg207_start < 0 or pg207_end < 0:
+    fail("PG-207 CleanupExpiredEvents contract missing")
+else:
+    pg207_cleanup = pg207_living[pg207_start:pg207_end]
+    for pg207_symbol in [
+        "distance-policy=member-local",
+        "Event.Actors.RemoveAtSwap",
+        "if (Event.ExpiresAt <= Now)",
+        "if (Event.Actors.Num() == 0)",
+    ]:
+        if pg207_symbol not in pg207_cleanup:
+            fail(f"PG-207 member-local event cleanup invariant missing: {pg207_symbol}")
+    if "bExpired = true" in pg207_cleanup:
+        fail("PG-207 event-wide distance expiry regression detected")
+
+
 # PG-084: living-world player responses must remain bounded, ephemeral and story-neutral.
 pg84_plan = json.loads(read(ROOT / "Data" / "LivingWorldEventPlan.json"))
 pg84_policy = pg84_plan.get("player_interaction_policy", {})
