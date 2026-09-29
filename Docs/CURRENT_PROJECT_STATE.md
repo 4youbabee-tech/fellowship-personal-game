@@ -1,3 +1,18 @@
+## 2026-09-29 - F2-01 Three Hunters / Captives Maximum-Safe Source V1
+
+- F2-01 is now the active **Part II maximum-safe source-production wave** after F1-08.
+- Canonical mission scope was checked against the supplied Mission, Story and World PDFs: Aragorn/Legolas/Gimli pursue the Uruk-hai; Merry/Pippin escape into Fangorn; locked postcondition is **Paths converge around Fangorn/Rohan**.
+- Safe optional focus is tracking, stamina and evidence reading.
+- The pack explicitly excludes F2-02 Treebeard/Ent mobilization and Gandalf-return resolution.
+- No Part II runtime ID is invented. `runtime_consumers=[]` and `runtime_mapping_status=NOT_ASSIGNED_DO_NOT_INVENT` remain hard guardrails until a dedicated runtime-ID migration/mapping decision exists.
+- `Data/F201ThreeHuntersCaptivesMaximumSafeMegaSourceV1.json` defines **38 categories**, **17 landmark-oriented categories**, **8 source banks**, **28,000 total candidate ceiling**, **2,600/category hard ceiling**, fair-share scheduling and landmark bonus 8.
+- Source banks cover Rohan pursuit, tracking/evidence, Uruk trail pressure, captive escape, Fangorn threshold, hunter characters/animation, audio/weather/foley and convergence handoff.
+- Source success requires at least **14 populated landmark categories** and **7 ready banks**.
+- Fangorn use is threshold-only in F2-01: dense trunks, roots, mist and disorientation setup without opening later Ent-state content.
+- `PG-202` protects canon outcome, later-chapter exclusions, candidate breadth, bank minimums, FBX-only animation, BMP rejection, inventory gate and the unassigned Part II runtime-ID boundary.
+- Exact-head validation and heavy source execution are **pending**.
+- Evidence boundary: **SOURCE-IMPLEMENTED / STATIC-VALIDATION PENDING**. No runtime integration, PIE, device, visual, pacing or performance acceptance is claimed.
+
 ## 2026-09-29 - F1-08 Amon Hen / Breaking of the Fellowship Maximum-Safe Source V1
 
 - F1-08 is now the active **maximum-safe source-production wave** under `DEC-078`; legacy runtime consumer remains `P1C08` and runtime integration is still blocked behind P1C07 Gate 6/7.
