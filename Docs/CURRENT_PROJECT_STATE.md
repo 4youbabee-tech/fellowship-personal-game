@@ -1,3 +1,15 @@
+## 2026-09-30 - P1C01 maximum-safe mega train active after automated W00 closure
+
+- Automated W00 closure is now run-proven on PR #184 exact head `d6ca8aac03f5a1da07609e61e790ddf8faad8eed`: Pre-Unreal #1435 SUCCESS and Unreal Build #1108 SUCCESS.
+- Packaged evidence includes `W00_PACKAGED_DATA_PASS expected=37 verified=37`, `W00_PACKAGED_RUNTIME_DATA_READ_PASS marker=NPCContext: ready=yes`, and `W00_PACKAGED_STARTUP_PASS observed=6s`.
+- This does **not** promote DEVICE-TESTED, PERFORMANCE-ACCEPTED or VISUALLY-ACCEPTED; target FPS/frame-time/RAM/VRAM, human traversal/pacing/visual review and real audio playback remain separate.
+- DEC-090 authorizes one owner approval for the large P1C01 train with many bounded cars. Runtime-changing cars remain serialized behind their own exact-head engine gates.
+- Programmer culling finding is confirmed and source-repaired: authored event lifetime expiry remains event-wide, while distance retirement is member-local so one roaming actor cannot hide/recycle a nearby interaction or participant.
+- PG-208 and `test_living_world_distance_cull_is_member_local` protect that invariant. PG-210 protects the existing cached player-pawn lookup path.
+- Save-schema review found no trustworthy version-by-version migration history; no speculative old-save migration semantics are introduced.
+- Source/runtime mapping is explicit: supplied F1-01/F1-02/F1-03 remain distinct canonical mission packages even though the current runtime P1C01 aggregates the Shire party, Bag End/departure, road danger and ferry material.
+- Current mega-train status: **AUTOMATED W00 GREEN / CULL REPAIR EXACT-HEAD PROOF PENDING / LATER RUNTIME CARS GATED**.
+
 ## 2026-09-30 - W00 packaged runtime Data-read proof guard
 
 - Remote branch-salvage cleanup is closed machine-wise: the 26 legacy heads are recoverable from `archive/pre-build-salvage-20260930`, and the final cleanup pass reduced persistent refs to `develop`, `main`, and the recovery-only archive before this short-lived validation branch was opened.
