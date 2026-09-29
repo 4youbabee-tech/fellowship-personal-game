@@ -1,3 +1,11 @@
+## 2026-09-30 - Last orphan ref closeout
+
+- Legacy archived working refs: **26 / 26 DELETED by Branch Cleanup #178 closeout**.
+- Recovery anchor: **PRESERVED** at `archive/pre-build-salvage-20260930`.
+- Superseded PR #179 maintenance ref: **QUEUED FOR FINAL GUARDED DELETE**.
+- Expected branch set after this merge cleanup: **develop + main + one recovery-only archive ref**.
+- Gameplay/compile/PIE/device/visual/performance maturity: **UNCHANGED / NOT CLAIMED**.
+
 ## 2026-09-30 - Final branch-hygiene gate before construction resume
 
 - Legacy branch histories captured in recovery archive: **26 / 26 heads captured**.

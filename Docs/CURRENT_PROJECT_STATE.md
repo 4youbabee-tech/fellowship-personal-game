@@ -1,3 +1,12 @@
+## 2026-09-30 - Last orphan maintenance ref closeout
+
+- PR #178 merged the final legacy-ref retirement policy before PR #179 could merge; PR #179 therefore became a superseded maintenance branch rather than production work.
+- PR #179 exact head `a6b8bc300980bd2e8bc7c0132ea5e8b2d9d25e77` completed the full hosted Pre-Unreal chain successfully, then was closed unmerged after #178 landed first.
+- Branch Cleanup for #178 completed SUCCESS and explicitly deleted all 26 archived legacy working refs; its log ended with `deletedExplicit=26`, `keptUnique=1`, `planProtected=3`.
+- The only extra live ref after that pass is `maintenance/final-prebuild-branch-cleanout-v1`; it is now explicitly queued for deletion by this final closeout.
+- Expected final live refs: `develop`, `main`, and recovery-only `archive/pre-build-salvage-20260930`.
+- Evidence boundary: repository hygiene only. No compile/PIE/device/visual/performance acceptance is claimed.
+
 ## 2026-09-30 - Final legacy-ref retirement before build resume
 
 - Recovery archive created at `archive/pre-build-salvage-20260930@a47eda59f31352676de44777845fbc01c38d2d0d`.
