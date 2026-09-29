@@ -1,3 +1,18 @@
+## 2026-09-29 - F1-08 Amon Hen / Breaking of the Fellowship Maximum Safe Chapter V1
+
+- Canonical mission authority: **F1-08 Breaking of the Fellowship**, owner location **Amon Hen**, runtime consumer **P1C08**.
+- Canonical critical path from the supplied mission/story sources: Boromir falls; Merry/Pippin are captured; Frodo chooses Mordor; Sam follows. Locked postcondition: **three parallel campaigns begin**.
+- Safe optional window is limited to multi-character combat / pursuit handoff. It must expire cleanly once the irreversible set-piece commits.
+- F2-01 Three Hunters / Captives pursuit gameplay remains a successor mission. F1-08 may prepare the exit handoff and trail/captive-state assets but must not consume F2-01 runtime progression.
+- World grammar authority for Anduin/Amon Hen: river corridor / ancient ruins; water, cliffs, stone monuments, forest; state variants transition from river/calm approach to Uruk attack, battle and aftermath.
+- Film-script verification supports production zoning around Parth Galen forest/camp, Amon Hen slopes/seeing-seat ruins, summit/ruins, Uruk battle among ancient stone, Merry/Pippin flight and Boromir defense, aftermath, and the river-shore Frodo/Sam departure.
+- Boromir's fall remains tragic and redemptive, never villainized. His sword/shield identity and relationship-aware handoff must remain story-state driven.
+- This is the first chapter designed under **DEC-078 Adaptive Maximum Safe Production**: maximize source/category/bank breadth while keeping runtime residency bounded through soft references, asynchronous loading and staged bank overlap.
+- Planned runtime residency is **multi-bank/zone streamed**. Only current bank plus bounded next-bank transition overlap may be resident; no synchronous heavy loads.
+- Animated production candidates are FBX-only. Production textures are PNG/TGA, BMP forbidden. Crowds/Uruk background pressure use pooling; repeated forest/ruin dressing uses ISM/HISM + LOD/culling.
+- Source preparation may run now; P1C08 runtime integration remains predecessor Gate 6/7 gated.
+- Evidence boundary: **SOURCE ARCHITECTURE REGISTRATION ONLY**. No UE integration, PIE, device, visual, pacing or performance acceptance is implied.
+
 ## 2026-09-29 - Maximum Safe Production Mode V1
 
 - Owner direction: production speed becomes a first-class project objective. The project should run at the **maximum safe throughput** allowed by current evidence instead of advancing through tiny isolated preparation increments.
