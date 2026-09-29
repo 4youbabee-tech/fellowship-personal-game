@@ -24,6 +24,16 @@ function Add-CarResult {
   param([string]$Id,[string]$State,[int]$ExitCode,[string]$Detail)
   $script:results += [ordered]@{id=$Id;state=$State;exit_code=$ExitCode;detail=$Detail;completed_at_utc=[DateTime]::UtcNow.ToString("o")}
 }
+function Invoke-ChildPowerShell {
+  param([string]$ScriptPath,[object[]]$ChildArgs=@())
+  & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $ScriptPath @ChildArgs
+  $code=[int]$LASTEXITCODE
+  if($code -ne 0){
+    $ex=New-Object System.Exception -ArgumentList ("child PowerShell failed exit="+$code+" script="+$ScriptPath)
+    $ex.Data["ExitCode"]=$code
+    throw $ex
+  }
+}
 function Invoke-Car {
   param([object]$Car,[scriptblock]$Body)
   $id=[string]$Car.id
@@ -31,32 +41,28 @@ function Invoke-Car {
   Write-Host ("P1C01_CLOSURE_PACK_CAR_BEGIN id="+$id)
   try{
     & $Body
-    $code=$LASTEXITCODE
-    if($null -eq $code){ $code=0 }
-    if($code -eq 0){ Add-CarResult $id "PASS" 0 "completed"; Write-Host ("P1C01_CLOSURE_PACK_CAR_PASS id="+$id); return }
-    if(([string]$Car.criticality) -eq "INFRASTRUCTURE"){
-      Add-CarResult $id "HARD_FAILURE" $code ("infrastructure exit="+$code)
-      $script:hardFailure=$true
-      Write-Host ("P1C01_CLOSURE_PACK_CAR_HARD_FAIL id="+$id+" exit="+$code)
-    }else{
-      Add-CarResult $id "QUARANTINED_CONTINUE" $code ("provider/asset/source blocker isolated; exit="+$code)
-      Write-Host ("P1C01_CLOSURE_PACK_CAR_QUARANTINED id="+$id+" exit="+$code)
-    }
+    Add-CarResult $id "PASS" 0 "completed"
+    Write-Host ("P1C01_CLOSURE_PACK_CAR_PASS id="+$id)
+    return
   }catch{
+    $failureCode=1
+    if($null -ne $_.Exception.Data -and $_.Exception.Data.Contains("ExitCode")){
+      $failureCode=[int]$_.Exception.Data["ExitCode"]
+    }
     if(([string]$Car.criticality) -eq "INFRASTRUCTURE"){
-      Add-CarResult $id "HARD_FAILURE" 1 $_.Exception.Message
+      Add-CarResult $id "HARD_FAILURE" $failureCode $_.Exception.Message
       $script:hardFailure=$true
-      Write-Host ("P1C01_CLOSURE_PACK_CAR_HARD_FAIL id="+$id+" detail="+$_.Exception.Message)
+      Write-Host ("P1C01_CLOSURE_PACK_CAR_HARD_FAIL id="+$id+" exit="+$failureCode+" detail="+$_.Exception.Message)
     }else{
-      Add-CarResult $id "QUARANTINED_CONTINUE" 1 $_.Exception.Message
-      Write-Host ("P1C01_CLOSURE_PACK_CAR_QUARANTINED id="+$id+" detail="+$_.Exception.Message)
+      Add-CarResult $id "QUARANTINED_CONTINUE" $failureCode $_.Exception.Message
+      Write-Host ("P1C01_CLOSURE_PACK_CAR_QUARANTINED id="+$id+" exit="+$failureCode+" detail="+$_.Exception.Message)
     }
   }
 }
 function Invoke-ManifestScript {
   param([string]$ScriptName,[string]$ChildManifest)
   $resolved=Resolve-ChildManifest $ChildManifest
-  & powershell.exe -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot $ScriptName) -ManifestPath $resolved
+  Invoke-ChildPowerShell -ScriptPath (Join-Path $PSScriptRoot $ScriptName) -ChildArgs @("-ManifestPath",$resolved)
 }
 
 foreach($car in @($manifest.cars | Sort-Object order)){
@@ -82,7 +88,7 @@ foreach($car in @($manifest.cars | Sort-Object order)){
     "STAGE_KAYKIT" { Invoke-Car $car { Invoke-ManifestScript "stage_kaykit_github_warehouse.ps1" ([string]$car.manifest) } }
     "STAGE_AUDIO" { Invoke-Car $car { Invoke-ManifestScript "stage_opengameart_audio.ps1" ([string]$car.manifest) } }
     "INVENTORY_AUDIT" {
-      Invoke-Car $car { & powershell.exe -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot "audit_warehouse_inventory.ps1") }
+      Invoke-Car $car { Invoke-ChildPowerShell -ScriptPath (Join-Path $PSScriptRoot "audit_warehouse_inventory.ps1") }
       if($hardFailure){ break }
     }
     "SATURATION_REPORT" { Invoke-Car $car { Invoke-ManifestScript "run_warehouse_saturation_train.ps1" ([string]$car.manifest) } }
@@ -91,21 +97,21 @@ foreach($car in @($manifest.cars | Sort-Object order)){
     "MEGA_PROMOTION" {
       Invoke-Car $car {
         $resolved=Resolve-ChildManifest ([string]$car.manifest)
-        & powershell.exe -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot "run_warehouse_p1c01_mega_promotion.ps1") -ManifestPath $resolved -WarehouseRoot $WarehouseRoot
+        Invoke-ChildPowerShell -ScriptPath (Join-Path $PSScriptRoot "run_warehouse_p1c01_mega_promotion.ps1") -ChildArgs @("-ManifestPath",$resolved,"-WarehouseRoot",$WarehouseRoot)
       }
     }
     "MATERIAL_SOURCE_EXPORT" {
       Invoke-Car $car {
         $resolved=Resolve-ChildManifest ([string]$car.manifest)
         $budget=$car.export_budget
-        & powershell.exe -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot "export_p1c01_material_source_branch.ps1") -ManifestPath $resolved -WarehouseRoot $WarehouseRoot -GeneratedBranch ([string]$car.generated_branch) -MaxSingleSourceBytes ([int64]$budget.max_single_source_bytes) -MaxBatchSourceBytes ([int64]$budget.max_batch_source_bytes) -MinimumExportedMaterials ([int]$budget.minimum_exported_materials)
+        Invoke-ChildPowerShell -ScriptPath (Join-Path $PSScriptRoot "export_p1c01_material_source_branch.ps1") -ChildArgs @("-ManifestPath",$resolved,"-WarehouseRoot",$WarehouseRoot,"-GeneratedBranch",([string]$car.generated_branch),"-MaxSingleSourceBytes",([int64]$budget.max_single_source_bytes),"-MaxBatchSourceBytes",([int64]$budget.max_batch_source_bytes),"-MinimumExportedMaterials",([int]$budget.minimum_exported_materials))
       }
     }
     "CHARACTER_INTAKE" {
       Invoke-Car $car {
         $resolved=Resolve-ChildManifest ([string]$car.manifest)
         $out=Join-Path $WarehouseRoot "_p1c01_character_intake"
-        & powershell.exe -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot "prepare_p1c01_character_rig_intake.ps1") -ManifestPath $resolved -WarehouseRoot $WarehouseRoot -OutputRoot $out
+        Invoke-ChildPowerShell -ScriptPath (Join-Path $PSScriptRoot "prepare_p1c01_character_rig_intake.ps1") -ChildArgs @("-ManifestPath",$resolved,"-WarehouseRoot",$WarehouseRoot,"-OutputRoot",$out)
       }
     }
     "FINAL_INVENTORY_AUDIT" {
