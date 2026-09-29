@@ -107,6 +107,9 @@ jobs:
       - name: Test warehouse receipt supersession semantics
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_warehouse_inventory_receipt_supersession.ps1"
 
+      - name: Test warehouse saturation empty-sum handling
+        run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_warehouse_saturation_empty_sum.ps1"
+
       - name: Validate project structure
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" Scripts\pre_unreal_validate.py
 
