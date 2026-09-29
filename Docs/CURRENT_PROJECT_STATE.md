@@ -1,3 +1,16 @@
+## 2026-09-29 - F2-03 Edoras Maximum-Safe Source V1
+
+- F2-03 Edoras is prepared as the next Part II source-production wave; runtime identity remains unassigned.
+- Source-verified chapter contract: Theoden restored; political and military crisis clarified; optional window is court exploration, stables, equipment and social scenes; locked postcondition is Rohan evacuates toward Helm's Deep.
+- Permanent story governance applies: Edoras is not reduced to a single restoration set-piece. Compatible settlement, Meduseld/court, horse/stable, relationship, muster and departure detail remains in source scope.
+- Data/F203EdorasMaximumSafeMegaSourceV1.json defines 32 categories, 20 landmark-tagged categories and 8 source banks under a 32,000-candidate fair-share ceiling.
+- Source success requires at least 14 populated landmark categories and 7 ready banks.
+- F2-04 road/refugee escort/Helm's Deep preparation and F2-05 battle resolution remain outside this pack.
+- runtime_consumers=[] and runtime_mapping_status=NOT_ASSIGNED_DO_NOT_INVENT remain hard boundaries.
+- PG-204 protects canon, breadth, format rules, warehouse reserve and runtime-ID safety.
+- DEC-084 owns this F2-03 source wave.
+- Evidence boundary: SOURCE-IMPLEMENTED / STATIC-VALIDATION PENDING. No runtime integration, PIE, device, visual, pacing or performance acceptance is claimed.
+
 ## 2026-09-29 - permanent full-journey story/source and Arabic localization governance
 
 - Owner direction is captured as permanent repository governance: the game is experience-first, not a shortened recap. Timeline is navigation/order only; film/screenplays lock film-driven continuity; Tolkien supplies compatible deeper detail and book-only events; Sources 02-11 drive production.
