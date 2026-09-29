@@ -4830,6 +4830,44 @@
         "Scripts/pre_unreal_validate.py PG-201"
       ],
       "evidence_boundary": "SOURCE ARCHITECTURE ONLY. Heavy source execution still requires clean inventory; P1C08 runtime remains predecessor-gated. No PIE/device/visual/pacing/performance acceptance is claimed."
+    },
+    {
+      "id": "DEC-080",
+      "title": "F2-01 Three Hunters / Captives begins Part II maximum-safe source preparation without inventing a runtime ID",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-PROD-011",
+        "REQ-WORLD-001",
+        "REQ-WORLD-002",
+        "REQ-PERF-001",
+        "REQ-STABILITY-001"
+      ],
+      "resolution": "Begin canonical F2-01 Three Hunters / Captives as an 8-bank maximum-safe shared source-preparation wave for Rohan / Fangorn edge. Do not assign or infer a Part II runtime chapter ID until a dedicated runtime-ID migration/mapping decision exists.",
+      "implementation_contract": [
+        "Canonical critical path remains: Aragorn, Legolas and Gimli pursue the Uruk-hai; Merry and Pippin escape into Fangorn.",
+        "Locked postcondition remains Paths converge around Fangorn/Rohan.",
+        "Safe optional focus remains tracking, stamina and evidence reading.",
+        "F2-02 Treebeard/Ent mobilization and Gandalf-return resolution are explicitly excluded from this F2-01 pack.",
+        "Use eight preparation banks covering Rohan pursuit, tracking/evidence, Uruk trail pressure, captive escape, Fangorn threshold, hunter characters/animation, audio/weather/foley and convergence handoff.",
+        "At least seven banks and fourteen landmark categories must have source coverage before the source runner reports success.",
+        "Candidate scheduling uses fair-share budgeting inside a 28,000 total candidate ceiling so one family cannot starve the rest of the chapter.",
+        "Animated candidates remain FBX-only; production textures PNG/TGA; BMP blocked; heavy runtime assets remain soft-reference/async only.",
+        "Persistent warehouse inventory must be clean and the 6 GiB free-space reserve remains mandatory.",
+        "runtime_consumers remains empty and runtime_mapping_status remains NOT_ASSIGNED_DO_NOT_INVENT until an explicit Part II runtime mapping migration is approved.",
+        "Source preparation never counts as runtime/PIE/device/visual/pacing/performance acceptance."
+      ],
+      "rationale": "F2-01 is the next canonical mission after F1-08 in the supplied project sources. Maximum-safe production requires continuing source preparation immediately, but the repository does not currently document a Part II runtime-ID mapping; preserving save/quest/runtime identity therefore requires source-only preparation until that mapping exists.",
+      "evidence": [
+        "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX — F2-01 Three Hunters / Captives",
+        "01_STORY_AND_TIMELINE_BIBLE — F2-01 production specification",
+        "03_WORLD_LOCATIONS_AND_MAP_BIBLE — Fangorn production specification",
+        "Data/F201ThreeHuntersCaptivesMaximumSafeMegaSourceV1.json",
+        "Scripts/run_f201_three_hunters_captives_maximum_safe_source.ps1",
+        ".github/workflows/f201-three-hunters-captives-maximum-safe-source.yml",
+        "Scripts/pre_unreal_validate.py PG-202",
+        "Docs/WORLD_DETAIL_LEDGER.md — F2-01 Three Hunters / Captives Maximum-Safe Source V1"
+      ],
+      "evidence_boundary": "SOURCE ARCHITECTURE ONLY. No Part II runtime ID or runtime integration is approved; no PIE/device/visual/pacing/performance acceptance is claimed."
     }
   ],
   "open_conflicts": [],

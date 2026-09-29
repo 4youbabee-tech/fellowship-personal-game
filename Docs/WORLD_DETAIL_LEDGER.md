@@ -1,3 +1,19 @@
+## 2026-09-29 - F2-01 Three Hunters / Captives Maximum-Safe Source V1
+
+- Canonical mission authority: **F2-01 Three Hunters / Captives**.
+- Primary location: **Rohan / Fangorn edge**.
+- Present/playable focus: Aragorn, Legolas, Gimli, Merry, Pippin.
+- Canonical critical path: the Three Hunters pursue the Uruk-hai while Merry and Pippin escape into Fangorn.
+- Safe optional window: tracking, stamina and evidence reading.
+- Locked postcondition: **paths converge around Fangorn/Rohan**.
+- Entry/save contract: validate previous chapter outcome, roster and knowledge flags; clean-entry autosave; pre-set-piece checkpoint; postcondition save after committed state.
+- World-state rule: chapter-specific population, weather, damage, patrol and prop variants only; do not leak future-state changes early.
+- Fangorn production grammar: ancient forest, dense trunks, roots, mist and a living environment; exploration/disorientation now, Ent interactions remain canon-aware and the later mobilization state is not opened early.
+- This is a **source/preparation wave only**. No Part II runtime chapter ID is invented because the repository currently has no documented Part II runtime-ID migration mapping.
+- Maximum-safe architecture uses independent preparation banks for hunter tracking, Uruk trail/evidence, captive escape, Rohan edge traversal, Fangorn threshold, character/animation, audio/weather and transition aftermath.
+- Existing low-spec rules remain mandatory: animated candidates FBX-only; production textures PNG/TGA, BMP blocked; heavy runtime assets soft-referenced/asynchronously loaded; crowds pooled; repeated dressing ISM/HISM + LOD/culling.
+- Evidence boundary: **SOURCE ARCHITECTURE REGISTRATION ONLY**. No runtime integration, PIE, device, visual, pacing or performance acceptance is implied.
+
 ## 2026-09-29 - F1-08 Amon Hen / Breaking of the Fellowship Maximum-Safe Mega Source V1
 
 - Canonical mission authority: **F1-08 Breaking of the Fellowship**. Legacy runtime consumer remains **P1C08** under DEC-067; no runtime renumbering is introduced.

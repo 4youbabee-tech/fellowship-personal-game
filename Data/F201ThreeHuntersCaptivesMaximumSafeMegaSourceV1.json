@@ -1,0 +1,788 @@
+{
+  "schema_version": 1,
+  "pack_id": "F201_THREE_HUNTERS_CAPTIVES_MAXIMUM_SAFE_MEGA_SOURCE_V1",
+  "status": "SOURCE_ARCHITECTURE_READY_INVENTORY_GATED_RUNTIME_MAPPING_UNASSIGNED",
+  "canonical_mission_id": "F2-01",
+  "canonical_title": "Three Hunters / Captives",
+  "runtime_consumers": [],
+  "runtime_mapping_status": "NOT_ASSIGNED_DO_NOT_INVENT",
+  "authority": [
+    "01_STORY_AND_TIMELINE_BIBLE",
+    "02_CHARACTERS_AND_RELATIONSHIPS_BIBLE",
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+    "04_PEOPLES_LORE_ARTIFACTS_AND_CULTURES",
+    "05_BATTLES_WEAPONS_ARMIES_AND_CREATURES",
+    "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "Data/MaximumSafeProductionModeV1.json",
+    "Data/ProjectGovernor.json",
+    "Docs/WORLD_DETAIL_LEDGER.md"
+  ],
+  "story_contract": {
+    "critical_path": [
+      "Aragorn, Legolas and Gimli pursue the Uruk-hai.",
+      "Merry and Pippin escape into Fangorn."
+    ],
+    "safe_optional_window": [
+      "tracking",
+      "stamina",
+      "evidence reading"
+    ],
+    "locked_postcondition": "Paths converge around Fangorn/Rohan.",
+    "excluded_from_this_pack": [
+      "F2-02 Treebeard/Ent interaction resolution",
+      "F2-02 Ent mobilization",
+      "Gandalf returned reveal/resolution"
+    ],
+    "save_contract": [
+      "clean entry autosave",
+      "pre-set-piece checkpoint",
+      "postcondition save after committed state"
+    ]
+  },
+  "world_contract": {
+    "primary_location": "Rohan / Fangorn edge",
+    "rohan_edge": {
+      "location_type": "Open pursuit corridor / plains-edge transition",
+      "visual_grammar": [
+        "open grassland",
+        "rolling terrain",
+        "wind",
+        "distant ridges",
+        "trail readability"
+      ],
+      "gameplay_roles": [
+        "tracking",
+        "stamina pressure",
+        "evidence reading",
+        "pursuit pacing"
+      ],
+      "landmark_contract": "Long-range route silhouettes and pursuit direction remain readable without dense clutter."
+    },
+    "fangorn_threshold": {
+      "location_type": "Ancient forest threshold",
+      "visual_grammar": [
+        "dense trunks",
+        "roots",
+        "mist",
+        "living environment"
+      ],
+      "gameplay_roles": [
+        "escape threshold",
+        "disorientation",
+        "exploration setup"
+      ],
+      "state_variants": [
+        "quiet threshold only"
+      ],
+      "landmark_contract": "The forest edge must read as a dramatic compression from open pursuit space into dense ancient woodland without opening F2-02 Ent mobilization."
+    }
+  },
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_class": 2
+  },
+  "safety_gate": {
+    "requires_clean_warehouse_inventory": true,
+    "hard_stop_on_hash_mismatch": true,
+    "hard_stop_on_license_hash_mismatch": true,
+    "hard_stop_on_dangerous_file": true,
+    "hard_stop_on_bad_receipt": true,
+    "runtime_integration_allowed": false,
+    "runtime_mapping_required_before_runtime_work": true
+  },
+  "source_policy": {
+    "throughput_mode": "ADAPTIVE_MAXIMUM_SAFE",
+    "reuse_existing_warehouse_first": true,
+    "duplicate_payloads_per_runtime_chapter": false,
+    "index_only": true,
+    "animated_candidate_extension": ".fbx",
+    "texture_extensions": [
+      ".png",
+      ".tga"
+    ],
+    "forbidden_texture_extensions": [
+      ".bmp"
+    ],
+    "static_source_extensions": [
+      ".fbx",
+      ".obj"
+    ],
+    "audio_extensions": [
+      ".wav"
+    ],
+    "metadata_extensions": [
+      ".json",
+      ".mtl"
+    ],
+    "max_total_candidates": 28000,
+    "max_candidates_per_category": 2600,
+    "fair_share_across_categories": true,
+    "minimum_free_disk_reserve_bytes": 6442450944,
+    "landmark_score_bonus": 8
+  },
+  "bank_policy": {
+    "minimum_ready_banks": 7,
+    "banks": [
+      {
+        "id": "BANK01_ROHAN_PURSUIT",
+        "purpose": "Open pursuit corridor, plains-edge landmarks and traversal"
+      },
+      {
+        "id": "BANK02_TRACKING_EVIDENCE",
+        "purpose": "Tracks, trail signs, camp traces, evidence-reading props and surfaces"
+      },
+      {
+        "id": "BANK03_URUK_TRAIL_PRESSURE",
+        "purpose": "Uruk trail pressure, abandoned/crossed terrain and pursuit threat"
+      },
+      {
+        "id": "BANK04_CAPTIVE_ESCAPE",
+        "purpose": "Merry/Pippin restraint, escape, concealment and movement support"
+      },
+      {
+        "id": "BANK05_FANGORN_THRESHOLD",
+        "purpose": "Dense ancient forest threshold, roots, mist and disorientation setup only"
+      },
+      {
+        "id": "BANK06_HUNTER_CHARACTERS_ANIMATION",
+        "purpose": "Aragorn/Legolas/Gimli locomotion, tracking, fatigue and interaction support"
+      },
+      {
+        "id": "BANK07_AUDIO_WEATHER_FOLEY",
+        "purpose": "Wind, plains, trail, footsteps, forest-edge ambience and threat audio"
+      },
+      {
+        "id": "BANK08_TRANSITION_AFTERMATH",
+        "purpose": "Convergence around Fangorn/Rohan and handoff visuals without F2-02 resolution"
+      }
+    ]
+  },
+  "landmark_policy": {
+    "minimum_landmark_categories": 14,
+    "require_open_to_dense_transition_readability": true,
+    "rohan_route_silhouette_required": true,
+    "fangorn_threshold_silhouette_required": true,
+    "tracking_landmarks_required": true,
+    "distance_proxy_or_lod_required_for_large_landmark_meshes": true,
+    "critical_vista_preload_required": true
+  },
+  "categories": [
+    {
+      "id": "ROHAN_OPEN_PLAINS_ROUTE",
+      "bank": "BANK01_ROHAN_PURSUIT",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "rohan",
+        "plain",
+        "grass",
+        "field",
+        "ridge",
+        "route",
+        "trail",
+        "valley",
+        "open"
+      ]
+    },
+    {
+      "id": "ROHAN_DISTANT_RIDGE_LANDMARK",
+      "bank": "BANK01_ROHAN_PURSUIT",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "ridge",
+        "hill",
+        "distant",
+        "silhouette",
+        "plain",
+        "grass",
+        "mountain",
+        "horizon"
+      ]
+    },
+    {
+      "id": "ROHAN_WIND_GRASS_DRESSING",
+      "bank": "BANK01_ROHAN_PURSUIT",
+      "kind": "mixed",
+      "landmark": false,
+      "keywords": [
+        "grass",
+        "wind",
+        "field",
+        "plain",
+        "meadow",
+        "tuft",
+        "weed",
+        "vegetation"
+      ]
+    },
+    {
+      "id": "ROHAN_TRAIL_SURFACES",
+      "bank": "BANK01_ROHAN_PURSUIT",
+      "kind": "surface",
+      "landmark": false,
+      "keywords": [
+        "dirt",
+        "mud",
+        "grass",
+        "trail",
+        "ground",
+        "soil",
+        "rock",
+        "path"
+      ]
+    },
+    {
+      "id": "ROHAN_WATER_BREAK_SUPPORT",
+      "bank": "BANK01_ROHAN_PURSUIT",
+      "kind": "mixed",
+      "landmark": false,
+      "keywords": [
+        "stream",
+        "water",
+        "river",
+        "ford",
+        "bank",
+        "wet",
+        "rock",
+        "shore"
+      ]
+    },
+    {
+      "id": "TRACKS_FOOTPRINT_EVIDENCE",
+      "bank": "BANK02_TRACKING_EVIDENCE",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "track",
+        "footprint",
+        "trail",
+        "mud",
+        "print",
+        "path",
+        "evidence",
+        "ground"
+      ]
+    },
+    {
+      "id": "BROKEN_BRANCH_EVIDENCE",
+      "bank": "BANK02_TRACKING_EVIDENCE",
+      "kind": "static",
+      "landmark": false,
+      "keywords": [
+        "branch",
+        "broken",
+        "twig",
+        "leaf",
+        "bush",
+        "trail",
+        "evidence",
+        "forest"
+      ]
+    },
+    {
+      "id": "CAMPFIRE_ASH_EVIDENCE",
+      "bank": "BANK02_TRACKING_EVIDENCE",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "camp",
+        "fire",
+        "ash",
+        "charcoal",
+        "embers",
+        "wood",
+        "evidence",
+        "smoke"
+      ]
+    },
+    {
+      "id": "DROPPED_GEAR_EVIDENCE",
+      "bank": "BANK02_TRACKING_EVIDENCE",
+      "kind": "static",
+      "landmark": false,
+      "keywords": [
+        "gear",
+        "pack",
+        "cloth",
+        "rope",
+        "weapon",
+        "scrap",
+        "dropped",
+        "trail",
+        "evidence"
+      ]
+    },
+    {
+      "id": "TRACKING_MARKER_ROUTE",
+      "bank": "BANK02_TRACKING_EVIDENCE",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "marker",
+        "trail",
+        "stone",
+        "branch",
+        "ridge",
+        "track",
+        "route",
+        "sign"
+      ]
+    },
+    {
+      "id": "URUK_TRAIL_ROUTE_LANDMARK",
+      "bank": "BANK03_URUK_TRAIL_PRESSURE",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "uruk",
+        "orc",
+        "trail",
+        "route",
+        "ridge",
+        "path",
+        "march",
+        "camp"
+      ]
+    },
+    {
+      "id": "URUK_CAMP_REMAINS",
+      "bank": "BANK03_URUK_TRAIL_PRESSURE",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "uruk",
+        "orc",
+        "camp",
+        "fire",
+        "stake",
+        "rope",
+        "weapon",
+        "crate",
+        "ash"
+      ]
+    },
+    {
+      "id": "URUK_MARCH_PROP_SUPPORT",
+      "bank": "BANK03_URUK_TRAIL_PRESSURE",
+      "kind": "static",
+      "landmark": false,
+      "keywords": [
+        "orc",
+        "uruk",
+        "weapon",
+        "shield",
+        "pack",
+        "rope",
+        "banner",
+        "armor"
+      ]
+    },
+    {
+      "id": "URUK_TRAIL_THREAT_AUDIO",
+      "bank": "BANK03_URUK_TRAIL_PRESSURE",
+      "kind": "audio",
+      "landmark": false,
+      "keywords": [
+        "orc",
+        "uruk",
+        "march",
+        "footstep",
+        "horn",
+        "shout",
+        "battle",
+        "threat"
+      ]
+    },
+    {
+      "id": "URUK_HAI_DISTANCE_CHARACTER_SUPPORT",
+      "bank": "BANK03_URUK_TRAIL_PRESSURE",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "uruk",
+        "orc",
+        "warrior",
+        "march",
+        "run",
+        "enemy",
+        "soldier",
+        "humanoid"
+      ]
+    },
+    {
+      "id": "MERRY_PIPPIN_RESTRAINT_PROPS",
+      "bank": "BANK04_CAPTIVE_ESCAPE",
+      "kind": "static",
+      "landmark": false,
+      "keywords": [
+        "rope",
+        "binding",
+        "cloth",
+        "pack",
+        "restraint",
+        "prisoner",
+        "hobbit"
+      ]
+    },
+    {
+      "id": "MERRY_PIPPIN_ESCAPE_ANIMATION",
+      "bank": "BANK04_CAPTIVE_ESCAPE",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "escape",
+        "crawl",
+        "run",
+        "struggle",
+        "fall",
+        "hide",
+        "hobbit",
+        "prisoner"
+      ]
+    },
+    {
+      "id": "CAPTIVE_ESCAPE_COVER",
+      "bank": "BANK04_CAPTIVE_ESCAPE",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "cover",
+        "rock",
+        "bush",
+        "tree",
+        "ditch",
+        "slope",
+        "hide",
+        "escape"
+      ]
+    },
+    {
+      "id": "CAPTIVE_ESCAPE_ROUTE_LANDMARK",
+      "bank": "BANK04_CAPTIVE_ESCAPE",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "route",
+        "escape",
+        "trail",
+        "forest",
+        "edge",
+        "slope",
+        "path",
+        "ridge"
+      ]
+    },
+    {
+      "id": "FANGORN_EDGE_WALL_OF_TREES",
+      "bank": "BANK05_FANGORN_THRESHOLD",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "fangorn",
+        "forest",
+        "tree",
+        "ancient",
+        "edge",
+        "trunk",
+        "dense",
+        "canopy"
+      ]
+    },
+    {
+      "id": "FANGORN_ROOTS_THRESHOLD",
+      "bank": "BANK05_FANGORN_THRESHOLD",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "root",
+        "tree",
+        "ancient",
+        "forest",
+        "gnarled",
+        "path",
+        "threshold"
+      ]
+    },
+    {
+      "id": "FANGORN_MIST_THRESHOLD",
+      "bank": "BANK05_FANGORN_THRESHOLD",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "mist",
+        "fog",
+        "forest",
+        "tree",
+        "dark",
+        "threshold",
+        "atmosphere"
+      ]
+    },
+    {
+      "id": "FANGORN_DENSE_TRUNKS",
+      "bank": "BANK05_FANGORN_THRESHOLD",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "trunk",
+        "forest",
+        "tree",
+        "dense",
+        "ancient",
+        "wood",
+        "bark"
+      ]
+    },
+    {
+      "id": "FANGORN_FOREST_SURFACES",
+      "bank": "BANK05_FANGORN_THRESHOLD",
+      "kind": "surface",
+      "landmark": false,
+      "keywords": [
+        "bark",
+        "moss",
+        "root",
+        "leaf",
+        "forest",
+        "ground",
+        "wood",
+        "fern"
+      ]
+    },
+    {
+      "id": "FANGORN_QUIET_AMBIENCE",
+      "bank": "BANK05_FANGORN_THRESHOLD",
+      "kind": "audio",
+      "landmark": false,
+      "keywords": [
+        "forest",
+        "wind",
+        "leaf",
+        "creak",
+        "bird",
+        "mist",
+        "ambient",
+        "quiet"
+      ]
+    },
+    {
+      "id": "ARAGORN_TRACKING_ANIMATION",
+      "bank": "BANK06_HUNTER_CHARACTERS_ANIMATION",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "track",
+        "kneel",
+        "inspect",
+        "walk",
+        "run",
+        "ranger",
+        "look",
+        "point"
+      ]
+    },
+    {
+      "id": "LEGOLAS_SCOUT_ANIMATION",
+      "bank": "BANK06_HUNTER_CHARACTERS_ANIMATION",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "scout",
+        "look",
+        "listen",
+        "point",
+        "run",
+        "archer",
+        "elf",
+        "watch"
+      ]
+    },
+    {
+      "id": "GIMLI_ENDURANCE_ANIMATION",
+      "bank": "BANK06_HUNTER_CHARACTERS_ANIMATION",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "dwarf",
+        "run",
+        "walk",
+        "fatigue",
+        "axe",
+        "idle",
+        "stamina",
+        "breath"
+      ]
+    },
+    {
+      "id": "THREE_HUNTERS_GROUP_TRAVEL",
+      "bank": "BANK06_HUNTER_CHARACTERS_ANIMATION",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "group",
+        "travel",
+        "run",
+        "walk",
+        "talk",
+        "gesture",
+        "companion",
+        "fellowship"
+      ]
+    },
+    {
+      "id": "HUNTER_GEAR_SUPPORT",
+      "bank": "BANK06_HUNTER_CHARACTERS_ANIMATION",
+      "kind": "static",
+      "landmark": false,
+      "keywords": [
+        "sword",
+        "bow",
+        "axe",
+        "quiver",
+        "pack",
+        "cloak",
+        "leather",
+        "gear"
+      ]
+    },
+    {
+      "id": "ROHAN_WIND_AUDIO",
+      "bank": "BANK07_AUDIO_WEATHER_FOLEY",
+      "kind": "audio",
+      "landmark": false,
+      "keywords": [
+        "wind",
+        "plain",
+        "grass",
+        "gust",
+        "field",
+        "ambient"
+      ]
+    },
+    {
+      "id": "PURSUIT_FOOTSTEP_FOLEY",
+      "bank": "BANK07_AUDIO_WEATHER_FOLEY",
+      "kind": "audio",
+      "landmark": false,
+      "keywords": [
+        "footstep",
+        "run",
+        "grass",
+        "dirt",
+        "mud",
+        "rock",
+        "trail"
+      ]
+    },
+    {
+      "id": "TRACKING_INTERACTION_FOLEY",
+      "bank": "BANK07_AUDIO_WEATHER_FOLEY",
+      "kind": "audio",
+      "landmark": false,
+      "keywords": [
+        "branch",
+        "cloth",
+        "gear",
+        "stone",
+        "rustle",
+        "inspect",
+        "rope"
+      ]
+    },
+    {
+      "id": "FANGORN_EDGE_AUDIO_TRANSITION",
+      "bank": "BANK07_AUDIO_WEATHER_FOLEY",
+      "kind": "audio",
+      "landmark": true,
+      "keywords": [
+        "forest",
+        "wind",
+        "quiet",
+        "creak",
+        "leaf",
+        "transition",
+        "mist",
+        "ambient"
+      ]
+    },
+    {
+      "id": "F201_CONVERGENCE_VISTA",
+      "bank": "BANK08_TRANSITION_AFTERMATH",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "vista",
+        "forest",
+        "plain",
+        "ridge",
+        "route",
+        "distant",
+        "transition",
+        "fangorn"
+      ]
+    },
+    {
+      "id": "F201_HANDOFF_ROUTE_SUPPORT",
+      "bank": "BANK08_TRANSITION_AFTERMATH",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "route",
+        "path",
+        "forest",
+        "plain",
+        "trail",
+        "ridge",
+        "handoff",
+        "transition"
+      ]
+    },
+    {
+      "id": "F201_SYSTEMIC_REACTION_SUPPORT",
+      "bank": "BANK08_TRANSITION_AFTERMATH",
+      "kind": "mixed",
+      "landmark": false,
+      "keywords": [
+        "grass",
+        "branch",
+        "cloth",
+        "rope",
+        "wind",
+        "impact",
+        "prop",
+        "debris"
+      ]
+    },
+    {
+      "id": "F201_LANDMARK_DISTANCE_PROXY_SUPPORT",
+      "bank": "BANK08_TRANSITION_AFTERMATH",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "lod",
+        "proxy",
+        "silhouette",
+        "vista",
+        "ridge",
+        "forest",
+        "tree",
+        "distant",
+        "plain"
+      ]
+    }
+  ],
+  "runtime_residency_blueprint": {
+    "mode": "MULTI_BANK_SOURCE_PREP_ONLY",
+    "rule": "No runtime chapter is opened until an explicit Part II runtime mapping/migration decision exists and predecessor runtime gates allow it.",
+    "heavy_references": "TSoftObjectPtr/TSoftClassPtr/FSoftObjectPath",
+    "heavy_loading": "FStreamableManager asynchronous",
+    "future_overlap": "Active bank plus bounded transition overlap only after runtime mapping is approved."
+  },
+  "acceptance_boundary": "Source architecture/index preparation only. No Part II runtime ID is invented and no runtime/PIE/device/visual/pacing/performance acceptance is claimed."
+}
