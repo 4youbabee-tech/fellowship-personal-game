@@ -1,3 +1,15 @@
+## 2026-09-29 - F1-07 Lórien & Anduin Mega Landmark Source Pack V1
+
+- Canonical mission authority: **F1-07 Lórien & Anduin** from the supplied Story/Timeline and Mission/Chapter source PDFs.
+- Runtime boundary remains **P1C07 = F1-07** under DEC-067. This source pack may establish the Anduin journey and Amon Hen approach/readability required by F1-07, but **Breaking of the Fellowship / F1-08 runtime content remains outside this pack**.
+- Canonical critical path is grief -> rest -> gifts -> river journey -> mounting group pressure. Safe optional window is quiet exploration, provisioning and boats. Locked postcondition is the Fellowship reaching Amon Hen.
+- Lothlórien world grammar: golden forest sanctuary; vertical flets, organic bridges, luminous forest; recovery, gifts, reflection and exploration; night-arrival/departure variants.
+- Anduin approach world grammar: river corridor with water, cliffs, stone monuments and forest; boat traversal/scouting; this pack prepares journey/readability assets but does not claim the later F1-08 Fellowship-break set piece.
+- Landmark-first requirement: Lothlórien must read through a dominant vertical flet/tree-canopy sanctuary vista; Anduin must read through river-axis/cliff/stone-monument silhouettes and a clear Amon Hen approach focal vista.
+- Source policy remains shared-warehouse/index-only. Animated candidates are FBX-only; production textures PNG/TGA; BMP blocked. Heavy runtime assets remain soft-referenced/asynchronously streamed, crowds pooled, repeated dressing ISM/HISM + LOD/culling.
+- Heavy execution remains warehouse-inventory-gated until the active receipt supersession repair produces a clean persistent audit.
+- Evidence boundary: **SOURCE ARCHITECTURE REGISTRATION ONLY**. No UE integration, PIE, device, visual, pacing or performance acceptance is implied.
+
 ## 2026-09-29 - Part I Landmark Identity Plan V1 + F1-06 Caradhras & Moria Landmark Mega Source Superpack
 
 Registered before any runtime implementation.
