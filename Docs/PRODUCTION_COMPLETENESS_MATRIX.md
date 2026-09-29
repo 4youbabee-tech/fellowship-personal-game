@@ -1,3 +1,12 @@
+## 2026-09-29 - Inventory repair auto-rearm
+
+- P1C01 Closure audit-change rearm: **SOURCE-IMPLEMENTED**.
+- F1-05 heavy source audit-change rearm: **SOURCE-IMPLEMENTED**.
+- F1-06 landmark source audit-change rearm: **SOURCE-IMPLEMENTED**.
+- PG-200 rearm regression guard: **SOURCE-IMPLEMENTED**.
+- Exact-head validation: **PENDING**.
+- Real warehouse clean pass: **PENDING**.
+
 ## 2026-09-29 - Warehouse latest-receipt authority repair
 
 - Exact blocker identification (Plaster007): **EVIDENCE CAPTURED**.
