@@ -57,7 +57,8 @@
       "state": "ACTIVE",
       "scope": "Fix micro-event distance retirement so one far member cannot remove nearby interaction/event members.",
       "proof": [
-        "PG-207 static guard",
+        "PG-208 member-local cull guard",
+        "test_living_world_distance_cull_is_member_local",
         "exact-head UE4 compile/runtime"
       ]
     },
@@ -67,7 +68,7 @@
       "state": "SOURCE_IMPLEMENTED_PROOF_PENDING",
       "scope": "Guard AShireAmbientNPC so UGameplayStatics::GetPlayerPawn remains centralized in GetPlayerPawnCached only.",
       "proof": [
-        "PG-208 static direct-call centralization guard"
+        "PG-210 direct-call centralization guard"
       ]
     },
     {
@@ -76,6 +77,7 @@
       "state": "PREPARED",
       "scope": "Reconstruct schema-version changes before adding migration code; do not invent historical field semantics.",
       "proof": [
+        "PG-211 save-schema audit guard",
         "documented version map or explicit unsupported boundary"
       ]
     },
