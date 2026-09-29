@@ -1,22 +1,3 @@
-## 2026-09-30 - P1C01 Overnight Mega Build Train V1
-
-- Owner authorized one large P1C01 production approval covering many bounded work cars rather than repeated per-car approvals.
-- Registered machine-readable train: `Data/P1C01OvernightMegaBuildTrainV1.json`.
-- Source boundary checked before registration: source F1-01 owns Prologue/Ring history + birthday preparation + Gandalf arrival + party/social/fireworks and locks Bilbo departure/Ring transfer; F1-02 owns Bag End Ring-danger/departure; F1-03 owns Shire roads/Bucklebury Black Rider pursuit, road stealth and ferry escape. Current runtime `P1C01` already composes a wider vertical slice across these source beats, so this train preserves current runtime topology and does not silently redefine source chapter boundaries.
-- Large train cars cover W00 closure, living-world cull safety, Shire route-life density, party/Bag End interaction density, NPC routines/social memory, fauna/environmental motion, character presentation, quest/side-activity coherence, cinematic handoff, Shire audio identity, long-session save/load and final target-device/Gate 6/7 evidence.
-- Runtime-changing cars remain serialized behind exact-head engine gates. Source/QC, documentation, warehouse and non-runtime preparation may run in parallel.
-- Performance contract remains the target laptop: 6th-gen i7, 8 GB RAM, ~2 GB VRAM, DX11 1280x720 Low-Medium with 30 FPS floor target.
-- Heavy production assets remain soft/asynchronous; animated production delivery remains FBX-only; final textures remain PNG/TGA; crowd-scale actors remain pooled.
-- Evidence boundary: authorization/preparation only. Individual cars do not inherit PIE/device/visual/performance acceptance from the train.
-
-## 2026-09-30 - Living-world member-local retirement safety
-
-- Programmer review identified a real long-session living-world defect: one far actor inside a multi-member micro-event could retire the entire event, including a nearby player interaction or participant.
-- Approved repair direction: event lifetime expiry remains event-wide, but distance retirement is actor-local. Each far member is released to its existing pool independently; the event record survives while any member remains active.
-- Interaction/ambient-motion/NPC pooling ownership remains in `ALivingWorldDirector`; no parallel world-life system is introduced.
-- The repair keeps story/save/quest ownership unchanged and adds a static regression guard against restoring event-wide distance culling.
-- Evidence boundary: source implementation only until exact-head Pre-Unreal and UE4.27.2 gates succeed. No PIE/device/visual/performance acceptance is claimed.
-
 ## 2026-09-30 - P1C01 living-world member-local culling safety repair
 
 - Programmer review finding confirmed against canonical develop: `CleanupExpiredEvents` retired an entire micro-event when any one grouped actor crossed `EventCullDistance`, allowing a roaming NPC or motion actor to make a nearby interaction disappear in front of the player.
@@ -24,7 +5,7 @@
 - Pool ownership stays with `ALivingWorldDirector`; this does not create a second life system or change quest/save authority.
 - `ShireAmbientNPC` player lookup review found one direct `UGameplayStatics::GetPlayerPawn` call inside `GetPlayerPawnCached()`; normal runtime consumers already use that cache. No redundant caching rewrite is authorized.
 - Save-schema review found newer-save rejection plus existing legacy/canonicalization repair, but no documented per-version migration history sufficient to safely invent a general migration pipeline. Schema migration remains a separately designed task, not part of this repair.
-- Evidence boundary: SOURCE IMPLEMENTATION + STATIC GUARD ONLY until exact-head CI/UE evidence exists. No PIE/device/visual/performance acceptance is claimed.
+- Evidence boundary: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. No PIE/device/visual/performance acceptance is claimed.
 
 ## 2026-09-29 - F2-04 Road & Helm's Deep Prep Maximum-Safe Source V1
 
