@@ -1,3 +1,17 @@
+## 2026-09-29 - F2-03 Edoras Maximum-Safe Source V1
+
+- Canonical mission: F2-03 Edoras.
+- Primary location: Rohan / Edoras.
+- Present focus: Theoden, Eowyn, Eomer, Gandalf, Aragorn.
+- Canonical beat: Theoden restored; political and military crisis clarified.
+- Optional window: court exploration, stables, equipment, social scenes.
+- Locked postcondition: Rohan evacuates toward Helm's Deep.
+- Keep F2-04 road/Helm's Deep preparation and later battle resolution outside this pack.
+- Source/preparation only. Do not invent a Part II runtime ID.
+- Permanent story rule applies: preserve compatible court, settlement, stable, relationship and departure detail instead of reducing the chapter to one set-piece.
+- Low-spec rules remain: FBX animated assets, PNG/TGA textures, async soft references, pooled crowds, ISM/HISM + LOD/culling.
+- Evidence boundary: SOURCE ARCHITECTURE REGISTRATION ONLY.
+
 ## 2026-09-29 - F2-02 reconciliation with full-journey story contract
 
 - F2-02 Fangorn & Gandalf Returned remains the canonical source wave after F2-01 and before F2-03 Edoras.

@@ -4959,6 +4959,45 @@
         "Scripts/pre_unreal_validate.py PG-203"
       ],
       "evidence_boundary": "SOURCE ARCHITECTURE ONLY; exact-head static validation is required. No runtime or human acceptance is claimed."
+    },
+    {
+      "id": "DEC-084",
+      "title": "F2-03 Edoras uses a maximum-safe source wave without assigning a Part II runtime ID",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-PROD-011",
+        "REQ-WORLD-001",
+        "REQ-WORLD-002",
+        "REQ-NPC-001",
+        "REQ-PERF-001",
+        "REQ-STABILITY-001"
+      ],
+      "resolution": "Prepare canonical F2-03 Edoras as a source-only maximum-safe wave. Preserve the locked postcondition that Rohan evacuates toward Helm's Deep and keep Part II runtime identity unassigned until a dedicated mapping/migration decision exists.",
+      "implementation_contract": [
+        "Timeline remains the navigation spine; this chapter must preserve compatible court, settlement, stable, social and departure detail rather than collapsing into one restoration set-piece.",
+        "Critical path remains Theoden restored; political and military crisis clarified.",
+        "Safe optional window remains court exploration, stables, equipment and social scenes.",
+        "Locked postcondition remains Rohan evacuates toward Helm's Deep.",
+        "F2-04 road/refugee escort/Helm's Deep preparation and F2-05 battle resolution remain outside this pack.",
+        "Use 8 preparation banks, at least 32 categories and at least 20 landmark-tagged categories.",
+        "At least 7 banks and 14 landmark categories must have source coverage before the source runner reports success.",
+        "Candidate scheduling remains fair-share inside a 32,000 total candidate ceiling.",
+        "Animated production candidates remain FBX-only; production textures PNG/TGA; BMP blocked.",
+        "Persistent warehouse inventory must be clean and the 6 GiB free-space reserve remains mandatory.",
+        "runtime_consumers remains empty and runtime_mapping_status remains NOT_ASSIGNED_DO_NOT_INVENT.",
+        "Source preparation does not count as runtime, PIE, device, visual, pacing or performance acceptance."
+      ],
+      "rationale": "F2-03 is the next canonical Edoras chapter after F2-02. The permanent full-journey story rule requires preserving source-grounded settlement, court, horse culture and evacuation-preparation detail while runtime identity remains gated.",
+      "evidence": [
+        "01_STORY_AND_TIMELINE_BIBLE — F2-03 Edoras",
+        "Tolkien The Lord of the Rings — Edoras / The King of the Golden Hall source detail",
+        "Data/F203EdorasMaximumSafeMegaSourceV1.json",
+        "Scripts/run_f203_edoras_maximum_safe_source.ps1",
+        ".github/workflows/f203-edoras-maximum-safe-source.yml",
+        "Scripts/pre_unreal_validate.py PG-204",
+        "Docs/WORLD_DETAIL_LEDGER.md — F2-03 Edoras Maximum-Safe Source V1"
+      ],
+      "evidence_boundary": "SOURCE ARCHITECTURE ONLY. Exact-head static validation is required. No Part II runtime ID or runtime integration is approved and no PIE/device/visual/pacing/performance acceptance is claimed."
     }
   ],
   "open_conflicts": [],
@@ -5683,7 +5722,8 @@
       "warehouse": "#264 SUCCESS",
       "scope": "D runtime/content merge has fresh UE4.27.2 build/import/runtime/package proof. Subsequent develop changes are administrative CI/cleanup/governance only and do not create new gameplay acceptance."
     },
-    "w01_freeze": "RELEASED_BY_W00_EXIT"
+    "w01_freeze": "RELEASED_BY_W00_EXIT",
+    "story_source_note": "Permanent full-journey source contract active; F2-03 Edoras is the next source/preparation wave while P1C01 remains the sole runtime-changing lane."
   },
   "immediate_next_large_actions": [
     "1. Mega Asset Promotion — move evidence-backed P1C01 warehouse/project-source assets through bounded intake, import and integration.",
