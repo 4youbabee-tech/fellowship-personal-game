@@ -8489,6 +8489,45 @@ for ignored in [
         fail(f"PG-199 F1-06 tooling path must stay off Unreal push+PR filters: {ignored}")
 
 
+# PG-200: warehouse inventory authority follows the latest hashed receipt per path and preserves historical provenance.
+pg200_audit = read(ROOT / "Scripts" / "audit_warehouse_inventory.ps1")
+pg200_test = read(ROOT / "Scripts" / "test_warehouse_inventory_supersession.ps1")
+pg200_workflow = read(ROOT / ".github" / "workflows" / "pre-unreal-validation.yml")
+
+for symbol in [
+    "Resolve-LatestHashRecords",
+    "receipt_sort_ticks",
+    "superseded_hash_records",
+    "superseded_license_hash_records",
+    "WAREHOUSE_SUPERSEDED_HASH_RECORD",
+    "current_hash_match",
+    'Sort-Object -Property @{Expression="receipt_sort_ticks";Descending=$true}',
+]:
+    if symbol not in pg200_audit:
+        fail(f"PG-200 warehouse latest-receipt authority marker missing: {symbol}")
+
+for forbidden in [
+    "Remove-Item -LiteralPath $row.superseded_receipt",
+    "Set-Content -LiteralPath $row.superseded_receipt",
+    "Set-Content -Path $row.superseded_receipt",
+]:
+    if forbidden in pg200_audit:
+        fail("PG-200 audit diagnostics must not mutate superseded receipts")
+
+for symbol in [
+    "WAREHOUSE_SUPERSESSION_TEST_PASS latest-receipt-match=true",
+    "WAREHOUSE_SUPERSESSION_TEST_PASS latest-receipt-mismatch-hard-fail=true",
+    "WAREHOUSE_RECEIPT_SUPERSESSION_TEST_PASS",
+]:
+    if symbol not in pg200_test:
+        fail(f"PG-200 warehouse supersession regression marker missing: {symbol}")
+
+if "Test warehouse receipt supersession semantics" not in pg200_workflow:
+    fail("PG-200 Pre-Unreal workflow must execute warehouse supersession regression test")
+if "test_warehouse_inventory_supersession.ps1" not in pg200_workflow:
+    fail("PG-200 Pre-Unreal workflow missing warehouse supersession test script")
+
+
 # PG-195: Unreal import must not trust an editor-only wait while a commandlet remains alive.
 pg195_wait = read(ROOT / "Scripts" / "wait_for_unreal_processes.ps1")
 pg195_wait_cmd = read(ROOT / "Scripts" / "ci_wait_for_unreal_editor.cmd")
