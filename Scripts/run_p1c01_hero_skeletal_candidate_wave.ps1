@@ -104,6 +104,18 @@ $report=[ordered]@{
 $summary=Join-Path $OutputRoot "p1c01_hero_skeletal_candidate_summary.json"
 $report | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $summary -Encoding UTF8
 
+Write-Host ("P1C01_HERO_RIG_DIAGNOSTIC intakeExit="+$intakeExit+" intakePrepared="+[int]$intakeReceipt.prepared_count+" intakePending="+[int]$intakeReceipt.pending_count+" intakeBlocked="+[int]$intakeReceipt.blocked_count+" discoveredFbx="+$fbxFiles.Count+" discoveredPngTga="+$textureFiles.Count+" ranked="+$totalRanked+" pools="+$poolReady)
+foreach($pendingRow in @($intakeReceipt.pending)){
+  Write-Host ("P1C01_HERO_RIG_PENDING provider="+[string]$pendingRow.provider+" id="+[string]$pendingRow.id+" reason="+[string]$pendingRow.reason)
+}
+foreach($blockedRow in @($intakeReceipt.blocked)){
+  Write-Host ("P1C01_HERO_RIG_BLOCKED id="+[string]$blockedRow.id+" reason="+[string]$blockedRow.reason+" file="+[string]$blockedRow.file)
+}
+foreach($charRow in $characterReports){
+  Write-Host ("P1C01_HERO_RIG_CHARACTER character="+[string]$charRow.character+" candidates="+[int]$charRow.candidate_count)
+}
+Write-Host ("P1C01_HERO_RIG_SUMMARY path="+$summary)
+
 if($totalRanked -lt $minimumTotal){ throw "P1C01_HERO_RIG_CANDIDATE_COVERAGE_FAIL total=$totalRanked required=$minimumTotal" }
 if($poolReady -lt $minimumPools){ throw "P1C01_HERO_RIG_POOL_COVERAGE_FAIL ready=$poolReady required=$minimumPools" }
 

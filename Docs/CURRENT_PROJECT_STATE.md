@@ -1,3 +1,11 @@
+## 2026-09-29 - P1C01 hero skeletal candidate diagnostic repair
+
+- Post-merge P1C01 Frodo/Gandalf skeletal candidate workflow run #1 reached the candidate-build step and failed there; checkout, runner health and PowerShell preflight all passed.
+- The candidate runner now prints bounded diagnostic counts and pending/blocked reasons before enforcing candidate coverage thresholds.
+- This change does not weaken candidate QC or promote generic FBX files; it only exposes why the persistent Warehouse did not satisfy the first candidate-run threshold.
+- Evidence boundary: DIAGNOSTIC TOOLING CHANGE / exact-head static validation pending. No rig import, PIE, device, visual or performance acceptance is claimed.
+
+
 ## 2026-09-29 - F2-04 Road & Helm's Deep Prep Maximum-Safe Source V1
 
 - F2-04 is now the active Part II source/preparation wave after merged F2-03 Edoras.
