@@ -1,3 +1,12 @@
+## 2026-09-29 - F2-02 reconciliation with full-journey story contract
+
+- F2-02 Fangorn & Gandalf Returned remains the canonical source wave after F2-01 and before F2-03 Edoras.
+- The existing Fangorn/Ent/Gandalf source plan is now explicitly governed by the permanent no-story-shortcuts / zero-silent-omission rule.
+- Compatible Tolkien Fangorn, Ent, relationship, travel and environmental detail discovered during chapter review must be implemented or dispositioned; later F2-08 Isengard resolution remains excluded.
+- Runtime identity remains NOT_ASSIGNED_DO_NOT_INVENT until a dedicated Part II mapping decision exists.
+- Decision owner: DEC-083.
+- Evidence boundary: source/governance reconciliation only; no runtime or human acceptance promotion.
+
 ## 2026-09-29 - Permanent full-journey story/source + Arabic localization contract
 
 - Owner direction is now permanent project memory: **Shire Journey must be experienced as a rich journey, not a shortened recap connecting only major film set pieces.**
