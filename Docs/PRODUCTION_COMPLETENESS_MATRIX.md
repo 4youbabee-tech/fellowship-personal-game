@@ -1,5 +1,6 @@
 ## 2026-09-30 - P1C01 maximum-safe mega train / living-world safety
 
+- P1C01 legacy mega-pack Warehouse default: **RECONCILED to D runner authority**; no runtime/gameplay maturity promotion.
 - LivingWorld grouped-event distance retirement: **SOURCE-REPAIRED to member-local**.
 - Authored event lifetime expiry: **PRESERVED event-wide**.
 - Regression protection: **PG-208 + source-contract test implemented / exact-head CI pending**.
