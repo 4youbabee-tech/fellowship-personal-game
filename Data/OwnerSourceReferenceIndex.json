@@ -145,10 +145,11 @@
       "kind": "OWNER_STORY_REFERENCE",
       "sha256": "6a22f1c2eeae3aaa071374589b0705252bee4424c8870f5dab62093c744e1ae9",
       "use": [
-        "Part I chapter chronology",
+        "F1-F3 trilogy chapter chronology and navigation",
         "causal spine and locked outcomes",
         "safe optional-play windows",
-        "chapter state and handoff rules"
+        "chapter state and handoff rules",
+        "routing key into screenplay/Tolkien/domain-source chapter packets"
       ],
       "runtime_ship": false
     },
@@ -490,6 +491,52 @@
       "Final visual acceptance needs rendered chapter/character evidence.",
       "Part III is now screenplay-backed, but Part III runtime production remains gated by chapter-by-chapter source verification and implementation work.",
       "The Tolkien volume is a deep-lore authority, not a silent replacement for film-only chronology or outcomes."
+    ]
+  },
+  "chapter_binding_policy": {
+    "status": "ACTIVE",
+    "scope": "F1-01_THROUGH_F3-07",
+    "completeness_statement": "The registered source architecture is structurally complete for the current film-trilogy LOTR game scope. This is not a claim that every Tolkien publication is present or that every discovered detail is already implemented.",
+    "navigation_spine": "SRC_OWNER_STORY_TIMELINE_BIBLE_V1",
+    "required_layers": [
+      "Timeline chapter ID, critical beat, safe window and locked outcome",
+      "Matching film and supplied screenplay scene order, cast presence, knowledge state and required outcome",
+      "Matching Tolkien narrative chapter(s)",
+      "Tolkien Appendix B chronology/date state where applicable",
+      "Relevant Tolkien appendices for lineage, calendar, language, names, peoples and historical context",
+      "Relevant Sources 02-11 for characters, world, cultures, combat, gameplay, implementation, visuals, resources and production systems",
+      "Implementation/disposition record for meaningful extracted detail"
+    ],
+    "detail_disposition_values": [
+      "IMPLEMENTED",
+      "LINKED_FOR_LATER",
+      "DEFERRED_PERFORMANCE",
+      "BOOK_ONLY_COMPATIBLE",
+      "BLOCKED_BY_FILM_CONTINUITY",
+      "NOT_APPLICABLE",
+      "NEEDS_SOURCE_RESOLUTION"
+    ],
+    "rules": [
+      "The Story & Timeline Bible organizes the route; it does not cap story/world detail.",
+      "Do not shorten the journey merely to connect film anchors.",
+      "Compatible Tolkien book-only events/details are playable-content candidates when they preserve locked film outcomes, chronology and knowledge boundaries.",
+      "No meaningful source-backed detail discovered during chapter review may be silently omitted; record a disposition and reason.",
+      "Film trilogy and supplied screenplay continuity remain primary for film-driven chronology, visible staging and required outcomes.",
+      "Tolkien The Lord of the Rings including Appendices is the primary supplied deep-lore/detail source when compatible with film continuity.",
+      "Book-only differences must be explicitly tagged and may not silently replace film-driven events.",
+      "Old Sources 01-07 ROTK-screenplay-absent warnings are superseded by Source 11 and SRC_FILM_ROTK_SCREENPLAY.",
+      "Do not create Source 12+ merely to solve routing; extend this index or the relevant existing source unless a genuinely new domain is required.",
+      "Source/detail completeness is distinct from runtime, Gate 6/7, PIE, device, visual, pacing and performance acceptance."
+    ],
+    "canonical_packet_key": "timeline_chapter_id"
+  },
+  "organizational_findings_2026_09_29": {
+    "status": "SOURCE_LIBRARY_STRUCTURE_CONFIRMED_WITH_ROUTING_CLEANUP",
+    "findings": [
+      "Core routing covers Sources 01-11, all three supplied film screenplays and one full supplied Tolkien LOTR volume.",
+      "Source 01 is trilogy-wide navigation, not Part-I-only.",
+      "Source 11 supersedes old Sources 01-07 warnings that the ROTK screenplay was not supplied.",
+      "Duplicate file copies are housekeeping, not a content-gap signal; unique source material must not be removed by deduplication."
     ]
   }
 }
