@@ -1,5 +1,5 @@
 param(
-    [string]$Root = "C:\actions-runner\_warehouse\ShireJourney"
+    [string]$Root = "D:\actions-runner\_warehouse\ShireJourney"
 )
 
 $ErrorActionPreference = "Stop"

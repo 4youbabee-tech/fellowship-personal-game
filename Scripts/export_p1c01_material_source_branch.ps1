@@ -1,6 +1,6 @@
 param(
   [string]$ManifestPath = "Data/P1C01MaterialImportWaveV1.json",
-  [string]$WarehouseRoot = "C:\actions-runner\_warehouse\ShireJourney",
+  [string]$WarehouseRoot = "D:\actions-runner\_warehouse\ShireJourney",
   [string]$GeneratedBranch = "generated/p1c01-material-source-v1",
   [int64]$MaxSingleSourceBytes = 33554432,
   [int64]$MaxBatchSourceBytes = 268435456,
