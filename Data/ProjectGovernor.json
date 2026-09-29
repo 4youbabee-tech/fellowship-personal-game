@@ -1765,7 +1765,8 @@
         "Full-cast production is ordered by Part1MegaProductionPlan with asset-root, rig-family, final-gap and acceptance contracts.",
         "Final animated character/creature delivery requires real skeletal authoring and skeletal FBX export; OBJ-to-FBX container conversion alone is not accepted as rigging evidence.",
         "CharacterVisualProductionWaveV7 defines the rigged-FBX intake, natural-humanoid quality bar, soft/async runtime contract and first delivery order.",
-        "Docs/CHARACTER_ASSET_HANDOFF.md defines the exact FBX/PNG/TGA handoff required to replace static proxy characters."
+        "Docs/CHARACTER_ASSET_HANDOFF.md defines the exact FBX/PNG/TGA handoff required to replace static proxy characters.",
+        "P1C01HeroSkeletalCandidateWaveV1 ranks legal/provenanced FBX candidate pools for Frodo and Gandalf before engine import; candidates remain QC_REQUIRED and not READY_FOR_IMPORT by default."
       ],
       "missing_work": [
         "Complete V7 async rig runtime/import infrastructure and earn exact-head static validation before any visual-complete claim.",
@@ -1774,7 +1775,8 @@
         "replace runtime proxies",
         "UE4 compile/import and PIE visual/motion acceptance",
         "Clean verified triangulation-risk character sources before the next affected production import wave.",
-        "Produce skeletal FBX packages only after skeleton/skin-weight/deformation work; retain static OBJ fallback assets until replacements pass engine + visual/motion acceptance."
+        "Produce skeletal FBX packages only after skeleton/skin-weight/deformation work; retain static OBJ fallback assets until replacements pass engine + visual/motion acceptance.",
+        "Run the Frodo/Gandalf candidate wave on the persistent Warehouse, then promote only candidates that pass skeleton/skin/retarget/deformation QC into bounded UE4 import."
       ],
       "acceptance_criteria": [
         "core cast recognizable without labels",
@@ -4998,6 +5000,39 @@
         "Docs/WORLD_DETAIL_LEDGER.md — F2-03 Edoras Maximum-Safe Source V1"
       ],
       "evidence_boundary": "SOURCE ARCHITECTURE ONLY. Exact-head static validation is required. No Part II runtime ID or runtime integration is approved and no PIE/device/visual/pacing/performance acceptance is claimed."
+    },
+    {
+      "id": "DEC-085",
+      "title": "Prioritize real Frodo/Gandalf skeletal FBX candidates inside P1C01 before visual acceptance",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-CHAR-001",
+        "REQ-CHAR-003",
+        "REQ-CHAR-004",
+        "REQ-ASSET-001",
+        "REQ-PERF-001"
+      ],
+      "resolution": "Use a bounded source/intake/QC wave to rank legal FBX skeletal-character candidates for Frodo and Gandalf now, while preserving the existing modular fallback until a full skeletal mesh + AnimBP pair passes engine and human review.",
+      "implementation_contract": [
+        "Frodo and Gandalf are priority 1.",
+        "Animated production delivery is FBX-only; OBJ remains static fallback and BMP is blocked.",
+        "No candidate is READY_FOR_IMPORT by filename or container format alone.",
+        "Require provenance plus skeleton, skin-weight, retarget, deformation, animation, material, LOD/cull and socket QC before import promotion.",
+        "Use TSoftObjectPtr/TSoftClassPtr/FSoftObjectPath and FStreamableManager for heavy runtime rig assets.",
+        "Do not hide modular visuals until both skeletal mesh and locomotion AnimBP resolve.",
+        "Do not create a second AI/state authority; ShireNPCContextSubsystem and LivingWorldDirector ownership remains unchanged.",
+        "Candidate discovery tooling remains off the heavy Unreal lane; actual imported rig integration must re-enter UE4 build/import/PIE/device gates."
+      ],
+      "rationale": "The owner wants to see real characters in the first stage as soon as safely possible. The current project already has rig handoff plumbing; the shortest safe path is to turn staged legal stock into explicit Frodo/Gandalf rig-family candidate pools without pretending generic FBX files are finished characters.",
+      "evidence": [
+        "Data/P1C01HeroSkeletalCandidateWaveV1.json",
+        "Scripts/run_p1c01_hero_skeletal_candidate_wave.ps1",
+        ".github/workflows/p1c01-hero-skeletal-candidate-wave.yml",
+        "Scripts/pre_unreal_validate.py PG-205",
+        "Data/CharacterVisualProductionWaveV7.json",
+        "Data/P1C01CharacterRigAnimationPrepV1.json"
+      ],
+      "evidence_boundary": "SOURCE/INTAKE/QC TOOLING ONLY. No character is claimed imported, rigged, PIE-tested, device-tested, visually accepted or performance accepted."
     }
   ],
   "open_conflicts": [],
