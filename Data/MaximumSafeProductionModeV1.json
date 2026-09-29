@@ -123,15 +123,15 @@
     ]
   },
   "execution_order": [
-    "Complete F1-08 Amon Hen / Breaking of the Fellowship maximum-safe multi-bank source wave and exact-head validation.",
-    "Execute F1-08 source indexing only while persistent warehouse inventory remains clean.",
-    "Resume P1C01 Chapter Closure Pack from the clean inventory/reporting gate.",
-    "Keep later-region source/material/audio/character/world preparation moving through the existing 28-region queue where canon authority is sufficient.",
-    "Convert later chapters to multi-bank streamed chapter plans before high-density runtime promotion.",
-    "Use P1C01 H target-device profiling to replace inferred residency ceilings with measured budgets."
+    "Complete F2-01 Three Hunters / Captives maximum-safe source wave and exact-head validation.",
+    "Execute F2-01 source indexing only while persistent warehouse inventory remains clean.",
+    "Keep Part II runtime integration disabled until an explicit runtime-ID mapping/migration decision exists.",
+    "Continue P1C01 runtime closure as the sole runtime-changing lane.",
+    "Keep later-region source/material/audio/character/world preparation moving through the whole-game queue where canon authority is sufficient.",
+    "Use target-device profiling to replace inferred residency ceilings with measured budgets."
   ],
   "success_definition": "Production lanes remain saturated without violating any hard stop, while runtime integration stays serialized and evidence-backed.",
   "evidence_boundary": "Execution architecture and current live warehouse evidence only. No PIE/device/visual/pacing/performance acceptance is implied.",
-  "active_source_wave": "F1-08 Amon Hen / Breaking of the Fellowship",
-  "active_source_wave_status": "SOURCE_ARCHITECTURE_IMPLEMENTATION_ACTIVE"
+  "active_source_wave": "F2-01 Three Hunters / Captives",
+  "active_source_wave_status": "SOURCE_ARCHITECTURE_IMPLEMENTATION_ACTIVE_RUNTIME_MAPPING_UNASSIGNED"
 }
