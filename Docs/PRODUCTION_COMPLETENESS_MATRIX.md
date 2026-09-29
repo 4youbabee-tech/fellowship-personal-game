@@ -1,3 +1,11 @@
+## 2026-09-29 - Interactive orchestration responsiveness
+
+- Repeated same-run interactive long polling: **PROHIBITED BY DEC-075**.
+- Bounded status checks + automation continuation: **GOVERNED**.
+- PR #153 exact-head Pre-Unreal #1379: **SUCCESS**.
+- PR #153 exact-head Unreal #1095: **SUCCESS**.
+- Gate 6/7 / PIE / device / visual / performance criteria: **UNCHANGED**.
+
 ## 2026-09-29 - F1-06 landmark scoring priority
 
 - Configurable landmark score bonus (6): **SOURCE-IMPLEMENTED**.
