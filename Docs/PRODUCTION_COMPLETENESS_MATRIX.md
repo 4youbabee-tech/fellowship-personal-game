@@ -1,3 +1,15 @@
+## 2026-09-30 - P1C01 maximum-safe mega build train + living-world cull safety
+
+- W00 packaged-runtime Data consumption: **MACHINE-GREEN on merged PR #184 / Unreal #1108**; human/device/visual Gate 6/7 evidence remains separate.
+- P1C01 mega train: **SOURCE/PREPARATION ACTIVE; runtime cars remain exact-head gated**.
+- Living-world grouped-event distance retirement: **SOURCE-REPAIRED to member-local**; authored event lifetime expiry remains event-wide.
+- Regression protection: **PG-208 + source-contract unit coverage**, plus **PG-209** mega-train gate guard; exact-head validation is pending on the new integration head.
+- Ambient player-pawn lookup claim: **rechecked; one direct engine lookup inside cache helper, no redundant rewrite required**.
+- Save schema migration: **AUDITED / HISTORY INCOMPLETE / NO SPECULATIVE MIGRATION ADDED**.
+- Zero-silent-omission source disposition: **PREPARED** for Shire/Hobbiton, Bag End, party/fireworks, Ring danger, road hiding/ferry, life/audio and checkpoint/retry.
+- P1C01 legacy mega-pack Warehouse default: **RECONCILED to D runner authority**.
+- AI/Life, Gameplay, Character, Audio, Cinematic, PIE, Device, Visual and Performance maturity are not promoted by this source wave.
+
 ## 2026-09-30 - W00 packaged runtime Data-read proof guard
 
 - Packaged RuntimeDependencies staging/JSON syntax guard: **IMPLEMENTED**.
