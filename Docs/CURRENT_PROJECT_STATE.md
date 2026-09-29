@@ -1,3 +1,13 @@
+## 2026-09-29 - P1C01 Frodo/Gandalf skeletal candidate wave V1
+
+- The active P1C01 character-production path now includes a bounded Frodo/Gandalf skeletal candidate discovery/QC wave.
+- This wave is intentionally source/intake/QC only: it searches the already authorized staged character packs for real FBX candidates and ranks them into Frodo/Gandalf rig-family pools.
+- No candidate defaults to READY_FOR_IMPORT. Skeleton hierarchy, skin weights, retarget, deformation, animation coverage, materials, sockets and LOD/cull remain explicit QC gates.
+- Runtime handoff remains /Game/Production/Characters/Rigs/<Character>/ with SK_<Character> + ABP_<Character>_Locomotion, soft references and FStreamableManager asynchronous loading.
+- Existing modular characters remain visible until the full rig pair resolves; ShireNPCContextSubsystem and LivingWorldDirector ownership is unchanged.
+- DEC-085 owns this visible-character priority wave.
+- Evidence boundary: SOURCE/INTAKE/QC TOOLING IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING. No imported rig, PIE, device, visual or performance acceptance is claimed.
+
 ## 2026-09-29 - F2-03 Edoras Maximum-Safe Source V1
 
 - F2-03 Edoras is the next Part II source-production wave; runtime identity remains unassigned.
