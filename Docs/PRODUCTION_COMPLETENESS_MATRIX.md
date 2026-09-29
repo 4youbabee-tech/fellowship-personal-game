@@ -1,3 +1,11 @@
+## 2026-09-29 - F1-06 landmark scoring priority
+
+- Configurable landmark score bonus (6): **SOURCE-IMPLEMENTED**.
+- PG-199 minimum landmark-score regression guard: **SOURCE-IMPLEMENTED**.
+- Duplicate PR #152: **CLOSED / NOT MERGED**.
+- PR #153 exact-head Pre-Unreal/Unreal after scoring update: **PENDING**.
+- Visual acceptance: **NOT CLAIMED**.
+
 ## 2026-09-29 - PG-199 landmark/F1-06 guard
 
 - Part I landmark/F1-06 static regression guard: **SOURCE-IMPLEMENTED**.
