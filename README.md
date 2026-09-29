@@ -18,6 +18,22 @@ There is **one project manager and one entry path**. Do not reconstruct project 
 6. Inspect the live `develop` HEAD and current GitHub checks before editing.
 7. Work on a short-lived candidate branch targeting `develop`; never use `main` as the normal development branch.
 
+## STORY / SOURCE ENTRY — REQUIRED FOR STORY, WORLD OR CHAPTER WORK
+
+Before touching story, missions, characters, dialogue, exploration or world content, read `Data/OwnerSourceReferenceIndex.json` and the permanent story/source contract in `Data/ProjectGovernor.json`.
+
+The project rule is:
+
+**Timeline organizes the journey; it does not shorten it. Film/screenplays lock film-driven chronology and outcomes. Tolkien supplies compatible deeper detail and book-only events. Sources 02-11 translate that material into production. Meaningful discovered detail is never silently omitted.**
+
+For every chapter, use the source packet chain:
+
+`Timeline chapter -> film/screenplay -> Tolkien narrative -> Appendix B/other appendices -> Sources 02-11 -> implementation/disposition`.
+
+Compatible Tolkien material omitted/compressed by the films may become real playable traversal, exploration, quests, encounters, puzzles, NPC/social scenes or environmental storytelling when it preserves the locked film outcome and knowledge boundaries. Gate 6/7 may delay implementation; it is not permission to compress the planned story.
+
+Localization product rule: **English VO + Arabic subtitles/UI/objectives**, while canonical Middle-earth location labels on the map remain in their original English names.
+
 ## CRITICAL RUNNER OWNERSHIP RULE
 
 Before touching GitHub Actions runner configuration: **service mode is permanently excluded.** `actions.runner.*` should be absent; if Windows still exposes a pending-deletion entry it must be **Stopped + Disabled**. The only supported UE4 runner path is the supervised **interactive-user watchdog** through `ShireJourney-GitHubRunner-Watchdog`. `NETWORK SERVICE`, `LOCAL SERVICE`, and `SYSTEM` are forbidden. The watchdog continuously runs `Scripts/runner_service_guard.ps1` so a recreated service is stopped/deleted again. If topology looks wrong, fail closed and use the repository installer/verifier; do not improvise a service-mode repair.
@@ -91,6 +107,8 @@ Unreal Engine 4.27.2.
 ## Key references
 
 - project authority: `Data/ProjectGovernor.json`
+- canonical source routing: `Data/OwnerSourceReferenceIndex.json`
+- world/detail decision ledger: `Docs/WORLD_DETAIL_LEDGER.md`
 - authority guide: `Docs/PROJECT_GOVERNOR.md`
 - current handoff: `Docs/CURRENT_PROJECT_STATE.md`
 - development gates: `Docs/DEVELOPMENT_GATES.md`
