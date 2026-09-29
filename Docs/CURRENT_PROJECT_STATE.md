@@ -1,3 +1,12 @@
+## 2026-09-29 - Interactive CI orchestration anti-hang rule
+
+- PR #153 is merged on develop; exact-head Pre-Unreal #1379 and Unreal #1095 both completed SUCCESS.
+- The recent apparent chat hangs were caused by repeated interactive polling while long GitHub Actions jobs were still running, not by a proven Unreal deadlock.
+- Governor `DEC-075` now limits repeated status polling for the same long-running workflow inside one interactive response.
+- After bounded checks, continuation moves to the scheduled automation/next run while independent safe work may continue on separate branches.
+- Exact-head validation, Gate 6/7 and evidence standards are unchanged.
+- Evidence boundary: **ORCHESTRATION FIX RECORDED**; no new runtime/device/visual/performance acceptance is claimed.
+
 ## 2026-09-29 - F1-06 landmark scoring strengthened
 
 - F1-06 landmark categories now use a manifest-driven **landmark score bonus = 6** instead of a fixed small inline boost.
