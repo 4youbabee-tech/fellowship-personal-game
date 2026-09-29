@@ -145,6 +145,43 @@
         "Balrog escape"
       ],
       "runtime_status": "SOURCE_ARCHITECTURE_ONLY"
+    },
+    {
+      "id": "LOTHLORIEN",
+      "canonical_location": "Lothlórien",
+      "runtime_chapter": "P1C07",
+      "visual_grammar": [
+        "golden forest sanctuary",
+        "vertical flets",
+        "organic bridges",
+        "luminous forest"
+      ],
+      "identity_anchor": "Vertical flet and ancient tree-canopy sanctuary vista",
+      "visibility_goal": "The sanctuary reads as elevated, luminous and protected before fine foliage density or prop detail.",
+      "state_variants": [
+        "night arrival",
+        "departure"
+      ],
+      "runtime_status": "SOURCE_ARCHITECTURE_ONLY"
+    },
+    {
+      "id": "ANDUIN_F107_APPROACH",
+      "canonical_location": "Anduin / Amon Hen approach",
+      "runtime_chapter": "P1C07",
+      "visual_grammar": [
+        "river corridor",
+        "water",
+        "cliffs",
+        "stone monuments",
+        "forest"
+      ],
+      "identity_anchor": "River-axis framed by cliffs and ancient stone monuments toward the Amon Hen approach",
+      "visibility_goal": "Boat-route direction and destination approach remain readable from the river without executing the later F1-08 Fellowship-break set piece.",
+      "state_variants": [
+        "river journey",
+        "Amon Hen approach"
+      ],
+      "runtime_status": "SOURCE_ARCHITECTURE_ONLY"
     }
   ],
   "acceptance_boundary": "Source/visual identity planning only. No landmark is VISUALLY-ACCEPTED until chapter-specific observation evidence exists."
