@@ -1,3 +1,15 @@
+## 2026-09-29 - Adaptive Maximum Safe Production Mode V1
+
+- Owner direction is now permanent project policy through `DEC-078` and `REQ-PROD-011`: use the already-built CI/warehouse/streaming/governance infrastructure to maximize real production throughput instead of advancing in tiny isolated increments.
+- `Data/MaximumSafeProductionModeV1.json` is the machine-readable execution contract. It defines parallel preparation lanes, the single runtime-changing lane, hard stops, quarantine/continue behavior, runtime residency policy and the ordered next production waves.
+- `Data/WholeGameProductionExecutionQueueV1.json` now runs in `ACTIVE_MAXIMUM_SAFE_PREPARATION_RUNTIME_SERIALIZED` mode. Persistent warehouse mutation remains single-writer; source/index/material/audio/character/world-prep lanes may proceed independently when dependencies permit.
+- `Data/MasterExecutionRoadmap.json` is reconciled away from stale W00/PR#67 control state. Current mode is P1C01 runtime closure plus parallel whole-game preparation, with F1-08 as the next maximum-safe mega source wave after F1-07.
+- Live Warehouse #286 evidence proved the receipt-supersession repair worked: `WAREHOUSE_INVENTORY_AUDIT_PASS payloadFiles=18697 bytes=6688457009 receipts=14 receiptRecords=667 activeRecords=239 superseded=428 duplicateGroups=0`.
+- Warehouse #286 later failed in `run_warehouse_saturation_train.ps1` because an empty verified set under StrictMode exposed no `.Sum` property. This is a reporting/tooling defect, not an inventory-capacity failure.
+- Saturation reporting now uses an empty-safe Int64 sum helper; `Scripts/test_warehouse_saturation_empty_sum.ps1` is wired into Pre-Unreal so an empty source lane must report `verified_bytes=0` instead of stopping the train.
+- Existing safety boundaries remain unchanged: FBX-only animated production assets, PNG/TGA production textures, no BMP, 6 GiB warehouse reserve, soft/async heavy runtime loading, pooled crowds, ISM/HISM + LOD/culling, predecessor Gate 6/7 and target-device profiling.
+- Evidence boundary: **SOURCE-IMPLEMENTED / exact-head validation pending** for this production-mode wave. Warehouse inventory clean is evidenced at the #286 audit step; the full Warehouse #286 workflow was not successful because of the later saturation-report defect. No PIE/device/visual/pacing/performance acceptance is claimed.
+
 ## 2026-09-29 - F1-07 Lórien & Anduin Landmark Mega Source V1
 
 - Canonical F1-07 source architecture is now registered for legacy runtime consumer `P1C07`.
