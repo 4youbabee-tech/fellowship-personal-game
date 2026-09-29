@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "plan_id": "MAXIMUM_SAFE_PRODUCTION_MODE_V1",
+  "status": "ACTIVE",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "DEC-078",
+    "REQ-PROD-011"
+  ],
+  "purpose": "Operate Shire Journey at the highest evidence-safe production throughput without weakening canon, provenance, runtime serialization, target-device performance or Gate 6/7.",
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "platform": "Windows",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "quality": "Low-Medium",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_class": 2
+  },
+  "live_baseline": {
+    "develop_head": "df90f41bbb0dae15c7774afcbb3db21a3acd0cf2",
+    "warehouse_audit_run": "#286",
+    "warehouse_inventory": "PASS",
+    "payload_files": 18697,
+    "payload_bytes": 6688457009,
+    "active_receipt_records": 239,
+    "superseded_receipt_records": 428,
+    "warehouse_reserve_bytes": 6442450944,
+    "note": "Warehouse #286 later failed in saturation reporting on an empty Measure-Object Sum StrictMode defect; inventory itself was clean."
+  },
+  "throughput_model": {
+    "mode": "ADAPTIVE_MAXIMUM_SAFE",
+    "rule": "Keep every dependency-independent preparation lane busy. Increase batch breadth until a real guard trips; do not slow production because of arbitrary small-batch habits.",
+    "runtime_lane_count": 1,
+    "persistent_warehouse_writer_count": 1,
+    "index_only_parallelism": "MULTI_LANE_WHEN_RUNNER_AND_CI_CAPACITY_ALLOW",
+    "long_ci_behavior": "DEC-075 bounded polling; continue independent production instead of waiting interactively."
+  },
+  "parallel_lanes": [
+    {
+      "id": "SOURCE_CANON_INDEX",
+      "scope": "Supplied PDFs, mission/world/character/culture source indexing and chapter source architecture",
+      "mutation": "REPO_ONLY",
+      "parallel": true
+    },
+    {
+      "id": "WAREHOUSE_ACQUISITION",
+      "scope": "Licensed/public provider staging into persistent warehouse",
+      "mutation": "PERSISTENT_WAREHOUSE",
+      "parallel": false,
+      "reason": "Single inventory/provenance truth"
+    },
+    {
+      "id": "SOURCE_CANDIDATE_INDEXES",
+      "scope": "Mega source candidate scoring/report generation from clean warehouse",
+      "mutation": "INDEX_ONLY",
+      "parallel": true
+    },
+    {
+      "id": "MATERIAL_PREP",
+      "scope": "PNG/TGA 1K/2K source preparation, channel packing where appropriate, deterministic receipts",
+      "mutation": "GENERATED_SOURCE",
+      "parallel": true
+    },
+    {
+      "id": "CHARACTER_ANIMATION_PREP",
+      "scope": "FBX skeletal/animation intake, retarget/deformation QC preparation",
+      "mutation": "GENERATED_SOURCE",
+      "parallel": true
+    },
+    {
+      "id": "AUDIO_PREP",
+      "scope": "WAV ambience/foley/voice-ready banks and metadata",
+      "mutation": "GENERATED_SOURCE",
+      "parallel": true
+    },
+    {
+      "id": "REGION_AUTHORING_PREP",
+      "scope": "Landmark, traversal, collision/nav, encounter, dialogue and living-world prep for later regions",
+      "mutation": "REPO_ONLY",
+      "parallel": true
+    },
+    {
+      "id": "RUNTIME_INTEGRATION",
+      "scope": "Actual UE runtime-changing chapter/system integration",
+      "mutation": "RUNTIME",
+      "parallel": false,
+      "reason": "Exactly one runtime-changing lane; predecessor Gate 6/7 fence"
+    }
+  ],
+  "hard_stops": [
+    "Warehouse inventory integrity failure after active-receipt supersession resolution.",
+    "Dangerous payload, invalid provenance/license evidence or blocked final format.",
+    "Free warehouse storage below 6 GiB reserve.",
+    "Synchronous heavy runtime loading or hard-reference residency regression.",
+    "Crowd Spawn/Destroy churn replacing required pooling.",
+    "Runtime chapter promotion before predecessor Gate 6/7 acceptance.",
+    "Exact-head compile/runtime validation failure for runtime-changing work.",
+    "Measured target-device RAM/VRAM/frame-time budget violation."
+  ],
+  "non_blocking_quarantine": [
+    "One provider unavailable while other providers/lanes remain usable.",
+    "One source candidate corrupt or oversized when the containing wave can continue.",
+    "One optional category has zero candidates while required landmark/source minimums still pass.",
+    "Long CI run queued/in_progress while unrelated safe work exists."
+  ],
+  "runtime_residency_policy": {
+    "source_library_limit": "NOT_THE_RUNTIME_LIMIT",
+    "rule": "Large on-disk libraries are allowed. Runtime loads only the active region/zone working set plus bounded transition overlap.",
+    "heavy_references": "TSoftObjectPtr/TSoftClassPtr/FSoftObjectPath",
+    "heavy_loading": "FStreamableManager asynchronous",
+    "chapter_design": "Prefer multi-bank/zone residency for large future chapters rather than one giant resident bank.",
+    "release_rule": "Release obsolete handles only after destination world-state commit is stable.",
+    "measurement_gate": [
+      "resident RAM",
+      "texture/VRAM footprint",
+      "frame time",
+      "draw calls",
+      "streaming hitch",
+      "audio concurrency",
+      "active pooled actors"
+    ]
+  },
+  "execution_order": [
+    "Repair Warehouse #286 saturation-report StrictMode defect and add regression coverage.",
+    "Rerun selective Warehouse audit/saturation/prep; inventory must remain clean.",
+    "Resume P1C01 Chapter Closure Pack from the clean inventory gate.",
+    "Complete/merge F1-07 source architecture after exact-head validation.",
+    "Open F1-08 Amon Hen / Breaking of the Fellowship maximum-safe landmark mega source pack.",
+    "Keep Part II/III world-source preparation moving through the existing 28-region whole-game queue where canon authority is sufficient.",
+    "Convert later chapters to multi-bank streamed chapter plans before high-density runtime promotion.",
+    "Use P1C01 H target-device profiling to replace inferred residency ceilings with measured budgets."
+  ],
+  "success_definition": "Production lanes remain saturated without violating any hard stop, while runtime integration stays serialized and evidence-backed.",
+  "evidence_boundary": "Execution architecture and current live warehouse evidence only. No PIE/device/visual/pacing/performance acceptance is implied."
+}

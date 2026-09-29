@@ -1,3 +1,15 @@
+## 2026-09-29 - Maximum Safe Production Mode V1
+
+- Owner direction: production speed becomes a first-class project objective. The project should run at the **maximum safe throughput** allowed by current evidence instead of advancing through tiny isolated preparation increments.
+- This is an execution-mode change, not permission to weaken canon, provenance, runtime, save, Gate 6/7, device, visual or performance acceptance.
+- Maximum-safe means adaptive saturation of all independent preparation lanes until a real guard trips: persistent warehouse integrity, storage reserve, format/provenance policy, exact-head CI, runtime dependency safety, measured residency/memory limits or human Gate 6/7 requirements.
+- Runtime-changing integration remains exactly one lane at a time. Source/PDF indexing, warehouse acquisition, candidate indexing, material/audio/character preparation, later-region authoring and documentation may advance in large coherent waves in parallel with the active runtime lane.
+- Prefer **large coherent production waves** over one-small-PR-per-idea churn. Shared authority files must be updated in the same wave so branch-conflict overhead does not become the production bottleneck.
+- Persistent warehouse writers remain serialized because they share one runner-local warehouse and inventory truth. Index-only/source-prep work that does not mutate the warehouse may proceed independently.
+- Latest live warehouse evidence on Warehouse #286: inventory audit passed with payloadFiles=18697, bytes=6688457009, receipts=14, receiptRecords=667, activeRecords=239, superseded=428, duplicateGroups=0. The workflow later failed in the saturation report on an empty-sum StrictMode tooling defect, not on inventory corruption.
+- Existing low-spec rules remain mandatory: animated production assets FBX-only, PNG/TGA production textures, no BMP, soft references + async loading, pooled crowds, ISM/HISM + LOD/culling.
+- Evidence boundary: **PRODUCTION POLICY REGISTRATION + TOOLING REPAIR WAVE**. This does not constitute PIE/device/visual/performance acceptance.
+
 ## 2026-09-29 - F1-07 Lórien & Anduin Mega Landmark Source Pack V1
 
 - Canonical mission authority: **F1-07 Lórien & Anduin** from the supplied Story/Timeline and Mission/Chapter source PDFs.

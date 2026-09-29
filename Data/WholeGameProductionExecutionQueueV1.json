@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "queue_id": "WHOLE_GAME_PRODUCTION_EXECUTION_QUEUE_V1",
-  "status": "ACTIVE_PREPARATION_RUNTIME_SERIALIZED",
+  "status": "ACTIVE_MAXIMUM_SAFE_PREPARATION_RUNTIME_SERIALIZED",
   "authority": [
     "Data/ProjectGovernor.json",
     "Data/BigProductionBuildLaunchV1.json",
@@ -9,7 +9,7 @@
     "DEC-038",
     "DEC-039"
   ],
-  "purpose": "Drive the large whole-game production campaign now without opening a second runtime-changing lane.",
+  "purpose": "Drive the whole-game production campaign at adaptive maximum-safe throughput while keeping exactly one runtime-changing integration lane.",
   "target_profile": "Windows / DX11 / 720p Low-Medium / 30 FPS floor / i7 Gen6 / 8GB RAM / ~2GB VRAM",
   "active_waves": [
     "BPB-W1 Whole-World Surface Library",
@@ -23,31 +23,39 @@
     "BPB-W9 Arabic Presentation and UI"
   ],
   "hard_rules": [
-    "Exactly one runtime-changing PR at a time.",
+    "Adaptive maximum-safe production is the default operating mode: independent preparation lanes stay busy until a real guard trips.",
+    "Exactly one runtime-changing PR/lane at a time.",
     "P1C01 remains the active runtime benchmark until Gate 6/7.",
-    "Later regions may advance source, asset, authoring, design and warehouse preparation now but not runtime promotion.",
+    "Later regions advance source, asset, authoring, design and warehouse preparation now but not runtime promotion.",
+    "Persistent warehouse mutation is serialized against one inventory/provenance truth; index-only/read-only preparation may proceed independently.",
     "Animated production assets use FBX only.",
-    "Production textures use PNG/TGA; 1K/2K is default and 4K is hero-only after measurement.",
-    "Heavy runtime assets use TSoftObjectPtr/TSoftClassPtr and FStreamableManager asynchronous loading.",
+    "Production textures use PNG/TGA; 1K/2K is default and 4K is hero-only after measured approval.",
+    "Heavy runtime assets use TSoftObjectPtr/TSoftClassPtr/FSoftObjectPath and FStreamableManager asynchronous loading.",
     "Crowds use object pooling and repeated world detail uses ISM/HISM plus LOD/culling.",
-    "No preparation, staging or import state is treated as PIE/device/visual/performance acceptance."
+    "At least 6 GiB warehouse free-space reserve is preserved until superseded by a measured storage policy.",
+    "No preparation, staging or import state is treated as PIE/device/visual/performance acceptance.",
+    "Long queued/in-progress CI does not idle unrelated safe production; DEC-075 bounded polling applies."
   ],
   "runtime_lane": {
-    "current": "PR #80 C2 lightweight foliage wind",
-    "next": "C3 stable foliage material identity after C2 evidence gate",
-    "then": [
-      "C4 LOD/cull/overdraw",
-      "D lighting/sky/fog/water",
-      "E character presentation",
-      "F living Shire NPC/fauna/environmental motion",
-      "G quest/cinematic/audio polish",
-      "H target-device profiling",
-      "Gate 6/7"
-    ]
+    "current": "P1C01 closure/integration remains the sole active runtime chapter lane",
+    "next": "Complete P1C01 closure, target-device H profiling, then Gate 6/7",
+    "successor_rule": "Only the immediate runtime successor opens after predecessor Gate 6/7 ACCEPTED",
+    "future_design": "Large chapters should use bounded multi-bank/zone streaming rather than one giant resident bank."
   },
   "preparation_lane": {
-    "source_branch": "planning/whole-game-production-prep-v2",
-    "merge_policy": "Accumulate preparation artifacts here without opening another runtime-changing lane; integrate when CI is healthy."
+    "source_branch_policy": "Use large coherent temporary branches/PRs and merge completed validated preparation promptly; do not accumulate stale planning branches.",
+    "merge_policy": "Source/warehouse/tooling preparation may integrate independently when its own exact-head/static contracts pass and it does not open a second runtime-changing lane.",
+    "throughput_mode": "ADAPTIVE_MAXIMUM_SAFE",
+    "active_parallel_tracks": [
+      "canon/source indexing",
+      "mega source candidate indexes",
+      "materials",
+      "characters/animation",
+      "audio/foley",
+      "landmarks/world authoring",
+      "later-region preparation"
+    ],
+    "persistent_warehouse_writer": "SERIALIZED_SINGLE_WRITER"
   },
   "regions": [
     {
@@ -555,5 +563,6 @@
       }
     }
   ],
-  "evidence_boundary": "Preparation execution only. No new runtime acceptance claim."
+  "evidence_boundary": "Preparation execution only. No new runtime acceptance claim.",
+  "maximum_safe_production_plan": "Data/MaximumSafeProductionModeV1.json"
 }
