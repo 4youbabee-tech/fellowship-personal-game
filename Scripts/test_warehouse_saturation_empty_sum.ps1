@@ -36,7 +36,7 @@ try {
         throw "Empty saturation lane must not fail. Exit=$exitCode Output=$($output -join ' ')"
     }
 
-    $reportPath = Join-Path $outputRoot "warehouse_saturation_latest.json"
+    $reportPath = Join-Path $outputRoot "warehouse_saturation_train_latest.json"
     if (-not (Test-Path -LiteralPath $reportPath -PathType Leaf)) {
         throw "Saturation report missing: $reportPath"
     }
