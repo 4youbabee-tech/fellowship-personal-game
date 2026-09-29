@@ -6,6 +6,10 @@ on:
       - develop
     paths-ignore:
       - '.github/workflows/**'
+      - 'Data/F108AmonHenMaximumSafeChapterPlanV1.json'
+      - 'Data/F108AmonHenMaximumSafeSourceSuperpackV1.json'
+      - 'Scripts/run_f108_amon_hen_maximum_safe_source.ps1'
+      - '.github/workflows/f108-amon-hen-maximum-safe-source.yml'
       - 'Data/F107LorienAnduinLandmarkMegaSourceSuperpackV1.json'
       - 'Scripts/run_f107_lorien_anduin_landmark_mega_source.ps1'
       - '.github/workflows/f107-lorien-anduin-landmark-mega-source.yml'
@@ -111,6 +115,10 @@ on:
       - develop
     paths-ignore:
       - '.github/workflows/**'
+      - 'Data/F108AmonHenMaximumSafeChapterPlanV1.json'
+      - 'Data/F108AmonHenMaximumSafeSourceSuperpackV1.json'
+      - 'Scripts/run_f108_amon_hen_maximum_safe_source.ps1'
+      - '.github/workflows/f108-amon-hen-maximum-safe-source.yml'
       - 'Data/F107LorienAnduinLandmarkMegaSourceSuperpackV1.json'
       - 'Scripts/run_f107_lorien_anduin_landmark_mega_source.ps1'
       - '.github/workflows/f107-lorien-anduin-landmark-mega-source.yml'
