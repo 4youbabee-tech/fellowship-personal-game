@@ -4642,7 +4642,8 @@
         "Animated candidates remain FBX-only; production textures remain PNG/TGA; BMP is blocked.",
         "The source run must produce enough populated landmark categories to satisfy the configured landmark-source minimum before it reports source success.",
         "Warehouse inventory audit remains a hard gate before heavy indexing while the current mismatch is unresolved.",
-        "P1C05/P1C06 runtime integration remains blocked until predecessor Gate 6/7 acceptance."
+        "P1C05/P1C06 runtime integration remains blocked until predecessor Gate 6/7 acceptance.",
+        "Landmark categories receive a configurable source-index priority bonus of at least 6 so dominant vistas outrank generic dressing when keyword evidence is otherwise comparable."
       ],
       "rationale": "F1-06 spans the strongest environment contrast in early Part I: exposed low-visibility mountain traversal followed by monumental underground halls. A landmark-centered pack makes world identity and navigation visible while keeping the low-spec performance contract intact.",
       "evidence": [
