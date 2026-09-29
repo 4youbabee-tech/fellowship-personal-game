@@ -2507,20 +2507,6 @@ for symbol in [
     if symbol not in (living_h + living_cpp):
         fail(f"PG-049 living-world director invariant missing: {symbol}")
 
-# PG-207: distance retirement is actor-local; one roaming event member must not
-# retire a nearby interaction or other event participant.
-if "LivingWorldEventMemberCull" not in living_cpp or "Event.Actors.RemoveAtSwap" not in living_cpp:
-    fail("PG-207 living-world member-local distance culling contract missing")
-if re.search(r'FVector::DistSquared2D\([^\n]+\)[\s\S]{0,180}?bExpired\s*=\s*true', living_cpp):
-    fail("PG-207 event-wide distance expiry regression: distance culling must remain member-local")
-
-# PG-207: distance retirement is actor-local; one roaming event member must not
-# retire a nearby interaction or other event participant.
-if "LivingWorldEventMemberCull" not in living_cpp or "Event.Actors.RemoveAtSwap" not in living_cpp:
-    fail("PG-207 living-world member-local distance culling contract missing")
-if re.search(r'FVector::DistSquared2D\([^\n]+\)[\s\S]{0,180}?bExpired\s*=\s*true', living_cpp):
-    fail("PG-207 event-wide distance expiry regression: distance culling must remain member-local")
-
 game_mode_cpp = read(resolve_source("ShireGameMode.cpp"))
 if "SpawnActor<ALivingWorldDirector>" not in game_mode_cpp:
     fail("PG-049 ShireGameMode no longer bootstraps LivingWorldDirector")
@@ -5751,28 +5737,6 @@ for pg207_path, pg207_symbol in [
         fail(f"PG-207 D-root authority marker missing: {pg207_path.relative_to(ROOT)}")
 
 
-
-# PG-207: living-world event distance culling must remain member-local.
-# A roaming event member may not retire a nearby interaction or other member.
-pg207_living = read(resolve_source("LivingWorldDirector.cpp"))
-pg207_start = pg207_living.find("void ALivingWorldDirector::CleanupExpiredEvents()")
-pg207_end = pg207_living.find("FName ALivingWorldDirector::ChooseEventType()", pg207_start)
-if pg207_start < 0 or pg207_end < 0:
-    fail("PG-207 CleanupExpiredEvents source boundary missing")
-else:
-    pg207_cleanup = pg207_living[pg207_start:pg207_end]
-    for pg207_symbol in [
-        "distance-policy=member-local",
-        "Event.Actors.RemoveAtSwap(ActorIndex, 1, false)",
-        "if (Event.ExpiresAt <= Now)",
-        "if (Event.Actors.Num() == 0)",
-    ]:
-        if pg207_symbol not in pg207_cleanup:
-            fail(f"PG-207 member-local cleanup invariant missing: {pg207_symbol}")
-    if "bExpired = true;" in pg207_cleanup:
-        fail("PG-207 event-wide distance expiry regression detected")
-
-
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
@@ -6581,25 +6545,26 @@ for pg83_marker in [
         fail(f"PG-083 environmental puzzle placement missing: {pg83_marker}")
 
 
-# PG-207: micro-event distance retirement must remain member-local.
+
+# PG-208: micro-event distance retirement must remain member-local.
 # A roaming member leaving EventCullDistance must never retire a nearby interaction or peer.
-pg207_living = read(resolve_source("LivingWorldDirector.cpp"))
-pg207_start = pg207_living.find("void ALivingWorldDirector::CleanupExpiredEvents()")
-pg207_end = pg207_living.find("FName ALivingWorldDirector::ChooseEventType()", pg207_start)
-if pg207_start < 0 or pg207_end < 0:
-    fail("PG-207 CleanupExpiredEvents contract missing")
+pg208_living = read(resolve_source("LivingWorldDirector.cpp"))
+pg208_start = pg208_living.find("void ALivingWorldDirector::CleanupExpiredEvents()")
+pg208_end = pg208_living.find("FName ALivingWorldDirector::ChooseEventType()", pg208_start)
+if pg208_start < 0 or pg208_end < 0:
+    fail("PG-208 CleanupExpiredEvents contract missing")
 else:
-    pg207_cleanup = pg207_living[pg207_start:pg207_end]
-    for pg207_symbol in [
-        "distance-policy=member-local",
+    pg208_cleanup = pg208_living[pg208_start:pg208_end]
+    for pg208_symbol in [
+        "LivingWorldEventMemberCull",
         "Event.Actors.RemoveAtSwap",
         "if (Event.ExpiresAt <= Now)",
         "if (Event.Actors.Num() == 0)",
     ]:
-        if pg207_symbol not in pg207_cleanup:
-            fail(f"PG-207 member-local event cleanup invariant missing: {pg207_symbol}")
-    if "bExpired = true" in pg207_cleanup:
-        fail("PG-207 event-wide distance expiry regression detected")
+        if pg208_symbol not in pg208_cleanup:
+            fail(f"PG-208 member-local event cleanup invariant missing: {pg208_symbol}")
+    if "bExpired = true" in pg208_cleanup:
+        fail("PG-208 event-wide distance expiry regression detected")
 
 
 # PG-084: living-world player responses must remain bounded, ephemeral and story-neutral.
@@ -9376,30 +9341,6 @@ for symbol in [
 ]:
     if symbol not in pg195_preflight:
         fail(f"PG-195 production-import process diagnostics missing: {symbol}")
-
-
-# PG-208: living-world distance retirement must remain member-local.
-# One roaming event actor may not retire a nearby interaction or participant.
-pg208_living_cpp = read(resolve_source("LivingWorldDirector.cpp"))
-pg208_start = pg208_living_cpp.find("void ALivingWorldDirector::CleanupExpiredEvents()")
-pg208_end = pg208_living_cpp.find("FName ALivingWorldDirector::ChooseEventType()", pg208_start)
-if pg208_start < 0 or pg208_end < 0:
-    fail("PG-208 CleanupExpiredEvents function boundary missing")
-else:
-    pg208_cleanup = pg208_living_cpp[pg208_start:pg208_end]
-    for pg208_symbol in [
-        "distance-policy=member-local",
-        "Event.Actors.RemoveAtSwap",
-        "if (Event.ExpiresAt <= Now)",
-        "if (Event.Actors.Num() == 0)",
-    ]:
-        if pg208_symbol not in pg208_cleanup:
-            fail(f"PG-208 member-local event retirement invariant missing: {pg208_symbol}")
-    if re.search(
-        r"FVector::DistSquared2D\([^\n]+\)[\s\S]{0,260}?bExpired\s*=\s*true",
-        pg208_cleanup,
-    ):
-        fail("PG-208 distance culling may not expire an entire micro-event from one far member")
 
 
 if errors:
