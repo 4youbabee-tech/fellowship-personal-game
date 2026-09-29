@@ -1,3 +1,9 @@
+## 2026-09-29 - PG-199 landmark/F1-06 guard
+
+- Part I landmark/F1-06 static regression guard: **SOURCE-IMPLEMENTED**.
+- Exact-head Pre-Unreal validation after PG-199: **PENDING**.
+- Visual/runtime acceptance: **NOT CLAIMED**.
+
 ## 2026-09-29 - Part I landmark identity / F1-06 Caradhras-Moria source mega pack
 
 - Part I landmark identity plan: **SOURCE-IMPLEMENTED**.
