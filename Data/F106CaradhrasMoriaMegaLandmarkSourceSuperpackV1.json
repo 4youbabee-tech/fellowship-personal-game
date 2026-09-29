@@ -1,0 +1,564 @@
+{
+  "schema_version": 1,
+  "pack_id": "F106_CARADHRAS_MORIA_MEGA_LANDMARK_SOURCE_SUPERPACK_V1",
+  "status": "SOURCE_ARCHITECTURE_READY_LANDMARK_FIRST_INVENTORY_GATED_RUNTIME_GATED",
+  "canonical_mission_id": "F1-06",
+  "canonical_title": "Caradhras & Moria",
+  "runtime_consumers": [
+    "P1C05",
+    "P1C06"
+  ],
+  "authority": [
+    "01_STORY_AND_TIMELINE_BIBLE",
+    "02_CHARACTERS_AND_RELATIONSHIPS_BIBLE",
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+    "05_BATTLES_WEAPONS_ARMIES_AND_CREATURES",
+    "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "Data/ProjectGovernor.json",
+    "Docs/WORLD_DETAIL_LEDGER.md"
+  ],
+  "story_contract": {
+    "critical_path": [
+      "Mountain route fails.",
+      "Moria reveals Balin's fate.",
+      "Balrog attacks."
+    ],
+    "safe_optional_window": [
+      "survival",
+      "puzzle door",
+      "routefinding",
+      "tomb battle",
+      "escape"
+    ],
+    "locked_postcondition": "Gandalf falls; Fellowship escapes."
+  },
+  "landmark_identity_contract": {
+    "required": true,
+    "rules": [
+      "Each location must expose at least one dominant silhouette or vista used for navigation and cinematic continuity.",
+      "Landmark candidates receive higher source-index score than generic dressing when keyword evidence is present.",
+      "Landmarks remain navigation/cinematic anchors; gameplay identity never depends on source filenames."
+    ],
+    "caradhras": {
+      "location_type": "High mountain pass",
+      "visual_grammar": [
+        "snow",
+        "rock",
+        "wind",
+        "low visibility"
+      ],
+      "gameplay_roles": [
+        "survival traversal",
+        "group assists"
+      ],
+      "state_variants": [
+        "storm escalation"
+      ],
+      "identity_lanes": [
+        "dominant mountain-pass silhouette",
+        "storm-route spine",
+        "snow choke points",
+        "exposed rock walls"
+      ]
+    },
+    "moria": {
+      "location_type": "Dwarven underground kingdom",
+      "visual_grammar": [
+        "monumental geometry",
+        "darkness",
+        "mines",
+        "halls"
+      ],
+      "gameplay_roles": [
+        "puzzle",
+        "navigation",
+        "combat escalation",
+        "horror"
+      ],
+      "state_variants": [
+        "entrance",
+        "tomb alert",
+        "Balrog escape"
+      ],
+      "identity_lanes": [
+        "Moria gate / Doors of Moria approach",
+        "monumental halls",
+        "mine corridors",
+        "tomb-alert space",
+        "escape-scale bridge/chasm geometry"
+      ]
+    }
+  },
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_class": 2
+  },
+  "safety_gate": {
+    "requires_clean_warehouse_inventory": true,
+    "hard_stop_on_hash_mismatch": true,
+    "hard_stop_on_license_hash_mismatch": true,
+    "hard_stop_on_dangerous_file": true,
+    "hard_stop_on_bad_receipt": true
+  },
+  "source_policy": {
+    "reuse_existing_warehouse_first": true,
+    "duplicate_payloads_per_runtime_chapter": false,
+    "index_only": true,
+    "animated_candidate_extension": ".fbx",
+    "texture_extensions": [
+      ".png",
+      ".tga"
+    ],
+    "forbidden_texture_extensions": [
+      ".bmp"
+    ],
+    "static_source_extensions": [
+      ".fbx",
+      ".obj"
+    ],
+    "audio_extensions": [
+      ".wav"
+    ],
+    "metadata_extensions": [
+      ".json",
+      ".mtl"
+    ],
+    "max_total_candidates": 16000,
+    "max_candidates_per_category": 1800,
+    "landmark_score_bonus": 6,
+    "production_score_bonus": 2,
+    "imported_score_bonus": 1,
+    "fbx_score_bonus": 2,
+    "texture_score_bonus": 1,
+    "minimum_free_disk_reserve_bytes": 6442450944
+  },
+  "character_encounter_guardrails": [
+    "Fellowship availability remains chapter-driven.",
+    "Gandalf magic remains rare and purposeful.",
+    "Balrog is a catastrophic pursuit obstacle, not a loot boss; canonical outcome remains fixed.",
+    "Doors of Moria interaction is observation/puzzle progression and may not alter canonical entrances/exits/deaths/discoveries."
+  ],
+  "categories": [
+    {
+      "id": "CARADHRAS_LANDMARK_SILHOUETTES",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "caradhras",
+        "mountain",
+        "pass",
+        "peak",
+        "ridge",
+        "silhouette",
+        "vista",
+        "cliff",
+        "wall",
+        "summit"
+      ]
+    },
+    {
+      "id": "CARADHRAS_STORM_ROUTE_SPINE",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "snow",
+        "storm",
+        "blizzard",
+        "wind",
+        "pass",
+        "route",
+        "path",
+        "ridge",
+        "low visibility",
+        "trail"
+      ]
+    },
+    {
+      "id": "CARADHRAS_SNOW_ROCK_SURFACES",
+      "kind": "surface",
+      "landmark": false,
+      "keywords": [
+        "snow",
+        "ice",
+        "rock",
+        "cliff",
+        "stone",
+        "frozen",
+        "mountain",
+        "wet",
+        "cold"
+      ]
+    },
+    {
+      "id": "CARADHRAS_TRAVERSAL_OBSTACLES",
+      "kind": "static",
+      "landmark": false,
+      "keywords": [
+        "snowbank",
+        "rock",
+        "boulder",
+        "ledge",
+        "slope",
+        "path",
+        "cliff",
+        "debris",
+        "fallen",
+        "obstacle"
+      ]
+    },
+    {
+      "id": "CARADHRAS_SURVIVAL_PROPS",
+      "kind": "mixed",
+      "landmark": false,
+      "keywords": [
+        "rope",
+        "pack",
+        "blanket",
+        "cloak",
+        "torch",
+        "fire",
+        "camp",
+        "food",
+        "wood",
+        "supply"
+      ]
+    },
+    {
+      "id": "CARADHRAS_WEATHER_AUDIO",
+      "kind": "audio",
+      "landmark": false,
+      "keywords": [
+        "wind",
+        "blizzard",
+        "storm",
+        "snow",
+        "ice",
+        "mountain",
+        "gust",
+        "ambient",
+        "footstep"
+      ]
+    },
+    {
+      "id": "CARADHRAS_FELLOWSHIP_ANIMATION",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "walk",
+        "climb",
+        "push",
+        "help",
+        "carry",
+        "fall",
+        "cold",
+        "injured",
+        "stumble",
+        "idle",
+        "run"
+      ]
+    },
+    {
+      "id": "CARADHRAS_SYSTEMIC_REACTION",
+      "kind": "mixed",
+      "landmark": false,
+      "keywords": [
+        "snow",
+        "branch",
+        "rock",
+        "wind",
+        "cloth",
+        "footstep",
+        "debris",
+        "impact",
+        "slide"
+      ]
+    },
+    {
+      "id": "MORIA_GATE_LANDMARK",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "moria",
+        "gate",
+        "door",
+        "entrance",
+        "stone",
+        "arch",
+        "wall",
+        "lake",
+        "cliff",
+        "monumental"
+      ]
+    },
+    {
+      "id": "DOORS_OF_MORIA_PUZZLE_SUPPORT",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "door",
+        "gate",
+        "rune",
+        "inscription",
+        "symbol",
+        "stone",
+        "arch",
+        "puzzle",
+        "pedestal",
+        "wall"
+      ]
+    },
+    {
+      "id": "MORIA_MONUMENTAL_HALLS",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "moria",
+        "hall",
+        "pillar",
+        "column",
+        "vault",
+        "monumental",
+        "dwarf",
+        "dwarven",
+        "stone",
+        "chamber",
+        "arch"
+      ]
+    },
+    {
+      "id": "MORIA_MINES_CORRIDORS",
+      "kind": "static",
+      "landmark": false,
+      "keywords": [
+        "mine",
+        "tunnel",
+        "corridor",
+        "shaft",
+        "rail",
+        "cart",
+        "chain",
+        "rock",
+        "stone",
+        "cave"
+      ]
+    },
+    {
+      "id": "MORIA_TOMB_ALERT_SPACE",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "tomb",
+        "crypt",
+        "grave",
+        "coffin",
+        "sarcophagus",
+        "chamber",
+        "stone",
+        "book",
+        "well",
+        "pillar"
+      ]
+    },
+    {
+      "id": "MORIA_ESCAPE_CHASM_GEOMETRY",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "bridge",
+        "chasm",
+        "abyss",
+        "cliff",
+        "span",
+        "arch",
+        "pillar",
+        "stair",
+        "ledge",
+        "monumental"
+      ]
+    },
+    {
+      "id": "MORIA_DARKNESS_LIGHTING",
+      "kind": "mixed",
+      "landmark": false,
+      "keywords": [
+        "dark",
+        "torch",
+        "fire",
+        "shadow",
+        "light",
+        "lantern",
+        "glow",
+        "smoke",
+        "ember"
+      ]
+    },
+    {
+      "id": "MORIA_STONE_METAL_SURFACES",
+      "kind": "surface",
+      "landmark": false,
+      "keywords": [
+        "stone",
+        "granite",
+        "basalt",
+        "metal",
+        "iron",
+        "rust",
+        "chain",
+        "rock",
+        "dust",
+        "soot"
+      ]
+    },
+    {
+      "id": "MORIA_DWARVEN_PROPS",
+      "kind": "static",
+      "landmark": false,
+      "keywords": [
+        "dwarf",
+        "dwarven",
+        "forge",
+        "anvil",
+        "hammer",
+        "axe",
+        "shield",
+        "table",
+        "bench",
+        "barrel",
+        "crate",
+        "chain"
+      ]
+    },
+    {
+      "id": "MORIA_COMBAT_ENCOUNTER_SUPPORT",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "orc",
+        "goblin",
+        "troll",
+        "attack",
+        "combat",
+        "sword",
+        "shield",
+        "bow",
+        "run",
+        "hit",
+        "fall"
+      ]
+    },
+    {
+      "id": "BALROG_PURSUIT_SUPPORT",
+      "kind": "animated",
+      "landmark": true,
+      "keywords": [
+        "balrog",
+        "demon",
+        "fire",
+        "whip",
+        "flame",
+        "shadow",
+        "pursuit",
+        "run",
+        "escape",
+        "monster"
+      ]
+    },
+    {
+      "id": "FELLOWSHIP_CHARACTER_ANIMATION_SUPPORT",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "frodo",
+        "sam",
+        "merry",
+        "pippin",
+        "gandalf",
+        "aragorn",
+        "legolas",
+        "gimli",
+        "boromir",
+        "hobbit",
+        "human",
+        "elf",
+        "dwarf",
+        "wizard"
+      ]
+    },
+    {
+      "id": "MORIA_HORROR_AUDIO",
+      "kind": "audio",
+      "landmark": false,
+      "keywords": [
+        "cave",
+        "mine",
+        "echo",
+        "chain",
+        "stone",
+        "drip",
+        "rumble",
+        "orc",
+        "growl",
+        "fire",
+        "ambient",
+        "dark"
+      ]
+    },
+    {
+      "id": "F106_CINEMATIC_LANDMARK_DRESSING",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "vista",
+        "silhouette",
+        "wide",
+        "monumental",
+        "bridge",
+        "hall",
+        "mountain",
+        "storm",
+        "door",
+        "fire",
+        "shadow"
+      ]
+    },
+    {
+      "id": "F106_FAUNA_CREATURE_AMBIENCE",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "bat",
+        "crow",
+        "bird",
+        "insect",
+        "creature",
+        "ambient",
+        "cave"
+      ]
+    },
+    {
+      "id": "F106_SYSTEMIC_INTERACTION_SUPPORT",
+      "kind": "mixed",
+      "landmark": false,
+      "keywords": [
+        "door",
+        "rune",
+        "chain",
+        "lever",
+        "rock",
+        "snow",
+        "fire",
+        "torch",
+        "bridge",
+        "debris",
+        "impact",
+        "water"
+      ]
+    }
+  ],
+  "acceptance_boundary": "Source architecture/index preparation only. No UE integration, PIE, device, visual, pacing or performance acceptance."
+}
