@@ -1,3 +1,10 @@
+## 2026-09-30 - Living-world pooled-event cull safety
+
+- Event lifetime cleanup: **PRESERVED event-wide**.
+- Distance cleanup: **CHANGED to member-local** so one wandering member cannot despawn a nearby interaction/participant.
+- Regression guard: **PG-207 SOURCE-IMPLEMENTED / exact-head static validation pending**.
+- AI/Life maturity remains unchanged until real UE4/runtime observation; no PIE/device/visual/performance promotion is made.
+
 ## 2026-09-30 - Living-world pooled-event cull repair candidate
 
 - AI/Life reliability: grouped micro-event distance cleanup corrected from event-wide retirement to member-local retirement while preserving event-wide lifetime expiry.
