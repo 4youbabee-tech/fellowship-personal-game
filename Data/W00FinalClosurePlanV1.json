@@ -1,15 +1,21 @@
 {
   "schema_version": 1,
   "plan_id": "W00_FINAL_CLOSURE_WAVE_V1",
-  "status": "FINAL_WORKFLOW_REPAIR_COMMITTED_PROOF_PENDING",
+  "status": "AUTOMATED_FINAL_CLOSURE_MACHINE_GREEN_HUMAN_AUDIO_DEVICE_GATES_REMAIN",
   "authority": "Data/ProjectGovernor.json",
   "base_green_head": "31b6e1c9958b6121ec7a00c07e038fec4ab36408",
   "purpose": "Close every remaining automatable W00 acceptance blocker in one large evidence wave so the deferred W01-W11 production program can start on an unobstructed foundation.",
   "machine_green_baseline": {
-    "pre_unreal": "#791 SUCCESS",
-    "unreal": "#626 attempt 2 SUCCESS",
+    "pre_unreal": "#1435 SUCCESS",
+    "unreal": "#1108 SUCCESS",
     "warehouse": "#207 SUCCESS",
-    "interpretation": "Architectural/root-repair loop is closed. This wave is acceptance expansion, not another broad repair wave."
+    "interpretation": "Automated W00 package/data/runtime/startup/regression gates are machine-green on the exact acceptance head. Human chapter review, real audio playback/mix, and target-device performance/visual evidence remain separate.",
+    "acceptance_head": "d6ca8aac03f5a1da07609e61e790ddf8faad8eed",
+    "acceptance_merge": "4fb15dfff70bfda5a2c023c3d82b3008fb831edc",
+    "packaged_data": "W00_PACKAGED_DATA_PASS expected=37 verified=37",
+    "packaged_runtime_data_read": "W00_PACKAGED_RUNTIME_DATA_READ_PASS marker=NPCContext: ready=yes",
+    "packaged_startup": "W00_PACKAGED_STARTUP_PASS observed=6s",
+    "hardware_snapshot": "Intel(R) Core(TM) i7-6498DU CPU @ 2.50GHz; ramBytes=8457560064; snapshot only, not DEVICE_TESTED"
   },
   "automated_gates": [
     {
@@ -66,7 +72,7 @@
     "Data/CompletionWaveMapV1.json"
   ],
   "next_large_program": "W01-W06 Part I large production build, followed by W07-W11 Part II/III and trilogy final integration.",
-  "last_refresh": "2026-09-25",
+  "last_refresh": "2026-09-30",
   "grounding_pie_evidence": {
     "tested_commit": "2427e6594f5adb3ea81f143dc19d4ecede8eecc9",
     "chapter": "P1C01",
@@ -92,10 +98,17 @@
     ]
   },
   "packaged_runtime_data_read_guard": {
-    "status": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
+    "status": "EXACT_HEAD_RUN_PROVEN",
     "verifier": "Scripts/verify_packaged_startup.ps1",
     "required_marker": "NPCContext: ready=yes",
     "purpose": "Close the gap between proving Data JSON files are staged and proving the packaged executable actually consumes required NPC context Data at runtime.",
-    "evidence_boundary": "This guard can prove packaged runtime Data consumption when its exact-head workflow succeeds. It does not prove final audio playback, target-device performance, human PIE traversal, pacing or visual acceptance."
+    "evidence_boundary": "This guard can prove packaged runtime Data consumption when its exact-head workflow succeeds. It does not prove final audio playback, target-device performance, human PIE traversal, pacing or visual acceptance.",
+    "evidence": {
+      "head": "d6ca8aac03f5a1da07609e61e790ddf8faad8eed",
+      "pre_unreal": "#1435 SUCCESS",
+      "unreal": "#1108 SUCCESS",
+      "marker": "W00_PACKAGED_RUNTIME_DATA_READ_PASS marker=NPCContext: ready=yes",
+      "staged": "W00_PACKAGED_DATA_PASS expected=37 verified=37"
+    }
   }
 }
