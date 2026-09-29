@@ -1,3 +1,10 @@
+## 2026-09-29 - Hero skeletal candidate diagnostic note
+
+- First post-merge candidate workflow failed during candidate construction after checkout/runner/preflight success.
+- Diagnostic output is added without relaxing FBX/provenance/skeleton/skin/retarget/deformation gates.
+- Character visual-completion status remains unchanged.
+
+
 ## 2026-09-29 - F2-04 Road & Helm's Deep Prep source-preparation note
 
 - F2-04 has a maximum-safe source architecture with 36 categories / 19 landmarks / 9 banks and PG-206 protection.
