@@ -1,3 +1,25 @@
+## 2026-09-29 - F1-04 Bree & Weathertop Mega Source Superpack V1
+
+Registered before any runtime implementation.
+
+Canonical source scope:
+- Mission package: **F1-04 Bree & Weathertop**.
+- Runtime consumers: legacy implementation chapters **P1C02 + P1C03** under the recorded F1/P1 reconciliation; do not rename runtime IDs in place.
+- Story boundary: the Hobbits reach Bree from the previous package; Aragorn becomes the guide; Ring use increases danger; Frodo is wounded; the locked postcondition is the party racing for Rivendell.
+- Safe optional window: tavern attention, travel, camp decisions and defensive combat.
+- Bree world grammar: crossroads town; timber/stone; rain; gates; crowded inn; social stealth, supplies, rumors and pursuit pressure; night-arrival/departure variants.
+- Weathertop world grammar: ruined hilltop watchtower; ancient stone ring; exposed skyline; camp tension and the Nazgul encounter; calm-approach/night-attack variants.
+
+Production intent:
+- Build one **shared, very large source-preparation pack** for both Bree and Weathertop instead of duplicating payloads between P1C02 and P1C03.
+- Reuse the persistent warehouse first. The pack indexes candidates; it does not duplicate multi-gigabyte source payloads.
+- Cover surfaces, architecture, settlement props, inn/interior props, roads/travel, ruins, vegetation, weather/audio, fauna, character/animation support, encounter/combat support, cinematic dressing and systemic-interaction support.
+- Preserve low-spec constraints: final animated candidates FBX only; textures PNG/TGA; no BMP; runtime heavy assets remain soft-referenced/asynchronously streamed; background populations remain pooled; repeated static dressing remains ISM/HISM + LOD/culling.
+- This source-preparation pack may run before P1C01 Gate 6/7 acceptance, but **P1C02/P1C03 runtime integration remains blocked** until predecessor acceptance.
+- No source index, warehouse count or candidate score is evidence of PIE/device/visual/performance acceptance.
+
+Status: **REGISTERED / SOURCE PREPARATION AUTHORIZED / RUNTIME GATED**.
+
 ## 2026-09-29 - Part I full sequential runtime train and canonical-ID reconciliation
 
 Registered for the owner's continuous overnight production direction.
