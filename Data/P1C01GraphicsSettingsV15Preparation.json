@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "scope": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
+  "status": "LEDGER_REGISTERED_GOVERNOR_PENDING_RUNTIME_UNOPENED",
+  "base_develop_sha": "ad149bfb684d4d82b6810e12662fdd78e01e3c87",
+  "ledger_registration_commit": "61ba60e2c6f96049eb78564da1808a757251f79e",
+  "candidate_requirement_id": "REQ-PERF-004",
+  "candidate_decision_id": "DEC-087",
+  "runtime_source_open": false,
+  "default_preset": "CinematicBalanced",
+  "presets": [
+    "Performance",
+    "CinematicBalanced",
+    "High",
+    "Ultra",
+    "Custom"
+  ],
+  "target_floor": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "quality": "Low-Medium",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_class": 2
+  },
+  "protected_scalability_anchors": {
+    "source": "Config/DefaultScalability.ini",
+    "source_blob_sha": "86d376709d09d9707fabda18d0b9ee91c1503133",
+    "texture_pool_mb": [600, 800, 1000],
+    "shadow_max_resolution": [512, 768, 1024],
+    "shadow_cascades": [1, 2, 2],
+    "shadow_distance_scale": [0.45, 0.65, 0.80],
+    "foliage_density_scale": [0.30, 0.50, 0.70],
+    "grass_density_scale": [0.30, 0.50, 0.70],
+    "view_distance_scale": [0.45, 0.65, 0.80]
+  },
+  "visual_economy": {
+    "protect_first": [
+      "silhouette",
+      "composition",
+      "hero materials",
+      "lighting",
+      "atmosphere",
+      "near-field detail"
+    ],
+    "recover_cost_first": [
+      "duplicate actors",
+      "far shadows",
+      "overdraw",
+      "translucency",
+      "redundant lights",
+      "uninstanced repetition",
+      "unnecessary Tick",
+      "invisible or far detail"
+    ]
+  },
+  "display_apply_contract": [
+    "preview",
+    "confirm",
+    "revert"
+  ],
+  "runtime_constraints": {
+    "heavy_assets": "soft references plus async FStreamableManager",
+    "crowds": "object pooling",
+    "repeated_detail": "ISM/HISM plus LOD and culling",
+    "animated_final_assets": "FBX",
+    "production_textures": "PNG/TGA including channel-packed textures",
+    "public_private_cpp_layout": true
+  },
+  "gates": {
+    "later_runtime_chapters_before_gate_6_7": false,
+    "project_governor_authority_required_before_runtime_source": true,
+    "exact_head_compile_required_before_compile_tested_claim": true,
+    "pie_required_before_pie_tested_claim": true,
+    "device_measurement_required_before_performance_claim": true,
+    "human_review_required_before_visual_acceptance_claim": true
+  },
+  "evidence_boundary": "RUNNERLESS_SOURCE_AND_GOVERNANCE_PREPARATION_ONLY"
+}
