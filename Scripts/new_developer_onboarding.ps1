@@ -58,6 +58,9 @@ $Summary = [ordered]@{
     engine = [string]$Governor.engine
     authority = 'Data/ProjectGovernor.json'
     authority_guide = 'Docs/PROJECT_GOVERNOR.md'
+    story_source_index = 'Data/OwnerSourceReferenceIndex.json'
+    story_rule = if ($Governor.story_source_execution_contract) { [string]$Governor.story_source_execution_contract.no_story_shortcut_rule } else { $null }
+    localization_rule = if ($Governor.localization_contract) { "English VO; Arabic subtitles/UI/objectives; canonical map location labels remain English." } else { $null }
     canonical_development_branch = [string]$Governor.branch_workflow.integration_branch
     stable_release_branch = [string]$Governor.branch_workflow.stable_release_branch
     current_git_branch = $CurrentBranch
@@ -77,9 +80,11 @@ $Summary = [ordered]@{
     required_reading = @(
         'Docs/PROJECT_GOVERNOR.md',
         'Data/ProjectGovernor.json',
+        'Data/OwnerSourceReferenceIndex.json',
         'Docs/CURRENT_PROJECT_STATE.md',
         'Docs/DEVELOPMENT_GATES.md',
-        'Docs/PROJECT_GUARDIAN.md'
+        'Docs/PROJECT_GUARDIAN.md',
+        'Docs/WORLD_DETAIL_LEDGER.md'
     )
 }
 
@@ -95,6 +100,7 @@ Write-Host '============================================================'
 Write-Host ''
 Write-Host "Authority:            $($Summary.authority)"
 Write-Host "Authority guide:      $($Summary.authority_guide)"
+Write-Host "Story source index:   $($Summary.story_source_index)"
 Write-Host "Engine:               $($Summary.engine)"
 Write-Host "Development branch:   $($Summary.canonical_development_branch)"
 Write-Host "Stable branch:        $($Summary.stable_release_branch)"
@@ -109,6 +115,17 @@ Write-Host "Active lane:          $($Summary.active_lane)"
 Write-Host "Active gate:          $($Summary.active_gate) [$($Summary.active_gate_status)]"
 Write-Host "Visible benchmark:    $($Summary.visible_benchmark)"
 Write-Host "Current status:       $($Summary.current_status)"
+Write-Host ''
+Write-Host 'STORY / SOURCE RULE'
+if ([string]::IsNullOrWhiteSpace($Summary.story_rule)) {
+    Write-Host '  - Read the Governor and source index before story/world work.'
+}
+else {
+    Write-Host "  $($Summary.story_rule)"
+}
+if (-not [string]::IsNullOrWhiteSpace($Summary.localization_rule)) {
+    Write-Host "  Localization: $($Summary.localization_rule)"
+}
 Write-Host ''
 Write-Host 'CURRENT FOCUS'
 if ([string]::IsNullOrWhiteSpace($Summary.current_focus)) {
