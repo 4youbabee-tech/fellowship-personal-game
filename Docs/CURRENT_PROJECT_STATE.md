@@ -1,3 +1,12 @@
+## 2026-09-30 - Final zero-ahead maintenance sweep before construction resume
+
+- PR #180 merged the last orphan-ref closeout after exact-head hosted Pre-Unreal SUCCESS.
+- The remaining non-canonical maintenance refs are now limited to the superseded `maintenance/final-prebuild-branch-cleanout-v1` plus this short-lived sweep branch.
+- This sweep explicitly queues both refs for guarded deletion; the merged sweep head will also be deleted by DEC-088 exact-head closeout.
+- Expected persistent refs after Branch Cleanup: `develop`, `main`, and recovery-only `archive/pre-build-salvage-20260930`.
+- After that branch-cleanup SUCCESS, repository hygiene is closed and substantive build work resumes from canonical `develop`.
+- Evidence boundary: repository hygiene only. No compile/PIE/device/visual/performance acceptance is claimed.
+
 ## 2026-09-30 - Last orphan maintenance ref closeout
 
 - PR #178 merged the final legacy-ref retirement policy before PR #179 could merge; PR #179 therefore became a superseded maintenance branch rather than production work.

@@ -1,3 +1,11 @@
+## 2026-09-30 - Final zero-ahead maintenance sweep
+
+- Remaining maintenance refs before sweep: **2**.
+- Post-sweep expected persistent refs: **develop + main + recovery-only archive**.
+- Branch cleanup lifecycle: **EXACT MERGED-HEAD DELETE + EXPLICIT ORPHAN DELETE**.
+- Build resume after cleanup success: **AUTHORIZED FROM CANONICAL develop**.
+- Gameplay/compile/PIE/device/visual/performance maturity: **UNCHANGED / NOT CLAIMED**.
+
 ## 2026-09-30 - Last orphan ref closeout
 
 - Legacy archived working refs: **26 / 26 DELETED by Branch Cleanup #178 closeout**.

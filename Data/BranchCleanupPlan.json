@@ -86,7 +86,8 @@
     "production/p1c01-warehouse-runnerless-backlog-v1",
     "tooling/opencodereview-readonly",
     "warehouse/p1c01-ready-review-v1",
-    "maintenance/final-prebuild-branch-cleanout-v1"
+    "maintenance/final-prebuild-branch-cleanout-v1",
+    "maintenance/final-zero-ahead-sweep-v1"
   ],
   "safety_rules": [
     "Never delete develop or main.",
@@ -318,5 +319,20 @@
       "archive/pre-build-salvage-20260930"
     ],
     "evidence_boundary": "Repository hygiene only; no gameplay/compile/PIE/device/visual/performance claim."
+  },
+  "final_zero_ahead_sweep_2026_09_30": {
+    "action": "DELETE_LAST_MAINTENANCE_REFS_AND_RESUME_BUILD",
+    "branches": [
+      "maintenance/final-prebuild-branch-cleanout-v1",
+      "maintenance/final-zero-ahead-sweep-v1"
+    ],
+    "expected_survivors": [
+      "develop",
+      "main",
+      "archive/pre-build-salvage-20260930"
+    ],
+    "rule": "After this merge, Branch Cleanup deletes this merged head exactly and deletes the superseded final-prebuild maintenance ref if still present. The archive ref remains recovery-only.",
+    "build_resume": "Once Branch Cleanup succeeds and only develop/main/archive remain, repository cleanup is closed and substantive construction resumes from develop.",
+    "evidence_boundary": "Repository hygiene only; no gameplay/compile/PIE/device/visual/performance acceptance."
   }
 }
