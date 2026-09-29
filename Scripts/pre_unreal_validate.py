@@ -8869,6 +8869,135 @@ for ignored in [
     if pg202_unreal.count(ignored) < 2:
         fail(f"PG-202 F2-01 tooling path must stay off Unreal push+PR filters: {ignored}")
 
+
+# PG-203: F2-02 Fangorn/Gandalf maximum-safe source wave must preserve canon, Treebeard identity and the unassigned Part II runtime-ID boundary.
+pg203_manifest = json.loads(read(ROOT / "Data" / "F202FangornGandalfMaximumSafeMegaSourceV1.json"))
+pg203_runner = read(ROOT / "Scripts" / "run_f202_fangorn_gandalf_maximum_safe_source.ps1")
+pg203_workflow = read(ROOT / ".github" / "workflows" / "f202-fangorn-gandalf-maximum-safe-source.yml")
+pg203_unreal = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+
+if pg203_manifest.get("status") != "SOURCE_ARCHITECTURE_READY_INVENTORY_GATED_RUNTIME_MAPPING_UNASSIGNED":
+    fail("PG-203 F2-02 source wave status drifted")
+if pg203_manifest.get("canonical_mission_id") != "F2-02":
+    fail("PG-203 F2-02 canonical mission ID drifted")
+if pg203_manifest.get("canonical_title") != "Fangorn & Gandalf Returned":
+    fail("PG-203 F2-02 canonical title drifted")
+if pg203_manifest.get("runtime_consumers") not in ([], None):
+    fail("PG-203 F2-02 must not invent a Part II runtime consumer before migration mapping exists")
+if pg203_manifest.get("runtime_mapping_status") != "NOT_ASSIGNED_DO_NOT_INVENT":
+    fail("PG-203 F2-02 runtime mapping boundary weakened")
+
+pg203_story = pg203_manifest.get("story_contract", {})
+if pg203_story.get("locked_postcondition") != "Gandalf leads hunters to Edoras.":
+    fail("PG-203 F2-02 locked postcondition drifted")
+pg203_critical = " ".join(str(x) for x in pg203_story.get("critical_path", []))
+for required in ["Ents introduced", "Gandalf returns transformed"]:
+    if required not in pg203_critical:
+        fail(f"PG-203 F2-02 critical path missing canonical beat: {required}")
+
+pg203_treebeard = " ".join(str(x) for x in pg203_manifest.get("character_guardrails", {}).get("treebeard", [])).lower()
+for required in ["slow deliberation", "massive", "deliberate"]:
+    if required not in pg203_treebeard:
+        fail(f"PG-203 Treebeard guardrail missing: {required}")
+
+pg203_world = pg203_manifest.get("world_contract", {})
+if pg203_world.get("primary_location") != "Fangorn":
+    fail("PG-203 F2-02 primary location drifted")
+for required in ["Quiet", "Ent mobilization"]:
+    if required not in pg203_world.get("required_state_variants", []):
+        fail(f"PG-203 Fangorn state variant missing: {required}")
+
+pg203_policy = pg203_manifest.get("source_policy", {})
+pg203_safety = pg203_manifest.get("safety_gate", {})
+pg203_landmarks = pg203_manifest.get("landmark_policy", {})
+pg203_banks = pg203_manifest.get("bank_policy", {})
+
+if pg203_policy.get("throughput_mode") != "ADAPTIVE_MAXIMUM_SAFE":
+    fail("PG-203 F2-02 must remain in Adaptive Maximum Safe production mode")
+if int(pg203_policy.get("max_total_candidates", 0)) < 32000:
+    fail("PG-203 F2-02 total candidate ceiling unexpectedly reduced")
+if int(pg203_policy.get("max_candidates_per_category", 0)) < 2800:
+    fail("PG-203 F2-02 per-category throughput unexpectedly reduced")
+if int(pg203_policy.get("landmark_score_bonus", 0)) < 9:
+    fail("PG-203 F2-02 landmark score bonus unexpectedly reduced")
+if not pg203_policy.get("fair_share_across_categories", False):
+    fail("PG-203 F2-02 fair-share category scheduling removed")
+if pg203_policy.get("animated_candidate_extension") != ".fbx":
+    fail("PG-203 animated F2-02 candidates must remain FBX-only")
+if ".bmp" not in pg203_policy.get("forbidden_texture_extensions", []):
+    fail("PG-203 F2-02 source pack must continue blocking BMP textures")
+if not pg203_safety.get("requires_clean_warehouse_inventory", False):
+    fail("PG-203 F2-02 heavy execution must require clean warehouse inventory")
+if pg203_safety.get("runtime_integration_allowed", True):
+    fail("PG-203 F2-02 runtime integration must remain disabled until explicit Part II runtime mapping exists")
+if not pg203_safety.get("runtime_mapping_required_before_runtime_work", False):
+    fail("PG-203 F2-02 runtime mapping requirement removed")
+
+if int(pg203_banks.get("minimum_ready_banks", 0)) < 8:
+    fail("PG-203 F2-02 minimum ready bank count unexpectedly reduced")
+if len(pg203_banks.get("banks", [])) < 9:
+    fail("PG-203 F2-02 multi-bank source architecture lost required breadth")
+if int(pg203_landmarks.get("minimum_landmark_categories", 0)) < 16:
+    fail("PG-203 F2-02 landmark minimum unexpectedly reduced")
+
+pg203_categories = pg203_manifest.get("categories", [])
+if len(pg203_categories) < 42:
+    fail("PG-203 F2-02 source pack lost required category breadth")
+if len([x for x in pg203_categories if x.get("landmark")]) < 20:
+    fail("PG-203 F2-02 configured landmark category count too small")
+if any(not str(x.get("bank") or "").strip() for x in pg203_categories):
+    fail("PG-203 every F2-02 source category must belong to a source bank")
+
+for required in [
+    "FANGORN_ANCIENT_TRUNK_CATHEDRAL",
+    "FANGORN_ROOT_MAZE_LANDMARK",
+    "ENT_SCALE_SILHOUETTE",
+    "ENT_MEETING_CLEARING",
+    "TREEBEARD_STEP_IMPACT_SUPPORT",
+    "GANDALF_RETURN_REVEAL_VISTA",
+    "HUNTER_REUNION_CLEARING",
+    "ENT_MOBILIZATION_FOREST_STATE",
+    "ENT_GATHERING_LANDMARK",
+    "EDORAS_EXIT_ROUTE",
+    "FANGORN_TO_ROHAN_TRANSITION_VISTA",
+    "F202_LANDMARK_DISTANCE_PROXY_SUPPORT",
+]:
+    if required not in {x.get("id") for x in pg203_categories}:
+        fail(f"PG-203 F2-02 landmark/source category missing: {required}")
+
+for symbol in [
+    "F202_MEGA_SOURCE_INVENTORY_GATE_BEGIN",
+    "F202_MEGA_SOURCE_INVENTORY_GATE_PASS",
+    "F202_BANK_SOURCE_PASS",
+    "F202_BANK_SOURCE_COVERAGE_FAIL",
+    "F202_LANDMARK_SOURCE_PASS",
+    "F202_LANDMARK_SOURCE_COVERAGE_FAIL",
+    "$effectivePerCategory",
+    "landmarkBonus",
+    "F202_MEGA_SOURCE_CATEGORY_PASS",
+    "F202_MEGA_SOURCE_PASS",
+]:
+    if symbol not in pg203_runner:
+        fail(f"PG-203 F2-02 runner marker missing: {symbol}")
+
+for symbol in [
+    "name: F2-02 Fangorn Gandalf Maximum Safe Mega Source",
+    "cancel-in-progress: false",
+    "timeout-minutes: 180",
+    "Fast F2-02 PowerShell preflight",
+    "Build Fangorn Gandalf maximum-safe mega source indexes",
+]:
+    if symbol not in pg203_workflow:
+        fail(f"PG-203 F2-02 workflow contract missing: {symbol}")
+
+for ignored in [
+    "Data/F202FangornGandalfMaximumSafeMegaSourceV1.json",
+    "Scripts/run_f202_fangorn_gandalf_maximum_safe_source.ps1",
+    ".github/workflows/f202-fangorn-gandalf-maximum-safe-source.yml",
+]:
+    if pg203_unreal.count(ignored) < 2:
+        fail(f"PG-203 F2-02 tooling path must stay off Unreal push+PR filters: {ignored}")
+
 # PG-195: Unreal import must not trust an editor-only wait while a commandlet remains alive.
 pg195_wait = read(ROOT / "Scripts" / "wait_for_unreal_processes.ps1")
 pg195_wait_cmd = read(ROOT / "Scripts" / "ci_wait_for_unreal_editor.cmd")
