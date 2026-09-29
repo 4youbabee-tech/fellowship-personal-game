@@ -4654,6 +4654,31 @@
         "03_WORLD_LOCATIONS_AND_MAP_BIBLE — Caradhras and Moria production specifications"
       ],
       "evidence_boundary": "SOURCE ARCHITECTURE ONLY. Heavy execution is inventory-gated; no UE integration, PIE, device, visual, pacing or performance acceptance is claimed."
+    },
+    {
+      "id": "DEC-075",
+      "title": "Long CI waits must use bounded polling and asynchronous continuation",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-STABILITY-001",
+        "REQ-STABILITY-003"
+      ],
+      "resolution": "Interactive project work may not spin in repeated GitHub polling loops while a long-running CI job is in progress. Use bounded live checks, then hand continuation to CI/automation and continue independent safe work.",
+      "implementation_contract": [
+        "Within one interactive response, perform at most two follow-up status polls for the same long-running workflow after the initial state read.",
+        "If the workflow remains queued or in_progress after the bounded checks, stop polling it in that response.",
+        "Do not create commits solely to force a fresh status event while an exact-head validation is still running.",
+        "Use the scheduled Shire Journey continuation automation for later re-entry and root-cause handling.",
+        "When safe independent work exists, continue that work on a separate branch without modifying the exact head under validation.",
+        "A completed success/failure event may be handled immediately; only genuinely human-required blockers should interrupt the owner.",
+        "This rule changes orchestration only; it does not weaken exact-head validation, Gate 6/7, canon, or evidence requirements."
+      ],
+      "rationale": "Repeated interactive polling of long Unreal and warehouse runs caused the conversation to appear stuck for extended periods even when CI itself was progressing normally. The project needs responsive orchestration without weakening verification.",
+      "evidence": [
+        "PR #153 exact-head Pre-Unreal #1379 and Unreal #1095 both completed SUCCESS while repeated polling made the chat appear stalled.",
+        "Existing hourly Shire Journey continuation automation can resume later without blocking the active conversation."
+      ],
+      "evidence_boundary": "ORCHESTRATION GOVERNANCE. Does not imply runtime, device, visual, or performance acceptance."
     }
   ],
   "open_conflicts": [],
