@@ -1,3 +1,16 @@
+## 2026-09-29 - P1C01 Graphics/Video Visual-Economy Doctrine V4
+
+- Active runtime scope is **W01_P1C01_PRODUCTION_VERTICAL_SLICE only**. This registration does not open later runtime chapters before Gates 6/7.
+- The Graphics/Video system must ship a visually strong **CinematicBalanced** default plus **Performance**, **High**, **Ultra** and **Custom** controls.
+- The non-negotiable target-floor contract remains **UE4.27.2 / DX11 / 1280x720 / Low-Medium / 30 FPS** on the i7 Gen6 / 8 GB RAM / ~2 GB VRAM laptop class.
+- Existing lower-tier anchors remain protected until measured evidence authorizes change: texture pools 600/800/1000 MB; shadow max resolution 512/768/1024; shadow cascades 1/2/2; shadow distance 0.45/0.65/0.80; foliage/grass density 0.30/0.50/0.70; view distance 0.45/0.65/0.80.
+- Permanent visual-economy priority: maximize visible beauty per measured CPU/GPU/VRAM cost. Protect silhouette, composition, hero materials, lighting, atmosphere and near-field detail first.
+- Recover cost before sacrificing hero value, in this order: duplicate actors; far shadows; overdraw; translucency; redundant lights; uninstanced repetition; unnecessary Tick; invisible/far detail.
+- Display-mode changes must use reversible **preview -> confirm -> revert** behavior so an invalid or undesirable mode cannot strand the player.
+- Heavy production assets remain soft-referenced and asynchronously loaded through FStreamableManager; crowds remain pooled; repeated decorative detail uses ISM/HISM + LOD/culling; animated final assets remain FBX; production textures remain PNG/TGA including channel-packed textures.
+- Candidate authority is **REQ-PERF-004 + DEC-087**. Runtime settings source must remain unopened until that ProjectGovernor authority is actually landed.
+- Evidence boundary: **GOVERNANCE REGISTRATION ONLY**. No compile, PIE, device, visual acceptance, FPS/VRAM improvement, hitch reduction or target-device performance claim is implied.
+
 ## 2026-09-29 - F2-04 Road & Helm's Deep Prep Maximum-Safe Source V1
 
 - Canonical mission: F2-04 Road & Helm's Deep Prep.
