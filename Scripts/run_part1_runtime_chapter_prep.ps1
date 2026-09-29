@@ -65,6 +65,8 @@ foreach($chapter in $chapters){
         }
     }
 
+    [object[]]$candidateRows = $matches.ToArray()
+
     $report = [ordered]@{
         schema_version = 1
         train_id = [string]$manifest.train_id
@@ -73,9 +75,9 @@ foreach($chapter in $chapters){
         story_scope = [string]$chapter.story_scope
         status = "SOURCE_CANDIDATE_INDEX_PREPARED"
         warehouse_root = $WarehouseRoot
-        candidate_count = $matches.Count
+        candidate_count = $candidateRows.Count
         candidate_ceiling = $maxCandidates
-        candidates = @($matches)
+        candidates = $candidateRows
         runtime_integration = "NOT_STARTED"
         evidence_boundary = "Candidate indexing only; no READY_FOR_IMPORT, UE import, PIE, device, visual or performance claim."
     }
@@ -84,9 +86,9 @@ foreach($chapter in $chapters){
     $report | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $reportPath -Encoding UTF8
     Write-Host ("PART1_CHAPTER_PREP_PASS chapter=" + [string]$chapter.runtime_chapter +
         " predecessor=" + [string]$chapter.predecessor +
-        " candidates=" + $matches.Count +
+        " candidates=" + $candidateRows.Count +
         " report=" + $reportPath)
-    $summary += [ordered]@{ chapter=[string]$chapter.runtime_chapter; candidates=$matches.Count; report=$reportPath }
+    $summary += [ordered]@{ chapter=[string]$chapter.runtime_chapter; candidates=$candidateRows.Count; report=$reportPath }
 }
 
 $summaryPath = Join-Path $outputRoot "summary.json"
