@@ -8527,6 +8527,15 @@ if "Test warehouse receipt supersession semantics" not in pg200_workflow:
 if "test_warehouse_inventory_supersession.ps1" not in pg200_workflow:
     fail("PG-200 Pre-Unreal workflow missing warehouse supersession test script")
 
+for rel in [
+    ".github/workflows/p1c01-chapter-closure.yml",
+    ".github/workflows/f105-rivendell-fellowship-mega-source.yml",
+    ".github/workflows/f106-caradhras-moria-landmark-mega-source.yml",
+]:
+    pg200_rearm = read(ROOT / rel)
+    if "Scripts/audit_warehouse_inventory.ps1" not in pg200_rearm:
+        fail(f"PG-200 inventory-gated workflow must rearm on warehouse audit changes: {rel}")
+
 
 # PG-195: Unreal import must not trust an editor-only wait while a commandlet remains alive.
 pg195_wait = read(ROOT / "Scripts" / "wait_for_unreal_processes.ps1")
