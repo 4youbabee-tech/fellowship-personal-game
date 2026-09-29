@@ -119,7 +119,8 @@
     "max_total_candidates": 24000,
     "max_candidates_per_category": 2400,
     "minimum_free_disk_reserve_bytes": 6442450944,
-    "landmark_score_bonus": 8
+    "landmark_score_bonus": 8,
+    "fair_share_across_categories": true
   },
   "bank_policy": {
     "minimum_ready_banks": 6,
@@ -658,7 +659,7 @@
       ]
     },
     {
-      "id": "F108_AFTERmath_AUDIO",
+      "id": "F108_AFTERMATH_AUDIO",
       "bank": "BANK07_CAMPAIGN_SPLIT_AFTERMATH",
       "kind": "audio",
       "landmark": false,
