@@ -1,0 +1,12 @@
+# Generated P1C01 external material intake.
+newmtl 
+MI_Sh_StonyPath_PH
+Kd 1.0 1.0 1.0
+Pr 
+0.8400
+Pm 
+0.0000
+Ks 0.0300 0.0300 0.0300
+map_Kd 
+TX_SH_STONY_PATH_BaseColor.png
+
