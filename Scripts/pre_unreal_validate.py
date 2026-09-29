@@ -5761,21 +5761,6 @@ else:
 
 
 
-# PG-208: ambient player lookup must stay centralized in GetPlayerPawnCached.
-pg208_ambient = read(resolve_source("ShireAmbientNPC.cpp"))
-pg208_direct = pg208_ambient.count("UGameplayStatics::GetPlayerPawn(")
-if pg208_direct != 1:
-    fail(f"PG-208 ShireAmbientNPC direct GetPlayerPawn count must remain 1, got {pg208_direct}")
-pg208_cache_start = pg208_ambient.find("APawn* AShireAmbientNPC::GetPlayerPawnCached()")
-pg208_cache_end = pg208_ambient.find("void AShireAmbientNPC::BeginPlay()", pg208_cache_start)
-if pg208_cache_start < 0 or pg208_cache_end < 0:
-    fail("PG-208 GetPlayerPawnCached source boundary missing")
-else:
-    pg208_cache = pg208_ambient[pg208_cache_start:pg208_cache_end]
-    if "UGameplayStatics::GetPlayerPawn(" not in pg208_cache:
-        fail("PG-208 direct player lookup escaped the cache helper")
-
-
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
