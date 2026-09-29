@@ -123,15 +123,14 @@
     ]
   },
   "execution_order": [
-    "Repair Warehouse #286 saturation-report StrictMode defect and add regression coverage.",
-    "Rerun selective Warehouse audit/saturation/prep; inventory must remain clean.",
-    "Resume P1C01 Chapter Closure Pack from the clean inventory gate.",
-    "Complete/merge F1-07 source architecture after exact-head validation.",
-    "Open F1-08 Amon Hen / Breaking of the Fellowship maximum-safe landmark mega source pack.",
-    "Keep Part II/III world-source preparation moving through the existing 28-region whole-game queue where canon authority is sufficient.",
-    "Convert later chapters to multi-bank streamed chapter plans before high-density runtime promotion.",
-    "Use P1C01 H target-device profiling to replace inferred residency ceilings with measured budgets."
+    "F1-08 maximum-safe source architecture is active: build/validate the streamed chapter plan, 36-category source superpack, indexer and dedicated workflow.",
+    "Keep selective Warehouse audit/saturation/prep green; persistent warehouse remains the shared source truth.",
+    "Resume P1C01 Chapter Closure Pack from the clean inventory gate without opening a second runtime lane.",
+    "Execute F1-08 heavy source indexing after merge while P1C08 runtime remains predecessor Gate 6/7 gated.",
+    "Continue later-region source/material/audio/character/world preparation through the whole-game queue where canon authority is sufficient.",
+    "Use P1C01 H target-device profiling to replace inferred residency ceilings with measured RAM/VRAM/frame-time budgets."
   ],
   "success_definition": "Production lanes remain saturated without violating any hard stop, while runtime integration stays serialized and evidence-backed.",
-  "evidence_boundary": "Execution architecture and current live warehouse evidence only. No PIE/device/visual/pacing/performance acceptance is implied."
+  "evidence_boundary": "Execution architecture and current live warehouse evidence only. No PIE/device/visual/pacing/performance acceptance is implied.",
+  "active_source_wave": "F1-08 Amon Hen / Breaking of the Fellowship Maximum Safe Chapter V1"
 }
