@@ -39,7 +39,8 @@
     "The programmer handoff must remain branch-simple: develop is canonical development/integration, main is stable/release, and temporary implementation branches self-clean after merge once meaningful content is integrated.",
     "Temporary branches must merge meaningful completed work into develop immediately, then delete the branch ref; only active work or unresolved unique-content salvage may remain outside develop.",
     "Parallel source/PDF/warehouse/asset-preparation lanes may advance without repeating engine gates for administrative-only changes; promotion into runtime remains serialized and technical safety/performance/runtime-data gates stay fail-closed.",
-    "Permanent branch closeout invariant: every completed temporary branch is exact-head validated, merged into develop immediately, and its remote ref is deleted after merge so develop never lags completed work. Only an active PR head or a branch with verified unique unsalvaged commits may remain temporarily."
+    "Permanent branch closeout invariant: every completed temporary branch is exact-head validated, merged into develop immediately, and its remote ref is deleted after merge so develop never lags completed work. Only an active PR head or a branch with verified unique unsalvaged commits may remain temporarily.",
+    "Maximum Safe Production is the default for all eligible project production work even when the owner does not explicitly say 'start chapter' or repeat the throughput instruction."
   ],
   "requirement_status_values": [
     "REQUESTED",
@@ -4766,6 +4767,7 @@
       ],
       "resolution": "Production throughput is now a first-class project objective. Saturate all independent preparation lanes with large coherent waves up to the current evidence-based safety guards. Do not impose artificial small-batch pacing when no real guard is active. Keep persistent warehouse mutation serialized and keep exactly one runtime-changing integration lane behind existing chapter and Gate 6/7 boundaries.",
       "implementation_contract": [
+        "Maximum Safe Production is the default for all eligible project production work even when the owner does not explicitly say 'start chapter' or repeat the throughput instruction.",
         "Use the existing whole-game production queue as the master preparation map; do not create a competing authority.",
         "Run source/PDF indexing, candidate selection, later-region authoring, material/audio/character preparation and other non-runtime lanes in parallel whenever dependencies permit.",
         "Serialize writes to the persistent warehouse because one inventory/provenance truth is shared; index-only readers may proceed independently.",
