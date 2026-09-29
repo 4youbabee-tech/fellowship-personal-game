@@ -1,3 +1,22 @@
+## 2026-09-29 - F2-01 Three Hunters / Captives maximum-safe source wave
+
+- Canonical F2-01 scope: **REGISTERED**.
+- Part II runtime ID mapping: **UNASSIGNED / DO NOT INVENT**.
+- Mission/story/world source verification: **SOURCE-REVIEWED**.
+- F2-02 later-state exclusion: **PRESERVED**.
+- 38-category / 8-bank / 28,000-candidate manifest: **SOURCE-IMPLEMENTED**.
+- 17 configured landmark categories / minimum 14 ready: **SOURCE-IMPLEMENTED / EXECUTION PENDING**.
+- Minimum 7 of 8 banks ready: **SOURCE-IMPLEMENTED / EXECUTION PENDING**.
+- Fair-share candidate scheduling: **SOURCE-IMPLEMENTED**.
+- FBX-only animated candidates / PNG-TGA texture policy / BMP rejection: **SOURCE-IMPLEMENTED**.
+- Clean warehouse inventory + 6 GiB reserve gate: **SOURCE-IMPLEMENTED**.
+- Dedicated 180-minute source workflow: **SOURCE-IMPLEMENTED**.
+- PG-202 runtime-ID/source regression guard: **SOURCE-IMPLEMENTED**.
+- Part II runtime integration: **BLOCKED UNTIL EXPLICIT RUNTIME-ID MAPPING + EXISTING RUNTIME GATES**.
+- Exact-head Pre-Unreal: **PENDING**.
+- Heavy F2-01 source execution: **PENDING CLEAN-INVENTORY RUN**.
+- PIE/device/visual/pacing/performance acceptance: **NOT CLAIMED**.
+
 ## 2026-09-29 - F1-08 Amon Hen / Breaking of the Fellowship maximum-safe source wave
 
 - Canonical F1-08 / P1C08 mapping: **REGISTERED / NO RUNTIME RENUMBERING**.
