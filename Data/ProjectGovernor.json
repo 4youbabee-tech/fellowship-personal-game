@@ -4673,7 +4673,8 @@
         "License snapshot hash records use the same latest-receipt authority semantics.",
         "Historical receipt files are never deleted or rewritten by inventory audit.",
         "Inventory JSON records hard mismatches and superseded records separately.",
-        "Pre-Unreal runs a two-case regression: latest matching receipt must pass with superseded warning; mutation after latest receipt must hard-fail."
+        "Pre-Unreal runs a two-case regression: latest matching receipt must pass with superseded warning; mutation after latest receipt must hard-fail.",
+        "P1C01 Closure, F1-05 source prep, and F1-06 landmark source prep rearm automatically on warehouse-audit changes so an accepted integrity repair can release all inventory-gated waves without a new owner continue prompt."
       ],
       "rationale": "Warehouse #285 identified the sole blocker as ambientCG Plaster007: old batch WAREHOUSE_AMBIENTCG_P1C01_V1 declared 3aa7dd9257286e0f7c219ebc7934c7ee826f11626a29e46a82563c258d857237 while the current payload is 7c486a9f0f058adf3e412ea5b3c91834cdb7d3a75b06ce6e840bf5414ab05b9e. Closure #2 had already detected the prior archive as structurally corrupt, removed it, downloaded a fresh readable archive, and completed the newer WAREHOUSE_AMBIENTCG_TRILOGY_FOUNDATION_V2 stage. The ambientCG stager computes SHA256 only after ZIP structural validation, so historical receipts must not be treated as current authority after a legitimate refresh.",
       "evidence": [
