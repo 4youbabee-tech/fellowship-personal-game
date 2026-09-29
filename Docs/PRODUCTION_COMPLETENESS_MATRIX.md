@@ -1,3 +1,16 @@
+## 2026-09-29 - F2-02 exact-head CI routing repair
+
+- The first reconciled Pre-Unreal run failed at PG-203 tooling-filter coverage, not at canon/runtime/source-content validation.
+- Unreal source-only filters are corrected for both push and PR paths.
+- No chapter completeness or runtime acceptance status changes.
+
+## 2026-09-29 - F2-02 reconciliation note
+
+- F2-02 source-preparation metadata/tooling is reconciled with the permanent story/source rules without changing runtime chapter maturity.
+- F2-02 remains SOURCE/PREPARATION ONLY and is not assigned a Part II runtime ID.
+- DEC-083 owns the F2-02 source wave after DEC-081/DEC-082 were assigned to permanent story/source and localization governance.
+- No production-completeness row is promoted to PIE/device/visual/performance accepted by this reconciliation.
+
 ## 2026-09-29 — Story/source completeness and localization governance note
 
 - Story/source completeness definition is strengthened without promoting runtime maturity: chapter planning must route Timeline -> film/screenplay -> Tolkien narrative/Appendices -> Sources 02-11 and explicitly disposition meaningful discovered detail.

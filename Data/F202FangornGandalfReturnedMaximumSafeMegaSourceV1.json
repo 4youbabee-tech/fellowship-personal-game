@@ -1,0 +1,819 @@
+{
+  "schema_version": 1,
+  "pack_id": "F202_FANGORN_GANDALF_RETURNED_MAXIMUM_SAFE_MEGA_SOURCE_V1",
+  "status": "SOURCE_ARCHITECTURE_READY_INVENTORY_GATED_RUNTIME_MAPPING_UNASSIGNED",
+  "canonical_mission_id": "F2-02",
+  "canonical_title": "Fangorn & Gandalf Returned",
+  "runtime_consumers": [],
+  "runtime_mapping_status": "NOT_ASSIGNED_DO_NOT_INVENT",
+  "authority": [
+    "01_STORY_AND_TIMELINE_BIBLE",
+    "02_CHARACTERS_AND_RELATIONSHIPS_BIBLE",
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+    "04_PEOPLES_LORE_ARTIFACTS_AND_CULTURES",
+    "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "Data/MaximumSafeProductionModeV1.json",
+    "Data/ProjectGovernor.json",
+    "Docs/WORLD_DETAIL_LEDGER.md"
+  ],
+  "story_contract": {
+    "critical_path": [
+      "Ents introduced.",
+      "Gandalf returns transformed."
+    ],
+    "safe_optional_window": [
+      "exploration",
+      "dialogue",
+      "Ent traversal"
+    ],
+    "locked_postcondition": "Gandalf leads hunters to Edoras.",
+    "character_guardrails": [
+      "Treebeard traversal/destruction feels massive and deliberate; slow deliberation becomes action.",
+      "Gandalf returned-strategist presentation keeps magic rare and purposeful, not spam-casting."
+    ],
+    "excluded_from_this_pack": [
+      "F2-08 Ent assault on Isengard resolution",
+      "F2-08 Saruman war-machine destruction outcome",
+      "Edoras/Meduseld court resolution"
+    ],
+    "save_contract": [
+      "clean entry autosave",
+      "pre-set-piece checkpoint",
+      "postcondition save after committed state"
+    ]
+  },
+  "world_contract": {
+    "primary_location": "Fangorn",
+    "location_type": "Ancient forest",
+    "visual_grammar": [
+      "dense trunks",
+      "roots",
+      "mist",
+      "living environment"
+    ],
+    "gameplay_roles": [
+      "exploration",
+      "Ent interactions",
+      "disorientation"
+    ],
+    "state_variants": [
+      "quiet",
+      "Ent mobilization source-support only"
+    ],
+    "landmark_contract": "At least one dominant Fangorn silhouette/vista remains readable for navigation and cinematic continuity across quiet and mobilization-support states.",
+    "traversal_contract": "Document primary path, optional branches, companion catch-up links and massive deliberate Ent traversal corridors.",
+    "streaming_contract": "Partition by sightline/terrain logic and preload the next critical bank before transition."
+  },
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_class": 2
+  },
+  "safety_gate": {
+    "requires_clean_warehouse_inventory": true,
+    "hard_stop_on_hash_mismatch": true,
+    "hard_stop_on_license_hash_mismatch": true,
+    "hard_stop_on_dangerous_file": true,
+    "hard_stop_on_bad_receipt": true,
+    "runtime_integration_allowed": false,
+    "runtime_mapping_required_before_runtime_work": true
+  },
+  "source_policy": {
+    "throughput_mode": "ADAPTIVE_MAXIMUM_SAFE",
+    "reuse_existing_warehouse_first": true,
+    "duplicate_payloads_per_runtime_chapter": false,
+    "index_only": true,
+    "animated_candidate_extension": ".fbx",
+    "texture_extensions": [
+      ".png",
+      ".tga"
+    ],
+    "forbidden_texture_extensions": [
+      ".bmp"
+    ],
+    "static_source_extensions": [
+      ".fbx",
+      ".obj"
+    ],
+    "audio_extensions": [
+      ".wav"
+    ],
+    "metadata_extensions": [
+      ".json",
+      ".mtl"
+    ],
+    "max_total_candidates": 32000,
+    "max_candidates_per_category": 2800,
+    "fair_share_across_categories": true,
+    "minimum_free_disk_reserve_bytes": 6442450944,
+    "landmark_score_bonus": 9
+  },
+  "bank_policy": {
+    "minimum_ready_banks": 8,
+    "banks": [
+      {
+        "id": "BANK01_FANGORN_QUIET_EXPLORATION",
+        "purpose": "Ancient forest quiet-state traversal, dominant trees, roots and disorientation"
+      },
+      {
+        "id": "BANK02_ENT_INTRODUCTION_DIALOGUE",
+        "purpose": "Treebeard/Ent introductions, dialogue staging and relationship support"
+      },
+      {
+        "id": "BANK03_ENT_TRAVERSAL_SCALE",
+        "purpose": "Massive deliberate Ent traversal and environmental interaction support"
+      },
+      {
+        "id": "BANK04_MERRY_PIPPIN_COMPANION",
+        "purpose": "Hobbit companionship, observation, climbing/ride support and reactions"
+      },
+      {
+        "id": "BANK05_HUNTERS_SEARCH_DISORIENTATION",
+        "purpose": "Aragorn/Legolas/Gimli search, forest disorientation and reunion staging"
+      },
+      {
+        "id": "BANK06_GANDALF_RETURN_REVEAL",
+        "purpose": "Returned Gandalf silhouette, staff/sword support, restrained reveal effects and dialogue staging"
+      },
+      {
+        "id": "BANK07_FANGORN_AUDIO_LIGHTING_MIST",
+        "purpose": "Quiet/threat/reveal ambience, mist, lighting and living-forest audio"
+      },
+      {
+        "id": "BANK08_ENT_MOBILIZATION_SUPPORT",
+        "purpose": "Source support for Fangorn mobilization state without opening F2-08 Isengard assault resolution"
+      },
+      {
+        "id": "BANK09_EDORAS_HANDOFF",
+        "purpose": "Departure route and cinematic handoff toward Edoras without opening court-resolution content"
+      }
+    ]
+  },
+  "landmark_policy": {
+    "minimum_landmark_categories": 16,
+    "require_dominant_fangorn_vista": true,
+    "dense_trunk_root_readability_required": true,
+    "ent_scale_route_readability_required": true,
+    "gandalf_reveal_landmark_required": true,
+    "quiet_to_mobilization_state_readability_required": true,
+    "distance_proxy_or_lod_required_for_large_landmark_meshes": true,
+    "critical_vista_preload_required": true
+  },
+  "categories": [
+    {
+      "id": "FANGORN_ANCIENT_TRUNK_LANDMARK",
+      "bank": "BANK01_FANGORN_QUIET_EXPLORATION",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "fangorn",
+        "ancient",
+        "tree",
+        "trunk",
+        "forest",
+        "massive",
+        "old",
+        "canopy"
+      ]
+    },
+    {
+      "id": "FANGORN_ROOT_MAZE_LANDMARK",
+      "bank": "BANK01_FANGORN_QUIET_EXPLORATION",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "root",
+        "tree",
+        "forest",
+        "maze",
+        "path",
+        "ancient",
+        "gnarled",
+        "ground"
+      ]
+    },
+    {
+      "id": "FANGORN_MIST_CORRIDOR",
+      "bank": "BANK01_FANGORN_QUIET_EXPLORATION",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "mist",
+        "fog",
+        "forest",
+        "corridor",
+        "tree",
+        "dark",
+        "path",
+        "atmosphere"
+      ]
+    },
+    {
+      "id": "FANGORN_DENSE_CANOPY",
+      "bank": "BANK01_FANGORN_QUIET_EXPLORATION",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "canopy",
+        "tree",
+        "forest",
+        "dense",
+        "branch",
+        "ancient",
+        "leaf",
+        "wood"
+      ]
+    },
+    {
+      "id": "FANGORN_FOREST_SURFACES",
+      "bank": "BANK01_FANGORN_QUIET_EXPLORATION",
+      "kind": "surface",
+      "landmark": false,
+      "keywords": [
+        "bark",
+        "moss",
+        "root",
+        "leaf",
+        "forest",
+        "ground",
+        "wood",
+        "fern"
+      ]
+    },
+    {
+      "id": "FANGORN_LIVING_FOREST_DRESSING",
+      "bank": "BANK01_FANGORN_QUIET_EXPLORATION",
+      "kind": "mixed",
+      "landmark": false,
+      "keywords": [
+        "branch",
+        "root",
+        "vine",
+        "tree",
+        "forest",
+        "living",
+        "moss",
+        "leaf"
+      ]
+    },
+    {
+      "id": "TREEBEARD_HERO_SILHOUETTE",
+      "bank": "BANK02_ENT_INTRODUCTION_DIALOGUE",
+      "kind": "animated",
+      "landmark": true,
+      "keywords": [
+        "treebeard",
+        "ent",
+        "tree",
+        "giant",
+        "ancient",
+        "humanoid",
+        "character",
+        "forest"
+      ]
+    },
+    {
+      "id": "ENT_DIALOGUE_CLEARING",
+      "bank": "BANK02_ENT_INTRODUCTION_DIALOGUE",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "clearing",
+        "forest",
+        "tree",
+        "circle",
+        "gather",
+        "dialogue",
+        "root",
+        "stone"
+      ]
+    },
+    {
+      "id": "ENT_SOCIAL_STAGING_PROPS",
+      "bank": "BANK02_ENT_INTRODUCTION_DIALOGUE",
+      "kind": "static",
+      "landmark": false,
+      "keywords": [
+        "tree",
+        "root",
+        "stone",
+        "stump",
+        "forest",
+        "gather",
+        "meeting",
+        "branch"
+      ]
+    },
+    {
+      "id": "TREEBEARD_DIALOGUE_ANIMATION",
+      "bank": "BANK02_ENT_INTRODUCTION_DIALOGUE",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "talk",
+        "gesture",
+        "look",
+        "turn",
+        "slow",
+        "ent",
+        "tree",
+        "idle",
+        "deliberate"
+      ]
+    },
+    {
+      "id": "ENT_MASSIVE_TRAVERSAL_ROUTE",
+      "bank": "BANK03_ENT_TRAVERSAL_SCALE",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "forest",
+        "route",
+        "wide",
+        "tree",
+        "root",
+        "path",
+        "giant",
+        "traversal"
+      ]
+    },
+    {
+      "id": "ENT_FOOTFALL_ENV_SUPPORT",
+      "bank": "BANK03_ENT_TRAVERSAL_SCALE",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "foot",
+        "impact",
+        "ground",
+        "root",
+        "branch",
+        "debris",
+        "forest",
+        "heavy"
+      ]
+    },
+    {
+      "id": "ENT_DELIBERATE_MOVEMENT_ANIMATION",
+      "bank": "BANK03_ENT_TRAVERSAL_SCALE",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "walk",
+        "step",
+        "turn",
+        "carry",
+        "slow",
+        "heavy",
+        "giant",
+        "tree",
+        "ent"
+      ]
+    },
+    {
+      "id": "ENT_ENVIRONMENTAL_INTERACTION",
+      "bank": "BANK03_ENT_TRAVERSAL_SCALE",
+      "kind": "mixed",
+      "landmark": false,
+      "keywords": [
+        "branch",
+        "tree",
+        "root",
+        "rock",
+        "push",
+        "lift",
+        "break",
+        "environment",
+        "ent"
+      ]
+    },
+    {
+      "id": "MERRY_PIPPIN_TREE_RIDE_SUPPORT",
+      "bank": "BANK04_MERRY_PIPPIN_COMPANION",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "hobbit",
+        "ride",
+        "carry",
+        "tree",
+        "ent",
+        "climb",
+        "sit",
+        "hold"
+      ]
+    },
+    {
+      "id": "MERRY_PIPPIN_OBSERVATION_ANIMATION",
+      "bank": "BANK04_MERRY_PIPPIN_COMPANION",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "look",
+        "point",
+        "talk",
+        "listen",
+        "surprise",
+        "hobbit",
+        "forest",
+        "observe"
+      ]
+    },
+    {
+      "id": "HOBBIT_SCALE_FOREST_LANDMARK",
+      "bank": "BANK04_MERRY_PIPPIN_COMPANION",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "forest",
+        "root",
+        "trunk",
+        "giant",
+        "scale",
+        "path",
+        "hobbit",
+        "tree"
+      ]
+    },
+    {
+      "id": "HOBBIT_COMPANION_DIALOGUE_SPACE",
+      "bank": "BANK04_MERRY_PIPPIN_COMPANION",
+      "kind": "static",
+      "landmark": false,
+      "keywords": [
+        "forest",
+        "clearing",
+        "root",
+        "stone",
+        "dialogue",
+        "rest",
+        "tree"
+      ]
+    },
+    {
+      "id": "HUNTERS_SEARCH_ROUTE",
+      "bank": "BANK05_HUNTERS_SEARCH_DISORIENTATION",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "search",
+        "trail",
+        "forest",
+        "route",
+        "path",
+        "tree",
+        "root",
+        "track"
+      ]
+    },
+    {
+      "id": "HUNTERS_FOREST_DISORIENTATION",
+      "bank": "BANK05_HUNTERS_SEARCH_DISORIENTATION",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "forest",
+        "mist",
+        "dense",
+        "path",
+        "lost",
+        "dark",
+        "tree",
+        "maze"
+      ]
+    },
+    {
+      "id": "ARAGORN_FANGORN_SEARCH_ANIM",
+      "bank": "BANK05_HUNTERS_SEARCH_DISORIENTATION",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "aragorn",
+        "ranger",
+        "search",
+        "track",
+        "look",
+        "kneel",
+        "forest",
+        "walk"
+      ]
+    },
+    {
+      "id": "LEGOLAS_FANGORN_LISTEN_ANIM",
+      "bank": "BANK05_HUNTERS_SEARCH_DISORIENTATION",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "legolas",
+        "elf",
+        "listen",
+        "look",
+        "scout",
+        "forest",
+        "bow",
+        "watch"
+      ]
+    },
+    {
+      "id": "GIMLI_FANGORN_REACTION_ANIM",
+      "bank": "BANK05_HUNTERS_SEARCH_DISORIENTATION",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "gimli",
+        "dwarf",
+        "axe",
+        "look",
+        "walk",
+        "reaction",
+        "forest",
+        "guard"
+      ]
+    },
+    {
+      "id": "GANDALF_RETURN_REVEAL_LANDMARK",
+      "bank": "BANK06_GANDALF_RETURN_REVEAL",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "gandalf",
+        "white",
+        "wizard",
+        "light",
+        "forest",
+        "reveal",
+        "staff",
+        "silhouette"
+      ]
+    },
+    {
+      "id": "GANDALF_RETURN_COSTUME_SUPPORT",
+      "bank": "BANK06_GANDALF_RETURN_REVEAL",
+      "kind": "static",
+      "landmark": false,
+      "keywords": [
+        "white",
+        "robe",
+        "staff",
+        "sword",
+        "wizard",
+        "cloth",
+        "gandalf",
+        "gear"
+      ]
+    },
+    {
+      "id": "GANDALF_RESTRAINED_MAGIC_VFX",
+      "bank": "BANK06_GANDALF_RETURN_REVEAL",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "light",
+        "glow",
+        "staff",
+        "white",
+        "mist",
+        "magic",
+        "reveal",
+        "aura"
+      ]
+    },
+    {
+      "id": "GANDALF_RETURN_DIALOGUE_ANIM",
+      "bank": "BANK06_GANDALF_RETURN_REVEAL",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "wizard",
+        "talk",
+        "gesture",
+        "staff",
+        "stand",
+        "turn",
+        "calm",
+        "gandalf"
+      ]
+    },
+    {
+      "id": "GANDALF_HUNTERS_REUNION_SPACE",
+      "bank": "BANK06_GANDALF_RETURN_REVEAL",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "forest",
+        "clearing",
+        "tree",
+        "reunion",
+        "path",
+        "light",
+        "stone",
+        "mist"
+      ]
+    },
+    {
+      "id": "FANGORN_QUIET_AMBIENCE_AUDIO",
+      "bank": "BANK07_FANGORN_AUDIO_LIGHTING_MIST",
+      "kind": "audio",
+      "landmark": false,
+      "keywords": [
+        "forest",
+        "quiet",
+        "wind",
+        "leaf",
+        "creak",
+        "bird",
+        "ambient",
+        "tree"
+      ]
+    },
+    {
+      "id": "FANGORN_THREAT_AMBIENCE_AUDIO",
+      "bank": "BANK07_FANGORN_AUDIO_LIGHTING_MIST",
+      "kind": "audio",
+      "landmark": false,
+      "keywords": [
+        "forest",
+        "threat",
+        "creak",
+        "wind",
+        "dark",
+        "branch",
+        "ambient",
+        "rumble"
+      ]
+    },
+    {
+      "id": "FANGORN_ENT_FOOTSTEP_AUDIO",
+      "bank": "BANK07_FANGORN_AUDIO_LIGHTING_MIST",
+      "kind": "audio",
+      "landmark": false,
+      "keywords": [
+        "footstep",
+        "heavy",
+        "wood",
+        "ground",
+        "impact",
+        "tree",
+        "rumble",
+        "forest"
+      ]
+    },
+    {
+      "id": "FANGORN_REVEAL_LIGHT_MIST",
+      "bank": "BANK07_FANGORN_AUDIO_LIGHTING_MIST",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "mist",
+        "light",
+        "forest",
+        "ray",
+        "fog",
+        "white",
+        "reveal",
+        "tree"
+      ]
+    },
+    {
+      "id": "ENT_MOBILIZATION_GATHERING_LANDMARK",
+      "bank": "BANK08_ENT_MOBILIZATION_SUPPORT",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "ent",
+        "tree",
+        "gather",
+        "forest",
+        "clearing",
+        "march",
+        "mobilize",
+        "ancient"
+      ]
+    },
+    {
+      "id": "ENT_MOBILIZATION_ROUTE_SUPPORT",
+      "bank": "BANK08_ENT_MOBILIZATION_SUPPORT",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "route",
+        "forest",
+        "tree",
+        "march",
+        "path",
+        "wide",
+        "root",
+        "ent"
+      ]
+    },
+    {
+      "id": "ENT_GROUP_MOVEMENT_ANIMATION",
+      "bank": "BANK08_ENT_MOBILIZATION_SUPPORT",
+      "kind": "animated",
+      "landmark": false,
+      "keywords": [
+        "ent",
+        "tree",
+        "walk",
+        "march",
+        "group",
+        "slow",
+        "heavy",
+        "forest"
+      ]
+    },
+    {
+      "id": "MOBILIZATION_STATE_FOREST_DRESSING",
+      "bank": "BANK08_ENT_MOBILIZATION_SUPPORT",
+      "kind": "mixed",
+      "landmark": false,
+      "keywords": [
+        "forest",
+        "branch",
+        "debris",
+        "root",
+        "path",
+        "march",
+        "tree",
+        "mobilize"
+      ]
+    },
+    {
+      "id": "EDORAS_DEPARTURE_ROUTE_LANDMARK",
+      "bank": "BANK09_EDORAS_HANDOFF",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "route",
+        "departure",
+        "forest",
+        "plain",
+        "ridge",
+        "road",
+        "edoras",
+        "horizon"
+      ]
+    },
+    {
+      "id": "F202_EDORAS_HANDOFF_VISTA",
+      "bank": "BANK09_EDORAS_HANDOFF",
+      "kind": "mixed",
+      "landmark": true,
+      "keywords": [
+        "vista",
+        "forest",
+        "plain",
+        "hill",
+        "route",
+        "distant",
+        "edoras",
+        "transition"
+      ]
+    },
+    {
+      "id": "F202_SYSTEMIC_REACTION_SUPPORT",
+      "bank": "BANK09_EDORAS_HANDOFF",
+      "kind": "mixed",
+      "landmark": false,
+      "keywords": [
+        "branch",
+        "root",
+        "leaf",
+        "cloth",
+        "wind",
+        "impact",
+        "prop",
+        "debris"
+      ]
+    },
+    {
+      "id": "F202_LANDMARK_DISTANCE_PROXY_SUPPORT",
+      "bank": "BANK09_EDORAS_HANDOFF",
+      "kind": "static",
+      "landmark": true,
+      "keywords": [
+        "lod",
+        "proxy",
+        "silhouette",
+        "vista",
+        "tree",
+        "forest",
+        "distant",
+        "hill",
+        "route"
+      ]
+    }
+  ],
+  "runtime_residency_blueprint": {
+    "mode": "MULTI_BANK_SOURCE_PREP_ONLY",
+    "rule": "No Part II runtime chapter is opened until an explicit Part II runtime mapping/migration decision exists.",
+    "heavy_references": "TSoftObjectPtr/TSoftClassPtr/FSoftObjectPath",
+    "heavy_loading": "FStreamableManager asynchronous",
+    "future_overlap": "Active bank plus bounded transition overlap only after runtime mapping is approved."
+  },
+  "acceptance_boundary": "Source architecture/index preparation only. No Part II runtime ID is invented and no runtime/PIE/device/visual/pacing/performance acceptance is claimed."
+}

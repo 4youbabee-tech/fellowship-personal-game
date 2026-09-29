@@ -4943,6 +4943,22 @@
         "REQ-QA-001 localization integrity work"
       ],
       "evidence_boundary": "LOCALIZATION PRODUCT CONTRACT ONLY. Runtime localization completeness, PIE/device and visual acceptance are not claimed."
+    },
+    {
+      "id": "DEC-083",
+      "title": "F2-02 Fangorn and Gandalf Returned source preparation",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-PROD-011",
+        "REQ-WORLD-001",
+        "REQ-PERF-001"
+      ],
+      "resolution": "Prepare F2-02 as a source-only maximum-safe wave. Keep Part II runtime identity unassigned and preserve the locked handoff to Edoras.",
+      "evidence": [
+        "Data/F202FangornGandalfReturnedMaximumSafeMegaSourceV1.json",
+        "Scripts/pre_unreal_validate.py PG-203"
+      ],
+      "evidence_boundary": "SOURCE ARCHITECTURE ONLY; exact-head static validation is required. No runtime or human acceptance is claimed."
     }
   ],
   "open_conflicts": [],

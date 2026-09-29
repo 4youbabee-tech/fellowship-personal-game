@@ -1,3 +1,21 @@
+## 2026-09-29 - F2-02 exact-head static repair
+
+- Pre-Unreal #1401 reached the project-structure validator and failed because PG-203 requires every F2-02 tooling-only path to be ignored in both Unreal push and pull-request filters, while the reconciliation branch contained each path only once.
+- The Unreal workflow filter is corrected so all three F2-02 tooling paths are present in both filter lists.
+- This is a CI routing repair only; F2-02 story/source scope and runtime boundaries are unchanged.
+- Evidence boundary: fresh exact-head static validation is pending on the repaired head. No runtime or human acceptance promotion is claimed.
+
+## 2026-09-29 - F2-02 reconciled after permanent story/source governance
+
+- F2-02 Fangorn & Gandalf Returned source architecture is reconciled onto the post-PR #164 governance baseline.
+- Canonical outcome remains: Gandalf leads the hunters to Edoras.
+- Source pack remains 40 categories, 20 landmark categories, 9 banks, 32,000 candidate ceiling, fair-share scheduling and minimum 8 ready banks / 16 landmark categories.
+- Part II runtime identity remains unassigned: runtime_consumers=[] and runtime_mapping_status=NOT_ASSIGNED_DO_NOT_INVENT.
+- The permanent story contract now applies to this pack: no story shortcuts, no silent omission, and compatible Tolkien detail may enrich playable content without changing locked film outcomes.
+- Governor decision is DEC-083; DEC-081 and DEC-082 remain reserved for the permanent full-journey story/source rule and Arabic localization rule.
+- PG-203 and the F2-02 source runner/workflow are present on this reconciliation branch.
+- Evidence boundary: SOURCE / GOVERNANCE / TOOLING ONLY. Fresh exact-head Pre-Unreal is required on this reconciled head. No PIE, device, visual, pacing or performance acceptance is claimed.
+
 ## 2026-09-29 - permanent full-journey story/source and Arabic localization governance
 
 - Owner direction is captured as permanent repository governance: the game is experience-first, not a shortened recap. Timeline is navigation/order only; film/screenplays lock film-driven continuity; Tolkien supplies compatible deeper detail and book-only events; Sources 02-11 drive production.
