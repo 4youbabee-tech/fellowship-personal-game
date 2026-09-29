@@ -44,7 +44,10 @@
     },
     "maximum_safe_plan": "Data/MaximumSafeProductionModeV1.json",
     "proof_boundary": "No source/preparation success is promoted to PIE/device/visual/performance acceptance.",
-    "active_source_wave": "F1-08 AMON_HEN_BREAKING_MAXIMUM_SAFE"
+    "active_source_wave": "F2-01 THREE_HUNTERS_CAPTIVES_MAXIMUM_SAFE",
+    "part2_source_train": {
+      "F201": "ACTIVE_MAXIMUM_SAFE_SOURCE_WAVE_RUNTIME_MAPPING_UNASSIGNED"
+    }
   },
   "bundles": [
     {
@@ -506,11 +509,12 @@
     "WORK-WORLD-003"
   ],
   "immediate_next_large_actions": [
-    "Complete F1-08 Amon Hen / Breaking of the Fellowship maximum-safe source architecture and exact-head validation.",
-    "Execute the F1-08 source workflow only against a clean persistent warehouse inventory.",
-    "Resume P1C01 Chapter Closure Pack from the clean inventory/reporting gate without opening P1C08 runtime.",
-    "Keep later-region source/material/audio/character/world preparation moving through the 28-region queue.",
-    "Use P1C01 target-device profiling to replace inferred runtime residency limits with measured RAM/VRAM/frame-time budgets."
+    "Complete F2-01 Three Hunters / Captives maximum-safe source architecture and exact-head validation.",
+    "Execute the F2-01 source workflow only against a clean persistent warehouse inventory.",
+    "Do not invent a Part II runtime chapter ID; create a dedicated runtime-ID mapping/migration decision before any Part II runtime integration.",
+    "Resume/continue P1C01 runtime closure independently under the single runtime-changing lane rule.",
+    "Keep later-region source/material/audio/character/world preparation moving through the whole-game queue.",
+    "Use target-device profiling to convert inferred residency limits into measured RAM/VRAM/frame-time budgets."
   ],
   "last_reconciliation": "2026-09-29 MAXIMUM_SAFE_PRODUCTION_V1"
 }
