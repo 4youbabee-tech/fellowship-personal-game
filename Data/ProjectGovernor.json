@@ -4789,6 +4789,47 @@
         "Docs/WORLD_DETAIL_LEDGER.md — Maximum Safe Production Mode V1"
       ],
       "evidence_boundary": "PRODUCTION GOVERNANCE + EXECUTION MODE. Does not waive runtime/PIE/device/visual/pacing/performance acceptance."
+    },
+    {
+      "id": "DEC-079",
+      "title": "F1-08 Breaking of the Fellowship is the first full Adaptive Maximum Safe streamed chapter package",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-PROD-011",
+        "REQ-WORLD-001",
+        "REQ-WORLD-002",
+        "REQ-NPC-001",
+        "REQ-PERF-001",
+        "REQ-STABILITY-001"
+      ],
+      "resolution": "Prepare F1-08 Amon Hen / Breaking of the Fellowship as a 36-category maximum-safe source superpack plus an eight-bank streamed chapter architecture for legacy runtime consumer P1C08. Source/index work may advance now at maximum safe throughput; actual P1C08 runtime integration remains predecessor Gate 6/7 gated.",
+      "implementation_contract": [
+        "Canonical critical path remains Boromir falls; Merry/Pippin are captured; Frodo chooses Mordor; Sam follows. Locked postcondition remains Three parallel campaigns begin.",
+        "F2-01 Three Hunters / Captives owns pursuit/captive progression after the F1-08 postcondition; F1-08 may prepare handoff assets/state but must not consume successor mission progression.",
+        "Boromir remains tragic/redemptive and is never reframed as a generic villain; named equipment remains story-state driven.",
+        "Amon Hen identity centers river/forest/ancient-stone geography, seeing-seat/summit silhouette, battle-state ruin lanes and river-shore departure.",
+        "Maximum-safe source indexing uses 36 categories, a 22,000 candidate-assignment ceiling, 2,400/category, source-path category reuse cap of 3, landmark bonus >=8 and story-critical bonus >=5.",
+        "At least 20 categories and at least 10 landmark categories must be populated for hard source success. Other coverage-group targets report gaps without unnecessarily stopping independent production.",
+        "Runtime design is multi-bank/zone streamed with a planned maximum two-bank transition overlap, soft references and FStreamableManager asynchronous loads; synchronous heavy loads are forbidden.",
+        "Uruk background pressure uses pooling and repeated forest/ruin dressing uses ISM/HISM with LOD/culling.",
+        "Animated production candidates remain FBX-only; production textures remain PNG/TGA; BMP remains blocked.",
+        "Persistent warehouse inventory must be clean and retain the 6 GiB reserve before heavy source execution.",
+        "Source preparation, candidate count and bank planning do not constitute runtime, PIE, device, visual, pacing or performance acceptance."
+      ],
+      "rationale": "The owner made Adaptive Maximum Safe Production the permanent default and requested immediate chapter production at the highest safe throughput. F1-08 is the first suitable chapter to apply that policy end-to-end because its canonical Amon Hen set piece combines multiple world states, combat, character handoffs and a hard campaign split while the target laptop requires bounded residency rather than one giant resident asset graph.",
+      "evidence": [
+        "Docs/WORLD_DETAIL_LEDGER.md — F1-08 Amon Hen / Breaking of the Fellowship Maximum Safe Chapter V1",
+        "Data/F108AmonHenMaximumSafeChapterPlanV1.json",
+        "Data/F108AmonHenMaximumSafeSourceSuperpackV1.json",
+        "Scripts/run_f108_amon_hen_maximum_safe_source.ps1",
+        ".github/workflows/f108-amon-hen-maximum-safe-source.yml",
+        "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX — F1-08 Breaking of the Fellowship",
+        "01_STORY_AND_TIMELINE_BIBLE — F1-08 Breaking of the Fellowship",
+        "03_WORLD_LOCATIONS_AND_MAP_BIBLE — Anduin / Amon Hen",
+        "02_CHARACTERS_AND_RELATIONSHIPS_BIBLE — Boromir",
+        "Fellowship of the Ring screenplay — Amon Hen / Parth Galen sequence"
+      ],
+      "evidence_boundary": "SOURCE/RUNTIME ARCHITECTURE ONLY. No P1C08 runtime integration, PIE, device, visual, pacing or performance acceptance is claimed."
     }
   ],
   "open_conflicts": [],
