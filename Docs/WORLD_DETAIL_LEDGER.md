@@ -1,3 +1,30 @@
+## 2026-09-29 - F1-06 Caradhras & Moria Mega Landmark Source Superpack V1
+
+Registered before any runtime implementation.
+
+Canonical scope:
+- Mission package: **F1-06 Caradhras & Moria**.
+- Legacy runtime consumers: **P1C05 + P1C06** under the recorded F1/P1 reconciliation.
+- Critical path: mountain route fails; Moria reveals Balin's fate; Balrog attacks.
+- Safe optional window: survival, puzzle door, routefinding, tomb battle, escape.
+- Locked postcondition: Gandalf falls; Fellowship escapes.
+
+Landmark identity contract:
+- **Caradhras**: high mountain pass; snow, rock, wind, low visibility; storm escalation; survival traversal and group assists. Establish a dominant mountain-pass silhouette/vista and a readable storm-route spine for navigation/cinematic continuity.
+- **Moria**: Dwarven underground kingdom; monumental geometry, darkness, mines and halls; puzzle/navigation/combat escalation/horror. Establish strong monumental navigation anchors across entrance, tomb-alert and Balrog-escape states.
+- **Doors of Moria** is a supported canonical interaction landmark: observation/puzzle interaction only; progression must preserve fixed entrances/exits/outcomes.
+- Do not invent unsupported named landmarks as production truth.
+
+Production intent:
+- Build the largest Part I source-preparation pack so far, with explicit landmark-first scoring and separate Caradhras/Moria identity lanes.
+- Reuse persistent warehouse stock; index shared candidates instead of duplicating payloads.
+- Heavy execution remains warehouse-inventory-clean gated.
+- Animated candidates FBX-only; PNG/TGA production textures; BMP blocked.
+- Runtime heavy assets remain soft-referenced/asynchronously streamed; crowd/background populations pooled; repeated static geometry uses ISM/HISM + LOD/culling.
+- Source architecture may advance now; P1C05/P1C06 runtime integration remains blocked behind predecessor Gate 6/7 acceptance.
+
+Status: **REGISTERED / LANDMARK-FIRST SOURCE ARCHITECTURE AUTHORIZED / HEAVY EXECUTION INVENTORY-GATED / RUNTIME GATED**.
+
 ## 2026-09-29 - F1-05 Rivendell & Fellowship Mega Source Superpack V1
 
 Registered before any runtime implementation.
