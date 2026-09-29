@@ -1,3 +1,9 @@
+## 2026-09-30 - Second branch-hygiene pass
+
+- Eight clearly superseded remote branches are approved for post-merge deletion: duplicate main-entry workflow experiments, obsolete Warehouse diagnostic/supersession repairs, the pre-reconciliation hero skeletal candidate branch, and three stale repair branches.
+- Unique production/art/provenance/settings branches are explicitly protected in `preserve_pending_salvage`; branch age alone is not a deletion criterion.
+- Evidence boundary: repository hygiene only; no gameplay/PIE/device/visual/performance acceptance is claimed.
+
 ## 2026-09-30 - Stale PR branch cleanup authorization
 
 - Closed stale PRs #171, #163, #167, #154, #159, #162 and #125 after live supersession/integration review.

@@ -43,7 +43,15 @@
     "fix/warehouse-latest-receipt-authority-v1",
     "production/f108-amon-hen-maximum-safe-v1",
     "production/f202-fangorn-gandalf-maximum-safe-source-v1",
-    "production/p1c01-runtime-completion-train-v1"
+    "production/p1c01-runtime-completion-train-v1",
+    "docs/main-developer-entry-20260929",
+    "governance/main-developer-entry-redirect-v1",
+    "fix/warehouse-inventory-hash-diagnostics-v1",
+    "fix/warehouse-supersession-strictmode-v2",
+    "production/p1c01-frodo-gandalf-skeletal-candidate-v1",
+    "repair/p1c01-material-intake-return-v1",
+    "repair/p1c01-pr145-preunreal-contract-v1",
+    "repair/warehouse-critical-gap-receipt-supersession-v1"
   ],
   "safety_rules": [
     "Never delete develop or main.",
@@ -72,7 +80,40 @@
     ]
   },
   "active_work_branches": [],
-  "preserve_pending_salvage": [],
+  "preserve_pending_salvage": [
+    {
+      "branch": "generated/p1c01-material-source-v1",
+      "reason": "unique generated P1C01 material source payload/receipt; preserve until asset salvage decision"
+    },
+    {
+      "branch": "production/p1c01-material-visual-binding-v1",
+      "reason": "large unique C++/config/material/settings wave; requires dedicated salvage review"
+    },
+    {
+      "branch": "production/p1c01-audio-provenance-capture-v1",
+      "reason": "unique audio provenance data; preserve until merged/salvaged"
+    },
+    {
+      "branch": "production/p1c01-architecture-audio-intake-hardening-v1",
+      "reason": "unique runnerless source backlog data; preserve until disposition"
+    },
+    {
+      "branch": "production/p1c01-warehouse-runnerless-backlog-v1",
+      "reason": "unique runnerless backlog document; preserve until disposition"
+    },
+    {
+      "branch": "production/p1c01-hero-rig-source-recovery-v2",
+      "reason": "unique Quaternius hero-rig recovery data; preserve until disposition"
+    },
+    {
+      "branch": "warehouse/p1c01-ready-review-v1",
+      "reason": "warehouse readiness deltas require exact current-data comparison"
+    },
+    {
+      "branch": "production/p1c01-acceptance-closure-train-v1",
+      "reason": "runtime code is integrated but branch has unique acceptance/test material; preserve for one focused salvage pass"
+    }
+  ],
   "completed_integration_branches": [
     "stability/source-architecture-manifest-sync-v1",
     "planning/whole-game-world-build-v1",
@@ -164,5 +205,29 @@
       "develop",
       "main"
     ]
+  },
+  "obvious_stale_cleanup_2026_09_30": {
+    "action": "DELETE_AFTER_THIS_MERGE",
+    "branches": [
+      "docs/main-developer-entry-20260929",
+      "governance/main-developer-entry-redirect-v1",
+      "fix/warehouse-inventory-hash-diagnostics-v1",
+      "fix/warehouse-supersession-strictmode-v2",
+      "production/p1c01-frodo-gandalf-skeletal-candidate-v1",
+      "repair/p1c01-material-intake-return-v1",
+      "repair/p1c01-pr145-preunreal-contract-v1",
+      "repair/warehouse-critical-gap-receipt-supersession-v1"
+    ],
+    "dispositions": {
+      "docs/main-developer-entry-20260929": "SUPERSEDED: obsolete daily-report/deepseek workflow experiment plus old README; current main/developer entry governance is newer.",
+      "governance/main-developer-entry-redirect-v1": "SUPERSEDED duplicate of the same obsolete workflow/README experiment.",
+      "fix/warehouse-inventory-hash-diagnostics-v1": "SUPERSEDED by current warehouse inventory audit with latest-valid-receipt provenance resolution and regression coverage.",
+      "fix/warehouse-supersession-strictmode-v2": "SUPERSEDED by current warehouse receipt supersession semantics and current workflow/validator architecture.",
+      "production/p1c01-frodo-gandalf-skeletal-candidate-v1": "INTEGRATED/SUPERSEDED by merged hero skeletal candidate reconciliation and later diagnostics; candidate manifest/workflow are already current and runner script has newer diagnostics on develop.",
+      "repair/p1c01-material-intake-return-v1": "SUPERSEDED by current material intake implementation and later promotion/validation waves.",
+      "repair/p1c01-pr145-preunreal-contract-v1": "SUPERSEDED repair packet only; current PG-145/PG-145B/PG-183 contracts are authoritative.",
+      "repair/warehouse-critical-gap-receipt-supersession-v1": "SUPERSEDED Governor-only repair snapshot; current Governor and warehouse semantics are newer."
+    },
+    "safety": "Unique production/art/provenance/settings branches are explicitly preserved for focused salvage instead of being deleted by age."
   }
 }
