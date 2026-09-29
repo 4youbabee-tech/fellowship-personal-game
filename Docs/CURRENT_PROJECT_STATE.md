@@ -1,3 +1,12 @@
+## 2026-09-30 - Living-world event member-cull safety repair
+
+- Direct code review confirmed a real pooled-event lifecycle defect in `ALivingWorldDirector::CleanupExpiredEvents`: one distant member could retire the entire event and hide/recycle a still-near interaction or participant.
+- The repair separates **event lifetime expiry** from **distance culling**. Authored lifetime expiry still retires the event as a unit; distance culling now releases only the specific far member, removes invalid weak refs, and retires the event only when no members remain.
+- New marker: `LivingWorldEventMemberCull ... distance-policy=member-local`. PG-207 statically rejects a return to event-wide distance expiry.
+- Programmer review item about repeated `GetPlayerPawn` calls was rechecked against current source: only one direct `UGameplayStatics::GetPlayerPawn` remains, inside `GetPlayerPawnCached()`; active callers use the cached helper. No speculative rewrite is applied.
+- Save-schema review remains separate: schema 6 rejects future saves and contains legacy identity repair, but a general historical schema-migration ladder is not documented well enough to invent migrations safely in this repair.
+- Current status: **SOURCE-IMPLEMENTED / exact-head validation pending**. No PIE/device/visual/performance acceptance is claimed.
+
 ## 2026-09-30 - Living-world member-local cull repair candidate
 
 - Live source review confirmed a pooled-event defect: one distant event member could cause all grouped members, including a nearby player interaction, to be retired together.
