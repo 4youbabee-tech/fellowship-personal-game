@@ -1,5 +1,6 @@
 ## 2026-09-30 - P1C01 maximum-safe mega train integration
 
+- PR #185 was closed unmerged as superseded; `fix/living-world-member-cull-safety-v1` is now explicitly queued in `Data/BranchCleanupPlan.json` for guarded deletion after clean PR #186 integration lands.
 - Owner standing approval is recorded by Governor DEC-090: one approval covers the coordinated P1C01 mega train; safe source/QC/data/documentation work may proceed in parallel, while runtime-changing cars remain serialized behind W00 and exact-head engine gates.
 - Source review preserves the explicit mapping boundary: supplied sources separate F1-01, F1-02 and F1-03, while current runtime P1C01 aggregates Shire party, Ring/Bag End departure and Shire-road/ferry material. No silent chapter renumbering is introduced.
 - Programmer proposal audit confirmed one real defect: `ALivingWorldDirector::CleanupExpiredEvents` could retire an entire pooled micro-event when one member exceeded `EventCullDistance`. The candidate repair keeps authored lifetime expiry event-wide but makes distance retirement member-local, preventing a roaming member from recycling a nearby interaction/participant.
