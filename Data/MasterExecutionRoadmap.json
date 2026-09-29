@@ -40,10 +40,11 @@
       "F105": "SOURCE_ARCHITECTURE_READY",
       "F106": "MERGED_SOURCE_ARCHITECTURE",
       "F107": "PR #157 exact-head validation active",
-      "F108": "NEXT_MAXIMUM_SAFE_MEGA_SOURCE_WAVE"
+      "F108": "ACTIVE_MAXIMUM_SAFE_SOURCE_WAVE"
     },
     "maximum_safe_plan": "Data/MaximumSafeProductionModeV1.json",
-    "proof_boundary": "No source/preparation success is promoted to PIE/device/visual/performance acceptance."
+    "proof_boundary": "No source/preparation success is promoted to PIE/device/visual/performance acceptance.",
+    "active_source_wave": "F1-08 AMON_HEN_BREAKING_MAXIMUM_SAFE"
   },
   "bundles": [
     {
@@ -505,13 +506,11 @@
     "WORK-WORLD-003"
   ],
   "immediate_next_large_actions": [
-    "Repair Warehouse #286 saturation-report StrictMode defect and add regression coverage.",
-    "Rerun selective Warehouse audit/saturation/prep and preserve the clean active-receipt inventory result.",
-    "Resume P1C01 Chapter Closure Pack after the inventory/reporting train is green.",
-    "Complete and merge F1-07 source architecture after exact-head validation.",
-    "Open F1-08 Amon Hen / Breaking of the Fellowship maximum-safe landmark mega source wave.",
-    "Keep later-region source/material/audio/character/world preparation moving through the 28-region whole-game queue without opening another runtime lane.",
-    "Use P1C01 target-device profiling to turn inferred runtime residency limits into measured RAM/VRAM/frame-time budgets."
+    "Complete F1-08 Amon Hen / Breaking of the Fellowship maximum-safe source architecture and exact-head validation.",
+    "Execute the F1-08 source workflow only against a clean persistent warehouse inventory.",
+    "Resume P1C01 Chapter Closure Pack from the clean inventory/reporting gate without opening P1C08 runtime.",
+    "Keep later-region source/material/audio/character/world preparation moving through the 28-region queue.",
+    "Use P1C01 target-device profiling to replace inferred runtime residency limits with measured RAM/VRAM/frame-time budgets."
   ],
   "last_reconciliation": "2026-09-29 MAXIMUM_SAFE_PRODUCTION_V1"
 }
