@@ -1,3 +1,18 @@
+## 2026-09-29 - F2-02 Fangorn & Gandalf Returned Maximum-Safe Source V1
+
+- F2-02 is now the active **Part II maximum-safe source-production wave** after F2-01.
+- Canonical source verification: owner location Fangorn; Merry, Pippin, Treebeard; Hunters, Gandalf; critical path **Ents introduced; Gandalf returns transformed**; locked postcondition **Gandalf leads hunters to Edoras**.
+- Safe optional content is exploration, dialogue and Ent traversal.
+- Fangorn required state variants are **Quiet / Ent mobilization** with dense trunks, roots, mist and living-environment readability.
+- Treebeard hard guardrail is preserved: traversal/destruction remains massive and deliberate; slow deliberation becomes action.
+- No Part II runtime ID is invented. `runtime_consumers=[]` and `runtime_mapping_status=NOT_ASSIGNED_DO_NOT_INVENT` remain enforced until a dedicated mapping/migration decision exists.
+- `Data/F202FangornGandalfMaximumSafeMegaSourceV1.json` defines **42 categories**, **20 landmark-oriented categories**, **9 source banks**, **32,000 total candidate ceiling**, **2,800/category hard ceiling**, fair-share scheduling and landmark bonus 9.
+- Banks cover quiet Fangorn, Ent introduction, Treebeard traversal, Gandalf return, hunter reunion, Ent mobilization, audio/lighting/weather, Edoras handoff and systemic forest response.
+- Source success requires at least **16 populated landmark categories** and **8 ready banks**.
+- `PG-203` protects canon, Treebeard identity, Quiet/Mobilization variants, 42-category breadth, 9-bank breadth, FBX-only animation, BMP rejection, inventory gate and the unassigned Part II runtime-ID boundary.
+- Exact-head validation and heavy source execution are **pending**.
+- Evidence boundary: **SOURCE-IMPLEMENTED / STATIC-VALIDATION PENDING**. No runtime integration, PIE, device, visual, pacing or performance acceptance is claimed.
+
 ## 2026-09-29 - F2-01 Three Hunters / Captives Maximum-Safe Source V1
 
 - F2-01 is now the active **Part II maximum-safe source-production wave** after F1-08.
