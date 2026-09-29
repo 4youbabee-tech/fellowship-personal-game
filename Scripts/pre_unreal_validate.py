@@ -2514,6 +2514,13 @@ if "LivingWorldEventMemberCull" not in living_cpp or "Event.Actors.RemoveAtSwap"
 if re.search(r'FVector::DistSquared2D\([^\n]+\)[\s\S]{0,180}?bExpired\s*=\s*true', living_cpp):
     fail("PG-207 event-wide distance expiry regression: distance culling must remain member-local")
 
+# PG-207: distance retirement is actor-local; one roaming event member must not
+# retire a nearby interaction or other event participant.
+if "LivingWorldEventMemberCull" not in living_cpp or "Event.Actors.RemoveAtSwap" not in living_cpp:
+    fail("PG-207 living-world member-local distance culling contract missing")
+if re.search(r'FVector::DistSquared2D\([^\n]+\)[\s\S]{0,180}?bExpired\s*=\s*true', living_cpp):
+    fail("PG-207 event-wide distance expiry regression: distance culling must remain member-local")
+
 game_mode_cpp = read(resolve_source("ShireGameMode.cpp"))
 if "SpawnActor<ALivingWorldDirector>" not in game_mode_cpp:
     fail("PG-049 ShireGameMode no longer bootstraps LivingWorldDirector")
