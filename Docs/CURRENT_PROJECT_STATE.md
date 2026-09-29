@@ -1,3 +1,12 @@
+## 2026-09-30 - Living-world member-local cull repair candidate
+
+- Live source review confirmed a pooled-event defect: one distant event member could cause all grouped members, including a nearby player interaction, to be retired together.
+- `LivingWorldDirector::CleanupExpiredEvents` now separates event lifetime expiry from distance retirement. Lifetime expiry releases the full event; distance culling releases only the specific far member and removes its weak entry.
+- Regression protection is added through PG-207 and `test_living_world_distance_cull_is_member_local`.
+- The reported AmbientNPC GetPlayerPawn hot-path issue is not reproduced on current develop: the only direct engine lookup is inside `GetPlayerPawnCached()`; runtime callers use the cached helper.
+- Save-schema migration remains separate: older-save canonicalization exists, but historical per-schema migration transforms are not sufficiently documented to invent safely.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD CI PENDING**. No PIE/device/visual/performance claim.
+
 ## 2026-09-30 - Living-world pooled event cull repair
 
 - Confirmed defect: one distant member of a grouped micro-event could previously retire every member, including a nearby player interaction.
