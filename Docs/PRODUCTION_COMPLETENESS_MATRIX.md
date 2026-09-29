@@ -1,3 +1,9 @@
+## 2026-09-29 - Hero skeletal candidate diagnostic note
+
+- First post-merge candidate workflow failed during candidate construction after checkout/runner/preflight success.
+- Diagnostic output is added without relaxing FBX/provenance/skeleton/skin/retarget/deformation gates.
+- Character visual-completion status remains unchanged.
+
 ## 2026-09-29 - P1C01 hero skeletal candidate preparation
 
 - Frodo/Gandalf real-character work advances from generic rig staging to an explicit ranked FBX candidate/QC wave.
