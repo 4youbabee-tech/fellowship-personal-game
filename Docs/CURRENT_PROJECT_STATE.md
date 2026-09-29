@@ -1,3 +1,23 @@
+## 2026-09-29 - Warehouse receipt supersession semantics
+
+- Warehouse #285 isolated the current inventory blocker to `ambientCG\PLASTER\Plaster007_2K-PNG.zip`: historical batch `WAREHOUSE_AMBIENTCG_P1C01_V1` declares the old payload hash while the refreshed current payload is represented by the newer trilogy-foundation receipt path.
+- `Scripts/audit_warehouse_inventory.ps1` now resolves **one active provenance record per normalized payload path**. Newer parseable receipt provenance is active; older receipts stay preserved as `superseded` history instead of being treated as simultaneous hash authorities.
+- Windows path case/slash variants are normalized before grouping. Active-record hash, missing-reference and license checks remain fail-closed.
+- The inventory report now records total/active/superseded provenance counts and the old-to-new receipt relationship without rewriting or deleting historical receipts.
+- New `Scripts/test_warehouse_inventory_receipt_supersession.ps1` proves that a stale V1 hash is superseded by a valid newer V2 receipt, then proves a tampered active V2 payload still fails.
+- Pre-Unreal runs this synthetic regression on `windows-latest`.
+- Governor `DEC-076` records the permanent provenance rule.
+- Evidence boundary: **SOURCE-IMPLEMENTED / exact-head Pre-Unreal pending / persistent warehouse rerun pending**. Warehouse clean state and P1C01 closure continuation are not yet claimed.
+
+## 2026-09-29 - Interactive CI orchestration anti-hang rule
+
+- PR #153 is merged on develop; exact-head Pre-Unreal #1379 and Unreal #1095 both completed SUCCESS.
+- The recent apparent chat hangs were caused by repeated interactive polling while long GitHub Actions jobs were still running, not by a proven Unreal deadlock.
+- Governor `DEC-075` now limits repeated status polling for the same long-running workflow inside one interactive response.
+- After bounded checks, continuation moves to the scheduled automation/next run while independent safe work may continue on separate branches.
+- Exact-head validation, Gate 6/7 and evidence standards are unchanged.
+- Evidence boundary: **ORCHESTRATION FIX RECORDED**; no new runtime/device/visual/performance acceptance is claimed.
+
 ## 2026-09-29 - F1-06 landmark scoring strengthened
 
 - F1-06 landmark categories now use a manifest-driven **landmark score bonus = 6** instead of a fixed small inline boost.

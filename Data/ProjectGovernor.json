@@ -4654,6 +4654,59 @@
         "03_WORLD_LOCATIONS_AND_MAP_BIBLE — Caradhras and Moria production specifications"
       ],
       "evidence_boundary": "SOURCE ARCHITECTURE ONLY. Heavy execution is inventory-gated; no UE integration, PIE, device, visual, pacing or performance acceptance is claimed."
+    },
+    {
+      "id": "DEC-075",
+      "title": "Long CI waits must use bounded polling and asynchronous continuation",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-STABILITY-001",
+        "REQ-STABILITY-003"
+      ],
+      "resolution": "Interactive project work may not spin in repeated GitHub polling loops while a long-running CI job is in progress. Use bounded live checks, then hand continuation to CI/automation and continue independent safe work.",
+      "implementation_contract": [
+        "Within one interactive response, perform at most two follow-up status polls for the same long-running workflow after the initial state read.",
+        "If the workflow remains queued or in_progress after the bounded checks, stop polling it in that response.",
+        "Do not create commits solely to force a fresh status event while an exact-head validation is still running.",
+        "Use the scheduled Shire Journey continuation automation for later re-entry and root-cause handling.",
+        "When safe independent work exists, continue that work on a separate branch without modifying the exact head under validation.",
+        "A completed success/failure event may be handled immediately; only genuinely human-required blockers should interrupt the owner.",
+        "This rule changes orchestration only; it does not weaken exact-head validation, Gate 6/7, canon, or evidence requirements."
+      ],
+      "rationale": "Repeated interactive polling of long Unreal and warehouse runs caused the conversation to appear stuck for extended periods even when CI itself was progressing normally. The project needs responsive orchestration without weakening verification.",
+      "evidence": [
+        "PR #153 exact-head Pre-Unreal #1379 and Unreal #1095 both completed SUCCESS while repeated polling made the chat appear stalled.",
+        "Existing hourly Shire Journey continuation automation can resume later without blocking the active conversation."
+      ],
+      "evidence_boundary": "ORCHESTRATION GOVERNANCE. Does not imply runtime, device, visual, or performance acceptance."
+    },
+    {
+      "id": "DEC-076",
+      "title": "Warehouse provenance uses the latest valid receipt per normalized payload path",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-STABILITY-001",
+        "REQ-STABILITY-003"
+      ],
+      "resolution": "Preserve historical warehouse receipts, but resolve one active provenance record per normalized payload path. The newest parseable receipt record for that path is active; older records remain historical/superseded and do not compare stale hashes against a legitimately refreshed payload.",
+      "implementation_contract": [
+        "Normalize payload paths before provenance grouping so Windows case and slash variations cannot create parallel active records for the same file.",
+        "Order records by staged_at_utc when parseable, fall back to receipt file LastWriteTimeUtc, and use deterministic receipt path/record-index tie breakers.",
+        "Only the active record participates in payload existence, payload SHA256, license snapshot SHA256, provider summary and duplicate-hash audit checks.",
+        "Superseded receipts remain on disk and are recorded in warehouse_inventory_latest.json with old/new batch and receipt identity; they are history, not audit failures.",
+        "If the active newest receipt disagrees with the current payload, the inventory audit still hard-fails with exact active receipt evidence.",
+        "Do not rewrite an old receipt and do not delete a payload merely to make the audit pass.",
+        "Pre-Unreal executes a synthetic PowerShell regression proving V1 stale-hash supersession, normalized-path coalescing and fail-closed behavior for a corrupted active V2 payload."
+      ],
+      "rationale": "Warehouse #285 identified ambientCG\\PLASTER\\Plaster007_2K-PNG.zip with a historical WAREHOUSE_AMBIENTCG_P1C01_V1 hash beginning 3aa7dd while the current payload hash begins 7c486a. The modern ambientCG stager structurally validates the ZIP, hashes the current file and writes a newer V2 receipt. Auditing every historical receipt as simultaneously active incorrectly turns legitimate refresh history into corruption.",
+      "evidence": [
+        "Warehouse #285 exact mismatch evidence for ambientCG\\PLASTER\\Plaster007_2K-PNG.zip",
+        "Scripts/audit_warehouse_inventory.ps1",
+        "Scripts/stage_ambientcg_warehouse.ps1",
+        "Scripts/test_warehouse_inventory_receipt_supersession.ps1",
+        ".github/workflows/pre-unreal-validation.yml"
+      ],
+      "evidence_boundary": "SOURCE-IMPLEMENTED repair contract. Fresh exact-head Pre-Unreal plus persistent warehouse inventory rerun are required before claiming the mismatch repaired or inventory clean."
     }
   ],
   "open_conflicts": [],

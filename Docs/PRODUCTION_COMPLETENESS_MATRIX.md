@@ -1,3 +1,23 @@
+## 2026-09-29 - Warehouse active-provenance supersession repair
+
+- Historical receipt preservation: **RETAINED / NO RECEIPT REWRITE**.
+- Active provenance selection: **SOURCE-IMPLEMENTED — latest valid receipt per normalized payload path**.
+- Windows case/slash path coalescing: **SOURCE-IMPLEMENTED**.
+- Superseded historical hash records: **NON-FAILING HISTORY / REPORTED**.
+- Active latest-receipt hash mismatch: **HARD FAIL REMAINS ENFORCED**.
+- Synthetic V1 -> V2 supersession regression: **SOURCE-IMPLEMENTED / PRE-UNREAL EXECUTION PENDING**.
+- Persistent warehouse inventory clean state: **PENDING RERUN**.
+- P1C01 Closure Pack continuation: **BLOCKED UNTIL PERSISTENT AUDIT PASSES**.
+- Runtime/PIE/device/visual/pacing/performance acceptance: **UNCHANGED / NOT CLAIMED**.
+
+## 2026-09-29 - Interactive orchestration responsiveness
+
+- Repeated same-run interactive long polling: **PROHIBITED BY DEC-075**.
+- Bounded status checks + automation continuation: **GOVERNED**.
+- PR #153 exact-head Pre-Unreal #1379: **SUCCESS**.
+- PR #153 exact-head Unreal #1095: **SUCCESS**.
+- Gate 6/7 / PIE / device / visual / performance criteria: **UNCHANGED**.
+
 ## 2026-09-29 - F1-06 landmark scoring priority
 
 - Configurable landmark score bonus (6): **SOURCE-IMPLEMENTED**.
