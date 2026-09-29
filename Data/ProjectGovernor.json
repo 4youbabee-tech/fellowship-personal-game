@@ -4868,6 +4868,48 @@
         "Docs/WORLD_DETAIL_LEDGER.md — F2-01 Three Hunters / Captives Maximum-Safe Source V1"
       ],
       "evidence_boundary": "SOURCE ARCHITECTURE ONLY. No Part II runtime ID or runtime integration is approved; no PIE/device/visual/pacing/performance acceptance is claimed."
+    },
+    {
+      "id": "DEC-081",
+      "title": "F2-02 Fangorn & Gandalf Returned uses a 9-bank maximum-safe source wave without assigning a Part II runtime ID",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-PROD-011",
+        "REQ-WORLD-001",
+        "REQ-WORLD-002",
+        "REQ-NPC-001",
+        "REQ-PERF-001",
+        "REQ-STABILITY-001"
+      ],
+      "resolution": "Prepare canonical F2-02 Fangorn & Gandalf Returned as a 40-category, 9-bank maximum-safe shared source wave. Preserve runtime_consumers=[] and runtime_mapping_status=NOT_ASSIGNED_DO_NOT_INVENT until a dedicated Part II runtime-ID migration/mapping decision exists.",
+      "implementation_contract": [
+        "Canonical critical path remains Ents introduced; Gandalf returns transformed.",
+        "Locked postcondition remains Gandalf leads hunters to Edoras.",
+        "Safe optional window remains exploration, dialogue and Ent traversal.",
+        "Treebeard traversal/destruction remains massive and deliberate; slow deliberation becomes action.",
+        "Gandalf's returned-strategist presentation keeps magic rare and purposeful, not spam-casting.",
+        "Fangorn remains ancient forest with dense trunks, roots, mist and living environment; required source state support covers quiet and Ent mobilization.",
+        "F2-08 Ent assault on Isengard resolution and Edoras court resolution are excluded from this wave.",
+        "Nine banks cover quiet exploration, Ent introduction/dialogue, Ent traversal scale, Merry/Pippin companion support, Hunters search/disorientation, Gandalf return reveal, audio/lighting/mist, mobilization support and Edoras handoff.",
+        "At least eight banks and sixteen landmark categories must have source coverage before the source runner reports success.",
+        "Candidate scheduling uses fair-share budgeting inside a 32,000 total candidate ceiling with landmark score bonus at least 9.",
+        "Animated candidates remain FBX-only; production textures PNG/TGA; BMP blocked; heavy runtime content remains soft-reference/async only.",
+        "Persistent warehouse inventory must be clean and the 6 GiB free-space reserve remains mandatory.",
+        "No Part II runtime ID is inferred or opened by source-preparation work."
+      ],
+      "rationale": "The supplied F2-02 mission, story, world and character sources define a Fangorn-centered chapter that introduces Ents and Gandalf's return, then hands the Hunters toward Edoras. Maximum-safe production can advance source breadth now, but runtime identity must remain unassigned until the project explicitly maps Part II runtime chapter IDs.",
+      "evidence": [
+        "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX — F2-02 Fangorn & Gandalf Returned",
+        "01_STORY_AND_TIMELINE_BIBLE — F2-02 production specification",
+        "03_WORLD_LOCATIONS_AND_MAP_BIBLE — Fangorn production specification",
+        "02_CHARACTERS_AND_RELATIONSHIPS_BIBLE — Treebeard and Gandalf guardrails",
+        "Data/F202FangornGandalfReturnedMaximumSafeMegaSourceV1.json",
+        "Scripts/run_f202_fangorn_gandalf_returned_maximum_safe_source.ps1",
+        ".github/workflows/f202-fangorn-gandalf-returned-maximum-safe-source.yml",
+        "Scripts/pre_unreal_validate.py PG-203",
+        "Docs/WORLD_DETAIL_LEDGER.md — F2-02 Fangorn & Gandalf Returned Maximum-Safe Source V1"
+      ],
+      "evidence_boundary": "SOURCE ARCHITECTURE ONLY. No Part II runtime ID/runtime integration is approved and no PIE/device/visual/pacing/performance acceptance is claimed."
     }
   ],
   "open_conflicts": [],
