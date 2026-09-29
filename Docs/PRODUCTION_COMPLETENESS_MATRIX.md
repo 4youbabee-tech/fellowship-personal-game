@@ -1,3 +1,10 @@
+## 2026-09-30 - W00 packaged runtime Data-read proof guard
+
+- Packaged RuntimeDependencies staging/JSON syntax guard: **IMPLEMENTED**.
+- Packaged executable Data-consumption guard: **SOURCE-IMPLEMENTED / EXACT-HEAD CI PENDING**, requiring `NPCContext: ready=yes` during packaged startup.
+- This is acceptance evidence hardening only; chapter production maturity is unchanged.
+- P1C01 PIE/device/performance/audio-listening/visual acceptance remains pending and is not promoted by this guard.
+
 ## 2026-09-30 - Final zero-ahead maintenance sweep
 
 - Remaining maintenance refs before sweep: **2**.
