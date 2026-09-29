@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "disposition_id": "P1C01_SOURCE_TO_RUNTIME_DISPOSITION_V1",
-  "status": "PREPARATION_ACTIVE_RUNTIME_EXPANSION_GATED",
+  "status": "PREPARATION_COMPLETE_RUNTIME_CARS_GATED",
   "authority": [
     "Data/ProjectGovernor.json",
     "Data/P1C01MaximumSafeMegaBuildV1.json",
