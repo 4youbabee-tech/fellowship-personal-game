@@ -1,3 +1,12 @@
+## 2026-09-30 - P1C01 mega-build / LivingWorld member-cull safety
+
+- LivingWorld event member-local distance retirement: **SOURCE-IMPLEMENTED / exact-head CI pending**.
+- Whole-event authored lifetime expiry: **PRESERVED**.
+- Ambient player-pawn caching regression guard: **SOURCE-IMPLEMENTED**; current direct UGameplayStatics lookup count in ShireAmbientNPC is one and centralized in the cache helper.
+- Generic save-schema migration: **NOT CLAIMED**; history audit registered before any version-specific migration code.
+- P1C01 12-car maximum-safe mega build: **REGISTERED / runtime expansion gated by W00**.
+- Chapter maturity remains unchanged until exact-head UE4 and later chapter-specific PIE/device/human evidence exist.
+
 ## 2026-09-30 - P1C01 maximum-safe mega build train + living-world cull safety
 
 - Owner-authorized P1C01 mega train: **PREPARATION ACTIVE / RUNTIME EXPANSION GATED BY W00**.
