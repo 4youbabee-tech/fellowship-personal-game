@@ -1,3 +1,11 @@
+## 2026-09-30 - Living-world pooled event cull safety
+
+- Grouped micro-event distance retirement: **SOURCE-REPAIRED** to member-local release.
+- Event lifetime expiry: **UNCHANGED / event-wide**.
+- Pool reuse architecture: **PRESERVED**.
+- Static regression guard PG-207: **IMPLEMENTED / exact-head CI pending**.
+- AI/Life maturity is not promoted until UE/runtime evidence exists; PIE/device/visual/performance remain pending.
+
 ## 2026-09-30 - Final zero-ahead maintenance sweep
 
 - Remaining maintenance refs before sweep: **2**.
