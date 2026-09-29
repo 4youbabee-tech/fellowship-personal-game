@@ -1,0 +1,78 @@
+name: P1C01 Frodo Gandalf Skeletal Candidate Wave
+
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - 'Data/P1C01HeroSkeletalCandidateWaveV1.json'
+      - 'Data/P1C01CharacterRigAnimationPrepV1.json'
+      - 'Scripts/run_p1c01_hero_skeletal_candidate_wave.ps1'
+      - 'Scripts/prepare_p1c01_character_rig_intake.ps1'
+      - '.github/workflows/p1c01-hero-skeletal-candidate-wave.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: p1c01-hero-skeletal-candidate-wave-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    name: Rank Frodo Gandalf skeletal candidates
+    runs-on:
+      - self-hosted
+      - Windows
+      - X64
+      - ue4-27
+    timeout-minutes: 180
+    env:
+      TARGET_SHA: ${{ github.sha }}
+
+    steps:
+      - name: Checkout exact candidate-wave head
+        shell: cmd
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          @echo off
+          setlocal EnableExtensions EnableDelayedExpansion
+          set "GITEXE="
+          for /f "delims=" %%G in ('where git.exe 2^>nul') do if not defined GITEXE set "GITEXE=%%G"
+          if not defined GITEXE if exist "C:\Program Files\Git\cmd\git.exe" set "GITEXE=C:\Program Files\Git\cmd\git.exe"
+          if not defined GITEXE exit /b 22
+          set "SRC=%RUNNER_TEMP%\shire-p1c01-hero-rig-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
+          if exist "!SRC!" rmdir /S /Q "!SRC!"
+          mkdir "!SRC!"
+          cd /d "!SRC!"
+          "!GITEXE!" init
+          if errorlevel 1 exit /b 70
+          "!GITEXE!" -c credential.helper= remote add origin "https://x-access-token:!GH_TOKEN!@github.com/%GITHUB_REPOSITORY%.git"
+          if errorlevel 1 exit /b 71
+          "!GITEXE!" -c credential.helper= fetch --no-tags --depth=2 origin !TARGET_SHA!
+          if errorlevel 1 exit /b 72
+          "!GITEXE!" checkout -f FETCH_HEAD
+          if errorlevel 1 exit /b 73
+          for /f "delims=" %%H in ('"!GITEXE!" rev-parse HEAD') do set "CHECKED_SHA=%%H"
+          if /I not "!CHECKED_SHA!"=="!TARGET_SHA!" exit /b 74
+          echo SHIRE_HERO_RIG_SRC=!SRC!>>"%GITHUB_ENV%"
+          echo P1C01_HERO_RIG_EXACT_CHECKOUT_PASS sha=!CHECKED_SHA!
+
+      - name: Verify runner session health
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_HERO_RIG_SRC%\Scripts\verify_runner_session.ps1"
+
+      - name: Fast PowerShell preflight
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_HERO_RIG_SRC%\Scripts\test_powershell_syntax.ps1"
+
+      - name: Build Frodo Gandalf skeletal candidate report
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_HERO_RIG_SRC%\Scripts\run_p1c01_hero_skeletal_candidate_wave.ps1" -ManifestPath "%SHIRE_HERO_RIG_SRC%\Data\P1C01HeroSkeletalCandidateWaveV1.json"
+
+      - name: Remove isolated checkout
+        if: always()
+        shell: cmd
+        run: |
+          @echo off
+          if defined SHIRE_HERO_RIG_SRC if exist "%SHIRE_HERO_RIG_SRC%" rmdir /S /Q "%SHIRE_HERO_RIG_SRC%"
+          exit /b 0

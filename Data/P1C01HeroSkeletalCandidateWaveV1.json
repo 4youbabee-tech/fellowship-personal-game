@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "wave_id": "P1C01_FRODO_GANDALF_SKELETAL_CANDIDATE_V1",
+  "status": "SOURCE_INTAKE_QC_READY_RUNTIME_NOT_STARTED",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/CharacterVisualProductionWaveV7.json",
+    "Data/CharacterProductionMatrix.json",
+    "Data/P1C01CharacterRigAnimationPrepV1.json",
+    "Data/P1C01ECharacterPresentationPlanV1.json",
+    "Docs/WORLD_DETAIL_LEDGER.md"
+  ],
+  "runtime_scope": "P1C01_ONLY",
+  "runtime_integration_allowed": false,
+  "priority_characters": [
+    {
+      "id": "FRODO",
+      "rig_family": "HOBBIT_HUMANOID",
+      "priority": 1,
+      "target": "first playable Shire skeletal quality bar"
+    },
+    {
+      "id": "GANDALF",
+      "rig_family": "TALL_HUMANOID",
+      "priority": 1,
+      "target": "parallel playable tall-humanoid skeletal quality bar"
+    }
+  ],
+  "authorized_source_packs": [
+    "QTN_UNIVERSAL_BASE_CHARACTERS",
+    "QTN_RPG_CHARACTERS",
+    "QTN_FANTASY_OUTFITS",
+    "QTN_UNIVERSAL_ANIMATION_LIBRARY"
+  ],
+  "candidate_policy": {
+    "animated_source_format": ".fbx",
+    "production_texture_formats": [
+      ".png",
+      ".tga"
+    ],
+    "forbidden_texture_formats": [
+      ".bmp"
+    ],
+    "max_ranked_candidates_per_character": 24,
+    "require_provenance": true,
+    "require_real_skeleton_qc_before_import": true,
+    "require_skin_weight_qc_before_import": true,
+    "require_deformation_qc_before_visual_claim": true,
+    "ready_for_import_default": false,
+    "obj_policy": "STATIC_MODULAR_FALLBACK_ONLY"
+  },
+  "character_scoring": {
+    "FRODO": [
+      "hobbit",
+      "small",
+      "short",
+      "rpg",
+      "male",
+      "character",
+      "adventurer",
+      "villager",
+      "base"
+    ],
+    "GANDALF": [
+      "wizard",
+      "mage",
+      "old",
+      "beard",
+      "robe",
+      "staff",
+      "male",
+      "character",
+      "fantasy",
+      "base"
+    ]
+  },
+  "required_qc": [
+    "source/provider provenance",
+    "FBX skeletal mesh presence",
+    "real skeleton hierarchy",
+    "skin weights",
+    "retarget compatibility",
+    "deformation review",
+    "idle/walk/run coverage or compatible locomotion skeleton",
+    "material slots",
+    "PNG/TGA texture coverage",
+    "equipment sockets",
+    "LOD/cull plan",
+    "conversation-distance face readability"
+  ],
+  "runtime_contract": {
+    "destination_pattern": "/Game/Production/Characters/Rigs/<Character>/",
+    "skeletal_asset_pattern": "SK_<Character>",
+    "anim_blueprint_pattern": "ABP_<Character>_Locomotion",
+    "heavy_refs": "TSoftObjectPtr/TSoftClassPtr/FSoftObjectPath",
+    "loading": "FStreamableManager asynchronous",
+    "fallback_rule": "Keep existing modular character visible until both skeletal mesh and AnimBP resolve.",
+    "npc_world_rule": "No second AI/state authority; ShireNPCContextSubsystem and LivingWorldDirector ownership remains unchanged."
+  },
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "quality": "Low-Medium",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_class": 2
+  },
+  "success_boundary": {
+    "minimum_fbx_candidates_total": 2,
+    "minimum_character_pools_with_candidates": 2,
+    "warehouse_inventory_must_be_clean": true,
+    "output_state": "CANDIDATE_QC_READY_NOT_IMPORTED"
+  },
+  "evidence_boundary": "Candidate discovery/ranking only. No skeletal import, runtime replacement, PIE, device, visual or performance acceptance is claimed."
+}

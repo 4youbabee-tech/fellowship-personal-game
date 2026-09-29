@@ -1,3 +1,16 @@
+## 2026-09-29 - P1C01 Frodo/Gandalf skeletal candidate production wave V1
+
+- Existing owner priority remains unchanged: replace proxy/modular character bodies with real skeletal FBX production characters, beginning with Frodo and Gandalf inside the active P1C01 runtime benchmark.
+- This wave is a **source/intake/QC preparation wave**, not a runtime replacement claim.
+- Frodo is priority 1 because he is the primary playable Shire quality bar; Gandalf is priority 1 because he proves the tall-humanoid/parallel playable route.
+- Accepted source candidates must be legal/provenanced, FBX for animated character delivery, with PNG/TGA production textures. OBJ may remain static fallback only and BMP is forbidden.
+- Candidate selection must preserve real rigging requirements: skeleton, skin weights, deformation, retarget compatibility, locomotion coverage, material slots, LOD/cull plan and equipment sockets. Container conversion alone is never rigging evidence.
+- Runtime handoff target remains /Game/Production/Characters/Rigs/<Character>/ with SK_<Character> + ABP_<Character>_Locomotion and soft/async loading.
+- Existing modular character remains visible until both skeletal mesh and AnimBP resolve; do not create a broken half-rig state.
+- ShireNPCContextSubsystem / LivingWorldDirector ownership is unchanged by this wave; presentation assets must not create a second AI/state authority or per-character global polling.
+- Evidence boundary: SOURCE/INTAKE/QC PREPARATION ONLY. No character is called rigged, imported, PIE-tested, device-tested, visually accepted or performance accepted by this ledger entry.
+
+
 ## 2026-09-29 - F2-03 Edoras Maximum-Safe Source V1
 
 - Canonical mission: F2-03 Edoras.
