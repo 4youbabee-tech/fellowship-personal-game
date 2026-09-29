@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "P1C01_OVERNIGHT_MEGA_BUILD_TRAIN_V1",
-  "status": "AUTHORIZED_PREPARATION_RUNTIME_GATED",
+  "status": "W01_ACTIVE_ONE_APPROVAL_MANY_CARS_SERIALIZED_RUNTIME",
   "authority": [
     "Data/ProjectGovernor.json",
     "Docs/WORLD_DETAIL_LEDGER.md",
@@ -41,7 +41,7 @@
   },
   "execution_policy": {
     "one_approval_many_cars": true,
-    "runtime_serialization": "No runtime car starts until its prerequisite exact-head machine gate is green.",
+    "runtime_serialization": "W00 machine closure is green. Runtime-changing cars remain serialized: the next runtime car may start only after the current runtime-changing car has exact-head Pre-Unreal + UE4.27.2 proof.",
     "parallel_allowed": [
       "source/QC acquisition",
       "warehouse inventory",
@@ -65,84 +65,85 @@
       "order": 1,
       "id": "W00_ACCEPTANCE_CLOSE",
       "type": "GATE",
-      "status": "IN_PROGRESS",
-      "purpose": "Close packaged runtime Data-read and current W00 machine evidence before runtime expansion."
+      "status": "COMPLETE_MACHINE_PROVEN",
+      "purpose": "Close packaged runtime Data-read and current W00 machine evidence before runtime expansion.",
+      "evidence": "PR #184; Pre #1435 SUCCESS; Unreal #1108 SUCCESS; packaged Data 37/37; NPCContext ready marker; packaged startup 6s."
     },
     {
       "order": 2,
       "id": "LIVING_WORLD_EVENT_CULL_SAFETY",
       "type": "RUNTIME_REPAIR",
-      "status": "SOURCE_IMPLEMENTED_PROOF_PENDING",
+      "status": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
       "purpose": "Member-local distance retirement so one roaming actor cannot despawn a nearby interaction/event member."
     },
     {
       "order": 3,
       "id": "SHIRE_WORLD_DENSITY_AND_ROUTE_LIFE",
       "type": "RUNTIME_BUILD",
-      "status": "GATED",
+      "status": "QUEUED_BEHIND_CURRENT_RUNTIME_CAR",
       "purpose": "Populate Hobbiton/fields/lanes/party/ferry corridor using existing pooled LivingWorld ownership and chapter-tuned caps."
     },
     {
       "order": 4,
       "id": "PARTY_AND_BAG_END_INTERACTION_DENSITY",
       "type": "RUNTIME_BUILD",
-      "status": "GATED",
+      "status": "QUEUED_BEHIND_CURRENT_RUNTIME_CAR",
       "purpose": "Birthday setup, social onboarding, tables/food/decorations, bounded guest interactions, Bag End lived-in interaction pass."
     },
     {
       "order": 5,
       "id": "NPC_ROUTINES_SOCIAL_MEMORY",
       "type": "RUNTIME_BUILD",
-      "status": "GATED",
+      "status": "QUEUED_BEHIND_CURRENT_RUNTIME_CAR",
       "purpose": "Expand existing Shire schedules, context, social pairing and bounded memory without a parallel AI brain."
     },
     {
       "order": 6,
       "id": "FAUNA_ENVIRONMENTAL_MOTION",
       "type": "RUNTIME_BUILD",
-      "status": "GATED",
+      "status": "QUEUED_BEHIND_CURRENT_RUNTIME_CAR",
       "purpose": "Bird/rabbit/butterfly and environmental motion using existing pooled/distance-throttled systems."
     },
     {
       "order": 7,
       "id": "CHARACTER_PRESENTATION",
       "type": "RUNTIME_BUILD",
-      "status": "GATED",
+      "status": "QUEUED_BEHIND_CURRENT_RUNTIME_CAR",
       "purpose": "Promote approved FBX skeletal candidates and animation presentation through soft/async residency only."
     },
     {
       "order": 8,
       "id": "QUEST_SIDE_ACTIVITY_COHERENCE",
       "type": "RUNTIME_BUILD",
-      "status": "GATED",
+      "status": "QUEUED_BEHIND_CURRENT_RUNTIME_CAR",
       "purpose": "Strengthen current P1C01 quest chain and source-grounded optional windows without changing locked outcomes."
     },
     {
       "order": 9,
       "id": "CINEMATIC_CONTROL_HANDOFF",
       "type": "RUNTIME_BUILD",
-      "status": "GATED",
+      "status": "QUEUED_BEHIND_CURRENT_RUNTIME_CAR",
       "purpose": "Bounded set-piece entry/exit with identical skip postconditions and clean return to embodied control."
     },
     {
       "order": 10,
       "id": "SHIRE_AUDIO_IDENTITY",
       "type": "CONTENT_INTEGRATION",
-      "status": "GATED",
+      "status": "QUEUED_BEHIND_CURRENT_RUNTIME_CAR",
       "purpose": "Birds, hedges/breeze, farm work, distant laughter, carts, warm interiors, fire/cutlery using approved offline banks and concurrency."
     },
     {
       "order": 11,
       "id": "SAVE_LOAD_LONG_SESSION",
       "type": "RELIABILITY",
-      "status": "GATED",
+      "status": "QUEUED_BEHIND_CURRENT_RUNTIME_CAR",
       "purpose": "Long-session pool reuse, save/load, world revision and legacy restore regression coverage."
     },
     {
       "order": 12,
       "id": "TARGET_DEVICE_PROFILE_AND_GATE67",
       "type": "ACCEPTANCE",
-      "status": "GATED",
+      "status": "QUEUED_BEHIND_CURRENT_RUNTIME_CAR",
       "purpose": "720p Low-Medium FPS/frame-time/hitch/RAM/VRAM and human chapter-specific visual/gameplay/life review."
     }
   ],
