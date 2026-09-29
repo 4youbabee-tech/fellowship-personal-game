@@ -1,3 +1,11 @@
+## 2026-09-30 - Runner root migration C -> D
+
+- Persistent self-hosted runner authority is now `D:\\actions-runner`; persistent Warehouse authority is `D:\\actions-runner\\_warehouse\\ShireJourney`.
+- Live GitHub runner proof after the move reported `RUNNER_HEALTH_WORKSPACE_PASS temp=D:\\actions-runner\\_work\\_temp` and `RUNNER_HEALTH_PASS` under the interactive watchdog-owned user session.
+- Repository runner/Warehouse defaults were migrated away from active `C:\\actions-runner` assumptions, including chapter source waves, Warehouse trains, watchdog/service guard defaults, and Warehouse Stage explicit paths.
+- The old C-side runner is retirement residue only; quarantine preserved the pre-retirement baseline of 28,252 files / 7,604,599,440 bytes before cleanup.
+- Evidence boundary: RUNNER ROOT / WORKSPACE / TOPOLOGY RUN-PROVEN. No PIE, packaged gameplay, visual, target-device performance, or chapter acceptance is claimed.
+
 ## 2026-09-29 - P1C01 hero skeletal candidate diagnostic repair
 
 - Post-merge P1C01 Frodo/Gandalf skeletal candidate workflow run #1 reached the candidate-build step and failed there; checkout, runner health and PowerShell preflight all passed.
