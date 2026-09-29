@@ -123,15 +123,15 @@
     ]
   },
   "execution_order": [
-    "Complete F2-01 Three Hunters / Captives maximum-safe source wave and exact-head validation.",
-    "Execute F2-01 source indexing only while persistent warehouse inventory remains clean.",
+    "Complete F2-02 Fangorn & Gandalf Returned maximum-safe source wave and exact-head validation.",
+    "Execute F2-02 source indexing only while persistent warehouse inventory remains clean.",
     "Keep Part II runtime integration disabled until an explicit runtime-ID mapping/migration decision exists.",
     "Continue P1C01 runtime closure as the sole runtime-changing lane.",
-    "Keep later-region source/material/audio/character/world preparation moving through the whole-game queue where canon authority is sufficient.",
+    "Advance later source/material/audio/character/world preparation through the whole-game queue at maximum safe throughput.",
     "Use target-device profiling to replace inferred residency ceilings with measured budgets."
   ],
   "success_definition": "Production lanes remain saturated without violating any hard stop, while runtime integration stays serialized and evidence-backed.",
   "evidence_boundary": "Execution architecture and current live warehouse evidence only. No PIE/device/visual/pacing/performance acceptance is implied.",
-  "active_source_wave": "F2-01 Three Hunters / Captives",
+  "active_source_wave": "F2-02 Fangorn & Gandalf Returned",
   "active_source_wave_status": "SOURCE_ARCHITECTURE_IMPLEMENTATION_ACTIVE_RUNTIME_MAPPING_UNASSIGNED"
 }
