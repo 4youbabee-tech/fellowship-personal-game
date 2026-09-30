@@ -33,6 +33,8 @@ void AStoryPresentationDirector::BeginPlay()
     {
         Presentation->OnStoryPresentationRequested.AddDynamic(
             this, &AStoryPresentationDirector::HandlePresentationCue);
+        Presentation->OnCinematicStateChanged.AddDynamic(
+            this, &AStoryPresentationDirector::HandleCinematicStateChanged);
     }
 
     if (UShireQuestSubsystem* Quests = GI->GetSubsystem<UShireQuestSubsystem>())
@@ -57,6 +59,8 @@ void AStoryPresentationDirector::EndPlay(const EEndPlayReason::Type EndPlayReaso
         {
             Presentation->OnStoryPresentationRequested.RemoveDynamic(
                 this, &AStoryPresentationDirector::HandlePresentationCue);
+            Presentation->OnCinematicStateChanged.RemoveDynamic(
+                this, &AStoryPresentationDirector::HandleCinematicStateChanged);
         }
 
         if (UShireQuestSubsystem* Quests = GI->GetSubsystem<UShireQuestSubsystem>())
@@ -337,7 +341,23 @@ void AStoryPresentationDirector::HandlePresentationCue(FShireStoryPresentationCu
 
 void AStoryPresentationDirector::HandleChapterChanged(FName PreviousChapterId, FName NewChapterId)
 {
+    if (UGameInstance* GI = GetGameInstance())
+    {
+        if (UShireStoryPresentationSubsystem* Presentation =
+            GI->GetSubsystem<UShireStoryPresentationSubsystem>())
+        {
+            Presentation->ReleaseCinematicLock();
+        }
+    }
     ReleaseCamera();
+}
+
+void AStoryPresentationDirector::HandleCinematicStateChanged(bool bLocked)
+{
+    if (!bLocked)
+    {
+        ReleaseCamera();
+    }
 }
 
 void AStoryPresentationDirector::ReleaseCamera()
