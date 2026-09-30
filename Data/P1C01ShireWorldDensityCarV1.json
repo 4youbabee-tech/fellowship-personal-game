@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "car_id": "P1C01_SHIRE_WORLD_DENSITY_V1",
+  "status": "REGISTERED_NOT_RUNTIME_IMPLEMENTED",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Docs/WORLD_DETAIL_LEDGER.md",
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+    "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE",
+    "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX",
+    "Data/WorldLifeSaturationPlan.json"
+  ],
+  "purpose": "Increase P1C01 lived-in Shire visual density without increasing full-AI population or introducing a second world-life owner.",
+  "source_scope": {
+    "world": "Pastoral hills, lanes, farms, Hobbit-holes, gardens, readable low-threat exploration and chapter-state variation.",
+    "systems": "Believable authored routine/world detail with bounded simulation; density quality should use instancing, culling and simplified distant presentation.",
+    "canon_boundary": "P1C01 remains the existing F1-01/F1-02/F1-03 aggregation. This car changes dressing only and owns no locked story outcome."
+  },
+  "architecture": {
+    "world_builder": "Geometry/dressing only.",
+    "living_world_director": "Ambient population budgets, pooling and micro-events remain sole authority.",
+    "quest_subsystem": "Quest/story truth remains sole authority.",
+    "implementation": "AWorldDetailCluster HISM actors using already-resident meshes exposed by ShirePrototypeWorldBuilder.",
+    "per_frame_tick": false,
+    "collision": false,
+    "synchronous_heavy_load": false
+  },
+  "budget": {
+    "ambient_population_target_p1c01": 18,
+    "max_cluster_actors": 5,
+    "max_detail_instances": 70,
+    "categories": [
+      {
+        "id": "WOOD_PILES",
+        "max_instances": 10,
+        "start_cull_cm": 1200,
+        "end_cull_cm": 6500
+      },
+      {
+        "id": "FERN_CLUMPS",
+        "max_instances": 24,
+        "start_cull_cm": 900,
+        "end_cull_cm": 4800
+      },
+      {
+        "id": "REED_CLUSTERS",
+        "max_instances": 18,
+        "start_cull_cm": 1200,
+        "end_cull_cm": 6000
+      },
+      {
+        "id": "PATH_MARKERS",
+        "max_instances": 12,
+        "start_cull_cm": 1600,
+        "end_cull_cm": 8000
+      },
+      {
+        "id": "FALLEN_LOGS",
+        "max_instances": 6,
+        "start_cull_cm": 1800,
+        "end_cull_cm": 8500
+      }
+    ]
+  },
+  "asset_policy": {
+    "source": "Existing ProductionCommon* mesh pointers resolved from already-resident soft object paths.",
+    "missing_asset_behavior": "Skip that category; do not synchronously load it.",
+    "animated_assets": "Not part of this car.",
+    "texture_policy": "No new texture asset introduced."
+  },
+  "acceptance": {
+    "exact_head_required": [
+      "Pre-Unreal Validation",
+      "UE4.27.2 Unreal Build Validation"
+    ],
+    "human_later": [
+      "PIE traversal/readability",
+      "visual density/pacing review"
+    ],
+    "device_later": [
+      "720p Low-Medium FPS/frame-time/hitches/RAM/VRAM on target-class hardware"
+    ],
+    "boundary": "Registration is planning evidence only."
+  }
+}
