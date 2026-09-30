@@ -87,7 +87,16 @@
     "tooling/opencodereview-readonly",
     "warehouse/p1c01-ready-review-v1",
     "maintenance/final-prebuild-branch-cleanout-v1",
-    "maintenance/final-zero-ahead-sweep-v1"
+    "maintenance/final-zero-ahead-sweep-v1",
+    "feature/p1c01-physical-surface-sync-v1",
+    "fix/living-world-member-cull-safety-v1",
+    "fix/living-world-member-cull-safety-v2",
+    "integration/p1c01-maximum-safe-mega-v1",
+    "prep/p1c01-cache-guard-evidence-v2",
+    "prep/p1c01-save-schema-history-v1",
+    "production/p1c01-maximum-safe-mega-build-v1",
+    "production/p1c01-maximum-safe-mega-train-v1",
+    "maintenance/ci-rootfix-branch-retirement-v1"
   ],
   "safety_rules": [
     "Never delete develop or main.",
@@ -334,5 +343,22 @@
     "rule": "After this merge, Branch Cleanup deletes this merged head exactly and deletes the superseded final-prebuild maintenance ref if still present. The archive ref remains recovery-only.",
     "build_resume": "Once Branch Cleanup succeeds and only develop/main/archive remain, repository cleanup is closed and substantive construction resumes from develop.",
     "evidence_boundary": "Repository hygiene only; no gameplay/compile/PIE/device/visual/performance acceptance."
+  },
+  "late_branch_retirement_2026_10_01": {
+    "action": "DELETE_REVIEWED_LEGACY_HEADS_AFTER_THIS_MERGE",
+    "archive_branch": "archive/pre-build-salvage-20260930",
+    "archive_commit": "1122e4e4a41c43bfbdf15b38a452ab3b17dd7479",
+    "branches": [
+      "feature/p1c01-physical-surface-sync-v1",
+      "fix/living-world-member-cull-safety-v1",
+      "fix/living-world-member-cull-safety-v2",
+      "integration/p1c01-maximum-safe-mega-v1",
+      "prep/p1c01-cache-guard-evidence-v2",
+      "prep/p1c01-save-schema-history-v1",
+      "production/p1c01-maximum-safe-mega-build-v1",
+      "production/p1c01-maximum-safe-mega-train-v1"
+    ],
+    "safety": "All listed legacy heads were first captured as parents of the recovery-only archive commit. Active PR heads #201/#202 remain protected and are not included. develop/main remain canonical/protected.",
+    "root_fix": "Merged-head exact-SHA deletion remains mandatory; new merged branches must not accumulate."
   }
 }
