@@ -9893,3 +9893,69 @@ else:
     if "if (!bLocked)" not in state_body or "ReleaseCamera();" not in state_body:
         fail("PG-220 cinematic unlock must release transient runtime camera")
 
+
+
+# PG-221: P1C01 Shire audio identity keeps async ownership and bounded decorative concurrency.
+pg221_path = ROOT / "Data" / "P1C01ShireAudioIdentityV1.json"
+if not pg221_path.exists():
+    fail("PG-221 Shire audio identity contract missing")
+else:
+    try:
+        pg221 = json.loads(read(pg221_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-221 invalid Shire audio identity contract: {exc}")
+        pg221 = {}
+
+    if pg221:
+        if pg221.get("status") != "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING":
+            fail("PG-221 Shire audio identity status drifted")
+        runtime = pg221.get("runtime_contract", {})
+        budget = pg221.get("low_spec_budget", {})
+        if runtime.get("heavy_audio_loading") != "FSoftObjectPath + FStreamableManager async":
+            fail("PG-221 heavy audio loading contract drifted")
+        if runtime.get("decorative_spatial_sfx_burst_bounded") is not True:
+            fail("PG-221 decorative SFX burst must remain bounded")
+        if runtime.get("story_critical_sfx_not_blocked_by_decorative_burst") is not True:
+            fail("PG-221 story-critical SFX priority contract drifted")
+        if budget.get("max_decorative_spatial_sfx_starts_per_window") != 6:
+            fail("PG-221 decorative SFX start cap must remain 6")
+        if abs(float(budget.get("decorative_spatial_sfx_window_seconds", 0.0)) - 0.25) > 0.001:
+            fail("PG-221 decorative SFX window must remain 0.25 seconds")
+
+    pg221_h = read(resolve_source("Subsystems/ShireAudioSubsystem.h"))
+    pg221_cpp = read(resolve_source("Subsystems/ShireAudioSubsystem.cpp"))
+
+    for required in (
+        "RecentDecorativeSfxStartTimes",
+        "DecorativeSfxWindowSeconds = 0.25f",
+        "MaxDecorativeSfxStartsPerWindow = 6",
+        "CanPlaySfxNow(FName CueId, bool bStoryCritical)",
+    ):
+        if required not in pg221_h:
+            fail(f"PG-221 audio header missing required token: {required}")
+
+    sfx_start = pg221_cpp.index("bool UShireAudioSubsystem::CanPlaySfxNow")
+    ambience_start = pg221_cpp.index("void UShireAudioSubsystem::SetAmbienceCue", sfx_start)
+    sfx_budget_body = pg221_cpp[sfx_start:ambience_start]
+    for required in (
+        "RecentDecorativeSfxStartTimes.RemoveAll",
+        "RecentDecorativeSfxStartTimes.Num() >= MaxDecorativeSfxStartsPerWindow",
+        "RecentDecorativeSfxStartTimes.Add(Now)",
+    ):
+        if required not in sfx_budget_body:
+            fail(f"PG-221 decorative SFX budget implementation missing: {required}")
+
+    if "CanPlaySfxNow(CueId, true)" not in pg221_cpp:
+        fail("PG-221 story-critical SFX path must bypass decorative burst budget")
+    if "CanPlaySfxNow(CueId, false)" not in pg221_cpp:
+        fail("PG-221 localized decorative SFX path must consume burst budget")
+
+    async_start = pg221_cpp.index("void UShireAudioSubsystem::RequestAudioAssetAsync")
+    async_end = pg221_cpp.index("void UShireAudioSubsystem::CancelPendingAudioCategory", async_start)
+    async_body = pg221_cpp[async_start:async_end]
+    if "RequestAsyncLoad" not in async_body:
+        fail("PG-221 audio residency path must remain asynchronous")
+    for forbidden in ("LoadObject<", "StaticLoadObject", "RequestSyncLoad"):
+        if forbidden in pg221_cpp:
+            fail(f"PG-221 audio source contains forbidden synchronous load path: {forbidden}")
+
