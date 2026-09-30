@@ -1,3 +1,14 @@
+## 2026-09-30 - P1C01 TARGET_DEVICE_PROFILE_AND_GATE67 static acceptance preparation active
+
+- SAVE_LOAD_LONG_SESSION predecessor PR #200 currently has Pre-Unreal #1488 SUCCESS; UE4.27.2 Unreal Build #1161 was not yet proven complete when this acceptance-prep car opened.
+- Active acceptance car: TARGET_DEVICE_PROFILE_AND_GATE67.
+- This branch is static acceptance preparation only until predecessor exact-head UE proof is green and merged.
+- Target evidence profile remains 6th-gen i7 class / 8 GB RAM / ~2 GB VRAM class / DX11 / 1280x720 / Low-Medium / 30 FPS floor.
+- Added a fail-closed exact-head evidence contract and evaluator. Missing target-device, route or human-review observations produce INCOMPLETE/NOT_ACCEPTED, never inferred DEVICE/PERFORMANCE/VISUAL acceptance.
+- Runtime-affecting scalability/device-profile changes are not opened by this preparation.
+- Current status: STATIC-ACCEPTANCE-PREP / PREDECESSOR UE GATE PENDING.
+- Not claimed: PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PACING-ACCEPTED, PERFORMANCE-ACCEPTED.
+
 ## 2026-09-30 - P1C01 SHIRE_AUDIO_IDENTITY active
 
 - Predecessor CINEMATIC_CONTROL_HANDOFF: exact-head machine-green on PR #198 at `46655d2ecdc02a3f1698c9fd0b1b14c09f767946` with Pre-Unreal #1484 SUCCESS + Unreal Build #1157 SUCCESS; merged as `3b38698c19a244fde8f2979d73f12cd829576b7f`.
