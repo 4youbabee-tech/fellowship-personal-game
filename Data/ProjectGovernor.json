@@ -164,6 +164,7 @@
         "Moria now receives environmental danger/aftermath motion while retaining zero civilian baseline; Isengard receives bounded industrial motion without generic crowd simulation."
       ],
       "missing_work": [
+        "Owner-observed local P1C01 currently reads sparse/empty over the white Template_Default floor; run the registered local production import/Entry-map bootstrap and then perform real rendered review before further density escalation.",
         "production-quality terrain/material/art replacement beyond current procedural detail",
         "batch integration PIE/device/performance/visual review",
         "additional fauna variety beyond the CP55 bird/rabbit/butterfly set remains optional future polish",
@@ -5463,6 +5464,39 @@
       ],
       "evidence_boundary": "SOURCE/RUNTIME IMPLEMENTATION CONTRACT. No final asset, playback/listening, PIE/device/pacing/performance acceptance is implied until matching evidence exists.",
       "authority": "DEC-090_USER_MEGA_TRAIN_AUTHORIZATION"
+    },
+    {
+      "id": "DEC-101",
+      "title": "P1C01 local visible-world bootstrap exposes the existing production pack without bypassing Gate 6/7",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WORLD-001",
+        "REQ-WORLD-003",
+        "REQ-ASSET-001",
+        "REQ-PERF-001"
+      ],
+      "resolution": "Treat the owner's white/sparse local P1C01 view as a production-visibility problem first: reuse the established production importer to materialize the tracked Shire source pack locally, launch against the engine Entry map so Template_Default does not visually mask the generated Shire, and keep #200/#201 runtime serialization unchanged.",
+      "implementation_contract": [
+        "Register the visible-world bootstrap in WORLD_DETAIL_LEDGER before tooling implementation.",
+        "Reuse Scripts/ci_import_production_assets.cmd and ShireProductionImport; do not create a parallel importer or asset manager.",
+        "Fail closed if UE4Editor is already running, UE4.27.2 tools are missing, import fails, or Content/Production contains zero generated .uasset files.",
+        "Use /Engine/Maps/Entry for this local preview instead of permanently changing DefaultEngine.ini in the tooling lane.",
+        "Keep AChapterWorldRouter as world commit owner, AShirePrototypeWorldBuilder as Shire geometry owner, ALivingWorldDirector as population owner, UShireNPCContextSubsystem as NPC context owner, and UShireQuestSubsystem as story/progression owner.",
+        "Animated final production delivery remains FBX-only. Existing OBJ source assets are static/source fallbacks only and are not animated-production evidence.",
+        "New production textures remain PNG/TGA only; BMP is forbidden.",
+        "This tooling lane may expose already-authored production content locally but may not claim PIE/device/visual/pacing/performance acceptance and may not bypass PR #200/#201."
+      ],
+      "rationale": "The repository already contains a large production source pack, but Content/Production is intentionally generated/ignored and both startup maps still point to Unreal Template_Default. Import visibility and template-floor masking must be fixed before adding yet more source files, otherwise asset volume can increase without changing what the owner sees.",
+      "evidence": [
+        "Config/DefaultEngine.ini",
+        "SourceAssets/Production",
+        "Scripts/ci_import_production_assets.cmd",
+        "Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp",
+        "Data/P1C01LocalVisualBootstrapV1.json",
+        "Scripts/bootstrap_local_p1c01_visuals.cmd",
+        "Docs/WORLD_DETAIL_LEDGER.md"
+      ],
+      "evidence_boundary": "SOURCE/TOOLING IMPLEMENTATION ONLY. Local execution and rendered review remain pending; no PIE/device/visual/pacing/performance acceptance is claimed."
     }
   ],
   "open_conflicts": [],
