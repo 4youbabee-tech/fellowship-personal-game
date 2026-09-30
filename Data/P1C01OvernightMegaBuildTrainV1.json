@@ -121,7 +121,7 @@
       "order": 9,
       "id": "CINEMATIC_CONTROL_HANDOFF",
       "type": "RUNTIME_BUILD",
-      "status": "GATED",
+      "status": "EXACT_HEAD_MACHINE_GREEN_PR198_PRE1484_UE1157_MERGED_3B3869",
       "purpose": "Bounded set-piece entry/exit with identical skip postconditions and clean return to embodied control."
     },
     {
@@ -162,7 +162,8 @@
     "character_presentation": "EXACT_HEAD_MACHINE_GREEN_PR195_PRE1475_UE1148_MERGED_66CAF6",
     "living_shire": "EXACT_HEAD_MACHINE_GREEN_PR196_PRE1478_UE1151_MERGED_A47812",
     "quest_side_activity_coherence": "EXACT_HEAD_MACHINE_GREEN_PR197_PRE1481_UE1154_MERGED_E92688",
-    "cinematic_control_handoff": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING"
+    "cinematic_control_handoff": "EXACT_HEAD_MACHINE_GREEN_PR198_PRE1484_UE1157_MERGED_3B3869",
+    "shire_audio_identity": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING"
   },
   "w00_machine_evidence": {
     "pr": 184,
