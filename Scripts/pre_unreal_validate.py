@@ -9827,3 +9827,69 @@ else:
         if required not in pg219_cpp:
             fail(f"PG-219 quest coherence implementation missing: {required}")
 
+
+
+# PG-220: P1C01 cinematic control handoff must converge unlock/skip/camera release under existing owners.
+pg220_path = ROOT / "Data" / "P1C01CinematicControlHandoffV1.json"
+if not pg220_path.exists():
+    fail("PG-220 cinematic control handoff contract missing")
+else:
+    try:
+        pg220 = json.loads(read(pg220_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-220 invalid cinematic control handoff contract: {exc}")
+        pg220 = {}
+
+    if pg220:
+        if pg220.get("status") != "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING":
+            fail("PG-220 cinematic handoff status drifted")
+        runtime = pg220.get("runtime_contract", {})
+        for field in (
+            "bounded_cinematic_lock",
+            "skip_release_uses_same_exit_path",
+            "camera_release_on_cinematic_unlock",
+            "chapter_change_forces_release",
+            "authored_external_camera_not_stolen",
+        ):
+            if runtime.get(field) is not True:
+                fail(f"PG-220 required cinematic handoff contract drifted: {field}")
+        if runtime.get("quest_route_save_state_mutation_from_presentation") is not False:
+            fail("PG-220 presentation must not own quest/route/save mutation")
+        if runtime.get("stale_runtime_camera_after_skip") is not False:
+            fail("PG-220 stale runtime camera after skip must remain forbidden")
+
+    pg220_presentation_h = read(resolve_source("Subsystems/ShireStoryPresentationSubsystem.h"))
+    pg220_presentation_cpp = read(resolve_source("Subsystems/ShireStoryPresentationSubsystem.cpp"))
+    pg220_director_h = read(resolve_source("World/StoryPresentationDirector.h"))
+    pg220_director_cpp = read(resolve_source("World/StoryPresentationDirector.cpp"))
+
+    for required in ("IsCinematicLocked", "RequestSkipActivePresentation", "ReleaseCinematicLock"):
+        if required not in pg220_presentation_h or required not in pg220_presentation_cpp:
+            fail(f"PG-220 presentation exit API missing: {required}")
+
+    skip_start = pg220_presentation_cpp.index("void UShireStoryPresentationSubsystem::RequestSkipActivePresentation")
+    release_start = pg220_presentation_cpp.index("void UShireStoryPresentationSubsystem::ReleaseCinematicLock", skip_start)
+    skip_body = pg220_presentation_cpp[skip_start:release_start]
+    if "ReleaseCinematicLock();" not in skip_body:
+        fail("PG-220 skip must converge on ReleaseCinematicLock")
+    for forbidden in ("SetQuestStage(", "AdvanceQuest(", "StartChapter(", "StartExperience(", "TriggerStoryBeat("):
+        if forbidden in skip_body:
+            fail(f"PG-220 skip path contains forbidden story mutation: {forbidden}")
+
+    for required in (
+        "HandleCinematicStateChanged",
+        "OnCinematicStateChanged.AddDynamic",
+        "OnCinematicStateChanged.RemoveDynamic",
+        "Presentation->ReleaseCinematicLock();",
+    ):
+        if required not in pg220_director_cpp:
+            fail(f"PG-220 director handoff missing token: {required}")
+    if "HandleCinematicStateChanged" not in pg220_director_h:
+        fail("PG-220 director header missing cinematic-state handler")
+
+    state_start = pg220_director_cpp.index("void AStoryPresentationDirector::HandleCinematicStateChanged")
+    release_camera_start = pg220_director_cpp.index("void AStoryPresentationDirector::ReleaseCamera", state_start)
+    state_body = pg220_director_cpp[state_start:release_camera_start]
+    if "if (!bLocked)" not in state_body or "ReleaseCamera();" not in state_body:
+        fail("PG-220 cinematic unlock must release transient runtime camera")
+

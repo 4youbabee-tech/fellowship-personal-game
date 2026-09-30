@@ -46,6 +46,9 @@ private:
     UFUNCTION()
     void HandleChapterChanged(FName PreviousChapterId, FName NewChapterId);
 
+    UFUNCTION()
+    void HandleCinematicStateChanged(bool bLocked);
+
     void ReleaseCamera();
     FShotProfile ResolveShotProfile(const FShireStoryPresentationCue& Cue) const;
     AActor* ResolveNamedSubject(FName SubjectName) const;

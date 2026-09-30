@@ -209,8 +209,11 @@ class SourceContractTests(unittest.TestCase):
             cars["CHARACTER_PRESENTATION"]["status"],
             "EXACT_HEAD_MACHINE_GREEN_PR195_PRE1475_UE1148_MERGED_66CAF6",
         )
+        self.assertEqual(
+            cars["QUEST_SIDE_ACTIVITY_COHERENCE"]["status"],
+            "EXACT_HEAD_MACHINE_GREEN_PR197_PRE1481_UE1154_MERGED_E92688",
+        )
         for car_id in (
-            "QUEST_SIDE_ACTIVITY_COHERENCE",
             "CINEMATIC_CONTROL_HANDOFF",
             "SHIRE_AUDIO_IDENTITY",
             "SAVE_LOAD_LONG_SESSION",
@@ -414,6 +417,36 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("JourneyDiscoveryIds.Contains(DiscoveryId)", source)
         for quest_id in ("RingSecret", "LeavingHome", "KeepOffRoad", "FerryEscape"):
             self.assertIn(f'ActiveQuestId == TEXT("{quest_id}")', source)
+
+
+
+    def test_p1c01_cinematic_control_handoff_converges_on_one_exit_path(self):
+        root = Path(__file__).resolve().parents[1]
+        contract = json.loads((root / "Data" / "P1C01CinematicControlHandoffV1.json").read_text(encoding="utf-8"))
+        self.assertEqual(contract["status"], "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING")
+        runtime = contract["runtime_contract"]
+        self.assertTrue(runtime["skip_release_uses_same_exit_path"])
+        self.assertTrue(runtime["camera_release_on_cinematic_unlock"])
+        self.assertTrue(runtime["chapter_change_forces_release"])
+        self.assertFalse(runtime["quest_route_save_state_mutation_from_presentation"])
+        self.assertFalse(runtime["stale_runtime_camera_after_skip"])
+
+        presentation_h = (root / "Source" / "ShireJourney" / "Public" / "Subsystems" / "ShireStoryPresentationSubsystem.h").read_text(encoding="utf-8")
+        presentation_cpp = (root / "Source" / "ShireJourney" / "Private" / "Subsystems" / "ShireStoryPresentationSubsystem.cpp").read_text(encoding="utf-8")
+        director_cpp = (root / "Source" / "ShireJourney" / "Private" / "World" / "StoryPresentationDirector.cpp").read_text(encoding="utf-8")
+
+        self.assertIn("RequestSkipActivePresentation", presentation_h)
+        skip_start = presentation_cpp.index("void UShireStoryPresentationSubsystem::RequestSkipActivePresentation")
+        release_start = presentation_cpp.index("void UShireStoryPresentationSubsystem::ReleaseCinematicLock", skip_start)
+        skip_body = presentation_cpp[skip_start:release_start]
+        self.assertIn("ReleaseCinematicLock();", skip_body)
+        for forbidden in ("SetQuestStage(", "AdvanceQuest(", "StartChapter(", "StartExperience(", "TriggerStoryBeat("):
+            self.assertNotIn(forbidden, skip_body)
+
+        self.assertIn("OnCinematicStateChanged.AddDynamic", director_cpp)
+        self.assertIn("OnCinematicStateChanged.RemoveDynamic", director_cpp)
+        self.assertIn("HandleCinematicStateChanged", director_cpp)
+        self.assertIn("Presentation->ReleaseCinematicLock();", director_cpp)
 
 
 

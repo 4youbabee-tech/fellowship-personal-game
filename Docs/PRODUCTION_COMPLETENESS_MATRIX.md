@@ -1,3 +1,15 @@
+## 2026-09-30 - P1C01 CINEMATIC_CONTROL_HANDOFF car
+
+- QUEST_SIDE_ACTIVITY_COHERENCE predecessor: **EXACT-HEAD MACHINE-GREEN** on PR #197 / Pre-Unreal #1481 / Unreal Build #1154; merged as `e926889f9328e238afaffb16f9f9dabf58ce9040`.
+- Cinematic control-handoff source implementation: **SOURCE-IMPLEMENTED / EXACT-HEAD CI PENDING**.
+- Presentation state owner: **UNCHANGED — UShireStoryPresentationSubsystem**.
+- Runtime camera owner: **UNCHANGED — AStoryPresentationDirector**.
+- Quest/save/world-commit mutation by presentation: **FORBIDDEN / UNCHANGED**.
+- Timed release, explicit skip and chapter-change release: **TARGETED TO ONE EXIT PATH**.
+- Stale transient runtime camera after presentation unlock: **FORBIDDEN**.
+- Authored external camera/Level Sequence ownership: **PRESERVED**.
+- PIE skip/return behavior, target-device performance and human visual/pacing review: **PENDING / NOT CLAIMED**.
+
 ## 2026-09-30 - P1C01 QUEST_SIDE_ACTIVITY_COHERENCE car
 
 - LIVING_SHIRE predecessor: **EXACT-HEAD MACHINE-GREEN** on PR #196 / Pre-Unreal #1478 / Unreal Build #1151; merged as `a478127559ab54f0ec938377a4962e6a75479d36`.

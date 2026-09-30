@@ -83,6 +83,12 @@ public:
     UFUNCTION(BlueprintPure, Category="Story Presentation")
     FShireStoryPresentationCue GetActiveCue() const { return ActiveCue; }
 
+    UFUNCTION(BlueprintPure, Category="Story Presentation")
+    bool IsCinematicLocked() const { return bCinematicLocked; }
+
+    UFUNCTION(BlueprintCallable, Category="Story Presentation")
+    void RequestSkipActivePresentation();
+
     UFUNCTION(BlueprintCallable, Category="Story Presentation")
     void ReleaseCinematicLock();
 
