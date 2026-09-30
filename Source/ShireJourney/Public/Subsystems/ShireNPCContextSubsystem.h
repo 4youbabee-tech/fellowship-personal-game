@@ -100,6 +100,36 @@ struct FShireBoundedDialogueResult
     FString SourceContextSummary;
 };
 
+USTRUCT(BlueprintType)
+struct FShireNPCBehaviorSnapshot
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCContext")
+    bool bValid = false;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCContext")
+    bool bDangerActive = false;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCContext")
+    bool bInclementWeather = false;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCContext")
+    FName ProfileId = NAME_None;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCContext")
+    FName SchedulePhase = NAME_None;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCContext")
+    FName PreferredAnchor = NAME_None;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCContext")
+    FName WorldMood = NAME_None;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCContext")
+    FName EmotionalState = TEXT("CALM");
+};
+
 UCLASS()
 class SHIREJOURNEY_API UShireNPCContextSubsystem : public UGameInstanceSubsystem
 {
@@ -153,6 +183,12 @@ public:
 
     UFUNCTION(BlueprintPure, Category="NPCContext")
     FName GetPreferredAnchor(FName ProfileHint, FName SchedulePhase) const;
+
+    UFUNCTION(BlueprintPure, Category="NPCContext")
+    FShireNPCBehaviorSnapshot BuildBehaviorSnapshot(
+        FName ProfileHint,
+        float NormalizedDay,
+        bool bStoryOverride = false) const;
 
     UFUNCTION(BlueprintPure, Category="NPCContext")
     TArray<FName> GetNamedProfilesForCurrentChapter() const;
