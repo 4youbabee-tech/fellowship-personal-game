@@ -9959,3 +9959,49 @@ else:
         if forbidden in pg221_cpp:
             fail(f"PG-221 audio source contains forbidden synchronous load path: {forbidden}")
 
+
+
+# PG-223: P1C01 Gate 6/7 evidence tooling remains fail-closed and cannot self-certify missing device/human evidence.
+pg223_path = ROOT / "Data" / "P1C01TargetDeviceGate67V1.json"
+if not pg223_path.exists():
+    fail("PG-223 target-device Gate67 contract missing")
+else:
+    try:
+        pg223 = json.loads(read(pg223_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-223 invalid Gate67 contract: {exc}")
+        pg223 = {}
+
+    if pg223:
+        if pg223.get("status") != "STATIC_ACCEPTANCE_PREP_IMPLEMENTED_PREDECESSOR_UE_GATE_PENDING":
+            fail("PG-223 Gate67 preparation status drifted")
+        profile = pg223.get("target_profile", {})
+        if profile.get("renderer") != "DX11":
+            fail("PG-223 renderer target must remain DX11")
+        if profile.get("resolution_width") != 1280 or profile.get("resolution_height") != 720:
+            fail("PG-223 target resolution must remain 1280x720")
+        if profile.get("quality") != "Low-Medium" or profile.get("fps_floor") != 30:
+            fail("PG-223 quality/FPS gate drifted")
+        claims = pg223.get("current_claims", {})
+        if any(claims.values()):
+            fail("PG-223 static preparation may not claim runtime/device/human acceptance")
+
+    evaluator_path = ROOT / "Scripts" / "evaluate_p1c01_gate67_evidence.py"
+    if not evaluator_path.exists():
+        fail("PG-223 Gate67 evidence evaluator missing")
+    else:
+        evaluator = read(evaluator_path)
+        for required in (
+            '"status":"INCOMPLETE"',
+            '"status":"GATE67_NOT_ACCEPTED"',
+            'route below 30 FPS floor',
+            'blocking streaming hitch',
+            'synchronous heavy load observed',
+            'save/load continuity not proven',
+            'return-to-control continuity not proven',
+            '"DEVICE_TESTED":True',
+            '"PERFORMANCE_ACCEPTED":True',
+        ):
+            if required not in evaluator:
+                fail(f"PG-223 evidence evaluator missing fail-closed token: {required}")
+
