@@ -1,3 +1,14 @@
+## 2026-09-30 - P1C01 SHIRE_AUDIO_IDENTITY car
+
+- CINEMATIC_CONTROL_HANDOFF predecessor: **EXACT-HEAD MACHINE-GREEN** on PR #198 / Pre-Unreal #1484 / Unreal Build #1157; merged as `3b38698c19a244fde8f2979d73f12cd829576b7f`.
+- Shire sonic-identity runtime implementation: **SOURCE-IMPLEMENTED / EXACT-HEAD CI PENDING**.
+- Runtime audio owner: **UNCHANGED — UShireAudioSubsystem**.
+- Heavy/nonresident audio: **SOFT-PATH + ASYNC FStreamableManager**.
+- Decorative localized SFX concurrency: **BOUNDED — max 6 starts / 0.25 s + existing 0.06 s per-cue repeat guard**.
+- Story-critical one-shot priority over decorative burst budget: **SOURCE-IMPLEMENTED**.
+- Final P1C01 WAV masters/import/listening/mix/master: **PENDING / NOT CLAIMED**.
+- PIE/device/audio-listening/pacing/performance acceptance: **PENDING / NOT CLAIMED**.
+
 ## 2026-09-30 - P1C01 CINEMATIC_CONTROL_HANDOFF car
 
 - QUEST_SIDE_ACTIVITY_COHERENCE predecessor: **EXACT-HEAD MACHINE-GREEN** on PR #197 / Pre-Unreal #1481 / Unreal Build #1154; merged as `e926889f9328e238afaffb16f9f9dabf58ce9040`.
