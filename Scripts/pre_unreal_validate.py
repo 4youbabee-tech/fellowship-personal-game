@@ -9653,3 +9653,68 @@ else:
             fail(f"PG-216 party activity reward drifted: {activity_id}")
         if row.get("may_advance_required_anchor") or row.get("may_change_canon_outcome") or row.get("future_knowledge_allowed"):
             fail(f"PG-216 canon-unsafe party activity flags: {activity_id}")
+
+# PG-217: P1C01 character presentation keeps stable identity, canon-safe gear and async rig ownership.
+pg217_path = ROOT / "Data" / "P1C01CharacterPresentationChapterV1.json"
+if not pg217_path.exists():
+    fail("PG-217 character presentation contract missing")
+else:
+    try:
+        pg217 = json.loads(read(pg217_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-217 invalid character presentation contract: {exc}")
+        pg217 = {}
+
+    if pg217:
+        if pg217.get("status") != "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING":
+            fail("PG-217 character presentation status drifted")
+        contract = pg217.get("runtime_contract", {})
+        if contract.get("frodo_future_weapon_in_p1c01") is not False:
+            fail("PG-217 Frodo future weapon must stay hidden in P1C01")
+        if contract.get("named_story_npcs_use_explicit_character_ids") is not True:
+            fail("PG-217 named story NPC stable identity contract drifted")
+        if contract.get("synchronous_heavy_load") is not False or contract.get("per_frame_asset_scan") is not False:
+            fail("PG-217 low-spec loading contract drifted")
+
+    pg217_npc_h = read(resolve_source("Characters/ShireNPC.h"))
+    pg217_npc_cpp = read(resolve_source("Characters/ShireNPC.cpp"))
+    pg217_player = read(resolve_source("Characters/ShirePlayerCharacter.cpp"))
+    pg217_streaming = read(resolve_source("Subsystems/ShireChapterAssetStreamingSubsystem.cpp"))
+    pg217_world = read(resolve_source("World/ShirePrototypeWorldBuilder.cpp"))
+
+    for required in ("ProductionCharacterId", "ResolveProductionCharacterId"):
+        if required not in pg217_npc_h or required not in pg217_npc_cpp:
+            fail(f"PG-217 stable NPC presentation identity missing token: {required}")
+
+    for required in (
+        'GandalfRoad->ProductionCharacterId=TEXT("Gandalf")',
+        'Bilbo->ProductionCharacterId=TEXT("Bilbo")',
+        'GandalfBagEnd->ProductionCharacterId=TEXT("Gandalf")',
+        'Sam->ProductionCharacterId=TEXT("Sam")',
+    ):
+        if required not in pg217_world:
+            fail(f"PG-217 P1C01 hero binding missing: {required}")
+
+    for required in (
+        "ShouldShowPrototypeWeaponForCurrentStory",
+        'GetCurrentChapterId() == TEXT("P1C01")',
+        "P1C01_CHARACTER_PRESENTATION",
+    ):
+        if required not in pg217_player:
+            fail(f"PG-217 Frodo story-aware equipment guard missing: {required}")
+
+    rig_start = pg217_streaming.index("void UShireChapterAssetStreamingSubsystem::RequestCharacterRig")
+    rig_end = pg217_streaming.index("void UShireChapterAssetStreamingSubsystem::HandleCharacterRigLoadComplete", rig_start)
+    rig_body = pg217_streaming[rig_start:rig_end]
+    if "RequestAsyncLoad" not in rig_body:
+        fail("PG-217 production rig request must remain asynchronous")
+    for forbidden in ("LoadObject<", "StaticLoadObject", "RequestSyncLoad"):
+        if forbidden in rig_body:
+            fail(f"PG-217 production rig request contains forbidden synchronous path: {forbidden}")
+
+    for source_text, label in ((pg217_player, "player"), (pg217_npc_cpp, "npc")):
+        if "bEnableUpdateRateOptimizations = true" not in source_text:
+            fail(f"PG-217 {label} skeletal presentation must keep URO enabled")
+        if "OnlyTickPoseWhenRendered" not in source_text:
+            fail(f"PG-217 {label} skeletal presentation must remain visibility-throttled")
+

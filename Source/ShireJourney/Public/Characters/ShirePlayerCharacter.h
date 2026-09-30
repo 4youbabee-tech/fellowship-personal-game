@@ -330,6 +330,7 @@ private:
     bool TryApplyPendingSaveRestoreTransform();
     bool IsCurrentWorldCommitted() const;
     bool TryApplyProductionRig(const FString& RigFolder);
+    bool ShouldShowPrototypeWeaponForCurrentStory(FName VisualId) const;
     void ApplyPrototypeStyle();
     void UpdatePrototypeAnimation(float DeltaSeconds);
     void UpdatePlayerLife(float DeltaSeconds);

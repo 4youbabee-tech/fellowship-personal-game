@@ -25,7 +25,7 @@
     "original_dialogue_only": true
   },
   "gate_policy": {
-    "current_gate": "BAG_END_LIVED_IN_PASS machine-green; PARTY_AND_SOCIAL_LOOP source-implemented and awaiting its own exact-head gate.",
+    "current_gate": "PARTY_AND_SOCIAL_LOOP machine-green on PR #194; CHARACTER_PRESENTATION source-implemented and awaiting exact-head gate.",
     "runtime_expansion_rule": "W00 packaged/runtime machine evidence is green on PR #184 exact head d6ca8aac03f5a1da07609e61e790ddf8faad8eed. No new runtime feature implementation starts until the relevant current car head completes its required exact-head Pre-Unreal and UE4.27.2 gates and Governor prerequisites permit that car.",
     "allowed_in_parallel_now": [
       "source review and zero-silent-omission disposition",
@@ -125,7 +125,7 @@
     {
       "order": 7,
       "id": "PARTY_AND_SOCIAL_LOOP",
-      "state": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
+      "state": "EXACT_HEAD_MACHINE_GREEN_PR194_PRE1472_UE1145",
       "scope": "Birthday setup/social onboarding/firework-safe-window presentation using current quest ownership and bounded optional activities.",
       "proof": [
         "quest idempotence",
@@ -135,7 +135,7 @@
     {
       "order": 8,
       "id": "LIVING_SHIRE",
-      "state": "GATED",
+      "state": "GATED_BY_CHARACTER_PRESENTATION_EXACT_HEAD",
       "scope": "Expand role/routine/social/fauna/environmental motion breadth through existing LivingWorldDirector + ShireNPCContextSubsystem ownership.",
       "proof": [
         "pool/state-leak regression",
@@ -145,7 +145,7 @@
     {
       "order": 9,
       "id": "CHARACTER_PRESENTATION",
-      "state": "GATED",
+      "state": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
       "scope": "Promote legal FBX Frodo/Gandalf/Sam Shire presentation candidates behind modular fallback and async rig loading.",
       "proof": [
         "rig/skin/deformation/AnimBP QC",

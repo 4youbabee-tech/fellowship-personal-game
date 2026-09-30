@@ -1798,6 +1798,7 @@ void AShirePrototypeWorldBuilder::SpawnStoryActors()
     if(GandalfRoad)
     {
         GandalfRoad->DisplayName=FText::FromString(TEXT("Gandalf"));
+        GandalfRoad->ProductionCharacterId=TEXT("Gandalf");
         GandalfRoad->DialogueLines={
             FText::FromString(TEXT("The Shire has not changed much. That is part of its charm.")),
             FText::FromString(TEXT("Come. There is a party ahead, and an old friend waiting."))
@@ -1831,6 +1832,7 @@ void AShirePrototypeWorldBuilder::SpawnStoryActors()
     if(Bilbo)
     {
         Bilbo->DisplayName=FText::FromString(TEXT("Bilbo"));
+        Bilbo->ProductionCharacterId=TEXT("Bilbo");
         Bilbo->DialogueLines={
             FText::FromString(TEXT("Enjoy the evening, Frodo. I have been preparing for this one for quite some time.")),
             FText::FromString(TEXT("There are some things an old hobbit must finally leave behind."))
@@ -1868,6 +1870,7 @@ void AShirePrototypeWorldBuilder::SpawnStoryActors()
     if(GandalfBagEnd)
     {
         GandalfBagEnd->DisplayName=FText::FromString(TEXT("Gandalf"));
+        GandalfBagEnd->ProductionCharacterId=TEXT("Gandalf");
         GandalfBagEnd->DialogueLines={
             FText::FromString(TEXT("Keep the Ring hidden. Do not use it, and do not speak of it lightly.")),
             FText::FromString(TEXT("You must leave quietly. Sam can be trusted to go with you."))
@@ -1881,6 +1884,7 @@ void AShirePrototypeWorldBuilder::SpawnStoryActors()
     if(Sam)
     {
         Sam->DisplayName=FText::FromString(TEXT("Sam"));
+        Sam->ProductionCharacterId=TEXT("Sam");
         Sam->DialogueLines={FText::FromString(TEXT("Wherever the road goes, Mr. Frodo, you will not be taking it alone."))};
         Sam->QuestId=TEXT("RingSecret");
         Sam->RequiredQuestStage=1;

@@ -5294,6 +5294,41 @@
       ],
       "evidence_boundary": "SOURCE IMPLEMENTATION CONTRACT. Exact-head Pre-Unreal/UE4.27.2 pending; no PIE/device/visual/performance acceptance is implied.",
       "authority": "DEC-090_USER_MEGA_TRAIN_AUTHORIZATION"
+    },
+    {
+      "id": "DEC-094",
+      "title": "P1C01 character presentation separates stable hero identity from display names and blocks future-gear leakage",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WORLD-001",
+        "REQ-NPC-001",
+        "REQ-PERF-001",
+        "REQ-STABILITY-001",
+        "REQ-QA-001"
+      ],
+      "resolution": "Open CHARACTER_PRESENTATION as the next serialized P1C01 runtime car after PARTY_AND_SOCIAL_LOOP machine-green. Strengthen Frodo/Gandalf/Bilbo/Sam presentation through stable production character identity, existing modular fallback, and the current asynchronous skeletal-rig path without creating another asset or AI owner.",
+      "implementation_contract": [
+        "Register the car in WORLD_DETAIL_LEDGER and Data/P1C01CharacterPresentationChapterV1.json before runtime C++ changes.",
+        "AShirePlayerCharacter and AShireNPC remain presentation consumers; UShireChapterAssetStreamingSubsystem remains the only production skeletal-rig async owner.",
+        "Named story NPCs use an explicit ProductionCharacterId instead of relying on localized DisplayName as the asset/rig identity.",
+        "Frodo may not display future named sword gear inside P1C01; chapter-state equipment must not leak backward.",
+        "Gandalf may retain staff-led guide presentation; no new magic-combat system or spam-casting presentation is authorized.",
+        "Existing modular/static fallback remains visible until both skeletal mesh and locomotion AnimBP resolve.",
+        "Heavy production rig assets remain soft-path/asynchronous through FStreamableManager; no synchronous heavy load or per-frame global asset scan.",
+        "Skeletal presentation keeps update-rate optimization and rendered-only pose ticking for the low-spec target.",
+        "P1C01 ambient population target remains unchanged; this car does not increase crowd counts.",
+        "Exact-head Pre-Unreal + UE4.27.2 required before merge; PIE/device/visual/deformation/performance acceptance remains separate."
+      ],
+      "rationale": "Source 02 requires character identity and named equipment to follow story state, with Frodo protected from generic power-fantasy drift and Gandalf's power kept rare and purposeful. Source 11 requires performance-aware skeletal presentation. The repository already has a safe async rig subsystem and modular fallback, so the maximum-safe next step is to make identity and equipment state explicit rather than add a second presentation architecture.",
+      "evidence": [
+        "02_CHARACTERS_AND_RELATIONSHIPS_BIBLE",
+        "10_3D_VISUAL_ASSET_ATLAS_PRODUCTION",
+        "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX",
+        "Data/P1C01CharacterPresentationChapterV1.json",
+        "Docs/WORLD_DETAIL_LEDGER.md"
+      ],
+      "evidence_boundary": "SOURCE/RUNTIME IMPLEMENTATION CONTRACT. No PIE/device/visual/deformation/performance acceptance is implied until matching evidence exists.",
+      "authority": "DEC-090_USER_MEGA_TRAIN_AUTHORIZATION"
     }
   ],
   "open_conflicts": [],

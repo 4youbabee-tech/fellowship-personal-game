@@ -195,12 +195,21 @@ class SourceContractTests(unittest.TestCase):
         )
         self.assertEqual(
             cars["PARTY_AND_BAG_END_INTERACTION_DENSITY"]["status"],
-            "PARTY_SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING_BAG_END_PR193_GREEN",
+            "PARTY_EXACT_HEAD_MACHINE_GREEN_PR194_PRE1472_UE1145_BAG_END_PR193_GREEN",
         )
         for car_id in (
             "NPC_ROUTINES_SOCIAL_MEMORY",
             "FAUNA_ENVIRONMENTAL_MOTION",
-            "CHARACTER_PRESENTATION",
+        ):
+            self.assertEqual(
+                cars[car_id]["status"],
+                "GATED_BY_CHARACTER_PRESENTATION_EXACT_HEAD",
+            )
+        self.assertEqual(
+            cars["CHARACTER_PRESENTATION"]["status"],
+            "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
+        )
+        for car_id in (
             "QUEST_SIDE_ACTIVITY_COHERENCE",
             "CINEMATIC_CONTROL_HANDOFF",
             "SHIRE_AUDIO_IDENTITY",
@@ -301,6 +310,48 @@ class SourceContractTests(unittest.TestCase):
             self.assertFalse(row["may_advance_required_anchor"])
             self.assertFalse(row["may_change_canon_outcome"])
             self.assertFalse(row["future_knowledge_allowed"])
+
+
+    def test_p1c01_character_presentation_is_explicit_and_async(self):
+        root = Path(__file__).resolve().parents[1]
+        contract = json.loads((root / "Data" / "P1C01CharacterPresentationChapterV1.json").read_text(encoding="utf-8"))
+        self.assertEqual(contract["status"], "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING")
+        self.assertFalse(contract["runtime_contract"]["frodo_future_weapon_in_p1c01"])
+        self.assertTrue(contract["runtime_contract"]["named_story_npcs_use_explicit_character_ids"])
+        self.assertFalse(contract["runtime_contract"]["synchronous_heavy_load"])
+        self.assertFalse(contract["runtime_contract"]["per_frame_asset_scan"])
+
+        npc_h = (root / "Source" / "ShireJourney" / "Public" / "Characters" / "ShireNPC.h").read_text(encoding="utf-8")
+        npc_cpp = (root / "Source" / "ShireJourney" / "Private" / "Characters" / "ShireNPC.cpp").read_text(encoding="utf-8")
+        player = (root / "Source" / "ShireJourney" / "Private" / "Characters" / "ShirePlayerCharacter.cpp").read_text(encoding="utf-8")
+        streaming = (root / "Source" / "ShireJourney" / "Private" / "Subsystems" / "ShireChapterAssetStreamingSubsystem.cpp").read_text(encoding="utf-8")
+        world = (root / "Source" / "ShireJourney" / "Private" / "World" / "ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+
+        self.assertIn("ProductionCharacterId", npc_h)
+        self.assertIn("ResolveProductionCharacterId", npc_cpp)
+        for token in (
+            'GandalfRoad->ProductionCharacterId=TEXT("Gandalf")',
+            'Bilbo->ProductionCharacterId=TEXT("Bilbo")',
+            'GandalfBagEnd->ProductionCharacterId=TEXT("Gandalf")',
+            'Sam->ProductionCharacterId=TEXT("Sam")',
+        ):
+            self.assertIn(token, world)
+
+        self.assertIn("ShouldShowPrototypeWeaponForCurrentStory", player)
+        self.assertIn('GetCurrentChapterId() == TEXT("P1C01")', player)
+        self.assertIn("P1C01_CHARACTER_PRESENTATION", player)
+
+        start = streaming.index("void UShireChapterAssetStreamingSubsystem::RequestCharacterRig")
+        end = streaming.index("void UShireChapterAssetStreamingSubsystem::HandleCharacterRigLoadComplete", start)
+        body = streaming[start:end]
+        self.assertIn("RequestAsyncLoad", body)
+        for forbidden in ("LoadObject<", "StaticLoadObject", "RequestSyncLoad"):
+            self.assertNotIn(forbidden, body)
+        self.assertIn("bEnableUpdateRateOptimizations = true", player)
+        self.assertIn("OnlyTickPoseWhenRendered", player)
+        self.assertIn("bEnableUpdateRateOptimizations = true", npc_cpp)
+        self.assertIn("OnlyTickPoseWhenRendered", npc_cpp)
+
 
 
 if __name__ == "__main__":

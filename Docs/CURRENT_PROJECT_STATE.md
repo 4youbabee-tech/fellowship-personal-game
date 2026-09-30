@@ -1,3 +1,14 @@
+## 2026-09-30 - P1C01 CHARACTER_PRESENTATION source implementation
+
+- Predecessor PARTY_AND_SOCIAL_LOOP is exact-head machine-green: PR #194 head `5e4814c9f2ec9acc3bae3df389936c1621bde9e0` passed Pre-Unreal #1472 and Unreal Build #1145, then merged to develop as `584b9522298e04f8a5a3d79e246c5f0483cce7c0`.
+- Registered CHARACTER_PRESENTATION before runtime code in `Data/P1C01CharacterPresentationChapterV1.json` and WORLD_DETAIL_LEDGER.
+- Added stable `AShireNPC::ProductionCharacterId` so hero rig/asset identity no longer depends on localized `DisplayName`. P1C01 story actors explicitly bind Gandalf Road, Bilbo, Gandalf at Bag End and Sam to stable production IDs.
+- Existing `UShireChapterAssetStreamingSubsystem` remains the only skeletal-rig residency owner: soft paths + `FStreamableManager::RequestAsyncLoad`, bounded package availability retry, modular fallback until mesh + AnimBP resolve, URO and rendered-only pose ticking.
+- Added story-aware player equipment presentation: Frodo's modular future sword presentation is suppressed inside P1C01 rather than leaking later named gear backward into the Shire chapter.
+- No population increase, new AI brain, per-frame asset scan, synchronous heavy production load or crowd Spawn/Destroy path was added.
+- Current status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27.2 PROOF PENDING**.
+- Not claimed: PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, DEFORMATION-ACCEPTED or PERFORMANCE-ACCEPTED.
+
 ## 2026-09-30 - P1C01 SHIRE_WORLD_DENSITY runtime car source implementation
 
 - Predecessor mega integration is machine-green: PR #189 exact head `3680ab2fa52b7ebd7ec896ec10d2d2f9a60dd63c` passed Pre-Unreal #1465 and UE4.27.2 Unreal Build #1138, then merged to `develop@64b70c4532a7412a47c031d71bb4f972e7720096`.

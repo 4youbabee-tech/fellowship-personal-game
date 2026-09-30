@@ -175,8 +175,8 @@ bool AShireNPC::TryApplyProductionRig(const FString& RigFolder)
     GetMesh()->SetVisibility(true, true);
 
     UE_LOG(LogTemp, Display,
-        TEXT("ProductionRig: npc=%s rig=%s async=yes URO=on visibilityTick=rendered"),
-        *DisplayName.ToString(), *RigFolder);
+        TEXT("ProductionRig: npc=%s characterId=%s rig=%s async=yes URO=on visibilityTick=rendered"),
+        *DisplayName.ToString(), *ResolveProductionCharacterId().ToString(), *RigFolder);
 
     UStaticMeshComponent* ModularPieces[] = {
         PrototypeTorso, PrototypeHead, PrototypeHair,
@@ -207,7 +207,8 @@ void AShireNPC::ApplyPrototypeStyle()
         return;
     }
 
-    const FString Name = DisplayName.ToString();
+    const FName PresentationId = ResolveProductionCharacterId();
+    const FString Name = PresentationId.IsNone() ? DisplayName.ToString() : PresentationId.ToString();
 
     FLinearColor Coat(0.24f, 0.34f, 0.17f);
     FLinearColor Trousers(0.27f, 0.18f, 0.10f);
@@ -1321,6 +1322,27 @@ void AShireNPC::RestoreCompanionFollowState()
     {
         bFollowingPlayer = true;
     }
+}
+
+FName AShireNPC::ResolveProductionCharacterId() const
+{
+    if (!ProductionCharacterId.IsNone())
+    {
+        return ProductionCharacterId;
+    }
+
+    const FString Name = DisplayName.ToString();
+    if (Name.Equals(TEXT("Gandalf"), ESearchCase::IgnoreCase)) return TEXT("Gandalf");
+    if (Name.Equals(TEXT("Bilbo"), ESearchCase::IgnoreCase)) return TEXT("Bilbo");
+    if (Name.Equals(TEXT("Sam"), ESearchCase::IgnoreCase)) return TEXT("Sam");
+    if (Name.Equals(TEXT("Merry"), ESearchCase::IgnoreCase)) return TEXT("Merry");
+    if (Name.Equals(TEXT("Pippin"), ESearchCase::IgnoreCase)) return TEXT("Pippin");
+    if (Name.Equals(TEXT("Aragorn"), ESearchCase::IgnoreCase) || Name.Equals(TEXT("Strider"), ESearchCase::IgnoreCase)) return TEXT("Aragorn");
+    if (Name.Equals(TEXT("Boromir"), ESearchCase::IgnoreCase)) return TEXT("Boromir");
+    if (Name.Equals(TEXT("Legolas"), ESearchCase::IgnoreCase)) return TEXT("Legolas");
+    if (Name.Equals(TEXT("Gimli"), ESearchCase::IgnoreCase)) return TEXT("Gimli");
+    if (Name.Equals(TEXT("Arwen"), ESearchCase::IgnoreCase)) return TEXT("Arwen");
+    return NAME_None;
 }
 
 FName AShireNPC::ResolveCanonicalProfileId() const

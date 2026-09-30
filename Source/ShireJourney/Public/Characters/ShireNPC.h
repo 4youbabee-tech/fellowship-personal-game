@@ -48,6 +48,9 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="NPC")
     FText DisplayName;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Presentation")
+    FName ProductionCharacterId = NAME_None;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue", meta=(MultiLine="true"))
     TArray<FText> DialogueLines;
 
@@ -220,4 +223,5 @@ private:
     void UpdateCompanionBanter(float DeltaSeconds);
     void RefreshLivingContext(float DeltaSeconds);
     FName ResolveCanonicalProfileId() const;
+    FName ResolveProductionCharacterId() const;
 };
