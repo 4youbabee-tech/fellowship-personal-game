@@ -5249,9 +5249,12 @@
         "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX: F1-01/F1-02 mission contracts",
         "Docs/P1C01_HOBBITON_BAGEND_ARCHITECTURE.md",
         "Data/P1C01BagEndHeroChapterV1.json",
-        "Docs/WORLD_DETAIL_LEDGER.md"
+        "Docs/WORLD_DETAIL_LEDGER.md",
+        "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp SpawnBagEndHeroPass",
+        "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp ApplyBagEndStoryVariant",
+        "Scripts/pre_unreal_validate.py PG-215"
       ],
-      "evidence_boundary": "SCOPE REGISTRATION ONLY. Runtime source, exact-head compile, PIE, device, visual and performance evidence remain pending.",
+      "evidence_boundary": "SOURCE IMPLEMENTATION CONTRACT. Exact-head Pre-Unreal/UE4.27.2 pending; no PIE/device/visual/performance acceptance is implied.",
       "authority": "DEC-090_USER_MEGA_TRAIN_AUTHORIZATION"
     }
   ],
