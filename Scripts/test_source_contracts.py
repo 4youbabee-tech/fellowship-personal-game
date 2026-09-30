@@ -195,12 +195,21 @@ class SourceContractTests(unittest.TestCase):
         )
         self.assertEqual(
             cars["PARTY_AND_BAG_END_INTERACTION_DENSITY"]["status"],
-            "PARTY_SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING_BAG_END_PR193_GREEN",
+            "PARTY_EXACT_HEAD_MACHINE_GREEN_PR194_PRE1472_UE1145_BAG_END_PR193_GREEN",
         )
         for car_id in (
             "NPC_ROUTINES_SOCIAL_MEMORY",
             "FAUNA_ENVIRONMENTAL_MOTION",
-            "CHARACTER_PRESENTATION",
+        ):
+            self.assertEqual(
+                cars[car_id]["status"],
+                "GATED_BY_CHARACTER_PRESENTATION_EXACT_HEAD",
+            )
+        self.assertEqual(
+            cars["CHARACTER_PRESENTATION"]["status"],
+            "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
+        )
+        for car_id in (
             "QUEST_SIDE_ACTIVITY_COHERENCE",
             "CINEMATIC_CONTROL_HANDOFF",
             "SHIRE_AUDIO_IDENTITY",
