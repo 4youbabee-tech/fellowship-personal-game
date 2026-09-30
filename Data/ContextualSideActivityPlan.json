@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "CONTEXTUAL_SIDE_ACTIVITY_PLAN_V1",
-  "status": "RUNTIME_MULTI_STEP_MECHANICS_AND_STEALTH_LITE_PENDING_ENGINE_PROOF",
+  "status": "P1C01_PARTY_FIREWORKS_RUNTIME_SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
   "purpose": "Add optional game-like side activities that plausibly happen inside the time, place and character context of the Peter Jackson film story without creating an alternate main story.",
   "canon_rule": "The film spine is mandatory. Side activities are unseen gap-fill moments only: plausible things the player could have done between film anchors.",
   "hard_rules": [
@@ -102,6 +102,56 @@
           "may_change_canon_outcome": false,
           "future_knowledge_allowed": false,
           "urgency_policy": "Disabled once PartyArrival begins."
+        },
+        {
+          "id": "SIDE_SHIRE_FIREWORKS_SAFETY",
+          "title": "Gandalf's Fireworks",
+          "type": "TIMING_CHALLENGE",
+          "available_after": "PartyArrival",
+          "ends_before": "BilboDisappearance",
+          "participants": [
+            "Frodo",
+            "Gandalf",
+            "Shire residents"
+          ],
+          "film_context": "During Bilbo's birthday celebration, Frodo can help with a bounded firework-safety sequence without changing Bilbo's party outcome.",
+          "mechanics": [
+            "select a prepared firework position",
+            "move through placement/aim checkpoints",
+            "time the safe launch sequence",
+            "spectacle/reaction reward only"
+          ],
+          "discovery_reward_id": "SHIRE_FIREWORKS_SAFETY",
+          "canon_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false,
+          "future_knowledge_allowed": false,
+          "urgency_policy": "Immediately expires when BilboDisappearance closes the party-safe window."
+        },
+        {
+          "id": "SIDE_SHIRE_DRAGON_FIREWORK_MISHAP",
+          "title": "A Firework Best Left Alone",
+          "type": "STEALTH_LITE",
+          "available_after": "PartyArrival",
+          "ends_before": "BilboDisappearance",
+          "participants": [
+            "Frodo",
+            "Merry",
+            "Pippin"
+          ],
+          "film_context": "A comic optional interaction around the fireworks wagon can resolve to a fixed harmless mishap state without changing the mandatory party or Ring outcome.",
+          "mechanics": [
+            "approach the wagon quietly",
+            "cross three bounded interaction checkpoints",
+            "standing up resets only the optional sequence",
+            "completion records the fixed comic mishap beat"
+          ],
+          "discovery_reward_id": "SHIRE_DRAGON_FIREWORK_MISHAP",
+          "canon_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false,
+          "future_knowledge_allowed": false,
+          "urgency_policy": "Immediately expires when BilboDisappearance closes the party-safe window."
         }
       ]
     },
