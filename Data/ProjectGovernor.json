@@ -5396,6 +5396,39 @@
       ],
       "evidence_boundary": "SOURCE/RUNTIME IMPLEMENTATION CONTRACT. No PIE/device/visual/pacing/performance acceptance is implied until matching evidence exists.",
       "authority": "DEC-090_USER_MEGA_TRAIN_AUTHORIZATION"
+    },
+    {
+      "id": "DEC-097",
+      "title": "P1C01 cinematic handoff converges timed, skip and chapter release onto one presentation exit path",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-STABILITY-001",
+        "REQ-SAVE-001",
+        "REQ-QA-001"
+      ],
+      "resolution": "Open CINEMATIC_CONTROL_HANDOFF after QUEST_SIDE_ACTIVITY_COHERENCE exact-head machine-green. Keep UShireStoryPresentationSubsystem as presentation-state owner and AStoryPresentationDirector as transient camera owner; unify presentation exit so timed release, explicit skip and chapter transition cannot leave stale runtime camera state or mutate quest/save/world truth.",
+      "implementation_contract": [
+        "Register Data/P1C01CinematicControlHandoffV1.json and WORLD_DETAIL_LEDGER before runtime implementation.",
+        "UShireStoryPresentationSubsystem owns cinematic lock/unlock state; AStoryPresentationDirector consumes that state and owns only transient runtime camera handoff.",
+        "Explicit skip/release uses the same ReleaseCinematicLock exit path as timed release.",
+        "AStoryPresentationDirector releases its transient camera when cinematic state unlocks and on chapter change/end play.",
+        "Runtime presentation must not steal an authored external camera or Level Sequence view target.",
+        "Presentation code may not mutate quest stages, route identity, save state, chapter-world commit state or locked story outcomes.",
+        "P1C01 BilboDisappearance is the primary cinematic beat covered; no new story beat or dialogue copy is introduced.",
+        "Exact-head Pre-Unreal + UE4.27.2 required before merge; PIE/device/visual/pacing/performance acceptance remains separate."
+      ],
+      "rationale": "The existing presentation subsystem already has bounded cinematic locking and the director already returns to the prior player view, but lock release and camera release are independent. Unifying those exit paths closes stale-camera/skip handoff risk without creating a second cinematic state owner or touching quest/save/world authority.",
+      "evidence": [
+        "Data/P1C01CinematicControlHandoffV1.json",
+        "Data/P1C01GQuestCinematicAudioPolishPlanV1.json",
+        "Source/ShireJourney/Public/Subsystems/ShireStoryPresentationSubsystem.h",
+        "Source/ShireJourney/Private/Subsystems/ShireStoryPresentationSubsystem.cpp",
+        "Source/ShireJourney/Public/World/StoryPresentationDirector.h",
+        "Source/ShireJourney/Private/World/StoryPresentationDirector.cpp",
+        "Docs/WORLD_DETAIL_LEDGER.md"
+      ],
+      "evidence_boundary": "SOURCE/RUNTIME IMPLEMENTATION CONTRACT. No PIE/device/visual/pacing/performance acceptance is implied until matching evidence exists.",
+      "authority": "DEC-090_USER_MEGA_TRAIN_AUTHORIZATION"
     }
   ],
   "open_conflicts": [],
