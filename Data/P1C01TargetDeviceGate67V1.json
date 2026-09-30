@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "chapter_id": "P1C01",
+  "car_id": "TARGET_DEVICE_PROFILE_AND_GATE67",
+  "status": "STATIC_ACCEPTANCE_PREP_IMPLEMENTED_PREDECESSOR_UE_GATE_PENDING",
+  "predecessor": {
+    "car_id": "SAVE_LOAD_LONG_SESSION",
+    "pr": 200,
+    "known_exact_head": "c9e427487438204e8f77f848021f7a675cbfd28e",
+    "pre_unreal": "#1488 SUCCESS",
+    "unreal_build": "#1161 NOT_YET_PROVEN_AT_PREP_TIME",
+    "merge_sha": null
+  },
+  "target_profile": {
+    "cpu_class": "Intel i7 6th generation class",
+    "ram_gb": 8,
+    "vram_gb_class": 2,
+    "renderer": "DX11",
+    "resolution_width": 1280,
+    "resolution_height": 720,
+    "quality": "Low-Medium",
+    "fps_floor": 30
+  },
+  "representative_routes": [
+    "Bag End interior traversal",
+    "Bag End exterior transition",
+    "Hobbiton lane traversal",
+    "dense vegetation view",
+    "active NPC/fauna area",
+    "canon-beat return-to-control state",
+    "save/load resumed traversal"
+  ],
+  "required_measurements": [
+    "hardware identity",
+    "exact git head",
+    "renderer/resolution/quality",
+    "route minimum and average FPS",
+    "frame-time evidence",
+    "streaming/blocking hitch observations",
+    "VRAM/texture pressure observations",
+    "NPC/fauna activation observations",
+    "audio concurrency observations",
+    "save/load continuity",
+    "cinematic return-to-control continuity"
+  ],
+  "fail_closed": {
+    "missing_route_measurement": "INCOMPLETE",
+    "wrong_profile": "FAIL",
+    "any_sustained_route_segment_below_30_fps": "FAIL",
+    "blocking_streaming_hitch": "FAIL",
+    "synchronous_heavy_load_observed": "FAIL",
+    "save_load_continuity_failure": "FAIL",
+    "return_to_control_failure": "FAIL",
+    "human_visual_or_pacing_missing": "GATE67_NOT_ACCEPTED"
+  },
+  "label_boundary": {
+    "static_validated": "requires exact-head repository/static evidence",
+    "compile_tested": "requires real UE4.27.2 compile on same head",
+    "pie_tested": "requires chapter-specific PIE evidence",
+    "device_tested": "requires actual target-class device/profile observations",
+    "visually_accepted": "requires explicit human review on same build",
+    "performance_accepted": "requires target-device measurements meeting declared floor"
+  },
+  "current_claims": {
+    "device_tested": false,
+    "performance_accepted": false,
+    "pie_tested": false,
+    "visually_accepted": false,
+    "pacing_accepted": false
+  }
+}
