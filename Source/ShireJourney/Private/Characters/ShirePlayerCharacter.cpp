@@ -265,6 +265,27 @@ bool AShirePlayerCharacter::TryApplyProductionRig(const FString& RigFolder)
     return true;
 }
 
+bool AShirePlayerCharacter::ShouldShowPrototypeWeaponForCurrentStory(FName VisualId) const
+{
+    if (VisualId == TEXT("Frodo"))
+    {
+        const UGameInstance* GI = GetGameInstance();
+        const UShireQuestSubsystem* Quests =
+            GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+        if (Quests && Quests->GetCurrentChapterId() == TEXT("P1C01"))
+        {
+            return false;
+        }
+    }
+
+    return VisualId == TEXT("Frodo") ||
+        VisualId == TEXT("Gandalf") ||
+        VisualId == TEXT("Aragorn") ||
+        VisualId == TEXT("Boromir") ||
+        VisualId == TEXT("Legolas") ||
+        VisualId == TEXT("Gimli");
+}
+
 void AShirePlayerCharacter::ApplyPrototypeStyle()
 {
     UMaterialInterface* BasicMaterial = Cast<UMaterialInterface>(FSoftObjectPath(TEXT("/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface")).ResolveObject());
@@ -580,8 +601,20 @@ void AShirePlayerCharacter::ApplyPrototypeStyle()
     ApplyColor(PrototypeMouth,FLinearColor(0.23f,0.055f,0.045f), 0.56f);
     ApplyColor(PrototypeSatchel,bBoromir ? FLinearColor(0.34f,0.36f,0.37f) : FLinearColor(0.26f,0.13f,0.045f), bBoromir ? 0.34f : 0.66f, bBoromir ? 0.78f : 0.0f);
 
-    const bool bWeaponVisible = bFrodo || bGandalf || bAragorn || bBoromir || bLegolas || bGimli;
+    const bool bWeaponVisible = ShouldShowPrototypeWeaponForCurrentStory(VisualId);
     PrototypeWeapon->SetVisibility(bWeaponVisible, true);
+    if (bFrodo)
+    {
+        const UGameInstance* GI = GetGameInstance();
+        const UShireQuestSubsystem* Quests =
+            GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+        if (Quests && Quests->GetCurrentChapterId() == TEXT("P1C01"))
+        {
+            UE_LOG(LogTemp, Display,
+                TEXT("P1C01_CHARACTER_PRESENTATION character=Frodo futureWeaponVisible=no asyncRig=%s"),
+                bUsingSkeletalProductionRig ? TEXT("yes") : TEXT("pending-or-fallback"));
+        }
+    }
     PrototypeWeapon->SetRelativeLocation(bGandalf ? FVector(4,34,0) : FVector(8,29,-4));
     PrototypeWeapon->SetRelativeScale3D(bProductionCharacter ? FVector(1) :
         (bGandalf ? FVector(0.055f,0.055f,0.92f) : (bLegolas ? FVector(0.035f,0.035f,0.72f) : FVector(0.045f,0.045f,0.52f))));
