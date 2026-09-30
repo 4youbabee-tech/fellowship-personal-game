@@ -241,7 +241,7 @@ class SourceContractTests(unittest.TestCase):
     def test_p1c01_bag_end_hero_pass_is_bounded_and_state_driven(self):
         root = Path(__file__).resolve().parents[1]
         contract = json.loads((root / "Data" / "P1C01BagEndHeroChapterV1.json").read_text(encoding="utf-8"))
-        self.assertEqual(contract["status"], "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING")
+        self.assertEqual(contract["status"], "EXACT_HEAD_MACHINE_GREEN_PR193_PRE1469_UE1142")
         self.assertEqual(contract["runtime_budget"]["max_hism_cluster_actors"], 3)
         self.assertEqual(contract["runtime_budget"]["max_hism_instances"], 36)
         self.assertEqual(contract["architecture"]["ambient_population_target_p1c01"], 18)
@@ -266,6 +266,41 @@ class SourceContractTests(unittest.TestCase):
         state_body = source[state_start:state_end]
         for token in ("ShireArrival", "LongExpectedParty", "RingSecret", "LeavingHome", "BAG_END_STORY_VARIANT"):
             self.assertIn(token, state_body)
+
+
+    def test_p1c01_party_social_loop_is_bounded_and_windowed(self):
+        root = Path(__file__).resolve().parents[1]
+        contract = json.loads((root / "Data" / "P1C01PartySocialLoopChapterV1.json").read_text(encoding="utf-8"))
+        self.assertEqual(contract["status"], "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING")
+        self.assertEqual(contract["runtime_budget"]["max_hism_cluster_actors"], 4)
+        self.assertEqual(contract["runtime_budget"]["max_hism_instances"], 56)
+        self.assertEqual(contract["runtime_budget"]["max_state_variant_props"], 8)
+        self.assertEqual(contract["architecture"]["ambient_population_target_p1c01"], 18)
+
+        source = (root / "Source" / "ShireJourney" / "Private" / "World" / "ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        start = source.index("void AShirePrototypeWorldBuilder::SpawnPartySocialLoopPass()")
+        end = source.index("void AShirePrototypeWorldBuilder::SpawnSideStories()", start)
+        body = source[start:end]
+        self.assertEqual(body.count("SpawnPartyCluster("), 4)
+        self.assertIn("PARTY_SOCIAL_LOOP_PASS", body)
+        self.assertIn("populationTarget=18", body)
+        for forbidden in ("LoadObject<", "StaticLoadObject", "RequestSyncLoad", "SpawnActor<AShireAmbientNPC>"):
+            self.assertNotIn(forbidden, body)
+
+        plan = json.loads((root / "Data" / "ContextualSideActivityPlan.json").read_text(encoding="utf-8"))
+        p1 = next(row for row in plan["chapters"] if row["route"] == "FrodoMain" and row["chapter"] == "P1C01")
+        by_id = {row["id"]: row for row in p1["activities"]}
+        for activity_id, reward_id in (
+            ("SIDE_SHIRE_FIREWORKS_SAFETY", "SHIRE_FIREWORKS_SAFETY"),
+            ("SIDE_SHIRE_DRAGON_FIREWORK_MISHAP", "SHIRE_DRAGON_FIREWORK_MISHAP"),
+        ):
+            row = by_id[activity_id]
+            self.assertEqual(row["available_after"], "PartyArrival")
+            self.assertEqual(row["ends_before"], "BilboDisappearance")
+            self.assertEqual(row["discovery_reward_id"], reward_id)
+            self.assertFalse(row["may_advance_required_anchor"])
+            self.assertFalse(row["may_change_canon_outcome"])
+            self.assertFalse(row["future_knowledge_allowed"])
 
 
 if __name__ == "__main__":
