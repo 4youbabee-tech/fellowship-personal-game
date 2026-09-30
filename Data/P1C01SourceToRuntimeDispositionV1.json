@@ -57,9 +57,13 @@
       "current_runtime": [
         "LongExpectedParty",
         "party field",
-        "ambient PartyGuest role"
+        "ambient PartyGuest role",
+        "SpawnPartySocialLoopPass",
+        "Side_BirthdayDecorReady",
+        "Side_BirthdayFoodReady",
+        "Side_BirthdaySetupComplete"
       ],
-      "state": "PARTY_SOCIAL_LOOP_REGISTERED_RUNTIME_NOT_IMPLEMENTED",
+      "state": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
       "next_car": "PARTY_AND_SOCIAL_LOOP"
     },
     {
@@ -67,9 +71,11 @@
       "source": "01_STORY_AND_TIMELINE_BIBLE + 06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE",
       "source_requirement": "Gandalf fireworks safe optional window; spectacle/reactions; cannot alter locked canon outcomes.",
       "current_runtime": [
-        "existing party/firework presentation hooks where present"
+        "SIDE_SHIRE_FIREWORKS_SAFETY",
+        "SHIRE_FIREWORKS_SAFETY",
+        "Side_FireworksSafetyComplete"
       ],
-      "state": "PARTY_SOCIAL_LOOP_REGISTERED_RUNTIME_NOT_IMPLEMENTED",
+      "state": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
       "next_car": "PARTY_AND_SOCIAL_LOOP"
     },
     {
@@ -201,6 +207,18 @@
       ],
       "state": "REQUIRES_RUNTIME_AUDIT_BEFORE_EXPANSION",
       "next_car": "QUEST_SIDE_ACTIVITY_COHERENCE"
+    },
+    {
+      "id": "F1_01_DRAGON_FIREWORK_MISHAP",
+      "source": "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE ACT_F1_03",
+      "source_requirement": "Comic stealth/interact sequence with fixed outcome; optional window only while party state remains plausible; cannot change locked F1-01 outcome.",
+      "current_runtime": [
+        "SIDE_SHIRE_DRAGON_FIREWORK_MISHAP",
+        "SHIRE_DRAGON_FIREWORK_MISHAP",
+        "Side_DragonFireworkMishapComplete"
+      ],
+      "state": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
+      "next_car": "PARTY_AND_SOCIAL_LOOP"
     }
   ],
   "zero_silent_omission_rule": "Every future P1C01 mega-build change must update a disposition entry or add a new source-grounded entry before runtime implementation.",
