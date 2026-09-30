@@ -43,9 +43,11 @@
         "RingSecret",
         "LeavingHome",
         "Bag End world geometry",
-        "P1C01BagEndHeroChapterV1"
+        "P1C01BagEndHeroChapterV1",
+        "SpawnBagEndHeroPass",
+        "ApplyBagEndStoryVariant"
       ],
-      "state": "REGISTERED_BAG_END_HERO_RUNTIME_NOT_IMPLEMENTED_INTERIOR_CONTENT_PENDING",
+      "state": "BAG_END_EXTERIOR_HERO_SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING_INTERIOR_CONTENT_PENDING",
       "next_car": "BAG_END_LIVED_IN_PASS"
     },
     {
