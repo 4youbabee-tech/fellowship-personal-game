@@ -2159,4 +2159,13 @@ Whenever a chapter, route, enemy, biome, mechanic or major story beat changes:
 - update the relevant story/audio plan,
 - add Guardian validation where machine-checkable,
 - do not mark ACCEPTED without real UE4.27/PIE evidence.
+## 2026-09-30 - P1C01 overnight preparation / save-history reconciliation
+
+This wave changes preparation contracts and static validation only; it does **not** promote any production-completeness acceptance column.
+
+W00 machine closure is inherited from PR #184 exact head `d6ca8aac03f5a1da07609e61e790ddf8faad8eed` (Pre-Unreal #1435 SUCCESS, Unreal Build #1108 SUCCESS including packaged Runtime Data verification and packaged executable observation). The current P1C01 successor PR must still satisfy its own current exact-head engine gate before merge or runtime-car expansion.
+
+The save audit now records only reachable, reviewable history: schema 3 introduced explicit version metadata; schema 4 added Journey Discovery fields; schema 5 added stamina/resolve/supplies/progression XP; schema 6 added Chronicle/map-knowledge fields. Explicit schema 1/2 semantics remain undocumented, so no compatibility or migration claim is promoted.
+
+Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/cinematic-skip postcondition equivalence and safe optional-window expiry. Runtime gameplay, target-device performance, human PIE, visual quality and audio listening remain gated and unaccepted.
 

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "P1C01_MAXIMUM_SAFE_MEGA_BUILD_V1",
-  "status": "PREP_AND_DEFECT_REPAIR_ACTIVE_RUNTIME_EXPANSION_GATED_BY_W00",
+  "status": "PREP_ACTIVE_W00_CLOSED_RUNTIME_EXPANSION_GATED_BY_PER_CAR_EXACT_HEAD_UE4",
   "authority": [
     "Data/ProjectGovernor.json",
     "Docs/WORLD_DETAIL_LEDGER.md",
@@ -25,8 +25,8 @@
     "original_dialogue_only": true
   },
   "gate_policy": {
-    "current_gate": "W00 packaged/runtime acceptance",
-    "runtime_expansion_rule": "No new runtime feature implementation starts until W00 exact-head Unreal acceptance evidence is green and Governor prerequisites permit the next P1C01 car.",
+    "current_gate": "W00 machine closure inherited; current per-car exact-head UE4.27.2 gate",
+    "runtime_expansion_rule": "W00 packaged/runtime machine evidence is green on PR #184 exact head d6ca8aac03f5a1da07609e61e790ddf8faad8eed. No new runtime feature implementation starts until the relevant current car head completes its required exact-head Pre-Unreal and UE4.27.2 gates and Governor prerequisites permit that car.",
     "allowed_in_parallel_now": [
       "source review and zero-silent-omission disposition",
       "warehouse/source candidate preparation",
@@ -34,7 +34,15 @@
       "static validators and regression guards",
       "documentation",
       "defect fixes required to protect existing runtime"
-    ]
+    ],
+    "w00_machine_baseline": {
+      "pr": 184,
+      "exact_head": "d6ca8aac03f5a1da07609e61e790ddf8faad8eed",
+      "pre_unreal": "#1435 SUCCESS",
+      "unreal_build": "#1108 SUCCESS",
+      "packaged_runtime_data": "37/37 Runtime Data payload verification plus packaged executable observation with NPCContext ready=yes",
+      "boundary": "Machine evidence only; it does not imply PIE/device/visual/performance acceptance."
+    }
   },
   "architecture": {
     "LivingWorldDirector": "Region population budgets, pooled admission/retirement, micro-events and coarse world-state response.",
@@ -54,7 +62,7 @@
     {
       "order": 1,
       "id": "DEFECT_EVENT_MEMBER_CULL",
-      "state": "ACTIVE",
+      "state": "SOURCE_IMPLEMENTED_PROOF_PENDING",
       "scope": "Fix micro-event distance retirement so one far member cannot remove nearby interaction/event members.",
       "proof": [
         "PG-208 member-local cull guard",
@@ -74,8 +82,8 @@
     {
       "order": 3,
       "id": "SAVE_SCHEMA_HISTORY_AUDIT",
-      "state": "PREPARED",
-      "scope": "Reconstruct schema-version changes before adding migration code; do not invent historical field semantics.",
+      "state": "PARTIAL_HISTORY_RECOVERED_V3_TO_V6_V1_V2_UNDOCUMENTED",
+      "scope": "Reachable develop history now documents explicit schema transitions 3->4->5->6. Explicit schema 1/2 semantics are still not recovered, so no invented migration path is permitted.",
       "proof": [
         "PG-211 save-schema audit guard",
         "documented version map or explicit unsupported boundary"
@@ -183,7 +191,15 @@
     "population_target_p1c01": 18,
     "max_active_micro_events_near_player": 3,
     "max_active_fauna_groups_near_player": 2,
-    "event_cull_policy": "member-local distance retirement; event-wide retirement only on authored expiry/reset"
+    "event_cull_policy": "member-local distance retirement; event-wide retirement only on authored expiry/reset",
+    "planning_guardrails": [
+      "No runtime density increase is authorized by planning evidence alone.",
+      "Heavy assets remain soft-referenced and asynchronously loaded.",
+      "Transient crowd-scale actors remain pooled; avoid Spawn/Destroy churn.",
+      "Repeated detail prefers ISM/HISM with LOD and distance culling.",
+      "Animated production assets remain FBX-only; final production textures remain PNG/TGA.",
+      "Profile against DX11 1280x720 Low-Medium and a 30 FPS floor on target-class hardware before performance acceptance."
+    ]
   },
   "acceptance_boundary": [
     "STATIC-VALIDATED and COMPILE-TESTED may be promoted only from exact evidence.",
@@ -191,5 +207,16 @@
     "DEVICE-TESTED requires target-class device measurements.",
     "VISUALLY-ACCEPTED requires explicit human review.",
     "This plan itself authorizes no acceptance promotion."
-  ]
+  ],
+  "preparation_lanes": {
+    "source_qc_review": "ACTIVE_ALLOWED",
+    "zero_silent_omission_disposition": "ACTIVE_ALLOWED",
+    "warehouse_source_preparation": "ACTIVE_ALLOWED_NO_RUNTIME_PROMOTION",
+    "data_contracts": "ACTIVE_ALLOWED",
+    "static_validators": "ACTIVE_ALLOWED",
+    "documentation": "ACTIVE_ALLOWED",
+    "save_schema_history_audit": "PARTIAL_HISTORY_RECOVERED_V3_TO_V6",
+    "performance_safe_planning": "ACTIVE_ALLOWED_NO_ACCEPTANCE_PROMOTION",
+    "runtime_feature_expansion": "BLOCKED_UNTIL_RELEVANT_EXACT_HEAD_ENGINE_GATE"
+  }
 }

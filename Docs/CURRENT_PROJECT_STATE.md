@@ -3233,6 +3233,13 @@ These files are required Project Guardian inputs.
 They explicitly cover facial acting, gaze, blink behavior, lip-sync, voice, body language, locomotion,
 interaction animation, environmental reaction, combat reaction, crowd behavior, continuity and low-spec LOD/performance.
 Current proxy characters do not satisfy final character quality; final rigs/animations/voice assets remain future production work.
+## 2026-09-30 - P1C01 overnight train checkpoint
 
+PR #184 is already merged and supplies the current W00 packaged-runtime machine baseline: exact head `d6ca8aac03f5a1da07609e61e790ddf8faad8eed`, Pre-Unreal #1435 SUCCESS and Unreal Build #1108 SUCCESS through package/Data/runtime observation. Branch Cleanup #76 also succeeded.
 
+PR #185 was closed without merge and superseded by the clean post-W00 consolidation path rather than wholesale-merging its 64-commit intermediate history. The live successor remains PR #189. Its parent exact head `66fd2c38aa5d6db815c4e6eaba957add89094b0d` had Pre-Unreal #1461 SUCCESS but Unreal Build #1134 was queued, so that head was not merge-eligible and no dependent runtime feature car was opened.
+
+Allowed preparation work advanced instead: zero-silent-omission coverage was extended; source/QC and warehouse promotion boundaries were re-reviewed; static validators now require explicit disposition fields and preserve exact W00/per-car gates; and the save-schema audit recovered documented v3-v6 field evolution from reachable `develop` history while keeping v1/v2 explicitly unknown. No runtime C++ feature expansion was added by this checkpoint.
+
+Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headless/package statements only where exact evidence exists. P1C01 PIE/device/visual/performance acceptance remains unclaimed.
 

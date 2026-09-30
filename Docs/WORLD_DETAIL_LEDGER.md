@@ -776,3 +776,13 @@ Purpose: retain visual, material, life, ambience and world-detail ideas discover
 - Mega Asset Promotion reuses `Data/P1C01WarehousePromotionQueueV1.json` and `Data/ProductionAssetPromotionPolicyV1.json`; this is not a second inventory. Work may advance through staging/intake QC, but no item is promoted to `READY_FOR_IMPORT` without provider/source/license, local staging receipt, SHA256 and class-specific QC.
 - Final animated production assets remain FBX-only. Final production textures remain PNG/TGA; BMP cannot be accepted as final promotion evidence. Heavy runtime assets stay soft-referenced/asynchronously owned; crowds remain pooled and repeated detail remains ISM/HISM + LOD/culling.
 - Evidence boundary: **EXECUTION AUTHORIZED / NOT YET VALIDATED**. C4 candidate exact head passed Pre-Unreal #1070 and Unreal Build #875 before merge. D needs its own exact-head machine proof plus later rendered/device evidence; no PIE/device/visual/performance acceptance is claimed here.
+## 2026-09-30 - P1C01 overnight preparation reconciliation (no new runtime feature)
+
+- W00 packaged-runtime machine closure is inherited from merged PR #184 exact head `d6ca8aac03f5a1da07609e61e790ddf8faad8eed`: Pre-Unreal #1435 and Unreal Build #1108 succeeded, including real Windows packaging, 37/37 Runtime Data payload verification and packaged executable observation.
+- The live P1C01 consolidation PR remains a separate exact-head gate. Its parent head `66fd2c38aa5d6db815c4e6eaba957add89094b0d` had Pre-Unreal #1461 green while Unreal Build #1134 was still queued, so no runtime expansion or merge was authorized from that proof.
+- Preparation advanced without runtime feature expansion: direct F1-01/F1-02/F1-03 source review, two explicit zero-silent-omission rows (knowledge/skip equivalence and safe optional-window expiry), warehouse/source QC contract review, stronger static disposition guards, and a targeted save-schema history reconstruction.
+- Reachable `develop` history now proves explicit save schemas 3, 4, 5 and 6. Versions 1/2 remain undocumented; no migration behavior is invented.
+- Ownership remains unchanged: LivingWorldDirector owns population/pooling/events, ShireNPCContextSubsystem owns NPC context/knowledge/schedules, and ShireQuestSubsystem owns quest/progression truth.
+- Low-spec constraints remain UE4.27.2, DX11 1280x720 Low-Medium, 6th-gen i7 / 8 GB RAM / ~2 GB VRAM, 30 FPS floor target, soft/async heavy loading, pooled transient crowds, ISM/HISM + LOD/culling, FBX animated assets and PNG/TGA final textures.
+- Evidence boundary: preparation/static bookkeeping only. No PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED or PERFORMANCE-ACCEPTED promotion is made here.
+

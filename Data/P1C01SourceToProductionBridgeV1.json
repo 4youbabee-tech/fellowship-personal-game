@@ -203,5 +203,18 @@
     "mega_plan": "Data/P1C01MaximumSafeMegaBuildV1.json",
     "overnight_train": "Data/P1C01OvernightMegaBuildTrainV1.json",
     "rule": "This bridge may expand source/QC/data preparation now. Runtime-changing rows stay gated by W00 and per-car exact-head engine proof."
+  },
+  "parallel_preparation_review": {
+    "status": "SOURCE_QC_AND_WAREHOUSE_CONTRACT_READY_LOCAL_EXECUTION_NOT_CLAIMED",
+    "warehouse_root": "D:\\actions-runner\\_warehouse\\ShireJourney",
+    "intake_rules": [
+      "Require provider/source/license provenance before promotion.",
+      "Require local staging receipt and SHA256 before READY_FOR_IMPORT.",
+      "Animated production candidates are FBX-only.",
+      "Final production textures are PNG/TGA; BMP is not final production evidence.",
+      "Heavy production assets remain soft/async at runtime.",
+      "No source/QC preparation result authorizes runtime integration or density expansion."
+    ],
+    "evidence_boundary": "Contract/preparation review only; no new warehouse inventory, asset QC pass, UE import or runtime acceptance is claimed by this update."
   }
 }

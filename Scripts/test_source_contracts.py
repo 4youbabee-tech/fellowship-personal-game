@@ -1,3 +1,4 @@
+import json
 import unittest
 from pathlib import Path
 
@@ -133,6 +134,74 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("if (Event.ExpiresAt <= Now)", cleanup)
         self.assertIn("if (Event.Actors.Num() == 0)", cleanup)
         self.assertNotIn("bExpired = true", cleanup)
+
+
+    def test_p1c01_disposition_rows_are_explicit(self):
+        root = Path(__file__).resolve().parents[1]
+        disposition = json.loads((root / "Data" / "P1C01SourceToRuntimeDispositionV1.json").read_text(encoding="utf-8"))
+        rows = disposition["dispositions"]
+        required = {
+            "SHIRE_HOBBITON_WORLD",
+            "BAG_END_WORLD",
+            "F1_01_PARTY_SETUP",
+            "F1_01_FIREWORKS",
+            "F1_01_LOCKED_OUTCOME",
+            "F1_02_RING_DANGER",
+            "F1_03_FIELD_SHORTCUT",
+            "F1_03_ROAD_HIDING",
+            "F1_03_FERRY_ESCAPE",
+            "SHIRE_LIVING_WORLD",
+            "SHIRE_AUDIO_IDENTITY",
+            "CHECKPOINT_AND_RETRY",
+            "DIALOGUE_KNOWLEDGE_AND_CINEMATIC_SKIP",
+            "SAFE_OPTIONAL_WINDOW_EXPIRY",
+        }
+        self.assertTrue(required.issubset({row["id"] for row in rows}))
+        for row in rows:
+            for field in ("id", "source", "source_requirement", "state", "next_car"):
+                self.assertTrue(str(row.get(field, "")).strip(), (row.get("id"), field))
+            self.assertIsInstance(row.get("current_runtime"), list)
+
+    def test_save_schema_history_preserves_proven_and_unknown_boundaries(self):
+        root = Path(__file__).resolve().parents[1]
+        audit = json.loads((root / "Data" / "SaveSchemaMigrationAuditV1.json").read_text(encoding="utf-8"))
+        self.assertEqual(
+            audit["status"],
+            "PARTIAL_HISTORY_RECOVERED_V3_TO_V6_V1_V2_UNDOCUMENTED_DO_NOT_INVENT",
+        )
+        self.assertEqual(
+            [row["schema_version"] for row in audit["documented_transitions"]],
+            [3, 4, 5, 6],
+        )
+        unknown = " ".join(audit["unknown_boundaries"])
+        self.assertIn("schema versions 1 or 2", unknown)
+        self.assertIn("retroactively labeled schema 1 or 2", unknown)
+
+    def test_overnight_train_keeps_runtime_exact_head_gated(self):
+        root = Path(__file__).resolve().parents[1]
+        train = json.loads((root / "Data" / "P1C01OvernightMegaBuildTrainV1.json").read_text(encoding="utf-8"))
+        cars = {row["id"]: row for row in train["cars"]}
+        self.assertEqual(
+            cars["W00_ACCEPTANCE_CLOSE"]["status"],
+            "CLOSED_MACHINE_PROVEN_PR184_EXACT_HEAD",
+        )
+        self.assertEqual(
+            train["preparation_progress"]["runtime_expansion"],
+            "GATED_BY_RELEVANT_PER_CAR_EXACT_HEAD_UE4",
+        )
+        for car_id in (
+            "SHIRE_WORLD_DENSITY_AND_ROUTE_LIFE",
+            "PARTY_AND_BAG_END_INTERACTION_DENSITY",
+            "NPC_ROUTINES_SOCIAL_MEMORY",
+            "FAUNA_ENVIRONMENTAL_MOTION",
+            "CHARACTER_PRESENTATION",
+            "QUEST_SIDE_ACTIVITY_COHERENCE",
+            "CINEMATIC_CONTROL_HANDOFF",
+            "SHIRE_AUDIO_IDENTITY",
+            "SAVE_LOAD_LONG_SESSION",
+            "TARGET_DEVICE_PROFILE_AND_GATE67",
+        ):
+            self.assertEqual(cars[car_id]["status"], "GATED")
 
 
 if __name__ == "__main__":

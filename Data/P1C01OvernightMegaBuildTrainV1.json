@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "P1C01_OVERNIGHT_MEGA_BUILD_TRAIN_V1",
-  "status": "AUTHORIZED_PREPARATION_RUNTIME_GATED",
+  "status": "AUTHORIZED_PREPARATION_W00_CLOSED_RUNTIME_CARS_ENGINE_GATED",
   "authority": [
     "Data/ProjectGovernor.json",
     "Docs/WORLD_DETAIL_LEDGER.md",
@@ -15,7 +15,7 @@
     "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
     "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX"
   ],
-  "purpose": "One owner approval authorizes a large P1C01 production train with many bounded cars. Preparation/source/validation cars may proceed in parallel; runtime-changing cars remain serialized behind exact-head W00 and per-car engine gates.",
+  "purpose": "One owner approval authorizes a large P1C01 production train with many bounded cars. W00 packaged-runtime machine closure is inherited from merged PR #184. Preparation/source/validation cars may proceed in parallel; runtime-changing cars remain serialized behind their relevant exact-head engine gates.",
   "canon_scope": {
     "runtime_chapter_id": "P1C01",
     "source_mapping_note": "Current runtime P1C01 is a wider vertical-slice composition than source F1-01 alone and already spans party, Ring/Bag End departure setup and road/ferry escape material. This train preserves current runtime topology and does not silently redefine source chapter boundaries.",
@@ -41,7 +41,7 @@
   },
   "execution_policy": {
     "one_approval_many_cars": true,
-    "runtime_serialization": "No runtime car starts until its prerequisite exact-head machine gate is green.",
+    "runtime_serialization": "W00 machine closure is inherited from PR #184. No runtime car starts until the current relevant car head has completed its required exact-head Pre-Unreal and UE4.27.2 gates.",
     "parallel_allowed": [
       "source/QC acquisition",
       "warehouse inventory",
@@ -65,8 +65,8 @@
       "order": 1,
       "id": "W00_ACCEPTANCE_CLOSE",
       "type": "GATE",
-      "status": "IN_PROGRESS",
-      "purpose": "Close packaged runtime Data-read and current W00 machine evidence before runtime expansion."
+      "status": "CLOSED_MACHINE_PROVEN_PR184_EXACT_HEAD",
+      "purpose": "Inherited machine closure: PR #184 exact head d6ca8aac03f5a1da07609e61e790ddf8faad8eed passed Pre-Unreal #1435 and Unreal Build #1108 including package, 37/37 staged Runtime Data validation and packaged executable observation."
     },
     {
       "order": 2,
@@ -156,8 +156,16 @@
   "preparation_progress": {
     "event_member_cull": "SOURCE_IMPLEMENTED_PROOF_PENDING",
     "pawn_cache_guard": "SOURCE_IMPLEMENTED_PROOF_PENDING",
-    "save_schema_history": "AUDITED_HISTORY_NOT_RECOVERED_DO_NOT_INVENT_MIGRATIONS",
+    "save_schema_history": "PARTIAL_HISTORY_RECOVERED_V3_TO_V6_V1_V2_UNDOCUMENTED_DO_NOT_INVENT",
     "source_to_production_bridge": "COMPREHENSIVE_ROWS_EXTENDED",
-    "runtime_expansion": "GATED_BY_W00"
+    "runtime_expansion": "GATED_BY_RELEVANT_PER_CAR_EXACT_HEAD_UE4"
+  },
+  "w00_machine_evidence": {
+    "pr": 184,
+    "exact_head": "d6ca8aac03f5a1da07609e61e790ddf8faad8eed",
+    "pre_unreal": "#1435 SUCCESS",
+    "unreal_build": "#1108 SUCCESS",
+    "branch_cleanup": "#76 SUCCESS",
+    "acceptance_boundary": "Machine closure only. No inherited PIE/device/visual/performance acceptance."
   }
 }

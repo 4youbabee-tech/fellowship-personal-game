@@ -172,8 +172,37 @@
       "current_runtime": [],
       "state": "DEFERRED_LATER_TRILOGY_STATE",
       "next_car": "NONE"
+    },
+    {
+      "id": "DIALOGUE_KNOWLEDGE_AND_CINEMATIC_SKIP",
+      "source": "01_STORY_AND_TIMELINE_BIBLE",
+      "source_requirement": "Dialogue must respect current knowledge flags; a skipped cinematic must produce the same locked postconditions; all new game dialogue remains original project-authored wording.",
+      "current_runtime": [
+        "ShireDialogueSubsystem",
+        "ShireStoryPresentationSubsystem",
+        "ShireQuestSubsystem"
+      ],
+      "state": "REQUIRES_STATIC_AND_RUNTIME_AUDIT_BEFORE_POLISH",
+      "next_car": "QUEST_CINEMATIC_POLISH"
+    },
+    {
+      "id": "SAFE_OPTIONAL_WINDOW_EXPIRY",
+      "source": "01_STORY_AND_TIMELINE_BIBLE",
+      "source_requirement": "Optional Shire/party/road content must expire cleanly when story urgency makes it implausible and may not change the locked chapter outcome.",
+      "current_runtime": [
+        "LongExpectedParty",
+        "Shire side-activity hooks",
+        "ShireQuestSubsystem"
+      ],
+      "state": "REQUIRES_RUNTIME_AUDIT_BEFORE_EXPANSION",
+      "next_car": "QUEST_SIDE_ACTIVITY_COHERENCE"
     }
   ],
   "zero_silent_omission_rule": "Every future P1C01 mega-build change must update a disposition entry or add a new source-grounded entry before runtime implementation.",
-  "evidence_boundary": "This disposition is source-to-runtime planning evidence. It does not by itself promote compile, PIE, device, performance or visual status."
+  "evidence_boundary": "This disposition is source-to-runtime planning evidence. It does not by itself promote compile, PIE, device, performance or visual status.",
+  "preparation_review": {
+    "direct_source_review": "01_STORY_AND_TIMELINE_BIBLE F1-01/F1-02/F1-03 production specifications reviewed",
+    "source_boundary": "Current P1C01 aggregation remains an implementation topology only; it does not redefine canonical F1-01/F1-02/F1-03 mission boundaries.",
+    "runtime_boundary": "Disposition expansion is planning/static evidence only and does not open runtime feature cars."
+  }
 }

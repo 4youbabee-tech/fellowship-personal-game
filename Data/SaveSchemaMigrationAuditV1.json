@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "audit_id": "SAVE_SCHEMA_MIGRATION_AUDIT_V1",
-  "status": "HISTORY_NOT_RECOVERED_DO_NOT_INVENT_MIGRATIONS",
+  "status": "PARTIAL_HISTORY_RECOVERED_V3_TO_V6_V1_V2_UNDOCUMENTED_DO_NOT_INVENT",
   "current_schema_version": 6,
   "observed_runtime_behavior": {
     "rejects_newer_than_current": true,
@@ -10,16 +10,98 @@
     "generic_per_schema_migration_pipeline": false
   },
   "evidence": [
-    "Source/ShireJourney/Public/SaveGame/ShireSaveGame.h: CurrentSchemaVersion = 6",
-    "Source/ShireJourney/Private/Characters/ShirePlayerCharacter.cpp: RestoreSaveSnapshot rejects only newer schema versions and then restores/canonicalizes current fields",
-    "Repository commit search did not return documented schema-version transition commits by schema/save-version terms"
+    "Source/ShireJourney/Public/SaveGame/ShireSaveGame.h: CurrentSchemaVersion = 6.",
+    "Source/ShireJourney/Private/Characters/ShirePlayerCharacter.cpp: RestoreSaveSnapshot rejects only newer schema versions and restores/canonicalizes current fields.",
+    "Reachable develop path history documents schema 3 introduction at b94d1b1f, schema 4 at 0797f034, schema 5 at 9dc630ec and schema 6 at 40d9f020.",
+    "Earlier reachable SaveGame header commits are unversioned; explicit schema 1/2 semantics remain unrecovered."
   ],
-  "decision": "Do not fabricate version-by-version migration semantics. Recover historical schema changes from reachable commit history or authoritative documentation first; then implement explicit migrations only for documented field changes.",
+  "decision": "History is sufficient to document explicit v3->v4->v5->v6 payload evolution, but not to implement speculative v1/v2 migrations. Do not add MinSupportedSchemaVersion or migration switch cases until authoritative v1/v2 semantics or representative fixtures are recovered. Field-history evidence alone does not prove backward-compatibility behavior.",
   "safe_followups": [
-    "Add structural/static guard that newer schemas remain rejected.",
-    "Require explicit schema-history table before adding MinSupportedSchemaVersion or migration switch cases.",
+    "Keep structural/static guard that newer schemas remain rejected.",
+    "Statically protect the recovered v3/v4/v5/v6 transition map and the explicit unknown v1/v2 boundary.",
     "Preserve existing legacy terminal-state canonicalization tests.",
-    "When history is recovered, add fixture-based old-save tests per supported schema transition."
+    "Recover representative old save fixtures or authoritative documentation before implementing version-specific migrations.",
+    "When fixtures exist, add engine-backed restore tests for each explicitly supported transition."
   ],
-  "evidence_boundary": "AUDIT ONLY. No claim that every older schema is safely migratable or fully backward compatible."
+  "evidence_boundary": "AUDIT ONLY. v3-v6 field evolution is history-documented; no claim is made that every older save deserializes safely, that schema 1/2 semantics are known, or that backward compatibility is engine-proven.",
+  "recovery_method": "Targeted develop branch path history for the pre-migration SaveGame header, followed by exact-commit header inspection. Generic code/commit keyword search was insufficient because the relevant history lives on develop and the file later moved to Public/SaveGame.",
+  "pre_versioned_history": [
+    {
+      "commit": "43c5be74a59cd2d2507126cbce7269202402aaef",
+      "date": "2026-09-17",
+      "message": "feat: add save game state model",
+      "evidence": "Save payload exists without CurrentSchemaVersion/SaveSchemaVersion."
+    },
+    {
+      "commit": "8bb67fdd759715b57f825867350e743074f9473c",
+      "date": "2026-09-17",
+      "message": "feat: persist completed story beats in save data",
+      "evidence": "CompletedStoryBeats added while the header is still explicitly unversioned."
+    },
+    {
+      "commit": "368d1979c44e44dff42ffe4b761a426f7112cb43",
+      "date": "2026-09-18",
+      "message": "systems: add persistent multi-route story state",
+      "evidence": "CurrentRouteId, CurrentEpisodeId, PlayableCharacterId and RouteProgress added while the header is still explicitly unversioned."
+    },
+    {
+      "commit": "f5bc3a6d6a3dc241b72decc47a1be19c8a1ed947",
+      "date": "2026-09-18",
+      "message": "combat: add player health and reusable enemy core",
+      "evidence": "PlayerHealth added while the header is still explicitly unversioned."
+    },
+    {
+      "commit": "e37cff8eff7f088850fc4ffaf467438a5ae8aff8",
+      "date": "2026-09-18",
+      "message": "save: rebase automatic checkpoint runtime on latest develop",
+      "evidence": "CheckpointId added while the header is still explicitly unversioned."
+    },
+    {
+      "commit": "c83e1b945fa149d7960726d3e0792e758ff95e2b",
+      "date": "2026-09-18",
+      "message": "living-world: add bounded named NPC memory runtime foundation",
+      "evidence": "NPCMemoryState added while the header is still explicitly unversioned."
+    }
+  ],
+  "documented_transitions": [
+    {
+      "schema_version": 3,
+      "commit": "b94d1b1faa5c104df348599f54261cf7cb5cfd94",
+      "date": "2026-09-18",
+      "message": "backend: harden persistent NPC memory aliases budgets and expiry",
+      "proven_change": "Introduces CurrentSchemaVersion = 3, SaveSchemaVersion and SnapshotCreatedUnixSeconds. Header patch does not add another payload domain in that commit."
+    },
+    {
+      "schema_version": 4,
+      "commit": "0797f03413340f1a85fa0b017b43030d6cd07062",
+      "date": "2026-09-19",
+      "message": "feat: implement persistent Journey Discovery progression",
+      "proven_change": "Adds JourneyDiscoveryIds, JourneyInsight and JourneyInsightMilestones."
+    },
+    {
+      "schema_version": 5,
+      "commit": "9dc630ec52880925ad36398d93620ff0599f6ca2",
+      "date": "2026-09-19",
+      "message": "feat: add player-life and persistent progression runtime",
+      "proven_change": "Adds PlayerStamina, PlayerResolve, PlayerSupplies and ProgressionXP."
+    },
+    {
+      "schema_version": 6,
+      "commit": "40d9f0208ed6df1101636c87c4555ea1677973f9",
+      "date": "2026-09-19",
+      "message": "save: persist Chronicle and map knowledge",
+      "proven_change": "Adds ChronicleEntryIds and KnownMapRegionIds."
+    }
+  ],
+  "layout_history": {
+    "commit": "9acc72b16e058a422428389fcefeb9af12fa0e98",
+    "date": "2026-09-23",
+    "message": "refactor: migrate runtime module to Public Private domains",
+    "evidence": "SaveGame header moves to Source/ShireJourney/Public/SaveGame/ShireSaveGame.h with schema version 6 and the same observed payload field set."
+  },
+  "unknown_boundaries": [
+    "No reachable develop header state reviewed here documents explicit schema versions 1 or 2.",
+    "Pre-versioned save payloads are real history, but they must not be retroactively labeled schema 1 or 2 without authoritative evidence.",
+    "No fixture-backed per-version migration semantics are proven merely by field additions or the current older-or-equal acceptance check."
+  ]
 }
