@@ -47,7 +47,8 @@
     "require_skin_weight_qc_before_import": true,
     "require_deformation_qc_before_visual_claim": true,
     "ready_for_import_default": false,
-    "obj_policy": "STATIC_MODULAR_FALLBACK_ONLY"
+    "obj_policy": "STATIC_MODULAR_FALLBACK_ONLY",
+    "fbx_pipeline_compatibility": "UE4.27 FBX 2018-compatible export required"
   },
   "character_scoring": {
     "FRODO": [
@@ -75,6 +76,7 @@
     ]
   },
   "required_qc": [
+    "FBX 2018-compatible export for UE4.27",
     "source/provider provenance",
     "FBX skeletal mesh presence",
     "real skeleton hierarchy",
@@ -101,10 +103,11 @@
     "engine": "UE4.27.2",
     "renderer": "DX11",
     "resolution": "1280x720",
-    "quality": "Low-Medium",
+    "quality": "Balanced Medium / selective High where visually important",
     "fps_floor": 30,
     "ram_gb": 8,
-    "vram_gb_class": 2
+    "vram_gb_class": 2,
+    "performance_floor_preset": "720p Low-Medium-equivalent cost floor retained for profiling"
   },
   "success_boundary": {
     "minimum_fbx_candidates_total": 2,
