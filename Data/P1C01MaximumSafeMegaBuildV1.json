@@ -62,7 +62,7 @@
     {
       "order": 1,
       "id": "DEFECT_EVENT_MEMBER_CULL",
-      "state": "SOURCE_IMPLEMENTED_PROOF_PENDING",
+      "state": "EXACT_HEAD_MACHINE_GREEN_PR189_PRE1465_UE1138",
       "scope": "Fix micro-event distance retirement so one far member cannot remove nearby interaction/event members.",
       "proof": [
         "PG-208 member-local cull guard",
@@ -73,7 +73,7 @@
     {
       "order": 2,
       "id": "CACHE_REGRESSION_GUARD",
-      "state": "SOURCE_IMPLEMENTED_PROOF_PENDING",
+      "state": "EXACT_HEAD_MACHINE_GREEN_PR189_PRE1465_UE1138",
       "scope": "Guard AShireAmbientNPC so UGameplayStatics::GetPlayerPawn remains centralized in GetPlayerPawnCached only.",
       "proof": [
         "PG-210 direct-call centralization guard"
@@ -102,10 +102,13 @@
     {
       "order": 5,
       "id": "SHIRE_WORLD_DENSITY",
-      "state": "GATED",
+      "state": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
       "scope": "Strengthen Hobbiton/fields/party-area lived-in density using current builders and instanced detail without raising unsafe resident budgets.",
       "proof": [
-        "UE4 exact-head",
+        "PG-214 bounded world-density guard",
+        "Data/P1C01ShireWorldDensityCarV1.json",
+        "exact-head Pre-Unreal",
+        "exact-head UE4.27.2",
         "later PIE/device density review"
       ]
     },

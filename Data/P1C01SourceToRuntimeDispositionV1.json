@@ -28,9 +28,11 @@
       "current_runtime": [
         "ShirePrototypeWorldBuilder",
         "ShireArrival",
-        "LongExpectedParty"
+        "LongExpectedParty",
+        "P1C01ShireWorldDensityCarV1",
+        "AWorldDetailCluster HISM world-density dressing"
       ],
-      "state": "IMPLEMENTED_PARTIAL_NEEDS_VISUAL_ACCEPTANCE",
+      "state": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING_VISUAL_ACCEPTANCE_LATER",
       "next_car": "SHIRE_WORLD_DENSITY"
     },
     {

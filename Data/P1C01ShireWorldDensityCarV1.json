@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "car_id": "P1C01_SHIRE_WORLD_DENSITY_V1",
-  "status": "REGISTERED_NOT_RUNTIME_IMPLEMENTED",
+  "status": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
   "authority": [
     "Data/ProjectGovernor.json",
     "Docs/WORLD_DETAIL_LEDGER.md",
@@ -80,6 +80,18 @@
     "device_later": [
       "720p Low-Medium FPS/frame-time/hitches/RAM/VRAM on target-class hardware"
     ],
-    "boundary": "Registration is planning evidence only."
+    "boundary": "Source implementation candidate only until exact-head Pre-Unreal + UE4.27.2 succeed. PIE/device/visual/pacing/performance remain separate evidence."
+  },
+  "runtime_implementation": {
+    "owner": "ShirePrototypeWorldBuilder",
+    "helper": "AWorldDetailCluster",
+    "function": "SpawnWorldDensityDetailPass",
+    "marker": "SHIRE_WORLD_DENSITY_DETAIL_PASS",
+    "configured_cluster_ceiling": 5,
+    "configured_instance_ceiling": 70,
+    "ambient_population_target_p1c01": 18,
+    "collision": "none",
+    "tick": "none",
+    "missing_asset_behavior": "skip category without load"
   }
 }
