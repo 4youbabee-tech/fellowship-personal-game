@@ -1,6 +1,7 @@
 #include "ShireAmbientNPC.h"
 #include "ShireNPCContextSubsystem.h"
 #include "ShirePlayerCharacter.h"
+#include "LivingWorldDirector.h"
 #include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/TextRenderComponent.h"
@@ -8,7 +9,6 @@
 #include "Materials/MaterialInterface.h"
 #include "GameFramework/Pawn.h"
 #include "Kismet/GameplayStatics.h"
-#include "EngineUtils.h"
 #include "UObject/ConstructorHelpers.h"
 
 AShireAmbientNPC::AShireAmbientNPC()
@@ -651,6 +651,8 @@ void AShireAmbientNPC::ConfigureLivingWorldRoutine(
     RuntimeSchedulePhase = NAME_None;
     RuntimeEmotion = TEXT("CALM");
     RuntimeGoal = TEXT("ROUTINE");
+    bCachedDangerContext = false;
+    bCachedInclementContext = false;
     PendingSocialCaption = FText::GetEmpty();
 
     SetActorLocationAndRotation(Start, FRotator::ZeroRotator, false, nullptr, ETeleportType::TeleportPhysics);
@@ -668,6 +670,11 @@ void AShireAmbientNPC::ConfigureLivingWorldRoutine(
 
     AppliedVisualRole = NAME_None;
     ApplyVisualStyle();
+}
+
+void AShireAmbientNPC::SetLivingWorldDirector(ALivingWorldDirector* InDirector)
+{
+    LivingWorldDirector = InDirector;
 }
 
 void AShireAmbientNPC::DeactivateForLivingWorldPool()
@@ -794,19 +801,27 @@ void AShireAmbientNPC::UpdateScheduleContext(float DeltaSeconds)
     if (!Context)
     {
         WalkSpeed = BaseWalkSpeed;
+        bCachedDangerContext = false;
+        bCachedInclementContext = false;
         return;
     }
 
-    const bool bDanger = Context->IsDangerStateActive();
-    const bool bBadWeather = Context->IsInclementWeather();
     const FName ProfileHint = ResolveRuntimeProfileHint();
-
     const float NormalizedDay = FMath::Frac(GetWorld()->GetTimeSeconds() / 900.0f);
-    RuntimeSchedulePhase = ProfileHint != NAME_None
-        ? Context->ResolveSchedulePhase(ProfileHint, NormalizedDay, bDanger, false)
-        : (bDanger ? FName(TEXT("DANGER_OVERRIDE")) : NAME_None);
+    const FShireNPCBehaviorSnapshot Snapshot =
+        Context->BuildBehaviorSnapshot(ProfileHint, NormalizedDay, false);
 
-    if (bDanger)
+    bCachedDangerContext = Snapshot.bValid
+        ? Snapshot.bDangerActive
+        : Context->IsDangerStateActive();
+    bCachedInclementContext = Snapshot.bValid
+        ? Snapshot.bInclementWeather
+        : Context->IsInclementWeather();
+    RuntimeSchedulePhase = Snapshot.bValid
+        ? Snapshot.SchedulePhase
+        : (bCachedDangerContext ? FName(TEXT("DANGER_OVERRIDE")) : NAME_None);
+
+    if (bCachedDangerContext)
     {
         WalkSpeed = BaseWalkSpeed * 1.35f;
         WaitRemaining = 0.0f;
@@ -819,7 +834,7 @@ void AShireAmbientNPC::UpdateScheduleContext(float DeltaSeconds)
         return;
     }
 
-    if (bBadWeather)
+    if (bCachedInclementContext)
     {
         WalkSpeed = BaseWalkSpeed * 0.78f;
         WaitRemaining = FMath::Max(WaitRemaining, Random.FRandRange(1.5f, 3.5f));
@@ -865,11 +880,8 @@ void AShireAmbientNPC::UpdateNeedsAndEmotion(float DeltaSeconds)
         SocialNeed01 + NeedStep * (bSocializing ? -2.8f : 0.9f),
         0.0f, 1.0f);
 
-    UGameInstance* GI = GetGameInstance();
-    UShireNPCContextSubsystem* Context =
-        GI ? GI->GetSubsystem<UShireNPCContextSubsystem>() : nullptr;
-    const bool bDanger = Context && Context->IsDangerStateActive();
-    const bool bBadWeather = Context && Context->IsInclementWeather();
+    const bool bDanger = bCachedDangerContext;
+    const bool bBadWeather = bCachedInclementContext;
 
     if (bDanger)
     {
@@ -1281,19 +1293,26 @@ void AShireAmbientNPC::UpdateSocialLife(float DeltaSeconds)
     AShireAmbientNPC* BestPartner = nullptr;
     float BestDistanceSq = FMath::Square(240.0f);
 
-    // One bounded scan answers both density and partner selection. The old path
-    // traversed the ambient actor list twice for every social check.
-    for (TActorIterator<AShireAmbientNPC> It(GetWorld()); It; ++It)
+    ALivingWorldDirector* Director = LivingWorldDirector.Get();
+    if (!Director)
     {
-        AShireAmbientNPC* Candidate = *It;
+        return;
+    }
+
+    TArray<AShireAmbientNPC*> NearbyCandidates;
+    Director->GatherActiveAmbientNPCsNear(
+        GetActorLocation(),
+        1800.0f,
+        NearbyCandidates);
+
+    for (AShireAmbientNPC* Candidate : NearbyCandidates)
+    {
         if (!Candidate)
         {
             continue;
         }
 
-        if (Candidate->bSocializing &&
-            FVector::DistSquared2D(PlayerPawn->GetActorLocation(), Candidate->GetActorLocation()) <=
-                FMath::Square(1800.0f))
+        if (Candidate->bSocializing)
         {
             ++NearbySocialActors;
         }

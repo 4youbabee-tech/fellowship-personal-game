@@ -9,6 +9,7 @@ class UStaticMeshComponent;
 class UTextRenderComponent;
 class UMaterialInterface;
 class UStaticMesh;
+class ALivingWorldDirector;
 
 UCLASS()
 class SHIREJOURNEY_API AShireAmbientNPC : public AActor
@@ -29,6 +30,7 @@ public:
         float InMinWait,
         float InMaxWait);
     void DeactivateForLivingWorldPool();
+    void SetLivingWorldDirector(ALivingWorldDirector* InDirector);
     bool IsInLivingWorldPool() const { return bInLivingWorldPool; }
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Routine")
@@ -151,6 +153,9 @@ private:
     FName RuntimeGoal = TEXT("ROUTINE");
     bool bSocializing = false;
     bool bInLivingWorldPool = false;
+    bool bCachedDangerContext = false;
+    bool bCachedInclementContext = false;
+    TWeakObjectPtr<ALivingWorldDirector> LivingWorldDirector;
     FText PendingSocialCaption;
     float VisualTorsoBaseZ = 58.0f;
     float VisualHeadBaseZ = 101.0f;

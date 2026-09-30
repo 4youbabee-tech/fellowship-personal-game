@@ -1,3 +1,16 @@
+## 2026-09-30 - P1C01 LIVING_SHIRE
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| Predecessor CHARACTER_PRESENTATION | EXACT-HEAD MACHINE-GREEN / MERGED | PR #195; head `24ffa0ddb35756a606fb166d010b1e7ca2940308`; Pre-Unreal #1475 SUCCESS; Unreal Build #1148 SUCCESS; merge `66caf6168157e0ec171a1e7249ead245e45d8b42` |
+| Bounded NPC context snapshot | SOURCE-IMPLEMENTED / EXACT-HEAD PROOF PENDING | `FShireNPCBehaviorSnapshot`, `UShireNPCContextSubsystem::BuildBehaviorSnapshot` |
+| Bounded social candidate query | SOURCE-IMPLEMENTED / EXACT-HEAD PROOF PENDING | `ALivingWorldDirector::GatherActiveAmbientNPCsNear`; no per-NPC full-world social iterator |
+| Fauna group admission cap | SOURCE-IMPLEMENTED / EXACT-HEAD PROOF PENDING | existing LivingWorldEventPlan cap 2 loaded/enforced before FAUNA event selection |
+| Pool ownership | PRESERVED IN SOURCE / EXACT-HEAD PROOF PENDING | AmbientNPC, interaction and ambient-motion pools remain under LivingWorldDirector |
+| P1C01 population | UNCHANGED | baseline target 18 |
+| Story/canon ownership | PRESERVED IN SOURCE | ShireQuestSubsystem remains progression truth; ambient behavior cannot own locked outcomes |
+| PIE / device / visual / pacing / performance | NOT TESTED / NOT ACCEPTED | Requires separate chapter-specific human/device evidence |
+
 ## 2026-09-30 - P1C01 CHARACTER_PRESENTATION car
 
 - PARTY_AND_SOCIAL_LOOP predecessor: **STATIC-VALIDATED + UE4.27.2/headless machine-green** on PR #194 / Pre-Unreal #1472 / Unreal #1145.

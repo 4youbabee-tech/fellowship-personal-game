@@ -1,3 +1,17 @@
+## 2026-09-30 - P1C01 LIVING_SHIRE chapter registered before runtime implementation
+
+- Scope: next serialized P1C01 runtime car after CHARACTER_PRESENTATION exact-head machine-green and merge.
+- Predecessor evidence: PR #195 exact head `24ffa0ddb35756a606fb166d010b1e7ca2940308`; Pre-Unreal #1475 SUCCESS; Unreal Build #1148 SUCCESS; merge `66caf6168157e0ec171a1e7249ead245e45d8b42`.
+- Runtime ownership stays decoupled: ALivingWorldDirector owns population budgets, pooled lifecycle, active-NPC admission/query, micro-events and fauna caps; UShireNPCContextSubsystem owns bounded context/knowledge/schedules/relationship projection; UShireQuestSubsystem owns story/progression truth.
+- Bottleneck repair: ambient social pairing must not perform a full-world `TActorIterator<AShireAmbientNPC>` scan from every NPC. Social candidates are restricted to the Director's bounded managed active population.
+- Context contract: NPC routine updates consume one bounded behavior snapshot per scheduled refresh rather than rebuilding danger/weather/schedule context through repeated independent calls.
+- Fauna contract: the existing `max_active_fauna_groups_near_player=2` budget becomes an enforced runtime cap, not data-only guidance.
+- Population invariant: P1C01 ambient target stays 18. No crowd-density increase is authorized by this car.
+- Performance invariants: pooling remains mandatory; no synchronous heavy load; no per-frame global context reconstruction; fauna/environment motion remains distance/activity-budget driven.
+- Story/canon invariant: ambient life cannot own locked outcomes, danger/story overrides outrank ambient schedules, and existing knowledge gates remain authoritative.
+- Gate: exact-head Pre-Unreal + UE4.27.2 required before merge. PIE/device/visual/pacing/performance acceptance remains separate and is not claimed.
+- Machine contract: `Data/P1C01LivingShireChapterV1.json`; guard target PG-218.
+
 ## 2026-09-30 - P1C01 CHARACTER_PRESENTATION chapter registered before runtime implementation
 
 - Scope: next serialized P1C01 runtime car after PARTY_AND_SOCIAL_LOOP exact-head machine-green and merge.

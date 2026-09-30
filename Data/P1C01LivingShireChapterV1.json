@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "chapter_id": "P1C01",
+  "car_id": "LIVING_SHIRE",
+  "status": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
+  "predecessor": {
+    "car_id": "CHARACTER_PRESENTATION",
+    "pr": 195,
+    "exact_head": "24ffa0ddb35756a606fb166d010b1e7ca2940308",
+    "pre_unreal": "#1475 SUCCESS",
+    "unreal_build": "#1148 SUCCESS",
+    "merge_sha": "66caf6168157e0ec171a1e7249ead245e45d8b42"
+  },
+  "purpose": "Deepen P1C01 living-world routines, local social behavior, bounded context refresh, fauna and environmental motion without increasing the ambient population target or creating a parallel AI brain.",
+  "architecture": {
+    "LivingWorldDirector": "Owns population budgets, bounded active-NPC admission/query, pooled lifecycle, micro-events, fauna-group caps and coarse world response.",
+    "ShireNPCContextSubsystem": "Owns bounded NPC context, knowledge, schedules, relationships and reusable behavior snapshots.",
+    "ShireQuestSubsystem": "Remains sole story/quest/progression truth.",
+    "parallel_ai_brain": false
+  },
+  "runtime_budget": {
+    "p1c01_ambient_population_target": 18,
+    "max_active_micro_events_near_player": 3,
+    "max_active_fauna_groups_near_player": 2,
+    "ambient_npc_pool_cap": 24,
+    "social_query_scope": "LivingWorldDirector managed active NPC registry only",
+    "full_world_social_actor_scan": false,
+    "context_refresh_seconds": [4.0, 7.0],
+    "needs_refresh_seconds": [0.8, 1.6],
+    "offscreen_simulation": "STATE_ONLY_OR_DISTANCE_THROTTLED"
+  },
+  "runtime_contract": {
+    "bounded_context_snapshot": true,
+    "social_pairing_uses_managed_active_query": true,
+    "fauna_group_cap_enforced": true,
+    "pooling_preserved": true,
+    "synchronous_heavy_load": false,
+    "per_frame_context_reconstruction": false,
+    "population_increase": false
+  },
+  "canon_boundary": [
+    "Ambient life never owns or changes locked story outcomes.",
+    "Danger/story overrides outrank ambient schedules.",
+    "NPC knowledge remains gated by existing profile/story contracts.",
+    "Fauna/environment motion cannot block required traversal."
+  ],
+  "acceptance_boundary": "SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27.2 PROOF PENDING. No PIE/device/visual/pacing/performance acceptance is claimed."
+}

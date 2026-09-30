@@ -9718,3 +9718,65 @@ else:
         if "OnlyTickPoseWhenRendered" not in source_text:
             fail(f"PG-217 {label} skeletal presentation must remain visibility-throttled")
 
+# PG-218: P1C01 Living Shire keeps context/social/fauna work bounded under existing owners.
+pg218_path = ROOT / "Data" / "P1C01LivingShireChapterV1.json"
+if not pg218_path.exists():
+    fail("PG-218 Living Shire contract missing")
+else:
+    try:
+        pg218 = json.loads(read(pg218_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-218 invalid Living Shire contract: {exc}")
+        pg218 = {}
+
+    if pg218:
+        if pg218.get("status") != "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING":
+            fail("PG-218 Living Shire status drifted")
+        budget = pg218.get("runtime_budget", {})
+        runtime = pg218.get("runtime_contract", {})
+        if budget.get("p1c01_ambient_population_target") != 18:
+            fail("PG-218 P1C01 population target must remain 18")
+        if budget.get("max_active_fauna_groups_near_player") != 2:
+            fail("PG-218 fauna-group cap must remain 2")
+        if budget.get("full_world_social_actor_scan") is not False:
+            fail("PG-218 full-world social actor scan must remain disabled")
+        if runtime.get("bounded_context_snapshot") is not True:
+            fail("PG-218 bounded context snapshot contract drifted")
+        if runtime.get("social_pairing_uses_managed_active_query") is not True:
+            fail("PG-218 managed active social query contract drifted")
+        if runtime.get("fauna_group_cap_enforced") is not True:
+            fail("PG-218 fauna admission cap must remain enforced")
+        if runtime.get("synchronous_heavy_load") is not False or runtime.get("per_frame_context_reconstruction") is not False:
+            fail("PG-218 low-spec context/loading contract drifted")
+
+    pg218_ambient = read(resolve_source("Characters/ShireAmbientNPC.cpp"))
+    pg218_director = read(resolve_source("World/LivingWorldDirector.cpp"))
+    pg218_context_h = read(resolve_source("Subsystems/ShireNPCContextSubsystem.h"))
+    pg218_context_cpp = read(resolve_source("Subsystems/ShireNPCContextSubsystem.cpp"))
+
+    social_start = pg218_ambient.index("void AShireAmbientNPC::UpdateSocialLife")
+    social_end = pg218_ambient.index("void AShireAmbientNPC::Tick", social_start)
+    social_body = pg218_ambient[social_start:social_end]
+    if "GatherActiveAmbientNPCsNear" not in social_body:
+        fail("PG-218 social pairing must use Director bounded active query")
+    if "TActorIterator<AShireAmbientNPC>" in social_body:
+        fail("PG-218 social pairing reintroduced full-world ambient actor scan")
+
+    schedule_start = pg218_ambient.index("void AShireAmbientNPC::UpdateScheduleContext")
+    schedule_end = pg218_ambient.index("void AShireAmbientNPC::UpdateNeedsAndEmotion", schedule_start)
+    if "BuildBehaviorSnapshot" not in pg218_ambient[schedule_start:schedule_end]:
+        fail("PG-218 ambient schedule refresh must consume bounded behavior snapshot")
+
+    for required in ("GatherActiveAmbientNPCsNear", "max_active_fauna_groups_near_player", "MaxActiveFaunaGroups"):
+        if required not in pg218_director:
+            fail(f"PG-218 LivingWorldDirector missing required token: {required}")
+    for required in ("FShireNPCBehaviorSnapshot", "BuildBehaviorSnapshot"):
+        if required not in pg218_context_h:
+            fail(f"PG-218 NPC context header missing required token: {required}")
+    if "BuildBehaviorSnapshot" not in pg218_context_cpp:
+        fail("PG-218 NPC context implementation missing bounded behavior snapshot")
+
+    pg218_life = json.loads(read(ROOT / "Data" / "WorldLifeSaturationPlan.json"))
+    if pg218_life.get("baseline_population_targets", {}).get("P1C01") != 18:
+        fail("PG-218 WorldLifeSaturationPlan P1C01 population drifted above/below 18")
+

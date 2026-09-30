@@ -5329,6 +5329,40 @@
       ],
       "evidence_boundary": "SOURCE/RUNTIME IMPLEMENTATION CONTRACT. No PIE/device/visual/deformation/performance acceptance is implied until matching evidence exists.",
       "authority": "DEC-090_USER_MEGA_TRAIN_AUTHORIZATION"
+    },
+    {
+      "id": "DEC-095",
+      "title": "P1C01 Living Shire uses bounded Director-owned active queries and coalesced NPC context snapshots",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WORLD-001",
+        "REQ-NPC-001",
+        "REQ-PERF-001",
+        "REQ-STABILITY-001",
+        "REQ-QA-001"
+      ],
+      "resolution": "Open LIVING_SHIRE after CHARACTER_PRESENTATION exact-head machine-green. Deepen NPC routines/social behavior/fauna/environment motion only through the existing LivingWorldDirector and ShireNPCContextSubsystem owners, while removing full-world social scans and enforcing existing fauna budgets.",
+      "implementation_contract": [
+        "Register WORLD_DETAIL_LEDGER and Data/P1C01LivingShireChapterV1.json before runtime C++ changes.",
+        "ALivingWorldDirector owns the bounded active ambient-NPC query used for social pairing; individual NPCs may not scan the entire world actor set.",
+        "UShireNPCContextSubsystem exposes a bounded behavior snapshot combining schedule, mood, emotion, danger and weather context for scheduled NPC refresh.",
+        "P1C01 ambient population target remains 18.",
+        "LivingWorldEventPlan max_active_fauna_groups_near_player is enforced at runtime.",
+        "Existing NPC, interaction and ambient-motion object pools remain the lifecycle owners.",
+        "No synchronous heavy asset loading, no per-frame global context reconstruction and no parallel AI brain.",
+        "Quest/story truth remains in UShireQuestSubsystem; ambient life cannot change locked canon outcomes.",
+        "Exact-head Pre-Unreal + UE4.27.2 required before merge; PIE/device/visual/pacing/performance acceptance remains separate."
+      ],
+      "rationale": "The existing runtime already contains schedules, social behavior, fauna, pooled micro-events and environmental motion, but social checks still scan all ambient actors and the fauna-group budget is not enforced directly. This decision deepens the living-world layer by fixing those scaling boundaries instead of adding another intelligence system or increasing crowd counts.",
+      "evidence": [
+        "Data/P1C01LivingShireChapterV1.json",
+        "Data/P1C01FLivingShirePlanV1.json",
+        "Data/LivingWorldEventPlan.json",
+        "Data/WorldLifeSaturationPlan.json",
+        "Docs/WORLD_DETAIL_LEDGER.md"
+      ],
+      "evidence_boundary": "SOURCE/RUNTIME IMPLEMENTATION CONTRACT. No PIE/device/visual/pacing/performance acceptance is implied until matching evidence exists.",
+      "authority": "DEC-090_USER_MEGA_TRAIN_AUTHORIZATION"
     }
   ],
   "open_conflicts": [],
