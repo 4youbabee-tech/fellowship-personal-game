@@ -3347,3 +3347,11 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - The highest-priority compound test remains settlement entry under simultaneous streaming/residency, NPC activation, AI/animation/collision, first-use rendering and cleanup pressure.
 - Existing architecture already mitigates several audit concerns through async soft-reference streaming, bounded population pooling, explicit residency plans and bounded save/load contracts; these must be measured before speculative rewrites.
 - Evidence boundary: governance/source review only. No new PIE/device/visual/pacing/performance acceptance claim.
+
+## 2026-10-01 - P1C01 Gate 6/7 + local visible-world tooling reconciled
+
+- SAVE_LOAD_LONG_SESSION predecessor #200 is merged at `7ad697ed146e356dea9e591ccf61a8268138bc3b` after exact-head Unreal success.
+- TARGET_DEVICE_PROFILE_AND_GATE67 fail-closed evidence tooling is reconciled onto current develop. The target remains DX11 / 1280x720 / 30 FPS floor / 8 GB RAM / ~2 GB VRAM, with the Governor's **Balanced Medium + selective High** visual-quality rule.
+- Missing target-device route evidence or human visual/pacing review remains INCOMPLETE/NOT_ACCEPTED; no device/performance/visual acceptance is inferred from CI.
+- Local visible-world bootstrap tooling is reconciled: it reuses `ShireProductionImport`, verifies generated `.uasset` output, and launches `/Engine/Maps/Entry` without permanently changing DefaultEngine startup maps.
+- Evidence boundary: SOURCE/TOOLING + STATIC validation pending on this exact head. No new PIE/device/visual/pacing/performance acceptance claim.
