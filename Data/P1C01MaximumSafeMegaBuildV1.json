@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "P1C01_MAXIMUM_SAFE_MEGA_BUILD_V1",
-  "status": "CAR5_MACHINE_GREEN_CAR6_BAG_END_HERO_SOURCE_IMPLEMENTED",
+  "status": "PREP_ACTIVE_W00_CLOSED_RUNTIME_EXPANSION_GATED_BY_PER_CAR_EXACT_HEAD_UE4",
   "authority": [
     "Data/ProjectGovernor.json",
     "Docs/WORLD_DETAIL_LEDGER.md",
