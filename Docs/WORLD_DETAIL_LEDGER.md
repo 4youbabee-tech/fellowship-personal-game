@@ -1,3 +1,15 @@
+## 2026-09-30 - P1C01 CINEMATIC_CONTROL_HANDOFF chapter registered before runtime implementation
+
+- Scope: next serialized P1C01 runtime car after QUEST_SIDE_ACTIVITY_COHERENCE exact-head machine-green and merge.
+- Predecessor evidence: PR #197 exact head `10fa10ac47deed372d3a29c14dd30c1c3b5a5522`; Pre-Unreal #1481 SUCCESS; Unreal Build #1154 SUCCESS; merge `e926889f9328e238afaffb16f9f9dabf58ce9040`.
+- Runtime ownership: UShireStoryPresentationSubsystem owns presentation lock/state, AStoryPresentationDirector owns runtime camera handoff, UShireQuestSubsystem remains sole quest/story truth, and AChapterWorldRouter remains world-commit truth.
+- Handoff contract: timed release, explicit skip release and chapter-change release all converge on the same presentation exit path; runtime camera must return to the previously embodied player view and may not outlive cinematic unlock.
+- External-camera invariant: authored external cameras/Level Sequences remain authoritative; the runtime presentation director may not steal their view target.
+- Transaction invariant: presentation may not mutate route, save, quest or world-commit state. Skipping presentation changes presentation only; locked story postconditions remain owned by quest/story systems.
+- P1C01 focus: BilboDisappearance is the primary cinematic beat covered by this car. No new story outcome is introduced.
+- Gate: exact-head Pre-Unreal + UE4.27.2 required before merge. PIE/device/visual/pacing/performance acceptance remains separate and is not claimed.
+- Machine contract: `Data/P1C01CinematicControlHandoffV1.json`; guard target PG-220.
+
 ## 2026-09-30 - P1C01 QUEST_SIDE_ACTIVITY_COHERENCE chapter registered before runtime implementation
 
 - Scope: next serialized P1C01 runtime car after LIVING_SHIRE exact-head machine-green and merge.
