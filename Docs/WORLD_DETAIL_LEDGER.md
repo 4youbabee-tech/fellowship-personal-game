@@ -1,3 +1,15 @@
+## 2026-10-01 - P1C01 FOUNDATION_CORRECTIONS_V1 registered
+
+- Scope: corrective foundation pass before additional visible P1C01 construction; no new chapter or story outcome.
+- Confirmed runtime defect: manually builder-authored humanoid ambient residents in Bree/Rivendell/Lorien can reach social-life logic without being visible to the Director's candidate registry.
+- Corrective architecture: `ALivingWorldDirector` performs one committed-world reconciliation scan, weakly registers persistent social-capable residents, excludes `LivingWorldManaged` pooled actors and fauna, and keeps `GatherActiveAmbientNPCsNear()` as the single bounded candidate query. Persistent registration does not transfer lifecycle ownership.
+- Startup-order rationale: world routing/build can precede LivingWorldDirector spawn, therefore builder-local `SetLivingWorldDirector()` calls are not accepted as the sole fix.
+- Audio-surface correction: establish Grass/Dirt/Stone/Wood project SurfaceTypes and prefer Physical Material identity in footsteps, retaining name/tag fallback until production material instances are fully authored.
+- Character asset correction: animated production candidates must be UE4.27 FBX 2018-compatible; existing OBJ character pieces remain static modular fallback only until real skeleton/weights/deformation/AnimBP proof exists.
+- Material strategy remains **Balanced Medium + selective High**: no blanket multi-map expansion on the ~2 GB VRAM target; selective normal/channel-packed detail only after bounded intake/profile work.
+- No Niagara conversion is authorized for current fauna without profiling evidence; pooled bounded fauna and HISM world detail remain the default architecture.
+- Gate: exact-head Pre-Unreal + UE4.27.2 validation required before merge. Human PIE/device/visual/pacing/performance acceptance remains separate.
+
 ## 2026-09-30 - P1C01 SAVE_LOAD_LONG_SESSION chapter registered before runtime implementation
 
 - Scope: next serialized P1C01 reliability car after SHIRE_AUDIO_IDENTITY exact-head machine-green and merge.
