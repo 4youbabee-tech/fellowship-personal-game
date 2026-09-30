@@ -2190,3 +2190,15 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 - Dedicated Bag End interior: **CONTENT_PENDING**; no production interior shell/kit exists in the repository and no completion claim is made.
 - PIE collision/readability, human visual acceptance and target-device performance: **PENDING / NOT CLAIMED**.
 
+## 2026-09-30 - P1C01 PARTY_AND_SOCIAL_LOOP car
+
+- BAG_END_LIVED_IN_PASS predecessor: **STATIC-VALIDATED + UE4.27.2/headless machine-green** on PR #193 / Pre-Unreal #1469 / Unreal #1142.
+- Party/social source implementation: **SOURCE-IMPLEMENTED / EXACT-HEAD CI PENDING**.
+- Visual budget: **4 HISM clusters / 48 non-collision decorative instances + 14 static party props + 8 state-variant props**.
+- Optional gameplay: **3 birthday-setup beats + 2 multi-step activities** (Fireworks Safety and Dragon Firework Mishap), all story-window gated and non-mandatory.
+- Progression/save: **DATA-WIRED** through existing side-activity/discovery first-time reward path; direct reward bypass remains rejected by ShireQuestSubsystem.
+- Ambient AI population: **UNCHANGED at 18**.
+- F1-01 locked outcome: **UNCHANGED**.
+- New gameplay subsystem / per-frame scan / synchronous heavy load: **NONE**.
+- PIE activity retry/window behavior, human party visual/pacing review and target-device performance: **PENDING / NOT CLAIMED**.
+
