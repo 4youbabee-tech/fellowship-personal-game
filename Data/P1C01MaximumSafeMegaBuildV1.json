@@ -25,7 +25,7 @@
     "original_dialogue_only": true
   },
   "gate_policy": {
-    "current_gate": "PARTY_AND_SOCIAL_LOOP machine-green on PR #194; CHARACTER_PRESENTATION source-implemented and awaiting exact-head gate.",
+    "current_gate": "CHARACTER_PRESENTATION machine-green and merged from PR #195; LIVING_SHIRE source-implemented and awaiting exact-head Pre-Unreal + UE4.27.2.",
     "runtime_expansion_rule": "W00 packaged/runtime machine evidence is green on PR #184 exact head d6ca8aac03f5a1da07609e61e790ddf8faad8eed. No new runtime feature implementation starts until the relevant current car head completes its required exact-head Pre-Unreal and UE4.27.2 gates and Governor prerequisites permit that car.",
     "allowed_in_parallel_now": [
       "source review and zero-silent-omission disposition",
@@ -135,7 +135,7 @@
     {
       "order": 8,
       "id": "LIVING_SHIRE",
-      "state": "GATED_BY_CHARACTER_PRESENTATION_EXACT_HEAD",
+      "state": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
       "scope": "Expand role/routine/social/fauna/environmental motion breadth through existing LivingWorldDirector + ShireNPCContextSubsystem ownership.",
       "proof": [
         "pool/state-leak regression",
@@ -145,7 +145,7 @@
     {
       "order": 9,
       "id": "CHARACTER_PRESENTATION",
-      "state": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
+      "state": "EXACT_HEAD_MACHINE_GREEN_PR195_PRE1475_UE1148_MERGED_66CAF6",
       "scope": "Promote legal FBX Frodo/Gandalf/Sam Shire presentation candidates behind modular fallback and async rig loading.",
       "proof": [
         "rig/skin/deformation/AnimBP QC",
@@ -220,6 +220,6 @@
     "documentation": "ACTIVE_ALLOWED",
     "save_schema_history_audit": "PARTIAL_HISTORY_RECOVERED_V3_TO_V6",
     "performance_safe_planning": "ACTIVE_ALLOWED_NO_ACCEPTANCE_PROMOTION",
-    "runtime_feature_expansion": "BLOCKED_UNTIL_RELEVANT_EXACT_HEAD_ENGINE_GATE"
+    "runtime_feature_expansion": "LIVING_SHIRE_EXACT_HEAD_GATE_PENDING"
   }
 }
