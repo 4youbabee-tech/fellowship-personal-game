@@ -86,28 +86,28 @@
       "order": 4,
       "id": "PARTY_AND_BAG_END_INTERACTION_DENSITY",
       "type": "RUNTIME_BUILD",
-      "status": "PARTY_SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING_BAG_END_PR193_GREEN",
+      "status": "PARTY_EXACT_HEAD_MACHINE_GREEN_PR194_PRE1472_UE1145_BAG_END_PR193_GREEN",
       "purpose": "Birthday setup, social onboarding, tables/food/decorations, bounded guest interactions, Bag End lived-in interaction pass."
     },
     {
       "order": 5,
       "id": "NPC_ROUTINES_SOCIAL_MEMORY",
       "type": "RUNTIME_BUILD",
-      "status": "GATED",
+      "status": "GATED_BY_CHARACTER_PRESENTATION_EXACT_HEAD",
       "purpose": "Expand existing Shire schedules, context, social pairing and bounded memory without a parallel AI brain."
     },
     {
       "order": 6,
       "id": "FAUNA_ENVIRONMENTAL_MOTION",
       "type": "RUNTIME_BUILD",
-      "status": "GATED",
+      "status": "GATED_BY_CHARACTER_PRESENTATION_EXACT_HEAD",
       "purpose": "Bird/rabbit/butterfly and environmental motion using existing pooled/distance-throttled systems."
     },
     {
       "order": 7,
       "id": "CHARACTER_PRESENTATION",
       "type": "RUNTIME_BUILD",
-      "status": "GATED",
+      "status": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
       "purpose": "Promote approved FBX skeletal candidates and animation presentation through soft/async residency only."
     },
     {
