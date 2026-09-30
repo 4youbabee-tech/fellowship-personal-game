@@ -9,16 +9,18 @@
     "platform": "Windows",
     "renderer": "DX11",
     "resolution": "720p",
-    "quality": "Low-Medium",
+    "quality": "Balanced Medium / selective High where visually important",
     "fps_floor_target": 30,
     "ram_gb": 8,
-    "gpu_vram_class_gb": 2
+    "gpu_vram_class_gb": 2,
+    "visual_quality_rule": "The supported low-spec profile must still look intentional, attractive and game-ready. Preserve higher perceived quality for hero characters, nearby architecture, terrain readability, key materials and primary lighting; recover performance first from distant shadows, far-detail density, nonessential effects, LOD/cull distance and other lower-salience costs. Do not globally flatten the game to Low merely to meet the frame target."
   },
   "product_north_star": [
     "Let the player live the Peter Jackson film story as a playable adventure rather than inventing a replacement main story.",
     "Make the world feel alive, beautiful, explorable and responsive while preserving story chronology and low-spec performance.",
     "Preserve every meaningful user request and decision so chat loss or developer changes never erase project intent.",
-    "Prefer player enjoyment, clarity, stable traversal, save continuity and reliable performance over uncontrolled feature quantity."
+    "Prefer player enjoyment, clarity, stable traversal, save continuity and reliable performance over uncontrolled feature quantity.",
+    "Deliver a visually strong, enjoyable image on the target laptop through selective quality budgeting rather than uniformly low settings; performance optimization must preserve the player's sense of beauty, atmosphere and authored world quality."
   ],
   "operating_rules": [
     "Global project-management changes go through the single Governor and a validation branch/PR; workers must not create competing authority files.",
@@ -5494,6 +5496,25 @@
       ],
       "evidence_boundary": "SOURCE/RUNTIME RELIABILITY CONTRACT. No human long-session PIE/device/performance acceptance is implied until matching evidence exists.",
       "authority": "DEC-090_USER_MEGA_TRAIN_AUTHORIZATION"
+    },
+    {
+      "id": "DEC-102",
+      "title": "Balanced-Medium visual quality and Deep Audit V1 become permanent engineering constraints",
+      "status": "ACCEPTED",
+      "priority": "HIGH",
+      "date": "2026-10-01",
+      "owner_direction": "The game must remain visually attractive and enjoyable on the target laptop. 'Low-Medium' is not permission to make the image look cheap; use a balanced Medium baseline with selective High treatment for visually important content and save performance on lower-salience costs.",
+      "deep_audit_disposition": "SHIRE JOURNEY PRE-MORTEM PERFORMANCE & ARCHITECTURE DEEP AUDIT V1 is adopted as a validation checklist, not as proof of ten defects. It reported zero confirmed code defects and ten plausible runtime risk surfaces requiring source/runtime measurement before acceptance.",
+      "engineering_rules": [
+        "Preserve the 30 FPS floor, DX11, 720p, 8 GB RAM and ~2 GB VRAM target.",
+        "Prioritize perceived image quality for hero characters, nearby architecture, terrain readability, primary lighting and key materials.",
+        "Reduce cost first through measured distant-shadow ranges, far LOD/detail density, nonessential post/effects, culling and streaming/residency budgets rather than globally lowering all quality.",
+        "Treat settlement-entry streaming + NPC activation + AI/animation/collision + first-use rendering + GC as one compound performance envelope.",
+        "Use the Deep Audit R-01 through R-10 list as a falsifiable test matrix; do not relabel an UNSUPPORTED risk as a defect without source or runtime evidence.",
+        "Track p95/p99/max frame time and memory/residency behavior for target-device acceptance; average FPS alone is insufficient.",
+        "Existing async streaming, soft-reference ownership, pooled population, bounded save payload and target-device plans remain the preferred architecture and must be measured rather than rewritten speculatively."
+      ],
+      "evidence_boundary": "GOVERNANCE/DESIGN DECISION only. It does not claim PIE, device, visual, pacing or performance acceptance."
     }
   ],
   "open_conflicts": [],
@@ -8156,5 +8177,41 @@
     "quality_rule": "Localization QA covers truncation, RTL ordering, line wrapping, subtitle timing/readability, objective clarity and preservation of canonical English map labels.",
     "authority_rule": "Localization must not alter canon, locked outcomes, character knowledge or objective meaning.",
     "evidence_boundary": "This contract is governance/design truth. It does not claim the runtime localization pipeline is already fully implemented or device-tested."
+  },
+  "deep_audit_v1_2026_10_01": {
+    "status": "ADOPTED_AS_PRE_MORTEM_CHECKLIST",
+    "source": "Owner-supplied SHIRE JOURNEY — PRE-MORTEM PERFORMANCE & ARCHITECTURE DEEP AUDIT V1",
+    "confirmed_defects": 0,
+    "plausible_risk_surfaces": 10,
+    "risk_ids": [
+      "R-01",
+      "R-02",
+      "R-03",
+      "R-04",
+      "R-05",
+      "R-06",
+      "R-07",
+      "R-08",
+      "R-09",
+      "R-10"
+    ],
+    "key_compound_risk": "Settlement entry can align streaming/residency changes, NPC activation, AI/animation/collision, first-use rendering and cleanup work in the same frame window.",
+    "useful_existing_mitigations": [
+      "UShireChapterAssetStreamingSubsystem uses soft object paths and FStreamableManager async loading with resident/pending ownership.",
+      "LivingWorldDirector has bounded pooling paths for ambient NPCs, interactions and ambient motion.",
+      "WholeGamePooledPopulationPlanV1 defines activation bands and forbids uncontrolled Spawn/Destroy bursts.",
+      "WholeGameStreamingResidencyPlanV1 forbids synchronous heavy runtime loading and bounds active working sets.",
+      "P1C01HTargetDeviceProfilingPlanV1 already targets DX11 / 720p / 30 FPS / ~2 GB VRAM.",
+      "P1C01SaveLoadLongSessionV1 already bounds save payload growth and restore mutation."
+    ],
+    "required_followup": [
+      "Measure cold and warm traversal separately.",
+      "Capture Game/Draw/GPU frame time plus p95/p99/max tails.",
+      "Measure streaming/VRAM pressure on representative target hardware.",
+      "Measure NPC activation tiers, pooled counts and activation bursts.",
+      "Exercise long-session revisit and repeated Save/Load stability.",
+      "Profile first-use rendering/PSO behavior on the chosen target RHI."
+    ],
+    "truth_boundary": "The audit is a pre-mortem and validation plan. Its ten risks remain hypotheses until current-source or runtime evidence proves a concrete defect."
   }
 }
