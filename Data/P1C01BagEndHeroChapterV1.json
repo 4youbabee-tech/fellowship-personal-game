@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "car_id": "P1C01_BAG_END_HERO_CHAPTER_V1",
-  "status": "REGISTERED_RUNTIME_NOT_IMPLEMENTED",
+  "status": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
   "authority": [
     "Data/ProjectGovernor.json",
     "Docs/WORLD_DETAIL_LEDGER.md",
@@ -59,6 +59,23 @@
     "later_device": [
       "720p Low-Medium FPS/frame-time/hitches/RAM/VRAM on target-class hardware"
     ],
-    "boundary": "Registration only; no runtime/compile/PIE/device/visual/performance claim yet."
+    "boundary": "Source implementation candidate. Exact-head Pre-Unreal and UE4.27.2 proof pending; PIE/device/visual/pacing/performance remain separate evidence."
+  },
+  "runtime_implementation": {
+    "owner": "ShirePrototypeWorldBuilder",
+    "function": "SpawnBagEndHeroPass",
+    "state_function": "ApplyBagEndStoryVariant",
+    "marker": "BAG_END_HERO_PASS",
+    "state_marker": "BAG_END_STORY_VARIANT",
+    "hism_cluster_ceiling": 3,
+    "hism_instance_configured": 34,
+    "static_prop_configured": 8,
+    "birthday_variant_prop_configured": 5,
+    "departure_variant_prop_configured": 5,
+    "ambient_population_target_p1c01": 18,
+    "collision": "none for new detail/state props",
+    "tick": "none",
+    "state_owner": "ShireQuestSubsystem delegates",
+    "interior": "CONTENT_PENDING_DEDICATED_FBX_KIT_AND_PROVENANCE"
   }
 }
