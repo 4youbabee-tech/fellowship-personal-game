@@ -388,8 +388,17 @@ class SourceContractTests(unittest.TestCase):
 
         director = (root / "Source" / "ShireJourney" / "Private" / "World" / "LivingWorldDirector.cpp").read_text(encoding="utf-8")
         self.assertIn("GatherActiveAmbientNPCsNear", director)
+        self.assertIn("ReconcilePersistentAmbientNPCRegistry", director)
+        self.assertIn("PersistentAmbientNPCs", director)
+        self.assertIn("TActorIterator<AShireAmbientNPC>", director)
+        self.assertIn('ActorHasTag(TEXT("LivingWorldManaged"))', director)
+        self.assertIn('RoutineRole == TEXT("Bird")', director)
         self.assertIn('max_active_fauna_groups_near_player', director)
         self.assertIn("MaxActiveFaunaGroups", director)
+
+        self.assertTrue(contract["runtime_contract"]["persistent_builder_residents_registered_for_social_query"])
+        self.assertFalse(contract["runtime_contract"]["persistent_registration_transfers_lifecycle_ownership"])
+        self.assertFalse(contract["runtime_contract"]["per_tick_full_world_registration_scan"])
 
         context_h = (root / "Source" / "ShireJourney" / "Public" / "Subsystems" / "ShireNPCContextSubsystem.h").read_text(encoding="utf-8")
         context_cpp = (root / "Source" / "ShireJourney" / "Private" / "Subsystems" / "ShireNPCContextSubsystem.cpp").read_text(encoding="utf-8")
