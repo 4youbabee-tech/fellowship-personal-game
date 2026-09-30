@@ -1,3 +1,15 @@
+## 2026-09-30 - P1C01 LIVING_SHIRE source implementation
+
+- CHARACTER_PRESENTATION predecessor closed on PR #195 exact head `24ffa0ddb35756a606fb166d010b1e7ca2940308`: Pre-Unreal #1475 SUCCESS, Unreal Build #1148 SUCCESS, merged as `66caf6168157e0ec171a1e7249ead245e45d8b42`.
+- Registered LIVING_SHIRE first in `Docs/WORLD_DETAIL_LEDGER.md`, `Data/P1C01LivingShireChapterV1.json` and Governor DEC-095.
+- Added `FShireNPCBehaviorSnapshot` / `BuildBehaviorSnapshot()` so scheduled ambient routine refresh coalesces danger, weather, schedule, anchor, regional mood and emotional state instead of rebuilding context through repeated independent queries.
+- Replaced per-NPC full-world `TActorIterator<AShireAmbientNPC>` social scans with `ALivingWorldDirector::GatherActiveAmbientNPCsNear()`, bounded to Director-managed baseline and active micro-event NPCs inside the requested radius.
+- Loaded and enforced the existing `max_active_fauna_groups_near_player=2` admission budget before FAUNA micro-events are selected.
+- Existing AmbientNPC / interaction / ambient-motion pools remain lifecycle owners; no parallel AI brain or streaming owner was added.
+- P1C01 ambient population target remains **18**. No density increase, synchronous heavy load or per-frame global context reconstruction was introduced.
+- Current status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27.2 PROOF PENDING**.
+- Not claimed: PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PACING-ACCEPTED or PERFORMANCE-ACCEPTED.
+
 ## 2026-09-30 - P1C01 CHARACTER_PRESENTATION source implementation
 
 - Predecessor PARTY_AND_SOCIAL_LOOP is exact-head machine-green: PR #194 head `5e4814c9f2ec9acc3bae3df389936c1621bde9e0` passed Pre-Unreal #1472 and Unreal Build #1145, then merged to develop as `584b9522298e04f8a5a3d79e246c5f0483cce7c0`.
