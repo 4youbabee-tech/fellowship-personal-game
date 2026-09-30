@@ -1,3 +1,14 @@
+## 2026-09-30 - P1C01 SAVE_LOAD_LONG_SESSION chapter registered before runtime implementation
+
+- Scope: next serialized P1C01 reliability car after SHIRE_AUDIO_IDENTITY exact-head machine-green and merge.
+- Predecessor evidence: PR #199 exact head `c258cebda8ae5749c54ed0aa6717582b89988fc3`; Pre-Unreal #1486 SUCCESS; Unreal Build #1159 SUCCESS; merge `ec96e9e487ecbe91d9563848f685df4bd5c11b0d`.
+- Persistence ownership: AShirePlayerCharacter keeps the production snapshot/restore path, UShireQuestSubsystem owns logical persistence domains, AChapterWorldRouter owns committed-world identity/revision. No parallel save manager.
+- Existing long-session protections retained: transactional restore publication, async checkpoint world-revision guard, queued snapshot preservation, legacy identity canonicalization and deferred grounded transform restore.
+- New admission contract: reject structurally oversized/corrupt save payloads before BeginPersistenceRestore or any player/quest mutation.
+- Restore ceilings: quest stages 128; story beats 512; route entries 16; NPC memory buckets 128; discoveries 512; insight milestones 128; progression tracks 64; Chronicle entries 1024; known map regions 128.
+- Gate: exact-head Pre-Unreal + UE4.27.2 required before merge. Human long-session PIE/device hitch/persistence-stress acceptance remains separate and is not claimed.
+- Machine contract: `Data/P1C01SaveLoadLongSessionV1.json`; guard target PG-222.
+
 ## 2026-09-30 - P1C01 SHIRE_AUDIO_IDENTITY chapter registered before runtime implementation
 
 - Scope: next serialized P1C01 runtime car after CINEMATIC_CONTROL_HANDOFF exact-head machine-green and merge.
