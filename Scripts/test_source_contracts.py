@@ -203,11 +203,11 @@ class SourceContractTests(unittest.TestCase):
         ):
             self.assertEqual(
                 cars[car_id]["status"],
-                "GATED_BY_CHARACTER_PRESENTATION_EXACT_HEAD",
+                "SOURCE_IMPLEMENTED_LIVING_SHIRE_EXACT_HEAD_PROOF_PENDING",
             )
         self.assertEqual(
             cars["CHARACTER_PRESENTATION"]["status"],
-            "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
+            "EXACT_HEAD_MACHINE_GREEN_PR195_PRE1475_UE1148_MERGED_66CAF6",
         )
         for car_id in (
             "QUEST_SIDE_ACTIVITY_COHERENCE",
@@ -351,6 +351,45 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("OnlyTickPoseWhenRendered", player)
         self.assertIn("bEnableUpdateRateOptimizations = true", npc_cpp)
         self.assertIn("OnlyTickPoseWhenRendered", npc_cpp)
+
+
+    def test_p1c01_living_shire_is_bounded_and_director_owned(self):
+        root = Path(__file__).resolve().parents[1]
+        contract = json.loads((root / "Data" / "P1C01LivingShireChapterV1.json").read_text(encoding="utf-8"))
+        self.assertEqual(contract["status"], "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING")
+        self.assertEqual(contract["runtime_budget"]["p1c01_ambient_population_target"], 18)
+        self.assertEqual(contract["runtime_budget"]["max_active_fauna_groups_near_player"], 2)
+        self.assertFalse(contract["runtime_budget"]["full_world_social_actor_scan"])
+        self.assertTrue(contract["runtime_contract"]["bounded_context_snapshot"])
+        self.assertTrue(contract["runtime_contract"]["social_pairing_uses_managed_active_query"])
+        self.assertTrue(contract["runtime_contract"]["fauna_group_cap_enforced"])
+        self.assertFalse(contract["runtime_contract"]["synchronous_heavy_load"])
+        self.assertFalse(contract["runtime_contract"]["per_frame_context_reconstruction"])
+
+        ambient = (root / "Source" / "ShireJourney" / "Private" / "Characters" / "ShireAmbientNPC.cpp").read_text(encoding="utf-8")
+        social_start = ambient.index("void AShireAmbientNPC::UpdateSocialLife")
+        social_end = ambient.index("void AShireAmbientNPC::Tick", social_start)
+        social = ambient[social_start:social_end]
+        self.assertIn("GatherActiveAmbientNPCsNear", social)
+        self.assertNotIn("TActorIterator<AShireAmbientNPC>", social)
+
+        schedule_start = ambient.index("void AShireAmbientNPC::UpdateScheduleContext")
+        schedule_end = ambient.index("void AShireAmbientNPC::UpdateNeedsAndEmotion", schedule_start)
+        self.assertIn("BuildBehaviorSnapshot", ambient[schedule_start:schedule_end])
+
+        director = (root / "Source" / "ShireJourney" / "Private" / "World" / "LivingWorldDirector.cpp").read_text(encoding="utf-8")
+        self.assertIn("GatherActiveAmbientNPCsNear", director)
+        self.assertIn('max_active_fauna_groups_near_player', director)
+        self.assertIn("MaxActiveFaunaGroups", director)
+
+        context_h = (root / "Source" / "ShireJourney" / "Public" / "Subsystems" / "ShireNPCContextSubsystem.h").read_text(encoding="utf-8")
+        context_cpp = (root / "Source" / "ShireJourney" / "Private" / "Subsystems" / "ShireNPCContextSubsystem.cpp").read_text(encoding="utf-8")
+        self.assertIn("FShireNPCBehaviorSnapshot", context_h)
+        self.assertIn("BuildBehaviorSnapshot", context_h)
+        self.assertIn("BuildBehaviorSnapshot", context_cpp)
+
+        life = json.loads((root / "Data" / "WorldLifeSaturationPlan.json").read_text(encoding="utf-8"))
+        self.assertEqual(life["baseline_population_targets"]["P1C01"], 18)
 
 
 
