@@ -178,6 +178,9 @@ public:
     bool IsSideActivityAvailable(FName ActivityId) const;
 
     UFUNCTION(BlueprintPure, Category="SideActivity")
+    TArray<FName> GetAvailableSideActivityIdsForCurrentWindow() const;
+
+    UFUNCTION(BlueprintPure, Category="SideActivity")
     bool IsSideActivityDiscoveryAvailable(FName DiscoveryId) const;
 
     UFUNCTION(BlueprintPure, Category="SideActivity")
@@ -418,6 +421,7 @@ private:
     const FShireChapterProductionDefinition* FindChapterProductionDefinition(FName RouteId, FName ChapterId) const;
     static FName MakeChapterProductionKey(FName RouteId, FName ChapterId);
     bool IsSideActivityDefinitionAvailable(const FShireSideActivityProgressionDefinition& Definition) const;
+    bool IsMainQuestUrgencySuppressingSideActivities() const;
     void RebuildJourneyInsightState();
     FName MakeJourneyRegionCompletionId(FName RouteId, FName ChapterId) const;
     void AwardDiscoveryProgression(const FShireJourneyDiscoveryDefinition& Definition);

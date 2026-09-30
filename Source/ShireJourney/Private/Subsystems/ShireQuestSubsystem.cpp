@@ -1433,10 +1433,27 @@ bool UShireQuestSubsystem::LoadSideActivityPlan()
     return bReady;
 }
 
+bool UShireQuestSubsystem::IsMainQuestUrgencySuppressingSideActivities() const
+{
+    if (CurrentRouteId != TEXT("FrodoMain") || CurrentChapterId != TEXT("P1C01"))
+    {
+        return false;
+    }
+
+    // Once the Ring danger/departure lane is active, casual Shire activities must
+    // yield to the mandatory route even if malformed or legacy beat state says the
+    // optional window is still open. This is a safety override, not a story change.
+    return ActiveQuestId == TEXT("RingSecret") ||
+        ActiveQuestId == TEXT("LeavingHome") ||
+        ActiveQuestId == TEXT("KeepOffRoad") ||
+        ActiveQuestId == TEXT("FerryEscape");
+}
+
 bool UShireQuestSubsystem::IsSideActivityDefinitionAvailable(
     const FShireSideActivityProgressionDefinition& Definition) const
 {
     if (Definition.RouteId != CurrentRouteId || Definition.ChapterId != CurrentChapterId) return false;
+    if (IsMainQuestUrgencySuppressingSideActivities()) return false;
     if (Definition.AvailableAfterStoryBeat != NAME_None &&
         !HasStoryBeatTriggered(Definition.AvailableAfterStoryBeat)) return false;
     if (Definition.EndsBeforeStoryBeat != NAME_None &&
@@ -1455,6 +1472,23 @@ bool UShireQuestSubsystem::IsSideActivityAvailable(FName ActivityId) const
     return Definition && IsSideActivityDefinitionAvailable(*Definition);
 }
 
+TArray<FName> UShireQuestSubsystem::GetAvailableSideActivityIdsForCurrentWindow() const
+{
+    TArray<FName> AvailableIds;
+    AvailableIds.Reserve(SideActivityDefinitionsById.Num());
+
+    for (const TPair<FName, FShireSideActivityProgressionDefinition>& Pair : SideActivityDefinitionsById)
+    {
+        if (IsSideActivityDefinitionAvailable(Pair.Value))
+        {
+            AvailableIds.Add(Pair.Key);
+        }
+    }
+
+    AvailableIds.Sort(FNameLexicalLess());
+    return AvailableIds;
+}
+
 bool UShireQuestSubsystem::IsSideActivityDiscoveryAvailable(FName DiscoveryId) const
 {
     const FShireSideActivityProgressionDefinition* Definition = SideActivityProgressionDefinitions.Find(DiscoveryId);
@@ -1469,8 +1503,19 @@ FName UShireQuestSubsystem::GetSideActivityIdForDiscovery(FName DiscoveryId) con
 
 bool UShireQuestSubsystem::CompleteSideActivityDiscovery(FName DiscoveryId)
 {
+    if (JourneyDiscoveryIds.Contains(DiscoveryId))
+    {
+        UE_LOG(LogTemp, Verbose,
+            TEXT("SideActivityRuntime: completion ignored discovery=%s reason=already-completed"),
+            *DiscoveryId.ToString());
+        return false;
+    }
+
     if (!HasSideActivityForDiscovery(DiscoveryId) || !IsSideActivityDiscoveryAvailable(DiscoveryId))
     {
+        UE_LOG(LogTemp, Verbose,
+            TEXT("SideActivityRuntime: completion rejected discovery=%s reason=window-or-contract"),
+            *DiscoveryId.ToString());
         return false;
     }
 

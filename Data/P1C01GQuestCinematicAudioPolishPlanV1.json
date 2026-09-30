@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "P1C01_G_QUEST_CINEMATIC_AUDIO_POLISH_V1",
-  "status": "PREPARED_NOT_RUNTIME_STARTED",
+  "status": "QUEST_SIDE_ACTIVITY_COHERENCE_SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
   "authority": [
     "Data/ProjectGovernor.json",
     "01_STORY_AND_TIMELINE_BIBLE",
@@ -9,7 +9,7 @@
     "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
     "DEC-038"
   ],
-  "prerequisite": "F living Shire runtime pass must be engine-green before G runtime implementation starts.",
+  "prerequisite": "SATISFIED: LIVING_SHIRE PR #196 exact head 149c9570c2cbac4295b0b1c41dca5e06f2e7f5bc passed Pre-Unreal #1478 and Unreal Build #1151 and merged as a478127559ab54f0ec938377a4962e6a75479d36.",
   "purpose": "Prepare the final P1C01 gameplay/presentation polish layer around locked canon beats while preserving player control windows and persistent world-state consequences.",
   "playable_film_contract": [
     "Locked Canon Beat",
@@ -54,5 +54,17 @@
     "Human pacing/visual/audio review remains mandatory.",
     "Target-device profiling remains a later separate gate."
   ],
-  "evidence_boundary": "Preparation only. No runtime, pacing, audio, PIE/device or performance acceptance claim."
+  "evidence_boundary": "QUEST SIDE-ACTIVITY SOURCE/RUNTIME IMPLEMENTED; EXACT-HEAD PRE-UNREAL + UE4.27.2 PROOF PENDING. Cinematic/audio runtime cars and PIE/device/visual/pacing/performance acceptance remain separate and are not claimed.",
+  "quest_runtime_implementation": {
+    "owner": "UShireQuestSubsystem",
+    "safe_window_projection": "GetAvailableSideActivityIdsForCurrentWindow",
+    "urgency_suppression": [
+      "RingSecret",
+      "LeavingHome",
+      "KeepOffRoad",
+      "FerryEscape"
+    ],
+    "duplicate_completion_guard": true,
+    "locked_outcomes_unchanged": true
+  }
 }

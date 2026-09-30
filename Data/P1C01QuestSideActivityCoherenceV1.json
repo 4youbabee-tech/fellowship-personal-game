@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "chapter_id": "P1C01",
+  "car_id": "QUEST_SIDE_ACTIVITY_COHERENCE",
+  "status": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
+  "predecessor": {
+    "car_id": "LIVING_SHIRE",
+    "pr": 196,
+    "exact_head": "149c9570c2cbac4295b0b1c41dca5e06f2e7f5bc",
+    "pre_unreal": "#1478 SUCCESS",
+    "unreal_build": "#1151 SUCCESS",
+    "merge_sha": "a478127559ab54f0ec938377a4962e6a75479d36"
+  },
+  "source_scope": {
+    "F1_01": "Party setup, social onboarding and fireworks inside the birthday safe window; Bilbo still leaves and the Ring passes to Frodo.",
+    "F1_02": "Investigation, packing and stealth-departure support must yield cleanly to Ring danger and Frodo leaving the Shire.",
+    "F1_03": "Road hiding/ferry activity remains subordinate to Black Rider urgency and the locked Bree arrival outcome."
+  },
+  "runtime_ownership": {
+    "ShireQuestSubsystem": "sole owner of quest/story progression truth and side-activity availability/completion projection",
+    "SideActivityTriggers": "consume subsystem availability; do not duplicate story-window logic",
+    "WorldBuilders": "placement only; no quest truth",
+    "parallel_quest_brain": false
+  },
+  "coherence_contract": {
+    "main_quest_priority": true,
+    "safe_window_projection": "bounded query from ShireQuestSubsystem",
+    "clean_expiry_on_closing_story_beat": true,
+    "p1c01_urgency_suppression": [
+      "RingSecret",
+      "LeavingHome",
+      "KeepOffRoad",
+      "FerryEscape"
+    ],
+    "idempotent_completion": true,
+    "optional_reward_cannot_advance_required_anchor": true,
+    "optional_failure_cannot_change_canon": true
+  },
+  "acceptance_boundary": "SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27.2 PROOF PENDING. No PIE/device/visual/pacing/performance acceptance is claimed."
+}

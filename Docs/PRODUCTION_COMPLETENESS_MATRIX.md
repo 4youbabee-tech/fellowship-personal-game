@@ -1,3 +1,14 @@
+## 2026-09-30 - P1C01 QUEST_SIDE_ACTIVITY_COHERENCE car
+
+- LIVING_SHIRE predecessor: **EXACT-HEAD MACHINE-GREEN** on PR #196 / Pre-Unreal #1478 / Unreal Build #1151; merged as `a478127559ab54f0ec938377a4962e6a75479d36`.
+- Quest/side-activity coherence implementation: **SOURCE-IMPLEMENTED / EXACT-HEAD CI PENDING**.
+- Quest/story ownership: **UNCHANGED — UShireQuestSubsystem only**.
+- Safe-window projection: **SOURCE-IMPLEMENTED** through `GetAvailableSideActivityIdsForCurrentWindow()`.
+- P1C01 main-quest urgency suppression: **SOURCE-IMPLEMENTED** for RingSecret / LeavingHome / KeepOffRoad / FerryEscape.
+- Side-activity duplicate reward prevention: **SOURCE-IMPLEMENTED / explicit guard + existing discovery idempotence**.
+- Locked story outcomes / required anchors: **UNCHANGED**.
+- PIE optional-window pacing, save/load behavior, target-device performance and human review: **PENDING / NOT CLAIMED**.
+
 ## 2026-09-30 - P1C01 LIVING_SHIRE
 
 | Area | Status | Evidence / boundary |
