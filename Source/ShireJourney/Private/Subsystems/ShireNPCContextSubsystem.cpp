@@ -1250,6 +1250,35 @@ FName UShireNPCContextSubsystem::GetPreferredAnchor(FName ProfileHint, FName Sch
     return Profile->Anchors.Num() > 0 ? Profile->Anchors[0] : NAME_None;
 }
 
+FShireNPCBehaviorSnapshot UShireNPCContextSubsystem::BuildBehaviorSnapshot(
+    FName ProfileHint,
+    float NormalizedDay,
+    bool bStoryOverride) const
+{
+    FShireNPCBehaviorSnapshot Snapshot;
+    Snapshot.ProfileId = ResolveCanonicalProfileId(ProfileHint);
+    if (Snapshot.ProfileId == NAME_None)
+    {
+        return Snapshot;
+    }
+
+    Snapshot.bDangerActive = IsDangerStateActive();
+    Snapshot.bInclementWeather = IsInclementWeather();
+    Snapshot.WorldMood = GetRegionalWorldMood();
+    Snapshot.EmotionalState = GetProfileEmotionalState(Snapshot.ProfileId);
+    Snapshot.SchedulePhase = ResolveSchedulePhase(
+        Snapshot.ProfileId,
+        NormalizedDay,
+        Snapshot.bDangerActive,
+        bStoryOverride);
+    Snapshot.PreferredAnchor = GetPreferredAnchor(
+        Snapshot.ProfileId,
+        Snapshot.SchedulePhase);
+    Snapshot.bValid = true;
+    return Snapshot;
+}
+
+
 TArray<FName> UShireNPCContextSubsystem::GetNamedProfilesForCurrentChapter() const
 {
     TArray<FName> Result;
