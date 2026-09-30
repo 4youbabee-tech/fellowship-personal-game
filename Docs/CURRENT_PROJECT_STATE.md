@@ -3339,3 +3339,11 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Current status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27.2 PROOF PENDING**.
 - Not claimed: PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PACING-ACCEPTED or PERFORMANCE-ACCEPTED.
 
+## 2026-10-01 — Visual-quality/performance owner direction + Deep Audit V1
+
+- Owner direction is now explicit: the target profile is **Balanced Medium with selective High treatment for visually important content**, not a blanket low-quality presentation. The 30 FPS / DX11 / 720p / 8 GB RAM / ~2 GB VRAM target remains unchanged.
+- Perceived quality is protected first for hero characters, nearby architecture, terrain readability, key materials and primary lighting. Performance savings should come first from lower-salience costs such as distant shadow range, far-detail density, nonessential effects, LOD/culling and measured residency budgets.
+- Owner-supplied **SHIRE JOURNEY — PRE-MORTEM PERFORMANCE & ARCHITECTURE DEEP AUDIT V1** is adopted as an engineering validation checklist. It reported **0 confirmed defects** and **10 plausible risk surfaces (R-01..R-10)**; those risks are not treated as discovered bugs without source/runtime proof.
+- The highest-priority compound test remains settlement entry under simultaneous streaming/residency, NPC activation, AI/animation/collision, first-use rendering and cleanup pressure.
+- Existing architecture already mitigates several audit concerns through async soft-reference streaming, bounded population pooling, explicit residency plans and bounded save/load contracts; these must be measured before speculative rewrites.
+- Evidence boundary: governance/source review only. No new PIE/device/visual/pacing/performance acceptance claim.
