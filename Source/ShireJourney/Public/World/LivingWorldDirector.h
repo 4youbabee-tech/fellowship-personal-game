@@ -57,6 +57,10 @@ private:
     TMap<FName, TArray<FName>> AllowedEventTypesByChapter;
     TArray<FActiveMicroEvent> ActiveEvents;
     TArray<TWeakObjectPtr<AShireAmbientNPC>> BaselinePopulation;
+    // Builder-authored ambient residents are persistent world content, not pooled
+    // LivingWorld-owned population. Keep weak registration only so bounded social
+    // queries can see them without transferring lifecycle ownership.
+    TArray<TWeakObjectPtr<AShireAmbientNPC>> PersistentAmbientNPCs;
     TArray<TWeakObjectPtr<AShireAmbientNPC>> AmbientNPCPool;
     TArray<TWeakObjectPtr<AShireWorldEventInteraction>> InteractionPool;
     TArray<TWeakObjectPtr<AWorldAmbientMotionActor>> AmbientMotionPool;
@@ -95,6 +99,7 @@ private:
     void ApplyPopulationProfile();
     void CleanupExpiredEvents();
     void CleanupBaselinePopulation();
+    void ReconcilePersistentAmbientNPCRegistry();
     void ReleaseAmbientNPCToPool(AShireAmbientNPC* NPC);
     AShireAmbientNPC* AcquireAmbientNPC(const FVector& Location);
     void ReleaseInteractionToPool(AShireWorldEventInteraction* Interaction);

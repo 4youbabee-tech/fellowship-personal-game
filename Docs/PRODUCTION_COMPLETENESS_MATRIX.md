@@ -1,3 +1,19 @@
+## 2026-10-01 - P1C01 FOUNDATION_CORRECTIONS_V1
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| Canonical predecessor | MACHINE-GREEN | `develop@3ec3f725cb1dff42a762e36e39790b82a4801714`; post-#207 Pre-Unreal + Unreal Build SUCCESS |
+| Persistent ambient social registration | SOURCE-IMPLEMENTED / EXACT-HEAD CI PENDING | Director-owned committed-world reconciliation; weak registry; no lifecycle transfer; bounded nearby query includes persistent residents |
+| Per-NPC full-world social scan | FORBIDDEN / PRESERVED | No `TActorIterator` in `AShireAmbientNPC::UpdateSocialLife`; one reconciliation scan occurs only at committed-world synchronization |
+| Pool ownership | PRESERVED | LivingWorld-managed baseline/micro-event NPCs remain pooled under `ALivingWorldDirector`; persistent builder-authored residents are not pooled by this repair |
+| Footstep surface resolution | SOURCE-IMPLEMENTED / EXACT-HEAD CI PENDING | Grass/Dirt/Stone/Wood SurfaceTypes + physical-material-first resolution; legacy identity fallback retained |
+| Hero animated source policy | GOVERNOR-ALIGNED | UE4.27 FBX 2018-compatible skeletal intake; OBJ remains static modular fallback only |
+| Visual quality target | GOVERNOR-ALIGNED | Balanced Medium + selective High; 720p / 30 FPS low-spec floor retained |
+| PBR expansion | NOT IMPLEMENTED BY THIS REPAIR | Existing scalar PBR remains; selective Normal/channel-packed acquisitions stay future bounded material work |
+| Fauna/Niagara rewrite | NOT AUTHORIZED / NO EVIDENCE NEED | Existing bounded pooled fauna retained until profiling shows a bottleneck |
+| Part II runtime expansion | FROZEN | Source-preparation workflows remain non-runtime evidence; P1C01 remains active runtime lane |
+| PIE / device / visual / pacing / performance | NOT TESTED / NOT ACCEPTED | Requires separate exact-head human/device evidence |
+
 ## 2026-09-30 - P1C01 SAVE_LOAD_LONG_SESSION car
 
 - SHIRE_AUDIO_IDENTITY predecessor: **EXACT-HEAD MACHINE-GREEN** on PR #199 / Pre-Unreal #1486 / Unreal Build #1159; merged as `ec96e9e487ecbe91d9563848f685df4bd5c11b0d`.

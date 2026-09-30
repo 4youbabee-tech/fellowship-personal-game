@@ -9767,9 +9767,19 @@ else:
     if "BuildBehaviorSnapshot" not in pg218_ambient[schedule_start:schedule_end]:
         fail("PG-218 ambient schedule refresh must consume bounded behavior snapshot")
 
-    for required in ("GatherActiveAmbientNPCsNear", "max_active_fauna_groups_near_player", "MaxActiveFaunaGroups"):
+    for required in (
+        "GatherActiveAmbientNPCsNear",
+        "ReconcilePersistentAmbientNPCRegistry",
+        "PersistentAmbientNPCs",
+        "max_active_fauna_groups_near_player",
+        "MaxActiveFaunaGroups",
+    ):
         if required not in pg218_director:
             fail(f"PG-218 LivingWorldDirector missing required token: {required}")
+    if "TActorIterator<AShireAmbientNPC>" not in pg218_director:
+        fail("PG-218 persistent ambient registration must reconcile once from committed world actors")
+    if 'ActorHasTag(TEXT("LivingWorldManaged"))' not in pg218_director:
+        fail("PG-218 persistent ambient registration must exclude Director-managed pooled population")
     for required in ("FShireNPCBehaviorSnapshot", "BuildBehaviorSnapshot"):
         if required not in pg218_context_h:
             fail(f"PG-218 NPC context header missing required token: {required}")
