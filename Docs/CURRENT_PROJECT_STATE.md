@@ -1,3 +1,13 @@
+## 2026-09-30 - P1C01 local visible-world bootstrap tooling
+
+- Owner-reported local symptom: P1C01 appears sparse/empty and the visible floor is the white Unreal template floor.
+- Static repository diagnosis: both `EditorStartupMap` and `GameDefaultMap` are still `/Engine/Maps/Templates/Template_Default`; `Content/Production` is intentionally gitignored/generated locally, while the tracked production source pack currently contains 399 files under `SourceAssets/Production`.
+- Added `Scripts/bootstrap_local_p1c01_visuals.cmd` to reuse the existing fail-closed `ShireProductionImport` pipeline, require generated production `.uasset` files, then launch `/Engine/Maps/Entry` in game mode at DX11 / 1280x720.
+- This tooling lane does not mutate runtime ownership, chapter topology, quest state, population budgets or save schema, and does not alter `Config/DefaultEngine.ini`.
+- Runtime serialization remains blocked behind the active #200/#201 train; this helper is local source/import/preview preparation only.
+- Status: **SOURCE-IMPLEMENTED / STATIC PROOF PENDING**.
+- No PIE/device/visual/pacing/performance acceptance is claimed.
+
 ## 2026-09-30 - P1C01 SHIRE_AUDIO_IDENTITY active
 
 - Predecessor CINEMATIC_CONTROL_HANDOFF: exact-head machine-green on PR #198 at `46655d2ecdc02a3f1698c9fd0b1b14c09f767946` with Pre-Unreal #1484 SUCCESS + Unreal Build #1157 SUCCESS; merged as `3b38698c19a244fde8f2979d73f12cd829576b7f`.
