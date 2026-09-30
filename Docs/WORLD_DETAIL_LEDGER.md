@@ -1,3 +1,14 @@
+## 2026-09-30 - P1C01 LOCAL_VISIBLE_WORLD_BOOTSTRAP registered before tooling implementation
+
+- Owner-observed symptom: local P1C01 currently reads as sparse/empty with primitive meshes over a white template floor instead of the intended Shire presentation.
+- Repository finding: `Config/DefaultEngine.ini` currently points both `EditorStartupMap` and `GameDefaultMap` at `/Engine/Maps/Templates/Template_Default`; tracked `Content/` is intentionally absent while production source inputs live under `SourceAssets/Production` and are generated locally into ignored `Content/Production`.
+- Scope: preparation/tooling only. Provide one local command that imports the existing production source pack through the established `ShireProductionImport` commandlet, verifies generated `.uasset` presence, then launches P1C01 against the engine Entry map so the template white floor does not mask the router-owned generated Shire.
+- Runtime ownership remains unchanged: AChapterWorldRouter owns chapter world commit/placement, ShirePrototypeWorldBuilder owns Shire geometry/dressing, LivingWorldDirector owns population, and ShireQuestSubsystem owns story/progression.
+- No new asset manager, no synchronous heavy runtime load, no crowd Spawn/Destroy churn, and no permanent startup-map/config change in this tooling lane.
+- Production source policy remains unchanged: animated production delivery must be FBX; production textures PNG/TGA; BMP is forbidden for new production texture work.
+- This lane does not bypass #200/#201 serialization and does not claim Gate 6/7, PIE, device, visual, pacing or performance acceptance.
+- Machine contract target: `Data/P1C01LocalVisualBootstrapV1.json`.
+
 ## 2026-09-30 - P1C01 SHIRE_AUDIO_IDENTITY chapter registered before runtime implementation
 
 - Scope: next serialized P1C01 runtime car after CINEMATIC_CONTROL_HANDOFF exact-head machine-green and merge.
