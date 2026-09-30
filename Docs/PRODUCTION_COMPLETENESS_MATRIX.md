@@ -2280,3 +2280,14 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Compound settlement-entry performance | MEASUREMENT REQUIRED | Target-device/standalone evidence pending |
 | Tail-frame telemetry | REQUIRED FOR ACCEPTANCE | p95/p99/max + Game/Draw/GPU; not yet accepted |
 | Long-session memory/save-load stability | SOURCE-GUARDED / DEVICE EVIDENCE PENDING | Existing bounded contracts retained |
+
+## 2026-10-01 - Gate 6/7 + local visual bootstrap reconciliation
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| SAVE_LOAD_LONG_SESSION predecessor | MERGED / machine-green | #200 merged at `7ad697ed146e356dea9e591ccf61a8268138bc3b` |
+| Gate 6/7 evidence evaluator | RECONCILED / FAIL-CLOSED | Device + human evidence still pending |
+| Visual quality target | GOVERNOR-LOCKED | Balanced Medium + selective High, 30 FPS floor retained |
+| Local production import/bootstrap | SOURCE-IMPLEMENTED | Local execution/rendered review pending |
+| Runtime ownership | UNCHANGED | Existing router/world/living-world/quest owners remain authoritative |
+| PIE / device / visual / pacing / performance | NOT ACCEPTED | Requires real matching evidence |
