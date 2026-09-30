@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "plan_id": "P1C01_F_LIVING_SHIRE_V1",
-  "status": "PREPARED_NOT_RUNTIME_STARTED",
+  "status": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
   "authority": [
     "Data/ProjectGovernor.json",
     "Data/LivingNPCIntelligenceRoadmap.json",
     "Data/P1C01WorldBuildIntakePacketV1.json",
     "DEC-038"
   ],
-  "prerequisite": "E character presentation must be engine-green before F runtime implementation starts.",
+  "prerequisite": "SATISFIED: CHARACTER_PRESENTATION PR #195 exact head 24ffa0ddb35756a606fb166d010b1e7ca2940308 passed Pre-Unreal #1475 and Unreal Build #1148 and merged as 66caf6168157e0ec171a1e7249ead245e45d8b42.",
   "purpose": "Prepare low-cost living Shire NPC/fauna/environmental motion on top of existing ownership instead of creating a parallel AI brain.",
   "ownership_model": {
     "LivingWorldDirector": "Owns region population budgets, activation windows, pooled actor admission/retirement and coarse world-state events.",
@@ -59,5 +59,12 @@
     "Player traversal and quest state are not blocked by inactive/pooled NPCs.",
     "PIE/device/performance acceptance remains separately evidenced."
   ],
-  "evidence_boundary": "Preparation only. No runtime, AI-behavior, PIE/device or performance acceptance claim."
+  "evidence_boundary": "SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27.2 PROOF PENDING. No PIE/device/visual/pacing/performance acceptance claim.",
+  "runtime_implementation": {
+    "bounded_behavior_snapshot": "UShireNPCContextSubsystem::BuildBehaviorSnapshot coalesces schedule, anchor, mood, emotion, danger and weather context on scheduled refresh.",
+    "bounded_social_query": "ALivingWorldDirector::GatherActiveAmbientNPCsNear restricts social candidates to managed baseline + active micro-event NPCs inside radius; AShireAmbientNPC no longer performs TActorIterator full-world social scans.",
+    "fauna_budget": "LivingWorldEventPlan max_active_fauna_groups_near_player is loaded and enforced before FAUNA event admission.",
+    "population": "P1C01 baseline remains 18.",
+    "lifecycle": "Existing AmbientNPC/Interaction/AmbientMotion pools remain owners; no new AI or streaming owner."
+  }
 }
