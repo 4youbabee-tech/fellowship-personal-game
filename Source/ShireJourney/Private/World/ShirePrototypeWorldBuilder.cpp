@@ -5,6 +5,7 @@
 #include "ShireQuestSubsystem.h"
 #include "ShireQuestTrigger.h"
 #include "ShireTraversalChallenge.h"
+#include "WorldDetailCluster.h"
 
 #include "Components/BoxComponent.h"
 #include "Components/DirectionalLightComponent.h"
@@ -2152,6 +2153,177 @@ void AShirePrototypeWorldBuilder::SpawnProductionVillageDetailLayer()
 
 }
 
+void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()
+{
+    if (!GetWorld())
+    {
+        return;
+    }
+
+    struct FDetailPlacement
+    {
+        FVector Location;
+        FRotator Rotation;
+        FVector Scale;
+    };
+
+    int32 ClusterCount = 0;
+    int32 InstanceCount = 0;
+
+    auto SpawnDetailCluster = [this, &ClusterCount, &InstanceCount](
+        UStaticMesh* Mesh,
+        int32 StartCullDistance,
+        int32 EndCullDistance,
+        const FDetailPlacement* Placements,
+        int32 PlacementCount)
+    {
+        if (!Mesh || !Placements || PlacementCount <= 0)
+        {
+            return;
+        }
+
+        FActorSpawnParameters Params;
+        Params.Owner = this;
+        Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+        AWorldDetailCluster* Cluster = GetWorld()->SpawnActor<AWorldDetailCluster>(
+            FVector::ZeroVector, FRotator::ZeroRotator, Params);
+        if (!Cluster)
+        {
+            return;
+        }
+
+        Cluster->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
+        Cluster->Tags.AddUnique(TEXT("P1C01WorldDensityDetail"));
+        Cluster->Configure(Mesh, false, StartCullDistance, EndCullDistance);
+
+        for (int32 Index = 0; Index < PlacementCount; ++Index)
+        {
+            const FDetailPlacement& P = Placements[Index];
+            Cluster->AddDetailInstance(P.Location, P.Rotation, P.Scale);
+        }
+
+        ++ClusterCount;
+        InstanceCount += Cluster->GetDetailCount();
+    };
+
+    // Domestic/farm work history. Visual-only HISM instances: no collision, no Tick,
+    // and no population ownership.
+    const FDetailPlacement WoodPiles[] = {
+        { FVector(-2050,-1020,0), FRotator(0,18,0), FVector(0.72f) },
+        { FVector(-1520,-1060,0), FRotator(0,-12,0), FVector(0.66f) },
+        { FVector(-860,-920,0), FRotator(0,24,0), FVector(0.70f) },
+        { FVector(520,760,0), FRotator(0,-20,0), FVector(0.62f) },
+        { FVector(1120,980,0), FRotator(0,14,0), FVector(0.68f) },
+        { FVector(6040,-1660,0), FRotator(0,8,0), FVector(0.76f) },
+        { FVector(6480,-1220,0), FRotator(0,-22,0), FVector(0.72f) },
+        { FVector(7240,-1080,0), FRotator(0,31,0), FVector(0.74f) },
+        { FVector(8360,-720,0), FRotator(0,-16,0), FVector(0.70f) },
+        { FVector(9020,-1280,0), FRotator(0,27,0), FVector(0.78f) }
+    };
+    SpawnDetailCluster(
+        ProductionCommonWoodPileMesh, 1200, 6500,
+        WoodPiles, UE_ARRAY_COUNT(WoodPiles));
+
+    // Ferns thicken hedge/wood edges without adding actors per plant.
+    const FDetailPlacement Ferns[] = {
+        { FVector(-2380,-1120,0), FRotator(0,5,0), FVector(0.58f) },
+        { FVector(-1900,-1280,0), FRotator(0,42,0), FVector(0.64f) },
+        { FVector(-1280,-1180,0), FRotator(0,81,0), FVector(0.56f) },
+        { FVector(-620,-1120,0), FRotator(0,123,0), FVector(0.62f) },
+        { FVector(480,980,0), FRotator(0,167,0), FVector(0.54f) },
+        { FVector(1180,1040,0), FRotator(0,208,0), FVector(0.60f) },
+        { FVector(11650,-980,0), FRotator(0,12,0), FVector(0.68f) },
+        { FVector(12150,1120,0), FRotator(0,47,0), FVector(0.61f) },
+        { FVector(12700,-1100,0), FRotator(0,83,0), FVector(0.66f) },
+        { FVector(13250,1250,0), FRotator(0,118,0), FVector(0.59f) },
+        { FVector(13800,-1220,0), FRotator(0,154,0), FVector(0.70f) },
+        { FVector(14350,1180,0), FRotator(0,191,0), FVector(0.62f) },
+        { FVector(14900,-1150,0), FRotator(0,226,0), FVector(0.67f) },
+        { FVector(15450,1260,0), FRotator(0,263,0), FVector(0.60f) },
+        { FVector(16000,-1230,0), FRotator(0,298,0), FVector(0.69f) },
+        { FVector(16550,1130,0), FRotator(0,333,0), FVector(0.63f) },
+        { FVector(17100,-1100,0), FRotator(0,9,0), FVector(0.66f) },
+        { FVector(17600,980,0), FRotator(0,44,0), FVector(0.58f) },
+        { FVector(18400,-1050,0), FRotator(0,79,0), FVector(0.64f) },
+        { FVector(18850,920,0), FRotator(0,116,0), FVector(0.57f) },
+        { FVector(19400,-980,0), FRotator(0,151,0), FVector(0.65f) },
+        { FVector(19950,860,0), FRotator(0,187,0), FVector(0.59f) },
+        { FVector(20600,-900,0), FRotator(0,223,0), FVector(0.62f) },
+        { FVector(21200,780,0), FRotator(0,259,0), FVector(0.56f) }
+    };
+    SpawnDetailCluster(
+        ProductionCommonFernClumpMesh, 900, 4800,
+        Ferns, UE_ARRAY_COUNT(Ferns));
+
+    // The Water/ferry corridor gets low-cost edge vegetation, kept off the authored
+    // travel line so this pass cannot become a traversal collider.
+    const FDetailPlacement Reeds[] = {
+        { FVector(ShireLayout::FerryX-1800,-1760,0), FRotator(0,8,0), FVector(0.70f) },
+        { FVector(ShireLayout::FerryX-1500,-1690,0), FRotator(0,37,0), FVector(0.66f) },
+        { FVector(ShireLayout::FerryX-1200,-1810,0), FRotator(0,71,0), FVector(0.74f) },
+        { FVector(ShireLayout::FerryX-900,-1720,0), FRotator(0,104,0), FVector(0.68f) },
+        { FVector(ShireLayout::FerryX-600,-1780,0), FRotator(0,139,0), FVector(0.72f) },
+        { FVector(ShireLayout::FerryX-300,-1700,0), FRotator(0,173,0), FVector(0.65f) },
+        { FVector(ShireLayout::FerryX,-1800,0), FRotator(0,207,0), FVector(0.76f) },
+        { FVector(ShireLayout::FerryX+300,-1710,0), FRotator(0,241,0), FVector(0.69f) },
+        { FVector(ShireLayout::FerryX+600,-1760,0), FRotator(0,276,0), FVector(0.71f) },
+        { FVector(ShireLayout::FerryX-1800,760,0), FRotator(0,19,0), FVector(0.68f) },
+        { FVector(ShireLayout::FerryX-1500,700,0), FRotator(0,54,0), FVector(0.72f) },
+        { FVector(ShireLayout::FerryX-1200,790,0), FRotator(0,88,0), FVector(0.65f) },
+        { FVector(ShireLayout::FerryX-900,720,0), FRotator(0,122,0), FVector(0.74f) },
+        { FVector(ShireLayout::FerryX-600,780,0), FRotator(0,157,0), FVector(0.67f) },
+        { FVector(ShireLayout::FerryX-300,710,0), FRotator(0,191,0), FVector(0.70f) },
+        { FVector(ShireLayout::FerryX,800,0), FRotator(0,225,0), FVector(0.73f) },
+        { FVector(ShireLayout::FerryX+300,730,0), FRotator(0,260,0), FVector(0.66f) },
+        { FVector(ShireLayout::FerryX+600,780,0), FRotator(0,294,0), FVector(0.71f) }
+    };
+    SpawnDetailCluster(
+        ProductionCommonReedClusterMesh, 1200, 6000,
+        Reeds, UE_ARRAY_COUNT(Reeds));
+
+    // Sparse route-side markers improve travel rhythm/readability without replacing
+    // canonical landmarks or quest coordinates.
+    const FDetailPlacement PathMarkers[] = {
+        { FVector(2650,1120,0), FRotator(0,12,0), FVector(0.68f) },
+        { FVector(4300,-1180,0), FRotator(0,-18,0), FVector(0.72f) },
+        { FVector(6100,1060,0), FRotator(0,24,0), FVector(0.70f) },
+        { FVector(7900,-1160,0), FRotator(0,-12,0), FVector(0.74f) },
+        { FVector(9800,1100,0), FRotator(0,18,0), FVector(0.69f) },
+        { FVector(11600,-1040,0), FRotator(0,-20,0), FVector(0.71f) },
+        { FVector(13600,1080,0), FRotator(0,16,0), FVector(0.70f) },
+        { FVector(15600,-1060,0), FRotator(0,-14,0), FVector(0.73f) },
+        { FVector(17800,1040,0), FRotator(0,20,0), FVector(0.68f) },
+        { FVector(19800,-1020,0), FRotator(0,-17,0), FVector(0.72f) },
+        { FVector(21800,980,0), FRotator(0,15,0), FVector(0.70f) },
+        { FVector(ShireLayout::FerryX-850,-980,0), FRotator(0,-10,0), FVector(0.74f) }
+    };
+    SpawnDetailCluster(
+        ProductionCommonPathMarkerMesh, 1600, 8000,
+        PathMarkers, UE_ARRAY_COUNT(PathMarkers));
+
+    const FDetailPlacement FallenLogs[] = {
+        { FVector(12600,1380,0), FRotator(0,18,0), FVector(0.78f) },
+        { FVector(13750,-1380,0), FRotator(0,-22,0), FVector(0.82f) },
+        { FVector(14950,1420,0), FRotator(0,31,0), FVector(0.76f) },
+        { FVector(16150,-1360,0), FRotator(0,-16,0), FVector(0.80f) },
+        { FVector(17350,1320,0), FRotator(0,27,0), FVector(0.74f) },
+        { FVector(18800,-1280,0), FRotator(0,-19,0), FVector(0.79f) }
+    };
+    SpawnDetailCluster(
+        ProductionCommonFallenLogMesh, 1800, 8500,
+        FallenLogs, UE_ARRAY_COUNT(FallenLogs));
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("SHIRE_WORLD_DENSITY_DETAIL_PASS clusters=%d instances=%d populationTarget=18 collision=none tick=none"),
+        ClusterCount,
+        InstanceCount);
+}
+
+
+
 void AShirePrototypeWorldBuilder::SpawnScenicDetailPass()
 {
     if (!DistantTreeTrunkInstances || !DistantTreeCanopyInstances || !RockInstances || !PathStoneInstances)
@@ -2522,6 +2694,7 @@ void AShirePrototypeWorldBuilder::BuildPrototypeWorld()
     SpawnProductionVillageDetailLayer();
     SpawnFoliagePass();
     SpawnScenicDetailPass();
+    SpawnWorldDensityDetailPass();
     SpawnSideStories();
     SpawnStoryActors();
 }

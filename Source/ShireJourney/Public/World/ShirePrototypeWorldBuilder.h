@@ -114,6 +114,7 @@ private:
     void SpawnHobbitonArchitecturePass();
     void SpawnVillage();
     void SpawnProductionVillageDetailLayer();
+    void SpawnWorldDensityDetailPass();
     void SpawnSideStories();
     void SpawnStoryActors();
     void ApplyStoryAtmosphere();
