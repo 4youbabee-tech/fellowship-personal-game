@@ -195,7 +195,7 @@ class SourceContractTests(unittest.TestCase):
         )
         self.assertEqual(
             cars["PARTY_AND_BAG_END_INTERACTION_DENSITY"]["status"],
-            "BAG_END_HERO_SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
+            "PARTY_SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING_BAG_END_PR193_GREEN",
         )
         for car_id in (
             "NPC_ROUTINES_SOCIAL_MEMORY",
