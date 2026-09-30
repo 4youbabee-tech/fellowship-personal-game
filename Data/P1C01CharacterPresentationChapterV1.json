@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "car_id": "P1C01_CHARACTER_PRESENTATION_V1",
+  "status": "REGISTERED_RUNTIME_IMPLEMENTATION_PENDING",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Docs/WORLD_DETAIL_LEDGER.md",
+    "02_CHARACTERS_AND_RELATIONSHIPS_BIBLE",
+    "10_3D_VISUAL_ASSET_ATLAS_PRODUCTION",
+    "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX"
+  ],
+  "purpose": "Promote the P1C01 visible cast from name-coupled modular fallback presentation toward explicit hero character identity and asynchronous skeletal-rig presentation while preserving low-spec fallback behavior and canon-safe equipment state.",
+  "source_scope": {
+    "frodo": {
+      "role": "Hobbit / Ring-bearer",
+      "guardrail": "Never present Frodo as a conventional power-fantasy warrior.",
+      "equipment_rule": "Named gear is story-state driven and must not leak into earlier chapters."
+    },
+    "gandalf": {
+      "role": "Wizard / guide",
+      "guardrail": "Magic is rare and purposeful; presentation must not imply spam-casting.",
+      "signature_presentation": "Staff-led guide silhouette with bounded hero presentation."
+    },
+    "production_rule": "Major characters need explicit visual identity, rig/skin/deformation/animation QC, and chapter/costume state rather than display-name-dependent asset ownership."
+  },
+  "architecture": {
+    "player_owner": "AShirePlayerCharacter",
+    "named_npc_owner": "AShireNPC",
+    "rig_streaming_owner": "UShireChapterAssetStreamingSubsystem",
+    "story_state_owner": "UShireQuestSubsystem",
+    "identity_contract": "Stable ProductionCharacterId is separate from localized DisplayName.",
+    "heavy_asset_loading": "FStreamableManager asynchronous only",
+    "fallback": "Existing modular/static presentation remains visible until a complete skeletal mesh + AnimBP pair resolves."
+  },
+  "p1c01_hero_cast": [
+    "Frodo",
+    "Gandalf",
+    "Bilbo",
+    "Sam"
+  ],
+  "runtime_contract": {
+    "frodo_future_weapon_in_p1c01": false,
+    "gandalf_staff_allowed_in_p1c01": true,
+    "named_story_npcs_use_explicit_character_ids": true,
+    "skeletal_visibility_tick": "OnlyTickPoseWhenRendered",
+    "update_rate_optimization": true,
+    "per_frame_asset_scan": false,
+    "synchronous_heavy_load": false
+  },
+  "performance_budget": {
+    "target_profile": "6th-gen i7 / 8GB RAM / ~2GB VRAM / DX11 / 720p Low-Medium",
+    "full_rate_background_rig_polling": false,
+    "missing_rig_retry": "bounded existing package-availability check",
+    "fallback_actor_count_increase": 0
+  },
+  "acceptance": {
+    "exact_head_required": [
+      "Pre-Unreal Validation",
+      "UE4.27.2 Unreal Build Validation"
+    ],
+    "later_human": [
+      "P1C01 hero silhouette/readability review",
+      "skeletal deformation and animation review",
+      "chapter-state equipment continuity"
+    ],
+    "later_device": [
+      "720p Low-Medium FPS/frame-time/hitches/RAM/VRAM"
+    ],
+    "boundary": "Registration and source/runtime contract only until exact-head implementation evidence exists. PIE/device/visual/performance acceptance remains separate."
+  }
+}
