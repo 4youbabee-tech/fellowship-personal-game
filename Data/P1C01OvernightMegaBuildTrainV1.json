@@ -1,0 +1,171 @@
+{
+  "schema_version": 1,
+  "plan_id": "P1C01_OVERNIGHT_MEGA_BUILD_TRAIN_V1",
+  "status": "AUTHORIZED_PREPARATION_W00_CLOSED_RUNTIME_CARS_ENGINE_GATED",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Docs/WORLD_DETAIL_LEDGER.md",
+    "Data/P1C01WorldBuildIntakePacketV1.json",
+    "Data/P1C01FLivingShirePlanV1.json",
+    "Data/P1C01GQuestCinematicAudioPolishPlanV1.json",
+    "Data/P1C01Gate67AcceptanceChecklistV1.json",
+    "01_STORY_AND_TIMELINE_BIBLE",
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+    "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX"
+  ],
+  "purpose": "One owner approval authorizes a large P1C01 production train with many bounded cars. W00 packaged-runtime machine closure is inherited from merged PR #184. Preparation/source/validation cars may proceed in parallel; runtime-changing cars remain serialized behind their relevant exact-head engine gates.",
+  "canon_scope": {
+    "runtime_chapter_id": "P1C01",
+    "source_mapping_note": "Current runtime P1C01 is a wider vertical-slice composition than source F1-01 alone and already spans party, Ring/Bag End departure setup and road/ferry escape material. This train preserves current runtime topology and does not silently redefine source chapter boundaries.",
+    "source_f1_01": [
+      "Ring history establishes stakes",
+      "Bilbo prepares birthday",
+      "Gandalf arrives",
+      "party setup/social onboarding/fireworks",
+      "locked postcondition: Bilbo leaves and Ring passes to Frodo"
+    ],
+    "source_f1_02": [
+      "Bag End/Shire Ring danger confirmation",
+      "investigation/packing/stealth departure",
+      "locked postcondition: Frodo leaves the Shire"
+    ],
+    "source_f1_03": [
+      "Shire roads/Bucklebury",
+      "Black Rider pursuit",
+      "road stealth/ferry escape/environmental hiding",
+      "locked postcondition: Hobbits reach Bree"
+    ],
+    "dialogue_rule": "Original game-authored wording only; no verbatim Tolkien or film dialogue."
+  },
+  "execution_policy": {
+    "one_approval_many_cars": true,
+    "runtime_serialization": "W00 machine closure is inherited from PR #184. No runtime car starts until the current relevant car head has completed its required exact-head Pre-Unreal and UE4.27.2 gates.",
+    "parallel_allowed": [
+      "source/QC acquisition",
+      "warehouse inventory",
+      "documentation",
+      "contract validation",
+      "non-runtime data preparation"
+    ],
+    "forbidden": [
+      "wholesale legacy branch merges",
+      "Part II runtime opening",
+      "synchronous heavy asset loads",
+      "crowd Spawn/Destroy churn",
+      "hard references to heavy production assets",
+      "OBJ for animated production assets",
+      "BMP as final production texture"
+    ],
+    "performance_target": "6th-gen i7 / 8 GB RAM / ~2 GB VRAM, DX11 1280x720 Low-Medium, 30 FPS floor target"
+  },
+  "cars": [
+    {
+      "order": 1,
+      "id": "W00_ACCEPTANCE_CLOSE",
+      "type": "GATE",
+      "status": "CLOSED_MACHINE_PROVEN_PR184_EXACT_HEAD",
+      "purpose": "Inherited machine closure: PR #184 exact head d6ca8aac03f5a1da07609e61e790ddf8faad8eed passed Pre-Unreal #1435 and Unreal Build #1108 including package, 37/37 staged Runtime Data validation and packaged executable observation."
+    },
+    {
+      "order": 2,
+      "id": "LIVING_WORLD_EVENT_CULL_SAFETY",
+      "type": "RUNTIME_REPAIR",
+      "status": "SOURCE_IMPLEMENTED_PROOF_PENDING",
+      "purpose": "Member-local distance retirement so one roaming actor cannot despawn a nearby interaction/event member."
+    },
+    {
+      "order": 3,
+      "id": "SHIRE_WORLD_DENSITY_AND_ROUTE_LIFE",
+      "type": "RUNTIME_BUILD",
+      "status": "GATED",
+      "purpose": "Populate Hobbiton/fields/lanes/party/ferry corridor using existing pooled LivingWorld ownership and chapter-tuned caps."
+    },
+    {
+      "order": 4,
+      "id": "PARTY_AND_BAG_END_INTERACTION_DENSITY",
+      "type": "RUNTIME_BUILD",
+      "status": "GATED",
+      "purpose": "Birthday setup, social onboarding, tables/food/decorations, bounded guest interactions, Bag End lived-in interaction pass."
+    },
+    {
+      "order": 5,
+      "id": "NPC_ROUTINES_SOCIAL_MEMORY",
+      "type": "RUNTIME_BUILD",
+      "status": "GATED",
+      "purpose": "Expand existing Shire schedules, context, social pairing and bounded memory without a parallel AI brain."
+    },
+    {
+      "order": 6,
+      "id": "FAUNA_ENVIRONMENTAL_MOTION",
+      "type": "RUNTIME_BUILD",
+      "status": "GATED",
+      "purpose": "Bird/rabbit/butterfly and environmental motion using existing pooled/distance-throttled systems."
+    },
+    {
+      "order": 7,
+      "id": "CHARACTER_PRESENTATION",
+      "type": "RUNTIME_BUILD",
+      "status": "GATED",
+      "purpose": "Promote approved FBX skeletal candidates and animation presentation through soft/async residency only."
+    },
+    {
+      "order": 8,
+      "id": "QUEST_SIDE_ACTIVITY_COHERENCE",
+      "type": "RUNTIME_BUILD",
+      "status": "GATED",
+      "purpose": "Strengthen current P1C01 quest chain and source-grounded optional windows without changing locked outcomes."
+    },
+    {
+      "order": 9,
+      "id": "CINEMATIC_CONTROL_HANDOFF",
+      "type": "RUNTIME_BUILD",
+      "status": "GATED",
+      "purpose": "Bounded set-piece entry/exit with identical skip postconditions and clean return to embodied control."
+    },
+    {
+      "order": 10,
+      "id": "SHIRE_AUDIO_IDENTITY",
+      "type": "CONTENT_INTEGRATION",
+      "status": "GATED",
+      "purpose": "Birds, hedges/breeze, farm work, distant laughter, carts, warm interiors, fire/cutlery using approved offline banks and concurrency."
+    },
+    {
+      "order": 11,
+      "id": "SAVE_LOAD_LONG_SESSION",
+      "type": "RELIABILITY",
+      "status": "GATED",
+      "purpose": "Long-session pool reuse, save/load, world revision and legacy restore regression coverage."
+    },
+    {
+      "order": 12,
+      "id": "TARGET_DEVICE_PROFILE_AND_GATE67",
+      "type": "ACCEPTANCE",
+      "status": "GATED",
+      "purpose": "720p Low-Medium FPS/frame-time/hitch/RAM/VRAM and human chapter-specific visual/gameplay/life review."
+    }
+  ],
+  "source_grounding": [
+    "Shire/Hobbiton: warm domestic scale, circular doors, gardens; onboarding/social play/low-threat exploration.",
+    "Bag End: dense lived-in props and round geometry; narrative hub/inventory/Ring revelation.",
+    "Birthday setup: tables, food, decorations, guest interactions; safe abandon/retry and idempotent completion.",
+    "World audio identity: birds, breeze in hedges, farm work, distant laughter, carts, warm interiors, fire and cutlery."
+  ],
+  "evidence_boundary": "Authorization and implementation train contract only. Each car retains its own STATIC/COMPILE/PIE/DEVICE/VISUAL/PERFORMANCE evidence boundary.",
+  "preparation_progress": {
+    "event_member_cull": "SOURCE_IMPLEMENTED_PROOF_PENDING",
+    "pawn_cache_guard": "SOURCE_IMPLEMENTED_PROOF_PENDING",
+    "save_schema_history": "PARTIAL_HISTORY_RECOVERED_V3_TO_V6_V1_V2_UNDOCUMENTED_DO_NOT_INVENT",
+    "source_to_production_bridge": "COMPREHENSIVE_ROWS_EXTENDED",
+    "runtime_expansion": "GATED_BY_RELEVANT_PER_CAR_EXACT_HEAD_UE4"
+  },
+  "w00_machine_evidence": {
+    "pr": 184,
+    "exact_head": "d6ca8aac03f5a1da07609e61e790ddf8faad8eed",
+    "pre_unreal": "#1435 SUCCESS",
+    "unreal_build": "#1108 SUCCESS",
+    "branch_cleanup": "#76 SUCCESS",
+    "acceptance_boundary": "Machine closure only. No inherited PIE/device/visual/performance acceptance."
+  }
+}

@@ -1,3 +1,16 @@
+## 2026-09-30 - W00 automated machine closure + P1C01 maximum-safe mega train V2
+
+- PR #184 exact head `d6ca8aac03f5a1da07609e61e790ddf8faad8eed` passed hosted Pre-Unreal #1435 and full UE4.27.2 Unreal Build #1108, then merged to `develop@4fb15dfff70bfda5a2c023c3d82b3008fb831edc`.
+- Exact machine evidence includes editor build, production import, Automation Framework QA, headless startup, chapter audit, route/state roundtrip, warning-debt guard, real Windows package, Runtime Data staging and packaged startup.
+- Packaged Data proof: `W00_PACKAGED_DATA_PASS expected=37 verified=37`.
+- Packaged runtime-consumption proof: `W00_PACKAGED_RUNTIME_DATA_READ_PASS marker=NPCContext: ready=yes`.
+- Packaged startup proof: `W00_PACKAGED_STARTUP_PASS observed=6s`.
+- Runner hardware snapshot: Intel i7-6498DU, 8,457,560,064 RAM bytes. This is a hardware snapshot only and is **not DEVICE-TESTED** because representative FPS/frame-time/VRAM acceptance has not been captured.
+- Automated W00 machine gates are therefore closed on the exact acceptance head. Human chapter traversal/readability/pacing, real audio playback/mix and target-device performance/visual evidence remain separate gates.
+- P1C01 mega train V2 is rebuilt from the merged canonical develop instead of resolving the old #185 conflict wholesale. It selectively preserves the confirmed LivingWorld member-local cull repair, PG-208/209/210/211/212+ guards, source-to-runtime disposition, save-schema audit and the 12-car maximum-safe production program.
+- No new runtime expansion car is promoted solely by W00 machine closure; each dependent car still follows Governor prerequisites and its own exact-head UE4 / later Gate 6/7 evidence.
+- No new PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED claim is made by this record.
+
 ## 2026-09-30 - W00 packaged runtime Data-read proof guard
 
 - Remote branch-salvage cleanup is closed machine-wise: the 26 legacy heads are recoverable from `archive/pre-build-salvage-20260930`, and the final cleanup pass reduced persistent refs to `develop`, `main`, and the recovery-only archive before this short-lived validation branch was opened.
@@ -3220,6 +3233,13 @@ These files are required Project Guardian inputs.
 They explicitly cover facial acting, gaze, blink behavior, lip-sync, voice, body language, locomotion,
 interaction animation, environmental reaction, combat reaction, crowd behavior, continuity and low-spec LOD/performance.
 Current proxy characters do not satisfy final character quality; final rigs/animations/voice assets remain future production work.
+## 2026-09-30 - P1C01 overnight train checkpoint
 
+PR #184 is already merged and supplies the current W00 packaged-runtime machine baseline: exact head `d6ca8aac03f5a1da07609e61e790ddf8faad8eed`, Pre-Unreal #1435 SUCCESS and Unreal Build #1108 SUCCESS through package/Data/runtime observation. Branch Cleanup #76 also succeeded.
 
+PR #185 was closed without merge and superseded by the clean post-W00 consolidation path rather than wholesale-merging its 64-commit intermediate history. The live successor remains PR #189. Its parent exact head `66fd2c38aa5d6db815c4e6eaba957add89094b0d` had Pre-Unreal #1461 SUCCESS but Unreal Build #1134 was queued, so that head was not merge-eligible and no dependent runtime feature car was opened.
+
+Allowed preparation work advanced instead: zero-silent-omission coverage was extended; source/QC and warehouse promotion boundaries were re-reviewed; static validators now require explicit disposition fields and preserve exact W00/per-car gates; and the save-schema audit recovered documented v3-v6 field evolution from reachable `develop` history while keeping v1/v2 explicitly unknown. No runtime C++ feature expansion was added by this checkpoint.
+
+Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headless/package statements only where exact evidence exists. P1C01 PIE/device/visual/performance acceptance remains unclaimed.
 

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "bridge_id": "P1C01_SOURCE_TO_PRODUCTION_BRIDGE_V1",
-  "status": "ACTIVE_PREPARATION",
+  "status": "ACTIVE_COMPREHENSIVE_PREPARATION",
   "purpose": "Map source-grounded Shire/Bag End needs to the active asset/material preparation lanes.",
   "rows": [
     {
@@ -76,6 +76,118 @@
         "existing registered P1C01 queue"
       ],
       "runtime_gate": "prep/QC only until relevant E/F/G stage"
+    },
+    {
+      "need": "birthday setup social loop",
+      "source_requirement": "F1-01 safe optional window: party setup/social onboarding; ACT_F1_01 tables, food, decorations, guest interactions",
+      "asset_lane": "P1C01_G_QUEST_CINEMATIC_AUDIO_POLISH + existing side-activity runtime",
+      "candidate_ids": [
+        "ACT_F1_01",
+        "LongExpectedParty"
+      ],
+      "runtime_gate": "GATED until W00 and prior P1C01 engine prerequisites are green; completion must remain idempotent and canon-neutral"
+    },
+    {
+      "need": "Gandalf fireworks spectacle",
+      "source_requirement": "ACT_F1_02 select/place-or-aim/time launch safely; spectacle and reactions",
+      "asset_lane": "P1C01_G_QUEST_CINEMATIC_AUDIO_POLISH",
+      "candidate_ids": [
+        "ACT_F1_02"
+      ],
+      "runtime_gate": "GATED; may enrich safe window but cannot alter locked postconditions"
+    },
+    {
+      "need": "Merry/Pippin firework mishap",
+      "source_requirement": "ACT_F1_03 comic stealth/interact sequence with fixed outcome",
+      "asset_lane": "P1C01_G_QUEST_CINEMATIC_AUDIO_POLISH",
+      "candidate_ids": [
+        "ACT_F1_03"
+      ],
+      "runtime_gate": "GATED; fixed outcome and original project-authored dialogue only"
+    },
+    {
+      "need": "Bag End lived-in narrative hub",
+      "source_requirement": "dense lived-in props; round geometry; narrative hub/inventory/Ring revelation; Bilbo occupied/Frodo departure/epilogue variants",
+      "asset_lane": "P1C01_WORLD_BUILD + P1C01_ARCHITECTURE_INTERIOR_PROP_MEGABATCH",
+      "candidate_ids": [
+        "BAG_END"
+      ],
+      "runtime_gate": "GATED; deterministic chapter-state variant and traversal/collision review required"
+    },
+    {
+      "need": "Shire chapter-state population and schedules",
+      "source_requirement": "NPC population, schedules, dialogue knowledge and faction presence are chapter-state data",
+      "asset_lane": "P1C01_F_LIVING_SHIRE",
+      "candidate_ids": [
+        "ARCH_SHIRE_RESIDENT",
+        "LivingWorldDirector",
+        "ShireNPCContextSubsystem"
+      ],
+      "runtime_gate": "GATED; pooled admission/retirement, cached context, no parallel AI brain"
+    },
+    {
+      "need": "Shire sonic identity",
+      "source_requirement": "birds, breeze in hedges, farm work, distant laughter, carts, warm interiors, fire and cutlery",
+      "asset_lane": "P1C01_G_QUEST_CINEMATIC_AUDIO_POLISH + P1C01 audio intake",
+      "candidate_ids": [
+        "SHIRE_AMBIENCE",
+        "SHIRE_FOLEY"
+      ],
+      "runtime_gate": "GATED; authored/approved offline WAV bank, attenuation/concurrency, playback proof without -NoSound"
+    },
+    {
+      "need": "chapter-state variants",
+      "source_requirement": "Shire/Hobbiton birthday/departure/post-war; Bag End Bilbo-occupied/Frodo-departure/epilogue",
+      "asset_lane": "world-state + quest + builder presentation",
+      "candidate_ids": [
+        "P1C01_WORLD_VARIANTS"
+      ],
+      "runtime_gate": "GATED; deterministic from chapter flags and cannot infer future-state changes early"
+    },
+    {
+      "need": "streaming and critical-area preload",
+      "source_requirement": "partition by sightline/portal/terrain logic; preload next critical area before transition",
+      "asset_lane": "ChapterAssetStreaming + existing chapter router",
+      "candidate_ids": [
+        "P1C01_STREAMING"
+      ],
+      "runtime_gate": "preserve current async/soft residency; no synchronous heavy load"
+    },
+    {
+      "need": "chapter QA coverage",
+      "source_requirement": "backtracking, reload, companion recovery, collision, navmesh, chapter-state swaps; fresh start/migrated save/death-retry/cinematic skip/optional abandon/low-performance tier",
+      "asset_lane": "P1C01_GATE_6_7_ACCEPTANCE_CHECKLIST",
+      "candidate_ids": [
+        "P1C01_QA"
+      ],
+      "runtime_gate": "machine proof first; human PIE/device/visual acceptance separate"
+    },
+    {
+      "need": "checkpoint and save continuity",
+      "source_requirement": "entry checkpoint + pre-set-piece checkpoint + postcondition save where appropriate",
+      "asset_lane": "ShireQuestSubsystem + ShireSaveGame + ChapterWorldRouter",
+      "candidate_ids": [
+        "P1C01_CHECKPOINTS"
+      ],
+      "runtime_gate": "GATED; world-commit synchronized save/restore and documented schema behavior required"
+    },
+    {
+      "need": "current runtime/source chapter mapping",
+      "source_requirement": "sources separate F1-01/F1-02/F1-03 while repository runtime P1C01 aggregates Shire party, Ring/Bag End departure and road/ferry material",
+      "asset_lane": "P1C01_MAXIMUM_SAFE_MEGA_BUILD",
+      "candidate_ids": [
+        "P1C01_RUNTIME_AGGREGATION"
+      ],
+      "runtime_gate": "preserve current topology for this train; no silent renumbering or canon rewrite"
+    },
+    {
+      "need": "low-spec living-world budget",
+      "source_requirement": "world should feel inhabited without maximum simulation; profile representative Shire scenes before optimizing",
+      "asset_lane": "LivingWorldDirector + Gate67 profiling",
+      "candidate_ids": [
+        "P1C01_LIFE_BUDGET"
+      ],
+      "runtime_gate": "18 baseline residents max contract, 3 micro-events, 2 fauna groups; target DX11 720p Low-Medium 30 FPS floor"
     }
   ],
   "non_negotiable": [
@@ -85,5 +197,24 @@
     "Animated production assets FBX only",
     "Private-offline assets cannot become distributable dependencies"
   ],
-  "evidence_boundary": "Planning bridge only."
+  "evidence_boundary": "Planning bridge only.",
+  "comprehensive_train": {
+    "status": "SOURCE_DISPOSITION_EXTENDED_RUNTIME_GATED",
+    "mega_plan": "Data/P1C01MaximumSafeMegaBuildV1.json",
+    "overnight_train": "Data/P1C01OvernightMegaBuildTrainV1.json",
+    "rule": "This bridge may expand source/QC/data preparation now. Runtime-changing rows stay gated by W00 and per-car exact-head engine proof."
+  },
+  "parallel_preparation_review": {
+    "status": "SOURCE_QC_AND_WAREHOUSE_CONTRACT_READY_LOCAL_EXECUTION_NOT_CLAIMED",
+    "warehouse_root": "D:\\actions-runner\\_warehouse\\ShireJourney",
+    "intake_rules": [
+      "Require provider/source/license provenance before promotion.",
+      "Require local staging receipt and SHA256 before READY_FOR_IMPORT.",
+      "Animated production candidates are FBX-only.",
+      "Final production textures are PNG/TGA; BMP is not final production evidence.",
+      "Heavy production assets remain soft/async at runtime.",
+      "No source/QC preparation result authorizes runtime integration or density expansion."
+    ],
+    "evidence_boundary": "Contract/preparation review only; no new warehouse inventory, asset QC pass, UE import or runtime acceptance is claimed by this update."
+  }
 }

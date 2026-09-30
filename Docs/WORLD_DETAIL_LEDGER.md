@@ -1,3 +1,19 @@
+## 2026-09-30 - P1C01 Maximum-Safe Mega Build V1 + LivingWorld cull safety
+
+- P1C01 legacy mega-pack path drift found during the train audit was corrected to the D-backed Warehouse authority; this is infrastructure consistency only, not content/runtime acceptance.
+- Registered before further runtime expansion: owner authorizes one large P1C01 production train with many bounded work cars under one approval, rather than repeated tiny approvals.
+- Source basis rechecked from the supplied Story/Timeline, World/Locations, Gameplay/Side Activities, Mission Matrix and Master Production Systems PDFs.
+- Source boundary: F1-01 owns Ring-history/birthday/Gandalf/party material; F1-02 owns Bag End Ring-danger/departure; F1-03 owns Shire-road/Black Rider/ferry material. Current runtime P1C01 is broader than source F1-01, so this wave preserves current topology while explicitly recording the mismatch instead of silently redefining canon chapters.
+- Confirmed programmer finding: grouped micro-event distance cleanup could retire nearby event members because one roaming member exceeded EventCullDistance.
+- Registered and implemented repair: event lifetime expiry stays event-wide; distance retirement is member-local through existing ALivingWorldDirector pool ownership. No second world-life brain is created.
+- Audit correction: ShireAmbientNPC already centralizes its only direct UGameplayStatics::GetPlayerPawn call in GetPlayerPawnCached(); no redundant cache rewrite is authorized.
+- Save-schema work is evidence-gated: schema 6/newer-save rejection and legacy canonicalization are present, but no verified v1-v6 transform history exists. No migration ladder may be invented until history/fixtures are recovered.
+- Machine-readable train: Data/P1C01MaximumSafeMegaBuildV1.json + Data/P1C01OvernightMegaBuildTrainV1.json. Source disposition: Data/P1C01SourceToRuntimeDispositionV1.json. Save boundary: Data/SaveSchemaMigrationAuditV1.json.
+- Architecture remains decoupled: ALivingWorldDirector owns population/event budgets and pooling; UShireNPCContextSubsystem owns bounded NPC context/knowledge/schedules; UShireQuestSubsystem owns story/progression; world builders own geometry/dressing/story placement.
+- Low-spec rules remain mandatory: FBX for animated production assets; PNG/TGA production textures; soft references + FStreamableManager for heavy assets; pooled transient crowds; ISM/HISM + LOD/culling for repeated detail.
+- Runtime feature cars beyond the defect repair remain gated by W00 exact-head UE4 evidence and later Gate 6/7 requirements. Source/QC/data/static/documentation preparation may proceed in parallel.
+- Evidence boundary: SOURCE IMPLEMENTATION/PREPARATION ONLY until exact-head CI/UE4 and later chapter-specific PIE/device/human evidence exist.
+
 ## 2026-09-29 - F2-04 Road & Helm's Deep Prep Maximum-Safe Source V1
 
 - Canonical mission: F2-04 Road & Helm's Deep Prep.
@@ -760,3 +776,13 @@ Purpose: retain visual, material, life, ambience and world-detail ideas discover
 - Mega Asset Promotion reuses `Data/P1C01WarehousePromotionQueueV1.json` and `Data/ProductionAssetPromotionPolicyV1.json`; this is not a second inventory. Work may advance through staging/intake QC, but no item is promoted to `READY_FOR_IMPORT` without provider/source/license, local staging receipt, SHA256 and class-specific QC.
 - Final animated production assets remain FBX-only. Final production textures remain PNG/TGA; BMP cannot be accepted as final promotion evidence. Heavy runtime assets stay soft-referenced/asynchronously owned; crowds remain pooled and repeated detail remains ISM/HISM + LOD/culling.
 - Evidence boundary: **EXECUTION AUTHORIZED / NOT YET VALIDATED**. C4 candidate exact head passed Pre-Unreal #1070 and Unreal Build #875 before merge. D needs its own exact-head machine proof plus later rendered/device evidence; no PIE/device/visual/performance acceptance is claimed here.
+## 2026-09-30 - P1C01 overnight preparation reconciliation (no new runtime feature)
+
+- W00 packaged-runtime machine closure is inherited from merged PR #184 exact head `d6ca8aac03f5a1da07609e61e790ddf8faad8eed`: Pre-Unreal #1435 and Unreal Build #1108 succeeded, including real Windows packaging, 37/37 Runtime Data payload verification and packaged executable observation.
+- The live P1C01 consolidation PR remains a separate exact-head gate. Its parent head `66fd2c38aa5d6db815c4e6eaba957add89094b0d` had Pre-Unreal #1461 green while Unreal Build #1134 was still queued, so no runtime expansion or merge was authorized from that proof.
+- Preparation advanced without runtime feature expansion: direct F1-01/F1-02/F1-03 source review, two explicit zero-silent-omission rows (knowledge/skip equivalence and safe optional-window expiry), warehouse/source QC contract review, stronger static disposition guards, and a targeted save-schema history reconstruction.
+- Reachable `develop` history now proves explicit save schemas 3, 4, 5 and 6. Versions 1/2 remain undocumented; no migration behavior is invented.
+- Ownership remains unchanged: LivingWorldDirector owns population/pooling/events, ShireNPCContextSubsystem owns NPC context/knowledge/schedules, and ShireQuestSubsystem owns quest/progression truth.
+- Low-spec constraints remain UE4.27.2, DX11 1280x720 Low-Medium, 6th-gen i7 / 8 GB RAM / ~2 GB VRAM, 30 FPS floor target, soft/async heavy loading, pooled transient crowds, ISM/HISM + LOD/culling, FBX animated assets and PNG/TGA final textures.
+- Evidence boundary: preparation/static bookkeeping only. No PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED or PERFORMANCE-ACCEPTED promotion is made here.
+
