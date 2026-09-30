@@ -1,3 +1,15 @@
+## 2026-09-30 - P1C01 TARGET_DEVICE_PROFILE_AND_GATE67 acceptance car
+
+- Gate 6/7 evidence infrastructure: **STATIC PREPARATION IMPLEMENTED**.
+- Predecessor SAVE_LOAD_LONG_SESSION at preparation time: **Pre-Unreal #1488 SUCCESS / Unreal Build #1161 NOT YET PROVEN COMPLETE**.
+- Exact-head + hardware/profile evidence binding: **SOURCE-IMPLEMENTED**.
+- Representative-route measurement completeness: **FAIL-CLOSED / NO MISSING-ROUTE PASS**.
+- 30 FPS floor enforcement: **SOURCE-IMPLEMENTED IN EVALUATOR / NO DEVICE MEASUREMENT CLAIMED**.
+- Blocking streaming-hitch / synchronous-heavy-load failure rules: **SOURCE-IMPLEMENTED**.
+- Save/load continuity + cinematic return-to-control acceptance requirements: **SOURCE-IMPLEMENTED**.
+- Human visual/world-life/pacing evidence: **REQUIRED / NOT YET PROVIDED**.
+- DEVICE-TESTED / PERFORMANCE-ACCEPTED / VISUALLY-ACCEPTED / PACING-ACCEPTED: **NOT CLAIMED**.
+
 ## 2026-09-30 - P1C01 SHIRE_AUDIO_IDENTITY car
 
 - CINEMATIC_CONTROL_HANDOFF predecessor: **EXACT-HEAD MACHINE-GREEN** on PR #198 / Pre-Unreal #1484 / Unreal Build #1157; merged as `3b38698c19a244fde8f2979d73f12cd829576b7f`.
