@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "P1C01_G_QUEST_CINEMATIC_AUDIO_POLISH_V1",
-  "status": "CINEMATIC_CONTROL_HANDOFF_SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
+  "status": "SHIRE_AUDIO_IDENTITY_SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
   "authority": [
     "Data/ProjectGovernor.json",
     "01_STORY_AND_TIMELINE_BIBLE",
@@ -9,7 +9,7 @@
     "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
     "DEC-038"
   ],
-  "prerequisite": "SATISFIED: QUEST_SIDE_ACTIVITY_COHERENCE PR #197 exact head 10fa10ac47deed372d3a29c14dd30c1c3b5a5522 passed Pre-Unreal #1481 and Unreal Build #1154 and merged as e926889f9328e238afaffb16f9f9dabf58ce9040.",
+  "prerequisite": "SATISFIED: CINEMATIC_CONTROL_HANDOFF PR #198 exact head 46655d2ecdc02a3f1698c9fd0b1b14c09f767946 passed Pre-Unreal #1484 and Unreal Build #1157 and merged as 3b38698c19a244fde8f2979d73f12cd829576b7f.",
   "purpose": "Prepare the final P1C01 gameplay/presentation polish layer around locked canon beats while preserving player control windows and persistent world-state consequences.",
   "playable_film_contract": [
     "Locked Canon Beat",
@@ -54,7 +54,7 @@
     "Human pacing/visual/audio review remains mandatory.",
     "Target-device profiling remains a later separate gate."
   ],
-  "evidence_boundary": "CINEMATIC CONTROL HANDOFF SOURCE/RUNTIME IMPLEMENTED; EXACT-HEAD PRE-UNREAL + UE4.27.2 PROOF PENDING. Audio runtime, PIE/device/visual/pacing/performance acceptance remain separate and are not claimed.",
+  "evidence_boundary": "SHIRE AUDIO IDENTITY SOURCE/RUNTIME IMPLEMENTED; EXACT-HEAD PRE-UNREAL + UE4.27.2 PROOF PENDING. Final WAV import, playback/listening, mix/master, PIE/device/pacing/performance acceptance remain separate and are not claimed.",
   "quest_runtime_implementation": {
     "owner": "UShireQuestSubsystem",
     "safe_window_projection": "GetAvailableSideActivityIdsForCurrentWindow",
@@ -75,5 +75,21 @@
     "release_camera_on_unlock": true,
     "chapter_change_forces_release": true,
     "story_state_mutation_from_skip": false
+  },
+  "audio_runtime_implementation": {
+    "owner": "UShireAudioSubsystem",
+    "identity_layers": [
+      "birds",
+      "breeze in hedges",
+      "farm work",
+      "distant laughter",
+      "carts",
+      "warm interiors",
+      "fire/cutlery"
+    ],
+    "heavy_audio_loading": "FSoftObjectPath + FStreamableManager async",
+    "decorative_spatial_sfx_budget": "max 6 starts per 0.25 seconds",
+    "story_critical_priority": true,
+    "final_asset_intake_pending": true
   }
 }
