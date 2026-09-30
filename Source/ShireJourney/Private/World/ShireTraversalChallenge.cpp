@@ -64,13 +64,14 @@ void AShireTraversalChallenge::ConfigureActivityChallenge(
     const FVector& GateBOffset,
     const FVector& GateCOffset,
     bool bInRequireCrouch,
-    float InMaxCompletionSeconds)
+    float InMaxCompletionSeconds,
+    FName InCompletionStoryBeat)
 {
     DiscoveryId = InDiscoveryId;
     DisplayName = InDisplayName;
     RequiredStoryBeat = NAME_None;
     BlockedAfterStoryBeat = NAME_None;
-    CompletionStoryBeat = NAME_None;
+    CompletionStoryBeat = InCompletionStoryBeat;
     ChallengeType = InChallengeType == NAME_None ? TEXT("TRAVERSAL_CHALLENGE") : InChallengeType;
     bRequireCrouch = bInRequireCrouch || ChallengeType == TEXT("STEALTH_LITE");
     MaxCompletionSeconds = InMaxCompletionSeconds > 0.0f
