@@ -1,3 +1,14 @@
+## 2026-09-30 - P1C01 SHIRE_WORLD_DENSITY runtime car source implementation
+
+- Predecessor mega integration is machine-green: PR #189 exact head `3680ab2fa52b7ebd7ec896ec10d2d2f9a60dd63c` passed Pre-Unreal #1465 and UE4.27.2 Unreal Build #1138, then merged to `develop@64b70c4532a7412a47c031d71bb4f972e7720096`.
+- LivingWorld member-local culling and the ambient pawn-cache regression guard therefore have exact-head machine proof on that PR. This is compile/headless-machine evidence, not human PIE/device/visual/performance acceptance.
+- First post-mega runtime car: `SHIRE_WORLD_DENSITY`. It adds only geometry/dressing through `ShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()` and existing zero-Tick `AWorldDetailCluster` HISM ownership.
+- Fixed budget: at most 5 cluster actors / 70 non-collision instances across wood piles, ferns, reeds, path markers and fallen logs. Missing production meshes are skipped; no synchronous load is introduced.
+- `WorldLifeSaturationPlan` P1C01 ambient population target remains **18**. LivingWorldDirector still owns ambient NPC budgets/pooling; ShireQuestSubsystem still owns story/quest state.
+- No quest coordinate, story anchor, crowd cap or chapter topology is changed by this car.
+- Current car status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27.2 PROOF PENDING**.
+- Still not claimed: PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PACING-ACCEPTED or PERFORMANCE-ACCEPTED.
+
 ## 2026-09-30 - W00 automated machine closure + P1C01 maximum-safe mega train V2
 
 - PR #184 exact head `d6ca8aac03f5a1da07609e61e790ddf8faad8eed` passed hosted Pre-Unreal #1435 and full UE4.27.2 Unreal Build #1108, then merged to `develop@4fb15dfff70bfda5a2c023c3d82b3008fb831edc`.

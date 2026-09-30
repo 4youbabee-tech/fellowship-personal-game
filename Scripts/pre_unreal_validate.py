@@ -5870,6 +5870,70 @@ for pg209_required in [
         fail(f"PG-213 P1C01 mega-build car missing: {pg209_required}")
 
 
+# PG-214: P1C01 Shire world-density car stays bounded, instanced and outside AI/story ownership.
+pg214_contract = json.loads(read(ROOT / "Data" / "P1C01ShireWorldDensityCarV1.json"))
+if pg214_contract.get("status") != "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING":
+    fail("PG-214 density car status drifted")
+pg214_budget = pg214_contract.get("budget", {})
+if pg214_budget.get("ambient_population_target_p1c01") != 18:
+    fail("PG-214 P1C01 ambient population target must remain 18")
+if pg214_budget.get("max_cluster_actors") != 5:
+    fail("PG-214 density cluster ceiling must remain exactly 5 for this car")
+if pg214_budget.get("max_detail_instances") != 70:
+    fail("PG-214 density detail-instance ceiling must remain exactly 70 for this car")
+pg214_categories = pg214_budget.get("categories", [])
+if len(pg214_categories) != 5:
+    fail("PG-214 density category breadth must remain exactly 5")
+if sum(int(row.get("max_instances", 0)) for row in pg214_categories if isinstance(row, dict)) != 70:
+    fail("PG-214 category instance budgets must sum to 70")
+
+pg214_life = json.loads(read(ROOT / "Data" / "WorldLifeSaturationPlan.json"))
+if pg214_life.get("baseline_population_targets", {}).get("P1C01") != 18:
+    fail("PG-214 WorldLifeSaturationPlan P1C01 population target drifted above/below 18")
+
+pg214_h = read(resolve_source("ShirePrototypeWorldBuilder.h"))
+pg214_cpp = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))
+pg214_cluster_cpp = read(resolve_source("WorldDetailCluster.cpp"))
+if "void SpawnWorldDensityDetailPass();" not in pg214_h:
+    fail("PG-214 density pass declaration missing")
+pg214_start = pg214_cpp.find("void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()")
+pg214_end = pg214_cpp.find("void AShirePrototypeWorldBuilder::SpawnScenicDetailPass()", pg214_start)
+if pg214_start < 0 or pg214_end <= pg214_start:
+    fail("PG-214 density pass function boundary missing")
+    pg214_body = ""
+else:
+    pg214_body = pg214_cpp[pg214_start:pg214_end]
+for pg214_symbol in [
+    "AWorldDetailCluster",
+    "ProductionCommonWoodPileMesh",
+    "ProductionCommonFernClumpMesh",
+    "ProductionCommonReedClusterMesh",
+    "ProductionCommonPathMarkerMesh",
+    "ProductionCommonFallenLogMesh",
+    "SHIRE_WORLD_DENSITY_DETAIL_PASS",
+    "populationTarget=18",
+    "Cluster->Configure(Mesh, false",
+]:
+    if pg214_symbol not in pg214_body:
+        fail(f"PG-214 density implementation marker missing: {pg214_symbol}")
+if pg214_body.count("SpawnDetailCluster(") != 5:
+    fail("PG-214 density pass must keep exactly five bounded cluster admissions")
+for pg214_forbidden in [
+    "LoadObject<",
+    "StaticLoadObject",
+    "RequestSyncLoad",
+    "SpawnActor<AShireAmbientNPC>",
+]:
+    if pg214_forbidden in pg214_body:
+        fail(f"PG-214 forbidden density implementation path returned: {pg214_forbidden}")
+if pg214_cpp.count("SpawnWorldDensityDetailPass();") != 1:
+    fail("PG-214 density pass must be invoked exactly once by the Shire world builder")
+if "PrimaryActorTick.bCanEverTick = false;" not in pg214_cluster_cpp:
+    fail("PG-214 WorldDetailCluster must remain zero-Tick")
+if "Instances->SetCollisionEnabled(ECollisionEnabled::NoCollision);" not in pg214_cluster_cpp:
+    fail("PG-214 WorldDetailCluster default no-collision boundary missing")
+
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:

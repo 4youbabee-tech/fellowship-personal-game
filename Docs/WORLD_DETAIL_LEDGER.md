@@ -8,7 +8,9 @@
 - Population invariant: P1C01 ambient target remains 18; this car improves perceived density through spatial/detail variety, not more full AI.
 - Traversal invariant: all new detail is non-collision and stays outside story/quest anchor ownership.
 - Gate: source implementation must pass exact-head Pre-Unreal + UE4.27.2 before merge; target-device FPS/hitch/RAM/VRAM and human visual/pacing review remain separate Gate 6/7 evidence.
-- Evidence boundary at registration: **REGISTERED / NOT YET RUNTIME-IMPLEMENTED**.
+- Implementation: `ShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()` now uses five bounded `AWorldDetailCluster` HISM categories with a 70-instance ceiling and no collision/Tick ownership.
+- Regression guard: PG-214 + source-contract test lock population target 18, HISM cluster/instance ceilings, resident-only asset behavior and the no-load/no-ambient-NPC-spawn boundary.
+- Evidence boundary after implementation: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27.2 PROOF PENDING**. No PIE/device/visual/pacing/performance acceptance is claimed.
 
 ## 2026-09-30 - P1C01 Maximum-Safe Mega Build V1 + LivingWorld cull safety
 

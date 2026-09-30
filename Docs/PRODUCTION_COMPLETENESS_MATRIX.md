@@ -1,3 +1,13 @@
+## 2026-09-30 - P1C01 SHIRE_WORLD_DENSITY car
+
+- Predecessor PR #189 exact head `3680ab2fa52b7ebd7ec896ec10d2d2f9a60dd63c`: **STATIC-VALIDATED by Pre-Unreal #1465 + COMPILE/headless machine-green by Unreal Build #1138**.
+- LivingWorld member-local cull repair: **EXACT-HEAD MACHINE-GREEN on PR #189**.
+- SHIRE_WORLD_DENSITY source implementation: **SOURCE-IMPLEMENTED / EXACT-HEAD CI PENDING**.
+- AI population: **UNCHANGED at P1C01 target 18**.
+- Added density budget: **<=5 zero-Tick HISM clusters / <=70 non-collision decorative instances**; resident production meshes only; missing categories skip without load.
+- Story/quest topology: **UNCHANGED**.
+- PIE traversal/readability, target-device FPS/frame-time/hitches/RAM/VRAM, visual density and pacing: **PENDING / NOT CLAIMED**.
+
 ## 2026-09-30 - W00 machine closure / P1C01 mega train V2
 
 - Exact acceptance head: `d6ca8aac03f5a1da07609e61e790ddf8faad8eed`.
@@ -5,7 +15,7 @@
 - UE4.27.2 Unreal Build #1108: **SUCCESS**, including C++ build, production import, Automation, startup, chapter audit, route/state roundtrip, warning debt, Windows package, packaged Data verification and packaged executable observation.
 - Runtime Data staging: **RUN-PROVEN 37/37**.
 - Packaged runtime Data consumption: **RUN-PROVEN** via `NPCContext: ready=yes`.
-- LivingWorld member-local cull repair in mega V2: **SOURCE-IMPLEMENTED / its own exact-head CI pending**.
+- LivingWorld member-local cull repair in mega V2: **EXACT-HEAD MACHINE-GREEN on PR #189 / Pre-Unreal #1465 + Unreal #1138**.
 - P1C01 mega-build program: **REGISTERED / preparation active / dependent runtime cars remain Governor-gated**.
 - Target-device FPS/frame-time/VRAM, chapter-wide human PIE, audio listening/mix and visual acceptance: **PENDING / NOT CLAIMED**.
 
