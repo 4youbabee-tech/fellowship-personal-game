@@ -115,7 +115,7 @@
     {
       "order": 6,
       "id": "BAG_END_LIVED_IN_PASS",
-      "state": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
+      "state": "EXACT_HEAD_MACHINE_GREEN_PR193_PRE1469_UE1142",
       "scope": "Dense lived-in round-geometry narrative-hub dressing, interaction readability and deterministic story-state variants.",
       "proof": [
         "UE4 exact-head",
@@ -125,7 +125,7 @@
     {
       "order": 7,
       "id": "PARTY_AND_SOCIAL_LOOP",
-      "state": "GATED",
+      "state": "REGISTERED_RUNTIME_NOT_IMPLEMENTED",
       "scope": "Birthday setup/social onboarding/firework-safe-window presentation using current quest ownership and bounded optional activities.",
       "proof": [
         "quest idempotence",
