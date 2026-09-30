@@ -902,3 +902,15 @@ Purpose: retain visual, material, life, ambience and world-detail ideas discover
 - Locked F1-01 outcome remains Bilbo departure + Ring transfer; no copied book/film dialogue was added.
 - Evidence boundary: **SOURCE-IMPLEMENTED / exact-head Pre-Unreal + UE4.27.2 pending**. PIE/device/visual/pacing/performance remain separate.
 
+
+
+## Future Ancient Lore candidate — Carcharoth / Huan / Beren legend
+
+- User reference captured from a Carcharoth lore post + wolf mood-art image.
+- Classification: **FUTURE WORLD DETAIL / ANCIENT LORE / CHRONICLE CANDIDATE**, not an active Part I runtime feature.
+- Canon guard: Carcharoth must **not** appear as a living contemporary creature/boss in P1C01 or the current Part I journey. Any implementation must preserve the First Age historical placement and current-age chronology.
+- Safe future uses: Chronicle/Ancient Tales entry, source-grounded manuscript/book inspection, Rivendell lore reference, mural/carving/storytelling detail, or optional bestiary-history presentation.
+- Visual reference rule: supplied artwork is mood/reference only; do not copy it 1:1 or treat it as a production asset. Any future production depiction must be original.
+- Story rule: no verbatim Tolkien or film dialogue/text. Any game-facing prose must be original and source-grounded.
+- Scope gate: no runtime implementation until the current P1C01 Gate 6/7 lane is closed and the item is re-verified against Sources 01/04/05 and Tolkien source material.
+- Status: **RECORDED / BACKLOG ONLY / NOT AUTHORIZED FOR RUNTIME**.
