@@ -1691,6 +1691,50 @@ UShireSaveGame* AShirePlayerCharacter::CreateSaveSnapshot(
     return Save;
 }
 
+bool AShirePlayerCharacter::ValidateSaveSnapshotBounds(const UShireSaveGame* Save) const
+{
+    if (!Save)
+    {
+        return false;
+    }
+
+    struct FBoundCheck
+    {
+        const TCHAR* Label;
+        int32 Count;
+        int32 MaxCount;
+    };
+
+    const FBoundCheck Checks[] = {
+        { TEXT("QuestStages"), Save->QuestStages.Num(), 128 },
+        { TEXT("CompletedStoryBeats"), Save->CompletedStoryBeats.Num(), 512 },
+        { TEXT("RouteProgress"), Save->RouteProgress.Num(), 16 },
+        { TEXT("NPCMemoryState"), Save->NPCMemoryState.Num(), 128 },
+        { TEXT("JourneyDiscoveryIds"), Save->JourneyDiscoveryIds.Num(), 512 },
+        { TEXT("JourneyInsightMilestones"), Save->JourneyInsightMilestones.Num(), 128 },
+        { TEXT("ProgressionXP"), Save->ProgressionXP.Num(), 64 },
+        { TEXT("ChronicleEntryIds"), Save->ChronicleEntryIds.Num(), 1024 },
+        { TEXT("KnownMapRegionIds"), Save->KnownMapRegionIds.Num(), 128 },
+    };
+
+    for (const FBoundCheck& Check : Checks)
+    {
+        if (Check.Count > Check.MaxCount)
+        {
+            UE_LOG(
+                LogTemp,
+                Error,
+                TEXT("ShireSaveRestore: FAIL reason=payload-bound field=%s count=%d max=%d"),
+                Check.Label,
+                Check.Count,
+                Check.MaxCount);
+            return false;
+        }
+    }
+
+    return true;
+}
+
 bool AShirePlayerCharacter::IsGameplayWorldCommitted() const
 {
     return !bWorldTransitionHeld && IsCurrentWorldCommitted();
@@ -1751,6 +1795,11 @@ bool AShirePlayerCharacter::RestoreSaveSnapshot(
     const FText& SuccessMessage)
 {
     if (!Save)
+    {
+        return false;
+    }
+
+    if (!ValidateSaveSnapshotBounds(Save))
     {
         return false;
     }

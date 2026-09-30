@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "chapter_id": "P1C01",
+  "car_id": "SAVE_LOAD_LONG_SESSION",
+  "status": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
+  "predecessor": {
+    "car_id": "SHIRE_AUDIO_IDENTITY",
+    "pr": 199,
+    "exact_head": "c258cebda8ae5749c54ed0aa6717582b89988fc3",
+    "pre_unreal": "#1486 SUCCESS",
+    "unreal_build": "#1159 SUCCESS",
+    "merge_sha": "ec96e9e487ecbe91d9563848f685df4bd5c11b0d"
+  },
+  "ownership": {
+    "save_snapshot_owner": "AShirePlayerCharacter production snapshot/restore path",
+    "quest_persistence_owner": "UShireQuestSubsystem",
+    "world_commit_owner": "AChapterWorldRouter",
+    "parallel_save_manager": false
+  },
+  "runtime_contract": {
+    "persistence_restore_is_transactional": true,
+    "world_revision_guards_async_checkpoint_effects": true,
+    "queued_checkpoint_preserves_captured_snapshot": true,
+    "restored_transform_waits_for_matching_world_commit": true,
+    "legacy_identity_is_canonicalized_before_publication": true,
+    "save_payload_bounds_checked_before_restore_mutation": true,
+    "long_session_unbounded_save_growth_forbidden": true
+  },
+  "restore_bounds": {
+    "max_quest_stages": 128,
+    "max_story_beats": 512,
+    "max_route_progress_entries": 16,
+    "max_npc_memory_buckets": 128,
+    "max_discoveries": 512,
+    "max_insight_milestones": 128,
+    "max_progression_tracks": 64,
+    "max_chronicle_entries": 1024,
+    "max_known_map_regions": 128
+  },
+  "acceptance_boundary": "SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27.2 PROOF PENDING. Human long-session PIE, device hitching and persistence stress acceptance are not claimed."
+}

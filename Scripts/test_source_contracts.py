@@ -217,8 +217,11 @@ class SourceContractTests(unittest.TestCase):
             cars["CINEMATIC_CONTROL_HANDOFF"]["status"],
             "EXACT_HEAD_MACHINE_GREEN_PR198_PRE1484_UE1157_MERGED_3B3869",
         )
+        self.assertEqual(
+            cars["SHIRE_AUDIO_IDENTITY"]["status"],
+            "EXACT_HEAD_MACHINE_GREEN_PR199_PRE1486_UE1159_MERGED_EC96E9",
+        )
         for car_id in (
-            "SHIRE_AUDIO_IDENTITY",
             "SAVE_LOAD_LONG_SESSION",
             "TARGET_DEVICE_PROFILE_AND_GATE67",
         ):
@@ -477,6 +480,35 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("RecentDecorativeSfxStartTimes.RemoveAll", source)
         for forbidden in ("LoadObject<", "StaticLoadObject", "RequestSyncLoad"):
             self.assertNotIn(forbidden, source)
+
+
+
+    def test_p1c01_save_load_long_session_is_bounded_before_restore_mutation(self):
+        root = Path(__file__).resolve().parents[1]
+        contract = json.loads((root / "Data" / "P1C01SaveLoadLongSessionV1.json").read_text(encoding="utf-8"))
+        self.assertEqual(contract["status"], "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING")
+        self.assertTrue(contract["runtime_contract"]["save_payload_bounds_checked_before_restore_mutation"])
+        self.assertTrue(contract["runtime_contract"]["world_revision_guards_async_checkpoint_effects"])
+        self.assertTrue(contract["runtime_contract"]["queued_checkpoint_preserves_captured_snapshot"])
+        self.assertEqual(contract["restore_bounds"]["max_route_progress_entries"], 16)
+        self.assertEqual(contract["restore_bounds"]["max_chronicle_entries"], 1024)
+
+        header = (root / "Source" / "ShireJourney" / "Public" / "Characters" / "ShirePlayerCharacter.h").read_text(encoding="utf-8")
+        source = (root / "Source" / "ShireJourney" / "Private" / "Characters" / "ShirePlayerCharacter.cpp").read_text(encoding="utf-8")
+        save_h = (root / "Source" / "ShireJourney" / "Public" / "SaveGame" / "ShireSaveGame.h").read_text(encoding="utf-8")
+        self.assertIn("ValidateSaveSnapshotBounds", header)
+        restore_start = source.index("bool AShirePlayerCharacter::RestoreSaveSnapshot")
+        begin_restore = source.index("BeginPersistenceRestore", restore_start)
+        self.assertIn("ValidateSaveSnapshotBounds(Save)", source[restore_start:begin_restore])
+        for token in (
+            'TEXT("QuestStages"), Save->QuestStages.Num(), 128',
+            'TEXT("CompletedStoryBeats"), Save->CompletedStoryBeats.Num(), 512',
+            'TEXT("RouteProgress"), Save->RouteProgress.Num(), 16',
+            'TEXT("NPCMemoryState"), Save->NPCMemoryState.Num(), 128',
+            'TEXT("ChronicleEntryIds"), Save->ChronicleEntryIds.Num(), 1024',
+        ):
+            self.assertIn(token, source)
+        self.assertIn("CurrentSchemaVersion = 6", save_h)
 
 
 

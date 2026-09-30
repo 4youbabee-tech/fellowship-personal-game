@@ -9959,3 +9959,65 @@ else:
         if forbidden in pg221_cpp:
             fail(f"PG-221 audio source contains forbidden synchronous load path: {forbidden}")
 
+
+
+# PG-222: P1C01 long-session persistence rejects oversized payloads before restore mutation.
+pg222_path = ROOT / "Data" / "P1C01SaveLoadLongSessionV1.json"
+if not pg222_path.exists():
+    fail("PG-222 long-session persistence contract missing")
+else:
+    try:
+        pg222 = json.loads(read(pg222_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-222 invalid long-session persistence contract: {exc}")
+        pg222 = {}
+
+    if pg222:
+        if pg222.get("status") != "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING":
+            fail("PG-222 long-session status drifted")
+        runtime = pg222.get("runtime_contract", {})
+        if runtime.get("save_payload_bounds_checked_before_restore_mutation") is not True:
+            fail("PG-222 save payload bounds must be checked before restore mutation")
+        if runtime.get("long_session_unbounded_save_growth_forbidden") is not True:
+            fail("PG-222 unbounded long-session save growth must remain forbidden")
+        bounds = pg222.get("restore_bounds", {})
+        expected = {
+            "max_quest_stages": 128,
+            "max_story_beats": 512,
+            "max_route_progress_entries": 16,
+            "max_npc_memory_buckets": 128,
+            "max_discoveries": 512,
+            "max_insight_milestones": 128,
+            "max_progression_tracks": 64,
+            "max_chronicle_entries": 1024,
+            "max_known_map_regions": 128,
+        }
+        if bounds != expected:
+            fail("PG-222 restore bounds drifted")
+
+    pg222_h = read(resolve_source("Characters/ShirePlayerCharacter.h"))
+    pg222_cpp = read(resolve_source("Characters/ShirePlayerCharacter.cpp"))
+    if "ValidateSaveSnapshotBounds" not in pg222_h or "ValidateSaveSnapshotBounds" not in pg222_cpp:
+        fail("PG-222 bounded save admission API missing")
+
+    restore_start = pg222_cpp.index("bool AShirePlayerCharacter::RestoreSaveSnapshot")
+    begin_restore = pg222_cpp.index("BeginPersistenceRestore", restore_start)
+    pre_transaction = pg222_cpp[restore_start:begin_restore]
+    if "ValidateSaveSnapshotBounds(Save)" not in pre_transaction:
+        fail("PG-222 payload bounds must execute before BeginPersistenceRestore")
+
+    for required in (
+        'TEXT("QuestStages"), Save->QuestStages.Num(), 128',
+        'TEXT("CompletedStoryBeats"), Save->CompletedStoryBeats.Num(), 512',
+        'TEXT("RouteProgress"), Save->RouteProgress.Num(), 16',
+        'TEXT("NPCMemoryState"), Save->NPCMemoryState.Num(), 128',
+        'TEXT("JourneyDiscoveryIds"), Save->JourneyDiscoveryIds.Num(), 512',
+        'TEXT("ChronicleEntryIds"), Save->ChronicleEntryIds.Num(), 1024',
+    ):
+        if required not in pg222_cpp:
+            fail(f"PG-222 bounded save field missing: {required}")
+
+    save_h = read(ROOT / "Source" / "ShireJourney" / "Public" / "SaveGame" / "ShireSaveGame.h")
+    if "CurrentSchemaVersion = 6" not in save_h:
+        fail("PG-222 must not change save schema solely for bounded admission")
+

@@ -1,3 +1,13 @@
+## 2026-09-30 - P1C01 SAVE_LOAD_LONG_SESSION car
+
+- SHIRE_AUDIO_IDENTITY predecessor: **EXACT-HEAD MACHINE-GREEN** on PR #199 / Pre-Unreal #1486 / Unreal Build #1159; merged as `ec96e9e487ecbe91d9563848f685df4bd5c11b0d`.
+- Long-session persistence hardening: **SOURCE-IMPLEMENTED / EXACT-HEAD CI PENDING**.
+- Production save/restore ownership: **UNCHANGED**.
+- Restore transaction + committed-world transform grounding + async checkpoint revision guards: **PRESERVED**.
+- Oversized/corrupt save payload admission: **FAIL-CLOSED BEFORE RESTORE MUTATION**.
+- Serialization schema version: **UNCHANGED (v6)**; this car does not invent undocumented v1/v2 history or force a migration.
+- Human long-session PIE, save/load stress, target-device hitch/memory behavior: **PENDING / NOT CLAIMED**.
+
 ## 2026-09-30 - P1C01 SHIRE_AUDIO_IDENTITY car
 
 - CINEMATIC_CONTROL_HANDOFF predecessor: **EXACT-HEAD MACHINE-GREEN** on PR #198 / Pre-Unreal #1484 / Unreal Build #1157; merged as `3b38698c19a244fde8f2979d73f12cd829576b7f`.

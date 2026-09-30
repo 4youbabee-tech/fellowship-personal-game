@@ -5463,6 +5463,37 @@
       ],
       "evidence_boundary": "SOURCE/RUNTIME IMPLEMENTATION CONTRACT. No final asset, playback/listening, PIE/device/pacing/performance acceptance is implied until matching evidence exists.",
       "authority": "DEC-090_USER_MEGA_TRAIN_AUTHORIZATION"
+    },
+    {
+      "id": "DEC-099",
+      "title": "P1C01 long-session persistence rejects oversized save payloads before restore mutation",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-SAVE-001",
+        "REQ-STABILITY-001",
+        "REQ-QA-001"
+      ],
+      "resolution": "Open SAVE_LOAD_LONG_SESSION after SHIRE_AUDIO_IDENTITY exact-head machine-green. Preserve the existing production save/restore ownership and harden restore admission with bounded container ceilings before BeginPersistenceRestore or any player/quest mutation.",
+      "implementation_contract": [
+        "Register Data/P1C01SaveLoadLongSessionV1.json and WORLD_DETAIL_LEDGER before runtime implementation.",
+        "AShirePlayerCharacter remains the production snapshot/restore path; UShireQuestSubsystem remains logical persistence owner; AChapterWorldRouter remains committed-world/revision owner.",
+        "Restore must reject structurally oversized payloads before BeginPersistenceRestore, quest mutation, player-life mutation or transform scheduling.",
+        "Preserve async checkpoint world-revision guards and queued captured-snapshot semantics.",
+        "Preserve legacy identity canonicalization and committed-world grounded transform restore.",
+        "Do not change SaveSchemaVersion solely for bounded admission; undocumented schema v1/v2 history must not be invented.",
+        "Human long-session PIE, save/load stress and target-device hitch/memory acceptance remain separate evidence."
+      ],
+      "rationale": "Long sessions repeatedly accumulate quest, memory, discovery and knowledge state. The existing production path already protects async checkpoint races and world-commit ordering, so the maximum-safe next reliability step is bounded admission of serialized containers before transactional restore rather than adding another persistence architecture.",
+      "evidence": [
+        "Data/P1C01SaveLoadLongSessionV1.json",
+        "Source/ShireJourney/Public/SaveGame/ShireSaveGame.h",
+        "Source/ShireJourney/Public/Characters/ShirePlayerCharacter.h",
+        "Source/ShireJourney/Private/Characters/ShirePlayerCharacter.cpp",
+        "Source/ShireJourney/Private/Subsystems/ShireQuestSubsystem.cpp",
+        "Source/ShireJourney/Private/World/ChapterWorldRouter.cpp"
+      ],
+      "evidence_boundary": "SOURCE/RUNTIME RELIABILITY CONTRACT. No human long-session PIE/device/performance acceptance is implied until matching evidence exists.",
+      "authority": "DEC-090_USER_MEGA_TRAIN_AUTHORIZATION"
     }
   ],
   "open_conflicts": [],

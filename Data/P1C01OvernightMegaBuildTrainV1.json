@@ -128,7 +128,7 @@
       "order": 10,
       "id": "SHIRE_AUDIO_IDENTITY",
       "type": "CONTENT_INTEGRATION",
-      "status": "GATED",
+      "status": "EXACT_HEAD_MACHINE_GREEN_PR199_PRE1486_UE1159_MERGED_EC96E9",
       "purpose": "Birds, hedges/breeze, farm work, distant laughter, carts, warm interiors, fire/cutlery using approved offline banks and concurrency."
     },
     {
@@ -163,7 +163,8 @@
     "living_shire": "EXACT_HEAD_MACHINE_GREEN_PR196_PRE1478_UE1151_MERGED_A47812",
     "quest_side_activity_coherence": "EXACT_HEAD_MACHINE_GREEN_PR197_PRE1481_UE1154_MERGED_E92688",
     "cinematic_control_handoff": "EXACT_HEAD_MACHINE_GREEN_PR198_PRE1484_UE1157_MERGED_3B3869",
-    "shire_audio_identity": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING"
+    "shire_audio_identity": "EXACT_HEAD_MACHINE_GREEN_PR199_PRE1486_UE1159_MERGED_EC96E9",
+    "save_load_long_session": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING"
   },
   "w00_machine_evidence": {
     "pr": 184,

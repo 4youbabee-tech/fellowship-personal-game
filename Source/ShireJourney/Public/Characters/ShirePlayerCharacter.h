@@ -316,6 +316,7 @@ private:
     FVector StoryCameraTargetSocketOffset = FVector(0.0f, 28.0f, 10.0f);
 
     UShireSaveGame* CreateSaveSnapshot(FName CheckpointId, bool bCheckpointSnapshot) const;
+    bool ValidateSaveSnapshotBounds(const UShireSaveGame* Save) const;
     bool StartCheckpointSnapshotSave(
         UShireSaveGame* Snapshot,
         FName CheckpointId,
