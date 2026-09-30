@@ -1,3 +1,12 @@
+## 2026-09-30 - P1C01 QUEST_SIDE_ACTIVITY_COHERENCE active
+
+- Predecessor LIVING_SHIRE: exact-head machine-green on PR #196 at `149c9570c2cbac4295b0b1c41dca5e06f2e7f5bc` with Pre-Unreal #1478 SUCCESS + Unreal Build #1151 SUCCESS; merged as `a478127559ab54f0ec938377a4962e6a75479d36`.
+- Active runtime car: QUEST_SIDE_ACTIVITY_COHERENCE.
+- UShireQuestSubsystem remains sole quest/story authority.
+- Runtime source now adds a bounded current-window activity projection, P1C01 urgency suppression and explicit duplicate-completion rejection.
+- Status: SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27.2 PROOF PENDING.
+- No PIE/device/visual/pacing/performance acceptance is claimed.
+
 ## 2026-09-30 - P1C01 LIVING_SHIRE source implementation
 
 - CHARACTER_PRESENTATION predecessor closed on PR #195 exact head `24ffa0ddb35756a606fb166d010b1e7ca2940308`: Pre-Unreal #1475 SUCCESS, Unreal Build #1148 SUCCESS, merged as `66caf6168157e0ec171a1e7249ead245e45d8b42`.
