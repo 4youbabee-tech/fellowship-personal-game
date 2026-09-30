@@ -1,3 +1,15 @@
+## 2026-09-30 - P1C01 LOCAL_VISIBLE_WORLD_BOOTSTRAP tooling
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| White template-floor diagnosis | STATIC-IDENTIFIED | `Config/DefaultEngine.ini` points startup/game maps to `/Engine/Maps/Templates/Template_Default` |
+| Production source inventory | STATIC-COUNTED | 399 tracked files under `SourceAssets/Production`: 352 OBJ static/source meshes, 22 MTL, 24 TGA, 1 README |
+| Local production import | SOURCE-IMPLEMENTED / RUN PENDING | `Scripts/bootstrap_local_p1c01_visuals.cmd` reuses `ci_import_production_assets.cmd` + `ShireProductionImport` |
+| Generated `Content/Production` verification | SOURCE-IMPLEMENTED / RUN PENDING | launcher fails closed when zero generated `.uasset` files exist |
+| Template-floor avoidance | SOURCE-IMPLEMENTED / RUN PENDING | local preview launches `/Engine/Maps/Entry`; no permanent DefaultEngine startup-map change |
+| Runtime ownership / Gate 6/7 | UNCHANGED | #200/#201 serialization remains authoritative |
+| PIE / device / visual / pacing / performance | NOT TESTED / NOT ACCEPTED | requires separate real evidence |
+
 ## 2026-09-30 - P1C01 SHIRE_AUDIO_IDENTITY car
 
 - CINEMATIC_CONTROL_HANDOFF predecessor: **EXACT-HEAD MACHINE-GREEN** on PR #198 / Pre-Unreal #1484 / Unreal Build #1157; merged as `3b38698c19a244fde8f2979d73f12cd829576b7f`.
