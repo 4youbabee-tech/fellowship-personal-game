@@ -1,3 +1,13 @@
+## 2026-09-30 - P1C01 exact-head machine proof / next safe car
+
+- PR #189 runtime exact head: `fb4b50bc912dcc36d60089acba9e8980fb6b6ffc`.
+- Pre-Unreal #1464: **SUCCESS**.
+- UE4.27.2 Unreal Build #1137: **SUCCESS** through build/import/Automation/startup/chapter/state/warning/package/runtime-observation stages.
+- LivingWorld member-local cull repair: **MACHINE-PROVEN AT EXACT HEAD / DEFECT-SPECIFIC PIE PENDING**.
+- Cache-centralization guard PG-210: **STATIC-VALIDATED AT EXACT HEAD**.
+- Next density/runtime expansion: **NOT STARTED**; target-device profiling and Gate 6/7 boundaries remain in force.
+- PIE/device/visual/audio-listening/FPS/performance acceptance: **PENDING / NOT CLAIMED**.
+
 ## 2026-09-30 - W00 machine closure / P1C01 mega train V2
 
 - Exact acceptance head: `d6ca8aac03f5a1da07609e61e790ddf8faad8eed`.

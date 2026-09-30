@@ -62,22 +62,34 @@
     {
       "order": 1,
       "id": "DEFECT_EVENT_MEMBER_CULL",
-      "state": "SOURCE_IMPLEMENTED_PROOF_PENDING",
+      "state": "MACHINE_PROVEN_AT_FB4B50BC_PIE_PENDING",
       "scope": "Fix micro-event distance retirement so one far member cannot remove nearby interaction/event members.",
       "proof": [
         "PG-208 member-local cull guard",
         "test_living_world_distance_cull_is_member_local",
         "exact-head UE4 compile/runtime"
-      ]
+      ],
+      "evidence": {
+        "exact_head": "fb4b50bc912dcc36d60089acba9e8980fb6b6ffc",
+        "pre_unreal": "#1464 SUCCESS",
+        "unreal_build": "#1137 SUCCESS",
+        "boundary": "Machine proof only. Defect-specific human PIE/device observation remains pending; do not call this defect fixed or PIE-TESTED."
+      }
     },
     {
       "order": 2,
       "id": "CACHE_REGRESSION_GUARD",
-      "state": "SOURCE_IMPLEMENTED_PROOF_PENDING",
+      "state": "STATIC_VALIDATED_AT_FB4B50BC_PRE1464",
       "scope": "Guard AShireAmbientNPC so UGameplayStatics::GetPlayerPawn remains centralized in GetPlayerPawnCached only.",
       "proof": [
         "PG-210 direct-call centralization guard"
-      ]
+      ],
+      "evidence": {
+        "exact_head": "fb4b50bc912dcc36d60089acba9e8980fb6b6ffc",
+        "pre_unreal": "#1464 SUCCESS",
+        "guard": "PG-210 direct player lookup centralization in AShireAmbientNPC::GetPlayerPawnCached",
+        "boundary": "Static guard proof only; no runtime, PIE, device, visual or performance acceptance."
+      }
     },
     {
       "order": 3,
@@ -213,7 +225,7 @@
     "zero_silent_omission_disposition": "ACTIVE_ALLOWED",
     "warehouse_source_preparation": "ACTIVE_ALLOWED_NO_RUNTIME_PROMOTION",
     "data_contracts": "ACTIVE_ALLOWED",
-    "static_validators": "ACTIVE_ALLOWED",
+    "static_validators": "ACTIVE_ALLOWED_PG210_EXACT_HEAD_STATIC_PROVEN",
     "documentation": "ACTIVE_ALLOWED",
     "save_schema_history_audit": "PARTIAL_HISTORY_RECOVERED_V3_TO_V6",
     "performance_safe_planning": "ACTIVE_ALLOWED_NO_ACCEPTANCE_PROMOTION",

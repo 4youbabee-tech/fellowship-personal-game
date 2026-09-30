@@ -1,3 +1,13 @@
+## 2026-09-30 - P1C01 exact-head gate cleared; cache guard advanced
+
+- Active runtime lane PR #189 exact head `fb4b50bc912dcc36d60089acba9e8980fb6b6ffc` passed Pre-Unreal #1464 and full UE4.27.2 Unreal Build #1137.
+- Unreal #1137 completed editor build, production import, Automation Framework QA, headless startup, chapter audit, route/story state roundtrip, warning guard, Windows package, packaged Runtime Data verification and packaged executable observation.
+- `DEFECT_EVENT_MEMBER_CULL` is therefore **MACHINE-PROVEN AT EXACT HEAD / DEFECT-SPECIFIC PIE STILL PENDING**. This does not call the defect fixed and does not promote PIE/device/visual/performance acceptance.
+- The next safe bounded car, `CACHE_REGRESSION_GUARD`, is **STATIC-VALIDATED AT THE SAME EXACT HEAD** through PG-210 on Pre-Unreal #1464; the guard keeps direct `UGameplayStatics::GetPlayerPawn` use centralized in `AShireAmbientNPC::GetPlayerPawnCached`.
+- No new runtime code is introduced by this evidence/preparation update. The exact runtime branch remains pinned to `fb4b50bc912dcc36d60089acba9e8980fb6b6ffc` while this state update stays isolated on a preparation branch.
+- `SHIRE_WORLD_DENSITY` remains gated: ProjectGovernor still requires target-device DX11 720p Low-Medium profiling before density/expensive presentation expansion, with Gate 6/7 human visual/pacing/performance evidence remaining distinct.
+- No **PIE-TESTED**, **DEVICE-TESTED**, **VISUALLY-ACCEPTED**, audio-listening, FPS or performance acceptance is claimed.
+
 ## 2026-09-30 - W00 automated machine closure + P1C01 maximum-safe mega train V2
 
 - PR #184 exact head `d6ca8aac03f5a1da07609e61e790ddf8faad8eed` passed hosted Pre-Unreal #1435 and full UE4.27.2 Unreal Build #1108, then merged to `develop@4fb15dfff70bfda5a2c023c3d82b3008fb831edc`.

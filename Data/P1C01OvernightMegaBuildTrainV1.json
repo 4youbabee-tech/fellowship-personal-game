@@ -72,7 +72,7 @@
       "order": 2,
       "id": "LIVING_WORLD_EVENT_CULL_SAFETY",
       "type": "RUNTIME_REPAIR",
-      "status": "SOURCE_IMPLEMENTED_PROOF_PENDING",
+      "status": "MACHINE_PROVEN_AT_FB4B50BC_PIE_PENDING",
       "purpose": "Member-local distance retirement so one roaming actor cannot despawn a nearby interaction/event member."
     },
     {
@@ -154,8 +154,8 @@
   ],
   "evidence_boundary": "Authorization and implementation train contract only. Each car retains its own STATIC/COMPILE/PIE/DEVICE/VISUAL/PERFORMANCE evidence boundary.",
   "preparation_progress": {
-    "event_member_cull": "SOURCE_IMPLEMENTED_PROOF_PENDING",
-    "pawn_cache_guard": "SOURCE_IMPLEMENTED_PROOF_PENDING",
+    "event_member_cull": "MACHINE_PROVEN_AT_FB4B50BC_PIE_PENDING",
+    "pawn_cache_guard": "STATIC_VALIDATED_AT_FB4B50BC_PRE1464",
     "save_schema_history": "PARTIAL_HISTORY_RECOVERED_V3_TO_V6_V1_V2_UNDOCUMENTED_DO_NOT_INVENT",
     "source_to_production_bridge": "COMPREHENSIVE_ROWS_EXTENDED",
     "runtime_expansion": "GATED_BY_RELEVANT_PER_CAR_EXACT_HEAD_UE4"
@@ -167,5 +167,12 @@
     "unreal_build": "#1108 SUCCESS",
     "branch_cleanup": "#76 SUCCESS",
     "acceptance_boundary": "Machine closure only. No inherited PIE/device/visual/performance acceptance."
+  },
+  "current_exact_head_evidence": {
+    "pr": 189,
+    "exact_head": "fb4b50bc912dcc36d60089acba9e8980fb6b6ffc",
+    "pre_unreal": "#1464 SUCCESS",
+    "unreal_build": "#1137 SUCCESS",
+    "boundary": "Machine/static evidence only. No PIE/device/visual/performance acceptance is inferred."
   }
 }
