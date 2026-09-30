@@ -1,3 +1,15 @@
+## 2026-09-30 - P1C01 QUEST_SIDE_ACTIVITY_COHERENCE chapter registered before runtime implementation
+
+- Scope: next serialized P1C01 runtime car after LIVING_SHIRE exact-head machine-green and merge.
+- Predecessor evidence: PR #196 exact head `149c9570c2cbac4295b0b1c41dca5e06f2e7f5bc`; Pre-Unreal #1478 SUCCESS; Unreal Build #1151 SUCCESS; merge `a478127559ab54f0ec938377a4962e6a75479d36`.
+- Source basis: Source 01 F1-01/F1-02/F1-03 optional windows; Source 06 optional activity/quest rules; Source 07 mission package rules requiring optional branches to rejoin safely and rewards to remain idempotent.
+- Runtime ownership: UShireQuestSubsystem remains sole quest/story truth and side-activity availability/completion owner. No parallel quest brain.
+- Coherence contract: one bounded safe-window projection, story-beat closing windows, explicit P1C01 urgency suppression, and duplicate-completion rejection.
+- Urgency guard: RingSecret, LeavingHome, KeepOffRoad and FerryEscape suppress casual optional activities even if stale/legacy beat state appears open.
+- Canon invariant: optional activity cannot advance required anchors, alter locked outcomes, or become a hidden dependency of the main quest.
+- Gate: exact-head Pre-Unreal + UE4.27.2 required before merge. PIE/device/visual/pacing/performance acceptance remains separate and is not claimed.
+- Machine contract: `Data/P1C01QuestSideActivityCoherenceV1.json`; guard target PG-219.
+
 ## 2026-09-30 - P1C01 LIVING_SHIRE chapter registered before runtime implementation
 
 - Scope: next serialized P1C01 runtime car after CHARACTER_PRESENTATION exact-head machine-green and merge.
