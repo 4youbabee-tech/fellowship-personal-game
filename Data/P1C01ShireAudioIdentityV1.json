@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "chapter_id": "P1C01",
+  "car_id": "SHIRE_AUDIO_IDENTITY",
+  "status": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
+  "predecessor": {
+    "car_id": "CINEMATIC_CONTROL_HANDOFF",
+    "pr": 198,
+    "exact_head": "46655d2ecdc02a3f1698c9fd0b1b14c09f767946",
+    "pre_unreal": "#1484 SUCCESS",
+    "unreal_build": "#1157 SUCCESS",
+    "merge_sha": "3b38698c19a244fde8f2979d73f12cd829576b7f"
+  },
+  "source_identity": [
+    "birds",
+    "breeze in hedges",
+    "farm work",
+    "distant laughter",
+    "carts",
+    "warm interiors",
+    "fire/cutlery"
+  ],
+  "ownership": {
+    "runtime_owner": "UShireAudioSubsystem",
+    "cue_sources": [
+      "UShireStoryPresentationSubsystem",
+      "UShireDialogueSubsystem"
+    ],
+    "parallel_audio_owner": false
+  },
+  "runtime_contract": {
+    "heavy_audio_loading": "FSoftObjectPath + FStreamableManager async",
+    "missing_assets": "silent logical cue; no sync fallback",
+    "ambience_music_crossfade": true,
+    "voice_ducks_music": true,
+    "localized_sfx_uses_shared_attenuation": true,
+    "decorative_spatial_sfx_burst_bounded": true,
+    "story_critical_sfx_not_blocked_by_decorative_burst": true,
+    "per_cue_repeat_guard": true
+  },
+  "low_spec_budget": {
+    "decorative_spatial_sfx_window_seconds": 0.25,
+    "max_decorative_spatial_sfx_starts_per_window": 6,
+    "per_cue_min_repeat_seconds": 0.06,
+    "target": "6th-gen i7 / 8GB RAM / ~2GB VRAM / DX11 720p Low-Medium / 30 FPS floor"
+  },
+  "asset_boundary": "Final banks remain intake/listening work. This car wires runtime identity/budget only and does not claim final WAV import, mix/master, playback listening, PIE/device or performance acceptance.",
+  "acceptance_boundary": "SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27.2 PROOF PENDING. No PIE/device/listening/visual/pacing/performance acceptance is claimed."
+}

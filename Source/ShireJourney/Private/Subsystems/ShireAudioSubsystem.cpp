@@ -41,6 +41,7 @@ void UShireAudioSubsystem::Initialize(FSubsystemCollectionBase& Collection)
     PendingAudioLoads.Empty();
     PendingSpatialSfx.Empty();
     LastSfxPlaybackTimeSeconds.Empty();
+    RecentDecorativeSfxStartTimes.Empty();
 
     SpatialSfxAttenuation = NewObject<USoundAttenuation>(this);
     if (SpatialSfxAttenuation)
@@ -97,6 +98,7 @@ void UShireAudioSubsystem::Deinitialize()
     PendingAudioLoads.Empty();
     PendingSpatialSfx.Empty();
     LastSfxPlaybackTimeSeconds.Empty();
+    RecentDecorativeSfxStartTimes.Empty();
     PendingVoiceCue = NAME_None;
     SpatialSfxAttenuation = nullptr;
 
@@ -318,7 +320,7 @@ void UShireAudioSubsystem::ApplyMusicDuck(bool bDuck)
     }
 }
 
-bool UShireAudioSubsystem::CanPlaySfxNow(FName CueId)
+bool UShireAudioSubsystem::CanPlaySfxNow(FName CueId, bool bStoryCritical)
 {
     if (CueId == NAME_None)
     {
@@ -338,6 +340,23 @@ bool UShireAudioSubsystem::CanPlaySfxNow(FName CueId)
         {
             return false;
         }
+    }
+
+    if (!bStoryCritical)
+    {
+        const double WindowStart = Now - static_cast<double>(DecorativeSfxWindowSeconds);
+        RecentDecorativeSfxStartTimes.RemoveAll(
+            [WindowStart](double TimeSeconds)
+            {
+                return TimeSeconds < WindowStart;
+            });
+
+        if (RecentDecorativeSfxStartTimes.Num() >= MaxDecorativeSfxStartsPerWindow)
+        {
+            return false;
+        }
+
+        RecentDecorativeSfxStartTimes.Add(Now);
     }
 
     LastSfxPlaybackTimeSeconds.Add(CueId, Now);
@@ -425,7 +444,7 @@ void UShireAudioSubsystem::SetMusicCue(FName CueId)
 
 void UShireAudioSubsystem::PlaySfxCue(FName CueId)
 {
-    if (!CanPlaySfxNow(CueId))
+    if (!CanPlaySfxNow(CueId, true))
     {
         return;
     }
@@ -448,7 +467,7 @@ void UShireAudioSubsystem::PlaySfxCueAtLocation(
     float VolumeMultiplier,
     float PitchMultiplier)
 {
-    if (!GetWorld() || !CanPlaySfxNow(CueId))
+    if (!GetWorld() || !CanPlaySfxNow(CueId, false))
     {
         return;
     }

@@ -213,8 +213,11 @@ class SourceContractTests(unittest.TestCase):
             cars["QUEST_SIDE_ACTIVITY_COHERENCE"]["status"],
             "EXACT_HEAD_MACHINE_GREEN_PR197_PRE1481_UE1154_MERGED_E92688",
         )
+        self.assertEqual(
+            cars["CINEMATIC_CONTROL_HANDOFF"]["status"],
+            "EXACT_HEAD_MACHINE_GREEN_PR198_PRE1484_UE1157_MERGED_3B3869",
+        )
         for car_id in (
-            "CINEMATIC_CONTROL_HANDOFF",
             "SHIRE_AUDIO_IDENTITY",
             "SAVE_LOAD_LONG_SESSION",
             "TARGET_DEVICE_PROFILE_AND_GATE67",
@@ -447,6 +450,33 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("OnCinematicStateChanged.RemoveDynamic", director_cpp)
         self.assertIn("HandleCinematicStateChanged", director_cpp)
         self.assertIn("Presentation->ReleaseCinematicLock();", director_cpp)
+
+
+
+    def test_p1c01_shire_audio_identity_is_async_and_bounded(self):
+        root = Path(__file__).resolve().parents[1]
+        contract = json.loads((root / "Data" / "P1C01ShireAudioIdentityV1.json").read_text(encoding="utf-8"))
+        self.assertEqual(contract["status"], "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING")
+        self.assertEqual(
+            contract["source_identity"],
+            ["birds", "breeze in hedges", "farm work", "distant laughter", "carts", "warm interiors", "fire/cutlery"],
+        )
+        self.assertEqual(contract["low_spec_budget"]["max_decorative_spatial_sfx_starts_per_window"], 6)
+        self.assertEqual(contract["low_spec_budget"]["decorative_spatial_sfx_window_seconds"], 0.25)
+        self.assertTrue(contract["runtime_contract"]["decorative_spatial_sfx_burst_bounded"])
+        self.assertTrue(contract["runtime_contract"]["story_critical_sfx_not_blocked_by_decorative_burst"])
+
+        header = (root / "Source" / "ShireJourney" / "Public" / "Subsystems" / "ShireAudioSubsystem.h").read_text(encoding="utf-8")
+        source = (root / "Source" / "ShireJourney" / "Private" / "Subsystems" / "ShireAudioSubsystem.cpp").read_text(encoding="utf-8")
+        self.assertIn("RecentDecorativeSfxStartTimes", header)
+        self.assertIn("DecorativeSfxWindowSeconds = 0.25f", header)
+        self.assertIn("MaxDecorativeSfxStartsPerWindow = 6", header)
+        self.assertIn("RequestAsyncLoad", source)
+        self.assertIn("CanPlaySfxNow(CueId, true)", source)
+        self.assertIn("CanPlaySfxNow(CueId, false)", source)
+        self.assertIn("RecentDecorativeSfxStartTimes.RemoveAll", source)
+        for forbidden in ("LoadObject<", "StaticLoadObject", "RequestSyncLoad"):
+            self.assertNotIn(forbidden, source)
 
 
 

@@ -1,3 +1,16 @@
+## 2026-09-30 - P1C01 SHIRE_AUDIO_IDENTITY chapter registered before runtime implementation
+
+- Scope: next serialized P1C01 runtime car after CINEMATIC_CONTROL_HANDOFF exact-head machine-green and merge.
+- Predecessor evidence: PR #198 exact head `46655d2ecdc02a3f1698c9fd0b1b14c09f767946`; Pre-Unreal #1484 SUCCESS; Unreal Build #1157 SUCCESS; merge `3b38698c19a244fde8f2979d73f12cd829576b7f`.
+- Source identity: birds, hedge breeze, farm work, distant laughter, carts, warm interiors and fire/cutlery.
+- Runtime ownership: UShireAudioSubsystem remains sole runtime audio owner; cue requests continue from StoryPresentation/Dialogue systems.
+- Streaming invariant: heavy/nonresident audio uses FSoftObjectPath + FStreamableManager async; missing authored assets remain silent and never trigger synchronous fallback loading.
+- Low-spec concurrency invariant: decorative localized SFX use shared attenuation plus a bounded start window of at most 6 starts per 0.25 seconds; the existing per-cue 0.06-second repeat guard remains.
+- Priority invariant: story-critical SFX are not dropped merely because decorative spatial ambience/foley exhausted its burst budget.
+- Asset boundary: final WAV masters/intake/listening/mix remain separate work; this chapter does not claim final audio-bank integration or listening acceptance.
+- Gate: exact-head Pre-Unreal + UE4.27.2 required before merge. PIE/device/listening/pacing/performance acceptance remains separate and is not claimed.
+- Machine contract: `Data/P1C01ShireAudioIdentityV1.json`; guard target PG-221.
+
 ## 2026-09-30 - P1C01 CINEMATIC_CONTROL_HANDOFF chapter registered before runtime implementation
 
 - Scope: next serialized P1C01 runtime car after QUEST_SIDE_ACTIVITY_COHERENCE exact-head machine-green and merge.

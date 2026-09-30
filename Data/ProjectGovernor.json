@@ -5429,6 +5429,40 @@
       ],
       "evidence_boundary": "SOURCE/RUNTIME IMPLEMENTATION CONTRACT. No PIE/device/visual/pacing/performance acceptance is implied until matching evidence exists.",
       "authority": "DEC-090_USER_MEGA_TRAIN_AUTHORIZATION"
+    },
+    {
+      "id": "DEC-098",
+      "title": "P1C01 Shire audio identity uses existing async audio ownership with bounded decorative concurrency",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WORLD-001",
+        "REQ-PERF-001",
+        "REQ-STABILITY-001",
+        "REQ-QA-001"
+      ],
+      "resolution": "Open SHIRE_AUDIO_IDENTITY after CINEMATIC_CONTROL_HANDOFF exact-head machine-green. Preserve UShireAudioSubsystem as the sole runtime audio owner, formalize the Shire sonic identity, and add a low-spec decorative spatial-SFX burst budget without delaying story-critical cues.",
+      "implementation_contract": [
+        "Register Data/P1C01ShireAudioIdentityV1.json and WORLD_DETAIL_LEDGER before runtime implementation.",
+        "Shire sonic identity is birds, hedge breeze, farm work, distant laughter, carts, warm interiors and fire/cutlery.",
+        "UShireAudioSubsystem remains the sole runtime audio owner; no parallel ambience or music manager is authorized.",
+        "Heavy/nonresident audio remains FSoftObjectPath + FStreamableManager asynchronous; missing assets stay silent with no synchronous fallback.",
+        "Localized decorative SFX retain shared attenuation and are limited to at most six starts inside a 0.25-second window plus the existing per-cue repeat guard.",
+        "Story-critical one-shot cues must not be blocked solely by decorative burst saturation.",
+        "Ambience/music fades, voice attachment and voice music-ducking remain unchanged.",
+        "Final WAV master intake, playback/listening, mix/master, PIE/device and target-performance acceptance remain separate evidence."
+      ],
+      "rationale": "Source 11 and the Part I sonic plan define the Shire through birds, hedge breeze, farm work, distant laughter, carts, warm interiors and fire/cutlery, while the complete P1C01 audio-bank contract requires bounded voice/fauna/foley/spot-ambience concurrency and story-critical priority. The existing async subsystem already owns routing and streaming, so the safe production step is to harden its budget rather than create another audio architecture.",
+      "evidence": [
+        "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX",
+        "Data/Part1SonicWorldPlan.json",
+        "Data/P1C01CompleteAudioBankV1.json",
+        "Data/P1C01AudioFoleyAmbiencePrepV1.json",
+        "Data/P1C01ShireAudioIdentityV1.json",
+        "Source/ShireJourney/Public/Subsystems/ShireAudioSubsystem.h",
+        "Source/ShireJourney/Private/Subsystems/ShireAudioSubsystem.cpp"
+      ],
+      "evidence_boundary": "SOURCE/RUNTIME IMPLEMENTATION CONTRACT. No final asset, playback/listening, PIE/device/pacing/performance acceptance is implied until matching evidence exists.",
+      "authority": "DEC-090_USER_MEGA_TRAIN_AUTHORIZATION"
     }
   ],
   "open_conflicts": [],
