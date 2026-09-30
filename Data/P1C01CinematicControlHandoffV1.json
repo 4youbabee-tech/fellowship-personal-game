@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "chapter_id": "P1C01",
+  "car_id": "CINEMATIC_CONTROL_HANDOFF",
+  "status": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
+  "predecessor": {
+    "car_id": "QUEST_SIDE_ACTIVITY_COHERENCE",
+    "pr": 197,
+    "exact_head": "10fa10ac47deed372d3a29c14dd30c1c3b5a5522",
+    "pre_unreal": "#1481 SUCCESS",
+    "unreal_build": "#1154 SUCCESS",
+    "merge_sha": "e926889f9328e238afaffb16f9f9dabf58ce9040"
+  },
+  "ownership": {
+    "presentation_state": "UShireStoryPresentationSubsystem",
+    "camera_handoff": "AStoryPresentationDirector",
+    "quest_story_truth": "UShireQuestSubsystem",
+    "world_commit_truth": "AChapterWorldRouter",
+    "parallel_cinematic_state_owner": false
+  },
+  "runtime_contract": {
+    "bounded_cinematic_lock": true,
+    "skip_release_uses_same_exit_path": true,
+    "camera_release_on_cinematic_unlock": true,
+    "chapter_change_forces_release": true,
+    "quest_route_save_state_mutation_from_presentation": false,
+    "authored_external_camera_not_stolen": true,
+    "stale_runtime_camera_after_skip": false
+  },
+  "p1c01_focus_beats": [
+    "BilboDisappearance"
+  ],
+  "canon_boundary": [
+    "Presentation may frame a locked beat but cannot change quest/story outcomes.",
+    "Skipping presentation changes presentation state only; story postconditions remain owned by quest/story systems.",
+    "Original project-authored dialogue only; no copied film or Tolkien dialogue."
+  ],
+  "acceptance_boundary": "SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27.2 PROOF PENDING. No PIE/device/visual/pacing/performance acceptance is claimed."
+}
