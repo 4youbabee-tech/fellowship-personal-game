@@ -34,7 +34,8 @@ public:
         const FVector& GateBOffset,
         const FVector& GateCOffset,
         bool bInRequireCrouch = false,
-        float InMaxCompletionSeconds = 0.0f);
+        float InMaxCompletionSeconds = 0.0f,
+        FName InCompletionStoryBeat = NAME_None);
 
 protected:
     virtual void BeginPlay() override;

@@ -9539,7 +9539,7 @@ else:
         pg215 = {}
 
     if pg215:
-        if pg215.get("status") != "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING":
+        if pg215.get("status") != "EXACT_HEAD_MACHINE_GREEN_PR193_PRE1469_UE1142":
             fail("PG-215 Bag End hero chapter status drifted")
         budget = pg215.get("runtime_budget", {})
         if budget.get("max_hism_cluster_actors") != 3:
@@ -9576,3 +9576,80 @@ else:
     for required in ("ShireArrival", "LongExpectedParty", "RingSecret", "LeavingHome", "BAG_END_STORY_VARIANT"):
         if required not in pg215_variant:
             fail(f"PG-215 Bag End state variant missing required token: {required}")
+
+
+# PG-216: P1C01 party/social loop is source-grounded, bounded and window-gated.
+pg216_path = ROOT / "Data" / "P1C01PartySocialLoopChapterV1.json"
+if not pg216_path.exists():
+    fail("PG-216 party/social loop contract missing")
+else:
+    try:
+        pg216 = json.loads(read(pg216_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-216 invalid party/social loop contract: {exc}")
+        pg216 = {}
+
+    if pg216:
+        if pg216.get("status") != "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING":
+            fail("PG-216 party/social status drifted")
+        budget = pg216.get("runtime_budget", {})
+        if budget.get("max_hism_cluster_actors") != 4 or budget.get("max_hism_instances") != 56:
+            fail("PG-216 party HISM budget drifted")
+        if budget.get("max_unique_party_props") != 16 or budget.get("max_state_variant_props") != 8:
+            fail("PG-216 party prop budget drifted")
+        if budget.get("max_new_optional_trigger_or_challenge_actors") != 6:
+            fail("PG-216 optional actor ceiling drifted")
+        if pg216.get("architecture", {}).get("ambient_population_target_p1c01") != 18:
+            fail("PG-216 party car must not raise P1C01 population above 18")
+
+    pg216_source = read(resolve_source("World/ShirePrototypeWorldBuilder.cpp"))
+    if "void AShirePrototypeWorldBuilder::SpawnPartySocialLoopPass()" not in pg216_source:
+        fail("PG-216 party world pass missing")
+    if "void AShirePrototypeWorldBuilder::ApplyPartyStoryVariant()" not in pg216_source:
+        fail("PG-216 party story variant missing")
+    pg216_start = pg216_source.index("void AShirePrototypeWorldBuilder::SpawnPartySocialLoopPass()")
+    pg216_end = pg216_source.index("void AShirePrototypeWorldBuilder::SpawnSideStories()", pg216_start)
+    pg216_body = pg216_source[pg216_start:pg216_end]
+    if pg216_body.count("SpawnPartyCluster(") != 4:
+        fail("PG-216 party pass must admit exactly four HISM clusters")
+    for required in ("PARTY_SOCIAL_LOOP_PASS", "populationTarget=18", "Configure(Mesh, false"):
+        if required not in pg216_body:
+            fail(f"PG-216 party pass missing required token: {required}")
+    for forbidden in ("LoadObject<", "StaticLoadObject", "RequestSyncLoad", "SpawnActor<AShireAmbientNPC>"):
+        if forbidden in pg216_body:
+            fail(f"PG-216 party pass contains forbidden runtime path: {forbidden}")
+
+    pg216_side = pg216_source[pg216_source.index("void AShirePrototypeWorldBuilder::SpawnSideStories()"):]
+    for required in (
+        "Side_BirthdayDecorReady",
+        "Side_BirthdayFoodReady",
+        "Side_BirthdaySetupComplete",
+        "SHIRE_FIREWORKS_SAFETY",
+        "SHIRE_DRAGON_FIREWORK_MISHAP",
+        "Side_FireworksSafetyComplete",
+        "Side_DragonFireworkMishapComplete",
+    ):
+        if required not in pg216_side:
+            fail(f"PG-216 party side-loop token missing: {required}")
+
+    pg216_plan = json.loads(read(ROOT / "Data" / "ContextualSideActivityPlan.json"))
+    p1_rows = []
+    for chapter in pg216_plan.get("chapters", []):
+        if chapter.get("route") == "FrodoMain" and chapter.get("chapter") == "P1C01":
+            p1_rows = chapter.get("activities", [])
+            break
+    p1_by_id = {row.get("id"): row for row in p1_rows if isinstance(row, dict)}
+    for activity_id, reward_id in (
+        ("SIDE_SHIRE_FIREWORKS_SAFETY", "SHIRE_FIREWORKS_SAFETY"),
+        ("SIDE_SHIRE_DRAGON_FIREWORK_MISHAP", "SHIRE_DRAGON_FIREWORK_MISHAP"),
+    ):
+        row = p1_by_id.get(activity_id)
+        if not row:
+            fail(f"PG-216 side activity missing: {activity_id}")
+            continue
+        if row.get("available_after") != "PartyArrival" or row.get("ends_before") != "BilboDisappearance":
+            fail(f"PG-216 party activity window drifted: {activity_id}")
+        if row.get("discovery_reward_id") != reward_id:
+            fail(f"PG-216 party activity reward drifted: {activity_id}")
+        if row.get("may_advance_required_anchor") or row.get("may_change_canon_outcome") or row.get("future_knowledge_allowed"):
+            fail(f"PG-216 canon-unsafe party activity flags: {activity_id}")

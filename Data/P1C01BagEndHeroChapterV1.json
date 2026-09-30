@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "car_id": "P1C01_BAG_END_HERO_CHAPTER_V1",
-  "status": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
+  "status": "EXACT_HEAD_MACHINE_GREEN_PR193_PRE1469_UE1142",
   "authority": [
     "Data/ProjectGovernor.json",
     "Docs/WORLD_DETAIL_LEDGER.md",
@@ -59,7 +59,7 @@
     "later_device": [
       "720p Low-Medium FPS/frame-time/hitches/RAM/VRAM on target-class hardware"
     ],
-    "boundary": "Source implementation candidate. Exact-head Pre-Unreal and UE4.27.2 proof pending; PIE/device/visual/pacing/performance remain separate evidence."
+    "boundary": "PR #193 exact head passed Pre-Unreal #1469 and Unreal Build #1142. PIE/device/visual/pacing/performance remain separate evidence."
   },
   "runtime_implementation": {
     "owner": "ShirePrototypeWorldBuilder",
@@ -77,5 +77,13 @@
     "tick": "none",
     "state_owner": "ShireQuestSubsystem delegates",
     "interior": "CONTENT_PENDING_DEDICATED_FBX_KIT_AND_PROVENANCE"
+  },
+  "machine_evidence": {
+    "pr": 193,
+    "exact_head": "45ea51bc64609d2781a4bb5bdbbdbdef3c9094a1",
+    "merged_develop": "488159e0eeb2f2c6ee892ef4018da8f60d117744",
+    "pre_unreal": "#1469 SUCCESS",
+    "unreal_build": "#1142 SUCCESS",
+    "boundary": "Exact-head static/C++/headless machine proof only; no PIE/device/visual/performance acceptance."
   }
 }

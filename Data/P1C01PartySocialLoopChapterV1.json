@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "car_id": "P1C01_PARTY_SOCIAL_LOOP_V1",
+  "status": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Docs/WORLD_DETAIL_LEDGER.md",
+    "01_STORY_AND_TIMELINE_BIBLE",
+    "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "Data/ContextualSideActivityPlan.json"
+  ],
+  "purpose": "Turn the F1-01 birthday field into a dense playable social hub with party setup, bounded guest interactions and canon-safe fireworks activities while preserving the locked Bilbo/Ring outcome.",
+  "source_scope": {
+    "f1_01": "Party setup, social onboarding, fireworks are the safe optional window; Bilbo leaves and Ring passes to Frodo remains locked.",
+    "act_f1_01": "Tables, food, decorations, guest interactions.",
+    "act_f1_02": "Select, place/aim and time launch safely; reward spectacle/reactions/party score.",
+    "act_f1_03": "Comic stealth/interact sequence with fixed outcome; unique dialogue."
+  },
+  "architecture": {
+    "quest_owner": "ShireQuestSubsystem",
+    "optional_trigger_owner": "AShireQuestTrigger",
+    "multi_step_activity_owner": "AShireTraversalChallenge",
+    "ambient_population_owner": "LivingWorldDirector",
+    "npc_context_owner": "ShireNPCContextSubsystem",
+    "ambient_population_target_p1c01": 18,
+    "synchronous_heavy_load": false,
+    "per_frame_scan": false
+  },
+  "runtime_budget": {
+    "max_hism_cluster_actors": 4,
+    "max_hism_instances": 56,
+    "max_unique_party_props": 16,
+    "max_state_variant_props": 8,
+    "max_new_optional_trigger_or_challenge_actors": 6,
+    "collision_for_new_decorative_detail": "none",
+    "ambient_population_target_p1c01": 18
+  },
+  "activity_windows": {
+    "birthday_setup": {
+      "open_after": "ShireOpening",
+      "close_at": "PartyArrival"
+    },
+    "fireworks": {
+      "open_after": "PartyArrival",
+      "close_at": "BilboDisappearance"
+    },
+    "dragon_mishap": {
+      "open_after": "PartyArrival",
+      "close_at": "BilboDisappearance",
+      "fixed_outcome": true
+    },
+    "escalation_rule": "All casual party content must stop being available once BilboDisappearance/RingSecret escalation makes it implausible."
+  },
+  "acceptance": {
+    "exact_head_required": [
+      "Pre-Unreal Validation",
+      "UE4.27.2 Unreal Build Validation"
+    ],
+    "later_human": [
+      "PIE optional-window/retry review",
+      "party readability/pacing",
+      "fireworks interaction readability",
+      "visual composition"
+    ],
+    "later_device": [
+      "720p Low-Medium FPS/frame-time/hitches/RAM/VRAM"
+    ],
+    "boundary": "Source implementation candidate. Exact-head Pre-Unreal + UE4.27.2 pending; PIE/device/visual/pacing/performance remain separate evidence."
+  },
+  "runtime_implementation": {
+    "owner": "ShirePrototypeWorldBuilder + existing ShireTraversalChallenge/ShireQuestTrigger",
+    "world_function": "SpawnPartySocialLoopPass",
+    "state_function": "ApplyPartyStoryVariant",
+    "world_marker": "PARTY_SOCIAL_LOOP_PASS",
+    "state_marker": "PARTY_SOCIAL_STORY_VARIANT",
+    "hism_cluster_configured": 4,
+    "hism_instance_configured": 48,
+    "static_party_props_configured": 14,
+    "setup_state_props_configured": 4,
+    "celebration_state_props_configured": 4,
+    "new_optional_triggers_configured": 3,
+    "new_multi_step_activities_configured": 2,
+    "fireworks_discovery_id": "SHIRE_FIREWORKS_SAFETY",
+    "dragon_mishap_discovery_id": "SHIRE_DRAGON_FIREWORK_MISHAP",
+    "ambient_population_target_p1c01": 18,
+    "transition_spawn_destroy_churn": false,
+    "state_owner": "ShireQuestSubsystem story beats/delegates"
+  }
+}

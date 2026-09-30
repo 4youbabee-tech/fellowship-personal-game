@@ -257,6 +257,7 @@ void AShirePrototypeWorldBuilder::BeginPlay()
 
     ApplyStoryAtmosphere();
     ApplyBagEndStoryVariant();
+    ApplyPartyStoryVariant();
 }
 
 void AShirePrototypeWorldBuilder::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -816,19 +817,61 @@ void AShirePrototypeWorldBuilder::HandleActiveQuestChanged(FName QuestId)
 {
     ApplyStoryAtmosphere();
     ApplyBagEndStoryVariant();
+    ApplyPartyStoryVariant();
 }
 
 void AShirePrototypeWorldBuilder::HandleQuestStageChanged(FName QuestId, int32 NewStage)
 {
     ApplyStoryAtmosphere();
     ApplyBagEndStoryVariant();
+    ApplyPartyStoryVariant();
 }
 
 void AShirePrototypeWorldBuilder::HandleStoryBeatTriggered(FName StoryBeatId)
 {
     ApplyStoryAtmosphere();
     ApplyBagEndStoryVariant();
+    ApplyPartyStoryVariant();
 }
+
+void AShirePrototypeWorldBuilder::ApplyPartyStoryVariant()
+{
+    if (!QuestSubsystem)
+    {
+        return;
+    }
+
+    const bool bPartyArrived = QuestSubsystem->HasStoryBeatTriggered(TEXT("PartyArrival"));
+    const bool bPartyEnded = QuestSubsystem->HasStoryBeatTriggered(TEXT("BilboDisappearance"));
+    const bool bSetupVisible = !bPartyArrived && !bPartyEnded &&
+        QuestSubsystem->GetActiveQuestId() == TEXT("ShireArrival");
+    const bool bCelebrationVisible = bPartyArrived && !bPartyEnded;
+
+    for (AStaticMeshActor* Actor : PartySetupVariantActors)
+    {
+        if (IsValid(Actor))
+        {
+            Actor->SetActorHiddenInGame(!bSetupVisible);
+        }
+    }
+    for (AStaticMeshActor* Actor : PartyCelebrationVariantActors)
+    {
+        if (IsValid(Actor))
+        {
+            Actor->SetActorHiddenInGame(!bCelebrationVisible);
+        }
+    }
+
+    UE_LOG(
+        LogTemp, Verbose,
+        TEXT("PARTY_SOCIAL_STORY_VARIANT setup=%s celebration=%s ended=%s setupProps=%d celebrationProps=%d"),
+        bSetupVisible ? TEXT("visible") : TEXT("hidden"),
+        bCelebrationVisible ? TEXT("visible") : TEXT("hidden"),
+        bPartyEnded ? TEXT("yes") : TEXT("no"),
+        PartySetupVariantActors.Num(),
+        PartyCelebrationVariantActors.Num());
+}
+
 
 void AShirePrototypeWorldBuilder::ApplyBagEndStoryVariant()
 {
@@ -1269,6 +1312,146 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
 }
 
 
+void AShirePrototypeWorldBuilder::SpawnPartySocialLoopPass()
+{
+    if (!GetWorld())
+    {
+        return;
+    }
+
+    const FVector PartyCenter(280.0f, 1320.0f, 0.0f);
+    UStaticMesh* CommonSackBale = ResolveResidentStaticMesh(
+        TEXT("/Game/Production/World/Common/SM_CommonSackBale.SM_CommonSackBale"));
+    UStaticMesh* CommonCargoCrate = ResolveResidentStaticMesh(
+        TEXT("/Game/Production/World/Common/SM_CommonCargoCrate.SM_CommonCargoCrate"));
+    UStaticMesh* CommonFlowerPlanter = ResolveResidentStaticMesh(
+        TEXT("/Game/Production/World/Common/SM_CommonFlowerPlanter.SM_CommonFlowerPlanter"));
+    UStaticMesh* CommonLongBench = ResolveResidentStaticMesh(
+        TEXT("/Game/Production/World/Common/SM_CommonLongBench.SM_CommonLongBench"));
+    UStaticMesh* CommonMarketTable = ResolveResidentStaticMesh(
+        TEXT("/Game/Production/World/Common/SM_CommonMarketTable.SM_CommonMarketTable"));
+    UStaticMesh* CommonMarketCanopy = ResolveResidentStaticMesh(
+        TEXT("/Game/Production/World/Common/SM_CommonMarketCanopy.SM_CommonMarketCanopy"));
+    UStaticMesh* CommonWheelbarrow = ResolveResidentStaticMesh(
+        TEXT("/Game/Production/World/Common/SM_CommonWheelbarrow.SM_CommonWheelbarrow"));
+    UStaticMesh* CommonBarrel = ResolveResidentStaticMesh(
+        TEXT("/Game/Production/World/Common/SM_CommonBarrel.SM_CommonBarrel"));
+
+    int32 ClusterCount = 0;
+    int32 InstanceCount = 0;
+    auto SpawnPartyCluster = [this, &ClusterCount, &InstanceCount](
+        UStaticMesh* Mesh, const TCHAR* Tag, int32 StartCull, int32 EndCull,
+        const TArray<FTransform>& Placements)
+    {
+        if (!Mesh || Placements.Num() == 0)
+        {
+            return;
+        }
+        AWorldDetailCluster* Cluster = GetWorld()->SpawnActor<AWorldDetailCluster>();
+        if (!Cluster)
+        {
+            return;
+        }
+        Cluster->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
+        Cluster->Tags.AddUnique(TEXT("P1C01PartySocialDetail"));
+        Cluster->Tags.AddUnique(FName(Tag));
+        Cluster->Configure(Mesh, false, StartCull, EndCull);
+        for (const FTransform& T : Placements)
+        {
+            Cluster->AddDetailInstance(T.GetLocation(), T.Rotator(), T.GetScale3D());
+        }
+        ++ClusterCount;
+        InstanceCount += Cluster->GetDetailCount();
+    };
+
+    auto RingPlacements = [&PartyCenter](float Radius, int32 Count, float Z, float Scale, float YawOffset)
+    {
+        TArray<FTransform> Out;
+        Out.Reserve(Count);
+        for (int32 Index = 0; Index < Count; ++Index)
+        {
+            const float Angle = (360.0f / static_cast<float>(Count)) * static_cast<float>(Index) + YawOffset;
+            const float Radians = FMath::DegreesToRadians(Angle);
+            const FVector P = PartyCenter + FVector(FMath::Cos(Radians) * Radius, FMath::Sin(Radians) * Radius, Z);
+            Out.Emplace(FRotator(0.0f, Angle + 90.0f, 0.0f), P, FVector(Scale + 0.03f * static_cast<float>(Index % 3)));
+        }
+        return Out;
+    };
+
+    SpawnPartyCluster(CommonSackBale, TEXT("P1C01PartyFoodStores"), 800, 3800,
+        RingPlacements(610.0f, 12, 0.0f, 0.55f, 5.0f));
+    SpawnPartyCluster(CommonCargoCrate, TEXT("P1C01PartySupplyCrates"), 900, 4200,
+        RingPlacements(760.0f, 12, 0.0f, 0.52f, 18.0f));
+    SpawnPartyCluster(CommonFlowerPlanter, TEXT("P1C01PartyDecorPlanters"), 700, 3400,
+        RingPlacements(500.0f, 12, 0.0f, 0.50f, 2.0f));
+    SpawnPartyCluster(ProductionLanternMesh, TEXT("P1C01PartyLanternRing"), 1000, 4600,
+        RingPlacements(880.0f, 12, 16.0f, 0.52f, 0.0f));
+
+    int32 StaticPropCount = 0;
+    auto SpawnPartyProp = [this, &StaticPropCount](
+        UStaticMesh* Mesh, const FVector& Location, const FVector& Scale, const FRotator& Rotation)
+    {
+        AStaticMeshActor* Actor = SpawnShape(Mesh, Location, Scale, FLinearColor::White, Rotation, false);
+        if (Actor)
+        {
+            Actor->Tags.AddUnique(TEXT("P1C01PartySocialDetail"));
+            ++StaticPropCount;
+        }
+        return Actor;
+    };
+
+    const FVector TableOffsets[] = {
+        FVector(-420,-150,0), FVector(-100,-190,0), FVector(240,-160,0),
+        FVector(-310,170,0), FVector(40,210,0), FVector(380,150,0)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(TableOffsets); ++Index)
+    {
+        SpawnPartyProp(ProductionPicnicTableMesh, PartyCenter + TableOffsets[Index],
+            FVector(0.72f), FRotator(0.0f, static_cast<float>((Index % 3) * 4 - 4), 0.0f));
+    }
+    SpawnPartyProp(CommonLongBench, PartyCenter + FVector(-560,40,0), FVector(0.68f), FRotator(0,8,0));
+    SpawnPartyProp(CommonLongBench, PartyCenter + FVector(560,20,0), FVector(0.68f), FRotator(0,-8,0));
+    SpawnPartyProp(CommonMarketCanopy, PartyCenter + FVector(-260,-400,0), FVector(0.68f), FRotator(0,6,0));
+    SpawnPartyProp(CommonMarketCanopy, PartyCenter + FVector(300,-405,0), FVector(0.68f), FRotator(0,-6,0));
+    SpawnPartyProp(ProductionLoadedCartMesh, PartyCenter + FVector(780,-360,0), FVector(0.58f), FRotator(0,95,0));
+    SpawnPartyProp(CommonBarrel, PartyCenter + FVector(690,-250,0), FVector(0.60f), FRotator::ZeroRotator);
+    SpawnPartyProp(CommonBarrel, PartyCenter + FVector(735,-205,0), FVector(0.56f), FRotator(0,15,0));
+    SpawnPartyProp(ProductionHaystackMesh, PartyCenter + FVector(-760,-330,0), FVector(0.62f), FRotator(0,-12,0));
+
+    auto SpawnStateProp = [this, &PartyCenter](
+        TArray<AStaticMeshActor*>& Target, UStaticMesh* Mesh,
+        const FVector& Offset, const FVector& Scale, const FRotator& Rotation, const TCHAR* Tag)
+    {
+        AStaticMeshActor* Actor = SpawnShape(Mesh, PartyCenter + Offset, Scale, FLinearColor::White, Rotation, false);
+        if (!Actor)
+        {
+            return;
+        }
+        Actor->Tags.AddUnique(TEXT("P1C01PartyStateVariant"));
+        Actor->Tags.AddUnique(FName(Tag));
+        Actor->SetActorHiddenInGame(true);
+        Actor->SetActorEnableCollision(false);
+        Target.Add(Actor);
+    };
+
+    SpawnStateProp(PartySetupVariantActors, CommonWheelbarrow, FVector(-690,310,0), FVector(0.62f), FRotator(0,25,0), TEXT("P1C01PartySetupState"));
+    SpawnStateProp(PartySetupVariantActors, CommonCargoCrate, FVector(-610,350,0), FVector(0.62f), FRotator(0,-8,0), TEXT("P1C01PartySetupState"));
+    SpawnStateProp(PartySetupVariantActors, CommonMarketTable, FVector(610,345,0), FVector(0.68f), FRotator(0,5,0), TEXT("P1C01PartySetupState"));
+    SpawnStateProp(PartySetupVariantActors, CommonSackBale, FVector(690,310,0), FVector(0.60f), FRotator(0,-12,0), TEXT("P1C01PartySetupState"));
+
+    SpawnStateProp(PartyCelebrationVariantActors, ProductionLanternMesh, FVector(-480,410,20), FVector(0.68f), FRotator::ZeroRotator, TEXT("P1C01PartyCelebrationState"));
+    SpawnStateProp(PartyCelebrationVariantActors, ProductionLanternMesh, FVector(500,410,20), FVector(0.68f), FRotator::ZeroRotator, TEXT("P1C01PartyCelebrationState"));
+    SpawnStateProp(PartyCelebrationVariantActors, CommonMarketCanopy, FVector(-20,430,0), FVector(0.72f), FRotator(0,2,0), TEXT("P1C01PartyCelebrationState"));
+    SpawnStateProp(PartyCelebrationVariantActors, ProductionMarketStallMesh, FVector(760,80,0), FVector(0.58f), FRotator(0,92,0), TEXT("P1C01PartyCelebrationState"));
+
+    UE_LOG(
+        LogTemp, Display,
+        TEXT("PARTY_SOCIAL_LOOP_PASS clusters=%d instances=%d staticProps=%d setupProps=%d celebrationProps=%d populationTarget=18 collision=none tick=none"),
+        ClusterCount, InstanceCount, StaticPropCount,
+        PartySetupVariantActors.Num(), PartyCelebrationVariantActors.Num());
+}
+
+
 void AShirePrototypeWorldBuilder::SpawnSideStories()
 {
     if (!GetWorld())
@@ -1353,6 +1536,73 @@ void AShirePrototypeWorldBuilder::SpawnSideStories()
         PartyMischief->SideStoryBeatAfterTrigger = TEXT("Side_PartyMischief");
         PartyMischief->ObjectiveMessage = FText::FromString(
             TEXT("Laughter erupts near the fireworks wagon. Someone has clearly been where they were told not to be."));
+    }
+
+    // F1-01 birthday setup chain: three optional local beats, all invalid once
+    // PartyArrival closes the preparation window.
+    AShireQuestTrigger* PartyDecorations = GetWorld()->SpawnActor<AShireQuestTrigger>(
+        FVector(-120, 1060, 75), FRotator::ZeroRotator);
+    if (PartyDecorations)
+    {
+        PartyDecorations->RequiredSideStoryBeat = TEXT("ShireOpening");
+        PartyDecorations->BlockedAfterStoryBeat = TEXT("PartyArrival");
+        PartyDecorations->SideStoryBeatAfterTrigger = TEXT("Side_BirthdayDecorReady");
+        PartyDecorations->ObjectiveMessage = FText::FromString(
+            TEXT("Optional party setup: decorations and lantern positions are ready."));
+    }
+
+    AShireQuestTrigger* PartyFood = GetWorld()->SpawnActor<AShireQuestTrigger>(
+        FVector(300, 1010, 75), FRotator::ZeroRotator);
+    if (PartyFood)
+    {
+        PartyFood->RequiredSideStoryBeat = TEXT("Side_BirthdayDecorReady");
+        PartyFood->BlockedAfterStoryBeat = TEXT("PartyArrival");
+        PartyFood->SideStoryBeatAfterTrigger = TEXT("Side_BirthdayFoodReady");
+        PartyFood->ObjectiveMessage = FText::FromString(
+            TEXT("Optional party setup: food stores and serving tables are in place."));
+    }
+
+    AShireQuestTrigger* PartyGuests = GetWorld()->SpawnActor<AShireQuestTrigger>(
+        FVector(610, 1220, 75), FRotator::ZeroRotator);
+    if (PartyGuests)
+    {
+        PartyGuests->RequiredSideStoryBeat = TEXT("Side_BirthdayFoodReady");
+        PartyGuests->BlockedAfterStoryBeat = TEXT("PartyArrival");
+        PartyGuests->SideStoryBeatAfterTrigger = TEXT("Side_BirthdaySetupComplete");
+        PartyGuests->ObjectiveMessage = FText::FromString(
+            TEXT("Optional party setup complete: the field is ready for Bilbo's guests."));
+    }
+
+    AShireTraversalChallenge* FireworksSafety = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(760, 1180, 75), FRotator::ZeroRotator);
+    if (FireworksSafety)
+    {
+        FireworksSafety->ConfigureActivityChallenge(
+            TEXT("SHIRE_FIREWORKS_SAFETY"),
+            FText::FromString(TEXT("Gandalf's Fireworks")),
+            TEXT("TIMING_CHALLENGE"),
+            FVector(0, 0, 0),
+            FVector(170, 120, 0),
+            FVector(330, -20, 0),
+            false,
+            28.0f,
+            TEXT("Side_FireworksSafetyComplete"));
+    }
+
+    AShireTraversalChallenge* DragonFireworkMishap = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(430, 1510, 75), FRotator::ZeroRotator);
+    if (DragonFireworkMishap)
+    {
+        DragonFireworkMishap->ConfigureActivityChallenge(
+            TEXT("SHIRE_DRAGON_FIREWORK_MISHAP"),
+            FText::FromString(TEXT("A Firework Best Left Alone")),
+            TEXT("STEALTH_LITE"),
+            FVector(0, 0, 0),
+            FVector(150, 80, 0),
+            FVector(290, -40, 0),
+            true,
+            0.0f,
+            TEXT("Side_DragonFireworkMishapComplete"));
     }
 
     AShireTraversalChallenge* FieldRace = GetWorld()->SpawnActor<AShireTraversalChallenge>(
@@ -2913,6 +3163,7 @@ void AShirePrototypeWorldBuilder::BuildPrototypeWorld()
     SpawnScenicDetailPass();
     SpawnWorldDensityDetailPass();
     SpawnBagEndHeroPass();
+    SpawnPartySocialLoopPass();
     SpawnSideStories();
     SpawnStoryActors();
 }

@@ -819,3 +819,25 @@ Purpose: retain visual, material, life, ambience and world-detail ideas discover
 - Interior remains CONTENT_PENDING pending an approved FBX/provenance modular shell.
 - Evidence boundary: **SOURCE-IMPLEMENTED / exact-head Pre-Unreal + UE4.27.2 pending**. Human PIE/device/visual/performance evidence remains separate.
 
+## 2026-09-30 - P1C01 PARTY_AND_SOCIAL_LOOP chapter registration
+
+- Predecessor BAG_END_LIVED_IN_PASS is machine-green: PR #193 exact head `45ea51bc64609d2781a4bb5bdbbdbdef3c9094a1` passed Pre-Unreal #1469 and Unreal Build #1142, then merged as `488159e0eeb2f2c6ee892ef4018da8f60d117744`.
+- Registered next serialized runtime car: **PARTY_AND_SOCIAL_LOOP / P1C01_PARTY_SOCIAL_LOOP_V1**.
+- Source scope is F1-01 only: birthday setup/social onboarding/fireworks. ACT_F1_01 requires tables, food, decorations and guest interactions; ACT_F1_02 requires select/place/aim/time launch safely; ACT_F1_03 permits a comic stealth/interact firework mishap with fixed outcome.
+- Locked outcome remains unchanged: Bilbo leaves and the Ring passes to Frodo.
+- Runtime budget before implementation: <=4 HISM clusters / <=56 decorative instances, <=16 unique party props, <=8 state-variant props, <=6 new optional trigger/challenge actors, ambient population remains 18.
+- Optional content must expire at story escalation, be safe to abandon/retry, and never own mandatory progression.
+- Evidence boundary: **REGISTERED / RUNTIME NOT IMPLEMENTED**.
+
+## 2026-09-30 - P1C01 PARTY_AND_SOCIAL_LOOP runtime implementation
+
+- Implemented the registered F1-01 party/social/fireworks car after BAG_END_LIVED_IN_PASS exact-head machine closure.
+- Party-field presentation now adds 4 zero-Tick/no-collision HISM clusters (48 configured instances), 14 authored non-collision party props, 4 setup-state props and 4 celebration-state props.
+- Story-state visibility remains event-driven from ShireQuestSubsystem: setup before PartyArrival, celebration after PartyArrival, all casual party variants hidden after BilboDisappearance.
+- Birthday setup now has three sequential optional local beats for decorations, food stores and guest readiness; each expires at PartyArrival and owns no mandatory progression.
+- Gandalf Fireworks is implemented as a bounded timing activity and Dragon Firework Mishap as a bounded stealth-lite activity with a fixed optional completion beat. Both exist only from PartyArrival until BilboDisappearance.
+- Activity rewards use the existing ContextualSideActivityPlan -> JourneyDiscoveryRewardPlan -> ShireQuestSubsystem first-time discovery path, preserving anti-farm/save behavior.
+- P1C01 population target remains 18. No new AI owner, Tick loop, synchronous heavy load or crowd Spawn/Destroy churn was introduced.
+- Locked F1-01 outcome remains Bilbo departure + Ring transfer; no copied book/film dialogue was added.
+- Evidence boundary: **SOURCE-IMPLEMENTED / exact-head Pre-Unreal + UE4.27.2 pending**. PIE/device/visual/pacing/performance remain separate.
+
