@@ -1,3 +1,12 @@
+## 2026-09-30 - P1C01 CINEMATIC_CONTROL_HANDOFF active
+
+- Predecessor QUEST_SIDE_ACTIVITY_COHERENCE: exact-head machine-green on PR #197 at `10fa10ac47deed372d3a29c14dd30c1c3b5a5522` with Pre-Unreal #1481 SUCCESS + Unreal Build #1154 SUCCESS; merged as `e926889f9328e238afaffb16f9f9dabf58ce9040`.
+- Active runtime car: CINEMATIC_CONTROL_HANDOFF.
+- UShireStoryPresentationSubsystem remains presentation-state owner; AStoryPresentationDirector remains transient camera owner; quest/save/world truth ownership is unchanged.
+- Scope: unify timed release / skip / chapter handoff onto one exit path so transient presentation cannot leave a stale camera or mutate story state.
+- Status: SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27.2 PROOF PENDING.
+- No PIE/device/visual/pacing/performance acceptance is claimed.
+
 ## 2026-09-30 - P1C01 QUEST_SIDE_ACTIVITY_COHERENCE active
 
 - Predecessor LIVING_SHIRE: exact-head machine-green on PR #196 at `149c9570c2cbac4295b0b1c41dca5e06f2e7f5bc` with Pre-Unreal #1478 SUCCESS + Unreal Build #1151 SUCCESS; merged as `a478127559ab54f0ec938377a4962e6a75479d36`.
