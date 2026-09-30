@@ -103,6 +103,7 @@
     ],
     "animations": "FBX clips on same or retarget-compatible skeleton",
     "qc": [
+      "FBX 2018 compatibility",
       "real skeleton",
       "skin weights",
       "retarget result",
@@ -111,7 +112,8 @@
       "material slots",
       "LOD/cull plan",
       "socket/equipment compatibility"
-    ]
+    ],
+    "fbx_pipeline_compatibility": "UE4.27 FBX 2018-compatible export required"
   },
   "runtime_contract": {
     "heavy_refs": "TSoftObjectPtr/TSoftClassPtr",
