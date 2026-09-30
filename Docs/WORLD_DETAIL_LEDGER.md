@@ -1,3 +1,13 @@
+## 2026-09-30 - P1C01 CHARACTER_PRESENTATION chapter registered before runtime implementation
+
+- Scope: next serialized P1C01 runtime car after PARTY_AND_SOCIAL_LOOP exact-head machine-green and merge.
+- Source basis: Source 02 defines Frodo as a Hobbit/Ring-bearer whose named equipment is story-state driven and must not turn him into a conventional power-fantasy warrior; Gandalf remains a guide whose magic is rare/purposeful. Source 11 requires believable authored presentation, reduced distant animation cost and low-spec character/crowd budgets.
+- Runtime ownership: AShirePlayerCharacter owns playable presentation, AShireNPC owns named-NPC presentation, UShireChapterAssetStreamingSubsystem remains the only skeletal-rig async residency owner, and UShireQuestSubsystem remains story-state truth.
+- Identity contract: named production characters use a stable ProductionCharacterId separate from DisplayName/localization. P1C01 hero cast in this car is Frodo, Gandalf, Bilbo and Sam.
+- Canon equipment guard: Frodo must not show future named sword gear inside P1C01; Gandalf's staff presentation is allowed. No future-knowledge/equipment leak is authorized.
+- Low-spec contract: no synchronous heavy load, no per-frame asset scan, no extra crowd population, existing modular fallback stays visible until a complete skeletal mesh + AnimBP pair resolves, and skeletal meshes use update-rate optimization with rendered-only pose ticking.
+- Gate: exact-head Pre-Unreal + UE4.27.2 required before merge. PIE/device/visual/deformation/performance acceptance remains separate and is not claimed.
+
 ## 2026-09-30 - P1C01 SHIRE_WORLD_DENSITY car registered before runtime implementation
 
 - Scope: first post-mega runtime car for the existing P1C01 aggregation; no chapter renumbering and no new story outcome.
