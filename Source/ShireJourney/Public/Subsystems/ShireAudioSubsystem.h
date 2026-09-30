@@ -102,7 +102,10 @@ private:
     };
     TMap<FName, FPendingSpatialSfx> PendingSpatialSfx;
     TMap<FName, double> LastSfxPlaybackTimeSeconds;
+    TArray<double> RecentDecorativeSfxStartTimes;
     float MinSfxRepeatIntervalSeconds = 0.06f;
+    float DecorativeSfxWindowSeconds = 0.25f;
+    int32 MaxDecorativeSfxStartsPerWindow = 6;
 
     FStreamableManager StreamableManager;
     TMap<FName, TSharedPtr<FStreamableHandle>> PendingAudioLoads;
@@ -122,7 +125,7 @@ private:
         FSoftObjectPath AssetPath,
         FName LoadKey);
     void CancelPendingAudioCategory(FName Category);
-    bool CanPlaySfxNow(FName CueId);
+    bool CanPlaySfxNow(FName CueId, bool bStoryCritical);
     void StartVoicePlayback(FName CueId, USoundBase* Sound);
     void ApplyMusicDuck(bool bDuck);
     AActor* ResolveVoiceSpeakerActor(FName CueId) const;
