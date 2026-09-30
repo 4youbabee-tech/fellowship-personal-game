@@ -121,6 +121,28 @@
           "story_effect": "NONE",
           "may_advance_required_anchor": false,
           "may_change_canon_outcome": false
+        },
+        {
+          "id": "SHIRE_FIREWORKS_SAFETY",
+          "label": "Safe firework preparation at Bilbo's birthday",
+          "available_between": [
+            "PartyArrival",
+            "BilboDisappearance"
+          ],
+          "story_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false
+        },
+        {
+          "id": "SHIRE_DRAGON_FIREWORK_MISHAP",
+          "label": "Comic fixed-outcome firework mishap",
+          "available_between": [
+            "PartyArrival",
+            "BilboDisappearance"
+          ],
+          "story_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false
         }
       ],
       "return_policy": {
