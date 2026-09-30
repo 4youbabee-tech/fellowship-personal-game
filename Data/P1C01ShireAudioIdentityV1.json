@@ -36,7 +36,14 @@
     "localized_sfx_uses_shared_attenuation": true,
     "decorative_spatial_sfx_burst_bounded": true,
     "story_critical_sfx_not_blocked_by_decorative_burst": true,
-    "per_cue_repeat_guard": true
+    "per_cue_repeat_guard": true,
+    "footstep_surface_resolution": "Physical SurfaceType first; legacy material/mesh/actor identity fallback retained until all production surfaces are authored",
+    "footstep_surface_types": [
+      "Grass",
+      "Dirt",
+      "Stone",
+      "Wood"
+    ]
   },
   "low_spec_budget": {
     "decorative_spatial_sfx_window_seconds": 0.25,
