@@ -156,6 +156,10 @@ bool ALivingWorldDirector::LoadEventContract()
         {
             EventCullDistance = FMath::Clamp(static_cast<float>(Value), 2500.0f, 9000.0f);
         }
+        if ((*Budgets)->TryGetNumberField(TEXT("max_active_fauna_groups_near_player"), Value))
+        {
+            MaxActiveFaunaGroups = FMath::Clamp(static_cast<int32>(Value), 0, 4);
+        }
     }
 
     AllowedEventTypesByChapter.Empty();
@@ -635,6 +639,22 @@ FName ALivingWorldDirector::ChooseEventType() const
             continue;
         }
 
+        if (EventType == TEXT("FAUNA"))
+        {
+            int32 ActiveFaunaGroups = 0;
+            for (const FActiveMicroEvent& ActiveEvent : ActiveEvents)
+            {
+                if (ActiveEvent.EventType == TEXT("FAUNA"))
+                {
+                    ++ActiveFaunaGroups;
+                }
+            }
+            if (ActiveFaunaGroups >= MaxActiveFaunaGroups)
+            {
+                continue;
+            }
+        }
+
         // Dead-city and danger-heavy chapters should never fabricate civilian life.
         if (ActiveChapterId == TEXT("P1C06") &&
             EventType != TEXT("PROP_MOTION") &&
@@ -923,6 +943,47 @@ void ALivingWorldDirector::CleanupBaselinePopulation()
     }
 }
 
+void ALivingWorldDirector::GatherActiveAmbientNPCsNear(
+    const FVector& Origin,
+    float Radius,
+    TArray<AShireAmbientNPC*>& OutNPCs) const
+{
+    OutNPCs.Reset();
+    if (Radius <= 0.0f)
+    {
+        return;
+    }
+
+    const float RadiusSq = FMath::Square(Radius);
+    TSet<AShireAmbientNPC*> Seen;
+    auto Admit = [&OutNPCs, &Seen, &Origin, RadiusSq](AShireAmbientNPC* NPC)
+    {
+        if (!NPC || NPC->IsInLivingWorldPool() || Seen.Contains(NPC))
+        {
+            return;
+        }
+        if (FVector::DistSquared2D(Origin, NPC->GetActorLocation()) > RadiusSq)
+        {
+            return;
+        }
+        Seen.Add(NPC);
+        OutNPCs.Add(NPC);
+    };
+
+    for (const TWeakObjectPtr<AShireAmbientNPC>& NPCPtr : BaselinePopulation)
+    {
+        Admit(NPCPtr.Get());
+    }
+
+    for (const FActiveMicroEvent& Event : ActiveEvents)
+    {
+        for (const TWeakObjectPtr<AActor>& ActorPtr : Event.Actors)
+        {
+            Admit(Cast<AShireAmbientNPC>(ActorPtr.Get()));
+        }
+    }
+}
+
 void ALivingWorldDirector::MaintainBaselinePopulation()
 {
     if (!GetWorld() || !QuestSubsystem || QuestSubsystem->GetCurrentRouteId() != TEXT("FrodoMain"))
@@ -1170,6 +1231,7 @@ AShireAmbientNPC* ALivingWorldDirector::SpawnAmbientActor(
         Speed,
         MinWait,
         MaxWait);
+    NPC->SetLivingWorldDirector(this);
     return NPC;
 }
 
