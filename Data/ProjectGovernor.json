@@ -5220,6 +5220,39 @@
       ],
       "evidence_boundary": "SOURCE IMPLEMENTATION CONTRACT. No PIE/device/visual/pacing/performance acceptance is implied until matching evidence exists.",
       "authority": "DEC-090_USER_MEGA_TRAIN_AUTHORIZATION"
+    },
+    {
+      "id": "DEC-092",
+      "title": "P1C01 Bag End hero chapter uses bounded resident dressing and event-driven story variants",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WORLD-001",
+        "REQ-PERF-001",
+        "REQ-STABILITY-001",
+        "REQ-QA-001"
+      ],
+      "resolution": "Open BAG_END_LIVED_IN_PASS as the next serialized P1C01 runtime car after SHIRE_WORLD_DENSITY machine-green evidence. Improve the exterior hero approach and lived-in domestic read with resident meshes, bounded HISM detail and ShireQuestSubsystem-driven Birthday/Departure variants. Dedicated Bag End interior production remains content-pending.",
+      "implementation_contract": [
+        "Register the car in WORLD_DETAIL_LEDGER and Data/P1C01BagEndHeroChapterV1.json before runtime C++ changes.",
+        "Preserve existing Bag End quest/story anchors and locked F1-01/F1-02 outcomes.",
+        "Use only P1C01 resident production meshes; missing optional meshes skip without synchronous loading.",
+        "Repeated local dressing uses AWorldDetailCluster HISM with no Tick and no collision.",
+        "Story variants react to ShireQuestSubsystem delegates; no per-frame scans or parallel state owner.",
+        "Do not raise P1C01 ambient population above 18 in this car.",
+        "Dedicated Bag End interior shell remains CONTENT_PENDING until an approved FBX/provenance asset kit exists.",
+        "Exact-head Pre-Unreal and UE4.27.2 validation are required before merge; PIE/device/visual/performance acceptance remains separate."
+      ],
+      "rationale": "The world bible requires Bag End to read as a dense lived-in Hobbit narrative hub and the Shire as warm domestic landscape with deterministic state variants. The current repository has resident exterior/common props but no dedicated production interior shell, so the safe next visual leap is a bounded exterior hero/state pass rather than inventing an interior.",
+      "evidence": [
+        "03_WORLD_LOCATIONS_AND_MAP_BIBLE: Shire/Hobbiton and Bag End production specifications",
+        "01_STORY_AND_TIMELINE_BIBLE: F1-01/F1-02 state requirements",
+        "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX: F1-01/F1-02 mission contracts",
+        "Docs/P1C01_HOBBITON_BAGEND_ARCHITECTURE.md",
+        "Data/P1C01BagEndHeroChapterV1.json",
+        "Docs/WORLD_DETAIL_LEDGER.md"
+      ],
+      "evidence_boundary": "SCOPE REGISTRATION ONLY. Runtime source, exact-head compile, PIE, device, visual and performance evidence remain pending.",
+      "authority": "DEC-090_USER_MEGA_TRAIN_AUTHORIZATION"
     }
   ],
   "open_conflicts": [],

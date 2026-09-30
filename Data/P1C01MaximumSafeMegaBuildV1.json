@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "P1C01_MAXIMUM_SAFE_MEGA_BUILD_V1",
-  "status": "PREP_ACTIVE_W00_CLOSED_RUNTIME_EXPANSION_GATED_BY_PER_CAR_EXACT_HEAD_UE4",
+  "status": "CAR5_MACHINE_GREEN_CAR6_BAG_END_HERO_REGISTERED",
   "authority": [
     "Data/ProjectGovernor.json",
     "Docs/WORLD_DETAIL_LEDGER.md",
@@ -25,7 +25,7 @@
     "original_dialogue_only": true
   },
   "gate_policy": {
-    "current_gate": "W00 machine closure inherited; current per-car exact-head UE4.27.2 gate",
+    "current_gate": "SHIRE_WORLD_DENSITY machine-green; BAG_END_LIVED_IN_PASS registered as the next serialized runtime car.",
     "runtime_expansion_rule": "W00 packaged/runtime machine evidence is green on PR #184 exact head d6ca8aac03f5a1da07609e61e790ddf8faad8eed. No new runtime feature implementation starts until the relevant current car head completes its required exact-head Pre-Unreal and UE4.27.2 gates and Governor prerequisites permit that car.",
     "allowed_in_parallel_now": [
       "source review and zero-silent-omission disposition",
@@ -102,7 +102,7 @@
     {
       "order": 5,
       "id": "SHIRE_WORLD_DENSITY",
-      "state": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
+      "state": "EXACT_HEAD_MACHINE_GREEN_PR192_PRE1467_UE1140_DEVELOP_PRE1468_UE1141",
       "scope": "Strengthen Hobbiton/fields/party-area lived-in density using current builders and instanced detail without raising unsafe resident budgets.",
       "proof": [
         "PG-214 bounded world-density guard",
@@ -115,7 +115,7 @@
     {
       "order": 6,
       "id": "BAG_END_LIVED_IN_PASS",
-      "state": "GATED",
+      "state": "REGISTERED_RUNTIME_NOT_IMPLEMENTED",
       "scope": "Dense lived-in round-geometry narrative-hub dressing, interaction readability and deterministic story-state variants.",
       "proof": [
         "UE4 exact-head",

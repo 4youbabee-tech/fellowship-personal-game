@@ -800,3 +800,13 @@ Purpose: retain visual, material, life, ambience and world-detail ideas discover
 - Low-spec constraints remain UE4.27.2, DX11 1280x720 Low-Medium, 6th-gen i7 / 8 GB RAM / ~2 GB VRAM, 30 FPS floor target, soft/async heavy loading, pooled transient crowds, ISM/HISM + LOD/culling, FBX animated assets and PNG/TGA final textures.
 - Evidence boundary: preparation/static bookkeeping only. No PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED or PERFORMANCE-ACCEPTED promotion is made here.
 
+## 2026-09-30 - P1C01 BAG_END_LIVED_IN_PASS hero chapter registration
+
+- Predecessor SHIRE_WORLD_DENSITY is machine-green: PR #192 exact head `5a489781c23ed582f9203bd5c6df20d969fef467` passed Pre-Unreal #1467 and Unreal Build #1140; merged `develop@6abc675cacfe9c9b37a63420d72d0b1621b3b7c6` passed Pre-Unreal #1468 and Unreal Build #1141.
+- Registered next serialized runtime car: **BAG_END_LIVED_IN_PASS / P1C01_BAG_END_HERO_CHAPTER_V1**.
+- Source intent: Bag End becomes the dominant lived-in Hobbiton hero landmark with warm domestic approach framing and deterministic Birthday/departure variants. Existing F1-01/F1-02 locked outcomes and story anchors are not moved.
+- Runtime budget before implementation: <=3 zero-Tick/no-collision HISM clusters, <=36 HISM instances, <=12 unique lived-in props, <=6 state-variant props per state, ambient population remains 18.
+- State ownership: ShireQuestSubsystem delegates only; no Tick, global scan, duplicate story authority or extra AI population.
+- Asset boundary: P1C01 already-resident production meshes only. Missing optional detail skips without load. Dedicated Bag End interior is still **CONTENT_PENDING** because the repository has no approved production interior shell/kit.
+- Evidence boundary: **REGISTERED / RUNTIME NOT IMPLEMENTED**. No PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED or PERFORMANCE-ACCEPTED claim.
+

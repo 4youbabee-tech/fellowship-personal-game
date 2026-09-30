@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "car_id": "P1C01_BAG_END_HERO_CHAPTER_V1",
+  "status": "REGISTERED_RUNTIME_NOT_IMPLEMENTED",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Docs/WORLD_DETAIL_LEDGER.md",
+    "01_STORY_AND_TIMELINE_BIBLE",
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "Docs/P1C01_HOBBITON_BAGEND_ARCHITECTURE.md"
+  ],
+  "purpose": "Make Bag End read as the P1C01 hero landmark and lived-in narrative hub without changing quest ownership, increasing AI population, or inventing an unshipped interior.",
+  "source_scope": {
+    "shire": "Warm domestic scale, circular Hobbit architecture, gardens, low-threat exploration, deterministic Birthday/departure state variants.",
+    "bag_end": "Dense lived-in domestic language and narrative-hub readability. Current car owns exterior approach/state dressing only because no dedicated production interior shell exists.",
+    "f1_01": "Birthday preparation/social state before Bilbo leaves and the Ring passes to Frodo.",
+    "f1_02": "Ring-danger/packing/departure state before Frodo leaves the Shire."
+  },
+  "architecture": {
+    "world_builder": "Geometry/dressing and direct references to spawned Bag End state actors only.",
+    "quest_subsystem": "Sole state truth; delegates drive variant changes.",
+    "living_world_director": "Population/pooling authority unchanged.",
+    "npc_context_subsystem": "NPC knowledge/schedule authority unchanged.",
+    "repeated_detail": "AWorldDetailCluster HISM, zero Tick, no collision.",
+    "synchronous_heavy_load": false,
+    "ambient_population_target_p1c01": 18
+  },
+  "runtime_budget": {
+    "max_hism_cluster_actors": 3,
+    "max_hism_instances": 36,
+    "max_unique_lived_in_props": 12,
+    "max_state_variant_props_per_state": 6,
+    "collision_for_new_detail": "none",
+    "per_frame_tick": false
+  },
+  "visual_layers": [
+    "Hero approach framing from the Hobbiton footpath toward Bag End",
+    "Garden/property-edge lived-in detail around the existing round-door landmark",
+    "Domestic work/storage clutter placed away from the traversal line",
+    "Birthday preparation variant",
+    "Frodo departure/packing variant"
+  ],
+  "asset_policy": {
+    "residency": "P1C01 ChapterAssetStreamingPlan assets only",
+    "missing_asset_behavior": "Skip optional detail; never synchronous-load it",
+    "interior": "CONTENT_PENDING_DEDICATED_FBX_KIT_AND_PROVENANCE",
+    "new_textures": "None in this car"
+  },
+  "acceptance": {
+    "exact_head_required": [
+      "Pre-Unreal Validation",
+      "UE4.27.2 Unreal Build Validation"
+    ],
+    "later_human": [
+      "PIE Bag End traversal/collision/readability",
+      "visual composition/state-variant review"
+    ],
+    "later_device": [
+      "720p Low-Medium FPS/frame-time/hitches/RAM/VRAM on target-class hardware"
+    ],
+    "boundary": "Registration only; no runtime/compile/PIE/device/visual/performance claim yet."
+  }
+}

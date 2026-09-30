@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "car_id": "P1C01_SHIRE_WORLD_DENSITY_V1",
-  "status": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
+  "status": "EXACT_HEAD_MACHINE_GREEN_PR192_PRE1467_UE1140_DEVELOP_PRE1468_UE1141",
   "authority": [
     "Data/ProjectGovernor.json",
     "Docs/WORLD_DETAIL_LEDGER.md",
@@ -80,7 +80,7 @@
     "device_later": [
       "720p Low-Medium FPS/frame-time/hitches/RAM/VRAM on target-class hardware"
     ],
-    "boundary": "Source implementation candidate only until exact-head Pre-Unreal + UE4.27.2 succeed. PIE/device/visual/pacing/performance remain separate evidence."
+    "boundary": "PR #192 exact head passed Pre-Unreal #1467 and Unreal Build #1140; merged develop passed Pre-Unreal #1468 and Unreal Build #1141. PIE/device/visual/pacing/performance remain separate evidence."
   },
   "runtime_implementation": {
     "owner": "ShirePrototypeWorldBuilder",
@@ -93,5 +93,15 @@
     "collision": "none",
     "tick": "none",
     "missing_asset_behavior": "skip category without load"
+  },
+  "machine_evidence": {
+    "pr": 192,
+    "exact_pr_head": "5a489781c23ed582f9203bd5c6df20d969fef467",
+    "merged_develop": "6abc675cacfe9c9b37a63420d72d0b1621b3b7c6",
+    "pre_unreal_pr": "#1467 SUCCESS",
+    "unreal_build_pr": "#1140 SUCCESS",
+    "pre_unreal_develop": "#1468 SUCCESS",
+    "unreal_build_develop": "#1141 SUCCESS",
+    "proof_boundary": "Static/C++/headless machine evidence. No PIE/device/visual/pacing/performance acceptance is implied."
   }
 }
