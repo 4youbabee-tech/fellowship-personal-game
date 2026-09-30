@@ -10,6 +10,7 @@
 #include "Dom/JsonObject.h"
 #include "Engine/GameInstance.h"
 #include "Engine/StaticMesh.h"
+#include "EngineUtils.h"
 #include "GameFramework/Pawn.h"
 #include "Kismet/GameplayStatics.h"
 #include "Misc/FileHelper.h"
@@ -90,6 +91,18 @@ void ALivingWorldDirector::EndPlay(const EEndPlayReason::Type EndPlayReason)
         }
     }
     BaselinePopulation.Empty();
+
+    // Persistent ambient residents belong to the committed world builders. The
+    // LivingWorldDirector only holds weak query registration and must never destroy
+    // them during its own shutdown.
+    for (TWeakObjectPtr<AShireAmbientNPC>& NPCPtr : PersistentAmbientNPCs)
+    {
+        if (AShireAmbientNPC* NPC = NPCPtr.Get())
+        {
+            NPC->SetLivingWorldDirector(nullptr);
+        }
+    }
+    PersistentAmbientNPCs.Empty();
 
     for (TWeakObjectPtr<AShireAmbientNPC>& NPCPtr : AmbientNPCPool)
     {
@@ -448,6 +461,7 @@ void ALivingWorldDirector::ResetForCurrentChapter()
     }
 
     ApplyChapterWeatherContext();
+    ReconcilePersistentAmbientNPCRegistry();
 
     const int32* AuditTarget = BaselineTargetByChapter.Find(ActiveChapterId);
     UE_LOG(
@@ -943,6 +957,50 @@ void ALivingWorldDirector::CleanupBaselinePopulation()
     }
 }
 
+void ALivingWorldDirector::ReconcilePersistentAmbientNPCRegistry()
+{
+    PersistentAmbientNPCs.Reset();
+    if (!GetWorld())
+    {
+        return;
+    }
+
+    int32 Registered = 0;
+    for (TActorIterator<AShireAmbientNPC> It(GetWorld()); It; ++It)
+    {
+        AShireAmbientNPC* NPC = *It;
+        if (!NPC ||
+            NPC->IsPendingKillPending() ||
+            NPC->ActorHasTag(TEXT("LivingWorldManaged")) ||
+            NPC->IsInLivingWorldPool())
+        {
+            continue;
+        }
+
+        // Fauna has its own cheap routine path and returns before social-life work.
+        // Register only social-capable persistent residents so nearby queries remain
+        // bounded to useful candidates.
+        if (NPC->RoutineRole == TEXT("Bird") ||
+            NPC->RoutineRole == TEXT("Rabbit") ||
+            NPC->RoutineRole == TEXT("Butterfly"))
+        {
+            continue;
+        }
+
+        NPC->SetLivingWorldDirector(this);
+        PersistentAmbientNPCs.AddUnique(TWeakObjectPtr<AShireAmbientNPC>(NPC));
+        ++Registered;
+    }
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("LivingWorldPersistentAmbientRegistry: chapter=%s revision=%u registered=%d"),
+        *ActiveChapterId.ToString(),
+        AppliedWorldRevision,
+        Registered);
+}
+
 void ALivingWorldDirector::GatherActiveAmbientNPCsNear(
     const FVector& Origin,
     float Radius,
@@ -971,6 +1029,11 @@ void ALivingWorldDirector::GatherActiveAmbientNPCsNear(
     };
 
     for (const TWeakObjectPtr<AShireAmbientNPC>& NPCPtr : BaselinePopulation)
+    {
+        Admit(NPCPtr.Get());
+    }
+
+    for (const TWeakObjectPtr<AShireAmbientNPC>& NPCPtr : PersistentAmbientNPCs)
     {
         Admit(NPCPtr.Get());
     }
