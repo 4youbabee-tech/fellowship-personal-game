@@ -810,3 +810,12 @@ Purpose: retain visual, material, life, ambience and world-detail ideas discover
 - Asset boundary: P1C01 already-resident production meshes only. Missing optional detail skips without load. Dedicated Bag End interior is still **CONTENT_PENDING** because the repository has no approved production interior shell/kit.
 - Evidence boundary: **REGISTERED / RUNTIME NOT IMPLEMENTED**. No PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED or PERFORMANCE-ACCEPTED claim.
 
+## 2026-09-30 - P1C01 BAG_END_LIVED_IN_PASS runtime implementation
+
+- Implemented the registered Bag End hero pass after its ledger/data registration.
+- Exterior composition uses only P1C01 resident meshes and bounded zero-Tick/no-collision dressing: 3 HISM clusters, 34 instances and 8 static lived-in props.
+- Added deterministic Birthday and Departure prop sets (5 each) controlled through existing ShireQuestSubsystem delegate events. No extra state owner, per-frame scan, synchronous load or AI population increase was introduced.
+- Existing Bag End story triggers/NPC anchors are not moved.
+- Interior remains CONTENT_PENDING pending an approved FBX/provenance modular shell.
+- Evidence boundary: **SOURCE-IMPLEMENTED / exact-head Pre-Unreal + UE4.27.2 pending**. Human PIE/device/visual/performance evidence remains separate.
+
