@@ -2271,3 +2271,12 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 - New gameplay subsystem / per-frame scan / synchronous heavy load: **NONE**.
 - PIE activity retry/window behavior, human party visual/pacing review and target-device performance: **PENDING / NOT CLAIMED**.
 
+## 2026-10-01 — Deep Audit V1 / visual-quality governance
+
+| Area | Current status | Evidence boundary |
+|---|---|---|
+| Balanced Medium visual target | GOVERNOR-LOCKED | Selective High for visually important content; no visual acceptance claimed |
+| Deep Audit R-01..R-10 | ADOPTED AS VALIDATION MATRIX | 0 confirmed defects; 10 hypotheses requiring source/runtime measurement |
+| Compound settlement-entry performance | MEASUREMENT REQUIRED | Target-device/standalone evidence pending |
+| Tail-frame telemetry | REQUIRED FOR ACCEPTANCE | p95/p99/max + Game/Draw/GPU; not yet accepted |
+| Long-session memory/save-load stability | SOURCE-GUARDED / DEVICE EVIDENCE PENDING | Existing bounded contracts retained |
