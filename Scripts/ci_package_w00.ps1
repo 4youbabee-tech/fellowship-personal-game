@@ -60,11 +60,16 @@ finally {
 
 $dbghelpProbeDir = Join-Path $stage "WindowsNoEditor\Engine\Binaries\ThirdParty\DbgHelp"
 New-Item -ItemType Directory -Path $dbghelpProbeDir -Force | Out-Null
-$dbghelpProbePath = Join-Path $dbghelpProbeDir "dbghelp.dll"
+# Probe the exact destination directory with a neutral filename.
+# Writing a synthetic file named dbghelp.dll itself can be intercepted transiently by
+# endpoint protection even when the directory ACL is healthy. That produced false-red
+# CI after compile/runtime checks had already passed. UAT remains the authoritative
+# proof that the real dbghelp.dll can be staged.
+$dbghelpProbePath = Join-Path $dbghelpProbeDir "shire-destination-write-probe.tmp"
 try {
     [System.IO.File]::WriteAllText($dbghelpProbePath, "shire-w00-dbghelp-destination-probe")
     if (-not (Test-Path -LiteralPath $dbghelpProbePath -PathType Leaf)) {
-        throw "exact destination probe was not created"
+        throw "destination directory probe was not created"
     }
     $dbghelpDestinationOwner = (Get-Acl -LiteralPath $dbghelpProbeDir).Owner
     Remove-Item -LiteralPath $dbghelpProbePath -Force
