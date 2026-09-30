@@ -1,3 +1,15 @@
+## 2026-09-30 - P1C01 CHARACTER_PRESENTATION car
+
+- PARTY_AND_SOCIAL_LOOP predecessor: **STATIC-VALIDATED + UE4.27.2/headless machine-green** on PR #194 / Pre-Unreal #1472 / Unreal #1145.
+- Character presentation implementation: **SOURCE-IMPLEMENTED / EXACT-HEAD CI PENDING**.
+- Stable hero identity: **DATA/C++ WIRED** through `AShireNPC::ProductionCharacterId`; P1C01 Gandalf/Bilbo/Sam story actors no longer depend on display-name identity.
+- Player canon presentation: **P1C01 Frodo future named sword fallback hidden**; no locked story outcome changed.
+- Skeletal rig path: **EXISTING ASYNC OWNER RETAINED** via `UShireChapterAssetStreamingSubsystem` / `FStreamableManager`; modular fallback remains until complete mesh + AnimBP resolution.
+- Low-spec skeletal controls: **URO + OnlyTickPoseWhenRendered retained**.
+- Ambient AI population: **UNCHANGED at 18**.
+- New AI subsystem / per-frame asset scan / synchronous heavy production load / crowd Spawn-Destroy churn: **NONE**.
+- PIE silhouette/equipment continuity, skeletal deformation/animation, target-device FPS/frame-time/hitches/RAM/VRAM and human visual review: **PENDING / NOT CLAIMED**.
+
 ## 2026-09-30 - P1C01 SHIRE_WORLD_DENSITY car
 
 - Predecessor PR #189 exact head `3680ab2fa52b7ebd7ec896ec10d2d2f9a60dd63c`: **STATIC-VALIDATED by Pre-Unreal #1465 + COMPILE/headless machine-green by Unreal Build #1138**.
