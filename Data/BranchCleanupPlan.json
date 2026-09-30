@@ -96,7 +96,9 @@
     "prep/p1c01-save-schema-history-v1",
     "production/p1c01-maximum-safe-mega-build-v1",
     "production/p1c01-maximum-safe-mega-train-v1",
-    "maintenance/ci-rootfix-branch-retirement-v1"
+    "maintenance/ci-rootfix-branch-retirement-v1",
+    "planning/ancient-lore-carcharoth-ledger-v1",
+    "maintenance/carcharoth-ledger-retire-v1"
   ],
   "safety_rules": [
     "Never delete develop or main.",
@@ -360,5 +362,11 @@
     ],
     "safety": "All listed legacy heads were first captured as parents of the recovery-only archive commit. Active PR heads #201/#202 remain protected and are not included. develop/main remain canonical/protected.",
     "root_fix": "Merged-head exact-SHA deletion remains mandatory; new merged branches must not accumulate."
+  },
+  "carcharoth_orphan_retirement_2026_10_01": {
+    "action": "DELETE_AFTER_THIS_MERGE",
+    "branch": "planning/ancient-lore-carcharoth-ledger-v1",
+    "disposition": "INTEGRATED: its only unique change, the ancient-lore backlog ledger note, is copied onto current develop lineage by this maintenance PR. No runtime code or asset is imported.",
+    "safety": "The original branch remains recoverable from Git history/archive ancestry; no runtime feature or Gate acceptance is implied."
   }
 }
