@@ -5463,6 +5463,37 @@
       ],
       "evidence_boundary": "SOURCE/RUNTIME IMPLEMENTATION CONTRACT. No final asset, playback/listening, PIE/device/pacing/performance acceptance is implied until matching evidence exists.",
       "authority": "DEC-090_USER_MEGA_TRAIN_AUTHORIZATION"
+    },
+    {
+      "id": "DEC-100",
+      "title": "P1C01 Gate 6/7 acceptance uses fail-closed exact-head device evidence and cannot auto-promote from CI",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-PERF-001",
+        "REQ-QA-001",
+        "REQ-STABILITY-001"
+      ],
+      "resolution": "Open TARGET_DEVICE_PROFILE_AND_GATE67 as the final P1C01 mega-train acceptance car in static-preparation mode while SAVE_LOAD_LONG_SESSION exact-head UE proof is still pending. Build evidence tooling and contracts now; runtime-affecting device-profile changes remain blocked until the predecessor merges.",
+      "implementation_contract": [
+        "Register WORLD_DETAIL_LEDGER and Data/P1C01TargetDeviceGate67V1.json before any acceptance tooling.",
+        "Target profile remains 6th-gen i7 class, 8 GB RAM, ~2 GB VRAM class, DX11, 1280x720 Low-Medium, 30 FPS floor.",
+        "Acceptance evidence must be tied to exact git head, hardware identity and tested renderer/resolution/quality profile.",
+        "Missing route measurements, missing human review or missing target-device observations must yield INCOMPLETE/NOT_RUN, never inferred acceptance.",
+        "Static/compile/PIE/device/visual/pacing/performance labels remain independent and may not be promoted by another lane's evidence.",
+        "Runtime-affecting scalability/device-profile changes are blocked until SAVE_LOAD_LONG_SESSION exact-head Pre-Unreal + UE4.27.2 machine proof is green and merged.",
+        "Any sustained representative route segment below 30 FPS, blocking streaming hitch, save/load continuity failure or return-to-control failure blocks performance acceptance.",
+        "No new runtime system, parallel profiler authority or gameplay shortcut is authorized by this acceptance car."
+      ],
+      "rationale": "Gate 6/7 exists to prevent broad runtime expansion before the Shire is proven on the intended low-spec target. The project already has separate static, compile, runtime and human evidence lanes, so the correct next step is a strict evidence evaluator rather than treating hosted CI or hardware snapshots as target-device acceptance.",
+      "evidence": [
+        "Docs/DEVELOPMENT_GATES.md",
+        "Data/P1C01Gate67AcceptanceChecklistV1.json",
+        "Data/P1C01HTargetDeviceProfilingPlanV1.json",
+        "Data/P1C01TargetDeviceGate67V1.json",
+        "Docs/WORLD_DETAIL_LEDGER.md"
+      ],
+      "evidence_boundary": "STATIC ACCEPTANCE PREPARATION ONLY. No PIE/device/visual/pacing/performance acceptance is implied until matching exact-head evidence exists.",
+      "authority": "DEC-090_USER_MEGA_TRAIN_AUTHORIZATION"
     }
   ],
   "open_conflicts": [],
