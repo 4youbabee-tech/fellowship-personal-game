@@ -5363,6 +5363,39 @@
       ],
       "evidence_boundary": "SOURCE/RUNTIME IMPLEMENTATION CONTRACT. No PIE/device/visual/pacing/performance acceptance is implied until matching evidence exists.",
       "authority": "DEC-090_USER_MEGA_TRAIN_AUTHORIZATION"
+    },
+    {
+      "id": "DEC-096",
+      "title": "P1C01 quest and side-activity coherence uses a single quest-owned safe-window projection",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-STABILITY-001",
+        "REQ-QA-001",
+        "REQ-SAVE-001"
+      ],
+      "resolution": "Open QUEST_SIDE_ACTIVITY_COHERENCE after LIVING_SHIRE exact-head machine-green. Keep UShireQuestSubsystem as the sole quest/story owner and expose one bounded current-window projection so optional Shire activities expire cleanly, cannot double-award, and yield to urgent main-quest states.",
+      "implementation_contract": [
+        "Register Data/P1C01QuestSideActivityCoherenceV1.json and WORLD_DETAIL_LEDGER before runtime implementation.",
+        "UShireQuestSubsystem remains the only owner of quest/story progression truth and side-activity availability/completion state.",
+        "Side-activity consumers use GetAvailableSideActivityIdsForCurrentWindow or existing subsystem availability APIs instead of duplicating story-beat logic.",
+        "P1C01 RingSecret, LeavingHome, KeepOffRoad and FerryEscape suppress casual optional activity even if legacy/malformed beat state leaves a window apparently open.",
+        "Story-beat closing windows remain authoritative and completed discovery rewards remain idempotent.",
+        "Optional content cannot advance required anchors, change locked outcomes or become a hidden dependency of the main quest.",
+        "No new quest subsystem, parallel story brain, synchronous heavy load or per-frame world scan is authorized.",
+        "Exact-head Pre-Unreal + UE4.27.2 required before merge; PIE/device/visual/pacing/performance acceptance remains separate."
+      ],
+      "rationale": "Sources 01, 06 and 07 define F1-01/F1-02/F1-03 optional windows as subordinate to fixed story outcomes, require clean expiry as urgency rises, and require idempotent optional rewards. The existing quest subsystem already owns these contracts, so coherence is improved by centralizing the projection rather than adding another quest layer.",
+      "evidence": [
+        "01_STORY_AND_TIMELINE_BIBLE F1-01/F1-02/F1-03",
+        "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE optional activity and quest-state rules",
+        "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX F1-01/F1-02/F1-03 mission packages",
+        "Data/P1C01QuestSideActivityCoherenceV1.json",
+        "Source/ShireJourney/Public/Subsystems/ShireQuestSubsystem.h",
+        "Source/ShireJourney/Private/Subsystems/ShireQuestSubsystem.cpp",
+        "Scripts/pre_unreal_validate.py PG-219"
+      ],
+      "evidence_boundary": "SOURCE/RUNTIME IMPLEMENTATION CONTRACT. No PIE/device/visual/pacing/performance acceptance is implied until matching evidence exists.",
+      "authority": "DEC-090_USER_MEGA_TRAIN_AUTHORIZATION"
     }
   ],
   "open_conflicts": [],
