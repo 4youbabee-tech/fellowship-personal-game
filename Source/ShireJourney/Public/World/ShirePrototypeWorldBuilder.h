@@ -96,6 +96,8 @@ private:
     UPROPERTY() UShireQuestSubsystem* QuestSubsystem = nullptr;
     UPROPERTY() TArray<AStaticMeshActor*> BagEndBirthdayVariantActors;
     UPROPERTY() TArray<AStaticMeshActor*> BagEndDepartureVariantActors;
+    UPROPERTY() TArray<AStaticMeshActor*> PartySetupVariantActors;
+    UPROPERTY() TArray<AStaticMeshActor*> PartyCelebrationVariantActors;
 
     bool bBuilt = false;
 
@@ -118,10 +120,12 @@ private:
     void SpawnProductionVillageDetailLayer();
     void SpawnWorldDensityDetailPass();
     void SpawnBagEndHeroPass();
+    void SpawnPartySocialLoopPass();
     void SpawnSideStories();
     void SpawnStoryActors();
     void ApplyStoryAtmosphere();
     void ApplyBagEndStoryVariant();
+    void ApplyPartyStoryVariant();
 
     UFUNCTION()
     void HandleActiveQuestChanged(FName QuestId);
