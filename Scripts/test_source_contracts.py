@@ -209,8 +209,11 @@ class SourceContractTests(unittest.TestCase):
             cars["CHARACTER_PRESENTATION"]["status"],
             "EXACT_HEAD_MACHINE_GREEN_PR195_PRE1475_UE1148_MERGED_66CAF6",
         )
+        self.assertEqual(
+            cars["QUEST_SIDE_ACTIVITY_COHERENCE"]["status"],
+            "EXACT_HEAD_MACHINE_GREEN_PR197_PRE1481_UE1154_MERGED_E92688",
+        )
         for car_id in (
-            "QUEST_SIDE_ACTIVITY_COHERENCE",
             "CINEMATIC_CONTROL_HANDOFF",
             "SHIRE_AUDIO_IDENTITY",
             "SAVE_LOAD_LONG_SESSION",
