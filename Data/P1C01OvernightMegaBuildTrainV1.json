@@ -164,7 +164,8 @@
     "quest_side_activity_coherence": "EXACT_HEAD_MACHINE_GREEN_PR197_PRE1481_UE1154_MERGED_E92688",
     "cinematic_control_handoff": "EXACT_HEAD_MACHINE_GREEN_PR198_PRE1484_UE1157_MERGED_3B3869",
     "shire_audio_identity": "EXACT_HEAD_MACHINE_GREEN_PR199_PRE1486_UE1159_MERGED_EC96E9",
-    "save_load_long_session": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING"
+    "save_load_long_session": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
+    "target_device_profile_and_gate67": "RECONCILED_ON_CURRENT_DEVELOP_PREDECESSOR_MERGED_ACCEPTANCE_EVIDENCE_PENDING"
   },
   "w00_machine_evidence": {
     "pr": 184,

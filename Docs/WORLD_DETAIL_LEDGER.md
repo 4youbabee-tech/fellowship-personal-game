@@ -923,3 +923,11 @@ Purpose: retain visual, material, life, ambience and world-detail ideas discover
 - Story rule: no verbatim Tolkien or film dialogue/text. Any game-facing prose must be original and source-grounded.
 - Scope gate: no runtime implementation until the current P1C01 Gate 6/7 lane is closed and the item is re-verified against Sources 01/04/05 and Tolkien source material.
 - Status: **RECORDED / BACKLOG ONLY / NOT AUTHORIZED FOR RUNTIME**.
+
+## 2026-10-01 - P1C01 Gate 6/7 and local visible-world tooling reconciled
+
+- Gate 6/7 evidence infrastructure and local visible-world bootstrap are carried forward onto current develop instead of merging stale branch snapshots wholesale.
+- Target-device contract remains fail-closed: DX11, 1280x720, 30 FPS floor, 8 GB RAM, ~2 GB VRAM, with Balanced Medium + selective High visual intent.
+- The local bootstrap reuses the established production importer and Entry map; it creates no parallel runtime owner, no synchronous-heavy asset path, no crowd Spawn/Destroy policy change, and no permanent startup-map mutation.
+- Animated final production delivery remains FBX-only; new production textures remain PNG/TGA; legacy OBJ source inputs remain static/source fallback only.
+- No Gate 6/7, PIE, device, visual, pacing or performance acceptance is claimed by this reconciliation.

@@ -511,6 +511,28 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("CurrentSchemaVersion = 6", save_h)
 
 
+    def test_p1c01_gate67_acceptance_tooling_is_fail_closed(self):
+        root = Path(__file__).resolve().parents[1]
+        contract = json.loads((root / "Data" / "P1C01TargetDeviceGate67V1.json").read_text(encoding="utf-8"))
+        self.assertEqual(contract["status"], "STATIC_ACCEPTANCE_PREP_IMPLEMENTED_PREDECESSOR_MERGED")
+        self.assertEqual(contract["target_profile"]["renderer"], "DX11")
+        self.assertEqual(contract["target_profile"]["resolution_width"], 1280)
+        self.assertEqual(contract["target_profile"]["resolution_height"], 720)
+        self.assertEqual(contract["target_profile"]["quality"], "Balanced Medium / selective High where visually important")
+        self.assertEqual(contract["target_profile"]["fps_floor"], 30)
+        self.assertFalse(any(contract["current_claims"].values()))
+
+        evaluator = (root / "Scripts" / "evaluate_p1c01_gate67_evidence.py").read_text(encoding="utf-8")
+        self.assertIn('"status":"INCOMPLETE"', evaluator)
+        self.assertIn('"status":"GATE67_NOT_ACCEPTED"', evaluator)
+        self.assertIn('route below 30 FPS floor', evaluator)
+        self.assertIn('blocking streaming hitch', evaluator)
+        self.assertIn('synchronous heavy load observed', evaluator)
+        self.assertIn('save/load continuity not proven', evaluator)
+        self.assertIn('return-to-control continuity not proven', evaluator)
+        self.assertIn('"DEVICE_TESTED":True', evaluator)
+        self.assertIn('"PERFORMANCE_ACCEPTED":True', evaluator)
+
 
 if __name__ == "__main__":
     unittest.main()

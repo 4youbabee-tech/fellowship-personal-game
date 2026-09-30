@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "id": "P1C01_LOCAL_VISUAL_BOOTSTRAP_V1",
+  "date": "2026-09-30",
+  "status": "TOOLING_PREPARATION",
+  "purpose": "Make the existing production source pack visible in a local P1C01 preview without mixing a runtime/config mutation into the active #200/#201 serialized train.",
+  "baseline_observation": {
+    "develop_sha": "ec96e9e487ecbe91d9563848f685df4bd5c11b0d",
+    "editor_startup_map": "/Engine/Maps/Templates/Template_Default",
+    "game_default_map": "/Engine/Maps/Templates/Template_Default",
+    "tracked_content_entries": 0,
+    "source_assets_entries": 447,
+    "source_assets_files": 401,
+    "production_source_entries": 442,
+    "production_source_files": 399,
+    "production_source_by_extension": {
+      "obj": 352,
+      "mtl": 22,
+      "tga": 24,
+      "md": 1
+    },
+    "interpretation": "The repository intentionally generates ignored Content/Production locally. Without the production import pass, runtime builders resolve only fallbacks; Template_Default can also leave its white floor in the visible preview."
+  },
+  "implementation": {
+    "launcher": "Scripts/bootstrap_local_p1c01_visuals.cmd",
+    "importer": "Scripts/ci_import_production_assets.cmd",
+    "commandlet": "ShireProductionImport",
+    "generated_content_root": "Content/Production",
+    "preview_map": "/Engine/Maps/Entry",
+    "preview_renderer": "DX11",
+    "preview_resolution": "1280x720",
+    "behavior": [
+      "Require the UE4 editor to be closed before import.",
+      "Reuse the existing production import commandlet rather than inventing a second importer.",
+      "Verify that generated .uasset files exist under Content/Production after import.",
+      "Launch the project against /Engine/Maps/Entry in game mode so the engine Template_Default floor does not mask the generated Shire.",
+      "Do not change Config/DefaultEngine.ini in this tooling-only lane."
+    ]
+  },
+  "ownership": {
+    "world_commit": "AChapterWorldRouter",
+    "shire_geometry": "AShirePrototypeWorldBuilder",
+    "population": "ALivingWorldDirector",
+    "npc_context": "UShireNPCContextSubsystem",
+    "story_progression": "UShireQuestSubsystem"
+  },
+  "asset_policy": {
+    "animated_final_production": "FBX only",
+    "existing_obj_scope": "Static/source fallback only; not evidence of animated production readiness.",
+    "production_textures": "PNG/TGA only; new BMP production textures forbidden.",
+    "heavy_runtime_loading": "Soft references plus FStreamableManager asynchronous loading.",
+    "crowd_lifecycle": "Object pooling"
+  },
+  "gates": {
+    "runtime_promotion": "BLOCKED_FROM_THIS_TOOLING_LANE",
+    "predecessor_train": [
+      "PR #200 SAVE_LOAD_LONG_SESSION",
+      "PR #201 TARGET_DEVICE_PROFILE_AND_GATE67"
+    ],
+    "evidence_boundary": [
+      "No PIE-TESTED claim",
+      "No DEVICE-TESTED claim",
+      "No VISUALLY-ACCEPTED claim",
+      "No PACING-ACCEPTED claim",
+      "No PERFORMANCE-ACCEPTED claim"
+    ]
+  }
+}

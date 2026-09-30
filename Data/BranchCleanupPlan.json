@@ -98,7 +98,10 @@
     "production/p1c01-maximum-safe-mega-train-v1",
     "maintenance/ci-rootfix-branch-retirement-v1",
     "planning/ancient-lore-carcharoth-ledger-v1",
-    "maintenance/carcharoth-ledger-retire-v1"
+    "maintenance/carcharoth-ledger-retire-v1",
+    "production/p1c01-target-device-gate67-v1",
+    "tooling/p1c01-local-visual-bootstrap-v1",
+    "integration/p1c01-gate67-visual-bootstrap-reconcile-v1"
   ],
   "safety_rules": [
     "Never delete develop or main.",
@@ -368,5 +371,15 @@
     "branch": "planning/ancient-lore-carcharoth-ledger-v1",
     "disposition": "INTEGRATED: its only unique change, the ancient-lore backlog ledger note, is copied onto current develop lineage by this maintenance PR. No runtime code or asset is imported.",
     "safety": "The original branch remains recoverable from Git history/archive ancestry; no runtime feature or Gate acceptance is implied."
+  },
+  "p1c01_gate67_visual_reconciliation_2026_10_01": {
+    "action": "DELETE_STALE_PR_HEADS_AFTER_RECONCILED_MERGE",
+    "reconciled_into": "integration/p1c01-gate67-visual-bootstrap-reconcile-v1",
+    "stale_branches": [
+      "production/p1c01-target-device-gate67-v1",
+      "tooling/p1c01-local-visual-bootstrap-v1"
+    ],
+    "rule": "Do not bulk-merge stale snapshots. Carry forward their unique current-valid contracts/tooling onto current develop, validate the reconciled exact head, merge once, then delete both stale PR heads and the reconciliation head.",
+    "safety": "develop/main/archive remain protected; no Gate 6/7 acceptance is implied."
   }
 }
