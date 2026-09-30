@@ -114,7 +114,7 @@
       "order": 8,
       "id": "QUEST_SIDE_ACTIVITY_COHERENCE",
       "type": "RUNTIME_BUILD",
-      "status": "GATED",
+      "status": "EXACT_HEAD_MACHINE_GREEN_PR197_PRE1481_UE1154_MERGED_E92688",
       "purpose": "Strengthen current P1C01 quest chain and source-grounded optional windows without changing locked outcomes."
     },
     {
@@ -161,7 +161,8 @@
     "runtime_expansion": "GATED_BY_RELEVANT_PER_CAR_EXACT_HEAD_UE4",
     "character_presentation": "EXACT_HEAD_MACHINE_GREEN_PR195_PRE1475_UE1148_MERGED_66CAF6",
     "living_shire": "EXACT_HEAD_MACHINE_GREEN_PR196_PRE1478_UE1151_MERGED_A47812",
-    "quest_side_activity_coherence": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING"
+    "quest_side_activity_coherence": "EXACT_HEAD_MACHINE_GREEN_PR197_PRE1481_UE1154_MERGED_E92688",
+    "cinematic_control_handoff": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING"
   },
   "w00_machine_evidence": {
     "pr": 184,
