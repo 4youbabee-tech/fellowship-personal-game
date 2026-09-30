@@ -269,8 +269,8 @@ bool AShirePlayerCharacter::ShouldShowPrototypeWeaponForCurrentStory(FName Visua
 {
     if (VisualId == TEXT("Frodo"))
     {
-        const UGameInstance* GI = GetGameInstance();
-        const UShireQuestSubsystem* Quests =
+        UGameInstance* GI = GetGameInstance();
+        UShireQuestSubsystem* Quests =
             GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
         if (Quests && Quests->GetCurrentChapterId() == TEXT("P1C01"))
         {
@@ -605,8 +605,8 @@ void AShirePlayerCharacter::ApplyPrototypeStyle()
     PrototypeWeapon->SetVisibility(bWeaponVisible, true);
     if (bFrodo)
     {
-        const UGameInstance* GI = GetGameInstance();
-        const UShireQuestSubsystem* Quests =
+        UGameInstance* GI = GetGameInstance();
+        UShireQuestSubsystem* Quests =
             GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
         if (Quests && Quests->GetCurrentChapterId() == TEXT("P1C01"))
         {
@@ -1443,8 +1443,8 @@ void AShirePlayerCharacter::ToggleChronicle()
     if (bChronicleOpen)
     {
         bWorldMapOpen = false;
-        const UGameInstance* GI = GetGameInstance();
-        const UShireQuestSubsystem* Quests =
+        UGameInstance* GI = GetGameInstance();
+        UShireQuestSubsystem* Quests =
             GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
         ChronicleBrowseIndex = Quests ? FMath::Max(0, Quests->GetChronicleCount() - 1) : 0;
     }
