@@ -5285,9 +5285,14 @@
         "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE ACT_F1_01, ACT_F1_02, ACT_F1_03",
         "Data/ContextualSideActivityPlan.json",
         "Data/P1C01PartySocialLoopChapterV1.json",
-        "Docs/WORLD_DETAIL_LEDGER.md"
+        "Docs/WORLD_DETAIL_LEDGER.md",
+        "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp SpawnPartySocialLoopPass",
+        "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp ApplyPartyStoryVariant",
+        "Source/ShireJourney/Private/World/ShireTraversalChallenge.cpp completion-beat activity extension",
+        "Data/JourneyDiscoveryRewardPlan.json party firework discoveries",
+        "Scripts/pre_unreal_validate.py PG-216"
       ],
-      "evidence_boundary": "SCOPE REGISTRATION ONLY. Runtime/compile/PIE/device/visual/performance proof pending.",
+      "evidence_boundary": "SOURCE IMPLEMENTATION CONTRACT. Exact-head Pre-Unreal/UE4.27.2 pending; no PIE/device/visual/performance acceptance is implied.",
       "authority": "DEC-090_USER_MEGA_TRAIN_AUTHORIZATION"
     }
   ],
