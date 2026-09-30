@@ -1,3 +1,14 @@
+## 2026-09-30 - P1C01 TARGET_DEVICE_PROFILE_AND_GATE67 acceptance mega-car registered (static prep only)
+
+- Scope: final P1C01 mega-train acceptance car. Runtime-affecting profile/config changes remain blocked until SAVE_LOAD_LONG_SESSION receives exact-head UE4.27.2 proof and merges.
+- Current predecessor state at registration: PR #200 / SAVE_LOAD_LONG_SESSION has Pre-Unreal #1488 SUCCESS; Unreal Build #1161 is not yet proven complete at this registration point.
+- Target contract: 6th-gen i7 class, 8 GB RAM, ~2 GB VRAM class, DX11, 1280x720, Low-Medium, 30 FPS floor.
+- Evidence lanes remain separate: exact-head machine/compile, chapter PIE, target-device measurements, human visual/pacing review.
+- No DEVICE-TESTED, PERFORMANCE-ACCEPTED, PIE-TESTED or VISUALLY-ACCEPTED claim is created by this preparation.
+- This car will use fail-closed evidence capture tied to exact head + hardware/profile identity; missing measurements produce NOT_RUN/INCOMPLETE, never inferred acceptance.
+- Gate 6/7 cannot auto-promote from static CI because visual/pacing and target-device observations require matching human/device evidence.
+- Machine contract target: `Data/P1C01TargetDeviceGate67V1.json`; capture tool target: `Scripts/evaluate_p1c01_gate67_evidence.py`; guard target: PG-223.
+
 ## 2026-09-30 - P1C01 SHIRE_AUDIO_IDENTITY chapter registered before runtime implementation
 
 - Scope: next serialized P1C01 runtime car after CINEMATIC_CONTROL_HANDOFF exact-head machine-green and merge.
