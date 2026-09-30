@@ -23,6 +23,10 @@ public:
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
     virtual void Tick(float DeltaSeconds) override;
     uint32 GetAppliedWorldRevision() const { return AppliedWorldRevision; }
+    void GatherActiveAmbientNPCsNear(
+        const FVector& Origin,
+        float Radius,
+        TArray<AShireAmbientNPC*>& OutNPCs) const;
 
 private:
     struct FActiveMicroEvent
@@ -74,6 +78,7 @@ private:
     float PopulationSpawnInterval = 0.35f;
     float DangerPopulationFraction = 0.50f;
     int32 MaxActiveMicroEvents = 3;
+    int32 MaxActiveFaunaGroups = 2;
     int32 MaxAmbientNPCPoolSize = 24;
     int32 MaxInteractionPoolSize = 12;
     int32 MaxAmbientMotionPoolSize = 16;
