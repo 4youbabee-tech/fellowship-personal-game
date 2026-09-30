@@ -13,7 +13,7 @@
   },
   "purpose": "Deepen P1C01 living-world routines, local social behavior, bounded context refresh, fauna and environmental motion without increasing the ambient population target or creating a parallel AI brain.",
   "architecture": {
-    "LivingWorldDirector": "Owns population budgets, bounded active-NPC admission/query, pooled lifecycle, micro-events, fauna-group caps and coarse world response.",
+    "LivingWorldDirector": "Owns population budgets, bounded active-NPC admission/query, pooled lifecycle, micro-events, fauna-group caps, persistent ambient query registration and coarse world response.",
     "ShireNPCContextSubsystem": "Owns bounded NPC context, knowledge, schedules, relationships and reusable behavior snapshots.",
     "ShireQuestSubsystem": "Remains sole story/quest/progression truth.",
     "parallel_ai_brain": false
@@ -23,10 +23,16 @@
     "max_active_micro_events_near_player": 3,
     "max_active_fauna_groups_near_player": 2,
     "ambient_npc_pool_cap": 24,
-    "social_query_scope": "LivingWorldDirector managed active NPC registry only",
+    "social_query_scope": "LivingWorldDirector bounded active query over pooled baseline/micro-event NPCs plus weakly registered persistent builder-authored social residents",
     "full_world_social_actor_scan": false,
-    "context_refresh_seconds": [4.0, 7.0],
-    "needs_refresh_seconds": [0.8, 1.6],
+    "context_refresh_seconds": [
+      4,
+      7
+    ],
+    "needs_refresh_seconds": [
+      0.8,
+      1.6
+    ],
     "offscreen_simulation": "STATE_ONLY_OR_DISTANCE_THROTTLED"
   },
   "runtime_contract": {
@@ -36,7 +42,10 @@
     "pooling_preserved": true,
     "synchronous_heavy_load": false,
     "per_frame_context_reconstruction": false,
-    "population_increase": false
+    "population_increase": false,
+    "persistent_builder_residents_registered_for_social_query": true,
+    "persistent_registration_transfers_lifecycle_ownership": false,
+    "per_tick_full_world_registration_scan": false
   },
   "canon_boundary": [
     "Ambient life never owns or changes locked story outcomes.",
@@ -44,5 +53,5 @@
     "NPC knowledge remains gated by existing profile/story contracts.",
     "Fauna/environment motion cannot block required traversal."
   ],
-  "acceptance_boundary": "SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27.2 PROOF PENDING. No PIE/device/visual/pacing/performance acceptance is claimed."
+  "acceptance_boundary": "SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27.2 PROOF PENDING. Persistent builder-authored social residents are registered by LivingWorldDirector at committed-world reconciliation; no PIE/device/visual/pacing/performance acceptance is claimed."
 }
