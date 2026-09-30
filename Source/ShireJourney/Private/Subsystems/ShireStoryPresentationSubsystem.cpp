@@ -282,6 +282,18 @@ void UShireStoryPresentationSubsystem::HandleStoryBeat(FName StoryBeatId)
     OnStoryPresentationRequested.Broadcast(ActiveCue);
 }
 
+void UShireStoryPresentationSubsystem::RequestSkipActivePresentation()
+{
+    if (!bCinematicLocked)
+    {
+        return;
+    }
+
+    // Skip changes presentation state only. Story/quest postconditions already belong
+    // to UShireQuestSubsystem and must never be replayed or mutated from this path.
+    ReleaseCinematicLock();
+}
+
 void UShireStoryPresentationSubsystem::ReleaseCinematicLock()
 {
     if (UWorld* World = GetWorld())
