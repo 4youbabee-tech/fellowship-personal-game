@@ -5256,6 +5256,39 @@
       ],
       "evidence_boundary": "SOURCE IMPLEMENTATION CONTRACT. Exact-head Pre-Unreal/UE4.27.2 pending; no PIE/device/visual/performance acceptance is implied.",
       "authority": "DEC-090_USER_MEGA_TRAIN_AUTHORIZATION"
+    },
+    {
+      "id": "DEC-093",
+      "title": "P1C01 party and social loop becomes the next maximum-safe runtime chapter car",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WORLD-001",
+        "REQ-NPC-001",
+        "REQ-PERF-001",
+        "REQ-STABILITY-001",
+        "REQ-QA-001"
+      ],
+      "resolution": "Open PARTY_AND_SOCIAL_LOOP after Bag End hero PR #193 exact-head machine-green. Build a large F1-01 birthday/social/fireworks layer using existing ShireQuestSubsystem, ShireTraversalChallenge and ShireQuestTrigger ownership, without increasing the ambient NPC population target.",
+      "implementation_contract": [
+        "Register the chapter in WORLD_DETAIL_LEDGER and Data/P1C01PartySocialLoopChapterV1.json before runtime code.",
+        "Implement source-supported birthday setup: tables, food/decorations, guest interactions.",
+        "Implement a bounded Gandalf-fireworks optional activity window with selection/placement/timing abstraction using existing multi-step activity mechanics; no copied dialogue.",
+        "Implement the Dragon Firework Mishap only as a comic fixed-outcome optional side beat that cannot change F1-01 locked outcomes.",
+        "All optional party content must be available only in plausible F1-01 windows and expire cleanly at BilboDisappearance/RingSecret escalation.",
+        "No new AI owner, per-frame scan, crowd Spawn/Destroy churn or synchronous heavy loading.",
+        "P1C01 ambient population target remains 18; perceived density comes from authored/HISM dressing and existing pooled LivingWorld.",
+        "Exact-head Pre-Unreal + UE4.27.2 required before merge; human PIE/device/visual/performance remain separate evidence."
+      ],
+      "rationale": "01_STORY_AND_TIMELINE_BIBLE defines F1-01 safe optional windows as party setup, social onboarding and fireworks. 06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE specifies birthday setup, Gandalf fireworks and the dragon-firework mishap with fixed canon-safe outcomes. Existing runtime already has side-story and multi-step activity primitives, so this chapter deepens production without creating a parallel gameplay/state architecture.",
+      "evidence": [
+        "01_STORY_AND_TIMELINE_BIBLE F1-01 production specification",
+        "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE ACT_F1_01, ACT_F1_02, ACT_F1_03",
+        "Data/ContextualSideActivityPlan.json",
+        "Data/P1C01PartySocialLoopChapterV1.json",
+        "Docs/WORLD_DETAIL_LEDGER.md"
+      ],
+      "evidence_boundary": "SCOPE REGISTRATION ONLY. Runtime/compile/PIE/device/visual/performance proof pending.",
+      "authority": "DEC-090_USER_MEGA_TRAIN_AUTHORIZATION"
     }
   ],
   "open_conflicts": [],
