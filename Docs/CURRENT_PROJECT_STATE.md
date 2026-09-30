@@ -1,3 +1,12 @@
+## 2026-09-30 - P1C01 SAVE_LOAD_LONG_SESSION active
+
+- Predecessor SHIRE_AUDIO_IDENTITY: exact-head machine-green on PR #199 at `c258cebda8ae5749c54ed0aa6717582b89988fc3` with Pre-Unreal #1486 SUCCESS + Unreal Build #1159 SUCCESS; merged as `ec96e9e487ecbe91d9563848f685df4bd5c11b0d`.
+- Active runtime/reliability car: SAVE_LOAD_LONG_SESSION.
+- Existing restore transaction, world-revision checkpoint guard, queued snapshot coalescing, legacy canonicalization and committed-world transform grounding remain authoritative.
+- This car adds fail-closed bounded save-payload admission before restore mutation so long sessions/corrupt saves cannot expand persistence containers without limit.
+- Status: SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27.2 PROOF PENDING.
+- Human long-session PIE, device save/restore hitching and persistence-stress acceptance: PENDING / NOT CLAIMED.
+
 ## 2026-09-30 - P1C01 SHIRE_AUDIO_IDENTITY active
 
 - Predecessor CINEMATIC_CONTROL_HANDOFF: exact-head machine-green on PR #198 at `46655d2ecdc02a3f1698c9fd0b1b14c09f767946` with Pre-Unreal #1484 SUCCESS + Unreal Build #1157 SUCCESS; merged as `3b38698c19a244fde8f2979d73f12cd829576b7f`.
