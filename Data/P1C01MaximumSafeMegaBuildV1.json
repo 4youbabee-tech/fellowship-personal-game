@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "P1C01_MAXIMUM_SAFE_MEGA_BUILD_V1",
-  "status": "CAR5_MACHINE_GREEN_CAR6_BAG_END_HERO_REGISTERED",
+  "status": "CAR5_MACHINE_GREEN_CAR6_BAG_END_HERO_SOURCE_IMPLEMENTED",
   "authority": [
     "Data/ProjectGovernor.json",
     "Docs/WORLD_DETAIL_LEDGER.md",
@@ -115,7 +115,7 @@
     {
       "order": 6,
       "id": "BAG_END_LIVED_IN_PASS",
-      "state": "REGISTERED_RUNTIME_NOT_IMPLEMENTED",
+      "state": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
       "scope": "Dense lived-in round-geometry narrative-hub dressing, interaction readability and deterministic story-state variants.",
       "proof": [
         "UE4 exact-head",
