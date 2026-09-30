@@ -1,3 +1,14 @@
+## 2026-10-01 - P1C01 FOUNDATION_CORRECTIONS_V1 active
+
+- Canonical base: `develop@3ec3f725cb1dff42a762e36e39790b82a4801714`, which is machine-green after PR #207 (Pre-Unreal and Unreal Build Validation SUCCESS).
+- Confirmed Living Shire defect repair: builder-authored humanoid ambient residents were outside `LivingWorldDirector::GatherActiveAmbientNPCsNear()` candidate sources. The Director now performs a committed-world reconciliation pass, weakly registers persistent social-capable ambient residents, excludes Director-managed pooled actors/fauna, and includes that registry in the bounded nearby social query without taking lifecycle ownership.
+- Startup-order constraint is preserved: `AChapterWorldRouter` may commit/build before `ALivingWorldDirector` exists, so registration is Director-owned at committed-world reconciliation rather than pushed into each builder spawn site.
+- Footstep foundation hardening: `DefaultEngine.ini` defines Grass/Dirt/Stone/Wood physical surface types; `UShireFootstepComponent` prefers `UPhysicalMaterial::DetermineSurfaceType` and retains the existing identity fallback for legacy/proxy materials.
+- Hero skeletal intake policy now explicitly requires UE4.27 FBX 2018-compatible exports, keeps OBJ character pieces as `STATIC_MODULAR_FALLBACK_ONLY`, and aligns the visual target to **Balanced Medium / selective High** while retaining the 720p/30 FPS low-spec performance floor.
+- No fauna density increase, Niagara rewrite, Part II runtime expansion, synchronous heavy load, parallel AI/audio owner, or story/canon change is introduced.
+- Current status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27.2 PROOF PENDING** on this repair branch.
+- Not claimed: PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PACING-ACCEPTED or PERFORMANCE-ACCEPTED.
+
 ## 2026-09-30 - P1C01 SAVE_LOAD_LONG_SESSION active
 
 - Predecessor SHIRE_AUDIO_IDENTITY: exact-head machine-green on PR #199 at `c258cebda8ae5749c54ed0aa6717582b89988fc3` with Pre-Unreal #1486 SUCCESS + Unreal Build #1159 SUCCESS; merged as `ec96e9e487ecbe91d9563848f685df4bd5c11b0d`.
