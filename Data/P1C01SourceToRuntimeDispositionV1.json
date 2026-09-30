@@ -47,8 +47,8 @@
         "SpawnBagEndHeroPass",
         "ApplyBagEndStoryVariant"
       ],
-      "state": "BAG_END_EXTERIOR_HERO_SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING_INTERIOR_CONTENT_PENDING",
-      "next_car": "BAG_END_LIVED_IN_PASS"
+      "state": "BAG_END_EXTERIOR_HERO_EXACT_HEAD_MACHINE_GREEN_PR193_INTERIOR_CONTENT_PENDING",
+      "next_car": "PARTY_AND_SOCIAL_LOOP"
     },
     {
       "id": "F1_01_PARTY_SETUP",
@@ -59,7 +59,7 @@
         "party field",
         "ambient PartyGuest role"
       ],
-      "state": "IMPLEMENTED_PARTIAL",
+      "state": "PARTY_SOCIAL_LOOP_REGISTERED_RUNTIME_NOT_IMPLEMENTED",
       "next_car": "PARTY_AND_SOCIAL_LOOP"
     },
     {
@@ -69,7 +69,7 @@
       "current_runtime": [
         "existing party/firework presentation hooks where present"
       ],
-      "state": "REQUIRES_RUNTIME_AUDIT_BEFORE_EXPANSION",
+      "state": "PARTY_SOCIAL_LOOP_REGISTERED_RUNTIME_NOT_IMPLEMENTED",
       "next_car": "PARTY_AND_SOCIAL_LOOP"
     },
     {
