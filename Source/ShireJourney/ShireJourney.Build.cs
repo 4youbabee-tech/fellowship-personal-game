@@ -31,6 +31,11 @@ public class ShireJourney : ModuleRules
             "JsonUtilities"
         });
 
+        PrivateDependencyModuleNames.AddRange(new string[]
+        {
+            "PhysicsCore"
+        });
+
         RuntimeDependencies.Add("$(ProjectDir)/Data/NPCSocialModel.json", StagedFileType.NonUFS);
         RuntimeDependencies.Add("$(ProjectDir)/Data/NPCConversationPlan.json", StagedFileType.NonUFS);
         RuntimeDependencies.Add("$(ProjectDir)/Data/NPCMemoryPlan.json", StagedFileType.NonUFS);
