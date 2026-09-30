@@ -393,5 +393,29 @@ class SourceContractTests(unittest.TestCase):
 
 
 
+    def test_p1c01_quest_side_activity_coherence_is_quest_owned_and_windowed(self):
+        root = Path(__file__).resolve().parents[1]
+        contract = json.loads((root / "Data" / "P1C01QuestSideActivityCoherenceV1.json").read_text(encoding="utf-8"))
+        self.assertEqual(contract["status"], "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING")
+        coherence = contract["coherence_contract"]
+        self.assertTrue(coherence["main_quest_priority"])
+        self.assertTrue(coherence["clean_expiry_on_closing_story_beat"])
+        self.assertTrue(coherence["idempotent_completion"])
+        self.assertEqual(
+            set(coherence["p1c01_urgency_suppression"]),
+            {"RingSecret", "LeavingHome", "KeepOffRoad", "FerryEscape"},
+        )
+
+        header = (root / "Source" / "ShireJourney" / "Public" / "Subsystems" / "ShireQuestSubsystem.h").read_text(encoding="utf-8")
+        source = (root / "Source" / "ShireJourney" / "Private" / "Subsystems" / "ShireQuestSubsystem.cpp").read_text(encoding="utf-8")
+        self.assertIn("GetAvailableSideActivityIdsForCurrentWindow", header)
+        self.assertIn("IsMainQuestUrgencySuppressingSideActivities", header)
+        self.assertIn("GetAvailableSideActivityIdsForCurrentWindow", source)
+        self.assertIn("JourneyDiscoveryIds.Contains(DiscoveryId)", source)
+        for quest_id in ("RingSecret", "LeavingHome", "KeepOffRoad", "FerryEscape"):
+            self.assertIn(f'ActiveQuestId == TEXT("{quest_id}")', source)
+
+
+
 if __name__ == "__main__":
     unittest.main()
