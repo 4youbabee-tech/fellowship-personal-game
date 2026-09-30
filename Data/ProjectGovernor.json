@@ -5181,8 +5181,8 @@
         "Data/P1C01SourceToRuntimeDispositionV1.json",
         "Docs/WORLD_DETAIL_LEDGER.md",
         "Programmer review confirmed living-world grouped-event cull defect",
-        "Scripts/pre_unreal_validate.py PG-207 member-local event culling",
-        "Scripts/pre_unreal_validate.py PG-208 ambient player-pawn cache centralization",
+        "Scripts/pre_unreal_validate.py PG-208 member-local event culling",
+        "Scripts/pre_unreal_validate.py PG-210 ambient player-pawn cache centralization",
         "Scripts/pre_unreal_validate.py PG-209 P1C01 mega-train contract"
       ],
       "evidence_boundary": "EXECUTION AUTHORIZATION + SOURCE/RUNTIME REPAIR CONTRACT. No PIE/device/visual/performance acceptance is implied.",
