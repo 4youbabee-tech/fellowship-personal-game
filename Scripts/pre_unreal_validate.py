@@ -9780,3 +9780,50 @@ else:
     if pg218_life.get("baseline_population_targets", {}).get("P1C01") != 18:
         fail("PG-218 WorldLifeSaturationPlan P1C01 population drifted above/below 18")
 
+
+
+# PG-219: P1C01 quest/side-activity coherence remains quest-owned, windowed and idempotent.
+pg219_path = ROOT / "Data" / "P1C01QuestSideActivityCoherenceV1.json"
+if not pg219_path.exists():
+    fail("PG-219 quest-side-activity coherence contract missing")
+else:
+    try:
+        pg219 = json.loads(read(pg219_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-219 invalid quest-side-activity coherence contract: {exc}")
+        pg219 = {}
+
+    if pg219:
+        if pg219.get("status") != "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING":
+            fail("PG-219 quest coherence status drifted")
+        coherence = pg219.get("coherence_contract", {})
+        if coherence.get("main_quest_priority") is not True:
+            fail("PG-219 main quest priority must remain enabled")
+        if coherence.get("clean_expiry_on_closing_story_beat") is not True:
+            fail("PG-219 side activities must expire on closing story beats")
+        if coherence.get("idempotent_completion") is not True:
+            fail("PG-219 side activity completion must remain idempotent")
+        expected_urgency = {"RingSecret", "LeavingHome", "KeepOffRoad", "FerryEscape"}
+        if set(coherence.get("p1c01_urgency_suppression", [])) != expected_urgency:
+            fail("PG-219 P1C01 urgency suppression set drifted")
+
+    pg219_h = read(resolve_source("Subsystems/ShireQuestSubsystem.h"))
+    pg219_cpp = read(resolve_source("Subsystems/ShireQuestSubsystem.cpp"))
+    for required in (
+        "GetAvailableSideActivityIdsForCurrentWindow",
+        "IsMainQuestUrgencySuppressingSideActivities",
+    ):
+        if required not in pg219_h or required not in pg219_cpp:
+            fail(f"PG-219 quest-owned activity projection missing token: {required}")
+
+    for required in (
+        'ActiveQuestId == TEXT("RingSecret")',
+        'ActiveQuestId == TEXT("LeavingHome")',
+        'ActiveQuestId == TEXT("KeepOffRoad")',
+        'ActiveQuestId == TEXT("FerryEscape")',
+        "JourneyDiscoveryIds.Contains(DiscoveryId)",
+        "IsSideActivityDefinitionAvailable(Pair.Value)",
+    ):
+        if required not in pg219_cpp:
+            fail(f"PG-219 quest coherence implementation missing: {required}")
+
