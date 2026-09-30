@@ -3254,3 +3254,14 @@ Allowed preparation work advanced instead: zero-silent-omission coverage was ext
 
 Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headless/package statements only where exact evidence exists. P1C01 PIE/device/visual/performance acceptance remains unclaimed.
 
+## 2026-09-30 - P1C01 BAG_END_LIVED_IN_PASS hero runtime source implementation
+
+- Predecessor SHIRE_WORLD_DENSITY is machine-green on PR #192 exact head `5a489781c23ed582f9203bd5c6df20d969fef467`: Pre-Unreal #1467 SUCCESS and Unreal Build #1140 SUCCESS; merged `develop@6abc675cacfe9c9b37a63420d72d0b1621b3b7c6` also passed #1468/#1141.
+- Added `AShirePrototypeWorldBuilder::SpawnBagEndHeroPass()`: 3 zero-Tick/no-collision HISM clusters configured for 34 local instances (14 approach stones, 12 garden planters, 8 wood piles) plus 8 non-collision lived-in props.
+- Added `ApplyBagEndStoryVariant()`: 5 Birthday props for `ShireArrival/LongExpectedParty` and 5 departure/packing props for `RingSecret/LeavingHome`. Existing ShireQuestSubsystem delegates drive visibility; no new Tick, global scan or Spawn/Destroy transition churn.
+- P1C01 ambient population remains **18**. LivingWorldDirector, ShireNPCContextSubsystem and ShireQuestSubsystem ownership is unchanged.
+- Existing quest/story anchors and locked F1-01/F1-02 outcomes are unchanged.
+- Dedicated Bag End interior remains **CONTENT_PENDING** because the repository has no approved production interior FBX kit/shell.
+- Current status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27.2 PROOF PENDING**.
+- Not claimed: PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PACING-ACCEPTED or PERFORMANCE-ACCEPTED.
+
