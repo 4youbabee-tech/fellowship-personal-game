@@ -1,3 +1,17 @@
+## 2026-09-30 - P1C01 SHIRE_WORLD_DENSITY car registered before runtime implementation
+
+- Scope: first post-mega runtime car for the existing P1C01 aggregation; no chapter renumbering and no new story outcome.
+- Source basis: Shire/Hobbiton pastoral hills, lanes, farms, Hobbit-holes, gardens and warm domestic scale; chapter-state population remains owned by LivingWorldDirector rather than the world builder.
+- Runtime ownership: ShirePrototypeWorldBuilder may add geometry/dressing only. Ambient NPC population stays owned by LivingWorldDirector; quest/story truth stays owned by ShireQuestSubsystem.
+- Low-spec implementation contract: add at most 5 zero-Tick AWorldDetailCluster HISM clusters / 70 non-collision decorative instances using already-resident production meshes only. No synchronous load, no new hard heavy-asset reference, no crowd Spawn/Destroy path, no per-frame scan.
+- Categories: wood piles near homes/farms, fern clumps near hedges/wooded road, reed clusters near The Water/ferry, path markers along readable travel corridors, and fallen logs inside wooded-road dressing.
+- Population invariant: P1C01 ambient target remains 18; this car improves perceived density through spatial/detail variety, not more full AI.
+- Traversal invariant: all new detail is non-collision and stays outside story/quest anchor ownership.
+- Gate: source implementation must pass exact-head Pre-Unreal + UE4.27.2 before merge; target-device FPS/hitch/RAM/VRAM and human visual/pacing review remain separate Gate 6/7 evidence.
+- Implementation: `ShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()` now uses five bounded `AWorldDetailCluster` HISM categories with a 70-instance ceiling and no collision/Tick ownership.
+- Regression guard: PG-214 + source-contract test lock population target 18, HISM cluster/instance ceilings, resident-only asset behavior and the no-load/no-ambient-NPC-spawn boundary.
+- Evidence boundary after implementation: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27.2 PROOF PENDING**. No PIE/device/visual/pacing/performance acceptance is claimed.
+
 ## 2026-09-30 - P1C01 Maximum-Safe Mega Build V1 + LivingWorld cull safety
 
 - P1C01 legacy mega-pack path drift found during the train audit was corrected to the D-backed Warehouse authority; this is infrastructure consistency only, not content/runtime acceptance.

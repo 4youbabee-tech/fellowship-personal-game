@@ -72,14 +72,14 @@
       "order": 2,
       "id": "LIVING_WORLD_EVENT_CULL_SAFETY",
       "type": "RUNTIME_REPAIR",
-      "status": "SOURCE_IMPLEMENTED_PROOF_PENDING",
+      "status": "EXACT_HEAD_MACHINE_GREEN_PR189_PRE1465_UE1138",
       "purpose": "Member-local distance retirement so one roaming actor cannot despawn a nearby interaction/event member."
     },
     {
       "order": 3,
       "id": "SHIRE_WORLD_DENSITY_AND_ROUTE_LIFE",
       "type": "RUNTIME_BUILD",
-      "status": "GATED",
+      "status": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
       "purpose": "Populate Hobbiton/fields/lanes/party/ferry corridor using existing pooled LivingWorld ownership and chapter-tuned caps."
     },
     {
@@ -154,7 +154,7 @@
   ],
   "evidence_boundary": "Authorization and implementation train contract only. Each car retains its own STATIC/COMPILE/PIE/DEVICE/VISUAL/PERFORMANCE evidence boundary.",
   "preparation_progress": {
-    "event_member_cull": "SOURCE_IMPLEMENTED_PROOF_PENDING",
+    "event_member_cull": "EXACT_HEAD_MACHINE_GREEN_PR189_PRE1465_UE1138",
     "pawn_cache_guard": "SOURCE_IMPLEMENTED_PROOF_PENDING",
     "save_schema_history": "PARTIAL_HISTORY_RECOVERED_V3_TO_V6_V1_V2_UNDOCUMENTED_DO_NOT_INVENT",
     "source_to_production_bridge": "COMPREHENSIVE_ROWS_EXTENDED",

@@ -5187,6 +5187,39 @@
       ],
       "evidence_boundary": "EXECUTION AUTHORIZATION + SOURCE/RUNTIME REPAIR CONTRACT. No PIE/device/visual/performance acceptance is implied.",
       "authority": "USER_EXPLICIT_DIRECTION"
+    },
+    {
+      "id": "DEC-091",
+      "title": "P1C01 Shire world-density car uses bounded HISM dressing without raising AI population",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-STABILITY-001",
+        "REQ-PERF-001",
+        "REQ-WORLD-001",
+        "REQ-NPC-001",
+        "REQ-QA-001"
+      ],
+      "resolution": "Open SHIRE_WORLD_DENSITY as the first post-mega runtime car using existing WorldBuilder geometry ownership and AWorldDetailCluster HISM dressing. Keep P1C01 ambient population target at 18 and leave LivingWorldDirector as sole ambient-population authority.",
+      "implementation_contract": [
+        "World-density additions are geometry/dressing only and own no quest/story postcondition.",
+        "P1C01 ambient population target remains 18; perceived density comes from spatial/detail variety rather than more full AI.",
+        "Use at most five zero-Tick AWorldDetailCluster actors and at most 70 non-collision detail instances in this car.",
+        "Use only already-resident ProductionCommon mesh pointers; a missing mesh skips its category and never triggers synchronous heavy loading.",
+        "No crowd Spawn/Destroy path, global per-frame scan, parallel AI brain or new hard heavy-asset reference is allowed.",
+        "New detail remains non-collision to avoid changing authored traversal topology.",
+        "Exact-head Pre-Unreal plus UE4.27.2 validation is required before merge; PIE/device/visual/performance acceptance remains separate."
+      ],
+      "rationale": "The Shire source bibles call for pastoral lanes, farms, gardens and lived-in low-threat exploration, while the master production system favors bounded authored world life, instancing/culling and simplified distant presentation over maximum simulation.",
+      "evidence": [
+        "Data/P1C01ShireWorldDensityCarV1.json",
+        "Docs/WORLD_DETAIL_LEDGER.md",
+        "Data/WorldLifeSaturationPlan.json P1C01 target=18",
+        "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp SpawnWorldDensityDetailPass",
+        "Source/ShireJourney/Private/World/WorldDetailCluster.cpp zero-Tick HISM implementation",
+        "Scripts/pre_unreal_validate.py PG-214"
+      ],
+      "evidence_boundary": "SOURCE IMPLEMENTATION CONTRACT. No PIE/device/visual/pacing/performance acceptance is implied until matching evidence exists.",
+      "authority": "DEC-090_USER_MEGA_TRAIN_AUTHORIZATION"
     }
   ],
   "open_conflicts": [],

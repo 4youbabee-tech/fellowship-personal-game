@@ -189,8 +189,11 @@ class SourceContractTests(unittest.TestCase):
             train["preparation_progress"]["runtime_expansion"],
             "GATED_BY_RELEVANT_PER_CAR_EXACT_HEAD_UE4",
         )
+        self.assertEqual(
+            cars["SHIRE_WORLD_DENSITY_AND_ROUTE_LIFE"]["status"],
+            "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
+        )
         for car_id in (
-            "SHIRE_WORLD_DENSITY_AND_ROUTE_LIFE",
             "PARTY_AND_BAG_END_INTERACTION_DENSITY",
             "NPC_ROUTINES_SOCIAL_MEMORY",
             "FAUNA_ENVIRONMENTAL_MOTION",
@@ -202,6 +205,34 @@ class SourceContractTests(unittest.TestCase):
             "TARGET_DEVICE_PROFILE_AND_GATE67",
         ):
             self.assertEqual(cars[car_id]["status"], "GATED")
+
+
+    def test_p1c01_shire_world_density_is_bounded_and_instanced(self):
+        root = Path(__file__).resolve().parents[1]
+        contract = json.loads((root / "Data" / "P1C01ShireWorldDensityCarV1.json").read_text(encoding="utf-8"))
+        self.assertEqual(contract["status"], "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING")
+        self.assertEqual(contract["budget"]["ambient_population_target_p1c01"], 18)
+        self.assertEqual(contract["budget"]["max_cluster_actors"], 5)
+        self.assertEqual(contract["budget"]["max_detail_instances"], 70)
+        self.assertEqual(
+            sum(row["max_instances"] for row in contract["budget"]["categories"]),
+            70,
+        )
+
+        life = json.loads((root / "Data" / "WorldLifeSaturationPlan.json").read_text(encoding="utf-8"))
+        self.assertEqual(life["baseline_population_targets"]["P1C01"], 18)
+
+        source = (root / "Source" / "ShireJourney" / "Private" / "World" / "ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        start = source.index("void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()")
+        end = source.index("void AShirePrototypeWorldBuilder::SpawnScenicDetailPass()", start)
+        body = source[start:end]
+        self.assertEqual(body.count("SpawnDetailCluster("), 5)
+        self.assertIn("Cluster->Configure(Mesh, false", body)
+        self.assertIn("SHIRE_WORLD_DENSITY_DETAIL_PASS", body)
+        self.assertIn("populationTarget=18", body)
+        self.assertNotIn("LoadObject<", body)
+        self.assertNotIn("StaticLoadObject", body)
+        self.assertNotIn("SpawnActor<AShireAmbientNPC>", body)
 
 
 if __name__ == "__main__":
