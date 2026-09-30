@@ -2179,3 +2179,14 @@ The save audit now records only reachable, reviewable history: schema 3 introduc
 
 Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/cinematic-skip postcondition equivalence and safe optional-window expiry. Runtime gameplay, target-device performance, human PIE, visual quality and audio listening remain gated and unaccepted.
 
+## 2026-09-30 - P1C01 BAG_END_LIVED_IN_PASS hero car
+
+- SHIRE_WORLD_DENSITY predecessor: **STATIC-VALIDATED + UE4.27.2/headless machine-green** on PR #192 / Pre-Unreal #1467 / Unreal #1140; merged develop #1468/#1141 also green.
+- Bag End hero source implementation: **SOURCE-IMPLEMENTED / EXACT-HEAD CI PENDING**.
+- Exterior hero budget: **3 HISM clusters / 34 non-collision instances + 8 static lived-in props**.
+- Quest-state variants: **5 Birthday props + 5 Departure props**, visibility-swapped from existing ShireQuestSubsystem delegate events; no Tick and no transition Spawn/Destroy churn.
+- AI population: **UNCHANGED at 18**.
+- Story anchors / locked F1-01/F1-02 outcomes: **UNCHANGED**.
+- Dedicated Bag End interior: **CONTENT_PENDING**; no production interior shell/kit exists in the repository and no completion claim is made.
+- PIE collision/readability, human visual acceptance and target-device performance: **PENDING / NOT CLAIMED**.
+

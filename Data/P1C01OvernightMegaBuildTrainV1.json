@@ -79,14 +79,14 @@
       "order": 3,
       "id": "SHIRE_WORLD_DENSITY_AND_ROUTE_LIFE",
       "type": "RUNTIME_BUILD",
-      "status": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
+      "status": "EXACT_HEAD_MACHINE_GREEN_PR192_PRE1467_UE1140_DEVELOP_PRE1468_UE1141",
       "purpose": "Populate Hobbiton/fields/lanes/party/ferry corridor using existing pooled LivingWorld ownership and chapter-tuned caps."
     },
     {
       "order": 4,
       "id": "PARTY_AND_BAG_END_INTERACTION_DENSITY",
       "type": "RUNTIME_BUILD",
-      "status": "GATED",
+      "status": "BAG_END_HERO_SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
       "purpose": "Birthday setup, social onboarding, tables/food/decorations, bounded guest interactions, Bag End lived-in interaction pass."
     },
     {

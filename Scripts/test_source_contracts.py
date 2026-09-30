@@ -191,10 +191,13 @@ class SourceContractTests(unittest.TestCase):
         )
         self.assertEqual(
             cars["SHIRE_WORLD_DENSITY_AND_ROUTE_LIFE"]["status"],
-            "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
+            "EXACT_HEAD_MACHINE_GREEN_PR192_PRE1467_UE1140_DEVELOP_PRE1468_UE1141",
+        )
+        self.assertEqual(
+            cars["PARTY_AND_BAG_END_INTERACTION_DENSITY"]["status"],
+            "BAG_END_HERO_SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
         )
         for car_id in (
-            "PARTY_AND_BAG_END_INTERACTION_DENSITY",
             "NPC_ROUTINES_SOCIAL_MEMORY",
             "FAUNA_ENVIRONMENTAL_MOTION",
             "CHARACTER_PRESENTATION",
@@ -210,7 +213,7 @@ class SourceContractTests(unittest.TestCase):
     def test_p1c01_shire_world_density_is_bounded_and_instanced(self):
         root = Path(__file__).resolve().parents[1]
         contract = json.loads((root / "Data" / "P1C01ShireWorldDensityCarV1.json").read_text(encoding="utf-8"))
-        self.assertEqual(contract["status"], "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING")
+        self.assertEqual(contract["status"], "EXACT_HEAD_MACHINE_GREEN_PR192_PRE1467_UE1140_DEVELOP_PRE1468_UE1141")
         self.assertEqual(contract["budget"]["ambient_population_target_p1c01"], 18)
         self.assertEqual(contract["budget"]["max_cluster_actors"], 5)
         self.assertEqual(contract["budget"]["max_detail_instances"], 70)
@@ -233,6 +236,36 @@ class SourceContractTests(unittest.TestCase):
         self.assertNotIn("LoadObject<", body)
         self.assertNotIn("StaticLoadObject", body)
         self.assertNotIn("SpawnActor<AShireAmbientNPC>", body)
+
+
+    def test_p1c01_bag_end_hero_pass_is_bounded_and_state_driven(self):
+        root = Path(__file__).resolve().parents[1]
+        contract = json.loads((root / "Data" / "P1C01BagEndHeroChapterV1.json").read_text(encoding="utf-8"))
+        self.assertEqual(contract["status"], "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING")
+        self.assertEqual(contract["runtime_budget"]["max_hism_cluster_actors"], 3)
+        self.assertEqual(contract["runtime_budget"]["max_hism_instances"], 36)
+        self.assertEqual(contract["architecture"]["ambient_population_target_p1c01"], 18)
+        self.assertEqual(
+            contract["asset_policy"]["interior"],
+            "CONTENT_PENDING_DEDICATED_FBX_KIT_AND_PROVENANCE",
+        )
+
+        source = (root / "Source" / "ShireJourney" / "Private" / "World" / "ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        start = source.index("void AShirePrototypeWorldBuilder::SpawnBagEndHeroPass()")
+        end = source.index("void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()", start)
+        body = source[start:end]
+        self.assertEqual(body.count("SpawnDetailCluster("), 3)
+        self.assertIn("BAG_END_HERO_PASS", body)
+        self.assertIn("populationTarget=18", body)
+        self.assertIn("Configure(Mesh, false", body)
+        for forbidden in ("LoadObject<", "StaticLoadObject", "RequestSyncLoad", "SpawnActor<AShireAmbientNPC>"):
+            self.assertNotIn(forbidden, body)
+
+        state_start = source.index("void AShirePrototypeWorldBuilder::ApplyBagEndStoryVariant()")
+        state_end = source.index("void AShirePrototypeWorldBuilder::ApplyStoryAtmosphere()", state_start)
+        state_body = source[state_start:state_end]
+        for token in ("ShireArrival", "LongExpectedParty", "RingSecret", "LeavingHome", "BAG_END_STORY_VARIANT"):
+            self.assertIn(token, state_body)
 
 
 if __name__ == "__main__":

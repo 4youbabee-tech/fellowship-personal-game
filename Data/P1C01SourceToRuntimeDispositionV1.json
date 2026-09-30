@@ -32,8 +32,8 @@
         "P1C01ShireWorldDensityCarV1",
         "AWorldDetailCluster HISM world-density dressing"
       ],
-      "state": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING_VISUAL_ACCEPTANCE_LATER",
-      "next_car": "SHIRE_WORLD_DENSITY"
+      "state": "EXACT_HEAD_MACHINE_GREEN_PR192_VISUAL_ACCEPTANCE_LATER",
+      "next_car": "BAG_END_LIVED_IN_PASS"
     },
     {
       "id": "BAG_END_WORLD",
@@ -42,9 +42,12 @@
       "current_runtime": [
         "RingSecret",
         "LeavingHome",
-        "Bag End world geometry"
+        "Bag End world geometry",
+        "P1C01BagEndHeroChapterV1",
+        "SpawnBagEndHeroPass",
+        "ApplyBagEndStoryVariant"
       ],
-      "state": "IMPLEMENTED_PARTIAL_NEEDS_DRESSING_AND_ACCEPTANCE",
+      "state": "BAG_END_EXTERIOR_HERO_SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING_INTERIOR_CONTENT_PENDING",
       "next_car": "BAG_END_LIVED_IN_PASS"
     },
     {

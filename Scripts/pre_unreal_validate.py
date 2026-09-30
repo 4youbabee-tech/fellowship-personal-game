@@ -5872,7 +5872,7 @@ for pg209_required in [
 
 # PG-214: P1C01 Shire world-density car stays bounded, instanced and outside AI/story ownership.
 pg214_contract = json.loads(read(ROOT / "Data" / "P1C01ShireWorldDensityCarV1.json"))
-if pg214_contract.get("status") != "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING":
+if pg214_contract.get("status") != "EXACT_HEAD_MACHINE_GREEN_PR192_PRE1467_UE1140_DEVELOP_PRE1468_UE1141":
     fail("PG-214 density car status drifted")
 pg214_budget = pg214_contract.get("budget", {})
 if pg214_budget.get("ambient_population_target_p1c01") != 18:
@@ -9525,3 +9525,54 @@ if errors:
     sys.exit(1)
 
 print("PRE-UNREAL VALIDATION PASSED")
+
+
+# PG-215: P1C01 Bag End hero chapter remains bounded, resident-only and event-driven.
+pg215_path = ROOT / "Data" / "P1C01BagEndHeroChapterV1.json"
+if not pg215_path.exists():
+    fail("PG-215 Bag End hero chapter contract missing")
+else:
+    try:
+        pg215 = json.loads(read(pg215_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-215 invalid Bag End hero chapter contract: {exc}")
+        pg215 = {}
+
+    if pg215:
+        if pg215.get("status") != "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING":
+            fail("PG-215 Bag End hero chapter status drifted")
+        budget = pg215.get("runtime_budget", {})
+        if budget.get("max_hism_cluster_actors") != 3:
+            fail("PG-215 Bag End HISM cluster ceiling must remain 3")
+        if budget.get("max_hism_instances") != 36:
+            fail("PG-215 Bag End HISM instance ceiling must remain 36")
+        if budget.get("max_unique_lived_in_props") != 12:
+            fail("PG-215 Bag End unique prop ceiling must remain 12")
+        if budget.get("max_state_variant_props_per_state") != 6:
+            fail("PG-215 Bag End state prop ceiling must remain 6")
+        if pg215.get("architecture", {}).get("ambient_population_target_p1c01") != 18:
+            fail("PG-215 Bag End car must not raise P1C01 population above 18")
+
+    pg215_source = read(resolve_source("World/ShirePrototypeWorldBuilder.cpp"))
+    if "void AShirePrototypeWorldBuilder::SpawnBagEndHeroPass()" not in pg215_source:
+        fail("PG-215 SpawnBagEndHeroPass implementation missing")
+    if "void AShirePrototypeWorldBuilder::ApplyBagEndStoryVariant()" not in pg215_source:
+        fail("PG-215 ApplyBagEndStoryVariant implementation missing")
+    pg215_start = pg215_source.index("void AShirePrototypeWorldBuilder::SpawnBagEndHeroPass()")
+    pg215_end = pg215_source.index("void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()", pg215_start)
+    pg215_body = pg215_source[pg215_start:pg215_end]
+    if pg215_body.count("SpawnDetailCluster(") != 3:
+        fail("PG-215 Bag End pass must admit exactly three bounded HISM clusters")
+    for required in ("BAG_END_HERO_PASS", "populationTarget=18", "Configure(Mesh, false"):
+        if required not in pg215_body:
+            fail(f"PG-215 Bag End hero pass missing required token: {required}")
+    for forbidden in ("LoadObject<", "StaticLoadObject", "RequestSyncLoad", "SpawnActor<AShireAmbientNPC>"):
+        if forbidden in pg215_body:
+            fail(f"PG-215 Bag End pass contains forbidden runtime path: {forbidden}")
+
+    pg215_variant_start = pg215_source.index("void AShirePrototypeWorldBuilder::ApplyBagEndStoryVariant()")
+    pg215_variant_end = pg215_source.index("void AShirePrototypeWorldBuilder::ApplyStoryAtmosphere()", pg215_variant_start)
+    pg215_variant = pg215_source[pg215_variant_start:pg215_variant_end]
+    for required in ("ShireArrival", "LongExpectedParty", "RingSecret", "LeavingHome", "BAG_END_STORY_VARIANT"):
+        if required not in pg215_variant:
+            fail(f"PG-215 Bag End state variant missing required token: {required}")

@@ -94,6 +94,8 @@ private:
     UPROPERTY() ASkyLight* RuntimeSky = nullptr;
     UPROPERTY() APostProcessVolume* RuntimePostProcess = nullptr;
     UPROPERTY() UShireQuestSubsystem* QuestSubsystem = nullptr;
+    UPROPERTY() TArray<AStaticMeshActor*> BagEndBirthdayVariantActors;
+    UPROPERTY() TArray<AStaticMeshActor*> BagEndDepartureVariantActors;
 
     bool bBuilt = false;
 
@@ -115,9 +117,11 @@ private:
     void SpawnVillage();
     void SpawnProductionVillageDetailLayer();
     void SpawnWorldDensityDetailPass();
+    void SpawnBagEndHeroPass();
     void SpawnSideStories();
     void SpawnStoryActors();
     void ApplyStoryAtmosphere();
+    void ApplyBagEndStoryVariant();
 
     UFUNCTION()
     void HandleActiveQuestChanged(FName QuestId);

@@ -256,6 +256,7 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     }
 
     ApplyStoryAtmosphere();
+    ApplyBagEndStoryVariant();
 }
 
 void AShirePrototypeWorldBuilder::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -814,17 +815,61 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
 void AShirePrototypeWorldBuilder::HandleActiveQuestChanged(FName QuestId)
 {
     ApplyStoryAtmosphere();
+    ApplyBagEndStoryVariant();
 }
 
 void AShirePrototypeWorldBuilder::HandleQuestStageChanged(FName QuestId, int32 NewStage)
 {
     ApplyStoryAtmosphere();
+    ApplyBagEndStoryVariant();
 }
 
 void AShirePrototypeWorldBuilder::HandleStoryBeatTriggered(FName StoryBeatId)
 {
     ApplyStoryAtmosphere();
+    ApplyBagEndStoryVariant();
 }
+
+void AShirePrototypeWorldBuilder::ApplyBagEndStoryVariant()
+{
+    const FName QuestId = QuestSubsystem ? QuestSubsystem->GetActiveQuestId() : NAME_None;
+    const bool bBirthdayState =
+        QuestId == TEXT("ShireArrival") ||
+        QuestId == TEXT("LongExpectedParty");
+    const bool bDepartureState =
+        QuestId == TEXT("RingSecret") ||
+        QuestId == TEXT("LeavingHome");
+
+    for (AStaticMeshActor* Actor : BagEndBirthdayVariantActors)
+    {
+        if (IsValid(Actor))
+        {
+            Actor->SetActorHiddenInGame(!bBirthdayState);
+        }
+    }
+
+    for (AStaticMeshActor* Actor : BagEndDepartureVariantActors)
+    {
+        if (IsValid(Actor))
+        {
+            Actor->SetActorHiddenInGame(!bDepartureState);
+        }
+    }
+
+    const TCHAR* StateName =
+        bBirthdayState ? TEXT("birthday") :
+        (bDepartureState ? TEXT("departure") : TEXT("neutral"));
+
+    UE_LOG(
+        LogTemp,
+        Verbose,
+        TEXT("BAG_END_STORY_VARIANT quest=%s state=%s birthdayVisible=%d departureVisible=%d"),
+        *QuestId.ToString(),
+        StateName,
+        bBirthdayState ? BagEndBirthdayVariantActors.Num() : 0,
+        bDepartureState ? BagEndDepartureVariantActors.Num() : 0);
+}
+
 
 void AShirePrototypeWorldBuilder::ApplyStoryAtmosphere()
 {
@@ -2153,6 +2198,178 @@ void AShirePrototypeWorldBuilder::SpawnProductionVillageDetailLayer()
 
 }
 
+void AShirePrototypeWorldBuilder::SpawnBagEndHeroPass()
+{
+    if (!GetWorld())
+    {
+        return;
+    }
+
+    const FVector BagEnd(-2210.0f, -520.0f, 0.0f);
+
+    UStaticMesh* CommonFlowerPlanter = ResolveResidentStaticMesh(
+        TEXT("/Game/Production/World/Common/SM_CommonFlowerPlanter.SM_CommonFlowerPlanter"));
+    UStaticMesh* CommonBucket = ResolveResidentStaticMesh(
+        TEXT("/Game/Production/World/Common/SM_CommonBucket.SM_CommonBucket"));
+    UStaticMesh* CommonStorageChest = ResolveResidentStaticMesh(
+        TEXT("/Game/Production/World/Common/SM_CommonStorageChest.SM_CommonStorageChest"));
+    UStaticMesh* CommonSackBale = ResolveResidentStaticMesh(
+        TEXT("/Game/Production/World/Common/SM_CommonSackBale.SM_CommonSackBale"));
+    UStaticMesh* CommonWheelbarrow = ResolveResidentStaticMesh(
+        TEXT("/Game/Production/World/Common/SM_CommonWheelbarrow.SM_CommonWheelbarrow"));
+
+    int32 ClusterCount = 0;
+    int32 InstanceCount = 0;
+    auto SpawnDetailCluster = [this, &ClusterCount, &InstanceCount](
+        UStaticMesh* Mesh,
+        const TCHAR* Tag,
+        int32 StartCull,
+        int32 EndCull,
+        const TArray<FTransform>& Placements)
+    {
+        if (!Mesh || Placements.Num() == 0)
+        {
+            return;
+        }
+
+        AWorldDetailCluster* Cluster = GetWorld()->SpawnActor<AWorldDetailCluster>();
+        if (!Cluster)
+        {
+            return;
+        }
+
+        Cluster->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
+        Cluster->Tags.AddUnique(TEXT("P1C01BagEndHeroDetail"));
+        Cluster->Tags.AddUnique(FName(Tag));
+        Cluster->Configure(Mesh, false, StartCull, EndCull);
+        for (const FTransform& Transform : Placements)
+        {
+            Cluster->AddDetailInstance(
+                Transform.GetLocation(),
+                Transform.Rotator(),
+                Transform.GetScale3D());
+        }
+
+        ++ClusterCount;
+        InstanceCount += Cluster->GetDetailCount();
+    };
+
+    TArray<FTransform> ApproachStones;
+    ApproachStones.Reserve(14);
+    for (int32 Index = 0; Index < 14; ++Index)
+    {
+        const float Alpha = static_cast<float>(Index) / 13.0f;
+        const FVector Location = FMath::Lerp(
+            FVector(-1710.0f, -355.0f, 5.0f),
+            FVector(-2180.0f, -500.0f, 5.0f),
+            Alpha);
+        const float Side = (Index % 2 == 0) ? -22.0f : 22.0f;
+        ApproachStones.Emplace(
+            FRotator(0.0f, -15.0f + static_cast<float>((Index * 17) % 31), 0.0f),
+            Location + FVector(0.0f, Side, 0.0f),
+            FVector(0.48f + 0.03f * static_cast<float>(Index % 3)));
+    }
+    SpawnDetailCluster(ProductionPathStoneMesh, TEXT("P1C01BagEndApproachStones"), 700, 3600, ApproachStones);
+
+    TArray<FTransform> GardenPlanters;
+    GardenPlanters.Reserve(12);
+    const FVector PlanterOffsets[] = {
+        FVector(-20,-245,0), FVector(45,-250,0), FVector(115,-238,0),
+        FVector(190,-222,0), FVector(-5,245,0), FVector(65,250,0),
+        FVector(140,238,0), FVector(215,218,0), FVector(300,-205,0),
+        FVector(345,-160,0), FVector(305,205,0), FVector(350,155,0)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(PlanterOffsets); ++Index)
+    {
+        GardenPlanters.Emplace(
+            FRotator(0.0f, static_cast<float>((Index * 29) % 50) - 25.0f, 0.0f),
+            BagEnd + PlanterOffsets[Index],
+            FVector(0.52f + 0.03f * static_cast<float>(Index % 3)));
+    }
+    SpawnDetailCluster(CommonFlowerPlanter, TEXT("P1C01BagEndGardenPlanters"), 600, 3000, GardenPlanters);
+
+    TArray<FTransform> WoodPiles;
+    WoodPiles.Reserve(8);
+    const FVector WoodOffsets[] = {
+        FVector(-90,-300,0), FVector(5,-315,0), FVector(105,-302,0), FVector(205,-292,0),
+        FVector(-70,300,0), FVector(30,315,0), FVector(135,302,0), FVector(238,286,0)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(WoodOffsets); ++Index)
+    {
+        WoodPiles.Emplace(
+            FRotator(0.0f, static_cast<float>((Index * 37) % 35) - 17.0f, 0.0f),
+            BagEnd + WoodOffsets[Index],
+            FVector(0.54f + 0.04f * static_cast<float>(Index % 2)));
+    }
+    SpawnDetailCluster(ProductionCommonWoodPileMesh, TEXT("P1C01BagEndWoodPiles"), 900, 4200, WoodPiles);
+
+    int32 StaticPropCount = 0;
+    auto SpawnHeroProp = [this, &StaticPropCount](
+        UStaticMesh* Mesh, const FVector& Location, const FVector& Scale, const FRotator& Rotation)
+    {
+        AStaticMeshActor* Actor = SpawnShape(Mesh, Location, Scale, FLinearColor::White, Rotation, false);
+        if (Actor)
+        {
+            Actor->Tags.AddUnique(TEXT("P1C01BagEndHeroDetail"));
+            ++StaticPropCount;
+        }
+        return Actor;
+    };
+
+    SpawnHeroProp(CommonWheelbarrow, BagEnd + FVector(355,-255,0), FVector(0.62f), FRotator(0,72,0));
+    SpawnHeroProp(CommonBucket, BagEnd + FVector(295,-105,0), FVector(0.60f), FRotator(0,-8,0));
+    SpawnHeroProp(CommonStorageChest, BagEnd + FVector(125,255,0), FVector(0.62f), FRotator(0,12,0));
+    SpawnHeroProp(CommonSackBale, BagEnd + FVector(210,275,0), FVector(0.58f), FRotator(0,-16,0));
+    SpawnHeroProp(ProductionBarrelMesh, BagEnd + FVector(305,265,0), FVector(0.58f), FRotator(0,9,0));
+    SpawnHeroProp(ProductionCrateMesh, BagEnd + FVector(365,230,0), FVector(0.56f), FRotator(0,-11,0));
+    SpawnHeroProp(ProductionLanternMesh, BagEnd + FVector(220,-170,18), FVector(0.56f), FRotator::ZeroRotator);
+    SpawnHeroProp(ProductionFlowerBoxMesh, BagEnd + FVector(-25,185,0), FVector(0.62f), FRotator(0,-5,0));
+
+    auto SpawnVariantProp = [this, &BagEnd](
+        TArray<AStaticMeshActor*>& Target,
+        UStaticMesh* Mesh,
+        const FVector& Offset,
+        const FVector& Scale,
+        const FRotator& Rotation,
+        const TCHAR* StateTag)
+    {
+        AStaticMeshActor* Actor = SpawnShape(Mesh, BagEnd + Offset, Scale, FLinearColor::White, Rotation, false);
+        if (!Actor)
+        {
+            return;
+        }
+
+        Actor->Tags.AddUnique(TEXT("P1C01BagEndStateVariant"));
+        Actor->Tags.AddUnique(FName(StateTag));
+        Actor->SetActorHiddenInGame(true);
+        Actor->SetActorEnableCollision(false);
+        Target.Add(Actor);
+    };
+
+    SpawnVariantProp(BagEndBirthdayVariantActors, ProductionPicnicTableMesh, FVector(520,180,0), FVector(0.58f), FRotator(0,-8,0), TEXT("P1C01BagEndBirthdayState"));
+    SpawnVariantProp(BagEndBirthdayVariantActors, ProductionPicnicTableMesh, FVector(555,-155,0), FVector(0.56f), FRotator(0,10,0), TEXT("P1C01BagEndBirthdayState"));
+    SpawnVariantProp(BagEndBirthdayVariantActors, ProductionLanternMesh, FVector(455,245,12), FVector(0.58f), FRotator::ZeroRotator, TEXT("P1C01BagEndBirthdayState"));
+    SpawnVariantProp(BagEndBirthdayVariantActors, ProductionLanternMesh, FVector(475,-245,12), FVector(0.58f), FRotator::ZeroRotator, TEXT("P1C01BagEndBirthdayState"));
+    SpawnVariantProp(BagEndBirthdayVariantActors, ProductionMarketStallMesh, FVector(650,20,0), FVector(0.50f), FRotator(0,90,0), TEXT("P1C01BagEndBirthdayState"));
+
+    SpawnVariantProp(BagEndDepartureVariantActors, CommonStorageChest, FVector(430,205,0), FVector(0.64f), FRotator(0,-7,0), TEXT("P1C01BagEndDepartureState"));
+    SpawnVariantProp(BagEndDepartureVariantActors, CommonSackBale, FVector(500,230,0), FVector(0.62f), FRotator(0,12,0), TEXT("P1C01BagEndDepartureState"));
+    SpawnVariantProp(BagEndDepartureVariantActors, ProductionCrateMesh, FVector(455,-210,0), FVector(0.62f), FRotator(0,-10,0), TEXT("P1C01BagEndDepartureState"));
+    SpawnVariantProp(BagEndDepartureVariantActors, ProductionLoadedCartMesh, FVector(625,-70,0), FVector(0.54f), FRotator(0,82,0), TEXT("P1C01BagEndDepartureState"));
+    SpawnVariantProp(BagEndDepartureVariantActors, CommonBucket, FVector(380,-170,0), FVector(0.60f), FRotator::ZeroRotator, TEXT("P1C01BagEndDepartureState"));
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("BAG_END_HERO_PASS clusters=%d instances=%d staticProps=%d birthdayProps=%d departureProps=%d populationTarget=18 collision=none tick=none interior=content-pending"),
+        ClusterCount,
+        InstanceCount,
+        StaticPropCount,
+        BagEndBirthdayVariantActors.Num(),
+        BagEndDepartureVariantActors.Num());
+}
+
+
 void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()
 {
     if (!GetWorld())
@@ -2695,6 +2912,7 @@ void AShirePrototypeWorldBuilder::BuildPrototypeWorld()
     SpawnFoliagePass();
     SpawnScenicDetailPass();
     SpawnWorldDensityDetailPass();
+    SpawnBagEndHeroPass();
     SpawnSideStories();
     SpawnStoryActors();
 }
