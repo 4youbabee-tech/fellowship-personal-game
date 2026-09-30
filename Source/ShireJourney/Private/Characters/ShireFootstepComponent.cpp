@@ -135,6 +135,26 @@ void UShireFootstepComponent::TickComponent(
 
 FName UShireFootstepComponent::ResolveSurfaceCue(const FHitResult& Hit) const
 {
+    if (Hit.PhysMaterial.IsValid())
+    {
+        switch (UPhysicalMaterial::DetermineSurfaceType(Hit.PhysMaterial.Get()))
+        {
+        case SurfaceType1:
+            return ShireFootstep::GrassCue;
+        case SurfaceType2:
+            return ShireFootstep::DirtCue;
+        case SurfaceType3:
+            return ShireFootstep::StoneCue;
+        case SurfaceType4:
+            return ShireFootstep::WoodCue;
+        default:
+            break;
+        }
+    }
+
+    // Keep the existing identity fallback for legacy/proxy materials that have not
+    // yet been assigned an authored Physical Material. Production surfaces should
+    // converge on the explicit SurfaceType contract above.
     FString SurfaceIdentity;
     if (Hit.PhysMaterial.IsValid())
     {
