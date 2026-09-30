@@ -12,14 +12,96 @@
   "evidence": [
     "Source/ShireJourney/Public/SaveGame/ShireSaveGame.h: CurrentSchemaVersion = 6",
     "Source/ShireJourney/Private/Characters/ShirePlayerCharacter.cpp: RestoreSaveSnapshot rejects only newer schema versions and then restores/canonicalizes current fields",
-    "Repository commit search did not return documented schema-version transition commits by schema/save-version terms"
+    "Canonical file history: 43c5be74 -> 8bb67fdd -> 368d1979 -> f5bc3a6d -> e37cff8e -> c83e1b94 had no schema-version field",
+    "Schema history: b94d1b1f introduced v3; 0797f034 introduced v4; 9dc630ec introduced v5; 40d9f020 introduced v6",
+    "9acc72b1 migrated the runtime module to Public/Private paths without changing the schema-version lineage"
   ],
-  "decision": "Do not fabricate version-by-version migration semantics. Recover historical schema changes from reachable commit history or authoritative documentation first; then implement explicit migrations only for documented field changes.",
+  "decision": "Canonical reachable history now recovers the v3->v6 field-introduction lineage, but v1/v2 declarations and historical serialized fixtures remain unrecovered. Do not fabricate migrations. Add runtime migration code only after an exact historical fixture or authoritative transformation semantics exists for the source version being supported.",
   "safe_followups": [
-    "Add structural/static guard that newer schemas remain rejected.",
-    "Require explicit schema-history table before adding MinSupportedSchemaVersion or migration switch cases.",
-    "Preserve existing legacy terminal-state canonicalization tests.",
-    "When history is recovered, add fixture-based old-save tests per supported schema transition."
+    "Keep the newer-than-current rejection guard fail-closed.",
+    "Preserve the recovered v3-v6 commit/field map as the minimum historical evidence contract.",
+    "Search archive/recovery refs for any v1/v2 schema declarations or serialized .sav fixtures before defining MinSupportedSchemaVersion.",
+    "When a historical fixture is recovered, add a fixture-based UE4 restore test for that exact source schema before writing a migration transform.",
+    "Preserve existing legacy terminal-state canonicalization and disk-roundtrip audits."
   ],
-  "evidence_boundary": "AUDIT ONLY. No claim that every older schema is safely migratable or fully backward compatible."
+  "evidence_boundary": "AUDIT/HISTORY RECONSTRUCTION ONLY. v3-v6 field-introduction history is source-recovered; no claim is made that old binary saves are migratable, PIE-tested, device-tested, visually accepted or performance accepted.",
+  "history_recovery": {
+    "status": "PARTIAL_CANONICAL_HISTORY_RECOVERED_V3_TO_V6",
+    "source_path_history": [
+      "Source/ShireJourney/ShireSaveGame.h through parent 92f6d3aaad79f33eaf2385de292e6886d2c1b5da",
+      "Source/ShireJourney/Public/SaveGame/ShireSaveGame.h after Public/Private migration commit 9acc72b16e058a422428389fcefeb9af12fa0e98"
+    ],
+    "pre_schema_reachable_commits": [
+      {
+        "commit": "43c5be74a59cd2d2507126cbce7269202402aaef",
+        "note": "Initial reachable save model; no CurrentSchemaVersion/SaveSchemaVersion field."
+      },
+      {
+        "commit": "8bb67fdd759715b57f825867350e743074f9473c",
+        "note": "CompletedStoryBeats added; still no schema-version field."
+      },
+      {
+        "commit": "368d1979c44e44dff42ffe4b761a426f7112cb43",
+        "note": "Route/episode/playable-character/route-progress persistence added; still no schema-version field."
+      },
+      {
+        "commit": "f5bc3a6d6a3dc241b72decc47a1be19c8a1ed947",
+        "note": "PlayerHealth persistence added; still no schema-version field."
+      },
+      {
+        "commit": "e37cff8eff7f088850fc4ffaf467438a5ae8aff8",
+        "note": "CheckpointId persistence present; still no schema-version field."
+      },
+      {
+        "commit": "c83e1b945fa149d7960726d3e0792e758ff95e2b",
+        "note": "NPCMemoryState persistence added; still no schema-version field."
+      }
+    ],
+    "schema_versions": [
+      {
+        "version": 3,
+        "introduced_by": "b94d1b1faa5c104df348599f54261cf7cb5cfd94",
+        "known_header_additions": [
+          "SaveSchemaVersion",
+          "SnapshotCreatedUnixSeconds"
+        ],
+        "note": "First reachable canonical ShireSaveGame.h state declaring CurrentSchemaVersion. The same commit also hardens NPC-memory behavior; do not infer a binary migration transform without a historical fixture."
+      },
+      {
+        "version": 4,
+        "introduced_by": "0797f03413340f1a85fa0b017b43030d6cd07062",
+        "known_header_additions": [
+          "JourneyDiscoveryIds",
+          "JourneyInsight",
+          "JourneyInsightMilestones"
+        ],
+        "note": "Journey Discovery persistence introduced."
+      },
+      {
+        "version": 5,
+        "introduced_by": "9dc630ec52880925ad36398d93620ff0599f6ca2",
+        "known_header_additions": [
+          "PlayerStamina",
+          "PlayerResolve",
+          "PlayerSupplies",
+          "ProgressionXP"
+        ],
+        "note": "Player-life and progression persistence introduced."
+      },
+      {
+        "version": 6,
+        "introduced_by": "40d9f0208ed6df1101636c87c4555ea1677973f9",
+        "known_header_additions": [
+          "ChronicleEntryIds",
+          "KnownMapRegionIds"
+        ],
+        "note": "Chronicle and map-knowledge persistence introduced."
+      }
+    ],
+    "unresolved": [
+      "No reachable canonical ShireSaveGame.h state declaring CurrentSchemaVersion 1 or 2 was found in the traced path history.",
+      "Pre-schema binary .sav compatibility has not been proven with historical UE4-produced fixtures.",
+      "Current reflected-property defaults, clamping and canonicalization are runtime safeguards but are not evidence of a complete version-by-version migration ladder."
+    ]
+  }
 }

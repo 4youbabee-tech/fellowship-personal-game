@@ -65,21 +65,40 @@
     {
       "order": 2,
       "id": "CACHE_REGRESSION_GUARD",
-      "state": "SOURCE_IMPLEMENTED_PROOF_PENDING",
+      "state": "STATIC_VALIDATED_AT_66FD2C38_PRE1461",
       "scope": "Guard AShireAmbientNPC so UGameplayStatics::GetPlayerPawn remains centralized in GetPlayerPawnCached only.",
       "proof": [
         "PG-210 direct-call centralization guard"
-      ]
+      ],
+      "evidence": {
+        "exact_head": "66fd2c38aa5d6db815c4e6eaba957add89094b0d",
+        "pre_unreal": "#1461 SUCCESS",
+        "boundary": "Static guard proof only; no runtime/PIE/device/visual/performance acceptance."
+      }
     },
     {
       "order": 3,
       "id": "SAVE_SCHEMA_HISTORY_AUDIT",
-      "state": "PREPARED",
+      "state": "AUDIT_ADVANCED_V3_V6_HISTORY_RECOVERED_RUNTIME_MIGRATION_GATED",
       "scope": "Reconstruct schema-version changes before adding migration code; do not invent historical field semantics.",
       "proof": [
         "PG-211 save-schema audit guard",
         "documented version map or explicit unsupported boundary"
-      ]
+      ],
+      "evidence": {
+        "recovered_versions": [
+          3,
+          4,
+          5,
+          6
+        ],
+        "unresolved_versions": [
+          1,
+          2
+        ],
+        "source": "Data/SaveSchemaMigrationAuditV1.json",
+        "boundary": "No migration code authorized until historical fixture/semantics exists."
+      }
     },
     {
       "order": 4,

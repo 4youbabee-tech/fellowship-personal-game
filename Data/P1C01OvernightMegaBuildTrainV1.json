@@ -155,8 +155,8 @@
   "evidence_boundary": "Authorization and implementation train contract only. Each car retains its own STATIC/COMPILE/PIE/DEVICE/VISUAL/PERFORMANCE evidence boundary.",
   "preparation_progress": {
     "event_member_cull": "SOURCE_IMPLEMENTED_PROOF_PENDING",
-    "pawn_cache_guard": "SOURCE_IMPLEMENTED_PROOF_PENDING",
-    "save_schema_history": "AUDITED_HISTORY_NOT_RECOVERED_DO_NOT_INVENT_MIGRATIONS",
+    "pawn_cache_guard": "STATIC_VALIDATED_AT_66FD2C38_PRE1461",
+    "save_schema_history": "V3_V6_CANONICAL_HISTORY_RECOVERED_V1_V2_UNRESOLVED_NO_RUNTIME_MIGRATION",
     "source_to_production_bridge": "COMPREHENSIVE_ROWS_EXTENDED",
     "runtime_expansion": "GATED_BY_W00"
   }

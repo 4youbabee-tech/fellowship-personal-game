@@ -1,3 +1,12 @@
+## 2026-09-30 - P1C01 save-schema audit car advanced safely
+
+- Active runtime proof boundary stays on exact head `66fd2c38aa5d6db815c4e6eaba957add89094b0d`: Pre-Unreal #1461 **SUCCESS**; Unreal Build #1134 **QUEUED** at preparation time.
+- Cache-centralization guard (PG-210): **STATIC-VALIDATED on 66fd2c38 / Pre #1461**.
+- Save-schema history car: **AUDIT ADVANCED**, with source-recovered lineage v3=`b94d1b1f`, v4=`0797f034`, v5=`9dc630ec`, v6=`40d9f020`.
+- v1/v2 schema declarations and historical UE4 `.sav` fixtures: **NOT RECOVERED / DO NOT INVENT MIGRATIONS**.
+- Runtime migration implementation: **GATED** until exact historical fixture/transformation semantics exists.
+- This is non-runtime preparation only; no compile, PIE, device, visual, audio-listening or performance acceptance is promoted.
+
 ## 2026-09-30 - W00 machine closure / P1C01 mega train V2
 
 - Exact acceptance head: `d6ca8aac03f5a1da07609e61e790ddf8faad8eed`.

@@ -1,3 +1,12 @@
+## 2026-09-30 - P1C01 parallel prep: save-schema history reconstruction
+
+- Active mega runtime head remains `66fd2c38aa5d6db815c4e6eaba957add89094b0d`; Pre-Unreal #1461 is **SUCCESS** and Unreal Build #1134 is still queued, so this preparation is isolated instead of moving PR #189's exact runtime head.
+- Work car `CACHE_REGRESSION_GUARD` now has exact-head static proof from #1461; this does not promote any runtime or human acceptance label.
+- Work car `SAVE_SCHEMA_HISTORY_AUDIT` advanced by tracing canonical `ShireSaveGame.h` history: v3 at `b94d1b1f`, v4 at `0797f034`, v5 at `9dc630ec`, and v6 at `40d9f020`.
+- Earlier reachable save-model commits `43c5be74`, `8bb67fdd`, `368d1979`, `f5bc3a6d`, `e37cff8e` and `c83e1b94` contain no schema-version field. No reachable canonical v1/v2 declaration or old serialized fixture was found, so no migration ladder is invented.
+- The Public/Private migration `9acc72b1` is recorded as a path move, not a schema transition.
+- No runtime code changed in this preparation car. No PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED or performance acceptance is claimed.
+
 ## 2026-09-30 - W00 automated machine closure + P1C01 maximum-safe mega train V2
 
 - PR #184 exact head `d6ca8aac03f5a1da07609e61e790ddf8faad8eed` passed hosted Pre-Unreal #1435 and full UE4.27.2 Unreal Build #1108, then merged to `develop@4fb15dfff70bfda5a2c023c3d82b3008fb831edc`.
