@@ -1,7 +1,40 @@
 # Process/job-local environment only. No registry, service or security changes.
 $ErrorActionPreference = 'Stop'
-$root = Join-Path $env:RUNNER_TEMP ("shire-msvc-" + $env:GITHUB_RUN_ID + '-' + $env:GITHUB_RUN_ATTEMPT)
+
+# Use one stable compiler temp root on this single supervised self-hosted runner.
+# UE4/UBT incremental action metadata can retain compiler command lines between jobs.
+# A run-id-specific TEMP path therefore becomes invalid as soon as the next job starts
+# and has caused C1083 failures against deleted _CL_* files from the previous run.
+$root = Join-Path $env:RUNNER_TEMP 'shire-msvc-active'
+$stamp = Join-Path $env:GITHUB_WORKSPACE 'Intermediate\.shire-ci-msvc-temp-root.txt'
+$buildRoot = Join-Path $env:GITHUB_WORKSPACE 'Intermediate\Build\Win64'
+$previousRoot = ''
+if (Test-Path -LiteralPath $stamp -PathType Leaf) {
+    $previousRoot = (Get-Content -LiteralPath $stamp -Raw).Trim()
+}
+
+$needsCompileReset = (Test-Path -LiteralPath $buildRoot -PathType Container) -and
+    ([string]::IsNullOrWhiteSpace($previousRoot) -or
+     -not $previousRoot.Equals($root, [System.StringComparison]::OrdinalIgnoreCase))
+
+if ($needsCompileReset) {
+    Write-Host ("MSVC_TEMP_ROOT_MIGRATION_RESET previous=" + $previousRoot + " current=" + $root)
+    & (Join-Path $env:GITHUB_WORKSPACE 'Scripts\reset_project_build_intermediates.ps1')
+    if ($LASTEXITCODE -ne 0) {
+        throw "Failed to reset project intermediates during compiler-temp root migration."
+    }
+}
+
+if (Test-Path -LiteralPath $root) {
+    try { attrib -R -S -H ($root + '\*') /S /D 2>$null | Out-Null } catch {}
+    Remove-Item -LiteralPath $root -Recurse -Force -ErrorAction Stop
+}
 New-Item -ItemType Directory -Path $root -Force | Out-Null
+
+$stampDir = Split-Path -Parent $stamp
+New-Item -ItemType Directory -Path $stampDir -Force | Out-Null
+Set-Content -LiteralPath $stamp -Value $root -Encoding ASCII
+
 $probe = Join-Path $root 'compiler_probe.cpp'
 Set-Content -LiteralPath $probe -Value 'int shire_compiler_probe() { return 42; }' -Encoding ascii
 $env:TEMP = $root
@@ -9,10 +42,7 @@ $env:TMP = $root
 Add-Content -LiteralPath $env:GITHUB_ENV -Value "TEMP=$root" -Encoding utf8
 Add-Content -LiteralPath $env:GITHUB_ENV -Value "TMP=$root" -Encoding utf8
 
-# The self-hosted service has repeatedly hit MSVC D8050 while c1xx records full
-# debug command lines during UE builds. Exact-head CI validates compile/runtime
-# correctness, not debugger symbol quality, so disable debug info only for this
-# CI target. Local/editor developer builds remain untouched.
+# Exact-head CI validates compile/runtime correctness, not debugger symbol quality.
 $env:SHIRE_CI_NO_DEBUGINFO = "1"
 Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_CI_NO_DEBUGINFO=1" -Encoding utf8
 Write-Host "CI editor target debug info: disabled (SHIRE_CI_NO_DEBUGINFO=1)"
@@ -24,6 +54,7 @@ if ([string]::IsNullOrWhiteSpace($env:USERPROFILE)) {
     }
 }
 Write-Host "Compiler temp directory is writable: $root"
+Write-Host "Compiler temp root policy: stable-single-runner root with stale-intermediate migration reset"
 Write-Host "Service profile present: $(-not [string]::IsNullOrWhiteSpace($env:USERPROFILE))"
 $compiler = 'C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Tools\MSVC\14.29.30133\bin\HostX64\x64\cl.exe'
 if (-not (Test-Path -LiteralPath $compiler)) {
