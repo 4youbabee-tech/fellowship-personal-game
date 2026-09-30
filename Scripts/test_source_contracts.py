@@ -361,6 +361,22 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("bEnableUpdateRateOptimizations = true", npc_cpp)
         self.assertIn("OnlyTickPoseWhenRendered", npc_cpp)
 
+        hero_rig = json.loads((root / "Data" / "P1C01HeroSkeletalCandidateWaveV1.json").read_text(encoding="utf-8"))
+        rig_prep = json.loads((root / "Data" / "P1C01CharacterRigAnimationPrepV1.json").read_text(encoding="utf-8"))
+        self.assertEqual(
+            hero_rig["candidate_policy"]["fbx_pipeline_compatibility"],
+            "UE4.27 FBX 2018-compatible export required",
+        )
+        self.assertEqual(
+            hero_rig["target_profile"]["quality"],
+            "Balanced Medium / selective High where visually important",
+        )
+        self.assertEqual(
+            rig_prep["required_bundle"]["fbx_pipeline_compatibility"],
+            "UE4.27 FBX 2018-compatible export required",
+        )
+        self.assertEqual(rig_prep["project_owned_fallback"]["state"], "STATIC_MODULAR_FALLBACK_ONLY")
+
 
     def test_p1c01_living_shire_is_bounded_and_director_owned(self):
         root = Path(__file__).resolve().parents[1]
@@ -489,6 +505,24 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("RecentDecorativeSfxStartTimes.RemoveAll", source)
         for forbidden in ("LoadObject<", "StaticLoadObject", "RequestSyncLoad"):
             self.assertNotIn(forbidden, source)
+
+        footstep = (root / "Source" / "ShireJourney" / "Private" / "Characters" / "ShireFootstepComponent.cpp").read_text(encoding="utf-8")
+        engine_ini = (root / "Config" / "DefaultEngine.ini").read_text(encoding="utf-8")
+        self.assertEqual(
+            contract["runtime_contract"]["footstep_surface_types"],
+            ["Grass", "Dirt", "Stone", "Wood"],
+        )
+        self.assertIn("UPhysicalMaterial::DetermineSurfaceType", footstep)
+        for surface_type, cue in (
+            ("SurfaceType1", "GrassCue"),
+            ("SurfaceType2", "DirtCue"),
+            ("SurfaceType3", "StoneCue"),
+            ("SurfaceType4", "WoodCue"),
+        ):
+            self.assertIn(f"case {surface_type}:", footstep)
+            self.assertIn(f"return ShireFootstep::{cue};", footstep)
+        for index, name in enumerate(("Grass", "Dirt", "Stone", "Wood"), start=1):
+            self.assertIn(f'PhysicalSurfaces=(Type=SurfaceType{index},Name="{name}")', engine_ini)
 
 
 
