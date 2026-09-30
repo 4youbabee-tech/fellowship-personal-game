@@ -3265,3 +3265,17 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Current status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27.2 PROOF PENDING**.
 - Not claimed: PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PACING-ACCEPTED or PERFORMANCE-ACCEPTED.
 
+## 2026-09-30 - P1C01 PARTY_AND_SOCIAL_LOOP source implementation
+
+- Predecessor BAG_END_LIVED_IN_PASS is exact-head machine-green: PR #193 head `45ea51bc64609d2781a4bb5bdbbdbdef3c9094a1` passed Pre-Unreal #1469 and Unreal Build #1142, then merged as `488159e0eeb2f2c6ee892ef4018da8f60d117744`.
+- Implemented `SpawnPartySocialLoopPass()`: 4 zero-Tick/no-collision HISM clusters configured for 48 decorative instances, plus 14 authored non-collision party props.
+- Added 4 setup-state props and 4 celebration-state props. `ApplyPartyStoryVariant()` reads existing ShireQuestSubsystem story beats: setup before `PartyArrival`, celebration after `PartyArrival`, both hidden after `BilboDisappearance`.
+- Birthday setup gameplay adds three bounded optional beats: decorations, food stores, guest readiness. All are blocked after `PartyArrival`.
+- Added two source-backed multi-step activities through existing `AShireTraversalChallenge`: `SHIRE_FIREWORKS_SAFETY` (timing) and `SHIRE_DRAGON_FIREWORK_MISHAP` (stealth-lite/fixed optional outcome). Both are available only from `PartyArrival` until `BilboDisappearance`.
+- `ConfigureActivityChallenge` now accepts an optional completion story beat while remaining backward-compatible with existing callers; no new gameplay subsystem was introduced.
+- Both activities are registered in `ContextualSideActivityPlan` and `JourneyDiscoveryRewardPlan`, preserving first-time reward / anti-farm / save semantics and canon-safe flags.
+- P1C01 ambient population remains **18**; no crowd-cap increase, per-frame scan, synchronous heavy load or transition Spawn/Destroy churn was added.
+- Locked F1-01 outcome remains unchanged: Bilbo leaves and the Ring passes to Frodo.
+- Current status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27.2 PROOF PENDING**.
+- Not claimed: PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PACING-ACCEPTED or PERFORMANCE-ACCEPTED.
+
