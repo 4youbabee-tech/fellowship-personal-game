@@ -704,3 +704,17 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 **Guard:** `Scripts/test_daily_project_manager_report.ps1` must pass on the exact PR head before any generator change merges.
 
 **Delivery rule:** successful generation alone is not report delivery. A valid scheduled/manual run must also prove the publish step completed against issue #96 (and any additional configured delivery surfaces).
+
+
+### PG-167 - Scheduled manager reports must use a parsed/tested generator
+**Symptom exposed by:** Daily Project Manager Report run #6.
+
+**Evidence:** the self-hosted runner completed setup and checkout of `develop`, then `Generate project-manager report` failed in PowerShell parsing. The downstream `Post to Project Manager issue` step was skipped. The log reported parser errors beginning around the report-string construction, including malformed quoting/encoding around the develop-head and dash characters.
+
+**Root cause class:** a large inline PowerShell block inside the workflow had no repository regression test and was vulnerable to quoting/encoding corruption.
+
+**Permanent rule:** scheduled report generation lives in a repository PowerShell script that is parsed and executed by Pre-Unreal validation. The scheduled workflow is only a launcher/publisher and must not duplicate the report-generation logic inline.
+
+**Delivery rule:** the report must be publishable to Issue #96 and also exposed through the GitHub Actions job summary and an artifact so a single publication-path failure does not make the report disappear.
+
+**Evidence boundary:** generator repair is SOURCE-IMPLEMENTED until exact-head Pre-Unreal validation passes and the main-branch scheduled workflow is separately updated and observed successfully.
