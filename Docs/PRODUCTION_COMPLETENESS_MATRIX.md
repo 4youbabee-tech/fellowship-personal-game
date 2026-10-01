@@ -2318,3 +2318,14 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Local production import/bootstrap | SOURCE-IMPLEMENTED | Local execution/rendered review pending |
 | Runtime ownership | UNCHANGED | Existing router/world/living-world/quest owners remain authoritative |
 | PIE / device / visual / pacing / performance | NOT ACCEPTED | Requires real matching evidence |
+
+
+## 2026-10-01 - Frodo candidate warehouse targeted repair
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Warehouse Stage #302 on `develop@b8cee93c` | FAILURE | Ended inside material-provenance repair; no terminal job log and no candidate artifact |
+| Exact terminal runner/service cause | UNKNOWN / FAIL-CLOSED | GitHub retained the active step without a terminal step conclusion; do not invent a cause |
+| Full Poly Haven `-Refresh` | REMOVED IN REPAIR CANDIDATE | Replaced by receipt SHA256 validation and targeted purge/redownload |
+| Repair-step duration | BOUNDED TO 20 MINUTES | Exact-head workflow proof pending |
+| Frodo/Gandalf candidate report | NOT PRODUCED | No character import, runtime promotion, visual acceptance, or Gate 6/7 closure |
