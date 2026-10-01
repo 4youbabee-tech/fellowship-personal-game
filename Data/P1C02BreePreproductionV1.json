@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "pack_id": "P1C02_BREE_PREPRODUCTION_V1",
+  "status": "SOURCE_PREPRODUCTION_OPEN_RUNTIME_GATED",
+  "runtime_chapter": "P1C02",
+  "runtime_title": "Bree / The Prancing Pony",
+  "canonical_mission_id": "F1-04",
+  "runtime_integration_allowed": false,
+  "predecessor_gate": "P1C01_GATE_6_7_ACCEPTED",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/P1C01RuntimeChapterSequenceV1.json",
+    "Data/F104BreeWeathertopMegaSourceSuperpackV1.json",
+    "Docs/WORLD_DETAIL_LEDGER.md",
+    "01_STORY_AND_TIMELINE_BIBLE",
+    "02_CHARACTERS_AND_RELATIONSHIPS_BIBLE",
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "Tolkien - The Lord of the Rings, Book One, Chapters IX-X"
+  ],
+  "canon_contract": {
+    "entry": "F1-03 locked outcome: the Hobbits reach Bree.",
+    "shared_f104_critical_path": [
+      "Aragorn becomes guide.",
+      "Ring use draws danger.",
+      "Frodo is wounded."
+    ],
+    "p1c02_bree_scope": [
+      "night arrival at Bree",
+      "gated crossroads-town traversal",
+      "Prancing Pony social hub",
+      "tavern attention and rumor pressure",
+      "Aragorn/Strider guide handoff",
+      "departure-state preparation"
+    ],
+    "shared_f104_optional_window": [
+      "tavern attention",
+      "travel",
+      "camp decisions",
+      "defensive combat"
+    ],
+    "shared_f104_locked_postcondition": "Party races for Rivendell.",
+    "p1c02_runtime_exit_note": "A chapter-local runtime postcondition is not promoted here; runtime implementation remains predecessor-gated."
+  },
+  "world_contract": {
+    "location_type": "Crossroads town",
+    "visual_grammar": [
+      "timber",
+      "stone",
+      "rain",
+      "gates",
+      "crowded inn"
+    ],
+    "gameplay_roles": [
+      "social stealth",
+      "supplies",
+      "rumors",
+      "pursuit pressure"
+    ],
+    "required_state_variants": [
+      "night arrival",
+      "departure"
+    ],
+    "canon_spatial_anchors": [
+      "Bree sits beneath Bree-hill within a small inhabited Bree-land.",
+      "The settlement is gated at night and organized around old road crossings.",
+      "The Prancing Pony is a large inn and social meeting place for locals, travellers and Rangers.",
+      "Bree includes both Men and Hobbits; population identity must not be flattened into a single generic crowd."
+    ],
+    "landmark_rule": "Town gate and inn must remain dominant navigation/cinematic anchors.",
+    "streaming_rule": "Partition by sightline/portal logic and preload the next critical area before transition."
+  },
+  "existing_project_stock": {
+    "source_root": "SourceAssets/Production/World/Bree",
+    "current_role": "STATIC_SUPPORT_STOCK_REQUIRES_QC",
+    "known_families": [
+      "gate",
+      "inn",
+      "house",
+      "street/alley",
+      "stable",
+      "market/trade",
+      "tavern furniture",
+      "lantern/signage"
+    ],
+    "animated_character_stock_rule": "Existing OBJ character pieces are never final animated-character evidence."
+  },
+  "source_preparation": {
+    "shared_superpack": "Data/F104BreeWeathertopMegaSourceSuperpackV1.json",
+    "reuse_existing_warehouse_first": true,
+    "supporting_provider_lanes": [
+      "Poly Haven CC0",
+      "ambientCG CC0",
+      "KayKit official public GitHub packs",
+      "OpenGameArt items that pass existing license/QC policy"
+    ],
+    "quaternius_note": "Current hero-character page resolver can report public pages without producing direct archives; do not treat page access as staged payload evidence.",
+    "categories": [
+      "BREE_ARCHITECTURE",
+      "BREE_INN_INTERIORS",
+      "BREE_STREETS_MARKET",
+      "BREE_SURFACES",
+      "BREE_WEATHER_AUDIO",
+      "BREE_POPULATION_SUPPORT",
+      "BREE_SYSTEMIC_INTERACTION"
+    ]
+  },
+  "preproduction_car_order": [
+    "P1C02-PREP-A_CANON_AND_ROUTE_CONTRACT",
+    "P1C02-PREP-B_WAREHOUSE_INDEX_AND_PROVENANCE",
+    "P1C02-PREP-C_GATE_TOWN_ARCHITECTURE_QC",
+    "P1C02-PREP-D_PRANCING_PONY_INTERIOR_QC",
+    "P1C02-PREP-E_WEATHER_AUDIO_QC",
+    "P1C02-PREP-F_POPULATION_AND_RUMOR_SUPPORT_QC",
+    "P1C02-PREP-G_HANDOFF_PACKAGE_READY"
+  ],
+  "architecture_invariants": {
+    "heavy_asset_references": "TSoftObjectPtr/TSoftClassPtr/FSoftObjectPath",
+    "heavy_asset_loading": "FStreamableManager asynchronous only",
+    "animated_character_source": "FBX 2018-compatible",
+    "texture_formats": [".png", ".tga"],
+    "forbidden_texture_formats": [".bmp"],
+    "crowd_lifecycle": "LivingWorldDirector object pooling",
+    "character_context_owner": "ShireNPCContextSubsystem",
+    "story_owner": "ShireQuestSubsystem",
+    "audio_owner": "UShireAudioSubsystem",
+    "repeated_static_detail": "ISM/HISM + LOD/culling"
+  },
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "quality": "Balanced Medium / selective High where visually important",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_class": 2
+  },
+  "activation_boundary": {
+    "source_preparation_before_p1c01_gate67": "ALLOWED",
+    "runtime_changes_before_p1c01_gate67": "FORBIDDEN",
+    "runtime_activation_condition": "P1C01 Gate 6/7 ACCEPTED with real matching evidence"
+  },
+  "evidence_boundary": "Preproduction/source contract only. No P1C02 runtime integration, PIE, device, visual, pacing or performance acceptance is claimed."
+}
