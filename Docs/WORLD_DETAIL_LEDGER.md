@@ -960,3 +960,19 @@ Registered against the already-authorized **F1-04 Bree & Weathertop Mega Source 
 - No P1C02 gameplay/story/runtime mutation is authorized by this registration.
 
 Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-VISUAL ACCEPTANCE CLAIM**.
+
+
+## 2026-10-01 - P1C03 Weathertop / Ford preproduction lane opened
+
+Registered against the already-authorized **F1-04 Bree & Weathertop Mega Source Superpack V1** with explicit handoff awareness toward **F1-05 Rivendell & Fellowship**. This does not open P1C03 runtime.
+
+- Runtime chapter: **P1C03 - Weathertop / Ford**.
+- Runtime predecessor gate remains: **P1C02 Gate 6/7 ACCEPTED**.
+- F1-04 critical path remains source-locked: Aragorn guides; Ring use raises danger; the Weathertop camp is attacked; Frodo is wounded; the locked outcome is the party racing for Rivendell.
+- Weathertop world grammar remains source-locked: ruined hilltop watchtower, ancient stone ring, exposed skyline, wind/darkness, camp tension, travel decisions, defensive combat and Nazgul encounter support.
+- Ford preparation is restricted to the source-supported wounded-pursuit / river-crossing handoff into Rivendell; no independent Ford outcome or early Rivendell state is invented.
+- Existing `SourceAssets/Production/World/Weathertop` stock remains **STATIC_SUPPORT_STOCK_REQUIRES_QC**.
+- Source work reuses `Data/F104BreeWeathertopMegaSourceSuperpackV1.json`, persistent warehouse stock and the existing F1-05 handoff pack; no duplicate heavy payload lane is created.
+- Animated final character candidates remain FBX-only; production textures PNG/TGA; heavy runtime assets soft/async; repeated detail ISM/HISM + LOD/culling; populations remain pooled.
+
+Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-VISUAL ACCEPTANCE CLAIM**.
