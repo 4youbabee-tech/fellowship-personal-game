@@ -40,8 +40,12 @@ try {
         throw "The mismatched payload must be purged so the staging script can redownload only that file."
     }
 
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    $payloadSource = Join-Path $testRoot "plaster-source"
+    New-Item -ItemType Directory -Path $payloadSource -Force | Out-Null
+    [IO.File]::WriteAllText((Join-Path $payloadSource "Plaster007_Color.png"), "current-valid-payload")
     $payloadPath = Join-Path $payloadDir "Plaster007_2K-PNG.zip"
-    [IO.File]::WriteAllText($payloadPath, "current-valid-payload")
+    [IO.Compression.ZipFile]::CreateFromDirectory($payloadSource, $payloadPath)
     $currentHash = (Get-FileHash -LiteralPath $payloadPath -Algorithm SHA256).Hash.ToLowerInvariant()
 
     $oldProbe = Join-Path $testRoot "old-payload.bin"
