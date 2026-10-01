@@ -2426,3 +2426,15 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Daily report regression test | SOURCE-IMPLEMENTED | Parse + execution + required-content + encoding checks wired into Pre-Unreal |
 | Issue #96 publishing | NOT YET RE-OBSERVED | Default-branch workflow still requires launcher update after generator merge |
 | Actions Summary / downloadable report artifact | PLANNED IN WORKFLOW FOLLOW-UP | No delivery claim until default-branch workflow is updated and run succeeds |
+
+
+## 2026-10-01 - Daily manager report reliability
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Self-hosted runner/watchdog for report #6 | RUNNER REACHED JOB | Setup + checkout succeeded; this does not prove all future runner availability |
+| Report generator | SOURCE-IMPLEMENTED | Extracted to tested repository script |
+| Generator regression | SOURCE-IMPLEMENTED | Parser + execution + content/encoding guard wired into Pre-Unreal |
+| Issue #96 publication | BROKEN IN RUN #6 | Publish step skipped because generation failed |
+| Actions Summary + artifact fallback | PLANNED MAIN-WORKFLOW FIX | Separate main workflow PR required after generator lands |
+| Daily report end-to-end delivery | NOT YET VERIFIED | Requires successful scheduled/manual workflow run |
