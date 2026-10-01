@@ -12,6 +12,7 @@ on:
       - 'Data/WarehouseQuaterniusAcquisitionBatchV1.json'
       - 'Scripts/stage_quaternius_warehouse.ps1'
       - 'Data/P1C01CharacterRigAnimationPrepV1.json'
+      - 'Data/P1C01HeroSkeletalCandidateWaveV1.json'
       - 'Scripts/prepare_p1c01_character_rig_intake.ps1'
       - 'Data/WarehouseAmbientCGAcquisitionBatchV1.json'
       - 'Scripts/stage_ambientcg_warehouse.ps1'
@@ -59,6 +60,7 @@ jobs:
     env:
       TARGET_SHA: ${{ github.sha }}
       BASE_SHA: ${{ github.event.before }}
+      P1C01_HERO_RIG_REPORT: ${{ runner.temp }}\shire-p1c01-hero-rig-report-${{ github.run_id }}-${{ github.run_attempt }}
 
     steps:
       - name: Checkout exact warehouse head into isolated temp source
@@ -189,6 +191,22 @@ jobs:
         if: env.WH_RUN_P1C01_CHAPTER_PACK == 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\run_p1c01_mega_chapter_pack.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\P1C01MegaChapterPackV1.json"
+
+      - name: Build exact-head P1C01 Frodo Gandalf candidate report
+        if: github.event_name == 'push' && contains(github.event.head_commit.message, 'P1C01_FRODO_CANDIDATE_QC')
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\run_p1c01_hero_skeletal_candidate_wave.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\P1C01HeroSkeletalCandidateWaveV1.json" -OutputRoot "%P1C01_HERO_RIG_REPORT%"
+
+      - name: Upload exact-head P1C01 hero candidate evidence
+        if: always() && github.event_name == 'push' && contains(github.event.head_commit.message, 'P1C01_FRODO_CANDIDATE_QC')
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1c01-hero-skeletal-candidate-${{ env.TARGET_SHA }}
+          path: |
+            ${{ env.P1C01_HERO_RIG_REPORT }}\p1c01_hero_skeletal_candidate_summary.json
+            ${{ env.P1C01_HERO_RIG_REPORT }}\intake\p1c01_character_rig_intake_receipt.json
+          if-no-files-found: error
+          retention-days: 14
 
       - name: Summarize selective warehouse execution
         shell: cmd
