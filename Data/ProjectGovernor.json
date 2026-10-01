@@ -2932,6 +2932,27 @@
         "REQ-EXEC-002",
         "REQ-STABILITY-003"
       ]
+    },
+    {
+      "id": "REQ-EXEC-003",
+      "title": "Serialized Part I runtime production from P1C01 through P1C08",
+      "category": "ProjectGovernance",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Owner explicitly distinguished the twelve narrative segments from the eight runtime chapters and ordered continuous chapter-by-chapter production beginning with P1C01 Frodo skeletal production.",
+      "intent": "Keep one runtime chapter and one bounded production car active at a time, merge exact-head green work into develop, and advance automatically only when the registered predecessor gate allows it.",
+      "acceptance_criteria": [
+        "Runtime chapter order is exactly P1C01 through P1C08 as registered in Data/P1C01RuntimeChapterSequenceV1.json.",
+        "P1C01 executes Frodo before Gandalf and completes the registered A-I production cars without opening later runtime chapters in parallel.",
+        "P1C02 runtime does not open until P1C01 Gate 6/7 is accepted with required real device and human evidence.",
+        "Every temporary branch is validated, merged into develop, verified, and deleted before the next car fans out.",
+        "CI success is reported only as static/compile evidence and never promoted to PIE, device, visual, pacing or performance acceptance."
+      ],
+      "dependencies": [
+        "REQ-EXEC-002",
+        "REQ-QA-002",
+        "REQ-PERF-001"
+      ]
     }
   ],
   "hard_invariants": [
@@ -5580,6 +5601,58 @@
         "Docs/WORLD_DETAIL_LEDGER.md"
       ],
       "evidence_boundary": "SOURCE/TOOLING IMPLEMENTATION ONLY. Local execution and rendered review remain pending; no PIE/device/visual/pacing/performance acceptance is claimed."
+    },
+    {
+      "id": "DEC-103",
+      "title": "Part I uses eight serialized runtime chapters and begins with Frodo skeletal production",
+      "status": "ACCEPTED",
+      "priority": "CRITICAL",
+      "date": "2026-10-01",
+      "owner_direction": "The twelve Masterplan narrative segments are not runtime chapters. Runtime production is P1C01, P1C02, P1C03, P1C04, P1C05, P1C06, P1C07, P1C08 in that exact order. Begin P1C01 now with Frodo, then Gandalf, and never skip ahead because later assets are easier or already available.",
+      "runtime_order": [
+        {
+          "id": "P1C01",
+          "title": "The Shire through Bucklebury / Ferry"
+        },
+        {
+          "id": "P1C02",
+          "title": "Bree / The Prancing Pony"
+        },
+        {
+          "id": "P1C03",
+          "title": "Weathertop / Ford"
+        },
+        {
+          "id": "P1C04",
+          "title": "Rivendell / Fellowship Formation"
+        },
+        {
+          "id": "P1C05",
+          "title": "Fellowship Road / Caradhras / West Gate"
+        },
+        {
+          "id": "P1C06",
+          "title": "Moria"
+        },
+        {
+          "id": "P1C07",
+          "title": "Lothlorien / Anduin"
+        },
+        {
+          "id": "P1C08",
+          "title": "Amon Hen / Breaking of the Fellowship"
+        }
+      ],
+      "implementation_contract": [
+        "P1C01-A is Frodo skeletal production; P1C01-B is Gandalf skeletal production.",
+        "Animated production delivery is FBX 2018-compatible with real skeleton, skin weights and deformation QC; OBJ remains static modular fallback only.",
+        "UShireChapterAssetStreamingSubsystem remains the sole heavy hero-rig async owner and uses soft paths plus FStreamableManager.",
+        "LivingWorldDirector remains population/pooling/query owner; ShireNPCContextSubsystem remains context/schedule/knowledge/relationship owner.",
+        "UShireQuestSubsystem remains sole story/quest authority; UShireAudioSubsystem remains sole audio owner; existing presentation owners remain unchanged.",
+        "P1C02 runtime remains closed until P1C01 Gate 6/7 acceptance evidence is complete.",
+        "Branch, validation, merge and cleanup are serialized per car."
+      ],
+      "evidence_boundary": "OWNER GOVERNANCE AND EXECUTION ORDER. Candidate, import, compile, PIE, device, visual, pacing and performance evidence remain separate."
     }
   ],
   "open_conflicts": [],
@@ -6293,7 +6366,7 @@
   "current_focus": {
     "production_lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
-    "rule": "D lighting/sky/fog/low-cost water is merged and machine-green. Resume substantive P1C01 production from develop: bounded Mega Asset Promotion/import-integration first, then character presentation/skeletal-animation coverage and living-Shire/audio polish. Do not reopen CI/root repair without concrete regression evidence.",
+    "rule": "P1C01 is the sole runtime-changing chapter. Execute the owner-authorized serialized production order from Data/P1C01RuntimeChapterSequenceV1.json: Frodo skeletal production first, then Gandalf, physical materials/footsteps, selective PBR, Living Shire, gameplay/quest flow, audio/presentation, save/load reliability, optimization and Gate 6/7. Do not open P1C02 runtime until P1C01 Gate 6/7 is accepted with real evidence.",
     "machine_baseline": {
       "runtime_sha": "1066cf022723fcdef9bfac66519f5b0f9c1e03a4",
       "pre_unreal": "#1109 SUCCESS",
@@ -6305,7 +6378,8 @@
       "scope": "D runtime/content merge has fresh UE4.27.2 build/import/runtime/package proof. Subsequent develop changes are administrative CI/cleanup/governance only and do not create new gameplay acceptance."
     },
     "w01_freeze": "RELEASED_BY_W00_EXIT",
-    "story_source_note": "Permanent full-journey source contract active; F2-03 Edoras is the next source/preparation wave while P1C01 remains the sole runtime-changing lane."
+    "story_source_note": "Permanent full-journey source contract active; F2-03 Edoras is the next source/preparation wave while P1C01 remains the sole runtime-changing lane.",
+    "runtime_chapter_sequence": "Data/P1C01RuntimeChapterSequenceV1.json"
   },
   "immediate_next_large_actions": [
     "1. Mega Asset Promotion — move evidence-backed P1C01 warehouse/project-source assets through bounded intake, import and integration.",
@@ -7435,10 +7509,11 @@
       "warehouse_run": 232
     },
     "next_actions": [
-      "Advance P1C01 Mega Asset Promotion from staging/intake QC into evidence-backed READY_FOR_IMPORT/import/integration in bounded category batches; do not promote metadata-only candidates.",
-      "Begin the next substantive P1C01 character presentation / skeletal-animation production wave after the bounded asset batch is selected.",
-      "Continue Living Shire motion/fauna plus quest/audio polish without reopening unrelated CI/root repair.",
-      "Run target-device DX11 720p Low-Medium profiling before any density or expensive presentation expansion; Gate 6/7 remains required before broad Part II/III runtime production."
+      "Run the P1C01 Frodo/Gandalf skeletal Candidate Wave against the exact candidate head and inspect the warehouse receipt/report; do not infer readiness from filenames.",
+      "Promote and integrate Frodo first only after provenance, real skeleton, skin-weight, deformation, locomotion, material, socket and low-spec QC succeed; keep modular fallback visible until SK_Frodo plus ABP_Frodo_Locomotion resolve asynchronously.",
+      "After Frodo exact-head machine-green, repeat the proven path for Gandalf; do not fan out across additional characters.",
+      "Continue P1C01 in the registered A-I car order and keep P1C02-P1C08 runtime predecessor-gated.",
+      "Collect fail-closed Gate 6/7 evidence; no PIE/device/visual/pacing/performance claim may be inferred from CI."
     ],
     "runner_infrastructure_guard": "HARD: service-mode runner ownership is eliminated, not merely discouraged. actions.runner.* must be absent or Stopped+Disabled pending deletion. UE4-27-Windows runs only via the interactive-user watchdog; NETWORK SERVICE/LOCAL SERVICE/SYSTEM are forbidden.",
     "production_freeze": {
@@ -7460,7 +7535,17 @@
         "warehouse_execution": "WAREHOUSE_SELECTIVE_EXECUTION_PASS",
         "unreal_routing": "No Unreal Build Validation run was triggered for the Warehouse/control-plane-only develop merge."
       }
-    }
+    },
+    "runtime_chapter_order": [
+      "P1C01",
+      "P1C02",
+      "P1C03",
+      "P1C04",
+      "P1C05",
+      "P1C06",
+      "P1C07",
+      "P1C08"
+    ]
   },
   "development_mode_contract": {
     "schema_version": 1,

@@ -115,5 +115,16 @@
     "warehouse_inventory_must_be_clean": true,
     "output_state": "CANDIDATE_QC_READY_NOT_IMPORTED"
   },
-  "evidence_boundary": "Candidate discovery/ranking only. No skeletal import, runtime replacement, PIE, device, visual or performance acceptance is claimed."
+  "evidence_boundary": "Candidate discovery/ranking only. No skeletal import, runtime replacement, PIE, device, visual or performance acceptance is claimed.",
+  "owner_sequence_authority": "Data/P1C01RuntimeChapterSequenceV1.json",
+  "owner_execution_order": [
+    "FRODO",
+    "GANDALF"
+  ],
+  "exact_head_candidate_gate": {
+    "required": true,
+    "report_artifact_required": true,
+    "runtime_integration_remains_false_until_qc_promotion": true,
+    "current_target": "FRODO_FIRST"
+  }
 }

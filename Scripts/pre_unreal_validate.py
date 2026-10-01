@@ -10076,3 +10076,44 @@ else:
         ):
             if required not in evaluator:
                 fail(f"PG-223 evidence evaluator missing fail-closed token: {required}")
+
+
+# PG-224: Part I runtime production is serialized P1C01-P1C08 with Frodo first and fail-closed predecessor gates.
+pg224_path = ROOT / "Data" / "P1C01RuntimeChapterSequenceV1.json"
+if not pg224_path.exists():
+    fail("PG-224 runtime chapter sequence contract missing")
+else:
+    try:
+        pg224 = json.loads(read(pg224_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-224 invalid runtime chapter sequence contract: {exc}")
+        pg224 = {}
+
+    if pg224:
+        expected_order = [f"P1C0{i}" for i in range(1, 9)]
+        actual_order = [str(row.get("id")) for row in pg224.get("runtime_chapter_order", [])]
+        if actual_order != expected_order:
+            fail("PG-224 runtime chapter order must remain P1C01 through P1C08")
+        if pg224.get("current_chapter") != "P1C01":
+            fail("PG-224 P1C01 must remain the active runtime chapter until Gate 6/7 acceptance")
+        if pg224.get("current_car") != "P1C01-A_FRODO_SKELETAL_PRODUCTION":
+            fail("PG-224 Frodo skeletal production must remain the current first car")
+        if pg224.get("p1c01_character_order") != ["FRODO", "GANDALF"]:
+            fail("PG-224 character production must remain Frodo then Gandalf")
+        later = pg224.get("runtime_chapter_order", [])[1:]
+        if any(row.get("runtime_status") != "PREDECESSOR_GATED" for row in later):
+            fail("PG-224 later runtime chapters must remain predecessor-gated")
+
+if pg205_manifest.get("owner_sequence_authority") != "Data/P1C01RuntimeChapterSequenceV1.json":
+    fail("PG-224 hero candidate wave must reference the owner runtime sequence")
+if pg205_manifest.get("owner_execution_order") != ["FRODO", "GANDALF"]:
+    fail("PG-224 hero candidate execution must remain Frodo then Gandalf")
+for symbol in [
+    "pull_request:",
+    "github.event.pull_request.head.sha || github.sha",
+    "actions/upload-artifact@v4",
+    "p1c01_hero_skeletal_candidate_summary.json",
+    "p1c01_character_rig_intake_receipt.json",
+]:
+    if symbol not in pg205_workflow:
+        fail(f"PG-224 exact-head candidate evidence workflow missing: {symbol}")
