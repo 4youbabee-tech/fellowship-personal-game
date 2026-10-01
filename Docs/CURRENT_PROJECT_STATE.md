@@ -3460,3 +3460,14 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - `Scripts/test_daily_project_manager_report.ps1` parses and executes the generator and checks required report sections plus encoding-sanity markers.
 - Pre-Unreal now runs this regression test on exact PR heads.
 - Evidence boundary: **SOURCE-IMPLEMENTED repair candidate** until exact-head Pre-Unreal/Unreal validation succeeds and the scheduled/default-branch workflow is updated and observed posting successfully.
+
+
+## 2026-10-01 - Daily Project Manager Report root-fix candidate
+
+- Runner/watchdog evidence is healthy for the observed failure class: run #6 reached the self-hosted Windows runner, completed setup and checkout, and failed only inside report generation.
+- The report destination is GitHub Issue #96 (`Project Manager - Daily Shire Journey Progress`), not ChatGPT. Run #6 never posted because generation failed and the publish step was skipped.
+- Report generation has been extracted from inline workflow PowerShell into `Scripts/generate_daily_project_manager_report.ps1`.
+- `Scripts/test_daily_project_manager_report.ps1` parses and executes the generator and guards expected sections plus encoding corruption.
+- Pre-Unreal now runs the regression test.
+- A separate main-branch workflow update is still required after this generator lands on `develop`; that launcher will publish to Issue #96, Actions Summary and an artifact.
+- Evidence boundary: **SOURCE-IMPLEMENTED repair candidate**. Exact-head validation and a successful scheduled/manual report run are still required.
