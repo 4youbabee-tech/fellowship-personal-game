@@ -5,6 +5,37 @@ param(
 $ErrorActionPreference = "Stop"
 if (-not (Test-Path -LiteralPath $Root -PathType Container)) { throw "Warehouse root missing: $Root" }
 
+function Resolve-WarehouseReceiptPath {
+    param(
+        [string]$Path,
+        [string]$BaseRoot
+    )
+
+    if ([string]::IsNullOrWhiteSpace($Path)) { return "" }
+
+    $expanded = [Environment]::ExpandEnvironmentVariables($Path)
+    $slashNormalized = $expanded.Replace("/", "\\")
+    $warehouseMarker = "\\actions-runner\\_warehouse\\ShireJourney"
+    $markerIndex = $slashNormalized.IndexOf($warehouseMarker, [StringComparison]::OrdinalIgnoreCase)
+    if ($markerIndex -ge 0) {
+        $relativeStart = $markerIndex + $warehouseMarker.Length
+        $relative = $slashNormalized.Substring($relativeStart).TrimStart("\\")
+        if ([string]::IsNullOrWhiteSpace($relative)) {
+            return $BaseRoot
+        }
+        return Join-Path $BaseRoot $relative
+    }
+
+    if (-not [IO.Path]::IsPathRooted($expanded)) {
+        $expanded = Join-Path $BaseRoot $expanded
+    }
+    try {
+        return [IO.Path]::GetFullPath($expanded)
+    } catch {
+        return $expanded
+    }
+}
+
 function Get-WarehouseNormalizedPathKey {
     param(
         [string]$Path,
@@ -12,16 +43,8 @@ function Get-WarehouseNormalizedPathKey {
     )
 
     if ([string]::IsNullOrWhiteSpace($Path)) { return "" }
-    $expanded = [Environment]::ExpandEnvironmentVariables($Path)
-    if (-not [IO.Path]::IsPathRooted($expanded)) {
-        $expanded = Join-Path $BaseRoot $expanded
-    }
-    try {
-        $full = [IO.Path]::GetFullPath($expanded)
-    } catch {
-        $full = $expanded
-    }
-    return ($full.Replace("/", "\").TrimEnd("\")).ToLowerInvariant()
+    $resolved = Resolve-WarehouseReceiptPath -Path $Path -BaseRoot $BaseRoot
+    return ($resolved.Replace("/", "\\").TrimEnd("\\")).ToLowerInvariant()
 }
 
 function Get-WarehouseReceiptTimestampUtc {
@@ -74,6 +97,10 @@ foreach($receiptFile in $receiptFiles){
             continue
         }
 
+        $originalPath = $path
+        $path = Resolve-WarehouseReceiptPath -Path $originalPath -BaseRoot $Root
+        $originalLicensePath = [string]$item.license_snapshot
+        $licensePath = Resolve-WarehouseReceiptPath -Path $originalLicensePath -BaseRoot $Root
         $normalizedPath = Get-WarehouseNormalizedPathKey -Path $path -BaseRoot $Root
         $candidates += [pscustomobject]@{
             provider=$provider
@@ -83,12 +110,14 @@ foreach($receiptFile in $receiptFiles){
             category=[string]$item.category
             record_kind=$recordKind
             path=$path
+            original_path=$originalPath
             normalized_path=$normalizedPath
             declared_sha256=$declaredHash
             source_page=[string]$item.source_page
             source_url=[string]$item.source_url
             state=if([string]::IsNullOrWhiteSpace([string]$item.state)){"STAGED"}else{[string]$item.state}
-            license_snapshot=[string]$item.license_snapshot
+            license_snapshot=$licensePath
+            original_license_snapshot=$originalLicensePath
             license_sha256=([string]$item.license_sha256).ToLowerInvariant()
             receipt_path=$receiptFile.FullName
             receipt_staged_at_utc=$receiptTimestamp
