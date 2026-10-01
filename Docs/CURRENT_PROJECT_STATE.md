@@ -3468,3 +3468,11 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - `Scripts/test_warehouse_provider_zero_payload_fail_closed.ps1` is wired into Pre-Unreal and verifies both the script guard and the Quaternius manual-access policy/registry classification.
 - This prevents a repeat of Warehouse #308's false staging PASS and ensures downstream candidate gates cannot consume page-only evidence as asset availability.
 - Evidence boundary: **SOURCE-IMPLEMENTED / exact-head validation pending** on this audit branch.
+
+
+## 2026-10-01 - Daily Project Manager Report pipeline root fix
+
+- Daily Project Manager Report run #6 reached the self-hosted runner and completed setup plus canonical `develop` checkout; failure was isolated to fragile inline PowerShell report generation, so Issue #96 publication was skipped.
+- Report generation now lives in `Scripts/generate_daily_project_manager_report.ps1`; `Scripts/test_daily_project_manager_report.ps1` parse-tests, executes and checks report content/encoding from Pre-Unreal.
+- The default-branch publisher remains a separate follow-up: it must be reconciled only after this tested generator lands on `develop`, then observed posting to Issue #96, Actions Summary and an artifact.
+- Evidence boundary: **SOURCE-IMPLEMENTED / COMPILE-TESTED candidate only** after exact-head gates; end-to-end delivery remains unverified until a real publisher run succeeds.

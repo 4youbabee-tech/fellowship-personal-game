@@ -2444,3 +2444,12 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Zero-payload regression test | SOURCE-IMPLEMENTED | Pre-Unreal wiring added; exact-head result pending |
 | Provider access policy | SOURCE-IMPLEMENTED | Quaternius reclassified manual-clear-license |
 | Whole-game gap audit | SOURCE-IMPLEMENTED | 28 regions + cross-cutting characters/creatures/animation/audio/VFX/gameplay-support domains |
+
+
+## 2026-10-01 - Daily manager report pipeline repair
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Report generator | SOURCE-IMPLEMENTED | Repository script replaces fragile inline PowerShell |
+| Generator regression test | SOURCE-IMPLEMENTED | Parse, execution, content and encoding test wired into Pre-Unreal |
+| Issue #96 / Actions Summary / artifact delivery | NOT YET RE-OBSERVED | Requires default-branch publisher and one successful end-to-end run |

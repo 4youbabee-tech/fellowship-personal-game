@@ -704,3 +704,17 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 **Provider correction:** Quaternius is now treated as `MANUAL_CLEAR_LICENSE` / manual item download unless a provider-supported direct payload URL is known. Do not fabricate or scrape undocumented archive URLs.
 
 **Evidence boundary:** governance/source-access correction only; it does not produce Frodo/Gandalf candidates or authorize runtime integration.
+
+
+### PG-167 - Scheduled reports must use a parsed and tested generator
+**Symptom exposed by:** Daily Project Manager Report Run #6.
+
+**Evidence:** the self-hosted runner setup and canonical `develop` checkout succeeded; inline PowerShell report generation then hit parser errors and Issue #96 publication was skipped.
+
+**Root cause:** an untested inline workflow block mixed Markdown quoting, interpolation and non-ASCII punctuation.
+
+**Permanent rule:** report generation lives in a repository PowerShell script. Pre-Unreal must parse-test and execute it; the workflow is only its launcher/publisher.
+
+**Guard:** `Scripts/test_daily_project_manager_report.ps1` runs on every exact candidate head.
+
+**Evidence boundary:** successful generation is not report delivery. A real default-branch run must still prove Issue #96 publication, Actions Summary output and artifact creation.
