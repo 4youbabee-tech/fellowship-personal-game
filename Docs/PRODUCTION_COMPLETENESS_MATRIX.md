@@ -2403,3 +2403,15 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Existing Bree source stock | QC REQUIRED | Static support stock only; no visual acceptance |
 | P1C02 runtime integration | PREDECESSOR-GATED / NOT STARTED | Requires P1C01 Gate 6/7 ACCEPTED |
 | P1C02 PIE / device / visual / pacing / performance | NOT ACCEPTED | Real matching evidence required after runtime activation |
+
+
+## 2026-10-01 - P1C03 Weathertop / Ford preproduction opening
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| P1C03 Weathertop / Ford source contract | SOURCE-IMPLEMENTED | `Data/P1C03WeathertopFordPreproductionV1.json` |
+| F1-04 Weathertop source binding | SOURCE-IMPLEMENTED | Existing shared pack reused; no duplicate payload lane |
+| Ford handoff boundary | SOURCE-LOCKED / PREPRODUCTION | Wounded pursuit / Ford crossing / Rivendell handoff only |
+| Existing Weathertop stock | QC REQUIRED | Static support stock only; no visual acceptance |
+| P1C03 runtime integration | PREDECESSOR-GATED / NOT STARTED | Requires P1C02 Gate 6/7 ACCEPTED |
+| P1C03 PIE / device / visual / pacing / performance | NOT ACCEPTED | Real matching evidence required after runtime activation |
