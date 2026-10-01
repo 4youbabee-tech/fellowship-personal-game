@@ -1,25 +1,6 @@
 name: P1C01 Frodo Gandalf Skeletal Candidate Wave
 
 on:
-  pull_request:
-    branches:
-      - develop
-    paths:
-      - 'Data/P1C01HeroSkeletalCandidateWaveV1.json'
-      - 'Data/P1C01RuntimeChapterSequenceV1.json'
-      - 'Scripts/run_p1c01_hero_skeletal_candidate_wave.ps1'
-      - 'Scripts/prepare_p1c01_character_rig_intake.ps1'
-      - '.github/workflows/p1c01-hero-skeletal-candidate-wave.yml'
-  push:
-    branches:
-      - develop
-    paths:
-      - 'Data/P1C01HeroSkeletalCandidateWaveV1.json'
-      - 'Data/P1C01RuntimeChapterSequenceV1.json'
-      - 'Data/P1C01CharacterRigAnimationPrepV1.json'
-      - 'Scripts/run_p1c01_hero_skeletal_candidate_wave.ps1'
-      - 'Scripts/prepare_p1c01_character_rig_intake.ps1'
-      - '.github/workflows/p1c01-hero-skeletal-candidate-wave.yml'
   workflow_dispatch:
 
 concurrency:
