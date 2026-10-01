@@ -154,7 +154,11 @@ foreach ($asset in $manifest.assets) {
 
         $dest = Join-Path $assetDir $name
         try {
-            if (-not (Test-Path $dest)) {
+            if ($Refresh -and (Test-Path -LiteralPath $dest -PathType Leaf)) {
+                Write-Host "WAREHOUSE_REFRESH_REMOVE provider=POLY_HAVEN path=$dest"
+                Remove-Item -LiteralPath $dest -Force
+            }
+            if (-not (Test-Path -LiteralPath $dest -PathType Leaf)) {
                 Write-Host "Downloading $slug/$name"
                 Invoke-WarehouseDownload -Uri ([string]$candidate.url) -Headers $headers -OutFile $dest | Out-Null
             } else {

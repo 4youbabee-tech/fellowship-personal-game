@@ -34,6 +34,10 @@ foreach($lane in $manifest.search_lanes){
     $name=($id + "_" + [string]$manifest.target_attribute + ".zip")
     $dest=Join-Path $destDir $name
     try {
+      if($Refresh -and (Test-Path -LiteralPath $dest -PathType Leaf)){
+        Write-Host ("WAREHOUSE_REFRESH_REMOVE provider=AMBIENTCG path=" + $dest)
+        Remove-Item -LiteralPath $dest -Force
+      }
       if((Test-Path -LiteralPath $dest -PathType Leaf) -and -not (Test-WarehouseZipReadable -Path $dest)){
         Write-Warning ("AMBIENTCG_WAREHOUSE_REPAIR removing corrupt archive asset_id=" + $id + " path=" + $dest)
         Remove-Item -LiteralPath $dest -Force -ErrorAction SilentlyContinue

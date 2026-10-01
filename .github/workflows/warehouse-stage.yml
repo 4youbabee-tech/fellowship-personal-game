@@ -60,7 +60,6 @@ jobs:
     env:
       TARGET_SHA: ${{ github.sha }}
       BASE_SHA: ${{ github.event.before }}
-      P1C01_HERO_RIG_REPORT: ${{ runner.temp }}\shire-p1c01-hero-rig-report-${{ github.run_id }}-${{ github.run_attempt }}
 
     steps:
       - name: Checkout exact warehouse head into isolated temp source
@@ -105,6 +104,7 @@ jobs:
           if /I not "!CHECKED_SHA!"=="!TARGET_SHA!" exit /b 74
           if not exist "ShireJourney.uproject" exit /b 75
           echo SHIRE_WAREHOUSE_SOURCE=!WAREHOUSE_SRC!>>"%GITHUB_ENV%"
+          echo P1C01_HERO_RIG_REPORT=%RUNNER_TEMP%\shire-p1c01-hero-rig-report-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%>>"%GITHUB_ENV%"
           echo WAREHOUSE_CHECKOUT_PASS sha=!CHECKED_SHA! isolated=true source=!WAREHOUSE_SRC!
 
       - name: Verify runner session health
@@ -156,6 +156,15 @@ jobs:
         if: env.WH_RUN_CHARACTER_INTAKE == 'true' && env.WH_RUN_P1C01_CHAPTER_PACK != 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\prepare_p1c01_character_rig_intake.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\P1C01CharacterRigAnimationPrepV1.json" -OutputRoot "D:\actions-runner\_warehouse\ShireJourney\_p1c01_character_intake"
+
+      - name: Repair candidate-gate material warehouse provenance
+        if: github.event_name == 'push' && contains(github.event.head_commit.message, 'P1C01_FRODO_CANDIDATE_QC')
+        shell: cmd
+        run: |
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_polyhaven_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseAcquisitionBatchV1.json" -Refresh
+          if errorlevel 1 exit /b 81
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_ambientcg_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseAmbientCGTrilogyBatchV2.json" -Refresh
+          if errorlevel 1 exit /b 82
 
       - name: Audit persistent warehouse inventory
         if: env.WH_RUN_AUDIT == 'true' && env.WH_RUN_P1C01_CHAPTER_PACK != 'true'
