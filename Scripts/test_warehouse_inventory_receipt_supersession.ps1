@@ -48,7 +48,7 @@ try {
     $oldHash = (Get-FileHash -LiteralPath $oldProbe -Algorithm SHA256).Hash.ToLowerInvariant()
     Remove-Item -LiteralPath $oldProbe -Force
 
-    $oldPathVariant = $payloadPath.ToUpperInvariant().Replace("\", "/")
+    $oldPathVariant = "C:\\actions-runner\\_warehouse\\ShireJourney\\ambientCG\\PLASTER\\Plaster007_2K-PNG.zip"
     $receiptV1 = [ordered]@{
         batch_id = "WAREHOUSE_AMBIENTCG_P1C01_V1"
         provider = "ambientCG"
@@ -101,6 +101,9 @@ try {
     if (@($report.hash_mismatches).Count -ne 0) {
         throw "Historical superseded hash must not fail the active payload."
     }
+    if (($passOutput -join " ") -notmatch "WAREHOUSE_RECEIPT_ROOT_REBASE") {
+        throw "Migrated legacy receipt path was not explicitly rebased to the active warehouse root."
+    }
 
     $superseded = @($report.superseded_receipt_records)
     if ($superseded.Count -ne 1 -or [string]$superseded[0].superseded_batch_id -ne "WAREHOUSE_AMBIENTCG_P1C01_V1" -or [string]$superseded[0].active_batch_id -ne "WAREHOUSE_AMBIENTCG_TRILOGY_FOUNDATION_V2") {
@@ -123,7 +126,7 @@ try {
         throw "Fail-closed output did not identify the active V2 receipt."
     }
 
-    Write-Host "WAREHOUSE_RECEIPT_SUPERSESSION_TEST_PASS historical_v1_superseded=true active_v2_enforced=true normalized_path=true fail_closed=true hash_mismatch_targeted_purge=true"
+    Write-Host "WAREHOUSE_RECEIPT_SUPERSESSION_TEST_PASS historical_v1_superseded=true active_v2_enforced=true normalized_path=true migrated_root_rebased=true fail_closed=true hash_mismatch_targeted_purge=true"
 }
 finally {
     if (Test-Path -LiteralPath $testRoot -PathType Container) {
