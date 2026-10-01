@@ -5718,6 +5718,8 @@ for ignored in [
 
 # PG-207: the persistent runner/Warehouse authority lives on D after the 2026-09-29 migration.
 pg207_forbidden_runner_root = "C:\\actions-runner"
+pg207_real_legacy_fixture = ROOT / "Scripts" / "test_warehouse_inventory_receipt_supersession.ps1"
+pg207_real_legacy_fixture_line = '$oldPathVariant = "C:\\actions-runner\\_warehouse\\ShireJourney\\ambientCG\\PLASTER\\Plaster007_2K-PNG.zip"'
 pg207_active_files = []
 for pg207_pattern in ("*.ps1", "*.cmd"):
     pg207_active_files.extend((ROOT / "Scripts").glob(pg207_pattern))
@@ -5725,8 +5727,16 @@ for pg207_pattern in ("*.yml", "*.yaml"):
     pg207_active_files.extend((ROOT / ".github" / "workflows").glob(pg207_pattern))
 for pg207_path in pg207_active_files:
     pg207_text = read(pg207_path)
-    if pg207_forbidden_runner_root in pg207_text:
-        fail(f"PG-207 active runner/Warehouse path still targets retired C root: {pg207_path.relative_to(ROOT)}")
+    pg207_occurrences = pg207_text.count(pg207_forbidden_runner_root)
+    if pg207_occurrences == 0:
+        continue
+    if (
+        pg207_path == pg207_real_legacy_fixture
+        and pg207_occurrences == 1
+        and pg207_real_legacy_fixture_line in pg207_text
+    ):
+        continue
+    fail(f"PG-207 active runner/Warehouse path still targets retired C root: {pg207_path.relative_to(ROOT)}")
 for pg207_path, pg207_symbol in [
     (ROOT / "Scripts" / "install_runner_watchdog.ps1", 'D:\\actions-runner'),
     (ROOT / "Scripts" / "runner_watchdog.ps1", 'D:\\actions-runner'),

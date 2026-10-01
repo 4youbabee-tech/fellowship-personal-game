@@ -159,7 +159,7 @@ jobs:
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\prepare_p1c01_character_rig_intake.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\P1C01CharacterRigAnimationPrepV1.json" -OutputRoot "D:\actions-runner\_warehouse\ShireJourney\_p1c01_character_intake"
 
       - name: Repair candidate-gate material warehouse provenance
-        if: github.event_name == 'push' && contains(github.event.head_commit.message, 'P1C01_FRODO_CANDIDATE_QC')
+        if: github.event_name == 'push'
         timeout-minutes: 20
         shell: cmd
         run: |
@@ -204,12 +204,12 @@ jobs:
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\run_p1c01_mega_chapter_pack.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\P1C01MegaChapterPackV1.json"
 
       - name: Build exact-head P1C01 Frodo Gandalf candidate report
-        if: github.event_name == 'push' && contains(github.event.head_commit.message, 'P1C01_FRODO_CANDIDATE_QC')
+        if: github.event_name == 'push'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\run_p1c01_hero_skeletal_candidate_wave.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\P1C01HeroSkeletalCandidateWaveV1.json" -OutputRoot "%P1C01_HERO_RIG_REPORT%"
 
       - name: Upload exact-head P1C01 hero candidate evidence
-        if: always() && github.event_name == 'push' && contains(github.event.head_commit.message, 'P1C01_FRODO_CANDIDATE_QC')
+        if: always() && github.event_name == 'push'
         uses: actions/upload-artifact@v4
         with:
           name: p1c01-hero-skeletal-candidate-${{ env.TARGET_SHA }}

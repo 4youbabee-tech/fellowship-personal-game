@@ -1,3 +1,32 @@
+## 2026-10-01 - PG-207 fixture boundary
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| Operational runner / Warehouse root | D-root required | Any live C-root occurrence remains a validation failure |
+| Historical C-root test fixture | SOURCE-IMPLEMENTED | Exactly one canonical fixture literal permitted only in receipt-supersession test |
+| Broader C-root allowlist | FORBIDDEN | Scripts/workflows/configuration remain fail-closed |
+| Exact-head validation | PENDING | Requires re-run after validator correction |
+
+## 2026-10-01 - Warehouse real-path canonicalization correction
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| Real `C:\actions-runner\...` receipt paths | SOURCE-REPAIRED / EXACT-HEAD PROOF PENDING | Single Windows separators now canonicalize to active `D:\actions-runner\_warehouse\ShireJourney` root |
+| Regression fixture | SOURCE-IMPLEMENTED | Uses real single-backslash Windows path, not a C-style doubled representation |
+| Missing snow / mismatched rock records | FAIL-CLOSED PENDING TARGETED REPAIR | Candidate staging may repair only those payloads |
+| Blanket material refresh | FORBIDDEN | Existing verified payloads preserved |
+| Gate 6-7 and human/device acceptance | NOT ACCEPTED | Separate evidence required |
+
+## 2026-10-01 - Warehouse candidate trigger hardening matrix
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| Candidate gate activation | SOURCE-IMPLEMENTED / EXACT-HEAD PROOF PENDING | Relevant Warehouse push invokes bounded provenance repair and candidate report without merge-subject matching |
+| Receipt integrity and payload reuse | PRESERVED | SHA256 verification; only missing or mismatched payload is redownloaded |
+| Broad refresh | FORBIDDEN | No `-Refresh` in the candidate gate |
+| Frodo/Gandalf report and artifact | PENDING | Requires successful exact-head Warehouse execution |
+| PIE / device / visual / pacing / performance / Gate 6-7 | NOT ACCEPTED | Separate real evidence required |
+
 ## 2026-10-01 - Warehouse migrated-receipt root repair matrix
 
 | Area | Status | Evidence / boundary |
