@@ -2391,3 +2391,15 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Regression guard | SOURCE-IMPLEMENTED | Pre-Unreal contract test requires exact pack parity and provider staging before candidate report |
 | Runtime character promotion | NOT STARTED | No READY_FOR_IMPORT, skeletal import or runtime replacement claim |
 | PIE / device / visual / pacing / performance | NOT ACCEPTED | Real matching evidence still required |
+
+
+## 2026-10-01 - P1C02 Bree preproduction opening
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| P1C02 Bree / The Prancing Pony source contract | SOURCE-IMPLEMENTED | `Data/P1C02BreePreproductionV1.json` |
+| F1-04 shared source superpack binding | SOURCE-IMPLEMENTED | Existing Bree/Weathertop pack reused; no duplicate payload lane |
+| Bree canon/world grammar | SOURCE-LOCKED | Project Bibles + Tolkien Book One IX-X |
+| Existing Bree source stock | QC REQUIRED | Static support stock only; no visual acceptance |
+| P1C02 runtime integration | PREDECESSOR-GATED / NOT STARTED | Requires P1C01 Gate 6/7 ACCEPTED |
+| P1C02 PIE / device / visual / pacing / performance | NOT ACCEPTED | Real matching evidence required after runtime activation |
