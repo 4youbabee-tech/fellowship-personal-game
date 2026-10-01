@@ -2938,7 +2938,7 @@
       "title": "Serialized Part I runtime production from P1C01 through P1C08",
       "category": "ProjectGovernance",
       "priority": "CRITICAL",
-      "status": "ACTIVE",
+      "status": "PARTIAL",
       "origin": "Owner explicitly distinguished the twelve narrative segments from the eight runtime chapters and ordered continuous chapter-by-chapter production beginning with P1C01 Frodo skeletal production.",
       "intent": "Keep one runtime chapter and one bounded production car active at a time, merge exact-head green work into develop, and advance automatically only when the registered predecessor gate allows it.",
       "acceptance_criteria": [
