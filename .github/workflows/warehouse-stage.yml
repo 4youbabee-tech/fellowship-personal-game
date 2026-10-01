@@ -10,6 +10,7 @@ on:
       - 'Data/WarehouseAudioAcquisitionBatchV1.json'
       - 'Scripts/stage_opengameart_audio.ps1'
       - 'Data/WarehouseQuaterniusAcquisitionBatchV1.json'
+      - 'Data/WarehouseQuaterniusHeroCandidateBatchV1.json'
       - 'Scripts/stage_quaternius_warehouse.ps1'
       - 'Data/P1C01CharacterRigAnimationPrepV1.json'
       - 'Data/P1C01HeroSkeletalCandidateWaveV1.json'
@@ -202,6 +203,12 @@ jobs:
         if: env.WH_RUN_P1C01_CHAPTER_PACK == 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\run_p1c01_mega_chapter_pack.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\P1C01MegaChapterPackV1.json"
+
+      - name: Stage P1C01 hero candidate provider batch
+        if: github.event_name == 'push'
+        timeout-minutes: 20
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_quaternius_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseQuaterniusHeroCandidateBatchV1.json"
 
       - name: Build exact-head P1C01 Frodo Gandalf candidate report
         if: github.event_name == 'push'

@@ -3307,7 +3307,7 @@ The Public/Private/root-correction loop is closed machine-wise on CP-W00-154 and
 3. Run target-device DX11 / 720p / Low-Medium profiling and record FPS, frame time, obvious hitching, GC spikes, RAM/VRAM pressure and tick hotspots where measurable.
 4. Collect chapter-specific human PIE traversal, onboarding/core-loop, pacing, visual readability, collision/movement and NPC-behavior observations.
 
-W01 and B1/B2/B3 remain frozen until the Governor records these remaining W00 acceptance evidence families.
+W00 is closed and the Governor has released the production freeze. W01/P1C01 is the active runtime lane; missing device/human evidence still blocks Gate 6/7 acceptance and later runtime chapters, not the current serialized P1C01 production car.
 
 ## Failure procedure
 
@@ -3421,3 +3421,12 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Missing target-device route evidence or human visual/pacing review remains INCOMPLETE/NOT_ACCEPTED; no device/performance/visual acceptance is inferred from CI.
 - Local visible-world bootstrap tooling is reconciled: it reuses `ShireProductionImport`, verifies generated `.uasset` output, and launches `/Engine/Maps/Entry` without permanently changing DefaultEngine startup maps.
 - Evidence boundary: SOURCE/TOOLING reconciliation only on this branch. No new PIE/device/visual/pacing/performance acceptance claim.
+
+
+## 2026-10-01 - Warehouse #307 hero-provider prerequisite root-fix candidate
+
+- Warehouse #307 on `develop@2363d3f97d9158cd64a9e5f2f19b864092f69555` passed runner health, persistent inventory audit and critical-gap preparation. The critical-gap stage reported `verified=239`, `pending=0`, `manualQueue=0`.
+- The actual failure occurred in the exact-head hero candidate report: character intake reported `prepared=0 pending=4 blocked=0`; the four pending rows were `QTN_UNIVERSAL_BASE_CHARACTERS`, `QTN_RPG_CHARACTERS`, `QTN_FANTASY_OUTFITS` and `QTN_UNIVERSAL_ANIMATION_LIBRARY`, each with `warehouse_source_not_staged_yet`. Frodo and Gandalf therefore each had `candidates=0`.
+- Repair candidate adds a bounded four-pack Quaternius prerequisite manifest and stages it immediately before the Frodo/Gandalf candidate report. It does not refresh the full provider warehouse and does not promote any asset to runtime.
+- Pre-Unreal now has a regression contract requiring exact pack parity with `authorized_source_packs`, FBX/CC0 boundaries, workflow triggering and provider staging before candidate ranking.
+- Evidence boundary: **SOURCE-IMPLEMENTED repair candidate**. Fresh exact-head Pre-Unreal/Unreal proof and a subsequent develop Warehouse run are required. No PIE/device/visual/pacing/performance acceptance is claimed.

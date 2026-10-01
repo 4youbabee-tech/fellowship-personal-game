@@ -676,3 +676,17 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 
 **Evidence boundary:** second correction committed; exact-head Pre-Unreal rerun required before calling PG-164 proven.
 
+
+
+### PG-165 — Hero candidate QC must stage its declared provider prerequisites
+**Symptom exposed by:** Warehouse #307 on `develop@2363d3f97d9158cd64a9e5f2f19b864092f69555`.
+
+**Evidence:** runner health passed; persistent inventory audit passed; critical-gap preparation reported `verified=239 pending=0 manualQueue=0`. The final candidate wave then reported `prepared=0 pending=4 blocked=0`, `FRODO candidates=0`, `GANDALF candidates=0`; every pending row named an authorized Quaternius pack with reason `warehouse_source_not_staged_yet`.
+
+**Root cause:** the exact-head hero candidate report ran on every Warehouse push, but its four declared Quaternius source-pack prerequisites were only staged when unrelated provider paths happened to trigger the general Quaternius stage. Candidate execution and prerequisite execution were therefore not coupled.
+
+**Permanent rule:** any push that executes the P1C01 hero candidate report must first execute a bounded provider prerequisite batch containing exactly the wave's declared `authorized_source_packs`. Do not substitute a full-provider refresh.
+
+**Guard:** `Scripts/test_p1c01_hero_candidate_provider_contract.ps1` checks exact authorized-pack parity, FBX/CC0 boundaries, Warehouse path triggering and stage-before-report order.
+
+**Evidence boundary:** repair is SOURCE-IMPLEMENTED until fresh exact-head Pre-Unreal/Unreal validation succeeds and the next develop Warehouse run produces nonzero candidate coverage or a new concrete provider-access blocker.
