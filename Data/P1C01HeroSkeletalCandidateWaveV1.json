@@ -125,6 +125,10 @@
     "required": true,
     "report_artifact_required": true,
     "runtime_integration_remains_false_until_qc_promotion": true,
-    "current_target": "FRODO_FIRST"
+    "current_target": "FRODO_FIRST",
+    "request_id": "P1C01_FRODO_QC_2026_10_01_V1",
+    "requested_utc": "2026-10-01T00:40:00Z",
+    "requested_character": "FRODO",
+    "expected_output": "CANDIDATE_QC_READY_NOT_IMPORTED"
   }
 }
