@@ -1,0 +1,160 @@
+{
+  "schema_version": 1,
+  "pack_id": "P1C03_WEATHERTOP_FORD_PREPRODUCTION_V1",
+  "status": "SOURCE_PREPRODUCTION_OPEN_RUNTIME_GATED",
+  "runtime_chapter": "P1C03",
+  "runtime_title": "Weathertop / Ford",
+  "canonical_mission_id": "F1-04",
+  "runtime_integration_allowed": false,
+  "predecessor_gate": "P1C02_GATE_6_7_ACCEPTED",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/P1C01RuntimeChapterSequenceV1.json",
+    "Data/F104BreeWeathertopMegaSourceSuperpackV1.json",
+    "Data/F105RivendellFellowshipMegaSourceSuperpackV1.json",
+    "Docs/WORLD_DETAIL_LEDGER.md",
+    "01_STORY_AND_TIMELINE_BIBLE",
+    "02_CHARACTERS_AND_RELATIONSHIPS_BIBLE",
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "Tolkien - The Lord of the Rings, Book One / Appendix B"
+  ],
+  "canon_contract": {
+    "entry": "P1C02/Bree hands off into the F1-04 travel-and-pursuit phase.",
+    "f104_critical_path": [
+      "Aragorn is the guide.",
+      "Ring use has increased pursuit danger.",
+      "The Weathertop camp is attacked.",
+      "Frodo is wounded."
+    ],
+    "f104_safe_optional_window": [
+      "travel",
+      "camp decisions",
+      "defensive combat"
+    ],
+    "f104_locked_postcondition": "Party races for Rivendell.",
+    "ford_reference_boundary": {
+      "source_supported": true,
+      "facts": [
+        "Frodo's wound remains the urgent state carried east from Weathertop.",
+        "The route reaches the Ford of Bruinen before Rivendell recovery.",
+        "P1C03 must hand off cleanly into F1-05 Rivendell arrival/recovery without pre-applying Rivendell chapter outcomes."
+      ],
+      "rule": "Do not invent a separate Ford mission outcome beyond the source-supported handoff into Rivendell."
+    }
+  },
+  "world_contract": {
+    "weathertop": {
+      "location_type": "Ruined hilltop watchtower",
+      "visual_grammar": [
+        "ancient stone ring",
+        "ruined masonry",
+        "exposed skyline",
+        "wind",
+        "darkness"
+      ],
+      "gameplay_roles": [
+        "camp tension",
+        "travel decisions",
+        "defensive combat",
+        "Nazgul encounter support"
+      ],
+      "state_variants": [
+        "calm approach",
+        "night attack",
+        "post-attack wounded departure"
+      ],
+      "landmark_rule": "The old ring / hilltop silhouette remains the dominant navigation and encounter landmark."
+    },
+    "ford_handoff": {
+      "location_type": "Pursuit-to-river-crossing handoff",
+      "visual_grammar": [
+        "river crossing",
+        "urgent eastward route",
+        "pursuit pressure"
+      ],
+      "gameplay_roles": [
+        "wounded-state urgency",
+        "route pursuit",
+        "chapter handoff"
+      ],
+      "detail_boundary": "Only source-supported route/river-crossing preparation is authorized here; Rivendell sanctuary content belongs to F1-05/P1C04."
+    }
+  },
+  "existing_project_stock": {
+    "weathertop_source_root": "SourceAssets/Production/World/Weathertop",
+    "current_role": "STATIC_SUPPORT_STOCK_REQUIRES_QC",
+    "known_families": [
+      "ruin wall",
+      "ruined arch",
+      "broken pillar",
+      "watch stone",
+      "camp ring",
+      "camp fire",
+      "rubble",
+      "wind marker/banner"
+    ],
+    "animated_character_stock_rule": "Animated production candidates require FBX; existing OBJ content is static support only."
+  },
+  "source_preparation": {
+    "shared_f104_superpack": "Data/F104BreeWeathertopMegaSourceSuperpackV1.json",
+    "next_handoff_superpack": "Data/F105RivendellFellowshipMegaSourceSuperpackV1.json",
+    "reuse_existing_warehouse_first": true,
+    "duplicate_payloads_forbidden_when_equivalent_stock_exists": true,
+    "categories": [
+      "WEATHERTOP_TERRAIN",
+      "WEATHERTOP_RUINS",
+      "WEATHERTOP_CAMP",
+      "WEATHERTOP_VEGETATION",
+      "WEATHERTOP_WEATHER_AUDIO",
+      "WEATHERTOP_ENCOUNTER_SUPPORT",
+      "F104_CHARACTER_ANIMATION_SUPPORT",
+      "F104_CINEMATIC_DRESSING",
+      "F104_FAUNA_AMBIENCE"
+    ],
+    "supporting_provider_lanes": [
+      "Existing persistent warehouse stock",
+      "Poly Haven CC0",
+      "ambientCG CC0",
+      "KayKit official public GitHub packs",
+      "OpenGameArt items that pass existing license/QC policy"
+    ]
+  },
+  "preproduction_car_order": [
+    "P1C03-PREP-A_CANON_ROUTE_AND_WOUNDED_STATE_CONTRACT",
+    "P1C03-PREP-B_WAREHOUSE_INDEX_AND_PROVENANCE",
+    "P1C03-PREP-C_WEATHERTOP_TERRAIN_AND_RUIN_QC",
+    "P1C03-PREP-D_CAMP_AND_NIGHT_ATTACK_DRESSING_QC",
+    "P1C03-PREP-E_WEATHER_AUDIO_AND_PURSUIT_QC",
+    "P1C03-PREP-F_ENCOUNTER_CHARACTER_ANIMATION_SUPPORT_QC",
+    "P1C03-PREP-G_FORD_HANDOFF_SOURCE_QC",
+    "P1C03-PREP-H_HANDOFF_PACKAGE_READY"
+  ],
+  "architecture_invariants": {
+    "heavy_asset_references": "TSoftObjectPtr/TSoftClassPtr/FSoftObjectPath",
+    "heavy_asset_loading": "FStreamableManager asynchronous only",
+    "animated_character_source": "FBX 2018-compatible",
+    "texture_formats": [".png", ".tga"],
+    "forbidden_texture_formats": [".bmp"],
+    "crowd_lifecycle": "LivingWorldDirector object pooling",
+    "character_context_owner": "ShireNPCContextSubsystem",
+    "story_owner": "ShireQuestSubsystem",
+    "audio_owner": "UShireAudioSubsystem",
+    "repeated_static_detail": "ISM/HISM + LOD/culling"
+  },
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "quality": "Balanced Medium / selective High where visually important",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_class": 2
+  },
+  "activation_boundary": {
+    "source_preparation_before_p1c02_gate67": "ALLOWED",
+    "runtime_changes_before_p1c02_gate67": "FORBIDDEN",
+    "runtime_activation_condition": "P1C02 Gate 6/7 ACCEPTED with real matching evidence"
+  },
+  "evidence_boundary": "Preproduction/source contract only. No P1C03 runtime integration, PIE, device, visual, pacing or performance acceptance is claimed."
+}
