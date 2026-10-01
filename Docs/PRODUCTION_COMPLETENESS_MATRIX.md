@@ -2434,3 +2434,13 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Water/boats + mounted pipeline | MEDIUM GAP | Dedicated interaction/rig/source QC still required |
 | Quaternius automated staging | CORRECTED TO MANUAL | #308: `files=0 unresolved=4`; page reachability no longer counts as payload staging |
 | PIE / device / visual / performance acceptance | UNCHANGED | Source audit creates no runtime acceptance |
+
+
+### Resource-audit guard delta
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Quaternius zero-payload staging | SOURCE-IMPLEMENTED FAIL-CLOSED | `files=0 && unresolved>0` now exits nonzero |
+| Zero-payload regression test | SOURCE-IMPLEMENTED | Pre-Unreal wiring added; exact-head result pending |
+| Provider access policy | SOURCE-IMPLEMENTED | Quaternius reclassified manual-clear-license |
+| Whole-game gap audit | SOURCE-IMPLEMENTED | 28 regions + cross-cutting characters/creatures/animation/audio/VFX/gameplay-support domains |
