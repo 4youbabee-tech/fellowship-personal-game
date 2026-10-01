@@ -8,7 +8,7 @@
     "Data/CharacterProductionMatrix.json",
     "Data/ProductionAssetPromotionPolicyV1.json"
   ],
-  "runtime_gate": "AFTER_MATERIAL_AND_ARCHITECTURE_RUNTIME_LANES_CLOSE",
+  "runtime_gate": "OWNER_AUTHORIZED_P1C01_FRODO_FIRST_EXACT_HEAD_QC",
   "priority_characters": [
     {
       "id": "FRODO",
@@ -127,5 +127,12 @@
     "UNLICENSED_EXTERNAL_PROMOTION",
     "FAKE_RIG_EVIDENCE"
   ],
-  "evidence_boundary": "Preparation only. No character is called rigged, imported, visually accepted or device-accepted from this manifest."
+  "evidence_boundary": "Preparation only. No character is called rigged, imported, visually accepted or device-accepted from this manifest.",
+  "owner_sequence_authority": "Data/P1C01RuntimeChapterSequenceV1.json",
+  "active_scope": {
+    "character": "FRODO",
+    "successor": "GANDALF",
+    "later_characters": "DEFERRED_UNTIL_SERIAL_PREDECESSORS_COMPLETE",
+    "integration_rule": "Candidate QC must pass before READY_FOR_IMPORT or runtime integration."
+  }
 }
