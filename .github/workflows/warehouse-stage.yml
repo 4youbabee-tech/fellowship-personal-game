@@ -12,6 +12,8 @@ on:
       - 'Data/WarehouseQuaterniusAcquisitionBatchV1.json'
       - 'Data/WarehouseQuaterniusHeroCandidateBatchV1.json'
       - 'Scripts/stage_quaternius_warehouse.ps1'
+      - 'Data/P1C01OpenGameArtHeroCandidateBatchV1.json'
+      - 'Scripts/stage_opengameart_character_candidate.ps1'
       - 'Data/P1C01CharacterRigAnimationPrepV1.json'
       - 'Data/P1C01HeroSkeletalCandidateWaveV1.json'
       - 'Scripts/prepare_p1c01_character_rig_intake.ps1'
@@ -213,6 +215,12 @@ jobs:
         timeout-minutes: 20
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_quaternius_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseQuaterniusHeroCandidateBatchV1.json" -RecordManualQueue
+
+      - name: Stage OpenGameArt Quaternius character candidate
+        if: github.event_name == 'push'
+        timeout-minutes: 20
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_opengameart_character_candidate.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\P1C01OpenGameArtHeroCandidateBatchV1.json"
 
       - name: Build exact-head P1C01 Frodo Gandalf candidate report
         if: github.event_name == 'push'

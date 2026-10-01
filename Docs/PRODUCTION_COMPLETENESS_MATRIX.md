@@ -2468,3 +2468,16 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Caller-checkout survival | SOURCE-IMPLEMENTED REPAIR CANDIDATE | Bounded cleanup, overlap rejection, metadata prune, downstream script guard |
 | Frodo candidate evidence | BLOCKED BY #310 INFRASTRUCTURE FAILURE | Report did not run; artifact did not exist |
 | Runtime / Gate 6/7 acceptance | UNCHANGED / NOT ACCEPTED | No character import or human/device evidence |
+
+
+## 2026-10-02 - Warehouse #311 exact Frodo blocker and direct CC0 fallback
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Caller checkout survival | RUN-PROVEN | #311 reached hero staging/report after generated material export |
+| Warehouse inventory | RUN-PROVEN CLEAN | 18,932 files / 6,808,598,106 bytes / 0 duplicate groups |
+| Candidate artifact | RUN-PROVEN / DIGEST MATCHED | SHA256 `37b7a51113d8d3ddc750522e8f7c68ac6b277424f4bf4269108d82f4b82c1dc2` |
+| Frodo / Gandalf candidates | TRUE BLOCKER | 0 FBX / 0 pools; four Quaternius manual-source packs pending |
+| OpenGameArt Quaternius fallback | SOURCE-IMPLEMENTED CANDIDATE | Direct CC0 archive, bounded ZIP scan, FBX gate, SHA reuse |
+| READY_FOR_IMPORT / runtime | NOT STARTED | Skeleton/skin/deformation/FBX-2018 QC still required |
+| Gate 6/7 | UNCHANGED / NOT ACCEPTED | No human/device evidence |

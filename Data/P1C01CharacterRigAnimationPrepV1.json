@@ -93,6 +93,15 @@
       "required_final_format": "FBX",
       "observed_page_license": "CC0",
       "license_capture": "OFFICIAL_PACK_PAGE_VERIFIED_2026-09-27"
+    },
+    {
+      "provider": "OPENGAMEART",
+      "id": "OGA_QTN_ULTIMATE_ANIMATED_CHARACTERS_CC0",
+      "state": "AUTHORIZED_FOR_STAGING",
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_OPENGAMEART_QUATERNIUS_UPLOAD_VERIFIED_2026-10-02",
+      "intended_use": "RIG_BASE_QC_CANDIDATE_NOT_FINAL_LIKENESS"
     }
   ],
   "required_bundle": {
