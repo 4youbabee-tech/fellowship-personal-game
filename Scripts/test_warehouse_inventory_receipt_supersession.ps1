@@ -1,12 +1,44 @@
 $ErrorActionPreference = "Stop"
 
 $scriptPath = Join-Path $PSScriptRoot "audit_warehouse_inventory.ps1"
+$networkScriptPath = Join-Path $PSScriptRoot "warehouse_network.ps1"
+. $networkScriptPath
+
 $testRoot = Join-Path ([IO.Path]::GetTempPath()) ("shire-warehouse-supersession-" + [Guid]::NewGuid().ToString("N"))
 $warehouseRoot = Join-Path $testRoot "warehouse"
 $payloadDir = Join-Path $warehouseRoot "ambientCG\PLASTER"
 New-Item -ItemType Directory -Path $payloadDir -Force | Out-Null
 
 try {
+    $reuseRoot = Join-Path $testRoot "reuse"
+    New-Item -ItemType Directory -Path $reuseRoot -Force | Out-Null
+    $reusePayload = Join-Path $reuseRoot "same-size-corrupt.bin"
+    [IO.File]::WriteAllBytes($reusePayload, [byte[]](1,2,3,4,5,6,7,8))
+    $reuseExpectedHash = (Get-FileHash -LiteralPath $reusePayload -Algorithm SHA256).Hash.ToLowerInvariant()
+    $reuseReceiptPath = Join-Path $reuseRoot "receipt_REUSE_HASH_TEST.json"
+    $reuseReceipt = [ordered]@{
+        batch_id = "REUSE_HASH_TEST"
+        files = @(
+            [ordered]@{
+                file = $reusePayload
+                size = [int64](Get-Item -LiteralPath $reusePayload).Length
+                sha256 = $reuseExpectedHash
+            }
+        )
+    }
+    $reuseReceipt | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $reuseReceiptPath -Encoding UTF8
+    if (-not (Test-WarehouseReceiptReusable -ReceiptPath $reuseReceiptPath -BatchId "REUSE_HASH_TEST")) {
+        throw "A valid receipt payload should be reusable."
+    }
+
+    [IO.File]::WriteAllBytes($reusePayload, [byte[]](8,7,6,5,4,3,2,1))
+    if (Test-WarehouseReceiptReusable -ReceiptPath $reuseReceiptPath -BatchId "REUSE_HASH_TEST") {
+        throw "A same-size SHA256 mismatch must not be reusable."
+    }
+    if (Test-Path -LiteralPath $reusePayload -PathType Leaf) {
+        throw "The mismatched payload must be purged so the staging script can redownload only that file."
+    }
+
     $payloadPath = Join-Path $payloadDir "Plaster007_2K-PNG.zip"
     [IO.File]::WriteAllText($payloadPath, "current-valid-payload")
     $currentHash = (Get-FileHash -LiteralPath $payloadPath -Algorithm SHA256).Hash.ToLowerInvariant()
@@ -91,7 +123,7 @@ try {
         throw "Fail-closed output did not identify the active V2 receipt."
     }
 
-    Write-Host "WAREHOUSE_RECEIPT_SUPERSESSION_TEST_PASS historical_v1_superseded=true active_v2_enforced=true normalized_path=true fail_closed=true"
+    Write-Host "WAREHOUSE_RECEIPT_SUPERSESSION_TEST_PASS historical_v1_superseded=true active_v2_enforced=true normalized_path=true fail_closed=true hash_mismatch_targeted_purge=true"
 }
 finally {
     if (Test-Path -LiteralPath $testRoot -PathType Container) {

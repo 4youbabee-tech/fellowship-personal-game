@@ -1,3 +1,13 @@
+## 2026-10-01 - P1C01 Frodo candidate warehouse targeted-repair lane
+
+- Canonical failure head: `develop@b8cee93c01673fc2635f672ca0a0fbe1f543311a`; Warehouse Stage #302 ended **FAILURE** during `Repair candidate-gate material warehouse provenance` after approximately 54 minutes of job execution.
+- GitHub retained the active step without a terminal step conclusion and published neither job log nor candidate artifact. Therefore the terminal runner/service cause is not claimed, and no Frodo/Gandalf candidate result exists from #302.
+- Source inspection confirmed a failure amplifier: the candidate-gate path passed `-Refresh` to the full Poly Haven V4 batch (37 material/prop slugs, 2.6 GB byte cap), deleting every already-staged payload even when only one receipt hash was stale.
+- Root-fix candidate: receipt reuse now verifies recorded SHA256, purges only the mismatched payload, and lets the existing staging path redownload only missing/corrupt files. The candidate-gate repair step no longer forces full-batch refresh and is independently bounded to 20 minutes.
+- Regression coverage exercises a same-size content corruption so size-only validation cannot regress.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + WAREHOUSE PROOF PENDING**.
+- Not claimed: COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, Frodo candidate acceptance, or runtime integration.
+
 ## 2026-10-01 - P1C01 FOUNDATION_CORRECTIONS_V1 active
 
 - Canonical base: `develop@3ec3f725cb1dff42a762e36e39790b82a4801714`, which is machine-green after PR #207 (Pre-Unreal and Unreal Build Validation SUCCESS).

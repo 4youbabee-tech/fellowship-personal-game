@@ -117,6 +117,17 @@ function Test-WarehouseReceiptReusable {
             if ($record.PSObject.Properties.Name -contains "size") {
                 if ([int64](Get-Item -LiteralPath $path).Length -ne [int64]$record.size) { return $false }
             }
+            if ($record.PSObject.Properties.Name -contains "sha256") {
+                $expectedHash = ([string]$record.sha256).ToLowerInvariant()
+                if (-not [string]::IsNullOrWhiteSpace($expectedHash)) {
+                    $actualHash = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
+                    if ($actualHash -ne $expectedHash) {
+                        Write-Warning "WAREHOUSE_REUSE_PURGE_HASH_MISMATCH path=$path expected=$expectedHash actual=$actualHash"
+                        Remove-Item -LiteralPath $path -Force -ErrorAction SilentlyContinue
+                        return $false
+                    }
+                }
+            }
             if ([IO.Path]::GetExtension($path).ToLowerInvariant() -eq ".zip" -and -not (Test-WarehouseZipReadable -Path $path)) {
                 Write-Warning "WAREHOUSE_REUSE_PURGE_CORRUPT_ZIP path=$path"
                 Remove-Item -LiteralPath $path -Force -ErrorAction SilentlyContinue
@@ -129,6 +140,17 @@ function Test-WarehouseReceiptReusable {
             if (-not (Test-Path -LiteralPath $archive -PathType Leaf)) { return $false }
             if ($record.PSObject.Properties.Name -contains "archive_size") {
                 if ([int64](Get-Item -LiteralPath $archive).Length -ne [int64]$record.archive_size) { return $false }
+            }
+            if ($record.PSObject.Properties.Name -contains "archive_sha256") {
+                $expectedArchiveHash = ([string]$record.archive_sha256).ToLowerInvariant()
+                if (-not [string]::IsNullOrWhiteSpace($expectedArchiveHash)) {
+                    $actualArchiveHash = (Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant()
+                    if ($actualArchiveHash -ne $expectedArchiveHash) {
+                        Write-Warning "WAREHOUSE_REUSE_PURGE_HASH_MISMATCH path=$archive expected=$expectedArchiveHash actual=$actualArchiveHash"
+                        Remove-Item -LiteralPath $archive -Force -ErrorAction SilentlyContinue
+                        return $false
+                    }
+                }
             }
             if ($record.PSObject.Properties.Name -contains "license_snapshot") {
                 $license = [string]$record.license_snapshot
