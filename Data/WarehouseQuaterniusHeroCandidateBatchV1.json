@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "batch_id": "WAREHOUSE_QUATERNIUS_P1C01_HERO_CANDIDATE_V1",
+  "status": "AUTHORIZED_FOR_TARGETED_STAGING",
+  "provider": "QUATERNIUS",
+  "license": "PER_PACK_PAGE_LICENSE_CAPTURE_REQUIRED",
+  "purpose": "Bounded prerequisite staging for the exact-head P1C01 Frodo/Gandalf skeletal candidate gate. This manifest contains only the four source packs authorized by P1C01HeroSkeletalCandidateWaveV1.",
+  "staging_root": "D:\\actions-runner\\_warehouse\\ShireJourney\\Quaternius",
+  "source_pages": [
+    {
+      "id": "QTN_UNIVERSAL_BASE_CHARACTERS",
+      "url": "https://quaternius.com/packs/universalbasecharacters.html",
+      "category": "CHARACTER_BASE",
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_PACK_PAGE_VERIFIED_2026-09-27"
+    },
+    {
+      "id": "QTN_RPG_CHARACTERS",
+      "url": "https://quaternius.com/packs/rpgcharacters.html",
+      "category": "NPC_CHARACTER_BASE",
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_PACK_PAGE_VERIFIED_2026-09-27"
+    },
+    {
+      "id": "QTN_FANTASY_OUTFITS",
+      "url": "https://quaternius.com/packs/modularcharacteroutfitsfantasy.html",
+      "category": "CHARACTER_OUTFITS",
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_PACK_PAGE_VERIFIED_2026-09-27"
+    },
+    {
+      "id": "QTN_UNIVERSAL_ANIMATION_LIBRARY",
+      "url": "https://quaternius.com/packs/universalanimationlibrary.html",
+      "category": "ANIMATION",
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_PACK_PAGE_VERIFIED_2026-09-27"
+    }
+  ],
+  "rules": [
+    "Only the four P1C01 hero-candidate source packs are staged by this bounded prerequisite batch.",
+    "Only public downloads discovered from the official Quaternius pack pages are eligible; interactive/store-only routes remain unresolved.",
+    "Animated production-character candidates must reach the project as FBX; OBJ is not accepted as final animated-character evidence.",
+    "Production textures are PNG/TGA only; BMP is forbidden.",
+    "Staging does not promote any asset to READY_FOR_IMPORT, runtime integration, PIE, device, visual or performance acceptance."
+  ],
+  "evidence_boundary": "Warehouse prerequisite only. Candidate ranking, import and runtime promotion remain separately gated."
+}
