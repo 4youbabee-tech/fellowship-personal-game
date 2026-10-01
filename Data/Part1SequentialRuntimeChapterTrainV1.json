@@ -105,7 +105,7 @@
     "reuse_first": true,
     "copy_shared_assets_per_chapter": false,
     "index_shared_warehouse_stock": true,
-    "output_root": "C:\\actions-runner\\_warehouse\\ShireJourney\\_part1_runtime_chapter_prep_v1",
+    "output_root": "D:\\actions-runner\\_warehouse\\ShireJourney\\_part1_runtime_chapter_prep_v1",
     "allowed_extensions": [
       ".fbx",
       ".png",

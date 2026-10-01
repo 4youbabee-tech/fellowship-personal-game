@@ -5,7 +5,7 @@
   "provider": "AMBIENTCG",
   "license": "CC0",
   "api_base": "https://ambientcg.com/api/v2/full_json",
-  "staging_root": "C:\\actions-runner\\_warehouse\\ShireJourney\\ambientCG_Trilogy",
+  "staging_root": "D:\\actions-runner\\_warehouse\\ShireJourney\\ambientCG_Trilogy",
   "max_download_bytes": 2200000000,
   "target_attribute": "2K-PNG",
   "search_lanes": [

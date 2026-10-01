@@ -4,7 +4,7 @@
   "status": "AUTHORIZED_FOR_STAGING",
   "provider": "KENNEY",
   "license": "CC0",
-  "staging_root": "C:\\actions-runner\\_warehouse\\ShireJourney\\Kenney",
+  "staging_root": "D:\\actions-runner\\_warehouse\\ShireJourney\\Kenney",
   "pack_pages": [
     {
       "id": "FANTASY_TOWN_KIT",
