@@ -3450,3 +3450,13 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Source-backed Ford boundary: wounded eastward pursuit reaches the Ford of Bruinen before Rivendell recovery. No separate unsupported mission outcome is introduced.
 - Runtime remains fail-closed: `runtime_integration_allowed=false` until **P1C02 Gate 6/7 ACCEPTED** with real evidence.
 - Evidence boundary: **SOURCE-IMPLEMENTED preproduction contract** only; no P1C03 PIE/device/visual/pacing/performance acceptance.
+
+
+## 2026-10-01 - Daily Project Manager Report pipeline root fix
+
+- Runner evidence is healthy for the failing scheduled report: Run #6 reached the self-hosted Windows runner, completed setup and checked out canonical `develop` successfully.
+- The actual failure was inside the inline PowerShell report generator. Run #6 failed in `Generate project-manager report` with parser errors caused by fragile inline quoting/encoding; the publish step to Project Manager issue #96 was therefore skipped.
+- Report generation is now isolated in `Scripts/generate_daily_project_manager_report.ps1` with ASCII-safe formatting, explicit input validation, stable Git log invocation and no inline backtick-dependent Markdown construction.
+- `Scripts/test_daily_project_manager_report.ps1` parses and executes the generator and checks required report sections plus encoding-sanity markers.
+- Pre-Unreal now runs this regression test on exact PR heads.
+- Evidence boundary: **SOURCE-IMPLEMENTED repair candidate** until exact-head Pre-Unreal/Unreal validation succeeds and the scheduled/default-branch workflow is updated and observed posting successfully.
