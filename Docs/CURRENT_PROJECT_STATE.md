@@ -3477,3 +3477,11 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Unexpected failures remain fatal; no broad `continue-on-error` is used. The downstream exact-head Frodo report remains fail-closed when candidate coverage is zero, but it can now run and upload its blocker evidence.
 - Poly Haven remains selective/reuse-first; #309 skipped its provider batch and no full refresh occurred.
 - Evidence boundary: **SOURCE-IMPLEMENTED / exact-head validation pending**. No Quaternius payload, FBX candidate, import, runtime integration, PIE, device, visual, pacing or performance acceptance is claimed.
+
+
+## 2026-10-01 - Daily Project Manager Report pipeline root fix
+
+- Daily Project Manager Report run #6 reached the self-hosted runner and completed setup plus canonical `develop` checkout; failure was isolated to fragile inline PowerShell report generation, so Issue #96 publication was skipped.
+- Report generation now lives in `Scripts/generate_daily_project_manager_report.ps1`; `Scripts/test_daily_project_manager_report.ps1` parse-tests, executes and checks report content/encoding from Pre-Unreal.
+- The default-branch publisher remains a separate follow-up: it must be reconciled only after this tested generator lands on `develop`, then observed posting to Issue #96, Actions Summary and an artifact.
+- Evidence boundary: **SOURCE-IMPLEMENTED candidate** pending new exact-head validation; end-to-end delivery remains unverified until a real publisher run succeeds.

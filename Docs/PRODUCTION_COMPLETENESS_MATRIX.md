@@ -2455,3 +2455,12 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Persistent warehouse payloads | PRESERVED | No full Poly Haven rerun; valid staged files are untouched |
 | Frodo candidate artifact | REPAIR PENDING | Workflow must reach candidate report/upload on a fresh exact head |
 | Runtime / Gate 6/7 acceptance | UNCHANGED / NOT ACCEPTED | No character import or human/device evidence |
+
+
+## 2026-10-01 - Daily manager report pipeline repair
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Report generator | SOURCE-IMPLEMENTED | Repository script replaces fragile inline PowerShell |
+| Generator regression test | SOURCE-IMPLEMENTED | Parse, execution, content and encoding test wired into Pre-Unreal |
+| Issue #96 / Actions Summary / artifact delivery | NOT YET RE-OBSERVED | Requires default-branch publisher and one successful end-to-end run |
