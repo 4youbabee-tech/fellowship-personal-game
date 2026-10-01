@@ -1,3 +1,13 @@
+## 2026-10-01 - Warehouse candidate trigger hardening matrix
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| Candidate gate activation | SOURCE-IMPLEMENTED / EXACT-HEAD PROOF PENDING | Relevant Warehouse push invokes bounded provenance repair and candidate report without merge-subject matching |
+| Receipt integrity and payload reuse | PRESERVED | SHA256 verification; only missing or mismatched payload is redownloaded |
+| Broad refresh | FORBIDDEN | No `-Refresh` in the candidate gate |
+| Frodo/Gandalf report and artifact | PENDING | Requires successful exact-head Warehouse execution |
+| PIE / device / visual / pacing / performance / Gate 6-7 | NOT ACCEPTED | Separate real evidence required |
+
 ## 2026-10-01 - Warehouse migrated-receipt root repair matrix
 
 | Area | Status | Evidence / boundary |

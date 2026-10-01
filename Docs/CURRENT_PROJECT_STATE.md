@@ -1,3 +1,10 @@
+## 2026-10-01 - Warehouse candidate gate trigger hardening
+
+- Confirmed integration defect: Warehouse Stage #305 at `develop@9e87b1b45556e8429c1ef14dc12a931ce5a95fce` skipped both targeted provenance repair and the Frodo/Gandalf candidate report because GitHub's final merge subject did not retain the prior `P1C01_FRODO_CANDIDATE_QC` text marker.
+- Root fix: every relevant `Warehouse Stage` push now executes the bounded targeted provenance repair and exact-head candidate-report lane. These operations reuse verified payloads, purge only hash-mismatched payloads, and never authorize a blanket refresh.
+- This removes merge-subject wording as a runtime control plane while keeping the existing 20-minute repair bound, SHA256 receipt enforcement, fail-closed corruption handling, and artifact upload.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + WAREHOUSE PROOF PENDING**. No Frodo/Gandalf acceptance, PIE, device, visual, pacing, performance, or Gate 6/7 claim is made.
+
 ## 2026-10-01 - Warehouse migrated-receipt root rebasing
 
 - Warehouse Stage #304 on `develop@a75b2f810996289ba5795995563a7c83e406c526` proved the active payload root is `D:\\actions-runner\\_warehouse\\ShireJourney`, but two records inside the migrated Poly Haven V3 receipt still named the retired absolute `C:` root.
