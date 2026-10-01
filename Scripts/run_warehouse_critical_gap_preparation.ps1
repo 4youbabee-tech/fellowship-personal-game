@@ -44,6 +44,52 @@ function Get-OptionalPropertyValue {
   return $prop.Value
 }
 
+function Resolve-WarehouseReceiptPath {
+  param(
+    [string]$Path,
+    [string]$BaseRoot
+  )
+
+  if ([string]::IsNullOrWhiteSpace($Path)) { return "" }
+  $expanded = [Environment]::ExpandEnvironmentVariables($Path)
+  $slashNormalized = $expanded.Replace("/", "\")
+  $warehouseMarker = "\actions-runner\_warehouse\ShireJourney"
+  $markerIndex = $slashNormalized.IndexOf($warehouseMarker, [StringComparison]::OrdinalIgnoreCase)
+  if ($markerIndex -ge 0) {
+    $relativeStart = $markerIndex + $warehouseMarker.Length
+    $relative = $slashNormalized.Substring($relativeStart).TrimStart("\")
+    if ([string]::IsNullOrWhiteSpace($relative)) { return $BaseRoot }
+    return Join-Path $BaseRoot $relative
+  }
+
+  if (-not [IO.Path]::IsPathRooted($expanded)) {
+    $expanded = Join-Path $BaseRoot $expanded
+  }
+  try { return [IO.Path]::GetFullPath($expanded) }
+  catch { return $expanded }
+}
+
+function Get-WarehouseReceiptTimestampUtc {
+  param(
+    $Receipt,
+    [System.IO.FileInfo]$ReceiptFile
+  )
+
+  $raw = [string](Get-OptionalPropertyValue -Object $Receipt -Name "staged_at_utc" -Default "")
+  if (-not [string]::IsNullOrWhiteSpace($raw)) {
+    try {
+      return ([DateTime]::Parse(
+        $raw,
+        [Globalization.CultureInfo]::InvariantCulture,
+        [Globalization.DateTimeStyles]::AssumeUniversal -bor [Globalization.DateTimeStyles]::AdjustToUniversal
+      )).ToUniversalTime()
+    } catch {
+      Write-Warning ("WAREHOUSE_CRITICAL_GAP_RECEIPT_TIMESTAMP_FALLBACK receipt=" + $ReceiptFile.FullName + " staged_at_utc=" + $raw)
+    }
+  }
+  return $ReceiptFile.LastWriteTimeUtc
+}
+
 $dangerous = @(".exe",".msi",".cmd",".bat",".ps1",".vbs",".js",".scr",".com")
 $audioExt = @(".wav",".ogg",".mp3",".flac")
 $textureExt = @(".png",".tga",".jpg",".jpeg",".bmp",".exr",".hdr")
@@ -51,8 +97,9 @@ $meshExt = @(".fbx",".obj",".gltf",".glb",".blend")
 $archiveExt = @(".zip",".7z",".rar")
 
 $receiptRows = @()
-$receiptSeen = @{}
+$receiptCandidates = @()
 $duplicateReceiptRows = 0
+$supersededReceiptRows = 0
 $badReceipts = @()
 if (Test-Path -LiteralPath $WarehouseRoot -PathType Container) {
   foreach ($receiptFile in @(Get-ChildItem -LiteralPath $WarehouseRoot -Recurse -File -Filter "receipt_*.json")) {
@@ -65,38 +112,69 @@ if (Test-Path -LiteralPath $WarehouseRoot -PathType Container) {
     $receiptProvider=[string](Get-OptionalPropertyValue -Object $receipt -Name "provider" -Default "")
     $receiptBatchId=[string](Get-OptionalPropertyValue -Object $receipt -Name "batch_id" -Default "")
     $receiptItems=@(Get-OptionalPropertyValue -Object $receipt -Name "files" -Default @())
+    $receiptTimestamp=Get-WarehouseReceiptTimestampUtc -Receipt $receipt -ReceiptFile $receiptFile
+    $recordIndex=0
 
     foreach ($row in $receiptItems) {
-      $path = [string](Get-OptionalPropertyValue -Object $row -Name "file" -Default "")
+      $originalPath = [string](Get-OptionalPropertyValue -Object $row -Name "file" -Default "")
       $declared = ([string](Get-OptionalPropertyValue -Object $row -Name "sha256" -Default "")).ToLowerInvariant()
-      if ([string]::IsNullOrWhiteSpace($path)) {
-        $path = [string](Get-OptionalPropertyValue -Object $row -Name "archive" -Default "")
+      if ([string]::IsNullOrWhiteSpace($originalPath)) {
+        $originalPath = [string](Get-OptionalPropertyValue -Object $row -Name "archive" -Default "")
         $declared = ([string](Get-OptionalPropertyValue -Object $row -Name "archive_sha256" -Default "")).ToLowerInvariant()
       }
-      if ([string]::IsNullOrWhiteSpace($path)) { continue }
-
-      $receiptKey = ($path.ToLowerInvariant() + "|" + $declared)
-      if($receiptSeen.ContainsKey($receiptKey)){
-        $duplicateReceiptRows++
+      if ([string]::IsNullOrWhiteSpace($originalPath)) {
+        $recordIndex++
         continue
       }
-      $receiptSeen[$receiptKey]=$true
 
+      $path = Resolve-WarehouseReceiptPath -Path $originalPath -BaseRoot $WarehouseRoot
+      $normalizedPath = $path.Replace("/", "\").TrimEnd("\").ToLowerInvariant()
       $rowState=[string](Get-OptionalPropertyValue -Object $row -Name "state" -Default "STAGED")
       if([string]::IsNullOrWhiteSpace($rowState)){$rowState="STAGED"}
 
-      $receiptRows += [pscustomobject]@{
+      $receiptCandidates += [pscustomobject]@{
         provider=$receiptProvider
         batch_id=$receiptBatchId
         asset_id=[string](Get-OptionalPropertyValue -Object $row -Name "asset_id" -Default "")
         asset_slug=[string](Get-OptionalPropertyValue -Object $row -Name "asset_slug" -Default "")
         category=[string](Get-OptionalPropertyValue -Object $row -Name "category" -Default "")
         path=$path
+        original_path=$originalPath
+        normalized_path=$normalizedPath
         declared_sha256=$declared
         source_page=[string](Get-OptionalPropertyValue -Object $row -Name "source_page" -Default "")
         state=$rowState
         receipt_file=$receiptFile.FullName
+        receipt_staged_at_utc=$receiptTimestamp
+        receipt_file_last_write_utc=$receiptFile.LastWriteTimeUtc
+        receipt_record_index=$recordIndex
       }
+      $recordIndex++
+    }
+  }
+}
+
+$sortProperties = @(
+  @{ Expression={ $_.receipt_staged_at_utc }; Descending=$true },
+  @{ Expression={ $_.receipt_file_last_write_utc }; Descending=$true },
+  @{ Expression={ $_.receipt_file }; Descending=$true },
+  @{ Expression={ $_.receipt_record_index }; Descending=$true }
+)
+foreach($group in @($receiptCandidates | Group-Object normalized_path)){
+  $ordered=@($group.Group | Sort-Object -Property $sortProperties)
+  if($ordered.Count -eq 0){continue}
+  $active=$ordered[0]
+  $receiptRows += $active
+
+  for($i=1;$i -lt $ordered.Count;$i++){
+    $older=$ordered[$i]
+    if(
+      [string]$older.receipt_file -eq [string]$active.receipt_file -and
+      [string]$older.declared_sha256 -eq [string]$active.declared_sha256
+    ){
+      $duplicateReceiptRows++
+    } else {
+      $supersededReceiptRows++
     }
   }
 }
@@ -122,7 +200,7 @@ foreach($row in $receiptRows){
 
 # Fail before archive enumeration when receipt integrity is already broken.
 if($badReceipts.Count -gt 0 -or $blocked.Count -gt 0){
-  Write-Host ("WAREHOUSE_CRITICAL_GAP_PREFLIGHT_BLOCKED verified="+$verified.Count+" blocked="+$blocked.Count+" badReceipts="+$badReceipts.Count+" duplicatesSkipped="+$duplicateReceiptRows)
+  Write-Host ("WAREHOUSE_CRITICAL_GAP_PREFLIGHT_BLOCKED verified="+$verified.Count+" blocked="+$blocked.Count+" badReceipts="+$badReceipts.Count+" duplicatesSkipped="+$duplicateReceiptRows+" superseded="+$supersededReceiptRows)
   foreach($entry in $blocked){Write-Host ("WAREHOUSE_CRITICAL_GAP_BLOCKED_DETAIL "+($entry|ConvertTo-Json -Compress -Depth 6))}
   foreach($entry in $badReceipts){Write-Host ("WAREHOUSE_CRITICAL_GAP_BAD_RECEIPT_DETAIL "+($entry|ConvertTo-Json -Compress -Depth 6))}
   exit 2
@@ -242,7 +320,7 @@ foreach($car in @($manifest.cars|Sort-Object order)){
 
 $report=[ordered]@{
   schema_version=1;train_id=[string]$manifest.train_id;generated_at_utc=[DateTime]::UtcNow.ToString("o");
-  receipt_records=$receiptRows.Count;duplicate_receipt_records_skipped=$duplicateReceiptRows;verified_receipts=$verified.Count;bad_receipts=$badReceipts;
+  receipt_records=$receiptCandidates.Count;active_receipt_records=$receiptRows.Count;superseded_receipt_records=$supersededReceiptRows;duplicate_receipt_records_skipped=$duplicateReceiptRows;verified_receipts=$verified.Count;bad_receipts=$badReceipts;
   blocked=$blocked;pending=$pending;inventory_file_count=$inventory.Count;
   provider_summary=$providerSummary;role_summary=$roleSummary;cars=$cars;
   rules=@(
@@ -282,9 +360,9 @@ $outPath=Join-Path $OutputRoot "warehouse_critical_gap_preparation_latest.json"
 $report|ConvertTo-Json -Depth 12|Set-Content -LiteralPath $outPath -Encoding UTF8
 
 if($manualQueue.Count -gt 0){
-  Write-Host ("WAREHOUSE_CRITICAL_GAP_PREP_PASS_WITH_MANUAL_QUEUE verified="+$verified.Count+" inventory="+$inventory.Count+" blocked="+$blocked.Count+" badReceipts="+$badReceipts.Count+" pending="+$pending.Count+" manualQueue="+$manualQueue.Count+" duplicatesSkipped="+$duplicateReceiptRows+" archiveMode=metadata-only report="+$outPath)
+  Write-Host ("WAREHOUSE_CRITICAL_GAP_PREP_PASS_WITH_MANUAL_QUEUE verified="+$verified.Count+" inventory="+$inventory.Count+" blocked="+$blocked.Count+" badReceipts="+$badReceipts.Count+" pending="+$pending.Count+" manualQueue="+$manualQueue.Count+" duplicatesSkipped="+$duplicateReceiptRows+" superseded="+$supersededReceiptRows+" archiveMode=metadata-only report="+$outPath)
   foreach($entry in $manualQueue){Write-Host ("WAREHOUSE_CRITICAL_GAP_MANUAL_QUEUE "+($entry|ConvertTo-Json -Compress -Depth 6))}
 }
 else{
-  Write-Host ("WAREHOUSE_CRITICAL_GAP_PREP_PASS verified="+$verified.Count+" inventory="+$inventory.Count+" pending=0 manualQueue=0 duplicatesSkipped="+$duplicateReceiptRows+" archiveMode=metadata-only report="+$outPath)
+  Write-Host ("WAREHOUSE_CRITICAL_GAP_PREP_PASS verified="+$verified.Count+" inventory="+$inventory.Count+" pending=0 manualQueue=0 duplicatesSkipped="+$duplicateReceiptRows+" superseded="+$supersededReceiptRows+" archiveMode=metadata-only report="+$outPath)
 }
