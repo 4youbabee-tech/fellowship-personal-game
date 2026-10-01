@@ -3440,3 +3440,13 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Runtime remains fail-closed: `runtime_integration_allowed=false` until **P1C01 Gate 6/7 ACCEPTED** with real matching evidence.
 - Current P1C01 blocker remains separate: Warehouse #308 staged the targeted Quaternius step but produced zero payload files and four unresolved source packs, so Frodo/Gandalf candidate coverage stayed at zero.
 - Evidence boundary: **SOURCE-IMPLEMENTED preproduction contract**. No P1C02 PIE/device/visual/pacing/performance claim.
+
+
+## 2026-10-01 - P1C03 Weathertop / Ford source preproduction opened
+
+- `Data/P1C03WeathertopFordPreproductionV1.json` opens the **source/preproduction lane only** for P1C03.
+- It reuses the existing F1-04 Bree/Weathertop mega source pipeline and references F1-05 only for a clean Rivendell handoff boundary.
+- Source-backed Weathertop scope: ruined hilltop / ancient stone ring / exposed skyline, calm-approach + night-attack + wounded-departure state preparation, camp/terrain/ruin/weather/audio/encounter source QC.
+- Source-backed Ford boundary: wounded eastward pursuit reaches the Ford of Bruinen before Rivendell recovery. No separate unsupported mission outcome is introduced.
+- Runtime remains fail-closed: `runtime_integration_allowed=false` until **P1C02 Gate 6/7 ACCEPTED** with real evidence.
+- Evidence boundary: **SOURCE-IMPLEMENTED preproduction contract** only; no P1C03 PIE/device/visual/pacing/performance acceptance.
