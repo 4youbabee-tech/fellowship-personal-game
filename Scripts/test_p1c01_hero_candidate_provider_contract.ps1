@@ -36,20 +36,23 @@ if(-not $workflow.Contains($triggerMarker)){
     throw "P1C01_HERO_PROVIDER_CONTRACT_TRIGGER_MISSING"
 }
 
-$stageMarker = 'WarehouseQuaterniusHeroCandidateBatchV1.json'
-$reportMarker = 'run_p1c01_hero_skeletal_candidate_wave.ps1'
-$stageIndex = $workflow.IndexOf($stageMarker,[StringComparison]::Ordinal)
+$stageStepMarker = '- name: Stage P1C01 hero candidate provider batch'
+$stageManifestMarker = 'WarehouseQuaterniusHeroCandidateBatchV1.json'
+$reportMarker = '- name: Build exact-head P1C01 Frodo Gandalf candidate report'
+$stageStepIndex = $workflow.IndexOf($stageStepMarker,[StringComparison]::Ordinal)
 $reportIndex = $workflow.IndexOf($reportMarker,[StringComparison]::Ordinal)
-if($stageIndex -lt 0 -or $reportIndex -lt 0 -or $stageIndex -ge $reportIndex){
-    throw "P1C01_HERO_PROVIDER_CONTRACT_ORDER_FAIL stage=$stageIndex report=$reportIndex"
+if($stageStepIndex -lt 0 -or $reportIndex -lt 0 -or $stageStepIndex -ge $reportIndex){
+    throw "P1C01_HERO_PROVIDER_CONTRACT_ORDER_FAIL stage=$stageStepIndex report=$reportIndex"
 }
 
-$stageBlockStart = $workflow.LastIndexOf("- name: Stage P1C01 hero candidate provider batch",$stageIndex,[StringComparison]::Ordinal)
-if($stageBlockStart -lt 0){ throw "P1C01_HERO_PROVIDER_CONTRACT_STEP_MISSING" }
+$stageBlockStart = $stageStepIndex
 $stageBlockLength = [Math]::Min(900,$workflow.Length-$stageBlockStart)
 $stageBlock = $workflow.Substring($stageBlockStart,$stageBlockLength)
 if(-not $stageBlock.Contains("if: github.event_name == 'push'")){
     throw "P1C01_HERO_PROVIDER_CONTRACT_PUSH_GATE_MISSING"
+}
+if(-not $stageBlock.Contains($stageManifestMarker)){
+    throw "P1C01_HERO_PROVIDER_CONTRACT_MANIFEST_EXECUTION_MISSING"
 }
 
 Write-Host "P1C01_HERO_PROVIDER_CONTRACT_TEST_PASS packs=$($required.Count) targeted=true precedes_candidate_report=true"
