@@ -133,6 +133,8 @@
     "character": "FRODO",
     "successor": "GANDALF",
     "later_characters": "DEFERRED_UNTIL_SERIAL_PREDECESSORS_COMPLETE",
-    "integration_rule": "Candidate QC must pass before READY_FOR_IMPORT or runtime integration."
+    "integration_rule": "Candidate QC must pass before READY_FOR_IMPORT or runtime integration.",
+    "qc_request_id": "P1C01_FRODO_CANDIDATE_QC_2026_10_01_V1",
+    "qc_request_state": "REQUESTED_EXACT_HEAD_WAREHOUSE"
   }
 }
