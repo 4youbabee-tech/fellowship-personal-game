@@ -1,3 +1,9 @@
+## 2026-10-01 - PG-207 real legacy-path fixture guard
+
+- Exact-head Pre-Unreal correctly rejected the real `C:\\actions-runner` migration fixture as though it were live runner configuration. This was a validator false positive after the fixture was corrected to the real Windows path form.
+- PG-207 now permits exactly one known historical-path literal in the dedicated receipt-supersession test and requires it to be the canonical fixture assignment. Any additional occurrence, any different test/script occurrence, or any workflow/config occurrence remains a fail-closed retired-root violation.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL PENDING**. The D-root operational authority is unchanged.
+
 ## 2026-10-01 - Warehouse real Windows path canonicalization correction
 
 - Warehouse #305 proved the prior root-rebase implementation still failed for real receipt paths such as `C:\actions-runner\_warehouse\ShireJourney\...`: the PowerShell source used C-style doubled backslashes, which are literal double characters in PowerShell rather than an escape sequence.

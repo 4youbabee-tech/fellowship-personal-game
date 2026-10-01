@@ -1,3 +1,12 @@
+## 2026-10-01 - PG-207 fixture boundary
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| Operational runner / Warehouse root | D-root required | Any live C-root occurrence remains a validation failure |
+| Historical C-root test fixture | SOURCE-IMPLEMENTED | Exactly one canonical fixture literal permitted only in receipt-supersession test |
+| Broader C-root allowlist | FORBIDDEN | Scripts/workflows/configuration remain fail-closed |
+| Exact-head validation | PENDING | Requires re-run after validator correction |
+
 ## 2026-10-01 - Warehouse real-path canonicalization correction
 
 | Area | Status | Evidence / boundary |
