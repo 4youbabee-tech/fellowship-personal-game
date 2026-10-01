@@ -2378,3 +2378,16 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Full Poly Haven `-Refresh` | REMOVED IN REPAIR CANDIDATE | Replaced by receipt SHA256 validation and targeted purge/redownload |
 | Repair-step duration | BOUNDED TO 20 MINUTES | Exact-head workflow proof pending |
 | Frodo/Gandalf candidate report | NOT PRODUCED | No character import, runtime promotion, visual acceptance, or Gate 6/7 closure |
+
+
+## 2026-10-01 - P1C01 hero-provider prerequisite repair candidate
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Warehouse #307 on `develop@2363d3f9` | FAILURE | Inventory/critical-gap stages passed; hero candidate coverage failed |
+| Persistent inventory | CLEAN IN RUN #307 | `239` active verified records; `0` pending; `0` manual queue |
+| Frodo/Gandalf intake | BLOCKED BY MISSING STAGING | `prepared=0`, `pending=4`, `blocked=0`; both candidate pools were zero |
+| Quaternius hero prerequisite | SOURCE-IMPLEMENTED REPAIR CANDIDATE | Bounded to four authorized FBX/CC0 source packs; exact-head proof pending |
+| Regression guard | SOURCE-IMPLEMENTED | Pre-Unreal contract test requires exact pack parity and provider staging before candidate report |
+| Runtime character promotion | NOT STARTED | No READY_FOR_IMPORT, skeletal import or runtime replacement claim |
+| PIE / device / visual / pacing / performance | NOT ACCEPTED | Real matching evidence still required |
