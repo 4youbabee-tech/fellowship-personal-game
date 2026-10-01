@@ -132,7 +132,7 @@ jobs:
       - name: Stage Quaternius support batch
         if: env.WH_STAGE_QUATERNIUS == 'true'
         shell: cmd
-        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_quaternius_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseQuaterniusAcquisitionBatchV1.json"
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_quaternius_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseQuaterniusAcquisitionBatchV1.json" -RecordManualQueue
 
       - name: Stage ambientCG material batch
         if: env.WH_STAGE_AMBIENTCG == 'true'
@@ -208,7 +208,7 @@ jobs:
         if: github.event_name == 'push'
         timeout-minutes: 20
         shell: cmd
-        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_quaternius_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseQuaterniusHeroCandidateBatchV1.json"
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_quaternius_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseQuaterniusHeroCandidateBatchV1.json" -RecordManualQueue
 
       - name: Build exact-head P1C01 Frodo Gandalf candidate report
         if: github.event_name == 'push'
