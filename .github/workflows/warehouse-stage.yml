@@ -157,6 +157,15 @@ jobs:
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\prepare_p1c01_character_rig_intake.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\P1C01CharacterRigAnimationPrepV1.json" -OutputRoot "D:\actions-runner\_warehouse\ShireJourney\_p1c01_character_intake"
 
+      - name: Repair candidate-gate material warehouse provenance
+        if: github.event_name == 'push' && contains(github.event.head_commit.message, 'P1C01_FRODO_CANDIDATE_QC')
+        shell: cmd
+        run: |
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_polyhaven_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseAcquisitionBatchV1.json" -Refresh
+          if errorlevel 1 exit /b 81
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_ambientcg_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseAmbientCGTrilogyBatchV2.json" -Refresh
+          if errorlevel 1 exit /b 82
+
       - name: Audit persistent warehouse inventory
         if: env.WH_RUN_AUDIT == 'true' && env.WH_RUN_P1C01_CHAPTER_PACK != 'true'
         shell: cmd
