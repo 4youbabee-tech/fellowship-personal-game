@@ -14,6 +14,10 @@ permissions:
   contents: read
   issues: write
 
+concurrency:
+  group: daily-project-manager-report
+  cancel-in-progress: true
+
 jobs:
   report:
     name: Post Shire Journey manager report
@@ -22,7 +26,8 @@ jobs:
       - Windows
       - X64
       - ue4-27
-    timeout-minutes: 5
+    timeout-minutes: 10
+
     steps:
       - name: Checkout canonical develop
         uses: actions/checkout@v4
@@ -30,89 +35,37 @@ jobs:
           ref: develop
           fetch-depth: 200
 
+      - name: Verify runner and generator
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Write-Host "DAILY_MANAGER_RUNNER_READY machine=$env:COMPUTERNAME run=$env:GITHUB_RUN_ID"
+          if (-not (Test-Path -LiteralPath 'Scripts\generate_daily_project_manager_report.ps1' -PathType Leaf)) {
+              throw 'DAILY_MANAGER_GENERATOR_MISSING_ON_DEVELOP'
+          }
+
       - name: Generate project-manager report
         shell: powershell
         run: |
           $ErrorActionPreference = 'Stop'
-          $gov = Get-Content 'Data/ProjectGovernor.json' -Raw | ConvertFrom-Json
-          $waves = Get-Content 'Data/CompletionWaveMapV1.json' -Raw | ConvertFrom-Json
-
-          $current = $null
-          if ($gov.daily_progress_reporting -and
-              $gov.daily_progress_reporting.PSObject.Properties['current_planning_percent']) {
-              $current = [int]$gov.daily_progress_reporting.current_planning_percent
-          }
-          if ($null -eq $current) {
-              $current = [int]$waves.baseline.planning_completion_percent
-              if ([string]$gov.w00_final_closure.status -like 'CLOSED*') {
-                  $current = 42
-              }
+          & '.\Scripts\generate_daily_project_manager_report.ps1' -ProjectRoot $env:GITHUB_WORKSPACE -OutputPath 'daily_manager_report.md'
+          if (-not (Test-Path -LiteralPath 'daily_manager_report.md' -PathType Leaf)) {
+              throw 'DAILY_MANAGER_REPORT_OUTPUT_MISSING'
           }
 
-          $previous = $current
-          if ($gov.daily_progress_reporting -and
-              $gov.daily_progress_reporting.PSObject.Properties['previous_planning_percent']) {
-              $previous = [int]$gov.daily_progress_reporting.previous_planning_percent
-          }
+      - name: Publish report to Actions summary
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Get-Content -LiteralPath 'daily_manager_report.md' -Raw | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Encoding UTF8
 
-          $now = [DateTime]::UtcNow
-          $since = $now.AddHours(-24).ToString('o')
-          $head = (git rev-parse HEAD).Trim()
-          $merges = @(git log "--since=$since" --merges --pretty=format:"%h %s" | Select-Object -First 8)
-          $changes = @(git log "--since=$since" --no-merges --pretty=format:"%h %s" | Select-Object -First 12)
-
-          $wave = $null
-          foreach ($item in $waves.waves) {
-              if ($current -ge [int]$item.from_percent -and $current -lt [int]$item.to_percent) {
-                  $wave = $item
-                  break
-              }
-          }
-
-          $report = [System.Collections.Generic.List[string]]::new()
-          $report.Add('# Shire Journey — Daily Project Manager Report')
-          $report.Add('')
-          $report.Add("- Generated UTC: $($now.ToString('yyyy-MM-dd HH:mm'))")
-          $report.Add("- Develop head observed: `$head`")
-          $report.Add("- Planning / production completion: **$current%**")
-          $report.Add("- 24h planning delta: **$([string]::Format('{0:+0;-0;0}', $current - $previous)) percentage points**")
-          $report.Add("- Active lane: **$($gov.current_focus.production_lane)**")
-          $report.Add("- Active gate: **$($gov.active_gate.id)** — $($gov.active_gate.status)")
-          if ($null -ne $wave) {
-              $report.Add("- Current wave: **$($wave.id) — $($wave.name)**")
-              $report.Add("- Wave range: $($wave.from_percent)% -> $($wave.to_percent)%")
-          }
-
-          $report.Add('')
-          $report.Add('## Meaningful movement in the last 24 hours')
-          foreach ($line in $merges) { if ($line) { $report.Add("- Merge: $line") } }
-          foreach ($line in $changes) { if ($line) { $report.Add("- Change: $line") } }
-          if ($merges.Count -eq 0 -and $changes.Count -eq 0) {
-              $report.Add('- No repository commits recorded in the last 24 hours.')
-          }
-
-          if ($null -ne $wave) {
-              $report.Add('')
-              $report.Add('## Next percentage unlock')
-              $exitPreview = @($wave.exit | Select-Object -First 4) -join '; '
-              $report.Add("- $($wave.to_percent)% after: $exitPreview")
-          }
-
-          $report.Add('')
-          $report.Add('## Evidence boundary')
-          $report.Add('- This is a planning/production estimate, not a test-acceptance label.')
-          $report.Add('- Commit count alone never raises the percentage.')
-          $report.Add('- STATIC/COMPILE evidence does not imply PIE, DEVICE, VISUAL, PACING, or PERFORMANCE acceptance.')
-
-          if ($gov.session_handoff -and $gov.session_handoff.unverified_acceptance) {
-              $report.Add('')
-              $report.Add('## Still awaiting human/device evidence')
-              foreach ($item in @($gov.session_handoff.unverified_acceptance | Select-Object -First 8)) {
-                  $report.Add("- $item")
-              }
-          }
-
-          $report | Set-Content 'daily_manager_report.md' -Encoding UTF8
+      - name: Upload report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-project-manager-report
+          path: daily_manager_report.md
+          if-no-files-found: error
+          retention-days: 30
 
       - name: Post to Project Manager issue
         shell: powershell
@@ -122,7 +75,7 @@ jobs:
           REPOSITORY: ${{ github.repository }}
         run: |
           $ErrorActionPreference = 'Stop'
-          $body = Get-Content 'daily_manager_report.md' -Raw
+          $body = Get-Content -LiteralPath 'daily_manager_report.md' -Raw
           $headers = @{
               Authorization = "Bearer $env:GH_TOKEN"
               Accept = 'application/vnd.github+json'
@@ -130,4 +83,8 @@ jobs:
           }
           $payload = @{ body = $body } | ConvertTo-Json -Depth 3
           $uri = "https://api.github.com/repos/$env:REPOSITORY/issues/$env:ISSUE_NUMBER/comments"
-          Invoke-RestMethod -Method Post -Uri $uri -Headers $headers -ContentType 'application/json' -Body $payload | Out-Null
+          $response = Invoke-RestMethod -Method Post -Uri $uri -Headers $headers -ContentType 'application/json' -Body $payload
+          if ($null -eq $response -or [string]::IsNullOrWhiteSpace([string]$response.html_url)) {
+              throw 'DAILY_MANAGER_REPORT_ISSUE_POST_NO_URL'
+          }
+          Write-Host "DAILY_MANAGER_REPORT_ISSUE_POST_PASS url=$($response.html_url)"
