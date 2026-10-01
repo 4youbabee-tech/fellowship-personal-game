@@ -1,3 +1,11 @@
+## 2026-10-01 - Critical-gap receipt supersession parity
+
+- Warehouse #306 at `develop@5ec1307aa749741fa10c801c288b101ef4b5292a` proved the canonical inventory audit is clean: 18,925 payload files / 6,745,968,858 bytes / 239 active receipt records / 428 superseded / zero hash, missing, license, dangerous, or duplicate-hash failures.
+- The next critical-gap preflight still read all historical receipt rows literally and therefore re-reported three retired `C:` records after the authoritative audit had superseded them.
+- Root fix: critical-gap preparation now applies the same active-root canonicalization and newest-receipt-per-normalized-payload selection before SHA256 verification. Same-receipt duplicates remain counted separately; genuine newest-record corruption remains fail-closed.
+- Hosted regression coverage now executes both the inventory audit and critical-gap preparation against the same real Windows migration fixture.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + WAREHOUSE PROOF PENDING**. No payload refresh, Frodo/Gandalf acceptance, PIE, device, visual, pacing, performance, or Gate 6/7 claim.
+
 ## 2026-10-01 - PG-207 real legacy-path fixture guard
 
 - Exact-head Pre-Unreal correctly rejected the real `C:\\actions-runner` migration fixture as though it were live runner configuration. This was a validator false positive after the fixture was corrected to the real Windows path form.

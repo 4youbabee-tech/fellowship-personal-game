@@ -1,3 +1,13 @@
+## 2026-10-01 - Critical-gap receipt parity matrix
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| Canonical Warehouse inventory | RUN-PROVEN CLEAN | #306: 18,925 payloads / 6,745,968,858 bytes / 239 active / 428 superseded / 0 integrity failures |
+| Critical-gap receipt selection | SOURCE-REPAIRED / EXACT-HEAD PROOF PENDING | Same canonical root and newest-receipt rule as inventory audit |
+| Same-receipt duplicates | PRESERVED | Counted separately from historical supersession |
+| Newest active receipt corruption | FAIL-CLOSED | SHA256/missing-file preflight remains blocking and regression-covered |
+| Runtime / Frodo / Gate 6-7 maturity | UNCHANGED | No human/device or visual acceptance supplied |
+
 ## 2026-10-01 - PG-207 fixture boundary
 
 | Area | Status | Evidence / boundary |

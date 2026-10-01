@@ -1,6 +1,7 @@
 $ErrorActionPreference = "Stop"
 
 $scriptPath = Join-Path $PSScriptRoot "audit_warehouse_inventory.ps1"
+$gapScriptPath = Join-Path $PSScriptRoot "run_warehouse_critical_gap_preparation.ps1"
 $networkScriptPath = Join-Path $PSScriptRoot "warehouse_network.ps1"
 . $networkScriptPath
 
@@ -39,8 +40,12 @@ try {
         throw "The mismatched payload must be purged so the staging script can redownload only that file."
     }
 
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    $payloadSource = Join-Path $testRoot "plaster-source"
+    New-Item -ItemType Directory -Path $payloadSource -Force | Out-Null
+    [IO.File]::WriteAllText((Join-Path $payloadSource "Plaster007_Color.png"), "current-valid-payload")
     $payloadPath = Join-Path $payloadDir "Plaster007_2K-PNG.zip"
-    [IO.File]::WriteAllText($payloadPath, "current-valid-payload")
+    [IO.Compression.ZipFile]::CreateFromDirectory($payloadSource, $payloadPath)
     $currentHash = (Get-FileHash -LiteralPath $payloadPath -Algorithm SHA256).Hash.ToLowerInvariant()
 
     $oldProbe = Join-Path $testRoot "old-payload.bin"
@@ -110,6 +115,24 @@ try {
         throw "Supersession report did not preserve V1 as history and V2 as active provenance."
     }
 
+    $gapManifestPath = Join-Path $testRoot "critical-gap-manifest.json"
+    $gapOutputRoot = Join-Path $testRoot "critical-gap-output"
+    @{ schema_version = 1; train_id = "WAREHOUSE_RECEIPT_SUPERSESSION_TEST"; cars = @() } |
+        ConvertTo-Json -Depth 4 | Set-Content -LiteralPath $gapManifestPath -Encoding UTF8
+    $gapOutput = & $powershellExe -NoLogo -NoProfile -ExecutionPolicy Bypass -File $gapScriptPath -ManifestPath $gapManifestPath -WarehouseRoot $warehouseRoot -OutputRoot $gapOutputRoot 2>&1
+    $gapExit = $LASTEXITCODE
+    if ($gapExit -ne 0) {
+        throw "Critical-gap preparation did not honor migrated receipt supersession. Exit=$gapExit Output=$($gapOutput -join ' ')"
+    }
+    $gapReportPath = Join-Path $gapOutputRoot "warehouse_critical_gap_preparation_latest.json"
+    $gapReport = Get-Content -LiteralPath $gapReportPath -Raw | ConvertFrom-Json
+    if ([int]$gapReport.receipt_records -ne 2 -or [int]$gapReport.active_receipt_records -ne 1 -or [int]$gapReport.superseded_receipt_records -ne 1) {
+        throw "Critical-gap receipt supersession counts are incorrect total=$($gapReport.receipt_records) active=$($gapReport.active_receipt_records) superseded=$($gapReport.superseded_receipt_records)"
+    }
+    if (($gapOutput -join " ") -match "WAREHOUSE_CRITICAL_GAP_PREFLIGHT_BLOCKED") {
+        throw "Historical migrated receipt must not fail critical-gap preflight."
+    }
+
     [IO.File]::WriteAllText($payloadPath, "tampered-after-v2")
     $failOutput = & $powershellExe -NoLogo -NoProfile -ExecutionPolicy Bypass -File $scriptPath -Root $warehouseRoot 2>&1
     $failExit = $LASTEXITCODE
@@ -126,7 +149,7 @@ try {
         throw "Fail-closed output did not identify the active V2 receipt."
     }
 
-    Write-Host "WAREHOUSE_RECEIPT_SUPERSESSION_TEST_PASS historical_v1_superseded=true active_v2_enforced=true normalized_path=true real_windows_root_rebased=true migrated_root_rebased=true fail_closed=true hash_mismatch_targeted_purge=true"
+    Write-Host "WAREHOUSE_RECEIPT_SUPERSESSION_TEST_PASS historical_v1_superseded=true active_v2_enforced=true normalized_path=true real_windows_root_rebased=true migrated_root_rebased=true gap_supersession=true fail_closed=true hash_mismatch_targeted_purge=true"
 }
 finally {
     if (Test-Path -LiteralPath $testRoot -PathType Container) {
