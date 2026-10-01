@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "batch_id": "WAREHOUSE_OGA_QUATERNIUS_P1C01_HERO_CANDIDATE_V1",
+  "status": "AUTHORIZED_FOR_TARGETED_STAGING",
+  "provider": "OPENGAMEART",
+  "creator": "Quaternius",
+  "license": "CC0-1.0",
+  "purpose": "Direct public CC0 rig-base fallback for the exact-head P1C01 Frodo-first skeletal candidate gate while newer Quaternius packs remain manual-access.",
+  "staging_root": "D:\\actions-runner\\_warehouse\\ShireJourney\\OpenGameArt\\Characters",
+  "assets": [
+    {
+      "id": "OGA_QTN_ULTIMATE_ANIMATED_CHARACTERS_CC0",
+      "source_page": "https://opengameart.org/content/animated-characters-pack",
+      "download_url": "https://opengameart.org/sites/default/files/ultimate_animated_character_pack_by_quaternius.zip",
+      "filename": "ultimate_animated_character_pack_by_quaternius.zip",
+      "observed_page_license": "CC0",
+      "required_final_format": "FBX",
+      "source_author": "Quaternius",
+      "page_verified_utc": "2026-10-01T22:10:00Z",
+      "intended_use": "Rig-base and deformation/retarget candidate discovery; not final Frodo likeness or visual acceptance."
+    }
+  ],
+  "rules": [
+    "Download only the direct file published on the OpenGameArt page by uploader Quaternius.",
+    "Preserve or replace only this one payload; reuse it when the receipt SHA256 matches.",
+    "Validate ZIP structure and require at least one FBX entry before writing the receipt.",
+    "Candidate discovery does not prove FBX 2018 compatibility, skeleton quality, skin weights, deformation, import, runtime integration or visual acceptance."
+  ],
+  "evidence_boundary": "Targeted legal source staging only. All character QC and runtime gates remain fail-closed."
+}

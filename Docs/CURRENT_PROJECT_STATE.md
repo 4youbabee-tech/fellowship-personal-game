@@ -3488,3 +3488,14 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - First real failure: material export removed the workflow-owned isolated source checkout while cleaning its generated worktree. The following Frodo provider step could not find `Scripts/stage_quaternius_warehouse.ps1`; candidate reporting and artifact upload never started.
 - Repair candidate uses exact RUNNER_TEMP-bounded cleanup, rejects overlap with the caller checkout, prunes only worktree metadata, verifies the downstream script survived, and adds workflow/Pre-Unreal regression guards.
 - Evidence boundary: **SOURCE-IMPLEMENTED / exact-head validation pending**. No Frodo FBX, import, PIE, device, visual, pacing, or performance acceptance is claimed.
+
+
+## 2026-10-02 - Warehouse #311 exact Frodo blocker and direct CC0 fallback
+
+- Post-merge `develop@0dd06344f6b839be5ef249933ebb18bf8e6c55bd`: Pre-Unreal #1556 and Unreal Build #1208 succeeded.
+- Warehouse #311 proved the generated-worktree repair: both `P1C01_MATERIAL_SOURCE_CALLER_CHECKOUT_PASS` and `WAREHOUSE_SOURCE_CHECKOUT_SURVIVAL_PASS` appeared before the Frodo lane.
+- Persistent inventory remained clean: **18,932 payload files / 6,808,598,106 bytes / 239 active / 428 superseded / 0 duplicates**. Poly Haven **219** and ambientCG **8** payloads were receipt-reused.
+- Exact candidate artifact SHA256: `37b7a51113d8d3ddc750522e8f7c68ac6b277424f4bf4269108d82f4b82c1dc2`; local digest matched GitHub.
+- True blocker: Quaternius manual queue contains four packs; candidate report contains **0 discovered FBX / 0 Frodo / 0 Gandalf / 4 pending / 0 blocked**.
+- New bounded fallback candidate uses the direct OpenGameArt upload published by Quaternius under CC0: one 48.4 MB archive, ZIP safety budget, FBX-presence gate, receipt SHA256 reuse, and targeted redownload only when missing/mismatched.
+- This source is a rig-base/QC candidate, not a final Frodo likeness. FBX 2018, skeleton, skin weights, deformation, retarget, import, runtime, PIE, device, visual and performance evidence remain required.
