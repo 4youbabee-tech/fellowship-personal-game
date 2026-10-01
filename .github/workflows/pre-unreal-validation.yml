@@ -163,6 +163,10 @@ jobs:
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_daily_project_manager_report.ps1"
 
+      - name: Test daily project manager report generator
+        shell: cmd
+        run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_daily_project_manager_report.ps1"
+
       - name: Scrub static checkout authentication
         if: always()
         shell: cmd
