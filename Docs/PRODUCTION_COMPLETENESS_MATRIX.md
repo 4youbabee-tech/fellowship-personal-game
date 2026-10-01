@@ -2455,3 +2455,16 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Persistent warehouse payloads | PRESERVED | No full Poly Haven rerun; valid staged files are untouched |
 | Frodo candidate artifact | REPAIR PENDING | Workflow must reach candidate report/upload on a fresh exact head |
 | Runtime / Gate 6/7 acceptance | UNCHANGED / NOT ACCEPTED | No character import or human/device evidence |
+
+
+## 2026-10-02 - Warehouse #310 generated-worktree caller-checkout repair
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Persistent Warehouse inventory | RUN-PROVEN CLEAN | #310: 18,925 payload files / 6,745,967,498 bytes / 239 active / 428 superseded / 0 duplicate groups |
+| Poly Haven / ambientCG provenance | REUSE-PROVEN | 219 + 8 receipt-verified files reused; no blind refresh |
+| P1C01 mega promotion | RUN-PROVEN WITH MANUAL QUEUE | 36 prepared / 34 intake-QC / 3 pending / 2 manual |
+| Generated P1C01 materials | SOURCE BRANCH CREATED | 8 receipt-verified sources; runtime/visual acceptance not implied |
+| Caller-checkout survival | SOURCE-IMPLEMENTED REPAIR CANDIDATE | Bounded cleanup, overlap rejection, metadata prune, downstream script guard |
+| Frodo candidate evidence | BLOCKED BY #310 INFRASTRUCTURE FAILURE | Report did not run; artifact did not exist |
+| Runtime / Gate 6/7 acceptance | UNCHANGED / NOT ACCEPTED | No character import or human/device evidence |

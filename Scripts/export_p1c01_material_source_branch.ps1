@@ -238,5 +238,41 @@ try{
   }
 }
 finally{
-  & $git -C $ProjectRoot worktree remove --force $worktree 2>$null
+  # The workflow owns the isolated source checkout. Clean only the exact
+  # generated worktree path and prove the caller checkout survives.
+  $resolvedProjectRoot=[IO.Path]::GetFullPath($ProjectRoot).TrimEnd([char]92)
+  $resolvedWorktree=[IO.Path]::GetFullPath($worktree).TrimEnd([char]92)
+  $resolvedRunnerTemp=[IO.Path]::GetFullPath([string]$env:RUNNER_TEMP).TrimEnd([char]92)
+  $runnerTempPrefix=$resolvedRunnerTemp+[char]92
+  $projectPrefix=$resolvedProjectRoot+[char]92
+  $worktreePrefix=$resolvedWorktree+[char]92
+
+  if(-not $resolvedWorktree.StartsWith($runnerTempPrefix,[StringComparison]::OrdinalIgnoreCase)){
+    throw "Generated material worktree escaped RUNNER_TEMP: $resolvedWorktree"
+  }
+  if($resolvedWorktree.Equals($resolvedProjectRoot,[StringComparison]::OrdinalIgnoreCase) -or
+     $resolvedWorktree.StartsWith($projectPrefix,[StringComparison]::OrdinalIgnoreCase) -or
+     $resolvedProjectRoot.StartsWith($worktreePrefix,[StringComparison]::OrdinalIgnoreCase)){
+    throw "Generated material worktree overlaps caller checkout: project=$resolvedProjectRoot worktree=$resolvedWorktree"
+  }
+
+  if(Test-Path -LiteralPath $resolvedWorktree){
+    $worktreeMarker=Join-Path $resolvedWorktree ".git"
+    if(-not (Test-Path -LiteralPath $worktreeMarker -PathType Leaf)){
+      throw "Generated material cleanup refused: worktree marker missing at $worktreeMarker"
+    }
+    Remove-Item -LiteralPath $resolvedWorktree -Recurse -Force
+  }
+
+  if(-not (Test-Path -LiteralPath $resolvedProjectRoot -PathType Container)){
+    throw "P1C01_MATERIAL_SOURCE_CALLER_CHECKOUT_LOST root=$resolvedProjectRoot"
+  }
+  & $git -C $resolvedProjectRoot worktree prune --expire now
+  if($LASTEXITCODE -ne 0){ throw "Generated material worktree metadata prune failed" }
+
+  $downstreamGuard=Join-Path $resolvedProjectRoot "Scripts\stage_quaternius_warehouse.ps1"
+  if(-not (Test-Path -LiteralPath $downstreamGuard -PathType Leaf)){
+    throw "P1C01_MATERIAL_SOURCE_CALLER_SCRIPT_LOST path=$downstreamGuard"
+  }
+  Write-Host ("P1C01_MATERIAL_SOURCE_CALLER_CHECKOUT_PASS root="+$resolvedProjectRoot+" removedWorktree="+$resolvedWorktree)
 }

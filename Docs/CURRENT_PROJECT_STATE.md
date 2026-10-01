@@ -3477,3 +3477,14 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Unexpected failures remain fatal; no broad `continue-on-error` is used. The downstream exact-head Frodo report remains fail-closed when candidate coverage is zero, but it can now run and upload its blocker evidence.
 - Poly Haven remains selective/reuse-first; #309 skipped its provider batch and no full refresh occurred.
 - Evidence boundary: **SOURCE-IMPLEMENTED / exact-head validation pending**. No Quaternius payload, FBX candidate, import, runtime integration, PIE, device, visual, pacing or performance acceptance is claimed.
+
+
+## 2026-10-02 - Warehouse #310 generated-worktree caller-checkout repair
+
+- Post-merge `develop@e3563bb74a359e449398396b4ba52bddf26f5607` passed Pre-Unreal #1553 and Unreal Build #1205.
+- Warehouse #310 preserved and hash-audited the persistent inventory: **18,925 payload files / 6,745,967,498 bytes / 239 active receipt records / 428 superseded / 0 duplicate groups**.
+- Poly Haven and ambientCG were reuse-only: **219 + 8 receipt-verified files reused**, with no blind full refresh.
+- P1C01 promotion prepared **36** items (**34** intake-QC, **3** pending, **2** manual) and exported **8** receipt-verified material sources.
+- First real failure: material export removed the workflow-owned isolated source checkout while cleaning its generated worktree. The following Frodo provider step could not find `Scripts/stage_quaternius_warehouse.ps1`; candidate reporting and artifact upload never started.
+- Repair candidate uses exact RUNNER_TEMP-bounded cleanup, rejects overlap with the caller checkout, prunes only worktree metadata, verifies the downstream script survived, and adds workflow/Pre-Unreal regression guards.
+- Evidence boundary: **SOURCE-IMPLEMENTED / exact-head validation pending**. No Frodo FBX, import, PIE, device, visual, pacing, or performance acceptance is claimed.
