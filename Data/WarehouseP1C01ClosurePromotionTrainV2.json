@@ -10,8 +10,8 @@
     "Data/P1C01ChapterClosureMegaPackV2.json"
   ],
   "objective": "Prepare the largest practical P1C01 Shire closure batch from staged public/licensed warehouse stock while keeping class-level QC, provenance, quarantine and low-spec runtime boundaries explicit.",
-  "warehouse_root": "C:\\actions-runner\\_warehouse\\ShireJourney",
-  "output_root": "C:\\actions-runner\\_warehouse\\ShireJourney\\_p1c01_chapter_closure_promotion_v2",
+  "warehouse_root": "D:\\actions-runner\\_warehouse\\ShireJourney",
+  "output_root": "D:\\actions-runner\\_warehouse\\ShireJourney\\_p1c01_chapter_closure_promotion_v2",
   "promotion_ceiling": "INTAKE_QC",
   "global_rules": [
     "Reuse existing staged payloads before new acquisition.",

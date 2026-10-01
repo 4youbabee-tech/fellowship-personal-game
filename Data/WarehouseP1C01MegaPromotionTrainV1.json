@@ -10,8 +10,8 @@
     "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
   ],
   "objective": "Exploit already-staged warehouse stock first and build bounded P1C01 Shire intake-QC batches for materials, architecture/props, audio, fauna and character/animation support before downloading more stock.",
-  "warehouse_root": "C:\\actions-runner\\_warehouse\\ShireJourney",
-  "output_root": "C:\\actions-runner\\_warehouse\\ShireJourney\\_p1c01_mega_promotion_v1",
+  "warehouse_root": "D:\\actions-runner\\_warehouse\\ShireJourney",
+  "output_root": "D:\\actions-runner\\_warehouse\\ShireJourney\\_p1c01_mega_promotion_v1",
   "promotion_ceiling": "INTAKE_QC",
   "global_rules": [
     "Reuse existing staged payloads before new acquisition.",

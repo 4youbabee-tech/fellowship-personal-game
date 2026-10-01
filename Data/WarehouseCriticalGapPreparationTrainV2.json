@@ -12,8 +12,8 @@
     "Data/WarehouseSaturationTrainV1.json"
   ],
   "objective": "Turn staged warehouse payloads into evidence-rich intake-QC candidates using fail-fast receipt integrity and read-only archive metadata, without repeatedly extracting unchanged source archives.",
-  "warehouse_root": "C:\\actions-runner\\_warehouse\\ShireJourney",
-  "prepared_root": "C:\\actions-runner\\_warehouse\\ShireJourney\\_prepared_v2",
+  "warehouse_root": "D:\\actions-runner\\_warehouse\\ShireJourney",
+  "prepared_root": "D:\\actions-runner\\_warehouse\\ShireJourney\\_prepared_v2",
   "global_ceiling": "INTAKE_QC",
   "global_rules": [
     "Never overwrite or delete original staged source payloads during preparation.",

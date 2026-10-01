@@ -8,7 +8,7 @@
   "access": "PUBLIC_OFFICIAL_GITHUB_REPOSITORIES",
   "automation": "DIRECT_PUBLIC_ARCHIVES_ONLY_NO_INTERACTION",
   "purpose": "Stage low-spec supporting architecture, interiors, props and rigged-character pipeline stock from KayKit official public GitHub repositories without login, purchase flows or interactive download gates.",
-  "staging_root": "C:\\actions-runner\\_warehouse\\ShireJourney\\KayKit",
+  "staging_root": "D:\\actions-runner\\_warehouse\\ShireJourney\\KayKit",
   "max_total_download_bytes": 650000000,
   "packs": [
     {

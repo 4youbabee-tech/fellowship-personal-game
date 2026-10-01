@@ -38,8 +38,8 @@
   "reuse_policy": {
     "reuse_first": true,
     "duplicate_downloads_forbidden_when_equivalent_stock_exists": true,
-    "warehouse_root": "C:\\actions-runner\\_warehouse\\ShireJourney",
-    "output_root": "C:\\actions-runner\\_warehouse\\ShireJourney\\_p1c02_shadow_past_prep_v1",
+    "warehouse_root": "D:\\actions-runner\\_warehouse\\ShireJourney",
+    "output_root": "D:\\actions-runner\\_warehouse\\ShireJourney\\_p1c02_shadow_past_prep_v1",
     "allowed_extensions": [
       ".fbx",
       ".png",

@@ -5,7 +5,7 @@
   "provider": "OPENGAMEART",
   "license": "CC0",
   "purpose": "Populate the persistent warehouse with an initial CC0 WAV/music/foley bank for Shire/Bree/exploration/battle-state prototyping and later audio integration.",
-  "staging_root": "C:\\actions-runner\\_warehouse\\ShireJourney\\OpenGameArt",
+  "staging_root": "D:\\actions-runner\\_warehouse\\ShireJourney\\OpenGameArt",
   "max_download_bytes": 900000000,
   "assets": [
     {

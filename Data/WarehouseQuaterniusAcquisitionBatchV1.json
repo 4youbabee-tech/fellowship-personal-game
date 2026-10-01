@@ -5,7 +5,7 @@
   "provider": "QUATERNIUS",
   "license": "PER_PACK_PAGE_LICENSE_CAPTURE_REQUIRED",
   "purpose": "Bulk-stage CC0 character, animation, fauna, creature-pipeline, architecture and prop packs for supporting production use and rig/world pipeline coverage.",
-  "staging_root": "C:\\actions-runner\\_warehouse\\ShireJourney\\Quaternius",
+  "staging_root": "D:\\actions-runner\\_warehouse\\ShireJourney\\Quaternius",
   "source_pages": [
     {
       "id": "QTN_UNIVERSAL_BASE_CHARACTERS",
