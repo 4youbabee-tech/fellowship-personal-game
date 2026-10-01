@@ -1,6 +1,7 @@
 param(
     [string]$ManifestPath = "Data/WarehouseQuaterniusAcquisitionBatchV1.json",
-    [switch]$Refresh
+    [switch]$Refresh,
+    [switch]$RecordManualQueue
 )
 
 $ErrorActionPreference = "Stop"
@@ -19,6 +20,7 @@ $receipt = [ordered]@{
     provider = $manifest.provider
     license = $manifest.license
     staged_at_utc = [DateTime]::UtcNow.ToString("o")
+    state = "RESOLVING"
     files = @()
     unresolved = @()
 }
@@ -116,11 +118,17 @@ foreach ($pack in $manifest.source_pages) {
     }
 }
 
-$receipt | ConvertTo-Json -Depth 8 | Set-Content -Path $receiptPath -Encoding UTF8
-
 if ($receipt.files.Count -eq 0 -and $receipt.unresolved.Count -gt 0) {
+    $receipt["state"] = "MANUAL_QUEUE_REQUIRED"
+    $receipt | ConvertTo-Json -Depth 8 | Set-Content -Path $receiptPath -Encoding UTF8
+    if ($RecordManualQueue) {
+        Write-Host "QUATERNIUS_WAREHOUSE_MANUAL_QUEUE files=0 unresolved=$($receipt.unresolved.Count) receipt=$receiptPath"
+        exit 0
+    }
     Write-Host "QUATERNIUS_WAREHOUSE_STAGE_ZERO_PAYLOAD_FAIL files=0 unresolved=$($receipt.unresolved.Count) receipt=$receiptPath"
     exit 3
 }
 
+$receipt["state"] = "STAGED_WITH_PAYLOAD"
+$receipt | ConvertTo-Json -Depth 8 | Set-Content -Path $receiptPath -Encoding UTF8
 Write-Host "QUATERNIUS_WAREHOUSE_STAGE_PASS files=$($receipt.files.Count) unresolved=$($receipt.unresolved.Count) receipt=$receiptPath"

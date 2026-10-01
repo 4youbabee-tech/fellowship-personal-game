@@ -2444,3 +2444,14 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Zero-payload regression test | SOURCE-IMPLEMENTED | Pre-Unreal wiring added; exact-head result pending |
 | Provider access policy | SOURCE-IMPLEMENTED | Quaternius reclassified manual-clear-license |
 | Whole-game gap audit | SOURCE-IMPLEMENTED | 28 regions + cross-cutting characters/creatures/animation/audio/VFX/gameplay-support domains |
+
+## 2026-10-01 - Warehouse #309 manual-provider continuation repair
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Quaternius support resolution | MANUAL QUEUE REQUIRED | #309: `files=0 unresolved=17`; no payload staged |
+| Default zero-payload behavior | FAIL-CLOSED RETAINED | Exit code 3 remains the default |
+| Workflow manual-provider handling | SOURCE-IMPLEMENTED REPAIR CANDIDATE | Explicit `-RecordManualQueue`; no staging PASS and no broad error suppression |
+| Persistent warehouse payloads | PRESERVED | No full Poly Haven rerun; valid staged files are untouched |
+| Frodo candidate artifact | REPAIR PENDING | Workflow must reach candidate report/upload on a fresh exact head |
+| Runtime / Gate 6/7 acceptance | UNCHANGED / NOT ACCEPTED | No character import or human/device evidence |

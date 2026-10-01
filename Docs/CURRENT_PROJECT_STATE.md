@@ -3468,3 +3468,12 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - `Scripts/test_warehouse_provider_zero_payload_fail_closed.ps1` is wired into Pre-Unreal and verifies both the script guard and the Quaternius manual-access policy/registry classification.
 - This prevents a repeat of Warehouse #308's false staging PASS and ensures downstream candidate gates cannot consume page-only evidence as asset availability.
 - Evidence boundary: **SOURCE-IMPLEMENTED / exact-head validation pending** on this audit branch.
+
+## 2026-10-01 - Warehouse #309 manual-provider continuation repair
+
+- Exact merge `develop@8d138b93d1b3cf558f2f71e59354f0b6efd935b8` exposed the next real failure in Warehouse #309: the new fail-closed Quaternius guard correctly reported `files=0 unresolved=17`, but the generic support step stopped the job before persistent inventory audit, provider resolution, Frodo candidate reporting, or candidate-artifact creation.
+- Root cause: the provider was reclassified to manual access, while both workflow call sites still treated the expected zero-payload/manual state as a terminal staging error.
+- Repair candidate: `stage_quaternius_warehouse.ps1` retains exit code 3 by default, adds an explicit `-RecordManualQueue` mode that writes receipt state `MANUAL_QUEUE_REQUIRED` and never prints a staging PASS, and the two bounded workflow call sites opt into that mode.
+- Unexpected failures remain fatal; no broad `continue-on-error` is used. The downstream exact-head Frodo report remains fail-closed when candidate coverage is zero, but it can now run and upload its blocker evidence.
+- Poly Haven remains selective/reuse-first; #309 skipped its provider batch and no full refresh occurred.
+- Evidence boundary: **SOURCE-IMPLEMENTED / exact-head validation pending**. No Quaternius payload, FBX candidate, import, runtime integration, PIE, device, visual, pacing or performance acceptance is claimed.
