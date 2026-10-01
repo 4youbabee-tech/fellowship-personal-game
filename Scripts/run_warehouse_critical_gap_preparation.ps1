@@ -217,7 +217,7 @@ foreach($row in $verified){
     $archive=$null
     try{
       $archive=[System.IO.Compression.ZipFile]::OpenRead($row.path)
-      foreach($entry in @($archive.Entries)){
+      foreach($entry in $archive.Entries){
         if([string]::IsNullOrWhiteSpace([string]$entry.Name)){ continue }
         $entryPath=[string]$entry.FullName
         $entryExt=[IO.Path]::GetExtension($entryPath).ToLowerInvariant()
@@ -244,7 +244,7 @@ foreach($row in $verified){
 }
 
 $inventory=@()
-foreach($f in @($scanFiles)){
+foreach($f in $scanFiles){
   $ext=$f.extension
   if($dangerous -contains $ext){
     $blocked += [ordered]@{provider=$f.provider;asset_id=$f.asset_id;path=$f.path;reason="dangerous_extracted_extension"}
