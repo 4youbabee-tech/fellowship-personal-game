@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "sequence_id": "PART1_RUNTIME_CHAPTER_SEQUENCE_V1",
+  "status": "ACTIVE_P1C01_FRODO_FIRST",
+  "authority": "Data/ProjectGovernor.json",
+  "distinction": "The twelve canonical narrative segments remain story/source structure; they are not twelve runtime chapters.",
+  "runtime_chapter_order": [
+    {
+      "id": "P1C01",
+      "title": "The Shire through Bucklebury / Ferry",
+      "runtime_status": "ACTIVE",
+      "gate_predecessor": null
+    },
+    {
+      "id": "P1C02",
+      "title": "Bree / The Prancing Pony",
+      "runtime_status": "PREDECESSOR_GATED",
+      "gate_predecessor": "P1C01_GATE_6_7_ACCEPTED"
+    },
+    {
+      "id": "P1C03",
+      "title": "Weathertop / Ford",
+      "runtime_status": "PREDECESSOR_GATED",
+      "gate_predecessor": "P1C02_GATE_6_7_ACCEPTED"
+    },
+    {
+      "id": "P1C04",
+      "title": "Rivendell / Fellowship Formation",
+      "runtime_status": "PREDECESSOR_GATED",
+      "gate_predecessor": "P1C03_GATE_6_7_ACCEPTED"
+    },
+    {
+      "id": "P1C05",
+      "title": "Fellowship Road / Caradhras / West Gate",
+      "runtime_status": "PREDECESSOR_GATED",
+      "gate_predecessor": "P1C04_GATE_6_7_ACCEPTED"
+    },
+    {
+      "id": "P1C06",
+      "title": "Moria",
+      "runtime_status": "PREDECESSOR_GATED",
+      "gate_predecessor": "P1C05_GATE_6_7_ACCEPTED"
+    },
+    {
+      "id": "P1C07",
+      "title": "Lothlorien / Anduin",
+      "runtime_status": "PREDECESSOR_GATED",
+      "gate_predecessor": "P1C06_GATE_6_7_ACCEPTED"
+    },
+    {
+      "id": "P1C08",
+      "title": "Amon Hen / Breaking of the Fellowship",
+      "runtime_status": "PREDECESSOR_GATED",
+      "gate_predecessor": "P1C07_GATE_6_7_ACCEPTED"
+    }
+  ],
+  "current_chapter": "P1C01",
+  "current_car": "P1C01-A_FRODO_SKELETAL_PRODUCTION",
+  "p1c01_character_order": [
+    "FRODO",
+    "GANDALF"
+  ],
+  "p1c01_car_order": [
+    "P1C01-A_FRODO_SKELETAL_PRODUCTION",
+    "P1C01-B_GANDALF_SKELETAL_PRODUCTION",
+    "P1C01-C_PHYSICAL_MATERIALS_AND_FOOTSTEPS",
+    "P1C01-D_SELECTIVE_PBR_AND_MATERIAL_QUALITY",
+    "P1C01-E_LIVING_SHIRE",
+    "P1C01-F_GAMEPLAY_AND_QUEST_FLOW",
+    "P1C01-G_AUDIO_AND_PRESENTATION",
+    "P1C01-H_SAVE_LOAD_AND_RELIABILITY",
+    "P1C01-I_OPTIMIZATION_AND_GATE_6_7"
+  ],
+  "execution_rules": [
+    "One bounded production car at a time.",
+    "Frodo exact-head QC and integration precede Gandalf.",
+    "No later runtime chapter opens before its predecessor Gate 6/7 is accepted.",
+    "Temporary branch -> implement -> validate -> root-fix -> exact-head green -> merge -> verify -> cleanup.",
+    "Source/warehouse preparation for later chapters does not authorize later runtime integration."
+  ],
+  "architecture_invariants": {
+    "heavy_asset_references": "TSoftObjectPtr/TSoftClassPtr/FSoftObjectPath",
+    "heavy_asset_loading": "FStreamableManager asynchronous only",
+    "animated_character_source": "FBX 2018-compatible",
+    "obj_use": "STATIC_MODULAR_FALLBACK_ONLY",
+    "texture_formats": [
+      ".png",
+      ".tga"
+    ],
+    "forbidden_texture_formats": [
+      ".bmp"
+    ],
+    "crowd_lifecycle": "LivingWorldDirector object pooling; no spawn/destroy churn",
+    "character_context_owner": "ShireNPCContextSubsystem",
+    "story_owner": "ShireQuestSubsystem",
+    "audio_owner": "UShireAudioSubsystem",
+    "rig_streaming_owner": "UShireChapterAssetStreamingSubsystem"
+  },
+  "evidence_boundary": "EXECUTION ORDER ONLY. No candidate/import/compile/PIE/device/visual/pacing/performance acceptance is claimed."
+}

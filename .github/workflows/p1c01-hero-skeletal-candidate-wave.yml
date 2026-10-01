@@ -1,11 +1,21 @@
 name: P1C01 Frodo Gandalf Skeletal Candidate Wave
 
 on:
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - 'Data/P1C01HeroSkeletalCandidateWaveV1.json'
+      - 'Data/P1C01RuntimeChapterSequenceV1.json'
+      - 'Scripts/run_p1c01_hero_skeletal_candidate_wave.ps1'
+      - 'Scripts/prepare_p1c01_character_rig_intake.ps1'
+      - '.github/workflows/p1c01-hero-skeletal-candidate-wave.yml'
   push:
     branches:
       - develop
     paths:
       - 'Data/P1C01HeroSkeletalCandidateWaveV1.json'
+      - 'Data/P1C01RuntimeChapterSequenceV1.json'
       - 'Data/P1C01CharacterRigAnimationPrepV1.json'
       - 'Scripts/run_p1c01_hero_skeletal_candidate_wave.ps1'
       - 'Scripts/prepare_p1c01_character_rig_intake.ps1'
@@ -26,7 +36,8 @@ jobs:
       - ue4-27
     timeout-minutes: 180
     env:
-      TARGET_SHA: ${{ github.sha }}
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      P1C01_HERO_RIG_REPORT: ${{ runner.temp }}\shire-p1c01-hero-rig-report-${{ github.run_id }}-${{ github.run_attempt }}
 
     steps:
       - name: Checkout exact candidate-wave head
@@ -67,7 +78,18 @@ jobs:
 
       - name: Build Frodo Gandalf skeletal candidate report
         shell: cmd
-        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_HERO_RIG_SRC%\Scripts\run_p1c01_hero_skeletal_candidate_wave.ps1" -ManifestPath "%SHIRE_HERO_RIG_SRC%\Data\P1C01HeroSkeletalCandidateWaveV1.json"
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_HERO_RIG_SRC%\Scripts\run_p1c01_hero_skeletal_candidate_wave.ps1" -ManifestPath "%SHIRE_HERO_RIG_SRC%\Data\P1C01HeroSkeletalCandidateWaveV1.json" -OutputRoot "%P1C01_HERO_RIG_REPORT%"
+
+      - name: Upload exact-head candidate report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1c01-hero-skeletal-candidate-${{ env.TARGET_SHA }}
+          path: |
+            ${{ env.P1C01_HERO_RIG_REPORT }}\p1c01_hero_skeletal_candidate_summary.json
+            ${{ env.P1C01_HERO_RIG_REPORT }}\intake\p1c01_character_rig_intake_receipt.json
+          if-no-files-found: error
+          retention-days: 14
 
       - name: Remove isolated checkout
         if: always()
