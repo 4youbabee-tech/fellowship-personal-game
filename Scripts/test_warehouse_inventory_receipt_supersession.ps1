@@ -48,7 +48,7 @@ try {
     $oldHash = (Get-FileHash -LiteralPath $oldProbe -Algorithm SHA256).Hash.ToLowerInvariant()
     Remove-Item -LiteralPath $oldProbe -Force
 
-    $oldPathVariant = "C:\\actions-runner\\_warehouse\\ShireJourney\\ambientCG\\PLASTER\\Plaster007_2K-PNG.zip"
+    $oldPathVariant = "C:\actions-runner\_warehouse\ShireJourney\ambientCG\PLASTER\Plaster007_2K-PNG.zip"
     $receiptV1 = [ordered]@{
         batch_id = "WAREHOUSE_AMBIENTCG_P1C01_V1"
         provider = "ambientCG"
@@ -126,7 +126,7 @@ try {
         throw "Fail-closed output did not identify the active V2 receipt."
     }
 
-    Write-Host "WAREHOUSE_RECEIPT_SUPERSESSION_TEST_PASS historical_v1_superseded=true active_v2_enforced=true normalized_path=true migrated_root_rebased=true fail_closed=true hash_mismatch_targeted_purge=true"
+    Write-Host "WAREHOUSE_RECEIPT_SUPERSESSION_TEST_PASS historical_v1_superseded=true active_v2_enforced=true normalized_path=true real_windows_root_rebased=true migrated_root_rebased=true fail_closed=true hash_mismatch_targeted_purge=true"
 }
 finally {
     if (Test-Path -LiteralPath $testRoot -PathType Container) {

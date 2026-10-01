@@ -15,18 +15,18 @@ function Resolve-WarehouseReceiptPath {
     if ([string]::IsNullOrWhiteSpace($Path)) { return "" }
 
     $expanded = [Environment]::ExpandEnvironmentVariables($Path)
-    $slashNormalized = $expanded.Replace("/", "\\")
-    $warehouseMarker = "\\actions-runner\\_warehouse\\ShireJourney"
+    $slashNormalized = $expanded.Replace("/", "\")
+    $warehouseMarker = "\actions-runner\_warehouse\ShireJourney"
     $markerIndex = $slashNormalized.IndexOf($warehouseMarker, [StringComparison]::OrdinalIgnoreCase)
     if ($markerIndex -ge 0) {
         $relativeStart = $markerIndex + $warehouseMarker.Length
-        $relative = $slashNormalized.Substring($relativeStart).TrimStart("\\")
+        $relative = $slashNormalized.Substring($relativeStart).TrimStart("\")
         $rebased = if ([string]::IsNullOrWhiteSpace($relative)) {
             $BaseRoot
         } else {
             Join-Path $BaseRoot $relative
         }
-        if ($slashNormalized.TrimEnd("\\") -ne $rebased.Replace("/", "\\").TrimEnd("\\")) {
+        if ($slashNormalized.TrimEnd("\") -ne $rebased.Replace("/", "\").TrimEnd("\")) {
             $script:ReceiptRootRebaseCount++
         }
         return $rebased

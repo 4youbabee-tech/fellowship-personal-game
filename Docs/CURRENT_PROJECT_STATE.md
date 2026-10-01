@@ -1,3 +1,10 @@
+## 2026-10-01 - Warehouse real Windows path canonicalization correction
+
+- Warehouse #305 proved the prior root-rebase implementation still failed for real receipt paths such as `C:\actions-runner\_warehouse\ShireJourney\...`: the PowerShell source used C-style doubled backslashes, which are literal double characters in PowerShell rather than an escape sequence.
+- Root fix: receipt normalization now uses single Windows separators in replacement, marker matching, trim, and normalized-key operations. The regression fixture now uses the real single-backslash `C:\actions-runner\...` form recorded by the runner.
+- The two affected records are preserved for the targeted candidate gate: missing `snow_01_diff_2k.png` and hash-mismatched `rock_01_arm_2k.png` remain fail-closed until the bounded staging path repairs only them.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + WAREHOUSE PROOF PENDING**. No blanket refresh and no Frodo/Gandalf or human/device acceptance claim.
+
 ## 2026-10-01 - Warehouse candidate gate trigger hardening
 
 - Confirmed integration defect: Warehouse Stage #305 at `develop@9e87b1b45556e8429c1ef14dc12a931ce5a95fce` skipped both targeted provenance repair and the Frodo/Gandalf candidate report because GitHub's final merge subject did not retain the prior `P1C01_FRODO_CANDIDATE_QC` text marker.

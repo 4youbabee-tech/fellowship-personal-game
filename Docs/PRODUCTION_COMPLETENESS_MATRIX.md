@@ -1,3 +1,13 @@
+## 2026-10-01 - Warehouse real-path canonicalization correction
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| Real `C:\actions-runner\...` receipt paths | SOURCE-REPAIRED / EXACT-HEAD PROOF PENDING | Single Windows separators now canonicalize to active `D:\actions-runner\_warehouse\ShireJourney` root |
+| Regression fixture | SOURCE-IMPLEMENTED | Uses real single-backslash Windows path, not a C-style doubled representation |
+| Missing snow / mismatched rock records | FAIL-CLOSED PENDING TARGETED REPAIR | Candidate staging may repair only those payloads |
+| Blanket material refresh | FORBIDDEN | Existing verified payloads preserved |
+| Gate 6-7 and human/device acceptance | NOT ACCEPTED | Separate evidence required |
+
 ## 2026-10-01 - Warehouse candidate trigger hardening matrix
 
 | Area | Status | Evidence / boundary |
