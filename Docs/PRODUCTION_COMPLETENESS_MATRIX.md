@@ -2415,3 +2415,14 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Existing Weathertop stock | QC REQUIRED | Static support stock only; no visual acceptance |
 | P1C03 runtime integration | PREDECESSOR-GATED / NOT STARTED | Requires P1C02 Gate 6/7 ACCEPTED |
 | P1C03 PIE / device / visual / pacing / performance | NOT ACCEPTED | Real matching evidence required after runtime activation |
+
+
+## 2026-10-01 - Daily manager report delivery repair
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Self-hosted runner availability for Run #6 | OBSERVED HEALTHY FOR JOB PICKUP | Setup + canonical develop checkout succeeded before script failure |
+| Daily report generator | SOURCE-IMPLEMENTED REPAIR CANDIDATE | External PowerShell generator replaces fragile inline block |
+| Daily report regression test | SOURCE-IMPLEMENTED | Parse + execution + required-content + encoding checks wired into Pre-Unreal |
+| Issue #96 publishing | NOT YET RE-OBSERVED | Default-branch workflow still requires launcher update after generator merge |
+| Actions Summary / downloadable report artifact | PLANNED IN WORKFLOW FOLLOW-UP | No delivery claim until default-branch workflow is updated and run succeeds |
