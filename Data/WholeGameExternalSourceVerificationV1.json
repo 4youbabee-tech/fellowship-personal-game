@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "map_id": "WHOLE_GAME_EXTERNAL_SOURCE_VERIFICATION_V1",
+  "verified_on": "2026-10-01",
+  "purpose": "Record current external-source access and license facts used by the whole-game resource gap audit. This is discovery/provenance data only.",
+  "sources": [
+    {
+      "id": "POLY_HAVEN",
+      "url": "https://polyhaven.com/license",
+      "verified_fact": "All Poly Haven HDRIs, textures and 3D models are CC0; commercial use and redistribution are permitted. Website terms still prohibit unauthorized scraping/data mining.",
+      "access_class": "PUBLIC_LICENSE_CLEAR_API_OR_MANUAL",
+      "production_use": [
+        "PBR materials",
+        "HDRIs",
+        "natural props/models"
+      ],
+      "automation_note": "Use documented APIs/endpoints; do not scrape."
+    },
+    {
+      "id": "MIXAMO",
+      "url": "https://helpx.adobe.com/creative-cloud/faq/mixamo-faq.html",
+      "verified_fact": "Adobe states Mixamo characters and animations may be used royalty-free in personal, commercial and non-profit projects including video games. Adobe ID required; library/auto-rigger are bipedal humanoid only.",
+      "access_class": "AUTH_REQUIRED_MANUAL",
+      "production_use": [
+        "humanoid auto-rigging",
+        "locomotion",
+        "social/combat animation candidates"
+      ],
+      "automation_note": "No credential bypass; acquire manually/authenticated and export FBX."
+    },
+    {
+      "id": "SONNISS_GDC_2026",
+      "url": "https://gdc.sonniss.com/",
+      "verified_fact": "2026 bundle advertises 7.47GB+ / 347+ files, royalty-free and commercially usable, with no attribution required; licensed for media production including games.",
+      "access_class": "PUBLIC_BUNDLE_MANUAL",
+      "production_use": [
+        "ambience",
+        "foley",
+        "combat",
+        "creature",
+        "weather",
+        "UI candidate SFX"
+      ],
+      "automation_note": "Acquire bundle manually or via provider-supported links; preserve the license version applicable on acquisition date."
+    },
+    {
+      "id": "ACTIONVFX",
+      "url": "https://www.actionvfx.com/faq",
+      "verified_fact": "ActionVFX states free and paid assets include perpetual royalty-free commercial licenses and may be used in video games; their FAQ explicitly calls out particle flipbooks and VFX textures for Unreal/Unity.",
+      "access_class": "ACCOUNT_OR_MANUAL_PER_ASSET",
+      "production_use": [
+        "fire",
+        "smoke",
+        "dust",
+        "debris",
+        "weather/impact elements"
+      ],
+      "automation_note": "Manual/per-product acquisition; preprocess into lightweight UE4.27-compatible assets."
+    },
+    {
+      "id": "SMITHSONIAN_OPEN_ACCESS",
+      "url": "https://www.si.edu/openaccess/faq",
+      "verified_fact": "Items explicitly marked CC0 are open access; 3D may be available as glTF/glb/OBJ and data via API/GitHub.",
+      "access_class": "PUBLIC_CC0_PER_ITEM",
+      "production_use": [
+        "historical prop reference",
+        "generic artifact/reference candidates"
+      ],
+      "automation_note": "Only CC0-marked records; OBJ remains static/reference only for this project."
+    },
+    {
+      "id": "OPENTOPOGRAPHY",
+      "url": "https://opentopography.org/usageterms",
+      "verified_fact": "Hosted data are generally free for non-commercial and commercial use, but individual datasets can carry licenses such as CC BY 4.0. Some services/API calls require an account/API key and have rate/commercial-integration limits.",
+      "access_class": "PUBLIC_DATA_WITH_PER_DATASET_TERMS",
+      "production_use": [
+        "terrain reference",
+        "heightmap studies"
+      ],
+      "automation_note": "Respect dataset licenses, attribution and API-key limits; terrain data informs authored geography and never defines canon geography."
+    },
+    {
+      "id": "QUATERNIUS",
+      "url": "https://quaternius.com/",
+      "verified_fact": "Project Warehouse #308 reached official pack pages but staged zero files and four unresolved packs in the targeted hero batch.",
+      "access_class": "MANUAL_CLEAR_LICENSE",
+      "production_use": [
+        "support characters",
+        "animation",
+        "fauna",
+        "world kits where manually acquired and QC-passed"
+      ],
+      "automation_note": "Do not classify page reachability as staged payload; no fabricated/undocumented archive URLs."
+    }
+  ],
+  "prohibited_shortcuts": [
+    "No scraping when site terms prohibit it.",
+    "No OAuth/login/paywall bypass.",
+    "No fan/IP replica imports without clear rights.",
+    "No source discovery result is READY_FOR_IMPORT.",
+    "No OBJ as final animated-character evidence.",
+    "No BMP production textures.",
+    "No whole-library runtime residency."
+  ],
+  "evidence_boundary": "External-source verification only; no asset acquisition, import, runtime integration, PIE/device/visual/performance acceptance."
+}
