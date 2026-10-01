@@ -3460,3 +3460,11 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - `Data/WholeGameResourceGapAuditV2.json` records source lanes and acceptance boundaries for these gaps without opening any new runtime chapter.
 - Provider policy correction: Warehouse #308 proved current Quaternius pack pages may be reachable while staging zero payload files. Quaternius is therefore no longer treated as a direct auto-stage provider; it is manual-clear-license unless a provider-supported direct payload URL exists.
 - No new source count, download, candidate or web-discovery result is treated as READY_FOR_IMPORT, runtime integration or visual acceptance.
+
+
+### Zero-payload provider guard implemented
+
+- `Scripts/stage_quaternius_warehouse.ps1` now fails closed with `QUATERNIUS_WAREHOUSE_STAGE_ZERO_PAYLOAD_FAIL` when a run resolves only metadata/pages and produces zero payload files while unresolved packs remain.
+- `Scripts/test_warehouse_provider_zero_payload_fail_closed.ps1` is wired into Pre-Unreal and verifies both the script guard and the Quaternius manual-access policy/registry classification.
+- This prevents a repeat of Warehouse #308's false staging PASS and ensures downstream candidate gates cannot consume page-only evidence as asset availability.
+- Evidence boundary: **SOURCE-IMPLEMENTED / exact-head validation pending** on this audit branch.
