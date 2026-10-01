@@ -690,3 +690,17 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 **Guard:** `Scripts/test_p1c01_hero_candidate_provider_contract.ps1` checks exact authorized-pack parity, FBX/CC0 boundaries, Warehouse path triggering and stage-before-report order.
 
 **Evidence boundary:** repair is SOURCE-IMPLEMENTED until fresh exact-head Pre-Unreal/Unreal validation succeeds and the next develop Warehouse run produces nonzero candidate coverage or a new concrete provider-access blocker.
+
+
+### PG-167 - Scheduled reports must not embed fragile untested PowerShell
+**Symptom exposed by:** Daily Project Manager Report Run #6.
+
+**Evidence:** runner setup and checkout of canonical `develop` succeeded. `Generate project-manager report` then failed with PowerShell parser errors and `Post to Project Manager issue` was skipped.
+
+**Root cause:** a large inline PowerShell block mixed Markdown quoting, interpolation and non-ASCII punctuation inside YAML. The workflow had no parse/execution regression test for the report generator.
+
+**Permanent rule:** scheduled reporting workflows must call a repository script that is parse-tested and execution-tested in Pre-Unreal. Keep report-generation text formatting ASCII-safe where practical and isolate delivery from generation.
+
+**Guard:** `Scripts/test_daily_project_manager_report.ps1` must pass on the exact PR head before any generator change merges.
+
+**Delivery rule:** successful generation alone is not report delivery. A valid scheduled/manual run must also prove the publish step completed against issue #96 (and any additional configured delivery surfaces).
