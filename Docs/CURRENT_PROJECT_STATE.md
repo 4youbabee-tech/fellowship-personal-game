@@ -3430,3 +3430,13 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Repair candidate adds a bounded four-pack Quaternius prerequisite manifest and stages it immediately before the Frodo/Gandalf candidate report. It does not refresh the full provider warehouse and does not promote any asset to runtime.
 - Pre-Unreal now has a regression contract requiring exact pack parity with `authorized_source_packs`, FBX/CC0 boundaries, workflow triggering and provider staging before candidate ranking.
 - Evidence boundary: **SOURCE-IMPLEMENTED repair candidate**. Fresh exact-head Pre-Unreal/Unreal proof and a subsequent develop Warehouse run are required. No PIE/device/visual/pacing/performance acceptance is claimed.
+
+
+## 2026-10-01 - P1C02 Bree preproduction opened
+
+- `Data/P1C02BreePreproductionV1.json` now opens the Bree / The Prancing Pony **source-preparation lane only**.
+- The contract is bound to the existing F1-04 Bree/Weathertop mega source superpack and reuses persistent warehouse stock before any new acquisition.
+- Canon/world anchors are sourced from the project Story, Characters, World and Mission bibles plus Tolkien Book One Chapters IX-X; no chapter-local outcome was invented where the source pack does not define one.
+- Runtime remains fail-closed: `runtime_integration_allowed=false` until **P1C01 Gate 6/7 ACCEPTED** with real matching evidence.
+- Current P1C01 blocker remains separate: Warehouse #308 staged the targeted Quaternius step but produced zero payload files and four unresolved source packs, so Frodo/Gandalf candidate coverage stayed at zero.
+- Evidence boundary: **SOURCE-IMPLEMENTED preproduction contract**. No P1C02 PIE/device/visual/pacing/performance claim.

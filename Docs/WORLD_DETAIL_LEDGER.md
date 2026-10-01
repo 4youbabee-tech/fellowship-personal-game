@@ -943,3 +943,20 @@ Purpose: retain visual, material, life, ambience and world-detail ideas discover
 - The local bootstrap reuses the established production importer and Entry map; it creates no parallel runtime owner, no synchronous-heavy asset path, no crowd Spawn/Destroy policy change, and no permanent startup-map mutation.
 - Animated final production delivery remains FBX-only; new production textures remain PNG/TGA; legacy OBJ source inputs remain static/source fallback only.
 - No Gate 6/7, PIE, device, visual, pacing or performance acceptance is claimed by this reconciliation.
+
+
+## 2026-10-01 - P1C02 Bree preproduction lane opened
+
+Registered against the already-authorized **F1-04 Bree & Weathertop Mega Source Superpack V1**; this does not open P1C02 runtime.
+
+- Runtime chapter: **P1C02 - Bree / The Prancing Pony**.
+- Predecessor runtime gate remains: **P1C01 Gate 6/7 ACCEPTED**.
+- Canon entry remains the F1-03 locked outcome: the Hobbits reach Bree.
+- Bree world grammar remains source-locked: crossroads town; timber/stone; rain; gates; crowded inn; social stealth, supplies, rumors and pursuit pressure; night-arrival/departure states.
+- Tolkien spatial anchors retained without reproducing source dialogue: Bree under Bree-hill, gated night access, old road-crossing identity, a large inn functioning as a social/news hub, and a mixed population of Men and Hobbits.
+- P1C02 source work reuses `Data/F104BreeWeathertopMegaSourceSuperpackV1.json` and the persistent warehouse; no duplicate mega-download lane is created.
+- Existing `SourceAssets/Production/World/Bree` assets remain **STATIC_SUPPORT_STOCK_REQUIRES_QC**, not visual acceptance.
+- Heavy runtime assets remain soft/async; animated final character candidates remain FBX-only; textures PNG/TGA; background populations pooled; repeated detail ISM/HISM + LOD/culling.
+- No P1C02 gameplay/story/runtime mutation is authorized by this registration.
+
+Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-VISUAL ACCEPTANCE CLAIM**.
