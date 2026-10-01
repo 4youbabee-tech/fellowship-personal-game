@@ -197,7 +197,11 @@ jobs:
       - name: Promote large P1C01 material source batch to generated branch
         if: env.WH_RUN_P1C01_MATERIAL_EXPORT == 'true' && env.WH_RUN_P1C01_CHAPTER_PACK != 'true'
         shell: cmd
-        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\export_p1c01_material_source_branch.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\P1C01MaterialImportWaveV1.json" -GeneratedBranch "generated/p1c01-material-source-v1"
+        run: |
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\export_p1c01_material_source_branch.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\P1C01MaterialImportWaveV1.json" -GeneratedBranch "generated/p1c01-material-source-v1"
+          if errorlevel 1 exit /b 83
+          if not exist "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_quaternius_warehouse.ps1" exit /b 84
+          echo WAREHOUSE_SOURCE_CHECKOUT_SURVIVAL_PASS root=%SHIRE_WAREHOUSE_SOURCE%
 
       - name: Run P1C01 Mega Chapter Pack
         if: env.WH_RUN_P1C01_CHAPTER_PACK == 'true'

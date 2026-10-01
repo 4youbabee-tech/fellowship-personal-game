@@ -163,6 +163,10 @@ jobs:
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_warehouse_provider_zero_payload_fail_closed.ps1"
 
+      - name: Test generated material export checkout isolation
+        shell: cmd
+        run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_p1c01_material_export_checkout_isolation.ps1"
+
       - name: Scrub static checkout authentication
         if: always()
         shell: cmd
