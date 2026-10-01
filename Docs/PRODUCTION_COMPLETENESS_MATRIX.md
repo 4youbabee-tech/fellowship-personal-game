@@ -1,3 +1,13 @@
+## 2026-10-01 - Warehouse migrated-receipt root repair matrix
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| Active Warehouse root | RUN-PROVEN | Warehouse #304 used `D:\\actions-runner\\_warehouse\\ShireJourney` |
+| Historical absolute receipt paths | SOURCE-REPAIRED / EXACT-HEAD PROOF PENDING | Rebased to the explicit audit root before grouping and SHA256/license checks |
+| Valid payload preservation | REQUIRED / PRESERVED | No blanket refresh or deletion; newer receipts supersede migrated historical records |
+| Genuine active-root corruption | FAIL-CLOSED / REGRESSION-COVERED | Newest active receipt hash mismatch still exits with audit failure |
+| P1C01 runtime / Frodo candidate / Gate 6-7 | UNCHANGED | No runtime or human/device acceptance supplied by this CI repair |
+
 ## 2026-10-01 - P1C01 FOUNDATION_CORRECTIONS_V1
 
 | Area | Status | Evidence / boundary |

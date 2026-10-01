@@ -1,3 +1,12 @@
+## 2026-10-01 - Warehouse migrated-receipt root rebasing
+
+- Warehouse Stage #304 on `develop@a75b2f810996289ba5795995563a7c83e406c526` proved the active payload root is `D:\\actions-runner\\_warehouse\\ShireJourney`, but two records inside the migrated Poly Haven V3 receipt still named the retired absolute `C:` root.
+- The inventory audit now canonicalizes any receipt path under `*\\actions-runner\\_warehouse\\ShireJourney` onto the explicitly supplied active warehouse root before provenance grouping, SHA256 verification, and license-snapshot verification.
+- This preserves payloads and lets newer same-payload receipts supersede historical records across runner-drive migration; it does not suppress genuine active-root missing files or hash mismatches.
+- Hosted regression coverage models a stale `C:` receipt against the active root and retains fail-closed enforcement for a tampered newest receipt.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + WAREHOUSE PROOF PENDING**.
+- No full Poly Haven refresh is authorized by this repair; no gameplay, PIE, device, visual, pacing, performance, or Frodo-candidate acceptance is claimed.
+
 ## 2026-10-01 - P1C01 Frodo candidate warehouse targeted-repair lane
 
 - Canonical failure head: `develop@b8cee93c01673fc2635f672ca0a0fbe1f543311a`; Warehouse Stage #302 ended **FAILURE** during `Repair candidate-gate material warehouse provenance` after approximately 54 minutes of job execution.
