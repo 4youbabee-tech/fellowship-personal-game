@@ -690,3 +690,17 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 **Guard:** `Scripts/test_p1c01_hero_candidate_provider_contract.ps1` checks exact authorized-pack parity, FBX/CC0 boundaries, Warehouse path triggering and stage-before-report order.
 
 **Evidence boundary:** repair is SOURCE-IMPLEMENTED until fresh exact-head Pre-Unreal/Unreal validation succeeds and the next develop Warehouse run produces nonzero candidate coverage or a new concrete provider-access blocker.
+
+
+### PG-166 — Provider page reachability is not staged-payload evidence
+**Symptom exposed by:** Warehouse #308 on `develop@bb4faa05984c4015e90eb1d3bfeea032679492b1`.
+
+**Evidence:** the targeted Quaternius prerequisite step reached all four official pack pages and ended with `QUATERNIUS_WAREHOUSE_STAGE_PASS files=0 unresolved=4`. The downstream exact-head hero candidate report then produced `prepared=0 pending=4 blocked=0`, `FRODO candidates=0`, `GANDALF candidates=0` and `P1C01_HERO_RIG_CANDIDATE_COVERAGE_FAIL total=0 required=2`.
+
+**Root cause class:** metadata/page resolution was allowed to report a staging PASS without any staged payload file.
+
+**Permanent rule:** a source-acquisition/staging step that produces zero payload files must not satisfy a downstream asset-availability prerequisite. Page/license metadata may be recorded, but payload state remains unresolved/manual until a provider-supported direct download or explicit manual acquisition yields a verified file receipt.
+
+**Provider correction:** Quaternius is now treated as `MANUAL_CLEAR_LICENSE` / manual item download unless a provider-supported direct payload URL is known. Do not fabricate or scrape undocumented archive URLs.
+
+**Evidence boundary:** governance/source-access correction only; it does not produce Frodo/Gandalf candidates or authorize runtime integration.
