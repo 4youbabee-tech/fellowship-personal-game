@@ -10080,6 +10080,7 @@ else:
 
 # PG-224: Part I runtime production is serialized P1C01-P1C08 with Frodo first and fail-closed predecessor gates.
 pg224_path = ROOT / "Data" / "P1C01RuntimeChapterSequenceV1.json"
+pg224_warehouse = read(ROOT / ".github" / "workflows" / "warehouse-stage.yml")
 if not pg224_path.exists():
     fail("PG-224 runtime chapter sequence contract missing")
 else:
@@ -10117,3 +10118,17 @@ for symbol in [
 ]:
     if symbol not in pg205_workflow:
         fail(f"PG-224 exact-head candidate evidence workflow missing: {symbol}")
+
+
+# PG-225: registered Warehouse Stage executes the one-shot exact-head Frodo candidate QC bridge on an explicit merge marker.
+for symbol in [
+    "Data/P1C01HeroSkeletalCandidateWaveV1.json",
+    "P1C01_FRODO_CANDIDATE_QC",
+    "run_p1c01_hero_skeletal_candidate_wave.ps1",
+    "Build exact-head P1C01 Frodo Gandalf candidate report",
+    "Upload exact-head P1C01 hero candidate evidence",
+    "p1c01_hero_skeletal_candidate_summary.json",
+    "p1c01_character_rig_intake_receipt.json",
+]:
+    if symbol not in pg224_warehouse:
+        fail(f"PG-225 Warehouse candidate-QC bridge missing: {symbol}")
