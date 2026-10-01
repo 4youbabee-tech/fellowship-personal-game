@@ -3,6 +3,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+$script:ReceiptRootRebaseCount = 0
 if (-not (Test-Path -LiteralPath $Root -PathType Container)) { throw "Warehouse root missing: $Root" }
 
 function Resolve-WarehouseReceiptPath {
@@ -20,10 +21,15 @@ function Resolve-WarehouseReceiptPath {
     if ($markerIndex -ge 0) {
         $relativeStart = $markerIndex + $warehouseMarker.Length
         $relative = $slashNormalized.Substring($relativeStart).TrimStart("\\")
-        if ([string]::IsNullOrWhiteSpace($relative)) {
-            return $BaseRoot
+        $rebased = if ([string]::IsNullOrWhiteSpace($relative)) {
+            $BaseRoot
+        } else {
+            Join-Path $BaseRoot $relative
         }
-        return Join-Path $BaseRoot $relative
+        if ($slashNormalized.TrimEnd("\\") -ne $rebased.Replace("/", "\\").TrimEnd("\\")) {
+            $script:ReceiptRootRebaseCount++
+        }
+        return $rebased
     }
 
     if (-not [IO.Path]::IsPathRooted($expanded)) {
@@ -270,6 +276,7 @@ $outPath = Join-Path $Root "warehouse_inventory_latest.json"
 $inventory | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $outPath -Encoding UTF8
 
 Write-Host ("WAREHOUSE_PROVENANCE_RESOLUTION active="+$activeCandidates.Count+" superseded="+$superseded.Count+" receipts="+$receiptFiles.Count+" rule=latest_valid_receipt_per_normalized_payload_path")
+if($script:ReceiptRootRebaseCount -gt 0){ Write-Host ("WAREHOUSE_RECEIPT_ROOT_REBASE count="+$script:ReceiptRootRebaseCount+" activeRoot="+$Root) }
 
 if($missing.Count -gt 0 -or $hashMismatch.Count -gt 0 -or $licenseHashMismatch.Count -gt 0 -or $dangerous.Count -gt 0 -or $badReceipt.Count -gt 0){
     foreach($row in $hashMismatch | Select-Object -First 20){
