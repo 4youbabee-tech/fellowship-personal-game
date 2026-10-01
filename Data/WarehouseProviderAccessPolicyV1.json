@@ -15,8 +15,7 @@
       "meaning": "Official public item/pack pages expose direct downloads and no contrary automation restriction has been identified. Resolver remains rate-bounded and item-scoped.",
       "current": [
         "KENNEY",
-        "OPENGAMEART",
-        "QUATERNIUS"
+        "OPENGAMEART"
       ]
     },
     "MANUAL_CLEAR_LICENSE": {
@@ -25,7 +24,8 @@
         "TEXTURECAN",
         "CGBOOKCASE",
         "3DTEXTURES_ME",
-        "SHARETEXTURES"
+        "SHARETEXTURES",
+        "QUATERNIUS"
       ]
     },
     "AUTH_REQUIRED": {
@@ -64,7 +64,9 @@
     "Rate-limit public resolvers and prefer provider APIs.",
     "Every staged file records source/provider/license/hash/state.",
     "Quaternius unresolved packs remain candidates; do not fabricate direct download URLs.",
-    "PRIVATE_OFFLINE_ONLY does not authorize provider-access bypass or redistribution."
+    "PRIVATE_OFFLINE_ONLY does not authorize provider-access bypass or redistribution.",
+    "A provider stage that resolves zero payload files must not be treated as successful staging for any downstream candidate gate.",
+    "Quaternius pack-page reachability is metadata/license evidence only until an official provider-supported direct payload URL or manual acquisition exists."
   ],
   "private_offline_rule": "Unknown or non-commercially-cleared assets may be catalogued or locally integrated only when explicitly tagged PRIVATE_OFFLINE_ONLY and kept out of distributable/commercial exports. Access-method restrictions remain unchanged."
 }
