@@ -63,6 +63,7 @@ jobs:
 
     steps:
       - name: Checkout exact warehouse head into isolated temp source
+        timeout-minutes: 5
         shell: cmd
         env:
           GH_TOKEN: ${{ github.token }}
