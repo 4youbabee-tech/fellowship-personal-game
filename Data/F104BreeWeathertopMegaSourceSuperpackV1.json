@@ -14,7 +14,8 @@
     "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
     "Data/ProjectGovernor.json",
     "Docs/WORLD_DETAIL_LEDGER.md",
-    "Data/P1C02BreePreproductionV1.json"
+    "Data/P1C02BreePreproductionV1.json",
+    "Data/P1C03WeathertopFordPreproductionV1.json"
   ],
   "story_contract": {
     "entry": "Previous package resolves with the Hobbits reaching Bree.",
@@ -474,5 +475,6 @@
     "OpenGameArt assets that pass existing license/QC policy"
   ],
   "acceptance_boundary": "Source candidate preparation only. No UE integration, PIE, device, visual, pacing or performance acceptance.",
-  "p1c02_preproduction_contract": "Data/P1C02BreePreproductionV1.json"
+  "p1c02_preproduction_contract": "Data/P1C02BreePreproductionV1.json",
+  "p1c03_preproduction_contract": "Data/P1C03WeathertopFordPreproductionV1.json"
 }
