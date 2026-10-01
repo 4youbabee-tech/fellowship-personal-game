@@ -3450,3 +3450,21 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Source-backed Ford boundary: wounded eastward pursuit reaches the Ford of Bruinen before Rivendell recovery. No separate unsupported mission outcome is introduced.
 - Runtime remains fail-closed: `runtime_integration_allowed=false` until **P1C02 Gate 6/7 ACCEPTED** with real evidence.
 - Evidence boundary: **SOURCE-IMPLEMENTED preproduction contract** only; no P1C03 PIE/device/visual/pacing/performance acceptance.
+
+
+## 2026-10-01 - Whole-game resource gap audit V2
+
+- A whole-game source audit now cross-checks the 28-region production packets, culture/artifact requirements, battle/creature needs, gameplay interaction systems, the 3D Visual Asset Atlas and the Master External Resource Bible against current warehouse/source coverage.
+- Strong coverage remains in generic PBR surfaces, support props, low-poly settlement/support kits, UI support and terrain/reference tooling.
+- Highest-value remaining gaps are: hero humanoid bases, canonical creature rigs, professional humanoid/creature animation, realistic hero architecture, biome-specific vegetation, battle/siege stock, professional audio depth, battle/weather VFX, water/boat support, horse/mounted pipeline and culture-specific artifact/faction kits.
+- `Data/WholeGameResourceGapAuditV2.json` records source lanes and acceptance boundaries for these gaps without opening any new runtime chapter.
+- Provider policy correction: Warehouse #308 proved current Quaternius pack pages may be reachable while staging zero payload files. Quaternius is therefore no longer treated as a direct auto-stage provider; it is manual-clear-license unless a provider-supported direct payload URL exists.
+- No new source count, download, candidate or web-discovery result is treated as READY_FOR_IMPORT, runtime integration or visual acceptance.
+
+
+### Zero-payload provider guard implemented
+
+- `Scripts/stage_quaternius_warehouse.ps1` now fails closed with `QUATERNIUS_WAREHOUSE_STAGE_ZERO_PAYLOAD_FAIL` when a run resolves only metadata/pages and produces zero payload files while unresolved packs remain.
+- `Scripts/test_warehouse_provider_zero_payload_fail_closed.ps1` is wired into Pre-Unreal and verifies both the script guard and the Quaternius manual-access policy/registry classification.
+- This prevents a repeat of Warehouse #308's false staging PASS and ensures downstream candidate gates cannot consume page-only evidence as asset availability.
+- Evidence boundary: **SOURCE-IMPLEMENTED / exact-head validation pending** on this audit branch.

@@ -1,0 +1,213 @@
+{
+  "schema_version": 2,
+  "audit_id": "WHOLE_GAME_RESOURCE_GAP_AUDIT_V2",
+  "status": "SOURCE_RESEARCH_ACTIVE_RUNTIME_UNCHANGED",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/WholeGameRegionProductionPacketsV1.json",
+    "Data/WholeGameAssetFamilyCoverageV1.json",
+    "Data/TrilogyProductionAssetWarehouse.json",
+    "Data/TrilogyAssetCandidateQueue.json",
+    "Data/MasterExternalResourceBibleAdoptionV1.json",
+    "Docs/WORLD_DETAIL_LEDGER.md",
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+    "04_PEOPLES_LORE_ARTIFACTS_AND_CULTURES",
+    "05_BATTLES_WEAPONS_ARMIES_AND_CREATURES",
+    "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE",
+    "10_3D_VISUAL_ASSET_ATLAS_PRODUCTION",
+    "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX",
+    "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+  ],
+  "audit_scope": {
+    "regions": 28,
+    "family_groups": [
+      "GLOBAL_SURFACE_LIBRARY",
+      "PASTORAL_SETTLEMENT",
+      "FOREST_BIOME",
+      "WATER_RIVER_COAST",
+      "SNOW_ALPINE",
+      "DARK_CAVE_RUIN",
+      "FORTIFICATION",
+      "MARSH_WETLAND",
+      "ASH_INDUSTRIAL_VOLCANIC"
+    ],
+    "additional_asset_domains": [
+      "hero/support characters",
+      "crowd/faction families",
+      "fauna and mounts",
+      "canonical large creatures",
+      "weapons/equipment/artifacts",
+      "humanoid and creature animation",
+      "battle/siege support",
+      "audio/foley/music",
+      "weather/VFX",
+      "terrain/reference data",
+      "UI/localization",
+      "gameplay interaction props"
+    ]
+  },
+  "coverage_summary": {
+    "strong_or_broad": [
+      "generic PBR materials and surfaces",
+      "supporting static props and interior filler",
+      "supporting low-poly settlement kits",
+      "basic UI support",
+      "generic terrain/reference tooling",
+      "whole-game region packet coverage",
+      "existing source-preparation packs for Part I and several Part II regions"
+    ],
+    "material_gaps": [
+      {
+        "priority": "CRITICAL",
+        "gap": "realistic hero humanoid bases and hero-grade costume/hair/face source pipeline",
+        "why": "Current Quaternius/KayKit stock is support/pipeline quality only; named characters need real skeletal FBX, skin/deformation, character-specific silhouette and material quality.",
+        "safe_sources": [
+          "Mixamo/AccuRIG/ActorCore as manual/authenticated rigging-motion lanes",
+          "MakeHuman for original NPC/character base generation after cleanup",
+          "Fab per-item licensed character bases filtered for UE4.27-compatible export"
+        ],
+        "acceptance": "Never promote a generic base as a named LOTR likeness without project-specific art and QC."
+      },
+      {
+        "priority": "CRITICAL",
+        "gap": "canonical creature bases",
+        "why": "Cave Troll, Balrog, Warg, Fell Beast, Mumakil/Oliphaunt, Shelob, Ent and Great Eagle each require species-specific rigs, locomotion, deformation and LOD plans.",
+        "safe_sources": [
+          "Fab/marketplace per-item licensed generic creature bases",
+          "Quaternius/KayKit only for pipeline/support where direct/manual access is valid",
+          "project-authored/retargeted species-specific rigs where no adequate licensed base exists"
+        ],
+        "acceptance": "Hero creatures require species-specific skeleton/deformation review; generic monster packs are not visual acceptance."
+      },
+      {
+        "priority": "CRITICAL",
+        "gap": "professional humanoid and creature animation coverage",
+        "why": "Required sets include short-stride hobbit motion, ranger/elf/dwarf/wizard families, mounted combat, crowds and large-creature locomotion.",
+        "safe_sources": [
+          "Mixamo manual/authenticated FBX",
+          "Rokoko Motion Library/manual FBX where current license permits",
+          "ActorCore motions/AccuRIG",
+          "project-authored cleanup/retarget via Cascadeur or Blender"
+        ],
+        "acceptance": "Retarget, root motion, skeleton mapping and UE4.27 compatibility must be proven per rig family."
+      },
+      {
+        "priority": "HIGH",
+        "gap": "realistic medieval/rural/fortification hero architecture",
+        "why": "Current stylized packs are useful for support but not sufficient alone for Bree, Meduseld, Helm's Deep, Minas Tirith, Osgiliath, Minas Morgul or Grey Havens hero silhouettes.",
+        "safe_sources": [
+          "Fab per-item licensed architecture",
+          "Poly Haven and ambientCG for high-fidelity generic props/material support",
+          "CGTrader/TurboSquid/Evermotion/KitBash3D only with per-item license and aggressive optimization"
+        ],
+        "acceptance": "Hero architecture remains region-specific; support kits may not flatten culture identity."
+      },
+      {
+        "priority": "HIGH",
+        "gap": "biome-specific vegetation beyond generic filler",
+        "why": "Rivendell, Lothlorien, Fangorn, Ithilien, Dead Marshes, Caradhras and Mordor need distinct ecology/shape palettes.",
+        "safe_sources": [
+          "Poly Haven nature",
+          "Fab vegetation filtered for UE4.27 and non-Nanite dependency",
+          "SpeedTree where licensed/version-compatible",
+          "manual Xfrog/Globe Plants only after license/version review"
+        ],
+        "acceptance": "HISM/ISM, authored LOD/cull bands and masked-overdraw profiling are mandatory."
+      },
+      {
+        "priority": "HIGH",
+        "gap": "battle and siege support stock",
+        "why": "Helm's Deep, Minas Tirith, Pelennor and Black Gate require ladders, rams, siege debris, barriers, banners, formations and destruction variants.",
+        "safe_sources": [
+          "Fab per-item medieval siege/fortification assets",
+          "Kenney/KayKit only for support/layout where stylistically acceptable",
+          "project-authored modular siege props for canon-critical silhouettes"
+        ],
+        "acceptance": "Background battle assets remain pooled/instanced; no mass spawn/destroy churn."
+      },
+      {
+        "priority": "HIGH",
+        "gap": "professional whole-game audio depth",
+        "why": "Ambience/foley/creatures/combat/weather/household/boats/horses/siege/UI all require broader high-quality coverage than current project-authored placeholders.",
+        "safe_sources": [
+          "Sonniss GDC bundles manual acquisition",
+          "Freesound per-sound manual/authenticated license review",
+          "99Sounds/Kenney where license and content fit",
+          "Soundly or premium libraries as licensed/manual sources"
+        ],
+        "acceptance": "WAV masters, per-file provenance, attenuation/concurrency, and selective runtime loading only."
+      },
+      {
+        "priority": "HIGH",
+        "gap": "battle/weather/environmental VFX",
+        "why": "Rain, snow, mist, fire, smoke, embers, ash, water spray, dust, webs, impacts and siege debris recur across many chapters.",
+        "safe_sources": [
+          "ActionVFX per-product/manual licensed elements",
+          "EmberGen baked flipbooks",
+          "JangaFX free/manual resources after exact license review",
+          "Fab UE4.27-compatible VFX only"
+        ],
+        "acceptance": "Prefer baked/flipbook/Cascade-compatible effects; avoid expensive runtime volumetrics on ~2GB VRAM."
+      },
+      {
+        "priority": "MEDIUM",
+        "gap": "water/boat/river/coast interaction stock",
+        "why": "Anduin, Rivendell, Henneth Annun, Osgiliath and Grey Havens require water surfaces, boats/paddles, river/coast ambience and interaction props.",
+        "safe_sources": [
+          "Poly Haven/ambientCG for water-adjacent surfaces and rocks",
+          "Fab/manual boat and harbor props",
+          "project-authored lightweight UE4 water material/mesh solutions"
+        ],
+        "acceptance": "Reflection/translucency cost must be profiled; no blanket high-cost water system."
+      },
+      {
+        "priority": "MEDIUM",
+        "gap": "mounted gameplay and horse pipeline",
+        "why": "Rohan, pursuit, travel and muster activities need horse/pony rigs, mount/dismount, gait sets, tack, reins, stable props and mounted combat.",
+        "safe_sources": [
+          "Fab per-item horse rigs",
+          "Quaternius animated animals only as manual/support candidate where source is actually obtainable",
+          "Mixamo/ActorCore/Rokoko for rider motions where compatible"
+        ],
+        "acceptance": "Horse/rider synchronization and collision require dedicated runtime QC."
+      },
+      {
+        "priority": "MEDIUM",
+        "gap": "cultural artifacts and faction-specific visual kits",
+        "why": "Rohirrim, Gondor/Dunedain, Elves, Dwarves, Orcs/Uruk-hai, Ents, Haradrim/Easterlings and Nazgul must remain visually distinct.",
+        "safe_sources": [
+          "generic licensed medieval/fantasy bases",
+          "project-specific re-materialing and silhouette work",
+          "Smithsonian Open Access CC0 reference/prop candidates where appropriate"
+        ],
+        "acceptance": "Never import LOTR fan/IP replicas without clear rights; canon identity comes from project-authored adaptation."
+      }
+    ]
+  },
+  "provider_access_corrections": [
+    {
+      "provider": "QUATERNIUS",
+      "previous": "PUBLIC_DIRECT_RESOLVER / AUTO_RESOLVE_STAGE",
+      "observed_runtime_evidence": "Warehouse #308 targeted hero batch returned QUATERNIUS_WAREHOUSE_STAGE_PASS files=0 unresolved=4; official pack pages were reachable but no direct archive was staged.",
+      "corrected": "MANUAL_CLEAR_LICENSE",
+      "automation": "MANUAL_ITEM_DOWNLOAD_OR_PROVIDER_SUPPORTED_DIRECT_URL_ONLY",
+      "rule": "Page reachability is not payload evidence. Do not report staging success when files=0."
+    }
+  ],
+  "source_policy_updates": [
+    "ShareTextures remains MANUAL_ONLY_NO_AUTOMATION because site terms prohibit automated/bulk downloading.",
+    "Freesound remains per-item/authenticated/manual for originals; do not treat its free API as a blanket production-ingest lane.",
+    "Poly Haven and ambientCG remain preferred automatic CC0 anchors for materials/HDRIs/selected models.",
+    "Sonniss GDC is a high-value manual audio lane; preserve bundle/license provenance and do not load the whole library at runtime.",
+    "Fab and mixed marketplaces remain per-item licensed/manual; current listing/version compatibility must be checked before UE4.27 intake.",
+    "LOTR-specific fan assets stay reference/quarantine unless rights are independently clear."
+  ],
+  "execution_order": [
+    "Keep P1C01 runtime serialization unchanged.",
+    "Run source/warehouse research and indexing in parallel only.",
+    "Prioritize gaps that unlock multiple regions: animation, creatures, realistic architecture, audio, VFX, vegetation.",
+    "Reuse existing warehouse payloads before any new acquisition.",
+    "No download or candidate count may be interpreted as runtime integration or visual acceptance."
+  ],
+  "evidence_boundary": "Research/source governance only. No READY_FOR_IMPORT, runtime integration, PIE, device, visual, pacing or performance acceptance is created by this audit."
+}

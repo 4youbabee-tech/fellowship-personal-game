@@ -2415,3 +2415,32 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Existing Weathertop stock | QC REQUIRED | Static support stock only; no visual acceptance |
 | P1C03 runtime integration | PREDECESSOR-GATED / NOT STARTED | Requires P1C02 Gate 6/7 ACCEPTED |
 | P1C03 PIE / device / visual / pacing / performance | NOT ACCEPTED | Real matching evidence required after runtime activation |
+
+
+## 2026-10-01 - Whole-game resource coverage audit V2
+
+| Domain | Status | Evidence boundary |
+|---|---|---|
+| Generic PBR surfaces/materials | BROAD SOURCE COVERAGE | Poly Haven/ambientCG and existing warehouse lanes; runtime integration remains per-region |
+| Supporting static props/interiors | BROAD SOURCE COVERAGE | Kenney/KayKit/project stock; hero visual acceptance not implied |
+| Hero humanoid bases | CRITICAL GAP | Generic/support bases exist; final named-character skeletal FBX + deformation/art QC still required |
+| Canonical creature bases | CRITICAL GAP | Species-specific rigs/deformation/LOD still required |
+| Humanoid + creature animation | CRITICAL GAP | Manual/authenticated motion sources required; retarget QC per rig family |
+| Realistic hero architecture | HIGH GAP | Support kits exist; culture/region-specific hero silhouettes need higher-fidelity licensed/custom sources |
+| Biome-specific vegetation | HIGH GAP | Generic nature stock exists; ecology identity/LOD/overdraw QC still required |
+| Battle/siege support | HIGH GAP | Modular/background support needs expansion and canon-specific silhouette filtering |
+| Whole-game audio depth | HIGH GAP | Manual licensed libraries required for ambience/foley/creature/combat/weather breadth |
+| Weather/battle VFX | HIGH GAP | Baked/flipbook/UE4.27-compatible source acquisition still required |
+| Water/boats + mounted pipeline | MEDIUM GAP | Dedicated interaction/rig/source QC still required |
+| Quaternius automated staging | CORRECTED TO MANUAL | #308: `files=0 unresolved=4`; page reachability no longer counts as payload staging |
+| PIE / device / visual / performance acceptance | UNCHANGED | Source audit creates no runtime acceptance |
+
+
+### Resource-audit guard delta
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Quaternius zero-payload staging | SOURCE-IMPLEMENTED FAIL-CLOSED | `files=0 && unresolved>0` now exits nonzero |
+| Zero-payload regression test | SOURCE-IMPLEMENTED | Pre-Unreal wiring added; exact-head result pending |
+| Provider access policy | SOURCE-IMPLEMENTED | Quaternius reclassified manual-clear-license |
+| Whole-game gap audit | SOURCE-IMPLEMENTED | 28 regions + cross-cutting characters/creatures/animation/audio/VFX/gameplay-support domains |

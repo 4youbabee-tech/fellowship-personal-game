@@ -159,6 +159,10 @@ jobs:
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_p1c01_hero_candidate_provider_contract.ps1"
 
+      - name: Test zero-payload provider fail-closed contract
+        shell: cmd
+        run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_warehouse_provider_zero_payload_fail_closed.ps1"
+
       - name: Scrub static checkout authentication
         if: always()
         shell: cmd

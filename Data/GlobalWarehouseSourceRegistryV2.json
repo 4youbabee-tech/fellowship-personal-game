@@ -20,8 +20,8 @@
     {
       "id": "QUATERNIUS",
       "license": "CC0",
-      "access": "PUBLIC_PACK_PAGES",
-      "automation": "AUTO_RESOLVE_STAGE",
+      "access": "PUBLIC_PACK_PAGES_MANUAL_DOWNLOAD",
+      "automation": "MANUAL_ITEM_DOWNLOAD_UNLESS_PROVIDER_SUPPORTED_DIRECT_URL",
       "categories": [
         "3D_MODEL",
         "RIGGED_CHARACTER",
@@ -29,7 +29,8 @@
         "FAUNA",
         "WORLD_KIT"
       ],
-      "priority": "HIGH"
+      "priority": "HIGH",
+      "notes": "CC0 source remains valuable for support characters, animation, fauna and world kits, but Warehouse #308 proved current official pack pages can resolve without yielding a direct archive. Page reachability is not staged-payload evidence."
     },
     {
       "id": "KENNEY",

@@ -117,4 +117,10 @@ foreach ($pack in $manifest.source_pages) {
 }
 
 $receipt | ConvertTo-Json -Depth 8 | Set-Content -Path $receiptPath -Encoding UTF8
+
+if ($receipt.files.Count -eq 0 -and $receipt.unresolved.Count -gt 0) {
+    Write-Host "QUATERNIUS_WAREHOUSE_STAGE_ZERO_PAYLOAD_FAIL files=0 unresolved=$($receipt.unresolved.Count) receipt=$receiptPath"
+    exit 3
+}
+
 Write-Host "QUATERNIUS_WAREHOUSE_STAGE_PASS files=$($receipt.files.Count) unresolved=$($receipt.unresolved.Count) receipt=$receiptPath"
