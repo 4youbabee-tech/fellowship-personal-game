@@ -475,10 +475,16 @@ void AShirePrototypeWorldBuilder::SpawnHobbitHole(const FVector& Location, float
         FVector(0.18f, 0.18f, 0.48f) * Scale, Stone, FRotator::ZeroRotator, false);
     SpawnShape(CubeMesh, Location + FVector(-122.0f, 0.0f, 8.0f) * Scale,
         FVector(0.42f, 0.70f, 0.10f) * Scale, Stone, FRotator::ZeroRotator, true);
-    SpawnShape(SphereMesh, Location + FVector(-105.0f, -92.0f, 24.0f) * Scale,
-        FVector(0.32f, 0.26f, 0.22f) * Scale, FLinearColor(0.10f, 0.32f, 0.08f), FRotator::ZeroRotator, false);
-    SpawnShape(SphereMesh, Location + FVector(-105.0f, 92.0f, 24.0f) * Scale,
-        FVector(0.32f, 0.26f, 0.22f) * Scale, FLinearColor(0.12f, 0.36f, 0.09f), FRotator::ZeroRotator, false);
+    // Use the already-resident production shrub for the planted entry when available.
+    // Keep the primitive spheres only as a deterministic no-asset fallback.
+    UStaticMesh* EntryShrubMesh = ProductionShrubMesh ? ProductionShrubMesh : SphereMesh;
+    const FVector EntryShrubScale = ProductionShrubMesh
+        ? FVector(0.54f, 0.46f, 0.52f) * Scale
+        : FVector(0.32f, 0.26f, 0.22f) * Scale;
+    SpawnShape(EntryShrubMesh, Location + FVector(-105.0f, -92.0f, 24.0f) * Scale,
+        EntryShrubScale, FLinearColor(0.10f, 0.32f, 0.08f), FRotator(0.0f, -18.0f, 0.0f), false);
+    SpawnShape(EntryShrubMesh, Location + FVector(-105.0f, 92.0f, 24.0f) * Scale,
+        EntryShrubScale, FLinearColor(0.12f, 0.36f, 0.09f), FRotator(0.0f, 21.0f, 0.0f), false);
 }
 
 
