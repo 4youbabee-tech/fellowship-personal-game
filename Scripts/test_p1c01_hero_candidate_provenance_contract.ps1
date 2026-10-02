@@ -15,7 +15,7 @@ $wave = Get-Content -LiteralPath $wavePath -Raw
 $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
 
 if(-not [bool]$manifest.candidate_policy.require_provenance){ throw "P1C01_HERO_PROVENANCE_POLICY_DISABLED" }
-foreach($marker in @("candidate_source_provenance","candidate_file","source_sha256","receipt=[string]$row.receipt")){
+foreach($marker in @("candidate_source_provenance","candidate_file","source_sha256",'receipt=[string]$row.receipt')){
   if(-not $prep.Contains($marker)){ throw "P1C01_HERO_PROVENANCE_INTAKE_MARKER_MISSING marker=$marker" }
 }
 foreach($marker in @("P1C01_HERO_RIG_PROVENANCE_FAIL","source_asset_id","source_receipt","source_payload","unprovenanced_fbx")){
