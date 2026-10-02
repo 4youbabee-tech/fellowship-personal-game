@@ -2548,3 +2548,30 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Frodo static FBX structure | STATIC-VALIDATED | Warehouse #315: 5/5 allowlisted candidates, FBX v7400, skeleton/skin/cluster markers present |
 | Frodo UE4 skeletal import / deformation / likeness | PENDING | Separate engine and human visual evidence still required |
 | PIE / device / visual / performance acceptance | NOT ACCEPTED | Queue/source capacity does not create experiential evidence |
+
+## 2026-10-02 - P1C01 visible-world mega source execution
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Bag End hero ring source priority | SOURCE-IMPLEMENTED | Materials/props/garden/fence support routed through existing warehouse-first pack; runtime/visual acceptance not implied |
+| Hobbiton village source priority | SOURCE-IMPLEMENTED | Paths/fences/farm/social-prop/vegetation support prioritized; runtime/visual acceptance not implied |
+| Shire road corridor source priority | SOURCE-IMPLEMENTED | Ground/path/hedge/tree/rock support prioritized; runtime/visual acceptance not implied |
+| Bucklebury/Ferry source priority | SOURCE-IMPLEMENTED | Riverbank/wood/vegetation/transition support prioritized; runtime/visual acceptance not implied |
+| Runtime mutation | NOT AUTHORIZED BY THIS PACK | PR #247 remains serialized Frodo runtime lane; P1C02+ runtime stays gated |
+| Exact-head validation | PENDING | Pre-Unreal required before merge to develop |
+| PIE / device / visual / performance acceptance | NOT ACCEPTED | Requires later matching runtime and human/device evidence |
+
+## 2026-10-02 - Visible proxy replacement inventory
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Current Engine primitive fallbacks | STATIC-IDENTIFIED | Shire builder retains Cube/Sphere/Cylinder/Cone fallback paths |
+| Bag End replacement routing | SOURCE-IMPLEMENTED | Existing production identities + missing interior/hero-detail source needs recorded |
+| Hobbiton replacement routing | SOURCE-IMPLEMENTED | Existing village assets + remaining party/crop/log/clutter source needs recorded |
+| Shire road replacement routing | SOURCE-IMPLEMENTED | Existing road/hedge/tree/rock assets + remaining road-edge/variation source needs recorded |
+| Bucklebury/Ferry replacement routing | SOURCE-IMPLEMENTED | Riverbank/water exist; ferry/dock/mooring support remains source debt |
+| Runtime replacement | NOT STARTED IN THIS BRANCH | Serialized runtime lane remains PR #247 |
+| Exact-head static validation | PENDING | Pre-Unreal contract added |
+| Visual/device/performance acceptance | NOT ACCEPTED | Requires later runtime and human/device evidence |
+
+| Visible-world pack PG-187 compatibility | SOURCE-REPAIRED | Keep required `RUNNER_EXECUTION_READY` status; new priority carried by separate execution profile |

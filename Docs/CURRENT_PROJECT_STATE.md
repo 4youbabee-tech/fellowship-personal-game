@@ -3568,3 +3568,25 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Performance/architecture boundary remains UE4.27.2 + DX11 + 1280x720 + 30 FPS floor, soft refs, async FStreamableManager, pooled crowds, ISM/HISM, FBX animated assets, PNG/TGA textures.
 - Warehouse #315 on `develop@8c0f7b7da22e25ab723675d6d7a447d309c00bfe` succeeded and produced **5/5 Frodo static FBX structure passes** (FBX v7400, skeleton/skin/cluster markers present). This is **STATIC-VALIDATED** only; UE4 skeletal import, deformation and likeness remain pending.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING** for the new queue.
+
+## 2026-10-02 - P1C01 visible-world mega source execution
+
+- Opened a dedicated source/preparation branch from canonical develop to push the already-authorized M003-M007 visual stack while M001 Frodo skeletal validation remains serialized on PR #247.
+- `Data/P1C01MegaChapterPackV1.json` is upgraded to schema v2 and now explicitly prioritizes four visible cells: Bag End hero ring, Hobbiton village, Shire road corridor and Bucklebury/Ferry.
+- The pack continues to reuse the persistent warehouse before acquisition and keeps the existing promotion/material-export/character-intake machinery. It does not introduce a second runtime lane.
+- Target constraints remain UE4.27.2 / DX11 / 720p / 30 FPS floor / 8 GB RAM / ~2 GB VRAM, FBX animated assets, PNG/TGA production textures, soft/async heavy runtime assets and ISM/HISM+LOD/culling for repeated detail.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL PENDING**. No PIE/device/visual/performance acceptance claim.
+
+## 2026-10-02 - Concrete visible-proxy inventory for the next P1C01 art pass
+
+- Static source inspection of `ShirePrototypeWorldBuilder.cpp` confirms the world still retains Engine Cube/Sphere/Cylinder/Cone fallbacks when production meshes are unavailable.
+- Added `Data/P1C01VisibleWorldProxyReplacementV1.json` to convert that observation into a concrete source-routing contract for Bag End, Hobbiton, Shire roads and Bucklebury/Ferry.
+- The plan records existing production mesh identities separately from missing source needs, so later runtime work can remove a fallback only when a real imported replacement exists.
+- A Pre-Unreal contract test now fails closed if the four visible cells, FBX/PNG-TGA rules, async-loading rule or HISM repeated-detail rule drift.
+- Status: **STATIC-VALIDATED SOURCE CONTRACT PENDING EXACT-HEAD PRE-UNREAL**. No runtime/PIE/device/visual/performance acceptance claim.
+
+## 2026-10-02 - Visible-world pack PG-187 repair
+
+- Pre-Unreal #1599 reached the project-structure gate and failed only because the visible-world source branch changed the legacy mega-pack status token away from the PG-187 required value.
+- Root fix keeps `status=RUNNER_EXECUTION_READY` and records the new intent separately as `execution_profile=VISIBLE_WORLD_PRIORITY_V2`; no guard is weakened.
+- Status: **SOURCE-REPAIRED / FRESH EXACT-HEAD PRE-UNREAL PENDING**.
