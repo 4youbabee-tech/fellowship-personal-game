@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "import_id": "P1C01_FRODO_SKELETAL_IMPORT_VALIDATION_V1",
-  "status": "FINAL_CURRENT_FAMILY_CANDIDATE_PROBE_ACTIVE",
+  "status": "ALTERNATE_CC0_SOURCE_FAMILY_PROBE_ACTIVE",
   "authority": [
     "Data/ProjectGovernor.json",
     "Data/P1C01HeroSkeletalCandidateWaveV1.json",
@@ -27,7 +27,7 @@
     "require_nonzero_bones": true,
     "runtime_integration_allowed": false
   },
-  "evidence_boundary": "Four exact filename+SHA warehouse candidates are REJECTED_TECHNICAL after real UE4.27.2 imports with 33 reference bones. Worker_Male.fbx is now the active final candidate in the current source family. If it repeats the same source-quality defects, this source family is exhausted and must be replaced rather than weakening the gate. No deformation, retarget, AnimBP, runtime replacement, PIE, device, visual or performance acceptance is proved.",
+  "evidence_boundary": "All five exact filename+SHA candidates from the original OpenGameArt/Quaternius Ultimate Animated Character family are REJECTED_TECHNICAL after real UE4.27.2 imports with 33 reference bones. A separate CC0 Quaternius RPG Characters mirror is now the bounded alternate source family; it must pass the same static and real UE4.27.2 technical gate before any promotion. No deformation, retarget, AnimBP, runtime replacement, PIE, device, visual or performance acceptance is proved.",
   "technical_rejections": [
     {
       "filename": "BaseCharacter.fbx",
@@ -102,6 +102,27 @@
         "Unreal Build Validation #1250"
       ],
       "note": "UE4.27.2 imported a USkeletalMesh with 33 reference bones; exact source rejected for smoothing/bind-pose/UV debt."
+    },
+    {
+      "filename": "Worker_Male.fbx",
+      "source_sha256": "833d26026f32d96699c8cf667cbec849adda93d43cea447a7449fc4d72c3a20d",
+      "source_bytes": 1502204,
+      "evidence_head": "1b8ec60dba387bd3142b0c3e995a63477fd02d4f",
+      "ue4_skeletal_registered": true,
+      "ue4_reference_bones": 33,
+      "state": "REJECTED_TECHNICAL",
+      "reason_codes": [
+        "MISSING_SMOOTHING_GROUPS",
+        "MISSING_BIND_POSE_BONES",
+        "MISSING_UV_SET"
+      ],
+      "evidence": [
+        "P1C01 Frodo Skeletal Import Validation #24"
+      ],
+      "note": "UE4.27.2 imported a USkeletalMesh with 33 reference bones; the final candidate in the original source family is rejected for smoothing/bind-pose/UV debt, exhausting that family."
     }
+  ],
+  "preferred_candidate_source_asset_ids": [
+    "OGA_QTN_RPG_CHARACTERS_CC0"
   ]
 }

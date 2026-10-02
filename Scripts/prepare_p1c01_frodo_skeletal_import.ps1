@@ -54,6 +54,40 @@ foreach($preferred in @($manifest.preferred_candidate_order)){
   $selected=[pscustomobject]@{ filename=[string]$preferred; source=$source; sha256=$sha; bytes=(Get-Item -LiteralPath $source).Length }
   break
 }
+if($null -eq $selected){
+  $preferredSourceIds=@()
+  if($null -ne $manifest.PSObject.Properties["preferred_candidate_source_asset_ids"]){
+    $preferredSourceIds=@($manifest.preferred_candidate_source_asset_ids | ForEach-Object { [string]$_ })
+  }
+  foreach($sourceId in $preferredSourceIds){
+    $sourceCandidates=@($frodoRows[0].candidates | Where-Object { [string]$_.source_asset_id -ieq $sourceId } | Sort-Object -Property @{Expression="score";Descending=$true}, @{Expression="bytes";Descending=$false})
+    foreach($candidateRow in $sourceCandidates){
+      $preferred=[string]$candidateRow.filename
+      $source=[string]$candidateRow.source_fbx
+      if(-not (Test-Path -LiteralPath $source -PathType Leaf)){ continue }
+      $sha=(Get-FileHash -LiteralPath $source -Algorithm SHA256).Hash.ToLowerInvariant()
+      $qc=@($static.candidates | Where-Object {
+        [string]$_.filename -ieq $preferred -and
+        [string]$_.source_asset_id -ieq $sourceId -and
+        ([string]$_.sha256).ToLowerInvariant() -eq $sha -and
+        [bool]$_.static_structure_pass
+      })
+      if($qc.Count -ne 1){ continue }
+      $rejections=@($technicalRejections | Where-Object {
+        [string]$_.filename -ieq $preferred -and
+        ([string]$_.source_sha256).ToLowerInvariant() -eq $sha
+      })
+      if($rejections.Count -gt 0){
+        $appliedRejections += $preferred
+        Write-Host ("P1C01_FRODO_IMPORT_SKIP_TECHNICAL_REJECTION file="+$preferred+" sha256="+$sha+" state="+[string]$rejections[0].state)
+        continue
+      }
+      $selected=[pscustomobject]@{ filename=$preferred; source=$source; sha256=$sha; bytes=(Get-Item -LiteralPath $source).Length }
+      break
+    }
+    if($null -ne $selected){ break }
+  }
+}
 if($null -eq $selected){ throw "P1C01_FRODO_IMPORT_NO_STATIC_VALIDATED_NONREJECTED_CANDIDATE" }
 
 $relative=[string]$manifest.temporary_source_destination

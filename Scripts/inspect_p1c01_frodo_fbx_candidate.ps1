@@ -59,6 +59,7 @@ $manifest=Get-Content -LiteralPath $ManifestPath -Raw | ConvertFrom-Json
 $candidateReportObject=Get-Content -LiteralPath $CandidateReport -Raw | ConvertFrom-Json
 $policy=$manifest.frodo_static_fbx_qc
 $allow=@($policy.candidate_filename_allowlist | ForEach-Object { [string]$_ })
+$sourceAllow=@((Get-OptionalPropertyValue $policy "candidate_source_asset_id_allowlist" @()) | ForEach-Object { [string]$_ })
 $minimum=[int]$policy.minimum_static_structure_pass_candidates
 $characterRows=@(Resolve-CandidateCharacterRows -RootObject $candidateReportObject)
 $frodoRows=@($characterRows | Where-Object { [string](Get-OptionalPropertyValue $_ "character" "") -eq "FRODO" })
@@ -70,10 +71,12 @@ if($SchemaSelfTest){
 }
 
 $selected=@()
-foreach($filename in $allow){
-  $matches=@((Get-OptionalPropertyValue $frodoRows[0] "candidates" @()) | Where-Object { [string](Get-OptionalPropertyValue $_ "filename" "") -ieq $filename })
-  if($matches.Count -gt 1){ throw "P1C01_FRODO_STATIC_QC_DUPLICATE filename=$filename count=$($matches.Count)" }
-  if($matches.Count -eq 1){ $selected += $matches[0] }
+foreach($candidate in @((Get-OptionalPropertyValue $frodoRows[0] "candidates" @()))){
+  $filename=[string](Get-OptionalPropertyValue $candidate "filename" "")
+  $sourceAssetId=[string](Get-OptionalPropertyValue $candidate "source_asset_id" "")
+  if(($allow -icontains $filename) -or ($sourceAllow -icontains $sourceAssetId)){
+    $selected += $candidate
+  }
 }
 if($selected.Count -eq 0){ throw "P1C01_FRODO_STATIC_QC_NO_ALLOWLIST_CANDIDATE" }
 
@@ -102,6 +105,7 @@ foreach($candidate in $selected){
   if($staticPass){ $passCount++ }
   $rows += [ordered]@{
     filename=[IO.Path]::GetFileName($path)
+    source_asset_id=[string](Get-OptionalPropertyValue $candidate "source_asset_id" "")
     bytes=[int64]$bytes.Length
     sha256=(Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
     fbx_encoding=if($binary){"BINARY"}else{"ASCII_OR_UNKNOWN"}
@@ -129,6 +133,7 @@ $report=[ordered]@{
   generated_utc=[DateTime]::UtcNow.ToString("o")
   source_candidate_report=[string]$CandidateReport
   allowlist=$allow
+  source_asset_id_allowlist=$sourceAllow
   inspected_count=$rows.Count
   static_structure_pass_count=$passCount
   minimum_static_structure_pass_candidates=$minimum

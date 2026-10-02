@@ -1,3 +1,13 @@
+## 2026-10-02 - Frodo alternate source-family matrix
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| Original Quaternius animated-character family | EXHAUSTED / 5 REJECTED | Final `Worker_Male.fbx` SHA256 `833d2602…`, 1,502,204 bytes, 33 bones; missing smoothing groups, bind-pose bones and UV set in Frodo #24 |
+| Alternate source | SOURCE-IMPLEMENTED / EXACT-HEAD PROOF PENDING | Quaternius LowPoly RPG Characters direct OpenGameArt archive; uploader Quaternius; CC0; receipt SHA256 required |
+| Candidate admission | FAIL-CLOSED | Exact Frodo filename allowlist plus explicit `OGA_QTN_RPG_CHARACTERS_CC0` source-id allowlist only |
+| Persistent-runner cleanup | SOURCE-REPAIRED / EXACT-HEAD PROOF PENDING | Tracked-path query is non-erroring; only three known transient Frodo paths may be removed |
+| Runtime / likeness / deformation / Gate 6-7 | NOT ACCEPTED | No runtime replacement, AnimBP, PIE, device, visual or performance evidence |
+
 ## 2026-10-01 - Critical-gap receipt parity matrix
 
 | Area | Status | Evidence / boundary |

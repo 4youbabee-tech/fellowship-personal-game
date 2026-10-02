@@ -1,3 +1,11 @@
+## 2026-10-02 - Frodo alternate CC0 source-family intake
+
+- Exact-head Frodo validation #24 at `1b8ec60dba387bd3142b0c3e995a63477fd02d4f` imported `Worker_Male.fbx` as a 33-bone `USkeletalMesh`, then correctly rejected it for missing smoothing groups, bind-pose bones and a UV set. Its source receipt is `833d26026f32d96699c8cf667cbec849adda93d43cea447a7449fc4d72c3a20d` / 1,502,204 bytes.
+- That result exhausts all five exact candidates in the original OpenGameArt/Quaternius Ultimate Animated Character family; the gate remains unchanged.
+- The next bounded lane stages the separate Quaternius LowPoly RPG Characters archive from the creator's OpenGameArt CC0 page, preserves SHA256 provenance, and admits only that explicit source id to Frodo static/UE4 probing.
+- Persistent-runner cleanup now queries tracked paths without `--error-unmatch`, preventing untracked validation residue from turning native stderr into a PowerShell cleanup failure. Only the three known transient Frodo paths may be removed.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27.2 FRODO PROOF PENDING**. Runtime integration remains false; no deformation, retarget, AnimBP, PIE, device, visual or performance acceptance is claimed.
+
 ## 2026-10-01 - Critical-gap receipt supersession parity
 
 - Warehouse #306 at `develop@5ec1307aa749741fa10c801c288b101ef4b5292a` proved the canonical inventory audit is clean: 18,925 payload files / 6,745,968,858 bytes / 239 active receipt records / 428 superseded / zero hash, missing, license, dangerous, or duplicate-hash failures.

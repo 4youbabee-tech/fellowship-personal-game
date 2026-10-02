@@ -47,6 +47,10 @@ jobs:
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\stage_opengameart_character_candidate.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\P1C01OpenGameArtHeroCandidateBatchV1.json"
 
+      - name: Stage alternate OpenGameArt RPG hero archive
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\stage_opengameart_character_candidate.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\P1C01OpenGameArtRpgHeroCandidateBatchV1.json"
+
       - name: Build Frodo candidate report
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\run_p1c01_hero_skeletal_candidate_wave.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\P1C01HeroSkeletalCandidateWaveV1.json" -OutputRoot "%P1C01_HERO_RIG_REPORT%"
@@ -138,8 +142,9 @@ jobs:
             "Content/Production/Characters/Rigs/FRODO/SK_FRODO_Skeleton.uasset"
           )
           foreach ($relative in $paths) {
-            & git.exe -C $env:GITHUB_WORKSPACE ls-files --error-unmatch -- $relative *> $null
-            if ($LASTEXITCODE -ne 0) {
+            $tracked = @(& git.exe -C $env:GITHUB_WORKSPACE ls-files -- $relative 2>$null)
+            if ($LASTEXITCODE -ne 0) { throw "P1C01_FRODO_VALIDATION_CLEANUP_GIT_FAIL path=$relative exit=$LASTEXITCODE" }
+            if ($tracked.Count -eq 0) {
               $absolute = Join-Path $env:GITHUB_WORKSPACE $relative
               Remove-Item -LiteralPath $absolute -Force -ErrorAction SilentlyContinue
             }
