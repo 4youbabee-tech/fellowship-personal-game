@@ -2522,3 +2522,13 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Regression fixture | SOURCE-IMPLEMENTED | Generated schema-v2 report is parsed by inspector self-test |
 | Static FBX marker QC | PENDING FRESH RUN | Warehouse #314 failed before marker pass/fail could be trusted |
 | UE4 import / deformation / likeness | NOT STARTED | Separate engine/human evidence required |
+
+
+## 2026-10-02 - P1C01 priority CC0 audio provenance refresh
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Priority OpenGameArt audio pages | SOURCE-PROVENANCE RECORDED | 5/5 entries carry uploader, primary-page CC0 evidence and source file label |
+| Download/hash evidence | PENDING | No receipt SHA256 claimed by this metadata update |
+| Audio QC / WAV masters / UE import | PENDING | Separate intake and listening/import evidence required |
+| Runtime / device / performance | NOT ACCEPTED | No experiential evidence created by this source metadata change |
