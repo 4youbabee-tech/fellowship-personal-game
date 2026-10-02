@@ -2680,3 +2680,16 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Frodo static-QC source admission | SOURCE-IMPLEMENTED | Source asset ID allowlist updated |
 | Warehouse staging / UE4 skeletal import | PENDING | Separate exact-head execution required |
 | Runtime / deformation / visual acceptance | NOT ACCEPTED | No matching evidence |
+
+
+## 2026-10-03 - Bag End planted-entry proxy cleanup
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Runtime writer | ACTIVE / SINGLE | P1C01 Bag End entry shrub cleanup only |
+| Entry sphere shrubs | SOURCE-REPLACED | Resident `SM_ShShrub`; sphere is no-asset fallback |
+| New asset acquisition | NONE | Existing resident production stock reused |
+| Collision / Tick / actor budget | UNCHANGED | No collision, no Tick, zero actor-count delta |
+| Door/window/trim debt | PRESERVED | Exact hero support remains separately import/QC-gated |
+| Exact-head engine validation | PENDING | Fresh Pre-Unreal + UE4.27.2 required |
+| PIE / device / visual / performance acceptance | NOT ACCEPTED | No matching evidence |
