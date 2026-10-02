@@ -2606,3 +2606,23 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Quest/NPC/LivingWorld authority | UNCHANGED | No parallel state or crowd owner introduced |
 | Exact-head UE4 compile/runtime audit | PENDING | Required before merge |
 | PIE / device / visual / target performance acceptance | NOT ACCEPTED | Human/device evidence still required |
+
+## 2026-10-02 - Runner broker-stall recovery
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Listener process | OBSERVED ALIVE | Local screenshot showed Runner.Listener PID present |
+| Worker process | OBSERVED ABSENT | No Runner.Worker process while Unreal jobs remained queued |
+| Broker transport | OBSERVED FAILED | Runner log showed SocketException 995 / aborted I/O |
+| Watchdog timestamp parser | ROOT CAUSE FIX SOURCE-IMPLEMENTED | Real `[yyyy-MM-dd HH:mm:ssZ INFO ...]` format now parsed; legacy form retained |
+| Stalled acquire recovery | SOURCE-IMPLEMENTED | Existing ack-without-worker recycle can now receive a real AckUtc |
+| Hosted regression | SOURCE-IMPLEMENTED | Pre-Unreal test covers real + legacy timestamp forms |
+| Local machine recovery | PENDING USER-SIDE WATCHDOG REINSTALL/RESTART | No claim of runner recovery until a queued job starts |
+
+| Runner manual recovery | RUN-PROVEN | Watchdog emitted `START` then `ONLINE ... brokerListening=true`; queued Unreal work resumed |
+| Broker transport-stall auto-recovery | SOURCE-IMPLEMENTED | Bounded recycle when transport error remains newer than healthy broker evidence, no worker is active, and github.com:443 is reachable |
+| Network outage behavior | SOURCE-IMPLEMENTED | Logs `NETWORK_BLOCKED`; avoids restart loop when GitHub control plane is unreachable |
+| Runner auto-recovery exact-head validation | PENDING | Fresh Pre-Unreal + subsequent machine deployment/restart required |
+
+| Runner PG-145 split-helper compatibility | SOURCE-FIXED | Validator now checks watchdog + timestamp helper as one contract; fresh exact-head Pre-Unreal pending |
+| Runner maintenance UE queue isolation | SOURCE-FIXED | New helper/test paths are maintenance-safe and path-filtered off Unreal push/PR triggers |

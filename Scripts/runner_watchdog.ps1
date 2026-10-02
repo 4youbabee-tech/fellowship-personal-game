@@ -3,6 +3,7 @@ param(
     [int]$PollSeconds = 15,
     [int]$AcquireHangSeconds = 150,
     [int]$WorkerIdleHangSeconds = 300,
+    [int]$BrokerTransportHangSeconds = 180,
     [int]$RestartCooldownSeconds = 20,
     [int]$ServiceGuardIntervalSeconds = 300,
     [string]$ServiceGuardPath = "",
@@ -15,6 +16,7 @@ $ErrorActionPreference = "Stop"
 if ($PollSeconds -lt 5) { throw "PollSeconds must be >= 5." }
 if ($AcquireHangSeconds -lt 110) { throw "AcquireHangSeconds must be >= 110." }
 if ($WorkerIdleHangSeconds -lt 180) { throw "WorkerIdleHangSeconds must be >= 180." }
+if ($BrokerTransportHangSeconds -lt 120) { throw "BrokerTransportHangSeconds must be >= 120." }
 if ($RestartCooldownSeconds -lt 5) { throw "RestartCooldownSeconds must be >= 5." }
 
 $runCmd = Join-Path $RunnerRoot "run.cmd"
@@ -29,6 +31,11 @@ if ([string]::IsNullOrWhiteSpace($ServiceGuardPath)) {
 if (-not (Test-Path -LiteralPath $ServiceGuardPath -PathType Leaf)) {
     throw "runner_service_guard.ps1 missing: $ServiceGuardPath"
 }
+$timestampParserPath = Join-Path $PSScriptRoot "runner_log_timestamp.ps1"
+if (-not (Test-Path -LiteralPath $timestampParserPath -PathType Leaf)) {
+    throw "runner_log_timestamp.ps1 missing: $timestampParserPath"
+}
+. $timestampParserPath
 $lastServiceGuardUtc = [DateTime]::MinValue
 $mutex = New-Object System.Threading.Mutex($false, "ShireJourneyRunnerWatchdog")
 
@@ -63,30 +70,30 @@ function Invoke-RunnerServiceGuard {
 
 function Get-RunnerTimestampUtc {
     param([string]$Line)
-    if ($Line -match '^\[RUNNER (?<ts>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}Z) ') {
-        return [DateTime]::ParseExact($Matches["ts"], "yyyy-MM-dd HH:mm:ssZ", [Globalization.CultureInfo]::InvariantCulture, [Globalization.DateTimeStyles]::AssumeUniversal).ToUniversalTime()
-    }
-    return $null
+    return ConvertFrom-RunnerLogTimestampUtc -Line $Line
 }
 
 function Get-RunnerBrokerState {
     $latest = Get-ChildItem -LiteralPath $diagRoot -Filter "Runner_*.log" -File -ErrorAction SilentlyContinue | Sort-Object LastWriteTimeUtc -Descending | Select-Object -First 1
-    if ($null -eq $latest) { return [pscustomobject]@{ LogPath = ""; AckUtc = $null; RunningUtc = $null } }
-
-    $tail = @(Get-Content -LiteralPath $latest.FullName -Tail 800 -ErrorAction SilentlyContinue)
-    $ackUtc = $null
-    $runningUtc = $null
-    foreach ($line in $tail) {
-        if ($line -match 'Acknowledging runner request') {
-            $parsed = Get-RunnerTimestampUtc $line
-            if ($null -ne $parsed) { $ackUtc = $parsed }
-        }
-        if ($line -match 'Running job:') {
-            $parsed = Get-RunnerTimestampUtc $line
-            if ($null -ne $parsed) { $runningUtc = $parsed }
+    if ($null -eq $latest) {
+        return [pscustomobject]@{
+            LogPath = ""
+            AckUtc = $null
+            RunningUtc = $null
+            ErrorUtc = $null
+            HealthyUtc = $null
         }
     }
-    return [pscustomobject]@{ LogPath = $latest.FullName; AckUtc = $ackUtc; RunningUtc = $runningUtc }
+
+    $tail = @(Get-Content -LiteralPath $latest.FullName -Tail 1200 -ErrorAction SilentlyContinue)
+    $evidence = Get-RunnerBrokerEvidenceFromLines -Lines $tail
+    return [pscustomobject]@{
+        LogPath = $latest.FullName
+        AckUtc = $evidence.AckUtc
+        RunningUtc = $evidence.RunningUtc
+        ErrorUtc = $evidence.ErrorUtc
+        HealthyUtc = $evidence.HealthyUtc
+    }
 }
 
 function Get-LatestRunnerLog {
@@ -221,12 +228,53 @@ function Recover-StalledAcquire {
     Start-RunnerListener
 }
 
+function Test-GitHubControlPlaneReachable {
+    $client = New-Object System.Net.Sockets.TcpClient
+    try {
+        $task = $client.ConnectAsync("github.com", 443)
+        if (-not $task.Wait(5000)) { return $false }
+        return $client.Connected
+    }
+    catch {
+        return $false
+    }
+    finally {
+        $client.Close()
+        $client.Dispose()
+    }
+}
+
+function Recover-BrokerTransportStall {
+    param([DateTime]$ErrorUtc, [string]$RunnerLog)
+
+    $workers = @(Get-Process -Name "Runner.Worker" -ErrorAction SilentlyContinue)
+    if ($workers.Count -gt 0) {
+        Write-WatchLog ("SHIRE_RUNNER_WATCHDOG_RECOVERY_SKIP reason=worker-active brokerError=" + $ErrorUtc.ToString("o"))
+        return
+    }
+
+    if (-not (Test-GitHubControlPlaneReachable)) {
+        Write-WatchLog ("SHIRE_RUNNER_WATCHDOG_NETWORK_BLOCKED brokerError=" + $ErrorUtc.ToString("o") + " endpoint=github.com:443")
+        return
+    }
+
+    $listeners = @(Get-Process -Name "Runner.Listener" -ErrorAction SilentlyContinue)
+    if ($listeners.Count -eq 0) { Start-RunnerListener; return }
+
+    Write-WatchLog ("SHIRE_RUNNER_WATCHDOG_RECOVERY reason=broker-transport-stall brokerError=" + $ErrorUtc.ToString("o") + " log=" + $RunnerLog)
+    foreach ($listener in $listeners) {
+        Stop-Process -Id $listener.Id -Force -ErrorAction SilentlyContinue
+    }
+    Start-Sleep -Seconds $RestartCooldownSeconds
+    Start-RunnerListener
+}
+
 $hasMutex = $false
 try {
     $hasMutex = $mutex.WaitOne(0, $false)
     if (-not $hasMutex) { throw "Another ShireJourney runner watchdog instance is already active." }
     $identity = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-    Write-WatchLog ("SHIRE_RUNNER_WATCHDOG_BOOT identity=" + $identity + " root=" + $RunnerRoot + " acquireHangSeconds=" + $AcquireHangSeconds + " workerIdleHangSeconds=" + $WorkerIdleHangSeconds)
+    Write-WatchLog ("SHIRE_RUNNER_WATCHDOG_BOOT identity=" + $identity + " root=" + $RunnerRoot + " acquireHangSeconds=" + $AcquireHangSeconds + " workerIdleHangSeconds=" + $WorkerIdleHangSeconds + " brokerTransportHangSeconds=" + $BrokerTransportHangSeconds)
     Invoke-ServiceOwnershipGuard
     $script:lastServiceGuardUtc = [DateTime]::UtcNow
     Recover-OrphanedListenerOnSupervisorBoot
@@ -255,12 +303,28 @@ try {
                 }
 
                 $state = Get-RunnerBrokerState
+                $workers = @(Get-Process -Name "Runner.Worker" -ErrorAction SilentlyContinue)
+
                 if ($null -ne $state.AckUtc) {
                     $ackStillPending = ($null -eq $state.RunningUtc) -or ($state.RunningUtc -lt $state.AckUtc)
                     if ($ackStillPending) {
                         $ageSeconds = ([DateTime]::UtcNow - $state.AckUtc).TotalSeconds
-                        $workers = @(Get-Process -Name "Runner.Worker" -ErrorAction SilentlyContinue)
-                        if ($ageSeconds -ge $AcquireHangSeconds -and $workers.Count -eq 0) { Recover-StalledAcquire -AckUtc $state.AckUtc -RunnerLog $state.LogPath }
+                        if ($ageSeconds -ge $AcquireHangSeconds -and $workers.Count -eq 0) {
+                            Recover-StalledAcquire -AckUtc $state.AckUtc -RunnerLog $state.LogPath
+                            if ($Once) { break }
+                            Start-Sleep -Seconds $PollSeconds
+                            continue
+                        }
+                    }
+                }
+
+                if ($null -ne $state.ErrorUtc) {
+                    $transportStillBad = ($null -eq $state.HealthyUtc) -or ($state.HealthyUtc -lt $state.ErrorUtc)
+                    if ($transportStillBad) {
+                        $errorAgeSeconds = ([DateTime]::UtcNow - $state.ErrorUtc).TotalSeconds
+                        if ($errorAgeSeconds -ge $BrokerTransportHangSeconds -and $workers.Count -eq 0) {
+                            Recover-BrokerTransportStall -ErrorUtc $state.ErrorUtc -RunnerLog $state.LogPath
+                        }
                     }
                 }
             }

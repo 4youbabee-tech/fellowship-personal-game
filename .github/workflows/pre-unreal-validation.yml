@@ -104,6 +104,9 @@ jobs:
       - name: Parse all PowerShell scripts
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_powershell_syntax.ps1"
 
+      - name: Test runner watchdog broker timestamp recovery
+        run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_runner_watchdog_timestamp.ps1"
+
       - name: Test warehouse receipt supersession semantics
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_warehouse_inventory_receipt_supersession.ps1"
 
