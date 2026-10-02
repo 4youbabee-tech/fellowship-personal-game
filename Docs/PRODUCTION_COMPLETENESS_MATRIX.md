@@ -2510,3 +2510,15 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | UE4 skeletal import / deformation / likeness | NOT STARTED | Requires exact-head Unreal evidence and human visual review |
 | READY_FOR_IMPORT / Runtime / Gate 6/7 | NOT ACCEPTED | P1C01 remains active; P1C02 remains predecessor-gated |
 
+
+
+## 2026-10-02 - Warehouse #314 Frodo static-QC schema repair
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Candidate artifact schema | RUN-PROVEN | Warehouse #314 artifact: schema v2, `characters` array present, 5 Frodo / 4 Gandalf candidates |
+| Frodo inspector crash | ROOT CAUSE ISOLATED | Strict property access failed before FBX marker inspection |
+| Schema parser hardening | SOURCE-IMPLEMENTED | Current v2 + bounded legacy/flat compatibility; explicit unsupported-schema diagnostic |
+| Regression fixture | SOURCE-IMPLEMENTED | Generated schema-v2 report is parsed by inspector self-test |
+| Static FBX marker QC | PENDING FRESH RUN | Warehouse #314 failed before marker pass/fail could be trusted |
+| UE4 import / deformation / likeness | NOT STARTED | Separate engine/human evidence required |
