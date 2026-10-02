@@ -2532,3 +2532,17 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Download/hash evidence | PENDING | No receipt SHA256 claimed by this metadata update |
 | Audio QC / WAV masters / UE import | PENDING | Separate intake and listening/import evidence required |
 | Runtime / device / performance | NOT ACCEPTED | No experiential evidence created by this source metadata change |
+
+
+## 2026-10-02 - Frodo skeletal UE4 import validation
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Frodo static FBX candidate pool | STATIC-VALIDATED | Warehouse #315: 5/5 allowlisted candidates passed header/skeleton/skin/cluster marker probe |
+| Selected source staging | SOURCE-IMPLEMENTED | SHA256-verified candidate copied only into isolated `Characters/Rigs/FRODO/SK_FRODO.fbx` path |
+| Production importer skeletal FBX path | SOURCE-IMPLEMENTED | FBX accepted only below `Characters/Rigs/`; explicit `FBXIT_SkeletalMesh` |
+| Materials/textures/animations during validation | DISABLED | Validation isolates skeletal mesh import only |
+| Skeletal class verification | SOURCE-IMPLEMENTED | AssetRegistry must register expected object as `USkeletalMesh` |
+| Exact-head UE4.27.2 import | PENDING | Dedicated self-hosted workflow must produce `SK_FRODO.uasset` + log marker |
+| AnimBP / retarget / deformation / likeness | NOT ACCEPTED | Separate successor evidence required |
+| Runtime replacement / PIE / device / visual / performance | NOT ACCEPTED | `runtime_integration_allowed=false` |
