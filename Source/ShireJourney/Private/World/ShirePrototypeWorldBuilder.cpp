@@ -450,6 +450,16 @@ void AShirePrototypeWorldBuilder::SpawnHobbitHole(const FVector& Location, float
             FVector(0.10f, 0.82f, 0.58f) * Scale, Earth, FRotator::ZeroRotator, true);
     }
 
+    const bool bProductionHobbitHoleResident =
+        ProductionTurfMoundMesh && ProductionHobbitFacadeMesh;
+
+    if (bProductionHobbitHoleResident)
+    {
+        return;
+    }
+
+    // Primitive accent geometry belongs only to the deterministic fallback path.
+    // Production mound/facade assets own the final visible silhouette when resident.
     // Round frame + inset painted door.
     SpawnShape(CylinderMesh, Location + FVector(-83.0f * Scale, 0.0f, 55.0f * Scale),
         FVector(0.51f, 0.51f, 0.075f) * Scale, Timber, FRotator(0.0f, 90.0f, 0.0f), false);
