@@ -1300,22 +1300,30 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             TEXT("%s/%s.%s"), *DestinationPath, *AssetName, *AssetName);
         UObject* ImportedAsset = nullptr;
         bool bSkeletalAssetRegistered = false;
+        int32 ImportedSkeletalBoneCount = 0;
         if (bCharacterRigFbx)
         {
             FAssetRegistryModule& AssetRegistryModule =
                 FModuleManager::LoadModuleChecked<FAssetRegistryModule>(TEXT("AssetRegistry"));
             const FAssetData RigAssetData =
                 AssetRegistryModule.Get().GetAssetByObjectPath(FName(*ExpectedObjectPath));
+            USkeletalMesh* ImportedSkeletalMesh =
+                FindObject<USkeletalMesh>(nullptr, *ExpectedObjectPath);
+            ImportedSkeletalBoneCount =
+                ImportedSkeletalMesh ? ImportedSkeletalMesh->GetRefSkeleton().GetNum() : 0;
             bSkeletalAssetRegistered =
                 RigAssetData.IsValid() &&
-                RigAssetData.AssetClass == USkeletalMesh::StaticClass()->GetFName();
+                RigAssetData.AssetClass == USkeletalMesh::StaticClass()->GetFName() &&
+                ImportedSkeletalMesh != nullptr &&
+                ImportedSkeletalBoneCount > 0;
             if (!bSkeletalAssetRegistered)
             {
                 UE_LOG(
                     LogTemp,
                     Error,
-                    TEXT("ShireProductionImport: skeletal FBX did not register as USkeletalMesh path=%s"),
-                    *ExpectedObjectPath);
+                    TEXT("ShireProductionImport: skeletal FBX validation failed path=%s bones=%d"),
+                    *ExpectedObjectPath,
+                    ImportedSkeletalBoneCount);
             }
         }
         else
@@ -1535,12 +1543,13 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         UE_LOG(
             LogTemp,
             Display,
-            TEXT("ShireProductionImport result: %s | paths=%d result=%d resolved=%s skeletal-registered=%s bare-obj-materials=%s authored-material-import=%s smoothing-injected=%s generated-uvs=%s tangent-generation=%s material-packages-marked=%d"),
+            TEXT("ShireProductionImport result: %s | paths=%d result=%d resolved=%s skeletal-registered=%s skeletal-bones=%d bare-obj-materials=%s authored-material-import=%s smoothing-injected=%s generated-uvs=%s tangent-generation=%s material-packages-marked=%d"),
             *Filename,
             Task->ImportedObjectPaths.Num(),
             Task->Result.Num(),
             ImportedAsset ? TEXT("yes") : TEXT("no"),
             bSkeletalAssetRegistered ? TEXT("yes") : TEXT("no"),
+            ImportedSkeletalBoneCount,
             bBareObjMaterialImportDisabled ? TEXT("disabled") : TEXT("n/a"),
             bAuthoredMaterialImportForced ? TEXT("forced") : TEXT("n/a"),
             bInjectedSmoothingGroup ? TEXT("yes") : TEXT("no"),
