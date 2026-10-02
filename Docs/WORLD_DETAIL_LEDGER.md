@@ -994,3 +994,12 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Quaternius remains BLOCKED_MANUAL after prior zero-payload provider evidence; it cannot stop independent lanes and no undocumented archive URL may be fabricated.
 - Animated production candidates remain FBX; production textures PNG/TGA with 1K/2K default; repeated world assets use HISM/ISM/LOD/culling; heavy runtime assets remain soft/async.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING**. No PIE/device/visual/performance acceptance claim.
+
+
+## 2026-10-02 - Source-backed trilogy chapter packet set
+
+- Registered source/preproduction packets for all 23 normalized trilogy chapters already defined by the project Story and Mission Bibles.
+- No new location, character, canonical beat or locked outcome is invented by this registration; it mirrors existing source-backed chapter definitions.
+- F3 packets preserve the source-library warning that Return of the King material is film/master normalized rather than screenplay-verified in the supplied source set.
+- Runtime remains P1C01-only under ProjectGovernor; this packet set is not runtime authorization.
+- Status: **SOURCE/PREPRODUCTION REGISTERED / FUTURE RUNTIME GATED**.
