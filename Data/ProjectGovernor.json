@@ -2847,7 +2847,8 @@
         "Data/MaximumSafeProductionModeV1.json defines lanes, hard stops, quarantine behavior, residency policy and execution order.",
         "Data/WholeGameProductionExecutionQueueV1.json runs in ACTIVE_MAXIMUM_SAFE_PREPARATION_RUNTIME_SERIALIZED mode.",
         "Data/MasterExecutionRoadmap.json is reconciled to the current P1C01 + parallel whole-game preparation state.",
-        "Warehouse #286 clean inventory audit proves the active-receipt warehouse can continue production; full maximum-safe lane saturation remains operational work in progress."
+        "Warehouse #286 clean inventory audit proves the active-receipt warehouse can continue production; full maximum-safe lane saturation remains operational work in progress.",
+        "Hosted Unreal preflight classification reserves the self-hosted UE4.27 machine only for full/core/asset/acceptance modes; source/preproduction/static-only deltas remain on GitHub-hosted validation lanes without weakening exact-head engine gates."
       ]
     },
     {
