@@ -3597,3 +3597,11 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Reusable stock now explicitly routed before new acquisition: `SM_CommonRiverBoat`, `SM_CommonFootbridge`, rope post/coil, reeds, fallen log, broadleaf tree and boulder cluster.
 - This materially reduces the true new-source gap for Bucklebury/Ferry and the wooded Shire road. New acquisition is now conditional on later visual failure of this existing stock, not the default.
 - Status: **STATIC-VALIDATED SOURCE ROUTING / EXACT-HEAD PRE-UNREAL PENDING**.
+
+## 2026-10-02 - Visible-world exact resident binding packet
+
+- Added `Data/P1C01VisibleWorldReuseBindingPacketV1.json` on current develop ancestry.
+- The packet converts the reuse-first scan into exact production object paths for Bucklebury/Ferry and the Shire road corridor, reducing unnecessary new-source acquisition.
+- Ferry bindings cover river boat, footbridge, mooring post/rope, reeds and boulders. Road bindings cover fallen log, broadleaf tree, boulder, fence, wood pile and fern detail.
+- Runtime remains unchanged by this source packet; P1C01 is still the only active runtime chapter.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL PENDING**. No PIE/device/visual/performance acceptance claim.
