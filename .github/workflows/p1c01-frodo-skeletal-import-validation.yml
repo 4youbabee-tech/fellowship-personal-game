@@ -1,6 +1,15 @@
 name: P1C01 Frodo Skeletal Import Validation
 
 on:
+  push:
+    branches:
+      - develop
+    paths:
+      - 'Data/P1C01FrodoSkeletalImportV1.json'
+      - 'Scripts/prepare_p1c01_frodo_skeletal_import.ps1'
+      - 'Scripts/test_p1c01_frodo_skeletal_import_contract.ps1'
+      - 'Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp'
+      - '.github/workflows/p1c01-frodo-skeletal-import-validation.yml'
   pull_request:
     branches:
       - develop
