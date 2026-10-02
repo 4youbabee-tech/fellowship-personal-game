@@ -2565,3 +2565,13 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Warning debt attribution | ROOT CAUSE ISOLATED | `Missing smoothing groups = 2` on #1241 is the Frodo live warning plus UE summary echo; zero ceiling remains unchanged |
 | AnimBP / retarget / deformation / likeness | NOT ACCEPTED | Separate successor evidence required |
 | Runtime replacement / PIE / device / visual / performance | NOT ACCEPTED | `runtime_integration_allowed=false` |
+
+## 2026-10-02 - Frodo candidate #3
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Casual2_Male UE4 skeletal import | RUN-PROVEN | Dedicated #20 reached 33 reference bones |
+| Smoothing/bind-pose/UV quality | REJECTED_TECHNICAL | Same three source-quality defects emitted |
+| Exact rejection SHA | PENDING RECEIPT CAPTURE | Do not filename-only blacklist; exact SHA is required |
+| Candidate #4 rotation | BLOCKED ON SHA CAPTURE | Preserve exact-source rejection semantics |
+| PIE/device/visual/performance | NOT ACCEPTED | No matching evidence |
