@@ -32,6 +32,7 @@ $intakeExit=[int]$LASTEXITCODE
 $receiptPath=Join-Path $intakeRoot "p1c01_character_rig_intake_receipt.json"
 if(-not (Test-Path -LiteralPath $receiptPath -PathType Leaf)){ throw "P1C01_HERO_RIG_INTAKE_RECEIPT_MISSING exit=$intakeExit" }
 $intakeReceipt=Get-Content -LiteralPath $receiptPath -Raw | ConvertFrom-Json
+$provenanceRows=@($intakeReceipt.candidate_source_provenance)
 
 $fbxFiles=@(Get-ChildItem -LiteralPath $intakeRoot -Recurse -File -Filter "*.fbx" -ErrorAction SilentlyContinue)
 $textureFiles=@(Get-ChildItem -LiteralPath $intakeRoot -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.Extension.ToLowerInvariant() -in @(".png",".tga") })
@@ -41,6 +42,13 @@ if($bmpFiles.Count -gt 0){ throw "P1C01_HERO_RIG_FORBIDDEN_BMP count=$($bmpFiles
 $maxPer=[int]$manifest.candidate_policy.max_ranked_candidates_per_character
 $characterReports=@()
 $poolReady=0
+$unprovenancedFbx=@()
+foreach($file in $fbxFiles){
+  $match=@($provenanceRows | Where-Object { [string]$_.candidate_file -ieq [string]$file.FullName })
+  if($match.Count -ne 1){ $unprovenancedFbx += $file.FullName }
+}
+if($unprovenancedFbx.Count -gt 0){ throw "P1C01_HERO_RIG_PROVENANCE_FAIL count=$($unprovenancedFbx.Count) first=$($unprovenancedFbx[0])" }
+
 foreach($character in @($manifest.priority_characters)){
   $id=[string]$character.id
   $keywords=@($manifest.character_scoring.$id | ForEach-Object { ([string]$_).ToLowerInvariant() })
@@ -55,12 +63,18 @@ foreach($character in @($manifest.priority_characters)){
     if($score -le 0){ continue }
     $dir=$file.DirectoryName
     $nearTextures=@($textureFiles | Where-Object { $_.DirectoryName -eq $dir }).Count
+    $prov=@($provenanceRows | Where-Object { [string]$_.candidate_file -ieq [string]$file.FullName })[0]
     $scored += [pscustomobject]@{
       source_fbx=$file.FullName
       bytes=[int64]$file.Length
       score=[int]$score
       matched_terms=$matches
       nearby_png_tga=$nearTextures
+      provider=[string]$prov.provider
+      source_asset_id=[string]$prov.asset_id
+      source_receipt=[string]$prov.receipt
+      source_payload=[string]$prov.source_file
+      source_sha256=[string]$prov.source_sha256
       state="RIG_FAMILY_CANDIDATE_QC_REQUIRED"
       ready_for_import=$false
       qc_pending=@("skeleton","skin_weights","retarget","deformation","animation_coverage","material_slots","equipment_sockets","lod_cull","visual_readability")
@@ -91,6 +105,8 @@ $report=[ordered]@{
   intake_pending_count=[int]$intakeReceipt.pending_count
   intake_blocked_count=[int]$intakeReceipt.blocked_count
   discovered_fbx=$fbxFiles.Count
+  provenance_rows=$provenanceRows.Count
+  unprovenanced_fbx=$unprovenancedFbx.Count
   discovered_png_tga=$textureFiles.Count
   ranked_candidates_total=$totalRanked
   pools_with_candidates=$poolReady

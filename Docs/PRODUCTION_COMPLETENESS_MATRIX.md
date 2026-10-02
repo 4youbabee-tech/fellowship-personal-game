@@ -2481,3 +2481,11 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | OpenGameArt Quaternius fallback | SOURCE-IMPLEMENTED CANDIDATE | Direct CC0 archive, bounded ZIP scan, FBX gate, SHA reuse |
 | READY_FOR_IMPORT / runtime | NOT STARTED | Skeleton/skin/deformation/FBX-2018 QC still required |
 | Gate 6/7 | UNCHANGED / NOT ACCEPTED | No human/device evidence |
+
+
+## 2026-10-02 - P1C01 hero candidate file-level provenance guard
+
+- The hero intake now records a provenance row for every admitted FBX, binding candidate file path to provider, source asset ID, receipt, source payload and verified SHA256.
+- The exact-head hero candidate wave fails closed before ranking when any discovered FBX lacks exactly one provenance row; ranked rows now carry the provenance fields into the evidence artifact.
+- This closes the gap between `candidate_policy.require_provenance=true` and actual per-file candidate evidence without promoting any asset to READY_FOR_IMPORT.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. No skeleton, skin-weight, deformation, import, PIE, device, visual or performance acceptance is claimed.
