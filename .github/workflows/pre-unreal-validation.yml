@@ -183,6 +183,10 @@ jobs:
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_p1c01_material_export_checkout_isolation.ps1"
 
+      - name: Test continuous mega-wave queue V2
+        shell: cmd
+        run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_continuous_production_wave_queue_v2.ps1"
+
       - name: Scrub static checkout authentication
         if: always()
         shell: cmd
