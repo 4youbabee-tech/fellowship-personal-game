@@ -2645,3 +2645,12 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Persistent-runner validation residue | SOURCE-REPAIRED / VALIDATION PENDING | Only known untracked Frodo validation source/output is removed; tracked production assets remain untouched |
 | Warning ceiling | PRESERVED | Missing-smoothing ceiling remains zero; no suppression or budget increase |
 | Runtime replacement / visual / device / performance | NOT ACCEPTED | Isolation and class/bone evidence do not authorize runtime promotion |
+
+## 2026-10-02 - Frodo source-family escalation
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Original Quaternius character family | EXHAUSTED / 5 OF 5 REJECTED | Exact-SHA real UE4.27.2 imports; 33-bone meshes failed smoothing/bind-pose/UV gate |
+| Alternate Quaternius RPG mirror | STAGED / NOT SKELETAL-VALID FOR RANKED FRODO ROWS | #26: 12 FBX staged; observed ranked alternate rows failed static skeleton/skin/cluster structure |
+| KayKit Adventurers source family | SOURCE-IMPLEMENTED | Immutable source revision registered; exact-head staging/static-QC/UE4 import pending |
+| Runtime replacement / likeness / deformation | NOT ACCEPTED | Separate successor evidence required |
