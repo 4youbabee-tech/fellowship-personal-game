@@ -3565,3 +3565,10 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - F3-01 through F3-07 retain the project Bible warning `FILM_CANON_MASTER_SUMMARY_NOT_SCRIPT_VERIFIED` because the supplied source set does not include a Return of the King screenplay.
 - Added hosted regression coverage for exact chapter parity, locked postconditions, future-runtime prohibition and the ROTK evidence boundary.
 - Status: **SOURCE-PREPARED / EXACT-HEAD STATIC VALIDATION PENDING**.
+
+## 2026-10-02 - Whole-game chapter asset-demand routing
+
+- Added `Data/WholeGameChapterAssetDemandMatrixV1.json`, mapping all **23** normalized trilogy chapter packets to environment, character, animation, audio, VFX, interaction and performance-demand families.
+- Demand rows route into the global source waves M013-M024 so acquisition work can continue while P1C01 runtime remains serialized.
+- Every demand row remains `runtime_integration_allowed=false`; this is source/acquisition planning only.
+- No provider payload, READY_FOR_IMPORT state, runtime integration, visual acceptance or performance acceptance is created by the matrix.
