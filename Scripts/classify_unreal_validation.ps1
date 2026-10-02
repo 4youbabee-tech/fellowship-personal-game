@@ -98,11 +98,15 @@ function Test-SafeGovernanceDelta([string]$GitExe, [string]$BaseSha, [string]$He
 function Test-NearestSafeGovernanceAncestorGreen([string]$GitExe, [string]$ParentSha, [string]$HeadSha, [string[]]$SafeExact) {
     if (-not $env:GH_TOKEN) { return $false }
 
-    # Exact checkout is shallow; fetch bounded history only when ancestor proof is needed.
-    & $GitExe fetch --no-tags --depth=21 origin $HeadSha
-    if ($LASTEXITCODE -ne 0) { return $false }
-
-    $ancestors = @(& $GitExe rev-list --first-parent --max-count=20 $ParentSha)
+    # Hosted preflight uses full local history. Avoid a credential-bearing network
+    # fetch unless ancestry is genuinely absent (self-hosted/shallow fallback).
+    $ancestors = @(& $GitExe rev-list --first-parent --max-count=20 $ParentSha 2>$null)
+    if ($LASTEXITCODE -ne 0 -or $ancestors.Count -eq 0) {
+        Write-Host "ANCESTOR_HISTORY_FETCH_REQUIRED parent=$ParentSha head=$HeadSha"
+        & $GitExe fetch --no-tags --depth=21 origin $HeadSha
+        if ($LASTEXITCODE -ne 0) { return $false }
+        $ancestors = @(& $GitExe rev-list --first-parent --max-count=20 $ParentSha)
+    }
     if ($LASTEXITCODE -ne 0 -or $ancestors.Count -eq 0) { return $false }
 
     foreach ($candidate in $ancestors) {
