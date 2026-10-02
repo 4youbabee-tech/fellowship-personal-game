@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "pack_id": "P1C01_MEGA_CHAPTER_PACK_V1",
-  "status": "VISIBLE_WORLD_SOURCE_EXECUTION_READY",
+  "status": "RUNNER_EXECUTION_READY",
   "authority": [
     "Data/ProjectGovernor.json",
     "Data/WarehouseP1C01MegaPromotionTrainV1.json",
@@ -158,5 +158,6 @@
       "Animated production assets remain FBX only.",
       "This pack does not activate P1C02+ runtime."
     ]
-  }
+  },
+  "execution_profile": "VISIBLE_WORLD_PRIORITY_V2"
 }
