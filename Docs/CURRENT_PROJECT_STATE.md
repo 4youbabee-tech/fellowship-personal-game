@@ -3605,3 +3605,12 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Ferry bindings cover river boat, footbridge, mooring post/rope, reeds and boulders. Road bindings cover fallen log, broadleaf tree, boulder, fence, wood pile and fern detail.
 - Runtime remains unchanged by this source packet; P1C01 is still the only active runtime chapter.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL PENDING**. No PIE/device/visual/performance acceptance claim.
+
+## 2026-10-02 - P1C01 visible Ferry / Wooded Road runtime replacement pass
+
+- Implemented a bounded P1C01 world-visual replacement using already-imported resident production meshes from the reuse-first packet.
+- Wooded Road now prefers `SM_CommonFallenLog` for the prior cylinder+sphere obstacle and adds `SM_CommonBoulderCluster` support; the old primitives remain only as deterministic fallback when the production asset is not resident.
+- Bucklebury/Ferry now prefers resident `SM_CommonFootbridge`, `SM_CommonRiverBoat`, `SM_CommonRopePost`, `SM_CommonRopeCoil`, `SM_CommonReedCluster` and `SM_CommonBoulderCluster` before the old cube/cylinder fallback shapes.
+- No synchronous load was introduced: the builder still uses resident-only `FSoftObjectPath::ResolveObject`; chapter streaming ownership remains with the existing async streaming subsystem.
+- Story/quest/NPC ownership is unchanged; no new Tick loop, crowd authority, Spawn/Destroy crowd churn or P1C02 runtime activation was introduced.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD UE4.27.2 BUILD + RUNTIME AUDIT PENDING**. No PIE/device/visual/performance acceptance claim.
