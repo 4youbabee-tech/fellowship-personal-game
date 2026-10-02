@@ -3678,3 +3678,10 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Hosted preflight now checks out full history (`fetch-depth: 0`) before classification, allowing exact base/head diff without reserving the UE4 laptop for source-only work.
 - Pre-Unreal now guards this full-history + self-hosted-skip contract.
 - Status: **SOURCE-FIXED / FRESH EXACT-HEAD PRE-UNREAL PENDING**. No runtime/PIE/device/visual/performance acceptance claim.
+
+## 2026-10-02 - Hosted classifier local-history-first ancestor proof
+
+- East Fields source-only run proved the UE laptop skip worked, but the hosted classifier still went red because the governance-ancestor proof performed an unnecessary private-repo `git fetch` after credentials had been scrubbed.
+- The classifier now consumes the full local hosted history first and fetches only when ancestry is genuinely absent.
+- This preserves `persist-credentials: false`, keeps the UE job skipped for source-only work, and retains fail-closed behavior when history really is unavailable.
+- Status: **SOURCE-FIXED / FRESH EXACT-HEAD PRE-UNREAL PENDING**.
