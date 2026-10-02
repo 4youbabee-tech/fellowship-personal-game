@@ -85,6 +85,7 @@ private:
 
     UPROPERTY() USceneComponent* RuntimeRoot;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* GrassInstances;
+    UPROPERTY() UHierarchicalInstancedStaticMeshComponent* EastFieldRowInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* FlowerInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* ShrubInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* DistantTreeTrunkInstances;
