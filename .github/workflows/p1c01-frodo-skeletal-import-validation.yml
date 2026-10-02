@@ -8,7 +8,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: p1c01-frodo-skeletal-import-validation-${{ github.event.pull_request.number }}
+  group: p1c01-frodo-skeletal-import-validation
   cancel-in-progress: true
 
 jobs:
