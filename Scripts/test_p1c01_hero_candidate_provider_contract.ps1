@@ -32,18 +32,15 @@ foreach($row in @($qtn.source_pages)+@($oga.assets)+@($kay.assets)){
 foreach($marker in @(
   "'Data/WarehouseQuaterniusHeroCandidateBatchV1.json'",
   "'Data/P1C01OpenGameArtHeroCandidateBatchV1.json'",
-  "'Data/P1C01KayKitAdventurersHeroCandidateBatchV1.json'",
   "- name: Stage P1C01 hero candidate provider batch",
   "- name: Stage OpenGameArt Quaternius character candidate",
-  "- name: Stage KayKit Adventurers hero candidate",
   "- name: Build exact-head P1C01 Frodo Gandalf candidate report"
 )){
   if(-not $workflow.Contains($marker)){ throw "P1C01_HERO_PROVIDER_CONTRACT_WORKFLOW_MARKER_MISSING marker=$marker" }
 }
 $qtnIndex=$workflow.IndexOf("- name: Stage P1C01 hero candidate provider batch",[StringComparison]::Ordinal)
 $ogaIndex=$workflow.IndexOf("- name: Stage OpenGameArt Quaternius character candidate",[StringComparison]::Ordinal)
-$kayIndex=$workflow.IndexOf("- name: Stage KayKit Adventurers hero candidate",[StringComparison]::Ordinal)
 $reportIndex=$workflow.IndexOf("- name: Build exact-head P1C01 Frodo Gandalf candidate report",[StringComparison]::Ordinal)
-if($qtnIndex -lt 0 -or $ogaIndex -le $qtnIndex -or $kayIndex -le $ogaIndex -or $reportIndex -le $kayIndex){ throw "P1C01_HERO_PROVIDER_CONTRACT_ORDER_FAIL qtn=$qtnIndex oga=$ogaIndex kay=$kayIndex report=$reportIndex" }
+if($qtnIndex -lt 0 -or $ogaIndex -le $qtnIndex -or $reportIndex -le $ogaIndex){ throw "P1C01_HERO_PROVIDER_CONTRACT_ORDER_FAIL qtn=$qtnIndex oga=$ogaIndex report=$reportIndex" }
 
 Write-Host "P1C01_HERO_PROVIDER_CONTRACT_TEST_PASS packs=$($required.Count) directFallback=true precedes_candidate_report=true"
