@@ -3605,3 +3605,10 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Ferry bindings cover river boat, footbridge, mooring post/rope, reeds and boulders. Road bindings cover fallen log, broadleaf tree, boulder, fence, wood pile and fern detail.
 - Runtime remains unchanged by this source packet; P1C01 is still the only active runtime chapter.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL PENDING**. No PIE/device/visual/performance acceptance claim.
+
+## 2026-10-02 - KayKit Adventurers alternate Frodo source family registration
+
+- Registered immutable KayKit Adventurers revision `672074b73ba276876a19e8816ecdc5241817ab47` as a bounded alternate Frodo rig-base source family after the original five Quaternius candidates were technically rejected and the alternate Quaternius RPG ranked rows failed static skeletal structure.
+- `KAYKIT_ADVENTURERS_CC0` is now admitted by the existing P1C01 character-intake and Frodo static-QC source allowlists.
+- This branch is source/preparation only. It does not stage/import/promote a character by itself and does not authorize runtime replacement.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING**. No deformation, retarget, PIE, device, visual or performance acceptance claim.
