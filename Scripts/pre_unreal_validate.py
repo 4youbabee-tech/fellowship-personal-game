@@ -8251,6 +8251,7 @@ for pg145_classifier_symbol in [
     'Set-Mode "asset"',
     "SHIRE_ASSET_IMPORT_ONLY",
     "editor-tool-or-p1c01-material-delta-build-import-startup-only",
+    "ANCESTOR_HISTORY_FETCH_REQUIRED",
 ]:
     if pg145_classifier_symbol not in pg145_classifier:
         fail(f"PG-145 transitive core-proof optimization missing: {pg145_classifier_symbol}")
