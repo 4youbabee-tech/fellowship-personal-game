@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "import_id": "P1C01_FRODO_SKELETAL_IMPORT_VALIDATION_V1",
-  "status": "FOUR_CANDIDATES_REJECTED_FINAL_WAREHOUSE_CANDIDATE_PROBE_PENDING",
+  "status": "FINAL_CURRENT_FAMILY_CANDIDATE_PROBE_ACTIVE",
   "authority": [
     "Data/ProjectGovernor.json",
     "Data/P1C01HeroSkeletalCandidateWaveV1.json",
@@ -27,7 +27,7 @@
     "require_nonzero_bones": true,
     "runtime_integration_allowed": false
   },
-  "evidence_boundary": "Four exact filename+SHA warehouse candidates are REJECTED_TECHNICAL after real UE4.27.2 imports with 33 reference bones. Worker_Male.fbx is the final candidate in the current family. If it repeats the same defects, replace the source family rather than weakening the gate. No deformation, retarget, AnimBP, runtime replacement, PIE, device, visual or performance acceptance is proved.",
+  "evidence_boundary": "Four exact filename+SHA warehouse candidates are REJECTED_TECHNICAL after real UE4.27.2 imports with 33 reference bones. Worker_Male.fbx is now the active final candidate in the current source family. If it repeats the same source-quality defects, this source family is exhausted and must be replaced rather than weakening the gate. No deformation, retarget, AnimBP, runtime replacement, PIE, device, visual or performance acceptance is proved.",
   "technical_rejections": [
     {
       "filename": "BaseCharacter.fbx",
