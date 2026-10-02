@@ -106,7 +106,8 @@ function Remove-RemoteBranch {
         throw "Refusing plan-protected branch: $Branch"
     }
     if (($activeHeads -contains $Branch) -or (Test-BranchHasOpenPull -Branch $Branch)) {
-        throw "Refusing to delete active PR head: $Branch"
+        Write-Host "BRANCH_CLEANUP_KEEP_ACTIVE_PR branch=$Branch reason=$Reason"
+        return $false
     }
 
     $remoteRef = "refs/heads/$Branch"
