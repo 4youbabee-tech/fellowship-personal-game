@@ -2647,3 +2647,11 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Technical debt rejection | SOURCE-IMPLEMENTED | Missing smoothing groups / bind-pose bones / UV set remain hard reject reasons |
 | Runtime replacement / deformation / retarget / AnimBP | PENDING | Requires fresh real UE4 evidence before promotion |
 | PIE / device / visual / performance acceptance | NOT ACCEPTED | No matching human/device evidence |
+
+
+## 2026-10-02 — Frodo direct-FBX transport recovery
+
+| Scope | State | Evidence / next gate |
+|---|---|---|
+| KayKit alternate Frodo source transport | EXACT-REVISION DIRECT FBX FIX PREPARED | Run #27 rejected an archive with zero FBX entries. The next exact head must prove direct `Rogue.fbx` staging, header/SHA verification, static skeletal structure, and real UE4.27 import. |
+| Frodo runtime integration | NOT STARTED | Remains blocked on technical import, deformation, retarget, AnimBP and runtime evidence. |

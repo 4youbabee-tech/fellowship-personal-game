@@ -7,17 +7,22 @@ $cpp=Join-Path $root "Source\ShireJourneyEditorTools\Private\ShireProductionImpo
 $workflow=Join-Path $root ".github\workflows\p1c01-frodo-skeletal-import-validation.yml"
 $importCmd=Join-Path $root "Scripts\ci_import_production_assets.cmd"
 $alternateManifest=Join-Path $root "Data\P1C01OpenGameArtRpgHeroCandidateBatchV1.json"
-foreach($p in @($manifest,$stage,$cpp,$workflow,$importCmd,$alternateManifest)){ if(-not(Test-Path -LiteralPath $p -PathType Leaf)){throw "P1C01_FRODO_IMPORT_CONTRACT_FILE_MISSING path=$p"} }
+$candidateStage=Join-Path $root "Scripts\stage_opengameart_character_candidate.ps1"
+foreach($p in @($manifest,$stage,$cpp,$workflow,$importCmd,$alternateManifest,$candidateStage)){ if(-not(Test-Path -LiteralPath $p -PathType Leaf)){throw "P1C01_FRODO_IMPORT_CONTRACT_FILE_MISSING path=$p"} }
 $m=Get-Content -LiteralPath $manifest -Raw | ConvertFrom-Json
 $c=Get-Content -LiteralPath $cpp -Raw
 $s=Get-Content -LiteralPath $stage -Raw
 $w=Get-Content -LiteralPath $workflow -Raw
 $i=Get-Content -LiteralPath $importCmd -Raw
 $a=Get-Content -LiteralPath $alternateManifest -Raw | ConvertFrom-Json
+$g=Get-Content -LiteralPath $candidateStage -Raw
 if([string]$m.character -ne "FRODO"){throw "P1C01_FRODO_IMPORT_CONTRACT_CHARACTER_FAIL"}
 if([bool]$m.import_contract.runtime_integration_allowed){throw "P1C01_FRODO_IMPORT_CONTRACT_RUNTIME_FORBIDDEN"}
 if([string]$a.provider -ne "OPENGAMEART" -or [string]$a.license -ne "CC0-1.0"){throw "P1C01_FRODO_IMPORT_CONTRACT_ALTERNATE_SOURCE_FAIL"}
 if([string]$a.assets[0].id -ne "OGA_QTN_RPG_CHARACTERS_CC0"){throw "P1C01_FRODO_IMPORT_CONTRACT_ALTERNATE_ID_FAIL"}
+foreach($marker in @("DIRECT_FBX","Test-DirectFbx","OGA_CHARACTER_DIRECT_FBX_HEADER_FAIL","Test-CandidatePayload")){
+  if(-not $g.Contains($marker)){throw "P1C01_FRODO_IMPORT_CONTRACT_DIRECT_FBX_STAGE_MARKER_MISSING marker=$marker"}
+}
 foreach($marker in @(
   'FParse::Param(*Params, TEXT("EnableCharacterRigImport"))',
   'if (bEnableCharacterRigImport)',

@@ -3656,3 +3656,10 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Dedicated workflow is path-filtered so unrelated PRs do not consume the single UE4 self-hosted lane.
 - KayKit Adventurers remains a technical rig-base candidate only; runtime integration stays false until real import, deformation, retarget and AnimBP gates pass.
 - Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD PRE-UNREAL + UE4 SKELETAL IMPORT PENDING**. No PIE/device/visual/performance acceptance claim.
+
+
+## 2026-10-02 — Frodo KayKit immutable direct-FBX recovery
+
+- Exact-head Frodo run #27 on `c22c9af838b94ecf2b93d6148a5c5c5c7ccc972d` failed before candidate ranking because the GitHub source archive contained no FBX entries.
+- The immutable repository revision itself exposes `Characters/fbx/Rogue.fbx`; the lane now stages that exact raw-revision FBX directly, validates its FBX header and records SHA256/bytes in the existing receipt before intake.
+- Existing OpenGameArt payloads remain reuse-verified; no full redownload, conversion, runtime integration, Gate 6/7, visual or device acceptance claim is introduced.

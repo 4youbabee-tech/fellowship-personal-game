@@ -11,12 +11,14 @@
       "id": "KAYKIT_ADVENTURERS_CC0",
       "source_page": "https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0",
       "source_revision": "672074b73ba276876a19e8816ecdc5241817ab47",
-      "download_url": "https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/archive/672074b73ba276876a19e8816ecdc5241817ab47.zip",
-      "filename": "kaykit_character_pack_adventures_672074b.zip",
+      "download_url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/672074b73ba276876a19e8816ecdc5241817ab47/addons/kaykit_character_pack_adventures/Characters/fbx/Rogue.fbx",
+      "filename": "kaykit_rogue_672074b73ba276876a19e8816ecdc5241817ab47.fbx",
       "observed_page_license": "CC0",
       "required_final_format": "FBX",
       "source_author": "Kay Lousberg",
-      "intended_use": "Alternate Frodo rig-base technical candidate discovery; not final likeness or visual acceptance."
+      "intended_use": "Alternate Frodo rig-base technical candidate discovery through immutable direct FBX payload; not final likeness or visual acceptance.",
+      "download_kind": "DIRECT_FBX",
+      "source_path": "addons/kaykit_character_pack_adventures/Characters/fbx/Rogue.fbx"
     }
   ],
   "rules": [
@@ -25,5 +27,5 @@
     "Animated production candidate format remains FBX.",
     "Candidate discovery does not prove UE4.27 import quality, deformation, retarget quality, final likeness, runtime integration or visual acceptance."
   ],
-  "evidence_boundary": "Source registration only. Exact-head Warehouse/static/UE4 evidence remains required."
+  "evidence_boundary": "Source registration plus immutable direct-FBX transport recovery. Exact-head staging/static/UE4 evidence remains required; archive absence does not authorize format conversion or gate weakening."
 }
