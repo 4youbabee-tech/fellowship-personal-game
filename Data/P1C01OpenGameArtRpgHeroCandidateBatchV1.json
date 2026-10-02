@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "batch_id": "WAREHOUSE_OGA_QUATERNIUS_P1C01_RPG_HERO_CANDIDATE_V1",
+  "status": "AUTHORIZED_FOR_TARGETED_STAGING",
+  "provider": "OPENGAMEART",
+  "creator": "Quaternius",
+  "license": "CC0-1.0",
+  "purpose": "Bounded alternate Frodo rig-base source after all five candidates in the original Quaternius animated-character mirror failed the real UE4.27.2 technical gate.",
+  "staging_root": "D:\\actions-runner\\_warehouse\\ShireJourney\\OpenGameArt\\Characters",
+  "assets": [
+    {
+      "id": "OGA_QTN_RPG_CHARACTERS_CC0",
+      "source_page": "https://opengameart.org/content/lowpoly-rpg-characters",
+      "download_url": "https://opengameart.org/sites/default/files/rpg_characters_-_nov_2020.zip",
+      "filename": "rpg_characters_-_nov_2020.zip",
+      "observed_page_license": "CC0",
+      "required_final_format": "FBX",
+      "source_author": "Quaternius",
+      "page_verified_utc": "2026-10-02T00:00:00Z",
+      "intended_use": "Alternate Frodo rig-base and deformation/retarget candidate discovery; not final likeness or visual acceptance."
+    }
+  ],
+  "rules": [
+    "Download only the direct file published on the OpenGameArt page by uploader Quaternius.",
+    "Preserve and reuse the payload when the receipt SHA256 matches; purge/redownload only this payload when missing or mismatched.",
+    "Validate ZIP structure and require at least one FBX entry before writing the receipt.",
+    "Candidate discovery does not prove FBX 2018 compatibility, skeleton quality, skin weights, deformation, import, runtime integration or visual acceptance."
+  ],
+  "evidence_boundary": "Targeted CC0 source staging only. The same exact-head UE4.27.2 technical gate remains fail-closed."
+}
