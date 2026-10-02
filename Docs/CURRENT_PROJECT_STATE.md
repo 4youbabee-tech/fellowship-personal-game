@@ -3499,3 +3499,12 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - True blocker: Quaternius manual queue contains four packs; candidate report contains **0 discovered FBX / 0 Frodo / 0 Gandalf / 4 pending / 0 blocked**.
 - New bounded fallback candidate uses the direct OpenGameArt upload published by Quaternius under CC0: one 48.4 MB archive, ZIP safety budget, FBX-presence gate, receipt SHA256 reuse, and targeted redownload only when missing/mismatched.
 - This source is a rig-base/QC candidate, not a final Frodo likeness. FBX 2018, skeleton, skin weights, deformation, retarget, import, runtime, PIE, device, visual and performance evidence remain required.
+
+
+## 2026-10-02 — P1C01 Shire mega chapter source/content batch
+
+- Added `Data/P1C01ShireMegaChapterPackV1.json` as a comprehensive bounded production contract for the active runtime chapter: Hobbiton/Bag End, village detail, Shire travel roads, and Bucklebury/Ferry approach.
+- The package binds Frodo-first/Gandalf-second character order, LivingWorldDirector + ShireNPCContextSubsystem ownership, ShireQuestSubsystem gameplay windows, UShireAudioSubsystem identity, material/surface rules, save/streaming reliability checks, and low-spec HISM/ISM/LOD/culling/async budgets.
+- Added hosted regression `Scripts/test_p1c01_shire_mega_chapter_pack.ps1` and wired it into Pre-Unreal validation.
+- Runtime car remains `P1C01-A_FRODO_SKELETAL_PRODUCTION`; this parallel batch does not stack runtime changes on the pending Frodo exact-head Unreal build and does not authorize P1C02 runtime.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING**. No PIE/device/visual/pacing/performance/Gate 6/7 acceptance claim.
