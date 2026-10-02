@@ -2481,3 +2481,12 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | OpenGameArt Quaternius fallback | SOURCE-IMPLEMENTED CANDIDATE | Direct CC0 archive, bounded ZIP scan, FBX gate, SHA reuse |
 | READY_FOR_IMPORT / runtime | NOT STARTED | Skeleton/skin/deformation/FBX-2018 QC still required |
 | Gate 6/7 | UNCHANGED / NOT ACCEPTED | No human/device evidence |
+
+
+## 2026-10-02 — P1C01 Shire mega chapter source/content batch
+
+- Added `Data/P1C01ShireMegaChapterPackV1.json` as a comprehensive bounded production contract for the active runtime chapter: Hobbiton/Bag End, village detail, Shire travel roads, and Bucklebury/Ferry approach.
+- The package binds Frodo-first/Gandalf-second character order, LivingWorldDirector + ShireNPCContextSubsystem ownership, ShireQuestSubsystem gameplay windows, UShireAudioSubsystem identity, material/surface rules, save/streaming reliability checks, and low-spec HISM/ISM/LOD/culling/async budgets.
+- Added hosted regression `Scripts/test_p1c01_shire_mega_chapter_pack.ps1` and wired it into Pre-Unreal validation.
+- Runtime car remains `P1C01-A_FRODO_SKELETAL_PRODUCTION`; this parallel batch does not stack runtime changes on the pending Frodo exact-head Unreal build and does not authorize P1C02 runtime.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING**. No PIE/device/visual/pacing/performance/Gate 6/7 acceptance claim.
