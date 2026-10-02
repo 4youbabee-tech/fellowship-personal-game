@@ -90,4 +90,14 @@ foreach($marker in @(
   }
 }
 
-Write-Host ("P1C01_VISIBLE_WORLD_CONTRACT_PASS cells="+$cells.Count+" eastFieldsHism=true eastFieldsMax=96 runtime=true")
+foreach($marker in @(
+  "bProductionHobbitHoleResident",
+  "ProductionTurfMoundMesh && ProductionHobbitFacadeMesh",
+  "Primitive accent geometry belongs only to the deterministic fallback path"
+)){
+  if(-not $builder.Contains($marker)){
+    throw "P1C01_HOBBIT_HOLE_OVERLAY_GUARD_MISSING marker=$marker"
+  }
+}
+
+Write-Host ("P1C01_VISIBLE_WORLD_CONTRACT_PASS cells="+$cells.Count+" eastFieldsHism=true eastFieldsMax=96 hobbitHoleProductionOverlay=false runtime=true")
