@@ -1,0 +1,906 @@
+{
+  "schema_version": 2,
+  "queue_id": "SHIRE_CONTINUOUS_MEGA_WAVE_QUEUE_V2",
+  "status": "ACTIVE_SOURCE_IMPLEMENTED",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Docs/DEVELOPMENT_GATES.md",
+    "Docs/PROJECT_GUARDIAN.md",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "01_STORY_AND_TIMELINE_BIBLE",
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE"
+  ],
+  "project_manager_registration": {
+    "request_id": "PMREQ_CONTINUOUS_MEGA_WAVE_QUEUE_V2_2026_10_02",
+    "request_name": "Maximum-safe continuous whole-game production train",
+    "state": "REGISTERED",
+    "runtime_lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
+    "risk": "HIGH_SCOPE_LOW_RUNTIME_EXPANSION",
+    "execution_boundary": "Only P1C01 waves may mutate runtime. All later trilogy chapter waves are source/preproduction until predecessor Gate 6/7 acceptance."
+  },
+  "active_runtime_scope": {
+    "chapter": "P1C01",
+    "future_runtime_activation": false,
+    "rule": "No future chapter wave may become runtime-changing from this queue alone."
+  },
+  "scheduling": {
+    "policy": "Highest-priority eligible wave; if runtime is CI/manual blocked, execute independent SOURCE_ONLY, SOURCE_PREPRODUCTION_ONLY or SYSTEM_HARDENING work.",
+    "runtime_serialization": "P1C01 runtime waves remain serialized by current Governor sequence.",
+    "manual_blocker": "Record blocker and continue independent wave.",
+    "technical_failure": "Repair same failure class with smallest root fix and regression guard before stacking runtime changes."
+  },
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_class": 2,
+    "heavy_refs": "TSoftObjectPtr/TSoftClassPtr/FSoftObjectPath",
+    "loading": "FStreamableManager asynchronous",
+    "crowds": "Object pooling",
+    "repeated_world_detail": "ISM/HISM + LOD/culling",
+    "animated_asset_format": "FBX",
+    "production_texture_formats": [
+      "PNG",
+      "TGA"
+    ]
+  },
+  "waves": [
+    {
+      "id": "M001",
+      "title": "Frodo skeletal UE4 import and deformation closure",
+      "mode": "P1C01_RUNTIME",
+      "target_items": 120,
+      "state": "QUEUED",
+      "runtime_chapter": "P1C01",
+      "runtime_integration_allowed": true
+    },
+    {
+      "id": "M002",
+      "title": "Gandalf skeletal candidate and import closure",
+      "mode": "P1C01_RUNTIME",
+      "target_items": 110,
+      "state": "QUEUED",
+      "runtime_chapter": "P1C01",
+      "runtime_integration_allowed": true
+    },
+    {
+      "id": "M003",
+      "title": "Bag End hero interior and exterior production pass",
+      "mode": "P1C01_RUNTIME",
+      "target_items": 240,
+      "state": "QUEUED",
+      "runtime_chapter": "P1C01",
+      "runtime_integration_allowed": true
+    },
+    {
+      "id": "M004",
+      "title": "Hobbiton architecture replacement and silhouette pass",
+      "mode": "P1C01_RUNTIME",
+      "target_items": 280,
+      "state": "QUEUED",
+      "runtime_chapter": "P1C01",
+      "runtime_integration_allowed": true
+    },
+    {
+      "id": "M005",
+      "title": "Shire roads Bucklebury Ferry traversal and collision pass",
+      "mode": "P1C01_RUNTIME",
+      "target_items": 220,
+      "state": "QUEUED",
+      "runtime_chapter": "P1C01",
+      "runtime_integration_allowed": true
+    },
+    {
+      "id": "M006",
+      "title": "Shire vegetation ecology LOD and overdraw pass",
+      "mode": "P1C01_RUNTIME",
+      "target_items": 260,
+      "state": "QUEUED",
+      "runtime_chapter": "P1C01",
+      "runtime_integration_allowed": true
+    },
+    {
+      "id": "M007",
+      "title": "Selective PBR materials channel packing and surface identity",
+      "mode": "P1C01_RUNTIME",
+      "target_items": 220,
+      "state": "QUEUED",
+      "runtime_chapter": "P1C01",
+      "runtime_integration_allowed": true
+    },
+    {
+      "id": "M008",
+      "title": "Living Shire NPC routines pooling social context and fauna",
+      "mode": "P1C01_RUNTIME",
+      "target_items": 180,
+      "state": "QUEUED",
+      "runtime_chapter": "P1C01",
+      "runtime_integration_allowed": true
+    },
+    {
+      "id": "M009",
+      "title": "Quest interaction side-activity and cinematic coherence",
+      "mode": "P1C01_RUNTIME",
+      "target_items": 170,
+      "state": "QUEUED",
+      "runtime_chapter": "P1C01",
+      "runtime_integration_allowed": true
+    },
+    {
+      "id": "M010",
+      "title": "Shire audio ambience footsteps foley and presentation",
+      "mode": "P1C01_RUNTIME",
+      "target_items": 180,
+      "state": "QUEUED",
+      "runtime_chapter": "P1C01",
+      "runtime_integration_allowed": true
+    },
+    {
+      "id": "M011",
+      "title": "Save load streaming reliability memory and warning debt",
+      "mode": "P1C01_RUNTIME",
+      "target_items": 150,
+      "state": "QUEUED",
+      "runtime_chapter": "P1C01",
+      "runtime_integration_allowed": true
+    },
+    {
+      "id": "M012",
+      "title": "P1C01 optimization and Gate 6/7 evidence preparation",
+      "mode": "P1C01_RUNTIME",
+      "target_items": 140,
+      "state": "QUEUED",
+      "runtime_chapter": "P1C01",
+      "runtime_integration_allowed": true
+    },
+    {
+      "id": "M013",
+      "title": "Global hero humanoid and named-character source expansion",
+      "mode": "SOURCE_ONLY",
+      "target_items": 420,
+      "state": "QUEUED",
+      "runtime_integration_allowed": false
+    },
+    {
+      "id": "M014",
+      "title": "Global creature rig and species-specific source expansion",
+      "mode": "SOURCE_ONLY",
+      "target_items": 380,
+      "state": "QUEUED",
+      "runtime_integration_allowed": false
+    },
+    {
+      "id": "M015",
+      "title": "Global humanoid animation and retarget source expansion",
+      "mode": "SOURCE_ONLY",
+      "target_items": 420,
+      "state": "QUEUED",
+      "runtime_integration_allowed": false
+    },
+    {
+      "id": "M016",
+      "title": "Global creature animation source expansion",
+      "mode": "SOURCE_ONLY",
+      "target_items": 320,
+      "state": "QUEUED",
+      "runtime_integration_allowed": false
+    },
+    {
+      "id": "M017",
+      "title": "Global realistic architecture and settlement kit expansion",
+      "mode": "SOURCE_ONLY",
+      "target_items": 500,
+      "state": "QUEUED",
+      "runtime_integration_allowed": false
+    },
+    {
+      "id": "M018",
+      "title": "Global biome vegetation and ecology source expansion",
+      "mode": "SOURCE_ONLY",
+      "target_items": 420,
+      "state": "QUEUED",
+      "runtime_integration_allowed": false
+    },
+    {
+      "id": "M019",
+      "title": "Global PBR material and terrain surface expansion",
+      "mode": "SOURCE_ONLY",
+      "target_items": 520,
+      "state": "QUEUED",
+      "runtime_integration_allowed": false
+    },
+    {
+      "id": "M020",
+      "title": "Global props artifacts culture and faction kit expansion",
+      "mode": "SOURCE_ONLY",
+      "target_items": 480,
+      "state": "QUEUED",
+      "runtime_integration_allowed": false
+    },
+    {
+      "id": "M021",
+      "title": "Global professional audio ambience foley combat weather expansion",
+      "mode": "SOURCE_ONLY",
+      "target_items": 420,
+      "state": "QUEUED",
+      "runtime_integration_allowed": false
+    },
+    {
+      "id": "M022",
+      "title": "Global weather battle fire smoke water VFX expansion",
+      "mode": "SOURCE_ONLY",
+      "target_items": 340,
+      "state": "QUEUED",
+      "runtime_integration_allowed": false
+    },
+    {
+      "id": "M023",
+      "title": "Global horse mounted boats water and traversal support expansion",
+      "mode": "SOURCE_ONLY",
+      "target_items": 300,
+      "state": "QUEUED",
+      "runtime_integration_allowed": false
+    },
+    {
+      "id": "M024",
+      "title": "Global battle siege crowd impostor and destruction source expansion",
+      "mode": "SOURCE_ONLY",
+      "target_items": 400,
+      "state": "QUEUED",
+      "runtime_integration_allowed": false
+    },
+    {
+      "id": "M025",
+      "title": "F1-01 Prologue & Ring history maximum-safe source/preproduction mega chapter",
+      "mode": "SOURCE_PREPRODUCTION_ONLY",
+      "target_items": 360,
+      "state": "QUEUED",
+      "source_chapter_id": "F1-01",
+      "location": "Middle-earth / Shire",
+      "locked_postcondition": "Bilbo leaves; Ring passes to Frodo.",
+      "runtime_integration_allowed": false,
+      "production_domains": [
+        "canon/state contract",
+        "world/location packet",
+        "characters/roster",
+        "props/materials/vegetation",
+        "animation/encounters",
+        "audio/VFX",
+        "quest/checkpoint/save contract",
+        "streaming/performance plan",
+        "QA acceptance matrix"
+      ]
+    },
+    {
+      "id": "M026",
+      "title": "F1-02 Shadow of the Past maximum-safe source/preproduction mega chapter",
+      "mode": "SOURCE_PREPRODUCTION_ONLY",
+      "target_items": 360,
+      "state": "QUEUED",
+      "source_chapter_id": "F1-02",
+      "location": "Bag End / Shire",
+      "locked_postcondition": "Frodo leaves the Shire.",
+      "runtime_integration_allowed": false,
+      "production_domains": [
+        "canon/state contract",
+        "world/location packet",
+        "characters/roster",
+        "props/materials/vegetation",
+        "animation/encounters",
+        "audio/VFX",
+        "quest/checkpoint/save contract",
+        "streaming/performance plan",
+        "QA acceptance matrix"
+      ]
+    },
+    {
+      "id": "M027",
+      "title": "F1-03 Road to Bree maximum-safe source/preproduction mega chapter",
+      "mode": "SOURCE_PREPRODUCTION_ONLY",
+      "target_items": 360,
+      "state": "QUEUED",
+      "source_chapter_id": "F1-03",
+      "location": "Shire roads / Bucklebury",
+      "locked_postcondition": "Hobbits reach Bree.",
+      "runtime_integration_allowed": false,
+      "production_domains": [
+        "canon/state contract",
+        "world/location packet",
+        "characters/roster",
+        "props/materials/vegetation",
+        "animation/encounters",
+        "audio/VFX",
+        "quest/checkpoint/save contract",
+        "streaming/performance plan",
+        "QA acceptance matrix"
+      ]
+    },
+    {
+      "id": "M028",
+      "title": "F1-04 Bree & Weathertop maximum-safe source/preproduction mega chapter",
+      "mode": "SOURCE_PREPRODUCTION_ONLY",
+      "target_items": 360,
+      "state": "QUEUED",
+      "source_chapter_id": "F1-04",
+      "location": "Bree / Weathertop",
+      "locked_postcondition": "Party races for Rivendell.",
+      "runtime_integration_allowed": false,
+      "production_domains": [
+        "canon/state contract",
+        "world/location packet",
+        "characters/roster",
+        "props/materials/vegetation",
+        "animation/encounters",
+        "audio/VFX",
+        "quest/checkpoint/save contract",
+        "streaming/performance plan",
+        "QA acceptance matrix"
+      ]
+    },
+    {
+      "id": "M029",
+      "title": "F1-05 Rivendell & Fellowship maximum-safe source/preproduction mega chapter",
+      "mode": "SOURCE_PREPRODUCTION_ONLY",
+      "target_items": 360,
+      "state": "QUEUED",
+      "source_chapter_id": "F1-05",
+      "location": "Rivendell",
+      "locked_postcondition": "Nine depart.",
+      "runtime_integration_allowed": false,
+      "production_domains": [
+        "canon/state contract",
+        "world/location packet",
+        "characters/roster",
+        "props/materials/vegetation",
+        "animation/encounters",
+        "audio/VFX",
+        "quest/checkpoint/save contract",
+        "streaming/performance plan",
+        "QA acceptance matrix"
+      ]
+    },
+    {
+      "id": "M030",
+      "title": "F1-06 Caradhras & Moria maximum-safe source/preproduction mega chapter",
+      "mode": "SOURCE_PREPRODUCTION_ONLY",
+      "target_items": 360,
+      "state": "QUEUED",
+      "source_chapter_id": "F1-06",
+      "location": "Misty Mountains / Moria",
+      "locked_postcondition": "Gandalf falls; Fellowship escapes.",
+      "runtime_integration_allowed": false,
+      "production_domains": [
+        "canon/state contract",
+        "world/location packet",
+        "characters/roster",
+        "props/materials/vegetation",
+        "animation/encounters",
+        "audio/VFX",
+        "quest/checkpoint/save contract",
+        "streaming/performance plan",
+        "QA acceptance matrix"
+      ]
+    },
+    {
+      "id": "M031",
+      "title": "F1-07 Lorien & Anduin maximum-safe source/preproduction mega chapter",
+      "mode": "SOURCE_PREPRODUCTION_ONLY",
+      "target_items": 360,
+      "state": "QUEUED",
+      "source_chapter_id": "F1-07",
+      "location": "Lothlorien / Anduin",
+      "locked_postcondition": "Fellowship reaches Amon Hen.",
+      "runtime_integration_allowed": false,
+      "production_domains": [
+        "canon/state contract",
+        "world/location packet",
+        "characters/roster",
+        "props/materials/vegetation",
+        "animation/encounters",
+        "audio/VFX",
+        "quest/checkpoint/save contract",
+        "streaming/performance plan",
+        "QA acceptance matrix"
+      ]
+    },
+    {
+      "id": "M032",
+      "title": "F1-08 Breaking of the Fellowship maximum-safe source/preproduction mega chapter",
+      "mode": "SOURCE_PREPRODUCTION_ONLY",
+      "target_items": 360,
+      "state": "QUEUED",
+      "source_chapter_id": "F1-08",
+      "location": "Amon Hen",
+      "locked_postcondition": "Three parallel campaigns begin.",
+      "runtime_integration_allowed": false,
+      "production_domains": [
+        "canon/state contract",
+        "world/location packet",
+        "characters/roster",
+        "props/materials/vegetation",
+        "animation/encounters",
+        "audio/VFX",
+        "quest/checkpoint/save contract",
+        "streaming/performance plan",
+        "QA acceptance matrix"
+      ]
+    },
+    {
+      "id": "M033",
+      "title": "F2-01 Three Hunters / Captives maximum-safe source/preproduction mega chapter",
+      "mode": "SOURCE_PREPRODUCTION_ONLY",
+      "target_items": 360,
+      "state": "QUEUED",
+      "source_chapter_id": "F2-01",
+      "location": "Rohan / Fangorn edge",
+      "locked_postcondition": "Paths converge around Fangorn/Rohan.",
+      "runtime_integration_allowed": false,
+      "production_domains": [
+        "canon/state contract",
+        "world/location packet",
+        "characters/roster",
+        "props/materials/vegetation",
+        "animation/encounters",
+        "audio/VFX",
+        "quest/checkpoint/save contract",
+        "streaming/performance plan",
+        "QA acceptance matrix"
+      ]
+    },
+    {
+      "id": "M034",
+      "title": "F2-02 Fangorn & Gandalf Returned maximum-safe source/preproduction mega chapter",
+      "mode": "SOURCE_PREPRODUCTION_ONLY",
+      "target_items": 360,
+      "state": "QUEUED",
+      "source_chapter_id": "F2-02",
+      "location": "Fangorn",
+      "locked_postcondition": "Gandalf leads hunters to Edoras.",
+      "runtime_integration_allowed": false,
+      "production_domains": [
+        "canon/state contract",
+        "world/location packet",
+        "characters/roster",
+        "props/materials/vegetation",
+        "animation/encounters",
+        "audio/VFX",
+        "quest/checkpoint/save contract",
+        "streaming/performance plan",
+        "QA acceptance matrix"
+      ]
+    },
+    {
+      "id": "M035",
+      "title": "F2-03 Edoras maximum-safe source/preproduction mega chapter",
+      "mode": "SOURCE_PREPRODUCTION_ONLY",
+      "target_items": 360,
+      "state": "QUEUED",
+      "source_chapter_id": "F2-03",
+      "location": "Rohan",
+      "locked_postcondition": "Rohan evacuates toward Helm's Deep.",
+      "runtime_integration_allowed": false,
+      "production_domains": [
+        "canon/state contract",
+        "world/location packet",
+        "characters/roster",
+        "props/materials/vegetation",
+        "animation/encounters",
+        "audio/VFX",
+        "quest/checkpoint/save contract",
+        "streaming/performance plan",
+        "QA acceptance matrix"
+      ]
+    },
+    {
+      "id": "M036",
+      "title": "F2-04 Road & Helm's Deep Prep maximum-safe source/preproduction mega chapter",
+      "mode": "SOURCE_PREPRODUCTION_ONLY",
+      "target_items": 360,
+      "state": "QUEUED",
+      "source_chapter_id": "F2-04",
+      "location": "Rohan / Helm's Deep",
+      "locked_postcondition": "Uruk army arrives.",
+      "runtime_integration_allowed": false,
+      "production_domains": [
+        "canon/state contract",
+        "world/location packet",
+        "characters/roster",
+        "props/materials/vegetation",
+        "animation/encounters",
+        "audio/VFX",
+        "quest/checkpoint/save contract",
+        "streaming/performance plan",
+        "QA acceptance matrix"
+      ]
+    },
+    {
+      "id": "M037",
+      "title": "F2-05 Battle of Helm's Deep maximum-safe source/preproduction mega chapter",
+      "mode": "SOURCE_PREPRODUCTION_ONLY",
+      "target_items": 360,
+      "state": "QUEUED",
+      "source_chapter_id": "F2-05",
+      "location": "Helm's Deep",
+      "locked_postcondition": "Rohan survives.",
+      "runtime_integration_allowed": false,
+      "production_domains": [
+        "canon/state contract",
+        "world/location packet",
+        "characters/roster",
+        "props/materials/vegetation",
+        "animation/encounters",
+        "audio/VFX",
+        "quest/checkpoint/save contract",
+        "streaming/performance plan",
+        "QA acceptance matrix"
+      ]
+    },
+    {
+      "id": "M038",
+      "title": "F2-06 Frodo, Sam & Gollum maximum-safe source/preproduction mega chapter",
+      "mode": "SOURCE_PREPRODUCTION_ONLY",
+      "target_items": 360,
+      "state": "QUEUED",
+      "source_chapter_id": "F2-06",
+      "location": "Emyn Muil / Dead Marshes",
+      "locked_postcondition": "Approach to Black Gate.",
+      "runtime_integration_allowed": false,
+      "production_domains": [
+        "canon/state contract",
+        "world/location packet",
+        "characters/roster",
+        "props/materials/vegetation",
+        "animation/encounters",
+        "audio/VFX",
+        "quest/checkpoint/save contract",
+        "streaming/performance plan",
+        "QA acceptance matrix"
+      ]
+    },
+    {
+      "id": "M039",
+      "title": "F2-07 Ithilien & Faramir maximum-safe source/preproduction mega chapter",
+      "mode": "SOURCE_PREPRODUCTION_ONLY",
+      "target_items": 360,
+      "state": "QUEUED",
+      "source_chapter_id": "F2-07",
+      "location": "Ithilien / Henneth Annun",
+      "locked_postcondition": "Frodo continues toward Mordor.",
+      "runtime_integration_allowed": false,
+      "production_domains": [
+        "canon/state contract",
+        "world/location packet",
+        "characters/roster",
+        "props/materials/vegetation",
+        "animation/encounters",
+        "audio/VFX",
+        "quest/checkpoint/save contract",
+        "streaming/performance plan",
+        "QA acceptance matrix"
+      ]
+    },
+    {
+      "id": "M040",
+      "title": "F2-08 Ents & Isengard maximum-safe source/preproduction mega chapter",
+      "mode": "SOURCE_PREPRODUCTION_ONLY",
+      "target_items": 360,
+      "state": "QUEUED",
+      "source_chapter_id": "F2-08",
+      "location": "Fangorn / Isengard",
+      "locked_postcondition": "Saruman's war machine broken.",
+      "runtime_integration_allowed": false,
+      "production_domains": [
+        "canon/state contract",
+        "world/location packet",
+        "characters/roster",
+        "props/materials/vegetation",
+        "animation/encounters",
+        "audio/VFX",
+        "quest/checkpoint/save contract",
+        "streaming/performance plan",
+        "QA acceptance matrix"
+      ]
+    },
+    {
+      "id": "M041",
+      "title": "F3-01 Isengard Aftermath / Palantir maximum-safe source/preproduction mega chapter",
+      "mode": "SOURCE_PREPRODUCTION_ONLY",
+      "target_items": 360,
+      "state": "QUEUED",
+      "source_chapter_id": "F3-01",
+      "location": "Isengard / Rohan road",
+      "locked_postcondition": "Gandalf rides with Pippin to Gondor.",
+      "runtime_integration_allowed": false,
+      "production_domains": [
+        "canon/state contract",
+        "world/location packet",
+        "characters/roster",
+        "props/materials/vegetation",
+        "animation/encounters",
+        "audio/VFX",
+        "quest/checkpoint/save contract",
+        "streaming/performance plan",
+        "QA acceptance matrix"
+      ]
+    },
+    {
+      "id": "M042",
+      "title": "F3-02 Minas Tirith & Muster maximum-safe source/preproduction mega chapter",
+      "mode": "SOURCE_PREPRODUCTION_ONLY",
+      "target_items": 360,
+      "state": "QUEUED",
+      "source_chapter_id": "F3-02",
+      "location": "Minas Tirith / Rohan",
+      "locked_postcondition": "Armies move to war.",
+      "runtime_integration_allowed": false,
+      "production_domains": [
+        "canon/state contract",
+        "world/location packet",
+        "characters/roster",
+        "props/materials/vegetation",
+        "animation/encounters",
+        "audio/VFX",
+        "quest/checkpoint/save contract",
+        "streaming/performance plan",
+        "QA acceptance matrix"
+      ]
+    },
+    {
+      "id": "M043",
+      "title": "F3-03 Paths of the Dead maximum-safe source/preproduction mega chapter",
+      "mode": "SOURCE_PREPRODUCTION_ONLY",
+      "target_items": 360,
+      "state": "QUEUED",
+      "source_chapter_id": "F3-03",
+      "location": "Dunharrow / Paths",
+      "locked_postcondition": "Aragorn gains decisive force.",
+      "runtime_integration_allowed": false,
+      "production_domains": [
+        "canon/state contract",
+        "world/location packet",
+        "characters/roster",
+        "props/materials/vegetation",
+        "animation/encounters",
+        "audio/VFX",
+        "quest/checkpoint/save contract",
+        "streaming/performance plan",
+        "QA acceptance matrix"
+      ]
+    },
+    {
+      "id": "M044",
+      "title": "F3-04 Siege & Pelennor maximum-safe source/preproduction mega chapter",
+      "mode": "SOURCE_PREPRODUCTION_ONLY",
+      "target_items": 360,
+      "state": "QUEUED",
+      "source_chapter_id": "F3-04",
+      "location": "Minas Tirith / Pelennor",
+      "locked_postcondition": "Mordor army defeated locally at great cost.",
+      "runtime_integration_allowed": false,
+      "production_domains": [
+        "canon/state contract",
+        "world/location packet",
+        "characters/roster",
+        "props/materials/vegetation",
+        "animation/encounters",
+        "audio/VFX",
+        "quest/checkpoint/save contract",
+        "streaming/performance plan",
+        "QA acceptance matrix"
+      ]
+    },
+    {
+      "id": "M045",
+      "title": "F3-05 Cirith Ungol / Mordor maximum-safe source/preproduction mega chapter",
+      "mode": "SOURCE_PREPRODUCTION_ONLY",
+      "target_items": 360,
+      "state": "QUEUED",
+      "source_chapter_id": "F3-05",
+      "location": "Cirith Ungol / Mordor",
+      "locked_postcondition": "Ring-bearers reach Mount Doom.",
+      "runtime_integration_allowed": false,
+      "production_domains": [
+        "canon/state contract",
+        "world/location packet",
+        "characters/roster",
+        "props/materials/vegetation",
+        "animation/encounters",
+        "audio/VFX",
+        "quest/checkpoint/save contract",
+        "streaming/performance plan",
+        "QA acceptance matrix"
+      ]
+    },
+    {
+      "id": "M046",
+      "title": "F3-06 Black Gate & Mount Doom maximum-safe source/preproduction mega chapter",
+      "mode": "SOURCE_PREPRODUCTION_ONLY",
+      "target_items": 360,
+      "state": "QUEUED",
+      "source_chapter_id": "F3-06",
+      "location": "Mordor",
+      "locked_postcondition": "Sauron falls.",
+      "runtime_integration_allowed": false,
+      "production_domains": [
+        "canon/state contract",
+        "world/location packet",
+        "characters/roster",
+        "props/materials/vegetation",
+        "animation/encounters",
+        "audio/VFX",
+        "quest/checkpoint/save contract",
+        "streaming/performance plan",
+        "QA acceptance matrix"
+      ]
+    },
+    {
+      "id": "M047",
+      "title": "F3-07 Return & Farewell maximum-safe source/preproduction mega chapter",
+      "mode": "SOURCE_PREPRODUCTION_ONLY",
+      "target_items": 360,
+      "state": "QUEUED",
+      "source_chapter_id": "F3-07",
+      "location": "Minas Tirith / Shire / Grey Havens",
+      "locked_postcondition": "Main campaign complete.",
+      "runtime_integration_allowed": false,
+      "production_domains": [
+        "canon/state contract",
+        "world/location packet",
+        "characters/roster",
+        "props/materials/vegetation",
+        "animation/encounters",
+        "audio/VFX",
+        "quest/checkpoint/save contract",
+        "streaming/performance plan",
+        "QA acceptance matrix"
+      ]
+    },
+    {
+      "id": "M048",
+      "title": "System integration asset-data-C++ contract hardening",
+      "mode": "SYSTEM_HARDENING",
+      "target_items": 220,
+      "state": "QUEUED",
+      "runtime_integration_allowed": false
+    },
+    {
+      "id": "M049",
+      "title": "Streaming residency async cancellation and fallback hardening",
+      "mode": "SYSTEM_HARDENING",
+      "target_items": 200,
+      "state": "QUEUED",
+      "runtime_integration_allowed": false
+    },
+    {
+      "id": "M050",
+      "title": "Object pooling crowd fauna encounter lifecycle hardening",
+      "mode": "SYSTEM_HARDENING",
+      "target_items": 200,
+      "state": "QUEUED",
+      "runtime_integration_allowed": false
+    },
+    {
+      "id": "M051",
+      "title": "NPC context LivingWorldDirector interaction budget hardening",
+      "mode": "SYSTEM_HARDENING",
+      "target_items": 180,
+      "state": "QUEUED",
+      "runtime_integration_allowed": false
+    },
+    {
+      "id": "M052",
+      "title": "Quest cinematic skip parity and story-state hardening",
+      "mode": "SYSTEM_HARDENING",
+      "target_items": 180,
+      "state": "QUEUED",
+      "runtime_integration_allowed": false
+    },
+    {
+      "id": "M053",
+      "title": "Save migration corruption long-session and checkpoint hardening",
+      "mode": "SYSTEM_HARDENING",
+      "target_items": 200,
+      "state": "QUEUED",
+      "runtime_integration_allowed": false
+    },
+    {
+      "id": "M054",
+      "title": "Material shader variant draw-call and texture-memory hardening",
+      "mode": "SYSTEM_HARDENING",
+      "target_items": 220,
+      "state": "QUEUED",
+      "runtime_integration_allowed": false
+    },
+    {
+      "id": "M055",
+      "title": "Landscape collision navmesh traversal and companion recovery hardening",
+      "mode": "SYSTEM_HARDENING",
+      "target_items": 220,
+      "state": "QUEUED",
+      "runtime_integration_allowed": false
+    },
+    {
+      "id": "M056",
+      "title": "Battle AI tiers impostor fields and stress-scene preparation",
+      "mode": "SYSTEM_HARDENING",
+      "target_items": 240,
+      "state": "QUEUED",
+      "runtime_integration_allowed": false
+    },
+    {
+      "id": "M057",
+      "title": "Audio concurrency occlusion mix identity and memory hardening",
+      "mode": "SYSTEM_HARDENING",
+      "target_items": 180,
+      "state": "QUEUED",
+      "runtime_integration_allowed": false
+    },
+    {
+      "id": "M058",
+      "title": "VFX flipbook particle overdraw and destruction budget hardening",
+      "mode": "SYSTEM_HARDENING",
+      "target_items": 180,
+      "state": "QUEUED",
+      "runtime_integration_allowed": false
+    },
+    {
+      "id": "M059",
+      "title": "Mounted water boat traversal and interaction architecture preparation",
+      "mode": "SYSTEM_HARDENING",
+      "target_items": 180,
+      "state": "QUEUED",
+      "runtime_integration_allowed": false
+    },
+    {
+      "id": "M060",
+      "title": "Accessibility input UI subtitle and readability production pass",
+      "mode": "SYSTEM_HARDENING",
+      "target_items": 160,
+      "state": "QUEUED",
+      "runtime_integration_allowed": false
+    },
+    {
+      "id": "M061",
+      "title": "Deterministic functional automation and chapter regression suite expansion",
+      "mode": "SYSTEM_HARDENING",
+      "target_items": 260,
+      "state": "QUEUED",
+      "runtime_integration_allowed": false
+    },
+    {
+      "id": "M062",
+      "title": "Target-device DX11 720p profiling and memory telemetry preparation",
+      "mode": "SYSTEM_HARDENING",
+      "target_items": 180,
+      "state": "QUEUED",
+      "runtime_integration_allowed": false
+    },
+    {
+      "id": "M063",
+      "title": "Whole-game provenance license warehouse receipt and provider governance hardening",
+      "mode": "SYSTEM_HARDENING",
+      "target_items": 200,
+      "state": "QUEUED",
+      "runtime_integration_allowed": false
+    },
+    {
+      "id": "M064",
+      "title": "Release packaging chapter-state integrity and production handoff consolidation",
+      "mode": "SYSTEM_HARDENING",
+      "target_items": 220,
+      "state": "QUEUED",
+      "runtime_integration_allowed": false
+    }
+  ],
+  "totals": {
+    "wave_count": 64,
+    "runtime_wave_count": 12,
+    "source_wave_count": 12,
+    "chapter_preproduction_wave_count": 23,
+    "system_hardening_wave_count": 17,
+    "target_items": 18890
+  },
+  "evidence_boundary": "Queue capacity and source/preproduction registration do not prove runtime, PIE, device, visual, pacing or performance acceptance."
+}
