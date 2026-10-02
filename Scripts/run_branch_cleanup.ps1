@@ -1,8 +1,8 @@
 param(
     [string]$PlanPath = "Data/BranchCleanupPlan.json",
     [string]$Repository = $env:GITHUB_REPOSITORY,
-    [string]$MergedHeadRef = $env:MERGED_HEAD_REF,
-    [string]$MergedHeadSha = $env:MERGED_HEAD_SHA
+    [string]$ClosedHeadRef = $env:CLOSED_HEAD_REF,
+    [string]$ClosedHeadSha = $env:CLOSED_HEAD_SHA
 )
 
 Set-StrictMode -Version Latest
@@ -94,44 +94,45 @@ function Remove-RemoteBranch {
     return $true
 }
 
-# DEC-042/DEC-088: close the lifecycle of the exact merged PR head first.
-# This is independent of the repository-level delete_branch_on_merge setting.
-$deletedMergedHead = 0
-if (-not [string]::IsNullOrWhiteSpace($MergedHeadRef)) {
-    $mergedBranch = $MergedHeadRef.Trim()
-    $mergedSha = ([string]$MergedHeadSha).Trim()
+# DEC-042/DEC-088: closing a PR ends the lifecycle of that exact head ref, whether the
+# PR merged or was explicitly closed as superseded/abandoned. The exact-SHA check prevents
+# deleting later work if the branch moved after the close event.
+$deletedClosedHead = 0
+if (-not [string]::IsNullOrWhiteSpace($ClosedHeadRef)) {
+    $closedBranch = $ClosedHeadRef.Trim()
+    $closedSha = ([string]$ClosedHeadSha).Trim()
 
-    if ($mergedBranch -in @("develop", "main")) {
-        Write-Host "BRANCH_CLEANUP_MERGED_HEAD_SKIP_CANONICAL branch=$mergedBranch"
+    if ($closedBranch -in @("develop", "main")) {
+        Write-Host "BRANCH_CLEANUP_CLOSED_HEAD_SKIP_CANONICAL branch=$closedBranch"
     }
-    elseif ($activeHeads -contains $mergedBranch) {
-        Write-Host "BRANCH_CLEANUP_MERGED_HEAD_KEEP_ACTIVE branch=$mergedBranch"
+    elseif ($activeHeads -contains $closedBranch) {
+        Write-Host "BRANCH_CLEANUP_CLOSED_HEAD_KEEP_ACTIVE branch=$closedBranch"
     }
     else {
-        $remoteRef = "refs/heads/$mergedBranch"
+        $remoteRef = "refs/heads/$closedBranch"
         $existing = @(& git ls-remote --heads origin $remoteRef)
         if ($LASTEXITCODE -ne 0) {
-            throw "Unable to query merged PR head branch: $mergedBranch"
+            throw "Unable to query closed PR head branch: $closedBranch"
         }
 
         if ($existing.Count -eq 0) {
-            Write-Host "BRANCH_CLEANUP_MERGED_HEAD_ALREADY_ABSENT branch=$mergedBranch"
+            Write-Host "BRANCH_CLEANUP_CLOSED_HEAD_ALREADY_ABSENT branch=$closedBranch"
         }
         else {
             $remoteSha = (($existing[0] -split "\s+")[0]).Trim()
-            if ([string]::IsNullOrWhiteSpace($mergedSha)) {
-                throw "MERGED_HEAD_SHA is required when MERGED_HEAD_REF is present."
+            if ([string]::IsNullOrWhiteSpace($closedSha)) {
+                throw "CLOSED_HEAD_SHA is required when CLOSED_HEAD_REF is present."
             }
-            if (-not $remoteSha.Equals($mergedSha, [System.StringComparison]::OrdinalIgnoreCase)) {
-                Write-Host "BRANCH_CLEANUP_MERGED_HEAD_MOVED branch=$mergedBranch remoteSha=$remoteSha mergedSha=$mergedSha"
+            if (-not $remoteSha.Equals($closedSha, [System.StringComparison]::OrdinalIgnoreCase)) {
+                Write-Host "BRANCH_CLEANUP_CLOSED_HEAD_MOVED branch=$closedBranch remoteSha=$remoteSha closedSha=$closedSha"
             }
             else {
-                Write-Host "BRANCH_CLEANUP_MERGED_HEAD_DELETE branch=$mergedBranch sha=$remoteSha"
-                & git push origin --delete $mergedBranch
+                Write-Host "BRANCH_CLEANUP_CLOSED_HEAD_DELETE branch=$closedBranch sha=$remoteSha"
+                & git push origin --delete $closedBranch
                 if ($LASTEXITCODE -ne 0) {
-                    throw "Failed to delete exact merged PR head branch: $mergedBranch"
+                    throw "Failed to delete exact closed PR head branch: $closedBranch"
                 }
-                $deletedMergedHead = 1
+                $deletedClosedHead = 1
             }
         }
     }
@@ -212,4 +213,4 @@ foreach ($protected in @($planProtectedBranches | Where-Object { $_ -notin @("de
         throw "Plan-protected branch missing after cleanup: $protected"
     }
 }
-Write-Host ("BRANCH_CLEANUP_PASS mergedHeadDeleted=" + $deletedMergedHead + " deletedPlanCount=" + $deleteBranches.Count + " deletedExplicit=" + $deletedExplicit + " deletedAutoZeroAhead=" + $deletedAuto + " keptUnique=" + $keptUnique + " activePrHeads=" + $activeHeads.Count + " planProtected=" + $planProtectedBranches.Count + " canonical=develop stable=main")
+Write-Host ("BRANCH_CLEANUP_PASS closedHeadDeleted=" + $deletedClosedHead + " deletedPlanCount=" + $deleteBranches.Count + " deletedExplicit=" + $deletedExplicit + " deletedAutoZeroAhead=" + $deletedAuto + " keptUnique=" + $keptUnique + " activePrHeads=" + $activeHeads.Count + " planProtected=" + $planProtectedBranches.Count + " canonical=develop stable=main")
