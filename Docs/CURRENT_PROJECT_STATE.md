@@ -3756,3 +3756,15 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Fresh current-develop repair now filters null responses and requires an exact `head.ref == branch` match before a branch is considered active.
 - API failures remain fatal/fail-closed. The already-merged KEEP + CONTINUE behavior for truly active PR heads remains intact.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL PENDING**.
+
+
+## 2026-10-03 - Stale branch retirement wave 2
+
+Prepared a second governed cleanup wave while Branch Cleanup #140 processes the first batch. This wave adds only four refs with explicit dispositions:
+- merged #268 maintenance head left behind by the earlier failed cleanup;
+- closed audio provenance PR #241, explicitly superseded by merged #243;
+- closed whole-game chapter packet PR #246, superseded as execution branch by current refresh #262;
+- closed queued-mega-waves PR #239, explicitly superseded by merged #244 / ContinuousProductionWaveQueueV2.
+
+This PR must not merge until the currently running cleanup finishes, so the cleanup concurrency group is not cancelled mid-batch.
+Status: **SOURCE-IMPLEMENTED / HOSTED VALIDATION PENDING**.

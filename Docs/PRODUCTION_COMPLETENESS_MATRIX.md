@@ -2736,3 +2736,13 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | True active PR handling | PRESERVED | KEEP + CONTINUE |
 | API failure behavior | PRESERVED | Fatal / fail-closed |
 | Exact-head validation | PENDING | Fresh Pre-Unreal required |
+
+
+## 2026-10-03 - Stale branch retirement wave 2
+
+| Scope | Status | Evidence boundary |
+|---|---|---|
+| Additional disposed refs | 4 QUEUED | #268 head, #241, #246, #239 |
+| Active PR heads | EXCLUDED | none of the four has an open PR |
+| Cleanup execution | NOT STARTED | do not merge while #140 is running |
+| Hosted validation | PENDING | fresh Pre-Unreal required |
