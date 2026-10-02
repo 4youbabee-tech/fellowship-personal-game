@@ -95,6 +95,34 @@ def measure_missing_smoothing(files):
     measured = sorted(identities | unresolved)
     return len(measured), measured
 
+def measure_missing_smoothing(files):
+    identities = set()
+    unresolved = set()
+    for path in files:
+        lines = decode(path).splitlines()
+        local_ids = set()
+        orphan = 0
+        for index, line in enumerate(lines):
+            if not SMOOTHING_RE.search(line):
+                continue
+            identity = None
+            for following in lines[index + 1:min(len(lines), index + 48)]:
+                match = IMPORT_RESULT_RE.search(following)
+                if match:
+                    identity = match.group(1).strip().replace("\\\\", "/").rsplit("/", 1)[-1]
+                    break
+            if identity:
+                local_ids.add(identity)
+            else:
+                orphan += 1
+        identities.update(local_ids)
+        if orphan and not local_ids:
+            unresolved.add("UNIDENTIFIED@" + path.name)
+        elif orphan > 1:
+            unresolved.add("UNIDENTIFIED@" + path.name)
+    measured = sorted(identities | unresolved)
+    return len(measured), measured
+
 def collect_text(files, scope: str) -> str:
     if scope == "runtime":
         files = [path for path in files if is_runtime_log(path)]
