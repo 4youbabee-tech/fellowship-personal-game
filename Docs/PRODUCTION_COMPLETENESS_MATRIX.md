@@ -2532,3 +2532,15 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Download/hash evidence | PENDING | No receipt SHA256 claimed by this metadata update |
 | Audio QC / WAV masters / UE import | PENDING | Separate intake and listening/import evidence required |
 | Runtime / device / performance | NOT ACCEPTED | No experiential evidence created by this source metadata change |
+
+
+## 2026-10-02 - Whole-game chapter packet matrix
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Fellowship normalized chapters | SOURCE-PREPARED | F1-01 through F1-08 registered from project Mission/Story Bibles |
+| Two Towers normalized chapters | SOURCE-PREPARED | F2-01 through F2-08 registered from project Mission/Story Bibles |
+| Return of the King normalized chapters | SOURCE-PREPARED WITH SOURCE WARNING | F3-01 through F3-07 marked FILM_CANON_MASTER_SUMMARY_NOT_SCRIPT_VERIFIED |
+| Locked chapter postconditions | PRESERVED | Every packet carries the source-defined canonical postcondition |
+| Future runtime activation | FORBIDDEN | `runtime_integration_allowed=false` for all 23 packet rows |
+| Runtime / PIE / device / visual / pacing / performance | NOT ACCEPTED | Source packets create no experiential evidence |
