@@ -2497,3 +2497,10 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 - Declared queue capacity exceeds 3,000 target items. Runtime promotion remains predecessor-gated; queued status never implies import, runtime, PIE, device, visual or performance acceptance.
 - Added hosted regression coverage for queue size, unique IDs, independent source/preproduction fallback lanes and prohibition of future-part runtime activation.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING**.
+
+
+### 2026-10-02 — Self-healing production train
+- Queue execution now defines explicit technical-failure repair, bounded retry/quarantine, manual-blocker bypass, and automatic next-wave selection semantics.
+- First live repair case: Pre-Unreal #1567 failed at `Test continuous production mega wave queue` because StrictMode accessed a missing optional `chapter` property. The validator was corrected to inspect property existence before future-runtime checks; exact-head rerun is pending.
+- PR #236 independently reached Pre-Unreal #1564 SUCCESS + Unreal Build #1216 SUCCESS and was squash-merged as `f91a196f5cd882779cf9260b729a69d8a146992e` while the queue repair continued.
+- Playable/enjoyable milestone remains evidence-gated: compile + PIE + save/load + target-device + human visual/pacing evidence are still required; not claimed here.
