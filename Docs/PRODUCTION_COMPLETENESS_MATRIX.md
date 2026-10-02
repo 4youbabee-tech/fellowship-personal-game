@@ -2548,3 +2548,16 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Frodo static FBX structure | STATIC-VALIDATED | Warehouse #315: 5/5 allowlisted candidates, FBX v7400, skeleton/skin/cluster markers present |
 | Frodo UE4 skeletal import / deformation / likeness | PENDING | Separate engine and human visual evidence still required |
 | PIE / device / visual / performance acceptance | NOT ACCEPTED | Queue/source capacity does not create experiential evidence |
+
+## 2026-10-02 - Frodo skeletal UE4 import validation
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Frodo static FBX candidate pool | STATIC-VALIDATED | Warehouse #315: 5/5 allowlisted candidates passed header/skeleton/skin/cluster marker probe |
+| Selected source staging | SOURCE-IMPLEMENTED | SHA256-verified candidate copied only into isolated `Characters/Rigs/FRODO/SK_FRODO.fbx` path |
+| Production importer skeletal FBX path | SOURCE-IMPLEMENTED | FBX accepted only below `Characters/Rigs/`; explicit `FBXIT_SkeletalMesh` |
+| Materials/textures/animations during validation | DISABLED | Validation isolates skeletal mesh import only |
+| Skeletal class + bone verification | SOURCE-IMPLEMENTED | AssetRegistry must register expected object as `USkeletalMesh` and imported mesh must report >0 reference-skeleton bones |
+| Exact-head UE4.27.2 import | PENDING | Dedicated self-hosted workflow must produce `SK_FRODO.uasset` + log marker |
+| AnimBP / retarget / deformation / likeness | NOT ACCEPTED | Separate successor evidence required |
+| Runtime replacement / PIE / device / visual / performance | NOT ACCEPTED | `runtime_integration_allowed=false` |
