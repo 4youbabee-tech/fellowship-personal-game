@@ -3584,3 +3584,9 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - The plan records existing production mesh identities separately from missing source needs, so later runtime work can remove a fallback only when a real imported replacement exists.
 - A Pre-Unreal contract test now fails closed if the four visible cells, FBX/PNG-TGA rules, async-loading rule or HISM repeated-detail rule drift.
 - Status: **STATIC-VALIDATED SOURCE CONTRACT PENDING EXACT-HEAD PRE-UNREAL**. No runtime/PIE/device/visual/performance acceptance claim.
+
+## 2026-10-02 - Visible-world pack PG-187 repair
+
+- Pre-Unreal #1599 reached the project-structure gate and failed only because the visible-world source branch changed the legacy mega-pack status token away from the PG-187 required value.
+- Root fix keeps `status=RUNNER_EXECUTION_READY` and records the new intent separately as `execution_profile=VISIBLE_WORLD_PRIORITY_V2`; no guard is weakened.
+- Status: **SOURCE-REPAIRED / FRESH EXACT-HEAD PRE-UNREAL PENDING**.
