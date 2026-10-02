@@ -3499,3 +3499,13 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - True blocker: Quaternius manual queue contains four packs; candidate report contains **0 discovered FBX / 0 Frodo / 0 Gandalf / 4 pending / 0 blocked**.
 - New bounded fallback candidate uses the direct OpenGameArt upload published by Quaternius under CC0: one 48.4 MB archive, ZIP safety budget, FBX-presence gate, receipt SHA256 reuse, and targeted redownload only when missing/mismatched.
 - This source is a rig-base/QC candidate, not a final Frodo likeness. FBX 2018, skeleton, skin weights, deformation, retarget, import, runtime, PIE, device, visual and performance evidence remain required.
+
+
+## 2026-10-02 — F2-03 Edoras source/preproduction mega batch
+
+- Implemented a large independent source/preproduction batch while P1C01 Frodo runtime validation remains serialized.
+- Added `Data/F2_03EdorasMegaSourcePreproductionV1.json`: 7 authored world cells, 3 world-state variants, 6 named character source contracts, 4 expiring optional-activity windows, Rohan material/prop/audio families, save/transition rules, low-spec budgets and a fail-closed runtime-promotion boundary.
+- Exact source routing is preserved: F2-03 Story/Timeline navigation + supplied Tolkien compatible detail; the supplied Two Towers screenplay is still required for exact future film-scene/cast/knowledge verification before runtime promotion.
+- Added `Scripts/test_f2_03_edoras_mega_source_preproduction.ps1` and executable unit coverage in `Scripts/test_source_contracts.py` so the existing Pre-Unreal lane checks runtime gating, source routing, detail coverage, expiry rules, PNG/TGA/BMP policy, HISM/ISM + async/pooling constraints and disposition validity.
+- P1C01 remains the only runtime-changing chapter. This batch does not open P1C02-P1C08 or any Part II runtime lane.
+- Status: **SOURCE/PREPRODUCTION IMPLEMENTED / EXACT-HEAD PRE-UNREAL PENDING**. No PIE/device/visual/pacing/performance/Gate acceptance claim.
