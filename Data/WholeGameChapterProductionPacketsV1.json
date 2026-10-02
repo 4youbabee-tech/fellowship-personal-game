@@ -1,0 +1,705 @@
+{
+  "schema_version": 1,
+  "packet_set_id": "WHOLE_GAME_CHAPTER_PRODUCTION_PACKETS_V1",
+  "status": "SOURCE_PREPRODUCTION_REGISTERED",
+  "authority": [
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "01_STORY_AND_TIMELINE_BIBLE",
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+    "Data/ProjectGovernor.json"
+  ],
+  "runtime_rule": "Only the Governor-authorized current runtime chapter may mutate runtime. These packets prepare later chapters but do not activate them.",
+  "chapter_count": 23,
+  "packets": [
+    {
+      "id": "F1-01",
+      "title": "Prologue & Ring history",
+      "location": "Middle-earth / Shire",
+      "focus": "Bilbo, Frodo, Gandalf",
+      "critical": "Ring history establishes stakes; Bilbo prepares birthday; Gandalf arrives.",
+      "optional": "Party setup, social onboarding, fireworks.",
+      "post": "Bilbo leaves; Ring passes to Frodo.",
+      "wave_id": "M025",
+      "status": "SOURCE_PREPRODUCTION_REGISTERED",
+      "runtime_integration_allowed": false,
+      "checkpoint_contract": [
+        "chapter entry",
+        "before irreversible set-piece",
+        "postcondition commit where applicable"
+      ],
+      "production_domains": [
+        "world-state variants",
+        "roster/character needs",
+        "encounter package",
+        "cinematic handoff",
+        "quest/objective graph",
+        "save/checkpoint",
+        "audio/VFX",
+        "streaming/performance",
+        "QA matrix"
+      ],
+      "source_boundary": "PROJECT_SOURCE_MATRIX",
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+    },
+    {
+      "id": "F1-02",
+      "title": "Shadow of the Past",
+      "location": "Bag End / Shire",
+      "focus": "Frodo, Gandalf, Sam",
+      "critical": "Gandalf confirms the Ring danger and Sauron connection.",
+      "optional": "Investigation tutorial; packing; stealth departure.",
+      "post": "Frodo leaves the Shire.",
+      "wave_id": "M026",
+      "status": "SOURCE_PREPRODUCTION_REGISTERED",
+      "runtime_integration_allowed": false,
+      "checkpoint_contract": [
+        "chapter entry",
+        "before irreversible set-piece",
+        "postcondition commit where applicable"
+      ],
+      "production_domains": [
+        "world-state variants",
+        "roster/character needs",
+        "encounter package",
+        "cinematic handoff",
+        "quest/objective graph",
+        "save/checkpoint",
+        "audio/VFX",
+        "streaming/performance",
+        "QA matrix"
+      ],
+      "source_boundary": "PROJECT_SOURCE_MATRIX",
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+    },
+    {
+      "id": "F1-03",
+      "title": "Road to Bree",
+      "location": "Shire roads / Bucklebury",
+      "focus": "Frodo, Sam, Merry, Pippin",
+      "critical": "Black Riders hunt the Hobbits; companions converge.",
+      "optional": "Road stealth, ferry escape, environmental hiding.",
+      "post": "Hobbits reach Bree.",
+      "wave_id": "M027",
+      "status": "SOURCE_PREPRODUCTION_REGISTERED",
+      "runtime_integration_allowed": false,
+      "checkpoint_contract": [
+        "chapter entry",
+        "before irreversible set-piece",
+        "postcondition commit where applicable"
+      ],
+      "production_domains": [
+        "world-state variants",
+        "roster/character needs",
+        "encounter package",
+        "cinematic handoff",
+        "quest/objective graph",
+        "save/checkpoint",
+        "audio/VFX",
+        "streaming/performance",
+        "QA matrix"
+      ],
+      "source_boundary": "PROJECT_SOURCE_MATRIX",
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+    },
+    {
+      "id": "F1-04",
+      "title": "Bree & Weathertop",
+      "location": "Bree / Weathertop",
+      "focus": "Hobbits, Aragorn, Nazgul",
+      "critical": "Aragorn becomes guide; Ring use draws danger; Frodo is wounded.",
+      "optional": "Tavern attention, travel, camp decisions, defensive combat.",
+      "post": "Party races for Rivendell.",
+      "wave_id": "M028",
+      "status": "SOURCE_PREPRODUCTION_REGISTERED",
+      "runtime_integration_allowed": false,
+      "checkpoint_contract": [
+        "chapter entry",
+        "before irreversible set-piece",
+        "postcondition commit where applicable"
+      ],
+      "production_domains": [
+        "world-state variants",
+        "roster/character needs",
+        "encounter package",
+        "cinematic handoff",
+        "quest/objective graph",
+        "save/checkpoint",
+        "audio/VFX",
+        "streaming/performance",
+        "QA matrix"
+      ],
+      "source_boundary": "PROJECT_SOURCE_MATRIX",
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+    },
+    {
+      "id": "F1-05",
+      "title": "Rivendell & Fellowship",
+      "location": "Rivendell",
+      "focus": "Frodo, Council, Fellowship",
+      "critical": "Council chooses destruction of Ring; Fellowship forms.",
+      "optional": "Exploration, lore, equipment, relationship scenes.",
+      "post": "Nine depart.",
+      "wave_id": "M029",
+      "status": "SOURCE_PREPRODUCTION_REGISTERED",
+      "runtime_integration_allowed": false,
+      "checkpoint_contract": [
+        "chapter entry",
+        "before irreversible set-piece",
+        "postcondition commit where applicable"
+      ],
+      "production_domains": [
+        "world-state variants",
+        "roster/character needs",
+        "encounter package",
+        "cinematic handoff",
+        "quest/objective graph",
+        "save/checkpoint",
+        "audio/VFX",
+        "streaming/performance",
+        "QA matrix"
+      ],
+      "source_boundary": "PROJECT_SOURCE_MATRIX",
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+    },
+    {
+      "id": "F1-06",
+      "title": "Caradhras & Moria",
+      "location": "Misty Mountains / Moria",
+      "focus": "Fellowship",
+      "critical": "Mountain route fails; Moria reveals Balin's fate; Balrog attacks.",
+      "optional": "Survival, puzzle door, routefinding, tomb battle, escape.",
+      "post": "Gandalf falls; Fellowship escapes.",
+      "wave_id": "M030",
+      "status": "SOURCE_PREPRODUCTION_REGISTERED",
+      "runtime_integration_allowed": false,
+      "checkpoint_contract": [
+        "chapter entry",
+        "before irreversible set-piece",
+        "postcondition commit where applicable"
+      ],
+      "production_domains": [
+        "world-state variants",
+        "roster/character needs",
+        "encounter package",
+        "cinematic handoff",
+        "quest/objective graph",
+        "save/checkpoint",
+        "audio/VFX",
+        "streaming/performance",
+        "QA matrix"
+      ],
+      "source_boundary": "PROJECT_SOURCE_MATRIX",
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+    },
+    {
+      "id": "F1-07",
+      "title": "Lorien & Anduin",
+      "location": "Lothlorien / Anduin",
+      "focus": "Fellowship, Galadriel",
+      "critical": "Grief, rest, gifts, river journey; pressure fractures group.",
+      "optional": "Quiet exploration, provisioning, boats.",
+      "post": "Fellowship reaches Amon Hen.",
+      "wave_id": "M031",
+      "status": "SOURCE_PREPRODUCTION_REGISTERED",
+      "runtime_integration_allowed": false,
+      "checkpoint_contract": [
+        "chapter entry",
+        "before irreversible set-piece",
+        "postcondition commit where applicable"
+      ],
+      "production_domains": [
+        "world-state variants",
+        "roster/character needs",
+        "encounter package",
+        "cinematic handoff",
+        "quest/objective graph",
+        "save/checkpoint",
+        "audio/VFX",
+        "streaming/performance",
+        "QA matrix"
+      ],
+      "source_boundary": "PROJECT_SOURCE_MATRIX",
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+    },
+    {
+      "id": "F1-08",
+      "title": "Breaking of the Fellowship",
+      "location": "Amon Hen",
+      "focus": "Frodo, Sam, Aragorn, Boromir, Uruk-hai",
+      "critical": "Boromir falls; Merry/Pippin captured; Frodo chooses Mordor; Sam follows.",
+      "optional": "Multi-character combat and pursuit handoff.",
+      "post": "Three parallel campaigns begin.",
+      "wave_id": "M032",
+      "status": "SOURCE_PREPRODUCTION_REGISTERED",
+      "runtime_integration_allowed": false,
+      "checkpoint_contract": [
+        "chapter entry",
+        "before irreversible set-piece",
+        "postcondition commit where applicable"
+      ],
+      "production_domains": [
+        "world-state variants",
+        "roster/character needs",
+        "encounter package",
+        "cinematic handoff",
+        "quest/objective graph",
+        "save/checkpoint",
+        "audio/VFX",
+        "streaming/performance",
+        "QA matrix"
+      ],
+      "source_boundary": "PROJECT_SOURCE_MATRIX",
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+    },
+    {
+      "id": "F2-01",
+      "title": "Three Hunters / Captives",
+      "location": "Rohan / Fangorn edge",
+      "focus": "Aragorn, Legolas, Gimli, Merry, Pippin",
+      "critical": "Hunters pursue Uruk-hai; captives escape into Fangorn.",
+      "optional": "Tracking, stamina, evidence reading.",
+      "post": "Paths converge around Fangorn/Rohan.",
+      "wave_id": "M033",
+      "status": "SOURCE_PREPRODUCTION_REGISTERED",
+      "runtime_integration_allowed": false,
+      "checkpoint_contract": [
+        "chapter entry",
+        "before irreversible set-piece",
+        "postcondition commit where applicable"
+      ],
+      "production_domains": [
+        "world-state variants",
+        "roster/character needs",
+        "encounter package",
+        "cinematic handoff",
+        "quest/objective graph",
+        "save/checkpoint",
+        "audio/VFX",
+        "streaming/performance",
+        "QA matrix"
+      ],
+      "source_boundary": "PROJECT_SOURCE_MATRIX",
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+    },
+    {
+      "id": "F2-02",
+      "title": "Fangorn & Gandalf Returned",
+      "location": "Fangorn",
+      "focus": "Merry, Pippin, Treebeard; Hunters, Gandalf",
+      "critical": "Ents introduced; Gandalf returns transformed.",
+      "optional": "Exploration, dialogue, Ent traversal.",
+      "post": "Gandalf leads hunters to Edoras.",
+      "wave_id": "M034",
+      "status": "SOURCE_PREPRODUCTION_REGISTERED",
+      "runtime_integration_allowed": false,
+      "checkpoint_contract": [
+        "chapter entry",
+        "before irreversible set-piece",
+        "postcondition commit where applicable"
+      ],
+      "production_domains": [
+        "world-state variants",
+        "roster/character needs",
+        "encounter package",
+        "cinematic handoff",
+        "quest/objective graph",
+        "save/checkpoint",
+        "audio/VFX",
+        "streaming/performance",
+        "QA matrix"
+      ],
+      "source_boundary": "PROJECT_SOURCE_MATRIX",
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+    },
+    {
+      "id": "F2-03",
+      "title": "Edoras",
+      "location": "Rohan",
+      "focus": "Theoden, Eowyn, Eomer, Gandalf, Aragorn",
+      "critical": "Theoden restored; political and military crisis clarified.",
+      "optional": "Court exploration, stables, equipment, social scenes.",
+      "post": "Rohan evacuates toward Helm's Deep.",
+      "wave_id": "M035",
+      "status": "SOURCE_PREPRODUCTION_REGISTERED",
+      "runtime_integration_allowed": false,
+      "checkpoint_contract": [
+        "chapter entry",
+        "before irreversible set-piece",
+        "postcondition commit where applicable"
+      ],
+      "production_domains": [
+        "world-state variants",
+        "roster/character needs",
+        "encounter package",
+        "cinematic handoff",
+        "quest/objective graph",
+        "save/checkpoint",
+        "audio/VFX",
+        "streaming/performance",
+        "QA matrix"
+      ],
+      "source_boundary": "PROJECT_SOURCE_MATRIX",
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+    },
+    {
+      "id": "F2-04",
+      "title": "Road & Helm's Deep Prep",
+      "location": "Rohan / Helm's Deep",
+      "focus": "Rohan party",
+      "critical": "Refugees move under threat; defenses prepared.",
+      "optional": "Escort, rescue, armory, wall prep, civilians.",
+      "post": "Uruk army arrives.",
+      "wave_id": "M036",
+      "status": "SOURCE_PREPRODUCTION_REGISTERED",
+      "runtime_integration_allowed": false,
+      "checkpoint_contract": [
+        "chapter entry",
+        "before irreversible set-piece",
+        "postcondition commit where applicable"
+      ],
+      "production_domains": [
+        "world-state variants",
+        "roster/character needs",
+        "encounter package",
+        "cinematic handoff",
+        "quest/objective graph",
+        "save/checkpoint",
+        "audio/VFX",
+        "streaming/performance",
+        "QA matrix"
+      ],
+      "source_boundary": "PROJECT_SOURCE_MATRIX",
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+    },
+    {
+      "id": "F2-05",
+      "title": "Battle of Helm's Deep",
+      "location": "Helm's Deep",
+      "focus": "Aragorn, Legolas, Gimli, Theoden",
+      "critical": "Siege escalates from walls to keep; dawn counterattack.",
+      "optional": "Defense phases, breach response, retreat, mounted sortie.",
+      "post": "Rohan survives.",
+      "wave_id": "M037",
+      "status": "SOURCE_PREPRODUCTION_REGISTERED",
+      "runtime_integration_allowed": false,
+      "checkpoint_contract": [
+        "chapter entry",
+        "before irreversible set-piece",
+        "postcondition commit where applicable"
+      ],
+      "production_domains": [
+        "world-state variants",
+        "roster/character needs",
+        "encounter package",
+        "cinematic handoff",
+        "quest/objective graph",
+        "save/checkpoint",
+        "audio/VFX",
+        "streaming/performance",
+        "QA matrix"
+      ],
+      "source_boundary": "PROJECT_SOURCE_MATRIX",
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+    },
+    {
+      "id": "F2-06",
+      "title": "Frodo, Sam & Gollum",
+      "location": "Emyn Muil / Dead Marshes",
+      "focus": "Frodo, Sam, Gollum",
+      "critical": "Gollum becomes guide; Ring pressure grows.",
+      "optional": "Traversal, navigation, trust tension, survival.",
+      "post": "Approach to Black Gate.",
+      "wave_id": "M038",
+      "status": "SOURCE_PREPRODUCTION_REGISTERED",
+      "runtime_integration_allowed": false,
+      "checkpoint_contract": [
+        "chapter entry",
+        "before irreversible set-piece",
+        "postcondition commit where applicable"
+      ],
+      "production_domains": [
+        "world-state variants",
+        "roster/character needs",
+        "encounter package",
+        "cinematic handoff",
+        "quest/objective graph",
+        "save/checkpoint",
+        "audio/VFX",
+        "streaming/performance",
+        "QA matrix"
+      ],
+      "source_boundary": "PROJECT_SOURCE_MATRIX",
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+    },
+    {
+      "id": "F2-07",
+      "title": "Ithilien & Faramir",
+      "location": "Ithilien / Henneth Annun",
+      "focus": "Frodo, Sam, Gollum, Faramir",
+      "critical": "Rangers capture group; Haradrim observed; Ring danger tested.",
+      "optional": "Stealth/scouting, ambush observation, dialogue.",
+      "post": "Frodo continues toward Mordor.",
+      "wave_id": "M039",
+      "status": "SOURCE_PREPRODUCTION_REGISTERED",
+      "runtime_integration_allowed": false,
+      "checkpoint_contract": [
+        "chapter entry",
+        "before irreversible set-piece",
+        "postcondition commit where applicable"
+      ],
+      "production_domains": [
+        "world-state variants",
+        "roster/character needs",
+        "encounter package",
+        "cinematic handoff",
+        "quest/objective graph",
+        "save/checkpoint",
+        "audio/VFX",
+        "streaming/performance",
+        "QA matrix"
+      ],
+      "source_boundary": "PROJECT_SOURCE_MATRIX",
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+    },
+    {
+      "id": "F2-08",
+      "title": "Ents & Isengard",
+      "location": "Fangorn / Isengard",
+      "focus": "Merry, Pippin, Treebeard",
+      "critical": "Ent decision turns into assault on Isengard.",
+      "optional": "Environmental destruction, large-creature traversal.",
+      "post": "Saruman's war machine broken.",
+      "wave_id": "M040",
+      "status": "SOURCE_PREPRODUCTION_REGISTERED",
+      "runtime_integration_allowed": false,
+      "checkpoint_contract": [
+        "chapter entry",
+        "before irreversible set-piece",
+        "postcondition commit where applicable"
+      ],
+      "production_domains": [
+        "world-state variants",
+        "roster/character needs",
+        "encounter package",
+        "cinematic handoff",
+        "quest/objective graph",
+        "save/checkpoint",
+        "audio/VFX",
+        "streaming/performance",
+        "QA matrix"
+      ],
+      "source_boundary": "PROJECT_SOURCE_MATRIX",
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+    },
+    {
+      "id": "F3-01",
+      "title": "Isengard Aftermath / Palantir",
+      "location": "Isengard / Rohan road",
+      "focus": "Fellowship allies, Pippin, Gandalf",
+      "critical": "Aftermath reunites threads; Palantir reveals urgency.",
+      "optional": "Exploration, aftermath interactions, transition.",
+      "post": "Gandalf rides with Pippin to Gondor.",
+      "wave_id": "M041",
+      "status": "SOURCE_PREPRODUCTION_REGISTERED",
+      "runtime_integration_allowed": false,
+      "checkpoint_contract": [
+        "chapter entry",
+        "before irreversible set-piece",
+        "postcondition commit where applicable"
+      ],
+      "production_domains": [
+        "world-state variants",
+        "roster/character needs",
+        "encounter package",
+        "cinematic handoff",
+        "quest/objective graph",
+        "save/checkpoint",
+        "audio/VFX",
+        "streaming/performance",
+        "QA matrix"
+      ],
+      "source_boundary": "FILM_CANON_MASTER_SUMMARY_NOT_SCRIPT_VERIFIED",
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+    },
+    {
+      "id": "F3-02",
+      "title": "Minas Tirith & Muster",
+      "location": "Minas Tirith / Rohan",
+      "focus": "Gandalf, Pippin; Theoden, Eowyn, Merry",
+      "critical": "Gondor prepares; Rohan musters; beacons call aid.",
+      "optional": "City exploration, guard duties, beacon/muster activities.",
+      "post": "Armies move to war.",
+      "wave_id": "M042",
+      "status": "SOURCE_PREPRODUCTION_REGISTERED",
+      "runtime_integration_allowed": false,
+      "checkpoint_contract": [
+        "chapter entry",
+        "before irreversible set-piece",
+        "postcondition commit where applicable"
+      ],
+      "production_domains": [
+        "world-state variants",
+        "roster/character needs",
+        "encounter package",
+        "cinematic handoff",
+        "quest/objective graph",
+        "save/checkpoint",
+        "audio/VFX",
+        "streaming/performance",
+        "QA matrix"
+      ],
+      "source_boundary": "FILM_CANON_MASTER_SUMMARY_NOT_SCRIPT_VERIFIED",
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+    },
+    {
+      "id": "F3-03",
+      "title": "Paths of the Dead",
+      "location": "Dunharrow / Paths",
+      "focus": "Aragorn, Legolas, Gimli",
+      "critical": "Aragorn claims kingly path and seeks the Dead.",
+      "optional": "Fear-space traversal, oath confrontation, environmental puzzle.",
+      "post": "Aragorn gains decisive force.",
+      "wave_id": "M043",
+      "status": "SOURCE_PREPRODUCTION_REGISTERED",
+      "runtime_integration_allowed": false,
+      "checkpoint_contract": [
+        "chapter entry",
+        "before irreversible set-piece",
+        "postcondition commit where applicable"
+      ],
+      "production_domains": [
+        "world-state variants",
+        "roster/character needs",
+        "encounter package",
+        "cinematic handoff",
+        "quest/objective graph",
+        "save/checkpoint",
+        "audio/VFX",
+        "streaming/performance",
+        "QA matrix"
+      ],
+      "source_boundary": "FILM_CANON_MASTER_SUMMARY_NOT_SCRIPT_VERIFIED",
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+    },
+    {
+      "id": "F3-04",
+      "title": "Siege & Pelennor",
+      "location": "Minas Tirith / Pelennor",
+      "focus": "Gondor, Rohan, Mordor armies",
+      "critical": "Siege culminates in massive field battle.",
+      "optional": "Siege support, cavalry phases, hero encounters, rescue.",
+      "post": "Mordor army defeated locally at great cost.",
+      "wave_id": "M044",
+      "status": "SOURCE_PREPRODUCTION_REGISTERED",
+      "runtime_integration_allowed": false,
+      "checkpoint_contract": [
+        "chapter entry",
+        "before irreversible set-piece",
+        "postcondition commit where applicable"
+      ],
+      "production_domains": [
+        "world-state variants",
+        "roster/character needs",
+        "encounter package",
+        "cinematic handoff",
+        "quest/objective graph",
+        "save/checkpoint",
+        "audio/VFX",
+        "streaming/performance",
+        "QA matrix"
+      ],
+      "source_boundary": "FILM_CANON_MASTER_SUMMARY_NOT_SCRIPT_VERIFIED",
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+    },
+    {
+      "id": "F3-05",
+      "title": "Cirith Ungol / Mordor",
+      "location": "Cirith Ungol / Mordor",
+      "focus": "Frodo, Sam, Gollum",
+      "critical": "Shelob crisis, tower rescue, disguise, final march.",
+      "optional": "Stealth, rescue, disguise pressure, survival.",
+      "post": "Ring-bearers reach Mount Doom.",
+      "wave_id": "M045",
+      "status": "SOURCE_PREPRODUCTION_REGISTERED",
+      "runtime_integration_allowed": false,
+      "checkpoint_contract": [
+        "chapter entry",
+        "before irreversible set-piece",
+        "postcondition commit where applicable"
+      ],
+      "production_domains": [
+        "world-state variants",
+        "roster/character needs",
+        "encounter package",
+        "cinematic handoff",
+        "quest/objective graph",
+        "save/checkpoint",
+        "audio/VFX",
+        "streaming/performance",
+        "QA matrix"
+      ],
+      "source_boundary": "FILM_CANON_MASTER_SUMMARY_NOT_SCRIPT_VERIFIED",
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+    },
+    {
+      "id": "F3-06",
+      "title": "Black Gate & Mount Doom",
+      "location": "Mordor",
+      "focus": "All major threads",
+      "critical": "Allies distract Sauron; Ring reaches final crisis and is destroyed.",
+      "optional": "Parallel climax: survival battle + final traversal.",
+      "post": "Sauron falls.",
+      "wave_id": "M046",
+      "status": "SOURCE_PREPRODUCTION_REGISTERED",
+      "runtime_integration_allowed": false,
+      "checkpoint_contract": [
+        "chapter entry",
+        "before irreversible set-piece",
+        "postcondition commit where applicable"
+      ],
+      "production_domains": [
+        "world-state variants",
+        "roster/character needs",
+        "encounter package",
+        "cinematic handoff",
+        "quest/objective graph",
+        "save/checkpoint",
+        "audio/VFX",
+        "streaming/performance",
+        "QA matrix"
+      ],
+      "source_boundary": "FILM_CANON_MASTER_SUMMARY_NOT_SCRIPT_VERIFIED",
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+    },
+    {
+      "id": "F3-07",
+      "title": "Return & Farewell",
+      "location": "Minas Tirith / Shire / Grey Havens",
+      "focus": "Survivors",
+      "critical": "Coronation, homecoming, final departures.",
+      "optional": "Post-war exploration, closure conversations, epilogue unlocks.",
+      "post": "Main campaign complete.",
+      "wave_id": "M047",
+      "status": "SOURCE_PREPRODUCTION_REGISTERED",
+      "runtime_integration_allowed": false,
+      "checkpoint_contract": [
+        "chapter entry",
+        "before irreversible set-piece",
+        "postcondition commit where applicable"
+      ],
+      "production_domains": [
+        "world-state variants",
+        "roster/character needs",
+        "encounter package",
+        "cinematic handoff",
+        "quest/objective graph",
+        "save/checkpoint",
+        "audio/VFX",
+        "streaming/performance",
+        "QA matrix"
+      ],
+      "source_boundary": "FILM_CANON_MASTER_SUMMARY_NOT_SCRIPT_VERIFIED",
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+    }
+  ]
+}
