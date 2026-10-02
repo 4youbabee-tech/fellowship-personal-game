@@ -2756,3 +2756,14 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Active PR heads | EXCLUDED | none of the three remains open |
 | Production/runtime content | UNCHANGED | maintenance-only retirement |
 | Hosted validation | PENDING | fresh Pre-Unreal required |
+
+
+## 2026-10-03 - Final branch cleanup wave
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Live dead refs targeted | 4 | #270, #272, #273, #263 heads |
+| Active delete queue | COMPACTED 95 -> 4 | historical absent refs removed from execution queue |
+| Active PR heads | EXCLUDED | none of the four targets is open |
+| #263 runtime authority | SUPERSEDED | exact replacement support still import/QC pending; #267 remains bounded writer |
+| Exact-head validation | PENDING | fresh Pre-Unreal required |
