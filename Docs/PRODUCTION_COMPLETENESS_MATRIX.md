@@ -2618,3 +2618,8 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Stalled acquire recovery | SOURCE-IMPLEMENTED | Existing ack-without-worker recycle can now receive a real AckUtc |
 | Hosted regression | SOURCE-IMPLEMENTED | Pre-Unreal test covers real + legacy timestamp forms |
 | Local machine recovery | PENDING USER-SIDE WATCHDOG REINSTALL/RESTART | No claim of runner recovery until a queued job starts |
+
+| Runner manual recovery | RUN-PROVEN | Watchdog emitted `START` then `ONLINE ... brokerListening=true`; queued Unreal work resumed |
+| Broker transport-stall auto-recovery | SOURCE-IMPLEMENTED | Bounded recycle when transport error remains newer than healthy broker evidence, no worker is active, and github.com:443 is reachable |
+| Network outage behavior | SOURCE-IMPLEMENTED | Logs `NETWORK_BLOCKED`; avoids restart loop when GitHub control plane is unreachable |
+| Runner auto-recovery exact-head validation | PENDING | Fresh Pre-Unreal + subsequent machine deployment/restart required |
