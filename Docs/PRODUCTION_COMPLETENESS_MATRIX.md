@@ -2532,3 +2532,19 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Download/hash evidence | PENDING | No receipt SHA256 claimed by this metadata update |
 | Audio QC / WAV masters / UE import | PENDING | Separate intake and listening/import evidence required |
 | Runtime / device / performance | NOT ACCEPTED | No experiential evidence created by this source metadata change |
+
+
+## 2026-10-02 - Continuous Mega Wave Queue V2
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Mega production queue | SOURCE-IMPLEMENTED | 64 waves / 18,890 target work-items |
+| P1C01 runtime waves | REGISTERED | 12 serialized runtime waves; Governor order remains authoritative |
+| Global source waves | REGISTERED | 12 source-only acquisition families |
+| Trilogy chapter packages | SOURCE-PREPARED | 23 chapter waves covering F1-01 through F3-07 |
+| Future chapter runtime | FORBIDDEN BY QUEUE | Every future chapter row carries `runtime_integration_allowed=false` |
+| Cross-cutting hardening | REGISTERED | 17 system/QA/streaming/performance waves |
+| Project Manager traceability | REGISTERED | `PMREQ_CONTINUOUS_MEGA_WAVE_QUEUE_V2_2026_10_02` |
+| Frodo static FBX structure | STATIC-VALIDATED | Warehouse #315: 5/5 allowlisted candidates, FBX v7400, skeleton/skin/cluster markers present |
+| Frodo UE4 skeletal import / deformation / likeness | PENDING | Separate engine and human visual evidence still required |
+| PIE / device / visual / performance acceptance | NOT ACCEPTED | Queue/source capacity does not create experiential evidence |
