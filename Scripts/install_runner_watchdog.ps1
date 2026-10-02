@@ -16,13 +16,16 @@ if ($identity -match 'NETWORK SERVICE') { throw "Do not install the watchdog und
 
 $sourceWatchdog = Join-Path $PSScriptRoot "runner_watchdog.ps1"
 $sourceServiceGuard = Join-Path $PSScriptRoot "runner_service_guard.ps1"
+$sourceTimestampParser = Join-Path $PSScriptRoot "runner_log_timestamp.ps1"
 $runCmd = Join-Path $RunnerRoot "run.cmd"
 $supervisorRoot = Join-Path $RunnerRoot "supervisor"
 $installedWatchdog = Join-Path $supervisorRoot "runner_watchdog.ps1"
 $installedServiceGuard = Join-Path $supervisorRoot "runner_service_guard.ps1"
+$installedTimestampParser = Join-Path $supervisorRoot "runner_log_timestamp.ps1"
 
 if (-not (Test-Path -LiteralPath $sourceWatchdog -PathType Leaf)) { throw "Watchdog source missing: $sourceWatchdog" }
 if (-not (Test-Path -LiteralPath $sourceServiceGuard -PathType Leaf)) { throw "Runner service guard missing: $sourceServiceGuard" }
+if (-not (Test-Path -LiteralPath $sourceTimestampParser -PathType Leaf)) { throw "Runner timestamp parser missing: $sourceTimestampParser" }
 if (-not (Test-Path -LiteralPath $runCmd -PathType Leaf)) { throw "GitHub runner run.cmd missing: $runCmd" }
 
 $workers = @(Get-Process -Name "Runner.Worker" -ErrorAction SilentlyContinue)
@@ -31,6 +34,7 @@ if ($workers.Count -gt 0) { throw "Runner.Worker is active. Wait for the live jo
 New-Item -ItemType Directory -Path $supervisorRoot -Force | Out-Null
 Copy-Item -LiteralPath $sourceWatchdog -Destination $installedWatchdog -Force
 Copy-Item -LiteralPath $sourceServiceGuard -Destination $installedServiceGuard -Force
+Copy-Item -LiteralPath $sourceTimestampParser -Destination $installedTimestampParser -Force
 
 # Permanently eliminate service-mode ownership before starting the interactive watchdog.
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File $installedServiceGuard -RunnerRoot $RunnerRoot
