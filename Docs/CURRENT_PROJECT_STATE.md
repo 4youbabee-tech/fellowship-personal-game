@@ -3700,3 +3700,10 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Production mode uses resident `ProductionGrassClumpMesh` with exactly 12 x 8 = 96 deterministic instances, cull band 900-6500 cm and no shadows; the twelve long cube strips remain fallback-only when the resident mesh is unavailable.
 - Existing async/resident asset ownership, quest/NPC/LivingWorld authority and P1C02 gate remain unchanged.
 - Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD PRE-UNREAL + UE4.27.2 PENDING**. No PIE/device/visual/performance acceptance claim.
+
+## 2026-10-03 - Hobbit-hole production overlay suppression
+
+- Implemented visible-world cleanup so resident `SM_ShTurfMound` + `SM_ShHobbitFacade` own the hobbit-hole silhouette without engine primitive door/window/chimney/bush overlays.
+- The complete primitive-accent path remains deterministic fallback-only when either production mesh is unavailable.
+- This reduces production-mode spawned primitive actors and does not add Tick, collision ownership, synchronous loading, NPC/state authority or P1C02 runtime work.
+- Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD PRE-UNREAL + UE4.27.2 PENDING**. No PIE/device/visual/performance acceptance claim.
