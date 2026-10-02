@@ -3663,3 +3663,10 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Exact-head Frodo run #27 on `c22c9af838b94ecf2b93d6148a5c5c5c7ccc972d` failed before candidate ranking because the GitHub source archive contained no FBX entries.
 - The immutable repository revision itself exposes `Characters/fbx/Rogue.fbx`; the lane now stages that exact raw-revision FBX directly, validates its FBX header and records SHA256/bytes in the existing receipt before intake.
 - Existing OpenGameArt payloads remain reuse-verified; no full redownload, conversion, runtime integration, Gate 6/7, visual or device acceptance claim is introduced.
+
+
+## 2026-10-02 — Frodo KayKit candidate ranking recovery
+
+- Exact-head Frodo run #28 proved immutable direct-FBX staging: `Rogue.fbx`, 19,529,164 bytes, SHA256 `93a9ee0a67ae69b2d815050234acad2004c3b8af7d294b916e52609c8195eb71`.
+- The run then exposed a bounded ranking defect: smaller accessory FBXs displaced the KayKit character FBX from the eight-row Frodo pool. Candidate ranking now applies a manifest-owned KayKit source bonus so the licensed character payload reaches static/UE4 gates without widening the pool.
+- This is source-selection evidence only; runtime integration and all human/device acceptance states remain false.

@@ -76,6 +76,7 @@ $bmpFiles=@(Get-ChildItem -LiteralPath $intakeRoot -Recurse -File -Filter "*.bmp
 if($bmpFiles.Count -gt 0){ throw "P1C01_HERO_RIG_FORBIDDEN_BMP count=$($bmpFiles.Count)" }
 
 $globalMax=[int]$manifest.candidate_policy.max_ranked_candidates_per_character
+$sourcePriorityBonuses=Get-OptionalPropertyValue $manifest.candidate_policy "source_asset_priority_bonus" ([pscustomobject]@{})
 $characterReports=@()
 $poolReady=0
 $unprovenancedFbx=@()
@@ -112,6 +113,9 @@ foreach($character in @($manifest.priority_characters)){
     $dir=$file.DirectoryName
     $nearTextures=@($textureFiles | Where-Object { $_.DirectoryName -eq $dir }).Count
     $prov=@($provenanceRows | Where-Object { [string]$_.candidate_file -ieq [string]$file.FullName })[0]
+    $sourcePriorityBonus=0
+    $sourceBonusProperty=$sourcePriorityBonuses.PSObject.Properties[[string]$prov.asset_id]
+    if($null -ne $sourceBonusProperty){ $sourcePriorityBonus=[int]$sourceBonusProperty.Value; $score += $sourcePriorityBonus }
     $scored += [pscustomobject]@{
       source_fbx=$file.FullName
       filename=$file.Name
@@ -126,6 +130,7 @@ foreach($character in @($manifest.priority_characters)){
       source_receipt=[string]$prov.receipt
       source_payload=[string]$prov.source_file
       source_sha256=[string]$prov.source_sha256
+      source_priority_bonus=[int]$sourcePriorityBonus
       state="RIG_BASE_CANDIDATE_STATIC_QC_REQUIRED"
       final_character_likeness=$false
       ready_for_import=$false
