@@ -3623,3 +3623,14 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Added `Scripts/runner_log_timestamp.ps1` supporting the real broker timestamp format while retaining the legacy parser, wired it into the watchdog, and updated the installer so the helper is copied into the supervisor directory.
 - Added hosted regression `test_runner_watchdog_timestamp.ps1` and Pre-Unreal execution so this parser drift cannot silently disable stalled-acquire recovery again.
 - Status: **SOURCE-IMPLEMENTED / HOSTED EXACT-HEAD VALIDATION PENDING / MACHINE WATCHDOG REINSTALL REQUIRED**. The queued Unreal jobs are not claimed recovered until the local supervisor is reinstalled/restarted and GitHub shows a job entering `in_progress`.
+
+## 2026-10-02 - Runner recovery machine proof + transport-stall fail-safe
+
+- Manual supervisor recycle on the UE4 machine produced concrete watchdog evidence:
+  - `SHIRE_RUNNER_WATCHDOG_START root=D:\actions-runner`
+  - `SHIRE_RUNNER_WATCHDOG_ONLINE pid=30020 brokerListening=true`
+- GitHub then assigned queued Unreal work again: #1268 ran to a real C++ compile failure, and #1267 entered `in_progress`. This proves the queue stall was runner-broker acquisition related rather than a global GitHub Actions outage.
+- The permanent source fix is stronger than the manual restart: the watchdog now parses real runner timestamps, tracks broker transport error vs later healthy evidence, and automatically recycles a listener that remains transport-failed for the configured bounded interval when no worker is active and github.com:443 is reachable.
+- If github.com:443 itself is unreachable, the watchdog logs `SHIRE_RUNNER_WATCHDOG_NETWORK_BLOCKED` instead of restart-looping.
+- Existing stale-worker and ack-without-worker recovery remain active; this change adds broker-transport-stall recovery rather than replacing them.
+- Status: **MACHINE RECOVERY RUN-PROVEN FOR MANUAL RECYCLE / PERMANENT AUTO-RECOVERY SOURCE-IMPLEMENTED / FRESH EXACT-HEAD VALIDATION PENDING**.
