@@ -2575,3 +2575,13 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Visual/device/performance acceptance | NOT ACCEPTED | Requires later runtime and human/device evidence |
 
 | Visible-world pack PG-187 compatibility | SOURCE-REPAIRED | Keep required `RUNNER_EXECUTION_READY` status; new priority carried by separate execution profile |
+
+## 2026-10-02 - Visible-world reuse-first correction
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Ferry reusable production stock | STATIC-IDENTIFIED | River boat, footbridge, rope post/coil, reed cluster already present/imported |
+| Road reusable production stock | STATIC-IDENTIFIED | Fallen log, broadleaf tree and boulder cluster already present/imported |
+| New source acquisition | CONDITIONAL | Only after existing stock fails later composition/visual review |
+| Runtime binding | NOT STARTED HERE | Serialized runtime lane remains separate |
+| Visual/device/performance acceptance | NOT ACCEPTED | No matching evidence |

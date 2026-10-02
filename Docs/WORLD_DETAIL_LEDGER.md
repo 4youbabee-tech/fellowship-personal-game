@@ -1013,3 +1013,11 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Animated production candidates remain FBX-only. Production textures remain PNG/TGA, 1K/2K by default. Repeated world detail remains ISM/HISM + LOD/culling. Heavy runtime residency remains soft/async under the existing streaming subsystem.
 - Player-visible intent: replace the strongest current proxy/material read blockers first so the next authorized runtime integration can materially improve what the owner sees in Bag End/Hobbiton rather than only expanding backend systems.
 - Evidence boundary: **REGISTERED / SOURCE EXECUTION NOT YET RUN**. No PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED or PERFORMANCE-ACCEPTED claim.
+
+## 2026-10-02 - P1C01 visible-world reuse-first correction
+
+- Before acquiring more ferry/road assets, exact Unreal import evidence was checked against the visible proxy list.
+- Existing imported production stock already includes `SM_CommonRiverBoat`, `SM_CommonRopePost`, `SM_CommonRopeCoil`, `SM_CommonFootbridge`, `SM_CommonReedCluster`, `SM_CommonFallenLog`, `SM_CommonBroadleafTree` and `SM_CommonBoulderCluster`.
+- Therefore Bucklebury/Ferry and the wooded-road corridor are now **reuse-first**, not automatically classified as new-source gaps. The next serialized runtime visual pass must try these resident production roles before requesting another provider asset.
+- This remains source/routing work only while PR #247 owns the runtime-changing lane.
+- Evidence boundary: **STATIC-VALIDATED ROUTING / NO VISUAL ACCEPTANCE**.

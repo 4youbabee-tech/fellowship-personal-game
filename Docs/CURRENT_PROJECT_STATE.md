@@ -3590,3 +3590,10 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Pre-Unreal #1599 reached the project-structure gate and failed only because the visible-world source branch changed the legacy mega-pack status token away from the PG-187 required value.
 - Root fix keeps `status=RUNNER_EXECUTION_READY` and records the new intent separately as `execution_profile=VISIBLE_WORLD_PRIORITY_V2`; no guard is weakened.
 - Status: **SOURCE-REPAIRED / FRESH EXACT-HEAD PRE-UNREAL PENDING**.
+
+## 2026-10-02 - Visible-world reuse-first scan
+
+- Deep scan found that several shapes still shown as primitive fallbacks already have imported production alternatives elsewhere in the project/import set.
+- Reusable stock now explicitly routed before new acquisition: `SM_CommonRiverBoat`, `SM_CommonFootbridge`, rope post/coil, reeds, fallen log, broadleaf tree and boulder cluster.
+- This materially reduces the true new-source gap for Bucklebury/Ferry and the wooded Shire road. New acquisition is now conditional on later visual failure of this existing stock, not the default.
+- Status: **STATIC-VALIDATED SOURCE ROUTING / EXACT-HEAD PRE-UNREAL PENDING**.
