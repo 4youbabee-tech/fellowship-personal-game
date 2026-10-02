@@ -16,6 +16,18 @@ function Set-Mode([string]$Mode, [string]$Reason, [string]$ParentSha, [string]$R
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_UNREAL_PARENT_SHA=$ParentSha"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value ("SHIRE_RESET_INTERMEDIATES=" + ($(if($ResetIntermediates){"true"}else{"false"})))
 
+    if (-not [string]::IsNullOrWhiteSpace([string]$env:GITHUB_OUTPUT)) {
+        Add-Content -LiteralPath $env:GITHUB_OUTPUT -Value "mode=$Mode"
+        Add-Content -LiteralPath $env:GITHUB_OUTPUT -Value "full=$full"
+        Add-Content -LiteralPath $env:GITHUB_OUTPUT -Value "core=$core"
+        Add-Content -LiteralPath $env:GITHUB_OUTPUT -Value "asset=$asset"
+        Add-Content -LiteralPath $env:GITHUB_OUTPUT -Value "acceptance=$acceptance"
+        Add-Content -LiteralPath $env:GITHUB_OUTPUT -Value "resume_stage=$ResumeStage"
+        Add-Content -LiteralPath $env:GITHUB_OUTPUT -Value "reason=$Reason"
+        Add-Content -LiteralPath $env:GITHUB_OUTPUT -Value "parent_sha=$ParentSha"
+        Add-Content -LiteralPath $env:GITHUB_OUTPUT -Value ("reset_intermediates=" + ($(if($ResetIntermediates){"true"}else{"false"})))
+    }
+
     Write-Host "UNREAL_VALIDATION_DECISION mode=$Mode full=$full core=$core asset=$asset acceptance=$acceptance resume=$ResumeStage resetIntermediates=$ResetIntermediates parent=$ParentSha reason=$Reason"
 }
 
@@ -447,6 +459,13 @@ $safeExact = @(
     "Data/P1C01CompleteAudioBankV1.json",
     "Data/P1C01NamedCharacterEffortsV1.json",
     "Data/WarehouseGapAuditSource09V1.json",
+    "Data/P1C01EastFieldsRowReplacementV1.json",
+    "Data/P1C01KayKitAdventurersHeroCandidateBatchV1.json",
+    "Data/P1C01OpenGameArtRpgHeroCandidateBatchV1.json",
+    "Data/WholeGameChapterAssetDemandMatrixV1.json",
+    "Data/WholeGameChapterProductionPacketsV1.json",
+    "Scripts/test_p1c01_hero_candidate_provider_contract.ps1",
+    "Scripts/test_whole_game_chapter_production_packets.ps1",
     "Scripts/operation_recovery.py",
     "Scripts/test_operation_recovery.py",
     "Scripts/run_branch_cleanup.ps1",
