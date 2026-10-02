@@ -79,3 +79,16 @@ try {
     $env:GH_TOKEN = $oldToken
     Set-Location $oldLocation
 }
+
+
+# Regression: hosted checkout uses full local history with credentials intentionally
+# removed. Tree-equivalent merge proof must probe local Git first and only fetch when
+# the parent object is absent; otherwise governance/source-only PRs can reserve UE4
+# because of an authentication failure rather than missing evidence.
+if (-not $source.Contains('rev-parse --verify --quiet "$ParentSha^{object}"')) {
+    throw 'Classifier must probe local merge-parent object before tree-equivalent fetch'
+}
+if (-not $source.Contains('TREE_EQUIVALENT_PARENT_FETCH_REQUIRED')) {
+    throw 'Classifier shallow-history fallback marker missing'
+}
+Write-Host 'UNREAL_CLASSIFIER_LOCAL_TREE_PROOF_REGRESSION_PASS'
