@@ -175,10 +175,6 @@ jobs:
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_p1c01_frodo_candidate_semantic_qc.ps1"
 
-      - name: Test P1C01 Frodo skeletal import contract
-        shell: cmd
-        run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_p1c01_frodo_skeletal_import_contract.ps1"
-
       - name: Test zero-payload provider fail-closed contract
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_warehouse_provider_zero_payload_fail_closed.ps1"
@@ -190,6 +186,14 @@ jobs:
       - name: Test continuous mega-wave queue V2
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_continuous_production_wave_queue_v2.ps1"
+
+      - name: Test P1C01 Frodo skeletal import contract
+        shell: cmd
+        run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_p1c01_frodo_skeletal_import_contract.ps1"
+
+      - name: Test P1C01 visible-world proxy replacement contract
+        shell: cmd
+        run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_p1c01_visible_world_proxy_replacement.ps1"
 
       - name: Scrub static checkout authentication
         if: always()

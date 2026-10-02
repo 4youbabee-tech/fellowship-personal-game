@@ -1003,3 +1003,21 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - P1C01 remains the sole runtime-changing production lane. All later chapter packets are explicitly source/preproduction only until predecessor Gate 6/7 acceptance.
 - Preproduction domains per chapter: canon/state contract, location/world packet, roster/character needs, props/materials/vegetation, animation/encounters, audio/VFX, quest/checkpoint/save contract, streaming/performance plan and QA matrix.
 - Status: **SOURCE/PREPRODUCTION REGISTERED / NO FUTURE RUNTIME ACTIVATION**.
+
+## 2026-10-02 - P1C01 visible-world mega execution registration
+
+- Registered a source-only production continuation specifically to shorten time-to-visible-Shire while M001 Frodo skeletal validation remains on the serialized runtime lane.
+- This execution is not a new feature and does not open a second runtime authority. It activates the already-registered P1C01 warehouse-first cells for **Bag End hero ring, Hobbiton village, Shire road corridor and Bucklebury/Ferry**.
+- Priority source domains are the already-authorized M003-M007 visual stack: production surfaces/materials, architecture/props, vegetation support and world dressing. Existing warehouse bytes are reused first.
+- `Data/P1C01MegaChapterPackV1.json` remains source/preparation only. Its material export, promotion and character-intake cars do not mutate P1C01 runtime while PR #247 owns the current runtime-changing skeletal lane.
+- Animated production candidates remain FBX-only. Production textures remain PNG/TGA, 1K/2K by default. Repeated world detail remains ISM/HISM + LOD/culling. Heavy runtime residency remains soft/async under the existing streaming subsystem.
+- Player-visible intent: replace the strongest current proxy/material read blockers first so the next authorized runtime integration can materially improve what the owner sees in Bag End/Hobbiton rather than only expanding backend systems.
+- Evidence boundary: **REGISTERED / SOURCE EXECUTION NOT YET RUN**. No PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED or PERFORMANCE-ACCEPTED claim.
+
+## 2026-10-02 - P1C01 visible-world reuse-first correction
+
+- Before acquiring more ferry/road assets, exact Unreal import evidence was checked against the visible proxy list.
+- Existing imported production stock already includes `SM_CommonRiverBoat`, `SM_CommonRopePost`, `SM_CommonRopeCoil`, `SM_CommonFootbridge`, `SM_CommonReedCluster`, `SM_CommonFallenLog`, `SM_CommonBroadleafTree` and `SM_CommonBoulderCluster`.
+- Therefore Bucklebury/Ferry and the wooded-road corridor are now **reuse-first**, not automatically classified as new-source gaps. The next serialized runtime visual pass must try these resident production roles before requesting another provider asset.
+- This remains source/routing work only while PR #247 owns the runtime-changing lane.
+- Evidence boundary: **STATIC-VALIDATED ROUTING / NO VISUAL ACCEPTANCE**.

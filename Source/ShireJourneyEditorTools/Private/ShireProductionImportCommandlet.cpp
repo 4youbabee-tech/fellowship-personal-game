@@ -17,6 +17,7 @@
 #include "Misc/FileHelper.h"
 #include "Misc/PackageName.h"
 #include "Misc/Paths.h"
+#include "Misc/Parse.h"
 #include "Materials/Material.h"
 #include "Materials/MaterialExpressionScalarParameter.h"
 #include "Materials/MaterialExpressionTextureSampleParameter2D.h"
@@ -332,6 +333,13 @@ UShireProductionImportCommandlet::UShireProductionImportCommandlet()
 
 int32 UShireProductionImportCommandlet::Main(const FString& Params)
 {
+    const bool bEnableCharacterRigImport = FParse::Param(*Params, TEXT("EnableCharacterRigImport"));
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("ShireProductionImport: character-rig-import=%s"),
+        bEnableCharacterRigImport ? TEXT("enabled") : TEXT("disabled"));
+
     const FString SourceRoot = FPaths::ConvertRelativePathToFull(
         FPaths::Combine(FPaths::ProjectDir(), TEXT("SourceAssets/Production")));
     const FString WorkingRoot = FPaths::ConvertRelativePathToFull(
@@ -357,15 +365,18 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
     IFileManager::Get().FindFilesRecursive(TextureFiles, *WorkingRoot, TEXT("*.png"), true, false, false);
     IFileManager::Get().FindFilesRecursive(TextureFiles, *WorkingRoot, TEXT("*.tga"), true, false, false);
     IFileManager::Get().FindFilesRecursive(MeshFiles, *WorkingRoot, TEXT("*.obj"), true, false, false);
-    IFileManager::Get().FindFilesRecursive(RigFbxFiles, *WorkingRoot, TEXT("*.fbx"), true, false, false);
-    for (const FString& FbxFile : RigFbxFiles)
+    if (bEnableCharacterRigImport)
     {
-        FString RelativeFbx = FbxFile;
-        FPaths::MakePathRelativeTo(RelativeFbx, *(WorkingRoot / TEXT("")));
-        RelativeFbx.ReplaceInline(TEXT("\\"), TEXT("/"));
-        if (RelativeFbx.StartsWith(TEXT("Characters/Rigs/"), ESearchCase::IgnoreCase))
+        IFileManager::Get().FindFilesRecursive(RigFbxFiles, *WorkingRoot, TEXT("*.fbx"), true, false, false);
+        for (const FString& FbxFile : RigFbxFiles)
         {
-            MeshFiles.Add(FbxFile);
+            FString RelativeFbx = FbxFile;
+            FPaths::MakePathRelativeTo(RelativeFbx, *(WorkingRoot / TEXT("")));
+            RelativeFbx.ReplaceInline(TEXT("\\"), TEXT("/"));
+            if (RelativeFbx.StartsWith(TEXT("Characters/Rigs/"), ESearchCase::IgnoreCase))
+            {
+                MeshFiles.Add(FbxFile);
+            }
         }
     }
     IFileManager::Get().FindFilesRecursive(MaterialLibraryFiles, *WorkingRoot, TEXT("*.mtl"), true, false, false);

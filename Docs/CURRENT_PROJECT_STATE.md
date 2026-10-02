@@ -3615,3 +3615,43 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Candidate #5 `Worker_Male.fbx` is now the active exact-head UE4.27.2 probe after four exact-SHA technical rejections.
 - If candidate #5 repeats the same defects, the current source family is exhausted; the gate will not be weakened.
 - Status: **SOURCE-IMPLEMENTED / FINAL CURRENT-FAMILY PROBE ACTIVE / EXACT-HEAD ENGINE EVIDENCE PENDING**.
+
+## 2026-10-02 - P1C01 visible-world mega source execution
+
+- Opened a dedicated source/preparation branch from canonical develop to push the already-authorized M003-M007 visual stack while M001 Frodo skeletal validation remains serialized on PR #247.
+- `Data/P1C01MegaChapterPackV1.json` is upgraded to schema v2 and now explicitly prioritizes four visible cells: Bag End hero ring, Hobbiton village, Shire road corridor and Bucklebury/Ferry.
+- The pack continues to reuse the persistent warehouse before acquisition and keeps the existing promotion/material-export/character-intake machinery. It does not introduce a second runtime lane.
+- Target constraints remain UE4.27.2 / DX11 / 720p / 30 FPS floor / 8 GB RAM / ~2 GB VRAM, FBX animated assets, PNG/TGA production textures, soft/async heavy runtime assets and ISM/HISM+LOD/culling for repeated detail.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL PENDING**. No PIE/device/visual/performance acceptance claim.
+
+## 2026-10-02 - Concrete visible-proxy inventory for the next P1C01 art pass
+
+- Static source inspection of `ShirePrototypeWorldBuilder.cpp` confirms the world still retains Engine Cube/Sphere/Cylinder/Cone fallbacks when production meshes are unavailable.
+- Added `Data/P1C01VisibleWorldProxyReplacementV1.json` to convert that observation into a concrete source-routing contract for Bag End, Hobbiton, Shire roads and Bucklebury/Ferry.
+- The plan records existing production mesh identities separately from missing source needs, so later runtime work can remove a fallback only when a real imported replacement exists.
+- A Pre-Unreal contract test now fails closed if the four visible cells, FBX/PNG-TGA rules, async-loading rule or HISM repeated-detail rule drift.
+- Status: **STATIC-VALIDATED SOURCE CONTRACT PENDING EXACT-HEAD PRE-UNREAL**. No runtime/PIE/device/visual/performance acceptance claim.
+
+## 2026-10-02 - Visible-world pack PG-187 repair
+
+- Pre-Unreal #1599 reached the project-structure gate and failed only because the visible-world source branch changed the legacy mega-pack status token away from the PG-187 required value.
+- Root fix keeps `status=RUNNER_EXECUTION_READY` and records the new intent separately as `execution_profile=VISIBLE_WORLD_PRIORITY_V2`; no guard is weakened.
+- Status: **SOURCE-REPAIRED / FRESH EXACT-HEAD PRE-UNREAL PENDING**.
+
+## 2026-10-02 - Visible-world reuse-first scan
+
+- Deep scan found that several shapes still shown as primitive fallbacks already have imported production alternatives elsewhere in the project/import set.
+- Reusable stock now explicitly routed before new acquisition: `SM_CommonRiverBoat`, `SM_CommonFootbridge`, rope post/coil, reeds, fallen log, broadleaf tree and boulder cluster.
+- This materially reduces the true new-source gap for Bucklebury/Ferry and the wooded Shire road. New acquisition is now conditional on later visual failure of this existing stock, not the default.
+- Status: **STATIC-VALIDATED SOURCE ROUTING / EXACT-HEAD PRE-UNREAL PENDING**.
+
+
+## 2026-10-02 - Frodo validation residue isolation on current develop
+
+- Dedicated Frodo run #23 on `bf86b7b62f5fcc92f3ee80ebf217fa05245f1dea` imported `Casual3_Male.fbx` as a 33-bone `USkeletalMesh`, then correctly rejected it for a missing body UV set; smoothing-group and bind-pose warnings remain candidate-quality debt.
+- Concurrent normal Unreal #1250 compiled C++, completed production import, Automation QA, startup, chapter audits and state roundtrips, then failed the zero-ceiling warning-debt guard because the persistent self-hosted checkout let that transient validation FBX leak into the general importer.
+- The warning ceiling remains zero. Character-rig FBX discovery is now explicit opt-in through `-EnableCharacterRigImport`; normal production imports ignore `Characters/Rigs` FBX files.
+- The shared wrapper removes only the three known untracked Frodo validation source/output files before normal imports. The dedicated workflow passes the opt-in flag and performs the same bounded cleanup after evidence upload. Tracked future production assets are preserved.
+- Candidate #5 `Worker_Male.fbx` remains the active final-family probe; this repair isolates its evidence and does not relax its technical gate.
+- The branch is merged forward onto current `develop@3f1af6f96c42e29d5178d4b2041082b266977c2e`, preserving the visible-world reuse-first work. Exact-head Pre-Unreal, dedicated Frodo import and normal Unreal validation are required before merge.
+- Runtime integration remains false. No deformation, retarget, likeness, PIE, device, visual or performance acceptance is claimed.

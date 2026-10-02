@@ -1,0 +1,140 @@
+{
+  "schema_version": 2,
+  "plan_id": "P1C01_VISIBLE_WORLD_PROXY_REPLACEMENT_V1",
+  "status": "SOURCE_REUSE_PRIORITY_ACTIVE",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/ContinuousProductionWaveQueueV2.json",
+    "Data/P1C01WarehouseWorldExpansionV1.json",
+    "Data/P1C01MegaChapterPackV1.json",
+    "Docs/WORLD_DETAIL_LEDGER.md"
+  ],
+  "runtime_chapter": "P1C01",
+  "runtime_integration_allowed": false,
+  "objective": "Inventory concrete player-visible primitive fallback classes in the current Shire builder and route source acquisition/preparation so the next serialized runtime visual pass can replace the strongest proxy reads without inventing new story content.",
+  "current_builder": "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp",
+  "observed_fallback_policy": {
+    "engine_primitives": [
+      "/Engine/BasicShapes/Cube",
+      "/Engine/BasicShapes/Sphere",
+      "/Engine/BasicShapes/Cylinder",
+      "/Engine/BasicShapes/Cone"
+    ],
+    "reason": "Current builder intentionally retains primitives when production assets are absent. Hero-visible cells must progressively eliminate these fallbacks as source assets become available.",
+    "source_state": "STATIC_SOURCE_INSPECTION"
+  },
+  "replacement_cells": [
+    {
+      "order": 1,
+      "cell": "BAG_END_HERO_RING",
+      "priority": "CRITICAL_VISIBLE",
+      "existing_production_assets": [
+        "SM_ShHobbitFacade",
+        "SM_ShFenceSegment",
+        "SM_ShFlowerBox",
+        "SM_ShLantern",
+        "SM_ShBench",
+        "SM_ShCartLoaded"
+      ],
+      "remaining_source_needs": [
+        "approved modular Bag End interior shell FBX",
+        "hero round-door/window/trim support FBX",
+        "higher-quality domestic clutter support",
+        "garden/earth transition support"
+      ],
+      "runtime_rule": "Do not remove fallback until the exact replacement asset has import/QC evidence."
+    },
+    {
+      "order": 2,
+      "cell": "HOBBITON_VILLAGE",
+      "priority": "CRITICAL_VISIBLE",
+      "existing_production_assets": [
+        "SM_ShCottageHouse",
+        "SM_ShMillHouse",
+        "SM_ShStoneBridge",
+        "SM_ShMarketStall",
+        "SM_ShWell",
+        "SM_ShFarmGate",
+        "SM_ShPicnicTable"
+      ],
+      "remaining_source_needs": [
+        "party-field hero structure/decor support",
+        "crop-row/field-detail production support",
+        "fallen-log/woodland obstacle support",
+        "higher-quality village clutter variation"
+      ],
+      "runtime_rule": "Prefer production meshes and HISM detail; keep story anchors fixed."
+    },
+    {
+      "order": 3,
+      "cell": "SHIRE_ROAD_CORRIDOR",
+      "priority": "HIGH_VISIBLE",
+      "existing_production_assets": [
+        "SM_ShRoadBlock",
+        "SM_ShPathStone",
+        "SM_ShHedge",
+        "SM_ShTreeTrunk",
+        "SM_ShTreeCanopy",
+        "SM_ShRock",
+        "SM_CommonFallenLog",
+        "SM_CommonBroadleafTree",
+        "SM_CommonBoulderCluster"
+      ],
+      "remaining_source_needs": [
+        "road-edge breakup/ditch support if current stock cannot compose the required silhouette",
+        "additional hedge/broadleaf variation only after current reusable assets are exhausted"
+      ],
+      "runtime_rule": "Next serialized runtime visual pass must reuse Common fallen-log/broadleaf/boulder stock first; repeated detail remains ISM/HISM + LOD/culling."
+    },
+    {
+      "order": 4,
+      "cell": "BUCKLEBURY_FERRY",
+      "priority": "CRITICAL_VISIBLE",
+      "existing_production_assets": [
+        "SM_CommonRiverBank",
+        "M_ProductionWater",
+        "SM_CommonRiverBoat",
+        "SM_CommonRopePost",
+        "SM_CommonRopeCoil",
+        "SM_CommonFootbridge",
+        "SM_CommonReedCluster"
+      ],
+      "remaining_source_needs": [
+        "hero-specific ferry silhouette only if reusable river-boat/footbridge stock fails later visual review",
+        "additional riverbank vegetation variation only if current reed/rock stock is insufficient"
+      ],
+      "runtime_rule": "Next serialized runtime visual pass must try already-imported river boat/footbridge/rope/reed assets before requesting another ferry source. Water remains low-cost."
+    }
+  ],
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_class": 2,
+    "animated_asset_format": "FBX",
+    "texture_formats": [
+      "PNG",
+      "TGA"
+    ],
+    "loading": "FStreamableManager asynchronous for heavy runtime assets",
+    "repeated_detail": "ISM/HISM + LOD/culling"
+  },
+  "success_boundary": "Existing production stock is mapped to the visible fallback roles first; only roles still unsupported after reuse are eligible for new acquisition. Runtime replacement remains serialized and separately validated.",
+  "evidence_boundary": "STATIC SOURCE/IMPORT-LOG reuse mapping only. No PIE/device/visual/performance acceptance.",
+  "reuse_discovery": {
+    "evidence": "Unreal Build #1250 production-import log + current Shire builder static inspection",
+    "rule": "Prefer already-imported production assets before acquiring another source for the same visible role.",
+    "reusable_assets": [
+      "SM_CommonRiverBoat",
+      "SM_CommonRopePost",
+      "SM_CommonRopeCoil",
+      "SM_CommonFootbridge",
+      "SM_CommonReedCluster",
+      "SM_CommonFallenLog",
+      "SM_CommonBroadleafTree",
+      "SM_CommonBoulderCluster"
+    ]
+  }
+}

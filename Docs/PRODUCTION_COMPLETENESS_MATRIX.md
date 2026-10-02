@@ -2586,3 +2586,52 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | PIE / device / visual / deformation / retarget | NOT ACCEPTED | No matching evidence |
 
 | Missing smoothing warning identity | SOURCE-IMPLEMENTED | Zero ceiling unchanged; live+summary echo deduplicated by concrete import identity; unidentified warnings fail closed |
+
+## 2026-10-02 - P1C01 visible-world mega source execution
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Bag End hero ring source priority | SOURCE-IMPLEMENTED | Materials/props/garden/fence support routed through existing warehouse-first pack; runtime/visual acceptance not implied |
+| Hobbiton village source priority | SOURCE-IMPLEMENTED | Paths/fences/farm/social-prop/vegetation support prioritized; runtime/visual acceptance not implied |
+| Shire road corridor source priority | SOURCE-IMPLEMENTED | Ground/path/hedge/tree/rock support prioritized; runtime/visual acceptance not implied |
+| Bucklebury/Ferry source priority | SOURCE-IMPLEMENTED | Riverbank/wood/vegetation/transition support prioritized; runtime/visual acceptance not implied |
+| Runtime mutation | NOT AUTHORIZED BY THIS PACK | PR #247 remains serialized Frodo runtime lane; P1C02+ runtime stays gated |
+| Exact-head validation | PENDING | Pre-Unreal required before merge to develop |
+| PIE / device / visual / performance acceptance | NOT ACCEPTED | Requires later matching runtime and human/device evidence |
+
+## 2026-10-02 - Visible proxy replacement inventory
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Current Engine primitive fallbacks | STATIC-IDENTIFIED | Shire builder retains Cube/Sphere/Cylinder/Cone fallback paths |
+| Bag End replacement routing | SOURCE-IMPLEMENTED | Existing production identities + missing interior/hero-detail source needs recorded |
+| Hobbiton replacement routing | SOURCE-IMPLEMENTED | Existing village assets + remaining party/crop/log/clutter source needs recorded |
+| Shire road replacement routing | SOURCE-IMPLEMENTED | Existing road/hedge/tree/rock assets + remaining road-edge/variation source needs recorded |
+| Bucklebury/Ferry replacement routing | SOURCE-IMPLEMENTED | Riverbank/water exist; ferry/dock/mooring support remains source debt |
+| Runtime replacement | NOT STARTED IN THIS BRANCH | Serialized runtime lane remains PR #247 |
+| Exact-head static validation | PENDING | Pre-Unreal contract added |
+| Visual/device/performance acceptance | NOT ACCEPTED | Requires later runtime and human/device evidence |
+
+| Visible-world pack PG-187 compatibility | SOURCE-REPAIRED | Keep required `RUNNER_EXECUTION_READY` status; new priority carried by separate execution profile |
+
+## 2026-10-02 - Visible-world reuse-first correction
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Ferry reusable production stock | STATIC-IDENTIFIED | River boat, footbridge, rope post/coil, reed cluster already present/imported |
+| Road reusable production stock | STATIC-IDENTIFIED | Fallen log, broadleaf tree and boulder cluster already present/imported |
+| New source acquisition | CONDITIONAL | Only after existing stock fails later composition/visual review |
+| Runtime binding | NOT STARTED HERE | Serialized runtime lane remains separate |
+| Visual/device/performance acceptance | NOT ACCEPTED | No matching evidence |
+
+
+## 2026-10-02 - Frodo validation residue isolation
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Dedicated Frodo #23 | FAILED / CANDIDATE REJECTED | `Casual3_Male.fbx` imported as 33-bone `USkeletalMesh`, then failed missing-UV technical QC; no deformation/likeness acceptance |
+| Normal Unreal #1250 | FAILED / ROOT-CAUSED | Build/import/Automation/startup/chapter/state passed; warning-debt failed because transient Frodo validation FBX leaked into general import |
+| General production importer rig discovery | SOURCE-REPAIRED / VALIDATION PENDING | Character-rig FBX admission now requires explicit `-EnableCharacterRigImport` |
+| Persistent-runner validation residue | SOURCE-REPAIRED / VALIDATION PENDING | Only known untracked Frodo validation source/output is removed; tracked production assets remain untouched |
+| Warning ceiling | PRESERVED | Missing-smoothing ceiling remains zero; no suppression or budget increase |
+| Runtime replacement / visual / device / performance | NOT ACCEPTED | Isolation and class/bone evidence do not authorize runtime promotion |

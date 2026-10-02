@@ -65,7 +65,7 @@ jobs:
 
       - name: Import Frodo skeletal mesh in UE4.27.2
         shell: cmd
-        run: '"%GITHUB_WORKSPACE%\Scripts\ci_import_production_assets.cmd"'
+        run: '"%GITHUB_WORKSPACE%\Scripts\ci_import_production_assets.cmd" -EnableCharacterRigImport'
 
       - name: Verify SK_FRODO import evidence
         shell: powershell
@@ -127,3 +127,21 @@ jobs:
             ${{ github.workspace }}\Saved\Logs\CI-ProductionAssetImport.log
           if-no-files-found: error
           retention-days: 14
+
+      - name: Cleanup transient Frodo validation files
+        if: always()
+        shell: powershell
+        run: |
+          $paths = @(
+            "SourceAssets/Production/Characters/Rigs/FRODO/SK_FRODO.fbx",
+            "Content/Production/Characters/Rigs/FRODO/SK_FRODO.uasset",
+            "Content/Production/Characters/Rigs/FRODO/SK_FRODO_Skeleton.uasset"
+          )
+          foreach ($relative in $paths) {
+            & git.exe -C $env:GITHUB_WORKSPACE ls-files --error-unmatch -- $relative *> $null
+            if ($LASTEXITCODE -ne 0) {
+              $absolute = Join-Path $env:GITHUB_WORKSPACE $relative
+              Remove-Item -LiteralPath $absolute -Force -ErrorAction SilentlyContinue
+            }
+          }
+          Write-Host "P1C01_FRODO_VALIDATION_CLEANUP_PASS"
