@@ -80,15 +80,28 @@ class WarningDebtGuardTests(unittest.TestCase):
         ]:
             self.assertTrue(guard.is_runtime_log(Path(name)), name)
 
-    def test_occurrence_gate_still_counts_each_unidentified_warning(self):
-        pattern = re.compile(r"No smoothing group information", re.I)
-        count, identities = guard.measure(
-            "No smoothing group information\nNo smoothing group information",
-            pattern,
-            None,
-        )
-        self.assertEqual(count, 2)
-        self.assertEqual(identities, [])
+    def test_smoothing_summary_echo_counts_once_by_import_identity(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            log = root / "CI-ProductionAssetImport.log"
+            log.write_text("\n".join([
+                "FBXImport: Warning: No smoothing group information was found in this FBX scene.",
+                "ShireProductionImport result: C:/x/SK_FRODO.fbx | paths=1 result=0",
+                "Warning/Error Summary (Unique only)",
+                "LogInit: Display: FBXImport: Warning: No smoothing group information was found in this FBX scene.",
+            ]), encoding="utf-8")
+            count, identities = guard.measure_missing_smoothing([log])
+            self.assertEqual(count, 1)
+            self.assertEqual(identities, ["SK_FRODO.fbx"])
+
+    def test_smoothing_unidentified_warning_fails_closed(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            log = root / "CI-ProductionAssetImport.log"
+            log.write_text("No smoothing group information\n", encoding="utf-8")
+            count, identities = guard.measure_missing_smoothing([log])
+            self.assertEqual(count, 1)
+            self.assertEqual(identities, ["UNIDENTIFIED@CI-ProductionAssetImport.log"])
 
 
 if __name__ == "__main__":
