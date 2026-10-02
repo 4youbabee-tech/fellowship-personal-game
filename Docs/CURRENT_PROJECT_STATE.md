@@ -3785,3 +3785,21 @@ Wave 3 now retires four live-but-dead refs: closed PR #270, closed PR #272, clos
 The active `delete_after_merge` queue is compacted from 95 historical entries to these four live deletion targets. Historical dispositions remain preserved elsewhere in `BranchCleanupPlan.json`; absent refs are no longer re-queried on every cleanup run.
 
 Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD PRE-UNREAL PENDING**.
+
+
+## 2026-10-03 - Final live-branch hygiene closeout
+
+Live-ref audit after Branch Cleanup #142:
+- total live refs: **15**;
+- canonical/recovery refs: `develop`, `main`, `archive/pre-build-salvage-20260930`;
+- open PR heads: **9**;
+- unresolved unique-content refs without open PRs: **3**, now explicitly protected pending selective salvage.
+
+The three pending-salvage refs are:
+- `mega/p1c01-production-train-v1@793a57f8...`: contains P1C01 mega/visual packet files absent from develop;
+- `prep/f2-03-edoras-mega-source-v1@46d2d26f...`: unique Edoras packet/regression content absent from develop;
+- `prep/f2-03-edoras-mega-source-v2@d616be0c...`: independent later Edoras source lineage requiring selective reconciliation.
+
+The active `delete_after_merge` execution queue is now cleared to zero because all reviewed dead refs have been physically retired. Historical dispositions remain recorded in audit sections.
+
+Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptance claim.

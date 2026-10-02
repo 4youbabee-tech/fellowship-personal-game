@@ -4,7 +4,7 @@
   "authority": "Data/ProjectGovernor.json",
   "canonical_branch": "develop",
   "stable_release_branch": "main",
-  "status": "AUTOMATIC_EXACT_CLOSED_HEAD_DELETE_PLUS_ZERO_AHEAD_PRUNE",
+  "status": "CLEAN_ACTIVE_DELETE_QUEUE_ZERO_WITH_EXPLICIT_PENDING_SALVAGE",
   "truth_boundary": "This plan records branch hygiene only. It does not claim PIE/device/visual acceptance.",
   "preserve": [
     {
@@ -29,12 +29,7 @@
     "Docs/BRANCH_CONSOLIDATION_AUDIT.md",
     "SHIRE_PIE_VERIFY.bat"
   ],
-  "delete_after_merge": [
-    "maintenance/fix-branch-cleanup-empty-open-pr-query-2026-10-03",
-    "maintenance/final-branch-cleanup-rootfix-2026-10-03",
-    "maintenance/branch-cleanup-fast-absent-skip-2026-10-03",
-    "p1c01/hobbit-hole-production-overlay-suppression-2026-10-03"
-  ],
+  "delete_after_merge": [],
   "safety_rules": [
     "Never delete develop or main.",
     "Never delete an active PR head.",
@@ -66,6 +61,21 @@
     {
       "branch": "archive/pre-build-salvage-20260930",
       "reason": "non-execution recovery anchor containing the captured legacy branch heads as commit parents; preserve for selective forensic recovery only"
+    },
+    {
+      "branch": "mega/p1c01-production-train-v1",
+      "head_sha": "793a57f8da8ded10bf031e2686f3573193ae2458",
+      "reason": "Unique unsalvaged P1C01 production packet content remains; Data/P1C01ShireMegaChapterPackV1.json and Data/P1C01VisualProductionMegaWaveV2.json are absent from current develop. Preserve until selective salvage/reconciliation."
+    },
+    {
+      "branch": "prep/f2-03-edoras-mega-source-v1",
+      "head_sha": "46d2d26f17024057608447e0d8a69c1bfc27be1b",
+      "reason": "Unique F2-03 Edoras source-preproduction content remains and Data/F2_03EdorasMegaSourcePreproductionV1.json / its regression guard are absent from current develop. Preserve until selective reconciliation."
+    },
+    {
+      "branch": "prep/f2-03-edoras-mega-source-v2",
+      "head_sha": "d616be0c5f1178f1c5bf1997f1bb4b0b8b75b487",
+      "reason": "Independent later Edoras source-preparation lineage with unique commits not represented on current develop. Preserve until v1/v2 are reconciled selectively; do not bulk-merge."
     }
   ],
   "completed_integration_branches": [
@@ -406,6 +416,27 @@
       "live_ref_basis": "2026-10-03 live branch audit after Branch Cleanup #140 and #141."
     },
     "safety": "No open PR head is included. develop/main/archive remain protected. No unresolved unique-content branch is included.",
+    "evidence_boundary": "Repository/process hygiene only; no gameplay/compile/PIE/device/visual/performance acceptance."
+  },
+  "final_branch_hygiene_closeout_2026_10_03": {
+    "action": "CLOSE_ACTIVE_DELETION_QUEUE_AND_PROTECT_ONLY_UNRESOLVED_UNIQUE_REFS",
+    "live_ref_audit": {
+      "total_live_refs_before_closeout_pr": 15,
+      "canonical_and_recovery": [
+        "develop",
+        "main",
+        "archive/pre-build-salvage-20260930"
+      ],
+      "open_pr_heads_count": 9,
+      "pending_salvage_count": 3,
+      "pending_salvage_branches": [
+        "mega/p1c01-production-train-v1",
+        "prep/f2-03-edoras-mega-source-v1",
+        "prep/f2-03-edoras-mega-source-v2"
+      ]
+    },
+    "active_delete_queue_count": 0,
+    "rule": "A remaining branch must be canonical/recovery, the head of an open PR, or explicitly protected pending selective salvage. No unexplained live refs remain.",
     "evidence_boundary": "Repository/process hygiene only; no gameplay/compile/PIE/device/visual/performance acceptance."
   }
 }
