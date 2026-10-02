@@ -3648,3 +3648,11 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - `KAYKIT_ADVENTURERS_CC0` is now admitted by the existing P1C01 character-intake and Frodo static-QC source allowlists.
 - This branch is source/preparation only. It does not stage/import/promote a character by itself and does not authorize runtime replacement.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING**. No deformation, retarget, PIE, device, visual or performance acceptance claim.
+
+## 2026-10-02 - Frodo skeletal validation pipeline refreshed on current develop
+
+- Rebuilt the bounded Frodo skeletal validation lane from current develop ancestry instead of continuing stale PR #247.
+- Restored static candidate QC, exact-source staging receipt, UE4.27.2 skeletal import support, nonzero-bone verification, and fail-closed rejection of smoothing-group / bind-pose / UV debt.
+- Dedicated workflow is path-filtered so unrelated PRs do not consume the single UE4 self-hosted lane.
+- KayKit Adventurers remains a technical rig-base candidate only; runtime integration stays false until real import, deformation, retarget and AnimBP gates pass.
+- Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD PRE-UNREAL + UE4 SKELETAL IMPORT PENDING**. No PIE/device/visual/performance acceptance claim.
