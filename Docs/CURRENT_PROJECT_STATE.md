@@ -3614,3 +3614,12 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - No synchronous load was introduced: the builder still uses resident-only `FSoftObjectPath::ResolveObject`; chapter streaming ownership remains with the existing async streaming subsystem.
 - Story/quest/NPC ownership is unchanged; no new Tick loop, crowd authority, Spawn/Destroy crowd churn or P1C02 runtime activation was introduced.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD UE4.27.2 BUILD + RUNTIME AUDIT PENDING**. No PIE/device/visual/performance acceptance claim.
+
+## 2026-10-02 - UE4 self-hosted runner broker-stall root fix
+
+- Live machine evidence showed `Runner.Listener.exe` alive with **no `Runner.Worker.exe`**, while Unreal jobs #1267/#1268/#1269 remained queued.
+- Runner diagnostics showed broker transport failure (`SocketException 995`, aborted I/O) followed by a real log line in the form `[2026-10-02 15:19:29Z INFO BrokerMessageListener] Acknowledging runner request ...`.
+- Root cause in `runner_watchdog.ps1`: `Get-RunnerTimestampUtc` only accepted the obsolete `[RUNNER yyyy-MM-dd HH:mm:ssZ ...]` prefix. Therefore `AckUtc` stayed null and the existing `ack-without-worker` recovery path never fired for the actual GitHub runner log format.
+- Added `Scripts/runner_log_timestamp.ps1` supporting the real broker timestamp format while retaining the legacy parser, wired it into the watchdog, and updated the installer so the helper is copied into the supervisor directory.
+- Added hosted regression `test_runner_watchdog_timestamp.ps1` and Pre-Unreal execution so this parser drift cannot silently disable stalled-acquire recovery again.
+- Status: **SOURCE-IMPLEMENTED / HOSTED EXACT-HEAD VALIDATION PENDING / MACHINE WATCHDOG REINSTALL REQUIRED**. The queued Unreal jobs are not claimed recovered until the local supervisor is reinstalled/restarted and GitHub shows a job entering `in_progress`.
