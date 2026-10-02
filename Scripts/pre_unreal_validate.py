@@ -5325,6 +5325,8 @@ for pg167_cleanup_guard in [
     "BRANCH_CLEANUP_CLOSED_HEAD_MOVED",
     "BRANCH_CLEANUP_CLOSED_HEAD_KEEP_ACTIVE",
     "BRANCH_CLEANUP_ACTIVE_HEAD_RECHECK",
+    "activeBranchResponse",
+    "head.ref",
     "Test-BranchHasOpenPull",
     "CLOSED_HEAD_SHA is required",
     "compare/develop...",
