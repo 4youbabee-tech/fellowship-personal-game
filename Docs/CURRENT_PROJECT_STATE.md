@@ -3547,3 +3547,11 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Regression coverage now executes the inspector against a generated schema-v2 fixture before Warehouse runtime use.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**.
 - No UE4 skeletal import, deformation, Frodo likeness, PIE, device, visual or performance acceptance is claimed.
+
+
+## 2026-10-02 - P1C01 priority CC0 audio provenance refresh
+
+- Ported the verified OpenGameArt priority-source metadata from the earlier draft onto current develop ancestry instead of merging a stale branch snapshot.
+- Five P1C01 audio candidates now carry creator/uploader, primary-page verification timestamp, file label, CC0 page evidence, and an explicit provenance state.
+- Boundary: source-page provenance only. Download receipt SHA256, audio QC, durable WAV-master conversion, UE import, playback/listening, device and performance acceptance remain pending.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING**.
