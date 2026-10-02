@@ -249,8 +249,17 @@ function Test-TreeEquivalentCoreProof([string]$GitExe, [string]$ParentSha) {
     # A merge commit may have a new SHA even when its checked-out content is byte-for-byte
     # identical to an already-proven candidate parent. Reuse proof only when Git tree IDs
     # are exactly equal; commit-message/metadata similarity is never enough.
-    & $GitExe fetch --no-tags --depth=2 origin $ParentSha
-    if ($LASTEXITCODE -ne 0) { return $false }
+    #
+    # Hosted classification checks out full history with persist-credentials=false.
+    # Never force a network fetch when the merge commit is already present locally: doing
+    # so can manufacture a false fail-safe solely because credentials were intentionally
+    # scrubbed. Fetch remains a shallow/self-hosted fallback only.
+    & $GitExe rev-parse --verify --quiet "$ParentSha^{object}" *> $null
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "TREE_EQUIVALENT_PARENT_FETCH_REQUIRED parent=$ParentSha"
+        & $GitExe fetch --no-tags --depth=2 origin $ParentSha
+        if ($LASTEXITCODE -ne 0) { return $false }
+    }
 
     $parentTree = (& $GitExe rev-parse "$ParentSha^{tree}").Trim()
     if ($LASTEXITCODE -ne 0 -or -not $parentTree) { return $false }
