@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "import_id": "P1C01_FRODO_SKELETAL_IMPORT_VALIDATION_V1",
-  "status": "THREE_CANDIDATES_PROBED_CANDIDATE3_REJECTION_HASH_PENDING",
+  "status": "THREE_CANDIDATES_REJECTED_NEXT_UE4_PROBE_PENDING",
   "authority": [
     "Data/ProjectGovernor.json",
     "Data/P1C01HeroSkeletalCandidateWaveV1.json",
@@ -27,7 +27,7 @@
     "require_nonzero_bones": true,
     "runtime_integration_allowed": false
   },
-  "evidence_boundary": "BaseCharacter.fbx and Casual_Male.fbx have exact filename+SHA technical rejections. Casual2_Male.fbx is run-proven rejected on dedicated workflow #20 with 33 bones and smoothing/bind-pose/UV debt, but its exact staging-receipt SHA is still required before automated skip is authorized. No final Frodo likeness, deformation quality, retarget quality, AnimBP readiness, runtime replacement, PIE, device, visual or performance acceptance is proved.",
+  "evidence_boundary": "BaseCharacter.fbx, Casual_Male.fbx and Casual2_Male.fbx now have exact filename+SHA technical rejections after real UE4.27.2 skeletal imports with 33 reference bones. The next static-valid candidate requires fresh exact-head UE4 import. No final Frodo likeness, deformation quality, retarget quality, AnimBP readiness, runtime replacement, PIE, device, visual or performance acceptance is proved.",
   "technical_rejections": [
     {
       "filename": "BaseCharacter.fbx",
@@ -68,7 +68,7 @@
     },
     {
       "filename": "Casual2_Male.fbx",
-      "source_sha256": "UNKNOWN_UNTIL_RECEIPT_REFRESH",
+      "source_sha256": "abe8d30fa6b5fbebee485c9bdcceafb39fcfc4832cb65be124d5eaae660df986",
       "evidence_head": "196b343c2bd26f492afe6b0672886a117286a36b",
       "ue4_skeletal_registered": true,
       "ue4_reference_bones": 33,
@@ -81,7 +81,8 @@
       "evidence": [
         "P1C01 Frodo Skeletal Import Validation #20"
       ],
-      "note": "Exact-head UE4.27.2 import reached 33 reference bones and failed the same source-quality gate. Hash must be replaced with the staging-receipt SHA before this rejection can drive filename+SHA skipping."
+      "note": "UE4.27.2 imported a USkeletalMesh with 33 reference bones; exact staging-receipt SHA is captured and the source is rejected for smoothing/bind-pose/UV debt.",
+      "source_bytes": 1523164
     }
   ]
 }
