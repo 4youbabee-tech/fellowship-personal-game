@@ -2544,3 +2544,14 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Locked chapter postconditions | PRESERVED | Every packet carries the source-defined canonical postcondition |
 | Future runtime activation | FORBIDDEN | `runtime_integration_allowed=false` for all 23 packet rows |
 | Runtime / PIE / device / visual / pacing / performance | NOT ACCEPTED | Source packets create no experiential evidence |
+
+## 2026-10-02 - Whole-game chapter asset-demand routing
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Chapter-to-resource demand map | SOURCE-PREPARED | 23/23 normalized chapters mapped to asset-family demand |
+| Hero/creature/animation routing | REGISTERED | Routed to M013-M016 |
+| Architecture/vegetation/PBR routing | REGISTERED | Routed to M017-M019 |
+| Props/culture/audio/VFX/traversal/battle routing | REGISTERED | Routed to M020-M024 |
+| Provider/license/payload evidence | PENDING | Demand rows are not acquisition receipts |
+| Runtime / visual / performance acceptance | NOT ACCEPTED | All rows remain source-only |
