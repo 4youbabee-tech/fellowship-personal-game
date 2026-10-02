@@ -2670,3 +2670,7 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | East Fields production row instances | SOURCE-IMPLEMENTED | 96 deterministic resident `SM_ShGrassClump` instances, no collision/no Tick/no shadow, cull 900-6500 cm |
 | East Fields exact-head UE4 compile/runtime audit | PENDING | Requires fresh current-develop ancestry after source registration merges |
 | East Fields PIE / device / visual / performance acceptance | NOT ACCEPTED | No matching human/device evidence |
+
+| Hobbit-hole production silhouette | SOURCE-IMPLEMENTED | Resident turf mound + facade suppress primitive accent overlays; full primitive path fallback-only |
+| Hobbiton/Bag End exact-head UE4 validation | PENDING | Fresh Pre-Unreal + UE4.27.2 required before merge |
+| Hobbiton visual/device/performance acceptance | NOT ACCEPTED | No chapter-specific human/device evidence yet |
