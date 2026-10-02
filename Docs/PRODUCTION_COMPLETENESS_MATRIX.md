@@ -2746,3 +2746,13 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Active PR heads | EXCLUDED | none of the four has an open PR |
 | Cleanup execution | NOT STARTED | do not merge while #140 is running |
 | Hosted validation | PENDING | fresh Pre-Unreal required |
+
+
+## 2026-10-03 - Stale branch retirement wave 3
+
+| Scope | Status | Evidence boundary |
+|---|---|---|
+| Closed maintenance refs | 3 QUEUED | #270, #272, #273 heads |
+| Active PR heads | EXCLUDED | none of the three remains open |
+| Production/runtime content | UNCHANGED | maintenance-only retirement |
+| Hosted validation | PENDING | fresh Pre-Unreal required |
