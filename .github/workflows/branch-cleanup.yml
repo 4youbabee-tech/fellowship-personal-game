@@ -16,15 +16,16 @@ concurrency:
 
 jobs:
   cleanup:
-    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.merged == true }}
+    # Every closed PR ends that exact head lifecycle. The cleanup script still fails closed
+    # on canonical/protected refs, active PR heads, and refs whose SHA moved after closure.
     # Pure GitHub administration must not occupy the supervised UE4 machine.
     runs-on: windows-latest
     timeout-minutes: 5
     env:
       GH_TOKEN: ${{ github.token }}
-      TARGET_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.merge_commit_sha || github.sha }}
-      MERGED_HEAD_REF: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || '' }}
-      MERGED_HEAD_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || '' }}
+      TARGET_SHA: ${{ github.event_name == 'pull_request' && (github.event.pull_request.merged == true && github.event.pull_request.merge_commit_sha || github.event.pull_request.base.sha) || github.sha }}
+      CLOSED_HEAD_REF: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || '' }}
+      CLOSED_HEAD_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || '' }}
     defaults:
       run:
         shell: cmd

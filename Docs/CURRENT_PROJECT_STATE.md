@@ -3716,3 +3716,27 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - This lane is deliberately source-only. It does not authorize Frodo likeness selection, runtime replacement, retarget, animation or chapter authority changes.
 - Next gate remains staging receipt + static FBX QC; real UE4.27.2 skeletal import is allowed only after those gates pass.
 - Status: **SOURCE-IMPLEMENTED / STATIC QC PENDING**. No UE import, PIE, device, visual or performance acceptance claim.
+
+
+## 2026-10-03 - Branch lifecycle cleanup root fix
+
+- Live audit confirmed the Actions branch filter mixes historical branch names with live refs; for example the exact #265 head was physically deleted by Branch Cleanup #137 even though its historical name can still appear in the Actions filter.
+- A real hygiene gap also existed: Branch Cleanup executed only when a closed PR had `merged == true`. Closed-unmerged superseded PR heads and orphan refresh attempts with unique commits could therefore accumulate indefinitely.
+- The cleanup workflow now runs on every PR close. It deletes the exact closed head only when the ref is non-canonical, not an active PR head, and its current remote SHA still equals the closed PR head SHA. A moved ref is preserved as new work.
+- A verified stale batch is recorded in `Data/BranchCleanupPlan.json` for retirement after this maintenance merge; current open PR heads remain protected.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD HOSTED VALIDATION PENDING**. Repository hygiene only; no UE/PIE/device/visual claim.
+
+
+### 2026-10-03 - Branch cleanup validation repair
+
+- Pre-Unreal Validation #1671 **FAILED** at the PG-167 project-structure contract, not at PowerShell parsing. The failure correctly exposed that the validator still required the old `MERGED_HEAD_*` contract and that the workflow environment had not yet switched to `CLOSED_HEAD_*`.
+- Repair on PR #268 updates the workflow environment, PG-167 validation contract, and the single Project Governor `REQ-EXEC-002` so closed-unmerged superseded PRs have an explicit salvage/disposition-before-delete lifecycle.
+- The exact-SHA moved-ref guard, active-PR guard, canonical/protected refs and hosted-only administration boundary remain fail-closed.
+- Status remains **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD PRE-UNREAL PENDING**. #1671 is failure evidence, not acceptance.
+
+### 2026-10-03 - Per-branch active PR deletion guard
+
+- Branch Cleanup #137 ended with `activePrHeads=0` even though PR #264 was already open, so global open-head discovery is not accepted as the sole deletion safety boundary.
+- Every deletion path now performs a second, branch-specific GitHub API query for an open PR whose `head=owner:branch`. API failure is fatal; an active result blocks deletion.
+- The guard applies both to exact closed-head deletion and explicit/zero-ahead cleanup through `Remove-RemoteBranch`.
+- This is a safety hardening, not a cleanup-gate relaxation. Fresh exact-head validation remains pending.

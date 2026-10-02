@@ -2692,3 +2692,27 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Static FBX skeletal QC | PENDING | Must pass before UE runner reservation |
 | UE4.27.2 skeletal import | PENDING | Same smoothing/bind-pose/UV rejection gate as Rogue |
 | Runtime / likeness / deformation / retarget | NOT AUTHORIZED | Technical probe only |
+
+
+## 2026-10-03 - Closed-PR branch lifecycle enforcement
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Root cause | IDENTIFIED | Cleanup job previously skipped closed-unmerged PRs |
+| Exact closed-head deletion | SOURCE-IMPLEMENTED | SHA-match + active-PR + canonical/protected guards retained |
+| Existing stale branch retirement | SOURCE-IMPLEMENTED | 19 verified superseded/orphan refs queued in cleanup plan |
+| Active PR protection | PRESERVED | Live open PR heads are excluded |
+| Hosted validation | PENDING | Fresh exact-head Pre-Unreal/cleanup evidence required |
+
+
+### 2026-10-03 - Branch lifecycle root-fix validation
+
+| Area | Status | Evidence |
+|---|---|---|
+| Pre-Unreal #1671 | FAILED / DIAGNOSTIC | PG-167 caught stale merged-head contract |
+| Workflow CLOSED_HEAD env | SOURCE-REPAIRED | exact close head + base/merge checkout distinction |
+| PG-167 contract | SOURCE-REPAIRED | validates closed-PR lifecycle markers |
+| Project Governor REQ-EXEC-002 | UPDATED | salvage/disposition-before-delete + live-ref audit rule |
+| Fresh exact-head validation | PENDING | new run required before merge |
+
+| Branch deletion active-PR safety recheck | SOURCE-HARDENED | Per-branch `head=owner:branch` API query before deletion; API failure blocks cleanup |

@@ -5284,21 +5284,22 @@ if "runs-on: windows-latest" not in pg167_cleanup:
     fail("PG-167 Branch Cleanup must run on GitHub-hosted Windows so administration never occupies the supervised UE4 runner")
 if "- self-hosted" in pg167_cleanup or "- ue4-27" in pg167_cleanup:
     fail("PG-167 Branch Cleanup must not consume the supervised UE4 runner")
-for pg167_post_merge_symbol in [
+for pg167_post_close_symbol in [
     "pull_request:",
     "- closed",
     "github.event.pull_request.merged == true",
     "github.event.pull_request.merge_commit_sha",
+    "github.event.pull_request.base.sha",
     "github.event.pull_request.head.ref",
     "github.event.pull_request.head.sha",
-    "MERGED_HEAD_REF",
-    "MERGED_HEAD_SHA",
+    "CLOSED_HEAD_REF",
+    "CLOSED_HEAD_SHA",
     "group: branch-cleanup-${{ github.repository }}",
 ]:
-    if pg167_post_merge_symbol not in pg167_cleanup:
-        fail(f"PG-167 permanent post-merge cleanup contract missing: {pg167_post_merge_symbol}")
+    if pg167_post_close_symbol not in pg167_cleanup:
+        fail(f"PG-167 permanent post-close cleanup contract missing: {pg167_post_close_symbol}")
 if "\n  push:\n" in pg167_cleanup:
-    fail("PG-167 Branch Cleanup must not run on ordinary develop pushes; merged-PR closeout owns automatic cleanup")
+    fail("PG-167 Branch Cleanup must not run on ordinary develop pushes; closed-PR closeout owns automatic cleanup")
 for pg167_cleanup_symbol in [
     "BRANCH_CLEANUP_EXACT_CHECKOUT_PASS",
     "SHIRE_CLEANUP_ROOT",
@@ -5320,9 +5321,12 @@ for pg167_cleanup_guard in [
     "Plan-protected branch missing after cleanup",
     "BRANCH_CLEANUP_AUTO_ZERO_AHEAD",
     "BRANCH_CLEANUP_KEEP_UNIQUE",
-    "BRANCH_CLEANUP_MERGED_HEAD_DELETE",
-    "BRANCH_CLEANUP_MERGED_HEAD_MOVED",
-    "MERGED_HEAD_SHA is required",
+    "BRANCH_CLEANUP_CLOSED_HEAD_DELETE",
+    "BRANCH_CLEANUP_CLOSED_HEAD_MOVED",
+    "BRANCH_CLEANUP_CLOSED_HEAD_KEEP_ACTIVE",
+    "BRANCH_CLEANUP_ACTIVE_HEAD_RECHECK",
+    "Test-BranchHasOpenPull",
+    "CLOSED_HEAD_SHA is required",
     "compare/develop...",
 ]:
     if pg167_cleanup_guard not in pg167_cleanup_script:

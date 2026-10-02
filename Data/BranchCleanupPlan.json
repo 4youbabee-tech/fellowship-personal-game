@@ -4,7 +4,7 @@
   "authority": "Data/ProjectGovernor.json",
   "canonical_branch": "develop",
   "stable_release_branch": "main",
-  "status": "AUTOMATIC_EXACT_MERGED_HEAD_DELETE_PLUS_ZERO_AHEAD_PRUNE",
+  "status": "AUTOMATIC_EXACT_CLOSED_HEAD_DELETE_PLUS_ZERO_AHEAD_PRUNE",
   "truth_boundary": "This plan records branch hygiene only. It does not claim PIE/device/visual acceptance.",
   "preserve": [
     {
@@ -101,17 +101,37 @@
     "maintenance/carcharoth-ledger-retire-v1",
     "production/p1c01-target-device-gate67-v1",
     "tooling/p1c01-local-visual-bootstrap-v1",
-    "integration/p1c01-gate67-visual-bootstrap-reconcile-v1"
+    "integration/p1c01-gate67-visual-bootstrap-reconcile-v1",
+    "p1c01/bag-end-entry-shrub-proxy-cleanup-2026-10-03",
+    "p1c01/east-fields-instanced-rows-runtime-2026-10-02",
+    "p1c01/frodo-skeletal-import-validation-v1",
+    "p1c01/frodo-skeletal-import-validation-v2",
+    "p1c01/frodo-skeletal-import-validation-v3",
+    "refresh/p1c01-east-fields-254-0461390",
+    "refresh/p1c01-east-fields-254-1f85e77",
+    "refresh/p1c01-east-fields-254-b32f055",
+    "refresh/p1c01-east-fields-254-fd747da",
+    "refresh/p1c01-kaykit-256-0461390",
+    "refresh/p1c01-kaykit-256-e37612f",
+    "refresh/p1c01-kaykit-256-fd747da",
+    "refresh/p1c01-party-field-253-b32f055",
+    "source/p1c01-kaykit-frodo-family-2026-10-02",
+    "source/p1c01-kaykit-knight-probe-v2-2026-10-02",
+    "refresh/ci-hosted-classifier-258-e72cd6a",
+    "fix/daily-manager-report-pipeline-v1",
+    "reconcile/daily-manager-report-pipeline-v1",
+    "reconcile/daily-manager-report-pipeline-v2"
   ],
   "safety_rules": [
     "Never delete develop or main.",
     "Never delete an active PR head.",
-    "On every merged PR close event, delete the exact merged head ref immediately only when the remote SHA still equals the merged PR head SHA; if the ref moved, preserve it as new work.",
+    "On every PR close event, delete the exact closed head ref only when the remote SHA still equals the PR head SHA; if the ref moved, preserve it as new work.",
     "After exact merged-head closeout, enumerate live refs once and delete non-protected, non-active-PR branches only when GitHub reports zero commits ahead of develop.",
     "delete_after_merge is an explicit deletion supplement for reviewed superseded/divergent refs, not the sole discovery source.",
     "Never bulk-merge or auto-delete a divergent branch with unique commits; selectively salvage or explicitly supersede it first.",
     "Branches with unresolved unique commits remain protected until reviewed.",
-    "Cleanup runs only from an exact-head develop merge checkout on GitHub-hosted Windows."
+    "Cleanup runs only from an exact-head develop merge checkout on GitHub-hosted Windows.",
+    "A PR must not be closed while it is the only named salvage source; salvage or record the exact commit SHA first. Closing a PR declares that branch lifecycle finished."
   ],
   "final_audit": {
     "status": "FINAL_LEGACY_REF_RETIREMENT_AUTHORIZED",
@@ -381,5 +401,58 @@
     ],
     "rule": "Do not bulk-merge stale snapshots. Carry forward their unique current-valid contracts/tooling onto current develop, validate the reconciled exact head, merge once, then delete both stale PR heads and the reconciliation head.",
     "safety": "develop/main/archive remain protected; no Gate 6/7 acceptance is implied."
+  },
+  "branch_lifecycle_root_fix_2026_10_03": {
+    "action": "DELETE_CLOSED_PR_HEADS_AND_RETIRE_VERIFIED_SUPERSEDED_REFS",
+    "root_cause": "The prior workflow ran only when pull_request.merged == true. Closed-unmerged superseded PR heads and orphan refresh attempts with unique commits therefore survived indefinitely.",
+    "new_policy": "Every pull_request closed event runs hosted cleanup. The exact head is deleted only if it is non-canonical, not an active PR head, and the live remote SHA still equals the closed PR head SHA.",
+    "verified_stale_branches": [
+      "p1c01/bag-end-entry-shrub-proxy-cleanup-2026-10-03",
+      "p1c01/east-fields-instanced-rows-runtime-2026-10-02",
+      "p1c01/frodo-skeletal-import-validation-v1",
+      "p1c01/frodo-skeletal-import-validation-v2",
+      "p1c01/frodo-skeletal-import-validation-v3",
+      "refresh/p1c01-east-fields-254-0461390",
+      "refresh/p1c01-east-fields-254-1f85e77",
+      "refresh/p1c01-east-fields-254-b32f055",
+      "refresh/p1c01-east-fields-254-fd747da",
+      "refresh/p1c01-kaykit-256-0461390",
+      "refresh/p1c01-kaykit-256-e37612f",
+      "refresh/p1c01-kaykit-256-fd747da",
+      "refresh/p1c01-party-field-253-b32f055",
+      "source/p1c01-kaykit-frodo-family-2026-10-02",
+      "source/p1c01-kaykit-knight-probe-v2-2026-10-02",
+      "refresh/ci-hosted-classifier-258-e72cd6a",
+      "fix/daily-manager-report-pipeline-v1",
+      "reconcile/daily-manager-report-pipeline-v1",
+      "reconcile/daily-manager-report-pipeline-v2"
+    ],
+    "dispositions": {
+      "p1c01/bag-end-entry-shrub-proxy-cleanup-2026-10-03": "SUPERSEDED by fresh current-develop PR #267.",
+      "p1c01/east-fields-instanced-rows-runtime-2026-10-02": "SUPERSEDED by merged East Fields runtime implementation PR #261 and its current develop state.",
+      "p1c01/frodo-skeletal-import-validation-v1": "CLOSED PR #245; superseded by later Frodo validation generations and current #257 salvage lane.",
+      "p1c01/frodo-skeletal-import-validation-v2": "CLOSED PR #247; explicitly superseded by current Frodo refresh/salvage lane.",
+      "p1c01/frodo-skeletal-import-validation-v3": "Orphan intermediate validation restore branch; current #257 is the named salvage authority.",
+      "source/p1c01-kaykit-frodo-family-2026-10-02": "CLOSED PR #252; superseded by merged #256.",
+      "source/p1c01-kaykit-knight-probe-v2-2026-10-02": "Superseded by merged fresh Knight V2 PR #265.",
+      "fix/daily-manager-report-pipeline-v1": "CLOSED PR #225; superseded by later reconciliation/current report lane.",
+      "reconcile/daily-manager-report-pipeline-v1": "CLOSED PR #228; superseded by later reconciliation/current report lane.",
+      "reconcile/daily-manager-report-pipeline-v2": "CLOSED PR #230; superseded by current report lane #233.",
+      "refresh/ci-hosted-classifier-258-e72cd6a": "Superseded infrastructure refresh; current classifier repair authority is PR #264."
+    },
+    "repeated_refresh_rule": "The East Fields, KayKit and Party Field refresh branches listed in verified_stale_branches are retired because their accepted/current successors are already represented on develop or by the named current PR.",
+    "protected_live_heads": [
+      "PR #267",
+      "PR #264",
+      "PR #263",
+      "PR #262",
+      "PR #257",
+      "PR #238",
+      "PR #237",
+      "PR #235",
+      "PR #233",
+      "PR #226"
+    ],
+    "evidence_boundary": "Repository/process hygiene only. No gameplay, compile, PIE, device, visual or performance acceptance is implied."
   }
 }
