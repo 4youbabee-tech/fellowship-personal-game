@@ -3755,3 +3755,14 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Consolidated the useful behavior from PR #269 into the #270 root fix: an active PR head is now logged as `BRANCH_CLEANUP_KEEP_ACTIVE_PR` and skipped, while cleanup continues to unrelated reviewed stale refs.
 - This does not weaken active-head protection. The branch-specific open-PR query remains fail-closed on API errors, and exact closed-head handling still preserves an active/moved ref.
 - PR #269 is retained temporarily until #270 merges; it will then be closed as superseded so the corrected close-event cleanup can retire its branch.
+
+
+### 2026-10-03 - Additional verified stale refs
+
+Added four more explicitly-disposed refs to the governed retirement batch:
+- merged #268 maintenance head left behind only by Cleanup #138 failure;
+- audio provenance #241, explicitly superseded by merged #243;
+- old whole-game packet #246, superseded as execution branch by current refresh #262;
+- queued mega waves #239, explicitly superseded by merged #244 / ContinuousProductionWaveQueueV2.
+
+No active PR head or unresolved unique-content branch is included by this addition.
