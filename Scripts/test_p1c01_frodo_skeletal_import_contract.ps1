@@ -24,7 +24,13 @@ foreach($marker in @(
   'USkeletalMesh::StaticClass()->GetFName()',
   'skeletal-registered=%s'
 )){ if(-not $c.Contains($marker)){throw "P1C01_FRODO_IMPORT_CONTRACT_CPP_MARKER_MISSING marker=$marker"} }
-if($c -match 'if \(bCharacterRigFbx\)[\s\S]{0,900}LoadObject<'){throw "P1C01_FRODO_IMPORT_CONTRACT_SYNC_SKELETAL_LOAD_FORBIDDEN"}
+$skeletalStart=$c.IndexOf("if (bCharacterRigFbx)",[StringComparison]::Ordinal)
+if($skeletalStart -lt 0){throw "P1C01_FRODO_IMPORT_CONTRACT_SKELETAL_BRANCH_MISSING"}
+$nonSkeletalElse=$c.IndexOf("else",$skeletalStart,[StringComparison]::Ordinal)
+if($nonSkeletalElse -le $skeletalStart){throw "P1C01_FRODO_IMPORT_CONTRACT_SKELETAL_ELSE_MISSING"}
+$skeletalBranch=$c.Substring($skeletalStart,$nonSkeletalElse-$skeletalStart)
+if($skeletalBranch.Contains("LoadObject<")){throw "P1C01_FRODO_IMPORT_CONTRACT_SYNC_SKELETAL_LOAD_FORBIDDEN"}
+if(-not $skeletalBranch.Contains("GetAssetByObjectPath")){throw "P1C01_FRODO_IMPORT_CONTRACT_ASSETREGISTRY_BRANCH_MISSING"}
 foreach($marker in @("P1C01_FRODO_IMPORT_STAGE_PASS","Get-FileHash","static_structure_pass","SK_FRODO.fbx")){
   if(-not $s.Contains($marker)){throw "P1C01_FRODO_IMPORT_CONTRACT_STAGE_MARKER_MISSING marker=$marker"}
 }
