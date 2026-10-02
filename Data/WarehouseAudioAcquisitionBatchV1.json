@@ -148,7 +148,12 @@
       "use": [
         "P1C01 wood/stone/leaves/gravel/mud footsteps",
         "surface-driven footstep bank intake"
-      ]
+      ],
+      "creator_uploader": "TinyWorlds",
+      "source_page_verified_utc": "2026-10-02T02:43:52Z",
+      "source_page_file_label": "[kdd]DifferentSteps.zip",
+      "source_page_license_evidence": "CC0 listed on the primary OpenGameArt item page",
+      "provenance_state": "PRIMARY_PAGE_AUTHOR_LICENSE_FILE_VERIFIED_DOWNLOAD_HASH_PENDING"
     },
     {
       "id": "OGA_FIREPLACE_LOOP",
@@ -160,7 +165,12 @@
       "use": [
         "Bag End hearth",
         "warm interior fireplace emitter"
-      ]
+      ],
+      "creator_uploader": "PagDev",
+      "source_page_verified_utc": "2026-10-02T02:43:52Z",
+      "source_page_file_label": "fire.wav",
+      "source_page_license_evidence": "CC0 listed on the primary OpenGameArt item page",
+      "provenance_state": "PRIMARY_PAGE_AUTHOR_LICENSE_FILE_VERIFIED_DOWNLOAD_HASH_PENDING"
     },
     {
       "id": "OGA_100_CC0_WOOD_METAL_SFX",
@@ -174,7 +184,12 @@
         "wood creaks",
         "tools/farm support",
         "metal/wood interaction bank"
-      ]
+      ],
+      "creator_uploader": "rubberduck",
+      "source_page_verified_utc": "2026-10-02T02:43:52Z",
+      "source_page_file_label": "100-CC0-wood-metal-SFX.zip",
+      "source_page_license_evidence": "CC0 listed on the primary OpenGameArt item page",
+      "provenance_state": "PRIMARY_PAGE_AUTHOR_LICENSE_FILE_VERIFIED_DOWNLOAD_HASH_PENDING"
     },
     {
       "id": "OGA_AMBIENT_BIRD_SOUNDS",
@@ -188,7 +203,12 @@
       "use": [
         "P1C01 daytime Shire bird bed",
         "spot-call source extraction candidate"
-      ]
+      ],
+      "creator_uploader": "isaiah658",
+      "source_page_verified_utc": "2026-10-02T02:43:52Z",
+      "source_page_file_label": "birds-isaiah658.ogg",
+      "source_page_license_evidence": "CC0 listed on the primary OpenGameArt item page",
+      "provenance_state": "PRIMARY_PAGE_AUTHOR_LICENSE_FILE_VERIFIED_DOWNLOAD_HASH_PENDING"
     },
     {
       "id": "OGA_TINYSIZED_FANTASY_SFX",
@@ -202,7 +222,12 @@
         "leather sheath and metal interaction support",
         "water pour/drop support",
         "general Shire household interaction bank"
-      ]
+      ],
+      "creator_uploader": "Vehicle",
+      "source_page_verified_utc": "2026-10-02T02:43:52Z",
+      "source_page_file_label": "tinysized.zip",
+      "source_page_license_evidence": "CC0 listed on the primary OpenGameArt item page",
+      "provenance_state": "PRIMARY_PAGE_AUTHOR_LICENSE_FILE_VERIFIED_DOWNLOAD_HASH_PENDING"
     }
   ],
   "intake_expectations": [
@@ -212,5 +237,18 @@
     "ZIP archives remain STAGED until extracted/scanned/classified; WAV files remain STAGED until audio intake checks pass.",
     "These tracks are generic CC0 candidates and are not replacements for final authored cinematic score identity.",
     "Non-WAV source files may be staged as intake sources, but must be converted/auditioned into durable WAV masters before UE import."
-  ]
+  ],
+  "p1c01_priority_source_provenance": {
+    "verified_utc": "2026-10-02T02:43:52Z",
+    "verification_scope": "PRIMARY_OPENGAMEART_ITEM_PAGES",
+    "result": "5_OF_5_AUTHOR_LICENSE_AND_FILE_PRESENT",
+    "asset_ids": [
+      "OGA_DIFFERENT_STEPS_SURFACES",
+      "OGA_FIREPLACE_LOOP",
+      "OGA_100_CC0_WOOD_METAL_SFX",
+      "OGA_AMBIENT_BIRD_SOUNDS",
+      "OGA_TINYSIZED_FANTASY_SFX"
+    ],
+    "boundary": "Source-page provenance only. Download receipt SHA256, audio QC, WAV master conversion, UE import, playback, listening, device and performance acceptance remain pending."
+  }
 }
