@@ -1,7 +1,7 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "wave_id": "P1C01_FRODO_GANDALF_SKELETAL_CANDIDATE_V1",
-  "status": "SOURCE_INTAKE_QC_READY_RUNTIME_NOT_STARTED",
+  "status": "FRODO_FIRST_EXACT_TOKEN_AND_STATIC_FBX_QC",
   "authority": [
     "Data/ProjectGovernor.json",
     "Data/CharacterVisualProductionWaveV7.json",
@@ -17,13 +17,62 @@
       "id": "FRODO",
       "rig_family": "HOBBIT_HUMANOID",
       "priority": 1,
-      "target": "first playable Shire skeletal quality bar"
+      "target": "first playable Shire skeletal quality bar",
+      "max_ranked_candidates": 8,
+      "required_any_tokens": [
+        "hobbit",
+        "small",
+        "short",
+        "adventurer",
+        "villager",
+        "base",
+        "casual",
+        "worker"
+      ],
+      "required_all_tokens": [],
+      "excluded_tokens": [
+        "female",
+        "goblin",
+        "zombie",
+        "ninja",
+        "pirate",
+        "soldier",
+        "knight",
+        "cowboy",
+        "viking",
+        "chef",
+        "doctor"
+      ]
     },
     {
       "id": "GANDALF",
       "rig_family": "TALL_HUMANOID",
-      "priority": 1,
-      "target": "parallel playable tall-humanoid skeletal quality bar"
+      "priority": 2,
+      "target": "parallel playable tall-humanoid skeletal quality bar",
+      "max_ranked_candidates": 6,
+      "required_any_tokens": [
+        "wizard",
+        "mage",
+        "old",
+        "beard",
+        "robe",
+        "staff",
+        "base"
+      ],
+      "required_all_tokens": [],
+      "excluded_tokens": [
+        "female",
+        "goblin",
+        "zombie",
+        "ninja",
+        "pirate",
+        "soldier",
+        "knight",
+        "cowboy",
+        "viking",
+        "chef",
+        "young"
+      ]
     }
   ],
   "authorized_source_packs": [
@@ -49,7 +98,10 @@
     "require_deformation_qc_before_visual_claim": true,
     "ready_for_import_default": false,
     "obj_policy": "STATIC_MODULAR_FALLBACK_ONLY",
-    "fbx_pipeline_compatibility": "UE4.27 FBX 2018-compatible export required"
+    "fbx_pipeline_compatibility": "UE4.27 FBX 2018-compatible export required",
+    "ranking_semantics": "EXACT_FILENAME_TOKENS_ONLY",
+    "substring_matching_forbidden": true,
+    "final_likeness_from_filename_forbidden": true
   },
   "character_scoring": {
     "FRODO": [
@@ -114,9 +166,9 @@
     "minimum_fbx_candidates_total": 2,
     "minimum_character_pools_with_candidates": 2,
     "warehouse_inventory_must_be_clean": true,
-    "output_state": "CANDIDATE_QC_READY_NOT_IMPORTED"
+    "output_state": "FRODO_STATIC_FBX_QC_REQUIRED_NOT_IMPORTED"
   },
-  "evidence_boundary": "Candidate discovery/ranking only. No skeletal import, runtime replacement, PIE, device, visual or performance acceptance is claimed.",
+  "evidence_boundary": "Exact filename-token candidate ranking plus static FBX structure probing only. No FBX 2018 export confirmation, UE4 skeletal import, skeleton/skin quality, retarget/deformation, final character likeness, runtime replacement, PIE, device, visual or performance acceptance is claimed.",
   "owner_sequence_authority": "Data/P1C01RuntimeChapterSequenceV1.json",
   "owner_execution_order": [
     "FRODO",
@@ -130,6 +182,33 @@
     "request_id": "P1C01_FRODO_QC_2026_10_01_V1",
     "requested_utc": "2026-10-01T00:40:00Z",
     "requested_character": "FRODO",
-    "expected_output": "CANDIDATE_QC_READY_NOT_IMPORTED"
+    "expected_output": "FRODO_STATIC_FBX_QC_REQUIRED_NOT_IMPORTED"
+  },
+  "frodo_static_fbx_qc": {
+    "active_character": "FRODO",
+    "candidate_filename_allowlist": [
+      "BaseCharacter.fbx",
+      "Casual_Male.fbx",
+      "Casual2_Male.fbx",
+      "Casual3_Male.fbx",
+      "Worker_Male.fbx"
+    ],
+    "minimum_static_structure_pass_candidates": 1,
+    "required_static_markers": [
+      "Geometry",
+      "Model",
+      "LimbNode",
+      "Deformer",
+      "Skin",
+      "Cluster"
+    ],
+    "optional_animation_markers": [
+      "AnimationStack",
+      "AnimationCurve"
+    ],
+    "output_state": "STATIC_FBX_STRUCTURE_PRESENT_UE4_IMPORT_REQUIRED",
+    "ready_for_import": false,
+    "evidence_boundary": "Static FBX header/marker evidence only; no FBX 2018 export, UE4 import, deformation, final likeness, runtime, PIE, device, visual or performance acceptance."
   }
 }
+

@@ -14,6 +14,8 @@ on:
       - 'Scripts/stage_quaternius_warehouse.ps1'
       - 'Data/P1C01OpenGameArtHeroCandidateBatchV1.json'
       - 'Scripts/stage_opengameart_character_candidate.ps1'
+      - 'Scripts/inspect_p1c01_frodo_fbx_candidate.ps1'
+      - 'Scripts/test_p1c01_frodo_candidate_semantic_qc.ps1'
       - 'Data/P1C01CharacterRigAnimationPrepV1.json'
       - 'Data/P1C01HeroSkeletalCandidateWaveV1.json'
       - 'Scripts/prepare_p1c01_character_rig_intake.ps1'
@@ -227,6 +229,11 @@ jobs:
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\run_p1c01_hero_skeletal_candidate_wave.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\P1C01HeroSkeletalCandidateWaveV1.json" -OutputRoot "%P1C01_HERO_RIG_REPORT%"
 
+      - name: Inspect Frodo FBX static structure
+        if: github.event_name == 'push'
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\inspect_p1c01_frodo_fbx_candidate.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\P1C01HeroSkeletalCandidateWaveV1.json" -CandidateReport "%P1C01_HERO_RIG_REPORT%\p1c01_hero_skeletal_candidate_summary.json" -OutputRoot "%P1C01_HERO_RIG_REPORT%"
+
       - name: Upload exact-head P1C01 hero candidate evidence
         if: always() && github.event_name == 'push'
         uses: actions/upload-artifact@v4
@@ -234,6 +241,7 @@ jobs:
           name: p1c01-hero-skeletal-candidate-${{ env.TARGET_SHA }}
           path: |
             ${{ env.P1C01_HERO_RIG_REPORT }}\p1c01_hero_skeletal_candidate_summary.json
+            ${{ env.P1C01_HERO_RIG_REPORT }}\p1c01_frodo_fbx_static_qc.json
             ${{ env.P1C01_HERO_RIG_REPORT }}\intake\p1c01_character_rig_intake_receipt.json
           if-no-files-found: error
           retention-days: 14
@@ -259,3 +267,4 @@ jobs:
           @echo off
           if defined SHIRE_WAREHOUSE_SOURCE if exist "%SHIRE_WAREHOUSE_SOURCE%" rmdir /S /Q "%SHIRE_WAREHOUSE_SOURCE%"
           exit /b 0
+

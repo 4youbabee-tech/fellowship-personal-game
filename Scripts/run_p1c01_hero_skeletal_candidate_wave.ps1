@@ -2,11 +2,47 @@ param(
   [string]$ManifestPath = "Data/P1C01HeroSkeletalCandidateWaveV1.json",
   [string]$BaseIntakeManifest = "Data/P1C01CharacterRigAnimationPrepV1.json",
   [string]$WarehouseRoot = "D:\actions-runner\_warehouse\ShireJourney",
-  [string]$OutputRoot = ""
+  [string]$OutputRoot = "",
+  [switch]$ScoreSelfTest
 )
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
+
+function Get-OptionalPropertyValue {
+  param([object]$Object,[string]$Name,[object]$Default=$null)
+  if($null -eq $Object){ return $Default }
+  $property=$Object.PSObject.Properties[$Name]
+  if($null -eq $property){ return $Default }
+  return $property.Value
+}
+
+function Get-CandidateNameTokens {
+  param([string]$Name)
+  $stem=[IO.Path]::GetFileNameWithoutExtension($Name)
+  $expanded=[regex]::Replace($stem,'([a-z0-9])([A-Z])','$1 $2')
+  $expanded=[regex]::Replace($expanded,'([A-Za-z])([0-9])','$1 $2')
+  $expanded=[regex]::Replace($expanded,'([0-9])([A-Za-z])','$1 $2')
+  return @($expanded.ToLowerInvariant() -split '[^a-z0-9]+' | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+}
+
+function Test-TokenSetContains {
+  param([hashtable]$TokenSet,[string]$Token)
+  return $TokenSet.ContainsKey($Token.ToLowerInvariant())
+}
+
+if($ScoreSelfTest){
+  $female=@(Get-CandidateNameTokens "Worker_Female.fbx")
+  $soldier=@(Get-CandidateNameTokens "BlueSoldier_Male.fbx")
+  $base=@(Get-CandidateNameTokens "BaseCharacter.fbx")
+  $old=@(Get-CandidateNameTokens "Doctor_Male_Old.fbx")
+  if($female -contains "male"){ throw "P1C01_HERO_TOKEN_SELF_TEST_FEMALE_MATCHED_MALE" }
+  if($soldier -contains "old"){ throw "P1C01_HERO_TOKEN_SELF_TEST_SOLDIER_MATCHED_OLD" }
+  if($base -notcontains "base" -or $base -notcontains "character"){ throw "P1C01_HERO_TOKEN_SELF_TEST_CAMEL_SPLIT_FAIL" }
+  if($old -notcontains "male" -or $old -notcontains "old"){ throw "P1C01_HERO_TOKEN_SELF_TEST_EXACT_MATCH_FAIL" }
+  Write-Host "P1C01_HERO_TOKEN_SELF_TEST_PASS femaleNotMale=true soldierNotOld=true camelSplit=true"
+  exit 0
+}
 
 $ProjectRoot = Split-Path $PSScriptRoot -Parent
 foreach($name in @("ManifestPath","BaseIntakeManifest")){
@@ -39,7 +75,7 @@ $textureFiles=@(Get-ChildItem -LiteralPath $intakeRoot -Recurse -File -ErrorActi
 $bmpFiles=@(Get-ChildItem -LiteralPath $intakeRoot -Recurse -File -Filter "*.bmp" -ErrorAction SilentlyContinue)
 if($bmpFiles.Count -gt 0){ throw "P1C01_HERO_RIG_FORBIDDEN_BMP count=$($bmpFiles.Count)" }
 
-$maxPer=[int]$manifest.candidate_policy.max_ranked_candidates_per_character
+$globalMax=[int]$manifest.candidate_policy.max_ranked_candidates_per_character
 $characterReports=@()
 $poolReady=0
 $unprovenancedFbx=@()
@@ -52,32 +88,48 @@ if($unprovenancedFbx.Count -gt 0){ throw "P1C01_HERO_RIG_PROVENANCE_FAIL count=$
 foreach($character in @($manifest.priority_characters)){
   $id=[string]$character.id
   $keywords=@($manifest.character_scoring.$id | ForEach-Object { ([string]$_).ToLowerInvariant() })
+  $requiredAny=@(Get-OptionalPropertyValue $character "required_any_tokens" @() | ForEach-Object { ([string]$_).ToLowerInvariant() })
+  $requiredAll=@(Get-OptionalPropertyValue $character "required_all_tokens" @() | ForEach-Object { ([string]$_).ToLowerInvariant() })
+  $excluded=@(Get-OptionalPropertyValue $character "excluded_tokens" @() | ForEach-Object { ([string]$_).ToLowerInvariant() })
+  $maxPer=[int](Get-OptionalPropertyValue $character "max_ranked_candidates" $globalMax)
   $scored=@()
   foreach($file in $fbxFiles){
-    $hay=$file.FullName.ToLowerInvariant()
-    $matches=@($keywords | Where-Object { $hay.Contains($_) })
+    $tokens=@(Get-CandidateNameTokens $file.Name)
+    $tokenSet=@{}
+    foreach($token in $tokens){ $tokenSet[$token]=$true }
+    $excludedMatches=@($excluded | Where-Object { Test-TokenSetContains $tokenSet $_ })
+    if($excludedMatches.Count -gt 0){ continue }
+    $identityMatches=@($requiredAny | Where-Object { Test-TokenSetContains $tokenSet $_ })
+    if($requiredAny.Count -gt 0 -and $identityMatches.Count -eq 0){ continue }
+    $missingRequired=@($requiredAll | Where-Object { -not (Test-TokenSetContains $tokenSet $_) })
+    if($missingRequired.Count -gt 0){ continue }
+    $matches=@($keywords | Where-Object { Test-TokenSetContains $tokenSet $_ })
     $score=$matches.Count
-    if($hay.Contains("rig")){ $score+=2 }
-    if($hay.Contains("anim")){ $score+=1 }
-    if($hay.Contains("character")){ $score+=1 }
+    if(Test-TokenSetContains $tokenSet "rig"){ $score+=2 }
+    if(Test-TokenSetContains $tokenSet "anim"){ $score+=1 }
+    if(Test-TokenSetContains $tokenSet "character"){ $score+=1 }
     if($score -le 0){ continue }
     $dir=$file.DirectoryName
     $nearTextures=@($textureFiles | Where-Object { $_.DirectoryName -eq $dir }).Count
     $prov=@($provenanceRows | Where-Object { [string]$_.candidate_file -ieq [string]$file.FullName })[0]
     $scored += [pscustomobject]@{
       source_fbx=$file.FullName
+      filename=$file.Name
       bytes=[int64]$file.Length
       score=[int]$score
+      filename_tokens=$tokens
       matched_terms=$matches
+      identity_terms=$identityMatches
       nearby_png_tga=$nearTextures
       provider=[string]$prov.provider
       source_asset_id=[string]$prov.asset_id
       source_receipt=[string]$prov.receipt
       source_payload=[string]$prov.source_file
       source_sha256=[string]$prov.source_sha256
-      state="RIG_FAMILY_CANDIDATE_QC_REQUIRED"
+      state="RIG_BASE_CANDIDATE_STATIC_QC_REQUIRED"
+      final_character_likeness=$false
       ready_for_import=$false
-      qc_pending=@("skeleton","skin_weights","retarget","deformation","animation_coverage","material_slots","equipment_sockets","lod_cull","visual_readability")
+      qc_pending=@("fbx_static_structure","ue4_import","skeleton_quality","skin_weights","retarget","deformation","animation_coverage","material_slots","equipment_sockets","lod_cull","visual_readability")
     }
   }
   $ranked=@($scored | Sort-Object -Property @{Expression="score";Descending=$true}, @{Expression="bytes";Descending=$false} | Select-Object -First $maxPer)
@@ -85,10 +137,14 @@ foreach($character in @($manifest.priority_characters)){
   $characterReports += [ordered]@{
     character=$id
     rig_family=[string]$character.rig_family
+    selection_mode="EXACT_FILENAME_TOKEN_MATCH"
+    required_any_tokens=$requiredAny
+    required_all_tokens=$requiredAll
+    excluded_tokens=$excluded
     candidate_count=$ranked.Count
     candidates=$ranked
   }
-  Write-Host ("P1C01_HERO_RIG_POOL character="+$id+" candidates="+$ranked.Count)
+  Write-Host ("P1C01_HERO_RIG_POOL character="+$id+" candidates="+$ranked.Count+" selection=exact-filename-tokens")
 }
 
 $totalRanked=0
@@ -97,9 +153,10 @@ $minimumTotal=[int]$manifest.success_boundary.minimum_fbx_candidates_total
 $minimumPools=[int]$manifest.success_boundary.minimum_character_pools_with_candidates
 
 $report=[ordered]@{
-  schema_version=1
+  schema_version=2
   wave_id=[string]$manifest.wave_id
   generated_utc=[DateTime]::UtcNow.ToString("o")
+  ranking_semantics="EXACT_FILENAME_TOKENS_V2"
   intake_exit=$intakeExit
   intake_prepared_count=[int]$intakeReceipt.prepared_count
   intake_pending_count=[int]$intakeReceipt.pending_count
@@ -120,7 +177,7 @@ $report=[ordered]@{
 $summary=Join-Path $OutputRoot "p1c01_hero_skeletal_candidate_summary.json"
 $report | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $summary -Encoding UTF8
 
-Write-Host ("P1C01_HERO_RIG_DIAGNOSTIC intakeExit="+$intakeExit+" intakePrepared="+[int]$intakeReceipt.prepared_count+" intakePending="+[int]$intakeReceipt.pending_count+" intakeBlocked="+[int]$intakeReceipt.blocked_count+" discoveredFbx="+$fbxFiles.Count+" discoveredPngTga="+$textureFiles.Count+" ranked="+$totalRanked+" pools="+$poolReady)
+Write-Host ("P1C01_HERO_RIG_DIAGNOSTIC intakeExit="+$intakeExit+" intakePrepared="+[int]$intakeReceipt.prepared_count+" intakePending="+[int]$intakeReceipt.pending_count+" intakeBlocked="+[int]$intakeReceipt.blocked_count+" discoveredFbx="+$fbxFiles.Count+" discoveredPngTga="+$textureFiles.Count+" ranked="+$totalRanked+" pools="+$poolReady+" ranking=exact-filename-tokens-v2")
 foreach($pendingRow in @($intakeReceipt.pending)){
   Write-Host ("P1C01_HERO_RIG_PENDING provider="+[string]$pendingRow.provider+" id="+[string]$pendingRow.id+" reason="+[string]$pendingRow.reason)
 }
@@ -135,5 +192,6 @@ Write-Host ("P1C01_HERO_RIG_SUMMARY path="+$summary)
 if($totalRanked -lt $minimumTotal){ throw "P1C01_HERO_RIG_CANDIDATE_COVERAGE_FAIL total=$totalRanked required=$minimumTotal" }
 if($poolReady -lt $minimumPools){ throw "P1C01_HERO_RIG_POOL_COVERAGE_FAIL ready=$poolReady required=$minimumPools" }
 
-Write-Host ("P1C01_HERO_RIG_CANDIDATE_PASS fbx="+$fbxFiles.Count+" ranked="+$totalRanked+" pools="+$poolReady+" summary="+$summary)
+Write-Host ("P1C01_HERO_RIG_CANDIDATE_PASS fbx="+$fbxFiles.Count+" ranked="+$totalRanked+" pools="+$poolReady+" ranking=exact-filename-tokens-v2 summary="+$summary)
 exit 0
+

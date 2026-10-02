@@ -171,6 +171,10 @@ jobs:
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_p1c01_hero_candidate_provenance_contract.ps1"
 
+      - name: Test P1C01 Frodo candidate semantic and static QC contract
+        shell: cmd
+        run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_p1c01_frodo_candidate_semantic_qc.ps1"
+
       - name: Test zero-payload provider fail-closed contract
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_warehouse_provider_zero_payload_fail_closed.ps1"
@@ -192,3 +196,4 @@ jobs:
             "!GITEXE!" remote set-url origin "https://github.com/%GITHUB_REPOSITORY%.git" >nul 2>nul
           )
           exit /b 0
+

@@ -2497,3 +2497,16 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 - The batch maps approved acquisition lanes to Bag End, Hobbiton, Shire roads and Bucklebury/Ferry while preserving FBX/PNG-TGA, provenance, HISM/ISM/LOD/culling and soft/async heavy-asset rules.
 - Quaternius remains a manual provider blocker and does not block independent Poly Haven/ambientCG/licensed character-animation/audio/VFX lanes.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING**. No PIE/device/visual/performance acceptance claim.
+
+## 2026-10-02 - Frodo skeletal candidate semantic QC
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Direct CC0 archive | RUN-PROVEN STAGED | 48,430,012 bytes; SHA256 `0295062cbc72da52ee804f39ac38694901a40458011f9b2638fc7ef13ed509da` |
+| FBX discovery | RUN-PROVEN | 52 FBX in Warehouse #312; receipt hash verified |
+| Old candidate ranking | REJECTED AS SEMANTICALLY UNSAFE | Substring collisions: Female→male and Soldier/Golden→old |
+| Exact-token ranking repair | SOURCE-IMPLEMENTED | Filename-only tokens, identity filters, exclusions, bounded pools |
+| Frodo static FBX structure probe | SOURCE-IMPLEMENTED | Header/version plus Geometry/Model/LimbNode/Deformer/Skin/Cluster markers |
+| UE4 skeletal import / deformation / likeness | NOT STARTED | Requires exact-head Unreal evidence and human visual review |
+| READY_FOR_IMPORT / Runtime / Gate 6/7 | NOT ACCEPTED | P1C01 remains active; P1C02 remains predecessor-gated |
+
