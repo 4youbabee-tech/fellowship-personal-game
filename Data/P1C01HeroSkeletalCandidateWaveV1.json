@@ -84,7 +84,8 @@
     "QTN_FANTASY_OUTFITS",
     "QTN_UNIVERSAL_ANIMATION_LIBRARY",
     "OGA_QTN_ULTIMATE_ANIMATED_CHARACTERS_CC0",
-    "OGA_QTN_RPG_CHARACTERS_CC0"
+    "OGA_QTN_RPG_CHARACTERS_CC0",
+    "KAYKIT_ADVENTURERS_CC0"
   ],
   "candidate_policy": {
     "animated_source_format": ".fbx",
@@ -217,7 +218,8 @@
     "ready_for_import": false,
     "evidence_boundary": "Static FBX header/marker evidence only. Exact original-family files remain allowlisted for rejection replay, while alternate-source candidates are admitted only from the explicit CC0 source asset-id allowlist. This does not prove FBX 2018 export, UE4 import, deformation, final likeness, runtime, PIE, device, visual or performance acceptance.",
     "candidate_source_asset_id_allowlist": [
-      "OGA_QTN_RPG_CHARACTERS_CC0"
+      "OGA_QTN_RPG_CHARACTERS_CC0",
+      "KAYKIT_ADVENTURERS_CC0"
     ]
   }
 }
