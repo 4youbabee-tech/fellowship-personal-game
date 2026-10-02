@@ -2606,3 +2606,15 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Quest/NPC/LivingWorld authority | UNCHANGED | No parallel state or crowd owner introduced |
 | Exact-head UE4 compile/runtime audit | PENDING | Required before merge |
 | PIE / device / visual / target performance acceptance | NOT ACCEPTED | Human/device evidence still required |
+
+## 2026-10-02 - Runner broker-stall recovery
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Listener process | OBSERVED ALIVE | Local screenshot showed Runner.Listener PID present |
+| Worker process | OBSERVED ABSENT | No Runner.Worker process while Unreal jobs remained queued |
+| Broker transport | OBSERVED FAILED | Runner log showed SocketException 995 / aborted I/O |
+| Watchdog timestamp parser | ROOT CAUSE FIX SOURCE-IMPLEMENTED | Real `[yyyy-MM-dd HH:mm:ssZ INFO ...]` format now parsed; legacy form retained |
+| Stalled acquire recovery | SOURCE-IMPLEMENTED | Existing ack-without-worker recycle can now receive a real AckUtc |
+| Hosted regression | SOURCE-IMPLEMENTED | Pre-Unreal test covers real + legacy timestamp forms |
+| Local machine recovery | PENDING USER-SIDE WATCHDOG REINSTALL/RESTART | No claim of runner recovery until a queued job starts |
