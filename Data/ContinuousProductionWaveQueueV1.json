@@ -1,0 +1,176 @@
+{
+  "schema_version": 1,
+  "queue_id": "SHIRE_CONTINUOUS_MEGA_WAVE_QUEUE_V1",
+  "status": "ACTIVE",
+  "rule": "Run highest-priority eligible wave; if runtime waits on CI/manual, continue an independent source/preproduction/hardening wave. Future chapters remain source/preproduction until predecessor gates.",
+  "waves": [
+    {
+      "id": "Q001",
+      "title": "Frodo skeletal closure",
+      "mode": "P1C01",
+      "target_items": 40,
+      "state": "QUEUED"
+    },
+    {
+      "id": "Q002",
+      "title": "Gandalf skeletal prep",
+      "mode": "P1C01",
+      "target_items": 35,
+      "state": "QUEUED"
+    },
+    {
+      "id": "Q003",
+      "title": "Shire architecture replacement",
+      "mode": "P1C01",
+      "target_items": 120,
+      "state": "QUEUED"
+    },
+    {
+      "id": "Q004",
+      "title": "Shire props/clutter",
+      "mode": "P1C01",
+      "target_items": 160,
+      "state": "QUEUED"
+    },
+    {
+      "id": "Q005",
+      "title": "Shire vegetation",
+      "mode": "P1C01",
+      "target_items": 140,
+      "state": "QUEUED"
+    },
+    {
+      "id": "Q006",
+      "title": "Shire materials",
+      "mode": "P1C01",
+      "target_items": 100,
+      "state": "QUEUED"
+    },
+    {
+      "id": "Q007",
+      "title": "Shire audio",
+      "mode": "P1C01",
+      "target_items": 80,
+      "state": "QUEUED"
+    },
+    {
+      "id": "Q008",
+      "title": "Living Shire",
+      "mode": "P1C01",
+      "target_items": 50,
+      "state": "QUEUED"
+    },
+    {
+      "id": "Q009",
+      "title": "Quest/interaction polish",
+      "mode": "P1C01",
+      "target_items": 45,
+      "state": "QUEUED"
+    },
+    {
+      "id": "Q010",
+      "title": "Save/streaming reliability",
+      "mode": "P1C01",
+      "target_items": 35,
+      "state": "QUEUED"
+    },
+    {
+      "id": "Q011",
+      "title": "Optimization/memory",
+      "mode": "P1C01",
+      "target_items": 60,
+      "state": "QUEUED"
+    },
+    {
+      "id": "Q012",
+      "title": "Gate 6/7 evidence prep",
+      "mode": "EVIDENCE_ONLY",
+      "target_items": 25,
+      "state": "QUEUED"
+    },
+    {
+      "id": "Q013",
+      "title": "Global PBR acquisition",
+      "mode": "SOURCE_ONLY",
+      "target_items": 300,
+      "state": "QUEUED"
+    },
+    {
+      "id": "Q014",
+      "title": "Global architecture acquisition",
+      "mode": "SOURCE_ONLY",
+      "target_items": 250,
+      "state": "QUEUED"
+    },
+    {
+      "id": "Q015",
+      "title": "Global animation acquisition",
+      "mode": "SOURCE_ONLY",
+      "target_items": 300,
+      "state": "QUEUED"
+    },
+    {
+      "id": "Q016",
+      "title": "Global audio acquisition",
+      "mode": "SOURCE_ONLY",
+      "target_items": 220,
+      "state": "QUEUED"
+    },
+    {
+      "id": "Q017",
+      "title": "Global vegetation acquisition",
+      "mode": "SOURCE_ONLY",
+      "target_items": 220,
+      "state": "QUEUED"
+    },
+    {
+      "id": "Q018",
+      "title": "Global VFX acquisition",
+      "mode": "SOURCE_ONLY",
+      "target_items": 140,
+      "state": "QUEUED"
+    },
+    {
+      "id": "Q019",
+      "title": "Bree source/preproduction",
+      "mode": "SOURCE_PREPRODUCTION_ONLY",
+      "target_items": 220,
+      "state": "QUEUED"
+    },
+    {
+      "id": "Q020",
+      "title": "Prancing Pony source/preproduction",
+      "mode": "SOURCE_PREPRODUCTION_ONLY",
+      "target_items": 180,
+      "state": "QUEUED"
+    },
+    {
+      "id": "Q021",
+      "title": "Weathertop/Ford source/preproduction",
+      "mode": "SOURCE_PREPRODUCTION_ONLY",
+      "target_items": 220,
+      "state": "QUEUED"
+    },
+    {
+      "id": "Q022",
+      "title": "Rivendell/Moria source/preproduction",
+      "mode": "SOURCE_PREPRODUCTION_ONLY",
+      "target_items": 300,
+      "state": "QUEUED"
+    },
+    {
+      "id": "Q023",
+      "title": "Rohan/Gondor/Mordor source-preproduction",
+      "mode": "SOURCE_PREPRODUCTION_ONLY",
+      "target_items": 420,
+      "state": "QUEUED"
+    },
+    {
+      "id": "Q024",
+      "title": "Global validation/streaming hardening",
+      "mode": "SOURCE_PREPRODUCTION_ONLY",
+      "target_items": 120,
+      "state": "QUEUED"
+    }
+  ]
+}
