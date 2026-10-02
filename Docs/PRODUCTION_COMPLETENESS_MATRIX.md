@@ -2573,3 +2573,5 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Runtime replacement | NOT STARTED IN THIS BRANCH | Serialized runtime lane remains PR #247 |
 | Exact-head static validation | PENDING | Pre-Unreal contract added |
 | Visual/device/performance acceptance | NOT ACCEPTED | Requires later runtime and human/device evidence |
+
+| Visible-world pack PG-187 compatibility | SOURCE-REPAIRED | Keep required `RUNNER_EXECUTION_READY` status; new priority carried by separate execution profile |
