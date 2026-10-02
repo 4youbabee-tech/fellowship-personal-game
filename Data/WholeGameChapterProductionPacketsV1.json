@@ -18,7 +18,6 @@
       "focus": "Bilbo, Frodo, Gandalf",
       "critical": "Ring history establishes stakes; Bilbo prepares birthday; Gandalf arrives.",
       "optional": "Party setup, social onboarding, fireworks.",
-      "post": "Bilbo leaves; Ring passes to Frodo.",
       "wave_id": "M025",
       "status": "SOURCE_PREPRODUCTION_REGISTERED",
       "runtime_integration_allowed": false,
@@ -39,7 +38,8 @@
         "QA matrix"
       ],
       "source_boundary": "PROJECT_SOURCE_MATRIX",
-      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet.",
+      "locked_postcondition": "Bilbo leaves; Ring passes to Frodo."
     },
     {
       "id": "F1-02",
@@ -48,7 +48,6 @@
       "focus": "Frodo, Gandalf, Sam",
       "critical": "Gandalf confirms the Ring danger and Sauron connection.",
       "optional": "Investigation tutorial; packing; stealth departure.",
-      "post": "Frodo leaves the Shire.",
       "wave_id": "M026",
       "status": "SOURCE_PREPRODUCTION_REGISTERED",
       "runtime_integration_allowed": false,
@@ -69,7 +68,8 @@
         "QA matrix"
       ],
       "source_boundary": "PROJECT_SOURCE_MATRIX",
-      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet.",
+      "locked_postcondition": "Frodo leaves the Shire."
     },
     {
       "id": "F1-03",
@@ -78,7 +78,6 @@
       "focus": "Frodo, Sam, Merry, Pippin",
       "critical": "Black Riders hunt the Hobbits; companions converge.",
       "optional": "Road stealth, ferry escape, environmental hiding.",
-      "post": "Hobbits reach Bree.",
       "wave_id": "M027",
       "status": "SOURCE_PREPRODUCTION_REGISTERED",
       "runtime_integration_allowed": false,
@@ -99,7 +98,8 @@
         "QA matrix"
       ],
       "source_boundary": "PROJECT_SOURCE_MATRIX",
-      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet.",
+      "locked_postcondition": "Hobbits reach Bree."
     },
     {
       "id": "F1-04",
@@ -108,7 +108,6 @@
       "focus": "Hobbits, Aragorn, Nazgul",
       "critical": "Aragorn becomes guide; Ring use draws danger; Frodo is wounded.",
       "optional": "Tavern attention, travel, camp decisions, defensive combat.",
-      "post": "Party races for Rivendell.",
       "wave_id": "M028",
       "status": "SOURCE_PREPRODUCTION_REGISTERED",
       "runtime_integration_allowed": false,
@@ -129,7 +128,8 @@
         "QA matrix"
       ],
       "source_boundary": "PROJECT_SOURCE_MATRIX",
-      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet.",
+      "locked_postcondition": "Party races for Rivendell."
     },
     {
       "id": "F1-05",
@@ -138,7 +138,6 @@
       "focus": "Frodo, Council, Fellowship",
       "critical": "Council chooses destruction of Ring; Fellowship forms.",
       "optional": "Exploration, lore, equipment, relationship scenes.",
-      "post": "Nine depart.",
       "wave_id": "M029",
       "status": "SOURCE_PREPRODUCTION_REGISTERED",
       "runtime_integration_allowed": false,
@@ -159,7 +158,8 @@
         "QA matrix"
       ],
       "source_boundary": "PROJECT_SOURCE_MATRIX",
-      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet.",
+      "locked_postcondition": "Nine depart."
     },
     {
       "id": "F1-06",
@@ -168,7 +168,6 @@
       "focus": "Fellowship",
       "critical": "Mountain route fails; Moria reveals Balin's fate; Balrog attacks.",
       "optional": "Survival, puzzle door, routefinding, tomb battle, escape.",
-      "post": "Gandalf falls; Fellowship escapes.",
       "wave_id": "M030",
       "status": "SOURCE_PREPRODUCTION_REGISTERED",
       "runtime_integration_allowed": false,
@@ -189,7 +188,8 @@
         "QA matrix"
       ],
       "source_boundary": "PROJECT_SOURCE_MATRIX",
-      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet.",
+      "locked_postcondition": "Gandalf falls; Fellowship escapes."
     },
     {
       "id": "F1-07",
@@ -198,7 +198,6 @@
       "focus": "Fellowship, Galadriel",
       "critical": "Grief, rest, gifts, river journey; pressure fractures group.",
       "optional": "Quiet exploration, provisioning, boats.",
-      "post": "Fellowship reaches Amon Hen.",
       "wave_id": "M031",
       "status": "SOURCE_PREPRODUCTION_REGISTERED",
       "runtime_integration_allowed": false,
@@ -219,7 +218,8 @@
         "QA matrix"
       ],
       "source_boundary": "PROJECT_SOURCE_MATRIX",
-      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet.",
+      "locked_postcondition": "Fellowship reaches Amon Hen."
     },
     {
       "id": "F1-08",
@@ -228,7 +228,6 @@
       "focus": "Frodo, Sam, Aragorn, Boromir, Uruk-hai",
       "critical": "Boromir falls; Merry/Pippin captured; Frodo chooses Mordor; Sam follows.",
       "optional": "Multi-character combat and pursuit handoff.",
-      "post": "Three parallel campaigns begin.",
       "wave_id": "M032",
       "status": "SOURCE_PREPRODUCTION_REGISTERED",
       "runtime_integration_allowed": false,
@@ -249,7 +248,8 @@
         "QA matrix"
       ],
       "source_boundary": "PROJECT_SOURCE_MATRIX",
-      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet.",
+      "locked_postcondition": "Three parallel campaigns begin."
     },
     {
       "id": "F2-01",
@@ -258,7 +258,6 @@
       "focus": "Aragorn, Legolas, Gimli, Merry, Pippin",
       "critical": "Hunters pursue Uruk-hai; captives escape into Fangorn.",
       "optional": "Tracking, stamina, evidence reading.",
-      "post": "Paths converge around Fangorn/Rohan.",
       "wave_id": "M033",
       "status": "SOURCE_PREPRODUCTION_REGISTERED",
       "runtime_integration_allowed": false,
@@ -279,7 +278,8 @@
         "QA matrix"
       ],
       "source_boundary": "PROJECT_SOURCE_MATRIX",
-      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet.",
+      "locked_postcondition": "Paths converge around Fangorn/Rohan."
     },
     {
       "id": "F2-02",
@@ -288,7 +288,6 @@
       "focus": "Merry, Pippin, Treebeard; Hunters, Gandalf",
       "critical": "Ents introduced; Gandalf returns transformed.",
       "optional": "Exploration, dialogue, Ent traversal.",
-      "post": "Gandalf leads hunters to Edoras.",
       "wave_id": "M034",
       "status": "SOURCE_PREPRODUCTION_REGISTERED",
       "runtime_integration_allowed": false,
@@ -309,7 +308,8 @@
         "QA matrix"
       ],
       "source_boundary": "PROJECT_SOURCE_MATRIX",
-      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet.",
+      "locked_postcondition": "Gandalf leads hunters to Edoras."
     },
     {
       "id": "F2-03",
@@ -318,7 +318,6 @@
       "focus": "Theoden, Eowyn, Eomer, Gandalf, Aragorn",
       "critical": "Theoden restored; political and military crisis clarified.",
       "optional": "Court exploration, stables, equipment, social scenes.",
-      "post": "Rohan evacuates toward Helm's Deep.",
       "wave_id": "M035",
       "status": "SOURCE_PREPRODUCTION_REGISTERED",
       "runtime_integration_allowed": false,
@@ -339,7 +338,8 @@
         "QA matrix"
       ],
       "source_boundary": "PROJECT_SOURCE_MATRIX",
-      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet.",
+      "locked_postcondition": "Rohan evacuates toward Helm's Deep."
     },
     {
       "id": "F2-04",
@@ -348,7 +348,6 @@
       "focus": "Rohan party",
       "critical": "Refugees move under threat; defenses prepared.",
       "optional": "Escort, rescue, armory, wall prep, civilians.",
-      "post": "Uruk army arrives.",
       "wave_id": "M036",
       "status": "SOURCE_PREPRODUCTION_REGISTERED",
       "runtime_integration_allowed": false,
@@ -369,7 +368,8 @@
         "QA matrix"
       ],
       "source_boundary": "PROJECT_SOURCE_MATRIX",
-      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet.",
+      "locked_postcondition": "Uruk army arrives."
     },
     {
       "id": "F2-05",
@@ -378,7 +378,6 @@
       "focus": "Aragorn, Legolas, Gimli, Theoden",
       "critical": "Siege escalates from walls to keep; dawn counterattack.",
       "optional": "Defense phases, breach response, retreat, mounted sortie.",
-      "post": "Rohan survives.",
       "wave_id": "M037",
       "status": "SOURCE_PREPRODUCTION_REGISTERED",
       "runtime_integration_allowed": false,
@@ -399,7 +398,8 @@
         "QA matrix"
       ],
       "source_boundary": "PROJECT_SOURCE_MATRIX",
-      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet.",
+      "locked_postcondition": "Rohan survives."
     },
     {
       "id": "F2-06",
@@ -408,7 +408,6 @@
       "focus": "Frodo, Sam, Gollum",
       "critical": "Gollum becomes guide; Ring pressure grows.",
       "optional": "Traversal, navigation, trust tension, survival.",
-      "post": "Approach to Black Gate.",
       "wave_id": "M038",
       "status": "SOURCE_PREPRODUCTION_REGISTERED",
       "runtime_integration_allowed": false,
@@ -429,7 +428,8 @@
         "QA matrix"
       ],
       "source_boundary": "PROJECT_SOURCE_MATRIX",
-      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet.",
+      "locked_postcondition": "Approach to Black Gate."
     },
     {
       "id": "F2-07",
@@ -438,7 +438,6 @@
       "focus": "Frodo, Sam, Gollum, Faramir",
       "critical": "Rangers capture group; Haradrim observed; Ring danger tested.",
       "optional": "Stealth/scouting, ambush observation, dialogue.",
-      "post": "Frodo continues toward Mordor.",
       "wave_id": "M039",
       "status": "SOURCE_PREPRODUCTION_REGISTERED",
       "runtime_integration_allowed": false,
@@ -459,7 +458,8 @@
         "QA matrix"
       ],
       "source_boundary": "PROJECT_SOURCE_MATRIX",
-      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet.",
+      "locked_postcondition": "Frodo continues toward Mordor."
     },
     {
       "id": "F2-08",
@@ -468,7 +468,6 @@
       "focus": "Merry, Pippin, Treebeard",
       "critical": "Ent decision turns into assault on Isengard.",
       "optional": "Environmental destruction, large-creature traversal.",
-      "post": "Saruman's war machine broken.",
       "wave_id": "M040",
       "status": "SOURCE_PREPRODUCTION_REGISTERED",
       "runtime_integration_allowed": false,
@@ -489,7 +488,8 @@
         "QA matrix"
       ],
       "source_boundary": "PROJECT_SOURCE_MATRIX",
-      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet.",
+      "locked_postcondition": "Saruman's war machine broken."
     },
     {
       "id": "F3-01",
@@ -498,7 +498,6 @@
       "focus": "Fellowship allies, Pippin, Gandalf",
       "critical": "Aftermath reunites threads; Palantir reveals urgency.",
       "optional": "Exploration, aftermath interactions, transition.",
-      "post": "Gandalf rides with Pippin to Gondor.",
       "wave_id": "M041",
       "status": "SOURCE_PREPRODUCTION_REGISTERED",
       "runtime_integration_allowed": false,
@@ -519,7 +518,8 @@
         "QA matrix"
       ],
       "source_boundary": "FILM_CANON_MASTER_SUMMARY_NOT_SCRIPT_VERIFIED",
-      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet.",
+      "locked_postcondition": "Gandalf rides with Pippin to Gondor."
     },
     {
       "id": "F3-02",
@@ -528,7 +528,6 @@
       "focus": "Gandalf, Pippin; Theoden, Eowyn, Merry",
       "critical": "Gondor prepares; Rohan musters; beacons call aid.",
       "optional": "City exploration, guard duties, beacon/muster activities.",
-      "post": "Armies move to war.",
       "wave_id": "M042",
       "status": "SOURCE_PREPRODUCTION_REGISTERED",
       "runtime_integration_allowed": false,
@@ -549,7 +548,8 @@
         "QA matrix"
       ],
       "source_boundary": "FILM_CANON_MASTER_SUMMARY_NOT_SCRIPT_VERIFIED",
-      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet.",
+      "locked_postcondition": "Armies move to war."
     },
     {
       "id": "F3-03",
@@ -558,7 +558,6 @@
       "focus": "Aragorn, Legolas, Gimli",
       "critical": "Aragorn claims kingly path and seeks the Dead.",
       "optional": "Fear-space traversal, oath confrontation, environmental puzzle.",
-      "post": "Aragorn gains decisive force.",
       "wave_id": "M043",
       "status": "SOURCE_PREPRODUCTION_REGISTERED",
       "runtime_integration_allowed": false,
@@ -579,7 +578,8 @@
         "QA matrix"
       ],
       "source_boundary": "FILM_CANON_MASTER_SUMMARY_NOT_SCRIPT_VERIFIED",
-      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet.",
+      "locked_postcondition": "Aragorn gains decisive force."
     },
     {
       "id": "F3-04",
@@ -588,7 +588,6 @@
       "focus": "Gondor, Rohan, Mordor armies",
       "critical": "Siege culminates in massive field battle.",
       "optional": "Siege support, cavalry phases, hero encounters, rescue.",
-      "post": "Mordor army defeated locally at great cost.",
       "wave_id": "M044",
       "status": "SOURCE_PREPRODUCTION_REGISTERED",
       "runtime_integration_allowed": false,
@@ -609,7 +608,8 @@
         "QA matrix"
       ],
       "source_boundary": "FILM_CANON_MASTER_SUMMARY_NOT_SCRIPT_VERIFIED",
-      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet.",
+      "locked_postcondition": "Mordor army defeated locally at great cost."
     },
     {
       "id": "F3-05",
@@ -618,7 +618,6 @@
       "focus": "Frodo, Sam, Gollum",
       "critical": "Shelob crisis, tower rescue, disguise, final march.",
       "optional": "Stealth, rescue, disguise pressure, survival.",
-      "post": "Ring-bearers reach Mount Doom.",
       "wave_id": "M045",
       "status": "SOURCE_PREPRODUCTION_REGISTERED",
       "runtime_integration_allowed": false,
@@ -639,7 +638,8 @@
         "QA matrix"
       ],
       "source_boundary": "FILM_CANON_MASTER_SUMMARY_NOT_SCRIPT_VERIFIED",
-      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet.",
+      "locked_postcondition": "Ring-bearers reach Mount Doom."
     },
     {
       "id": "F3-06",
@@ -648,7 +648,6 @@
       "focus": "All major threads",
       "critical": "Allies distract Sauron; Ring reaches final crisis and is destroyed.",
       "optional": "Parallel climax: survival battle + final traversal.",
-      "post": "Sauron falls.",
       "wave_id": "M046",
       "status": "SOURCE_PREPRODUCTION_REGISTERED",
       "runtime_integration_allowed": false,
@@ -669,7 +668,8 @@
         "QA matrix"
       ],
       "source_boundary": "FILM_CANON_MASTER_SUMMARY_NOT_SCRIPT_VERIFIED",
-      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet.",
+      "locked_postcondition": "Sauron falls."
     },
     {
       "id": "F3-07",
@@ -678,7 +678,6 @@
       "focus": "Survivors",
       "critical": "Coronation, homecoming, final departures.",
       "optional": "Post-war exploration, closure conversations, epilogue unlocks.",
-      "post": "Main campaign complete.",
       "wave_id": "M047",
       "status": "SOURCE_PREPRODUCTION_REGISTERED",
       "runtime_integration_allowed": false,
@@ -699,7 +698,8 @@
         "QA matrix"
       ],
       "source_boundary": "FILM_CANON_MASTER_SUMMARY_NOT_SCRIPT_VERIFIED",
-      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet."
+      "acceptance_boundary": "No runtime, PIE, device, visual, pacing or performance acceptance from this packet.",
+      "locked_postcondition": "Main campaign complete."
     }
   ]
 }
