@@ -722,6 +722,6 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 
 **Permanent rule:** production skeletal FBX validation is admitted only below `SourceAssets/Production/Characters/Rigs/`. Candidate bytes must come from provenance-bound Warehouse intake, pass static structure/hash checks, and be staged into an isolated checkout before UE4 import. This validation path does not authorize runtime replacement.
 
-**Import contract:** `FBXIT_SkeletalMesh`, materials/textures/animations disabled for the validation pass, expected asset class verified through AssetRegistry, and runtime residency remains under `UShireChapterAssetStreamingSubsystem` soft-path + `FStreamableManager` ownership.
+**Import contract:** `FBXIT_SkeletalMesh`, materials/textures/animations disabled for the validation pass, expected asset class verified through AssetRegistry, reference skeleton must contain >0 bones from the already-imported object, and runtime residency remains under `UShireChapterAssetStreamingSubsystem` soft-path + `FStreamableManager` ownership.
 
 **Evidence boundary:** skeletal import success still does not prove retarget quality, deformation, final likeness, AnimBP readiness, PIE, device, visual or performance acceptance.
