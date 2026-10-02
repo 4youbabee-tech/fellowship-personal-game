@@ -63,6 +63,27 @@ $activeHeads = @(
         Where-Object { $_ }
 )
 
+function Test-BranchHasOpenPull {
+    param([Parameter(Mandatory = $true)][string]$Branch)
+
+    $owner = ($Repository -split '/', 2)[0]
+    if ([string]::IsNullOrWhiteSpace($owner)) {
+        throw "Unable to derive repository owner for active-PR branch recheck."
+    }
+    $headValue = "${owner}:$Branch"
+    $headFilter = [System.Uri]::EscapeDataString($headValue)
+    $activeBranchUri = "https://api.github.com/repos/$Repository/pulls?state=open&head=$headFilter&per_page=1"
+    try {
+        $activeForBranch = @(Invoke-RestMethod -Method Get -Uri $activeBranchUri -Headers $headers)
+    }
+    catch {
+        throw "Unable to recheck active PR ownership for branch: $Branch :: $($_.Exception.Message)"
+    }
+
+    $isActive = $activeForBranch.Count -gt 0
+    Write-Host "BRANCH_CLEANUP_ACTIVE_HEAD_RECHECK branch=$Branch active=$($isActive.ToString().ToLowerInvariant())"
+    return $isActive
+}
 function Remove-RemoteBranch {
     param(
         [Parameter(Mandatory = $true)][string]$Branch,
@@ -72,7 +93,7 @@ function Remove-RemoteBranch {
     if ($planProtectedBranches.Contains($Branch)) {
         throw "Refusing plan-protected branch: $Branch"
     }
-    if ($activeHeads -contains $Branch) {
+    if (($activeHeads -contains $Branch) -or (Test-BranchHasOpenPull -Branch $Branch)) {
         throw "Refusing to delete active PR head: $Branch"
     }
 
@@ -105,7 +126,7 @@ if (-not [string]::IsNullOrWhiteSpace($ClosedHeadRef)) {
     if ($closedBranch -in @("develop", "main")) {
         Write-Host "BRANCH_CLEANUP_CLOSED_HEAD_SKIP_CANONICAL branch=$closedBranch"
     }
-    elseif ($activeHeads -contains $closedBranch) {
+    elseif (($activeHeads -contains $closedBranch) -or (Test-BranchHasOpenPull -Branch $closedBranch)) {
         Write-Host "BRANCH_CLEANUP_CLOSED_HEAD_KEEP_ACTIVE branch=$closedBranch"
     }
     else {
