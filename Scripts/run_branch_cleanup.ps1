@@ -74,14 +74,26 @@ function Test-BranchHasOpenPull {
     $headFilter = [System.Uri]::EscapeDataString($headValue)
     $activeBranchUri = "https://api.github.com/repos/$Repository/pulls?state=open&head=$headFilter&per_page=1"
     try {
-        $activeForBranch = @(Invoke-RestMethod -Method Get -Uri $activeBranchUri -Headers $headers)
+        $activeBranchResponse = Invoke-RestMethod -Method Get -Uri $activeBranchUri -Headers $headers
     }
     catch {
         throw "Unable to recheck active PR ownership for branch: $Branch :: $($_.Exception.Message)"
     }
 
+    # PowerShell wraps $null as a one-element array when using @($null). Filter null
+    # responses and require an exact head.ref match so an empty GitHub array is inactive.
+    $activeForBranch = @(
+        $activeBranchResponse |
+            Where-Object {
+                $null -ne $_ -and
+                $_.PSObject.Properties['head'] -and
+                $null -ne $_.head -and
+                $_.head.PSObject.Properties['ref'] -and
+                ([string]$_.head.ref).Equals($Branch, [System.StringComparison]::Ordinal)
+            }
+    )
     $isActive = $activeForBranch.Count -gt 0
-    Write-Host "BRANCH_CLEANUP_ACTIVE_HEAD_RECHECK branch=$Branch active=$($isActive.ToString().ToLowerInvariant())"
+    Write-Host "BRANCH_CLEANUP_ACTIVE_HEAD_RECHECK branch=$Branch active=$($isActive.ToString().ToLowerInvariant()) count=$($activeForBranch.Count)"
     return $isActive
 }
 function Remove-RemoteBranch {
