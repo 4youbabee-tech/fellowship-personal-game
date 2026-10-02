@@ -3748,3 +3748,10 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Repair filters null responses and requires an exact `head.ref == branch` match before declaring a branch active. GitHub API errors remain fatal and therefore fail closed.
 - The stale-retirement plan from #268 remains unchanged and will be retried only after fresh exact-head validation.
 - Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No branch-deletion success claim yet.
+
+
+### 2026-10-03 - Active-head cleanup continuation
+
+- Consolidated the useful behavior from PR #269 into the #270 root fix: an active PR head is now logged as `BRANCH_CLEANUP_KEEP_ACTIVE_PR` and skipped, while cleanup continues to unrelated reviewed stale refs.
+- This does not weaken active-head protection. The branch-specific open-PR query remains fail-closed on API errors, and exact closed-head handling still preserves an active/moved ref.
+- PR #269 is retained temporarily until #270 merges; it will then be closed as superseded so the corrected close-event cleanup can retire its branch.
