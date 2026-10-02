@@ -2558,6 +2558,10 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Production importer skeletal FBX path | SOURCE-IMPLEMENTED | FBX accepted only below `Characters/Rigs/`; explicit `FBXIT_SkeletalMesh` |
 | Materials/textures/animations during validation | DISABLED | Validation isolates skeletal mesh import only |
 | Skeletal class + bone verification | SOURCE-IMPLEMENTED | AssetRegistry must register expected object as `USkeletalMesh` and imported mesh must report >0 reference-skeleton bones |
-| Exact-head UE4.27.2 import | PENDING | Dedicated self-hosted workflow must produce `SK_FRODO.uasset` + log marker |
+| Exact-head UE4.27.2 first-candidate import | RUN-PROVEN / CANDIDATE REJECTED | PR #247 head `f92a7d3a70cf8d438de1f8918a89022104d28479`: exact Frodo result reported `skeletal-registered=yes skeletal-bones=33`; BaseCharacter is not promoted because the same import has smoothing/bind-pose/UV debt |
+| Bone verifier | ROOT CAUSE FIX SOURCE-IMPLEMENTED | Previous `bones=0` came from the first generic result line in the full import log; verifier now parses only the exact Frodo result and keeps the >0 gate |
+| Technical rejection / next-candidate rotation | SOURCE-IMPLEMENTED | Exact BaseCharacter filename+SHA is `REJECTED_TECHNICAL`; fresh workflow must probe the next static-valid nonrejected candidate |
+| Generated USkeleton persistence | SOURCE-IMPLEMENTED | Candidate cannot pass the dedicated gate unless `SK_FRODO_Skeleton.uasset` exists after import |
+| Warning debt attribution | ROOT CAUSE ISOLATED | `Missing smoothing groups = 2` on #1241 is the Frodo live warning plus UE summary echo; zero ceiling remains unchanged |
 | AnimBP / retarget / deformation / likeness | NOT ACCEPTED | Separate successor evidence required |
 | Runtime replacement / PIE / device / visual / performance | NOT ACCEPTED | `runtime_integration_allowed=false` |
