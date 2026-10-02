@@ -2670,3 +2670,13 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | East Fields production row instances | SOURCE-IMPLEMENTED | 96 deterministic resident `SM_ShGrassClump` instances, no collision/no Tick/no shadow, cull 900-6500 cm |
 | East Fields exact-head UE4 compile/runtime audit | PENDING | Requires fresh current-develop ancestry after source registration merges |
 | East Fields PIE / device / visual / performance acceptance | NOT ACCEPTED | No matching human/device evidence |
+
+## 2026-10-02 - KayKit Adventurers alternate Frodo source family
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| KayKit Adventurers immutable source registration | SOURCE-IMPLEMENTED | Revision `672074b73ba276876a19e8816ecdc5241817ab47` |
+| Character-intake admission | SOURCE-IMPLEMENTED | `KAYKIT_ADVENTURERS_CC0` added to external candidate manifest |
+| Frodo static-QC source admission | SOURCE-IMPLEMENTED | Source asset ID allowlist updated |
+| Warehouse staging / UE4 skeletal import | PENDING | Separate exact-head execution required |
+| Runtime / deformation / visual acceptance | NOT ACCEPTED | No matching evidence |
