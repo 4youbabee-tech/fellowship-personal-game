@@ -1267,10 +1267,33 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
     for(const FVector& P:WoodTrees) SpawnTree(P,0.94f);
     SpawnFenceLine(FVector(11900,-450,0),FVector(17100,-1150,0),16);
     SpawnFenceLine(FVector(12000,1450,0),FVector(17100,800,0),16);
-    SpawnShape(CylinderMesh,FVector(14550,1180,42),FVector(0.24f,0.24f,1.55f),
-        FLinearColor(0.20f,0.10f,0.045f),FRotator(0,82,90),true);
-    SpawnShape(SphereMesh,FVector(14470,1160,50),FVector(1.15f,0.52f,0.36f),
-        FLinearColor(0.12f,0.29f,0.075f),FRotator::ZeroRotator,true);
+    if (ProductionCommonFallenLogMesh)
+    {
+        SpawnShape(
+            ProductionCommonFallenLogMesh,
+            FVector(14510,1180,18),
+            FVector(0.82f),
+            FLinearColor::White,
+            FRotator(0,82,0),
+            true);
+    }
+    else
+    {
+        SpawnShape(CylinderMesh,FVector(14550,1180,42),FVector(0.24f,0.24f,1.55f),
+            FLinearColor(0.20f,0.10f,0.045f),FRotator(0,82,90),true);
+        SpawnShape(SphereMesh,FVector(14470,1160,50),FVector(1.15f,0.52f,0.36f),
+            FLinearColor(0.12f,0.29f,0.075f),FRotator::ZeroRotator,true);
+    }
+    if (ProductionCommonBoulderClusterMesh)
+    {
+        SpawnShape(
+            ProductionCommonBoulderClusterMesh,
+            FVector(14920,980,8),
+            FVector(0.62f),
+            FLinearColor::White,
+            FRotator(0,-18,0),
+            true);
+    }
     SpawnLabel(TEXT("Wooded Road"),FVector(ShireLayout::WoodedRoadX,1750,310),FLinearColor(0.72f,0.78f,0.62f));
 
     // The run to the Brandywine is intentionally long enough to feel like escape.
