@@ -3756,3 +3756,11 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Fresh current-develop repair now filters null responses and requires an exact `head.ref == branch` match before a branch is considered active.
 - API failures remain fatal/fail-closed. The already-merged KEEP + CONTINUE behavior for truly active PR heads remains intact.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL PENDING**.
+
+
+## 2026-10-03 - Branch Cleanup absent-ref fast path
+
+- Live cleanup remained slow because every explicit historical branch name performed a GitHub active-PR API request even when the ref was already absent.
+- `Remove-RemoteBranch` now queries the remote ref first. An absent ref exits immediately through `BRANCH_CLEANUP_REMOTE_ABSENT_FASTPATH`; only live refs pay the active-PR API safety check.
+- Active PR, canonical/protected and moved-ref safety is unchanged. This is throughput optimization only.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL PENDING**.
