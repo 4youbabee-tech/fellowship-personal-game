@@ -3535,3 +3535,15 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - This repair changes ranking to exact filename tokens, bounds Frodo/Gandalf identity terms, adds regression examples, adds a Frodo-first static FBX header/Geometry/Model/LimbNode/Deformer/Skin/Cluster probe, and migrates PG-205 from the retired substring/state markers to the fail-closed V2 contract.
 - Evidence boundary: **SOURCE-IMPLEMENTED / exact-head validation pending**. Static markers will not prove FBX 2018 export, UE4 skeletal import, deformation, final Frodo likeness, READY_FOR_IMPORT, runtime integration, PIE, device, visual or performance acceptance.
 
+
+
+## 2026-10-02 - Warehouse #314 Frodo static-QC schema repair
+
+- Exact develop head before repair: `de8bed40b94c3cd0d89f13ddbb260ba9df8449d5`.
+- Pre-Unreal #1571 and Unreal Build #1223 succeeded on that head.
+- Warehouse #314 reached the real Frodo lane with **52 staged FBX**, **5 Frodo candidates**, **4 Gandalf candidates**, and the Quaternius four-pack dependency recorded as manual queue rather than a factory-wide blocker.
+- The candidate artifact itself is schema v2 and contains a valid `characters` array; the failing step was `Inspect Frodo FBX static structure`, where strict property access raised `property 'characters' cannot be found on this object`.
+- Repair hardens candidate-report schema discovery, accepts the current v2 contract, retains a bounded legacy/flat-row compatibility path, and fails unsupported schemas with an explicit schema/key diagnostic.
+- Regression coverage now executes the inspector against a generated schema-v2 fixture before Warehouse runtime use.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**.
+- No UE4 skeletal import, deformation, Frodo likeness, PIE, device, visual or performance acceptance is claimed.
