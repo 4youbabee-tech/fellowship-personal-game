@@ -2489,3 +2489,11 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 - The exact-head hero candidate wave fails closed before ranking when any discovered FBX lacks exactly one provenance row; ranked rows now carry the provenance fields into the evidence artifact.
 - This closes the gap between `candidate_policy.require_provenance=true` and actual per-file candidate evidence without promoting any asset to READY_FOR_IMPORT.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. No skeleton, skin-weight, deformation, import, PIE, device, visual or performance acceptance is claimed.
+
+
+## 2026-10-02 — Continuous mega-wave production queue
+
+- Added `Data/ContinuousProductionWaveQueueV1.json`: 24 queued production waves spanning P1C01 character/world/gameplay/reliability/optimization work plus parallel whole-game warehouse acquisition and future-chapter SOURCE/PREPRODUCTION preparation.
+- Declared queue capacity exceeds 3,000 target items. Runtime promotion remains predecessor-gated; queued status never implies import, runtime, PIE, device, visual or performance acceptance.
+- Added hosted regression coverage for queue size, unique IDs, independent source/preproduction fallback lanes and prohibition of future-part runtime activation.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING**.
