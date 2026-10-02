@@ -976,3 +976,9 @@ Registered against the already-authorized **F1-04 Bree & Weathertop Mega Source 
 - Animated final character candidates remain FBX-only; production textures PNG/TGA; heavy runtime assets soft/async; repeated detail ISM/HISM + LOD/culling; populations remain pooled.
 
 Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-VISUAL ACCEPTANCE CLAIM**.
+
+## 2026-10-02 - F2-03 source world-detail preparation
+
+- Added a bounded seven-cell future chapter source packet with three state variants and explicit optional-window expiry.
+- Repeated environment detail stays HISM/ISM + LOD/culling; future population stays pooled; heavy assets remain soft/async; textures remain PNG/TGA; animated character sources remain FBX.
+- Runtime remains gated behind the active P1C01 lane. Human and device acceptance are not claimed.
