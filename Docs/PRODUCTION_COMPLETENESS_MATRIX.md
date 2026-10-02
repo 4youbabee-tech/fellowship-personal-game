@@ -2655,3 +2655,13 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Hosted classifier exact-base diff | SOURCE-FIXED | Full hosted history required before Unreal impact classification; source-only work must not fail-safe to UE solely because PR ancestry exceeds shallow depth |
 
 | Hosted ancestor proof network avoidance | SOURCE-FIXED | Full local hosted history is consumed before any fallback fetch; private-repo credentials remain non-persistent and source-only UE reservations stay skipped |
+
+## 2026-10-02 - East Fields row replacement plan
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Twelve cube crop-row strips | STATIC-IDENTIFIED | Current builder source |
+| Instanced production-row replacement | SOURCE-IMPLEMENTED PLAN | <=1 cluster / <=96 instances / no collision / no Tick |
+| Runtime implementation | PREDECESSOR-GATED | Wait for current Party Field runtime pass to merge green |
+| New acquisition | NOT REQUIRED BY DEFAULT | Reuse resident production vegetation first |
+| PIE / device / visual / performance acceptance | NOT ACCEPTED | No matching evidence |
