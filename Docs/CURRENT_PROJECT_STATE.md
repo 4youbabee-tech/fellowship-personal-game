@@ -3507,3 +3507,11 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - The exact-head hero candidate wave fails closed before ranking when any discovered FBX lacks exactly one provenance row; ranked rows now carry the provenance fields into the evidence artifact.
 - This closes the gap between `candidate_policy.require_provenance=true` and actual per-file candidate evidence without promoting any asset to READY_FOR_IMPORT.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. No skeleton, skin-weight, deformation, import, PIE, device, visual or performance acceptance is claimed.
+
+## 2026-10-02 - F2-03 Edoras source/preproduction mega batch
+
+- While P1C01 Frodo remains the serialized runtime car, the Governor-declared next source/preparation wave advanced independently.
+- Added `Data/F2_03EdorasMegaSourcePreproductionV1.json`: 7 authored Edoras/Rohan world cells, 3 state variants, 6 named character source contracts, 4 expiring safe-window activities, culture/material/prop/audio families, reliability rules and low-spec budgets.
+- Exact future film staging is still fail-closed on supplied Two Towers screenplay verification; the packet does not infer scene order or character knowledge from book material alone.
+- Added standalone PowerShell contract validation plus executable `Scripts/test_source_contracts.py` coverage for source routing, runtime gating, detail coverage, expiry, PNG/TGA/BMP policy, HISM/ISM, async streaming, pooling and source-detail dispositions.
+- Status: **SOURCE/PREPRODUCTION IMPLEMENTED / EXACT-HEAD PRE-UNREAL PENDING**. P1C01 remains the sole runtime-changing chapter; no Part II runtime or Gate 6/7 acceptance claim.
