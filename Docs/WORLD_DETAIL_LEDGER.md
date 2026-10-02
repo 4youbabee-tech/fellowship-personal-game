@@ -976,3 +976,16 @@ Registered against the already-authorized **F1-04 Bree & Weathertop Mega Source 
 - Animated final character candidates remain FBX-only; production textures PNG/TGA; heavy runtime assets soft/async; repeated detail ISM/HISM + LOD/culling; populations remain pooled.
 
 Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-VISUAL ACCEPTANCE CLAIM**.
+
+
+## 2026-10-02 — F2-03 Edoras mega source/preproduction wave
+
+- Governor-directed next source/preparation wave opened while P1C01 remains the sole runtime-changing chapter.
+- Added `Data/F2_03EdorasMegaSourcePreproductionV1.json` for the Edoras/Rohan packet: approach plain, royal-barrows threshold, lower settlement, stables, Meduseld exterior/interior, and evacuation muster.
+- Canon-safe chapter spine remains: Gandalf/hunters arrive from the Fangorn lane; Théoden restoration and the Rohan court/military crisis are the chapter core; optional exploration is limited to court/stables/equipment/social windows; the locked exit remains evacuation toward Helm's Deep.
+- Source routing is explicit: Story & Timeline Bible F2-03 is the navigation contract; the supplied Two Towers screenplay remains mandatory for exact film-scene/cast/knowledge verification before future FILM_CORE/runtime staging; supplied Tolkien LOTR provides compatible geography, Rohan history, settlement/culture and material-detail enrichment below film continuity.
+- World-state variants are prepared as PRE_RESTORATION, POST_RESTORATION_PRE_EVACUATION, and EVACUATION_COMMITTED so population, props, patrol readiness and optional-window availability cannot leak future state early.
+- Rohan production language is registered around horse-centered logistics, timber architecture, stable/tack systems, carts/cargo, textiles, iron hardware and hero-quality Meduseld surfaces.
+- Low-spec constraints remain explicit: HISM/ISM for repeated fences/posts/grass/flowers/cargo, LOD/culling for secondary settlement detail, pooled/staggered population and horses, soft references + FStreamableManager async loading, PNG/TGA textures only, and FBX 2018-compatible animated character sources when runtime production is eventually authorized.
+- Added source-contract QA coverage in `Scripts/test_source_contracts.py` plus a standalone PowerShell contract guard.
+- Evidence boundary: **SOURCE/PREPRODUCTION ONLY / RUNTIME PREDECESSOR-GATED**. No Part II runtime, compile, PIE, device, visual, pacing, performance or Gate acceptance is claimed.
