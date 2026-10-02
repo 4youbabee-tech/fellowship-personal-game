@@ -1021,3 +1021,12 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Therefore Bucklebury/Ferry and the wooded-road corridor are now **reuse-first**, not automatically classified as new-source gaps. The next serialized runtime visual pass must try these resident production roles before requesting another provider asset.
 - This remains source/routing work only while PR #247 owns the runtime-changing lane.
 - Evidence boundary: **STATIC-VALIDATED ROUTING / NO VISUAL ACCEPTANCE**.
+
+## 2026-10-02 - P1C01 visible-world resident binding packet
+
+- Registered exact resident-production bindings for the two strongest reuse-first cells: **Bucklebury/Ferry** and the **Shire road corridor**.
+- Ferry source bindings now point to the existing Common river boat, footbridge, rope post, rope coil, reed cluster and boulder cluster assets instead of defaulting to another acquisition pass.
+- Road-corridor bindings now point to the existing Common fallen log, broadleaf tree, boulder cluster, village fence, wood pile and fern cluster assets.
+- Runtime integration remains serialized elsewhere; this packet does not remove a primitive or change story/world authority by itself.
+- Repeated detail remains ISM/HISM + LOD/culling; heavy runtime residency remains soft/async through the existing streaming architecture.
+- Evidence boundary: **SOURCE/STATIC BINDING PREPARATION ONLY**. No PIE/device/visual/performance acceptance claim.
