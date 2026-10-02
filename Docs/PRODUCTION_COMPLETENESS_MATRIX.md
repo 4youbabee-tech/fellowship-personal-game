@@ -2489,3 +2489,11 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 - The exact-head hero candidate wave fails closed before ranking when any discovered FBX lacks exactly one provenance row; ranked rows now carry the provenance fields into the evidence artifact.
 - This closes the gap between `candidate_policy.require_provenance=true` and actual per-file candidate evidence without promoting any asset to READY_FOR_IMPORT.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. No skeleton, skin-weight, deformation, import, PIE, device, visual or performance acceptance is claimed.
+
+## 2026-10-02 - F2-03 source preparation batch
+
+- Source routing and bounded world preparation: IMPLEMENTED.
+- Seven world cells, three state variants, six character source contracts and four expiring optional windows are registered in `Data/F2_03EdorasMegaSourcePreproductionV1.json`.
+- Technical preparation remains low-spec safe: HISM/ISM, LOD/culling, pooling, soft references, asynchronous heavy loading, PNG/TGA textures and FBX animated-source requirements.
+- Runtime: PREDECESSOR-GATED. P1C01 remains the sole runtime-changing chapter.
+- PIE/device/visual/pacing/performance: NOT CLAIMED.
