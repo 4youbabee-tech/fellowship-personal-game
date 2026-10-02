@@ -3576,3 +3576,11 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - The pack continues to reuse the persistent warehouse before acquisition and keeps the existing promotion/material-export/character-intake machinery. It does not introduce a second runtime lane.
 - Target constraints remain UE4.27.2 / DX11 / 720p / 30 FPS floor / 8 GB RAM / ~2 GB VRAM, FBX animated assets, PNG/TGA production textures, soft/async heavy runtime assets and ISM/HISM+LOD/culling for repeated detail.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL PENDING**. No PIE/device/visual/performance acceptance claim.
+
+## 2026-10-02 - Concrete visible-proxy inventory for the next P1C01 art pass
+
+- Static source inspection of `ShirePrototypeWorldBuilder.cpp` confirms the world still retains Engine Cube/Sphere/Cylinder/Cone fallbacks when production meshes are unavailable.
+- Added `Data/P1C01VisibleWorldProxyReplacementV1.json` to convert that observation into a concrete source-routing contract for Bag End, Hobbiton, Shire roads and Bucklebury/Ferry.
+- The plan records existing production mesh identities separately from missing source needs, so later runtime work can remove a fallback only when a real imported replacement exists.
+- A Pre-Unreal contract test now fails closed if the four visible cells, FBX/PNG-TGA rules, async-loading rule or HISM repeated-detail rule drift.
+- Status: **STATIC-VALIDATED SOURCE CONTRACT PENDING EXACT-HEAD PRE-UNREAL**. No runtime/PIE/device/visual/performance acceptance claim.

@@ -2560,3 +2560,16 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Runtime mutation | NOT AUTHORIZED BY THIS PACK | PR #247 remains serialized Frodo runtime lane; P1C02+ runtime stays gated |
 | Exact-head validation | PENDING | Pre-Unreal required before merge to develop |
 | PIE / device / visual / performance acceptance | NOT ACCEPTED | Requires later matching runtime and human/device evidence |
+
+## 2026-10-02 - Visible proxy replacement inventory
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Current Engine primitive fallbacks | STATIC-IDENTIFIED | Shire builder retains Cube/Sphere/Cylinder/Cone fallback paths |
+| Bag End replacement routing | SOURCE-IMPLEMENTED | Existing production identities + missing interior/hero-detail source needs recorded |
+| Hobbiton replacement routing | SOURCE-IMPLEMENTED | Existing village assets + remaining party/crop/log/clutter source needs recorded |
+| Shire road replacement routing | SOURCE-IMPLEMENTED | Existing road/hedge/tree/rock assets + remaining road-edge/variation source needs recorded |
+| Bucklebury/Ferry replacement routing | SOURCE-IMPLEMENTED | Riverbank/water exist; ferry/dock/mooring support remains source debt |
+| Runtime replacement | NOT STARTED IN THIS BRANCH | Serialized runtime lane remains PR #247 |
+| Exact-head static validation | PENDING | Pre-Unreal contract added |
+| Visual/device/performance acceptance | NOT ACCEPTED | Requires later runtime and human/device evidence |
