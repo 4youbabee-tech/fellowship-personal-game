@@ -5,11 +5,15 @@ import re
 
 from runtime_audit_contracts import RUNTIME_LOG_PREFIXES
 
+SMOOTHING_RE = re.compile(r"No smoothing group information", re.I)
+IMPORT_RESULT_RE = re.compile(r"ShireProductionImport result:\s*(.+?)\s+\|", re.I)
+SKELETAL_BEGIN_RE = re.compile(r"ShireProductionImport: skeletal FBX import .*?asset=([A-Za-z0-9_]+)", re.I)
+
 # name, regex, ceiling, identity_group, scope
 # scope="all": build/import/runtime evidence.
 # scope="runtime": startup/chapter/state logs only.
 CHECKS = [
-    ("Missing smoothing groups", re.compile(r"No smoothing group information", re.I), 0, None, "all"),
+    ("Missing smoothing groups", SMOOTHING_RE, 0, None, "all"),
     ("Degenerate tangent bases", re.compile(r"\b(SM_[A-Za-z0-9_]+) has degenerate tangent bases", re.I), 0, 1, "all"),
     ("Nearly-zero tangents", re.compile(r"\b(SM_[A-Za-z0-9_]+) has some nearly zero tangents", re.I), 0, 1, "all"),
     ("Nearly-zero binormals", re.compile(r"\b(SM_[A-Za-z0-9_]+) has some nearly zero bi-normals", re.I), 0, 1, "all"),
@@ -37,6 +41,59 @@ def measure(text: str, pattern: re.Pattern, identity_group):
 
 def is_runtime_log(path: Path) -> bool:
     return any(path.name.startswith(prefix) for prefix in RUNTIME_LOG_PREFIXES)
+
+def _asset_basename(source: str) -> str:
+    return source.strip().replace("\\", "/").rsplit("/", 1)[-1]
+
+def measure_missing_smoothing(files):
+    """Count concrete import defects, not repeated UE warning-summary echoes."""
+    identities = set()
+    unresolved = set()
+
+    for path in files:
+        lines = decode(path).splitlines()
+        attributed_in_file = set()
+        orphan_count = 0
+
+        for index, line in enumerate(lines):
+            if not SMOOTHING_RE.search(line):
+                continue
+
+            identity = None
+
+            # Live importer warning: deterministic result follows shortly after it.
+            for following in lines[index + 1:min(len(lines), index + 48)]:
+                match = IMPORT_RESULT_RE.search(following)
+                if match:
+                    identity = _asset_basename(match.group(1))
+                    break
+
+            # Skeletal fallback: explicit begin marker precedes the warning.
+            if identity is None:
+                for prior in reversed(lines[max(0, index - 48):index]):
+                    match = SKELETAL_BEGIN_RE.search(prior)
+                    if match:
+                        identity = match.group(1) + ".fbx"
+                        break
+
+            if identity:
+                attributed_in_file.add(identity)
+            else:
+                orphan_count += 1
+
+        identities.update(attributed_in_file)
+
+        # UE4 repeats live warnings in its final Warning/Error Summary. One
+        # unattributed repeat in a log that already has an attributed warning
+        # is an echo, not a second asset defect. Anything else remains fail-closed.
+        if orphan_count:
+            if not attributed_in_file:
+                unresolved.add(f"UNIDENTIFIED@{path.name}")
+            elif orphan_count > 1:
+                unresolved.add(f"UNIDENTIFIED@{path.name}")
+
+    measured = sorted(identities | unresolved)
+    return len(measured), measured
 
 def collect_text(files, scope: str) -> str:
     if scope == "runtime":
@@ -68,7 +125,11 @@ def main() -> int:
 
     rows, failures = [], []
     for name, pattern, ceiling, identity_group, scope in CHECKS:
-        count, identities = measure(texts[scope], pattern, identity_group)
+        scoped_files = files if scope == "all" else [path for path in files if is_runtime_log(path)]
+        if name == "Missing smoothing groups":
+            count, identities = measure_missing_smoothing(scoped_files)
+        else:
+            count, identities = measure(texts[scope], pattern, identity_group)
         rows.append((name, count, ceiling, scope))
         print(f"Warning debt: {name} = {count} (ceiling {ceiling}, scope {scope})")
         if identities:
