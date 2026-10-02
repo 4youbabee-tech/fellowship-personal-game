@@ -15,40 +15,36 @@ function Get-OptionalPropertyValue {
   return $property.Value
 }
 
-function Get-CandidateCharacterRows {
-  param([object]$CandidateReportObject)
+function Resolve-CandidateCharacterRows {
+  param([object]$RootObject)
 
-  $roots=@($CandidateReportObject)
-  if($roots.Count -eq 1){
-    $root=$roots[0]
-    $characters=Get-OptionalPropertyValue $root "characters" $null
-    if($null -ne $characters){
-      return @($characters)
-    }
-
-    $legacy=Get-OptionalPropertyValue $root "character_reports" $null
-    if($null -ne $legacy){
-      return @($legacy)
-    }
+  if($null -eq $RootObject){
+    throw "P1C01_FRODO_STATIC_QC_SCHEMA_UNSUPPORTED schema=null keys="
   }
 
-  $flattened=@($roots | Where-Object {
-    $null -ne (Get-OptionalPropertyValue $_ "character" $null) -and
-    $null -ne (Get-OptionalPropertyValue $_ "candidates" $null)
+  $charactersProperty=$RootObject.PSObject.Properties["characters"]
+  if($null -ne $charactersProperty){
+    return @($charactersProperty.Value)
+  }
+
+  $legacyProperty=$RootObject.PSObject.Properties["character_reports"]
+  if($null -ne $legacyProperty){
+    return @($legacyProperty.Value)
+  }
+
+  $rootRows=@($RootObject)
+  $flat=@($rootRows | Where-Object {
+    $null -ne $_.PSObject.Properties["character"] -and
+    $null -ne $_.PSObject.Properties["candidates"]
   })
-  if($flattened.Count -gt 0){
-    return $flattened
+  if($flat.Count -gt 0){
+    return $flat
   }
 
   $schema="unknown"
-  if($roots.Count -eq 1){
-    $schemaValue=Get-OptionalPropertyValue $roots[0] "schema_version" $null
-    if($null -ne $schemaValue){ $schema=[string]$schemaValue }
-  }
-  $keys=@()
-  if($roots.Count -eq 1 -and $null -ne $roots[0]){
-    $keys=@($roots[0].PSObject.Properties | ForEach-Object { $_.Name })
-  }
+  $schemaProperty=$RootObject.PSObject.Properties["schema_version"]
+  if($null -ne $schemaProperty){ $schema=[string]$schemaProperty.Value }
+  $keys=@($RootObject.PSObject.Properties | ForEach-Object { $_.Name })
   throw ("P1C01_FRODO_STATIC_QC_SCHEMA_UNSUPPORTED schema="+$schema+" keys="+($keys -join ","))
 }
 
@@ -60,16 +56,16 @@ if([string]::IsNullOrWhiteSpace($OutputRoot)){ $OutputRoot=Split-Path $Candidate
 New-Item -ItemType Directory -Path $OutputRoot -Force | Out-Null
 
 $manifest=Get-Content -LiteralPath $ManifestPath -Raw | ConvertFrom-Json
-$candidateReport=Get-Content -LiteralPath $CandidateReport -Raw | ConvertFrom-Json
+$candidateReportObject=Get-Content -LiteralPath $CandidateReport -Raw | ConvertFrom-Json
 $policy=$manifest.frodo_static_fbx_qc
 $allow=@($policy.candidate_filename_allowlist | ForEach-Object { [string]$_ })
 $minimum=[int]$policy.minimum_static_structure_pass_candidates
-$characterRows=@(Get-CandidateCharacterRows $candidateReport)
+$characterRows=@(Resolve-CandidateCharacterRows -RootObject $candidateReportObject)
 $frodoRows=@($characterRows | Where-Object { [string](Get-OptionalPropertyValue $_ "character" "") -eq "FRODO" })
 if($frodoRows.Count -ne 1){ throw "P1C01_FRODO_STATIC_QC_POOL_MISSING count=$($frodoRows.Count)" }
 if($SchemaSelfTest){
   $candidateCount=@(Get-OptionalPropertyValue $frodoRows[0] "candidates" @()).Count
-  Write-Host ("P1C01_FRODO_STATIC_QC_SCHEMA_SELF_TEST_PASS schema="+[string](Get-OptionalPropertyValue $candidateReport "schema_version" "unknown")+" frodoRows="+$frodoRows.Count+" candidates="+$candidateCount)
+  Write-Host ("P1C01_FRODO_STATIC_QC_SCHEMA_SELF_TEST_PASS schema="+[string](Get-OptionalPropertyValue $candidateReportObject "schema_version" "unknown")+" frodoRows="+$frodoRows.Count+" candidates="+$candidateCount)
   exit 0
 }
 
@@ -131,7 +127,7 @@ $report=[ordered]@{
   schema_version=1
   character="FRODO"
   generated_utc=[DateTime]::UtcNow.ToString("o")
-  source_candidate_report=$CandidateReport
+  source_candidate_report=[string]$CandidateReport
   allowlist=$allow
   inspected_count=$rows.Count
   static_structure_pass_count=$passCount
