@@ -50,7 +50,7 @@ if(@($frodo[0].required_any_tokens).Count -lt 2 -or @($frodo[0].excluded_tokens)
 if(@($gandalf[0].required_any_tokens).Count -lt 2 -or @($gandalf[0].excluded_tokens) -notcontains "female"){ throw "P1C01_FRODO_SEMANTIC_QC_GANDALF_POLICY_FAIL" }
 if([string]$m.frodo_static_fbx_qc.active_character -ne "FRODO"){ throw "P1C01_FRODO_SEMANTIC_QC_ACTIVE_CHARACTER_FAIL" }
 if(@($m.frodo_static_fbx_qc.candidate_filename_allowlist) -notcontains "BaseCharacter.fbx"){ throw "P1C01_FRODO_SEMANTIC_QC_BASE_ALLOWLIST_FAIL" }
-foreach($marker in @("Get-CandidateCharacterRows","SchemaSelfTest","P1C01_FRODO_STATIC_QC_SCHEMA_UNSUPPORTED","LimbNode","Deformer","Skin","Cluster","fbx_2018_export_confirmed","ready_for_import","P1C01_FRODO_STATIC_QC_PASS")){
+foreach($marker in @("Resolve-CandidateCharacterRows","SchemaSelfTest","P1C01_FRODO_STATIC_QC_SCHEMA_UNSUPPORTED","LimbNode","Deformer","Skin","Cluster","fbx_2018_export_confirmed","ready_for_import","P1C01_FRODO_STATIC_QC_PASS")){
   if(-not $qc.Contains($marker)){ throw "P1C01_FRODO_SEMANTIC_QC_PROBE_MARKER_MISSING marker=$marker" }
 }
 $rankIndex=$w.IndexOf("- name: Build exact-head P1C01 Frodo Gandalf candidate report",[StringComparison]::Ordinal)
