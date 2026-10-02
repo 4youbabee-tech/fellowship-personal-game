@@ -155,6 +155,10 @@ jobs:
       - name: Test live governor evidence selection
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_live_governor_status.py" -v
 
+      - name: Test P1C01 warehouse world expansion contract
+        shell: cmd
+        run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_p1c01_warehouse_world_expansion.ps1"
+
       - name: Test P1C01 hero candidate provider prerequisite
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_p1c01_hero_candidate_provider_contract.ps1"

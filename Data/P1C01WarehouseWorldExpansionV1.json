@@ -1,0 +1,283 @@
+{
+  "schema_version": 1,
+  "batch_id": "P1C01_WAREHOUSE_WORLD_EXPANSION_V1",
+  "status": "SOURCE_ACQUISITION_AND_INTAKE_PREPARATION",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/WholeGameResourceGapAuditV2.json",
+    "Data/GlobalWarehouseSourceRegistryV2.json",
+    "Data/WarehouseP1C01MegaPromotionTrainV1.json",
+    "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25",
+    "10_3D_VISUAL_ASSET_ATLAS_PRODUCTION"
+  ],
+  "objective": "Fill P1C01 Shire production gaps from existing warehouse first, then approved high-quality sources, while preserving provenance and low-spec UE4.27.2 budgets.",
+  "warehouse_first": {
+    "known_latest_evidence": {
+      "run": "Warehouse Stage #278",
+      "payload_files": 18676,
+      "bytes": 6622954088,
+      "receipts": 14,
+      "receipt_records": 667,
+      "duplicate_groups": 215
+    },
+    "rule": "Inventory and reuse matching staged payloads before new acquisition."
+  },
+  "acquisition_lanes": [
+    {
+      "order": 1,
+      "id": "PBR_REALISM",
+      "need": [
+        "wood",
+        "plaster",
+        "dirt/path",
+        "grass/ground",
+        "stone",
+        "bark",
+        "leather",
+        "roof/thatch support"
+      ],
+      "preferred": [
+        "POLY_HAVEN",
+        "AMBIENTCG"
+      ],
+      "access": "PUBLIC_CLEAR",
+      "production": [
+        "1K/2K default",
+        "PNG/TGA production conversion",
+        "channel-pack masks where compatible",
+        "shared master materials"
+      ]
+    },
+    {
+      "order": 2,
+      "id": "NATURE_PROPS",
+      "need": [
+        "rocks",
+        "stumps",
+        "natural props",
+        "riverbank support"
+      ],
+      "preferred": [
+        "POLY_HAVEN"
+      ],
+      "access": "PUBLIC_CLEAR",
+      "production": [
+        "optimize high detail",
+        "LODs",
+        "HISM/ISM where repeated"
+      ]
+    },
+    {
+      "order": 3,
+      "id": "HERO_CHARACTER_RIG",
+      "need": [
+        "Frodo production base",
+        "Gandalf production base"
+      ],
+      "preferred": [
+        "MIXAMO",
+        "ACCURIG",
+        "ACTORCORE",
+        "FAB"
+      ],
+      "access": "MANUAL_OR_AUTH",
+      "production": [
+        "FBX only",
+        "provenance receipt",
+        "skeleton/deformation QC",
+        "LOD/material budget",
+        "no generic base promoted as named likeness"
+      ]
+    },
+    {
+      "order": 4,
+      "id": "HUMANOID_MOTION",
+      "need": [
+        "short-stride locomotion",
+        "idle/social",
+        "interaction",
+        "wizard/support"
+      ],
+      "preferred": [
+        "MIXAMO",
+        "ROKOKO",
+        "ACTORCORE"
+      ],
+      "access": "MANUAL_OR_AUTH",
+      "production": [
+        "FBX",
+        "retarget/root-motion QC",
+        "UE4 skeleton mapping"
+      ]
+    },
+    {
+      "order": 5,
+      "id": "ARCHITECTURE_PROPS",
+      "need": [
+        "rural building support",
+        "fences",
+        "furniture",
+        "food/work clutter",
+        "farm props"
+      ],
+      "preferred": [
+        "EXISTING_WAREHOUSE",
+        "KENNEY",
+        "FAB",
+        "CGTRADER"
+      ],
+      "access": "MIXED",
+      "production": [
+        "generic only",
+        "culture-specific silhouette remains project-authored",
+        "LOD/collision/pivot/material-count QC"
+      ]
+    },
+    {
+      "order": 6,
+      "id": "VEGETATION",
+      "need": [
+        "hedges",
+        "deciduous trees",
+        "grass",
+        "garden/farm plants",
+        "riverbank vegetation"
+      ],
+      "preferred": [
+        "POLY_HAVEN",
+        "FAB",
+        "SPEEDTREE"
+      ],
+      "access": "MIXED",
+      "production": [
+        "HISM/ISM",
+        "atlas where useful",
+        "masked overdraw budget",
+        "LOD/cull bands"
+      ]
+    },
+    {
+      "order": 7,
+      "id": "AUDIO",
+      "need": [
+        "birds",
+        "breeze",
+        "farm/village",
+        "footsteps",
+        "wood/metal",
+        "hearth/fire",
+        "water"
+      ],
+      "preferred": [
+        "EXISTING_WAREHOUSE",
+        "SONNISS_GDC",
+        "FREESOUND",
+        "99SOUNDS"
+      ],
+      "access": "MIXED",
+      "production": [
+        "WAV master preferred",
+        "per-file provenance",
+        "selective async runtime loading"
+      ]
+    },
+    {
+      "order": 8,
+      "id": "VFX_WEATHER",
+      "need": [
+        "mist",
+        "rain",
+        "fire/smoke",
+        "dust",
+        "water spray"
+      ],
+      "preferred": [
+        "ACTIONVFX",
+        "JANGAFX",
+        "EMBERGEN"
+      ],
+      "access": "MANUAL",
+      "production": [
+        "baked/flipbook/Cascade-compatible",
+        "avoid heavy runtime volumetrics"
+      ]
+    },
+    {
+      "order": 9,
+      "id": "TERRAIN_REFERENCE",
+      "need": [
+        "rolling pastoral terrain studies",
+        "river/ferry bank forms"
+      ],
+      "preferred": [
+        "OPENTOPOGRAPHY",
+        "USGS",
+        "GAEA",
+        "QGIS"
+      ],
+      "access": "DATA_OR_TOOL",
+      "production": [
+        "reference/authored terrain only",
+        "never substitute real-world data for canon geography"
+      ]
+    }
+  ],
+  "world_build_cells": [
+    {
+      "id": "BAG_END_HERO_RING",
+      "assets": [
+        "hero earth/grass transition",
+        "wood/stone/plaster",
+        "garden",
+        "fences/gates",
+        "domestic props"
+      ],
+      "density": "HERO_NEAR_SELECTIVE"
+    },
+    {
+      "id": "HOBBITON_VILLAGE",
+      "assets": [
+        "roads",
+        "fences",
+        "fields",
+        "gardens",
+        "work/social props",
+        "vegetation"
+      ],
+      "density": "INSTANCED_MEDIUM"
+    },
+    {
+      "id": "SHIRE_ROAD_CORRIDOR",
+      "assets": [
+        "path surfaces",
+        "hedges",
+        "trees",
+        "rocks",
+        "hiding pockets",
+        "landmarks"
+      ],
+      "density": "STREAMED_BOUNDED"
+    },
+    {
+      "id": "BUCKLEBURY_FERRY",
+      "assets": [
+        "riverbank",
+        "rocks",
+        "vegetation",
+        "ferry support props",
+        "transition landmarks"
+      ],
+      "density": "STREAMED_BOUNDED"
+    }
+  ],
+  "blockers": [
+    {
+      "provider": "QUATERNIUS",
+      "state": "BLOCKED_MANUAL",
+      "reason": "official pages previously yielded zero payload files; no fabricated archive URL",
+      "action": "manual provider-supported download only"
+    }
+  ],
+  "runtime_boundary": "INTAKE/SOURCE/WORLD-PREP ONLY until exact runtime car and Gate rules authorize integration.",
+  "evidence_boundary": "No acquisition count, source page, warehouse match or prepared world cell is PIE/device/visual/performance acceptance."
+}

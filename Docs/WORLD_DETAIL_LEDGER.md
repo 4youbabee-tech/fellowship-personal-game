@@ -976,3 +976,21 @@ Registered against the already-authorized **F1-04 Bree & Weathertop Mega Source 
 - Animated final character candidates remain FBX-only; production textures PNG/TGA; heavy runtime assets soft/async; repeated detail ISM/HISM + LOD/culling; populations remain pooled.
 
 Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-VISUAL ACCEPTANCE CLAIM**.
+
+
+## 2026-10-02 — P1C01 warehouse-first world expansion V1
+
+- Registered a warehouse-first acquisition/build batch covering Bag End hero ring, Hobbiton village, Shire road corridor and Bucklebury/Ferry.
+- Existing warehouse evidence is consumed before new acquisition; new lanes prioritize Poly Haven/ambientCG for PBR, licensed/manual hero character and motion sources, optimized vegetation, professional audio/VFX and terrain-reference tooling.
+- Quaternius remains BLOCKED_MANUAL after prior zero-payload provider evidence; it cannot stop independent lanes and no undocumented archive URL may be fabricated.
+- Animated production candidates remain FBX; production textures PNG/TGA with 1K/2K default; repeated world assets use HISM/ISM/LOD/culling; heavy runtime assets remain soft/async.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING**. No PIE/device/visual/performance acceptance claim.
+
+
+## 2026-10-02 — P1C01 warehouse-first world expansion V1
+
+- Registered a warehouse-first acquisition/build batch covering Bag End hero ring, Hobbiton village, Shire road corridor and Bucklebury/Ferry.
+- Existing warehouse evidence is consumed before new acquisition; new lanes prioritize Poly Haven/ambientCG for PBR, licensed/manual hero character and motion sources, optimized vegetation, professional audio/VFX and terrain-reference tooling.
+- Quaternius remains BLOCKED_MANUAL after prior zero-payload provider evidence; it cannot stop independent lanes and no undocumented archive URL may be fabricated.
+- Animated production candidates remain FBX; production textures PNG/TGA with 1K/2K default; repeated world assets use HISM/ISM/LOD/culling; heavy runtime assets remain soft/async.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING**. No PIE/device/visual/performance acceptance claim.
