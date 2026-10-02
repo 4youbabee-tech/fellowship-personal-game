@@ -1309,15 +1309,53 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
         FRotator::ZeroRotator);
     const float NearX=ShireLayout::FerryX-700.0f;
     const float FarX=ShireLayout::FerryX+700.0f;
-    SpawnShape(CubeMesh,FVector(NearX,-500,12),FVector(2.0f,2.0f,0.12f),FLinearColor(0.34f,0.20f,0.09f));
-    SpawnShape(CubeMesh,FVector(FarX,-500,12),FVector(2.0f,2.0f,0.12f),FLinearColor(0.34f,0.20f,0.09f));
-    SpawnShape(CubeMesh,FVector(ShireLayout::FerryX,-500,24),FVector(1.30f,0.86f,0.10f),FLinearColor(0.30f,0.18f,0.085f));
+    if (ProductionCommonFootbridgeMesh)
+    {
+        SpawnShape(ProductionCommonFootbridgeMesh,FVector(NearX,-500,4),FVector(0.78f),FLinearColor::White,FRotator(0,90,0),true);
+        SpawnShape(ProductionCommonFootbridgeMesh,FVector(FarX,-500,4),FVector(0.78f),FLinearColor::White,FRotator(0,90,0),true);
+    }
+    else
+    {
+        SpawnShape(CubeMesh,FVector(NearX,-500,12),FVector(2.0f,2.0f,0.12f),FLinearColor(0.34f,0.20f,0.09f));
+        SpawnShape(CubeMesh,FVector(FarX,-500,12),FVector(2.0f,2.0f,0.12f),FLinearColor(0.34f,0.20f,0.09f));
+    }
+
+    if (ProductionCommonRiverBoatMesh)
+    {
+        SpawnShape(ProductionCommonRiverBoatMesh,FVector(ShireLayout::FerryX,-500,12),FVector(0.86f),FLinearColor::White,FRotator(0,90,0),true);
+    }
+    else
+    {
+        SpawnShape(CubeMesh,FVector(ShireLayout::FerryX,-500,24),FVector(1.30f,0.86f,0.10f),FLinearColor(0.30f,0.18f,0.085f));
+    }
+
     const FVector FerryPosts[] = {
-        FVector(NearX,-700,70),FVector(NearX,-300,70),FVector(FarX,-700,70),FVector(FarX,-300,70)
+        FVector(NearX,-700,18),FVector(NearX,-300,18),FVector(FarX,-700,18),FVector(FarX,-300,18)
     };
     for(const FVector& Post:FerryPosts)
     {
-        SpawnShape(CylinderMesh,Post,FVector(0.09f,0.09f,0.72f),FLinearColor(0.26f,0.15f,0.07f));
+        if (ProductionCommonRopePostMesh)
+        {
+            SpawnShape(ProductionCommonRopePostMesh,Post,FVector(0.72f),FLinearColor::White,FRotator::ZeroRotator,true);
+        }
+        else
+        {
+            SpawnShape(CylinderMesh,Post+FVector(0,0,52),FVector(0.09f,0.09f,0.72f),FLinearColor(0.26f,0.15f,0.07f));
+        }
+    }
+
+    if (ProductionCommonRopeCoilMesh)
+    {
+        SpawnShape(ProductionCommonRopeCoilMesh,FVector(NearX+90,-620,12),FVector(0.62f),FLinearColor::White,FRotator(0,25,0),false);
+    }
+    if (ProductionCommonReedClusterMesh)
+    {
+        SpawnShape(ProductionCommonReedClusterMesh,FVector(NearX-180,-880,0),FVector(0.82f),FLinearColor::White,FRotator(0,15,0),false);
+        SpawnShape(ProductionCommonReedClusterMesh,FVector(FarX+170,-120,0),FVector(0.74f),FLinearColor::White,FRotator(0,-20,0),false);
+    }
+    if (ProductionCommonBoulderClusterMesh)
+    {
+        SpawnShape(ProductionCommonBoulderClusterMesh,FVector(NearX-250,-220,0),FVector(0.58f),FLinearColor::White,FRotator(0,35,0),true);
     }
     SpawnLabel(TEXT("Bucklebury Ferry"),FVector(NearX,-500,280),FLinearColor::White);
 
