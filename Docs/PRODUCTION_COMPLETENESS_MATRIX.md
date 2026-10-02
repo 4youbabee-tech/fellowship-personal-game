@@ -2584,3 +2584,5 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Exact source | REJECTED_TECHNICAL | SHA256 `94ce47df5f166856a2d1166202ed1e8a58fd087e96b13299492b020794ddc3fd`, 1,568,620 bytes |
 | Current warehouse Frodo family | 4/5 REJECTED | Worker_Male is final current-family probe |
 | PIE / device / visual / deformation / retarget | NOT ACCEPTED | No matching evidence |
+
+| Missing smoothing warning identity | SOURCE-IMPLEMENTED | Zero ceiling unchanged; live+summary echo deduplicated by concrete import identity; unidentified warnings fail closed |
