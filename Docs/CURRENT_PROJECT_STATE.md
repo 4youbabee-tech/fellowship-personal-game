@@ -3768,3 +3768,11 @@ Prepared a second governed cleanup wave while Branch Cleanup #140 processes the 
 
 This PR must not merge until the currently running cleanup finishes, so the cleanup concurrency group is not cancelled mid-batch.
 Status: **SOURCE-IMPLEMENTED / HOSTED VALIDATION PENDING**.
+
+
+## 2026-10-03 - Stale branch retirement wave 3
+
+- Prepared final maintenance-only cleanup for three closed/superseded refs: PR #270, PR #272 and PR #273 heads.
+- #270 is superseded by merged #271; #272 is superseded by merged #271 + #274; #273's optional fast-path was intentionally dropped after Branch Cleanup #140 and #141 both completed successfully under the current implementation.
+- No active PR head or gameplay/runtime/source authority is included.
+- Status: **SOURCE-IMPLEMENTED / HOSTED VALIDATION PENDING**.
