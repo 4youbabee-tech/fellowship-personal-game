@@ -27,7 +27,10 @@
         "villager",
         "base",
         "casual",
-        "worker"
+        "worker",
+        "rogue",
+        "ranger",
+        "monk"
       ],
       "required_all_tokens": [],
       "excluded_tokens": [
@@ -80,7 +83,9 @@
     "QTN_RPG_CHARACTERS",
     "QTN_FANTASY_OUTFITS",
     "QTN_UNIVERSAL_ANIMATION_LIBRARY",
-    "OGA_QTN_ULTIMATE_ANIMATED_CHARACTERS_CC0"
+    "OGA_QTN_ULTIMATE_ANIMATED_CHARACTERS_CC0",
+    "OGA_QTN_RPG_CHARACTERS_CC0",
+    "KAYKIT_ADVENTURERS_CC0"
   ],
   "candidate_policy": {
     "animated_source_format": ".fbx",
@@ -113,7 +118,10 @@
       "character",
       "adventurer",
       "villager",
-      "base"
+      "base",
+      "rogue",
+      "ranger",
+      "monk"
     ],
     "GANDALF": [
       "wizard",
@@ -208,7 +216,10 @@
     ],
     "output_state": "STATIC_FBX_STRUCTURE_PRESENT_UE4_IMPORT_REQUIRED",
     "ready_for_import": false,
-    "evidence_boundary": "Static FBX header/marker evidence only; no FBX 2018 export, UE4 import, deformation, final likeness, runtime, PIE, device, visual or performance acceptance."
+    "evidence_boundary": "Static FBX header/marker evidence only. Exact original-family files remain allowlisted for rejection replay, while alternate-source candidates are admitted only from the explicit CC0 source asset-id allowlist. This does not prove FBX 2018 export, UE4 import, deformation, final likeness, runtime, PIE, device, visual or performance acceptance.",
+    "candidate_source_asset_id_allowlist": [
+      "OGA_QTN_RPG_CHARACTERS_CC0",
+      "KAYKIT_ADVENTURERS_CC0"
+    ]
   }
 }
-
