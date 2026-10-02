@@ -83,7 +83,9 @@ foreach($marker in @(
   "SetCullDistances(900, 6500)",
   "EastFieldRowCount * InstancesPerRow == 96",
   "AddInstanceWorldSpace",
-  "if (EastFieldRowInstances && ProductionGrassClumpMesh)"
+  "if (EastFieldRowInstances && ProductionGrassClumpMesh)",
+  "UStaticMesh* EntryShrubMesh = ProductionShrubMesh ? ProductionShrubMesh : SphereMesh",
+  "Keep the primitive spheres only as a deterministic no-asset fallback"
 )){
   if(-not $builder.Contains($marker)){
     throw "P1C01_EAST_FIELDS_BUILDER_MARKER_MISSING marker=$marker"
