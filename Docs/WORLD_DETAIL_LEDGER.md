@@ -976,3 +976,12 @@ Registered against the already-authorized **F1-04 Bree & Weathertop Mega Source 
 - Animated final character candidates remain FBX-only; production textures PNG/TGA; heavy runtime assets soft/async; repeated detail ISM/HISM + LOD/culling; populations remain pooled.
 
 Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-VISUAL ACCEPTANCE CLAIM**.
+
+
+## 2026-10-02 — P1C01 visual production mega wave V2
+
+- Registered a 180-slot warehouse-first production wave: 30 architecture, 35 props, 30 vegetation, 25 materials, 20 audio, 15 VFX, 15 animation and 10 creature-support slots.
+- Added a warehouse scanner that classifies raw format candidates without promoting them; provenance/license/SHA256 and family QC remain mandatory.
+- Wave targets Bag End, Hobbiton, Shire roads/woods and Bucklebury/Ferry while preserving the current runtime-car and predecessor Gate boundaries.
+- Added hosted fail-closed regression coverage to Pre-Unreal validation.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING**. Candidate discovery is not import/runtime/visual/performance acceptance.
