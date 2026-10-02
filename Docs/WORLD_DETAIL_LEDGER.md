@@ -1039,3 +1039,12 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Story location, quest triggers, party-state ownership, NPC population, collision authority and chapter postconditions remain unchanged.
 - No new heavy asset load is introduced; the existing resident production pointer is reused.
 - Evidence boundary: **REGISTERED / RUNTIME CHANGE NOT YET IMPLEMENTED**. No PIE/device/visual/performance acceptance claim.
+
+## 2026-10-02 - P1C01 East Fields crop-row proxy replacement registration
+
+- Registered the next visible-world cleanup after the serialized Party Field pass: replace the twelve long non-collision cube crop-row strips in the East Fields.
+- Proposed implementation is one bounded instanced production-vegetation treatment using the existing resident production grass-clump mesh unless a more crop-appropriate already-imported production mesh is identified before runtime work.
+- Budget before implementation: <=1 zero-Tick/no-collision detail cluster, <=96 instances, start/end cull about 900/6500 cm.
+- Current cube strips remain deterministic fallback if the resident production mesh is unavailable.
+- Story geography, traversal, quest/NPC authority and P1C02 runtime remain unchanged.
+- Evidence boundary: **REGISTERED / SOURCE PREPARATION ONLY**. No PIE/device/visual/performance acceptance claim.

@@ -3685,3 +3685,10 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - The classifier now consumes the full local hosted history first and fetches only when ancestry is genuinely absent.
 - This preserves `persist-credentials: false`, keeps the UE job skipped for source-only work, and retains fail-closed behavior when history really is unavailable.
 - Status: **SOURCE-FIXED / FRESH EXACT-HEAD PRE-UNREAL PENDING**.
+
+## 2026-10-02 - East Fields row replacement source plan
+
+- Added `Data/P1C01EastFieldsRowReplacementV1.json` after deep scan identified twelve long cube strips still used as visible crop rows in the East Fields.
+- Runtime work is predecessor-gated behind the current Party Field serialized runtime cleanup; this branch does not mutate runtime.
+- Planned replacement uses one bounded zero-Tick/no-collision instanced cluster and existing resident production vegetation before any new asset acquisition.
+- Status: **SOURCE-IMPLEMENTED / RUNTIME PREDECESSOR-GATED**. No PIE/device/visual/performance acceptance claim.
