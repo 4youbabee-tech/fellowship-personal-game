@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "import_id": "P1C01_FRODO_SKELETAL_IMPORT_VALIDATION_V1",
-  "status": "ALTERNATE_CC0_SOURCE_FAMILY_PROBE_ACTIVE",
+  "status": "KAYKIT_ALTERNATE_CC0_SOURCE_FAMILY_PROBE_ACTIVE",
   "authority": [
     "Data/ProjectGovernor.json",
     "Data/P1C01HeroSkeletalCandidateWaveV1.json",
@@ -27,7 +27,7 @@
     "require_nonzero_bones": true,
     "runtime_integration_allowed": false
   },
-  "evidence_boundary": "All five exact filename+SHA candidates from the original OpenGameArt/Quaternius Ultimate Animated Character family are REJECTED_TECHNICAL after real UE4.27.2 imports with 33 reference bones. A separate CC0 Quaternius RPG Characters mirror is now the bounded alternate source family; it must pass the same static and real UE4.27.2 technical gate before any promotion. No deformation, retarget, AnimBP, runtime replacement, PIE, device, visual or performance acceptance is proved.",
+  "evidence_boundary": "All five original Quaternius Ultimate Animated Character candidates are exact-SHA REJECTED_TECHNICAL after real UE4.27.2 imports. The alternate Quaternius RPG mirror staged successfully but its Frodo-ranked FBX rows were animation/accessory files and failed static skeletal structure. KayKit Adventurers CC0 is now the next bounded alternate source family and must pass the same static and real UE4.27.2 technical gate before any promotion. No deformation, retarget, AnimBP, runtime replacement, PIE, device, visual or performance acceptance is proved.",
   "technical_rejections": [
     {
       "filename": "BaseCharacter.fbx",
@@ -123,6 +123,7 @@
     }
   ],
   "preferred_candidate_source_asset_ids": [
+    "KAYKIT_ADVENTURERS_CC0",
     "OGA_QTN_RPG_CHARACTERS_CC0"
   ]
 }
