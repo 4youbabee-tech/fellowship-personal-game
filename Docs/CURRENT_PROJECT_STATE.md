@@ -3555,3 +3555,16 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Five P1C01 audio candidates now carry creator/uploader, primary-page verification timestamp, file label, CC0 page evidence, and an explicit provenance state.
 - Boundary: source-page provenance only. Download receipt SHA256, audio QC, durable WAV-master conversion, UE import, playback/listening, device and performance acceptance remain pending.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING**.
+
+
+## 2026-10-02 - Continuous Mega Wave Queue V2 registered
+
+- Added `Data/ContinuousProductionWaveQueueV2.json` on current develop ancestry as the maximum-safe continuous production train.
+- Capacity: **64 waves / 18,890 target work-items**.
+- Composition: **12 P1C01 runtime waves + 12 global source waves + 23 trilogy chapter source/preproduction waves + 17 cross-cutting hardening waves**.
+- The 23 chapter waves map directly to the production chapter IDs F1-01 through F3-07 from the project Mission/Story Bibles.
+- Runtime remains fail-closed outside P1C01: every later chapter wave has `runtime_integration_allowed=false`; the queue cannot activate P1C02+ runtime by itself.
+- Project Manager registration is embedded in the queue under `PMREQ_CONTINUOUS_MEGA_WAVE_QUEUE_V2_2026_10_02`.
+- Performance/architecture boundary remains UE4.27.2 + DX11 + 1280x720 + 30 FPS floor, soft refs, async FStreamableManager, pooled crowds, ISM/HISM, FBX animated assets, PNG/TGA textures.
+- Warehouse #315 on `develop@8c0f7b7da22e25ab723675d6d7a447d309c00bfe` succeeded and produced **5/5 Frodo static FBX structure passes** (FBX v7400, skeleton/skin/cluster markers present). This is **STATIC-VALIDATED** only; UE4 skeletal import, deformation and likeness remain pending.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING** for the new queue.
