@@ -124,7 +124,10 @@
     "maintenance/closed-pr-branch-lifecycle-cleanup-2026-10-03",
     "prep/p1c01-audio-source-provenance-v1",
     "prep/whole-game-chapter-production-packets-v1",
-    "production/queued-mega-waves-v1"
+    "production/queued-mega-waves-v1",
+    "maintenance/fix-branch-cleanup-empty-open-pr-query-2026-10-03",
+    "maintenance/final-branch-cleanup-rootfix-2026-10-03",
+    "maintenance/branch-cleanup-fast-absent-skip-2026-10-03"
   ],
   "safety_rules": [
     "Never delete develop or main.",
@@ -474,6 +477,21 @@
       "production/queued-mega-waves-v1": "Closed PR #239 explicitly records supersession by merged PR #244 / ContinuousProductionWaveQueueV2."
     },
     "safety": "No active PR heads are included. Unique content was either merged through the named successor or remains represented by the current successor PR.",
+    "evidence_boundary": "Repository/process hygiene only; no gameplay/compile/PIE/device/visual/performance acceptance."
+  },
+  "stale_branch_retirement_wave3_2026_10_03": {
+    "action": "DELETE_AFTER_THIS_MERGE",
+    "branches": [
+      "maintenance/fix-branch-cleanup-empty-open-pr-query-2026-10-03",
+      "maintenance/final-branch-cleanup-rootfix-2026-10-03",
+      "maintenance/branch-cleanup-fast-absent-skip-2026-10-03"
+    ],
+    "dispositions": {
+      "maintenance/fix-branch-cleanup-empty-open-pr-query-2026-10-03": "Closed PR #270; superseded by merged fresh-ancestry repair #271.",
+      "maintenance/final-branch-cleanup-rootfix-2026-10-03": "Closed PR #272; useful script/validator behavior is on develop via #271 and the newer cleanup plan via merged #274.",
+      "maintenance/branch-cleanup-fast-absent-skip-2026-10-03": "Closed PR #273; optional throughput optimization intentionally dropped after Branch Cleanup #140 and #141 both succeeded under the current implementation."
+    },
+    "safety": "All three PRs are closed. No gameplay/runtime/source authority is being discarded; this wave retires maintenance-only refs after explicit disposition.",
     "evidence_boundary": "Repository/process hygiene only; no gameplay/compile/PIE/device/visual/performance acceptance."
   }
 }
