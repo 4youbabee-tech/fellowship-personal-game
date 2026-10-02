@@ -3507,3 +3507,12 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - The exact-head hero candidate wave fails closed before ranking when any discovered FBX lacks exactly one provenance row; ranked rows now carry the provenance fields into the evidence artifact.
 - This closes the gap between `candidate_policy.require_provenance=true` and actual per-file candidate evidence without promoting any asset to READY_FOR_IMPORT.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. No skeleton, skin-weight, deformation, import, PIE, device, visual or performance acceptance is claimed.
+
+
+## 2026-10-02 — P1C01 visual production mega wave V2
+
+- Registered a 180-slot warehouse-first production wave: 30 architecture, 35 props, 30 vegetation, 25 materials, 20 audio, 15 VFX, 15 animation and 10 creature-support slots.
+- Added a warehouse scanner that classifies raw format candidates without promoting them; provenance/license/SHA256 and family QC remain mandatory.
+- Wave targets Bag End, Hobbiton, Shire roads/woods and Bucklebury/Ferry while preserving the current runtime-car and predecessor Gate boundaries.
+- Added hosted fail-closed regression coverage to Pre-Unreal validation.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING**. Candidate discovery is not import/runtime/visual/performance acceptance.
