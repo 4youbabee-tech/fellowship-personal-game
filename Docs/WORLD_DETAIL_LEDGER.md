@@ -1003,3 +1003,9 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - F3 packets preserve the source-library warning that Return of the King material is film/master normalized rather than screenplay-verified in the supplied source set.
 - Runtime remains P1C01-only under ProjectGovernor; this packet set is not runtime authorization.
 - Status: **SOURCE/PREPRODUCTION REGISTERED / FUTURE RUNTIME GATED**.
+
+## 2026-10-02 - Chapter asset-family demand map
+
+- Registered asset-family demand for every existing F1-01 through F3-07 chapter packet without adding new canonical beats or outcomes.
+- The map exists to drive the already-authorized global source waves M013-M024 while later runtime chapters remain gated.
+- This is production-source routing only; no asset is promoted or visually accepted by this registration.
