@@ -1,7 +1,7 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "pack_id": "P1C01_MEGA_CHAPTER_PACK_V1",
-  "status": "RUNNER_EXECUTION_READY",
+  "status": "VISIBLE_WORLD_SOURCE_EXECUTION_READY",
   "authority": [
     "Data/ProjectGovernor.json",
     "Data/WarehouseP1C01MegaPromotionTrainV1.json",
@@ -11,9 +11,11 @@
   ],
   "scope": [
     "SHIRE_HOBBITON",
-    "BAG_END"
+    "BAG_END",
+    "SHIRE_ROAD_CORRIDOR",
+    "BUCKLEBURY_FERRY"
   ],
-  "objective": "Collapse P1C01 warehouse preparation into one chapter-scale execution with bounded internal cars, item-level quarantine and one final report.",
+  "objective": "Run one warehouse-first P1C01 source/preparation pack that prioritizes the player-visible Shire stack: Bag End/Hobbiton materials and support props first, then road/ferry dressing support, while the serialized Frodo skeletal runtime lane continues independently.",
   "operating_model": {
     "strategy": "ONE_CHAPTER_PACK_MANY_BOUNDED_CARS",
     "single_workflow_rule": "One warehouse workflow run may execute all enabled cars in-order. Cars report independently; non-fatal asset blockers are quarantined/manual-queued and later cars continue.",
@@ -96,5 +98,65 @@
       "manifest": "Data/P1C01CharacterRigAnimationPrepV1.json"
     }
   ],
-  "evidence_boundary": "A successful chapter-pack run proves only the individual car outputs it actually emits. It does not imply UE import, integration, PIE, device, visual or performance acceptance."
+  "evidence_boundary": "This pack is source/preparation execution only. A successful run proves only emitted inventory/promotion/material-export/intake outputs. It does not imply UE runtime integration, PIE, device, visual, pacing or performance acceptance.",
+  "visible_world_priority": {
+    "goal": "Reduce the current proxy/material read before adding more backend scope.",
+    "queue_links": [
+      "M003",
+      "M004",
+      "M005",
+      "M006",
+      "M007"
+    ],
+    "priority_cells": [
+      {
+        "order": 1,
+        "id": "BAG_END_HERO_RING",
+        "focus": [
+          "wood/plaster/stone/grass production surfaces",
+          "garden/fence/gate support",
+          "domestic clutter support"
+        ],
+        "acceptance_boundary": "source/intake only; no visual acceptance"
+      },
+      {
+        "order": 2,
+        "id": "HOBBITON_VILLAGE",
+        "focus": [
+          "path/ground material variety",
+          "fence/farm/social prop support",
+          "vegetation support stock"
+        ],
+        "acceptance_boundary": "source/intake only; no visual acceptance"
+      },
+      {
+        "order": 3,
+        "id": "SHIRE_ROAD_CORRIDOR",
+        "focus": [
+          "stony/grass/rustic path families",
+          "hedge/tree/rock support",
+          "landmark dressing stock"
+        ],
+        "acceptance_boundary": "source/intake only; no visual acceptance"
+      },
+      {
+        "order": 4,
+        "id": "BUCKLEBURY_FERRY",
+        "focus": [
+          "riverbank soil/rock/vegetation",
+          "wood support props",
+          "transition landmark support"
+        ],
+        "acceptance_boundary": "source/intake only; no visual acceptance"
+      }
+    ],
+    "architecture_rules": [
+      "Existing warehouse receipts are reused before new acquisition.",
+      "No synchronous runtime heavy asset loading.",
+      "Repeated world detail remains ISM/HISM + LOD/culling.",
+      "Production textures remain PNG/TGA with 1K/2K default.",
+      "Animated production assets remain FBX only.",
+      "This pack does not activate P1C02+ runtime."
+    ]
+  }
 }
