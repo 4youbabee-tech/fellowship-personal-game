@@ -1,3 +1,10 @@
+## 2026-10-02 - Frodo KayKit Rogue technical rejection and bounded successor
+
+- Exact-head `e7733a5308ba347beebd1d9cce286178927043b4`: Pre-Unreal #1642 and Unreal Build #1287 succeeded; P1C01 Frodo Skeletal Import #31 reached a real UE4.27.2 import and then failed the technical-quality gate.
+- `kaykit_rogue_672074b73ba276876a19e8816ecdc5241817ab47.fbx` is recorded as exact-SHA `REJECTED_TECHNICAL`: 19,529,164 bytes, SHA256 `93a9ee0a67ae69b2d815050234acad2004c3b8af7d294b916e52609c8195eb71`, imported as `USkeletalMesh` with 48 reference bones, rejected for missing smoothing groups and bind-pose bones. No missing-UV warning was observed.
+- The next bounded candidate is immutable `RogueHooded.fbx` from the same KayKit CC0 revision, isolated in a one-asset manifest so staging receipts and SHA256 remain unambiguous.
+- Warehouse candidate staging is corrected to stage the alternate OpenGameArt RPG, KayKit Rogue, and KayKit RogueHooded manifests before building the exact-head report; verified payload reuse and targeted missing/mismatch repair remain required.
+- Status: **ROGUE REJECTED / ROGUEHOODED SOURCE-REGISTERED / EXACT-HEAD PRE-UNREAL + UNREAL + UE4 IMPORT PROOF PENDING**. Runtime integration remains false; no deformation, retarget, AnimBP, PIE, device, visual, pacing, performance or Gate 6/7 acceptance is claimed.
 ## 2026-10-01 - Critical-gap receipt supersession parity
 
 - Warehouse #306 at `develop@5ec1307aa749741fa10c801c288b101ef4b5292a` proved the canonical inventory audit is clean: 18,925 payload files / 6,745,968,858 bytes / 239 active receipt records / 428 superseded / zero hash, missing, license, dangerous, or duplicate-hash failures.

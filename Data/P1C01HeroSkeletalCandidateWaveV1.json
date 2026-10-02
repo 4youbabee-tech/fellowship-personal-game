@@ -85,7 +85,8 @@
     "QTN_UNIVERSAL_ANIMATION_LIBRARY",
     "OGA_QTN_ULTIMATE_ANIMATED_CHARACTERS_CC0",
     "OGA_QTN_RPG_CHARACTERS_CC0",
-    "KAYKIT_ADVENTURERS_CC0"
+    "KAYKIT_ADVENTURERS_CC0",
+    "KAYKIT_ADVENTURERS_ROGUE_HOODED_CC0"
   ],
   "candidate_policy": {
     "animated_source_format": ".fbx",
@@ -108,7 +109,8 @@
     "substring_matching_forbidden": true,
     "final_likeness_from_filename_forbidden": true,
     "source_asset_priority_bonus": {
-      "KAYKIT_ADVENTURERS_CC0": 100
+      "KAYKIT_ADVENTURERS_CC0": 100,
+      "KAYKIT_ADVENTURERS_ROGUE_HOODED_CC0": 100
     }
   },
   "character_scoring": {
@@ -179,7 +181,7 @@
     "warehouse_inventory_must_be_clean": true,
     "output_state": "FRODO_STATIC_FBX_QC_REQUIRED_NOT_IMPORTED"
   },
-  "evidence_boundary": "Exact filename-token candidate ranking plus manifest-bounded source-family priority, then static FBX structure probing only. The KayKit direct Rogue FBX is intentionally retained in the bounded Frodo pool instead of being displaced by smaller accessory FBXs. No FBX 2018 export confirmation, UE4 skeletal import, skeleton/skin quality, retarget/deformation, final character likeness, runtime replacement, PIE, device, visual or performance acceptance is claimed.",
+  "evidence_boundary": "Exact filename-token candidate ranking plus manifest-bounded source-family priority, then static FBX structure probing only. The exact Rogue payload is retained as an auditable technical rejection while RogueHooded is admitted as a separate one-file CC0 candidate. No FBX 2018 export confirmation, UE4 skeletal import success for RogueHooded, skeleton/skin quality, retarget/deformation, final character likeness, runtime replacement, PIE, device, visual or performance acceptance is claimed.",
   "owner_sequence_authority": "Data/P1C01RuntimeChapterSequenceV1.json",
   "owner_execution_order": [
     "FRODO",
@@ -222,7 +224,8 @@
     "evidence_boundary": "Static FBX header/marker evidence only. Exact original-family files remain allowlisted for rejection replay, while alternate-source candidates are admitted only from the explicit CC0 source asset-id allowlist. This does not prove FBX 2018 export, UE4 import, deformation, final likeness, runtime, PIE, device, visual or performance acceptance.",
     "candidate_source_asset_id_allowlist": [
       "OGA_QTN_RPG_CHARACTERS_CC0",
-      "KAYKIT_ADVENTURERS_CC0"
+      "KAYKIT_ADVENTURERS_CC0",
+      "KAYKIT_ADVENTURERS_ROGUE_HOODED_CC0"
     ]
   }
 }

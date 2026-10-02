@@ -7,17 +7,19 @@ $cpp=Join-Path $root "Source\ShireJourneyEditorTools\Private\ShireProductionImpo
 $workflow=Join-Path $root ".github\workflows\p1c01-frodo-skeletal-import-validation.yml"
 $importCmd=Join-Path $root "Scripts\ci_import_production_assets.cmd"
 $alternateManifest=Join-Path $root "Data\P1C01OpenGameArtRpgHeroCandidateBatchV1.json"
+$kayHoodedManifest=Join-Path $root "Data\P1C01KayKitAdventurersRogueHoodedHeroCandidateBatchV1.json"
 $heroManifest=Join-Path $root "Data\P1C01HeroSkeletalCandidateWaveV1.json"
 $heroWave=Join-Path $root "Scripts\run_p1c01_hero_skeletal_candidate_wave.ps1"
 $characterIntake=Join-Path $root "Scripts\prepare_p1c01_character_rig_intake.ps1"
 $candidateStage=Join-Path $root "Scripts\stage_opengameart_character_candidate.ps1"
-foreach($p in @($manifest,$stage,$cpp,$workflow,$importCmd,$alternateManifest,$candidateStage,$heroManifest,$heroWave,$characterIntake)){ if(-not(Test-Path -LiteralPath $p -PathType Leaf)){throw "P1C01_FRODO_IMPORT_CONTRACT_FILE_MISSING path=$p"} }
+foreach($p in @($manifest,$stage,$cpp,$workflow,$importCmd,$alternateManifest,$kayHoodedManifest,$candidateStage,$heroManifest,$heroWave,$characterIntake)){ if(-not(Test-Path -LiteralPath $p -PathType Leaf)){throw "P1C01_FRODO_IMPORT_CONTRACT_FILE_MISSING path=$p"} }
 $m=Get-Content -LiteralPath $manifest -Raw | ConvertFrom-Json
 $c=Get-Content -LiteralPath $cpp -Raw
 $s=Get-Content -LiteralPath $stage -Raw
 $w=Get-Content -LiteralPath $workflow -Raw
 $i=Get-Content -LiteralPath $importCmd -Raw
 $a=Get-Content -LiteralPath $alternateManifest -Raw | ConvertFrom-Json
+$kh=Get-Content -LiteralPath $kayHoodedManifest -Raw | ConvertFrom-Json
 $g=Get-Content -LiteralPath $candidateStage -Raw
 $h=Get-Content -LiteralPath $heroManifest -Raw | ConvertFrom-Json
 $hw=Get-Content -LiteralPath $heroWave -Raw
@@ -26,7 +28,12 @@ if([string]$m.character -ne "FRODO"){throw "P1C01_FRODO_IMPORT_CONTRACT_CHARACTE
 if([bool]$m.import_contract.runtime_integration_allowed){throw "P1C01_FRODO_IMPORT_CONTRACT_RUNTIME_FORBIDDEN"}
 if([string]$a.provider -ne "OPENGAMEART" -or [string]$a.license -ne "CC0-1.0"){throw "P1C01_FRODO_IMPORT_CONTRACT_ALTERNATE_SOURCE_FAIL"}
 if([string]$a.assets[0].id -ne "OGA_QTN_RPG_CHARACTERS_CC0"){throw "P1C01_FRODO_IMPORT_CONTRACT_ALTERNATE_ID_FAIL"}
+if(@($kh.assets).Count -ne 1 -or [string]$kh.assets[0].id -ne "KAYKIT_ADVENTURERS_ROGUE_HOODED_CC0" -or [string]$kh.assets[0].download_kind -ne "DIRECT_FBX"){throw "P1C01_FRODO_IMPORT_CONTRACT_KAYKIT_HOODED_FAIL"}
+if([string]$kh.assets[0].source_revision -ne "672074b73ba276876a19e8816ecdc5241817ab47"){throw "P1C01_FRODO_IMPORT_CONTRACT_KAYKIT_HOODED_REVISION_FAIL"}
 if([int]$h.candidate_policy.source_asset_priority_bonus.KAYKIT_ADVENTURERS_CC0 -lt 1){throw "P1C01_FRODO_IMPORT_CONTRACT_SOURCE_PRIORITY_MISSING"}
+if([int]$h.candidate_policy.source_asset_priority_bonus.KAYKIT_ADVENTURERS_ROGUE_HOODED_CC0 -lt 1){throw "P1C01_FRODO_IMPORT_CONTRACT_HOODED_PRIORITY_MISSING"}
+$rogueRejection=@($m.technical_rejections | Where-Object { [string]$_.source_sha256 -eq "93a9ee0a67ae69b2d815050234acad2004c3b8af7d294b916e52609c8195eb71" })
+if($rogueRejection.Count -ne 1 -or [int]$rogueRejection[0].ue4_reference_bones -ne 48){throw "P1C01_FRODO_IMPORT_CONTRACT_ROGUE_REJECTION_MISSING"}
 foreach($marker in @("P1C01_CHARACTER_INTAKE_DIRECT_FBX_PASS","direct_fbx_copy_sha256_mismatch",'candidate_file=[string]$directCandidate')){
   if(-not $ci.Contains($marker)){throw "P1C01_FRODO_IMPORT_CONTRACT_DIRECT_INTAKE_MARKER_MISSING marker=$marker"}
 }
@@ -68,7 +75,7 @@ if([string]$m.temporary_source_destination -ne "SourceAssets/Production/Characte
 if([string]$m.unreal_asset_name -ne "SK_FRODO"){
   throw "P1C01_FRODO_IMPORT_CONTRACT_ASSET_NAME_FAIL name=$([string]$m.unreal_asset_name)"
 }
-foreach($marker in @("Build ShireJourneyEditor","Stage Frodo skeletal source","Import Frodo skeletal mesh in UE4.27.2","Verify SK_FRODO import evidence","P1C01_FRODO_UE4_IMPORT_BONE_COUNT_FAIL","-EnableCharacterRigImport","P1C01_FRODO_VALIDATION_CLEANUP_PASS","Stage alternate OpenGameArt RPG hero archive","P1C01_FRODO_VALIDATION_CLEANUP_GIT_FAIL")){
+foreach($marker in @("Build ShireJourneyEditor","Stage Frodo skeletal source","Import Frodo skeletal mesh in UE4.27.2","Verify SK_FRODO import evidence","P1C01_FRODO_UE4_IMPORT_BONE_COUNT_FAIL","-EnableCharacterRigImport","P1C01_FRODO_VALIDATION_CLEANUP_PASS","Stage alternate OpenGameArt RPG hero archive","Stage KayKit RogueHooded alternate hero candidate","P1C01KayKitAdventurersRogueHoodedHeroCandidateBatchV1.json","P1C01_FRODO_VALIDATION_CLEANUP_GIT_FAIL")){
   if(-not $w.Contains($marker)){throw "P1C01_FRODO_IMPORT_CONTRACT_WORKFLOW_MARKER_MISSING marker=$marker"}
 }
 foreach($marker in @("%*","ENABLE_CHARACTER_RIG_IMPORT","cleanup_untracked_validation_file","P1C01_FRODO_VALIDATION_RESIDUE_REMOVED")){

@@ -13,6 +13,9 @@ on:
       - 'Data/WarehouseQuaterniusHeroCandidateBatchV1.json'
       - 'Scripts/stage_quaternius_warehouse.ps1'
       - 'Data/P1C01OpenGameArtHeroCandidateBatchV1.json'
+      - 'Data/P1C01OpenGameArtRpgHeroCandidateBatchV1.json'
+      - 'Data/P1C01KayKitAdventurersHeroCandidateBatchV1.json'
+      - 'Data/P1C01KayKitAdventurersRogueHoodedHeroCandidateBatchV1.json'
       - 'Scripts/stage_opengameart_character_candidate.ps1'
       - 'Scripts/inspect_p1c01_frodo_fbx_candidate.ps1'
       - 'Scripts/test_p1c01_frodo_candidate_semantic_qc.ps1'
@@ -223,6 +226,23 @@ jobs:
         timeout-minutes: 20
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_opengameart_character_candidate.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\P1C01OpenGameArtHeroCandidateBatchV1.json"
+      - name: Stage alternate OpenGameArt RPG hero candidate
+        if: github.event_name == 'push'
+        timeout-minutes: 20
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_opengameart_character_candidate.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\P1C01OpenGameArtRpgHeroCandidateBatchV1.json"
+
+      - name: Stage KayKit Adventurers alternate hero candidate
+        if: github.event_name == 'push'
+        timeout-minutes: 20
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_opengameart_character_candidate.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\P1C01KayKitAdventurersHeroCandidateBatchV1.json"
+
+      - name: Stage KayKit RogueHooded alternate hero candidate
+        if: github.event_name == 'push'
+        timeout-minutes: 20
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_opengameart_character_candidate.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\P1C01KayKitAdventurersRogueHoodedHeroCandidateBatchV1.json"
 
       - name: Build exact-head P1C01 Frodo Gandalf candidate report
         if: github.event_name == 'push'

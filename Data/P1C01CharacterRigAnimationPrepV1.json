@@ -120,6 +120,15 @@
       "observed_page_license": "CC0",
       "license_capture": "OFFICIAL_KAYKIT_GITHUB_LICENSE_VERIFIED_2026-10-02",
       "intended_use": "ALTERNATE_FRODO_RIG_BASE_QC_CANDIDATE_NOT_FINAL_LIKENESS"
+    },
+    {
+      "provider": "KAYKIT_GITHUB",
+      "id": "KAYKIT_ADVENTURERS_ROGUE_HOODED_CC0",
+      "state": "AUTHORIZED_FOR_STAGING",
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_KAYKIT_GITHUB_LICENSE_VERIFIED_2026-10-02",
+      "intended_use": "SECOND_ALTERNATE_FRODO_RIG_BASE_QC_CANDIDATE_NOT_FINAL_LIKENESS"
     }
   ],
   "required_bundle": {

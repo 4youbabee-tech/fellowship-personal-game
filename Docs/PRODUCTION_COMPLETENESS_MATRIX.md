@@ -1,3 +1,13 @@
+## 2026-10-02 - Frodo KayKit successor matrix
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| KayKit Rogue exact payload | REJECTED_TECHNICAL | Frodo Import #31 at `e7733a...`: `USkeletalMesh`, 48 bones, smoothing-group + bind-pose debt |
+| Rogue payload identity | RECORDED | 19,529,164 bytes; SHA256 `93a9ee0a67ae69b2d815050234acad2004c3b8af7d294b916e52609c8195eb71` |
+| KayKit RogueHooded | SOURCE-REGISTERED / EXACT-HEAD QC PENDING | One immutable direct-FBX manifest at the same CC0 revision; receipt SHA256 required |
+| Warehouse provider order | SOURCE-REPAIRED / EXACT-HEAD PROOF PENDING | All authorized alternate manifests stage before candidate report |
+| Runtime / deformation / retarget / AnimBP | NOT STARTED / NOT ACCEPTED | Technical candidate intake only |
+| PIE / device / visual / pacing / performance / Gate 6-7 | NOT ACCEPTED | Separate evidence required |
 ## 2026-10-01 - Critical-gap receipt parity matrix
 
 | Area | Status | Evidence / boundary |

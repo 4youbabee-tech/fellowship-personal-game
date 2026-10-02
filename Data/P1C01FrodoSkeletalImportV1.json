@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "import_id": "P1C01_FRODO_SKELETAL_IMPORT_VALIDATION_V1",
-  "status": "KAYKIT_ALTERNATE_CC0_SOURCE_FAMILY_PROBE_ACTIVE",
+  "status": "KAYKIT_ROGUE_REJECTED_ROGUE_HOODED_PROBE_ACTIVE",
   "authority": [
     "Data/ProjectGovernor.json",
     "Data/P1C01HeroSkeletalCandidateWaveV1.json",
@@ -27,7 +27,7 @@
     "require_nonzero_bones": true,
     "runtime_integration_allowed": false
   },
-  "evidence_boundary": "All five original Quaternius Ultimate Animated Character candidates are exact-SHA REJECTED_TECHNICAL after real UE4.27.2 imports. The alternate Quaternius RPG mirror staged successfully but its Frodo-ranked FBX rows were animation/accessory files and failed static skeletal structure. KayKit Adventurers CC0 is now the next bounded alternate source family and must pass the same static and real UE4.27.2 technical gate before any promotion. No deformation, retarget, AnimBP, runtime replacement, PIE, device, visual or performance acceptance is proved.",
+  "evidence_boundary": "All five original Quaternius Ultimate Animated Character candidates are exact-SHA REJECTED_TECHNICAL after real UE4.27.2 imports. The alternate Quaternius RPG mirror staged successfully but its Frodo-ranked FBX rows were animation/accessory files and failed static skeletal structure. KayKit Rogue imported as USkeletalMesh with 48 reference bones but is exact-SHA REJECTED_TECHNICAL for missing smoothing groups and bind-pose bones. The bounded RogueHooded candidate is next and must pass the same static and real UE4.27.2 technical gate before any promotion. No deformation, retarget, AnimBP, runtime replacement, PIE, device, visual or performance acceptance is proved.",
   "technical_rejections": [
     {
       "filename": "BaseCharacter.fbx",
@@ -120,10 +120,28 @@
         "P1C01 Frodo Skeletal Import Validation #24"
       ],
       "note": "UE4.27.2 imported a USkeletalMesh with 33 reference bones; the final candidate in the original source family is rejected for smoothing/bind-pose/UV debt, exhausting that family."
+    },
+    {
+      "filename": "kaykit_rogue_672074b73ba276876a19e8816ecdc5241817ab47.fbx",
+      "source_sha256": "93a9ee0a67ae69b2d815050234acad2004c3b8af7d294b916e52609c8195eb71",
+      "source_bytes": 19529164,
+      "evidence_head": "e7733a5308ba347beebd1d9cce286178927043b4",
+      "ue4_skeletal_registered": true,
+      "ue4_reference_bones": 48,
+      "state": "REJECTED_TECHNICAL",
+      "reason_codes": [
+        "MISSING_SMOOTHING_GROUPS",
+        "MISSING_BIND_POSE_BONES"
+      ],
+      "evidence": [
+        "P1C01 Frodo Skeletal Import Validation #31"
+      ],
+      "note": "UE4.27.2 imported a USkeletalMesh with 48 reference bones and no missing-UV warning, but exact-head candidate-scoped validation rejected the source for smoothing-group and bind-pose debt."
     }
   ],
   "preferred_candidate_source_asset_ids": [
     "KAYKIT_ADVENTURERS_CC0",
+    "KAYKIT_ADVENTURERS_ROGUE_HOODED_CC0",
     "OGA_QTN_RPG_CHARACTERS_CC0"
   ]
 }
