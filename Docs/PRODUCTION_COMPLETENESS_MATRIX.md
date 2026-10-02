@@ -2736,3 +2736,13 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | True active PR handling | PRESERVED | KEEP + CONTINUE |
 | API failure behavior | PRESERVED | Fatal / fail-closed |
 | Exact-head validation | PENDING | Fresh Pre-Unreal required |
+
+
+## 2026-10-03 - Branch cleanup absent-ref fast path
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Historical absent refs | SOURCE-OPTIMIZED | ls-remote fast path before API active-head query |
+| Live ref active-PR guard | PRESERVED | Per-branch exact head.ref query still required before deletion |
+| Safety gates | PRESERVED | Canonical/protected/moved-ref fail-closed |
+| Exact-head validation | PENDING | Fresh Pre-Unreal required |
