@@ -2692,3 +2692,14 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Static FBX skeletal QC | PENDING | Must pass before UE runner reservation |
 | UE4.27.2 skeletal import | PENDING | Same smoothing/bind-pose/UV rejection gate as Rogue |
 | Runtime / likeness / deformation / retarget | NOT AUTHORIZED | Technical probe only |
+
+
+## 2026-10-03 - Bag End entry shrub cleanup refresh
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Runtime writer | ACTIVE / SINGLE | Fresh ancestry branch only |
+| Entry sphere shrubs | SOURCE-REPLACED | Resident `SM_ShShrub`; sphere is no-asset fallback |
+| Actor / Tick / collision budget | UNCHANGED | Zero actor delta; no Tick/collision added |
+| Door/window/trim debt | PRESERVED | Exact replacement remains content-gated |
+| Fresh exact-head validation | PENDING | Pre-Unreal + UE4.27.2 required |
