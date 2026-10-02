@@ -994,3 +994,12 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Quaternius remains BLOCKED_MANUAL after prior zero-payload provider evidence; it cannot stop independent lanes and no undocumented archive URL may be fabricated.
 - Animated production candidates remain FBX; production textures PNG/TGA with 1K/2K default; repeated world assets use HISM/ISM/LOD/culling; heavy runtime assets remain soft/async.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING**. No PIE/device/visual/performance acceptance claim.
+
+
+## 2026-10-02 - Whole-game chapter preproduction mega-train registration
+
+- Registered the 23 normalized trilogy chapter packages from **F1-01 through F3-07** as source/preproduction production waves inside `ContinuousProductionWaveQueueV2`.
+- This registration introduces no new canon outcome and does not alter any chapter postcondition; it mirrors the existing Story/Mission Bible chapter spine and location/state contracts.
+- P1C01 remains the sole runtime-changing production lane. All later chapter packets are explicitly source/preproduction only until predecessor Gate 6/7 acceptance.
+- Preproduction domains per chapter: canon/state contract, location/world packet, roster/character needs, props/materials/vegetation, animation/encounters, audio/VFX, quest/checkpoint/save contract, streaming/performance plan and QA matrix.
+- Status: **SOURCE/PREPRODUCTION REGISTERED / NO FUTURE RUNTIME ACTIVATION**.
