@@ -1,10 +1,56 @@
 param(
   [string]$ManifestPath = "Data/P1C01HeroSkeletalCandidateWaveV1.json",
   [Parameter(Mandatory=$true)][string]$CandidateReport,
-  [string]$OutputRoot = ""
+  [string]$OutputRoot = "",
+  [switch]$SchemaSelfTest
 )
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
+
+function Get-OptionalPropertyValue {
+  param([object]$Object,[string]$Name,[object]$Default=$null)
+  if($null -eq $Object){ return $Default }
+  $property=$Object.PSObject.Properties[$Name]
+  if($null -eq $property){ return $Default }
+  return $property.Value
+}
+
+function Get-CandidateCharacterRows {
+  param([object]$CandidateReportObject)
+
+  $roots=@($CandidateReportObject)
+  if($roots.Count -eq 1){
+    $root=$roots[0]
+    $characters=Get-OptionalPropertyValue $root "characters" $null
+    if($null -ne $characters){
+      return @($characters)
+    }
+
+    $legacy=Get-OptionalPropertyValue $root "character_reports" $null
+    if($null -ne $legacy){
+      return @($legacy)
+    }
+  }
+
+  $flattened=@($roots | Where-Object {
+    $null -ne (Get-OptionalPropertyValue $_ "character" $null) -and
+    $null -ne (Get-OptionalPropertyValue $_ "candidates" $null)
+  })
+  if($flattened.Count -gt 0){
+    return $flattened
+  }
+
+  $schema="unknown"
+  if($roots.Count -eq 1){
+    $schemaValue=Get-OptionalPropertyValue $roots[0] "schema_version" $null
+    if($null -ne $schemaValue){ $schema=[string]$schemaValue }
+  }
+  $keys=@()
+  if($roots.Count -eq 1 -and $null -ne $roots[0]){
+    $keys=@($roots[0].PSObject.Properties | ForEach-Object { $_.Name })
+  }
+  throw ("P1C01_FRODO_STATIC_QC_SCHEMA_UNSUPPORTED schema="+$schema+" keys="+($keys -join ","))
+}
 
 $ProjectRoot=Split-Path $PSScriptRoot -Parent
 if(-not [IO.Path]::IsPathRooted($ManifestPath)){ $ManifestPath=Join-Path $ProjectRoot $ManifestPath }
@@ -18,12 +64,18 @@ $candidateReport=Get-Content -LiteralPath $CandidateReport -Raw | ConvertFrom-Js
 $policy=$manifest.frodo_static_fbx_qc
 $allow=@($policy.candidate_filename_allowlist | ForEach-Object { [string]$_ })
 $minimum=[int]$policy.minimum_static_structure_pass_candidates
-$frodoRows=@($candidateReport.characters | Where-Object { [string]$_.character -eq "FRODO" })
+$characterRows=@(Get-CandidateCharacterRows $candidateReport)
+$frodoRows=@($characterRows | Where-Object { [string](Get-OptionalPropertyValue $_ "character" "") -eq "FRODO" })
 if($frodoRows.Count -ne 1){ throw "P1C01_FRODO_STATIC_QC_POOL_MISSING count=$($frodoRows.Count)" }
+if($SchemaSelfTest){
+  $candidateCount=@(Get-OptionalPropertyValue $frodoRows[0] "candidates" @()).Count
+  Write-Host ("P1C01_FRODO_STATIC_QC_SCHEMA_SELF_TEST_PASS schema="+[string](Get-OptionalPropertyValue $candidateReport "schema_version" "unknown")+" frodoRows="+$frodoRows.Count+" candidates="+$candidateCount)
+  exit 0
+}
 
 $selected=@()
 foreach($filename in $allow){
-  $matches=@($frodoRows[0].candidates | Where-Object { [string]$_.filename -ieq $filename })
+  $matches=@((Get-OptionalPropertyValue $frodoRows[0] "candidates" @()) | Where-Object { [string](Get-OptionalPropertyValue $_ "filename" "") -ieq $filename })
   if($matches.Count -gt 1){ throw "P1C01_FRODO_STATIC_QC_DUPLICATE filename=$filename count=$($matches.Count)" }
   if($matches.Count -eq 1){ $selected += $matches[0] }
 }
