@@ -13,6 +13,30 @@ if([int]$LASTEXITCODE -ne 0){ throw "P1C01_FRODO_SEMANTIC_QC_TOKEN_SELF_TEST_FAI
 $rank=Get-Content -LiteralPath $rankPath -Raw
 $qc=Get-Content -LiteralPath $qcPath -Raw
 $m=Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
+$schemaFixture=Join-Path ([IO.Path]::GetTempPath()) ("p1c01_frodo_schema_"+[Guid]::NewGuid().ToString("N")+".json")
+try {
+  $fixture=[ordered]@{
+    schema_version=2
+    characters=@(
+      [ordered]@{
+        character="FRODO"
+        candidate_count=1
+        candidates=@([ordered]@{ filename="BaseCharacter.fbx"; source_fbx="X:\\fixture\\BaseCharacter.fbx" })
+      },
+      [ordered]@{
+        character="GANDALF"
+        candidate_count=1
+        candidates=@([ordered]@{ filename="Worker_Male.fbx"; source_fbx="X:\\fixture\\Worker_Male.fbx" })
+      }
+    )
+  }
+  $fixture | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $schemaFixture -Encoding UTF8
+  & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $qcPath -ManifestPath $manifestPath -CandidateReport $schemaFixture -SchemaSelfTest
+  if([int]$LASTEXITCODE -ne 0){ throw "P1C01_FRODO_SEMANTIC_QC_SCHEMA_SELF_TEST_FAIL exit=$LASTEXITCODE" }
+}
+finally {
+  Remove-Item -LiteralPath $schemaFixture -Force -ErrorAction SilentlyContinue
+}
 $w=Get-Content -LiteralPath $warehousePath -Raw
 $pre=Get-Content -LiteralPath $prePath -Raw
 if($rank.Contains('$hay.Contains($_)')){ throw "P1C01_FRODO_SEMANTIC_QC_SUBSTRING_REGRESSION" }
@@ -26,7 +50,7 @@ if(@($frodo[0].required_any_tokens).Count -lt 2 -or @($frodo[0].excluded_tokens)
 if(@($gandalf[0].required_any_tokens).Count -lt 2 -or @($gandalf[0].excluded_tokens) -notcontains "female"){ throw "P1C01_FRODO_SEMANTIC_QC_GANDALF_POLICY_FAIL" }
 if([string]$m.frodo_static_fbx_qc.active_character -ne "FRODO"){ throw "P1C01_FRODO_SEMANTIC_QC_ACTIVE_CHARACTER_FAIL" }
 if(@($m.frodo_static_fbx_qc.candidate_filename_allowlist) -notcontains "BaseCharacter.fbx"){ throw "P1C01_FRODO_SEMANTIC_QC_BASE_ALLOWLIST_FAIL" }
-foreach($marker in @("LimbNode","Deformer","Skin","Cluster","fbx_2018_export_confirmed","ready_for_import","P1C01_FRODO_STATIC_QC_PASS")){
+foreach($marker in @("Resolve-CandidateCharacterRows","SchemaSelfTest","P1C01_FRODO_STATIC_QC_SCHEMA_UNSUPPORTED","LimbNode","Deformer","Skin","Cluster","fbx_2018_export_confirmed","ready_for_import","P1C01_FRODO_STATIC_QC_PASS")){
   if(-not $qc.Contains($marker)){ throw "P1C01_FRODO_SEMANTIC_QC_PROBE_MARKER_MISSING marker=$marker" }
 }
 $rankIndex=$w.IndexOf("- name: Build exact-head P1C01 Frodo Gandalf candidate report",[StringComparison]::Ordinal)
