@@ -3707,3 +3707,12 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - `KAYKIT_ADVENTURERS_CC0` is now admitted by the existing P1C01 character-intake and Frodo static-QC source allowlists.
 - This branch is source/preparation only. It does not stage/import/promote a character by itself and does not authorize runtime replacement.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING**. No deformation, retarget, PIE, device, visual or performance acceptance claim.
+
+
+## 2026-10-03 - KayKit Knight V2 bounded technical probe refresh
+
+- Refreshed the second KayKit Adventurers technical rig-base probe on current `develop` ancestry using immutable revision `672074b73ba276876a19e8816ecdc5241817ab47`.
+- Candidate is `Knight.fbx` only, recorded as `KAYKIT_ADVENTURERS_KNIGHT_CC0`, with source Git blob `101848795913dea0d37ac3ec9352fdf9dd024010`.
+- This lane is deliberately source-only. It does not authorize Frodo likeness selection, runtime replacement, retarget, animation or chapter authority changes.
+- Next gate remains staging receipt + static FBX QC; real UE4.27.2 skeletal import is allowed only after those gates pass.
+- Status: **SOURCE-IMPLEMENTED / STATIC QC PENDING**. No UE import, PIE, device, visual or performance acceptance claim.
