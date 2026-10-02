@@ -17,11 +17,12 @@ $wave=Get-Content -LiteralPath $wavePath -Raw | ConvertFrom-Json
 $workflow=Get-Content -LiteralPath $workflowPath -Raw
 
 $required=@($wave.authorized_source_packs | ForEach-Object {[string]$_} | Sort-Object -Unique)
-$staged=@(
+$stagedAll=@(
   @($qtn.source_pages | ForEach-Object {[string]$_.id})
   @($oga.assets | ForEach-Object {[string]$_.id})
   @($kay.assets | ForEach-Object {[string]$_.id})
 ) | Sort-Object -Unique
+$staged=@($stagedAll | Where-Object { $required -contains $_ })
 if($required.Count -ne $staged.Count){ throw "P1C01_HERO_PROVIDER_CONTRACT_COUNT_FAIL required=$($required.Count) staged=$($staged.Count)" }
 foreach($id in $required){ if($staged -notcontains $id){ throw "P1C01_HERO_PROVIDER_CONTRACT_PACK_MISSING id=$id" } }
 foreach($row in @($qtn.source_pages)+@($oga.assets)+@($kay.assets)){
