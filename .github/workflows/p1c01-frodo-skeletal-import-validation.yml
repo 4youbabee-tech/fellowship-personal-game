@@ -77,8 +77,12 @@ jobs:
           $text = Get-Content -LiteralPath $log -Raw
           if (-not $text.Contains("SK_FRODO")) { throw "P1C01_FRODO_UE4_IMPORT_LOG_ASSET_MARKER_MISSING" }
           if (-not $text.Contains("skeletal-registered=yes")) { throw "P1C01_FRODO_UE4_IMPORT_CLASS_MARKER_MISSING" }
+          $match=[regex]::Match($text,'skeletal-bones=(\d+)')
+          if (-not $match.Success) { throw "P1C01_FRODO_UE4_IMPORT_BONE_MARKER_MISSING" }
+          $bones=[int]$match.Groups[1].Value
+          if ($bones -le 0) { throw "P1C01_FRODO_UE4_IMPORT_BONE_COUNT_FAIL bones=$bones" }
           $bytes=(Get-Item -LiteralPath $asset).Length
-          Write-Host "P1C01_FRODO_UE4_IMPORT_PASS asset=SK_FRODO bytes=$bytes class=USkeletalMesh runtimeIntegration=false"
+          Write-Host "P1C01_FRODO_UE4_IMPORT_PASS asset=SK_FRODO bytes=$bytes bones=$bones class=USkeletalMesh runtimeIntegration=false"
 
       - name: Upload Frodo skeletal import evidence
         if: always()
