@@ -2680,3 +2680,13 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Frodo static-QC source admission | SOURCE-IMPLEMENTED | Source asset ID allowlist updated |
 | Warehouse staging / UE4 skeletal import | PENDING | Separate exact-head execution required |
 | Runtime / deformation / visual acceptance | NOT ACCEPTED | No matching evidence |
+
+
+## 2026-10-03 - Hosted Unreal classifier local-history acceleration
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Root cause | IDENTIFIED | Unreal #1299 classifier log: credentialless fetch failed before tree-equivalent proof |
+| Local tree-equivalent proof path | SOURCE-IMPLEMENTED | Probe local parent object before network fallback |
+| Fail-closed behavior | PRESERVED | Missing local ancestry + failed fallback still returns no proof and cannot inherit |
+| Exact-head validation | PENDING | Fresh Pre-Unreal / hosted classifier evidence required |
