@@ -2489,3 +2489,10 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 - The exact-head hero candidate wave fails closed before ranking when any discovered FBX lacks exactly one provenance row; ranked rows now carry the provenance fields into the evidence artifact.
 - This closes the gap between `candidate_policy.require_provenance=true` and actual per-file candidate evidence without promoting any asset to READY_FOR_IMPORT.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. No skeleton, skin-weight, deformation, import, PIE, device, visual or performance acceptance is claimed.
+
+
+### 2026-10-02 — Production FBX intake lane
+- `SOURCE-IMPLEMENTED`: `ShireProductionImportCommandlet` now inventories `.fbx` under `SourceAssets/Production` and imports non-character FBX explicitly as static meshes with UE4.27 FBX settings.
+- Character FBX under `Characters/Rigs/` is deliberately deferred to the dedicated skeletal/provenance QC lane; the generic world importer cannot silently flatten a rig into a static mesh.
+- Production objective: allow approved environment/prop FBX to replace primitive Shire fallback geometry while preserving the character gate.
+- Evidence boundary: source change only; exact-head CI/Unreal build and runtime visual acceptance are pending.
