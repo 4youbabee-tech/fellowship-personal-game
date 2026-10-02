@@ -19,3 +19,24 @@ if ($null -eq $l -or $l.ToString("o") -notlike "2026-10-02T15:19:29*") { throw "
 if ($null -ne $n) { throw "RUNNER_TIMESTAMP_INVALID_LINE_FAIL" }
 
 Write-Host "RUNNER_TIMESTAMP_CONTRACT_PASS actual=true legacy=true invalidRejected=true"
+
+
+$recoveredLines = @(
+    "[2026-10-02 15:19:28Z ERR BrokerServer] System.IO.IOException: Unable to read data from the transport connection.",
+    "[2026-10-02 15:19:29Z INFO BrokerMessageListener] Acknowledging runner request '79d3d284-24ea-5de7-a8cc-3679bb35a8c6'."
+)
+$stalledLines = @(
+    "[2026-10-02 15:19:28Z ERR BrokerServer] System.Net.Sockets.SocketException (995): The I/O operation has been aborted."
+)
+
+$recovered = Get-RunnerBrokerEvidenceFromLines -Lines $recoveredLines
+$stalled = Get-RunnerBrokerEvidenceFromLines -Lines $stalledLines
+
+if ($null -eq $recovered.ErrorUtc -or $null -eq $recovered.HealthyUtc -or $recovered.HealthyUtc -lt $recovered.ErrorUtc) {
+    throw "RUNNER_BROKER_RECOVERY_ORDER_FAIL"
+}
+if ($null -eq $stalled.ErrorUtc -or $null -ne $stalled.HealthyUtc) {
+    throw "RUNNER_BROKER_STALL_EVIDENCE_FAIL"
+}
+
+Write-Host "RUNNER_BROKER_EVIDENCE_CONTRACT_PASS recoveredAfterError=true stalledWithoutHealthy=true"
