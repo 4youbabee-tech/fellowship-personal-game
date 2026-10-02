@@ -3562,7 +3562,7 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Warehouse #315 exact-head evidence on `develop@8c0f7b7da22e25ab723675d6d7a447d309c00bfe` produced **5/5 Frodo static FBX structure passes**; all five allowlisted candidates reported FBX version 7400 with skeleton/skin/cluster markers present.
 - Added `Data/P1C01FrodoSkeletalImportV1.json` and a bounded staging script that selects only a static-validated Frodo candidate, verifies SHA256, and copies it into an isolated checkout as `SourceAssets/Production/Characters/Rigs/FRODO/SK_FRODO.fbx`.
 - The production importer now discovers FBX only under `Characters/Rigs/` and imports those files explicitly as UE4 skeletal meshes. Materials, textures and animations are disabled for this import-validation pass.
-- Skeletal import verification uses AssetRegistry class evidence for `USkeletalMesh`; no new synchronous runtime heavy-load path is introduced.
+- Skeletal import verification requires AssetRegistry `USkeletalMesh` class evidence plus an already-imported in-memory skeletal mesh with `GetRefSkeleton().GetNum() > 0`; no new synchronous runtime heavy-load path is introduced.
 - Dedicated self-hosted workflow builds the exact head, stages the validated Frodo candidate, runs the UE4.27.2 production importer, and requires a generated `SK_FRODO.uasset` plus `skeletal-registered=yes` log evidence.
 - Runtime integration remains false: no AnimBP, retarget, deformation, likeness, PIE, device, visual or performance acceptance is claimed by this wave.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27.2 IMPORT PROOF PENDING**.
