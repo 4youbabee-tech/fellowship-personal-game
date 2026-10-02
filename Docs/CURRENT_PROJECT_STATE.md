@@ -3499,3 +3499,11 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - True blocker: Quaternius manual queue contains four packs; candidate report contains **0 discovered FBX / 0 Frodo / 0 Gandalf / 4 pending / 0 blocked**.
 - New bounded fallback candidate uses the direct OpenGameArt upload published by Quaternius under CC0: one 48.4 MB archive, ZIP safety budget, FBX-presence gate, receipt SHA256 reuse, and targeted redownload only when missing/mismatched.
 - This source is a rig-base/QC candidate, not a final Frodo likeness. FBX 2018, skeleton, skin weights, deformation, retarget, import, runtime, PIE, device, visual and performance evidence remain required.
+
+
+## 2026-10-02 - Daily manager report generator conflict-safe rebuild
+
+- Rebuilt the tested daily project-manager report generator and regression test from the current canonical `develop` head after PR #230 became non-mergeable due to branch divergence.
+- Pre-Unreal now executes the generator regression test exactly once; the test parses PowerShell, executes the generator, checks required report sections, and rejects encoding corruption.
+- This change does not claim scheduled delivery, Issue #96 publication, PIE, device, visual, pacing, or performance acceptance. Exact-head CI is required before merge.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**.
