@@ -2638,3 +2638,16 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | PIE / device / visual / performance acceptance | NOT ACCEPTED | No matching evidence |
 
 | Party Field #1268 compile blocker | SOURCE-FIXED | Replaced undeclared `ProductionPicnicCanopyMesh` reference with shared resident `ProductionCommonMarketCanopyMesh`; exact-head UE4 build pending |
+
+## 2026-10-02 - Maximum-safe CI lane reservation acceleration
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Hosted Unreal preflight classifier | SOURCE-IMPLEMENTED | Decides engine requirement before reserving UE4 machine |
+| Source/preproduction fast lanes | SOURCE-IMPLEMENTED | East Fields plan, KayKit/alternate source registration and whole-game packets stay hosted/static when parent proof is valid |
+| UE4 device lane reservation | SOURCE-IMPLEMENTED | Reserved only for full/core/asset/acceptance modes |
+| Classifier regression coverage | SOURCE-IMPLEMENTED | New source-only cases added to test_unreal_classifier.ps1 |
+| Exact-head static validation | PENDING | Fresh Pre-Unreal required before merge |
+| Runtime / PIE / device / visual / performance acceptance | NOT ACCEPTED | No matching evidence |
+
+| Hosted-classifier PG-145B reconciliation | SOURCE-FIXED | Validator recognizes hosted-preflight handoff while preserving runner-health-before-heavy-work invariant; fresh exact-head Pre-Unreal pending |
