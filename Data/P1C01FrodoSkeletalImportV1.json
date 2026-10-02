@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "import_id": "P1C01_FRODO_SKELETAL_IMPORT_VALIDATION_V1",
+  "status": "SOURCE_IMPLEMENTED_VALIDATION_PENDING",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/P1C01HeroSkeletalCandidateWaveV1.json",
+    "Data/ProductionAssetPromotionPolicyV1.json"
+  ],
+  "character": "FRODO",
+  "source_state_required": "STATIC_FBX_STRUCTURE_PRESENT_UE4_IMPORT_REQUIRED",
+  "preferred_candidate_order": [
+    "BaseCharacter.fbx",
+    "Casual_Male.fbx",
+    "Casual2_Male.fbx",
+    "Casual3_Male.fbx",
+    "Worker_Male.fbx"
+  ],
+  "temporary_source_destination": "SourceAssets/Production/Characters/Rigs/FRODO/SK_FRODO.fbx",
+  "unreal_destination": "/Game/Production/Characters/Rigs/FRODO",
+  "unreal_asset_name": "SK_FRODO",
+  "import_contract": {
+    "mesh_type": "SKELETAL_MESH",
+    "import_animations": false,
+    "import_materials": false,
+    "import_textures": false,
+    "require_nonzero_bones": true,
+    "runtime_integration_allowed": false
+  },
+  "evidence_boundary": "UE4 skeletal import validation only. Does not prove final Frodo likeness, deformation quality, retarget quality, AnimBP readiness, runtime replacement, PIE, device, visual or performance acceptance."
+}
