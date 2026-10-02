@@ -2585,3 +2585,13 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | New source acquisition | CONDITIONAL | Only after existing stock fails later composition/visual review |
 | Runtime binding | NOT STARTED HERE | Serialized runtime lane remains separate |
 | Visual/device/performance acceptance | NOT ACCEPTED | No matching evidence |
+
+## 2026-10-02 - Visible-world exact resident binding packet
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Bucklebury/Ferry resident bindings | SOURCE-IMPLEMENTED | Exact production identities prepared for boat/footbridge/rope/reeds/boulder roles |
+| Shire road resident bindings | SOURCE-IMPLEMENTED | Exact production identities prepared for fallen-log/tree/boulder/fence/woodpile/fern roles |
+| New acquisition pressure | REDUCED | Existing production stock must be tried before new provider acquisition |
+| Runtime mutation | NOT STARTED IN THIS PACKET | Serialized P1C01 runtime lane remains separate |
+| PIE / device / visual / performance acceptance | NOT ACCEPTED | No matching runtime/human/device evidence |
