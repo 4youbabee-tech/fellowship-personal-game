@@ -2690,3 +2690,5 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Local tree-equivalent proof path | SOURCE-IMPLEMENTED | Probe local parent object before network fallback |
 | Fail-closed behavior | PRESERVED | Missing local ancestry + failed fallback still returns no proof and cannot inherit |
 | Exact-head validation | PENDING | Fresh Pre-Unreal / hosted classifier evidence required |
+
+- Knight V2 exact source manifest is now explicitly hosted-safe; no broad Data wildcard was added. Fresh exact-head validation pending.
