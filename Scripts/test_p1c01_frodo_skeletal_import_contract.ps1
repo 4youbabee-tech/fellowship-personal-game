@@ -27,7 +27,7 @@ if([bool]$m.import_contract.runtime_integration_allowed){throw "P1C01_FRODO_IMPO
 if([string]$a.provider -ne "OPENGAMEART" -or [string]$a.license -ne "CC0-1.0"){throw "P1C01_FRODO_IMPORT_CONTRACT_ALTERNATE_SOURCE_FAIL"}
 if([string]$a.assets[0].id -ne "OGA_QTN_RPG_CHARACTERS_CC0"){throw "P1C01_FRODO_IMPORT_CONTRACT_ALTERNATE_ID_FAIL"}
 if([int]$h.candidate_policy.source_asset_priority_bonus.KAYKIT_ADVENTURERS_CC0 -lt 1){throw "P1C01_FRODO_IMPORT_CONTRACT_SOURCE_PRIORITY_MISSING"}
-foreach($marker in @("P1C01_CHARACTER_INTAKE_DIRECT_FBX_PASS","direct_fbx_copy_sha256_mismatch","candidate_file=[string]$directCandidate")){
+foreach($marker in @("P1C01_CHARACTER_INTAKE_DIRECT_FBX_PASS","direct_fbx_copy_sha256_mismatch",'candidate_file=[string]$directCandidate')){
   if(-not $ci.Contains($marker)){throw "P1C01_FRODO_IMPORT_CONTRACT_DIRECT_INTAKE_MARKER_MISSING marker=$marker"}
 }
 foreach($marker in @("sourcePriorityBonuses","sourcePriorityBonus","source_priority_bonus")){
