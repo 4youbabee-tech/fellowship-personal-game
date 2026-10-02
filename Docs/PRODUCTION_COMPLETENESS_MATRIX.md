@@ -2716,3 +2716,13 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Fresh exact-head validation | PENDING | new run required before merge |
 
 | Branch deletion active-PR safety recheck | SOURCE-HARDENED | Per-branch `head=owner:branch` API query before deletion; API failure blocks cleanup |
+
+
+## 2026-10-03 - Branch cleanup batch continuation
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Branch Cleanup #138 | FAILED / DIAGNOSTIC | Active PR correctly protected; batch aborted |
+| Active PR deletion behavior | SOURCE-REPAIRED | Keep + continue instead of abort |
+| Canonical / moved-ref protection | PRESERVED | No relaxation |
+| Exact-head validation | PENDING | Fresh Pre-Unreal required |

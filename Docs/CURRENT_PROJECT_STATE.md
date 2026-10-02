@@ -3740,3 +3740,11 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Every deletion path now performs a second, branch-specific GitHub API query for an open PR whose `head=owner:branch`. API failure is fatal; an active result blocks deletion.
 - The guard applies both to exact closed-head deletion and explicit/zero-ahead cleanup through `Remove-RemoteBranch`.
 - This is a safety hardening, not a cleanup-gate relaxation. Fresh exact-head validation remains pending.
+
+
+## 2026-10-03 - Branch Cleanup #138 active-head batch fix
+
+- Branch Cleanup #138 **FAILED** after correctly detecting `ops/actions-budget-isolation-v1` as an active PR head. The safety decision was correct, but `Remove-RemoteBranch` threw and aborted retirement of all unrelated stale refs.
+- Repair changes active-PR handling from fatal exception to explicit `BRANCH_CLEANUP_KEEP_ACTIVE_PR` + continue. Canonical/protected/moved-ref guards remain fail-closed.
+- Project Governor `REQ-EXEC-002` now requires active heads to be preserved without blocking unrelated stale cleanup.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL PENDING**. #138 remains failure evidence only.
