@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "packet_id": "P1C01_VISIBLE_WORLD_REUSE_BINDING_PACKET_V1",
+  "status": "SOURCE_BINDING_PREPARATION_ACTIVE",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/ContinuousProductionWaveQueueV2.json",
+    "Data/P1C01VisibleWorldProxyReplacementV1.json",
+    "Docs/WORLD_DETAIL_LEDGER.md"
+  ],
+  "runtime_chapter": "P1C01",
+  "runtime_integration_allowed": false,
+  "objective": "Prepare exact resident production-asset bindings for the strongest remaining Shire primitive fallback roles before any new acquisition.",
+  "source_evidence": [
+    "Current ShirePrototypeWorldBuilder resident production paths",
+    "Unreal production-import evidence from PR #247/#249 work"
+  ],
+  "cells": [
+    {
+      "cell": "BUCKLEBURY_FERRY",
+      "priority": "CRITICAL_VISIBLE",
+      "bindings": [
+        {
+          "role": "ferry_body_candidate",
+          "asset": "/Game/Production/World/Common/SM_CommonRiverBoat.SM_CommonRiverBoat",
+          "fallback_role": "primitive ferry platform"
+        },
+        {
+          "role": "landing_bridge_candidate",
+          "asset": "/Game/Production/World/Common/SM_CommonFootbridge.SM_CommonFootbridge",
+          "fallback_role": "primitive dock/landing"
+        },
+        {
+          "role": "mooring_post",
+          "asset": "/Game/Production/World/Common/SM_CommonRopePost.SM_CommonRopePost",
+          "fallback_role": "primitive cylinder post"
+        },
+        {
+          "role": "rope_detail",
+          "asset": "/Game/Production/World/Common/SM_CommonRopeCoil.SM_CommonRopeCoil",
+          "fallback_role": "missing rope detail"
+        },
+        {
+          "role": "riverbank_reeds",
+          "asset": "/Game/Production/World/Common/SM_CommonReedCluster.SM_CommonReedCluster",
+          "fallback_role": "missing bank vegetation"
+        },
+        {
+          "role": "riverbank_rock",
+          "asset": "/Game/Production/World/Common/SM_CommonBoulderCluster.SM_CommonBoulderCluster",
+          "fallback_role": "generic primitive rock"
+        }
+      ],
+      "integration_rule": "Do not bind until the serialized runtime visual pass verifies residency/import and preserves the existing low-cost water contract."
+    },
+    {
+      "cell": "SHIRE_ROAD_CORRIDOR",
+      "priority": "HIGH_VISIBLE",
+      "bindings": [
+        {
+          "role": "fallen_log_obstacle",
+          "asset": "/Game/Production/World/Common/SM_CommonFallenLog.SM_CommonFallenLog",
+          "fallback_role": "primitive cylinder/sphere woodland obstacle"
+        },
+        {
+          "role": "broadleaf_tree_variation",
+          "asset": "/Game/Production/World/Common/SM_CommonBroadleafTree.SM_CommonBroadleafTree",
+          "fallback_role": "repeated simple tree silhouette"
+        },
+        {
+          "role": "boulder_cluster",
+          "asset": "/Game/Production/World/Common/SM_CommonBoulderCluster.SM_CommonBoulderCluster",
+          "fallback_role": "simple primitive rock"
+        },
+        {
+          "role": "roadside_fence",
+          "asset": "/Game/Production/World/Common/SM_CommonVillageFence.SM_CommonVillageFence",
+          "fallback_role": "generic fence segment"
+        },
+        {
+          "role": "woodpile_detail",
+          "asset": "/Game/Production/World/Common/SM_CommonWoodPile.SM_CommonWoodPile",
+          "fallback_role": "missing roadside lived-in detail"
+        },
+        {
+          "role": "fern_detail",
+          "asset": "/Game/Production/World/Common/SM_CommonFernClump.SM_CommonFernClump",
+          "fallback_role": "missing undergrowth variation"
+        }
+      ],
+      "integration_rule": "Repeated road/vegetation detail must remain ISM/HISM + LOD/culling; no density increase is authorized by this packet."
+    }
+  ],
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_class": 2,
+    "heavy_runtime_loading": "soft references + FStreamableManager async",
+    "repeated_detail": "ISM/HISM + LOD/culling"
+  },
+  "success_boundary": "All listed bindings are available to the next serialized runtime visual pass as exact production identities; no runtime mutation occurs in this source packet.",
+  "evidence_boundary": "SOURCE/STATIC binding preparation only. No PIE/device/visual/performance acceptance."
+}
