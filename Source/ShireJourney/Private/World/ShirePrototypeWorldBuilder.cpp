@@ -222,6 +222,7 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     ProductionCommonRiverBoatMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonRiverBoat.SM_CommonRiverBoat"));
     ProductionCommonRopePostMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonRopePost.SM_CommonRopePost"));
     ProductionCommonRopeCoilMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonRopeCoil.SM_CommonRopeCoil"));
+    ProductionCommonMarketCanopyMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonMarketCanopy.SM_CommonMarketCanopy"));
     ProductionWaterMaterial = ResolveResidentMaterial(
         TEXT("/Game/Production/Materials/M_ProductionWater.M_ProductionWater"));
 
@@ -1186,7 +1187,16 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
     // Party Field is a distinct destination north of the village center.
     const FVector PartyCenter(280.0f,1320.0f,0.0f);
     SpawnTree(PartyCenter,1.45f);
-    SpawnShape(CubeMesh,PartyCenter+FVector(300,20,50),FVector(1.6f,0.9f,0.5f),FLinearColor(0.70f,0.62f,0.38f));
+    // The later architecture pass places the resident production picnic canopy at
+    // this same story destination. Do not leave a large cube shell underneath it.
+    if (!ProductionCommonMarketCanopyMesh)
+    {
+        SpawnShape(
+            CubeMesh,
+            PartyCenter+FVector(300,20,50),
+            FVector(1.6f,0.9f,0.5f),
+            FLinearColor(0.70f,0.62f,0.38f));
+    }
     SpawnLabel(TEXT("Party Field"),PartyCenter+FVector(0,0,390),FLinearColor::White);
     if (!ProductionPicnicTableMesh)
     {
@@ -1394,8 +1404,7 @@ void AShirePrototypeWorldBuilder::SpawnPartySocialLoopPass()
         TEXT("/Game/Production/World/Common/SM_CommonLongBench.SM_CommonLongBench"));
     UStaticMesh* CommonMarketTable = ResolveResidentStaticMesh(
         TEXT("/Game/Production/World/Common/SM_CommonMarketTable.SM_CommonMarketTable"));
-    UStaticMesh* CommonMarketCanopy = ResolveResidentStaticMesh(
-        TEXT("/Game/Production/World/Common/SM_CommonMarketCanopy.SM_CommonMarketCanopy"));
+    UStaticMesh* CommonMarketCanopy = ProductionCommonMarketCanopyMesh;
     UStaticMesh* CommonWheelbarrow = ResolveResidentStaticMesh(
         TEXT("/Game/Production/World/Common/SM_CommonWheelbarrow.SM_CommonWheelbarrow"));
     UStaticMesh* CommonBarrel = ResolveResidentStaticMesh(

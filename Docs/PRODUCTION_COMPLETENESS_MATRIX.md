@@ -2626,3 +2626,15 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 
 | Runner PG-145 split-helper compatibility | SOURCE-FIXED | Validator now checks watchdog + timestamp helper as one contract; fresh exact-head Pre-Unreal pending |
 | Runner maintenance UE queue isolation | SOURCE-FIXED | New helper/test paths are maintenance-safe and path-filtered off Unreal push/PR triggers |
+
+## 2026-10-02 - P1C01 Party Field primitive-overlay suppression
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Party Field large cube centerpiece | SOURCE-IMPLEMENTED | Suppressed when resident `SM_ShPicnicCanopy` is available; deterministic fallback retained |
+| Story / quest / NPC authority | UNCHANGED | No state or population ownership changes |
+| Runtime loading | UNCHANGED | Existing resident mesh pointer reused; no synchronous heavy load added |
+| Exact-head UE4 compile/runtime audit | PENDING | Required before merge |
+| PIE / device / visual / performance acceptance | NOT ACCEPTED | No matching evidence |
+
+| Party Field #1268 compile blocker | SOURCE-FIXED | Replaced undeclared `ProductionPicnicCanopyMesh` reference with shared resident `ProductionCommonMarketCanopyMesh`; exact-head UE4 build pending |

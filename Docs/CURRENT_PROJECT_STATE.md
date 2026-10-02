@@ -3641,3 +3641,18 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - PG-145 now validates the combined watchdog + timestamp-parser contract instead of requiring every marker to remain in one file.
 - The new parser/test helper paths are also classified as runner-maintenance and ignored by the UE device lane in both push and PR path filters, preventing infrastructure-only edits from consuming the single UE4 runner.
 - Status: **SOURCE-FIXED / FRESH EXACT-HEAD PRE-UNREAL PENDING**.
+
+## 2026-10-02 - P1C01 Party Field primitive-overlay suppression
+
+- Implemented the registered Party Field cleanup after the Ferry/Wooded Road runtime pass merged green.
+- `SpawnVillage()` no longer leaves its large cube centerpiece underneath the later resident `SM_ShPicnicCanopy` production placement. The cube is now fallback-only when `ProductionPicnicCanopyMesh` is not resident.
+- No story anchor, quest state, NPC ownership, collision contract, asset-loading policy or P1C02 runtime state changed.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD UE4.27.2 BUILD + RUNTIME AUDIT PENDING**. No PIE/device/visual/performance acceptance claim.
+
+## 2026-10-02 - Party Field #1268 compile root fix
+
+- Unreal Build #1268 reached the real UE4.27.2 C++ compiler and failed at `ShirePrototypeWorldBuilder.cpp(1191)` with `C2065: ProductionPicnicCanopyMesh: undeclared identifier`.
+- Root cause: the Party Field fallback-suppression branch referenced a member that does not exist; the actual resident production canopy is `SM_CommonMarketCanopy`, previously resolved only as a local pointer inside the later Party social-detail pass.
+- Added one shared resident pointer `ProductionCommonMarketCanopyMesh`, resolved in `BeginPlay()` through the existing resident-only soft-path resolver, and reused it both for the early primitive-fallback gate and the later Party social pass.
+- No synchronous asset load was introduced and no story/quest/NPC authority changed.
+- Status: **SOURCE-FIXED / FRESH EXACT-HEAD UE4.27.2 BUILD PENDING**. No PIE/device/visual/performance acceptance claim.
