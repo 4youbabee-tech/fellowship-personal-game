@@ -1056,3 +1056,11 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - HISM budget: no Tick, no collision/overlap, no shadow, cull start 900 cm, cull end 6500 cm. Cube strips remain deterministic fallback-only.
 - No new world authority, story state, NPC state, synchronous heavy load or P1C02 activation is introduced.
 - Evidence boundary: **SOURCE IMPLEMENTATION ONLY** until fresh exact-head Pre-Unreal + UE4.27.2 validation completes; no PIE/device/visual/performance acceptance.
+
+## 2026-10-03 - P1C01 Hobbit-hole production overlay suppression registered
+
+- Scope: visible-world cleanup only inside the active P1C01 runtime; no new chapter, story outcome, NPC authority or save-state rule.
+- Confirmed visual blocker: `SpawnHobbitHole()` uses resident `SM_ShTurfMound` + `SM_ShHobbitFacade` when available but still overlays engine primitive cylinders/spheres/cubes for door, windows, chimney, doorstep and bushes, making production Hobbiton read as hybrid greybox.
+- Runtime rule: when both resident production mound and facade are available, they own the visible hobbit-hole silhouette and primitive accent geometry is suppressed. The full primitive-accent path remains deterministic fallback when either production mesh is unavailable.
+- Low-spec invariant: no new actors are added; this pass reduces actor/component count in production mode. No synchronous heavy load, Tick, crowd change or new runtime authority.
+- Gate: source implementation must pass exact-head Pre-Unreal + UE4.27.2 validation before merge. No PIE/device/visual/performance acceptance is claimed by this ledger entry.
