@@ -2726,3 +2726,13 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Active PR deletion behavior | SOURCE-REPAIRED | Keep + continue instead of abort |
 | Canonical / moved-ref protection | PRESERVED | No relaxation |
 | Exact-head validation | PENDING | Fresh Pre-Unreal required |
+
+
+## 2026-10-03 - Empty active-PR query repair
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Empty REST response handling | SOURCE-REPAIRED | Null-filter + exact `head.ref` match |
+| True active PR handling | PRESERVED | KEEP + CONTINUE |
+| API failure behavior | PRESERVED | Fatal / fail-closed |
+| Exact-head validation | PENDING | Fresh Pre-Unreal required |
