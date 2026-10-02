@@ -29,6 +29,11 @@ if ([string]::IsNullOrWhiteSpace($ServiceGuardPath)) {
 if (-not (Test-Path -LiteralPath $ServiceGuardPath -PathType Leaf)) {
     throw "runner_service_guard.ps1 missing: $ServiceGuardPath"
 }
+$timestampParserPath = Join-Path $PSScriptRoot "runner_log_timestamp.ps1"
+if (-not (Test-Path -LiteralPath $timestampParserPath -PathType Leaf)) {
+    throw "runner_log_timestamp.ps1 missing: $timestampParserPath"
+}
+. $timestampParserPath
 $lastServiceGuardUtc = [DateTime]::MinValue
 $mutex = New-Object System.Threading.Mutex($false, "ShireJourneyRunnerWatchdog")
 
@@ -63,10 +68,7 @@ function Invoke-RunnerServiceGuard {
 
 function Get-RunnerTimestampUtc {
     param([string]$Line)
-    if ($Line -match '^\[RUNNER (?<ts>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}Z) ') {
-        return [DateTime]::ParseExact($Matches["ts"], "yyyy-MM-dd HH:mm:ssZ", [Globalization.CultureInfo]::InvariantCulture, [Globalization.DateTimeStyles]::AssumeUniversal).ToUniversalTime()
-    }
-    return $null
+    return ConvertFrom-RunnerLogTimestampUtc -Line $Line
 }
 
 function Get-RunnerBrokerState {
