@@ -3586,3 +3586,10 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - `Casual_Male.fbx` SHA256 `d3c2ada76aede1be3b37f084de952fc8686668a5627c03fa854b45070f583997` imported as `USkeletalMesh` with **33 reference bones**, then failed the unchanged technical-quality gate for `MISSING_SMOOTHING_GROUPS`, `MISSING_BIND_POSE_BONES`, and `MISSING_UV_SET`.
 - Two exact source candidates are now rejected by filename+SHA: `BaseCharacter.fbx` and `Casual_Male.fbx`. The next deterministic probe target is `Casual2_Male.fbx`.
 - Status: **COMPILE-TESTED for PR #247 engine/build path; FRODO CANDIDATE #2 RUN-PROVEN + REJECTED_TECHNICAL; CANDIDATE #3 EXACT-HEAD PROBE PENDING**. No deformation, retarget, AnimBP, runtime replacement, PIE, device, visual or performance acceptance is claimed.
+
+## 2026-10-02 - Frodo candidate #3 exact-head result
+
+- PR #247 exact head `196b343c2bd26f492afe6b0672886a117286a36b`: Pre-Unreal #1596 **SUCCESS**, Unreal Build #1245 **SUCCESS**, dedicated Frodo skeletal import #20 **FAILURE by intended technical-quality gate**.
+- `Casual2_Male.fbx` imported in UE4.27.2 with **33 reference bones** and then emitted the same three quality defects: missing smoothing groups, missing bind-pose bones and missing UV set.
+- This is real engine evidence that candidate #3 is not acceptable for promotion. Its staging-receipt SHA must be captured before the manifest may use the filename+SHA skip mechanism for candidate #4.
+- Status: **COMPILE-TESTED / CANDIDATE #3 RUN-PROVEN REJECTED_TECHNICAL / EXACT SHA CAPTURE PENDING**. No deformation, retarget, AnimBP, runtime replacement, PIE, device, visual or performance acceptance claim.
