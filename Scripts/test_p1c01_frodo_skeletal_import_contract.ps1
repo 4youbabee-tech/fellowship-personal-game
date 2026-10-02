@@ -22,7 +22,9 @@ foreach($marker in @(
   'bImportTextures = false',
   'GetAssetByObjectPath',
   'USkeletalMesh::StaticClass()->GetFName()',
-  'skeletal-registered=%s'
+  'GetRefSkeleton().GetNum()',
+  'skeletal-registered=%s',
+  'skeletal-bones=%d'
 )){ if(-not $c.Contains($marker)){throw "P1C01_FRODO_IMPORT_CONTRACT_CPP_MARKER_MISSING marker=$marker"} }
 $skeletalStart=$c.IndexOf("if (bCharacterRigFbx)",[StringComparison]::Ordinal)
 if($skeletalStart -lt 0){throw "P1C01_FRODO_IMPORT_CONTRACT_SKELETAL_BRANCH_MISSING"}
@@ -40,7 +42,7 @@ if([string]$m.temporary_source_destination -ne "SourceAssets/Production/Characte
 if([string]$m.unreal_asset_name -ne "SK_FRODO"){
   throw "P1C01_FRODO_IMPORT_CONTRACT_ASSET_NAME_FAIL name=$([string]$m.unreal_asset_name)"
 }
-foreach($marker in @("Build ShireJourneyEditor","Stage Frodo skeletal source","Import Frodo skeletal mesh in UE4.27.2","Verify SK_FRODO import evidence")){
+foreach($marker in @("Build ShireJourneyEditor","Stage Frodo skeletal source","Import Frodo skeletal mesh in UE4.27.2","Verify SK_FRODO import evidence","P1C01_FRODO_UE4_IMPORT_BONE_COUNT_FAIL")){
   if(-not $w.Contains($marker)){throw "P1C01_FRODO_IMPORT_CONTRACT_WORKFLOW_MARKER_MISSING marker=$marker"}
 }
 Write-Host "P1C01_FRODO_IMPORT_CONTRACT_PASS runtime=false boundedRigFbx=true asyncRuntimePreserved=true"
