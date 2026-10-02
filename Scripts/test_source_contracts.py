@@ -576,6 +576,44 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn('"DEVICE_TESTED":True', evaluator)
         self.assertIn('"PERFORMANCE_ACCEPTED":True', evaluator)
 
+    def test_f2_03_edoras_source_preproduction_is_complete_and_runtime_gated(self):
+        root = Path(__file__).resolve().parents[1]
+        contract = json.loads((root / "Data" / "F2_03EdorasMegaSourcePreproductionV1.json").read_text(encoding="utf-8"))
+
+        self.assertEqual(contract["timeline_chapter_id"], "F2-03")
+        self.assertEqual(contract["status"], "SOURCE_PREPRODUCTION_ONLY_RUNTIME_PREDECESSOR_GATED")
+        self.assertIn("FORBIDDEN", contract["runtime_promotion_status"])
+        self.assertEqual(contract["source_routing"]["film_story_primary"], "SRC_FILM_TTT_SCREENPLAY")
+        self.assertEqual(contract["source_routing"]["deep_lore_primary"], "SRC_TOLKIEN_LOTR_2010")
+        self.assertIn("screenplay", contract["source_routing"]["verification_boundary"].lower())
+
+        self.assertGreaterEqual(len(contract["world_cells"]), 7)
+        self.assertGreaterEqual(len(contract["world_state_variants"]), 3)
+        self.assertGreaterEqual(len(contract["character_source_contracts"]), 6)
+        self.assertIn("Helm", contract["canonical_contract"]["locked_postcondition"])
+
+        safe = contract["gameplay_preproduction"]["safe_window_activities"]
+        self.assertGreaterEqual(len(safe), 4)
+        self.assertTrue(all(str(row.get("expiry", "")).strip() for row in safe))
+
+        self.assertIn("PNG/TGA", contract["culture_and_material_language"]["texture_rule"])
+        self.assertIn("BMP", contract["culture_and_material_language"]["texture_rule"])
+        perf = " ".join(contract["performance_preproduction"]["rules"])
+        for token in ("HISM/ISM", "FStreamableManager", "asynchronous", "Pool"):
+            self.assertIn(token.lower(), perf.lower())
+
+        self.assertIn("SOURCE/PREPRODUCTION ONLY", contract["qa_and_acceptance_preproduction"]["evidence_boundary"])
+        self.assertGreaterEqual(len(contract["chronology_and_knowledge"]["forbidden_early_state"]), 3)
+
+        allowed = {
+            "IMPLEMENTED", "LINKED_FOR_LATER", "DEFERRED_PERFORMANCE",
+            "BOOK_ONLY_COMPATIBLE", "BLOCKED_BY_FILM_CONTINUITY",
+            "NOT_APPLICABLE", "NEEDS_SOURCE_RESOLUTION",
+        }
+        rows = contract["meaningful_detail_disposition"]
+        self.assertGreaterEqual(len(rows), 7)
+        self.assertTrue(all(row["disposition"] in allowed for row in rows))
+
 
 if __name__ == "__main__":
     unittest.main()
