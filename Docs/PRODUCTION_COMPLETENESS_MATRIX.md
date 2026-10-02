@@ -2481,3 +2481,14 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | OpenGameArt Quaternius fallback | SOURCE-IMPLEMENTED CANDIDATE | Direct CC0 archive, bounded ZIP scan, FBX gate, SHA reuse |
 | READY_FOR_IMPORT / runtime | NOT STARTED | Skeleton/skin/deformation/FBX-2018 QC still required |
 | Gate 6/7 | UNCHANGED / NOT ACCEPTED | No human/device evidence |
+
+
+## 2026-10-02 - F2-03 Edoras source-preproduction batch
+
+- Source routing: IMPLEMENTED. F2-03 timeline navigation, Two Towers screenplay authority, and compatible Tolkien-detail routing are registered.
+- World preparation: IMPLEMENTED AS SOURCE PREP. Seven bounded Edoras/Rohan cells plus pre-restoration, post-restoration, and evacuation-committed state variants.
+- Character preparation: IMPLEMENTED AS SOURCE PREP. Theoden, Eowyn, Eomer, Gandalf, Aragorn and Grima source contracts are registered; exact future film staging remains screenplay-gated.
+- Optional gameplay preparation: IMPLEMENTED AS SOURCE PREP. Court, stable, equipment and social windows all have explicit urgency expiry.
+- Technical preparation: GUARDED. HISM/ISM, LOD/culling, pooling, soft references, FStreamableManager async loading, PNG/TGA textures and FBX animated-source rules remain mandatory.
+- Runtime: PREDECESSOR-GATED. P1C01 remains the sole runtime-changing chapter.
+- PIE/device/visual/pacing/performance: NOT CLAIMED.
