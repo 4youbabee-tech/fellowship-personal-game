@@ -3591,5 +3591,5 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 
 - PR #247 exact head `196b343c2bd26f492afe6b0672886a117286a36b`: Pre-Unreal #1596 **SUCCESS**, Unreal Build #1245 **SUCCESS**, dedicated Frodo skeletal import #20 **FAILURE by intended technical-quality gate**.
 - `Casual2_Male.fbx` imported in UE4.27.2 with **33 reference bones** and then emitted the same three quality defects: missing smoothing groups, missing bind-pose bones and missing UV set.
-- This is real engine evidence that candidate #3 is not acceptable for promotion. Its staging-receipt SHA must be captured before the manifest may use the filename+SHA skip mechanism for candidate #4.
-- Status: **COMPILE-TESTED / CANDIDATE #3 RUN-PROVEN REJECTED_TECHNICAL / EXACT SHA CAPTURE PENDING**. No deformation, retarget, AnimBP, runtime replacement, PIE, device, visual or performance acceptance claim.
+- This is real engine evidence that candidate #3 is not acceptable for promotion. Exact staging evidence is now captured: SHA256 `abe8d30fa6b5fbebee485c9bdcceafb39fcfc4832cb65be124d5eaae660df986`, bytes `1523164`; the filename+SHA skip mechanism may now advance to candidate #4.
+- Status: **COMPILE-TESTED / CANDIDATE #3 RUN-PROVEN REJECTED_TECHNICAL / EXACT SHA CAPTURED / CANDIDATE #4 PROBE PENDING**. No deformation, retarget, AnimBP, runtime replacement, PIE, device, visual or performance acceptance claim.
