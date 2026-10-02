@@ -2595,3 +2595,14 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | New acquisition pressure | REDUCED | Existing production stock must be tried before new provider acquisition |
 | Runtime mutation | NOT STARTED IN THIS PACKET | Serialized P1C01 runtime lane remains separate |
 | PIE / device / visual / performance acceptance | NOT ACCEPTED | No matching runtime/human/device evidence |
+
+## 2026-10-02 - P1C01 Ferry / Wooded Road visible-runtime replacement
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Wooded Road primitive obstacle | SOURCE-IMPLEMENTED | Resident fallen-log + boulder production meshes preferred; primitive fallback retained only if assets are not resident |
+| Bucklebury/Ferry landing/body/posts/detail | SOURCE-IMPLEMENTED | Footbridge/river-boat/rope/reeds/boulder resident production meshes preferred |
+| Heavy-asset loading policy | PRESERVED | Resident-only soft-path resolution; no synchronous heavy load added |
+| Quest/NPC/LivingWorld authority | UNCHANGED | No parallel state or crowd owner introduced |
+| Exact-head UE4 compile/runtime audit | PENDING | Required before merge |
+| PIE / device / visual / target performance acceptance | NOT ACCEPTED | Human/device evidence still required |

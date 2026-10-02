@@ -76,6 +76,9 @@ private:
     UPROPERTY() UStaticMesh* ProductionCommonFernClumpMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionCommonReedClusterMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionCommonFootbridgeMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionCommonRiverBoatMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionCommonRopePostMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionCommonRopeCoilMesh = nullptr;
     UPROPERTY() UMaterialInterface* BasicMaterial;
     UPROPERTY() UMaterialInterface* ProductionWaterMaterial = nullptr;
 

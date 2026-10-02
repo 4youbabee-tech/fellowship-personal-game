@@ -219,6 +219,9 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     ProductionCommonFernClumpMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonFernClump.SM_CommonFernClump"));
     ProductionCommonReedClusterMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonReedCluster.SM_CommonReedCluster"));
     ProductionCommonFootbridgeMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonFootbridge.SM_CommonFootbridge"));
+    ProductionCommonRiverBoatMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonRiverBoat.SM_CommonRiverBoat"));
+    ProductionCommonRopePostMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonRopePost.SM_CommonRopePost"));
+    ProductionCommonRopeCoilMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonRopeCoil.SM_CommonRopeCoil"));
     ProductionWaterMaterial = ResolveResidentMaterial(
         TEXT("/Game/Production/Materials/M_ProductionWater.M_ProductionWater"));
 
@@ -1264,10 +1267,33 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
     for(const FVector& P:WoodTrees) SpawnTree(P,0.94f);
     SpawnFenceLine(FVector(11900,-450,0),FVector(17100,-1150,0),16);
     SpawnFenceLine(FVector(12000,1450,0),FVector(17100,800,0),16);
-    SpawnShape(CylinderMesh,FVector(14550,1180,42),FVector(0.24f,0.24f,1.55f),
-        FLinearColor(0.20f,0.10f,0.045f),FRotator(0,82,90),true);
-    SpawnShape(SphereMesh,FVector(14470,1160,50),FVector(1.15f,0.52f,0.36f),
-        FLinearColor(0.12f,0.29f,0.075f),FRotator::ZeroRotator,true);
+    if (ProductionCommonFallenLogMesh)
+    {
+        SpawnShape(
+            ProductionCommonFallenLogMesh,
+            FVector(14510,1180,18),
+            FVector(0.82f),
+            FLinearColor::White,
+            FRotator(0,82,0),
+            true);
+    }
+    else
+    {
+        SpawnShape(CylinderMesh,FVector(14550,1180,42),FVector(0.24f,0.24f,1.55f),
+            FLinearColor(0.20f,0.10f,0.045f),FRotator(0,82,90),true);
+        SpawnShape(SphereMesh,FVector(14470,1160,50),FVector(1.15f,0.52f,0.36f),
+            FLinearColor(0.12f,0.29f,0.075f),FRotator::ZeroRotator,true);
+    }
+    if (ProductionCommonBoulderClusterMesh)
+    {
+        SpawnShape(
+            ProductionCommonBoulderClusterMesh,
+            FVector(14920,980,8),
+            FVector(0.62f),
+            FLinearColor::White,
+            FRotator(0,-18,0),
+            true);
+    }
     SpawnLabel(TEXT("Wooded Road"),FVector(ShireLayout::WoodedRoadX,1750,310),FLinearColor(0.72f,0.78f,0.62f));
 
     // The run to the Brandywine is intentionally long enough to feel like escape.
@@ -1283,15 +1309,53 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
         FRotator::ZeroRotator);
     const float NearX=ShireLayout::FerryX-700.0f;
     const float FarX=ShireLayout::FerryX+700.0f;
-    SpawnShape(CubeMesh,FVector(NearX,-500,12),FVector(2.0f,2.0f,0.12f),FLinearColor(0.34f,0.20f,0.09f));
-    SpawnShape(CubeMesh,FVector(FarX,-500,12),FVector(2.0f,2.0f,0.12f),FLinearColor(0.34f,0.20f,0.09f));
-    SpawnShape(CubeMesh,FVector(ShireLayout::FerryX,-500,24),FVector(1.30f,0.86f,0.10f),FLinearColor(0.30f,0.18f,0.085f));
+    if (ProductionCommonFootbridgeMesh)
+    {
+        SpawnShape(ProductionCommonFootbridgeMesh,FVector(NearX,-500,4),FVector(0.78f),FLinearColor::White,FRotator(0,90,0),true);
+        SpawnShape(ProductionCommonFootbridgeMesh,FVector(FarX,-500,4),FVector(0.78f),FLinearColor::White,FRotator(0,90,0),true);
+    }
+    else
+    {
+        SpawnShape(CubeMesh,FVector(NearX,-500,12),FVector(2.0f,2.0f,0.12f),FLinearColor(0.34f,0.20f,0.09f));
+        SpawnShape(CubeMesh,FVector(FarX,-500,12),FVector(2.0f,2.0f,0.12f),FLinearColor(0.34f,0.20f,0.09f));
+    }
+
+    if (ProductionCommonRiverBoatMesh)
+    {
+        SpawnShape(ProductionCommonRiverBoatMesh,FVector(ShireLayout::FerryX,-500,12),FVector(0.86f),FLinearColor::White,FRotator(0,90,0),true);
+    }
+    else
+    {
+        SpawnShape(CubeMesh,FVector(ShireLayout::FerryX,-500,24),FVector(1.30f,0.86f,0.10f),FLinearColor(0.30f,0.18f,0.085f));
+    }
+
     const FVector FerryPosts[] = {
-        FVector(NearX,-700,70),FVector(NearX,-300,70),FVector(FarX,-700,70),FVector(FarX,-300,70)
+        FVector(NearX,-700,18),FVector(NearX,-300,18),FVector(FarX,-700,18),FVector(FarX,-300,18)
     };
     for(const FVector& Post:FerryPosts)
     {
-        SpawnShape(CylinderMesh,Post,FVector(0.09f,0.09f,0.72f),FLinearColor(0.26f,0.15f,0.07f));
+        if (ProductionCommonRopePostMesh)
+        {
+            SpawnShape(ProductionCommonRopePostMesh,Post,FVector(0.72f),FLinearColor::White,FRotator::ZeroRotator,true);
+        }
+        else
+        {
+            SpawnShape(CylinderMesh,Post+FVector(0,0,52),FVector(0.09f,0.09f,0.72f),FLinearColor(0.26f,0.15f,0.07f));
+        }
+    }
+
+    if (ProductionCommonRopeCoilMesh)
+    {
+        SpawnShape(ProductionCommonRopeCoilMesh,FVector(NearX+90,-620,12),FVector(0.62f),FLinearColor::White,FRotator(0,25,0),false);
+    }
+    if (ProductionCommonReedClusterMesh)
+    {
+        SpawnShape(ProductionCommonReedClusterMesh,FVector(NearX-180,-880,0),FVector(0.82f),FLinearColor::White,FRotator(0,15,0),false);
+        SpawnShape(ProductionCommonReedClusterMesh,FVector(FarX+170,-120,0),FVector(0.74f),FLinearColor::White,FRotator(0,-20,0),false);
+    }
+    if (ProductionCommonBoulderClusterMesh)
+    {
+        SpawnShape(ProductionCommonBoulderClusterMesh,FVector(NearX-250,-220,0),FVector(0.58f),FLinearColor::White,FRotator(0,35,0),true);
     }
     SpawnLabel(TEXT("Bucklebury Ferry"),FVector(NearX,-500,280),FLinearColor::White);
 
