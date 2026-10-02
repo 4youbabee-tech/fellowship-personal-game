@@ -3634,3 +3634,10 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - If github.com:443 itself is unreachable, the watchdog logs `SHIRE_RUNNER_WATCHDOG_NETWORK_BLOCKED` instead of restart-looping.
 - Existing stale-worker and ack-without-worker recovery remain active; this change adds broker-transport-stall recovery rather than replacing them.
 - Status: **MACHINE RECOVERY RUN-PROVEN FOR MANUAL RECYCLE / PERMANENT AUTO-RECOVERY SOURCE-IMPLEMENTED / FRESH EXACT-HEAD VALIDATION PENDING**.
+
+## 2026-10-02 - Runner recovery static-contract reconciliation
+
+- Exact-head Pre-Unreal #1627 passed the new timestamp/broker regression itself but stopped at legacy PG-145 because the marker `Acknowledging runner request` moved from `runner_watchdog.ps1` into the dedicated parser helper.
+- PG-145 now validates the combined watchdog + timestamp-parser contract instead of requiring every marker to remain in one file.
+- The new parser/test helper paths are also classified as runner-maintenance and ignored by the UE device lane in both push and PR path filters, preventing infrastructure-only edits from consuming the single UE4 runner.
+- Status: **SOURCE-FIXED / FRESH EXACT-HEAD PRE-UNREAL PENDING**.
