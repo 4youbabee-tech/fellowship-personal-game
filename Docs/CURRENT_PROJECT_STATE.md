@@ -3716,3 +3716,12 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - This lane is deliberately source-only. It does not authorize Frodo likeness selection, runtime replacement, retarget, animation or chapter authority changes.
 - Next gate remains staging receipt + static FBX QC; real UE4.27.2 skeletal import is allowed only after those gates pass.
 - Status: **SOURCE-IMPLEMENTED / STATIC QC PENDING**. No UE import, PIE, device, visual or performance acceptance claim.
+
+
+## 2026-10-03 - Bag End / Hobbit-hole planted-entry proxy cleanup (fresh ancestry)
+
+- Refreshed the serialized runtime visual car on current `develop@93e04fa2f95c459eb94b8bc58d99433097e76201` after Knight V2 source registration merged.
+- `SpawnHobbitHole` selects resident `ProductionShrubMesh` for the two planted-entry accents and retains `SphereMesh` only when the production mesh is unavailable.
+- No asset acquisition, synchronous heavy load, Tick, collision, actor-count increase, quest/NPC/story authority change or P1C02 activation is introduced.
+- Door/window/trim primitives remain untouched because exact hero replacement content is not yet import/QC-proven.
+- Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD PRE-UNREAL + UE4.27.2 PENDING**. No PIE/device/visual/performance acceptance claim.
