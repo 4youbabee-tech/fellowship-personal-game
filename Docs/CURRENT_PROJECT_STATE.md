@@ -3707,3 +3707,11 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - `KAYKIT_ADVENTURERS_CC0` is now admitted by the existing P1C01 character-intake and Frodo static-QC source allowlists.
 - This branch is source/preparation only. It does not stage/import/promote a character by itself and does not authorize runtime replacement.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING**. No deformation, retarget, PIE, device, visual or performance acceptance claim.
+
+
+## 2026-10-03 - Hosted Unreal classifier local tree-proof repair
+
+- Deep Scan of PR #256 Unreal #1299 showed the hosted classifier attempted an authenticated `git fetch` inside `Test-TreeEquivalentCoreProof` after `actions/checkout` intentionally removed credentials.
+- The resulting `could not read Username for 'https://github.com'` did not bypass evidence: fail-closed behavior correctly selected `mode=full`, but it unnecessarily reserved the UE4 laptop for a source-only delta.
+- Repair: tree-equivalent merge proof now probes the already-present local commit object first and fetches only when ancestry is genuinely absent. Tree equality plus prior green Unreal evidence remains mandatory.
+- Evidence boundary: **SOURCE-IMPLEMENTED / STATIC VALIDATION PENDING** until the PR's exact-head hosted checks complete. No UE/PIE/device/visual claim.
