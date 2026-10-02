@@ -1,0 +1,129 @@
+{
+  "schema_version": 2,
+  "import_id": "P1C01_FRODO_SKELETAL_IMPORT_VALIDATION_V1",
+  "status": "KAYKIT_ALTERNATE_CC0_SOURCE_FAMILY_PROBE_ACTIVE",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/P1C01HeroSkeletalCandidateWaveV1.json",
+    "Data/ProductionAssetPromotionPolicyV1.json"
+  ],
+  "character": "FRODO",
+  "source_state_required": "STATIC_FBX_STRUCTURE_PRESENT_UE4_IMPORT_REQUIRED",
+  "preferred_candidate_order": [
+    "BaseCharacter.fbx",
+    "Casual_Male.fbx",
+    "Casual2_Male.fbx",
+    "Casual3_Male.fbx",
+    "Worker_Male.fbx"
+  ],
+  "temporary_source_destination": "SourceAssets/Production/Characters/Rigs/FRODO/SK_FRODO.fbx",
+  "unreal_destination": "/Game/Production/Characters/Rigs/FRODO",
+  "unreal_asset_name": "SK_FRODO",
+  "import_contract": {
+    "mesh_type": "SKELETAL_MESH",
+    "import_animations": false,
+    "import_materials": false,
+    "import_textures": false,
+    "require_nonzero_bones": true,
+    "runtime_integration_allowed": false
+  },
+  "evidence_boundary": "All five original Quaternius Ultimate Animated Character candidates are exact-SHA REJECTED_TECHNICAL after real UE4.27.2 imports. The alternate Quaternius RPG mirror staged successfully but its Frodo-ranked FBX rows were animation/accessory files and failed static skeletal structure. KayKit Adventurers CC0 is now the next bounded alternate source family and must pass the same static and real UE4.27.2 technical gate before any promotion. No deformation, retarget, AnimBP, runtime replacement, PIE, device, visual or performance acceptance is proved.",
+  "technical_rejections": [
+    {
+      "filename": "BaseCharacter.fbx",
+      "source_sha256": "366d77fa536dffddb766f064872f100d878921fc956fb3ffd54ee9229bb2f5f0",
+      "source_bytes": 1488428,
+      "evidence_head": "f92a7d3a70cf8d438de1f8918a89022104d28479",
+      "ue4_skeletal_registered": true,
+      "ue4_reference_bones": 33,
+      "state": "REJECTED_TECHNICAL",
+      "reason_codes": [
+        "MISSING_SMOOTHING_GROUPS",
+        "MISSING_BIND_POSE_BONES",
+        "MISSING_UV_SET"
+      ],
+      "evidence": [
+        "P1C01 Frodo Skeletal Import Validation #16",
+        "Unreal Build Validation #1241"
+      ],
+      "note": "UE4.27.2 imported a USkeletalMesh with 33 reference bones, but source-quality warnings fail the hero-candidate technical gate."
+    },
+    {
+      "filename": "Casual_Male.fbx",
+      "source_sha256": "d3c2ada76aede1be3b37f084de952fc8686668a5627c03fa854b45070f583997",
+      "source_bytes": 1612396,
+      "evidence_head": "fcde6c4189ce371040e6c7d94ac0039356bf6256",
+      "ue4_skeletal_registered": true,
+      "ue4_reference_bones": 33,
+      "state": "REJECTED_TECHNICAL",
+      "reason_codes": [
+        "MISSING_SMOOTHING_GROUPS",
+        "MISSING_BIND_POSE_BONES",
+        "MISSING_UV_SET"
+      ],
+      "evidence": [
+        "P1C01 Frodo Skeletal Import Validation #18"
+      ],
+      "note": "UE4.27.2 imported a USkeletalMesh with 33 reference bones, but exact-head candidate-scoped validation rejected the source for smoothing/bind-pose/UV debt."
+    },
+    {
+      "filename": "Casual2_Male.fbx",
+      "source_sha256": "abe8d30fa6b5fbebee485c9bdcceafb39fcfc4832cb65be124d5eaae660df986",
+      "evidence_head": "196b343c2bd26f492afe6b0672886a117286a36b",
+      "ue4_skeletal_registered": true,
+      "ue4_reference_bones": 33,
+      "state": "REJECTED_TECHNICAL",
+      "reason_codes": [
+        "MISSING_SMOOTHING_GROUPS",
+        "MISSING_BIND_POSE_BONES",
+        "MISSING_UV_SET"
+      ],
+      "evidence": [
+        "P1C01 Frodo Skeletal Import Validation #20"
+      ],
+      "note": "UE4.27.2 imported a USkeletalMesh with 33 reference bones; exact staging-receipt SHA is captured and the source is rejected for smoothing/bind-pose/UV debt.",
+      "source_bytes": 1523164
+    },
+    {
+      "filename": "Casual3_Male.fbx",
+      "source_sha256": "94ce47df5f166856a2d1166202ed1e8a58fd087e96b13299492b020794ddc3fd",
+      "source_bytes": 1568620,
+      "evidence_head": "4cbc294478e8e019ea9d6ed13f4d85f27e2c6cc2",
+      "ue4_skeletal_registered": true,
+      "ue4_reference_bones": 33,
+      "state": "REJECTED_TECHNICAL",
+      "reason_codes": [
+        "MISSING_SMOOTHING_GROUPS",
+        "MISSING_BIND_POSE_BONES",
+        "MISSING_UV_SET"
+      ],
+      "evidence": [
+        "P1C01 Frodo Skeletal Import Validation #23",
+        "Unreal Build Validation #1250"
+      ],
+      "note": "UE4.27.2 imported a USkeletalMesh with 33 reference bones; exact source rejected for smoothing/bind-pose/UV debt."
+    },
+    {
+      "filename": "Worker_Male.fbx",
+      "source_sha256": "833d26026f32d96699c8cf667cbec849adda93d43cea447a7449fc4d72c3a20d",
+      "source_bytes": 1502204,
+      "evidence_head": "1b8ec60dba387bd3142b0c3e995a63477fd02d4f",
+      "ue4_skeletal_registered": true,
+      "ue4_reference_bones": 33,
+      "state": "REJECTED_TECHNICAL",
+      "reason_codes": [
+        "MISSING_SMOOTHING_GROUPS",
+        "MISSING_BIND_POSE_BONES",
+        "MISSING_UV_SET"
+      ],
+      "evidence": [
+        "P1C01 Frodo Skeletal Import Validation #24"
+      ],
+      "note": "UE4.27.2 imported a USkeletalMesh with 33 reference bones; the final candidate in the original source family is rejected for smoothing/bind-pose/UV debt, exhausting that family."
+    }
+  ],
+  "preferred_candidate_source_asset_ids": [
+    "KAYKIT_ADVENTURERS_CC0",
+    "OGA_QTN_RPG_CHARACTERS_CC0"
+  ]
+}
