@@ -2815,13 +2815,14 @@
         "Divergent branches with unique commits are not deleted until their useful content is selectively reviewed/salvaged.",
         "main remains stable/release only.",
         "A closed-unmerged PR is not left as a permanent branch: useful unique work is salvaged or recorded by exact commit/disposition before close, then the unchanged head ref is deleted.",
-        "Branch audits use live repository refs; historical branch names retained in GitHub Actions filters are not treated as proof that the branch still exists."
+        "Branch audits use live repository refs; historical branch names retained in GitHub Actions filters are not treated as proof that the branch still exists.",
+        "Cleanup must preserve active PR heads without aborting unrelated stale-branch retirement; active heads are logged and skipped while safe stale refs continue to be processed."
       ],
       "dependencies": [
         "REQ-MEM-001",
         "REQ-ORG-001"
       ],
-      "notes": "2026-10-03 lifecycle root fix: merged and explicitly closed/superseded temporary PR heads are cleaned by exact-SHA guarded hosted automation; active/moved/protected refs remain fail-closed."
+      "notes": "2026-10-03 lifecycle root fix: merged and explicitly closed/superseded temporary PR heads are cleaned by exact-SHA guarded hosted automation; active/moved/protected refs remain fail-closed. 2026-10-03: active PR heads are fail-closed preserved and skipped rather than aborting the entire cleanup batch."
     },
     {
       "id": "REQ-PROD-011",
