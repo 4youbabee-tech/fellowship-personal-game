@@ -8345,7 +8345,7 @@ if "workflow_dispatch:" not in pg145b_health_workflow or "verify_runner_session.
     fail("PG-145B manual runner health workflow is incomplete")
 
 for pg145b_path, pg145b_before in [
-    (ROOT / ".github" / "workflows" / "unreal-build-validation.yml", "Classify current delta for Unreal validation"),
+    (ROOT / ".github" / "workflows" / "unreal-build-validation.yml", "Import hosted Unreal classification"),
     (ROOT / ".github" / "workflows" / "warehouse-stage.yml", "Stage Poly Haven CC0 batch"),
 ]:
     pg145b_text = read(pg145b_path)

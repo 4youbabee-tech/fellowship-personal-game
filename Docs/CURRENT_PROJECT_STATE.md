@@ -3656,3 +3656,18 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Added one shared resident pointer `ProductionCommonMarketCanopyMesh`, resolved in `BeginPlay()` through the existing resident-only soft-path resolver, and reused it both for the early primitive-fallback gate and the later Party social pass.
 - No synchronous asset load was introduced and no story/quest/NPC authority changed.
 - Status: **SOURCE-FIXED / FRESH EXACT-HEAD UE4.27.2 BUILD PENDING**. No PIE/device/visual/performance acceptance claim.
+
+## 2026-10-02 - Maximum-safe CI lane reservation acceleration
+
+- Implemented hosted-first Unreal classification so source/preproduction/static-only PRs can be classified on `windows-latest` before the single UE4.27 laptop is reserved.
+- The self-hosted UE4 job now runs only for `full`, `core`, `asset` or `acceptance` modes; `inherit` source/admin work never enters the expensive device queue.
+- Added explicit fast-lane coverage for East Fields source planning, KayKit/alternate hero source registration and whole-game chapter production packets, with regression cases in `test_unreal_classifier.ps1`.
+- Preserved classifier outputs for package/reset/acceptance semantics so acceleration does not weaken exact-head engine gates.
+- Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD PRE-UNREAL PENDING**. No runtime, PIE, device, visual or performance acceptance claim.
+
+
+### #1643 validator reconciliation
+
+- Fresh Pre-Unreal #1643 proved the hosted classifier regression cases and PowerShell syntax, then failed only at PG-145B because the validator still searched for the retired self-hosted step name `Classify current delta for Unreal validation`.
+- PG-145B remains fail-closed: `verify_runner_session.ps1` must still precede the first self-hosted post-checkout work step. The validator is updated to recognize the hosted-preflight handoff marker instead of weakening the health requirement.
+- Status: **SOURCE-FIXED / FRESH EXACT-HEAD PRE-UNREAL PENDING**.
