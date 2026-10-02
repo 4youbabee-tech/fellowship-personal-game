@@ -3609,3 +3609,9 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - The zero ceiling remains unchanged. Unidentified smoothing warnings still fail closed.
 - Regression coverage now proves one live+summary echo counts as one concrete defect and an unattributed warning remains a failure.
 - Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD PRE-UNREAL + UNREAL VALIDATION PENDING**.
+
+## 2026-10-02 - Frodo current-family final probe armed
+
+- Candidate #5 `Worker_Male.fbx` is now the active exact-head UE4.27.2 probe after four exact-SHA technical rejections.
+- If candidate #5 repeats the same defects, the current source family is exhausted; the gate will not be weakened.
+- Status: **SOURCE-IMPLEMENTED / FINAL CURRENT-FAMILY PROBE ACTIVE / EXACT-HEAD ENGINE EVIDENCE PENDING**.
