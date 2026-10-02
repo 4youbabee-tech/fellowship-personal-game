@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "plan_id": "P1C01_BAG_END_ENTRY_SHRUB_PROXY_CLEANUP_V1",
+  "status": "RUNTIME_IMPLEMENTATION_ACTIVE",
+  "runtime_chapter": "P1C01",
+  "runtime_integration_allowed": true,
+  "objective": "Remove the remaining planted-entry sphere proxy read from production-resident Hobbit-hole exteriors, including Bag End, without weakening the exact-replacement gate for hero door/window/trim.",
+  "predecessor_evidence": {
+    "east_fields_pre_unreal": "Pre-Unreal Validation #1657 SUCCESS",
+    "east_fields_unreal": "Unreal Build Validation #1295 SUCCESS",
+    "east_fields_merge": "25845ed9b0cf6948c4c19881ba28909a10ed68ab"
+  },
+  "reuse_contract": {
+    "production_mesh": "/Game/Production/World/Shire/SM_ShShrub.SM_ShShrub",
+    "resident_pointer": "ProductionShrubMesh",
+    "fallback_mesh": "SphereMesh",
+    "fallback_only_when_production_mesh_unavailable": true,
+    "new_asset_acquisition": false,
+    "collision": false,
+    "tick": false,
+    "actor_count_change": 0
+  },
+  "protected_remaining_debt": [
+    "hero round-door/window/trim support FBX remains separately gated",
+    "Bag End interior shell remains content-pending",
+    "do not suppress exact architectural fallbacks without import/QC evidence"
+  ],
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_class": 2
+  },
+  "evidence_boundary": "Source runtime implementation only until fresh exact-head Pre-Unreal and UE4.27.2 validation complete. No PIE, device, visual or performance acceptance."
+}
