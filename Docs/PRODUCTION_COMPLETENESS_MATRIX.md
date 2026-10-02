@@ -2636,3 +2636,14 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Frodo static-QC source admission | SOURCE-IMPLEMENTED | Source asset ID allowlist updated |
 | Warehouse staging / UE4 skeletal import | PENDING | Separate exact-head execution required |
 | Runtime / deformation / visual acceptance | NOT ACCEPTED | No matching evidence |
+
+## 2026-10-02 - Frodo skeletal validation pipeline refresh
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Fresh current-develop ancestry | SOURCE-IMPLEMENTED | Rebuilt from current develop; stale #247 not used as active base |
+| Static FBX QC + staging receipt | SOURCE-IMPLEMENTED | Exact filename/SHA and static-structure gating restored |
+| UE4.27.2 skeletal import path | SOURCE-IMPLEMENTED | Explicit opt-in FBX skeletal import; nonzero bones required |
+| Technical debt rejection | SOURCE-IMPLEMENTED | Missing smoothing groups / bind-pose bones / UV set remain hard reject reasons |
+| Runtime replacement / deformation / retarget / AnimBP | PENDING | Requires fresh real UE4 evidence before promotion |
+| PIE / device / visual / performance acceptance | NOT ACCEPTED | No matching human/device evidence |
