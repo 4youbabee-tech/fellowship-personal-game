@@ -474,6 +474,7 @@ $safeExact = @(
     "Data/WarehouseGapAuditSource09V1.json",
     "Data/P1C01EastFieldsRowReplacementV1.json",
     "Data/P1C01KayKitAdventurersHeroCandidateBatchV1.json",
+    "Data/P1C01KayKitAdventurersHeroCandidateBatchV2.json",
     "Data/P1C01OpenGameArtRpgHeroCandidateBatchV1.json",
     "Data/WholeGameChapterAssetDemandMatrixV1.json",
     "Data/WholeGameChapterProductionPacketsV1.json",
