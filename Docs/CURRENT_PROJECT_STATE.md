@@ -3593,3 +3593,11 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - `Casual2_Male.fbx` imported in UE4.27.2 with **33 reference bones** and then emitted the same three quality defects: missing smoothing groups, missing bind-pose bones and missing UV set.
 - This is real engine evidence that candidate #3 is not acceptable for promotion. Exact staging evidence is now captured: SHA256 `abe8d30fa6b5fbebee485c9bdcceafb39fcfc4832cb65be124d5eaae660df986`, bytes `1523164`; the filename+SHA skip mechanism may now advance to candidate #4.
 - Status: **COMPILE-TESTED / CANDIDATE #3 RUN-PROVEN REJECTED_TECHNICAL / EXACT SHA CAPTURED / CANDIDATE #4 PROBE PENDING**. No deformation, retarget, AnimBP, runtime replacement, PIE, device, visual or performance acceptance claim.
+
+## 2026-10-02 - Frodo candidate #4 result
+
+- PR #247 exact head `4cbc294478e8e019ea9d6ed13f4d85f27e2c6cc2`: Pre-Unreal #1602 **SUCCESS**. Unreal Build #1250 built/imported and reached warning debt. Dedicated Frodo #23 imported `Casual3_Male.fbx` in UE4.27.2 with **33 reference bones**.
+- Exact source: **1,568,620 bytes**, SHA256 `94ce47df5f166856a2d1166202ed1e8a58fd087e96b13299492b020794ddc3fd`.
+- Candidate #4 is **REJECTED_TECHNICAL** for missing smoothing groups, bind-pose bones and UVs.
+- Four of five current warehouse-family candidates are now rejected. `Worker_Male.fbx` is the final current-family probe; a repeat means the family is exhausted, not that the gate should be weakened.
+- Status: **COMPILE-TESTED / CANDIDATE #4 RUN-PROVEN REJECTED_TECHNICAL / CANDIDATE #5 EXACT-HEAD PROBE PENDING**.
