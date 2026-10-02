@@ -2481,3 +2481,11 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | OpenGameArt Quaternius fallback | SOURCE-IMPLEMENTED CANDIDATE | Direct CC0 archive, bounded ZIP scan, FBX gate, SHA reuse |
 | READY_FOR_IMPORT / runtime | NOT STARTED | Skeleton/skin/deformation/FBX-2018 QC still required |
 | Gate 6/7 | UNCHANGED / NOT ACCEPTED | No human/device evidence |
+
+
+## 2026-10-02 - Daily manager report generator conflict-safe rebuild
+
+- Rebuilt the tested daily project-manager report generator and regression test from the current canonical `develop` head after PR #230 became non-mergeable due to branch divergence.
+- Pre-Unreal now executes the generator regression test exactly once; the test parses PowerShell, executes the generator, checks required report sections, and rejects encoding corruption.
+- This change does not claim scheduled delivery, Issue #96 publication, PIE, device, visual, pacing, or performance acceptance. Exact-head CI is required before merge.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**.
