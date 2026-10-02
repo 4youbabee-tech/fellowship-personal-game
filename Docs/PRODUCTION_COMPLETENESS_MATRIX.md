@@ -2572,6 +2572,6 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 |---|---|---|
 | Casual2_Male UE4 skeletal import | RUN-PROVEN | Dedicated #20 reached 33 reference bones |
 | Smoothing/bind-pose/UV quality | REJECTED_TECHNICAL | Same three source-quality defects emitted |
-| Exact rejection SHA | PENDING RECEIPT CAPTURE | Do not filename-only blacklist; exact SHA is required |
-| Candidate #4 rotation | BLOCKED ON SHA CAPTURE | Preserve exact-source rejection semantics |
+| Exact rejection SHA | RUN-PROVEN | `abe8d30fa6b5fbebee485c9bdcceafb39fcfc4832cb65be124d5eaae660df986`, 1,523,164 bytes |
+| Candidate #4 rotation | READY FOR FRESH EXACT-HEAD PROBE | Three exact filename+SHA rejections now skip deterministically |
 | PIE/device/visual/performance | NOT ACCEPTED | No matching evidence |
