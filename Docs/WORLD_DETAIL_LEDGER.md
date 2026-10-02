@@ -989,3 +989,13 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Low-spec constraints remain explicit: HISM/ISM for repeated fences/posts/grass/flowers/cargo, LOD/culling for secondary settlement detail, pooled/staggered population and horses, soft references + FStreamableManager async loading, PNG/TGA textures only, and FBX 2018-compatible animated character sources when runtime production is eventually authorized.
 - Added source-contract QA coverage in `Scripts/test_source_contracts.py` plus a standalone PowerShell contract guard.
 - Evidence boundary: **SOURCE/PREPRODUCTION ONLY / RUNTIME PREDECESSOR-GATED**. No Part II runtime, compile, PIE, device, visual, pacing, performance or Gate acceptance is claimed.
+
+
+## 2026-10-02 — F2-03 Edoras source/preproduction wave
+
+- Added `Data/F2_03EdorasMegaSourcePreproductionV1.json` for Edoras/Rohan: approach plain, royal-barrows threshold, lower settlement, stables, Meduseld exterior/interior, and evacuation muster.
+- Preserves the F2-03 chapter contract: Théoden restoration and the Rohan crisis are central; optional court/stable/equipment/social windows expire with urgency; the locked exit remains evacuation toward Helm's Deep.
+- Source routing is explicit: Story & Timeline Bible for F2-03 navigation; the supplied Two Towers screenplay remains mandatory for exact future film-scene/cast/knowledge verification; supplied Tolkien material may enrich compatible geography, history, culture and settlement detail without replacing film continuity.
+- Prepared PRE_RESTORATION, POST_RESTORATION_PRE_EVACUATION and EVACUATION_COMMITTED world variants so population, props, patrol readiness and optional content cannot leak future state early.
+- Low-spec production rules remain HISM/ISM repetition, LOD/culling, pooled/staggered population and horses, soft references + FStreamableManager async loading, PNG/TGA textures, and FBX animated sources when later authorized.
+- Evidence boundary: **SOURCE/PREPRODUCTION ONLY / RUNTIME PREDECESSOR-GATED**. No Part II runtime, PIE, device, visual, pacing, performance or Gate acceptance is claimed.
