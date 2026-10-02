@@ -1063,3 +1063,11 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - This does not alter canon, chapter state, gameplay authority or final Frodo likeness requirements. It is only a technical rig-base source escalation after prior candidate families failed their technical gates.
 - Animated production candidates remain FBX-only; final likeness/deformation/retarget/runtime acceptance remain separately gated.
 - Status: **SOURCE REGISTERED / RUNTIME NOT AUTHORIZED**.
+
+
+## 2026-10-03 - P1C01 KayKit Knight technical source probe
+
+- Registered the already-discovered `Knight.fbx` row from the same immutable KayKit Adventurers family as a second bounded technical rig-base probe after Rogue's real UE4 technical rejection.
+- This is not a world-detail addition and introduces no runtime actor, NPC authority, story state, save state or visual placement.
+- If Knight reproduces Rogue's missing-smoothing-groups and missing-bind-pose-bones debt under the same real UE4.27.2 gate, treat the KayKit export family as a technical closure candidate before spending runs on Mage/Barbarian.
+- Evidence boundary: **SOURCE REGISTRATION ONLY** until staging/static/UE evidence exists.

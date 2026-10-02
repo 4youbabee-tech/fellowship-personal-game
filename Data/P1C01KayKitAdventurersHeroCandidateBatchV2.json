@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "batch_id": "WAREHOUSE_KAYKIT_P1C01_ADVENTURERS_HERO_CANDIDATE_V2",
+  "status": "AUTHORIZED_FOR_TARGETED_STAGING",
+  "provider": "KAYKIT_GITHUB",
+  "creator": "Kay Lousberg",
+  "license": "CC0-1.0",
+  "purpose": "Second bounded KayKit Adventurers Frodo technical rig-base probe after Rogue imported with 48 bones but was rejected for missing smoothing groups and bind-pose bones.",
+  "assets": [
+    {
+      "id": "KAYKIT_ADVENTURERS_KNIGHT_CC0",
+      "source_page": "https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0",
+      "source_revision": "672074b73ba276876a19e8816ecdc5241817ab47",
+      "download_url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/672074b73ba276876a19e8816ecdc5241817ab47/addons/kaykit_character_pack_adventures/Characters/fbx/Knight.fbx",
+      "filename": "kaykit_knight_672074b73ba276876a19e8816ecdc5241817ab47.fbx",
+      "observed_page_license": "CC0",
+      "required_final_format": "FBX",
+      "source_author": "Kay Lousberg",
+      "intended_use": "Second alternate Frodo technical rig-base probe only; not final likeness or runtime promotion.",
+      "download_kind": "DIRECT_FBX",
+      "source_path": "addons/kaykit_character_pack_adventures/Characters/fbx/Knight.fbx",
+      "source_git_blob_sha": "101848795913dea0d37ac3ec9352fdf9dd024010"
+    }
+  ],
+  "rules": [
+    "Use the immutable GitHub source revision and exact source path recorded by this manifest.",
+    "Preserve source provenance and verify payload SHA256 in the warehouse receipt before candidate admission.",
+    "Animated production candidate format remains FBX.",
+    "This probe must pass the same static and real UE4.27.2 technical gates as every prior Frodo candidate.",
+    "Missing smoothing groups, missing bind-pose bones or missing UV sets remain hard technical rejection reasons."
+  ],
+  "evidence_boundary": "Source registration only. Rogue V1 has real UE4 rejection evidence; Knight V2 has no import/deformation/retarget/runtime/PIE/device/visual/performance acceptance until exact-head execution."
+}
