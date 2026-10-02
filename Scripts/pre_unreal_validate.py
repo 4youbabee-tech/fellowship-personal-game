@@ -8256,6 +8256,13 @@ for pg145_classifier_symbol in [
         fail(f"PG-145 transitive core-proof optimization missing: {pg145_classifier_symbol}")
 
 pg145_unreal_workflow = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+for pg145_hosted_classifier_symbol in [
+    "Hosted Unreal lane classifier",
+    "fetch-depth: 0",
+    "needs.classify.outputs.mode != 'inherit'",
+]:
+    if pg145_hosted_classifier_symbol not in pg145_unreal_workflow:
+        fail(f"PG-145 hosted Unreal preflight contract missing: {pg145_hosted_classifier_symbol}")
 for pg145_maintenance_path in [
     "Scripts/classify_unreal_validation.ps1",
     "Scripts/runner_watchdog.ps1",
