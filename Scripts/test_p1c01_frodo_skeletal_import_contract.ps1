@@ -31,8 +31,14 @@ if($nonSkeletalElse -le $skeletalStart){throw "P1C01_FRODO_IMPORT_CONTRACT_SKELE
 $skeletalBranch=$c.Substring($skeletalStart,$nonSkeletalElse-$skeletalStart)
 if($skeletalBranch.Contains("LoadObject<")){throw "P1C01_FRODO_IMPORT_CONTRACT_SYNC_SKELETAL_LOAD_FORBIDDEN"}
 if(-not $skeletalBranch.Contains("GetAssetByObjectPath")){throw "P1C01_FRODO_IMPORT_CONTRACT_ASSETREGISTRY_BRANCH_MISSING"}
-foreach($marker in @("P1C01_FRODO_IMPORT_STAGE_PASS","Get-FileHash","static_structure_pass","SK_FRODO.fbx")){
+foreach($marker in @("P1C01_FRODO_IMPORT_STAGE_PASS","Get-FileHash","static_structure_pass")){
   if(-not $s.Contains($marker)){throw "P1C01_FRODO_IMPORT_CONTRACT_STAGE_MARKER_MISSING marker=$marker"}
+}
+if([string]$m.temporary_source_destination -ne "SourceAssets/Production/Characters/Rigs/FRODO/SK_FRODO.fbx"){
+  throw "P1C01_FRODO_IMPORT_CONTRACT_DESTINATION_FAIL path=$([string]$m.temporary_source_destination)"
+}
+if([string]$m.unreal_asset_name -ne "SK_FRODO"){
+  throw "P1C01_FRODO_IMPORT_CONTRACT_ASSET_NAME_FAIL name=$([string]$m.unreal_asset_name)"
 }
 foreach($marker in @("Build ShireJourneyEditor","Stage Frodo skeletal source","Import Frodo skeletal mesh in UE4.27.2","Verify SK_FRODO import evidence")){
   if(-not $w.Contains($marker)){throw "P1C01_FRODO_IMPORT_CONTRACT_WORKFLOW_MARKER_MISSING marker=$marker"}
