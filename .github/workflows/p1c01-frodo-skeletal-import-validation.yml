@@ -1,0 +1,98 @@
+name: P1C01 Frodo Skeletal Import Validation
+
+on:
+  pull_request:
+    branches: [develop]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: p1c01-frodo-skeletal-import-validation
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: UE4.27.2 Frodo skeletal import
+    runs-on:
+      - self-hosted
+      - Windows
+      - X64
+      - ue4-27
+    timeout-minutes: 90
+    env:
+      TARGET_SHA: "${{ github.event.pull_request.head.sha || github.sha }}"
+
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          fetch-depth: 2
+          persist-credentials: false
+
+      - name: Configure Frodo evidence root
+        shell: cmd
+        run: echo P1C01_HERO_RIG_REPORT=%RUNNER_TEMP%\shire-p1c01-frodo-import-${{ github.run_id }}-${{ github.run_attempt }}>>"%GITHUB_ENV%"
+
+      - name: Verify exact checkout and runner
+        shell: cmd
+        run: |
+          @echo off
+          for /f "delims=" %%H in ('git rev-parse HEAD') do set "CHECKED_SHA=%%H"
+          if /I not "%TARGET_SHA%"=="%CHECKED_SHA%" exit /b 71
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\verify_runner_session.ps1"
+
+      - name: Stage reusable OpenGameArt hero archive
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\stage_opengameart_character_candidate.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\P1C01OpenGameArtHeroCandidateBatchV1.json"
+
+      - name: Build Frodo candidate report
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\run_p1c01_hero_skeletal_candidate_wave.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\P1C01HeroSkeletalCandidateWaveV1.json" -OutputRoot "%P1C01_HERO_RIG_REPORT%"
+
+      - name: Inspect Frodo static FBX structure
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\inspect_p1c01_frodo_fbx_candidate.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\P1C01HeroSkeletalCandidateWaveV1.json" -CandidateReport "%P1C01_HERO_RIG_REPORT%\p1c01_hero_skeletal_candidate_summary.json" -OutputRoot "%P1C01_HERO_RIG_REPORT%"
+
+      - name: Stage Frodo skeletal source
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\prepare_p1c01_frodo_skeletal_import.ps1" -CandidateReport "%P1C01_HERO_RIG_REPORT%\p1c01_hero_skeletal_candidate_summary.json" -StaticQcReport "%P1C01_HERO_RIG_REPORT%\p1c01_frodo_fbx_static_qc.json" -Workspace "%GITHUB_WORKSPACE%" -ManifestPath "%GITHUB_WORKSPACE%\Data\P1C01FrodoSkeletalImportV1.json"
+
+      - name: Build ShireJourneyEditor
+        shell: cmd
+        run: '"%GITHUB_WORKSPACE%\Scripts\ci_build_unreal.cmd"'
+
+      - name: Import Frodo skeletal mesh in UE4.27.2
+        shell: cmd
+        run: '"%GITHUB_WORKSPACE%\Scripts\ci_import_production_assets.cmd"'
+
+      - name: Verify SK_FRODO import evidence
+        shell: powershell
+        run: |
+          $asset = Join-Path $env:GITHUB_WORKSPACE "Content\Production\Characters\Rigs\FRODO\SK_FRODO.uasset"
+          $log = Join-Path $env:GITHUB_WORKSPACE "Saved\Logs\CI-ProductionAssetImport.log"
+          if (-not (Test-Path -LiteralPath $asset -PathType Leaf)) { throw "P1C01_FRODO_UE4_IMPORT_ASSET_MISSING path=$asset" }
+          if (-not (Test-Path -LiteralPath $log -PathType Leaf)) { throw "P1C01_FRODO_UE4_IMPORT_LOG_MISSING path=$log" }
+          $text = Get-Content -LiteralPath $log -Raw
+          if (-not $text.Contains("SK_FRODO")) { throw "P1C01_FRODO_UE4_IMPORT_LOG_ASSET_MARKER_MISSING" }
+          if (-not $text.Contains("skeletal-registered=yes")) { throw "P1C01_FRODO_UE4_IMPORT_CLASS_MARKER_MISSING" }
+          $match=[regex]::Match($text,'skeletal-bones=(\d+)')
+          if (-not $match.Success) { throw "P1C01_FRODO_UE4_IMPORT_BONE_MARKER_MISSING" }
+          $bones=[int]$match.Groups[1].Value
+          if ($bones -le 0) { throw "P1C01_FRODO_UE4_IMPORT_BONE_COUNT_FAIL bones=$bones" }
+          $bytes=(Get-Item -LiteralPath $asset).Length
+          Write-Host "P1C01_FRODO_UE4_IMPORT_PASS asset=SK_FRODO bytes=$bytes bones=$bones class=USkeletalMesh runtimeIntegration=false"
+
+      - name: Upload Frodo skeletal import evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1c01-frodo-skeletal-import-${{ env.TARGET_SHA }}
+          path: |
+            ${{ env.P1C01_HERO_RIG_REPORT }}\p1c01_hero_skeletal_candidate_summary.json
+            ${{ env.P1C01_HERO_RIG_REPORT }}\p1c01_frodo_fbx_static_qc.json
+            ${{ github.workspace }}\Saved\P1C01FrodoImport\frodo_skeletal_import_staging_receipt.json
+            ${{ github.workspace }}\Saved\Logs\CI-ProductionAssetImport.log
+          if-no-files-found: error
+          retention-days: 14
