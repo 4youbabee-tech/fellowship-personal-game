@@ -2723,3 +2723,6 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 
 
 | Active PR encountered during stale batch | KEEP + CONTINUE | Active ref preserved; unrelated reviewed stale refs continue through cleanup |
+
+
+| Additional stale refs queued | 4 VERIFIED | #268 head, #241 audio provenance, #246 old chapter packets, #239 old mega queue |
