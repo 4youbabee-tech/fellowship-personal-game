@@ -50,7 +50,7 @@ if (Test-Path -LiteralPath $WarehouseRoot) {
   }
 }
 
-$prepared=@(); $pending=@(); $blocked=@()
+$prepared=@(); $pending=@(); $blocked=@(); $candidateProvenance=@()
 foreach($item in @($manifest.external_candidates)) {
   if ([string]$item.state -ne "AUTHORIZED_FOR_STAGING") {
     $pending += [ordered]@{provider=[string]$item.provider;id=[string]$item.id;reason="license_capture_required_before_staging"}
@@ -94,7 +94,17 @@ foreach($item in @($manifest.external_candidates)) {
         Expand-Archive -LiteralPath $row.file -DestinationPath $destination -Force
         foreach($extracted in @(Get-ChildItem -LiteralPath $destination -Recurse -File)){
           $inside=$extracted.Extension.ToLowerInvariant()
-          if($inside -eq ".fbx"){ $fbx++ }
+          if($inside -eq ".fbx"){
+            $fbx++
+            $candidateProvenance += [ordered]@{
+              provider=[string]$item.provider
+              asset_id=[string]$item.id
+              receipt=[string]$row.receipt
+              source_file=[string]$row.file
+              source_sha256=[string]$actual
+              candidate_file=[string]$extracted.FullName
+            }
+          }
           elseif($inside -in @(".png",".tga")){ $pngtga++ }
           elseif($inside -eq ".obj"){ $obj++ }
         }
@@ -104,7 +114,17 @@ foreach($item in @($manifest.external_candidates)) {
       }
     }
     elseif($ext -in @(".7z",".rar")){ $pending += [ordered]@{id=[string]$item.id;file=$row.file;reason="archive_requires_approved_extractor"} }
-    elseif($ext -eq ".fbx"){ $fbx++ }
+    elseif($ext -eq ".fbx"){
+      $fbx++
+      $candidateProvenance += [ordered]@{
+        provider=[string]$item.provider
+        asset_id=[string]$item.id
+        receipt=[string]$row.receipt
+        source_file=[string]$row.file
+        source_sha256=[string]$actual
+        candidate_file=[string]$row.file
+      }
+    }
     elseif($ext -in @(".png",".tga")){ $pngtga++ }
     elseif($ext -eq ".obj"){ $obj++ }
   }
@@ -126,6 +146,7 @@ $report=[ordered]@{
   project_owned_fallback_file_count=$fallbackCount;
   prepared_count=$prepared.Count; pending_count=$pending.Count; blocked_count=$blocked.Count;
   prepared=$prepared; pending=$pending; blocked=$blocked;
+  candidate_source_provenance=$candidateProvenance;
   rule="No final animated-character promotion without FBX + provenance + skeleton/skin/retarget/deformation QC."
 }
 $receipt=Join-Path $OutputRoot "p1c01_character_rig_intake_receipt.json"
