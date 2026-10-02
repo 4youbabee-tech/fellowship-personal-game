@@ -2575,3 +2575,12 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Exact rejection SHA | RUN-PROVEN | `abe8d30fa6b5fbebee485c9bdcceafb39fcfc4832cb65be124d5eaae660df986`, 1,523,164 bytes |
 | Candidate #4 rotation | READY FOR FRESH EXACT-HEAD PROBE | Three exact filename+SHA rejections now skip deterministically |
 | PIE/device/visual/performance | NOT ACCEPTED | No matching evidence |
+
+## 2026-10-02 - Frodo candidate #4
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Casual3_Male UE4 skeletal import | RUN-PROVEN | 33 bones on dedicated #23 |
+| Exact source | REJECTED_TECHNICAL | SHA256 `94ce47df5f166856a2d1166202ed1e8a58fd087e96b13299492b020794ddc3fd`, 1,568,620 bytes |
+| Current warehouse Frodo family | 4/5 REJECTED | Worker_Male is final current-family probe |
+| PIE / device / visual / deformation / retarget | NOT ACCEPTED | No matching evidence |
