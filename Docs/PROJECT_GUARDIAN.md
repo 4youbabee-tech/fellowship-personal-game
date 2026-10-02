@@ -714,3 +714,14 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 **Guard:** `Scripts/test_p1c01_hero_candidate_provenance_contract.ps1` requires intake provenance emission and exact-file fail-closed enforcement in the candidate wave.
 
 **Evidence boundary:** SOURCE-IMPLEMENTED until exact-head Pre-Unreal/Unreal validation and Warehouse candidate evidence succeed. This is not skeletal/deformation/visual/runtime acceptance.
+
+
+### PG-168 — Character skeletal FBX import must be path-bounded and non-runtime
+
+**Risk:** enabling generic FBX discovery in the production importer could accidentally treat world/static FBX assets as skeletal character rigs or create a synchronous runtime-heavy loading path.
+
+**Permanent rule:** production skeletal FBX validation is admitted only below `SourceAssets/Production/Characters/Rigs/`. Candidate bytes must come from provenance-bound Warehouse intake, pass static structure/hash checks, and be staged into an isolated checkout before UE4 import. This validation path does not authorize runtime replacement.
+
+**Import contract:** `FBXIT_SkeletalMesh`, materials/textures/animations disabled for the validation pass, expected asset class verified through AssetRegistry, and runtime residency remains under `UShireChapterAssetStreamingSubsystem` soft-path + `FStreamableManager` ownership.
+
+**Evidence boundary:** skeletal import success still does not prove retarget quality, deformation, final likeness, AnimBP readiness, PIE, device, visual or performance acceptance.
