@@ -3715,3 +3715,7 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - The resulting `could not read Username for 'https://github.com'` did not bypass evidence: fail-closed behavior correctly selected `mode=full`, but it unnecessarily reserved the UE4 laptop for a source-only delta.
 - Repair: tree-equivalent merge proof now probes the already-present local commit object first and fetches only when ancestry is genuinely absent. Tree equality plus prior green Unreal evidence remains mandatory.
 - Evidence boundary: **SOURCE-IMPLEMENTED / STATIC VALIDATION PENDING** until the PR's exact-head hosted checks complete. No UE/PIE/device/visual claim.
+
+
+- Follow-up Deep Scan on Knight V2 PR #265 showed `Data/P1C01KayKitAdventurersHeroCandidateBatchV2.json` was not in the hosted safe-source allowlist, so classifier #1302 selected `mode=full` despite the delta being source registration + docs only.
+- Added the exact V2 manifest path to the safe-source allowlist and a regression case. No wildcard broadening was introduced.
