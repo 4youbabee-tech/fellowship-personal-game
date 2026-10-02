@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "plan_id": "P1C01_EAST_FIELDS_ROW_REPLACEMENT_V1",
-  "status": "SOURCE_PREPARATION_REGISTERED",
+  "status": "RUNTIME_IMPLEMENTATION_ACTIVE",
   "runtime_chapter": "P1C01",
-  "runtime_integration_allowed": false,
+  "runtime_integration_allowed": true,
   "objective": "Replace the twelve long non-collision cube crop-row strips in the East Fields with one bounded instanced production-vegetation row treatment after the current serialized Party Field runtime pass closes.",
   "current_proxy_evidence": {
     "source": "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp",
@@ -14,7 +14,7 @@
   "proposed_runtime_contract": {
     "predecessor": "P1C01 Party Field primitive-overlay suppression exact-head green + merged",
     "mesh_source": "Existing resident ProductionGrassClumpMesh unless a more crop-appropriate already-imported production mesh is identified before implementation.",
-    "instancing": "Single AWorldDetailCluster / HISM-style bounded cluster",
+    "instancing": "Dedicated UHierarchicalInstancedStaticMeshComponent owned by AShirePrototypeWorldBuilder",
     "collision": false,
     "tick": false,
     "max_instances": 96,
@@ -31,5 +31,5 @@
     "ram_gb": 8,
     "vram_gb_class": 2
   },
-  "evidence_boundary": "Registration/source preparation only. No runtime implementation, PIE, device, visual or performance acceptance."
+  "evidence_boundary": "Runtime source implementation authorized after Party Field exact-head green + merge. HISM row replacement still requires fresh exact-head Pre-Unreal + UE4.27.2 validation. No PIE, device, visual or performance acceptance."
 }

@@ -1048,3 +1048,11 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Current cube strips remain deterministic fallback if the resident production mesh is unavailable.
 - Story geography, traversal, quest/NPC authority and P1C02 runtime remain unchanged.
 - Evidence boundary: **REGISTERED / SOURCE PREPARATION ONLY**. No PIE/device/visual/performance acceptance claim.
+
+## 2026-10-02 - P1C01 East Fields HISM crop-row implementation
+
+- The previously registered East Fields cleanup is now implemented in source on its stacked runtime lane.
+- Twelve long non-collision cube strips are replaced when `SM_ShGrassClump` is resident by one dedicated builder-owned HISM component with 96 deterministic instances total.
+- HISM budget: no Tick, no collision/overlap, no shadow, cull start 900 cm, cull end 6500 cm. Cube strips remain deterministic fallback-only.
+- No new world authority, story state, NPC state, synchronous heavy load or P1C02 activation is introduced.
+- Evidence boundary: **SOURCE IMPLEMENTATION ONLY** until fresh exact-head Pre-Unreal + UE4.27.2 validation completes; no PIE/device/visual/performance acceptance.

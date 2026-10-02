@@ -71,6 +71,13 @@ AShirePrototypeWorldBuilder::AShirePrototypeWorldBuilder()
     GrassInstances->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     GrassInstances->SetCastShadow(false);
 
+    EastFieldRowInstances = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("EastFieldRowInstances"));
+    EastFieldRowInstances->SetupAttachment(RuntimeRoot);
+    EastFieldRowInstances->SetMobility(EComponentMobility::Movable);
+    EastFieldRowInstances->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    EastFieldRowInstances->SetGenerateOverlapEvents(false);
+    EastFieldRowInstances->SetCastShadow(false);
+
     FlowerInstances = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("FlowerInstances"));
     FlowerInstances->SetupAttachment(RuntimeRoot);
     FlowerInstances->SetMobility(EComponentMobility::Movable);
@@ -128,6 +135,7 @@ AShirePrototypeWorldBuilder::AShirePrototypeWorldBuilder()
     // Explicit cull bands keep the first production world pass bounded on the
     // i7/8 GB/~2 GB VRAM target. These are starting budgets, not acceptance proof.
     GrassInstances->SetCullDistances(1200, 5200);
+    EastFieldRowInstances->SetCullDistances(900, 6500);
     FlowerInstances->SetCullDistances(800, 3200);
     ShrubInstances->SetCullDistances(1500, 6500);
     DistantTreeTrunkInstances->SetCullDistances(5000, 19000);
@@ -243,6 +251,7 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     if (ProductionTreeCanopyMesh) DistantTreeCanopyInstances->SetStaticMesh(ProductionTreeCanopyMesh);
     if (ProductionRockMesh) RockInstances->SetStaticMesh(ProductionRockMesh);
     if (ProductionGrassClumpMesh) GrassInstances->SetStaticMesh(ProductionGrassClumpMesh);
+    if (ProductionGrassClumpMesh) EastFieldRowInstances->SetStaticMesh(ProductionGrassClumpMesh);
     if (ProductionShrubMesh) ShrubInstances->SetStaticMesh(ProductionShrubMesh);
     if (ProductionPathStoneMesh) PathStoneInstances->SetStaticMesh(ProductionPathStoneMesh);
 
@@ -1241,11 +1250,43 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
     SpawnHobbitHole(FVector(6200,-1600,0),0.92f);
     SpawnFenceLine(FVector(5750,-1850,0),FVector(6900,-1850,0),9);
     SpawnGardenPatch(FVector(6500,-1420,0),0.95f);
-    for(int32 Row=0; Row<12; ++Row)
+    if (EastFieldRowInstances && ProductionGrassClumpMesh)
     {
-        const float Y=-1320.0f+Row*135.0f;
-        SpawnShape(CubeMesh,FVector(ShireLayout::FieldsX,Y,8),FVector(12.0f,0.10f,0.06f),
-            FLinearColor(0.30f,0.22f,0.075f),FRotator::ZeroRotator,false);
+        constexpr int32 EastFieldRowCount = 12;
+        constexpr int32 InstancesPerRow = 8;
+        static_assert(EastFieldRowCount * InstancesPerRow == 96, "East Fields row budget must remain capped at 96 instances.");
+
+        for (int32 Row = 0; Row < EastFieldRowCount; ++Row)
+        {
+            const float Y = -1320.0f + Row * 135.0f;
+            for (int32 Segment = 0; Segment < InstancesPerRow; ++Segment)
+            {
+                const float X = ShireLayout::FieldsX - 525.0f + Segment * 150.0f;
+                const float ScaleBias = 0.76f + 0.05f * static_cast<float>((Row + Segment) % 3);
+                const float Yaw = static_cast<float>((Row * 13 + Segment * 17) % 360);
+                EastFieldRowInstances->AddInstanceWorldSpace(
+                    FTransform(
+                        FRotator(0.0f, Yaw, 0.0f),
+                        FVector(X, Y, 6.0f),
+                        FVector(ScaleBias, 0.62f, ScaleBias)));
+            }
+        }
+    }
+    else
+    {
+        // Deterministic greybox fallback only when the resident production row mesh
+        // is unavailable. Production mode must not overlay cubes beneath the HISM rows.
+        for (int32 Row = 0; Row < 12; ++Row)
+        {
+            const float Y = -1320.0f + Row * 135.0f;
+            SpawnShape(
+                CubeMesh,
+                FVector(ShireLayout::FieldsX, Y, 8),
+                FVector(12.0f, 0.10f, 0.06f),
+                FLinearColor(0.30f,0.22f,0.075f),
+                FRotator::ZeroRotator,
+                false);
+        }
     }
     if (ProductionBarrelMesh)
     {

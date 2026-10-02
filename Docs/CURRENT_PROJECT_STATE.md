@@ -3692,3 +3692,11 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Runtime work is predecessor-gated behind the current Party Field serialized runtime cleanup; this branch does not mutate runtime.
 - Planned replacement uses one bounded zero-Tick/no-collision instanced cluster and existing resident production vegetation before any new asset acquisition.
 - Status: **SOURCE-IMPLEMENTED / RUNTIME PREDECESSOR-GATED**. No PIE/device/visual/performance acceptance claim.
+
+## 2026-10-02 - East Fields bounded HISM row runtime implementation
+
+- Implemented the registered East Fields row replacement on top of the source-registration ancestry after Party Field #253 merged exact-head green.
+- Added one dedicated `UHierarchicalInstancedStaticMeshComponent` owned by `AShirePrototypeWorldBuilder`; no Actor-per-row/per-plant spawning, no Tick and no collision.
+- Production mode uses resident `ProductionGrassClumpMesh` with exactly 12 x 8 = 96 deterministic instances, cull band 900-6500 cm and no shadows; the twelve long cube strips remain fallback-only when the resident mesh is unavailable.
+- Existing async/resident asset ownership, quest/NPC/LivingWorld authority and P1C02 gate remain unchanged.
+- Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD PRE-UNREAL + UE4.27.2 PENDING**. No PIE/device/visual/performance acceptance claim.
