@@ -976,3 +976,13 @@ Registered against the already-authorized **F1-04 Bree & Weathertop Mega Source 
 - Animated final character candidates remain FBX-only; production textures PNG/TGA; heavy runtime assets soft/async; repeated detail ISM/HISM + LOD/culling; populations remain pooled.
 
 Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-VISUAL ACCEPTANCE CLAIM**.
+
+
+## 2026-10-02 — P1C01 Shire mega chapter production package
+
+- Registered a bounded comprehensive P1C01 world/content package covering Hobbiton/Bag End, Hobbiton village, Shire travel roads, and Bucklebury/Ferry approach.
+- Source-backed story windows preserved: party/social onboarding; investigation/packing/stealth departure; road stealth/environmental hiding/ferry escape. Locked outcomes and knowledge boundaries remain authoritative; no future-state leakage is authorized.
+- World-detail families registered for production: roads/footpaths, fences/hedges, fields, gardens, vegetation, rocks, carts/work props, village social/work pockets, riverbank/ferry readability.
+- Runtime ownership remains decoupled: LivingWorldDirector = pooled population lifecycle; ShireNPCContextSubsystem = context; ShireQuestSubsystem = story; UShireAudioSubsystem = audio; UShireChapterAssetStreamingSubsystem remains rig/heavy asset streaming owner.
+- Low-spec rules: HISM/ISM repetition, LOD/culling, bounded ambient updates, soft references, asynchronous heavy loading, PNG/TGA textures and FBX animated characters.
+- This ledger entry is **SOURCE/PREPRODUCTION**. It does not claim that these cells/assets are imported, PIE-tested, device-tested, visually accepted, performance accepted, or Gate 6/7 accepted.
