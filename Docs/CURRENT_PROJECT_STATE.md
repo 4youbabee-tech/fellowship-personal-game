@@ -3663,3 +3663,11 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Candidate #5 `Worker_Male.fbx` remains the active final-family probe; this repair isolates its evidence and does not relax its technical gate.
 - The branch is merged forward onto current `develop@3f1af6f96c42e29d5178d4b2041082b266977c2e`, preserving the visible-world reuse-first work. Exact-head Pre-Unreal, dedicated Frodo import and normal Unreal validation are required before merge.
 - Runtime integration remains false. No deformation, retarget, likeness, PIE, device, visual or performance acceptance is claimed.
+
+## 2026-10-02 - Frodo source-family escalation after #26
+
+- Dedicated Frodo #26 proved the alternate OpenGameArt/Quaternius RPG payload itself stages correctly (**12 FBX**), but the Frodo-ranked alternate rows observed in the static probe were animation/accessory FBX files (`Rogue_Dagger`, `Ranger_Arrow`, `Ranger_Bow`) and failed the real static skeletal structure gate.
+- The original five-character Quaternius family remains exhausted: all five exact source SHAs are `REJECTED_TECHNICAL`.
+- Registered immutable KayKit Adventurers source revision `672074b73ba276876a19e8816ecdc5241817ab47` as the next bounded CC0 candidate family. Intake, static-QC and import manifests now admit `KAYKIT_ADVENTURERS_CC0`; the dedicated workflow stages it before candidate ranking.
+- The same fail-closed UE4.27.2 skeletal import gate remains in force. No likeness/deformation/runtime/PIE/device/visual acceptance is implied.
+- Status: **SOURCE-IMPLEMENTED / KAYKIT ALTERNATE FAMILY EXACT-HEAD VALIDATION PENDING**.
