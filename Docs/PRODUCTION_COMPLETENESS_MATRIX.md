@@ -2651,3 +2651,5 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Runtime / PIE / device / visual / performance acceptance | NOT ACCEPTED | No matching evidence |
 
 | Hosted-classifier PG-145B reconciliation | SOURCE-FIXED | Validator recognizes hosted-preflight handoff while preserving runner-health-before-heavy-work invariant; fresh exact-head Pre-Unreal pending |
+
+| Hosted classifier exact-base diff | SOURCE-FIXED | Full hosted history required before Unreal impact classification; source-only work must not fail-safe to UE solely because PR ancestry exceeds shallow depth |
