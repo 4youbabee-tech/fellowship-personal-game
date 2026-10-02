@@ -3707,3 +3707,12 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - `KAYKIT_ADVENTURERS_CC0` is now admitted by the existing P1C01 character-intake and Frodo static-QC source allowlists.
 - This branch is source/preparation only. It does not stage/import/promote a character by itself and does not authorize runtime replacement.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING**. No deformation, retarget, PIE, device, visual or performance acceptance claim.
+
+
+## 2026-10-03 - Bag End / Hobbit-hole planted-entry proxy cleanup
+
+- Opened the next serialized P1C01 runtime visual car after East Fields exact-head green + merge.
+- `SpawnHobbitHole` now selects resident `ProductionShrubMesh` for the two planted-entry accents and retains `SphereMesh` only when that production mesh is unavailable.
+- No asset acquisition, synchronous load, Tick, collision, actor-count increase, quest/NPC/story authority change or P1C02 activation is introduced.
+- Door/window/trim primitives are intentionally untouched because the current visible-world contract still lists hero round-door/window/trim support FBX as unresolved content debt.
+- Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD PRE-UNREAL + UE4.27.2 PENDING**. No PIE/device/visual/performance acceptance claim.
