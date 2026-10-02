@@ -3555,3 +3555,13 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Five P1C01 audio candidates now carry creator/uploader, primary-page verification timestamp, file label, CC0 page evidence, and an explicit provenance state.
 - Boundary: source-page provenance only. Download receipt SHA256, audio QC, durable WAV-master conversion, UE import, playback/listening, device and performance acceptance remain pending.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING**.
+
+
+## 2026-10-02 - Whole-game 23-chapter production packets registered
+
+- Added `Data/WholeGameChapterProductionPacketsV1.json` with one source/preproduction packet for every normalized trilogy chapter **F1-01 through F3-07**.
+- Each packet preserves its project-source location, playable/present focus, critical path, optional window, locked postcondition, checkpoint contract and production-domain checklist.
+- All 23 packets explicitly set `runtime_integration_allowed=false`; they cannot activate later runtime chapters ahead of Governor predecessor gates.
+- F3-01 through F3-07 retain the project Bible warning `FILM_CANON_MASTER_SUMMARY_NOT_SCRIPT_VERIFIED` because the supplied source set does not include a Return of the King screenplay.
+- Added hosted regression coverage for exact chapter parity, locked postconditions, future-runtime prohibition and the ROTK evidence boundary.
+- Status: **SOURCE-PREPARED / EXACT-HEAD STATIC VALIDATION PENDING**.
