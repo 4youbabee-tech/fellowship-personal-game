@@ -3733,3 +3733,10 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Repair on PR #268 updates the workflow environment, PG-167 validation contract, and the single Project Governor `REQ-EXEC-002` so closed-unmerged superseded PRs have an explicit salvage/disposition-before-delete lifecycle.
 - The exact-SHA moved-ref guard, active-PR guard, canonical/protected refs and hosted-only administration boundary remain fail-closed.
 - Status remains **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD PRE-UNREAL PENDING**. #1671 is failure evidence, not acceptance.
+
+### 2026-10-03 - Per-branch active PR deletion guard
+
+- Branch Cleanup #137 ended with `activePrHeads=0` even though PR #264 was already open, so global open-head discovery is not accepted as the sole deletion safety boundary.
+- Every deletion path now performs a second, branch-specific GitHub API query for an open PR whose `head=owner:branch`. API failure is fatal; an active result blocks deletion.
+- The guard applies both to exact closed-head deletion and explicit/zero-ahead cleanup through `Remove-RemoteBranch`.
+- This is a safety hardening, not a cleanup-gate relaxation. Fresh exact-head validation remains pending.
