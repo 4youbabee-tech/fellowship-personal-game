@@ -2664,3 +2664,12 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | KayKit direct FBX transport | STAGED + SHA-RECORDED | Run #28: `Rogue.fbx`, 19,529,164 bytes, SHA256 `93a9ee0a67ae69b2d815050234acad2004c3b8af7d294b916e52609c8195eb71`. |
 | Bounded Frodo candidate ranking | SOURCE FIX PREPARED | Manifest-owned source bonus prevents smaller accessory FBXs from displacing the authorized KayKit character while preserving the eight-candidate cap. |
 | UE4 skeletal import / runtime | PENDING / NOT STARTED | Fresh exact-head static and real UE4.27 evidence still required. |
+
+
+## 2026-10-02 — Direct-FBX intake materialization
+
+| Scope | State | Evidence / next gate |
+|---|---|---|
+| Direct FBX warehouse → intake | SOURCE FIX PREPARED | Run #29 exposed a counted-but-not-enumerated direct payload (64 instead of 65 FBXs). Intake now copies to a deterministic temporary path and re-verifies SHA256. |
+| KayKit Rogue candidate | PENDING EXACT-HEAD QC | Must appear in the next candidate/static reports before any UE4 import claim. |
+| Runtime / Gate 6/7 | NOT STARTED / NOT ACCEPTED | No change. |

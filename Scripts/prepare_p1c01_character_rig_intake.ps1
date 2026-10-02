@@ -115,6 +115,12 @@ foreach($item in @($manifest.external_candidates)) {
     }
     elseif($ext -in @(".7z",".rar")){ $pending += [ordered]@{id=[string]$item.id;file=$row.file;reason="archive_requires_approved_extractor"} }
     elseif($ext -eq ".fbx"){
+      $directRoot=Join-Path $OutputRoot ("Direct_"+([string]$item.id -replace '[^A-Za-z0-9_.-]','_')+"_"+$actual.Substring(0,12))
+      New-Item -ItemType Directory -Path $directRoot -Force | Out-Null
+      $directCandidate=Join-Path $directRoot ([IO.Path]::GetFileName($row.file))
+      Copy-Item -LiteralPath $row.file -Destination $directCandidate -Force
+      $directHash=(Get-FileHash -LiteralPath $directCandidate -Algorithm SHA256).Hash.ToLowerInvariant()
+      if($directHash -ne $actual){ throw "direct_fbx_copy_sha256_mismatch" }
       $fbx++
       $candidateProvenance += [ordered]@{
         provider=[string]$item.provider
@@ -122,8 +128,9 @@ foreach($item in @($manifest.external_candidates)) {
         receipt=[string]$row.receipt
         source_file=[string]$row.file
         source_sha256=[string]$actual
-        candidate_file=[string]$row.file
+        candidate_file=[string]$directCandidate
       }
+      Write-Host ("P1C01_CHARACTER_INTAKE_DIRECT_FBX_PASS id="+[string]$item.id+" sha256="+$actual+" candidate="+$directCandidate)
     }
     elseif($ext -in @(".png",".tga")){ $pngtga++ }
     elseif($ext -eq ".obj"){ $obj++ }

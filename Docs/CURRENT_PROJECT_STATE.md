@@ -3670,3 +3670,10 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Exact-head Frodo run #28 proved immutable direct-FBX staging: `Rogue.fbx`, 19,529,164 bytes, SHA256 `93a9ee0a67ae69b2d815050234acad2004c3b8af7d294b916e52609c8195eb71`.
 - The run then exposed a bounded ranking defect: smaller accessory FBXs displaced the KayKit character FBX from the eight-row Frodo pool. Candidate ranking now applies a manifest-owned KayKit source bonus so the licensed character payload reaches static/UE4 gates without widening the pool.
 - This is source-selection evidence only; runtime integration and all human/device acceptance states remain false.
+
+
+## 2026-10-02 — Direct-FBX intake materialization fix
+
+- Exact-head Frodo run #29 reused the verified KayKit payload but reported only 64 discovered FBXs: the intake receipt counted the direct FBX without materializing it under the bounded intake root.
+- Direct-FBX rows are now copied into a deterministic temporary intake directory, re-hashed after copy, and provenance points to that staged candidate while retaining the immutable warehouse source and SHA.
+- Expected next diagnostic is 65 discovered FBXs with KayKit `Rogue.fbx` retained by the manifest source-priority rule. UE4 import and runtime remain unproved.
