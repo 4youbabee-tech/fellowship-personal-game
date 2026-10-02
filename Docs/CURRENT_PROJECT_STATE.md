@@ -3766,3 +3766,9 @@ Added four more explicitly-disposed refs to the governed retirement batch:
 - queued mega waves #239, explicitly superseded by merged #244 / ContinuousProductionWaveQueueV2.
 
 No active PR head or unresolved unique-content branch is included by this addition.
+
+
+### 2026-10-03 - Exact-head cleanup validation refresh
+
+- PR #270 changed after Pre-Unreal #1678, so #1678 is retained only as historical validation for `a3bee1d09e0f7d5c52300d77c0763e83d2920258`.
+- Fresh exact-head hosted validation is required for the current consolidated cleanup head before merge.
