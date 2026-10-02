@@ -1063,3 +1063,12 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - This does not alter canon, chapter state, gameplay authority or final Frodo likeness requirements. It is only a technical rig-base source escalation after prior candidate families failed their technical gates.
 - Animated production candidates remain FBX-only; final likeness/deformation/retarget/runtime acceptance remain separately gated.
 - Status: **SOURCE REGISTERED / RUNTIME NOT AUTHORIZED**.
+
+
+## 2026-10-03 - P1C01 Bag End planted-entry production shrub cleanup
+
+- Runtime visual cleanup registered and implemented after the East Fields runtime predecessor closed with Pre-Unreal #1657 and Unreal #1295 success.
+- Existing planted-entry positions are unchanged; only their production-mode mesh selection changes from unconditional sphere primitives to resident `SM_ShShrub`, with spheres retained as deterministic fallback.
+- This does not create a new location/detail concept, story anchor or authority. It removes one residual proxy read using existing production stock.
+- Hero door/window/trim and interior remain content-gated and are not silently approximated.
+- Evidence boundary: **SOURCE IMPLEMENTATION ONLY** until fresh exact-head workflows complete.
