@@ -43,7 +43,8 @@
     "Parallel source/PDF/warehouse/asset-preparation lanes may advance without repeating engine gates for administrative-only changes; promotion into runtime remains serialized and technical safety/performance/runtime-data gates stay fail-closed.",
     "Permanent branch closeout invariant: every completed temporary branch is exact-head validated, merged into develop immediately, and its remote ref is deleted after merge so develop never lags completed work. Only an active PR head or a branch with verified unique unsalvaged commits may remain temporarily.",
     "Maximum Safe Production is the default for all eligible project production work even when the owner does not explicitly say 'start chapter' or repeat the throughput instruction.",
-    "Story scope is experience-first, not summary-first: the Timeline organizes sequence but never caps detail; compatible Tolkien book-only events/details should be playable when safe, and meaningful discovered source material may not be silently omitted."
+    "Story scope is experience-first, not summary-first: the Timeline organizes sequence but never caps detail; compatible Tolkien book-only events/details should be playable when safe, and meaningful discovered source material may not be silently omitted.",
+    "Closing a temporary PR is an explicit branch-lifecycle disposition. If it closes unmerged, any useful unique work must first be selectively salvaged into the current authority or recorded by exact commit SHA/disposition; after closure the unchanged remote head ref is deleted. A moved ref or active PR head is preserved as new work."
   ],
   "requirement_status_values": [
     "REQUESTED",
@@ -2812,12 +2813,15 @@
         "After successful merge, the temporary branch ref is deleted.",
         "Branches with zero commits ahead of develop and no active PR are removed as stale refs.",
         "Divergent branches with unique commits are not deleted until their useful content is selectively reviewed/salvaged.",
-        "main remains stable/release only."
+        "main remains stable/release only.",
+        "A closed-unmerged PR is not left as a permanent branch: useful unique work is salvaged or recorded by exact commit/disposition before close, then the unchanged head ref is deleted.",
+        "Branch audits use live repository refs; historical branch names retained in GitHub Actions filters are not treated as proof that the branch still exists."
       ],
       "dependencies": [
         "REQ-MEM-001",
         "REQ-ORG-001"
-      ]
+      ],
+      "notes": "2026-10-03 lifecycle root fix: merged and explicitly closed/superseded temporary PR heads are cleaned by exact-SHA guarded hosted automation; active/moved/protected refs remain fail-closed."
     },
     {
       "id": "REQ-PROD-011",
