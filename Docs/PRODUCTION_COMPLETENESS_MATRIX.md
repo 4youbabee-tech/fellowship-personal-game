@@ -2720,3 +2720,6 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 
 | Branch Cleanup #138 | FAILED-SAFE | Empty open-PR response misread as active; no stale batch deletion completed |
 | Empty-query active-PR guard repair | SOURCE-IMPLEMENTED | Null-filter + exact head.ref match; API failure remains fatal |
+
+
+| Active PR encountered during stale batch | KEEP + CONTINUE | Active ref preserved; unrelated reviewed stale refs continue through cleanup |
