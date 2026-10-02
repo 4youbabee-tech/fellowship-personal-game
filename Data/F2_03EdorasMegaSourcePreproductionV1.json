@@ -1,0 +1,477 @@
+{
+  "schema_version": 1,
+  "package_id": "F2_03_EDORAS_MEGA_SOURCE_PREPRODUCTION_V1",
+  "status": "SOURCE_PREPRODUCTION_ONLY_RUNTIME_PREDECESSOR_GATED",
+  "authority": "Data/ProjectGovernor.json",
+  "timeline_chapter_id": "F2-03",
+  "runtime_promotion_status": "FORBIDDEN_UNTIL_PART_I_AND_PREDECESSOR_RUNTIME_GATES_AUTHORIZE",
+  "source_routing": {
+    "navigation": "SRC_OWNER_STORY_TIMELINE_BIBLE_V1",
+    "film_story_primary": "SRC_FILM_TTT_SCREENPLAY",
+    "deep_lore_primary": "SRC_TOLKIEN_LOTR_2010",
+    "production_layers": [
+      "SRC_OWNER_CHARACTERS_RELATIONSHIPS_BIBLE_V1",
+      "SRC_OWNER_WORLD_LOCATIONS_MAP_BIBLE_V1",
+      "SRC_OWNER_PEOPLES_LORE_ARTIFACTS_CULTURES_BIBLE_V1",
+      "SRC_OWNER_GAMEPLAY_SIDE_ACTIVITIES_BIBLE_V1",
+      "SRC_OWNER_MISSION_CHAPTER_IMPLEMENTATION_MATRIX_V1",
+      "SRC_OWNER_VISUAL_REFERENCE_BIBLE_V1",
+      "SRC_OWNER_3D_VISUAL_ASSET_ATLAS_V1",
+      "SRC_OWNER_MASTER_PRODUCTION_SYSTEMS_SOURCE_INDEX_V1"
+    ],
+    "verification_boundary": "Timeline + supplied Tolkien evidence are routed in this packet. Exact Two Towers screenplay scene verification remains mandatory before any future FILM_CORE/runtime promotion."
+  },
+  "canonical_contract": {
+    "primary_location": "Rohan / Edoras",
+    "playable_present_focus": [
+      "Theoden",
+      "Eowyn",
+      "Eomer",
+      "Gandalf",
+      "Aragorn"
+    ],
+    "canonical_beat": "Theoden is restored and the political/military crisis is clarified.",
+    "safe_optional_window": [
+      "court exploration",
+      "stables",
+      "equipment preparation",
+      "social scenes"
+    ],
+    "locked_postcondition": "Rohan evacuates toward Helm's Deep.",
+    "entry_contract": "Prior Rohan/Fangorn progression is committed; roster, knowledge flags, chapter-state population and world variant are validated before control returns.",
+    "exit_contract": "Commit F2-03 completion and evacuation toward Helm's Deep without allowing optional content to rewrite the locked outcome.",
+    "save_strategy": [
+      "clean-entry autosave",
+      "checkpoint immediately before irreversible restoration/decision set-piece",
+      "postcondition save after evacuation state commit"
+    ],
+    "skip_rule": "Any skipped presentation must leave the same quest/world/knowledge postconditions as the completed presentation."
+  },
+  "chronology_and_knowledge": {
+    "predecessor": "F2-02 Fangorn & Gandalf Returned",
+    "successor": "F2-04 Road & Helm's Deep Prep",
+    "allowed_known_state": [
+      "Gandalf has returned and leads the hunters to Edoras.",
+      "Rohan is under active wartime pressure.",
+      "Theoden's impaired condition and court crisis may be presented only as verified by film/script continuity."
+    ],
+    "forbidden_early_state": [
+      "Do not pre-apply Helm's Deep battle aftermath.",
+      "Do not expose later Pelennor/Dunharrow outcomes.",
+      "Do not reveal future character knowledge or equipment before the verified scene/window that grants it."
+    ],
+    "source_disposition_rules": [
+      "Film/script chronology controls visible staging and locked outcomes.",
+      "Compatible Tolkien geography, Rohan history, settlement structure and material culture may enrich exploration.",
+      "Book-only differences may not silently replace film-driven events."
+    ]
+  },
+  "world_cells": [
+    {
+      "id": "EDORAS_APPROACH_PLAIN",
+      "role": "arrival readability and first hero vista",
+      "authored_elements": [
+        "rolling grassland approach",
+        "white-mountain backdrop",
+        "stream/ford approach",
+        "green hill silhouette",
+        "distant golden-hall landmark read"
+      ],
+      "production_budget": [
+        "long-view terrain first",
+        "sparse foreground clusters",
+        "distance culling",
+        "no dense per-instance ticking"
+      ]
+    },
+    {
+      "id": "EDORAS_BARROW_APPROACH",
+      "role": "cultural threshold before settlement core",
+      "authored_elements": [
+        "royal burial mounds",
+        "simbelmyne-inspired pale flower dressing without direct textual reproduction",
+        "walled-hill approach",
+        "war-readiness sentries"
+      ],
+      "production_budget": [
+        "HISM flowers/grass",
+        "shared stone/earth materials",
+        "hero-readable silhouettes over prop count"
+      ]
+    },
+    {
+      "id": "EDORAS_LOWER_SETTLEMENT",
+      "role": "lived Rohan support space",
+      "authored_elements": [
+        "timber dwellings",
+        "service yards",
+        "horse traffic lanes",
+        "craft/work pockets",
+        "evacuation-ready household props"
+      ],
+      "production_budget": [
+        "HISM fences/posts",
+        "pooled population markers",
+        "LOD/cull tiers",
+        "no unique shader per building"
+      ]
+    },
+    {
+      "id": "EDORAS_STABLES",
+      "role": "safe-window horse/equipment/social gameplay",
+      "authored_elements": [
+        "stable bays",
+        "tack storage",
+        "feed/hay props",
+        "grooming/work stations",
+        "mount preparation lanes"
+      ],
+      "production_budget": [
+        "pooled horse/ambient actors when runtime eventually opens",
+        "shared skeletal/animation families",
+        "bounded audio emitters"
+      ]
+    },
+    {
+      "id": "MEDUSELD_EXTERIOR",
+      "role": "hero landmark and political center",
+      "authored_elements": [
+        "elevated terrace",
+        "golden-roof visual identity",
+        "large timber posts",
+        "guarded entrance",
+        "clear processional approach"
+      ],
+      "production_budget": [
+        "selective high material quality on hero surfaces",
+        "LOD on secondary timber",
+        "baked/static lighting bias where compatible"
+      ]
+    },
+    {
+      "id": "MEDUSELD_INTERIOR",
+      "role": "court restoration/political crisis set-piece and bounded exploration",
+      "authored_elements": [
+        "king's dais/throne focus",
+        "timber structural rhythm",
+        "warm hall lighting",
+        "court guard/retainer staging",
+        "clear cinematic/gameplay camera lanes"
+      ],
+      "production_budget": [
+        "limited hero lights",
+        "shared material masters",
+        "no unbounded reflection/effect cost",
+        "stream interior package asynchronously"
+      ]
+    },
+    {
+      "id": "EDORAS_EVACUATION_MUSTER",
+      "role": "chapter exit state and transition toward Helm's Deep",
+      "authored_elements": [
+        "supply carts",
+        "packed household props",
+        "horse lines",
+        "civilian/military route separation",
+        "departure gate/readable outbound path"
+      ],
+      "production_budget": [
+        "pooled crowds",
+        "HISM repeated cargo/props",
+        "bounded vehicle/cart count",
+        "visibility-cell culling"
+      ]
+    }
+  ],
+  "world_state_variants": [
+    {
+      "id": "PRE_RESTORATION",
+      "population": "subdued court/settlement activity; guards and essential work remain",
+      "weather_light": "cool restrained exterior/interior contrast; exact film look requires future visual review",
+      "props": "normal settlement plus wartime caution; no evacuation clutter yet",
+      "patrol": "defensive local presence only",
+      "rule": "Must not imply the restored/post-decision state early."
+    },
+    {
+      "id": "POST_RESTORATION_PRE_EVACUATION",
+      "population": "activity rises around court, stables and preparations",
+      "weather_light": "retain chapter continuity; no unsupported time jump",
+      "props": "equipment and travel preparation becomes visible",
+      "patrol": "organized movement/readiness",
+      "rule": "Optional exploration may run only while urgency remains plausible."
+    },
+    {
+      "id": "EVACUATION_COMMITTED",
+      "population": "movement toward departure lanes",
+      "weather_light": "transition-ready",
+      "props": "packed supplies, carts and mount staging",
+      "patrol": "route protection and departure control",
+      "rule": "Safe-window side activities expire; exit postcondition becomes authoritative."
+    }
+  ],
+  "character_source_contracts": [
+    {
+      "id": "THEODEN",
+      "role": "king/restoration/political decision center",
+      "source_requirements": [
+        "future exact screenplay scene verification",
+        "Tolkien lineage/context may enrich non-conflicting lore",
+        "FBX 2018-compatible skeletal source before runtime"
+      ],
+      "runtime_boundary": "SOURCE_ONLY"
+    },
+    {
+      "id": "EOWYN",
+      "role": "court/family/settlement emotional continuity",
+      "source_requirements": [
+        "knowledge flags bound to F2-03",
+        "future exact screenplay scene verification",
+        "no future Pelennor identity/state leakage"
+      ],
+      "runtime_boundary": "SOURCE_ONLY"
+    },
+    {
+      "id": "EOMER",
+      "role": "Rohan military/family continuity",
+      "source_requirements": [
+        "presence/state must match supplied film/script continuity",
+        "do not infer scene presence solely from book continuity"
+      ],
+      "runtime_boundary": "SOURCE_ONLY"
+    },
+    {
+      "id": "GANDALF",
+      "role": "restoration catalyst and continuity bridge from F2-02",
+      "source_requirements": [
+        "future film/script scene verification",
+        "reuse existing production character architecture when eventually authorized"
+      ],
+      "runtime_boundary": "SOURCE_ONLY"
+    },
+    {
+      "id": "ARAGORN",
+      "role": "hunter/ally viewpoint in Edoras court crisis",
+      "source_requirements": [
+        "future film/script scene verification",
+        "knowledge/equipment must remain chapter-accurate"
+      ],
+      "runtime_boundary": "SOURCE_ONLY"
+    },
+    {
+      "id": "GRIMA",
+      "role": "court-opposition/political crisis source packet",
+      "source_requirements": [
+        "screenplay/film verification required before final scene staging",
+        "original game dialogue only"
+      ],
+      "runtime_boundary": "SOURCE_ONLY"
+    }
+  ],
+  "culture_and_material_language": {
+    "principles": [
+      "Horse-lord identity should read through stable infrastructure, tack, mounted logistics, horse imagery and movement lanes rather than generic medieval clutter.",
+      "Timber construction, carved posts, woven textiles, leather, iron hardware and warm hall interiors form the reusable Rohan material family.",
+      "Royal lineage/history may appear through environment and memorial structure only where source-compatible and non-spoilery."
+    ],
+    "material_families": [
+      "weathered timber",
+      "gold-toned hero roof/trim treatment",
+      "packed earth",
+      "grass",
+      "stone foundation",
+      "leather/tack",
+      "iron hardware",
+      "woven cloth"
+    ],
+    "texture_rule": "New textures PNG/TGA only; channel-pack roughness/metallic/AO where appropriate; no BMP.",
+    "shader_rule": "Shared masters + material instances; reserve expensive features for Meduseld hero surfaces."
+  },
+  "prop_asset_families": [
+    {
+      "id": "ROHAN_FENCE_POST_SET",
+      "reuse": [
+        "approach",
+        "lower settlement",
+        "stable yards"
+      ],
+      "instancing": "HISM/ISM"
+    },
+    {
+      "id": "ROHAN_STABLE_TACK_SET",
+      "reuse": [
+        "stables",
+        "muster"
+      ],
+      "instancing": "ISM where repeated"
+    },
+    {
+      "id": "ROHAN_CART_CARGO_SET",
+      "reuse": [
+        "work areas",
+        "evacuation muster"
+      ],
+      "instancing": "HISM/ISM static pieces; cart actors bounded"
+    },
+    {
+      "id": "ROHAN_HALL_TIMBER_SET",
+      "reuse": [
+        "Meduseld exterior/interior",
+        "prestige structures"
+      ],
+      "instancing": "modular static mesh kit"
+    },
+    {
+      "id": "ROHAN_TEXTILE_BANNER_SET",
+      "reuse": [
+        "court",
+        "muster"
+      ],
+      "instancing": "bounded; motion only near hero camera"
+    },
+    {
+      "id": "ROHAN_MEAL_HOUSEHOLD_SET",
+      "reuse": [
+        "hall/social scenes",
+        "lower settlement"
+      ],
+      "instancing": "shared low-cost props"
+    },
+    {
+      "id": "ROHAN_WEAPON_RACK_SET",
+      "reuse": [
+        "hall guard zones",
+        "equipment prep"
+      ],
+      "instancing": "static repeated props; gameplay weapons remain separate authoritative actors"
+    }
+  ],
+  "gameplay_preproduction": {
+    "owner_when_runtime_opens": "Existing quest/story authority only; do not create a second quest system.",
+    "safe_window_activities": [
+      {
+        "id": "COURT_EXPLORATION",
+        "purpose": "read political/social state without changing outcome",
+        "expiry": "restoration/evacuation urgency"
+      },
+      {
+        "id": "STABLE_ROUTINE",
+        "purpose": "grooming/tack/equipment micro-activity",
+        "expiry": "evacuation commit"
+      },
+      {
+        "id": "EQUIPMENT_PREP",
+        "purpose": "bounded gear-readiness interaction",
+        "expiry": "evacuation commit"
+      },
+      {
+        "id": "SOCIAL_SCENES",
+        "purpose": "source-safe relationship/world texture",
+        "expiry": "when urgency makes them implausible"
+      }
+    ],
+    "forbidden": [
+      "No optional branch may prevent Theoden restoration.",
+      "No side activity may reverse the evacuation decision.",
+      "No optional reward may silently advance future combat/story state."
+    ]
+  },
+  "living_world_preproduction": {
+    "population_groups": [
+      "royal household/retainers",
+      "guards/riders",
+      "stable workers",
+      "craft/work residents",
+      "civilian households preparing for departure"
+    ],
+    "ambient_routines": [
+      "horse care",
+      "tack movement",
+      "guard rotation",
+      "supply handling",
+      "court waiting",
+      "departure packing"
+    ],
+    "lifecycle_rule": "Future runtime population must use the existing pooled living-world architecture; no per-frame global scan and no spawn/destroy crowd churn.",
+    "density_rule": "Author life through route-local pockets and state changes, not raw NPC count."
+  },
+  "audio_preproduction": {
+    "owner_when_runtime_opens": "UShireAudioSubsystem or successor explicitly approved by Governor; no parallel manager.",
+    "identity": [
+      "wind across grassland",
+      "horses/stable movement",
+      "leather/tack handling",
+      "timber hall room tone",
+      "distant work/muster activity",
+      "controlled horn/ceremonial accents where source/staging supports them"
+    ],
+    "streaming_rule": "Heavy audio stays soft-referenced and asynchronously loaded.",
+    "mix_rule": "Story-critical dialogue/cues outrank decorative ambience."
+  },
+  "performance_preproduction": {
+    "target_profile": {
+      "renderer": "DX11",
+      "resolution": "720p",
+      "ram_gb": 8,
+      "vram_gb": 2,
+      "fps_floor": 30
+    },
+    "rules": [
+      "HISM/ISM repeated fences, posts, grasses, flowers and cargo.",
+      "LOD/cull secondary timber buildings and distant clutter.",
+      "Soft references for heavy chapter packages.",
+      "FStreamableManager asynchronous heavy loading only.",
+      "Pool settlement population and horses; stagger context/animation updates.",
+      "Keep Meduseld hero surfaces selectively high while reducing distant shadow/detail cost first.",
+      "No Niagara-heavy grassland ambience by default."
+    ]
+  },
+  "qa_and_acceptance_preproduction": {
+    "static_checks": [
+      "F2-03 ID and locked postcondition are present.",
+      "Runtime promotion remains predecessor-gated.",
+      "All animated-character source requirements remain FBX.",
+      "Texture formats remain PNG/TGA.",
+      "Async/soft-reference and pooling rules are present.",
+      "Optional activities all define expiry.",
+      "Pre-restoration state cannot contain evacuation-complete flags."
+    ],
+    "future_manual_evidence": [
+      "exact screenplay scene/cast/knowledge verification",
+      "rendered visual comparison",
+      "PIE traversal/quest/save tests",
+      "target-device p95/p99/max frame-time and memory evidence",
+      "human pacing/visual acceptance"
+    ],
+    "evidence_boundary": "SOURCE/PREPRODUCTION ONLY. No runtime implementation, compile, PIE, device, visual, pacing, performance or Gate acceptance."
+  },
+  "meaningful_detail_disposition": [
+    {
+      "detail": "Edoras hill settlement and hero hall silhouette",
+      "disposition": "LINKED_FOR_LATER"
+    },
+    {
+      "detail": "stream/ford and approach geography",
+      "disposition": "LINKED_FOR_LATER"
+    },
+    {
+      "detail": "royal burial mounds and seasonal pale memorial flowers",
+      "disposition": "BOOK_ONLY_COMPATIBLE"
+    },
+    {
+      "detail": "Meduseld elevated golden-hall identity",
+      "disposition": "BOOK_ONLY_COMPATIBLE"
+    },
+    {
+      "detail": "Rohan horse-centered logistics/material culture",
+      "disposition": "LINKED_FOR_LATER"
+    },
+    {
+      "detail": "Theoden/Eowyn/Eomer family history beyond scene needs",
+      "disposition": "LINKED_FOR_LATER"
+    },
+    {
+      "detail": "exact film staging/dialogue/order inside restoration scene",
+      "disposition": "NEEDS_SOURCE_RESOLUTION"
+    }
+  ]
+}
