@@ -1,7 +1,7 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "plan_id": "P1C01_VISIBLE_WORLD_PROXY_REPLACEMENT_V1",
-  "status": "SOURCE_PREPARATION_ACTIVE",
+  "status": "SOURCE_REUSE_PRIORITY_ACTIVE",
   "authority": [
     "Data/ProjectGovernor.json",
     "Data/ContinuousProductionWaveQueueV2.json",
@@ -75,14 +75,16 @@
         "SM_ShHedge",
         "SM_ShTreeTrunk",
         "SM_ShTreeCanopy",
-        "SM_ShRock"
+        "SM_ShRock",
+        "SM_CommonFallenLog",
+        "SM_CommonBroadleafTree",
+        "SM_CommonBoulderCluster"
       ],
       "remaining_source_needs": [
-        "road-edge breakup/ditch support",
-        "wooded-road obstacle/fallen-log support",
-        "hedge and broadleaf variation with LOD/cull readiness"
+        "road-edge breakup/ditch support if current stock cannot compose the required silhouette",
+        "additional hedge/broadleaf variation only after current reusable assets are exhausted"
       ],
-      "runtime_rule": "Repeated detail must remain ISM/HISM + LOD/culling."
+      "runtime_rule": "Next serialized runtime visual pass must reuse Common fallen-log/broadleaf/boulder stock first; repeated detail remains ISM/HISM + LOD/culling."
     },
     {
       "order": 4,
@@ -90,15 +92,18 @@
       "priority": "CRITICAL_VISIBLE",
       "existing_production_assets": [
         "SM_CommonRiverBank",
-        "M_ProductionWater"
+        "M_ProductionWater",
+        "SM_CommonRiverBoat",
+        "SM_CommonRopePost",
+        "SM_CommonRopeCoil",
+        "SM_CommonFootbridge",
+        "SM_CommonReedCluster"
       ],
       "remaining_source_needs": [
-        "ferry platform/raft FBX",
-        "dock/landing timber FBX",
-        "mooring-post/rope support",
-        "riverbank reeds/rocks variation"
+        "hero-specific ferry silhouette only if reusable river-boat/footbridge stock fails later visual review",
+        "additional riverbank vegetation variation only if current reed/rock stock is insufficient"
       ],
-      "runtime_rule": "Water remains low-cost; no planar reflections, scene capture or CPU water simulation on target profile."
+      "runtime_rule": "Next serialized runtime visual pass must try already-imported river boat/footbridge/rope/reed assets before requesting another ferry source. Water remains low-cost."
     }
   ],
   "target_profile": {
@@ -116,6 +121,20 @@
     "loading": "FStreamableManager asynchronous for heavy runtime assets",
     "repeated_detail": "ISM/HISM + LOD/culling"
   },
-  "success_boundary": "Source candidates are prepared with provenance and class QC for the listed visible cells; this plan alone does not authorize runtime replacement.",
-  "evidence_boundary": "STATIC SOURCE/ROUTING contract only. No PIE/device/visual/performance acceptance."
+  "success_boundary": "Existing production stock is mapped to the visible fallback roles first; only roles still unsupported after reuse are eligible for new acquisition. Runtime replacement remains serialized and separately validated.",
+  "evidence_boundary": "STATIC SOURCE/IMPORT-LOG reuse mapping only. No PIE/device/visual/performance acceptance.",
+  "reuse_discovery": {
+    "evidence": "Unreal Build #1250 production-import log + current Shire builder static inspection",
+    "rule": "Prefer already-imported production assets before acquiring another source for the same visible role.",
+    "reusable_assets": [
+      "SM_CommonRiverBoat",
+      "SM_CommonRopePost",
+      "SM_CommonRopeCoil",
+      "SM_CommonFootbridge",
+      "SM_CommonReedCluster",
+      "SM_CommonFallenLog",
+      "SM_CommonBroadleafTree",
+      "SM_CommonBoulderCluster"
+    ]
+  }
 }
