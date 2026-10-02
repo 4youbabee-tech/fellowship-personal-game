@@ -2542,7 +2542,7 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Selected source staging | SOURCE-IMPLEMENTED | SHA256-verified candidate copied only into isolated `Characters/Rigs/FRODO/SK_FRODO.fbx` path |
 | Production importer skeletal FBX path | SOURCE-IMPLEMENTED | FBX accepted only below `Characters/Rigs/`; explicit `FBXIT_SkeletalMesh` |
 | Materials/textures/animations during validation | DISABLED | Validation isolates skeletal mesh import only |
-| Skeletal class verification | SOURCE-IMPLEMENTED | AssetRegistry must register expected object as `USkeletalMesh` |
+| Skeletal class + bone verification | SOURCE-IMPLEMENTED | AssetRegistry must register expected object as `USkeletalMesh` and imported mesh must report >0 reference-skeleton bones |
 | Exact-head UE4.27.2 import | PENDING | Dedicated self-hosted workflow must produce `SK_FRODO.uasset` + log marker |
 | AnimBP / retarget / deformation / likeness | NOT ACCEPTED | Separate successor evidence required |
 | Runtime replacement / PIE / device / visual / performance | NOT ACCEPTED | `runtime_integration_allowed=false` |
