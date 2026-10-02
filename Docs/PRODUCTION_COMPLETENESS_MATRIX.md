@@ -2692,3 +2692,14 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Static FBX skeletal QC | PENDING | Must pass before UE runner reservation |
 | UE4.27.2 skeletal import | PENDING | Same smoothing/bind-pose/UV rejection gate as Rogue |
 | Runtime / likeness / deformation / retarget | NOT AUTHORIZED | Technical probe only |
+
+
+## 2026-10-03 - Closed-PR branch lifecycle enforcement
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Root cause | IDENTIFIED | Cleanup job previously skipped closed-unmerged PRs |
+| Exact closed-head deletion | SOURCE-IMPLEMENTED | SHA-match + active-PR + canonical/protected guards retained |
+| Existing stale branch retirement | SOURCE-IMPLEMENTED | 19 verified superseded/orphan refs queued in cleanup plan |
+| Active PR protection | PRESERVED | Live open PR heads are excluded |
+| Hosted validation | PENDING | Fresh exact-head Pre-Unreal/cleanup evidence required |
