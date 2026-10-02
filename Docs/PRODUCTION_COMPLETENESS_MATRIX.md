@@ -2714,3 +2714,5 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | PG-167 contract | SOURCE-REPAIRED | validates closed-PR lifecycle markers |
 | Project Governor REQ-EXEC-002 | UPDATED | salvage/disposition-before-delete + live-ref audit rule |
 | Fresh exact-head validation | PENDING | new run required before merge |
+
+| Branch deletion active-PR safety recheck | SOURCE-HARDENED | Per-branch `head=owner:branch` API query before deletion; API failure blocks cleanup |
