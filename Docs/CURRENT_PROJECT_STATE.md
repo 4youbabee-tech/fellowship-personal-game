@@ -3740,3 +3740,11 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Every deletion path now performs a second, branch-specific GitHub API query for an open PR whose `head=owner:branch`. API failure is fatal; an active result blocks deletion.
 - The guard applies both to exact closed-head deletion and explicit/zero-ahead cleanup through `Remove-RemoteBranch`.
 - This is a safety hardening, not a cleanup-gate relaxation. Fresh exact-head validation remains pending.
+
+
+### 2026-10-03 - Branch Cleanup #138 empty-query repair
+
+- Branch Cleanup #138 **FAILED safely** before stale deletion. The branch-specific open-PR recheck treated an empty GitHub REST response as active because PowerShell `@($null)` has `Count=1`.
+- Repair filters null responses and requires an exact `head.ref == branch` match before declaring a branch active. GitHub API errors remain fatal and therefore fail closed.
+- The stale-retirement plan from #268 remains unchanged and will be retried only after fresh exact-head validation.
+- Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No branch-deletion success claim yet.
