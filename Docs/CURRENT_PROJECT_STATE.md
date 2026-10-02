@@ -3671,3 +3671,10 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Fresh Pre-Unreal #1643 proved the hosted classifier regression cases and PowerShell syntax, then failed only at PG-145B because the validator still searched for the retired self-hosted step name `Classify current delta for Unreal validation`.
 - PG-145B remains fail-closed: `verify_runner_session.ps1` must still precede the first self-hosted post-checkout work step. The validator is updated to recognize the hosted-preflight handoff marker instead of weakening the health requirement.
 - Status: **SOURCE-FIXED / FRESH EXACT-HEAD PRE-UNREAL PENDING**.
+
+## 2026-10-02 - Hosted Unreal classifier exact-base diff fix
+
+- East Fields refresh exposed a real acceleration defect: hosted classification used `fetch-depth: 2`, so multi-commit PR ancestry could not resolve the exact develop base and correctly fell back to `mode=full`.
+- Hosted preflight now checks out full history (`fetch-depth: 0`) before classification, allowing exact base/head diff without reserving the UE4 laptop for source-only work.
+- Pre-Unreal now guards this full-history + self-hosted-skip contract.
+- Status: **SOURCE-FIXED / FRESH EXACT-HEAD PRE-UNREAL PENDING**. No runtime/PIE/device/visual/performance acceptance claim.
