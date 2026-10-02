@@ -3568,3 +3568,11 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Performance/architecture boundary remains UE4.27.2 + DX11 + 1280x720 + 30 FPS floor, soft refs, async FStreamableManager, pooled crowds, ISM/HISM, FBX animated assets, PNG/TGA textures.
 - Warehouse #315 on `develop@8c0f7b7da22e25ab723675d6d7a447d309c00bfe` succeeded and produced **5/5 Frodo static FBX structure passes** (FBX v7400, skeleton/skin/cluster markers present). This is **STATIC-VALIDATED** only; UE4 skeletal import, deformation and likeness remain pending.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING** for the new queue.
+
+## 2026-10-02 - P1C01 visible-world mega source execution
+
+- Opened a dedicated source/preparation branch from canonical develop to push the already-authorized M003-M007 visual stack while M001 Frodo skeletal validation remains serialized on PR #247.
+- `Data/P1C01MegaChapterPackV1.json` is upgraded to schema v2 and now explicitly prioritizes four visible cells: Bag End hero ring, Hobbiton village, Shire road corridor and Bucklebury/Ferry.
+- The pack continues to reuse the persistent warehouse before acquisition and keeps the existing promotion/material-export/character-intake machinery. It does not introduce a second runtime lane.
+- Target constraints remain UE4.27.2 / DX11 / 720p / 30 FPS floor / 8 GB RAM / ~2 GB VRAM, FBX animated assets, PNG/TGA production textures, soft/async heavy runtime assets and ISM/HISM+LOD/culling for repeated detail.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL PENDING**. No PIE/device/visual/performance acceptance claim.
