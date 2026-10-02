@@ -226,7 +226,43 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  classify:
+    name: Hosted Unreal lane classifier
+    runs-on: windows-latest
+    timeout-minutes: 10
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+    outputs:
+      mode: ${{ steps.classify.outputs.mode }}
+      reason: ${{ steps.classify.outputs.reason }}
+      parent_sha: ${{ steps.classify.outputs.parent_sha }}
+      resume_stage: ${{ steps.classify.outputs.resume_stage }}
+      reset_intermediates: ${{ steps.classify.outputs.reset_intermediates }}
+      full: ${{ steps.classify.outputs.full }}
+      core: ${{ steps.classify.outputs.core }}
+      asset: ${{ steps.classify.outputs.asset }}
+      acceptance: ${{ steps.classify.outputs.acceptance }}
+    steps:
+      - name: Checkout exact candidate for classification
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          fetch-depth: 2
+          persist-credentials: false
+
+      - name: Classify Unreal requirement without reserving UE4 machine
+        id: classify
+        shell: powershell
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          & "$env:GITHUB_WORKSPACE\Scripts\classify_unreal_validation.ps1"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
   unreal-build:
+    needs: classify
+    if: needs.classify.outputs.mode != 'inherit'
     name: UE4.27.2 C++ Build
     runs-on:
       - self-hosted
@@ -321,11 +357,21 @@ jobs:
         shell: cmd
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\verify_runner_session.ps1"'
 
-      - name: Classify current delta for Unreal validation
-        shell: cmd
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\classify_unreal_validation.ps1"'
+      - name: Import hosted Unreal classification
+        shell: powershell
+        run: |
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_UNREAL_MODE=${{ needs.classify.outputs.mode }}"
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_UNREAL_DECISION_REASON=${{ needs.classify.outputs.reason }}"
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_UNREAL_PARENT_SHA=${{ needs.classify.outputs.parent_sha }}"
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_ACCEPTANCE_RESUME_STAGE=${{ needs.classify.outputs.resume_stage }}"
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_RESET_INTERMEDIATES=${{ needs.classify.outputs.reset_intermediates }}"
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_FULL_UNREAL_REQUIRED=${{ needs.classify.outputs.full }}"
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_CORE_UNREAL_REQUIRED=${{ needs.classify.outputs.core }}"
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_ASSET_IMPORT_ONLY=${{ needs.classify.outputs.asset }}"
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_ACCEPTANCE_ONLY=${{ needs.classify.outputs.acceptance }}"
+          if ("${{ needs.classify.outputs.mode }}" -notin @("full","core","asset","acceptance")) {
+            throw "Unexpected hosted Unreal mode: ${{ needs.classify.outputs.mode }}"
+          }
 
       - name: Scrub checkout credential from persistent Git metadata
         shell: cmd
