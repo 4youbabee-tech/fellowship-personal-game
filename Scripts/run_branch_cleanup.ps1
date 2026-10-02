@@ -105,18 +105,21 @@ function Remove-RemoteBranch {
     if ($planProtectedBranches.Contains($Branch)) {
         throw "Refusing plan-protected branch: $Branch"
     }
-    if (($activeHeads -contains $Branch) -or (Test-BranchHasOpenPull -Branch $Branch)) {
-        Write-Host "BRANCH_CLEANUP_KEEP_ACTIVE_PR branch=$Branch reason=$Reason"
-        return $false
-    }
 
+    # Fast-path already-absent historical refs before spending a GitHub API request.
+    # This preserves active-PR safety because deletion is considered only for a live ref.
     $remoteRef = "refs/heads/$Branch"
     $existing = @(& git ls-remote --heads origin $remoteRef)
     if ($LASTEXITCODE -ne 0) {
         throw "Unable to query remote branch: $Branch"
     }
     if ($existing.Count -eq 0) {
-        Write-Host "BRANCH_CLEANUP_ALREADY_ABSENT branch=$Branch reason=$Reason"
+        Write-Host "BRANCH_CLEANUP_REMOTE_ABSENT_FASTPATH branch=$Branch reason=$Reason"
+        return $false
+    }
+
+    if (($activeHeads -contains $Branch) -or (Test-BranchHasOpenPull -Branch $Branch)) {
+        Write-Host "BRANCH_CLEANUP_KEEP_ACTIVE_PR branch=$Branch reason=$Reason"
         return $false
     }
 
