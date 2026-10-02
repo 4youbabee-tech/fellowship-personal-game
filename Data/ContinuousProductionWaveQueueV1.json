@@ -172,5 +172,37 @@
       "target_items": 120,
       "state": "QUEUED"
     }
-  ]
+  ],
+  "self_healing": {
+    "lifecycle": [
+      "QUEUED",
+      "ACTIVE",
+      "VALIDATING",
+      "FAILED_TECHNICAL",
+      "REPAIRING",
+      "BLOCKED_MANUAL",
+      "READY_NEXT",
+      "COMPLETE"
+    ],
+    "technical_failure_policy": "Capture exact failing step/log, isolate smallest root cause, repair on the same wave branch, add/strengthen regression guard, rerun exact-head validation. Do not advance the affected runtime lane until its required gate passes.",
+    "manual_blocker_policy": "Record provider/license/download/device/visual blocker and immediately select an independent eligible wave.",
+    "retry_policy": {
+      "automatic_repair_cycles_per_failure_class": 3,
+      "after_limit": "QUARANTINE_FAILURE_CLASS_AND_CONTINUE_INDEPENDENT_WAVE"
+    },
+    "next_wave_policy": "A successful wave marks READY_NEXT/COMPLETE and activates the highest-priority eligible next wave without owner confirmation.",
+    "runtime_safety": "Never stack new runtime changes on a known failing runtime checkpoint."
+  },
+  "playable_milestone": {
+    "id": "P1C01_PLAYABLE_ENJOYABLE_SLICE",
+    "required_before_claim": [
+      "exact-head static validation",
+      "UE4.27.2 compile/UHT",
+      "PIE traversal and interactions",
+      "save/load exercise",
+      "target-device 720p/DX11 evidence",
+      "human visual and pacing review"
+    ],
+    "note": "Large source waves accelerate content production but do not replace runtime, device, visual or pacing evidence."
+  }
 }
