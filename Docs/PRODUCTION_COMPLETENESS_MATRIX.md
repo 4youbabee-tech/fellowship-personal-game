@@ -2505,7 +2505,7 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Direct CC0 archive | RUN-PROVEN STAGED | 48,430,012 bytes; SHA256 `0295062cbc72da52ee804f39ac38694901a40458011f9b2638fc7ef13ed509da` |
 | FBX discovery | RUN-PROVEN | 52 FBX in Warehouse #312; receipt hash verified |
 | Old candidate ranking | REJECTED AS SEMANTICALLY UNSAFE | Substring collisions: Female→male and Soldier/Golden→old |
-| Exact-token ranking repair | SOURCE-IMPLEMENTED | Filename-only tokens, identity filters, exclusions, bounded pools |
+| Exact-token ranking repair | SOURCE-IMPLEMENTED | Filename-only tokens, identity filters, exclusions, bounded pools; PG-205 enforces the V2 state/order/policy |
 | Frodo static FBX structure probe | SOURCE-IMPLEMENTED | Header/version plus Geometry/Model/LimbNode/Deformer/Skin/Cluster markers |
 | UE4 skeletal import / deformation / likeness | NOT STARTED | Requires exact-head Unreal evidence and human visual review |
 | READY_FOR_IMPORT / Runtime / Gate 6/7 | NOT ACCEPTED | P1C01 remains active; P1C02 remains predecessor-gated |

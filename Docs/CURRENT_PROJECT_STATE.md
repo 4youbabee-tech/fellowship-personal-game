@@ -3532,6 +3532,6 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Persistent inventory remained clean: **18,933 payload files / 6,857,028,364 bytes / 240 active / 428 superseded / 0 duplicate groups**. Poly Haven 219 and ambientCG 8 payloads were receipt-reused.
 - Candidate artifact `11198541662` ZIP SHA256 matched GitHub: `415c678706a6f258077fed877c45a155a016dea1092f0217a83042e03f2ec2fa`.
 - Artifact review exposed semantic false positives: substring matching classified `Female` as `male` and `Soldier/Golden` as `old`.
-- This repair changes ranking to exact filename tokens, bounds Frodo/Gandalf identity terms, adds regression examples, and adds a Frodo-first static FBX header/Geometry/Model/LimbNode/Deformer/Skin/Cluster probe.
+- This repair changes ranking to exact filename tokens, bounds Frodo/Gandalf identity terms, adds regression examples, adds a Frodo-first static FBX header/Geometry/Model/LimbNode/Deformer/Skin/Cluster probe, and migrates PG-205 from the retired substring/state markers to the fail-closed V2 contract.
 - Evidence boundary: **SOURCE-IMPLEMENTED / exact-head validation pending**. Static markers will not prove FBX 2018 export, UE4 skeletal import, deformation, final Frodo likeness, READY_FOR_IMPORT, runtime integration, PIE, device, visual or performance acceptance.
 

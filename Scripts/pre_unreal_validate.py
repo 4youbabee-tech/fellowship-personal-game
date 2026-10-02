@@ -5574,8 +5574,12 @@ pg205_runner = read(ROOT / "Scripts" / "run_p1c01_hero_skeletal_candidate_wave.p
 pg205_workflow = read(ROOT / ".github" / "workflows" / "p1c01-hero-skeletal-candidate-wave.yml")
 pg205_unreal = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
 
-if pg205_manifest.get("status") != "SOURCE_INTAKE_QC_READY_RUNTIME_NOT_STARTED":
+if pg205_manifest.get("status") != "FRODO_FIRST_EXACT_TOKEN_AND_STATIC_FBX_QC":
     fail("PG-205 hero skeletal wave status drifted")
+if pg205_manifest.get("schema_version", 0) < 2:
+    fail("PG-205 exact-token candidate schema missing")
+if pg205_manifest.get("owner_execution_order", [])[:2] != ["FRODO", "GANDALF"]:
+    fail("PG-205 Frodo-first execution order drifted")
 if pg205_manifest.get("runtime_scope") != "P1C01_ONLY":
     fail("PG-205 hero skeletal wave escaped P1C01 scope")
 if pg205_manifest.get("runtime_integration_allowed", True):
@@ -5592,6 +5596,15 @@ if ".bmp" not in policy.get("forbidden_texture_formats", []):
     fail("PG-205 BMP rejection missing")
 if policy.get("ready_for_import_default") is not False:
     fail("PG-205 candidates must not default to READY_FOR_IMPORT")
+if policy.get("ranking_semantics") != "EXACT_FILENAME_TOKENS_ONLY":
+    fail("PG-205 exact filename-token ranking missing")
+if policy.get("substring_matching_forbidden") is not True:
+    fail("PG-205 substring-match rejection missing")
+frodo_qc = pg205_manifest.get("frodo_static_fbx_qc", {})
+if frodo_qc.get("active_character") != "FRODO":
+    fail("PG-205 static FBX QC must remain Frodo-first")
+if frodo_qc.get("ready_for_import") is not False:
+    fail("PG-205 static FBX QC must not claim READY_FOR_IMPORT")
 runtime = pg205_manifest.get("runtime_contract", {})
 for token in ["TSoftObjectPtr", "FStreamableManager"]:
     if token not in json.dumps(runtime):
@@ -5603,7 +5616,8 @@ for symbol in [
     "P1C01_HERO_RIG_INVENTORY_GATE_BEGIN",
     "P1C01_HERO_RIG_INVENTORY_GATE_PASS",
     "P1C01_HERO_RIG_CANDIDATE_PASS",
-    "RIG_FAMILY_CANDIDATE_QC_REQUIRED",
+    "RIG_BASE_CANDIDATE_STATIC_QC_REQUIRED",
+    "EXACT_FILENAME_TOKEN_MATCH",
     "ready_for_import=$false",
 ]:
     if symbol not in pg205_runner:
