@@ -704,3 +704,13 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 **Provider correction:** Quaternius is now treated as `MANUAL_CLEAR_LICENSE` / manual item download unless a provider-supported direct payload URL is known. Do not fabricate or scrape undocumented archive URLs.
 
 **Evidence boundary:** governance/source-access correction only; it does not produce Frodo/Gandalf candidates or authorize runtime integration.
+
+
+### PG-167 — P1C01 hero FBX candidates require file-level provenance
+**Risk:** candidate ranking could previously consume an extracted FBX by filename/keywords without carrying the provider asset, receipt, source payload and SHA256 into the ranked candidate record.
+
+**Permanent rule:** every FBX admitted to the P1C01 hero candidate pool must have exactly one intake provenance row binding its extracted candidate path to provider, asset ID, receipt, source payload and verified SHA256. Missing or ambiguous provenance fails closed before character ranking.
+
+**Guard:** `Scripts/test_p1c01_hero_candidate_provenance_contract.ps1` requires intake provenance emission and exact-file fail-closed enforcement in the candidate wave.
+
+**Evidence boundary:** SOURCE-IMPLEMENTED until exact-head Pre-Unreal/Unreal validation and Warehouse candidate evidence succeed. This is not skeletal/deformation/visual/runtime acceptance.
