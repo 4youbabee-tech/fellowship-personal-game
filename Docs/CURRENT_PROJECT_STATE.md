@@ -3601,3 +3601,11 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Candidate #4 is **REJECTED_TECHNICAL** for missing smoothing groups, bind-pose bones and UVs.
 - Four of five current warehouse-family candidates are now rejected. `Worker_Male.fbx` is the final current-family probe; a repeat means the family is exhausted, not that the gate should be weakened.
 - Status: **COMPILE-TESTED / CANDIDATE #4 RUN-PROVEN REJECTED_TECHNICAL / CANDIDATE #5 EXACT-HEAD PROBE PENDING**.
+
+## 2026-10-02 - Warning-debt smoothing identity guard
+
+- Unreal #1250 still reported `Missing smoothing groups = 2` although the import evidence corresponds to the same Frodo warning being emitted live and repeated in UE's final Warning/Error Summary.
+- `Scripts/warning_debt_guard.py` now attributes missing-smoothing debt to the concrete `ShireProductionImport result` asset identity and deduplicates only summary echoes for that same import identity.
+- The zero ceiling remains unchanged. Unidentified smoothing warnings still fail closed.
+- Regression coverage now proves one live+summary echo counts as one concrete defect and an unattributed warning remains a failure.
+- Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD PRE-UNREAL + UNREAL VALIDATION PENDING**.
