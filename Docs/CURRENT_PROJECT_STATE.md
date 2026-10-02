@@ -3748,3 +3748,11 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - Repair changes active-PR handling from fatal exception to explicit `BRANCH_CLEANUP_KEEP_ACTIVE_PR` + continue. Canonical/protected/moved-ref guards remain fail-closed.
 - Project Governor `REQ-EXEC-002` now requires active heads to be preserved without blocking unrelated stale cleanup.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL PENDING**. #138 remains failure evidence only.
+
+
+## 2026-10-03 - Branch Cleanup empty open-PR response repair
+
+- Branch Cleanup #138 exposed a second safety-path bug: PowerShell wrapped an empty GitHub REST response as `@($null)`, yielding `Count=1` and falsely classifying dead refs as active.
+- Fresh current-develop repair now filters null responses and requires an exact `head.ref == branch` match before a branch is considered active.
+- API failures remain fatal/fail-closed. The already-merged KEEP + CONTINUE behavior for truly active PR heads remains intact.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL PENDING**.
