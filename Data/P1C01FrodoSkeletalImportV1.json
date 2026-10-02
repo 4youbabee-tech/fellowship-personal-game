@@ -27,7 +27,7 @@
     "require_nonzero_bones": true,
     "runtime_integration_allowed": false
   },
-  "evidence_boundary": "BaseCharacter.fbx, Casual_Male.fbx, Casual2_Male.fbx and Casual3_Male.fbx now have exact filename+SHA technical rejections after real UE4.27.2 skeletal imports with 33 reference bones. Worker_Male.fbx is the final candidate in the current warehouse family and requires fresh exact-head UE4 import. If it repeats the same source-quality defects, the current source family must be exhausted and replaced rather than weakening the quality gate. No final Frodo likeness, deformation quality, retarget quality, AnimBP readiness, runtime replacement, PIE, device, visual or performance acceptance is proved.",
+  "evidence_boundary": "Four exact filename+SHA warehouse candidates are REJECTED_TECHNICAL after real UE4.27.2 imports with 33 reference bones. Worker_Male.fbx is the final candidate in the current family. If it repeats the same defects, replace the source family rather than weakening the gate. No deformation, retarget, AnimBP, runtime replacement, PIE, device, visual or performance acceptance is proved.",
   "technical_rejections": [
     {
       "filename": "BaseCharacter.fbx",
@@ -88,7 +88,7 @@
       "filename": "Casual3_Male.fbx",
       "source_sha256": "94ce47df5f166856a2d1166202ed1e8a58fd087e96b13299492b020794ddc3fd",
       "source_bytes": 1568620,
-      "evidence_head": "bf86b7b62f5fcc92f3ee80ebf217fa05245f1dea",
+      "evidence_head": "4cbc294478e8e019ea9d6ed13f4d85f27e2c6cc2",
       "ue4_skeletal_registered": true,
       "ue4_reference_bones": 33,
       "state": "REJECTED_TECHNICAL",
@@ -101,7 +101,7 @@
         "P1C01 Frodo Skeletal Import Validation #23",
         "Unreal Build Validation #1250"
       ],
-      "note": "UE4.27.2 imported a USkeletalMesh with 33 reference bones; exact source is rejected for smoothing/bind-pose/UV debt."
+      "note": "UE4.27.2 imported a USkeletalMesh with 33 reference bones; exact source rejected for smoothing/bind-pose/UV debt."
     }
   ]
 }
