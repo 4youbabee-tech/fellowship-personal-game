@@ -1030,3 +1030,10 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Runtime integration remains serialized elsewhere; this packet does not remove a primitive or change story/world authority by itself.
 - Repeated detail remains ISM/HISM + LOD/culling; heavy runtime residency remains soft/async through the existing streaming architecture.
 - Evidence boundary: **SOURCE/STATIC BINDING PREPARATION ONLY**. No PIE/device/visual/performance acceptance claim.
+
+## 2026-10-02 - Alternate Frodo source-family escalation registration
+
+- Registered a new bounded CC0 rig-base source family for Frodo candidate QC: KayKit Adventurers at immutable revision `672074b73ba276876a19e8816ecdc5241817ab47`.
+- This does not alter canon, chapter state, gameplay authority or final Frodo likeness requirements. It is only a technical rig-base source escalation after prior candidate families failed their technical gates.
+- Animated production candidates remain FBX-only; final likeness/deformation/retarget/runtime acceptance remain separately gated.
+- Status: **SOURCE REGISTERED / RUNTIME NOT AUTHORIZED**.
