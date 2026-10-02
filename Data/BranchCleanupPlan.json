@@ -120,7 +120,11 @@
     "refresh/ci-hosted-classifier-258-e72cd6a",
     "fix/daily-manager-report-pipeline-v1",
     "reconcile/daily-manager-report-pipeline-v1",
-    "reconcile/daily-manager-report-pipeline-v2"
+    "reconcile/daily-manager-report-pipeline-v2",
+    "maintenance/closed-pr-branch-lifecycle-cleanup-2026-10-03",
+    "prep/p1c01-audio-source-provenance-v1",
+    "prep/whole-game-chapter-production-packets-v1",
+    "production/queued-mega-waves-v1"
   ],
   "safety_rules": [
     "Never delete develop or main.",
@@ -454,5 +458,22 @@
       "PR #226"
     ],
     "evidence_boundary": "Repository/process hygiene only. No gameplay, compile, PIE, device, visual or performance acceptance is implied."
+  },
+  "stale_branch_retirement_wave2_2026_10_03": {
+    "action": "DELETE_AFTER_THIS_MERGE",
+    "branches": [
+      "maintenance/closed-pr-branch-lifecycle-cleanup-2026-10-03",
+      "prep/p1c01-audio-source-provenance-v1",
+      "prep/whole-game-chapter-production-packets-v1",
+      "production/queued-mega-waves-v1"
+    ],
+    "dispositions": {
+      "maintenance/closed-pr-branch-lifecycle-cleanup-2026-10-03": "Merged PR #268; branch survived only because Branch Cleanup #138 failed before closeout.",
+      "prep/p1c01-audio-source-provenance-v1": "Closed PR #241 explicitly records supersession by merged PR #243 on current ancestry.",
+      "prep/whole-game-chapter-production-packets-v1": "Closed PR #246 is superseded as execution branch by current fresh-ancestry refresh PR #262.",
+      "production/queued-mega-waves-v1": "Closed PR #239 explicitly records supersession by merged PR #244 / ContinuousProductionWaveQueueV2."
+    },
+    "safety": "No active PR heads are included. Unique content was either merged through the named successor or remains represented by the current successor PR.",
+    "evidence_boundary": "Repository/process hygiene only; no gameplay/compile/PIE/device/visual/performance acceptance."
   }
 }
