@@ -25,19 +25,36 @@ $frodoRows=@($candidate.characters | Where-Object { [string]$_.character -eq "FR
 if($frodoRows.Count -ne 1){ throw "P1C01_FRODO_IMPORT_POOL_FAIL count=$($frodoRows.Count)" }
 
 $selected=$null
+$technicalRejections=@()
+if($null -ne $manifest.PSObject.Properties["technical_rejections"]){
+  $technicalRejections=@($manifest.technical_rejections)
+}
+$appliedRejections=@()
 foreach($preferred in @($manifest.preferred_candidate_order)){
   $qc=@($static.candidates | Where-Object { [string]$_.filename -ieq [string]$preferred -and [bool]$_.static_structure_pass })
   if($qc.Count -ne 1){ continue }
+
+  $qcSha=([string]$qc[0].sha256).ToLowerInvariant()
+  $rejections=@($technicalRejections | Where-Object {
+    [string]$_.filename -ieq [string]$preferred -and
+    ([string]$_.source_sha256).ToLowerInvariant() -eq $qcSha
+  })
+  if($rejections.Count -gt 0){
+    $appliedRejections += [string]$preferred
+    Write-Host ("P1C01_FRODO_IMPORT_SKIP_TECHNICAL_REJECTION file="+[string]$preferred+" sha256="+$qcSha+" state="+[string]$rejections[0].state)
+    continue
+  }
+
   $candidateRows=@($frodoRows[0].candidates | Where-Object { [string]$_.filename -ieq [string]$preferred })
   if($candidateRows.Count -ne 1){ continue }
   $source=[string]$candidateRows[0].source_fbx
   if(-not (Test-Path -LiteralPath $source -PathType Leaf)){ continue }
   $sha=(Get-FileHash -LiteralPath $source -Algorithm SHA256).Hash.ToLowerInvariant()
-  if($sha -ne ([string]$qc[0].sha256).ToLowerInvariant()){ throw "P1C01_FRODO_IMPORT_HASH_MISMATCH file=$preferred" }
+  if($sha -ne $qcSha){ throw "P1C01_FRODO_IMPORT_HASH_MISMATCH file=$preferred" }
   $selected=[pscustomobject]@{ filename=[string]$preferred; source=$source; sha256=$sha; bytes=(Get-Item -LiteralPath $source).Length }
   break
 }
-if($null -eq $selected){ throw "P1C01_FRODO_IMPORT_NO_STATIC_VALIDATED_CANDIDATE" }
+if($null -eq $selected){ throw "P1C01_FRODO_IMPORT_NO_STATIC_VALIDATED_NONREJECTED_CANDIDATE" }
 
 $relative=[string]$manifest.temporary_source_destination
 $destination=Join-Path $Workspace ($relative -replace '/','\')
@@ -56,6 +73,7 @@ $receipt=[ordered]@{
   selected_filename=[string]$selected.filename
   selected_sha256=[string]$selected.sha256
   selected_bytes=[int64]$selected.bytes
+  technical_rejections_applied=@($appliedRejections)
   staged_relative_path=$relative
   unreal_destination=[string]$manifest.unreal_destination
   unreal_asset_name=[string]$manifest.unreal_asset_name
