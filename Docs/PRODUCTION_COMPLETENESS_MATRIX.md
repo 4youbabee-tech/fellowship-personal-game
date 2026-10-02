@@ -2680,3 +2680,15 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Frodo static-QC source admission | SOURCE-IMPLEMENTED | Source asset ID allowlist updated |
 | Warehouse staging / UE4 skeletal import | PENDING | Separate exact-head execution required |
 | Runtime / deformation / visual acceptance | NOT ACCEPTED | No matching evidence |
+
+
+## 2026-10-03 - KayKit Knight V2 technical probe
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Immutable candidate registration | SOURCE-IMPLEMENTED | KayKit revision `672074b73ba276876a19e8816ecdc5241817ab47`, `Knight.fbx` |
+| Source blob identity | SOURCE-IMPLEMENTED | Git blob `101848795913dea0d37ac3ec9352fdf9dd024010` |
+| Warehouse staging / payload SHA256 | PENDING | Must be produced by targeted staging |
+| Static FBX skeletal QC | PENDING | Must pass before UE runner reservation |
+| UE4.27.2 skeletal import | PENDING | Same smoothing/bind-pose/UV rejection gate as Rogue |
+| Runtime / likeness / deformation / retarget | NOT AUTHORIZED | Technical probe only |
