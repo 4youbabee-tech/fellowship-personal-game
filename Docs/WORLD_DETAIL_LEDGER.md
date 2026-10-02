@@ -1030,3 +1030,12 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Runtime integration remains serialized elsewhere; this packet does not remove a primitive or change story/world authority by itself.
 - Repeated detail remains ISM/HISM + LOD/culling; heavy runtime residency remains soft/async through the existing streaming architecture.
 - Evidence boundary: **SOURCE/STATIC BINDING PREPARATION ONLY**. No PIE/device/visual/performance acceptance claim.
+
+## 2026-10-02 - P1C01 Party Field primitive-overlay suppression
+
+- Registered a bounded visible-runtime cleanup for the existing F1-01 Party Field only.
+- Deep source inspection found that `SpawnVillage()` still always spawns a large cube centerpiece at the Party Field even though the later Hobbiton architecture pass already places the resident production `SM_ShPicnicCanopy` at the same story destination.
+- This pass removes only that duplicate greybox visual when the production canopy is resident; the cube remains a deterministic fallback when the production mesh is absent.
+- Story location, quest triggers, party-state ownership, NPC population, collision authority and chapter postconditions remain unchanged.
+- No new heavy asset load is introduced; the existing resident production pointer is reused.
+- Evidence boundary: **REGISTERED / RUNTIME CHANGE NOT YET IMPLEMENTED**. No PIE/device/visual/performance acceptance claim.
