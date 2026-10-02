@@ -2626,3 +2626,13 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 
 | Runner PG-145 split-helper compatibility | SOURCE-FIXED | Validator now checks watchdog + timestamp helper as one contract; fresh exact-head Pre-Unreal pending |
 | Runner maintenance UE queue isolation | SOURCE-FIXED | New helper/test paths are maintenance-safe and path-filtered off Unreal push/PR triggers |
+
+## 2026-10-02 - KayKit Adventurers alternate Frodo source family
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| KayKit Adventurers immutable source registration | SOURCE-IMPLEMENTED | Revision `672074b73ba276876a19e8816ecdc5241817ab47` |
+| Character-intake admission | SOURCE-IMPLEMENTED | `KAYKIT_ADVENTURERS_CC0` added to external candidate manifest |
+| Frodo static-QC source admission | SOURCE-IMPLEMENTED | Source asset ID allowlist updated |
+| Warehouse staging / UE4 skeletal import | PENDING | Separate exact-head execution required |
+| Runtime / deformation / visual acceptance | NOT ACCEPTED | No matching evidence |
