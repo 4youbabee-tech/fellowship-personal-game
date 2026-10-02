@@ -5335,6 +5335,8 @@ pg167_maintenance_safe = [
     "Scripts/run_p1c01_material_pipeline.ps1",
     "Scripts/install_runner_watchdog.ps1",
     "Scripts/runner_watchdog.ps1",
+    "Scripts/runner_log_timestamp.ps1",
+    "Scripts/test_runner_watchdog_timestamp.ps1",
     "Scripts/deep_project_audit.py",
     "Scripts/test_deep_project_audit.py",
     "Scripts/source_contracts.py",
@@ -8207,6 +8209,8 @@ if "uses: actions/checkout@" in pg145_workflow:
     fail("PG-145 self-hosted warehouse stage must not depend on marketplace checkout download")
 
 pg145_watchdog = read(ROOT / "Scripts" / "runner_watchdog.ps1")
+pg145_watchdog_timestamp = read(ROOT / "Scripts" / "runner_log_timestamp.ps1")
+pg145_watchdog_contract = pg145_watchdog + "\n" + pg145_watchdog_timestamp
 pg145_watchdog_installer = read(ROOT / "Scripts" / "install_runner_watchdog.ps1")
 for pg145_symbol in [
     "Acknowledging runner request",
@@ -8217,7 +8221,7 @@ for pg145_symbol in [
     "Recover-OrphanedListenerOnSupervisorBoot",
     "SHIRE_RUNNER_WATCHDOG_BOOT_RECOVERY",
 ]:
-    if pg145_symbol not in pg145_watchdog:
+    if pg145_symbol not in pg145_watchdog_contract:
         fail(f"PG-145 runner watchdog contract missing: {pg145_symbol}")
 pg145_timeout = re.search(r"\[int\]\$AcquireHangSeconds\s*=\s*(\d+)", pg145_watchdog)
 if not pg145_timeout or not (110 <= int(pg145_timeout.group(1)) <= 180):
@@ -8255,6 +8259,8 @@ pg145_unreal_workflow = read(ROOT / ".github" / "workflows" / "unreal-build-vali
 for pg145_maintenance_path in [
     "Scripts/classify_unreal_validation.ps1",
     "Scripts/runner_watchdog.ps1",
+    "Scripts/runner_log_timestamp.ps1",
+    "Scripts/test_runner_watchdog_timestamp.ps1",
     "Scripts/runner_service_guard.ps1",
     "Scripts/install_runner_watchdog.ps1",
     "Scripts/pre_unreal_validate.py",
