@@ -51,6 +51,10 @@ jobs:
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\stage_opengameart_character_candidate.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\P1C01OpenGameArtRpgHeroCandidateBatchV1.json"
 
+      - name: Stage KayKit Adventurers alternate hero archive
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\stage_opengameart_character_candidate.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\P1C01KayKitAdventurersHeroCandidateBatchV1.json"
+
       - name: Build Frodo candidate report
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\run_p1c01_hero_skeletal_candidate_wave.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\P1C01HeroSkeletalCandidateWaveV1.json" -OutputRoot "%P1C01_HERO_RIG_REPORT%"
