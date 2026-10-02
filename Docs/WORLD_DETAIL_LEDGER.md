@@ -1056,3 +1056,10 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - HISM budget: no Tick, no collision/overlap, no shadow, cull start 900 cm, cull end 6500 cm. Cube strips remain deterministic fallback-only.
 - No new world authority, story state, NPC state, synchronous heavy load or P1C02 activation is introduced.
 - Evidence boundary: **SOURCE IMPLEMENTATION ONLY** until fresh exact-head Pre-Unreal + UE4.27.2 validation completes; no PIE/device/visual/performance acceptance.
+
+## 2026-10-02 - Alternate Frodo source-family escalation registration
+
+- Registered a new bounded CC0 rig-base source family for Frodo candidate QC: KayKit Adventurers at immutable revision `672074b73ba276876a19e8816ecdc5241817ab47`.
+- This does not alter canon, chapter state, gameplay authority or final Frodo likeness requirements. It is only a technical rig-base source escalation after prior candidate families failed their technical gates.
+- Animated production candidates remain FBX-only; final likeness/deformation/retarget/runtime acceptance remain separately gated.
+- Status: **SOURCE REGISTERED / RUNTIME NOT AUTHORIZED**.
