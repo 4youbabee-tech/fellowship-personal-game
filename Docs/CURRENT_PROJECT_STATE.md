@@ -3776,3 +3776,12 @@ Status: **SOURCE-IMPLEMENTED / HOSTED VALIDATION PENDING**.
 - #270 is superseded by merged #271; #272 is superseded by merged #271 + #274; #273's optional fast-path was intentionally dropped after Branch Cleanup #140 and #141 both completed successfully under the current implementation.
 - No active PR head or gameplay/runtime/source authority is included.
 - Status: **SOURCE-IMPLEMENTED / HOSTED VALIDATION PENDING**.
+
+
+## 2026-10-03 - Final stale maintenance retirement + active-queue compaction
+
+Wave 3 now retires four live-but-dead refs: closed PR #270, closed PR #272, closed PR #273, and closed runtime PR #263. The #263 disposition is grounded in the current visible-world contract: hero round-door/window/trim support remains a source need and fallback removal is forbidden until exact replacement import/QC evidence exists.
+
+The active `delete_after_merge` queue is compacted from 95 historical entries to these four live deletion targets. Historical dispositions remain preserved elsewhere in `BranchCleanupPlan.json`; absent refs are no longer re-queried on every cleanup run.
+
+Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD PRE-UNREAL PENDING**.
