@@ -143,10 +143,25 @@
         "Unreal Build Validation #1351",
         "Pre-Unreal Validation #1749"
       ]
+    },
+    {
+      "candidate": "Lowpoly Dummy Character Idle Anim.fbx",
+      "sha256": "00177d777d324e2eb807f5f94b573026c94226c6574267900213863a0dc8014d",
+      "bytes": 442604,
+      "ue4_bones": 41,
+      "state": "REJECTED_TECHNICAL",
+      "reasons": [
+        "MISSING_SMOOTHING_GROUPS",
+        "MISSING_BIND_POSE_BONES"
+      ],
+      "evidence": [
+        "P1C01 Frodo OGA Lowpoly Dummy UE4 Technical Probe #1",
+        "exact probe head ffaa3f6718a92b68f5112b040643846df277cd67"
+      ]
     }
   ],
   "policy": "Do not retry an exact payload SHA256 listed here. New candidates may proceed only if their exact payload identity differs and they pass the same or stricter technical gates.",
   "evidence_boundary": "Historical exact-head technical/static rejection evidence only. No candidate here is runtime/visual accepted.",
-  "last_updated_utc": "2026-10-03T15:43:00Z",
-  "current_next_action": "Do not retry listed payload hashes. Advance to a different licensed human/hobbit-compatible FBX candidate family or corrected export with distinct payload identity; keep the same technical gates."
+  "last_updated_utc": "2026-10-03T18:50:00Z",
+  "current_next_action": "Do not retry any listed payload hash. The OGA Lowpoly Dummy Idle FBX is now rejected after a 41-bone UE4.27 skeletal import due to smoothing-group and bind-pose warnings. Advance to a distinct licensed FBX payload/corrected export; do not weaken technical gates."
 }
