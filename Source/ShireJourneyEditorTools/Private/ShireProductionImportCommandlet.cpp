@@ -9,6 +9,7 @@
 #include "Factories/MaterialInstanceConstantFactoryNew.h"
 #include "Factories/MaterialFactoryNew.h"
 #include "Engine/StaticMesh.h"
+#include "Engine/SkeletalMesh.h"
 #include "StaticMeshResources.h"
 #include "Engine/Texture2D.h"
 #include "HAL/FileManager.h"
@@ -16,6 +17,7 @@
 #include "Misc/FileHelper.h"
 #include "Misc/PackageName.h"
 #include "Misc/Paths.h"
+#include "Misc/Parse.h"
 #include "Materials/Material.h"
 #include "Materials/MaterialExpressionScalarParameter.h"
 #include "Materials/MaterialExpressionTextureSampleParameter2D.h"
@@ -331,6 +333,13 @@ UShireProductionImportCommandlet::UShireProductionImportCommandlet()
 
 int32 UShireProductionImportCommandlet::Main(const FString& Params)
 {
+    const bool bEnableCharacterRigImport = FParse::Param(*Params, TEXT("EnableCharacterRigImport"));
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("ShireProductionImport: character-rig-import=%s"),
+        bEnableCharacterRigImport ? TEXT("enabled") : TEXT("disabled"));
+
     const FString SourceRoot = FPaths::ConvertRelativePathToFull(
         FPaths::Combine(FPaths::ProjectDir(), TEXT("SourceAssets/Production")));
     const FString WorkingRoot = FPaths::ConvertRelativePathToFull(
@@ -384,6 +393,10 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
     SourceFiles.Append(TextureFiles);
     SourceFiles.Append(MeshFiles);
     SourceFiles.Append(StaticFbxFiles);
+    if (bEnableCharacterRigImport)
+    {
+        SourceFiles.Append(CharacterFbxFiles);
+    }
 
     if (SourceFiles.Num() == 0 && CharacterFbxFiles.Num() == 0)
     {
@@ -400,13 +413,16 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         StaticFbxFiles.Num(),
         CharacterFbxFiles.Num());
 
-    for (const FString& CharacterFbx : CharacterFbxFiles)
+    if (!bEnableCharacterRigImport)
     {
-        UE_LOG(
-            LogTemp,
-            Display,
-            TEXT("ShireProductionImport character FBX deferred to skeletal QC lane: %s"),
-            *CharacterFbx);
+        for (const FString& CharacterFbx : CharacterFbxFiles)
+        {
+            UE_LOG(
+                LogTemp,
+                Display,
+                TEXT("ShireProductionImport character FBX deferred to skeletal QC lane: %s"),
+                *CharacterFbx);
+        }
     }
 
     FAssetToolsModule& AssetTools = FModuleManager::LoadModuleChecked<FAssetToolsModule>(TEXT("AssetTools"));
@@ -1176,7 +1192,22 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         bool bBuiltInTangentsForUntexturedObj = false;
         TArray<FString> AuthoredMaterialNames;
         const FString SourceExtension = FPaths::GetExtension(Filename).ToLower();
-        if (SourceExtension == TEXT("fbx"))
+        const bool bCharacterRigFbx =
+            SourceExtension == TEXT("fbx") &&
+            Relative.StartsWith(TEXT("Characters/Rigs/"), ESearchCase::IgnoreCase);
+        if (bCharacterRigFbx)
+        {
+            UFbxImportUI* ImportOptions = NewObject<UFbxImportUI>();
+            ImportOptions->MeshTypeToImport = EFBXImportType::FBXIT_SkeletalMesh;
+            ImportOptions->bImportAsSkeletal = true;
+            ImportOptions->bImportAnimations = false;
+            ImportOptions->bImportMaterials = false;
+            ImportOptions->bImportTextures = false;
+            Task->Options = ImportOptions;
+            UE_LOG(LogTemp, Display, TEXT("ShireProductionImport: skeletal FBX import file=%s destination=%s asset=%s"),
+                *Filename, *DestinationPath, *Task->DestinationName);
+        }
+        else if (SourceExtension == TEXT("fbx"))
         {
             UFbxImportUI* ImportOptions = NewObject<UFbxImportUI>();
             ImportOptions->MeshTypeToImport = EFBXImportType::FBXIT_StaticMesh;
@@ -1321,7 +1352,34 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         const FString AssetName = FPaths::GetBaseFilename(Filename);
         const FString ExpectedObjectPath = FString::Printf(
             TEXT("%s/%s.%s"), *DestinationPath, *AssetName, *AssetName);
-        UObject* ImportedAsset = LoadObject<UObject>(nullptr, *ExpectedObjectPath);
+        UObject* ImportedAsset = nullptr;
+        bool bSkeletalAssetRegistered = false;
+        int32 ImportedSkeletalBoneCount = 0;
+        if (bCharacterRigFbx)
+        {
+            FAssetRegistryModule& AssetRegistryModule =
+                FModuleManager::LoadModuleChecked<FAssetRegistryModule>(TEXT("AssetRegistry"));
+            const FAssetData RigAssetData =
+                AssetRegistryModule.Get().GetAssetByObjectPath(FName(*ExpectedObjectPath));
+            USkeletalMesh* ImportedSkeletalMesh =
+                FindObject<USkeletalMesh>(nullptr, *ExpectedObjectPath);
+            ImportedSkeletalBoneCount =
+                ImportedSkeletalMesh ? ImportedSkeletalMesh->GetRefSkeleton().GetNum() : 0;
+            bSkeletalAssetRegistered =
+                RigAssetData.IsValid() &&
+                RigAssetData.AssetClass == USkeletalMesh::StaticClass()->GetFName() &&
+                ImportedSkeletalMesh != nullptr &&
+                ImportedSkeletalBoneCount > 0;
+            if (!bSkeletalAssetRegistered)
+            {
+                UE_LOG(LogTemp, Error, TEXT("ShireProductionImport: skeletal FBX validation failed path=%s bones=%d"),
+                    *ExpectedObjectPath, ImportedSkeletalBoneCount);
+            }
+        }
+        else
+        {
+            ImportedAsset = LoadObject<UObject>(nullptr, *ExpectedObjectPath);
+        }
 
         int32 MarkedMaterialPackages = 0;
         if (UStaticMesh* ImportedMesh = Cast<UStaticMesh>(ImportedAsset))
@@ -1529,16 +1587,19 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         const bool bImported =
             Task->ImportedObjectPaths.Num() > 0 ||
             Task->Result.Num() > 0 ||
-            ImportedAsset != nullptr;
+            ImportedAsset != nullptr ||
+            bSkeletalAssetRegistered;
 
         UE_LOG(
             LogTemp,
             Display,
-            TEXT("ShireProductionImport result: %s | paths=%d result=%d resolved=%s bare-obj-materials=%s authored-material-import=%s smoothing-injected=%s generated-uvs=%s tangent-generation=%s material-packages-marked=%d"),
+            TEXT("ShireProductionImport result: %s | paths=%d result=%d resolved=%s skeletal-registered=%s skeletal-bones=%d bare-obj-materials=%s authored-material-import=%s smoothing-injected=%s generated-uvs=%s tangent-generation=%s material-packages-marked=%d"),
             *Filename,
             Task->ImportedObjectPaths.Num(),
             Task->Result.Num(),
             ImportedAsset ? TEXT("yes") : TEXT("no"),
+            bSkeletalAssetRegistered ? TEXT("yes") : TEXT("no"),
+            ImportedSkeletalBoneCount,
             bBareObjMaterialImportDisabled ? TEXT("disabled") : TEXT("n/a"),
             bAuthoredMaterialImportForced ? TEXT("forced") : TEXT("n/a"),
             bInjectedSmoothingGroup ? TEXT("yes") : TEXT("no"),
