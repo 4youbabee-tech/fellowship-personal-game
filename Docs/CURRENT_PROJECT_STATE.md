@@ -4004,3 +4004,11 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Runtime integration remains disabled. A technical pass advances only to deformation/retarget suitability; the existing modular fallback remains visible until skeletal mesh + locomotion AnimBP are proven and asynchronously loadable.
 - `ALivingWorldDirector` / `UShireNPCContextSubsystem` ownership is unchanged and no second NPC state authority is introduced.
 - Status: **SOURCE/CI IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. No deformation, retarget, AnimBP, runtime, PIE/device/visual/FPS acceptance claimed.
+
+
+## 2026-10-03 - Frodo breakthrough first-run failures corrected
+
+- Exact-head run #1 did **not** clear the candidate gate. The hosted source download itself succeeded for the Kenney Animated Characters 1 archive (718021 bytes, archive SHA256 `9cc53e82c941781f26aa8fb39d40887cf14b1d74cca2d10ccc6e7c140a68f820`, 4 FBX entries), but the probe script stopped on an unset PowerShell `$LASTEXITCODE` check before FBX inventory.
+- Pre-Unreal #1782 also failed because the provider contract still counted only the five older source packs while the active candidate wave now requires six.
+- Both failures are corrected without weakening any technical gate: the probe no longer relies on undefined `$LASTEXITCODE` after a direct PowerShell script call, and the provider/warehouse contract now explicitly includes the distinct Kenney animated source before candidate-report generation.
+- Status remains **VALIDATION PENDING** until the new exact head runs complete. No UE4 skeletal/deformation/runtime/visual acceptance claimed.
