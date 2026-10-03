@@ -3062,3 +3062,24 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | New exact-head hosted static inventory | PENDING |
 | New exact-head UE4 skeletal probe | PENDING |
 | Runtime/visual promotion | BLOCKED |
+
+
+## 2026-10-03 - Frodo RPG bounded multi-candidate escalation
+
+| Gate | Status |
+|---|---|
+| Kenney characterMedium exact UE4 registration | PASS: 59 bones |
+| Kenney smoothing-group gate | FAIL |
+| Kenney bind-pose gate | FAIL |
+| Kenney payload retry | FORBIDDEN |
+| Kenney active source family | CLOSED / EXHAUSTED |
+| Distinct Quaternius RPG CC0 source | ACTIVATED |
+| Full-archive hosted FBX inventory | IMPLEMENTED / RUN PENDING |
+| Known-rejection SHA exclusion | IMPLEMENTED |
+| Maximum UE4 candidates per reservation | 4 |
+| Single editor build per bounded gauntlet | IMPLEMENTED |
+| Stop on first clean technical pass | IMPLEMENTED |
+| Invalid bind-pose rejection | IMPLEMENTED |
+| Deformation / retarget mega gate | BLOCKED UNTIL TECHNICAL PASS |
+| AnimBP / async runtime promotion | BLOCKED |
+| PIE/device/rendered visual/FPS acceptance | NOT CLAIMED |
