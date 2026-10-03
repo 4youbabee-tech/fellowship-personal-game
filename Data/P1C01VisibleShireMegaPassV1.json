@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "packet_id": "P1C01_VISIBLE_SHIRE_MEGA_PASS_V1",
+  "status": "SOURCE_IMPLEMENTED_VALIDATION_PENDING",
+  "runtime_chapter": "P1C01",
+  "runtime_writer": "AShirePrototypeWorldBuilder",
+  "route": [
+    "Bag End",
+    "Hobbiton",
+    "worked fields",
+    "wooded road",
+    "Ferry approach"
+  ],
+  "objectives": [
+    "replace open/proxy visual read with layered hedgerows, woodland depth, field boundaries and river-edge vegetation",
+    "keep repeated world dressing in HISM lanes with explicit cull bands",
+    "preserve existing quest/story anchors and LivingWorldDirector/NPCContext ownership"
+  ],
+  "hism_lanes": {
+    "hedges": {
+      "planned_instances": 148,
+      "cull_start": 1200,
+      "cull_end": 10500,
+      "collision": "QueryAndPhysics",
+      "cast_shadow": false
+    },
+    "woodland_trees": {
+      "planned_instances": 177,
+      "cull_start": 4500,
+      "cull_end": 22000,
+      "collision": "None",
+      "cast_shadow": false
+    },
+    "rural_fences": {
+      "planned_instances": 42,
+      "cull_start": 1400,
+      "cull_end": 11000,
+      "collision": "QueryAndPhysics",
+      "cast_shadow": false
+    },
+    "ferns": {
+      "planned_instances": 72,
+      "cull_start": 700,
+      "cull_end": 5600,
+      "collision": "None",
+      "cast_shadow": false
+    },
+    "reeds": {
+      "planned_instances": 48,
+      "cull_start": 800,
+      "cull_end": 7200,
+      "collision": "None",
+      "cast_shadow": false
+    }
+  },
+  "asset_rules": {
+    "source": "already-resident production static meshes only",
+    "missing_asset_behavior": "skip optional lane",
+    "synchronous_load": false,
+    "hard_asset_reference_added": false
+  },
+  "ownership": {
+    "world_geometry": "AShirePrototypeWorldBuilder",
+    "ambient_population_pooling": "ALivingWorldDirector",
+    "npc_context": "UShireNPCContextSubsystem",
+    "quest_story_truth": "UShireQuestSubsystem"
+  },
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_class": 2
+  },
+  "validation_required": [
+    "Pre-Unreal exact head",
+    "UE4.27.2 build exact head",
+    "later PIE/device/rendered visual/performance review"
+  ],
+  "evidence_boundary": "Source implementation only until exact-head validation completes. No PIE, device, rendered visual, pacing or FPS acceptance is claimed."
+}
