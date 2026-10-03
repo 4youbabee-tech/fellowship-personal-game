@@ -3915,3 +3915,11 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Their dedicated workflows remain responsible for the real source/UE probe they own; the generic UE4 lane is no longer duplicated for the same PR.
 - Runtime/C++/SourceAssets changes remain core/full and still reserve the UE4 runner.
 - Evidence boundary: **SOURCE/CI IMPLEMENTED; hosted Pre-Unreal required before merge**.
+
+
+## 2026-10-03 - Frodo Knight V2 rejected; payload history preserved
+
+- Exact KayKit Knight V2 payload `b25e35cc7eaaa3c7c103f10a4f41fde1cbd81936fede9aa9ae4efbd29d40ba1b` imported as a UE4.27 `USkeletalMesh` with **51 reference bones**.
+- The candidate is **REJECTED_TECHNICAL** because exact-head probe #4 reported `MISSING_SMOOTHING_GROUPS` and `MISSING_BIND_POSE_BONES`.
+- The payload is now in durable rejection history and must not be retried. The next Frodo candidate must have a distinct exact payload identity and pass the same gates.
+- This is technical evidence only; no deformation/retarget/AnimBP/runtime/visual acceptance claim.
