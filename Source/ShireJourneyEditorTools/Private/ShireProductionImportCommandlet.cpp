@@ -351,21 +351,62 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
     TArray<FString> SourceFiles;
     TArray<FString> TextureFiles;
     TArray<FString> MeshFiles;
+    TArray<FString> StaticFbxFiles;
+    TArray<FString> CharacterFbxFiles;
     TArray<FString> MaterialLibraryFiles;
     IFileManager::Get().FindFilesRecursive(TextureFiles, *WorkingRoot, TEXT("*.png"), true, false, false);
     IFileManager::Get().FindFilesRecursive(TextureFiles, *WorkingRoot, TEXT("*.tga"), true, false, false);
     IFileManager::Get().FindFilesRecursive(MeshFiles, *WorkingRoot, TEXT("*.obj"), true, false, false);
+
+    TArray<FString> AllFbxFiles;
+    IFileManager::Get().FindFilesRecursive(AllFbxFiles, *WorkingRoot, TEXT("*.fbx"), true, false, false);
+    for (const FString& FbxFile : AllFbxFiles)
+    {
+        FString RelativeFbx = FbxFile;
+        FPaths::MakePathRelativeTo(RelativeFbx, *(WorkingRoot / TEXT("")));
+        RelativeFbx.ReplaceInline(TEXT("\\"), TEXT("/"));
+        if (RelativeFbx.StartsWith(TEXT("Characters/Rigs/"), ESearchCase::IgnoreCase))
+        {
+            CharacterFbxFiles.Add(FbxFile);
+        }
+        else
+        {
+            StaticFbxFiles.Add(FbxFile);
+        }
+    }
+
     IFileManager::Get().FindFilesRecursive(MaterialLibraryFiles, *WorkingRoot, TEXT("*.mtl"), true, false, false);
     TextureFiles.Sort();
     MeshFiles.Sort();
+    StaticFbxFiles.Sort();
+    CharacterFbxFiles.Sort();
     MaterialLibraryFiles.Sort();
     SourceFiles.Append(TextureFiles);
     SourceFiles.Append(MeshFiles);
+    SourceFiles.Append(StaticFbxFiles);
 
-    if (SourceFiles.Num() == 0)
+    if (SourceFiles.Num() == 0 && CharacterFbxFiles.Num() == 0)
     {
         UE_LOG(LogTemp, Warning, TEXT("ShireProductionImport: no production assets found at %s"), *SourceRoot);
         return 0;
+    }
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("ShireProductionImport source inventory: textures=%d objStatic=%d fbxStatic=%d fbxCharacterQcOnly=%d"),
+        TextureFiles.Num(),
+        MeshFiles.Num(),
+        StaticFbxFiles.Num(),
+        CharacterFbxFiles.Num());
+
+    for (const FString& CharacterFbx : CharacterFbxFiles)
+    {
+        UE_LOG(
+            LogTemp,
+            Display,
+            TEXT("ShireProductionImport character FBX deferred to skeletal QC lane: %s"),
+            *CharacterFbx);
     }
 
     FAssetToolsModule& AssetTools = FModuleManager::LoadModuleChecked<FAssetToolsModule>(TEXT("AssetTools"));
@@ -1134,7 +1175,24 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         bool bAuthoredMaterialImportForced = false;
         bool bBuiltInTangentsForUntexturedObj = false;
         TArray<FString> AuthoredMaterialNames;
-        if (FPaths::GetExtension(Filename).Equals(TEXT("obj"), ESearchCase::IgnoreCase))
+        const FString SourceExtension = FPaths::GetExtension(Filename).ToLower();
+        if (SourceExtension == TEXT("fbx"))
+        {
+            UFbxImportUI* ImportOptions = NewObject<UFbxImportUI>();
+            ImportOptions->MeshTypeToImport = EFBXImportType::FBXIT_StaticMesh;
+            ImportOptions->bImportAsSkeletal = false;
+            ImportOptions->bImportAnimations = false;
+            ImportOptions->bImportMaterials = false;
+            ImportOptions->bImportTextures = false;
+            if (ImportOptions->StaticMeshImportData)
+            {
+                ImportOptions->StaticMeshImportData->bRemoveDegenerates = true;
+                ImportOptions->StaticMeshImportData->NormalImportMethod = EFBXNormalImportMethod::FBXNIM_ImportNormalsAndTangents;
+            }
+            Task->Options = ImportOptions;
+            UE_LOG(LogTemp, Display, TEXT("ShireProductionImport static FBX enabled: %s -> %s"), *Filename, *DestinationPath);
+        }
+        else if (SourceExtension == TEXT("obj"))
         {
             FString ObjSource;
             if (FFileHelper::LoadFileToString(ObjSource, *Filename))

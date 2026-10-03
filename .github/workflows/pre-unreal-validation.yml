@@ -206,6 +206,10 @@ jobs:
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_daily_project_manager_report.ps1"
 
+      - name: Test static FBX world intake contract
+        shell: cmd
+        run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_static_fbx_world_intake.ps1"
+
       - name: Test P1C01 visible-world proxy replacement contract
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_p1c01_visible_world_proxy_replacement.ps1"
