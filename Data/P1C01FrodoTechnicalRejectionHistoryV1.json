@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "history_id": "P1C01_FRODO_TECHNICAL_REJECTION_HISTORY_V1",
+  "status": "DURABLE_EVIDENCE_HISTORY",
+  "runtime_integration_allowed": false,
+  "purpose": "Preserve exact rejected Frodo rig-base candidate evidence from the superseded skeletal-import branch so failed source families are never rediscovered or retried after chat/branch cleanup.",
+  "source_branch": "MULTI_CANDIDATE_DURABLE_HISTORY",
+  "source_head": "CURRENT_DEVELOP_RECONCILIATION_2026_10_03",
+  "rejections": [
+    {
+      "candidate": "BaseCharacter.fbx",
+      "sha256": "366d77fa536dffddb766f064872f100d878921fc956fb3ffd54ee9229bb2f5f0",
+      "bytes": 1488428,
+      "ue4_bones": 33,
+      "state": "REJECTED_TECHNICAL",
+      "reasons": [
+        "MISSING_SMOOTHING_GROUPS",
+        "MISSING_BIND_POSE_BONES",
+        "MISSING_UV_SET"
+      ],
+      "evidence": [
+        "P1C01 Frodo Skeletal Import Validation #16",
+        "Unreal Build Validation #1241"
+      ]
+    },
+    {
+      "candidate": "Casual_Male.fbx",
+      "sha256": "d3c2ada76aede1be3b37f084de952fc8686668a5627c03fa854b45070f583997",
+      "bytes": 1612396,
+      "ue4_bones": 33,
+      "state": "REJECTED_TECHNICAL",
+      "reasons": [
+        "MISSING_SMOOTHING_GROUPS",
+        "MISSING_BIND_POSE_BONES",
+        "MISSING_UV_SET"
+      ],
+      "evidence": [
+        "P1C01 Frodo Skeletal Import Validation #18"
+      ]
+    },
+    {
+      "candidate": "Casual2_Male.fbx",
+      "sha256": "abe8d30fa6b5fbebee485c9bdcceafb39fcfc4832cb65be124d5eaae660df986",
+      "bytes": 1523164,
+      "ue4_bones": 33,
+      "state": "REJECTED_TECHNICAL",
+      "reasons": [
+        "MISSING_SMOOTHING_GROUPS",
+        "MISSING_BIND_POSE_BONES",
+        "MISSING_UV_SET"
+      ],
+      "evidence": [
+        "P1C01 Frodo Skeletal Import Validation #20"
+      ]
+    },
+    {
+      "candidate": "Casual3_Male.fbx",
+      "sha256": "94ce47df5f166856a2d1166202ed1e8a58fd087e96b13299492b020794ddc3fd",
+      "bytes": 1568620,
+      "ue4_bones": 33,
+      "state": "REJECTED_TECHNICAL",
+      "reasons": [
+        "MISSING_SMOOTHING_GROUPS",
+        "MISSING_BIND_POSE_BONES",
+        "MISSING_UV_SET"
+      ],
+      "evidence": [
+        "P1C01 Frodo Skeletal Import Validation #23",
+        "Unreal Build Validation #1250"
+      ]
+    },
+    {
+      "candidate": "Worker_Male.fbx",
+      "sha256": "833d26026f32d96699c8cf667cbec849adda93d43cea447a7449fc4d72c3a20d",
+      "bytes": 1502204,
+      "ue4_bones": 33,
+      "state": "REJECTED_TECHNICAL",
+      "reasons": [
+        "MISSING_SMOOTHING_GROUPS",
+        "MISSING_BIND_POSE_BONES",
+        "MISSING_UV_SET"
+      ],
+      "evidence": [
+        "P1C01 Frodo Skeletal Import Validation #24"
+      ]
+    },
+    {
+      "candidate": "kaykit_rogue_672074b73ba276876a19e8816ecdc5241817ab47.fbx",
+      "sha256": "93a9ee0a67ae69b2d815050234acad2004c3b8af7d294b916e52609c8195eb71",
+      "bytes": 19529164,
+      "ue4_bones": 48,
+      "state": "REJECTED_TECHNICAL",
+      "reasons": [
+        "MISSING_SMOOTHING_GROUPS",
+        "MISSING_BIND_POSE_BONES"
+      ],
+      "evidence": [
+        "P1C01 Frodo Skeletal Import Validation #31"
+      ]
+    },
+    {
+      "candidate": "kaykit_rogue_hooded_672074b73ba276876a19e8816ecdc5241817ab47.fbx",
+      "sha256": "4a773f074695c6c089cc6f059eed85da080928a4a4137af4e38b177139d4cc27",
+      "bytes": 19516300,
+      "ue4_bones": 48,
+      "state": "REJECTED_TECHNICAL",
+      "reasons": [
+        "MISSING_SMOOTHING_GROUPS",
+        "MISSING_BIND_POSE_BONES"
+      ],
+      "evidence": [
+        "P1C01 Frodo Skeletal Import Validation #32"
+      ]
+    },
+    {
+      "candidate": "kenney_blocky-characters_20.zip",
+      "sha256": "5e123859aa0c1598342b600c6db197024a1d63eb9ec531398b310725f589887e",
+      "bytes": 2148510,
+      "ue4_bones": 0,
+      "state": "REJECTED_STATIC_STRUCTURE",
+      "reasons": [
+        "FBX_VERSION_7700_NOT_UE4_2018",
+        "MISSING_LIMB_NODE_MARKER",
+        "MISSING_CLUSTER_MARKER"
+      ],
+      "evidence": [
+        "P1C01 Frodo Skeletal Import Validation #34",
+        "artifact 11260912375"
+      ]
+    },
+    {
+      "candidate": "kaykit_knight_672074b73ba276876a19e8816ecdc5241817ab47.fbx",
+      "sha256": "b25e35cc7eaaa3c7c103f10a4f41fde1cbd81936fede9aa9ae4efbd29d40ba1b",
+      "bytes": 20659324,
+      "ue4_bones": 51,
+      "state": "REJECTED_TECHNICAL",
+      "reasons": [
+        "MISSING_SMOOTHING_GROUPS",
+        "MISSING_BIND_POSE_BONES"
+      ],
+      "evidence": [
+        "P1C01 Frodo Knight V2 Technical Probe #4",
+        "Unreal Build Validation #1351",
+        "Pre-Unreal Validation #1749"
+      ]
+    }
+  ],
+  "policy": "Do not retry an exact payload SHA256 listed here. New candidates may proceed only if their exact payload identity differs and they pass the same or stricter technical gates.",
+  "evidence_boundary": "Historical exact-head technical/static rejection evidence only. No candidate here is runtime/visual accepted.",
+  "last_updated_utc": "2026-10-03T15:43:00Z",
+  "current_next_action": "Do not retry listed payload hashes. Advance to a different licensed human/hobbit-compatible FBX candidate family or corrected export with distinct payload identity; keep the same technical gates."
+}
