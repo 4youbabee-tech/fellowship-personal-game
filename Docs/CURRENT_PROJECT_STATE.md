@@ -3993,3 +3993,15 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - All new repeated detail reuses existing HISM components and cull bands. No new synchronous heavy asset loading, no per-instance Tick, no NPC Spawn/Destroy lane and no new story/quest/save owner were added.
 - This is intended as a **large player-visible change**, not another backend-only checkpoint.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. No PIE/device/rendered visual/FPS acceptance claimed.
+
+
+## 2026-10-04 - Permanent professional Lead Game Architect operating method recorded
+
+- The owner has made the delivery method itself a durable project requirement: professional senior-engineering judgment, continuous visible production, maximum practical quality and root-cause problem solving must survive programmer/agent changes.
+- `Data/ProjectGovernor.json` now carries `lead_engineering_operating_policy_2026_10_04` as the persistent operating contract.
+- Routine technical decisions no longer require owner interruption when they can be resolved inside canon, provenance, architecture, performance, gate and evidence constraints.
+- Nontrivial blockers use an explicit evidence loop: live project/source evidence -> official UE4.27/Epic behavior -> mature open-source implementations/issues -> experienced developer practice -> compare viable remedies -> implement the strongest target-compatible root-cause fix.
+- Asset rejection is no longer treated as proof that content is unavailable: broad legal/open-source discovery plus bounded candidate factories and lawful FBX normalization/re-export are the default when a source/export defect is repairable.
+- Production batching is now explicit: prefer large coherent player-visible packets and one stable exact-head validation cycle over avoidable micro-commit/CI churn.
+- Visible priority remains human/skeletal characters and a natural readable Shire: terrain silhouette, landmarks/architecture, roads/hedges/woodland/Ferry, vegetation/materials and lighting/presentation.
+- Evidence discipline is unchanged: no PIE/device/visual/FPS acceptance is inferred from static/compile/CI evidence.
