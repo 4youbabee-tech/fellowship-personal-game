@@ -125,6 +125,7 @@ private:
     void SpawnFoliagePass();
     void SpawnScenicDetailPass();
     void SpawnGeographyFoundationPass();
+    void SpawnAuthoredShireLandmarkPass();
     void SpawnHobbitonArchitecturePass();
     void SpawnVillage();
     void SpawnProductionVillageDetailLayer();
