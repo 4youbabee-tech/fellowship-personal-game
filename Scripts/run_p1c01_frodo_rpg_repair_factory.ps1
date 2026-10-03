@@ -32,8 +32,13 @@ if($Mode -eq "NormalizeHosted") {
   $selected = @($staticReceipt.selected_candidates)
   if($selected.Count -lt 1) { throw "FRODO_REPAIR_NO_SELECTED_CANDIDATES" }
 
-  $blenderVersion = (& $BlenderExecutable --version | Select-Object -First 1)
-  if($LASTEXITCODE -ne 0) { throw "FRODO_REPAIR_BLENDER_UNAVAILABLE executable=$BlenderExecutable" }
+  $blenderCommand = Get-Command $BlenderExecutable -ErrorAction Stop
+  $blenderVersionLines = @(& $blenderCommand.Source --version)
+  $blenderExit = [int]$LASTEXITCODE
+  if($blenderExit -ne 0 -or $blenderVersionLines.Count -lt 1) {
+    throw "FRODO_REPAIR_BLENDER_UNAVAILABLE executable=$BlenderExecutable exit=$blenderExit"
+  }
+  $blenderVersion = [string]$blenderVersionLines[0]
 
   $normalizedDir = Join-Path $OutputRoot "normalized"
   New-Item -ItemType Directory -Path $normalizedDir -Force | Out-Null
