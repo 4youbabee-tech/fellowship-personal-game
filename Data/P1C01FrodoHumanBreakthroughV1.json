@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "packet_id": "P1C01_FRODO_HUMAN_BREAKTHROUGH_V1",
+  "status": "SOURCE_AND_CI_IMPLEMENTED_EXACT_HEAD_VALIDATION_PENDING",
+  "runtime_chapter": "P1C01",
+  "target_character": "FRODO",
+  "player_visible_goal": "replace modular/proxy Frodo with a real UE4 skeletal humanoid only after strict technical and deformation gates pass",
+  "active_source": {
+    "provider": "OPENGAMEART",
+    "creator": "Kenney",
+    "asset_id": "OGA_KENNEY_ANIMATED_CHARACTERS_1_CC0",
+    "license": "CC0-1.0",
+    "family": "Animated Characters 1",
+    "final_likeness": false
+  },
+  "gate_order": [
+    "hosted archive/static FBX inventory",
+    "exact extracted payload SHA256",
+    "known-rejection hash exclusion",
+    "UE4.27 skeletal registration and positive bone count",
+    "smoothing/bind-pose/UV technical gate",
+    "deformation and retarget suitability",
+    "AnimBP locomotion",
+    "async runtime promotion with modular fallback"
+  ],
+  "runtime_contract": {
+    "heavy_refs": "TSoftObjectPtr/TSoftClassPtr/FSoftObjectPath",
+    "loading": "FStreamableManager asynchronous",
+    "synchronous_heavy_load": false,
+    "fallback": "keep current modular Frodo until skeletal mesh plus locomotion AnimBP are proven and ready"
+  },
+  "ownership": {
+    "population_pooling": "ALivingWorldDirector",
+    "npc_context": "UShireNPCContextSubsystem",
+    "quest_story": "UShireQuestSubsystem"
+  },
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_class": 2
+  },
+  "evidence_boundary": "No final likeness, deformation, retarget, AnimBP, runtime, PIE, device, rendered visual or performance acceptance until exact evidence exists."
+}
