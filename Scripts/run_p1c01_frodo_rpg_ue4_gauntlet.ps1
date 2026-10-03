@@ -111,7 +111,7 @@ $receipt = [ordered]@{
   results = $results
   technical_pass_candidate = $technicalPass
   runtime_integration_allowed = $false
-  next_if_pass = "Deformation, pose, locomotion-skeleton and retarget suitability mega gate; then AnimBP and async runtime promotion only after those pass.",
+  next_if_pass = "Deformation, pose, locomotion-skeleton and retarget suitability mega gate; then AnimBP and async runtime promotion only after those pass."
   evidence_boundary = "Real UE4.27 skeletal technical evidence only. A pass does not prove deformation, retarget, final likeness, AnimBP, runtime, PIE/device/visual/performance acceptance."
 }
 $receiptPath = Join-Path $OutputRoot "p1c01_frodo_rpg_ue4_gauntlet.json"
