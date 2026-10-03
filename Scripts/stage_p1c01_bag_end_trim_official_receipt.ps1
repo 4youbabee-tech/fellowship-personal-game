@@ -33,14 +33,24 @@ $subset=@($m.exact_file_discovery.primary_static_qc_subset | ForEach-Object { [s
 $rows=@()
 foreach($name in $subset){
   $matches=@(Get-ChildItem -LiteralPath $extract -Recurse -File | Where-Object { $_.Name -ieq $name })
-  if($matches.Count -ne 1){ throw "BAG_END_TRIM_CANDIDATE_COUNT_FAIL file=$name count=$($matches.Count)" }
-  $item=$matches[0]
-  $sha=(Get-FileHash -LiteralPath $item.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+  if($matches.Count -lt 1){ throw "BAG_END_TRIM_CANDIDATE_MISSING file=$name" }
   $exp=[string]$expected[$name]
   if([string]::IsNullOrWhiteSpace($exp)){ throw "BAG_END_TRIM_EXPECTED_HASH_MISSING file=$name" }
-  if($sha -ne $exp){ throw "BAG_END_TRIM_HASH_MISMATCH file=$name expected=$exp actual=$sha" }
-  $rows += [ordered]@{ file=$name; bytes=[int64]$item.Length; sha256=$sha; match=$true }
-  Write-Host "BAG_END_TRIM_OFFICIAL_FILE_MATCH file=$name bytes=$($item.Length) sha256=$sha"
+
+  $matched=@()
+  foreach($candidate in $matches){
+    $candidateSha=(Get-FileHash -LiteralPath $candidate.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+    if($candidateSha -eq $exp){
+      $matched += [pscustomobject]@{ item=$candidate; sha=$candidateSha }
+    }
+  }
+  if($matched.Count -ne 1){
+    throw "BAG_END_TRIM_EXPECTED_HASH_MATCH_COUNT_FAIL file=$name discovered=$($matches.Count) expectedMatches=$($matched.Count)"
+  }
+  $item=$matched[0].item
+  $sha=[string]$matched[0].sha
+  $rows += [ordered]@{ file=$name; relative_path=$item.FullName.Substring($extract.Length).TrimStart('\'); bytes=[int64]$item.Length; sha256=$sha; match=$true }
+  Write-Host "BAG_END_TRIM_OFFICIAL_FILE_MATCH file=$name bytes=$($item.Length) sha256=$sha path=$($item.FullName)"
 }
 $receipt=[ordered]@{
   schema_version=1
