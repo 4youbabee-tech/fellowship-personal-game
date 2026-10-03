@@ -2897,3 +2897,14 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | UE5 migration / Nanite / MetaHuman Crowd / UE5 PCG | NOT CURRENT STACK |
 | Proposal adoption | VERIFY AGAINST LIVE DEVELOP + PROJECT SOURCES |
 | Durable repository memory | REQUIRED FOR EVERY ACCEPTED MAJOR DIRECTION |
+
+
+## 2026-10-03 - Bag End hero trim official receipt
+
+| Gate | Status |
+|---|---|
+| Official Kenney source + direct ZIP URL | RESOLVED |
+| Hosted archive SHA256/size receipt | EXECUTION PENDING |
+| Exact extracted candidate hash match | EXECUTION PENDING |
+| UE4 static import/QC | BLOCKED UNTIL RECEIPT PASS |
+| Runtime door/window/trim replacement | BLOCKED UNTIL IMPORT/QC |
