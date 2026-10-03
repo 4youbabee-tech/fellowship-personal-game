@@ -3837,3 +3837,12 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Candidate families remain bounded to Kenney Building Kit, Kenney Modular Buildings, and Quaternius Medieval Village MegaKit.
 - KayKit Medieval Hexagon remains rejected as an exact hero-trim family based on repository-tree inspection.
 - Status: **SOURCE-IMPLEMENTED / EXACT FILE DISCOVERY + STATIC QC PENDING**. No staged file, UE import, PIE/device/visual claim.
+
+## 2026-10-03 - Bag End hero trim exact-file discovery
+
+- Kenney Building Kit now has exact independent FBX candidates for the visible Bag End blocker: round door leaves, round doorway wall/frame pieces, and round window pieces.
+- Discovery mirror is pinned to `series-ai/jam-ready-assets@9cd5db46...` and is used only to discover filenames and Git-LFS payload SHA256 identities. It is not the license/provenance authority.
+- Official Kenney remains the source authority; official receipt is still mandatory before static QC evidence can be promoted.
+- Primary QC subset: `door-rotate-round-a.fbx`, `wall-doorway-round.fbx`, `wall-window-round-detailed.fbx`, plus `colormap.png`.
+- The official archive should be staged whole because it is small, but UE import remains candidate-only.
+- Status: **SOURCE-IMPLEMENTED / EXACT-FILE-DISCOVERED / OFFICIAL RECEIPT PENDING**. No static binary QC, UE import, runtime, PIE/device/visual claim.
