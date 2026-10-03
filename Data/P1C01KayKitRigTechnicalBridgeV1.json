@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "packet_id": "P1C01_KAYKIT_RIG_TECHNICAL_BRIDGE_V1",
-  "status": "REGISTERED_IMPLEMENTATION_ACTIVE",
+  "status": "DIRECT_RAW_FBX_SOURCE_CORRECTION_IMPLEMENTED_VALIDATION_PENDING",
   "runtime_chapter": "P1C01",
   "target_character": "FRODO",
   "role": "TECHNICAL_RIG_DEFORMATION_BRIDGE_NOT_FINAL_LIKENESS",
@@ -10,7 +10,7 @@
     "publisher": "Kay Lousberg",
     "repository": "KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0",
     "source_page": "https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0",
-    "archive_url": "https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/archive/refs/heads/main.zip",
+    "archive_url": "https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0",
     "license_url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/main/LICENSE.txt",
     "license": "CC0-1.0",
     "required_final_format": "FBX",
@@ -18,7 +18,23 @@
       "PNG",
       "TGA"
     ],
-    "project_authority": "Data/WarehouseKayKitGitHubAcquisitionBatchV1.json"
+    "project_authority": "Data/WarehouseKayKitGitHubAcquisitionBatchV1.json",
+    "delivery_mode": "DIRECT_OFFICIAL_RAW_FBX",
+    "export_archive_note": "Repository .gitattributes marks Characters/fbx and Assets/fbx export-ignore; GitHub source ZIP intentionally omits FBX payloads.",
+    "direct_candidates": [
+      {
+        "filename": "Rogue.fbx",
+        "repository_path": "addons/kaykit_character_pack_adventures/Characters/fbx/Rogue.fbx",
+        "url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/main/addons/kaykit_character_pack_adventures/Characters/fbx/Rogue.fbx",
+        "texture_url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/main/addons/kaykit_character_pack_adventures/Characters/fbx/rogue_texture.png"
+      },
+      {
+        "filename": "RogueHooded.fbx",
+        "repository_path": "addons/kaykit_character_pack_adventures/Characters/fbx/RogueHooded.fbx",
+        "url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/main/addons/kaykit_character_pack_adventures/Characters/fbx/RogueHooded.fbx",
+        "texture_url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/main/addons/kaykit_character_pack_adventures/Characters/fbx/rogue_texture.png"
+      }
+    ]
   },
   "verified_source_properties": {
     "fully_rigged_animated_characters": 4,
@@ -33,13 +49,11 @@
     "fbx_version_ceiling": 7500,
     "preferred_entries": [
       "Rogue.fbx",
-      "RogueHooded.fbx",
-      "Mage.fbx",
-      "Barbarian.fbx",
-      "Knight.fbx"
+      "RogueHooded.fbx"
     ],
     "max_single_fbx_bytes": 33554432,
-    "final_likeness": false
+    "final_likeness": false,
+    "source_delivery": "DIRECT_RAW_OFFICIAL_GITHUB_FILES_ONLY"
   },
   "technical_gate": [
     "exact archive and payload SHA256",
@@ -66,5 +80,10 @@
     "loading": "FStreamableManager asynchronous",
     "synchronous_heavy_load": false
   },
-  "evidence_boundary": "Technical rig bridge only. No final Frodo likeness, runtime, PIE, device, rendered visual or FPS acceptance."
+  "evidence_boundary": "Technical rig bridge only. No final Frodo likeness, runtime, PIE, device, rendered visual or FPS acceptance.",
+  "latest_source_correction": {
+    "evidence": ".gitattributes export-ignore excludes Characters/fbx from GitHub source archives",
+    "action": "download exact official raw FBX files directly from raw.githubusercontent.com",
+    "asset_disposition": "UNTESTED_NO_CANDIDATE_QC_REACHED_YET"
+  }
 }
