@@ -1,0 +1,31 @@
+name: P1C01 Frodo Lowpoly Dummy Source Inventory
+
+on:
+  pull_request:
+    branches: [develop]
+    paths:
+      - 'Data/P1C01OpenGameArtLowpolyDummyCandidateV1.json'
+      - 'Scripts/inspect_p1c01_frodo_lowpoly_dummy_candidate.ps1'
+      - 'Scripts/stage_opengameart_character_candidate.ps1'
+      - '.github/workflows/p1c01-frodo-lowpoly-dummy-source-inventory.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  inventory:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Download and inventory exact CC0 archive
+        shell: powershell
+        run: '& "$env:GITHUB_WORKSPACE\Scripts\inspect_p1c01_frodo_lowpoly_dummy_candidate.ps1" -ManifestPath "$env:GITHUB_WORKSPACE\Data\P1C01OpenGameArtLowpolyDummyCandidateV1.json" -OutputRoot "$env:RUNNER_TEMP\shire-frodo-lowpoly-dummy"'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: p1c01-frodo-lowpoly-dummy-source-inventory
+          path: ${{ runner.temp }}\shire-frodo-lowpoly-dummy\p1c01_frodo_lowpoly_dummy_inventory.json
+          if-no-files-found: error
+          retention-days: 14

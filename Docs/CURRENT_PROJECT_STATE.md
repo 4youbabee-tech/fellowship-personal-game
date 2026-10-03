@@ -3937,3 +3937,11 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Hosted static QC caught `door-rotate-round-a.fbx` as FBX **7700** with Geometry/Model/UV/Material markers present, but outside the project UE4.27-compatible accepted probe range (`<=7500`).
 - The exact payload is therefore **REJECTED_STATIC_QC as-is** and is not sent to the self-hosted UE machine. This is the intended build-speed behavior: cheap hosted rejection before expensive UE validation.
 - The hosted QC is being rerun to capture all three exact files in one durable report; then the hero-trim lane pivots to a compatible export/source family.
+
+
+## 2026-10-03 - Next Frodo candidate family moved to hosted source inventory
+
+- Registered a distinct CC0 OpenGameArt humanoid source (`Lowpoly Dummy Character`) after known Quaternius/KayKit/Kenney payloads were rejected.
+- Hosted inventory downloads the public archive and records every FBX entry, exact SHA256, size, FBX version and skeletal/static markers before any UE4 machine time is spent.
+- This candidate is a technical rig-base/deformation candidate only; it is not accepted as final Frodo likeness.
+- Generic UE validation inherits green parent proof for this source-only lane; only a static-pass exact FBX is eligible for the dedicated UE4 skeletal probe.
