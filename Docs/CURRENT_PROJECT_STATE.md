@@ -3854,3 +3854,11 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Its official download action resolves to `kenney_building-kit.zip`; the direct official URL is now recorded in `Data/P1C01BagEndHeroTrimSourceProbeV1.json`.
 - Archive SHA256/size, extracted candidate hash match, static FBX QC and real UE4.27.2 import remain pending. No runtime fallback was removed.
 - Status: **SOURCE-IMPLEMENTED / OFFICIAL RECEIPT HASH PENDING**. No PIE/device/visual/performance acceptance claim.
+
+
+## 2026-10-03 - Local launch helper runner-root guard corrected
+
+- `SHIRE_UPDATE_BUILD_LAUNCH.bat` no longer prints the retired `C:\\actions-runner\\_work` path as current authority.
+- The interactive safety guard now rejects any project root under `\\actions-runner\\`, so both the persistent CI workspace and warehouse/runner subtrees remain unavailable for manual Unreal launches regardless of drive letter.
+- The active runner authority remains `D:\\actions-runner`; interactive Unreal work remains in the Documents developer clone.
+- Evidence boundary: **SOURCE-IMPLEMENTED** pending exact-head hosted validation. No PIE/device/visual/performance acceptance claim.

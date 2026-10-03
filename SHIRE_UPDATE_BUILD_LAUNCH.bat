@@ -38,11 +38,11 @@ echo SHIRE JOURNEY - DEVELOP UPDATE ^> BUILD ^> IMPORT ^> LAUNCH
 echo ============================================================
 echo.
 
-echo(%ROOT%| findstr /I /C:"\actions-runner\_work\" >NUL
+echo(%ROOT%| findstr /I /C:"\actions-runner\" >NUL
 if not errorlevel 1 (
   echo ERROR: RUNNER_WORKSPACE_BLOCKED
   echo Interactive Unreal work must use the developer clone under Documents.
-  echo The GitHub Actions runner owns C:\actions-runner\_work exclusively.
+  echo The GitHub Actions runner root is reserved for CI only.
   pause
   exit /b 13
 )

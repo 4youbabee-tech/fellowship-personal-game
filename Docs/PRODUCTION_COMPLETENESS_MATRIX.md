@@ -2839,3 +2839,13 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Archive SHA256 + byte size | PENDING | warehouse receipt required |
 | Extracted candidate hash match | PENDING | must match discovery identities |
 | Static FBX QC / UE4.27.2 import | PENDING | no promotion/runtime binding yet |
+
+
+## 2026-10-03 - Interactive launcher / runner-root isolation
+
+| Control | Status | Evidence boundary |
+|---|---|---|
+| Retired C-runner message | REMOVED | launcher no longer names `C:\\actions-runner` as active authority |
+| Runner-root interactive guard | STRENGTHENED | rejects any `\\actions-runner\\` project root independent of drive letter |
+| Active self-hosted authority | UNCHANGED | `D:\\actions-runner` remains CI-only |
+| Manual Unreal clone | UNCHANGED | Documents developer clone only |
