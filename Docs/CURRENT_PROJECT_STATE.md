@@ -3822,3 +3822,10 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Candidate families are now bounded to Kenney Building Kit, Kenney Modular Buildings, and Quaternius Medieval Village MegaKit. KayKit Medieval Hexagon is not accepted as an exact replacement family based on its current repository tree.
 - Production intake constraints remain FBX-only for selected 3D support and PNG/TGA for textures; the existing `TX_ShDoorGreen.bmp` is not promoted into the new pipeline.
 - Status: **SOURCE-IMPLEMENTED / EXACT FILE DISCOVERY + STATIC QC PENDING**. No UE import/runtime/PIE/device/visual claim.
+
+
+### 2026-10-03 - Bag End source probe CI lane correction
+
+- Hosted classifier for the first #278 head marked the PR `mode=full` only because the source-only packet also modified `Scripts/test_p1c01_visible_world_proxy_replacement.ps1`, which is intentionally classified as a full-Unreal-impact path.
+- The source probe does not require runtime-script mutation. That test-file delta is reverted to current develop so the packet remains data/docs-only and can use the hosted source lane.
+- No classifier safety rule is relaxed. Fresh exact-head classification is required.
