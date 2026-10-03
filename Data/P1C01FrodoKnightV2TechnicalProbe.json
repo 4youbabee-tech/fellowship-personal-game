@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "probe_id": "P1C01_FRODO_KAYKIT_KNIGHT_V2_TECHNICAL_PROBE",
+  "status": "EXACT_SOURCE_TECHNICAL_PROBE",
+  "runtime_integration_allowed": false,
+  "character": "FRODO",
+  "purpose": "Use the exact KayKit Adventurers Knight.fbx already source-pinned on develop as a rig-base technical probe only. This is not final Frodo likeness.",
+  "source_manifest": "Data/P1C01KayKitAdventurersHeroCandidateBatchV2.json",
+  "source_revision": "672074b73ba276876a19e8816ecdc5241817ab47",
+  "source_path": "addons/kaykit_character_pack_adventures/Characters/fbx/Knight.fbx",
+  "warehouse_filename": "kaykit_knight_672074b73ba276876a19e8816ecdc5241817ab47.fbx",
+  "temporary_source_destination": "SourceAssets/Production/Characters/Rigs/FRODO/SK_FRODO.fbx",
+  "unreal_destination": "/Game/Production/Characters/Rigs/FRODO/SK_FRODO",
+  "technical_pass_requires": [
+    "UE4.27.2 imports USkeletalMesh",
+    "reference bone count > 0",
+    "no missing smoothing group warning",
+    "no missing bind pose bones warning",
+    "no missing UV set warning"
+  ],
+  "next_if_pass": "Proceed to deformation/retarget suitability review before any runtime promotion.",
+  "next_if_fail": "Record exact rejection and move to the next licensed candidate family without weakening technical gates.",
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_class": 2
+  },
+  "evidence_boundary": "Technical import probe only. No final likeness, deformation, retarget, AnimBP, runtime, PIE, device, visual or performance acceptance."
+}
