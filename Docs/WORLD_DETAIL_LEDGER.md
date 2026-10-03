@@ -1149,3 +1149,35 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Traversal rule: all new route breakup instances are decorative/non-colliding and stay outside the authored centerline and quest trigger corridor.
 - Performance rule: deterministic bounded instance counts, existing HISM cull bands and no per-instance Tick. Target remains 720p / 30 FPS floor on i7 Gen6 / 8 GB RAM / ~2 GB VRAM.
 - Gate: exact-head Pre-Unreal + UE4.27.2 build required before merge. Rendered/PIE/device/FPS acceptance remains a separate human/device gate and is not claimed by source implementation.
+
+
+## 2026-10-03 - P1C01 FRODO HUMAN BREAKTHROUGH lane registered
+
+- Scope: character-visible production only for the existing P1C01 runtime chapter. No new chapter, no story rewrite and no NPC/quest/save authority change.
+- Player-facing target: replace the current modular/proxy Frodo presentation with a real UE4 skeletal humanoid pipeline candidate, then advance only if deformation/retarget quality survives.
+- Active source family for this lane: the previously registered CC0 OpenGameArt/Kenney Animated Characters 1 pack, selected because it is a distinct licensed animated humanoid family and has not yet been technically exhausted on current `develop`.
+- Gate order is strict: hosted/static archive inventory -> exact extracted FBX SHA256 -> known-rejection check -> real UE4.27 skeletal import -> smoothing/bind-pose/UV gate -> deformation/retarget suitability -> AnimBP -> async runtime promotion.
+- Same exact payload hashes already present in `Data/P1C01FrodoTechnicalRejectionHistoryV1.json` are forbidden from retry.
+- Runtime integration remains false in this packet. Existing modular fallback remains visible until both `SK_FRODO` and locomotion AnimBP are proven and asynchronously resolvable.
+- Architecture: heavy runtime references remain soft and loaded through `FStreamableManager`; no synchronous heavy `LoadObject` path is introduced.
+- Ownership: `ALivingWorldDirector` remains ambient population/pooling owner; `UShireNPCContextSubsystem` remains NPC-context owner; this lane does not create a second AI/state authority.
+- Evidence boundary: no final Frodo likeness, deformation, retarget, AnimBP, runtime, PIE, device, rendered visual or performance acceptance until those exact gates produce evidence.
+
+
+## 2026-10-03 - P1C01 Frodo RPG multi-candidate gauntlet disposition
+
+- The registered Kenney Animated source was technically exhausted after its only skinned model registered 59 UE4 bones but failed smoothing-group and bind-pose gates. Its exact payload hash is durable rejection memory and cannot be retried.
+- Next visible-character source is the distinct CC0 OpenGameArt/Quaternius RPG Characters family. This remains inside P1C01 and does not open a new chapter or change story/NPC/save ownership.
+- The gauntlet is intentionally large but bounded: hosted inventory may rank the whole archive, while the expensive UE4 lane probes at most four distinct exact FBX payloads in one reservation and stops on first clean pass.
+- No gate is relaxed for throughput. Missing smoothing groups, missing/invalid bind pose, missing UVs, zero bones or failed skeletal asset generation reject the candidate.
+- A technical winner advances directly to a deformation/reference-pose/locomotion-retarget mega gate; it is not called final Frodo and is not runtime-promoted by technical import alone.
+
+## 2026-10-04 - P1C01 AUTHORED_SHIRE_TERRAIN_LANDMARK_MATERIAL_PACKET registered
+
+- Scope: visible-world authoring packet for the existing P1C01 only; no P1C02 runtime opening and no story outcome change.
+- Source basis: F1-02 anchors Bag End / Shire and F1-03 anchors Shire roads / Bucklebury with road stealth, ferry escape and environmental hiding. Tolkien source supports a progression from wooded shelter to open grassland, then well-tended fields/meadows with hedges, gates and drainage dikes; Ferry lane is orderly, with a broad wooden landing stage, reeds/mist at the bank, a broad slow river, and a steep winding path on the far side.
+- Visual-authoring intent: replace test-strip readability with terrain silhouette and enclosure changes: Bag End hill/earth integration; Hobbiton domestic-scale clustering; field/meadow openness; wooded-road canopy/understory enclosure; low well-laid hedge lanes; river-bank reeds and Ferry framing; landmark sightlines that prevent seeing the whole route at once.
+- Architecture ownership: AShirePrototypeWorldBuilder remains the sole P1C01 world-construction writer. ALivingWorldDirector remains population/pooling authority; no parallel world or crowd authority is authorized.
+- Performance contract: repeated dressing uses HISM/ISM with explicit culling; heavy production assets remain soft/async; no synchronous heavy loads; no actor-per-prop density; materials should minimize slots/draw calls and use packed masks where appropriate for the ~2 GB VRAM target.
+- Asset rule: no automatic fan/IP asset import. Generic terrain/environment sources must pass provenance/license + scale/pivot/UV/collision/triangles/LOD/material-budget review before production admission.
+- Evidence boundary: REGISTERED / SOURCE-GROUNDED DESIGN ONLY. Runtime implementation, PIE, target-device, rendered visual, pacing and FPS acceptance are not claimed.
