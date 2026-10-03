@@ -3094,3 +3094,14 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | PIE/device/rendered visual/FPS | NOT ACCEPTED | direct evidence required |
 
 | Authored Shire B/C P1C02 guard false-positive | TEST-REPAIRED / REVALIDATION PENDING | #1817 failed on prose comment only; guard now targets `TEXT("P1C02")` runtime token |
+
+## 2026-10-04 - Hobbit facade production cleanup
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Hobbit facade geometry grouping | STATIC-AUDITED | 228 faces; no mixed face groups |
+| Authored material assignment | SOURCE-REPAIRED | Earth 12 / Wood door 48 / DoorGreen 48 / Wood windows 96 / Stone sills 24 faces |
+| Production duplicate primitive door/frame/sills | SOURCE-REMOVED | fallback-only when production facade unavailable |
+| Warm glass / knob / chimney-step accents | RETAINED BOUNDED | non-structural presentation accents |
+| UE4.27 static import/build | PENDING EXACT-HEAD | PR validation required |
+| PIE/device/rendered visual/FPS | NOT ACCEPTED | direct evidence required |
