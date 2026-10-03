@@ -2807,3 +2807,8 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 
 | #278 first classifier decision | FULL / CORRECT-BY-PATH | test script change triggered full Unreal |
 | Hosted-only correction | SOURCE-REPAIRED | test-script delta reverted; classifier policy unchanged |
+
+
+| Bag End source probe exact classifier allowlist | SOURCE-REPAIRED | exact file added to direct + safe-intervening lists |
+| Broad Data bypass | FORBIDDEN | no prefix-level exemption introduced |
+| Fresh exact-head classifier | PENDING | superseded full decision is diagnostic only |
