@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "packet_id": "P1C01_BAG_END_HERO_TRIM_SOURCE_PROBE_V1",
-  "status": "OFFICIAL_RECEIPT_HASH_MATCH_COMPLETE_STATIC_QC_NEXT",
+  "status": "KENNEY_BUILDING_KIT_REJECTED_STATIC_FBX_VERSION_7700",
   "runtime_chapter": "P1C01",
   "runtime_integration_allowed": false,
   "objective": "Find an exact, production-usable modular FBX source family for Bag End hero round-door/window/trim support before any architectural primitive fallback is removed.",
@@ -29,7 +29,7 @@
       "observed_license": "CC0",
       "observed_files": "80x 3D files on official page",
       "purpose": "Probe archive contents for independent door/window/frame/trim FBX pieces.",
-      "status": "PROVIDER_VERIFIED_EXACT_FILE_DISCOVERY_PENDING"
+      "status": "REJECTED_AS_IS_STATIC_FBX_VERSION_7700_REQUIRES_COMPATIBLE_EXPORT_OR_DIFFERENT_SOURCE"
     },
     {
       "rank": 2,
@@ -82,7 +82,7 @@
     "runtime binding in single serialized runtime lane",
     "PIE/device/visual acceptance later"
   ],
-  "evidence_boundary": "Official source page, direct ZIP URL, archive SHA256/size and extracted candidate identity match are complete. Binary static FBX QC, UE import, runtime binding, PIE/device/visual acceptance remain pending.",
+  "evidence_boundary": "Official receipt/hash identity is complete. Current Kenney Building Kit exact hero-trim FBX payload is rejected as-is by static QC because at least the round door is FBX version 7700, outside the project's accepted UE4.27-compatible probe range. No UE import/runtime/visual claim.",
   "refresh_base": "071a0ed2632c4919ed9160b817a965ed3b1eb76c",
   "exact_file_discovery": {
     "status": "COMPLETE_FOR_KENNEY_BUILDING_KIT_CANDIDATE_SET",
@@ -197,7 +197,31 @@
       "wall-doorway-round.fbx",
       "wall-window-round-detailed.fbx",
       "colormap.png"
-    ]
+    ],
+    "static_qc_result": {
+      "state": "REJECTED_STATIC_QC",
+      "evidence": "P1C01 Bag End Trim Static FBX QC #3",
+      "observed": [
+        {
+          "file": "door-rotate-round-a.fbx",
+          "fbx_version": 7700,
+          "geometry": true,
+          "model": true,
+          "uv": true,
+          "material": true
+        },
+        {
+          "file": "wall-doorway-round.fbx",
+          "fbx_version": "PENDING_FULL_REPORT_RERUN"
+        },
+        {
+          "file": "wall-window-round-detailed.fbx",
+          "fbx_version": "PENDING_FULL_REPORT_RERUN"
+        }
+      ],
+      "rejection_rule": "Project requires UE4.27-compatible FBX 2018-era payload; FBX 7700 is outside the accepted <=7500 static probe range.",
+      "runtime_integration_allowed": false
+    }
   },
   "official_staging_plan": {
     "status": "OFFICIAL_RECEIPT_HASH_MATCH_COMPLETE",
@@ -212,7 +236,7 @@
       "candidate extracted-file SHA256 values"
     ],
     "fail_closed_match_rule": "The official extracted candidate payload SHA256 must match the discovery identities before static QC evidence may be reused. Any mismatch invalidates mirror-derived identity and requires fresh inspection.",
-    "next_gate": "Binary static FBX QC on the three exact matched models -> real UE4.27.2 static-mesh import -> serialized runtime binding.",
+    "next_gate": "Complete static-QC report for all exact files, then pivot to a distinct UE4.27-compatible hero-trim source/export. Do not schedule UE import for rejected FBX 7700 payloads.",
     "official_download_url": "https://kenney.nl/media/pages/assets/building-kit/0de7aaa492-1743244741/kenney_building-kit.zip",
     "official_page_observation": "Kenney Building Kit official page reports 80 3D files and Creative Commons CC0; the official page download action resolves to the recorded ZIP URL.",
     "observed_at_utc": "2026-10-03T08:52:00Z",

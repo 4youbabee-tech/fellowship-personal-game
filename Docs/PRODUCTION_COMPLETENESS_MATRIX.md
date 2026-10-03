@@ -2930,3 +2930,22 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Binary static FBX QC | NEXT |
 | UE4.27.2 static import | PENDING |
 | Runtime hero trim replacement | BLOCKED UNTIL IMPORT/QC |
+
+
+## 2026-10-03 - Bag End trim static QC
+
+| Gate | Status |
+|---|---|
+| Official exact payload receipt | PASS |
+| Hosted FBX static structure QC | ACTIVE |
+| UE4.27.2 import | PENDING |
+| Runtime replacement | PENDING |
+
+
+## 2026-10-03 - Bag End trim static QC result
+
+| Candidate | Static result |
+|---|---|
+| Kenney Building Kit round door | REJECTED: FBX 7700 |
+| UE4 self-hosted import | NOT SCHEDULED for rejected payload |
+| Next | compatible export/source family |
