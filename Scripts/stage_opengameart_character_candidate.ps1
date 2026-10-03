@@ -16,6 +16,20 @@ if($assets.Count -ne 1){ throw "OGA_CHARACTER_BOUNDED_ASSET_COUNT_FAIL count=$($
 $asset = $assets[0]
 if(([string]$asset.observed_page_license).ToUpperInvariant() -ne "CC0"){ throw "OGA_CHARACTER_LICENSE_FAIL" }
 if(([string]$asset.required_final_format).ToUpperInvariant() -ne "FBX"){ throw "OGA_CHARACTER_FORMAT_FAIL" }
+$payloadKind="ARCHIVE_ZIP"
+if($null -ne $asset.PSObject.Properties["download_kind"]){ $payloadKind=([string]$asset.download_kind).ToUpperInvariant() }
+elseif([IO.Path]::GetExtension([string]$asset.filename).ToLowerInvariant() -eq ".fbx"){ $payloadKind="DIRECT_FBX" }
+if($payloadKind -notin @("ARCHIVE_ZIP","DIRECT_FBX")){ throw "OGA_CHARACTER_PAYLOAD_KIND_FAIL kind=$payloadKind" }
+
+$archiveMinimumBytesDefault=[int64]1048576
+$archiveMinimumBytesFloor=[int64]262144
+$archiveMinimumBytes=$archiveMinimumBytesDefault
+if($null -ne $asset.PSObject.Properties["minimum_archive_bytes"]){
+  $archiveMinimumBytes=[int64]$asset.minimum_archive_bytes
+}
+if($archiveMinimumBytes -lt $archiveMinimumBytesFloor -or $archiveMinimumBytes -gt 104857600){
+  throw "OGA_CHARACTER_ARCHIVE_MINIMUM_INVALID bytes=$archiveMinimumBytes floor=$archiveMinimumBytesFloor ceiling=104857600"
+}
 
 $stageRoot = Join-Path $WarehouseRoot "OpenGameArt\Characters"
 New-Item -ItemType Directory -Path $stageRoot -Force | Out-Null
@@ -24,10 +38,10 @@ $receiptPath = Join-Path $stageRoot ("receipt_"+[string]$manifest.batch_id+".jso
 $partialPath = $archivePath+".partial"
 
 function Test-CandidateArchive {
-  param([string]$Path)
+  param([string]$Path,[int64]$MinimumBytes)
   if(-not (Test-Path -LiteralPath $Path -PathType Leaf)){ throw "OGA_CHARACTER_ARCHIVE_MISSING path=$Path" }
   $file = Get-Item -LiteralPath $Path
-  if($file.Length -lt 1048576){ throw "OGA_CHARACTER_ARCHIVE_TOO_SMALL bytes=$($file.Length)" }
+  if($file.Length -lt $MinimumBytes){ throw "OGA_CHARACTER_ARCHIVE_TOO_SMALL bytes=$($file.Length) required=$MinimumBytes" }
   $zip = [IO.Compression.ZipFile]::OpenRead($Path)
   try {
     $entryCount=0; $fbxCount=0; $totalBytes=[int64]0
@@ -48,6 +62,31 @@ function Test-CandidateArchive {
   } finally { $zip.Dispose() }
 }
 
+function Test-DirectFbx {
+  param([string]$Path)
+  if(-not (Test-Path -LiteralPath $Path -PathType Leaf)){ throw "OGA_CHARACTER_DIRECT_FBX_MISSING path=$Path" }
+  $file=Get-Item -LiteralPath $Path
+  if($file.Length -lt 1048576){ throw "OGA_CHARACTER_DIRECT_FBX_TOO_SMALL bytes=$($file.Length)" }
+  $stream=[IO.File]::OpenRead($Path)
+  try {
+    $buffer=New-Object byte[] 96
+    $count=$stream.Read($buffer,0,$buffer.Length)
+    $header=[Text.Encoding]::ASCII.GetString($buffer,0,$count)
+    if(-not ($header.StartsWith("Kaydara FBX Binary") -or $header.Contains("FBXHeaderExtension"))){
+      throw "OGA_CHARACTER_DIRECT_FBX_HEADER_FAIL"
+    }
+  } finally { $stream.Dispose() }
+  return [ordered]@{entry_count=1;fbx_count=1;expanded_bytes=[int64]$file.Length;payload_kind="DIRECT_FBX"}
+}
+
+function Test-CandidatePayload {
+  param([string]$Path,[string]$Kind)
+  if($Kind -eq "DIRECT_FBX"){ return Test-DirectFbx -Path $Path }
+  $scan=Test-CandidateArchive -Path $Path -MinimumBytes $archiveMinimumBytes
+  $scan["payload_kind"]="ARCHIVE_ZIP"
+  return $scan
+}
+
 $reuse=$false
 if((Test-Path -LiteralPath $archivePath -PathType Leaf) -and (Test-Path -LiteralPath $receiptPath -PathType Leaf)){
   try {
@@ -57,7 +96,7 @@ if((Test-Path -LiteralPath $archivePath -PathType Leaf) -and (Test-Path -Literal
       $actual=(Get-FileHash -LiteralPath $archivePath -Algorithm SHA256).Hash.ToLowerInvariant()
       $expected=([string]$oldRows[0].sha256).ToLowerInvariant()
       if($actual -eq $expected -and -not [string]::IsNullOrWhiteSpace($expected)){
-        $scan=Test-CandidateArchive -Path $archivePath
+        $scan=Test-CandidatePayload -Path $archivePath -Kind $payloadKind
         $reuse=$true
         Write-Host "OGA_CHARACTER_REUSE_PASS asset=$($asset.id) sha256=$actual fbx=$($scan.fbx_count)"
       }
@@ -85,7 +124,7 @@ if(-not $reuse){
     }
   }
   if(-not $downloaded){ throw "OGA_CHARACTER_DOWNLOAD_FAIL asset=$($asset.id)" }
-  $scan=Test-CandidateArchive -Path $archivePath
+  $scan=Test-CandidatePayload -Path $archivePath -Kind $payloadKind
 }
 
 $sha=(Get-FileHash -LiteralPath $archivePath -Algorithm SHA256).Hash.ToLowerInvariant()
@@ -98,6 +137,7 @@ $receipt=[ordered]@{
  license=[string]$manifest.license
  staged_at_utc=[DateTime]::UtcNow.ToString("o")
  state=if($reuse){"REUSED_VERIFIED_PAYLOAD"}else{"STAGED_VERIFIED_PAYLOAD"}
+ payload_kind=$payloadKind
  files=@([ordered]@{
   asset_id=[string]$asset.id
   file=$archivePath
@@ -112,4 +152,4 @@ $receipt=[ordered]@{
  })
 }
 $receipt | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $receiptPath -Encoding UTF8
-Write-Host "OGA_CHARACTER_STAGE_PASS asset=$($asset.id) reuse=$reuse bytes=$($file.Length) sha256=$sha fbx=$($scan.fbx_count) receipt=$receiptPath"
+Write-Host "OGA_CHARACTER_STAGE_PASS asset=$($asset.id) kind=$payloadKind reuse=$reuse bytes=$($file.Length) sha256=$sha fbx=$($scan.fbx_count) receipt=$receiptPath"
