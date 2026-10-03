@@ -6372,7 +6372,7 @@
   "current_focus": {
     "production_lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
-    "rule": "P1C01 is the sole runtime-changing chapter. Visible-game delivery is the active tie-breaker: remove visible Shire proxies and advance Frodo toward a real skeletal character in parallel source lanes, while allowing exactly one runtime-changing P1C01 writer at a time. Do not open P1C02 runtime until P1C01 Gate 6/7 is accepted with real evidence.",
+    "rule": "P1C01 is the sole runtime-changing chapter. VISIBLE SHIRE FIRST is the active tie-breaker: aggressively improve human character presentation plus natural terrain, landmarks, architecture, roads/hedges/woodland/Ferry, vegetation/materials and lighting in large coherent production packets. The Lead Game Architect resolves routine blockers through root-cause research, broad legal/open-source discovery and reusable pipelines without waiting on the owner. Exactly one runtime-changing P1C01 writer remains authoritative; do not open P1C02 runtime until P1C01 Gate 6/7 is accepted with real evidence.",
     "machine_baseline": {
       "runtime_sha": "1066cf022723fcdef9bfac66519f5b0f9c1e03a4",
       "pre_unreal": "#1109 SUCCESS",
@@ -6388,11 +6388,11 @@
     "runtime_chapter_sequence": "Data/P1C01RuntimeChapterSequenceV1.json"
   },
   "immediate_next_large_actions": [
-    "1. Visible Shire First — remove highest-impact Bag End/Hobbiton proxies using exact production replacements, HISM/ISM and bounded culling.",
-    "2. Frodo real skeletal production lane — reconcile current UE4.27 skeletal FBX import/QC, pass a clean candidate, then deformation/retarget/AnimBP/runtime replacement.",
-    "3. Hobbiton/road/woodland vegetation and material depth using UE4.27-compatible authored + instanced/procedural authoring, not a parallel world authority.",
-    "4. Target-device DX11 720p Low-Medium profiling before density, heavy PBR, static-lighting or expensive presentation expansion.",
-    "5. Gate 6/7 human visual, pacing and performance evidence before broad later-chapter runtime production."
+    "1. Finish the active Frodo real-human lane with a multi-source asset factory: exact-source inventory -> repair/normalization where lawful -> UE4.27 technical gauntlet -> deformation/retarget -> AnimBP -> async runtime replacement.",
+    "2. Continue Visible Shire First with large player-facing packets: natural terrain silhouette, Bag End/Hobbiton landmarks and architecture, roads/hedges/woodland/Ferry, vegetation/material variation and lighting/presentation.",
+    "3. Convert recurring asset failures into reusable normalization/QC tooling rather than repeated manual retries; broaden legal/open candidate discovery whenever a source family is technically exhausted.",
+    "4. Keep target-device DX11 720p/30-FPS performance constraints active through HISM/ISM, culling, soft refs, async loading, LOD/material budgets and pooled NPCs.",
+    "5. Collect real Gate 6/7 PIE/device/visual/pacing/performance evidence only after the visible P1C01 vertical slice is materially transformed; do not open P1C02 runtime early."
   ],
   "session_handoff": {
     "checkpoint_id": "CP-W01-P1C01-C4-MERGED-D-NEXT",
@@ -6467,7 +6467,10 @@
       "Translate requests into ordered work, dependencies, evidence and acceptance boundaries.",
       "Detect contradictions, stale evidence and risky changes before they contaminate the project.",
       "Keep story chronology, save continuity, build integrity and performance safeguards intact.",
-      "Coordinate workers and validation so they do not duplicate, overwrite or contradict one another."
+      "Coordinate workers and validation so they do not duplicate, overwrite or contradict one another.",
+      "Operate as a senior lead engineer: proactively research high-quality professional solutions to blockers instead of waiting for the owner to supply implementation details.",
+      "Prefer root-cause closure and reusable production pipelines over repeated one-off retries or local workarounds.",
+      "Continuously steer work toward visible player-facing quality: human characters, natural landforms, landmarks, architecture, vegetation, materials, lighting and readable world identity."
     ],
     "non_blocking_policy": [
       "A failing gate normally quarantines acceptance, release and dependent changes rather than the whole repository.",
@@ -6475,7 +6478,9 @@
       "Infrastructure waiting may be used for tests, evidence collection, documentation reconciliation and repairs only when they belong to an allowed execution bundle.",
       "Do not broaden warehouse, world, character, gameplay or living-world production merely because a runner is idle while W00 is active.",
       "Only the Governor may change the active lane or unfreeze B1/B2/B3 after the recorded exit criteria are satisfied.",
-      "Governor/management work must remain an overseer, not a serial bottleneck: no duplicated authority files, no stale transport metadata as gates, no administrative wave may delay an independent allowed production wave unless it proves a concrete safety/build/canon/save/performance dependency."
+      "Governor/management work must remain an overseer, not a serial bottleneck: no duplicated authority files, no stale transport metadata as gates, no administrative wave may delay an independent allowed production wave unless it proves a concrete safety/build/canon/save/performance dependency.",
+      "A local asset or tooling rejection must not stall the whole visible-production lane when a distinct legal source, repair path or independent world/character lane can proceed safely.",
+      "Routine technical choices are owned by the Lead Game Architect; owner interruption is reserved for product-direction changes, unresolved canon/provenance conflicts, material scope tradeoffs or acceptance decisions."
     ]
   },
   "accepted_owner_development_ideas": [
@@ -6571,6 +6576,21 @@
         "REQ-PERF-001"
       ],
       "execution_rule": "Visible-game delivery is the default tie-breaker inside the active P1C01 gate. Preserve canon, runtime-authority boundaries and low-spec constraints."
+    },
+    {
+      "id": "OWNER-IDEA-PROFESSIONAL-LEAD-QUALITY-CONTINUOUS-2026-10-04",
+      "status": "ACTIVE_PERMANENT",
+      "title": "Professional lead-engineering method: maximum quality, continuous visible delivery and root-cause research",
+      "captured_value": [
+        "The project must be run professionally even if programmers/agents change; the method lives in the Governor, not in chat memory.",
+        "The Lead Game Architect should autonomously make routine technical decisions, search widely for better legal/open assets and expert solutions, and keep production moving without repeatedly asking the owner.",
+        "When problems appear, diagnose and solve root causes using project evidence, official UE4.27 documentation, mature open-source work and experienced developer practice.",
+        "Do not settle for the first workable asset or workaround when a materially higher-quality compatible solution is available.",
+        "Accelerate completion through large coherent production waves, cheap preflight filters, reusable repair/import factories and reduced CI/branch churn.",
+        "Visible priorities remain human characters plus natural Shire terrain, landmarks, architecture, vegetation/material/lighting quality and readable world identity.",
+        "Never trade away canon, provenance, save/build integrity, low-spec performance or evidence discipline for superficial speed."
+      ],
+      "execution_rule": "Apply lead_engineering_operating_policy_2026_10_04 as the default method for all active and future production lanes unless a later Governor update explicitly supersedes it with stronger evidence."
     }
   ],
   "branch_workflow": {
@@ -6757,7 +6777,7 @@
       "accepts a useful external/programmer proposal as project direction"
     ],
     "capture_rule": "Promote accepted owner direction into requirements, decisions, work_queue items or linked production plans before/with implementation. Preserve unfinished work and evidence boundaries.",
-    "external_advice_rule": "Programmer/external advice is non-authoritative until checked against live develop and relevant Project Sources. Preserve the useful verified result, not a stale claim.",
+    "external_advice_rule": "Programmer/external advice is non-authoritative until checked against live develop, relevant Project Sources, UE4.27 behavior and the target hardware. For nontrivial blockers, actively consult official engine documentation plus mature open-source/experienced developer evidence, preserve the useful verified result, and record rejected alternatives/reasons instead of copying advice blindly.",
     "anti_loss_rule": "No accepted major request may exist only in chat, a temporary ZIP or a worker's memory.",
     "coordination_rule": "Workers read the Governor before meaningful work and write back status/evidence/findings in the same logical change; conflicts are recorded rather than silently resolved.",
     "atomic_mapping_rule": "When a new unfinished requirement is accepted, the same logical change must map it into MasterExecutionRoadmap and refresh tracked unfinished/ACTIVE snapshots before the branch may be considered static-green. PG-078 remains the enforcement backstop.",
@@ -8399,5 +8419,60 @@
       "Profile first-use rendering/PSO behavior on the chosen target RHI."
     ],
     "truth_boundary": "The audit is a pre-mortem and validation plan. Its ten risks remain hypotheses until current-source or runtime evidence proves a concrete defect."
+  },
+  "lead_engineering_operating_policy_2026_10_04": {
+    "status": "ACTIVE_PERMANENT",
+    "owner_intent": "The project must be led as a professional game-production program: maximum practical quality, continuous delivery, fast visible progress, root-cause problem solving, aggressive use of high-quality licensed/open resources, and durable repository memory so changing programmers do not change the method.",
+    "lead_role": "The Lead Game Architect is expected to make routine engineering/production decisions autonomously inside canon, provenance, architecture, performance, gate and evidence constraints. Do not stop production to ask the owner for ordinary technical choices that can be resolved professionally from evidence.",
+    "product_priority": [
+      "Make the game visibly read as a real Shire experience before broadening later runtime chapters.",
+      "Human/skeletal character presentation, natural terrain, landmarks, architecture, vegetation, materials, lighting and readable route identity outrank backend-only polish unless backend work directly unblocks those visible results.",
+      "Prefer large coherent vertical-slice production packets over tiny disconnected increments when safety and reviewability are preserved.",
+      "Every major production packet should materially remove a visible proxy/greybox limitation or advance a production human character unless the packet is closing a proven blocker."
+    ],
+    "blocker_root_cause_loop": [
+      "Verify the blocker on the live exact head and classify it as source/export, tooling/CI, engine/import, runtime/system, performance, provenance/license, or canon/integration.",
+      "Do not repeatedly retry the same exact payload, workflow or workaround after a durable failure reason is known.",
+      "Consult project sources/governor first, then official UE4.27/Epic documentation, then mature open-source repositories/issues and experienced developer practice relevant to the exact problem.",
+      "For nontrivial blockers, compare multiple viable remedies and choose the highest-quality UE4.27-compatible option that fits the i7 Gen6 / 8 GB RAM / ~2 GB VRAM target.",
+      "Separate repairable content/export defects from fundamentally broken assets. Normalize/re-export recoverable FBX content offline when provenance permits; reject irreparable rigs without weakening import/deformation gates.",
+      "Record the selected root-cause fix, rejected alternatives, evidence boundary and next production action in repository memory before or with implementation.",
+      "After blocker closure, resume visible production immediately; diagnosis alone is not considered delivery."
+    ],
+    "external_engineering_evidence_order": [
+      "ProjectGovernor + Project Sources + live develop evidence",
+      "Epic/Unreal Engine 4.27 official documentation and engine behavior",
+      "Mature open-source implementations and issue histories with reproducible technical evidence",
+      "Experienced developer/community practice used as supporting evidence, never as a substitute for project-specific validation"
+    ],
+    "asset_and_content_acquisition_policy": [
+      "Search broadly for high-quality legal sources when a production asset is missing or rejected; do not behave as if the first available asset family is the only option.",
+      "Prefer CC0, permissive/open assets, original/project-authored content and clearly licensed sources with item-level provenance.",
+      "Animated production characters must end as skeletal FBX with real skeleton, skin weights and acceptable deformation; OBJ is not a final animated-character format.",
+      "Production textures use PNG/TGA and channel-packed masks where appropriate; uncompressed BMP is not accepted for production materials.",
+      "Candidate factories should inventory/rank multiple exact payloads cheaply before expensive UE4 runner use and preserve exact hashes to prevent wasteful retries.",
+      "A technically clean generic humanoid may be used as a rig/deformation base before final likeness work; technical pass is not visual acceptance."
+    ],
+    "performance_and_architecture_quality_bar": [
+      "Heavy runtime assets remain soft-referenced and asynchronously loaded through FStreamableManager/RequestAsyncLoad.",
+      "Repeated static world detail prefers HISM/ISM, culling and bounded collision instead of actor-per-prop density.",
+      "Ambient NPC scale uses pooling; no high-frequency Spawn/Destroy churn.",
+      "No UE5-only dependency, Nanite, MetaHuman Crowd or UE5 PCG migration is allowed as a shortcut.",
+      "Quality improvements must be measured against the fixed DX11 720p 30 FPS floor and low-memory target rather than assumed safe from desktop-class examples."
+    ],
+    "production_batching_and_ci_policy": [
+      "Batch related implementation into coherent production packets and avoid unnecessary micro-commits that create superseded CI churn.",
+      "Use cheap hosted/static filters before the single expensive UE4 self-hosted lane whenever possible.",
+      "Do not weaken gates to make the dashboard green; distinguish expected asset rejection from pipeline regression.",
+      "Prefer one exact-head validation cycle per stable packet; superseded runs may be cancelled, but repeated cancellation caused by avoidable commit churn is a process defect to reduce.",
+      "After merge, delete the temporary branch unless it contains explicitly recorded unique unsalvaged work."
+    ],
+    "continuity_contract": [
+      "This policy is repository authority, not chat memory.",
+      "Any replacement programmer/agent must read this policy before meaningful production work.",
+      "A new worker may improve implementation details but may not silently lower the visible-quality target, narrow source discovery, weaken technical gates, reopen rejected exact payloads or revert to backend-first delivery.",
+      "When a better proven method is discovered, update the Governor with evidence and supersede the old method explicitly rather than drifting informally."
+    ],
+    "evidence_claim_boundary": "COMPILE/STATIC/UE4 machine evidence never implies PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED or FPS acceptance without chapter-specific proof."
   }
 }
