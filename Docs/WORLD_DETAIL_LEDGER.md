@@ -1129,3 +1129,11 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Composition rule: preserve the existing Bag End/Hobbiton/Fields/WoodedRoad/Ferry anchors and reveal sequence; increase foreground/midground layering, hedge enclosure, orchard/woodland depth and river-edge vegetation without moving quest triggers.
 - Performance target: 720p / 30 FPS floor on i7 Gen6 / 8 GB RAM / ~2 GB VRAM; recover cost through HISM, explicit cull bands and shadow suppression rather than reducing the hero world to low-quality primitives.
 - Gate: exact-head Pre-Unreal + UE4.27.2 build required before merge. PIE/device/rendered visual acceptance remains separate and is not claimed by machine validation.
+
+
+## 2026-10-03 - P1C01 Frodo OGA Lowpoly Dummy technical probe disposition
+
+- Exact UE4.27 probe completed for the registered CC0 Lowpoly Dummy Idle FBX payload SHA256 `00177d777d324e2eb807f5f94b573026c94226c6574267900213863a0dc8014d`.
+- UE4 skeletal registration succeeded with 41 bones; the candidate is nevertheless rejected because the import emitted missing smoothing-group information and missing bind-pose bones.
+- This is a technical source rejection only. It does not alter story/world/NPC ownership and does not authorize runtime character integration.
+- The rejected hash is durable project memory and may not be retried. Next candidate must be a distinct licensed payload/corrected export and must pass the same or stricter technical gate.

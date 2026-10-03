@@ -31,7 +31,10 @@
   ],
   "delete_after_merge": [
     "production/fbx-world-character-import-v1",
-    "reconcile/fbx-world-intake-current-develop-2026-10-03"
+    "reconcile/fbx-world-intake-current-develop-2026-10-03",
+    "data/p1c01-frodo-rejection-history-knight-v2-2026-10-03",
+    "probe/p1c01-frodo-knight-v2-2026-10-03",
+    "source/p1c01-bag-end-trim-official-receipt-2026-10-03"
   ],
   "safety_rules": [
     "Never delete develop or main.",
@@ -505,5 +508,33 @@
     },
     "safety": "Frodo skeletal validation and both Edoras pending-salvage refs remain protected; canonical/recovery refs excluded.",
     "evidence_boundary": "Repository/import-tool hygiene only; no PIE/device/visual acceptance implied."
+  },
+  "post_303_related_ref_cleanup_2026_10_03": {
+    "action": "DELETE_REVIEWED_SUPERSEDED_REFS_AFTER_THIS_MERGE",
+    "branches": [
+      "data/p1c01-frodo-rejection-history-knight-v2-2026-10-03",
+      "probe/p1c01-frodo-knight-v2-2026-10-03",
+      "source/p1c01-bag-end-trim-official-receipt-2026-10-03"
+    ],
+    "dispositions": {
+      "data/p1c01-frodo-rejection-history-knight-v2-2026-10-03": "INTEGRATED/SUPERSEDED: rejection-history blob is byte-identical to current develop before the OGA addition; current branch now extends the same durable history with the OGA rejection.",
+      "probe/p1c01-frodo-knight-v2-2026-10-03": "INTEGRATED/SUPERSEDED: exact Knight V2 payload SHA, 51-bone UE4 result and smoothing/bind-pose rejection are durable in P1C01FrodoTechnicalRejectionHistoryV1.json; no unique runtime integration is authorized from the old probe head.",
+      "source/p1c01-bag-end-trim-official-receipt-2026-10-03": "INTEGRATED/SUPERSEDED: current develop contains newer official-receipt evidence plus the later static-QC rejection of the Kenney FBX 7700 payload; the older receipt-only branch must not remain a parallel production root."
+    },
+    "preserved_unique": [
+      "p1c01/frodo-skeletal-import-refresh-2026-10-02",
+      "prep/f2-03-edoras-mega-source-v1",
+      "prep/f2-03-edoras-mega-source-v2",
+      "archive/pre-build-salvage-20260930"
+    ],
+    "safety": "No active PR head is listed. The old Frodo skeletal-refresh branch and both Edoras branches remain preserved because they still contain reviewed unique unsalvaged content. develop/main/archive remain protected.",
+    "expected_after_cleanup": [
+      "develop",
+      "main",
+      "archive/pre-build-salvage-20260930",
+      "p1c01/frodo-skeletal-import-refresh-2026-10-02",
+      "prep/f2-03-edoras-mega-source-v1",
+      "prep/f2-03-edoras-mega-source-v2"
+    ]
   }
 }

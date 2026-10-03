@@ -3964,3 +3964,21 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - No NPC Spawn/Destroy lane was added. `ALivingWorldDirector` remains population/pooling owner and `UShireNPCContextSubsystem` remains NPC-context owner.
 - Asset residency remains fail-soft: no synchronous heavy load and no new hard asset load path; optional detail is skipped when the production mesh is not resident.
 - Machine status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. No PIE/device/rendered visual/FPS acceptance claimed.
+
+
+## 2026-10-03 - Frodo OGA Lowpoly Dummy rejected by real UE4.27 technical probe
+
+- Exact source payload `00177d777d324e2eb807f5f94b573026c94226c6574267900213863a0dc8014d` (442604 bytes, FBX 7400) was staged from the verified CC0 archive and was not a previously rejected hash.
+- Dedicated evidence: `P1C01 Frodo OGA Lowpoly Dummy UE4 Technical Probe #1` on exact head `ffaa3f6718a92b68f5112b040643846df277cd67`.
+- UE4.27 registered the payload as a skeletal mesh with **41 bones**, but import emitted both `MISSING_SMOOTHING_GROUPS` and `MISSING_BIND_POSE_BONES`.
+- Result: **REJECTED_TECHNICAL**. The exact payload is now added to the durable rejection history and must not consume UE runner time again.
+- The transient probe FBX/uassets were cleaned by the workflow. No runtime Frodo promotion occurred.
+- Next character action is a distinct licensed FBX/corrected export under the same technical gate; deformation/retarget/AnimBP remain blocked until a clean candidate passes.
+
+
+## 2026-10-03 - Related stale branch retirement queued with Frodo probe closeout
+
+- Three reviewed superseded refs are queued for post-merge deletion: the old Knight V2 rejection-history branch, the Knight V2 probe branch, and the obsolete Bag End official-receipt branch.
+- Each has a durable successor on current `develop`; none is an active PR head.
+- The older Frodo skeletal-import refresh branch and both Edoras preparation branches are **not** deleted because they still contain unique unsalvaged work. They remain explicit salvage targets rather than parallel execution trunks.
+- This is repository hygiene only and carries no runtime/visual acceptance claim.

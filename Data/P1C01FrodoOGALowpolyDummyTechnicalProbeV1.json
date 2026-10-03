@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "probe_id": "P1C01_FRODO_OGA_LOWPOLY_DUMMY_UE4_TECHNICAL_PROBE_V1",
+  "status": "REJECTED_TECHNICAL",
+  "runtime_integration_allowed": false,
+  "character": "FRODO",
+  "source_manifest": "Data/P1C01OpenGameArtLowpolyDummyCandidateV1.json",
+  "source_archive_sha256": "fe31806ca6252b4bfed6f491b92e3535e71dd8342924e453bbe9f12ea9f53d1c",
+  "source_archive_bytes": 363048,
+  "source_entry": "Lowpoly Dummy Character/Lowpoly Dummy Character Idle Anim.fbx",
+  "extracted_payload_sha256": "00177d777d324e2eb807f5f94b573026c94226c6574267900213863a0dc8014d",
+  "extracted_payload_bytes": 442604,
+  "fbx_version": 7400,
+  "exact_probe_head": "ffaa3f6718a92b68f5112b040643846df277cd67",
+  "workflow": "P1C01 Frodo OGA Lowpoly Dummy UE4 Technical Probe #1",
+  "ue4_result": {
+    "skeletal_registered": true,
+    "reference_bones": 41,
+    "import_commandlet_completed": true,
+    "technical_gate": "REJECTED",
+    "reasons": [
+      "MISSING_SMOOTHING_GROUPS",
+      "MISSING_BIND_POSE_BONES"
+    ]
+  },
+  "cleanup": "Transient FBX and generated skeletal probe assets were removed by the workflow cleanup step.",
+  "next_action": "Do not retry this payload SHA256. Advance to a distinct licensed FBX/corrected export and retain the same or stricter UE4 technical gate.",
+  "evidence_boundary": "Exact source + real UE4.27 skeletal technical evidence only. No deformation, retarget, AnimBP, final likeness, runtime, PIE, device, visual or performance acceptance."
+}
