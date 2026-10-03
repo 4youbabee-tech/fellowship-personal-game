@@ -3055,6 +3055,233 @@ void AShirePrototypeWorldBuilder::SpawnVisibleShireMegaPass()
         ReedCount);
 }
 
+
+void AShirePrototypeWorldBuilder::SpawnNaturalRouteMegaPass()
+{
+    // Maximum-safe vertical-slice growth: make the existing P1C01 route read as one
+    // continuous natural landscape instead of opening a new runtime chapter.
+    // Every lane below reuses already-resident production meshes through existing HISM
+    // components. Missing production meshes simply skip their layer.
+    const FVector Route[] = {
+        FVector(-2450,-140,12), FVector(-2050,-90,12), FVector(-1550,30,12), FVector(-1050,100,12),
+        FVector(-500,40,12), FVector(100,-80,12), FVector(700,-120,12),
+        FVector(ShireLayout::HobbitonExitX,0,12), FVector(2500,320,12), FVector(3800,680,12),
+        FVector(5200,420,12), FVector(6400,-260,12), FVector(ShireLayout::FieldsX,-620,12),
+        FVector(9000,-180,12), FVector(10500,620,12), FVector(12100,980,12),
+        FVector(ShireLayout::WoodedRoadX,520,12), FVector(16000,-180,12), FVector(17600,-720,12),
+        FVector(19500,-980,12), FVector(21400,-820,12), FVector(ShireLayout::FerryX-700,-520,12)
+    };
+
+    int32 VergeGrassCount = 0;
+    int32 ShoulderStoneCount = 0;
+    int32 ShrubPocketCount = 0;
+    int32 RockBreakupCount = 0;
+    int32 TerrainBankCount = 0;
+    int32 VistaTreeCount = 0;
+    int32 RiverReedCount = 0;
+
+    const bool bGrassReady =
+        GrassInstances && ProductionGrassClumpMesh &&
+        GrassInstances->GetStaticMesh() == ProductionGrassClumpMesh;
+    const bool bStoneReady =
+        PathStoneInstances && ProductionPathStoneMesh &&
+        PathStoneInstances->GetStaticMesh() == ProductionPathStoneMesh;
+    const bool bShrubReady =
+        ShrubInstances && ProductionShrubMesh &&
+        ShrubInstances->GetStaticMesh() == ProductionShrubMesh;
+    const bool bRockReady =
+        RockInstances && ProductionRockMesh &&
+        RockInstances->GetStaticMesh() == ProductionRockMesh;
+    const bool bSlopeReady =
+        GeographySlopeInstances && ProductionCommonVillageSlopeMesh &&
+        GeographySlopeInstances->GetStaticMesh() == ProductionCommonVillageSlopeMesh;
+    const bool bHillReady =
+        GeographyHillInstances && ProductionCommonTerracedHillMesh &&
+        GeographyHillInstances->GetStaticMesh() == ProductionCommonTerracedHillMesh;
+    const bool bTreeReady =
+        WoodlandTreeInstances && ProductionCommonBroadleafTreeMesh &&
+        WoodlandTreeInstances->GetStaticMesh() == ProductionCommonBroadleafTreeMesh;
+    const bool bReedReady =
+        ReedInstances && ProductionCommonReedClusterMesh &&
+        ReedInstances->GetStaticMesh() == ProductionCommonReedClusterMesh;
+
+    for (int32 Segment = 0; Segment < UE_ARRAY_COUNT(Route) - 1; ++Segment)
+    {
+        const FVector A = Route[Segment];
+        const FVector B = Route[Segment + 1];
+        FVector Tangent = (B - A).GetSafeNormal2D();
+        if (Tangent.IsNearlyZero())
+        {
+            continue;
+        }
+
+        const FVector Normal(-Tangent.Y, Tangent.X, 0.0f);
+        const float SegmentLength = FVector::Dist2D(A, B);
+        const int32 Samples = FMath::Clamp(FMath::CeilToInt(SegmentLength / 150.0f), 3, 8);
+
+        for (int32 Sample = 0; Sample <= Samples; ++Sample)
+        {
+            const float Alpha = static_cast<float>(Sample) / static_cast<float>(Samples);
+            const FVector Center = FMath::Lerp(A, B, Alpha);
+            const float Phase = static_cast<float>(Segment * 17 + Sample * 7);
+
+            for (int32 SideIndex = 0; SideIndex < 2; ++SideIndex)
+            {
+                const float Side = SideIndex == 0 ? -1.0f : 1.0f;
+                const float Shoulder = 245.0f
+                    + 42.0f * FMath::Sin(Phase * 0.37f + Side * 0.8f);
+                const FVector Edge = Center + Normal * Shoulder * Side;
+
+                if (bGrassReady)
+                {
+                    // Four clumps per sampled shoulder create a dense verge while keeping
+                    // one draw family and a bounded cull band.
+                    for (int32 Patch = 0; Patch < 4; ++Patch)
+                    {
+                        const float Along = (static_cast<float>(Patch) - 1.5f) * 34.0f;
+                        const float Out = 18.0f + 24.0f * static_cast<float>(Patch % 2);
+                        const FVector Location =
+                            Edge + Tangent * Along + Normal * Out * Side
+                            + FVector(0.0f, 0.0f, 5.0f);
+                        const float Scale = 0.085f
+                            + 0.008f * static_cast<float>((Segment + Sample + Patch) % 4);
+                        GrassInstances->AddInstance(FTransform(
+                            FRotator(0.0f, static_cast<float>((Segment * 43 + Sample * 29 + Patch * 61) % 360), 0.0f),
+                            Location,
+                            FVector(Scale, Scale, Scale * 1.65f)));
+                        ++VergeGrassCount;
+                    }
+                }
+
+                if (bStoneReady && ((Sample + Segment + SideIndex) % 2) == 0)
+                {
+                    const float Scale = 0.16f
+                        + 0.025f * static_cast<float>((Segment + Sample) % 3);
+                    PathStoneInstances->AddInstance(FTransform(
+                        FRotator(0.0f, static_cast<float>((Segment * 31 + Sample * 47 + SideIndex * 19) % 360), 0.0f),
+                        Edge + Normal * 38.0f * Side + FVector(0.0f, 0.0f, 3.0f),
+                        FVector(Scale * 1.35f, Scale, 0.055f)));
+                    ++ShoulderStoneCount;
+                }
+
+                if (bShrubReady && ((Sample + Segment * 2 + SideIndex) % 5) == 0)
+                {
+                    const float Scale = 0.19f
+                        + 0.025f * static_cast<float>((Segment + Sample + SideIndex) % 4);
+                    ShrubInstances->AddInstance(FTransform(
+                        FRotator(0.0f, static_cast<float>((Segment * 59 + Sample * 23 + SideIndex * 101) % 360), 0.0f),
+                        Edge + Normal * (105.0f + 22.0f * static_cast<float>((Sample + SideIndex) % 3)) * Side,
+                        FVector(Scale * 1.30f, Scale, Scale * 0.78f)));
+                    ++ShrubPocketCount;
+                }
+
+                if (bRockReady && Segment >= 7 && ((Sample + Segment + SideIndex) % 6) == 0)
+                {
+                    const float Scale = 0.13f
+                        + 0.03f * static_cast<float>((Segment + Sample) % 4);
+                    RockInstances->AddInstance(FTransform(
+                        FRotator(0.0f, static_cast<float>((Segment * 71 + Sample * 17) % 360), 0.0f),
+                        Edge + Normal * 170.0f * Side,
+                        FVector(Scale * 1.45f, Scale, Scale * 0.72f)));
+                    ++RockBreakupCount;
+                }
+            }
+        }
+    }
+
+    // Terrain banks hide the long flat-test-map read without moving traversal anchors.
+    if (bSlopeReady || bHillReady)
+    {
+        for (int32 Index = 0; Index < 34; ++Index)
+        {
+            const float Alpha = static_cast<float>(Index) / 33.0f;
+            const float X = FMath::Lerp(-2800.0f, ShireLayout::FerryX + 1300.0f, Alpha);
+            const float Side = (Index % 2 == 0) ? -1.0f : 1.0f;
+            const float Y = Side * (3050.0f + 420.0f * FMath::Sin(static_cast<float>(Index) * 0.69f));
+            const float Yaw = 4.0f * FMath::Sin(static_cast<float>(Index) * 0.41f);
+
+            if (bSlopeReady)
+            {
+                GeographySlopeInstances->AddInstance(FTransform(
+                    FRotator(0.0f, Yaw, 0.0f),
+                    FVector(X, Y, -95.0f),
+                    FVector(2.6f + 0.25f * static_cast<float>(Index % 3), 2.1f, 1.35f)));
+                ++TerrainBankCount;
+            }
+
+            if (bHillReady && (Index % 2) == 0)
+            {
+                GeographyHillInstances->AddInstance(FTransform(
+                    FRotator(0.0f, -Yaw, 0.0f),
+                    FVector(X + 180.0f, Y + Side * 540.0f, -130.0f),
+                    FVector(2.2f + 0.20f * static_cast<float>(Index % 4), 2.0f, 1.45f)));
+                ++TerrainBankCount;
+            }
+        }
+    }
+
+    // Mid-distance tree masses give each route section a clear visual wall and stop the
+    // player from seeing the whole generated strip at once.
+    if (bTreeReady)
+    {
+        for (int32 Index = 0; Index < 72; ++Index)
+        {
+            const float Alpha = static_cast<float>(Index) / 71.0f;
+            const float X = FMath::Lerp(-2600.0f, ShireLayout::FerryX + 800.0f, Alpha);
+            const float Side = (Index % 2 == 0) ? -1.0f : 1.0f;
+            float Distance = 2250.0f + 480.0f * FMath::Sin(static_cast<float>(Index) * 0.83f);
+
+            // Keep the worked fields broader and the wooded road more enclosed.
+            if (X > 10500.0f && X < 19200.0f)
+            {
+                Distance -= 520.0f;
+            }
+            else if (X > 3000.0f && X < 10000.0f)
+            {
+                Distance += 320.0f;
+            }
+
+            const float Scale = 0.62f + 0.06f * static_cast<float>(Index % 5);
+            WoodlandTreeInstances->AddInstance(FTransform(
+                FRotator(0.0f, static_cast<float>((Index * 47) % 360), 0.0f),
+                FVector(X, Side * Distance, 0.0f),
+                FVector(Scale)));
+            ++VistaTreeCount;
+        }
+    }
+
+    // Denser natural river edge around the Ferry while keeping the crossing readable.
+    if (bReedReady)
+    {
+        for (int32 Index = 0; Index < 64; ++Index)
+        {
+            const int32 BankIndex = Index % 32;
+            const float Alpha = static_cast<float>(BankIndex) / 31.0f;
+            const float X = FMath::Lerp(ShireLayout::FerryX - 2400.0f, ShireLayout::FerryX + 1600.0f, Alpha);
+            const float BankY = Index < 32 ? -1600.0f : 720.0f;
+            const float Y = BankY + 110.0f * FMath::Sin(static_cast<float>(Index) * 0.91f);
+            const float Scale = 0.56f + 0.05f * static_cast<float>(Index % 5);
+            ReedInstances->AddInstance(FTransform(
+                FRotator(0.0f, static_cast<float>((Index * 37) % 360), 0.0f),
+                FVector(X, Y, -5.0f),
+                FVector(Scale)));
+            ++RiverReedCount;
+        }
+    }
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("P1C01_NATURAL_ROUTE_MEGA_PASS vergeGrass=%d shoulderStones=%d shrubPockets=%d rocks=%d terrainBanks=%d vistaTrees=%d riverReeds=%d writer=ShirePrototypeWorldBuilder"),
+        VergeGrassCount,
+        ShoulderStoneCount,
+        ShrubPocketCount,
+        RockBreakupCount,
+        TerrainBankCount,
+        VistaTreeCount,
+        RiverReedCount);
+}
+
 void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()
 {
     if (!GetWorld())
@@ -3597,6 +3824,7 @@ void AShirePrototypeWorldBuilder::BuildPrototypeWorld()
     SpawnVisibleShireMegaPass();
     SpawnFoliagePass();
     SpawnScenicDetailPass();
+    SpawnNaturalRouteMegaPass();
     SpawnWorldDensityDetailPass();
     SpawnBagEndHeroPass();
     SpawnPartySocialLoopPass();
