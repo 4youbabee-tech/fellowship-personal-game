@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "packet_id": "P1C01_FRODO_HUMAN_BREAKTHROUGH_V1",
-  "status": "RPG_MULTI_CANDIDATE_GAUNTLET_IMPLEMENTED_EXACT_HEAD_VALIDATION_PENDING",
+  "status": "RPG_NORMALIZED_FAMILY_REJECTED_NEXT_SOURCE_REQUIRED",
   "runtime_chapter": "P1C01",
   "target_character": "FRODO",
   "player_visible_goal": "replace modular/proxy Frodo with a real UE4 skeletal humanoid only after strict technical and deformation gates pass",
@@ -12,7 +12,10 @@
     "license": "CC0-1.0",
     "family": "Lowpoly RPG Characters",
     "final_likeness": false,
-    "mode": "BOUNDED_MULTI_CANDIDATE_GAUNTLET_MAX_4"
+    "mode": "BOUNDED_MULTI_CANDIDATE_GAUNTLET_MAX_4",
+    "disposition": "TECHNICALLY_REJECTED_AFTER_NORMALIZED_UE4_GAUNTLET",
+    "next_source": "QTN_UNIVERSAL_BASE_CHARACTERS",
+    "next_animation_source": "QTN_UNIVERSAL_ANIMATION_LIBRARY"
   },
   "gate_order": [
     "hosted full-archive FBX inventory and ranking",
@@ -54,5 +57,14 @@
       "MISSING_SMOOTHING_GROUPS",
       "MISSING_BIND_POSE_BONES"
     ]
+  },
+  "latest_exact_evidence": {
+    "pre_unreal_run": 1812,
+    "unreal_build_run": 1409,
+    "unreal_build_result": "SUCCESS",
+    "gauntlet_run": 17,
+    "gauntlet_result": "NORMALIZED_GAUNTLET_EXHAUSTED_TECHNICAL_REJECTION",
+    "cleric_normalized_sha256": "77cc7b8c6e3a787837b0777ec16e1988a6fe2b7c50e2d188eba90e18a9d1ee0d",
+    "wizard_normalized_sha256": "ff080ee60bd33d10dbf2ece9ff535cea96a9afb2bd052a22d53d78c58f6e2add"
   }
 }
