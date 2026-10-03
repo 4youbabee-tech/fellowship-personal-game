@@ -1079,3 +1079,11 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Existing planted-entry transforms remain unchanged. `SM_ShShrub` is used when resident; primitive spheres remain deterministic no-asset fallback.
 - Hero architectural door/window/trim and interior-shell debt remain separately gated; no fallback is removed without exact replacement import/QC evidence.
 - Evidence boundary: **SOURCE IMPLEMENTATION ONLY** pending fresh exact-head workflows.
+
+
+## 2026-10-03 - Bag End hero trim source probe
+
+- This is a source/preproduction refinement of the existing Bag End Hero Ring, not a new world-detail concept.
+- Source target remains consistent with the project world reference: warm domestic scale, circular doors/gardens for Hobbiton and dense lived-in/round geometry for Bag End.
+- Existing fallback architecture remains intentionally visible until exact replacement import/QC evidence exists.
+- No story state, NPC authority, quest truth, traversal route, save schema or runtime placement changes are introduced.
