@@ -2988,3 +2988,20 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Exact-head Pre-Unreal | PENDING |
 | Exact-head UE4.27.2 build | PENDING |
 | PIE/device/rendered visual/FPS acceptance | NOT CLAIMED |
+
+
+## 2026-10-03 - Frodo OGA Lowpoly Dummy technical result
+
+| Gate | Status |
+|---|---|
+| Exact CC0 archive receipt | PASS |
+| Exact Idle FBX identity | PASS: `00177d777d324e2eb807f5f94b573026c94226c6574267900213863a0dc8014d` |
+| FBX version | PASS: 7400 |
+| UE4.27 skeletal registration | PASS |
+| Reference bone count | PASS: 41 |
+| Smoothing-group gate | FAIL |
+| Bind-pose gate | FAIL |
+| Technical candidate | REJECTED |
+| Retry same payload | FORBIDDEN |
+| Deformation / retarget / AnimBP | BLOCKED |
+| Runtime Frodo promotion | BLOCKED |
