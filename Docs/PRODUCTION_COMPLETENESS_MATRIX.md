@@ -3026,3 +3026,20 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Exact-head Pre-Unreal | PENDING |
 | Exact-head UE4.27.2 validation | PENDING |
 | PIE/device/rendered visual/FPS acceptance | NOT CLAIMED |
+
+
+## 2026-10-04 - Lead engineering delivery method
+
+| Control | Status |
+|---|---|
+| Professional lead method stored in Governor | IMPLEMENTED IN GOVERNANCE BRANCH |
+| Routine technical decisions owned by Lead Architect | ENABLED WITH CANON/PROVENANCE/PERF/GATE BOUNDARIES |
+| Root-cause blocker research loop | REQUIRED |
+| Official UE4.27 + mature OSS/expert evidence review | REQUIRED FOR NONTRIVIAL BLOCKERS |
+| Broad legal/open asset discovery | REQUIRED WHEN CURRENT SOURCE IS INSUFFICIENT |
+| Repairable FBX export normalization path | AUTHORIZED WITH PROVENANCE + STRICT RE-VALIDATION |
+| Large coherent visible production packets | DEFAULT |
+| Avoidable micro-commit / superseded-CI churn | PROCESS DEFECT TO REDUCE |
+| Visible Shire + human characters | PRIMARY DELIVERY TARGET |
+| Low-spec DX11 / 720p / 30 FPS architecture constraints | UNCHANGED |
+| PIE/device/visual/FPS claims without direct evidence | FORBIDDEN |
