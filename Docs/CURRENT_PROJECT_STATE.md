@@ -3982,3 +3982,14 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Each has a durable successor on current `develop`; none is an active PR head.
 - The older Frodo skeletal-import refresh branch and both Edoras preparation branches are **not** deleted because they still contain unique unsalvaged work. They remain explicit salvage targets rather than parallel execution trunks.
 - This is repository hygiene only and carries no runtime/visual acceptance claim.
+
+
+## 2026-10-03 - Maximum-safe P1C01 vertical-slice growth: natural route mega pass implemented
+
+- The accepted scale-up strategy is being applied as **vertical-slice growth inside the active P1C01 chapter**, not by opening another runtime chapter: make one Shire route feel substantially larger, denser and more finished before asking the owner to reopen Unreal.
+- `AShirePrototypeWorldBuilder` now extends the merged visible-Shire pass with a continuous natural-route layer from Bag End through Hobbiton, the worked fields, wooded road and Bucklebury Ferry.
+- Source-level maximum when all already-resident production meshes are available: **up to 1,758 additional HISM instances** — 1,304 grass-verge clumps, 163 shoulder stones, 64 shrub pockets, 40 rock breakups, 51 terrain-bank instances, 72 vista trees and 64 river reeds.
+- The pass deliberately breaks the long flat/test-strip read: route shoulders vary on both sides, terrain banks close the horizon, the worked fields stay broad, the wooded road becomes more enclosed, and the Ferry receives a denser river edge.
+- All new repeated detail reuses existing HISM components and cull bands. No new synchronous heavy asset loading, no per-instance Tick, no NPC Spawn/Destroy lane and no new story/quest/save owner were added.
+- This is intended as a **large player-visible change**, not another backend-only checkpoint.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. No PIE/device/rendered visual/FPS acceptance claimed.
