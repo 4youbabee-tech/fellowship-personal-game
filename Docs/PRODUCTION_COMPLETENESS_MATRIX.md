@@ -2920,3 +2920,5 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Nonzero bones | PENDING |
 | Smoothing/bind-pose/UV debt | PENDING |
 | Deformation/retarget/AnimBP/runtime | BLOCKED UNTIL TECHNICAL PASS |
+
+- Frodo rejected-candidate memory: **DURABLE IN REPOSITORY** — exact payload identities/reasons preserved; exact failed SHA payloads are non-retriable.
