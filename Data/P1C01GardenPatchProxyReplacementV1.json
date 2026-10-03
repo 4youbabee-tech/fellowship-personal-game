@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "plan_id": "P1C01_GARDEN_PATCH_PROXY_REPLACEMENT_V1",
+  "status": "RUNTIME_IMPLEMENTATION_ACTIVE",
+  "runtime_chapter": "P1C01",
+  "runtime_integration_allowed": true,
+  "objective": "Replace the five visible Shire garden patches' primitive cube/sphere treatment with already-resident production ground and shrub assets while preserving authored locations and low-spec budgets.",
+  "source_basis": {
+    "project_world_bible": "03_WORLD_LOCATIONS_AND_MAP_BIBLE: The Shire/Hobbiton visual grammar = warm domestic scale; circular doors; gardens.",
+    "runtime_source": "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp"
+  },
+  "replacement_contract": {
+    "garden_patch_count": 5,
+    "rows_per_patch": 5,
+    "plants_per_row": 5,
+    "max_production_shrub_instances": 125,
+    "soil_mesh": "/Game/Production/World/Shire/SM_ShGroundBlock.SM_ShGroundBlock",
+    "plant_mesh": "/Game/Production/World/Shire/SM_ShShrub.SM_ShShrub",
+    "plant_instancing": "existing ShrubInstances UHierarchicalInstancedStaticMeshComponent",
+    "shrub_cull_start_cm": 1500,
+    "shrub_cull_end_cm": 6500,
+    "collision": false,
+    "cast_shadow": false,
+    "tick": false,
+    "primitive_fallback": "Cube soil rows and Sphere plants remain only when the exact resident production meshes/HISM binding are unavailable.",
+    "actor_count_effect": "Production path removes up to 125 individual primitive plant actors and replaces them with HISM instances; no new per-plant Actor/Tick authority."
+  },
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_class": 2
+  },
+  "evidence_boundary": "SOURCE-IMPLEMENTED pending exact-head Pre-Unreal and UE4.27.2 validation. No PIE, device, visual or performance acceptance."
+}
