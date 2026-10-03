@@ -1,0 +1,880 @@
+{
+  "schema_version": 1,
+  "matrix_id": "WHOLE_GAME_CHAPTER_ASSET_DEMAND_MATRIX_V1",
+  "status": "SOURCE_DEMAND_REGISTERED",
+  "authority": [
+    "Data/WholeGameChapterProductionPacketsV1.json",
+    "Data/ContinuousProductionWaveQueueV2.json",
+    "Data/WholeGameResourceGapAuditV2.json",
+    "Data/ProjectGovernor.json"
+  ],
+  "chapter_count": 23,
+  "runtime_rule": "Demand planning does not activate runtime. P1C01 remains the only Governor-authorized runtime lane.",
+  "acquisition_routing": {
+    "character_animation": "M013-M016",
+    "architecture_vegetation_materials": "M017-M019",
+    "props_cultures_factions": "M020",
+    "audio": "M021",
+    "vfx": "M022",
+    "traversal_mounts_water": "M023",
+    "battle_siege_crowds": "M024"
+  },
+  "rows": [
+    {
+      "chapter_id": "F1-01",
+      "wave_id": "M025",
+      "runtime_integration_allowed": false,
+      "environment_families": [
+        "hobbit_rural_architecture",
+        "hedgerows_fields_gardens",
+        "shire_roads_bridges_fences"
+      ],
+      "character_families": [
+        "gandalf_hero",
+        "frodo_hero"
+      ],
+      "animation_families": [
+        "staff_robed_humanoid",
+        "hobbit_hero_locomotion_interaction",
+        "social_dialogue_gestures"
+      ],
+      "audio_families": [
+        "birds_breeze_farm_village",
+        "warm_interior_foley",
+        "dialogue_space_tone"
+      ],
+      "vfx_families": [
+        "bounded_weather_atmosphere"
+      ],
+      "interaction_families": [
+        "chapter_context_interactions"
+      ],
+      "performance_risks": [
+        "ue4_27_dx11_720p_30fps_floor"
+      ],
+      "acquisition_state": "SOURCE_DEMAND_REGISTERED",
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+    },
+    {
+      "chapter_id": "F1-02",
+      "wave_id": "M026",
+      "runtime_integration_allowed": false,
+      "environment_families": [
+        "hobbit_rural_architecture",
+        "hedgerows_fields_gardens",
+        "shire_roads_bridges_fences"
+      ],
+      "character_families": [
+        "gandalf_hero",
+        "frodo_hero",
+        "sam_hero"
+      ],
+      "animation_families": [
+        "staff_robed_humanoid",
+        "hobbit_hero_locomotion_interaction",
+        "hobbit_companion"
+      ],
+      "audio_families": [
+        "birds_breeze_farm_village",
+        "warm_interior_foley"
+      ],
+      "vfx_families": [
+        "bounded_weather_atmosphere"
+      ],
+      "interaction_families": [
+        "stealth_detection",
+        "contextual_cover_or_disguise"
+      ],
+      "performance_risks": [
+        "ue4_27_dx11_720p_30fps_floor"
+      ],
+      "acquisition_state": "SOURCE_DEMAND_REGISTERED",
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+    },
+    {
+      "chapter_id": "F1-03",
+      "wave_id": "M027",
+      "runtime_integration_allowed": false,
+      "environment_families": [
+        "hobbit_rural_architecture",
+        "hedgerows_fields_gardens",
+        "shire_roads_bridges_fences",
+        "bree_timber_stone_town",
+        "inn_stable_gate_interiors"
+      ],
+      "character_families": [
+        "nazgul_rider_mount",
+        "frodo_hero",
+        "sam_hero",
+        "merry_hero",
+        "pippin_hero",
+        "ent_scale_creature_support"
+      ],
+      "animation_families": [
+        "mounted_pursuit",
+        "threat_search",
+        "hobbit_hero_locomotion_interaction",
+        "hobbit_companion",
+        "large_creature_walk_interact"
+      ],
+      "audio_families": [
+        "birds_breeze_farm_village",
+        "warm_interior_foley",
+        "crowded_inn_rain_night_town"
+      ],
+      "vfx_families": [
+        "bounded_weather_atmosphere"
+      ],
+      "interaction_families": [
+        "stealth_detection",
+        "contextual_cover_or_disguise"
+      ],
+      "performance_risks": [
+        "ue4_27_dx11_720p_30fps_floor"
+      ],
+      "acquisition_state": "SOURCE_DEMAND_REGISTERED",
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+    },
+    {
+      "chapter_id": "F1-04",
+      "wave_id": "M028",
+      "runtime_integration_allowed": false,
+      "environment_families": [
+        "bree_timber_stone_town",
+        "inn_stable_gate_interiors",
+        "exposed_ruined_watch_hill",
+        "rock_grass_camp"
+      ],
+      "character_families": [
+        "nazgul_rider_mount",
+        "aragorn_hero",
+        "frodo_hero",
+        "ent_scale_creature_support"
+      ],
+      "animation_families": [
+        "mounted_pursuit",
+        "threat_search",
+        "human_hero_locomotion_combat",
+        "hobbit_hero_locomotion_interaction",
+        "large_creature_walk_interact",
+        "combat_reactions_death",
+        "formation_or_encounter_motion"
+      ],
+      "audio_families": [
+        "crowded_inn_rain_night_town",
+        "combat_impacts_shouts_environment"
+      ],
+      "vfx_families": [
+        "night_wind_weather"
+      ],
+      "interaction_families": [
+        "chapter_context_interactions"
+      ],
+      "performance_risks": [
+        "pooled_actor_budget",
+        "ue4_27_dx11_720p_30fps_floor"
+      ],
+      "acquisition_state": "SOURCE_DEMAND_REGISTERED",
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+    },
+    {
+      "chapter_id": "F1-05",
+      "wave_id": "M029",
+      "runtime_integration_allowed": false,
+      "environment_families": [
+        "elven_rivendell_architecture",
+        "waterfalls_cliffs_gardens"
+      ],
+      "character_families": [
+        "frodo_hero",
+        "ent_scale_creature_support"
+      ],
+      "animation_families": [
+        "hobbit_hero_locomotion_interaction",
+        "large_creature_walk_interact",
+        "social_dialogue_gestures"
+      ],
+      "audio_families": [
+        "water_elven_settlement_ambience",
+        "dialogue_space_tone"
+      ],
+      "vfx_families": [
+        "bounded_weather_atmosphere"
+      ],
+      "interaction_families": [
+        "chapter_context_interactions"
+      ],
+      "performance_risks": [
+        "ue4_27_dx11_720p_30fps_floor"
+      ],
+      "acquisition_state": "SOURCE_DEMAND_REGISTERED",
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+    },
+    {
+      "chapter_id": "F1-06",
+      "wave_id": "M030",
+      "runtime_integration_allowed": false,
+      "environment_families": [
+        "snow_mountain_pass",
+        "rock_cliff_snow_surfaces",
+        "dwarven_subterranean_halls",
+        "mine_tombs_bridge_chasm"
+      ],
+      "character_families": [
+        "balrog_large_creature"
+      ],
+      "animation_families": [
+        "large_creature_combat",
+        "combat_reactions_death",
+        "formation_or_encounter_motion"
+      ],
+      "audio_families": [
+        "cavern_reverb_stone_metal",
+        "combat_impacts_shouts_environment"
+      ],
+      "vfx_families": [
+        "snow_wind_low_visibility",
+        "torch_fire_dust_darkness",
+        "fire_shadow_creature"
+      ],
+      "interaction_families": [
+        "chapter_context_interactions"
+      ],
+      "performance_risks": [
+        "pooled_actor_budget",
+        "ue4_27_dx11_720p_30fps_floor"
+      ],
+      "acquisition_state": "SOURCE_DEMAND_REGISTERED",
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+    },
+    {
+      "chapter_id": "F1-07",
+      "wave_id": "M031",
+      "runtime_integration_allowed": false,
+      "environment_families": [
+        "golden_forest_elven_platforms",
+        "riverbank_boat_launch",
+        "great_river_corridor",
+        "ancient_ruins_woodland"
+      ],
+      "character_families": [],
+      "animation_families": [
+        "chapter_humanoid_locomotion_interaction"
+      ],
+      "audio_families": [
+        "forest_elven_ambience"
+      ],
+      "vfx_families": [
+        "bounded_weather_atmosphere"
+      ],
+      "interaction_families": [
+        "boats_river_travel",
+        "boat_boarding_travel"
+      ],
+      "performance_risks": [
+        "ue4_27_dx11_720p_30fps_floor"
+      ],
+      "acquisition_state": "SOURCE_DEMAND_REGISTERED",
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+    },
+    {
+      "chapter_id": "F1-08",
+      "wave_id": "M032",
+      "runtime_integration_allowed": false,
+      "environment_families": [
+        "great_river_corridor",
+        "ancient_ruins_woodland",
+        "mordor_volcanic_wasteland",
+        "black_gate_fortification",
+        "lava_ash_rock"
+      ],
+      "character_families": [
+        "aragorn_hero",
+        "frodo_hero",
+        "sam_hero",
+        "merry_hero",
+        "pippin_hero",
+        "uruk_hai_army"
+      ],
+      "animation_families": [
+        "human_hero_locomotion_combat",
+        "hobbit_hero_locomotion_interaction",
+        "hobbit_companion",
+        "army_melee_locomotion",
+        "combat_reactions_death",
+        "formation_or_encounter_motion"
+      ],
+      "audio_families": [
+        "combat_impacts_shouts_environment"
+      ],
+      "vfx_families": [
+        "ash_smoke_fire_lava"
+      ],
+      "interaction_families": [
+        "boats_river_travel"
+      ],
+      "performance_risks": [
+        "large_battle_density",
+        "volcanic_vfx_budget",
+        "pooled_crowd_budget",
+        "pooled_actor_budget",
+        "ue4_27_dx11_720p_30fps_floor"
+      ],
+      "acquisition_state": "SOURCE_DEMAND_REGISTERED",
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+    },
+    {
+      "chapter_id": "F2-01",
+      "wave_id": "M033",
+      "runtime_integration_allowed": false,
+      "environment_families": [
+        "rohan_grasslands",
+        "timber_hall_settlement",
+        "horse_culture_props",
+        "ancient_dense_forest",
+        "giant_tree_roots"
+      ],
+      "character_families": [
+        "ent_scale_creature_support",
+        "aragorn_hero",
+        "merry_hero",
+        "pippin_hero",
+        "uruk_hai_army"
+      ],
+      "animation_families": [
+        "human_hero_locomotion_combat",
+        "hobbit_companion",
+        "army_melee_locomotion"
+      ],
+      "audio_families": [
+        "wind_horses_wood_hall"
+      ],
+      "vfx_families": [
+        "bounded_weather_atmosphere"
+      ],
+      "interaction_families": [
+        "mounted_support",
+        "large_creature_traversal",
+        "stealth_detection",
+        "contextual_cover_or_disguise"
+      ],
+      "performance_risks": [
+        "pooled_crowd_budget",
+        "ue4_27_dx11_720p_30fps_floor"
+      ],
+      "acquisition_state": "SOURCE_DEMAND_REGISTERED",
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+    },
+    {
+      "chapter_id": "F2-02",
+      "wave_id": "M034",
+      "runtime_integration_allowed": false,
+      "environment_families": [
+        "ancient_dense_forest",
+        "giant_tree_roots"
+      ],
+      "character_families": [
+        "ent_scale_creature_support",
+        "gandalf_hero",
+        "merry_hero",
+        "pippin_hero"
+      ],
+      "animation_families": [
+        "staff_robed_humanoid",
+        "hobbit_companion",
+        "large_creature_walk_interact",
+        "social_dialogue_gestures"
+      ],
+      "audio_families": [
+        "dialogue_space_tone"
+      ],
+      "vfx_families": [
+        "bounded_weather_atmosphere"
+      ],
+      "interaction_families": [
+        "large_creature_traversal"
+      ],
+      "performance_risks": [
+        "ue4_27_dx11_720p_30fps_floor"
+      ],
+      "acquisition_state": "SOURCE_DEMAND_REGISTERED",
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+    },
+    {
+      "chapter_id": "F2-03",
+      "wave_id": "M035",
+      "runtime_integration_allowed": false,
+      "environment_families": [
+        "rohan_grasslands",
+        "timber_hall_settlement",
+        "horse_culture_props"
+      ],
+      "character_families": [
+        "aragorn_hero",
+        "gandalf_hero",
+        "ent_scale_creature_support"
+      ],
+      "animation_families": [
+        "human_hero_locomotion_combat",
+        "staff_robed_humanoid",
+        "large_creature_walk_interact",
+        "social_dialogue_gestures"
+      ],
+      "audio_families": [
+        "wind_horses_wood_hall",
+        "dialogue_space_tone"
+      ],
+      "vfx_families": [
+        "bounded_weather_atmosphere"
+      ],
+      "interaction_families": [
+        "mounted_support"
+      ],
+      "performance_risks": [
+        "ue4_27_dx11_720p_30fps_floor"
+      ],
+      "acquisition_state": "SOURCE_DEMAND_REGISTERED",
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+    },
+    {
+      "chapter_id": "F2-04",
+      "wave_id": "M036",
+      "runtime_integration_allowed": false,
+      "environment_families": [
+        "rohan_grasslands",
+        "timber_hall_settlement",
+        "horse_culture_props",
+        "helms_deep_fortification",
+        "wall_gate_keep_caves"
+      ],
+      "character_families": [],
+      "animation_families": [
+        "chapter_humanoid_locomotion_interaction"
+      ],
+      "audio_families": [
+        "wind_horses_wood_hall"
+      ],
+      "vfx_families": [
+        "rain_fire_explosions_breach_dust"
+      ],
+      "interaction_families": [
+        "mounted_support",
+        "siege_defense"
+      ],
+      "performance_risks": [
+        "large_battle_density",
+        "ue4_27_dx11_720p_30fps_floor"
+      ],
+      "acquisition_state": "SOURCE_DEMAND_REGISTERED",
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+    },
+    {
+      "chapter_id": "F2-05",
+      "wave_id": "M037",
+      "runtime_integration_allowed": false,
+      "environment_families": [
+        "helms_deep_fortification",
+        "wall_gate_keep_caves"
+      ],
+      "character_families": [
+        "aragorn_hero"
+      ],
+      "animation_families": [
+        "human_hero_locomotion_combat",
+        "combat_reactions_death",
+        "formation_or_encounter_motion",
+        "horse_rider_animation"
+      ],
+      "audio_families": [
+        "combat_impacts_shouts_environment"
+      ],
+      "vfx_families": [
+        "rain_fire_explosions_breach_dust"
+      ],
+      "interaction_families": [
+        "siege_defense",
+        "mount_dismount_riding"
+      ],
+      "performance_risks": [
+        "large_battle_density",
+        "pooled_actor_budget",
+        "ue4_27_dx11_720p_30fps_floor"
+      ],
+      "acquisition_state": "SOURCE_DEMAND_REGISTERED",
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+    },
+    {
+      "chapter_id": "F2-06",
+      "wave_id": "M038",
+      "runtime_integration_allowed": false,
+      "environment_families": [
+        "broken_rock_maze",
+        "marsh_water_bog",
+        "dead_marsh_atmosphere"
+      ],
+      "character_families": [
+        "frodo_hero",
+        "sam_hero",
+        "gollum_creature_humanoid"
+      ],
+      "animation_families": [
+        "hobbit_hero_locomotion_interaction",
+        "hobbit_companion",
+        "gollum_crawl_climb_dialogue"
+      ],
+      "audio_families": [
+        "location_ambience_foley"
+      ],
+      "vfx_families": [
+        "mist_water_glow"
+      ],
+      "interaction_families": [
+        "climb_scramble_routefinding"
+      ],
+      "performance_risks": [
+        "ue4_27_dx11_720p_30fps_floor"
+      ],
+      "acquisition_state": "SOURCE_DEMAND_REGISTERED",
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+    },
+    {
+      "chapter_id": "F2-07",
+      "wave_id": "M039",
+      "runtime_integration_allowed": false,
+      "environment_families": [
+        "ithilien_woodland_ruins",
+        "ranger_hideout"
+      ],
+      "character_families": [
+        "frodo_hero",
+        "sam_hero",
+        "gollum_creature_humanoid",
+        "haradrim_units_oliphaunt_support"
+      ],
+      "animation_families": [
+        "hobbit_hero_locomotion_interaction",
+        "hobbit_companion",
+        "gollum_crawl_climb_dialogue",
+        "social_dialogue_gestures"
+      ],
+      "audio_families": [
+        "woodland_stealth_ambience",
+        "dialogue_space_tone"
+      ],
+      "vfx_families": [
+        "bounded_weather_atmosphere"
+      ],
+      "interaction_families": [
+        "stealth_detection",
+        "contextual_cover_or_disguise"
+      ],
+      "performance_risks": [
+        "large_creature_army_budget",
+        "ue4_27_dx11_720p_30fps_floor"
+      ],
+      "acquisition_state": "SOURCE_DEMAND_REGISTERED",
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+    },
+    {
+      "chapter_id": "F2-08",
+      "wave_id": "M040",
+      "runtime_integration_allowed": false,
+      "environment_families": [
+        "ancient_dense_forest",
+        "giant_tree_roots",
+        "orthanc_industrial_ring",
+        "pits_dams_war_machine"
+      ],
+      "character_families": [
+        "ent_scale_creature_support",
+        "merry_hero",
+        "pippin_hero"
+      ],
+      "animation_families": [
+        "hobbit_companion",
+        "large_creature_walk_interact",
+        "combat_reactions_death",
+        "formation_or_encounter_motion"
+      ],
+      "audio_families": [
+        "combat_impacts_shouts_environment"
+      ],
+      "vfx_families": [
+        "fire_smoke_water_destruction"
+      ],
+      "interaction_families": [
+        "large_creature_traversal"
+      ],
+      "performance_risks": [
+        "destruction_crowd_budget",
+        "pooled_actor_budget",
+        "ue4_27_dx11_720p_30fps_floor"
+      ],
+      "acquisition_state": "SOURCE_DEMAND_REGISTERED",
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+    },
+    {
+      "chapter_id": "F3-01",
+      "wave_id": "M041",
+      "runtime_integration_allowed": false,
+      "environment_families": [
+        "rohan_grasslands",
+        "timber_hall_settlement",
+        "horse_culture_props",
+        "orthanc_industrial_ring",
+        "pits_dams_war_machine"
+      ],
+      "character_families": [
+        "gandalf_hero",
+        "pippin_hero"
+      ],
+      "animation_families": [
+        "staff_robed_humanoid",
+        "hobbit_companion"
+      ],
+      "audio_families": [
+        "wind_horses_wood_hall"
+      ],
+      "vfx_families": [
+        "fire_smoke_water_destruction"
+      ],
+      "interaction_families": [
+        "mounted_support"
+      ],
+      "performance_risks": [
+        "destruction_crowd_budget",
+        "ue4_27_dx11_720p_30fps_floor"
+      ],
+      "acquisition_state": "SOURCE_DEMAND_REGISTERED",
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+    },
+    {
+      "chapter_id": "F3-02",
+      "wave_id": "M042",
+      "runtime_integration_allowed": false,
+      "environment_families": [
+        "rohan_grasslands",
+        "timber_hall_settlement",
+        "horse_culture_props",
+        "gondor_white_stone_city",
+        "pelennor_field",
+        "siege_fortification"
+      ],
+      "character_families": [
+        "gandalf_hero",
+        "merry_hero",
+        "pippin_hero"
+      ],
+      "animation_families": [
+        "staff_robed_humanoid",
+        "hobbit_companion"
+      ],
+      "audio_families": [
+        "wind_horses_wood_hall"
+      ],
+      "vfx_families": [
+        "siege_fire_smoke_dust"
+      ],
+      "interaction_families": [
+        "mounted_support"
+      ],
+      "performance_risks": [
+        "large_battle_density",
+        "city_streaming_budget",
+        "ue4_27_dx11_720p_30fps_floor"
+      ],
+      "acquisition_state": "SOURCE_DEMAND_REGISTERED",
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+    },
+    {
+      "chapter_id": "F3-03",
+      "wave_id": "M043",
+      "runtime_integration_allowed": false,
+      "environment_families": [
+        "rohan_grasslands",
+        "timber_hall_settlement",
+        "horse_culture_props",
+        "dunharrow_mountain_tombs",
+        "underground_dead_paths"
+      ],
+      "character_families": [
+        "aragorn_hero",
+        "ent_scale_creature_support"
+      ],
+      "animation_families": [
+        "human_hero_locomotion_combat",
+        "large_creature_walk_interact"
+      ],
+      "audio_families": [
+        "wind_horses_wood_hall"
+      ],
+      "vfx_families": [
+        "spectral_fog_low_light"
+      ],
+      "interaction_families": [
+        "mounted_support"
+      ],
+      "performance_risks": [
+        "ue4_27_dx11_720p_30fps_floor"
+      ],
+      "acquisition_state": "SOURCE_DEMAND_REGISTERED",
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+    },
+    {
+      "chapter_id": "F3-04",
+      "wave_id": "M044",
+      "runtime_integration_allowed": false,
+      "environment_families": [
+        "rohan_grasslands",
+        "timber_hall_settlement",
+        "horse_culture_props",
+        "gondor_white_stone_city",
+        "pelennor_field",
+        "siege_fortification",
+        "mordor_volcanic_wasteland",
+        "black_gate_fortification",
+        "lava_ash_rock"
+      ],
+      "character_families": [],
+      "animation_families": [
+        "combat_reactions_death",
+        "formation_or_encounter_motion",
+        "horse_rider_animation"
+      ],
+      "audio_families": [
+        "wind_horses_wood_hall",
+        "combat_impacts_shouts_environment"
+      ],
+      "vfx_families": [
+        "siege_fire_smoke_dust",
+        "ash_smoke_fire_lava"
+      ],
+      "interaction_families": [
+        "mounted_support",
+        "mount_dismount_riding"
+      ],
+      "performance_risks": [
+        "large_battle_density",
+        "city_streaming_budget",
+        "volcanic_vfx_budget",
+        "pooled_actor_budget",
+        "ue4_27_dx11_720p_30fps_floor"
+      ],
+      "acquisition_state": "SOURCE_DEMAND_REGISTERED",
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+    },
+    {
+      "chapter_id": "F3-05",
+      "wave_id": "M045",
+      "runtime_integration_allowed": false,
+      "environment_families": [
+        "cirith_ungol_tower_pass",
+        "mordor_border_rock",
+        "mordor_volcanic_wasteland",
+        "black_gate_fortification",
+        "lava_ash_rock"
+      ],
+      "character_families": [
+        "frodo_hero",
+        "sam_hero",
+        "gollum_creature_humanoid",
+        "shelob_large_spider"
+      ],
+      "animation_families": [
+        "hobbit_hero_locomotion_interaction",
+        "hobbit_companion",
+        "gollum_crawl_climb_dialogue",
+        "spider_locomotion_attack"
+      ],
+      "audio_families": [
+        "location_ambience_foley"
+      ],
+      "vfx_families": [
+        "darkness_web_fog",
+        "ash_smoke_fire_lava",
+        "web_darkness"
+      ],
+      "interaction_families": [
+        "stealth_detection",
+        "contextual_cover_or_disguise"
+      ],
+      "performance_risks": [
+        "large_battle_density",
+        "volcanic_vfx_budget",
+        "ue4_27_dx11_720p_30fps_floor"
+      ],
+      "acquisition_state": "SOURCE_DEMAND_REGISTERED",
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+    },
+    {
+      "chapter_id": "F3-06",
+      "wave_id": "M046",
+      "runtime_integration_allowed": false,
+      "environment_families": [
+        "mordor_volcanic_wasteland",
+        "black_gate_fortification",
+        "lava_ash_rock"
+      ],
+      "character_families": [],
+      "animation_families": [
+        "combat_reactions_death",
+        "formation_or_encounter_motion"
+      ],
+      "audio_families": [
+        "combat_impacts_shouts_environment"
+      ],
+      "vfx_families": [
+        "ash_smoke_fire_lava"
+      ],
+      "interaction_families": [
+        "chapter_context_interactions"
+      ],
+      "performance_risks": [
+        "large_battle_density",
+        "volcanic_vfx_budget",
+        "pooled_actor_budget",
+        "ue4_27_dx11_720p_30fps_floor"
+      ],
+      "acquisition_state": "SOURCE_DEMAND_REGISTERED",
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+    },
+    {
+      "chapter_id": "F3-07",
+      "wave_id": "M047",
+      "runtime_integration_allowed": false,
+      "environment_families": [
+        "hobbit_rural_architecture",
+        "hedgerows_fields_gardens",
+        "shire_roads_bridges_fences",
+        "gondor_white_stone_city",
+        "pelennor_field",
+        "siege_fortification",
+        "grey_havens_coastal_elven_port",
+        "shore_boat_ship_support"
+      ],
+      "character_families": [],
+      "animation_families": [
+        "chapter_humanoid_locomotion_interaction"
+      ],
+      "audio_families": [
+        "birds_breeze_farm_village",
+        "warm_interior_foley",
+        "sea_wind_harbor"
+      ],
+      "vfx_families": [
+        "siege_fire_smoke_dust"
+      ],
+      "interaction_families": [
+        "chapter_context_interactions"
+      ],
+      "performance_risks": [
+        "large_battle_density",
+        "city_streaming_budget",
+        "ue4_27_dx11_720p_30fps_floor"
+      ],
+      "acquisition_state": "SOURCE_DEMAND_REGISTERED",
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+    }
+  ],
+  "evidence_boundary": "Source/acquisition demand mapping only. Provider selection, license evidence, payload receipts, intake QC, UE import and acceptance remain separate."
+}

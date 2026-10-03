@@ -1099,3 +1099,11 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Kenney Building Kit official download URL is resolved and pinned for the next warehouse receipt step.
 - Architectural primitive fallbacks remain mandatory until archive receipt, extracted-file identity match, static FBX QC and real UE4.27.2 import evidence exist.
 - Evidence boundary: **SOURCE PREPRODUCTION ONLY**.
+
+
+## 2026-10-03 - Reconciled source/preproduction packets from stale open PRs
+
+- Recovered the P1C01 Shire production pack and 180-slot visual production wave onto fresh current develop ancestry without activating any new runtime chapter.
+- Recovered the 23-chapter source-backed production packet/demand matrix with every row still runtime_integration_allowed=false.
+- This reconciliation records source/detail planning only; it does not add runtime actors, alter story/quest/NPC authority, or remove any visual fallback.
+- Evidence boundary: **SOURCE PREPRODUCTION ONLY / EXACT-HEAD VALIDATION PENDING**.

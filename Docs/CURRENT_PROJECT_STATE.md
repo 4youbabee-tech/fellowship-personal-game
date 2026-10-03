@@ -3862,3 +3862,12 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - The interactive safety guard now rejects any project root under `\\actions-runner\\`, so both the persistent CI workspace and warehouse/runner subtrees remain unavailable for manual Unreal launches regardless of drive letter.
 - The active runner authority remains `D:\\actions-runner`; interactive Unreal work remains in the Documents developer clone.
 - Evidence boundary: **SOURCE-IMPLEMENTED** pending exact-head hosted validation. No PIE/device/visual/performance acceptance claim.
+
+
+## 2026-10-03 - Safe reconciliation of stale open source/preproduction PR content
+
+- Selectively salvaged current-useful, non-runtime content from stale open PRs instead of bulk-merging old ancestry: whole-game 23-chapter source packets/demand matrix, P1C01 Shire mega chapter pack, P1C01 180-slot visual production wave, and daily manager report generator/test.
+- No stale branch-local Governor/state snapshots or old workflow bodies were copied wholesale. Current develop governance and current hosted Pre-Unreal architecture remain authoritative.
+- Fresh current-ancestry Pre-Unreal coverage now executes the four salvaged contract tests directly.
+- Runtime integration remains unchanged: P1C01 is still the sole runtime chapter; all salvaged whole-game chapter packets keep runtime_integration_allowed=false.
+- Evidence boundary: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD VALIDATION PENDING**. No PIE/device/visual/performance acceptance claim.
