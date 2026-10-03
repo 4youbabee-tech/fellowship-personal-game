@@ -3812,3 +3812,13 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Existing transforms remain bounded to two actors. No new asset acquisition, synchronous heavy load, Tick, collision, NPC/story/quest/save authority, or P1C02 runtime activation is introduced.
 - Hero round-door/window/trim and Bag End interior-shell debt remain content/import-QC gated and untouched.
 - Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD PRE-UNREAL + UE4.27.2 PENDING**. No PIE/device/visual/performance acceptance claim.
+
+
+## 2026-10-03 - Bag End hero trim source probe
+
+- After merged shrub replacement #277, the next CRITICAL_VISIBLE blocker remains hero round-door/window/trim support.
+- No runtime mutation is authorized in this lane. Current facade/architectural primitive fallbacks stay in place until exact replacement import/QC evidence exists.
+- Existing production stock was audited first: facade/flower box/lantern/bench/cart remain useful dressing, but none proves an exact hero door/window/trim replacement.
+- Candidate families are now bounded to Kenney Building Kit, Kenney Modular Buildings, and Quaternius Medieval Village MegaKit. KayKit Medieval Hexagon is not accepted as an exact replacement family based on its current repository tree.
+- Production intake constraints remain FBX-only for selected 3D support and PNG/TGA for textures; the existing `TX_ShDoorGreen.bmp` is not promoted into the new pipeline.
+- Status: **SOURCE-IMPLEMENTED / EXACT FILE DISCOVERY + STATIC QC PENDING**. No UE import/runtime/PIE/device/visual claim.
