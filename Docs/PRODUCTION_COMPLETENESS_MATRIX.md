@@ -3063,3 +3063,13 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | PIE/device/rendered visual/FPS | NOT ACCEPTED | direct evidence required |
 
 | KayKit bridge source-contract regression guard | SOURCE-IMPLEMENTED | `test_source_contracts.py`; locks CC0/direct-source, max-two budget, hard rejection reasons and non-runtime boundary |
+
+## 2026-10-04 - KayKit hosted path-filter correction
+
+| Check | Status | Evidence boundary |
+|---|---|---|
+| Official KayKit archive download | REACHED | run #1 progressed to archive scan |
+| Preferred FBX discovery | TOOLING-FAILED BEFORE CANDIDATE QC | path selector returned zero |
+| Root-cause correction | SOURCE-IMPLEMENTED | lowercase normalized archive path + explicit leaf split |
+| KayKit asset technical disposition | UNCHANGED / UNTESTED | no FBX was judged by run #1 |
+| Exact-head hosted/UE4 rerun | PENDING | corrected head required |
