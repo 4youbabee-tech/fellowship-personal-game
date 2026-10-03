@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "packet_id": "P1C01_BAG_END_HERO_TRIM_SOURCE_PROBE_V1",
-  "status": "OFFICIAL_DOWNLOAD_URL_RESOLVED_RECEIPT_HASH_PENDING",
+  "status": "OFFICIAL_RECEIPT_HASH_MATCH_COMPLETE_STATIC_QC_NEXT",
   "runtime_chapter": "P1C01",
   "runtime_integration_allowed": false,
   "objective": "Find an exact, production-usable modular FBX source family for Bag End hero round-door/window/trim support before any architectural primitive fallback is removed.",
@@ -82,7 +82,7 @@
     "runtime binding in single serialized runtime lane",
     "PIE/device/visual acceptance later"
   ],
-  "evidence_boundary": "OFFICIAL SOURCE PAGE + DIRECT ZIP URL RESOLVED. Archive download receipt/SHA256, extracted-file hash match, binary static FBX QC, UE import, runtime binding, PIE/device/visual acceptance remain pending.",
+  "evidence_boundary": "Official source page, direct ZIP URL, archive SHA256/size and extracted candidate identity match are complete. Binary static FBX QC, UE import, runtime binding, PIE/device/visual acceptance remain pending.",
   "refresh_base": "071a0ed2632c4919ed9160b817a965ed3b1eb76c",
   "exact_file_discovery": {
     "status": "COMPLETE_FOR_KENNEY_BUILDING_KIT_CANDIDATE_SET",
@@ -200,7 +200,7 @@
     ]
   },
   "official_staging_plan": {
-    "status": "OFFICIAL_DOWNLOAD_URL_RESOLVED_RECEIPT_HASH_PENDING",
+    "status": "OFFICIAL_RECEIPT_HASH_MATCH_COMPLETE",
     "archive_source": "Official Kenney Building Kit public download only.",
     "archive_scope": "Stage full small archive in warehouse for receipt/provenance; do not bulk-import all models into UE.",
     "required_receipt": [
@@ -212,12 +212,44 @@
       "candidate extracted-file SHA256 values"
     ],
     "fail_closed_match_rule": "The official extracted candidate payload SHA256 must match the discovery identities before static QC evidence may be reused. Any mismatch invalidates mirror-derived identity and requires fresh inspection.",
-    "next_gate": "Official staging receipt -> binary static FBX QC -> real UE4.27.2 static-mesh import.",
+    "next_gate": "Binary static FBX QC on the three exact matched models -> real UE4.27.2 static-mesh import -> serialized runtime binding.",
     "official_download_url": "https://kenney.nl/media/pages/assets/building-kit/0de7aaa492-1743244741/kenney_building-kit.zip",
     "official_page_observation": "Kenney Building Kit official page reports 80 3D files and Creative Commons CC0; the official page download action resolves to the recorded ZIP URL.",
     "observed_at_utc": "2026-10-03T08:52:00Z",
-    "archive_sha256": "PENDING_WAREHOUSE_RECEIPT",
-    "archive_byte_size": "PENDING_WAREHOUSE_RECEIPT",
-    "extracted_candidate_hash_match": "PENDING_WAREHOUSE_RECEIPT"
+    "archive_sha256": "2740ef5772fb5fb3d7aab881db22d129f6b68afe711b1a79e6d5e9e19cf3eec6",
+    "archive_byte_size": 1598905,
+    "extracted_candidate_hash_match": "PASS",
+    "receipt_evidence": {
+      "workflow": "P1C01 Bag End Trim Official Receipt #7",
+      "run_id": 37131087030,
+      "exact_head": "86c09549a67dec4f7083ca4ec18b03924d3f9f89",
+      "candidates": [
+        {
+          "file": "door-rotate-round-a.fbx",
+          "bytes": 64176,
+          "sha256": "1c9dcfd007c5a8fa6d7455f725ca66cc0bd3f728092d5763fb9c5089ea6f93f6",
+          "match": true
+        },
+        {
+          "file": "wall-doorway-round.fbx",
+          "bytes": 27056,
+          "sha256": "b93fc0cb38504b57a3f355fec41808dffbce28661ddf94136833148be4804616",
+          "match": true
+        },
+        {
+          "file": "wall-window-round-detailed.fbx",
+          "bytes": 36672,
+          "sha256": "709d19c98fd2f66b1c0a428bb8971460788ec25e190b4474f644d15dff606c91",
+          "match": true
+        },
+        {
+          "file": "colormap.png",
+          "bytes": 10051,
+          "sha256": "01741a46a279bef667de3143ee653d0073ed7cae925d88341281391d9220092b",
+          "identical_matches_in_archive": 3,
+          "match": true
+        }
+      ]
+    }
   }
 }
