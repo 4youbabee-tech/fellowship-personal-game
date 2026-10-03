@@ -3828,3 +3828,12 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - `Test-NearestSafeGovernanceAncestorGreen` now accepts a safe ancestor only when the full intervening delta is governance/source-safe and the ancestor has either direct green Unreal evidence or existing exact tree-equivalent core proof.
 - This does not broaden safe file classes and does not accept commit metadata similarity; tree equality remains mandatory.
 - Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**.
+
+## 2026-10-03 - Bag End hero trim source probe V3
+
+- Fresh source-only refresh from `develop@071a0ed2632c4919ed9160b817a965ed3b1eb76c` after hosted classifier transitive-tree proof #281 merged.
+- Scope remains exact modular FBX discovery for the Bag End hero round-door/window/trim blocker; no runtime binding is allowed.
+- Existing production facade and domestic props remain reusable, but no exact resident hero trim replacement is proven.
+- Candidate families remain bounded to Kenney Building Kit, Kenney Modular Buildings, and Quaternius Medieval Village MegaKit.
+- KayKit Medieval Hexagon remains rejected as an exact hero-trim family based on repository-tree inspection.
+- Status: **SOURCE-IMPLEMENTED / EXACT FILE DISCOVERY + STATIC QC PENDING**. No staged file, UE import, PIE/device/visual claim.

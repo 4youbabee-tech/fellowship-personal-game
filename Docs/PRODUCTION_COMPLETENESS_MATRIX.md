@@ -2804,3 +2804,15 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Transitive governance ancestor proof | SOURCE-IMPLEMENTED | safe delta + direct green OR exact tree-equivalent core proof |
 | Broad safety relaxation | NONE | existing safe-file and tree-equality requirements preserved |
 | Fresh hosted validation | PENDING | exact-head Pre-Unreal required |
+
+## 2026-10-03 - Bag End hero trim source probe V3
+
+| Gate | Status |
+|---|---|
+| Current ancestry | `develop@071a0ed2632c4919ed9160b817a965ed3b1eb76c` |
+| Runtime integration | BLOCKED / false |
+| Exact modular FBX discovery | PENDING |
+| Immutable receipt/SHA256 | PENDING |
+| Static FBX UV/material/perf QC | PENDING |
+| Real UE4.27.2 static-mesh import | BLOCKED UNTIL STATIC GATES |
+| Visual acceptance | NOT CLAIMED |
