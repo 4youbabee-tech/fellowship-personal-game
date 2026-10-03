@@ -85,8 +85,9 @@ jobs:
         shell: bash
         run: |
           sudo apt-get update
-          sudo apt-get install -y blender
+          sudo apt-get install -y blender python3-numpy
           blender --version | head -n 1
+          python3 -c "import numpy; print('NUMPY_READY', numpy.__version__)"
 
       - name: Normalize bounded candidates without weakening gates
         shell: pwsh
