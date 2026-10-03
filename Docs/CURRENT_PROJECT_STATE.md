@@ -3898,3 +3898,12 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - `VISIBLE SHIRE FIRST` and `FRODO FIRST REAL RIG` run in parallel source lanes, with exactly one runtime-changing P1C01 writer at a time.
 - UE5 migration, MetaHuman Crowd, Nanite and UE5 PCG are not current production dependencies. UE4.27 HISM/ISM/foliage-compatible paths remain preferred.
 - Every accepted direction, blocker and evidence boundary must be written back to repository memory; chat recall is never authoritative.
+
+
+## 2026-10-03 - Frodo skeletal importer reconciled on current develop ancestry
+
+- Restored the useful opt-in UE4.27 skeletal FBX import/QC capability from stale PR #257 onto current importer code without bulk-merging stale ancestry.
+- Default production import still defers `Characters/Rigs` FBX. Skeletal import occurs only with explicit `-EnableCharacterRigImport`.
+- The skeletal path uses AssetRegistry + in-memory `FindObject<USkeletalMesh>` for registration/bone proof and does not add synchronous runtime asset loading.
+- Restored bounded direct-FBX warehouse staging so the exact KayKit Knight V2 probe can advance next.
+- Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD VALIDATION PENDING**. No deformation/retarget/AnimBP/runtime/PIE/device/visual acceptance claim.
