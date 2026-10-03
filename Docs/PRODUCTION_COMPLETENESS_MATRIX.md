@@ -3061,3 +3061,5 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Deformation / locomotion / AnimBP | BLOCKED | clean technical winner required |
 | Exact-head Pre-Unreal / UE4 | PENDING | PR validation required |
 | PIE/device/rendered visual/FPS | NOT ACCEPTED | direct evidence required |
+
+| KayKit bridge source-contract regression guard | SOURCE-IMPLEMENTED | `test_source_contracts.py`; locks CC0/direct-source, max-two budget, hard rejection reasons and non-runtime boundary |
