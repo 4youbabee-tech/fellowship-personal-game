@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "wave_id": "P1C01_FRODO_GANDALF_SKELETAL_CANDIDATE_V1",
-  "status": "FRODO_FIRST_EXACT_TOKEN_AND_STATIC_FBX_QC",
+  "status": "FRODO_RPG_MULTI_CANDIDATE_GAUNTLET",
   "authority": [
     "Data/ProjectGovernor.json",
     "Data/CharacterVisualProductionWaveV7.json",
@@ -81,7 +81,8 @@
     "QTN_FANTASY_OUTFITS",
     "QTN_UNIVERSAL_ANIMATION_LIBRARY",
     "OGA_QTN_ULTIMATE_ANIMATED_CHARACTERS_CC0",
-    "OGA_KENNEY_ANIMATED_CHARACTERS_1_CC0"
+    "OGA_KENNEY_ANIMATED_CHARACTERS_1_CC0",
+    "OGA_QTN_RPG_CHARACTERS_CC0"
   ],
   "candidate_policy": {
     "animated_source_format": ".fbx",
@@ -104,7 +105,8 @@
     "substring_matching_forbidden": true,
     "final_likeness_from_filename_forbidden": true,
     "source_asset_priority_bonus": {
-      "OGA_KENNEY_ANIMATED_CHARACTERS_1_CC0": 120
+      "OGA_KENNEY_ANIMATED_CHARACTERS_1_CC0": 120,
+      "OGA_QTN_RPG_CHARACTERS_CC0": 160
     }
   },
   "character_scoring": {
@@ -172,7 +174,7 @@
     "warehouse_inventory_must_be_clean": true,
     "output_state": "FRODO_STATIC_FBX_QC_REQUIRED_NOT_IMPORTED"
   },
-  "evidence_boundary": "Current candidate discovery prioritizes the distinct CC0 Kenney Animated Characters 1 family. Static structure and exact payload identity must pass before real UE4.27 import. Runtime integration remains forbidden until technical, deformation, retarget and AnimBP gates pass.",
+  "evidence_boundary": "Kenney Animated is technically exhausted. Current exact-head lane scans the distinct CC0 Quaternius RPG archive, excludes durable rejected hashes, and may send at most four static-pass humanoid FBXs through the unchanged real UE4.27 technical gate, stopping on the first clean pass. Runtime integration remains forbidden until deformation/retarget/AnimBP gates pass.",
   "owner_sequence_authority": "Data/P1C01RuntimeChapterSequenceV1.json",
   "owner_execution_order": [
     "FRODO",
@@ -214,10 +216,11 @@
     "ready_for_import": false,
     "evidence_boundary": "Static FBX header/marker evidence only; no FBX 2018 export, UE4 import, deformation, final likeness, runtime, PIE, device, visual or performance acceptance.",
     "candidate_source_asset_id_allowlist": [
-      "OGA_KENNEY_ANIMATED_CHARACTERS_1_CC0"
+      "OGA_KENNEY_ANIMATED_CHARACTERS_1_CC0",
+      "OGA_QTN_RPG_CHARACTERS_CC0"
     ]
   },
   "dedicated_validation_source_packs": [
-    "OGA_KENNEY_ANIMATED_CHARACTERS_1_CC0"
+    "OGA_QTN_RPG_CHARACTERS_CC0"
   ]
 }
