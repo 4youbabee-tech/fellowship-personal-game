@@ -3812,3 +3812,11 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Existing transforms remain bounded to two actors. No new asset acquisition, synchronous heavy load, Tick, collision, NPC/story/quest/save authority, or P1C02 runtime activation is introduced.
 - Hero round-door/window/trim and Bag End interior-shell debt remain content/import-QC gated and untouched.
 - Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD PRE-UNREAL + UE4.27.2 PENDING**. No PIE/device/visual/performance acceptance claim.
+
+## 2026-10-03 - Hosted classifier local-tree proof + Bag End source packet
+
+- Refreshes the stale #264 local-tree proof on current develop.
+- Tree-equivalent proof now probes the already-present parent object before any credential-dependent fetch; network fetch remains a shallow-history fallback.
+- Adds only `Data/P1C01BagEndHeroTrimSourceProbeV1.json` to the exact hosted-safe source-data allowlists; no `Data/` wildcard is introduced.
+- Parent `82d5d9f8...` is tree-equivalent to the exact #277 candidate head `6e1b474e...` (compare shows one merge commit and zero file changes), whose Unreal Build Validation #1310 succeeded.
+- Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD HOSTED VALIDATION PENDING**. No gameplay/PIE/device/visual claim.

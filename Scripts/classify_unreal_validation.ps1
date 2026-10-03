@@ -249,8 +249,14 @@ function Test-TreeEquivalentCoreProof([string]$GitExe, [string]$ParentSha) {
     # A merge commit may have a new SHA even when its checked-out content is byte-for-byte
     # identical to an already-proven candidate parent. Reuse proof only when Git tree IDs
     # are exactly equal; commit-message/metadata similarity is never enough.
-    & $GitExe fetch --no-tags --depth=2 origin $ParentSha
-    if ($LASTEXITCODE -ne 0) { return $false }
+    # Hosted checkout already has full history and intentionally scrubs credentials.
+    # Reuse the local merge-parent object first; fetch only for genuinely shallow history.
+    & $GitExe rev-parse --verify --quiet "$ParentSha^{object}" *> $null
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "TREE_EQUIVALENT_PARENT_FETCH_REQUIRED parent=$ParentSha"
+        & $GitExe fetch --no-tags --depth=2 origin $ParentSha
+        if ($LASTEXITCODE -ne 0) { return $false }
+    }
 
     $parentTree = (& $GitExe rev-parse "$ParentSha^{tree}").Trim()
     if ($LASTEXITCODE -ne 0 -or -not $parentTree) { return $false }
@@ -289,6 +295,7 @@ function Test-CoreProofSafeInterveningDelta([string]$GitExe, [string]$BaseSha, [
         "Data/ProjectSourcePdfRegistryV1.json",
         "Data/P1C01SourceExtractionV1.json",
         "Data/P1C01SourceToProductionBridgeV1.json",
+        "Data/P1C01BagEndHeroTrimSourceProbeV1.json",
         "Data/P1C01MaterialImportWaveV1.json",
         "Data/P1C01WorldBuildIntakePacketV1.json",
         "Data/P1C01C3FoliageMaterialIdentityPlanV1.json",
@@ -468,6 +475,7 @@ $safeExact = @(
     "Data/P1C01OpenGameArtRpgHeroCandidateBatchV1.json",
     "Data/WholeGameChapterAssetDemandMatrixV1.json",
     "Data/WholeGameChapterProductionPacketsV1.json",
+    "Data/P1C01BagEndHeroTrimSourceProbeV1.json",
     "Scripts/test_p1c01_hero_candidate_provider_contract.ps1",
     "Scripts/test_whole_game_chapter_production_packets.ps1",
     "Scripts/operation_recovery.py",
