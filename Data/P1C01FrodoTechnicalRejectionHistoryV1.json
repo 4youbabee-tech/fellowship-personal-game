@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "history_id": "P1C01_FRODO_TECHNICAL_REJECTION_HISTORY_V1",
-  "status": "DURABLE_EVIDENCE_HISTORY",
+  "status": "RPG_NORMALIZED_FAMILY_EXHAUSTED_NEXT_SOURCE_REQUIRED",
   "runtime_integration_allowed": false,
   "purpose": "Preserve exact rejected Frodo rig-base candidate evidence from the superseded skeletal-import branch so failed source families are never rediscovered or retried after chat/branch cleanup.",
   "source_branch": "MULTI_CANDIDATE_DURABLE_HISTORY",
@@ -231,6 +231,33 @@
         "P1C01 Frodo RPG Multi Candidate UE4 Gauntlet #10",
         "UE4.27.2 normalized-repair pivot authorized after exact original payload rejection"
       ]
+    },
+    {
+      "source_asset": "OGA_QTN_RPG_CHARACTERS_CC0",
+      "entry": "RPG Characters - Nov 2020/FBX/Cleric.fbx",
+      "source_sha256": "ddbd70823da811625a512ef4ceacce2faa9de8c71aa2c6fee7e23e0fb52b6daa",
+      "normalized_sha256": "77cc7b8c6e3a787837b0777ec16e1988a6fe2b7c50e2d188eba90e18a9d1ee0d",
+      "ue4_reference_bones": 48,
+      "disposition": "REJECTED_TECHNICAL_DO_NOT_RESTAGE",
+      "reasons": [
+        "INVALID_BIND_POSE",
+        "MISSING_BIND_POSE_BONES"
+      ],
+      "evidence": "P1C01 Frodo RPG Multi Candidate UE4 Gauntlet #17"
+    },
+    {
+      "source_asset": "OGA_QTN_RPG_CHARACTERS_CC0",
+      "entry": "RPG Characters - Nov 2020/FBX/Wizard.fbx",
+      "source_sha256": "ddd72512ff771380df9223cef02731ebf68e31309be759bf79d7063936f4636d",
+      "normalized_sha256": "ff080ee60bd33d10dbf2ece9ff535cea96a9afb2bd052a22d53d78c58f6e2add",
+      "ue4_reference_bones": 50,
+      "disposition": "REJECTED_TECHNICAL_DO_NOT_RESTAGE",
+      "reasons": [
+        "INVALID_BIND_POSE",
+        "MISSING_BIND_POSE_BONES",
+        "MISSING_UV_SET"
+      ],
+      "evidence": "P1C01 Frodo RPG Multi Candidate UE4 Gauntlet #17"
     }
   ],
   "policy": "Do not retry an exact payload SHA256 listed here. New candidates may proceed only if their exact payload identity differs and they pass the same or stricter technical gates.",
