@@ -9,11 +9,12 @@ $importCmd=Join-Path $root "Scripts\ci_import_production_assets.cmd"
 $alternateManifest=Join-Path $root "Data\P1C01OpenGameArtRpgHeroCandidateBatchV1.json"
 $kayHoodedManifest=Join-Path $root "Data\P1C01KayKitAdventurersRogueHoodedHeroCandidateBatchV1.json"
 $kenneyManifest=Join-Path $root "Data\P1C01KenneyBlockyHeroCandidateBatchV1.json"
+$kenneyAnimatedManifest=Join-Path $root "Data\P1C01OpenGameArtKenneyAnimatedHeroCandidateBatchV1.json"
 $heroManifest=Join-Path $root "Data\P1C01HeroSkeletalCandidateWaveV1.json"
 $heroWave=Join-Path $root "Scripts\run_p1c01_hero_skeletal_candidate_wave.ps1"
 $characterIntake=Join-Path $root "Scripts\prepare_p1c01_character_rig_intake.ps1"
 $candidateStage=Join-Path $root "Scripts\stage_opengameart_character_candidate.ps1"
-foreach($p in @($manifest,$stage,$cpp,$workflow,$importCmd,$alternateManifest,$kayHoodedManifest,$kenneyManifest,$candidateStage,$heroManifest,$heroWave,$characterIntake)){ if(-not(Test-Path -LiteralPath $p -PathType Leaf)){throw "P1C01_FRODO_IMPORT_CONTRACT_FILE_MISSING path=$p"} }
+foreach($p in @($manifest,$stage,$cpp,$workflow,$importCmd,$alternateManifest,$kayHoodedManifest,$kenneyManifest,$kenneyAnimatedManifest,$candidateStage,$heroManifest,$heroWave,$characterIntake)){ if(-not(Test-Path -LiteralPath $p -PathType Leaf)){throw "P1C01_FRODO_IMPORT_CONTRACT_FILE_MISSING path=$p"} }
 $m=Get-Content -LiteralPath $manifest -Raw | ConvertFrom-Json
 $c=Get-Content -LiteralPath $cpp -Raw
 $s=Get-Content -LiteralPath $stage -Raw
@@ -22,6 +23,7 @@ $i=Get-Content -LiteralPath $importCmd -Raw
 $a=Get-Content -LiteralPath $alternateManifest -Raw | ConvertFrom-Json
 $kh=Get-Content -LiteralPath $kayHoodedManifest -Raw | ConvertFrom-Json
 $kn=Get-Content -LiteralPath $kenneyManifest -Raw | ConvertFrom-Json
+$ka=Get-Content -LiteralPath $kenneyAnimatedManifest -Raw | ConvertFrom-Json
 $g=Get-Content -LiteralPath $candidateStage -Raw
 $h=Get-Content -LiteralPath $heroManifest -Raw | ConvertFrom-Json
 $hw=Get-Content -LiteralPath $heroWave -Raw
@@ -34,13 +36,20 @@ if(@($kh.assets).Count -ne 1 -or [string]$kh.assets[0].id -ne "KAYKIT_ADVENTURER
 if([string]$kh.assets[0].source_revision -ne "672074b73ba276876a19e8816ecdc5241817ab47"){throw "P1C01_FRODO_IMPORT_CONTRACT_KAYKIT_HOODED_REVISION_FAIL"}
 if([string]$kn.provider -ne "KENNEY" -or [string]$kn.license -ne "CC0-1.0" -or @($kn.assets).Count -ne 1 -or [string]$kn.assets[0].id -ne "KENNEY_BLOCKY_CHARACTERS_CC0" -or [string]$kn.assets[0].download_kind -ne "ARCHIVE_ZIP"){throw "P1C01_FRODO_IMPORT_CONTRACT_KENNEY_BLOCKY_FAIL"}
 if(-not ([string]$kn.assets[0].download_url).StartsWith("https://kenney.nl/media/pages/assets/blocky-characters/")){throw "P1C01_FRODO_IMPORT_CONTRACT_KENNEY_URL_FAIL"}
+if([string]$ka.provider -ne "OPENGAMEART" -or [string]$ka.license -ne "CC0-1.0" -or @($ka.assets).Count -ne 1 -or [string]$ka.assets[0].id -ne "OGA_KENNEY_ANIMATED_CHARACTERS_1_CC0" -or [string]$ka.assets[0].download_kind -ne "ARCHIVE_ZIP"){throw "P1C01_FRODO_IMPORT_CONTRACT_KENNEY_ANIMATED_FAIL"}
+if([string]$ka.assets[0].download_url -ne "https://opengameart.org/sites/default/files/kenney_animated-characters-1.zip"){throw "P1C01_FRODO_IMPORT_CONTRACT_KENNEY_ANIMATED_URL_FAIL"}
 if([int]$h.candidate_policy.source_asset_priority_bonus.KAYKIT_ADVENTURERS_CC0 -lt 1){throw "P1C01_FRODO_IMPORT_CONTRACT_SOURCE_PRIORITY_MISSING"}
 if([int]$h.candidate_policy.source_asset_priority_bonus.KAYKIT_ADVENTURERS_ROGUE_HOODED_CC0 -lt 1){throw "P1C01_FRODO_IMPORT_CONTRACT_HOODED_PRIORITY_MISSING"}
-if([int]$h.candidate_policy.source_asset_priority_bonus.KENNEY_BLOCKY_CHARACTERS_CC0 -lt 1){throw "P1C01_FRODO_IMPORT_CONTRACT_KENNEY_PRIORITY_MISSING"}
+if($null -ne $h.candidate_policy.source_asset_priority_bonus.PSObject.Properties["KENNEY_BLOCKY_CHARACTERS_CC0"]){throw "P1C01_FRODO_IMPORT_CONTRACT_BLOCKY_PRIORITY_NOT_REMOVED"}
+if([int]$h.candidate_policy.source_asset_priority_bonus.OGA_KENNEY_ANIMATED_CHARACTERS_1_CC0 -lt 1){throw "P1C01_FRODO_IMPORT_CONTRACT_KENNEY_ANIMATED_PRIORITY_MISSING"}
 $rogueRejection=@($m.technical_rejections | Where-Object { [string]$_.source_sha256 -eq "93a9ee0a67ae69b2d815050234acad2004c3b8af7d294b916e52609c8195eb71" })
 if($rogueRejection.Count -ne 1 -or [int]$rogueRejection[0].ue4_reference_bones -ne 48){throw "P1C01_FRODO_IMPORT_CONTRACT_ROGUE_REJECTION_MISSING"}
 $hoodedRejection=@($m.technical_rejections | Where-Object { [string]$_.source_sha256 -eq "4a773f074695c6c089cc6f059eed85da080928a4a4137af4e38b177139d4cc27" })
 if($hoodedRejection.Count -ne 1 -or [int]$hoodedRejection[0].ue4_reference_bones -ne 48){throw "P1C01_FRODO_IMPORT_CONTRACT_HOODED_REJECTION_MISSING"}
+$blockyRejection=@($m.technical_rejections | Where-Object { [string]$_.source_sha256 -eq "5e123859aa0c1598342b600c6db197024a1d63eb9ec531398b310725f589887e" })
+if($blockyRejection.Count -ne 1 -or [string]$blockyRejection[0].state -ne "REJECTED_STATIC_STRUCTURE"){throw "P1C01_FRODO_IMPORT_CONTRACT_BLOCKY_REJECTION_MISSING"}
+if(@($h.frodo_static_fbx_qc.candidate_source_asset_id_allowlist) -contains "KENNEY_BLOCKY_CHARACTERS_CC0"){throw "P1C01_FRODO_IMPORT_CONTRACT_BLOCKY_STILL_ADMITTED"}
+if(@($h.frodo_static_fbx_qc.candidate_source_asset_id_allowlist) -notcontains "OGA_KENNEY_ANIMATED_CHARACTERS_1_CC0"){throw "P1C01_FRODO_IMPORT_CONTRACT_KENNEY_ANIMATED_NOT_ADMITTED"}
 foreach($marker in @("P1C01_CHARACTER_INTAKE_DIRECT_FBX_PASS","direct_fbx_copy_sha256_mismatch",'candidate_file=[string]$directCandidate')){
   if(-not $ci.Contains($marker)){throw "P1C01_FRODO_IMPORT_CONTRACT_DIRECT_INTAKE_MARKER_MISSING marker=$marker"}
 }
@@ -82,7 +91,7 @@ if([string]$m.temporary_source_destination -ne "SourceAssets/Production/Characte
 if([string]$m.unreal_asset_name -ne "SK_FRODO"){
   throw "P1C01_FRODO_IMPORT_CONTRACT_ASSET_NAME_FAIL name=$([string]$m.unreal_asset_name)"
 }
-foreach($marker in @("Build ShireJourneyEditor","Stage Frodo skeletal source","Import Frodo skeletal mesh in UE4.27.2","Verify SK_FRODO import evidence","P1C01_FRODO_UE4_IMPORT_BONE_COUNT_FAIL","-EnableCharacterRigImport","P1C01_FRODO_VALIDATION_CLEANUP_PASS","Stage alternate OpenGameArt RPG hero archive","Stage KayKit RogueHooded alternate hero candidate","P1C01KayKitAdventurersRogueHoodedHeroCandidateBatchV1.json","Stage Kenney Blocky alternate hero candidate","P1C01KenneyBlockyHeroCandidateBatchV1.json","P1C01_FRODO_VALIDATION_CLEANUP_GIT_FAIL")){
+foreach($marker in @("Build ShireJourneyEditor","Stage Frodo skeletal source","Import Frodo skeletal mesh in UE4.27.2","Verify SK_FRODO import evidence","P1C01_FRODO_UE4_IMPORT_BONE_COUNT_FAIL","-EnableCharacterRigImport","P1C01_FRODO_VALIDATION_CLEANUP_PASS","Stage alternate OpenGameArt RPG hero archive","Stage KayKit RogueHooded alternate hero candidate","P1C01KayKitAdventurersRogueHoodedHeroCandidateBatchV1.json","Stage Kenney Blocky alternate hero candidate","P1C01KenneyBlockyHeroCandidateBatchV1.json","Stage OpenGameArt Kenney Animated Characters 1 candidate","P1C01OpenGameArtKenneyAnimatedHeroCandidateBatchV1.json","P1C01_FRODO_VALIDATION_CLEANUP_GIT_FAIL")){
   if(-not $w.Contains($marker)){throw "P1C01_FRODO_IMPORT_CONTRACT_WORKFLOW_MARKER_MISSING marker=$marker"}
 }
 foreach($marker in @("%*","ENABLE_CHARACTER_RIG_IMPORT","cleanup_untracked_validation_file","P1C01_FRODO_VALIDATION_RESIDUE_REMOVED")){

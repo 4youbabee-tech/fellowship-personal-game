@@ -1,3 +1,11 @@
+## 2026-10-03 - Frodo Kenney Blocky static rejection and animated successor
+
+- Exact-head `54e551bb10b2eb20bb0f647a76e03ef469f3d4f1`: Pre-Unreal #1694 succeeded. Frodo Import #34 staged the bounded Kenney Blocky archive, generated the candidate report and static-QC artifact, then stopped before UE4 import because no non-rejected static-valid candidate remained.
+- Archive identity: 2,148,510 bytes, SHA256 `5e123859aa0c1598342b600c6db197024a1d63eb9ec531398b310725f589887e`, 18 FBXs. Six Frodo-ranked `character-*.fbx` samples were FBX 7700 and lacked LimbNode and Cluster markers; the pack is `REJECTED_STATIC_STRUCTURE` for the UE4.27/Frodo lane.
+- Evidence artifact: Frodo #34 artifact `11260912375`, ZIP digest `72c8a616d1883542db3404ce012606755d4d45a3363b952a027f0483029e44ec`.
+- The next bounded independent source is Kenney Animated Characters 1 from its public OpenGameArt author/license page: one CC0 rigged/animated archive only. Kenney Blocky remains preserved in Warehouse/provenance but is excluded from Frodo static admission; no full Kenney batch is rerun.
+- Status: **KENNEY BLOCKY STATIC-REJECTED / KENNEY ANIMATED CHARACTERS 1 SOURCE-REGISTERED / EXACT-HEAD STATIC + UE4 IMPORT PROOF PENDING**. No runtime, deformation, retarget, AnimBP, PIE, device, visual, pacing, performance or Gate 6/7 acceptance claim.
+
 ## 2026-10-03 - Frodo KayKit RogueHooded rejection and Kenney successor
 
 - Exact-head `a158e77d68484d4f92014c64086bdd820d8c2557`: Pre-Unreal #1692 succeeded; Frodo Import #32 staged all sources, built the editor, imported the mesh, uploaded evidence and cleaned transient files.

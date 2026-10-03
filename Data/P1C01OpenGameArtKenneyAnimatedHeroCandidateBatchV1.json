@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "batch_id": "WAREHOUSE_OGA_KENNEY_P1C01_ANIMATED_CHARACTERS_1_HERO_CANDIDATE_V1",
+  "status": "AUTHORIZED_FOR_TARGETED_STAGING",
+  "provider": "OPENGAMEART",
+  "creator": "Kenney",
+  "license": "CC0-1.0",
+  "purpose": "Bounded independent animated humanoid Frodo rig-base probe after Kenney Blocky proved non-skeletal at the static FBX gate.",
+  "assets": [
+    {
+      "id": "OGA_KENNEY_ANIMATED_CHARACTERS_1_CC0",
+      "source_page": "https://opengameart.org/content/animated-characters-1",
+      "source_revision": "OPENGAMEART_KENNEY_ANIMATED_CHARACTERS_1_2026_10_03",
+      "download_url": "https://opengameart.org/sites/default/files/kenney_animated-characters-1.zip",
+      "filename": "kenney_animated-characters-1.zip",
+      "observed_page_license": "CC0",
+      "required_final_format": "FBX",
+      "source_author": "Kenney",
+      "intended_use": "Independent animated humanoid Frodo rig-base technical candidate discovery; not final likeness or visual acceptance.",
+      "download_kind": "ARCHIVE_ZIP"
+    }
+  ],
+  "rules": [
+    "Use only the public OpenGameArt Kenney upload recorded by this manifest.",
+    "Preserve source provenance and verify payload SHA256 before candidate admission.",
+    "Animated production candidate format remains FBX; no OBJ promotion.",
+    "Candidate discovery does not prove UE4.27 import quality, deformation, retarget quality, final likeness, runtime integration or visual acceptance."
+  ],
+  "evidence_boundary": "OpenGameArt page records Kenney as author, CC0, rigged/animated, four skins and three animations. Exact-head staging, receipt SHA256, static structure and real UE4.27.2 import evidence remain required."
+}

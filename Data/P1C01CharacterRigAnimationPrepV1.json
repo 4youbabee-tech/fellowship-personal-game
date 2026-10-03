@@ -133,11 +133,22 @@
     {
       "provider": "KENNEY",
       "id": "KENNEY_BLOCKY_CHARACTERS_CC0",
-      "state": "AUTHORIZED_FOR_STAGING",
+      "state": "REJECTED_STATIC_STRUCTURE",
       "required_final_format": "FBX",
       "observed_page_license": "CC0",
       "license_capture": "OFFICIAL_KENNEY_ASSET_PAGE_VERIFIED_2026-10-03",
-      "intended_use": "INDEPENDENT_FRODO_RIG_BASE_QC_CANDIDATE_NOT_FINAL_LIKENESS"
+      "intended_use": "INDEPENDENT_FRODO_RIG_BASE_QC_CANDIDATE_NOT_FINAL_LIKENESS",
+      "technical_evidence": "Frodo #34: 18 FBX staged; six Frodo-ranked samples were FBX 7700 with no LimbNode or Cluster markers.",
+      "source_archive_sha256": "5e123859aa0c1598342b600c6db197024a1d63eb9ec531398b310725f589887e"
+    },
+    {
+      "provider": "OPENGAMEART",
+      "id": "OGA_KENNEY_ANIMATED_CHARACTERS_1_CC0",
+      "state": "AUTHORIZED_FOR_STAGING",
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_OPENGAMEART_KENNEY_UPLOAD_VERIFIED_2026-10-03",
+      "intended_use": "INDEPENDENT_ANIMATED_HUMANOID_FRODO_RIG_BASE_QC_CANDIDATE_NOT_FINAL_LIKENESS"
     }
   ],
   "required_bundle": {

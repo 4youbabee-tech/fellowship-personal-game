@@ -1,3 +1,14 @@
+## 2026-10-03 - Frodo Kenney static-gate matrix
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| Kenney Blocky archive | REJECTED_STATIC_STRUCTURE | Frodo #34 at `54e551bb...`: 18 FBXs; six ranked samples were FBX 7700 with no LimbNode/Cluster markers |
+| Blocky payload identity | RECORDED | 2,148,510 bytes; SHA256 `5e123859aa0c1598342b600c6db197024a1d63eb9ec531398b310725f589887e`; artifact `11260912375` |
+| Kenney Animated Characters 1 via OpenGameArt | SOURCE-REGISTERED / EXACT-HEAD QC PENDING | Kenney-authored CC0 page; one bounded rigged/animated archive; receipt SHA256 required |
+| Full Kenney / OpenGameArt refresh | NOT AUTHORIZED | Only the recorded character archive is targeted |
+| Runtime / deformation / retarget / AnimBP | NOT STARTED / NOT ACCEPTED | Technical candidate intake only |
+| PIE / device / visual / pacing / performance / Gate 6-7 | NOT ACCEPTED | Separate evidence required |
+
 ## 2026-10-03 - Frodo independent-source successor matrix
 
 | Area | Status | Evidence / boundary |

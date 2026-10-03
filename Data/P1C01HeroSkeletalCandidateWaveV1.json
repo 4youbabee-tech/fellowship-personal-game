@@ -113,7 +113,7 @@
     "source_asset_priority_bonus": {
       "KAYKIT_ADVENTURERS_CC0": 100,
       "KAYKIT_ADVENTURERS_ROGUE_HOODED_CC0": 100,
-      "KENNEY_BLOCKY_CHARACTERS_CC0": 90
+      "OGA_KENNEY_ANIMATED_CHARACTERS_1_CC0": 95
     }
   },
   "character_scoring": {
@@ -184,7 +184,7 @@
     "warehouse_inventory_must_be_clean": true,
     "output_state": "FRODO_STATIC_FBX_QC_REQUIRED_NOT_IMPORTED"
   },
-  "evidence_boundary": "Exact filename-token candidate ranking plus manifest-bounded source-family priority, then static FBX structure probing only. Both exact KayKit Rogue payloads remain auditable technical rejections; the independent Kenney Blocky Characters CC0 pack is admitted as a bounded successor. No FBX 2018 export confirmation, UE4 skeletal import success for Kenney, skeleton/skin quality, retarget/deformation, final character likeness, runtime replacement, PIE, device, visual or performance acceptance is claimed.",
+  "evidence_boundary": "Candidate discovery and static FBX structure only. Kenney Blocky is retained as exact provenance but excluded from Frodo static admission after #34 proved FBX 7700 with no LimbNode/Cluster markers. The bounded OpenGameArt Kenney Animated Characters 1 CC0 pack is the active independent rig probe. Runtime integration remains forbidden until exact-head static and real UE4.27.2 technical gates pass.",
   "owner_sequence_authority": "Data/P1C01RuntimeChapterSequenceV1.json",
   "owner_execution_order": [
     "FRODO",
@@ -229,7 +229,10 @@
       "OGA_QTN_RPG_CHARACTERS_CC0",
       "KAYKIT_ADVENTURERS_CC0",
       "KAYKIT_ADVENTURERS_ROGUE_HOODED_CC0",
-      "KENNEY_BLOCKY_CHARACTERS_CC0"
+      "OGA_KENNEY_ANIMATED_CHARACTERS_1_CC0"
     ]
-  }
+  },
+  "dedicated_validation_source_packs": [
+    "OGA_KENNEY_ANIMATED_CHARACTERS_1_CC0"
+  ]
 }

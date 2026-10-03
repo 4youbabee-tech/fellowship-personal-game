@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "import_id": "P1C01_FRODO_SKELETAL_IMPORT_VALIDATION_V1",
-  "status": "KAYKIT_HOODED_REJECTED_KENNEY_BLOCKY_PROBE_ACTIVE",
+  "status": "KENNEY_BLOCKY_REJECTED_KENNEY_ANIMATED1_PROBE_ACTIVE",
   "authority": [
     "Data/ProjectGovernor.json",
     "Data/P1C01HeroSkeletalCandidateWaveV1.json",
@@ -27,7 +27,7 @@
     "require_nonzero_bones": true,
     "runtime_integration_allowed": false
   },
-  "evidence_boundary": "All five original Quaternius candidates are exact-SHA REJECTED_TECHNICAL. The alternate Quaternius RPG mirror produced only animation/accessory Frodo-ranked rows. KayKit Rogue and RogueHooded each imported as USkeletalMesh with 48 reference bones but are exact-SHA REJECTED_TECHNICAL for missing smoothing groups and bind-pose bones. Kenney Blocky Characters CC0 is the next bounded independent source family and must pass the same static and real UE4.27.2 technical gate before promotion. No deformation, retarget, AnimBP, runtime replacement, PIE, device, visual or performance acceptance is proved.",
+  "evidence_boundary": "All original Quaternius candidates and both KayKit candidates are exact-SHA REJECTED_TECHNICAL. Kenney Blocky archive SHA256 5e123859... staged 18 FBXs, but Frodo #34 found the six ranked samples were FBX 7700 with no LimbNode or Cluster markers, so that family is REJECTED_STATIC_STRUCTURE. OpenGameArt Kenney Animated Characters 1 CC0 is the next bounded rigged/animated source family. No deformation, retarget, AnimBP, runtime replacement, PIE, device, visual or performance acceptance is proved.",
   "technical_rejections": [
     {
       "filename": "BaseCharacter.fbx",
@@ -154,12 +154,31 @@
         "P1C01 Frodo Skeletal Import Validation #32"
       ],
       "note": "UE4.27.2 imported a USkeletalMesh with 48 reference bones and no missing-UV warning, but exact-head validation rejected the source for the same smoothing-group and bind-pose debt as Rogue."
+    },
+    {
+      "filename": "kenney_blocky-characters_20.zip",
+      "source_sha256": "5e123859aa0c1598342b600c6db197024a1d63eb9ec531398b310725f589887e",
+      "source_bytes": 2148510,
+      "evidence_head": "54e551bb10b2eb20bb0f647a76e03ef469f3d4f1",
+      "ue4_skeletal_registered": false,
+      "ue4_reference_bones": 0,
+      "state": "REJECTED_STATIC_STRUCTURE",
+      "reason_codes": [
+        "FBX_VERSION_7700_NOT_UE4_2018",
+        "MISSING_LIMB_NODE_MARKER",
+        "MISSING_CLUSTER_MARKER"
+      ],
+      "evidence": [
+        "P1C01 Frodo Skeletal Import Validation #34",
+        "artifact 11260912375"
+      ],
+      "note": "The official CC0 archive staged 18 FBXs. Six Frodo-ranked character files were inspected; all were FBX 7700 and lacked LimbNode and Cluster markers, so no candidate advanced to UE4 import."
     }
   ],
   "preferred_candidate_source_asset_ids": [
+    "OGA_KENNEY_ANIMATED_CHARACTERS_1_CC0",
     "KAYKIT_ADVENTURERS_CC0",
     "KAYKIT_ADVENTURERS_ROGUE_HOODED_CC0",
-    "KENNEY_BLOCKY_CHARACTERS_CC0",
     "OGA_QTN_RPG_CHARACTERS_CC0"
   ]
 }
