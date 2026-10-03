@@ -3282,6 +3282,189 @@ void AShirePrototypeWorldBuilder::SpawnNaturalRouteMegaPass()
         RiverReedCount);
 }
 
+
+void AShirePrototypeWorldBuilder::SpawnAuthoredShireLandmarkPass()
+{
+    if (!GeographyHillInstances || !GeographySlopeInstances || !GeographyRiverBankInstances)
+    {
+        return;
+    }
+
+    int32 BagEndTerrainCount = 0;
+    int32 VillageTerraceCount = 0;
+    int32 FieldRidgeCount = 0;
+    int32 WoodlandShoulderCount = 0;
+    int32 FerryBankCount = 0;
+
+    auto AddHill = [this](const FVector& Location, const FVector& Scale, float Yaw)
+    {
+        if (ProductionCommonTerracedHillMesh && GeographyHillInstances->GetStaticMesh() == ProductionCommonTerracedHillMesh)
+        {
+            GeographyHillInstances->AddInstance(
+                FTransform(FRotator(0.0f, Yaw, 0.0f), Location, Scale));
+            return true;
+        }
+        return false;
+    };
+
+    auto AddSlope = [this](const FVector& Location, const FVector& Scale, float Yaw)
+    {
+        if (ProductionCommonVillageSlopeMesh && GeographySlopeInstances->GetStaticMesh() == ProductionCommonVillageSlopeMesh)
+        {
+            GeographySlopeInstances->AddInstance(
+                FTransform(FRotator(0.0f, Yaw, 0.0f), Location, Scale));
+            return true;
+        }
+        return false;
+    };
+
+    auto AddRiverBank = [this](const FVector& Location, const FVector& Scale, float Yaw)
+    {
+        if (ProductionCommonRiverBankMesh && GeographyRiverBankInstances->GetStaticMesh() == ProductionCommonRiverBankMesh)
+        {
+            GeographyRiverBankInstances->AddInstance(
+                FTransform(FRotator(0.0f, Yaw, 0.0f), Location, Scale));
+            return true;
+        }
+        return false;
+    };
+
+    // Bag End remains the dominant landmark. These earth masses sit behind and to
+    // the sides of the authored hole instead of covering the entrance/collision path.
+    const struct FTerrainPlacement
+    {
+        FVector Location;
+        FVector Scale;
+        float Yaw;
+    } BagEndTerrain[] = {
+        { FVector(-2780,-1180,-180), FVector(3.55f,2.80f,1.72f), 18.0f },
+        { FVector(-2920,  360,-185), FVector(3.25f,2.55f,1.62f), -16.0f },
+        { FVector(-2200,-1460,-165), FVector(2.90f,2.30f,1.48f), 34.0f },
+        { FVector(-1980,  880,-160), FVector(2.70f,2.20f,1.42f), -28.0f }
+    };
+    for (const FTerrainPlacement& P : BagEndTerrain)
+    {
+        if (AddHill(P.Location, P.Scale, P.Yaw))
+        {
+            ++BagEndTerrainCount;
+        }
+    }
+
+    // Hobbiton should read as homes stepping through a real hill settlement rather
+    // than structures placed on one flat plane. These terraces stay outside the core
+    // walkable common and existing quest anchors.
+    const FTerrainPlacement VillageTerraces[] = {
+        { FVector(-1500, 1450,-125), FVector(2.35f,1.72f,1.18f),  12.0f },
+        { FVector( -650, 1650,-130), FVector(2.45f,1.80f,1.20f),  -8.0f },
+        { FVector(  260, 1600,-125), FVector(2.30f,1.72f,1.16f),  16.0f },
+        { FVector( 1120, 1440,-120), FVector(2.25f,1.68f,1.15f), -14.0f },
+        { FVector(-1280,-1560,-125), FVector(2.35f,1.75f,1.18f), -10.0f },
+        { FVector( -280,-1610,-130), FVector(2.45f,1.82f,1.20f),  10.0f },
+        { FVector(  780,-1510,-125), FVector(2.30f,1.72f,1.16f), -16.0f },
+        { FVector( 1560,-1380,-120), FVector(2.20f,1.65f,1.14f),  18.0f }
+    };
+    for (const FTerrainPlacement& P : VillageTerraces)
+    {
+        if (AddSlope(P.Location, P.Scale, P.Yaw))
+        {
+            ++VillageTerraceCount;
+        }
+    }
+
+    // Worked fields remain visually broad, but gentle outer ridges stop them reading
+    // as an infinite flat test plane.
+    const FTerrainPlacement FieldRidges[] = {
+        { FVector( 4100, 2650,-135), FVector(2.90f,2.15f,1.28f),  14.0f },
+        { FVector( 6900, 2820,-140), FVector(3.10f,2.20f,1.32f),  -8.0f },
+        { FVector( 9400, 2700,-140), FVector(3.00f,2.16f,1.30f),  10.0f },
+        { FVector( 4300,-2720,-135), FVector(2.85f,2.10f,1.28f), -12.0f },
+        { FVector( 7200,-2860,-140), FVector(3.05f,2.20f,1.32f),   9.0f },
+        { FVector( 9700,-2660,-138), FVector(2.95f,2.15f,1.30f), -10.0f }
+    };
+    for (const FTerrainPlacement& P : FieldRidges)
+    {
+        if (AddHill(P.Location, P.Scale, P.Yaw))
+        {
+            ++FieldRidgeCount;
+        }
+    }
+
+    // The wooded road receives closer shoulders than the fields. This creates the
+    // intended pressure/enclosure shift while preserving the central navigation lane.
+    const FTerrainPlacement WoodlandShoulders[] = {
+        { FVector(11600, 1960,-115), FVector(2.45f,1.85f,1.30f),   8.0f },
+        { FVector(13600, 1850,-120), FVector(2.60f,1.92f,1.34f), -10.0f },
+        { FVector(15800, 1920,-122), FVector(2.55f,1.90f,1.34f),  12.0f },
+        { FVector(18100, 1840,-118), FVector(2.45f,1.84f,1.30f),  -8.0f },
+        { FVector(11750,-2010,-115), FVector(2.45f,1.85f,1.30f),  -9.0f },
+        { FVector(13950,-1890,-120), FVector(2.60f,1.92f,1.34f),  11.0f },
+        { FVector(16150,-1970,-122), FVector(2.55f,1.90f,1.34f), -12.0f },
+        { FVector(18450,-1860,-118), FVector(2.45f,1.84f,1.30f),   8.0f }
+    };
+    for (const FTerrainPlacement& P : WoodlandShoulders)
+    {
+        if (AddSlope(P.Location, P.Scale, P.Yaw))
+        {
+            ++WoodlandShoulderCount;
+        }
+    }
+
+    // Ferry composition: heavier near/far bank masses frame the broad crossing, while
+    // the authored crossing corridor stays open. The raised far-side silhouettes also
+    // support the source-grounded steep-bank/winding-path read without opening P1C02.
+    const FTerrainPlacement FerryBanks[] = {
+        { FVector(21750,-1380,-48), FVector(3.10f,1.62f,1.08f),   3.0f },
+        { FVector(22550,-1460,-46), FVector(3.20f,1.68f,1.10f),  -2.0f },
+        { FVector(23950,-1450,-46), FVector(3.25f,1.70f,1.12f),   2.0f },
+        { FVector(24800,-1340,-48), FVector(3.10f,1.62f,1.08f),  -3.0f },
+        { FVector(21780,  610,-46), FVector(3.00f,1.56f,1.06f), 178.0f },
+        { FVector(22620,  690,-44), FVector(3.18f,1.66f,1.10f), 182.0f },
+        { FVector(24020,  700,-44), FVector(3.22f,1.68f,1.12f), 178.0f },
+        { FVector(24860,  620,-46), FVector(3.05f,1.58f,1.07f), 182.0f }
+    };
+    for (const FTerrainPlacement& P : FerryBanks)
+    {
+        if (AddRiverBank(P.Location, P.Scale, P.Yaw))
+        {
+            ++FerryBankCount;
+        }
+    }
+
+    // Sparse, authored route-side stones emphasize the final Ferry approach. These
+    // use the already-resident production mesh/HISM and remain non-colliding.
+    int32 FerryApproachStoneCount = 0;
+    if (PathStoneInstances && ProductionPathStoneMesh &&
+        PathStoneInstances->GetStaticMesh() == ProductionPathStoneMesh)
+    {
+        for (int32 Index = 0; Index < 18; ++Index)
+        {
+            const float Alpha = static_cast<float>(Index) / 17.0f;
+            const float X = FMath::Lerp(20100.0f, ShireLayout::FerryX - 520.0f, Alpha);
+            const float Side = (Index % 2 == 0) ? -1.0f : 1.0f;
+            const float Y = -610.0f + Side * (225.0f + 28.0f * static_cast<float>(Index % 3));
+            const float Scale = 0.18f + 0.018f * static_cast<float>(Index % 4);
+            PathStoneInstances->AddInstance(FTransform(
+                FRotator(0.0f, static_cast<float>((Index * 37) % 360), 0.0f),
+                FVector(X, Y, 4.0f),
+                FVector(Scale * 1.25f, Scale, 0.060f)));
+            ++FerryApproachStoneCount;
+        }
+    }
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("P1C01_AUTHORED_SHIRE_LANDMARK_PASS bagEndTerrain=%d villageTerraces=%d fieldRidges=%d woodlandShoulders=%d ferryBanks=%d ferryApproachStones=%d writer=ShirePrototypeWorldBuilder"),
+        BagEndTerrainCount,
+        VillageTerraceCount,
+        FieldRidgeCount,
+        WoodlandShoulderCount,
+        FerryBankCount,
+        FerryApproachStoneCount);
+}
+
+
+
 void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()
 {
     if (!GetWorld())
@@ -3819,6 +4002,7 @@ void AShirePrototypeWorldBuilder::BuildPrototypeWorld()
     ConfigureFoliageInstances();
     SpawnVillage();
     SpawnGeographyFoundationPass();
+    SpawnAuthoredShireLandmarkPass();
     SpawnHobbitonArchitecturePass();
     SpawnProductionVillageDetailLayer();
     SpawnVisibleShireMegaPass();
