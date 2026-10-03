@@ -2918,3 +2918,16 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Frodo dedicated probe metadata/workflow-only delta | INHERIT/SKIP |
 | Runtime C++ / SourceAssets / engine config | REQUIRED |
 | Dedicated Frodo skeletal technical probe | OWN UE4 WORKFLOW REQUIRED |
+
+
+## 2026-10-03 - Frodo Knight V2 disposition
+
+| Evidence | Result |
+|---|---|
+| UE4.27 skeletal registration | PASS |
+| Reference bones | 51 |
+| Smoothing groups | FAIL |
+| Bind pose | FAIL |
+| Candidate disposition | REJECTED_TECHNICAL |
+| Runtime promotion | FORBIDDEN |
+| Next action | distinct licensed FBX candidate |
