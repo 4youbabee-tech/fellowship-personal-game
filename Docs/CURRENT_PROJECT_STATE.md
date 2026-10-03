@@ -3846,3 +3846,11 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Primary QC subset: `door-rotate-round-a.fbx`, `wall-doorway-round.fbx`, `wall-window-round-detailed.fbx`, plus `colormap.png`.
 - The official archive should be staged whole because it is small, but UE import remains candidate-only.
 - Status: **SOURCE-IMPLEMENTED / EXACT-FILE-DISCOVERED / OFFICIAL RECEIPT PENDING**. No static binary QC, UE import, runtime, PIE/device/visual claim.
+
+
+## 2026-10-03 - Bag End hero trim official download URL resolved
+
+- Official Kenney Building Kit page remains the provenance/license authority and reports 80 3D files under Creative Commons CC0.
+- Its official download action resolves to `kenney_building-kit.zip`; the direct official URL is now recorded in `Data/P1C01BagEndHeroTrimSourceProbeV1.json`.
+- Archive SHA256/size, extracted candidate hash match, static FBX QC and real UE4.27.2 import remain pending. No runtime fallback was removed.
+- Status: **SOURCE-IMPLEMENTED / OFFICIAL RECEIPT HASH PENDING**. No PIE/device/visual/performance acceptance claim.

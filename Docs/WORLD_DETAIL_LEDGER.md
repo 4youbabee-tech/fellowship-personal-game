@@ -1091,3 +1091,11 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Existing Bag End Hero Ring requirement is refined to exact modular FBX candidates; no new lore/detail concept is added.
 - Candidate geometry is limited to round door/doorway/window support consistent with the already-recorded circular domestic geometry requirement.
 - Current primitive architectural fallbacks remain untouched until official receipt, static QC and real UE4 import succeed.
+
+
+## 2026-10-03 - Bag End hero trim official source resolution
+
+- Existing Bag End round-door/window/trim debt remains unchanged; this wave records source evidence only.
+- Kenney Building Kit official download URL is resolved and pinned for the next warehouse receipt step.
+- Architectural primitive fallbacks remain mandatory until archive receipt, extracted-file identity match, static FBX QC and real UE4.27.2 import evidence exist.
+- Evidence boundary: **SOURCE PREPRODUCTION ONLY**.
