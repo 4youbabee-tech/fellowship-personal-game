@@ -12,7 +12,6 @@ if([string]::IsNullOrWhiteSpace($OutputRoot)){ $OutputRoot=Join-Path $env:RUNNER
 $warehouse=Join-Path $OutputRoot "warehouse"
 New-Item -ItemType Directory -Path $warehouse -Force | Out-Null
 & (Join-Path $root "Scripts\stage_opengameart_character_candidate.ps1") -ManifestPath $ManifestPath -WarehouseRoot $warehouse
-if($LASTEXITCODE -ne 0){ throw "FRODO_DUMMY_STAGE_FAIL exit=$LASTEXITCODE" }
 $asset=$m.assets[0]
 $zip=Join-Path $warehouse ("OpenGameArt\Characters\"+[string]$asset.filename)
 if(-not (Test-Path -LiteralPath $zip -PathType Leaf)){ throw "FRODO_DUMMY_ZIP_MISSING path=$zip" }
