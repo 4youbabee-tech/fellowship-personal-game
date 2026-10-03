@@ -35,7 +35,6 @@ if(Test-Path -LiteralPath $extractRoot) { Remove-Item -LiteralPath $extractRoot 
 New-Item -ItemType Directory -Path $extractRoot -Force | Out-Null
 
 & (Join-Path $root "Scripts\stage_opengameart_character_candidate.ps1") -ManifestPath $ManifestPath -WarehouseRoot $warehouse
-if($LASTEXITCODE -ne 0) { throw "FRODO_KENNEY_SOURCE_STAGE_FAIL exit=$LASTEXITCODE" }
 
 $archive = Join-Path $warehouse ("OpenGameArt\Characters\" + [string]$asset.filename)
 if(-not (Test-Path -LiteralPath $archive -PathType Leaf)) { throw "FRODO_KENNEY_ARCHIVE_MISSING path=$archive" }
