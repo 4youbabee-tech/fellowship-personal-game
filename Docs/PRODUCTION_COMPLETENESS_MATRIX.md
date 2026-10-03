@@ -2908,3 +2908,15 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Default character FBX behavior | DEFERRED unless explicit flag | preserved |
 | Nonzero skeleton/bone proof | IMPLEMENTED in import commandlet | candidate run pending |
 | Frodo deformation/retarget/AnimBP/runtime | NOT STARTED | requires clean technical candidate |
+
+
+## 2026-10-03 - Frodo Knight V2 technical probe
+
+| Gate | Status |
+|---|---|
+| Exact immutable source | PINNED |
+| Direct FBX warehouse staging | PREPARED |
+| UE4.27.2 skeletal import | PENDING |
+| Nonzero bones | PENDING |
+| Smoothing/bind-pose/UV debt | PENDING |
+| Deformation/retarget/AnimBP/runtime | BLOCKED UNTIL TECHNICAL PASS |
