@@ -30,12 +30,8 @@
     "SHIRE_PIE_VERIFY.bat"
   ],
   "delete_after_merge": [
-    "source/whole-game-chapter-packets-refresh-2026-10-02",
-    "mega/p1c01-visual-production-wave-v2",
-    "mega/p1c01-shire-chapter-pack-v1",
-    "repair/daily-manager-report-rebase-v3",
-    "fix/main-daily-manager-report-publisher-v1",
-    "mega/p1c01-production-train-v1"
+    "production/fbx-world-character-import-v1",
+    "reconcile/fbx-world-intake-current-develop-2026-10-03"
   ],
   "safety_rules": [
     "Never delete develop or main.",
@@ -490,5 +486,24 @@
     },
     "safety": "Canonical/recovery refs, current open PR heads, Edoras pending-salvage refs, Frodo validation ref and the current static-FBX reconciliation preparation ref are excluded.",
     "evidence_boundary": "Repository/source hygiene only; no PIE/device/visual/performance acceptance implied."
+  },
+  "post_289_fbx_ref_cleanup_2026_10_03": {
+    "status": "AUTHORIZED_AFTER_FRESH_CURRENT_ANCESTRY_SALVAGE",
+    "action": "DELETE_AFTER_THIS_MERGE",
+    "branches": [
+      "production/fbx-world-character-import-v1",
+      "reconcile/fbx-world-intake-current-develop-2026-10-03"
+    ],
+    "dispositions": {
+      "production/fbx-world-character-import-v1": "SUPERSEDED by merged PR #289; useful static FBX world/prop intake was selectively ported onto current importer code and exact-head validated.",
+      "reconcile/fbx-world-intake-current-develop-2026-10-03": "SUPERSEDED preparation branch; its commandlet delta was refreshed onto PR #289 latest develop ancestry and merged."
+    },
+    "evidence": {
+      "merge_289": "241873235b774fe4004e32d58b32315ba86d3cea",
+      "pre_unreal_289": "Pre-Unreal Validation #1729 SUCCESS",
+      "unreal_289": "Unreal Build Validation #1335 SUCCESS"
+    },
+    "safety": "Frodo skeletal validation and both Edoras pending-salvage refs remain protected; canonical/recovery refs excluded.",
+    "evidence_boundary": "Repository/import-tool hygiene only; no PIE/device/visual acceptance implied."
   }
 }
