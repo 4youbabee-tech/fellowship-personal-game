@@ -3114,3 +3114,15 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Deformation / retarget | BLOCKED UNTIL CLEAN TECHNICAL PASS | no inference from bone count alone |
 | AnimBP / async runtime Frodo | BLOCKED | modular fallback retained |
 | PIE / device / visual / FPS | NOT ACCEPTED | no matching evidence |
+
+## 2026-10-04 - Frodo repair factory hosted normalization correction
+
+| Check | Status | Evidence |
+|---|---|---|
+| Hosted Blender install | PASS | Gauntlet #11, Blender 4.0.2 |
+| Original hosted static candidate scan | PASS | Gauntlet #11 |
+| Normalization execution | TOOLING-FAILED BEFORE EXPORT | strict-mode `$LASTEXITCODE` misuse |
+| Root-cause correction | SOURCE-IMPLEMENTED | direct external process invocation + immediate exit capture |
+| FBX technical disposition | UNCHANGED / NOT YET RE-RUN | no candidate rejected by #11 normalization job |
+| UE4 normalized revalidation | PENDING NEW EXACT HEAD | hard gates unchanged |
+| PIE/device/visual/FPS | NOT ACCEPTED | no direct evidence |
