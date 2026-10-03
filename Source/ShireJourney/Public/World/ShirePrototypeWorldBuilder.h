@@ -95,6 +95,11 @@ private:
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* GeographyHillInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* GeographySlopeInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* GeographyRiverBankInstances;
+    UPROPERTY() UHierarchicalInstancedStaticMeshComponent* HedgeInstances;
+    UPROPERTY() UHierarchicalInstancedStaticMeshComponent* WoodlandTreeInstances;
+    UPROPERTY() UHierarchicalInstancedStaticMeshComponent* RuralFenceInstances;
+    UPROPERTY() UHierarchicalInstancedStaticMeshComponent* FernInstances;
+    UPROPERTY() UHierarchicalInstancedStaticMeshComponent* ReedInstances;
     UPROPERTY() ADirectionalLight* RuntimeSun = nullptr;
     UPROPERTY() ASkyLight* RuntimeSky = nullptr;
     UPROPERTY() APostProcessVolume* RuntimePostProcess = nullptr;
@@ -123,6 +128,7 @@ private:
     void SpawnHobbitonArchitecturePass();
     void SpawnVillage();
     void SpawnProductionVillageDetailLayer();
+    void SpawnVisibleShireMegaPass();
     void SpawnWorldDensityDetailPass();
     void SpawnBagEndHeroPass();
     void SpawnPartySocialLoopPass();
