@@ -158,10 +158,27 @@
         "P1C01 Frodo OGA Lowpoly Dummy UE4 Technical Probe #1",
         "exact probe head ffaa3f6718a92b68f5112b040643846df277cd67"
       ]
+    },
+    {
+      "candidate": "Model/characterMedium.fbx",
+      "sha256": "18835fef534eede635b081ee7fe647d01a885550a591d2e6bf071010906167d8",
+      "bytes": 167212,
+      "ue4_bones": 59,
+      "state": "REJECTED_TECHNICAL",
+      "reasons": [
+        "MISSING_SMOOTHING_GROUPS",
+        "MISSING_BIND_POSE_BONES"
+      ],
+      "evidence": [
+        "P1C01 Frodo Kenney Animated Human Breakthrough #5",
+        "exact probe head e40b8204af3ef7e47cfb186eac8504416d57dacb",
+        "Pre-Unreal Validation #1786 SUCCESS",
+        "Unreal Build Validation #1385 SUCCESS"
+      ]
     }
   ],
   "policy": "Do not retry an exact payload SHA256 listed here. New candidates may proceed only if their exact payload identity differs and they pass the same or stricter technical gates.",
   "evidence_boundary": "Historical exact-head technical/static rejection evidence only. No candidate here is runtime/visual accepted.",
-  "last_updated_utc": "2026-10-03T18:50:00Z",
-  "current_next_action": "Do not retry any listed payload hash. The OGA Lowpoly Dummy Idle FBX is now rejected after a 41-bone UE4.27 skeletal import due to smoothing-group and bind-pose warnings. Advance to a distinct licensed FBX payload/corrected export; do not weaken technical gates."
+  "last_updated_utc": "2026-10-03T21:08:00Z",
+  "current_next_action": "Do not retry any listed payload hash. Kenney Animated characterMedium.fbx is rejected after UE4.27 skeletal registration with 59 bones because smoothing-group and bind-pose gates failed. Advance immediately to the distinct CC0 OpenGameArt Quaternius RPG Characters source as a bounded multi-candidate gauntlet; do not weaken technical gates."
 }
