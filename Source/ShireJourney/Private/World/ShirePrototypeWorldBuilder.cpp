@@ -480,8 +480,10 @@ void AShirePrototypeWorldBuilder::SpawnHobbitHole(const FVector& Location, float
     const FLinearColor Stone(0.42f, 0.40f, 0.34f);
 
     // Imported production mound/facade replace the toy-like primitive silhouette when
-    // available. Runtime accents below remain cheap and readable on the target laptop.
-    if (ProductionTurfMoundMesh && ProductionHobbitFacadeMesh)
+    // available. The facade owns the round timber/door/window/sill geometry; runtime
+    // primitives are retained only when that authored facade is unavailable.
+    const bool bHasProductionFacade = ProductionTurfMoundMesh && ProductionHobbitFacadeMesh;
+    if (bHasProductionFacade)
     {
         SpawnShape(ProductionTurfMoundMesh, Location + FVector(0.0f, 0.0f, 30.0f * Scale),
             FVector(2.45f, 2.10f, 2.10f) * Scale, Turf, FRotator::ZeroRotator, true);
@@ -496,24 +498,35 @@ void AShirePrototypeWorldBuilder::SpawnHobbitHole(const FVector& Location, float
             FVector(0.10f, 0.82f, 0.58f) * Scale, Earth, FRotator::ZeroRotator, true);
     }
 
-    // Round frame + inset painted door.
-    SpawnShape(CylinderMesh, Location + FVector(-83.0f * Scale, 0.0f, 55.0f * Scale),
-        FVector(0.51f, 0.51f, 0.075f) * Scale, Timber, FRotator(0.0f, 90.0f, 0.0f), false);
-    SpawnShape(CylinderMesh, Location + FVector(-88.0f * Scale, 0.0f, 55.0f * Scale),
-        FVector(0.43f, 0.43f, 0.050f) * Scale, DoorGreen, FRotator(0.0f, 90.0f, 0.0f), false);
+    // The authored facade carries the timber frame, green door, window-frame and
+    // stone-sill geometry. Keep those primitive constructions only as a deterministic
+    // no-asset fallback so production Hobbiton no longer overlays greybox geometry.
+    if (!bHasProductionFacade)
+    {
+        SpawnShape(CylinderMesh, Location + FVector(-83.0f * Scale, 0.0f, 55.0f * Scale),
+            FVector(0.51f, 0.51f, 0.075f) * Scale, Timber, FRotator(0.0f, 90.0f, 0.0f), false);
+        SpawnShape(CylinderMesh, Location + FVector(-88.0f * Scale, 0.0f, 55.0f * Scale),
+            FVector(0.43f, 0.43f, 0.050f) * Scale, DoorGreen, FRotator(0.0f, 90.0f, 0.0f), false);
+
+        for (float Side : { -1.0f, 1.0f })
+        {
+            const FVector Window = Location + FVector(-88.0f * Scale, Side * 58.0f * Scale, 68.0f * Scale);
+            SpawnShape(CylinderMesh, Window, FVector(0.22f, 0.22f, 0.035f) * Scale,
+                Timber, FRotator(0.0f, 90.0f, 0.0f), false);
+            SpawnShape(CubeMesh, Window + FVector(-2.0f * Scale, 0.0f, -27.0f * Scale),
+                FVector(0.10f, 0.30f, 0.045f) * Scale, Stone, FRotator::ZeroRotator, false);
+        }
+    }
+
+    // Small readable accents remain: the source facade has no warm-glass material and
+    // no knob detail. These do not duplicate its structural silhouette.
     SpawnShape(SphereMesh, Location + FVector(-94.0f * Scale, 21.0f * Scale, 56.0f * Scale),
         FVector(0.045f) * Scale, FLinearColor(0.74f, 0.55f, 0.18f), FRotator::ZeroRotator, false);
-
-    // Two warm circular windows and shallow stone sills.
     for (float Side : { -1.0f, 1.0f })
     {
-        const FVector Window = Location + FVector(-88.0f * Scale, Side * 58.0f * Scale, 68.0f * Scale);
-        SpawnShape(CylinderMesh, Window, FVector(0.22f, 0.22f, 0.035f) * Scale,
-            Timber, FRotator(0.0f, 90.0f, 0.0f), false);
-        SpawnShape(CylinderMesh, Window + FVector(-4.0f * Scale, 0.0f, 0.0f),
-            FVector(0.17f, 0.17f, 0.025f) * Scale, WarmGlass, FRotator(0.0f, 90.0f, 0.0f), false);
-        SpawnShape(CubeMesh, Window + FVector(-2.0f * Scale, 0.0f, -27.0f * Scale),
-            FVector(0.10f, 0.30f, 0.045f) * Scale, Stone, FRotator::ZeroRotator, false);
+        const FVector Window = Location + FVector(-92.0f * Scale, Side * 58.0f * Scale, 68.0f * Scale);
+        SpawnShape(CylinderMesh, Window, FVector(0.16f, 0.16f, 0.018f) * Scale,
+            WarmGlass, FRotator(0.0f, 90.0f, 0.0f), false);
     }
 
     // Chimney, doorstep and planted entry soften the generated silhouette.
