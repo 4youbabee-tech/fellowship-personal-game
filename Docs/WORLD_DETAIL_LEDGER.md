@@ -1071,3 +1071,11 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - This is not a world-detail addition and introduces no runtime actor, NPC authority, story state, save state or visual placement.
 - If Knight reproduces Rogue's missing-smoothing-groups and missing-bind-pose-bones debt under the same real UE4.27.2 gate, treat the KayKit export family as a technical closure candidate before spending runs on Mage/Barbarian.
 - Evidence boundary: **SOURCE REGISTRATION ONLY** until staging/static/UE evidence exists.
+
+
+## 2026-10-03 - Bag End entry shrub refresh
+
+- No new lore/location concept is introduced; this refresh only replaces the already-registered planted-entry primitive visual with resident production stock.
+- Existing planted-entry transforms remain unchanged. `SM_ShShrub` is used when resident; primitive spheres remain deterministic no-asset fallback.
+- Hero architectural door/window/trim and interior-shell debt remain separately gated; no fallback is removed without exact replacement import/QC evidence.
+- Evidence boundary: **SOURCE IMPLEMENTATION ONLY** pending fresh exact-head workflows.
