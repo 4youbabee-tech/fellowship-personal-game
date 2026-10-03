@@ -102,6 +102,15 @@
       "observed_page_license": "CC0",
       "license_capture": "OFFICIAL_OPENGAMEART_QUATERNIUS_UPLOAD_VERIFIED_2026-10-02",
       "intended_use": "RIG_BASE_QC_CANDIDATE_NOT_FINAL_LIKENESS"
+    },
+    {
+      "provider": "OPENGAMEART",
+      "id": "OGA_KENNEY_ANIMATED_CHARACTERS_1_CC0",
+      "state": "AUTHORIZED_FOR_STAGING",
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_OPENGAMEART_KENNEY_UPLOAD_VERIFIED_2026_10_03",
+      "intended_use": "INDEPENDENT_ANIMATED_HUMANOID_FRODO_RIG_BASE_QC_CANDIDATE_NOT_FINAL_LIKENESS"
     }
   ],
   "required_bundle": {
@@ -144,6 +153,6 @@
     "later_characters": "DEFERRED_UNTIL_SERIAL_PREDECESSORS_COMPLETE",
     "integration_rule": "Candidate QC must pass before READY_FOR_IMPORT or runtime integration.",
     "qc_request_id": "P1C01_FRODO_CANDIDATE_QC_2026_10_01_V1",
-    "qc_request_state": "REQUESTED_EXACT_HEAD_WAREHOUSE"
+    "qc_request_state": "KENNEY_ANIMATED_DISTINCT_SOURCE_ACTIVE"
   }
 }
