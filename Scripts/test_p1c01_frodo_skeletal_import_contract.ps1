@@ -32,7 +32,7 @@ if([string]$a.provider -ne "OPENGAMEART" -or [string]$a.license -ne "CC0-1.0"){t
 if([string]$a.assets[0].id -ne "OGA_QTN_RPG_CHARACTERS_CC0"){throw "P1C01_FRODO_IMPORT_CONTRACT_ALTERNATE_ID_FAIL"}
 if(@($kh.assets).Count -ne 1 -or [string]$kh.assets[0].id -ne "KAYKIT_ADVENTURERS_ROGUE_HOODED_CC0" -or [string]$kh.assets[0].download_kind -ne "DIRECT_FBX"){throw "P1C01_FRODO_IMPORT_CONTRACT_KAYKIT_HOODED_FAIL"}
 if([string]$kh.assets[0].source_revision -ne "672074b73ba276876a19e8816ecdc5241817ab47"){throw "P1C01_FRODO_IMPORT_CONTRACT_KAYKIT_HOODED_REVISION_FAIL"}
-if([string]$kn.provider -ne "KENNEY" -or [string]$kn.license -ne "CC0-1.0" -or @($kn.assets).Count -ne 1 -or [string]$kn.assets[0].id -ne "KENNEY_BLOCKY_CHARACTERS_CC0"){throw "P1C01_FRODO_IMPORT_CONTRACT_KENNEY_BLOCKY_FAIL"}
+if([string]$kn.provider -ne "KENNEY" -or [string]$kn.license -ne "CC0-1.0" -or @($kn.assets).Count -ne 1 -or [string]$kn.assets[0].id -ne "KENNEY_BLOCKY_CHARACTERS_CC0" -or [string]$kn.assets[0].download_kind -ne "ARCHIVE_ZIP"){throw "P1C01_FRODO_IMPORT_CONTRACT_KENNEY_BLOCKY_FAIL"}
 if(-not ([string]$kn.assets[0].download_url).StartsWith("https://kenney.nl/media/pages/assets/blocky-characters/")){throw "P1C01_FRODO_IMPORT_CONTRACT_KENNEY_URL_FAIL"}
 if([int]$h.candidate_policy.source_asset_priority_bonus.KAYKIT_ADVENTURERS_CC0 -lt 1){throw "P1C01_FRODO_IMPORT_CONTRACT_SOURCE_PRIORITY_MISSING"}
 if([int]$h.candidate_policy.source_asset_priority_bonus.KAYKIT_ADVENTURERS_ROGUE_HOODED_CC0 -lt 1){throw "P1C01_FRODO_IMPORT_CONTRACT_HOODED_PRIORITY_MISSING"}
