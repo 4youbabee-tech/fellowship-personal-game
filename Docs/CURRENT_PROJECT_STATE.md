@@ -4049,3 +4049,10 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - The job failed before candidate re-export because the PowerShell script read `$LASTEXITCODE` after piping `blender --version` through `Select-Object`, leaving the variable unavailable under strict mode.
 - Root cause is tooling-only, not an FBX/rig rejection. The version probe now executes Blender directly, captures the external-process exit code immediately, validates at least one version line, and preserves all existing normalization/UE4 hard gates.
 - Exact-head validation must rerun on the corrected head. No deformation/retarget/runtime/PIE/device/visual/FPS acceptance is implied.
+
+## 2026-10-04 - Frodo repair factory Blender/Numpy dependency correction
+
+- Gauntlet #14 passed the hosted static inventory and selected two previously untested exact Quaternius RPG payloads: Cleric `ddbd70823da811625a512ef4ceacce2faa9de8c71aa2c6fee7e23e0fb52b6daa` and Wizard `ddd72512ff771380df9223cef02731ebf68e31309be759bf79d7063936f4636d`, both FBX 7400/static-pass.
+- Hosted normalization failed before FBX import because Ubuntu Noble's Blender 4.0.2 FBX add-on could not import Python `numpy`. This is infrastructure/tooling evidence, not a candidate rejection.
+- The workflow now installs `blender python3-numpy` and runs an explicit Python numpy readiness check before normalization. UE4 hard gates remain unchanged.
+- Cleric/Wizard remain technically UNTESTED by UE4 normalization until the corrected exact head runs. No deformation/retarget/runtime/visual acceptance is implied.
