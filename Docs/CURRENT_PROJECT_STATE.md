@@ -3880,3 +3880,12 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Added a hosted source contract guard that forbids synchronous `LoadObject` in the static-FBX branch and checks the character deferral boundary.
 - Existing legacy static OBJ handling remains untouched; animated/rigged production intake remains FBX-only.
 - Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD PRE-UNREAL + UE4.27.2 COMPILE PENDING**. No PIE/device/visual/performance acceptance claim.
+
+
+## 2026-10-03 - P1C01 production garden proxy replacement
+
+- The five authored Shire/Hobbiton garden patches now prefer the resident production ground mesh for soil rows and the resident production shrub mesh for plants.
+- Production plants are emitted through the existing `ShrubInstances` HISM instead of 25 individual sphere actors per patch; across five patches this removes up to 125 primitive plant actors on the production path.
+- Existing authored garden locations are unchanged. Cube/sphere treatment remains deterministic fallback only when the exact production mesh/HISM binding is unavailable.
+- No quest/story/NPC authority changed. No new Tick, collision, synchronous heavy load, or runtime chapter activation was added.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. No PIE/device/visual/performance acceptance claim.
