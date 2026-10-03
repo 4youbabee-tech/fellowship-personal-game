@@ -82,10 +82,10 @@ try {
 
 
 # Exact source-only allowlist for Bag End hero trim probe; never broaden Data/ safety.
-if(-not $classifier.Contains('"Data/P1C01BagEndHeroTrimSourceProbeV1.json"')){
+if(-not $source.Contains('"Data/P1C01BagEndHeroTrimSourceProbeV1.json"')){
     throw "UNREAL_CLASSIFIER_BAG_END_HERO_TRIM_SOURCE_ALLOWLIST_MISSING"
 }
-if($classifier.Contains('$n.StartsWith("Data/") -and $safe')){
+if($source.Contains('$n.StartsWith("Data/") -and $safe')){
     throw "UNREAL_CLASSIFIER_BROAD_DATA_SAFE_BYPASS_FORBIDDEN"
 }
 Write-Host "UNREAL_CLASSIFIER_BAG_END_HERO_TRIM_EXACT_ALLOWLIST_PASS"
