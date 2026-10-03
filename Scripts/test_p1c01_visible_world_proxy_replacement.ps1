@@ -93,3 +93,26 @@ foreach($marker in @(
 }
 
 Write-Host ("P1C01_VISIBLE_WORLD_CONTRACT_PASS cells="+$cells.Count+" eastFieldsHism=true eastFieldsMax=96 runtime=true")
+
+
+$bagEndTrimPacketPath = Join-Path $RepoRoot "Data\P1C01BagEndHeroTrimSourceProbeV1.json"
+if(-not (Test-Path $bagEndTrimPacketPath)){
+  throw "P1C01_BAG_END_HERO_TRIM_PACKET_MISSING"
+}
+$bagEndTrim = Get-Content $bagEndTrimPacketPath -Raw | ConvertFrom-Json
+if($bagEndTrim.runtime_integration_allowed -ne $false){
+  throw "P1C01_BAG_END_HERO_TRIM_RUNTIME_MUST_REMAIN_DISABLED"
+}
+if($bagEndTrim.status -ne "SOURCE_PREPRODUCTION_ACTIVE"){
+  throw "P1C01_BAG_END_HERO_TRIM_STATUS_INVALID"
+}
+if(@($bagEndTrim.candidate_families).Count -lt 2){
+  throw "P1C01_BAG_END_HERO_TRIM_CANDIDATE_FAMILY_COUNT_LOW"
+}
+if(-not (@($bagEndTrim.required_static_gates) -contains "FBX only for selected 3D hero-support asset")){
+  throw "P1C01_BAG_END_HERO_TRIM_FBX_GATE_MISSING"
+}
+if(-not (@($bagEndTrim.required_static_gates) -contains "no BMP texture payload; PNG/TGA only, channel-packed where applicable")){
+  throw "P1C01_BAG_END_HERO_TRIM_TEXTURE_GATE_MISSING"
+}
+Write-Host "P1C01_BAG_END_HERO_TRIM_SOURCE_PROBE_PASS candidates=$(@($bagEndTrim.candidate_families).Count) runtime=false"
