@@ -3905,3 +3905,5 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Added a hosted Windows source-only receipt probe for the official Kenney Building Kit ZIP so provenance/hash work does not reserve the single UE4 self-hosted runner.
 - The probe must match the official extracted `door-rotate-round-a.fbx`, `wall-doorway-round.fbx`, `wall-window-round-detailed.fbx` and `colormap.png` SHA256 identities already discovered before any UE import/runtime replacement is authorized.
 - Status: **SOURCE PIPELINE ACTIVE / OFFICIAL RECEIPT EXECUTION PENDING**.
+
+- **Bag End trim receipt evidence:** hosted exact-head source verification succeeded on `7cca28071a4dedd69e36501444d37e4d7184f8a0`; official Kenney Building Kit ZIP = `1,598,905` bytes, SHA256 `2740ef5772fb5fb3d7aab881db22d129f6b68afe711b1a79e6d5e9e19cf3eec6`. Door, doorway, round-window and colormap payload hashes all matched the prior immutable discovery identities. Status advances to binary static FBX QC; no UE/runtime/visual acceptance yet.
