@@ -4028,3 +4028,11 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Root cause was path-leaf matching in the hosted staging script after path normalization. The selector now normalizes the full archive path to lowercase, splits the leaf explicitly on `/`, and matches only `*/characters/fbx/*` against the bounded preferred filename list.
 - No KayKit FBX payload was rejected by run #1. Exact-head hosted/static + UE4 validation must rerun on the corrected head.
 - Status remains **SOURCE-IMPLEMENTED / VALIDATION PENDING**; no deformation/runtime/PIE/device/visual/FPS acceptance is claimed.
+
+## 2026-10-04 - KayKit hosted FBX discovery hardening
+
+- KayKit bridge rerun #4 still failed before candidate QC with zero preferred FBX entries. No asset was judged.
+- Hosted discovery is now decoupled from candidate ranking: the script first discovers every `.fbx` under any archive `/Characters/` path, then assigns preferred-name priority and falls back to the smallest static-pass character FBX only if a preferred name is absent.
+- If character discovery is still empty, the script now emits up to 20 archive FBX paths before failing so the next root cause is evidence-based rather than inferred.
+- Max-two UE4 probe budget and all technical rejection gates remain unchanged.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD RERUN PENDING**. No KayKit technical pass or runtime acceptance is claimed.
