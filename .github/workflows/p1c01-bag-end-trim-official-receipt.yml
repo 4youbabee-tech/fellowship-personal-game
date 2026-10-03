@@ -1,0 +1,33 @@
+name: P1C01 Bag End Trim Official Receipt
+
+on:
+  pull_request:
+    branches: [develop]
+    paths:
+      - 'Data/P1C01BagEndHeroTrimSourceProbeV1.json'
+      - 'Scripts/stage_p1c01_bag_end_trim_official_receipt.ps1'
+      - '.github/workflows/p1c01-bag-end-trim-official-receipt.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  receipt:
+    name: Verify official Kenney Building Kit receipt
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Download official archive and verify exact candidates
+        shell: powershell
+        run: |
+          & "$env:GITHUB_WORKSPACE\Scripts\stage_p1c01_bag_end_trim_official_receipt.ps1" -ManifestPath "$env:GITHUB_WORKSPACE\Data\P1C01BagEndHeroTrimSourceProbeV1.json" -OutputRoot "$env:RUNNER_TEMP\shire-bag-end-trim-official"
+      - name: Upload official receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1c01-bag-end-trim-official-receipt
+          path: ${{ runner.temp }}\shire-bag-end-trim-official\p1c01_bag_end_trim_official_receipt.json
+          if-no-files-found: error
+          retention-days: 14

@@ -2918,3 +2918,15 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Frodo dedicated probe metadata/workflow-only delta | INHERIT/SKIP |
 | Runtime C++ / SourceAssets / engine config | REQUIRED |
 | Dedicated Frodo skeletal technical probe | OWN UE4 WORKFLOW REQUIRED |
+
+
+## 2026-10-03 - Bag End hero trim source receipt completion
+
+| Gate | Status |
+|---|---|
+| Official archive SHA256/size | PASS |
+| Exact door/frame/window payload identity | PASS |
+| Expected colormap payload identity | PASS |
+| Binary static FBX QC | NEXT |
+| UE4.27.2 static import | PENDING |
+| Runtime hero trim replacement | BLOCKED UNTIL IMPORT/QC |
