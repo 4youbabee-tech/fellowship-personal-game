@@ -3073,3 +3073,14 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Root-cause correction | SOURCE-IMPLEMENTED | lowercase normalized archive path + explicit leaf split |
 | KayKit asset technical disposition | UNCHANGED / UNTESTED | no FBX was judged by run #1 |
 | Exact-head hosted/UE4 rerun | PENDING | corrected head required |
+
+## 2026-10-04 - KayKit character discovery hardening
+
+| Check | Status | Evidence boundary |
+|---|---|---|
+| KayKit rerun #4 candidate judgment | NOT REACHED | discovery failed before FBX static QC |
+| Character FBX discovery | SOURCE-HARDENED | all `/Characters/*.fbx` first, ranking second |
+| Preferred candidate order | PRESERVED | Rogue -> RogueHooded -> Mage -> Barbarian -> Knight |
+| Fallback ranking | BOUNDED | smallest static-pass character FBX only |
+| UE4 probe cap | UNCHANGED | max 2 |
+| Exact-head rerun | PENDING | corrected head required |
