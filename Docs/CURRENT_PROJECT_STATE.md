@@ -4014,3 +4014,12 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - No story/quest anchor, P1C02 runtime state, NPC lifecycle owner or crowd budget changes. No new synchronous load, per-instance Tick or actor-per-prop density lane was added.
 - Imported production materials remain authoritative; the existing primitive-color path remains fallback-only.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27 VALIDATION PENDING**. No PIE/device/rendered-visual/pacing/FPS acceptance is claimed.
+
+## 2026-10-04 - P1C01 presentation composition wave C source implementation
+
+- Existing production materials remain untouched and authoritative; no generic material override was added to imported meshes.
+- A new `SpawnPresentationCompositionPass()` appends 120 bounded, non-colliding HISM instances after the natural-route pass: 28 cultivated foreground shrubs around Bag End/Hobbiton, 20 threshold trees at the wooded-road transition, 40 layered understory ferns and 32 Ferry-bank reed accents.
+- Morning presentation defaults were refined in the existing low-cost path: slightly less orange direct light, softer/lighter distance fog, modestly stronger skylight, tighter exposure, and reduced bloom/vignette. Volumetric fog remains disabled and the water path still uses no planar reflection/scene capture.
+- No new runtime material dependency, synchronous load, Tick, crowd owner or chapter expansion was introduced.
+- Source resource review keeps CC0/open PBR sources such as Poly Haven/ambientCG as future intake options only if PIE review proves a real material gap; no external material was admitted by this code wave.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. No rendered visual, device or FPS acceptance is claimed.
