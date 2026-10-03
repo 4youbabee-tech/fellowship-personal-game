@@ -2790,3 +2790,16 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Door/window/trim debt | PRESERVED | exact replacement remains import/QC gated |
 | Fresh exact-head Pre-Unreal | PENDING | new head required |
 | Fresh UE4.27.2 compile/build | PENDING | old #1305 does not validate refreshed head |
+
+
+## 2026-10-03 - Bag End hero trim source probe
+
+| Gate | Status | Evidence |
+|---|---|---|
+| Existing production stock reuse audit | COMPLETE | no exact door/window/trim replacement found |
+| Kenney Building Kit provider/license | PROVIDER-VERIFIED | official page reports CC0 / 80 3D files |
+| Kenney Modular Buildings provider/license | PROVIDER-VERIFIED | official page reports CC0 / 100 3D files |
+| KayKit Medieval Hexagon exact-fit | REJECTED-AS-EXACT | tree exposes complete buildings/walls, not independent hero trim pieces |
+| Exact FBX file discovery | PENDING | must identify door/window/frame/trim files |
+| Static FBX/UV/material QC | PENDING | before UE reservation |
+| Runtime integration | BLOCKED | single runtime lane only after real UE import/QC |
