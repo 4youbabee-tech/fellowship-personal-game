@@ -3043,3 +3043,21 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Visible Shire + human characters | PRIMARY DELIVERY TARGET |
 | Low-spec DX11 / 720p / 30 FPS architecture constraints | UNCHANGED |
 | PIE/device/visual/FPS claims without direct evidence | FORBIDDEN |
+
+## 2026-10-04 - KayKit rig technical bridge
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Ledger registration before code | COMPLETE | P1C01 KAYKIT_RIG_TECHNICAL_BRIDGE |
+| Source | AUTHORIZED | KayKit official GitHub, CC0 |
+| Final Frodo likeness | NOT CLAIMED | technical bridge only |
+| Candidate budget | LOCKED | max 2 UE4 probes |
+| Hosted direct-source/license/hash gate | SOURCE-IMPLEMENTED | exact GitHub URLs + CC0 + SHA256 |
+| ZIP/path/size safety | SOURCE-IMPLEMENTED | bounded extraction |
+| FBX static rig markers | SOURCE-IMPLEMENTED | version/Geometry/Model/LimbNode/Skin/Cluster/animation |
+| UE4 skeletal hard gate | SOURCE-IMPLEMENTED | registration/bones/assets + smoothing/bind/UV rejects |
+| Runtime hard reference | NONE ADDED | modular Frodo fallback preserved |
+| Sync heavy runtime load | NONE ADDED | later integration remains soft/async |
+| Deformation / locomotion / AnimBP | BLOCKED | clean technical winner required |
+| Exact-head Pre-Unreal / UE4 | PENDING | PR validation required |
+| PIE/device/rendered visual/FPS | NOT ACCEPTED | direct evidence required |
