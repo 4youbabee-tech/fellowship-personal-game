@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "batch_id": "WAREHOUSE_OGA_KENNEY_P1C01_ANIMATED_CHARACTERS_1_HERO_CANDIDATE_V1",
-  "status": "AUTHORIZED_FOR_TARGETED_STAGING",
+  "status": "EXHAUSTED_TECHNICAL_REJECTION",
   "provider": "OPENGAMEART",
   "creator": "Kenney",
   "license": "CC0-1.0",
@@ -28,5 +28,70 @@
     "Reject exact payload hashes already present in P1C01FrodoTechnicalRejectionHistoryV1.json.",
     "Candidate discovery does not prove UE4.27 import quality, deformation, retarget quality, final likeness, runtime integration or visual acceptance."
   ],
-  "evidence_boundary": "Source registration and bounded staging only until exact-head hosted/static and real UE4.27 technical evidence complete."
+  "evidence_boundary": "Exact archive/static evidence plus real UE4.27 skeletal registration exists, but the only skinned model payload is technically rejected. This source family is exhausted for current Frodo promotion. No deformation, retarget, AnimBP, runtime, PIE/device/visual/performance acceptance.",
+  "exact_source_evidence": {
+    "archive_sha256": "9cc53e82c941781f26aa8fb39d40887cf14b1d74cca2d10ccc6e7c140a68f820",
+    "archive_bytes": 718021,
+    "fbx_count": 4,
+    "entries": [
+      {
+        "entry": "Animations/idle.fbx",
+        "bytes": 608188,
+        "sha256": "c8a24e0294376ee5a195c56752a13310e1c0b5f8588a4db50e094120e3e4cc74",
+        "fbx_version": 7400,
+        "limb_node": true,
+        "skin": false,
+        "cluster": false,
+        "animation": true,
+        "static_pass": false
+      },
+      {
+        "entry": "Animations/jump.fbx",
+        "bytes": 562796,
+        "sha256": "b88429077a7a1af5d3f55f43cfd8ce0f7441b4f6f7bb15a8070d7ed15d275f74",
+        "fbx_version": 7400,
+        "limb_node": true,
+        "skin": false,
+        "cluster": false,
+        "animation": true,
+        "static_pass": false
+      },
+      {
+        "entry": "Animations/run.fbx",
+        "bytes": 572732,
+        "sha256": "e635461fc8dace85ec67a7f7941e949a7c3f108b51ae4d2da1557e6e01749df8",
+        "fbx_version": 7400,
+        "limb_node": true,
+        "skin": false,
+        "cluster": false,
+        "animation": true,
+        "static_pass": false
+      },
+      {
+        "entry": "Model/characterMedium.fbx",
+        "bytes": 167212,
+        "sha256": "18835fef534eede635b081ee7fe647d01a885550a591d2e6bf071010906167d8",
+        "fbx_version": 7400,
+        "limb_node": true,
+        "skin": true,
+        "cluster": true,
+        "animation": false,
+        "static_pass": true
+      }
+    ]
+  },
+  "ue4_technical_result": {
+    "workflow": "P1C01 Frodo Kenney Animated Human Breakthrough #5",
+    "exact_head": "e40b8204af3ef7e47cfb186eac8504416d57dacb",
+    "candidate": "Model/characterMedium.fbx",
+    "payload_sha256": "18835fef534eede635b081ee7fe647d01a885550a591d2e6bf071010906167d8",
+    "skeletal_registered": true,
+    "ue4_bones": 59,
+    "result": "REJECTED_TECHNICAL",
+    "reasons": [
+      "MISSING_SMOOTHING_GROUPS",
+      "MISSING_BIND_POSE_BONES"
+    ],
+    "runtime_integration_allowed": false
+  }
 }
