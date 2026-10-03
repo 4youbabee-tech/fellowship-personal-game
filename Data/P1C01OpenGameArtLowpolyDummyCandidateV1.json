@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "batch_id": "P1C01_FRODO_OGA_LOWPOLY_DUMMY_CANDIDATE_V1",
-  "status": "HOSTED_SOURCE_INVENTORY_ACTIVE",
+  "status": "REJECTED_TECHNICAL_UE4_41_BONES_SMOOTHING_BIND_POSE",
   "provider": "OPENGAMEART",
   "creator": "Umplix",
   "license": "CC0-1.0",
@@ -39,5 +39,57 @@
     "ram_gb": 8,
     "vram_gb_class": 2
   },
-  "evidence_boundary": "Public CC0 source registration plus hosted archive inventory only. No UE4 import, deformation, retarget, final Frodo likeness, runtime, PIE, device, visual or performance acceptance."
+  "evidence_boundary": "Hosted source inventory passed, and exact Idle FBX payload imported as a UE4.27 skeletal mesh with 41 bones, but the payload is technically rejected for missing smoothing-group information and missing bind-pose bones. No deformation, retarget, AnimBP, runtime, PIE, device, visual, likeness or performance acceptance.",
+  "hosted_inventory_evidence": {
+    "workflow": "P1C01 Frodo Lowpoly Dummy Source Inventory #5",
+    "archive_sha256": "fe31806ca6252b4bfed6f491b92e3535e71dd8342924e453bbe9f12ea9f53d1c",
+    "archive_bytes": 363048,
+    "fbx_count": 3,
+    "technical_candidate_count": 3,
+    "entries": [
+      {
+        "name": "Lowpoly Dummy Character/Lowpoly Dummy Character Idle Anim.fbx",
+        "bytes": 442604,
+        "fbx_version": 7400,
+        "limb_node": true,
+        "skin": true,
+        "cluster": true,
+        "animation": true
+      },
+      {
+        "name": "Lowpoly Dummy Character/Lowpoly Dummy Character Walk Anim.fbx",
+        "bytes": 446860,
+        "fbx_version": 7400,
+        "limb_node": true,
+        "skin": true,
+        "cluster": true,
+        "animation": true
+      },
+      {
+        "name": "Lowpoly Dummy Character/Lowpoly Dummy Character Run Anim.fbx",
+        "bytes": 428588,
+        "fbx_version": 7400,
+        "limb_node": true,
+        "skin": true,
+        "cluster": true,
+        "animation": true
+      }
+    ]
+  },
+  "ue4_technical_probe": {
+    "workflow": "P1C01 Frodo OGA Lowpoly Dummy UE4 Technical Probe #1",
+    "exact_head": "ffaa3f6718a92b68f5112b040643846df277cd67",
+    "source_entry": "Lowpoly Dummy Character/Lowpoly Dummy Character Idle Anim.fbx",
+    "payload_sha256": "00177d777d324e2eb807f5f94b573026c94226c6574267900213863a0dc8014d",
+    "payload_bytes": 442604,
+    "fbx_version": 7400,
+    "skeletal_registered": true,
+    "ue4_bones": 41,
+    "result": "REJECTED_TECHNICAL",
+    "reasons": [
+      "MISSING_SMOOTHING_GROUPS",
+      "MISSING_BIND_POSE_BONES"
+    ],
+    "runtime_integration_allowed": false
+  }
 }
