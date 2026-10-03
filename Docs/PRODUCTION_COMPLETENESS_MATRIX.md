@@ -2803,3 +2803,7 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Exact FBX file discovery | PENDING | must identify door/window/frame/trim files |
 | Static FBX/UV/material QC | PENDING | before UE reservation |
 | Runtime integration | BLOCKED | single runtime lane only after real UE import/QC |
+
+
+| #278 first classifier decision | FULL / CORRECT-BY-PATH | test script change triggered full Unreal |
+| Hosted-only correction | SOURCE-REPAIRED | test-script delta reverted; classifier policy unchanged |
