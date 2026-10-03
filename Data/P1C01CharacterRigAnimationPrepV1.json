@@ -106,11 +106,12 @@
     {
       "provider": "OPENGAMEART",
       "id": "OGA_KENNEY_ANIMATED_CHARACTERS_1_CC0",
-      "state": "AUTHORIZED_FOR_STAGING",
+      "state": "REJECTED_TECHNICAL_DO_NOT_RESTAGE",
       "required_final_format": "FBX",
       "observed_page_license": "CC0",
       "license_capture": "OFFICIAL_OPENGAMEART_KENNEY_UPLOAD_VERIFIED_2026_10_03",
-      "intended_use": "INDEPENDENT_ANIMATED_HUMANOID_FRODO_RIG_BASE_QC_CANDIDATE_NOT_FINAL_LIKENESS"
+      "intended_use": "INDEPENDENT_ANIMATED_HUMANOID_FRODO_RIG_BASE_QC_CANDIDATE_NOT_FINAL_LIKENESS",
+      "disposition": "Exact characterMedium payload registered 59 UE4 bones but failed smoothing-group and bind-pose gates; source family closed for Frodo promotion."
     },
     {
       "provider": "OPENGAMEART",
