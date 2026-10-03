@@ -1085,3 +1085,9 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Continues the existing Bag End Hero Ring source requirement only; no new world/detail concept is introduced.
 - Current architectural primitive fallbacks remain untouched until an exact replacement passes provenance, static QC and real UE4 import.
 - No story, quest, NPC, save, traversal, streaming or runtime placement authority changes.
+
+## 2026-10-03 - Bag End hero trim exact-file candidates
+
+- Existing Bag End Hero Ring requirement is refined to exact modular FBX candidates; no new lore/detail concept is added.
+- Candidate geometry is limited to round door/doorway/window support consistent with the already-recorded circular domestic geometry requirement.
+- Current primitive architectural fallbacks remain untouched until official receipt, static QC and real UE4 import succeed.

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "packet_id": "P1C01_BAG_END_HERO_TRIM_SOURCE_PROBE_V1",
-  "status": "SOURCE_PREPRODUCTION_ACTIVE",
+  "status": "EXACT_FILE_DISCOVERY_COMPLETE_OFFICIAL_RECEIPT_PENDING",
   "runtime_chapter": "P1C01",
   "runtime_integration_allowed": false,
   "objective": "Find an exact, production-usable modular FBX source family for Bag End hero round-door/window/trim support before any architectural primitive fallback is removed.",
@@ -82,6 +82,136 @@
     "runtime binding in single serialized runtime lane",
     "PIE/device/visual acceptance later"
   ],
-  "evidence_boundary": "SOURCE-IMPLEMENTED only. Fresh hosted Pre-Unreal/classifier evidence required. No staged asset, UE import, runtime replacement, PIE/device/visual acceptance.",
-  "refresh_base": "071a0ed2632c4919ed9160b817a965ed3b1eb76c"
+  "evidence_boundary": "EXACT FILE DISCOVERY COMPLETE. Official Kenney receipt, binary static FBX QC, UE import, runtime binding, PIE/device/visual acceptance remain pending.",
+  "refresh_base": "071a0ed2632c4919ed9160b817a965ed3b1eb76c",
+  "exact_file_discovery": {
+    "status": "COMPLETE_FOR_KENNEY_BUILDING_KIT_CANDIDATE_SET",
+    "official_source_authority": {
+      "provider": "KENNEY",
+      "source_id": "BUILDING_KIT",
+      "source_page": "https://kenney.nl/assets/building-kit",
+      "observed_license": "CC0",
+      "observed_file_count": 80,
+      "observed_pack_capability": "3D building kit; Kenney distribution states walls/floors with doors and windows; FBX available.",
+      "authority_rule": "Official Kenney source remains provenance/license authority. Discovery mirror is not production provenance."
+    },
+    "immutable_discovery_mirror": {
+      "repository": "series-ai/jam-ready-assets",
+      "revision": "9cd5db46c2c66b8ca9c66733bd5d18191d8d593a",
+      "purpose": "Filename and Git-LFS payload identity discovery only.",
+      "tree_response_truncated": true,
+      "production_receipt_authority": false
+    },
+    "candidate_files": [
+      {
+        "role": "ROUND_DOOR_LEAF",
+        "file": "door-rotate-round-a.fbx",
+        "git_blob_sha": "5c652c27a0d3995b9e1ef564a5035baa62b28e2c",
+        "payload_sha256": "1c9dcfd007c5a8fa6d7455f725ca66cc0bd3f728092d5763fb9c5089ea6f93f6",
+        "size_bytes": 64176,
+        "rank": 1
+      },
+      {
+        "role": "ROUND_DOOR_LEAF",
+        "file": "door-rotate-round-b.fbx",
+        "git_blob_sha": "22973698b5ee8eeef52b40f0d72cb46bbcc2ca81",
+        "payload_sha256": "77e86f74c161b34ff2007bb50381d9bbf8febfcc7ab9c7baae2552902a019b19",
+        "size_bytes": 68752,
+        "rank": 2
+      },
+      {
+        "role": "ROUND_DOOR_LEAF",
+        "file": "door-rotate-round-c.fbx",
+        "git_blob_sha": "6fd411884ed9861afb8d7da8e2f0e82f684e78ff",
+        "payload_sha256": "8bfe91ca4d4ae7c2403d01397c149cd554062496de3f1bc7059fe5e3458344a5",
+        "size_bytes": 72128,
+        "rank": 3
+      },
+      {
+        "role": "ROUND_DOOR_LEAF",
+        "file": "door-rotate-round-d.fbx",
+        "git_blob_sha": "ff1f0b4fd9dd1a42df5972131ea1803ef690b46a",
+        "payload_sha256": "f45ac637e1ebc4dffc48e91d7f7119f1bcbec5133d535b1f3e4764de21b28a0d",
+        "size_bytes": 78624,
+        "rank": 4
+      },
+      {
+        "role": "ROUND_DOORWAY_FRAME",
+        "file": "wall-doorway-round.fbx",
+        "git_blob_sha": "f2c128e0083443edacdc40fee4560f364b46e3a7",
+        "payload_sha256": "b93fc0cb38504b57a3f355fec41808dffbce28661ddf94136833148be4804616",
+        "size_bytes": 27056,
+        "rank": 1
+      },
+      {
+        "role": "ROUND_DOORWAY_FRAME",
+        "file": "wall-doorway-wide-round.fbx",
+        "git_blob_sha": "af482fbb370bf3d70cf332809ce96fd6ca1ad37d",
+        "payload_sha256": "ceb62e12eda8e8bb7cb994126ab1b1436b1bf780d5bb01e287ecc6465486fcf2",
+        "size_bytes": 27248,
+        "rank": 2
+      },
+      {
+        "role": "ROUND_WINDOW",
+        "file": "wall-window-round-detailed.fbx",
+        "git_blob_sha": "146b3087375d89320a8082c04c838a88f997e48a",
+        "payload_sha256": "709d19c98fd2f66b1c0a428bb8971460788ec25e190b4474f644d15dff606c91",
+        "size_bytes": 36672,
+        "rank": 1
+      },
+      {
+        "role": "ROUND_WINDOW",
+        "file": "wall-window-round.fbx",
+        "git_blob_sha": "96d302fd0e3ae45b83de58c25bf2c24bb440266f",
+        "payload_sha256": "b1fbba8100a8991cc550cee37093df454f165e6a5ce38e230291c3fecebcb5a4",
+        "size_bytes": 35072,
+        "rank": 2
+      },
+      {
+        "role": "ROUND_WINDOW_WIDE",
+        "file": "wall-window-wide-round-detailed.fbx",
+        "git_blob_sha": "4e387c323e245c683cc25d9b581d45a80db90056",
+        "payload_sha256": "5e2a69b30a67b5abbaecd67d83eee578bcae067b10ea7a3324c4dce790c7f9c8",
+        "size_bytes": 37552,
+        "rank": 1
+      },
+      {
+        "role": "ROUND_WINDOW_WIDE",
+        "file": "wall-window-wide-round.fbx",
+        "git_blob_sha": "a7632146b98a8adba3e710129d415f6c36ee168f",
+        "payload_sha256": "7b3f6c4cefd41d11eea50ae72fbcef3bd37b21061ab4981c1d282718dc3863ee",
+        "size_bytes": 35376,
+        "rank": 2
+      },
+      {
+        "role": "COLOR_TEXTURE",
+        "file": "colormap.png",
+        "git_blob_sha": "8bcd854698dd529de2831f4386c9e20632aaccf9",
+        "payload_sha256": "01741a46a279bef667de3143ee653d0073ed7cae925d88341281391d9220092b",
+        "size_bytes": 10051,
+        "rank": 1
+      }
+    ],
+    "primary_static_qc_subset": [
+      "door-rotate-round-a.fbx",
+      "wall-doorway-round.fbx",
+      "wall-window-round-detailed.fbx",
+      "colormap.png"
+    ]
+  },
+  "official_staging_plan": {
+    "status": "PENDING",
+    "archive_source": "Official Kenney Building Kit public download only.",
+    "archive_scope": "Stage full small archive in warehouse for receipt/provenance; do not bulk-import all models into UE.",
+    "required_receipt": [
+      "official source-page URL",
+      "download URL resolved from official page",
+      "archive SHA256",
+      "archive byte size",
+      "extraction manifest",
+      "candidate extracted-file SHA256 values"
+    ],
+    "fail_closed_match_rule": "The official extracted candidate payload SHA256 must match the discovery identities before static QC evidence may be reused. Any mismatch invalidates mirror-derived identity and requires fresh inspection.",
+    "next_gate": "Official staging receipt -> binary static FBX QC -> real UE4.27.2 static-mesh import."
+  }
 }
