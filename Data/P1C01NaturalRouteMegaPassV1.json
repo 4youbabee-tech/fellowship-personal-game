@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "packet_id": "P1C01_NATURAL_ROUTE_MEGA_PASS_V1",
+  "status": "SOURCE_IMPLEMENTED_EXACT_HEAD_VALIDATION_PENDING",
+  "strategy": "MAXIMUM_SAFE_VERTICAL_SLICE_GROWTH",
+  "runtime_chapter": "P1C01",
+  "runtime_writer": "AShirePrototypeWorldBuilder",
+  "route": [
+    "Bag End",
+    "Hobbiton",
+    "worked fields",
+    "wooded road",
+    "Bucklebury Ferry"
+  ],
+  "purpose": "Make the already-active Shire chapter feel materially larger and more natural before the owner reopens Unreal, without opening P1C02 or adding backend-only scope.",
+  "implementation": {
+    "route_shoulder_grass_instances_up_to": 1304,
+    "route_shoulder_stones_up_to": 163,
+    "route_shrub_pockets_up_to": 64,
+    "route_rocks_up_to": 40,
+    "terrain_bank_instances_up_to": 51,
+    "vista_trees_up_to": 72,
+    "river_reeds_up_to": 64,
+    "total_new_hism_instances_up_to": 1758,
+    "notes": [
+      "Counts are source-level maxima when every required resident production mesh is available.",
+      "Each lane fails soft when its production mesh is not resident.",
+      "No decorative instance owns Tick or NPC lifecycle."
+    ]
+  },
+  "architecture": {
+    "repeated_detail": "existing HISM components only",
+    "heavy_loading": "no new synchronous load path",
+    "content_references": "already-resident production meshes only",
+    "npc_population_owner": "ALivingWorldDirector",
+    "npc_context_owner": "UShireNPCContextSubsystem",
+    "quest_story_owner": "UShireQuestSubsystem",
+    "collision": "new route-breakup instances are decorative/non-colliding"
+  },
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_class": 2
+  },
+  "validation_required": [
+    "Pre-Unreal exact head",
+    "UE4.27.2 build/import/runtime/package lane exact head",
+    "later human PIE/device/rendered visual/performance review"
+  ],
+  "evidence_boundary": "Source implementation and machine validation only until exact-head workflows complete. No rendered visual, PIE, device or FPS acceptance is claimed."
+}
