@@ -3649,6 +3649,168 @@ Acceptance truth remains narrow: machine proof may support STATIC/COMPILE/headle
 - The new parser/test helper paths are also classified as runner-maintenance and ignored by the UE device lane in both push and PR path filters, preventing infrastructure-only edits from consuming the single UE4 runner.
 - Status: **SOURCE-FIXED / FRESH EXACT-HEAD PRE-UNREAL PENDING**.
 
+## 2026-10-02 - P1C01 Party Field primitive-overlay suppression
+
+- Implemented the registered Party Field cleanup after the Ferry/Wooded Road runtime pass merged green.
+- `SpawnVillage()` no longer leaves its large cube centerpiece underneath the later resident `SM_ShPicnicCanopy` production placement. The cube is now fallback-only when `ProductionPicnicCanopyMesh` is not resident.
+- No story anchor, quest state, NPC ownership, collision contract, asset-loading policy or P1C02 runtime state changed.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD UE4.27.2 BUILD + RUNTIME AUDIT PENDING**. No PIE/device/visual/performance acceptance claim.
+
+## 2026-10-02 - Party Field #1268 compile root fix
+
+- Unreal Build #1268 reached the real UE4.27.2 C++ compiler and failed at `ShirePrototypeWorldBuilder.cpp(1191)` with `C2065: ProductionPicnicCanopyMesh: undeclared identifier`.
+- Root cause: the Party Field fallback-suppression branch referenced a member that does not exist; the actual resident production canopy is `SM_CommonMarketCanopy`, previously resolved only as a local pointer inside the later Party social-detail pass.
+- Added one shared resident pointer `ProductionCommonMarketCanopyMesh`, resolved in `BeginPlay()` through the existing resident-only soft-path resolver, and reused it both for the early primitive-fallback gate and the later Party social pass.
+- No synchronous asset load was introduced and no story/quest/NPC authority changed.
+- Status: **SOURCE-FIXED / FRESH EXACT-HEAD UE4.27.2 BUILD PENDING**. No PIE/device/visual/performance acceptance claim.
+
+## 2026-10-02 - Maximum-safe CI lane reservation acceleration
+
+- Implemented hosted-first Unreal classification so source/preproduction/static-only PRs can be classified on `windows-latest` before the single UE4.27 laptop is reserved.
+- The self-hosted UE4 job now runs only for `full`, `core`, `asset` or `acceptance` modes; `inherit` source/admin work never enters the expensive device queue.
+- Added explicit fast-lane coverage for East Fields source planning, KayKit/alternate hero source registration and whole-game chapter production packets, with regression cases in `test_unreal_classifier.ps1`.
+- Preserved classifier outputs for package/reset/acceptance semantics so acceleration does not weaken exact-head engine gates.
+- Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD PRE-UNREAL PENDING**. No runtime, PIE, device, visual or performance acceptance claim.
+
+
+### #1643 validator reconciliation
+
+- Fresh Pre-Unreal #1643 proved the hosted classifier regression cases and PowerShell syntax, then failed only at PG-145B because the validator still searched for the retired self-hosted step name `Classify current delta for Unreal validation`.
+- PG-145B remains fail-closed: `verify_runner_session.ps1` must still precede the first self-hosted post-checkout work step. The validator is updated to recognize the hosted-preflight handoff marker instead of weakening the health requirement.
+- Status: **SOURCE-FIXED / FRESH EXACT-HEAD PRE-UNREAL PENDING**.
+
+## 2026-10-02 - Hosted Unreal classifier exact-base diff fix
+
+- East Fields refresh exposed a real acceleration defect: hosted classification used `fetch-depth: 2`, so multi-commit PR ancestry could not resolve the exact develop base and correctly fell back to `mode=full`.
+- Hosted preflight now checks out full history (`fetch-depth: 0`) before classification, allowing exact base/head diff without reserving the UE4 laptop for source-only work.
+- Pre-Unreal now guards this full-history + self-hosted-skip contract.
+- Status: **SOURCE-FIXED / FRESH EXACT-HEAD PRE-UNREAL PENDING**. No runtime/PIE/device/visual/performance acceptance claim.
+
+## 2026-10-02 - Hosted classifier local-history-first ancestor proof
+
+- East Fields source-only run proved the UE laptop skip worked, but the hosted classifier still went red because the governance-ancestor proof performed an unnecessary private-repo `git fetch` after credentials had been scrubbed.
+- The classifier now consumes the full local hosted history first and fetches only when ancestry is genuinely absent.
+- This preserves `persist-credentials: false`, keeps the UE job skipped for source-only work, and retains fail-closed behavior when history really is unavailable.
+- Status: **SOURCE-FIXED / FRESH EXACT-HEAD PRE-UNREAL PENDING**.
+
+## 2026-10-02 - East Fields row replacement source plan
+
+- Added `Data/P1C01EastFieldsRowReplacementV1.json` after deep scan identified twelve long cube strips still used as visible crop rows in the East Fields.
+- Runtime work is predecessor-gated behind the current Party Field serialized runtime cleanup; this branch does not mutate runtime.
+- Planned replacement uses one bounded zero-Tick/no-collision instanced cluster and existing resident production vegetation before any new asset acquisition.
+- Status: **SOURCE-IMPLEMENTED / RUNTIME PREDECESSOR-GATED**. No PIE/device/visual/performance acceptance claim.
+
+## 2026-10-02 - East Fields bounded HISM row runtime implementation
+
+- Implemented the registered East Fields row replacement on top of the source-registration ancestry after Party Field #253 merged exact-head green.
+- Added one dedicated `UHierarchicalInstancedStaticMeshComponent` owned by `AShirePrototypeWorldBuilder`; no Actor-per-row/per-plant spawning, no Tick and no collision.
+- Production mode uses resident `ProductionGrassClumpMesh` with exactly 12 x 8 = 96 deterministic instances, cull band 900-6500 cm and no shadows; the twelve long cube strips remain fallback-only when the resident mesh is unavailable.
+- Existing async/resident asset ownership, quest/NPC/LivingWorld authority and P1C02 gate remain unchanged.
+- Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD PRE-UNREAL + UE4.27.2 PENDING**. No PIE/device/visual/performance acceptance claim.
+
+## 2026-10-02 - KayKit Adventurers alternate Frodo source family registration
+
+- Registered immutable KayKit Adventurers revision `672074b73ba276876a19e8816ecdc5241817ab47` as a bounded alternate Frodo rig-base source family after the original five Quaternius candidates were technically rejected and the alternate Quaternius RPG ranked rows failed static skeletal structure.
+- `KAYKIT_ADVENTURERS_CC0` is now admitted by the existing P1C01 character-intake and Frodo static-QC source allowlists.
+- This branch is source/preparation only. It does not stage/import/promote a character by itself and does not authorize runtime replacement.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING**. No deformation, retarget, PIE, device, visual or performance acceptance claim.
+
+
+## 2026-10-03 - KayKit Knight V2 bounded technical probe refresh
+
+- Refreshed the second KayKit Adventurers technical rig-base probe on current `develop` ancestry using immutable revision `672074b73ba276876a19e8816ecdc5241817ab47`.
+- Candidate is `Knight.fbx` only, recorded as `KAYKIT_ADVENTURERS_KNIGHT_CC0`, with source Git blob `101848795913dea0d37ac3ec9352fdf9dd024010`.
+- This lane is deliberately source-only. It does not authorize Frodo likeness selection, runtime replacement, retarget, animation or chapter authority changes.
+- Next gate remains staging receipt + static FBX QC; real UE4.27.2 skeletal import is allowed only after those gates pass.
+- Status: **SOURCE-IMPLEMENTED / STATIC QC PENDING**. No UE import, PIE, device, visual or performance acceptance claim.
+
+
+## 2026-10-03 - Branch lifecycle cleanup root fix
+
+- Live audit confirmed the Actions branch filter mixes historical branch names with live refs; for example the exact #265 head was physically deleted by Branch Cleanup #137 even though its historical name can still appear in the Actions filter.
+- A real hygiene gap also existed: Branch Cleanup executed only when a closed PR had `merged == true`. Closed-unmerged superseded PR heads and orphan refresh attempts with unique commits could therefore accumulate indefinitely.
+- The cleanup workflow now runs on every PR close. It deletes the exact closed head only when the ref is non-canonical, not an active PR head, and its current remote SHA still equals the closed PR head SHA. A moved ref is preserved as new work.
+- A verified stale batch is recorded in `Data/BranchCleanupPlan.json` for retirement after this maintenance merge; current open PR heads remain protected.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD HOSTED VALIDATION PENDING**. Repository hygiene only; no UE/PIE/device/visual claim.
+
+
+### 2026-10-03 - Branch cleanup validation repair
+
+- Pre-Unreal Validation #1671 **FAILED** at the PG-167 project-structure contract, not at PowerShell parsing. The failure correctly exposed that the validator still required the old `MERGED_HEAD_*` contract and that the workflow environment had not yet switched to `CLOSED_HEAD_*`.
+- Repair on PR #268 updates the workflow environment, PG-167 validation contract, and the single Project Governor `REQ-EXEC-002` so closed-unmerged superseded PRs have an explicit salvage/disposition-before-delete lifecycle.
+- The exact-SHA moved-ref guard, active-PR guard, canonical/protected refs and hosted-only administration boundary remain fail-closed.
+- Status remains **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD PRE-UNREAL PENDING**. #1671 is failure evidence, not acceptance.
+
+### 2026-10-03 - Per-branch active PR deletion guard
+
+- Branch Cleanup #137 ended with `activePrHeads=0` even though PR #264 was already open, so global open-head discovery is not accepted as the sole deletion safety boundary.
+- Every deletion path now performs a second, branch-specific GitHub API query for an open PR whose `head=owner:branch`. API failure is fatal; an active result blocks deletion.
+- The guard applies both to exact closed-head deletion and explicit/zero-ahead cleanup through `Remove-RemoteBranch`.
+- This is a safety hardening, not a cleanup-gate relaxation. Fresh exact-head validation remains pending.
+
+
+## 2026-10-03 - Branch Cleanup #138 active-head batch fix
+
+- Branch Cleanup #138 **FAILED** after correctly detecting `ops/actions-budget-isolation-v1` as an active PR head. The safety decision was correct, but `Remove-RemoteBranch` threw and aborted retirement of all unrelated stale refs.
+- Repair changes active-PR handling from fatal exception to explicit `BRANCH_CLEANUP_KEEP_ACTIVE_PR` + continue. Canonical/protected/moved-ref guards remain fail-closed.
+- Project Governor `REQ-EXEC-002` now requires active heads to be preserved without blocking unrelated stale cleanup.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL PENDING**. #138 remains failure evidence only.
+
+
+## 2026-10-03 - Branch Cleanup empty open-PR response repair
+
+- Branch Cleanup #138 exposed a second safety-path bug: PowerShell wrapped an empty GitHub REST response as `@($null)`, yielding `Count=1` and falsely classifying dead refs as active.
+- Fresh current-develop repair now filters null responses and requires an exact `head.ref == branch` match before a branch is considered active.
+- API failures remain fatal/fail-closed. The already-merged KEEP + CONTINUE behavior for truly active PR heads remains intact.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL PENDING**.
+
+
+## 2026-10-03 - Stale branch retirement wave 2
+
+Prepared a second governed cleanup wave while Branch Cleanup #140 processes the first batch. This wave adds only four refs with explicit dispositions:
+- merged #268 maintenance head left behind by the earlier failed cleanup;
+- closed audio provenance PR #241, explicitly superseded by merged #243;
+- closed whole-game chapter packet PR #246, superseded as execution branch by current refresh #262;
+- closed queued-mega-waves PR #239, explicitly superseded by merged #244 / ContinuousProductionWaveQueueV2.
+
+This PR must not merge until the currently running cleanup finishes, so the cleanup concurrency group is not cancelled mid-batch.
+Status: **SOURCE-IMPLEMENTED / HOSTED VALIDATION PENDING**.
+
+
+## 2026-10-03 - Stale branch retirement wave 3
+
+- Prepared final maintenance-only cleanup for three closed/superseded refs: PR #270, PR #272 and PR #273 heads.
+- #270 is superseded by merged #271; #272 is superseded by merged #271 + #274; #273's optional fast-path was intentionally dropped after Branch Cleanup #140 and #141 both completed successfully under the current implementation.
+- No active PR head or gameplay/runtime/source authority is included.
+- Status: **SOURCE-IMPLEMENTED / HOSTED VALIDATION PENDING**.
+
+
+## 2026-10-03 - Final stale maintenance retirement + active-queue compaction
+
+Wave 3 now retires four live-but-dead refs: closed PR #270, closed PR #272, closed PR #273, and closed runtime PR #263. The #263 disposition is grounded in the current visible-world contract: hero round-door/window/trim support remains a source need and fallback removal is forbidden until exact replacement import/QC evidence exists.
+
+The active `delete_after_merge` queue is compacted from 95 historical entries to these four live deletion targets. Historical dispositions remain preserved elsewhere in `BranchCleanupPlan.json`; absent refs are no longer re-queried on every cleanup run.
+
+Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD PRE-UNREAL PENDING**.
+
+
+## 2026-10-03 - Final live-branch hygiene closeout
+
+Live-ref audit after Branch Cleanup #142:
+- total live refs: **15**;
+- canonical/recovery refs: `develop`, `main`, `archive/pre-build-salvage-20260930`;
+- open PR heads: **9**;
+- unresolved unique-content refs without open PRs: **3**, now explicitly protected pending selective salvage.
+
+The three pending-salvage refs are:
+- `mega/p1c01-production-train-v1@793a57f8...`: contains P1C01 mega/visual packet files absent from develop;
+- `prep/f2-03-edoras-mega-source-v1@46d2d26f...`: unique Edoras packet/regression content absent from develop;
+- `prep/f2-03-edoras-mega-source-v2@d616be0c...`: independent later Edoras source lineage requiring selective reconciliation.
+
+The active `delete_after_merge` execution queue is now cleared to zero because all reviewed dead refs have been physically retired. Historical dispositions remain recorded in audit sections.
+
+Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptance claim.
+
 ## 2026-10-02 - KayKit Adventurers alternate Frodo source family registration
 
 - Registered immutable KayKit Adventurers revision `672074b73ba276876a19e8816ecdc5241817ab47` as a bounded alternate Frodo rig-base source family after the original five Quaternius candidates were technically rejected and the alternate Quaternius RPG ranked rows failed static skeletal structure.

@@ -2637,6 +2637,158 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Runner PG-145 split-helper compatibility | SOURCE-FIXED | Validator now checks watchdog + timestamp helper as one contract; fresh exact-head Pre-Unreal pending |
 | Runner maintenance UE queue isolation | SOURCE-FIXED | New helper/test paths are maintenance-safe and path-filtered off Unreal push/PR triggers |
 
+## 2026-10-02 - P1C01 Party Field primitive-overlay suppression
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Party Field large cube centerpiece | SOURCE-IMPLEMENTED | Suppressed when resident `SM_ShPicnicCanopy` is available; deterministic fallback retained |
+| Story / quest / NPC authority | UNCHANGED | No state or population ownership changes |
+| Runtime loading | UNCHANGED | Existing resident mesh pointer reused; no synchronous heavy load added |
+| Exact-head UE4 compile/runtime audit | PENDING | Required before merge |
+| PIE / device / visual / performance acceptance | NOT ACCEPTED | No matching evidence |
+
+| Party Field #1268 compile blocker | SOURCE-FIXED | Replaced undeclared `ProductionPicnicCanopyMesh` reference with shared resident `ProductionCommonMarketCanopyMesh`; exact-head UE4 build pending |
+
+## 2026-10-02 - Maximum-safe CI lane reservation acceleration
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Hosted Unreal preflight classifier | SOURCE-IMPLEMENTED | Decides engine requirement before reserving UE4 machine |
+| Source/preproduction fast lanes | SOURCE-IMPLEMENTED | East Fields plan, KayKit/alternate source registration and whole-game packets stay hosted/static when parent proof is valid |
+| UE4 device lane reservation | SOURCE-IMPLEMENTED | Reserved only for full/core/asset/acceptance modes |
+| Classifier regression coverage | SOURCE-IMPLEMENTED | New source-only cases added to test_unreal_classifier.ps1 |
+| Exact-head static validation | PENDING | Fresh Pre-Unreal required before merge |
+| Runtime / PIE / device / visual / performance acceptance | NOT ACCEPTED | No matching evidence |
+
+| Hosted-classifier PG-145B reconciliation | SOURCE-FIXED | Validator recognizes hosted-preflight handoff while preserving runner-health-before-heavy-work invariant; fresh exact-head Pre-Unreal pending |
+
+| Hosted classifier exact-base diff | SOURCE-FIXED | Full hosted history required before Unreal impact classification; source-only work must not fail-safe to UE solely because PR ancestry exceeds shallow depth |
+
+| Hosted ancestor proof network avoidance | SOURCE-FIXED | Full local hosted history is consumed before any fallback fetch; private-repo credentials remain non-persistent and source-only UE reservations stay skipped |
+
+## 2026-10-02 - East Fields row replacement plan
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Twelve cube crop-row strips | STATIC-IDENTIFIED | Current builder source |
+| Instanced production-row replacement | SOURCE-IMPLEMENTED PLAN | <=1 cluster / <=96 instances / no collision / no Tick |
+| Runtime implementation | PREDECESSOR-GATED | Wait for current Party Field runtime pass to merge green |
+| New acquisition | NOT REQUIRED BY DEFAULT | Reuse resident production vegetation first |
+| PIE / device / visual / performance acceptance | NOT ACCEPTED | No matching evidence |
+
+| East Fields 12 cube crop strips | SOURCE-REPLACED | Dedicated builder-owned HISM path; primitive rows fallback-only |
+| East Fields production row instances | SOURCE-IMPLEMENTED | 96 deterministic resident `SM_ShGrassClump` instances, no collision/no Tick/no shadow, cull 900-6500 cm |
+| East Fields exact-head UE4 compile/runtime audit | PENDING | Requires fresh current-develop ancestry after source registration merges |
+| East Fields PIE / device / visual / performance acceptance | NOT ACCEPTED | No matching human/device evidence |
+
+## 2026-10-02 - KayKit Adventurers alternate Frodo source family
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| KayKit Adventurers immutable source registration | SOURCE-IMPLEMENTED | Revision `672074b73ba276876a19e8816ecdc5241817ab47` |
+| Character-intake admission | SOURCE-IMPLEMENTED | `KAYKIT_ADVENTURERS_CC0` added to external candidate manifest |
+| Frodo static-QC source admission | SOURCE-IMPLEMENTED | Source asset ID allowlist updated |
+| Warehouse staging / UE4 skeletal import | PENDING | Separate exact-head execution required |
+| Runtime / deformation / visual acceptance | NOT ACCEPTED | No matching evidence |
+
+
+## 2026-10-03 - KayKit Knight V2 technical probe
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Immutable candidate registration | SOURCE-IMPLEMENTED | KayKit revision `672074b73ba276876a19e8816ecdc5241817ab47`, `Knight.fbx` |
+| Source blob identity | SOURCE-IMPLEMENTED | Git blob `101848795913dea0d37ac3ec9352fdf9dd024010` |
+| Warehouse staging / payload SHA256 | PENDING | Must be produced by targeted staging |
+| Static FBX skeletal QC | PENDING | Must pass before UE runner reservation |
+| UE4.27.2 skeletal import | PENDING | Same smoothing/bind-pose/UV rejection gate as Rogue |
+| Runtime / likeness / deformation / retarget | NOT AUTHORIZED | Technical probe only |
+
+
+## 2026-10-03 - Closed-PR branch lifecycle enforcement
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Root cause | IDENTIFIED | Cleanup job previously skipped closed-unmerged PRs |
+| Exact closed-head deletion | SOURCE-IMPLEMENTED | SHA-match + active-PR + canonical/protected guards retained |
+| Existing stale branch retirement | SOURCE-IMPLEMENTED | 19 verified superseded/orphan refs queued in cleanup plan |
+| Active PR protection | PRESERVED | Live open PR heads are excluded |
+| Hosted validation | PENDING | Fresh exact-head Pre-Unreal/cleanup evidence required |
+
+
+### 2026-10-03 - Branch lifecycle root-fix validation
+
+| Area | Status | Evidence |
+|---|---|---|
+| Pre-Unreal #1671 | FAILED / DIAGNOSTIC | PG-167 caught stale merged-head contract |
+| Workflow CLOSED_HEAD env | SOURCE-REPAIRED | exact close head + base/merge checkout distinction |
+| PG-167 contract | SOURCE-REPAIRED | validates closed-PR lifecycle markers |
+| Project Governor REQ-EXEC-002 | UPDATED | salvage/disposition-before-delete + live-ref audit rule |
+| Fresh exact-head validation | PENDING | new run required before merge |
+
+| Branch deletion active-PR safety recheck | SOURCE-HARDENED | Per-branch `head=owner:branch` API query before deletion; API failure blocks cleanup |
+
+
+## 2026-10-03 - Branch cleanup batch continuation
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Branch Cleanup #138 | FAILED / DIAGNOSTIC | Active PR correctly protected; batch aborted |
+| Active PR deletion behavior | SOURCE-REPAIRED | Keep + continue instead of abort |
+| Canonical / moved-ref protection | PRESERVED | No relaxation |
+| Exact-head validation | PENDING | Fresh Pre-Unreal required |
+
+
+## 2026-10-03 - Empty active-PR query repair
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Empty REST response handling | SOURCE-REPAIRED | Null-filter + exact `head.ref` match |
+| True active PR handling | PRESERVED | KEEP + CONTINUE |
+| API failure behavior | PRESERVED | Fatal / fail-closed |
+| Exact-head validation | PENDING | Fresh Pre-Unreal required |
+
+
+## 2026-10-03 - Stale branch retirement wave 2
+
+| Scope | Status | Evidence boundary |
+|---|---|---|
+| Additional disposed refs | 4 QUEUED | #268 head, #241, #246, #239 |
+| Active PR heads | EXCLUDED | none of the four has an open PR |
+| Cleanup execution | NOT STARTED | do not merge while #140 is running |
+| Hosted validation | PENDING | fresh Pre-Unreal required |
+
+
+## 2026-10-03 - Stale branch retirement wave 3
+
+| Scope | Status | Evidence boundary |
+|---|---|---|
+| Closed maintenance refs | 3 QUEUED | #270, #272, #273 heads |
+| Active PR heads | EXCLUDED | none of the three remains open |
+| Production/runtime content | UNCHANGED | maintenance-only retirement |
+| Hosted validation | PENDING | fresh Pre-Unreal required |
+
+
+## 2026-10-03 - Final branch cleanup wave
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Live dead refs targeted | 4 | #270, #272, #273, #263 heads |
+| Active delete queue | COMPACTED 95 -> 4 | historical absent refs removed from execution queue |
+| Active PR heads | EXCLUDED | none of the four targets is open |
+| #263 runtime authority | SUPERSEDED | exact replacement support still import/QC pending; #267 remains bounded writer |
+| Exact-head validation | PENDING | fresh Pre-Unreal required |
+
+
+## 2026-10-03 - Final branch hygiene closeout
+
+| Live-ref class | Count | Status |
+|---|---:|---|
+| Canonical/recovery | 3 | PRESERVED |
+| Open PR heads | 9 | ACTIVE / PRESERVED |
+| Explicit pending salvage | 3 | UNIQUE CONTENT / PRESERVED |
+| Unexplained dead refs | 0 | CLEAN |
+| Active delete queue | 0 | COMPACTED |
+
 ## 2026-10-02 - KayKit Adventurers alternate Frodo source family
 
 | Area | Status | Evidence boundary |

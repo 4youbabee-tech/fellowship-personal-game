@@ -4,7 +4,7 @@
   "authority": "Data/ProjectGovernor.json",
   "canonical_branch": "develop",
   "stable_release_branch": "main",
-  "status": "AUTOMATIC_EXACT_MERGED_HEAD_DELETE_PLUS_ZERO_AHEAD_PRUNE",
+  "status": "CLEAN_ACTIVE_DELETE_QUEUE_ZERO_WITH_EXPLICIT_PENDING_SALVAGE",
   "truth_boundary": "This plan records branch hygiene only. It does not claim PIE/device/visual acceptance.",
   "preserve": [
     {
@@ -29,89 +29,17 @@
     "Docs/BRANCH_CONSOLIDATION_AUDIT.md",
     "SHIRE_PIE_VERIFY.bat"
   ],
-  "delete_after_merge": [
-    "ops/actions-budget-isolation-v1",
-    "ops/daily-project-manager-report-v1",
-    "ops/onboarding-handoff-v2",
-    "planning/mega-production-resume-v1",
-    "planning/w01-localization-prototype-v1",
-    "planning/w01-p1c01-mega-prep-v1",
-    "warehouse/p1c01-mega-promotion-audit-v1",
-    "fix/p1c01-hero-rig-diagnostics-v1",
-    "production/f202-fangorn-gandalf-returned-maximum-safe-source-v1",
-    "production/f203-edoras-maximum-safe-source-v1",
-    "fix/warehouse-latest-receipt-authority-v1",
-    "production/f108-amon-hen-maximum-safe-v1",
-    "production/f202-fangorn-gandalf-maximum-safe-source-v1",
-    "production/p1c01-runtime-completion-train-v1",
-    "docs/main-developer-entry-20260929",
-    "governance/main-developer-entry-redirect-v1",
-    "fix/warehouse-inventory-hash-diagnostics-v1",
-    "fix/warehouse-supersession-strictmode-v2",
-    "production/p1c01-frodo-gandalf-skeletal-candidate-v1",
-    "repair/p1c01-material-intake-return-v1",
-    "repair/p1c01-pr145-preunreal-contract-v1",
-    "repair/warehouse-critical-gap-receipt-supersession-v1",
-    "maintenance/lineage-duplicate-branch-cleanup-20260930",
-    "production/p1c01-visual-economy-settings-v1",
-    "production/p1c01-visual-economy-settings-v2",
-    "production/p1c01-visual-economy-settings-v3",
-    "production/p1c01-visual-economy-settings-static-gate-v1",
-    "production/p1c01-visual-economy-settings-static-gate-v3",
-    "production/p1c01-visual-economy-settings-static-gate-v5",
-    "production/part1-finale-f107-f108-mega-train-v1",
-    "generated/p1c01-material-source-v1",
-    "production/f106-caradhras-moria-landmark-mega-v1",
-    "production/f106-caradhras-moria-mega-source-v1",
-    "production/f107-lothlorien-anduin-mega-source-v1",
-    "production/f108-breaking-fellowship-landmark-mega-source-v1",
-    "production/p1c01-acceptance-closure-train-v1",
-    "production/p1c01-architecture-audio-intake-hardening-v1",
-    "production/p1c01-architecture-interiors-props-megabatch-v1",
-    "production/p1c01-audio-provenance-capture-v1",
-    "production/p1c01-fauna-license-capture-v1",
-    "production/p1c01-graphics-settings-authority-v1",
-    "production/p1c01-graphics-settings-v7",
-    "production/p1c01-graphics-settings-v10",
-    "production/p1c01-graphics-settings-v11",
-    "production/p1c01-graphics-settings-v13",
-    "production/p1c01-graphics-settings-v14",
-    "production/p1c01-graphics-settings-v15",
-    "production/p1c01-graphics-settings-visual-economy-v1",
-    "production/p1c01-hero-rig-source-recovery-v2",
-    "production/p1c01-material-visual-binding-v1",
-    "production/p1c01-mega-prep-train-char-audio-fauna-v1",
-    "production/p1c01-salvage-from-develop-v1",
-    "production/p1c01-visual-economy-settings-v4",
-    "production/p1c01-warehouse-runnerless-backlog-v1",
-    "tooling/opencodereview-readonly",
-    "warehouse/p1c01-ready-review-v1",
-    "maintenance/final-prebuild-branch-cleanout-v1",
-    "maintenance/final-zero-ahead-sweep-v1",
-    "feature/p1c01-physical-surface-sync-v1",
-    "fix/living-world-member-cull-safety-v1",
-    "fix/living-world-member-cull-safety-v2",
-    "integration/p1c01-maximum-safe-mega-v1",
-    "prep/p1c01-cache-guard-evidence-v2",
-    "prep/p1c01-save-schema-history-v1",
-    "production/p1c01-maximum-safe-mega-build-v1",
-    "production/p1c01-maximum-safe-mega-train-v1",
-    "maintenance/ci-rootfix-branch-retirement-v1",
-    "planning/ancient-lore-carcharoth-ledger-v1",
-    "maintenance/carcharoth-ledger-retire-v1",
-    "production/p1c01-target-device-gate67-v1",
-    "tooling/p1c01-local-visual-bootstrap-v1",
-    "integration/p1c01-gate67-visual-bootstrap-reconcile-v1"
-  ],
+  "delete_after_merge": [],
   "safety_rules": [
     "Never delete develop or main.",
     "Never delete an active PR head.",
-    "On every merged PR close event, delete the exact merged head ref immediately only when the remote SHA still equals the merged PR head SHA; if the ref moved, preserve it as new work.",
+    "On every PR close event, delete the exact closed head ref only when the remote SHA still equals the PR head SHA; if the ref moved, preserve it as new work.",
     "After exact merged-head closeout, enumerate live refs once and delete non-protected, non-active-PR branches only when GitHub reports zero commits ahead of develop.",
     "delete_after_merge is an explicit deletion supplement for reviewed superseded/divergent refs, not the sole discovery source.",
     "Never bulk-merge or auto-delete a divergent branch with unique commits; selectively salvage or explicitly supersede it first.",
     "Branches with unresolved unique commits remain protected until reviewed.",
-    "Cleanup runs only from an exact-head develop merge checkout on GitHub-hosted Windows."
+    "Cleanup runs only from an exact-head develop merge checkout on GitHub-hosted Windows.",
+    "A PR must not be closed while it is the only named salvage source; salvage or record the exact commit SHA first. Closing a PR declares that branch lifecycle finished."
   ],
   "final_audit": {
     "status": "FINAL_LEGACY_REF_RETIREMENT_AUTHORIZED",
@@ -133,6 +61,21 @@
     {
       "branch": "archive/pre-build-salvage-20260930",
       "reason": "non-execution recovery anchor containing the captured legacy branch heads as commit parents; preserve for selective forensic recovery only"
+    },
+    {
+      "branch": "mega/p1c01-production-train-v1",
+      "head_sha": "793a57f8da8ded10bf031e2686f3573193ae2458",
+      "reason": "Unique unsalvaged P1C01 production packet content remains; Data/P1C01ShireMegaChapterPackV1.json and Data/P1C01VisualProductionMegaWaveV2.json are absent from current develop. Preserve until selective salvage/reconciliation."
+    },
+    {
+      "branch": "prep/f2-03-edoras-mega-source-v1",
+      "head_sha": "46d2d26f17024057608447e0d8a69c1bfc27be1b",
+      "reason": "Unique F2-03 Edoras source-preproduction content remains and Data/F2_03EdorasMegaSourcePreproductionV1.json / its regression guard are absent from current develop. Preserve until selective reconciliation."
+    },
+    {
+      "branch": "prep/f2-03-edoras-mega-source-v2",
+      "head_sha": "d616be0c5f1178f1c5bf1997f1bb4b0b8b75b487",
+      "reason": "Independent later Edoras source-preparation lineage with unique commits not represented on current develop. Preserve until v1/v2 are reconciled selectively; do not bulk-merge."
     }
   ],
   "completed_integration_branches": [
@@ -381,5 +324,119 @@
     ],
     "rule": "Do not bulk-merge stale snapshots. Carry forward their unique current-valid contracts/tooling onto current develop, validate the reconciled exact head, merge once, then delete both stale PR heads and the reconciliation head.",
     "safety": "develop/main/archive remain protected; no Gate 6/7 acceptance is implied."
+  },
+  "branch_lifecycle_root_fix_2026_10_03": {
+    "action": "DELETE_CLOSED_PR_HEADS_AND_RETIRE_VERIFIED_SUPERSEDED_REFS",
+    "root_cause": "The prior workflow ran only when pull_request.merged == true. Closed-unmerged superseded PR heads and orphan refresh attempts with unique commits therefore survived indefinitely.",
+    "new_policy": "Every pull_request closed event runs hosted cleanup. The exact head is deleted only if it is non-canonical, not an active PR head, and the live remote SHA still equals the closed PR head SHA.",
+    "verified_stale_branches": [
+      "p1c01/bag-end-entry-shrub-proxy-cleanup-2026-10-03",
+      "p1c01/east-fields-instanced-rows-runtime-2026-10-02",
+      "p1c01/frodo-skeletal-import-validation-v1",
+      "p1c01/frodo-skeletal-import-validation-v2",
+      "p1c01/frodo-skeletal-import-validation-v3",
+      "refresh/p1c01-east-fields-254-0461390",
+      "refresh/p1c01-east-fields-254-1f85e77",
+      "refresh/p1c01-east-fields-254-b32f055",
+      "refresh/p1c01-east-fields-254-fd747da",
+      "refresh/p1c01-kaykit-256-0461390",
+      "refresh/p1c01-kaykit-256-e37612f",
+      "refresh/p1c01-kaykit-256-fd747da",
+      "refresh/p1c01-party-field-253-b32f055",
+      "source/p1c01-kaykit-frodo-family-2026-10-02",
+      "source/p1c01-kaykit-knight-probe-v2-2026-10-02",
+      "refresh/ci-hosted-classifier-258-e72cd6a",
+      "fix/daily-manager-report-pipeline-v1",
+      "reconcile/daily-manager-report-pipeline-v1",
+      "reconcile/daily-manager-report-pipeline-v2"
+    ],
+    "dispositions": {
+      "p1c01/bag-end-entry-shrub-proxy-cleanup-2026-10-03": "SUPERSEDED by fresh current-develop PR #267.",
+      "p1c01/east-fields-instanced-rows-runtime-2026-10-02": "SUPERSEDED by merged East Fields runtime implementation PR #261 and its current develop state.",
+      "p1c01/frodo-skeletal-import-validation-v1": "CLOSED PR #245; superseded by later Frodo validation generations and current #257 salvage lane.",
+      "p1c01/frodo-skeletal-import-validation-v2": "CLOSED PR #247; explicitly superseded by current Frodo refresh/salvage lane.",
+      "p1c01/frodo-skeletal-import-validation-v3": "Orphan intermediate validation restore branch; current #257 is the named salvage authority.",
+      "source/p1c01-kaykit-frodo-family-2026-10-02": "CLOSED PR #252; superseded by merged #256.",
+      "source/p1c01-kaykit-knight-probe-v2-2026-10-02": "Superseded by merged fresh Knight V2 PR #265.",
+      "fix/daily-manager-report-pipeline-v1": "CLOSED PR #225; superseded by later reconciliation/current report lane.",
+      "reconcile/daily-manager-report-pipeline-v1": "CLOSED PR #228; superseded by later reconciliation/current report lane.",
+      "reconcile/daily-manager-report-pipeline-v2": "CLOSED PR #230; superseded by current report lane #233.",
+      "refresh/ci-hosted-classifier-258-e72cd6a": "Superseded infrastructure refresh; current classifier repair authority is PR #264."
+    },
+    "repeated_refresh_rule": "The East Fields, KayKit and Party Field refresh branches listed in verified_stale_branches are retired because their accepted/current successors are already represented on develop or by the named current PR.",
+    "protected_live_heads": [
+      "PR #267",
+      "PR #264",
+      "PR #263",
+      "PR #262",
+      "PR #257",
+      "PR #238",
+      "PR #237",
+      "PR #235",
+      "PR #233",
+      "PR #226"
+    ],
+    "evidence_boundary": "Repository/process hygiene only. No gameplay, compile, PIE, device, visual or performance acceptance is implied."
+  },
+  "stale_branch_retirement_wave2_2026_10_03": {
+    "action": "DELETE_AFTER_THIS_MERGE",
+    "branches": [
+      "maintenance/closed-pr-branch-lifecycle-cleanup-2026-10-03",
+      "prep/p1c01-audio-source-provenance-v1",
+      "prep/whole-game-chapter-production-packets-v1",
+      "production/queued-mega-waves-v1"
+    ],
+    "dispositions": {
+      "maintenance/closed-pr-branch-lifecycle-cleanup-2026-10-03": "Merged PR #268; branch survived only because Branch Cleanup #138 failed before closeout.",
+      "prep/p1c01-audio-source-provenance-v1": "Closed PR #241 explicitly records supersession by merged PR #243 on current ancestry.",
+      "prep/whole-game-chapter-production-packets-v1": "Closed PR #246 is superseded as execution branch by current fresh-ancestry refresh PR #262.",
+      "production/queued-mega-waves-v1": "Closed PR #239 explicitly records supersession by merged PR #244 / ContinuousProductionWaveQueueV2."
+    },
+    "safety": "No active PR heads are included. Unique content was either merged through the named successor or remains represented by the current successor PR.",
+    "evidence_boundary": "Repository/process hygiene only; no gameplay/compile/PIE/device/visual/performance acceptance."
+  },
+  "stale_branch_retirement_wave3_2026_10_03": {
+    "action": "DELETE_AFTER_THIS_MERGE_AND_COMPACT_ACTIVE_QUEUE",
+    "branches": [
+      "maintenance/fix-branch-cleanup-empty-open-pr-query-2026-10-03",
+      "maintenance/final-branch-cleanup-rootfix-2026-10-03",
+      "maintenance/branch-cleanup-fast-absent-skip-2026-10-03",
+      "p1c01/hobbit-hole-production-overlay-suppression-2026-10-03"
+    ],
+    "dispositions": {
+      "maintenance/fix-branch-cleanup-empty-open-pr-query-2026-10-03": "Closed PR #270; superseded by merged #271 on current develop.",
+      "maintenance/final-branch-cleanup-rootfix-2026-10-03": "Closed PR #272; superseded by merged #271 plus merged #274.",
+      "maintenance/branch-cleanup-fast-absent-skip-2026-10-03": "Closed PR #273; optional fast-path optimization superseded by active deletion-queue compaction.",
+      "p1c01/hobbit-hole-production-overlay-suppression-2026-10-03": "Closed PR #263; conflicts with current exact-replacement rule because hero round-door/window/trim support remains source/import-QC pending. Current bounded runtime writer is #267."
+    },
+    "compaction": {
+      "previous_active_delete_queue_count": 95,
+      "new_active_delete_queue_count": 4,
+      "rule": "Historical already-absent refs remain documented in prior audit sections but are removed from the active delete_after_merge queue once physically absent.",
+      "live_ref_basis": "2026-10-03 live branch audit after Branch Cleanup #140 and #141."
+    },
+    "safety": "No open PR head is included. develop/main/archive remain protected. No unresolved unique-content branch is included.",
+    "evidence_boundary": "Repository/process hygiene only; no gameplay/compile/PIE/device/visual/performance acceptance."
+  },
+  "final_branch_hygiene_closeout_2026_10_03": {
+    "action": "CLOSE_ACTIVE_DELETION_QUEUE_AND_PROTECT_ONLY_UNRESOLVED_UNIQUE_REFS",
+    "live_ref_audit": {
+      "total_live_refs_before_closeout_pr": 15,
+      "canonical_and_recovery": [
+        "develop",
+        "main",
+        "archive/pre-build-salvage-20260930"
+      ],
+      "open_pr_heads_count": 9,
+      "pending_salvage_count": 3,
+      "pending_salvage_branches": [
+        "mega/p1c01-production-train-v1",
+        "prep/f2-03-edoras-mega-source-v1",
+        "prep/f2-03-edoras-mega-source-v2"
+      ]
+    },
+    "active_delete_queue_count": 0,
+    "rule": "A remaining branch must be canonical/recovery, the head of an open PR, or explicitly protected pending selective salvage. No unexplained live refs remain.",
+    "evidence_boundary": "Repository/process hygiene only; no gameplay/compile/PIE/device/visual/performance acceptance."
   }
 }

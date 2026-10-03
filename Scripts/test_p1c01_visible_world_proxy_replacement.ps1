@@ -4,9 +4,10 @@ Set-StrictMode -Version Latest
 $root=Split-Path -Parent $PSScriptRoot
 $planPath=Join-Path $root "Data\P1C01VisibleWorldProxyReplacementV1.json"
 $packPath=Join-Path $root "Data\P1C01MegaChapterPackV1.json"
+$eastFieldsPath=Join-Path $root "Data\P1C01EastFieldsRowReplacementV1.json"
 $builderPath=Join-Path $root "Source\ShireJourney\Private\World\ShirePrototypeWorldBuilder.cpp"
 
-foreach($path in @($planPath,$packPath,$builderPath)){
+foreach($path in @($planPath,$packPath,$eastFieldsPath,$builderPath)){
   if(-not (Test-Path -LiteralPath $path -PathType Leaf)){
     throw "P1C01_VISIBLE_WORLD_CONTRACT_FILE_MISSING path=$path"
   }
@@ -14,6 +15,7 @@ foreach($path in @($planPath,$packPath,$builderPath)){
 
 $plan=Get-Content -LiteralPath $planPath -Raw | ConvertFrom-Json
 $pack=Get-Content -LiteralPath $packPath -Raw | ConvertFrom-Json
+$eastFields=Get-Content -LiteralPath $eastFieldsPath -Raw | ConvertFrom-Json
 $builder=Get-Content -LiteralPath $builderPath -Raw
 
 if([string]$plan.plan_id -ne "P1C01_VISIBLE_WORLD_PROXY_REPLACEMENT_V1"){
@@ -64,4 +66,28 @@ if([string]$plan.target_profile.repeated_detail -notmatch "HISM"){
   throw "P1C01_VISIBLE_WORLD_INSTANCING_POLICY_FAIL"
 }
 
-Write-Host ("P1C01_VISIBLE_WORLD_CONTRACT_PASS cells="+$cells.Count+" runtime=false sourcePlan=true")
+if([string]$eastFields.plan_id -ne "P1C01_EAST_FIELDS_ROW_REPLACEMENT_V1"){
+  throw "P1C01_EAST_FIELDS_PLAN_ID_FAIL"
+}
+if(-not [bool]$eastFields.runtime_integration_allowed){
+  throw "P1C01_EAST_FIELDS_RUNTIME_AUTHORIZATION_MISSING"
+}
+if([int]$eastFields.proposed_runtime_contract.max_instances -ne 96){
+  throw "P1C01_EAST_FIELDS_INSTANCE_BUDGET_FAIL"
+}
+if([int]$eastFields.proposed_runtime_contract.cull_start_cm -ne 900 -or [int]$eastFields.proposed_runtime_contract.cull_end_cm -ne 6500){
+  throw "P1C01_EAST_FIELDS_CULL_BUDGET_FAIL"
+}
+foreach($marker in @(
+  "EastFieldRowInstances",
+  "SetCullDistances(900, 6500)",
+  "EastFieldRowCount * InstancesPerRow == 96",
+  "AddInstanceWorldSpace",
+  "if (EastFieldRowInstances && ProductionGrassClumpMesh)"
+)){
+  if(-not $builder.Contains($marker)){
+    throw "P1C01_EAST_FIELDS_BUILDER_MARKER_MISSING marker=$marker"
+  }
+}
+
+Write-Host ("P1C01_VISIBLE_WORLD_CONTRACT_PASS cells="+$cells.Count+" eastFieldsHism=true eastFieldsMax=96 runtime=true")

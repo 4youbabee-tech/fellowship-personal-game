@@ -71,6 +71,13 @@ AShirePrototypeWorldBuilder::AShirePrototypeWorldBuilder()
     GrassInstances->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     GrassInstances->SetCastShadow(false);
 
+    EastFieldRowInstances = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("EastFieldRowInstances"));
+    EastFieldRowInstances->SetupAttachment(RuntimeRoot);
+    EastFieldRowInstances->SetMobility(EComponentMobility::Movable);
+    EastFieldRowInstances->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    EastFieldRowInstances->SetGenerateOverlapEvents(false);
+    EastFieldRowInstances->SetCastShadow(false);
+
     FlowerInstances = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("FlowerInstances"));
     FlowerInstances->SetupAttachment(RuntimeRoot);
     FlowerInstances->SetMobility(EComponentMobility::Movable);
@@ -128,6 +135,7 @@ AShirePrototypeWorldBuilder::AShirePrototypeWorldBuilder()
     // Explicit cull bands keep the first production world pass bounded on the
     // i7/8 GB/~2 GB VRAM target. These are starting budgets, not acceptance proof.
     GrassInstances->SetCullDistances(1200, 5200);
+    EastFieldRowInstances->SetCullDistances(900, 6500);
     FlowerInstances->SetCullDistances(800, 3200);
     ShrubInstances->SetCullDistances(1500, 6500);
     DistantTreeTrunkInstances->SetCullDistances(5000, 19000);
@@ -222,6 +230,7 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     ProductionCommonRiverBoatMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonRiverBoat.SM_CommonRiverBoat"));
     ProductionCommonRopePostMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonRopePost.SM_CommonRopePost"));
     ProductionCommonRopeCoilMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonRopeCoil.SM_CommonRopeCoil"));
+    ProductionCommonMarketCanopyMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonMarketCanopy.SM_CommonMarketCanopy"));
     ProductionWaterMaterial = ResolveResidentMaterial(
         TEXT("/Game/Production/Materials/M_ProductionWater.M_ProductionWater"));
 
@@ -242,6 +251,7 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     if (ProductionTreeCanopyMesh) DistantTreeCanopyInstances->SetStaticMesh(ProductionTreeCanopyMesh);
     if (ProductionRockMesh) RockInstances->SetStaticMesh(ProductionRockMesh);
     if (ProductionGrassClumpMesh) GrassInstances->SetStaticMesh(ProductionGrassClumpMesh);
+    if (ProductionGrassClumpMesh) EastFieldRowInstances->SetStaticMesh(ProductionGrassClumpMesh);
     if (ProductionShrubMesh) ShrubInstances->SetStaticMesh(ProductionShrubMesh);
     if (ProductionPathStoneMesh) PathStoneInstances->SetStaticMesh(ProductionPathStoneMesh);
 
@@ -1186,7 +1196,16 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
     // Party Field is a distinct destination north of the village center.
     const FVector PartyCenter(280.0f,1320.0f,0.0f);
     SpawnTree(PartyCenter,1.45f);
-    SpawnShape(CubeMesh,PartyCenter+FVector(300,20,50),FVector(1.6f,0.9f,0.5f),FLinearColor(0.70f,0.62f,0.38f));
+    // The later architecture pass places the resident production picnic canopy at
+    // this same story destination. Do not leave a large cube shell underneath it.
+    if (!ProductionCommonMarketCanopyMesh)
+    {
+        SpawnShape(
+            CubeMesh,
+            PartyCenter+FVector(300,20,50),
+            FVector(1.6f,0.9f,0.5f),
+            FLinearColor(0.70f,0.62f,0.38f));
+    }
     SpawnLabel(TEXT("Party Field"),PartyCenter+FVector(0,0,390),FLinearColor::White);
     if (!ProductionPicnicTableMesh)
     {
@@ -1231,11 +1250,43 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
     SpawnHobbitHole(FVector(6200,-1600,0),0.92f);
     SpawnFenceLine(FVector(5750,-1850,0),FVector(6900,-1850,0),9);
     SpawnGardenPatch(FVector(6500,-1420,0),0.95f);
-    for(int32 Row=0; Row<12; ++Row)
+    if (EastFieldRowInstances && ProductionGrassClumpMesh)
     {
-        const float Y=-1320.0f+Row*135.0f;
-        SpawnShape(CubeMesh,FVector(ShireLayout::FieldsX,Y,8),FVector(12.0f,0.10f,0.06f),
-            FLinearColor(0.30f,0.22f,0.075f),FRotator::ZeroRotator,false);
+        constexpr int32 EastFieldRowCount = 12;
+        constexpr int32 InstancesPerRow = 8;
+        static_assert(EastFieldRowCount * InstancesPerRow == 96, "East Fields row budget must remain capped at 96 instances.");
+
+        for (int32 Row = 0; Row < EastFieldRowCount; ++Row)
+        {
+            const float Y = -1320.0f + Row * 135.0f;
+            for (int32 Segment = 0; Segment < InstancesPerRow; ++Segment)
+            {
+                const float X = ShireLayout::FieldsX - 525.0f + Segment * 150.0f;
+                const float ScaleBias = 0.76f + 0.05f * static_cast<float>((Row + Segment) % 3);
+                const float Yaw = static_cast<float>((Row * 13 + Segment * 17) % 360);
+                EastFieldRowInstances->AddInstanceWorldSpace(
+                    FTransform(
+                        FRotator(0.0f, Yaw, 0.0f),
+                        FVector(X, Y, 6.0f),
+                        FVector(ScaleBias, 0.62f, ScaleBias)));
+            }
+        }
+    }
+    else
+    {
+        // Deterministic greybox fallback only when the resident production row mesh
+        // is unavailable. Production mode must not overlay cubes beneath the HISM rows.
+        for (int32 Row = 0; Row < 12; ++Row)
+        {
+            const float Y = -1320.0f + Row * 135.0f;
+            SpawnShape(
+                CubeMesh,
+                FVector(ShireLayout::FieldsX, Y, 8),
+                FVector(12.0f, 0.10f, 0.06f),
+                FLinearColor(0.30f,0.22f,0.075f),
+                FRotator::ZeroRotator,
+                false);
+        }
     }
     if (ProductionBarrelMesh)
     {
@@ -1394,8 +1445,7 @@ void AShirePrototypeWorldBuilder::SpawnPartySocialLoopPass()
         TEXT("/Game/Production/World/Common/SM_CommonLongBench.SM_CommonLongBench"));
     UStaticMesh* CommonMarketTable = ResolveResidentStaticMesh(
         TEXT("/Game/Production/World/Common/SM_CommonMarketTable.SM_CommonMarketTable"));
-    UStaticMesh* CommonMarketCanopy = ResolveResidentStaticMesh(
-        TEXT("/Game/Production/World/Common/SM_CommonMarketCanopy.SM_CommonMarketCanopy"));
+    UStaticMesh* CommonMarketCanopy = ProductionCommonMarketCanopyMesh;
     UStaticMesh* CommonWheelbarrow = ResolveResidentStaticMesh(
         TEXT("/Game/Production/World/Common/SM_CommonWheelbarrow.SM_CommonWheelbarrow"));
     UStaticMesh* CommonBarrel = ResolveResidentStaticMesh(

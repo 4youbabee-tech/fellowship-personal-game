@@ -1031,6 +1031,47 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Repeated detail remains ISM/HISM + LOD/culling; heavy runtime residency remains soft/async through the existing streaming architecture.
 - Evidence boundary: **SOURCE/STATIC BINDING PREPARATION ONLY**. No PIE/device/visual/performance acceptance claim.
 
+## 2026-10-02 - P1C01 Party Field primitive-overlay suppression
+
+- Registered a bounded visible-runtime cleanup for the existing F1-01 Party Field only.
+- Deep source inspection found that `SpawnVillage()` still always spawns a large cube centerpiece at the Party Field even though the later Hobbiton architecture pass already places the resident production `SM_ShPicnicCanopy` at the same story destination.
+- This pass removes only that duplicate greybox visual when the production canopy is resident; the cube remains a deterministic fallback when the production mesh is absent.
+- Story location, quest triggers, party-state ownership, NPC population, collision authority and chapter postconditions remain unchanged.
+- No new heavy asset load is introduced; the existing resident production pointer is reused.
+- Evidence boundary: **REGISTERED / RUNTIME CHANGE NOT YET IMPLEMENTED**. No PIE/device/visual/performance acceptance claim.
+
+## 2026-10-02 - P1C01 East Fields crop-row proxy replacement registration
+
+- Registered the next visible-world cleanup after the serialized Party Field pass: replace the twelve long non-collision cube crop-row strips in the East Fields.
+- Proposed implementation is one bounded instanced production-vegetation treatment using the existing resident production grass-clump mesh unless a more crop-appropriate already-imported production mesh is identified before runtime work.
+- Budget before implementation: <=1 zero-Tick/no-collision detail cluster, <=96 instances, start/end cull about 900/6500 cm.
+- Current cube strips remain deterministic fallback if the resident production mesh is unavailable.
+- Story geography, traversal, quest/NPC authority and P1C02 runtime remain unchanged.
+- Evidence boundary: **REGISTERED / SOURCE PREPARATION ONLY**. No PIE/device/visual/performance acceptance claim.
+
+## 2026-10-02 - P1C01 East Fields HISM crop-row implementation
+
+- The previously registered East Fields cleanup is now implemented in source on its stacked runtime lane.
+- Twelve long non-collision cube strips are replaced when `SM_ShGrassClump` is resident by one dedicated builder-owned HISM component with 96 deterministic instances total.
+- HISM budget: no Tick, no collision/overlap, no shadow, cull start 900 cm, cull end 6500 cm. Cube strips remain deterministic fallback-only.
+- No new world authority, story state, NPC state, synchronous heavy load or P1C02 activation is introduced.
+- Evidence boundary: **SOURCE IMPLEMENTATION ONLY** until fresh exact-head Pre-Unreal + UE4.27.2 validation completes; no PIE/device/visual/performance acceptance.
+
+## 2026-10-02 - Alternate Frodo source-family escalation registration
+
+- Registered a new bounded CC0 rig-base source family for Frodo candidate QC: KayKit Adventurers at immutable revision `672074b73ba276876a19e8816ecdc5241817ab47`.
+- This does not alter canon, chapter state, gameplay authority or final Frodo likeness requirements. It is only a technical rig-base source escalation after prior candidate families failed their technical gates.
+- Animated production candidates remain FBX-only; final likeness/deformation/retarget/runtime acceptance remain separately gated.
+- Status: **SOURCE REGISTERED / RUNTIME NOT AUTHORIZED**.
+
+
+## 2026-10-03 - P1C01 KayKit Knight technical source probe
+
+- Registered the already-discovered `Knight.fbx` row from the same immutable KayKit Adventurers family as a second bounded technical rig-base probe after Rogue's real UE4 technical rejection.
+- This is not a world-detail addition and introduces no runtime actor, NPC authority, story state, save state or visual placement.
+- If Knight reproduces Rogue's missing-smoothing-groups and missing-bind-pose-bones debt under the same real UE4.27.2 gate, treat the KayKit export family as a technical closure candidate before spending runs on Mage/Barbarian.
+- Evidence boundary: **SOURCE REGISTRATION ONLY** until staging/static/UE evidence exists.
+
 ## 2026-10-02 - Alternate Frodo source-family escalation registration
 
 - Registered a new bounded CC0 rig-base source family for Frodo candidate QC: KayKit Adventurers at immutable revision `672074b73ba276876a19e8816ecdc5241817ab47`.

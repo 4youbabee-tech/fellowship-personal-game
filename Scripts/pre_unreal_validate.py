@@ -5284,21 +5284,22 @@ if "runs-on: windows-latest" not in pg167_cleanup:
     fail("PG-167 Branch Cleanup must run on GitHub-hosted Windows so administration never occupies the supervised UE4 runner")
 if "- self-hosted" in pg167_cleanup or "- ue4-27" in pg167_cleanup:
     fail("PG-167 Branch Cleanup must not consume the supervised UE4 runner")
-for pg167_post_merge_symbol in [
+for pg167_post_close_symbol in [
     "pull_request:",
     "- closed",
     "github.event.pull_request.merged == true",
     "github.event.pull_request.merge_commit_sha",
+    "github.event.pull_request.base.sha",
     "github.event.pull_request.head.ref",
     "github.event.pull_request.head.sha",
-    "MERGED_HEAD_REF",
-    "MERGED_HEAD_SHA",
+    "CLOSED_HEAD_REF",
+    "CLOSED_HEAD_SHA",
     "group: branch-cleanup-${{ github.repository }}",
 ]:
-    if pg167_post_merge_symbol not in pg167_cleanup:
-        fail(f"PG-167 permanent post-merge cleanup contract missing: {pg167_post_merge_symbol}")
+    if pg167_post_close_symbol not in pg167_cleanup:
+        fail(f"PG-167 permanent post-close cleanup contract missing: {pg167_post_close_symbol}")
 if "\n  push:\n" in pg167_cleanup:
-    fail("PG-167 Branch Cleanup must not run on ordinary develop pushes; merged-PR closeout owns automatic cleanup")
+    fail("PG-167 Branch Cleanup must not run on ordinary develop pushes; closed-PR closeout owns automatic cleanup")
 for pg167_cleanup_symbol in [
     "BRANCH_CLEANUP_EXACT_CHECKOUT_PASS",
     "SHIRE_CLEANUP_ROOT",
@@ -5320,9 +5321,15 @@ for pg167_cleanup_guard in [
     "Plan-protected branch missing after cleanup",
     "BRANCH_CLEANUP_AUTO_ZERO_AHEAD",
     "BRANCH_CLEANUP_KEEP_UNIQUE",
-    "BRANCH_CLEANUP_MERGED_HEAD_DELETE",
-    "BRANCH_CLEANUP_MERGED_HEAD_MOVED",
-    "MERGED_HEAD_SHA is required",
+    "BRANCH_CLEANUP_CLOSED_HEAD_DELETE",
+    "BRANCH_CLEANUP_CLOSED_HEAD_MOVED",
+    "BRANCH_CLEANUP_CLOSED_HEAD_KEEP_ACTIVE",
+    "BRANCH_CLEANUP_ACTIVE_HEAD_RECHECK",
+    "BRANCH_CLEANUP_KEEP_ACTIVE_PR",
+    "activeBranchResponse",
+    "head.ref",
+    "Test-BranchHasOpenPull",
+    "CLOSED_HEAD_SHA is required",
     "compare/develop...",
 ]:
     if pg167_cleanup_guard not in pg167_cleanup_script:
@@ -8251,11 +8258,19 @@ for pg145_classifier_symbol in [
     'Set-Mode "asset"',
     "SHIRE_ASSET_IMPORT_ONLY",
     "editor-tool-or-p1c01-material-delta-build-import-startup-only",
+    "ANCESTOR_HISTORY_FETCH_REQUIRED",
 ]:
     if pg145_classifier_symbol not in pg145_classifier:
         fail(f"PG-145 transitive core-proof optimization missing: {pg145_classifier_symbol}")
 
 pg145_unreal_workflow = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+for pg145_hosted_classifier_symbol in [
+    "Hosted Unreal lane classifier",
+    "fetch-depth: 0",
+    "needs.classify.outputs.mode != 'inherit'",
+]:
+    if pg145_hosted_classifier_symbol not in pg145_unreal_workflow:
+        fail(f"PG-145 hosted Unreal preflight contract missing: {pg145_hosted_classifier_symbol}")
 for pg145_maintenance_path in [
     "Scripts/classify_unreal_validation.ps1",
     "Scripts/runner_watchdog.ps1",
@@ -8345,7 +8360,7 @@ if "workflow_dispatch:" not in pg145b_health_workflow or "verify_runner_session.
     fail("PG-145B manual runner health workflow is incomplete")
 
 for pg145b_path, pg145b_before in [
-    (ROOT / ".github" / "workflows" / "unreal-build-validation.yml", "Classify current delta for Unreal validation"),
+    (ROOT / ".github" / "workflows" / "unreal-build-validation.yml", "Import hosted Unreal classification"),
     (ROOT / ".github" / "workflows" / "warehouse-stage.yml", "Stage Poly Haven CC0 batch"),
 ]:
     pg145b_text = read(pg145b_path)
