@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "batch_id": "WAREHOUSE_OGA_QUATERNIUS_P1C01_RPG_HERO_CANDIDATE_V1",
+  "status": "AUTHORIZED_FOR_BOUNDED_MULTI_CANDIDATE_GAUNTLET",
+  "provider": "OPENGAMEART",
+  "creator": "Quaternius",
+  "license": "CC0-1.0",
+  "purpose": "Distinct bounded Frodo rig-base source family after Kenney Animated characterMedium failed the real UE4.27 smoothing/bind-pose gate. Scan the entire licensed RPG archive, exclude known rejected payload hashes, then probe only the highest-ranked static-pass humanoid candidates.",
+  "assets": [
+    {
+      "id": "OGA_QTN_RPG_CHARACTERS_CC0",
+      "source_page": "https://opengameart.org/content/lowpoly-rpg-characters",
+      "download_url": "https://opengameart.org/sites/default/files/rpg_characters_-_nov_2020.zip",
+      "filename": "rpg_characters_-_nov_2020.zip",
+      "observed_page_license": "CC0",
+      "required_final_format": "FBX",
+      "source_author": "Quaternius",
+      "page_verified_utc": "2026-10-02T00:00:00Z",
+      "intended_use": "Distinct humanoid rig-base/deformation/retarget candidate discovery; not final Frodo likeness.",
+      "download_kind": "ARCHIVE_ZIP",
+      "minimum_archive_bytes": 1048576
+    }
+  ],
+  "gauntlet": {
+    "maximum_ue4_candidates": 4,
+    "fbx_version_ceiling": 7500,
+    "required_static_markers": [
+      "Geometry",
+      "Model",
+      "LimbNode",
+      "Skin",
+      "Cluster"
+    ],
+    "exclude_known_rejection_hashes": true,
+    "stop_on_first_technical_pass": true,
+    "technical_reject_reasons": [
+      "MISSING_SMOOTHING_GROUPS",
+      "MISSING_BIND_POSE_BONES",
+      "MISSING_UV_SET"
+    ]
+  },
+  "rules": [
+    "Use only the direct public OpenGameArt payload recorded here.",
+    "Record exact archive and extracted FBX SHA256 identities.",
+    "Do not retry payload hashes already in P1C01FrodoTechnicalRejectionHistoryV1.json.",
+    "Probe at most four top-ranked static-pass FBX candidates in one UE4 runner reservation and stop on first clean technical pass.",
+    "Animated production candidates remain FBX; OBJ is not accepted as final animated character.",
+    "A technical pass advances only to deformation/retarget suitability and does not prove final Frodo likeness or runtime acceptance."
+  ],
+  "evidence_boundary": "Source registration for a bounded multi-candidate technical gauntlet. No UE4, deformation, retarget, AnimBP, runtime, PIE/device/visual/performance acceptance until exact-head evidence exists."
+}
