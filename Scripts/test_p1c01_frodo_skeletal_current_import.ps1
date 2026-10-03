@@ -16,7 +16,7 @@ foreach($marker in @(
  'skeletal-bones=%d'
 )){ if(-not $cpp.Contains($marker)){ throw "FRODO_SKELETAL_CURRENT_IMPORT_MARKER_MISSING marker=$marker" } }
 $start=$cpp.IndexOf("if (bCharacterRigFbx)",[StringComparison]::Ordinal)
-$end=$cpp.IndexOf("else if (SourceExtension == TEXT(\"fbx\"))",$start,[StringComparison]::Ordinal)
+$end=$cpp.IndexOf('else if (SourceExtension == TEXT("fbx"))',$start,[StringComparison]::Ordinal)
 if($start -lt 0 -or $end -le $start){ throw "FRODO_SKELETAL_CURRENT_BRANCH_MISSING" }
 $branch=$cpp.Substring($start,$end-$start)
 if($branch.Contains("LoadObject<")){ throw "FRODO_SKELETAL_CURRENT_SYNC_LOAD_FORBIDDEN" }
