@@ -1167,3 +1167,14 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Material rule: preserve imported production materials; do not override them with generic color MIDs. External PBR intake is not required for this source pass; if a material gap remains after PIE review, prefer recorded CC0 sources such as Poly Haven/ambientCG and package PNG/TGA/channel-packed textures under the existing material budget.
 - Performance boundary: HISM only for repeated new vegetation, existing cull distances, no per-instance Tick/collision, no volumetric fog, no planar reflection/scene capture, no new synchronous heavy asset load.
 - Evidence boundary: REGISTERED / SOURCE-GROUNDED PLAN. Visual acceptance requires later PIE/device evidence.
+
+## 2026-10-04 - P1C01 KAYKIT_RIG_TECHNICAL_BRIDGE registered before implementation
+
+- Scope: existing P1C01 character-pipeline blocker only. This does not replace Frodo likeness art, does not open P1C02, and does not alter story/NPC ownership.
+- Trigger: Quaternius RPG normalized family exhausted exact UE4.27 technical gates; Quaternius Universal Base Characters remains source-suitable but its free distribution is currently behind an interactive itch.io download flow rather than a stable direct archive accepted by the automated warehouse policy.
+- Technical bridge source: KayKit official public GitHub repository `KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0`, CC0, direct public archive, FBX/PNG content, fully rigged/animated characters and 75 animations. Existing project manifest already authorizes this pack as rigged-character pipeline support.
+- Intended use: prove a clean UE4.27 skeletal import + bind pose + UV + real skeleton + animation/deformation bridge on one bounded candidate. It is not final Frodo likeness and cannot be promoted as named-character final art.
+- Candidate policy: prefer one smallest/most neutral suitable FBX candidate first; exact archive/payload SHA256 recorded; hard reject on invalid bind pose, missing bind-pose bones, missing UVs, smoothing failure or missing skeletal registration.
+- Performance boundary: low-poly/mobile-oriented source; PNG textures only; no runtime hard reference; any later integration remains soft/async via FStreamableManager; modular Frodo remains fallback.
+- Ownership boundary: ALivingWorldDirector remains population/pooling authority; UShireNPCContextSubsystem remains context; UShireQuestSubsystem remains story truth.
+- Evidence boundary: REGISTERED / SOURCE-GROUNDED PLAN ONLY. No UE4 import, deformation, runtime, PIE, device, rendered visual or FPS acceptance is claimed yet.
