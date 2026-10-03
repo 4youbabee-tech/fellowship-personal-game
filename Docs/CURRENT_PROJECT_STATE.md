@@ -3953,3 +3953,14 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Knight V2 exact payload `b25e35cc7eaaa3c7c103f10a4f41fde1cbd81936fede9aa9ae4efbd29d40ba1b` remains **REJECTED_TECHNICAL** after UE4.27 skeletal registration with **51 bones** because `MISSING_SMOOTHING_GROUPS` and `MISSING_BIND_POSE_BONES` were observed.
 - Earlier rejected Quaternius/KayKit/Kenney payload hashes and reasons remain in `Data/P1C01FrodoTechnicalRejectionHistoryV1.json`.
 - The distinct OpenGameArt Lowpoly Dummy source inventory has now landed separately; rejected-history preservation does not imply that candidate has passed UE4 import, deformation, retarget, AnimBP, runtime, PIE, device, visual, or performance gates.
+
+
+## 2026-10-03 - P1C01 visible Shire mega runtime pass implemented
+
+- Runtime construction now adds five bounded HISM lanes to the existing P1C01 world writer: production hedges, broadleaf woodland trees, rural fences, ferns and river reeds.
+- Player-facing composition remains Bag End -> Hobbiton -> worked fields -> wooded road -> Ferry approach. Existing quest/story anchors are not moved.
+- The pass targets roughly 487 repeated visible-world instances while avoiding hundreds of individual ticking actors: 148 hedge placements, 177 woodland/backdrop trees, 42 rural-fence placements, 72 ferns and 48 reeds when their already-resident production meshes are available.
+- Explicit cull bands and shadow suppression bound the new repeated detail for the i7 Gen6 / 8 GB / ~2 GB VRAM target. Decorative woodland/fern/reed instances are non-colliding; route-shaping hedges/fences retain bounded collision.
+- No NPC Spawn/Destroy lane was added. `ALivingWorldDirector` remains population/pooling owner and `UShireNPCContextSubsystem` remains NPC-context owner.
+- Asset residency remains fail-soft: no synchronous heavy load and no new hard asset load path; optional detail is skipped when the production mesh is not resident.
+- Machine status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. No PIE/device/rendered visual/FPS acceptance claimed.

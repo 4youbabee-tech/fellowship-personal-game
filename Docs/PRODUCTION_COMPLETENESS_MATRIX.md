@@ -2971,3 +2971,20 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Knight V2 bind pose | FAIL |
 | Retry same exact payload | FORBIDDEN |
 | Distinct OGA Lowpoly Dummy family | SOURCE INVENTORY PASS ONLY; UE4 TECHNICAL PROBE NEXT |
+
+
+## 2026-10-03 - P1C01 visible Shire mega pass
+
+| Gate | Status |
+|---|---|
+| World-detail ledger registration | COMPLETE |
+| Runtime HISM mega-pass source | IMPLEMENTED |
+| Bag End/Hobbiton hedge enclosure | IMPLEMENTED IN SOURCE |
+| Field boundaries / shelterbelts | IMPLEMENTED IN SOURCE |
+| Wooded-road layered vegetation | IMPLEMENTED IN SOURCE |
+| Ferry-bank reeds / approach framing | IMPLEMENTED IN SOURCE |
+| New synchronous heavy loading | NONE ADDED |
+| New NPC lifecycle owner | NONE; LivingWorldDirector remains authoritative |
+| Exact-head Pre-Unreal | PENDING |
+| Exact-head UE4.27.2 build | PENDING |
+| PIE/device/rendered visual/FPS acceptance | NOT CLAIMED |

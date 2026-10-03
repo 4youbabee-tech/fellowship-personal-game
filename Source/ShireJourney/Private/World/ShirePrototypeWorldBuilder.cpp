@@ -132,6 +132,41 @@ AShirePrototypeWorldBuilder::AShirePrototypeWorldBuilder()
     GeographyRiverBankInstances->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     GeographyRiverBankInstances->SetCastShadow(false);
 
+    HedgeInstances = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("HedgeInstances"));
+    HedgeInstances->SetupAttachment(RuntimeRoot);
+    HedgeInstances->SetMobility(EComponentMobility::Movable);
+    HedgeInstances->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+    HedgeInstances->SetGenerateOverlapEvents(false);
+    HedgeInstances->SetCastShadow(false);
+
+    WoodlandTreeInstances = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("WoodlandTreeInstances"));
+    WoodlandTreeInstances->SetupAttachment(RuntimeRoot);
+    WoodlandTreeInstances->SetMobility(EComponentMobility::Movable);
+    WoodlandTreeInstances->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    WoodlandTreeInstances->SetGenerateOverlapEvents(false);
+    WoodlandTreeInstances->SetCastShadow(false);
+
+    RuralFenceInstances = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("RuralFenceInstances"));
+    RuralFenceInstances->SetupAttachment(RuntimeRoot);
+    RuralFenceInstances->SetMobility(EComponentMobility::Movable);
+    RuralFenceInstances->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+    RuralFenceInstances->SetGenerateOverlapEvents(false);
+    RuralFenceInstances->SetCastShadow(false);
+
+    FernInstances = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("FernInstances"));
+    FernInstances->SetupAttachment(RuntimeRoot);
+    FernInstances->SetMobility(EComponentMobility::Movable);
+    FernInstances->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    FernInstances->SetGenerateOverlapEvents(false);
+    FernInstances->SetCastShadow(false);
+
+    ReedInstances = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("ReedInstances"));
+    ReedInstances->SetupAttachment(RuntimeRoot);
+    ReedInstances->SetMobility(EComponentMobility::Movable);
+    ReedInstances->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    ReedInstances->SetGenerateOverlapEvents(false);
+    ReedInstances->SetCastShadow(false);
+
     // Explicit cull bands keep the first production world pass bounded on the
     // i7/8 GB/~2 GB VRAM target. These are starting budgets, not acceptance proof.
     GrassInstances->SetCullDistances(1200, 5200);
@@ -145,6 +180,11 @@ AShirePrototypeWorldBuilder::AShirePrototypeWorldBuilder()
     GeographyHillInstances->SetCullDistances(16000, 32000);
     GeographySlopeInstances->SetCullDistances(12000, 28000);
     GeographyRiverBankInstances->SetCullDistances(9000, 26000);
+    HedgeInstances->SetCullDistances(1200, 10500);
+    WoodlandTreeInstances->SetCullDistances(4500, 22000);
+    RuralFenceInstances->SetCullDistances(1400, 11000);
+    FernInstances->SetCullDistances(700, 5600);
+    ReedInstances->SetCullDistances(800, 7200);
 
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeAsset(TEXT("/Engine/BasicShapes/Cube.Cube"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereAsset(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
@@ -254,6 +294,12 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     if (ProductionGrassClumpMesh) EastFieldRowInstances->SetStaticMesh(ProductionGrassClumpMesh);
     if (ProductionShrubMesh) ShrubInstances->SetStaticMesh(ProductionShrubMesh);
     if (ProductionPathStoneMesh) PathStoneInstances->SetStaticMesh(ProductionPathStoneMesh);
+    if (ProductionHedgeMesh) HedgeInstances->SetStaticMesh(ProductionHedgeMesh);
+    if (ProductionCommonBroadleafTreeMesh) WoodlandTreeInstances->SetStaticMesh(ProductionCommonBroadleafTreeMesh);
+    if (ProductionCommonVillageFenceMesh) RuralFenceInstances->SetStaticMesh(ProductionCommonVillageFenceMesh);
+    else if (ProductionFenceSegmentMesh) RuralFenceInstances->SetStaticMesh(ProductionFenceSegmentMesh);
+    if (ProductionCommonFernClumpMesh) FernInstances->SetStaticMesh(ProductionCommonFernClumpMesh);
+    if (ProductionCommonReedClusterMesh) ReedInstances->SetStaticMesh(ProductionCommonReedClusterMesh);
 
     BuildPrototypeWorld();
 
@@ -2807,6 +2853,208 @@ void AShirePrototypeWorldBuilder::SpawnBagEndHeroPass()
 }
 
 
+
+void AShirePrototypeWorldBuilder::SpawnVisibleShireMegaPass()
+{
+    // Visible-first W01 mega pass: repeated production detail is emitted through HISM
+    // so the route gains enclosure, depth and worked-landscape rhythm without hundreds
+    // of ticking actors or synchronous runtime asset loads. The chapter streaming path
+    // remains responsible for residency; a missing optional mesh simply skips its lane.
+    int32 HedgeCount = 0;
+    int32 TreeCount = 0;
+    int32 FenceCount = 0;
+    int32 FernCount = 0;
+    int32 ReedCount = 0;
+
+    if (HedgeInstances)
+    {
+        HedgeInstances->ClearInstances();
+        if (HedgeInstances->GetStaticMesh())
+        {
+            auto AddHedgeRibbon = [this, &HedgeCount](
+                float StartX, float EndX, int32 Count, float BaseY, float YWave,
+                float Z, float BaseYaw, const FVector& Scale)
+            {
+                if (Count <= 0)
+                {
+                    return;
+                }
+
+                const float Denom = static_cast<float>(FMath::Max(1, Count - 1));
+                for (int32 Index = 0; Index < Count; ++Index)
+                {
+                    const float Alpha = static_cast<float>(Index) / Denom;
+                    const float X = FMath::Lerp(StartX, EndX, Alpha);
+                    const float Phase = static_cast<float>(Index) * 0.73f + StartX * 0.00031f;
+                    const float Y = BaseY + FMath::Sin(Phase) * YWave;
+                    const float Yaw = BaseYaw + FMath::Sin(Phase * 0.61f) * 7.0f;
+                    const float SizeJitter = 0.94f + 0.04f * static_cast<float>(Index % 4);
+                    HedgeInstances->AddInstance(FTransform(
+                        FRotator(0.0f, Yaw, 0.0f),
+                        FVector(X, Y, Z),
+                        Scale * SizeJitter));
+                    ++HedgeCount;
+                }
+            };
+
+            // Bag End/Hobbiton lanes: close enough to shape the route, far enough to keep
+            // the existing quest corridor and property entrances unobstructed.
+            AddHedgeRibbon(-2700.0f, 1650.0f, 16, -980.0f, 85.0f, 34.0f, 2.0f, FVector(1.95f,0.92f,1.12f));
+            AddHedgeRibbon(-2500.0f, 1700.0f, 15, 910.0f, 95.0f, 34.0f, -2.0f, FVector(1.90f,0.92f,1.10f));
+
+            // Worked fields: long boundaries make the agricultural middle distance read
+            // as intentional land use rather than an open test plane.
+            AddHedgeRibbon(2600.0f, 10400.0f, 22, -1780.0f, 115.0f, 36.0f, 1.0f, FVector(2.15f,0.96f,1.18f));
+            AddHedgeRibbon(3000.0f, 10800.0f, 21, 1540.0f, 125.0f, 36.0f, -1.0f, FVector(2.10f,0.96f,1.16f));
+
+            // Wooded road: asymmetrical enclosing hedges deliberately narrow the visual
+            // corridor while preserving the central traversal line.
+            AddHedgeRibbon(11100.0f, 18800.0f, 27, -1160.0f, 210.0f, 42.0f, -6.0f, FVector(2.35f,1.02f,1.28f));
+            AddHedgeRibbon(11300.0f, 19000.0f, 27, 1260.0f, 220.0f, 42.0f, 6.0f, FVector(2.35f,1.02f,1.28f));
+
+            // Ferry approach: lower hedges open the composition before the river reveal.
+            AddHedgeRibbon(19300.0f, 22400.0f, 10, -1280.0f, 110.0f, 35.0f, -3.0f, FVector(1.85f,0.90f,1.05f));
+            AddHedgeRibbon(19400.0f, 22300.0f, 10, 980.0f, 105.0f, 35.0f, 3.0f, FVector(1.80f,0.90f,1.02f));
+        }
+    }
+
+    if (WoodlandTreeInstances)
+    {
+        WoodlandTreeInstances->ClearInstances();
+        if (WoodlandTreeInstances->GetStaticMesh())
+        {
+            auto AddTreeBand = [this, &TreeCount](
+                float StartX, float EndX, int32 Count, float SideY, float SpreadY, float BaseScale)
+            {
+                if (Count <= 0)
+                {
+                    return;
+                }
+
+                const float Denom = static_cast<float>(FMath::Max(1, Count - 1));
+                for (int32 Index = 0; Index < Count; ++Index)
+                {
+                    const float Alpha = static_cast<float>(Index) / Denom;
+                    const float X = FMath::Lerp(StartX, EndX, Alpha);
+                    const float Phase = static_cast<float>(Index) * 1.17f + SideY * 0.0007f;
+                    const float Y = SideY + FMath::Sin(Phase) * SpreadY;
+                    const float Scale = BaseScale * (0.86f + 0.06f * static_cast<float>(Index % 5));
+                    WoodlandTreeInstances->AddInstance(FTransform(
+                        FRotator(0.0f, static_cast<float>((Index * 47 + FMath::Abs(static_cast<int32>(SideY))) % 360), 0.0f),
+                        FVector(X, Y, 0.0f),
+                        FVector(Scale)));
+                    ++TreeCount;
+                }
+            };
+
+            // Village/orchard backdrop provides vertical depth without filling the
+            // walkable common with collision-heavy actors.
+            AddTreeBand(-2500.0f, 1900.0f, 24, 1780.0f, 360.0f, 0.72f);
+            AddTreeBand(-2300.0f, 1800.0f, 20, -1700.0f, 330.0f, 0.68f);
+
+            // Fields retain broad views but receive broken shelterbelts.
+            AddTreeBand(3200.0f, 9800.0f, 22, 2150.0f, 440.0f, 0.74f);
+            AddTreeBand(3900.0f, 10400.0f, 20, -2240.0f, 420.0f, 0.72f);
+
+            // Wooded road is the densest visual band. Trees stay outside the central
+            // corridor; nearby colliding hero trunks remain owned by existing authored
+            // actors, while this HISM band supplies mid/far canopy mass.
+            AddTreeBand(10800.0f, 19200.0f, 34, 1760.0f, 520.0f, 0.82f);
+            AddTreeBand(11100.0f, 19500.0f, 35, -1820.0f, 540.0f, 0.84f);
+
+            // River approach softens to scattered trees so the Ferry remains readable.
+            AddTreeBand(19600.0f, 22700.0f, 12, 1620.0f, 360.0f, 0.72f);
+            AddTreeBand(19900.0f, 22500.0f, 10, -1680.0f, 330.0f, 0.70f);
+        }
+    }
+
+    if (RuralFenceInstances)
+    {
+        RuralFenceInstances->ClearInstances();
+        if (RuralFenceInstances->GetStaticMesh())
+        {
+            auto AddFenceLine = [this, &FenceCount](
+                const FVector& Start, const FVector& End, int32 Count, const FVector& Scale)
+            {
+                if (Count <= 0)
+                {
+                    return;
+                }
+
+                const FVector Delta = End - Start;
+                const FRotator Rotation = Delta.GetSafeNormal2D().Rotation();
+                const float Denom = static_cast<float>(FMath::Max(1, Count - 1));
+                for (int32 Index = 0; Index < Count; ++Index)
+                {
+                    const float Alpha = static_cast<float>(Index) / Denom;
+                    const FVector P = FMath::Lerp(Start, End, Alpha);
+                    RuralFenceInstances->AddInstance(FTransform(Rotation, P, Scale));
+                    ++FenceCount;
+                }
+            };
+
+            AddFenceLine(FVector(3300,-1420,0), FVector(6000,-1510,0), 9, FVector(0.76f));
+            AddFenceLine(FVector(7200,-1450,0), FVector(9800,-1320,0), 9, FVector(0.76f));
+            AddFenceLine(FVector(3600,1330,0), FVector(6200,1450,0), 9, FVector(0.74f));
+            AddFenceLine(FVector(7600,1390,0), FVector(10100,1290,0), 8, FVector(0.74f));
+            AddFenceLine(FVector(19700,-1030,0), FVector(21900,-900,0), 7, FVector(0.72f));
+        }
+    }
+
+    if (FernInstances)
+    {
+        FernInstances->ClearInstances();
+        if (FernInstances->GetStaticMesh())
+        {
+            for (int32 Index = 0; Index < 72; ++Index)
+            {
+                const float Alpha = static_cast<float>(Index) / 71.0f;
+                const float X = FMath::Lerp(10800.0f, 19400.0f, Alpha);
+                const float Side = (Index % 2 == 0) ? -1.0f : 1.0f;
+                const float Y = Side * (720.0f + 210.0f * static_cast<float>((Index / 2) % 5))
+                    + FMath::Sin(static_cast<float>(Index) * 0.91f) * 95.0f;
+                const float Scale = 0.56f + 0.05f * static_cast<float>(Index % 4);
+                FernInstances->AddInstance(FTransform(
+                    FRotator(0.0f, static_cast<float>((Index * 61) % 360), 0.0f),
+                    FVector(X, Y, 4.0f),
+                    FVector(Scale)));
+                ++FernCount;
+            }
+        }
+    }
+
+    if (ReedInstances)
+    {
+        ReedInstances->ClearInstances();
+        if (ReedInstances->GetStaticMesh())
+        {
+            for (int32 Index = 0; Index < 48; ++Index)
+            {
+                const float Alpha = static_cast<float>(Index % 24) / 23.0f;
+                const float X = FMath::Lerp(21900.0f, 24600.0f, Alpha);
+                const float BankY = Index < 24 ? -1460.0f : 650.0f;
+                const float Y = BankY + FMath::Sin(static_cast<float>(Index) * 0.83f) * 105.0f;
+                const float Scale = 0.62f + 0.04f * static_cast<float>(Index % 5);
+                ReedInstances->AddInstance(FTransform(
+                    FRotator(0.0f, static_cast<float>((Index * 29) % 360), 0.0f),
+                    FVector(X, Y, -4.0f),
+                    FVector(Scale)));
+                ++ReedCount;
+            }
+        }
+    }
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("VISIBLE_SHIRE_MEGA_PASS hills_route=BagEnd-Hobbiton-Fields-WoodedRoad-Ferry hedges=%d trees=%d fences=%d ferns=%d reeds=%d runtimeWriter=ShirePrototypeWorldBuilder"),
+        HedgeCount,
+        TreeCount,
+        FenceCount,
+        FernCount,
+        ReedCount);
+}
+
 void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()
 {
     if (!GetWorld())
@@ -3346,6 +3594,7 @@ void AShirePrototypeWorldBuilder::BuildPrototypeWorld()
     SpawnGeographyFoundationPass();
     SpawnHobbitonArchitecturePass();
     SpawnProductionVillageDetailLayer();
+    SpawnVisibleShireMegaPass();
     SpawnFoliagePass();
     SpawnScenicDetailPass();
     SpawnWorldDensityDetailPass();
