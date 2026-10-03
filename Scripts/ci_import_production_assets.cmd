@@ -16,7 +16,7 @@ set ATTEMPT=1
 :run_import
 if exist "%IMPORTLOG%" del /F /Q "%IMPORTLOG%" >nul 2>nul
 echo PRODUCTION_IMPORT_ATTEMPT attempt=!ATTEMPT!/2
-"%EDITORCMD%" "%PROJECT%" -run=ShireProductionImport -unattended -nop4 -nosplash -NoSound -abslog="%IMPORTLOG%"
+"%EDITORCMD%" "%PROJECT%" -run=ShireProductionImport %* -unattended -nop4 -nosplash -NoSound -abslog="%IMPORTLOG%"
 set "IMPORT_EXIT=!ERRORLEVEL!"
 if exist "%IMPORTLOG%" findstr /I /C:"ShireProductionImport:" /C:"ShireProductionImport FAILED" /C:"Error:" /C:"Warning:" "%IMPORTLOG%"
 
