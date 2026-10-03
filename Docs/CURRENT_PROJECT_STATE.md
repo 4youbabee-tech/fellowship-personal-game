@@ -4042,3 +4042,10 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Active lane now distinguishes bad export from bad rig: hosted Blender re-export creates new exact normalized payload hashes, records Blender/version/source/output evidence, and sends only those new payloads to the same strict UE4.27 skeletal gate.
 - No smoothing/bind-pose/UV/registration gate is relaxed. A normalized technical pass still does not authorize runtime integration; deformation/reference pose/root/scale/limb/hand-foot/retarget checks remain next.
 - Runtime Frodo remains on the modular fallback. No PIE/device/rendered-visual/FPS acceptance is claimed by this packet.
+
+## 2026-10-04 - Frodo repair factory hosted-run root-cause correction
+
+- P1C01 Frodo RPG Multi Candidate UE4 Gauntlet #11 reached the hosted Blender normalization job; Blender 4.0.2 installed successfully.
+- The job failed before candidate re-export because the PowerShell script read `$LASTEXITCODE` after piping `blender --version` through `Select-Object`, leaving the variable unavailable under strict mode.
+- Root cause is tooling-only, not an FBX/rig rejection. The version probe now executes Blender directly, captures the external-process exit code immediately, validates at least one version line, and preserves all existing normalization/UE4 hard gates.
+- Exact-head validation must rerun on the corrected head. No deformation/retarget/runtime/PIE/device/visual/FPS acceptance is implied.
