@@ -2949,3 +2949,13 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Kenney Building Kit round door | REJECTED: FBX 7700 |
 | UE4 self-hosted import | NOT SCHEDULED for rejected payload |
 | Next | compatible export/source family |
+
+
+## 2026-10-03 - Next Frodo candidate source lane
+
+| Gate | Status |
+|---|---|
+| Distinct CC0 humanoid source | REGISTERED |
+| Hosted archive/FBX inventory | ACTIVE |
+| UE4 runner reservation | BLOCKED UNTIL HOSTED STATIC PASS |
+| Final Frodo likeness/runtime | NOT CLAIMED |
