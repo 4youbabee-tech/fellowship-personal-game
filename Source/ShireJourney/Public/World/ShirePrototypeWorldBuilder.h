@@ -131,6 +131,7 @@ private:
     void SpawnProductionVillageDetailLayer();
     void SpawnVisibleShireMegaPass();
     void SpawnNaturalRouteMegaPass();
+    void SpawnPresentationCompositionPass();
     void SpawnWorldDensityDetailPass();
     void SpawnBagEndHeroPass();
     void SpawnPartySocialLoopPass();
