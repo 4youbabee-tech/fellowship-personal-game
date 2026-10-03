@@ -1107,3 +1107,12 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Recovered the 23-chapter source-backed production packet/demand matrix with every row still runtime_integration_allowed=false.
 - This reconciliation records source/detail planning only; it does not add runtime actors, alter story/quest/NPC authority, or remove any visual fallback.
 - Evidence boundary: **SOURCE PREPRODUCTION ONLY / EXACT-HEAD VALIDATION PENDING**.
+
+
+## 2026-10-03 - Bag End/Hobbiton garden production pass
+
+- World-bible basis remains the Shire/Hobbiton domestic visual grammar: pastoral hills/lanes/farms/Hobbit-holes with warm domestic scale, circular doors and gardens.
+- The five existing garden locations are preserved; this wave changes representation only, replacing cube/sphere production-path treatment with resident ground + shrub production assets.
+- Repeated garden plants remain bounded under the existing HISM/cull architecture; no new world authority or procedural system is introduced.
+- Primitive fallbacks remain until exact production assets resolve at runtime.
+- Evidence boundary: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**.

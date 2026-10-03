@@ -5,9 +5,10 @@ $root=Split-Path -Parent $PSScriptRoot
 $planPath=Join-Path $root "Data\P1C01VisibleWorldProxyReplacementV1.json"
 $packPath=Join-Path $root "Data\P1C01MegaChapterPackV1.json"
 $eastFieldsPath=Join-Path $root "Data\P1C01EastFieldsRowReplacementV1.json"
+$gardenPath=Join-Path $root "Data\P1C01GardenPatchProxyReplacementV1.json"
 $builderPath=Join-Path $root "Source\ShireJourney\Private\World\ShirePrototypeWorldBuilder.cpp"
 
-foreach($path in @($planPath,$packPath,$eastFieldsPath,$builderPath)){
+foreach($path in @($planPath,$packPath,$eastFieldsPath,$gardenPath,$builderPath)){
   if(-not (Test-Path -LiteralPath $path -PathType Leaf)){
     throw "P1C01_VISIBLE_WORLD_CONTRACT_FILE_MISSING path=$path"
   }
@@ -16,6 +17,7 @@ foreach($path in @($planPath,$packPath,$eastFieldsPath,$builderPath)){
 $plan=Get-Content -LiteralPath $planPath -Raw | ConvertFrom-Json
 $pack=Get-Content -LiteralPath $packPath -Raw | ConvertFrom-Json
 $eastFields=Get-Content -LiteralPath $eastFieldsPath -Raw | ConvertFrom-Json
+$garden=Get-Content -LiteralPath $gardenPath -Raw | ConvertFrom-Json
 $builder=Get-Content -LiteralPath $builderPath -Raw
 
 if([string]$plan.plan_id -ne "P1C01_VISIBLE_WORLD_PROXY_REPLACEMENT_V1"){
@@ -92,4 +94,30 @@ foreach($marker in @(
   }
 }
 
-Write-Host ("P1C01_VISIBLE_WORLD_CONTRACT_PASS cells="+$cells.Count+" eastFieldsHism=true eastFieldsMax=96 runtime=true")
+if([string]$garden.plan_id -ne "P1C01_GARDEN_PATCH_PROXY_REPLACEMENT_V1"){
+  throw "P1C01_GARDEN_PLAN_ID_FAIL"
+}
+if(-not [bool]$garden.runtime_integration_allowed){
+  throw "P1C01_GARDEN_RUNTIME_AUTHORIZATION_MISSING"
+}
+if([int]$garden.replacement_contract.max_production_shrub_instances -ne 125){
+  throw "P1C01_GARDEN_INSTANCE_BUDGET_FAIL"
+}
+if([int]$garden.replacement_contract.shrub_cull_start_cm -ne 1500 -or [int]$garden.replacement_contract.shrub_cull_end_cm -ne 6500){
+  throw "P1C01_GARDEN_CULL_BUDGET_FAIL"
+}
+foreach($marker in @(
+  "UStaticMesh* SoilRowMesh = ProductionGroundBlockMesh ? ProductionGroundBlockMesh : CubeMesh",
+  "const bool bUseProductionGardenPlants",
+  "if (!bUseProductionGardenPlants)",
+  "Replace the toy-like sphere crop rows",
+  "GardenPatches[]",
+  "ShrubInstances->AddInstance",
+  "SetCullDistances(1500, 6500)"
+)){
+  if(-not $builder.Contains($marker)){
+    throw "P1C01_GARDEN_BUILDER_MARKER_MISSING marker=$marker"
+  }
+}
+
+Write-Host ("P1C01_VISIBLE_WORLD_CONTRACT_PASS cells="+$cells.Count+" eastFieldsHism=true eastFieldsMax=96 gardenHism=true gardenMax=125 runtime=true")
