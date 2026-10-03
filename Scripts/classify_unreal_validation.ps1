@@ -307,6 +307,8 @@ function Test-CoreProofSafeInterveningDelta([string]$GitExe, [string]$BaseSha, [
     "Data/P1C01FrodoTechnicalRejectionHistoryV1.json",
     "Scripts/stage_p1c01_bag_end_trim_official_receipt.ps1",
     ".github/workflows/p1c01-bag-end-trim-official-receipt.yml",
+    "Scripts/test_p1c01_bag_end_trim_static_fbx_qc.ps1",
+    ".github/workflows/p1c01-bag-end-trim-static-fbx-qc.yml",
     ".github/workflows/p1c01-frodo-knight-v2-technical-probe.yml",
         "Data/P1C01MaterialImportWaveV1.json",
         "Data/P1C01WorldBuildIntakePacketV1.json",
