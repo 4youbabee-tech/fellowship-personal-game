@@ -3993,3 +3993,14 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - All new repeated detail reuses existing HISM components and cull bands. No new synchronous heavy asset loading, no per-instance Tick, no NPC Spawn/Destroy lane and no new story/quest/save owner were added.
 - This is intended as a **large player-visible change**, not another backend-only checkpoint.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. No PIE/device/rendered visual/FPS acceptance claimed.
+
+
+## 2026-10-03 - Next visible blocker started: Frodo human breakthrough lane
+
+- The post-world-expansion priority is now the character itself: move Frodo from the modular/proxy presentation toward a real UE4 skeletal humanoid.
+- A fresh current-`develop` branch activates the distinct CC0 OpenGameArt/Kenney Animated Characters 1 family rather than retrying any exact rejected Quaternius/KayKit/Kenney Blocky/Lowpoly Dummy payload.
+- New tooling performs deterministic archive inspection, records every FBX entry/version/SHA256 and skeleton/skin/cluster markers, rejects hashes already in the durable rejection history, and selects only a static-pass FBX.
+- A dedicated two-stage workflow then runs a cheap hosted static inventory first and only reserves the UE4.27 runner if that gate passes. The self-hosted stage imports the selected exact payload as transient `SK_FRODO` and rejects missing smoothing groups, missing bind-pose bones or missing UVs.
+- Runtime integration remains disabled. A technical pass advances only to deformation/retarget suitability; the existing modular fallback remains visible until skeletal mesh + locomotion AnimBP are proven and asynchronously loadable.
+- `ALivingWorldDirector` / `UShireNPCContextSubsystem` ownership is unchanged and no second NPC state authority is introduced.
+- Status: **SOURCE/CI IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. No deformation, retarget, AnimBP, runtime, PIE/device/visual/FPS acceptance claimed.
