@@ -2885,3 +2885,15 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Actor/Tick growth | none; production path reduces per-plant actors | source inspection |
 | Exact-head UE4.27.2 validation | PENDING | required before merge |
 | PIE/device/visual/performance | NOT CLAIMED | separate acceptance gates |
+
+
+## 2026-10-03 - Visible-game delivery authority
+
+| Direction | Status |
+|---|---|
+| Visible Shire first | ACTIVE AUTHORITY |
+| Frodo first real skeletal character | ACTIVE AUTHORITY |
+| One P1C01 runtime writer | REQUIRED |
+| UE5 migration / Nanite / MetaHuman Crowd / UE5 PCG | NOT CURRENT STACK |
+| Proposal adoption | VERIFY AGAINST LIVE DEVELOP + PROJECT SOURCES |
+| Durable repository memory | REQUIRED FOR EVERY ACCEPTED MAJOR DIRECTION |
