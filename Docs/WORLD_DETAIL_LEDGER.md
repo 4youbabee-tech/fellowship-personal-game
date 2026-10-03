@@ -1162,3 +1162,12 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Architecture: heavy runtime references remain soft and loaded through `FStreamableManager`; no synchronous heavy `LoadObject` path is introduced.
 - Ownership: `ALivingWorldDirector` remains ambient population/pooling owner; `UShireNPCContextSubsystem` remains NPC-context owner; this lane does not create a second AI/state authority.
 - Evidence boundary: no final Frodo likeness, deformation, retarget, AnimBP, runtime, PIE, device, rendered visual or performance acceptance until those exact gates produce evidence.
+
+
+## 2026-10-03 - P1C01 Frodo RPG multi-candidate gauntlet disposition
+
+- The registered Kenney Animated source was technically exhausted after its only skinned model registered 59 UE4 bones but failed smoothing-group and bind-pose gates. Its exact payload hash is durable rejection memory and cannot be retried.
+- Next visible-character source is the distinct CC0 OpenGameArt/Quaternius RPG Characters family. This remains inside P1C01 and does not open a new chapter or change story/NPC/save ownership.
+- The gauntlet is intentionally large but bounded: hosted inventory may rank the whole archive, while the expensive UE4 lane probes at most four distinct exact FBX payloads in one reservation and stops on first clean pass.
+- No gate is relaxed for throughput. Missing smoothing groups, missing/invalid bind pose, missing UVs, zero bones or failed skeletal asset generation reject the candidate.
+- A technical winner advances directly to a deformation/reference-pose/locomotion-retarget mega gate; it is not called final Frodo and is not runtime-promoted by technical import alone.
