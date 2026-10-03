@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "packet_id": "P1C01_BAG_END_HERO_TRIM_SOURCE_PROBE_V1",
-  "status": "OFFICIAL_RECEIPT_HASH_MATCH_COMPLETE_STATIC_QC_NEXT",
+  "status": "OFFICIAL_RECEIPT_COMPLETE_STATIC_FBX_QC_ACTIVE",
   "runtime_chapter": "P1C01",
   "runtime_integration_allowed": false,
   "objective": "Find an exact, production-usable modular FBX source family for Bag End hero round-door/window/trim support before any architectural primitive fallback is removed.",
@@ -212,7 +212,7 @@
       "candidate extracted-file SHA256 values"
     ],
     "fail_closed_match_rule": "The official extracted candidate payload SHA256 must match the discovery identities before static QC evidence may be reused. Any mismatch invalidates mirror-derived identity and requires fresh inspection.",
-    "next_gate": "Binary static FBX QC on the three exact matched models -> real UE4.27.2 static-mesh import -> serialized runtime binding.",
+    "next_gate": "Hosted binary static FBX QC active -> real UE4.27.2 static-mesh import -> serialized runtime binding.",
     "official_download_url": "https://kenney.nl/media/pages/assets/building-kit/0de7aaa492-1743244741/kenney_building-kit.zip",
     "official_page_observation": "Kenney Building Kit official page reports 80 3D files and Creative Commons CC0; the official page download action resolves to the recorded ZIP URL.",
     "observed_at_utc": "2026-10-03T08:52:00Z",
