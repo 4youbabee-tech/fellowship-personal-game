@@ -30,10 +30,12 @@
     "SHIRE_PIE_VERIFY.bat"
   ],
   "delete_after_merge": [
-    "refresh/p1c01-bag-end-entry-shrub-266-93e04fa",
-    "ci/hosted-classifier-local-tree-proof-2026-10-03",
-    "source/p1c01-bag-end-hero-trim-probe-v1-2026-10-03",
-    "source/p1c01-bag-end-hero-trim-probe-v2-2026-10-03"
+    "source/whole-game-chapter-packets-refresh-2026-10-02",
+    "mega/p1c01-visual-production-wave-v2",
+    "mega/p1c01-shire-chapter-pack-v1",
+    "repair/daily-manager-report-rebase-v3",
+    "fix/main-daily-manager-report-publisher-v1",
+    "mega/p1c01-production-train-v1"
   ],
   "safety_rules": [
     "Never delete develop or main.",
@@ -66,11 +68,6 @@
     {
       "branch": "archive/pre-build-salvage-20260930",
       "reason": "non-execution recovery anchor containing the captured legacy branch heads as commit parents; preserve for selective forensic recovery only"
-    },
-    {
-      "branch": "mega/p1c01-production-train-v1",
-      "head_sha": "793a57f8da8ded10bf031e2686f3573193ae2458",
-      "reason": "Unique unsalvaged P1C01 production packet content remains; Data/P1C01ShireMegaChapterPackV1.json and Data/P1C01VisualProductionMegaWaveV2.json are absent from current develop. Preserve until selective salvage/reconciliation."
     },
     {
       "branch": "prep/f2-03-edoras-mega-source-v1",
@@ -461,5 +458,37 @@
     },
     "safety": "Live GitHub recheck found all four refs still present and all corresponding PRs closed. Canonical/recovery refs, open PR heads and preserve_pending_salvage refs are excluded.",
     "evidence_boundary": "Repository branch hygiene only; no UE/PIE/device/visual/performance acceptance."
+  },
+  "post_287_reconciled_ref_cleanup_2026_10_03": {
+    "status": "AUTHORIZED_AFTER_SELECTIVE_SALVAGE",
+    "action": "DELETE_AFTER_THIS_MERGE",
+    "branches": [
+      "source/whole-game-chapter-packets-refresh-2026-10-02",
+      "mega/p1c01-visual-production-wave-v2",
+      "mega/p1c01-shire-chapter-pack-v1",
+      "repair/daily-manager-report-rebase-v3",
+      "fix/main-daily-manager-report-publisher-v1",
+      "mega/p1c01-production-train-v1"
+    ],
+    "dispositions": {
+      "source/whole-game-chapter-packets-refresh-2026-10-02": "SUPERSEDED: useful 23-chapter packets/demand matrix/test selectively salvaged by merged PR #287.",
+      "mega/p1c01-visual-production-wave-v2": "SUPERSEDED: useful 180-slot visual wave manifest/runner/test selectively salvaged by merged PR #287.",
+      "mega/p1c01-shire-chapter-pack-v1": "SUPERSEDED: useful P1C01 Shire mega chapter pack/test selectively salvaged by merged PR #287.",
+      "repair/daily-manager-report-rebase-v3": "SUPERSEDED: useful daily manager generator/test selectively salvaged by merged PR #287; stale docs/workflow ancestry not copied.",
+      "fix/main-daily-manager-report-publisher-v1": "SUPERSEDED: stale publisher reserves the dedicated self-hosted UE4 runner for informational admin work; current runner architecture forbids that bottleneck. Generator remains salvaged on develop.",
+      "mega/p1c01-production-train-v1": "SALVAGED/SUPERSEDED: P1C01ShireMegaChapterPackV1 and P1C01VisualProductionMegaWaveV2 are now on develop via #287; ContinuousProductionWaveQueueV1 is superseded by current V2 and consolidation metadata carries no unique runtime authority."
+    },
+    "evidence": {
+      "merge_287": "2858299e9caecec9cc8f354fa3b229a17a941e87",
+      "pre_unreal_287": "Pre-Unreal Validation #1725 SUCCESS",
+      "unreal_287": "Unreal Build Validation #1333 SUCCESS",
+      "pr_226": "CLOSED_UNMERGED_SUPERSEDED_BY_CURRENT_RUNNER_ARCHITECTURE",
+      "pr_233": "CLOSED_UNMERGED_SUPERSEDED_BY_287",
+      "pr_235": "CLOSED_UNMERGED_SUPERSEDED_BY_287",
+      "pr_238": "CLOSED_UNMERGED_SUPERSEDED_BY_287",
+      "pr_262": "CLOSED_UNMERGED_SUPERSEDED_BY_287"
+    },
+    "safety": "Canonical/recovery refs, current open PR heads, Edoras pending-salvage refs, Frodo validation ref and the current static-FBX reconciliation preparation ref are excluded.",
+    "evidence_boundary": "Repository/source hygiene only; no PIE/device/visual/performance acceptance implied."
   }
 }
