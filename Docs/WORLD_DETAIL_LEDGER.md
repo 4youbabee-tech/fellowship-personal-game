@@ -1137,3 +1137,15 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - UE4 skeletal registration succeeded with 41 bones; the candidate is nevertheless rejected because the import emitted missing smoothing-group information and missing bind-pose bones.
 - This is a technical source rejection only. It does not alter story/world/NPC ownership and does not authorize runtime character integration.
 - The rejected hash is durable project memory and may not be retried. Next candidate must be a distinct licensed payload/corrected export and must pass the same or stricter technical gate.
+
+
+## 2026-10-03 - P1C01 NATURAL_ROUTE_MEGA_PASS registered before runtime implementation
+
+- Scope: second large visible-world pass for the existing P1C01 route only. No chapter expansion, no story outcome changes and no quest/save/NPC authority changes.
+- Player-facing target: break the remaining straight/blocky road-edge read between Bag End, Hobbiton, the worked fields, wooded road and Ferry with irregular path-edge stones, grass verges, shrub pockets and flower/meadow breakup using already-resident production meshes.
+- Runtime writer remains `AShirePrototypeWorldBuilder`. `ALivingWorldDirector` continues to own pooled ambient population; `UShireNPCContextSubsystem` continues to own NPC context. This pass creates no NPCs and performs no global actor scan.
+- Instancing rule: extend the existing HISM lanes (`PathStoneInstances`, `GrassInstances`, `ShrubInstances`, `FlowerInstances`) after their normal rebuild instead of creating per-prop actors.
+- Residency rule: use only meshes already resolved by the existing chapter streaming/import path. No synchronous heavy asset load and no new hard content reference.
+- Traversal rule: all new route breakup instances are decorative/non-colliding and stay outside the authored centerline and quest trigger corridor.
+- Performance rule: deterministic bounded instance counts, existing HISM cull bands and no per-instance Tick. Target remains 720p / 30 FPS floor on i7 Gen6 / 8 GB RAM / ~2 GB VRAM.
+- Gate: exact-head Pre-Unreal + UE4.27.2 build required before merge. Rendered/PIE/device/FPS acceptance remains a separate human/device gate and is not claimed by source implementation.
