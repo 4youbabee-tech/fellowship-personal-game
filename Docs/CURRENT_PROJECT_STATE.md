@@ -4036,3 +4036,9 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - The OBJ source now places each `usemtl` switch before its exact non-overlapping face range: 12 Earth faces, 48 Wood door-frame faces, 48 DoorGreen door faces, 96 Wood window-frame faces and 24 Stone sill faces.
 - `SpawnHobbitHole()` no longer overlays duplicate primitive door/frame/window-frame/sill geometry when the production mound+facade are resident. Those structures remain deterministic fallback-only. Small warm-glass inserts, knob, chimney/step and planted-entry accents remain because the facade source does not provide those presentation details.
 - This is a static-world asset/source correction only; no animated OBJ use was introduced. Exact-head hosted + UE4 import/build validation is still required before merge, and no rendered visual acceptance is claimed.
+
+## 2026-10-04 - Authored Shire source-guard false-positive correction
+
+- Pre-Unreal #1817 reached the new authored-Shire structural test and failed only because the guard rejected the literal word `P1C02` inside a source comment that explicitly stated the pass does not open P1C02.
+- The guard now rejects the actual C++ chapter token `TEXT("P1C02")` inside the new runtime passes instead of prose comments. No runtime/world behavior changed and the P1C01-only contract remains fail-closed.
+- Fresh exact-head Pre-Unreal remains required.

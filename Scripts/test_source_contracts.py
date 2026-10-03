@@ -632,7 +632,7 @@ class SourceContractTests(unittest.TestCase):
                 "RequestSyncLoad",
                 "SpawnActor<AShireAmbientNPC>",
                 "SpawnActor<ALivingWorldDirector>",
-                "P1C02",
+                'TEXT("P1C02")',
             ):
                 self.assertNotIn(forbidden, body)
 

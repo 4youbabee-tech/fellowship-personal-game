@@ -3092,3 +3092,5 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Warm glass / knob / chimney-step accents | RETAINED BOUNDED | non-structural presentation accents |
 | UE4.27 static import/build | PENDING EXACT-HEAD | PR validation required |
 | PIE/device/rendered visual/FPS | NOT ACCEPTED | direct evidence required |
+
+| Authored Shire B/C P1C02 guard false-positive | TEST-REPAIRED / REVALIDATION PENDING | #1817 failed on prose comment only; guard now targets `TEXT("P1C02")` runtime token |
