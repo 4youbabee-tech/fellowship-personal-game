@@ -67,10 +67,13 @@ try {
   $fbxEntries = @($zip.Entries | Where-Object {
     $n = ([string]$_.FullName).Replace([char]92,'/')
     $lower = $n.ToLowerInvariant()
-    $leaf = @($lower.Split('/') | Where-Object { $_ -ne '' })[-1]
-    ($lower -like "*/characters/fbx/*") -and ($preferred -contains $leaf)
+    $lower.Contains("/characters/") -and $lower.EndsWith(".fbx")
   })
-  if($fbxEntries.Count -lt 1){ throw "KAYKIT_RIG_NO_PREFERRED_FBX" }
+  if($fbxEntries.Count -lt 1){
+    $fbxLike = @($zip.Entries | Where-Object { ([string]$_.FullName).ToLowerInvariant().EndsWith(".fbx") } | Select-Object -First 20)
+    foreach($probe in $fbxLike){ Write-Host ("KAYKIT_RIG_DISCOVERY_PROBE entry="+[string]$probe.FullName) }
+    throw "KAYKIT_RIG_NO_CHARACTER_FBX"
+  }
 
   foreach($entry in $fbxEntries){
     if([int64]$entry.Length -le 0 -or [int64]$entry.Length -gt $maxBytes){ continue }
@@ -89,7 +92,8 @@ try {
     $hasAnim = $ascii.Contains("AnimationStack") -or $ascii.Contains("AnimationCurve")
     $versionOk = $version -gt 0 -and $version -le [int]$manifest.candidate_policy.fbx_version_ceiling
     $staticPass = $versionOk -and $hasGeometry -and $hasModel -and $hasLimb -and $hasSkin -and $hasCluster
-    $priority = [Array]::IndexOf($preferred,$leaf.ToLowerInvariant())
+    $leafLower = $leaf.ToLowerInvariant()
+    $priority = [Array]::IndexOf($preferred,$leafLower)
     if($priority -lt 0){ $priority = 999 }
     $rows += [pscustomobject]@{
       entry=[string]$entry.FullName
@@ -112,7 +116,9 @@ try {
 }
 finally { $zip.Dispose() }
 
-$selected = @($rows | Where-Object { $_.static_pass } | Sort-Object priority,bytes | Select-Object -First ([int]$manifest.candidate_policy.maximum_ue4_candidates))
+$preferredRows = @($rows | Where-Object { $_.static_pass -and $_.priority -lt 999 } | Sort-Object priority,bytes)
+$fallbackRows = @($rows | Where-Object { $_.static_pass -and $_.priority -ge 999 } | Sort-Object bytes,filename)
+$selected = @(@($preferredRows + $fallbackRows) | Select-Object -First ([int]$manifest.candidate_policy.maximum_ue4_candidates))
 $receipt = [ordered]@{
   schema_version=1
   status=if($selected.Count -gt 0){"STATIC_BRIDGE_READY_FOR_UE4"}else{"REJECTED_STATIC_NO_COMPATIBLE_FBX"}
