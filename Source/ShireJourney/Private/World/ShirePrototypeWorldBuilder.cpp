@@ -533,17 +533,36 @@ void AShirePrototypeWorldBuilder::SpawnGardenPatch(const FVector& Center, float 
 {
     const FLinearColor Soil(0.23f, 0.13f, 0.065f);
     const FLinearColor Leaf(0.18f, 0.42f, 0.12f);
+    UStaticMesh* SoilRowMesh = ProductionGroundBlockMesh ? ProductionGroundBlockMesh : CubeMesh;
+    const bool bUseProductionGardenPlants =
+        ProductionShrubMesh &&
+        ShrubInstances &&
+        ShrubInstances->GetStaticMesh() == ProductionShrubMesh;
 
     for (int32 Row = -2; Row <= 2; ++Row)
     {
         const FVector RowCenter = Center + FVector(0.0f, Row * 42.0f * Scale, 4.0f);
-        SpawnShape(CubeMesh, RowCenter, FVector(1.25f, 0.12f, 0.05f) * Scale, Soil, FRotator::ZeroRotator, false);
+        // Keep the primitive soil strip only as a deterministic fallback when the
+        // resident production ground mesh is unavailable.
+        SpawnShape(
+            SoilRowMesh,
+            RowCenter,
+            FVector(1.25f, 0.12f, ProductionGroundBlockMesh ? 0.075f : 0.05f) * Scale,
+            Soil,
+            FRotator::ZeroRotator,
+            false);
 
-        for (int32 Plant = -2; Plant <= 2; ++Plant)
+        // Production garden plants are emitted later through the existing shrub HISM
+        // after SpawnFoliagePass clears/rebuilds its instance set. Do not create 25
+        // individual actors per patch when the resident production shrub is available.
+        if (!bUseProductionGardenPlants)
         {
-            const FVector PlantLocation = RowCenter + FVector(Plant * 48.0f * Scale, 0.0f, 12.0f * Scale);
-            SpawnShape(SphereMesh, PlantLocation, FVector(0.10f, 0.10f, 0.075f) * Scale,
-                Leaf, FRotator::ZeroRotator, false);
+            for (int32 Plant = -2; Plant <= 2; ++Plant)
+            {
+                const FVector PlantLocation = RowCenter + FVector(Plant * 48.0f * Scale, 0.0f, 12.0f * Scale);
+                SpawnShape(SphereMesh, PlantLocation, FVector(0.10f, 0.10f, 0.075f) * Scale,
+                    Leaf, FRotator::ZeroRotator, false);
+            }
         }
     }
 }
@@ -660,6 +679,50 @@ void AShirePrototypeWorldBuilder::SpawnFoliagePass()
             FRotator(0.0f, static_cast<float>((Index * 31) % 360), 0.0f),
             ShrubCenters[Index],
             FVector(Scale * 1.35f, Scale, Scale * 0.72f)));
+    }
+
+    // Replace the toy-like sphere crop rows in the five authored Shire garden patches
+    // with the already-resident production shrub mesh through the existing HISM.
+    // This preserves the authored garden locations while removing up to 125 individual
+    // primitive plant actors from the production-asset path.
+    if (ProductionShrubMesh && ShrubInstances->GetStaticMesh() == ProductionShrubMesh)
+    {
+        struct FGardenPatchPlacement
+        {
+            FVector Center;
+            float Scale;
+        };
+
+        const FGardenPatchPlacement GardenPatches[] = {
+            { FVector(-1910.0f,-700.0f,0.0f), 0.80f },
+            { FVector(-1220.0f,-600.0f,0.0f), 0.68f },
+            { FVector(430.0f,610.0f,0.0f), 0.70f },
+            { FVector(1030.0f,820.0f,0.0f), 0.66f },
+            { FVector(6500.0f,-1420.0f,0.0f), 0.95f }
+        };
+
+        for (int32 PatchIndex = 0; PatchIndex < UE_ARRAY_COUNT(GardenPatches); ++PatchIndex)
+        {
+            const FGardenPatchPlacement& Patch = GardenPatches[PatchIndex];
+            for (int32 Row = -2; Row <= 2; ++Row)
+            {
+                const FVector RowCenter =
+                    Patch.Center + FVector(0.0f, Row * 42.0f * Patch.Scale, 4.0f);
+                for (int32 Plant = -2; Plant <= 2; ++Plant)
+                {
+                    const FVector PlantLocation =
+                        RowCenter + FVector(Plant * 48.0f * Patch.Scale, 0.0f, 12.0f * Patch.Scale);
+                    const float SizeJitter =
+                        0.145f + 0.012f * static_cast<float>((PatchIndex * 7 + Row * 3 + Plant + 32) % 4);
+                    const float Yaw =
+                        static_cast<float>((PatchIndex * 47 + (Row + 2) * 29 + (Plant + 2) * 17) % 360);
+                    ShrubInstances->AddInstance(FTransform(
+                        FRotator(0.0f, Yaw, 0.0f),
+                        PlantLocation,
+                        FVector(SizeJitter * 1.15f, SizeJitter, SizeJitter * 0.72f) * Patch.Scale));
+                }
+            }
+        }
     }
 }
 
