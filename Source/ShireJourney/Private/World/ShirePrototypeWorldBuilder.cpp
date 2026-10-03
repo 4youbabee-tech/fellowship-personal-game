@@ -480,8 +480,10 @@ void AShirePrototypeWorldBuilder::SpawnHobbitHole(const FVector& Location, float
     const FLinearColor Stone(0.42f, 0.40f, 0.34f);
 
     // Imported production mound/facade replace the toy-like primitive silhouette when
-    // available. Runtime accents below remain cheap and readable on the target laptop.
-    if (ProductionTurfMoundMesh && ProductionHobbitFacadeMesh)
+    // available. The facade owns the round timber/door/window/sill geometry; runtime
+    // primitives are retained only when that authored facade is unavailable.
+    const bool bHasProductionFacade = ProductionTurfMoundMesh && ProductionHobbitFacadeMesh;
+    if (bHasProductionFacade)
     {
         SpawnShape(ProductionTurfMoundMesh, Location + FVector(0.0f, 0.0f, 30.0f * Scale),
             FVector(2.45f, 2.10f, 2.10f) * Scale, Turf, FRotator::ZeroRotator, true);
@@ -496,24 +498,35 @@ void AShirePrototypeWorldBuilder::SpawnHobbitHole(const FVector& Location, float
             FVector(0.10f, 0.82f, 0.58f) * Scale, Earth, FRotator::ZeroRotator, true);
     }
 
-    // Round frame + inset painted door.
-    SpawnShape(CylinderMesh, Location + FVector(-83.0f * Scale, 0.0f, 55.0f * Scale),
-        FVector(0.51f, 0.51f, 0.075f) * Scale, Timber, FRotator(0.0f, 90.0f, 0.0f), false);
-    SpawnShape(CylinderMesh, Location + FVector(-88.0f * Scale, 0.0f, 55.0f * Scale),
-        FVector(0.43f, 0.43f, 0.050f) * Scale, DoorGreen, FRotator(0.0f, 90.0f, 0.0f), false);
+    // The authored facade carries the timber frame, green door, window-frame and
+    // stone-sill geometry. Keep those primitive constructions only as a deterministic
+    // no-asset fallback so production Hobbiton no longer overlays greybox geometry.
+    if (!bHasProductionFacade)
+    {
+        SpawnShape(CylinderMesh, Location + FVector(-83.0f * Scale, 0.0f, 55.0f * Scale),
+            FVector(0.51f, 0.51f, 0.075f) * Scale, Timber, FRotator(0.0f, 90.0f, 0.0f), false);
+        SpawnShape(CylinderMesh, Location + FVector(-88.0f * Scale, 0.0f, 55.0f * Scale),
+            FVector(0.43f, 0.43f, 0.050f) * Scale, DoorGreen, FRotator(0.0f, 90.0f, 0.0f), false);
+
+        for (float Side : { -1.0f, 1.0f })
+        {
+            const FVector Window = Location + FVector(-88.0f * Scale, Side * 58.0f * Scale, 68.0f * Scale);
+            SpawnShape(CylinderMesh, Window, FVector(0.22f, 0.22f, 0.035f) * Scale,
+                Timber, FRotator(0.0f, 90.0f, 0.0f), false);
+            SpawnShape(CubeMesh, Window + FVector(-2.0f * Scale, 0.0f, -27.0f * Scale),
+                FVector(0.10f, 0.30f, 0.045f) * Scale, Stone, FRotator::ZeroRotator, false);
+        }
+    }
+
+    // Small readable accents remain: the source facade has no warm-glass material and
+    // no knob detail. These do not duplicate its structural silhouette.
     SpawnShape(SphereMesh, Location + FVector(-94.0f * Scale, 21.0f * Scale, 56.0f * Scale),
         FVector(0.045f) * Scale, FLinearColor(0.74f, 0.55f, 0.18f), FRotator::ZeroRotator, false);
-
-    // Two warm circular windows and shallow stone sills.
     for (float Side : { -1.0f, 1.0f })
     {
-        const FVector Window = Location + FVector(-88.0f * Scale, Side * 58.0f * Scale, 68.0f * Scale);
-        SpawnShape(CylinderMesh, Window, FVector(0.22f, 0.22f, 0.035f) * Scale,
-            Timber, FRotator(0.0f, 90.0f, 0.0f), false);
-        SpawnShape(CylinderMesh, Window + FVector(-4.0f * Scale, 0.0f, 0.0f),
-            FVector(0.17f, 0.17f, 0.025f) * Scale, WarmGlass, FRotator(0.0f, 90.0f, 0.0f), false);
-        SpawnShape(CubeMesh, Window + FVector(-2.0f * Scale, 0.0f, -27.0f * Scale),
-            FVector(0.10f, 0.30f, 0.045f) * Scale, Stone, FRotator::ZeroRotator, false);
+        const FVector Window = Location + FVector(-92.0f * Scale, Side * 58.0f * Scale, 68.0f * Scale);
+        SpawnShape(CylinderMesh, Window, FVector(0.16f, 0.16f, 0.018f) * Scale,
+            WarmGlass, FRotator(0.0f, 90.0f, 0.0f), false);
     }
 
     // Chimney, doorstep and planted entry soften the generated silhouette.
@@ -806,8 +819,8 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
             // UE4.27 requires the light to be movable before changing the actor rotation in PIE.
             SunComponent->SetMobility(EComponentMobility::Movable);
             Sun->SetActorRotation(FRotator(-38.0f, -28.0f, 0.0f));
-            SunComponent->SetIntensity(2.55f);
-            SunComponent->SetLightColor(FLinearColor(1.0f, 0.86f, 0.70f));
+            SunComponent->SetIntensity(2.45f);
+            SunComponent->SetLightColor(FLinearColor(1.0f, 0.90f, 0.78f));
             SunComponent->SetCastShadows(true);
             SunComponent->SetAtmosphereSunLight(true);
             SunComponent->SetAtmosphereSunLightIndex(0);
@@ -860,12 +873,12 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
     {
         if (UExponentialHeightFogComponent* FogComponent = HeightFog->GetComponent())
         {
-            FogComponent->SetFogDensity(0.0085f);
-            FogComponent->SetFogHeightFalloff(0.17f);
-            FogComponent->SetFogInscatteringColor(FLinearColor(0.62f, 0.70f, 0.61f));
-            FogComponent->SetDirectionalInscatteringColor(FLinearColor(1.0f, 0.82f, 0.60f));
-            FogComponent->SetStartDistance(850.0f);
-            FogComponent->SetFogMaxOpacity(0.72f);
+            FogComponent->SetFogDensity(0.0070f);
+            FogComponent->SetFogHeightFalloff(0.20f);
+            FogComponent->SetFogInscatteringColor(FLinearColor(0.70f, 0.76f, 0.68f));
+            FogComponent->SetDirectionalInscatteringColor(FLinearColor(0.95f, 0.84f, 0.68f));
+            FogComponent->SetStartDistance(1000.0f);
+            FogComponent->SetFogMaxOpacity(0.62f);
             FogComponent->SetVolumetricFog(false);
         }
     }
@@ -893,7 +906,7 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
         if (USkyLightComponent* SkyComponent = Cast<USkyLightComponent>(Sky->GetLightComponent()))
         {
             SkyComponent->SetMobility(EComponentMobility::Movable);
-            SkyComponent->SetIntensity(0.60f);
+            SkyComponent->SetIntensity(0.68f);
             SkyComponent->bLowerHemisphereIsBlack = false;
             SkyComponent->RecaptureSky();
         }
@@ -927,16 +940,16 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
         PostProcess->BlendWeight = 1.0f;
 
         PostProcess->Settings.bOverride_AutoExposureMinBrightness = true;
-        PostProcess->Settings.AutoExposureMinBrightness = 0.68f;
+        PostProcess->Settings.AutoExposureMinBrightness = 0.72f;
         PostProcess->Settings.bOverride_AutoExposureMaxBrightness = true;
-        PostProcess->Settings.AutoExposureMaxBrightness = 0.98f;
+        PostProcess->Settings.AutoExposureMaxBrightness = 0.96f;
         PostProcess->Settings.bOverride_AutoExposureBias = true;
-        PostProcess->Settings.AutoExposureBias = -0.12f;
+        PostProcess->Settings.AutoExposureBias = -0.08f;
 
         PostProcess->Settings.bOverride_BloomIntensity = true;
-        PostProcess->Settings.BloomIntensity = 0.16f;
+        PostProcess->Settings.BloomIntensity = 0.10f;
         PostProcess->Settings.bOverride_VignetteIntensity = true;
-        PostProcess->Settings.VignetteIntensity = 0.17f;
+        PostProcess->Settings.VignetteIntensity = 0.12f;
     }
 }
 
@@ -3282,6 +3295,303 @@ void AShirePrototypeWorldBuilder::SpawnNaturalRouteMegaPass()
         RiverReedCount);
 }
 
+
+void AShirePrototypeWorldBuilder::SpawnAuthoredShireLandmarkPass()
+{
+    if (!GeographyHillInstances || !GeographySlopeInstances || !GeographyRiverBankInstances)
+    {
+        return;
+    }
+
+    int32 BagEndTerrainCount = 0;
+    int32 VillageTerraceCount = 0;
+    int32 FieldRidgeCount = 0;
+    int32 WoodlandShoulderCount = 0;
+    int32 FerryBankCount = 0;
+
+    auto AddHill = [this](const FVector& Location, const FVector& Scale, float Yaw)
+    {
+        if (ProductionCommonTerracedHillMesh && GeographyHillInstances->GetStaticMesh() == ProductionCommonTerracedHillMesh)
+        {
+            GeographyHillInstances->AddInstance(
+                FTransform(FRotator(0.0f, Yaw, 0.0f), Location, Scale));
+            return true;
+        }
+        return false;
+    };
+
+    auto AddSlope = [this](const FVector& Location, const FVector& Scale, float Yaw)
+    {
+        if (ProductionCommonVillageSlopeMesh && GeographySlopeInstances->GetStaticMesh() == ProductionCommonVillageSlopeMesh)
+        {
+            GeographySlopeInstances->AddInstance(
+                FTransform(FRotator(0.0f, Yaw, 0.0f), Location, Scale));
+            return true;
+        }
+        return false;
+    };
+
+    auto AddRiverBank = [this](const FVector& Location, const FVector& Scale, float Yaw)
+    {
+        if (ProductionCommonRiverBankMesh && GeographyRiverBankInstances->GetStaticMesh() == ProductionCommonRiverBankMesh)
+        {
+            GeographyRiverBankInstances->AddInstance(
+                FTransform(FRotator(0.0f, Yaw, 0.0f), Location, Scale));
+            return true;
+        }
+        return false;
+    };
+
+    // Bag End remains the dominant landmark. These earth masses sit behind and to
+    // the sides of the authored hole instead of covering the entrance/collision path.
+    const struct FTerrainPlacement
+    {
+        FVector Location;
+        FVector Scale;
+        float Yaw;
+    } BagEndTerrain[] = {
+        { FVector(-2780,-1180,-180), FVector(3.55f,2.80f,1.72f), 18.0f },
+        { FVector(-2920,  360,-185), FVector(3.25f,2.55f,1.62f), -16.0f },
+        { FVector(-2200,-1460,-165), FVector(2.90f,2.30f,1.48f), 34.0f },
+        { FVector(-1980,  880,-160), FVector(2.70f,2.20f,1.42f), -28.0f }
+    };
+    for (const FTerrainPlacement& P : BagEndTerrain)
+    {
+        if (AddHill(P.Location, P.Scale, P.Yaw))
+        {
+            ++BagEndTerrainCount;
+        }
+    }
+
+    // Hobbiton should read as homes stepping through a real hill settlement rather
+    // than structures placed on one flat plane. These terraces stay outside the core
+    // walkable common and existing quest anchors.
+    const FTerrainPlacement VillageTerraces[] = {
+        { FVector(-1500, 1450,-125), FVector(2.35f,1.72f,1.18f),  12.0f },
+        { FVector( -650, 1650,-130), FVector(2.45f,1.80f,1.20f),  -8.0f },
+        { FVector(  260, 1600,-125), FVector(2.30f,1.72f,1.16f),  16.0f },
+        { FVector( 1120, 1440,-120), FVector(2.25f,1.68f,1.15f), -14.0f },
+        { FVector(-1280,-1560,-125), FVector(2.35f,1.75f,1.18f), -10.0f },
+        { FVector( -280,-1610,-130), FVector(2.45f,1.82f,1.20f),  10.0f },
+        { FVector(  780,-1510,-125), FVector(2.30f,1.72f,1.16f), -16.0f },
+        { FVector( 1560,-1380,-120), FVector(2.20f,1.65f,1.14f),  18.0f }
+    };
+    for (const FTerrainPlacement& P : VillageTerraces)
+    {
+        if (AddSlope(P.Location, P.Scale, P.Yaw))
+        {
+            ++VillageTerraceCount;
+        }
+    }
+
+    // Worked fields remain visually broad, but gentle outer ridges stop them reading
+    // as an infinite flat test plane.
+    const FTerrainPlacement FieldRidges[] = {
+        { FVector( 4100, 2650,-135), FVector(2.90f,2.15f,1.28f),  14.0f },
+        { FVector( 6900, 2820,-140), FVector(3.10f,2.20f,1.32f),  -8.0f },
+        { FVector( 9400, 2700,-140), FVector(3.00f,2.16f,1.30f),  10.0f },
+        { FVector( 4300,-2720,-135), FVector(2.85f,2.10f,1.28f), -12.0f },
+        { FVector( 7200,-2860,-140), FVector(3.05f,2.20f,1.32f),   9.0f },
+        { FVector( 9700,-2660,-138), FVector(2.95f,2.15f,1.30f), -10.0f }
+    };
+    for (const FTerrainPlacement& P : FieldRidges)
+    {
+        if (AddHill(P.Location, P.Scale, P.Yaw))
+        {
+            ++FieldRidgeCount;
+        }
+    }
+
+    // The wooded road receives closer shoulders than the fields. This creates the
+    // intended pressure/enclosure shift while preserving the central navigation lane.
+    const FTerrainPlacement WoodlandShoulders[] = {
+        { FVector(11600, 1960,-115), FVector(2.45f,1.85f,1.30f),   8.0f },
+        { FVector(13600, 1850,-120), FVector(2.60f,1.92f,1.34f), -10.0f },
+        { FVector(15800, 1920,-122), FVector(2.55f,1.90f,1.34f),  12.0f },
+        { FVector(18100, 1840,-118), FVector(2.45f,1.84f,1.30f),  -8.0f },
+        { FVector(11750,-2010,-115), FVector(2.45f,1.85f,1.30f),  -9.0f },
+        { FVector(13950,-1890,-120), FVector(2.60f,1.92f,1.34f),  11.0f },
+        { FVector(16150,-1970,-122), FVector(2.55f,1.90f,1.34f), -12.0f },
+        { FVector(18450,-1860,-118), FVector(2.45f,1.84f,1.30f),   8.0f }
+    };
+    for (const FTerrainPlacement& P : WoodlandShoulders)
+    {
+        if (AddSlope(P.Location, P.Scale, P.Yaw))
+        {
+            ++WoodlandShoulderCount;
+        }
+    }
+
+    // Ferry composition: heavier near/far bank masses frame the broad crossing, while
+    // the authored crossing corridor stays open. The raised far-side silhouettes also
+    // support the source-grounded steep-bank/winding-path read without opening P1C02.
+    const FTerrainPlacement FerryBanks[] = {
+        { FVector(21750,-1380,-48), FVector(3.10f,1.62f,1.08f),   3.0f },
+        { FVector(22550,-1460,-46), FVector(3.20f,1.68f,1.10f),  -2.0f },
+        { FVector(23950,-1450,-46), FVector(3.25f,1.70f,1.12f),   2.0f },
+        { FVector(24800,-1340,-48), FVector(3.10f,1.62f,1.08f),  -3.0f },
+        { FVector(21780,  610,-46), FVector(3.00f,1.56f,1.06f), 178.0f },
+        { FVector(22620,  690,-44), FVector(3.18f,1.66f,1.10f), 182.0f },
+        { FVector(24020,  700,-44), FVector(3.22f,1.68f,1.12f), 178.0f },
+        { FVector(24860,  620,-46), FVector(3.05f,1.58f,1.07f), 182.0f }
+    };
+    for (const FTerrainPlacement& P : FerryBanks)
+    {
+        if (AddRiverBank(P.Location, P.Scale, P.Yaw))
+        {
+            ++FerryBankCount;
+        }
+    }
+
+    // Sparse, authored route-side stones emphasize the final Ferry approach. These
+    // use the already-resident production mesh/HISM and remain non-colliding.
+    int32 FerryApproachStoneCount = 0;
+    if (PathStoneInstances && ProductionPathStoneMesh &&
+        PathStoneInstances->GetStaticMesh() == ProductionPathStoneMesh)
+    {
+        for (int32 Index = 0; Index < 18; ++Index)
+        {
+            const float Alpha = static_cast<float>(Index) / 17.0f;
+            const float X = FMath::Lerp(20100.0f, ShireLayout::FerryX - 520.0f, Alpha);
+            const float Side = (Index % 2 == 0) ? -1.0f : 1.0f;
+            const float Y = -610.0f + Side * (225.0f + 28.0f * static_cast<float>(Index % 3));
+            const float Scale = 0.18f + 0.018f * static_cast<float>(Index % 4);
+            PathStoneInstances->AddInstance(FTransform(
+                FRotator(0.0f, static_cast<float>((Index * 37) % 360), 0.0f),
+                FVector(X, Y, 4.0f),
+                FVector(Scale * 1.25f, Scale, 0.060f)));
+            ++FerryApproachStoneCount;
+        }
+    }
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("P1C01_AUTHORED_SHIRE_LANDMARK_PASS bagEndTerrain=%d villageTerraces=%d fieldRidges=%d woodlandShoulders=%d ferryBanks=%d ferryApproachStones=%d writer=ShirePrototypeWorldBuilder"),
+        BagEndTerrainCount,
+        VillageTerraceCount,
+        FieldRidgeCount,
+        WoodlandShoulderCount,
+        FerryBankCount,
+        FerryApproachStoneCount);
+}
+
+
+
+
+void AShirePrototypeWorldBuilder::SpawnPresentationCompositionPass()
+{
+    int32 ForegroundShrubCount = 0;
+    int32 WoodlandThresholdTreeCount = 0;
+    int32 UnderstoryFernCount = 0;
+    int32 FerryReedAccentCount = 0;
+
+    // Domestic foreground layers make Bag End/Hobbiton read as cultivated spaces.
+    // These stay outside the main traversal corridor and remain non-colliding HISM.
+    if (ShrubInstances && ProductionShrubMesh &&
+        ShrubInstances->GetStaticMesh() == ProductionShrubMesh)
+    {
+        const FVector ShrubCenters[] = {
+            FVector(-2490,-920,5), FVector(-2340,-1010,5), FVector(-2180,-970,5),
+            FVector(-1970,-1010,5), FVector(-1810,-930,5), FVector(-1650,-1040,5),
+            FVector(-1460,1060,5), FVector(-1260,1140,5), FVector(-1060,1080,5),
+            FVector(-790,1110,5), FVector(-520,1080,5), FVector(-250,1160,5),
+            FVector(40,-1040,5), FVector(310,-1110,5), FVector(590,-1030,5),
+            FVector(880,-1110,5), FVector(1160,-1010,5), FVector(1430,-960,5),
+            FVector(1710,980,5), FVector(1950,1040,5), FVector(2180,960,5),
+            FVector(2430,1060,5), FVector(2700,980,5), FVector(2960,1050,5),
+            FVector(3400,-1180,5), FVector(3820,-1250,5), FVector(4260,-1170,5),
+            FVector(4680,-1240,5)
+        };
+        for (int32 Index = 0; Index < UE_ARRAY_COUNT(ShrubCenters); ++Index)
+        {
+            const float Scale = 0.18f + 0.025f * static_cast<float>(Index % 4);
+            ShrubInstances->AddInstance(FTransform(
+                FRotator(0.0f, static_cast<float>((Index * 53) % 360), 0.0f),
+                ShrubCenters[Index],
+                FVector(Scale * 1.25f, Scale, Scale * 0.74f)));
+            ++ForegroundShrubCount;
+        }
+    }
+
+    // Threshold tree clusters emphasize the shift from open Shire to the tighter
+    // wooded road without filling the whole field section with forest.
+    if (WoodlandTreeInstances && ProductionCommonBroadleafTreeMesh &&
+        WoodlandTreeInstances->GetStaticMesh() == ProductionCommonBroadleafTreeMesh)
+    {
+        const FVector TreeLocations[] = {
+            FVector(10350, 1760,0), FVector(10950, 1680,0), FVector(11550, 1810,0),
+            FVector(10450,-1810,0), FVector(11100,-1710,0), FVector(11700,-1840,0),
+            FVector(12800, 1590,0), FVector(13650, 1660,0), FVector(14500, 1580,0),
+            FVector(12950,-1650,0), FVector(13800,-1580,0), FVector(14650,-1680,0),
+            FVector(16000, 1640,0), FVector(16900, 1570,0), FVector(17800, 1660,0),
+            FVector(16150,-1700,0), FVector(17050,-1590,0), FVector(17950,-1690,0),
+            FVector(19000, 1750,0), FVector(19500,-1780,0)
+        };
+        for (int32 Index = 0; Index < UE_ARRAY_COUNT(TreeLocations); ++Index)
+        {
+            const float Scale = 0.70f + 0.05f * static_cast<float>(Index % 5);
+            WoodlandTreeInstances->AddInstance(FTransform(
+                FRotator(0.0f, static_cast<float>((Index * 71) % 360), 0.0f),
+                TreeLocations[Index],
+                FVector(Scale)));
+            ++WoodlandThresholdTreeCount;
+        }
+    }
+
+    // Layered understory occupies the near hedge/tree edge while keeping the road
+    // center clear. HISM culling keeps this bounded on the low-spec target.
+    if (FernInstances && ProductionCommonFernClumpMesh &&
+        FernInstances->GetStaticMesh() == ProductionCommonFernClumpMesh)
+    {
+        for (int32 Index = 0; Index < 40; ++Index)
+        {
+            const float Alpha = static_cast<float>(Index) / 39.0f;
+            const float X = FMath::Lerp(11000.0f, 19400.0f, Alpha);
+            const float Side = (Index % 2 == 0) ? -1.0f : 1.0f;
+            const float Y = Side * (840.0f + 120.0f * static_cast<float>((Index / 2) % 4))
+                + 55.0f * FMath::Sin(static_cast<float>(Index) * 0.77f);
+            const float Scale = 0.52f + 0.045f * static_cast<float>(Index % 4);
+            FernInstances->AddInstance(FTransform(
+                FRotator(0.0f, static_cast<float>((Index * 67) % 360), 0.0f),
+                FVector(X, Y, 3.0f),
+                FVector(Scale)));
+            ++UnderstoryFernCount;
+        }
+    }
+
+    // Final bank accents frame the ferry without placing vegetation in the crossing.
+    if (ReedInstances && ProductionCommonReedClusterMesh &&
+        ReedInstances->GetStaticMesh() == ProductionCommonReedClusterMesh)
+    {
+        for (int32 Index = 0; Index < 32; ++Index)
+        {
+            const int32 BankIndex = Index % 16;
+            const float Alpha = static_cast<float>(BankIndex) / 15.0f;
+            const float X = FMath::Lerp(ShireLayout::FerryX - 2100.0f, ShireLayout::FerryX + 1100.0f, Alpha);
+            const float BankY = Index < 16 ? -1510.0f : 635.0f;
+            const float Y = BankY + 70.0f * FMath::Sin(static_cast<float>(Index) * 0.89f);
+            const float Scale = 0.54f + 0.045f * static_cast<float>(Index % 5);
+            ReedInstances->AddInstance(FTransform(
+                FRotator(0.0f, static_cast<float>((Index * 41) % 360), 0.0f),
+                FVector(X, Y, -3.0f),
+                FVector(Scale)));
+            ++FerryReedAccentCount;
+        }
+    }
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("P1C01_PRESENTATION_COMPOSITION_PASS shrubs=%d thresholdTrees=%d understoryFerns=%d ferryReedAccents=%d volumetricFog=no planarReflection=no writer=ShirePrototypeWorldBuilder"),
+        ForegroundShrubCount,
+        WoodlandThresholdTreeCount,
+        UnderstoryFernCount,
+        FerryReedAccentCount);
+}
+
+
+
 void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()
 {
     if (!GetWorld())
@@ -3819,12 +4129,14 @@ void AShirePrototypeWorldBuilder::BuildPrototypeWorld()
     ConfigureFoliageInstances();
     SpawnVillage();
     SpawnGeographyFoundationPass();
+    SpawnAuthoredShireLandmarkPass();
     SpawnHobbitonArchitecturePass();
     SpawnProductionVillageDetailLayer();
     SpawnVisibleShireMegaPass();
     SpawnFoliagePass();
     SpawnScenicDetailPass();
     SpawnNaturalRouteMegaPass();
+    SpawnPresentationCompositionPass();
     SpawnWorldDensityDetailPass();
     SpawnBagEndHeroPass();
     SpawnPartySocialLoopPass();

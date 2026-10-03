@@ -3043,3 +3043,65 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Visible Shire + human characters | PRIMARY DELIVERY TARGET |
 | Low-spec DX11 / 720p / 30 FPS architecture constraints | UNCHANGED |
 | PIE/device/visual/FPS claims without direct evidence | FORBIDDEN |
+
+## 2026-10-04 - Authored Shire mega wave B
+
+| Visible domain | Status | Evidence boundary |
+|---|---|---|
+| World-detail ledger registration | COMPLETE BEFORE CODE | P1C01 AUTHORED_SHIRE_MEGA_WAVE_B |
+| Runtime writer | PRESERVED | AShirePrototypeWorldBuilder only |
+| Bag End earth/hill framing | SOURCE-IMPLEMENTED | 4 resident HISM landform placements |
+| Hobbiton terrain terraces | SOURCE-IMPLEMENTED | 8 resident HISM slope placements |
+| Worked-field outer ridges | SOURCE-IMPLEMENTED | 6 resident HISM hill placements |
+| Wooded-road enclosure shoulders | SOURCE-IMPLEMENTED | 8 resident HISM slope placements |
+| Ferry near/far bank framing | SOURCE-IMPLEMENTED | 8 resident HISM river-bank placements |
+| Ferry final-approach stones | SOURCE-IMPLEMENTED | 18 non-collision production HISM instances |
+| New synchronous heavy loading | NONE ADDED | resident meshes only |
+| New per-instance Tick | NONE | existing HISM architecture |
+| P1C02 runtime expansion | NOT OPENED | visual P1C01 only |
+| Exact-head Pre-Unreal | PENDING | branch validation required |
+| Exact-head UE4.27.2 build | PENDING | branch validation required |
+| PIE/device/visual/pacing/FPS | NOT ACCEPTED | direct evidence still required |
+
+## 2026-10-04 - Presentation composition wave C
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Wave C ledger registration | COMPLETE BEFORE CODE | presentation/material/vegetation rules captured |
+| Cultivated Bag End/Hobbiton foreground | SOURCE-IMPLEMENTED | 28 shrub HISM instances |
+| Wooded-road threshold canopy | SOURCE-IMPLEMENTED | 20 broadleaf HISM instances |
+| Wooded-road understory | SOURCE-IMPLEMENTED | 40 fern HISM instances |
+| Ferry-bank vegetation framing | SOURCE-IMPLEMENTED | 32 reed HISM instances |
+| Imported material preservation | PRESERVED | no production-mesh color MID override |
+| Morning light/fog/exposure refinement | SOURCE-IMPLEMENTED | existing low-cost actors/settings only |
+| Volumetric fog | DISABLED | low-spec policy preserved |
+| Planar reflection / scene capture | NONE | low-cost water path preserved |
+| External PBR intake | NOT REQUIRED YET | only after visual review proves gap |
+| Exact-head Pre-Unreal / UE4 build | PENDING | branch not opened for validation yet |
+| PIE/device/visual/FPS | NOT ACCEPTED | direct evidence required |
+
+| Authored Shire B/C source regression guard | SOURCE-IMPLEMENTED | `test_source_contracts.py`; locks budgets, call order, no-sync-load, no duplicate authority and P1C01-only boundary |
+
+## 2026-10-04 - Hobbit facade production cleanup
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Hobbit facade geometry grouping | STATIC-AUDITED | 228 faces; no mixed face groups |
+| Authored material assignment | SOURCE-REPAIRED | Earth 12 / Wood door 48 / DoorGreen 48 / Wood windows 96 / Stone sills 24 faces |
+| Production duplicate primitive door/frame/sills | SOURCE-REMOVED | fallback-only when production facade unavailable |
+| Warm glass / knob / chimney-step accents | RETAINED BOUNDED | non-structural presentation accents |
+| UE4.27 static import/build | PENDING EXACT-HEAD | PR validation required |
+| PIE/device/rendered visual/FPS | NOT ACCEPTED | direct evidence required |
+
+| Authored Shire B/C P1C02 guard false-positive | TEST-REPAIRED / REVALIDATION PENDING | #1817 failed on prose comment only; guard now targets `TEXT("P1C02")` runtime token |
+
+## 2026-10-04 - Hobbit facade production cleanup
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Hobbit facade geometry grouping | STATIC-AUDITED | 228 faces; no mixed face groups |
+| Authored material assignment | SOURCE-REPAIRED | Earth 12 / Wood door 48 / DoorGreen 48 / Wood windows 96 / Stone sills 24 faces |
+| Production duplicate primitive door/frame/sills | SOURCE-REMOVED | fallback-only when production facade unavailable |
+| Warm glass / knob / chimney-step accents | RETAINED BOUNDED | non-structural presentation accents |
+| UE4.27 static import/build | PENDING EXACT-HEAD | PR validation required |
+| PIE/device/rendered visual/FPS | NOT ACCEPTED | direct evidence required |

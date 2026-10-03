@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "wave_id": "P1C01_AUTHORED_SHIRE_MEGA_WAVE_BC_V1",
+  "status": "SOURCE_IMPLEMENTED_VALIDATION_PENDING",
+  "runtime_chapter": "P1C01",
+  "runtime_writer": "AShirePrototypeWorldBuilder",
+  "p1c02_runtime_opened": false,
+  "source_basis": {
+    "project_sources": [
+      "01_STORY_AND_TIMELINE_BIBLE",
+      "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+      "10_3D_VISUAL_ASSET_ATLAS_PRODUCTION",
+      "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX"
+    ],
+    "canon_summary": [
+      "Bag End and the Shire remain the F1-02 visual anchor.",
+      "Shire roads and Bucklebury/Ferry remain the F1-03 travel anchor.",
+      "Route composition should move between cultivated domestic hills, open worked fields, tighter wooded tracks and the river crossing."
+    ]
+  },
+  "authored_landform_budget": {
+    "bag_end_earth_masses": 4,
+    "hobbiton_terraces": 8,
+    "worked_field_ridges": 6,
+    "wooded_road_shoulders": 8,
+    "ferry_bank_masses": 8,
+    "ferry_approach_stones": 18,
+    "total_instances": 52
+  },
+  "presentation_composition_budget": {
+    "cultivated_foreground_shrubs": 28,
+    "wooded_threshold_trees": 20,
+    "understory_ferns": 40,
+    "ferry_reed_accents": 32,
+    "total_instances": 120
+  },
+  "implementation_contract": {
+    "repeated_detail": "HISM_ONLY",
+    "per_instance_tick": false,
+    "repeated_collision": false,
+    "synchronous_heavy_load": false,
+    "resident_production_meshes_only": true,
+    "production_materials_preserved": true,
+    "primitive_color_materials": "FALLBACK_ONLY",
+    "volumetric_fog": false,
+    "planar_reflection": false,
+    "scene_capture_water": false,
+    "npc_lifecycle_owner": "ALivingWorldDirector",
+    "npc_context_owner": "UShireNPCContextSubsystem",
+    "quest_story_owner": "UShireQuestSubsystem"
+  },
+  "performance_target": {
+    "engine": "UE4.27.2",
+    "rhi": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "cpu": "i7 Gen6 class",
+    "ram_gb": 8,
+    "vram_gb_approx": 2
+  },
+  "validation": {
+    "static_source_audit": "PASS_SCOPE_ONLY",
+    "pre_unreal": "PENDING",
+    "ue4_compile": "PENDING",
+    "pie_visual": "PENDING",
+    "target_device": "PENDING",
+    "fps_measurement": "PENDING"
+  },
+  "evidence_boundary": "Source implementation and scope audit only. No PIE/device/rendered visual/pacing/FPS acceptance."
+}

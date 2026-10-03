@@ -4005,3 +4005,47 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Production batching is now explicit: prefer large coherent player-visible packets and one stable exact-head validation cycle over avoidable micro-commit/CI churn.
 - Visible priority remains human/skeletal characters and a natural readable Shire: terrain silhouette, landmarks/architecture, roads/hedges/woodland/Ferry, vegetation/materials and lighting/presentation.
 - Evidence discipline is unchanged: no PIE/device/visual/FPS acceptance is inferred from static/compile/CI evidence.
+
+## 2026-10-04 - P1C01 authored Shire terrain/landmark mega wave B source implementation
+
+- `AShirePrototypeWorldBuilder` remains the only P1C01 world-construction writer and now calls a dedicated `SpawnAuthoredShireLandmarkPass()` after the geography foundation and before Hobbiton architecture.
+- The pass adds 52 bounded repeated placements using existing resident production meshes/HISM components only: 4 Bag End background earth masses, 8 Hobbiton settlement terraces, 6 worked-field outer ridges, 8 close wooded-road shoulders, 8 Ferry bank masses and 18 final-approach stones.
+- The spatial intent is source-grounded: Bag End/Hobbiton gain hill/terrace integration; worked fields stay broad but stop reading as an infinite flat test plane; woodland becomes more enclosed; the Ferry gains stronger near/far bank silhouette while preserving the crossing corridor.
+- No story/quest anchor, P1C02 runtime state, NPC lifecycle owner or crowd budget changes. No new synchronous load, per-instance Tick or actor-per-prop density lane was added.
+- Imported production materials remain authoritative; the existing primitive-color path remains fallback-only.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27 VALIDATION PENDING**. No PIE/device/rendered-visual/pacing/FPS acceptance is claimed.
+
+## 2026-10-04 - P1C01 presentation composition wave C source implementation
+
+- Existing production materials remain untouched and authoritative; no generic material override was added to imported meshes.
+- A new `SpawnPresentationCompositionPass()` appends 120 bounded, non-colliding HISM instances after the natural-route pass: 28 cultivated foreground shrubs around Bag End/Hobbiton, 20 threshold trees at the wooded-road transition, 40 layered understory ferns and 32 Ferry-bank reed accents.
+- Morning presentation defaults were refined in the existing low-cost path: slightly less orange direct light, softer/lighter distance fog, modestly stronger skylight, tighter exposure, and reduced bloom/vignette. Volumetric fog remains disabled and the water path still uses no planar reflection/scene capture.
+- No new runtime material dependency, synchronous load, Tick, crowd owner or chapter expansion was introduced.
+- Source resource review keeps CC0/open PBR sources such as Poly Haven/ambientCG as future intake options only if PIE review proves a real material gap; no external material was admitted by this code wave.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. No rendered visual, device or FPS acceptance is claimed.
+
+## 2026-10-04 - Authored Shire B/C static regression guard
+
+- `test_source_contracts.py` now reads `P1C01AuthoredShireMegaWaveBCV1.json` and locks the P1C01-only/single-writer boundary, 52-landform and 120-presentation budgets, HISM/resident-only/no-sync-load rules, and authored pass ordering inside `BuildPrototypeWorld()`.
+- The guard explicitly rejects synchronous load calls, ambient/director spawning, and P1C02 tokens inside both new world passes.
+- Status remains **SOURCE-IMPLEMENTED / HOSTED+UE4 EXACT-HEAD VALIDATION PENDING** until this branch is opened and run.
+
+## 2026-10-04 - Hobbit facade material/overlay source correction
+
+- Static source audit found `SM_ShHobbitFacade.obj` had five intended material switches (Earth -> Wood -> DoorGreen -> Wood -> Stone) written after the face list, so only the initial Earth material could own faces despite geometry already being cleanly separated into base, door frame, door, two window frames and two stone sill groups.
+- The OBJ source now places each `usemtl` switch before its exact non-overlapping face range: 12 Earth faces, 48 Wood door-frame faces, 48 DoorGreen door faces, 96 Wood window-frame faces and 24 Stone sill faces.
+- `SpawnHobbitHole()` no longer overlays duplicate primitive door/frame/window-frame/sill geometry when the production mound+facade are resident. Those structures remain deterministic fallback-only. Small warm-glass inserts, knob, chimney/step and planted-entry accents remain because the facade source does not provide those presentation details.
+- This is a static-world asset/source correction only; no animated OBJ use was introduced. Exact-head hosted + UE4 import/build validation is still required before merge, and no rendered visual acceptance is claimed.
+
+## 2026-10-04 - Authored Shire source-guard false-positive correction
+
+- Pre-Unreal #1817 reached the new authored-Shire structural test and failed only because the guard rejected the literal word `P1C02` inside a source comment that explicitly stated the pass does not open P1C02.
+- The guard now rejects the actual C++ chapter token `TEXT("P1C02")` inside the new runtime passes instead of prose comments. No runtime/world behavior changed and the P1C01-only contract remains fail-closed.
+- Fresh exact-head Pre-Unreal remains required.
+
+## 2026-10-04 - Hobbit facade material/overlay source correction
+
+- Static source audit found `SM_ShHobbitFacade.obj` had five intended material switches (Earth -> Wood -> DoorGreen -> Wood -> Stone) written after the face list, so only the initial Earth material could own faces despite geometry already being cleanly separated into base, door frame, door, two window frames and two stone sill groups.
+- The OBJ source now places each `usemtl` switch before its exact non-overlapping face range: 12 Earth faces, 48 Wood door-frame faces, 48 DoorGreen door faces, 96 Wood window-frame faces and 24 Stone sill faces.
+- `SpawnHobbitHole()` no longer overlays duplicate primitive door/frame/window-frame/sill geometry when the production mound+facade are resident. Those structures remain deterministic fallback-only. Small warm-glass inserts, knob, chimney/step and planted-entry accents remain because the facade source does not provide those presentation details.
+- This is a static-world asset/source correction only; no animated OBJ use was introduced. Exact-head hosted + UE4 import/build validation is still required before merge, and no rendered visual acceptance is claimed.

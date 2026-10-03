@@ -125,11 +125,13 @@ private:
     void SpawnFoliagePass();
     void SpawnScenicDetailPass();
     void SpawnGeographyFoundationPass();
+    void SpawnAuthoredShireLandmarkPass();
     void SpawnHobbitonArchitecturePass();
     void SpawnVillage();
     void SpawnProductionVillageDetailLayer();
     void SpawnVisibleShireMegaPass();
     void SpawnNaturalRouteMegaPass();
+    void SpawnPresentationCompositionPass();
     void SpawnWorldDensityDetailPass();
     void SpawnBagEndHeroPass();
     void SpawnPartySocialLoopPass();
