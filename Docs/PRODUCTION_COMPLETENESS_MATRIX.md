@@ -3126,3 +3126,17 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | FBX technical disposition | UNCHANGED / NOT YET RE-RUN | no candidate rejected by #11 normalization job |
 | UE4 normalized revalidation | PENDING NEW EXACT HEAD | hard gates unchanged |
 | PIE/device/visual/FPS | NOT ACCEPTED | no direct evidence |
+
+## 2026-10-04 - Blender FBX dependency correction
+
+| Check | Status | Evidence boundary |
+|---|---|---|
+| Hosted RPG static scan | PASS | Gauntlet #14 |
+| Cleric exact payload | STATIC-PASS / UE4 UNTESTED | `ddbd7082...b6daa`, FBX 7400 |
+| Wizard exact payload | STATIC-PASS / UE4 UNTESTED | `ddd72512...4636d`, FBX 7400 |
+| Blender 4.0.2 install | PASS | Gauntlet #14 |
+| FBX normalization | INFRA-FAILED BEFORE IMPORT | missing Python numpy module |
+| python3-numpy dependency | SOURCE-FIXED | explicit install + readiness probe |
+| UE4 normalized technical gate | PENDING NEW EXACT HEAD | hard gates unchanged |
+| Deformation / AnimBP / runtime | BLOCKED | clean technical winner required |
+| PIE/device/visual/FPS | NOT ACCEPTED | no matching evidence |
