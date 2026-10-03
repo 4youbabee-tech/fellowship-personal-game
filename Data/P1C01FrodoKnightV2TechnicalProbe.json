@@ -28,5 +28,7 @@
     "ram_gb": 8,
     "vram_gb_class": 2
   },
-  "evidence_boundary": "Technical import probe only. No final likeness, deformation, retarget, AnimBP, runtime, PIE, device, visual or performance acceptance."
+  "evidence_boundary": "Technical import probe only. No final likeness, deformation, retarget, AnimBP, runtime, PIE, device, visual or performance acceptance.",
+  "rejection_history": "Data/P1C01FrodoTechnicalRejectionHistoryV1.json",
+  "memory_rule": "Before probing any future Frodo candidate, reject exact SHA256 matches already recorded in the durable rejection history."
 }
