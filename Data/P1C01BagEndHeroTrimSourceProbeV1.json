@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "packet_id": "P1C01_BAG_END_HERO_TRIM_SOURCE_PROBE_V1",
+  "status": "SOURCE_PREPRODUCTION_ACTIVE",
+  "runtime_chapter": "P1C01",
+  "runtime_integration_allowed": false,
+  "objective": "Find an exact, production-usable modular FBX source family for Bag End hero round-door/window/trim support before any architectural primitive fallback is removed.",
+  "source_basis": {
+    "project_world_reference": [
+      "The Shire/Hobbiton: warm domestic scale, circular doors, gardens.",
+      "Bag End: dense lived-in props, round geometry, narrative-hub landmark."
+    ],
+    "current_runtime_contract": "Data/P1C01VisibleWorldProxyReplacementV1.json forbids fallback removal until exact replacement asset import/QC evidence exists."
+  },
+  "current_production_reuse_audit": {
+    "SM_ShHobbitFacade": "KEEP; production facade already resident but does not prove exact round-door/window/trim replacement.",
+    "SM_ShFlowerBox": "KEEP for domestic dressing; not architectural trim.",
+    "SM_ShLantern": "KEEP for domestic dressing; not architectural trim.",
+    "SM_ShBench": "KEEP for domestic dressing; not architectural trim.",
+    "SM_ShCartLoaded": "KEEP for domestic dressing; not architectural trim.",
+    "TX_ShDoorGreen_bmp": "REJECT_FOR_NEW_TEXTURE_PIPELINE; BMP is not accepted for production texture intake."
+  },
+  "candidate_families": [
+    {
+      "rank": 1,
+      "provider": "KENNEY",
+      "source_id": "BUILDING_KIT",
+      "source_page": "https://kenney.nl/assets/building-kit",
+      "observed_license": "CC0",
+      "observed_files": "80x 3D files on official page",
+      "purpose": "Probe archive contents for independent door/window/frame/trim FBX pieces.",
+      "status": "PROVIDER_VERIFIED_EXACT_FILE_DISCOVERY_PENDING"
+    },
+    {
+      "rank": 2,
+      "provider": "KENNEY",
+      "source_id": "MODULAR_BUILDINGS",
+      "source_page": "https://kenney.nl/assets/modular-buildings",
+      "observed_license": "CC0",
+      "observed_files": "100x 3D files on official page",
+      "purpose": "Probe modular building parts only if independent hero-support pieces exist; do not use whole-building meshes as Bag End hero replacements.",
+      "status": "PROVIDER_VERIFIED_EXACT_FILE_DISCOVERY_PENDING"
+    },
+    {
+      "rank": 3,
+      "provider": "QUATERNIUS",
+      "source_id": "QTN_MEDIEVAL_VILLAGE_MEGAKIT",
+      "source_page": "https://quaternius.com/packs/medievalvillagemegakit.html",
+      "observed_license": "CC0_CAPTURED_IN_WAREHOUSE_REGISTRY",
+      "purpose": "Probe only after public-download discovery and immutable receipt evidence; hero use requires art-direction fit.",
+      "status": "PUBLIC_DOWNLOAD_AND_EXACT_FILE_DISCOVERY_PENDING"
+    }
+  ],
+  "rejected_as_exact_replacement": [
+    {
+      "provider": "KAYKIT",
+      "source_id": "KAYKIT_MEDIEVAL_HEXAGON_1_0",
+      "reason": "Repository tree inspection exposes complete buildings/walls/fences but no independent door/window/trim files suitable as exact Bag End hero support."
+    },
+    {
+      "source": "SourceAssets/Production/World/Moria/SM_MoriaDoor.obj",
+      "reason": "Wrong visual/cultural family and OBJ source is not accepted as the hero FBX intake path."
+    }
+  ],
+  "required_static_gates": [
+    "exact source page and license evidence",
+    "immutable revision or receipt SHA256",
+    "FBX only for selected 3D hero-support asset",
+    "no BMP texture payload; PNG/TGA only, channel-packed where applicable",
+    "independent door/window/frame/trim geometry confirmed",
+    "UV/material slots present",
+    "bounded triangle/material count for ~2GB VRAM target",
+    "no runtime integration until real UE4.27.2 import/QC succeeds"
+  ],
+  "promotion_sequence": [
+    "provider verification",
+    "exact file discovery",
+    "receipt/SHA256",
+    "static FBX QC",
+    "real UE4.27.2 static-mesh import",
+    "material/UV validation",
+    "runtime binding in single serialized runtime lane",
+    "PIE/device/visual acceptance later"
+  ],
+  "evidence_boundary": "SOURCE-IMPLEMENTED only. Fresh hosted Pre-Unreal/classifier evidence required. No staged asset, UE import, runtime replacement, PIE/device/visual acceptance.",
+  "refresh_base": "071a0ed2632c4919ed9160b817a965ed3b1eb76c"
+}
