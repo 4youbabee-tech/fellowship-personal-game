@@ -4021,3 +4021,10 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - `test_source_contracts.py` now locks the KayKit bridge to P1C01, CC0/direct official GitHub URLs, FBX-only animated-character intake, max-two UE4 probes, modular Frodo fallback, no synchronous heavy runtime loading and no final-likeness claim.
 - The guard also requires ZIP path/license/hash checks in hosted staging, all UE4 skeletal rejection tokens, exact-head workflow dependency ordering and artifact capture.
 - Status remains **SOURCE-IMPLEMENTED / HOSTED + UE4 EXACT-HEAD VALIDATION PENDING**.
+
+## 2026-10-04 - KayKit hosted ZIP path-filter root-cause correction
+
+- KayKit Rig Technical Bridge run #1 failed before any FBX static/UE4 candidate judgment. The official archive downloaded, but the hosted ZIP selector returned `KAYKIT_RIG_NO_PREFERRED_FBX`.
+- Root cause was path-leaf matching in the hosted staging script after path normalization. The selector now normalizes the full archive path to lowercase, splits the leaf explicitly on `/`, and matches only `*/characters/fbx/*` against the bounded preferred filename list.
+- No KayKit FBX payload was rejected by run #1. Exact-head hosted/static + UE4 validation must rerun on the corrected head.
+- Status remains **SOURCE-IMPLEMENTED / VALIDATION PENDING**; no deformation/runtime/PIE/device/visual/FPS acceptance is claimed.
