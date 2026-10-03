@@ -3026,3 +3026,23 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Exact-head Pre-Unreal | PENDING |
 | Exact-head UE4.27.2 validation | PENDING |
 | PIE/device/rendered visual/FPS acceptance | NOT CLAIMED |
+
+
+## 2026-10-03 - Frodo human breakthrough lane
+
+| Gate | Status |
+|---|---|
+| Distinct licensed humanoid source | IMPLEMENTED: OGA/Kenney Animated Characters 1 CC0 |
+| Exact FBX inventory/version/hash gate | IMPLEMENTED / RUN PENDING |
+| Known rejected payload exclusion | IMPLEMENTED |
+| Hosted cheap static gate before UE runner | IMPLEMENTED |
+| Real UE4.27 skeletal import | PENDING |
+| Positive reference-bone count | PENDING |
+| Smoothing-group gate | PENDING |
+| Bind-pose gate | PENDING |
+| UV gate | PENDING |
+| Deformation / retarget suitability | BLOCKED UNTIL TECHNICAL PASS |
+| AnimBP locomotion | BLOCKED |
+| Async runtime Frodo replacement | BLOCKED |
+| Modular fallback | RETAINED |
+| PIE/device/rendered visual/FPS acceptance | NOT CLAIMED |
