@@ -2828,3 +2828,14 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Binary static FBX QC | PENDING | no binary payload available in current execution environment |
 | UE4.27.2 import | BLOCKED | requires official receipt + static QC |
 | Runtime replacement | BLOCKED | exact import/QC evidence required first |
+
+
+## 2026-10-03 - Bag End hero trim source receipt progression
+
+| Gate | Status | Evidence boundary |
+|---|---|---|
+| Official provider page | RESOLVED | Kenney Building Kit / CC0 / 80 files |
+| Official direct ZIP URL | RESOLVED | recorded in `P1C01BagEndHeroTrimSourceProbeV1.json` |
+| Archive SHA256 + byte size | PENDING | warehouse receipt required |
+| Extracted candidate hash match | PENDING | must match discovery identities |
+| Static FBX QC / UE4.27.2 import | PENDING | no promotion/runtime binding yet |
