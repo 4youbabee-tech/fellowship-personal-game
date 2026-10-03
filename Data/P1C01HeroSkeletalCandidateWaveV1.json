@@ -80,7 +80,8 @@
     "QTN_RPG_CHARACTERS",
     "QTN_FANTASY_OUTFITS",
     "QTN_UNIVERSAL_ANIMATION_LIBRARY",
-    "OGA_QTN_ULTIMATE_ANIMATED_CHARACTERS_CC0"
+    "OGA_QTN_ULTIMATE_ANIMATED_CHARACTERS_CC0",
+    "OGA_KENNEY_ANIMATED_CHARACTERS_1_CC0"
   ],
   "candidate_policy": {
     "animated_source_format": ".fbx",
@@ -101,7 +102,10 @@
     "fbx_pipeline_compatibility": "UE4.27 FBX 2018-compatible export required",
     "ranking_semantics": "EXACT_FILENAME_TOKENS_ONLY",
     "substring_matching_forbidden": true,
-    "final_likeness_from_filename_forbidden": true
+    "final_likeness_from_filename_forbidden": true,
+    "source_asset_priority_bonus": {
+      "OGA_KENNEY_ANIMATED_CHARACTERS_1_CC0": 120
+    }
   },
   "character_scoring": {
     "FRODO": [
@@ -168,7 +172,7 @@
     "warehouse_inventory_must_be_clean": true,
     "output_state": "FRODO_STATIC_FBX_QC_REQUIRED_NOT_IMPORTED"
   },
-  "evidence_boundary": "Exact filename-token candidate ranking plus static FBX structure probing only. No FBX 2018 export confirmation, UE4 skeletal import, skeleton/skin quality, retarget/deformation, final character likeness, runtime replacement, PIE, device, visual or performance acceptance is claimed.",
+  "evidence_boundary": "Current candidate discovery prioritizes the distinct CC0 Kenney Animated Characters 1 family. Static structure and exact payload identity must pass before real UE4.27 import. Runtime integration remains forbidden until technical, deformation, retarget and AnimBP gates pass.",
   "owner_sequence_authority": "Data/P1C01RuntimeChapterSequenceV1.json",
   "owner_execution_order": [
     "FRODO",
@@ -208,7 +212,12 @@
     ],
     "output_state": "STATIC_FBX_STRUCTURE_PRESENT_UE4_IMPORT_REQUIRED",
     "ready_for_import": false,
-    "evidence_boundary": "Static FBX header/marker evidence only; no FBX 2018 export, UE4 import, deformation, final likeness, runtime, PIE, device, visual or performance acceptance."
-  }
+    "evidence_boundary": "Static FBX header/marker evidence only; no FBX 2018 export, UE4 import, deformation, final likeness, runtime, PIE, device, visual or performance acceptance.",
+    "candidate_source_asset_id_allowlist": [
+      "OGA_KENNEY_ANIMATED_CHARACTERS_1_CC0"
+    ]
+  },
+  "dedicated_validation_source_packs": [
+    "OGA_KENNEY_ANIMATED_CHARACTERS_1_CC0"
+  ]
 }
-
