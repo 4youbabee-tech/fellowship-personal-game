@@ -44,13 +44,13 @@ foreach($name in $subset){
       $matched += [pscustomobject]@{ item=$candidate; sha=$candidateSha }
     }
   }
-  if($matched.Count -ne 1){
-    throw "BAG_END_TRIM_EXPECTED_HASH_MATCH_COUNT_FAIL file=$name discovered=$($matches.Count) expectedMatches=$($matched.Count)"
+  if($matched.Count -lt 1){
+    throw "BAG_END_TRIM_EXPECTED_HASH_MATCH_MISSING file=$name discovered=$($matches.Count)"
   }
   $item=$matched[0].item
   $sha=[string]$matched[0].sha
-  $rows += [ordered]@{ file=$name; relative_path=$item.FullName.Substring($extract.Length).TrimStart('\'); bytes=[int64]$item.Length; sha256=$sha; match=$true }
-  Write-Host "BAG_END_TRIM_OFFICIAL_FILE_MATCH file=$name bytes=$($item.Length) sha256=$sha path=$($item.FullName)"
+  $rows += [ordered]@{ file=$name; relative_path=$item.FullName.Substring($extract.Length).TrimStart('\'); bytes=[int64]$item.Length; sha256=$sha; match=$true; identical_match_count=[int]$matched.Count }
+  Write-Host "BAG_END_TRIM_OFFICIAL_FILE_MATCH file=$name bytes=$($item.Length) sha256=$sha identicalMatches=$($matched.Count) path=$($item.FullName)"
 }
 $receipt=[ordered]@{
   schema_version=1
