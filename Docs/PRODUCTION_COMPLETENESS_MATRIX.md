@@ -2959,3 +2959,15 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Hosted archive/FBX inventory | ACTIVE |
 | UE4 runner reservation | BLOCKED UNTIL HOSTED STATIC PASS |
 | Final Frodo likeness/runtime | NOT CLAIMED |
+
+
+## 2026-10-03 - Frodo rejected-payload guard reconciled on current develop
+
+| Control | Status |
+|---|---|
+| Exact rejected payload hashes | DURABLY RECORDED |
+| Knight V2 UE4 skeletal registration | PASS, 51 bones |
+| Knight V2 smoothing groups | FAIL |
+| Knight V2 bind pose | FAIL |
+| Retry same exact payload | FORBIDDEN |
+| Distinct OGA Lowpoly Dummy family | SOURCE INVENTORY PASS ONLY; UE4 TECHNICAL PROBE NEXT |
