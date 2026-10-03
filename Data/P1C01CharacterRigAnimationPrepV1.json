@@ -116,11 +116,12 @@
     {
       "provider": "OPENGAMEART",
       "id": "OGA_QTN_RPG_CHARACTERS_CC0",
-      "state": "AUTHORIZED_FOR_STAGING",
+      "state": "REJECTED_TECHNICAL_DO_NOT_RESTAGE",
       "required_final_format": "FBX",
       "observed_page_license": "CC0",
       "license_capture": "OFFICIAL_OPENGAMEART_QUATERNIUS_RPG_UPLOAD_VERIFIED_2026_10_02",
-      "intended_use": "DISTINCT_FRODO_RIG_BASE_MULTI_CANDIDATE_GAUNTLET_NOT_FINAL_LIKENESS"
+      "intended_use": "DISTINCT_FRODO_RIG_BASE_MULTI_CANDIDATE_GAUNTLET_NOT_FINAL_LIKENESS",
+      "disposition": "Hosted static scan and Blender normalization succeeded, but exact normalized Cleric/Wizard payloads failed UE4.27 bind-pose gates; family closed for Frodo promotion."
     }
   ],
   "required_bundle": {
@@ -163,6 +164,6 @@
     "later_characters": "DEFERRED_UNTIL_SERIAL_PREDECESSORS_COMPLETE",
     "integration_rule": "Candidate QC must pass before READY_FOR_IMPORT or runtime integration.",
     "qc_request_id": "P1C01_FRODO_CANDIDATE_QC_2026_10_01_V1",
-    "qc_request_state": "OGA_QTN_RPG_MULTI_CANDIDATE_GAUNTLET_ACTIVE"
+    "qc_request_state": "QTN_UNIVERSAL_BASE_CHARACTERS_NEXT_SOURCE"
   }
 }
