@@ -3945,3 +3945,11 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Hosted inventory downloads the public archive and records every FBX entry, exact SHA256, size, FBX version and skeletal/static markers before any UE4 machine time is spent.
 - This candidate is a technical rig-base/deformation candidate only; it is not accepted as final Frodo likeness.
 - Generic UE validation inherits green parent proof for this source-only lane; only a static-pass exact FBX is eligible for the dedicated UE4 skeletal probe.
+
+
+## 2026-10-03 - Frodo technical rejection history reconciled after source-inventory merge
+
+- Durable exact-payload rejection history is preserved on current `develop` ancestry so known-bad character assets are not retried after branch cleanup.
+- Knight V2 exact payload `b25e35cc7eaaa3c7c103f10a4f41fde1cbd81936fede9aa9ae4efbd29d40ba1b` remains **REJECTED_TECHNICAL** after UE4.27 skeletal registration with **51 bones** because `MISSING_SMOOTHING_GROUPS` and `MISSING_BIND_POSE_BONES` were observed.
+- Earlier rejected Quaternius/KayKit/Kenney payload hashes and reasons remain in `Data/P1C01FrodoTechnicalRejectionHistoryV1.json`.
+- The distinct OpenGameArt Lowpoly Dummy source inventory has now landed separately; rejected-history preservation does not imply that candidate has passed UE4 import, deformation, retarget, AnimBP, runtime, PIE, device, visual, or performance gates.
