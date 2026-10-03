@@ -3898,3 +3898,10 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - `VISIBLE SHIRE FIRST` and `FRODO FIRST REAL RIG` run in parallel source lanes, with exactly one runtime-changing P1C01 writer at a time.
 - UE5 migration, MetaHuman Crowd, Nanite and UE5 PCG are not current production dependencies. UE4.27 HISM/ISM/foliage-compatible paths remain preferred.
 - Every accepted direction, blocker and evidence boundary must be written back to repository memory; chat recall is never authoritative.
+
+
+## 2026-10-03 - Bag End hero trim official receipt gate moved to hosted CI
+
+- Added a hosted Windows source-only receipt probe for the official Kenney Building Kit ZIP so provenance/hash work does not reserve the single UE4 self-hosted runner.
+- The probe must match the official extracted `door-rotate-round-a.fbx`, `wall-doorway-round.fbx`, `wall-window-round-detailed.fbx` and `colormap.png` SHA256 identities already discovered before any UE import/runtime replacement is authorized.
+- Status: **SOURCE PIPELINE ACTIVE / OFFICIAL RECEIPT EXECUTION PENDING**.
