@@ -2897,3 +2897,14 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | UE5 migration / Nanite / MetaHuman Crowd / UE5 PCG | NOT CURRENT STACK |
 | Proposal adoption | VERIFY AGAINST LIVE DEVELOP + PROJECT SOURCES |
 | Durable repository memory | REQUIRED FOR EVERY ACCEPTED MAJOR DIRECTION |
+
+
+## 2026-10-03 - Frodo real-rig lane current-ancestry reconciliation
+
+| Item | Status | Evidence boundary |
+|---|---|---|
+| Opt-in UE4.27 skeletal FBX importer | SOURCE-IMPLEMENTED | exact-head build pending |
+| Direct FBX character staging | SOURCE-IMPLEMENTED | hosted contract pending |
+| Default character FBX behavior | DEFERRED unless explicit flag | preserved |
+| Nonzero skeleton/bone proof | IMPLEMENTED in import commandlet | candidate run pending |
+| Frodo deformation/retarget/AnimBP/runtime | NOT STARTED | requires clean technical candidate |
