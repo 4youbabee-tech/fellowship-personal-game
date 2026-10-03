@@ -3889,3 +3889,12 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Existing authored garden locations are unchanged. Cube/sphere treatment remains deterministic fallback only when the exact production mesh/HISM binding is unavailable.
 - No quest/story/NPC authority changed. No new Tick, collision, synchronous heavy load, or runtime chapter activation was added.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. No PIE/device/visual/performance acceptance claim.
+
+
+## 2026-10-03 - Owner-visible game delivery directive made durable
+
+- Owner priority is now explicit repository authority: deliver a visibly real game first — natural Shire scenery and human-looking production characters — rather than accumulating backend-only progress.
+- Programmer/external proposals remain advisory until checked against current `develop`, UE4.27.2, Project Sources and the i7/8 GB/~2 GB VRAM target.
+- `VISIBLE SHIRE FIRST` and `FRODO FIRST REAL RIG` run in parallel source lanes, with exactly one runtime-changing P1C01 writer at a time.
+- UE5 migration, MetaHuman Crowd, Nanite and UE5 PCG are not current production dependencies. UE4.27 HISM/ISM/foliage-compatible paths remain preferred.
+- Every accepted direction, blocker and evidence boundary must be written back to repository memory; chat recall is never authoritative.
