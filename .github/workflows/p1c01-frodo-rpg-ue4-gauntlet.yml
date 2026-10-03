@@ -1,0 +1,172 @@
+name: P1C01 Frodo RPG Multi Candidate UE4 Gauntlet
+
+on:
+  pull_request:
+    branches: [develop]
+    paths:
+      - 'Data/P1C01OpenGameArtRpgHeroCandidateBatchV1.json'
+      - 'Data/P1C01FrodoTechnicalRejectionHistoryV1.json'
+      - 'Data/P1C01CharacterRigAnimationPrepV1.json'
+      - 'Data/P1C01HeroSkeletalCandidateWaveV1.json'
+      - 'Scripts/stage_p1c01_frodo_rpg_gauntlet.ps1'
+      - 'Scripts/run_p1c01_frodo_rpg_ue4_gauntlet.ps1'
+      - 'Scripts/run_p1c01_frodo_rpg_repair_factory.ps1'
+      - 'Scripts/stage_opengameart_character_candidate.ps1'
+      - 'Scripts/ci_import_production_assets.cmd'
+      - 'Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp'
+      - '.github/workflows/p1c01-frodo-rpg-ue4-gauntlet.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: p1c01-frodo-rpg-ue4-gauntlet
+  cancel-in-progress: true
+
+jobs:
+  hosted_static_gauntlet:
+    name: Hosted bounded RPG FBX gauntlet
+    runs-on: windows-latest
+    timeout-minutes: 25
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          fetch-depth: 2
+          persist-credentials: false
+
+      - name: Verify exact checkout
+        shell: cmd
+        run: |
+          @echo off
+          for /f "delims=" %%H in ('git rev-parse HEAD') do set "CHECKED_SHA=%%H"
+          if /I not "%TARGET_SHA%"=="%CHECKED_SHA%" exit /b 71
+
+      - name: Scan distinct Quaternius RPG source and rank bounded candidates
+        shell: powershell
+        run: |
+          & "$env:GITHUB_WORKSPACE\Scripts\stage_p1c01_frodo_rpg_gauntlet.ps1" -ManifestPath "$env:GITHUB_WORKSPACE\Data\P1C01OpenGameArtRpgHeroCandidateBatchV1.json" -RejectionHistoryPath "$env:GITHUB_WORKSPACE\Data\P1C01FrodoTechnicalRejectionHistoryV1.json" -OutputRoot "$env:RUNNER_TEMP\shire-frodo-rpg-static"
+
+      - name: Upload hosted gauntlet evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1c01-frodo-rpg-static-${{ env.TARGET_SHA }}
+          path: ${{ runner.temp }}\shire-frodo-rpg-static\p1c01_frodo_rpg_static_gauntlet.json
+          if-no-files-found: warn
+          retention-days: 14
+
+  hosted_repair_normalization:
+    name: Hosted Blender FBX normalization
+    needs: hosted_static_gauntlet
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          fetch-depth: 2
+          persist-credentials: false
+
+      - name: Verify exact checkout
+        shell: bash
+        run: |
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+
+      - name: Install hosted Blender normalizer
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y blender
+          blender --version | head -n 1
+
+      - name: Normalize bounded candidates without weakening gates
+        shell: pwsh
+        run: |
+          & "$env:GITHUB_WORKSPACE/Scripts/run_p1c01_frodo_rpg_repair_factory.ps1" -Mode NormalizeHosted -ManifestPath "$env:GITHUB_WORKSPACE/Data/P1C01OpenGameArtRpgHeroCandidateBatchV1.json" -RejectionHistoryPath "$env:GITHUB_WORKSPACE/Data/P1C01FrodoTechnicalRejectionHistoryV1.json" -OutputRoot "$env:RUNNER_TEMP/shire-frodo-rpg-repair" -BlenderExecutable "blender"
+
+      - name: Upload normalized candidate evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1c01-frodo-rpg-repair-${{ env.TARGET_SHA }}
+          path: ${{ runner.temp }}/shire-frodo-rpg-repair
+          if-no-files-found: error
+          retention-days: 14
+
+  ue4_bounded_gauntlet:
+    name: UE4.27.2 normalized Frodo RPG gauntlet
+    needs: hosted_repair_normalization
+    runs-on:
+      - self-hosted
+      - Windows
+      - X64
+      - ue4-27
+    timeout-minutes: 90
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          fetch-depth: 2
+          persist-credentials: false
+
+      - name: Verify exact checkout and runner
+        shell: cmd
+        run: |
+          @echo off
+          for /f "delims=" %%H in ('git rev-parse HEAD') do set "CHECKED_SHA=%%H"
+          if /I not "%TARGET_SHA%"=="%CHECKED_SHA%" exit /b 71
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\verify_runner_session.ps1"
+
+      - name: Download normalized candidate evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: p1c01-frodo-rpg-repair-${{ env.TARGET_SHA }}
+          path: ${{ runner.temp }}\shire-frodo-rpg-repair
+      - name: Build ShireJourneyEditor once for bounded gauntlet
+        shell: cmd
+        run: '"%GITHUB_WORKSPACE%\Scripts\ci_build_unreal.cmd"'
+
+      - name: Revalidate normalized payloads in UE4 and stop on first clean pass
+        shell: powershell
+        run: |
+          & "$env:GITHUB_WORKSPACE\Scripts\run_p1c01_frodo_rpg_repair_factory.ps1" -Mode ProbeUE4 -RepairReceiptPath "$env:RUNNER_TEMP\shire-frodo-rpg-repair\p1c01_frodo_rpg_repair_receipt.json" -OutputRoot "$env:RUNNER_TEMP\shire-frodo-rpg-ue4"
+
+      - name: Upload UE4 gauntlet evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1c01-frodo-rpg-ue4-${{ env.TARGET_SHA }}
+          path: |
+            ${{ runner.temp }}\shire-frodo-rpg-repair\p1c01_frodo_rpg_repair_receipt.json
+            ${{ runner.temp }}\shire-frodo-rpg-ue4\p1c01_frodo_rpg_repair_ue4_receipt.json
+            ${{ github.workspace }}\Saved\Logs\CI-ProductionAssetImport.log
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Cleanup transient Frodo gauntlet assets
+        if: always()
+        shell: powershell
+        run: |
+          foreach($relative in @(
+            "SourceAssets/Production/Characters/Rigs/FRODO/SK_FRODO.fbx",
+            "Content/Production/Characters/Rigs/FRODO/SK_FRODO.uasset",
+            "Content/Production/Characters/Rigs/FRODO/SK_FRODO_Skeleton.uasset",
+            "Content/Production/Characters/Rigs/FRODO/SK_FRODO_PhysicsAsset.uasset"
+          )) {
+            $tracked = @(& git.exe -C $env:GITHUB_WORKSPACE ls-files -- $relative 2>$null)
+            if($LASTEXITCODE -ne 0) { throw "FRODO_RPG_GAUNTLET_CLEANUP_GIT_FAIL path=$relative" }
+            if($tracked.Count -eq 0) { Remove-Item -LiteralPath (Join-Path $env:GITHUB_WORKSPACE $relative) -Force -ErrorAction SilentlyContinue }
+          }
+          Write-Host "FRODO_RPG_GAUNTLET_CLEANUP_PASS"
