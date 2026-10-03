@@ -3105,3 +3105,44 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Warm glass / knob / chimney-step accents | RETAINED BOUNDED | non-structural presentation accents |
 | UE4.27 static import/build | PENDING EXACT-HEAD | PR validation required |
 | PIE/device/rendered visual/FPS | NOT ACCEPTED | direct evidence required |
+
+## 2026-10-04 - KayKit rig technical bridge
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Ledger registration before code | COMPLETE | P1C01 KAYKIT_RIG_TECHNICAL_BRIDGE |
+| Source | AUTHORIZED | KayKit official GitHub, CC0 |
+| Final Frodo likeness | NOT CLAIMED | technical bridge only |
+| Candidate budget | LOCKED | max 2 UE4 probes |
+| Hosted direct-source/license/hash gate | SOURCE-IMPLEMENTED | exact GitHub URLs + CC0 + SHA256 |
+| ZIP/path/size safety | SOURCE-IMPLEMENTED | bounded extraction |
+| FBX static rig markers | SOURCE-IMPLEMENTED | version/Geometry/Model/LimbNode/Skin/Cluster/animation |
+| UE4 skeletal hard gate | SOURCE-IMPLEMENTED | registration/bones/assets + smoothing/bind/UV rejects |
+| Runtime hard reference | NONE ADDED | modular Frodo fallback preserved |
+| Sync heavy runtime load | NONE ADDED | later integration remains soft/async |
+| Deformation / locomotion / AnimBP | BLOCKED | clean technical winner required |
+| Exact-head Pre-Unreal / UE4 | PENDING | PR validation required |
+| PIE/device/rendered visual/FPS | NOT ACCEPTED | direct evidence required |
+
+| KayKit bridge source-contract regression guard | SOURCE-IMPLEMENTED | `test_source_contracts.py`; locks CC0/direct-source, max-two budget, hard rejection reasons and non-runtime boundary |
+
+## 2026-10-04 - KayKit hosted path-filter correction
+
+| Check | Status | Evidence boundary |
+|---|---|---|
+| Official KayKit archive download | REACHED | run #1 progressed to archive scan |
+| Preferred FBX discovery | TOOLING-FAILED BEFORE CANDIDATE QC | path selector returned zero |
+| Root-cause correction | SOURCE-IMPLEMENTED | lowercase normalized archive path + explicit leaf split |
+| KayKit asset technical disposition | UNCHANGED / UNTESTED | no FBX was judged by run #1 |
+| Exact-head hosted/UE4 rerun | PENDING | corrected head required |
+
+## 2026-10-04 - KayKit character discovery hardening
+
+| Check | Status | Evidence boundary |
+|---|---|---|
+| KayKit rerun #4 candidate judgment | NOT REACHED | discovery failed before FBX static QC |
+| Character FBX discovery | SOURCE-HARDENED | all `/Characters/*.fbx` first, ranking second |
+| Preferred candidate order | PRESERVED | Rogue -> RogueHooded -> Mage -> Barbarian -> Knight |
+| Fallback ranking | BOUNDED | smallest static-pass character FBX only |
+| UE4 probe cap | UNCHANGED | max 2 |
+| Exact-head rerun | PENDING | corrected head required |
