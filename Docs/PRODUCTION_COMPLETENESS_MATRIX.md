@@ -3043,3 +3043,74 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Visible Shire + human characters | PRIMARY DELIVERY TARGET |
 | Low-spec DX11 / 720p / 30 FPS architecture constraints | UNCHANGED |
 | PIE/device/visual/FPS claims without direct evidence | FORBIDDEN |
+
+## 2026-10-03 - Frodo human breakthrough lane
+
+| Gate | Status |
+|---|---|
+| Distinct licensed humanoid source | IMPLEMENTED: OGA/Kenney Animated Characters 1 CC0 |
+| Exact FBX inventory/version/hash gate | IMPLEMENTED / RUN PENDING |
+| Known rejected payload exclusion | IMPLEMENTED |
+| Hosted cheap static gate before UE runner | IMPLEMENTED |
+| Real UE4.27 skeletal import | PENDING |
+| Positive reference-bone count | PENDING |
+| Smoothing-group gate | PENDING |
+| Bind-pose gate | PENDING |
+| UV gate | PENDING |
+| Deformation / retarget suitability | BLOCKED UNTIL TECHNICAL PASS |
+| AnimBP locomotion | BLOCKED |
+| Async runtime Frodo replacement | BLOCKED |
+| Modular fallback | RETAINED |
+| PIE/device/rendered visual/FPS acceptance | NOT CLAIMED |
+
+
+## 2026-10-03 - Frodo breakthrough correction pass
+
+| Check | Result |
+|---|---|
+| Kenney animated archive download | PASS on prior head: 718021 bytes |
+| Archive SHA256 | `9cc53e82c941781f26aa8fb39d40887cf14b1d74cca2d10ccc6e7c140a68f820` |
+| Archive FBX count | 4 |
+| First hosted probe run | FAIL: unset `$LASTEXITCODE` guard |
+| Pre-Unreal #1782 | FAIL: provider contract 6 required / 5 staged |
+| Probe-script correction | IMPLEMENTED |
+| Sixth provider contract + warehouse staging | IMPLEMENTED |
+| New exact-head hosted static inventory | PENDING |
+| New exact-head UE4 skeletal probe | PENDING |
+| Runtime/visual promotion | BLOCKED |
+
+
+## 2026-10-03 - Frodo RPG bounded multi-candidate escalation
+
+| Gate | Status |
+|---|---|
+| Kenney characterMedium exact UE4 registration | PASS: 59 bones |
+| Kenney smoothing-group gate | FAIL |
+| Kenney bind-pose gate | FAIL |
+| Kenney payload retry | FORBIDDEN |
+| Kenney active source family | CLOSED / EXHAUSTED |
+| Distinct Quaternius RPG CC0 source | ACTIVATED |
+| Full-archive hosted FBX inventory | IMPLEMENTED / RUN PENDING |
+| Known-rejection SHA exclusion | IMPLEMENTED |
+| Maximum UE4 candidates per reservation | 4 |
+| Single editor build per bounded gauntlet | IMPLEMENTED |
+| Stop on first clean technical pass | IMPLEMENTED |
+| Invalid bind-pose rejection | IMPLEMENTED |
+| Deformation / retarget mega gate | BLOCKED UNTIL TECHNICAL PASS |
+| AnimBP / async runtime promotion | BLOCKED |
+| PIE/device/rendered visual/FPS acceptance | NOT CLAIMED |
+
+## 2026-10-04 - Frodo RPG repair factory status
+
+| Gate | Status | Evidence boundary |
+|---|---|---|
+| Original Rogue payload | REJECTED | 52 bones; missing smoothing groups + bind-pose bones |
+| Original Ranger payload | REJECTED | 50 bones; missing smoothing groups + bind-pose bones |
+| Original Monk payload | REJECTED | 46 bones; missing smoothing groups + bind-pose bones |
+| Original Warrior payload | REJECTED | 49 bones; missing smoothing groups + bind-pose bones |
+| Exact original SHA retry | FORBIDDEN | hashes preserved in rejection history |
+| Hosted legal re-export normalization | SOURCE-IMPLEMENTED | new payload SHA required; original identity retained as provenance |
+| UE4.27 normalized revalidation | PENDING EXACT-HEAD RUN | unchanged hard gates |
+| Deformation / retarget | BLOCKED UNTIL CLEAN TECHNICAL PASS | no inference from bone count alone |
+| AnimBP / async runtime Frodo | BLOCKED | modular fallback retained |
+| PIE / device / visual / FPS | NOT ACCEPTED | no matching evidence |
