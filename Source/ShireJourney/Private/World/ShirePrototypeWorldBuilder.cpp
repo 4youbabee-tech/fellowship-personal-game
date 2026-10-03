@@ -806,8 +806,8 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
             // UE4.27 requires the light to be movable before changing the actor rotation in PIE.
             SunComponent->SetMobility(EComponentMobility::Movable);
             Sun->SetActorRotation(FRotator(-38.0f, -28.0f, 0.0f));
-            SunComponent->SetIntensity(2.55f);
-            SunComponent->SetLightColor(FLinearColor(1.0f, 0.86f, 0.70f));
+            SunComponent->SetIntensity(2.45f);
+            SunComponent->SetLightColor(FLinearColor(1.0f, 0.90f, 0.78f));
             SunComponent->SetCastShadows(true);
             SunComponent->SetAtmosphereSunLight(true);
             SunComponent->SetAtmosphereSunLightIndex(0);
@@ -860,12 +860,12 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
     {
         if (UExponentialHeightFogComponent* FogComponent = HeightFog->GetComponent())
         {
-            FogComponent->SetFogDensity(0.0085f);
-            FogComponent->SetFogHeightFalloff(0.17f);
-            FogComponent->SetFogInscatteringColor(FLinearColor(0.62f, 0.70f, 0.61f));
-            FogComponent->SetDirectionalInscatteringColor(FLinearColor(1.0f, 0.82f, 0.60f));
-            FogComponent->SetStartDistance(850.0f);
-            FogComponent->SetFogMaxOpacity(0.72f);
+            FogComponent->SetFogDensity(0.0070f);
+            FogComponent->SetFogHeightFalloff(0.20f);
+            FogComponent->SetFogInscatteringColor(FLinearColor(0.70f, 0.76f, 0.68f));
+            FogComponent->SetDirectionalInscatteringColor(FLinearColor(0.95f, 0.84f, 0.68f));
+            FogComponent->SetStartDistance(1000.0f);
+            FogComponent->SetFogMaxOpacity(0.62f);
             FogComponent->SetVolumetricFog(false);
         }
     }
@@ -893,7 +893,7 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
         if (USkyLightComponent* SkyComponent = Cast<USkyLightComponent>(Sky->GetLightComponent()))
         {
             SkyComponent->SetMobility(EComponentMobility::Movable);
-            SkyComponent->SetIntensity(0.60f);
+            SkyComponent->SetIntensity(0.68f);
             SkyComponent->bLowerHemisphereIsBlack = false;
             SkyComponent->RecaptureSky();
         }
@@ -927,16 +927,16 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
         PostProcess->BlendWeight = 1.0f;
 
         PostProcess->Settings.bOverride_AutoExposureMinBrightness = true;
-        PostProcess->Settings.AutoExposureMinBrightness = 0.68f;
+        PostProcess->Settings.AutoExposureMinBrightness = 0.72f;
         PostProcess->Settings.bOverride_AutoExposureMaxBrightness = true;
-        PostProcess->Settings.AutoExposureMaxBrightness = 0.98f;
+        PostProcess->Settings.AutoExposureMaxBrightness = 0.96f;
         PostProcess->Settings.bOverride_AutoExposureBias = true;
-        PostProcess->Settings.AutoExposureBias = -0.12f;
+        PostProcess->Settings.AutoExposureBias = -0.08f;
 
         PostProcess->Settings.bOverride_BloomIntensity = true;
-        PostProcess->Settings.BloomIntensity = 0.16f;
+        PostProcess->Settings.BloomIntensity = 0.10f;
         PostProcess->Settings.bOverride_VignetteIntensity = true;
-        PostProcess->Settings.VignetteIntensity = 0.17f;
+        PostProcess->Settings.VignetteIntensity = 0.12f;
     }
 }
 
@@ -3465,6 +3465,120 @@ void AShirePrototypeWorldBuilder::SpawnAuthoredShireLandmarkPass()
 
 
 
+
+void AShirePrototypeWorldBuilder::SpawnPresentationCompositionPass()
+{
+    int32 ForegroundShrubCount = 0;
+    int32 WoodlandThresholdTreeCount = 0;
+    int32 UnderstoryFernCount = 0;
+    int32 FerryReedAccentCount = 0;
+
+    // Domestic foreground layers make Bag End/Hobbiton read as cultivated spaces.
+    // These stay outside the main traversal corridor and remain non-colliding HISM.
+    if (ShrubInstances && ProductionShrubMesh &&
+        ShrubInstances->GetStaticMesh() == ProductionShrubMesh)
+    {
+        const FVector ShrubCenters[] = {
+            FVector(-2490,-920,5), FVector(-2340,-1010,5), FVector(-2180,-970,5),
+            FVector(-1970,-1010,5), FVector(-1810,-930,5), FVector(-1650,-1040,5),
+            FVector(-1460,1060,5), FVector(-1260,1140,5), FVector(-1060,1080,5),
+            FVector(-790,1110,5), FVector(-520,1080,5), FVector(-250,1160,5),
+            FVector(40,-1040,5), FVector(310,-1110,5), FVector(590,-1030,5),
+            FVector(880,-1110,5), FVector(1160,-1010,5), FVector(1430,-960,5),
+            FVector(1710,980,5), FVector(1950,1040,5), FVector(2180,960,5),
+            FVector(2430,1060,5), FVector(2700,980,5), FVector(2960,1050,5),
+            FVector(3400,-1180,5), FVector(3820,-1250,5), FVector(4260,-1170,5),
+            FVector(4680,-1240,5)
+        };
+        for (int32 Index = 0; Index < UE_ARRAY_COUNT(ShrubCenters); ++Index)
+        {
+            const float Scale = 0.18f + 0.025f * static_cast<float>(Index % 4);
+            ShrubInstances->AddInstance(FTransform(
+                FRotator(0.0f, static_cast<float>((Index * 53) % 360), 0.0f),
+                ShrubCenters[Index],
+                FVector(Scale * 1.25f, Scale, Scale * 0.74f)));
+            ++ForegroundShrubCount;
+        }
+    }
+
+    // Threshold tree clusters emphasize the shift from open Shire to the tighter
+    // wooded road without filling the whole field section with forest.
+    if (WoodlandTreeInstances && ProductionCommonBroadleafTreeMesh &&
+        WoodlandTreeInstances->GetStaticMesh() == ProductionCommonBroadleafTreeMesh)
+    {
+        const FVector TreeLocations[] = {
+            FVector(10350, 1760,0), FVector(10950, 1680,0), FVector(11550, 1810,0),
+            FVector(10450,-1810,0), FVector(11100,-1710,0), FVector(11700,-1840,0),
+            FVector(12800, 1590,0), FVector(13650, 1660,0), FVector(14500, 1580,0),
+            FVector(12950,-1650,0), FVector(13800,-1580,0), FVector(14650,-1680,0),
+            FVector(16000, 1640,0), FVector(16900, 1570,0), FVector(17800, 1660,0),
+            FVector(16150,-1700,0), FVector(17050,-1590,0), FVector(17950,-1690,0),
+            FVector(19000, 1750,0), FVector(19500,-1780,0)
+        };
+        for (int32 Index = 0; Index < UE_ARRAY_COUNT(TreeLocations); ++Index)
+        {
+            const float Scale = 0.70f + 0.05f * static_cast<float>(Index % 5);
+            WoodlandTreeInstances->AddInstance(FTransform(
+                FRotator(0.0f, static_cast<float>((Index * 71) % 360), 0.0f),
+                TreeLocations[Index],
+                FVector(Scale)));
+            ++WoodlandThresholdTreeCount;
+        }
+    }
+
+    // Layered understory occupies the near hedge/tree edge while keeping the road
+    // center clear. HISM culling keeps this bounded on the low-spec target.
+    if (FernInstances && ProductionCommonFernClumpMesh &&
+        FernInstances->GetStaticMesh() == ProductionCommonFernClumpMesh)
+    {
+        for (int32 Index = 0; Index < 40; ++Index)
+        {
+            const float Alpha = static_cast<float>(Index) / 39.0f;
+            const float X = FMath::Lerp(11000.0f, 19400.0f, Alpha);
+            const float Side = (Index % 2 == 0) ? -1.0f : 1.0f;
+            const float Y = Side * (840.0f + 120.0f * static_cast<float>((Index / 2) % 4))
+                + 55.0f * FMath::Sin(static_cast<float>(Index) * 0.77f);
+            const float Scale = 0.52f + 0.045f * static_cast<float>(Index % 4);
+            FernInstances->AddInstance(FTransform(
+                FRotator(0.0f, static_cast<float>((Index * 67) % 360), 0.0f),
+                FVector(X, Y, 3.0f),
+                FVector(Scale)));
+            ++UnderstoryFernCount;
+        }
+    }
+
+    // Final bank accents frame the ferry without placing vegetation in the crossing.
+    if (ReedInstances && ProductionCommonReedClusterMesh &&
+        ReedInstances->GetStaticMesh() == ProductionCommonReedClusterMesh)
+    {
+        for (int32 Index = 0; Index < 32; ++Index)
+        {
+            const int32 BankIndex = Index % 16;
+            const float Alpha = static_cast<float>(BankIndex) / 15.0f;
+            const float X = FMath::Lerp(ShireLayout::FerryX - 2100.0f, ShireLayout::FerryX + 1100.0f, Alpha);
+            const float BankY = Index < 16 ? -1510.0f : 635.0f;
+            const float Y = BankY + 70.0f * FMath::Sin(static_cast<float>(Index) * 0.89f);
+            const float Scale = 0.54f + 0.045f * static_cast<float>(Index % 5);
+            ReedInstances->AddInstance(FTransform(
+                FRotator(0.0f, static_cast<float>((Index * 41) % 360), 0.0f),
+                FVector(X, Y, -3.0f),
+                FVector(Scale)));
+            ++FerryReedAccentCount;
+        }
+    }
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("P1C01_PRESENTATION_COMPOSITION_PASS shrubs=%d thresholdTrees=%d understoryFerns=%d ferryReedAccents=%d volumetricFog=no planarReflection=no writer=ShirePrototypeWorldBuilder"),
+        ForegroundShrubCount,
+        WoodlandThresholdTreeCount,
+        UnderstoryFernCount,
+        FerryReedAccentCount);
+}
+
+
+
 void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()
 {
     if (!GetWorld())
@@ -4009,6 +4123,7 @@ void AShirePrototypeWorldBuilder::BuildPrototypeWorld()
     SpawnFoliagePass();
     SpawnScenicDetailPass();
     SpawnNaturalRouteMegaPass();
+    SpawnPresentationCompositionPass();
     SpawnWorldDensityDetailPass();
     SpawnBagEndHeroPass();
     SpawnPartySocialLoopPass();
