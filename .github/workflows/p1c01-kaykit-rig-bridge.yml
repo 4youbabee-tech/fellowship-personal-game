@@ -1,0 +1,127 @@
+name: P1C01 KayKit Rig Technical Bridge
+
+on:
+  pull_request:
+    branches: [develop]
+    paths:
+      - 'Data/P1C01KayKitRigTechnicalBridgeV1.json'
+      - 'Data/WarehouseKayKitGitHubAcquisitionBatchV1.json'
+      - 'Scripts/stage_p1c01_kaykit_rig_bridge.ps1'
+      - 'Scripts/run_p1c01_kaykit_rig_bridge_ue4.ps1'
+      - 'Scripts/ci_import_production_assets.cmd'
+      - 'Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp'
+      - '.github/workflows/p1c01-kaykit-rig-bridge.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: p1c01-kaykit-rig-bridge-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  hosted_static_bridge:
+    name: Hosted KayKit source and FBX static gate
+    runs-on: windows-latest
+    timeout-minutes: 25
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          fetch-depth: 2
+          persist-credentials: false
+
+      - name: Verify exact checkout
+        shell: cmd
+        run: |
+          @echo off
+          for /f "delims=" %%H in ('git rev-parse HEAD') do set "CHECKED_SHA=%%H"
+          if /I not "%TARGET_SHA%"=="%CHECKED_SHA%" exit /b 71
+
+      - name: Download exact official KayKit archive and stage bounded FBX candidates
+        shell: powershell
+        run: |
+          & "$env:GITHUB_WORKSPACE\Scripts\stage_p1c01_kaykit_rig_bridge.ps1" -ManifestPath "$env:GITHUB_WORKSPACE\Data\P1C01KayKitRigTechnicalBridgeV1.json" -OutputRoot "$env:RUNNER_TEMP\shire-kaykit-rig-bridge"
+
+      - name: Upload hosted bridge evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1c01-kaykit-rig-static-${{ env.TARGET_SHA }}
+          path: ${{ runner.temp }}\shire-kaykit-rig-bridge
+          if-no-files-found: error
+          retention-days: 14
+
+  ue4_technical_bridge:
+    name: UE4.27.2 KayKit skeletal technical gate
+    needs: hosted_static_bridge
+    runs-on:
+      - self-hosted
+      - Windows
+      - X64
+      - ue4-27
+    timeout-minutes: 90
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          fetch-depth: 2
+          persist-credentials: false
+
+      - name: Verify exact checkout and runner
+        shell: cmd
+        run: |
+          @echo off
+          for /f "delims=" %%H in ('git rev-parse HEAD') do set "CHECKED_SHA=%%H"
+          if /I not "%TARGET_SHA%"=="%CHECKED_SHA%" exit /b 71
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\verify_runner_session.ps1"
+
+      - name: Download hosted bridge evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: p1c01-kaykit-rig-static-${{ env.TARGET_SHA }}
+          path: ${{ runner.temp }}\shire-kaykit-rig-bridge
+
+      - name: Build ShireJourneyEditor once
+        shell: cmd
+        run: '"%GITHUB_WORKSPACE%\Scripts\ci_build_unreal.cmd"'
+
+      - name: Run unchanged UE4 skeletal hard gates and stop on first clean pass
+        shell: powershell
+        run: |
+          & "$env:GITHUB_WORKSPACE\Scripts\run_p1c01_kaykit_rig_bridge_ue4.ps1" -StaticReceiptPath "$env:RUNNER_TEMP\shire-kaykit-rig-bridge\p1c01_kaykit_rig_bridge_static.json" -ArtifactRoot "$env:RUNNER_TEMP\shire-kaykit-rig-bridge" -OutputRoot "$env:RUNNER_TEMP\shire-kaykit-rig-ue4"
+
+      - name: Upload UE4 bridge evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1c01-kaykit-rig-ue4-${{ env.TARGET_SHA }}
+          path: |
+            ${{ runner.temp }}\shire-kaykit-rig-bridge\p1c01_kaykit_rig_bridge_static.json
+            ${{ runner.temp }}\shire-kaykit-rig-ue4\p1c01_kaykit_rig_bridge_ue4.json
+            ${{ github.workspace }}\Saved\Logs\CI-ProductionAssetImport.log
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Cleanup transient bridge assets
+        if: always()
+        shell: powershell
+        run: |
+          foreach($relative in @(
+            "SourceAssets/Production/Characters/Rigs/FRODO/SK_FRODO.fbx",
+            "Content/Production/Characters/Rigs/FRODO/SK_FRODO.uasset",
+            "Content/Production/Characters/Rigs/FRODO/SK_FRODO_Skeleton.uasset",
+            "Content/Production/Characters/Rigs/FRODO/SK_FRODO_PhysicsAsset.uasset"
+          )) {
+            $tracked = @(& git.exe -C $env:GITHUB_WORKSPACE ls-files -- $relative 2>$null)
+            if($LASTEXITCODE -ne 0) { throw "KAYKIT_RIG_BRIDGE_CLEANUP_GIT_FAIL path=$relative" }
+            if($tracked.Count -eq 0) { Remove-Item -LiteralPath (Join-Path $env:GITHUB_WORKSPACE $relative) -Force -ErrorAction SilentlyContinue }
+          }
+          Write-Host "KAYKIT_RIG_BRIDGE_CLEANUP_PASS"
