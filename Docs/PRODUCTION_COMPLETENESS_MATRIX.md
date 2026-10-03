@@ -3046,3 +3046,19 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Async runtime Frodo replacement | BLOCKED |
 | Modular fallback | RETAINED |
 | PIE/device/rendered visual/FPS acceptance | NOT CLAIMED |
+
+
+## 2026-10-03 - Frodo breakthrough correction pass
+
+| Check | Result |
+|---|---|
+| Kenney animated archive download | PASS on prior head: 718021 bytes |
+| Archive SHA256 | `9cc53e82c941781f26aa8fb39d40887cf14b1d74cca2d10ccc6e7c140a68f820` |
+| Archive FBX count | 4 |
+| First hosted probe run | FAIL: unset `$LASTEXITCODE` guard |
+| Pre-Unreal #1782 | FAIL: provider contract 6 required / 5 staged |
+| Probe-script correction | IMPLEMENTED |
+| Sixth provider contract + warehouse staging | IMPLEMENTED |
+| New exact-head hosted static inventory | PENDING |
+| New exact-head UE4 skeletal probe | PENDING |
+| Runtime/visual promotion | BLOCKED |
