@@ -81,7 +81,6 @@
     "QTN_FANTASY_OUTFITS",
     "QTN_UNIVERSAL_ANIMATION_LIBRARY",
     "OGA_QTN_ULTIMATE_ANIMATED_CHARACTERS_CC0",
-    "OGA_KENNEY_ANIMATED_CHARACTERS_1_CC0",
     "OGA_QTN_RPG_CHARACTERS_CC0"
   ],
   "candidate_policy": {
@@ -105,7 +104,6 @@
     "substring_matching_forbidden": true,
     "final_likeness_from_filename_forbidden": true,
     "source_asset_priority_bonus": {
-      "OGA_KENNEY_ANIMATED_CHARACTERS_1_CC0": 120,
       "OGA_QTN_RPG_CHARACTERS_CC0": 160
     }
   },
