@@ -3079,3 +3079,5 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | External PBR intake | NOT REQUIRED YET | only after visual review proves gap |
 | Exact-head Pre-Unreal / UE4 build | PENDING | branch not opened for validation yet |
 | PIE/device/visual/FPS | NOT ACCEPTED | direct evidence required |
+
+| Authored Shire B/C source regression guard | SOURCE-IMPLEMENTED | `test_source_contracts.py`; locks budgets, call order, no-sync-load, no duplicate authority and P1C01-only boundary |
