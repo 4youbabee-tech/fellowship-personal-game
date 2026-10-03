@@ -190,6 +190,22 @@ jobs:
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_continuous_production_wave_queue_v2.ps1"
 
+      - name: Test P1C01 Shire mega chapter production contract
+        shell: cmd
+        run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_p1c01_shire_mega_chapter_pack.ps1"
+
+      - name: Test P1C01 visual production mega wave
+        shell: cmd
+        run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_p1c01_visual_production_mega_wave.ps1"
+
+      - name: Test whole-game chapter production packets
+        shell: cmd
+        run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_whole_game_chapter_production_packets.ps1"
+
+      - name: Test daily project manager report generator
+        shell: cmd
+        run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_daily_project_manager_report.ps1"
+
       - name: Test P1C01 visible-world proxy replacement contract
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_p1c01_visible_world_proxy_replacement.ps1"
