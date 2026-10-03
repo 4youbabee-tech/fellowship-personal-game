@@ -129,6 +129,7 @@ private:
     void SpawnVillage();
     void SpawnProductionVillageDetailLayer();
     void SpawnVisibleShireMegaPass();
+    void SpawnNaturalRouteMegaPass();
     void SpawnWorldDensityDetailPass();
     void SpawnBagEndHeroPass();
     void SpawnPartySocialLoopPass();

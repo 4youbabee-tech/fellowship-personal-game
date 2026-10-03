@@ -3005,3 +3005,24 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Retry same payload | FORBIDDEN |
 | Deformation / retarget / AnimBP | BLOCKED |
 | Runtime Frodo promotion | BLOCKED |
+
+
+## 2026-10-03 - P1C01 natural route mega pass
+
+| Gate / Visible Domain | Status |
+|---|---|
+| Strategy | MAXIMUM-SAFE VERTICAL-SLICE GROWTH |
+| Runtime chapter | P1C01 ONLY |
+| Runtime writer | AShirePrototypeWorldBuilder |
+| Bag End -> Hobbiton route breakup | IMPLEMENTED IN SOURCE |
+| Worked-field verge / horizon breakup | IMPLEMENTED IN SOURCE |
+| Wooded-road enclosure | IMPLEMENTED IN SOURCE |
+| Ferry river-edge density | IMPLEMENTED IN SOURCE |
+| Additional repeated detail budget | UP TO 1,758 HISM INSTANCES |
+| New synchronous heavy loads | NONE |
+| New per-instance Tick | NONE |
+| New NPC lifecycle owner | NONE |
+| P1C02 runtime expansion | NOT OPENED |
+| Exact-head Pre-Unreal | PENDING |
+| Exact-head UE4.27.2 validation | PENDING |
+| PIE/device/rendered visual/FPS acceptance | NOT CLAIMED |
