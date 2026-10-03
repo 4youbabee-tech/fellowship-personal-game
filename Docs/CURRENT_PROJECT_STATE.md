@@ -3871,3 +3871,12 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Fresh current-ancestry Pre-Unreal coverage now executes the four salvaged contract tests directly.
 - Runtime integration remains unchanged: P1C01 is still the sole runtime chapter; all salvaged whole-game chapter packets keep runtime_integration_allowed=false.
 - Evidence boundary: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD VALIDATION PENDING**. No PIE/device/visual/performance acceptance claim.
+
+
+## 2026-10-03 - Static FBX world intake reconciled on latest develop
+
+- Selectively ported the useful world/prop FBX intake delta from stale PR #237 onto current importer code; old branch ancestry and stale docs were not bulk-merged.
+- Static FBX files outside `Characters/Rigs` are imported as UE4 static meshes with automatic animations/materials/textures disabled; `Characters/Rigs` FBX files remain deferred to the dedicated skeletal QC lane.
+- Added a hosted source contract guard that forbids synchronous `LoadObject` in the static-FBX branch and checks the character deferral boundary.
+- Existing legacy static OBJ handling remains untouched; animated/rigged production intake remains FBX-only.
+- Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD PRE-UNREAL + UE4.27.2 COMPILE PENDING**. No PIE/device/visual/performance acceptance claim.
