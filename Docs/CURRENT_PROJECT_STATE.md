@@ -3838,3 +3838,9 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - No broad `Data/` bypass is introduced. Runtime C++, SourceAssets, config, packaging and unlisted Data files remain fail-closed.
 - Classifier regression coverage now requires the exact entry.
 - Fresh exact-head classification is required; the superseded full decision is diagnostic only.
+
+### 2026-10-03 - Classifier regression test variable repair
+
+- Pre-Unreal #1705 **FAILED** in `Test Unreal validation lane selection` because the new regression referenced undefined `$classifier`; the existing test harness stores classifier source in `$source`.
+- The regression now checks the exact allowlist entry through `$source`, preserving all existing classifier cases and the broad-Data-bypass guard.
+- #1705 is diagnostic failure evidence only. Fresh exact-head Pre-Unreal and classifier evidence are required.
