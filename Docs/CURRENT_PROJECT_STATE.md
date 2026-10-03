@@ -3907,3 +3907,11 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - The skeletal path uses AssetRegistry + in-memory `FindObject<USkeletalMesh>` for registration/bone proof and does not add synchronous runtime asset loading.
 - Restored bounded direct-FBX warehouse staging so the exact KayKit Knight V2 probe can advance next.
 - Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD VALIDATION PENDING**. No deformation/retarget/AnimBP/runtime/PIE/device/visual acceptance claim.
+
+
+## 2026-10-03 - Exact Frodo Knight V2 technical probe prepared
+
+- Added a bounded exact-source UE4.27.2 technical probe for KayKit `Knight.fbx` at immutable revision `672074b73ba276876a19e8816ecdc5241817ab47`.
+- The probe is rig-base QA only, not final Frodo likeness. It requires USkeletalMesh registration, nonzero bones, and zero missing-smoothing/bind-pose/UV warnings.
+- Runtime integration remains false. A pass advances only to deformation/retarget suitability review; a failure is recorded and the next licensed candidate is tried without weakening gates.
+- Status: **SOURCE PREPARED / EXACT-HEAD TECHNICAL EXECUTION PENDING**.
