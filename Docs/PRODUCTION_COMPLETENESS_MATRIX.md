@@ -1,3 +1,13 @@
+## 2026-10-03 - Frodo independent-source successor matrix
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| KayKit RogueHooded exact payload | REJECTED_TECHNICAL | Frodo #32 at `a158e77d...`: `USkeletalMesh`, 48 bones, smoothing-group + bind-pose debt |
+| RogueHooded identity | RECORDED | 19,516,300 bytes; SHA256 `4a773f074695c6c089cc6f059eed85da080928a4a4137af4e38b177139d4cc27` |
+| Kenney Blocky Characters 2.0 | SOURCE-REGISTERED / EXACT-HEAD QC PENDING | Official CC0 page; one bounded pack; receipt SHA256 required |
+| Full Kenney warehouse refresh | NOT AUTHORIZED | Only the character pack is targeted |
+| Runtime / deformation / retarget / AnimBP | NOT STARTED / NOT ACCEPTED | Technical candidate intake only |
+| PIE / device / visual / pacing / performance / Gate 6-7 | NOT ACCEPTED | Separate evidence required |
 ## 2026-10-02 - Frodo KayKit successor matrix
 
 | Area | Status | Evidence / boundary |

@@ -8,6 +8,7 @@ on:
       - 'Data/P1C01HeroSkeletalCandidateWaveV1.json'
       - 'Data/P1C01KayKitAdventurersHeroCandidateBatchV1.json'
       - 'Data/P1C01KayKitAdventurersRogueHoodedHeroCandidateBatchV1.json'
+      - 'Data/P1C01KenneyBlockyHeroCandidateBatchV1.json'
       - 'Data/P1C01OpenGameArtRpgHeroCandidateBatchV1.json'
       - 'Scripts/prepare_p1c01_frodo_skeletal_import.ps1'
       - 'Scripts/inspect_p1c01_frodo_fbx_candidate.ps1'
@@ -70,6 +71,9 @@ jobs:
       - name: Stage KayKit RogueHooded alternate hero candidate
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\stage_opengameart_character_candidate.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\P1C01KayKitAdventurersRogueHoodedHeroCandidateBatchV1.json"
+      - name: Stage Kenney Blocky alternate hero candidate
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\stage_opengameart_character_candidate.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\P1C01KenneyBlockyHeroCandidateBatchV1.json"
 
       - name: Build Frodo candidate report
         shell: cmd

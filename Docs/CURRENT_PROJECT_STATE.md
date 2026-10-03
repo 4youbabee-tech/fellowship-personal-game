@@ -1,3 +1,9 @@
+## 2026-10-03 - Frodo KayKit RogueHooded rejection and Kenney successor
+
+- Exact-head `a158e77d68484d4f92014c64086bdd820d8c2557`: Pre-Unreal #1692 succeeded; Frodo Import #32 staged all sources, built the editor, imported the mesh, uploaded evidence and cleaned transient files.
+- `kaykit_rogue_hooded_672074b73ba276876a19e8816ecdc5241817ab47.fbx` is exact-SHA `REJECTED_TECHNICAL`: 19,516,300 bytes, SHA256 `4a773f074695c6c089cc6f059eed85da080928a4a4137af4e38b177139d4cc27`, `USkeletalMesh`, 48 bones, missing smoothing groups and bind-pose bones; no missing-UV warning.
+- Both KayKit character candidates now show the same export-family debt. The next bounded independent source is Kenney Blocky Characters 2.0 from the official CC0 page and public pack URL; the whole Kenney warehouse batch is not refreshed.
+- Status: **KAYKIT HOODED REJECTED / KENNEY BLOCKY SOURCE-REGISTERED / EXACT-HEAD PRE-UNREAL + UNREAL + UE4 IMPORT PROOF PENDING**. No runtime, deformation, retarget, AnimBP, PIE, device, visual, pacing, performance or Gate 6/7 acceptance claim.
 ## 2026-10-02 - Frodo KayKit Rogue technical rejection and bounded successor
 
 - Exact-head `e7733a5308ba347beebd1d9cce286178927043b4`: Pre-Unreal #1642 and Unreal Build #1287 succeeded; P1C01 Frodo Skeletal Import #31 reached a real UE4.27.2 import and then failed the technical-quality gate.
