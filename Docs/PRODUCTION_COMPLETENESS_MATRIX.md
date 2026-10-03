@@ -2849,3 +2849,15 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Runner-root interactive guard | STRENGTHENED | rejects any `\\actions-runner\\` project root independent of drive letter |
 | Active self-hosted authority | UNCHANGED | `D:\\actions-runner` remains CI-only |
 | Manual Unreal clone | UNCHANGED | Documents developer clone only |
+
+
+## 2026-10-03 - Stale open source/preproduction reconciliation
+
+| Salvaged lane | Current ancestry disposition | Runtime boundary |
+|---|---|---|
+| 23 chapter production packets + asset demand matrix | SELECTIVELY SALVAGED | all rows runtime=false |
+| P1C01 Shire mega chapter pack | SELECTIVELY SALVAGED | source/preproduction only |
+| P1C01 180-slot visual mega wave | SELECTIVELY SALVAGED | candidate discovery only; provenance/QC required |
+| Daily manager report generator/test | SELECTIVELY SALVAGED | informational tooling only |
+| Old branch-local docs/workflow snapshots | NOT COPIED | current develop remains authority |
+| Fresh exact-head Pre-Unreal | PENDING | required before merge |
