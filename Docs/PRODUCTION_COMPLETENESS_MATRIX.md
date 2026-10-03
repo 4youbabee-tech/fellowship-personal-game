@@ -2790,3 +2790,13 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Door/window/trim debt | PRESERVED | exact replacement remains import/QC gated |
 | Fresh exact-head Pre-Unreal | PENDING | new head required |
 | Fresh UE4.27.2 compile/build | PENDING | old #1305 does not validate refreshed head |
+
+## 2026-10-03 - Hosted classifier current-tree proof refresh
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Local parent-object probe | SOURCE-IMPLEMENTED | fetch only if local object absent |
+| Bag End source packet allowlist | EXACT-PATH ONLY | no broad Data wildcard |
+| Parent tree evidence | AVAILABLE | `82d5...` vs `6e1b...`: zero file delta |
+| Prior engine proof | AVAILABLE | #277 Unreal Build #1310 SUCCESS on `6e1b...` |
+| Fresh classifier validation | PENDING | exact current head required |
