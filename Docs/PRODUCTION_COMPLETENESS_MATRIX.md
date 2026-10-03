@@ -3062,3 +3062,20 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Exact-head Pre-Unreal | PENDING | branch validation required |
 | Exact-head UE4.27.2 build | PENDING | branch validation required |
 | PIE/device/visual/pacing/FPS | NOT ACCEPTED | direct evidence still required |
+
+## 2026-10-04 - Presentation composition wave C
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Wave C ledger registration | COMPLETE BEFORE CODE | presentation/material/vegetation rules captured |
+| Cultivated Bag End/Hobbiton foreground | SOURCE-IMPLEMENTED | 28 shrub HISM instances |
+| Wooded-road threshold canopy | SOURCE-IMPLEMENTED | 20 broadleaf HISM instances |
+| Wooded-road understory | SOURCE-IMPLEMENTED | 40 fern HISM instances |
+| Ferry-bank vegetation framing | SOURCE-IMPLEMENTED | 32 reed HISM instances |
+| Imported material preservation | PRESERVED | no production-mesh color MID override |
+| Morning light/fog/exposure refinement | SOURCE-IMPLEMENTED | existing low-cost actors/settings only |
+| Volumetric fog | DISABLED | low-spec policy preserved |
+| Planar reflection / scene capture | NONE | low-cost water path preserved |
+| External PBR intake | NOT REQUIRED YET | only after visual review proves gap |
+| Exact-head Pre-Unreal / UE4 build | PENDING | branch not opened for validation yet |
+| PIE/device/visual/FPS | NOT ACCEPTED | direct evidence required |
