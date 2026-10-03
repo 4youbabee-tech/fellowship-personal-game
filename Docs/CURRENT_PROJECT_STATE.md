@@ -4012,3 +4012,14 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Pre-Unreal #1782 also failed because the provider contract still counted only the five older source packs while the active candidate wave now requires six.
 - Both failures are corrected without weakening any technical gate: the probe no longer relies on undefined `$LASTEXITCODE` after a direct PowerShell script call, and the provider/warehouse contract now explicitly includes the distinct Kenney animated source before candidate-report generation.
 - Status remains **VALIDATION PENDING** until the new exact head runs complete. No UE4 skeletal/deformation/runtime/visual acceptance claimed.
+
+
+## 2026-10-03 - Frodo human breakthrough escalated to bounded RPG multi-candidate gauntlet
+
+- Kenney Animated exact skinned payload `Model/characterMedium.fbx` is now durably **REJECTED_TECHNICAL**: SHA256 `18835fef534eede635b081ee7fe647d01a885550a591d2e6bf071010906167d8`, 167212 bytes, FBX 7400, UE4.27 skeletal registration **59 bones**, followed by `MISSING_SMOOTHING_GROUPS` and `MISSING_BIND_POSE_BONES`.
+- Exact-head evidence for that disposition: hosted static inventory in Human Breakthrough #5, Pre-Unreal #1786 SUCCESS, Unreal Build #1385 SUCCESS, and dedicated UE4 import/strict-gate failure on the selected payload. This is a technical rejection, not a pipeline regression.
+- The lane immediately pivots to a distinct CC0 OpenGameArt/Quaternius RPG Characters family. New source/CI implements a **maximum four-candidate bounded gauntlet**: scan the full archive on hosted CI, record every exact FBX identity, reject known hashes, rank static-pass humanoids, build UE4 once, then probe up to four exact payloads serially in one runner reservation and stop at the first clean technical pass.
+- Technical gates are stricter, not weaker: positive skeletal registration/bone count, no missing smoothing groups, no missing bind-pose bones, no invalid bind pose, no missing UV set, and generated skeletal/skeleton asset presence.
+- The exhausted Kenney dedicated workflow is retired from the active branch so it cannot reserve the UE4 runner again. Persistent warehouse staging also pivots from exhausted Kenney to the active RPG source.
+- If any RPG payload passes, the immediate successor is a large deformation/reference-pose/locomotion-retarget gate, then AnimBP + asynchronous runtime promotion while retaining the modular fallback until the complete bundle is proven.
+- Status: **SOURCE/CI IMPLEMENTED / NEW EXACT-HEAD VALIDATION PENDING**. No deformation, retarget, AnimBP, runtime, PIE, device, rendered-visual or FPS acceptance claimed.
