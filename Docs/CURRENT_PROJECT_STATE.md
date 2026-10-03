@@ -4005,3 +4005,40 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Production batching is now explicit: prefer large coherent player-visible packets and one stable exact-head validation cycle over avoidable micro-commit/CI churn.
 - Visible priority remains human/skeletal characters and a natural readable Shire: terrain silhouette, landmarks/architecture, roads/hedges/woodland/Ferry, vegetation/materials and lighting/presentation.
 - Evidence discipline is unchanged: no PIE/device/visual/FPS acceptance is inferred from static/compile/CI evidence.
+
+## 2026-10-03 - Next visible blocker started: Frodo human breakthrough lane
+
+- The post-world-expansion priority is now the character itself: move Frodo from the modular/proxy presentation toward a real UE4 skeletal humanoid.
+- A fresh current-`develop` branch activates the distinct CC0 OpenGameArt/Kenney Animated Characters 1 family rather than retrying any exact rejected Quaternius/KayKit/Kenney Blocky/Lowpoly Dummy payload.
+- New tooling performs deterministic archive inspection, records every FBX entry/version/SHA256 and skeleton/skin/cluster markers, rejects hashes already in the durable rejection history, and selects only a static-pass FBX.
+- A dedicated two-stage workflow then runs a cheap hosted static inventory first and only reserves the UE4.27 runner if that gate passes. The self-hosted stage imports the selected exact payload as transient `SK_FRODO` and rejects missing smoothing groups, missing bind-pose bones or missing UVs.
+- Runtime integration remains disabled. A technical pass advances only to deformation/retarget suitability; the existing modular fallback remains visible until skeletal mesh + locomotion AnimBP are proven and asynchronously loadable.
+- `ALivingWorldDirector` / `UShireNPCContextSubsystem` ownership is unchanged and no second NPC state authority is introduced.
+- Status: **SOURCE/CI IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. No deformation, retarget, AnimBP, runtime, PIE/device/visual/FPS acceptance claimed.
+
+
+## 2026-10-03 - Frodo breakthrough first-run failures corrected
+
+- Exact-head run #1 did **not** clear the candidate gate. The hosted source download itself succeeded for the Kenney Animated Characters 1 archive (718021 bytes, archive SHA256 `9cc53e82c941781f26aa8fb39d40887cf14b1d74cca2d10ccc6e7c140a68f820`, 4 FBX entries), but the probe script stopped on an unset PowerShell `$LASTEXITCODE` check before FBX inventory.
+- Pre-Unreal #1782 also failed because the provider contract still counted only the five older source packs while the active candidate wave now requires six.
+- Both failures are corrected without weakening any technical gate: the probe no longer relies on undefined `$LASTEXITCODE` after a direct PowerShell script call, and the provider/warehouse contract now explicitly includes the distinct Kenney animated source before candidate-report generation.
+- Status remains **VALIDATION PENDING** until the new exact head runs complete. No UE4 skeletal/deformation/runtime/visual acceptance claimed.
+
+
+## 2026-10-03 - Frodo human breakthrough escalated to bounded RPG multi-candidate gauntlet
+
+- Kenney Animated exact skinned payload `Model/characterMedium.fbx` is now durably **REJECTED_TECHNICAL**: SHA256 `18835fef534eede635b081ee7fe647d01a885550a591d2e6bf071010906167d8`, 167212 bytes, FBX 7400, UE4.27 skeletal registration **59 bones**, followed by `MISSING_SMOOTHING_GROUPS` and `MISSING_BIND_POSE_BONES`.
+- Exact-head evidence for that disposition: hosted static inventory in Human Breakthrough #5, Pre-Unreal #1786 SUCCESS, Unreal Build #1385 SUCCESS, and dedicated UE4 import/strict-gate failure on the selected payload. This is a technical rejection, not a pipeline regression.
+- The lane immediately pivots to a distinct CC0 OpenGameArt/Quaternius RPG Characters family. New source/CI implements a **maximum four-candidate bounded gauntlet**: scan the full archive on hosted CI, record every exact FBX identity, reject known hashes, rank static-pass humanoids, build UE4 once, then probe up to four exact payloads serially in one runner reservation and stop at the first clean technical pass.
+- Technical gates are stricter, not weaker: positive skeletal registration/bone count, no missing smoothing groups, no missing bind-pose bones, no invalid bind pose, no missing UV set, and generated skeletal/skeleton asset presence.
+- The exhausted Kenney dedicated workflow is retired from the active branch so it cannot reserve the UE4 runner again. Persistent warehouse staging also pivots from exhausted Kenney to the active RPG source.
+- If any RPG payload passes, the immediate successor is a large deformation/reference-pose/locomotion-retarget gate, then AnimBP + asynchronous runtime promotion while retaining the modular fallback until the complete bundle is proven.
+- Status: **SOURCE/CI IMPLEMENTED / NEW EXACT-HEAD VALIDATION PENDING**. No deformation, retarget, AnimBP, runtime, PIE, device, rendered-visual or FPS acceptance claimed.
+
+## 2026-10-04 - Frodo RPG repair/normalization factory
+
+- Gauntlet #10 exhausted all four original Quaternius RPG payloads under unchanged UE4.27 gates: Rogue 52 bones, Ranger 50, Monk 46, Warrior 49; every original payload failed MISSING_SMOOTHING_GROUPS + MISSING_BIND_POSE_BONES.
+- Original payload SHA256 values are durably recorded and remain forbidden for direct retry.
+- Active lane now distinguishes bad export from bad rig: hosted Blender re-export creates new exact normalized payload hashes, records Blender/version/source/output evidence, and sends only those new payloads to the same strict UE4.27 skeletal gate.
+- No smoothing/bind-pose/UV/registration gate is relaxed. A normalized technical pass still does not authorize runtime integration; deformation/reference pose/root/scale/limb/hand-foot/retarget checks remain next.
+- Runtime Frodo remains on the modular fallback. No PIE/device/rendered-visual/FPS acceptance is claimed by this packet.
