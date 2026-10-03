@@ -4005,3 +4005,12 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Production batching is now explicit: prefer large coherent player-visible packets and one stable exact-head validation cycle over avoidable micro-commit/CI churn.
 - Visible priority remains human/skeletal characters and a natural readable Shire: terrain silhouette, landmarks/architecture, roads/hedges/woodland/Ferry, vegetation/materials and lighting/presentation.
 - Evidence discipline is unchanged: no PIE/device/visual/FPS acceptance is inferred from static/compile/CI evidence.
+
+## 2026-10-04 - P1C01 authored Shire terrain/landmark mega wave B source implementation
+
+- `AShirePrototypeWorldBuilder` remains the only P1C01 world-construction writer and now calls a dedicated `SpawnAuthoredShireLandmarkPass()` after the geography foundation and before Hobbiton architecture.
+- The pass adds 52 bounded repeated placements using existing resident production meshes/HISM components only: 4 Bag End background earth masses, 8 Hobbiton settlement terraces, 6 worked-field outer ridges, 8 close wooded-road shoulders, 8 Ferry bank masses and 18 final-approach stones.
+- The spatial intent is source-grounded: Bag End/Hobbiton gain hill/terrace integration; worked fields stay broad but stop reading as an infinite flat test plane; woodland becomes more enclosed; the Ferry gains stronger near/far bank silhouette while preserving the crossing corridor.
+- No story/quest anchor, P1C02 runtime state, NPC lifecycle owner or crowd budget changes. No new synchronous load, per-instance Tick or actor-per-prop density lane was added.
+- Imported production materials remain authoritative; the existing primitive-color path remains fallback-only.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27 VALIDATION PENDING**. No PIE/device/rendered-visual/pacing/FPS acceptance is claimed.
