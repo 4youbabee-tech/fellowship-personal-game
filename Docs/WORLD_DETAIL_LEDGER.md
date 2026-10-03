@@ -1158,3 +1158,12 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Performance boundary: existing resident production meshes only for runtime geometry; HISM/ISM for repeated landform/vegetation; explicit culling; no per-instance Tick; no synchronous heavy load; no actor-per-prop density expansion; no new NPC ownership.
 - Material boundary: imported production materials remain authoritative. Engine primitive color materials remain fallback-only. New external textures/assets, if later required, must pass provenance/license, PNG/TGA/channel-packing, material-slot, LOD and VRAM review before admission.
 - Evidence boundary: REGISTERED / SOURCE-GROUNDED PLAN. No PIE, device, visual, pacing or FPS acceptance is claimed.
+
+## 2026-10-04 - P1C01 PRESENTATION_COMPOSITION_WAVE_C registered before implementation
+
+- Scope: P1C01 visual presentation only; follows the authored landform packet on the same branch. No chapter expansion, new story owner or NPC lifecycle change.
+- Source/production basis: Bag End garden should read bright and cultivated; Shire travel should alternate open pastoral views with deeper wooded enclosure and mist/stream depth. The production resource bible prioritizes restrained runtime texture resolution, packed masks where appropriate, reduced material slots/draw calls, and low-LOD/atlas vegetation for the ~2 GB VRAM target.
+- Implementation intent: strengthen foreground/midground vegetation composition with existing HISM components and resident meshes, improve wooded-road canopy/understory layering and Ferry-bank framing, and make the existing morning atmosphere less prototype-heavy through bounded light/fog/post-process tuning.
+- Material rule: preserve imported production materials; do not override them with generic color MIDs. External PBR intake is not required for this source pass; if a material gap remains after PIE review, prefer recorded CC0 sources such as Poly Haven/ambientCG and package PNG/TGA/channel-packed textures under the existing material budget.
+- Performance boundary: HISM only for repeated new vegetation, existing cull distances, no per-instance Tick/collision, no volumetric fog, no planar reflection/scene capture, no new synchronous heavy asset load.
+- Evidence boundary: REGISTERED / SOURCE-GROUNDED PLAN. Visual acceptance requires later PIE/device evidence.
