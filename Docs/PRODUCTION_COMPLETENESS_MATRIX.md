@@ -2861,3 +2861,15 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Daily manager report generator/test | SELECTIVELY SALVAGED | informational tooling only |
 | Old branch-local docs/workflow snapshots | NOT COPIED | current develop remains authority |
 | Fresh exact-head Pre-Unreal | PENDING | required before merge |
+
+
+## 2026-10-03 - Static FBX world intake reconciliation
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Static world/prop FBX discovery/import | SOURCE-IMPLEMENTED | latest develop ancestry |
+| Characters/Rigs FBX | DEFERRED | dedicated skeletal QC lane |
+| Auto animation/material/texture import | DISABLED | deterministic bounded static intake |
+| Synchronous heavy LoadObject in FBX branch | GUARDED FORBIDDEN | hosted source contract |
+| Fresh UE4.27.2 compile | PENDING | required before merge |
+| PIE/device/visual/performance | NOT CLAIMED | separate gates |
