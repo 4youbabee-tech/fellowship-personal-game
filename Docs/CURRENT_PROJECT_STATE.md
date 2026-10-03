@@ -4023,3 +4023,9 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - No new runtime material dependency, synchronous load, Tick, crowd owner or chapter expansion was introduced.
 - Source resource review keeps CC0/open PBR sources such as Poly Haven/ambientCG as future intake options only if PIE review proves a real material gap; no external material was admitted by this code wave.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. No rendered visual, device or FPS acceptance is claimed.
+
+## 2026-10-04 - Authored Shire B/C static regression guard
+
+- `test_source_contracts.py` now reads `P1C01AuthoredShireMegaWaveBCV1.json` and locks the P1C01-only/single-writer boundary, 52-landform and 120-presentation budgets, HISM/resident-only/no-sync-load rules, and authored pass ordering inside `BuildPrototypeWorld()`.
+- The guard explicitly rejects synchronous load calls, ambient/director spawning, and P1C02 tokens inside both new world passes.
+- Status remains **SOURCE-IMPLEMENTED / HOSTED+UE4 EXACT-HEAD VALIDATION PENDING** until this branch is opened and run.
