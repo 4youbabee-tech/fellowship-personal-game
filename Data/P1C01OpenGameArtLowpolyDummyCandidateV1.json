@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "batch_id": "P1C01_FRODO_OGA_LOWPOLY_DUMMY_CANDIDATE_V1",
+  "status": "HOSTED_SOURCE_INVENTORY_ACTIVE",
+  "provider": "OPENGAMEART",
+  "creator": "Umplix",
+  "license": "CC0-1.0",
+  "runtime_integration_allowed": false,
+  "purpose": "Distinct licensed humanoid FBX candidate family after Quaternius and KayKit payloads were technically rejected. Source discovery only; not final Frodo likeness.",
+  "assets": [
+    {
+      "id": "OGA_UMPLIX_LOWPOLY_DUMMY_CC0",
+      "source_page": "https://opengameart.org/content/lowpoly-dummy-character10-animations",
+      "download_url": "https://opengameart.org/sites/default/files/lowpoly_dummy_character.zip",
+      "filename": "lowpoly_dummy_character.zip",
+      "observed_page_license": "CC0",
+      "required_final_format": "FBX",
+      "source_author": "Umplix",
+      "download_kind": "ARCHIVE_ZIP",
+      "minimum_archive_bytes": 262144,
+      "observed_page_claims": [
+        "fully rigged low-poly humanoid",
+        "includes FBX files",
+        "includes multiple humanoid animations"
+      ]
+    }
+  ],
+  "rules": [
+    "Do not treat page claims as technical proof.",
+    "Hosted source inventory must list exact FBX entries, file sizes, SHA256 and FBX versions before any UE4 runner use.",
+    "Exact payloads already present in P1C01FrodoTechnicalRejectionHistoryV1.json are forbidden.",
+    "Runtime integration remains false until UE4 import, deformation, retarget, AnimBP and character-presentation gates pass."
+  ],
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_class": 2
+  },
+  "evidence_boundary": "Public CC0 source registration plus hosted archive inventory only. No UE4 import, deformation, retarget, final Frodo likeness, runtime, PIE, device, visual or performance acceptance."
+}
