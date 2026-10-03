@@ -1,0 +1,251 @@
+{
+  "schema_version": 1,
+  "package_id": "P1C01_SHIRE_MEGA_CHAPTER_PACK_V1",
+  "status": "SOURCE_PREPRODUCTION_ACTIVE_RUNTIME_GATE_PRESERVED",
+  "authority": "Data/ProjectGovernor.json",
+  "runtime_chapter": "P1C01",
+  "runtime_scope": "The Shire through Bucklebury / Ferry",
+  "source_contract": {
+    "timeline_segments": [
+      "F1-01 Prologue & Ring history",
+      "F1-02 Shadow of the Past",
+      "F1-03 Road to Bree (Shire/Bucklebury portion only)"
+    ],
+    "locked_outcomes": [
+      "Bilbo leaves and the Ring passes to Frodo",
+      "Frodo leaves the Shire",
+      "The hobbits reach Bree only after the P1C01 Shire/Bucklebury/Ferry route completes"
+    ],
+    "safe_windows": [
+      "party setup/social onboarding/fireworks",
+      "investigation tutorial/packing/stealth departure",
+      "road stealth/ferry escape/environmental hiding"
+    ],
+    "rules": [
+      "Do not leak future knowledge or future world-state variants early",
+      "Optional content expires when urgency makes it implausible",
+      "Skipped presentation must preserve identical quest/story postconditions",
+      "Original dialogue only; no verbatim book/film dialogue"
+    ]
+  },
+  "production_cells": [
+    {
+      "id": "SHIRE_HOBBITON_BAG_END",
+      "purpose": "hero settlement and chapter home anchor",
+      "detail": [
+        "Bag End exterior and garden",
+        "Hill/Bagshot Row silhouette",
+        "local lanes and gates",
+        "kitchen/garden/work props",
+        "nearby fields and hedges"
+      ],
+      "instancing": "HISM/ISM for repeated fences, hedges, vegetation and small props",
+      "lod": "hero-near selective quality; aggressive distant LOD/cull"
+    },
+    {
+      "id": "SHIRE_HOBBITON_VILLAGE",
+      "purpose": "living village exploration",
+      "detail": [
+        "roads and footpaths",
+        "fences and field boundaries",
+        "gardens and farm plots",
+        "village work/social pockets",
+        "rocks, carts and restrained clutter"
+      ],
+      "instancing": "HISM/ISM repeated sets",
+      "lod": "cell-bounded density and culling"
+    },
+    {
+      "id": "SHIRE_ROADS_TRAVEL",
+      "purpose": "Frodo departure and stealth travel",
+      "detail": [
+        "readable road hierarchy",
+        "hedgerow hiding pockets",
+        "field edges",
+        "travel landmarks",
+        "low-cost encounter staging"
+      ],
+      "instancing": "HISM vegetation/fences",
+      "lod": "long-view cull tiers"
+    },
+    {
+      "id": "BUCKLEBURY_FERRY_APPROACH",
+      "purpose": "P1C01 terminal travel cell",
+      "detail": [
+        "approach paths",
+        "riverbank vegetation",
+        "ferry readability",
+        "escape route landmarks",
+        "transition staging"
+      ],
+      "instancing": "HISM foliage/rocks",
+      "lod": "water/vegetation bounded for 2GB VRAM target"
+    }
+  ],
+  "character_contracts": [
+    {
+      "id": "FRODO",
+      "order": 1,
+      "state": "CURRENT_RUNTIME_CAR",
+      "requirements": [
+        "FBX 2018-compatible skeletal source",
+        "provenance-bound candidate",
+        "skeleton/deformation QC",
+        "locomotion and idle set",
+        "interaction hooks",
+        "async rig streaming"
+      ]
+    },
+    {
+      "id": "GANDALF",
+      "order": 2,
+      "state": "PREDECESSOR_GATED_BY_FRODO",
+      "requirements": [
+        "FBX skeletal source",
+        "staff/robe-aware QC",
+        "idle/interaction set",
+        "NPC context integration",
+        "async rig streaming"
+      ]
+    },
+    {
+      "id": "SAM",
+      "order": 3,
+      "state": "CHAPTER_SOURCE_CONTRACT_ONLY",
+      "requirements": [
+        "presence/knowledge flags for F1-02",
+        "no runtime promotion before authorized car"
+      ]
+    }
+  ],
+  "living_shire": {
+    "lifecycle_owner": "LivingWorldDirector",
+    "context_owner": "ShireNPCContextSubsystem",
+    "rules": [
+      "Director owns pooled population lifecycle",
+      "Context subsystem supplies bounded context/behavior inputs",
+      "No spawn/destroy crowd churn",
+      "No duplicate AI owner"
+    ],
+    "routine_families": [
+      "garden/farm work",
+      "walking/errands",
+      "doorstep/social idle",
+      "cart/work ambience",
+      "meal/rest transitions"
+    ],
+    "budgets": {
+      "near_social_queries": "bounded",
+      "background_population": "pooled and distance-managed",
+      "ambient_updates": "staggered; never full-population per-frame"
+    }
+  },
+  "gameplay": {
+    "story_owner": "ShireQuestSubsystem",
+    "windows": [
+      {
+        "id": "PARTY_SOCIAL",
+        "type": "optional",
+        "expiry": "story urgency"
+      },
+      {
+        "id": "INVESTIGATION",
+        "type": "tutorial",
+        "expiry": "departure commitment"
+      },
+      {
+        "id": "PACKING",
+        "type": "preparation",
+        "expiry": "departure commitment"
+      },
+      {
+        "id": "STEALTH_DEPARTURE",
+        "type": "critical-support",
+        "expiry": "route transition"
+      },
+      {
+        "id": "ROAD_STEALTH",
+        "type": "travel",
+        "expiry": "ferry transition"
+      },
+      {
+        "id": "ENVIRONMENTAL_HIDING",
+        "type": "travel",
+        "expiry": "encounter resolution"
+      },
+      {
+        "id": "FERRY_ESCAPE",
+        "type": "transition",
+        "expiry": "P1C01 exit"
+      }
+    ],
+    "save_points": [
+      "clean chapter/cell entry",
+      "before irreversible set-piece",
+      "after committed postcondition"
+    ]
+  },
+  "material_surface": {
+    "families": [
+      "wood",
+      "stone",
+      "soil/dirt",
+      "grass",
+      "roof/thatch",
+      "cloth",
+      "metal detail"
+    ],
+    "texture_rule": "PNG/TGA only; prefer channel-packed ORM/ARM-style masks where compatible",
+    "material_rule": "shared masters + instances; avoid unique shader proliferation",
+    "surfaces": [
+      "Grass",
+      "Dirt",
+      "Stone",
+      "Wood"
+    ]
+  },
+  "audio": {
+    "owner": "UShireAudioSubsystem",
+    "identity": [
+      "birds",
+      "breeze/hedges",
+      "farm/work",
+      "distant village voices/laughter",
+      "carts",
+      "warm interiors",
+      "fire/cutlery"
+    ],
+    "rule": "async soft-referenced banks/cues; story-critical priority over decorative ambience"
+  },
+  "reliability": {
+    "checks": [
+      "missing soft asset fail-closed/fallback",
+      "streaming cancellation and stale callback safety",
+      "quest-state persistence",
+      "cell-transition checkpoint ordering",
+      "save restore only into committed world"
+    ]
+  },
+  "optimization": {
+    "target": {
+      "renderer": "DX11",
+      "resolution": "720p",
+      "fps_floor": 30,
+      "ram_gb": 8,
+      "vram_gb": 2
+    },
+    "rules": [
+      "HISM/ISM repeated environment sets",
+      "soft references for heavy assets",
+      "FStreamableManager asynchronous heavy loading",
+      "LOD and distance culling",
+      "bounded NPC updates",
+      "selective hero/near-architecture quality before distant detail"
+    ]
+  },
+  "gate_boundary": {
+    "current_car": "P1C01-A_FRODO_SKELETAL_PRODUCTION",
+    "future_runtime_activation": "FORBIDDEN_UNTIL_PREDECESSOR_GATE_6_7",
+    "evidence": "SOURCE/PREPRODUCTION PACKAGE ONLY; no PIE/device/visual/performance acceptance"
+  }
+}

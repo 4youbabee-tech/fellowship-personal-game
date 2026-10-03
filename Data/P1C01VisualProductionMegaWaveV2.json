@@ -1,0 +1,2628 @@
+{
+  "schema_version": 1,
+  "wave_id": "P1C01_VISUAL_PRODUCTION_MEGA_WAVE_V2",
+  "status": "SOURCE_IMPLEMENTED_INTAKE_ACTIVE",
+  "chapter": "P1C01",
+  "total_slots": 180,
+  "target_profile": "UE4.27.2 / DX11 / 720p / 30 FPS floor / ~2GB VRAM",
+  "production_goal": "Replace prototype primitive readability with real production assets while preserving current runtime-car gates.",
+  "source_policy": {
+    "warehouse_first": true,
+    "preferred_material_sources": [
+      "POLY_HAVEN",
+      "AMBIENTCG",
+      "TEXTURE_NINJA"
+    ],
+    "preferred_character_animation_sources": [
+      "MIXAMO",
+      "ACCURIG",
+      "ACTORCORE",
+      "ROKOKO",
+      "CMU_MOCAP",
+      "ACCAD"
+    ],
+    "preferred_audio_sources": [
+      "SONNISS",
+      "FREESOUND_REVIEWED",
+      "99SOUNDS"
+    ],
+    "preferred_vfx_sources": [
+      "ACTIONVFX",
+      "EMBERGEN_BAKED"
+    ],
+    "preferred_base_geometry_sources": [
+      "THE_BASE_MESH",
+      "BLENDKIT",
+      "APPROVED_FAB"
+    ],
+    "manual_blockers_do_not_stop_wave": true
+  },
+  "promotion_rules": [
+    "Animated production assets: FBX only.",
+    "Textures: PNG/TGA only; channel-pack where appropriate.",
+    "Every external file needs provider, exact source, license state and receipt/SHA256 before promotion.",
+    "No named hero likeness is promoted from a generic base mesh.",
+    "World static FBX may enter generic production importer only after source/QC preparation.",
+    "Character FBX must pass dedicated skeletal provenance/skeleton/deformation QC.",
+    "Repeated environment families use HISM/ISM, LOD and culling.",
+    "Heavy runtime assets remain soft-referenced and asynchronously loaded.",
+    "No future chapter runtime activation from this wave."
+  ],
+  "slots": [
+    {
+      "id": "ARCH_001",
+      "family": "architecture",
+      "priority": "HIGH",
+      "targets": [
+        "BagEnd"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ARCH_002",
+      "family": "architecture",
+      "priority": "HIGH",
+      "targets": [
+        "HobbitonVillage"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ARCH_003",
+      "family": "architecture",
+      "priority": "HIGH",
+      "targets": [
+        "ShireRoad"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ARCH_004",
+      "family": "architecture",
+      "priority": "HIGH",
+      "targets": [
+        "BuckleburyFerry"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ARCH_005",
+      "family": "architecture",
+      "priority": "HIGH",
+      "targets": [
+        "BagEnd"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ARCH_006",
+      "family": "architecture",
+      "priority": "HIGH",
+      "targets": [
+        "HobbitonVillage"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ARCH_007",
+      "family": "architecture",
+      "priority": "HIGH",
+      "targets": [
+        "ShireRoad"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ARCH_008",
+      "family": "architecture",
+      "priority": "HIGH",
+      "targets": [
+        "BuckleburyFerry"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ARCH_009",
+      "family": "architecture",
+      "priority": "HIGH",
+      "targets": [
+        "BagEnd"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ARCH_010",
+      "family": "architecture",
+      "priority": "HIGH",
+      "targets": [
+        "HobbitonVillage"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ARCH_011",
+      "family": "architecture",
+      "priority": "HIGH",
+      "targets": [
+        "ShireRoad"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ARCH_012",
+      "family": "architecture",
+      "priority": "HIGH",
+      "targets": [
+        "BuckleburyFerry"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ARCH_013",
+      "family": "architecture",
+      "priority": "HIGH",
+      "targets": [
+        "BagEnd"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ARCH_014",
+      "family": "architecture",
+      "priority": "HIGH",
+      "targets": [
+        "HobbitonVillage"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ARCH_015",
+      "family": "architecture",
+      "priority": "HIGH",
+      "targets": [
+        "ShireRoad"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ARCH_016",
+      "family": "architecture",
+      "priority": "HIGH",
+      "targets": [
+        "BuckleburyFerry"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ARCH_017",
+      "family": "architecture",
+      "priority": "HIGH",
+      "targets": [
+        "BagEnd"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ARCH_018",
+      "family": "architecture",
+      "priority": "HIGH",
+      "targets": [
+        "HobbitonVillage"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ARCH_019",
+      "family": "architecture",
+      "priority": "HIGH",
+      "targets": [
+        "ShireRoad"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ARCH_020",
+      "family": "architecture",
+      "priority": "HIGH",
+      "targets": [
+        "BuckleburyFerry"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ARCH_021",
+      "family": "architecture",
+      "priority": "HIGH",
+      "targets": [
+        "BagEnd"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ARCH_022",
+      "family": "architecture",
+      "priority": "HIGH",
+      "targets": [
+        "HobbitonVillage"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ARCH_023",
+      "family": "architecture",
+      "priority": "HIGH",
+      "targets": [
+        "ShireRoad"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ARCH_024",
+      "family": "architecture",
+      "priority": "HIGH",
+      "targets": [
+        "BuckleburyFerry"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ARCH_025",
+      "family": "architecture",
+      "priority": "HIGH",
+      "targets": [
+        "BagEnd"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ARCH_026",
+      "family": "architecture",
+      "priority": "HIGH",
+      "targets": [
+        "HobbitonVillage"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ARCH_027",
+      "family": "architecture",
+      "priority": "HIGH",
+      "targets": [
+        "ShireRoad"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ARCH_028",
+      "family": "architecture",
+      "priority": "HIGH",
+      "targets": [
+        "BuckleburyFerry"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ARCH_029",
+      "family": "architecture",
+      "priority": "HIGH",
+      "targets": [
+        "BagEnd"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ARCH_030",
+      "family": "architecture",
+      "priority": "HIGH",
+      "targets": [
+        "HobbitonVillage"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_001",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "BagEnd"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_002",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "HobbitonVillage"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_003",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "PartyField"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_004",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "EastFields"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_005",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "BuckleburyFerry"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_006",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "BagEnd"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_007",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "HobbitonVillage"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_008",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "PartyField"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_009",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "EastFields"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_010",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "BuckleburyFerry"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_011",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "BagEnd"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_012",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "HobbitonVillage"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_013",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "PartyField"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_014",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "EastFields"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_015",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "BuckleburyFerry"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_016",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "BagEnd"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_017",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "HobbitonVillage"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_018",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "PartyField"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_019",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "EastFields"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_020",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "BuckleburyFerry"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_021",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "BagEnd"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_022",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "HobbitonVillage"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_023",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "PartyField"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_024",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "EastFields"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_025",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "BuckleburyFerry"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_026",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "BagEnd"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_027",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "HobbitonVillage"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_028",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "PartyField"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_029",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "EastFields"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_030",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "BuckleburyFerry"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_031",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "BagEnd"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_032",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "HobbitonVillage"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_033",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "PartyField"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_034",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "EastFields"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "PROP_035",
+      "family": "props",
+      "priority": "HIGH",
+      "targets": [
+        "BuckleburyFerry"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VEG_001",
+      "family": "vegetation",
+      "priority": "HIGH",
+      "targets": [
+        "BagEndGarden"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VEG_002",
+      "family": "vegetation",
+      "priority": "HIGH",
+      "targets": [
+        "HobbitonVillage"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VEG_003",
+      "family": "vegetation",
+      "priority": "HIGH",
+      "targets": [
+        "ShireRoad"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VEG_004",
+      "family": "vegetation",
+      "priority": "HIGH",
+      "targets": [
+        "WoodedRoad"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VEG_005",
+      "family": "vegetation",
+      "priority": "HIGH",
+      "targets": [
+        "RiverBank"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VEG_006",
+      "family": "vegetation",
+      "priority": "HIGH",
+      "targets": [
+        "BagEndGarden"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VEG_007",
+      "family": "vegetation",
+      "priority": "HIGH",
+      "targets": [
+        "HobbitonVillage"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VEG_008",
+      "family": "vegetation",
+      "priority": "HIGH",
+      "targets": [
+        "ShireRoad"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VEG_009",
+      "family": "vegetation",
+      "priority": "HIGH",
+      "targets": [
+        "WoodedRoad"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VEG_010",
+      "family": "vegetation",
+      "priority": "HIGH",
+      "targets": [
+        "RiverBank"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VEG_011",
+      "family": "vegetation",
+      "priority": "HIGH",
+      "targets": [
+        "BagEndGarden"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VEG_012",
+      "family": "vegetation",
+      "priority": "HIGH",
+      "targets": [
+        "HobbitonVillage"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VEG_013",
+      "family": "vegetation",
+      "priority": "HIGH",
+      "targets": [
+        "ShireRoad"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VEG_014",
+      "family": "vegetation",
+      "priority": "HIGH",
+      "targets": [
+        "WoodedRoad"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VEG_015",
+      "family": "vegetation",
+      "priority": "HIGH",
+      "targets": [
+        "RiverBank"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VEG_016",
+      "family": "vegetation",
+      "priority": "HIGH",
+      "targets": [
+        "BagEndGarden"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VEG_017",
+      "family": "vegetation",
+      "priority": "HIGH",
+      "targets": [
+        "HobbitonVillage"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VEG_018",
+      "family": "vegetation",
+      "priority": "HIGH",
+      "targets": [
+        "ShireRoad"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VEG_019",
+      "family": "vegetation",
+      "priority": "HIGH",
+      "targets": [
+        "WoodedRoad"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VEG_020",
+      "family": "vegetation",
+      "priority": "HIGH",
+      "targets": [
+        "RiverBank"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VEG_021",
+      "family": "vegetation",
+      "priority": "HIGH",
+      "targets": [
+        "BagEndGarden"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VEG_022",
+      "family": "vegetation",
+      "priority": "HIGH",
+      "targets": [
+        "HobbitonVillage"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VEG_023",
+      "family": "vegetation",
+      "priority": "HIGH",
+      "targets": [
+        "ShireRoad"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VEG_024",
+      "family": "vegetation",
+      "priority": "HIGH",
+      "targets": [
+        "WoodedRoad"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VEG_025",
+      "family": "vegetation",
+      "priority": "HIGH",
+      "targets": [
+        "RiverBank"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VEG_026",
+      "family": "vegetation",
+      "priority": "HIGH",
+      "targets": [
+        "BagEndGarden"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VEG_027",
+      "family": "vegetation",
+      "priority": "HIGH",
+      "targets": [
+        "HobbitonVillage"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VEG_028",
+      "family": "vegetation",
+      "priority": "HIGH",
+      "targets": [
+        "ShireRoad"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VEG_029",
+      "family": "vegetation",
+      "priority": "HIGH",
+      "targets": [
+        "WoodedRoad"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VEG_030",
+      "family": "vegetation",
+      "priority": "HIGH",
+      "targets": [
+        "RiverBank"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "MAT_001",
+      "family": "materials",
+      "priority": "HIGH",
+      "targets": [
+        "ground"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "MAT_002",
+      "family": "materials",
+      "priority": "HIGH",
+      "targets": [
+        "wood"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "MAT_003",
+      "family": "materials",
+      "priority": "HIGH",
+      "targets": [
+        "stone"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "MAT_004",
+      "family": "materials",
+      "priority": "HIGH",
+      "targets": [
+        "plaster"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "MAT_005",
+      "family": "materials",
+      "priority": "HIGH",
+      "targets": [
+        "thatch"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "MAT_006",
+      "family": "materials",
+      "priority": "HIGH",
+      "targets": [
+        "cloth"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "MAT_007",
+      "family": "materials",
+      "priority": "HIGH",
+      "targets": [
+        "metal"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "MAT_008",
+      "family": "materials",
+      "priority": "HIGH",
+      "targets": [
+        "foliage"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "MAT_009",
+      "family": "materials",
+      "priority": "HIGH",
+      "targets": [
+        "ground"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "MAT_010",
+      "family": "materials",
+      "priority": "HIGH",
+      "targets": [
+        "wood"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "MAT_011",
+      "family": "materials",
+      "priority": "HIGH",
+      "targets": [
+        "stone"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "MAT_012",
+      "family": "materials",
+      "priority": "HIGH",
+      "targets": [
+        "plaster"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "MAT_013",
+      "family": "materials",
+      "priority": "HIGH",
+      "targets": [
+        "thatch"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "MAT_014",
+      "family": "materials",
+      "priority": "HIGH",
+      "targets": [
+        "cloth"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "MAT_015",
+      "family": "materials",
+      "priority": "HIGH",
+      "targets": [
+        "metal"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "MAT_016",
+      "family": "materials",
+      "priority": "HIGH",
+      "targets": [
+        "foliage"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "MAT_017",
+      "family": "materials",
+      "priority": "HIGH",
+      "targets": [
+        "ground"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "MAT_018",
+      "family": "materials",
+      "priority": "HIGH",
+      "targets": [
+        "wood"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "MAT_019",
+      "family": "materials",
+      "priority": "HIGH",
+      "targets": [
+        "stone"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "MAT_020",
+      "family": "materials",
+      "priority": "HIGH",
+      "targets": [
+        "plaster"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "MAT_021",
+      "family": "materials",
+      "priority": "HIGH",
+      "targets": [
+        "thatch"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "MAT_022",
+      "family": "materials",
+      "priority": "HIGH",
+      "targets": [
+        "cloth"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "MAT_023",
+      "family": "materials",
+      "priority": "HIGH",
+      "targets": [
+        "metal"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "MAT_024",
+      "family": "materials",
+      "priority": "HIGH",
+      "targets": [
+        "foliage"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "MAT_025",
+      "family": "materials",
+      "priority": "HIGH",
+      "targets": [
+        "ground"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "AUD_001",
+      "family": "audio",
+      "priority": "MEDIUM",
+      "targets": [
+        "village"
+      ],
+      "accepted_formats": [
+        "wav"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "AUD_002",
+      "family": "audio",
+      "priority": "MEDIUM",
+      "targets": [
+        "birds"
+      ],
+      "accepted_formats": [
+        "wav"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "AUD_003",
+      "family": "audio",
+      "priority": "MEDIUM",
+      "targets": [
+        "wind"
+      ],
+      "accepted_formats": [
+        "wav"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "AUD_004",
+      "family": "audio",
+      "priority": "MEDIUM",
+      "targets": [
+        "farm"
+      ],
+      "accepted_formats": [
+        "wav"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "AUD_005",
+      "family": "audio",
+      "priority": "MEDIUM",
+      "targets": [
+        "footsteps"
+      ],
+      "accepted_formats": [
+        "wav"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "AUD_006",
+      "family": "audio",
+      "priority": "MEDIUM",
+      "targets": [
+        "water"
+      ],
+      "accepted_formats": [
+        "wav"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "AUD_007",
+      "family": "audio",
+      "priority": "MEDIUM",
+      "targets": [
+        "interior"
+      ],
+      "accepted_formats": [
+        "wav"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "AUD_008",
+      "family": "audio",
+      "priority": "MEDIUM",
+      "targets": [
+        "village"
+      ],
+      "accepted_formats": [
+        "wav"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "AUD_009",
+      "family": "audio",
+      "priority": "MEDIUM",
+      "targets": [
+        "birds"
+      ],
+      "accepted_formats": [
+        "wav"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "AUD_010",
+      "family": "audio",
+      "priority": "MEDIUM",
+      "targets": [
+        "wind"
+      ],
+      "accepted_formats": [
+        "wav"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "AUD_011",
+      "family": "audio",
+      "priority": "MEDIUM",
+      "targets": [
+        "farm"
+      ],
+      "accepted_formats": [
+        "wav"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "AUD_012",
+      "family": "audio",
+      "priority": "MEDIUM",
+      "targets": [
+        "footsteps"
+      ],
+      "accepted_formats": [
+        "wav"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "AUD_013",
+      "family": "audio",
+      "priority": "MEDIUM",
+      "targets": [
+        "water"
+      ],
+      "accepted_formats": [
+        "wav"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "AUD_014",
+      "family": "audio",
+      "priority": "MEDIUM",
+      "targets": [
+        "interior"
+      ],
+      "accepted_formats": [
+        "wav"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "AUD_015",
+      "family": "audio",
+      "priority": "MEDIUM",
+      "targets": [
+        "village"
+      ],
+      "accepted_formats": [
+        "wav"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "AUD_016",
+      "family": "audio",
+      "priority": "MEDIUM",
+      "targets": [
+        "birds"
+      ],
+      "accepted_formats": [
+        "wav"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "AUD_017",
+      "family": "audio",
+      "priority": "MEDIUM",
+      "targets": [
+        "wind"
+      ],
+      "accepted_formats": [
+        "wav"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "AUD_018",
+      "family": "audio",
+      "priority": "MEDIUM",
+      "targets": [
+        "farm"
+      ],
+      "accepted_formats": [
+        "wav"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "AUD_019",
+      "family": "audio",
+      "priority": "MEDIUM",
+      "targets": [
+        "footsteps"
+      ],
+      "accepted_formats": [
+        "wav"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "AUD_020",
+      "family": "audio",
+      "priority": "MEDIUM",
+      "targets": [
+        "water"
+      ],
+      "accepted_formats": [
+        "wav"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VFX_001",
+      "family": "vfx",
+      "priority": "MEDIUM",
+      "targets": [
+        "mist"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga",
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VFX_002",
+      "family": "vfx",
+      "priority": "MEDIUM",
+      "targets": [
+        "rain"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga",
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VFX_003",
+      "family": "vfx",
+      "priority": "MEDIUM",
+      "targets": [
+        "fire"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga",
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VFX_004",
+      "family": "vfx",
+      "priority": "MEDIUM",
+      "targets": [
+        "smoke"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga",
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VFX_005",
+      "family": "vfx",
+      "priority": "MEDIUM",
+      "targets": [
+        "dust"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga",
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VFX_006",
+      "family": "vfx",
+      "priority": "MEDIUM",
+      "targets": [
+        "water"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga",
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VFX_007",
+      "family": "vfx",
+      "priority": "MEDIUM",
+      "targets": [
+        "mist"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga",
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VFX_008",
+      "family": "vfx",
+      "priority": "MEDIUM",
+      "targets": [
+        "rain"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga",
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VFX_009",
+      "family": "vfx",
+      "priority": "MEDIUM",
+      "targets": [
+        "fire"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga",
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VFX_010",
+      "family": "vfx",
+      "priority": "MEDIUM",
+      "targets": [
+        "smoke"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga",
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VFX_011",
+      "family": "vfx",
+      "priority": "MEDIUM",
+      "targets": [
+        "dust"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga",
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VFX_012",
+      "family": "vfx",
+      "priority": "MEDIUM",
+      "targets": [
+        "water"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga",
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VFX_013",
+      "family": "vfx",
+      "priority": "MEDIUM",
+      "targets": [
+        "mist"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga",
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VFX_014",
+      "family": "vfx",
+      "priority": "MEDIUM",
+      "targets": [
+        "rain"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga",
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "VFX_015",
+      "family": "vfx",
+      "priority": "MEDIUM",
+      "targets": [
+        "fire"
+      ],
+      "accepted_formats": [
+        "png",
+        "tga",
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ANIM_001",
+      "family": "animation",
+      "priority": "CRITICAL",
+      "targets": [
+        "Frodo"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ANIM_002",
+      "family": "animation",
+      "priority": "CRITICAL",
+      "targets": [
+        "Gandalf"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ANIM_003",
+      "family": "animation",
+      "priority": "CRITICAL",
+      "targets": [
+        "HobbitNPC"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ANIM_004",
+      "family": "animation",
+      "priority": "CRITICAL",
+      "targets": [
+        "HumanNPC"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ANIM_005",
+      "family": "animation",
+      "priority": "CRITICAL",
+      "targets": [
+        "Frodo"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ANIM_006",
+      "family": "animation",
+      "priority": "CRITICAL",
+      "targets": [
+        "Gandalf"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ANIM_007",
+      "family": "animation",
+      "priority": "CRITICAL",
+      "targets": [
+        "HobbitNPC"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ANIM_008",
+      "family": "animation",
+      "priority": "CRITICAL",
+      "targets": [
+        "HumanNPC"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ANIM_009",
+      "family": "animation",
+      "priority": "CRITICAL",
+      "targets": [
+        "Frodo"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ANIM_010",
+      "family": "animation",
+      "priority": "CRITICAL",
+      "targets": [
+        "Gandalf"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ANIM_011",
+      "family": "animation",
+      "priority": "CRITICAL",
+      "targets": [
+        "HobbitNPC"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ANIM_012",
+      "family": "animation",
+      "priority": "CRITICAL",
+      "targets": [
+        "HumanNPC"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ANIM_013",
+      "family": "animation",
+      "priority": "CRITICAL",
+      "targets": [
+        "Frodo"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ANIM_014",
+      "family": "animation",
+      "priority": "CRITICAL",
+      "targets": [
+        "Gandalf"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "ANIM_015",
+      "family": "animation",
+      "priority": "CRITICAL",
+      "targets": [
+        "HobbitNPC"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "CREATURE_001",
+      "family": "creature_support",
+      "priority": "MEDIUM",
+      "targets": [
+        "bird"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "CREATURE_002",
+      "family": "creature_support",
+      "priority": "MEDIUM",
+      "targets": [
+        "rabbit"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "CREATURE_003",
+      "family": "creature_support",
+      "priority": "MEDIUM",
+      "targets": [
+        "butterfly"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "CREATURE_004",
+      "family": "creature_support",
+      "priority": "MEDIUM",
+      "targets": [
+        "horse"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "CREATURE_005",
+      "family": "creature_support",
+      "priority": "MEDIUM",
+      "targets": [
+        "bird"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "CREATURE_006",
+      "family": "creature_support",
+      "priority": "MEDIUM",
+      "targets": [
+        "rabbit"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "CREATURE_007",
+      "family": "creature_support",
+      "priority": "MEDIUM",
+      "targets": [
+        "butterfly"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "CREATURE_008",
+      "family": "creature_support",
+      "priority": "MEDIUM",
+      "targets": [
+        "horse"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "CREATURE_009",
+      "family": "creature_support",
+      "priority": "MEDIUM",
+      "targets": [
+        "bird"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    },
+    {
+      "id": "CREATURE_010",
+      "family": "creature_support",
+      "priority": "MEDIUM",
+      "targets": [
+        "rabbit"
+      ],
+      "accepted_formats": [
+        "fbx"
+      ],
+      "state": "WAREHOUSE_MATCH_OR_ACQUIRE",
+      "provenance_required": true,
+      "runtime_promotion": "GATED"
+    }
+  ]
+}
