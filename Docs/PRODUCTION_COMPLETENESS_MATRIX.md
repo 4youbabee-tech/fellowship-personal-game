@@ -1,3 +1,14 @@
+## 2026-10-03 - Frodo Animated Characters archive-size repair matrix
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| Exact-head baseline | PARTIAL MACHINE EVIDENCE | `2370cf478ebcf27bc5622ec1e69668bd2121ed8c`: Pre-Unreal #1695 + Unreal #1309 success; Frodo #35 stopped only at generic 1 MiB archive threshold |
+| Official archive observation | RECORDED | 718,021 bytes downloaded from the recorded OpenGameArt URL; receipt/static QC still pending |
+| Archive minimum policy | SOURCE-IMPLEMENTED / EXACT-HEAD PROOF PENDING | Default 1 MiB; manifest override 700,000; hard floor 262,144 |
+| ZIP safety and required FBX | PRESERVED | Traversal, extension, entry/expanded-size and FBX-presence gates unchanged |
+| Direct FBX minimum | PRESERVED | 1 MiB gate unchanged |
+| Runtime / visual / device / Gate 6-7 | NOT ACCEPTED | Candidate intake only |
+
 ## 2026-10-03 - Frodo Kenney static-gate matrix
 
 | Area | Status | Evidence / boundary |

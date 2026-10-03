@@ -21,6 +21,16 @@ if($null -ne $asset.PSObject.Properties["download_kind"]){ $payloadKind=([string
 elseif([IO.Path]::GetExtension([string]$asset.filename).ToLowerInvariant() -eq ".fbx"){ $payloadKind="DIRECT_FBX" }
 if($payloadKind -notin @("ARCHIVE_ZIP","DIRECT_FBX")){ throw "OGA_CHARACTER_PAYLOAD_KIND_FAIL kind=$payloadKind" }
 
+$archiveMinimumBytesDefault=[int64]1048576
+$archiveMinimumBytesFloor=[int64]262144
+$archiveMinimumBytes=$archiveMinimumBytesDefault
+if($null -ne $asset.PSObject.Properties["minimum_archive_bytes"]){
+  $archiveMinimumBytes=[int64]$asset.minimum_archive_bytes
+}
+if($archiveMinimumBytes -lt $archiveMinimumBytesFloor -or $archiveMinimumBytes -gt 104857600){
+  throw "OGA_CHARACTER_ARCHIVE_MINIMUM_INVALID bytes=$archiveMinimumBytes floor=$archiveMinimumBytesFloor ceiling=104857600"
+}
+
 $stageRoot = Join-Path $WarehouseRoot "OpenGameArt\Characters"
 New-Item -ItemType Directory -Path $stageRoot -Force | Out-Null
 $archivePath = Join-Path $stageRoot ([string]$asset.filename)
@@ -28,10 +38,10 @@ $receiptPath = Join-Path $stageRoot ("receipt_"+[string]$manifest.batch_id+".jso
 $partialPath = $archivePath+".partial"
 
 function Test-CandidateArchive {
-  param([string]$Path)
+  param([string]$Path,[int64]$MinimumBytes)
   if(-not (Test-Path -LiteralPath $Path -PathType Leaf)){ throw "OGA_CHARACTER_ARCHIVE_MISSING path=$Path" }
   $file = Get-Item -LiteralPath $Path
-  if($file.Length -lt 1048576){ throw "OGA_CHARACTER_ARCHIVE_TOO_SMALL bytes=$($file.Length)" }
+  if($file.Length -lt $MinimumBytes){ throw "OGA_CHARACTER_ARCHIVE_TOO_SMALL bytes=$($file.Length) required=$MinimumBytes" }
   $zip = [IO.Compression.ZipFile]::OpenRead($Path)
   try {
     $entryCount=0; $fbxCount=0; $totalBytes=[int64]0
@@ -72,7 +82,7 @@ function Test-DirectFbx {
 function Test-CandidatePayload {
   param([string]$Path,[string]$Kind)
   if($Kind -eq "DIRECT_FBX"){ return Test-DirectFbx -Path $Path }
-  $scan=Test-CandidateArchive -Path $Path
+  $scan=Test-CandidateArchive -Path $Path -MinimumBytes $archiveMinimumBytes
   $scan["payload_kind"]="ARCHIVE_ZIP"
   return $scan
 }

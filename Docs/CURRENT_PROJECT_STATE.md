@@ -1,3 +1,10 @@
+## 2026-10-03 - Frodo Animated Characters archive-size contract repair
+
+- Exact-head `2370cf478ebcf27bc5622ec1e69668bd2121ed8c`: Pre-Unreal #1695 and Unreal Build #1309 succeeded. Frodo Import #35 downloaded the official Kenney Animated Characters 1 archive, then rejected it before archive inspection solely because its observed 718,021-byte size was below the generic 1 MiB threshold.
+- Root fix: archive manifests may now declare a bounded `minimum_archive_bytes`; the default remains 1 MiB and overrides cannot fall below 262,144 bytes. This one official payload requires 700,000 bytes.
+- ZIP path traversal, dangerous-extension, BMP, entry-count, per-entry size, expanded-size and required-FBX checks remain unchanged. The direct-FBX 1 MiB minimum remains unchanged.
+- Status: **ROOT FIX SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + FRODO + UNREAL PROOF PENDING**. No runtime, deformation, retarget, AnimBP, PIE, device, visual, pacing, performance or Gate 6/7 acceptance claim.
+
 ## 2026-10-03 - Frodo Kenney Blocky static rejection and animated successor
 
 - Exact-head `54e551bb10b2eb20bb0f647a76e03ef469f3d4f1`: Pre-Unreal #1694 succeeded. Frodo Import #34 staged the bounded Kenney Blocky archive, generated the candidate report and static-QC artifact, then stopped before UE4 import because no non-rejected static-valid candidate remained.

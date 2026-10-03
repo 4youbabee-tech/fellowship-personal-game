@@ -38,6 +38,7 @@ if([string]$kn.provider -ne "KENNEY" -or [string]$kn.license -ne "CC0-1.0" -or @
 if(-not ([string]$kn.assets[0].download_url).StartsWith("https://kenney.nl/media/pages/assets/blocky-characters/")){throw "P1C01_FRODO_IMPORT_CONTRACT_KENNEY_URL_FAIL"}
 if([string]$ka.provider -ne "OPENGAMEART" -or [string]$ka.license -ne "CC0-1.0" -or @($ka.assets).Count -ne 1 -or [string]$ka.assets[0].id -ne "OGA_KENNEY_ANIMATED_CHARACTERS_1_CC0" -or [string]$ka.assets[0].download_kind -ne "ARCHIVE_ZIP"){throw "P1C01_FRODO_IMPORT_CONTRACT_KENNEY_ANIMATED_FAIL"}
 if([string]$ka.assets[0].download_url -ne "https://opengameart.org/sites/default/files/kenney_animated-characters-1.zip"){throw "P1C01_FRODO_IMPORT_CONTRACT_KENNEY_ANIMATED_URL_FAIL"}
+if([int64]$ka.assets[0].minimum_archive_bytes -ne 700000){throw "P1C01_FRODO_IMPORT_CONTRACT_KENNEY_ANIMATED_MINIMUM_FAIL"}
 if([int]$h.candidate_policy.source_asset_priority_bonus.KAYKIT_ADVENTURERS_CC0 -lt 1){throw "P1C01_FRODO_IMPORT_CONTRACT_SOURCE_PRIORITY_MISSING"}
 if([int]$h.candidate_policy.source_asset_priority_bonus.KAYKIT_ADVENTURERS_ROGUE_HOODED_CC0 -lt 1){throw "P1C01_FRODO_IMPORT_CONTRACT_HOODED_PRIORITY_MISSING"}
 if($null -ne $h.candidate_policy.source_asset_priority_bonus.PSObject.Properties["KENNEY_BLOCKY_CHARACTERS_CC0"]){throw "P1C01_FRODO_IMPORT_CONTRACT_BLOCKY_PRIORITY_NOT_REMOVED"}
@@ -59,6 +60,10 @@ foreach($marker in @("sourcePriorityBonuses","sourcePriorityBonus","source_prior
 foreach($marker in @("DIRECT_FBX","Test-DirectFbx","OGA_CHARACTER_DIRECT_FBX_HEADER_FAIL","Test-CandidatePayload")){
   if(-not $g.Contains($marker)){throw "P1C01_FRODO_IMPORT_CONTRACT_DIRECT_FBX_STAGE_MARKER_MISSING marker=$marker"}
 }
+foreach($marker in @('$archiveMinimumBytesDefault=[int64]1048576','$archiveMinimumBytesFloor=[int64]262144','minimum_archive_bytes','required=$MinimumBytes')){
+  if(-not $g.Contains($marker)){throw "P1C01_FRODO_IMPORT_CONTRACT_ARCHIVE_MINIMUM_MARKER_MISSING marker=$marker"}
+}
+if(-not $g.Contains('if($file.Length -lt 1048576){ throw "OGA_CHARACTER_DIRECT_FBX_TOO_SMALL bytes=$($file.Length)" }')){throw "P1C01_FRODO_IMPORT_CONTRACT_DIRECT_FBX_MINIMUM_CHANGED"}
 foreach($marker in @(
   'FParse::Param(*Params, TEXT("EnableCharacterRigImport"))',
   'if (bEnableCharacterRigImport)',

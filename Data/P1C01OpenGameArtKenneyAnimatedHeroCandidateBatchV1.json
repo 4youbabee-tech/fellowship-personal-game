@@ -17,7 +17,8 @@
       "required_final_format": "FBX",
       "source_author": "Kenney",
       "intended_use": "Independent animated humanoid Frodo rig-base technical candidate discovery; not final likeness or visual acceptance.",
-      "download_kind": "ARCHIVE_ZIP"
+      "download_kind": "ARCHIVE_ZIP",
+      "minimum_archive_bytes": 700000
     }
   ],
   "rules": [
