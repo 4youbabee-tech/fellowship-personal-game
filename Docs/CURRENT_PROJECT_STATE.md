@@ -4029,3 +4029,10 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - `test_source_contracts.py` now reads `P1C01AuthoredShireMegaWaveBCV1.json` and locks the P1C01-only/single-writer boundary, 52-landform and 120-presentation budgets, HISM/resident-only/no-sync-load rules, and authored pass ordering inside `BuildPrototypeWorld()`.
 - The guard explicitly rejects synchronous load calls, ambient/director spawning, and P1C02 tokens inside both new world passes.
 - Status remains **SOURCE-IMPLEMENTED / HOSTED+UE4 EXACT-HEAD VALIDATION PENDING** until this branch is opened and run.
+
+## 2026-10-04 - Hobbit facade material/overlay source correction
+
+- Static source audit found `SM_ShHobbitFacade.obj` had five intended material switches (Earth -> Wood -> DoorGreen -> Wood -> Stone) written after the face list, so only the initial Earth material could own faces despite geometry already being cleanly separated into base, door frame, door, two window frames and two stone sill groups.
+- The OBJ source now places each `usemtl` switch before its exact non-overlapping face range: 12 Earth faces, 48 Wood door-frame faces, 48 DoorGreen door faces, 96 Wood window-frame faces and 24 Stone sill faces.
+- `SpawnHobbitHole()` no longer overlays duplicate primitive door/frame/window-frame/sill geometry when the production mound+facade are resident. Those structures remain deterministic fallback-only. Small warm-glass inserts, knob, chimney/step and planted-entry accents remain because the facade source does not provide those presentation details.
+- This is a static-world asset/source correction only; no animated OBJ use was introduced. Exact-head hosted + UE4 import/build validation is still required before merge, and no rendered visual acceptance is claimed.
