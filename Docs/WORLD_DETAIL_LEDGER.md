@@ -1116,3 +1116,16 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Repeated garden plants remain bounded under the existing HISM/cull architecture; no new world authority or procedural system is introduced.
 - Primitive fallbacks remain until exact production assets resolve at runtime.
 - Evidence boundary: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**.
+
+
+## 2026-10-03 - P1C01 VISIBLE_SHIRE_MEGA_PASS registered before runtime implementation
+
+- Scope: one large visible-world runtime pass for the existing P1C01 Shire route only; no new chapter, story outcome, quest ownership, save ownership or character authority.
+- Player-facing target: make the route read as a coherent lived-in landscape from Bag End through Hobbiton, worked fields, enclosed wooded road and the Ferry approach instead of scattered props/proxies.
+- Runtime ownership stays with `AShirePrototypeWorldBuilder` as the single P1C01 world writer. `ALivingWorldDirector` continues to own ambient population/pooling and `UShireNPCContextSubsystem` continues to own bounded NPC context; this pass does not spawn or schedule NPCs.
+- Architecture: add bounded HISM lanes for repeated production hedge, broadleaf tree, rural fence, fern and reed meshes; no per-instance ticking, no crowd Spawn/Destroy churn, no synchronous heavy asset load, no new hard asset references.
+- Residency rule: the pass may bind only already-resident production meshes supplied by the existing chapter streaming/import path; missing optional meshes skip detail rather than falling back to new runtime loads.
+- Collision rule: decorative woodland/fern/reed instances remain non-colliding; route-shaping hedges/fences remain bounded and may use collision only where needed without changing story/traversal anchors.
+- Composition rule: preserve the existing Bag End/Hobbiton/Fields/WoodedRoad/Ferry anchors and reveal sequence; increase foreground/midground layering, hedge enclosure, orchard/woodland depth and river-edge vegetation without moving quest triggers.
+- Performance target: 720p / 30 FPS floor on i7 Gen6 / 8 GB RAM / ~2 GB VRAM; recover cost through HISM, explicit cull bands and shadow suppression rather than reducing the hero world to low-quality primitives.
+- Gate: exact-head Pre-Unreal + UE4.27.2 build required before merge. PIE/device/rendered visual acceptance remains separate and is not claimed by machine validation.
