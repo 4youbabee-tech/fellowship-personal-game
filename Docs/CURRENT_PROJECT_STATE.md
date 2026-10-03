@@ -4005,3 +4005,13 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Production batching is now explicit: prefer large coherent player-visible packets and one stable exact-head validation cycle over avoidable micro-commit/CI churn.
 - Visible priority remains human/skeletal characters and a natural readable Shire: terrain silhouette, landmarks/architecture, roads/hedges/woodland/Ferry, vegetation/materials and lighting/presentation.
 - Evidence discipline is unchanged: no PIE/device/visual/FPS acceptance is inferred from static/compile/CI evidence.
+
+## 2026-10-04 - P1C01 KayKit rig technical bridge source implementation
+
+- Registered a bounded technical bridge using the existing authorized CC0 KayKit Adventures GitHub source. This is pipeline evidence only, not final Frodo likeness.
+- Added `P1C01KayKitRigTechnicalBridgeV1.json` with max-two candidate policy, exact direct GitHub archive/license URLs, FBX/PNG-only intake boundaries, unchanged UE4 bind/UV/smoothing/skeletal hard gates, and modular Frodo fallback.
+- Added hosted staging/static-QC script `stage_p1c01_kaykit_rig_bridge.ps1`: downloads only the exact official archive/license, enforces archive and per-FBX byte caps, validates CC0 marker, rejects unsafe ZIP paths, records archive/license/payload SHA256, inspects FBX version + Geometry/Model/LimbNode/Skin/Cluster/animation markers, and selects at most two preferred candidates.
+- Added `run_p1c01_kaykit_rig_bridge_ue4.ps1`: imports selected FBX payloads one at a time through the existing production importer, requires real skeletal registration/reference bones/generated mesh+skeleton, and rejects missing smoothing groups, invalid/missing bind pose, or missing UVs.
+- Added exact-head workflow `p1c01-kaykit-rig-bridge.yml`: hosted source/static gate first, then one self-hosted UE4.27 editor build and serial candidate probes, with artifacts and transient cleanup.
+- Runtime integration remains blocked. No deformation, AnimBP, PIE/device/rendered-visual/FPS acceptance is claimed.
+- Status: **SOURCE-IMPLEMENTED / STATIC-VALIDATION + EXACT-HEAD UE4 PENDING**.
