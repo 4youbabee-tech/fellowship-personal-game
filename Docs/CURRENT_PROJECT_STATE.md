@@ -3915,3 +3915,9 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - The probe is rig-base QA only, not final Frodo likeness. It requires USkeletalMesh registration, nonzero bones, and zero missing-smoothing/bind-pose/UV warnings.
 - Runtime integration remains false. A pass advances only to deformation/retarget suitability review; a failure is recorded and the next licensed candidate is tried without weakening gates.
 - Status: **SOURCE PREPARED / EXACT-HEAD TECHNICAL EXECUTION PENDING**.
+
+
+## 2026-10-03 - Frodo failed-candidate evidence made durable
+
+- Added `Data/P1C01FrodoTechnicalRejectionHistoryV1.json` before retiring stale PR #257. It preserves exact SHA256, UE4 bone counts and rejection reasons for the five original 33-bone candidates, KayKit Rogue/RogueHooded 48-bone candidates, and Kenney Blocky static-structure rejection.
+- Future candidate probes must not retry an exact payload SHA already rejected. This closes the chat/branch-memory loss risk while the current Knight V2 probe proceeds.
