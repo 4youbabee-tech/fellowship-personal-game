@@ -2816,3 +2816,15 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Static FBX UV/material/perf QC | PENDING |
 | Real UE4.27.2 static-mesh import | BLOCKED UNTIL STATIC GATES |
 | Visual acceptance | NOT CLAIMED |
+
+## 2026-10-03 - Bag End hero trim exact-file gate
+
+| Gate | Status | Evidence |
+|---|---|---|
+| Provider/license family | COMPLETE | official Kenney Building Kit / CC0 |
+| Exact FBX filenames | COMPLETE | round door/doorway/window candidates identified |
+| Discovery payload identities | COMPLETE-DISCOVERY | Git-LFS SHA256 + byte size pinned to mirror revision |
+| Official Kenney archive receipt | PENDING | production provenance not yet captured |
+| Binary static FBX QC | PENDING | no binary payload available in current execution environment |
+| UE4.27.2 import | BLOCKED | requires official receipt + static QC |
+| Runtime replacement | BLOCKED | exact import/QC evidence required first |
