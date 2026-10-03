@@ -6372,7 +6372,7 @@
   "current_focus": {
     "production_lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
-    "rule": "P1C01 is the sole runtime-changing chapter. Execute the owner-authorized serialized production order from Data/P1C01RuntimeChapterSequenceV1.json: Frodo skeletal production first, then Gandalf, physical materials/footsteps, selective PBR, Living Shire, gameplay/quest flow, audio/presentation, save/load reliability, optimization and Gate 6/7. Do not open P1C02 runtime until P1C01 Gate 6/7 is accepted with real evidence.",
+    "rule": "P1C01 is the sole runtime-changing chapter. Visible-game delivery is the active tie-breaker: remove visible Shire proxies and advance Frodo toward a real skeletal character in parallel source lanes, while allowing exactly one runtime-changing P1C01 writer at a time. Do not open P1C02 runtime until P1C01 Gate 6/7 is accepted with real evidence.",
     "machine_baseline": {
       "runtime_sha": "1066cf022723fcdef9bfac66519f5b0f9c1e03a4",
       "pre_unreal": "#1109 SUCCESS",
@@ -6388,11 +6388,11 @@
     "runtime_chapter_sequence": "Data/P1C01RuntimeChapterSequenceV1.json"
   },
   "immediate_next_large_actions": [
-    "1. Mega Asset Promotion — move evidence-backed P1C01 warehouse/project-source assets through bounded intake, import and integration.",
-    "2. Character presentation and skeletal/animation production coverage.",
-    "3. Living Shire motion/fauna plus quest/audio polish.",
-    "4. Target-device DX11 720p Low-Medium profiling before density or expensive presentation expansion.",
-    "5. Gate 6/7 human visual, pacing and performance evidence before broad Part II/III runtime production."
+    "1. Visible Shire First — remove highest-impact Bag End/Hobbiton proxies using exact production replacements, HISM/ISM and bounded culling.",
+    "2. Frodo real skeletal production lane — reconcile current UE4.27 skeletal FBX import/QC, pass a clean candidate, then deformation/retarget/AnimBP/runtime replacement.",
+    "3. Hobbiton/road/woodland vegetation and material depth using UE4.27-compatible authored + instanced/procedural authoring, not a parallel world authority.",
+    "4. Target-device DX11 720p Low-Medium profiling before density, heavy PBR, static-lighting or expensive presentation expansion.",
+    "5. Gate 6/7 human visual, pacing and performance evidence before broad later-chapter runtime production."
   ],
   "session_handoff": {
     "checkpoint_id": "CP-W01-P1C01-C4-MERGED-D-NEXT",
@@ -6541,6 +6541,36 @@
         "WORK-PROD-007",
         "WORK-QA-001"
       ]
+    },
+    {
+      "id": "OWNER-IDEA-VISIBLE-GAME-DELIVERY-2026-10-03",
+      "status": "ACTIVE_IMPLEMENTATION",
+      "title": "Prioritize a visibly real playable game over backend-only progress",
+      "captured_value": [
+        "The owner cares first about seeing a real game: natural scenery, production-quality world presentation and human-looking characters.",
+        "Programmer/external proposals are inputs only; the Lead Game Architect must verify them against live develop, UE4.27.2, Project Sources and the low-spec target before adoption.",
+        "Take whatever safely accelerates visible production; reject or adapt proposals that require UE5-only systems, unsafe migration or unbounded target-hardware cost.",
+        "Every accepted production direction, implementation decision, blocker and evidence boundary must be recorded in repository memory so future work never depends on chat recall.",
+        "Visible Shire First remains the world priority: Bag End hero ring, Hobbiton, roads/hedges/woodland, Ferry, vegetation/material variation, production characters, then lighting/material polish.",
+        "Frodo remains the first real human/humanoid production rig target; do not wait for Frodo to freeze world art, but keep runtime-changing P1C01 writers serialized.",
+        "Use existing UE4.27-compatible HISM/ISM/foliage architecture and optimized licensed FBX/PNG/TGA assets instead of UE5-only MetaHuman Crowd, Nanite or PCG dependencies.",
+        "Each production wave should either remove a visible prototype/proxy element or advance a real human character toward runtime integration."
+      ],
+      "rejected_or_modified_parts": [
+        "UE5 migration as a shortcut",
+        "MetaHuman/MetaHuman Crowd as a production dependency",
+        "Nanite or UE5 PCG as current implementation requirements",
+        "Blind Static Lighting enablement without target-device A/B measurement",
+        "Bulk high-resolution photogrammetry ingestion without LOD/culling/VRAM review",
+        "Backend/refactor work that does not unblock visible P1C01 delivery"
+      ],
+      "canonical_requirements": [
+        "REQ-MEM-001",
+        "REQ-WORLD-002",
+        "REQ-PROD-007",
+        "REQ-PERF-001"
+      ],
+      "execution_rule": "Visible-game delivery is the default tie-breaker inside the active P1C01 gate. Preserve canon, runtime-authority boundaries and low-spec constraints."
     }
   ],
   "branch_workflow": {
