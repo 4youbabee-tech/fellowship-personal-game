@@ -577,5 +577,54 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn('"PERFORMANCE_ACCEPTED":True', evaluator)
 
 
+    def test_p1c01_kaykit_rig_bridge_is_bounded_and_non_runtime(self):
+        root = Path(__file__).resolve().parents[1]
+        packet = json.loads((root / "Data" / "P1C01KayKitRigTechnicalBridgeV1.json").read_text(encoding="utf-8"))
+        self.assertEqual(packet["runtime_chapter"], "P1C01")
+        self.assertEqual(packet["role"], "TECHNICAL_RIG_DEFORMATION_BRIDGE_NOT_FINAL_LIKENESS")
+        self.assertEqual(packet["source"]["provider"], "KAYKIT")
+        self.assertEqual(packet["source"]["license"], "CC0-1.0")
+        self.assertEqual(packet["source"]["required_final_format"], "FBX")
+        self.assertTrue(packet["source"]["archive_url"].startswith("https://github.com/KayKit-Game-Assets/"))
+        self.assertTrue(packet["source"]["license_url"].startswith("https://raw.githubusercontent.com/KayKit-Game-Assets/"))
+        self.assertEqual(packet["candidate_policy"]["maximum_ue4_candidates"], 2)
+        self.assertFalse(packet["candidate_policy"]["final_likeness"])
+        self.assertTrue(packet["runtime_contract"]["modular_frodo_fallback"])
+        self.assertFalse(packet["runtime_contract"]["synchronous_heavy_load"])
+
+        stage = (root / "Scripts" / "stage_p1c01_kaykit_rig_bridge.ps1").read_text(encoding="utf-8")
+        probe = (root / "Scripts" / "run_p1c01_kaykit_rig_bridge_ue4.ps1").read_text(encoding="utf-8")
+        workflow = (root / ".github" / "workflows" / "p1c01-kaykit-rig-bridge.yml").read_text(encoding="utf-8")
+
+        for token in (
+            "KAYKIT_RIG_ARCHIVE_PATH_UNSAFE",
+            "KAYKIT_RIG_LICENSE_MARKER_MISSING",
+            "Get-FileHash",
+            "LimbNode",
+            "Cluster",
+            "Select-Object -First",
+        ):
+            self.assertIn(token, stage)
+        for token in (
+            "SKELETAL_REGISTRATION_FAILED",
+            "ZERO_REFERENCE_BONES",
+            "MISSING_SMOOTHING_GROUPS",
+            "MISSING_BIND_POSE_BONES",
+            "INVALID_BIND_POSE",
+            "MISSING_UV_SET",
+            "runtime_integration_allowed=$false",
+        ):
+            self.assertIn(token, probe)
+        for forbidden in ("LoadObject<", "StaticLoadObject", "RequestSyncLoad", "RequestAsyncLoad"):
+            self.assertNotIn(forbidden, stage)
+            self.assertNotIn(forbidden, probe)
+
+        self.assertIn("Hosted KayKit source and FBX static gate", workflow)
+        self.assertIn("UE4.27.2 KayKit skeletal technical gate", workflow)
+        self.assertIn("needs: hosted_static_bridge", workflow)
+        self.assertIn("ci_build_unreal.cmd", workflow)
+        self.assertIn("actions/upload-artifact@v4", workflow)
+
+
 if __name__ == "__main__":
     unittest.main()
