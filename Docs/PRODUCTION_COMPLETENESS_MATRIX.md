@@ -3083,3 +3083,18 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Deformation / retarget mega gate | BLOCKED UNTIL TECHNICAL PASS |
 | AnimBP / async runtime promotion | BLOCKED |
 | PIE/device/rendered visual/FPS acceptance | NOT CLAIMED |
+
+## 2026-10-04 - Frodo RPG repair factory status
+
+| Gate | Status | Evidence boundary |
+|---|---|---|
+| Original Rogue payload | REJECTED | 52 bones; missing smoothing groups + bind-pose bones |
+| Original Ranger payload | REJECTED | 50 bones; missing smoothing groups + bind-pose bones |
+| Original Monk payload | REJECTED | 46 bones; missing smoothing groups + bind-pose bones |
+| Original Warrior payload | REJECTED | 49 bones; missing smoothing groups + bind-pose bones |
+| Exact original SHA retry | FORBIDDEN | hashes preserved in rejection history |
+| Hosted legal re-export normalization | SOURCE-IMPLEMENTED | new payload SHA required; original identity retained as provenance |
+| UE4.27 normalized revalidation | PENDING EXACT-HEAD RUN | unchanged hard gates |
+| Deformation / retarget | BLOCKED UNTIL CLEAN TECHNICAL PASS | no inference from bone count alone |
+| AnimBP / async runtime Frodo | BLOCKED | modular fallback retained |
+| PIE / device / visual / FPS | NOT ACCEPTED | no matching evidence |
