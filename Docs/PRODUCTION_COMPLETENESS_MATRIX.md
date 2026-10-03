@@ -2800,3 +2800,16 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Parent tree evidence | AVAILABLE | `82d5...` vs `6e1b...`: zero file delta |
 | Prior engine proof | AVAILABLE | #277 Unreal Build #1310 SUCCESS on `6e1b...` |
 | Fresh classifier validation | PENDING | exact current head required |
+
+## 2026-10-03 - Bag End hero trim source probe V2
+
+| Gate | Status |
+|---|---|
+| Fresh ancestry | `develop@be767e893ed51ea2a6821889216e01556bc1e322` |
+| Runtime integration | BLOCKED / false |
+| Existing production exact hero trim | NOT FOUND |
+| Candidate families | Kenney Building Kit / Modular Buildings / Quaternius Medieval Village |
+| Exact FBX discovery | PENDING |
+| Receipt/SHA256 + static FBX QC | PENDING |
+| Real UE4.27.2 import | BLOCKED UNTIL STATIC GATES |
+| PIE/device/visual acceptance | NOT CLAIMED |
