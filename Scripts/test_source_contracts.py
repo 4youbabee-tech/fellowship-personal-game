@@ -656,8 +656,12 @@ def test_p1c01_kaykit_rig_bridge_is_bounded_and_non_runtime(self):
         self.assertEqual(packet["source"]["provider"], "KAYKIT")
         self.assertEqual(packet["source"]["license"], "CC0-1.0")
         self.assertEqual(packet["source"]["required_final_format"], "FBX")
-        self.assertTrue(packet["source"]["archive_url"].startswith("https://github.com/KayKit-Game-Assets/"))
+        self.assertEqual(packet["source"]["delivery_mode"], "DIRECT_OFFICIAL_RAW_FBX")
         self.assertTrue(packet["source"]["license_url"].startswith("https://raw.githubusercontent.com/KayKit-Game-Assets/"))
+        self.assertEqual(len(packet["source"]["direct_candidates"]), 2)
+        for candidate in packet["source"]["direct_candidates"]:
+            self.assertTrue(candidate["filename"].lower().endswith(".fbx"))
+            self.assertTrue(candidate["url"].startswith("https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/"))
         self.assertEqual(packet["candidate_policy"]["maximum_ue4_candidates"], 2)
         self.assertFalse(packet["candidate_policy"]["final_likeness"])
         self.assertTrue(packet["runtime_contract"]["modular_frodo_fallback"])
@@ -668,7 +672,9 @@ def test_p1c01_kaykit_rig_bridge_is_bounded_and_non_runtime(self):
         workflow = (root / ".github" / "workflows" / "p1c01-kaykit-rig-bridge.yml").read_text(encoding="utf-8")
 
         for token in (
-            "KAYKIT_RIG_ARCHIVE_PATH_UNSAFE",
+            "KAYKIT_RIG_UNAPPROVED_RAW_SOURCE",
+            "KAYKIT_RIG_NON_FBX_CANDIDATE",
+            "KAYKIT_RIG_PAYLOAD_SIZE_FAIL",
             "KAYKIT_RIG_LICENSE_MARKER_MISSING",
             "Get-FileHash",
             "LimbNode",
