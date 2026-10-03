@@ -158,10 +158,83 @@
         "P1C01 Frodo OGA Lowpoly Dummy UE4 Technical Probe #1",
         "exact probe head ffaa3f6718a92b68f5112b040643846df277cd67"
       ]
+    },
+    {
+      "candidate": "Model/characterMedium.fbx",
+      "sha256": "18835fef534eede635b081ee7fe647d01a885550a591d2e6bf071010906167d8",
+      "bytes": 167212,
+      "ue4_bones": 59,
+      "state": "REJECTED_TECHNICAL",
+      "reasons": [
+        "MISSING_SMOOTHING_GROUPS",
+        "MISSING_BIND_POSE_BONES"
+      ],
+      "evidence": [
+        "P1C01 Frodo Kenney Animated Human Breakthrough #5",
+        "exact probe head e40b8204af3ef7e47cfb186eac8504416d57dacb",
+        "Pre-Unreal Validation #1786 SUCCESS",
+        "Unreal Build Validation #1385 SUCCESS"
+      ]
+    },
+    {
+      "candidate": "RPG Characters - Nov 2020/FBX/Rogue.fbx",
+      "sha256": "5b9bc7a1ec778d0c83f44609971e6c538480b6ef2a3f9cdde5853dee5e24586e",
+      "ue4_bones": 52,
+      "state": "REJECTED_TECHNICAL_EXPORT_DEFECT",
+      "reasons": [
+        "MISSING_SMOOTHING_GROUPS",
+        "MISSING_BIND_POSE_BONES"
+      ],
+      "evidence": [
+        "P1C01 Frodo RPG Multi Candidate UE4 Gauntlet #10",
+        "UE4.27.2 normalized-repair pivot authorized after exact original payload rejection"
+      ]
+    },
+    {
+      "candidate": "RPG Characters - Nov 2020/FBX/Ranger.fbx",
+      "sha256": "f1547ebf853bd2f7849642d7a5d98b7dfa0619bba7a2aa37d43dcaedc49eb6d2",
+      "ue4_bones": 50,
+      "state": "REJECTED_TECHNICAL_EXPORT_DEFECT",
+      "reasons": [
+        "MISSING_SMOOTHING_GROUPS",
+        "MISSING_BIND_POSE_BONES"
+      ],
+      "evidence": [
+        "P1C01 Frodo RPG Multi Candidate UE4 Gauntlet #10",
+        "UE4.27.2 normalized-repair pivot authorized after exact original payload rejection"
+      ]
+    },
+    {
+      "candidate": "RPG Characters - Nov 2020/FBX/Monk.fbx",
+      "sha256": "f22863a80c2032c731cb683b9322e20ffca2534748e7b3961a200aa8d1a72ab8",
+      "ue4_bones": 46,
+      "state": "REJECTED_TECHNICAL_EXPORT_DEFECT",
+      "reasons": [
+        "MISSING_SMOOTHING_GROUPS",
+        "MISSING_BIND_POSE_BONES"
+      ],
+      "evidence": [
+        "P1C01 Frodo RPG Multi Candidate UE4 Gauntlet #10",
+        "UE4.27.2 normalized-repair pivot authorized after exact original payload rejection"
+      ]
+    },
+    {
+      "candidate": "RPG Characters - Nov 2020/FBX/Warrior.fbx",
+      "sha256": "5840e821aba0f4cfbc7316db456dd28042d35fcd1173f8809e22d25d040b265f",
+      "ue4_bones": 49,
+      "state": "REJECTED_TECHNICAL_EXPORT_DEFECT",
+      "reasons": [
+        "MISSING_SMOOTHING_GROUPS",
+        "MISSING_BIND_POSE_BONES"
+      ],
+      "evidence": [
+        "P1C01 Frodo RPG Multi Candidate UE4 Gauntlet #10",
+        "UE4.27.2 normalized-repair pivot authorized after exact original payload rejection"
+      ]
     }
   ],
   "policy": "Do not retry an exact payload SHA256 listed here. New candidates may proceed only if their exact payload identity differs and they pass the same or stricter technical gates.",
   "evidence_boundary": "Historical exact-head technical/static rejection evidence only. No candidate here is runtime/visual accepted.",
-  "last_updated_utc": "2026-10-03T18:50:00Z",
-  "current_next_action": "Do not retry any listed payload hash. The OGA Lowpoly Dummy Idle FBX is now rejected after a 41-bone UE4.27 skeletal import due to smoothing-group and bind-pose warnings. Advance to a distinct licensed FBX payload/corrected export; do not weaken technical gates."
+  "last_updated_utc": "2026-10-03T22:00:07Z",
+  "current_next_action": "Original Quaternius RPG Rogue/Ranger/Monk/Warrior payload hashes are durably rejected. Treat the shared smoothing/bind-pose failure as a repairable export defect only: normalize/re-export to new exact payload hashes, then re-run the same strict UE4.27 gates. Do not retry any original rejected hash and do not weaken technical gates."
 }
