@@ -577,5 +577,77 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn('"PERFORMANCE_ACCEPTED":True', evaluator)
 
 
+    def test_p1c01_authored_shire_wave_bc_is_bounded_and_single_writer(self):
+        root = Path(__file__).resolve().parents[1]
+        contract = json.loads((root / "Data" / "P1C01AuthoredShireMegaWaveBCV1.json").read_text(encoding="utf-8"))
+        self.assertEqual(contract["runtime_chapter"], "P1C01")
+        self.assertEqual(contract["runtime_writer"], "AShirePrototypeWorldBuilder")
+        self.assertFalse(contract["p1c02_runtime_opened"])
+        self.assertEqual(contract["authored_landform_budget"]["total_instances"], 52)
+        self.assertEqual(contract["presentation_composition_budget"]["total_instances"], 120)
+        self.assertEqual(contract["implementation_contract"]["repeated_detail"], "HISM_ONLY")
+        self.assertFalse(contract["implementation_contract"]["per_instance_tick"])
+        self.assertFalse(contract["implementation_contract"]["repeated_collision"])
+        self.assertFalse(contract["implementation_contract"]["synchronous_heavy_load"])
+        self.assertTrue(contract["implementation_contract"]["resident_production_meshes_only"])
+        self.assertTrue(contract["implementation_contract"]["production_materials_preserved"])
+        self.assertFalse(contract["implementation_contract"]["volumetric_fog"])
+        self.assertFalse(contract["implementation_contract"]["planar_reflection"])
+        self.assertFalse(contract["implementation_contract"]["scene_capture_water"])
+
+        source = (root / "Source" / "ShireJourney" / "Private" / "World" / "ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        header = (root / "Source" / "ShireJourney" / "Public" / "World" / "ShirePrototypeWorldBuilder.h").read_text(encoding="utf-8")
+        self.assertIn("void SpawnAuthoredShireLandmarkPass();", header)
+        self.assertIn("void SpawnPresentationCompositionPass();", header)
+
+        landmark_start = source.index("void AShirePrototypeWorldBuilder::SpawnAuthoredShireLandmarkPass()")
+        landmark_end = source.index("void AShirePrototypeWorldBuilder::SpawnPresentationCompositionPass()", landmark_start)
+        landmark = source[landmark_start:landmark_end]
+        presentation_start = landmark_end
+        presentation_end = source.index("void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()", presentation_start)
+        presentation = source[presentation_start:presentation_end]
+
+        for token in (
+            "P1C01_AUTHORED_SHIRE_LANDMARK_PASS",
+            "BagEndTerrain[]",
+            "VillageTerraces[]",
+            "FieldRidges[]",
+            "WoodlandShoulders[]",
+            "FerryBanks[]",
+        ):
+            self.assertIn(token, landmark)
+        for token in (
+            "P1C01_PRESENTATION_COMPOSITION_PASS",
+            "ForegroundShrubCount",
+            "WoodlandThresholdTreeCount",
+            "UnderstoryFernCount",
+            "FerryReedAccentCount",
+        ):
+            self.assertIn(token, presentation)
+
+        for body in (landmark, presentation):
+            for forbidden in (
+                "LoadObject<",
+                "StaticLoadObject",
+                "RequestSyncLoad",
+                "SpawnActor<AShireAmbientNPC>",
+                "SpawnActor<ALivingWorldDirector>",
+                "P1C02",
+            ):
+                self.assertNotIn(forbidden, body)
+
+        build_start = source.index("void AShirePrototypeWorldBuilder::BuildPrototypeWorld()")
+        build = source[build_start:]
+        order = [
+            build.index("SpawnGeographyFoundationPass();"),
+            build.index("SpawnAuthoredShireLandmarkPass();"),
+            build.index("SpawnHobbitonArchitecturePass();"),
+            build.index("SpawnNaturalRouteMegaPass();"),
+            build.index("SpawnPresentationCompositionPass();"),
+            build.index("SpawnWorldDensityDetailPass();"),
+        ]
+        self.assertEqual(order, sorted(order))
+
+
 if __name__ == "__main__":
     unittest.main()
