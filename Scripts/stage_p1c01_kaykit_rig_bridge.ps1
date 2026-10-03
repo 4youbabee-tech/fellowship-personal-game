@@ -66,8 +66,9 @@ try {
 
   $fbxEntries = @($zip.Entries | Where-Object {
     $n = ([string]$_.FullName).Replace([char]92,'/')
-    $leaf = [IO.Path]::GetFileName($n)
-    $preferred -contains $leaf.ToLowerInvariant() -and $n -match '/Characters/fbx/'
+    $lower = $n.ToLowerInvariant()
+    $leaf = @($lower.Split('/') | Where-Object { $_ -ne '' })[-1]
+    ($lower -like "*/characters/fbx/*") -and ($preferred -contains $leaf)
   })
   if($fbxEntries.Count -lt 1){ throw "KAYKIT_RIG_NO_PREFERRED_FBX" }
 
