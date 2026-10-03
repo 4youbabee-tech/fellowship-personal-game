@@ -3907,3 +3907,11 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - The skeletal path uses AssetRegistry + in-memory `FindObject<USkeletalMesh>` for registration/bone proof and does not add synchronous runtime asset loading.
 - Restored bounded direct-FBX warehouse staging so the exact KayKit Knight V2 probe can advance next.
 - Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD VALIDATION PENDING**. No deformation/retarget/AnimBP/runtime/PIE/device/visual acceptance claim.
+
+
+## 2026-10-03 - Build-speed: dedicated source/probe PRs no longer reserve generic UE lane
+
+- Generic Unreal validation now treats Bag End official-receipt source probes and Frodo dedicated technical-probe metadata/workflows as safe inherited deltas when the parent has green Unreal proof.
+- Their dedicated workflows remain responsible for the real source/UE probe they own; the generic UE4 lane is no longer duplicated for the same PR.
+- Runtime/C++/SourceAssets changes remain core/full and still reserve the UE4 runner.
+- Evidence boundary: **SOURCE/CI IMPLEMENTED; hosted Pre-Unreal required before merge**.
