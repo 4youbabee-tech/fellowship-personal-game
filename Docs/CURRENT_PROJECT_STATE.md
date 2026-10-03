@@ -3930,3 +3930,10 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Official door/frame/window payload hashes are already proven. A hosted static FBX QC now checks exact payloads for UE4-compatible FBX version plus Geometry/Model/UV/Material markers before any self-hosted UE import is scheduled.
 - This keeps source rejection cheap and off the single UE4 runner.
 - Status: **STATIC QC EXECUTION PENDING**; no UE import/runtime/visual claim.
+
+
+## 2026-10-03 - Bag End Kenney trim candidate rejected before UE runner use
+
+- Hosted static QC caught `door-rotate-round-a.fbx` as FBX **7700** with Geometry/Model/UV/Material markers present, but outside the project UE4.27-compatible accepted probe range (`<=7500`).
+- The exact payload is therefore **REJECTED_STATIC_QC as-is** and is not sent to the self-hosted UE machine. This is the intended build-speed behavior: cheap hosted rejection before expensive UE validation.
+- The hosted QC is being rerun to capture all three exact files in one durable report; then the hero-trim lane pivots to a compatible export/source family.
