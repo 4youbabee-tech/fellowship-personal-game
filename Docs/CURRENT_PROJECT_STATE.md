@@ -4023,3 +4023,11 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - The exhausted Kenney dedicated workflow is retired from the active branch so it cannot reserve the UE4 runner again. Persistent warehouse staging also pivots from exhausted Kenney to the active RPG source.
 - If any RPG payload passes, the immediate successor is a large deformation/reference-pose/locomotion-retarget gate, then AnimBP + asynchronous runtime promotion while retaining the modular fallback until the complete bundle is proven.
 - Status: **SOURCE/CI IMPLEMENTED / NEW EXACT-HEAD VALIDATION PENDING**. No deformation, retarget, AnimBP, runtime, PIE, device, rendered-visual or FPS acceptance claimed.
+
+## 2026-10-04 - Frodo RPG repair/normalization factory
+
+- Gauntlet #10 exhausted all four original Quaternius RPG payloads under unchanged UE4.27 gates: Rogue 52 bones, Ranger 50, Monk 46, Warrior 49; every original payload failed MISSING_SMOOTHING_GROUPS + MISSING_BIND_POSE_BONES.
+- Original payload SHA256 values are durably recorded and remain forbidden for direct retry.
+- Active lane now distinguishes bad export from bad rig: hosted Blender re-export creates new exact normalized payload hashes, records Blender/version/source/output evidence, and sends only those new payloads to the same strict UE4.27 skeletal gate.
+- No smoothing/bind-pose/UV/registration gate is relaxed. A normalized technical pass still does not authorize runtime integration; deformation/reference pose/root/scale/limb/hand-foot/retarget checks remain next.
+- Runtime Frodo remains on the modular fallback. No PIE/device/rendered-visual/FPS acceptance is claimed by this packet.
