@@ -4015,3 +4015,9 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Added exact-head workflow `p1c01-kaykit-rig-bridge.yml`: hosted source/static gate first, then one self-hosted UE4.27 editor build and serial candidate probes, with artifacts and transient cleanup.
 - Runtime integration remains blocked. No deformation, AnimBP, PIE/device/rendered-visual/FPS acceptance is claimed.
 - Status: **SOURCE-IMPLEMENTED / STATIC-VALIDATION + EXACT-HEAD UE4 PENDING**.
+
+## 2026-10-04 - KayKit rig bridge hosted source-contract guard
+
+- `test_source_contracts.py` now locks the KayKit bridge to P1C01, CC0/direct official GitHub URLs, FBX-only animated-character intake, max-two UE4 probes, modular Frodo fallback, no synchronous heavy runtime loading and no final-likeness claim.
+- The guard also requires ZIP path/license/hash checks in hosted staging, all UE4 skeletal rejection tokens, exact-head workflow dependency ordering and artifact capture.
+- Status remains **SOURCE-IMPLEMENTED / HOSTED + UE4 EXACT-HEAD VALIDATION PENDING**.
