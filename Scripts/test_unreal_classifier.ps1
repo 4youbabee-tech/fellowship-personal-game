@@ -93,3 +93,13 @@ if (-not $source.Contains('"Data/P1C01BagEndHeroTrimSourceProbeV1.json"')) {
     throw 'Bag End hero trim source packet exact allowlist missing'
 }
 Write-Host 'UNREAL_CLASSIFIER_LOCAL_TREE_AND_BAG_END_SOURCE_PASS'
+
+# Governance ancestry may cross merge commits with no direct run only when the entire
+# intervening delta is safe and that ancestor has exact tree-equivalent core proof.
+if (-not $source.Contains('Test-TreeEquivalentCoreProof $GitExe $candidate')) {
+    throw 'Classifier transitive governance ancestor must support tree-equivalent proof'
+}
+if (-not $source.Contains('source=$proofSource')) {
+    throw 'Classifier transitive governance proof source marker missing'
+}
+Write-Host 'UNREAL_CLASSIFIER_TRANSITIVE_GOVERNANCE_TREE_PROOF_PASS'

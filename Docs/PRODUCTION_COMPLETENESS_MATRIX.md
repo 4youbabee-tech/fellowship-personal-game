@@ -2800,3 +2800,7 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Parent tree evidence | AVAILABLE | `82d5...` vs `6e1b...`: zero file delta |
 | Prior engine proof | AVAILABLE | #277 Unreal Build #1310 SUCCESS on `6e1b...` |
 | Fresh classifier validation | PENDING | exact current head required |
+
+| Transitive governance ancestor proof | SOURCE-IMPLEMENTED | safe delta + direct green OR exact tree-equivalent core proof |
+| Broad safety relaxation | NONE | existing safe-file and tree-equality requirements preserved |
+| Fresh hosted validation | PENDING | exact-head Pre-Unreal required |

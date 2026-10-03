@@ -111,9 +111,16 @@ function Test-NearestSafeGovernanceAncestorGreen([string]$GitExe, [string]$Paren
 
     foreach ($candidate in $ancestors) {
         if (-not (Test-SafeGovernanceDelta $GitExe $candidate $HeadSha $SafeExact)) { continue }
-        if (-not (Test-ParentWholeWorkflowGreen $candidate)) { continue }
 
-        Write-Host "TRANSITIVE_GOVERNANCE_PROOF_PASS ancestor=$candidate parent=$ParentSha head=$HeadSha"
+        $candidateGreen = Test-ParentWholeWorkflowGreen $candidate
+        $candidateTreeProof = $false
+        if (-not $candidateGreen) {
+            $candidateTreeProof = Test-TreeEquivalentCoreProof $GitExe $candidate
+        }
+        if (-not $candidateGreen -and -not $candidateTreeProof) { continue }
+
+        $proofSource = if ($candidateGreen) { "direct-workflow" } else { "tree-equivalent-core" }
+        Write-Host "TRANSITIVE_GOVERNANCE_PROOF_PASS ancestor=$candidate parent=$ParentSha head=$HeadSha source=$proofSource"
         return $true
     }
 
