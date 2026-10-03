@@ -2873,3 +2873,15 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Synchronous heavy LoadObject in FBX branch | GUARDED FORBIDDEN | hosted source contract |
 | Fresh UE4.27.2 compile | PENDING | required before merge |
 | PIE/device/visual/performance | NOT CLAIMED | separate gates |
+
+
+## 2026-10-03 - P1C01 garden visual replacement
+
+| Item | Status | Evidence boundary |
+|---|---|---|
+| Garden soil rows | production ground mesh preferred | source implemented |
+| Garden plants | existing shrub HISM, max 125 added instances | source implemented |
+| Primitive plant actors | fallback-only when production binding unavailable | source implemented |
+| Actor/Tick growth | none; production path reduces per-plant actors | source inspection |
+| Exact-head UE4.27.2 validation | PENDING | required before merge |
+| PIE/device/visual/performance | NOT CLAIMED | separate acceptance gates |
