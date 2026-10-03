@@ -2908,3 +2908,13 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Default character FBX behavior | DEFERRED unless explicit flag | preserved |
 | Nonzero skeleton/bone proof | IMPLEMENTED in import commandlet | candidate run pending |
 | Frodo deformation/retarget/AnimBP/runtime | NOT STARTED | requires clean technical candidate |
+
+
+## 2026-10-03 - CI build-speed lane split
+
+| Change class | Generic UE4 runner |
+|---|---|
+| Bag End hosted official receipt source-only delta | INHERIT/SKIP |
+| Frodo dedicated probe metadata/workflow-only delta | INHERIT/SKIP |
+| Runtime C++ / SourceAssets / engine config | REQUIRED |
+| Dedicated Frodo skeletal technical probe | OWN UE4 WORKFLOW REQUIRED |
