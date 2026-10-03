@@ -2908,3 +2908,5 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Exact extracted candidate hash match | EXECUTION PENDING |
 | UE4 static import/QC | BLOCKED UNTIL RECEIPT PASS |
 | Runtime door/window/trim replacement | BLOCKED UNTIL IMPORT/QC |
+
+- Bag End hero trim official archive receipt: **VERIFIED SOURCE EVIDENCE** — hosted workflow #4 matched all 4 primary payload identities; next gate is static FBX QC + real UE4.27.2 import. No runtime/visual acceptance.
