@@ -3829,3 +3829,12 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Hosted classifier for the first #278 head marked the PR `mode=full` only because the source-only packet also modified `Scripts/test_p1c01_visible_world_proxy_replacement.ps1`, which is intentionally classified as a full-Unreal-impact path.
 - The source probe does not require runtime-script mutation. That test-file delta is reverted to current develop so the packet remains data/docs-only and can use the hosted source lane.
 - No classifier safety rule is relaxed. Fresh exact-head classification is required.
+
+
+### 2026-10-03 - Exact source-packet classifier allowlist
+
+- #278 second classifier attempt failed closed as `core-delta-no-safe-core-proof-fail-safe` because every unlisted `Data/` file is intentionally core-impacting.
+- The repair is exact-path only: `Data/P1C01BagEndHeroTrimSourceProbeV1.json` joins the existing source/preproduction data allowlist in both direct classification and safe-intervening-delta proof.
+- No broad `Data/` bypass is introduced. Runtime C++, SourceAssets, config, packaging and unlisted Data files remain fail-closed.
+- Classifier regression coverage now requires the exact entry.
+- Fresh exact-head classification is required; the superseded full decision is diagnostic only.
