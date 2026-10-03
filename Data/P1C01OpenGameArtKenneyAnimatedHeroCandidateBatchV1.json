@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "batch_id": "WAREHOUSE_OGA_KENNEY_P1C01_ANIMATED_CHARACTERS_1_HERO_CANDIDATE_V1",
+  "status": "AUTHORIZED_FOR_TARGETED_STAGING",
+  "provider": "OPENGAMEART",
+  "creator": "Kenney",
+  "license": "CC0-1.0",
+  "purpose": "Distinct licensed animated humanoid Frodo rig-base technical candidate after the OGA Lowpoly Dummy exact payload was rejected on UE4 smoothing/bind-pose gates.",
+  "assets": [
+    {
+      "id": "OGA_KENNEY_ANIMATED_CHARACTERS_1_CC0",
+      "source_page": "https://opengameart.org/content/animated-characters-1",
+      "source_revision": "OPENGAMEART_KENNEY_ANIMATED_CHARACTERS_1_2026_10_03",
+      "download_url": "https://opengameart.org/sites/default/files/kenney_animated-characters-1.zip",
+      "filename": "kenney_animated-characters-1.zip",
+      "observed_page_license": "CC0",
+      "required_final_format": "FBX",
+      "source_author": "Kenney",
+      "intended_use": "Independent animated humanoid Frodo rig-base technical candidate discovery; not final likeness or visual acceptance.",
+      "download_kind": "ARCHIVE_ZIP",
+      "minimum_archive_bytes": 700000
+    }
+  ],
+  "rules": [
+    "Use only the public OpenGameArt Kenney upload recorded by this manifest.",
+    "Preserve source provenance and verify exact archive and extracted FBX SHA256 before candidate admission.",
+    "Animated production candidate format remains FBX; no OBJ promotion.",
+    "Reject exact payload hashes already present in P1C01FrodoTechnicalRejectionHistoryV1.json.",
+    "Candidate discovery does not prove UE4.27 import quality, deformation, retarget quality, final likeness, runtime integration or visual acceptance."
+  ],
+  "evidence_boundary": "Source registration and bounded staging only until exact-head hosted/static and real UE4.27 technical evidence complete."
+}
