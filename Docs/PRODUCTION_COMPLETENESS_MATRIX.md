@@ -3146,3 +3146,17 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Fallback ranking | BOUNDED | smallest static-pass character FBX only |
 | UE4 probe cap | UNCHANGED | max 2 |
 | Exact-head rerun | PENDING | corrected head required |
+
+## 2026-10-04 - KayKit direct raw FBX source correction
+
+| Check | Status | Evidence boundary |
+|---|---|---|
+| GitHub source ZIP FBX availability | PROVEN ABSENT | repository `.gitattributes` export-ignore for FBX directories |
+| Root cause | PROVEN | hosted run #8 + official `.gitattributes` |
+| Source delivery | SOURCE-CORRECTED | exact official raw `Rogue.fbx` + `RogueHooded.fbx` |
+| License snapshot | REQUIRED | official raw CC0 LICENSE.txt |
+| Raw source allowlist | SOURCE-IMPLEMENTED | exact KayKit repository prefix only |
+| Candidate format | FBX ONLY | max 2 |
+| Exact payload SHA256/static QC | PENDING RERUN | hosted gate |
+| UE4 technical gate | PENDING | no candidate judgment yet |
+| Deformation / runtime / PIE / device / visual / FPS | BLOCKED / NOT ACCEPTED | technical winner required first |
