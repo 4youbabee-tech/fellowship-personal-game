@@ -1171,3 +1171,13 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - The gauntlet is intentionally large but bounded: hosted inventory may rank the whole archive, while the expensive UE4 lane probes at most four distinct exact FBX payloads in one reservation and stops on first clean pass.
 - No gate is relaxed for throughput. Missing smoothing groups, missing/invalid bind pose, missing UVs, zero bones or failed skeletal asset generation reject the candidate.
 - A technical winner advances directly to a deformation/reference-pose/locomotion-retarget mega gate; it is not called final Frodo and is not runtime-promoted by technical import alone.
+
+## 2026-10-04 - P1C01 AUTHORED_SHIRE_TERRAIN_LANDMARK_MATERIAL_PACKET registered
+
+- Scope: visible-world authoring packet for the existing P1C01 only; no P1C02 runtime opening and no story outcome change.
+- Source basis: F1-02 anchors Bag End / Shire and F1-03 anchors Shire roads / Bucklebury with road stealth, ferry escape and environmental hiding. Tolkien source supports a progression from wooded shelter to open grassland, then well-tended fields/meadows with hedges, gates and drainage dikes; Ferry lane is orderly, with a broad wooden landing stage, reeds/mist at the bank, a broad slow river, and a steep winding path on the far side.
+- Visual-authoring intent: replace test-strip readability with terrain silhouette and enclosure changes: Bag End hill/earth integration; Hobbiton domestic-scale clustering; field/meadow openness; wooded-road canopy/understory enclosure; low well-laid hedge lanes; river-bank reeds and Ferry framing; landmark sightlines that prevent seeing the whole route at once.
+- Architecture ownership: AShirePrototypeWorldBuilder remains the sole P1C01 world-construction writer. ALivingWorldDirector remains population/pooling authority; no parallel world or crowd authority is authorized.
+- Performance contract: repeated dressing uses HISM/ISM with explicit culling; heavy production assets remain soft/async; no synchronous heavy loads; no actor-per-prop density; materials should minimize slots/draw calls and use packed masks where appropriate for the ~2 GB VRAM target.
+- Asset rule: no automatic fan/IP asset import. Generic terrain/environment sources must pass provenance/license + scale/pivot/UV/collision/triangles/LOD/material-budget review before production admission.
+- Evidence boundary: REGISTERED / SOURCE-GROUNDED DESIGN ONLY. Runtime implementation, PIE, target-device, rendered visual, pacing and FPS acceptance are not claimed.
