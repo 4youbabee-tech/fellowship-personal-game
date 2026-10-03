@@ -2812,3 +2812,6 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Bag End source probe exact classifier allowlist | SOURCE-REPAIRED | exact file added to direct + safe-intervening lists |
 | Broad Data bypass | FORBIDDEN | no prefix-level exemption introduced |
 | Fresh exact-head classifier | PENDING | superseded full decision is diagnostic only |
+
+| Pre-Unreal #1705 | FAILED / DIAGNOSTIC | regression used undefined `$classifier` instead of existing `$source` |
+| Classifier regression variable | SOURCE-REPAIRED | exact allowlist guard now reads `$source` |
