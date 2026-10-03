@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "wave_id": "P1C01_FRODO_GANDALF_SKELETAL_CANDIDATE_V1",
-  "status": "FRODO_RPG_MULTI_CANDIDATE_GAUNTLET",
+  "status": "FRODO_FIRST_EXACT_TOKEN_AND_STATIC_FBX_QC",
   "authority": [
     "Data/ProjectGovernor.json",
     "Data/CharacterVisualProductionWaveV7.json",
@@ -220,5 +220,7 @@
   },
   "dedicated_validation_source_packs": [
     "OGA_QTN_RPG_CHARACTERS_CC0"
-  ]
+  ],
+  "active_technical_lane": "FRODO_RPG_MULTI_CANDIDATE_GAUNTLET",
+  "active_technical_lane_state": "HOSTED_STATIC_PASS_UE4_BOUNDED_GAUNTLET_RUNNING"
 }
