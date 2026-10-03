@@ -3915,3 +3915,11 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Their dedicated workflows remain responsible for the real source/UE probe they own; the generic UE4 lane is no longer duplicated for the same PR.
 - Runtime/C++/SourceAssets changes remain core/full and still reserve the UE4 runner.
 - Evidence boundary: **SOURCE/CI IMPLEMENTED; hosted Pre-Unreal required before merge**.
+
+
+## 2026-10-03 - Bag End hero trim official receipt completed
+
+- Official Kenney Building Kit ZIP receipt completed on hosted CI: archive `1598905` bytes, SHA256 `2740ef5772fb5fb3d7aab881db22d129f6b68afe711b1a79e6d5e9e19cf3eec6`.
+- Exact official extracted identities matched for `door-rotate-round-a.fbx`, `wall-doorway-round.fbx`, `wall-window-round-detailed.fbx` and the expected `colormap.png` payload.
+- Evidence: `P1C01 Bag End Trim Official Receipt #7` SUCCESS on exact head `86c09549a67dec4f7083ca4ec18b03924d3f9f89`.
+- Next gate is binary static FBX QC, then real UE4.27.2 import; runtime fallback removal remains blocked until those gates pass.
