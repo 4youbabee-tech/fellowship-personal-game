@@ -3974,3 +3974,11 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Result: **REJECTED_TECHNICAL**. The exact payload is now added to the durable rejection history and must not consume UE runner time again.
 - The transient probe FBX/uassets were cleaned by the workflow. No runtime Frodo promotion occurred.
 - Next character action is a distinct licensed FBX/corrected export under the same technical gate; deformation/retarget/AnimBP remain blocked until a clean candidate passes.
+
+
+## 2026-10-03 - Related stale branch retirement queued with Frodo probe closeout
+
+- Three reviewed superseded refs are queued for post-merge deletion: the old Knight V2 rejection-history branch, the Knight V2 probe branch, and the obsolete Bag End official-receipt branch.
+- Each has a durable successor on current `develop`; none is an active PR head.
+- The older Frodo skeletal-import refresh branch and both Edoras preparation branches are **not** deleted because they still contain unique unsalvaged work. They remain explicit salvage targets rather than parallel execution trunks.
+- This is repository hygiene only and carries no runtime/visual acceptance claim.
