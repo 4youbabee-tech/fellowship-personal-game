@@ -3803,3 +3803,12 @@ The three pending-salvage refs are:
 The active `delete_after_merge` execution queue is now cleared to zero because all reviewed dead refs have been physically retired. Historical dispositions remain recorded in audit sections.
 
 Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptance claim.
+
+
+## 2026-10-03 - Bag End planted-entry shrub replacement refreshed on current develop
+
+- Single runtime writer refreshed from `develop@94ecdd6da09b4dbf9acc7ec7b99d18c696c64863`; stale PR #267 evidence is retained only as historical evidence for its old head.
+- `SpawnHobbitHole()` now selects resident `ProductionShrubMesh` for the two planted-entry accents and retains `SphereMesh` only when that production mesh is unavailable.
+- Existing transforms remain bounded to two actors. No new asset acquisition, synchronous heavy load, Tick, collision, NPC/story/quest/save authority, or P1C02 runtime activation is introduced.
+- Hero round-door/window/trim and Bag End interior-shell debt remain content/import-QC gated and untouched.
+- Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD PRE-UNREAL + UE4.27.2 PENDING**. No PIE/device/visual/performance acceptance claim.

@@ -2778,3 +2778,15 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Explicit pending salvage | 3 | UNIQUE CONTENT / PRESERVED |
 | Unexplained dead refs | 0 | CLEAN |
 | Active delete queue | 0 | COMPACTED |
+
+
+## 2026-10-03 - Bag End planted-entry shrub runtime refresh
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Runtime writer | ACTIVE / SINGLE | fresh branch from `94ecdd6da09b4dbf9acc7ec7b99d18c696c64863` |
+| Entry sphere shrubs | SOURCE-REPLACED | resident `SM_ShShrub`; sphere remains no-asset fallback |
+| Actor / Tick / collision budget | UNCHANGED | two existing placements; no Tick/collision added |
+| Door/window/trim debt | PRESERVED | exact replacement remains import/QC gated |
+| Fresh exact-head Pre-Unreal | PENDING | new head required |
+| Fresh UE4.27.2 compile/build | PENDING | old #1305 does not validate refreshed head |
