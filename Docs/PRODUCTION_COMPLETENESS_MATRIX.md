@@ -3043,3 +3043,22 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Visible Shire + human characters | PRIMARY DELIVERY TARGET |
 | Low-spec DX11 / 720p / 30 FPS architecture constraints | UNCHANGED |
 | PIE/device/visual/FPS claims without direct evidence | FORBIDDEN |
+
+## 2026-10-04 - Authored Shire mega wave B
+
+| Visible domain | Status | Evidence boundary |
+|---|---|---|
+| World-detail ledger registration | COMPLETE BEFORE CODE | P1C01 AUTHORED_SHIRE_MEGA_WAVE_B |
+| Runtime writer | PRESERVED | AShirePrototypeWorldBuilder only |
+| Bag End earth/hill framing | SOURCE-IMPLEMENTED | 4 resident HISM landform placements |
+| Hobbiton terrain terraces | SOURCE-IMPLEMENTED | 8 resident HISM slope placements |
+| Worked-field outer ridges | SOURCE-IMPLEMENTED | 6 resident HISM hill placements |
+| Wooded-road enclosure shoulders | SOURCE-IMPLEMENTED | 8 resident HISM slope placements |
+| Ferry near/far bank framing | SOURCE-IMPLEMENTED | 8 resident HISM river-bank placements |
+| Ferry final-approach stones | SOURCE-IMPLEMENTED | 18 non-collision production HISM instances |
+| New synchronous heavy loading | NONE ADDED | resident meshes only |
+| New per-instance Tick | NONE | existing HISM architecture |
+| P1C02 runtime expansion | NOT OPENED | visual P1C01 only |
+| Exact-head Pre-Unreal | PENDING | branch validation required |
+| Exact-head UE4.27.2 build | PENDING | branch validation required |
+| PIE/device/visual/pacing/FPS | NOT ACCEPTED | direct evidence still required |
