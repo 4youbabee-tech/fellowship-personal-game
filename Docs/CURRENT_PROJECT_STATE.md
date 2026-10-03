@@ -3820,3 +3820,11 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Adds only `Data/P1C01BagEndHeroTrimSourceProbeV1.json` to the exact hosted-safe source-data allowlists; no `Data/` wildcard is introduced.
 - Parent `82d5d9f8...` is tree-equivalent to the exact #277 candidate head `6e1b474e...` (compare shows one merge commit and zero file changes), whose Unreal Build Validation #1310 succeeded.
 - Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD HOSTED VALIDATION PENDING**. No gameplay/PIE/device/visual claim.
+
+## 2026-10-03 - Transitive governance tree-equivalent proof
+
+- Source-only PR #280 reached `governance-only-no-safe-green-ancestor-fail-safe` after #279 because the nearest safe engine-proven state is behind a merge commit (`82d5d9f8...`) with no workflow attached to the merge SHA itself.
+- The merge tree is byte-equivalent to exact candidate `6e1b474e...`, which has Unreal Build Validation #1310 SUCCESS.
+- `Test-NearestSafeGovernanceAncestorGreen` now accepts a safe ancestor only when the full intervening delta is governance/source-safe and the ancestor has either direct green Unreal evidence or existing exact tree-equivalent core proof.
+- This does not broaden safe file classes and does not accept commit metadata similarity; tree equality remains mandatory.
+- Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**.
