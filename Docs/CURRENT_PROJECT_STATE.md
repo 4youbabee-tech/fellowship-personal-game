@@ -3820,3 +3820,12 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Adds only `Data/P1C01BagEndHeroTrimSourceProbeV1.json` to the exact hosted-safe source-data allowlists; no `Data/` wildcard is introduced.
 - Parent `82d5d9f8...` is tree-equivalent to the exact #277 candidate head `6e1b474e...` (compare shows one merge commit and zero file changes), whose Unreal Build Validation #1310 succeeded.
 - Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD HOSTED VALIDATION PENDING**. No gameplay/PIE/device/visual claim.
+
+## 2026-10-03 - Bag End hero trim source probe V2 on current develop
+
+- Fresh source/preproduction-only refresh from `develop@be767e893ed51ea2a6821889216e01556bc1e322` after hosted-classifier repair #279.
+- Next CRITICAL_VISIBLE Bag End blocker remains exact hero round-door/window/trim support; current architectural fallbacks remain in place until exact replacement import/QC evidence exists.
+- Existing production stock remains reusable for dressing but no exact resident door/window/trim replacement is proven.
+- Candidate source families stay bounded to Kenney Building Kit, Kenney Modular Buildings, and Quaternius Medieval Village MegaKit; KayKit Medieval Hexagon remains rejected as an exact hero-trim family based on repository-tree inspection.
+- This refresh changes Data/docs/ledger only. `runtime_integration_allowed=false`.
+- Status: **SOURCE-IMPLEMENTED / EXACT FILE DISCOVERY + STATIC QC PENDING**. Fresh hosted validation pending; no UE import/PIE/device/visual claim.
