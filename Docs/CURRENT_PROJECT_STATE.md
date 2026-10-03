@@ -4080,3 +4080,11 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - If character discovery is still empty, the script now emits up to 20 archive FBX paths before failing so the next root cause is evidence-based rather than inferred.
 - Max-two UE4 probe budget and all technical rejection gates remain unchanged.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD RERUN PENDING**. No KayKit technical pass or runtime acceptance is claimed.
+
+## 2026-10-04 - KayKit source-delivery root cause and direct-FBX correction
+
+- Hosted bridge run #8 proved the official GitHub source ZIP contains no FBX entries. Repository `.gitattributes` is the direct cause: `Characters/fbx` and `Assets/fbx` are explicitly marked `export-ignore`, so GitHub source archives intentionally omit those folders.
+- The bridge no longer depends on the source ZIP. It now downloads only two exact official raw FBX payloads from `raw.githubusercontent.com`: `Rogue.fbx` and `RogueHooded.fbx`, plus the exact official CC0 license snapshot.
+- Hosted intake remains fail-closed: official raw-prefix allowlist, FBX-only candidate names, per-file byte cap, CC0 license marker, SHA256, FBX version and Geometry/Model/LimbNode/Skin/Cluster/animation static markers.
+- The max-two UE4 probe budget and all real UE4 bind/UV/smoothing/skeletal gates are unchanged. Neither KayKit candidate has yet been judged by UE4.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD HOSTED+UE4 REVALIDATION PENDING**. No deformation/runtime/PIE/device/rendered-visual/FPS acceptance is claimed.
