@@ -29,7 +29,12 @@
     "Docs/BRANCH_CONSOLIDATION_AUDIT.md",
     "SHIRE_PIE_VERIFY.bat"
   ],
-  "delete_after_merge": [],
+  "delete_after_merge": [
+    "refresh/p1c01-bag-end-entry-shrub-266-93e04fa",
+    "ci/hosted-classifier-local-tree-proof-2026-10-03",
+    "source/p1c01-bag-end-hero-trim-probe-v1-2026-10-03",
+    "source/p1c01-bag-end-hero-trim-probe-v2-2026-10-03"
+  ],
   "safety_rules": [
     "Never delete develop or main.",
     "Never delete an active PR head.",
@@ -438,5 +443,23 @@
     "active_delete_queue_count": 0,
     "rule": "A remaining branch must be canonical/recovery, the head of an open PR, or explicitly protected pending selective salvage. No unexplained live refs remain.",
     "evidence_boundary": "Repository/process hygiene only; no gameplay/compile/PIE/device/visual/performance acceptance."
+  },
+  "post_283_superseded_ref_cleanup_2026_10_03": {
+    "status": "AUTHORIZED_AFTER_LIVE_RECHECK",
+    "action": "DELETE_AFTER_THIS_MERGE",
+    "branches": [
+      "refresh/p1c01-bag-end-entry-shrub-266-93e04fa",
+      "ci/hosted-classifier-local-tree-proof-2026-10-03",
+      "source/p1c01-bag-end-hero-trim-probe-v1-2026-10-03",
+      "source/p1c01-bag-end-hero-trim-probe-v2-2026-10-03"
+    ],
+    "dispositions": {
+      "refresh/p1c01-bag-end-entry-shrub-266-93e04fa": "SUPERSEDED by merged PR #277; exact current replacement integrated at merge 82d5d9f8dac2f064fdb6797399e1591e545d8629 with Pre-Unreal #1696 and Unreal Build #1310 SUCCESS.",
+      "ci/hosted-classifier-local-tree-proof-2026-10-03": "SUPERSEDED by merged PRs #279 and #281; the local tree-object proof and safe transitive governance ancestry are already on develop.",
+      "source/p1c01-bag-end-hero-trim-probe-v1-2026-10-03": "SUPERSEDED by merged PR #282 and subsequent exact-file discovery merged via #283; no unique required authority remains.",
+      "source/p1c01-bag-end-hero-trim-probe-v2-2026-10-03": "SUPERSEDED by merged PR #282 and subsequent exact-file discovery merged via #283; no unique required authority remains."
+    },
+    "safety": "Live GitHub recheck found all four refs still present and all corresponding PRs closed. Canonical/recovery refs, open PR heads and preserve_pending_salvage refs are excluded.",
+    "evidence_boundary": "Repository branch hygiene only; no UE/PIE/device/visual/performance acceptance."
   }
 }
