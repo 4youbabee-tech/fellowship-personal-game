@@ -1199,3 +1199,17 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Performance contract: maximum new budget **212 HISM instances + 4 limited hero actors**; resident meshes only; existing culling; no per-instance Tick; no actor-per-prop density; no synchronous heavy loading; traversal corridor remains open.
 - VRAM rule: no new texture set/material permutation in this packet. Surface variation is geometric/verge breakup only pending a separately budgeted PNG/TGA/channel-packed material pass for the ~2 GB VRAM target.
 - Evidence boundary: REGISTERED / SOURCE-GROUNDED PLAN before implementation. No PIE/device/rendered-visual/FPS acceptance.
+
+
+## 2026-10-04 - P1C01 HUMAN_CHARACTER_PRODUCTION_WAVE_2 registered before implementation
+
+- Scope: P1C01 Frodo visible-character production only. No P1C02 runtime opening and no duplicate NPC/quest/world authority.
+- Trigger: Quaternius RPG and KayKit exact payload families produced real UE4.27 skeletal registration but failed unchanged smoothing/bind-pose/UV technical gates. Their exact rejected payload hashes remain forbidden for retry.
+- New source-family strategy: use a genuinely different CC0 human source/export family rather than another payload from the same rejected exporter lineage. First automated family is OpenGameArt Character Base Model by Overaction Game Studio, advertised as a rigged low-poly fantasy character base under CC0 with a direct downloadable source archive.
+- Repair policy: hosted intake may accept FBX directly or a source .blend only as an intermediate authoring file. Final animated candidate delivered to UE4 must be FBX. If direct FBX is absent or technically unsuitable for static structure, Blender normalization/re-export is authorized to produce a new exact FBX payload identity; hard UE4 smoothing/bind-pose/UV/skeletal-registration gates remain unchanged.
+- Source provenance requirements: source page, creator, CC0 marker, direct archive URL, archive SHA256, source entry identity, normalized payload SHA256, conversion tool/version and all technical rejection reasons are durable evidence.
+- Candidate budget: max two distinct normalized FBX payloads per source family before moving on. Do not brute-force a large archive on the self-hosted UE4 runner.
+- Next-on-pass: reference pose + root/scale/hierarchy + shoulder/elbow/knee + hand/foot deformation readiness artifact, then Idle/Walk/Run locomotion/retarget preparation and AnimBP; runtime promotion remains blocked until those pass.
+- Runtime contract: modular Frodo remains fallback. Heavy character assets must remain soft references and load asynchronously through FStreamableManager. No synchronous heavy LoadObject path is authorized.
+- Target: UE4.27.2 / DX11 / 720p / 30 FPS floor / i7 Gen6 / 8 GB RAM / ~2 GB VRAM.
+- Evidence boundary: REGISTERED / SOURCE-GROUNDED PLAN ONLY. No technical pass, deformation acceptance, runtime, PIE, device, rendered-visual or FPS acceptance is claimed.

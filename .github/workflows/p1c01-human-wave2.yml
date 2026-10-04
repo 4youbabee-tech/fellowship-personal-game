@@ -1,0 +1,147 @@
+name: P1C01 Human Character Production Wave 2
+
+on:
+  pull_request:
+    branches: [develop]
+    paths:
+      - 'Data/P1C01HumanCharacterProductionWave2V1.json'
+      - 'Scripts/stage_p1c01_human_wave2.ps1'
+      - 'Scripts/run_p1c01_human_wave2_ue4.ps1'
+      - 'Scripts/test_p1c01_human_wave2_contract.py'
+      - 'Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp'
+      - '.github/workflows/p1c01-human-wave2.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: p1c01-human-wave2-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  hosted_source_factory:
+    name: Hosted CC0 human source + Blender normalization
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    outputs:
+      selected_count: ${{ steps.outcome.outputs.selected_count }}
+      source_status: ${{ steps.outcome.outputs.source_status }}
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          fetch-depth: 2
+          persist-credentials: false
+
+      - name: Verify exact checkout
+        shell: bash
+        run: test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+
+      - name: Install bounded Blender normalizer
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y blender python3-numpy
+          blender --version | head -n 1
+          python3 -c "import numpy; print('NUMPY_READY', numpy.__version__)"
+
+      - name: Stage CC0 source family and normalize max two FBX candidates
+        shell: pwsh
+        run: |
+          & "$env:GITHUB_WORKSPACE/Scripts/stage_p1c01_human_wave2.ps1" -ManifestPath "$env:GITHUB_WORKSPACE/Data/P1C01HumanCharacterProductionWave2V1.json" -OutputRoot "$env:RUNNER_TEMP/shire-human-wave2" -BlenderExecutable "blender"
+
+      - name: Publish source-factory outcome
+        id: outcome
+        shell: pwsh
+        run: |
+          $r = Get-Content -LiteralPath "$env:RUNNER_TEMP/shire-human-wave2/p1c01_human_wave2_hosted.json" -Raw | ConvertFrom-Json
+          "selected_count=$($r.selected_count)" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          "source_status=$($r.status)" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          Write-Host ("HUMAN_WAVE2_HOSTED_OUTCOME status="+$r.status+" selected="+$r.selected_count)
+
+      - name: Upload hosted source/normalization evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1c01-human-wave2-hosted-${{ env.TARGET_SHA }}
+          path: ${{ runner.temp }}/shire-human-wave2
+          if-no-files-found: error
+          retention-days: 14
+
+  ue4_technical_gate:
+    name: UE4.27.2 Human Wave 2 skeletal gate
+    needs: hosted_source_factory
+    if: needs.hosted_source_factory.outputs.selected_count != '0'
+    runs-on:
+      - self-hosted
+      - Windows
+      - X64
+      - ue4-27
+    timeout-minutes: 90
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          fetch-depth: 2
+          persist-credentials: false
+
+      - name: Verify exact checkout and runner
+        shell: cmd
+        run: |
+          @echo off
+          for /f "delims=" %%H in ('git rev-parse HEAD') do set "CHECKED_SHA=%%H"
+          if /I not "%TARGET_SHA%"=="%CHECKED_SHA%" exit /b 71
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\verify_runner_session.ps1"
+
+      - name: Download hosted source factory artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: p1c01-human-wave2-hosted-${{ env.TARGET_SHA }}
+          path: ${{ runner.temp }}\shire-human-wave2
+
+      - name: Build ShireJourneyEditor once
+        shell: cmd
+        run: '"%GITHUB_WORKSPACE%\Scripts\ci_build_unreal.cmd"'
+
+      - name: Probe max two normalized candidates through unchanged hard gates
+        shell: powershell
+        run: |
+          & "$env:GITHUB_WORKSPACE\Scripts\run_p1c01_human_wave2_ue4.ps1" -HostedReceiptPath "$env:RUNNER_TEMP\shire-human-wave2\p1c01_human_wave2_hosted.json" -ArtifactRoot "$env:RUNNER_TEMP\shire-human-wave2" -OutputRoot "$env:RUNNER_TEMP\shire-human-wave2-ue4"
+
+      - name: Upload UE4 technical/deformation-readiness evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1c01-human-wave2-ue4-${{ env.TARGET_SHA }}
+          path: |
+            ${{ runner.temp }}\shire-human-wave2\p1c01_human_wave2_hosted.json
+            ${{ runner.temp }}\shire-human-wave2\normalized\*_readiness.json
+            ${{ runner.temp }}\shire-human-wave2-ue4\p1c01_human_wave2_ue4.json
+            ${{ github.workspace }}\Saved\Logs\CI-ProductionAssetImport.log
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Cleanup transient character assets
+        if: always()
+        shell: powershell
+        run: |
+          $sourceRelative="SourceAssets/Production/Characters/Rigs/FRODO/SK_FRODO.fbx"
+          $tracked=@(& git.exe -C $env:GITHUB_WORKSPACE ls-files -- $sourceRelative 2>$null)
+          if($LASTEXITCODE -ne 0) { throw "HUMAN_WAVE2_CLEANUP_GIT_FAIL path=$sourceRelative" }
+          if($tracked.Count -eq 0) {
+            Remove-Item -LiteralPath (Join-Path $env:GITHUB_WORKSPACE $sourceRelative) -Force -ErrorAction SilentlyContinue
+          }
+
+          $untracked=@(& git.exe -C $env:GITHUB_WORKSPACE ls-files --others --exclude-standard -- "Content/Production/Characters/Rigs/FRODO/*.uasset" 2>$null)
+          if($LASTEXITCODE -ne 0) { throw "HUMAN_WAVE2_CLEANUP_GIT_FAIL path=Content/Production/Characters/Rigs/FRODO/*.uasset" }
+          foreach($relative in $untracked) {
+            Remove-Item -LiteralPath (Join-Path $env:GITHUB_WORKSPACE $relative) -Force -ErrorAction SilentlyContinue
+          }
+          Write-Host "HUMAN_WAVE2_CLEANUP_PASS"

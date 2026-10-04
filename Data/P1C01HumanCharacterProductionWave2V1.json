@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "wave_id": "P1C01_HUMAN_CHARACTER_PRODUCTION_WAVE_2_V1",
+  "status": "TECHNICAL_WINNER_EVIDENCED_CI_HARDENING_PENDING",
+  "runtime_chapter": "P1C01",
+  "target_character": "FRODO",
+  "role": "HUMAN_SKELETAL_SOURCE_FACTORY_NOT_FINAL_LIKENESS",
+  "source_family": {
+    "provider": "OpenGameArt",
+    "creator": "overactiongamestudio",
+    "title": "Character Base Model",
+    "source_page": "https://opengameart.org/content/character-base-model",
+    "archive_url": "https://opengameart.org/sites/default/files/character-base-model-rigged.zip",
+    "observed_license": "CC0",
+    "license_marker_required": "CC0",
+    "source_description": "Rigged low-poly fantasy character base model",
+    "final_animated_format": "FBX"
+  },
+  "source_policy": {
+    "allowed_archive_extensions": [
+      ".fbx",
+      ".blend",
+      ".png",
+      ".tga"
+    ],
+    "max_archive_bytes": 33554432,
+    "max_source_entry_bytes": 67108864,
+    "max_ue4_candidates": 2,
+    "fbx_version_ceiling": 7500,
+    "blend_as_intermediate_only": true,
+    "blender_normalization_required": true,
+    "direct_obj_for_animated_character": false,
+    "production_texture_formats": [
+      "PNG",
+      "TGA"
+    ],
+    "prefer_blend_source": true,
+    "max_zero_weight_ratio": 0.35
+  },
+  "normalization_contract": {
+    "tool": "Blender",
+    "output_format": "FBX_BINARY_7400_EXPECTED",
+    "add_leaf_bones": false,
+    "smoothing": "FACE",
+    "tangent_space": true,
+    "animation_bake": true,
+    "selection": "ARMATURE_MESH",
+    "provenance": "source entry + source SHA256 + normalized SHA256 + Blender version",
+    "export_deform_bones_only": true,
+    "control_rig_bones_excluded": true
+  },
+  "hosted_deformation_readiness": {
+    "required": [
+      "armature_count > 0",
+      "mesh_count > 0",
+      "bone_count > 0",
+      "weighted_vertex_count > 0",
+      "zero_weight_vertex_count recorded",
+      "uv_layer_count > 0",
+      "finite mesh bounds",
+      "joint-name coverage recorded",
+      "deform_bone_count recorded",
+      "zero_weight_ratio <= 0.35 before UE4 reservation"
+    ],
+    "evidence_boundary": "Static deformation readiness only; no visual deformation acceptance."
+  },
+  "ue4_hard_gate": [
+    "skeletal registration",
+    "reference bones > 0",
+    "linked USkeleton via USkeletalMesh::GetSkeleton() is valid",
+    "generated skeletal mesh package exists",
+    "no missing smoothing groups",
+    "no invalid bind pose",
+    "no missing bind-pose bones",
+    "no missing UV set"
+  ],
+  "next_if_clean_technical_winner": [
+    "reference-pose review",
+    "root orientation and scale review",
+    "shoulder/elbow/knee deformation",
+    "hands/feet sanity",
+    "Idle/Walk/Run locomotion source mapping",
+    "retarget compatibility",
+    "AnimBP locomotion",
+    "soft/async runtime Frodo replacement"
+  ],
+  "runtime_contract": {
+    "modular_frodo_fallback": true,
+    "heavy_references": [
+      "TSoftObjectPtr",
+      "TSoftClassPtr",
+      "FSoftObjectPath"
+    ],
+    "loading": "FStreamableManager::RequestAsyncLoad",
+    "synchronous_heavy_load": false,
+    "runtime_promotion_allowed": false
+  },
+  "performance_target": {
+    "engine": "UE4.27.2",
+    "rhi": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_approx": 2
+  },
+  "evidence_boundary": "Technical winner is exact-head UE4.27 evidenced on Wave2 run #3. Deformation/retarget/runtime/PIE/device/rendered-visual/FPS acceptance remains pending.",
+  "latest_hosted_baseline": {
+    "workflow_run": 1,
+    "exact_head": "8afa53cdee648cef196b914c5123d3e38677fc2c",
+    "source_archive_sha256": "a6837a6626b92776a358bc2a85c845af194b3ba2b4b2acc8531f107726cb0d9e",
+    "blend_source_sha256": "5c638300359d8ff29693fffbfa179b6c8731bc2cf924016cc55a0e03cd6069bb",
+    "baseline_blend_normalized_sha256": "8b8d4193f5f20e16ed13e000bc4e1c324dead336d93261a5ccd37ff0b922ff9e",
+    "baseline_blend_bones": 443,
+    "baseline_blend_weighted_vertices": 1787,
+    "baseline_blend_zero_weight_vertices": 442,
+    "baseline_fbx_normalized_sha256": "980c4382fccff1e62b43a64072b7b0a471fceb1fe9405bbf80e4c2c4795387af",
+    "baseline_fbx_bones": 656,
+    "baseline_fbx_weighted_vertices": 24,
+    "baseline_fbx_zero_weight_vertices": 2205,
+    "diagnosis": "Rigify ORG/MCH/DEF control skeleton exported wholesale; direct FBX candidate also has catastrophic zero-weight ratio.",
+    "root_fix": "Blender export deform bones only and reject zero-weight ratio above 0.35 before self-hosted UE4."
+  },
+  "physics_asset_gate": {
+    "status": "SEPARATE_SANITY_GATE",
+    "runtime_collision_owner": "capsule",
+    "hard_skeletal_import_failure": false,
+    "rationale": "PhysicsAsset auto-generation can be absent on small-bone rigs and is not authoritative for skeletal import validity."
+  },
+  "latest_technical_winner": {
+    "workflow_run": 3,
+    "exact_head": "c0ad882792ccef8c9e639e4eb1d7c3e9e6ce5e90",
+    "normalized_sha256": "eff0e79980f90d49deada0aa37ad8be5975a86330348e4ae6fa49d3171fad570",
+    "ue4_skeletal_registered": true,
+    "ue4_reference_bones": 161,
+    "ue4_linked_skeleton": true,
+    "ue4_linked_skeleton_path": "/Game/Production/Characters/Rigs/FRODO/SK_FRODO_Skeleton.SK_FRODO_Skeleton",
+    "import_summary": "377 files, 0 failures",
+    "physics_asset_auto_generated": false,
+    "physics_asset_note": "UE4 reported small-bone auto-generation warning; separate sanity gate, not skeletal technical rejection.",
+    "technical_gate": "PASS",
+    "next_gate": "DEFORMATION_AND_RETARGET"
+  }
+}

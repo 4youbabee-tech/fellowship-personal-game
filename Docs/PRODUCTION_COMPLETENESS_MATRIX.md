@@ -3223,3 +3223,75 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Exact-head Pre-Unreal | PENDING | PR validation required |
 | Exact-head UE4.27.2 build | PENDING | PR validation required |
 | PIE visual/pacing/device/FPS | NOT ACCEPTED | direct evidence required |
+
+
+## 2026-10-04 - Human Character Production Wave 2
+
+| Gate | Status | Evidence boundary |
+|---|---|---|
+| New source family | SOURCE-REGISTERED | OpenGameArt Character Base Model / CC0 |
+| Source page + archive provenance | SOURCE-IMPLEMENTED | page + archive SHA256 captured by hosted factory |
+| Animated final format | FBX ONLY | .blend permitted only as hosted authoring intermediate |
+| Blender normalization | SOURCE-IMPLEMENTED | smoothing/armature/animation bake + exact normalized SHA |
+| Hosted deformation readiness | SOURCE-IMPLEMENTED | bones/weights/UV/bounds/joint-name coverage; not visual acceptance |
+| Self-hosted candidate budget | LOCKED | max 2 |
+| UE4 registration/bones/smoothing/bind/UV gate | SOURCE-IMPLEMENTED | unchanged hard rejects |
+| Technical winner | PENDING | exact-head run required |
+| Deformation visual acceptance | BLOCKED | clean technical winner first |
+| Idle/Walk/Run retarget | BLOCKED | clean deformation readiness first |
+| AnimBP | BLOCKED | locomotion proof first |
+| Runtime Frodo promotion | BLOCKED | soft/async only after all gates |
+| Modular fallback | PRESERVED | current runtime remains safe |
+| PIE/device/rendered visual/FPS | NOT ACCEPTED | direct evidence required |
+
+## 2026-10-04 - Human Wave 2 deform-only + runner dedup
+
+| Gate | Status | Evidence boundary |
+|---|---|---|
+| Hosted source factory baseline | PASS | run #1 on `8afa53cdee648cef196b914c5123d3e38677fc2c`; archive/provenance + Blender artifact captured |
+| Baseline preferred source | NEEDS NORMALIZATION ROOT FIX | 443 total bones; 1,787 weighted / 442 zero-weight |
+| Baseline direct-FBX source | HOSTED QUALITY REJECT TARGET | 656 total bones; 24 weighted / 2,205 zero-weight |
+| Rigify control/mechanism bones | PROVEN PRESENT | ORG/MCH/DEF strings in normalized artifact |
+| Deform-only FBX export | SOURCE-IMPLEMENTED | `use_armature_deform_only=True`; leaf bones off |
+| Deform-bone count receipt | SOURCE-IMPLEMENTED | hosted readiness JSON |
+| Zero-weight ratio pre-UE4 gate | SOURCE-IMPLEMENTED | maximum 0.35 |
+| Duplicate generic Unreal runner reservation | SOURCE-FIXED | Wave2-only delta classifies `inherit`; dedicated job owns Editor build + UE4 gate |
+| Fresh hosted normalization | PENDING | new exact head required |
+| UE4 skeletal technical winner | PENDING | unchanged hard gates |
+| Deformation / locomotion / AnimBP | BLOCKED | clean technical winner required |
+| Runtime Frodo promotion | BLOCKED | existing soft/async subsystem only after all gates |
+| PIE/device/rendered visual/FPS | NOT ACCEPTED | direct evidence required |
+
+
+## 2026-10-04 - Human Wave 2 linked USkeleton probe correction
+
+| Gate | Status | Evidence boundary |
+|---|---|---|
+| Rebase onto current develop | COMPLETE | base `3d0990bec48be182b291e266d321408c5d9ea034` |
+| Prior skeletal registration | EVIDENCED / NOT YET WINNER | run #2: registered, 161 reference bones |
+| Prior smoothing/bind/UV warning gate | CLEAN IN RUN #2 | no matching hard-warning reasons reported |
+| Skeletal mesh package | EVIDENCED | `SK_FRODO.uasset` existed |
+| Linked USkeleton probe | SOURCE-FIXED | authoritative `USkeletalMesh::GetSkeleton()` path |
+| Guessed skeleton filename requirement | REMOVED | no `SK_FRODO_Skeleton.uasset` hard dependency |
+| PhysicsAsset | SEPARATE SANITY | not hard import failure; capsule owns runtime collision |
+| Fresh exact-head hosted + UE4 gate | PENDING | new SHA required |
+| Deformation / retarget / AnimBP | BLOCKED | clean technical winner first |
+| PIE/device/rendered visual/FPS | NOT ACCEPTED | direct evidence required |
+
+## 2026-10-04 - Human Wave 2 technical winner
+
+| Gate | Status | Evidence boundary |
+|---|---|---|
+| Exact-head Wave2 run #3 | SUCCESS | `c0ad882792ccef8c9e639e4eb1d7c3e9e6ce5e90` |
+| Normalized winner | TECHNICAL PASS | `eff0e79980f90d49deada0aa37ad8be5975a86330348e4ae6fa49d3171fad570` |
+| Skeletal registration | PASS | yes |
+| Reference bones | PASS | 161 |
+| Linked USkeleton | PASS | `/Game/Production/Characters/Rigs/FRODO/SK_FRODO_Skeleton.SK_FRODO_Skeleton` |
+| Import batch | PASS | 377 files / 0 failures |
+| Smoothing / bind / UV hard gates | PASS | no matching rejection reasons |
+| PhysicsAsset | SEPARATE SANITY | small-bone auto-generation warning; not skeletal rejection |
+| Dedicated trigger includes commandlet | SOURCE-HARDENED / EXACT-HEAD PENDING | prevents commandlet-only probe drift |
+| Transient cleanup | SOURCE-HARDENED / EXACT-HEAD PENDING | generated untracked Frodo uassets only |
+| Deformation + retarget | NEXT | technical predecessor now satisfied |
+| AnimBP / runtime promotion | BLOCKED | deformation/retarget evidence required first |
+| PIE/device/rendered visual/FPS | NOT ACCEPTED | no direct evidence |
