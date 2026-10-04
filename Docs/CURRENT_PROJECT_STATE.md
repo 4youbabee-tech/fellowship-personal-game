@@ -4221,3 +4221,11 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Machine-readable closure: `Data/P1C01ShireSettlementSourceClosureV1.json`.
 - **Next required world gate is local visual bootstrap, not another blind density wave**: run `Scripts/bootstrap_local_p1c01_visuals.cmd` with UE4 closed, generate ignored `Content/Production`, and launch `/Engine/Maps/Entry` at DX11 1280x720.
 - Status: **SOURCE CONSTRUCTION COMPLETE / STATIC+COMPILE MACHINE-GREEN / HUMAN VISUAL + DEVICE PERFORMANCE PENDING**. No PIE/device/visual/FPS acceptance is claimed.
+
+
+## 2026-10-04 - Side-lane dead-branch retirement
+
+- Reviewed three non-active refs for safe retirement while current P1C01 builds/PRs continue independently: old Frodo human breakthrough, old Shire exterior closeout, and old settlement final-polish.
+- They are now queued in `Data/BranchCleanupPlan.json` with explicit supersession evidence; all current PR heads are excluded from deletion.
+- Cleanup runs on GitHub-hosted Windows and does not reserve or stop the self-hosted UE4.27 runner, so current compile/render/deformation work can continue in parallel.
+- This is repository hygiene only; no runtime acceptance claim.
