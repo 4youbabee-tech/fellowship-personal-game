@@ -4221,3 +4221,12 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Machine-readable closure: `Data/P1C01ShireSettlementSourceClosureV1.json`.
 - **Next required world gate is local visual bootstrap, not another blind density wave**: run `Scripts/bootstrap_local_p1c01_visuals.cmd` with UE4 closed, generate ignored `Content/Production`, and launch `/Engine/Maps/Entry` at DX11 1280x720.
 - Status: **SOURCE CONSTRUCTION COMPLETE / STATIC+COMPILE MACHINE-GREEN / HUMAN VISUAL + DEVICE PERFORMANCE PENDING**. No PIE/device/visual/FPS acceptance is claimed.
+
+
+## 2026-10-04 - Owner permanent root-cause + definitive P1C01 closeout directive
+
+- Owner directive is now durable project authority: **no symptom patching as closure**. Reproducible problems must be traced to the causal layer, fixed there, regression-guarded where practical, and the exact failed gate rerun. Temporary containment may protect the project while repair is underway but cannot be called the solution.
+- Added `REQ-ROOTCAUSE-001` + hard invariant `INV-ROOT-CAUSE`; `Scripts/project_governor.py` now fails if either permanent contract is removed/weakened.
+- Added `REQ-P1C01-CLOSEOUT-001`: settlement/source completion is not chapter completion. P1C01 closes only after the full Shire-through-Bucklebury/Ferry chapter has production character presentation, beautiful authored world presentation, living-world/gameplay/audio/save reliability, target-device performance, and human Gate 6/7 evidence.
+- Runtime order remains serialized: P1C01 ACTIVE; P1C02 Bree/Prancing Pony remains predecessor-gated until `P1C01_GATE_6_7_ACCEPTED`.
+- Evidence boundary: governance/source rule implementation only. This does not claim P1C01 visual/device/performance acceptance.
