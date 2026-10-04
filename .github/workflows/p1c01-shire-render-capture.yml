@@ -1,0 +1,53 @@
+name: P1C01 Shire Render Capture
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - production/p1c01-shire-automated-render-capture-v1-2026-10-04
+    paths:
+      - "Scripts/ci_capture_p1c01_visuals.cmd"
+      - "Scripts/ci_import_production_assets.cmd"
+      - ".github/workflows/p1c01-shire-render-capture.yml"
+      - "Source/**"
+      - "Config/**"
+      - "SourceAssets/Production/**"
+      - "ShireJourney.uproject"
+
+concurrency:
+  group: p1c01-shire-render-capture
+  cancel-in-progress: false
+
+jobs:
+  capture:
+    name: UE4.27.2 rendered evidence
+    runs-on:
+      - self-hosted
+      - Windows
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 0
+
+      - name: Print exact checkout
+        shell: cmd
+        run: |
+          git rev-parse HEAD
+          git status --short
+
+      - name: Capture P1C01 production Shire
+        shell: cmd
+        run: Scripts\ci_capture_p1c01_visuals.cmd
+
+      - name: Upload rendered evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1c01-shire-render-capture-${{ github.sha }}
+          path: |
+            Saved/Automation/P1C01VisualCapture/**
+          if-no-files-found: error
+          retention-days: 14
