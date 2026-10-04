@@ -4310,3 +4310,13 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Queued refs: PR #317, #319, #322, #323, #324 and #326 heads.
 - Active consolidated PR #327 is explicitly preserved, as are `develop`, `main`, the recovery archive and both Edoras prep refs.
 - No production implementation, chapter scope, gameplay, asset, runtime or acceptance state is changed by this wave.
+
+
+## 2026-10-04 - P1C01 two-mega-wave closure structure
+
+- Owner-facing production structure is now locked to **two remaining mega waves** for P1C01, not many micro-waves.
+- **P1C01-MW5 — Production Completion Mega Wave (ACTIVE):** Frodo/Gandalf production presentation, world/material/lighting/landmark completion, Living Shire, gameplay/traversal/collision/audio, save/load, localization-safe authoring foundation, and performance/streaming preparation.
+- **P1C01-MW6 — Final Closure and Gate 6/7 Mega Wave (PENDING):** exact-head technical evidence, full PIE route, save/load roundtrip, human visual/pacing review, target-device 720p/DX11 30 FPS evidence, and final Gate 6/7 acceptance.
+- A-I closeout lanes remain internal workstreams inside these two mega waves and must not become branch-per-lane churn.
+- P1C02 Bree remains runtime-locked until P1C01 Gate 6/7 is accepted.
+- Evidence boundary: planning/production structure only; no PIE/device/visual/performance acceptance is implied.
