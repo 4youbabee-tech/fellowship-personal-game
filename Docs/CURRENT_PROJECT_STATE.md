@@ -4330,3 +4330,12 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - The train may autonomously reach READY_FOR_HUMAN_DEVICE_ACCEPTANCE, but Gate 6/7 cannot be claimed until chapter-specific human visual/pacing and target-device evidence exist.
 - The next runtime chapter does not auto-open; after predecessor Gate 6/7 acceptance, wait for the owner's explicit start-next-chapter command.
 - P1C01 remains the active train; continue MW5 then MW6. P1C02 remains locked.
+
+
+## 2026-10-04 - Manual continuous chapter train + full P1C01 closure contract
+
+- Hourly production scheduling is disabled. Production continues only when the owner explicitly says to continue/start; the owner may issue commands as often as desired (for example every 15 minutes).
+- Each command resumes the active P1C01 train immediately from live GitHub state and continues routine engineering without micro-approval inside the current turn.
+- P1C01 closure now explicitly requires the complete Shire experience: film-causal story spine, compatible source-backed depth, main quests, exploration/discoveries, optional routes, side activities/missions, named-character continuity, Living Shire, world/audio presentation, traversal/collision/navigation, save/load, localization-safe text, target-device performance, and human visual/pacing/enjoyment review.
+- No meaningful supported chapter detail may be silently omitted: implement it or record an explicit disposition before closure.
+- P1C02 remains locked until P1C01 Gate 6/7 is accepted with chapter-specific evidence.
