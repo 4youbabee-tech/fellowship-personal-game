@@ -3295,3 +3295,29 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Deformation + retarget | NEXT | technical predecessor now satisfied |
 | AnimBP / runtime promotion | BLOCKED | deformation/retarget evidence required first |
 | PIE/device/rendered visual/FPS | NOT ACCEPTED | no direct evidence |
+
+
+## 2026-10-04 - Shire Settlement Completion V2
+
+| Settlement domain | Status | Evidence boundary |
+|---|---|---|
+| Ledger registration | COMPLETE | registered before implementation |
+| Runtime writer | PRESERVED | AShirePrototypeWorldBuilder only |
+| Bagshot Row | SOURCE-IMPLEMENTED | 4 bounded production-mesh homes + HISM garden rhythm |
+| Party Field boundary / entrance | SOURCE-IMPLEMENTED | existing Party Tree/social loop preserved |
+| Water / mill yard / bridge read | SOURCE-IMPLEMENTED | reeds + path stones + 4 bounded hero props |
+| Hobbiton domestic lanes | SOURCE-IMPLEMENTED | HISM fence/hedge boundaries |
+| Bywater-facing edge | SOURCE-IMPLEMENTED | 3 cottages + well + 2 produce stands; not full Bywater claim |
+| Orchard belt | SOURCE-IMPLEMENTED | 28 HISM trees + 20 shrubs + 2 ladders |
+| Farm yard | SOURCE-IMPLEMENTED | 24 fence + 24 grass HISM |
+| Household clutter | SOURCE-IMPLEMENTED | 4 HISM detail clusters / max 40 instances |
+| Lane lamps / signs / mail / wash line | SOURCE-IMPLEMENTED | bounded hero props |
+| HISM budget | LOCKED | <=300 |
+| Detail-cluster instance budget | LOCKED | <=40 |
+| Hero actor budget | LOCKED | <=32 |
+| New synchronous heavy load | NONE | resident assets only |
+| New world authority | NONE | existing ownership preserved |
+| P1C02 runtime | NOT OPENED | P1C01 only |
+| Exact-head Pre-Unreal | PENDING | PR validation required |
+| Exact-head UE4.27.2 build | PENDING | PR validation required |
+| PIE visual/pacing/device/FPS | NOT ACCEPTED | direct evidence still required |

@@ -4191,6 +4191,385 @@ void AShirePrototypeWorldBuilder::SpawnShireVisualFinishWave()
 }
 
 
+
+
+void AShirePrototypeWorldBuilder::SpawnShireSettlementCompletionPass()
+{
+    if (!GetWorld())
+    {
+        return;
+    }
+
+    int32 HismCount = 0;
+    int32 DetailClusterCount = 0;
+    int32 DetailInstanceCount = 0;
+    int32 HeroActorCount = 0;
+
+    auto AddInstance = [&HismCount](
+        UHierarchicalInstancedStaticMeshComponent* Component,
+        const FVector& Location,
+        const FVector& Scale,
+        float Yaw)
+    {
+        if (!Component || !Component->GetStaticMesh())
+        {
+            return;
+        }
+
+        Component->AddInstance(FTransform(
+            FRotator(0.0f, Yaw, 0.0f),
+            Location,
+            Scale));
+        ++HismCount;
+    };
+
+    auto SpawnHero = [this, &HeroActorCount](
+        UStaticMesh* Mesh,
+        const FVector& Location,
+        const FVector& Scale,
+        float Yaw,
+        bool bCollision)
+    {
+        if (!Mesh)
+        {
+            return static_cast<AStaticMeshActor*>(nullptr);
+        }
+
+        AStaticMeshActor* Actor = SpawnShape(
+            Mesh,
+            Location,
+            Scale,
+            FLinearColor::White,
+            FRotator(0.0f, Yaw, 0.0f),
+            bCollision);
+        if (Actor)
+        {
+            Actor->Tags.AddUnique(TEXT("P1C01ShireSettlementCompletion"));
+            ++HeroActorCount;
+        }
+        return Actor;
+    };
+
+    auto SpawnDetailCluster = [this, &DetailClusterCount, &DetailInstanceCount](
+        UStaticMesh* Mesh,
+        const TCHAR* Tag,
+        int32 StartCull,
+        int32 EndCull,
+        const TArray<FTransform>& Placements)
+    {
+        if (!Mesh || Placements.Num() == 0)
+        {
+            return;
+        }
+
+        AWorldDetailCluster* Cluster = GetWorld()->SpawnActor<AWorldDetailCluster>();
+        if (!Cluster)
+        {
+            return;
+        }
+
+        Cluster->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
+        Cluster->Tags.AddUnique(TEXT("P1C01ShireSettlementCompletion"));
+        Cluster->Tags.AddUnique(FName(Tag));
+        Cluster->Configure(Mesh, false, StartCull, EndCull);
+        for (const FTransform& Placement : Placements)
+        {
+            Cluster->AddDetailInstance(
+                Placement.GetLocation(),
+                Placement.Rotator(),
+                Placement.GetScale3D());
+        }
+        ++DetailClusterCount;
+        DetailInstanceCount += Cluster->GetDetailCount();
+    };
+
+    UStaticMesh* GardenArch = ResolveResidentStaticMesh(
+        TEXT("/Game/Production/World/Shire/SM_ShGardenArch.SM_ShGardenArch"));
+    UStaticMesh* Mailbox = ResolveResidentStaticMesh(
+        TEXT("/Game/Production/World/Shire/SM_ShMailbox.SM_ShMailbox"));
+    UStaticMesh* PumpWell = ResolveResidentStaticMesh(
+        TEXT("/Game/Production/World/Shire/SM_ShPumpWell.SM_ShPumpWell"));
+    UStaticMesh* ProduceStand = ResolveResidentStaticMesh(
+        TEXT("/Game/Production/World/Shire/SM_ShProduceStand.SM_ShProduceStand"));
+    UStaticMesh* WashLine = ResolveResidentStaticMesh(
+        TEXT("/Game/Production/World/Shire/SM_ShWashLine.SM_ShWashLine"));
+    UStaticMesh* OrchardLadder = ResolveResidentStaticMesh(
+        TEXT("/Game/Production/World/Shire/SM_ShOrchardLadder.SM_ShOrchardLadder"));
+
+    // Bagshot Row: four readable homes stepped along the south-facing slope below
+    // Bag End. The row is intentionally compact and does not move any quest anchors.
+    const struct FBagshotHome
+    {
+        FVector Center;
+        float Yaw;
+        float Scale;
+    } BagshotHomes[] = {
+        { FVector(-2010,-1180,0),  8.0f, 0.72f },
+        { FVector(-1640,-1210,0),  5.0f, 0.69f },
+        { FVector(-1260,-1180,0), -4.0f, 0.71f },
+        { FVector( -880,-1125,0), -8.0f, 0.68f }
+    };
+
+    for (const FBagshotHome& Home : BagshotHomes)
+    {
+        SpawnHero(ProductionTurfMoundMesh, Home.Center + FVector(80.0f,0.0f,22.0f),
+            FVector(1.95f,1.62f,1.55f) * Home.Scale, Home.Yaw, true);
+        SpawnHero(ProductionHobbitFacadeMesh, Home.Center + FVector(-50.0f,0.0f,0.0f),
+            FVector(Home.Scale), Home.Yaw, true);
+    }
+
+    // Bagshot Row property rhythm: low hedges, garden grass and small planting.
+    for (int32 Index = 0; Index < 20; ++Index)
+    {
+        const float X = -2160.0f + static_cast<float>(Index) * 75.0f;
+        const float Y = -930.0f + 38.0f * FMath::Sin(static_cast<float>(Index) * 0.71f);
+        AddInstance(HedgeInstances, FVector(X,Y,8.0f),
+            FVector(0.58f,0.52f,0.56f), 2.0f + 4.0f * FMath::Sin(Index * 0.37f));
+    }
+    for (int32 Index = 0; Index < 16; ++Index)
+    {
+        const float X = -2070.0f + static_cast<float>(Index) * 94.0f;
+        const float Y = -1260.0f + ((Index % 2 == 0) ? -150.0f : 155.0f);
+        AddInstance(GrassInstances, FVector(X,Y,2.0f),
+            FVector(0.20f + 0.018f * static_cast<float>(Index % 4)),
+            static_cast<float>((Index * 31) % 360));
+    }
+
+    // Party Field boundary/entrance. The Party Tree and social contents already
+    // exist; this pass gives the field a readable edge and controlled entry.
+    const FVector PartyCenter(280.0f,1320.0f,0.0f);
+    for (int32 Index = 0; Index < 24; ++Index)
+    {
+        const float Angle = FMath::DegreesToRadians(static_cast<float>(Index) * 15.0f);
+        const FVector P = PartyCenter + FVector(
+            FMath::Cos(Angle) * 900.0f,
+            FMath::Sin(Angle) * 640.0f,
+            6.0f);
+        if (P.Y < PartyCenter.Y - 540.0f && FMath::Abs(P.X - PartyCenter.X) < 230.0f)
+        {
+            continue;
+        }
+        AddInstance(HedgeInstances, P, FVector(0.58f,0.52f,0.56f),
+            FMath::RadiansToDegrees(Angle) + 90.0f);
+    }
+    for (int32 Index = 0; Index < 20; ++Index)
+    {
+        const float Angle = FMath::DegreesToRadians(static_cast<float>(Index) * 18.0f + 7.0f);
+        const FVector P = PartyCenter + FVector(
+            FMath::Cos(Angle) * 770.0f,
+            FMath::Sin(Angle) * 520.0f,
+            2.0f);
+        AddInstance(GrassInstances, P, FVector(0.19f + 0.015f * (Index % 4)),
+            static_cast<float>((Index * 43) % 360));
+    }
+    SpawnHero(ProductionFarmGateMesh, PartyCenter + FVector(0.0f,-660.0f,0.0f),
+        FVector(0.78f), 0.0f, true);
+    SpawnHero(GardenArch, PartyCenter + FVector(0.0f,-735.0f,0.0f),
+        FVector(0.72f), 0.0f, true);
+
+    // Water + mill-yard: reinforce the existing mill/bridge shell with reeds, bank
+    // stepping stones and only a few hero props. Keep the stream corridor open.
+    for (int32 Index = 0; Index < 24; ++Index)
+    {
+        const float X = -1800.0f + static_cast<float>(Index) * 72.0f;
+        const float Side = (Index % 2 == 0) ? -1.0f : 1.0f;
+        const float Y = 85.0f + Side * (190.0f + 35.0f * static_cast<float>((Index / 2) % 3));
+        AddInstance(ReedInstances, FVector(X,Y,-2.0f),
+            FVector(0.42f + 0.035f * static_cast<float>(Index % 4)),
+            static_cast<float>((Index * 29) % 360));
+    }
+    for (int32 Index = 0; Index < 16; ++Index)
+    {
+        const float X = -1680.0f + static_cast<float>(Index) * 92.0f;
+        const float Y = 330.0f + ((Index % 2 == 0) ? -270.0f : 270.0f);
+        AddInstance(PathStoneInstances, FVector(X,Y,3.0f),
+            FVector(0.18f,0.14f,0.045f),
+            static_cast<float>((Index * 47) % 360));
+    }
+    SpawnHero(ProductionMillWheelMesh, FVector(-1370,430,35), FVector(0.84f), 0.0f, false);
+    SpawnHero(ProductionLoadedCartMesh, FVector(-1540,590,0), FVector(0.64f), 24.0f, true);
+    SpawnHero(ProductionBenchMesh, FVector(-860,430,0), FVector(0.64f), -8.0f, true);
+    SpawnHero(ProductionSignpostMesh, FVector(-760,120,0), FVector(0.66f), 12.0f, false);
+
+    // Bywater-facing eastern edge: a small readable cluster rather than pretending
+    // the entire canonical Bywater settlement sits inside the Hobbiton core.
+    const struct FEdgeHouse
+    {
+        FVector Location;
+        float Yaw;
+        float Scale;
+    } EdgeHouses[] = {
+        { FVector(1880, 760,0), -16.0f, 0.72f },
+        { FVector(2260,-640,0),  14.0f, 0.70f },
+        { FVector(2740, 620,0), -10.0f, 0.68f }
+    };
+    for (const FEdgeHouse& House : EdgeHouses)
+    {
+        SpawnHero(ProductionCottageHouseMesh, House.Location, FVector(House.Scale),
+            House.Yaw, true);
+    }
+    SpawnHero(PumpWell, FVector(2050,120,0), FVector(0.70f), 0.0f, true);
+    SpawnHero(ProduceStand, FVector(2360,120,0), FVector(0.64f), -8.0f, true);
+    SpawnHero(ProduceStand, FVector(2580,150,0), FVector(0.62f), 7.0f, true);
+
+    // Domestic lanes leading out of Hobbiton into the worked landscape.
+    for (int32 Index = 0; Index < 32; ++Index)
+    {
+        const float Alpha = static_cast<float>(Index) / 31.0f;
+        const float X = FMath::Lerp(1200.0f, 4700.0f, Alpha);
+        const float Side = (Index % 2 == 0) ? -1.0f : 1.0f;
+        const float Y = Side * (820.0f + 110.0f * static_cast<float>((Index / 2) % 3));
+        AddInstance(RuralFenceInstances, FVector(X,Y,4.0f),
+            FVector(0.66f + 0.025f * static_cast<float>(Index % 3)),
+            Side > 0.0f ? 4.0f : -4.0f);
+    }
+    for (int32 Index = 0; Index < 20; ++Index)
+    {
+        const float Alpha = static_cast<float>(Index) / 19.0f;
+        const float X = FMath::Lerp(1350.0f, 4500.0f, Alpha);
+        const float Side = (Index % 2 == 0) ? -1.0f : 1.0f;
+        const float Y = Side * (1110.0f + 95.0f * static_cast<float>((Index / 2) % 2));
+        AddInstance(HedgeInstances, FVector(X,Y,8.0f),
+            FVector(0.60f,0.54f,0.58f),
+            Side > 0.0f ? 2.0f : -2.0f);
+    }
+
+    // Orchard belt: broadleaf HISM + shrubs, with enough spacing to keep player and
+    // ambient-NPC sightlines/navigation clear.
+    for (int32 Index = 0; Index < 28; ++Index)
+    {
+        const int32 Row = Index / 7;
+        const int32 Col = Index % 7;
+        const FVector P(
+            5200.0f + static_cast<float>(Col) * 430.0f + 55.0f * (Row % 2),
+            1220.0f + static_cast<float>(Row) * 420.0f,
+            0.0f);
+        AddInstance(WoodlandTreeInstances, P,
+            FVector(0.62f + 0.045f * static_cast<float>(Index % 4)),
+            static_cast<float>((Index * 53) % 360));
+    }
+    for (int32 Index = 0; Index < 20; ++Index)
+    {
+        const float X = 5050.0f + static_cast<float>(Index % 10) * 330.0f;
+        const float Y = 1080.0f + static_cast<float>(Index / 10) * 1720.0f;
+        AddInstance(ShrubInstances, FVector(X,Y,3.0f),
+            FVector(0.28f + 0.02f * static_cast<float>(Index % 4)),
+            static_cast<float>((Index * 67) % 360));
+    }
+    SpawnHero(OrchardLadder, FVector(6500,1740,0), FVector(0.66f), 15.0f, true);
+    SpawnHero(OrchardLadder, FVector(7350,2160,0), FVector(0.62f), -11.0f, true);
+
+    // Working farm yard and lane edge.
+    for (int32 Index = 0; Index < 24; ++Index)
+    {
+        const float X = 6100.0f + static_cast<float>(Index) * 165.0f;
+        const float Side = (Index % 2 == 0) ? -1.0f : 1.0f;
+        const float Y = -1710.0f + Side * (360.0f + 55.0f * static_cast<float>((Index / 2) % 3));
+        AddInstance(RuralFenceInstances, FVector(X,Y,4.0f),
+            FVector(0.70f), Side > 0.0f ? 3.0f : -3.0f);
+    }
+    for (int32 Index = 0; Index < 24; ++Index)
+    {
+        const float X = 5900.0f + static_cast<float>(Index) * 170.0f;
+        const float Y = -1350.0f + 170.0f * FMath::Sin(static_cast<float>(Index) * 0.73f);
+        AddInstance(GrassInstances, FVector(X,Y,2.0f),
+            FVector(0.20f + 0.015f * static_cast<float>(Index % 5)),
+            static_cast<float>((Index * 41) % 360));
+    }
+
+    // Smaller garden patches around the Hobbiton core.
+    for (int32 Index = 0; Index < 16; ++Index)
+    {
+        const float Angle = FMath::DegreesToRadians(static_cast<float>(Index) * 22.5f);
+        const FVector P(
+            -350.0f + FMath::Cos(Angle) * 1350.0f,
+            150.0f + FMath::Sin(Angle) * 980.0f,
+            3.0f);
+        AddInstance(ShrubInstances, P,
+            FVector(0.25f + 0.02f * static_cast<float>(Index % 3)),
+            static_cast<float>((Index * 59) % 360));
+    }
+    for (int32 Index = 0; Index < 16; ++Index)
+    {
+        const float Angle = FMath::DegreesToRadians(static_cast<float>(Index) * 22.5f + 11.0f);
+        const FVector P(
+            -350.0f + FMath::Cos(Angle) * 1180.0f,
+            150.0f + FMath::Sin(Angle) * 810.0f,
+            2.0f);
+        AddInstance(GrassInstances, P,
+            FVector(0.19f + 0.014f * static_cast<float>(Index % 4)),
+            static_cast<float>((Index * 71) % 360));
+    }
+
+    // Clustered household props keep visual life high without actor-per-prop density.
+    TArray<FTransform> Barrels;
+    TArray<FTransform> Crates;
+    TArray<FTransform> Benches;
+    TArray<FTransform> FlowerBoxes;
+    Barrels.Reserve(10);
+    Crates.Reserve(10);
+    Benches.Reserve(8);
+    FlowerBoxes.Reserve(12);
+
+    const FVector HouseholdNodes[] = {
+        FVector(-1870,-760,0), FVector(-1480,-720,0), FVector(-1080,-700,0),
+        FVector(-690,-650,0), FVector(-260,-690,0), FVector(180,-620,0),
+        FVector(620,-690,0), FVector(1050,-620,0), FVector(1500,-520,0),
+        FVector(1960,-350,0)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(HouseholdNodes); ++Index)
+    {
+        const FVector& P = HouseholdNodes[Index];
+        Barrels.Emplace(
+            FRotator(0.0f, static_cast<float>((Index * 37) % 360), 0.0f),
+            P + FVector(0.0f,80.0f,0.0f),
+            FVector(0.52f + 0.03f * static_cast<float>(Index % 2)));
+        Crates.Emplace(
+            FRotator(0.0f, static_cast<float>((Index * 43) % 360), 0.0f),
+            P + FVector(55.0f,-65.0f,0.0f),
+            FVector(0.50f + 0.03f * static_cast<float>(Index % 3)));
+        if (Index < 8)
+        {
+            Benches.Emplace(
+                FRotator(0.0f, static_cast<float>((Index % 2 == 0) ? 6 : -7), 0.0f),
+                P + FVector(140.0f,20.0f,0.0f),
+                FVector(0.58f));
+        }
+    }
+    for (int32 Index = 0; Index < 12; ++Index)
+    {
+        const float X = -1850.0f + static_cast<float>(Index) * 300.0f;
+        const float Y = (Index % 2 == 0) ? 520.0f : -520.0f;
+        FlowerBoxes.Emplace(
+            FRotator(0.0f, static_cast<float>((Index * 19) % 30) - 15.0f, 0.0f),
+            FVector(X,Y,0.0f),
+            FVector(0.52f));
+    }
+    SpawnDetailCluster(ProductionBarrelMesh, TEXT("P1C01SettlementBarrels"), 700, 3600, Barrels);
+    SpawnDetailCluster(ProductionCrateMesh, TEXT("P1C01SettlementCrates"), 700, 3600, Crates);
+    SpawnDetailCluster(ProductionBenchMesh, TEXT("P1C01SettlementBenches"), 900, 4200, Benches);
+    SpawnDetailCluster(ProductionFlowerBoxMesh, TEXT("P1C01SettlementFlowerBoxes"), 650, 3200, FlowerBoxes);
+
+    // Sparse lane identity. Existing Party Field lighting stays untouched.
+    SpawnHero(ProductionLampPostMesh, FVector(1320,520,0), FVector(0.70f), 0.0f, false);
+    SpawnHero(ProductionLampPostMesh, FVector(2780,510,0), FVector(0.70f), 0.0f, false);
+    SpawnHero(ProductionSignpostMesh, FVector(1540,-180,0), FVector(0.66f), 12.0f, false);
+    SpawnHero(ProductionSignpostMesh, FVector(3180,-220,0), FVector(0.64f), -10.0f, false);
+    SpawnHero(Mailbox, FVector(-1780,-980,0), FVector(0.54f), 82.0f, false);
+    SpawnHero(Mailbox, FVector(-1020,-970,0), FVector(0.54f), 86.0f, false);
+    SpawnHero(WashLine, FVector(980,-910,0), FVector(0.62f), 7.0f, false);
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("P1C01_SHIRE_SETTLEMENT_COMPLETION hism=%d hismBudget=300 detailClusters=%d detailInstances=%d detailBudget=40 heroActors=%d heroBudget=32 bagshotHomes=4 partyBoundary=complete millYard=complete bywaterEdge=complete orchard=complete farmYard=complete writer=ShirePrototypeWorldBuilder"),
+        HismCount,
+        DetailClusterCount,
+        DetailInstanceCount,
+        HeroActorCount);
+}
+
+
 void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()
 {
     if (!GetWorld())
@@ -4747,6 +5126,7 @@ void AShirePrototypeWorldBuilder::BuildPrototypeWorld()
     SpawnPresentationCompositionPass();
     SpawnVisibleShireMegaWaveD();
     SpawnShireVisualFinishWave();
+    SpawnShireSettlementCompletionPass();
     SpawnWorldDensityDetailPass();
     SpawnBagEndHeroPass();
     SpawnPartySocialLoopPass();

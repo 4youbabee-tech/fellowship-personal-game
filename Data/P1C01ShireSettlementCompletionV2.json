@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "packet_id": "P1C01_SHIRE_SETTLEMENT_COMPLETION_V2",
+  "status": "SOURCE_IMPLEMENTED_VALIDATION_PENDING",
+  "runtime_chapter": "P1C01",
+  "runtime_writer": "AShirePrototypeWorldBuilder",
+  "source_basis": {
+    "story": [
+      "F1-01 Prologue & Ring history",
+      "F1-02 Shadow of the Past"
+    ],
+    "settlement_elements": [
+      "Bag End on the Hill",
+      "Bagshot Row",
+      "Party Field south of Bag End",
+      "gardens and turf-walled homes",
+      "Hobbiton/Bywater provisioning and domestic life",
+      "the Water, mill and bridge/crossing",
+      "farms, hedgerows, lanes and valley settlement"
+    ],
+    "state_rule": "Early P1C01 only; later Scouring damage is not imported early."
+  },
+  "visible_completion": [
+    "Bagshot Row identity",
+    "Party Field boundary and entrance",
+    "Water and mill-yard read",
+    "Hobbiton domestic lanes",
+    "Bywater-facing settlement edge",
+    "orchards and farm yards",
+    "lane lighting and signage",
+    "clustered household detail"
+  ],
+  "budget": {
+    "max_hism_instances": 300,
+    "max_detail_cluster_instances": 40,
+    "max_detail_cluster_actors": 4,
+    "max_hero_actors": 32
+  },
+  "architecture": {
+    "new_world_authority": false,
+    "per_instance_tick": false,
+    "synchronous_heavy_load": false,
+    "actor_per_prop_density": false,
+    "p1c02_runtime_opened": false,
+    "repeated_detail": "existing HISM components + bounded AWorldDetailCluster",
+    "population_owner": "ALivingWorldDirector",
+    "npc_context_owner": "UShireNPCContextSubsystem",
+    "quest_owner": "UShireQuestSubsystem"
+  },
+  "performance_target": {
+    "engine": "UE4.27.2",
+    "rhi": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "cpu": "i7 Gen6 class",
+    "ram_gb": 8,
+    "vram_gb_approx": 2
+  },
+  "evidence_boundary": "Source implementation only until exact-head CI and later direct PIE/device/visual/performance evidence."
+}

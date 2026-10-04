@@ -700,6 +700,60 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("Index) * 1.17f", scenic)
 
 
+
+    def test_p1c01_shire_settlement_completion_is_bounded_and_single_writer(self):
+        root = Path(__file__).resolve().parents[1]
+        contract = json.loads((root / "Data" / "P1C01ShireSettlementCompletionV2.json").read_text(encoding="utf-8"))
+        self.assertEqual(contract["runtime_chapter"], "P1C01")
+        self.assertEqual(contract["runtime_writer"], "AShirePrototypeWorldBuilder")
+        self.assertEqual(contract["budget"]["max_hism_instances"], 300)
+        self.assertEqual(contract["budget"]["max_detail_cluster_instances"], 40)
+        self.assertEqual(contract["budget"]["max_hero_actors"], 32)
+        self.assertFalse(contract["architecture"]["new_world_authority"])
+        self.assertFalse(contract["architecture"]["per_instance_tick"])
+        self.assertFalse(contract["architecture"]["synchronous_heavy_load"])
+        self.assertFalse(contract["architecture"]["actor_per_prop_density"])
+        self.assertFalse(contract["architecture"]["p1c02_runtime_opened"])
+
+        header = (root / "Source" / "ShireJourney" / "Public" / "World" / "ShirePrototypeWorldBuilder.h").read_text(encoding="utf-8")
+        source = (root / "Source" / "ShireJourney" / "Private" / "World" / "ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        self.assertIn("void SpawnShireSettlementCompletionPass();", header)
+
+        start = source.index("void AShirePrototypeWorldBuilder::SpawnShireSettlementCompletionPass()")
+        end = source.index("void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()", start)
+        body = source[start:end]
+
+        for token in (
+            "P1C01_SHIRE_SETTLEMENT_COMPLETION",
+            "BagshotHomes[]",
+            "P1C01SettlementBarrels",
+            "P1C01SettlementCrates",
+            "P1C01SettlementBenches",
+            "P1C01SettlementFlowerBoxes",
+            "hismBudget=300",
+            "heroBudget=32",
+            "bagshotHomes=4",
+            "millYard=complete",
+            "bywaterEdge=complete",
+            "orchard=complete",
+            "farmYard=complete",
+        ):
+            self.assertIn(token, body)
+
+        for forbidden in (
+            "LoadObject<",
+            "StaticLoadObject",
+            "RequestSyncLoad",
+            "SpawnActor<ALivingWorldDirector>",
+            "SpawnActor<AShireAmbientNPC>",
+            'TEXT("P1C02")',
+        ):
+            self.assertNotIn(forbidden, body)
+
+        build = source[source.index("void AShirePrototypeWorldBuilder::BuildPrototypeWorld()"):]
+        self.assertLess(build.index("SpawnShireVisualFinishWave();"), build.index("SpawnShireSettlementCompletionPass();"))
+        self.assertLess(build.index("SpawnShireSettlementCompletionPass();"), build.index("SpawnWorldDensityDetailPass();"))
+
     def test_p1c01_shire_visual_finish_wave_is_bounded_and_single_writer(self):
         root = Path(__file__).resolve().parents[1]
         contract = json.loads((root / "Data" / "P1C01ShireVisualFinishWaveV1.json").read_text(encoding="utf-8"))

@@ -4171,3 +4171,15 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - PhysicsAsset auto-generation still emits the small-bone warning and remains a separate sanity gate; current movement collision is capsule-owned.
 - CI hardening in the follow-up source packet adds the import commandlet to the dedicated Wave2 trigger and removes filename-based transient cleanup in favor of deleting only generated untracked Frodo `.uasset` files.
 - Status: **TECHNICAL WINNER EVIDENCED / CI-HARDENING EXACT-HEAD VALIDATION PENDING**. Deformation, retarget, AnimBP, runtime, PIE/device/rendered-visual/FPS acceptance remains pending.
+
+
+## 2026-10-04 - Shire Settlement Completion V2 source implementation
+
+- Added `SpawnShireSettlementCompletionPass()` under the existing `AShirePrototypeWorldBuilder` authority. The pass runs after Shire Visual Finish Wave and before generic density.
+- Canon/source-grounded settlement gaps addressed without importing later Scouring damage into early P1C01: Bagshot Row identity, Party Field boundary/entrance, Water + mill yard, domestic Hobbiton lanes, Bywater-facing edge, orchards/farm yards, lane identity and household clutter.
+- Bagshot Row receives four authored production-mesh homes plus bounded hedges/gardens. The Party Tree and existing Party Social Loop are preserved; this packet adds field edges/entrance only.
+- Water/mill read is reinforced around the existing mill/bridge with reeds, stepping stones, wheel/cart/bench/sign props while keeping the stream corridor open.
+- Eastern village edge adds only three bounded cottages + well/produce stands as the Bywater-facing transition; it does not falsely claim the entire canonical Bywater settlement is inside the Hobbiton core.
+- Repeated visual detail is capped at 300 HISM instances plus 40 instances inside four bounded WorldDetailCluster HISM actors. Hero/static landmark budget is capped at 32 actors. No per-instance Tick, no synchronous heavy load and no new world authority were introduced.
+- Machine-readable contract: `Data/P1C01ShireSettlementCompletionV2.json`; source regression coverage added to `Scripts/test_source_contracts.py`.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC + UE4 BUILD VALIDATION PENDING**. No PIE/device/rendered-visual/FPS acceptance is claimed.
