@@ -3947,6 +3947,250 @@ void AShirePrototypeWorldBuilder::SpawnVisibleShireMegaWaveD()
 
 
 
+
+
+void AShirePrototypeWorldBuilder::SpawnShireVisualFinishWave()
+{
+    int32 TerrainSilhouetteInstances = 0;
+    int32 BagEndFinishInstances = 0;
+    int32 HobbitonFinishInstances = 0;
+    int32 RoadBreakupInstances = 0;
+    int32 WoodlandLayerInstances = 0;
+    int32 FerryFinishInstances = 0;
+    int32 FerryHeroActors = 0;
+
+    auto AddInstance = [](UHierarchicalInstancedStaticMeshComponent* Component,
+        const FVector& Location, const FVector& Scale, float Yaw)
+    {
+        if (!Component || !Component->GetStaticMesh())
+        {
+            return false;
+        }
+        Component->AddInstance(FTransform(FRotator(0.0f, Yaw, 0.0f), Location, Scale));
+        return true;
+    };
+
+    struct FVisualFinishPlacement
+    {
+        FVector Location;
+        FVector Scale;
+        float Yaw;
+    };
+
+    const FVisualFinishPlacement TerrainRidges[] = {
+        { FVector( 2450,-1880,-118), FVector(2.10f,1.48f,1.02f),  13.0f },
+        { FVector( 3650, 1760,-120), FVector(2.28f,1.56f,1.06f), -11.0f },
+        { FVector( 5050,-1810,-122), FVector(2.34f,1.60f,1.08f),   9.0f },
+        { FVector( 6500, 1840,-120), FVector(2.42f,1.64f,1.10f), -12.0f },
+        { FVector( 8050,-1760,-118), FVector(2.26f,1.54f,1.05f),  14.0f },
+        { FVector( 9500, 1710,-120), FVector(2.36f,1.60f,1.08f), -10.0f },
+        { FVector(11100,-1830,-122), FVector(2.44f,1.66f,1.10f),  11.0f },
+        { FVector(12600, 1810,-122), FVector(2.52f,1.70f,1.12f), -13.0f },
+        { FVector(14100,-1850,-124), FVector(2.48f,1.68f,1.12f),  10.0f },
+        { FVector(15600, 1790,-122), FVector(2.54f,1.72f,1.13f), -12.0f },
+        { FVector(17100,-1810,-120), FVector(2.46f,1.66f,1.10f),   9.0f },
+        { FVector(18600, 1760,-118), FVector(2.34f,1.58f,1.06f), -10.0f },
+        { FVector(19950,-1700,-114), FVector(2.22f,1.52f,1.04f),  11.0f },
+        { FVector(21050, 1580,-110), FVector(2.10f,1.46f,1.02f), -12.0f },
+        { FVector(21850,-1520,-108), FVector(2.02f,1.42f,1.00f),   8.0f },
+        { FVector(24750, 1220,-100), FVector(2.18f,1.48f,1.04f), -15.0f }
+    };
+    for (const FVisualFinishPlacement& P : TerrainRidges)
+    {
+        if (AddInstance(GeographySlopeInstances, P.Location, P.Scale, P.Yaw))
+        {
+            ++TerrainSilhouetteInstances;
+        }
+    }
+
+    const FVisualFinishPlacement BagEndHedges[] = {
+        { FVector(-2760,-820,12), FVector(0.74f,0.64f,0.68f),  22.0f },
+        { FVector(-2580,-910,12), FVector(0.70f,0.62f,0.66f),  15.0f },
+        { FVector(-2380,-940,12), FVector(0.68f,0.60f,0.64f),   8.0f },
+        { FVector(-1840,-860,12), FVector(0.72f,0.62f,0.66f), -14.0f },
+        { FVector(-2720, 250,12), FVector(0.70f,0.62f,0.66f), -20.0f },
+        { FVector(-2520, 330,12), FVector(0.66f,0.60f,0.64f), -12.0f },
+        { FVector(-2020, 350,12), FVector(0.68f,0.60f,0.64f),   9.0f },
+        { FVector(-1820, 280,12), FVector(0.72f,0.62f,0.66f),  16.0f }
+    };
+    for (const FVisualFinishPlacement& P : BagEndHedges)
+    {
+        if (AddInstance(HedgeInstances, P.Location, P.Scale, P.Yaw))
+        {
+            ++BagEndFinishInstances;
+        }
+    }
+    for (int32 Index = 0; Index < 16; ++Index)
+    {
+        const float Angle = FMath::DegreesToRadians(-150.0f + static_cast<float>(Index) * 19.0f);
+        const float Radius = 690.0f + 65.0f * static_cast<float>(Index % 3);
+        const FVector P(-2240.0f + FMath::Cos(Angle) * Radius, -470.0f + FMath::Sin(Angle) * Radius, 4.0f);
+        const float S = 0.18f + 0.022f * static_cast<float>(Index % 4);
+        if (AddInstance(ShrubInstances, P, FVector(S * 1.16f, S, S * 0.78f), static_cast<float>((Index * 43) % 360)))
+        {
+            ++BagEndFinishInstances;
+        }
+    }
+    for (int32 Index = 0; Index < 16; ++Index)
+    {
+        const float Alpha = static_cast<float>(Index) / 15.0f;
+        FVector P = FMath::Lerp(FVector(-1650.0f,-520.0f,3.0f), FVector(-2130.0f,-500.0f,3.0f), Alpha);
+        P.Y += (Index % 2 == 0 ? -145.0f : 145.0f);
+        const float S = 0.20f + 0.015f * static_cast<float>(Index % 5);
+        if (AddInstance(GrassInstances, P, FVector(S), static_cast<float>((Index * 29) % 360)))
+        {
+            ++BagEndFinishInstances;
+        }
+    }
+
+    const FVisualFinishPlacement HobbitonHedges[] = {
+        { FVector(-1700, 1040,12), FVector(0.78f,0.70f,0.72f),  10.0f },
+        { FVector(-1320, 1120,12), FVector(0.74f,0.68f,0.70f),  -8.0f },
+        { FVector( -900, 1070,12), FVector(0.76f,0.68f,0.70f),   7.0f },
+        { FVector( -450, 1140,12), FVector(0.72f,0.66f,0.68f), -10.0f },
+        { FVector(   40, 1080,12), FVector(0.76f,0.68f,0.70f),   8.0f },
+        { FVector(  520, 1120,12), FVector(0.74f,0.66f,0.68f),  -7.0f },
+        { FVector(-1540,-1100,12), FVector(0.78f,0.70f,0.72f), -10.0f },
+        { FVector(-1080,-1160,12), FVector(0.74f,0.68f,0.70f),   8.0f },
+        { FVector( -570,-1110,12), FVector(0.76f,0.68f,0.70f),  -7.0f },
+        { FVector(  -60,-1160,12), FVector(0.72f,0.66f,0.68f),  10.0f },
+        { FVector(  510,-1100,12), FVector(0.76f,0.68f,0.70f),  -8.0f },
+        { FVector( 1050,-1040,12), FVector(0.74f,0.66f,0.68f),   7.0f }
+    };
+    for (const FVisualFinishPlacement& P : HobbitonHedges)
+    {
+        if (AddInstance(HedgeInstances, P.Location, P.Scale, P.Yaw))
+        {
+            ++HobbitonFinishInstances;
+        }
+    }
+    for (int32 Index = 0; Index < 12; ++Index)
+    {
+        const float X = -1660.0f + static_cast<float>(Index) * 245.0f;
+        const float Y = (Index % 2 == 0 ? -1.0f : 1.0f) * (1360.0f + 70.0f * static_cast<float>(Index % 3));
+        if (AddInstance(RuralFenceInstances, FVector(X,Y,4.0f), FVector(0.72f + 0.03f * static_cast<float>(Index % 3)),
+            static_cast<float>((Index % 2 == 0 ? 4 : -5))))
+        {
+            ++HobbitonFinishInstances;
+        }
+    }
+
+    for (int32 Index = 0; Index < 24; ++Index)
+    {
+        const float Alpha = static_cast<float>(Index) / 23.0f;
+        const float X = FMath::Lerp(1800.0f, 10500.0f, Alpha);
+        const float Side = (Index % 2 == 0) ? -1.0f : 1.0f;
+        const float Y = Side * (525.0f + 55.0f * static_cast<float>((Index / 2) % 3))
+            + 70.0f * FMath::Sin(static_cast<float>(Index) * 0.73f);
+        const float S = 0.15f + 0.018f * static_cast<float>(Index % 4);
+        if (AddInstance(PathStoneInstances, FVector(X,Y,3.0f), FVector(S * 1.35f,S,0.052f),
+            static_cast<float>((Index * 47) % 360)))
+        {
+            ++RoadBreakupInstances;
+        }
+    }
+    for (int32 Index = 0; Index < 16; ++Index)
+    {
+        const float Alpha = static_cast<float>(Index) / 15.0f;
+        const float X = FMath::Lerp(2400.0f, 10200.0f, Alpha);
+        const float Side = (Index % 2 == 0) ? -1.0f : 1.0f;
+        const float Y = Side * (700.0f + 80.0f * static_cast<float>(Index % 3));
+        const float S = 0.18f + 0.020f * static_cast<float>(Index % 4);
+        if (AddInstance(GrassInstances, FVector(X,Y,2.0f), FVector(S), static_cast<float>((Index * 31) % 360)))
+        {
+            ++RoadBreakupInstances;
+        }
+    }
+
+    for (int32 Index = 0; Index < 24; ++Index)
+    {
+        const float Alpha = static_cast<float>(Index) / 23.0f;
+        const float X = FMath::Lerp(11200.0f, 19800.0f, Alpha);
+        const float Side = (Index % 2 == 0) ? -1.0f : 1.0f;
+        const float Y = Side * (1500.0f + 190.0f * static_cast<float>((Index / 2) % 4))
+            + 90.0f * FMath::Sin(static_cast<float>(Index) * 0.61f);
+        const float S = 0.66f + 0.055f * static_cast<float>(Index % 5);
+        if (AddInstance(WoodlandTreeInstances, FVector(X,Y,0.0f), FVector(S), static_cast<float>((Index * 59) % 360)))
+        {
+            ++WoodlandLayerInstances;
+        }
+    }
+    for (int32 Index = 0; Index < 24; ++Index)
+    {
+        const float Alpha = static_cast<float>(Index) / 23.0f;
+        const float X = FMath::Lerp(11350.0f, 19950.0f, Alpha);
+        const float Side = (Index % 2 == 0) ? -1.0f : 1.0f;
+        const float Y = Side * (880.0f + 115.0f * static_cast<float>((Index / 2) % 4))
+            + 65.0f * FMath::Sin(static_cast<float>(Index) * 0.91f);
+        const float S = 0.48f + 0.042f * static_cast<float>(Index % 4);
+        if (AddInstance(FernInstances, FVector(X,Y,2.0f), FVector(S), static_cast<float>((Index * 71) % 360)))
+        {
+            ++WoodlandLayerInstances;
+        }
+    }
+
+    const FVisualFinishPlacement FerryBanks[] = {
+        { FVector(21700,-1620,-56), FVector(2.70f,1.42f,1.02f),   4.0f },
+        { FVector(22280,-1680,-54), FVector(2.82f,1.48f,1.04f),  -3.0f },
+        { FVector(22900,-1700,-52), FVector(2.90f,1.52f,1.06f),   2.0f },
+        { FVector(23700,-1680,-52), FVector(2.92f,1.54f,1.07f),  -2.0f },
+        { FVector(24400,-1620,-54), FVector(2.82f,1.48f,1.04f),   3.0f },
+        { FVector(24900,-1540,-56), FVector(2.68f,1.40f,1.02f),  -4.0f },
+        { FVector(21750,  820,-50), FVector(2.78f,1.44f,1.04f), 177.0f },
+        { FVector(22350,  900,-48), FVector(2.94f,1.52f,1.08f), 181.0f },
+        { FVector(23050,  980,-44), FVector(3.04f,1.58f,1.12f), 179.0f },
+        { FVector(23800, 1040,-40), FVector(3.12f,1.62f,1.16f), 182.0f },
+        { FVector(24500, 1120,-36), FVector(3.18f,1.66f,1.18f), 178.0f },
+        { FVector(25100, 1200,-32), FVector(3.22f,1.68f,1.20f), 182.0f }
+    };
+    for (const FVisualFinishPlacement& P : FerryBanks)
+    {
+        if (AddInstance(GeographyRiverBankInstances, P.Location, P.Scale, P.Yaw))
+        {
+            ++FerryFinishInstances;
+        }
+    }
+    for (int32 Index = 0; Index < 32; ++Index)
+    {
+        const int32 BankIndex = Index % 16;
+        const float Alpha = static_cast<float>(BankIndex) / 15.0f;
+        const float X = FMath::Lerp(ShireLayout::FerryX - 2100.0f, ShireLayout::FerryX + 1050.0f, Alpha);
+        const float BaseY = Index < 16 ? -1740.0f : 900.0f;
+        const float Y = BaseY + 85.0f * FMath::Sin(static_cast<float>(Index) * 0.83f);
+        const float S = 0.50f + 0.040f * static_cast<float>(Index % 5);
+        if (AddInstance(ReedInstances, FVector(X,Y,-3.0f), FVector(S), static_cast<float>((Index * 37) % 360)))
+        {
+            ++FerryFinishInstances;
+        }
+    }
+
+    auto SpawnHero = [this, &FerryHeroActors](UStaticMesh* Mesh,
+        const FVector& Location, const FVector& Scale, float Yaw)
+    {
+        if (!Mesh)
+        {
+            return;
+        }
+        if (SpawnShape(Mesh, Location, Scale, FLinearColor::White, FRotator(0.0f, Yaw, 0.0f), false))
+        {
+            ++FerryHeroActors;
+        }
+    };
+
+    SpawnHero(ProductionLampPostMesh, FVector(22950, 620,0), FVector(0.82f), -4.0f);
+    SpawnHero(ProductionLampPostMesh, FVector(24250, 760,0), FVector(0.82f),  5.0f);
+    SpawnHero(ProductionCommonPathMarkerMesh, FVector(23920,1160,0), FVector(0.78f), 14.0f);
+    SpawnHero(ProductionCommonPathMarkerMesh, FVector(24720,1330,0), FVector(0.74f), 19.0f);
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("P1C01_SHIRE_VISUAL_FINISH_WAVE terrain=%d bagEnd=%d hobbiton=%d roadBreakup=%d woodland=%d ferry=%d ferryHeroActors=%d hismBudget=212 heroBudget=4 writer=ShirePrototypeWorldBuilder"),
+        TerrainSilhouetteInstances, BagEndFinishInstances, HobbitonFinishInstances,
+        RoadBreakupInstances, WoodlandLayerInstances, FerryFinishInstances, FerryHeroActors);
+}
+
+
 void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()
 {
     if (!GetWorld())
@@ -4502,6 +4746,7 @@ void AShirePrototypeWorldBuilder::BuildPrototypeWorld()
     SpawnNaturalRouteMegaPass();
     SpawnPresentationCompositionPass();
     SpawnVisibleShireMegaWaveD();
+    SpawnShireVisualFinishWave();
     SpawnWorldDensityDetailPass();
     SpawnBagEndHeroPass();
     SpawnPartySocialLoopPass();

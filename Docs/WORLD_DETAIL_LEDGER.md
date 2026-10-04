@@ -1188,3 +1188,14 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Performance contract: repeated detail through existing HISM/ISM components only; explicit culling; no per-instance Tick; no actor-per-prop density wave; no synchronous heavy loading; no new hard runtime references.
 - Asset rule: reuse resident production meshes/materials first. Any missing external visual material must pass provenance/license and PNG/TGA/channel-packed/LOD/VRAM review before admission.
 - Validation boundary: SOURCE-GROUNDED PLAN ONLY. No PIE/device/rendered-visual/FPS acceptance is claimed until direct evidence exists.
+
+
+## 2026-10-04 - P1C01 SHIRE_VISUAL_FINISH_WAVE registered before implementation
+
+- Scope: existing P1C01 only; visible-world finish packet; no P1C02 and no second world authority.
+- Source anchors: F1-02 Bag End/Shire + F1-03 Shire roads/Bucklebury. The route supports rolling/green land, tangled woodland, ordered open fields with fences/ditches, then the well-kept Ferry approach, reeds, broad river and a steeper opposite bank with an uphill path silhouette.
+- Runtime authority remains AShirePrototypeWorldBuilder. ALivingWorldDirector remains ambient population/pooling authority; UShireNPCContextSubsystem remains bounded NPC context; UShireQuestSubsystem remains story truth.
+- Visible objectives: terrain silhouette rhythm; stronger Bag End camera framing; Hobbiton property separation; low-cost road/verge breakup; foreground/midground woodland layering; final Ferry bank/path framing; anti-prototype cleanup.
+- Performance contract: maximum new budget **212 HISM instances + 4 limited hero actors**; resident meshes only; existing culling; no per-instance Tick; no actor-per-prop density; no synchronous heavy loading; traversal corridor remains open.
+- VRAM rule: no new texture set/material permutation in this packet. Surface variation is geometric/verge breakup only pending a separately budgeted PNG/TGA/channel-packed material pass for the ~2 GB VRAM target.
+- Evidence boundary: REGISTERED / SOURCE-GROUNDED PLAN before implementation. No PIE/device/rendered-visual/FPS acceptance.

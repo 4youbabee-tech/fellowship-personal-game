@@ -133,6 +133,7 @@ private:
     void SpawnNaturalRouteMegaPass();
     void SpawnPresentationCompositionPass();
     void SpawnVisibleShireMegaWaveD();
+    void SpawnShireVisualFinishWave();
     void SpawnWorldDensityDetailPass();
     void SpawnBagEndHeroPass();
     void SpawnPartySocialLoopPass();

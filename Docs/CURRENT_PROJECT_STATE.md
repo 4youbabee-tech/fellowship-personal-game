@@ -4120,3 +4120,13 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Machine-readable budget contract: `Data/P1C01VisibleShireMegaWaveDV1.json`.
 - Regression guard added to `test_source_contracts.py` for budgets, call order, single-writer boundaries, no sync loading and no P1C02 runtime tokens.
 - Status: **SOURCE-IMPLEMENTED / STATIC-VALIDATION PENDING EXACT-HEAD PRE-UNREAL + UE4 BUILD**. No PIE/device/rendered-visual/FPS acceptance is claimed.
+
+
+## 2026-10-04 - P1C01 Shire Visual Finish Wave source implementation
+
+- Added SpawnShireVisualFinishWave() to the existing AShirePrototypeWorldBuilder after Visible Shire Mega Wave D and before generic density detail.
+- Bounded visible budget: **212 HISM placements + 4 limited Ferry hero actors**, resident production meshes/components only.
+- Terrain: 16 staggered route shoulders. Bag End: 40 hedge/shrub/grass. Hobbiton: 24 hedge/fence. Road/verge: 40 path-stone/grass. Woodland: 48 tree/fern. Ferry: 44 bank/reed + 4 lamp/path-marker hero actors.
+- No duplicate writer, population ownership change, per-instance Tick, synchronous heavy load, or actor-per-prop density wave. P1C02 remains closed.
+- Machine-readable contract: Data/P1C01ShireVisualFinishWaveV1.json; regression guard added to Scripts/test_source_contracts.py.
+- Status: **SOURCE-IMPLEMENTED / STATIC-VALIDATION PENDING EXACT-HEAD PRE-UNREAL + UE4 BUILD**. No PIE/device/rendered-visual/FPS acceptance.

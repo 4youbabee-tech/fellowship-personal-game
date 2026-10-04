@@ -3201,3 +3201,25 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Exact-head Pre-Unreal | PENDING | PR validation required |
 | Exact-head UE4.27.2 build | PENDING | PR validation required |
 | PIE visual/pacing/device/FPS | NOT ACCEPTED | direct evidence still required |
+
+
+## 2026-10-04 - P1C01 Shire Visual Finish Wave
+
+| Visible domain | Status | Evidence boundary |
+|---|---|---|
+| Ledger registration before code | COMPLETE | P1C01 SHIRE_VISUAL_FINISH_WAVE |
+| Runtime writer | PRESERVED | AShirePrototypeWorldBuilder only |
+| Terrain silhouette refinement | SOURCE-IMPLEMENTED | 16 HISM route shoulders |
+| Bag End final framing | SOURCE-IMPLEMENTED | 40 HISM placements |
+| Hobbiton property identity | SOURCE-IMPLEMENTED | 24 HISM placements |
+| Road/verge breakup | SOURCE-IMPLEMENTED | 40 HISM placements |
+| Woodland layering | SOURCE-IMPLEMENTED | 48 HISM placements |
+| Ferry final framing | SOURCE-IMPLEMENTED | 44 HISM placements + 4 bounded hero actors |
+| New texture/material memory | NONE | geometry/verge breakup only |
+| New world authority | NONE | existing writer preserved |
+| New synchronous heavy load | NONE | resident meshes/components only |
+| New per-instance Tick | NONE | HISM architecture |
+| P1C02 runtime expansion | NOT OPENED | P1C01 only |
+| Exact-head Pre-Unreal | PENDING | PR validation required |
+| Exact-head UE4.27.2 build | PENDING | PR validation required |
+| PIE visual/pacing/device/FPS | NOT ACCEPTED | direct evidence required |
