@@ -1265,3 +1265,18 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Architecture remains unchanged: `AShirePrototypeWorldBuilder` world writer, `ALivingWorldDirector` population/pooling, `UShireNPCContextSubsystem` context, `UShireQuestSubsystem` story truth; repeated detail HISM/AWorldDetailCluster; no synchronous heavy loading; no P1C02.
 - Branch policy: `production/p1c01-definitive-chapter-closeout-2026-10-04` is the single active P1C01 closeout branch. Continue by sequential commits on this branch rather than opening a branch per sub-packet.
 - Evidence boundary: REGISTERED + RENDERED DEFECT EVIDENCE. No PIE/device/performance/Gate 6/7 acceptance.
+
+
+## 2026-10-04 - P1C01 SHIRE_LOCAL_MATERIAL_AND_GROUND_TILING_ROOT_FIX registered before implementation
+
+- Trigger evidence: rendered artifact run `37207780989` shows a systemic flat/dark/grey read across the ground, distant terrain and repeated woodland despite a successful production import.
+- Import evidence rules out a missing-import blanket failure: `376 files, 0 failures`, `161/161` requested albedo bindings bound, and `229` tracked material packages with zero missing persistence files.
+- Source audit isolates two causal presentation problems:
+  - repeated Shire geography/woodland currently uses shared Common meshes whose source materials are flat-color and have no authored UVs: Common Terraced Hill = `Turf`, Village Slope = `Turf`, River Bank = `RiverMud`, Broadleaf Tree = `Bark/Foliage`;
+  - the visible Shire ground uses one `SM_ShGroundBlock` scaled to approximately 34,000 x 13,000 cm while its top UV spans only 0..1, stretching one grass texture over most of the chapter floor.
+- Root-fix plan is Shire-local; do **not** mutate `CommonLandscapeMaterials.mtl` globally because Common assets are shared by other chapters.
+- Repeated Common components in P1C01 will receive component-level overrides from already-resident Shire textured material instances (`Grass/Earth/Bark/Leaves/Wood`) via `ResolveResidentMaterial`; no synchronous runtime load is introduced.
+- The one giant visible production ground actor will be replaced by one non-colliding HISM owner with a bounded 34 x 13 grid = 442 `SM_ShGroundBlock` instances. The hidden deterministic collision foundation remains the collision authority. This increases texture repetition/readability without actor-per-tile cost or extra texture memory.
+- Garden soil remains a dedicated HISM and will explicitly use the Shire Earth material instead of inheriting the ground block's Grass material.
+- Performance boundary: one additional HISM component, 442 trivial 12-triangle tiles, existing resident meshes/textures only, no per-instance Tick, no new movable lights, no new world authority.
+- Evidence boundary: SOURCE-GROUNDED ROOT-FIX PLAN. It is not visual acceptance; a fresh exact-head render must prove whether the grey/flat defect is materially improved.
