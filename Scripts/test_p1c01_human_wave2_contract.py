@@ -73,6 +73,9 @@ class HumanWave2ContractTests(unittest.TestCase):
         ):
             self.assertIn(token,probe)
 
+        commandlet=(root/"Source"/"ShireJourneyEditorTools"/"Private"/"ShireProductionImportCommandlet.cpp").read_text(encoding="utf-8")
+        self.assertIn("bUseT0AsRefPose = true",commandlet)
+        self.assertIn("use-t0-ref-pose=yes",commandlet)
         workflow=(root/".github"/"workflows"/"p1c01-human-wave2.yml").read_text(encoding="utf-8")
         self.assertIn("Hosted CC0 human source + Blender normalization",workflow)
         self.assertIn("UE4.27.2 Human Wave 2 skeletal gate",workflow)

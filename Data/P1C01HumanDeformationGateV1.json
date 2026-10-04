@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "gate_id": "P1C01_FRODO_STATIC_DEFORMATION_GATE_V1",
-  "status": "RUN33_UPPERLEG_ALIAS_RESOLVER_ROOT_FIX_IMPLEMENTED",
+  "status": "RUN34_T0_REF_POSE_REIMPORT_ROOT_FIX_IMPLEMENTED",
   "runtime_chapter": "P1C01",
   "predecessor": {
     "technical_gate": "Human Wave 2 UE4 technical winner",
@@ -86,5 +86,10 @@
     "normalized_derivative_identity": "SHA256 must differ from raw source before UE4 admission.",
     "kaykit_intake": "Direct immutable raw FBX endpoints because revision ZIP omits FBX/LFS payloads; each raw SHA256 must match historical identity, then normalized derivative SHA must differ before admission.",
     "semantic_alias_fix": "upperleg is a naming alias for required thigh semantics; requirement for weighted left/right thigh remains mandatory."
+  },
+  "ue4_hard_gate_policy": {
+    "use_t0_as_ref_pose_remediation": true,
+    "missing_bind_pose_bones_still_hard_reject": true,
+    "rationale": "Use T0 as ref pose is an import normalization requested by UE4.27, not an acceptance waiver. Any residual bind-pose warning still rejects the candidate."
   }
 }

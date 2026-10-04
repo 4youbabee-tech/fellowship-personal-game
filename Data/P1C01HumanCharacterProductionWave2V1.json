@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "wave_id": "P1C01_HUMAN_CHARACTER_PRODUCTION_WAVE_2_V1",
-  "status": "RUN33_KAYKIT_UPPERLEG_SEMANTIC_ALIAS_ROOT_FIX_IMPLEMENTED",
+  "status": "RUN34_UE4_T0_REFERENCE_POSE_IMPORT_REMEDIATION_IMPLEMENTED",
   "runtime_chapter": "P1C01",
   "target_character": "FRODO",
   "role": "HUMAN_SKELETAL_SOURCE_FACTORY_NOT_FINAL_LIKENESS",
@@ -250,5 +250,21 @@
     "foot": [
       "foot"
     ]
+  },
+  "latest_ue4_failure": {
+    "workflow_run": 37236597874,
+    "exact_head": "3dd5fe992910596895a93d9737a4c5521f8ac0e8",
+    "hosted_winner": "Rogue normalized derivative passed hosted weighted-joint, hierarchy, armature-link and nontrivial deformation preflight.",
+    "normalized_sha256": "195aed35323bcd87675e6b48ed9f6f0fe94bb249b8c86c38fc0401c30083289a",
+    "ue4_import": "skeletal-registered=yes; skeletal-bones=48; linked USkeleton valid; 377 files / 0 import failures",
+    "rejection": "MISSING_BIND_POSE_BONES",
+    "exact_log_guidance": "UE4.27 requested Use T0 as ref pose or adding bones to bind pose.",
+    "disposition": "Set UFbxSkeletalMeshImportData::bUseT0AsRefPose=true for character-rig FBX imports; keep MISSING_BIND_POSE_BONES as a hard rejection if warning remains."
+  },
+  "ue4_import_remediation": {
+    "use_t0_as_ref_pose": true,
+    "scope": "Characters/Rigs/*.fbx only in editor production import commandlet",
+    "gate_change": "NONE",
+    "acceptance_rule": "The warning must actually disappear. Skeletal registration, bones, linked skeleton, smoothing, bind pose, UV and deformation gates remain mandatory."
   }
 }

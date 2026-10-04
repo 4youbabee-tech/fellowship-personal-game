@@ -1204,8 +1204,16 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             ImportOptions->bImportAnimations = false;
             ImportOptions->bImportMaterials = false;
             ImportOptions->bImportTextures = false;
+            if (ImportOptions->SkeletalMeshImportData)
+            {
+                // Blender-normalized technical candidates may have a valid animated T0 pose
+                // while FBX bind-pose metadata omits non-skin cluster bones. UE4.27 itself
+                // recommends T0-as-reference for this case. The external hard gate still
+                // rejects any remaining MISSING_BIND_POSE_BONES warning after import.
+                ImportOptions->SkeletalMeshImportData->bUseT0AsRefPose = true;
+            }
             Task->Options = ImportOptions;
-            UE_LOG(LogTemp, Display, TEXT("ShireProductionImport: skeletal FBX import file=%s destination=%s asset=%s"),
+            UE_LOG(LogTemp, Display, TEXT("ShireProductionImport: skeletal FBX import file=%s destination=%s asset=%s use-t0-ref-pose=yes"),
                 *Filename, *DestinationPath, *Task->DestinationName);
         }
         else if (SourceExtension == TEXT("fbx"))

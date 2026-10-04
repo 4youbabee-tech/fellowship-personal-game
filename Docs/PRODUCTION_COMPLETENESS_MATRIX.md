@@ -3669,3 +3669,18 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Rogue zero-weight ratio | 0.3366 / WITHIN 0.35 CEILING |
 | RogueHooded / Knight zero-weight ratio | ABOVE CEILING / REJECTED |
 | Fresh exact-head deformation proof | PENDING |
+
+
+## 2026-10-04 - KayKit Rogue UE4 bind-pose remediation
+
+| Control | State |
+|---|---|
+| Hosted Rogue deformation preflight | PASS |
+| Rogue normalized SHA | `195aed35323bcd87675e6b48ed9f6f0fe94bb249b8c86c38fc0401c30083289a` |
+| UE4 skeletal registration | PASS / 48 bones |
+| Linked USkeleton | PASS |
+| UE4 import batch | 377 files / 0 failures |
+| Bind-pose hard gate | REJECTED |
+| UE4-recommended T0 reference pose | SOURCE-IMPLEMENTED |
+| Bind-pose gate weakened | NO |
+| Fresh exact-head compile/UE4 proof | PENDING |

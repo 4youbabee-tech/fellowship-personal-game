@@ -4430,3 +4430,13 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Root fix adds `upperleg` as an alias in **both** the hosted deformation preflight and the later Wave3 deformation gate. This does **not** weaken the requirement; left/right thigh still must exist, be deform bones, carry nonzero vertex influence, satisfy hierarchy, and move geometry under pose stress.
 - Rogue already meets the existing zero-weight ratio ceiling (0.3366 <= 0.35); RogueHooded and Knight remain above that ceiling and therefore stay rejected unless their actual normalized payload independently meets the same threshold later.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD REVALIDATION PENDING**.
+
+
+## 2026-10-04 - Run #34 UE4 T0 reference-pose remediation
+
+- Exact-head `3dd5fe992910596895a93d9737a4c5521f8ac0e8` produced the first hosted KayKit winner: **Rogue** passed the hosted weighted-joint/deformation gate; RogueHooded and Knight remained rejected by the unchanged zero-weight ratio ceiling.
+- UE4.27 then imported the normalized Rogue as a skeletal mesh with **48 reference bones**, a valid linked `USkeleton`, and the commandlet reported **377 files / 0 failures**.
+- The candidate was still correctly rejected because UE4 emitted `MISSING_BIND_POSE_BONES`. The engine log explicitly recommends **Use T0 as ref pose** (or adding the bones to the bind pose).
+- Root remediation is now implemented in the editor-only character-rig import path: `UFbxSkeletalMeshImportData::bUseT0AsRefPose = true`.
+- This is **not a gate waiver**. The Human Wave script still rejects `MISSING_BIND_POSE_BONES` if it appears after re-import, and all existing smoothing/UV/skeleton/deformation requirements remain unchanged.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD UE4 REVALIDATION PENDING**.
