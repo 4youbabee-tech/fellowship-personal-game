@@ -270,7 +270,7 @@ class SourceContractTests(unittest.TestCase):
 
         source = (root / "Source" / "ShireJourney" / "Private" / "World" / "ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
         start = source.index("void AShirePrototypeWorldBuilder::SpawnBagEndHeroPass()")
-        end = source.index("void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()", start)
+        end = source.index("void AShirePrototypeWorldBuilder::SpawnVisibleShireMegaPass()", start)
         body = source[start:end]
         self.assertEqual(body.count("SpawnDetailCluster("), 3)
         self.assertIn("BAG_END_HERO_PASS", body)
@@ -753,9 +753,9 @@ class SourceContractTests(unittest.TestCase):
         contract = json.loads((root / "Data" / "P1C01ShireSettlementCompletionV1.json").read_text(encoding="utf-8"))
         self.assertEqual(contract["runtime_chapter"], "P1C01")
         self.assertEqual(contract["runtime_writer"], "AShirePrototypeWorldBuilder")
-        self.assertEqual(contract["visible_budget"]["native_hism_instances"], 160)
-        self.assertEqual(contract["visible_budget"]["detail_cluster_instances"], 185)
-        self.assertEqual(contract["visible_budget"]["target_total_instances"], 345)
+        self.assertEqual(contract["visible_budget"]["native_hism_instances"], 173)
+        self.assertEqual(contract["visible_budget"]["detail_cluster_instances"], 179)
+        self.assertEqual(contract["visible_budget"]["target_total_instances"], 352)
         self.assertLessEqual(contract["visible_budget"]["maximum_detail_cluster_actors"], 24)
         self.assertFalse(contract["architecture_contract"]["new_world_authority"])
         self.assertFalse(contract["architecture_contract"]["per_instance_tick"])
@@ -768,7 +768,7 @@ class SourceContractTests(unittest.TestCase):
         header = (root / "Source" / "ShireJourney" / "Public" / "World" / "ShirePrototypeWorldBuilder.h").read_text(encoding="utf-8")
         self.assertIn("void SpawnShireSettlementCompletionPass();", header)
         start = source.index("void AShirePrototypeWorldBuilder::SpawnShireSettlementCompletionPass()")
-        end = source.index("void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()", start)
+        end = source.index("void AShirePrototypeWorldBuilder::SpawnShireSettlementFinalPolishPass()", start)
         body = source[start:end]
 
         for token in (
@@ -782,7 +782,10 @@ class SourceContractTests(unittest.TestCase):
             "VillageMailboxes",
             "VillageWashLines",
             "VillageProduceStands",
-            "targetTotal=345",
+            "PartyFieldEntryGates",
+            "targetTotal=352",
+            "partyEntryCollision=off",
+            "partyTablesOwner=PartySocialLoop",
         ):
             self.assertIn(token, body)
 
@@ -798,7 +801,8 @@ class SourceContractTests(unittest.TestCase):
 
         build = source[source.index("void AShirePrototypeWorldBuilder::BuildPrototypeWorld()"):]
         self.assertLess(build.index("SpawnShireVisualFinishWave();"), build.index("SpawnShireSettlementCompletionPass();"))
-        self.assertLess(build.index("SpawnShireSettlementCompletionPass();"), build.index("SpawnWorldDensityDetailPass();"))
+        self.assertLess(build.index("SpawnShireSettlementCompletionPass();"), build.index("SpawnShireSettlementFinalPolishPass();"))
+        self.assertLess(build.index("SpawnShireSettlementFinalPolishPass();"), build.index("SpawnShireSettlementCanonFinishPass();"))
 
 
     def test_p1c01_shire_settlement_canon_finish_is_bounded_and_source_safe(self):
