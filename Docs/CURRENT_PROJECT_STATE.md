@@ -4104,3 +4104,19 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Root correction is limited to restoring that existing KayKit test declaration to the `SourceContractTests` class. No runtime, asset, workflow policy or technical gate behavior changed.
 - Prior exact candidate evidence remains authoritative: Rogue and RogueHooded are both UE4.27 technical rejects with 48 bones and missing bind-pose/smoothing-group failures.
 - Status: **TOOLING-FIXED / FRESH EXACT-HEAD PRE-UNREAL PENDING**. No PIE/device/visual/FPS acceptance.
+
+## 2026-10-04 - P1C01 Visible Shire Mega Wave D source implementation
+
+- Registered and implemented a new visible-first world pass `SpawnVisibleShireMegaWaveD()` inside the existing `AShirePrototypeWorldBuilder`; no second world writer or P1C02 runtime authority was introduced.
+- The pass adds a bounded authored composition budget of **268 HISM instances + 12 limited Ferry hero actors** using resident production meshes only:
+  - Bag End: 52 HISM instances for rear hill massing, garden hedge framing, cultivated shrubs and grass-framed approach.
+  - Hobbiton: 48 HISM instances for settlement terraces, property hedges/fences and settlement trees.
+  - Worked fields: 42 HISM edge instances to establish alternating hedge/fence boundaries and sparse working-edge vegetation while preserving open pastoral sightlines.
+  - Wooded road: 64 HISM instances for canopy + fern understory enclosure while preserving the traversal corridor.
+  - Bucklebury Ferry: 62 HISM instances plus 12 limited hero actors for river-bank massing, reeds, approach stones, landing, boat, rope posts/coils and four lamp posts.
+- The pre-existing distant horizon tree line was also changed from regular 560-unit spacing to deterministic multi-frequency X/Y/scale offsets, specifically to remove the repeated test-strip silhouette without introducing non-deterministic placement.
+- Runtime/performance boundaries remain unchanged: existing HISM/ISM components, explicit culling, no per-instance Tick, no synchronous heavy loading, no crowd/NPC ownership changes, and no actor-per-prop density wave.
+- Canon/source basis remains the F1-02 Bag End/Shire and F1-03 Shire roads/Bucklebury visual spine; the Ferry treatment follows the source-supported well-kept approach / landing / reeds / broad river / steep opposite-bank read without opening Buckland runtime.
+- Machine-readable budget contract: `Data/P1C01VisibleShireMegaWaveDV1.json`.
+- Regression guard added to `test_source_contracts.py` for budgets, call order, single-writer boundaries, no sync loading and no P1C02 runtime tokens.
+- Status: **SOURCE-IMPLEMENTED / STATIC-VALIDATION PENDING EXACT-HEAD PRE-UNREAL + UE4 BUILD**. No PIE/device/rendered-visual/FPS acceptance is claimed.
