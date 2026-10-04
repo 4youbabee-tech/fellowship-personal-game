@@ -52,7 +52,7 @@ jobs:
           blender --version | head -n 1
           python3 -c "import numpy; print('NUMPY_READY', numpy.__version__)"
 
-      - name: Stage CC0 source family and normalize max two FBX candidates
+      - name: Stage immutable CC0 source family and normalize bounded FBX candidates
         shell: pwsh
         run: |
           & "$env:GITHUB_WORKSPACE/Scripts/stage_p1c01_human_wave2.ps1" -ManifestPath "$env:GITHUB_WORKSPACE/Data/P1C01HumanCharacterProductionWave2V1.json" -OutputRoot "$env:RUNNER_TEMP/shire-human-wave2" -BlenderExecutable "blender"

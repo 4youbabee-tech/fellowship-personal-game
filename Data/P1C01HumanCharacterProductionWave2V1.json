@@ -1,20 +1,22 @@
 {
   "schema_version": 1,
   "wave_id": "P1C01_HUMAN_CHARACTER_PRODUCTION_WAVE_2_V1",
-  "status": "RUN30_UV_EXPORT_SELECTION_ROOT_FIX_SOURCE_IMPLEMENTED",
+  "status": "RUN31_KAYKIT_DISTINCT_SKELETON_HOSTED_INTAKE_IMPLEMENTED",
   "runtime_chapter": "P1C01",
   "target_character": "FRODO",
   "role": "HUMAN_SKELETAL_SOURCE_FACTORY_NOT_FINAL_LIKENESS",
   "source_family": {
-    "provider": "OpenGameArt",
-    "creator": "Quaternius",
-    "title": "Animated Characters Pack",
-    "source_page": "https://opengameart.org/content/animated-characters-pack",
-    "archive_url": "https://opengameart.org/sites/default/files/ultimate_animated_character_pack_by_quaternius.zip",
+    "provider": "GitHub",
+    "creator": "Kay Lousberg / KayKit",
+    "title": "KayKit Character Pack: Adventurers",
+    "source_page": "https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0",
+    "verification_page": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/672074b73ba276876a19e8816ecdc5241817ab47/README.md",
+    "source_revision": "672074b73ba276876a19e8816ecdc5241817ab47",
+    "archive_url": "https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/archive/672074b73ba276876a19e8816ecdc5241817ab47.zip",
     "observed_license": "CC0",
     "license_marker_required": "CC0",
-    "required_page_regex": "Animated Characters Pack|50\\+ different animated characters",
-    "source_description": "Direct public Quaternius CC0 animated-character pack; technical rig-base source only, not final Frodo likeness.",
+    "required_page_regex": "fully rigged and animated|CC0 Licensed|Licensed under CC0",
+    "source_description": "Immutable CC0 KayKit Adventurers source family. Raw historical Rogue/Knight payloads are not retried in UE4; only Blender-normalized derivative SHA256s may proceed under unchanged hosted deformation and UE4 hard gates. Technical rig-base only, not final Frodo likeness.",
     "final_animated_format": "FBX"
   },
   "source_policy": {
@@ -24,7 +26,7 @@
       ".png",
       ".tga"
     ],
-    "max_archive_bytes": 67108864,
+    "max_archive_bytes": 134217728,
     "max_source_entry_bytes": 67108864,
     "max_ue4_candidates": 2,
     "fbx_version_ceiling": 7500,
@@ -35,30 +37,16 @@
       "PNG",
       "TGA"
     ],
-    "prefer_blend_source": true,
+    "prefer_blend_source": false,
     "max_zero_weight_ratio": 0.35,
     "prefer_fbx_source": true,
     "preferred_filename_tokens": [
-      "male",
-      "human",
-      "elf",
-      "adventurer",
-      "villager",
-      "worker",
-      "base",
-      "character"
-    ],
-    "excluded_filename_tokens": [
-      "female",
-      "zombie",
-      "goblin",
-      "ninja",
-      "cowboy",
-      "pirate",
-      "soldier",
+      "rogue",
       "knight"
     ],
-    "max_hosted_candidates": 12
+    "excluded_filename_tokens": [],
+    "max_hosted_candidates": 8,
+    "derivative_identity_rule": "Normalized FBX SHA256 must differ from raw source SHA256 before any UE4 admission."
   },
   "normalization_contract": {
     "tool": "Blender",
@@ -194,17 +182,29 @@
     "disposition": "REJECT_SOURCE_DO_NOT_RESERVE_UE4_AGAIN"
   },
   "latest_hosted_failure": {
-    "workflow_run": 37234716817,
-    "exact_head": "27db245d4136ee708afb2bb0e63b4a1108fc736f",
-    "observed_pre_export": "12/12 candidates: one armature, one mesh, 100% weighted vertices, generated technical UV",
-    "observed_post_export": "12/12 deformation probes rejected ARMATURE_COUNT_NOT_ONE",
-    "root_cause": "Smart-UV edit workflow changed selection and normalized FBX export uses use_selection=True; armature selection was not restored before export",
-    "disposition": "restore armature+mesh selection and active armature before FBX export; revalidate hosted deformation"
+    "workflow_run": 37235238312,
+    "exact_head": "d63e78f3cf79209022c0d68e21471fe9a8b7fe2b",
+    "source_family": "Quaternius Animated Characters Pack",
+    "result": "12/12 normalized candidates preserved one armature, one mesh, generated UV, and fully weighted vertices after export-selection repair.",
+    "rejection": "All 12 share a skeleton that fails required weighted Frodo semantic joints: spine, left/right hand, left/right thigh.",
+    "disposition": "SOURCE_FAMILY_EXHAUSTED_FOR_FRODO; do not weaken semantic/deformation gate."
   },
   "ci_efficiency_contract": {
     "unreal_delta_base": "previous PR head on synchronize, PR base only as fallback",
     "dedicated_human_lane": "generic Unreal build must inherit/skip when only Human Wave2 pipeline files changed",
     "render_delta_classifier": "self-hosted Shire capture skipped only when visual-impact delta is absent and previous-head render workflow is green",
     "render_transitive_proof": "If immediate parent has no green render, nearest green first-parent ancestor may be inherited only when Source/Config/SourceAssets/uproject/capture/import visual-content paths are unchanged."
+  },
+  "next_source_transition": {
+    "family": "KayKit Adventurers",
+    "immutable_revision": "672074b73ba276876a19e8816ecdc5241817ab47",
+    "target_raw_entries": [
+      "Rogue.fbx",
+      "RogueHooded.fbx",
+      "Knight.fbx"
+    ],
+    "historical_raw_policy": "Raw rejected Rogue/Knight exact SHA payloads are never sent directly to UE4 again.",
+    "normalized_derivative_policy": "A distinct normalized FBX SHA may proceed only after hosted weighted-joint/deformation pass and unchanged UE4 hard gates.",
+    "runtime_promotion_allowed": false
   }
 }

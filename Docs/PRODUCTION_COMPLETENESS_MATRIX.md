@@ -3621,3 +3621,20 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Immediate-parent render proof unavailable | TRANSITIVE SAFE-ANCESTOR SUPPORT ADDED |
 | Visual-content mutation across inherited render proof | FORBIDDEN |
 | Fresh Human exact-head proof | PENDING |
+
+
+## 2026-10-04 - KayKit Human Wave2 transition
+
+| Control | State |
+|---|---|
+| Quaternius Frodo family | EXHAUSTED |
+| Semantic/deformation gate weakened | NO |
+| New source family | KAYKIT ADVENTURERS |
+| Source revision | IMMUTABLE `672074b73ba276876a19e8816ecdc5241817ab47` |
+| License/provenance verification | IMMUTABLE README + CC0 MARKER |
+| Raw historical rejected payload direct UE4 retry | FORBIDDEN |
+| Normalized FBX identity | MUST DIFFER FROM RAW SHA256 |
+| Hosted candidates | BOUNDED MAX 8 |
+| UE4 survivors | BOUNDED MAX 2 |
+| Runtime promotion | BLOCKED |
+| Fresh exact-head proof | PENDING |

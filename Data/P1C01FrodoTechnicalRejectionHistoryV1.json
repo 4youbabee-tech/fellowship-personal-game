@@ -162,6 +162,6 @@
   ],
   "policy": "Do not retry an exact payload SHA256 listed here. New candidates may proceed only if their exact payload identity differs and they pass the same or stricter technical gates.",
   "evidence_boundary": "Historical exact-head technical/static rejection evidence only. No candidate here is runtime/visual accepted.",
-  "last_updated_utc": "2026-10-03T18:50:00Z",
-  "current_next_action": "Do not retry any listed payload hash. The OGA Lowpoly Dummy Idle FBX is now rejected after a 41-bone UE4.27 skeletal import due to smoothing-group and bind-pose warnings. Advance to a distinct licensed FBX payload/corrected export; do not weaken technical gates."
+  "last_updated_utc": "2026-10-04T21:24:00Z",
+  "current_next_action": "Do not retry the Quaternius Animated Characters family for Frodo. Advance to KayKit Adventurers immutable revision 672074b73ba276876a19e8816ecdc5241817ab47. Previously rejected raw Rogue/Knight SHA256s remain forbidden as direct UE4 candidates; only a distinct normalized derivative SHA may proceed through unchanged hosted deformation and UE4 gates."
 }

@@ -26,7 +26,8 @@ New-Item -ItemType Directory -Path $downloadRoot,$extractRoot,$normalizedRoot -F
 $headers = @{ "User-Agent" = "ShireJourney-HumanWave2/1.0" }
 $pagePath = Join-Path $downloadRoot "source_page.html"
 $archivePath = Join-Path $downloadRoot "character_source.zip"
-Invoke-WebRequest -UseBasicParsing -Uri ([string]$manifest.source_family.source_page) -Headers $headers -OutFile $pagePath
+$verificationPage=if($null -ne $manifest.source_family.PSObject.Properties["verification_page"]){[string]$manifest.source_family.verification_page}else{[string]$manifest.source_family.source_page}
+Invoke-WebRequest -UseBasicParsing -Uri $verificationPage -Headers $headers -OutFile $pagePath
 Invoke-WebRequest -UseBasicParsing -Uri ([string]$manifest.source_family.archive_url) -Headers $headers -OutFile $archivePath
 
 $pageText = Get-Content -LiteralPath $pagePath -Raw
@@ -238,6 +239,9 @@ foreach($src in $selectedSources){
   }
 
   $normSha=(Get-FileHash -LiteralPath $outPath -Algorithm SHA256).Hash.ToLowerInvariant()
+  if($normSha -eq ([string]$src.sha256).ToLowerInvariant()){
+    $rejectReasons += "NORMALIZED_DERIVATIVE_SHA_EQUALS_RAW_SOURCE"
+  }
   $readiness=Get-Content -LiteralPath $readinessPath -Raw | ConvertFrom-Json
 
   if($rejectReasons.Count -eq 0){

@@ -10,6 +10,8 @@ class HumanWave2ContractTests(unittest.TestCase):
         self.assertEqual(packet["runtime_chapter"],"P1C01")
         self.assertEqual(packet["source_family"]["observed_license"],"CC0")
         self.assertEqual(packet["source_family"]["final_animated_format"],"FBX")
+        self.assertEqual(packet["source_family"]["title"],"KayKit Character Pack: Adventurers")
+        self.assertEqual(packet["source_family"]["source_revision"],"672074b73ba276876a19e8816ecdc5241817ab47")
         self.assertTrue(packet["source_policy"]["blend_as_intermediate_only"])
         self.assertFalse(packet["source_policy"]["direct_obj_for_animated_character"])
         self.assertEqual(packet["source_policy"]["max_ue4_candidates"],2)
@@ -43,6 +45,9 @@ class HumanWave2ContractTests(unittest.TestCase):
             "HUMAN_WAVE2_CANDIDATE_HOSTED_RESULT",
             "HUMAN_WAVE2_CANDIDATE_FAST_REJECT",
             "HUMAN_WAVE2_HOSTED_SWEEP",
+            "source_revision",
+            "NORMALIZED_DERIVATIVE_SHA_EQUALS_RAW_SOURCE",
+            "verification_page",
         ):
             self.assertIn(token,stage)
         self.assertNotIn("LoadObject<",stage)

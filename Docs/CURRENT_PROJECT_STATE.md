@@ -4400,3 +4400,13 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Root fix restores the exact armature + mesh selection and active armature immediately before FBX export. The deformation receipt now records armature/mesh counts and names.
 - Render CI is also hardened to reuse the nearest successful ancestor only when the complete intervening **visual content** tree is unchanged; CI/control-file changes alone no longer require another self-hosted scene capture.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD REVALIDATION PENDING**.
+
+
+## 2026-10-04 - Run #31 immutable KayKit source transition
+
+- Quaternius is now closed as a Frodo rig-base family for this gate: after the export-selection repair, **12/12** hosted candidates retained a valid armature and full vertex weighting, but all failed the same required weighted semantic joints (`spine`, both `hand`, both `thigh`).
+- The deformation gate is **not weakened**. Human Wave2 now targets **KayKit Character Pack: Adventurers** at immutable revision `672074b73ba276876a19e8816ecdc5241817ab47`.
+- Provenance verification uses the immutable README for the CC0/rigged/animated marker while keeping the repository page as the human-readable source.
+- Historical raw Rogue/Knight payload SHA256s remain forbidden as direct UE4 retries. The hosted factory may use them only as source inputs to create a **different normalized FBX SHA256**; a byte-identical derivative is hard-rejected before UE4.
+- Candidate discovery is bounded to Rogue / RogueHooded / Knight names, hosted validation first, max 2 UE4 survivors, and runtime promotion remains blocked.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD HOSTED VALIDATION PENDING**.
