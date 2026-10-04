@@ -904,6 +904,45 @@ class SourceContractTests(unittest.TestCase):
         self.assertEqual(world["status"], "PARTIAL")
         self.assertTrue(any("bootstrap_local_p1c01_visuals.cmd" in item for item in world["missing_work"]))
 
+
+    def test_p1c01_local_visual_acceptance_harness_preserves_evidence_boundary(self):
+        root = Path(__file__).resolve().parents[1]
+        route = json.loads((root / "Data" / "P1C01LocalVisualAcceptanceRouteV1.json").read_text(encoding="utf-8"))
+        self.assertEqual(route["runtime_chapter"], "P1C01")
+        self.assertEqual(route["status"], "CAPTURE_HARNESS_READY_REVIEW_PENDING")
+        self.assertEqual(route["target_profile"]["fps_floor"], 30)
+        self.assertEqual(route["launch"]["renderer"], "DX11")
+        self.assertEqual(route["launch"]["resolution"], "1280x720")
+        self.assertGreaterEqual(len(route["checkpoints"]), 8)
+        for checkpoint in route["checkpoints"]:
+            self.assertTrue(checkpoint["human_review_required"])
+            self.assertGreater(len(checkpoint["criteria"]), 0)
+        for key in ("pie_tested","device_tested","visually_accepted","performance_accepted","gate_6_7_accepted"):
+            self.assertFalse(route["acceptance_boundary"][key])
+
+        script = (root / "Scripts" / "run_local_p1c01_visual_acceptance.ps1").read_text(encoding="utf-8")
+        for token in (
+            "ci_import_production_assets.cmd",
+            "/Engine/Maps/Entry",
+            "-d3d11",
+            "-ResX=1280",
+            "-ResY=720",
+            "stat startfile",
+            "stat stopfile",
+            "HighResShot 1",
+            "hardware.json",
+            "human_review_template.json",
+            "capture_receipt.json",
+            "visually_accepted = $false",
+            "performance_accepted = $false",
+        ):
+            self.assertIn(token, script)
+
+        checklist = json.loads((root / "Data" / "P1C01Gate67AcceptanceChecklistV1.json").read_text(encoding="utf-8"))
+        harness = checklist["local_capture_harness"]
+        self.assertEqual(harness["script"], "Scripts/run_local_p1c01_visual_acceptance.ps1")
+        self.assertIn("do not change", harness["rule"].lower())
+
     def test_p1c01_kaykit_rig_bridge_is_bounded_and_non_runtime(self):
         root = Path(__file__).resolve().parents[1]
         packet = json.loads((root / "Data" / "P1C01KayKitRigTechnicalBridgeV1.json").read_text(encoding="utf-8"))

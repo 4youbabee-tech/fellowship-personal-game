@@ -4221,3 +4221,13 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Machine-readable closure: `Data/P1C01ShireSettlementSourceClosureV1.json`.
 - **Next required world gate is local visual bootstrap, not another blind density wave**: run `Scripts/bootstrap_local_p1c01_visuals.cmd` with UE4 closed, generate ignored `Content/Production`, and launch `/Engine/Maps/Entry` at DX11 1280x720.
 - Status: **SOURCE CONSTRUCTION COMPLETE / STATIC+COMPILE MACHINE-GREEN / HUMAN VISUAL + DEVICE PERFORMANCE PENDING**. No PIE/device/visual/FPS acceptance is claimed.
+
+
+## 2026-10-04 - P1C01 local visual acceptance harness
+
+- Added a local-only acceptance capture path after the machine-green Shire settlement source closure; no additional world density is introduced.
+- `Scripts/run_local_p1c01_visual_acceptance.ps1` reuses the production importer, requires UE4Editor closed, verifies generated `Content/Production`, captures local CPU/GPU/RAM identity, launches `/Engine/Maps/Entry` at DX11 1280x720 and starts `stat fps / stat unit / stat streaming / stat startfile`.
+- `Data/P1C01LocalVisualAcceptanceRouteV1.json` fixes the review order: Bag End, Bagshot Row/Number 3, Hobbiton common, Party Field, Water/mill/bridge, Bywater-facing edge/Ivy Bush, Woodland, Ferry.
+- The harness tells the human reviewer to run `HighResShot 1` at every checkpoint and `stat stopfile` before exit; it gathers new screenshots/stat files into one evidence folder and creates a pending human-review template.
+- All generated receipt booleans remain false for PIE/device/visual/performance acceptance. File capture alone cannot promote Gate 6/7.
+- Status: **SOURCE-IMPLEMENTED / STATIC VALIDATION PENDING / LOCAL EXECUTION REQUIRED ON OWNER WORKSTATION**.

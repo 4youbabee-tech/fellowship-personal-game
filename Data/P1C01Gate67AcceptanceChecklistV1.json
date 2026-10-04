@@ -57,5 +57,21 @@
     "PERFORMANCE-ACCEPTED requires target-device measurements that meet the declared performance gate."
   ],
   "promotion_rule": "No wider runtime-region promotion until the ProjectGovernor Gate 6/7 requirements are satisfied with real evidence. Preparation for later regions may continue in parallel.",
-  "evidence_boundary": "Checklist only; P1C01 is not Gate 6/7 accepted by creation of this file."
+  "evidence_boundary": "Checklist + local evidence-capture harness only; P1C01 is not Gate 6/7 accepted by creation or execution of these files.",
+  "local_capture_harness": {
+    "status": "SOURCE_PREPARED_REVIEW_NOT_ACCEPTED",
+    "script": "Scripts/run_local_p1c01_visual_acceptance.ps1",
+    "route_contract": "Data/P1C01LocalVisualAcceptanceRouteV1.json",
+    "prerequisite": "Content/Production generated from the exact local source state",
+    "capture_outputs": [
+      "hardware.json",
+      "review_route.json",
+      "human_review_template.json",
+      "P1C01-VisualAcceptance.log",
+      "Screenshots/*",
+      "UnrealStats/*",
+      "capture_receipt.json"
+    ],
+    "rule": "Capture artifacts do not change any Gate 6/7 status until human/device evidence is reviewed and recorded."
+  }
 }

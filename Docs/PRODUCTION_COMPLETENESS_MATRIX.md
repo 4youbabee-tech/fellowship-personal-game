@@ -3378,3 +3378,21 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Local production bootstrap | REQUIRED | `Scripts/bootstrap_local_p1c01_visuals.cmd` |
 | Human PIE/rendered visual acceptance | PENDING | direct owner evidence required |
 | Target-device 720p / 30 FPS | PENDING | measured device evidence required |
+
+
+## 2026-10-04 - P1C01 local visual acceptance harness
+
+| Evidence helper | Status | Boundary |
+|---|---|---|
+| Production Content regeneration | SOURCE-IMPLEMENTED | existing `ci_import_production_assets.cmd` |
+| Entry-map launcher | SOURCE-IMPLEMENTED | UE4.27 / DX11 / 1280x720 |
+| Hardware capture | SOURCE-IMPLEMENTED | local CPU/GPU/RAM/OS receipt |
+| Review route | SOURCE-IMPLEMENTED | 8 P1C01 checkpoints |
+| Screenshot protocol | SOURCE-IMPLEMENTED | human `HighResShot 1` per checkpoint |
+| Unreal stats capture | SOURCE-IMPLEMENTED | fps/unit/streaming/startfile; stopfile before exit |
+| Evidence collation | SOURCE-IMPLEMENTED | Saved/P1C01Acceptance session folder |
+| Human visual review | PENDING | capture artifacts must be reviewed |
+| PIE acceptance | NOT ACCEPTED | direct chapter-specific evidence required |
+| Device acceptance | NOT ACCEPTED | target-class device required |
+| Performance acceptance | NOT ACCEPTED | measured 720p evidence required |
+| Gate 6/7 | NOT ACCEPTED | all required evidence categories remain authoritative |
