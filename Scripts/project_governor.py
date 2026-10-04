@@ -107,7 +107,7 @@ for required in [
     "REQ-WORLD-001", "REQ-WORLD-002", "REQ-NPC-001", "REQ-NPC-002",
     "REQ-NPC-003", "REQ-SAVE-001", "REQ-PERF-001",
     "REQ-QUALITY-001", "REQ-QUALITY-002", "REQ-CI-001", "REQ-CHAR-001",
-    "REQ-CHAR-002"
+    "REQ-CHAR-002", "REQ-ROOTCAUSE-001", "REQ-P1C01-CLOSEOUT-001"
 ]:
     if required not in req_ids:
         fail(f"Governor is missing critical requirement {required}")
@@ -118,10 +118,15 @@ if len(invariant_ids) != len(set(invariant_ids)):
     fail("Duplicate hard invariant id")
 for required in [
     "INV-MEMORY", "INV-STORY", "INV-INTEGRITY",
-    "INV-TRAVERSAL", "INV-PERFORMANCE", "INV-PROOF"
+    "INV-TRAVERSAL", "INV-PERFORMANCE", "INV-PROOF", "INV-ROOT-CAUSE"
 ]:
     if required not in invariant_ids:
         fail(f"Governor missing hard invariant {required}")
+
+root_cause_invariant = next((item for item in invariants if item.get("id") == "INV-ROOT-CAUSE"), {})
+root_cause_text = str(root_cause_invariant.get("description") or "").lower()
+if "root cause" not in root_cause_text or "temporary containment" not in root_cause_text:
+    fail("PG-ROOT-CAUSE permanent invariant wording was weakened")
 
 decision_ids: set[str] = set()
 covered_pairs: set[tuple[str, str]] = set()
