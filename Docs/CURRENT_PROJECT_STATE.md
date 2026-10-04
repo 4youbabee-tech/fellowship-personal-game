@@ -4289,3 +4289,10 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 
 
 - Render-capture runner utilization root-fix: the P1C01 capture workflow now uses `cancel-in-progress: true` for its single capture concurrency group. A newer exact head invalidates an older capture result anyway, so stale capture builds must release the supervised UE4 runner instead of delaying the current chapter head. This policy is intentionally different from Branch Cleanup, where closed-PR events must remain serialized and non-cancelling.
+
+
+### 2026-10-04 - Frodo deformation runner dependency root-fix
+
+- Exact failing evidence from Human Character Production Wave 2 #15: Blender 4.0.2 failed inside the FBX importer with `ModuleNotFoundError: No module named 'numpy'`; the job correctly exited 17 and therefore did not produce deformation evidence.
+- Root cause is the hosted deformation runner environment, not the Frodo candidate or UE4 import. The workflow now installs the explicit `python3-numpy` runtime dependency together with Blender and performs a Blender-internal NumPy preflight before importing the FBX.
+- This does not promote deformation status by itself. The exact-head deformation job must rerun and emit `STATIC_DEFORMATION_STRESS_PASS` before merge.
