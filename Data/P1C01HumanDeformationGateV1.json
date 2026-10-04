@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "gate_id": "P1C01_FRODO_STATIC_DEFORMATION_GATE_V1",
-  "status": "RUN31_DISTINCT_KAYKIT_SKELETON_HOSTED_INTAKE_IMPLEMENTED",
+  "status": "RUN32_KAYKIT_DIRECT_FBX_LFS_INTAKE_IMPLEMENTED",
   "runtime_chapter": "P1C01",
   "predecessor": {
     "technical_gate": "Human Wave 2 UE4 technical winner",
@@ -83,6 +83,7 @@
     "quaternius_disposition": "Exhausted after 12 hosted normalized candidates: common skeleton lacks required weighted Frodo semantic joints. Gate remains unchanged.",
     "kaykit_revision": "672074b73ba276876a19e8816ecdc5241817ab47",
     "raw_rejected_payload_direct_ue4_retry": false,
-    "normalized_derivative_identity": "SHA256 must differ from raw source before UE4 admission."
+    "normalized_derivative_identity": "SHA256 must differ from raw source before UE4 admission.",
+    "kaykit_intake": "Direct immutable raw FBX endpoints because revision ZIP omits FBX/LFS payloads; each raw SHA256 must match historical identity, then normalized derivative SHA must differ before admission."
   }
 }

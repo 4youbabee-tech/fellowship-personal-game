@@ -3638,3 +3638,18 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | UE4 survivors | BOUNDED MAX 2 |
 | Runtime promotion | BLOCKED |
 | Fresh exact-head proof | PENDING |
+
+
+## 2026-10-04 - KayKit LFS/direct-FBX intake
+
+| Control | State |
+|---|---|
+| Revision ZIP contains usable FBX payload | NO / LFS-OMITTED |
+| Hosted failure cost | CHEAP / BEFORE UE4 |
+| Immutable direct FBX endpoints | SOURCE-IMPLEMENTED |
+| Raw SHA identity verification | REQUIRED |
+| Raw rejected FBX direct UE4 admission | FORBIDDEN |
+| Normalized derivative SHA differs from raw | REQUIRED |
+| Generic Unreal self-hosted duplication | SKIPPED |
+| Shire render self-hosted duplication | SKIPPED |
+| Fresh exact-head validation | PENDING |

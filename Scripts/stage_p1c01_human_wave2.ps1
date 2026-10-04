@@ -28,38 +28,68 @@ $pagePath = Join-Path $downloadRoot "source_page.html"
 $archivePath = Join-Path $downloadRoot "character_source.zip"
 $verificationPage=if($null -ne $manifest.source_family.PSObject.Properties["verification_page"]){[string]$manifest.source_family.verification_page}else{[string]$manifest.source_family.source_page}
 Invoke-WebRequest -UseBasicParsing -Uri $verificationPage -Headers $headers -OutFile $pagePath
-Invoke-WebRequest -UseBasicParsing -Uri ([string]$manifest.source_family.archive_url) -Headers $headers -OutFile $archivePath
 
 $pageText = Get-Content -LiteralPath $pagePath -Raw
 if($pageText -notmatch "CC0"){ throw "HUMAN_WAVE2_SOURCE_PAGE_CC0_MARKER_MISSING" }
 $pageMarker=if($null -ne $manifest.source_family.PSObject.Properties["required_page_regex"]){[string]$manifest.source_family.required_page_regex}else{"Rigged Low Poly Character Base Model|Rigged.*Character"}
 if($pageText -notmatch $pageMarker){ throw "HUMAN_WAVE2_SOURCE_PAGE_RIGGED_MARKER_MISSING" }
-
-$archiveItem = Get-Item -LiteralPath $archivePath
-if($archiveItem.Length -le 0 -or $archiveItem.Length -gt [int64]$manifest.source_policy.max_archive_bytes){ throw "HUMAN_WAVE2_ARCHIVE_SIZE_FAIL bytes=$($archiveItem.Length)" }
-$archiveSha = (Get-FileHash -LiteralPath $archivePath -Algorithm SHA256).Hash.ToLowerInvariant()
 $pageSha = (Get-FileHash -LiteralPath $pagePath -Algorithm SHA256).Hash.ToLowerInvariant()
 
-$zip = [IO.Compression.ZipFile]::OpenRead($archivePath)
 $sourceRows=@()
-try {
-  foreach($entry in $zip.Entries){
-    $name=([string]$entry.FullName).Replace([char]92,'/')
-    $parts=@($name.Split('/') | Where-Object { $_ -ne '' })
-    if($name.StartsWith('/') -or $name -match '^[A-Za-z]:' -or @($parts | Where-Object { $_ -eq '..' }).Count -gt 0){ throw "HUMAN_WAVE2_ARCHIVE_PATH_UNSAFE entry=$name" }
-    if([int64]$entry.Length -gt [int64]$manifest.source_policy.max_source_entry_bytes){ throw "HUMAN_WAVE2_ARCHIVE_ENTRY_OVERSIZE entry=$name bytes=$($entry.Length)" }
-    $ext=[IO.Path]::GetExtension($name).ToLowerInvariant()
-    if($ext -notin @(".fbx",".blend",".png",".tga") -or [string]::IsNullOrWhiteSpace($entry.Name)){ continue }
-    $safeName=("src_{0:D2}_{1}" -f ($sourceRows.Count+1), [IO.Path]::GetFileName($name))
+$archiveSha=$null
+$archiveBytes=[int64]0
+$directSources=@()
+if($null -ne $manifest.source_family.PSObject.Properties["direct_fbx_sources"]){
+  $directSources=@($manifest.source_family.direct_fbx_sources)
+}
+
+if($directSources.Count -gt 0){
+  $directIndex=0
+  foreach($direct in $directSources){
+    $directIndex++
+    $url=[string]$direct.url
+    $entry=if($null -ne $direct.PSObject.Properties["entry"]){[string]$direct.entry}else{[IO.Path]::GetFileName(([Uri]$url).AbsolutePath)}
+    if([IO.Path]::GetExtension($entry).ToLowerInvariant() -ne ".fbx"){ throw "HUMAN_WAVE2_DIRECT_SOURCE_FORMAT_FAIL entry=$entry" }
+    $safeName=("src_{0:D2}_{1}" -f $directIndex,[IO.Path]::GetFileName($entry))
     $dest=Join-Path $extractRoot $safeName
-    [IO.Compression.ZipFileExtensions]::ExtractToFile($entry,$dest,$true)
-    $sourceRows += [pscustomobject]@{
-      entry=$name; extracted_path=$dest; filename=$safeName; extension=$ext;
-      bytes=[int64]$entry.Length; sha256=(Get-FileHash -LiteralPath $dest -Algorithm SHA256).Hash.ToLowerInvariant()
+    Invoke-WebRequest -UseBasicParsing -Uri $url -Headers $headers -OutFile $dest
+    $item=Get-Item -LiteralPath $dest
+    if($item.Length -le 0 -or $item.Length -gt [int64]$manifest.source_policy.max_source_entry_bytes){ throw "HUMAN_WAVE2_DIRECT_SOURCE_SIZE_FAIL entry=$entry bytes=$($item.Length)" }
+    $rawSha=(Get-FileHash -LiteralPath $dest -Algorithm SHA256).Hash.ToLowerInvariant()
+    if($null -ne $direct.PSObject.Properties["historical_raw_sha256"]){
+      $expected=([string]$direct.historical_raw_sha256).ToLowerInvariant()
+      if($rawSha -ne $expected){ throw "HUMAN_WAVE2_DIRECT_SOURCE_IDENTITY_DRIFT entry=$entry expected=$expected actual=$rawSha" }
+    }
+    $sourceRows += [pscustomobject]@{entry=$entry;extracted_path=$dest;filename=$safeName;extension=".fbx";bytes=[int64]$item.Length;sha256=$rawSha;download_url=$url}
+    Write-Host "HUMAN_WAVE2_DIRECT_SOURCE_PASS entry=$entry bytes=$($item.Length) sha256=$rawSha"
+  }
+}else{
+  Invoke-WebRequest -UseBasicParsing -Uri ([string]$manifest.source_family.archive_url) -Headers $headers -OutFile $archivePath
+  $archiveItem = Get-Item -LiteralPath $archivePath
+  if($archiveItem.Length -le 0 -or $archiveItem.Length -gt [int64]$manifest.source_policy.max_archive_bytes){ throw "HUMAN_WAVE2_ARCHIVE_SIZE_FAIL bytes=$($archiveItem.Length)" }
+  $archiveSha = (Get-FileHash -LiteralPath $archivePath -Algorithm SHA256).Hash.ToLowerInvariant()
+  $archiveBytes=[int64]$archiveItem.Length
+
+  $zip = [IO.Compression.ZipFile]::OpenRead($archivePath)
+  try {
+    foreach($entry in $zip.Entries){
+      $name=([string]$entry.FullName).Replace([char]92,'/')
+      $parts=@($name.Split('/') | Where-Object { $_ -ne '' })
+      if($name.StartsWith('/') -or $name -match '^[A-Za-z]:' -or @($parts | Where-Object { $_ -eq '..' }).Count -gt 0){ throw "HUMAN_WAVE2_ARCHIVE_PATH_UNSAFE entry=$name" }
+      if([int64]$entry.Length -gt [int64]$manifest.source_policy.max_source_entry_bytes){ throw "HUMAN_WAVE2_ARCHIVE_ENTRY_OVERSIZE entry=$name bytes=$($entry.Length)" }
+      $ext=[IO.Path]::GetExtension($name).ToLowerInvariant()
+      if($ext -notin @(".fbx",".blend",".png",".tga") -or [string]::IsNullOrWhiteSpace($entry.Name)){ continue }
+      $safeName=("src_{0:D2}_{1}" -f ($sourceRows.Count+1), [IO.Path]::GetFileName($name))
+      $dest=Join-Path $extractRoot $safeName
+      [IO.Compression.ZipFileExtensions]::ExtractToFile($entry,$dest,$true)
+      $sourceRows += [pscustomobject]@{
+        entry=$name; extracted_path=$dest; filename=$safeName; extension=$ext;
+        bytes=[int64]$entry.Length; sha256=(Get-FileHash -LiteralPath $dest -Algorithm SHA256).Hash.ToLowerInvariant()
+      }
     }
   }
+  finally { $zip.Dispose() }
 }
-finally { $zip.Dispose() }
 
 $characterSources=@($sourceRows | Where-Object { $_.extension -in @(".blend",".fbx") })
 if($characterSources.Count -lt 1){ throw "HUMAN_WAVE2_NO_CHARACTER_SOURCE" }
@@ -289,7 +319,7 @@ $eligible=@($normalized | Where-Object { $_.quality_pass } | Select-Object -Firs
 $receipt=[ordered]@{
   schema_version=1; status=if($eligible.Count -gt 0){"HOSTED_NORMALIZED_CANDIDATES_READY_FOR_UE4"}else{"HOSTED_SOURCE_FAMILY_EXHAUSTED_BEFORE_UE4"};
   source_page=[string]$manifest.source_family.source_page; source_creator=[string]$manifest.source_family.creator; license="CC0";
-  source_page_sha256=$pageSha; archive_sha256=$archiveSha; archive_bytes=[int64]$archiveItem.Length; blender_version=$blenderVersion;
+  source_page_sha256=$pageSha; archive_sha256=$archiveSha; archive_bytes=$archiveBytes; direct_source_count=$directSources.Count; blender_version=$blenderVersion;
   source_inventory=@($sourceRows | Select-Object entry,extension,bytes,sha256); normalized_results=$normalized; normalized_candidates=$eligible; selected_count=$eligible.Count;
   runtime_integration_allowed=$false; deformation_accepted=$false;
   evidence_boundary="Hosted source/provenance/Blender normalization + static deformation-readiness only. UE4 technical gate next; no rendered deformation acceptance."
@@ -297,4 +327,4 @@ $receipt=[ordered]@{
 $receiptPath=Join-Path $OutputRoot "p1c01_human_wave2_hosted.json"
 $receipt | ConvertTo-Json -Depth 16 | Set-Content -LiteralPath $receiptPath -Encoding UTF8
 if($eligible.Count -lt 1){ Write-Host ("HUMAN_WAVE2_HOSTED_FAST_REJECT selected=0 receipt="+$receiptPath); exit 0 }
-Write-Host ("HUMAN_WAVE2_HOSTED_PASS selected="+$eligible.Count+" deformOnly=true maxZeroWeightRatio="+$manifest.source_policy.max_zero_weight_ratio+" archiveSha="+$archiveSha+" receipt="+$receiptPath)
+Write-Host ("HUMAN_WAVE2_HOSTED_PASS selected="+$eligible.Count+" deformOnly=true maxZeroWeightRatio="+$manifest.source_policy.max_zero_weight_ratio+" archiveSha="+$archiveSha+" directSources="+$directSources.Count+" receipt="+$receiptPath)

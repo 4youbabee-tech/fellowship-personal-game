@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "wave_id": "P1C01_HUMAN_CHARACTER_PRODUCTION_WAVE_2_V1",
-  "status": "RUN31_KAYKIT_DISTINCT_SKELETON_HOSTED_INTAKE_IMPLEMENTED",
+  "status": "RUN32_KAYKIT_IMMUTABLE_DIRECT_FBX_INTAKE_IMPLEMENTED",
   "runtime_chapter": "P1C01",
   "target_character": "FRODO",
   "role": "HUMAN_SKELETAL_SOURCE_FACTORY_NOT_FINAL_LIKENESS",
@@ -12,12 +12,29 @@
     "source_page": "https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0",
     "verification_page": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/672074b73ba276876a19e8816ecdc5241817ab47/README.md",
     "source_revision": "672074b73ba276876a19e8816ecdc5241817ab47",
-    "archive_url": "https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/archive/672074b73ba276876a19e8816ecdc5241817ab47.zip",
+    "archive_url": null,
     "observed_license": "CC0",
     "license_marker_required": "CC0",
     "required_page_regex": "fully rigged and animated|CC0 Licensed|Licensed under CC0",
-    "source_description": "Immutable CC0 KayKit Adventurers source family. Raw historical Rogue/Knight payloads are not retried in UE4; only Blender-normalized derivative SHA256s may proceed under unchanged hosted deformation and UE4 hard gates. Technical rig-base only, not final Frodo likeness.",
-    "final_animated_format": "FBX"
+    "source_description": "Immutable KayKit Adventurers direct FBX technical inputs pinned to historical SHA256 identities. GitHub revision archive does not contain the LFS FBX payloads, so hosted intake downloads the exact raw FBX endpoints individually. Raw bytes are never admitted directly to UE4; only a different normalized derivative SHA may proceed.",
+    "final_animated_format": "FBX",
+    "direct_fbx_sources": [
+      {
+        "entry": "Rogue.fbx",
+        "url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/672074b73ba276876a19e8816ecdc5241817ab47/addons/kaykit_character_pack_adventures/Characters/fbx/Rogue.fbx",
+        "historical_raw_sha256": "93a9ee0a67ae69b2d815050234acad2004c3b8af7d294b916e52609c8195eb71"
+      },
+      {
+        "entry": "RogueHooded.fbx",
+        "url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/672074b73ba276876a19e8816ecdc5241817ab47/addons/kaykit_character_pack_adventures/Characters/fbx/RogueHooded.fbx",
+        "historical_raw_sha256": "4a773f074695c6c089cc6f059eed85da080928a4a4137af4e38b177139d4cc27"
+      },
+      {
+        "entry": "Knight.fbx",
+        "url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/672074b73ba276876a19e8816ecdc5241817ab47/addons/kaykit_character_pack_adventures/Characters/fbx/Knight.fbx",
+        "historical_raw_sha256": "b25e35cc7eaaa3c7c103f10a4f41fde1cbd81936fede9aa9ae4efbd29d40ba1b"
+      }
+    ]
   },
   "source_policy": {
     "allowed_archive_extensions": [
@@ -182,12 +199,11 @@
     "disposition": "REJECT_SOURCE_DO_NOT_RESERVE_UE4_AGAIN"
   },
   "latest_hosted_failure": {
-    "workflow_run": 37235238312,
-    "exact_head": "d63e78f3cf79209022c0d68e21471fe9a8b7fe2b",
-    "source_family": "Quaternius Animated Characters Pack",
-    "result": "12/12 normalized candidates preserved one armature, one mesh, generated UV, and fully weighted vertices after export-selection repair.",
-    "rejection": "All 12 share a skeleton that fails required weighted Frodo semantic joints: spine, left/right hand, left/right thigh.",
-    "disposition": "SOURCE_FAMILY_EXHAUSTED_FOR_FRODO; do not weaken semantic/deformation gate."
+    "workflow_run": 37236111431,
+    "exact_head": "b8f336706e976b1cfc64285bda5c3bfcd3ab91a5",
+    "failure": "HUMAN_WAVE2_NO_CHARACTER_SOURCE",
+    "cause": "GitHub revision archive contains textures/GLB but not the repository's FBX/LFS payloads; archive-based extractor therefore found zero .fbx/.blend character sources.",
+    "disposition": "Use immutable raw.githubusercontent FBX endpoints for Rogue/RogueHooded/Knight and verify their historical SHA256 identities before normalization."
   },
   "ci_efficiency_contract": {
     "unreal_delta_base": "previous PR head on synchronize, PR base only as fallback",

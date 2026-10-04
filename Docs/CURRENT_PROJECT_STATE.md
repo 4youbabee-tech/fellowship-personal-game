@@ -4410,3 +4410,13 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Historical raw Rogue/Knight payload SHA256s remain forbidden as direct UE4 retries. The hosted factory may use them only as source inputs to create a **different normalized FBX SHA256**; a byte-identical derivative is hard-rejected before UE4.
 - Candidate discovery is bounded to Rogue / RogueHooded / Knight names, hosted validation first, max 2 UE4 survivors, and runtime promotion remains blocked.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD HOSTED VALIDATION PENDING**.
+
+
+## 2026-10-04 - Run #32 KayKit Git LFS intake repair
+
+- Exact-head run `b8f336706e976b1cfc64285bda5c3bfcd3ab91a5` failed cheaply on hosted CI with `HUMAN_WAVE2_NO_CHARACTER_SOURCE`; **no UE4 Human reservation occurred**.
+- Artifact inspection showed the immutable GitHub revision ZIP contains textures and GLB assets but omits the repository FBX/LFS character payloads. This was an intake-path mismatch, not a character deformation result.
+- Human Wave2 now downloads the three immutable FBX endpoints directly: `Rogue.fbx`, `RogueHooded.fbx`, and `Knight.fbx`.
+- Each raw download must match its already-recorded historical SHA256 exactly. Those raw bytes remain prohibited from direct UE4 retry; Blender must generate a **different normalized derivative SHA256** and that derivative must pass the unchanged hosted deformation gate before UE4 is allowed.
+- Generic Unreal and Shire render self-hosted jobs were both skipped on this iteration by the CI dedup classifiers.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD DIRECT-FBX HOSTED VALIDATION PENDING**.

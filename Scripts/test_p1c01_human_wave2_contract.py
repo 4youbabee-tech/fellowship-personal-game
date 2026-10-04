@@ -46,6 +46,10 @@ class HumanWave2ContractTests(unittest.TestCase):
             "HUMAN_WAVE2_CANDIDATE_FAST_REJECT",
             "HUMAN_WAVE2_HOSTED_SWEEP",
             "source_revision",
+            "direct_source_count",
+            "direct_fbx_sources",
+            "HUMAN_WAVE2_DIRECT_SOURCE_IDENTITY_DRIFT",
+            "HUMAN_WAVE2_DIRECT_SOURCE_PASS",
             "NORMALIZED_DERIVATIVE_SHA_EQUALS_RAW_SOURCE",
             "verification_page",
         ):
