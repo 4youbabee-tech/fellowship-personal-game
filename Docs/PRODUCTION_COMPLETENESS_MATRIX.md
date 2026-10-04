@@ -3322,3 +3322,18 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Exact-head UE4.27.2 build | PENDING | PR validation required |
 | PIE traversal / visual / pacing | NOT ACCEPTED | direct chapter-specific evidence required |
 | Target-device 720p / 30 FPS | NOT ACCEPTED | measured device evidence required |
+
+
+## 2026-10-04 - P1C01 Shire settlement runtime cleanup
+
+| Cleanup domain | Status | Evidence boundary |
+|---|---|---|
+| Production hobbit-hole primitive overlays | SOURCE-REMOVED | authored mound/façade owns visible architecture |
+| Entry shrubs / doorstep | HISM | ShrubInstances + PathStoneInstances |
+| Repeated property fence construction | HISM-FIRST | RuralFenceInstances |
+| Production actor-per-fence-segment path | FALLBACK ONLY | only if HISM mesh unavailable |
+| World authority | PRESERVED | AShirePrototypeWorldBuilder |
+| Synchronous heavy load | NONE ADDED | resident meshes/components |
+| P1C02 | NOT OPENED | P1C01 only |
+| Exact-head CI | PENDING | stacked follow-up validation |
+| PIE/device/visual/FPS | NOT ACCEPTED | direct evidence required |

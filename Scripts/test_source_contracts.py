@@ -806,6 +806,41 @@ class SourceContractTests(unittest.TestCase):
         self.assertLess(build.index("SpawnShireVisualFinishWave();"), build.index("SpawnShireSettlementCompletionPass();"))
         self.assertLess(build.index("SpawnShireSettlementCompletionPass();"), build.index("SpawnWorldDensityDetailPass();"))
 
+
+
+    def test_p1c01_shire_settlement_runtime_cleanup_removes_production_greybox_overlays(self):
+        root = Path(__file__).resolve().parents[1]
+        packet = json.loads((root / "Data" / "P1C01ShireSettlementRuntimeCleanupV1.json").read_text(encoding="utf-8"))
+        self.assertEqual(packet["runtime_chapter"], "P1C01")
+        self.assertEqual(packet["runtime_writer"], "AShirePrototypeWorldBuilder")
+        self.assertTrue(packet["production_hobbit_hole"]["authored_facade_owns_visible_architecture"])
+        self.assertTrue(packet["production_hobbit_hole"]["entry_detail_uses_hism"])
+        self.assertTrue(packet["fence_line"]["hism_first"])
+        self.assertFalse(packet["architecture_contract"]["new_world_authority"])
+        self.assertFalse(packet["architecture_contract"]["per_instance_tick"])
+        self.assertFalse(packet["architecture_contract"]["synchronous_heavy_load"])
+        self.assertFalse(packet["architecture_contract"]["p1c02_runtime_opened"])
+
+        source = (root / "Source" / "ShireJourney" / "Private" / "World" / "ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+
+        hole_start = source.index("void AShirePrototypeWorldBuilder::SpawnHobbitHole(")
+        fence_start = source.index("void AShirePrototypeWorldBuilder::SpawnFenceLine(", hole_start)
+        hole = source[hole_start:fence_start]
+        prod_start = hole.index("if (bHasProductionFacade)")
+        prod_return = hole.index("        return;", prod_start)
+        production_path = hole[prod_start:prod_return]
+
+        self.assertIn("ShrubInstances->AddInstance", production_path)
+        self.assertIn("PathStoneInstances->AddInstance", production_path)
+        self.assertNotIn("SpawnShape(SphereMesh", production_path)
+        self.assertNotIn("SpawnShape(CubeMesh", production_path)
+        self.assertNotIn("SpawnShape(CylinderMesh", production_path)
+
+        garden_start = source.index("void AShirePrototypeWorldBuilder::SpawnGardenPatch(", fence_start)
+        fence = source[fence_start:garden_start]
+        self.assertIn("RuralFenceInstances->AddInstance", fence)
+        self.assertIn("if (RuralFenceInstances && RuralFenceInstances->GetStaticMesh())", fence)
+
     def test_p1c01_kaykit_rig_bridge_is_bounded_and_non_runtime(self):
         root = Path(__file__).resolve().parents[1]
         packet = json.loads((root / "Data" / "P1C01KayKitRigTechnicalBridgeV1.json").read_text(encoding="utf-8"))

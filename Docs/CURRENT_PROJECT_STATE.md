@@ -4186,3 +4186,12 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Existing mill/bridge/Bag End actors are not duplicated as new authorities; this pass fills their surrounding settlement context.
 - No new synchronous heavy load, no new world manager, no NPC Spawn/Destroy density change and no P1C02 runtime expansion.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. No PIE/device/rendered-visual/FPS acceptance is claimed.
+
+
+## 2026-10-04 - P1C01 Shire settlement runtime/greybox cleanup
+
+- Production `SpawnHobbitHole()` no longer overlays primitive door/window/glass/chimney/step actors over the imported mound/façade. Authored production geometry owns the visible house architecture.
+- Production planted-entry shrubs and doorstep accents now use existing `ShrubInstances` / `PathStoneInstances` HISM components, reducing per-home actor density.
+- `SpawnFenceLine()` is now HISM-first through `RuralFenceInstances`; production fence actors are retained only as a missing-HISM fallback.
+- No world authority, story anchor, population owner, runtime loading strategy or P1C02 scope changed.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. No PIE/device/rendered-visual/FPS acceptance.

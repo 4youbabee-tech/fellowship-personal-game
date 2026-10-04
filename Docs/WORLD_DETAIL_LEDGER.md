@@ -1224,3 +1224,12 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Performance contract: **306 HISM instances + 82 clustered instances across at most 8 AWorldDetailCluster actors + 16 limited hero actors**. No actor-per-prop density, no per-instance Tick, no synchronous heavy load, resident production meshes only.
 - Navigation contract: existing central road/common/player traversal corridor stays open for the player and pooled NPCs.
 - Evidence boundary at registration: **SOURCE-GROUNDED PLAN**. No PIE/device/rendered-visual/FPS acceptance.
+
+
+## 2026-10-04 - P1C01 SHIRE_SETTLEMENT_RUNTIME_CLEANUP_V1 registered before implementation
+
+- Scope: same P1C01 Shire settlement, no new feature/chapter. Remove residual prototype overlays and actor-per-segment settlement construction after the authored settlement completion packet.
+- Production hobbit-hole rule: when production mound + façade are resident, those authored meshes own the visible architecture. Primitive door/window/glass/chimney/step overlays must not be stacked over them; planted entry and doorstep detail should reuse existing HISM components.
+- Fence rule: repeated property fences are HISM-first through `RuralFenceInstances`; actor-per-segment production fence spawning is fallback only when the HISM component has no resident mesh.
+- Architecture ownership remains unchanged; no P1C02, no synchronous heavy load and no population ownership change.
+- Evidence boundary at registration: SOURCE-GROUNDED CLEANUP PLAN; no visual/device/FPS acceptance.

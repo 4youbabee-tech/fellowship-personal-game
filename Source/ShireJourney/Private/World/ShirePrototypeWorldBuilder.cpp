@@ -479,73 +479,150 @@ void AShirePrototypeWorldBuilder::SpawnHobbitHole(const FVector& Location, float
     const FLinearColor WarmGlass(0.92f, 0.67f, 0.28f);
     const FLinearColor Stone(0.42f, 0.40f, 0.34f);
 
-    // Imported production mound/facade replace the toy-like primitive silhouette when
-    // available. The facade owns the round timber/door/window/sill geometry; runtime
-    // primitives are retained only when that authored facade is unavailable.
     const bool bHasProductionFacade = ProductionTurfMoundMesh && ProductionHobbitFacadeMesh;
     if (bHasProductionFacade)
     {
-        SpawnShape(ProductionTurfMoundMesh, Location + FVector(0.0f, 0.0f, 30.0f * Scale),
-            FVector(2.45f, 2.10f, 2.10f) * Scale, Turf, FRotator::ZeroRotator, true);
-        SpawnShape(ProductionHobbitFacadeMesh, Location + FVector(-88.0f * Scale, 0.0f, 0.0f),
-            FVector(1.0f) * Scale, Earth, FRotator::ZeroRotator, true);
-    }
-    else
-    {
-        SpawnShape(SphereMesh, Location + FVector(0.0f, 0.0f, 82.0f * Scale),
-            FVector(1.72f, 1.12f, 0.78f) * Scale, Turf, FRotator::ZeroRotator, true);
-        SpawnShape(CubeMesh, Location + FVector(-72.0f * Scale, 0.0f, 54.0f * Scale),
-            FVector(0.10f, 0.82f, 0.58f) * Scale, Earth, FRotator::ZeroRotator, true);
-    }
+        SpawnShape(
+            ProductionTurfMoundMesh,
+            Location + FVector(0.0f, 0.0f, 30.0f * Scale),
+            FVector(2.45f, 2.10f, 2.10f) * Scale,
+            Turf,
+            FRotator::ZeroRotator,
+            true);
+        SpawnShape(
+            ProductionHobbitFacadeMesh,
+            Location + FVector(-88.0f * Scale, 0.0f, 0.0f),
+            FVector(1.0f) * Scale,
+            Earth,
+            FRotator::ZeroRotator,
+            true);
 
-    // The authored facade carries the timber frame, green door, window-frame and
-    // stone-sill geometry. Keep those primitive constructions only as a deterministic
-    // no-asset fallback so production Hobbiton no longer overlays greybox geometry.
-    if (!bHasProductionFacade)
-    {
-        SpawnShape(CylinderMesh, Location + FVector(-83.0f * Scale, 0.0f, 55.0f * Scale),
-            FVector(0.51f, 0.51f, 0.075f) * Scale, Timber, FRotator(0.0f, 90.0f, 0.0f), false);
-        SpawnShape(CylinderMesh, Location + FVector(-88.0f * Scale, 0.0f, 55.0f * Scale),
-            FVector(0.43f, 0.43f, 0.050f) * Scale, DoorGreen, FRotator(0.0f, 90.0f, 0.0f), false);
-
-        for (float Side : { -1.0f, 1.0f })
+        // Production façades own the visible door/window/timber/stone read.
+        // Do not overlay primitive discs/cubes that re-introduce a greybox look.
+        // Small planted entry + doorstep detail uses the already configured HISMs,
+        // avoiding four-to-seven extra actors per hobbit home.
+        if (ShrubInstances && ShrubInstances->GetStaticMesh())
         {
-            const FVector Window = Location + FVector(-88.0f * Scale, Side * 58.0f * Scale, 68.0f * Scale);
-            SpawnShape(CylinderMesh, Window, FVector(0.22f, 0.22f, 0.035f) * Scale,
-                Timber, FRotator(0.0f, 90.0f, 0.0f), false);
-            SpawnShape(CubeMesh, Window + FVector(-2.0f * Scale, 0.0f, -27.0f * Scale),
-                FVector(0.10f, 0.30f, 0.045f) * Scale, Stone, FRotator::ZeroRotator, false);
+            const float ShrubScale = 0.26f * Scale;
+            ShrubInstances->AddInstance(FTransform(
+                FRotator(0.0f, -18.0f, 0.0f),
+                Location + FVector(-105.0f, -92.0f, 24.0f) * Scale,
+                FVector(ShrubScale * 1.12f, ShrubScale, ShrubScale * 0.92f)));
+            ShrubInstances->AddInstance(FTransform(
+                FRotator(0.0f, 21.0f, 0.0f),
+                Location + FVector(-105.0f, 92.0f, 24.0f) * Scale,
+                FVector(ShrubScale * 1.10f, ShrubScale, ShrubScale * 0.94f)));
         }
+
+        if (PathStoneInstances && PathStoneInstances->GetStaticMesh())
+        {
+            PathStoneInstances->AddInstance(FTransform(
+                FRotator::ZeroRotator,
+                Location + FVector(-122.0f, 0.0f, 6.0f) * Scale,
+                FVector(0.34f, 0.52f, 0.055f) * Scale));
+        }
+
+        return;
     }
 
-    // Small readable accents remain: the source facade has no warm-glass material and
-    // no knob detail. These do not duplicate its structural silhouette.
-    SpawnShape(SphereMesh, Location + FVector(-94.0f * Scale, 21.0f * Scale, 56.0f * Scale),
-        FVector(0.045f) * Scale, FLinearColor(0.74f, 0.55f, 0.18f), FRotator::ZeroRotator, false);
+    // Deterministic no-production-asset fallback only.
+    SpawnShape(
+        SphereMesh,
+        Location + FVector(0.0f, 0.0f, 82.0f * Scale),
+        FVector(1.72f, 1.12f, 0.78f) * Scale,
+        Turf,
+        FRotator::ZeroRotator,
+        true);
+    SpawnShape(
+        CubeMesh,
+        Location + FVector(-72.0f * Scale, 0.0f, 54.0f * Scale),
+        FVector(0.10f, 0.82f, 0.58f) * Scale,
+        Earth,
+        FRotator::ZeroRotator,
+        true);
+
+    SpawnShape(
+        CylinderMesh,
+        Location + FVector(-83.0f * Scale, 0.0f, 55.0f * Scale),
+        FVector(0.51f, 0.51f, 0.075f) * Scale,
+        Timber,
+        FRotator(0.0f, 90.0f, 0.0f),
+        false);
+    SpawnShape(
+        CylinderMesh,
+        Location + FVector(-88.0f * Scale, 0.0f, 55.0f * Scale),
+        FVector(0.43f, 0.43f, 0.050f) * Scale,
+        DoorGreen,
+        FRotator(0.0f, 90.0f, 0.0f),
+        false);
+
     for (float Side : { -1.0f, 1.0f })
     {
-        const FVector Window = Location + FVector(-92.0f * Scale, Side * 58.0f * Scale, 68.0f * Scale);
-        SpawnShape(CylinderMesh, Window, FVector(0.16f, 0.16f, 0.018f) * Scale,
-            WarmGlass, FRotator(0.0f, 90.0f, 0.0f), false);
+        const FVector Window = Location + FVector(-88.0f * Scale, Side * 58.0f * Scale, 68.0f * Scale);
+        SpawnShape(
+            CylinderMesh,
+            Window,
+            FVector(0.22f, 0.22f, 0.035f) * Scale,
+            Timber,
+            FRotator(0.0f, 90.0f, 0.0f),
+            false);
+        SpawnShape(
+            CylinderMesh,
+            Window + FVector(-4.0f * Scale, 0.0f, 0.0f),
+            FVector(0.16f, 0.16f, 0.018f) * Scale,
+            WarmGlass,
+            FRotator(0.0f, 90.0f, 0.0f),
+            false);
+        SpawnShape(
+            CubeMesh,
+            Window + FVector(-2.0f * Scale, 0.0f, -27.0f * Scale),
+            FVector(0.10f, 0.30f, 0.045f) * Scale,
+            Stone,
+            FRotator::ZeroRotator,
+            false);
     }
 
-    // Chimney, doorstep and planted entry soften the generated silhouette.
-    SpawnShape(CubeMesh, Location + FVector(35.0f, -45.0f, 170.0f) * Scale,
-        FVector(0.18f, 0.18f, 0.48f) * Scale, Stone, FRotator::ZeroRotator, false);
-    SpawnShape(CubeMesh, Location + FVector(-122.0f, 0.0f, 8.0f) * Scale,
-        FVector(0.42f, 0.70f, 0.10f) * Scale, Stone, FRotator::ZeroRotator, true);
-    // Use the already-resident production shrub for the planted entry when available.
-    // Keep the primitive spheres only as a deterministic no-asset fallback.
+    SpawnShape(
+        SphereMesh,
+        Location + FVector(-94.0f * Scale, 21.0f * Scale, 56.0f * Scale),
+        FVector(0.045f) * Scale,
+        FLinearColor(0.74f, 0.55f, 0.18f),
+        FRotator::ZeroRotator,
+        false);
+    SpawnShape(
+        CubeMesh,
+        Location + FVector(35.0f, -45.0f, 170.0f) * Scale,
+        FVector(0.18f, 0.18f, 0.48f) * Scale,
+        Stone,
+        FRotator::ZeroRotator,
+        false);
+    SpawnShape(
+        CubeMesh,
+        Location + FVector(-122.0f, 0.0f, 8.0f) * Scale,
+        FVector(0.42f, 0.70f, 0.10f) * Scale,
+        Stone,
+        FRotator::ZeroRotator,
+        true);
+
     UStaticMesh* EntryShrubMesh = ProductionShrubMesh ? ProductionShrubMesh : SphereMesh;
     const FVector EntryShrubScale = ProductionShrubMesh
         ? FVector(0.54f, 0.46f, 0.52f) * Scale
         : FVector(0.32f, 0.26f, 0.22f) * Scale;
-    SpawnShape(EntryShrubMesh, Location + FVector(-105.0f, -92.0f, 24.0f) * Scale,
-        EntryShrubScale, FLinearColor(0.10f, 0.32f, 0.08f), FRotator(0.0f, -18.0f, 0.0f), false);
-    SpawnShape(EntryShrubMesh, Location + FVector(-105.0f, 92.0f, 24.0f) * Scale,
-        EntryShrubScale, FLinearColor(0.12f, 0.36f, 0.09f), FRotator(0.0f, 21.0f, 0.0f), false);
+    SpawnShape(
+        EntryShrubMesh,
+        Location + FVector(-105.0f, -92.0f, 24.0f) * Scale,
+        EntryShrubScale,
+        FLinearColor(0.10f, 0.32f, 0.08f),
+        FRotator(0.0f, -18.0f, 0.0f),
+        false);
+    SpawnShape(
+        EntryShrubMesh,
+        Location + FVector(-105.0f, 92.0f, 24.0f) * Scale,
+        EntryShrubScale,
+        FLinearColor(0.12f, 0.36f, 0.09f),
+        FRotator(0.0f, 21.0f, 0.0f),
+        false);
 }
-
 
 void AShirePrototypeWorldBuilder::SpawnFenceLine(const FVector& Start, const FVector& End, int32 Sections)
 {
@@ -560,14 +637,34 @@ void AShirePrototypeWorldBuilder::SpawnFenceLine(const FVector& Start, const FVe
     const FRotator RailRotation = SectionDelta.GetSafeNormal2D().Rotation();
     const FLinearColor Wood(0.31f, 0.18f, 0.08f);
 
+    // Repeated settlement boundaries are HISM-first. The configured rural fence
+    // component may use the project Shire segment or the common village fence.
+    if (RuralFenceInstances && RuralFenceInstances->GetStaticMesh())
+    {
+        for (int32 Index = 0; Index < Sections; ++Index)
+        {
+            const FVector Mid = Start + SectionDelta * (static_cast<float>(Index) + 0.5f);
+            RuralFenceInstances->AddInstance(FTransform(
+                RailRotation,
+                Mid,
+                FVector(FMath::Max(0.42f, SectionLength / 115.0f), 1.0f, 1.0f)));
+        }
+        return;
+    }
+
+    // Fallback only when the HISM fence component has no resident mesh.
     if (ProductionFenceSegmentMesh)
     {
         for (int32 Index = 0; Index < Sections; ++Index)
         {
             const FVector Mid = Start + SectionDelta * (static_cast<float>(Index) + 0.5f);
-            SpawnShape(ProductionFenceSegmentMesh, Mid,
+            SpawnShape(
+                ProductionFenceSegmentMesh,
+                Mid,
                 FVector(FMath::Max(0.25f, SectionLength / 100.0f), 1.0f, 1.0f),
-                Wood, RailRotation, true);
+                Wood,
+                RailRotation,
+                true);
         }
         return;
     }
@@ -575,8 +672,13 @@ void AShirePrototypeWorldBuilder::SpawnFenceLine(const FVector& Start, const FVe
     for (int32 Index = 0; Index <= Sections; ++Index)
     {
         const FVector PostBase = Start + SectionDelta * static_cast<float>(Index);
-        SpawnShape(CubeMesh, PostBase + FVector(0.0f, 0.0f, 34.0f),
-            FVector(0.075f, 0.075f, 0.68f), Wood, FRotator::ZeroRotator, true);
+        SpawnShape(
+            CubeMesh,
+            PostBase + FVector(0.0f, 0.0f, 34.0f),
+            FVector(0.075f, 0.075f, 0.68f),
+            Wood,
+            FRotator::ZeroRotator,
+            true);
     }
 
     for (int32 Index = 0; Index < Sections; ++Index)
