@@ -12,6 +12,7 @@ $Project = Join-Path $ProjectRoot "ShireJourney.uproject"
 $Editor = Join-Path $UERoot "Engine\Binaries\Win64\UE4Editor.exe"
 $Importer = Join-Path $ProjectRoot "Scripts\ci_import_production_assets.cmd"
 $RouteContract = Join-Path $ProjectRoot "Data\P1C01LocalVisualAcceptanceRouteV1.json"
+$env:GITHUB_WORKSPACE = $ProjectRoot
 
 if($env:OS -ne "Windows_NT"){
     throw "P1C01_LOCAL_ACCEPTANCE_FAIL reason=windows_required"
@@ -152,17 +153,15 @@ $StatsOut = Join-Path $EvidenceRoot "UnrealStats"
 New-Item -ItemType Directory -Path $ScreenshotOut -Force | Out-Null
 New-Item -ItemType Directory -Path $StatsOut -Force | Out-Null
 
-$ScreenshotRoots = @(
-    (Join-Path $ProjectRoot "Saved\Screenshots\Windows"),
-    (Join-Path $ProjectRoot "Saved\Screenshots\WindowsNoEditor")
-)
+$ScreenshotsRoot = Join-Path $ProjectRoot "Saved\Screenshots"
 $Screenshots = @()
-foreach($Root in $ScreenshotRoots){
-    if(Test-Path -LiteralPath $Root){
-        foreach($File in @(Get-ChildItem -LiteralPath $Root -File -ErrorAction SilentlyContinue | Where-Object { $_.LastWriteTime -ge $StartedAt })){
-            $Screenshots += $File
-            Copy-Item -LiteralPath $File.FullName -Destination (Join-Path $ScreenshotOut $File.Name) -Force
-        }
+if(Test-Path -LiteralPath $ScreenshotsRoot){
+    foreach($File in @(Get-ChildItem -LiteralPath $ScreenshotsRoot -Recurse -File -Filter "*.png" -ErrorAction SilentlyContinue | Where-Object { $_.LastWriteTime -ge $StartedAt })){
+        $Screenshots += $File
+        $RelativeParent = Split-Path ($File.FullName.Substring($ScreenshotsRoot.Length).TrimStart('\')) -Parent
+        $DestinationDir = if([string]::IsNullOrWhiteSpace($RelativeParent)){ $ScreenshotOut } else { Join-Path $ScreenshotOut $RelativeParent }
+        New-Item -ItemType Directory -Path $DestinationDir -Force | Out-Null
+        Copy-Item -LiteralPath $File.FullName -Destination (Join-Path $DestinationDir $File.Name) -Force
     }
 }
 
