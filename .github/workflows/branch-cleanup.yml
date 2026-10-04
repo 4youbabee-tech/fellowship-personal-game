@@ -1,0 +1,121 @@
+name: Branch Cleanup
+
+on:
+  pull_request:
+    types:
+      - closed
+  workflow_dispatch:
+  push:
+    branches:
+      - maintenance/default-branch-cleanup-rootfix-2026-10-04
+
+permissions:
+  contents: write
+  pull-requests: read
+
+concurrency:
+  group: branch-cleanup-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  cleanup:
+    runs-on: windows-latest
+    timeout-minutes: 8
+    env:
+      GH_TOKEN: ${{ github.token }}
+      CLOSED_HEAD_REF: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || '' }}
+      CLOSED_HEAD_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || '' }}
+
+    steps:
+      - name: Checkout latest canonical cleanup controller
+        uses: actions/checkout@v4
+        with:
+          ref: develop
+          fetch-depth: 0
+          clean: true
+          persist-credentials: true
+
+      - name: Verify cleanup controller
+        shell: powershell
+        run: |
+          $actual = (git rev-parse HEAD).Trim()
+          $develop = (git rev-parse origin/develop).Trim()
+          Write-Host "BRANCH_CLEANUP_CONTROLLER actual=$actual originDevelop=$develop"
+          if ($actual -ne $develop) { throw "Cleanup controller is not exact develop." }
+          if (-not (Test-Path "Scripts/run_branch_cleanup.ps1")) { throw "Missing cleanup script on develop." }
+          if (-not (Test-Path "Data/BranchCleanupPlan.json")) { throw "Missing cleanup plan on develop." }
+
+      - name: Run governed branch lifecycle cleanup
+        shell: powershell
+        run: |
+          & powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts/run_branch_cleanup.ps1"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: One-time retire already-reviewed stale refs
+        if: github.event_name == 'push'
+        shell: powershell
+        run: |
+          $ErrorActionPreference = "Stop"
+          $repo = $env:GITHUB_REPOSITORY
+          $headers = @{
+            Authorization = "Bearer $env:GH_TOKEN"
+            Accept = "application/vnd.github+json"
+            "X-GitHub-Api-Version" = "2022-11-28"
+          }
+
+          $open = @(Invoke-RestMethod -Headers $headers -Uri "https://api.github.com/repos/$repo/pulls?state=open&per_page=100")
+          $active = @($open | ForEach-Object { [string]$_.head.ref })
+
+          function Get-LiveSha([string]$branchName) {
+            $encoded = [System.Uri]::EscapeDataString("heads/$branchName")
+            try {
+              $ref = Invoke-RestMethod -Headers $headers -Uri "https://api.github.com/repos/$repo/git/ref/$encoded"
+              return [string]$ref.object.sha
+            } catch {
+              if ($_.Exception.Response.StatusCode.value__ -eq 404) { return $null }
+              throw
+            }
+          }
+
+          function Delete-Exact([string]$branchName,[string]$expectedSha,[string]$reason) {
+            if ($branchName -in @("main","develop","archive/pre-build-salvage-20260930")) { throw "Protected ref requested: $branchName" }
+            if ($active -contains $branchName) { throw "Active PR head requested: $branchName" }
+            $live = Get-LiveSha $branchName
+            if (-not $live) { Write-Host "ONE_SHOT_ALREADY_ABSENT branch=$branchName"; return }
+            if ($live -ne $expectedSha) { throw "Moved ref: $branchName live=$live expected=$expectedSha" }
+            Write-Host "ONE_SHOT_DELETE branch=$branchName reason=$reason sha=$live"
+            git push origin --delete $branchName
+            if ($LASTEXITCODE -ne 0) { throw "Delete failed: $branchName" }
+          }
+
+          function Delete-ZeroAheadDevelop([string]$branchName,[string]$reason) {
+            if ($active -contains $branchName) { throw "Active PR head requested: $branchName" }
+            $live = Get-LiveSha $branchName
+            if (-not $live) { Write-Host "ONE_SHOT_ALREADY_ABSENT branch=$branchName"; return }
+            $encoded = [System.Uri]::EscapeDataString($branchName)
+            $cmp = Invoke-RestMethod -Headers $headers -Uri "https://api.github.com/repos/$repo/compare/develop...$encoded"
+            if ([int]$cmp.ahead_by -ne 0) { throw "Not zero-ahead: $branchName ahead=$($cmp.ahead_by)" }
+            Write-Host "ONE_SHOT_DELETE branch=$branchName reason=$reason ahead=0"
+            git push origin --delete $branchName
+            if ($LASTEXITCODE -ne 0) { throw "Delete failed: $branchName" }
+          }
+
+          function Delete-ContainedBy([string]$branchName,[string]$successor,[string]$reason) {
+            if ($active -contains $branchName) { throw "Active PR head requested: $branchName" }
+            if (-not (Get-LiveSha $successor)) { throw "Successor missing: $successor" }
+            $live = Get-LiveSha $branchName
+            if (-not $live) { Write-Host "ONE_SHOT_ALREADY_ABSENT branch=$branchName"; return }
+            $encoded = [System.Uri]::EscapeDataString($branchName)
+            $baseEncoded = [System.Uri]::EscapeDataString($successor)
+            $cmp = Invoke-RestMethod -Headers $headers -Uri "https://api.github.com/repos/$repo/compare/$baseEncoded...$encoded"
+            if ([int]$cmp.ahead_by -ne 0) { throw "Branch is not contained by successor: $branchName successor=$successor ahead=$($cmp.ahead_by)" }
+            Write-Host "ONE_SHOT_DELETE branch=$branchName reason=$reason successor=$successor"
+            git push origin --delete $branchName
+            if ($LASTEXITCODE -ne 0) { throw "Delete failed: $branchName" }
+          }
+
+          Delete-ZeroAheadDevelop "production/ci-human-wave3-runner-dedup-2026-10-04" "identical-to-develop"
+          Delete-Exact "p1c01/frodo-skeletal-import-refresh-2026-10-02" "07114dfdbba04ec4b762ac4aa4043820d7addb18" "PR257 explicitly superseded by merged PR293"
+          Delete-Exact "production/p1c01-kaykit-rig-bridge-2026-10-04" "05a82c90947589ef429bfec082513facb222a572" "PR309 superseded by merged clean rollover PR310"
+          Delete-Exact "production/p1c01-shire-settlement-completion-v3-2026-10-04" "0f6d9e4095fdb9b13790584dd36155cacf8457ea" "PR316 explicitly superseded by PR317"
+          Delete-ContainedBy "production/p1c01-shire-settlement-runtime-cleanup-2026-10-04" "production/p1c01-shire-exterior-reconciled-closeout-2026-10-04" "fully-contained-in-active-successor-PR317"
