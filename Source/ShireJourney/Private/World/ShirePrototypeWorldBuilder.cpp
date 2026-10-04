@@ -3592,6 +3592,361 @@ void AShirePrototypeWorldBuilder::SpawnPresentationCompositionPass()
 
 
 
+
+void AShirePrototypeWorldBuilder::SpawnVisibleShireMegaWaveD()
+{
+    int32 BagEndInstances = 0;
+    int32 HobbitonInstances = 0;
+    int32 FieldEdgeInstances = 0;
+    int32 WoodlandInstances = 0;
+    int32 FerryInstances = 0;
+    int32 FerryHeroActors = 0;
+
+    auto AddInstance = [](UHierarchicalInstancedStaticMeshComponent* Component,
+        const FVector& Location, const FVector& Scale, float Yaw)
+    {
+        if (!Component || !Component->GetStaticMesh())
+        {
+            return false;
+        }
+
+        Component->AddInstance(FTransform(
+            FRotator(0.0f, Yaw, 0.0f),
+            Location,
+            Scale));
+        return true;
+    };
+
+    // ---------------------------------------------------------------------
+    // Bag End hero composition.
+    // Keep the entrance and quest approach open; mass the hill behind the
+    // facade and create asymmetric garden/property framing in the foreground.
+    // ---------------------------------------------------------------------
+    const struct FWaveDPlacement
+    {
+        FVector Location;
+        FVector Scale;
+        float Yaw;
+    } BagEndEarth[] = {
+        { FVector(-3020,-1120,-175), FVector(2.45f,1.90f,1.34f),  17.0f },
+        { FVector(-2950,  120,-170), FVector(2.35f,1.82f,1.30f), -14.0f },
+        { FVector(-2470,-1510,-150), FVector(2.00f,1.55f,1.16f),  31.0f },
+        { FVector(-2350,  740,-145), FVector(1.90f,1.52f,1.14f), -27.0f }
+    };
+    for (const FWaveDPlacement& P : BagEndEarth)
+    {
+        if (GeographyHillInstances &&
+            GeographyHillInstances->GetStaticMesh() == ProductionCommonTerracedHillMesh &&
+            AddInstance(GeographyHillInstances, P.Location, P.Scale, P.Yaw))
+        {
+            ++BagEndInstances;
+        }
+    }
+
+    const FWaveDPlacement BagEndHedges[] = {
+        { FVector(-2660,-960,0), FVector(0.82f,0.72f,0.72f),  18.0f },
+        { FVector(-2470,-1040,0), FVector(0.78f,0.70f,0.70f),  12.0f },
+        { FVector(-2260,-1080,0), FVector(0.74f,0.68f,0.68f),   8.0f },
+        { FVector(-2050,-1050,0), FVector(0.76f,0.70f,0.70f),  -4.0f },
+        { FVector(-1870,-970,0), FVector(0.80f,0.72f,0.72f), -12.0f },
+        { FVector(-2670,  140,0), FVector(0.78f,0.70f,0.70f), -17.0f },
+        { FVector(-2480,  230,0), FVector(0.74f,0.68f,0.68f), -10.0f },
+        { FVector(-2290,  290,0), FVector(0.72f,0.66f,0.66f),  -4.0f },
+        { FVector(-2100,  290,0), FVector(0.74f,0.68f,0.68f),   5.0f },
+        { FVector(-1900,  220,0), FVector(0.78f,0.70f,0.70f),  12.0f }
+    };
+    for (const FWaveDPlacement& P : BagEndHedges)
+    {
+        if (HedgeInstances && HedgeInstances->GetStaticMesh() == ProductionHedgeMesh &&
+            AddInstance(HedgeInstances, P.Location, P.Scale, P.Yaw))
+        {
+            ++BagEndInstances;
+        }
+    }
+
+    for (int32 Index = 0; Index < 18; ++Index)
+    {
+        const float Angle = FMath::DegreesToRadians(-155.0f + static_cast<float>(Index) * 17.5f);
+        const float Radius = 520.0f + 55.0f * static_cast<float>(Index % 3);
+        const FVector P(
+            -2210.0f + FMath::Cos(Angle) * Radius,
+            -520.0f + FMath::Sin(Angle) * Radius,
+            3.0f);
+        const float S = 0.19f + 0.025f * static_cast<float>(Index % 4);
+        if (ShrubInstances && ShrubInstances->GetStaticMesh() == ProductionShrubMesh &&
+            AddInstance(ShrubInstances, P, FVector(S * 1.18f,S,S * 0.78f), static_cast<float>((Index * 47) % 360)))
+        {
+            ++BagEndInstances;
+        }
+    }
+
+    for (int32 Index = 0; Index < 20; ++Index)
+    {
+        const float Alpha = static_cast<float>(Index) / 19.0f;
+        const FVector P = FMath::Lerp(
+            FVector(-1670.0f,-335.0f,2.0f),
+            FVector(-2155.0f,-493.0f,2.0f),
+            Alpha) + FVector(0.0f, (Index % 2 == 0 ? -95.0f : 95.0f), 0.0f);
+        const float S = 0.22f + 0.018f * static_cast<float>(Index % 5);
+        if (GrassInstances && GrassInstances->GetStaticMesh() == ProductionGrassClumpMesh &&
+            AddInstance(GrassInstances, P, FVector(S), static_cast<float>((Index * 31) % 360)))
+        {
+            ++BagEndInstances;
+        }
+    }
+
+    // ---------------------------------------------------------------------
+    // Hobbiton authored settlement depth.
+    // Alternate terraces, hedges, fences and trees so the village reads as
+    // several inhabited properties rather than one repeated strip.
+    // ---------------------------------------------------------------------
+    const FWaveDPlacement HobbitonTerraces[] = {
+        { FVector(-1650, 1280,-118), FVector(1.80f,1.34f,1.05f),  12.0f },
+        { FVector( -980, 1480,-122), FVector(1.92f,1.42f,1.08f),  -8.0f },
+        { FVector( -260, 1420,-120), FVector(1.86f,1.38f,1.06f),  11.0f },
+        { FVector(  520, 1380,-118), FVector(1.78f,1.34f,1.04f), -12.0f },
+        { FVector(-1430,-1350,-120), FVector(1.82f,1.36f,1.05f), -10.0f },
+        { FVector( -650,-1490,-124), FVector(1.94f,1.44f,1.09f),   9.0f },
+        { FVector(  220,-1420,-122), FVector(1.88f,1.40f,1.07f), -11.0f },
+        { FVector( 1120,-1280,-118), FVector(1.80f,1.35f,1.05f),  13.0f }
+    };
+    for (const FWaveDPlacement& P : HobbitonTerraces)
+    {
+        if (GeographySlopeInstances &&
+            GeographySlopeInstances->GetStaticMesh() == ProductionCommonVillageSlopeMesh &&
+            AddInstance(GeographySlopeInstances, P.Location, P.Scale, P.Yaw))
+        {
+            ++HobbitonInstances;
+        }
+    }
+
+    for (int32 Index = 0; Index < 20; ++Index)
+    {
+        const float X = -1760.0f + 185.0f * static_cast<float>(Index);
+        const float Side = (Index % 2 == 0) ? -1.0f : 1.0f;
+        const float Y = Side * (960.0f + 85.0f * static_cast<float>((Index / 2) % 3));
+        if (HedgeInstances && HedgeInstances->GetStaticMesh() == ProductionHedgeMesh &&
+            AddInstance(HedgeInstances, FVector(X,Y,0.0f), FVector(0.72f,0.62f,0.66f),
+                Side > 0.0f ? 7.0f : -7.0f))
+        {
+            ++HobbitonInstances;
+        }
+    }
+
+    for (int32 Index = 0; Index < 12; ++Index)
+    {
+        const float X = -1480.0f + 260.0f * static_cast<float>(Index);
+        const float Side = (Index % 2 == 0) ? -1.0f : 1.0f;
+        const float Y = Side * 1180.0f;
+        if (RuralFenceInstances && RuralFenceInstances->GetStaticMesh() &&
+            AddInstance(RuralFenceInstances, FVector(X,Y,0.0f), FVector(0.72f),
+                Side > 0.0f ? 4.0f : -4.0f))
+        {
+            ++HobbitonInstances;
+        }
+    }
+
+    const FVector HobbitonTrees[] = {
+        FVector(-1500,1700,0), FVector(-750,1820,0), FVector(50,1710,0), FVector(850,1600,0),
+        FVector(-1320,-1740,0), FVector(-520,-1810,0), FVector(320,-1740,0), FVector(1220,-1600,0)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(HobbitonTrees); ++Index)
+    {
+        const float S = 0.60f + 0.055f * static_cast<float>(Index % 4);
+        if (WoodlandTreeInstances &&
+            WoodlandTreeInstances->GetStaticMesh() == ProductionCommonBroadleafTreeMesh &&
+            AddInstance(WoodlandTreeInstances, HobbitonTrees[Index], FVector(S),
+                static_cast<float>((Index * 61) % 360)))
+        {
+            ++HobbitonInstances;
+        }
+    }
+
+    // ---------------------------------------------------------------------
+    // Worked fields and road rhythm.
+    // Keep broad pastoral openness but establish authored property edges and
+    // route bends with sparse, readable detail rather than uniform density.
+    // ---------------------------------------------------------------------
+    for (int32 Index = 0; Index < 24; ++Index)
+    {
+        const float Alpha = static_cast<float>(Index) / 23.0f;
+        const float X = FMath::Lerp(2800.0f, 10400.0f, Alpha);
+        const float Side = (Index % 2 == 0) ? -1.0f : 1.0f;
+        const float Y = Side * (1550.0f + 130.0f * FMath::Sin(static_cast<float>(Index) * 0.74f));
+        UHierarchicalInstancedStaticMeshComponent* Boundary =
+            ((Index % 3) == 0) ? RuralFenceInstances : HedgeInstances;
+        if (Boundary && Boundary->GetStaticMesh() &&
+            AddInstance(Boundary, FVector(X,Y,0.0f), FVector(0.78f,0.68f,0.72f),
+                5.0f * FMath::Sin(static_cast<float>(Index) * 0.55f)))
+        {
+            ++FieldEdgeInstances;
+        }
+    }
+
+    for (int32 Index = 0; Index < 18; ++Index)
+    {
+        const float Alpha = static_cast<float>(Index) / 17.0f;
+        const float X = FMath::Lerp(3200.0f, 10100.0f, Alpha);
+        const float Side = (Index % 2 == 0) ? -1.0f : 1.0f;
+        const float Y = Side * (1110.0f + 90.0f * FMath::Sin(static_cast<float>(Index) * 0.91f));
+        if (ShrubInstances && ShrubInstances->GetStaticMesh() == ProductionShrubMesh &&
+            AddInstance(ShrubInstances, FVector(X,Y,2.0f), FVector(0.22f,0.20f,0.17f),
+                static_cast<float>((Index * 73) % 360)))
+        {
+            ++FieldEdgeInstances;
+        }
+    }
+
+    // ---------------------------------------------------------------------
+    // Wooded-road enclosure.
+    // Tighten the player-facing corridor with canopy + understory while
+    // leaving the central route clear for traversal and NPC reactions.
+    // ---------------------------------------------------------------------
+    for (int32 Index = 0; Index < 28; ++Index)
+    {
+        const float Alpha = static_cast<float>(Index) / 27.0f;
+        const float X = FMath::Lerp(10800.0f, 19800.0f, Alpha);
+        const float Side = (Index % 2 == 0) ? -1.0f : 1.0f;
+        const float Y = Side * (1260.0f + 180.0f * FMath::Sin(static_cast<float>(Index) * 0.63f));
+        const float S = 0.70f + 0.07f * static_cast<float>(Index % 5);
+        if (WoodlandTreeInstances &&
+            WoodlandTreeInstances->GetStaticMesh() == ProductionCommonBroadleafTreeMesh &&
+            AddInstance(WoodlandTreeInstances, FVector(X,Y,0.0f), FVector(S),
+                static_cast<float>((Index * 43) % 360)))
+        {
+            ++WoodlandInstances;
+        }
+    }
+
+    for (int32 Index = 0; Index < 36; ++Index)
+    {
+        const float Alpha = static_cast<float>(Index) / 35.0f;
+        const float X = FMath::Lerp(10900.0f, 19900.0f, Alpha);
+        const float Side = (Index % 2 == 0) ? -1.0f : 1.0f;
+        const float Y = Side * (860.0f + 145.0f * static_cast<float>((Index / 2) % 4));
+        const float S = 0.48f + 0.04f * static_cast<float>(Index % 5);
+        if (FernInstances && FernInstances->GetStaticMesh() == ProductionCommonFernClumpMesh &&
+            AddInstance(FernInstances, FVector(X,Y,2.0f), FVector(S),
+                static_cast<float>((Index * 59) % 360)))
+        {
+            ++WoodlandInstances;
+        }
+    }
+
+    // ---------------------------------------------------------------------
+    // Bucklebury Ferry hero destination.
+    // Frame the approach and opposite bank as a destination: white-stone-like
+    // edge rhythm, landing/boat/rope-post silhouettes, reeds, lamps and a
+    // raised opposite bank. Do not open Buckland/P1C02 runtime.
+    // ---------------------------------------------------------------------
+    const FWaveDPlacement FerryBanks[] = {
+        { FVector(21800,-1510,-52), FVector(2.35f,1.38f,1.10f),   2.0f },
+        { FVector(22550,-1570,-48), FVector(2.55f,1.46f,1.14f),  -2.0f },
+        { FVector(24000,-1570,-48), FVector(2.60f,1.48f,1.16f),   2.0f },
+        { FVector(24800,-1480,-52), FVector(2.38f,1.40f,1.10f),  -3.0f },
+        { FVector(21850,  760,-45), FVector(2.25f,1.32f,1.12f), 179.0f },
+        { FVector(22600,  850,-40), FVector(2.60f,1.50f,1.24f), 181.0f },
+        { FVector(24050,  870,-38), FVector(2.72f,1.58f,1.30f), 179.0f },
+        { FVector(24900,  770,-44), FVector(2.36f,1.38f,1.15f), 181.0f }
+    };
+    for (const FWaveDPlacement& P : FerryBanks)
+    {
+        if (GeographyRiverBankInstances &&
+            GeographyRiverBankInstances->GetStaticMesh() == ProductionCommonRiverBankMesh &&
+            AddInstance(GeographyRiverBankInstances, P.Location, P.Scale, P.Yaw))
+        {
+            ++FerryInstances;
+        }
+    }
+
+    for (int32 Index = 0; Index < 36; ++Index)
+    {
+        const int32 Local = Index % 18;
+        const float Alpha = static_cast<float>(Local) / 17.0f;
+        const float X = FMath::Lerp(21100.0f, 24950.0f, Alpha);
+        const float BankY = Index < 18 ? -1650.0f : 850.0f;
+        const float Y = BankY + 85.0f * FMath::Sin(static_cast<float>(Index) * 0.81f);
+        const float S = 0.52f + 0.045f * static_cast<float>(Index % 5);
+        if (ReedInstances && ReedInstances->GetStaticMesh() == ProductionCommonReedClusterMesh &&
+            AddInstance(ReedInstances, FVector(X,Y,-2.0f), FVector(S),
+                static_cast<float>((Index * 41) % 360)))
+        {
+            ++FerryInstances;
+        }
+    }
+
+    for (int32 Index = 0; Index < 18; ++Index)
+    {
+        const float Alpha = static_cast<float>(Index) / 17.0f;
+        const float X = FMath::Lerp(20250.0f, ShireLayout::FerryX - 500.0f, Alpha);
+        const float Side = (Index % 2 == 0) ? -1.0f : 1.0f;
+        const float Y = -610.0f + Side * 245.0f;
+        const float S = 0.20f + 0.018f * static_cast<float>(Index % 4);
+        if (PathStoneInstances && PathStoneInstances->GetStaticMesh() == ProductionPathStoneMesh &&
+            AddInstance(PathStoneInstances, FVector(X,Y,4.0f), FVector(S * 1.45f,S,0.065f),
+                static_cast<float>((Index * 29) % 360)))
+        {
+            ++FerryInstances;
+        }
+    }
+
+    auto SpawnFerryHero = [this, &FerryHeroActors](UStaticMesh* Mesh,
+        const FVector& Location, const FVector& Scale, const FRotator& Rotation)
+    {
+        if (!Mesh)
+        {
+            return;
+        }
+        if (SpawnShape(Mesh, Location, Scale, FLinearColor::White, Rotation, false))
+        {
+            ++FerryHeroActors;
+        }
+    };
+
+    SpawnFerryHero(ProductionCommonFootbridgeMesh,
+        FVector(ShireLayout::FerryX - 80.0f,-720.0f,-4.0f),
+        FVector(1.05f,0.90f,0.80f), FRotator(0.0f,90.0f,0.0f));
+    SpawnFerryHero(ProductionCommonRiverBoatMesh,
+        FVector(ShireLayout::FerryX + 120.0f,-920.0f,-8.0f),
+        FVector(0.82f), FRotator(0.0f,7.0f,0.0f));
+
+    const FVector RopePosts[] = {
+        FVector(ShireLayout::FerryX-260,-980,0), FVector(ShireLayout::FerryX+20,-990,0),
+        FVector(ShireLayout::FerryX-250,-460,0), FVector(ShireLayout::FerryX+30,-450,0)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(RopePosts); ++Index)
+    {
+        SpawnFerryHero(ProductionCommonRopePostMesh, RopePosts[Index], FVector(0.72f),
+            FRotator(0.0f, static_cast<float>(Index * 90), 0.0f));
+    }
+    SpawnFerryHero(ProductionCommonRopeCoilMesh,
+        FVector(ShireLayout::FerryX-120,-850,0), FVector(0.62f), FRotator(0.0f,21.0f,0.0f));
+    SpawnFerryHero(ProductionCommonRopeCoilMesh,
+        FVector(ShireLayout::FerryX+75,-520,0), FVector(0.58f), FRotator(0.0f,-18.0f,0.0f));
+
+    SpawnFerryHero(ProductionLampPostMesh,
+        FVector(ShireLayout::FerryX-430,-1030,0), FVector(0.82f), FRotator::ZeroRotator);
+    SpawnFerryHero(ProductionLampPostMesh,
+        FVector(ShireLayout::FerryX+260,-1010,0), FVector(0.82f), FRotator::ZeroRotator);
+    SpawnFerryHero(ProductionLampPostMesh,
+        FVector(ShireLayout::FerryX-420,-380,0), FVector(0.80f), FRotator::ZeroRotator);
+    SpawnFerryHero(ProductionLampPostMesh,
+        FVector(ShireLayout::FerryX+260,-390,0), FVector(0.80f), FRotator::ZeroRotator);
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("P1C01_VISIBLE_SHIRE_MEGA_WAVE_D bagEnd=%d hobbiton=%d fields=%d woodland=%d ferry=%d ferryHeroActors=%d writer=ShirePrototypeWorldBuilder p1c02Runtime=no"),
+        BagEndInstances,
+        HobbitonInstances,
+        FieldEdgeInstances,
+        WoodlandInstances,
+        FerryInstances,
+        FerryHeroActors);
+}
+
+
+
 void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()
 {
     if (!GetWorld())
@@ -4137,6 +4492,7 @@ void AShirePrototypeWorldBuilder::BuildPrototypeWorld()
     SpawnScenicDetailPass();
     SpawnNaturalRouteMegaPass();
     SpawnPresentationCompositionPass();
+    SpawnVisibleShireMegaWaveD();
     SpawnWorldDensityDetailPass();
     SpawnBagEndHeroPass();
     SpawnPartySocialLoopPass();
