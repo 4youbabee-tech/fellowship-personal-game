@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "wave_id": "P1C01_VISIBLE_SHIRE_MEGA_WAVE_D_V1",
+  "status": "SOURCE_IMPLEMENTED_VALIDATION_PENDING",
+  "runtime_chapter": "P1C01",
+  "runtime_writer": "AShirePrototypeWorldBuilder",
+  "source_basis": {
+    "story_anchor": "F1-02 Bag End/Shire + F1-03 Shire roads/Bucklebury",
+    "route_read": "Bag End -> Hobbiton -> worked fields -> enclosed woodland -> Bucklebury Ferry",
+    "ferry_read": "well-kept approach, landing, reeds/mist framing, broad river, steep opposite bank/winding-path silhouette"
+  },
+  "visible_budget": {
+    "bag_end_hism": 52,
+    "hobbiton_hism": 48,
+    "field_edge_hism": 42,
+    "woodland_hism": 64,
+    "ferry_hism": 62,
+    "ferry_hero_actors": 12,
+    "total_hism": 268,
+    "total_limited_hero_actors": 12
+  },
+  "hero_elements": {
+    "bag_end": [
+      "rear hill massing",
+      "garden hedge frame",
+      "cultivated shrub ring",
+      "grass-framed approach"
+    ],
+    "hobbiton": [
+      "8 authored terraces",
+      "property hedge rhythm",
+      "fence edges",
+      "settlement trees"
+    ],
+    "fields": [
+      "alternating hedge/fence boundaries",
+      "sparse working-edge shrubs"
+    ],
+    "woodland": [
+      "28 canopy trees",
+      "36 fern understory instances",
+      "central traversal corridor preserved"
+    ],
+    "ferry": [
+      "8 river-bank masses",
+      "36 reed accents",
+      "18 approach stones",
+      "landing",
+      "boat",
+      "rope posts/coils",
+      "4 lamps"
+    ]
+  },
+  "architecture_contract": {
+    "repeated_detail": "existing HISM/ISM components",
+    "new_world_authority": false,
+    "per_instance_tick": false,
+    "synchronous_heavy_load": false,
+    "actor_per_prop_density": false,
+    "p1c02_runtime_opened": false,
+    "population_owner": "ALivingWorldDirector",
+    "npc_context_owner": "UShireNPCContextSubsystem",
+    "quest_owner": "UShireQuestSubsystem"
+  },
+  "performance_target": {
+    "engine": "UE4.27.2",
+    "rhi": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "cpu": "i7 Gen6 class",
+    "ram_gb": 8,
+    "vram_gb_approx": 2
+  },
+  "evidence_boundary": "Source implementation only until exact-head Pre-Unreal/UE4 and later PIE visual/performance evidence exist."
+}
