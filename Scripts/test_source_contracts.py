@@ -1019,5 +1019,81 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("delivery_mode=[string]$receipt.delivery_mode", ue4)
 
 
+    def test_p1c01_definitive_closeout_root_fixes_are_single_owner_and_bounded(self):
+        root = Path(__file__).resolve().parents[1]
+        packet = json.loads((root / "Data" / "P1C01DefinitiveChapterCloseoutV1.json").read_text(encoding="utf-8"))
+        self.assertEqual(packet["runtime_chapter"], "P1C01")
+        self.assertFalse(packet["branch_policy"]["p1c02_runtime_opened"])
+        self.assertEqual(packet["rendered_evidence"]["capture_count_proven_by_log"], 6)
+        self.assertEqual(packet["rendered_evidence"]["review_state"], "HUMAN_RENDER_REVIEWED_REJECTED")
+        self.assertFalse(packet["architecture_contract"]["synchronous_heavy_load"])
+
+        completion = json.loads((root / "Data" / "P1C01ShireSettlementCompletionV1.json").read_text(encoding="utf-8"))
+        self.assertEqual(completion["visible_budget"]["native_hism_instances"], 173)
+        self.assertEqual(completion["visible_budget"]["detail_cluster_instances"], 179)
+        self.assertEqual(completion["visible_budget"]["target_total_instances"], 352)
+        self.assertEqual(completion["settlement_detail"]["party_field_tables"], 0)
+        self.assertEqual(completion["settlement_detail"]["party_field_tables_owner"], "SpawnPartySocialLoopPass")
+        self.assertFalse(completion["settlement_detail"]["party_entry_collision"])
+
+        header = (root / "Source" / "ShireJourney" / "Public" / "World" / "ShirePrototypeWorldBuilder.h").read_text(encoding="utf-8")
+        source = (root / "Source" / "ShireJourney" / "Private" / "World" / "ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        for token in ("GardenSoilInstances", "PropertyFenceInstances", "SpawnShireSettlementFinalPolishPass"):
+            self.assertIn(token, header)
+            self.assertIn(token, source)
+
+        start = source.index("void AShirePrototypeWorldBuilder::SpawnShireSettlementCompletionPass()")
+        end = source.index("void AShirePrototypeWorldBuilder::SpawnShireSettlementFinalPolishPass()", start)
+        body = source[start:end]
+        self.assertIn("if (Index < 7 || Index > 9)", body)
+        self.assertNotIn("PartyFieldTablesCompletion", body)
+        self.assertIn("PartyFieldEntryGates", body)
+        self.assertIn("partyTablesOwner=PartySocialLoop", body)
+
+        fence_start = source.index("void AShirePrototypeWorldBuilder::SpawnFenceLine(")
+        garden_start = source.index("void AShirePrototypeWorldBuilder::SpawnGardenPatch(", fence_start)
+        fence = source[fence_start:garden_start]
+        self.assertIn("PropertyFenceInstances->AddInstance", fence)
+        self.assertNotIn("RuralFenceInstances->AddInstance", fence)
+
+        garden_end = source.index("void AShirePrototypeWorldBuilder::ConfigureFoliageInstances()", garden_start)
+        garden = source[garden_start:garden_end]
+        self.assertIn("GardenSoilInstances->AddInstance", garden)
+
+        polish_start = source.index("void AShirePrototypeWorldBuilder::SpawnShireSettlementFinalPolishPass()")
+        polish_end = source.index("void AShirePrototypeWorldBuilder::SpawnShireSettlementCanonFinishPass()", polish_start)
+        polish = source[polish_start:polish_end]
+        for token in ("P1C01MillWorkingBarrels", "P1C01BagshotGardenFlowers", "P1C01SettlementWarmLanternRhythm", "movableLightsAdded=0"):
+            self.assertIn(token, polish)
+        for forbidden in ("LoadObject<", "StaticLoadObject", "RequestSyncLoad", "UPointLightComponent"):
+            self.assertNotIn(forbidden, polish)
+
+    def test_p1c01_render_capture_finalizer_counts_without_cmd_pipe_escape(self):
+        root = Path(__file__).resolve().parents[1]
+        script = (root / "Scripts" / "ci_capture_p1c01_visuals.cmd").read_text(encoding="utf-8")
+        self.assertIn("P1C01_RENDER_CAPTURE_FINALIZER_PASS", script)
+        self.assertIn("@(Get-ChildItem", script)
+        self.assertNotIn("^| Measure-Object", script)
+        for shot in (
+            "01_BagEnd_Hill", "02_Hobbiton_Common", "03_Party_Field",
+            "04_Water_Mill_Bridge", "05_Bywater_Facing_Edge", "06_Bucklebury_Ferry",
+        ):
+            self.assertIn(shot, script)
+
+    def test_p1c01_local_visual_acceptance_harness_preserves_evidence_boundary(self):
+        root = Path(__file__).resolve().parents[1]
+        route = json.loads((root / "Data" / "P1C01LocalVisualAcceptanceRouteV1.json").read_text(encoding="utf-8"))
+        self.assertEqual(route["runtime_chapter"], "P1C01")
+        self.assertEqual(route["target_profile"]["fps_floor"], 30)
+        self.assertEqual(route["launch"]["renderer"], "DX11")
+        self.assertEqual(route["launch"]["resolution"], "1280x720")
+        self.assertGreaterEqual(len(route["checkpoints"]), 8)
+        for key in ("pie_tested","device_tested","visually_accepted","performance_accepted","gate_6_7_accepted"):
+            self.assertFalse(route["acceptance_boundary"][key])
+        script = (root / "Scripts" / "run_local_p1c01_visual_acceptance.ps1").read_text(encoding="utf-8")
+        for token in ("ci_import_production_assets.cmd", "/Engine/Maps/Entry", "-d3d11", "-ResX=1280", "-ResY=720", "stat startfile", "stat stopfile", "HighResShot 1"):
+            self.assertIn(token, script)
+
+
 if __name__ == "__main__":
     unittest.main()
