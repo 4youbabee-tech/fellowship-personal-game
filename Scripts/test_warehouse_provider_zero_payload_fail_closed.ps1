@@ -33,9 +33,23 @@ if(-not $script.Contains('"state"] = "MANUAL_QUEUE_REQUIRED"')){
 if(-not $script.Contains("QUATERNIUS_WAREHOUSE_MANUAL_QUEUE")){
     throw "WAREHOUSE_ZERO_PAYLOAD_MANUAL_QUEUE_MARKER_MISSING"
 }
-$manualQueueCalls = @([regex]::Matches($workflow, 'stage_quaternius_warehouse\.ps1"[^\r\n]*-RecordManualQueue'))
-if($manualQueueCalls.Count -ne 2){
-    throw "WAREHOUSE_ZERO_PAYLOAD_WORKFLOW_MANUAL_QUEUE_CALL_COUNT count=$($manualQueueCalls.Count)"
+$manualQueueLines = @(
+    [regex]::Split($workflow, "\r?\n") |
+    Where-Object { $_ -match 'stage_quaternius_warehouse\.ps1"[^\r\n]*-RecordManualQueue' }
+)
+$expectedManualQueueManifests = @(
+    "WarehouseQuaterniusAcquisitionBatchV1.json",
+    "WarehouseQuaterniusAnimationBatchV1.json",
+    "WarehouseQuaterniusHeroCandidateBatchV1.json"
+)
+if($manualQueueLines.Count -ne $expectedManualQueueManifests.Count){
+    throw "WAREHOUSE_ZERO_PAYLOAD_WORKFLOW_MANUAL_QUEUE_CALL_COUNT count=$($manualQueueLines.Count) expected=$($expectedManualQueueManifests.Count)"
+}
+foreach($manifestName in $expectedManualQueueManifests){
+    $matches = @($manualQueueLines | Where-Object { $_.Contains($manifestName) })
+    if($matches.Count -ne 1){
+        throw "WAREHOUSE_ZERO_PAYLOAD_WORKFLOW_MANUAL_QUEUE_MANIFEST_COUNT manifest=$manifestName count=$($matches.Count)"
+    }
 }
 if($workflow -match '(?i)continue-on-error'){
     throw "WAREHOUSE_ZERO_PAYLOAD_WORKFLOW_BROAD_CONTINUE_ON_ERROR_FORBIDDEN"
@@ -52,4 +66,4 @@ if([string]$q[0].automation -notmatch "^MANUAL_"){
     throw "WAREHOUSE_ZERO_PAYLOAD_REGISTRY_AUTOMATION_STALE automation=$([string]$q[0].automation)"
 }
 
-Write-Host "WAREHOUSE_ZERO_PAYLOAD_GUARD_PASS quaternius=manual failClosed=true manualQueueCalls=2"
+Write-Host ("WAREHOUSE_ZERO_PAYLOAD_GUARD_PASS quaternius=manual failClosed=true manualQueueCalls=" + $manualQueueLines.Count + " manifests=" + ($expectedManualQueueManifests -join ","))

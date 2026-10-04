@@ -4242,3 +4242,11 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - This is a numerical deformation-readiness gate only. `visual_deformation_accepted=false`, `retarget_accepted=false`, and runtime integration remains blocked.
 - Machine-readable gate: `Data/P1C01HumanDeformationGateV1.json`.
 - Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD HUMAN WAVE VALIDATION PENDING**.
+
+
+### 2026-10-04 - Wave3 zero-payload guard root fix
+
+- Exact-head Pre-Unreal #1872 failed only because the existing zero-payload regression encoded exactly two Quaternius `-RecordManualQueue` calls.
+- Wave3 intentionally adds a third bounded/manual-safe call for `WarehouseQuaterniusAnimationBatchV1.json`.
+- Root fix makes the regression semantic: it now requires exactly one manual-queue call for support, animation-only and hero-candidate manifests, while the broad `continue-on-error` prohibition and zero-payload fail-closed behavior remain unchanged.
+- Status: **SOURCE-FIXED / FRESH EXACT-HEAD VALIDATION REQUIRED**. No animation/deformation/retarget acceptance is implied.

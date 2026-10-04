@@ -3416,3 +3416,15 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Human rendered deformation acceptance | NOT ACCEPTED | direct visual review required |
 | Idle/Walk/Run retarget | BLOCKED | targeted animation intake + compatibility proof |
 | AnimBP/runtime promotion | BLOCKED | retarget + visual deformation first |
+
+
+### 2026-10-04 - Wave3 zero-payload guard root fix
+
+| Guard | Status | Evidence boundary |
+|---|---|---|
+| Pre-Unreal #1872 | FAIL / ROOT-CAUSED | stale exact-count regression only |
+| Support Quaternius manual queue | REQUIRED | one explicit manifest call |
+| Animation-only manual queue | REQUIRED | one explicit targeted manifest call |
+| Hero-candidate manual queue | REQUIRED | one explicit manifest call |
+| Broad continue-on-error | FORBIDDEN / PRESERVED | fail-closed policy unchanged |
+| Fresh exact-head validation | PENDING | new PR head required |
