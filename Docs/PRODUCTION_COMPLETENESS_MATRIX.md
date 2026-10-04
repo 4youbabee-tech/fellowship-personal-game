@@ -3505,3 +3505,16 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | P1C01-MW6 Final Closure + Gate 6/7 | PENDING | Chapter-specific PIE, save/load, human visual/pacing and target-device performance evidence accepted; Gate 6/7 accepted |
 
 A-I closeout lanes are internal workstreams, not separate waves. P1C02 remains predecessor-gated.
+
+
+## 2026-10-04 - Continuous chapter train control
+
+| Control | State |
+|---|---|
+| Owner must approve routine packet-by-packet engineering | NO |
+| Chapter train continues after each exact-head green packet | YES |
+| Root-cause repair before continuing after a failed gate | REQUIRED |
+| Daily owner progress reporting | REQUIRED |
+| Autonomous final human/device Gate 6/7 acceptance | FORBIDDEN |
+| Auto-open next runtime chapter | FORBIDDEN |
+| Current active train | P1C01 MW5 -> MW6 |
