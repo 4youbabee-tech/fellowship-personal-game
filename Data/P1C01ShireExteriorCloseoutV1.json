@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "packet_id": "P1C01_SHIRE_EXTERIOR_CLOSEOUT_V1",
+  "status": "SOURCE_IMPLEMENTED_EXACT_HEAD_VALIDATION_PENDING",
+  "runtime_chapter": "P1C01",
+  "runtime_writer": "AShirePrototypeWorldBuilder",
+  "garden_rows": {
+    "garden_patch_calls_in_current_world": 5,
+    "rows_per_patch": 5,
+    "expected_production_soil_instances": 25,
+    "expected_production_plant_instances": 125,
+    "hism_soil": true,
+    "hism_plants": true,
+    "soil_component": "GardenSoilInstances",
+    "plant_component": "ShrubInstances"
+  },
+  "party_field": {
+    "repeated_detail_owner": "SpawnPartySocialLoopPass",
+    "production_village_detail_duplicates_removed": true,
+    "settlement_completion_party_table_duplicates_removed": true,
+    "repeated_tables_clustered": true,
+    "repeated_benches_clustered": true,
+    "repeated_canopies_clustered": true,
+    "repeated_barrels_clustered": true,
+    "repeated_hay_clustered": true,
+    "state_variant_actors_preserved": true,
+    "loaded_cart_limited_actor_preserved": true
+  },
+  "architecture_contract": {
+    "new_world_authority": false,
+    "actor_per_repeated_party_prop": false,
+    "per_instance_tick": false,
+    "synchronous_heavy_load": false,
+    "p1c02_runtime_opened": false
+  },
+  "completion_boundary": "Hobbiton/Bag End exterior source closeout. Full Bywater town and interiors remain explicitly outside this P1C01 closeout.",
+  "evidence_boundary": "Source implementation only until exact-head validation. PIE/device/rendered-visual/FPS acceptance still required for Gate 6/7."
+}
