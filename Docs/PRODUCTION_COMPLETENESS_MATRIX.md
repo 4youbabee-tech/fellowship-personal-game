@@ -3684,3 +3684,15 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | UE4-recommended T0 reference pose | SOURCE-IMPLEMENTED |
 | Bind-pose gate weakened | NO |
 | Fresh exact-head compile/UE4 proof | PENDING |
+
+
+## 2026-10-05 - Human-only render reservation guard
+
+| Control | State |
+|---|---|
+| Human-only editor import change reserves generic Shire render | ROOT-FIXED IN SOURCE |
+| Mixed/unrelated Source delta bypasses render | NO |
+| Green-parent render proof required for inheritance | YES |
+| Human workflow remains compile/import/UE4 owner | YES |
+| Fresh visual acceptance claimed | NO |
+| Fresh exact-head classifier validation | PENDING |

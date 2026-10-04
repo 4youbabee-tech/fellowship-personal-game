@@ -4440,3 +4440,12 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Root remediation is now implemented in the editor-only character-rig import path: `UFbxSkeletalMeshImportData::bUseT0AsRefPose = true`.
 - This is **not a gate waiver**. The Human Wave script still rejects `MISSING_BIND_POSE_BONES` if it appears after re-import, and all existing smoothing/UV/skeleton/deformation requirements remain unchanged.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD UE4 REVALIDATION PENDING**.
+
+
+## 2026-10-05 - Human-owned render deduplication
+
+- Exact head `76d7609b1ab239abed1302c80b459c8a767120bb` exposed a CI ownership leak: the Human Wave2 T0-reference-pose editor import change caused the generic P1C01 Shire Render Capture workflow to reserve the self-hosted UE4 runner even though no runtime scene/content/config asset changed.
+- The render classifier now recognizes a **dedicated Human Wave2-only delta**. The editor import commandlet is ignored for Shire scene capture only when every non-doc file in the current delta belongs to the Human pipeline allowlist; mixed or unrelated `Source/` changes still force a render.
+- Existing green-parent proof remains mandatory before capture can be inherited. This does not create or imply fresh visual acceptance.
+- Goal: the Human workflow owns its own compile/import/UE4 evidence, while the Shire render lane stops duplicating the same expensive runner reservation.
+- Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD CLASSIFIER PROOF PENDING**.

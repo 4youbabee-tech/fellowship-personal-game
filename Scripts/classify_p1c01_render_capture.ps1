@@ -31,11 +31,37 @@ if($LASTEXITCODE -ne 0 -or $changed.Count -eq 0){
   exit 0
 }
 
+$dedicatedHumanExact=@(
+  "Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp",
+  "Scripts/stage_p1c01_human_wave2.ps1",
+  "Scripts/probe_p1c01_human_fbx_deformation.py",
+  "Scripts/run_p1c01_human_wave3_deformation.py",
+  "Scripts/run_p1c01_human_wave2_ue4.ps1",
+  "Scripts/test_p1c01_human_wave2_contract.py",
+  ".github/workflows/p1c01-human-wave2.yml",
+  "Data/P1C01HumanCharacterProductionWave2V1.json",
+  "Data/P1C01HumanDeformationGateV1.json",
+  "Data/P1C01FrodoTechnicalRejectionHistoryV1.json",
+  "Scripts/classify_p1c01_render_capture.ps1"
+)
+$normalizedChanged=@($changed | ForEach-Object { $_ -replace "\\","/" })
+$nonDocsChanged=@($normalizedChanged | Where-Object { -not $_.StartsWith("Docs/") })
+$dedicatedHumanOnly=(
+  $nonDocsChanged.Count -gt 0 -and
+  @($nonDocsChanged | Where-Object { $dedicatedHumanExact -notcontains $_ }).Count -eq 0
+)
+if($dedicatedHumanOnly){
+  $nonDocsChanged | ForEach-Object { Write-Host "P1C01_RENDER_DEDICATED_HUMAN_FILE $_" }
+}
+
 $visualImpact=@()
-foreach($path in $changed){
-  $n=$path -replace "\\","/"
+foreach($n in $normalizedChanged){
+  $isDedicatedHumanSource=(
+    $dedicatedHumanOnly -and
+    $dedicatedHumanExact -contains $n
+  )
   $impact=(
-    $n.StartsWith("Source/") -or
+    ($n.StartsWith("Source/") -and -not $isDedicatedHumanSource) -or
     $n.StartsWith("Config/") -or
     $n.StartsWith("SourceAssets/Production/") -or
     $n -eq "ShireJourney.uproject" -or
