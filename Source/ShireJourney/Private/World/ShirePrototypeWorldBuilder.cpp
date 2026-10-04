@@ -4191,6 +4191,279 @@ void AShirePrototypeWorldBuilder::SpawnShireVisualFinishWave()
 }
 
 
+
+
+void AShirePrototypeWorldBuilder::SpawnShireSettlementCompletionPass()
+{
+    if (!GetWorld())
+    {
+        return;
+    }
+
+    int32 NativeHismInstances = 0;
+    int32 DetailClusterCount = 0;
+    int32 DetailClusterInstances = 0;
+
+    auto AddHism = [&NativeHismInstances](
+        UHierarchicalInstancedStaticMeshComponent* Component,
+        const FVector& Location,
+        const FVector& Scale,
+        float Yaw)
+    {
+        if (!Component || !Component->GetStaticMesh())
+        {
+            return;
+        }
+        Component->AddInstance(FTransform(FRotator(0.0f, Yaw, 0.0f), Location, Scale));
+        ++NativeHismInstances;
+    };
+
+    auto SpawnCluster = [this, &DetailClusterCount, &DetailClusterInstances](
+        UStaticMesh* Mesh,
+        const TCHAR* Tag,
+        int32 StartCull,
+        int32 EndCull,
+        const TArray<FTransform>& Placements)
+    {
+        if (!Mesh || Placements.Num() == 0)
+        {
+            return;
+        }
+
+        AWorldDetailCluster* Cluster = GetWorld()->SpawnActor<AWorldDetailCluster>();
+        if (!Cluster)
+        {
+            return;
+        }
+
+        Cluster->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
+        Cluster->Tags.AddUnique(TEXT("P1C01ShireSettlementCompletion"));
+        Cluster->Tags.AddUnique(FName(Tag));
+        Cluster->Configure(Mesh, false, StartCull, EndCull);
+        for (const FTransform& Transform : Placements)
+        {
+            Cluster->AddDetailInstance(
+                Transform.GetLocation(),
+                Transform.Rotator(),
+                Transform.GetScale3D());
+        }
+
+        ++DetailClusterCount;
+        DetailClusterInstances += Cluster->GetDetailCount();
+    };
+
+    // Existing native HISM components own repeated property boundaries, lane breakup,
+    // low vegetation and garden rhythm. No new actor-per-prop density is introduced.
+    for (int32 Index = 0; Index < 16; ++Index)
+    {
+        const float X = -1880.0f + static_cast<float>(Index) * 180.0f;
+        const float YNorth = 1020.0f + 55.0f * FMath::Sin(static_cast<float>(Index) * 0.72f);
+        const float YSouth = -1080.0f + 65.0f * FMath::Cos(static_cast<float>(Index) * 0.61f);
+        AddHism(HedgeInstances, FVector(X, YNorth, 8.0f), FVector(0.68f, 0.58f, 0.64f), 4.0f);
+        AddHism(HedgeInstances, FVector(X, YSouth, 8.0f), FVector(0.68f, 0.58f, 0.64f), -4.0f);
+    }
+
+    for (int32 Index = 0; Index < 12; ++Index)
+    {
+        const float X = -1750.0f + static_cast<float>(Index) * 235.0f;
+        AddHism(RuralFenceInstances, FVector(X, 1450.0f + 45.0f * (Index % 3), 4.0f),
+            FVector(0.70f), static_cast<float>((Index % 2 == 0) ? 3 : -4));
+        AddHism(RuralFenceInstances, FVector(X, -1450.0f - 45.0f * (Index % 3), 4.0f),
+            FVector(0.70f), static_cast<float>((Index % 2 == 0) ? -3 : 4));
+    }
+
+    for (int32 Index = 0; Index < 36; ++Index)
+    {
+        const float Alpha = static_cast<float>(Index) / 35.0f;
+        const float X = FMath::Lerp(-2050.0f, 1900.0f, Alpha);
+        const float Y = 185.0f * FMath::Sin(static_cast<float>(Index) * 0.55f);
+        const float S = 0.17f + 0.018f * static_cast<float>(Index % 4);
+        AddHism(PathStoneInstances, FVector(X, Y, 4.0f), FVector(S * 1.35f, S, 0.055f),
+            static_cast<float>((Index * 41) % 360));
+    }
+
+    for (int32 Index = 0; Index < 40; ++Index)
+    {
+        const float X = -2050.0f + static_cast<float>(Index % 20) * 205.0f;
+        const float Side = Index < 20 ? -1.0f : 1.0f;
+        const float Y = Side * (610.0f + 80.0f * static_cast<float>(Index % 4));
+        const float S = 0.18f + 0.015f * static_cast<float>(Index % 5);
+        AddHism(GrassInstances, FVector(X, Y, 2.0f), FVector(S),
+            static_cast<float>((Index * 33) % 360));
+    }
+
+    for (int32 Index = 0; Index < 28; ++Index)
+    {
+        const float X = -1840.0f + static_cast<float>(Index % 14) * 255.0f;
+        const float Side = Index < 14 ? -1.0f : 1.0f;
+        const float Y = Side * (820.0f + 75.0f * static_cast<float>(Index % 3));
+        const float S = 0.28f + 0.025f * static_cast<float>(Index % 4);
+        AddHism(ShrubInstances, FVector(X, Y, 3.0f), FVector(S * 1.12f, S, S * 0.84f),
+            static_cast<float>((Index * 47) % 360));
+    }
+
+    TArray<FTransform> P;
+
+    // Bagshot Row / south-Hill domestic read: eight additional visual smials step
+    // along the hill edge adjoining the Party Field. Existing collision/traversal
+    // remains authoritative; these clusters are visual only.
+    const FVector BagshotCenters[] = {
+        FVector(-1820,1180,-35), FVector(-1530,1230,-38), FVector(-1240,1190,-34),
+        FVector(-950,1240,-40), FVector(-660,1185,-34), FVector(-370,1235,-38),
+        FVector(-80,1195,-35), FVector(210,1240,-38)
+    };
+    P.Reset();
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(BagshotCenters); ++Index)
+    {
+        P.Emplace(FRotator(0.0f, 4.0f * FMath::Sin(static_cast<float>(Index)), 0.0f),
+            BagshotCenters[Index], FVector(1.45f, 1.25f, 0.88f));
+    }
+    SpawnCluster(ProductionTurfMoundMesh, TEXT("BagshotRowTurf"), 1800, 9000, P);
+
+    P.Reset();
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(BagshotCenters); ++Index)
+    {
+        P.Emplace(FRotator(0.0f, -2.0f + static_cast<float>(Index % 3) * 2.0f, 0.0f),
+            BagshotCenters[Index] + FVector(-105.0f,0.0f,34.0f),
+            FVector(0.74f + 0.025f * static_cast<float>(Index % 3)));
+    }
+    SpawnCluster(ProductionHobbitFacadeMesh, TEXT("BagshotRowFacades"), 1600, 8500, P);
+
+    auto FillVillageScatter = [&P](
+        int32 Count,
+        const FVector& Min,
+        const FVector& Max,
+        const FVector& BaseScale,
+        float ScaleJitter,
+        float YawStep)
+    {
+        P.Reset();
+        for (int32 Index = 0; Index < Count; ++Index)
+        {
+            const float A = Count > 1 ? static_cast<float>(Index) / static_cast<float>(Count - 1) : 0.0f;
+            FVector L = FMath::Lerp(Min, Max, A);
+            L.Y += 95.0f * FMath::Sin(static_cast<float>(Index) * 1.17f);
+            const float S = 1.0f + ScaleJitter * FMath::Sin(static_cast<float>(Index) * 0.83f);
+            P.Emplace(FRotator(0.0f, FMath::Fmod(static_cast<float>(Index) * YawStep, 360.0f), 0.0f),
+                L, BaseScale * S);
+        }
+    };
+
+    FillVillageScatter(18, FVector(-1850,-760,0), FVector(1450,780,0), FVector(0.56f), 0.12f, 29.0f);
+    SpawnCluster(ProductionFlowerBoxMesh, TEXT("VillageFlowerBoxes"), 600, 3600, P);
+
+    FillVillageScatter(14, FVector(-1650,-520,0), FVector(1250,470,0), FVector(0.56f), 0.10f, 43.0f);
+    SpawnCluster(ProductionBarrelMesh, TEXT("VillageBarrels"), 700, 4200, P);
+
+    FillVillageScatter(14, FVector(-1540,520,0), FVector(1380,-500,0), FVector(0.54f), 0.10f, 37.0f);
+    SpawnCluster(ProductionCrateMesh, TEXT("VillageCrates"), 700, 4200, P);
+
+    FillVillageScatter(10, FVector(-1500,-330,0), FVector(1350,350,0), FVector(0.62f), 0.08f, 31.0f);
+    SpawnCluster(ProductionBenchMesh, TEXT("VillageBenches"), 1000, 5200, P);
+
+    FillVillageScatter(12, FVector(-1720,-870,0), FVector(1560,860,0), FVector(0.66f), 0.06f, 0.0f);
+    SpawnCluster(ProductionLampPostMesh, TEXT("VillageLampPosts"), 1800, 8500, P);
+
+    FillVillageScatter(12, FVector(3250,-1550,0), FVector(9200,1450,0), FVector(0.66f), 0.12f, 41.0f);
+    SpawnCluster(ProductionHaystackMesh, TEXT("SettlementHaystacks"), 1400, 8200, P);
+
+    FillVillageScatter(6, FVector(1800,-720,0), FVector(6200,820,0), FVector(0.62f), 0.08f, 53.0f);
+    SpawnCluster(ProductionCartMesh, TEXT("SettlementCarts"), 1800, 9000, P);
+
+    FillVillageScatter(4, FVector(3600,-1180,0), FVector(8400,1050,0), FVector(0.64f), 0.06f, 67.0f);
+    SpawnCluster(ProductionLoadedCartMesh, TEXT("SettlementLoadedCarts"), 2200, 10000, P);
+
+    const FVector PartyCenter(280.0f,1320.0f,0.0f);
+    P.Reset();
+    const FVector TableOffsets[] = {
+        FVector(-510,-210,0), FVector(-290,-225,0), FVector(-70,-205,0), FVector(170,-210,0),
+        FVector(-420,220,0), FVector(-170,235,0), FVector(90,220,0), FVector(350,205,0)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(TableOffsets); ++Index)
+    {
+        P.Emplace(FRotator(0.0f, static_cast<float>((Index % 4) * 3 - 5), 0.0f),
+            PartyCenter + TableOffsets[Index], FVector(0.66f));
+    }
+    SpawnCluster(ProductionPicnicTableMesh, TEXT("PartyFieldTablesCompletion"), 900, 5200, P);
+
+    FillVillageScatter(4, FVector(-850,120,0), FVector(350,210,0), FVector(0.66f), 0.04f, 5.0f);
+    SpawnCluster(ProductionMarketStallMesh, TEXT("VillageCommonMarket"), 1000, 5800, P);
+
+    FillVillageScatter(4, FVector(-1880,-250,0), FVector(1750,260,0), FVector(0.66f), 0.06f, 71.0f);
+    SpawnCluster(ProductionSignpostMesh, TEXT("VillageWayfinding"), 1600, 8200, P);
+
+    const FVector OrchardTrees[] = {
+        FVector(1180,1680,0), FVector(1450,1740,0), FVector(1740,1650,0),
+        FVector(2060,1730,0), FVector(2350,1660,0), FVector(2660,1760,0),
+        FVector(3320,-1720,0), FVector(3620,-1650,0), FVector(3940,-1740,0),
+        FVector(4250,-1660,0), FVector(4560,-1760,0), FVector(4880,-1680,0)
+    };
+    P.Reset();
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(OrchardTrees); ++Index)
+    {
+        const float S = 0.58f + 0.045f * static_cast<float>(Index % 4);
+        P.Emplace(FRotator(0.0f, static_cast<float>((Index * 31) % 360), 0.0f),
+            OrchardTrees[Index], FVector(S * 0.76f));
+    }
+    SpawnCluster(ProductionTreeTrunkMesh, TEXT("VillageOrchardTrunks"), 2500, 12000, P);
+
+    P.Reset();
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(OrchardTrees); ++Index)
+    {
+        const float S = 0.58f + 0.045f * static_cast<float>(Index % 4);
+        P.Emplace(FRotator(0.0f, static_cast<float>((Index * 47) % 360), 0.0f),
+            OrchardTrees[Index] + FVector(0.0f,0.0f,150.0f * S), FVector(S * 0.76f));
+    }
+    SpawnCluster(ProductionTreeCanopyMesh, TEXT("VillageOrchardCanopies"), 2500, 12000, P);
+
+    UStaticMesh* GardenArch = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShGardenArch.SM_ShGardenArch"));
+    UStaticMesh* Mailbox = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShMailbox.SM_ShMailbox"));
+    UStaticMesh* WashLine = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShWashLine.SM_ShWashLine"));
+    UStaticMesh* FarmPlough = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShFarmPlough.SM_ShFarmPlough"));
+    UStaticMesh* OrchardLadder = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShOrchardLadder.SM_ShOrchardLadder"));
+    UStaticMesh* ProduceStand = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShProduceStand.SM_ShProduceStand"));
+    UStaticMesh* PumpWell = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShPumpWell.SM_ShPumpWell"));
+
+    FillVillageScatter(6, FVector(-1650,-640,0), FVector(1200,620,0), FVector(0.58f), 0.06f, 17.0f);
+    SpawnCluster(GardenArch, TEXT("VillageGardenArches"), 1000, 5600, P);
+
+    FillVillageScatter(8, FVector(-1780,-530,0), FVector(1320,520,0), FVector(0.52f), 0.06f, 37.0f);
+    SpawnCluster(Mailbox, TEXT("VillageMailboxes"), 700, 4200, P);
+
+    FillVillageScatter(5, FVector(-980,-760,0), FVector(1500,760,0), FVector(0.60f), 0.05f, 23.0f);
+    SpawnCluster(WashLine, TEXT("VillageWashLines"), 900, 5200, P);
+
+    FillVillageScatter(4, FVector(4100,-1480,0), FVector(8500,1320,0), FVector(0.66f), 0.06f, 47.0f);
+    SpawnCluster(FarmPlough, TEXT("WorkingFieldPloughs"), 1600, 8600, P);
+
+    FillVillageScatter(3, FVector(1400,1700,0), FVector(4300,-1690,0), FVector(0.62f), 0.04f, 41.0f);
+    SpawnCluster(OrchardLadder, TEXT("OrchardLadders"), 1100, 6200, P);
+
+    FillVillageScatter(4, FVector(-760,90,0), FVector(520,190,0), FVector(0.62f), 0.04f, 8.0f);
+    SpawnCluster(ProduceStand, TEXT("VillageProduceStands"), 900, 5200, P);
+
+    P.Reset();
+    P.Emplace(FRotator::ZeroRotator, FVector(-120,300,0), FVector(0.66f));
+    P.Emplace(FRotator::ZeroRotator, FVector(1260,-410,0), FVector(0.62f));
+    SpawnCluster(PumpWell, TEXT("VillageWells"), 1200, 6400, P);
+
+    P.Reset();
+    P.Emplace(FRotator(0.0f,90.0f,0.0f), FVector(-1315,330,35), FVector(0.78f));
+    SpawnCluster(ProductionMillWheelMesh, TEXT("SandymanMillWheelAccent"), 1800, 9000, P);
+
+    FillVillageScatter(6, FVector(-1540,-940,0), FVector(680,960,0), FVector(0.66f), 0.04f, 3.0f);
+    SpawnCluster(ProductionFarmGateMesh, TEXT("VillageFarmGates"), 1400, 7200, P);
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("P1C01_SHIRE_SETTLEMENT_COMPLETION nativeHism=%d detailClusters=%d detailClusterInstances=%d targetTotal=345 writer=ShirePrototypeWorldBuilder collision=existing-authority visualClusters=no-collision tick=none p1c02=no"),
+        NativeHismInstances,
+        DetailClusterCount,
+        DetailClusterInstances);
+}
+
+
 void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()
 {
     if (!GetWorld())
@@ -4747,6 +5020,7 @@ void AShirePrototypeWorldBuilder::BuildPrototypeWorld()
     SpawnPresentationCompositionPass();
     SpawnVisibleShireMegaWaveD();
     SpawnShireVisualFinishWave();
+    SpawnShireSettlementCompletionPass();
     SpawnWorldDensityDetailPass();
     SpawnBagEndHeroPass();
     SpawnPartySocialLoopPass();

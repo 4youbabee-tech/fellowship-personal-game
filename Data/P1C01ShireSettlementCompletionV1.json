@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "wave_id": "P1C01_SHIRE_SETTLEMENT_COMPLETION_V1",
+  "status": "SOURCE_IMPLEMENTED_EXACT_HEAD_VALIDATION_PENDING",
+  "runtime_chapter": "P1C01",
+  "runtime_writer": "AShirePrototypeWorldBuilder",
+  "scope": {
+    "settlement": "Hobbiton / Bag End hill / Bagshot Row / Party Field / Water-mill-bridge / Bywater-facing domestic edge",
+    "source_basis": [
+      "F1-01 Shire social/party setup",
+      "F1-02 Bag End / Shire",
+      "Tolkien source: Hobbiton, the Hill, Bagshot Row, Party Field, the Water, mill/bridge, gardens, hedges, fields and domestic lanes"
+    ],
+    "exact_geographic_claim": "Source-grounded authored composition; not a claim of survey-accurate map coordinates."
+  },
+  "visible_budget": {
+    "native_hism_instances": 160,
+    "detail_cluster_instances": 185,
+    "target_total_instances": 345,
+    "maximum_detail_cluster_actors": 24,
+    "new_unique_hero_actors": 0
+  },
+  "settlement_detail": {
+    "bagshot_row_visual_smials": 8,
+    "orchard_trees": 12,
+    "party_field_tables": 8,
+    "market_stalls": 4,
+    "wells": 2,
+    "mill_wheel_accents": 1,
+    "garden_arches": 6,
+    "mailboxes": 8,
+    "wash_lines": 5,
+    "working_ploughs": 4,
+    "orchard_ladders": 3,
+    "produce_stands": 4,
+    "farm_gates": 6,
+    "repeated_property_and_lane_detail": "HISM / WorldDetailCluster"
+  },
+  "architecture_contract": {
+    "new_world_authority": false,
+    "repeated_detail": "HISM_OR_WORLD_DETAIL_CLUSTER",
+    "per_instance_tick": false,
+    "synchronous_heavy_load": false,
+    "actor_per_prop_density": false,
+    "p1c02_runtime_opened": false,
+    "resident_production_meshes_only": true,
+    "existing_collision_authority_preserved": true,
+    "population_owner": "ALivingWorldDirector",
+    "npc_context_owner": "UShireNPCContextSubsystem",
+    "quest_owner": "UShireQuestSubsystem"
+  },
+  "performance_target": {
+    "engine": "UE4.27.2",
+    "rhi": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_approx": 2
+  },
+  "evidence_boundary": "Source implementation only until exact-head CI and later PIE visual/performance evidence. No visual acceptance or FPS claim."
+}

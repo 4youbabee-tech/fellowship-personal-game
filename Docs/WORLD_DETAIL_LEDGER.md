@@ -1213,3 +1213,15 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Runtime contract: modular Frodo remains fallback. Heavy character assets must remain soft references and load asynchronously through FStreamableManager. No synchronous heavy LoadObject path is authorized.
 - Target: UE4.27.2 / DX11 / 720p / 30 FPS floor / i7 Gen6 / 8 GB RAM / ~2 GB VRAM.
 - Evidence boundary: REGISTERED / SOURCE-GROUNDED PLAN ONLY. No technical pass, deformation acceptance, runtime, PIE, device, rendered-visual or FPS acceptance is claimed.
+
+
+## 2026-10-04 - P1C01 SHIRE_SETTLEMENT_COMPLETION registered before implementation
+
+- Scope: finish the authored P1C01 Shire settlement layer before any P1C02 runtime expansion. Runtime writer remains `AShirePrototypeWorldBuilder`.
+- Source basis: F1-01/F1-02 plus supplied Tolkien material supports Hobbiton around the Hill/Bag End, Bagshot Row adjoining the Party Field, gardens and hedges, domestic lanes, the Water, mill/bridge, nearby Bywater-facing settlement activity, fields and orchards.
+- This packet does **not** claim survey-accurate geography where the supplied production sources do not provide coordinates; it converts the supported relationships into a readable authored game composition.
+- Visible completion targets: Bagshot Row visual smials; stronger property boundaries; domestic garden/laundry/mail detail; orchard rhythm; Party Field seating; village common/market; mill-wheel read; wells; carts/crates/barrels/benches; field work detail; wayfinding; lived-in transition toward Bywater.
+- Performance budget: 160 placements on existing native HISM components + 185 instances inside at most 24 `AWorldDetailCluster` actors = target 345 new visual instances. Detail clusters are non-colliding and zero-Tick; existing traversal collision remains authoritative.
+- Asset rule: resident production Shire/Common meshes only. No runtime `LoadObject`, no BMP, no new hard heavy references, no per-prop actor density.
+- Architecture: `ALivingWorldDirector` remains population/pooling authority; `UShireNPCContextSubsystem` context authority; `UShireQuestSubsystem` story truth. No duplicate manager.
+- Evidence boundary: REGISTERED / SOURCE-GROUNDED PLAN. No PIE/device/rendered visual/FPS acceptance claimed.
