@@ -4231,3 +4231,10 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - The harness tells the human reviewer to run `HighResShot 1` at every checkpoint and `stat stopfile` before exit; it gathers new screenshots/stat files into one evidence folder and creates a pending human-review template.
 - All generated receipt booleans remain false for PIE/device/visual/performance acceptance. File capture alone cannot promote Gate 6/7.
 - Status: **SOURCE-IMPLEMENTED / STATIC VALIDATION PENDING / LOCAL EXECUTION REQUIRED ON OWNER WORKSTATION**.
+
+
+### 2026-10-04 - Local Gate 6/7 acceptance harness hardening
+
+- The local P1C01 acceptance harness now explicitly exports `GITHUB_WORKSPACE` to the repository root before reusing `ci_import_production_assets.cmd`; this removes dependence on a GitHub Actions-only environment variable during owner-machine runs.
+- Screenshot evidence collection now scans `Saved/Screenshots` recursively and preserves subdirectories, covering UE4 `Windows`, `WindowsEditor`, or `WindowsNoEditor` output layouts without silently losing evidence.
+- This is capture-tooling preparation only. It does not upgrade P1C01 to PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED, or Gate 6/7 accepted.
