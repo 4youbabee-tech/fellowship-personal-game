@@ -1031,6 +1031,12 @@ class SourceContractTests(unittest.TestCase):
         self.assertEqual(packet["rendered_evidence"]["capture_count_proven_by_log"], 6)
         self.assertEqual(packet["rendered_evidence"]["review_state"], "HUMAN_RENDER_REVIEWED_REJECTED")
         self.assertFalse(packet["architecture_contract"]["synchronous_heavy_load"])
+        visual_fix = packet["visual_root_cause_analysis"]["implemented_root_fix"]
+        self.assertFalse(visual_fix["global_common_material_mutation"])
+        self.assertFalse(visual_fix["runtime_sync_load"])
+        self.assertEqual(visual_fix["visible_ground"]["instances"], 442)
+        self.assertEqual(visual_fix["visible_ground"]["type"], "HISM")
+        self.assertFalse(visual_fix["visible_ground"]["actor_per_tile"])
 
         completion = json.loads((root / "Data" / "P1C01ShireSettlementCompletionV1.json").read_text(encoding="utf-8"))
         self.assertEqual(completion["visible_budget"]["native_hism_instances"], 173)
@@ -1042,9 +1048,38 @@ class SourceContractTests(unittest.TestCase):
 
         header = (root / "Source" / "ShireJourney" / "Public" / "World" / "ShirePrototypeWorldBuilder.h").read_text(encoding="utf-8")
         source = (root / "Source" / "ShireJourney" / "Private" / "World" / "ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
-        for token in ("GardenSoilInstances", "PropertyFenceInstances", "SpawnShireSettlementFinalPolishPass"):
+        for token in ("GroundTileInstances", "GardenSoilInstances", "PropertyFenceInstances", "SpawnShireSettlementFinalPolishPass"):
             self.assertIn(token, header)
             self.assertIn(token, source)
+
+        for token in (
+            '/Game/Production/World/Shire/Grass.Grass',
+            '/Game/Production/World/Shire/Earth.Earth',
+            '/Game/Production/World/Shire/Bark.Bark',
+            '/Game/Production/World/Shire/Leaves.Leaves',
+            '/Game/Production/World/Shire/Wood.Wood',
+            'P1C01_SHIRE_LOCAL_MATERIAL_OVERRIDE',
+        ):
+            self.assertIn(token, source)
+
+        begin_start = source.index("void AShirePrototypeWorldBuilder::BeginPlay()")
+        begin_end = source.index("void AShirePrototypeWorldBuilder::EndPlay(", begin_start)
+        begin = source[begin_start:begin_end]
+        self.assertNotIn("LoadObject<", begin)
+        self.assertNotIn("StaticLoadObject", begin)
+        self.assertNotIn("RequestSyncLoad", begin)
+        self.assertIn("WoodlandTreeInstances->SetMaterial(0, ShireBarkMaterial)", begin)
+        self.assertIn("WoodlandTreeInstances->SetMaterial(1, ShireLeavesMaterial)", begin)
+        self.assertIn("GardenSoilInstances->SetMaterial(0, ShireEarthMaterial)", begin)
+
+        village_start = source.index("void AShirePrototypeWorldBuilder::SpawnVillage()")
+        party_start = source.index("void AShirePrototypeWorldBuilder::SpawnPartySocialLoopPass()", village_start)
+        village = source[village_start:party_start]
+        self.assertIn("GroundTileColumns = 34", village)
+        self.assertIn("GroundTileRows = 13", village)
+        self.assertIn("GroundTileBudget == 442", village)
+        self.assertIn("GroundTileInstances->AddInstance", village)
+        self.assertIn("P1C01_SHIRE_GROUND_TILING", village)
 
         start = source.index("void AShirePrototypeWorldBuilder::SpawnShireSettlementCompletionPass()")
         end = source.index("void AShirePrototypeWorldBuilder::SpawnShireSettlementFinalPolishPass()", start)
