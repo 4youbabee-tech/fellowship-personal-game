@@ -4130,3 +4130,34 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - No duplicate writer, population ownership change, per-instance Tick, synchronous heavy load, or actor-per-prop density wave. P1C02 remains closed.
 - Machine-readable contract: Data/P1C01ShireVisualFinishWaveV1.json; regression guard added to Scripts/test_source_contracts.py.
 - Status: **SOURCE-IMPLEMENTED / STATIC-VALIDATION PENDING EXACT-HEAD PRE-UNREAL + UE4 BUILD**. No PIE/device/rendered-visual/FPS acceptance.
+
+
+## 2026-10-04 - Human Character Production Wave 2 source factory
+
+- KayKit anti-churn PR #310 merged at `develop@07bb5517ecbf4114520caececfa0fcbc535da8b3`; exact rejected KayKit hashes no longer reserve the UE4 skeletal runner.
+- Wave 2 moves to a distinct CC0 human source/export family rather than retrying Quaternius/KayKit exporter lineage. The first bounded automated source is OpenGameArt Character Base Model by Overaction Game Studio, with source page + direct archive recorded in `P1C01HumanCharacterProductionWave2V1.json`.
+- Hosted source factory accepts FBX directly or source `.blend` as an authoring intermediate, but emits only normalized FBX for the animated UE4 lane. Blender normalization records source/archive/payload SHA256, Blender version, FBX version, armature/mesh/bone counts, weighted/zero-weight vertices, UV-layer count, finite bounds and joint-name coverage.
+- Max two normalized candidates can reach the self-hosted UE4 runner. Real UE4.27 gates remain unchanged: skeletal registration, reference bones, smoothing, bind pose, UV and generated skeletal mesh+skeleton assets.
+- A clean technical winner advances immediately to reference-pose/root-scale/hierarchy + shoulder/elbow/knee + hands/feet deformation review and then Idle/Walk/Run retarget + AnimBP preparation. Runtime integration remains blocked and modular Frodo remains fallback.
+- No synchronous heavy runtime loading was added. Final promotion remains soft-reference + FStreamableManager asynchronous loading only.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD HOSTED + UE4 VALIDATION PENDING**. No deformation/PIE/device/rendered-visual/FPS acceptance is claimed.
+
+## 2026-10-04 - Human Wave 2 Rigify control-rig root fix / UE4 runner dedup
+
+- Hosted Human Wave 2 run #1 succeeded on exact head `8afa53cdee648cef196b914c5123d3e38677fc2c` and captured source provenance before the self-hosted gate: archive SHA256 `a6837a6626b92776a358bc2a85c845af194b3ba2b4b2acc8531f107726cb0d9e`.
+- Baseline Blender normalization exposed a production defect before UE4: the preferred `.blend` source exported 443 total bones with 1,787 weighted / 442 zero-weight vertices, while the direct-FBX path exported 656 bones with only 24 weighted / 2,205 zero-weight vertices. Artifact inspection shows Rigify `ORG-*`, `MCH-*` and `DEF-*` layers; candidate 1 contains 84 distinct DEF bone names versus hundreds of control/mechanism bones.
+- Root fix: Blender export now uses `use_armature_deform_only=True`, keeps leaf bones disabled, preserves FACE smoothing/tangent-space/animation bake, records deform-bone count, and excludes control-rig layers except necessary hierarchy parents.
+- Hosted admission now rejects candidates with zero deform bones or zero-weight ratio above 0.35 before they can reserve the UE4 runner. The pathological direct-FBX candidate therefore cannot consume an expensive probe.
+- CI root fix: Human Wave 2 source/workflow/tooling paths are now an explicit dedicated lane. Generic Unreal validation returns `inherit` for a Wave2-only delta because the dedicated workflow already performs its own Editor build + UE4 skeletal probe; this removes the duplicate self-hosted build reservation.
+- The superseded baseline UE4/generic runs may be cancelled by this new exact head; such cancellation is process supersession, not asset acceptance/rejection.
+- Status: **SOURCE-IMPLEMENTED / HOSTED-BASELINE-EVIDENCED / FRESH EXACT-HEAD VALIDATION PENDING**. No UE4 technical winner, deformation acceptance, PIE/device/rendered-visual/FPS acceptance is claimed.
+
+
+## 2026-10-04 - Human Wave 2 linked USkeleton probe correction
+
+- Rebased the existing Human Wave 2 lane onto current `develop@3d0990bec48be182b291e266d321408c5d9ea034`; merged Shire world progress is preserved and P1C02 remains closed.
+- Prior Wave2 run #2 established skeletal registration with 161 reference bones and no smoothing/bind-pose/UV hard-warning reasons, while the generated `SK_FRODO.uasset` mesh package existed. The previous rejection came from assuming a filename `SK_FRODO_Skeleton.uasset` rather than querying the mesh-linked skeleton object.
+- `ShireProductionImportCommandlet` now records `skeletal-skeleton=yes/no` and `skeletal-skeleton-path=<object path>` from `USkeletalMesh::GetSkeleton()`.
+- The Wave2 probe now requires skeletal registration, reference bones, generated skeletal mesh package, linked USkeleton, and unchanged smoothing/bind/UV gates. It no longer requires a guessed skeleton filename.
+- PhysicsAsset presence is recorded separately as a sanity field; absence is not a hard skeletal-import rejection because current player collision remains capsule-owned.
+- Status: **SOURCE-FIXED / FRESH EXACT-HEAD VALIDATION PENDING**. No deformation, retarget, PIE/device/rendered-visual/FPS acceptance is claimed.

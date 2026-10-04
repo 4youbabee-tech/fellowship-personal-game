@@ -306,6 +306,11 @@ function Test-CoreProofSafeInterveningDelta([string]$GitExe, [string]$BaseSha, [
     "Data/P1C01FrodoKnightV2TechnicalProbe.json",
     "Data/P1C01FrodoTechnicalRejectionHistoryV1.json",
     "Data/P1C01OpenGameArtLowpolyDummyCandidateV1.json",
+    "Data/P1C01HumanCharacterProductionWave2V1.json",
+    "Scripts/stage_p1c01_human_wave2.ps1",
+    "Scripts/run_p1c01_human_wave2_ue4.ps1",
+    "Scripts/test_p1c01_human_wave2_contract.py",
+    ".github/workflows/p1c01-human-wave2.yml",
     "Scripts/inspect_p1c01_frodo_lowpoly_dummy_candidate.ps1",
     ".github/workflows/p1c01-frodo-lowpoly-dummy-source-inventory.yml",
     "Scripts/stage_p1c01_bag_end_trim_official_receipt.ps1",
@@ -456,6 +461,23 @@ if ($LASTEXITCODE -ne 0 -or $changed.Count -eq 0) {
     exit 0
 }
 
+$dedicatedHumanWave2Exact = @(
+    "Data/P1C01HumanCharacterProductionWave2V1.json",
+    "Scripts/stage_p1c01_human_wave2.ps1",
+    "Scripts/run_p1c01_human_wave2_ue4.ps1",
+    "Scripts/test_p1c01_human_wave2_contract.py",
+    ".github/workflows/p1c01-human-wave2.yml",
+    "Scripts/classify_unreal_validation.ps1",
+    "Scripts/test_unreal_classifier.ps1"
+)
+$humanWave2NonDocs = @($changed | ForEach-Object { $_ -replace "\\","/" } | Where-Object { -not $_.StartsWith("Docs/") })
+$humanWave2Only = $humanWave2NonDocs.Count -gt 0 -and @($humanWave2NonDocs | Where-Object { $dedicatedHumanWave2Exact -notcontains $_ }).Count -eq 0
+if($humanWave2Only){
+    $humanWave2NonDocs | ForEach-Object { Write-Host "DEDICATED_HUMAN_WAVE2_FILE $_" }
+    Set-Mode "inherit" "dedicated-human-wave2-owns-editor-build-and-ue4-gate" $parentSha
+    exit 0
+}
+
 $requiresCleanCompile = @($changed | Where-Object {
     $changedPath = ($_ -replace "\\","/")
     $changedPath.EndsWith(".Build.cs") -or
@@ -496,6 +518,11 @@ $safeExact = @(
     "Data/P1C01FrodoKnightV2TechnicalProbe.json",
     "Data/P1C01FrodoTechnicalRejectionHistoryV1.json",
     "Data/P1C01OpenGameArtLowpolyDummyCandidateV1.json",
+    "Data/P1C01HumanCharacterProductionWave2V1.json",
+    "Scripts/stage_p1c01_human_wave2.ps1",
+    "Scripts/run_p1c01_human_wave2_ue4.ps1",
+    "Scripts/test_p1c01_human_wave2_contract.py",
+    ".github/workflows/p1c01-human-wave2.yml",
     "Scripts/inspect_p1c01_frodo_lowpoly_dummy_candidate.ps1",
     ".github/workflows/p1c01-frodo-lowpoly-dummy-source-inventory.yml",
     "Scripts/stage_p1c01_bag_end_trim_official_receipt.ps1",

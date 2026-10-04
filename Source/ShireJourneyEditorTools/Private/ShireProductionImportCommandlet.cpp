@@ -10,6 +10,7 @@
 #include "Factories/MaterialFactoryNew.h"
 #include "Engine/StaticMesh.h"
 #include "Engine/SkeletalMesh.h"
+#include "Animation/Skeleton.h"
 #include "StaticMeshResources.h"
 #include "Engine/Texture2D.h"
 #include "HAL/FileManager.h"
@@ -1355,6 +1356,8 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         UObject* ImportedAsset = nullptr;
         bool bSkeletalAssetRegistered = false;
         int32 ImportedSkeletalBoneCount = 0;
+        bool bLinkedSkeletonValid = false;
+        FString LinkedSkeletonPath = TEXT("NONE");
         if (bCharacterRigFbx)
         {
             FAssetRegistryModule& AssetRegistryModule =
@@ -1365,6 +1368,14 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                 FindObject<USkeletalMesh>(nullptr, *ExpectedObjectPath);
             ImportedSkeletalBoneCount =
                 ImportedSkeletalMesh ? ImportedSkeletalMesh->GetRefSkeleton().GetNum() : 0;
+            if (ImportedSkeletalMesh)
+            {
+                if (USkeleton* LinkedSkeleton = ImportedSkeletalMesh->GetSkeleton())
+                {
+                    bLinkedSkeletonValid = true;
+                    LinkedSkeletonPath = LinkedSkeleton->GetPathName();
+                }
+            }
             bSkeletalAssetRegistered =
                 RigAssetData.IsValid() &&
                 RigAssetData.AssetClass == USkeletalMesh::StaticClass()->GetFName() &&
@@ -1593,13 +1604,15 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         UE_LOG(
             LogTemp,
             Display,
-            TEXT("ShireProductionImport result: %s | paths=%d result=%d resolved=%s skeletal-registered=%s skeletal-bones=%d bare-obj-materials=%s authored-material-import=%s smoothing-injected=%s generated-uvs=%s tangent-generation=%s material-packages-marked=%d"),
+            TEXT("ShireProductionImport result: %s | paths=%d result=%d resolved=%s skeletal-registered=%s skeletal-bones=%d skeletal-skeleton=%s skeletal-skeleton-path=%s bare-obj-materials=%s authored-material-import=%s smoothing-injected=%s generated-uvs=%s tangent-generation=%s material-packages-marked=%d"),
             *Filename,
             Task->ImportedObjectPaths.Num(),
             Task->Result.Num(),
             ImportedAsset ? TEXT("yes") : TEXT("no"),
             bSkeletalAssetRegistered ? TEXT("yes") : TEXT("no"),
             ImportedSkeletalBoneCount,
+            bLinkedSkeletonValid ? TEXT("yes") : TEXT("no"),
+            *LinkedSkeletonPath,
             bBareObjMaterialImportDisabled ? TEXT("disabled") : TEXT("n/a"),
             bAuthoredMaterialImportForced ? TEXT("forced") : TEXT("n/a"),
             bInjectedSmoothingGroup ? TEXT("yes") : TEXT("no"),
