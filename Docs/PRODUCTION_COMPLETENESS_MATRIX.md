@@ -3582,3 +3582,16 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | UE4 reservation with zero hosted survivors | FORBIDDEN / FAIL-FAST |
 | Quaternius CC0 fallback source | ACTIVE PROBE / EXACT-HEAD PENDING |
 | Retarget / AnimBP / runtime / visual / device / performance | NOT ACCEPTED |
+
+
+## 2026-10-04 - Human Wave run #28 efficiency repair
+
+| Control | State |
+|---|---|
+| Failed no-UV candidate reaches UE4 | NO |
+| Blender Python exception propagated | SOURCE-IMPLEMENTED via `--python-exit-code 18` |
+| Single bad candidate aborts whole family | ROOT-FIXED |
+| Hosted candidate sweep | MAX 12 |
+| UE4 survivors | MAX 2 |
+| Hosted evidence on failure | ALWAYS-UPLOAD |
+| Fresh exact-head validation | PENDING |

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "gate_id": "P1C01_FRODO_STATIC_DEFORMATION_GATE_V1",
-  "status": "RUN27_DEFORMATION_REJECT_HOSTED_FRONTLOAD_IMPLEMENTED",
+  "status": "RUN28_HOSTED_SWEEP_NORMALIZER_EXITCODE_ROOT_FIX_IMPLEMENTED",
   "runtime_chapter": "P1C01",
   "predecessor": {
     "technical_gate": "Human Wave 2 UE4 technical winner",
@@ -72,6 +72,10 @@
   "hosted_frontload_contract": {
     "probe": "Scripts/probe_p1c01_human_fbx_deformation.py",
     "timing": "normalized FBX -> hosted deformation preflight -> UE4 only if survivor exists",
-    "selector": "prefer semantic deform bone with real vertex influence"
+    "selector": "prefer semantic deform bone with real vertex influence",
+    "max_hosted_candidates": 12,
+    "normalizer_exitcode": "--python-exit-code 18",
+    "asset_quality_failure": "candidate reject + continue",
+    "infrastructure_failure": "fail closed immediately"
   }
 }

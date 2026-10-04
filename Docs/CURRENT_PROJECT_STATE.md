@@ -4370,3 +4370,13 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Root fix: normalized FBX now must pass hosted weighted-joint, Armature-link, hierarchy and non-zero pose-deformation checks **before** self-hosted UE4 is reserved. Zero survivors publish evidence and fail fast on hosted infrastructure.
 - The rejected Character Base Model source is retired from the active probe; active bounded fallback is the direct public Quaternius CC0 Animated Characters Pack mirror on OpenGameArt.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. Retarget, AnimBP/runtime, PIE/device/visual/performance and Gate 6/7 remain not accepted.
+
+
+## 2026-10-04 - Run #28 hosted source-factory root fix
+
+- Human Wave run #28 on `6c8ab7b8f460d56ea3a6e442d3bf8dcbfccf22fb` failed on the hosted runner; both UE4 Human jobs were skipped, so the new frontload already prevented another 30-minute UE4 character waste.
+- Exact cause: first fallback FBX had no UV layers. The inline Blender normalizer raised, but its invocation lacked `--python-exit-code`, so Blender returned success and the PowerShell stage failed later while reading a missing output FBX.
+- Root fix: normalization now uses `--python-exit-code 18`; asset-quality failures are recorded per candidate and the hosted factory continues a bounded sweep of up to 12 candidates. Only up to 2 survivors may reserve UE4.
+- Hosted outcome/evidence upload now runs with `if: always()` so failed source factories still leave evidence.
+- Infrastructure/probe failures remain fail-closed; only candidate-quality failures continue.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**.

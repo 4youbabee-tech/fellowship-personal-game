@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "wave_id": "P1C01_HUMAN_CHARACTER_PRODUCTION_WAVE_2_V1",
-  "status": "RUN27_DEFORMATION_REJECTED_HOSTED_FRONTLOAD_IMPLEMENTED",
+  "status": "RUN28_HOSTED_SWEEP_AND_NORMALIZER_EXITCODE_ROOT_FIX_IMPLEMENTED",
   "runtime_chapter": "P1C01",
   "target_character": "FRODO",
   "role": "HUMAN_SKELETAL_SOURCE_FACTORY_NOT_FINAL_LIKENESS",
@@ -57,7 +57,8 @@
       "pirate",
       "soldier",
       "knight"
-    ]
+    ],
+    "max_hosted_candidates": 12
   },
   "normalization_contract": {
     "tool": "Blender",
@@ -171,7 +172,9 @@
       "missing Armature linkage",
       "broken hierarchy",
       "zero pose displacement"
-    ]
+    ],
+    "max_hosted_candidates": 12,
+    "candidate_failure_policy": "Reject asset-quality failures per candidate, record evidence, continue bounded hosted sweep. Infrastructure failures remain fail-closed."
   },
   "latest_failed_deformation_evidence": {
     "workflow_run": 37229582560,
@@ -182,5 +185,15 @@
     "exact_log": "required deform joints have no weighted vertex influence: head,left_foot,left_forearm,left_hand,left_shin,left_thigh,left_upper_arm,pelvis,right_foot,right_forearm,right_hand,right_shin,right_thigh,right_upper_arm,spine",
     "forensic_fbx_result": "weighted skin clusters confined to torso families; required head/limb families unweighted",
     "disposition": "REJECT_SOURCE_DO_NOT_RESERVE_UE4_AGAIN"
+  },
+  "latest_hosted_failure": {
+    "workflow_run": 37232629209,
+    "exact_head": "6c8ab7b8f460d56ea3a6e442d3bf8dcbfccf22fb",
+    "failure": "Fallback candidate had no UV layers; Blender Python raised but normalization invocation lacked --python-exit-code, so the script later failed on missing output instead of classifying the candidate.",
+    "root_causes": [
+      "candidate-quality failure aborted source family instead of continuing bounded hosted sweep",
+      "normalizer Blender invocation did not propagate Python exception exit code"
+    ],
+    "disposition": "per-candidate reject + continue; --python-exit-code 18; always publish hosted evidence; UE4 only for survivors"
   }
 }

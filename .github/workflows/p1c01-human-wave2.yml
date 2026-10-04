@@ -59,19 +59,28 @@ jobs:
 
       - name: Publish source-factory outcome
         id: outcome
+        if: always()
         shell: pwsh
         run: |
-          $r = Get-Content -LiteralPath "$env:RUNNER_TEMP/shire-human-wave2/p1c01_human_wave2_hosted.json" -Raw | ConvertFrom-Json
-          "selected_count=$($r.selected_count)" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
-          "source_status=$($r.status)" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
-          Write-Host ("HUMAN_WAVE2_HOSTED_OUTCOME status="+$r.status+" selected="+$r.selected_count)
+          $receipt="$env:RUNNER_TEMP/shire-human-wave2/p1c01_human_wave2_hosted.json"
+          if(Test-Path -LiteralPath $receipt -PathType Leaf){
+            $r = Get-Content -LiteralPath $receipt -Raw | ConvertFrom-Json
+            "selected_count=$($r.selected_count)" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+            "source_status=$($r.status)" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+            Write-Host ("HUMAN_WAVE2_HOSTED_OUTCOME status="+$r.status+" selected="+$r.selected_count)
+          }else{
+            "selected_count=0" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+            "source_status=HOSTED_RECEIPT_MISSING" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+            Write-Host "HUMAN_WAVE2_HOSTED_OUTCOME status=HOSTED_RECEIPT_MISSING selected=0"
+          }
 
       - name: Upload hosted source/normalization evidence
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: p1c01-human-wave2-hosted-${{ env.TARGET_SHA }}
           path: ${{ runner.temp }}/shire-human-wave2
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 14
 
       - name: Fail fast before UE4 when hosted deformation preflight rejects all candidates

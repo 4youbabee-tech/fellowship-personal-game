@@ -13,6 +13,7 @@ class HumanWave2ContractTests(unittest.TestCase):
         self.assertTrue(packet["source_policy"]["blend_as_intermediate_only"])
         self.assertFalse(packet["source_policy"]["direct_obj_for_animated_character"])
         self.assertEqual(packet["source_policy"]["max_ue4_candidates"],2)
+        self.assertGreaterEqual(packet["source_policy"]["max_hosted_candidates"],8)
         self.assertLessEqual(packet["source_policy"]["max_zero_weight_ratio"],0.35)
         self.assertTrue(packet["normalization_contract"]["export_deform_bones_only"])
         self.assertFalse(packet["runtime_contract"]["synchronous_heavy_load"])
@@ -37,6 +38,11 @@ class HumanWave2ContractTests(unittest.TestCase):
             "HOSTED_DEFORMATION_PREFLIGHT_REJECT",
             "probe_p1c01_human_fbx_deformation.py",
             "HUMAN_WAVE2_HOSTED_FAST_REJECT",
+            "--python-exit-code 18",
+            "NORMALIZATION_REJECT_EXIT_",
+            "HUMAN_WAVE2_CANDIDATE_HOSTED_RESULT",
+            "HUMAN_WAVE2_CANDIDATE_FAST_REJECT",
+            "HUMAN_WAVE2_HOSTED_SWEEP",
         ):
             self.assertIn(token,stage)
         self.assertNotIn("LoadObject<",stage)
@@ -66,6 +72,7 @@ class HumanWave2ContractTests(unittest.TestCase):
         self.assertIn("Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp",workflow)
         self.assertIn("ls-files --others --exclude-standard",workflow)
         self.assertIn("Hosted Frodo static deformation stress",workflow)
+        self.assertIn("if: always()",workflow)
         self.assertIn("Fail fast before UE4 when hosted deformation preflight rejects all candidates",workflow)
         self.assertIn("run_p1c01_human_wave3_deformation.py",workflow)
         self.assertIn("Stage stable UE4 evidence contract",workflow)

@@ -171,33 +171,62 @@ $preferred=@($manifest.source_policy.preferred_filename_tokens | ForEach-Object 
 $excluded=@($manifest.source_policy.excluded_filename_tokens | ForEach-Object {([string]$_).ToLowerInvariant()})
 $scored=@()
 foreach($src in $characterSources){$tokens=@(Get-HumanWave2FilenameTokens ([string]$src.entry));if(@($excluded|Where-Object{$tokens -contains $_}).Count -gt 0){continue};$score=@($preferred|Where-Object{$tokens -contains $_}).Count;if($preferred.Count -gt 0 -and $score -eq 0){continue};$scored += [pscustomobject]@{source=$src;score=$score}}
-$selectedSources=@($scored | Sort-Object @{Expression="score";Descending=$true}, @{Expression={if($_.source.extension -eq ".fbx"){0}else{1}}}, @{Expression={$_.source.bytes}} | Select-Object -First ([int]$manifest.source_policy.max_ue4_candidates) | ForEach-Object {$_.source})
+$maxHostedCandidates=if($null -ne $manifest.source_policy.PSObject.Properties["max_hosted_candidates"]){[int]$manifest.source_policy.max_hosted_candidates}else{[Math]::Max([int]$manifest.source_policy.max_ue4_candidates,8)}
+$selectedSources=@($scored | Sort-Object @{Expression="score";Descending=$true}, @{Expression={if($_.source.extension -eq ".fbx"){0}else{1}}}, @{Expression={$_.source.bytes}} | Select-Object -First $maxHostedCandidates | ForEach-Object {$_.source})
+Write-Host ("HUMAN_WAVE2_HOSTED_SWEEP candidates="+$selectedSources.Count+" ue4Max="+[int]$manifest.source_policy.max_ue4_candidates)
 $normalized=@(); $index=0
 foreach($src in $selectedSources){
   $index++
   $outName=("candidate_{0:D2}.fbx" -f $index)
   $outPath=Join-Path $normalizedRoot $outName
   $readinessPath=Join-Path $normalizedRoot ("candidate_{0:D2}_readiness.json" -f $index)
+  $deformationPath=Join-Path $normalizedRoot ("candidate_{0:D2}_deformation_preflight.json" -f $index)
+  $rejectReasons=@()
+
   if($src.extension -eq ".blend"){
-    & $blenderCommand.Source --background ([string]$src.extracted_path) --python $pythonPath -- --source ([string]$src.extracted_path) --source-kind ".blend" --output $outPath --receipt $readinessPath
+    & $blenderCommand.Source --background ([string]$src.extracted_path) --python-exit-code 18 --python $pythonPath -- --source ([string]$src.extracted_path) --source-kind ".blend" --output $outPath --receipt $readinessPath
   }else{
-    & $blenderCommand.Source --background --factory-startup --python $pythonPath -- --source ([string]$src.extracted_path) --source-kind ".fbx" --output $outPath --receipt $readinessPath
+    & $blenderCommand.Source --background --factory-startup --python-exit-code 18 --python $pythonPath -- --source ([string]$src.extracted_path) --source-kind ".fbx" --output $outPath --receipt $readinessPath
   }
-  if([int]$LASTEXITCODE -ne 0){ throw "HUMAN_WAVE2_NORMALIZE_FAIL entry=$($src.entry)" }
+  $normalizeExit=[int]$LASTEXITCODE
+  if($normalizeExit -ne 0 -or -not (Test-Path -LiteralPath $outPath -PathType Leaf) -or -not (Test-Path -LiteralPath $readinessPath -PathType Leaf)){
+    $rejectReasons += ("NORMALIZATION_REJECT_EXIT_"+$normalizeExit)
+    $normalized += [pscustomobject]@{
+      source_entry=[string]$src.entry; source_kind=[string]$src.extension; source_sha256=[string]$src.sha256; source_bytes=[int64]$src.bytes;
+      normalized_relative_path=$null; normalized_sha256=$null; normalized_bytes=0; normalized_fbx_version=0; static_rig_markers=$false;
+      readiness_relative_path=$null; armature_count=0; mesh_count=0; bone_count=0; deform_bone_count=0; vertex_count=0; weighted_vertex_count=0;
+      zero_weight_vertex_count=0; zero_weight_ratio=1.0; uv_layer_count=0; finite_bounds=$false; joint_name_coverage=$null;
+      deformation_preflight_status="NOT_RUN"; deformation_preflight_reasons=@(); deformation_preflight_relative_path=$null;
+      quality_pass=$false; quality_reasons=$rejectReasons
+    }
+    Write-Host ("HUMAN_WAVE2_CANDIDATE_FAST_REJECT stage=normalize entry="+[string]$src.entry+" exit="+$normalizeExit)
+    Remove-Item -LiteralPath $outPath,$readinessPath -Force -ErrorAction SilentlyContinue
+    continue
+  }
 
   $version=Get-FbxBinaryVersion $outPath
-  if($version -le 0 -or $version -gt [int]$manifest.source_policy.fbx_version_ceiling){ throw "HUMAN_WAVE2_NORMALIZED_FBX_VERSION_FAIL entry=$($src.entry) version=$version" }
+  if($version -le 0 -or $version -gt [int]$manifest.source_policy.fbx_version_ceiling){
+    $rejectReasons += ("NORMALIZED_FBX_VERSION_FAIL_"+$version)
+  }
+
   $normSha=(Get-FileHash -LiteralPath $outPath -Algorithm SHA256).Hash.ToLowerInvariant()
   $readiness=Get-Content -LiteralPath $readinessPath -Raw | ConvertFrom-Json
-  $probeScript=Join-Path $root "Scripts\probe_p1c01_human_fbx_deformation.py"
-  $deformationPath=Join-Path $normalizedRoot ("candidate_{0:D2}_deformation_preflight.json" -f $index)
-  & $blenderCommand.Source --background --factory-startup --python-exit-code 19 --python $probeScript -- --fbx $outPath --output $deformationPath
-  if([int]$LASTEXITCODE -ne 0){throw "HUMAN_WAVE2_DEFORMATION_PREFLIGHT_INFRA_FAIL entry=$($src.entry)"}
-  $deformation=Get-Content -LiteralPath $deformationPath -Raw | ConvertFrom-Json
+
+  if($rejectReasons.Count -eq 0){
+    $probeScript=Join-Path $root "Scripts\probe_p1c01_human_fbx_deformation.py"
+    & $blenderCommand.Source --background --factory-startup --python-exit-code 19 --python $probeScript -- --fbx $outPath --output $deformationPath
+    $probeExit=[int]$LASTEXITCODE
+    if($probeExit -ne 0){ throw "HUMAN_WAVE2_DEFORMATION_PREFLIGHT_INFRA_FAIL entry=$($src.entry) exit=$probeExit" }
+    if(-not (Test-Path -LiteralPath $deformationPath -PathType Leaf)){ throw "HUMAN_WAVE2_DEFORMATION_PREFLIGHT_RECEIPT_MISSING entry=$($src.entry)" }
+    $deformation=Get-Content -LiteralPath $deformationPath -Raw | ConvertFrom-Json
+  }else{
+    $deformation=[pscustomobject]@{status="NOT_RUN";reasons=@($rejectReasons)}
+  }
+
   $ascii=[Text.Encoding]::ASCII.GetString([IO.File]::ReadAllBytes($outPath))
   $staticPass=$ascii.Contains("Geometry") -and $ascii.Contains("Model") -and $ascii.Contains("LimbNode") -and $ascii.Contains("Skin") -and $ascii.Contains("Cluster")
   $zeroWeightRatio=if([int]$readiness.vertex_count -gt 0){ [double]$readiness.zero_weight_vertex_count / [double]$readiness.vertex_count }else{ 1.0 }
-  $qualityReasons=@()
+  $qualityReasons=@($rejectReasons)
   if(-not $staticPass){ $qualityReasons+="MISSING_STATIC_RIG_MARKERS" }
   if([int]$readiness.deform_bone_count -le 0){ $qualityReasons+="ZERO_DEFORM_BONES" }
   if([int]$readiness.weighted_vertex_count -le 0){ $qualityReasons+="ZERO_WEIGHTED_VERTICES" }
@@ -206,19 +235,21 @@ foreach($src in $selectedSources){
   if($zeroWeightRatio -gt [double]$manifest.source_policy.max_zero_weight_ratio){ $qualityReasons+="EXCESS_ZERO_WEIGHT_RATIO" }
   if(([string]$deformation.status) -ne "HOSTED_DEFORMATION_PREFLIGHT_PASS"){ $qualityReasons+="HOSTED_DEFORMATION_PREFLIGHT_REJECT" }
   $qualityPass=$qualityReasons.Count -eq 0
+
   $normalized += [pscustomobject]@{
     source_entry=[string]$src.entry; source_kind=[string]$src.extension; source_sha256=[string]$src.sha256; source_bytes=[int64]$src.bytes;
     normalized_relative_path=("normalized/"+$outName); normalized_sha256=$normSha; normalized_bytes=[int64](Get-Item $outPath).Length;
     normalized_fbx_version=[int]$version; static_rig_markers=[bool]$staticPass;
     readiness_relative_path=("normalized/"+[IO.Path]::GetFileName($readinessPath));
     armature_count=[int]$readiness.armature_count; mesh_count=[int]$readiness.mesh_count; bone_count=[int]$readiness.bone_count;
-    deform_bone_count=[int]$readiness.deform_bone_count;
-    vertex_count=[int]$readiness.vertex_count; weighted_vertex_count=[int]$readiness.weighted_vertex_count;
+    deform_bone_count=[int]$readiness.deform_bone_count; vertex_count=[int]$readiness.vertex_count; weighted_vertex_count=[int]$readiness.weighted_vertex_count;
     zero_weight_vertex_count=[int]$readiness.zero_weight_vertex_count; zero_weight_ratio=$zeroWeightRatio; uv_layer_count=[int]$readiness.uv_layer_count;
     finite_bounds=[bool]$readiness.finite_bounds; joint_name_coverage=$readiness.joint_name_coverage;
-    deformation_preflight_status=[string]$deformation.status; deformation_preflight_reasons=@($deformation.reasons); deformation_preflight_relative_path=("normalized/"+[IO.Path]::GetFileName($deformationPath));
+    deformation_preflight_status=[string]$deformation.status; deformation_preflight_reasons=@($deformation.reasons);
+    deformation_preflight_relative_path=if(Test-Path -LiteralPath $deformationPath -PathType Leaf){"normalized/"+[IO.Path]::GetFileName($deformationPath)}else{$null};
     quality_pass=[bool]$qualityPass; quality_reasons=$qualityReasons
   }
+  Write-Host ("HUMAN_WAVE2_CANDIDATE_HOSTED_RESULT entry="+[string]$src.entry+" qualityPass="+$qualityPass+" reasons="+($qualityReasons -join ","))
 }
 
 $eligible=@($normalized | Where-Object { $_.quality_pass } | Select-Object -First ([int]$manifest.source_policy.max_ue4_candidates))
