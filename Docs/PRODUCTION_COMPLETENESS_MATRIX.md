@@ -3518,3 +3518,25 @@ A-I closeout lanes are internal workstreams, not separate waves. P1C02 remains p
 | Autonomous final human/device Gate 6/7 acceptance | FORBIDDEN |
 | Auto-open next runtime chapter | FORBIDDEN |
 | Current active train | P1C01 MW5 -> MW6 |
+
+
+## 2026-10-04 - P1C01 complete-experience closure matrix
+
+| Dimension | Required before P1C01 close |
+|---|---|
+| Film causal story spine / chronology / knowledge state | YES |
+| Compatible Tolkien/source-backed detail | YES, unless explicitly dispositioned |
+| Main quests/objectives | YES |
+| Exploration / discoveries / optional routes | YES |
+| Side activities / side missions | YES where source/chapter-supported |
+| Hero + named-character continuity | YES |
+| Living Shire NPC/work/social/context behavior | YES |
+| World/landmarks/materials/lighting/water/audio | YES |
+| Traversal/collision/navigation/return-to-control | YES |
+| Save/load/world-state restoration | YES |
+| Localization-safe text + Arabic contract continuity | YES |
+| Target-device 720p DX11 / 30 FPS evidence | YES |
+| Human visual/pacing/atmosphere/enjoyment review | YES |
+| Main-story-only shortcut to P1C02 | FORBIDDEN |
+
+Production cadence is owner-command driven, not hourly scheduled automation.
