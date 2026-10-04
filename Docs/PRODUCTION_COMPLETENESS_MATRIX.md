@@ -3428,3 +3428,19 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Hero-candidate manual queue | REQUIRED | one explicit manifest call |
 | Broad continue-on-error | FORBIDDEN / PRESERVED | fail-closed policy unchanged |
 | Fresh exact-head validation | PENDING | new PR head required |
+
+
+## 2026-10-04 - P1C01 definitive closeout wave
+
+| Lane | State | Concrete evidence / next action |
+|---|---|---|
+| Settlement source construction | COMPILE-TESTED / MERGED | #314 + #318 + #320 |
+| Frodo UE4 technical skeletal gate | TECHNICAL PASS | 161 bones; Human Wave 2 log |
+| Frodo deformation stress | NOT PROVEN | prior job hit FileNotFoundError for UE4 receipt; repair handoff and rerun |
+| Automated rendered capture | 6 SHOTS EXIST / WORKFLOW FINALIZER FAILED | run 37207780989; artifact 11306540563; count parser root-fix required |
+| Human rendered visual review | REJECTED | blocky player, flat/grey prototype read, weak landmark depth, Ferry under-authored |
+| World causal visual repair | OPEN | diagnose material/lighting before new density |
+| Party Field ownership/traversal | OPEN ROOT-FIX | remove duplicate event furniture ownership; real collision opening |
+| Authored property fences | OPEN ROOT-FIX | isolate from RuralFenceInstances clear/rebuild |
+| Gameplay / save / device / FPS | NOT ACCEPTED | exact chapter evidence still required |
+| P1C02 | PREDECESSOR-GATED | do not open before P1C01 Gate 6/7 |
