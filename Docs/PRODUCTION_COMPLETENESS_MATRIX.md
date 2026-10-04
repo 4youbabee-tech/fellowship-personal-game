@@ -3434,3 +3434,15 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Duplicate placement growth | AVOIDED | no blind copy of extra garden/mail/farm props |
 | Runtime authority | PRESERVED | AShirePrototypeWorldBuilder |
 | Exact-head validation | PENDING | new merged candidate required |
+
+
+## 2026-10-04 - Shire property-fence ownership correction
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Authored village property fences | HISM / DEDICATED OWNER | PropertyFenceInstances |
+| Later RuralFence density reset | NO LONGER ERASES AUTHORED FENCES | separate lifecycle owner |
+| Collision | PRESERVED | QueryAndPhysics |
+| Per-instance Tick | NONE | static HISM |
+| New heavy load | NONE | resident fence mesh reused |
+| Exact-head CI | PENDING | PR #317 validation required |

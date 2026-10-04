@@ -12,8 +12,11 @@
   },
   "fence_line": {
     "hism_first": true,
-    "component": "RuralFenceInstances",
-    "actor_segment_fallback_only_when_hism_mesh_missing": true
+    "component": "PropertyFenceInstances",
+    "actor_segment_fallback_only_when_hism_mesh_missing": true,
+    "lifecycle_owner": "SpawnVillage authored property fences",
+    "reason_for_dedicated_component": "SpawnVisibleShireMegaPass clears/rebuilds RuralFenceInstances after SpawnVillage.",
+    "survives_later_density_clear": true
   },
   "architecture_contract": {
     "new_world_authority": false,

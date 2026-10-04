@@ -160,6 +160,13 @@ AShirePrototypeWorldBuilder::AShirePrototypeWorldBuilder()
     RuralFenceInstances->SetGenerateOverlapEvents(false);
     RuralFenceInstances->SetCastShadow(false);
 
+    PropertyFenceInstances = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("PropertyFenceInstances"));
+    PropertyFenceInstances->SetupAttachment(RuntimeRoot);
+    PropertyFenceInstances->SetMobility(EComponentMobility::Movable);
+    PropertyFenceInstances->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+    PropertyFenceInstances->SetGenerateOverlapEvents(false);
+    PropertyFenceInstances->SetCastShadow(false);
+
     FernInstances = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("FernInstances"));
     FernInstances->SetupAttachment(RuntimeRoot);
     FernInstances->SetMobility(EComponentMobility::Movable);
@@ -191,6 +198,7 @@ AShirePrototypeWorldBuilder::AShirePrototypeWorldBuilder()
     HedgeInstances->SetCullDistances(1200, 10500);
     WoodlandTreeInstances->SetCullDistances(4500, 22000);
     RuralFenceInstances->SetCullDistances(1400, 11000);
+    PropertyFenceInstances->SetCullDistances(1000, 8500);
     FernInstances->SetCullDistances(700, 5600);
     ReedInstances->SetCullDistances(800, 7200);
 
@@ -305,8 +313,16 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     if (ProductionGroundBlockMesh) GardenSoilInstances->SetStaticMesh(ProductionGroundBlockMesh);
     if (ProductionHedgeMesh) HedgeInstances->SetStaticMesh(ProductionHedgeMesh);
     if (ProductionCommonBroadleafTreeMesh) WoodlandTreeInstances->SetStaticMesh(ProductionCommonBroadleafTreeMesh);
-    if (ProductionCommonVillageFenceMesh) RuralFenceInstances->SetStaticMesh(ProductionCommonVillageFenceMesh);
-    else if (ProductionFenceSegmentMesh) RuralFenceInstances->SetStaticMesh(ProductionFenceSegmentMesh);
+    if (ProductionCommonVillageFenceMesh)
+    {
+        RuralFenceInstances->SetStaticMesh(ProductionCommonVillageFenceMesh);
+        PropertyFenceInstances->SetStaticMesh(ProductionCommonVillageFenceMesh);
+    }
+    else if (ProductionFenceSegmentMesh)
+    {
+        RuralFenceInstances->SetStaticMesh(ProductionFenceSegmentMesh);
+        PropertyFenceInstances->SetStaticMesh(ProductionFenceSegmentMesh);
+    }
     if (ProductionCommonFernClumpMesh) FernInstances->SetStaticMesh(ProductionCommonFernClumpMesh);
     if (ProductionCommonReedClusterMesh) ReedInstances->SetStaticMesh(ProductionCommonReedClusterMesh);
 
@@ -646,14 +662,15 @@ void AShirePrototypeWorldBuilder::SpawnFenceLine(const FVector& Start, const FVe
     const FRotator RailRotation = SectionDelta.GetSafeNormal2D().Rotation();
     const FLinearColor Wood(0.31f, 0.18f, 0.08f);
 
-    // Repeated settlement boundaries are HISM-first. The configured rural fence
-    // component may use the project Shire segment or the common village fence.
-    if (RuralFenceInstances && RuralFenceInstances->GetStaticMesh())
+    // SpawnVillage-authored property boundaries use a dedicated HISM owner.
+    // SpawnVisibleShireMegaPass clears/rebuilds RuralFenceInstances later, so using
+    // that density component here would silently erase these earlier property fences.
+    if (PropertyFenceInstances && PropertyFenceInstances->GetStaticMesh())
     {
         for (int32 Index = 0; Index < Sections; ++Index)
         {
             const FVector Mid = Start + SectionDelta * (static_cast<float>(Index) + 0.5f);
-            RuralFenceInstances->AddInstance(FTransform(
+            PropertyFenceInstances->AddInstance(FTransform(
                 RailRotation,
                 Mid,
                 FVector(FMath::Max(0.42f, SectionLength / 115.0f), 1.0f, 1.0f)));

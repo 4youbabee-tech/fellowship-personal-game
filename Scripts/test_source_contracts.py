@@ -826,6 +826,8 @@ class SourceContractTests(unittest.TestCase):
         self.assertFalse(packet["architecture_contract"]["p1c02_runtime_opened"])
 
         source = (root / "Source" / "ShireJourney" / "Private" / "World" / "ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        header = (root / "Source" / "ShireJourney" / "Public" / "World" / "ShirePrototypeWorldBuilder.h").read_text(encoding="utf-8")
+        self.assertIn("PropertyFenceInstances", header)
 
         hole_start = source.index("void AShirePrototypeWorldBuilder::SpawnHobbitHole(")
         fence_start = source.index("void AShirePrototypeWorldBuilder::SpawnFenceLine(", hole_start)
@@ -842,8 +844,8 @@ class SourceContractTests(unittest.TestCase):
 
         garden_start = source.index("void AShirePrototypeWorldBuilder::SpawnGardenPatch(", fence_start)
         fence = source[fence_start:garden_start]
-        self.assertIn("RuralFenceInstances->AddInstance", fence)
-        self.assertIn("if (RuralFenceInstances && RuralFenceInstances->GetStaticMesh())", fence)
+        self.assertIn("PropertyFenceInstances->AddInstance", fence)
+        self.assertIn("if (PropertyFenceInstances && PropertyFenceInstances->GetStaticMesh())", fence)
 
 
 

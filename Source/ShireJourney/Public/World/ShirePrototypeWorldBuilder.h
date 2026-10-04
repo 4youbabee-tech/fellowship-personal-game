@@ -99,6 +99,7 @@ private:
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* HedgeInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* WoodlandTreeInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* RuralFenceInstances;
+    UPROPERTY() UHierarchicalInstancedStaticMeshComponent* PropertyFenceInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* FernInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* ReedInstances;
     UPROPERTY() ADirectionalLight* RuntimeSun = nullptr;

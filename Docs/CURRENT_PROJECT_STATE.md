@@ -4250,3 +4250,11 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Full-world audit confirmed PR #314's extra garden-arch/mailbox/wash-line/plough/orchard-ladder/pump-well/produce-stand categories already exist under the established ProductionVillageDetailLayer/CP54 world ownership. Carrying the extra placements forward would increase duplicate density rather than close a missing category.
 - The reconciled closeout therefore supersedes PR #314's duplicate Settlement implementation while preserving its history as a merge parent. Current world construction remains one AShirePrototypeWorldBuilder authority.
 - Status remains **SOURCE-RECONCILED / FRESH EXACT-HEAD VALIDATION PENDING**; no PIE/device/visual/FPS acceptance is claimed.
+
+
+## 2026-10-04 - Shire authored property-fence ownership correction
+
+- Pass-order audit proved `SpawnVisibleShireMegaPass()` clears/rebuilds `RuralFenceInstances` after `SpawnVillage()`.
+- `SpawnFenceLine()` now writes to dedicated `PropertyFenceInstances` HISM, preserving early authored Hobbiton property boundaries through later density reconstruction.
+- The dedicated component reuses the resident production/common fence mesh, keeps QueryAndPhysics collision, bounded culling and zero Tick; no new asset load or authority is introduced.
+- Status: **SOURCE-FIXED / EXACT-HEAD VALIDATION PENDING**.
