@@ -4741,7 +4741,7 @@ void AShirePrototypeWorldBuilder::SpawnShireSettlementCompletionPass()
     UE_LOG(
         LogTemp,
         Display,
-        TEXT("P1C01_SHIRE_SETTLEMENT_COMPLETION hism=%d clusterActors=%d clusterInstances=%d heroActors=%d hismBudget=303 clusterBudget=82 heroBudget=16 writer=ShirePrototypeWorldBuilder p1c02=no"),
+        TEXT("P1C01_SHIRE_SETTLEMENT_COMPLETION hism=%d clusterActors=%d clusterInstances=%d heroActors=%d hismBudget=303 clusterBudget=82 heroBudget=16 partyEntryCollision=off writer=ShirePrototypeWorldBuilder p1c02=no"),
         HismInstances,
         ClusterActors,
         ClusterInstances,

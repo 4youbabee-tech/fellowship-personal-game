@@ -3354,3 +3354,13 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Settlement runtime source | NOT REJECTED BY #1855 | failure occurred inside Python test ordering |
 | Regression assertion ordering | SOURCE-FIXED | Party Field assertions moved after body slice construction |
 | Fresh Pre-Unreal | PENDING | exact-head rerun required |
+
+
+## 2026-10-04 - Party Field runtime evidence marker
+
+| Evidence | Status | Boundary |
+|---|---|---|
+| Settlement runtime log marker | SOURCE-IMPLEMENTED | `partyEntryCollision=off` |
+| Visual gate collision | SOURCE-FIXED | both Party entry gate actors collision=false |
+| Hedge opening | SOURCE-FIXED | collision hedge indices 6-8 omitted |
+| PIE traversal | NOT ACCEPTED | direct walkthrough required |

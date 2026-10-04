@@ -4205,3 +4205,11 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Pre-Unreal #1855 failed only because the new Party Field regression assertions referenced the local `body` variable before it was assigned.
 - Runtime/world source was not implicated by that failure. The assertions now execute after the settlement function slice is constructed.
 - Status: **TEST-HARNESS FIXED / FRESH EXACT-HEAD VALIDATION PENDING**.
+
+
+## 2026-10-04 - Party Field runtime evidence marker
+
+- Settlement completion log now emits `partyEntryCollision=off` alongside the bounded HISM/cluster/hero budgets.
+- This makes the source/runtime diagnostic explicit for the two non-colliding visual Party Field entry gates after the hedge-opening correction.
+- This marker does not itself constitute PIE traversal acceptance; direct walkthrough evidence remains required.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD COMPILE VALIDATION PENDING**.
