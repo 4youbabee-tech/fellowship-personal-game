@@ -247,8 +247,6 @@ class SourceContractTests(unittest.TestCase):
         start = source.index("void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()")
         end = source.index("void AShirePrototypeWorldBuilder::SpawnScenicDetailPass()", start)
         body = source[start:end]
-        self.assertEqual(body.count('TEXT("P1C01PartyFieldEntryGate")'), 2)
-        self.assertNotIn('18.0f,\n        true,\n        TEXT("P1C01PartyFieldEntryGate")', body)
 
         self.assertEqual(body.count("SpawnDetailCluster("), 5)
         self.assertIn("Cluster->Configure(Mesh, false", body)
@@ -776,6 +774,8 @@ class SourceContractTests(unittest.TestCase):
         start = source.index("void AShirePrototypeWorldBuilder::SpawnShireSettlementCompletionPass()")
         end = source.index("void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()", start)
         body = source[start:end]
+        self.assertEqual(body.count('TEXT("P1C01PartyFieldEntryGate")'), 2)
+        self.assertNotIn('18.0f,\n        true,\n        TEXT("P1C01PartyFieldEntryGate")', body)
         for token in (
             "P1C01_SHIRE_SETTLEMENT_COMPLETION",
             "BagshotFacades[]",
