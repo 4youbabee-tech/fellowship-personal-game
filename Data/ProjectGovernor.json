@@ -8622,7 +8622,9 @@
     ],
     "final_gate_rule": "The train may autonomously reach READY_FOR_HUMAN_DEVICE_ACCEPTANCE, but it must not claim Gate 6/7 accepted until chapter-specific human/device evidence exists.",
     "chapter_transition_rule": "Do not auto-open the next runtime chapter. After predecessor Gate 6/7 is accepted, wait for the owner's explicit 'start next chapter' command before beginning the next chapter train.",
-    "p1c01_application": "P1C01 is currently the active train. Continue MW5 then MW6 under the above rules; P1C02 remains locked."
+    "p1c01_application": "P1C01 is currently the active train. Continue MW5 then MW6 under the above rules; P1C02 remains locked.",
+    "execution_trigger": "MANUAL_OWNER_CONTINUE_COMMANDS_ONLY; no recurring production schedule. Each owner command continues the active chapter train immediately from live state.",
+    "owner_supervision_model": "The owner may issue continue/start commands as often as desired (for example every 15 minutes). Routine work proceeds within that turn without asking for micro-approval."
   },
   "owner_manual_continuous_command_policy_2026_10_04": {
     "status": "ACTIVE_PERMANENT",
@@ -8656,5 +8658,29 @@
     "completeness_rule": "Do not call the chapter 100% complete while any required dimension above is materially open. Scope additions discovered from the supplied sources must be implemented or explicitly rejected/deferred with a recorded canon/production reason.",
     "next_chapter_rule": "P1C02 runtime stays locked until P1C01 is Gate 6/7 accepted under this total-completion contract.",
     "evidence_boundary": "This contract raises the closure bar; it does not itself claim any new acceptance state."
+  },
+  "p1c01_full_completeness_contract_2026_10_04": {
+    "status": "ACTIVE_PERMANENT",
+    "runtime_chapter": "P1C01",
+    "closure_definition": "P1C01 may close only when the complete Shire experience is covered, not merely the main path or visible settlement.",
+    "required_dimensions": [
+      "Film-causal story spine and all required chapter beats in correct chronology and character knowledge state",
+      "Compatible Tolkien/source-backed chapter detail that can deepen the experience without changing locked film outcomes",
+      "Main quests and chapter objectives",
+      "Exploration content, discoveries, optional routes, environmental storytelling and rewarding traversal",
+      "Side activities and side missions supported by the project sources and chapter context",
+      "Named-character continuity, Frodo/Gandalf and required hero presentation",
+      "Living Shire NPC routines, social/work activity, contextual reactions and bounded memory",
+      "Architecture, landmarks, terrain, vegetation, materials, lighting, water, ambience and audio",
+      "Traversal, collision, navigation, interaction and return-to-control reliability",
+      "Save/load continuity and chapter/world-state restoration",
+      "Localization-safe player-facing text and the permanent Arabic localization contract",
+      "Target-device streaming, VRAM/RAM behavior and 30 FPS floor evidence",
+      "Human visual, pacing, readability, atmosphere and enjoyment review"
+    ],
+    "no_silent_omission_rule": "Any meaningful supported chapter detail discovered in Sources 00-11, supplied film material, Tolkien source review or the registered chapter plans must be implemented or receive an explicit documented disposition before P1C01 closure.",
+    "enjoyment_rule": "Exploration and optional content must make the Shire enjoyable to inhabit and discover, not merely extend playtime. Reward-free atmosphere, social activity, environmental interactions, discoveries and side content are valid when canon-safe and performance-bounded.",
+    "closure_gate": "P1C01 closes only when all required dimensions are resolved and Gate 6/7 has chapter-specific evidence. No 'mostly complete' or 'main story complete' shortcut opens P1C02.",
+    "evidence_boundary": "This contract defines completeness. It does not itself claim any runtime, device, visual, pacing or performance acceptance."
   }
 }
