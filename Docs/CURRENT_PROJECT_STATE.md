@@ -4361,3 +4361,12 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Fail-closed repair: required semantic joints must be deform bones, each must influence weighted vertices, and every pose scenario must exceed a scale-relative minimum displacement while retaining finite/bounds guards.
 - Frodo remains a technical skeletal candidate. Retarget, AnimBP/runtime integration and human rendered deformation are **NOT ACCEPTED**.
 - Exact-head repaired Human Wave rerun is required before any renewed deformation claim.
+
+
+## 2026-10-04 - Human Wave #27 root-cause / no-repeat repair
+
+- Exact head `77067204743927b64c8165358d59e1c4609f8dd9`: Pre-Unreal, Unreal Build and Shire Render Capture **SUCCESS**; Human Character Wave #27 failed only at hosted deformation.
+- Exact failure: required Frodo semantic deform joints had zero weighted vertex influence. Binary FBX forensic inspection confirmed weighted skin clusters were confined to torso families; head/limb chains were unweighted.
+- Root fix: normalized FBX now must pass hosted weighted-joint, Armature-link, hierarchy and non-zero pose-deformation checks **before** self-hosted UE4 is reserved. Zero survivors publish evidence and fail fast on hosted infrastructure.
+- The rejected Character Base Model source is retired from the active probe; active bounded fallback is the direct public Quaternius CC0 Animated Characters Pack mirror on OpenGameArt.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. Retarget, AnimBP/runtime, PIE/device/visual/performance and Gate 6/7 remain not accepted.

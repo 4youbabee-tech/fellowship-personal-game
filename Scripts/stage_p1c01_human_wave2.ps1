@@ -31,7 +31,8 @@ Invoke-WebRequest -UseBasicParsing -Uri ([string]$manifest.source_family.archive
 
 $pageText = Get-Content -LiteralPath $pagePath -Raw
 if($pageText -notmatch "CC0"){ throw "HUMAN_WAVE2_SOURCE_PAGE_CC0_MARKER_MISSING" }
-if($pageText -notmatch "Rigged Low Poly Character Base Model|Rigged.*Character"){ throw "HUMAN_WAVE2_SOURCE_PAGE_RIGGED_MARKER_MISSING" }
+$pageMarker=if($null -ne $manifest.source_family.PSObject.Properties["required_page_regex"]){[string]$manifest.source_family.required_page_regex}else{"Rigged Low Poly Character Base Model|Rigged.*Character"}
+if($pageText -notmatch $pageMarker){ throw "HUMAN_WAVE2_SOURCE_PAGE_RIGGED_MARKER_MISSING" }
 
 $archiveItem = Get-Item -LiteralPath $archivePath
 if($archiveItem.Length -le 0 -or $archiveItem.Length -gt [int64]$manifest.source_policy.max_archive_bytes){ throw "HUMAN_WAVE2_ARCHIVE_SIZE_FAIL bytes=$($archiveItem.Length)" }
@@ -165,8 +166,12 @@ function Get-FbxBinaryVersion([string]$Path){
   return [BitConverter]::ToInt32($bytes,23)
 }
 
-$ranked=@($characterSources | Sort-Object @{Expression={if($_.extension -eq ".blend"){0}else{1}}}, @{Expression={$_.bytes}})
-$selectedSources=@($ranked | Select-Object -First ([int]$manifest.source_policy.max_ue4_candidates))
+function Get-HumanWave2FilenameTokens([string]$Entry){$s=[regex]::Replace([IO.Path]::GetFileNameWithoutExtension($Entry),'([a-z0-9])([A-Z])','$1 $2');return @($s.ToLowerInvariant() -split '[^a-z0-9]+' | Where-Object {$_})}
+$preferred=@($manifest.source_policy.preferred_filename_tokens | ForEach-Object {([string]$_).ToLowerInvariant()})
+$excluded=@($manifest.source_policy.excluded_filename_tokens | ForEach-Object {([string]$_).ToLowerInvariant()})
+$scored=@()
+foreach($src in $characterSources){$tokens=@(Get-HumanWave2FilenameTokens ([string]$src.entry));if(@($excluded|Where-Object{$tokens -contains $_}).Count -gt 0){continue};$score=@($preferred|Where-Object{$tokens -contains $_}).Count;if($preferred.Count -gt 0 -and $score -eq 0){continue};$scored += [pscustomobject]@{source=$src;score=$score}}
+$selectedSources=@($scored | Sort-Object @{Expression="score";Descending=$true}, @{Expression={if($_.source.extension -eq ".fbx"){0}else{1}}}, @{Expression={$_.source.bytes}} | Select-Object -First ([int]$manifest.source_policy.max_ue4_candidates) | ForEach-Object {$_.source})
 $normalized=@(); $index=0
 foreach($src in $selectedSources){
   $index++
@@ -184,6 +189,11 @@ foreach($src in $selectedSources){
   if($version -le 0 -or $version -gt [int]$manifest.source_policy.fbx_version_ceiling){ throw "HUMAN_WAVE2_NORMALIZED_FBX_VERSION_FAIL entry=$($src.entry) version=$version" }
   $normSha=(Get-FileHash -LiteralPath $outPath -Algorithm SHA256).Hash.ToLowerInvariant()
   $readiness=Get-Content -LiteralPath $readinessPath -Raw | ConvertFrom-Json
+  $probeScript=Join-Path $root "Scripts\probe_p1c01_human_fbx_deformation.py"
+  $deformationPath=Join-Path $normalizedRoot ("candidate_{0:D2}_deformation_preflight.json" -f $index)
+  & $blenderCommand.Source --background --factory-startup --python-exit-code 19 --python $probeScript -- --fbx $outPath --output $deformationPath
+  if([int]$LASTEXITCODE -ne 0){throw "HUMAN_WAVE2_DEFORMATION_PREFLIGHT_INFRA_FAIL entry=$($src.entry)"}
+  $deformation=Get-Content -LiteralPath $deformationPath -Raw | ConvertFrom-Json
   $ascii=[Text.Encoding]::ASCII.GetString([IO.File]::ReadAllBytes($outPath))
   $staticPass=$ascii.Contains("Geometry") -and $ascii.Contains("Model") -and $ascii.Contains("LimbNode") -and $ascii.Contains("Skin") -and $ascii.Contains("Cluster")
   $zeroWeightRatio=if([int]$readiness.vertex_count -gt 0){ [double]$readiness.zero_weight_vertex_count / [double]$readiness.vertex_count }else{ 1.0 }
@@ -194,6 +204,7 @@ foreach($src in $selectedSources){
   if([int]$readiness.uv_layer_count -le 0){ $qualityReasons+="MISSING_UV_LAYER" }
   if(-not [bool]$readiness.finite_bounds){ $qualityReasons+="NONFINITE_BOUNDS" }
   if($zeroWeightRatio -gt [double]$manifest.source_policy.max_zero_weight_ratio){ $qualityReasons+="EXCESS_ZERO_WEIGHT_RATIO" }
+  if(([string]$deformation.status) -ne "HOSTED_DEFORMATION_PREFLIGHT_PASS"){ $qualityReasons+="HOSTED_DEFORMATION_PREFLIGHT_REJECT" }
   $qualityPass=$qualityReasons.Count -eq 0
   $normalized += [pscustomobject]@{
     source_entry=[string]$src.entry; source_kind=[string]$src.extension; source_sha256=[string]$src.sha256; source_bytes=[int64]$src.bytes;
@@ -205,6 +216,7 @@ foreach($src in $selectedSources){
     vertex_count=[int]$readiness.vertex_count; weighted_vertex_count=[int]$readiness.weighted_vertex_count;
     zero_weight_vertex_count=[int]$readiness.zero_weight_vertex_count; zero_weight_ratio=$zeroWeightRatio; uv_layer_count=[int]$readiness.uv_layer_count;
     finite_bounds=[bool]$readiness.finite_bounds; joint_name_coverage=$readiness.joint_name_coverage;
+    deformation_preflight_status=[string]$deformation.status; deformation_preflight_reasons=@($deformation.reasons); deformation_preflight_relative_path=("normalized/"+[IO.Path]::GetFileName($deformationPath));
     quality_pass=[bool]$qualityPass; quality_reasons=$qualityReasons
   }
 }
@@ -220,5 +232,5 @@ $receipt=[ordered]@{
 }
 $receiptPath=Join-Path $OutputRoot "p1c01_human_wave2_hosted.json"
 $receipt | ConvertTo-Json -Depth 16 | Set-Content -LiteralPath $receiptPath -Encoding UTF8
-if($eligible.Count -lt 1){ throw "HUMAN_WAVE2_HOSTED_EXHAUSTED receipt=$receiptPath" }
+if($eligible.Count -lt 1){ Write-Host ("HUMAN_WAVE2_HOSTED_FAST_REJECT selected=0 receipt="+$receiptPath); exit 0 }
 Write-Host ("HUMAN_WAVE2_HOSTED_PASS selected="+$eligible.Count+" deformOnly=true maxZeroWeightRatio="+$manifest.source_policy.max_zero_weight_ratio+" archiveSha="+$archiveSha+" receipt="+$receiptPath)

@@ -34,6 +34,9 @@ class HumanWave2ContractTests(unittest.TestCase):
             "use_armature_deform_only=True",
             "uv_layer_count",
             "Get-FileHash",
+            "HOSTED_DEFORMATION_PREFLIGHT_REJECT",
+            "probe_p1c01_human_fbx_deformation.py",
+            "HUMAN_WAVE2_HOSTED_FAST_REJECT",
         ):
             self.assertIn(token,stage)
         self.assertNotIn("LoadObject<",stage)
@@ -63,6 +66,7 @@ class HumanWave2ContractTests(unittest.TestCase):
         self.assertIn("Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp",workflow)
         self.assertIn("ls-files --others --exclude-standard",workflow)
         self.assertIn("Hosted Frodo static deformation stress",workflow)
+        self.assertIn("Fail fast before UE4 when hosted deformation preflight rejects all candidates",workflow)
         self.assertIn("run_p1c01_human_wave3_deformation.py",workflow)
         self.assertIn("Stage stable UE4 evidence contract",workflow)
         self.assertIn("shire-human-wave2-ue4-artifact",workflow)
@@ -84,6 +88,7 @@ class HumanWave2ContractTests(unittest.TestCase):
             "required deform joints have no weighted vertex influence",
             "min_required_displacement",
             "NO_NONTRIVIAL_DEFORMATION",
+            "bone_influence_count",
         ):
             self.assertIn(token,deformation)
         gate=json.loads((root/"Data"/"P1C01HumanDeformationGateV1.json").read_text(encoding="utf-8"))

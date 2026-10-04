@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "gate_id": "P1C01_FRODO_STATIC_DEFORMATION_GATE_V1",
-  "status": "SOURCE_REPAIRED_FALSE_GREEN_GUARD_EXACT_HEAD_VALIDATION_PENDING",
+  "status": "RUN27_DEFORMATION_REJECT_HOSTED_FRONTLOAD_IMPLEMENTED",
   "runtime_chapter": "P1C01",
   "predecessor": {
     "technical_gate": "Human Wave 2 UE4 technical winner",
@@ -61,5 +61,17 @@
     "observed": "Prior artifact marked all stress scenarios passed while every max_vertex_displacement was 0.0.",
     "root_cause": "Semantic joint selection allowed non-deform controls and the gate did not require weighted influence or non-zero evaluated displacement.",
     "disposition": "Prior artifact proves workflow execution only. It must not be used as deformation proof; exact-head fail-closed rerun required."
+  },
+  "run27_exact_failure": {
+    "workflow_run": 37229582560,
+    "exact_head": "77067204743927b64c8165358d59e1c4609f8dd9",
+    "technical_gate": "PASS",
+    "deformation_gate": "REJECT",
+    "disposition": "source rejected; frontload weighted-joint deformation check before UE4"
+  },
+  "hosted_frontload_contract": {
+    "probe": "Scripts/probe_p1c01_human_fbx_deformation.py",
+    "timing": "normalized FBX -> hosted deformation preflight -> UE4 only if survivor exists",
+    "selector": "prefer semantic deform bone with real vertex influence"
   }
 }

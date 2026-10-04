@@ -1,19 +1,20 @@
 {
   "schema_version": 1,
   "wave_id": "P1C01_HUMAN_CHARACTER_PRODUCTION_WAVE_2_V1",
-  "status": "TECHNICAL_WINNER_EVIDENCED_CI_HARDENING_PENDING",
+  "status": "RUN27_DEFORMATION_REJECTED_HOSTED_FRONTLOAD_IMPLEMENTED",
   "runtime_chapter": "P1C01",
   "target_character": "FRODO",
   "role": "HUMAN_SKELETAL_SOURCE_FACTORY_NOT_FINAL_LIKENESS",
   "source_family": {
     "provider": "OpenGameArt",
-    "creator": "overactiongamestudio",
-    "title": "Character Base Model",
-    "source_page": "https://opengameart.org/content/character-base-model",
-    "archive_url": "https://opengameart.org/sites/default/files/character-base-model-rigged.zip",
+    "creator": "Quaternius",
+    "title": "Animated Characters Pack",
+    "source_page": "https://opengameart.org/content/animated-characters-pack",
+    "archive_url": "https://opengameart.org/sites/default/files/ultimate_animated_character_pack_by_quaternius.zip",
     "observed_license": "CC0",
     "license_marker_required": "CC0",
-    "source_description": "Rigged low-poly fantasy character base model",
+    "required_page_regex": "Animated Characters Pack|50\\+ different animated characters",
+    "source_description": "Direct public Quaternius CC0 animated-character pack; technical rig-base source only, not final Frodo likeness.",
     "final_animated_format": "FBX"
   },
   "source_policy": {
@@ -23,7 +24,7 @@
       ".png",
       ".tga"
     ],
-    "max_archive_bytes": 33554432,
+    "max_archive_bytes": 67108864,
     "max_source_entry_bytes": 67108864,
     "max_ue4_candidates": 2,
     "fbx_version_ceiling": 7500,
@@ -35,7 +36,28 @@
       "TGA"
     ],
     "prefer_blend_source": true,
-    "max_zero_weight_ratio": 0.35
+    "max_zero_weight_ratio": 0.35,
+    "prefer_fbx_source": true,
+    "preferred_filename_tokens": [
+      "male",
+      "human",
+      "elf",
+      "adventurer",
+      "villager",
+      "worker",
+      "base",
+      "character"
+    ],
+    "excluded_filename_tokens": [
+      "female",
+      "zombie",
+      "goblin",
+      "ninja",
+      "cowboy",
+      "pirate",
+      "soldier",
+      "knight"
+    ]
   },
   "normalization_contract": {
     "tool": "Blender",
@@ -139,5 +161,26 @@
     "physics_asset_note": "UE4 reported small-bone auto-generation warning; separate sanity gate, not skeletal technical rejection.",
     "technical_gate": "PASS",
     "next_gate": "DEFORMATION_AND_RETARGET"
+  },
+  "hosted_deformation_preflight": {
+    "required": true,
+    "order": "NORMALIZED_FBX_BEFORE_SELF_HOSTED_UE4",
+    "self_hosted_reservation_rule": "UE4 job skipped when hosted selected_count is zero.",
+    "hard_rejects": [
+      "missing/zero-weight semantic deform joint",
+      "missing Armature linkage",
+      "broken hierarchy",
+      "zero pose displacement"
+    ]
+  },
+  "latest_failed_deformation_evidence": {
+    "workflow_run": 37229582560,
+    "workflow_label": "#27",
+    "exact_head": "77067204743927b64c8165358d59e1c4609f8dd9",
+    "technical_gate": "PASS",
+    "deformation_gate": "REJECT",
+    "exact_log": "required deform joints have no weighted vertex influence: head,left_foot,left_forearm,left_hand,left_shin,left_thigh,left_upper_arm,pelvis,right_foot,right_forearm,right_hand,right_shin,right_thigh,right_upper_arm,spine",
+    "forensic_fbx_result": "weighted skin clusters confined to torso families; required head/limb families unweighted",
+    "disposition": "REJECT_SOURCE_DO_NOT_RESERVE_UE4_AGAIN"
   }
 }

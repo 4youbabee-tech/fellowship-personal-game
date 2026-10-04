@@ -72,23 +72,23 @@ def side_match(name, side):
         return "right" in raw or ".r" in raw or "_r" in raw or "-r" in raw or raw.endswith(" r")
     return True
 
+def bone_influence_count(bone_name):
+    influenced=0
+    for obj in meshes:
+        group=obj.vertex_groups.get(bone_name)
+        if group is None: continue
+        influenced += sum(1 for vertex in obj.data.vertices if any(link.group==group.index and link.weight>1e-5 for link in vertex.groups))
+    return influenced
+
 def find_joint(tokens, side=None, exclude=()):
-    matches = []
+    matches=[]
     for pb in armature.pose.bones:
-        packed = compact(pb.name)
-        if not pb.bone.use_deform:
-            continue
-        if side and not side_match(pb.name, side):
-            continue
-        if any(x in packed for x in exclude):
-            continue
-        if any(token in packed for token in tokens):
-            score = len(pb.name) * 0.001
-            matches.append((score, pb))
-    if not matches:
-        return None
-    matches.sort(key=lambda item: item[0])
-    return matches[0][1]
+        packed=compact(pb.name)
+        if not pb.bone.use_deform or (side and not side_match(pb.name,side)) or any(x in packed for x in exclude): continue
+        if any(token in packed for token in tokens): matches.append((-bone_influence_count(pb.name),len(pb.name),pb.name.lower(),pb))
+    if not matches:return None
+    matches.sort(key=lambda item:(item[0],item[1],item[2]))
+    return matches[0][3]
 
 joints = {
     "pelvis": find_joint(("pelvis", "hips", "hip")),
@@ -131,16 +131,7 @@ if not all(hierarchy.values()):
     raise RuntimeError("hierarchy sanity failed: " + ",".join(failed))
 
 def weighted_vertex_influence_count(bone_name):
-    influenced = 0
-    for obj in meshes:
-        group = obj.vertex_groups.get(bone_name)
-        if group is None:
-            continue
-        group_index = group.index
-        for vertex in obj.data.vertices:
-            if any(link.group == group_index and link.weight > 1e-5 for link in vertex.groups):
-                influenced += 1
-    return influenced
+    return bone_influence_count(bone_name)
 
 joint_influence_counts = {
     key: weighted_vertex_influence_count(pb.name)

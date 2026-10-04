@@ -8,6 +8,7 @@ on:
       - 'Scripts/stage_p1c01_human_wave2.ps1'
       - 'Scripts/run_p1c01_human_wave2_ue4.ps1'
       - 'Scripts/run_p1c01_human_wave3_deformation.py'
+      - 'Scripts/probe_p1c01_human_fbx_deformation.py'
       - 'Data/P1C01HumanDeformationGateV1.json'
       - 'Scripts/test_p1c01_human_wave2_contract.py'
       - 'Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp'
@@ -72,6 +73,13 @@ jobs:
           path: ${{ runner.temp }}/shire-human-wave2
           if-no-files-found: error
           retention-days: 14
+
+      - name: Fail fast before UE4 when hosted deformation preflight rejects all candidates
+        if: steps.outcome.outputs.selected_count == '0'
+        shell: bash
+        run: |
+          echo "HUMAN_WAVE2_HOSTED_FAST_REJECT selected=0; self-hosted UE4 reservation skipped."
+          exit 31
 
   ue4_technical_gate:
     name: UE4.27.2 Human Wave 2 skeletal gate

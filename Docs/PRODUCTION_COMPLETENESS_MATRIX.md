@@ -3569,3 +3569,16 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Exact-head repaired Human Wave rerun | PENDING |
 | Retarget / AnimBP / runtime Frodo | NOT ACCEPTED |
 | Human rendered deformation acceptance | NOT ACCEPTED |
+
+
+## 2026-10-04 - Human Wave #27 fail-fast repair
+
+| Item | State |
+|---|---|
+| Run #27 UE4 skeletal gate | PASS |
+| Run #27 deformation | REJECT — required semantic deform joints unweighted |
+| Bad source | RETIRED FROM ACTIVE PROBE |
+| Hosted weighted-joint/deformation preflight | SOURCE-IMPLEMENTED |
+| UE4 reservation with zero hosted survivors | FORBIDDEN / FAIL-FAST |
+| Quaternius CC0 fallback source | ACTIVE PROBE / EXACT-HEAD PENDING |
+| Retarget / AnimBP / runtime / visual / device / performance | NOT ACCEPTED |
