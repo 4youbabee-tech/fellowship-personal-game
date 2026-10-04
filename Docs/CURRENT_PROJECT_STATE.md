@@ -4186,3 +4186,14 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - P1C02 remains closed. Population/context/quest ownership is unchanged.
 - Machine-readable contract: `Data/P1C01ShireSettlementCompletionV1.json`; source regression added to `Scripts/test_source_contracts.py`.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. This is not PIE-tested, device-tested, visually accepted, or an FPS acceptance claim.
+
+
+## 2026-10-04 - P1C01 Shire Settlement Reconciliation
+
+- Reconciled the broader settlement implementation already on develop with the best traversal/ownership findings from the superseded v3 branch rather than stacking two competing settlement writers.
+- Permanent settlement composition retains Bagshot Row, domestic clutter, orchard, mill/common detail, gardens, mailboxes, wash lines, farm tools, produce, wells, carts and wayfinding.
+- Removed 8 always-on Party Field picnic tables from Settlement Completion because SpawnPartySocialLoopPass already owns party/event tables and stateful social dressing.
+- Added a real Party Field approach: collision hedge indices 7-9 are omitted, two visual FarmGate instances are non-colliding, and 16 path-stone HISM instances lead into the existing Party Tree/social area.
+- Reconciled budget: **173 native HISM + 179 clustered = 352 repeated instances, <=24 detail-cluster actors, 0 new unique hero actors**.
+- No new world/NPC/quest authority, no synchronous heavy loading, no per-instance Tick, and P1C02 remains closed.
+- Status: **SOURCE-RECONCILED / EXACT-HEAD PRE-UNREAL + UE4.27 VALIDATION PENDING**. No PIE/device/visual/FPS acceptance.

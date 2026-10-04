@@ -2959,6 +2959,49 @@
         "REQ-QA-002",
         "REQ-PERF-001"
       ]
+    },
+    {
+      "id": "REQ-WORLD-007",
+      "title": "Finish Hobbiton / Bag End exterior settlement before runtime scope expansion",
+      "category": "VisualProduction",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Owner direction 2026-10-04: continue without stopping and at minimum finish building the Shire town in detail",
+      "intent": "Make the active P1C01 Hobbiton/Bag End exterior settlement read as a coherent inhabited Shire town before opening broader runtime scope, while preserving low-spec budgets and Gate 6/7 evidence discipline.",
+      "evidence": [
+        "Data/P1C01ShireSettlementCompletionV1.json",
+        "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp",
+        "Docs/WORLD_DETAIL_LEDGER.md",
+        "Docs/CURRENT_PROJECT_STATE.md",
+        "Docs/PRODUCTION_COMPLETENESS_MATRIX.md"
+      ],
+      "implementation_refs": [
+        "Bagshot Row and Hill-side domestic composition",
+        "Party Field entrance and Party Tree social space",
+        "Hobbiton gardens/property lanes/orchard/mill/common household detail",
+        "SpawnPartySocialLoopPass owns stateful party furniture",
+        "HISM/AWorldDetailCluster repeated-detail architecture"
+      ],
+      "missing_work": [
+        "Exact-head Pre-Unreal validation for reconciliation",
+        "Exact-head UE4.27.2 compile/build validation",
+        "Human PIE traversal and visual readability review",
+        "Target-device DX11 720p performance evidence",
+        "Final pacing/visual Gate 6 evidence"
+      ],
+      "acceptance_criteria": [
+        "Hobbiton / Bag End exterior settlement is source-built with readable Bagshot Row, Party Field, domestic gardens, mill/common and cultivated edge detail",
+        "Party Field entrance is physically traversable and party-state props have one owner",
+        "Repeated settlement detail stays instanced/culled and does not introduce synchronous heavy runtime loading",
+        "P1C02 runtime stays closed until Gate 6/7 acceptance",
+        "PIE/device/visual acceptance is recorded only from direct evidence"
+      ],
+      "dependencies": [
+        "REQ-WORLD-001",
+        "REQ-WORLD-002",
+        "REQ-PERF-001"
+      ],
+      "checkpoint": "P1C01_SHIRE_SETTLEMENT_RECONCILIATION"
     }
   ],
   "hard_invariants": [
@@ -5659,6 +5702,29 @@
         "Branch, validation, merge and cleanup are serialized per car."
       ],
       "evidence_boundary": "OWNER GOVERNANCE AND EXECUTION ORDER. Candidate, import, compile, PIE, device, visual, pacing and performance evidence remain separate."
+    },
+    {
+      "id": "DEC-104",
+      "title": "Hobbiton exterior settlement closure precedes further P1C01 scope expansion",
+      "status": "ACCEPTED",
+      "priority": "CRITICAL",
+      "date": "2026-10-04",
+      "owner_direction": "Finish building the Shire town in detail before treating the active visible-world lane as ready to move on.",
+      "requirements": [
+        "REQ-WORLD-007",
+        "REQ-WORLD-001",
+        "REQ-PERF-001"
+      ],
+      "resolution": "Use the existing develop settlement implementation as the canonical base, reconcile Party Field traversal and single-owner social dressing, then close static/compile evidence before further visual/runtime expansion. Do not open P1C02.",
+      "implementation_contract": [
+        "AShirePrototypeWorldBuilder remains the only P1C01 world-construction writer.",
+        "SpawnPartySocialLoopPass owns picnic tables/canopies/stateful party dressing; Settlement Completion owns permanent place composition.",
+        "Repeated settlement detail remains HISM/AWorldDetailCluster with explicit culling and no per-instance Tick.",
+        "Heavy runtime loading remains soft-reference/asynchronous under existing owners.",
+        "P1C02 runtime remains closed until real Gate 6/7 evidence.",
+        "PIE/device/visual/pacing labels cannot be inferred from CI."
+      ],
+      "evidence_boundary": "OWNER GOVERNANCE + SOURCE IMPLEMENTATION DIRECTION. Exact-head static/compile and later PIE/device/human visual evidence remain separate."
     }
   ],
   "open_conflicts": [],

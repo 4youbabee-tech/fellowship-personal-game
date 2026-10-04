@@ -1225,3 +1225,14 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Asset rule: resident production Shire/Common meshes only. No runtime `LoadObject`, no BMP, no new hard heavy references, no per-prop actor density.
 - Architecture: `ALivingWorldDirector` remains population/pooling authority; `UShireNPCContextSubsystem` context authority; `UShireQuestSubsystem` story truth. No duplicate manager.
 - Evidence boundary: REGISTERED / SOURCE-GROUNDED PLAN. No PIE/device/rendered visual/FPS acceptance claimed.
+
+
+## 2026-10-04 - P1C01 SHIRE_SETTLEMENT_RECONCILIATION registered before implementation
+
+- Owner direction: finish the Hobbiton / Bag End exterior settlement before widening runtime scope.
+- Reconciliation authority: retain the broad resident-mesh settlement composition already on develop and import only the stronger traversal/ownership ideas from the superseded v3 lane.
+- Party Field ownership: Settlement Completion owns the field entrance/path/boundary read; SpawnPartySocialLoopPass remains sole owner of picnic tables, canopies and story-state party dressing.
+- Collision discipline: the north collision hedge belt omits indices 7-9 at the Party Field approach; two FarmGate visuals are provided through a non-colliding AWorldDetailCluster.
+- Budget after reconciliation: 173 native HISM + 179 clustered instances = 352 repeated instances; maximum 24 detail-cluster actors; 0 new unique hero actors.
+- Scope remains P1C01 Hobbiton/Bag End exterior settlement. Full Bywater town, interiors and P1C02 runtime are not claimed/opened.
+- Evidence boundary: SOURCE-GROUNDED / EXACT-HEAD STATIC+COMPILE VALIDATION PENDING. PIE/device/visual/pacing/FPS acceptance remains separate.

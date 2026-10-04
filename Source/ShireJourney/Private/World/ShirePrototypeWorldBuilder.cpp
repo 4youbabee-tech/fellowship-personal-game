@@ -4259,7 +4259,12 @@ void AShirePrototypeWorldBuilder::SpawnShireSettlementCompletionPass()
         const float X = -1880.0f + static_cast<float>(Index) * 180.0f;
         const float YNorth = 1020.0f + 55.0f * FMath::Sin(static_cast<float>(Index) * 0.72f);
         const float YSouth = -1080.0f + 65.0f * FMath::Cos(static_cast<float>(Index) * 0.61f);
-        AddHism(HedgeInstances, FVector(X, YNorth, 8.0f), FVector(0.68f, 0.58f, 0.64f), 4.0f);
+        // HedgeInstances owns collision. Leave a real Party Field approach opening
+        // in the north belt instead of placing collision behind the visual gates.
+        if (Index < 7 || Index > 9)
+        {
+            AddHism(HedgeInstances, FVector(X, YNorth, 8.0f), FVector(0.68f, 0.58f, 0.64f), 4.0f);
+        }
         AddHism(HedgeInstances, FVector(X, YSouth, 8.0f), FVector(0.68f, 0.58f, 0.64f), -4.0f);
     }
 
@@ -4373,18 +4378,28 @@ void AShirePrototypeWorldBuilder::SpawnShireSettlementCompletionPass()
     FillVillageScatter(4, FVector(3600,-1180,0), FVector(8400,1050,0), FVector(0.64f), 0.06f, 67.0f);
     SpawnCluster(ProductionLoadedCartMesh, TEXT("SettlementLoadedCarts"), 2200, 10000, P);
 
+    // Settlement Completion owns the Party Field place, not party-event furniture.
+    // SpawnPartySocialLoopPass() remains the sole owner of picnic tables/canopies
+    // and stateful celebration dressing.
     const FVector PartyCenter(280.0f,1320.0f,0.0f);
     P.Reset();
-    const FVector TableOffsets[] = {
-        FVector(-510,-210,0), FVector(-290,-225,0), FVector(-70,-205,0), FVector(170,-210,0),
-        FVector(-420,220,0), FVector(-170,235,0), FVector(90,220,0), FVector(350,205,0)
-    };
-    for (int32 Index = 0; Index < UE_ARRAY_COUNT(TableOffsets); ++Index)
+    P.Emplace(FRotator(0.0f,18.0f,0.0f), FVector(-520.0f,1060.0f,0.0f), FVector(0.72f));
+    P.Emplace(FRotator(0.0f,18.0f,0.0f), FVector(-180.0f,1060.0f,0.0f), FVector(0.72f));
+    SpawnCluster(ProductionFarmGateMesh, TEXT("PartyFieldEntryGates"), 1000, 6000, P);
+
+    for (int32 Index = 0; Index < 16; ++Index)
     {
-        P.Emplace(FRotator(0.0f, static_cast<float>((Index % 4) * 3 - 5), 0.0f),
-            PartyCenter + TableOffsets[Index], FVector(0.66f));
+        const float Alpha = static_cast<float>(Index) / 15.0f;
+        const FVector EntryPoint = FMath::Lerp(
+            FVector(-520.0f,1040.0f,3.0f),
+            FVector(135.0f,1230.0f,3.0f),
+            Alpha) + FVector(0.0f, Index % 2 == 0 ? -22.0f : 22.0f, 0.0f);
+        AddHism(
+            PathStoneInstances,
+            EntryPoint,
+            FVector(0.18f,0.15f,0.052f),
+            static_cast<float>((Index * 31) % 360));
     }
-    SpawnCluster(ProductionPicnicTableMesh, TEXT("PartyFieldTablesCompletion"), 900, 5200, P);
 
     FillVillageScatter(4, FVector(-850,120,0), FVector(350,210,0), FVector(0.66f), 0.04f, 5.0f);
     SpawnCluster(ProductionMarketStallMesh, TEXT("VillageCommonMarket"), 1000, 5800, P);
@@ -4457,7 +4472,7 @@ void AShirePrototypeWorldBuilder::SpawnShireSettlementCompletionPass()
     UE_LOG(
         LogTemp,
         Display,
-        TEXT("P1C01_SHIRE_SETTLEMENT_COMPLETION nativeHism=%d detailClusters=%d detailClusterInstances=%d targetTotal=345 writer=ShirePrototypeWorldBuilder collision=existing-authority visualClusters=no-collision tick=none p1c02=no"),
+        TEXT("P1C01_SHIRE_SETTLEMENT_COMPLETION nativeHism=%d detailClusters=%d detailClusterInstances=%d targetTotal=352 partyEntryCollision=off partyTablesOwner=PartySocialLoop writer=ShirePrototypeWorldBuilder collision=existing-authority visualClusters=no-collision tick=none p1c02=no"),
         NativeHismInstances,
         DetailClusterCount,
         DetailClusterInstances);

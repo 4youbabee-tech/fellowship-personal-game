@@ -3320,3 +3320,23 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Exact-head Pre-Unreal / UE4 compile | PENDING | PR validation required |
 | PIE visual walkthrough | NOT ACCEPTED | direct human evidence required |
 | Target-device 720p / 30 FPS | NOT ACCEPTED | measured device evidence required |
+
+
+## 2026-10-04 - P1C01 Shire Settlement Reconciliation
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Base settlement composition | PRESERVED | develop settlement completion remains canonical base |
+| Party Field place ownership | SOURCE-RECONCILED | Settlement Completion owns entrance/path/boundary |
+| Party event furniture ownership | SINGLE OWNER | SpawnPartySocialLoopPass; no permanent duplicate picnic-table cluster |
+| Party Field hedge opening | SOURCE-IMPLEMENTED | collision hedge indices 7-9 omitted |
+| Party Field visual gates | SOURCE-IMPLEMENTED | 2 non-colliding clustered FarmGate visuals |
+| Party entry path | SOURCE-IMPLEMENTED | 16 PathStone HISM |
+| Native HISM budget | BOUNDED | 173 |
+| Detail cluster instances | BOUNDED | 179 |
+| Detail cluster actors | BOUNDED | <=24 |
+| New unique hero actors | NONE | 0 |
+| P1C02 runtime | CLOSED | no scope expansion |
+| Exact-head Pre-Unreal | PENDING | new reconciliation SHA required |
+| Exact-head UE4.27 build | PENDING | new reconciliation SHA required |
+| PIE / device / human visual / pacing / FPS | NOT ACCEPTED | direct evidence required |

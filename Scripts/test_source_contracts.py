@@ -753,9 +753,9 @@ class SourceContractTests(unittest.TestCase):
         contract = json.loads((root / "Data" / "P1C01ShireSettlementCompletionV1.json").read_text(encoding="utf-8"))
         self.assertEqual(contract["runtime_chapter"], "P1C01")
         self.assertEqual(contract["runtime_writer"], "AShirePrototypeWorldBuilder")
-        self.assertEqual(contract["visible_budget"]["native_hism_instances"], 160)
-        self.assertEqual(contract["visible_budget"]["detail_cluster_instances"], 185)
-        self.assertEqual(contract["visible_budget"]["target_total_instances"], 345)
+        self.assertEqual(contract["visible_budget"]["native_hism_instances"], 173)
+        self.assertEqual(contract["visible_budget"]["detail_cluster_instances"], 179)
+        self.assertEqual(contract["visible_budget"]["target_total_instances"], 352)
         self.assertLessEqual(contract["visible_budget"]["maximum_detail_cluster_actors"], 24)
         self.assertFalse(contract["architecture_contract"]["new_world_authority"])
         self.assertFalse(contract["architecture_contract"]["per_instance_tick"])
@@ -770,6 +770,9 @@ class SourceContractTests(unittest.TestCase):
         start = source.index("void AShirePrototypeWorldBuilder::SpawnShireSettlementCompletionPass()")
         end = source.index("void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()", start)
         body = source[start:end]
+        self.assertIn("if (Index < 7 || Index > 9)", body)
+        self.assertNotIn("PartyFieldTablesCompletion", body)
+        self.assertIn("SpawnPartySocialLoopPass()", source)
 
         for token in (
             "P1C01_SHIRE_SETTLEMENT_COMPLETION",
@@ -782,7 +785,10 @@ class SourceContractTests(unittest.TestCase):
             "VillageMailboxes",
             "VillageWashLines",
             "VillageProduceStands",
-            "targetTotal=345",
+            "PartyFieldEntryGates",
+            "targetTotal=352",
+            "partyEntryCollision=off",
+            "partyTablesOwner=PartySocialLoop",
         ):
             self.assertIn(token, body)
 
