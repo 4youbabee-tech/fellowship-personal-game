@@ -34,7 +34,10 @@
     "reconcile/fbx-world-intake-current-develop-2026-10-03",
     "data/p1c01-frodo-rejection-history-knight-v2-2026-10-03",
     "probe/p1c01-frodo-knight-v2-2026-10-03",
-    "source/p1c01-bag-end-trim-official-receipt-2026-10-03"
+    "source/p1c01-bag-end-trim-official-receipt-2026-10-03",
+    "production/p1c01-frodo-human-breakthrough-2026-10-03",
+    "production/p1c01-shire-exterior-closeout-2026-10-04",
+    "production/p1c01-shire-settlement-final-polish-2026-10-04"
   ],
   "safety_rules": [
     "Never delete develop or main.",
@@ -536,5 +539,33 @@
       "prep/f2-03-edoras-mega-source-v1",
       "prep/f2-03-edoras-mega-source-v2"
     ]
+  },
+  "stale_branch_retirement_2026_10_04": {
+    "action": "DELETE_REVIEWED_DEAD_REFS_WITHOUT_TOUCHING_ACTIVE_WORK",
+    "branches": [
+      "production/p1c01-frodo-human-breakthrough-2026-10-03",
+      "production/p1c01-shire-exterior-closeout-2026-10-04",
+      "production/p1c01-shire-settlement-final-polish-2026-10-04"
+    ],
+    "dispositions": {
+      "production/p1c01-frodo-human-breakthrough-2026-10-03": "CLOSED PR #305; superseded by later merged/current Frodo production lanes (#310/#311 and active #321). Current develop/current Wave 3 own newer durable candidate/rejection/rig-prep records; old branch-local gauntlet is not current runtime authority.",
+      "production/p1c01-shire-exterior-closeout-2026-10-04": "SUPERSEDED by active reconciled closeout PR #317, which carries the authored exterior-closeout/runtime-cleanup/property-fence corrections on the current settlement lineage.",
+      "production/p1c01-shire-settlement-final-polish-2026-10-04": "SUPERSEDED by active reconciled closeout PR #317; P1C01ShireSettlementFinalPolishV1.json is byte-identical on the successor and the final-polish implementation is carried forward there."
+    },
+    "safety": [
+      "Never delete develop, main or archive/pre-build-salvage-20260930.",
+      "Never delete an active PR head.",
+      "The three refs above are not active PR heads at this audit.",
+      "Cleanup remains GitHub-hosted and does not reserve or interrupt the self-hosted UE4 runner."
+    ],
+    "active_pr_heads_excluded": [
+      "governance/root-cause-no-patching-2026-10-04",
+      "production/p1c01-local-visual-acceptance-harness-2026-10-04",
+      "production/p1c01-shire-automated-render-capture-v1-2026-10-04",
+      "production/p1c01-frodo-animation-intake-wave3-2026-10-04",
+      "production/p1c01-shire-settlement-reconciliation-2026-10-04",
+      "production/p1c01-shire-exterior-reconciled-closeout-2026-10-04"
+    ],
+    "evidence_boundary": "Repository hygiene only; no gameplay/compile/PIE/device/visual/performance acceptance."
   }
 }
