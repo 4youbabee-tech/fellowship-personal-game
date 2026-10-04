@@ -3463,3 +3463,19 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Settlement final polish | SOURCE IMPLEMENTED | 44 HISM + 54 clustered, <=6 actors, 0 hero actors, 0 movable lights |
 | Local Gate 6/7 harness | INTEGRATED / REVIEW PENDING | no acceptance flags promoted |
 | P1C02 runtime | BLOCKED | predecessor gate unchanged |
+
+
+### P1C01 visual root-cause repair — material/ground layer
+
+| Item | State | Evidence / boundary |
+|---|---|---|
+| Production import | PREVIOUS RUN HEALTHY | 376 files / 0 failures |
+| Albedo binding | PREVIOUS RUN HEALTHY | 161 requested / 161 bound / 0 missing |
+| Material persistence | PREVIOUS RUN HEALTHY | 229 tracked / 0 missing |
+| Shared Common bank | UNCHANGED GLOBALLY | prevents cross-chapter Shire contamination |
+| Shire-local Common HISM material overrides | SOURCE-IMPLEMENTED | resident Grass/Earth/Bark/Leaves/Wood only; no sync load |
+| Giant visible ground texture stretch | ROOT-FIXED IN SOURCE | one 34k x 13k actor replaced by 442 HISM tiles |
+| Broad ground collision | PRESERVED | hidden deterministic foundation remains authority |
+| Garden soil material | SOURCE-IMPLEMENTED | dedicated HISM + Shire Earth |
+| Extra texture memory | NONE | existing resident textures reused |
+| Fresh rendered proof | PENDING | prior six-shot artifact remains visually rejected |
