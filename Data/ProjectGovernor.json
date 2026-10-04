@@ -31,6 +31,7 @@
     "Before changing or adding any FILM_CORE beat, verify the exact scene order, participating characters and outcome against the supplied film/script source; do not rely on memory when the source can be checked.",
     "A feature is never called accepted from compile/static evidence alone.",
     "If a previously passed critical gate fails, quarantine the affected acceptance/merge path, repair the smallest failing layer, and rerun the exact failed gate while unrelated safe production work continues.",
+    "Permanent root-cause rule: patching over symptoms is not an accepted closure. Every reproducible defect must be reduced to the causal layer, repaired at that layer, guarded against regression where practical, and revalidated at the exact failed gate. Temporary containment may only protect data/branches/runners while the root repair is underway and may not be presented as the solution.",
     "Human pacing and visual review are mandatory for enjoyment/acceptance; CI cannot infer fun.",
     "Developer-owned automation should reproduce and verify defects before asking the owner to spend play time on technical regression checks; never relabel machine checks as visual or pacing approval.",
     "Validation harness semantics are first-class: repeated log copies must not inflate defect counts, save tests must prove disk roundtrip, and every failing debt gate must print concrete asset/package identities.",
@@ -2958,6 +2959,86 @@
         "REQ-QA-002",
         "REQ-PERF-001"
       ]
+    },
+    {
+      "id": "REQ-ROOTCAUSE-001",
+      "title": "Permanent root-cause repair; no symptom patching",
+      "category": "Quality",
+      "priority": "CRITICAL",
+      "status": "IMPLEMENTED",
+      "origin": "Owner directive 2026-10-04: no patching; every encountered problem requires a radical/root-cause solution",
+      "intent": "Treat workarounds and symptom masking as temporary containment only. Close defects by identifying the causal layer, repairing the invariant or pipeline at that layer, adding a regression guard where practical, and rerunning the exact failed evidence gate before the lane resumes.",
+      "evidence": [
+        "Data/ProjectGovernor.json",
+        "Docs/DEVELOPMENT_GATES.md",
+        "Scripts/project_governor.py"
+      ],
+      "implementation_refs": [
+        "INV-ROOT-CAUSE makes root-cause closure a hard project invariant.",
+        "Gate 8 requires causal diagnosis, root-layer repair, regression protection where practical, and exact failed-gate rerun.",
+        "Project Governor validation fails if the permanent root-cause invariant or requirement is removed."
+      ],
+      "missing_work": [
+        "Operational: apply the invariant to every future reproducible defect; temporary containment must never be relabeled as closure."
+      ],
+      "acceptance_criteria": [
+        "Every closed reproducible defect records the concrete symptom and causal layer.",
+        "The repair changes the causal layer rather than merely hiding the symptom.",
+        "A regression signal/test/guard is added when practical.",
+        "The exact failed gate is rerun after the repair and must pass before the affected lane resumes.",
+        "Temporary containment is explicitly labeled and cannot be promoted as the final fix."
+      ],
+      "dependencies": [
+        "REQ-QUALITY-001",
+        "REQ-CI-001"
+      ],
+      "checkpoint": "PERMANENT_QUALITY_DISCIPLINE",
+      "notes": "Governance implementation is present; each future defect still requires its own evidence. This requirement does not itself prove any runtime defect fixed."
+    },
+    {
+      "id": "REQ-P1C01-CLOSEOUT-001",
+      "title": "Definitive P1C01 Shire chapter closure before P1C02 runtime",
+      "category": "ProductionPriority",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Owner directive reaffirmed 2026-10-04: finish the Shire chapter completely, beautifully and with production characters before moving runtime focus onward",
+      "intent": "P1C01 is not considered finished merely because settlement source construction or compilation is green. Close the complete Shire-through-Bucklebury/Ferry playable chapter with production-quality characters, world art, living-world behavior, quests/story presentation, audio, save/load reliability, traversal, visual beauty and target-device performance evidence before opening P1C02 runtime.",
+      "evidence": [
+        "Data/P1C01RuntimeChapterSequenceV1.json",
+        "Data/P1C01Gate67AcceptanceChecklistV1.json",
+        "Docs/PRODUCTION_COMPLETENESS_MATRIX.md"
+      ],
+      "implementation_refs": [
+        "P1C01 remains ACTIVE and P1C02 remains PREDECESSOR_GATED.",
+        "P1C01 production cars A-I define character, materials, living world, gameplay, audio, reliability and optimization closeout.",
+        "Settlement source construction #314/#318 is only one completed component of the chapter.",
+        "Frodo technical skeletal winner exists but final visible-character/deformation/runtime/likeness acceptance remains separate."
+      ],
+      "missing_work": [
+        "Finish and visually integrate production Frodo; then Gandalf and required visible P1C01 character presentation.",
+        "Review actual rendered Shire and repair only demonstrated world/material/lighting/composition defects at root cause.",
+        "Prove chapter gameplay/quest flow, route traversal, story handoffs, audio presentation and save/load continuity in PIE/runtime evidence.",
+        "Measure the target-class DX11 1280x720 device and meet the 30 FPS floor without flattening hero visual quality.",
+        "Complete human visual/pacing acceptance and Gate 6/7 evidence for the exact accepted build."
+      ],
+      "acceptance_criteria": [
+        "Bag End, Hobbiton/Bagshot Row, Party Field, Water/mill/bridge, Shire roads/woodland and Bucklebury/Ferry read as one beautiful authored production chapter.",
+        "Required named/hero characters use production character presentation appropriate to the chapter rather than debug/prototype stand-ins.",
+        "Living Shire activity feels believable without violating pooling/context/story ownership or low-spec budgets.",
+        "Required story/quest sequence, traversal, return-to-control and save/load continuity pass chapter-specific evidence.",
+        "Target-device performance meets the declared 30 FPS floor at DX11 1280x720 with acceptable RAM/VRAM/streaming behavior.",
+        "P1C01 receives explicit human VISUAL/PACING acceptance and Gate 6/7 acceptance before P1C02 runtime opens."
+      ],
+      "dependencies": [
+        "REQ-WORLD-001",
+        "REQ-WORLD-002",
+        "REQ-CHAR-001",
+        "REQ-QUALITY-001",
+        "REQ-PERF-001",
+        "REQ-SAVE-001"
+      ],
+      "checkpoint": "P1C01_GATE_6_7_ACCEPTED",
+      "notes": "PARTIAL. Settlement source construction is machine-green, but production characters, rendered/human acceptance and target-device evidence remain open."
     }
   ],
   "hard_invariants": [
@@ -2994,6 +3075,11 @@
     {
       "id": "INV-DEFECT-CLOSURE",
       "description": "A runtime defect is never called fixed from source inspection or static validation alone. Identify the root cause, add a regression signal where feasible, pass exact-head machine gates, then require defect-specific PIE/device observation before closure.",
+      "auto_override": false
+    },
+    {
+      "id": "INV-ROOT-CAUSE",
+      "description": "Patching over symptoms is never accepted as defect closure. Every reproducible failure must be traced to its root cause and repaired at the causal layer; temporary containment is allowed only to protect the project while that repair is in progress, and exact-gate revalidation plus a regression guard where practical are required before closure.",
       "auto_override": false
     },
     {
@@ -6371,7 +6457,7 @@
   "current_focus": {
     "production_lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
-    "rule": "P1C01 is the sole runtime-changing chapter. VISIBLE SHIRE FIRST is the active tie-breaker: aggressively improve human character presentation plus natural terrain, landmarks, architecture, roads/hedges/woodland/Ferry, vegetation/materials and lighting in large coherent production packets. The Lead Game Architect resolves routine blockers through root-cause research, broad legal/open-source discovery and reusable pipelines without waiting on the owner. Exactly one runtime-changing P1C01 writer remains authoritative; do not open P1C02 runtime until P1C01 Gate 6/7 is accepted with real evidence.",
+    "rule": "P1C01 is the sole runtime-changing chapter. VISIBLE SHIRE FIRST is the active tie-breaker: aggressively improve human character presentation plus natural terrain, landmarks, architecture, roads/hedges/woodland/Ferry, vegetation/materials and lighting in large coherent production packets. The Lead Game Architect resolves routine blockers through root-cause research, broad legal/open-source discovery and reusable pipelines without waiting on the owner. Exactly one runtime-changing P1C01 writer remains authoritative; do not open P1C02 runtime until P1C01 Gate 6/7 is accepted with real evidence. Definitive P1C01 closeout means the full Shire-through-Bucklebury/Ferry chapter, including production character presentation, world beauty, living-world/gameplay/audio/save reliability and exact-build Gate 6/7 evidence; settlement source completion alone is not chapter completion.",
     "machine_baseline": {
       "runtime_sha": "1066cf022723fcdef9bfac66519f5b0f9c1e03a4",
       "pre_unreal": "#1109 SUCCESS",
