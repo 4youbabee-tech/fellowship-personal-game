@@ -8,7 +8,7 @@
     "primary": "Hobbiton / Bag End settlement completion",
     "included": [
       "Bagshot Row readable residential belt",
-      "Party Field and Party Tree landmark",
+      "Party Field framing around existing Party Tree landmark",
       "Hobbiton property lanes and garden boundaries",
       "orchard / cultivated garden edge",
       "mill / village common surrounding lived-in detail",
@@ -68,5 +68,10 @@
     "ram_gb": 8,
     "vram_gb_approx": 2
   },
-  "evidence_boundary": "Source implementation only until exact-head Pre-Unreal + UE4 build complete. No PIE/device/rendered-visual/FPS acceptance."
+  "evidence_boundary": "Source implementation only until exact-head Pre-Unreal + UE4 build complete. No PIE/device/rendered-visual/FPS acceptance.",
+  "anti_duplication": {
+    "party_tree_owner": "SpawnVillage existing canonical anchor",
+    "settlement_pass_action": "preserve existing Party Tree; add authored field entry gates and surrounding composition",
+    "duplicate_party_tree_spawn": false
+  }
 }

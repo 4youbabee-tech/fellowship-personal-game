@@ -4178,7 +4178,7 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Added `SpawnShireSettlementCompletionPass()` to the existing `AShirePrototypeWorldBuilder`, after Shire Visual Finish and before generic density.
 - Settlement completion budget: **306 HISM + 82 clustered instances / max 8 cluster actors + 16 limited hero actors**.
 - Bagshot Row: six readable production façades backed by terraced slope massing, hedges, shrubs, grass, path stones and fence rhythm.
-- Party Field: production trunk/canopy landmark establishes the Party Tree; field perimeter, approach stones, grass and shrubs reinforce the F1-01 celebration space without moving the existing story anchor.
+- Party Field: the existing canonical Party Tree spawned by the foundational village pass is preserved without duplication; two authored entry gates plus perimeter, approach stones, grass and shrubs reinforce the F1-01 celebration space without moving the story anchor.
 - Hobbiton: denser property lanes, hedge/fence separation and verge breakup create residential parcels while keeping the village common and main traversal lane open.
 - Cultivated edge: 18 orchard trees plus understory/grass create an authored garden-orchard transition instead of an abrupt wilderness boundary.
 - Bywater-facing edge: four limited cottages, two wells, property boundaries, trees and route stones form a lived-in transition. This packet does **not** claim full Bywater town completion.

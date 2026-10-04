@@ -776,8 +776,7 @@ class SourceContractTests(unittest.TestCase):
         for token in (
             "P1C01_SHIRE_SETTLEMENT_COMPLETION",
             "BagshotFacades[]",
-            "P1C01PartyTreeTrunk",
-            "P1C01PartyTreeCanopy",
+            "P1C01PartyFieldEntryGate",
             "P1C01BywaterFacingCottage",
             "P1C01SettlementBenches",
             "P1C01SettlementBarrels",

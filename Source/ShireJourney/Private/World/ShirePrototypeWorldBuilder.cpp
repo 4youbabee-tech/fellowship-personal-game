@@ -4370,20 +4370,23 @@ void AShirePrototypeWorldBuilder::SpawnShireSettlementCompletionPass()
     // a special entrance and the prominent tree inside the celebration space.
     // ---------------------------------------------------------------------
     const FVector PartyTreeBase(280.0f, 1320.0f, 0.0f);
+    // SpawnVillage() already owns the Party Tree at this canonical story anchor.
+    // Do not stack a second trunk/canopy here. Instead author the source-supported
+    // special field entrance so the existing landmark reads as intentional.
     SpawnHero(
-        ProductionTreeTrunkMesh,
-        PartyTreeBase,
-        FVector(1.45f, 1.45f, 1.55f),
-        8.0f,
-        false,
-        TEXT("P1C01PartyTreeTrunk"));
+        ProductionFarmGateMesh,
+        FVector(-430.0f, 1035.0f, 0.0f),
+        FVector(0.76f),
+        18.0f,
+        true,
+        TEXT("P1C01PartyFieldEntryGate"));
     SpawnHero(
-        ProductionTreeCanopyMesh,
-        PartyTreeBase + FVector(0.0f, 0.0f, 315.0f),
-        FVector(1.70f, 1.62f, 1.52f),
-        -12.0f,
-        false,
-        TEXT("P1C01PartyTreeCanopy"));
+        ProductionFarmGateMesh,
+        FVector(-285.0f, 1085.0f, 0.0f),
+        FVector(0.72f),
+        18.0f,
+        true,
+        TEXT("P1C01PartyFieldEntryGate"));
 
     for (int32 Index = 0; Index < 12; ++Index)
     {

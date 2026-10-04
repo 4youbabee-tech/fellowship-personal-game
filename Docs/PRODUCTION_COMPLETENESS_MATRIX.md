@@ -3305,7 +3305,7 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Runtime writer | PRESERVED | AShirePrototypeWorldBuilder only |
 | Bag End / Hill hero hierarchy | PRESERVED + CONTEXT EXPANDED | prior Bag End passes retained |
 | Bagshot Row readable residential belt | SOURCE-IMPLEMENTED | 6 hero façades + terracing/property detail |
-| Party Field landmark | SOURCE-IMPLEMENTED | production Party Tree trunk/canopy + field composition |
+| Party Field landmark | SOURCE-IMPLEMENTED | existing Party Tree preserved; authored entry gates + field composition |
 | Hobbiton property lanes | SOURCE-IMPLEMENTED | HISM hedge/fence/path/grass rhythm |
 | Cultivated orchard/garden edge | SOURCE-IMPLEMENTED | HISM tree/shrub/grass belt |
 | Mill / bridge context | SOURCE-IMPLEMENTED | clustered village-life surroundings; existing landmarks not duplicated |
