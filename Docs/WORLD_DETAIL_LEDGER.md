@@ -1252,3 +1252,16 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - No further settlement density wave is authorized before the existing local visual bootstrap and human rendered review, because the Governor requires observation of the generated production Content rather than blind source-density escalation.
 - Remaining world work is acceptance/polish: generate local `Content/Production`, launch `/Engine/Maps/Entry`, inspect composition/material/lighting/traversal, then correct only observed defects and measure the 720p/DX11 target.
 - This closure does not promote Gate 6/7, PIE/device/visual/pacing/performance acceptance, or P1C02 runtime.
+
+
+## 2026-10-04 - P1C01 DEFINITIVE_CHAPTER_CLOSEOUT_V1 registered before implementation
+
+- Owner direction: stop branch-per-packet churn, clean completed/dead refs, and accelerate P1C01 on one active closeout branch until the Shire-through-Bucklebury/Ferry chapter is actually closed.
+- Baseline: `develop@fd08c1c719f4b754384f03a10751dd748eacc74f`.
+- Render evidence reviewed from PR #322 run `37207780989`, artifact `11306540563`: six successful bounded screenshots exist for Bag End/Hill, Hobbiton Common, Party Field, Water/Mill/Bridge, Bywater-facing edge, and Bucklebury Ferry.
+- Human visual disposition for that artifact: **REJECTED / POLISH REQUIRED**. The player is still a blocky proxy; broad terrain/foliage/settlement surfaces read flat/grey; landmark framing and lighting/depth are below the intended production target; Ferry remains under-authored.
+- This is now an evidence-driven closeout wave, not a blind density wave. First repair causal pipeline/ownership defects, then re-render and only add geometry where the new images prove a real gap.
+- Known root-cause lanes to repair in this wave: render-capture final count parser; Human Wave 3 artifact handoff/deformation false-green; Party Field single-owner/traversable entrance; authored property-fence lifecycle ownership.
+- Architecture remains unchanged: `AShirePrototypeWorldBuilder` world writer, `ALivingWorldDirector` population/pooling, `UShireNPCContextSubsystem` context, `UShireQuestSubsystem` story truth; repeated detail HISM/AWorldDetailCluster; no synchronous heavy loading; no P1C02.
+- Branch policy: `production/p1c01-definitive-chapter-closeout-2026-10-04` is the single active P1C01 closeout branch. Continue by sequential commits on this branch rather than opening a branch per sub-packet.
+- Evidence boundary: REGISTERED + RENDERED DEFECT EVIDENCE. No PIE/device/performance/Gate 6/7 acceptance.
