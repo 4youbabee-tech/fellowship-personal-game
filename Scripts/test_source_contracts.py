@@ -841,6 +841,44 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("RuralFenceInstances->AddInstance", fence)
         self.assertIn("if (RuralFenceInstances && RuralFenceInstances->GetStaticMesh())", fence)
 
+
+
+    def test_p1c01_shire_exterior_closeout_consolidates_garden_and_party_repetition(self):
+        root = Path(__file__).resolve().parents[1]
+        packet = json.loads((root / "Data" / "P1C01ShireExteriorCloseoutV1.json").read_text(encoding="utf-8"))
+        self.assertEqual(packet["runtime_chapter"], "P1C01")
+        self.assertEqual(packet["runtime_writer"], "AShirePrototypeWorldBuilder")
+        self.assertTrue(packet["garden_rows"]["hism_soil"])
+        self.assertTrue(packet["garden_rows"]["hism_plants"])
+        self.assertEqual(packet["party_field"]["repeated_detail_owner"], "SpawnPartySocialLoopPass")
+        self.assertFalse(packet["architecture_contract"]["actor_per_repeated_party_prop"])
+        self.assertFalse(packet["architecture_contract"]["synchronous_heavy_load"])
+        self.assertFalse(packet["architecture_contract"]["p1c02_runtime_opened"])
+
+        header = (root / "Source" / "ShireJourney" / "Public" / "World" / "ShirePrototypeWorldBuilder.h").read_text(encoding="utf-8")
+        source = (root / "Source" / "ShireJourney" / "Private" / "World" / "ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        self.assertIn("GardenSoilInstances", header)
+        self.assertIn('TEXT("GardenSoilInstances")', source)
+        self.assertIn("GardenSoilInstances->AddInstance", source)
+        self.assertIn("ShrubInstances->AddInstance", source)
+
+        detail_start = source.index("void AShirePrototypeWorldBuilder::SpawnProductionVillageDetailLayer()")
+        detail_end = source.index("void AShirePrototypeWorldBuilder::SpawnBagEndHeroPass()", detail_start)
+        detail = source[detail_start:detail_end]
+        self.assertIn("PartySocialLoopPass owns repeated Party Field furniture and lighting", detail)
+
+        party_start = source.index("void AShirePrototypeWorldBuilder::SpawnPartySocialLoopPass()")
+        party_end = source.index("void AShirePrototypeWorldBuilder::SpawnSideStories()", party_start)
+        party = source[party_start:party_end]
+        for token in (
+            "P1C01PartyTables",
+            "P1C01PartyLongBenches",
+            "P1C01PartyCanopies",
+            "P1C01PartyBarrels",
+            "P1C01PartyHay",
+        ):
+            self.assertIn(token, party)
+
     def test_p1c01_kaykit_rig_bridge_is_bounded_and_non_runtime(self):
         root = Path(__file__).resolve().parents[1]
         packet = json.loads((root / "Data" / "P1C01KayKitRigTechnicalBridgeV1.json").read_text(encoding="utf-8"))

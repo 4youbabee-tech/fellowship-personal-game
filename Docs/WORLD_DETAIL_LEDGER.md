@@ -1233,3 +1233,13 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Fence rule: repeated property fences are HISM-first through `RuralFenceInstances`; actor-per-segment production fence spawning is fallback only when the HISM component has no resident mesh.
 - Architecture ownership remains unchanged; no P1C02, no synchronous heavy load and no population ownership change.
 - Evidence boundary at registration: SOURCE-GROUNDED CLEANUP PLAN; no visual/device/FPS acceptance.
+
+
+## 2026-10-04 - P1C01 SHIRE_EXTERIOR_CLOSEOUT_V1 registered before implementation
+
+- Scope: final exterior-source cleanup for the existing Hobbiton/Bag End P1C01 settlement. No new chapter, no full Bywater claim, no interiors.
+- Garden repetition: five current garden patches x five soil rows move to a dedicated HISM component; production plants remain HISM through ShrubInstances.
+- Party Field repeated-detail authority: `SpawnPartySocialLoopPass` only. Duplicate party tables/lamps in ProductionVillageDetailLayer and duplicate completion-table placement are removed.
+- Repeated party tables, benches, canopies, barrels and hay become clustered static detail. Story-state variants stay actors because they require independent visibility toggles; one loaded cart stays a bounded authored actor.
+- Ownership/loading/population contracts unchanged. No synchronous heavy loading and no P1C02.
+- Evidence boundary: SOURCE-GROUNDED CLOSEOUT PLAN. PIE/device/visual/FPS acceptance remains separate.

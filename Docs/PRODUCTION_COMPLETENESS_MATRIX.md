@@ -3337,3 +3337,21 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | P1C02 | NOT OPENED | P1C01 only |
 | Exact-head CI | PENDING | stacked follow-up validation |
 | PIE/device/visual/FPS | NOT ACCEPTED | direct evidence required |
+
+
+## 2026-10-04 - P1C01 Shire exterior source closeout
+
+| Closeout domain | Status | Evidence boundary |
+|---|---|---|
+| Garden production soil rows | HISM SOURCE-IMPLEMENTED | GardenSoilInstances; expected 25 current instances |
+| Garden production plants | HISM SOURCE-IMPLEMENTED | ShrubInstances; expected 125 current placements |
+| Party repeated-detail owner | CONSOLIDATED | SpawnPartySocialLoopPass |
+| Duplicate Party tables/lamps in village detail pass | REMOVED IN SOURCE | no second owner |
+| Duplicate completion Party table family | REMOVED IN SOURCE | social loop owns furniture |
+| Party tables/benches/canopies/barrels/hay | CLUSTERED | no actor-per-repeated-prop density |
+| Story-state Party variants | LIMITED ACTORS PRESERVED | independent visibility required |
+| World authority | PRESERVED | AShirePrototypeWorldBuilder |
+| Full Bywater / interiors | NOT CLAIMED | outside this exterior closeout |
+| P1C02 | NOT OPENED | P1C01 only |
+| Exact-head CI | PENDING | stacked validation after predecessors merge |
+| PIE/visual/pacing/device/FPS | NOT ACCEPTED | direct evidence required for Gate 6/7 |

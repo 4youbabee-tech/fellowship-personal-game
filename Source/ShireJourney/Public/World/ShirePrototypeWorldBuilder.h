@@ -92,6 +92,7 @@ private:
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* DistantTreeCanopyInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* RockInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* PathStoneInstances;
+    UPROPERTY() UHierarchicalInstancedStaticMeshComponent* GardenSoilInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* GeographyHillInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* GeographySlopeInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* GeographyRiverBankInstances;

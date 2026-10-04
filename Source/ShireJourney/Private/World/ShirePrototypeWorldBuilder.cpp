@@ -114,6 +114,13 @@ AShirePrototypeWorldBuilder::AShirePrototypeWorldBuilder()
     PathStoneInstances->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     PathStoneInstances->SetCastShadow(false);
 
+    GardenSoilInstances = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("GardenSoilInstances"));
+    GardenSoilInstances->SetupAttachment(RuntimeRoot);
+    GardenSoilInstances->SetMobility(EComponentMobility::Movable);
+    GardenSoilInstances->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    GardenSoilInstances->SetGenerateOverlapEvents(false);
+    GardenSoilInstances->SetCastShadow(false);
+
     GeographyHillInstances = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("GeographyHillInstances"));
     GeographyHillInstances->SetupAttachment(RuntimeRoot);
     GeographyHillInstances->SetMobility(EComponentMobility::Movable);
@@ -177,6 +184,7 @@ AShirePrototypeWorldBuilder::AShirePrototypeWorldBuilder()
     DistantTreeCanopyInstances->SetCullDistances(5000, 19000);
     RockInstances->SetCullDistances(2200, 9000);
     PathStoneInstances->SetCullDistances(900, 5000);
+    GardenSoilInstances->SetCullDistances(700, 4200);
     GeographyHillInstances->SetCullDistances(16000, 32000);
     GeographySlopeInstances->SetCullDistances(12000, 28000);
     GeographyRiverBankInstances->SetCullDistances(9000, 26000);
@@ -294,6 +302,7 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     if (ProductionGrassClumpMesh) EastFieldRowInstances->SetStaticMesh(ProductionGrassClumpMesh);
     if (ProductionShrubMesh) ShrubInstances->SetStaticMesh(ProductionShrubMesh);
     if (ProductionPathStoneMesh) PathStoneInstances->SetStaticMesh(ProductionPathStoneMesh);
+    if (ProductionGroundBlockMesh) GardenSoilInstances->SetStaticMesh(ProductionGroundBlockMesh);
     if (ProductionHedgeMesh) HedgeInstances->SetStaticMesh(ProductionHedgeMesh);
     if (ProductionCommonBroadleafTreeMesh) WoodlandTreeInstances->SetStaticMesh(ProductionCommonBroadleafTreeMesh);
     if (ProductionCommonVillageFenceMesh) RuralFenceInstances->SetStaticMesh(ProductionCommonVillageFenceMesh);
@@ -694,7 +703,12 @@ void AShirePrototypeWorldBuilder::SpawnGardenPatch(const FVector& Center, float 
 {
     const FLinearColor Soil(0.23f, 0.13f, 0.065f);
     const FLinearColor Leaf(0.18f, 0.42f, 0.12f);
-    UStaticMesh* SoilRowMesh = ProductionGroundBlockMesh ? ProductionGroundBlockMesh : CubeMesh;
+
+    const bool bUseProductionGardenSoil =
+        ProductionGroundBlockMesh &&
+        GardenSoilInstances &&
+        GardenSoilInstances->GetStaticMesh() == ProductionGroundBlockMesh;
+
     const bool bUseProductionGardenPlants =
         ProductionShrubMesh &&
         ShrubInstances &&
@@ -703,190 +717,54 @@ void AShirePrototypeWorldBuilder::SpawnGardenPatch(const FVector& Center, float 
     for (int32 Row = -2; Row <= 2; ++Row)
     {
         const FVector RowCenter = Center + FVector(0.0f, Row * 42.0f * Scale, 4.0f);
-        // Keep the primitive soil strip only as a deterministic fallback when the
-        // resident production ground mesh is unavailable.
-        SpawnShape(
-            SoilRowMesh,
-            RowCenter,
-            FVector(1.25f, 0.12f, ProductionGroundBlockMesh ? 0.075f : 0.05f) * Scale,
-            Soil,
-            FRotator::ZeroRotator,
-            false);
 
-        // Production garden plants are emitted later through the existing shrub HISM
-        // after SpawnFoliagePass clears/rebuilds its instance set. Do not create 25
-        // individual actors per patch when the resident production shrub is available.
-        if (!bUseProductionGardenPlants)
+        if (bUseProductionGardenSoil)
+        {
+            GardenSoilInstances->AddInstance(FTransform(
+                FRotator::ZeroRotator,
+                RowCenter,
+                FVector(1.25f, 0.12f, 0.075f) * Scale));
+        }
+        else
+        {
+            SpawnShape(
+                ProductionGroundBlockMesh ? ProductionGroundBlockMesh : CubeMesh,
+                RowCenter,
+                FVector(1.25f, 0.12f, ProductionGroundBlockMesh ? 0.075f : 0.05f) * Scale,
+                Soil,
+                FRotator::ZeroRotator,
+                false);
+        }
+
+        if (bUseProductionGardenPlants)
         {
             for (int32 Plant = -2; Plant <= 2; ++Plant)
             {
-                const FVector PlantLocation = RowCenter + FVector(Plant * 48.0f * Scale, 0.0f, 12.0f * Scale);
-                SpawnShape(SphereMesh, PlantLocation, FVector(0.10f, 0.10f, 0.075f) * Scale,
-                    Leaf, FRotator::ZeroRotator, false);
+                const FVector PlantLocation =
+                    RowCenter + FVector(Plant * 48.0f * Scale, 0.0f, 12.0f * Scale);
+                ShrubInstances->AddInstance(FTransform(
+                    FRotator(0.0f, static_cast<float>((Row + 2) * 31 + (Plant + 2) * 17), 0.0f),
+                    PlantLocation,
+                    FVector(0.11f, 0.10f, 0.085f) * Scale));
             }
         }
-    }
-}
-
-void AShirePrototypeWorldBuilder::ConfigureFoliageInstances()
-{
-    if (!BasicMaterial)
-    {
-        return;
-    }
-
-    auto ApplyInstanceColor = [this](
-        UHierarchicalInstancedStaticMeshComponent* Component,
-        UStaticMesh* ProductionMesh,
-        const FLinearColor& Color)
-    {
-        if (!Component)
+        else
         {
-            return;
-        }
-
-        // Imported production meshes already carry authored materials/textures.
-        // Do not flatten them back to BasicShapeMaterial.
-        if (ProductionMesh && Component->GetStaticMesh() == ProductionMesh)
-        {
-            return;
-        }
-
-        UMaterialInstanceDynamic* MID = UMaterialInstanceDynamic::Create(BasicMaterial, this);
-        if (MID)
-        {
-            MID->SetVectorParameterValue(TEXT("Color"), Color);
-            Component->SetMaterial(0, MID);
-        }
-    };
-
-    ApplyInstanceColor(GrassInstances, ProductionGrassClumpMesh, FLinearColor(0.105f, 0.34f, 0.065f));
-    ApplyInstanceColor(FlowerInstances, nullptr, FLinearColor(0.92f, 0.69f, 0.24f));
-    ApplyInstanceColor(ShrubInstances, ProductionShrubMesh, FLinearColor(0.085f, 0.285f, 0.055f));
-    ApplyInstanceColor(DistantTreeTrunkInstances, ProductionTreeTrunkMesh, FLinearColor(0.15f, 0.075f, 0.03f));
-    ApplyInstanceColor(DistantTreeCanopyInstances, ProductionTreeCanopyMesh, FLinearColor(0.07f, 0.25f, 0.045f));
-    ApplyInstanceColor(RockInstances, ProductionRockMesh, FLinearColor(0.34f, 0.35f, 0.31f));
-    ApplyInstanceColor(PathStoneInstances, ProductionPathStoneMesh, FLinearColor(0.43f, 0.40f, 0.32f));
-}
-
-void AShirePrototypeWorldBuilder::SpawnFoliagePass()
-{
-    if (!GrassInstances || !FlowerInstances || !ShrubInstances)
-    {
-        return;
-    }
-
-    GrassInstances->ClearInstances();
-    FlowerInstances->ClearInstances();
-    ShrubInstances->ClearInstances();
-
-    // Clustered instancing keeps the expanded world green without turning every blade
-    // into a ticking/rendering actor.
-    const FVector GrassCenters[] = {
-        FVector(-2200,-650,20), FVector(-1500,650,20), FVector(-650,-520,20), FVector(100,720,20),
-        FVector(900,-520,20), FVector(2500,520,20), FVector(4300,-300,20),
-        FVector(ShireLayout::FieldsX,-650,20), FVector(ShireLayout::FieldsX+1300,250,20),
-        FVector(ShireLayout::WoodedRoadX-1800,1000,20), FVector(ShireLayout::WoodedRoadX,650,20),
-        FVector(ShireLayout::WoodedRoadX+1900,-600,20), FVector(19500,-1100,20),
-        FVector(ShireLayout::FerryX-1800,-650,20), FVector(ShireLayout::FerryX+1000,500,20)
-    };
-
-    int32 GrassIndex = 0;
-    for (const FVector& Center : GrassCenters)
-    {
-        for (int32 Ring = 0; Ring < 48; ++Ring)
-        {
-            const float Angle = FMath::DegreesToRadians(static_cast<float>((Ring * 137 + GrassIndex * 29) % 360));
-            const float Radius = 95.0f + 58.0f * static_cast<float>(Ring % 8);
-            const FVector Base = Center + FVector(FMath::Cos(Angle) * Radius, FMath::Sin(Angle) * Radius, 0.0f);
-            const float Size = 0.09f + 0.012f * static_cast<float>((Ring + GrassIndex) % 4);
-            const float Height = 0.18f + 0.020f * static_cast<float>((Ring + GrassIndex) % 5);
-
-            GrassInstances->AddInstance(FTransform(
-                FRotator(0.0f, static_cast<float>((Ring * 43 + GrassIndex * 17) % 360), 0.0f),
-                Base,
-                FVector(Size, Size, Height)));
-        }
-        ++GrassIndex;
-    }
-
-    const FVector FlowerBeds[] = {
-        FVector(-2140,-690,38), FVector(-1990,-680,38), FVector(-1270,-560,38),
-        FVector(-300,1180,38), FVector(20,1260,38), FVector(350,1180,38),
-        FVector(6200,-1480,38), FVector(6480,-1390,38), FVector(6900,-1540,38),
-        FVector(ShireLayout::FerryX-650,-920,38)
-    };
-    for (int32 Index = 0; Index < UE_ARRAY_COUNT(FlowerBeds); ++Index)
-    {
-        const float Scale = 0.055f + 0.008f * static_cast<float>(Index % 3);
-        FlowerInstances->AddInstance(FTransform(
-            FRotator::ZeroRotator,
-            FlowerBeds[Index],
-            FVector(Scale, Scale, Scale * 0.75f)));
-    }
-
-    const FVector ShrubCenters[] = {
-        FVector(-2250,-610,42), FVector(-1600,-450,42), FVector(-820,-500,42),
-        FVector(-250,1180,42), FVector(520,1050,42), FVector(2900,520,42),
-        FVector(5600,-900,42), FVector(9300,350,42),
-        FVector(ShireLayout::WoodedRoadX-2100,950,42), FVector(ShireLayout::WoodedRoadX-900,-850,42),
-        FVector(ShireLayout::WoodedRoadX+350,900,42), FVector(ShireLayout::WoodedRoadX+1600,-750,42),
-        FVector(19700,-1180,42), FVector(ShireLayout::FerryX-1300,-800,42)
-    };
-    for (int32 Index = 0; Index < UE_ARRAY_COUNT(ShrubCenters); ++Index)
-    {
-        const float Scale = 0.24f + 0.035f * static_cast<float>(Index % 4);
-        ShrubInstances->AddInstance(FTransform(
-            FRotator(0.0f, static_cast<float>((Index * 31) % 360), 0.0f),
-            ShrubCenters[Index],
-            FVector(Scale * 1.35f, Scale, Scale * 0.72f)));
-    }
-
-    // Replace the toy-like sphere crop rows in the five authored Shire garden patches
-    // with the already-resident production shrub mesh through the existing HISM.
-    // This preserves the authored garden locations while removing up to 125 individual
-    // primitive plant actors from the production-asset path.
-    if (ProductionShrubMesh && ShrubInstances->GetStaticMesh() == ProductionShrubMesh)
-    {
-        struct FGardenPatchPlacement
-        {
-            FVector Center;
-            float Scale;
-        };
-
-        const FGardenPatchPlacement GardenPatches[] = {
-            { FVector(-1910.0f,-700.0f,0.0f), 0.80f },
-            { FVector(-1220.0f,-600.0f,0.0f), 0.68f },
-            { FVector(430.0f,610.0f,0.0f), 0.70f },
-            { FVector(1030.0f,820.0f,0.0f), 0.66f },
-            { FVector(6500.0f,-1420.0f,0.0f), 0.95f }
-        };
-
-        for (int32 PatchIndex = 0; PatchIndex < UE_ARRAY_COUNT(GardenPatches); ++PatchIndex)
-        {
-            const FGardenPatchPlacement& Patch = GardenPatches[PatchIndex];
-            for (int32 Row = -2; Row <= 2; ++Row)
+            for (int32 Plant = -2; Plant <= 2; ++Plant)
             {
-                const FVector RowCenter =
-                    Patch.Center + FVector(0.0f, Row * 42.0f * Patch.Scale, 4.0f);
-                for (int32 Plant = -2; Plant <= 2; ++Plant)
-                {
-                    const FVector PlantLocation =
-                        RowCenter + FVector(Plant * 48.0f * Patch.Scale, 0.0f, 12.0f * Patch.Scale);
-                    const float SizeJitter =
-                        0.145f + 0.012f * static_cast<float>((PatchIndex * 7 + Row * 3 + Plant + 32) % 4);
-                    const float Yaw =
-                        static_cast<float>((PatchIndex * 47 + (Row + 2) * 29 + (Plant + 2) * 17) % 360);
-                    ShrubInstances->AddInstance(FTransform(
-                        FRotator(0.0f, Yaw, 0.0f),
-                        PlantLocation,
-                        FVector(SizeJitter * 1.15f, SizeJitter, SizeJitter * 0.72f) * Patch.Scale));
-                }
+                const FVector PlantLocation =
+                    RowCenter + FVector(Plant * 48.0f * Scale, 0.0f, 12.0f * Scale);
+                SpawnShape(
+                    SphereMesh,
+                    PlantLocation,
+                    FVector(0.10f, 0.10f, 0.075f) * Scale,
+                    Leaf,
+                    FRotator::ZeroRotator,
+                    false);
             }
         }
     }
 }
-
 
 void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
 {
@@ -1731,36 +1609,83 @@ void AShirePrototypeWorldBuilder::SpawnPartySocialLoopPass()
     SpawnPartyCluster(ProductionLanternMesh, TEXT("P1C01PartyLanternRing"), 1000, 4600,
         RingPlacements(880.0f, 12, 16.0f, 0.52f, 0.0f));
 
-    int32 StaticPropCount = 0;
-    auto SpawnPartyProp = [this, &StaticPropCount](
-        UStaticMesh* Mesh, const FVector& Location, const FVector& Scale, const FRotator& Rotation)
-    {
-        AStaticMeshActor* Actor = SpawnShape(Mesh, Location, Scale, FLinearColor::White, Rotation, false);
-        if (Actor)
-        {
-            Actor->Tags.AddUnique(TEXT("P1C01PartySocialDetail"));
-            ++StaticPropCount;
-        }
-        return Actor;
-    };
-
+    // Repeated Party Field furniture is clustered by mesh family.
+    // Only story-state variants remain individual actors because they need independent
+    // visibility toggles across setup/celebration states.
+    TArray<FTransform> PartyTables;
+    PartyTables.Reserve(6);
     const FVector TableOffsets[] = {
         FVector(-420,-150,0), FVector(-100,-190,0), FVector(240,-160,0),
         FVector(-310,170,0), FVector(40,210,0), FVector(380,150,0)
     };
     for (int32 Index = 0; Index < UE_ARRAY_COUNT(TableOffsets); ++Index)
     {
-        SpawnPartyProp(ProductionPicnicTableMesh, PartyCenter + TableOffsets[Index],
-            FVector(0.72f), FRotator(0.0f, static_cast<float>((Index % 3) * 4 - 4), 0.0f));
+        PartyTables.Emplace(
+            FRotator(0.0f, static_cast<float>((Index % 3) * 4 - 4), 0.0f),
+            PartyCenter + TableOffsets[Index],
+            FVector(0.72f));
     }
-    SpawnPartyProp(CommonLongBench, PartyCenter + FVector(-560,40,0), FVector(0.68f), FRotator(0,8,0));
-    SpawnPartyProp(CommonLongBench, PartyCenter + FVector(560,20,0), FVector(0.68f), FRotator(0,-8,0));
-    SpawnPartyProp(CommonMarketCanopy, PartyCenter + FVector(-260,-400,0), FVector(0.68f), FRotator(0,6,0));
-    SpawnPartyProp(CommonMarketCanopy, PartyCenter + FVector(300,-405,0), FVector(0.68f), FRotator(0,-6,0));
-    SpawnPartyProp(ProductionLoadedCartMesh, PartyCenter + FVector(780,-360,0), FVector(0.58f), FRotator(0,95,0));
-    SpawnPartyProp(CommonBarrel, PartyCenter + FVector(690,-250,0), FVector(0.60f), FRotator::ZeroRotator);
-    SpawnPartyProp(CommonBarrel, PartyCenter + FVector(735,-205,0), FVector(0.56f), FRotator(0,15,0));
-    SpawnPartyProp(ProductionHaystackMesh, PartyCenter + FVector(-760,-330,0), FVector(0.62f), FRotator(0,-12,0));
+    SpawnPartyCluster(
+        ProductionPicnicTableMesh,
+        TEXT("P1C01PartyTables"),
+        900,
+        5000,
+        PartyTables);
+
+    TArray<FTransform> PartyBenches;
+    PartyBenches.Emplace(FRotator(0,8,0), PartyCenter + FVector(-560,40,0), FVector(0.68f));
+    PartyBenches.Emplace(FRotator(0,-8,0), PartyCenter + FVector(560,20,0), FVector(0.68f));
+    SpawnPartyCluster(
+        CommonLongBench,
+        TEXT("P1C01PartyLongBenches"),
+        900,
+        5000,
+        PartyBenches);
+
+    TArray<FTransform> PartyCanopies;
+    PartyCanopies.Emplace(FRotator(0,6,0), PartyCenter + FVector(-260,-400,0), FVector(0.68f));
+    PartyCanopies.Emplace(FRotator(0,-6,0), PartyCenter + FVector(300,-405,0), FVector(0.68f));
+    SpawnPartyCluster(
+        CommonMarketCanopy,
+        TEXT("P1C01PartyCanopies"),
+        1200,
+        6000,
+        PartyCanopies);
+
+    TArray<FTransform> PartyBarrels;
+    PartyBarrels.Emplace(FRotator::ZeroRotator, PartyCenter + FVector(690,-250,0), FVector(0.60f));
+    PartyBarrels.Emplace(FRotator(0,15,0), PartyCenter + FVector(735,-205,0), FVector(0.56f));
+    SpawnPartyCluster(
+        CommonBarrel,
+        TEXT("P1C01PartyBarrels"),
+        800,
+        4200,
+        PartyBarrels);
+
+    TArray<FTransform> PartyHay;
+    PartyHay.Emplace(FRotator(0,-12,0), PartyCenter + FVector(-760,-330,0), FVector(0.62f));
+    SpawnPartyCluster(
+        ProductionHaystackMesh,
+        TEXT("P1C01PartyHay"),
+        1000,
+        5200,
+        PartyHay);
+
+    int32 StaticPropCount = 0;
+    if (ProductionLoadedCartMesh)
+    {
+        if (AStaticMeshActor* Cart = SpawnShape(
+            ProductionLoadedCartMesh,
+            PartyCenter + FVector(780,-360,0),
+            FVector(0.58f),
+            FLinearColor::White,
+            FRotator(0,95,0),
+            false))
+        {
+            Cart->Tags.AddUnique(TEXT("P1C01PartySocialDetail"));
+            ++StaticPropCount;
+        }
+    }
 
     auto SpawnStateProp = [this, &PartyCenter](
         TArray<AStaticMeshActor*>& Target, UStaticMesh* Mesh,
@@ -2721,28 +2646,8 @@ void AShirePrototypeWorldBuilder::SpawnProductionVillageDetailLayer()
     SpawnProd(ProductionLoadedCartMesh, FVector(8750,-1080,0), FVector(0.78f),
         FRotator(0.0f, -12.0f, 0.0f), true);
 
-    // Party Field gets real tables and warm lamp-post silhouettes.
-    const FVector PartyCenter(280.0f,1320.0f,0.0f);
-    const FVector PartyTables[] = {
-        PartyCenter + FVector(-420,-150,0), PartyCenter + FVector(-100,-190,0),
-        PartyCenter + FVector(240,-160,0), PartyCenter + FVector(-310,170,0),
-        PartyCenter + FVector(40,210,0), PartyCenter + FVector(380,150,0)
-    };
-    for (const FVector& Table : PartyTables)
-    {
-        SpawnProd(ProductionPicnicTableMesh, Table, FVector(0.72f), FRotator::ZeroRotator, true);
-    }
-
-    const FVector Lamps[] = {
-        PartyCenter + FVector(-520,-300,0), PartyCenter + FVector(520,-300,0),
-        PartyCenter + FVector(-520,320,0), PartyCenter + FVector(520,320,0),
-        FVector(-920, 120, 0), FVector(-620, 110, 0), FVector(-300, 125, 0),
-        FVector(20, 140, 0), FVector(340, 110, 0)
-    };
-    for (const FVector& Lamp : Lamps)
-    {
-        SpawnProd(ProductionLampPostMesh, Lamp, FVector(0.76f), FRotator::ZeroRotator, false);
-    }
+    // PartySocialLoopPass owns repeated Party Field furniture and lighting.
+    // Do not duplicate its table/lamp placements in the village detail layer.
     // CP54 mega inventory pass: dense farm, market, river and household activity props.
     auto LoadCP54 = [](const TCHAR* Path) -> UStaticMesh* { return ResolveResidentStaticMesh(Path); };
     UStaticMesh* CP54Bucket = LoadCP54(TEXT("/Game/Production/World/Common/SM_CommonBucket.SM_CommonBucket"));
@@ -4784,21 +4689,11 @@ void AShirePrototypeWorldBuilder::SpawnShireSettlementCompletionPass()
         6500,
         MakeTransforms(HayPoints, UE_ARRAY_COUNT(HayPoints), 0.64f, 31.0f));
 
-    const FVector TablePoints[] = {
-        FVector(-250,1160,0), FVector(30,1140,0), FVector(320,1170,0), FVector(590,1210,0),
-        FVector(-120,1460,0), FVector(170,1490,0), FVector(450,1460,0), FVector(720,1420,0)
-    };
-    SpawnCluster(
-        ProductionPicnicTableMesh,
-        TEXT("P1C01PartyFieldTables"),
-        900,
-        5200,
-        MakeTransforms(TablePoints, UE_ARRAY_COUNT(TablePoints), 0.68f, 17.0f));
+    // PartySocialLoopPass owns Party Field furniture; settlement completion does not duplicate it.
 
     const FVector LampPoints[] = {
         FVector(-2100,-900,0), FVector(-1690,-930,0), FVector(-1260,-910,0), FVector(-820,-900,0),
         FVector(-720,720,0), FVector(-260,760,0), FVector(180,720,0), FVector(620,700,0),
-        FVector(-480,1090,0), FVector(40,1060,0), FVector(540,1110,0),
         FVector(1900,-480,0), FVector(2450,-560,0), FVector(3000,-520,0)
     };
     SpawnCluster(

@@ -4195,3 +4195,13 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - `SpawnFenceLine()` is now HISM-first through `RuralFenceInstances`; production fence actors are retained only as a missing-HISM fallback.
 - No world authority, story anchor, population owner, runtime loading strategy or P1C02 scope changed.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. No PIE/device/rendered-visual/FPS acceptance.
+
+
+## 2026-10-04 - P1C01 Shire exterior source closeout
+
+- Added `GardenSoilInstances` HISM. The five current garden patches now produce 25 resident production soil-row instances instead of approximately 25 static-mesh actors; their 125 production plant placements use the existing shrub HISM.
+- Party Field repeated furniture/lighting ownership is consolidated under `SpawnPartySocialLoopPass`.
+- Duplicate Party tables/lamps are removed from `SpawnProductionVillageDetailLayer`; settlement completion no longer adds another Party table family.
+- Party tables, benches, canopies, barrels and hay in `SpawnPartySocialLoopPass` are now clustered by mesh family. Story-state variant actors remain independently toggleable; the authored loaded cart remains one bounded actor.
+- This closes the known repeated-detail/greybox source debt for the Hobbiton/Bag End exterior without opening full Bywater or interiors.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. This is not PIE/visual/device/FPS acceptance.
