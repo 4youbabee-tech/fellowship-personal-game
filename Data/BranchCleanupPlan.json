@@ -34,7 +34,13 @@
     "reconcile/fbx-world-intake-current-develop-2026-10-03",
     "data/p1c01-frodo-rejection-history-knight-v2-2026-10-03",
     "probe/p1c01-frodo-knight-v2-2026-10-03",
-    "source/p1c01-bag-end-trim-official-receipt-2026-10-03"
+    "source/p1c01-bag-end-trim-official-receipt-2026-10-03",
+    "production/p1c01-shire-exterior-reconciled-closeout-2026-10-04",
+    "production/p1c01-shire-settlement-reconciliation-2026-10-04",
+    "production/p1c01-shire-automated-render-capture-v1-2026-10-04",
+    "production/p1c01-local-visual-acceptance-harness-2026-10-04",
+    "governance/root-cause-no-patching-2026-10-04",
+    "maintenance/stale-branch-retirement-2026-10-04"
   ],
   "safety_rules": [
     "Never delete develop or main.",
@@ -535,6 +541,53 @@
       "p1c01/frodo-skeletal-import-refresh-2026-10-02",
       "prep/f2-03-edoras-mega-source-v1",
       "prep/f2-03-edoras-mega-source-v2"
+    ]
+  },
+  "light_dead_ref_cleanup_2026_10_04": {
+    "action": "DELETE_SIX_REVIEWED_SUPERSEDED_REFS_ONLY",
+    "active_pr_excluded": "production/p1c01-definitive-chapter-closeout-2026-10-04",
+    "branches": [
+      {
+        "branch": "production/p1c01-shire-exterior-reconciled-closeout-2026-10-04",
+        "closed_pr": 317,
+        "head_sha": "9c2a5adf2b04341c7b7b3d2096175f51dd669c46",
+        "reason": "superseded by consolidated PR #327 after selective reconciliation"
+      },
+      {
+        "branch": "production/p1c01-shire-settlement-reconciliation-2026-10-04",
+        "closed_pr": 319,
+        "head_sha": "8067284f7c3da2f007c6976354571034287b2128",
+        "reason": "superseded by consolidated PR #327 after selective reconciliation"
+      },
+      {
+        "branch": "production/p1c01-shire-automated-render-capture-v1-2026-10-04",
+        "closed_pr": 322,
+        "head_sha": "de660c5fee42c77a92d416c6671c48d52135a495",
+        "reason": "render-capture lane integrated and root-fixed on PR #327"
+      },
+      {
+        "branch": "production/p1c01-local-visual-acceptance-harness-2026-10-04",
+        "closed_pr": 323,
+        "head_sha": "c31c97168df0ccbeee59cdfbbfd8799d1d0ea242",
+        "reason": "local acceptance harness integrated on PR #327"
+      },
+      {
+        "branch": "governance/root-cause-no-patching-2026-10-04",
+        "closed_pr": 324,
+        "head_sha": "34c726e98bca479cef80fccc568ff87059589102",
+        "reason": "root-cause governance integrated on PR #327"
+      },
+      {
+        "branch": "maintenance/stale-branch-retirement-2026-10-04",
+        "closed_pr": 326,
+        "head_sha": "61ab97bab443e56f076d0a2863ce6ff33a655f93",
+        "reason": "retirement plan integrated; branch lifecycle ended"
+      }
+    ],
+    "safety": [
+      "Do not delete develop, main, archive/pre-build-salvage-20260930, the active PR #327 head, or either Edoras prep branch.",
+      "Each listed ref is a closed PR head whose useful current work was selectively reconciled before closure.",
+      "This is repository hygiene only; no runtime or acceptance claim."
     ]
   }
 }

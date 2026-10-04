@@ -4250,3 +4250,11 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Wave3 intentionally adds a third bounded/manual-safe call for `WarehouseQuaterniusAnimationBatchV1.json`.
 - Root fix makes the regression semantic: it now requires exactly one manual-queue call for support, animation-only and hero-candidate manifests, while the broad `continue-on-error` prohibition and zero-payload fail-closed behavior remain unchanged.
 - Status: **SOURCE-FIXED / FRESH EXACT-HEAD VALIDATION REQUIRED**. No animation/deformation/retarget acceptance is implied.
+
+
+## 2026-10-04 - Light dead-ref cleanup wave
+
+- Scope is deliberately small: six already-closed/superseded P1C01 working refs only.
+- Queued refs: PR #317, #319, #322, #323, #324 and #326 heads.
+- Active consolidated PR #327 is explicitly preserved, as are `develop`, `main`, the recovery archive and both Edoras prep refs.
+- No production implementation, chapter scope, gameplay, asset, runtime or acceptance state is changed by this wave.

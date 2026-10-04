@@ -3428,3 +3428,14 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Hero-candidate manual queue | REQUIRED | one explicit manifest call |
 | Broad continue-on-error | FORBIDDEN / PRESERVED | fail-closed policy unchanged |
 | Fresh exact-head validation | PENDING | new PR head required |
+
+
+## 2026-10-04 - Light branch hygiene wave
+
+| Item | State |
+|---|---|
+| Reviewed dead refs queued | 6 |
+| Active P1C01 closeout branch | PRESERVED |
+| develop / main / archive | PRESERVED |
+| Edoras prep refs | PRESERVED |
+| Runtime or Gate 6/7 effect | NONE |
