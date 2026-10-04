@@ -3320,3 +3320,37 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Exact-head Pre-Unreal / UE4 compile | PENDING | PR validation required |
 | PIE visual walkthrough | NOT ACCEPTED | direct human evidence required |
 | Target-device 720p / 30 FPS | NOT ACCEPTED | measured device evidence required |
+
+
+## 2026-10-04 - P1C01 Shire Settlement Canon Finish B
+
+| Settlement canon detail | Status | Evidence boundary |
+|---|---|---|
+| #314 predecessor | COMPILE-TESTED / MERGED | head `3ee80ffe...`; Pre #1849 + Unreal #1446 SUCCESS; merge `b3f31134...` |
+| Ivy Bush roadside inn identity | SOURCE-IMPLEMENTED | bounded cottage + clustered sign/bench/barrels |
+| Number 3 Bagshot Row | SOURCE-IMPLEMENTED | visual turf/facade/mailbox anchor; quest anchors unchanged |
+| Party special entrance | SOURCE-IMPLEMENTED | 10 HISM step stones + setup/celebration gate variants |
+| Party open-air kitchen | SOURCE-IMPLEMENTED | cooking stand + table + canopy in setup/celebration state arrays |
+| Mill yard work detail | SOURCE-IMPLEMENTED | 12 clustered sacks/crates/barrels |
+| Bywater-road avenue | SOURCE-IMPLEMENTED | 12 trunk + 12 canopy cluster instances |
+| Green Dragon in Hobbiton | FORBIDDEN / NOT PLACED | canonical Bywater ownership preserved |
+| New synchronous heavy load | NONE | resident soft-path resolution only |
+| Per-instance Tick | NONE | existing HISM / WorldDetailCluster |
+| P1C02 runtime | NOT OPENED | P1C01 only |
+| Fresh exact-head Pre-Unreal | PENDING | PR validation required |
+| Fresh exact-head Unreal build/package | PENDING | PR validation required |
+| PIE/device/human visual/FPS | NOT ACCEPTED | direct evidence required |
+
+
+### Closed PR #315 selective salvage
+
+| Item | Disposition | Reason |
+|---|---|---|
+| Party Field boundary shell | RETAINED IN CANON FINISH B | unique source-grounded field read |
+| Water/mill reeds + stepping stones | RETAINED IN CANON FINISH B | unique mill/Water environmental read |
+| 3 Bywater-facing cottages | RETAINED IN CANON FINISH B | unique settlement-edge silhouette |
+| Duplicate Bagshot homes | SUPERSEDED | #314 + Number 3 anchor already stronger |
+| Duplicate clutter / lamps / mail / wash | SUPERSEDED | #314 already covers with clustered/limited detail |
+| Duplicate orchard/farm density | SUPERSEDED | avoid unnecessary low-spec density growth |
+| Canon Finish B visual budget | LOCKED MAX 153 | 96 HISM + 45 cluster + 4 landmarks + 8 state actors |
+| Fresh exact-head validation | PENDING | required after salvage commit |

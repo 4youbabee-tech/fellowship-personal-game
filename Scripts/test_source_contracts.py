@@ -800,6 +800,64 @@ class SourceContractTests(unittest.TestCase):
         self.assertLess(build.index("SpawnShireVisualFinishWave();"), build.index("SpawnShireSettlementCompletionPass();"))
         self.assertLess(build.index("SpawnShireSettlementCompletionPass();"), build.index("SpawnWorldDensityDetailPass();"))
 
+
+    def test_p1c01_shire_settlement_canon_finish_is_bounded_and_source_safe(self):
+        root = Path(__file__).resolve().parents[1]
+        contract = json.loads((root / "Data" / "P1C01ShireSettlementCanonFinishBV1.json").read_text(encoding="utf-8"))
+        self.assertEqual(contract["runtime_chapter"], "P1C01")
+        self.assertEqual(contract["runtime_writer"], "AShirePrototypeWorldBuilder")
+        self.assertEqual(contract["visible_budget"]["native_hism_budget"], 96)
+        self.assertEqual(contract["visible_budget"]["detail_cluster_instances"], 45)
+        self.assertEqual(contract["visible_budget"]["persistent_landmark_budget"], 4)
+        self.assertEqual(contract["visible_budget"]["party_state_actors"], 8)
+        self.assertEqual(contract["visible_budget"]["target_visual_budget"], 153)
+        self.assertLessEqual(contract["visible_budget"]["maximum_detail_cluster_actors"], 11)
+        self.assertFalse(contract["canon_contract"]["green_dragon_placed_in_hobbiton"])
+        self.assertFalse(contract["architecture_contract"]["new_world_authority"])
+        self.assertFalse(contract["architecture_contract"]["synchronous_heavy_load"])
+        self.assertFalse(contract["architecture_contract"]["p1c02_runtime_opened"])
+
+        source = (root / "Source" / "ShireJourney" / "Private" / "World" / "ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        header = (root / "Source" / "ShireJourney" / "Public" / "World" / "ShirePrototypeWorldBuilder.h").read_text(encoding="utf-8")
+        self.assertIn("void SpawnShireSettlementCanonFinishPass();", header)
+        start = source.index("void AShirePrototypeWorldBuilder::SpawnShireSettlementCanonFinishPass()")
+        end = source.index("void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()", start)
+        body = source[start:end]
+        for token in (
+            "P1C01_SHIRE_SETTLEMENT_CANON_FINISH",
+            "P1C01IvyBush",
+            "Number3BagshotRowTurf",
+            "Number3BagshotRowFacade",
+            "MillYardSacks",
+            "BywaterRoadAvenueTrunks",
+            "P1C01BywaterFacingEdge",
+            "partyBoundary=yes",
+            "millWaterEdge=yes",
+            "bywaterEdgeCottages=3",
+            "PartySpecialEntranceSetup",
+            "PartySpecialEntranceCelebration",
+            "PartyOpenAirKitchenCookingStand",
+            "whiteGateTreatments",
+            "greenDragonHobbiton=no",
+        ):
+            self.assertIn(token, body)
+
+        for forbidden in (
+            "LoadObject<",
+            "StaticLoadObject",
+            "RequestSyncLoad",
+            "SpawnActor<ALivingWorldDirector>",
+            "SpawnActor<AShireAmbientNPC>",
+            'TEXT("P1C02")',
+        ):
+            self.assertNotIn(forbidden, body)
+
+        self.assertIn('TEXT("Discover_IvyBush")', source)
+        self.assertIn("The Ivy Bush on the Bywater Road", source)
+        build = source[source.index("void AShirePrototypeWorldBuilder::BuildPrototypeWorld()"):]
+        self.assertLess(build.index("SpawnShireSettlementCompletionPass();"), build.index("SpawnShireSettlementCanonFinishPass();"))
+        self.assertLess(build.index("SpawnShireSettlementCanonFinishPass();"), build.index("SpawnWorldDensityDetailPass();"))
+
     def test_p1c01_kaykit_rig_bridge_is_bounded_and_non_runtime(self):
         root = Path(__file__).resolve().parents[1]
         packet = json.loads((root / "Data" / "P1C01KayKitRigTechnicalBridgeV1.json").read_text(encoding="utf-8"))
