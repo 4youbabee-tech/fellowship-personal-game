@@ -101,10 +101,22 @@ function Test-GreenRender([string]$Sha){
 function Test-VisualContentUnchanged([string]$FromSha,[string]$ToSha){
   $delta=@(& $git diff --name-only $FromSha $ToSha)
   if($LASTEXITCODE -ne 0){return $false}
-  foreach($path in $delta){
-    $n=$path -replace "\\","/"
+  $normalizedDelta=@($delta | ForEach-Object { $_ -replace "\\","/" })
+  $nonDocsDelta=@($normalizedDelta | Where-Object { -not $_.StartsWith("Docs/") })
+  $humanOnlyAcrossProof=(
+    $nonDocsDelta.Count -gt 0 -and
+    @($nonDocsDelta | Where-Object { $dedicatedHumanExact -notcontains $_ }).Count -eq 0
+  )
+  if($humanOnlyAcrossProof){
+    Write-Host "P1C01_RENDER_TRANSITIVE_HUMAN_ONLY ancestor=$FromSha head=$ToSha files=$($nonDocsDelta.Count)"
+  }
+  foreach($n in $normalizedDelta){
+    $isDedicatedHumanSource=(
+      $humanOnlyAcrossProof -and
+      $dedicatedHumanExact -contains $n
+    )
     $impact=(
-      $n.StartsWith("Source/") -or
+      ($n.StartsWith("Source/") -and -not $isDedicatedHumanSource) -or
       $n.StartsWith("Config/") -or
       $n.StartsWith("SourceAssets/Production/") -or
       $n -eq "ShireJourney.uproject" -or

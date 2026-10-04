@@ -4449,3 +4449,11 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Existing green-parent proof remains mandatory before capture can be inherited. This does not create or imply fresh visual acceptance.
 - Goal: the Human workflow owns its own compile/import/UE4 evidence, while the Shire render lane stops duplicating the same expensive runner reservation.
 - Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD CLASSIFIER PROOF PENDING**.
+
+
+## 2026-10-05 - Transitive Human-only render proof fix
+
+- Fresh classifier evidence on `c1683caba3f3542b0c7bc30bc445f40484b91b9b` correctly recognized the immediate delta as Human-only, but safe-ancestor reuse still treated the earlier Human editor commandlet change as generic visual `Source/` impact.
+- Root fix extends the same **all-files-must-be-Human-owned** rule across the complete ancestor-to-head delta. The commandlet is ignored only when every non-doc file across that proof window is on the dedicated Human allowlist.
+- Any mixed source/config/content delta still blocks inheritance and forces capture.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD TRANSITIVE CLASSIFIER PROOF PENDING**.

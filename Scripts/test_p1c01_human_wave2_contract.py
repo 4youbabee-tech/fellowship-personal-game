@@ -117,6 +117,7 @@ class HumanWave2ContractTests(unittest.TestCase):
         self.assertIn("P1C01_RENDER_DEDICATED_HUMAN_FILE",render_classifier)
         self.assertIn('"Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp"',render_classifier)
         self.assertIn("$dedicatedHumanOnly",render_classifier)
+        self.assertIn("P1C01_RENDER_TRANSITIVE_HUMAN_ONLY",render_classifier)
         gate=json.loads((root/"Data"/"P1C01HumanDeformationGateV1.json").read_text(encoding="utf-8"))
         self.assertFalse(gate["runtime_contract"]["visual_deformation_accepted"])
         self.assertFalse(gate["runtime_contract"]["retarget_accepted"])

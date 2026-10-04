@@ -3696,3 +3696,14 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Human workflow remains compile/import/UE4 owner | YES |
 | Fresh visual acceptance claimed | NO |
 | Fresh exact-head classifier validation | PENDING |
+
+
+## 2026-10-05 - Transitive Human-only visual proof
+
+| Control | State |
+|---|---|
+| Immediate Human-only delta recognized | PASS on prior head |
+| Safe-ancestor Human-only delta | ROOT-FIXED IN SOURCE |
+| Mixed Source delta can inherit render | NO |
+| Current queued duplicate render expected after fresh push | CANCELLATION/RECLASSIFICATION PENDING |
+| Fresh visual acceptance claimed | NO |
