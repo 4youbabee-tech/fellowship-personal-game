@@ -4161,3 +4161,13 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - The Wave2 probe now requires skeletal registration, reference bones, generated skeletal mesh package, linked USkeleton, and unchanged smoothing/bind/UV gates. It no longer requires a guessed skeleton filename.
 - PhysicsAsset presence is recorded separately as a sanity field; absence is not a hard skeletal-import rejection because current player collision remains capsule-owned.
 - Status: **SOURCE-FIXED / FRESH EXACT-HEAD VALIDATION PENDING**. No deformation, retarget, PIE/device/rendered-visual/FPS acceptance is claimed.
+
+## 2026-10-04 - Human Wave 2 technical winner
+
+- Exact-head Human Wave 2 run #3 on `c0ad882792ccef8c9e639e4eb1d7c3e9e6ce5e90` completed SUCCESS.
+- Technical winner: `eff0e79980f90d49deada0aa37ad8be5975a86330348e4ae6fa49d3171fad570`.
+- UE4.27 evidence: `skeletal-registered=yes`, `skeletal-bones=161`, `skeletal-skeleton=yes`, linked path `/Game/Production/Characters/Rigs/FRODO/SK_FRODO_Skeleton.SK_FRODO_Skeleton`, and commandlet summary `377 files, 0 failures`.
+- No smoothing-group, bind-pose, missing-bind-bone, UV, registration or linked-USkeleton rejection remained.
+- PhysicsAsset auto-generation still emits the small-bone warning and remains a separate sanity gate; current movement collision is capsule-owned.
+- CI hardening in the follow-up source packet adds the import commandlet to the dedicated Wave2 trigger and removes filename-based transient cleanup in favor of deleting only generated untracked Frodo `.uasset` files.
+- Status: **TECHNICAL WINNER EVIDENCED / CI-HARDENING EXACT-HEAD VALIDATION PENDING**. Deformation, retarget, AnimBP, runtime, PIE/device/rendered-visual/FPS acceptance remains pending.

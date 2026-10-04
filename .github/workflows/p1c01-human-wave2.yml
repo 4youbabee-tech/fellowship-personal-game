@@ -8,6 +8,7 @@ on:
       - 'Scripts/stage_p1c01_human_wave2.ps1'
       - 'Scripts/run_p1c01_human_wave2_ue4.ps1'
       - 'Scripts/test_p1c01_human_wave2_contract.py'
+      - 'Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp'
       - '.github/workflows/p1c01-human-wave2.yml'
 
 permissions:
@@ -131,14 +132,16 @@ jobs:
         if: always()
         shell: powershell
         run: |
-          foreach($relative in @(
-            "SourceAssets/Production/Characters/Rigs/FRODO/SK_FRODO.fbx",
-            "Content/Production/Characters/Rigs/FRODO/SK_FRODO.uasset",
-            "Content/Production/Characters/Rigs/FRODO/SK_FRODO_Skeleton.uasset",
-            "Content/Production/Characters/Rigs/FRODO/SK_FRODO_PhysicsAsset.uasset"
-          )) {
-            $tracked = @(& git.exe -C $env:GITHUB_WORKSPACE ls-files -- $relative 2>$null)
-            if($LASTEXITCODE -ne 0) { throw "HUMAN_WAVE2_CLEANUP_GIT_FAIL path=$relative" }
-            if($tracked.Count -eq 0) { Remove-Item -LiteralPath (Join-Path $env:GITHUB_WORKSPACE $relative) -Force -ErrorAction SilentlyContinue }
+          $sourceRelative="SourceAssets/Production/Characters/Rigs/FRODO/SK_FRODO.fbx"
+          $tracked=@(& git.exe -C $env:GITHUB_WORKSPACE ls-files -- $sourceRelative 2>$null)
+          if($LASTEXITCODE -ne 0) { throw "HUMAN_WAVE2_CLEANUP_GIT_FAIL path=$sourceRelative" }
+          if($tracked.Count -eq 0) {
+            Remove-Item -LiteralPath (Join-Path $env:GITHUB_WORKSPACE $sourceRelative) -Force -ErrorAction SilentlyContinue
+          }
+
+          $untracked=@(& git.exe -C $env:GITHUB_WORKSPACE ls-files --others --exclude-standard -- "Content/Production/Characters/Rigs/FRODO/*.uasset" 2>$null)
+          if($LASTEXITCODE -ne 0) { throw "HUMAN_WAVE2_CLEANUP_GIT_FAIL path=Content/Production/Characters/Rigs/FRODO/*.uasset" }
+          foreach($relative in $untracked) {
+            Remove-Item -LiteralPath (Join-Path $env:GITHUB_WORKSPACE $relative) -Force -ErrorAction SilentlyContinue
           }
           Write-Host "HUMAN_WAVE2_CLEANUP_PASS"

@@ -60,6 +60,8 @@ class HumanWave2ContractTests(unittest.TestCase):
         self.assertIn("UE4.27.2 Human Wave 2 skeletal gate",workflow)
         self.assertIn("if: needs.hosted_source_factory.outputs.selected_count != '0'",workflow)
         self.assertIn("ci_build_unreal.cmd",workflow)
+        self.assertIn("Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp",workflow)
+        self.assertIn("ls-files --others --exclude-standard",workflow)
 
 
 if __name__=="__main__":

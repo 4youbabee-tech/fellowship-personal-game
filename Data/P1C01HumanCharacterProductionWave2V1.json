@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "wave_id": "P1C01_HUMAN_CHARACTER_PRODUCTION_WAVE_2_V1",
-  "status": "USKELETON_LINK_PROBE_FIX_IMPLEMENTED_VALIDATION_PENDING",
+  "status": "TECHNICAL_WINNER_EVIDENCED_CI_HARDENING_PENDING",
   "runtime_chapter": "P1C01",
   "target_character": "FRODO",
   "role": "HUMAN_SKELETAL_SOURCE_FACTORY_NOT_FINAL_LIKENESS",
@@ -103,7 +103,7 @@
     "ram_gb": 8,
     "vram_gb_approx": 2
   },
-  "evidence_boundary": "USkeleton-linked technical probe fix only until fresh exact-head hosted + UE4 evidence exists. No deformation, runtime, PIE, device, rendered-visual or FPS acceptance.",
+  "evidence_boundary": "Technical winner is exact-head UE4.27 evidenced on Wave2 run #3. Deformation/retarget/runtime/PIE/device/rendered-visual/FPS acceptance remains pending.",
   "latest_hosted_baseline": {
     "workflow_run": 1,
     "exact_head": "8afa53cdee648cef196b914c5123d3e38677fc2c",
@@ -125,5 +125,19 @@
     "runtime_collision_owner": "capsule",
     "hard_skeletal_import_failure": false,
     "rationale": "PhysicsAsset auto-generation can be absent on small-bone rigs and is not authoritative for skeletal import validity."
+  },
+  "latest_technical_winner": {
+    "workflow_run": 3,
+    "exact_head": "c0ad882792ccef8c9e639e4eb1d7c3e9e6ce5e90",
+    "normalized_sha256": "eff0e79980f90d49deada0aa37ad8be5975a86330348e4ae6fa49d3171fad570",
+    "ue4_skeletal_registered": true,
+    "ue4_reference_bones": 161,
+    "ue4_linked_skeleton": true,
+    "ue4_linked_skeleton_path": "/Game/Production/Characters/Rigs/FRODO/SK_FRODO_Skeleton.SK_FRODO_Skeleton",
+    "import_summary": "377 files, 0 failures",
+    "physics_asset_auto_generated": false,
+    "physics_asset_note": "UE4 reported small-bone auto-generation warning; separate sanity gate, not skeletal technical rejection.",
+    "technical_gate": "PASS",
+    "next_gate": "DEFORMATION_AND_RETARGET"
   }
 }
