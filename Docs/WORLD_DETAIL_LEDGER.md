@@ -1178,3 +1178,13 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Performance boundary: low-poly/mobile-oriented source; PNG textures only; no runtime hard reference; any later integration remains soft/async via FStreamableManager; modular Frodo remains fallback.
 - Ownership boundary: ALivingWorldDirector remains population/pooling authority; UShireNPCContextSubsystem remains context; UShireQuestSubsystem remains story truth.
 - Evidence boundary: REGISTERED / SOURCE-GROUNDED PLAN ONLY. No UE4 import, deformation, runtime, PIE, device, rendered visual or FPS acceptance is claimed yet.
+
+## 2026-10-04 - P1C01 VISIBLE_SHIRE_MEGA_WAVE_D registered before implementation
+
+- Scope: existing P1C01 only. This wave is a visible-world completion push, not a new chapter or duplicate world authority.
+- Canon/source anchors: F1-02 Bag End/Shire and F1-03 Shire roads/Bucklebury remain the playable visual spine. The source route explicitly supports a transition from steep green banks and tangled woodland into flatter open country with ditches/fences, then a well-kept Ferry lane, broad landing stage, reeds/mist, broad slow river, steep opposite bank and a winding uphill path. 
+- Runtime authority remains AShirePrototypeWorldBuilder. ALivingWorldDirector remains ambient population/pooling authority; UShireNPCContextSubsystem remains bounded NPC context; UShireQuestSubsystem remains story truth.
+- Visible objectives: (1) stronger Bag End hero silhouette and garden/entry framing, (2) Hobbiton settlement depth and terrace identity, (3) authored road/field edge rhythm, (4) woodland threshold/canopy/understory enclosure, (5) Ferry destination readability and opposite-bank silhouette, (6) cleanup of obvious prototype repetition from player-facing sightlines.
+- Performance contract: repeated detail through existing HISM/ISM components only; explicit culling; no per-instance Tick; no actor-per-prop density wave; no synchronous heavy loading; no new hard runtime references.
+- Asset rule: reuse resident production meshes/materials first. Any missing external visual material must pass provenance/license and PNG/TGA/channel-packed/LOD/VRAM review before admission.
+- Validation boundary: SOURCE-GROUNDED PLAN ONLY. No PIE/device/rendered-visual/FPS acceptance is claimed until direct evidence exists.
