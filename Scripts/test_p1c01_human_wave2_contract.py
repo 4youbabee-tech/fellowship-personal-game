@@ -64,6 +64,12 @@ class HumanWave2ContractTests(unittest.TestCase):
         self.assertIn("ls-files --others --exclude-standard",workflow)
         self.assertIn("Hosted Frodo static deformation stress",workflow)
         self.assertIn("run_p1c01_human_wave3_deformation.py",workflow)
+        self.assertIn("Stage stable UE4 evidence contract",workflow)
+        self.assertIn("shire-human-wave2-ue4-artifact",workflow)
+        self.assertIn("HUMAN_WAVE2_ARTIFACT_CONTRACT_FAIL",workflow)
+        self.assertIn("--python-exit-code 17",workflow)
+        self.assertIn("HUMAN_WAVE3_DEFORMATION_CONTRACT_PASS",workflow)
+        self.assertIn('test -s "$RUNNER_TEMP/shire-human-wave3/ue4/p1c01_human_wave2_ue4.json"',workflow)
         deformation=(root/"Scripts"/"run_p1c01_human_wave3_deformation.py").read_text(encoding="utf-8")
         for token in ("shoulders","elbows","knees","hands_feet","locomotion_stress","visual_deformation_accepted","retarget_accepted"):
             self.assertIn(token,deformation)
