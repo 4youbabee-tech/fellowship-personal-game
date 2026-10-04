@@ -5,6 +5,7 @@
 #include "AssetToolsModule.h"
 #include "FileHelpers.h"
 #include "Factories/FbxImportUI.h"
+#include "Factories/FbxSkeletalMeshImportData.h"
 #include "Factories/FbxStaticMeshImportData.h"
 #include "Factories/MaterialInstanceConstantFactoryNew.h"
 #include "Factories/MaterialFactoryNew.h"

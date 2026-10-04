@@ -3719,3 +3719,20 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Provenance + quality JSON receipts retained | YES |
 | Gate semantics changed | NO |
 | Fresh transfer timing evidence | PENDING |
+
+## 2026-10-05 - Human Wave2 skeletal-import compile root fix
+
+| Control | State |
+|---|---|
+| Failing exact head | `62684319a343b7b183a73dd6b512d68f96ca5b11` |
+| Human Wave2 run | `37238261738` / FAILURE |
+| Hosted KayKit source + normalization | PASS |
+| Direct UE4 step | FAIL at `Build ShireJourneyEditor once` |
+| Compiler defect | `C2027` incomplete `UFbxSkeletalMeshImportData` |
+| Complete UE4.27 header | SOURCE-IMPLEMENTED: `Factories/FbxSkeletalMeshImportData.h` |
+| T0 ref-pose behavior | PRESERVED |
+| `MISSING_BIND_POSE_BONES` hard gate | PRESERVED |
+| Deformation / retarget / AnimBP / runtime Frodo | BLOCKED PENDING FRESH HUMAN GATE |
+| Fresh exact-head Human compile/import proof | PENDING |
+| Human visual / PIE / device / performance / Gate 6/7 | NOT ACCEPTED |
+

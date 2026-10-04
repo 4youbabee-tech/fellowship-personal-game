@@ -4465,3 +4465,12 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - The hosted stage now writes the complete provenance/quality receipt first, then removes the raw download/extraction directories and rejected normalized FBXs from the transport tree. It preserves all JSON diagnostics plus only the selected normalized FBX payload(s).
 - This changes transport size/cost only; source SHA provenance remains in the receipt and all technical gates remain unchanged.
 - Status: **SOURCE-IMPLEMENTED / FRESH TRANSPORT-TIME EVIDENCE PENDING**.
+
+## 2026-10-05 - Human Wave2 UFbxSkeletalMeshImportData compile root fix
+
+- Exact-head Human Wave2 run `37238261738` on `62684319a343b7b183a73dd6b512d68f96ca5b11` passed the hosted KayKit source/Blender normalization job, then failed in the direct UE4.27.2 skeletal gate at **Build ShireJourneyEditor once**.
+- Exact compiler evidence: `ShireProductionImportCommandlet.cpp(1213): error C2027: use of undefined type 'UFbxSkeletalMeshImportData'`; `FbxImportUI.h` supplied only the forward declaration.
+- Root fix: the editor-only production importer now includes `Factories/FbxSkeletalMeshImportData.h`, providing the complete UE4.27 type before assigning `bUseT0AsRefPose`.
+- T0 reference-pose remediation and the unchanged post-import `MISSING_BIND_POSE_BONES` hard rejection remain intact; no deformation, bind-pose, UV, skeleton, or visual gate is weakened.
+- Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD HUMAN COMPILE + UE4 REVALIDATION PENDING**. This is not yet COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED, or Gate 6/7 acceptance.
+
