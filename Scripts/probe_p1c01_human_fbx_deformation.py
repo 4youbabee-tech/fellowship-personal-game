@@ -22,7 +22,9 @@ try:
     bpy.ops.wm.read_factory_settings(use_empty=True)
     if "FINISHED" not in bpy.ops.import_scene.fbx(filepath=args.fbx,use_custom_normals=True): raise RuntimeError("FBX import failed")
     arms=[o for o in bpy.context.scene.objects if o.type=="ARMATURE"]; meshes=[o for o in bpy.context.scene.objects if o.type=="MESH"]
-    if len(arms)!=1:r["reasons"].append("ARMATURE_COUNT_NOT_ONE")
+    r["armature_count"]=len(arms); r["armature_names"]=[o.name for o in arms]
+    r["mesh_count"]=len(meshes); r["mesh_names"]=[o.name for o in meshes]
+    if len(arms)!=1:r["reasons"].append("ARMATURE_COUNT_NOT_ONE:"+str(len(arms)))
     if not meshes:r["reasons"].append("NO_MESH_OBJECTS")
     if r["reasons"]: r["status"]="HOSTED_DEFORMATION_PREFLIGHT_REJECT";write(r);sys.exit(0)
     arm=arms[0];arm.data.pose_position="POSE"

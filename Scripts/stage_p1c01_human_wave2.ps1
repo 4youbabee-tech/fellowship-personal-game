@@ -153,6 +153,15 @@ if uv_layers <= 0:
 if uv_layers <= 0: raise RuntimeError("UV normalization failed")
 if not finite_bounds: raise RuntimeError("non-finite bounds")
 
+# UV edit-mode operations mutate selection. Restore the exact skeletal export set
+# before use_selection=True so the armature cannot be silently omitted.
+for o in bpy.context.scene.objects:
+    o.select_set(False)
+for o in armatures + meshes:
+    o.hide_set(False)
+    o.select_set(True)
+bpy.context.view_layer.objects.active=armatures[0]
+
 os.makedirs(os.path.dirname(args.output), exist_ok=True)
 bpy.ops.export_scene.fbx(
     filepath=args.output, check_existing=False, use_selection=True,

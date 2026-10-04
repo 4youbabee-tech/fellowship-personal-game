@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "wave_id": "P1C01_HUMAN_CHARACTER_PRODUCTION_WAVE_2_V1",
-  "status": "RUN29_TECHNICAL_UV_NORMALIZATION_AND_CI_DEDUP_SOURCE_IMPLEMENTED",
+  "status": "RUN30_UV_EXPORT_SELECTION_ROOT_FIX_SOURCE_IMPLEMENTED",
   "runtime_chapter": "P1C01",
   "target_character": "FRODO",
   "role": "HUMAN_SKELETAL_SOURCE_FACTORY_NOT_FINAL_LIKENESS",
@@ -194,18 +194,17 @@
     "disposition": "REJECT_SOURCE_DO_NOT_RESERVE_UE4_AGAIN"
   },
   "latest_hosted_failure": {
-    "workflow_run": 37232629209,
-    "exact_head": "6c8ab7b8f460d56ea3a6e442d3bf8dcbfccf22fb",
-    "failure": "Fallback candidate had no UV layers; Blender Python raised but normalization invocation lacked --python-exit-code, so the script later failed on missing output instead of classifying the candidate.",
-    "root_causes": [
-      "candidate-quality failure aborted source family instead of continuing bounded hosted sweep",
-      "normalizer Blender invocation did not propagate Python exception exit code"
-    ],
-    "disposition": "per-candidate reject + continue; --python-exit-code 18; always publish hosted evidence; UE4 only for survivors"
+    "workflow_run": 37234716817,
+    "exact_head": "27db245d4136ee708afb2bb0e63b4a1108fc736f",
+    "observed_pre_export": "12/12 candidates: one armature, one mesh, 100% weighted vertices, generated technical UV",
+    "observed_post_export": "12/12 deformation probes rejected ARMATURE_COUNT_NOT_ONE",
+    "root_cause": "Smart-UV edit workflow changed selection and normalized FBX export uses use_selection=True; armature selection was not restored before export",
+    "disposition": "restore armature+mesh selection and active armature before FBX export; revalidate hosted deformation"
   },
   "ci_efficiency_contract": {
     "unreal_delta_base": "previous PR head on synchronize, PR base only as fallback",
     "dedicated_human_lane": "generic Unreal build must inherit/skip when only Human Wave2 pipeline files changed",
-    "render_delta_classifier": "self-hosted Shire capture skipped only when visual-impact delta is absent and previous-head render workflow is green"
+    "render_delta_classifier": "self-hosted Shire capture skipped only when visual-impact delta is absent and previous-head render workflow is green",
+    "render_transitive_proof": "If immediate parent has no green render, nearest green first-parent ancestor may be inherited only when Source/Config/SourceAssets/uproject/capture/import visual-content paths are unchanged."
   }
 }

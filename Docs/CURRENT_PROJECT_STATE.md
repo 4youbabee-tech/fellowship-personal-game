@@ -4390,3 +4390,13 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Shire Render Capture now has a hosted visual-delta classifier. It may inherit only when the current delta has no visual-impact files **and** the previous head has a successful render workflow; otherwise it renders fail-safe.
 - Goal: a Human pipeline iteration should spend hosted minutes first, reserve UE4 only for a surviving candidate, and avoid unrelated generic build/render reservations.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**.
+
+
+## 2026-10-04 - Run #30 armature export-selection root fix
+
+- Human hosted run on `27db245d4136ee708afb2bb0e63b4a1108fc736f` tested 12 Quaternius candidates. All 12 had one armature, one mesh, generated technical UVs, and **100% weighted vertices before export**.
+- All 12 then failed normalized-FBX deformation re-import with `ARMATURE_COUNT_NOT_ONE`.
+- Root cause: Smart-UV generation changed Blender object selection; normalization later exported with `use_selection=True` without restoring the armature selection. This could produce mesh-only normalized FBX despite valid pre-export rig data.
+- Root fix restores the exact armature + mesh selection and active armature immediately before FBX export. The deformation receipt now records armature/mesh counts and names.
+- Render CI is also hardened to reuse the nearest successful ancestor only when the complete intervening **visual content** tree is unchanged; CI/control-file changes alone no longer require another self-hosted scene capture.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD REVALIDATION PENDING**.

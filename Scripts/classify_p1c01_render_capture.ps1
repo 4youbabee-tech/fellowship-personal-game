@@ -52,9 +52,8 @@ if($visualImpact.Count -gt 0){
   exit 0
 }
 
-# Reuse only when the previous head has a completed successful render workflow.
-$proof=$false
-if($env:GH_TOKEN){
+function Test-GreenRender([string]$Sha){
+  if(-not $env:GH_TOKEN){return $false}
   try{
     $headers=@{
       Authorization="Bearer $($env:GH_TOKEN)"
@@ -62,17 +61,50 @@ if($env:GH_TOKEN){
       "X-GitHub-Api-Version"="2022-11-28"
       "User-Agent"="ShireJourney-RenderClassifier"
     }
-    $uri="https://api.github.com/repos/$($env:GITHUB_REPOSITORY)/actions/runs?head_sha=$base&per_page=100"
+    $uri="https://api.github.com/repos/$($env:GITHUB_REPOSITORY)/actions/runs?head_sha=$Sha&per_page=100"
     $r=Invoke-RestMethod -Uri $uri -Headers $headers -Method Get -TimeoutSec 20
-    $proof=@($r.workflow_runs | Where-Object {
+    return @($r.workflow_runs | Where-Object {
       $_.name -eq "P1C01 Shire Render Capture" -and $_.status -eq "completed" -and $_.conclusion -eq "success"
     }).Count -gt 0
   }catch{
-    Write-Host "P1C01_RENDER_PARENT_PROOF_LOOKUP_FAIL $($_.Exception.Message)"
+    Write-Host "P1C01_RENDER_PROOF_LOOKUP_FAIL sha=$Sha error=$($_.Exception.Message)"
+    return $false
   }
 }
-if($proof){
-  Set-Decision $false "visual-tree-unchanged-inherit-green-parent" $base
-}else{
-  Set-Decision $true "visual-tree-unchanged-but-parent-proof-missing" $base
+
+function Test-VisualContentUnchanged([string]$FromSha,[string]$ToSha){
+  $delta=@(& $git diff --name-only $FromSha $ToSha)
+  if($LASTEXITCODE -ne 0){return $false}
+  foreach($path in $delta){
+    $n=$path -replace "\\","/"
+    $impact=(
+      $n.StartsWith("Source/") -or
+      $n.StartsWith("Config/") -or
+      $n.StartsWith("SourceAssets/Production/") -or
+      $n -eq "ShireJourney.uproject" -or
+      $n -eq "Scripts/ci_capture_p1c01_visuals.cmd" -or
+      $n -eq "Scripts/ci_import_production_assets.cmd"
+    )
+    if($impact){
+      Write-Host "P1C01_RENDER_TRANSITIVE_BLOCKED file=$n ancestor=$FromSha head=$ToSha"
+      return $false
+    }
+  }
+  return $true
 }
+
+if(Test-GreenRender $base){
+  Set-Decision $false "visual-tree-unchanged-inherit-green-parent" $base
+  exit 0
+}
+
+$ancestors=@(& $git rev-list --first-parent --max-count=24 $base)
+foreach($candidate in $ancestors){
+  if(-not (Test-GreenRender $candidate)){continue}
+  if(-not (Test-VisualContentUnchanged $candidate $head)){continue}
+  Write-Host "P1C01_RENDER_TRANSITIVE_PROOF_PASS ancestor=$candidate head=$head"
+  Set-Decision $false "visual-content-unchanged-inherit-green-ancestor" $candidate
+  exit 0
+}
+
+Set-Decision $true "visual-tree-unchanged-but-no-safe-green-proof" $base

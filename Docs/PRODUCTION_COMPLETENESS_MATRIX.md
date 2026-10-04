@@ -3608,3 +3608,16 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Human dedicated file set | EXPANDED / OWNED BY HUMAN WORKFLOW |
 | Shire render on nonvisual delta | HOSTED CLASSIFIER + GREEN-PARENT INHERIT |
 | Fresh exact-head validation | PENDING |
+
+
+## 2026-10-04 - Human run #30 / transitive visual proof
+
+| Item | State |
+|---|---|
+| 12 hosted candidates pre-export weighted vertices | PASS |
+| Technical UV normalization | PASS |
+| Normalized export armature selection | ROOT-FIXED IN SOURCE |
+| Probe topology diagnostics | SOURCE-IMPLEMENTED |
+| Immediate-parent render proof unavailable | TRANSITIVE SAFE-ANCESTOR SUPPORT ADDED |
+| Visual-content mutation across inherited render proof | FORBIDDEN |
+| Fresh Human exact-head proof | PENDING |
