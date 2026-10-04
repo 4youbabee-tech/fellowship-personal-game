@@ -4230,3 +4230,6 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Added `REQ-P1C01-CLOSEOUT-001`: settlement/source completion is not chapter completion. P1C01 closes only after the full Shire-through-Bucklebury/Ferry chapter has production character presentation, beautiful authored world presentation, living-world/gameplay/audio/save reliability, target-device performance, and human Gate 6/7 evidence.
 - Runtime order remains serialized: P1C01 ACTIVE; P1C02 Bree/Prancing Pony remains predecessor-gated until `P1C01_GATE_6_7_ACCEPTED`.
 - Evidence boundary: governance/source rule implementation only. This does not claim P1C01 visual/device/performance acceptance.
+
+
+- Root-cause fix for PR #324 Pre-Unreal #1881: PG-078 failed because the two newly-added permanent requirements were not routed into MasterExecutionRoadmap. REQ-ROOTCAUSE-001 is now owned by B0_EXACT_HEAD_STABILITY; REQ-P1C01-CLOSEOUT-001 is owned by B4_ACCEPTANCE_AND_MERGE; tracked unfinished requirement snapshot is synchronized. This repairs the causal coordination contract rather than weakening PG-078.
