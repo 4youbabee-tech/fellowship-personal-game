@@ -772,7 +772,7 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("void SpawnShireSettlementCompletionPass();", header)
 
         start = source.index("void AShirePrototypeWorldBuilder::SpawnShireSettlementCompletionPass()")
-        end = source.index("void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()", start)
+        end = source.index("void AShirePrototypeWorldBuilder::SpawnShireSettlementFinalPolishPass()", start)
         body = source[start:end]
         self.assertIn("if (Index >= 6 && Index <= 8)", body)
 
@@ -785,7 +785,6 @@ class SourceContractTests(unittest.TestCase):
             "P1C01SettlementBarrels",
             "P1C01SettlementCrates",
             "P1C01SettlementHaystacks",
-            "P1C01PartyFieldTables",
             "P1C01SettlementLampPosts",
             "P1C01SettlementLoadedCarts",
             "P1C01SettlementFlowerBoxes",
@@ -808,7 +807,8 @@ class SourceContractTests(unittest.TestCase):
 
         build = source[source.index("void AShirePrototypeWorldBuilder::BuildPrototypeWorld()"):]
         self.assertLess(build.index("SpawnShireVisualFinishWave();"), build.index("SpawnShireSettlementCompletionPass();"))
-        self.assertLess(build.index("SpawnShireSettlementCompletionPass();"), build.index("SpawnWorldDensityDetailPass();"))
+        self.assertLess(build.index("SpawnShireSettlementCompletionPass();"), build.index("SpawnShireSettlementFinalPolishPass();"))
+        self.assertLess(build.index("SpawnShireSettlementFinalPolishPass();"), build.index("SpawnWorldDensityDetailPass();"))
 
 
 
