@@ -37,17 +37,29 @@ jobs:
       - Windows
     timeout-minutes: 30
     steps:
-      - name: Checkout exact head
+      - name: Checkout exact PR head
         uses: actions/checkout@v4
         with:
           clean: true
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
-      - name: Print exact checkout
-        shell: cmd
+      - name: Verify exact checkout
+        shell: powershell
         run: |
-          git rev-parse HEAD
+          $expected = "${{ github.event.pull_request.head.sha || github.sha }}"
+          $actual = (git rev-parse HEAD).Trim()
+          Write-Host "P1C01_CAPTURE_EXACT_HEAD expected=$expected actual=$actual"
+          if ($actual -ne $expected) { throw "Exact-head checkout mismatch" }
           git status --short
+
+      - name: Build ShireJourneyEditor for capture
+        shell: cmd
+        env:
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          call Scripts\ci_build_unreal.cmd
+          if errorlevel 1 exit /b %ERRORLEVEL%
 
       - name: Capture P1C01 production Shire
         shell: cmd
