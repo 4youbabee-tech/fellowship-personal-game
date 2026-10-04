@@ -57,7 +57,7 @@
     "ram_gb": 8,
     "vram_gb_approx": 2
   },
-  "evidence_boundary": "Source implementation only until exact-head CI and later PIE visual/performance evidence. No visual acceptance or FPS claim.",
+  "evidence_boundary": "Source/static/UE4 machine validation only. No PIE/device/human visual/FPS acceptance.",
   "exact_head_validation": {
     "pull_request": 314,
     "exact_head": "3ee80ffeaa03ee0acce131d098eb3f7967f36480",
@@ -77,5 +77,14 @@
     "visual_acceptance": false,
     "device_acceptance": false,
     "fps_acceptance": false
+  },
+  "validation_evidence": {
+    "pull_request": 314,
+    "exact_head": "3ee80ffeaa03ee0acce131d098eb3f7967f36480",
+    "pre_unreal_run": 1849,
+    "pre_unreal_conclusion": "SUCCESS",
+    "unreal_build_run": 1446,
+    "unreal_build_conclusion": "SUCCESS",
+    "merge_commit": "b3f31134e97d58362f486e09796eaf34852fe328"
   }
 }

@@ -4209,3 +4209,15 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Duplicate Bagshot Row homes, clutter, orchard/farm density, lamps/signs/mail/wash-line content were **not** reintroduced because #314/B already provide stronger or safer equivalents.
 - Updated Canon Finish B maximum budget: 96 native HISM placements, 45 clustered instances, maximum 4 persistent landmark actors, 8 party-state actors; maximum visual budget 153.
 - Status remains **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD VALIDATION REQUIRED** after this justified orphan-salvage head change.
+
+
+## 2026-10-04 - P1C01 Shire settlement source-construction closure
+
+- Settlement Completion PR #314 is **COMPILE-TESTED / MACHINE-GREEN / MERGED**: exact head `3ee80ffeaa03ee0acce131d098eb3f7967f36480`; Pre-Unreal #1849 SUCCESS; Unreal Build #1446 SUCCESS; merge `b3f31134e97d58362f486e09796eaf34852fe328`.
+- Canon Finish B PR #318 is **COMPILE-TESTED / MACHINE-GREEN / MERGED**: exact head `c9b27bdefbe91ef123c28f8a70a5ce37bd6b5e96`; Pre-Unreal #1868 SUCCESS; Unreal Build #1465 SUCCESS; merge `437db07cc67d742dded52541d09d0ef849f6d286`.
+- Source closure audit confirms authored representation for Bag End/Hill, Bagshot Row, Number 3 Gamgee anchor, Party Field/Party Tree/special entrance/open-air kitchen, village common, Ivy Bush, Water/mill/wheel/bridge, gardens/hedges/domestic life, orchard/working-field detail, Bywater-road avenue and a bounded Bywater-facing settlement edge.
+- Green Dragon is not placed in Hobbiton. Existing legacy save/discovery identity remains compatibility-only with corrected visible copy.
+- Architecture remains bounded: one world writer; repeated visual density through HISM/WorldDetailCluster; no per-instance Tick; no synchronous heavy load; no P1C02 runtime expansion.
+- Machine-readable closure: `Data/P1C01ShireSettlementSourceClosureV1.json`.
+- **Next required world gate is local visual bootstrap, not another blind density wave**: run `Scripts/bootstrap_local_p1c01_visuals.cmd` with UE4 closed, generate ignored `Content/Production`, and launch `/Engine/Maps/Entry` at DX11 1280x720.
+- Status: **SOURCE CONSTRUCTION COMPLETE / STATIC+COMPILE MACHINE-GREEN / HUMAN VISUAL + DEVICE PERFORMANCE PENDING**. No PIE/device/visual/FPS acceptance is claimed.

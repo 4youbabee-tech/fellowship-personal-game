@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "wave_id": "P1C01_SHIRE_SETTLEMENT_CANON_FINISH_B_V1",
-  "status": "SOURCE_IMPLEMENTED_WITH_SELECTIVE_ORPHAN_SALVAGE_EXACT_HEAD_VALIDATION_PENDING",
+  "status": "COMPILE_TESTED_MACHINE_GREEN_MERGED_SOURCE_CLOSURE",
   "runtime_chapter": "P1C01",
   "runtime_writer": "AShirePrototypeWorldBuilder",
   "predecessor": {
@@ -48,7 +48,7 @@
     "npc_context_owner": "UShireNPCContextSubsystem",
     "quest_owner": "UShireQuestSubsystem"
   },
-  "evidence_boundary": "Source implementation only until fresh exact-head validation. No PIE/device/human visual/FPS acceptance.",
+  "evidence_boundary": "Shire settlement source construction is machine-green. Local production bootstrap plus human PIE/visual and target-device FPS evidence remain mandatory before visual/performance acceptance.",
   "selective_orphan_salvage": {
     "source_pr": 315,
     "source_head": "be04e90053d997eee6085d8adc9b07d3e87baaf0",
@@ -65,5 +65,14 @@
       "duplicate lamps/signs/mail/wash-line detail"
     ],
     "reason": "Retain unique readable settlement composition while avoiding duplicate density and actor budget growth."
+  },
+  "validation_evidence": {
+    "pull_request": 318,
+    "exact_head": "c9b27bdefbe91ef123c28f8a70a5ce37bd6b5e96",
+    "pre_unreal_run": 1868,
+    "pre_unreal_conclusion": "SUCCESS",
+    "unreal_build_run": 1465,
+    "unreal_build_conclusion": "SUCCESS",
+    "merge_commit": "437db07cc67d742dded52541d09d0ef849f6d286"
   }
 }
