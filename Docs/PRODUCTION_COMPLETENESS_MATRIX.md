@@ -3485,3 +3485,13 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 
 
 - Frodo deformation hosted runner root cause: Wave 2 #15 failed on Blender FBX import because NumPy was absent. Workflow now installs `python3-numpy` and runs a Blender-internal dependency preflight; deformation remains REVALIDATION PENDING until exact-head PASS.
+
+## 2026-10-04 - Light branch hygiene wave
+
+| Item | State |
+|---|---|
+| Reviewed dead refs queued | 6 |
+| Active P1C01 closeout branch | PRESERVED |
+| develop / main / archive | PRESERVED |
+| Edoras prep refs | PRESERVED |
+| Runtime or Gate 6/7 effect | NONE |
