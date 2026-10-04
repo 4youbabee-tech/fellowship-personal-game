@@ -4222,3 +4222,23 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Explicit art gaps remain and are **not** silently promoted: no bespoke exact white Party gate, no bespoke giant Party pavilion, no dedicated open-air kitchen hero mesh, no full Bywater/Green Dragon completion, and no interiors.
 - Machine-readable audit: `Data/P1C01ShireSettlementExteriorCompletenessAuditV1.json`.
 - Status: **EXTERIOR SOURCE COVERAGE COMPLETE WITH EXPLICIT ART GAPS / EXACT-HEAD VALIDATION PENDING**. No PIE/visual/device/FPS/Gate 6/7 acceptance.
+
+
+## 2026-10-04 - P1C01 Shire Settlement Final Polish source implementation
+
+- Added SpawnShireSettlementFinalPolishPass() immediately after Settlement Completion.
+- Added 44 native HISM placements at the mill/Water bank (22 reeds + 22 shrubs).
+- Added 54 clustered repeated instances: 10 mill barrels, 8 mill crates, 4 mill benches, 12 Bagshot flower boxes, 8 Bagshot wood piles, 12 settlement lamp-post meshes.
+- No hero actors or movable point lights are added by this packet.
+- All repeated detail is non-colliding, zero-Tick and explicitly culled through existing HISM/AWorldDetailCluster ownership.
+- Status: **SOURCE-IMPLEMENTED / PREDECESSOR-MERGE + EXACT-HEAD VALIDATION PENDING**. No PIE/device/rendered-visual/FPS acceptance.
+
+## 2026-10-04 - P1C01 Shire exterior reconciled closeout
+
+- Reconciled the strongest existing Shire exterior lineage instead of stacking a duplicate settlement implementation.
+- Exterior-closeout ownership remains authoritative: production hobbit facades suppress greybox overlays; garden rows are HISM; Party repeated furniture is clustered under SpawnPartySocialLoopPass.
+- Party Field traversal now has a real three-segment gap in the collision-owning HedgeInstances ring (indices 6-8). The two production gate meshes are decorative/non-colliding so they cannot block the approach.
+- Settlement completion budget is reconciled to **303 HISM + 71 clustered instances / max 7 cluster actors + 16 limited hero actors**.
+- Added the previously registered Shire Settlement Final Polish pass: **44 native HISM + 54 clustered instances / max 6 cluster actors, 0 hero actors, 0 movable lights**, focused on The Water/mill working bank and Bagshot domestic micro-detail.
+- Exterior completeness audit remains explicit about art gaps: no bespoke exact white Party gate, giant pavilion, dedicated open-air kitchen hero mesh, full Bywater/Green Dragon, or interiors.
+- Status: **SOURCE-RECONCILED / FRESH EXACT-HEAD VALIDATION PENDING**. No PIE/device/rendered-visual/FPS/Gate 6/7 acceptance is claimed.

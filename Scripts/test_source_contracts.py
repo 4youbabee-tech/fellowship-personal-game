@@ -754,7 +754,7 @@ class SourceContractTests(unittest.TestCase):
         contract = json.loads((root / "Data" / "P1C01ShireSettlementCompletionV1.json").read_text(encoding="utf-8"))
         self.assertEqual(contract["runtime_chapter"], "P1C01")
         self.assertEqual(contract["runtime_writer"], "AShirePrototypeWorldBuilder")
-        self.assertEqual(contract["budget"]["hism_instances"], 306)
+        self.assertEqual(contract["budget"]["hism_instances"], 303)
         self.assertEqual(contract["budget"]["cluster_instances"], 71)
         self.assertEqual(contract["budget"]["cluster_actors_max"], 7)
         self.assertEqual(contract["budget"]["limited_hero_actors"], 16)
@@ -764,6 +764,8 @@ class SourceContractTests(unittest.TestCase):
         self.assertFalse(contract["architecture_contract"]["actor_per_prop_density"])
         self.assertFalse(contract["architecture_contract"]["p1c02_runtime_opened"])
         self.assertTrue(contract["architecture_contract"]["central_traversal_corridor_preserved"])
+        self.assertEqual(contract["party_field_traversal"]["southwest_entry_gap_skipped_indices"], [6, 7, 8])
+        self.assertFalse(contract["party_field_traversal"]["gate_collision"])
 
         source = (root / "Source" / "ShireJourney" / "Private" / "World" / "ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
         header = (root / "Source" / "ShireJourney" / "Public" / "World" / "ShirePrototypeWorldBuilder.h").read_text(encoding="utf-8")
@@ -772,6 +774,7 @@ class SourceContractTests(unittest.TestCase):
         start = source.index("void AShirePrototypeWorldBuilder::SpawnShireSettlementCompletionPass()")
         end = source.index("void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()", start)
         body = source[start:end]
+        self.assertIn("if (Index >= 6 && Index <= 8)", body)
 
         for token in (
             "P1C01_SHIRE_SETTLEMENT_COMPLETION",
@@ -786,8 +789,9 @@ class SourceContractTests(unittest.TestCase):
             "P1C01SettlementLampPosts",
             "P1C01SettlementLoadedCarts",
             "P1C01SettlementFlowerBoxes",
-            "hismBudget=306",
-            "clusterBudget=82",
+            "hismBudget=303",
+            "clusterBudget=71",
+            "partyEntryCollision=no",
             "heroBudget=16",
         ):
             self.assertIn(token, body)
@@ -878,6 +882,56 @@ class SourceContractTests(unittest.TestCase):
             "P1C01PartyHay",
         ):
             self.assertIn(token, party)
+
+    def test_p1c01_shire_settlement_final_polish_is_bounded_and_clustered(self):
+        root = Path(__file__).resolve().parents[1]
+        contract = json.loads((root / "Data" / "P1C01ShireSettlementFinalPolishV1.json").read_text(encoding="utf-8"))
+        self.assertEqual(contract["runtime_chapter"], "P1C01")
+        self.assertEqual(contract["runtime_writer"], "AShirePrototypeWorldBuilder")
+        self.assertEqual(contract["budget"]["native_hism_instances"], 44)
+        self.assertEqual(contract["budget"]["cluster_instances"], 54)
+        self.assertEqual(contract["budget"]["cluster_actors_max"], 6)
+        self.assertEqual(contract["budget"]["hero_actors"], 0)
+        self.assertFalse(contract["architecture"]["synchronous_heavy_load"])
+        self.assertFalse(contract["architecture"]["per_instance_tick"])
+        self.assertFalse(contract["architecture"]["movable_lights_added"])
+        self.assertFalse(contract["architecture"]["p1c02_runtime_opened"])
+
+        source = (root / "Source" / "ShireJourney" / "Private" / "World" / "ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        header = (root / "Source" / "ShireJourney" / "Public" / "World" / "ShirePrototypeWorldBuilder.h").read_text(encoding="utf-8")
+        self.assertIn("void SpawnShireSettlementFinalPolishPass();", header)
+        start = source.index("void AShirePrototypeWorldBuilder::SpawnShireSettlementFinalPolishPass()")
+        end = source.index("void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()", start)
+        body = source[start:end]
+
+        for token in (
+            "P1C01_SHIRE_SETTLEMENT_FINAL_POLISH",
+            "P1C01MillWorkingBarrels",
+            "P1C01MillWorkingCrates",
+            "P1C01MillBankBenches",
+            "P1C01BagshotGardenFlowers",
+            "P1C01BagshotWoodPiles",
+            "P1C01SettlementWarmLanternRhythm",
+            "repeatedBudget=98",
+            "heroActors=0",
+            "movableLightsAdded=0",
+        ):
+            self.assertIn(token, body)
+
+        for forbidden in (
+            "LoadObject<",
+            "StaticLoadObject",
+            "RequestSyncLoad",
+            "UPointLightComponent",
+            "SpawnActor<ALivingWorldDirector>",
+            "SpawnActor<AShireAmbientNPC>",
+            'TEXT("P1C02")',
+        ):
+            self.assertNotIn(forbidden, body)
+
+        build = source[source.index("void AShirePrototypeWorldBuilder::BuildPrototypeWorld()"):]
+        self.assertLess(build.index("SpawnShireSettlementCompletionPass();"), build.index("SpawnShireSettlementFinalPolishPass();"))
+        self.assertLess(build.index("SpawnShireSettlementFinalPolishPass();"), build.index("SpawnWorldDensityDetailPass();"))
 
     def test_p1c01_kaykit_rig_bridge_is_bounded_and_non_runtime(self):
         root = Path(__file__).resolve().parents[1]

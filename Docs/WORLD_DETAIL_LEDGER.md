@@ -1243,3 +1243,22 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Repeated party tables, benches, canopies, barrels and hay become clustered static detail. Story-state variants stay actors because they require independent visibility toggles; one loaded cart stays a bounded authored actor.
 - Ownership/loading/population contracts unchanged. No synchronous heavy loading and no P1C02.
 - Evidence boundary: SOURCE-GROUNDED CLOSEOUT PLAN. PIE/device/visual/FPS acceptance remains separate.
+
+
+## 2026-10-04 - P1C01 SHIRE_SETTLEMENT_FINAL_POLISH registered before implementation
+
+- Prerequisite: P1C01 SHIRE_SETTLEMENT_COMPLETION on the same source lineage.
+- Scope: close the remaining player-facing micro-detail gaps at the Hobbiton mill/Water bank and Bagshot Row gardens without expanding chapter scope.
+- Repeated-detail budget: 44 native HISM + 54 instances across maximum 6 AWorldDetailCluster actors; 0 new hero actors.
+- Presentation rule: lamp meshes may strengthen warm settlement rhythm, but this packet adds zero movable point lights and no dynamic-light proliferation.
+- Runtime ownership remains unchanged: AShirePrototypeWorldBuilder world construction; ALivingWorldDirector population/pooling; UShireNPCContextSubsystem context; UShireQuestSubsystem story truth.
+- No synchronous heavy loading, no per-instance Tick, no actor-per-prop density, no P1C02.
+- Evidence boundary: REGISTERED / SOURCE-GROUNDED PLAN. No PIE/device/rendered-visual/FPS acceptance.
+
+### P1C01 SHIRE_SETTLEMENT_COMPLETION reconciled traversal/budget
+- Exterior-closeout remains the settlement ownership baseline.
+- Party Field collision ring omits hedge indices 6-8 at the southwest authored approach; the two visible farm-gate meshes are non-colliding decoration.
+- Current completion budget after Party ownership dedup and traversal gap: **303 HISM + 71 clustered instances / max 7 cluster actors + 16 limited hero actors**.
+- The registered Final Polish packet is carried forward as **44 native HISM + 54 clustered instances / max 6 actors, 0 hero actors, 0 movable lights**.
+- Full Bywater/Green Dragon and interiors remain explicitly outside this exterior source closeout.
+- Evidence boundary: SOURCE-RECONCILED only until fresh exact-head CI and later PIE/device/visual/performance evidence.

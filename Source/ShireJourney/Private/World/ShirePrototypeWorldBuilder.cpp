@@ -4385,18 +4385,25 @@ void AShirePrototypeWorldBuilder::SpawnShireSettlementCompletionPass()
         FVector(-430.0f, 1035.0f, 0.0f),
         FVector(0.76f),
         18.0f,
-        true,
+        false,
         TEXT("P1C01PartyFieldEntryGate"));
     SpawnHero(
         ProductionFarmGateMesh,
         FVector(-285.0f, 1085.0f, 0.0f),
         FVector(0.72f),
         18.0f,
-        true,
+        false,
         TEXT("P1C01PartyFieldEntryGate"));
 
     for (int32 Index = 0; Index < 12; ++Index)
     {
+        // HedgeInstances owns collision. Preserve the authored southwest Party Field
+        // entrance instead of sealing the visible gate/path with a hidden hedge wall.
+        if (Index >= 6 && Index <= 8)
+        {
+            continue;
+        }
+
         const float Angle = FMath::DegreesToRadians(static_cast<float>(Index) * 30.0f);
         AddHism(
             HedgeInstances,
@@ -4730,11 +4737,197 @@ void AShirePrototypeWorldBuilder::SpawnShireSettlementCompletionPass()
     UE_LOG(
         LogTemp,
         Display,
-        TEXT("P1C01_SHIRE_SETTLEMENT_COMPLETION hism=%d clusterActors=%d clusterInstances=%d heroActors=%d hismBudget=306 clusterBudget=82 heroBudget=16 writer=ShirePrototypeWorldBuilder p1c02=no"),
+        TEXT("P1C01_SHIRE_SETTLEMENT_COMPLETION hism=%d clusterActors=%d clusterInstances=%d heroActors=%d hismBudget=303 clusterBudget=71 heroBudget=16 partyEntryCollision=no writer=ShirePrototypeWorldBuilder p1c02=no"),
         HismInstances,
         ClusterActors,
         ClusterInstances,
         HeroActors);
+}
+
+
+void AShirePrototypeWorldBuilder::SpawnShireSettlementFinalPolishPass()
+{
+    if (!GetWorld())
+    {
+        return;
+    }
+
+    int32 NativeHismInstances = 0;
+    int32 ClusterActors = 0;
+    int32 ClusterInstances = 0;
+
+    auto AddNative = [&NativeHismInstances](
+        UHierarchicalInstancedStaticMeshComponent* Component,
+        const FVector& Location,
+        const FVector& Scale,
+        float Yaw)
+    {
+        if (!Component || !Component->GetStaticMesh())
+        {
+            return;
+        }
+
+        Component->AddInstance(FTransform(
+            FRotator(0.0f, Yaw, 0.0f),
+            Location,
+            Scale));
+        ++NativeHismInstances;
+    };
+
+    auto SpawnCluster = [this, &ClusterActors, &ClusterInstances](
+        UStaticMesh* Mesh,
+        const TCHAR* Tag,
+        int32 StartCull,
+        int32 EndCull,
+        const TArray<FTransform>& Placements)
+    {
+        if (!Mesh || Placements.Num() == 0)
+        {
+            return;
+        }
+
+        AWorldDetailCluster* Cluster = GetWorld()->SpawnActor<AWorldDetailCluster>();
+        if (!Cluster)
+        {
+            return;
+        }
+
+        Cluster->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
+        Cluster->Tags.AddUnique(TEXT("P1C01ShireSettlementFinalPolish"));
+        Cluster->Tags.AddUnique(FName(Tag));
+        Cluster->Configure(Mesh, false, StartCull, EndCull);
+        for (const FTransform& Placement : Placements)
+        {
+            Cluster->AddDetailInstance(
+                Placement.GetLocation(),
+                Placement.Rotator(),
+                Placement.GetScale3D());
+        }
+
+        ++ClusterActors;
+        ClusterInstances += Cluster->GetDetailCount();
+    };
+
+    auto MakeTransforms = [](const FVector* Points, int32 Count, float BaseScale, float YawStep)
+    {
+        TArray<FTransform> Result;
+        Result.Reserve(Count);
+        for (int32 Index = 0; Index < Count; ++Index)
+        {
+            Result.Emplace(
+                FRotator(0.0f, FMath::Fmod(static_cast<float>(Index) * YawStep, 360.0f), 0.0f),
+                Points[Index],
+                FVector(BaseScale + 0.025f * static_cast<float>(Index % 3)));
+        }
+        return Result;
+    };
+
+    // The Water / mill working bank. Existing mill house, wheel, bridge and water
+    // surfaces remain the landmark owners; this pass only closes the empty working-yard read.
+    for (int32 Index = 0; Index < 22; ++Index)
+    {
+        const float Alpha = static_cast<float>(Index) / 21.0f;
+        const float X = FMath::Lerp(-1900.0f, -250.0f, Alpha);
+        const float Y = 700.0f + 55.0f * FMath::Sin(static_cast<float>(Index) * 0.73f);
+        AddNative(
+            ReedInstances,
+            FVector(X, Y, -3.0f),
+            FVector(0.50f + 0.035f * static_cast<float>(Index % 4)),
+            static_cast<float>((Index * 37) % 360));
+    }
+
+    const FVector MillBarrels[] = {
+        FVector(-1510,500,0), FVector(-1440,530,0), FVector(-1370,490,0), FVector(-1300,540,0),
+        FVector(-1230,500,0), FVector(-1160,545,0), FVector(-1090,505,0), FVector(-1020,540,0),
+        FVector(-950,500,0), FVector(-880,535,0)
+    };
+    SpawnCluster(
+        ProductionBarrelMesh,
+        TEXT("P1C01MillWorkingBarrels"),
+        700,
+        4200,
+        MakeTransforms(MillBarrels, UE_ARRAY_COUNT(MillBarrels), 0.52f, 41.0f));
+
+    const FVector MillCrates[] = {
+        FVector(-1480,610,0), FVector(-1390,635,0), FVector(-1300,600,0), FVector(-1210,640,0),
+        FVector(-1120,605,0), FVector(-1030,638,0), FVector(-940,610,0), FVector(-850,635,0)
+    };
+    SpawnCluster(
+        ProductionCrateMesh,
+        TEXT("P1C01MillWorkingCrates"),
+        700,
+        4200,
+        MakeTransforms(MillCrates, UE_ARRAY_COUNT(MillCrates), 0.50f, 29.0f));
+
+    const FVector MillBenches[] = {
+        FVector(-1460,80,0), FVector(-1260,70,0), FVector(-1050,78,0), FVector(-840,70,0)
+    };
+    SpawnCluster(
+        ProductionBenchMesh,
+        TEXT("P1C01MillBankBenches"),
+        900,
+        4800,
+        MakeTransforms(MillBenches, UE_ARRAY_COUNT(MillBenches), 0.60f, 13.0f));
+
+    // Bagshot Row gardens: the completion pass establishes the row and boundaries;
+    // these clusters provide domestic life without adding one actor per prop.
+    const FVector BagshotFlowers[] = {
+        FVector(-2010,-1120,0), FVector(-1870,-1160,0), FVector(-1710,-1175,0),
+        FVector(-1570,-1210,0), FVector(-1390,-1205,0), FVector(-1240,-1220,0),
+        FVector(-1060,-1200,0), FVector(-900,-1190,0), FVector(-720,-1155,0),
+        FVector(-560,-1135,0), FVector(-400,-1095,0), FVector(-260,-1070,0)
+    };
+    SpawnCluster(
+        ProductionFlowerBoxMesh,
+        TEXT("P1C01BagshotGardenFlowers"),
+        650,
+        3600,
+        MakeTransforms(BagshotFlowers, UE_ARRAY_COUNT(BagshotFlowers), 0.52f, 17.0f));
+
+    const FVector BagshotWood[] = {
+        FVector(-1970,-1360,0), FVector(-1680,-1400,0), FVector(-1390,-1410,0), FVector(-1100,-1390,0),
+        FVector(-820,-1360,0), FVector(-560,-1335,0), FVector(-330,-1300,0), FVector(-120,-1270,0)
+    };
+    SpawnCluster(
+        ProductionCommonWoodPileMesh,
+        TEXT("P1C01BagshotWoodPiles"),
+        800,
+        4400,
+        MakeTransforms(BagshotWood, UE_ARRAY_COUNT(BagshotWood), 0.54f, 31.0f));
+
+    // Warm readable village rhythm uses lamp meshes only; no extra movable point lights.
+    const FVector SettlementLanterns[] = {
+        FVector(-1840,-900,0), FVector(-1420,-910,0), FVector(-1000,-900,0), FVector(-580,-870,0),
+        FVector(-620,690,0), FVector(-180,720,0), FVector(280,690,0), FVector(720,675,0),
+        FVector(-420,1080,0), FVector(40,1060,0), FVector(500,1090,0), FVector(2050,-500,0)
+    };
+    SpawnCluster(
+        ProductionLampPostMesh,
+        TEXT("P1C01SettlementWarmLanternRhythm"),
+        1300,
+        7200,
+        MakeTransforms(SettlementLanterns, UE_ARRAY_COUNT(SettlementLanterns), 0.68f, 0.0f));
+
+    // Low shrubs soften the exposed mill-bank transition; native HISM keeps this cheap.
+    for (int32 Index = 0; Index < 22; ++Index)
+    {
+        const float Alpha = static_cast<float>(Index) / 21.0f;
+        const float X = FMath::Lerp(-1880.0f, -120.0f, Alpha);
+        const float Side = (Index % 2 == 0) ? -1.0f : 1.0f;
+        AddNative(
+            ShrubInstances,
+            FVector(X, 840.0f + Side * 95.0f, 3.0f),
+            FVector(0.20f + 0.018f * static_cast<float>(Index % 4)),
+            static_cast<float>((Index * 43) % 360));
+    }
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("P1C01_SHIRE_SETTLEMENT_FINAL_POLISH nativeHism=%d clusterActors=%d clusterInstances=%d repeatedBudget=98 clusterActorBudget=6 heroActors=0 movableLightsAdded=0 writer=ShirePrototypeWorldBuilder p1c02=no"),
+        NativeHismInstances,
+        ClusterActors,
+        ClusterInstances);
 }
 
 
@@ -5295,6 +5488,7 @@ void AShirePrototypeWorldBuilder::BuildPrototypeWorld()
     SpawnVisibleShireMegaWaveD();
     SpawnShireVisualFinishWave();
     SpawnShireSettlementCompletionPass();
+    SpawnShireSettlementFinalPolishPass();
     SpawnWorldDensityDetailPass();
     SpawnBagEndHeroPass();
     SpawnPartySocialLoopPass();

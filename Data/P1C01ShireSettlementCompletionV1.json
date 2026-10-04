@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "wave_id": "P1C01_SHIRE_SETTLEMENT_COMPLETION_V1",
-  "status": "SOURCE_IMPLEMENTED_EXACT_HEAD_VALIDATION_PENDING",
+  "status": "SOURCE_RECONCILED_EXACT_HEAD_VALIDATION_PENDING",
   "runtime_chapter": "P1C01",
   "runtime_writer": "AShirePrototypeWorldBuilder",
   "scope": {
@@ -41,7 +41,7 @@
     ]
   },
   "budget": {
-    "hism_instances": 306,
+    "hism_instances": 303,
     "cluster_instances": 71,
     "cluster_actors_max": 7,
     "limited_hero_actors": 16
@@ -68,7 +68,7 @@
     "ram_gb": 8,
     "vram_gb_approx": 2
   },
-  "evidence_boundary": "Source implementation only until exact-head Pre-Unreal + UE4 build complete. No PIE/device/rendered-visual/FPS acceptance.",
+  "evidence_boundary": "Reconciled source implementation only until exact-head Pre-Unreal + UE4 validation. No PIE/device/rendered-visual/FPS acceptance.",
   "anti_duplication": {
     "party_tree_owner": "SpawnVillage existing canonical anchor",
     "settlement_pass_action": "preserve existing Party Tree; add authored field entry gates and surrounding composition",
@@ -80,5 +80,18 @@
     "current_cluster_instances": 71,
     "current_cluster_actors_max": 7,
     "reason": "Party table family removed from settlement completion and Party-local lamp duplicates consolidated under SpawnPartySocialLoopPass."
+  },
+  "party_field_traversal": {
+    "boundary_component": "HedgeInstances",
+    "boundary_collision": "QueryAndPhysics",
+    "southwest_entry_gap_skipped_indices": [
+      6,
+      7,
+      8
+    ],
+    "gate_count": 2,
+    "gate_collision": false,
+    "collision_authority": "hedge ring + established route geometry",
+    "intent": "Visible gate/path aligns with a real collision opening; decorative gates cannot block the approach."
   }
 }

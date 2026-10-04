@@ -3387,3 +3387,38 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Interiors | OUT OF EXTERIOR CLOSEOUT |
 | PIE visual acceptance | NOT ACCEPTED |
 | Target-device 720p/30 FPS | NOT ACCEPTED |
+
+
+## 2026-10-04 - P1C01 Shire Settlement Final Polish
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Mill/Water working-bank reeds + shrubs | SOURCE-IMPLEMENTED | 44 native HISM |
+| Mill barrels/crates/benches | SOURCE-IMPLEMENTED | 22 clustered instances |
+| Bagshot domestic flower/wood detail | SOURCE-IMPLEMENTED | 20 clustered instances |
+| Settlement lamp-mesh rhythm | SOURCE-IMPLEMENTED | 12 clustered instances; zero movable lights |
+| Cluster actor budget | BOUNDED | <=6 |
+| Hero actor addition | NONE | 0 |
+| Sync heavy loading | NONE | existing resident meshes only |
+| Per-instance Tick | NONE | HISM / AWorldDetailCluster |
+| P1C02 | CLOSED | P1C01 only |
+| Exact-head CI | PENDING | validate after predecessor merge |
+| PIE/device/visual/FPS | NOT ACCEPTED | direct evidence required |
+
+## 2026-10-04 - P1C01 Shire exterior reconciled closeout
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Exterior-closeout lineage | RECONCILED | greybox/runtime repeated-detail cleanup retained |
+| Party Field hedge opening | SOURCE-FIXED | indices 6-8 omitted from collision-owning ring |
+| Party entry gate collision | DISABLED | decorative production gates cannot block traversal |
+| Settlement HISM | BOUNDED | 303 |
+| Settlement clustered detail | BOUNDED | 71 instances / max 7 actors |
+| Settlement limited hero actors | BOUNDED | 16 |
+| Final polish native HISM | BOUNDED | 44 |
+| Final polish clustered detail | BOUNDED | 54 / max 6 actors |
+| Final polish hero actors / movable lights | NONE | 0 / 0 |
+| Full Bywater / Green Dragon | NOT CLAIMED | outside current exterior closeout |
+| Bag End/hobbit interiors | CONTENT-PENDING | separate source/art/runtime packet required |
+| Exact-head Pre-Unreal / UE4 | PENDING | fresh candidate required |
+| PIE / target-device / visual / FPS | NOT ACCEPTED | direct human/device evidence required |

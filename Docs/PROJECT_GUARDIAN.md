@@ -714,3 +714,15 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 **Guard:** `Scripts/test_p1c01_hero_candidate_provenance_contract.ps1` requires intake provenance emission and exact-file fail-closed enforcement in the candidate wave.
 
 **Evidence boundary:** SOURCE-IMPLEMENTED until exact-head Pre-Unreal/Unreal validation and Warehouse candidate evidence succeed. This is not skeletal/deformation/visual/runtime acceptance.
+
+
+### PG-168 — Source-contract tests must stop at the intended function boundary
+**Symptom exposed by:** Pre-Unreal #1850 on settlement candidate `410a62da02115d81f89bb938561cd819f2d8fab0`.
+
+**Evidence:** the new settlement contract itself passed, while the older Bag End contract reported seven `SpawnDetailCluster` calls instead of its locked three. Bag End source had not gained four clusters; the test sliced from `SpawnBagEndHeroPass()` to a distant later function and accidentally included the newly inserted settlement function.
+
+**Permanent rule:** a source-contract test validating one C++ function must stop at that function's immediate structural boundary. It may not use a distant unrelated function as an end marker when legal new functions can be inserted between them.
+
+**Guard:** the Bag End source-contract slice now ends at the immediate next builder function and retains the original exact three-cluster assertion.
+
+**Static follow-up evidence:** Pre-Unreal #1853 passed the corrected structural source contracts on exact candidate `be04e90053d997eee6085d8adc9b07d3e87baaf0`. This is static regression evidence only; it is not PIE/device/visual acceptance.
