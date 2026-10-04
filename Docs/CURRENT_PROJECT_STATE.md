@@ -4229,3 +4229,5 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Added `Scripts/ci_capture_p1c01_visuals.cmd` to reuse the existing production importer, launch `/Engine/Maps/Entry` under UE4.27.2 / DX11 / 1280x720, and request six bounded screenshots covering Bag End/Hill, Hobbiton Common, Party Field, Water/Mill/Bridge, the Bywater-facing edge and Bucklebury Ferry.
 - The lane is evidence tooling only. Until an exact-head self-hosted run succeeds and the generated images are reviewed, the truthful status remains **STATIC-VALIDATED / VISUAL-EVIDENCE-PENDING**.
 - No PIE, device, visual, pacing or performance acceptance is claimed. P1C02 remains predecessor-gated.
+
+- Capture-lane hardening: screenshot discovery now scans the UE4 Saved/Screenshots tree recursively so Windows/WindowsEditor output differences do not create false failures; each bounded capture terminates the UE4Editor process it launched before the next view.
