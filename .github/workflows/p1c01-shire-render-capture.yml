@@ -27,7 +27,7 @@ on:
 
 concurrency:
   group: p1c01-shire-render-capture
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   capture:
