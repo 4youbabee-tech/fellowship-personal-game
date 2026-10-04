@@ -4286,3 +4286,6 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - A second causal defect was the visible chapter floor: one `SM_ShGroundBlock` with 0..1 UVs had been scaled to roughly **34,000 x 13,000 cm**, stretching one grass texture across most of the playable landscape. It is now represented by `GroundTileInstances`, a **34 x 13 = 442 instance HISM grid** at 1000 cm per tile. The existing hidden cube remains the only broad collision foundation; there is no actor-per-tile wave and no additional texture memory.
 - Garden soil is now explicitly Earth-material HISM rather than inheriting the Grass material from `SM_ShGroundBlock`.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD REVALIDATION PENDING / PRIOR RENDER STILL REJECTED**. A fresh render must demonstrate whether this repair materially improves the world before any visual-acceptance label is allowed.
+
+
+- Render-capture runner utilization root-fix: the P1C01 capture workflow now uses `cancel-in-progress: true` for its single capture concurrency group. A newer exact head invalidates an older capture result anyway, so stale capture builds must release the supervised UE4 runner instead of delaying the current chapter head. This policy is intentionally different from Branch Cleanup, where closed-PR events must remain serialized and non-cancelling.
