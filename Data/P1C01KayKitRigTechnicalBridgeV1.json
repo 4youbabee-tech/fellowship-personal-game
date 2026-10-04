@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "packet_id": "P1C01_KAYKIT_RIG_TECHNICAL_BRIDGE_V1",
+  "status": "KAYKIT_DIRECT_RAW_RIG_FAMILY_TECHNICALLY_REJECTED_RECORDED",
+  "runtime_chapter": "P1C01",
+  "target_character": "FRODO",
+  "role": "TECHNICAL_RIG_DEFORMATION_BRIDGE_NOT_FINAL_LIKENESS",
+  "source": {
+    "provider": "KAYKIT",
+    "publisher": "Kay Lousberg",
+    "repository": "KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0",
+    "source_page": "https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0",
+    "archive_url": "https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0",
+    "license_url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/main/LICENSE.txt",
+    "license": "CC0-1.0",
+    "required_final_format": "FBX",
+    "texture_formats": [
+      "PNG",
+      "TGA"
+    ],
+    "project_authority": "Data/WarehouseKayKitGitHubAcquisitionBatchV1.json",
+    "delivery_mode": "DIRECT_OFFICIAL_RAW_FBX",
+    "export_archive_note": "Repository .gitattributes marks Characters/fbx and Assets/fbx export-ignore; GitHub source ZIP intentionally omits FBX payloads.",
+    "direct_candidates": [
+      {
+        "filename": "Rogue.fbx",
+        "repository_path": "addons/kaykit_character_pack_adventures/Characters/fbx/Rogue.fbx",
+        "url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/main/addons/kaykit_character_pack_adventures/Characters/fbx/Rogue.fbx",
+        "texture_url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/main/addons/kaykit_character_pack_adventures/Characters/fbx/rogue_texture.png"
+      },
+      {
+        "filename": "RogueHooded.fbx",
+        "repository_path": "addons/kaykit_character_pack_adventures/Characters/fbx/RogueHooded.fbx",
+        "url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/main/addons/kaykit_character_pack_adventures/Characters/fbx/RogueHooded.fbx",
+        "texture_url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/main/addons/kaykit_character_pack_adventures/Characters/fbx/rogue_texture.png"
+      }
+    ]
+  },
+  "verified_source_properties": {
+    "fully_rigged_animated_characters": 4,
+    "animations": 75,
+    "low_poly_optimized": true,
+    "mobile_suitable": true,
+    "atlas_texture": "1024x1024 single gradient atlas; source README states it can be downsampled to 128x128",
+    "fbx_available": true
+  },
+  "candidate_policy": {
+    "maximum_ue4_candidates": 2,
+    "fbx_version_ceiling": 7500,
+    "preferred_entries": [
+      "Rogue.fbx",
+      "RogueHooded.fbx"
+    ],
+    "max_single_fbx_bytes": 33554432,
+    "final_likeness": false,
+    "source_delivery": "DIRECT_RAW_OFFICIAL_GITHUB_FILES_ONLY",
+    "known_rejections_excluded_from_ue4_requeue": true
+  },
+  "technical_gate": [
+    "exact archive and payload SHA256",
+    "FBX version <= 7500",
+    "Geometry + Model + LimbNode + Skin + Cluster",
+    "real UE4.27 skeletal registration",
+    "reference bones > 0",
+    "no missing smoothing groups",
+    "no invalid bind pose",
+    "no missing bind-pose bones",
+    "no missing UV set",
+    "generated skeletal mesh + skeleton assets exist"
+  ],
+  "next_if_pass": [
+    "deformation/reference-pose/limb/hands-feet/root-scale hierarchy review",
+    "embedded animation coverage inspection",
+    "Idle/Walk/Run locomotion proof",
+    "AnimBP prototype only after deformation pass",
+    "async runtime promotion only after all gates"
+  ],
+  "runtime_contract": {
+    "modular_frodo_fallback": true,
+    "heavy_refs": "TSoftObjectPtr/TSoftClassPtr/FSoftObjectPath",
+    "loading": "FStreamableManager asynchronous",
+    "synchronous_heavy_load": false
+  },
+  "evidence_boundary": "Technical rig bridge only. No final Frodo likeness, runtime, PIE, device, rendered visual or FPS acceptance.",
+  "latest_source_correction": {
+    "evidence": ".gitattributes export-ignore excludes Characters/fbx from GitHub source archives",
+    "action": "download exact official raw FBX files directly from raw.githubusercontent.com",
+    "asset_disposition": "ROGUE_AND_ROGUE_HOODED_TECHNICALLY_REJECTED_DO_NOT_REQUEUE"
+  },
+  "known_technical_rejections": [
+    {
+      "filename": "Rogue.fbx",
+      "sha256": "93a9ee0a67ae69b2d815050234acad2004c3b8af7d294b916e52609c8195eb71",
+      "ue4_reference_bones": 48,
+      "reasons": [
+        "MISSING_BIND_POSE_BONES",
+        "MISSING_SMOOTHING_GROUPS"
+      ],
+      "evidence": "P1C01 KayKit Rig Technical Bridge #13",
+      "exact_head": "30b0392aa9abe5223d6adfe0958c93cd9cf28631",
+      "disposition": "REJECTED_TECHNICAL_DO_NOT_REQUEUE"
+    },
+    {
+      "filename": "RogueHooded.fbx",
+      "sha256": "4a773f074695c6c089cc6f059eed85da080928a4a4137af4e38b177139d4cc27",
+      "ue4_reference_bones": 48,
+      "reasons": [
+        "MISSING_BIND_POSE_BONES",
+        "MISSING_SMOOTHING_GROUPS"
+      ],
+      "evidence": "P1C01 KayKit Rig Technical Bridge #13",
+      "exact_head": "30b0392aa9abe5223d6adfe0958c93cd9cf28631",
+      "disposition": "REJECTED_TECHNICAL_DO_NOT_REQUEUE"
+    }
+  ],
+  "latest_exact_evidence": {
+    "exact_head": "30b0392aa9abe5223d6adfe0958c93cd9cf28631",
+    "pre_unreal_run": 1836,
+    "pre_unreal_result": "SUCCESS",
+    "unreal_build_run": 1433,
+    "unreal_build_result": "SUCCESS",
+    "bridge_run": 13,
+    "hosted_static_result": "SUCCESS",
+    "ue4_candidate_result": "BOTH_REJECTED_TECHNICAL",
+    "tooling_defect": "UE4 receipt writer referenced archive_sha256 although direct-raw schema has no archive_sha256",
+    "runtime_integration_allowed": false
+  }
+}

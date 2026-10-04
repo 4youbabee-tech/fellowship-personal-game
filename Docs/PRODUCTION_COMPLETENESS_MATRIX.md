@@ -3105,3 +3105,76 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Warm glass / knob / chimney-step accents | RETAINED BOUNDED | non-structural presentation accents |
 | UE4.27 static import/build | PENDING EXACT-HEAD | PR validation required |
 | PIE/device/rendered visual/FPS | NOT ACCEPTED | direct evidence required |
+
+## 2026-10-04 - KayKit rig technical bridge
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Ledger registration before code | COMPLETE | P1C01 KAYKIT_RIG_TECHNICAL_BRIDGE |
+| Source | AUTHORIZED | KayKit official GitHub, CC0 |
+| Final Frodo likeness | NOT CLAIMED | technical bridge only |
+| Candidate budget | LOCKED | max 2 UE4 probes |
+| Hosted direct-source/license/hash gate | SOURCE-IMPLEMENTED | exact GitHub URLs + CC0 + SHA256 |
+| ZIP/path/size safety | SOURCE-IMPLEMENTED | bounded extraction |
+| FBX static rig markers | SOURCE-IMPLEMENTED | version/Geometry/Model/LimbNode/Skin/Cluster/animation |
+| UE4 skeletal hard gate | SOURCE-IMPLEMENTED | registration/bones/assets + smoothing/bind/UV rejects |
+| Runtime hard reference | NONE ADDED | modular Frodo fallback preserved |
+| Sync heavy runtime load | NONE ADDED | later integration remains soft/async |
+| Deformation / locomotion / AnimBP | BLOCKED | clean technical winner required |
+| Exact-head Pre-Unreal / UE4 | PENDING | PR validation required |
+| PIE/device/rendered visual/FPS | NOT ACCEPTED | direct evidence required |
+
+| KayKit bridge source-contract regression guard | SOURCE-IMPLEMENTED | `test_source_contracts.py`; locks CC0/direct-source, max-two budget, hard rejection reasons and non-runtime boundary |
+
+## 2026-10-04 - KayKit hosted path-filter correction
+
+| Check | Status | Evidence boundary |
+|---|---|---|
+| Official KayKit archive download | REACHED | run #1 progressed to archive scan |
+| Preferred FBX discovery | TOOLING-FAILED BEFORE CANDIDATE QC | path selector returned zero |
+| Root-cause correction | SOURCE-IMPLEMENTED | lowercase normalized archive path + explicit leaf split |
+| KayKit asset technical disposition | UNCHANGED / UNTESTED | no FBX was judged by run #1 |
+| Exact-head hosted/UE4 rerun | PENDING | corrected head required |
+
+## 2026-10-04 - KayKit character discovery hardening
+
+| Check | Status | Evidence boundary |
+|---|---|---|
+| KayKit rerun #4 candidate judgment | NOT REACHED | discovery failed before FBX static QC |
+| Character FBX discovery | SOURCE-HARDENED | all `/Characters/*.fbx` first, ranking second |
+| Preferred candidate order | PRESERVED | Rogue -> RogueHooded -> Mage -> Barbarian -> Knight |
+| Fallback ranking | BOUNDED | smallest static-pass character FBX only |
+| UE4 probe cap | UNCHANGED | max 2 |
+| Exact-head rerun | PENDING | corrected head required |
+
+## 2026-10-04 - KayKit direct raw FBX source correction
+
+| Check | Status | Evidence boundary |
+|---|---|---|
+| GitHub source ZIP FBX availability | PROVEN ABSENT | repository `.gitattributes` export-ignore for FBX directories |
+| Root cause | PROVEN | hosted run #8 + official `.gitattributes` |
+| Source delivery | SOURCE-CORRECTED | exact official raw `Rogue.fbx` + `RogueHooded.fbx` |
+| License snapshot | REQUIRED | official raw CC0 LICENSE.txt |
+| Raw source allowlist | SOURCE-IMPLEMENTED | exact KayKit repository prefix only |
+| Candidate format | FBX ONLY | max 2 |
+| Exact payload SHA256/static QC | PENDING RERUN | hosted gate |
+| UE4 technical gate | PENDING | no candidate judgment yet |
+| Deformation / runtime / PIE / device / visual / FPS | BLOCKED / NOT ACCEPTED | technical winner required first |
+
+## 2026-10-04 - KayKit exact technical result / runner anti-churn
+
+| Check | Status | Evidence boundary |
+|---|---|---|
+| Prior exact head | COMPILE-TESTED | `30b0392aa9abe5223d6adfe0958c93cd9cf28631`; Pre-Unreal #1836 SUCCESS + Unreal Build #1433 SUCCESS |
+| Rogue raw FBX | REJECTED TECHNICAL | 48 bones; MISSING_BIND_POSE_BONES + MISSING_SMOOTHING_GROUPS |
+| RogueHooded raw FBX | REJECTED TECHNICAL | 48 bones; MISSING_BIND_POSE_BONES + MISSING_SMOOTHING_GROUPS |
+| Same exact payload retry | FORBIDDEN / AUTOMATICALLY EXCLUDED | known SHA256 registry |
+| Direct-raw receipt schema bug | SOURCE-FIXED | obsolete `archive_sha256` reference removed |
+| Known-rejection-only hosted result | SOURCE-IMPLEMENTED | controlled `STATIC_BRIDGE_EXHAUSTED_KNOWN_REJECTIONS` |
+| Self-hosted UE4 reservation on zero new candidates | SOURCE-BLOCKED | job-level selected_count gate |
+| Modular Frodo fallback | PRESERVED | no failed candidate runtime promotion |
+| Deformation / AnimBP | BLOCKED | no clean technical candidate |
+| New exact-head Pre-Unreal | PENDING | anti-churn packet revalidation |
+| New exact-head Unreal build | PENDING ONLY IF CI CLASSIFIER REQUIRES | no runtime C++/asset change in this packet |
+| PIE/device/rendered visual/FPS | NOT ACCEPTED | no matching evidence |
+| KayKit anti-churn source-contract import error | TOOLING-FIXED / REVALIDATION PENDING | #1837 IndentationError only; existing class method declaration indentation restored |

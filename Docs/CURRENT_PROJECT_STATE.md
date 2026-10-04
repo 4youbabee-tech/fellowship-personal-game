@@ -4049,3 +4049,58 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - The OBJ source now places each `usemtl` switch before its exact non-overlapping face range: 12 Earth faces, 48 Wood door-frame faces, 48 DoorGreen door faces, 96 Wood window-frame faces and 24 Stone sill faces.
 - `SpawnHobbitHole()` no longer overlays duplicate primitive door/frame/window-frame/sill geometry when the production mound+facade are resident. Those structures remain deterministic fallback-only. Small warm-glass inserts, knob, chimney/step and planted-entry accents remain because the facade source does not provide those presentation details.
 - This is a static-world asset/source correction only; no animated OBJ use was introduced. Exact-head hosted + UE4 import/build validation is still required before merge, and no rendered visual acceptance is claimed.
+
+## 2026-10-04 - P1C01 KayKit rig technical bridge source implementation
+
+- Registered a bounded technical bridge using the existing authorized CC0 KayKit Adventures GitHub source. This is pipeline evidence only, not final Frodo likeness.
+- Added `P1C01KayKitRigTechnicalBridgeV1.json` with max-two candidate policy, exact direct GitHub archive/license URLs, FBX/PNG-only intake boundaries, unchanged UE4 bind/UV/smoothing/skeletal hard gates, and modular Frodo fallback.
+- Added hosted staging/static-QC script `stage_p1c01_kaykit_rig_bridge.ps1`: downloads only the exact official archive/license, enforces archive and per-FBX byte caps, validates CC0 marker, rejects unsafe ZIP paths, records archive/license/payload SHA256, inspects FBX version + Geometry/Model/LimbNode/Skin/Cluster/animation markers, and selects at most two preferred candidates.
+- Added `run_p1c01_kaykit_rig_bridge_ue4.ps1`: imports selected FBX payloads one at a time through the existing production importer, requires real skeletal registration/reference bones/generated mesh+skeleton, and rejects missing smoothing groups, invalid/missing bind pose, or missing UVs.
+- Added exact-head workflow `p1c01-kaykit-rig-bridge.yml`: hosted source/static gate first, then one self-hosted UE4.27 editor build and serial candidate probes, with artifacts and transient cleanup.
+- Runtime integration remains blocked. No deformation, AnimBP, PIE/device/rendered-visual/FPS acceptance is claimed.
+- Status: **SOURCE-IMPLEMENTED / STATIC-VALIDATION + EXACT-HEAD UE4 PENDING**.
+
+## 2026-10-04 - KayKit rig bridge hosted source-contract guard
+
+- `test_source_contracts.py` now locks the KayKit bridge to P1C01, CC0/direct official GitHub URLs, FBX-only animated-character intake, max-two UE4 probes, modular Frodo fallback, no synchronous heavy runtime loading and no final-likeness claim.
+- The guard also requires ZIP path/license/hash checks in hosted staging, all UE4 skeletal rejection tokens, exact-head workflow dependency ordering and artifact capture.
+- Status remains **SOURCE-IMPLEMENTED / HOSTED + UE4 EXACT-HEAD VALIDATION PENDING**.
+
+## 2026-10-04 - KayKit hosted ZIP path-filter root-cause correction
+
+- KayKit Rig Technical Bridge run #1 failed before any FBX static/UE4 candidate judgment. The official archive downloaded, but the hosted ZIP selector returned `KAYKIT_RIG_NO_PREFERRED_FBX`.
+- Root cause was path-leaf matching in the hosted staging script after path normalization. The selector now normalizes the full archive path to lowercase, splits the leaf explicitly on `/`, and matches only `*/characters/fbx/*` against the bounded preferred filename list.
+- No KayKit FBX payload was rejected by run #1. Exact-head hosted/static + UE4 validation must rerun on the corrected head.
+- Status remains **SOURCE-IMPLEMENTED / VALIDATION PENDING**; no deformation/runtime/PIE/device/visual/FPS acceptance is claimed.
+
+## 2026-10-04 - KayKit hosted FBX discovery hardening
+
+- KayKit bridge rerun #4 still failed before candidate QC with zero preferred FBX entries. No asset was judged.
+- Hosted discovery is now decoupled from candidate ranking: the script first discovers every `.fbx` under any archive `/Characters/` path, then assigns preferred-name priority and falls back to the smallest static-pass character FBX only if a preferred name is absent.
+- If character discovery is still empty, the script now emits up to 20 archive FBX paths before failing so the next root cause is evidence-based rather than inferred.
+- Max-two UE4 probe budget and all technical rejection gates remain unchanged.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD RERUN PENDING**. No KayKit technical pass or runtime acceptance is claimed.
+
+## 2026-10-04 - KayKit source-delivery root cause and direct-FBX correction
+
+- Hosted bridge run #8 proved the official GitHub source ZIP contains no FBX entries. Repository `.gitattributes` is the direct cause: `Characters/fbx` and `Assets/fbx` are explicitly marked `export-ignore`, so GitHub source archives intentionally omit those folders.
+- The bridge no longer depends on the source ZIP. It now downloads only two exact official raw FBX payloads from `raw.githubusercontent.com`: `Rogue.fbx` and `RogueHooded.fbx`, plus the exact official CC0 license snapshot.
+- Hosted intake remains fail-closed: official raw-prefix allowlist, FBX-only candidate names, per-file byte cap, CC0 license marker, SHA256, FBX version and Geometry/Model/LimbNode/Skin/Cluster/animation static markers.
+- The max-two UE4 probe budget and all real UE4 bind/UV/smoothing/skeletal gates are unchanged. Neither KayKit candidate has yet been judged by UE4.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD HOSTED+UE4 REVALIDATION PENDING**. No deformation/runtime/PIE/device/rendered-visual/FPS acceptance is claimed.
+
+## 2026-10-04 - KayKit bridge exact rejection + anti-churn closeout packet
+
+- Exact head `30b0392aa9abe5223d6adfe0958c93cd9cf28631` is **COMPILE-TESTED** by Pre-Unreal #1836 SUCCESS and Unreal Build #1433 SUCCESS.
+- KayKit Rig Technical Bridge #13 completed hosted source/static staging and then produced real UE4.27 skeletal evidence for both bounded candidates: `Rogue.fbx` SHA256 `93a9ee0a67ae69b2d815050234acad2004c3b8af7d294b916e52609c8195eb71` -> 48 reference bones, REJECTED for MISSING_BIND_POSE_BONES + MISSING_SMOOTHING_GROUPS; `RogueHooded.fbx` SHA256 `4a773f074695c6c089cc6f059eed85da080928a4a4137af4e38b177139d4cc27` -> 48 reference bones, same rejection.
+- The red workflow also exposed a secondary receipt-writer defect: direct-raw schema V2 has no `archive_sha256`, but the UE4 receipt writer still referenced that old archive field after candidate evaluation. This did not cause either candidate rejection.
+- Anti-churn fix: both exact rejected hashes are now durable known rejections; hosted staging excludes them from `selected_candidates`. If the bounded source family contains only known rejected hashes, the hosted job records `STATIC_BRIDGE_EXHAUSTED_KNOWN_REJECTIONS` and the self-hosted UE4 job is skipped entirely.
+- UE4 receipt generation now records direct-raw `delivery_mode`, `license_sha256`, and exact source payload hashes instead of the obsolete archive field.
+- Modular Frodo remains the runtime fallback. No deformation, AnimBP, runtime promotion, PIE, device, rendered-visual or FPS acceptance is claimed.
+- New anti-churn packet status: **SOURCE-IMPLEMENTED / EXACT-HEAD REVALIDATION PENDING**.
+## 2026-10-04 - KayKit anti-churn regression-test indentation correction
+
+- Pre-Unreal #1837 failed only while importing `test_source_contracts.py`: the earlier `test_p1c01_kaykit_rig_bridge_is_bounded_and_non_runtime` declaration was at module indentation while its body used class-method indentation; the newly added anti-churn method then exposed the mismatch.
+- Root correction is limited to restoring that existing KayKit test declaration to the `SourceContractTests` class. No runtime, asset, workflow policy or technical gate behavior changed.
+- Prior exact candidate evidence remains authoritative: Rogue and RogueHooded are both UE4.27 technical rejects with 48 bones and missing bind-pose/smoothing-group failures.
+- Status: **TOOLING-FIXED / FRESH EXACT-HEAD PRE-UNREAL PENDING**. No PIE/device/visual/FPS acceptance.
