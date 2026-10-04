@@ -270,7 +270,7 @@ class SourceContractTests(unittest.TestCase):
 
         source = (root / "Source" / "ShireJourney" / "Private" / "World" / "ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
         start = source.index("void AShirePrototypeWorldBuilder::SpawnBagEndHeroPass()")
-        end = source.index("void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()", start)
+        end = source.index("void AShirePrototypeWorldBuilder::SpawnVisibleShireMegaPass()", start)
         body = source[start:end]
         self.assertEqual(body.count("SpawnDetailCluster("), 3)
         self.assertIn("BAG_END_HERO_PASS", body)
