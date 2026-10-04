@@ -4320,3 +4320,13 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - A-I closeout lanes remain internal workstreams inside these two mega waves and must not become branch-per-lane churn.
 - P1C02 Bree remains runtime-locked until P1C01 Gate 6/7 is accepted.
 - Evidence boundary: planning/production structure only; no PIE/device/visual/performance acceptance is implied.
+
+
+## 2026-10-04 - Continuous chapter train policy
+
+- Owner command model: when the owner explicitly says to start a chapter, the Lead Game Architect continues that chapter through its registered production waves without requiring approval for routine technical decisions.
+- Execution is large coherent packet -> exact-head validation -> root-cause repair if needed -> rerun failed gate -> continue, rather than owner-by-owner prompting or micro-branch churn.
+- Routine progress is reported through the daily owner report / Slack instead of requiring continuous supervision.
+- The train may autonomously reach READY_FOR_HUMAN_DEVICE_ACCEPTANCE, but Gate 6/7 cannot be claimed until chapter-specific human visual/pacing and target-device evidence exist.
+- The next runtime chapter does not auto-open; after predecessor Gate 6/7 acceptance, wait for the owner's explicit start-next-chapter command.
+- P1C01 remains the active train; continue MW5 then MW6. P1C02 remains locked.
