@@ -4276,3 +4276,13 @@ Implemented on the single P1C01 closeout branch rather than opening additional s
 - Branch retirement plan from the maintenance lane is integrated so obsolete P1C01 refs can be deleted after their supersession is recorded.
 
 Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED VISUAL REVIEW REJECTED**. No PIE/device/performance/Gate 6/7 acceptance is claimed.
+
+
+### 2026-10-04 - Shire grey/flat render root-cause repair implemented
+
+- The prior six-shot artifact was not treated as a request for another blind density wave. Import logs prove the asset pipeline itself completed cleanly: **376 source files / 0 failures**, **161/161 albedo bindings**, and **229 tracked material packages / 0 missing**.
+- Source inspection isolated a Shire presentation mismatch: the repeated terrain/woodland HISM layer uses shared Common meshes whose `Turf/Foliage/RiverMud/Bark` materials are flat-color and whose source OBJ files contain no authored UVs. The same Common bank is shared by other chapters, so it is intentionally **not** modified globally.
+- P1C01 now applies component-level overrides from already-resident texture-backed Shire materials through `ResolveResidentMaterial`: Grass for hills/slopes/ground, Earth for river banks/garden soil, Bark+Leaves for repeated broadleaf woodland/ferns, Leaves for reeds, and Wood for village fence HISM. No synchronous load was added.
+- A second causal defect was the visible chapter floor: one `SM_ShGroundBlock` with 0..1 UVs had been scaled to roughly **34,000 x 13,000 cm**, stretching one grass texture across most of the playable landscape. It is now represented by `GroundTileInstances`, a **34 x 13 = 442 instance HISM grid** at 1000 cm per tile. The existing hidden cube remains the only broad collision foundation; there is no actor-per-tile wave and no additional texture memory.
+- Garden soil is now explicitly Earth-material HISM rather than inheriting the Grass material from `SM_ShGroundBlock`.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD REVALIDATION PENDING / PRIOR RENDER STILL REJECTED**. A fresh render must demonstrate whether this repair materially improves the world before any visual-acceptance label is allowed.
