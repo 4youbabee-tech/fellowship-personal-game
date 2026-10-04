@@ -117,17 +117,43 @@ jobs:
         run: |
           & "$env:GITHUB_WORKSPACE\Scripts\run_p1c01_human_wave2_ue4.ps1" -HostedReceiptPath "$env:RUNNER_TEMP\shire-human-wave2\p1c01_human_wave2_hosted.json" -ArtifactRoot "$env:RUNNER_TEMP\shire-human-wave2" -OutputRoot "$env:RUNNER_TEMP\shire-human-wave2-ue4"
 
+      - name: Stage stable UE4 evidence contract
+        if: always()
+        shell: powershell
+        run: |
+          $stage = Join-Path $env:RUNNER_TEMP "shire-human-wave2-ue4-artifact"
+          Remove-Item -LiteralPath $stage -Recurse -Force -ErrorAction SilentlyContinue
+          New-Item -ItemType Directory -Path $stage -Force | Out-Null
+
+          $receipt = Join-Path $env:RUNNER_TEMP "shire-human-wave2-ue4\p1c01_human_wave2_ue4.json"
+          if (-not (Test-Path -LiteralPath $receipt -PathType Leaf)) {
+            throw "HUMAN_WAVE2_ARTIFACT_CONTRACT_FAIL missing=$receipt"
+          }
+          Copy-Item -LiteralPath $receipt -Destination (Join-Path $stage "p1c01_human_wave2_ue4.json") -Force
+
+          $hosted = Join-Path $env:RUNNER_TEMP "shire-human-wave2\p1c01_human_wave2_hosted.json"
+          if (Test-Path -LiteralPath $hosted -PathType Leaf) {
+            Copy-Item -LiteralPath $hosted -Destination (Join-Path $stage "p1c01_human_wave2_hosted.json") -Force
+          }
+
+          $readinessOut = Join-Path $stage "readiness"
+          New-Item -ItemType Directory -Path $readinessOut -Force | Out-Null
+          Get-ChildItem -LiteralPath (Join-Path $env:RUNNER_TEMP "shire-human-wave2\normalized") -Filter "*_readiness.json" -File -ErrorAction SilentlyContinue |
+            Copy-Item -Destination $readinessOut -Force
+
+          $log = Join-Path $env:GITHUB_WORKSPACE "Saved\Logs\CI-ProductionAssetImport.log"
+          if (Test-Path -LiteralPath $log -PathType Leaf) {
+            Copy-Item -LiteralPath $log -Destination (Join-Path $stage "CI-ProductionAssetImport.log") -Force
+          }
+          Write-Host "HUMAN_WAVE2_ARTIFACT_CONTRACT_PASS stage=$stage"
+
       - name: Upload UE4 technical/deformation-readiness evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: p1c01-human-wave2-ue4-${{ env.TARGET_SHA }}
-          path: |
-            ${{ runner.temp }}\shire-human-wave2\p1c01_human_wave2_hosted.json
-            ${{ runner.temp }}\shire-human-wave2\normalized\*_readiness.json
-            ${{ runner.temp }}\shire-human-wave2-ue4\p1c01_human_wave2_ue4.json
-            ${{ github.workspace }}\Saved\Logs\CI-ProductionAssetImport.log
-          if-no-files-found: warn
+          path: ${{ runner.temp }}\shire-human-wave2-ue4-artifact
+          if-no-files-found: error
           retention-days: 14
 
       - name: Cleanup transient character assets
@@ -194,8 +220,26 @@ jobs:
       - name: Stress shoulders elbows knees hands and feet on UE4 winner
         shell: bash
         run: |
+          set -euo pipefail
           mkdir -p "$RUNNER_TEMP/shire-human-wave3/deformation"
-          blender --background --factory-startup             --python "$GITHUB_WORKSPACE/Scripts/run_p1c01_human_wave3_deformation.py" --             --hosted-receipt "$RUNNER_TEMP/shire-human-wave3/hosted/p1c01_human_wave2_hosted.json"             --ue4-receipt "$RUNNER_TEMP/shire-human-wave3/ue4/p1c01_human_wave2_ue4.json"             --artifact-root "$RUNNER_TEMP/shire-human-wave3/hosted"             --output "$RUNNER_TEMP/shire-human-wave3/deformation/p1c01_human_wave3_deformation.json"
+          test -s "$RUNNER_TEMP/shire-human-wave3/ue4/p1c01_human_wave2_ue4.json"
+          test -s "$RUNNER_TEMP/shire-human-wave3/hosted/p1c01_human_wave2_hosted.json"
+          blender --background --factory-startup --python-exit-code 17 \
+            --python "$GITHUB_WORKSPACE/Scripts/run_p1c01_human_wave3_deformation.py" -- \
+            --hosted-receipt "$RUNNER_TEMP/shire-human-wave3/hosted/p1c01_human_wave2_hosted.json" \
+            --ue4-receipt "$RUNNER_TEMP/shire-human-wave3/ue4/p1c01_human_wave2_ue4.json" \
+            --artifact-root "$RUNNER_TEMP/shire-human-wave3/hosted" \
+            --output "$RUNNER_TEMP/shire-human-wave3/deformation/p1c01_human_wave3_deformation.json"
+          test -s "$RUNNER_TEMP/shire-human-wave3/deformation/p1c01_human_wave3_deformation.json"
+          python3 - <<'PY'
+          import json, os, sys
+          path=os.path.join(os.environ["RUNNER_TEMP"],"shire-human-wave3","deformation","p1c01_human_wave3_deformation.json")
+          with open(path,"r",encoding="utf-8") as f:
+              receipt=json.load(f)
+          if receipt.get("status") != "STATIC_DEFORMATION_STRESS_PASS":
+              raise SystemExit("HUMAN_WAVE3_DEFORMATION_CONTRACT_FAIL status="+str(receipt.get("status")))
+          print("HUMAN_WAVE3_DEFORMATION_CONTRACT_PASS status="+receipt["status"])
+          PY
 
       - name: Upload deformation-stress evidence
         if: always()
