@@ -4200,3 +4200,12 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Canon guard: Green Dragon remains a Bywater landmark; legacy discovery ID remains only for save compatibility with corrected visible copy.
 - Added `Data/P1C01ShireSettlementCanonFinishBV1.json` and source-contract regression coverage.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. No PIE/device/human visual/FPS acceptance is claimed.
+
+
+### Selective salvage from closed PR #315
+
+- Closed unmerged PR #315 / head `be04e90053d997eee6085d8adc9b07d3e87baaf0` was inspected before disposition because its UE4 workflow was still occupying the self-hosted runner.
+- Three unique visual reads were retained in Canon Finish B: Party Field hedge/grass boundary shell, Water/mill reeds + stepping-stone edge, and three bounded cottages on the Bywater-facing edge.
+- Duplicate Bagshot Row homes, clutter, orchard/farm density, lamps/signs/mail/wash-line content were **not** reintroduced because #314/B already provide stronger or safer equivalents.
+- Updated Canon Finish B maximum budget: 96 native HISM placements, 45 clustered instances, maximum 4 persistent landmark actors, 8 party-state actors; maximum visual budget 153.
+- Status remains **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD VALIDATION REQUIRED** after this justified orphan-salvage head change.

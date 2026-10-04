@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "wave_id": "P1C01_SHIRE_SETTLEMENT_CANON_FINISH_B_V1",
-  "status": "SOURCE_IMPLEMENTED_EXACT_HEAD_VALIDATION_PENDING",
+  "status": "SOURCE_IMPLEMENTED_WITH_SELECTIVE_ORPHAN_SALVAGE_EXACT_HEAD_VALIDATION_PENDING",
   "runtime_chapter": "P1C01",
   "runtime_writer": "AShirePrototypeWorldBuilder",
   "predecessor": {
@@ -30,12 +30,12 @@
     "locked_story_outcomes_changed": false
   },
   "visible_budget": {
-    "native_hism_instances": 10,
+    "native_hism_budget": 96,
     "detail_cluster_instances": 45,
     "maximum_detail_cluster_actors": 11,
-    "persistent_landmark_actors": 1,
+    "persistent_landmark_budget": 4,
     "party_state_actors": 8,
-    "target_visual_instances": 64
+    "target_visual_budget": 153
   },
   "architecture_contract": {
     "new_world_authority": false,
@@ -48,5 +48,22 @@
     "npc_context_owner": "UShireNPCContextSubsystem",
     "quest_owner": "UShireQuestSubsystem"
   },
-  "evidence_boundary": "Source implementation only until fresh exact-head validation. No PIE/device/human visual/FPS acceptance."
+  "evidence_boundary": "Source implementation only until fresh exact-head validation. No PIE/device/human visual/FPS acceptance.",
+  "selective_orphan_salvage": {
+    "source_pr": 315,
+    "source_head": "be04e90053d997eee6085d8adc9b07d3e87baaf0",
+    "disposition": "SELECTIVE_SALVAGE_ONLY",
+    "retained": [
+      "Party Field hedge/grass boundary shell with entrance opening",
+      "Water/mill reeds and stepping-stone edge treatment",
+      "three bounded Bywater-facing cottages"
+    ],
+    "superseded_not_retained": [
+      "duplicate Bagshot Row home wave",
+      "duplicate household clutter",
+      "duplicate orchard/farm density",
+      "duplicate lamps/signs/mail/wash-line detail"
+    ],
+    "reason": "Retain unique readable settlement composition while avoiding duplicate density and actor budget growth."
+  }
 }

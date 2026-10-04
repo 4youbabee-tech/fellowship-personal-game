@@ -1236,3 +1236,11 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Performance budget: 10 HISM placements + 45 WorldDetailCluster instances + 1 persistent landmark actor + 8 story-state party actors = 64 new visual instances. Clusters are no-collision/zero-Tick and use resident production meshes only.
 - Existing quest/NPC anchors are not moved. Party props reuse the setup/celebration state arrays.
 - Evidence boundary: REGISTERED / SOURCE-GROUNDED PLAN. No PIE/device/rendered-visual/FPS acceptance.
+
+
+### 2026-10-04 - PR #315 selective salvage disposition
+
+- Closed unmerged head `be04e90053d997eee6085d8adc9b07d3e87baaf0` was reviewed before disposal.
+- Retained only unique source-grounded reads: Party Field boundary shell, Water/mill edge reeds + stepping stones, and three Bywater-facing cottages.
+- Rejected duplicate density from that branch where #314/B already owns the same visual role.
+- This is a bounded salvage into the active Canon Finish B authority, not a second settlement system.

@@ -3340,3 +3340,17 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Fresh exact-head Pre-Unreal | PENDING | PR validation required |
 | Fresh exact-head Unreal build/package | PENDING | PR validation required |
 | PIE/device/human visual/FPS | NOT ACCEPTED | direct evidence required |
+
+
+### Closed PR #315 selective salvage
+
+| Item | Disposition | Reason |
+|---|---|---|
+| Party Field boundary shell | RETAINED IN CANON FINISH B | unique source-grounded field read |
+| Water/mill reeds + stepping stones | RETAINED IN CANON FINISH B | unique mill/Water environmental read |
+| 3 Bywater-facing cottages | RETAINED IN CANON FINISH B | unique settlement-edge silhouette |
+| Duplicate Bagshot homes | SUPERSEDED | #314 + Number 3 anchor already stronger |
+| Duplicate clutter / lamps / mail / wash | SUPERSEDED | #314 already covers with clustered/limited detail |
+| Duplicate orchard/farm density | SUPERSEDED | avoid unnecessary low-spec density growth |
+| Canon Finish B visual budget | LOCKED MAX 153 | 96 HISM + 45 cluster + 4 landmarks + 8 state actors |
+| Fresh exact-head validation | PENDING | required after salvage commit |

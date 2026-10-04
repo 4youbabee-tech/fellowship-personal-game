@@ -806,11 +806,11 @@ class SourceContractTests(unittest.TestCase):
         contract = json.loads((root / "Data" / "P1C01ShireSettlementCanonFinishBV1.json").read_text(encoding="utf-8"))
         self.assertEqual(contract["runtime_chapter"], "P1C01")
         self.assertEqual(contract["runtime_writer"], "AShirePrototypeWorldBuilder")
-        self.assertEqual(contract["visible_budget"]["native_hism_instances"], 10)
+        self.assertEqual(contract["visible_budget"]["native_hism_budget"], 96)
         self.assertEqual(contract["visible_budget"]["detail_cluster_instances"], 45)
-        self.assertEqual(contract["visible_budget"]["persistent_landmark_actors"], 1)
+        self.assertEqual(contract["visible_budget"]["persistent_landmark_budget"], 4)
         self.assertEqual(contract["visible_budget"]["party_state_actors"], 8)
-        self.assertEqual(contract["visible_budget"]["target_visual_instances"], 64)
+        self.assertEqual(contract["visible_budget"]["target_visual_budget"], 153)
         self.assertLessEqual(contract["visible_budget"]["maximum_detail_cluster_actors"], 11)
         self.assertFalse(contract["canon_contract"]["green_dragon_placed_in_hobbiton"])
         self.assertFalse(contract["architecture_contract"]["new_world_authority"])
@@ -830,6 +830,10 @@ class SourceContractTests(unittest.TestCase):
             "Number3BagshotRowFacade",
             "MillYardSacks",
             "BywaterRoadAvenueTrunks",
+            "P1C01BywaterFacingEdge",
+            "partyBoundary=yes",
+            "millWaterEdge=yes",
+            "bywaterEdgeCottages=3",
             "PartySpecialEntranceSetup",
             "PartySpecialEntranceCelebration",
             "PartyOpenAirKitchenCookingStand",

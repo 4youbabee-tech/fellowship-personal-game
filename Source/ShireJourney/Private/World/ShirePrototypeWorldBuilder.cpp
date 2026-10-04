@@ -4648,7 +4648,100 @@ void AShirePrototypeWorldBuilder::SpawnShireSettlementCanonFinishPass()
     SpawnCluster(ProductionTreeTrunkMesh, TEXT("BywaterRoadAvenueTrunks"), 2600, 12500, P);
     SpawnCluster(ProductionTreeCanopyMesh, TEXT("BywaterRoadAvenueCanopies"), 2600, 12500, CanopyPlacements);
 
+    // Selective orphan salvage from closed PR #315: only the unique settlement
+    // reads not already superseded by #314/B are retained.
     const FVector PartyCenter(280.0f,1320.0f,0.0f);
+
+    // Party Field boundary shell, leaving the special road entrance open.
+    for (int32 Index = 0; Index < 24; ++Index)
+    {
+        const float Angle = FMath::DegreesToRadians(static_cast<float>(Index) * 15.0f);
+        const FVector BoundaryPoint = PartyCenter + FVector(
+            FMath::Cos(Angle) * 900.0f,
+            FMath::Sin(Angle) * 640.0f,
+            6.0f);
+        if (BoundaryPoint.Y < PartyCenter.Y - 540.0f &&
+            FMath::Abs(BoundaryPoint.X - PartyCenter.X) < 230.0f)
+        {
+            continue;
+        }
+        AddHism(
+            HedgeInstances,
+            BoundaryPoint,
+            FVector(0.58f,0.52f,0.56f),
+            FMath::RadiansToDegrees(Angle) + 90.0f);
+    }
+    for (int32 Index = 0; Index < 20; ++Index)
+    {
+        const float Angle = FMath::DegreesToRadians(static_cast<float>(Index) * 18.0f + 7.0f);
+        AddHism(
+            GrassInstances,
+            PartyCenter + FVector(
+                FMath::Cos(Angle) * 770.0f,
+                FMath::Sin(Angle) * 520.0f,
+                2.0f),
+            FVector(0.19f + 0.015f * static_cast<float>(Index % 4)),
+            static_cast<float>((Index * 43) % 360));
+    }
+
+    // Water/mill edge treatment from the useful portion of #315. This keeps the
+    // stream corridor open and adds no collision or unique runtime authority.
+    for (int32 Index = 0; Index < 24; ++Index)
+    {
+        const float X = -1800.0f + static_cast<float>(Index) * 72.0f;
+        const float Side = (Index % 2 == 0) ? -1.0f : 1.0f;
+        const float Y = 85.0f + Side *
+            (190.0f + 35.0f * static_cast<float>((Index / 2) % 3));
+        AddHism(
+            ReedInstances,
+            FVector(X,Y,-2.0f),
+            FVector(0.42f + 0.035f * static_cast<float>(Index % 4)),
+            static_cast<float>((Index * 29) % 360));
+    }
+    for (int32 Index = 0; Index < 16; ++Index)
+    {
+        const float X = -1680.0f + static_cast<float>(Index) * 92.0f;
+        const float Y = 330.0f + ((Index % 2 == 0) ? -270.0f : 270.0f);
+        AddHism(
+            PathStoneInstances,
+            FVector(X,Y,3.0f),
+            FVector(0.18f,0.14f,0.045f),
+            static_cast<float>((Index * 47) % 360));
+    }
+
+    // Three bounded cottages make the east edge read as the road toward Bywater,
+    // not as a claim that the whole canonical Bywater settlement is inside Hobbiton.
+    const struct FBywaterEdgeHouse
+    {
+        FVector Location;
+        float Yaw;
+        float Scale;
+    } BywaterEdgeHouses[] = {
+        { FVector(2180.0f, 760.0f,0.0f), -16.0f, 0.72f },
+        { FVector(2660.0f,-650.0f,0.0f),  14.0f, 0.70f },
+        { FVector(3140.0f, 650.0f,0.0f), -10.0f, 0.68f }
+    };
+    for (const FBywaterEdgeHouse& House : BywaterEdgeHouses)
+    {
+        if (!ProductionCottageHouseMesh)
+        {
+            continue;
+        }
+        AStaticMeshActor* Cottage = SpawnShape(
+            ProductionCottageHouseMesh,
+            House.Location,
+            FVector(House.Scale),
+            FLinearColor::White,
+            FRotator(0.0f,House.Yaw,0.0f),
+            true);
+        if (Cottage)
+        {
+            Cottage->Tags.AddUnique(TEXT("P1C01ShireSettlementCanonFinish"));
+            Cottage->Tags.AddUnique(TEXT("P1C01BywaterFacingEdge"));
+            ++PersistentLandmarkActors;
+        }
+    }
+
     for (int32 Index = 0; Index < 10; ++Index)
     {
         const float Alpha = static_cast<float>(Index) / 9.0f;
@@ -4746,7 +4839,7 @@ void AShirePrototypeWorldBuilder::SpawnShireSettlementCanonFinishPass()
     UE_LOG(
         LogTemp,
         Display,
-        TEXT("P1C01_SHIRE_SETTLEMENT_CANON_FINISH nativeHism=%d detailClusters=%d detailClusterInstances=%d persistentLandmarks=%d partyStateActors=%d whiteGateTreatments=%d targetVisual=64 ivyBush=yes number3=yes partyEntrance=yes partyKitchen=yes bywaterRoadAvenue=yes greenDragonHobbiton=no p1c02=no"),
+        TEXT("P1C01_SHIRE_SETTLEMENT_CANON_FINISH nativeHism=%d hismBudget=96 detailClusters=%d detailClusterInstances=%d persistentLandmarks=%d landmarkBudget=4 partyStateActors=%d whiteGateTreatments=%d visualBudget=153 ivyBush=yes number3=yes partyBoundary=yes partyEntrance=yes partyKitchen=yes millWaterEdge=yes bywaterEdgeCottages=3 bywaterRoadAvenue=yes greenDragonHobbiton=no p1c02=no"),
         NativeHismInstances,
         DetailClusterCount,
         DetailClusterInstances,
