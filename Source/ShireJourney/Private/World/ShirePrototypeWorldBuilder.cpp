@@ -1999,6 +1999,7 @@ void AShirePrototypeWorldBuilder::SpawnSideStories()
 
     const FDiscovery Discoveries[] = {
         { FVector(-1250,330,75), TEXT("Discover_ShireMill"), TEXT("Discovered: The Mill beside the Water.") },
+        { FVector(1760,-1180,75), TEXT("Discover_IvyBush"), TEXT("Discovered: The Ivy Bush on the Bywater Road.") },
         // Legacy discovery ID retained for existing saves; visible copy no longer misplaces Bywater's inn in Hobbiton.
         { FVector(-520,360,75), TEXT("Discover_GreenDragon"), TEXT("Discovered: Hobbiton village common.") },
         { FVector(280,1320,75), TEXT("Discover_PartyField"), TEXT("Discovered: Bilbo's Party Field.") },
@@ -4464,6 +4465,297 @@ void AShirePrototypeWorldBuilder::SpawnShireSettlementCompletionPass()
 }
 
 
+
+
+void AShirePrototypeWorldBuilder::SpawnShireSettlementCanonFinishPass()
+{
+    if (!GetWorld())
+    {
+        return;
+    }
+
+    int32 NativeHismInstances = 0;
+    int32 DetailClusterCount = 0;
+    int32 DetailClusterInstances = 0;
+    int32 PersistentLandmarkActors = 0;
+    int32 PartyStateActors = 0;
+    int32 WhiteGateTreatments = 0;
+
+    auto AddHism = [&NativeHismInstances](
+        UHierarchicalInstancedStaticMeshComponent* Component,
+        const FVector& Location,
+        const FVector& Scale,
+        float Yaw)
+    {
+        if (!Component || !Component->GetStaticMesh())
+        {
+            return;
+        }
+        Component->AddInstance(FTransform(FRotator(0.0f, Yaw, 0.0f), Location, Scale));
+        ++NativeHismInstances;
+    };
+
+    auto SpawnCluster = [this, &DetailClusterCount, &DetailClusterInstances](
+        UStaticMesh* Mesh,
+        const TCHAR* Tag,
+        int32 StartCull,
+        int32 EndCull,
+        const TArray<FTransform>& Placements)
+    {
+        if (!Mesh || Placements.Num() == 0)
+        {
+            return;
+        }
+
+        AWorldDetailCluster* Cluster = GetWorld()->SpawnActor<AWorldDetailCluster>();
+        if (!Cluster)
+        {
+            return;
+        }
+
+        Cluster->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
+        Cluster->Tags.AddUnique(TEXT("P1C01ShireSettlementCanonFinish"));
+        Cluster->Tags.AddUnique(FName(Tag));
+        Cluster->Configure(Mesh, false, StartCull, EndCull);
+        for (const FTransform& Transform : Placements)
+        {
+            Cluster->AddDetailInstance(
+                Transform.GetLocation(),
+                Transform.Rotator(),
+                Transform.GetScale3D());
+        }
+
+        ++DetailClusterCount;
+        DetailClusterInstances += Cluster->GetDetailCount();
+    };
+
+    UStaticMesh* CommonSignBoard = ResolveResidentStaticMesh(
+        TEXT("/Game/Production/World/Common/SM_CommonSignBoard.SM_CommonSignBoard"));
+    UStaticMesh* CommonLongBench = ResolveResidentStaticMesh(
+        TEXT("/Game/Production/World/Common/SM_CommonLongBench.SM_CommonLongBench"));
+    UStaticMesh* CommonBarrel = ResolveResidentStaticMesh(
+        TEXT("/Game/Production/World/Common/SM_CommonBarrel.SM_CommonBarrel"));
+    UStaticMesh* CommonSackBale = ResolveResidentStaticMesh(
+        TEXT("/Game/Production/World/Common/SM_CommonSackBale.SM_CommonSackBale"));
+    UStaticMesh* CommonCargoCrate = ResolveResidentStaticMesh(
+        TEXT("/Game/Production/World/Common/SM_CommonCargoCrate.SM_CommonCargoCrate"));
+    UStaticMesh* CommonCookingStand = ResolveResidentStaticMesh(
+        TEXT("/Game/Production/World/Common/SM_CommonCookingStand.SM_CommonCookingStand"));
+    UStaticMesh* CommonMarketTable = ResolveResidentStaticMesh(
+        TEXT("/Game/Production/World/Common/SM_CommonMarketTable.SM_CommonMarketTable"));
+    UStaticMesh* CommonMarketCanopy = ResolveResidentStaticMesh(
+        TEXT("/Game/Production/World/Common/SM_CommonMarketCanopy.SM_CommonMarketCanopy"));
+    UMaterialInterface* ProductionSurface = ResolveResidentMaterial(
+        TEXT("/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface"));
+
+    const FVector IvyBushCenter(1760.0f, -1180.0f, 0.0f);
+    if (ProductionCottageHouseMesh)
+    {
+        AStaticMeshActor* IvyBush = SpawnShape(
+            ProductionCottageHouseMesh,
+            IvyBushCenter,
+            FVector(0.90f),
+            FLinearColor::White,
+            FRotator(0.0f, 8.0f, 0.0f),
+            true);
+        if (IvyBush)
+        {
+            IvyBush->Tags.AddUnique(TEXT("P1C01ShireSettlementCanonFinish"));
+            IvyBush->Tags.AddUnique(TEXT("P1C01IvyBush"));
+            ++PersistentLandmarkActors;
+        }
+    }
+
+    TArray<FTransform> P;
+    P.Emplace(FRotator(0.0f,10.0f,0.0f), IvyBushCenter + FVector(-210.0f,185.0f,0.0f), FVector(0.58f));
+    SpawnCluster(CommonSignBoard, TEXT("IvyBushSign"), 1000, 6500, P);
+
+    P.Reset();
+    P.Emplace(FRotator(0.0f,-4.0f,0.0f), IvyBushCenter + FVector(170.0f,210.0f,0.0f), FVector(0.60f));
+    P.Emplace(FRotator(0.0f,7.0f,0.0f), IvyBushCenter + FVector(-80.0f,245.0f,0.0f), FVector(0.58f));
+    SpawnCluster(CommonLongBench, TEXT("IvyBushBenches"), 900, 5200, P);
+
+    P.Reset();
+    P.Emplace(FRotator::ZeroRotator, IvyBushCenter + FVector(230.0f,-180.0f,0.0f), FVector(0.54f));
+    P.Emplace(FRotator(0.0f,18.0f,0.0f), IvyBushCenter + FVector(285.0f,-145.0f,0.0f), FVector(0.50f));
+    P.Emplace(FRotator(0.0f,-12.0f,0.0f), IvyBushCenter + FVector(205.0f,-235.0f,0.0f), FVector(0.48f));
+    SpawnCluster(CommonBarrel, TEXT("IvyBushBarrels"), 700, 4200, P);
+
+    const FVector Number3Center(-1980.0f,-1040.0f,-28.0f);
+    P.Reset();
+    P.Emplace(FRotator(0.0f,3.0f,0.0f), Number3Center, FVector(1.10f,1.02f,0.82f));
+    SpawnCluster(ProductionTurfMoundMesh, TEXT("Number3BagshotRowTurf"), 1600, 8200, P);
+
+    P.Reset();
+    P.Emplace(FRotator(0.0f,2.0f,0.0f), Number3Center + FVector(-86.0f,0.0f,34.0f), FVector(0.66f));
+    SpawnCluster(ProductionHobbitFacadeMesh, TEXT("Number3BagshotRowFacade"), 1400, 7600, P);
+
+    UStaticMesh* Mailbox = ResolveResidentStaticMesh(
+        TEXT("/Game/Production/World/Shire/SM_ShMailbox.SM_ShMailbox"));
+    P.Reset();
+    P.Emplace(FRotator(0.0f,80.0f,0.0f), Number3Center + FVector(170.0f,-110.0f,28.0f), FVector(0.48f));
+    SpawnCluster(Mailbox, TEXT("Number3BagshotRowMailbox"), 700, 4200, P);
+
+    const FVector MillCenter(-1250.0f,330.0f,0.0f);
+    P.Reset();
+    for (int32 Index = 0; Index < 4; ++Index)
+    {
+        P.Emplace(
+            FRotator(0.0f,static_cast<float>(Index * 17),0.0f),
+            MillCenter + FVector(-220.0f + 75.0f * Index,245.0f + 32.0f * (Index % 2),0.0f),
+            FVector(0.50f + 0.025f * static_cast<float>(Index % 2)));
+    }
+    SpawnCluster(CommonSackBale, TEXT("MillYardSacks"), 700, 4300, P);
+
+    P.Reset();
+    for (int32 Index = 0; Index < 4; ++Index)
+    {
+        P.Emplace(
+            FRotator(0.0f,static_cast<float>(-10 + Index * 21),0.0f),
+            MillCenter + FVector(185.0f + 58.0f * Index,235.0f - 38.0f * (Index % 2),0.0f),
+            FVector(0.48f));
+    }
+    SpawnCluster(CommonCargoCrate, TEXT("MillYardCrates"), 700, 4300, P);
+
+    P.Reset();
+    for (int32 Index = 0; Index < 4; ++Index)
+    {
+        P.Emplace(
+            FRotator(0.0f,static_cast<float>(Index * 31),0.0f),
+            MillCenter + FVector(-280.0f + 165.0f * Index,-250.0f - 22.0f * (Index % 2),0.0f),
+            FVector(0.48f + 0.02f * static_cast<float>(Index % 3)));
+    }
+    SpawnCluster(CommonBarrel, TEXT("MillYardBarrels"), 700, 4300, P);
+
+    P.Reset();
+    TArray<FTransform> CanopyPlacements;
+    for (int32 Index = 0; Index < 12; ++Index)
+    {
+        const float Alpha = static_cast<float>(Index % 6) / 5.0f;
+        const float X = FMath::Lerp(1750.0f,4100.0f,Alpha);
+        const float Side = Index < 6 ? -1.0f : 1.0f;
+        const float Y = Side * (1320.0f + 55.0f * static_cast<float>(Index % 3));
+        const float S = 0.56f + 0.035f * static_cast<float>(Index % 4);
+        P.Emplace(
+            FRotator(0.0f,static_cast<float>((Index * 37) % 360),0.0f),
+            FVector(X,Y,0.0f),
+            FVector(S * 0.76f));
+        CanopyPlacements.Emplace(
+            FRotator(0.0f,static_cast<float>((Index * 53) % 360),0.0f),
+            FVector(X,Y,150.0f * S),
+            FVector(S * 0.76f));
+    }
+    SpawnCluster(ProductionTreeTrunkMesh, TEXT("BywaterRoadAvenueTrunks"), 2600, 12500, P);
+    SpawnCluster(ProductionTreeCanopyMesh, TEXT("BywaterRoadAvenueCanopies"), 2600, 12500, CanopyPlacements);
+
+    const FVector PartyCenter(280.0f,1320.0f,0.0f);
+    for (int32 Index = 0; Index < 10; ++Index)
+    {
+        const float Alpha = static_cast<float>(Index) / 9.0f;
+        AddHism(
+            PathStoneInstances,
+            FMath::Lerp(
+                PartyCenter + FVector(-210.0f,-720.0f,2.0f),
+                PartyCenter + FVector(210.0f,-520.0f,2.0f),
+                Alpha),
+            FVector(0.22f,0.34f,0.065f),
+            -8.0f + 16.0f * Alpha);
+    }
+
+    auto SpawnPartyStateProp = [this, &PartyStateActors](
+        TArray<AStaticMeshActor*>& Target,
+        UStaticMesh* Mesh,
+        const FVector& Location,
+        const FVector& Scale,
+        const FRotator& Rotation,
+        const TCHAR* DetailTag)
+    {
+        if (!Mesh)
+        {
+            return static_cast<AStaticMeshActor*>(nullptr);
+        }
+
+        AStaticMeshActor* Actor = SpawnShape(
+            Mesh, Location, Scale, FLinearColor::White, Rotation, false);
+        if (!Actor)
+        {
+            return static_cast<AStaticMeshActor*>(nullptr);
+        }
+
+        Actor->Tags.AddUnique(TEXT("P1C01PartyStateVariant"));
+        Actor->Tags.AddUnique(TEXT("P1C01ShireSettlementCanonFinish"));
+        Actor->Tags.AddUnique(FName(DetailTag));
+        Actor->SetActorHiddenInGame(true);
+        Actor->SetActorEnableCollision(false);
+        Target.Add(Actor);
+        ++PartyStateActors;
+        return Actor;
+    };
+
+    auto ApplyWhiteGate = [ProductionSurface, &WhiteGateTreatments](AStaticMeshActor* Gate)
+    {
+        if (!Gate || !ProductionSurface || !Gate->GetStaticMeshComponent())
+        {
+            return;
+        }
+
+        UMaterialInstanceDynamic* MID =
+            UMaterialInstanceDynamic::Create(ProductionSurface, Gate);
+        if (!MID)
+        {
+            return;
+        }
+
+        MID->SetVectorParameterValue(TEXT("Color"), FLinearColor(0.88f,0.86f,0.78f,1.0f));
+        MID->SetScalarParameterValue(TEXT("Roughness"), 0.84f);
+        Gate->GetStaticMeshComponent()->SetMaterial(0, MID);
+        ++WhiteGateTreatments;
+    };
+
+    auto AddPartyStateSet = [&](TArray<AStaticMeshActor*>& Target, const TCHAR* EntranceTag)
+    {
+        AStaticMeshActor* Gate = SpawnPartyStateProp(
+            Target,
+            ProductionFarmGateMesh,
+            PartyCenter + FVector(0.0f,-675.0f,0.0f),
+            FVector(0.92f),
+            FRotator(0.0f,90.0f,0.0f),
+            EntranceTag);
+        ApplyWhiteGate(Gate);
+
+        SpawnPartyStateProp(
+            Target, CommonCookingStand,
+            PartyCenter + FVector(-570.0f,430.0f,0.0f),
+            FVector(0.70f), FRotator(0.0f,8.0f,0.0f),
+            TEXT("PartyOpenAirKitchenCookingStand"));
+        SpawnPartyStateProp(
+            Target, CommonMarketTable,
+            PartyCenter + FVector(-410.0f,450.0f,0.0f),
+            FVector(0.68f), FRotator(0.0f,-4.0f,0.0f),
+            TEXT("PartyOpenAirKitchenTable"));
+        SpawnPartyStateProp(
+            Target, CommonMarketCanopy,
+            PartyCenter + FVector(-470.0f,430.0f,0.0f),
+            FVector(0.72f), FRotator(0.0f,3.0f,0.0f),
+            TEXT("PartyOpenAirKitchenCanopy"));
+    };
+
+    AddPartyStateSet(PartySetupVariantActors, TEXT("PartySpecialEntranceSetup"));
+    AddPartyStateSet(PartyCelebrationVariantActors, TEXT("PartySpecialEntranceCelebration"));
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("P1C01_SHIRE_SETTLEMENT_CANON_FINISH nativeHism=%d detailClusters=%d detailClusterInstances=%d persistentLandmarks=%d partyStateActors=%d whiteGateTreatments=%d targetVisual=64 ivyBush=yes number3=yes partyEntrance=yes partyKitchen=yes bywaterRoadAvenue=yes greenDragonHobbiton=no p1c02=no"),
+        NativeHismInstances,
+        DetailClusterCount,
+        DetailClusterInstances,
+        PersistentLandmarkActors,
+        PartyStateActors,
+        WhiteGateTreatments);
+}
+
+
 void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()
 {
     if (!GetWorld())
@@ -5021,6 +5313,7 @@ void AShirePrototypeWorldBuilder::BuildPrototypeWorld()
     SpawnVisibleShireMegaWaveD();
     SpawnShireVisualFinishWave();
     SpawnShireSettlementCompletionPass();
+    SpawnShireSettlementCanonFinishPass();
     SpawnWorldDensityDetailPass();
     SpawnBagEndHeroPass();
     SpawnPartySocialLoopPass();

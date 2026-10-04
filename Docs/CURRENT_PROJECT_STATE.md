@@ -4186,3 +4186,17 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - P1C02 remains closed. Population/context/quest ownership is unchanged.
 - Machine-readable contract: `Data/P1C01ShireSettlementCompletionV1.json`; source regression added to `Scripts/test_source_contracts.py`.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. This is not PIE-tested, device-tested, visually accepted, or an FPS acceptance claim.
+
+
+## 2026-10-04 - P1C01 Shire Settlement Canon Finish B
+
+- Settlement Completion predecessor #314 is **COMPILE-TESTED / MACHINE-GREEN / MERGED**: exact head `3ee80ffeaa03ee0acce131d098eb3f7967f36480`; Pre-Unreal #1849 SUCCESS; Unreal Build #1446 SUCCESS; merge `b3f31134e97d58362f486e09796eaf34852fe328`.
+- Added `SpawnShireSettlementCanonFinishPass()` after the 345-instance settlement completion pass.
+- Ivy Bush: bounded cottage landmark on the Bywater-facing road edge plus sign, benches and barrel yard; a new discovery identifies the Ivy Bush without reusing/misplacing the Green Dragon.
+- Number 3 Bagshot Row: dedicated visual turf/facade/mailbox anchor near the existing Hamfast gameplay area; no quest coordinate moved.
+- Party Field: ten visual step stones plus setup/celebration variants for the special entrance gate and cooking-stand/table/canopy open-air kitchen. A resident production material supplies a light gate treatment when resident; no synchronous load.
+- Mill: bounded sacks/crates/barrels turn the landmark into a working yard.
+- Bywater road: 12 low-cost visual trees (trunk+canopy clusters) frame the road transition while leaving the corridor open.
+- Canon guard: Green Dragon remains a Bywater landmark; legacy discovery ID remains only for save compatibility with corrected visible copy.
+- Added `Data/P1C01ShireSettlementCanonFinishBV1.json` and source-contract regression coverage.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. No PIE/device/human visual/FPS acceptance is claimed.

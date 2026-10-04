@@ -135,6 +135,7 @@ private:
     void SpawnVisibleShireMegaWaveD();
     void SpawnShireVisualFinishWave();
     void SpawnShireSettlementCompletionPass();
+    void SpawnShireSettlementCanonFinishPass();
     void SpawnWorldDensityDetailPass();
     void SpawnBagEndHeroPass();
     void SpawnPartySocialLoopPass();

@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "wave_id": "P1C01_SHIRE_SETTLEMENT_CANON_FINISH_B_V1",
+  "status": "SOURCE_IMPLEMENTED_EXACT_HEAD_VALIDATION_PENDING",
+  "runtime_chapter": "P1C01",
+  "runtime_writer": "AShirePrototypeWorldBuilder",
+  "predecessor": {
+    "pull_request": 314,
+    "merged_commit": "b3f31134e97d58362f486e09796eaf34852fe328",
+    "exact_head": "3ee80ffeaa03ee0acce131d098eb3f7967f36480",
+    "pre_unreal_run": 1849,
+    "unreal_build_run": 1446,
+    "status": "COMPILE_TESTED_MACHINE_GREEN"
+  },
+  "source_basis": {
+    "timeline": "F1-01 safe optional window permits party setup/social onboarding/fireworks; F1-02 remains Bag End/Shire without future-state leakage.",
+    "compatible_tolkien_detail": [
+      "Ivy Bush is a small inn on the Bywater road",
+      "Number 3 Bagshot Row is the Gamgee home below Bag End",
+      "Party Field has a special road entrance, broad steps and a large light-colored gate",
+      "Party Field includes a large open-air kitchen",
+      "The old mill and road toward Bywater are lived-in local landmarks"
+    ],
+    "exact_coordinate_claim": false
+  },
+  "canon_contract": {
+    "green_dragon_placed_in_hobbiton": false,
+    "green_dragon_rule": "Remains a Bywater landmark; legacy save/discovery IDs are preserved without visually misplacing the inn.",
+    "optional_detail_only": true,
+    "locked_story_outcomes_changed": false
+  },
+  "visible_budget": {
+    "native_hism_instances": 10,
+    "detail_cluster_instances": 45,
+    "maximum_detail_cluster_actors": 11,
+    "persistent_landmark_actors": 1,
+    "party_state_actors": 8,
+    "target_visual_instances": 64
+  },
+  "architecture_contract": {
+    "new_world_authority": false,
+    "synchronous_heavy_load": false,
+    "per_instance_tick": false,
+    "p1c02_runtime_opened": false,
+    "resident_production_meshes_only": true,
+    "existing_collision_and_quest_anchors_preserved": true,
+    "population_owner": "ALivingWorldDirector",
+    "npc_context_owner": "UShireNPCContextSubsystem",
+    "quest_owner": "UShireQuestSubsystem"
+  },
+  "evidence_boundary": "Source implementation only until fresh exact-head validation. No PIE/device/human visual/FPS acceptance."
+}

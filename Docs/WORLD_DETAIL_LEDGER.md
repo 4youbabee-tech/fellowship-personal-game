@@ -1225,3 +1225,14 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Asset rule: resident production Shire/Common meshes only. No runtime `LoadObject`, no BMP, no new hard heavy references, no per-prop actor density.
 - Architecture: `ALivingWorldDirector` remains population/pooling authority; `UShireNPCContextSubsystem` context authority; `UShireQuestSubsystem` story truth. No duplicate manager.
 - Evidence boundary: REGISTERED / SOURCE-GROUNDED PLAN. No PIE/device/rendered visual/FPS acceptance claimed.
+
+
+## 2026-10-04 - P1C01 SHIRE_SETTLEMENT_CANON_FINISH_B registered before implementation
+
+- Predecessor settlement packet #314 is machine-green and merged: exact head `3ee80ffeaa03ee0acce131d098eb3f7967f36480`, Pre-Unreal #1849 SUCCESS, Unreal Build #1446 SUCCESS, merge `b3f31134e97d58362f486e09796eaf34852fe328`.
+- Purpose: close remaining source-grounded Hobbiton settlement details without opening P1C02 or changing locked F1-01/F1-02 outcomes.
+- Source-safe details: Ivy Bush roadside inn identity; Number 3 Bagshot Row visual anchor; Party Field special entrance/steps and open-air kitchen; mill-yard stores; tree-lined Bywater-road transition.
+- Green Dragon is explicitly not placed in Hobbiton; it remains a Bywater landmark. Existing legacy save/discovery IDs are preserved for compatibility.
+- Performance budget: 10 HISM placements + 45 WorldDetailCluster instances + 1 persistent landmark actor + 8 story-state party actors = 64 new visual instances. Clusters are no-collision/zero-Tick and use resident production meshes only.
+- Existing quest/NPC anchors are not moved. Party props reuse the setup/celebration state arrays.
+- Evidence boundary: REGISTERED / SOURCE-GROUNDED PLAN. No PIE/device/rendered-visual/FPS acceptance.

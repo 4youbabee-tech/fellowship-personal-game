@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "wave_id": "P1C01_SHIRE_SETTLEMENT_COMPLETION_V1",
-  "status": "SOURCE_IMPLEMENTED_EXACT_HEAD_VALIDATION_PENDING",
+  "status": "COMPILE_TESTED_MACHINE_GREEN_MERGED",
   "runtime_chapter": "P1C01",
   "runtime_writer": "AShirePrototypeWorldBuilder",
   "scope": {
@@ -57,5 +57,25 @@
     "ram_gb": 8,
     "vram_gb_approx": 2
   },
-  "evidence_boundary": "Source implementation only until exact-head CI and later PIE visual/performance evidence. No visual acceptance or FPS claim."
+  "evidence_boundary": "Source implementation only until exact-head CI and later PIE visual/performance evidence. No visual acceptance or FPS claim.",
+  "exact_head_validation": {
+    "pull_request": 314,
+    "exact_head": "3ee80ffeaa03ee0acce131d098eb3f7967f36480",
+    "pre_unreal_run": 1849,
+    "pre_unreal_conclusion": "SUCCESS",
+    "unreal_build_run": 1446,
+    "unreal_build_conclusion": "SUCCESS",
+    "editor_build": true,
+    "production_asset_import": true,
+    "automation_framework": true,
+    "headless_startup": true,
+    "chapter_runtime_audit": true,
+    "route_state_roundtrip": true,
+    "cook_package": true,
+    "packaged_data_verification": true,
+    "packaged_executable_observation": true,
+    "visual_acceptance": false,
+    "device_acceptance": false,
+    "fps_acceptance": false
+  }
 }
