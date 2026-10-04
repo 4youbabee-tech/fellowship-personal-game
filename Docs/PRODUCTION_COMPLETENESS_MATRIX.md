@@ -3178,3 +3178,26 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | New exact-head Unreal build | PENDING ONLY IF CI CLASSIFIER REQUIRES | no runtime C++/asset change in this packet |
 | PIE/device/rendered visual/FPS | NOT ACCEPTED | no matching evidence |
 | KayKit anti-churn source-contract import error | TOOLING-FIXED / REVALIDATION PENDING | #1837 IndentationError only; existing class method declaration indentation restored |
+
+## 2026-10-04 - P1C01 Visible Shire Mega Wave D
+
+| Visible domain | Status | Evidence boundary |
+|---|---|---|
+| Ledger registration before code | COMPLETE | P1C01 VISIBLE_SHIRE_MEGA_WAVE_D |
+| Runtime writer | PRESERVED | AShirePrototypeWorldBuilder only |
+| Bag End hero composition | SOURCE-IMPLEMENTED | 52 HISM instances |
+| Hobbiton settlement depth | SOURCE-IMPLEMENTED | 48 HISM instances |
+| Worked-field edge rhythm | SOURCE-IMPLEMENTED | 42 HISM instances |
+| Wooded-road enclosure | SOURCE-IMPLEMENTED | 64 HISM instances |
+| Ferry authored framing | SOURCE-IMPLEMENTED | 62 HISM instances |
+| Ferry limited hero landmarks | SOURCE-IMPLEMENTED | 12 actors: landing/boat/rope/lamp silhouettes |
+| Repeated horizon cleanup | SOURCE-IMPLEMENTED | deterministic multi-frequency tree-line offsets |
+| New world authority | NONE | existing writer preserved |
+| New synchronous heavy load | NONE | resident meshes only |
+| New per-instance Tick | NONE | HISM/ISM architecture |
+| Actor-per-prop density wave | NONE | only 12 bounded Ferry hero actors |
+| P1C02 runtime expansion | NOT OPENED | P1C01 visual scope only |
+| Static source regression | SOURCE-IMPLEMENTED | budget/authority/order/no-sync-load guard |
+| Exact-head Pre-Unreal | PENDING | PR validation required |
+| Exact-head UE4.27.2 build | PENDING | PR validation required |
+| PIE visual/pacing/device/FPS | NOT ACCEPTED | direct evidence still required |
