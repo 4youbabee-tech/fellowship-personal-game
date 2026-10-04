@@ -114,6 +114,13 @@ AShirePrototypeWorldBuilder::AShirePrototypeWorldBuilder()
     PathStoneInstances->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     PathStoneInstances->SetCastShadow(false);
 
+    GroundTileInstances = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("GroundTileInstances"));
+    GroundTileInstances->SetupAttachment(RuntimeRoot);
+    GroundTileInstances->SetMobility(EComponentMobility::Movable);
+    GroundTileInstances->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    GroundTileInstances->SetGenerateOverlapEvents(false);
+    GroundTileInstances->SetCastShadow(false);
+
     GardenSoilInstances = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("GardenSoilInstances"));
     GardenSoilInstances->SetupAttachment(RuntimeRoot);
     GardenSoilInstances->SetMobility(EComponentMobility::Movable);
@@ -191,6 +198,7 @@ AShirePrototypeWorldBuilder::AShirePrototypeWorldBuilder()
     DistantTreeCanopyInstances->SetCullDistances(5000, 19000);
     RockInstances->SetCullDistances(2200, 9000);
     PathStoneInstances->SetCullDistances(900, 5000);
+    GroundTileInstances->SetCullDistances(0, 38000);
     GardenSoilInstances->SetCullDistances(700, 4200);
     GeographyHillInstances->SetCullDistances(16000, 32000);
     GeographySlopeInstances->SetCullDistances(12000, 28000);
@@ -290,6 +298,17 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     ProductionWaterMaterial = ResolveResidentMaterial(
         TEXT("/Game/Production/Materials/M_ProductionWater.M_ProductionWater"));
 
+    UMaterialInterface* ShireGrassMaterial = ResolveResidentMaterial(
+        TEXT("/Game/Production/World/Shire/Grass.Grass"));
+    UMaterialInterface* ShireEarthMaterial = ResolveResidentMaterial(
+        TEXT("/Game/Production/World/Shire/Earth.Earth"));
+    UMaterialInterface* ShireBarkMaterial = ResolveResidentMaterial(
+        TEXT("/Game/Production/World/Shire/Bark.Bark"));
+    UMaterialInterface* ShireLeavesMaterial = ResolveResidentMaterial(
+        TEXT("/Game/Production/World/Shire/Leaves.Leaves"));
+    UMaterialInterface* ShireWoodMaterial = ResolveResidentMaterial(
+        TEXT("/Game/Production/World/Shire/Wood.Wood"));
+
     if (GeographyHillInstances && ProductionCommonTerracedHillMesh)
     {
         GeographyHillInstances->SetStaticMesh(ProductionCommonTerracedHillMesh);
@@ -310,7 +329,11 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     if (ProductionGrassClumpMesh) EastFieldRowInstances->SetStaticMesh(ProductionGrassClumpMesh);
     if (ProductionShrubMesh) ShrubInstances->SetStaticMesh(ProductionShrubMesh);
     if (ProductionPathStoneMesh) PathStoneInstances->SetStaticMesh(ProductionPathStoneMesh);
-    if (ProductionGroundBlockMesh) GardenSoilInstances->SetStaticMesh(ProductionGroundBlockMesh);
+    if (ProductionGroundBlockMesh)
+    {
+        GroundTileInstances->SetStaticMesh(ProductionGroundBlockMesh);
+        GardenSoilInstances->SetStaticMesh(ProductionGroundBlockMesh);
+    }
     if (ProductionHedgeMesh) HedgeInstances->SetStaticMesh(ProductionHedgeMesh);
     if (ProductionCommonBroadleafTreeMesh) WoodlandTreeInstances->SetStaticMesh(ProductionCommonBroadleafTreeMesh);
     if (ProductionCommonVillageFenceMesh)
@@ -325,6 +348,47 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     }
     if (ProductionCommonFernClumpMesh) FernInstances->SetStaticMesh(ProductionCommonFernClumpMesh);
     if (ProductionCommonReedClusterMesh) ReedInstances->SetStaticMesh(ProductionCommonReedClusterMesh);
+
+    // P1C01-local material correction. The Common asset bank stays globally untouched;
+    // only this chapter's repeated components are overridden with already-resident,
+    // texture-backed Shire materials. ResolveResidentMaterial never performs a sync load.
+    if (ShireGrassMaterial)
+    {
+        if (GroundTileInstances) GroundTileInstances->SetMaterial(0, ShireGrassMaterial);
+        if (GeographyHillInstances) GeographyHillInstances->SetMaterial(0, ShireGrassMaterial);
+        if (GeographySlopeInstances) GeographySlopeInstances->SetMaterial(0, ShireGrassMaterial);
+    }
+    if (ShireEarthMaterial)
+    {
+        if (GardenSoilInstances) GardenSoilInstances->SetMaterial(0, ShireEarthMaterial);
+        if (GeographyRiverBankInstances) GeographyRiverBankInstances->SetMaterial(0, ShireEarthMaterial);
+    }
+    if (ShireBarkMaterial)
+    {
+        if (WoodlandTreeInstances) WoodlandTreeInstances->SetMaterial(0, ShireBarkMaterial);
+        if (FernInstances) FernInstances->SetMaterial(0, ShireBarkMaterial);
+    }
+    if (ShireLeavesMaterial)
+    {
+        if (WoodlandTreeInstances) WoodlandTreeInstances->SetMaterial(1, ShireLeavesMaterial);
+        if (FernInstances) FernInstances->SetMaterial(1, ShireLeavesMaterial);
+        if (ReedInstances) ReedInstances->SetMaterial(0, ShireLeavesMaterial);
+    }
+    if (ShireWoodMaterial)
+    {
+        if (RuralFenceInstances) RuralFenceInstances->SetMaterial(0, ShireWoodMaterial);
+        if (PropertyFenceInstances) PropertyFenceInstances->SetMaterial(0, ShireWoodMaterial);
+    }
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("P1C01_SHIRE_LOCAL_MATERIAL_OVERRIDE grass=%s earth=%s bark=%s leaves=%s wood=%s commonAssetsMutated=no syncLoad=no"),
+        ShireGrassMaterial ? TEXT("resident") : TEXT("missing"),
+        ShireEarthMaterial ? TEXT("resident") : TEXT("missing"),
+        ShireBarkMaterial ? TEXT("resident") : TEXT("missing"),
+        ShireLeavesMaterial ? TEXT("resident") : TEXT("missing"),
+        ShireWoodMaterial ? TEXT("resident") : TEXT("missing"));
 
     BuildPrototypeWorld();
 
@@ -1238,8 +1302,57 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
         }
     }
 
-    if (ProductionGroundBlockMesh)
+    if (ProductionGroundBlockMesh &&
+        GroundTileInstances &&
+        GroundTileInstances->GetStaticMesh() == ProductionGroundBlockMesh)
     {
+        GroundTileInstances->ClearInstances();
+
+        constexpr int32 GroundTileColumns = 34;
+        constexpr int32 GroundTileRows = 13;
+        constexpr int32 GroundTileBudget = GroundTileColumns * GroundTileRows;
+        static_assert(GroundTileBudget == 442, "P1C01 visible ground tile budget must remain 442 HISM instances.");
+
+        constexpr float GroundTileWorldSize = 1000.0f;
+        constexpr float GroundTileScale = GroundTileWorldSize / 100.0f;
+        constexpr float GroundCenterX = 10800.0f;
+        constexpr float GroundCenterY = 0.0f;
+        constexpr float GroundTopZ = -70.0f;
+
+        const float GroundStartX =
+            GroundCenterX - 0.5f * static_cast<float>(GroundTileColumns) * GroundTileWorldSize +
+            0.5f * GroundTileWorldSize;
+        const float GroundStartY =
+            GroundCenterY - 0.5f * static_cast<float>(GroundTileRows) * GroundTileWorldSize +
+            0.5f * GroundTileWorldSize;
+
+        for (int32 Row = 0; Row < GroundTileRows; ++Row)
+        {
+            for (int32 Column = 0; Column < GroundTileColumns; ++Column)
+            {
+                const FVector TileLocation(
+                    GroundStartX + static_cast<float>(Column) * GroundTileWorldSize,
+                    GroundStartY + static_cast<float>(Row) * GroundTileWorldSize,
+                    GroundTopZ);
+                GroundTileInstances->AddInstance(FTransform(
+                    FRotator::ZeroRotator,
+                    TileLocation,
+                    FVector(GroundTileScale, GroundTileScale, 1.0f)));
+            }
+        }
+
+        UE_LOG(
+            LogTemp,
+            Display,
+            TEXT("P1C01_SHIRE_GROUND_TILING instances=%d columns=%d rows=%d tileWorldSize=%.0f actorPerTile=no collisionAuthority=hidden-foundation"),
+            GroundTileInstances->GetInstanceCount(),
+            GroundTileColumns,
+            GroundTileRows,
+            GroundTileWorldSize);
+    }
+    else if (ProductionGroundBlockMesh)
+    {
+        // Asset/HISM binding fallback only. The normal production path is the tiled HISM above.
         SpawnShape(
             ProductionGroundBlockMesh,
             FVector(10800.0f, 0.0f, -70.0f),
