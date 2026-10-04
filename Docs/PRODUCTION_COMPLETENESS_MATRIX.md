@@ -3422,3 +3422,15 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Bag End/hobbit interiors | CONTENT-PENDING | separate source/art/runtime packet required |
 | Exact-head Pre-Unreal / UE4 | PENDING | fresh candidate required |
 | PIE / target-device / visual / FPS | NOT ACCEPTED | direct human/device evidence required |
+
+
+## 2026-10-04 - PR314 settlement mega reconciliation
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| PR #314 merge history | PRESERVED | develop merge `b3f31134e97d58362f486e09796eaf34852fe328` retained as merge parent |
+| Duplicate settlement implementation | SUPERSEDED | reconciled exterior closeout is current source truth |
+| PR314-only prop categories | ALREADY COVERED | existing ProductionVillageDetailLayer/CP54 owners contain those categories |
+| Duplicate placement growth | AVOIDED | no blind copy of extra garden/mail/farm props |
+| Runtime authority | PRESERVED | AShirePrototypeWorldBuilder |
+| Exact-head validation | PENDING | new merged candidate required |

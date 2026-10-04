@@ -4242,3 +4242,11 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Added the previously registered Shire Settlement Final Polish pass: **44 native HISM + 54 clustered instances / max 6 cluster actors, 0 hero actors, 0 movable lights**, focused on The Water/mill working bank and Bagshot domestic micro-detail.
 - Exterior completeness audit remains explicit about art gaps: no bespoke exact white Party gate, giant pavilion, dedicated open-air kitchen hero mesh, full Bywater/Green Dragon, or interiors.
 - Status: **SOURCE-RECONCILED / FRESH EXACT-HEAD VALIDATION PENDING**. No PIE/device/rendered-visual/FPS/Gate 6/7 acceptance is claimed.
+
+
+## 2026-10-04 - PR314 settlement mega reconciliation
+
+- `develop@b3f31134e97d58362f486e09796eaf34852fe328` merged PR #314 while the reconciled exterior closeout was being prepared.
+- Full-world audit confirmed PR #314's extra garden-arch/mailbox/wash-line/plough/orchard-ladder/pump-well/produce-stand categories already exist under the established ProductionVillageDetailLayer/CP54 world ownership. Carrying the extra placements forward would increase duplicate density rather than close a missing category.
+- The reconciled closeout therefore supersedes PR #314's duplicate Settlement implementation while preserving its history as a merge parent. Current world construction remains one AShirePrototypeWorldBuilder authority.
+- Status remains **SOURCE-RECONCILED / FRESH EXACT-HEAD VALIDATION PENDING**; no PIE/device/visual/FPS acceptance is claimed.

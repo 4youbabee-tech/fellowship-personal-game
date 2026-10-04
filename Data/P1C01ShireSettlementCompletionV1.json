@@ -93,5 +93,11 @@
     "gate_collision": false,
     "collision_authority": "hedge ring + established route geometry",
     "intent": "Visible gate/path aligns with a real collision opening; decorative gates cannot block the approach."
+  },
+  "reconciled_against_merged_pr314": {
+    "develop_merge": "b3f31134e97d58362f486e09796eaf34852fe328",
+    "merged_packet_head": "3ee80ffeaa03ee0acce131d098eb3f7967f36480",
+    "disposition": "SUPERSEDED_BY_RECONCILED_EXTERIOR_CLOSEOUT",
+    "reason": "PR314 settlement categories are already covered by the exterior-closeout lineage and existing ProductionVillageDetailLayer/CP54 owners; duplicate placements are not carried forward."
   }
 }
