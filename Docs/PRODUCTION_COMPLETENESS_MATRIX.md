@@ -3389,3 +3389,5 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Self-hosted UE4 workflow | IMPLEMENTED / RUN PENDING | `.github/workflows/p1c01-shire-render-capture.yml` |
 | Human rendered review | NOT ACCEPTED | Requires review of exact-head artifact |
 | PIE / target-device / pacing / FPS | NOT ACCEPTED | Must be proven separately; 30 FPS floor target remains unchanged |
+
+- Render-capture robustness: recursive Saved/Screenshots discovery + per-shot UE4Editor cleanup implemented; exact-head run still pending.
