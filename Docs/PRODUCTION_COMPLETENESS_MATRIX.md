@@ -3396,3 +3396,6 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Device acceptance | NOT ACCEPTED | target-class device required |
 | Performance acceptance | NOT ACCEPTED | measured 720p evidence required |
 | Gate 6/7 | NOT ACCEPTED | all required evidence categories remain authoritative |
+
+
+- P1C01 local Gate 6/7 harness hardening: owner-machine production import now has an explicit repository workspace; screenshot collection is recursive across UE4 platform/editor screenshot folders. Status remains PREPARED / HUMAN+DEVICE REVIEW PENDING.
