@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "route_id": "P1C01_LOCAL_VISUAL_ACCEPTANCE_ROUTE_V1",
+  "status": "CAPTURE_HARNESS_READY_REVIEW_PENDING",
+  "runtime_chapter": "P1C01",
+  "launch": {
+    "script": "Scripts/run_local_p1c01_visual_acceptance.ps1",
+    "production_importer": "Scripts/ci_import_production_assets.cmd",
+    "map": "/Engine/Maps/Entry",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "windowed": true,
+    "content_root": "Content/Production"
+  },
+  "target_profile": {
+    "cpu": "i7 Gen6 class",
+    "ram_gb": 8,
+    "vram_gb_approx": 2,
+    "fps_floor": 30,
+    "max_nominal_frame_time_ms": 33.33
+  },
+  "checkpoints": [
+    {
+      "id": "BAG_END_HERO",
+      "order": 1,
+      "location_read": "Bag End / the Hill",
+      "human_review_required": true,
+      "criteria": [
+        "Bag End reads as the hero landmark before surrounding detail",
+        "hill, turf, stone/earth and garden composition do not read as floating or cube-stretched",
+        "entrance/quest approach remains obvious and traversable",
+        "garden depth and property framing look authored rather than repeated"
+      ]
+    },
+    {
+      "id": "BAGSHOT_ROW_NUMBER_3",
+      "order": 2,
+      "location_read": "Bagshot Row / Number 3 Gamgee anchor",
+      "human_review_required": true,
+      "criteria": [
+        "Bagshot Row reads as a coherent stepped row below the Hill",
+        "Number 3 has a readable domestic identity without becoming a false hero landmark",
+        "hedges/fences do not trap the player or obstruct the required path",
+        "repeated facades/turf mounds do not form an obvious generated pattern"
+      ]
+    },
+    {
+      "id": "HOBBITON_COMMON",
+      "order": 3,
+      "location_read": "Hobbiton village common",
+      "human_review_required": true,
+      "criteria": [
+        "well, market/produce, benches, lamps and household clutter read as lived-in settlement detail",
+        "house/property spacing reads as a village rather than a prop strip",
+        "mailboxes, wash lines, flower boxes and garden arches remain secondary to architecture",
+        "no visible floating props, severe seams or empty near horizon"
+      ]
+    },
+    {
+      "id": "PARTY_FIELD",
+      "order": 4,
+      "location_read": "Party Field / Party Tree",
+      "human_review_required": true,
+      "criteria": [
+        "Party Tree is a clear social landmark",
+        "special entrance/gate/steps read as a deliberate boundary",
+        "open-air kitchen and tables support the active story state without inventing later outcomes",
+        "social circulation space remains open for player and NPC movement"
+      ]
+    },
+    {
+      "id": "WATER_MILL_BRIDGE",
+      "order": 5,
+      "location_read": "The Water / mill / bridge",
+      "human_review_required": true,
+      "criteria": [
+        "water, bank, mill house, wheel and bridge align as one working landmark",
+        "mill-yard stores and props feel subordinate to the landmark",
+        "bridge/river edges do not visibly intersect or float",
+        "road transition past the mill remains readable toward the eastern route"
+      ]
+    },
+    {
+      "id": "BYWATER_FACING_EDGE",
+      "order": 6,
+      "location_read": "Bywater Road / Ivy Bush / settlement-facing edge",
+      "human_review_required": true,
+      "criteria": [
+        "Ivy Bush reads as a small roadside social landmark, not the Green Dragon",
+        "tree avenue and edge cottages suggest continuation without opening P1C02",
+        "orchards/working fields transition naturally from the village",
+        "Green Dragon is not presented as a Hobbiton landmark"
+      ]
+    },
+    {
+      "id": "WOODLAND_TRANSITION",
+      "order": 7,
+      "location_read": "Wooded Road",
+      "human_review_required": true,
+      "criteria": [
+        "foreground, midground and canopy create real enclosure",
+        "central travel corridor remains open",
+        "tree/fern repetition is not obvious at player eye level",
+        "transition from ordered fields to woodland is visually legible"
+      ]
+    },
+    {
+      "id": "BUCKLEBURY_FERRY",
+      "order": 8,
+      "location_read": "Bucklebury Ferry destination",
+      "human_review_required": true,
+      "criteria": [
+        "landing, boat, ropes, lamps, reeds and banks read as a destination",
+        "broad river and opposite-bank silhouette are legible",
+        "uphill-path suggestion does not falsely open later runtime",
+        "ferry approach remains traversable and visually framed"
+      ]
+    }
+  ],
+  "capture_protocol": [
+    "Run with UE4Editor closed.",
+    "The harness regenerates ignored Content/Production unless -SkipImport is supplied deliberately.",
+    "At every checkpoint open the UE console and run HighResShot 1.",
+    "Observe stat fps, stat unit and stat streaming throughout the route.",
+    "Before exiting run stat stopfile so the Unreal stats capture closes cleanly.",
+    "Do not mark VISUALLY-ACCEPTED or PERFORMANCE-ACCEPTED from file presence alone; inspect the screenshots/stats and record chapter-specific human/device evidence."
+  ],
+  "acceptance_boundary": {
+    "source_construction_complete": true,
+    "compile_tested": true,
+    "pie_tested": false,
+    "device_tested": false,
+    "visually_accepted": false,
+    "performance_accepted": false,
+    "gate_6_7_accepted": false
+  }
+}
