@@ -3378,3 +3378,53 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Local production bootstrap | REQUIRED | `Scripts/bootstrap_local_p1c01_visuals.cmd` |
 | Human PIE/rendered visual acceptance | PENDING | direct owner evidence required |
 | Target-device 720p / 30 FPS | PENDING | measured device evidence required |
+
+
+## 2026-10-04 - Frodo targeted animation intake Wave 3
+
+| Gate | Status | Evidence boundary |
+|---|---|---|
+| Frodo skeletal technical winner | PASS / PRESERVED | `eff0e799...`; 161 bones + linked USkeleton |
+| Hero-mesh hunting | CLOSED | do not reopen while technical winner remains valid |
+| Animation source | SOURCE-REGISTERED | Quaternius Universal Animation Library / CC0 |
+| Animation warehouse scope | BOUNDED | one pack only |
+| Warehouse classifier | SOURCE-IMPLEMENTED | `WH_STAGE_QUATERNIUS_ANIM` |
+| Broad Quaternius support staging | NOT REQUESTED BY TARGETED PATH | avoids unrelated pack churn |
+| Required initial clips | LOCKED | Idle / Walk / Run |
+| Receipt/SHA256/public-download proof | PENDING | Warehouse execution after merge |
+| FBX clip inventory | PENDING | staged archive required |
+| Retarget compatibility | BLOCKED | valid clip inventory first |
+| Deformation review | BLOCKED | technical winner + selected clips |
+| AnimBP locomotion | BLOCKED | retarget/deformation proof first |
+| Async runtime Frodo promotion | BLOCKED | AnimBP/rig bundle proof first |
+| PIE/device/rendered visual/FPS | NOT ACCEPTED | direct evidence required |
+
+
+## 2026-10-04 - Frodo static deformation stress gate
+
+| Gate | Status | Evidence boundary |
+|---|---|---|
+| Input candidate | EXACT-RUN UE4 WINNER ONLY | same workflow artifacts; no new mesh hunt |
+| Required limb joints | SOURCE-GATED | pelvis/spine/head + bilateral arm/hand/leg/foot families |
+| Limb hierarchy | SOURCE-GATED | descendant-chain sanity |
+| Shoulder stress | SOURCE-IMPLEMENTED | +/-45 degrees |
+| Elbow stress | SOURCE-IMPLEMENTED | 75 degrees |
+| Knee stress | SOURCE-IMPLEMENTED | 65 degrees |
+| Hand/foot stress | SOURCE-IMPLEMENTED | 20 degrees |
+| Locomotion combined stress | SOURCE-IMPLEMENTED | deterministic numerical pose |
+| Catastrophic deformation guard | SOURCE-IMPLEMENTED | finite vertices + bounds/displacement thresholds |
+| Human rendered deformation acceptance | NOT ACCEPTED | direct visual review required |
+| Idle/Walk/Run retarget | BLOCKED | targeted animation intake + compatibility proof |
+| AnimBP/runtime promotion | BLOCKED | retarget + visual deformation first |
+
+
+### 2026-10-04 - Wave3 zero-payload guard root fix
+
+| Guard | Status | Evidence boundary |
+|---|---|---|
+| Pre-Unreal #1872 | FAIL / ROOT-CAUSED | stale exact-count regression only |
+| Support Quaternius manual queue | REQUIRED | one explicit manifest call |
+| Animation-only manual queue | REQUIRED | one explicit targeted manifest call |
+| Hero-candidate manual queue | REQUIRED | one explicit manifest call |
+| Broad continue-on-error | FORBIDDEN / PRESERVED | fail-closed policy unchanged |
+| Fresh exact-head validation | PENDING | new PR head required |

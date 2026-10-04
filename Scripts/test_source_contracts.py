@@ -904,6 +904,41 @@ class SourceContractTests(unittest.TestCase):
         self.assertEqual(world["status"], "PARTIAL")
         self.assertTrue(any("bootstrap_local_p1c01_visuals.cmd" in item for item in world["missing_work"]))
 
+
+    def test_p1c01_targeted_quaternius_animation_intake_is_one_pack_only(self):
+        root = Path(__file__).resolve().parents[1]
+        manifest = json.loads((root / "Data" / "WarehouseQuaterniusAnimationBatchV1.json").read_text(encoding="utf-8"))
+        self.assertEqual(manifest["batch_id"], "WAREHOUSE_QUATERNIUS_P1C01_ANIMATION_V1")
+        self.assertEqual(manifest["provider"], "QUATERNIUS")
+        self.assertEqual(len(manifest["source_pages"]), 1)
+        pack = manifest["source_pages"][0]
+        self.assertEqual(pack["id"], "QTN_UNIVERSAL_ANIMATION_LIBRARY")
+        self.assertEqual(pack["required_final_format"], "FBX")
+        self.assertEqual(pack["observed_page_license"], "CC0")
+        self.assertIn("Idle", pack["intended_use"])
+        self.assertIn("Walk", pack["intended_use"])
+        self.assertIn("Run", pack["intended_use"])
+
+        prep = json.loads((root / "Data" / "P1C01CharacterRigAnimationPrepV1.json").read_text(encoding="utf-8"))
+        self.assertEqual(
+            prep["technical_winner"]["normalized_sha256"],
+            "eff0e79980f90d49deada0aa37ad8be5975a86330348e4ae6fa49d3171fad570")
+        self.assertEqual(prep["active_animation_intake"]["stage_scope"], "ONE_PACK_ONLY")
+        self.assertEqual(prep["active_animation_intake"]["required_initial_clips"], ["Idle", "Walk", "Run"])
+
+        classifier = (root / "Scripts" / "classify_warehouse_validation.ps1").read_text(encoding="utf-8")
+        workflow = (root / ".github" / "workflows" / "warehouse-stage.yml").read_text(encoding="utf-8")
+        for token in (
+            "WH_STAGE_QUATERNIUS_ANIM",
+            "Data/WarehouseQuaterniusAnimationBatchV1.json",
+            "WH_RUN_CHARACTER_INTAKE",
+            "WH_RUN_AUDIT",
+        ):
+            self.assertIn(token, classifier)
+        self.assertIn("Stage Quaternius animation-only batch", workflow)
+        self.assertIn("WarehouseQuaterniusAnimationBatchV1.json", workflow)
+        self.assertIn("stage_quaternius_warehouse.ps1", workflow)
+
     def test_p1c01_kaykit_rig_bridge_is_bounded_and_non_runtime(self):
         root = Path(__file__).resolve().parents[1]
         packet = json.loads((root / "Data" / "P1C01KayKitRigTechnicalBridgeV1.json").read_text(encoding="utf-8"))

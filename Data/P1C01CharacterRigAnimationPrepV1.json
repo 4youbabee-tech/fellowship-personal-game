@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "batch_id": "P1C01_CHARACTER_RIG_ANIMATION_PREP_V1",
-  "status": "AUTHORIZED_FOR_STAGING_INTAKE_QC_PENDING",
+  "status": "FRODO_TECHNICAL_WINNER_TARGETED_ANIMATION_INTAKE_REQUESTED",
   "authority": [
     "Data/ProjectGovernor.json",
     "Data/CharacterVisualProductionWaveV7.json",
     "Data/CharacterProductionMatrix.json",
     "Data/ProductionAssetPromotionPolicyV1.json"
   ],
-  "runtime_gate": "OWNER_AUTHORIZED_P1C01_FRODO_FIRST_EXACT_HEAD_QC",
+  "runtime_gate": "P1C01_FRODO_TECHNICAL_WINNER_DEFORMATION_RETARGET_PREP",
   "priority_characters": [
     {
       "id": "FRODO",
@@ -136,7 +136,7 @@
     "UNLICENSED_EXTERNAL_PROMOTION",
     "FAKE_RIG_EVIDENCE"
   ],
-  "evidence_boundary": "Preparation only. No character is called rigged, imported, visually accepted or device-accepted from this manifest.",
+  "evidence_boundary": "Technical skeletal winner is evidenced. Animation staging/retarget/deformation/runtime/PIE/device/visual/FPS acceptance remains pending.",
   "owner_sequence_authority": "Data/P1C01RuntimeChapterSequenceV1.json",
   "active_scope": {
     "character": "FRODO",
@@ -144,6 +144,34 @@
     "later_characters": "DEFERRED_UNTIL_SERIAL_PREDECESSORS_COMPLETE",
     "integration_rule": "Candidate QC must pass before READY_FOR_IMPORT or runtime integration.",
     "qc_request_id": "P1C01_FRODO_CANDIDATE_QC_2026_10_01_V1",
-    "qc_request_state": "REQUESTED_EXACT_HEAD_WAREHOUSE"
+    "qc_request_state": "TECHNICAL_WINNER_EVIDENCED_TARGETED_ANIMATION_STAGE_REQUESTED"
+  },
+  "technical_winner": {
+    "normalized_sha256": "eff0e79980f90d49deada0aa37ad8be5975a86330348e4ae6fa49d3171fad570",
+    "ue4_reference_bones": 161,
+    "linked_uskeleton": true,
+    "evidence": "Human Wave 2 exact-head technical gate PASS; no deformation/retarget acceptance implied."
+  },
+  "active_animation_intake": {
+    "batch": "WAREHOUSE_QUATERNIUS_P1C01_ANIMATION_V1",
+    "manifest": "Data/WarehouseQuaterniusAnimationBatchV1.json",
+    "provider": "QUATERNIUS",
+    "source_id": "QTN_UNIVERSAL_ANIMATION_LIBRARY",
+    "observed_license": "CC0",
+    "required_final_format": "FBX",
+    "required_initial_clips": [
+      "Idle",
+      "Walk",
+      "Run"
+    ],
+    "stage_scope": "ONE_PACK_ONLY",
+    "state": "REQUESTED_TARGETED_WAREHOUSE_STAGE",
+    "next_if_staged": [
+      "verify archive receipt SHA256 and safe extraction",
+      "inventory FBX animation clips",
+      "select Idle/Walk/Run only",
+      "retarget compatibility proof against Frodo technical winner",
+      "deformation review before AnimBP/runtime promotion"
+    ]
   }
 }

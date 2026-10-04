@@ -7,6 +7,8 @@ on:
       - 'Data/P1C01HumanCharacterProductionWave2V1.json'
       - 'Scripts/stage_p1c01_human_wave2.ps1'
       - 'Scripts/run_p1c01_human_wave2_ue4.ps1'
+      - 'Scripts/run_p1c01_human_wave3_deformation.py'
+      - 'Data/P1C01HumanDeformationGateV1.json'
       - 'Scripts/test_p1c01_human_wave2_contract.py'
       - 'Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp'
       - '.github/workflows/p1c01-human-wave2.yml'
@@ -145,3 +147,61 @@ jobs:
             Remove-Item -LiteralPath (Join-Path $env:GITHUB_WORKSPACE $relative) -Force -ErrorAction SilentlyContinue
           }
           Write-Host "HUMAN_WAVE2_CLEANUP_PASS"
+
+
+  hosted_deformation_gate:
+    name: Hosted Frodo static deformation stress
+    needs:
+      - hosted_source_factory
+      - ue4_technical_gate
+    if: needs.ue4_technical_gate.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          fetch-depth: 2
+          persist-credentials: false
+
+      - name: Verify exact checkout
+        shell: bash
+        run: test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+
+      - name: Install Blender deformation probe
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y blender
+          blender --version | head -n 1
+
+      - name: Download exact normalized candidate artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: p1c01-human-wave2-hosted-${{ env.TARGET_SHA }}
+          path: ${{ runner.temp }}/shire-human-wave3/hosted
+
+      - name: Download exact UE4 technical winner evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: p1c01-human-wave2-ue4-${{ env.TARGET_SHA }}
+          path: ${{ runner.temp }}/shire-human-wave3/ue4
+
+      - name: Stress shoulders elbows knees hands and feet on UE4 winner
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/shire-human-wave3/deformation"
+          blender --background --factory-startup             --python "$GITHUB_WORKSPACE/Scripts/run_p1c01_human_wave3_deformation.py" --             --hosted-receipt "$RUNNER_TEMP/shire-human-wave3/hosted/p1c01_human_wave2_hosted.json"             --ue4-receipt "$RUNNER_TEMP/shire-human-wave3/ue4/p1c01_human_wave2_ue4.json"             --artifact-root "$RUNNER_TEMP/shire-human-wave3/hosted"             --output "$RUNNER_TEMP/shire-human-wave3/deformation/p1c01_human_wave3_deformation.json"
+
+      - name: Upload deformation-stress evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1c01-human-wave3-deformation-${{ env.TARGET_SHA }}
+          path: ${{ runner.temp }}/shire-human-wave3/deformation
+          if-no-files-found: warn
+          retention-days: 14

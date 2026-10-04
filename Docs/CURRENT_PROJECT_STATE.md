@@ -4221,3 +4221,32 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Machine-readable closure: `Data/P1C01ShireSettlementSourceClosureV1.json`.
 - **Next required world gate is local visual bootstrap, not another blind density wave**: run `Scripts/bootstrap_local_p1c01_visuals.cmd` with UE4 closed, generate ignored `Content/Production`, and launch `/Engine/Maps/Entry` at DX11 1280x720.
 - Status: **SOURCE CONSTRUCTION COMPLETE / STATIC+COMPILE MACHINE-GREEN / HUMAN VISUAL + DEVICE PERFORMANCE PENDING**. No PIE/device/visual/FPS acceptance is claimed.
+
+
+## 2026-10-04 - Frodo targeted animation intake Wave 3
+
+- Frodo technical winner remains `eff0e79980f90d49deada0aa37ad8be5975a86330348e4ae6fa49d3171fad570` with 161 UE4 reference bones and valid linked USkeleton; this wave does not reopen mesh hunting.
+- Added one-pack warehouse manifest `Data/WarehouseQuaterniusAnimationBatchV1.json` for `QTN_UNIVERSAL_ANIMATION_LIBRARY` only.
+- Warehouse classification gains `WH_STAGE_QUATERNIUS_ANIM`; this targeted path stages the one animation pack, runs character intake and inventory audit, but deliberately does **not** trigger the broad provider saturation/promotion/material trains.
+- Required first clips remain Idle / Walk / Run. Successful staging only advances to clip inventory + retarget/deformation gates; it does not authorize AnimBP or runtime promotion.
+- Existing `stage_quaternius_warehouse.ps1` is reused for license/public-download/SHA256 receipt behavior; no second downloader is introduced.
+- Status: **SOURCE-IMPLEMENTED / TARGETED WAREHOUSE EXECUTION PENDING AFTER MERGE**. No animation, retarget, deformation, PIE/device/visual/FPS acceptance is claimed.
+
+
+## 2026-10-04 - Frodo static deformation stress gate
+
+- Extended the existing Human Wave 2 exact-head workflow rather than creating a second hero-source pipeline.
+- After the self-hosted UE4 technical gate succeeds, a hosted Blender job downloads the **same exact normalized FBX artifact** and the UE4 technical-winner receipt from that run.
+- Numerical stress covers bilateral upper arms/forearms/hands/thighs/shins/feet plus pelvis/spine/head hierarchy, then deterministic shoulder, elbow, knee, hand/foot and combined locomotion poses.
+- Hard rejects cover missing joints, broken hierarchy, non-finite evaluated vertices/transforms, vertex-count changes and catastrophic bounds/displacement.
+- This is a numerical deformation-readiness gate only. `visual_deformation_accepted=false`, `retarget_accepted=false`, and runtime integration remains blocked.
+- Machine-readable gate: `Data/P1C01HumanDeformationGateV1.json`.
+- Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD HUMAN WAVE VALIDATION PENDING**.
+
+
+### 2026-10-04 - Wave3 zero-payload guard root fix
+
+- Exact-head Pre-Unreal #1872 failed only because the existing zero-payload regression encoded exactly two Quaternius `-RecordManualQueue` calls.
+- Wave3 intentionally adds a third bounded/manual-safe call for `WarehouseQuaterniusAnimationBatchV1.json`.
+- Root fix makes the regression semantic: it now requires exactly one manual-queue call for support, animation-only and hero-candidate manifests, while the broad `continue-on-error` prohibition and zero-payload fail-closed behavior remain unchanged.
+- Status: **SOURCE-FIXED / FRESH EXACT-HEAD VALIDATION REQUIRED**. No animation/deformation/retarget acceptance is implied.

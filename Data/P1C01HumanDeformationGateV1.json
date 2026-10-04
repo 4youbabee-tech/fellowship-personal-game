@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "gate_id": "P1C01_FRODO_STATIC_DEFORMATION_GATE_V1",
+  "status": "SOURCE_IMPLEMENTED_EXACT_HEAD_VALIDATION_PENDING",
+  "runtime_chapter": "P1C01",
+  "predecessor": {
+    "technical_gate": "Human Wave 2 UE4 technical winner",
+    "required_result": "PASS",
+    "winner_sha256": "resolved dynamically from exact-run UE4 receipt",
+    "known_prior_winner": "eff0e79980f90d49deada0aa37ad8be5975a86330348e4ae6fa49d3171fad570",
+    "reference_bones": 161
+  },
+  "required_joint_families": [
+    "pelvis",
+    "spine",
+    "head",
+    "left/right upper arm",
+    "left/right forearm",
+    "left/right hand",
+    "left/right thigh",
+    "left/right shin",
+    "left/right foot"
+  ],
+  "hierarchy_checks": [
+    "forearm descendant of upper arm",
+    "hand descendant of forearm",
+    "shin descendant of thigh",
+    "foot descendant of shin",
+    "head descendant of spine"
+  ],
+  "numerical_stress_scenarios": [
+    "shoulders +/-45deg",
+    "elbows 75deg",
+    "knees 65deg",
+    "hands/feet 20deg",
+    "combined locomotion stress"
+  ],
+  "hard_rejects": [
+    "missing required joint family",
+    "broken limb hierarchy",
+    "non-finite evaluated vertices",
+    "evaluated vertex-count change",
+    "posed bounds collapse/explosion outside 0.20x..5.0x rest diagonal",
+    "max vertex displacement above 5x rest diagonal",
+    "non-finite armature transform"
+  ],
+  "runtime_contract": {
+    "visual_deformation_accepted": false,
+    "retarget_accepted": false,
+    "runtime_integration_allowed": false,
+    "modular_frodo_fallback": true,
+    "loading": "existing soft/async UShireChapterAssetStreamingSubsystem path"
+  },
+  "next_gate": "Targeted Idle/Walk/Run inventory + retarget compatibility, then human rendered deformation review.",
+  "evidence_boundary": "Numerical static deformation stress only. No rendered visual, retarget, AnimBP, runtime, PIE, device or FPS acceptance."
+}
