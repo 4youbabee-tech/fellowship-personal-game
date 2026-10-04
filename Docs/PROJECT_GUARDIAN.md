@@ -714,3 +714,13 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 **Guard:** `Scripts/test_p1c01_hero_candidate_provenance_contract.ps1` requires intake provenance emission and exact-file fail-closed enforcement in the candidate wave.
 
 **Evidence boundary:** SOURCE-IMPLEMENTED until exact-head Pre-Unreal/Unreal validation and Warehouse candidate evidence succeed. This is not skeletal/deformation/visual/runtime acceptance.
+
+
+### PG-168 — Source-contract tests must stop at the intended function boundary
+**Symptom exposed by:** a settlement insertion caused an older Bag End source-contract slice to include unrelated later functions.
+
+**Permanent rule:** a source-contract test validating one C++ function must stop at that function's immediate structural boundary. It may not use a distant unrelated function as an end marker when legal new functions can be inserted between them.
+
+**Guard:** P1C01 closeout tests now slice Bag End and Settlement Completion at their immediate next builder functions while preserving their exact bounded assertions.
+
+**Evidence boundary:** source-regression discipline only. Exact-head Pre-Unreal revalidation is still required; this is not PIE/device/visual acceptance.
