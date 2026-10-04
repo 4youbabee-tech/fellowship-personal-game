@@ -3160,3 +3160,20 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Exact payload SHA256/static QC | PENDING RERUN | hosted gate |
 | UE4 technical gate | PENDING | no candidate judgment yet |
 | Deformation / runtime / PIE / device / visual / FPS | BLOCKED / NOT ACCEPTED | technical winner required first |
+
+## 2026-10-04 - KayKit exact technical result / runner anti-churn
+
+| Check | Status | Evidence boundary |
+|---|---|---|
+| Prior exact head | COMPILE-TESTED | `30b0392aa9abe5223d6adfe0958c93cd9cf28631`; Pre-Unreal #1836 SUCCESS + Unreal Build #1433 SUCCESS |
+| Rogue raw FBX | REJECTED TECHNICAL | 48 bones; MISSING_BIND_POSE_BONES + MISSING_SMOOTHING_GROUPS |
+| RogueHooded raw FBX | REJECTED TECHNICAL | 48 bones; MISSING_BIND_POSE_BONES + MISSING_SMOOTHING_GROUPS |
+| Same exact payload retry | FORBIDDEN / AUTOMATICALLY EXCLUDED | known SHA256 registry |
+| Direct-raw receipt schema bug | SOURCE-FIXED | obsolete `archive_sha256` reference removed |
+| Known-rejection-only hosted result | SOURCE-IMPLEMENTED | controlled `STATIC_BRIDGE_EXHAUSTED_KNOWN_REJECTIONS` |
+| Self-hosted UE4 reservation on zero new candidates | SOURCE-BLOCKED | job-level selected_count gate |
+| Modular Frodo fallback | PRESERVED | no failed candidate runtime promotion |
+| Deformation / AnimBP | BLOCKED | no clean technical candidate |
+| New exact-head Pre-Unreal | PENDING | anti-churn packet revalidation |
+| New exact-head Unreal build | PENDING ONLY IF CI CLASSIFIER REQUIRES | no runtime C++/asset change in this packet |
+| PIE/device/rendered visual/FPS | NOT ACCEPTED | no matching evidence |

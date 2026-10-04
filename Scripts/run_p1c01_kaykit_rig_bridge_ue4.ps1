@@ -109,7 +109,9 @@ foreach($candidate in $selected){
 $out = [ordered]@{
   schema_version=1
   status=if($null -ne $technicalPass){"TECHNICAL_PASS_DEFORMATION_GATE_NEXT"}else{"BRIDGE_EXHAUSTED_TECHNICAL_REJECTION"}
-  archive_sha256=[string]$receipt.archive_sha256
+  delivery_mode=[string]$receipt.delivery_mode
+  license_sha256=[string]$receipt.license_sha256
+  source_payload_sha256=@($selected | ForEach-Object { ([string]$_.sha256).ToLowerInvariant() })
   probed_count=$results.Count
   results=$results
   technical_pass_candidate=$technicalPass

@@ -702,5 +702,31 @@ def test_p1c01_kaykit_rig_bridge_is_bounded_and_non_runtime(self):
         self.assertIn("ci_build_unreal.cmd", workflow)
         self.assertIn("actions/upload-artifact@v4", workflow)
 
+    def test_p1c01_kaykit_known_rejections_do_not_requeue_self_hosted_runner(self):
+        root = Path(__file__).resolve().parents[1]
+        manifest = json.loads((root / "Data" / "P1C01KayKitRigTechnicalBridgeV1.json").read_text(encoding="utf-8"))
+        known = {row["sha256"]: row for row in manifest["known_technical_rejections"]}
+        self.assertEqual(set(known.keys()), {
+            "93a9ee0a67ae69b2d815050234acad2004c3b8af7d294b916e52609c8195eb71",
+            "4a773f074695c6c089cc6f059eed85da080928a4a4137af4e38b177139d4cc27",
+        })
+        for row in known.values():
+            self.assertEqual(row["ue4_reference_bones"], 48)
+            self.assertEqual(set(row["reasons"]), {"MISSING_BIND_POSE_BONES", "MISSING_SMOOTHING_GROUPS"})
+            self.assertEqual(row["disposition"], "REJECTED_TECHNICAL_DO_NOT_REQUEUE")
+
+        stage = (root / "Scripts" / "stage_p1c01_kaykit_rig_bridge.ps1").read_text(encoding="utf-8")
+        self.assertIn("STATIC_BRIDGE_EXHAUSTED_KNOWN_REJECTIONS", stage)
+        self.assertIn("$knownRejected.ContainsKey($sha)", stage)
+
+        workflow = (root / ".github" / "workflows" / "p1c01-kaykit-rig-bridge.yml").read_text(encoding="utf-8")
+        self.assertIn("selected_count: ${{ steps.outcome.outputs.selected_count }}", workflow)
+        self.assertIn("if: needs.hosted_static_bridge.outputs.selected_count != '0'", workflow)
+
+        ue4 = (root / "Scripts" / "run_p1c01_kaykit_rig_bridge_ue4.ps1").read_text(encoding="utf-8")
+        self.assertNotIn("archive_sha256=[string]$receipt.archive_sha256", ue4)
+        self.assertIn("delivery_mode=[string]$receipt.delivery_mode", ue4)
+
+
 if __name__ == "__main__":
     unittest.main()

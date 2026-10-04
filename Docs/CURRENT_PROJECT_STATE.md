@@ -4088,3 +4088,13 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Hosted intake remains fail-closed: official raw-prefix allowlist, FBX-only candidate names, per-file byte cap, CC0 license marker, SHA256, FBX version and Geometry/Model/LimbNode/Skin/Cluster/animation static markers.
 - The max-two UE4 probe budget and all real UE4 bind/UV/smoothing/skeletal gates are unchanged. Neither KayKit candidate has yet been judged by UE4.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD HOSTED+UE4 REVALIDATION PENDING**. No deformation/runtime/PIE/device/rendered-visual/FPS acceptance is claimed.
+
+## 2026-10-04 - KayKit bridge exact rejection + anti-churn closeout packet
+
+- Exact head `30b0392aa9abe5223d6adfe0958c93cd9cf28631` is **COMPILE-TESTED** by Pre-Unreal #1836 SUCCESS and Unreal Build #1433 SUCCESS.
+- KayKit Rig Technical Bridge #13 completed hosted source/static staging and then produced real UE4.27 skeletal evidence for both bounded candidates: `Rogue.fbx` SHA256 `93a9ee0a67ae69b2d815050234acad2004c3b8af7d294b916e52609c8195eb71` -> 48 reference bones, REJECTED for MISSING_BIND_POSE_BONES + MISSING_SMOOTHING_GROUPS; `RogueHooded.fbx` SHA256 `4a773f074695c6c089cc6f059eed85da080928a4a4137af4e38b177139d4cc27` -> 48 reference bones, same rejection.
+- The red workflow also exposed a secondary receipt-writer defect: direct-raw schema V2 has no `archive_sha256`, but the UE4 receipt writer still referenced that old archive field after candidate evaluation. This did not cause either candidate rejection.
+- Anti-churn fix: both exact rejected hashes are now durable known rejections; hosted staging excludes them from `selected_candidates`. If the bounded source family contains only known rejected hashes, the hosted job records `STATIC_BRIDGE_EXHAUSTED_KNOWN_REJECTIONS` and the self-hosted UE4 job is skipped entirely.
+- UE4 receipt generation now records direct-raw `delivery_mode`, `license_sha256`, and exact source payload hashes instead of the obsolete archive field.
+- Modular Frodo remains the runtime fallback. No deformation, AnimBP, runtime promotion, PIE, device, rendered-visual or FPS acceptance is claimed.
+- New anti-churn packet status: **SOURCE-IMPLEMENTED / EXACT-HEAD REVALIDATION PENDING**.

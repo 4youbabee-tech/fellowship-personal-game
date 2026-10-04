@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "packet_id": "P1C01_KAYKIT_RIG_TECHNICAL_BRIDGE_V1",
-  "status": "DIRECT_RAW_FBX_SOURCE_CORRECTION_IMPLEMENTED_VALIDATION_PENDING",
+  "status": "KAYKIT_DIRECT_RAW_RIG_FAMILY_TECHNICALLY_REJECTED_RECORDED",
   "runtime_chapter": "P1C01",
   "target_character": "FRODO",
   "role": "TECHNICAL_RIG_DEFORMATION_BRIDGE_NOT_FINAL_LIKENESS",
@@ -53,7 +53,8 @@
     ],
     "max_single_fbx_bytes": 33554432,
     "final_likeness": false,
-    "source_delivery": "DIRECT_RAW_OFFICIAL_GITHUB_FILES_ONLY"
+    "source_delivery": "DIRECT_RAW_OFFICIAL_GITHUB_FILES_ONLY",
+    "known_rejections_excluded_from_ue4_requeue": true
   },
   "technical_gate": [
     "exact archive and payload SHA256",
@@ -84,6 +85,44 @@
   "latest_source_correction": {
     "evidence": ".gitattributes export-ignore excludes Characters/fbx from GitHub source archives",
     "action": "download exact official raw FBX files directly from raw.githubusercontent.com",
-    "asset_disposition": "UNTESTED_NO_CANDIDATE_QC_REACHED_YET"
+    "asset_disposition": "ROGUE_AND_ROGUE_HOODED_TECHNICALLY_REJECTED_DO_NOT_REQUEUE"
+  },
+  "known_technical_rejections": [
+    {
+      "filename": "Rogue.fbx",
+      "sha256": "93a9ee0a67ae69b2d815050234acad2004c3b8af7d294b916e52609c8195eb71",
+      "ue4_reference_bones": 48,
+      "reasons": [
+        "MISSING_BIND_POSE_BONES",
+        "MISSING_SMOOTHING_GROUPS"
+      ],
+      "evidence": "P1C01 KayKit Rig Technical Bridge #13",
+      "exact_head": "30b0392aa9abe5223d6adfe0958c93cd9cf28631",
+      "disposition": "REJECTED_TECHNICAL_DO_NOT_REQUEUE"
+    },
+    {
+      "filename": "RogueHooded.fbx",
+      "sha256": "4a773f074695c6c089cc6f059eed85da080928a4a4137af4e38b177139d4cc27",
+      "ue4_reference_bones": 48,
+      "reasons": [
+        "MISSING_BIND_POSE_BONES",
+        "MISSING_SMOOTHING_GROUPS"
+      ],
+      "evidence": "P1C01 KayKit Rig Technical Bridge #13",
+      "exact_head": "30b0392aa9abe5223d6adfe0958c93cd9cf28631",
+      "disposition": "REJECTED_TECHNICAL_DO_NOT_REQUEUE"
+    }
+  ],
+  "latest_exact_evidence": {
+    "exact_head": "30b0392aa9abe5223d6adfe0958c93cd9cf28631",
+    "pre_unreal_run": 1836,
+    "pre_unreal_result": "SUCCESS",
+    "unreal_build_run": 1433,
+    "unreal_build_result": "SUCCESS",
+    "bridge_run": 13,
+    "hosted_static_result": "SUCCESS",
+    "ue4_candidate_result": "BOTH_REJECTED_TECHNICAL",
+    "tooling_defect": "UE4 receipt writer referenced archive_sha256 although direct-raw schema has no archive_sha256",
+    "runtime_integration_allowed": false
   }
 }

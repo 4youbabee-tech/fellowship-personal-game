@@ -28,6 +28,12 @@ $licenseText = Get-Content -LiteralPath $licensePath -Raw
 if($licenseText -notmatch "Creative Commons Zero|CC0"){ throw "KAYKIT_RIG_LICENSE_MARKER_MISSING" }
 $licenseSha = (Get-FileHash -LiteralPath $licensePath -Algorithm SHA256).Hash.ToLowerInvariant()
 
+$knownRejected=@{}
+foreach($row in @($manifest.known_technical_rejections)){
+  $hash=([string]$row.sha256).ToLowerInvariant()
+  if(-not [string]::IsNullOrWhiteSpace($hash)){ $knownRejected[$hash]=$row }
+}
+
 function Get-FbxVersion {
   param([byte[]]$Bytes,[string]$Ascii)
   if($Bytes.Length -ge 27){
@@ -69,7 +75,8 @@ foreach($candidate in @($candidates | Select-Object -First $maxCandidates)){
   $hasCluster=$ascii.Contains("Cluster")
   $hasAnim=$ascii.Contains("AnimationStack") -or $ascii.Contains("AnimationCurve")
   $versionOk=$version -gt 0 -and $version -le [int]$manifest.candidate_policy.fbx_version_ceiling
-  $staticPass=$versionOk -and $hasGeometry -and $hasModel -and $hasLimb -and $hasSkin -and $hasCluster
+  $knownRejection=$knownRejected.ContainsKey($sha)
+  $staticPass=$versionOk -and $hasGeometry -and $hasModel -and $hasLimb -and $hasSkin -and $hasCluster -and (-not $knownRejection)
 
   $rows += [pscustomobject]@{
     entry=[string]$candidate.repository_path
@@ -85,21 +92,25 @@ foreach($candidate in @($candidates | Select-Object -First $maxCandidates)){
     skin=$hasSkin
     cluster=$hasCluster
     animation=$hasAnim
+    known_rejection=$knownRejection
     static_pass=$staticPass
   }
-  Write-Host ("KAYKIT_RIG_FBX file="+$filename+" bytes="+$item.Length+" sha256="+$sha+" version="+$version+" limb="+$hasLimb+" skin="+$hasSkin+" cluster="+$hasCluster+" anim="+$hasAnim+" staticPass="+$staticPass)
+  Write-Host ("KAYKIT_RIG_FBX file="+$filename+" bytes="+$item.Length+" sha256="+$sha+" version="+$version+" limb="+$hasLimb+" skin="+$hasSkin+" cluster="+$hasCluster+" anim="+$hasAnim+" knownRejected="+$knownRejection+" staticPass="+$staticPass)
 }
 
 $selected=@($rows | Where-Object { $_.static_pass } | Select-Object -First $maxCandidates)
+$knownRejectedRows=@($rows | Where-Object { $_.known_rejection })
+$bridgeStatus=if($selected.Count -gt 0){"STATIC_BRIDGE_READY_FOR_UE4"}elseif($rows.Count -gt 0 -and $knownRejectedRows.Count -eq $rows.Count){"STATIC_BRIDGE_EXHAUSTED_KNOWN_REJECTIONS"}else{"REJECTED_STATIC_NO_COMPATIBLE_FBX"}
 $receipt=[ordered]@{
-  schema_version=2
-  status=if($selected.Count -gt 0){"STATIC_BRIDGE_READY_FOR_UE4"}else{"REJECTED_STATIC_NO_COMPATIBLE_FBX"}
+  schema_version=3
+  status=$bridgeStatus
   delivery_mode="DIRECT_OFFICIAL_RAW_FBX"
   license_sha256=$licenseSha
   scanned_count=$rows.Count
+  known_rejection_count=$knownRejectedRows.Count
   selected_count=$selected.Count
   selected_candidates=@($selected | Select-Object entry,filename,source_url,extracted_path,bytes,sha256,fbx_version,animation)
-  candidates=@($rows | Select-Object entry,filename,source_url,bytes,sha256,fbx_version,geometry,model,limb_node,skin,cluster,animation,static_pass)
+  candidates=@($rows | Select-Object entry,filename,source_url,bytes,sha256,fbx_version,geometry,model,limb_node,skin,cluster,animation,known_rejection,static_pass)
   runtime_integration_allowed=$false
   final_likeness=$false
   evidence_boundary="Official raw-source/license/hash/static FBX structure only. Real UE4.27 skeletal technical import gate is next."
@@ -107,5 +118,11 @@ $receipt=[ordered]@{
 $receiptPath=Join-Path $OutputRoot "p1c01_kaykit_rig_bridge_static.json"
 $receipt | ConvertTo-Json -Depth 12 | Set-Content -LiteralPath $receiptPath -Encoding UTF8
 
-if($selected.Count -lt 1){ throw "KAYKIT_RIG_STATIC_BRIDGE_EMPTY receipt=$receiptPath" }
+if($selected.Count -lt 1){
+  if($bridgeStatus -eq "STATIC_BRIDGE_EXHAUSTED_KNOWN_REJECTIONS"){
+    Write-Host ("KAYKIT_RIG_STATIC_BRIDGE_EXHAUSTED_KNOWN_REJECTIONS known="+$knownRejectedRows.Count+" selected=0 ue4RunnerRequired=false receipt="+$receiptPath)
+    exit 0
+  }
+  throw "KAYKIT_RIG_STATIC_BRIDGE_EMPTY receipt=$receiptPath"
+}
 Write-Host ("KAYKIT_RIG_STATIC_BRIDGE_PASS delivery=raw selected="+$selected.Count+" receipt="+$receiptPath)
