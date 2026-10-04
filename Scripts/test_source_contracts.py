@@ -699,6 +699,54 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("Deterministic multi-frequency offsets break the old evenly-spaced", scenic)
         self.assertIn("Index) * 1.17f", scenic)
 
+
+    def test_p1c01_shire_visual_finish_wave_is_bounded_and_single_writer(self):
+        root = Path(__file__).resolve().parents[1]
+        contract = json.loads((root / "Data" / "P1C01ShireVisualFinishWaveV1.json").read_text(encoding="utf-8"))
+        self.assertEqual(contract["runtime_chapter"], "P1C01")
+        self.assertEqual(contract["runtime_writer"], "AShirePrototypeWorldBuilder")
+        self.assertEqual(contract["visible_budget"]["total_hism"], 212)
+        self.assertEqual(contract["visible_budget"]["total_limited_hero_actors"], 4)
+        self.assertFalse(contract["architecture_contract"]["new_world_authority"])
+        self.assertFalse(contract["architecture_contract"]["per_instance_tick"])
+        self.assertFalse(contract["architecture_contract"]["synchronous_heavy_load"])
+        self.assertFalse(contract["architecture_contract"]["actor_per_prop_density"])
+        self.assertFalse(contract["architecture_contract"]["p1c02_runtime_opened"])
+
+        source = (root / "Source" / "ShireJourney" / "Private" / "World" / "ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        header = (root / "Source" / "ShireJourney" / "Public" / "World" / "ShirePrototypeWorldBuilder.h").read_text(encoding="utf-8")
+        self.assertIn("void SpawnShireVisualFinishWave();", header)
+
+        start = source.index("void AShirePrototypeWorldBuilder::SpawnShireVisualFinishWave()")
+        end = source.index("void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()", start)
+        body = source[start:end]
+        for token in (
+            "P1C01_SHIRE_VISUAL_FINISH_WAVE",
+            "TerrainRidges[]",
+            "BagEndHedges[]",
+            "HobbitonHedges[]",
+            "FerryBanks[]",
+            "GeographySlopeInstances",
+            "WoodlandTreeInstances",
+            "GeographyRiverBankInstances",
+            "hismBudget=212",
+        ):
+            self.assertIn(token, body)
+
+        for forbidden in (
+            "LoadObject<",
+            "StaticLoadObject",
+            "RequestSyncLoad",
+            "SpawnActor<ALivingWorldDirector>",
+            "SpawnActor<AShireAmbientNPC>",
+            'TEXT("P1C02")',
+        ):
+            self.assertNotIn(forbidden, body)
+
+        build = source[source.index("void AShirePrototypeWorldBuilder::BuildPrototypeWorld()"):]
+        self.assertLess(build.index("SpawnVisibleShireMegaWaveD();"), build.index("SpawnShireVisualFinishWave();"))
+        self.assertLess(build.index("SpawnShireVisualFinishWave();"), build.index("SpawnWorldDensityDetailPass();"))
+
     def test_p1c01_kaykit_rig_bridge_is_bounded_and_non_runtime(self):
         root = Path(__file__).resolve().parents[1]
         packet = json.loads((root / "Data" / "P1C01KayKitRigTechnicalBridgeV1.json").read_text(encoding="utf-8"))

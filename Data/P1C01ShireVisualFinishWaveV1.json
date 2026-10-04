@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "wave_id": "P1C01_SHIRE_VISUAL_FINISH_WAVE_V1",
+  "status": "SOURCE_IMPLEMENTED_VALIDATION_PENDING",
+  "runtime_chapter": "P1C01",
+  "runtime_writer": "AShirePrototypeWorldBuilder",
+  "source_basis": {
+    "story_anchor": "F1-02 Bag End/Shire + F1-03 Shire roads/Bucklebury",
+    "visual_spine": "rolling Shire land -> authored Hobbiton -> ordered fields -> enclosed woodland -> Bucklebury Ferry",
+    "ferry_read": "well-kept approach, reeds, broad river, steep opposite-bank/uphill-path silhouette"
+  },
+  "visible_budget": {
+    "terrain_silhouette_hism": 16,
+    "bag_end_hism": 40,
+    "hobbiton_hism": 24,
+    "road_breakup_hism": 40,
+    "woodland_hism": 48,
+    "ferry_hism": 44,
+    "total_hism": 212,
+    "total_limited_hero_actors": 4
+  },
+  "architecture_contract": {
+    "repeated_detail": "existing HISM components",
+    "new_world_authority": false,
+    "per_instance_tick": false,
+    "synchronous_heavy_load": false,
+    "actor_per_prop_density": false,
+    "p1c02_runtime_opened": false,
+    "population_owner": "ALivingWorldDirector",
+    "npc_context_owner": "UShireNPCContextSubsystem",
+    "quest_owner": "UShireQuestSubsystem"
+  },
+  "performance_target": {
+    "engine": "UE4.27.2",
+    "rhi": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "cpu": "i7 Gen6 class",
+    "ram_gb": 8,
+    "vram_gb_approx": 2
+  },
+  "material_boundary": "No new texture/material set in this packet; road/verge breakup is geometry-only pending separately budgeted material validation.",
+  "evidence_boundary": "Source implementation only until exact-head validation and later PIE visual/performance evidence exist."
+}
