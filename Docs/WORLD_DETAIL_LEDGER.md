@@ -1244,3 +1244,11 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Retained only unique source-grounded reads: Party Field boundary shell, Water/mill edge reeds + stepping stones, and three Bywater-facing cottages.
 - Rejected duplicate density from that branch where #314/B already owns the same visual role.
 - This is a bounded salvage into the active Canon Finish B authority, not a second settlement system.
+
+
+### 2026-10-04 - Shire settlement source-construction closure
+
+- PR #314 and PR #318 are exact-head machine-green and merged; the authored P1C01 Hobbiton/Shire settlement checklist is source-complete.
+- No further settlement density wave is authorized before the existing local visual bootstrap and human rendered review, because the Governor requires observation of the generated production Content rather than blind source-density escalation.
+- Remaining world work is acceptance/polish: generate local `Content/Production`, launch `/Engine/Maps/Entry`, inspect composition/material/lighting/traversal, then correct only observed defects and measure the 720p/DX11 target.
+- This closure does not promote Gate 6/7, PIE/device/visual/pacing/performance acceptance, or P1C02 runtime.

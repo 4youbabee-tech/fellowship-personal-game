@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "closure_id": "P1C01_SHIRE_SETTLEMENT_SOURCE_CLOSURE_V1",
+  "status": "SOURCE_CONSTRUCTION_COMPLETE_MACHINE_GREEN_VISUAL_ACCEPTANCE_PENDING",
+  "runtime_chapter": "P1C01",
+  "runtime_writer": "AShirePrototypeWorldBuilder",
+  "machine_evidence": {
+    "settlement_completion": {
+      "pull_request": 314,
+      "exact_head": "3ee80ffeaa03ee0acce131d098eb3f7967f36480",
+      "pre_unreal_run": 1849,
+      "unreal_build_run": 1446,
+      "merge_commit": "b3f31134e97d58362f486e09796eaf34852fe328"
+    },
+    "canon_finish_b": {
+      "pull_request": 318,
+      "exact_head": "c9b27bdefbe91ef123c28f8a70a5ce37bd6b5e96",
+      "pre_unreal_run": 1868,
+      "unreal_build_run": 1465,
+      "merge_commit": "437db07cc67d742dded52541d09d0ef849f6d286"
+    }
+  },
+  "authored_settlement_checklist": {
+    "bag_end_hill": true,
+    "bagshot_row": true,
+    "number_3_gamgee_anchor": true,
+    "party_field": true,
+    "party_tree_existing": true,
+    "party_special_entrance": true,
+    "party_open_air_kitchen": true,
+    "village_common": true,
+    "ivy_bush_bywater_road": true,
+    "water": true,
+    "mill_house": true,
+    "mill_wheel": true,
+    "bridge": true,
+    "gardens_hedges_domestic_detail": true,
+    "orchards_working_fields": true,
+    "bywater_road_avenue": true,
+    "bywater_facing_edge": true,
+    "green_dragon_misplaced_in_hobbiton": false
+  },
+  "bounded_architecture": {
+    "sole_world_writer": "AShirePrototypeWorldBuilder",
+    "repeated_detail": "HISM + AWorldDetailCluster",
+    "per_instance_tick": false,
+    "synchronous_heavy_load": false,
+    "crowd_spawn_destroy_churn": false,
+    "p1c02_runtime_opened": false,
+    "population_owner": "ALivingWorldDirector",
+    "npc_context_owner": "UShireNPCContextSubsystem",
+    "quest_owner": "UShireQuestSubsystem"
+  },
+  "local_visual_gate": {
+    "required": true,
+    "launcher": "Scripts/bootstrap_local_p1c01_visuals.cmd",
+    "generated_content_root": "Content/Production",
+    "preview_map": "/Engine/Maps/Entry",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "reason": "Content/Production is intentionally generated/ignored locally; the owner previously observed Template_Default rather than the intended production Shire."
+  },
+  "remaining_acceptance": [
+    "human PIE/rendered visual walkthrough",
+    "pacing/readability review",
+    "target-device 1280x720 DX11 FPS/frame-time/RAM/VRAM evidence",
+    "evidence-driven polish only if the rendered review exposes defects"
+  ],
+  "evidence_boundary": "SOURCE-COMPLETE + STATIC/COMPILE MACHINE-GREEN. Not PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PACING-ACCEPTED or PERFORMANCE-ACCEPTED."
+}

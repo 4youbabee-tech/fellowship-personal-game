@@ -3354,3 +3354,27 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Duplicate orchard/farm density | SUPERSEDED | avoid unnecessary low-spec density growth |
 | Canon Finish B visual budget | LOCKED MAX 153 | 96 HISM + 45 cluster + 4 landmarks + 8 state actors |
 | Fresh exact-head validation | PENDING | required after salvage commit |
+
+
+## 2026-10-04 - P1C01 Shire settlement source closure
+
+| Closure area | Status | Evidence boundary |
+|---|---|---|
+| Settlement Completion #314 | COMPILE-TESTED / MERGED | head `3ee80ffe...`; Pre #1849 SUCCESS; Unreal #1446 SUCCESS; merge `b3f31134...` |
+| Canon Finish B #318 | COMPILE-TESTED / MERGED | head `c9b27bde...`; Pre #1868 SUCCESS; Unreal #1465 SUCCESS; merge `437db07c...` |
+| Bag End / Hill | SOURCE-COMPLETE | hero composition + garden/property framing |
+| Bagshot Row / Number 3 | SOURCE-COMPLETE | row + dedicated Gamgee visual anchor |
+| Party Field | SOURCE-COMPLETE | Party Tree + boundary + special entrance + state-aware kitchen/social detail |
+| Hobbiton village common | SOURCE-COMPLETE | market/well/benches/produce/social space |
+| Ivy Bush | SOURCE-COMPLETE | bounded Bywater-road inn identity |
+| Water / mill / wheel / bridge | SOURCE-COMPLETE | landmark + working-yard + water-edge detail |
+| Gardens / hedges / household life | SOURCE-COMPLETE | clustered/HISM domestic detail |
+| Orchard / working-field transition | SOURCE-COMPLETE | trees, hay, ploughs, gates, ladders |
+| Bywater-road avenue / facing edge | SOURCE-COMPLETE | bounded road framing + three edge cottages |
+| Green Dragon in Hobbiton | NOT PLACED | Bywater ownership preserved |
+| World construction authority | PRESERVED | AShirePrototypeWorldBuilder only |
+| New synchronous heavy loading | NONE | resident/soft pipeline preserved |
+| P1C02 runtime | NOT OPENED | predecessor Gate 6/7 still required |
+| Local production bootstrap | REQUIRED | `Scripts/bootstrap_local_p1c01_visuals.cmd` |
+| Human PIE/rendered visual acceptance | PENDING | direct owner evidence required |
+| Target-device 720p / 30 FPS | PENDING | measured device evidence required |

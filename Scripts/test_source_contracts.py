@@ -858,6 +858,52 @@ class SourceContractTests(unittest.TestCase):
         self.assertLess(build.index("SpawnShireSettlementCompletionPass();"), build.index("SpawnShireSettlementCanonFinishPass();"))
         self.assertLess(build.index("SpawnShireSettlementCanonFinishPass();"), build.index("SpawnWorldDensityDetailPass();"))
 
+
+    def test_p1c01_shire_settlement_source_closure_is_machine_green_but_not_visual_acceptance(self):
+        root = Path(__file__).resolve().parents[1]
+        closure = json.loads((root / "Data" / "P1C01ShireSettlementSourceClosureV1.json").read_text(encoding="utf-8"))
+        self.assertEqual(closure["runtime_chapter"], "P1C01")
+        self.assertEqual(closure["runtime_writer"], "AShirePrototypeWorldBuilder")
+        self.assertEqual(
+            closure["status"],
+            "SOURCE_CONSTRUCTION_COMPLETE_MACHINE_GREEN_VISUAL_ACCEPTANCE_PENDING")
+        required = (
+            "bag_end_hill",
+            "bagshot_row",
+            "number_3_gamgee_anchor",
+            "party_field",
+            "party_tree_existing",
+            "party_special_entrance",
+            "party_open_air_kitchen",
+            "village_common",
+            "ivy_bush_bywater_road",
+            "water",
+            "mill_house",
+            "mill_wheel",
+            "bridge",
+            "gardens_hedges_domestic_detail",
+            "orchards_working_fields",
+            "bywater_road_avenue",
+            "bywater_facing_edge",
+        )
+        for key in required:
+            self.assertTrue(closure["authored_settlement_checklist"][key], key)
+        self.assertFalse(closure["authored_settlement_checklist"]["green_dragon_misplaced_in_hobbiton"])
+        self.assertFalse(closure["bounded_architecture"]["per_instance_tick"])
+        self.assertFalse(closure["bounded_architecture"]["synchronous_heavy_load"])
+        self.assertFalse(closure["bounded_architecture"]["p1c02_runtime_opened"])
+        self.assertTrue(closure["local_visual_gate"]["required"])
+        self.assertEqual(
+            closure["local_visual_gate"]["launcher"],
+            "Scripts/bootstrap_local_p1c01_visuals.cmd")
+        self.assertIn("VISUALLY-ACCEPTED", closure["evidence_boundary"])
+        self.assertIn("Not PIE-TESTED", closure["evidence_boundary"])
+
+        governor = json.loads((root / "Data" / "ProjectGovernor.json").read_text(encoding="utf-8"))
+        world = next(r for r in governor["requirements"] if r["id"] == "REQ-WORLD-002")
+        self.assertEqual(world["status"], "PARTIAL")
+        self.assertTrue(any("bootstrap_local_p1c01_visuals.cmd" in item for item in world["missing_work"]))
+
     def test_p1c01_kaykit_rig_bridge_is_bounded_and_non_runtime(self):
         root = Path(__file__).resolve().parents[1]
         packet = json.loads((root / "Data" / "P1C01KayKitRigTechnicalBridgeV1.json").read_text(encoding="utf-8"))

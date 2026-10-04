@@ -164,14 +164,14 @@
         "LivingWorldDirector now spawns bounded reward-free player interaction markers for work, traveler, market and social micro-events when story danger is inactive.",
         "Living-world interaction objects are ephemeral, chapter-bound and destroyed with their parent micro-event; they do not create persistent quest or save state.",
         "V9 environmental-life runtime adds chapter-specific prop motion and bounded shadowless glow accents through AWorldAmbientMotionActor.",
-        "Moria now receives environmental danger/aftermath motion while retaining zero civilian baseline; Isengard receives bounded industrial motion without generic crowd simulation."
+        "Moria now receives environmental danger/aftermath motion while retaining zero civilian baseline; Isengard receives bounded industrial motion without generic crowd simulation.",
+        "P1C01 Shire settlement source-composition closure: PR #314 and PR #318 complete the authored Hobbiton/Hill/Bagshot Row/Party Field/Water-mill-bridge/Ivy Bush/orchard/Bywater-facing settlement layer through bounded HISM/WorldDetailCluster detail while preserving LivingWorldDirector population ownership."
       ],
       "missing_work": [
-        "Owner-observed local P1C01 reads sparse/empty over the white Template_Default floor; run the registered local production import/Entry-map bootstrap and then perform real rendered review before density escalation.",
-        "production-quality terrain/material/art replacement beyond current procedural detail",
-        "batch integration PIE/device/performance/visual review",
-        "additional fauna variety beyond the CP55 bird/rabbit/butterfly set remains optional future polish",
-        "Bounded systemic environmental reaction contract for meaningful physical interactions (trees/foliage, water, doors/tools/props, fauna and NPC observers) using event-driven responders rather than per-object full simulation."
+        "Run Scripts/bootstrap_local_p1c01_visuals.cmd on the owner workstation so ignored Content/Production assets are generated and /Engine/Maps/Entry is launched instead of the white Template_Default preview.",
+        "Human rendered/PIE review of the machine-green P1C01 Shire settlement for density, traversal readability, social life and story-state presentation; correct only defects observed in that review.",
+        "Target-device 720p/DX11 performance validation for the integrated settlement and living-world population.",
+        "Additional fauna/environmental polish remains optional and must be evidence-driven rather than blind density escalation."
       ],
       "acceptance_criteria": [
         "Ordinary traversal repeatedly reveals believable activity or environmental storytelling",
@@ -186,7 +186,7 @@
         "REQ-NPC-001"
       ],
       "checkpoint": "LIVING_WORLD_ROADMAP",
-      "notes": "Full requirement is not satisfied by current social pauses alone."
+      "notes": "Living-world systems remain implemented; P1C01 settlement source composition is machine-green through PR #314/#318. Requirement remains PARTIAL until local production bootstrap, human rendered review and target-device performance evidence exist."
     },
     {
       "id": "REQ-WORLD-002",
@@ -214,15 +214,14 @@
         "Owner rejected the earlier plain reference-image quality as the target bar; the world visual bar is now explicitly higher and more cinematic.",
         "Visual target emphasizes layered vistas, foreground/midground/background depth, richer materials/vegetation, landmark composition, water/fog/light atmosphere and region-specific color identity.",
         "Part1ProductionAtlas records canonical region and landmark chains plus hero-vista targets for all eight Frodo chapters and Isengard.",
-        "Part1WorldMap now provides a source-grounded schematic travel graph using Middle-earth region/place names rather than modern-country substitutions."
+        "Part1WorldMap now provides a source-grounded schematic travel graph using Middle-earth region/place names rather than modern-country substitutions.",
+        "P1C01 settlement source closure: PR #314 exact head 3ee80ffeaa03ee0acce131d098eb3f7967f36480 (Pre #1849, Unreal #1446) plus PR #318 exact head c9b27bdefbe91ef123c28f8a70a5ce37bd6b5e96 (Pre #1868, Unreal #1465) cover Bag End/Hill, Bagshot Row/Number 3, Party Field entrance/kitchen/tree/social space, Water/mill/bridge, village common, Ivy Bush, orchards, Bywater-road avenue and Bywater-facing edge."
       ],
       "missing_work": [
-        "Most non-Shire regions remain prototype geometry.",
-        "Raise Shire itself from reference vertical slice to the new higher cinematic beauty bar.",
-        "Final terrain/material/vegetation/water/architecture production assets and composition pass.",
-        "Chapter-specific hero vistas and landmark reveals.",
-        "Environment motion/weather depth.",
-        "Focused PIE/device/performance/visual acceptance."
+        "Run Scripts/bootstrap_local_p1c01_visuals.cmd to generate Content/Production locally and launch /Engine/Maps/Entry for the intended Shire preview.",
+        "Human rendered/PIE visual review of Bag End, Hobbiton, Party Field, Water/mill/bridge and the Bywater-facing road; fix only demonstrated composition/material/lighting defects.",
+        "Target-device 1280x720 DX11 performance measurement against the 30 FPS floor, then tune distant shadows, cull distances, far-detail density or lower-salience effects if measurements require it.",
+        "Selective material/lighting/terrain polish remains open only where rendered review proves the machine-green source composition still misses the cinematic quality bar."
       ],
       "acceptance_criteria": [
         "Each chapter has recognizable physical identity and at least one memorable cinematic vista/reveal.",
@@ -233,7 +232,7 @@
       ],
       "dependencies": [],
       "checkpoint": "CP26_PLUS_PRODUCTION",
-      "notes": "Biome plan exists but final production quality is incomplete."
+      "notes": "The Shire settlement construction/source-composition lane is complete and machine-green on PR #314/#318, but REQ-WORLD-002 remains PARTIAL because human rendered visual acceptance and target-device performance are mandatory and have not been supplied."
     },
     {
       "id": "REQ-NPC-001",
