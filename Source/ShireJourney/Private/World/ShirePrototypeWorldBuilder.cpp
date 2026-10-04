@@ -4140,15 +4140,24 @@ void AShirePrototypeWorldBuilder::SpawnScenicDetailPass()
     PathStoneInstances->ClearInstances();
 
     // Long tree lines close the horizon without hundreds of AStaticMeshActors.
-    // The positions are deterministic so screenshots/perf comparisons remain repeatable.
+    // Deterministic multi-frequency offsets break the old evenly-spaced "test strip"
+    // silhouette while keeping screenshot/perf comparisons repeatable.
     for (int32 Index = 0; Index < 52; ++Index)
     {
-        const float X = -2600.0f + static_cast<float>(Index) * 560.0f;
-        const float Wave = FMath::Sin(static_cast<float>(Index) * 0.73f) * 430.0f;
+        const float BaseX = -2600.0f + static_cast<float>(Index) * 560.0f;
+        const float X = BaseX
+            + FMath::Sin(static_cast<float>(Index) * 1.17f) * 135.0f
+            + FMath::Cos(static_cast<float>(Index) * 0.41f) * 70.0f;
+        const float Wave = FMath::Sin(static_cast<float>(Index) * 0.73f) * 430.0f
+            + FMath::Cos(static_cast<float>(Index) * 0.29f) * 170.0f;
         for (int32 Side = -1; Side <= 1; Side += 2)
         {
-            const float Y = static_cast<float>(Side) * (2450.0f + Wave * 0.35f);
-            const float S = 0.65f + 0.09f * static_cast<float>((Index + (Side > 0 ? 1 : 0)) % 4);
+            const float SideBias = static_cast<float>(Side) * 95.0f
+                * FMath::Sin(static_cast<float>(Index) * 0.53f + (Side > 0 ? 0.8f : 0.0f));
+            const float Y = static_cast<float>(Side) * (2450.0f + Wave * 0.35f) + SideBias;
+            const float S = 0.61f
+                + 0.07f * static_cast<float>((Index + (Side > 0 ? 1 : 0)) % 5)
+                + 0.035f * FMath::Sin(static_cast<float>(Index) * 0.67f);
             if (ProductionTreeTrunkMesh && ProductionTreeCanopyMesh)
             {
                 DistantTreeTrunkInstances->AddInstance(FTransform(
