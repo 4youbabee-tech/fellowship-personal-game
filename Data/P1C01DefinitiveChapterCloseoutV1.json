@@ -75,5 +75,48 @@
     "ram_gb": 8,
     "vram_gb_approx": 2
   },
-  "acceptance_boundary": "P1C01 remains NOT Gate 6/7 accepted until exact-build visual, gameplay, save/load and target-device evidence passes. P1C02 remains predecessor-gated."
+  "acceptance_boundary": "P1C01 remains NOT Gate 6/7 accepted until exact-build visual, gameplay, save/load and target-device evidence passes. P1C02 remains predecessor-gated.",
+  "visual_root_cause_analysis": {
+    "prior_render_run": 37207780989,
+    "import_health": {
+      "source_files": 376,
+      "failures": 0,
+      "albedo_requested": 161,
+      "albedo_bound": 161,
+      "albedo_missing": 0,
+      "material_packages_tracked": 229,
+      "material_packages_missing": 0
+    },
+    "diagnosed_causes": [
+      "P1C01 repeated geography/woodland uses shared Common meshes whose source materials are flat-color and have no authored texture UVs; the importer synthesizes deterministic face UVs but Common Turf/Foliage/RiverMud/Bark remain textureless.",
+      "The visible SM_ShGroundBlock has authored 0..1 UVs but was scaled as one approximately 34000x13000 cm actor, stretching one grass texture across most of the chapter floor."
+    ],
+    "implemented_root_fix": {
+      "global_common_material_mutation": false,
+      "shire_local_component_overrides": [
+        "GeographyHillInstances -> resident Shire Grass",
+        "GeographySlopeInstances -> resident Shire Grass",
+        "GeographyRiverBankInstances -> resident Shire Earth",
+        "WoodlandTreeInstances slot0 -> resident Shire Bark",
+        "WoodlandTreeInstances slot1 -> resident Shire Leaves",
+        "FernInstances -> resident Shire Bark/Leaves",
+        "ReedInstances -> resident Shire Leaves",
+        "RuralFenceInstances/PropertyFenceInstances -> resident Shire Wood",
+        "GardenSoilInstances -> resident Shire Earth"
+      ],
+      "visible_ground": {
+        "owner": "GroundTileInstances",
+        "type": "HISM",
+        "columns": 34,
+        "rows": 13,
+        "instances": 442,
+        "tile_world_size_cm": 1000,
+        "actor_per_tile": false,
+        "collision_authority": "hidden deterministic foundation",
+        "new_texture_memory": false
+      },
+      "runtime_sync_load": false
+    },
+    "evidence_boundary": "Source root-fix implemented. A new exact-head rendered artifact is required before claiming visual improvement or acceptance."
+  }
 }
