@@ -3444,3 +3444,22 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Authored property fences | OPEN ROOT-FIX | isolate from RuralFenceInstances clear/rebuild |
 | Gameplay / save / device / FPS | NOT ACCEPTED | exact chapter evidence still required |
 | P1C02 | PREDECESSOR-GATED | do not open before P1C01 Gate 6/7 |
+
+
+### Definitive P1C01 closeout tranche A - implementation matrix
+
+| Area | Current state | Evidence boundary |
+|---|---|---|
+| Single active closeout branch | IMPLEMENTED | sequential commits on `production/p1c01-definitive-chapter-closeout-2026-10-04` |
+| Render capture generation | 6 PRIOR SHOTS PROVEN | run 37207780989 logs + artifact 11306540563 |
+| Render finalizer count bug | ROOT-FIX IMPLEMENTED | exact-head rerun pending |
+| Human visual disposition of prior six shots | REJECTED / POLISH REQUIRED | not visually accepted |
+| Frodo UE4 skeleton | TECHNICAL PASS | 161 reference bones, technical gate log |
+| Frodo static deformation | ROOT-FIX IMPLEMENTED / REVALIDATION PENDING | prior FileNotFoundError invalidated deformation proof |
+| Party Field entrance collision | SOURCE ROOT-FIX IMPLEMENTED | hedge indices 7-9 omitted; exact-head validation pending |
+| Party furniture ownership | SINGLE OWNER IN SOURCE | SpawnPartySocialLoopPass |
+| Authored property fences | DEDICATED HISM OWNER | PropertyFenceInstances |
+| Production garden soil | HISM | GardenSoilInstances |
+| Settlement final polish | SOURCE IMPLEMENTED | 44 HISM + 54 clustered, <=6 actors, 0 hero actors, 0 movable lights |
+| Local Gate 6/7 harness | INTEGRATED / REVIEW PENDING | no acceptance flags promoted |
+| P1C02 runtime | BLOCKED | predecessor gate unchanged |
