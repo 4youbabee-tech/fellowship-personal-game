@@ -118,13 +118,17 @@ Until current Part I is stable:
 - do not add a playable route without a strong story reason,
 - prefer extending proven systems over creating parallel systems.
 
-## Gate 8 — Failure discipline
-When a technical gate fails:
-1. stop the affected runtime/integration lane,
-2. isolate the concrete failure,
-3. fix the smallest failing layer,
-4. rerun that gate,
-5. resume that lane only after it passes.
+## Gate 8 — Failure discipline / permanent root-cause rule
+When a technical or production gate fails:
+1. stop or quarantine only the affected runtime/integration lane,
+2. reproduce and isolate the concrete symptom,
+3. identify the causal layer and root cause,
+4. repair the causal layer — never close the defect with a symptom mask or workaround,
+5. add or strengthen a regression signal where practical,
+6. rerun the exact failed gate on the repaired exact head,
+7. resume that lane only after the gate passes.
+
+Temporary containment is allowed only to protect saves, branches, runners, data or owner time while the root repair is underway. Containment is never the accepted solution and must not be relabeled as defect closure.
 
 Independent source/PDF/warehouse/design preparation may continue when the failure does not invalidate it. Do not stack new runtime changes on a known failing runtime checkpoint.
 
