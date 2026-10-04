@@ -75,8 +75,10 @@
     "One bounded production car at a time.",
     "Frodo exact-head QC and integration precede Gandalf.",
     "No later runtime chapter opens before its predecessor Gate 6/7 is accepted.",
+    "P1C01 is definitively closed only after all required P1C01 production cars and Gate 6/7 evidence are accepted; settlement source completion alone never opens P1C02.",
     "Temporary branch -> implement -> validate -> root-fix -> exact-head green -> merge -> verify -> cleanup.",
-    "Source/warehouse preparation for later chapters does not authorize later runtime integration."
+    "Source/warehouse preparation for later chapters does not authorize later runtime integration.",
+    "No defect lane may be closed with symptom patching: diagnose root cause, repair the causal layer, add a regression guard where practical, and rerun the exact failed gate."
   ],
   "architecture_invariants": {
     "heavy_asset_references": "TSoftObjectPtr/TSoftClassPtr/FSoftObjectPath",
