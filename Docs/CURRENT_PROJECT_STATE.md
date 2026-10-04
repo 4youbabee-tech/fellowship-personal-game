@@ -4296,3 +4296,10 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Exact failing evidence from Human Character Production Wave 2 #15: Blender 4.0.2 failed inside the FBX importer with `ModuleNotFoundError: No module named 'numpy'`; the job correctly exited 17 and therefore did not produce deformation evidence.
 - Root cause is the hosted deformation runner environment, not the Frodo candidate or UE4 import. The workflow now installs the explicit `python3-numpy` runtime dependency together with Blender and performs a Blender-internal NumPy preflight before importing the FBX.
 - This does not promote deformation status by itself. The exact-head deformation job must rerun and emit `STATIC_DEFORMATION_STRESS_PASS` before merge.
+
+
+### 2026-10-04 - P1C01 closeout branch lineage recovery
+
+- The consolidated P1C01 closeout branch was briefly moved to current `develop` while reconciling the already-merged cleanup packet. The prior closeout head remained recoverable and the branch was restored to that reviewed lineage before further work.
+- PR #328 cleanup state is being synchronized into this branch without dropping the 42 closeout commits.
+- Evidence boundary is unchanged: this administrative lineage repair does not promote PIE/device/visual/performance/Gate 6/7 acceptance.
