@@ -3378,3 +3378,14 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Local production bootstrap | REQUIRED | `Scripts/bootstrap_local_p1c01_visuals.cmd` |
 | Human PIE/rendered visual acceptance | PENDING | direct owner evidence required |
 | Target-device 720p / 30 FPS | PENDING | measured device evidence required |
+
+
+## 2026-10-04 - Permanent owner quality/sequence contracts
+
+| Contract | Status | Meaning |
+|---|---|---|
+| No symptom patching | IMPLEMENTED IN GOVERNANCE / VALIDATION PENDING | Root cause + causal-layer repair + regression guard where practical + exact failed-gate rerun |
+| Temporary workaround | CONTAINMENT ONLY | May protect project during repair; cannot be accepted as final fix |
+| P1C01 Shire definitive closure | PARTIAL | Settlement source is machine-green; full character/world/gameplay/audio/save/device/human closeout remains |
+| P1C02 Bree runtime | BLOCKED / PREDECESSOR-GATED | Opens only after `P1C01_GATE_6_7_ACCEPTED` |
+| Chapter progression | SERIALIZED | P1C01 -> P1C02 -> P1C03 -> ...; next runtime chapter requires predecessor Gate 6/7 |
