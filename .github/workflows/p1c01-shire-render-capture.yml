@@ -1,0 +1,76 @@
+name: P1C01 Shire Render Capture
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - "Scripts/ci_capture_p1c01_visuals.cmd"
+      - "Scripts/ci_import_production_assets.cmd"
+      - ".github/workflows/p1c01-shire-render-capture.yml"
+      - "Source/**"
+      - "Config/**"
+      - "SourceAssets/Production/**"
+      - "ShireJourney.uproject"
+  push:
+    branches:
+      - production/p1c01-definitive-chapter-closeout-2026-10-04
+    paths:
+      - "Scripts/ci_capture_p1c01_visuals.cmd"
+      - "Scripts/ci_import_production_assets.cmd"
+      - ".github/workflows/p1c01-shire-render-capture.yml"
+      - "Source/**"
+      - "Config/**"
+      - "SourceAssets/Production/**"
+      - "ShireJourney.uproject"
+
+concurrency:
+  group: p1c01-shire-render-capture
+  cancel-in-progress: false
+
+jobs:
+  capture:
+    name: UE4.27.2 rendered evidence
+    runs-on:
+      - self-hosted
+      - Windows
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Verify exact checkout
+        shell: powershell
+        run: |
+          $expected = "${{ github.event.pull_request.head.sha || github.sha }}"
+          $actual = (git rev-parse HEAD).Trim()
+          Write-Host "P1C01_CAPTURE_EXACT_HEAD expected=$expected actual=$actual"
+          if ($actual -ne $expected) { throw "Exact-head checkout mismatch" }
+          git status --short
+
+      - name: Build ShireJourneyEditor for capture
+        shell: cmd
+        env:
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          call Scripts\ci_build_unreal.cmd
+          if errorlevel 1 exit /b %ERRORLEVEL%
+
+      - name: Capture P1C01 production Shire
+        shell: cmd
+        run: Scripts\ci_capture_p1c01_visuals.cmd
+
+      - name: Upload rendered evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1c01-shire-render-capture-${{ github.sha }}
+          path: |
+            Saved/Automation/P1C01VisualCapture/**
+          if-no-files-found: error
+          retention-days: 14
