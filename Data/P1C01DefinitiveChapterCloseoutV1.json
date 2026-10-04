@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "wave_id": "P1C01_DEFINITIVE_CHAPTER_CLOSEOUT_V1",
+  "runtime_chapter": "P1C01",
+  "branch_policy": {
+    "branch": "production/p1c01-definitive-chapter-closeout-2026-10-04",
+    "rule": "One active P1C01 closeout branch; sequential commits on this branch replace branch-per-packet churn until P1C01 is Gate 6/7 accepted.",
+    "p1c02_runtime_opened": false
+  },
+  "source_baseline": {
+    "develop_sha": "fd08c1c719f4b754384f03a10751dd748eacc74f",
+    "already_merged": [
+      "PR #314 Shire Settlement Completion",
+      "PR #318 Shire Settlement Canon Finish B",
+      "PR #320 settlement source closure",
+      "PR #321 Frodo Wave 3 source/tooling"
+    ]
+  },
+  "rendered_evidence": {
+    "workflow_run": 37207780989,
+    "artifact_id": 11306540563,
+    "head_sha": "de660c5fee42c77a92d416c6671c48d52135a495",
+    "capture_count_proven_by_log": 6,
+    "capture_names": [
+      "Bag End / Hill",
+      "Hobbiton Common",
+      "Party Field",
+      "Water / Mill / Bridge",
+      "Bywater-facing edge",
+      "Bucklebury Ferry"
+    ],
+    "review_state": "HUMAN_RENDER_REVIEWED_REJECTED",
+    "observed_defects": [
+      "Player presentation is still a blocky/proxy character in all captured views.",
+      "Large portions of terrain, foliage and settlement surfaces read flat/grey and prototype-like rather than production-authored.",
+      "Landmark composition is not consistently hero-readable from the bounded review cameras.",
+      "Lighting/sky/depth separation is too flat for the intended cinematic Shire presentation.",
+      "Bucklebury/Ferry presentation remains visibly simple and under-authored compared with the target."
+    ],
+    "evidence_boundary": "These screenshots prove rendered output exists and justify rejection/polish work. They do not prove PIE, target-device, pacing or performance acceptance."
+  },
+  "root_cause_work": [
+    "Repair render-capture count parsing bug after six screenshot passes; do not change screenshot generation to hide the failure.",
+    "Repair Human Wave 3 artifact handoff so deformation stress consumes the actual UE4 receipt; the prior workflow green must not be treated as deformation proof.",
+    "Diagnose grey/flat world appearance at the material/lighting pipeline before adding more density.",
+    "Fix Party Field duplicate furniture ownership and physical entrance collision.",
+    "Fix village property-fence ownership so later rural-density clears cannot erase authored fences."
+  ],
+  "closeout_lanes": [
+    "A production Frodo deformation/animation/runtime presentation",
+    "B Gandalf/required hero presentation",
+    "C world material/lighting/landmark visual quality",
+    "D Living Shire behavior verification and defects",
+    "E gameplay/quest/traversal continuity",
+    "F audio/presentation",
+    "G save/load and return-to-control reliability",
+    "H target-device performance and streaming",
+    "I human visual/pacing Gate 6/7 acceptance"
+  ],
+  "architecture_contract": {
+    "world_writer": "AShirePrototypeWorldBuilder",
+    "population_owner": "ALivingWorldDirector",
+    "npc_context_owner": "UShireNPCContextSubsystem",
+    "quest_owner": "UShireQuestSubsystem",
+    "repeated_detail": "HISM_OR_AWorldDetailCluster",
+    "synchronous_heavy_load": false,
+    "actor_per_prop_density": false,
+    "runtime_asset_refs": "soft/async for heavy assets"
+  },
+  "target": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_approx": 2
+  },
+  "acceptance_boundary": "P1C01 remains NOT Gate 6/7 accepted until exact-build visual, gameplay, save/load and target-device evidence passes. P1C02 remains predecessor-gated."
+}
