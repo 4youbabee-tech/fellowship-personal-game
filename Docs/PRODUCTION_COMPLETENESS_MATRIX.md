@@ -3495,3 +3495,13 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | develop / main / archive | PRESERVED |
 | Edoras prep refs | PRESERVED |
 | Runtime or Gate 6/7 effect | NONE |
+
+
+## 2026-10-04 - P1C01 remaining mega-wave map
+
+| Mega wave | State | Exit |
+|---|---|---|
+| P1C01-MW5 Production Completion | ACTIVE | All known production/integration blockers required for final acceptance closed on one exact head; technical gates green |
+| P1C01-MW6 Final Closure + Gate 6/7 | PENDING | Chapter-specific PIE, save/load, human visual/pacing and target-device performance evidence accepted; Gate 6/7 accepted |
+
+A-I closeout lanes are internal workstreams, not separate waves. P1C02 remains predecessor-gated.
