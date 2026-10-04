@@ -4193,3 +4193,9 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Settlement Completion now leaves a three-segment hedge gap aligned to the authored entry gates/path.
 - HISM budget is corrected to **303**; cluster budget remains 82 and hero budget remains 16.
 - Status: **SOURCE-FIXED / FRESH EXACT-HEAD VALIDATION PENDING**. No PIE/visual/device/FPS acceptance is claimed.
+
+
+## 2026-10-04 - Party Field visual-gate collision correction
+- Static source-bounds audit measured SM_ShFarmGate at 258 cm source width; the two Party Field visual gate centers are ~153 cm apart before scale.
+- Both Party Field entry-gate actors are now non-colliding so they cannot reseal the real hedge opening. Other property gates remain collision-enabled.
+- Status: **SOURCE-FIXED / FRESH EXACT-HEAD VALIDATION PENDING**. No PIE traversal acceptance is claimed.

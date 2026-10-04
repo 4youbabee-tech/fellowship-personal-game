@@ -3333,3 +3333,14 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Settlement HISM budget | BOUNDED | 303 |
 | Cluster / hero budgets | UNCHANGED | 82 / 16 |
 | PIE traversal acceptance | NOT ACCEPTED | requires direct PIE walkthrough |
+
+
+## 2026-10-04 - Party Field gate collision correction
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| FarmGate source width | STATIC-MEASURED | 258 cm OBJ bounds |
+| Party Field visual gates | SOURCE-FIXED | 2 actors, collision=false |
+| Hedge boundary opening | SOURCE-FIXED | indices 6-8 omitted |
+| Property gates elsewhere | PRESERVED | collision behavior unchanged |
+| PIE traversal | NOT ACCEPTED | direct walkthrough still required |

@@ -83,6 +83,9 @@
       8
     ],
     "gate_count": 2,
-    "intent": "Visible gates and path align with a real collision opening; the Party Field is not sealed by the hedge ring."
+    "intent": "Visible gates and path align with a real collision opening; the Party Field is not sealed by the hedge ring.",
+    "entry_gate_collision": false,
+    "gate_mesh_source_width_cm": 258,
+    "reason": "Two scaled static gate panels can overlap the ~153 cm center spacing; visual gates are non-colliding so the authored hedge opening remains truly traversable."
   }
 }

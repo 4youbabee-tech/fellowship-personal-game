@@ -1230,3 +1230,9 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Party Field boundary uses collision-owning HedgeInstances, so a continuous 12-segment ring would have sealed the visible southwest gate/path.
 - The authored settlement pass now omits hedge indices 6-8 at that approach, preserving a real traversal opening behind the two entry gates.
 - Updated HISM budget: 303 (down from 306). No extra actors, no ownership change, no P1C02.
+
+
+### P1C01 Party Field gate collision correction
+- Production FarmGate source bounds are 258 cm wide before scaling; the two visual entrance gates are spaced about 153 cm center-to-center.
+- Keeping both as collision owners can overlap/seal the entrance even after the hedge opening correction.
+- Only the two P1C01PartyFieldEntryGate actors are now non-colliding visual landmarks. Property/boundary gates elsewhere keep their existing collision behavior.

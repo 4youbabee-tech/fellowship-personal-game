@@ -769,6 +769,8 @@ class SourceContractTests(unittest.TestCase):
         header = (root / "Source" / "ShireJourney" / "Public" / "World" / "ShirePrototypeWorldBuilder.h").read_text(encoding="utf-8")
         self.assertIn("void SpawnShireSettlementCompletionPass();", header)
         self.assertIn("if (Index >= 6 && Index <= 8)", source)
+        self.assertEqual(body.count('TEXT("P1C01PartyFieldEntryGate")'), 2)
+        self.assertNotIn('18.0f,\n        true,\n        TEXT("P1C01PartyFieldEntryGate")', body)
 
         start = source.index("void AShirePrototypeWorldBuilder::SpawnShireSettlementCompletionPass()")
         end = source.index("void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()", start)

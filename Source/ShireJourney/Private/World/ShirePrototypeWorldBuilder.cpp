@@ -4378,14 +4378,14 @@ void AShirePrototypeWorldBuilder::SpawnShireSettlementCompletionPass()
         FVector(-430.0f, 1035.0f, 0.0f),
         FVector(0.76f),
         18.0f,
-        true,
+        false,
         TEXT("P1C01PartyFieldEntryGate"));
     SpawnHero(
         ProductionFarmGateMesh,
         FVector(-285.0f, 1085.0f, 0.0f),
         FVector(0.72f),
         18.0f,
-        true,
+        false,
         TEXT("P1C01PartyFieldEntryGate"));
 
     for (int32 Index = 0; Index < 12; ++Index)
