@@ -69,14 +69,14 @@ set "ROLL=%~7"
 set "BEFORE_FILE=%TEMP%\p1c01_before_%RANDOM%.txt"
 set "LOG_FILE=%RUN_DIR%\%SHOT_NAME%.log"
 
-powershell.exe -NoProfile -Command "Get-ChildItem -LiteralPath '%SCREENSHOT_ROOT%' -File -Filter '*.png' -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName | Set-Content -LiteralPath '%BEFORE_FILE%'"
+powershell.exe -NoProfile -Command "Get-ChildItem -LiteralPath '%SCREENSHOT_ROOT%' -Recurse -File -Filter '*.png' -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName | Set-Content -LiteralPath '%BEFORE_FILE%'"
 
 echo P1C01_RENDER_CAPTURE_SHOT_BEGIN name=%SHOT_NAME% x=%X% y=%Y% z=%Z% pitch=%PITCH% yaw=%YAW% roll=%ROLL%
 
 start "" /B "%EDITOR%" "%PROJECT%" /Engine/Maps/Entry -game -log -abslog="%LOG_FILE%" -d3d11 -ResX=1280 -ResY=720 -Windowed -NoSplash -NoSound -ExecCmds="BugItGo %X% %Y% %Z% %PITCH% %YAW% %ROLL%,HighResShot 1"
 
 powershell.exe -NoProfile -ExecutionPolicy Bypass -Command ^
-  "$deadline=(Get-Date).AddSeconds(75); $before=@(); if(Test-Path -LiteralPath '%BEFORE_FILE%'){$before=Get-Content -LiteralPath '%BEFORE_FILE%'}; $shot=$null; do { Start-Sleep -Milliseconds 750; $shot=Get-ChildItem -LiteralPath '%SCREENSHOT_ROOT%' -File -Filter '*.png' -ErrorAction SilentlyContinue | Where-Object { $before -notcontains $_.FullName } | Sort-Object LastWriteTime -Descending | Select-Object -First 1 } while(-not $shot -and (Get-Date) -lt $deadline); if(-not $shot){exit 3}; Copy-Item -LiteralPath $shot.FullName -Destination '%RUN_DIR%\%SHOT_NAME%.png' -Force; exit 0"
+  "$deadline=(Get-Date).AddSeconds(75); $before=@(); if(Test-Path -LiteralPath '%BEFORE_FILE%'){$before=Get-Content -LiteralPath '%BEFORE_FILE%'}; $shot=$null; do { Start-Sleep -Milliseconds 750; $shot=Get-ChildItem -LiteralPath '%SCREENSHOT_ROOT%' -Recurse -File -Filter '*.png' -ErrorAction SilentlyContinue | Where-Object { $before -notcontains $_.FullName } | Sort-Object LastWriteTime -Descending | Select-Object -First 1 } while(-not $shot -and (Get-Date) -lt $deadline); if(-not $shot){exit 3}; Copy-Item -LiteralPath $shot.FullName -Destination '%RUN_DIR%\%SHOT_NAME%.png' -Force; exit 0"
 set "WAIT_EXIT=!ERRORLEVEL!"
 
 powershell.exe -NoProfile -Command "Get-CimInstance Win32_Process -Filter \"Name='UE4Editor.exe'\" | Where-Object { $_.CommandLine -like '*ShireJourney.uproject*' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }"
