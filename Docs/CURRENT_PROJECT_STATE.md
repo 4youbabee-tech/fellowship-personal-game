@@ -4303,3 +4303,10 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - The consolidated P1C01 closeout branch was briefly moved to current `develop` while reconciling the already-merged cleanup packet. The prior closeout head remained recoverable and the branch was restored to that reviewed lineage before further work.
 - PR #328 cleanup state is being synchronized into this branch without dropping the 42 closeout commits.
 - Evidence boundary is unchanged: this administrative lineage repair does not promote PIE/device/visual/performance/Gate 6/7 acceptance.
+
+## 2026-10-04 - Light dead-ref cleanup wave
+
+- Scope is deliberately small: six already-closed/superseded P1C01 working refs only.
+- Queued refs: PR #317, #319, #322, #323, #324 and #326 heads.
+- Active consolidated PR #327 is explicitly preserved, as are `develop`, `main`, the recovery archive and both Edoras prep refs.
+- No production implementation, chapter scope, gameplay, asset, runtime or acceptance state is changed by this wave.
