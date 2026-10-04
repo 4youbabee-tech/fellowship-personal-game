@@ -52,7 +52,7 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
       - name: One-time retire already-reviewed stale refs
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'maintenance/default-branch-cleanup-rootfix-2026-10-04')
         shell: powershell
         run: |
           $ErrorActionPreference = "Stop"
@@ -67,14 +67,10 @@ jobs:
           $active = @($open | ForEach-Object { [string]$_.head.ref })
 
           function Get-LiveSha([string]$branchName) {
-            $encoded = [System.Uri]::EscapeDataString("heads/$branchName")
-            try {
-              $ref = Invoke-RestMethod -Headers $headers -Uri "https://api.github.com/repos/$repo/git/ref/$encoded"
-              return [string]$ref.object.sha
-            } catch {
-              if ($_.Exception.Response.StatusCode.value__ -eq 404) { return $null }
-              throw
-            }
+            $lines = @(git ls-remote --heads origin "refs/heads/$branchName")
+            if ($LASTEXITCODE -ne 0) { throw "Unable to query live ref: $branchName" }
+            if ($lines.Count -eq 0) { return $null }
+            return (($lines[0] -split "\s+")[0]).Trim()
           }
 
           function Delete-Exact([string]$branchName,[string]$expectedSha,[string]$reason) {
