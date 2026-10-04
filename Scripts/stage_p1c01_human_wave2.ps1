@@ -326,5 +326,27 @@ $receipt=[ordered]@{
 }
 $receiptPath=Join-Path $OutputRoot "p1c01_human_wave2_hosted.json"
 $receipt | ConvertTo-Json -Depth 16 | Set-Content -LiteralPath $receiptPath -Encoding UTF8
+
+# The self-hosted UE4 lane needs only the hosted receipt, small JSON diagnostics and
+# the selected normalized FBX payload(s). Do not transport the downloaded source
+# archive/raw FBXs or rejected normalized FBXs across Actions artifacts.
+$selectedNormalized=@($eligible | ForEach-Object { [string]$_.normalized_relative_path })
+$removedNormalizedBytes=[int64]0
+Get-ChildItem -LiteralPath $normalizedRoot -Filter "*.fbx" -File -ErrorAction SilentlyContinue | ForEach-Object {
+  $rel=("normalized/"+$_.Name)
+  if($selectedNormalized -notcontains $rel){
+    $removedNormalizedBytes += [int64]$_.Length
+    Remove-Item -LiteralPath $_.FullName -Force
+  }
+}
+$removedSourceBytes=[int64]0
+foreach($heavyRoot in @($downloadRoot,$extractRoot)){
+  if(Test-Path -LiteralPath $heavyRoot){
+    Get-ChildItem -LiteralPath $heavyRoot -File -Recurse -ErrorAction SilentlyContinue | ForEach-Object { $removedSourceBytes += [int64]$_.Length }
+    Remove-Item -LiteralPath $heavyRoot -Recurse -Force
+  }
+}
+Write-Host ("HUMAN_WAVE2_TRANSPORT_PRUNE selectedFbx="+$selectedNormalized.Count+" removedSourceBytes="+$removedSourceBytes+" removedRejectedFbxBytes="+$removedNormalizedBytes)
+
 if($eligible.Count -lt 1){ Write-Host ("HUMAN_WAVE2_HOSTED_FAST_REJECT selected=0 receipt="+$receiptPath); exit 0 }
 Write-Host ("HUMAN_WAVE2_HOSTED_PASS selected="+$eligible.Count+" deformOnly=true maxZeroWeightRatio="+$manifest.source_policy.max_zero_weight_ratio+" archiveSha="+$archiveSha+" directSources="+$directSources.Count+" receipt="+$receiptPath)

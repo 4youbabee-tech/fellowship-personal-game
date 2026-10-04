@@ -3707,3 +3707,15 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Mixed Source delta can inherit render | NO |
 | Current queued duplicate render expected after fresh push | CANCELLATION/RECLASSIFICATION PENDING |
 | Fresh visual acceptance claimed | NO |
+
+
+## 2026-10-05 - Human hosted artifact transport
+
+| Control | State |
+|---|---|
+| Raw source archive transferred to self-hosted UE4 | ROOT-FIXED / NO |
+| Rejected normalized FBXs transferred | ROOT-FIXED / NO |
+| Selected normalized FBX transferred | YES |
+| Provenance + quality JSON receipts retained | YES |
+| Gate semantics changed | NO |
+| Fresh transfer timing evidence | PENDING |

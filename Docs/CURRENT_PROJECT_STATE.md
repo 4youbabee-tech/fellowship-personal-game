@@ -4457,3 +4457,11 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Root fix extends the same **all-files-must-be-Human-owned** rule across the complete ancestor-to-head delta. The commandlet is ignored only when every non-doc file across that proof window is on the dedicated Human allowlist.
 - Any mixed source/config/content delta still blocks inheritance and forces capture.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD TRANSITIVE CLASSIFIER PROOF PENDING**.
+
+
+## 2026-10-05 - Human artifact transport pruning
+
+- The exact-head Human lane was spending multiple minutes in **Download hosted source factory artifact** because the hosted artifact transported the entire downloaded KayKit raw source set plus rejected FBXs, even though UE4 consumes only the selected normalized candidate and JSON receipts.
+- The hosted stage now writes the complete provenance/quality receipt first, then removes the raw download/extraction directories and rejected normalized FBXs from the transport tree. It preserves all JSON diagnostics plus only the selected normalized FBX payload(s).
+- This changes transport size/cost only; source SHA provenance remains in the receipt and all technical gates remain unchanged.
+- Status: **SOURCE-IMPLEMENTED / FRESH TRANSPORT-TIME EVIDENCE PENDING**.
