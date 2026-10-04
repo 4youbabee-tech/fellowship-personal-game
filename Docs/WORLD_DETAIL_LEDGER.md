@@ -1213,3 +1213,14 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Runtime contract: modular Frodo remains fallback. Heavy character assets must remain soft references and load asynchronously through FStreamableManager. No synchronous heavy LoadObject path is authorized.
 - Target: UE4.27.2 / DX11 / 720p / 30 FPS floor / i7 Gen6 / 8 GB RAM / ~2 GB VRAM.
 - Evidence boundary: REGISTERED / SOURCE-GROUNDED PLAN ONLY. No technical pass, deformation acceptance, runtime, PIE, device, rendered-visual or FPS acceptance is claimed.
+
+
+## 2026-10-04 - P1C01 SHIRE_SETTLEMENT_COMPLETION_V2 registered before implementation
+
+- Scope: finish the player-facing Hobbiton/Bag End settlement layer inside existing P1C01 only. This does not open P1C02 and does not create a second world-construction authority.
+- Canon/source anchors: F1-01/F1-02 Bag End + Hobbiton and the supplied Tolkien source support Bag End on the Hill, Bagshot Row, the Party Field south of Bag End, gardens/turf walls, Hobbiton/Bywater local provisioning, the Water, a mill, bridge/crossing, farms/fields, hedgerows, lanes and a lived-in valley settlement. Later Scouring damage is not imported into the early P1C01 state.
+- Runtime authority remains AShirePrototypeWorldBuilder. LivingWorldDirector remains population/pooling authority; NPC context and quest/story ownership remain unchanged.
+- Visible completion targets: Bagshot Row identity; Party Field boundary/entrance/social shell; Water + mill yard + bridge read; Hobbiton domestic lanes and property gardens; Bywater-facing village edge; orchards/farm yards; lane lighting/signage; anti-prototype household clutter; continuous traversal and sightline hierarchy back to Bag End.
+- Performance contract: repeated detail uses existing HISM components or bounded WorldDetailCluster HISM actors; no per-instance Tick; no actor-per-prop density; hero actors remain bounded; no new synchronous heavy asset loads; no new texture set; existing cull bands remain authoritative.
+- Asset contract: reuse resident Shire/Common production meshes already present in the repository. Animated-character OBJ remains forbidden and unrelated to this world packet.
+- Evidence boundary at registration: SOURCE-GROUNDED PLAN ONLY. No PIE, device, rendered-visual or FPS acceptance is claimed.
