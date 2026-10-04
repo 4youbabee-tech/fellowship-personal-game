@@ -3479,3 +3479,6 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Garden soil material | SOURCE-IMPLEMENTED | dedicated HISM + Shire Earth |
 | Extra texture memory | NONE | existing resident textures reused |
 | Fresh rendered proof | PENDING | prior six-shot artifact remains visually rejected |
+
+
+- P1C01 capture concurrency: stale head runs are now cancelled when the branch advances; current exact-head capture retains the runner. This is CI throughput hygiene only, not rendered/visual acceptance.
