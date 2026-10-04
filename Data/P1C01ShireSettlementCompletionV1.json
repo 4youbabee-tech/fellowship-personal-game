@@ -42,8 +42,8 @@
   },
   "budget": {
     "hism_instances": 306,
-    "cluster_instances": 82,
-    "cluster_actors_max": 8,
+    "cluster_instances": 71,
+    "cluster_actors_max": 7,
     "limited_hero_actors": 16
   },
   "architecture_contract": {
@@ -73,5 +73,12 @@
     "party_tree_owner": "SpawnVillage existing canonical anchor",
     "settlement_pass_action": "preserve existing Party Tree; add authored field entry gates and surrounding composition",
     "duplicate_party_tree_spawn": false
+  },
+  "budget_after_exterior_closeout": {
+    "superseded_original_cluster_instances": 82,
+    "superseded_original_cluster_actors_max": 8,
+    "current_cluster_instances": 71,
+    "current_cluster_actors_max": 7,
+    "reason": "Party table family removed from settlement completion and Party-local lamp duplicates consolidated under SpawnPartySocialLoopPass."
   }
 }

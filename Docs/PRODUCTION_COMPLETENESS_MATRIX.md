@@ -3310,7 +3310,7 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Cultivated orchard/garden edge | SOURCE-IMPLEMENTED | HISM tree/shrub/grass belt |
 | Mill / bridge context | SOURCE-IMPLEMENTED | clustered village-life surroundings; existing landmarks not duplicated |
 | Bywater-facing transition | SOURCE-IMPLEMENTED | 4 cottages + 2 wells + bounded edges; full Bywater not claimed |
-| Household/farm/social detail | SOURCE-IMPLEMENTED | 82 instances / max 8 AWorldDetailCluster actors |
+| Household/farm/social detail | SOURCE-IMPLEMENTED / CLOSEOUT-RECONCILED | 71 instances / max 7 AWorldDetailCluster actors after Party ownership consolidation |
 | New repeated HISM budget | SOURCE-IMPLEMENTED | 306 |
 | Limited hero actor budget | SOURCE-IMPLEMENTED | 16 |
 | Actor-per-prop density | FORBIDDEN / PRESERVED | clustered repeated props |
@@ -3355,3 +3355,13 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | P1C02 | NOT OPENED | P1C01 only |
 | Exact-head CI | PENDING | stacked validation after predecessors merge |
 | PIE/visual/pacing/device/FPS | NOT ACCEPTED | direct evidence required for Gate 6/7 |
+
+
+## 2026-10-04 - Shire settlement clustered-budget reconciliation
+
+| Budget | Current source value | Note |
+|---|---:|---|
+| Settlement HISM | 306 | unchanged |
+| Settlement clustered instances | 71 | original 82 superseded after Party dedup |
+| Settlement cluster actors max | 7 | original 8 superseded after Party dedup |
+| Settlement limited hero actors | 16 | unchanged |

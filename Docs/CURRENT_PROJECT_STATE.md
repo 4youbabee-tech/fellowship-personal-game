@@ -4205,3 +4205,11 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Party tables, benches, canopies, barrels and hay in `SpawnPartySocialLoopPass` are now clustered by mesh family. Story-state variant actors remain independently toggleable; the authored loaded cart remains one bounded actor.
 - This closes the known repeated-detail/greybox source debt for the Hobbiton/Bag End exterior without opening full Bywater or interiors.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. This is not PIE/visual/device/FPS acceptance.
+
+
+## 2026-10-04 - Shire settlement clustered-budget reconciliation
+
+- Exterior closeout removes the settlement-completion Party table cluster and three Party-local lamp duplicates because `SpawnPartySocialLoopPass` is now the sole repeated Party furniture/lighting owner.
+- Current settlement completion clustered budget after closeout is **71 instances / max 7 cluster actors**, superseding the original 82 / 8 source budget.
+- HISM budget remains 306 and limited hero budget remains 16; story-state Party actors are governed separately.
+- Status: **SOURCE-RECONCILED / EXACT-HEAD VALIDATION PENDING**.
