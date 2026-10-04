@@ -1252,3 +1252,13 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - No further settlement density wave is authorized before the existing local visual bootstrap and human rendered review, because the Governor requires observation of the generated production Content rather than blind source-density escalation.
 - Remaining world work is acceptance/polish: generate local `Content/Production`, launch `/Engine/Maps/Entry`, inspect composition/material/lighting/traversal, then correct only observed defects and measure the 720p/DX11 target.
 - This closure does not promote Gate 6/7, PIE/device/visual/pacing/performance acceptance, or P1C02 runtime.
+
+
+### 2026-10-04 - P1C01 automated rendered-capture gate registered before implementation
+
+- Purpose: continue the Shire settlement lane after source-construction closure without another blind density wave.
+- Scope: exact-head UE4.27.2 production import plus automated rendered captures for Bag End/Hill, Hobbiton common, Party Field, Water/mill/bridge and the Bywater-facing edge.
+- This gate is observation tooling only. It does not create a second world authority, change quest/story outcomes, open P1C02, or replace the required owner PIE/device review.
+- Capture profile: /Engine/Maps/Entry, DX11, 1280x720, production Content generated through the existing import commandlet.
+- Evidence rule: generated screenshots may support an AUTOMATED-RENDER-REVIEW finding, but they are not PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PACING-ACCEPTED or PERFORMANCE-ACCEPTED by themselves.
+- Next action after capture: inspect the actual images and correct only defects visible in those renders; no additional settlement-density wave is authorized without evidence.
