@@ -4171,3 +4171,18 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - PhysicsAsset auto-generation still emits the small-bone warning and remains a separate sanity gate; current movement collision is capsule-owned.
 - CI hardening in the follow-up source packet adds the import commandlet to the dedicated Wave2 trigger and removes filename-based transient cleanup in favor of deleting only generated untracked Frodo `.uasset` files.
 - Status: **TECHNICAL WINNER EVIDENCED / CI-HARDENING EXACT-HEAD VALIDATION PENDING**. Deformation, retarget, AnimBP, runtime, PIE/device/rendered-visual/FPS acceptance remains pending.
+
+
+## 2026-10-04 - P1C01 Shire Settlement Completion Mega Packet
+
+- Added `SpawnShireSettlementCompletionPass()` under the existing `AShirePrototypeWorldBuilder` authority.
+- Visible budget: **345 new settlement instances** = 160 placements on existing native HISM components + 185 instances carried by bounded `AWorldDetailCluster` actors; no actor-per-prop density wave.
+- Hobbiton/Hill: eight additional visual Bagshot Row smials, property hedges/fences, lane stones, verge grass, shrubs, flower boxes, benches, lamps, mailboxes, garden arches and wash lines.
+- Party Field: retained the existing Party Tree/story destination and added a bounded completion layer of eight production picnic tables; no later-story state is inferred early.
+- Village common / Bywater-facing edge: market stalls, produce stands, wells, carts, loaded carts, crates/barrels and signposts strengthen the lived-in settlement read without claiming an invented canonical inn placement.
+- Working landscape: 12 orchard trees, orchard ladders, haystacks, ploughs and farm gates connect village properties to the surrounding Shire fields.
+- Water/mill landmark: adds a bounded production mill-wheel accent while preserving the existing authored mill/bridge placement and traversal collision.
+- All added repeated detail is non-colliding visual HISM/WorldDetailCluster data with explicit culling and no per-instance Tick. Existing resident production meshes are resolved only if already resident; no synchronous heavy load was added.
+- P1C02 remains closed. Population/context/quest ownership is unchanged.
+- Machine-readable contract: `Data/P1C01ShireSettlementCompletionV1.json`; source regression added to `Scripts/test_source_contracts.py`.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. This is not PIE-tested, device-tested, visually accepted, or an FPS acceptance claim.

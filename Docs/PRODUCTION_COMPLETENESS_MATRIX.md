@@ -3295,3 +3295,28 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Deformation + retarget | NEXT | technical predecessor now satisfied |
 | AnimBP / runtime promotion | BLOCKED | deformation/retarget evidence required first |
 | PIE/device/rendered visual/FPS | NOT ACCEPTED | no direct evidence |
+
+
+## 2026-10-04 - P1C01 Shire Settlement Completion Mega Packet
+
+| Settlement area | Status | Evidence boundary |
+|---|---|---|
+| Runtime writer | PRESERVED | `AShirePrototypeWorldBuilder` only |
+| Bagshot Row visual smials | SOURCE-IMPLEMENTED | 8 turf/facade pairs; visual clusters only |
+| Hobbiton property boundaries | SOURCE-IMPLEMENTED | hedge + fence HISM completion |
+| Domestic gardens / mail / laundry | SOURCE-IMPLEMENTED | garden arches, flower boxes, mailboxes, wash lines, shrubs |
+| Village lanes / verge breakup | SOURCE-IMPLEMENTED | path-stone + grass HISM |
+| Village common / market | SOURCE-IMPLEMENTED | market stalls, produce stands, wells, benches |
+| Party Field completion | SOURCE-IMPLEMENTED | 8 production picnic-table instances; existing Party Tree retained |
+| Orchard / farm work | SOURCE-IMPLEMENTED | 12 orchard trees + hay/plough/gate/ladder detail |
+| Water / mill landmark | SOURCE-IMPLEMENTED | bounded mill-wheel accent; existing mill/bridge preserved |
+| Lived-in clutter | SOURCE-IMPLEMENTED | barrels, crates, carts, loaded carts, lamps, signs |
+| Native HISM budget | 160 | existing components, explicit culling |
+| WorldDetailCluster instance budget | 185 | <=24 bounded cluster actors, no collision, zero Tick |
+| New per-prop actor density | NONE | cluster/HISM only |
+| New synchronous heavy load | NONE | resident production meshes only |
+| Population / NPC / quest authority | UNCHANGED | LivingWorldDirector / NPCContext / QuestSubsystem |
+| P1C02 runtime | NOT OPENED | P1C01 only |
+| Exact-head Pre-Unreal / UE4 compile | PENDING | PR validation required |
+| PIE visual walkthrough | NOT ACCEPTED | direct human evidence required |
+| Target-device 720p / 30 FPS | NOT ACCEPTED | measured device evidence required |
