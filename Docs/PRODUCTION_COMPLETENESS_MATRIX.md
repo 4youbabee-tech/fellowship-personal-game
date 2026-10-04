@@ -3482,3 +3482,6 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 
 
 - P1C01 capture concurrency: stale head runs are now cancelled when the branch advances; current exact-head capture retains the runner. This is CI throughput hygiene only, not rendered/visual acceptance.
+
+
+- Frodo deformation hosted runner root cause: Wave 2 #15 failed on Blender FBX import because NumPy was absent. Workflow now installs `python3-numpy` and runs a Blender-internal dependency preflight; deformation remains REVALIDATION PENDING until exact-head PASS.
