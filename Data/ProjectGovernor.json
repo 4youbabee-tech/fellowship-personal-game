@@ -8559,5 +8559,48 @@
       "When a better proven method is discovered, update the Governor with evidence and supersede the old method explicitly rather than drifting informally."
     ],
     "evidence_claim_boundary": "COMPILE/STATIC/UE4 machine evidence never implies PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED or FPS acceptance without chapter-specific proof."
+  },
+  "p1c01_mega_wave_closure_2026_10_04": {
+    "status": "ACTIVE_PERMANENT_PRODUCTION_STRUCTURE",
+    "runtime_chapter": "P1C01",
+    "owner_intent": "Finish the Shire through a small number of very large, coherent production waves rather than many micro-waves.",
+    "total_remaining_mega_waves": 2,
+    "current_mega_wave": "P1C01-MW5",
+    "rule": "The existing A-I closeout lanes are workstreams inside the two mega waves, not separate waves. Do not split them into branch-per-lane churn.",
+    "waves": [
+      {
+        "id": "P1C01-MW5",
+        "name": "Production Completion Mega Wave",
+        "status": "ACTIVE",
+        "scope": [
+          "Production Frodo deformation/animation/runtime presentation",
+          "Gandalf and required hero presentation",
+          "Shire world materials, terrain, lighting, architecture, landmarks, vegetation and Bucklebury/Ferry visual completion",
+          "Living Shire NPC routines/context/story reaction/fauna verification and root-cause fixes",
+          "Quest/story/traversal/collision/audio continuity",
+          "Save/load and return-to-control integration",
+          "Localization-safe authoring foundation for all new player-facing text; Arabic full translation remains a later whole-game closure concern",
+          "Target-device-aware streaming/performance preparation without weakening the visual bar"
+        ],
+        "exit": "All known production content/integration blockers required for final acceptance are closed on one exact head, with exact-head technical gates green. Human/device acceptance may still remain for MW6."
+      },
+      {
+        "id": "P1C01-MW6",
+        "name": "Final Closure and Gate 6/7 Mega Wave",
+        "status": "PENDING",
+        "scope": [
+          "Exact-head Pre-Unreal, UE4.27.2 build/import/runtime audits and character deformation evidence",
+          "Full chapter PIE route and required traversal/collision proof",
+          "Save/load disk roundtrip and intended world-state resume proof",
+          "Fresh region-by-region Shire render review and explicit human visual acceptance",
+          "Target-class DX11 1280x720 performance evidence meeting the 30 FPS floor",
+          "Streaming/VRAM/NPC activation observations on target profile",
+          "Quest/cinematic/audio pacing and return-to-control human review",
+          "Only root-cause defect fixes discovered by these acceptance runs; no new feature expansion"
+        ],
+        "exit": "P1C01_GATE_6_7_ACCEPTED with chapter-specific evidence. Only then may P1C02 Bree runtime open."
+      }
+    ],
+    "evidence_boundary": "Planning/production structure only. It does not itself claim PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED or Gate 6/7 acceptance."
   }
 }
