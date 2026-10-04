@@ -8602,5 +8602,26 @@
       }
     ],
     "evidence_boundary": "Planning/production structure only. It does not itself claim PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED or Gate 6/7 acceptance."
+  },
+  "continuous_chapter_train_policy_2026_10_04": {
+    "status": "ACTIVE_PERMANENT",
+    "owner_command_model": "When the owner explicitly says to start a chapter, the Lead Game Architect continues that chapter through its registered production waves without requiring approval for routine technical decisions.",
+    "execution_model": [
+      "Use one chapter train with large coherent packets rather than micro-branches or owner-by-owner prompting.",
+      "After each packet: validate exact head, root-fix any failure at the causal layer, rerun the failed gate, then continue to the next packet.",
+      "Merge completed exact-head-green work into develop promptly and retire temporary refs according to branch policy.",
+      "Keep ProjectGovernor, CURRENT_PROJECT_STATE and PRODUCTION_COMPLETENESS_MATRIX synchronized with real implementation changes.",
+      "Send owner-facing progress through the daily report and Slack; routine progress does not require the owner to supervise every step."
+    ],
+    "stop_conditions": [
+      "A canon conflict not resolvable from supplied sources and Governor authority.",
+      "A safety/provenance/license issue requiring owner choice.",
+      "A destructive repository action outside approved branch policy.",
+      "A blocker that cannot be root-fixed with available project/tool access.",
+      "A required human/device acceptance gate: visual/pacing judgment, target-device evidence, or other owner-only evidence."
+    ],
+    "final_gate_rule": "The train may autonomously reach READY_FOR_HUMAN_DEVICE_ACCEPTANCE, but it must not claim Gate 6/7 accepted until chapter-specific human/device evidence exists.",
+    "chapter_transition_rule": "Do not auto-open the next runtime chapter. After predecessor Gate 6/7 is accepted, wait for the owner's explicit 'start next chapter' command before beginning the next chapter train.",
+    "p1c01_application": "P1C01 is currently the active train. Continue MW5 then MW6 under the above rules; P1C02 remains locked."
   }
 }
