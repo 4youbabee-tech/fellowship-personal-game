@@ -3389,3 +3389,6 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | P1C01 Shire definitive closure | PARTIAL | Settlement source is machine-green; full character/world/gameplay/audio/save/device/human closeout remains |
 | P1C02 Bree runtime | BLOCKED / PREDECESSOR-GATED | Opens only after `P1C01_GATE_6_7_ACCEPTED` |
 | Chapter progression | SERIALIZED | P1C01 -> P1C02 -> P1C03 -> ...; next runtime chapter requires predecessor Gate 6/7 |
+
+
+- PR #324 PG-078 root-cause repair: new permanent root-cause and P1C01-closeout requirements are now explicitly owned by the master roadmap and tracked snapshot; exact-head Pre-Unreal revalidation required before merge.
