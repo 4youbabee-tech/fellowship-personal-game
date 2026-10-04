@@ -4221,3 +4221,13 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Machine-readable closure: `Data/P1C01ShireSettlementSourceClosureV1.json`.
 - **Next required world gate is local visual bootstrap, not another blind density wave**: run `Scripts/bootstrap_local_p1c01_visuals.cmd` with UE4 closed, generate ignored `Content/Production`, and launch `/Engine/Maps/Entry` at DX11 1280x720.
 - Status: **SOURCE CONSTRUCTION COMPLETE / STATIC+COMPILE MACHINE-GREEN / HUMAN VISUAL + DEVICE PERFORMANCE PENDING**. No PIE/device/visual/FPS acceptance is claimed.
+
+
+## 2026-10-04 - Frodo targeted animation intake Wave 3
+
+- Frodo technical winner remains `eff0e79980f90d49deada0aa37ad8be5975a86330348e4ae6fa49d3171fad570` with 161 UE4 reference bones and valid linked USkeleton; this wave does not reopen mesh hunting.
+- Added one-pack warehouse manifest `Data/WarehouseQuaterniusAnimationBatchV1.json` for `QTN_UNIVERSAL_ANIMATION_LIBRARY` only.
+- Warehouse classification gains `WH_STAGE_QUATERNIUS_ANIM`; this targeted path stages the one animation pack, runs character intake and inventory audit, but deliberately does **not** trigger the broad provider saturation/promotion/material trains.
+- Required first clips remain Idle / Walk / Run. Successful staging only advances to clip inventory + retarget/deformation gates; it does not authorize AnimBP or runtime promotion.
+- Existing `stage_quaternius_warehouse.ps1` is reused for license/public-download/SHA256 receipt behavior; no second downloader is introduced.
+- Status: **SOURCE-IMPLEMENTED / TARGETED WAREHOUSE EXECUTION PENDING AFTER MERGE**. No animation, retarget, deformation, PIE/device/visual/FPS acceptance is claimed.

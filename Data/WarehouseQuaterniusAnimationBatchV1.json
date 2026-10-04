@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "batch_id": "WAREHOUSE_QUATERNIUS_P1C01_ANIMATION_V1",
+  "status": "AUTHORIZED_FOR_TARGETED_STAGING",
+  "provider": "QUATERNIUS",
+  "license": "PER_PACK_PAGE_LICENSE_CAPTURE_REQUIRED",
+  "purpose": "Stage only the CC0 Universal Animation Library needed for the P1C01 Frodo Idle/Walk/Run deformation-retarget gate after the technical skeletal winner.",
+  "staging_root": "D:\\actions-runner\\_warehouse\\ShireJourney\\Quaternius",
+  "source_pages": [
+    {
+      "id": "QTN_UNIVERSAL_ANIMATION_LIBRARY",
+      "url": "https://quaternius.com/packs/universalanimationlibrary.html",
+      "category": "ANIMATION",
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_PACK_PAGE_VERIFIED_2026-09-27",
+      "intended_use": [
+        "Idle",
+        "Walk",
+        "Run",
+        "retarget compatibility only after QC"
+      ]
+    }
+  ],
+  "rules": [
+    "Only this one animation pack is staged by this batch.",
+    "Only public downloads discovered from the official Quaternius pack page are eligible.",
+    "If no public direct archive is discoverable, record MANUAL_QUEUE_REQUIRED; do not invent or scrape a private/store URL.",
+    "Animation production input must reach the project as FBX; OBJ is not accepted for animated-character evidence.",
+    "Any PNG/TGA support textures are permitted; BMP is forbidden.",
+    "Staging does not authorize runtime integration, deformation acceptance, retarget acceptance, AnimBP promotion, PIE, device, visual or FPS acceptance.",
+    "The existing Frodo technical winner remains authoritative; this batch must not reopen rejected hero-mesh hunting."
+  ],
+  "evidence_boundary": "Warehouse staging request only. Receipt/SHA256, clip inventory, retarget, deformation and runtime gates remain separate."
+}

@@ -3378,3 +3378,23 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Local production bootstrap | REQUIRED | `Scripts/bootstrap_local_p1c01_visuals.cmd` |
 | Human PIE/rendered visual acceptance | PENDING | direct owner evidence required |
 | Target-device 720p / 30 FPS | PENDING | measured device evidence required |
+
+
+## 2026-10-04 - Frodo targeted animation intake Wave 3
+
+| Gate | Status | Evidence boundary |
+|---|---|---|
+| Frodo skeletal technical winner | PASS / PRESERVED | `eff0e799...`; 161 bones + linked USkeleton |
+| Hero-mesh hunting | CLOSED | do not reopen while technical winner remains valid |
+| Animation source | SOURCE-REGISTERED | Quaternius Universal Animation Library / CC0 |
+| Animation warehouse scope | BOUNDED | one pack only |
+| Warehouse classifier | SOURCE-IMPLEMENTED | `WH_STAGE_QUATERNIUS_ANIM` |
+| Broad Quaternius support staging | NOT REQUESTED BY TARGETED PATH | avoids unrelated pack churn |
+| Required initial clips | LOCKED | Idle / Walk / Run |
+| Receipt/SHA256/public-download proof | PENDING | Warehouse execution after merge |
+| FBX clip inventory | PENDING | staged archive required |
+| Retarget compatibility | BLOCKED | valid clip inventory first |
+| Deformation review | BLOCKED | technical winner + selected clips |
+| AnimBP locomotion | BLOCKED | retarget/deformation proof first |
+| Async runtime Frodo promotion | BLOCKED | AnimBP/rig bundle proof first |
+| PIE/device/rendered visual/FPS | NOT ACCEPTED | direct evidence required |

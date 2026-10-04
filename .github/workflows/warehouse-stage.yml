@@ -10,6 +10,7 @@ on:
       - 'Data/WarehouseAudioAcquisitionBatchV1.json'
       - 'Scripts/stage_opengameart_audio.ps1'
       - 'Data/WarehouseQuaterniusAcquisitionBatchV1.json'
+      - 'Data/WarehouseQuaterniusAnimationBatchV1.json'
       - 'Data/WarehouseQuaterniusHeroCandidateBatchV1.json'
       - 'Scripts/stage_quaternius_warehouse.ps1'
       - 'Data/P1C01OpenGameArtHeroCandidateBatchV1.json'
@@ -137,6 +138,11 @@ jobs:
         if: env.WH_STAGE_QUATERNIUS == 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_quaternius_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseQuaterniusAcquisitionBatchV1.json" -RecordManualQueue
+
+      - name: Stage Quaternius animation-only batch
+        if: env.WH_STAGE_QUATERNIUS_ANIM == 'true'
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_quaternius_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseQuaterniusAnimationBatchV1.json" -RecordManualQueue
 
       - name: Stage ambientCG material batch
         if: env.WH_STAGE_AMBIENTCG == 'true'
