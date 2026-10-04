@@ -3365,3 +3365,25 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Settlement clustered instances | 71 | original 82 superseded after Party dedup |
 | Settlement cluster actors max | 7 | original 8 superseded after Party dedup |
 | Settlement limited hero actors | 16 | unchanged |
+
+
+## 2026-10-04 - P1C01 Shire settlement exterior completeness audit
+
+| Exterior feature | Source status |
+|---|---|
+| Bag End / Hill | IMPLEMENTED |
+| Bagshot Row | IMPLEMENTED |
+| Party Field / Party Tree | IMPLEMENTED |
+| Party entry / social dressing | IMPLEMENTED; bespoke white-gate/pavilion art gap explicit |
+| Hobbit holes / cottages | IMPLEMENTED |
+| Property lanes / hedges / fences | IMPLEMENTED / HISM |
+| Gardens / orchard edge | IMPLEMENTED / HISM |
+| The Water / mill / bridge | IMPLEMENTED |
+| Village common / market / wells | IMPLEMENTED |
+| Domestic/farm clutter | IMPLEMENTED / CLUSTERED |
+| Lighting rhythm | IMPLEMENTED |
+| Bywater-facing transition | IMPLEMENTED |
+| Full Bywater / Green Dragon | OUT OF CURRENT CLOSEOUT |
+| Interiors | OUT OF EXTERIOR CLOSEOUT |
+| PIE visual acceptance | NOT ACCEPTED |
+| Target-device 720p/30 FPS | NOT ACCEPTED |

@@ -4213,3 +4213,12 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Current settlement completion clustered budget after closeout is **71 instances / max 7 cluster actors**, superseding the original 82 / 8 source budget.
 - HISM budget remains 306 and limited hero budget remains 16; story-state Party actors are governed separately.
 - Status: **SOURCE-RECONCILED / EXACT-HEAD VALIDATION PENDING**.
+
+
+## 2026-10-04 - P1C01 Shire settlement exterior completeness audit
+
+- Current Hobbiton / Bag End exterior source coverage is closed across Bag End, Bagshot Row, Party Field/Tree, hobbit homes/cottages, property lanes, gardens/orchards, The Water/mill/bridge, village common/market/wells, domestic/farm clutter, lighting and the Bywater-facing transition.
+- Repeated detail is now HISM/clustered by ownership; Party repeated-detail authority is consolidated and the known production hobbit-hole primitive overlays are removed.
+- Explicit art gaps remain and are **not** silently promoted: no bespoke exact white Party gate, no bespoke giant Party pavilion, no dedicated open-air kitchen hero mesh, no full Bywater/Green Dragon completion, and no interiors.
+- Machine-readable audit: `Data/P1C01ShireSettlementExteriorCompletenessAuditV1.json`.
+- Status: **EXTERIOR SOURCE COVERAGE COMPLETE WITH EXPLICIT ART GAPS / EXACT-HEAD VALIDATION PENDING**. No PIE/visual/device/FPS/Gate 6/7 acceptance.
