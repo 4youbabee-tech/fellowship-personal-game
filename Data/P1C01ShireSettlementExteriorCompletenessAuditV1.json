@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "audit_id": "P1C01_SHIRE_SETTLEMENT_EXTERIOR_COMPLETENESS_AUDIT_V1",
+  "status": "SOURCE_COVERAGE_COMPLETE_WITH_EXPLICIT_ART_GAPS",
+  "runtime_chapter": "P1C01",
+  "settlement_scope": "Hobbiton / Bag End exterior and immediate authored settlement transition",
+  "covered": [
+    {
+      "feature": "Bag End hero landmark and Hill integration",
+      "status": "SOURCE_IMPLEMENTED"
+    },
+    {
+      "feature": "Bagshot Row residential belt",
+      "status": "SOURCE_IMPLEMENTED"
+    },
+    {
+      "feature": "Party Field destination",
+      "status": "SOURCE_IMPLEMENTED"
+    },
+    {
+      "feature": "Party Tree canonical anchor",
+      "status": "SOURCE_IMPLEMENTED_EXISTING_OWNER"
+    },
+    {
+      "feature": "Party Field special entrance",
+      "status": "SOURCE_IMPLEMENTED_WITH_PRODUCTION_GATE_MESH"
+    },
+    {
+      "feature": "Party furniture / supplies / lantern rhythm",
+      "status": "SOURCE_IMPLEMENTED_CLUSTERED"
+    },
+    {
+      "feature": "Hobbit holes / cottages",
+      "status": "SOURCE_IMPLEMENTED"
+    },
+    {
+      "feature": "property lanes / hedges / fences",
+      "status": "SOURCE_IMPLEMENTED_HISM"
+    },
+    {
+      "feature": "gardens / orchard edge",
+      "status": "SOURCE_IMPLEMENTED_HISM"
+    },
+    {
+      "feature": "The Water / mill / bridge",
+      "status": "SOURCE_IMPLEMENTED"
+    },
+    {
+      "feature": "village common / market / wells",
+      "status": "SOURCE_IMPLEMENTED"
+    },
+    {
+      "feature": "domestic carts / barrels / crates / benches / flower boxes",
+      "status": "SOURCE_IMPLEMENTED_CLUSTERED"
+    },
+    {
+      "feature": "farm work history / hay / plough / orchard ladder",
+      "status": "SOURCE_IMPLEMENTED"
+    },
+    {
+      "feature": "warm settlement lamp rhythm",
+      "status": "SOURCE_IMPLEMENTED"
+    },
+    {
+      "feature": "Bywater-facing lived-in transition",
+      "status": "SOURCE_IMPLEMENTED_NOT_FULL_BYWATER"
+    }
+  ],
+  "explicit_art_gaps": [
+    {
+      "feature": "large white Party gate as a bespoke canonical asset",
+      "status": "NOT_BESPOKE",
+      "current_representation": "resident production farm-gate meshes",
+      "rule": "Do not claim exact white-gate visual acceptance until a dedicated asset/material treatment is reviewed in PIE."
+    },
+    {
+      "feature": "very large Party pavilion surrounding the Party Tree",
+      "status": "NOT_BESPOKE",
+      "current_representation": "resident Shire picnic canopy + common market canopy / social-loop dressing",
+      "rule": "Do not claim exact pavilion silhouette acceptance until dedicated art exists and is reviewed."
+    },
+    {
+      "feature": "open-air Party kitchen",
+      "status": "FUNCTIONAL_DRESSING_ONLY",
+      "current_representation": "market tables/canopies/supply clusters; no dedicated kitchen hero mesh",
+      "rule": "No invented bespoke kitchen asset."
+    },
+    {
+      "feature": "full Bywater town / Green Dragon exterior+interior",
+      "status": "OUTSIDE_CURRENT_P1C01_SETTLEMENT_CLOSEOUT",
+      "rule": "Not promoted by this packet; no scope expansion beyond current runtime lane."
+    },
+    {
+      "feature": "Bag End and hobbit-hole interiors",
+      "status": "OUTSIDE_EXTERIOR_CLOSEOUT",
+      "rule": "Interior completion requires separate source/art/runtime packet."
+    }
+  ],
+  "architecture": {
+    "world_writer": "AShirePrototypeWorldBuilder",
+    "ambient_population_owner": "ALivingWorldDirector",
+    "npc_context_owner": "UShireNPCContextSubsystem",
+    "quest_owner": "UShireQuestSubsystem",
+    "repeated_detail": "HISM_OR_AWorldDetailCluster",
+    "synchronous_heavy_load": false,
+    "p1c02_runtime_opened": false
+  },
+  "evidence_boundary": "This audit means exterior source coverage is closed for the current P1C01 settlement scope. It is not PIE, visual, device, performance, or Gate 6/7 acceptance."
+}
