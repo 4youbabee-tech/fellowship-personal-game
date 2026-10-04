@@ -71,7 +71,20 @@ class HumanWave2ContractTests(unittest.TestCase):
         self.assertIn("HUMAN_WAVE3_DEFORMATION_CONTRACT_PASS",workflow)
         self.assertIn('test -s "$RUNNER_TEMP/shire-human-wave3/ue4/p1c01_human_wave2_ue4.json"',workflow)
         deformation=(root/"Scripts"/"run_p1c01_human_wave3_deformation.py").read_text(encoding="utf-8")
-        for token in ("shoulders","elbows","knees","hands_feet","locomotion_stress","visual_deformation_accepted","retarget_accepted"):
+        for token in (
+            "shoulders",
+            "elbows",
+            "knees",
+            "hands_feet",
+            "locomotion_stress",
+            "visual_deformation_accepted",
+            "retarget_accepted",
+            'if not pb.bone.use_deform:',
+            "joint_influence_counts",
+            "required deform joints have no weighted vertex influence",
+            "min_required_displacement",
+            "NO_NONTRIVIAL_DEFORMATION",
+        ):
             self.assertIn(token,deformation)
         gate=json.loads((root/"Data"/"P1C01HumanDeformationGateV1.json").read_text(encoding="utf-8"))
         self.assertFalse(gate["runtime_contract"]["visual_deformation_accepted"])

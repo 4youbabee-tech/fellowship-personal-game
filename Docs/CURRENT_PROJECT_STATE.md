@@ -4351,3 +4351,13 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Production remains **manual owner-command driven**; no hourly production schedule. The 24-hour owner status report remains separate.
 - P1C01 remains the active chapter train; P1C02 stays locked until P1C01 Gate 6/7 evidence is accepted and the owner explicitly starts the next chapter.
 - Evidence boundary: management continuity only; no runtime/visual/device/performance acceptance is implied.
+
+
+## 2026-10-04 - Frodo deformation false-green root repair
+
+- Prior Human Wave 3 artifact on `e76634d7154242e3e5a6e0dfcde3275afaa2802a` marked `STATIC_DEFORMATION_STRESS_PASS`, but every stress scenario recorded `max_vertex_displacement=0.0`.
+- That artifact is **SUPERSEDED AS DEFORMATION PROOF**. It proves the workflow executed, not that the mesh deformed.
+- Root cause: semantic joint selection could fall back to non-deform control bones, and the gate did not require weighted vertex influence or non-zero evaluated vertex motion.
+- Fail-closed repair: required semantic joints must be deform bones, each must influence weighted vertices, and every pose scenario must exceed a scale-relative minimum displacement while retaining finite/bounds guards.
+- Frodo remains a technical skeletal candidate. Retarget, AnimBP/runtime integration and human rendered deformation are **NOT ACCEPTED**.
+- Exact-head repaired Human Wave rerun is required before any renewed deformation claim.

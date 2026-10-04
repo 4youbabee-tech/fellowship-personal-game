@@ -3556,3 +3556,16 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Hourly/background chapter-production schedule | FORBIDDEN |
 | Daily owner status report | ACTIVE |
 | Auto-open next runtime chapter | FORBIDDEN |
+
+
+## 2026-10-04 - Frodo deformation evidence correction
+
+| Evidence item | State |
+|---|---|
+| Prior zero-displacement STATIC_DEFORMATION_STRESS_PASS | SUPERSEDED / NOT DEFORMATION PROOF |
+| Deform-bone-only semantic joint selection | SOURCE-IMPLEMENTED |
+| Required weighted vertex influence per joint | SOURCE-IMPLEMENTED |
+| Non-zero evaluated deformation per stress scenario | SOURCE-IMPLEMENTED |
+| Exact-head repaired Human Wave rerun | PENDING |
+| Retarget / AnimBP / runtime Frodo | NOT ACCEPTED |
+| Human rendered deformation acceptance | NOT ACCEPTED |

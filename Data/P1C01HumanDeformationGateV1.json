@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "gate_id": "P1C01_FRODO_STATIC_DEFORMATION_GATE_V1",
-  "status": "SOURCE_IMPLEMENTED_EXACT_HEAD_VALIDATION_PENDING",
+  "status": "SOURCE_REPAIRED_FALSE_GREEN_GUARD_EXACT_HEAD_VALIDATION_PENDING",
   "runtime_chapter": "P1C01",
   "predecessor": {
     "technical_gate": "Human Wave 2 UE4 technical winner",
@@ -42,7 +42,10 @@
     "evaluated vertex-count change",
     "posed bounds collapse/explosion outside 0.20x..5.0x rest diagonal",
     "max vertex displacement above 5x rest diagonal",
-    "non-finite armature transform"
+    "non-finite armature transform",
+    "required semantic joint resolves only to a non-deform/control bone",
+    "required deform joint has zero weighted vertex influence",
+    "stress pose produces no nontrivial evaluated vertex displacement"
   ],
   "runtime_contract": {
     "visual_deformation_accepted": false,
@@ -52,5 +55,11 @@
     "loading": "existing soft/async UShireChapterAssetStreamingSubsystem path"
   },
   "next_gate": "Targeted Idle/Walk/Run inventory + retarget compatibility, then human rendered deformation review.",
-  "evidence_boundary": "Numerical static deformation stress only. No rendered visual, retarget, AnimBP, runtime, PIE, device or FPS acceptance."
+  "evidence_boundary": "Numerical static deformation stress only, now fail-closed on deform-bone identity, weighted influence and non-zero evaluated deformation. Prior zero-displacement PASS is superseded. No rendered visual, retarget, AnimBP, runtime, PIE, device or FPS acceptance.",
+  "prior_evidence_correction_2026_10_04": {
+    "status": "SUPERSEDED_FALSE_GREEN",
+    "observed": "Prior artifact marked all stress scenarios passed while every max_vertex_displacement was 0.0.",
+    "root_cause": "Semantic joint selection allowed non-deform controls and the gate did not require weighted influence or non-zero evaluated displacement.",
+    "disposition": "Prior artifact proves workflow execution only. It must not be used as deformation proof; exact-head fail-closed rerun required."
+  }
 }

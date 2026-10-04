@@ -59,6 +59,7 @@ if len(armatures) != 1:
 if not meshes:
     raise RuntimeError("no mesh objects")
 armature = armatures[0]
+armature.data.pose_position = "POSE"
 
 def compact(name):
     return re.sub(r"[^a-z0-9]+", "", name.lower())
@@ -75,13 +76,14 @@ def find_joint(tokens, side=None, exclude=()):
     matches = []
     for pb in armature.pose.bones:
         packed = compact(pb.name)
+        if not pb.bone.use_deform:
+            continue
         if side and not side_match(pb.name, side):
             continue
         if any(x in packed for x in exclude):
             continue
         if any(token in packed for token in tokens):
-            score = 0 if pb.bone.use_deform else 10
-            score += len(pb.name) * 0.001
+            score = len(pb.name) * 0.001
             matches.append((score, pb))
     if not matches:
         return None
@@ -127,6 +129,32 @@ hierarchy = {
 if not all(hierarchy.values()):
     failed = [key for key, value in hierarchy.items() if not value]
     raise RuntimeError("hierarchy sanity failed: " + ",".join(failed))
+
+def weighted_vertex_influence_count(bone_name):
+    influenced = 0
+    for obj in meshes:
+        group = obj.vertex_groups.get(bone_name)
+        if group is None:
+            continue
+        group_index = group.index
+        for vertex in obj.data.vertices:
+            if any(link.group == group_index and link.weight > 1e-5 for link in vertex.groups):
+                influenced += 1
+    return influenced
+
+joint_influence_counts = {
+    key: weighted_vertex_influence_count(pb.name)
+    for key, pb in joints.items()
+}
+uninfluenced_joints = sorted(
+    key for key, count in joint_influence_counts.items()
+    if count <= 0
+)
+if uninfluenced_joints:
+    raise RuntimeError(
+        "required deform joints have no weighted vertex influence: " +
+        ",".join(uninfluenced_joints)
+    )
 
 def evaluated_points():
     depsgraph = bpy.context.evaluated_depsgraph_get()
@@ -183,19 +211,32 @@ for name, rotations in scenarios:
     posed_points = evaluated_points()
     posed = metrics(posed_points)
     max_displacement = None
+    min_required_displacement = max(rest["diag"] * 1e-5, 1e-6)
     passed = False
+    reject_reason = None
     if posed["vertex_count"] == rest["vertex_count"]:
         max_displacement = max(
             math.sqrt(sum((posed_points[i][axis] - rest_points[i][axis]) ** 2 for axis in range(3)))
-            for i in range(len(rest_points)))
+            for i in range(len(rest_points))
+        )
         ratio = posed["diag"] / rest["diag"] if rest["diag"] > 0 else 999.0
-        passed = posed["finite"] and 0.20 <= ratio <= 5.0 and max_displacement <= rest["diag"] * 5.0
+        if max_displacement < min_required_displacement:
+            reject_reason = "NO_NONTRIVIAL_DEFORMATION"
+        passed = (
+            posed["finite"] and
+            0.20 <= ratio <= 5.0 and
+            min_required_displacement <= max_displacement <= rest["diag"] * 5.0
+        )
+    else:
+        reject_reason = "VERTEX_COUNT_CHANGED"
     scenario_results.append({
         "name": name,
         "passed": passed,
+        "reject_reason": reject_reason,
         "bounds": posed,
         "bounds_ratio": posed["diag"] / rest["diag"] if rest["diag"] > 0 else None,
         "max_vertex_displacement": max_displacement,
+        "min_required_displacement": min_required_displacement,
     })
 
 reset_pose()
@@ -216,6 +257,7 @@ receipt = {
     "source_sha256": candidate.get("source_sha256"),
     "joint_map": {key: value.name for key, value in joints.items()},
     "hierarchy": hierarchy,
+    "joint_influence_counts": joint_influence_counts,
     "rest_bounds": rest,
     "scenarios": scenario_results,
     "armature_transform": {
@@ -228,7 +270,7 @@ receipt = {
     "retarget_accepted": False,
     "runtime_integration_allowed": False,
     "next_gate": "Idle/Walk/Run animation inventory and retarget compatibility, then human visual deformation review.",
-    "evidence_boundary": "Deterministic numerical Blender deformation stress only; no rendered/human visual, retarget, runtime, PIE, device or FPS acceptance.",
+    "evidence_boundary": "Fail-closed numerical Blender deformation stress with deform-bone, weighted-influence and non-zero evaluated-displacement proof only; no rendered/human visual, retarget, runtime, PIE, device or FPS acceptance.",
 }
 os.makedirs(os.path.dirname(args.output), exist_ok=True)
 with open(args.output, "w", encoding="utf-8") as f:
