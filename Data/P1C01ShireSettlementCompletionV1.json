@@ -41,7 +41,7 @@
     ]
   },
   "budget": {
-    "hism_instances": 306,
+    "hism_instances": 303,
     "cluster_instances": 82,
     "cluster_actors_max": 8,
     "limited_hero_actors": 16
@@ -73,5 +73,16 @@
     "party_tree_owner": "SpawnVillage existing canonical anchor",
     "settlement_pass_action": "preserve existing Party Tree; add authored field entry gates and surrounding composition",
     "duplicate_party_tree_spawn": false
+  },
+  "party_field_traversal": {
+    "boundary_component": "HedgeInstances",
+    "boundary_collision": "QueryAndPhysics",
+    "southwest_entry_gap_skipped_indices": [
+      6,
+      7,
+      8
+    ],
+    "gate_count": 2,
+    "intent": "Visible gates and path align with a real collision opening; the Party Field is not sealed by the hedge ring."
   }
 }

@@ -1224,3 +1224,9 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Performance contract: **306 HISM instances + 82 clustered instances across at most 8 AWorldDetailCluster actors + 16 limited hero actors**. No actor-per-prop density, no per-instance Tick, no synchronous heavy load, resident production meshes only.
 - Navigation contract: existing central road/common/player traversal corridor stays open for the player and pooled NPCs.
 - Evidence boundary at registration: **SOURCE-GROUNDED PLAN**. No PIE/device/rendered-visual/FPS acceptance.
+
+
+### P1C01 SHIRE_SETTLEMENT_COMPLETION traversal correction
+- Party Field boundary uses collision-owning HedgeInstances, so a continuous 12-segment ring would have sealed the visible southwest gate/path.
+- The authored settlement pass now omits hedge indices 6-8 at that approach, preserving a real traversal opening behind the two entry gates.
+- Updated HISM budget: 303 (down from 306). No extra actors, no ownership change, no P1C02.

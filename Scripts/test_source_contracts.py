@@ -754,7 +754,7 @@ class SourceContractTests(unittest.TestCase):
         contract = json.loads((root / "Data" / "P1C01ShireSettlementCompletionV1.json").read_text(encoding="utf-8"))
         self.assertEqual(contract["runtime_chapter"], "P1C01")
         self.assertEqual(contract["runtime_writer"], "AShirePrototypeWorldBuilder")
-        self.assertEqual(contract["budget"]["hism_instances"], 306)
+        self.assertEqual(contract["budget"]["hism_instances"], 303)
         self.assertEqual(contract["budget"]["cluster_instances"], 82)
         self.assertEqual(contract["budget"]["cluster_actors_max"], 8)
         self.assertEqual(contract["budget"]["limited_hero_actors"], 16)
@@ -768,6 +768,7 @@ class SourceContractTests(unittest.TestCase):
         source = (root / "Source" / "ShireJourney" / "Private" / "World" / "ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
         header = (root / "Source" / "ShireJourney" / "Public" / "World" / "ShirePrototypeWorldBuilder.h").read_text(encoding="utf-8")
         self.assertIn("void SpawnShireSettlementCompletionPass();", header)
+        self.assertIn("if (Index >= 6 && Index <= 8)", source)
 
         start = source.index("void AShirePrototypeWorldBuilder::SpawnShireSettlementCompletionPass()")
         end = source.index("void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()", start)
@@ -786,7 +787,7 @@ class SourceContractTests(unittest.TestCase):
             "P1C01SettlementLampPosts",
             "P1C01SettlementLoadedCarts",
             "P1C01SettlementFlowerBoxes",
-            "hismBudget=306",
+            "hismBudget=303",
             "clusterBudget=82",
             "heroBudget=16",
         ):

@@ -4186,3 +4186,10 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Existing mill/bridge/Bag End actors are not duplicated as new authorities; this pass fills their surrounding settlement context.
 - No new synchronous heavy load, no new world manager, no NPC Spawn/Destroy density change and no P1C02 runtime expansion.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. No PIE/device/rendered-visual/FPS acceptance is claimed.
+
+
+## 2026-10-04 - Shire Settlement Party Field traversal correction
+- Static traversal audit found the Party Field's collision-owning HedgeInstances ring could obstruct the visible southwest gate/path.
+- Settlement Completion now leaves a three-segment hedge gap aligned to the authored entry gates/path.
+- HISM budget is corrected to **303**; cluster budget remains 82 and hero budget remains 16.
+- Status: **SOURCE-FIXED / FRESH EXACT-HEAD VALIDATION PENDING**. No PIE/visual/device/FPS acceptance is claimed.

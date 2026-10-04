@@ -4390,6 +4390,14 @@ void AShirePrototypeWorldBuilder::SpawnShireSettlementCompletionPass()
 
     for (int32 Index = 0; Index < 12; ++Index)
     {
+        // HedgeInstances owns collision. Keep a real southwest opening aligned with
+        // the authored Party Field entry gates/path instead of placing collision
+        // directly behind the visible entrance.
+        if (Index >= 6 && Index <= 8)
+        {
+            continue;
+        }
+
         const float Angle = FMath::DegreesToRadians(static_cast<float>(Index) * 30.0f);
         AddHism(
             HedgeInstances,
@@ -4733,7 +4741,7 @@ void AShirePrototypeWorldBuilder::SpawnShireSettlementCompletionPass()
     UE_LOG(
         LogTemp,
         Display,
-        TEXT("P1C01_SHIRE_SETTLEMENT_COMPLETION hism=%d clusterActors=%d clusterInstances=%d heroActors=%d hismBudget=306 clusterBudget=82 heroBudget=16 writer=ShirePrototypeWorldBuilder p1c02=no"),
+        TEXT("P1C01_SHIRE_SETTLEMENT_COMPLETION hism=%d clusterActors=%d clusterInstances=%d heroActors=%d hismBudget=303 clusterBudget=82 heroBudget=16 writer=ShirePrototypeWorldBuilder p1c02=no"),
         HismInstances,
         ClusterActors,
         ClusterInstances,

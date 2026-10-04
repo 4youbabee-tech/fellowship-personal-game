@@ -3322,3 +3322,14 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Exact-head UE4.27.2 build | PENDING | PR validation required |
 | PIE traversal / visual / pacing | NOT ACCEPTED | direct chapter-specific evidence required |
 | Target-device 720p / 30 FPS | NOT ACCEPTED | measured device evidence required |
+
+
+## 2026-10-04 - Shire Settlement Party Field traversal correction
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Party Field visible gate | SOURCE-IMPLEMENTED | 2 bounded FarmGate landmarks |
+| Hedge collision opening | SOURCE-FIXED | indices 6-8 omitted from collision-owning ring |
+| Settlement HISM budget | BOUNDED | 303 |
+| Cluster / hero budgets | UNCHANGED | 82 / 16 |
+| PIE traversal acceptance | NOT ACCEPTED | requires direct PIE walkthrough |
