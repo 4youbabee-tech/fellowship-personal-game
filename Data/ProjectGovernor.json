@@ -8623,5 +8623,38 @@
     "final_gate_rule": "The train may autonomously reach READY_FOR_HUMAN_DEVICE_ACCEPTANCE, but it must not claim Gate 6/7 accepted until chapter-specific human/device evidence exists.",
     "chapter_transition_rule": "Do not auto-open the next runtime chapter. After predecessor Gate 6/7 is accepted, wait for the owner's explicit 'start next chapter' command before beginning the next chapter train.",
     "p1c01_application": "P1C01 is currently the active train. Continue MW5 then MW6 under the above rules; P1C02 remains locked."
+  },
+  "owner_manual_continuous_command_policy_2026_10_04": {
+    "status": "ACTIVE_PERMANENT",
+    "owner_intent": "Do not use an hourly production schedule. The owner may issue continuation/start commands manually as often as desired (for example every 15 minutes). Each command should continue from the live exact project state without restarting analysis from zero.",
+    "execution_rule": "On each owner command, continue the currently active chapter train immediately from the highest-priority unfinished production work, preserving the existing branch/PR lineage unless a root-cause technical reason requires otherwise.",
+    "no_schedule_rule": "No recurring hourly chapter-production automation is authorized. Scheduled daily reporting remains a separate owner-reporting function unless the owner disables it.",
+    "supervision_rule": "The owner is not required to approve routine technical substeps; however production advances only in response to owner commands rather than a background hourly schedule.",
+    "evidence_rule": "All normal evidence boundaries remain enforced."
+  },
+  "p1c01_total_completion_contract_2026_10_04": {
+    "status": "ACTIVE_PERMANENT",
+    "chapter": "P1C01",
+    "closure_definition": "P1C01 may close only when the Shire experience is complete from all agreed player-facing and technical angles, not merely when its main route or settlement construction works.",
+    "required_dimensions": [
+      "Film-driven causal/story spine and required chapter chronology, cast presence, knowledge limits and outcomes.",
+      "All meaningful source-backed Shire details discovered during chapter review are either implemented or explicitly dispositioned; no silent omission.",
+      "Exploration content that makes the Shire rewarding to wander without breaking canon or chronology.",
+      "Side activities/optional interactions appropriate to the Shire and the approved gameplay bible.",
+      "Living-world routines, work, social behavior, reactions, fauna/environment motion and story-state response.",
+      "Named NPC continuity and bounded contextual memory where required by the project architecture.",
+      "Required landmarks, homes, roads, gardens, farms, river/mill/bridge, woodland transitions and Bucklebury/Ferry read naturally and are traversable.",
+      "Hero and required human character presentation, animation, locomotion, deformation and runtime hookup.",
+      "Quests, objectives, dialogue, cinematics, audio, return-to-control and chapter pacing.",
+      "Traversal, collision, nav/path readability and required encounter reliability.",
+      "Save/load continuity and intended world/chapter state restoration.",
+      "Performance/streaming/VRAM/NPC activation on the target DX11 720p low-memory profile at the declared 30 FPS floor.",
+      "Human visual and pacing acceptance for the exact accepted chapter build.",
+      "Localization-safe player-facing text foundation. Full Arabic translation remains governed by the existing whole-game localization contract and is not silently moved earlier."
+    ],
+    "fun_rule": "The chapter must not be a film checklist only; it must contain canon-safe exploration, optional activity, environmental discovery and lived-in world detail so ordinary play is enjoyable between mandatory story beats.",
+    "completeness_rule": "Do not call the chapter 100% complete while any required dimension above is materially open. Scope additions discovered from the supplied sources must be implemented or explicitly rejected/deferred with a recorded canon/production reason.",
+    "next_chapter_rule": "P1C02 runtime stays locked until P1C01 is Gate 6/7 accepted under this total-completion contract.",
+    "evidence_boundary": "This contract raises the closure bar; it does not itself claim any new acceptance state."
   }
 }
