@@ -3391,3 +3391,5 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | PIE / target-device / pacing / FPS | NOT ACCEPTED | Must be proven separately; 30 FPS floor target remains unchanged |
 
 - Render-capture robustness: recursive Saved/Screenshots discovery + per-shot UE4Editor cleanup implemented; exact-head run still pending.
+
+- PR #322 automation trigger: pull_request synchronize against develop enabled; rendered evidence remains RUN PENDING until an actual workflow run exists.
