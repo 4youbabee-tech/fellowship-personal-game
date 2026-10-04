@@ -3393,3 +3393,15 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 - Render-capture robustness: recursive Saved/Screenshots discovery + per-shot UE4Editor cleanup implemented; exact-head run still pending.
 
 - PR #322 automation trigger: pull_request synchronize against develop enabled; rendered evidence remains RUN PENDING until an actual workflow run exists.
+
+
+#### P1C01 render-capture gate root-fix
+
+| Evidence | Result |
+|---|---|
+| Pre-Unreal #1877 | SUCCESS |
+| Unreal Build #1474 | SUCCESS |
+| Render Capture #6 | FAILED before screenshots |
+| Exact failure | `Unable to load module 'ShireJourney' - 0 instances`; production import exit=1 |
+| Root-fix | exact PR-head checkout + `ci_build_unreal.cmd` before import/capture |
+| Acceptance | RENDER-CAPTURE REVALIDATION PENDING; no PIE/device/visual/pacing/performance acceptance |
