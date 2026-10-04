@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "wave_id": "P1C01_HUMAN_CHARACTER_PRODUCTION_WAVE_2_V1",
-  "status": "RUN32_KAYKIT_IMMUTABLE_DIRECT_FBX_INTAKE_IMPLEMENTED",
+  "status": "RUN33_KAYKIT_UPPERLEG_SEMANTIC_ALIAS_ROOT_FIX_IMPLEMENTED",
   "runtime_chapter": "P1C01",
   "target_character": "FRODO",
   "role": "HUMAN_SKELETAL_SOURCE_FACTORY_NOT_FINAL_LIKENESS",
@@ -199,11 +199,12 @@
     "disposition": "REJECT_SOURCE_DO_NOT_RESERVE_UE4_AGAIN"
   },
   "latest_hosted_failure": {
-    "workflow_run": 37236111431,
-    "exact_head": "b8f336706e976b1cfc64285bda5c3bfcd3ab91a5",
-    "failure": "HUMAN_WAVE2_NO_CHARACTER_SOURCE",
-    "cause": "GitHub revision archive contains textures/GLB but not the repository's FBX/LFS payloads; archive-based extractor therefore found zero .fbx/.blend character sources.",
-    "disposition": "Use immutable raw.githubusercontent FBX endpoints for Rogue/RogueHooded/Knight and verify their historical SHA256 identities before normalization."
+    "workflow_run": 37236317609,
+    "exact_head": "f613c0e11df8d948e7542ea4744cf219355bd8a3",
+    "direct_source_identity": "PASS: Rogue, RogueHooded, Knight historical SHA256s matched exactly.",
+    "hosted_observation": "KayKit normalized FBX exposes upperleg.l / upperleg.r, lowerleg.l / lowerleg.r, hand.l / hand.r, spine, hips and head with nonzero weighted influences.",
+    "failure": "Resolver accepted thigh/upleg but omitted the canonical compact token upperleg, so both thigh semantics were falsely reported missing before pose scenarios.",
+    "disposition": "Add upperleg as semantic alias in BOTH hosted preflight and Wave3 deformation gate; no gate requirement removed or reduced."
   },
   "ci_efficiency_contract": {
     "unreal_delta_base": "previous PR head on synchronize, PR base only as fallback",
@@ -222,5 +223,32 @@
     "historical_raw_policy": "Raw rejected Rogue/Knight exact SHA payloads are never sent directly to UE4 again.",
     "normalized_derivative_policy": "A distinct normalized FBX SHA may proceed only after hosted weighted-joint/deformation pass and unchanged UE4 hard gates.",
     "runtime_promotion_allowed": false
+  },
+  "semantic_joint_aliases": {
+    "pelvis": [
+      "pelvis",
+      "hips",
+      "hip"
+    ],
+    "spine": [
+      "spine",
+      "chest"
+    ],
+    "thigh": [
+      "thigh",
+      "upleg",
+      "upperleg"
+    ],
+    "shin": [
+      "shin",
+      "calf",
+      "lowerleg"
+    ],
+    "hand": [
+      "hand"
+    ],
+    "foot": [
+      "foot"
+    ]
   }
 }

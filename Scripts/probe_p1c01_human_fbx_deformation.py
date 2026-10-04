@@ -41,7 +41,7 @@ try:
             if any(t in q for t in tokens): rows.append((infl.get(b.name,0),b))
         rows.sort(key=lambda x:(-x[0],len(x[1].name),x[1].name.lower()))
         return rows[0][1] if rows and rows[0][0]>0 else None
-    specs={"pelvis":(("pelvis","hips","hip"),None,()),"spine":(("spine","chest"),None,()),"head":(("head",),None,()),"left_upper_arm":(("upperarm","uparm"),"L",("forearm","lowerarm")),"right_upper_arm":(("upperarm","uparm"),"R",("forearm","lowerarm")),"left_forearm":(("forearm","lowerarm"),"L",()),"right_forearm":(("forearm","lowerarm"),"R",()),"left_hand":(("hand",),"L",()),"right_hand":(("hand",),"R",()),"left_thigh":(("thigh","upleg"),"L",()),"right_thigh":(("thigh","upleg"),"R",()),"left_shin":(("shin","calf","lowerleg"),"L",()),"right_shin":(("shin","calf","lowerleg"),"R",()),"left_foot":(("foot",),"L",()),"right_foot":(("foot",),"R",())}
+    specs={"pelvis":(("pelvis","hips","hip"),None,()),"spine":(("spine","chest"),None,()),"head":(("head",),None,()),"left_upper_arm":(("upperarm","uparm"),"L",("forearm","lowerarm")),"right_upper_arm":(("upperarm","uparm"),"R",("forearm","lowerarm")),"left_forearm":(("forearm","lowerarm"),"L",()),"right_forearm":(("forearm","lowerarm"),"R",()),"left_hand":(("hand",),"L",()),"right_hand":(("hand",),"R",()),"left_thigh":(("thigh","upleg","upperleg"),"L",()),"right_thigh":(("thigh","upleg","upperleg"),"R",()),"left_shin":(("shin","calf","lowerleg"),"L",()),"right_shin":(("shin","calf","lowerleg"),"R",()),"left_foot":(("foot",),"L",()),"right_foot":(("foot",),"R",())}
     joints={}
     for k,(t,s,e) in specs.items():
         b=pick(t,s,e)

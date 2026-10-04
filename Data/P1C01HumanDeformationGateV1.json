@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "gate_id": "P1C01_FRODO_STATIC_DEFORMATION_GATE_V1",
-  "status": "RUN32_KAYKIT_DIRECT_FBX_LFS_INTAKE_IMPLEMENTED",
+  "status": "RUN33_UPPERLEG_ALIAS_RESOLVER_ROOT_FIX_IMPLEMENTED",
   "runtime_chapter": "P1C01",
   "predecessor": {
     "technical_gate": "Human Wave 2 UE4 technical winner",
@@ -84,6 +84,7 @@
     "kaykit_revision": "672074b73ba276876a19e8816ecdc5241817ab47",
     "raw_rejected_payload_direct_ue4_retry": false,
     "normalized_derivative_identity": "SHA256 must differ from raw source before UE4 admission.",
-    "kaykit_intake": "Direct immutable raw FBX endpoints because revision ZIP omits FBX/LFS payloads; each raw SHA256 must match historical identity, then normalized derivative SHA must differ before admission."
+    "kaykit_intake": "Direct immutable raw FBX endpoints because revision ZIP omits FBX/LFS payloads; each raw SHA256 must match historical identity, then normalized derivative SHA must differ before admission.",
+    "semantic_alias_fix": "upperleg is a naming alias for required thigh semantics; requirement for weighted left/right thigh remains mandatory."
   }
 }

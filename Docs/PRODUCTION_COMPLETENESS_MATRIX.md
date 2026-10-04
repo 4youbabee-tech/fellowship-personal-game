@@ -3653,3 +3653,19 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Generic Unreal self-hosted duplication | SKIPPED |
 | Shire render self-hosted duplication | SKIPPED |
 | Fresh exact-head validation | PENDING |
+
+
+## 2026-10-04 - KayKit semantic resolver
+
+| Control | State |
+|---|---|
+| Direct FBX SHA provenance | PASS on 3/3 |
+| KayKit weighted hands | PRESENT |
+| KayKit weighted spine | PRESENT |
+| KayKit upper-leg bones | PRESENT as `upperleg.l/r` |
+| Hosted thigh resolver | ROOT-FIXED |
+| Wave3 thigh resolver | ROOT-FIXED |
+| Thigh requirement removed | NO |
+| Rogue zero-weight ratio | 0.3366 / WITHIN 0.35 CEILING |
+| RogueHooded / Knight zero-weight ratio | ABOVE CEILING / REJECTED |
+| Fresh exact-head deformation proof | PENDING |

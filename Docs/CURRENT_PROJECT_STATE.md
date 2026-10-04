@@ -4420,3 +4420,13 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Each raw download must match its already-recorded historical SHA256 exactly. Those raw bytes remain prohibited from direct UE4 retry; Blender must generate a **different normalized derivative SHA256** and that derivative must pass the unchanged hosted deformation gate before UE4 is allowed.
 - Generic Unreal and Shire render self-hosted jobs were both skipped on this iteration by the CI dedup classifiers.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD DIRECT-FBX HOSTED VALIDATION PENDING**.
+
+
+## 2026-10-04 - Run #33 KayKit upper-leg semantic resolver fix
+
+- Exact-head hosted run `f613c0e11df8d948e7542ea4744cf219355bd8a3` successfully downloaded and SHA-verified all three immutable KayKit FBXs: Rogue, RogueHooded, Knight. Generic Unreal and Shire render self-hosted work were skipped.
+- Normalized KayKit skeleton evidence is materially better than Quaternius: it contains weighted `spine`, `hand.l/r`, `upperarm`, `lowerarm`, `upperleg.l/r`, `lowerleg.l/r`, `foot.l/r`, `hips`, and `head`.
+- Hosted rejection was a resolver defect: the required thigh semantic recognized `thigh` and `upleg`, but not the actual compact bone name `upperleg`.
+- Root fix adds `upperleg` as an alias in **both** the hosted deformation preflight and the later Wave3 deformation gate. This does **not** weaken the requirement; left/right thigh still must exist, be deform bones, carry nonzero vertex influence, satisfy hierarchy, and move geometry under pose stress.
+- Rogue already meets the existing zero-weight ratio ceiling (0.3366 <= 0.35); RogueHooded and Knight remain above that ceiling and therefore stay rejected unless their actual normalized payload independently meets the same threshold later.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD REVALIDATION PENDING**.

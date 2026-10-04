@@ -107,6 +107,9 @@ class HumanWave2ContractTests(unittest.TestCase):
             "bone_influence_count",
         ):
             self.assertIn(token,deformation)
+        self.assertIn("upperleg",deformation)
+        hosted_deformation=(root/"Scripts"/"probe_p1c01_human_fbx_deformation.py").read_text(encoding="utf-8")
+        self.assertIn('"upperleg"',hosted_deformation)
         gate=json.loads((root/"Data"/"P1C01HumanDeformationGateV1.json").read_text(encoding="utf-8"))
         self.assertFalse(gate["runtime_contract"]["visual_deformation_accepted"])
         self.assertFalse(gate["runtime_contract"]["retarget_accepted"])
