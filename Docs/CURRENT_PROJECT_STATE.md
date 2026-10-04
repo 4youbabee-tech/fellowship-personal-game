@@ -4098,3 +4098,9 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - UE4 receipt generation now records direct-raw `delivery_mode`, `license_sha256`, and exact source payload hashes instead of the obsolete archive field.
 - Modular Frodo remains the runtime fallback. No deformation, AnimBP, runtime promotion, PIE, device, rendered-visual or FPS acceptance is claimed.
 - New anti-churn packet status: **SOURCE-IMPLEMENTED / EXACT-HEAD REVALIDATION PENDING**.
+## 2026-10-04 - KayKit anti-churn regression-test indentation correction
+
+- Pre-Unreal #1837 failed only while importing `test_source_contracts.py`: the earlier `test_p1c01_kaykit_rig_bridge_is_bounded_and_non_runtime` declaration was at module indentation while its body used class-method indentation; the newly added anti-churn method then exposed the mismatch.
+- Root correction is limited to restoring that existing KayKit test declaration to the `SourceContractTests` class. No runtime, asset, workflow policy or technical gate behavior changed.
+- Prior exact candidate evidence remains authoritative: Rogue and RogueHooded are both UE4.27 technical rejects with 48 bones and missing bind-pose/smoothing-group failures.
+- Status: **TOOLING-FIXED / FRESH EXACT-HEAD PRE-UNREAL PENDING**. No PIE/device/visual/FPS acceptance.

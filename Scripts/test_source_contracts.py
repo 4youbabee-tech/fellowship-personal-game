@@ -648,7 +648,7 @@ class SourceContractTests(unittest.TestCase):
         ]
         self.assertEqual(order, sorted(order))
 
-def test_p1c01_kaykit_rig_bridge_is_bounded_and_non_runtime(self):
+    def test_p1c01_kaykit_rig_bridge_is_bounded_and_non_runtime(self):
         root = Path(__file__).resolve().parents[1]
         packet = json.loads((root / "Data" / "P1C01KayKitRigTechnicalBridgeV1.json").read_text(encoding="utf-8"))
         self.assertEqual(packet["runtime_chapter"], "P1C01")

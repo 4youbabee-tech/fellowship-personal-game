@@ -3177,3 +3177,4 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | New exact-head Pre-Unreal | PENDING | anti-churn packet revalidation |
 | New exact-head Unreal build | PENDING ONLY IF CI CLASSIFIER REQUIRES | no runtime C++/asset change in this packet |
 | PIE/device/rendered visual/FPS | NOT ACCEPTED | no matching evidence |
+| KayKit anti-churn source-contract import error | TOOLING-FIXED / REVALIDATION PENDING | #1837 IndentationError only; existing class method declaration indentation restored |
