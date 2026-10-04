@@ -4250,3 +4250,12 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Wave3 intentionally adds a third bounded/manual-safe call for `WarehouseQuaterniusAnimationBatchV1.json`.
 - Root fix makes the regression semantic: it now requires exactly one manual-queue call for support, animation-only and hero-candidate manifests, while the broad `continue-on-error` prohibition and zero-payload fail-closed behavior remain unchanged.
 - Status: **SOURCE-FIXED / FRESH EXACT-HEAD VALIDATION REQUIRED**. No animation/deformation/retarget acceptance is implied.
+
+
+## 2026-10-04 - P1C01 definitive closeout wave opened
+
+- Consolidation baseline is `develop@fd08c1c719f4b754384f03a10751dd748eacc74f`. One branch now owns the remaining P1C01 closeout work: `production/p1c01-definitive-chapter-closeout-2026-10-04`.
+- We reviewed the actual PR #322 rendered artifact rather than guessing from source. Run `37207780989` produced six screenshots successfully; the workflow failed only after the six captures because its final PowerShell count expression received a literal cmd caret.
+- Human visual result for those six renders is **REJECTED / NOT VISUALLY ACCEPTED**: blocky proxy player, flat/grey prototype read across much of the world, weak landmark framing/depth, and under-authored Ferry presentation.
+- Separate evidence correction: merged PR #321 proves the UE4 technical skeletal winner (161 bones), but its hosted deformation-stress step did not execute successfully; the downloaded UE4 receipt was not at the assumed path and Blender raised `FileNotFoundError`. The workflow's overall green is therefore not deformation evidence. This wave will repair that handoff at the causal artifact-contract layer and rerun it.
+- No P1C02 runtime work is opened. No blind density escalation is authorized before the material/lighting/ownership causes visible in the current render are addressed.
