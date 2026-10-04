@@ -29,8 +29,51 @@ concurrency:
   group: p1c01-shire-render-capture
   cancel-in-progress: true
 
+permissions:
+  contents: read
+  actions: read
+
 jobs:
+  classify:
+    name: Hosted visual-delta classifier
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      BASE_SHA: ${{ github.event.before || github.event.pull_request.base.sha }}
+    outputs:
+      capture: ${{ steps.classify.outputs.capture }}
+      reason: ${{ steps.classify.outputs.reason }}
+      base_sha: ${{ steps.classify.outputs.base_sha }}
+    steps:
+      - name: Checkout exact candidate for visual classification
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Classify current delta
+        id: classify
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+        run: |
+          & "$env:GITHUB_WORKSPACE/Scripts/classify_p1c01_render_capture.ps1"
+
+  inherit:
+    name: Inherit unchanged visual-tree evidence
+    needs: classify
+    if: needs.classify.outputs.capture != 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Record inherited evidence boundary
+        run: echo "P1C01_RENDER_INHERITED base=${{ needs.classify.outputs.base_sha }} head=${{ github.event.pull_request.head.sha || github.sha }} reason=${{ needs.classify.outputs.reason }}; no fresh render and no visual acceptance claimed."
+
   capture:
+    needs: classify
+    if: needs.classify.outputs.capture == 'true'
     name: UE4.27.2 rendered evidence
     runs-on:
       - self-hosted

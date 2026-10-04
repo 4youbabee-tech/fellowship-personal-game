@@ -132,7 +132,25 @@ coverage={
     "knee":has_any(["calf","shin","lowerleg","lower_leg","knee"]),
 }
 if weighted <= 0: raise RuntimeError("no weighted vertices")
-if uv_layers <= 0: raise RuntimeError("no UV layers")
+
+generated_uv_mesh_count=0
+if uv_layers <= 0:
+    for m in meshes:
+        if len(m.data.polygons) <= 0 or len(m.data.uv_layers) > 0:
+            continue
+        for o in bpy.context.scene.objects:
+            o.select_set(False)
+        m.hide_set(False)
+        m.select_set(True)
+        bpy.context.view_layer.objects.active=m
+        bpy.ops.object.mode_set(mode="EDIT")
+        bpy.ops.mesh.select_all(action="SELECT")
+        bpy.ops.uv.smart_project()
+        bpy.ops.object.mode_set(mode="OBJECT")
+        generated_uv_mesh_count += 1
+    uv_layers=sum(len(m.data.uv_layers) for m in meshes)
+
+if uv_layers <= 0: raise RuntimeError("UV normalization failed")
 if not finite_bounds: raise RuntimeError("non-finite bounds")
 
 os.makedirs(os.path.dirname(args.output), exist_ok=True)
@@ -152,6 +170,7 @@ receipt={
     "deform_bone_count":deform_bone_count,
     "vertex_count":vertex_count,"weighted_vertex_count":weighted,
     "zero_weight_vertex_count":zero_weight,"uv_layer_count":uv_layers,
+    "generated_uv_mesh_count":generated_uv_mesh_count,
     "finite_bounds":finite_bounds,"joint_name_coverage":coverage,
     "source_kind":args.source_kind}
 with open(args.receipt,"w",encoding="utf-8") as f: json.dump(receipt,f,indent=2,sort_keys=True)
@@ -244,6 +263,7 @@ foreach($src in $selectedSources){
     armature_count=[int]$readiness.armature_count; mesh_count=[int]$readiness.mesh_count; bone_count=[int]$readiness.bone_count;
     deform_bone_count=[int]$readiness.deform_bone_count; vertex_count=[int]$readiness.vertex_count; weighted_vertex_count=[int]$readiness.weighted_vertex_count;
     zero_weight_vertex_count=[int]$readiness.zero_weight_vertex_count; zero_weight_ratio=$zeroWeightRatio; uv_layer_count=[int]$readiness.uv_layer_count;
+    generated_uv_mesh_count=if($null -ne $readiness.PSObject.Properties["generated_uv_mesh_count"]){[int]$readiness.generated_uv_mesh_count}else{0};
     finite_bounds=[bool]$readiness.finite_bounds; joint_name_coverage=$readiness.joint_name_coverage;
     deformation_preflight_status=[string]$deformation.status; deformation_preflight_reasons=@($deformation.reasons);
     deformation_preflight_relative_path=if(Test-Path -LiteralPath $deformationPath -PathType Leaf){"normalized/"+[IO.Path]::GetFileName($deformationPath)}else{$null};

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "gate_id": "P1C01_FRODO_STATIC_DEFORMATION_GATE_V1",
-  "status": "RUN28_HOSTED_SWEEP_NORMALIZER_EXITCODE_ROOT_FIX_IMPLEMENTED",
+  "status": "RUN29_UV_TECHNICAL_NORMALIZATION_AND_CI_DEDUP_SOURCE_IMPLEMENTED",
   "runtime_chapter": "P1C01",
   "predecessor": {
     "technical_gate": "Human Wave 2 UE4 technical winner",
@@ -76,6 +76,7 @@
     "max_hosted_candidates": 12,
     "normalizer_exitcode": "--python-exit-code 18",
     "asset_quality_failure": "candidate reject + continue",
-    "infrastructure_failure": "fail closed immediately"
+    "infrastructure_failure": "fail closed immediately",
+    "technical_uv_generation": "Allowed only when source rig-base has no UV; does not satisfy final visual/material acceptance."
   }
 }

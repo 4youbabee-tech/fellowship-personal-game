@@ -3595,3 +3595,16 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | UE4 survivors | MAX 2 |
 | Hosted evidence on failure | ALWAYS-UPLOAD |
 | Fresh exact-head validation | PENDING |
+
+
+## 2026-10-04 - CI throughput / character technical normalization
+
+| Control | State |
+|---|---|
+| Technical rig source with zero UV | AUTO-NORMALIZE UV; final visual gate unchanged |
+| Final Frodo material/likeness acceptance from generated UV | FORBIDDEN |
+| Human-only synchronize delta generic Unreal full build | ROOT-FIXED IN SOURCE |
+| Unreal classifier delta base | PREVIOUS PR HEAD FIRST |
+| Human dedicated file set | EXPANDED / OWNED BY HUMAN WORKFLOW |
+| Shire render on nonvisual delta | HOSTED CLASSIFIER + GREEN-PARENT INHERIT |
+| Fresh exact-head validation | PENDING |

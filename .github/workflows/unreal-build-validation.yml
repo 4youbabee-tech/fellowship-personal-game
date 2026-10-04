@@ -232,7 +232,7 @@ jobs:
     timeout-minutes: 10
     env:
       TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-      BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+      BASE_SHA: ${{ github.event.before || github.event.pull_request.base.sha }}
     outputs:
       mode: ${{ steps.classify.outputs.mode }}
       reason: ${{ steps.classify.outputs.reason }}
@@ -272,7 +272,7 @@ jobs:
     timeout-minutes: 90
     env:
       TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-      BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+      BASE_SHA: ${{ github.event.before || github.event.pull_request.base.sha }}
 
     steps:
       - name: Bootstrap Windows runner tools

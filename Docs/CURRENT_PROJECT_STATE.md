@@ -4380,3 +4380,13 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Hosted outcome/evidence upload now runs with `if: always()` so failed source factories still leave evidence.
 - Infrastructure/probe failures remain fail-closed; only candidate-quality failures continue.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**.
+
+
+## 2026-10-04 - Run #29 technical UV normalization + CI dedup
+
+- Run #28/29 hosted evidence proved **12/12** bounded Quaternius fallback candidates were rejected before UE4 because the source pack has no UV layers. The self-hosted Human UE4 jobs were correctly skipped.
+- This source is explicitly a **technical rig/deformation base**, not final Frodo likeness. Instead of weakening the UE4 UV gate, normalization now creates a deterministic Smart-UV layer only when a technical source has zero UVs. Final hero material/likeness/visual acceptance remains separately blocked and cannot inherit this technical UV.
+- Generic Unreal validation previously compared every synchronize event against the PR base, so old runtime files kept forcing a full UE4 build even for human-CI-only commits. The workflow now prefers the previous PR head (`github.event.before`) and the classifier recognizes the complete dedicated Human Wave2 file set.
+- Shire Render Capture now has a hosted visual-delta classifier. It may inherit only when the current delta has no visual-impact files **and** the previous head has a successful render workflow; otherwise it renders fail-safe.
+- Goal: a Human pipeline iteration should spend hosted minutes first, reserve UE4 only for a surviving candidate, and avoid unrelated generic build/render reservations.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**.

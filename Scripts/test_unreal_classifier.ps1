@@ -98,6 +98,13 @@ if (-not $source.Contains('"Data/P1C01BagEndHeroTrimSourceProbeV1.json"')) {
     throw 'Bag End hero trim source packet exact allowlist missing'
 }
 if (-not $source.Contains('dedicated-human-wave2-owns-editor-build-and-ue4-gate')) { throw 'Human Wave2 dedicated classifier marker missing' }
+foreach($requiredHumanFile in @(
+  '"Data/P1C01HumanDeformationGateV1.json"',
+  '"Scripts/run_p1c01_human_wave3_deformation.py"',
+  '"Scripts/probe_p1c01_human_fbx_deformation.py"'
+)){
+  if(-not $source.Contains($requiredHumanFile)){throw "Human Wave2 classifier allowlist missing $requiredHumanFile"}
+}
 Write-Host 'UNREAL_CLASSIFIER_HUMAN_WAVE2_DEDUP_PASS'
 Write-Host 'UNREAL_CLASSIFIER_LOCAL_TREE_AND_BAG_END_SOURCE_PASS'
 
@@ -110,3 +117,10 @@ if (-not $source.Contains('source=$proofSource')) {
     throw 'Classifier transitive governance proof source marker missing'
 }
 Write-Host 'UNREAL_CLASSIFIER_TRANSITIVE_GOVERNANCE_TREE_PROOF_PASS'
+
+
+$workflowSource=Get-Content -LiteralPath (Join-Path (Split-Path -Parent $PSScriptRoot) ".github/workflows/unreal-build-validation.yml") -Raw
+if(-not $workflowSource.Contains('github.event.before || github.event.pull_request.base.sha')){
+  throw 'Unreal workflow must classify synchronize delta from previous PR head before falling back to PR base'
+}
+Write-Host 'UNREAL_CLASSIFIER_PREVIOUS_HEAD_DELTA_PASS'

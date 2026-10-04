@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "wave_id": "P1C01_HUMAN_CHARACTER_PRODUCTION_WAVE_2_V1",
-  "status": "RUN28_HOSTED_SWEEP_AND_NORMALIZER_EXITCODE_ROOT_FIX_IMPLEMENTED",
+  "status": "RUN29_TECHNICAL_UV_NORMALIZATION_AND_CI_DEDUP_SOURCE_IMPLEMENTED",
   "runtime_chapter": "P1C01",
   "target_character": "FRODO",
   "role": "HUMAN_SKELETAL_SOURCE_FACTORY_NOT_FINAL_LIKENESS",
@@ -70,7 +70,14 @@
     "selection": "ARMATURE_MESH",
     "provenance": "source entry + source SHA256 + normalized SHA256 + Blender version",
     "export_deform_bones_only": true,
-    "control_rig_bones_excluded": true
+    "control_rig_bones_excluded": true,
+    "generated_uv_policy": {
+      "allowed_for": "TECHNICAL_RIG_BASE_COMPATIBILITY_ONLY",
+      "trigger": "source mesh has zero UV layers",
+      "method": "Blender Smart UV Project during deterministic normalization",
+      "final_visual_acceptance": "NOT_IMPLIED",
+      "final_likeness_material_gate": "STILL_REQUIRED"
+    }
   },
   "hosted_deformation_readiness": {
     "required": [
@@ -195,5 +202,10 @@
       "normalizer Blender invocation did not propagate Python exception exit code"
     ],
     "disposition": "per-candidate reject + continue; --python-exit-code 18; always publish hosted evidence; UE4 only for survivors"
+  },
+  "ci_efficiency_contract": {
+    "unreal_delta_base": "previous PR head on synchronize, PR base only as fallback",
+    "dedicated_human_lane": "generic Unreal build must inherit/skip when only Human Wave2 pipeline files changed",
+    "render_delta_classifier": "self-hosted Shire capture skipped only when visual-impact delta is absent and previous-head render workflow is green"
   }
 }
