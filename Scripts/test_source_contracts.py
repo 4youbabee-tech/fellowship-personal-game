@@ -299,7 +299,7 @@ class SourceContractTests(unittest.TestCase):
         start = source.index("void AShirePrototypeWorldBuilder::SpawnPartySocialLoopPass()")
         end = source.index("void AShirePrototypeWorldBuilder::SpawnSideStories()", start)
         body = source[start:end]
-        self.assertEqual(body.count("SpawnPartyCluster("), 4)
+        self.assertEqual(body.count("SpawnPartyCluster("), 9)
         self.assertIn("PARTY_SOCIAL_LOOP_PASS", body)
         self.assertIn("populationTarget=18", body)
         for forbidden in ("LoadObject<", "StaticLoadObject", "RequestSyncLoad", "SpawnActor<AShireAmbientNPC>"):
