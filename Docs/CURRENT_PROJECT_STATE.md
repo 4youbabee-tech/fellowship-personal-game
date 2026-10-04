@@ -4231,3 +4231,14 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Required first clips remain Idle / Walk / Run. Successful staging only advances to clip inventory + retarget/deformation gates; it does not authorize AnimBP or runtime promotion.
 - Existing `stage_quaternius_warehouse.ps1` is reused for license/public-download/SHA256 receipt behavior; no second downloader is introduced.
 - Status: **SOURCE-IMPLEMENTED / TARGETED WAREHOUSE EXECUTION PENDING AFTER MERGE**. No animation, retarget, deformation, PIE/device/visual/FPS acceptance is claimed.
+
+
+## 2026-10-04 - Frodo static deformation stress gate
+
+- Extended the existing Human Wave 2 exact-head workflow rather than creating a second hero-source pipeline.
+- After the self-hosted UE4 technical gate succeeds, a hosted Blender job downloads the **same exact normalized FBX artifact** and the UE4 technical-winner receipt from that run.
+- Numerical stress covers bilateral upper arms/forearms/hands/thighs/shins/feet plus pelvis/spine/head hierarchy, then deterministic shoulder, elbow, knee, hand/foot and combined locomotion poses.
+- Hard rejects cover missing joints, broken hierarchy, non-finite evaluated vertices/transforms, vertex-count changes and catastrophic bounds/displacement.
+- This is a numerical deformation-readiness gate only. `visual_deformation_accepted=false`, `retarget_accepted=false`, and runtime integration remains blocked.
+- Machine-readable gate: `Data/P1C01HumanDeformationGateV1.json`.
+- Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD HUMAN WAVE VALIDATION PENDING**.

@@ -3398,3 +3398,21 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | AnimBP locomotion | BLOCKED | retarget/deformation proof first |
 | Async runtime Frodo promotion | BLOCKED | AnimBP/rig bundle proof first |
 | PIE/device/rendered visual/FPS | NOT ACCEPTED | direct evidence required |
+
+
+## 2026-10-04 - Frodo static deformation stress gate
+
+| Gate | Status | Evidence boundary |
+|---|---|---|
+| Input candidate | EXACT-RUN UE4 WINNER ONLY | same workflow artifacts; no new mesh hunt |
+| Required limb joints | SOURCE-GATED | pelvis/spine/head + bilateral arm/hand/leg/foot families |
+| Limb hierarchy | SOURCE-GATED | descendant-chain sanity |
+| Shoulder stress | SOURCE-IMPLEMENTED | +/-45 degrees |
+| Elbow stress | SOURCE-IMPLEMENTED | 75 degrees |
+| Knee stress | SOURCE-IMPLEMENTED | 65 degrees |
+| Hand/foot stress | SOURCE-IMPLEMENTED | 20 degrees |
+| Locomotion combined stress | SOURCE-IMPLEMENTED | deterministic numerical pose |
+| Catastrophic deformation guard | SOURCE-IMPLEMENTED | finite vertices + bounds/displacement thresholds |
+| Human rendered deformation acceptance | NOT ACCEPTED | direct visual review required |
+| Idle/Walk/Run retarget | BLOCKED | targeted animation intake + compatibility proof |
+| AnimBP/runtime promotion | BLOCKED | retarget + visual deformation first |

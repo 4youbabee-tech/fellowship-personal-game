@@ -62,6 +62,15 @@ class HumanWave2ContractTests(unittest.TestCase):
         self.assertIn("ci_build_unreal.cmd",workflow)
         self.assertIn("Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp",workflow)
         self.assertIn("ls-files --others --exclude-standard",workflow)
+        self.assertIn("Hosted Frodo static deformation stress",workflow)
+        self.assertIn("run_p1c01_human_wave3_deformation.py",workflow)
+        deformation=(root/"Scripts"/"run_p1c01_human_wave3_deformation.py").read_text(encoding="utf-8")
+        for token in ("shoulders","elbows","knees","hands_feet","locomotion_stress","visual_deformation_accepted","retarget_accepted"):
+            self.assertIn(token,deformation)
+        gate=json.loads((root/"Data"/"P1C01HumanDeformationGateV1.json").read_text(encoding="utf-8"))
+        self.assertFalse(gate["runtime_contract"]["visual_deformation_accepted"])
+        self.assertFalse(gate["runtime_contract"]["retarget_accepted"])
+        self.assertFalse(gate["runtime_contract"]["runtime_integration_allowed"])
 
 
 if __name__=="__main__":
