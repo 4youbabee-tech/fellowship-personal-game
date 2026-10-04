@@ -1213,3 +1213,14 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Runtime contract: modular Frodo remains fallback. Heavy character assets must remain soft references and load asynchronously through FStreamableManager. No synchronous heavy LoadObject path is authorized.
 - Target: UE4.27.2 / DX11 / 720p / 30 FPS floor / i7 Gen6 / 8 GB RAM / ~2 GB VRAM.
 - Evidence boundary: REGISTERED / SOURCE-GROUNDED PLAN ONLY. No technical pass, deformation acceptance, runtime, PIE, device, rendered-visual or FPS acceptance is claimed.
+
+
+## 2026-10-04 - P1C01 SHIRE_SETTLEMENT_COMPLETION_V1 registered before implementation
+
+- Scope: finish the authored **Hobbiton / Bag End settlement read** inside the existing P1C01 runtime lane. This does not open P1C02 and does not claim the full Bywater town or any new chapter.
+- Source basis: F1-01/F1-02/F1-03 plus supplied Tolkien source. Supported reads include Bag End on the Hill; Bagshot Row beside the Party Field; the large field south of Bag End with a special bank/road entrance; a prominent field tree; Hobbiton/Bywater as neighboring lived-in settlements; the Water, bridge and mill; hedgerows, gardens, fields and lanes.
+- Runtime writer remains `AShirePrototypeWorldBuilder`. Ambient population/pooling remains `ALivingWorldDirector`; NPC context remains `UShireNPCContextSubsystem`; quest/story truth remains `UShireQuestSubsystem`.
+- Planned visible packet: Bagshot Row residential belt; Party Tree/field composition; property lanes; garden/orchard edge; mill/common lived-in surrounds; Bywater-facing settlement transition; household/farm/social clutter and lamp rhythm.
+- Performance contract: **306 HISM instances + 82 clustered instances across at most 8 AWorldDetailCluster actors + 16 limited hero actors**. No actor-per-prop density, no per-instance Tick, no synchronous heavy load, resident production meshes only.
+- Navigation contract: existing central road/common/player traversal corridor stays open for the player and pooled NPCs.
+- Evidence boundary at registration: **SOURCE-GROUNDED PLAN**. No PIE/device/rendered-visual/FPS acceptance.

@@ -4171,3 +4171,18 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - PhysicsAsset auto-generation still emits the small-bone warning and remains a separate sanity gate; current movement collision is capsule-owned.
 - CI hardening in the follow-up source packet adds the import commandlet to the dedicated Wave2 trigger and removes filename-based transient cleanup in favor of deleting only generated untracked Frodo `.uasset` files.
 - Status: **TECHNICAL WINNER EVIDENCED / CI-HARDENING EXACT-HEAD VALIDATION PENDING**. Deformation, retarget, AnimBP, runtime, PIE/device/rendered-visual/FPS acceptance remains pending.
+
+
+## 2026-10-04 - P1C01 Shire Settlement Completion source implementation
+
+- Added `SpawnShireSettlementCompletionPass()` to the existing `AShirePrototypeWorldBuilder`, after Shire Visual Finish and before generic density.
+- Settlement completion budget: **306 HISM + 82 clustered instances / max 8 cluster actors + 16 limited hero actors**.
+- Bagshot Row: six readable production façades backed by terraced slope massing, hedges, shrubs, grass, path stones and fence rhythm.
+- Party Field: production trunk/canopy landmark establishes the Party Tree; field perimeter, approach stones, grass and shrubs reinforce the F1-01 celebration space without moving the existing story anchor.
+- Hobbiton: denser property lanes, hedge/fence separation and verge breakup create residential parcels while keeping the village common and main traversal lane open.
+- Cultivated edge: 18 orchard trees plus understory/grass create an authored garden-orchard transition instead of an abrupt wilderness boundary.
+- Bywater-facing edge: four limited cottages, two wells, property boundaries, trees and route stones form a lived-in transition. This packet does **not** claim full Bywater town completion.
+- Household/farm/social density uses eight bounded `AWorldDetailCluster` families for benches, barrels, crates, haystacks, picnic tables, lamp posts, loaded carts and flower boxes rather than actor-per-prop placement.
+- Existing mill/bridge/Bag End actors are not duplicated as new authorities; this pass fills their surrounding settlement context.
+- No new synchronous heavy load, no new world manager, no NPC Spawn/Destroy density change and no P1C02 runtime expansion.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. No PIE/device/rendered-visual/FPS acceptance is claimed.

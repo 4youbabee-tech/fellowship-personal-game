@@ -747,6 +747,66 @@ class SourceContractTests(unittest.TestCase):
         self.assertLess(build.index("SpawnVisibleShireMegaWaveD();"), build.index("SpawnShireVisualFinishWave();"))
         self.assertLess(build.index("SpawnShireVisualFinishWave();"), build.index("SpawnWorldDensityDetailPass();"))
 
+
+
+    def test_p1c01_shire_settlement_completion_is_bounded_and_single_writer(self):
+        root = Path(__file__).resolve().parents[1]
+        contract = json.loads((root / "Data" / "P1C01ShireSettlementCompletionV1.json").read_text(encoding="utf-8"))
+        self.assertEqual(contract["runtime_chapter"], "P1C01")
+        self.assertEqual(contract["runtime_writer"], "AShirePrototypeWorldBuilder")
+        self.assertEqual(contract["budget"]["hism_instances"], 306)
+        self.assertEqual(contract["budget"]["cluster_instances"], 82)
+        self.assertEqual(contract["budget"]["cluster_actors_max"], 8)
+        self.assertEqual(contract["budget"]["limited_hero_actors"], 16)
+        self.assertFalse(contract["architecture_contract"]["new_world_authority"])
+        self.assertFalse(contract["architecture_contract"]["per_instance_tick"])
+        self.assertFalse(contract["architecture_contract"]["synchronous_heavy_load"])
+        self.assertFalse(contract["architecture_contract"]["actor_per_prop_density"])
+        self.assertFalse(contract["architecture_contract"]["p1c02_runtime_opened"])
+        self.assertTrue(contract["architecture_contract"]["central_traversal_corridor_preserved"])
+
+        source = (root / "Source" / "ShireJourney" / "Private" / "World" / "ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        header = (root / "Source" / "ShireJourney" / "Public" / "World" / "ShirePrototypeWorldBuilder.h").read_text(encoding="utf-8")
+        self.assertIn("void SpawnShireSettlementCompletionPass();", header)
+
+        start = source.index("void AShirePrototypeWorldBuilder::SpawnShireSettlementCompletionPass()")
+        end = source.index("void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()", start)
+        body = source[start:end]
+
+        for token in (
+            "P1C01_SHIRE_SETTLEMENT_COMPLETION",
+            "BagshotFacades[]",
+            "P1C01PartyTreeTrunk",
+            "P1C01PartyTreeCanopy",
+            "P1C01BywaterFacingCottage",
+            "P1C01SettlementBenches",
+            "P1C01SettlementBarrels",
+            "P1C01SettlementCrates",
+            "P1C01SettlementHaystacks",
+            "P1C01PartyFieldTables",
+            "P1C01SettlementLampPosts",
+            "P1C01SettlementLoadedCarts",
+            "P1C01SettlementFlowerBoxes",
+            "hismBudget=306",
+            "clusterBudget=82",
+            "heroBudget=16",
+        ):
+            self.assertIn(token, body)
+
+        for forbidden in (
+            "LoadObject<",
+            "StaticLoadObject",
+            "RequestSyncLoad",
+            "SpawnActor<ALivingWorldDirector>",
+            "SpawnActor<AShireAmbientNPC>",
+            'TEXT("P1C02")',
+        ):
+            self.assertNotIn(forbidden, body)
+
+        build = source[source.index("void AShirePrototypeWorldBuilder::BuildPrototypeWorld()"):]
+        self.assertLess(build.index("SpawnShireVisualFinishWave();"), build.index("SpawnShireSettlementCompletionPass();"))
+        self.assertLess(build.index("SpawnShireSettlementCompletionPass();"), build.index("SpawnWorldDensityDetailPass();"))
+
     def test_p1c01_kaykit_rig_bridge_is_bounded_and_non_runtime(self):
         root = Path(__file__).resolve().parents[1]
         packet = json.loads((root / "Data" / "P1C01KayKitRigTechnicalBridgeV1.json").read_text(encoding="utf-8"))

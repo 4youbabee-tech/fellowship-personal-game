@@ -3295,3 +3295,30 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Deformation + retarget | NEXT | technical predecessor now satisfied |
 | AnimBP / runtime promotion | BLOCKED | deformation/retarget evidence required first |
 | PIE/device/rendered visual/FPS | NOT ACCEPTED | no direct evidence |
+
+
+## 2026-10-04 - P1C01 Shire Settlement Completion
+
+| Settlement domain | Status | Evidence boundary |
+|---|---|---|
+| WORLD_DETAIL_LEDGER registration | COMPLETE | P1C01 SHIRE_SETTLEMENT_COMPLETION_V1 |
+| Runtime writer | PRESERVED | AShirePrototypeWorldBuilder only |
+| Bag End / Hill hero hierarchy | PRESERVED + CONTEXT EXPANDED | prior Bag End passes retained |
+| Bagshot Row readable residential belt | SOURCE-IMPLEMENTED | 6 hero façades + terracing/property detail |
+| Party Field landmark | SOURCE-IMPLEMENTED | production Party Tree trunk/canopy + field composition |
+| Hobbiton property lanes | SOURCE-IMPLEMENTED | HISM hedge/fence/path/grass rhythm |
+| Cultivated orchard/garden edge | SOURCE-IMPLEMENTED | HISM tree/shrub/grass belt |
+| Mill / bridge context | SOURCE-IMPLEMENTED | clustered village-life surroundings; existing landmarks not duplicated |
+| Bywater-facing transition | SOURCE-IMPLEMENTED | 4 cottages + 2 wells + bounded edges; full Bywater not claimed |
+| Household/farm/social detail | SOURCE-IMPLEMENTED | 82 instances / max 8 AWorldDetailCluster actors |
+| New repeated HISM budget | SOURCE-IMPLEMENTED | 306 |
+| Limited hero actor budget | SOURCE-IMPLEMENTED | 16 |
+| Actor-per-prop density | FORBIDDEN / PRESERVED | clustered repeated props |
+| Per-instance Tick | NONE | HISM/clustered static detail |
+| Synchronous heavy load | NONE | resident production meshes only |
+| Ambient population ownership | PRESERVED | ALivingWorldDirector |
+| P1C02 runtime | NOT OPENED | P1C01 only |
+| Exact-head Pre-Unreal | PENDING | PR validation required |
+| Exact-head UE4.27.2 build | PENDING | PR validation required |
+| PIE traversal / visual / pacing | NOT ACCEPTED | direct chapter-specific evidence required |
+| Target-device 720p / 30 FPS | NOT ACCEPTED | measured device evidence required |

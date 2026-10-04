@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "wave_id": "P1C01_SHIRE_SETTLEMENT_COMPLETION_V1",
+  "status": "SOURCE_IMPLEMENTED_EXACT_HEAD_VALIDATION_PENDING",
+  "runtime_chapter": "P1C01",
+  "runtime_writer": "AShirePrototypeWorldBuilder",
+  "scope": {
+    "primary": "Hobbiton / Bag End settlement completion",
+    "included": [
+      "Bagshot Row readable residential belt",
+      "Party Field and Party Tree landmark",
+      "Hobbiton property lanes and garden boundaries",
+      "orchard / cultivated garden edge",
+      "mill / village common surrounding lived-in detail",
+      "Bywater-facing settlement transition belt",
+      "domestic, farm, social and lighting clutter"
+    ],
+    "explicitly_not_claimed": [
+      "full Bywater town completion",
+      "interior completion",
+      "P1C02 runtime expansion",
+      "PIE visual acceptance",
+      "target-device performance acceptance"
+    ]
+  },
+  "source_basis": {
+    "story_timeline": [
+      "F1-01 Prologue & Ring history: Shire party setup/social onboarding",
+      "F1-02 Shadow of the Past: Bag End / Shire",
+      "F1-03 Road to Bree: Shire roads / Bucklebury"
+    ],
+    "tolkien_supported_reads": [
+      "Bag End on the Hill",
+      "Bagshot Row adjoining the Party Field",
+      "large field south of Bag End",
+      "special entrance from bank to road",
+      "prominent tree in the Party Field",
+      "Hobbiton and Bywater as neighboring lived-in settlements",
+      "the Water, bridge and mill as village landmarks",
+      "hedgerows, gardens, farms, lanes and cultivated country"
+    ]
+  },
+  "budget": {
+    "hism_instances": 306,
+    "cluster_instances": 82,
+    "cluster_actors_max": 8,
+    "limited_hero_actors": 16
+  },
+  "architecture_contract": {
+    "new_world_authority": false,
+    "repeated_detail": "HISM_OR_AWorldDetailCluster",
+    "actor_per_prop_density": false,
+    "per_instance_tick": false,
+    "synchronous_heavy_load": false,
+    "resident_production_meshes_only": true,
+    "central_traversal_corridor_preserved": true,
+    "p1c02_runtime_opened": false,
+    "population_owner": "ALivingWorldDirector",
+    "npc_context_owner": "UShireNPCContextSubsystem",
+    "quest_owner": "UShireQuestSubsystem"
+  },
+  "low_spec_target": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "cpu": "i7 Gen6 class",
+    "ram_gb": 8,
+    "vram_gb_approx": 2
+  },
+  "evidence_boundary": "Source implementation only until exact-head Pre-Unreal + UE4 build complete. No PIE/device/rendered-visual/FPS acceptance."
+}
