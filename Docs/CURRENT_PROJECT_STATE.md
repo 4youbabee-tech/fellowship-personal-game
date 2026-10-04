@@ -4199,3 +4199,9 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Static source-bounds audit measured SM_ShFarmGate at 258 cm source width; the two Party Field visual gate centers are ~153 cm apart before scale.
 - Both Party Field entry-gate actors are now non-colliding so they cannot reseal the real hedge opening. Other property gates remain collision-enabled.
 - Status: **SOURCE-FIXED / FRESH EXACT-HEAD VALIDATION PENDING**. No PIE traversal acceptance is claimed.
+
+
+## 2026-10-04 - Settlement traversal regression-test harness correction
+- Pre-Unreal #1855 failed only because the new Party Field regression assertions referenced the local `body` variable before it was assigned.
+- Runtime/world source was not implicated by that failure. The assertions now execute after the settlement function slice is constructed.
+- Status: **TEST-HARNESS FIXED / FRESH EXACT-HEAD VALIDATION PENDING**.

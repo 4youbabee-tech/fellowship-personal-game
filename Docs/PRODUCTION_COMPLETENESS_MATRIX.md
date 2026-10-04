@@ -3344,3 +3344,13 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Hedge boundary opening | SOURCE-FIXED | indices 6-8 omitted |
 | Property gates elsewhere | PRESERVED | collision behavior unchanged |
 | PIE traversal | NOT ACCEPTED | direct walkthrough still required |
+
+
+## 2026-10-04 - Settlement traversal regression-test harness correction
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Pre-Unreal #1855 | TEST-HARNESS FAILURE | `UnboundLocalError: body` before assignment |
+| Settlement runtime source | NOT REJECTED BY #1855 | failure occurred inside Python test ordering |
+| Regression assertion ordering | SOURCE-FIXED | Party Field assertions moved after body slice construction |
+| Fresh Pre-Unreal | PENDING | exact-head rerun required |
