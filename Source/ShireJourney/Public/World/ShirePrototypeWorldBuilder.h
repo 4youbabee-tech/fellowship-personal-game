@@ -92,12 +92,14 @@ private:
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* DistantTreeCanopyInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* RockInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* PathStoneInstances;
+    UPROPERTY() UHierarchicalInstancedStaticMeshComponent* GardenSoilInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* GeographyHillInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* GeographySlopeInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* GeographyRiverBankInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* HedgeInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* WoodlandTreeInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* RuralFenceInstances;
+    UPROPERTY() UHierarchicalInstancedStaticMeshComponent* PropertyFenceInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* FernInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* ReedInstances;
     UPROPERTY() ADirectionalLight* RuntimeSun = nullptr;
@@ -135,6 +137,7 @@ private:
     void SpawnVisibleShireMegaWaveD();
     void SpawnShireVisualFinishWave();
     void SpawnShireSettlementCompletionPass();
+    void SpawnShireSettlementFinalPolishPass();
     void SpawnShireSettlementCanonFinishPass();
     void SpawnWorldDensityDetailPass();
     void SpawnBagEndHeroPass();
