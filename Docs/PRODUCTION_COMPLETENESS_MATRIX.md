@@ -3378,3 +3378,14 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Local production bootstrap | REQUIRED | `Scripts/bootstrap_local_p1c01_visuals.cmd` |
 | Human PIE/rendered visual acceptance | PENDING | direct owner evidence required |
 | Target-device 720p / 30 FPS | PENDING | measured device evidence required |
+
+
+### P1C01 rendered visual evidence lane - 2026-10-04
+
+| Item | Current state | Evidence / next gate |
+|---|---|---|
+| Production-content bootstrap | IMPLEMENTED | Existing `Scripts/ci_import_production_assets.cmd` reused by capture lane |
+| Automated landmark screenshots | IMPLEMENTED / RUN PENDING | `Scripts/ci_capture_p1c01_visuals.cmd`; six bounded views |
+| Self-hosted UE4 workflow | IMPLEMENTED / RUN PENDING | `.github/workflows/p1c01-shire-render-capture.yml` |
+| Human rendered review | NOT ACCEPTED | Requires review of exact-head artifact |
+| PIE / target-device / pacing / FPS | NOT ACCEPTED | Must be proven separately; 30 FPS floor target remains unchanged |
