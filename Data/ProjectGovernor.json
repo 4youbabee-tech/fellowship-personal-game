@@ -8682,5 +8682,40 @@
     "enjoyment_rule": "Exploration and optional content must make the Shire enjoyable to inhabit and discover, not merely extend playtime. Reward-free atmosphere, social activity, environmental interactions, discoveries and side content are valid when canon-safe and performance-bounded.",
     "closure_gate": "P1C01 closes only when all required dimensions are resolved and Gate 6/7 has chapter-specific evidence. No 'mostly complete' or 'main story complete' shortcut opens P1C02.",
     "evidence_boundary": "This contract defines completeness. It does not itself claim any runtime, device, visual, pacing or performance acceptance."
+  },
+  "manager_continuity_contract_2026_10_04": {
+    "status": "ACTIVE_PERMANENT",
+    "authority": "PROJECT_GOVERNOR_IS_PERSISTENT_MANAGER",
+    "purpose": "Make project management survive programmer/chat changes and remove the burden of remembering old commitments from the owner.",
+    "preflight_rule": [
+      "Before meaningful production work, read ProjectGovernor, CURRENT_PROJECT_STATE, PRODUCTION_COMPLETENESS_MATRIX, the active chapter closeout plan and live GitHub gate state.",
+      "Do not restart analysis from zero when the owner says continue; resume the highest-priority unfinished work on the live active chapter lineage.",
+      "Cross-check current work against durable owner agreements and surface any forgotten obligation that materially affects chapter closure."
+    ],
+    "manager_reminder_duty": [
+      "The manager, not the owner, is responsible for recalling durable accepted requirements that affect the active work.",
+      "Do not wait for the owner to re-mention localization, story/source completeness, exploration/side content, hero-character quality, Living World, audio, save/load, performance, visual/pacing acceptance or documentation synchronization.",
+      "When a deferred/open item becomes relevant to the current wave, surface it automatically and either execute it or record why it remains deferred."
+    ],
+    "mandatory_chapter_closure_crosscuts": [
+      "film/screenplay causal spine and locked outcomes",
+      "compatible Tolkien/source detail with no silent omission",
+      "exploration, discoveries, side activities and enjoyable optional content",
+      "hero characters and required NPC presentation",
+      "Living World routines/context/social behavior/fauna",
+      "quest/story/traversal/collision continuity",
+      "audio/ambience/foley/presentation",
+      "save/load/checkpoint/return-to-control reliability",
+      "localization-safe authoring plus the active Arabic localization contract",
+      "target-device DX11 720p performance/streaming/VRAM budget",
+      "human visual and pacing acceptance",
+      "CURRENT_PROJECT_STATE and PRODUCTION_COMPLETENESS_MATRIX truth"
+    ],
+    "conversation_continuity_rule": "When the conversation/context becomes long enough that omission or loss of decisions is a realistic risk, proactively warn the owner and prepare a complete handoff before further substantial work. Do not wait for the owner to notice context loss.",
+    "open_loop_rule": "Accepted unfinished obligations must live in repository governance/plans, not only chat memory. Review them at chapter-wave boundaries and in the daily owner report.",
+    "execution_trigger": "MANUAL_OWNER_COMMANDS_ONLY_FOR_PRODUCTION",
+    "schedule_boundary": "No recurring production schedule is authorized. The separate 24-hour owner status report remains active.",
+    "chapter_transition_rule": "Never auto-open the next runtime chapter. Current chapter must satisfy its registered closure/Gate 6/7 evidence and the owner must explicitly start the next chapter.",
+    "evidence_boundary": "This contract governs continuity/management. It does not itself establish PIE, device, visual, performance or Gate 6/7 acceptance."
   }
 }

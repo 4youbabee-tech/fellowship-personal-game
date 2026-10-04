@@ -4339,3 +4339,15 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - P1C01 closure now explicitly requires the complete Shire experience: film-causal story spine, compatible source-backed depth, main quests, exploration/discoveries, optional routes, side activities/missions, named-character continuity, Living Shire, world/audio presentation, traversal/collision/navigation, save/load, localization-safe text, target-device performance, and human visual/pacing/enjoyment review.
 - No meaningful supported chapter detail may be silently omitted: implement it or record an explicit disposition before closure.
 - P1C02 remains locked until P1C01 Gate 6/7 is accepted with chapter-specific evidence.
+
+
+## 2026-10-04 - Permanent manager continuity contract
+
+- **ProjectGovernor is the persistent project manager/architect memory**, independent of any programmer/chat instance.
+- Before meaningful work, the active worker must review Governor + CURRENT_PROJECT_STATE + PRODUCTION_COMPLETENESS_MATRIX + active chapter closeout + live GitHub gates.
+- The manager owns reminder duty: localization, source/story completeness, exploration/side content, characters, Living World, audio, save/load, performance, human visual/pacing acceptance and documentation must be surfaced when relevant without waiting for the owner to remember them.
+- Accepted unfinished obligations must live in repository governance/plans, not chat-only memory.
+- When chat/context becomes long enough to risk omission, proactively warn the owner and prepare a complete handoff before further substantial work.
+- Production remains **manual owner-command driven**; no hourly production schedule. The 24-hour owner status report remains separate.
+- P1C01 remains the active chapter train; P1C02 stays locked until P1C01 Gate 6/7 evidence is accepted and the owner explicitly starts the next chapter.
+- Evidence boundary: management continuity only; no runtime/visual/device/performance acceptance is implied.

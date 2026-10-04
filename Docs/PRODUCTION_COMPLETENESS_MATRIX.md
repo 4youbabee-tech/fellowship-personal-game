@@ -3540,3 +3540,19 @@ A-I closeout lanes are internal workstreams, not separate waves. P1C02 remains p
 | Main-story-only shortcut to P1C02 | FORBIDDEN |
 
 Production cadence is owner-command driven, not hourly scheduled automation.
+
+
+## 2026-10-04 - Manager continuity / no-forgotten-obligation gate
+
+| Manager obligation | State |
+|---|---|
+| Persistent authority is ProjectGovernor, not chat memory | ACTIVE |
+| Resume live active chapter on owner `continue` command | REQUIRED |
+| Proactively recall cross-cutting accepted requirements | REQUIRED |
+| Localization carried with chapter production | REQUIRED |
+| Story/source no-silent-omission + exploration/side content | REQUIRED |
+| Character/Living World/audio/save/performance/visual-pacing closure | REQUIRED |
+| Warn and hand off before conversation context becomes unsafe | REQUIRED |
+| Hourly/background chapter-production schedule | FORBIDDEN |
+| Daily owner status report | ACTIVE |
+| Auto-open next runtime chapter | FORBIDDEN |
