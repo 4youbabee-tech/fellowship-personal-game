@@ -4512,3 +4512,13 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Root fix now prioritizes exact action-leaf matches, then exact file-stem, then bounded fallback, and prefers the Unreal Engine FBX path before Unity. This prevents `Idle_Loop` from silently resolving to `Crouch_Idle_Loop`.
 - Status: **SOURCE-INVENTORY HOSTED-PASS / SELECTOR ROOT-FIX SOURCE-IMPLEMENTED / EXACT-HEAD REVALIDATION PENDING**. Retarget, UE4 animation import, AnimBP, runtime, visual, PIE/device and performance acceptance remain pending.
 
+## 2026-10-05 - Frodo exact UE animation selection passes; hosted retarget gate implemented
+
+- Exact-head source-inventory run `37272572478` on `e87526dacfed91a47024c4e4ac915a17c90b0f82` completed **SUCCESS** after selector hardening.
+- The deterministic selections are now all from `Animation Library[Standard]/Unreal Engine/AL_Standard.fbx`, each with `EXACT_ACTION_LEAF`: Idle=`Idle_Loop` (75-frame span), Walk=`Walk_Loop` (40-frame span), Run=`Jog_Fwd_Loop` (28-frame span). All carry 15/15 semantic coverage and source variant rank 0.
+- This closes source discovery/selection only; it does not by itself accept retarget or runtime animation quality.
+- A new hosted-only retarget packet is now source-implemented: `Data/P1C01FrodoAnimationRetargetV1.json`, `Scripts/run_p1c01_frodo_animation_retarget.py`, `Scripts/test_p1c01_frodo_animation_retarget_contract.py`, and `.github/workflows/p1c01-frodo-animation-retarget.yml`.
+- The retarget gate regenerates the exact KayKit Rogue target from the immutable source and requires normalized SHA256 `75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be`. It also pins the Standard archive SHA and Unreal FBX SHA before importing source motion.
+- For Idle/Walk/Run it requires source semantic motion, hierarchy validity, nonzero target mesh deformation, finite bounded geometry, and re-importable animation-only FBX derivatives. It remains hosted-only; UE4 is not reserved before this gate passes.
+- Status: **SOURCE-IMPLEMENTED / HOSTED RETARGET EXACT-HEAD VALIDATION PENDING**. UE4 animation import, AnimBP, runtime, human visual, PIE/device and performance acceptance remain pending.
+
