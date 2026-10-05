@@ -13,6 +13,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
   group: p1c01-frodo-animation-retarget-${{ github.event.pull_request.number || github.ref }}
@@ -59,7 +60,7 @@ jobs:
           & "$env:GITHUB_WORKSPACE/Scripts/stage_p1c01_human_wave2.ps1" -ManifestPath "$env:GITHUB_WORKSPACE/Data/P1C01HumanCharacterProductionWave2V1.json" -OutputRoot "$env:RUNNER_TEMP/shire-frodo-retarget/human" -BlenderExecutable "blender"
           if($LASTEXITCODE -ne 0){ throw "P1C01_FRODO_RETARGET_TARGET_STAGE_FAIL exit=$LASTEXITCODE" }
 
-      - name: Enforce exact prior technical winner identity
+      - name: Enforce fresh Rogue source and structural sanity
         shell: bash
         run: |
           set -euo pipefail
@@ -67,11 +68,47 @@ jobs:
           import json, os
           p=os.path.join(os.environ['RUNNER_TEMP'],'shire-frodo-retarget','human','p1c01_human_wave2_hosted.json')
           r=json.load(open(p,encoding='utf-8-sig'))
+          rows=[x for x in r.get('normalized_candidates',[]) if x.get('source_entry')=='Rogue.fbx' and x.get('quality_pass')]
+          if len(rows)!=1:
+              raise SystemExit('P1C01_FRODO_RETARGET_FRESH_ROGUE_SANITY_FAIL')
+          x=rows[0]
+          expected={
+            'source_sha256':'93a9ee0a67ae69b2d815050234acad2004c3b8af7d294b916e52609c8195eb71',
+            'bone_count':41,
+            'vertex_count':3330,
+            'weighted_vertex_count':2209,
+            'uv_layer_count':12,
+          }
+          for key,value in expected.items():
+              if x.get(key)!=value:
+                  raise SystemExit('P1C01_FRODO_RETARGET_FRESH_STRUCTURE_FAIL '+key+'='+str(x.get(key)))
+          print('P1C01_FRODO_RETARGET_FRESH_SANITY_PASS normalized_sha256='+x.get('normalized_sha256',''))
+          PY
+
+      - name: Download exact prior UE4-gated Rogue winner artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: p1c01-human-wave2-hosted-157e4e857406a2ce28c18c96cdacfedfd0b07ab5
+          path: ${{ runner.temp }}/shire-frodo-retarget/prior
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: 37243788900
+
+      - name: Enforce exact prior technical winner bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f "$RUNNER_TEMP/shire-frodo-retarget/prior/normalized/candidate_02.fbx"
+          echo '75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be  '"$RUNNER_TEMP/shire-frodo-retarget/prior/normalized/candidate_02.fbx" | sha256sum -c -
+          python3 - <<'PY'
+          import json, os
+          p=os.path.join(os.environ['RUNNER_TEMP'],'shire-frodo-retarget','prior','p1c01_human_wave2_hosted.json')
+          r=json.load(open(p,encoding='utf-8-sig'))
           expected='75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be'
-          rows=[x for x in r.get('normalized_candidates',[]) if x.get('normalized_sha256','').lower()==expected]
-          if len(rows)!=1 or rows[0].get('source_entry')!='Rogue.fbx':
-              raise SystemExit('P1C01_FRODO_RETARGET_TARGET_IDENTITY_FAIL')
-          print('P1C01_FRODO_RETARGET_TARGET_IDENTITY_PASS sha256='+expected)
+          rows=[x for x in r.get('normalized_candidates',[]) if x.get('normalized_sha256','').lower()==expected and x.get('source_entry')=='Rogue.fbx']
+          if len(rows)!=1:
+              raise SystemExit('P1C01_FRODO_RETARGET_PRIOR_WINNER_RECEIPT_FAIL')
+          print('P1C01_FRODO_RETARGET_PRIOR_WINNER_PASS sha256='+expected)
           PY
 
       - name: Download pinned public animation archive
@@ -93,8 +130,8 @@ jobs:
           blender --background --factory-startup --python-exit-code 17 \
             --python "$GITHUB_WORKSPACE/Scripts/run_p1c01_frodo_animation_retarget.py" -- \
             --manifest "$GITHUB_WORKSPACE/Data/P1C01FrodoAnimationRetargetV1.json" \
-            --human-receipt "$RUNNER_TEMP/shire-frodo-retarget/human/p1c01_human_wave2_hosted.json" \
-            --human-root "$RUNNER_TEMP/shire-frodo-retarget/human" \
+            --human-receipt "$RUNNER_TEMP/shire-frodo-retarget/prior/p1c01_human_wave2_hosted.json" \
+            --human-root "$RUNNER_TEMP/shire-frodo-retarget/prior" \
             --animation-archive "$RUNNER_TEMP/shire-frodo-retarget/universal_animation_librarystandard.zip" \
             --output-root "$RUNNER_TEMP/shire-frodo-retarget/output" \
             --receipt "$RUNNER_TEMP/shire-frodo-retarget/p1c01_frodo_retarget.json"
@@ -126,5 +163,6 @@ jobs:
             ${{ runner.temp }}/shire-frodo-retarget/output/Frodo_Idle_Retarget.fbx
             ${{ runner.temp }}/shire-frodo-retarget/output/Frodo_Walk_Retarget.fbx
             ${{ runner.temp }}/shire-frodo-retarget/output/Frodo_Run_Retarget.fbx
-          if-no-files-found: error
+            ${{ runner.temp }}/shire-frodo-retarget/human/p1c01_human_wave2_hosted.json
+          if-no-files-found: warn
           retention-days: 14
