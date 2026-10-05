@@ -1,0 +1,119 @@
+name: P1C01 Frodo Animation Source Inventory
+
+on:
+  pull_request:
+    branches: [develop]
+    paths:
+      - 'Data/P1C01FrodoAnimationSourceV1.json'
+      - 'Scripts/run_p1c01_frodo_animation_source_inventory.py'
+      - 'Scripts/test_p1c01_frodo_animation_source_contract.py'
+      - '.github/workflows/p1c01-frodo-animation-source.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: p1c01-frodo-animation-source-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  hosted_source_inventory:
+    name: Hosted CC0 Idle Walk Run source inventory
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          fetch-depth: 2
+          persist-credentials: false
+
+      - name: Verify exact checkout
+        shell: bash
+        run: test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+
+      - name: Static animation-source contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m unittest Scripts/test_p1c01_frodo_animation_source_contract.py
+          echo P1C01_FRODO_ANIMATION_SOURCE_CONTRACT_PASS
+
+      - name: Install Blender inventory probe
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y blender
+          blender --version | head -n 1
+
+      - name: Verify public OpenGameArt provenance page
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/shire-frodo-animation-source"
+          curl --fail --location --retry 3 --retry-delay 3 \
+            --user-agent 'ShireJourneyAnimationSource/1.0' \
+            'https://opengameart.org/content/universal-animation-library' \
+            --output "$RUNNER_TEMP/shire-frodo-animation-source/source-page.html"
+          grep -qi 'quaternius' "$RUNNER_TEMP/shire-frodo-animation-source/source-page.html"
+          grep -qi 'CC0' "$RUNNER_TEMP/shire-frodo-animation-source/source-page.html"
+          grep -qi 'universal_animation_librarystandard.zip' "$RUNNER_TEMP/shire-frodo-animation-source/source-page.html"
+          echo P1C01_FRODO_ANIMATION_SOURCE_PROVENANCE_PASS
+
+      - name: Download bounded public Standard archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 3 --retry-delay 3 \
+            --user-agent 'ShireJourneyAnimationSource/1.0' \
+            'https://opengameart.org/sites/default/files/universal_animation_librarystandard.zip' \
+            --output "$RUNNER_TEMP/shire-frodo-animation-source/universal_animation_librarystandard.zip"
+          bytes=$(stat -c%s "$RUNNER_TEMP/shire-frodo-animation-source/universal_animation_librarystandard.zip")
+          test "$bytes" -ge 10000000
+          test "$bytes" -le 67108864
+          sha256sum "$RUNNER_TEMP/shire-frodo-animation-source/universal_animation_librarystandard.zip"
+
+      - name: Inventory FBX animation clips in Blender
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/shire-frodo-animation-source/work"
+          blender --background --factory-startup --python-exit-code 17 \
+            --python "$GITHUB_WORKSPACE/Scripts/run_p1c01_frodo_animation_source_inventory.py" -- \
+            --manifest "$GITHUB_WORKSPACE/Data/P1C01FrodoAnimationSourceV1.json" \
+            --archive "$RUNNER_TEMP/shire-frodo-animation-source/universal_animation_librarystandard.zip" \
+            --work-root "$RUNNER_TEMP/shire-frodo-animation-source/work" \
+            --output "$RUNNER_TEMP/shire-frodo-animation-source/p1c01_frodo_animation_source_inventory.json"
+
+      - name: Enforce source inventory receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os
+          path=os.path.join(os.environ['RUNNER_TEMP'],'shire-frodo-animation-source','p1c01_frodo_animation_source_inventory.json')
+          with open(path,encoding='utf-8') as f:r=json.load(f)
+          if r.get('status')!='ANIMATION_SOURCE_INVENTORY_PASS':
+              raise SystemExit('P1C01_FRODO_ANIMATION_SOURCE_RECEIPT_FAIL status='+str(r.get('status')))
+          if sorted(r.get('selected_clips',{}))!=['idle','run','walk']:
+              raise SystemExit('P1C01_FRODO_ANIMATION_SOURCE_CLIP_ROLE_FAIL')
+          if r.get('retarget_accepted') or r.get('runtime_integration_allowed'):
+              raise SystemExit('P1C01_FRODO_ANIMATION_SOURCE_BOUNDARY_FAIL')
+          print('P1C01_FRODO_ANIMATION_SOURCE_RECEIPT_PASS sha256='+r['source']['archive_sha256'])
+          PY
+
+      - name: Upload exact-head source inventory evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1c01-frodo-animation-source-${{ env.TARGET_SHA }}
+          path: |
+            ${{ runner.temp }}/shire-frodo-animation-source/p1c01_frodo_animation_source_inventory.json
+            ${{ runner.temp }}/shire-frodo-animation-source/source-page.html
+          if-no-files-found: error
+          retention-days: 14
