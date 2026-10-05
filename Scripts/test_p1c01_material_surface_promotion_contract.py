@@ -16,6 +16,26 @@ class P1C01MaterialSurfacePromotionContract(unittest.TestCase):
         ):
             self.assertIn(token, text)
 
+    def test_approved_material_manifest_and_plan_count_match(self):
+        import json
+        manifest = json.loads((ROOT/'Data'/'ExternalAssetManifest.json').read_text(encoding='utf-8'))
+        plan = json.loads((ROOT/'Data'/'ResourceIntegrationPlan.json').read_text(encoding='utf-8'))
+        approved = [
+            x for x in manifest.get('assets', [])
+            if isinstance(x, dict)
+            and x.get('provider') == 'POLY_HAVEN'
+            and x.get('approval_status') == 'APPROVED'
+            and str(x.get('asset_id', '')).startswith('P1C01_')
+        ]
+        self.assertEqual(len(approved), 8)
+        self.assertEqual(plan['external_resource_policy']['current_approved_asset_count'], 8)
+        for item in approved:
+            self.assertEqual(item.get('license_class'), 'CC0')
+            self.assertEqual(len(str(item.get('sha256', ''))), 64)
+            self.assertTrue(str(item.get('source_url', '')).startswith('https://dl.polyhaven.org/'))
+            self.assertTrue(str(item.get('relative_path', '')).startswith(
+                'SourceAssets/Production/Imported/P1C01Materials/'))
+
     def test_promotion_workflow_is_bounded_and_conflict_safe(self):
         workflow = (ROOT/'.github'/'workflows'/'p1c01-material-surface-promotion.yml').read_text(encoding='utf-8')
         for token in (
