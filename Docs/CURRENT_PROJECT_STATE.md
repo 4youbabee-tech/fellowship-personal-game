@@ -4707,3 +4707,13 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Source promotion into the branch is an owner/connector-side action only; CI remains evidence generation/verification and cannot create another approval loop.
 - Regression tests forbid `git push` and `contents: write` in both affected workflows.
 - Status: **SOURCE-IMPLEMENTED / FRESH OWNER-AUTHORED EXACT-HEAD ACTION BEHAVIOR VALIDATION PENDING**. No runtime/visual/device/performance/Gate 6/7 acceptance is claimed.
+
+## 2026-10-05 - GitHub Actions approval-loop root fix
+
+- Repeated `Action required / Approve and run` was traced to CI-authored branch mutations, not UE4 build instability.
+- The Frodo runtime-source and Shire material-source workflows were committing/pushing back into the active PR branch with the workflow token, producing bot-authored synchronize events that GitHub placed behind maintainer approval.
+- Both lanes are now **verify-only**: read-only contents permission, exact hash/receipt validation, no branch push, no CI-authored commit, and no promotion retry loop.
+- The already-promoted Frodo FBX payload and eight receipt-verified Poly Haven surface sources remain tracked on the branch; CI now validates them without mutating repository state.
+- Regression contracts explicitly require read-only workflow permissions and forbid the affected `git push` paths.
+- Replacement head is owner-authored through the GitHub connector; subsequent workflow runs entered queued/pending states instead of `action_required`.
+- Status: **ROOT CAUSE REMOVED / FRESH EXACT-HEAD VALIDATION RUNNING**. No PIE/device/visual/performance/Gate 6/7 acceptance is implied.
