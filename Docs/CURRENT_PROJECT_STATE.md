@@ -4688,3 +4688,11 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Arbitrary missing absolute paths are not trusted or promoted. Manual queue semantics remain fail-closed for genuinely missing/hash-drifted payloads.
 - Static regression guard now requires the bounded rebase logic plus SHA enforcement.
 - Status: **ROOT-FIX SOURCE-IMPLEMENTED / FRESH MATERIAL PROMOTION REVALIDATION PENDING**.
+
+## 2026-10-05 - Promotion wildcard copy root fix
+
+- Pre-execution review found both Frodo and Shire-surface promotion publish steps used `Copy-Item -LiteralPath (... "*")` where wildcard expansion is required.
+- `-LiteralPath` treats `*` literally and would have failed after otherwise-valid source preparation.
+- Root fix: wildcard directory copies now use `Copy-Item -Path`; exact single-file copies continue using `-LiteralPath`.
+- Static contract guards now forbid the literal-wildcard pattern in both promotion workflows.
+- Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD PROMOTION REVALIDATION PENDING**.
