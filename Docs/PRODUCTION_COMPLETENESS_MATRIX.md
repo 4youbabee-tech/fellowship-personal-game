@@ -4120,3 +4120,16 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Generator rollback | FORBIDDEN / NOT DONE |
 | Gate weakening | NONE |
 | Fresh exact-head Pre-Unreal | PENDING |
+
+## 2026-10-05 - Material warehouse path reconciliation
+
+| Control | State |
+|---|---|
+| Failing promotion run | `37349024980` / #10 |
+| Required prepared surfaces before failure | 8 |
+| Manual queue false positives | 96 stale C: receipt paths |
+| Active warehouse root | D:\actions-runner\_warehouse\ShireJourney |
+| Canonical-root bounded path rebase | SOURCE-IMPLEMENTED |
+| Rebased payload SHA256 verification | PRESERVED / REQUIRED |
+| Arbitrary path acceptance | FORBIDDEN |
+| Fresh promotion rerun | PENDING |
