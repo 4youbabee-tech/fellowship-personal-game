@@ -57,6 +57,8 @@ class FrodoUE4AnimationImportContract(unittest.TestCase):
         self.assertIn('reset --hard FETCH_HEAD', workflow)
         self.assertIn('P1C01_FRODO_RUNTIME_SOURCE_PROMOTION_PASS', workflow)
         self.assertNotIn('push --force', workflow.lower())
+        self.assertNotIn('Copy-Item -LiteralPath (Join-Path $stage "*")', workflow)
+        self.assertIn('Copy-Item -Path (Join-Path $stage "*")', workflow)
 
 
 if __name__ == '__main__':
