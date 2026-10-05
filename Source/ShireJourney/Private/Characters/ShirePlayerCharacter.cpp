@@ -9,9 +9,11 @@
 #include "ShireStoryPresentationSubsystem.h"
 #include "FellowshipEnemyPrototype.h"
 #include "Animation/AnimInstance.h"
+#include "Animation/AnimSequence.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
@@ -227,19 +229,63 @@ bool AShirePlayerCharacter::TryApplyProductionRig(const FString& RigFolder)
     const FName CharacterId(*RigFolder);
     USkeletalMesh* SkeletalMesh = nullptr;
     UClass* AnimClass = nullptr;
-    if (!Streaming->ResolveCharacterRig(CharacterId, SkeletalMesh, AnimClass))
+    UAnimSequence* Idle = nullptr;
+    UAnimSequence* Walk = nullptr;
+    UAnimSequence* Run = nullptr;
+    if (!Streaming->ResolveCharacterLocomotionAssets(
+            CharacterId,
+            SkeletalMesh,
+            AnimClass,
+            Idle,
+            Walk,
+            Run))
     {
         Streaming->RequestCharacterRig(CharacterId);
         GetMesh()->SetVisibility(false, true);
+        bUsingProductionAnimBlueprint = false;
+        ProductionIdleAnimation = nullptr;
+        ProductionWalkAnimation = nullptr;
+        ProductionRunAnimation = nullptr;
+        ProductionLocomotionState = NAME_None;
         return false;
     }
 
     GetMesh()->SetSkeletalMesh(SkeletalMesh);
-    GetMesh()->SetAnimInstanceClass(AnimClass);
     GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     GetMesh()->bEnableUpdateRateOptimizations = true;
     GetMesh()->VisibilityBasedAnimTickOption =
         EVisibilityBasedAnimTickOption::OnlyTickPoseWhenRendered;
+
+    ProductionIdleAnimation = Idle;
+    ProductionWalkAnimation = Walk;
+    ProductionRunAnimation = Run;
+    ProductionLocomotionState = NAME_None;
+
+    if (AnimClass)
+    {
+        GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
+        GetMesh()->SetAnimInstanceClass(AnimClass);
+        bUsingProductionAnimBlueprint = true;
+    }
+    else if (Idle && Walk && Run)
+    {
+        GetMesh()->SetAnimInstanceClass(nullptr);
+        GetMesh()->SetAnimationMode(EAnimationMode::AnimationSingleNode);
+        GetMesh()->PlayAnimation(Idle, true);
+        ProductionLocomotionState = FName(TEXT("Idle"));
+        bUsingProductionAnimBlueprint = false;
+    }
+    else
+    {
+        GetMesh()->SetVisibility(false, true);
+        UE_LOG(
+            LogTemp,
+            Warning,
+            TEXT("CharacterVisual: skeletal core resolved without locomotion id=%s fallback=modular"),
+            *RigFolder);
+        return false;
+    }
+
     GetMesh()->SetVisibility(true, true);
 
     UStaticMeshComponent* ModularPieces[] = {
@@ -260,8 +306,9 @@ bool AShirePlayerCharacter::TryApplyProductionRig(const FString& RigFolder)
     UE_LOG(
         LogTemp,
         Display,
-        TEXT("CharacterVisual: skeletal production rig active id=%s async=yes"),
-        *RigFolder);
+        TEXT("CharacterVisual: skeletal production rig active id=%s async=yes locomotion=%s"),
+        *RigFolder,
+        bUsingProductionAnimBlueprint ? TEXT("anim-blueprint") : TEXT("idle-walk-run-sequences"));
     return true;
 }
 
@@ -634,10 +681,44 @@ void AShirePlayerCharacter::ApplyPrototypeStyle()
     bUsingSkeletalProductionRig = TryApplyProductionRig(VisualId.ToString());
 }
 
+void AShirePlayerCharacter::UpdateProductionSkeletalAnimation()
+{
+    if (!bUsingSkeletalProductionRig ||
+        bUsingProductionAnimBlueprint ||
+        !GetMesh() ||
+        !ProductionIdleAnimation ||
+        !ProductionWalkAnimation ||
+        !ProductionRunAnimation)
+    {
+        return;
+    }
+
+    const float Speed = GetVelocity().Size2D();
+    UAnimSequence* DesiredAnimation = ProductionIdleAnimation;
+    FName DesiredState = FName(TEXT("Idle"));
+
+    if (!bCinematicInputLocked && Speed > 5.0f)
+    {
+        const bool bRun =
+            bSprintRequested &&
+            !bIsCrouched &&
+            Speed > WalkSpeed * 1.05f;
+        DesiredAnimation = bRun ? ProductionRunAnimation : ProductionWalkAnimation;
+        DesiredState = bRun ? FName(TEXT("Run")) : FName(TEXT("Walk"));
+    }
+
+    if (DesiredAnimation && DesiredState != ProductionLocomotionState)
+    {
+        GetMesh()->PlayAnimation(DesiredAnimation, true);
+        ProductionLocomotionState = DesiredState;
+    }
+}
+
 void AShirePlayerCharacter::UpdatePrototypeAnimation(float DeltaSeconds)
 {
     if (bUsingSkeletalProductionRig)
     {
+        UpdateProductionSkeletalAnimation();
         return;
     }
 
