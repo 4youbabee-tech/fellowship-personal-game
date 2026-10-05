@@ -4662,3 +4662,12 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Pre-execution static review caught an invalid shell continuation in the new material-promotion workflow: PowerShell does not use a trailing backslash for command continuation.
 - The intake invocation is normalized to a single PowerShell command line before the first warehouse execution; no failed runner evidence is being misclassified as a content failure.
 - Status remains **SOURCE-IMPLEMENTED / FRESH EXECUTION PENDING**.
+
+## 2026-10-05 - Poly Haven P1C01 source approval manifest reconciliation
+
+- Eight previously receipt/SHA256-verified Poly Haven P1C01 material source files now have explicit asset-level APPROVED records in `Data/ExternalAssetManifest.json`.
+- Each record preserves provider, CC0 license class, acquisition date, exact source URL, exact base-color SHA256, intended use, and an evidence boundary that does not overclaim UE/runtime/visual acceptance.
+- `Data/ResourceIntegrationPlan.json` approved external count is reconciled from historical zero to 8.
+- PG-052 no longer hardcodes an empty manifest assumption; it now compares the plan count against the actual number of APPROVED manifest records.
+- This is a governance/source-truth correction required before production promotion. No new third-party geometry is approved by this change.
+- Status: **SOURCE/GOVERNANCE RECONCILED / FRESH EXACT-HEAD STATIC VALIDATION PENDING**.
