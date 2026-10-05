@@ -4555,3 +4555,12 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Static contract guard: `Scripts/test_p1c01_frodo_ue4_animation_import_contract.py`.
 - Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD COMPILE + UE4 ANIMATION IMPORT VALIDATION PENDING**. No AnimBP, runtime integration, human visual, PIE/device, performance, or Gate 6/7 acceptance is claimed.
 
+## 2026-10-05 - Owner screenshot visual rejection + Frodo UE4 animation checkout isolation
+
+- Owner-provided PIE screenshots show the current P1C01 runtime still reading as **proxy/greybox**, not finished Shire presentation: flat/grey terrain and vegetation, simple low-poly trees, weak material/lighting depth, and a visible blocky player fallback instead of production Frodo.
+- This is direct human visual rejection evidence for the current runtime presentation. It does **not** invalidate the machine evidence that source/import/render jobs are green; it proves those jobs are insufficient for visual acceptance.
+- Source audit confirms part of the visual problem is asset fidelity, not just missing residency: several files currently named Production are deliberately low-poly generated meshes. Examples include `SM_ShGroundBlock.obj` as a cube-based ground tile and simple low-poly trunk/canopy assets. Therefore further blind density of the same meshes is not authorized as a final-quality fix.
+- Frodo proxy persistence is also expected from the current runtime contract: runtime promotion still requires the skeletal package plus `ABP_FRODO_Locomotion`; the technically validated rig/animations remain gate artifacts until UE4 animation import, AnimBP, runtime hookup and human visual review close.
+- The first fresh UE4 animation-import run on exact head `c10cc6fa9abf122cb6efadb4be7e6c43921d7926` failed **before build/import** because `actions/checkout@v4` could not clean/recreate the self-hosted workspace and ended with `fatal: not a git repository`.
+- Root fix is source-implemented on the same closeout branch: the self-hosted UE4 animation gate now uses an isolated temporary exact-SHA checkout, matching the project's proven self-hosted isolation pattern, and all build/import/cleanup paths are redirected to that isolated source root.
+- Status: **VISUAL REJECT / INFRASTRUCTURE ROOT FIX SOURCE-IMPLEMENTED / EXACT-HEAD REVALIDATION PENDING**. No PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED, or Gate 6/7 acceptance is claimed.
