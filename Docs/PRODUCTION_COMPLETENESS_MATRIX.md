@@ -4087,3 +4087,11 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Fresh source-promotion execution | PENDING |
 | UE material import/build | PENDING AFTER PROMOTION |
 | Runtime binding / visual acceptance | PENDING / NOT ACCEPTED |
+
+## 2026-10-05 - Material promotion invocation correction
+
+| Control | State |
+|---|---|
+| Invalid PowerShell backslash continuation | REMOVED BEFORE EXECUTION |
+| Warehouse intake semantics | UNCHANGED |
+| Fresh promotion execution | PENDING |
