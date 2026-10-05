@@ -73,12 +73,11 @@ namespace ShireProductionImport
             return false;
         }
 
-        CandidateText.ReplaceInline(TEXT("\r\n"), TEXT("\n"));
         return CandidateText.StartsWith(
-                TEXT("version https://git-lfs.github.com/spec/v1\n"),
+                TEXT("version https://git-lfs.github.com/spec/v1"),
                 ESearchCase::CaseSensitive) &&
-            CandidateText.Contains(TEXT("\noid sha256:"), ESearchCase::CaseSensitive) &&
-            CandidateText.Contains(TEXT("\nsize "), ESearchCase::CaseSensitive);
+            CandidateText.Contains(TEXT("oid sha256:"), ESearchCase::CaseSensitive) &&
+            CandidateText.Contains(TEXT("size "), ESearchCase::CaseSensitive);
     }
 
     static bool ParseObjVertex(const FString& Line, FVector& OutVertex)

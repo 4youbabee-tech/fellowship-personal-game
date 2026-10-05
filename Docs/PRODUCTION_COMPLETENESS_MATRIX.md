@@ -4243,3 +4243,18 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Daily manager UE runner contention | REMOVED VIA PR #330 |
 | Fresh exact-head technical proof | PENDING |
 | PIE / device / visual / performance / Gate 6+7 | NOT ACCEPTED |
+
+## 2026-10-06 - P1C01 mega chapter preflight unblock
+
+| Control | State |
+|---|---|
+| Failing exact head | `99bd0f93dcbb783451da638a87816891195dd852` |
+| Pre-Unreal run | #2016 / FAILURE |
+| PG-127 escaped-newline artifact | ROOT-FIX SOURCE-IMPLEMENTED |
+| PG-192 execution-ready contract | RESTORED |
+| Owner-facing One-Shot state | PRESERVED SEPARATELY |
+| P1C01 Material / Frodo UE4 / Render / Human Wave2 / Unreal Build lanes | QUEUED on previous head when diagnosed |
+| Gate weakening | NONE |
+| Fresh exact-head Pre-Unreal | PENDING |
+| Fresh exact-head UE4/closure execution | PENDING |
+| PIE / visual / device / performance / Gate 6+7 | NOT ACCEPTED |

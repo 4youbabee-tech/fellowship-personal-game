@@ -4758,3 +4758,12 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Road-cleaning root fixes in this packet: PG-017 now checks the committed Git object instead of a correctly hydrated LFS working-tree file; `ChapterAssetStreamingPlan` derived totals are reconciled and hosted PG-226 catches future drift before the expensive package lane.
 - The Daily Project Manager workflow was separately moved off the UE4 self-hosted runner via main maintenance PR #330, so scheduled reporting no longer competes with chapter production for the Unreal machine.
 - Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD VALIDATION PENDING**. No PIE/device/visual/performance/Gate 6/7 acceptance is claimed.
+
+## 2026-10-06 - P1C01 exact-head preflight root-fix before mega chapter execution
+
+- Exact head `99bd0f93dcbb783451da638a87816891195dd852` triggered Pre-Unreal #2016 and the expected P1C01/UE4 lanes. The visible "stopped" state was mostly self-hosted jobs queued behind the single UE4 runner plus a fast Pre-Unreal failure.
+- Pre-Unreal #2016 failed on two control-contract regressions only:
+  - `PG-127`: the new Git-LFS pointer detector introduced escaped CR/LF literals in `ShireProductionImportCommandlet.cpp`. Root fix removes escaped newline tokens entirely while preserving fail-closed pointer detection using the LFS version/OID/size signatures.
+  - `PG-192`: `P1C01ChapterClosureMegaPackV2.status` was repurposed for owner-facing One-Shot wording even though `RUNNER_EXECUTION_READY` is a machine execution contract. Root fix restores `RUNNER_EXECUTION_READY` and records One-Shot state in separate owner-facing fields.
+- No chapter scope, provenance gate, texture gate, runtime residency rule, or Gate 6/7 evidence requirement is weakened.
+- Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD STATIC + UE4 QUEUE REVALIDATION PENDING**.

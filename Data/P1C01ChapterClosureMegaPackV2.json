@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "pack_id": "P1C01_CHAPTER_CLOSURE_MEGA_PACK_V2",
-  "status": "ACTIVE_ONE_SHOT_CHAPTER_PREP",
+  "status": "RUNNER_EXECUTION_READY",
   "authority": [
     "Data/ProjectGovernor.json",
     "Data/WarehouseP1C01ClosurePromotionTrainV2.json",
@@ -174,5 +174,8 @@
       "command": "Scripts/audit_warehouse_inventory.ps1"
     }
   ],
-  "evidence_boundary": "Pack success proves only emitted source/preparation car outputs. It never implies UE import, integration, PIE, visual, device or performance acceptance."
+  "evidence_boundary": "Pack success proves only emitted source/preparation car outputs. It never implies UE import, integration, PIE, visual, device or performance acceptance.",
+  "owner_facing_wave": "P1C01-ONE-SHOT-FINISH",
+  "owner_facing_status": "ACTIVE",
+  "one_shot_rule": "Execution readiness remains the machine contract; owner-facing production remains one One-Shot Mega Chapter wave through Gate 6/7."
 }
