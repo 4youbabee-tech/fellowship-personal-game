@@ -4503,3 +4503,12 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - No self-hosted UE4 animation work was reserved by this failure. Retarget, AnimBP, runtime integration, PIE, visual and performance acceptance remain false/pending.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD HOSTED REVALIDATION PENDING**.
 
+## 2026-10-05 - Frodo animation source inventory passes; selector semantics hardened
+
+- Exact-head hosted source-inventory run `37272271829` on `836a6ae7aa5051fe9220eb41d95691439397a964` completed **SUCCESS** without reserving UE4.
+- Evidence: pinned Standard archive SHA256 matched `18ff1a7215f4852b320203e8aaf02a1578b5c8eef9027fbaedfcedc7b85a3ac2`; safe scan found **11 entries**, **2 FBX files**, and no required Idle/Walk/Run role missing.
+- Both FBXs provide full 15/15 semantic-joint coverage for the inventory probe. The archive includes an Unreal Engine variant `Animation Library[Standard]/Unreal Engine/AL_Standard.fbx` with 65 bones and a Unity variant with 53 bones.
+- Inventory exposed a selector-quality issue before retarget: substring matching allowed `Crouch_Idle_Loop` to satisfy the Idle token and path tie-breaking selected the Unity FBX. No retarget/runtime gate had accepted this selection.
+- Root fix now prioritizes exact action-leaf matches, then exact file-stem, then bounded fallback, and prefers the Unreal Engine FBX path before Unity. This prevents `Idle_Loop` from silently resolving to `Crouch_Idle_Loop`.
+- Status: **SOURCE-INVENTORY HOSTED-PASS / SELECTOR ROOT-FIX SOURCE-IMPLEMENTED / EXACT-HEAD REVALIDATION PENDING**. Retarget, UE4 animation import, AnimBP, runtime, visual, PIE/device and performance acceptance remain pending.
+
