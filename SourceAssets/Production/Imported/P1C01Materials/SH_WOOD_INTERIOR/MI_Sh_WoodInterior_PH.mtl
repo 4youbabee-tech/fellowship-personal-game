@@ -1,0 +1,8 @@
+# Generated P1C01 external material intake.
+newmtl MI_Sh_WoodInterior_PH
+Kd 1.0 1.0 1.0
+Pr 0.7200
+Pm 0.0000
+Ks 0.0400 0.0400 0.0400
+map_Kd TX_SH_WOOD_INTERIOR_BaseColor.png
+

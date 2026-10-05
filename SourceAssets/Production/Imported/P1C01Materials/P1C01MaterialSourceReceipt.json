@@ -1,0 +1,209 @@
+﻿{
+    "schema_version":  3,
+    "wave_id":  "P1C01_MATERIAL_IMPORT_WAVE_V1",
+    "generated_at_utc":  "2026-10-05T18:22:13.0668197Z",
+    "requested_count":  16,
+    "prepared_count":  8,
+    "pending_count":  8,
+    "manual_queue_count":  0,
+    "prepared":  [
+                     {
+                         "id":  "SH_DIRT_SOIL",
+                         "provider":  "POLY_HAVEN",
+                         "license":  "CC0",
+                         "asset_slug":  "dirt",
+                         "source_page":  "",
+                         "source_url":  "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/dirt/dirt_diff_2k.png",
+                         "selected_source_filename":  "dirt_diff_2k.png",
+                         "selected_source_kind":  "EXPLICIT_ALBEDO",
+                         "material_name":  "MI_Sh_DirtSoil_PH",
+                         "basecolor_file":  "D:\\actions-runner\\_work\\_temp\\p1c01-material-surface-promotion\\Prepared\\SH_DIRT_SOIL\\TX_SH_DIRT_SOIL_BaseColor.png",
+                         "roughness":  0.82,
+                         "metallic":  0,
+                         "specular":  0.08,
+                         "basecolor_sha256":  "f0fee6965209d08fd073067c9c61cefc815fecdede90070b361e3f8c47c87801",
+                         "mtl_file":  "D:\\actions-runner\\_work\\_temp\\p1c01-material-surface-promotion\\Prepared\\SH_DIRT_SOIL\\MI_Sh_DirtSoil_PH.mtl",
+                         "mtl_sha256":  "2546626b7b7cb321e8ca63cde146313f28f87937efae64a250082ff2cca27517",
+                         "state":  "INTAKE_QC_PREPARED"
+                     },
+                     {
+                         "id":  "SH_STONY_PATH",
+                         "provider":  "POLY_HAVEN",
+                         "license":  "CC0",
+                         "asset_slug":  "stony_dirt_path",
+                         "source_page":  "",
+                         "source_url":  "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/stony_dirt_path/stony_dirt_path_diff_2k.png",
+                         "selected_source_filename":  "stony_dirt_path_diff_2k.png",
+                         "selected_source_kind":  "EXPLICIT_ALBEDO",
+                         "material_name":  "MI_Sh_StonyPath_PH",
+                         "basecolor_file":  "D:\\actions-runner\\_work\\_temp\\p1c01-material-surface-promotion\\Prepared\\SH_STONY_PATH\\TX_SH_STONY_PATH_BaseColor.png",
+                         "roughness":  0.84,
+                         "metallic":  0,
+                         "specular":  0.12,
+                         "basecolor_sha256":  "5bfa9e35204e47517bb40367a281144b9568fd334f49c71de74e54db7c047996",
+                         "mtl_file":  "D:\\actions-runner\\_work\\_temp\\p1c01-material-surface-promotion\\Prepared\\SH_STONY_PATH\\MI_Sh_StonyPath_PH.mtl",
+                         "mtl_sha256":  "c800865a6c7a187d366b1107b69fe5f87bf12250f9f9a9b5d08fb58789e5e115",
+                         "state":  "INTAKE_QC_PREPARED"
+                     },
+                     {
+                         "id":  "SH_WARM_PLASTER",
+                         "provider":  "POLY_HAVEN",
+                         "license":  "CC0",
+                         "asset_slug":  "plastered_wall",
+                         "source_page":  "",
+                         "source_url":  "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/plastered_wall/plastered_wall_diff_2k.png",
+                         "selected_source_filename":  "plastered_wall_diff_2k.png",
+                         "selected_source_kind":  "EXPLICIT_ALBEDO",
+                         "material_name":  "MI_Sh_WarmPlaster_PH",
+                         "basecolor_file":  "D:\\actions-runner\\_work\\_temp\\p1c01-material-surface-promotion\\Prepared\\SH_WARM_PLASTER\\TX_SH_WARM_PLASTER_BaseColor.png",
+                         "roughness":  0.78,
+                         "metallic":  0,
+                         "specular":  0.1,
+                         "basecolor_sha256":  "c48f826da619d824a7954add6bba7a7c23eb077b240c139a721dfc6283f629df",
+                         "mtl_file":  "D:\\actions-runner\\_work\\_temp\\p1c01-material-surface-promotion\\Prepared\\SH_WARM_PLASTER\\MI_Sh_WarmPlaster_PH.mtl",
+                         "mtl_sha256":  "d7d1e04b746f70d172c5c84f9d7faa64c6c967c36d9caca49de0d21954eab8f3",
+                         "state":  "INTAKE_QC_PREPARED"
+                     },
+                     {
+                         "id":  "SH_MOSS_STONE",
+                         "provider":  "POLY_HAVEN",
+                         "license":  "CC0",
+                         "asset_slug":  "mossy_rock",
+                         "source_page":  "",
+                         "source_url":  "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/mossy_rock/mossy_rock_diff_2k.png",
+                         "selected_source_filename":  "mossy_rock_diff_2k.png",
+                         "selected_source_kind":  "EXPLICIT_ALBEDO",
+                         "material_name":  "MI_Sh_MossStone_PH",
+                         "basecolor_file":  "D:\\actions-runner\\_work\\_temp\\p1c01-material-surface-promotion\\Prepared\\SH_MOSS_STONE\\TX_SH_MOSS_STONE_BaseColor.png",
+                         "roughness":  0.82,
+                         "metallic":  0,
+                         "specular":  0.12,
+                         "basecolor_sha256":  "7a5cf7886fb46f71ff76d822939b0eb4169f7d29ef504918fe7526f948511302",
+                         "mtl_file":  "D:\\actions-runner\\_work\\_temp\\p1c01-material-surface-promotion\\Prepared\\SH_MOSS_STONE\\MI_Sh_MossStone_PH.mtl",
+                         "mtl_sha256":  "f65517c5d14c95b919a21fadf61cf2068eb5d884f045f5e1c4d5c7c507a64e0a",
+                         "state":  "INTAKE_QC_PREPARED"
+                     },
+                     {
+                         "id":  "SH_WOOD_INTERIOR",
+                         "provider":  "POLY_HAVEN",
+                         "license":  "CC0",
+                         "asset_slug":  "wood_floor",
+                         "source_page":  "",
+                         "source_url":  "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/wood_floor/wood_floor_diff_2k.png",
+                         "selected_source_filename":  "wood_floor_diff_2k.png",
+                         "selected_source_kind":  "EXPLICIT_ALBEDO",
+                         "material_name":  "MI_Sh_WoodInterior_PH",
+                         "basecolor_file":  "D:\\actions-runner\\_work\\_temp\\p1c01-material-surface-promotion\\Prepared\\SH_WOOD_INTERIOR\\TX_SH_WOOD_INTERIOR_BaseColor.png",
+                         "roughness":  0.72,
+                         "metallic":  0,
+                         "specular":  0.16,
+                         "basecolor_sha256":  "33040146e3ea6fa47d7bbf4ccdecdf3443cdb831e72e1f33dede6ad6542b2b7c",
+                         "mtl_file":  "D:\\actions-runner\\_work\\_temp\\p1c01-material-surface-promotion\\Prepared\\SH_WOOD_INTERIOR\\MI_Sh_WoodInterior_PH.mtl",
+                         "mtl_sha256":  "9f96ef157de3c2b2ca1f4ad8930553ab0d2e5251271d97d64bb448c7e1f6e871",
+                         "state":  "INTAKE_QC_PREPARED"
+                     },
+                     {
+                         "id":  "SH_TREE_BARK",
+                         "provider":  "POLY_HAVEN",
+                         "license":  "CC0",
+                         "asset_slug":  "bark_brown_01",
+                         "source_page":  "",
+                         "source_url":  "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/bark_brown_01/bark_brown_01_diff_2k.png",
+                         "selected_source_filename":  "bark_brown_01_diff_2k.png",
+                         "selected_source_kind":  "EXPLICIT_ALBEDO",
+                         "material_name":  "MI_Sh_TreeBark_PH",
+                         "basecolor_file":  "D:\\actions-runner\\_work\\_temp\\p1c01-material-surface-promotion\\Prepared\\SH_TREE_BARK\\TX_SH_TREE_BARK_BaseColor.png",
+                         "roughness":  0.76,
+                         "metallic":  0,
+                         "specular":  0.08,
+                         "basecolor_sha256":  "617985520504f73226bb54d7f64891687c8073b6efd30348008c7a1d241e04ca",
+                         "mtl_file":  "D:\\actions-runner\\_work\\_temp\\p1c01-material-surface-promotion\\Prepared\\SH_TREE_BARK\\MI_Sh_TreeBark_PH.mtl",
+                         "mtl_sha256":  "b6241138ceacdeccce3f54f41fee68b6711ffc867b63d29383fc38c1111a2034",
+                         "state":  "INTAKE_QC_PREPARED"
+                     },
+                     {
+                         "id":  "SH_WOOD_INTERIOR_ALT",
+                         "provider":  "POLY_HAVEN",
+                         "license":  "CC0",
+                         "asset_slug":  "wooden_floor_02",
+                         "source_page":  "",
+                         "source_url":  "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/wooden_floor_02/wooden_floor_02_diff_2k.png",
+                         "selected_source_filename":  "wooden_floor_02_diff_2k.png",
+                         "selected_source_kind":  "EXPLICIT_ALBEDO",
+                         "material_name":  "MI_Sh_WoodInteriorAlt_PH",
+                         "basecolor_file":  "D:\\actions-runner\\_work\\_temp\\p1c01-material-surface-promotion\\Prepared\\SH_WOOD_INTERIOR_ALT\\TX_SH_WOOD_INTERIOR_ALT_BaseColor.png",
+                         "roughness":  0.7,
+                         "metallic":  0,
+                         "specular":  0.16,
+                         "basecolor_sha256":  "6f63d2a0a862383067bb9edae1b2e439ece4cf06f5a836920be3947acdf7d364",
+                         "mtl_file":  "D:\\actions-runner\\_work\\_temp\\p1c01-material-surface-promotion\\Prepared\\SH_WOOD_INTERIOR_ALT\\MI_Sh_WoodInteriorAlt_PH.mtl",
+                         "mtl_sha256":  "6f610868a07c6c44bbc0235be18de489a6d3b4832e7b7d54e70e996cd867e0f0",
+                         "state":  "INTAKE_QC_PREPARED"
+                     },
+                     {
+                         "id":  "SH_GRASS_PATH",
+                         "provider":  "POLY_HAVEN",
+                         "license":  "CC0",
+                         "asset_slug":  "grass_path_2",
+                         "source_page":  "",
+                         "source_url":  "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/grass_path_2/grass_path_2_diff_2k.png",
+                         "selected_source_filename":  "grass_path_2_diff_2k.png",
+                         "selected_source_kind":  "EXPLICIT_ALBEDO",
+                         "material_name":  "MI_Sh_GrassPath_PH",
+                         "basecolor_file":  "D:\\actions-runner\\_work\\_temp\\p1c01-material-surface-promotion\\Prepared\\SH_GRASS_PATH\\TX_SH_GRASS_PATH_BaseColor.png",
+                         "roughness":  0.88,
+                         "metallic":  0,
+                         "specular":  0.08,
+                         "basecolor_sha256":  "7bb8dd7508749fe1bbfa59ca99493509a45e9e6edd8b720e5c0557e09a7d9152",
+                         "mtl_file":  "D:\\actions-runner\\_work\\_temp\\p1c01-material-surface-promotion\\Prepared\\SH_GRASS_PATH\\MI_Sh_GrassPath_PH.mtl",
+                         "mtl_sha256":  "e87fb0d35e7850025c83b13838a884410249ece83e151b0e6b4619b09f6cccc3",
+                         "state":  "INTAKE_QC_PREPARED"
+                     }
+                 ],
+    "pending_source":  [
+                           {
+                               "id":  "SH_GRASS_GROUND",
+                               "asset_slug":  "leafy_grass",
+                               "reason":  "warehouse_source_not_staged_yet"
+                           },
+                           {
+                               "id":  "SH_FOREST_FLOOR",
+                               "asset_slug":  "forest_floor",
+                               "reason":  "warehouse_source_not_staged_yet"
+                           },
+                           {
+                               "id":  "SH_DAMP_SOIL",
+                               "asset_slug":  "park_dirt",
+                               "reason":  "warehouse_source_not_staged_yet"
+                           },
+                           {
+                               "id":  "SH_LEAF_LITTER",
+                               "asset_slug":  "leaves_forest_ground",
+                               "reason":  "warehouse_source_not_staged_yet"
+                           },
+                           {
+                               "id":  "SH_RUSTIC_PATH",
+                               "asset_slug":  "wood_stone_pathway",
+                               "reason":  "warehouse_source_not_staged_yet"
+                           },
+                           {
+                               "id":  "SH_WOOD_CHIPS",
+                               "asset_slug":  "wood_chips",
+                               "reason":  "warehouse_source_not_staged_yet"
+                           },
+                           {
+                               "id":  "SH_FOREST_GROUND_ALT",
+                               "asset_slug":  "forrest_ground_01",
+                               "reason":  "warehouse_source_not_staged_yet"
+                           },
+                           {
+                               "id":  "SH_MOSSY_LEAVES",
+                               "asset_slug":  "forest_leaves_02",
+                               "reason":  "warehouse_source_not_staged_yet"
+                           }
+                       ],
+    "manual_queue":  [
+
+                     ],
+    "rule":  "Only receipt-hash-verified PNG/TGA files with explicit base-color/albedo/diffuse/color semantics are prepared. Normal/AO/roughness/metal/height/support maps and ambiguous names are rejected from visible color intake; selected-file provenance is retained."
+}
