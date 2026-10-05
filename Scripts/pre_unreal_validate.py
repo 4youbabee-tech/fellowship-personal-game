@@ -10,6 +10,7 @@ from __future__ import annotations
 import csv
 import json
 import re
+import subprocess
 import sys
 from collections import defaultdict, deque
 from pathlib import Path
@@ -93,11 +94,28 @@ except Exception as exc:
 
 
 def is_git_lfs_pointer(path: Path) -> bool:
+    """Inspect the committed Git object; the working tree may be correctly LFS-hydrated."""
     try:
-        return path.read_bytes().startswith(b"version https://git-lfs.github.com/spec/v1\n")
+        relative = path.relative_to(ROOT).as_posix()
+        proc = subprocess.run(
+            ["git", "show", f"HEAD:{relative}"],
+            cwd=ROOT,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=False,
+        )
     except Exception as exc:
-        fail(f"Cannot inspect {path.relative_to(ROOT)} for Git LFS pointer: {exc}")
+        fail(f"Cannot inspect committed Git blob for {path}: {exc}")
         return False
+    if proc.returncode != 0:
+        fail(
+            "Cannot inspect committed Git blob for "
+            + relative
+            + ": "
+            + proc.stderr.decode("utf-8", errors="replace").strip()
+        )
+        return False
+    return proc.stdout.startswith(b"version https://git-lfs.github.com/spec/v1\n")
 
 
 def strip_comments_and_strings(text: str) -> str:
@@ -3416,7 +3434,7 @@ if production_root.exists():
         if asset_path.is_file() and asset_path.suffix.lower() in lfs_extensions:
             if not is_git_lfs_pointer(asset_path):
                 fail(
-                    "PG-017: LFS-tracked production asset is committed as a raw blob: "
+                    "PG-017: LFS-tracked production asset Git object is not an LFS pointer: "
                     + str(asset_path.relative_to(ROOT))
                 )
 
@@ -3429,6 +3447,39 @@ for tga_path in production_root.rglob("*.tga"):
         fail(
             "PG-017: raw TGA exceeds 512 KiB source cap; reduce/channel-pack or use PNG/LFS: "
             + str(tga_path.relative_to(ROOT))
+        )
+
+# PG-226: fail cheap when ChapterAssetStreamingPlan derived audit counts drift.
+streaming_plan_contract_path = ROOT / "Data" / "ChapterAssetStreamingPlan.json"
+try:
+    streaming_plan_contract = json.loads(read(streaming_plan_contract_path))
+except json.JSONDecodeError as exc:
+    streaming_plan_contract = {}
+    fail(f"PG-226 invalid ChapterAssetStreamingPlan.json: {exc}")
+
+if streaming_plan_contract:
+    streaming_banks = streaming_plan_contract.get("banks", {})
+    streaming_audit = streaming_plan_contract.get("audit", {})
+    recorded_bank_counts = streaming_audit.get("chapter_bank_asset_counts", {})
+    derived_packages: set[str] = set()
+    for bank_id, bank_payload in streaming_banks.items():
+        assets = list((bank_payload or {}).get("assets", []))
+        if recorded_bank_counts.get(bank_id) != len(assets):
+            fail(
+                f"PG-226 streaming bank count drift: bank={bank_id} "
+                f"recorded={recorded_bank_counts.get(bank_id)} derived={len(assets)}"
+            )
+        for asset_path in assets:
+            asset_text = str(asset_path or "").strip()
+            if asset_text:
+                package_path = asset_text.split(".", 1)[0]
+                if package_path.startswith("/Game/Production/"):
+                    derived_packages.add(package_path)
+    if streaming_audit.get("total_unique_production_packages") != len(derived_packages):
+        fail(
+            "PG-226 streaming unique package count drift: "
+            f"recorded={streaming_audit.get('total_unique_production_packages')} "
+            f"derived={len(derived_packages)}"
         )
 
 # PG-125: source texture format is a hard pipeline rule, not a convention.

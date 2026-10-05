@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "policy_id": "P1C01_ONE_SHOT_CHAPTER_FINISH_V1",
+  "status": "ACTIVE_PREFLIGHT_AND_EXECUTION",
+  "authority": "Data/ProjectGovernor.json DEC-104 / INV-CHAPTER-ONE-SHOT-FINISH",
+  "runtime_chapter": "P1C01",
+  "title": "The Shire through Bucklebury / Ferry",
+  "source_scope": {
+    "canonical_segments": [
+      "F1-01",
+      "F1-02",
+      "F1-03"
+    ],
+    "rule": "P1C01 aggregates these supplied source segments for runtime topology only; source boundaries and locked outcomes remain unchanged."
+  },
+  "owner_facing_rule": "ONE_CHAPTER_ONE_MEGA_WAVE_FROM_PREFLIGHT_THROUGH_GATE_6_7",
+  "target_profile": {
+    "platform": "Windows",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "system_ram_gb": 8,
+    "gpu_vram_gb_approx": 2,
+    "fps_floor": 30
+  },
+  "preflight_before_mass_promotion": [
+    "Exact PR head and single runtime-changing authority",
+    "F1-01/F1-02/F1-03 zero-silent-omission disposition",
+    "Warehouse inventory, receipt SHA256 and free-disk reserve",
+    "Provider/license/provenance/archive hygiene",
+    "Animated production assets FBX; textures PNG/TGA; BMP blocked",
+    "Git LFS committed-object integrity independent from hydrated working tree",
+    "Class QC for static meshes, rigs, animation, audio and textures",
+    "Derived streaming metadata synchronized before expensive package work",
+    "No CI self-push or duplicate mass-promotion workflow",
+    "Interactive-user runner ownership/health before UE4 work",
+    "Runtime residency budget separated from Warehouse/Git payload size"
+  ],
+  "required_lanes": [
+    "CANON_STORY",
+    "CHARACTERS",
+    "WORLD_ROUTE",
+    "MATERIALS_VEGETATION_ART",
+    "LIVING_SHIRE",
+    "GAMEPLAY_EXPLORATION",
+    "AUDIO_PRESENTATION",
+    "SAVE_RELIABILITY",
+    "STREAMING_PERFORMANCE",
+    "GATE_6_7"
+  ],
+  "chapter_content": {
+    "characters": [
+      "Frodo",
+      "Bilbo",
+      "Gandalf",
+      "Sam",
+      "Merry",
+      "Pippin",
+      "Black Rider",
+      "Black Rider horse",
+      "ambient Hobbit/NPC production families"
+    ],
+    "world_route": [
+      "Bag End exterior",
+      "Bag End interior",
+      "Hill/Bagshot Row",
+      "Hobbiton",
+      "Party Field",
+      "Water/Mill/Bridge",
+      "worked fields/farms/orchards",
+      "wooded road/hedges",
+      "Black Rider hiding corridor",
+      "Bucklebury Ferry/riverbank"
+    ],
+    "visible_detail": [
+      "doors and latches",
+      "furniture",
+      "books/pantry/hearth",
+      "food/party dressing",
+      "fences/gates/carts/tools",
+      "flowers/gardens",
+      "rocks/soil/path breakup",
+      "natural trees/shrubs/grass/reeds",
+      "sky/light/fog/water"
+    ],
+    "gameplay": [
+      "party/social onboarding",
+      "fireworks activities",
+      "Ring/packing/departure flow",
+      "exploration/discoveries",
+      "road stealth/hiding",
+      "ferry escape",
+      "collision/navigation",
+      "return-to-control"
+    ],
+    "audio": [
+      "scripted/context voice",
+      "character efforts",
+      "footsteps",
+      "cloth/leather foley",
+      "Bag End interior",
+      "farm/cart",
+      "nature ambience",
+      "party/fireworks",
+      "ferry/water",
+      "Black Rider threat",
+      "music",
+      "subtitle/accessibility metadata"
+    ]
+  },
+  "source_capacity_reference": {
+    "selector_ceiling": 187,
+    "surfaces": 40,
+    "architecture_props": 60,
+    "vegetation_nature": 30,
+    "audio": 25,
+    "fauna": 12,
+    "character_animation": 20
+  },
+  "completion_rule": "P1C01 is not finished until every required lane is integrated and chapter-specific Gate 6/7 evidence is accepted. P1C02 remains locked."
+}

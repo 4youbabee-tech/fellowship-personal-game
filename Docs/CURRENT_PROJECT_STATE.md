@@ -4748,3 +4748,13 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Importer hardening: `ShireProductionImportCommandlet` now rejects any residual Git LFS pointer source before `ImportAssetTasks` and emits the explicit `GIT_LFS_POINTER_SOURCE` marker instead of allowing a misleading generic texture-import failure.
 - Hosted regression coverage is wired through `test_p1c01_material_lfs_hydration_contract.py`; no texture gate, albedo-binding requirement, package-persistence requirement, or visual/performance gate is weakened.
 - Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD PRE-UNREAL + UE4 IMPORT/BUILD + RENDER REVALIDATION PENDING**. No PIE, device, visual, performance, or Gate 6/7 acceptance is claimed.
+
+## 2026-10-06 - P1C01 One-Shot Mega Chapter production start
+
+- Owner-facing production model is now **one chapter = one mega wave**. P1C01 is `P1C01-ONE-SHOT-FINISH`, covering F1-01/F1-02/F1-03 through Bucklebury/Ferry. Internal dependency cars remain technical safety lanes only; they are not separate owner-facing waves.
+- Complete chapter manifest: `Data/P1C01OneShotChapterFinishV1.json`. It includes characters, world route/detail, materials/vegetation, Living Shire, gameplay/exploration, audio, save/reliability, streaming/performance and Gate 6/7.
+- Target clarification: **8 GB system RAM / ~2 GB GPU VRAM**. Production/Warehouse throughput may scale aggressively; runtime residency remains bounded and measured.
+- Unreal Build #1609 on `b114a8e5ab3a91d35ae45fb561cedf5486ead2e5` already proved the repaired production import path: **384 files / 0 failures**, **169/169 albedo bindings**, **233 material packages / 0 missing**.
+- Road-cleaning root fixes in this packet: PG-017 now checks the committed Git object instead of a correctly hydrated LFS working-tree file; `ChapterAssetStreamingPlan` derived totals are reconciled and hosted PG-226 catches future drift before the expensive package lane.
+- The Daily Project Manager workflow was separately moved off the UE4 self-hosted runner via main maintenance PR #330, so scheduled reporting no longer competes with chapter production for the Unreal machine.
+- Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD VALIDATION PENDING**. No PIE/device/visual/performance/Gate 6/7 acceptance is claimed.

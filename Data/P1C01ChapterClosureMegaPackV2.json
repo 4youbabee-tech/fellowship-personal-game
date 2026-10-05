@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "pack_id": "P1C01_CHAPTER_CLOSURE_MEGA_PACK_V2",
-  "status": "RUNNER_EXECUTION_READY",
+  "status": "ACTIVE_ONE_SHOT_CHAPTER_PREP",
   "authority": [
     "Data/ProjectGovernor.json",
     "Data/WarehouseP1C01ClosurePromotionTrainV2.json",
@@ -13,15 +13,18 @@
     "P1C01",
     "SHIRE_HOBBITON",
     "BAG_END",
-    "PARTY_FIELD"
+    "PARTY_FIELD",
+    "SHIRE_ROAD_CORRIDOR",
+    "BLACK_RIDER_HIDE_CORRIDOR",
+    "BUCKLEBURY_FERRY"
   ],
-  "objective": "Drive one chapter-scale acquisition/preparation train at the largest safe throughput practical on the persistent runner, with internal quarantine so provider or asset blockers do not stop independent cars.",
+  "objective": "Prepare the complete P1C01 Shire-through-Bucklebury/Ferry chapter as one owner-facing One-Shot Mega Chapter Finish, using maximum-safe parallel source/QC preparation and serialized runtime integration only where dependency/safety requires it.",
   "operating_model": {
-    "strategy": "ONE_CHAPTER_CLOSURE_PACK_MANY_LARGE_BOUNDED_CARS",
-    "package_rule": "One Warehouse workflow owns the P1C01 closure train. Raw stock may grow by multiple GB; Git/LFS and UE import remain separately bounded.",
+    "strategy": "ONE_OWNER_FACING_CHAPTER_WAVE_MANY_INTERNAL_BOUNDED_CARS",
+    "package_rule": "One chapter closure train owns P1C01 preparation. Raw Warehouse stock may grow by multiple GB; Git/LFS promotion is evidence-gated and runtime residency stays separately bounded.",
     "quarantine_rule": "Provider/asset/source failures quarantine only that car. Infrastructure/inventory/storage corruption is hard-fail.",
     "no_duplicate_rule": "Legacy overlapping P1C01 staging/promotion/export/intake steps are suppressed while this pack runs.",
-    "runtime_boundary": "Source acquisition and intake-QC only. Runtime promotion remains serialized behind exact-head engine gates."
+    "runtime_boundary": "Source/QC lanes may parallelize and quarantine provider-local failures; exactly one runtime-changing integration authority advances through exact-head gates."
   },
   "target_profile": {
     "engine": "UE4.27.2",

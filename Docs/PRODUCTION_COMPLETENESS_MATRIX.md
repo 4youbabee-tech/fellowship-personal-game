@@ -4221,3 +4221,25 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Texture/albedo gate weakening | NONE |
 | Fresh exact-head 8/8 texture + 8/8 binding proof | PENDING |
 | Human visual / performance / device / Gate 6+7 | NOT ACCEPTED |
+
+## 2026-10-06 - P1C01 One-Shot Mega Chapter
+
+| Control | State |
+|---|---|
+| Owner-facing production unit | P1C01-ONE-SHOT-FINISH |
+| Governor authority | DEC-104 + INV-CHAPTER-ONE-SHOT-FINISH |
+| Source coverage | F1-01 + F1-02 + F1-03 |
+| Full route | Bag End/Hobbiton/Party Field -> fields/wooded road/Black Rider -> Bucklebury Ferry |
+| Complete chapter preflight | REQUIRED |
+| Chapter manifest | Data/P1C01OneShotChapterFinishV1.json |
+| Target RAM / GPU VRAM | 8 GB / ~2 GB |
+| Unreal #1609 production import | 384 / 0 failures |
+| Unreal #1609 albedo binding | 169 / 169 |
+| Unreal #1609 material persistence | 233 / 0 missing |
+| Streaming P1C01 bank | 88 assets |
+| Unique production packages | 243 |
+| PG-017 hydrated-LFS false-red | ROOT-FIX SOURCE-IMPLEMENTED |
+| PG-226 derived streaming-count guard | ADDED |
+| Daily manager UE runner contention | REMOVED VIA PR #330 |
+| Fresh exact-head technical proof | PENDING |
+| PIE / device / visual / performance / Gate 6+7 | NOT ACCEPTED |

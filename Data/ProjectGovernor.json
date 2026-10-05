@@ -45,7 +45,8 @@
     "Permanent branch closeout invariant: every completed temporary branch is exact-head validated, merged into develop immediately, and its remote ref is deleted after merge so develop never lags completed work. Only an active PR head or a branch with verified unique unsalvaged commits may remain temporarily.",
     "Maximum Safe Production is the default for all eligible project production work even when the owner does not explicitly say 'start chapter' or repeat the throughput instruction.",
     "Story scope is experience-first, not summary-first: the Timeline organizes sequence but never caps detail; compatible Tolkien book-only events/details should be playable when safe, and meaningful discovered source material may not be silently omitted.",
-    "Closing a temporary PR is an explicit branch-lifecycle disposition. If it closes unmerged, any useful unique work must first be selectively salvaged into the current authority or recorded by exact commit SHA/disposition; after closure the unchanged remote head ref is deleted. A moved ref or active PR head is preserved as new work."
+    "Closing a temporary PR is an explicit branch-lifecycle disposition. If it closes unmerged, any useful unique work must first be selectively salvaged into the current authority or recorded by exact commit SHA/disposition; after closure the unchanged remote head ref is deleted. A moved ref or active PR head is preserved as new work.",
+    "An active runtime chapter is one owner-facing One-Shot Mega Chapter Finish: preflight the complete chapter payload first, then continue through all required character/world/gameplay/audio/save/performance/acceptance lanes without asking the owner to re-authorize routine internal steps. Internal runtime-changing dependencies may remain serialized for safety; this never permits opening the next runtime chapter early."
   ],
   "requirement_status_values": [
     "REQUESTED",
@@ -3126,6 +3127,11 @@
       "id": "INV-RUNNER-OWNERSHIP",
       "description": "The UE4.27 self-hosted GitHub runner must execute only under the proven interactive Windows user through the ShireJourney-GitHubRunner-Watchdog Scheduled Task. Legacy actions.runner.* Windows service registration is not an alternate execution path: it must be absent, or at minimum Stopped+Disabled while pending deletion. NETWORK SERVICE, LOCAL SERVICE and SYSTEM are forbidden. The watchdog continuously removes service-mode ownership and a worker/AI session may not change runner topology without explicit owner authorization.",
       "auto_override": false
+    },
+    {
+      "id": "INV-CHAPTER-ONE-SHOT-FINISH",
+      "description": "Once the owner starts a runtime chapter, that chapter is the owner-facing production unit from full preflight through Gate 6/7. Prepare and validate the whole chapter payload before mass promotion; quarantine independent source/provider failures instead of stopping unrelated lanes; keep exactly one runtime-changing integration authority; do not fragment the chapter into owner-facing micro-waves or repeated micro-approval.",
+      "auto_override": false
     }
   ],
   "conflict_status_values": [
@@ -5744,6 +5750,26 @@
         "Branch, validation, merge and cleanup are serialized per car."
       ],
       "evidence_boundary": "OWNER GOVERNANCE AND EXECUTION ORDER. Candidate, import, compile, PIE, device, visual, pacing and performance evidence remain separate."
+    },
+    {
+      "id": "DEC-104",
+      "title": "One-Shot Mega Chapter Finish is the permanent owner-facing production model",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-EXEC-003",
+        "REQ-P1C01-CLOSEOUT-001",
+        "REQ-PROD-011"
+      ],
+      "resolution": "When the owner starts a runtime chapter, production continues as one chapter-scale wave from complete preflight through Gate 6/7. Independent source, warehouse and QC work may run at maximum-safe throughput and quarantine local failures. Exactly one runtime-changing authority remains serialized where dependencies require it. Gate 6/7 is the final phase of the same chapter wave. The next runtime chapter never opens automatically.",
+      "implementation_contract": [
+        "P1C01 uses one P1C01-ONE-SHOT-FINISH owner-facing wave covering F1-01/F1-02/F1-03 through Bucklebury/Ferry.",
+        "Every chapter preflight covers canon/story, required characters, world/route/detail, materials/vegetation, living world, gameplay/exploration, audio, save/load, streaming/performance, provenance/QC, runner/workflow health and final acceptance evidence.",
+        "Administrative checks run before expensive UE4 work and must inspect the correct source of truth.",
+        "Warehouse/source libraries may grow aggressively; Git/LFS promotion is selected and proven; runtime residency stays bounded by soft refs, async streaming, pooling, HISM/ISM and LOD/culling.",
+        "Human/device evidence remains mandatory for PIE/device/visual/pacing/performance acceptance."
+      ],
+      "evidence_boundary": "PRODUCTION POLICY ONLY. This decision does not itself prove P1C01 complete or accepted.",
+      "authority": "USER_EXPLICIT_DIRECTION"
     }
   ],
   "open_conflicts": [],
@@ -7630,8 +7656,8 @@
     "stop_rule": "A newly discovered HIGH/CRITICAL cross-system gap is repaired or explicitly quarantined before the active wave may be promoted."
   },
   "execution_control": {
-    "mode": "ACTIVE_GATE_FIRST",
-    "active_lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
+    "mode": "ACTIVE_ONE_SHOT_CHAPTER_FINISH",
+    "active_lane": "P1C01_ONE_SHOT_SHIRE_CHAPTER_FINISH",
     "allowed_bundles": [
       "B2_CHARACTERS_AND_WORLD_PRODUCTION",
       "B3_LIVING_WORLD_AND_PRESENTATION",
@@ -7650,11 +7676,11 @@
       "warehouse_run": 232
     },
     "next_actions": [
-      "Run the P1C01 Frodo/Gandalf skeletal Candidate Wave against the exact candidate head and inspect the warehouse receipt/report; do not infer readiness from filenames.",
-      "Promote and integrate Frodo first only after provenance, real skeleton, skin-weight, deformation, locomotion, material, socket and low-spec QC succeed; keep modular fallback visible until SK_Frodo plus ABP_Frodo_Locomotion resolve asynchronously.",
-      "After Frodo exact-head machine-green, repeat the proven path for Gandalf; do not fan out across additional characters.",
-      "Continue P1C01 in the registered A-I car order and keep P1C02-P1C08 runtime predecessor-gated.",
-      "Collect fail-closed Gate 6/7 evidence; no PIE/device/visual/pacing/performance claim may be inferred from CI."
+      "Clean all known P1C01 preflight blockers before mass promotion: LFS truth, derived streaming counts, runner/control-plane contention and provenance/QC.",
+      "Saturate the complete P1C01 source payload: characters/animation, materials, architecture/interiors/props, vegetation, audio and fauna.",
+      "Integrate the full Shire-through-Ferry chapter under one runtime authority with visible-world and real-character priority.",
+      "Finish gameplay/exploration/audio/save/return-to-control, then execute Gate 6/7 inside the same chapter wave.",
+      "Do not open P1C02 runtime until P1C01 Gate 6/7 is accepted and the owner explicitly starts it."
     ],
     "runner_infrastructure_guard": "HARD: service-mode runner ownership is eliminated, not merely discouraged. actions.runner.* must be absent or Stopped+Disabled pending deletion. UE4-27-Windows runs only via the interactive-user watchdog; NETWORK SERVICE/LOCAL SERVICE/SYSTEM are forbidden.",
     "production_freeze": {
@@ -8563,45 +8589,31 @@
   "p1c01_mega_wave_closure_2026_10_04": {
     "status": "ACTIVE_PERMANENT_PRODUCTION_STRUCTURE",
     "runtime_chapter": "P1C01",
-    "owner_intent": "Finish the Shire through a small number of very large, coherent production waves rather than many micro-waves.",
-    "total_remaining_mega_waves": 2,
-    "current_mega_wave": "P1C01-MW5",
-    "rule": "The existing A-I closeout lanes are workstreams inside the two mega waves, not separate waves. Do not split them into branch-per-lane churn.",
+    "owner_intent": "Finish the entire Shire-through-Bucklebury/Ferry chapter as one owner-facing mega chapter wave from A to Z, then review/play it before starting the next runtime chapter.",
+    "total_remaining_mega_waves": 1,
+    "current_mega_wave": "P1C01-ONE-SHOT-FINISH",
+    "rule": "One owner-facing chapter wave only. Internal cars are safety/dependency lanes inside the same wave; they must not become micro-waves requiring owner re-authorization.",
     "waves": [
       {
-        "id": "P1C01-MW5",
-        "name": "Production Completion Mega Wave",
+        "id": "P1C01-ONE-SHOT-FINISH",
+        "name": "P1C01 One-Shot Shire Chapter Finish",
         "status": "ACTIVE",
         "scope": [
-          "Production Frodo deformation/animation/runtime presentation",
-          "Gandalf and required hero presentation",
-          "Shire world materials, terrain, lighting, architecture, landmarks, vegetation and Bucklebury/Ferry visual completion",
-          "Living Shire NPC routines/context/story reaction/fauna verification and root-cause fixes",
-          "Quest/story/traversal/collision/audio continuity",
-          "Save/load and return-to-control integration",
-          "Localization-safe authoring foundation for all new player-facing text; Arabic full translation remains a later whole-game closure concern",
-          "Target-device-aware streaming/performance preparation without weakening the visual bar"
+          "F1-01 + F1-02 + F1-03 source-grounded coverage aggregated into P1C01",
+          "Production Frodo, Bilbo, Gandalf, Sam, Merry, Pippin, Black Rider/horse and production-readable ambient Hobbit/NPC presentation",
+          "Bag End exterior+interior, Hill/Bagshot Row, Hobbiton, Party Field, Water/Mill/Bridge, fields, wooded road/hiding corridor and Bucklebury Ferry",
+          "Chapter-scale materials, optimized natural vegetation, architecture/interior props, lighting/sky/fog/water and small environmental detail",
+          "Living Shire schedules/context/social reactions/fauna/environment motion under pooling/bounded budgets",
+          "Main quest, optional exploration/discoveries, side activities, stealth/hiding, traversal/collision and cinematic return-to-control",
+          "Complete P1C01 voice/efforts/footsteps/foley/ambience/ferry/threat/music/accessibility runtime presentation",
+          "Save/load/checkpoints/disk roundtrip/world-state resume reliability",
+          "Soft/async streaming, LOD/culling/HISM/ISM and target-device VRAM/RAM/frame-time preparation",
+          "Exact-head technical gates plus the same wave's PIE/device/visual/pacing/performance Gate 6/7 acceptance"
         ],
-        "exit": "All known production content/integration blockers required for final acceptance are closed on one exact head, with exact-head technical gates green. Human/device acceptance may still remain for MW6."
-      },
-      {
-        "id": "P1C01-MW6",
-        "name": "Final Closure and Gate 6/7 Mega Wave",
-        "status": "PENDING",
-        "scope": [
-          "Exact-head Pre-Unreal, UE4.27.2 build/import/runtime audits and character deformation evidence",
-          "Full chapter PIE route and required traversal/collision proof",
-          "Save/load disk roundtrip and intended world-state resume proof",
-          "Fresh region-by-region Shire render review and explicit human visual acceptance",
-          "Target-class DX11 1280x720 performance evidence meeting the 30 FPS floor",
-          "Streaming/VRAM/NPC activation observations on target profile",
-          "Quest/cinematic/audio pacing and return-to-control human review",
-          "Only root-cause defect fixes discovered by these acceptance runs; no new feature expansion"
-        ],
-        "exit": "P1C01_GATE_6_7_ACCEPTED with chapter-specific evidence. Only then may P1C02 Bree runtime open."
+        "exit": "P1C01_GATE_6_7_ACCEPTED with chapter-specific evidence; P1C02 remains locked until then and still requires explicit owner start."
       }
     ],
-    "evidence_boundary": "Planning/production structure only. It does not itself claim PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED or Gate 6/7 acceptance."
+    "evidence_boundary": "Planning/production structure only; no PIE/device/visual/performance/Gate 6/7 acceptance is claimed."
   },
   "continuous_chapter_train_policy_2026_10_04": {
     "status": "ACTIVE_PERMANENT",
