@@ -50,6 +50,13 @@ class FrodoUE4AnimationImportContract(unittest.TestCase):
         self.assertIn('CI_BUILD_WORKSPACE root=%BUILD_WORKSPACE%', build_script)
         self.assertIn('ShireFrodoAnimationImport', workflow)
         self.assertIn('UE4_ANIMATION_IMPORT_TECHNICAL_PASS', workflow)
+        self.assertIn('Promote exact validated Frodo runtime FBX sources', workflow)
+        self.assertIn('SourceAssets\\ValidatedRuntime\\FRODO', workflow)
+        self.assertIn('P1C01_FRODO_RUNTIME_SOURCE_PROMOTION_ATTEMPT', workflow)
+        self.assertIn('git.exe -C $env:SHIRE_FRODO_UE4_SOURCE fetch --no-tags origin $env:HEAD_BRANCH', workflow)
+        self.assertIn('reset --hard FETCH_HEAD', workflow)
+        self.assertIn('P1C01_FRODO_RUNTIME_SOURCE_PROMOTION_PASS', workflow)
+        self.assertNotIn('push --force', workflow.lower())
 
 
 if __name__ == '__main__':
