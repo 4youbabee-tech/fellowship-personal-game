@@ -7,6 +7,7 @@
 #include "ShireChapterAssetStreamingSubsystem.generated.h"
 
 class USkeletalMesh;
+class UAnimSequence;
 
 DECLARE_MULTICAST_DELEGATE_TwoParams(
     FOnShireChapterAssetsReady,
@@ -47,6 +48,13 @@ public:
         FName CharacterId,
         USkeletalMesh*& OutSkeletalMesh,
         UClass*& OutAnimClass) const;
+    bool ResolveCharacterLocomotionAssets(
+        FName CharacterId,
+        USkeletalMesh*& OutSkeletalMesh,
+        UClass*& OutAnimClass,
+        UAnimSequence*& OutIdle,
+        UAnimSequence*& OutWalk,
+        UAnimSequence*& OutRun) const;
 
     FOnShireChapterAssetsReady OnChapterAssetsReady;
     FOnShireChapterAssetsCommitted OnChapterAssetsCommitted;
@@ -64,7 +72,12 @@ private:
     {
         FSoftObjectPath SkeletalMeshPath;
         FSoftObjectPath AnimClassPath;
+        FSoftObjectPath IdleAnimationPath;
+        FSoftObjectPath WalkAnimationPath;
+        FSoftObjectPath RunAnimationPath;
         TSharedPtr<FStreamableHandle> Handle;
+        bool bSequenceLocomotionRequired = false;
+        bool bAnimBlueprintPackagePresent = false;
         bool bAvailabilityChecked = false;
         bool bPackagesPresent = false;
         double LastAvailabilityCheckSeconds = -1.0;
