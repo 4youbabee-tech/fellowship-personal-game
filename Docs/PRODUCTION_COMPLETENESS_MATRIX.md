@@ -4017,3 +4017,21 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Fresh compile / package persistence | PENDING |
 | AnimBP / runtime / visual / PIE / performance | NOT ACCEPTED |
 
+
+## 2026-10-05 - Frodo runtime skeletal promotion bridge
+
+| Control | State |
+|---|---|
+| Persistence evidence baseline | `37291448630` / `555fe56e94fb7d4d7036a1e80462d9f2317cc322` |
+| Five rig/animation packages on disk in exact-head gate | PASS |
+| Previous runtime blocker | missing `ABP_FRODO_Locomotion` prevented any skeletal promotion |
+| Frodo mesh + Idle/Walk/Run async core | SOURCE-IMPLEMENTED |
+| AnimBP when available | PREFERRED / OPTIONAL DURING BRIDGE |
+| Single-node Idle/Walk/Run skeletal bridge | SOURCE-IMPLEMENTED |
+| Modular fallback retained until core residency | YES |
+| Heavy sync loading added | NO |
+| Existing NPC rig contract changed | NO |
+| Hosted regression guard | ADDED |
+| Fresh exact-head static/compile/runtime proof | PENDING |
+| Local owner-visible Frodo promotion | PENDING EXACT PAYLOAD STAGING |
+| Human visual / PIE / device / performance | NOT ACCEPTED |
