@@ -4159,3 +4159,17 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Owner/connector-side promotion boundary | REQUIRED |
 | Fresh owner-authored exact-head run behavior | PENDING |
 | PIE / device / visual / performance / Gate 6+7 | NOT ACCEPTED |
+
+## 2026-10-05 - GitHub Actions approval-loop elimination
+
+| Control | State |
+|---|---|
+| Root cause | CI self-push -> bot-authored PR synchronize -> maintainer approval gate |
+| Frodo runtime-source workflow | VERIFY-ONLY / READ-ONLY |
+| Shire material-source workflow | VERIFY-ONLY / READ-ONLY |
+| CI branch mutation in affected lanes | REMOVED |
+| Existing promoted sources | PRESERVED |
+| Exact hash/receipt validation | PRESERVED |
+| Regression guard against self-push | ACTIVE |
+| New workflow state after fix | QUEUED / PENDING, not `action_required` |
+| Gate 6/7 acceptance | NOT ACCEPTED |
