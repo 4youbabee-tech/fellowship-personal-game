@@ -4671,3 +4671,11 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - PG-052 no longer hardcodes an empty manifest assumption; it now compares the plan count against the actual number of APPROVED manifest records.
 - This is a governance/source-truth correction required before production promotion. No new third-party geometry is approved by this change.
 - Status: **SOURCE/GOVERNANCE RECONCILED / FRESH EXACT-HEAD STATIC VALIDATION PENDING**.
+
+## 2026-10-05 - Pre-Unreal #1985 PG-176 stale MTL marker root fix
+
+- Exact-head Pre-Unreal run `37348487318` / #1985 on `4d12a0984df77b5db37f69530c5f03b64e2a1309` failed at project structure validation only.
+- Exact failure: `PG-176 material intake preparation guard missing: "Ks $ksText $ksText $ksText"`.
+- Root cause: PG-176 still asserted the historical raw interpolation marker after the MTL generator was intentionally repaired to use the complete formatted directive `("Ks {0} {0} {0}" -f $ksText)`.
+- The validator now requires the corrected formatted directive. The generator is not reverted and no material gate is weakened.
+- Status: **ROOT-FIX SOURCE-IMPLEMENTED / FRESH EXACT-HEAD PRE-UNREAL REVALIDATION PENDING**.
