@@ -210,6 +210,10 @@ jobs:
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_p1c01_frodo_skeletal_current_import.ps1"
 
+      - name: Test P1C01 Frodo runtime promotion contract
+        shell: cmd
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_p1c01_frodo_runtime_promotion_contract.py" -v
+
       - name: Test static FBX world intake contract
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_static_fbx_world_intake.ps1"
