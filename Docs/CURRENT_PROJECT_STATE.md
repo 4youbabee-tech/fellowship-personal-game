@@ -4623,3 +4623,11 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - The modular fallback is retained until the skeletal core resolves; it is hidden only after the real skeletal mesh and locomotion sequences are resident and applied.
 - Static regression guard: `Scripts/test_p1c01_frodo_runtime_promotion_contract.py`, wired into hosted Pre-Unreal validation.
 - Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD STATIC + UE4 COMPILE/RUNTIME VALIDATION PENDING**. This is not PIE/device/visual/performance acceptance. Local production promotion still needs the exact rig/animation payloads to be regenerated or staged outside the transient CI checkout.
+
+## 2026-10-05 - Frodo validated source promotion + fail-closed local launch
+
+- The dedicated Frodo UE4 animation workflow now promotes the exact hash-pinned target FBX and Idle/Walk/Run derivatives into `SourceAssets/ValidatedRuntime/FRODO` only after the UE4.27 package/import gate succeeds.
+- Promotion preserves the validated SHAs and writes provenance for KayKit Rogue (CC0 normalized derivative) plus Quaternius Universal Animation Library Standard / OpenGameArt (CC0).
+- `run_local_p1c01_visual_acceptance.ps1` now validates all four source hashes, runs `ShireFrodoAnimationImport`, requires both persistence and technical-pass markers, and refuses to launch if any of the five Frodo runtime packages are missing.
+- This prevents another owner review session from silently falling back to the blocky player because CI-only assets were absent locally.
+- Status: **SOURCE-IMPLEMENTED / SOURCE-PROMOTION WORKFLOW + LOCAL FAIL-CLOSED IMPORT PENDING FRESH EXACT-HEAD EXECUTION**. No visual/PIE/device/performance acceptance is claimed.
