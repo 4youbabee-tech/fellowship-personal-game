@@ -4679,3 +4679,12 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Root cause: PG-176 still asserted the historical raw interpolation marker after the MTL generator was intentionally repaired to use the complete formatted directive `("Ks {0} {0} {0}" -f $ksText)`.
 - The validator now requires the corrected formatted directive. The generator is not reverted and no material gate is weakened.
 - Status: **ROOT-FIX SOURCE-IMPLEMENTED / FRESH EXACT-HEAD PRE-UNREAL REVALIDATION PENDING**.
+
+## 2026-10-05 - Material promotion run #10 stale warehouse-root root fix
+
+- Material Surface Promotion run `37349024980` prepared all 8 required P1C01 surfaces successfully, then failed the integrity step because `manual_queue_count=96`.
+- Exact evidence showed historical receipt rows pointing at `C:\actions-runner\_warehouse\ShireJourney\...` while the active warehouse root is `D:\actions-runner\_warehouse\ShireJourney`; the same required assets were already found/prepared from the active root.
+- Root fix: `prepare_p1c01_material_intake.ps1` now rebases a missing receipt path only when it contains the canonical `/ShireJourney/` warehouse boundary, keeps the relative suffix inside the configured WarehouseRoot, verifies the rebased file exists, and still enforces the receipt SHA256 before intake.
+- Arbitrary missing absolute paths are not trusted or promoted. Manual queue semantics remain fail-closed for genuinely missing/hash-drifted payloads.
+- Static regression guard now requires the bounded rebase logic plus SHA enforcement.
+- Status: **ROOT-FIX SOURCE-IMPLEMENTED / FRESH MATERIAL PROMOTION REVALIDATION PENDING**.
