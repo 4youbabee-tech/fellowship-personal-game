@@ -3859,3 +3859,32 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | UE4 animation import / AnimBP / runtime | PENDING |
 | Visual / PIE / device / performance | NOT ACCEPTED |
 
+## 2026-10-05 - Frodo hosted Idle/Walk/Run technical retarget closure
+
+| Control | State |
+|---|---|
+| Hosted retarget run | `37273783111` / SUCCESS |
+| Validated exact head | `be2815e278da30e3474158bc197686f521fb81c1` |
+| Exact UE4-gated Rogue target SHA256 | `75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be` |
+| Fresh Rogue regeneration role | SANITY ONLY / not substituted |
+| Fresh regeneration SHA256 | `28e51fcc8483ffe855c871cd2768463a60dbe88a84f815e1fa1b6aaee7db361d` |
+| Animation archive SHA256 | `18ff1a7215f4852b320203e8aaf02a1578b5c8eef9027fbaedfcedc7b85a3ac2` |
+| Unreal animation FBX SHA256 | `c836c5d47de2a414818f7644632ac43aa84475df6709f4514b9410d232800fd9` |
+| Idle derivative SHA256 | `ee81650714587d2a1a638f3ff0c1a8239ea555bf84959e96ce5d037af3f33cd3` |
+| Walk derivative SHA256 | `c4091b7881a4e9e810e70bb7f3abed58683dff5bacf54e26ccb2e926e4c9e688` |
+| Run derivative SHA256 | `4a4d10d91343dbd701c535d30ea9d9384ca74596cd7720cf6bfdd1c6328e1fc1` |
+| Idle max target displacement | `1.9948943913820651` |
+| Walk max target displacement | `2.4605389372972706` |
+| Run max target displacement | `2.4000922383830474` |
+| Bounds finite and within hosted policy | PASS |
+| Derivative Blender re-import | PASS / all 3 |
+| Re-import bone count | 41 each |
+| Re-import semantic coverage | 15/15 each |
+| Re-import animation curves | 419 fcurves each |
+| Hosted retarget technical gate | **PASS** |
+| Human visual retarget acceptance | NO |
+| UE4.27 animation-only import | PENDING |
+| AnimBP locomotion | PENDING |
+| Runtime Frodo presentation | PENDING |
+| PIE / device / performance / Gate 6+7 | NOT ACCEPTED |
+
