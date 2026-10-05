@@ -4717,3 +4717,11 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Regression contracts explicitly require read-only workflow permissions and forbid the affected `git push` paths.
 - Replacement head is owner-authored through the GitHub connector; subsequent workflow runs entered queued/pending states instead of `action_required`.
 - Status: **ROOT CAUSE REMOVED / FRESH EXACT-HEAD VALIDATION RUNNING**. No PIE/device/visual/performance/Gate 6/7 acceptance is implied.
+
+## 2026-10-05 - Material verify-only contract path assertion fix
+
+- Material Surface Promotion #28 failed in hosted preflight before warehouse execution.
+- Exact failure: the regression test expected `SourceAssets/Production/Imported/P1C01Materials` while the verify-only PowerShell workflow correctly uses the Windows path `SourceAssets\Production\Imported\P1C01Materials`.
+- Root cause is test-path representation drift only. Runtime/source verification semantics are unchanged.
+- The assertion now matches the actual Windows workflow path. No material gate or SHA verification is weakened.
+- Status: **STATIC TEST ROOT-FIX SOURCE-IMPLEMENTED / FRESH EXACT-HEAD REVALIDATION PENDING**.
