@@ -11,7 +11,7 @@ on:
       - '.github/workflows/p1c01-material-surface-promotion.yml'
 
 permissions:
-  contents: write
+  contents: read
   actions: read
 
 concurrency:
@@ -56,7 +56,6 @@ jobs:
     timeout-minutes: 45
     env:
       TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-      HEAD_BRANCH: ${{ github.head_ref }}
 
     steps:
       - name: Checkout exact PR head into isolated material source
@@ -162,56 +161,59 @@ jobs:
           }
           Write-Host "P1C01_MATERIAL_SURFACE_PREPARED_PASS count=$($r.prepared_count) required=$($required.Count)"
 
-      - name: Promote prepared surface sources to latest PR head
+      - name: Verify tracked corrected Shire surface sources
         shell: powershell
         run: |
           $ErrorActionPreference="Stop"
-          if([string]::IsNullOrWhiteSpace($env:HEAD_BRANCH)){ throw "P1C01_MATERIAL_PROMOTION_BRANCH_MISSING" }
+          $stageReceipt=Join-Path $env:SHIRE_MATERIAL_STAGE "p1c01_material_intake_receipt.json"
+          $trackedRoot=Join-Path $env:SHIRE_MATERIAL_SOURCE "SourceAssets\Production\Imported\P1C01Materials"
+          $trackedReceiptPath=Join-Path $trackedRoot "P1C01MaterialSourceReceipt.json"
 
-          $stage=Join-Path $env:RUNNER_TEMP "p1c01-material-publish"
-          Remove-Item -LiteralPath $stage -Recurse -Force -ErrorAction SilentlyContinue
-          New-Item -ItemType Directory -Path $stage -Force | Out-Null
-          Copy-Item -Path (Join-Path $env:SHIRE_MATERIAL_STAGE "Prepared\*") -Destination $stage -Recurse -Force
-          Copy-Item -LiteralPath (Join-Path $env:SHIRE_MATERIAL_STAGE "p1c01_material_intake_receipt.json") -Destination (Join-Path $stage "P1C01MaterialSourceReceipt.json") -Force
+          if(-not (Test-Path -LiteralPath $stageReceipt -PathType Leaf)){ throw "P1C01_MATERIAL_STAGE_RECEIPT_MISSING" }
+          if(-not (Test-Path -LiteralPath $trackedReceiptPath -PathType Leaf)){ throw "P1C01_MATERIAL_TRACKED_RECEIPT_MISSING" }
 
-          & git.exe -C $env:SHIRE_MATERIAL_SOURCE config user.name "Shire Journey CI"
-          & git.exe -C $env:SHIRE_MATERIAL_SOURCE config user.email "shire-journey-ci@users.noreply.github.com"
-          & git.exe -C $env:SHIRE_MATERIAL_SOURCE lfs install --local
-          if($LASTEXITCODE -ne 0){ throw "P1C01_MATERIAL_LFS_INSTALL_FAIL" }
-
-          $published=$false
-          for($attempt=1; $attempt -le 3 -and -not $published; $attempt++){
-            Write-Host "P1C01_MATERIAL_SOURCE_PROMOTION_ATTEMPT attempt=$attempt/3 branch=$env:HEAD_BRANCH"
-            & git.exe -C $env:SHIRE_MATERIAL_SOURCE fetch --no-tags origin $env:HEAD_BRANCH
-            if($LASTEXITCODE -ne 0){ throw "P1C01_MATERIAL_PROMOTION_FETCH_FAIL attempt=$attempt" }
-            & git.exe -C $env:SHIRE_MATERIAL_SOURCE reset --hard FETCH_HEAD
-            if($LASTEXITCODE -ne 0){ throw "P1C01_MATERIAL_PROMOTION_RESET_FAIL attempt=$attempt" }
-
-            $dest=Join-Path $env:SHIRE_MATERIAL_SOURCE "SourceAssets\Production\Imported\P1C01Materials"
-            Remove-Item -LiteralPath $dest -Recurse -Force -ErrorAction SilentlyContinue
-            New-Item -ItemType Directory -Path $dest -Force | Out-Null
-            Copy-Item -Path (Join-Path $stage "*") -Destination $dest -Recurse -Force
-
-            & git.exe -C $env:SHIRE_MATERIAL_SOURCE add -- "SourceAssets/Production/Imported/P1C01Materials"
-            if($LASTEXITCODE -ne 0){ throw "P1C01_MATERIAL_PROMOTION_GIT_ADD_FAIL attempt=$attempt" }
-            $pending=@(& git.exe -C $env:SHIRE_MATERIAL_SOURCE status --porcelain -- "SourceAssets/Production/Imported/P1C01Materials")
-            if($pending.Count -eq 0){
-              Write-Host "P1C01_MATERIAL_SOURCE_ALREADY_PROMOTED"
-              $published=$true
-              break
-            }
-
-            & git.exe -C $env:SHIRE_MATERIAL_SOURCE commit -m "P1C01: promote corrected receipt-verified Shire surface sources"
-            if($LASTEXITCODE -ne 0){ throw "P1C01_MATERIAL_PROMOTION_COMMIT_FAIL attempt=$attempt" }
-            & git.exe -C $env:SHIRE_MATERIAL_SOURCE push origin ("HEAD:" + $env:HEAD_BRANCH)
-            if($LASTEXITCODE -eq 0){
-              Write-Host "P1C01_MATERIAL_SOURCE_PROMOTION_PASS branch=$env:HEAD_BRANCH attempt=$attempt"
-              $published=$true
-              break
-            }
-            Write-Host "P1C01_MATERIAL_SOURCE_PROMOTION_RETRY reason=non_fast_forward_or_branch_moved attempt=$attempt"
+          $stage=Get-Content -LiteralPath $stageReceipt -Raw | ConvertFrom-Json
+          $tracked=Get-Content -LiteralPath $trackedReceiptPath -Raw | ConvertFrom-Json
+          if([int]$stage.prepared_count -ne 8 -or [int]$stage.manual_queue_count -ne 0){
+            throw "P1C01_MATERIAL_STAGE_RECEIPT_UNEXPECTED prepared=$($stage.prepared_count) manual=$($stage.manual_queue_count)"
           }
-          if(-not $published){ throw "P1C01_MATERIAL_SOURCE_PROMOTION_EXHAUSTED" }
+          if([int]$tracked.prepared_count -ne 8 -or [int]$tracked.manual_queue_count -ne 0){
+            throw "P1C01_MATERIAL_TRACKED_RECEIPT_UNEXPECTED prepared=$($tracked.prepared_count) manual=$($tracked.manual_queue_count)"
+          }
+
+          $trackedById=@{}
+          foreach($item in @($tracked.prepared)){ $trackedById[[string]$item.id]=$item }
+
+          foreach($item in @($stage.prepared)){
+            $id=[string]$item.id
+            if(-not $trackedById.ContainsKey($id)){ throw "P1C01_MATERIAL_TRACKED_ID_MISSING id=$id" }
+
+            $dir=Join-Path $trackedRoot $id
+            $baseLeaf=Split-Path ([string]$item.basecolor_file) -Leaf
+            $mtlLeaf=Split-Path ([string]$item.mtl_file) -Leaf
+            $base=Join-Path $dir $baseLeaf
+            $mtl=Join-Path $dir $mtlLeaf
+
+            if(-not (Test-Path -LiteralPath $base -PathType Leaf)){ throw "P1C01_MATERIAL_TRACKED_BASECOLOR_MISSING id=$id" }
+            if(-not (Test-Path -LiteralPath $mtl -PathType Leaf)){ throw "P1C01_MATERIAL_TRACKED_MTL_MISSING id=$id" }
+
+            $baseHash=(Get-FileHash -LiteralPath $base -Algorithm SHA256).Hash.ToLowerInvariant()
+            $mtlHash=(Get-FileHash -LiteralPath $mtl -Algorithm SHA256).Hash.ToLowerInvariant()
+            if($baseHash -ne ([string]$item.basecolor_sha256).ToLowerInvariant()){
+              throw "P1C01_MATERIAL_TRACKED_BASECOLOR_HASH_FAIL id=$id"
+            }
+            if($mtlHash -ne ([string]$item.mtl_sha256).ToLowerInvariant()){
+              throw "P1C01_MATERIAL_TRACKED_MTL_HASH_FAIL id=$id"
+            }
+
+            $trackedItem=$trackedById[$id]
+            if(([string]$trackedItem.basecolor_sha256).ToLowerInvariant() -ne $baseHash -or
+               [string]$trackedItem.material_name -ne [string]$item.material_name){
+              throw "P1C01_MATERIAL_TRACKED_RECEIPT_DRIFT id=$id"
+            }
+          }
+
+          Write-Host "P1C01_MATERIAL_SOURCE_TRACKED_PASS count=8 mutation=no"
 
       - name: Remove isolated material checkout
         if: always()
