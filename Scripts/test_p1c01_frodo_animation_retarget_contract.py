@@ -15,6 +15,8 @@ class FrodoAnimationRetargetContract(unittest.TestCase):
         self.assertEqual({x['action_leaf'] for x in data['clips'].values()},{'Idle_Loop','Walk_Loop','Jog_Fwd_Loop'})
         self.assertFalse(data['execution_contract']['self_hosted_ue4_reserved_before_hosted_retarget_pass'])
         self.assertFalse(data['execution_contract']['runtime_integration_allowed'])
+        self.assertTrue(data['execution_contract']['use_exact_prior_ue4_gated_winner_artifact'])
+        self.assertEqual(data['target']['exact_winner_workflow_run'],37243788900)
 
     def test_script_is_fail_closed_and_keeps_acceptance_boundaries(self):
         text=(ROOT/'Scripts'/'run_p1c01_frodo_animation_retarget.py').read_text(encoding='utf-8')
@@ -37,6 +39,9 @@ class FrodoAnimationRetargetContract(unittest.TestCase):
         self.assertNotIn('self-hosted',text)
         self.assertIn('stage_p1c01_human_wave2.ps1',text)
         self.assertIn('P1C01_FRODO_HOSTED_RETARGET_RECEIPT_PASS',text)
+        self.assertIn('actions/download-artifact@v4',text)
+        self.assertIn('P1C01_FRODO_RETARGET_PRIOR_WINNER_PASS',text)
+        self.assertIn('actions: read',text)
 
 
 if __name__=='__main__':
