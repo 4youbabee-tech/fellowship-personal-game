@@ -4767,3 +4767,13 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
   - `PG-192`: `P1C01ChapterClosureMegaPackV2.status` was repurposed for owner-facing One-Shot wording even though `RUNNER_EXECUTION_READY` is a machine execution contract. Root fix restores `RUNNER_EXECUTION_READY` and records One-Shot state in separate owner-facing fields.
 - No chapter scope, provenance gate, texture gate, runtime residency rule, or Gate 6/7 evidence requirement is weakened.
 - Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD STATIC + UE4 QUEUE REVALIDATION PENDING**.
+
+## 2026-10-06 - Runner queue incident + P1C01 closure trigger repair
+
+- Live branch head before this repair: `2092dace6a8e3f7ea93ad2c2a5186745be4ee8a9`.
+- Repository Actions observation: **0 jobs in progress / 6 runs queued**. Queued self-hosted work included Unreal Build, Material Surface Promotion, Frodo UE4 Animation Import, Shire Render Capture, Human Character Wave 2 and one older Daily Manager run.
+- Last proven runner health before the stall: `RUNNER_HEALTH_PASS identity=IDEAPAD320\user sessionId=2 listenerPid=30472 workerCount=1` at 2026-10-05 21:15 UTC. The same runner reached W00 package preflight at approximately 21:25 UTC. A self-hosted scheduled job remained queued from 21:35 UTC onward, so the runner stopped accepting repository jobs between approximately 21:25 and 21:35 UTC.
+- Current classification: **RUNNER UNAVAILABLE / NOT ACCEPTING JOBS**, based on queue behavior. GitHub evidence cannot distinguish machine sleep/logout from listener/watchdog/registration failure without the Windows host responding.
+- Independent workflow defect found: `P1C01 Chapter Closure Pack` previously triggered only on push to `develop` or manual dispatch, so PR #329 could not automatically launch the One-Shot chapter source train.
+- Root fix: the closure workflow now supports `pull_request` to `develop`, includes the One-Shot manifest in path routing, uses PR-specific concurrency and cancels superseded PR closure runs.
+- Status remains **SOURCE-IMPLEMENTED / RUNNER RECOVERY + FRESH EXACT-HEAD EXECUTION PENDING**. No PIE/device/visual/performance acceptance is claimed.

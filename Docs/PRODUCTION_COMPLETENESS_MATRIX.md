@@ -4258,3 +4258,20 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Fresh exact-head Pre-Unreal | PENDING |
 | Fresh exact-head UE4/closure execution | PENDING |
 | PIE / visual / device / performance / Gate 6+7 | NOT ACCEPTED |
+
+## 2026-10-06 - Runner availability / chapter execution unblock
+
+| Control | State |
+|---|---|
+| Repository Actions in progress | 0 |
+| Repository Actions queued | 6 |
+| Last proven runner-health marker | `RUNNER_HEALTH_PASS identity=IDEAPAD320\user sessionId=2 listenerPid=30472 workerCount=1` |
+| Last proven runner-health time | 2026-10-05 21:15 UTC |
+| Runner still executing package work | observed through ~21:25 UTC |
+| First persistent queued self-hosted run | 21:35 UTC |
+| Current runner classification | NOT ACCEPTING JOBS / HOST-SIDE RECOVERY REQUIRED |
+| Exact host-side cause | NOT YET OBSERVED |
+| P1C01 Chapter Closure Pack PR trigger | SOURCE-IMPLEMENTED |
+| Superseded PR closure cancellation | SOURCE-IMPLEMENTED |
+| Fresh exact-head closure execution | PENDING RUNNER RECOVERY |
+| PIE / device / visual / performance / Gate 6+7 | NOT ACCEPTED |

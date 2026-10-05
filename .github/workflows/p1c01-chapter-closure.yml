@@ -8,16 +8,28 @@ on:
       - 'Data/P1C01MaterialImportWaveV2.json'
       - 'Data/WarehouseP1C01ClosurePromotionTrainV2.json'
       - 'Data/P1C01ChapterClosureMegaPackV2.json'
+      - 'Data/P1C01OneShotChapterFinishV1.json'
       - 'Scripts/preflight_p1c01_chapter_closure_pack_v2.ps1'
       - 'Scripts/run_p1c01_chapter_closure_pack_v2.ps1'
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - 'Data/P1C01MaterialImportWaveV2.json'
+      - 'Data/WarehouseP1C01ClosurePromotionTrainV2.json'
+      - 'Data/P1C01ChapterClosureMegaPackV2.json'
+      - 'Data/P1C01OneShotChapterFinishV1.json'
+      - 'Scripts/preflight_p1c01_chapter_closure_pack_v2.ps1'
+      - 'Scripts/run_p1c01_chapter_closure_pack_v2.ps1'
+      - '.github/workflows/p1c01-chapter-closure.yml'
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: p1c01-chapter-closure-${{ github.repository }}
-  cancel-in-progress: false
+  group: p1c01-chapter-closure-${{ github.repository }}-${{ github.event_name == 'pull_request' && github.head_ref || 'develop' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   closure:
