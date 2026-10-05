@@ -90,20 +90,54 @@ jobs:
       TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
 
     steps:
-      - name: Checkout exact PR head
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ env.TARGET_SHA }}
-          fetch-depth: 2
-          persist-credentials: false
+      - name: Checkout exact PR head into isolated UE4 source
+        shell: cmd
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          @echo off
+          setlocal EnableExtensions EnableDelayedExpansion
+          set "GITEXE="
+          for /f "delims=" %%G in ('where git.exe 2^>nul') do if not defined GITEXE set "GITEXE=%%G"
+          if not defined GITEXE if exist "C:\Program Files\Git\cmd\git.exe" set "GITEXE=C:\Program Files\Git\cmd\git.exe"
+          if not defined GITEXE exit /b 70
+
+          set "SRC=%RUNNER_TEMP%\shire-frodo-ue4-animation-src-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
+          if exist "!SRC!" rmdir /S /Q "!SRC!"
+          mkdir "!SRC!"
+          cd /d "!SRC!"
+          "!GITEXE!" init
+          if errorlevel 1 exit /b 71
+          "!GITEXE!" remote add origin "https://x-access-token:!GH_TOKEN!@github.com/%GITHUB_REPOSITORY%.git"
+          if errorlevel 1 exit /b 72
+
+          set ATTEMPT=0
+          :fetch
+          set /a ATTEMPT+=1
+          "!GITEXE!" -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=20 fetch --no-tags --prune --depth=2 origin !TARGET_SHA!
+          if not errorlevel 1 goto fetched
+          if !ATTEMPT! GEQ 3 exit /b 73
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Start-Sleep -Seconds 3"
+          goto fetch
+
+          :fetched
+          "!GITEXE!" checkout -f FETCH_HEAD
+          if errorlevel 1 exit /b 74
+          "!GITEXE!" reset --hard !TARGET_SHA!
+          if errorlevel 1 exit /b 74
+          for /f "delims=" %%H in ('"!GITEXE!" rev-parse HEAD') do set "CHECKED_SHA=%%H"
+          if /I not "!CHECKED_SHA!"=="!TARGET_SHA!" exit /b 75
+          if not exist "ShireJourney.uproject" exit /b 76
+          echo SHIRE_FRODO_UE4_SOURCE=!SRC!>>"%GITHUB_ENV%"
+          echo P1C01_FRODO_UE4_ISOLATED_CHECKOUT_PASS sha=!CHECKED_SHA! source=!SRC!
 
       - name: Verify exact checkout and runner
         shell: cmd
         run: |
           @echo off
-          for /f "delims=" %%H in ('git rev-parse HEAD') do set "CHECKED_SHA=%%H"
-          if /I not "%TARGET_SHA%"=="%CHECKED_SHA%" exit /b 71
-          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\verify_runner_session.ps1"
+          if not defined SHIRE_FRODO_UE4_SOURCE exit /b 77
+          if not exist "%SHIRE_FRODO_UE4_SOURCE%\ShireJourney.uproject" exit /b 78
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_FRODO_UE4_SOURCE%\Scripts\verify_runner_session.ps1"
 
       - name: Download exact Human #39 target artifact
         uses: actions/download-artifact@v4
@@ -142,15 +176,15 @@ jobs:
 
       - name: Build ShireJourneyEditor once
         shell: cmd
-        run: '"%GITHUB_WORKSPACE%\Scripts\ci_build_unreal.cmd"'
+        run: '"%SHIRE_FRODO_UE4_SOURCE%\Scripts\ci_build_unreal.cmd"'
 
       - name: Import exact Rogue rig plus animation-only derivatives
         shell: cmd
         run: |
           @echo off
-          set "PROJECT=%GITHUB_WORKSPACE%\ShireJourney.uproject"
+          set "PROJECT=%SHIRE_FRODO_UE4_SOURCE%\ShireJourney.uproject"
           set "EDITORCMD=C:\Program Files\Epic Games\UE_4.27\Engine\Binaries\Win64\UE4Editor-Cmd.exe"
-          set "IMPORTLOG=%GITHUB_WORKSPACE%\Saved\Logs\CI-FrodoAnimationImport.log"
+          set "IMPORTLOG=%SHIRE_FRODO_UE4_SOURCE%\Saved\Logs\CI-FrodoAnimationImport.log"
           if not exist "%EDITORCMD%" exit /b 50
           if exist "%IMPORTLOG%" del /F /Q "%IMPORTLOG%"
           "%EDITORCMD%" "%PROJECT%" -run=ShireFrodoAnimationImport -TargetFbx="%RUNNER_TEMP%\frodo-ue4-animation\human\normalized\candidate_02.fbx" -AnimationDir="%RUNNER_TEMP%\frodo-ue4-animation\retarget\output" -unattended -nop4 -nosplash -NoSound -abslog="%IMPORTLOG%"
@@ -166,17 +200,17 @@ jobs:
         run: |
           $ErrorActionPreference="Stop"
           $required=@(
-            "$env:GITHUB_WORKSPACE\Content\Production\Characters\Rigs\FRODO\SK_FRODO.uasset",
-            "$env:GITHUB_WORKSPACE\Content\Production\Characters\Rigs\FRODO\SK_FRODO_Skeleton.uasset",
-            "$env:GITHUB_WORKSPACE\Content\Production\Characters\Animations\FRODO\A_Frodo_Idle.uasset",
-            "$env:GITHUB_WORKSPACE\Content\Production\Characters\Animations\FRODO\A_Frodo_Walk.uasset",
-            "$env:GITHUB_WORKSPACE\Content\Production\Characters\Animations\FRODO\A_Frodo_Run.uasset"
+            "$env:SHIRE_FRODO_UE4_SOURCE\Content\Production\Characters\Rigs\FRODO\SK_FRODO.uasset",
+            "$env:SHIRE_FRODO_UE4_SOURCE\Content\Production\Characters\Rigs\FRODO\SK_FRODO_Skeleton.uasset",
+            "$env:SHIRE_FRODO_UE4_SOURCE\Content\Production\Characters\Animations\FRODO\A_Frodo_Idle.uasset",
+            "$env:SHIRE_FRODO_UE4_SOURCE\Content\Production\Characters\Animations\FRODO\A_Frodo_Walk.uasset",
+            "$env:SHIRE_FRODO_UE4_SOURCE\Content\Production\Characters\Animations\FRODO\A_Frodo_Run.uasset"
           )
           foreach($p in $required){ if(-not (Test-Path -LiteralPath $p -PathType Leaf)){ throw "FRODO_UE4_ANIMATION_PACKAGE_MISSING path=$p" } }
           $stage=Join-Path $env:RUNNER_TEMP "frodo-ue4-animation-evidence"
           Remove-Item -LiteralPath $stage -Recurse -Force -ErrorAction SilentlyContinue
           New-Item -ItemType Directory -Path $stage -Force | Out-Null
-          Copy-Item -LiteralPath "$env:GITHUB_WORKSPACE\Saved\Logs\CI-FrodoAnimationImport.log" -Destination (Join-Path $stage "CI-FrodoAnimationImport.log")
+          Copy-Item -LiteralPath "$env:SHIRE_FRODO_UE4_SOURCE\Saved\Logs\CI-FrodoAnimationImport.log" -Destination (Join-Path $stage "CI-FrodoAnimationImport.log")
           [ordered]@{
             schema_version=1
             status="UE4_ANIMATION_IMPORT_TECHNICAL_PASS"
@@ -205,17 +239,25 @@ jobs:
         shell: powershell
         run: |
           $paths=@(
-            "$env:GITHUB_WORKSPACE\Content\Production\Characters\Rigs\FRODO\SK_FRODO.uasset",
-            "$env:GITHUB_WORKSPACE\Content\Production\Characters\Rigs\FRODO\SK_FRODO_Skeleton.uasset",
-            "$env:GITHUB_WORKSPACE\Content\Production\Characters\Rigs\FRODO\SK_FRODO_PhysicsAsset.uasset",
-            "$env:GITHUB_WORKSPACE\Content\Production\Characters\Animations\FRODO\A_Frodo_Idle.uasset",
-            "$env:GITHUB_WORKSPACE\Content\Production\Characters\Animations\FRODO\A_Frodo_Walk.uasset",
-            "$env:GITHUB_WORKSPACE\Content\Production\Characters\Animations\FRODO\A_Frodo_Run.uasset"
+            "$env:SHIRE_FRODO_UE4_SOURCE\Content\Production\Characters\Rigs\FRODO\SK_FRODO.uasset",
+            "$env:SHIRE_FRODO_UE4_SOURCE\Content\Production\Characters\Rigs\FRODO\SK_FRODO_Skeleton.uasset",
+            "$env:SHIRE_FRODO_UE4_SOURCE\Content\Production\Characters\Rigs\FRODO\SK_FRODO_PhysicsAsset.uasset",
+            "$env:SHIRE_FRODO_UE4_SOURCE\Content\Production\Characters\Animations\FRODO\A_Frodo_Idle.uasset",
+            "$env:SHIRE_FRODO_UE4_SOURCE\Content\Production\Characters\Animations\FRODO\A_Frodo_Walk.uasset",
+            "$env:SHIRE_FRODO_UE4_SOURCE\Content\Production\Characters\Animations\FRODO\A_Frodo_Run.uasset"
           )
           foreach($p in $paths){
-            $relative=$p.Substring($env:GITHUB_WORKSPACE.Length+1).Replace('\','/')
-            $tracked=@(& git.exe -C $env:GITHUB_WORKSPACE ls-files -- $relative 2>$null)
+            $relative=$p.Substring($env:SHIRE_FRODO_UE4_SOURCE.Length+1).Replace('\','/')
+            $tracked=@(& git.exe -C $env:SHIRE_FRODO_UE4_SOURCE ls-files -- $relative 2>$null)
             if($LASTEXITCODE -ne 0){ throw "FRODO_UE4_ANIMATION_CLEANUP_GIT_FAIL path=$relative" }
             if($tracked.Count -eq 0){ Remove-Item -LiteralPath $p -Force -ErrorAction SilentlyContinue }
           }
           Write-Host "P1C01_FRODO_UE4_ANIMATION_CLEANUP_PASS"
+
+      - name: Remove isolated UE4 source checkout
+        if: always()
+        shell: cmd
+        run: |
+          @echo off
+          if defined SHIRE_FRODO_UE4_SOURCE if exist "%SHIRE_FRODO_UE4_SOURCE%" rmdir /S /Q "%SHIRE_FRODO_UE4_SOURCE%"
+          exit /b 0
