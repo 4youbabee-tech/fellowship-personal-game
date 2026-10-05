@@ -4275,3 +4275,19 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Superseded PR closure cancellation | SOURCE-IMPLEMENTED |
 | Fresh exact-head closure execution | PENDING RUNNER RECOVERY |
 | PIE / device / visual / performance / Gate 6+7 | NOT ACCEPTED |
+
+## 2026-10-06 - Offline world/audio/mission saturation
+
+| Lane | State |
+|---|---|
+| Full-route micro-detail matrix | ADDED |
+| Bag End interior detail roles | MAPPED |
+| Wooded-road/Ferry detail roles | MAPPED |
+| Audio master/provenance slots | ADDED |
+| Tracked Production Audio masters | 0 |
+| Scripted external/generated voice source count | 25 |
+| Contextual external/generated speech source count | 58 |
+| F1-01/F1-02/F1-03 mission/QA map | ADDED |
+| P1C01/P1C02 F1-03 handoff boundary | PRESERVED |
+| Hosted offline saturation workflow | ADDED |
+| UE4/runtime/device evidence | PENDING RUNNER |

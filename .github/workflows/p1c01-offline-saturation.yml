@@ -1,0 +1,32 @@
+name: P1C01 Offline Source Saturation
+on:
+  pull_request:
+    branches: [develop]
+    paths:
+      - 'Data/P1C01*.json'
+      - 'Data/ProjectGovernor.json'
+      - 'Scripts/audit_p1c01_offline_saturation.py'
+      - '.github/workflows/p1c01-offline-saturation.yml'
+      - 'Docs/CURRENT_PROJECT_STATE.md'
+      - 'Docs/PRODUCTION_COMPLETENESS_MATRIX.md'
+      - 'Docs/WORLD_DETAIL_LEDGER.md'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: p1c01-offline-saturation-${{ github.repository }}-${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          lfs: false
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python Scripts/audit_p1c01_offline_saturation.py

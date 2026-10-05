@@ -4777,3 +4777,11 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Independent workflow defect found: `P1C01 Chapter Closure Pack` previously triggered only on push to `develop` or manual dispatch, so PR #329 could not automatically launch the One-Shot chapter source train.
 - Root fix: the closure workflow now supports `pull_request` to `develop`, includes the One-Shot manifest in path routing, uses PR-specific concurrency and cancels superseded PR closure runs.
 - Status remains **SOURCE-IMPLEMENTED / RUNNER RECOVERY + FRESH EXACT-HEAD EXECUTION PENDING**. No PIE/device/visual/performance acceptance is claimed.
+
+## 2026-10-06 - Offline saturation world/audio/mission packet
+
+- Runner-independent preparation now covers full-route micro detail, audio master slots/provenance and F1-01/F1-02/F1-03 mission/QA handoff.
+- Audio truth remains explicit: tracked `SourceAssets/Production/Audio` master count is **0** at this snapshot; 25 scripted and 58 contextual generated/external sources are upstream material only until production WAV masters+receipts exist.
+- F1-03 topology is preserved: P1C01 owns Shire roads/Bucklebury through FerryEscape; P1C02 owns Bree arrival/opening.
+- GitHub-hosted `P1C01 Offline Source Saturation` validates these source contracts without the UE4 runner.
+- Status: **SOURCE/DATA PREPARATION ADVANCED / HOSTED STATIC VALIDATION PENDING**.

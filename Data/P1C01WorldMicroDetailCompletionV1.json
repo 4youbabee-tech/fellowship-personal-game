@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "manifest_id": "P1C01_WORLD_MICRO_DETAIL_COMPLETION_V1",
+  "status": "REGISTERED_SOURCE_PREPARATION_ONLY_NO_BLIND_DENSITY",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+    "10_3D_VISUAL_ASSET_ATLAS_PRODUCTION",
+    "Docs/WORLD_DETAIL_LEDGER.md"
+  ],
+  "rule": "Completeness/asset-role matrix only. Reuse resident production sources first; missing hero/detail assets require provenance/QC. Repeated detail remains HISM/ISM/AWorldDetailCluster.",
+  "regions": [
+    {
+      "id": "BAG_END_EXTERIOR_GARDEN",
+      "inspection_slots": [
+        "round entrance/door readability",
+        "door hardware/latch/handle",
+        "mailbox",
+        "garden arch",
+        "flower boxes/garden color",
+        "hedges/shrubs/grass",
+        "fence/gate/property edge",
+        "path stones/soil breakup",
+        "lantern/entry detail"
+      ]
+    },
+    {
+      "id": "BAG_END_INTERIOR",
+      "inspection_slots": [
+        "rooms/circulation",
+        "hearth/fireplace",
+        "tables/seating/storage",
+        "books/paper",
+        "pantry/crockery/cutlery",
+        "bottles/corks/food dressing",
+        "interior doors/hinges/latches",
+        "warm timber/plaster surfaces",
+        "room tone/fire/household foley"
+      ]
+    },
+    {
+      "id": "HOBBITON_BAGSHOT_ROW_COMMON",
+      "inspection_slots": [
+        "hobbit-hole/facade identity",
+        "benches",
+        "carts/loaded carts",
+        "crates/barrels",
+        "well/pump",
+        "signposts/wayfinding",
+        "market/produce stalls",
+        "wash lines/domestic life",
+        "gardens/orchard rhythm",
+        "lighting/sky/depth"
+      ]
+    },
+    {
+      "id": "PARTY_FIELD",
+      "inspection_slots": [
+        "tables/seating",
+        "canopy/pavilion",
+        "food/produce dressing",
+        "lanterns/social lighting",
+        "decorations/guest anchors",
+        "fireworks staging",
+        "entrance/traversal clearance"
+      ]
+    },
+    {
+      "id": "WATER_MILL_BRIDGE",
+      "inspection_slots": [
+        "mill house/wheel",
+        "stone bridge",
+        "water edge/river-bank material",
+        "crates/barrels/work stores",
+        "water/wood/creak ambience"
+      ]
+    },
+    {
+      "id": "FIELDS_FARMS_ORCHARDS",
+      "inspection_slots": [
+        "field boundaries/fences/gates",
+        "plough/work tools",
+        "haystacks",
+        "orchard ladders/carts",
+        "hedges/grass/path breakup",
+        "farm-life spot audio"
+      ]
+    },
+    {
+      "id": "WOODED_ROAD_HIDE_CORRIDOR",
+      "inspection_slots": [
+        "natural tree trunk/canopy silhouettes",
+        "understory shrubs/grass",
+        "hedge/foliage cover readability",
+        "rocks/path stones/soil",
+        "foreground-midground-background depth",
+        "Black Rider approach readability"
+      ]
+    },
+    {
+      "id": "BUCKLEBURY_FERRY",
+      "inspection_slots": [
+        "landing stage/ferry construction",
+        "timber/wood surface",
+        "rope/boarding detail",
+        "reeds/bank vegetation",
+        "river/water edge",
+        "far-bank/uphill silhouette",
+        "paddle/rowing/rope/water audio",
+        "escape/traversal clearance"
+      ]
+    }
+  ],
+  "current_static_source_baseline": {
+    "shire_world_files": 48,
+    "high_fidelity_material_files": 17
+  },
+  "performance_contract": {
+    "repeated_detail": "HISM/ISM/AWorldDetailCluster",
+    "no_per_instance_tick": true,
+    "blind_density_wave": false,
+    "synchronous_heavy_load": false,
+    "target": "8 GB RAM / ~2 GB VRAM / DX11 / 1280x720 / 30 FPS floor"
+  }
+}

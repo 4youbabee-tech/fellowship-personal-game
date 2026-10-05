@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "manifest_id": "P1C01_AUDIO_MASTER_SLOT_MAP_V1",
+  "status": "OFFLINE_MASTER_PREPARATION_ACTIVE_UE_IMPORT_BLOCKED_BY_RUNNER",
+  "authority": [
+    "Data/P1C01CompleteAudioBankV1.json",
+    "Data/P1C01AudioFoleyAmbiencePrepV1.json",
+    "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX"
+  ],
+  "tracked_production_audio_master_files_at_snapshot": 0,
+  "source_coverage_snapshot": {
+    "scripted_voice_external_generated": 25,
+    "contextual_speech_external_generated": 58,
+    "note": "External/generated source existence is not tracked WAV master or runtime playback evidence."
+  },
+  "required_families": [
+    {
+      "id": "VOICE_SCRIPTED",
+      "state": "WAV_INTAKE_PENDING"
+    },
+    {
+      "id": "VOICE_CONTEXTUAL",
+      "state": "WAV_INTAKE_PENDING"
+    },
+    {
+      "id": "CHARACTER_EFFORTS",
+      "state": "SELECTION_MASTERING_PENDING"
+    },
+    {
+      "id": "FOOTSTEPS",
+      "state": "SELECTION_MASTERING_PENDING",
+      "roles": [
+        "grass",
+        "dirt",
+        "gravel",
+        "mud",
+        "wood",
+        "stone",
+        "shallow_water",
+        "foliage"
+      ]
+    },
+    {
+      "id": "CHARACTER_FOLEY",
+      "state": "SELECTION_MASTERING_PENDING"
+    },
+    {
+      "id": "BAG_END_INTERIOR",
+      "state": "SELECTION_MASTERING_PENDING",
+      "roles": [
+        "fire",
+        "timber_creak",
+        "door",
+        "hinge_latch",
+        "keys_lock",
+        "crockery_cutlery",
+        "bottle_cork",
+        "book_paper",
+        "room_tone"
+      ]
+    },
+    {
+      "id": "FARM_CART_WORK",
+      "state": "SELECTION_MASTERING_PENDING"
+    },
+    {
+      "id": "NATURE_AMBIENCE",
+      "state": "SELECTION_MASTERING_PENDING"
+    },
+    {
+      "id": "SOCIAL_PARTY",
+      "state": "SELECTION_MASTERING_PENDING"
+    },
+    {
+      "id": "FERRY_WATER",
+      "state": "SELECTION_MASTERING_PENDING"
+    },
+    {
+      "id": "BLACK_RIDER_THREAT",
+      "state": "SOURCE_SELECTION_PENDING"
+    },
+    {
+      "id": "MUSIC",
+      "state": "FINAL_ASSETS_PENDING",
+      "cue_count": 13
+    },
+    {
+      "id": "ACCESSIBILITY_METADATA",
+      "state": "AUTHORING_PENDING"
+    }
+  ],
+  "receipt_required_fields": [
+    "provider",
+    "creator",
+    "source_url",
+    "license",
+    "license_marker",
+    "acquired_at",
+    "original_filename",
+    "sha256",
+    "bytes",
+    "sample_rate",
+    "channels",
+    "master_filename",
+    "master_sha256"
+  ],
+  "qc": [
+    "no clipping",
+    "no inappropriate modern/industrial contamination",
+    "loop suitability",
+    "3D vs 2D classification",
+    "anti-repetition variants",
+    "meaningful speech subtitled",
+    "no actor cloning",
+    "no copied film dialogue",
+    "no film soundtrack/theme reconstruction"
+  ],
+  "runtime_boundary": "No family is IMPORTED/RUNTIME_WIRED/ACCEPTED until WAV masters+receipts exist and UE runner performs import/playback evidence."
+}

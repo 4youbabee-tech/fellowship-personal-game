@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "manifest_id": "P1C01_MISSION_RUNTIME_ACCEPTANCE_MATRIX_V1",
+  "status": "OFFLINE_AUTHORING_COMPLETE_RUNTIME_EVIDENCE_PENDING",
+  "authority": [
+    "01_STORY_AND_TIMELINE_BIBLE",
+    "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "Data/P1C01SourceToRuntimeDispositionV1.json"
+  ],
+  "runtime_sequence": [
+    "ShireArrival",
+    "LongExpectedParty",
+    "RingSecret",
+    "LeavingHome",
+    "Shortcut",
+    "KeepOffRoad",
+    "FerryEscape"
+  ],
+  "missions": [
+    {
+      "id": "F1-01",
+      "runtime_coverage": "P1C01",
+      "roster": [
+        "Bilbo",
+        "Frodo",
+        "Gandalf"
+      ],
+      "locked_postcondition": "Bilbo leaves; Ring passes to Frodo.",
+      "optional": [
+        "Birthday Setup",
+        "Gandalf Fireworks",
+        "Dragon Firework Mishap"
+      ]
+    },
+    {
+      "id": "F1-02",
+      "runtime_coverage": "P1C01",
+      "roster": [
+        "Frodo",
+        "Gandalf",
+        "Sam"
+      ],
+      "locked_postcondition": "Frodo leaves the Shire.",
+      "optional": [
+        "investigation tutorial",
+        "packing",
+        "stealth departure"
+      ]
+    },
+    {
+      "id": "F1-03",
+      "runtime_coverage": "P1C01_SHIRE_ROADS_THROUGH_FERRY_THEN_P1C02_BREE_HANDOFF",
+      "roster": [
+        "Frodo",
+        "Sam",
+        "Merry",
+        "Pippin"
+      ],
+      "source_locked_postcondition": "Hobbits reach Bree.",
+      "optional": [
+        "Road Hiding",
+        "ferry escape",
+        "environmental hiding"
+      ],
+      "topology_rule": "P1C01 owns Shire roads/Bucklebury through FerryEscape. P1C02 owns Bree arrival/opening; do not claim full F1-03 completion at the Ferry endpoint alone."
+    }
+  ],
+  "qa_matrix": [
+    "fresh start",
+    "migrated save",
+    "death/retry",
+    "cinematic skip",
+    "optional abandon",
+    "backtrack",
+    "low-performance tier"
+  ],
+  "p1c02_lock": "P1C02 remains predecessor-gated until P1C01 Gate 6/7 is accepted and explicitly started."
+}

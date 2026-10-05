@@ -1292,3 +1292,11 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Garden soil remains a dedicated HISM and will explicitly use the Shire Earth material instead of inheriting the ground block's Grass material.
 - Performance boundary: one additional HISM component, 442 trivial 12-triangle tiles, existing resident meshes/textures only, no per-instance Tick, no new movable lights, no new world authority.
 - Evidence boundary: SOURCE-GROUNDED ROOT-FIX PLAN. It is not visual acceptance; a fresh exact-head render must prove whether the grey/flat defect is materially improved.
+
+## 2026-10-06 - P1C01 OFFLINE SATURATION / MICRO DETAIL COMPLETENESS
+
+- Source-preparation only while UE4-27-Windows is unavailable. No blind density wave and no new runtime chapter.
+- `Data/P1C01WorldMicroDetailCompletionV1.json` tracks Bag End exterior/interior, Hobbiton/Bagshot Row, Party Field, Water/Mill/Bridge, fields/orchards, wooded hiding corridor and Bucklebury Ferry down to player-facing details such as door hardware, furniture, books/pantry/hearth, flowers/gardens, carts/tools, ferry rope/boarding detail and localized audio roles.
+- Existing resident Shire sources remain first choice; missing hero/detail items become provenance/QC gaps rather than primitive spam.
+- Repeated detail remains HISM/ISM/`AWorldDetailCluster`; no synchronous heavy loading or per-instance Tick.
+- Evidence boundary: SOURCE-PREPARED MATRIX ONLY. Placement/collision/render/PIE/device/FPS acceptance remains pending.
