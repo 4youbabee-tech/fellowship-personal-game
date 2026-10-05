@@ -4493,3 +4493,13 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - The archive SHA256 is intentionally captured on the first hosted receipt and must be pinned before retarget promotion. No retarget, UE4 animation import, AnimBP, runtime integration, PIE, device, visual, or FPS acceptance is implied.
 - Status: **SOURCE-IMPLEMENTED / EXACT-HEAD HOSTED SOURCE-INVENTORY VALIDATION PENDING**.
 
+## 2026-10-05 - Frodo animation inventory run #3 numpy infrastructure root fix
+
+- Exact-head hosted animation-source run `37272018993` on `f035babcd24eee31e601862dba27d9e72e49edd7` verified the OpenGameArt provenance page and downloaded the bounded Standard ZIP successfully.
+- The downloaded archive identity is now pinned: SHA256 `18ff1a7215f4852b320203e8aaf02a1578b5c8eef9027fbaedfcedc7b85a3ac2` (logged after a 13.8 MiB download).
+- The source inventory failed before evaluating FBX quality because Blender 4.0.2's FBX importer raised `ModuleNotFoundError: No module named 'numpy'`. This is classified as hosted probe infrastructure failure, not an animation-asset rejection.
+- Root fix: the hosted workflow now installs `python3-numpy` with Blender and runs an in-Blender numpy import/version preflight before provenance/download/inventory work.
+- The manifest now pins the observed archive SHA; future bytes must match before any FBX action inventory can pass.
+- No self-hosted UE4 animation work was reserved by this failure. Retarget, AnimBP, runtime integration, PIE, visual and performance acceptance remain false/pending.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD HOSTED REVALIDATION PENDING**.
+
