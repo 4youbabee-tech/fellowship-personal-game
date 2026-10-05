@@ -246,14 +246,15 @@ jobs:
           $ErrorActionPreference="Stop"
           if([string]::IsNullOrWhiteSpace($env:HEAD_BRANCH)){ throw "FRODO_RUNTIME_SOURCE_PROMOTION_BRANCH_MISSING" }
 
-          $root=Join-Path $env:SHIRE_FRODO_UE4_SOURCE "SourceAssets\ValidatedRuntime\FRODO"
-          New-Item -ItemType Directory -Path $root -Force | Out-Null
+          $stage=Join-Path $env:RUNNER_TEMP "frodo-runtime-source-promotion"
+          Remove-Item -LiteralPath $stage -Recurse -Force -ErrorAction SilentlyContinue
+          New-Item -ItemType Directory -Path $stage -Force | Out-Null
 
           $files=@(
-            @("$env:RUNNER_TEMP\frodo-ue4-animation\human\normalized\candidate_02.fbx", (Join-Path $root "SK_FRODO_Validated.fbx"), "75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be"),
-            @("$env:RUNNER_TEMP\frodo-ue4-animation\retarget\output\Frodo_Idle_Retarget.fbx", (Join-Path $root "Frodo_Idle_Retarget.fbx"), "ee81650714587d2a1a638f3ff0c1a8239ea555bf84959e96ce5d037af3f33cd3"),
-            @("$env:RUNNER_TEMP\frodo-ue4-animation\retarget\output\Frodo_Walk_Retarget.fbx", (Join-Path $root "Frodo_Walk_Retarget.fbx"), "c4091b7881a4e9e810e70bb7f3abed58683dff5bacf54e26ccb2e926e4c9e688"),
-            @("$env:RUNNER_TEMP\frodo-ue4-animation\retarget\output\Frodo_Run_Retarget.fbx", (Join-Path $root "Frodo_Run_Retarget.fbx"), "4a4d10d91343dbd701c535d30ea9d9384ca74596cd7720cf6bfdd1c6328e1fc1")
+            @("$env:RUNNER_TEMP\frodo-ue4-animation\human\normalized\candidate_02.fbx", (Join-Path $stage "SK_FRODO_Validated.fbx"), "75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be"),
+            @("$env:RUNNER_TEMP\frodo-ue4-animation\retarget\output\Frodo_Idle_Retarget.fbx", (Join-Path $stage "Frodo_Idle_Retarget.fbx"), "ee81650714587d2a1a638f3ff0c1a8239ea555bf84959e96ce5d037af3f33cd3"),
+            @("$env:RUNNER_TEMP\frodo-ue4-animation\retarget\output\Frodo_Walk_Retarget.fbx", (Join-Path $stage "Frodo_Walk_Retarget.fbx"), "c4091b7881a4e9e810e70bb7f3abed58683dff5bacf54e26ccb2e926e4c9e688"),
+            @("$env:RUNNER_TEMP\frodo-ue4-animation\retarget\output\Frodo_Run_Retarget.fbx", (Join-Path $stage "Frodo_Run_Retarget.fbx"), "4a4d10d91343dbd701c535d30ea9d9384ca74596cd7720cf6bfdd1c6328e1fc1")
           )
           foreach($row in $files){
             Copy-Item -LiteralPath $row[0] -Destination $row[1] -Force
@@ -280,23 +281,46 @@ jobs:
             visual_acceptance=$false
             pie_tested=$false
             device_tested=$false
-          } | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $root "provenance.json") -Encoding UTF8
-
-          & git.exe -C $env:SHIRE_FRODO_UE4_SOURCE add -- "SourceAssets/ValidatedRuntime/FRODO"
-          if($LASTEXITCODE -ne 0){ throw "FRODO_RUNTIME_SOURCE_PROMOTION_GIT_ADD_FAIL" }
-          $pending=@(& git.exe -C $env:SHIRE_FRODO_UE4_SOURCE status --porcelain -- "SourceAssets/ValidatedRuntime/FRODO")
-          if($pending.Count -eq 0){
-            Write-Host "P1C01_FRODO_RUNTIME_SOURCE_ALREADY_PROMOTED"
-            exit 0
-          }
+          } | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $stage "provenance.json") -Encoding UTF8
 
           & git.exe -C $env:SHIRE_FRODO_UE4_SOURCE config user.name "Shire Journey CI"
           & git.exe -C $env:SHIRE_FRODO_UE4_SOURCE config user.email "shire-journey-ci@users.noreply.github.com"
-          & git.exe -C $env:SHIRE_FRODO_UE4_SOURCE commit -m "P1C01: promote exact validated Frodo runtime FBX sources"
-          if($LASTEXITCODE -ne 0){ throw "FRODO_RUNTIME_SOURCE_PROMOTION_COMMIT_FAIL" }
-          & git.exe -C $env:SHIRE_FRODO_UE4_SOURCE push origin ("HEAD:" + $env:HEAD_BRANCH)
-          if($LASTEXITCODE -ne 0){ throw "FRODO_RUNTIME_SOURCE_PROMOTION_PUSH_FAIL" }
-          Write-Host "P1C01_FRODO_RUNTIME_SOURCE_PROMOTION_PASS branch=$env:HEAD_BRANCH"
+
+          $published=$false
+          for($attempt=1; $attempt -le 3 -and -not $published; $attempt++){
+            Write-Host "P1C01_FRODO_RUNTIME_SOURCE_PROMOTION_ATTEMPT attempt=$attempt/3 branch=$env:HEAD_BRANCH"
+            & git.exe -C $env:SHIRE_FRODO_UE4_SOURCE fetch --no-tags origin $env:HEAD_BRANCH
+            if($LASTEXITCODE -ne 0){ throw "FRODO_RUNTIME_SOURCE_PROMOTION_FETCH_FAIL attempt=$attempt" }
+            & git.exe -C $env:SHIRE_FRODO_UE4_SOURCE reset --hard FETCH_HEAD
+            if($LASTEXITCODE -ne 0){ throw "FRODO_RUNTIME_SOURCE_PROMOTION_RESET_FAIL attempt=$attempt" }
+
+            $root=Join-Path $env:SHIRE_FRODO_UE4_SOURCE "SourceAssets\ValidatedRuntime\FRODO"
+            Remove-Item -LiteralPath $root -Recurse -Force -ErrorAction SilentlyContinue
+            New-Item -ItemType Directory -Path $root -Force | Out-Null
+            Copy-Item -LiteralPath (Join-Path $stage "*") -Destination $root -Force
+
+            & git.exe -C $env:SHIRE_FRODO_UE4_SOURCE add -- "SourceAssets/ValidatedRuntime/FRODO"
+            if($LASTEXITCODE -ne 0){ throw "FRODO_RUNTIME_SOURCE_PROMOTION_GIT_ADD_FAIL attempt=$attempt" }
+            $pending=@(& git.exe -C $env:SHIRE_FRODO_UE4_SOURCE status --porcelain -- "SourceAssets/ValidatedRuntime/FRODO")
+            if($pending.Count -eq 0){
+              Write-Host "P1C01_FRODO_RUNTIME_SOURCE_ALREADY_PROMOTED"
+              $published=$true
+              break
+            }
+
+            & git.exe -C $env:SHIRE_FRODO_UE4_SOURCE commit -m "P1C01: promote exact validated Frodo runtime FBX sources"
+            if($LASTEXITCODE -ne 0){ throw "FRODO_RUNTIME_SOURCE_PROMOTION_COMMIT_FAIL attempt=$attempt" }
+            & git.exe -C $env:SHIRE_FRODO_UE4_SOURCE push origin ("HEAD:" + $env:HEAD_BRANCH)
+            if($LASTEXITCODE -eq 0){
+              Write-Host "P1C01_FRODO_RUNTIME_SOURCE_PROMOTION_PASS branch=$env:HEAD_BRANCH attempt=$attempt"
+              $published=$true
+              break
+            }
+
+            Write-Host "P1C01_FRODO_RUNTIME_SOURCE_PROMOTION_RETRY reason=non_fast_forward_or_branch_moved attempt=$attempt"
+          }
+
+          if(-not $published){ throw "FRODO_RUNTIME_SOURCE_PROMOTION_EXHAUSTED" }
 
       - name: Cleanup transient Frodo gate assets
         if: always()
