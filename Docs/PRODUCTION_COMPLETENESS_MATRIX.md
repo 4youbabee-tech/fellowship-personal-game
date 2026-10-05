@@ -4060,3 +4060,14 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Fresh exact-head static validation | PENDING |
 | Fresh UE4 material import validation | PENDING |
 | Human visual / performance acceptance | NOT ACCEPTED |
+
+## 2026-10-05 - Frodo promotion publish safety
+
+| Control | State |
+|---|---|
+| Payload staged outside mutable checkout | SOURCE-IMPLEMENTED |
+| Refresh latest PR head before promotion commit | SOURCE-IMPLEMENTED |
+| Bounded non-force push retry | SOURCE-IMPLEMENTED |
+| Exact FBX SHA locks preserved | YES |
+| Fresh workflow proof | PENDING |
+| Runtime / visual / device / performance acceptance | NOT ACCEPTED |
