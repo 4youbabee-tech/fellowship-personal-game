@@ -4639,3 +4639,11 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - New fail-closed regression guard: `Scripts/test_p1c01_material_mtl_contract.ps1`, wired into hosted Pre-Unreal validation.
 - Historical malformed generated material commit remains rejected and is not merged/reused unchanged.
 - Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD STATIC + UE4 MATERIAL IMPORT VALIDATION PENDING**. Human visual and performance acceptance remain NOT ACCEPTED.
+
+## 2026-10-05 - Frodo source promotion conflict-safe publish hardening
+
+- The validated Frodo source-promotion step is being hardened so it does not assume the PR branch stayed frozen for the full self-hosted UE4 run.
+- The promotion payload remains staged outside the checkout with the exact validated SHAs; before publishing, the isolated checkout refreshes to the latest PR branch head and reapplies only the validated runtime-source directory.
+- Publish retries are bounded and fast-forward only. No force push is authorized.
+- This prevents a long UE4 gate from overwriting or rejecting newer closeout work while preserving exact source identity.
+- Status: **SOURCE-IMPLEMENTED PENDING FRESH EXACT-HEAD WORKFLOW PROOF**. No runtime/visual/device/performance acceptance is promoted by this infrastructure hardening.
