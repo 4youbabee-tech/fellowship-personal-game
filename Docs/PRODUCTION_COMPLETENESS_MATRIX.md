@@ -3736,3 +3736,48 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Fresh exact-head Human compile/import proof | PENDING |
 | Human visual / PIE / device / performance / Gate 6/7 | NOT ACCEPTED |
 
+## 2026-10-05 - Human Wave2 run #39 exact-head closure evidence
+
+| Control | State |
+|---|---|
+| Validated exact head | `157e4e857406a2ce28c18c96cdacfedfd0b07ab5` |
+| Human Wave2 run | `37243788900` / #39 / SUCCESS |
+| `Build ShireJourneyEditor once` | **SUCCESS / COMPILE-TESTED** |
+| Complete `UFbxSkeletalMeshImportData` include | PASS |
+| Rogue T0 reference pose | PASS: `use-t0-ref-pose=yes` |
+| Rogue skeletal registration | PASS / 48 reference bones |
+| Linked `USkeleton` | PASS |
+| Production import summary | PASS / 377 files / 0 failures |
+| `MISSING_BIND_POSE_BONES` on winner | NOT OBSERVED AFTER T0 RE-IMPORT |
+| Static deformation | **STATIC_DEFORMATION_STRESS_PASS** |
+| Winner normalized SHA256 | `75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be` |
+| Shoulders max displacement | `1.3242740508125306` |
+| Elbows max displacement | `1.8153426847017398` |
+| Knees max displacement | `0.4075082909932559` |
+| Hands/feet max displacement | `0.34126040685103143` |
+| Locomotion-stress max displacement | `0.6584697777759558` |
+| Required semantic joint weighted influence | PASS / all > 0 |
+| Visual deformation accepted | NO |
+| Idle/Walk/Run retarget accepted | NO |
+| AnimBP/runtime Frodo accepted | NO |
+| PIE/device/performance/Gate 6+7 | NOT ACCEPTED |
+
+## 2026-10-05 - Frodo animation-source inventory gate
+
+| Control | State |
+|---|---|
+| Historical Quaternius direct animation payload | NOT STAGED: `files=0 unresolved=1` |
+| Replacement source intake | OpenGameArt / quaternius / Universal Animation Library Standard / CC0 |
+| Animated production input format | FBX ONLY |
+| Animated OBJ accepted | NO |
+| BMP accepted | NO |
+| Archive safety/budget scan | SOURCE-IMPLEMENTED |
+| Blender FBX/action inventory | SOURCE-IMPLEMENTED |
+| Required source roles | Idle / Walk / Run |
+| UE4 runner reserved before source inventory pass | NO |
+| First receipt captures archive SHA256 | REQUIRED |
+| SHA pin before retarget promotion | REQUIRED |
+| Fresh exact-head hosted inventory proof | PENDING |
+| Retarget / UE4 animation import / AnimBP / runtime | PENDING |
+| Visual / PIE / device / performance acceptance | NOT ACCEPTED |
+
