@@ -4522,3 +4522,11 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - For Idle/Walk/Run it requires source semantic motion, hierarchy validity, nonzero target mesh deformation, finite bounded geometry, and re-importable animation-only FBX derivatives. It remains hosted-only; UE4 is not reserved before this gate passes.
 - Status: **SOURCE-IMPLEMENTED / HOSTED RETARGET EXACT-HEAD VALIDATION PENDING**. UE4 animation import, AnimBP, runtime, human visual, PIE/device and performance acceptance remain pending.
 
+## 2026-10-05 - Hosted retarget exact-target identity root fix
+
+- Hosted retarget run `37273271779` on `5b5c1a76080caf833d82647614f09f76a385fb64` regenerated the current Rogue source successfully: immutable raw Rogue SHA matched, the candidate remained the hosted quality winner, and the structural metrics remained 41 bones / 3330 vertices / 2209 weighted vertices / 12 UV layers.
+- The run correctly failed before retarget because a freshly exported normalized FBX did not satisfy the exact prior normalized byte-SHA lookup. No source animation was downloaded and no UE4 work was reserved after this identity failure.
+- The retarget contract is now stricter about what exact bytes are animated: the actual retarget target is downloaded from successful Human Wave2 run `37243788900`, artifact `p1c01-human-wave2-hosted-157e4e857406a2ce28c18c96cdacfedfd0b07ab5`, and `normalized/candidate_02.fbx` must byte-match SHA256 `75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be`.
+- Fresh normalization remains a separate source/structure sanity check and may not substitute its bytes for the UE4-gated winner. The exact prior artifact receipt must also identify Rogue as that winner.
+- Status: **ROOT-FIX SOURCE-IMPLEMENTED / EXACT-HEAD HOSTED RETARGET REVALIDATION PENDING**. No retarget technical pass, UE4 animation import, AnimBP, runtime, visual, PIE/device or performance acceptance is claimed.
+
