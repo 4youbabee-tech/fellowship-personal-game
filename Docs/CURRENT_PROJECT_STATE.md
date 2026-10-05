@@ -4631,3 +4631,11 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - `run_local_p1c01_visual_acceptance.ps1` now validates all four source hashes, runs `ShireFrodoAnimationImport`, requires both persistence and technical-pass markers, and refuses to launch if any of the five Frodo runtime packages are missing.
 - This prevents another owner review session from silently falling back to the blocky player because CI-only assets were absent locally.
 - Status: **SOURCE-IMPLEMENTED / SOURCE-PROMOTION WORKFLOW + LOCAL FAIL-CLOSED IMPORT PENDING FRESH EXACT-HEAD EXECUTION**. No visual/PIE/device/performance acceptance is claimed.
+
+## 2026-10-05 - P1C01 Poly Haven MTL generator root fix
+
+- `Scripts/prepare_p1c01_material_intake.ps1` no longer emits concatenated PowerShell array expressions that serialize MTL directives as split tokens/lines.
+- The generator now formats complete one-line directives for `newmtl`, `Pr`, `Pm`, `Ks`, and `map_Kd`.
+- New fail-closed regression guard: `Scripts/test_p1c01_material_mtl_contract.ps1`, wired into hosted Pre-Unreal validation.
+- Historical malformed generated material commit remains rejected and is not merged/reused unchanged.
+- Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD STATIC + UE4 MATERIAL IMPORT VALIDATION PENDING**. Human visual and performance acceptance remain NOT ACCEPTED.
