@@ -10,14 +10,18 @@ $ErrorActionPreference = "Stop"
 $ProjectRoot = Split-Path $PSScriptRoot -Parent
 $Project = Join-Path $ProjectRoot "ShireJourney.uproject"
 $Editor = Join-Path $UERoot "Engine\Binaries\Win64\UE4Editor.exe"
+$EditorCmd = Join-Path $UERoot "Engine\Binaries\Win64\UE4Editor-Cmd.exe"
 $Importer = Join-Path $ProjectRoot "Scripts\ci_import_production_assets.cmd"
+$FrodoSourceRoot = Join-Path $ProjectRoot "SourceAssets\ValidatedRuntime\FRODO"
+$FrodoTargetFbx = Join-Path $FrodoSourceRoot "SK_FRODO_Validated.fbx"
+$FrodoAnimationDir = $FrodoSourceRoot
 $RouteContract = Join-Path $ProjectRoot "Data\P1C01LocalVisualAcceptanceRouteV1.json"
 $env:GITHUB_WORKSPACE = $ProjectRoot
 
 if($env:OS -ne "Windows_NT"){
     throw "P1C01_LOCAL_ACCEPTANCE_FAIL reason=windows_required"
 }
-foreach($Required in @($Project,$Editor,$Importer,$RouteContract)){
+foreach($Required in @($Project,$Editor,$EditorCmd,$Importer,$RouteContract)){
     if(-not (Test-Path -LiteralPath $Required -PathType Leaf)){
         throw "P1C01_LOCAL_ACCEPTANCE_FAIL reason=required_file_missing path=$Required"
     }
@@ -84,6 +88,51 @@ if(-not $SkipImport){
         throw "P1C01_LOCAL_ACCEPTANCE_FAIL reason=production_import exit=$ImportExit"
     }
 }
+
+$FrodoRequiredSources = @(
+    @($FrodoTargetFbx, "75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be"),
+    @((Join-Path $FrodoSourceRoot "Frodo_Idle_Retarget.fbx"), "ee81650714587d2a1a638f3ff0c1a8239ea555bf84959e96ce5d037af3f33cd3"),
+    @((Join-Path $FrodoSourceRoot "Frodo_Walk_Retarget.fbx"), "c4091b7881a4e9e810e70bb7f3abed58683dff5bacf54e26ccb2e926e4c9e688"),
+    @((Join-Path $FrodoSourceRoot "Frodo_Run_Retarget.fbx"), "4a4d10d91343dbd701c535d30ea9d9384ca74596cd7720cf6bfdd1c6328e1fc1")
+)
+foreach($Row in $FrodoRequiredSources){
+    if(-not (Test-Path -LiteralPath $Row[0] -PathType Leaf)){
+        throw "P1C01_LOCAL_ACCEPTANCE_FAIL reason=frodo_validated_source_missing path=$($Row[0])"
+    }
+    $Actual=(Get-FileHash -LiteralPath $Row[0] -Algorithm SHA256).Hash.ToLowerInvariant()
+    if($Actual -ne $Row[1]){
+        throw "P1C01_LOCAL_ACCEPTANCE_FAIL reason=frodo_validated_source_hash_mismatch path=$($Row[0])"
+    }
+}
+
+if(-not $SkipImport){
+    $FrodoImportLog = Join-Path $EvidenceRoot "P1C01-FrodoRuntimeImport.log"
+    Write-Host "P1C01_LOCAL_FRODO_IMPORT_BEGIN target=$FrodoTargetFbx"
+    & $EditorCmd $Project "-run=ShireFrodoAnimationImport" "-TargetFbx=$FrodoTargetFbx" "-AnimationDir=$FrodoAnimationDir" "-unattended" "-nop4" "-nosplash" "-NoSound" "-abslog=$FrodoImportLog"
+    $FrodoImportExit=[int]$LASTEXITCODE
+    if($FrodoImportExit -ne 0){
+        throw "P1C01_LOCAL_ACCEPTANCE_FAIL reason=frodo_runtime_import exit=$FrodoImportExit"
+    }
+    $FrodoImportText=Get-Content -LiteralPath $FrodoImportLog -Raw
+    if($FrodoImportText -notmatch "UE4_ANIMATION_PACKAGE_PERSISTENCE_PASS assets=5" -or
+       $FrodoImportText -notmatch "UE4_ANIMATION_IMPORT_TECHNICAL_PASS clips=3 bones=48"){
+        throw "P1C01_LOCAL_ACCEPTANCE_FAIL reason=frodo_runtime_import_markers_missing"
+    }
+}
+
+$FrodoPackages=@(
+    (Join-Path $ProjectRoot "Content\Production\Characters\Rigs\FRODO\SK_FRODO.uasset"),
+    (Join-Path $ProjectRoot "Content\Production\Characters\Rigs\FRODO\SK_FRODO_Skeleton.uasset"),
+    (Join-Path $ProjectRoot "Content\Production\Characters\Animations\FRODO\A_Frodo_Idle.uasset"),
+    (Join-Path $ProjectRoot "Content\Production\Characters\Animations\FRODO\A_Frodo_Walk.uasset"),
+    (Join-Path $ProjectRoot "Content\Production\Characters\Animations\FRODO\A_Frodo_Run.uasset")
+)
+foreach($Package in $FrodoPackages){
+    if(-not (Test-Path -LiteralPath $Package -PathType Leaf)){
+        throw "P1C01_LOCAL_ACCEPTANCE_FAIL reason=frodo_runtime_package_missing path=$Package"
+    }
+}
+Write-Host "P1C01_LOCAL_FRODO_RUNTIME_PACKAGES_PASS assets=5"
 
 $ContentRoot = Join-Path $ProjectRoot "Content\Production"
 $GeneratedUassets = if(Test-Path -LiteralPath $ContentRoot){
