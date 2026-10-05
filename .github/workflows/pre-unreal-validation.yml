@@ -226,6 +226,10 @@ jobs:
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_p1c01_material_mtl_contract.ps1"
 
+      - name: Test P1C01 material surface promotion contract
+        shell: cmd
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_p1c01_material_surface_promotion_contract.py" -v
+
       - name: Scrub static checkout authentication
         if: always()
         shell: cmd
