@@ -17,11 +17,7 @@ permissions:
 jobs:
   report:
     name: Post Shire Journey manager report
-    runs-on:
-      - self-hosted
-      - Windows
-      - X64
-      - ue4-27
+    runs-on: windows-latest
     timeout-minutes: 5
     steps:
       - name: Checkout canonical develop
@@ -29,6 +25,7 @@ jobs:
         with:
           ref: develop
           fetch-depth: 200
+          persist-credentials: false
 
       - name: Generate project-manager report
         shell: powershell
