@@ -4725,3 +4725,17 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Root cause is test-path representation drift only. Runtime/source verification semantics are unchanged.
 - The assertion now matches the actual Windows workflow path. No material gate or SHA verification is weakened.
 - Status: **STATIC TEST ROOT-FIX SOURCE-IMPLEMENTED / FRESH EXACT-HEAD REVALIDATION PENDING**.
+
+## 2026-10-05 - P1C01 high-fidelity surface runtime binding
+
+- Four highest-impact, already receipt/SHA-verified Poly Haven surface materials are now added to the P1C01 chapter streaming bank as soft object paths: DirtSoil, StonyPath, TreeBark and MossStone.
+- `AShirePrototypeWorldBuilder` consumes these only after chapter-bank residency through `ResolveResidentMaterial`; no synchronous `LoadObject`/sync stream path is introduced.
+- Chapter-local bindings:
+  - DirtSoil -> garden soil + river bank HISM;
+  - StonyPath -> path-stone HISM;
+  - TreeBark -> distant trunk + woodland tree slot 0;
+  - MossStone -> rock HISM.
+- Existing Common asset bank remains untouched and instance counts are unchanged.
+- This packet deliberately does not preload WarmPlaster/Wood/GrassPath yet to keep the first visual replacement bounded for the ~2 GB VRAM target.
+- New static guard: `Scripts/test_p1c01_high_fidelity_surface_binding_contract.py`, wired into Pre-Unreal.
+- Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD STATIC + UE4 IMPORT/RENDER VALIDATION PENDING**. No visual/performance/device/Gate 6/7 acceptance is claimed.
