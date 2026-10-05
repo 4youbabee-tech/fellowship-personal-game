@@ -48,8 +48,9 @@ jobs:
         run: |
           set -euo pipefail
           sudo apt-get update
-          sudo apt-get install -y blender
+          sudo apt-get install -y blender python3-numpy
           blender --version | head -n 1
+          blender --background --factory-startup --python-exit-code 18 --python-expr "import numpy as np; print('P1C01_FRODO_ANIMATION_NUMPY_PREFLIGHT_PASS version='+np.__version__)"
 
       - name: Verify public OpenGameArt provenance page
         shell: bash
