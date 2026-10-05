@@ -4184,3 +4184,19 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Warehouse/material content failure | NO |
 | SHA/receipt verification weakened | NO |
 | Fresh exact-head rerun | PENDING |
+
+## 2026-10-05 - High-fidelity Shire surface runtime binding
+
+| Control | State |
+|---|---|
+| DirtSoil async bank residency | SOURCE-IMPLEMENTED |
+| StonyPath async bank residency | SOURCE-IMPLEMENTED |
+| TreeBark async bank residency | SOURCE-IMPLEMENTED |
+| MossStone async bank residency | SOURCE-IMPLEMENTED |
+| Chapter-local HISM bindings | SOURCE-IMPLEMENTED |
+| Common asset bank mutation | NO |
+| Instance-density increase | NO |
+| Heavy synchronous runtime load | NO |
+| Static regression guard | ADDED / WIRED |
+| Fresh UE4 import/build/render evidence | PENDING |
+| Human visual / performance / device / Gate 6+7 | NOT ACCEPTED |
