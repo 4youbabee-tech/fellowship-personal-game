@@ -62,6 +62,8 @@ class P1C01MaterialSurfacePromotionContract(unittest.TestCase):
             self.assertIn(token, workflow)
         self.assertIn('contents: write', workflow)
         self.assertNotIn('push --force', workflow.lower())
+        self.assertNotIn('Copy-Item -LiteralPath (Join-Path $stage "*")', workflow)
+        self.assertIn('Copy-Item -Path (Join-Path $stage "*")', workflow)
         trigger_block = workflow.split('jobs:', 1)[0]
         self.assertNotIn('SourceAssets/Production/Imported/P1C01Materials', trigger_block)
 
