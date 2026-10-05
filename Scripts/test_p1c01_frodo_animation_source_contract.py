@@ -14,6 +14,7 @@ class FrodoAnimationSourceContract(unittest.TestCase):
         self.assertEqual(src['observed_license'].upper(), 'CC0')
         self.assertEqual(src['required_final_animation_format'].upper(), 'FBX')
         self.assertTrue(src['download_url'].startswith('https://opengameart.org/'))
+        self.assertEqual(src['expected_sha256'], '18ff1a7215f4852b320203e8aaf02a1578b5c8eef9027fbaedfcedc7b85a3ac2')
         self.assertEqual(data['archive_policy']['animated_obj_policy'], 'IGNORE_NOT_ACCEPTED')
         self.assertEqual(data['archive_policy']['accepted_animation_source_format'], 'FBX')
         self.assertFalse(data['execution_contract']['self_hosted_ue4_reserved_before_source_inventory_pass'])
@@ -40,6 +41,8 @@ class FrodoAnimationSourceContract(unittest.TestCase):
         self.assertNotIn('self-hosted', text)
         self.assertNotIn('ci_build_unreal', text)
         self.assertIn('P1C01_FRODO_ANIMATION_SOURCE_CONTRACT_PASS', text)
+        self.assertIn('python3-numpy', text)
+        self.assertIn('P1C01_FRODO_ANIMATION_NUMPY_PREFLIGHT_PASS', text)
 
 
 if __name__ == '__main__':
