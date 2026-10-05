@@ -53,7 +53,7 @@ class P1C01MaterialSurfacePromotionContract(unittest.TestCase):
             'prepare_p1c01_material_intake.ps1',
             r'D:\actions-runner\_warehouse\ShireJourney',
             'P1C01_MATERIAL_SURFACE_PREPARED_PASS',
-            'SourceAssets/Production/Imported/P1C01Materials',
+            r'SourceAssets\Production\Imported\P1C01Materials',
             'Verify tracked corrected Shire surface sources',
             'P1C01_MATERIAL_SOURCE_TRACKED_PASS',
         ):
