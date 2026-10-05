@@ -3888,3 +3888,25 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Runtime Frodo presentation | PENDING |
 | PIE / device / performance / Gate 6+7 | NOT ACCEPTED |
 
+## 2026-10-05 - Frodo UE4.27 animation-only import gate source packet
+
+| Control | State |
+|---|---|
+| Dedicated editor commandlet | SOURCE-IMPLEMENTED |
+| Public/Private code structure | PASS |
+| Exact Human #39 target SHA required | `75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be` |
+| Exact Idle derivative SHA required | `ee81650714587d2a1a638f3ff0c1a8239ea555bf84959e96ce5d037af3f33cd3` |
+| Exact Walk derivative SHA required | `c4091b7881a4e9e810e70bb7f3abed58683dff5bacf54e26ccb2e926e4c9e688` |
+| Exact Run derivative SHA required | `4a4d10d91343dbd701c535d30ea9d9384ca74596cd7720cf6bfdd1c6328e1fc1` |
+| Rogue UE4 rig sanity | must be linked USkeleton + 48 reference bones |
+| Animation import mode | `FBXIT_Animation` / mesh=false / animations=true |
+| Imported sequence skeleton identity | MUST equal exact Rogue USkeleton |
+| Frame/play-length gate | >1 frame / finite nonzero duration |
+| Hosted artifact preflight | SOURCE-IMPLEMENTED |
+| Self-hosted UE4 gated by hosted preflight | YES |
+| Broad 377-file importer required for this gate | NO |
+| Fresh exact-head compile proof | PENDING |
+| Fresh UE4 animation import proof | PENDING |
+| AnimBP / runtime Frodo | PENDING |
+| Human visual / PIE / device / performance / Gate 6+7 | NOT ACCEPTED |
+
