@@ -4696,3 +4696,14 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Root fix: wildcard directory copies now use `Copy-Item -Path`; exact single-file copies continue using `-LiteralPath`.
 - Static contract guards now forbid the literal-wildcard pattern in both promotion workflows.
 - Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD PROMOTION REVALIDATION PENDING**.
+
+## 2026-10-05 - GitHub Actions approval-loop root fix
+
+- The owner-visible `Action required / Approve and run` loop was traced to two workflow-authored branch commits: `996d56d...` (Frodo runtime source promotion) and `ea356bd...` (Shire material source promotion), both authored by `Shire Journey CI`.
+- Those self-pushing workflows caused subsequent pull-request synchronize events to be treated as bot-originated runs requiring maintainer approval.
+- Root fix: both workflows are now **verify-only**. They no longer commit or push to the PR branch, and their repository permission is reduced from `contents: write` to `contents: read`.
+- Frodo gate now verifies the already-tracked four exact SHA-locked FBX runtime sources plus provenance after the UE4 technical import gate.
+- Material lane now verifies the already-tracked eight receipt/SHA-locked Shire source surfaces against a freshly prepared warehouse receipt instead of mutating the branch.
+- Source promotion into the branch is an owner/connector-side action only; CI remains evidence generation/verification and cannot create another approval loop.
+- Regression tests forbid `git push` and `contents: write` in both affected workflows.
+- Status: **SOURCE-IMPLEMENTED / FRESH OWNER-AUTHORED EXACT-HEAD ACTION BEHAVIOR VALIDATION PENDING**. No runtime/visual/device/performance/Gate 6/7 acceptance is claimed.
