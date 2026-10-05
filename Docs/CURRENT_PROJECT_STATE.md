@@ -4656,3 +4656,9 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - PNG payloads remain Git LFS-managed; animated-asset rules are unaffected. Publish is conflict-safe, bounded, and never force-pushes.
 - The source-promotion lane does not claim UE material import success. The resulting SourceAssets commit must still pass the existing generic Unreal production-import/build and fresh render capture before runtime material binding can be accepted.
 - Status: **SOURCE-IMPLEMENTED / FRESH MATERIAL SOURCE-PROMOTION EXECUTION PENDING**. Human visual and performance acceptance remain NOT ACCEPTED.
+
+## 2026-10-05 - Material promotion PowerShell invocation correction
+
+- Pre-execution static review caught an invalid shell continuation in the new material-promotion workflow: PowerShell does not use a trailing backslash for command continuation.
+- The intake invocation is normalized to a single PowerShell command line before the first warehouse execution; no failed runner evidence is being misclassified as a content failure.
+- Status remains **SOURCE-IMPLEMENTED / FRESH EXECUTION PENDING**.
