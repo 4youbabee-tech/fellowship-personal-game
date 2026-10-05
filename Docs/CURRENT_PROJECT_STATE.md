@@ -4613,3 +4613,13 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - The dedicated Frodo animation self-hosted job for the failing head was still queued when this defect was identified, so no additional UE4 import cycle is intentionally spent on the known compile error.
 - Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD COMPILE + PERSISTENCE REVALIDATION PENDING**.
 
+
+## 2026-10-05 - Frodo runtime skeletal locomotion bridge
+
+- Exact-head Frodo UE4 animation run `37291448630` on `555fe56e94fb7d4d7036a1e80462d9f2317cc322` closed the five-package persistence blocker with `UE4_ANIMATION_PACKAGE_PERSISTENCE_PASS assets=5`; mesh, skeleton, Idle, Walk and Run packages were all verified on disk inside the isolated UE4 checkout.
+- Runtime root cause for the owner-visible blocky player was then isolated: `UShireChapterAssetStreamingSubsystem` required both `SK_FRODO` and the still-missing `ABP_FRODO_Locomotion` before it would broadcast rig readiness, so the technically valid mesh/animations could never replace the modular fallback.
+- Source implementation now treats Frodo's skeletal mesh plus Idle/Walk/Run as the minimum async-resident locomotion set. The future AnimBP remains preferred when its package exists; until then the player component can use UE4 single-node skeletal playback and switch Idle/Walk/Run from movement speed.
+- The path remains soft/async through `FStreamableManager::RequestAsyncLoad`. No heavy synchronous load was added. Existing NPC `ResolveCharacterRig` semantics remain intact.
+- The modular fallback is retained until the skeletal core resolves; it is hidden only after the real skeletal mesh and locomotion sequences are resident and applied.
+- Static regression guard: `Scripts/test_p1c01_frodo_runtime_promotion_contract.py`, wired into hosted Pre-Unreal validation.
+- Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD STATIC + UE4 COMPILE/RUNTIME VALIDATION PENDING**. This is not PIE/device/visual/performance acceptance. Local production promotion still needs the exact rig/animation payloads to be regenerated or staged outside the transient CI checkout.
