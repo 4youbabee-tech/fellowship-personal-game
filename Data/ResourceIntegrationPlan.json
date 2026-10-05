@@ -77,8 +77,8 @@
   ],
   "external_resource_policy": {
     "manifest": "Data/ExternalAssetManifest.json",
-    "current_approved_asset_count": 0,
-    "rule": "Third-party files enter runtime only after a real manifest asset entry and license evidence. Project-owned resources may be integrated immediately."
+    "current_approved_asset_count": 8,
+    "rule": "Third-party files enter runtime only after a real manifest asset entry and license evidence. Eight receipt/SHA256-verified Poly Haven P1C01 surface sources are now approved; all other third-party files remain gated."
   },
   "acceptance_boundary": {
     "implemented_by_cp52": [
