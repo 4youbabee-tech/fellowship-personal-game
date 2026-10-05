@@ -6245,8 +6245,15 @@ else:
 
 if resource_integration:
     external_policy = resource_integration.get("external_resource_policy", {})
-    if external_policy.get("current_approved_asset_count") != 0:
-        fail("PG-052 external approved count must match current empty ExternalAssetManifest assets list")
+    manifest_asset_count = len([
+        item for item in external_manifest.get("assets", [])
+        if isinstance(item, dict) and str(item.get("approval_status") or "") == "APPROVED"
+    ])
+    if external_policy.get("current_approved_asset_count") != manifest_asset_count:
+        fail(
+            "PG-052 external approved count must match approved ExternalAssetManifest assets "
+            f"(plan={external_policy.get('current_approved_asset_count')} manifest={manifest_asset_count})"
+        )
 
 # PG-053: Part I must maintain continuous low-cost regional life, not only isolated micro-events.
 world_life_plan_path = ROOT / "Data" / "WorldLifeSaturationPlan.json"
