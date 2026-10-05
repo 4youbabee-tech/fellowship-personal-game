@@ -4530,3 +4530,17 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Fresh normalization remains a separate source/structure sanity check and may not substitute its bytes for the UE4-gated winner. The exact prior artifact receipt must also identify Rogue as that winner.
 - Status: **ROOT-FIX SOURCE-IMPLEMENTED / EXACT-HEAD HOSTED RETARGET REVALIDATION PENDING**. No retarget technical pass, UE4 animation import, AnimBP, runtime, visual, PIE/device or performance acceptance is claimed.
 
+## 2026-10-05 - Frodo hosted Idle/Walk/Run technical retarget passes
+
+- Exact-head hosted retarget run `37273783111` on `be2815e278da30e3474158bc197686f521fb81c1` completed **SUCCESS**.
+- Fresh Rogue regeneration remained a source/structure sanity check only and produced normalized SHA256 `28e51fcc8483ffe855c871cd2768463a60dbe88a84f815e1fa1b6aaee7db361d`. It did **not** replace the previously UE4-gated target bytes.
+- The actual retarget target was the exact Human Wave2 #39 winner artifact from run `37243788900`, `normalized/candidate_02.fbx`, and passed byte verification at SHA256 `75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be`.
+- Animation source identity remained pinned: Standard archive SHA256 `18ff1a7215f4852b320203e8aaf02a1578b5c8eef9027fbaedfcedc7b85a3ac2`; Unreal `AL_Standard.fbx` SHA256 `c836c5d47de2a414818f7644632ac43aa84475df6709f4514b9410d232800fd9`.
+- Retarget derivatives:
+  - Idle: `Frodo_Idle_Retarget.fbx`, SHA256 `ee81650714587d2a1a638f3ff0c1a8239ea555bf84959e96ce5d037af3f33cd3`, 447084 bytes, max target vertex displacement `1.9948943913820651`, bounds ratio `0.7816054533133552..0.782846675089224`, loop endpoint ratio `0.00232035283394632`.
+  - Walk: `Frodo_Walk_Retarget.fbx`, SHA256 `c4091b7881a4e9e810e70bb7f3abed58683dff5bacf54e26ccb2e926e4c9e688`, 366588 bytes, max target vertex displacement `2.4605389372972706`, bounds ratio `0.8011183850238995..0.8581567396010394`, loop endpoint ratio `0.0`.
+  - Run: `Frodo_Run_Retarget.fbx`, SHA256 `4a4d10d91343dbd701c535d30ea9d9384ca74596cd7720cf6bfdd1c6328e1fc1`, 358860 bytes, max target vertex displacement `2.4000922383830474`, bounds ratio `0.7960923933008167..0.8296153019442178`, loop endpoint ratio `0.002081278016355056`.
+- All three animation-only FBX derivatives re-imported in Blender with **41 bones**, **15/15 semantic coverage**, and one nonzero animation action each (**419 fcurves**). Idle re-import range was 2-77, Walk 2-42, Run 2-30.
+- Evidence boundary remains strict: `retarget_technical_pass=true`, while `retarget_visual_accepted=false`, `ue4_animation_imported=false`, `anim_bp_allowed=false`, and `runtime_integration_allowed=false`.
+- Status: **HOSTED RETARGET TECHNICAL PASS / UE4.27 ANIMATION-ONLY IMPORT GATE NEXT**. This is not PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED, or Gate 6/7 acceptance.
+
