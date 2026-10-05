@@ -4544,3 +4544,14 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Evidence boundary remains strict: `retarget_technical_pass=true`, while `retarget_visual_accepted=false`, `ue4_animation_imported=false`, `anim_bp_allowed=false`, and `runtime_integration_allowed=false`.
 - Status: **HOSTED RETARGET TECHNICAL PASS / UE4.27 ANIMATION-ONLY IMPORT GATE NEXT**. This is not PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED, or Gate 6/7 acceptance.
 
+## 2026-10-05 - Frodo UE4.27 animation-only import gate source packet
+
+- Following hosted retarget technical PASS, a narrow editor-only import gate is now implemented rather than extending the broad production importer.
+- New C++ files preserve Public/Private structure: `Source/ShireJourneyEditorTools/Public/ShireFrodoAnimationImportCommandlet.h` and `Source/ShireJourneyEditorTools/Private/ShireFrodoAnimationImportCommandlet.cpp`.
+- The commandlet accepts the exact Human #39 Rogue target FBX plus the three exact hosted retarget FBXs. It first imports `SK_FRODO` with `bUseT0AsRefPose=true`, requires a linked `USkeleton` and the previously observed **48 UE4 reference bones**, then imports animations with UE4.27 `FBXIT_Animation`, `bImportMesh=false`, `bImportAnimations=true`, and the exact newly-created Rogue `USkeleton`.
+- Required generated sequences are `A_Frodo_Idle`, `A_Frodo_Walk`, and `A_Frodo_Run`. Each must resolve to exactly one `UAnimSequence`, point to the identical `USkeleton`, contain more than one frame, and have finite nonzero play length.
+- Hosted preflight is implemented in `.github/workflows/p1c01-frodo-ue4-animation-import.yml`: it verifies the exact Human #39 target SHA and all three exact retarget derivative SHAs before the self-hosted UE4 job is eligible.
+- The self-hosted job builds `ShireJourneyEditor` once, runs only the dedicated commandlet, requires its `UE4_ANIMATION_IMPORT_TECHNICAL_PASS clips=3 bones=48` marker, verifies the five expected generated packages, uploads evidence, then removes only untracked transient gate assets.
+- Static contract guard: `Scripts/test_p1c01_frodo_ue4_animation_import_contract.py`.
+- Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD COMPILE + UE4 ANIMATION IMPORT VALIDATION PENDING**. No AnimBP, runtime integration, human visual, PIE/device, performance, or Gate 6/7 acceptance is claimed.
+
