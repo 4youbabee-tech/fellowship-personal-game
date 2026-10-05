@@ -8,6 +8,14 @@ class P1C01MaterialSurfacePromotionContract(unittest.TestCase):
     def test_generator_uses_complete_mtl_directives(self):
         text = (ROOT/'Scripts'/'prepare_p1c01_material_intake.ps1').read_text(encoding='utf-8')
         for token in (
+            'function Resolve-WarehousePayloadPath',
+            "$marker = '/ShireJourney/'",
+            '$candidate.StartsWith($rootPrefix, [StringComparison]::OrdinalIgnoreCase)',
+            'P1C01_MATERIAL_WAREHOUSE_PATH_REBASED',
+            'Get-FileHash -LiteralPath $p -Algorithm SHA256',
+        ):
+            self.assertIn(token, text)
+        for token in (
             '("newmtl {0}" -f [string]$item.material_name)',
             '("Pr {0}" -f $roughnessText)',
             '("Pm {0}" -f $metallicText)',
