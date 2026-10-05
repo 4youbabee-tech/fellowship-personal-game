@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "gate_id": "P1C01_FRODO_ANIMATION_SOURCE_INVENTORY_V1",
+  "status": "HOSTED_SOURCE_INVENTORY_IMPLEMENTED_VALIDATION_PENDING",
+  "runtime_chapter": "P1C01",
+  "target_character": "FRODO",
+  "purpose": "Resolve a public CC0 FBX animation source for the already-evidenced KayKit Rogue technical winner without consuming UE4 runner time until Idle/Walk/Run inventory is proven.",
+  "animation_source": {
+    "provider": "OpenGameArt",
+    "creator": "quaternius",
+    "title": "Universal Animation Library Standard",
+    "source_page": "https://opengameart.org/content/universal-animation-library",
+    "download_url": "https://opengameart.org/sites/default/files/universal_animation_librarystandard.zip",
+    "filename": "universal_animation_librarystandard.zip",
+    "observed_license": "CC0",
+    "license_observation_date": "2026-10-05",
+    "source_page_author_marker": "quaternius",
+    "source_page_license_marker": "CC0",
+    "source_page_file_marker": "universal_animation_librarystandard.zip",
+    "required_final_animation_format": "FBX",
+    "expected_sha256": null,
+    "identity_state": "CAPTURE_ON_FIRST_HOSTED_RECEIPT_THEN_PIN",
+    "provenance_note": "OpenGameArt hosts the Standard archive on a page authored by quaternius and marked CC0. The Quaternius itch.io Standard download is name-your-price/interactive and is not automated by this project."
+  },
+  "archive_policy": {
+    "minimum_archive_bytes": 10000000,
+    "maximum_archive_bytes": 67108864,
+    "max_archive_entries": 5000,
+    "max_entry_bytes": 268435456,
+    "max_expanded_bytes": 1073741824,
+    "max_fbx_files": 96,
+    "forbidden_extensions": [".bmp", ".exe", ".msi", ".cmd", ".bat", ".ps1", ".vbs", ".js", ".scr", ".com"],
+    "animated_obj_policy": "IGNORE_NOT_ACCEPTED",
+    "accepted_animation_source_format": "FBX"
+  },
+  "required_clips": {
+    "idle": {"preferred_tokens": ["Idle_Loop", "Idle"]},
+    "walk": {"preferred_tokens": ["Walk_Loop", "Walk"]},
+    "run": {"preferred_tokens": ["Jog_Fwd_Loop", "Run_Loop", "Run", "Sprint_Loop"]}
+  },
+  "technical_target": {
+    "source_family": "KayKit Character Pack: Adventurers",
+    "source_revision": "672074b73ba276876a19e8816ecdc5241817ab47",
+    "source_entry": "Rogue.fbx",
+    "normalized_sha256": "75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be",
+    "ue4_reference_bones": 48,
+    "linked_uskeleton": true,
+    "static_deformation_status": "STATIC_DEFORMATION_STRESS_PASS",
+    "retarget_accepted": false
+  },
+  "execution_contract": {
+    "hosted_first": true,
+    "self_hosted_ue4_reserved_before_source_inventory_pass": false,
+    "runtime_integration_allowed": false,
+    "next_if_pass": [
+      "pin observed archive SHA256",
+      "prove Idle/Walk/Run retarget compatibility against exact normalized Rogue winner",
+      "export FBX animation derivatives only after hosted retarget proof",
+      "UE4 animation import gate",
+      "AnimBP locomotion",
+      "soft/async runtime Frodo hookup",
+      "fresh human visual review"
+    ]
+  },
+  "evidence_boundary": "Source inventory only. No retarget, UE4 animation import, AnimBP, runtime, PIE, device, visual or performance acceptance is implied."
+}
