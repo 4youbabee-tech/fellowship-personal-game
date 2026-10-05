@@ -1,5 +1,6 @@
 #include "ShireChapterAssetStreamingSubsystem.h"
 
+#include "Animation/AnimSequence.h"
 #include "Dom/JsonObject.h"
 #include "Engine/GameInstance.h"
 #include "Engine/SkeletalMesh.h"
@@ -323,6 +324,43 @@ bool UShireChapterAssetStreamingSubsystem::ResolveCharacterRig(
     return OutSkeletalMesh != nullptr && OutAnimClass != nullptr;
 }
 
+bool UShireChapterAssetStreamingSubsystem::ResolveCharacterLocomotionAssets(
+    FName CharacterId,
+    USkeletalMesh*& OutSkeletalMesh,
+    UClass*& OutAnimClass,
+    UAnimSequence*& OutIdle,
+    UAnimSequence*& OutWalk,
+    UAnimSequence*& OutRun) const
+{
+    OutSkeletalMesh = nullptr;
+    OutAnimClass = nullptr;
+    OutIdle = nullptr;
+    OutWalk = nullptr;
+    OutRun = nullptr;
+
+    const FCharacterRigRuntime* Rig = CharacterRigRequests.Find(CharacterId);
+    if (!Rig)
+    {
+        return false;
+    }
+
+    OutSkeletalMesh = Cast<USkeletalMesh>(Rig->SkeletalMeshPath.ResolveObject());
+    OutAnimClass = Cast<UClass>(Rig->AnimClassPath.ResolveObject());
+
+    if (!Rig->bSequenceLocomotionRequired)
+    {
+        return OutSkeletalMesh != nullptr && OutAnimClass != nullptr;
+    }
+
+    OutIdle = Cast<UAnimSequence>(Rig->IdleAnimationPath.ResolveObject());
+    OutWalk = Cast<UAnimSequence>(Rig->WalkAnimationPath.ResolveObject());
+    OutRun = Cast<UAnimSequence>(Rig->RunAnimationPath.ResolveObject());
+    return OutSkeletalMesh != nullptr &&
+        OutIdle != nullptr &&
+        OutWalk != nullptr &&
+        OutRun != nullptr;
+}
+
 void UShireChapterAssetStreamingSubsystem::RequestCharacterRig(FName CharacterId)
 {
     if (CharacterId.IsNone())
@@ -334,17 +372,40 @@ void UShireChapterAssetStreamingSubsystem::RequestCharacterRig(FName CharacterId
     if (!Rig.SkeletalMeshPath.IsValid())
     {
         const FString Character = CharacterId.ToString();
+        const bool bFrodo = CharacterId == FName(TEXT("Frodo"));
+        const FString RigToken = bFrodo ? FString(TEXT("FRODO")) : Character;
+
         Rig.SkeletalMeshPath = FSoftObjectPath(FString::Printf(
             TEXT("/Game/Production/Characters/Rigs/%s/SK_%s.SK_%s"),
-            *Character, *Character, *Character));
+            *RigToken, *RigToken, *RigToken));
         Rig.AnimClassPath = FSoftObjectPath(FString::Printf(
             TEXT("/Game/Production/Characters/Rigs/%s/ABP_%s_Locomotion.ABP_%s_Locomotion_C"),
-            *Character, *Character, *Character));
+            *RigToken, *RigToken, *RigToken));
+
+        if (bFrodo)
+        {
+            Rig.bSequenceLocomotionRequired = true;
+            Rig.IdleAnimationPath = FSoftObjectPath(
+                TEXT("/Game/Production/Characters/Animations/FRODO/A_Frodo_Idle.A_Frodo_Idle"));
+            Rig.WalkAnimationPath = FSoftObjectPath(
+                TEXT("/Game/Production/Characters/Animations/FRODO/A_Frodo_Walk.A_Frodo_Walk"));
+            Rig.RunAnimationPath = FSoftObjectPath(
+                TEXT("/Game/Production/Characters/Animations/FRODO/A_Frodo_Run.A_Frodo_Run"));
+        }
     }
 
     USkeletalMesh* ExistingMesh = nullptr;
     UClass* ExistingAnimClass = nullptr;
-    if (ResolveCharacterRig(CharacterId, ExistingMesh, ExistingAnimClass))
+    UAnimSequence* ExistingIdle = nullptr;
+    UAnimSequence* ExistingWalk = nullptr;
+    UAnimSequence* ExistingRun = nullptr;
+    if (ResolveCharacterLocomotionAssets(
+            CharacterId,
+            ExistingMesh,
+            ExistingAnimClass,
+            ExistingIdle,
+            ExistingWalk,
+            ExistingRun))
     {
         OnCharacterRigReady.Broadcast(CharacterId);
         return;
@@ -364,13 +425,34 @@ void UShireChapterAssetStreamingSubsystem::RequestCharacterRig(FName CharacterId
     if (bShouldCheckAvailability)
     {
         const bool bWasPresent = Rig.bPackagesPresent;
-        const FString MeshPackage =
-            FPackageName::ObjectPathToPackageName(Rig.SkeletalMeshPath.ToString());
-        const FString AnimPackage =
-            FPackageName::ObjectPathToPackageName(Rig.AnimClassPath.ToString());
-        Rig.bPackagesPresent =
-            FPackageName::DoesPackageExist(MeshPackage) &&
-            FPackageName::DoesPackageExist(AnimPackage);
+        const auto PackageExists = [](const FSoftObjectPath& ObjectPath) -> bool
+        {
+            if (!ObjectPath.IsValid())
+            {
+                return false;
+            }
+            return FPackageName::DoesPackageExist(
+                FPackageName::ObjectPathToPackageName(ObjectPath.ToString()));
+        };
+
+        const bool bMeshPresent = PackageExists(Rig.SkeletalMeshPath);
+        Rig.bAnimBlueprintPackagePresent = PackageExists(Rig.AnimClassPath);
+
+        if (Rig.bSequenceLocomotionRequired)
+        {
+            Rig.bPackagesPresent =
+                bMeshPresent &&
+                PackageExists(Rig.IdleAnimationPath) &&
+                PackageExists(Rig.WalkAnimationPath) &&
+                PackageExists(Rig.RunAnimationPath);
+        }
+        else
+        {
+            Rig.bPackagesPresent =
+                bMeshPresent &&
+                Rig.bAnimBlueprintPackagePresent;
+        }
+
         Rig.bAvailabilityChecked = true;
         Rig.LastAvailabilityCheckSeconds = NowSeconds;
 
@@ -379,7 +461,7 @@ void UShireChapterAssetStreamingSubsystem::RequestCharacterRig(FName CharacterId
             UE_LOG(
                 LogTemp,
                 Display,
-                TEXT("CharacterRigStreaming: unavailable id=%s reason=packages-missing fallback=modular retry=bounded"),
+                TEXT("CharacterRigStreaming: unavailable id=%s reason=core-packages-missing fallback=modular retry=bounded"),
                 *CharacterId.ToString());
         }
         else if (!bWasPresent)
@@ -387,8 +469,9 @@ void UShireChapterAssetStreamingSubsystem::RequestCharacterRig(FName CharacterId
             UE_LOG(
                 LogTemp,
                 Display,
-                TEXT("CharacterRigStreaming: availability-recovered id=%s async-request=ready"),
-                *CharacterId.ToString());
+                TEXT("CharacterRigStreaming: availability-recovered id=%s async-request=ready animBP=%s"),
+                *CharacterId.ToString(),
+                Rig.bAnimBlueprintPackagePresent ? TEXT("present") : TEXT("optional-missing"));
         }
     }
 
@@ -404,7 +487,20 @@ void UShireChapterAssetStreamingSubsystem::RequestCharacterRig(FName CharacterId
 
     TArray<FSoftObjectPath> Assets;
     Assets.Add(Rig.SkeletalMeshPath);
-    Assets.Add(Rig.AnimClassPath);
+    if (Rig.bSequenceLocomotionRequired)
+    {
+        Assets.Add(Rig.IdleAnimationPath);
+        Assets.Add(Rig.WalkAnimationPath);
+        Assets.Add(Rig.RunAnimationPath);
+        if (Rig.bAnimBlueprintPackagePresent)
+        {
+            Assets.Add(Rig.AnimClassPath);
+        }
+    }
+    else
+    {
+        Assets.Add(Rig.AnimClassPath);
+    }
 
     Rig.Handle = StreamableManager.RequestAsyncLoad(
         Assets,
@@ -416,9 +512,10 @@ void UShireChapterAssetStreamingSubsystem::RequestCharacterRig(FName CharacterId
     UE_LOG(
         LogTemp,
         Display,
-        TEXT("CharacterRigStreaming: request id=%s assets=%d"),
+        TEXT("CharacterRigStreaming: request id=%s assets=%d sequenceLocomotion=%s"),
         *CharacterId.ToString(),
-        Assets.Num());
+        Assets.Num(),
+        Rig.bSequenceLocomotionRequired ? TEXT("yes") : TEXT("no"));
 }
 
 void UShireChapterAssetStreamingSubsystem::HandleCharacterRigLoadComplete(FName CharacterId)
@@ -427,7 +524,16 @@ void UShireChapterAssetStreamingSubsystem::HandleCharacterRigLoadComplete(FName 
 
     USkeletalMesh* SkeletalMesh = nullptr;
     UClass* AnimClass = nullptr;
-    if (!ResolveCharacterRig(CharacterId, SkeletalMesh, AnimClass))
+    UAnimSequence* Idle = nullptr;
+    UAnimSequence* Walk = nullptr;
+    UAnimSequence* Run = nullptr;
+    if (!ResolveCharacterLocomotionAssets(
+            CharacterId,
+            SkeletalMesh,
+            AnimClass,
+            Idle,
+            Walk,
+            Run))
     {
         if (Rig)
         {
@@ -445,8 +551,9 @@ void UShireChapterAssetStreamingSubsystem::HandleCharacterRigLoadComplete(FName 
     UE_LOG(
         LogTemp,
         Display,
-        TEXT("CharacterRigStreaming: ready id=%s residency=actor-owned"),
-        *CharacterId.ToString());
+        TEXT("CharacterRigStreaming: ready id=%s residency=actor-owned mode=%s"),
+        *CharacterId.ToString(),
+        AnimClass ? TEXT("anim-blueprint") : TEXT("sequence-locomotion"));
 
     // Broadcast while the handle still pins the assets. Player/NPC components take
     // their own UObject references during the callback. Releasing afterward lets
