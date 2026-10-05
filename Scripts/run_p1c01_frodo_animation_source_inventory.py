@@ -162,34 +162,57 @@ def inspect_fbx(path, relative):
     }
 
 
-def choose_role(role, spec, inventory):
+def choose_role(role, spec, inventory, preferred_path_tokens):
     tokens = [norm(x) for x in spec.get('preferred_tokens', []) if norm(x)]
+    path_tokens = [norm(x) for x in preferred_path_tokens if norm(x)]
     rows = []
     for fbx in inventory:
         if not fbx.get('imported') or fbx.get('armature_count', 0) < 1:
             continue
         file_key = norm(os.path.basename(fbx['file']))
+        file_stem = norm(os.path.splitext(os.path.basename(fbx['file']))[0])
+        full_path_key = norm(fbx['file'])
+        variant_rank = len(path_tokens)
+        for i, path_token in enumerate(path_tokens):
+            if path_token in full_path_key:
+                variant_rank = i
+                break
         actions = fbx.get('actions') or []
         if not actions:
             actions = [{'name': os.path.splitext(os.path.basename(fbx['file']))[0], 'frame_start': 0.0, 'frame_end': 0.0, 'frame_span': 0.0, 'fcurves': 0}]
         for action in actions:
-            combined = file_key + norm(action.get('name', ''))
-            rank = None
+            action_leaf = str(action.get('name', '')).split('|')[-1]
+            action_key = norm(action_leaf)
+            match_mode = None
+            token_rank = None
             matched = None
             for i, token in enumerate(tokens):
-                if token and token in combined:
-                    rank = i
-                    matched = token
+                if action_key == token:
+                    match_mode, token_rank, matched = 0, i, token
                     break
-            if rank is None:
+            if match_mode is None:
+                for i, token in enumerate(tokens):
+                    if file_stem == token:
+                        match_mode, token_rank, matched = 1, i, token
+                        break
+            if match_mode is None:
+                combined = file_key + action_key
+                for i, token in enumerate(tokens):
+                    if token and token in combined:
+                        match_mode, token_rank, matched = 2, i, token
+                        break
+            if match_mode is None:
                 continue
             animated = float(action.get('frame_span', 0.0)) > 0.0 and int(action.get('fcurves', 0)) > 0
             coverage = max([int(a.get('semantic_coverage', 0)) for a in fbx.get('armatures', [])] or [0])
-            rows.append((rank, 0 if animated else 1, -coverage, fbx['file'], action.get('name', ''), {
+            rows.append((match_mode, token_rank, variant_rank, 0 if animated else 1, -coverage, fbx['file'], action.get('name', ''), {
                 'role': role,
                 'file': fbx['file'],
                 'action': action.get('name', ''),
+                'action_leaf': action_leaf,
                 'matched_token': matched,
+                'match_mode': ['EXACT_ACTION_LEAF', 'EXACT_FILE_STEM', 'BOUNDED_TOKEN_FALLBACK'][match_mode],
+                'variant_rank': variant_rank,
                 'animated': animated,
                 'frame_start': action.get('frame_start'),
                 'frame_end': action.get('frame_end'),
@@ -230,8 +253,9 @@ for relative, path, size in fbx_entries:
     inventory.append(row)
 
 selected = {}
+preferred_path_tokens = manifest.get('source_selection_policy', {}).get('preferred_fbx_path_tokens', [])
 for role, spec in manifest['required_clips'].items():
-    selected[role] = choose_role(role, spec, inventory)
+    selected[role] = choose_role(role, spec, inventory, preferred_path_tokens)
 missing = sorted([role for role, row in selected.items() if row is None or not row.get('animated')])
 status = 'ANIMATION_SOURCE_INVENTORY_PASS' if not missing else 'ANIMATION_SOURCE_INVENTORY_REJECT'
 
