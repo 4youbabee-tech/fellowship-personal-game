@@ -21,6 +21,7 @@ class FrodoAnimationSourceContract(unittest.TestCase):
         self.assertFalse(data['execution_contract']['runtime_integration_allowed'])
         self.assertEqual(set(data['required_clips']), {'idle', 'walk', 'run'})
         self.assertEqual(data['technical_target']['normalized_sha256'], '75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be')
+        self.assertEqual(data['source_selection_policy']['preferred_fbx_path_tokens'][0], 'Unreal Engine')
 
     def test_inventory_script_fail_closed_markers(self):
         text = (ROOT / 'Scripts' / 'run_p1c01_frodo_animation_source_inventory.py').read_text(encoding='utf-8')
@@ -32,6 +33,8 @@ class FrodoAnimationSourceContract(unittest.TestCase):
             "'runtime_integration_allowed': False",
             "ext == '.obj'",
             "'.bmp'",
+            'EXACT_ACTION_LEAF',
+            'variant_rank',
         ):
             self.assertIn(token, text)
 
