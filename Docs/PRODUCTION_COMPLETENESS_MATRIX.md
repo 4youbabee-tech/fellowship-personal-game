@@ -3781,3 +3781,21 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Retarget / UE4 animation import / AnimBP / runtime | PENDING |
 | Visual / PIE / device / performance acceptance | NOT ACCEPTED |
 
+## 2026-10-05 - Frodo animation inventory hosted infrastructure revalidation
+
+| Control | State |
+|---|---|
+| Failing hosted run | `37272018993` / FAILURE |
+| Failing exact head | `f035babcd24eee31e601862dba27d9e72e49edd7` |
+| OpenGameArt provenance page | PASS |
+| Public Standard archive download | PASS / 13.8 MiB |
+| Pinned archive SHA256 | `18ff1a7215f4852b320203e8aaf02a1578b5c8eef9027fbaedfcedc7b85a3ac2` |
+| Blender FBX inventory result | NOT REACHED ASSET QUALITY / infrastructure failure |
+| Exact infrastructure failure | `ModuleNotFoundError: No module named 'numpy'` |
+| Root fix | install `python3-numpy` + in-Blender numpy preflight |
+| Future archive bytes accepted without SHA match | NO |
+| Self-hosted UE4 reserved by failed inventory | NO |
+| Fresh exact-head hosted revalidation | PENDING |
+| Retarget / AnimBP / runtime | PENDING |
+| Visual / PIE / device / performance | NOT ACCEPTED |
+
