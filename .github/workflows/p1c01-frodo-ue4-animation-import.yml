@@ -10,7 +10,7 @@ on:
       - '.github/workflows/p1c01-frodo-ue4-animation-import.yml'
 
 permissions:
-  contents: write
+  contents: read
   actions: read
 
 concurrency:
@@ -88,7 +88,6 @@ jobs:
     timeout-minutes: 90
     env:
       TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-      HEAD_BRANCH: ${{ github.head_ref }}
 
     steps:
       - name: Checkout exact PR head into isolated UE4 source
@@ -238,89 +237,40 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-      - name: Promote exact validated Frodo runtime FBX sources
+      - name: Verify tracked validated Frodo runtime FBX sources
         shell: powershell
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: |
           $ErrorActionPreference="Stop"
-          if([string]::IsNullOrWhiteSpace($env:HEAD_BRANCH)){ throw "FRODO_RUNTIME_SOURCE_PROMOTION_BRANCH_MISSING" }
-
-          $stage=Join-Path $env:RUNNER_TEMP "frodo-runtime-source-promotion"
-          Remove-Item -LiteralPath $stage -Recurse -Force -ErrorAction SilentlyContinue
-          New-Item -ItemType Directory -Path $stage -Force | Out-Null
-
+          $root=Join-Path $env:SHIRE_FRODO_UE4_SOURCE "SourceAssets\ValidatedRuntime\FRODO"
           $files=@(
-            @("$env:RUNNER_TEMP\frodo-ue4-animation\human\normalized\candidate_02.fbx", (Join-Path $stage "SK_FRODO_Validated.fbx"), "75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be"),
-            @("$env:RUNNER_TEMP\frodo-ue4-animation\retarget\output\Frodo_Idle_Retarget.fbx", (Join-Path $stage "Frodo_Idle_Retarget.fbx"), "ee81650714587d2a1a638f3ff0c1a8239ea555bf84959e96ce5d037af3f33cd3"),
-            @("$env:RUNNER_TEMP\frodo-ue4-animation\retarget\output\Frodo_Walk_Retarget.fbx", (Join-Path $stage "Frodo_Walk_Retarget.fbx"), "c4091b7881a4e9e810e70bb7f3abed58683dff5bacf54e26ccb2e926e4c9e688"),
-            @("$env:RUNNER_TEMP\frodo-ue4-animation\retarget\output\Frodo_Run_Retarget.fbx", (Join-Path $stage "Frodo_Run_Retarget.fbx"), "4a4d10d91343dbd701c535d30ea9d9384ca74596cd7720cf6bfdd1c6328e1fc1")
+            @("SK_FRODO_Validated.fbx", "75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be"),
+            @("Frodo_Idle_Retarget.fbx", "ee81650714587d2a1a638f3ff0c1a8239ea555bf84959e96ce5d037af3f33cd3"),
+            @("Frodo_Walk_Retarget.fbx", "c4091b7881a4e9e810e70bb7f3abed58683dff5bacf54e26ccb2e926e4c9e688"),
+            @("Frodo_Run_Retarget.fbx", "4a4d10d91343dbd701c535d30ea9d9384ca74596cd7720cf6bfdd1c6328e1fc1")
           )
           foreach($row in $files){
-            Copy-Item -LiteralPath $row[0] -Destination $row[1] -Force
-            $actual=(Get-FileHash -LiteralPath $row[1] -Algorithm SHA256).Hash.ToLowerInvariant()
-            if($actual -ne $row[2]){ throw "FRODO_RUNTIME_SOURCE_PROMOTION_HASH_FAIL path=$($row[1])" }
+            $path=Join-Path $root $row[0]
+            if(-not (Test-Path -LiteralPath $path -PathType Leaf)){
+              throw "FRODO_RUNTIME_SOURCE_TRACKED_MISSING path=$path"
+            }
+            $actual=(Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
+            if($actual -ne $row[1]){
+              throw "FRODO_RUNTIME_SOURCE_TRACKED_HASH_FAIL path=$path actual=$actual expected=$($row[1])"
+            }
           }
 
-          [ordered]@{
-            schema_version=1
-            character="FRODO"
-            source_status="UE4_TECHNICALLY_VALIDATED_RUNTIME_INPUT"
-            target_fbx="SK_FRODO_Validated.fbx"
-            target_sha256="75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be"
-            idle_fbx="Frodo_Idle_Retarget.fbx"
-            idle_sha256="ee81650714587d2a1a638f3ff0c1a8239ea555bf84959e96ce5d037af3f33cd3"
-            walk_fbx="Frodo_Walk_Retarget.fbx"
-            walk_sha256="c4091b7881a4e9e810e70bb7f3abed58683dff5bacf54e26ccb2e926e4c9e688"
-            run_fbx="Frodo_Run_Retarget.fbx"
-            run_sha256="4a4d10d91343dbd701c535d30ea9d9384ca74596cd7720cf6bfdd1c6328e1fc1"
-            rig_source="KayKit Character Pack: Adventurers / Rogue / CC0 / normalized derivative"
-            animation_source="Quaternius Universal Animation Library Standard / OpenGameArt / CC0"
-            exact_validation_head=$env:TARGET_SHA
-            exact_validation_run=$env:GITHUB_RUN_ID
-            visual_acceptance=$false
-            pie_tested=$false
-            device_tested=$false
-          } | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $stage "provenance.json") -Encoding UTF8
-
-          & git.exe -C $env:SHIRE_FRODO_UE4_SOURCE config user.name "Shire Journey CI"
-          & git.exe -C $env:SHIRE_FRODO_UE4_SOURCE config user.email "shire-journey-ci@users.noreply.github.com"
-
-          $published=$false
-          for($attempt=1; $attempt -le 3 -and -not $published; $attempt++){
-            Write-Host "P1C01_FRODO_RUNTIME_SOURCE_PROMOTION_ATTEMPT attempt=$attempt/3 branch=$env:HEAD_BRANCH"
-            & git.exe -C $env:SHIRE_FRODO_UE4_SOURCE fetch --no-tags origin $env:HEAD_BRANCH
-            if($LASTEXITCODE -ne 0){ throw "FRODO_RUNTIME_SOURCE_PROMOTION_FETCH_FAIL attempt=$attempt" }
-            & git.exe -C $env:SHIRE_FRODO_UE4_SOURCE reset --hard FETCH_HEAD
-            if($LASTEXITCODE -ne 0){ throw "FRODO_RUNTIME_SOURCE_PROMOTION_RESET_FAIL attempt=$attempt" }
-
-            $root=Join-Path $env:SHIRE_FRODO_UE4_SOURCE "SourceAssets\ValidatedRuntime\FRODO"
-            Remove-Item -LiteralPath $root -Recurse -Force -ErrorAction SilentlyContinue
-            New-Item -ItemType Directory -Path $root -Force | Out-Null
-            Copy-Item -Path (Join-Path $stage "*") -Destination $root -Force
-
-            & git.exe -C $env:SHIRE_FRODO_UE4_SOURCE add -- "SourceAssets/ValidatedRuntime/FRODO"
-            if($LASTEXITCODE -ne 0){ throw "FRODO_RUNTIME_SOURCE_PROMOTION_GIT_ADD_FAIL attempt=$attempt" }
-            $pending=@(& git.exe -C $env:SHIRE_FRODO_UE4_SOURCE status --porcelain -- "SourceAssets/ValidatedRuntime/FRODO")
-            if($pending.Count -eq 0){
-              Write-Host "P1C01_FRODO_RUNTIME_SOURCE_ALREADY_PROMOTED"
-              $published=$true
-              break
-            }
-
-            & git.exe -C $env:SHIRE_FRODO_UE4_SOURCE commit -m "P1C01: promote exact validated Frodo runtime FBX sources"
-            if($LASTEXITCODE -ne 0){ throw "FRODO_RUNTIME_SOURCE_PROMOTION_COMMIT_FAIL attempt=$attempt" }
-            & git.exe -C $env:SHIRE_FRODO_UE4_SOURCE push origin ("HEAD:" + $env:HEAD_BRANCH)
-            if($LASTEXITCODE -eq 0){
-              Write-Host "P1C01_FRODO_RUNTIME_SOURCE_PROMOTION_PASS branch=$env:HEAD_BRANCH attempt=$attempt"
-              $published=$true
-              break
-            }
-
-            Write-Host "P1C01_FRODO_RUNTIME_SOURCE_PROMOTION_RETRY reason=non_fast_forward_or_branch_moved attempt=$attempt"
+          $provenancePath=Join-Path $root "provenance.json"
+          if(-not (Test-Path -LiteralPath $provenancePath -PathType Leaf)){
+            throw "FRODO_RUNTIME_SOURCE_PROVENANCE_MISSING"
           }
-
-          if(-not $published){ throw "FRODO_RUNTIME_SOURCE_PROMOTION_EXHAUSTED" }
+          $provenance=Get-Content -LiteralPath $provenancePath -Raw | ConvertFrom-Json
+          if([string]$provenance.target_sha256 -ne $files[0][1] -or
+             [string]$provenance.idle_sha256 -ne $files[1][1] -or
+             [string]$provenance.walk_sha256 -ne $files[2][1] -or
+             [string]$provenance.run_sha256 -ne $files[3][1]){
+            throw "FRODO_RUNTIME_SOURCE_PROVENANCE_HASH_FAIL"
+          }
+          Write-Host "P1C01_FRODO_RUNTIME_SOURCE_TRACKED_PASS assets=4 mutation=no"
 
       - name: Cleanup transient Frodo gate assets
         if: always()
