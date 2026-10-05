@@ -220,14 +220,16 @@ foreach($item in @($manifest.immediate_open_source_items)) {
   if ($null -ne $item.specular) { $specular = [double]$item.specular }
   $ks = [Math]::Max(0.005, [Math]::Min(0.1625, $specular / 4.0))
   $ksText = $ks.ToString("0.0000", [Globalization.CultureInfo]::InvariantCulture)
+  $roughnessText = ([double]$item.roughness).ToString("0.0000", [Globalization.CultureInfo]::InvariantCulture)
+  $metallicText = ([double]$item.metallic).ToString("0.0000", [Globalization.CultureInfo]::InvariantCulture)
   @(
     "# Generated P1C01 external material intake.",
-    "newmtl "+[string]$item.material_name,
+    ("newmtl {0}" -f [string]$item.material_name),
     "Kd 1.0 1.0 1.0",
-    "Pr "+([double]$item.roughness).ToString("0.0000", [Globalization.CultureInfo]::InvariantCulture),
-    "Pm "+([double]$item.metallic).ToString("0.0000", [Globalization.CultureInfo]::InvariantCulture),
-    "Ks $ksText $ksText $ksText",
-    "map_Kd "+[IO.Path]::GetFileName($dest),
+    ("Pr {0}" -f $roughnessText),
+    ("Pm {0}" -f $metallicText),
+    ("Ks {0} {0} {0}" -f $ksText),
+    ("map_Kd {0}" -f [IO.Path]::GetFileName($dest)),
     ""
   ) | Set-Content -LiteralPath $mtl -Encoding ASCII
 
