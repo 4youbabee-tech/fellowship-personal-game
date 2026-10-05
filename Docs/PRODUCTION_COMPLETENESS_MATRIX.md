@@ -4048,3 +4048,15 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Fresh exact-head workflow proof | PENDING |
 | Owner-visible skeletal Frodo review | PENDING |
 | Human visual / PIE / device / performance / Gate 6+7 | NOT ACCEPTED |
+
+## 2026-10-05 - P1C01 material intake root fix
+
+| Control | State |
+|---|---|
+| Historical malformed MTL output | REJECTED |
+| Complete `newmtl/Pr/Pm/Ks/map_Kd` directives | SOURCE-IMPLEMENTED |
+| Static MTL regression guard | ADDED |
+| Pre-Unreal guard wiring | ADDED |
+| Fresh exact-head static validation | PENDING |
+| Fresh UE4 material import validation | PENDING |
+| Human visual / performance acceptance | NOT ACCEPTED |
