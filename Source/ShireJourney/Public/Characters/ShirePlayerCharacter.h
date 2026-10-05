@@ -7,6 +7,7 @@
 class USpringArmComponent;
 class UCameraComponent;
 class UStaticMeshComponent;
+class UAnimSequence;
 class UShireFootstepComponent;
 class UShireSaveGame;
 
@@ -256,6 +257,14 @@ private:
     FName PrototypeMotionProfile = TEXT("HOBBIT");
     bool bUsingProductionCharacter = false;
     bool bUsingSkeletalProductionRig = false;
+    bool bUsingProductionAnimBlueprint = false;
+    UPROPERTY()
+    UAnimSequence* ProductionIdleAnimation = nullptr;
+    UPROPERTY()
+    UAnimSequence* ProductionWalkAnimation = nullptr;
+    UPROPERTY()
+    UAnimSequence* ProductionRunAnimation = nullptr;
+    FName ProductionLocomotionState = NAME_None;
     bool bSprintRequested = false;
     float CurrentStamina = 100.0f;
     float CurrentResolve = 100.0f;
@@ -331,6 +340,7 @@ private:
     bool TryApplyPendingSaveRestoreTransform();
     bool IsCurrentWorldCommitted() const;
     bool TryApplyProductionRig(const FString& RigFolder);
+    void UpdateProductionSkeletalAnimation();
     bool ShouldShowPrototypeWeaponForCurrentStory(FName VisualId) const;
     void ApplyPrototypeStyle();
     void UpdatePrototypeAnimation(float DeltaSeconds);
