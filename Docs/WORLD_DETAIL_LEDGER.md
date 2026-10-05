@@ -1,3 +1,15 @@
+## 2026-10-05 - P1C01 HIGH_FIDELITY_SURFACE_REPLACEMENT registered
+
+- Scope: replace owner-rejected flat/proxy Shire surface presentation inside the existing P1C01 world only; no new chapter, no Bree runtime opening, no density wave.
+- Owner visual evidence: current PIE screenshots read as grey/flat terrain, weak material depth, simple low-poly vegetation and proxy-quality presentation. This is a human visual rejection, not a request to increase instance counts.
+- Approved source lane: receipt/SHA256-verified Poly Haven CC0 surfaces already staged through the project warehouse/intake system. Historical generated output is not reusable unchanged because its MTL directives were malformed.
+- Root-fix requirement: P1C01 material intake must emit one complete directive per line (`newmtl`, `Pr`, `Pm`, `Ks`, `map_Kd`) and fail static regression before any UE import.
+- Runtime ownership: `AShirePrototypeWorldBuilder` remains the sole Shire geometry/material consumer; `UShireChapterAssetStreamingSubsystem` remains the async residency owner. No second world authority is introduced.
+- Low-spec boundary: 1K/2K runtime textures by default, one visible albedo sample plus bounded scalar roughness/metallic/specular in this wave, no blanket 4K, no synchronous heavy load, no foliage-density increase.
+- Intended authored bindings after validated import: grass/ground, dirt/garden/riverbank, stony paths, bark, warm plaster, moss/stone and wood. Leaves/foliage keep the current bounded foliage master path until a separately profiled replacement is proven.
+- Geometry boundary: this material car alone does not resolve the already-identified low-poly tree/terrain silhouette problem. Natural foliage/terrain geometry replacement remains a separate MW5 visual car after the surface pipeline is healthy.
+- Gate: fresh exact-head static + UE4.27.2 import/build evidence, then fresh render capture and human chapter review. No VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED, PIE-TESTED, DEVICE-TESTED or Gate 6/7 acceptance is implied by this registration.
+
 ## 2026-10-01 - P1C01 FOUNDATION_CORRECTIONS_V1 registered
 
 - Scope: corrective foundation pass before additional visible P1C01 construction; no new chapter or story outcome.
