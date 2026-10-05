@@ -3799,3 +3799,22 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Retarget / AnimBP / runtime | PENDING |
 | Visual / PIE / device / performance | NOT ACCEPTED |
 
+## 2026-10-05 - Frodo animation source inventory evidence + selector hardening
+
+| Control | State |
+|---|---|
+| Hosted inventory run | `37272271829` / SUCCESS |
+| Validated exact head | `836a6ae7aa5051fe9220eb41d95691439397a964` |
+| Archive SHA256 match | PASS / `18ff1a7215f4852b320203e8aaf02a1578b5c8eef9027fbaedfcedc7b85a3ac2` |
+| Archive entries | 11 |
+| FBX inventory | 2 |
+| Required Idle/Walk/Run roles discovered | PASS |
+| Unreal Engine FBX | `Animation Library[Standard]/Unreal Engine/AL_Standard.fbx` / 65 bones |
+| Unity FBX | `Animation Library[Standard]/Unity/AnimationLibrary_Unity_Standard.fbx` / 53 bones |
+| Semantic coverage in inventory | 15/15 on both |
+| Old Idle selector | SUBSTRING AMBIGUITY FOUND: `Crouch_Idle_Loop` |
+| Selector root fix | exact action leaf + UE FBX preference |
+| Exact-head selector revalidation | PENDING |
+| Retarget / UE4 animation import / AnimBP / runtime | PENDING |
+| Visual / PIE / device / performance | NOT ACCEPTED |
+
