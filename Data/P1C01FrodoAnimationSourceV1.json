@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "gate_id": "P1C01_FRODO_ANIMATION_SOURCE_INVENTORY_V1",
-  "status": "HOSTED_SOURCE_INVENTORY_REVALIDATION_AFTER_NUMPY_ROOT_FIX",
+  "status": "HOSTED_SOURCE_INVENTORY_SELECTOR_REVALIDATION_PENDING",
   "runtime_chapter": "P1C01",
   "target_character": "FRODO",
   "purpose": "Resolve a public CC0 FBX animation source for the already-evidenced KayKit Rogue technical winner without consuming UE4 runner time until Idle/Walk/Run inventory is proven.",
@@ -90,5 +90,17 @@
       "fresh human visual review"
     ]
   },
-  "evidence_boundary": "Source inventory only. No retarget, UE4 animation import, AnimBP, runtime, PIE, device, visual or performance acceptance is implied."
+  "evidence_boundary": "Source inventory and deterministic clip selection only. No retarget, UE4 animation import, AnimBP, runtime, PIE, device, visual or performance acceptance is implied.",
+  "source_selection_policy": {
+    "preferred_fbx_path_tokens": [
+      "Unreal Engine",
+      "Unity"
+    ],
+    "action_match_order": [
+      "EXACT_ACTION_LEAF",
+      "EXACT_FILE_STEM",
+      "BOUNDED_TOKEN_FALLBACK"
+    ],
+    "rationale": "For UE4.27 retarget preparation, prefer the Unreal Engine FBX variant and exact action leaf names so Idle_Loop cannot silently resolve to Crouch_Idle_Loop or another broader substring."
+  }
 }
