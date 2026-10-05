@@ -4474,3 +4474,22 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - T0 reference-pose remediation and the unchanged post-import `MISSING_BIND_POSE_BONES` hard rejection remain intact; no deformation, bind-pose, UV, skeleton, or visual gate is weakened.
 - Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD HUMAN COMPILE + UE4 REVALIDATION PENDING**. This is not yet COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED, or Gate 6/7 acceptance.
 
+## 2026-10-05 - Human Wave2 run #39 closes compile, T0 bind-pose and static deformation gates
+
+- Fresh exact-head Human Wave2 run `37243788900` (workflow run #39) on `157e4e857406a2ce28c18c96cdacfedfd0b07ab5` completed **SUCCESS**.
+- The direct UE4.27.2 job reached **Build ShireJourneyEditor once = SUCCESS**, so the `Factories/FbxSkeletalMeshImportData.h` root fix is now **COMPILE-TESTED** for this exact head. Generic Unreal classifier/inheritance is not being used as the compile proof.
+- Rogue re-import ran with `use-t0-ref-pose=yes` and passed the unchanged technical hard gate: **48 reference bones**, valid linked `USkeleton`, and **377 files / 0 failures**. The prior `MISSING_BIND_POSE_BONES` rejection did not recur for the technical winner.
+- Hosted Wave3 static deformation then produced `STATIC_DEFORMATION_STRESS_PASS` for normalized winner SHA256 `75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be`.
+- Required semantic deform joints all have nonzero weighted influence. Representative counts: spine=600, pelvis=495, head=613, left/right thigh=136 each, left/right shin=164 each, left/right foot=129 each, left/right hand=118 each.
+- Every stress scenario produced nonzero evaluated displacement: shoulders=`1.3242740508125306`, elbows=`1.8153426847017398`, knees=`0.4075082909932559`, hands/feet=`0.34126040685103143`, locomotion=`0.6584697777759558`.
+- Evidence boundary remains strict: `visual_deformation_accepted=false`, `retarget_accepted=false`, `runtime_integration_allowed=false`. This is **not** PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED, or Gate 6/7 acceptance.
+
+## 2026-10-05 - Frodo hosted Idle/Walk/Run animation-source inventory packet
+
+- The earlier Quaternius animation warehouse attempt did not stage payload: historical run `37211720726` recorded `QUATERNIUS_WAREHOUSE_MANUAL_QUEUE files=0 unresolved=1`. Therefore it is not valid animation input and is not being promoted.
+- A new bounded hosted-only source-inventory lane is implemented around the public OpenGameArt page for Quaternius **Universal Animation Library Standard**, marked CC0 and exposing a public Standard ZIP. The project does not automate the interactive/name-your-price Quaternius store path.
+- New contract files: `Data/P1C01FrodoAnimationSourceV1.json`, `Scripts/run_p1c01_frodo_animation_source_inventory.py`, `Scripts/test_p1c01_frodo_animation_source_contract.py`, and `.github/workflows/p1c01-frodo-animation-source.yml`.
+- The lane runs on hosted Ubuntu only, performs bounded safe ZIP extraction, rejects dangerous extensions including BMP, ignores OBJ as animated production input, inspects FBX actions in Blender, and requires discoverable animated Idle/Walk/Run roles before any self-hosted UE4 reservation.
+- The archive SHA256 is intentionally captured on the first hosted receipt and must be pinned before retarget promotion. No retarget, UE4 animation import, AnimBP, runtime integration, PIE, device, visual, or FPS acceptance is implied.
+- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD HOSTED SOURCE-INVENTORY VALIDATION PENDING**.
+
