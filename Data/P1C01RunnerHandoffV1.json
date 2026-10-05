@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "handoff_id": "P1C01_RUNNER_HANDOFF_V1",
+  "status": "READY_AS_EXECUTION_SEQUENCE_RUNNER_CURRENTLY_UNAVAILABLE",
+  "rule": "When UE4-27-Windows returns, do not restart planning. Sync the latest P1C01 head once, prove runner health, then execute the accumulated One-Shot train.",
+  "execution_order": [
+    {
+      "order": 1,
+      "id": "RUNNER_HEALTH",
+      "expected": "RUNNER_HEALTH_PASS"
+    },
+    {
+      "order": 2,
+      "id": "P1C01_CLOSURE_SOURCE_TRAIN",
+      "workflow": "P1C01 Chapter Closure Pack"
+    },
+    {
+      "order": 3,
+      "id": "PRE_UNREAL",
+      "workflow": "Pre-Unreal Validation"
+    },
+    {
+      "order": 4,
+      "id": "UNREAL_BUILD_IMPORT_PACKAGE",
+      "workflow": "Unreal Build Validation"
+    },
+    {
+      "order": 5,
+      "id": "FRODO_RUNTIME",
+      "workflow": "P1C01 Frodo UE4 Animation Import"
+    },
+    {
+      "order": 6,
+      "id": "REQUIRED_CHARACTER_SUCCESSORS",
+      "expected": "Gandalf then remaining P1C01 named-character bundles as gates allow"
+    },
+    {
+      "order": 7,
+      "id": "WORLD_RENDER",
+      "workflow": "P1C01 Shire Render Capture"
+    },
+    {
+      "order": 8,
+      "id": "AUDIO_RUNTIME",
+      "expected": "WAV import/playback evidence"
+    },
+    {
+      "order": 9,
+      "id": "PIE_MISSION_SAVE",
+      "expected": "route/collision/retry/skip/rejoin/disk save-load"
+    },
+    {
+      "order": 10,
+      "id": "TARGET_DEVICE",
+      "expected": "DX11 1280x720 >=30 FPS with RAM/VRAM/streaming/NPC observations"
+    },
+    {
+      "order": 11,
+      "id": "HUMAN_GATE_6_7",
+      "expected": "region visual/pacing/audio/return-to-control acceptance"
+    }
+  ],
+  "forbidden": [
+    "opening P1C02 automatically",
+    "calling static evidence PIE-tested",
+    "blind density increase",
+    "synchronous heavy loading",
+    "CI self-push"
+  ]
+}

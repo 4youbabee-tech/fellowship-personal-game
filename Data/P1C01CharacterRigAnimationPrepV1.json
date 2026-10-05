@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "batch_id": "P1C01_CHARACTER_RIG_ANIMATION_PREP_V1",
-  "status": "FRODO_TECHNICAL_WINNER_TARGETED_ANIMATION_INTAKE_REQUESTED",
+  "status": "P1C01_REQUIRED_CAST_SOURCE_SATURATION_ACTIVE_FRODO_TECHNICAL_WINNER_ESTABLISHED",
   "authority": [
     "Data/ProjectGovernor.json",
     "Data/CharacterVisualProductionWaveV7.json",
     "Data/CharacterProductionMatrix.json",
     "Data/ProductionAssetPromotionPolicyV1.json"
   ],
-  "runtime_gate": "P1C01_FRODO_TECHNICAL_WINNER_DEFORMATION_RETARGET_PREP",
+  "runtime_gate": "P1C01_ONE_SHOT_CHARACTER_SOURCE_PREP_WITH_SERIAL_RUNTIME_PROMOTION",
   "priority_characters": [
     {
       "id": "FRODO",
@@ -139,39 +139,128 @@
   "evidence_boundary": "Technical skeletal winner is evidenced. Animation staging/retarget/deformation/runtime/PIE/device/visual/FPS acceptance remains pending.",
   "owner_sequence_authority": "Data/P1C01RuntimeChapterSequenceV1.json",
   "active_scope": {
-    "character": "FRODO",
-    "successor": "GANDALF",
-    "later_characters": "DEFERRED_UNTIL_SERIAL_PREDECESSORS_COMPLETE",
-    "integration_rule": "Candidate QC must pass before READY_FOR_IMPORT or runtime integration.",
-    "qc_request_id": "P1C01_FRODO_CANDIDATE_QC_2026_10_01_V1",
-    "qc_request_state": "TECHNICAL_WINNER_EVIDENCED_TARGETED_ANIMATION_STAGE_REQUESTED"
+    "runtime_predecessor": "FRODO",
+    "runtime_successor": "GANDALF",
+    "source_preparation": "ALL_P1C01_REQUIRED_CHARACTERS_IN_PARALLEL",
+    "integration_rule": "Source/QC preparation may advance without the runner. Runtime promotion remains serialized where predecessor gates require it.",
+    "current_blocker": "SELF_HOSTED_UE4_RUNNER_UNAVAILABLE"
   },
   "technical_winner": {
-    "normalized_sha256": "eff0e79980f90d49deada0aa37ad8be5975a86330348e4ae6fa49d3171fad570",
-    "ue4_reference_bones": 161,
+    "character": "FRODO",
+    "source_family": "KayKit Rogue technical rig",
+    "normalized_sha256": "75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be",
+    "ue4_reference_bones": 48,
     "linked_uskeleton": true,
-    "evidence": "Human Wave 2 exact-head technical gate PASS; no deformation/retarget acceptance implied."
+    "t0_reference_pose": true,
+    "deformation_evidence": {
+      "state": "STATIC_DEFORMATION_STRESS_PASS",
+      "shoulder_max_displacement_approx": 1.324,
+      "elbow_max_displacement_approx": 1.815,
+      "knee_max_displacement_approx": 0.408,
+      "locomotion_max_displacement_approx": 0.658
+    },
+    "tracked_runtime_sources": [
+      "SourceAssets/ValidatedRuntime/FRODO/SK_FRODO_Validated.fbx",
+      "SourceAssets/ValidatedRuntime/FRODO/Frodo_Idle_Retarget.fbx",
+      "SourceAssets/ValidatedRuntime/FRODO/Frodo_Walk_Retarget.fbx",
+      "SourceAssets/ValidatedRuntime/FRODO/Frodo_Run_Retarget.fbx",
+      "SourceAssets/ValidatedRuntime/FRODO/provenance.json"
+    ],
+    "evidence_boundary": "Technical rig/deformation/source persistence only. Fresh exact-head runtime/visual/device acceptance remains pending."
   },
   "active_animation_intake": {
-    "batch": "WAREHOUSE_QUATERNIUS_P1C01_ANIMATION_V1",
-    "manifest": "Data/WarehouseQuaterniusAnimationBatchV1.json",
-    "provider": "QUATERNIUS",
-    "source_id": "QTN_UNIVERSAL_ANIMATION_LIBRARY",
-    "observed_license": "CC0",
-    "required_final_format": "FBX",
+    "state": "TRACKED_VALIDATED_RUNTIME_CORE_PRESENT",
     "required_initial_clips": [
       "Idle",
       "Walk",
       "Run"
     ],
-    "stage_scope": "ONE_PACK_ONLY",
-    "state": "REQUESTED_TARGETED_WAREHOUSE_STAGE",
-    "next_if_staged": [
-      "verify archive receipt SHA256 and safe extraction",
-      "inventory FBX animation clips",
-      "select Idle/Walk/Run only",
-      "retarget compatibility proof against Frodo technical winner",
-      "deformation review before AnimBP/runtime promotion"
-    ]
-  }
+    "tracked_clips": {
+      "Idle": "SourceAssets/ValidatedRuntime/FRODO/Frodo_Idle_Retarget.fbx",
+      "Walk": "SourceAssets/ValidatedRuntime/FRODO/Frodo_Walk_Retarget.fbx",
+      "Run": "SourceAssets/ValidatedRuntime/FRODO/Frodo_Run_Retarget.fbx"
+    },
+    "historical_ue4_import_evidence": {
+      "Idle": "76 frames / 2.5s",
+      "Walk": "41 frames / 1.333333s",
+      "Run": "29 frames / 0.933333s"
+    },
+    "next_runner_work": "Fresh exact-head import/runtime presentation, then successor runtime promotion."
+  },
+  "p1c01_required_characters": [
+    {
+      "id": "FRODO",
+      "rig_family": "HOBBIT_HUMANOID",
+      "story_segments": [
+        "F1-01",
+        "F1-02",
+        "F1-03"
+      ],
+      "source_prep_parallel": true
+    },
+    {
+      "id": "BILBO",
+      "rig_family": "HOBBIT_HUMANOID",
+      "story_segments": [
+        "F1-01"
+      ],
+      "source_prep_parallel": true
+    },
+    {
+      "id": "GANDALF",
+      "rig_family": "TALL_HUMANOID",
+      "story_segments": [
+        "F1-01",
+        "F1-02"
+      ],
+      "source_prep_parallel": true
+    },
+    {
+      "id": "SAM",
+      "rig_family": "HOBBIT_HUMANOID",
+      "story_segments": [
+        "F1-02",
+        "F1-03"
+      ],
+      "source_prep_parallel": true
+    },
+    {
+      "id": "MERRY",
+      "rig_family": "HOBBIT_HUMANOID",
+      "story_segments": [
+        "F1-03"
+      ],
+      "source_prep_parallel": true
+    },
+    {
+      "id": "PIPPIN",
+      "rig_family": "HOBBIT_HUMANOID",
+      "story_segments": [
+        "F1-03"
+      ],
+      "source_prep_parallel": true
+    },
+    {
+      "id": "BLACK_RIDER",
+      "rig_family": "TALL_HUMANOID_MOUNTED",
+      "story_segments": [
+        "F1-03"
+      ],
+      "source_prep_parallel": true
+    },
+    {
+      "id": "BLACK_RIDER_HORSE",
+      "rig_family": "HORSE",
+      "story_segments": [
+        "F1-03"
+      ],
+      "source_prep_parallel": true
+    }
+  ],
+  "part1_not_p1c01_source_prep_only": [
+    "ARAGORN",
+    "GIMLI",
+    "LEGOLAS",
+    "BOROMIR"
+  ]
 }

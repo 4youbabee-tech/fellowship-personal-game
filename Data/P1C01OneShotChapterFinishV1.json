@@ -116,5 +116,11 @@
     "fauna": 12,
     "character_animation": 20
   },
-  "completion_rule": "P1C01 is not finished until every required lane is integrated and chapter-specific Gate 6/7 evidence is accepted. P1C02 remains locked."
+  "completion_rule": "P1C01 is not finished until every required lane is integrated and chapter-specific Gate 6/7 evidence is accepted. P1C02 remains locked.",
+  "offline_runner_unavailable_mode": {
+    "state": "ACTIVE_WHEN_SELF_HOSTED_RUNNER_UNAVAILABLE",
+    "master_pack": "Data/P1C01OfflineSaturationPackV1.json",
+    "runner_handoff": "Data/P1C01RunnerHandoffV1.json",
+    "rule": "Do not idle. Finish source/code/data/provenance/QC/hosted-static preparation and defer only evidence that genuinely requires UE4-27-Windows."
+  }
 }

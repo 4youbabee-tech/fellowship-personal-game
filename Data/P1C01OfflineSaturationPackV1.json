@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "pack_id": "P1C01_OFFLINE_SATURATION_PACK_V1",
+  "status": "ACTIVE_WHILE_SELF_HOSTED_RUNNER_UNAVAILABLE",
+  "purpose": "Finish every P1C01 source/code/data/QC task that does not require UE4 or target-device evidence so runner return is spent on integration/evidence rather than planning.",
+  "source_scope": [
+    "F1-01",
+    "F1-02",
+    "F1-03 Shire roads/Bucklebury through Ferry handoff"
+  ],
+  "lanes": [
+    {
+      "id": "CANON_STORY",
+      "state": "OFFLINE_AUTHORING_ACTIVE"
+    },
+    {
+      "id": "CHARACTERS",
+      "state": "OFFLINE_GAP_MAP_COMPLETE_BINARY_ACQUISITION_OR_UE_QC_PENDING"
+    },
+    {
+      "id": "WORLD_ROUTE",
+      "state": "OFFLINE_COMPLETENESS_ACTIVE"
+    },
+    {
+      "id": "MATERIALS_VEGETATION_ART",
+      "state": "TRACKED_SOURCE_SET_PRESENT_MORE_SOURCE_QC_ALLOWED"
+    },
+    {
+      "id": "LIVING_SHIRE",
+      "state": "SOURCE_IMPLEMENTED_STATIC_AUDITABLE_UE_PIE_PENDING"
+    },
+    {
+      "id": "GAMEPLAY_EXPLORATION",
+      "state": "SOURCE_IMPLEMENTED_ACCEPTANCE_MAP_ACTIVE"
+    },
+    {
+      "id": "AUDIO_PRESENTATION",
+      "state": "OFFLINE_MASTER_PREPARATION_ACTIVE"
+    },
+    {
+      "id": "SAVE_RELIABILITY",
+      "state": "SOURCE_IMPLEMENTED_DISK_ROUNDTRIP_PENDING"
+    },
+    {
+      "id": "STREAMING_PERFORMANCE",
+      "state": "SOURCE_POLICY_PRESENT_DEVICE_MEASUREMENT_PENDING"
+    },
+    {
+      "id": "GATE_6_7",
+      "state": "RUNNER_AND_HUMAN_EVIDENCE_PENDING"
+    }
+  ],
+  "hard_blocked_without_runner": [
+    "UE4 compile/import/package/uasset persistence",
+    "runtime render/PIE",
+    "actual in-engine audio playback",
+    "save/load disk roundtrip",
+    "target-device FPS/RAM/VRAM",
+    "human visual/pacing Gate 6/7"
+  ],
+  "rule": "Runner outage is never a reason to idle source preparation."
+}

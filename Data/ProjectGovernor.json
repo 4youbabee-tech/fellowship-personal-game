@@ -7676,11 +7676,11 @@
       "warehouse_run": 232
     },
     "next_actions": [
-      "Clean all known P1C01 preflight blockers before mass promotion: LFS truth, derived streaming counts, runner/control-plane contention and provenance/QC.",
-      "Saturate the complete P1C01 source payload: characters/animation, materials, architecture/interiors/props, vegetation, audio and fauna.",
-      "Integrate the full Shire-through-Ferry chapter under one runtime authority with visible-world and real-character priority.",
-      "Finish gameplay/exploration/audio/save/return-to-control, then execute Gate 6/7 inside the same chapter wave.",
-      "Do not open P1C02 runtime until P1C01 Gate 6/7 is accepted and the owner explicitly starts it."
+      "While UE4-27-Windows is unavailable, execute Data/P1C01OfflineSaturationPackV1.json; do not idle P1C01.",
+      "Prepare all required P1C01 named-character FBX bundle sources/QC mappings in parallel while preserving serialized runtime promotion.",
+      "Complete world/audio/mission/save/streaming source handoff data before the next self-hosted slot.",
+      "When the runner returns, execute Data/P1C01RunnerHandoffV1.json from the latest exact head.",
+      "Do not open P1C02 until P1C01 Gate 6/7 is accepted and explicitly started by the owner."
     ],
     "runner_infrastructure_guard": "HARD: service-mode runner ownership is eliminated, not merely discouraged. actions.runner.* must be absent or Stopped+Disabled pending deletion. UE4-27-Windows runs only via the interactive-user watchdog; NETWORK SERVICE/LOCAL SERVICE/SYSTEM are forbidden.",
     "production_freeze": {
@@ -8729,5 +8729,18 @@
     "schedule_boundary": "No recurring production schedule is authorized. The separate 24-hour owner status report remains active.",
     "chapter_transition_rule": "Never auto-open the next runtime chapter. Current chapter must satisfy its registered closure/Gate 6/7 evidence and the owner must explicitly start the next chapter.",
     "evidence_boundary": "This contract governs continuity/management. It does not itself establish PIE, device, visual, performance or Gate 6/7 acceptance."
+  },
+  "runner_unavailable_policy_2026_10_06": {
+    "status": "ACTIVE_PERMANENT",
+    "trigger": "UE4-27-Windows is not accepting jobs or is physically unavailable.",
+    "rule": "Runner unavailability never idles the active chapter. Continue every safe source/code/data/provenance/QC/hosted-static task that does not require UE4 or target-device evidence. Execute Data/P1C01RunnerHandoffV1.json when the runner returns.",
+    "genuinely_runner_blocked": [
+      "UE4 compile/import/package/uasset persistence",
+      "runtime render/PIE",
+      "in-engine audio playback",
+      "disk save/load runtime proof",
+      "target-device FPS/RAM/VRAM",
+      "human Gate 6/7"
+    ]
   }
 }

@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "manifest_id": "P1C01_CHARACTER_BUNDLE_COMPLETION_V1",
+  "status": "OFFLINE_SOURCE_PREPARATION_ACTIVE",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "01_STORY_AND_TIMELINE_BIBLE",
+    "02_CHARACTERS_AND_RELATIONSHIPS_BIBLE",
+    "10_3D_VISUAL_ASSET_ATLAS_PRODUCTION",
+    "Data/P1C01CharacterRigAnimationPrepV1.json"
+  ],
+  "rule": "Every required animated P1C01 named character must reach a rigged FBX production bundle. Existing OBJ pieces are fallback/reference only. Source preparation may advance for all required characters while runtime promotion remains dependency-gated.",
+  "required_characters": [
+    {
+      "id": "FRODO",
+      "role": "PLAYABLE_HERO",
+      "segments": [
+        "F1-01",
+        "F1-02",
+        "F1-03"
+      ],
+      "current_sources": {
+        "legacy_obj_count": 9,
+        "validated_runtime_fbx_count": 4,
+        "provenance_count": 1
+      },
+      "source_state": "TECHNICAL_WINNER_AND_CORE_LOCOMOTION_TRACKED",
+      "final_bundle": [
+        "skeletal FBX",
+        "Idle",
+        "Walk",
+        "Run",
+        "stealth/hiding",
+        "interaction/packing",
+        "dialogue/social",
+        "fear/reaction",
+        "LOD/material plan"
+      ]
+    },
+    {
+      "id": "BILBO",
+      "role": "NAMED_STORY_NPC",
+      "segments": [
+        "F1-01"
+      ],
+      "current_sources": {
+        "legacy_obj_count": 3,
+        "final_rigged_fbx_count": 0
+      },
+      "source_state": "FINAL_ANIMATED_BUNDLE_GAP",
+      "final_bundle": [
+        "rigged FBX",
+        "Idle",
+        "Walk",
+        "talk/social gestures",
+        "party interaction",
+        "departure interaction",
+        "LOD/material plan"
+      ]
+    },
+    {
+      "id": "GANDALF",
+      "role": "NAMED_STORY_NPC",
+      "segments": [
+        "F1-01",
+        "F1-02"
+      ],
+      "current_sources": {
+        "legacy_obj_count": 10,
+        "final_rigged_fbx_count": 0
+      },
+      "source_state": "FINAL_ANIMATED_BUNDLE_GAP",
+      "final_bundle": [
+        "rigged FBX",
+        "Idle",
+        "Walk",
+        "staff idle/locomotion",
+        "talk gestures",
+        "fireworks interaction",
+        "Ring investigation interaction",
+        "LOD/material plan"
+      ]
+    },
+    {
+      "id": "SAM",
+      "role": "COMPANION",
+      "segments": [
+        "F1-02",
+        "F1-03"
+      ],
+      "current_sources": {
+        "legacy_obj_count": 5,
+        "final_rigged_fbx_count": 0
+      },
+      "source_state": "FINAL_ANIMATED_BUNDLE_GAP",
+      "final_bundle": [
+        "rigged FBX",
+        "Idle",
+        "Walk",
+        "Run",
+        "crouch/hide",
+        "carry/pack interaction",
+        "dialogue/react",
+        "LOD/material plan"
+      ]
+    },
+    {
+      "id": "MERRY",
+      "role": "COMPANION",
+      "segments": [
+        "F1-03"
+      ],
+      "current_sources": {
+        "legacy_obj_count": 5,
+        "final_rigged_fbx_count": 0
+      },
+      "source_state": "FINAL_ANIMATED_BUNDLE_GAP",
+      "final_bundle": [
+        "rigged FBX",
+        "Idle",
+        "Walk",
+        "Run",
+        "crouch/hide",
+        "dialogue/react",
+        "ferry interaction",
+        "LOD/material plan"
+      ]
+    },
+    {
+      "id": "PIPPIN",
+      "role": "COMPANION",
+      "segments": [
+        "F1-03"
+      ],
+      "current_sources": {
+        "legacy_obj_count": 5,
+        "final_rigged_fbx_count": 0
+      },
+      "source_state": "FINAL_ANIMATED_BUNDLE_GAP",
+      "final_bundle": [
+        "rigged FBX",
+        "Idle",
+        "Walk",
+        "Run",
+        "crouch/hide",
+        "dialogue/react",
+        "ferry interaction",
+        "LOD/material plan"
+      ]
+    },
+    {
+      "id": "BLACK_RIDER",
+      "role": "THREAT_NPC",
+      "segments": [
+        "F1-03"
+      ],
+      "current_sources": {
+        "legacy_obj_count": 2,
+        "final_rigged_fbx_count": 0
+      },
+      "source_state": "FINAL_ANIMATED_BUNDLE_GAP",
+      "final_bundle": [
+        "rigged rider FBX",
+        "mounted compatibility",
+        "threat idle",
+        "mounted posture/reaction",
+        "cloth/gear attachment plan",
+        "LOD/material plan"
+      ]
+    },
+    {
+      "id": "BLACK_RIDER_HORSE",
+      "role": "THREAT_MOUNT",
+      "segments": [
+        "F1-03"
+      ],
+      "current_sources": {
+        "legacy_obj_count": 1,
+        "final_rigged_fbx_count": 0
+      },
+      "source_state": "FINAL_ANIMATED_BUNDLE_GAP",
+      "final_bundle": [
+        "rigged horse FBX",
+        "Idle",
+        "Walk",
+        "Trot",
+        "Canter/Run",
+        "Turn",
+        "Stop",
+        "head/breath reaction",
+        "rider socket compatibility",
+        "LOD/collision plan"
+      ]
+    }
+  ],
+  "ambient_population": {
+    "current_project_owned_fallback": "SourceAssets/Production/Characters/Hobbit (5 OBJ pieces)",
+    "final_requirement": "Production-readable pooled Hobbit family variants with shared/compatible animation where practical.",
+    "runtime_owner": "ALivingWorldDirector",
+    "context_owner": "UShireNPCContextSubsystem"
+  },
+  "forbidden": [
+    "OBJ_AS_FINAL_ANIMATED_CHARACTER",
+    "SYNCHRONOUS_HEAVY_LOAD",
+    "HARD_HEAVY_RUNTIME_REFERENCE",
+    "UNPROVEN_LIKENESS_EQUALS_FINAL_ART"
+  ]
+}
