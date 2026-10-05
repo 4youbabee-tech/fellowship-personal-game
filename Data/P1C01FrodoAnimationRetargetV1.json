@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "gate_id": "P1C01_FRODO_HOSTED_RETARGET_V1",
-  "status": "SOURCE_IMPLEMENTED_VALIDATION_PENDING",
+  "status": "EXACT_PRIOR_WINNER_ARTIFACT_RETARGET_REVALIDATION_PENDING",
   "runtime_chapter": "P1C01",
   "target_character": "FRODO",
   "purpose": "Prove hosted Idle/Walk/Run technical retarget compatibility from the pinned Quaternius Standard Unreal FBX onto the exact normalized KayKit Rogue winner before any UE4 animation import reservation.",
@@ -11,7 +11,21 @@
     "source_entry": "Rogue.fbx",
     "normalized_sha256": "75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be",
     "expected_semantic_count": 15,
-    "static_deformation_gate": "STATIC_DEFORMATION_STRESS_PASS"
+    "static_deformation_gate": "STATIC_DEFORMATION_STRESS_PASS",
+    "exact_winner_workflow_run": 37243788900,
+    "exact_winner_artifact": "p1c01-human-wave2-hosted-157e4e857406a2ce28c18c96cdacfedfd0b07ab5",
+    "exact_winner_relative_path": "normalized/candidate_02.fbx",
+    "raw_source_sha256": "93a9ee0a67ae69b2d815050234acad2004c3b8af7d294b916e52609c8195eb71",
+    "fresh_regeneration_sanity": {
+      "required": true,
+      "require_source_entry": "Rogue.fbx",
+      "require_quality_pass": true,
+      "expected_bone_count": 41,
+      "expected_vertex_count": 3330,
+      "expected_weighted_vertex_count": 2209,
+      "expected_uv_layer_count": 12,
+      "note": "Fresh normalization remains a source/structure sanity check. The retarget target itself is the previously UE4-gated exact winner artifact and must match the pinned normalized SHA byte-for-byte."
+    }
   },
   "source": {
     "provider": "OpenGameArt",
@@ -24,18 +38,24 @@
     "animated_format": "FBX"
   },
   "clips": {
-    "idle": {"action_leaf": "Idle_Loop"},
-    "walk": {"action_leaf": "Walk_Loop"},
-    "run": {"action_leaf": "Jog_Fwd_Loop"}
+    "idle": {
+      "action_leaf": "Idle_Loop"
+    },
+    "walk": {
+      "action_leaf": "Walk_Loop"
+    },
+    "run": {
+      "action_leaf": "Jog_Fwd_Loop"
+    }
   },
   "retarget_policy": {
     "method": "mapped semantic local rotation deltas, in-place locomotion",
     "required_semantic_bones": 15,
-    "min_source_motion_degrees": 1.0,
+    "min_source_motion_degrees": 1,
     "min_moving_semantic_bones": 4,
     "min_displacement_ratio": 0.00001,
     "min_bounds_ratio": 0.2,
-    "max_bounds_ratio": 5.0,
+    "max_bounds_ratio": 5,
     "max_clip_frames": 240,
     "max_source_fbx_bytes": 67108864,
     "derivative_format": "FBX_ANIMATION_ONLY",
@@ -43,12 +63,14 @@
   },
   "execution_contract": {
     "hosted_only": true,
-    "regenerate_exact_target_from_immutable_source": true,
+    "regenerate_exact_target_from_immutable_source": false,
     "target_sha_must_match_prior_winner": true,
     "self_hosted_ue4_reserved_before_hosted_retarget_pass": false,
     "ue4_animation_imported": false,
     "anim_bp_allowed": false,
-    "runtime_integration_allowed": false
+    "runtime_integration_allowed": false,
+    "fresh_regeneration_sanity_required": true,
+    "use_exact_prior_ue4_gated_winner_artifact": true
   },
   "evidence_boundary": "Hosted technical retarget only. Human visual deformation, UE4 animation import, AnimBP, runtime, PIE, device and FPS acceptance remain separate gates."
 }
