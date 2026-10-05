@@ -20,6 +20,38 @@ function Test-DangerousExtension([string]$Extension) {
   return ([string]$Extension).ToLowerInvariant() -in @(".exe",".msi",".cmd",".bat",".ps1",".vbs",".js",".scr",".com")
 }
 
+function Resolve-WarehousePayloadPath {
+  param([string]$Path,[string]$WarehouseRoot)
+
+  if([string]::IsNullOrWhiteSpace($Path)){ return $Path }
+  if(Test-Path -LiteralPath $Path -PathType Leaf){ return $Path }
+
+  # Self-hosted runner roots can move between drive letters while receipt payload
+  # identities remain valid. Rebase only the portion below the canonical
+  # ShireJourney warehouse root; never trust an arbitrary missing absolute path.
+  $normalized = $Path.Replace([char]92,'/')
+  $marker = '/ShireJourney/'
+  $index = $normalized.IndexOf($marker, [StringComparison]::OrdinalIgnoreCase)
+  if($index -lt 0){ return $Path }
+
+  $relative = $normalized.Substring($index + $marker.Length)
+  if([string]::IsNullOrWhiteSpace($relative) -or $relative.Split('/') -contains '..'){
+    return $Path
+  }
+
+  $rootFull = [IO.Path]::GetFullPath($WarehouseRoot).TrimEnd([char]92,[char]47)
+  $candidate = [IO.Path]::GetFullPath((Join-Path $rootFull ($relative.Replace('/',[IO.Path]::DirectorySeparatorChar))))
+  $rootPrefix = $rootFull + [IO.Path]::DirectorySeparatorChar
+  if(-not $candidate.StartsWith($rootPrefix, [StringComparison]::OrdinalIgnoreCase)){
+    return $Path
+  }
+  if(Test-Path -LiteralPath $candidate -PathType Leaf){
+    Write-Host "P1C01_MATERIAL_WAREHOUSE_PATH_REBASED from=$Path to=$candidate"
+    return $candidate
+  }
+  return $Path
+}
+
 function Test-ZipSafe([string]$ArchivePath) {
   $archive=[IO.Compression.ZipFile]::OpenRead($ArchivePath)
   try {
@@ -139,7 +171,7 @@ foreach($item in @($manifest.immediate_open_source_items)) {
   $files=New-Object 'System.Collections.Generic.List[string]'
   $provenanceByFile=@{}
   foreach($row in $matches) {
-    $p=[string]$row.file
+    $p=Resolve-WarehousePayloadPath -Path ([string]$row.file) -WarehouseRoot $WarehouseRoot
     if([string]::IsNullOrWhiteSpace($p) -or -not (Test-Path -LiteralPath $p -PathType Leaf)){
       $manualQueue += [ordered]@{id=[string]$item.id;asset_slug=[string]$item.asset_slug;file=$p;reason="receipt_file_missing"}
       continue
