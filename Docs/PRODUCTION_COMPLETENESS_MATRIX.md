@@ -3910,3 +3910,19 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | AnimBP / runtime Frodo | PENDING |
 | Human visual / PIE / device / performance / Gate 6+7 | NOT ACCEPTED |
 
+## 2026-10-05 - Owner visual evidence + isolated Frodo UE4 checkout
+
+| Control | State |
+|---|---|
+| Owner runtime screenshots | HUMAN VISUAL REJECT / proxy-greybox still visible |
+| Terrain / foliage / tree presentation | NOT FINAL |
+| Frodo runtime presentation | PROXY FALLBACK STILL ACTIVE |
+| Existing low-poly Production-named world assets sufficient for hero-quality finish | NO |
+| Blind density wave with same low-poly meshes | NOT AUTHORIZED |
+| Frodo UE4 animation run on `c10cc6fa9abf122cb6efadb4be7e6c43921d7926` | FAILURE before build/import |
+| Failure cause | self-hosted `actions/checkout` workspace destruction / not-a-git-repository |
+| Isolated exact-SHA checkout | SOURCE-IMPLEMENTED |
+| Build/import evidence after isolation fix | PENDING |
+| AnimBP / runtime Frodo hookup | PENDING |
+| Human visual acceptance | NOT ACCEPTED |
+| PIE / device / performance / Gate 6+7 | NOT ACCEPTED |
