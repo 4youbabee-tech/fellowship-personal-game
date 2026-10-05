@@ -1,0 +1,20 @@
+﻿{
+    "schema_version":  1,
+    "character":  "FRODO",
+    "source_status":  "UE4_TECHNICALLY_VALIDATED_RUNTIME_INPUT",
+    "target_fbx":  "SK_FRODO_Validated.fbx",
+    "target_sha256":  "75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be",
+    "idle_fbx":  "Frodo_Idle_Retarget.fbx",
+    "idle_sha256":  "ee81650714587d2a1a638f3ff0c1a8239ea555bf84959e96ce5d037af3f33cd3",
+    "walk_fbx":  "Frodo_Walk_Retarget.fbx",
+    "walk_sha256":  "c4091b7881a4e9e810e70bb7f3abed58683dff5bacf54e26ccb2e926e4c9e688",
+    "run_fbx":  "Frodo_Run_Retarget.fbx",
+    "run_sha256":  "4a4d10d91343dbd701c535d30ea9d9384ca74596cd7720cf6bfdd1c6328e1fc1",
+    "rig_source":  "KayKit Character Pack: Adventurers / Rogue / CC0 / normalized derivative",
+    "animation_source":  "Quaternius Universal Animation Library Standard / OpenGameArt / CC0",
+    "exact_validation_head":  "ac8fe1488019c3ba0e12356c3a8d365ee338a6b5",
+    "exact_validation_run":  "37349713107",
+    "visual_acceptance":  false,
+    "pie_tested":  false,
+    "device_tested":  false
+}
