@@ -3839,3 +3839,23 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | UE4 animation import / AnimBP / runtime | PENDING |
 | Visual / PIE / device / performance | NOT ACCEPTED |
 
+## 2026-10-05 - Hosted retarget exact-target identity root fix
+
+| Control | State |
+|---|---|
+| Failing retarget run | `37273271779` / FAILURE |
+| Failing exact head | `5b5c1a76080caf833d82647614f09f76a385fb64` |
+| Fresh Rogue raw SHA | PASS |
+| Fresh Rogue hosted quality winner | PASS |
+| Fresh structural sanity | 41 bones / 3330 vertices / 2209 weighted / 12 UV |
+| Failure gate | exact prior normalized-byte identity lookup |
+| Exact retarget target source | Human Wave2 run `37243788900` artifact |
+| Exact target relative path | `normalized/candidate_02.fbx` |
+| Required exact target SHA256 | `75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be` |
+| Prior artifact receipt must identify Rogue | YES |
+| Fresh normalization allowed to replace exact target bytes | NO |
+| Self-hosted UE4 consumed after failure | NO |
+| Fresh hosted retarget revalidation | PENDING |
+| UE4 animation import / AnimBP / runtime | PENDING |
+| Visual / PIE / device / performance | NOT ACCEPTED |
+
