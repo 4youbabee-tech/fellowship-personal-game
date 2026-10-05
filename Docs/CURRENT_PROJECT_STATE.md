@@ -4647,3 +4647,12 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Publish retries are bounded and fast-forward only. No force push is authorized.
 - This prevents a long UE4 gate from overwriting or rejecting newer closeout work while preserving exact source identity.
 - Status: **SOURCE-IMPLEMENTED PENDING FRESH EXACT-HEAD WORKFLOW PROOF**. No runtime/visual/device/performance acceptance is promoted by this infrastructure hardening.
+
+## 2026-10-05 - P1C01 receipt-verified surface source promotion lane
+
+- A dedicated P1C01 material source-promotion lane is added for the ledger-registered high-fidelity surface replacement.
+- Hosted preflight validates the corrected MTL generator/contract before the warehouse runner is reserved.
+- The self-hosted lane reads only receipt/SHA256-verified warehouse inputs through `prepare_p1c01_material_intake.ps1`, requires the known Shire material subset plus a minimum prepared count, verifies complete one-line MTL directives, and publishes prepared source files into `SourceAssets/Production/Imported/P1C01Materials`.
+- PNG payloads remain Git LFS-managed; animated-asset rules are unaffected. Publish is conflict-safe, bounded, and never force-pushes.
+- The source-promotion lane does not claim UE material import success. The resulting SourceAssets commit must still pass the existing generic Unreal production-import/build and fresh render capture before runtime material binding can be accepted.
+- Status: **SOURCE-IMPLEMENTED / FRESH MATERIAL SOURCE-PROMOTION EXECUTION PENDING**. Human visual and performance acceptance remain NOT ACCEPTED.
