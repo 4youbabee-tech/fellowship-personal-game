@@ -4095,3 +4095,16 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Invalid PowerShell backslash continuation | REMOVED BEFORE EXECUTION |
 | Warehouse intake semantics | UNCHANGED |
 | Fresh promotion execution | PENDING |
+
+## 2026-10-05 - External material source approval reconciliation
+
+| Control | State |
+|---|---|
+| Approved Poly Haven P1C01 source records | 8 |
+| Provider / license class | POLY_HAVEN / CC0 |
+| Exact source URL + SHA256 | RECORDED |
+| ResourceIntegration approved count | 8 |
+| PG-052 approved-count logic | DATA-DRIVEN |
+| New third-party geometry approval | NONE |
+| Fresh exact-head static validation | PENDING |
+| UE/runtime/visual/performance acceptance | NOT ACCEPTED |
