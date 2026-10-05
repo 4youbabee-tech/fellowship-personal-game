@@ -12,8 +12,8 @@
     "run_sha256":  "4a4d10d91343dbd701c535d30ea9d9384ca74596cd7720cf6bfdd1c6328e1fc1",
     "rig_source":  "KayKit Character Pack: Adventurers / Rogue / CC0 / normalized derivative",
     "animation_source":  "Quaternius Universal Animation Library Standard / OpenGameArt / CC0",
-    "exact_validation_head":  "ac8fe1488019c3ba0e12356c3a8d365ee338a6b5",
-    "exact_validation_run":  "37349713107",
+    "exact_validation_head":  "996d56dccfbe2a58115565d57075baef9bf6db7c",
+    "exact_validation_run":  "37351362076",
     "visual_acceptance":  false,
     "pie_tested":  false,
     "device_tested":  false
