@@ -222,6 +222,10 @@ jobs:
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_p1c01_visible_world_proxy_replacement.ps1"
 
+      - name: Test P1C01 material MTL contract
+        shell: cmd
+        run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_p1c01_material_mtl_contract.ps1"
+
       - name: Scrub static checkout authentication
         if: always()
         shell: cmd
