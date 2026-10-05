@@ -87,6 +87,10 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
+      - name: Hydrate P1C01 material LFS sources
+        shell: powershell
+        run: '& "$env:GITHUB_WORKSPACE\Scripts\hydrate_p1c01_material_lfs.ps1"'
+
       - name: Verify exact checkout
         shell: powershell
         run: |

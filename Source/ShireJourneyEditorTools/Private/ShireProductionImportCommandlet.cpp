@@ -59,6 +59,28 @@ namespace ShireProductionImport
             ObjSource.Contains(TEXT("\nvt "), ESearchCase::CaseSensitive);
     }
 
+    static bool IsGitLfsPointerFile(const FString& Filename)
+    {
+        const int64 FileSize = IFileManager::Get().FileSize(*Filename);
+        if (FileSize < 0 || FileSize > 1024)
+        {
+            return false;
+        }
+
+        FString CandidateText;
+        if (!FFileHelper::LoadFileToString(CandidateText, *Filename))
+        {
+            return false;
+        }
+
+        CandidateText.ReplaceInline(TEXT("\r\n"), TEXT("\n"));
+        return CandidateText.StartsWith(
+                TEXT("version https://git-lfs.github.com/spec/v1\n"),
+                ESearchCase::CaseSensitive) &&
+            CandidateText.Contains(TEXT("\noid sha256:"), ESearchCase::CaseSensitive) &&
+            CandidateText.Contains(TEXT("\nsize "), ESearchCase::CaseSensitive);
+    }
+
     static bool ParseObjVertex(const FString& Line, FVector& OutVertex)
     {
         TArray<FString> Parts;
@@ -1194,6 +1216,19 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         bool bBuiltInTangentsForUntexturedObj = false;
         TArray<FString> AuthoredMaterialNames;
         const FString SourceExtension = FPaths::GetExtension(Filename).ToLower();
+        if (ShireProductionImport::IsGitLfsPointerFile(Filename))
+        {
+            ++Failed;
+            UE_LOG(
+                LogTemp,
+                Error,
+                TEXT("ShireProductionImport GIT_LFS_POINTER_SOURCE: file=%s destination=%s asset=%s"),
+                *Filename,
+                *DestinationPath,
+                *Task->DestinationName);
+            continue;
+        }
+
         const bool bCharacterRigFbx =
             SourceExtension == TEXT("fbx") &&
             Relative.StartsWith(TEXT("Characters/Rigs/"), ESearchCase::IgnoreCase);

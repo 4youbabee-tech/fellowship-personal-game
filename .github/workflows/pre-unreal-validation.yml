@@ -234,6 +234,10 @@ jobs:
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_p1c01_high_fidelity_surface_binding_contract.py" -v
 
+      - name: Test P1C01 material LFS hydration contract
+        shell: cmd
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_p1c01_material_lfs_hydration_contract.py" -v
+
       - name: Scrub static checkout authentication
         if: always()
         shell: cmd

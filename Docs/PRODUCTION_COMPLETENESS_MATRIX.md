@@ -4200,3 +4200,24 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Static regression guard | ADDED / WIRED |
 | Fresh UE4 import/build/render evidence | PENDING |
 | Human visual / performance / device / Gate 6+7 | NOT ACCEPTED |
+
+## 2026-10-05 - P1C01 material LFS hydration repair
+
+| Control | State |
+|---|---|
+| Failing Unreal run | #1608 / `37363370894` |
+| Exact failing head | `ae6dcf7c3a7879f6769465fad3a49afaf0505f7c` |
+| Editor C++ build | SUCCESS before import |
+| Production import summary | 384 files / 16 failures |
+| New PNG texture failures | 8 |
+| Dependent albedo-binding failures | 8 |
+| Root cause | P1C01 PNG sources remained Git LFS pointers at self-hosted import boundary |
+| Targeted material LFS hydration helper | SOURCE-IMPLEMENTED |
+| Unreal Build invokes hydration before build/import | SOURCE-IMPLEMENTED |
+| Shire Render Capture invokes hydration before build/capture | SOURCE-IMPLEMENTED |
+| PNG signature fail-closed check | SOURCE-IMPLEMENTED |
+| Importer LFS-pointer diagnostic guard | SOURCE-IMPLEMENTED |
+| Hosted regression contract | ADDED / WIRED |
+| Texture/albedo gate weakening | NONE |
+| Fresh exact-head 8/8 texture + 8/8 binding proof | PENDING |
+| Human visual / performance / device / Gate 6+7 | NOT ACCEPTED |

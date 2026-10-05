@@ -4739,3 +4739,12 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - This packet deliberately does not preload WarmPlaster/Wood/GrassPath yet to keep the first visual replacement bounded for the ~2 GB VRAM target.
 - New static guard: `Scripts/test_p1c01_high_fidelity_surface_binding_contract.py`, wired into Pre-Unreal.
 - Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD STATIC + UE4 IMPORT/RENDER VALIDATION PENDING**. No visual/performance/device/Gate 6/7 acceptance is claimed.
+
+## 2026-10-05 - P1C01 PNG Git LFS hydration root fix
+
+- Unreal Build #1608 / run `37363370894` on exact head `ae6dcf7c3a7879f6769465fad3a49afaf0505f7c` built `ShireJourneyEditor` successfully, then failed production import at exactly eight new P1C01 PNG albedo sources. Import summary: **384 files / 16 failures** = eight PNG import failures plus eight dependent albedo-binding failures.
+- Root cause is now isolated below the UE4 importer: `.gitattributes` routes `*.png` through Git LFS, and the eight promoted Shire PNG Git blobs are LFS pointer records referencing real payloads of roughly 8-23 MB. The self-hosted exact-head checkout did not explicitly hydrate that P1C01 LFS material subtree before invoking UE4, while the 24 TGA texture sources are not covered by the PNG LFS rule and continued to import.
+- Root fix: both the generic Unreal Build lane and P1C01 Render Capture lane now run `Scripts/hydrate_p1c01_material_lfs.ps1` before any editor build/import/capture. The helper performs a targeted `git lfs pull` only for `SourceAssets/Production/Imported/P1C01Materials/**`, then fail-closes unless every discovered PNG has the real PNG signature and emits `P1C01_LFS_TEXTURE_HYDRATION_PASS`.
+- Importer hardening: `ShireProductionImportCommandlet` now rejects any residual Git LFS pointer source before `ImportAssetTasks` and emits the explicit `GIT_LFS_POINTER_SOURCE` marker instead of allowing a misleading generic texture-import failure.
+- Hosted regression coverage is wired through `test_p1c01_material_lfs_hydration_contract.py`; no texture gate, albedo-binding requirement, package-persistence requirement, or visual/performance gate is weakened.
+- Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD PRE-UNREAL + UE4 IMPORT/BUILD + RENDER REVALIDATION PENDING**. No PIE, device, visual, performance, or Gate 6/7 acceptance is claimed.
