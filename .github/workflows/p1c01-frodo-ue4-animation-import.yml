@@ -176,7 +176,10 @@ jobs:
 
       - name: Build ShireJourneyEditor once
         shell: cmd
-        run: '"%SHIRE_FRODO_UE4_SOURCE%\Scripts\ci_build_unreal.cmd"'
+        run: |
+          @echo off
+          set "SHIRE_BUILD_WORKSPACE=%SHIRE_FRODO_UE4_SOURCE%"
+          call "%SHIRE_FRODO_UE4_SOURCE%\Scripts\ci_build_unreal.cmd"
 
       - name: Import exact Rogue rig plus animation-only derivatives
         shell: cmd

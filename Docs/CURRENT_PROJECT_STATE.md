@@ -4564,3 +4564,13 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - The first fresh UE4 animation-import run on exact head `c10cc6fa9abf122cb6efadb4be7e6c43921d7926` failed **before build/import** because `actions/checkout@v4` could not clean/recreate the self-hosted workspace and ended with `fatal: not a git repository`.
 - Root fix is source-implemented on the same closeout branch: the self-hosted UE4 animation gate now uses an isolated temporary exact-SHA checkout, matching the project's proven self-hosted isolation pattern, and all build/import/cleanup paths are redirected to that isolated source root.
 - Status: **VISUAL REJECT / INFRASTRUCTURE ROOT FIX SOURCE-IMPLEMENTED / EXACT-HEAD REVALIDATION PENDING**. No PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED, or Gate 6/7 acceptance is claimed.
+
+## 2026-10-05 - Frodo UE4 animation gate isolated-build root fix
+
+- Exact-head animation-import run `37281245292` on `e209988496ddb5380f30596d608e7d95790fabaf` passed hosted artifact identity, isolated checkout, runner verification, exact Windows SHA checks, and the workflow's build step, then failed before the commandlet could enter `Main`.
+- UE4 launch evidence: `ModuleManager: Unable to load module 'ShireJourney' - 0 instances of that module name found` and the same for `ShireJourneyEditorTools`.
+- Root cause: the workflow invoked `ci_build_unreal.cmd` from the isolated checkout, but that script still derived project/log/intermediate roots from GitHub's original `GITHUB_WORKSPACE`. The green build therefore targeted the old runner workspace while `UE4Editor-Cmd` launched the isolated exact-head project, which had no matching project module DLLs.
+- Root fix: `ci_build_unreal.cmd` now supports an explicit `SHIRE_BUILD_WORKSPACE` override, validates that root, uses it for project/log/retry cleanup paths, and prints `CI_BUILD_WORKSPACE` evidence. The Frodo animation workflow supplies the isolated source root through that override. A static contract guard now requires this wiring.
+- Human Wave2 run `37281245185` on the same head completed **SUCCESS**, including the direct UE4 skeletal gate and hosted Frodo static deformation stress.
+- Status: **ROOT-FIX SOURCE-IMPLEMENTED / FRESH EXACT-HEAD FRODO UE4 ANIMATION IMPORT REVALIDATION PENDING**. No AnimBP/runtime, PIE, device, visual, performance, or Gate 6/7 acceptance is claimed.
+

@@ -1,8 +1,14 @@
 @echo off
 setlocal EnableExtensions EnableDelayedExpansion
-set "PROJECT=%GITHUB_WORKSPACE%\ShireJourney.uproject"
+set "BUILD_WORKSPACE=%GITHUB_WORKSPACE%"
+if defined SHIRE_BUILD_WORKSPACE set "BUILD_WORKSPACE=%SHIRE_BUILD_WORKSPACE%"
+if not exist "%BUILD_WORKSPACE%\ShireJourney.uproject" (
+  echo ERROR: Build workspace is invalid: %BUILD_WORKSPACE%
+  exit /b 76
+)
+set "PROJECT=%BUILD_WORKSPACE%\ShireJourney.uproject"
 set "BUILDBAT=C:\Program Files\Epic Games\UE_4.27\Engine\Build\BatchFiles\Build.bat"
-set "LOGDIR=%GITHUB_WORKSPACE%\Saved\Logs"
+set "LOGDIR=%BUILD_WORKSPACE%\Saved\Logs"
 set "BUILDLOG=%LOGDIR%\CI-UnrealBuild.log"
 if not exist "%LOGDIR%" mkdir "%LOGDIR%"
 rem Re-establish the job-local compiler scratch directory at its point of use.
@@ -17,6 +23,7 @@ if not exist "%TEMP%\." (
   exit /b 77
 )
 echo Building exact commit: %TARGET_SHA%
+echo CI_BUILD_WORKSPACE root=%BUILD_WORKSPACE% override=%SHIRE_BUILD_WORKSPACE%
 call "%BUILDBAT%" ShireJourneyEditor Win64 Development "%PROJECT%" -WaitMutex -NoHotReloadFromIDE -MaxParallelActions=1 > "%BUILDLOG%" 2>&1
 set "BUILD_EXIT=!ERRORLEVEL!"
 if not "!BUILD_EXIT!"=="0" (
@@ -24,7 +31,7 @@ if not "!BUILD_EXIT!"=="0" (
   if not errorlevel 1 (
     echo.>>"%BUILDLOG%"
     echo CI_BUILD_RETRY: MSVC compiler resource/process pressure detected; clearing project intermediates and retrying once.>>"%BUILDLOG%"
-    powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$paths=@((Join-Path $env:GITHUB_WORKSPACE 'Intermediate\Build\Win64'),(Join-Path $env:GITHUB_WORKSPACE 'Binaries\Win64'));foreach($p in $paths){if(Test-Path -LiteralPath $p){Remove-Item -LiteralPath $p -Recurse -Force}};Start-Sleep -Seconds 5"
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$paths=@((Join-Path $env:BUILD_WORKSPACE 'Intermediate\Build\Win64'),(Join-Path $env:BUILD_WORKSPACE 'Binaries\Win64'));foreach($p in $paths){if(Test-Path -LiteralPath $p){Remove-Item -LiteralPath $p -Recurse -Force}};Start-Sleep -Seconds 5"
     call "%BUILDBAT%" ShireJourneyEditor Win64 Development "%PROJECT%" -WaitMutex -NoHotReloadFromIDE -MaxParallelActions=1 >> "%BUILDLOG%" 2>&1
     set "BUILD_EXIT=!ERRORLEVEL!"
   )

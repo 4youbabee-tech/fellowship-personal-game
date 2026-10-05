@@ -36,6 +36,10 @@ class FrodoUE4AnimationImportContract(unittest.TestCase):
         self.assertIn('needs: hosted_artifact_preflight', workflow)
         self.assertIn('self-hosted', workflow)
         self.assertIn('ci_build_unreal.cmd', workflow)
+        self.assertIn('set "SHIRE_BUILD_WORKSPACE=%SHIRE_FRODO_UE4_SOURCE%"', workflow)
+        build_script = (ROOT/'Scripts'/'ci_build_unreal.cmd').read_text(encoding='utf-8')
+        self.assertIn('if defined SHIRE_BUILD_WORKSPACE set "BUILD_WORKSPACE=%SHIRE_BUILD_WORKSPACE%"', build_script)
+        self.assertIn('CI_BUILD_WORKSPACE root=%BUILD_WORKSPACE%', build_script)
         self.assertIn('ShireFrodoAnimationImport', workflow)
         self.assertIn('UE4_ANIMATION_IMPORT_TECHNICAL_PASS', workflow)
 

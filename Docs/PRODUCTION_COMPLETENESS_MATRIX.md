@@ -3926,3 +3926,25 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | AnimBP / runtime Frodo hookup | PENDING |
 | Human visual acceptance | NOT ACCEPTED |
 | PIE / device / performance / Gate 6+7 | NOT ACCEPTED |
+
+## 2026-10-05 - Frodo UE4 animation isolated-build root fix
+
+| Control | State |
+|---|---|
+| Failing exact head | `e209988496ddb5380f30596d608e7d95790fabaf` |
+| Animation import run | `37281245292` / FAILURE |
+| Hosted exact artifact preflight | PASS |
+| Isolated self-hosted checkout | PASS |
+| Exact Windows payload SHA checks | PASS |
+| Workflow build step | PASS but targeted old `GITHUB_WORKSPACE` |
+| UE4 commandlet entry | NOT REACHED |
+| Exact launch failure | project modules unavailable in isolated project |
+| Root cause | build root and launch root diverged |
+| `SHIRE_BUILD_WORKSPACE` support | SOURCE-IMPLEMENTED |
+| Frodo workflow isolated build-root wiring | SOURCE-IMPLEMENTED |
+| Static regression guard | SOURCE-IMPLEMENTED |
+| Same-head Human Wave2 + deformation | SUCCESS |
+| Fresh exact-head animation import rerun | PENDING |
+| AnimBP / runtime Frodo | PENDING |
+| Human visual / PIE / device / performance / Gate 6+7 | NOT ACCEPTED |
+
