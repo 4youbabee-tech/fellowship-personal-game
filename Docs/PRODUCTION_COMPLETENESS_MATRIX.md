@@ -4108,3 +4108,15 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | New third-party geometry approval | NONE |
 | Fresh exact-head static validation | PENDING |
 | UE/runtime/visual/performance acceptance | NOT ACCEPTED |
+
+## 2026-10-05 - PG-176 MTL validator reconciliation
+
+| Control | State |
+|---|---|
+| Failing Pre-Unreal run | `37348487318` / #1985 |
+| Exact head | `4d12a0984df77b5db37f69530c5f03b64e2a1309` |
+| Failure | stale `"Ks $ksText $ksText $ksText"` validator marker |
+| Correct formatted Ks directive | REQUIRED |
+| Generator rollback | FORBIDDEN / NOT DONE |
+| Gate weakening | NONE |
+| Fresh exact-head Pre-Unreal | PENDING |
