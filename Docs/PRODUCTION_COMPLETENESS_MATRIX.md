@@ -4144,3 +4144,18 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Exact-file copies | `-LiteralPath` preserved |
 | Static regression guards | ADDED |
 | Fresh exact-head execution | PENDING |
+
+## 2026-10-05 - GitHub Actions approval-loop prevention
+
+| Control | State |
+|---|---|
+| CI-authored Frodo branch push | REMOVED |
+| CI-authored material branch push | REMOVED |
+| Frodo workflow contents permission | READ-ONLY |
+| Material workflow contents permission | READ-ONLY |
+| Exact tracked Frodo source verification | REQUIRED |
+| Exact tracked material source verification | REQUIRED |
+| Workflow `git push` regression guard | ADDED |
+| Owner/connector-side promotion boundary | REQUIRED |
+| Fresh owner-authored exact-head run behavior | PENDING |
+| PIE / device / visual / performance / Gate 6+7 | NOT ACCEPTED |
