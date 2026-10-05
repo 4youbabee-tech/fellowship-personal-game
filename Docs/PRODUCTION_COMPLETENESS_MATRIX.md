@@ -4071,3 +4071,19 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Exact FBX SHA locks preserved | YES |
 | Fresh workflow proof | PENDING |
 | Runtime / visual / device / performance acceptance | NOT ACCEPTED |
+
+## 2026-10-05 - Shire high-fidelity surface source promotion
+
+| Control | State |
+|---|---|
+| Ledger registration | RECORDED |
+| MTL root fix | SOURCE-IMPLEMENTED |
+| Hosted preflight before warehouse reservation | SOURCE-IMPLEMENTED |
+| Receipt/SHA256-only warehouse intake | SOURCE-IMPLEMENTED |
+| Minimum prepared surface gate | SOURCE-IMPLEMENTED |
+| Corrected MTL line validation | SOURCE-IMPLEMENTED |
+| Git LFS PNG promotion | SOURCE-IMPLEMENTED |
+| Conflict-safe no-force publish | SOURCE-IMPLEMENTED |
+| Fresh source-promotion execution | PENDING |
+| UE material import/build | PENDING AFTER PROMOTION |
+| Runtime binding / visual acceptance | PENDING / NOT ACCEPTED |
