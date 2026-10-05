@@ -1,0 +1,464 @@
+{
+  "schema_version": 1,
+  "manifest_id": "P1C01_OFFLINE_SOURCE_INTAKE_V1",
+  "status": "SOURCE_CANDIDATE_ROUTING_COMPLETE_BINARY_INTAKE_PENDING",
+  "prepared_from_head": "df575f04f4c573fe832523a0cbf374882a2df898",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "00_PROJECT_SOURCE_RULES",
+    "01_STORY_AND_TIMELINE_BIBLE",
+    "02_CHARACTERS_AND_RELATIONSHIPS_BIBLE",
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+    "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "10_3D_VISUAL_ASSET_ATLAS_PRODUCTION",
+    "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX",
+    "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25",
+    "Data/P1C01CharacterBundleCompletionV1.json",
+    "Data/P1C01AudioMasterSlotMapV1.json",
+    "Data/P1C01WorldMicroDetailCompletionV1.json"
+  ],
+  "scope": {
+    "chapter": "P1C01",
+    "includes": [
+      "F1-01",
+      "F1-02",
+      "F1-03 Shire roads/Bucklebury through FerryEscape"
+    ],
+    "excludes": [
+      "P1C02 Bree runtime",
+      "Isengard expansion in this intake packet"
+    ],
+    "next_chapter_rule": "P1C02 remains locked until P1C01 Gate 6/7 has chapter-specific evidence and the owner explicitly starts P1C02."
+  },
+  "character_source_routing": {
+    "current_truth": "Frodo has the established technical FBX bundle; the seven remaining named P1C01 animated targets still need final rigged FBX bundles.",
+    "final_animated_format": "FBX",
+    "forbidden_final_animated_formats": [
+      "OBJ"
+    ],
+    "heavy_asset_reference_rule": "TSoftObjectPtr/TSoftClassPtr or FSoftObjectPath with FStreamableManager async loading; no heavy synchronous LoadObject.",
+    "exact_rejected_payload_rule": "Never retry a previously rejected exact payload hash as if it were a new candidate. A normalized/re-exported payload must have new provenance and a new SHA256.",
+    "identity_rule": "Use generic/original lore-consistent character construction; do not clone film actors or ingest fan-made copyrighted character replicas.",
+    "targets": [
+      {
+        "id": "BILBO",
+        "archetype": "older hobbit humanoid",
+        "target_root": "SourceAssets/ValidatedRuntime/BILBO",
+        "final_fbx_present": false,
+        "skeleton_strategy": "Prefer a Frodo-compatible humanoid retarget family only if scale, bind pose, UV and deformation gates pass independently.",
+        "required_animation_roles": [
+          "idle",
+          "walk",
+          "turn",
+          "talk gestures",
+          "Ring handoff/party gestures"
+        ],
+        "state": "SOURCE_CANDIDATE_ROUTED_FINAL_FBX_PENDING"
+      },
+      {
+        "id": "GANDALF",
+        "archetype": "tall robed humanoid with staff",
+        "target_root": "SourceAssets/ValidatedRuntime/GANDALF",
+        "final_fbx_present": false,
+        "skeleton_strategy": "Humanoid rig with staff socket/attachment compatibility; do not force hobbit proportions or skeleton scale.",
+        "required_animation_roles": [
+          "idle",
+          "walk",
+          "turn",
+          "talk gestures",
+          "staff gestures"
+        ],
+        "state": "SOURCE_CANDIDATE_ROUTED_FINAL_FBX_PENDING"
+      },
+      {
+        "id": "SAM",
+        "archetype": "hobbit humanoid companion",
+        "target_root": "SourceAssets/ValidatedRuntime/SAM",
+        "final_fbx_present": false,
+        "skeleton_strategy": "Prefer Frodo-compatible humanoid retarget family after independent deformation/scale QC.",
+        "required_animation_roles": [
+          "idle",
+          "walk",
+          "run",
+          "crouch",
+          "talk gestures",
+          "follow locomotion"
+        ],
+        "state": "SOURCE_CANDIDATE_ROUTED_FINAL_FBX_PENDING"
+      },
+      {
+        "id": "MERRY",
+        "archetype": "hobbit humanoid companion",
+        "target_root": "SourceAssets/ValidatedRuntime/MERRY",
+        "final_fbx_present": false,
+        "skeleton_strategy": "Prefer Frodo-compatible humanoid retarget family after independent deformation/scale QC.",
+        "required_animation_roles": [
+          "idle",
+          "walk",
+          "run",
+          "crouch",
+          "talk gestures",
+          "firework interaction"
+        ],
+        "state": "SOURCE_CANDIDATE_ROUTED_FINAL_FBX_PENDING"
+      },
+      {
+        "id": "PIPPIN",
+        "archetype": "hobbit humanoid companion",
+        "target_root": "SourceAssets/ValidatedRuntime/PIPPIN",
+        "final_fbx_present": false,
+        "skeleton_strategy": "Prefer Frodo-compatible humanoid retarget family after independent deformation/scale QC.",
+        "required_animation_roles": [
+          "idle",
+          "walk",
+          "run",
+          "crouch",
+          "talk gestures",
+          "firework interaction"
+        ],
+        "state": "SOURCE_CANDIDATE_ROUTED_FINAL_FBX_PENDING"
+      },
+      {
+        "id": "BLACK_RIDER",
+        "archetype": "mounted hooded humanoid threat",
+        "target_root": "SourceAssets/ValidatedRuntime/BLACK_RIDER",
+        "final_fbx_present": false,
+        "skeleton_strategy": "Independent humanoid/mounted rig; preserve rider-horse attachment compatibility and cloak readability without actor likeness.",
+        "required_animation_roles": [
+          "mounted idle",
+          "mounted search",
+          "dismount/search if used",
+          "threat gestures"
+        ],
+        "state": "SOURCE_CANDIDATE_ROUTED_FINAL_FBX_PENDING"
+      },
+      {
+        "id": "BLACK_RIDER_HORSE",
+        "archetype": "quadruped horse",
+        "target_root": "SourceAssets/ValidatedRuntime/BLACK_RIDER_HORSE",
+        "final_fbx_present": false,
+        "skeleton_strategy": "Independent quadruped skeleton; rider socket/seat transform must be authored and verified.",
+        "required_animation_roles": [
+          "idle",
+          "walk",
+          "trot",
+          "gallop",
+          "turn/search pressure"
+        ],
+        "state": "SOURCE_CANDIDATE_ROUTED_FINAL_FBX_PENDING"
+      }
+    ],
+    "provider_candidates": [
+      {
+        "id": "QUATERNIUS_RPG_CHARACTER_PACK_CC0",
+        "source_url": "https://quaternius.com/packs/rpgcharacters.html",
+        "license_marker": "CC0 on provider page",
+        "advertised_formats": [
+          "FBX",
+          "OBJ",
+          "Blend",
+          "glTF"
+        ],
+        "role": "Generic rigged fantasy humanoid technical/source candidate only; final production candidate must pass project gates and may not reuse a previously rejected exact payload hash.",
+        "acquisition_state": "CANDIDATE_NOT_ACQUIRED_IN_THIS_PACKET"
+      },
+      {
+        "id": "QUATERNIUS_UNIVERSAL_BASE_CHARACTERS_CC0",
+        "source_url": "https://quaternius.com/packs/universalbasecharacters.html",
+        "license_marker": "CC0 on provider page",
+        "advertised_formats": [
+          "FBX",
+          "glTF"
+        ],
+        "role": "Generic humanoid base candidate for original character construction/retarget testing; source page advertises animation-friendly humanoid topology.",
+        "acquisition_state": "CANDIDATE_NOT_ACQUIRED_IN_THIS_PACKET"
+      },
+      {
+        "id": "QUATERNIUS_ULTIMATE_ANIMATED_ANIMALS_CC0",
+        "source_url": "https://quaternius.com/packs/ultimateanimatedanimals.html",
+        "license_marker": "CC0 on provider page",
+        "advertised_formats": [
+          "FBX",
+          "OBJ",
+          "Blend",
+          "glTF"
+        ],
+        "role": "Horse/quadruped source candidate; only FBX can be promoted as the final animated asset.",
+        "acquisition_state": "CANDIDATE_NOT_ACQUIRED_IN_THIS_PACKET"
+      }
+    ],
+    "provenance_qc_required": [
+      "provider/creator/source URL/license marker/acquisition timestamp",
+      "source archive SHA256 and selected entry identity",
+      "normalized FBX SHA256 and conversion tool/version when re-exported",
+      "skeletal registration/bone count/root/scale/T0 bind-reference pose",
+      "UV/material slots/smoothing/tangent readiness",
+      "shoulder/elbow/knee or quadruped limb deformation stress",
+      "animation frame/play-length evidence",
+      "LOD/cull/material/texture budget disposition"
+    ],
+    "promotion_boundary": "No remaining named character is runtime-ready or visually accepted until its exact FBX bundle passes UE4.27 technical import, deformation/animation hookup, runtime render and the applicable human/device gates."
+  },
+  "audio_master_intake": {
+    "production_root": "SourceAssets/Production/Audio/P1C01",
+    "tracked_production_audio_master_files_at_snapshot": 0,
+    "upstream_snapshot": {
+      "scripted_voice_external_generated": 25,
+      "contextual_speech_external_generated": 58
+    },
+    "production_master_format": {
+      "container": "WAV",
+      "codec": "uncompressed PCM",
+      "target_sample_rate_hz": 48000,
+      "target_bit_depth": 16,
+      "allowed_source_exception": "44.1 kHz and/or 24-bit source material may remain an upstream source, but the UE intake master normalization decision must be recorded in its receipt.",
+      "spatial_rule": "Use mono for positional voice/SFX where practical; stereo is allowed for non-positional ambience/music beds.",
+      "forbidden": [
+        "MP3 as production master",
+        "copied film dialogue",
+        "actor voice cloning",
+        "film soundtrack/theme reconstruction"
+      ]
+    },
+    "category_roots": [
+      "Voice/Scripted",
+      "Voice/Contextual",
+      "Voice/Efforts",
+      "SFX/Footsteps",
+      "SFX/CharacterFoley",
+      "Ambience/BagEnd",
+      "Ambience/FarmCart",
+      "Ambience/Nature",
+      "Ambience/Party",
+      "Ambience/FerryWater",
+      "SFX/BlackRiderThreat",
+      "Music",
+      "Metadata"
+    ],
+    "receipt_sidecar_required_fields": [
+      "provider",
+      "creator",
+      "source_url",
+      "license",
+      "license_marker",
+      "acquired_at",
+      "original_filename",
+      "source_sha256",
+      "source_bytes",
+      "sample_rate",
+      "channels",
+      "master_filename",
+      "master_sha256",
+      "master_bytes",
+      "edit_notes",
+      "runtime_role"
+    ],
+    "candidate_libraries": [
+      {
+        "id": "EXISTING_P1C01_GENERATED_VOICE_UPSTREAM",
+        "authority": "Data/P1C01CompleteAudioBankV1.json",
+        "use": "Select/master the existing 25 scripted + 58 contextual upstream items into tracked WAV masters with receipts; source existence alone is not runtime completion."
+      },
+      {
+        "id": "SONNISS_GDC_2026_TARGETED_SFX",
+        "source_url": "https://gdc.sonniss.com/",
+        "license_url": "https://sonniss.com/gdc-bundle-license/",
+        "license_marker": "Sonniss GDC Bundle License v2.0 effective 2026-08-27 for downloads on/after that date",
+        "use": "Targeted SFX candidate mining only. Do not ingest the full multi-gigabyte bundle into runtime or Git merely to increase inventory.",
+        "acquisition_state": "CANDIDATE_LIBRARY_NOT_BULK_ACQUIRED_IN_THIS_PACKET"
+      },
+      {
+        "id": "EXISTING_FREESOUND_RECEIPT_CANDIDATES",
+        "authority": "Data/P1C01CompleteAudioBankV1.json",
+        "use": "Preserve exact creator/source/license/SHA receipt identity for the already mapped Ferry/water and other candidates before mastering."
+      }
+    ],
+    "qc": [
+      "no clipping/DC offset",
+      "clean start/end edits and loop suitability where applicable",
+      "no modern/industrial contamination in Shire ambience unless explicitly source-appropriate",
+      "anti-repetition variants for common footsteps/foley",
+      "2D/3D role declared",
+      "meaningful speech has subtitle/localization metadata",
+      "no giant always-resident chapter audio bank"
+    ],
+    "runtime_boundary": "UShireAudioSubsystem remains the single audio runtime owner; production masters are not IMPORTED/RUNTIME_WIRED/PLAYBACK-PROVEN until the UE runner returns."
+  },
+  "world_hero_source_gaps": {
+    "rule": "Reuse resident production sources first. Add external/project-authored sources only for visible hero gaps; no blind density.",
+    "gaps": [
+      {
+        "id": "BAG_END_INTERIOR_HERO_SET",
+        "need": [
+          "door hardware",
+          "hearth",
+          "tables/seating",
+          "shelves/books",
+          "pantry/crockery",
+          "bottles/corks",
+          "food dressing",
+          "hinges/latches"
+        ],
+        "source_strategy": "Resident Shire/Common kit first; project-authored modular hero pieces or provenance-cleared generic interior sources only where the resident kit cannot carry the visible role.",
+        "runtime_strategy": "Hero pieces remain bounded; repeated small clutter uses HISM/ISM/AWorldDetailCluster when repetition is meaningful.",
+        "state": "SOURCE_SELECTION_QC_PENDING"
+      },
+      {
+        "id": "WOODED_ROAD_NATURAL_TREE_FOLIAGE",
+        "need": [
+          "broadleaf trunk/canopy silhouette",
+          "understory",
+          "hedge cover",
+          "foreground/midground/background layering"
+        ],
+        "source_strategy": "Use current resident foliage first; evaluate a provenance-cleared natural broadleaf source only as an offline source candidate, then generate aggressive LOD/cull variants before runtime.",
+        "candidates": [
+          {
+            "id": "POLY_HAVEN_TREE_SMALL_02_CC0",
+            "source_url": "https://polyhaven.com/a/tree_small_02",
+            "license_marker": "CC0 on provider page",
+            "source_warning": "Provider source is approximately 5M triangles; it is SOURCE-ONLY for this project until decimated/LOD-authored and measured. Never ship the raw source as repeated foliage."
+          },
+          {
+            "id": "QUATERNIUS_ULTIMATE_NATURE_CC0",
+            "source_url": "https://quaternius.com/packs/ultimatenature.html",
+            "license_marker": "CC0 on provider page",
+            "source_warning": "Stylized/low-cost fallback candidate; visual fit must be judged against the Shire hero bar rather than accepted from license/format alone."
+          }
+        ],
+        "runtime_strategy": "Repeated vegetation is HISM/ISM with culling/LOD; no actor-per-tree and no synchronous heavy loading.",
+        "state": "SOURCE_CANDIDATES_ROUTED_OPTIMIZED_DERIVATIVE_PENDING"
+      },
+      {
+        "id": "FERRY_CONSTRUCTION_ROPE_LANDING",
+        "need": [
+          "landing stage",
+          "ferry deck/boat silhouette",
+          "rope",
+          "posts",
+          "boarding edge",
+          "paddle/rowing props"
+        ],
+        "source_strategy": "Prefer project-authored modular timber/rope composition from resident meshes/materials; external generic boat/rope geometry only if provenance-cleared and measurably better.",
+        "runtime_strategy": "Limited hero actors for functional ferry pieces; repeated reeds/posts/details use instancing.",
+        "state": "SOURCE_COMPOSITION_QC_PENDING"
+      },
+      {
+        "id": "RIVERBANK_REEDS_WATER_EDGE",
+        "need": [
+          "bank breakup",
+          "reeds",
+          "stones",
+          "water edge transition",
+          "far-bank uphill silhouette"
+        ],
+        "source_strategy": "Resident bank/reed/stone assets first; improve silhouette/material breakup before adding new texture families.",
+        "runtime_strategy": "HISM/ISM plus existing water/river presentation; preserve ferry traversal corridor.",
+        "state": "SOURCE_COMPOSITION_QC_PENDING"
+      },
+      {
+        "id": "LIGHTING_SKY_WATER_PRESENTATION",
+        "need": [
+          "warm Shire daylight/party state",
+          "danger transition",
+          "water readability",
+          "fog/depth without obscuring traversal"
+        ],
+        "source_strategy": "Engine/project presentation configuration first; no heavyweight external sky/water plugin is required for offline saturation.",
+        "runtime_strategy": "Keep dynamic light/shadow cost bounded for DX11 720p / ~2 GB VRAM.",
+        "state": "SOURCE_CONFIGURATION_AUDIT_PENDING_RENDER_EVIDENCE"
+      }
+    ],
+    "texture_rule": "PNG/TGA only for production texture sources; use channel packing where practical. BMP is forbidden.",
+    "evidence_boundary": "Source routing only; no render/visual/performance acceptance."
+  },
+  "gameplay_coverage_audit": {
+    "status": "STATIC_COVERAGE_AUDIT_COMPLETE_GAPS_RECORDED_RUNTIME_PROOF_PENDING",
+    "observed_runtime_sequence": [
+      "ShireArrival",
+      "LongExpectedParty",
+      "RingSecret",
+      "LeavingHome",
+      "Shortcut",
+      "KeepOffRoad",
+      "FerryEscape"
+    ],
+    "observed_side_activity_ids": [
+      "SIDE_SHIRE_FIELD_RACE",
+      "SIDE_SHIRE_PARTY_ERRANDS",
+      "SIDE_SHIRE_QUIET_FEET",
+      "SIDE_SHIRE_FIREWORKS_SAFETY",
+      "SIDE_SHIRE_DRAGON_FIREWORK_MISHAP"
+    ],
+    "observed_world_landmark_beats": [
+      "Discover_ShireMill",
+      "Discover_IvyBush",
+      "Discover_GreenDragon",
+      "Discover_PartyField",
+      "Discover_OldBoundary",
+      "Discover_RootHide",
+      "Discover_BuckleburyFerry"
+    ],
+    "findings": [
+      {
+        "id": "F1_01_OPTIONAL",
+        "state": "DATA_MAPPED_RUNTIME_PROOF_PENDING",
+        "detail": "Party preparation/firework/social optional coverage is represented in ContextualSideActivityPlan; no runtime acceptance is inferred."
+      },
+      {
+        "id": "F1_02_INVESTIGATION_TUTORIAL",
+        "state": "EXPLICIT_DATA_AUTHORING_GAP",
+        "detail": "RingSecret main-quest coverage exists, but the source-backed optional investigation tutorial is not represented as a dedicated P1C01 side-activity/discovery entry."
+      },
+      {
+        "id": "F1_02_PACKING",
+        "state": "EXPLICIT_DATA_AUTHORING_GAP",
+        "detail": "The source-backed packing optional window is not represented in ContextualSideActivityPlan."
+      },
+      {
+        "id": "F1_02_STEALTH_DEPARTURE",
+        "state": "MAIN_QUEST_SKELETON_PRESENT_RUNTIME_MECHANIC_PROOF_PENDING",
+        "detail": "LeavingHome exists and the source calls for stealth departure, but exact stealth interaction/return-to-control behavior still needs runtime evidence."
+      },
+      {
+        "id": "F1_03_ENVIRONMENTAL_HIDING",
+        "state": "PARTIAL_STATIC",
+        "detail": "KeepOffRoad and RootHide/wooded-road landmark staging exist. The RootHide landmark is not currently a JourneyDiscoveryRewardPlan reward entry, and runtime stealth reliability remains unproven."
+      },
+      {
+        "id": "F1_03_FERRY",
+        "state": "MAIN_QUEST_AND_LANDMARK_PRESENT_RUNTIME_PROOF_PENDING",
+        "detail": "FerryEscape plus a Bucklebury Ferry landmark beat exist. The chapter must terminate at P1C01 FerryEscape; Bree remains P1C02."
+      },
+      {
+        "id": "SAVE_CHECKPOINT_COVERAGE",
+        "state": "SOURCE_PARTIAL_RUNTIME_DISK_PROOF_PENDING",
+        "detail": "Story checkpoint bindings exist for PartyArrival, LeavingHomeRoad and BlackRiderApproach. This packet adds a P1C01 terminal Ferry checkpoint; exact F1-01/F1-02 postcondition disk-roundtrip coverage remains an acceptance item."
+      },
+      {
+        "id": "RETRY_SKIP_BACKTRACK",
+        "state": "RUNTIME_EVIDENCE_GAP",
+        "detail": "Fresh start, migrated save, death/retry, cinematic skip equivalence, optional abandon/backtrack and resume remain explicit QA rows rather than assumed completion."
+      }
+    ],
+    "next_offline_authoring_targets": [
+      "Author a bounded F1-02 investigation tutorial entry using existing RingSecret knowledge limits.",
+      "Author a bounded Bag End packing interaction before LeavingHome without changing the locked departure outcome.",
+      "Connect safe pre-pressure road/environment discoveries to the existing JourneyDiscovery system only where pacing allows; do not add optional detours during active Black Rider urgency.",
+      "Keep save/checkpoint/skip/retry requirements explicit for runner return."
+    ],
+    "no_silent_omission_rule": "Each source-backed optional/gameplay item is either mapped above or carried as an explicit gap; nothing here opens Bree."
+  },
+  "chapter_boundary_root_fix": {
+    "defect": "Exact-head source contained two automatic P1C01-to-P1C02 transition paths: the Ferry far-side generated trigger and terminal-state save repair.",
+    "repair": [
+      "Ferry far-side now completes FerryEscape stage 2 inside P1C01 instead of assigning NextChapterId P1C02.",
+      "A terminal FerryEscapeComplete beat queues WC_P1C01_FERRY_END after authoritative quest state mutation.",
+      "ShireStoryFlowSubsystem no longer repairs P1C01 FerryEscape stage 2 into RoadToBree.",
+      "P1C02 remains owner-explicit and predecessor-gated."
+    ],
+    "evidence_state": "SOURCE_IMPLEMENTED_COMPILE_AND_RUNTIME_PROOF_PENDING"
+  },
+  "evidence_boundary": "OFFLINE SOURCE/DATA/CODE PREPARATION ONLY. No PIE/device/visual/performance/Gate 6/7 acceptance is claimed."
+}

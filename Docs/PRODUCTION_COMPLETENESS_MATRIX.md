@@ -4291,3 +4291,28 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | P1C01/P1C02 F1-03 handoff boundary | PRESERVED |
 | Hosted offline saturation workflow | ADDED |
 | UE4/runtime/device evidence | PENDING RUNNER |
+
+## 2026-10-06 - Offline source intake and P1C01 terminal boundary
+
+| Control | State |
+|---|---|
+| Remaining named-character source routes | 7 MAPPED / FINAL FBX PENDING |
+| Frodo technical bundle | PRESERVED / FRESH RUNTIME PROOF PENDING |
+| Production Audio WAV masters | 0 AT SNAPSHOT |
+| Audio master intake/receipt contract | ADDED |
+| Bag End interior hero-source gap | ROUTED |
+| Natural wooded-road tree/foliage gap | ROUTED / RAW HIGH-POLY SOURCE FORBIDDEN AT RUNTIME |
+| Ferry construction/rope/landing gap | ROUTED |
+| Riverbank/reeds/water-edge gap | ROUTED |
+| Lighting/sky/water presentation source/config gap | ROUTED |
+| F1-02 investigation tutorial | EXPLICIT DATA AUTHORING GAP |
+| F1-02 packing | EXPLICIT DATA AUTHORING GAP |
+| F1-02 stealth departure | MAIN QUEST SKELETON / RUNTIME PROOF PENDING |
+| F1-03 environmental hiding | PARTIAL STATIC / RUNTIME PROOF PENDING |
+| Ferry far-side automatic P1C02 transition | REMOVED IN SOURCE |
+| Restored P1C01 terminal auto-open to RoadToBree | REMOVED IN SOURCE |
+| Ferry terminal checkpoint | `WC_P1C01_FERRY_END` SOURCE-IMPLEMENTED |
+| Hosted boundary/source-intake guard | ADDED |
+| Fresh hosted static validation | PENDING |
+| UE4.27 compile / runtime / disk roundtrip | PENDING RUNNER |
+| PIE / device / visual / performance / Gate 6+7 | NOT ACCEPTED |

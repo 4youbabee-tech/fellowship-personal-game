@@ -2472,9 +2472,9 @@ void AShirePrototypeWorldBuilder::SpawnStoryActors()
         FerryFarSide->QuestId=TEXT("FerryEscape");
         FerryFarSide->RequiredStage=1;
         FerryFarSide->StageAfterTrigger=2;
-        FerryFarSide->NextChapterId=TEXT("P1C02");
-        FerryFarSide->NextChapterQuestId=TEXT("RoadToBree");
-        FerryFarSide->NextChapterQuestStage=0;
+        // P1C01 ends at the completed Ferry escape. Bree/P1C02 is an owner-explicit
+        // chapter start and must not be opened by a generated world trigger.
+        FerryFarSide->StoryBeatId=TEXT("FerryEscapeComplete");
         FerryFarSide->ObjectiveMessage=FText::FromString(TEXT("Across the river. The road to Bree begins here."));
     }
 }

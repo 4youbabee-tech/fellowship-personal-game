@@ -1300,3 +1300,13 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Existing resident Shire sources remain first choice; missing hero/detail items become provenance/QC gaps rather than primitive spam.
 - Repeated detail remains HISM/ISM/`AWorldDetailCluster`; no synchronous heavy loading or per-instance Tick.
 - Evidence boundary: SOURCE-PREPARED MATRIX ONLY. Placement/collision/render/PIE/device/FPS acceptance remains pending.
+
+## 2026-10-06 - P1C01 HERO SOURCE GAP + FERRY TERMINAL LOCK packet
+
+- Scope remains P1C01 only. This packet does not open Bree and does not add a second world/story authority.
+- World hero-source gaps are now explicitly routed before implementation: Bag End interior hero clutter/hardware; natural wooded-road tree/understory silhouettes; Ferry deck/landing/rope/boarding construction; riverbank/reeds/water-edge transition; and bounded lighting/sky/water presentation.
+- Resident Shire/Common sources remain first choice. Poly Haven Tree Small 02 and Quaternius Ultimate Nature are source candidates only; the Poly Haven tree's very high source triangle count means it must be reduced into project-owned LOD/cull derivatives before any repeated runtime use.
+- Repeated vegetation/riverbank/detail remains HISM/ISM/`AWorldDetailCluster`; no actor-per-tree wave, no synchronous heavy load, no BMP texture source, and no density added merely to fill space.
+- The same audit exposed a chapter-topology defect: Ferry far-side completion and terminal-state restore could auto-open P1C02. The registered repair makes `FerryEscape stage 2` a valid P1C01 terminal state, records `FerryEscapeComplete`, and queues `WC_P1C01_FERRY_END` without starting Bree.
+- This is not a new canon outcome: it enforces the existing production ownership boundary (P1C01 through FerryEscape; P1C02 owns Bree arrival/opening) and keeps the source-locked wider F1-03 postcondition separate.
+- Evidence boundary: **SOURCE-IMPLEMENTED / SOURCE-CANDIDATE-ROUTED** only. UE4 compile, PIE, visual, device, audio playback, disk save/load and FPS evidence remain pending.

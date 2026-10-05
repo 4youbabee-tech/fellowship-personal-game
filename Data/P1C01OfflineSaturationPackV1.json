@@ -15,11 +15,11 @@
     },
     {
       "id": "CHARACTERS",
-      "state": "OFFLINE_GAP_MAP_COMPLETE_BINARY_ACQUISITION_OR_UE_QC_PENDING"
+      "state": "OFFLINE_SOURCE_ROUTING_READY_FINAL_FBX_INTAKE_PENDING"
     },
     {
       "id": "WORLD_ROUTE",
-      "state": "OFFLINE_COMPLETENESS_ACTIVE"
+      "state": "OFFLINE_HERO_SOURCE_GAPS_ROUTED_SOURCE_QC_PENDING"
     },
     {
       "id": "MATERIALS_VEGETATION_ART",
@@ -31,15 +31,15 @@
     },
     {
       "id": "GAMEPLAY_EXPLORATION",
-      "state": "SOURCE_IMPLEMENTED_ACCEPTANCE_MAP_ACTIVE"
+      "state": "STATIC_COVERAGE_AUDIT_COMPLETE_GAPS_RECORDED"
     },
     {
       "id": "AUDIO_PRESENTATION",
-      "state": "OFFLINE_MASTER_PREPARATION_ACTIVE"
+      "state": "OFFLINE_WAV_MASTER_INTAKE_CONTRACT_READY_FILES_PENDING"
     },
     {
       "id": "SAVE_RELIABILITY",
-      "state": "SOURCE_IMPLEMENTED_DISK_ROUNDTRIP_PENDING"
+      "state": "SOURCE_IMPLEMENTED_FERRY_TERMINAL_CHECKPOINT_ADDED_DISK_ROUNDTRIP_PENDING"
     },
     {
       "id": "STREAMING_PERFORMANCE",
@@ -58,5 +58,21 @@
     "target-device FPS/RAM/VRAM",
     "human visual/pacing Gate 6/7"
   ],
-  "rule": "Runner outage is never a reason to idle source preparation."
+  "rule": "Runner outage is never a reason to idle source preparation.",
+  "offline_artifacts": [
+    "Data/P1C01CharacterBundleCompletionV1.json",
+    "Data/P1C01WorldMicroDetailCompletionV1.json",
+    "Data/P1C01AudioMasterSlotMapV1.json",
+    "Data/P1C01MissionRuntimeAcceptanceMatrixV1.json",
+    "Data/P1C01OfflineSourceIntakeV1.json"
+  ],
+  "latest_packet": {
+    "prepared_from_head": "df575f04f4c573fe832523a0cbf374882a2df898",
+    "character_targets_routed": 7,
+    "production_audio_master_count_snapshot": 0,
+    "world_hero_source_gap_count": 5,
+    "gameplay_static_gaps_recorded": true,
+    "p1c02_auto_open_source_paths_removed": true,
+    "compile_runtime_proof": "PENDING_RUNNER"
+  }
 }

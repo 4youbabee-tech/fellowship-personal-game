@@ -75,5 +75,15 @@
     "backtrack",
     "low-performance tier"
   ],
-  "p1c02_lock": "P1C02 remains predecessor-gated until P1C01 Gate 6/7 is accepted and explicitly started."
+  "p1c02_lock": "P1C02 remains predecessor-gated until P1C01 Gate 6/7 is accepted and explicitly started.",
+  "coverage_audit_ref": "Data/P1C01OfflineSourceIntakeV1.json",
+  "p1c01_terminal_contract": {
+    "quest_id": "FerryEscape",
+    "terminal_stage": 2,
+    "terminal_story_beat": "FerryEscapeComplete",
+    "checkpoint_id": "WC_P1C01_FERRY_END",
+    "auto_start_p1c02": false,
+    "p1c02_start_rule": "Only after P1C01 Gate 6/7 has chapter-specific evidence and the owner explicitly starts P1C02."
+  },
+  "boundary_repair_state": "SOURCE_IMPLEMENTED_COMPILE_RUNTIME_PROOF_PENDING"
 }

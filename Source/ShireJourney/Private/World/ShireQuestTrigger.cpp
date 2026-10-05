@@ -18,6 +18,7 @@ namespace ShireCheckpointBindings
         { TEXT("PartyArrival"), TEXT("WC_P1C01_PARTY") },
         { TEXT("LeavingHomeRoad"), TEXT("WC_P1C01_DEPART") },
         { TEXT("BlackRiderApproach"), TEXT("WC_P1C01_RIDER_PRE") },
+        { TEXT("FerryEscapeComplete"), TEXT("WC_P1C01_FERRY_END") },
         { TEXT("BreeRoadNightfall"), TEXT("WC_P1C02_GATE") },
         { TEXT("StriderPrivateRoom"), TEXT("WC_P1C02_PONY") },
         { TEXT("WeathertopReveal"), TEXT("WC_P1C03_WEATHERTOP") },

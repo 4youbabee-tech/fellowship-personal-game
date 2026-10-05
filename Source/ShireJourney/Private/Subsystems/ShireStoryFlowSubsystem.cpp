@@ -75,15 +75,10 @@ void UShireStoryFlowSubsystem::RepairRestoredTerminalState()
         return;
     }
 
-    // These states are the terminal authored stages immediately before a chapter
-    // hand-off. A normal playthrough transitions through the world trigger itself.
-    // If an older/incomplete save captured the terminal state first, resume safely
-    // at the opening quest of the next chapter instead of leaving the player stranded.
-    if (ChapterId == TEXT("P1C01") && QuestId == TEXT("FerryEscape") && Stage >= 2)
-    {
-        QuestSubsystem->StartChapter(TEXT("P1C02"), TEXT("RoadToBree"), 0);
-    }
-    else if (ChapterId == TEXT("P1C02") && QuestId == TEXT("NightAttack") && Stage >= 2)
+    // Terminal-state repair applies only after a chapter has been explicitly opened.
+    // P1C01 FerryEscape stage 2 is intentionally a valid committed terminal state:
+    // Bree/P1C02 remains owner-explicit and must not be opened by save restoration.
+    if (ChapterId == TEXT("P1C02") && QuestId == TEXT("NightAttack") && Stage >= 2)
     {
         QuestSubsystem->StartChapter(TEXT("P1C03"), TEXT("RoadToWeathertop"), 0);
     }

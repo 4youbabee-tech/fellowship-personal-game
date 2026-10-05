@@ -4785,3 +4785,12 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - F1-03 topology is preserved: P1C01 owns Shire roads/Bucklebury through FerryEscape; P1C02 owns Bree arrival/opening.
 - GitHub-hosted `P1C01 Offline Source Saturation` validates these source contracts without the UE4 runner.
 - Status: **SOURCE/DATA PREPARATION ADVANCED / HOSTED STATIC VALIDATION PENDING**.
+
+## 2026-10-06 - Offline source intake + Ferry owner-lock root fix
+
+- Exact source audit on PR #329 parent head `df575f04f4c573fe832523a0cbf374882a2df898` found a chapter-boundary conflict: the Ferry far-side trigger assigned `NextChapterId=P1C02`, and `UShireStoryFlowSubsystem` also promoted a restored `P1C01/FerryEscape stage 2` state directly into `RoadToBree`. That contradicted the active Governor rule that Bree remains owner-explicit.
+- Root fix keeps `FerryEscape stage 2` as the committed P1C01 terminal state, removes both automatic P1C02 openings, emits `FerryEscapeComplete`, and binds `WC_P1C01_FERRY_END` after authoritative quest mutation so the chapter-end state has an explicit checkpoint path.
+- `Data/P1C01OfflineSourceIntakeV1.json` now routes the seven non-Frodo named character FBX gaps, production WAV-master intake, five visible world hero-source gaps, and a gameplay/save coverage audit. Candidate provider records are source candidates only; no binary acquisition or runtime promotion is claimed.
+- The gameplay audit makes F1-02 investigation/packing explicit authoring gaps, keeps stealth departure/Black Rider hiding/Ferry runtime proof open, and records retry/skip/backtrack/disk-roundtrip as evidence gaps rather than silently treating them as complete.
+- Hosted `P1C01 Offline Source Saturation` now fail-closes if either P1C01->P1C02 automatic source path returns and also checks the new source-intake contract.
+- Status: **SOURCE-IMPLEMENTED / HOSTED STATIC VALIDATION PENDING / UE4 COMPILE+RUNTIME PROOF PENDING**. No PIE/device/visual/performance/Gate 6/7 acceptance is claimed.
