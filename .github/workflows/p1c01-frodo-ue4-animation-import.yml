@@ -297,7 +297,7 @@ jobs:
             $root=Join-Path $env:SHIRE_FRODO_UE4_SOURCE "SourceAssets\ValidatedRuntime\FRODO"
             Remove-Item -LiteralPath $root -Recurse -Force -ErrorAction SilentlyContinue
             New-Item -ItemType Directory -Path $root -Force | Out-Null
-            Copy-Item -LiteralPath (Join-Path $stage "*") -Destination $root -Force
+            Copy-Item -Path (Join-Path $stage "*") -Destination $root -Force
 
             & git.exe -C $env:SHIRE_FRODO_UE4_SOURCE add -- "SourceAssets/ValidatedRuntime/FRODO"
             if($LASTEXITCODE -ne 0){ throw "FRODO_RUNTIME_SOURCE_PROMOTION_GIT_ADD_FAIL attempt=$attempt" }
