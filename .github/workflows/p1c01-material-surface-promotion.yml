@@ -1,0 +1,222 @@
+name: P1C01 Material Surface Promotion
+
+on:
+  pull_request:
+    branches: [develop]
+    paths:
+      - 'Data/P1C01MaterialImportWaveV1.json'
+      - 'Scripts/prepare_p1c01_material_intake.ps1'
+      - 'Scripts/test_p1c01_material_mtl_contract.ps1'
+      - 'Scripts/test_p1c01_material_surface_promotion_contract.py'
+      - '.github/workflows/p1c01-material-surface-promotion.yml'
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: p1c01-material-surface-promotion-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  hosted_preflight:
+    name: Hosted material promotion preflight
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          fetch-depth: 2
+          persist-credentials: false
+
+      - name: Verify exact checkout
+        shell: bash
+        run: test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+
+      - name: Static promotion contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m unittest Scripts/test_p1c01_material_surface_promotion_contract.py
+          echo P1C01_MATERIAL_SURFACE_PROMOTION_CONTRACT_PASS
+
+  warehouse_prepare_and_promote:
+    name: Receipt-verified Shire surface source promotion
+    needs: hosted_preflight
+    runs-on:
+      - self-hosted
+      - Windows
+      - X64
+      - ue4-27
+    timeout-minutes: 45
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      HEAD_BRANCH: ${{ github.head_ref }}
+
+    steps:
+      - name: Checkout exact PR head into isolated material source
+        shell: cmd
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          @echo off
+          setlocal EnableExtensions EnableDelayedExpansion
+          set "GITEXE="
+          for /f "delims=" %%G in ('where git.exe 2^>nul') do if not defined GITEXE set "GITEXE=%%G"
+          if not defined GITEXE if exist "C:\Program Files\Git\cmd\git.exe" set "GITEXE=C:\Program Files\Git\cmd\git.exe"
+          if not defined GITEXE exit /b 70
+
+          set "SRC=%RUNNER_TEMP%\shire-material-source-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
+          if exist "!SRC!" rmdir /S /Q "!SRC!"
+          mkdir "!SRC!"
+          cd /d "!SRC!"
+          "!GITEXE!" init
+          if errorlevel 1 exit /b 71
+          "!GITEXE!" remote add origin "https://x-access-token:!GH_TOKEN!@github.com/%GITHUB_REPOSITORY%.git"
+          if errorlevel 1 exit /b 72
+
+          set ATTEMPT=0
+          :fetch
+          set /a ATTEMPT+=1
+          "!GITEXE!" -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=20 fetch --no-tags --prune --depth=2 origin !TARGET_SHA!
+          if not errorlevel 1 goto fetched
+          if !ATTEMPT! GEQ 3 exit /b 73
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Start-Sleep -Seconds 3"
+          goto fetch
+
+          :fetched
+          "!GITEXE!" checkout -f FETCH_HEAD
+          if errorlevel 1 exit /b 74
+          "!GITEXE!" reset --hard !TARGET_SHA!
+          if errorlevel 1 exit /b 74
+          for /f "delims=" %%H in ('"!GITEXE!" rev-parse HEAD') do set "CHECKED_SHA=%%H"
+          if /I not "!CHECKED_SHA!"=="!TARGET_SHA!" exit /b 75
+          echo SHIRE_MATERIAL_SOURCE=!SRC!>>"%GITHUB_ENV%"
+          echo P1C01_MATERIAL_ISOLATED_CHECKOUT_PASS sha=!CHECKED_SHA!
+
+      - name: Verify runner and Git LFS
+        shell: powershell
+        run: |
+          $ErrorActionPreference="Stop"
+          & "$env:SHIRE_MATERIAL_SOURCE\Scripts\verify_runner_session.ps1"
+          & git.exe lfs version
+          if($LASTEXITCODE -ne 0){ throw "P1C01_MATERIAL_GIT_LFS_UNAVAILABLE" }
+          Write-Host "P1C01_MATERIAL_GIT_LFS_PASS"
+
+      - name: Prepare receipt-verified surface sources
+        shell: powershell
+        run: |
+          $ErrorActionPreference="Stop"
+          $out=Join-Path $env:RUNNER_TEMP "p1c01-material-surface-promotion"
+          Remove-Item -LiteralPath $out -Recurse -Force -ErrorAction SilentlyContinue
+          & "$env:SHIRE_MATERIAL_SOURCE\Scripts\prepare_p1c01_material_intake.ps1"             -ManifestPath "$env:SHIRE_MATERIAL_SOURCE\Data\P1C01MaterialImportWaveV1.json"             -WarehouseRoot "D:\actions-runner\_warehouse\ShireJourney"             -OutputRoot $out             -Refresh
+          if($LASTEXITCODE -ne 0){ throw "P1C01_MATERIAL_SURFACE_PREPARE_FAIL exit=$LASTEXITCODE" }
+          echo "SHIRE_MATERIAL_STAGE=$out" >> $env:GITHUB_ENV
+
+      - name: Enforce prepared material subset and MTL integrity
+        shell: powershell
+        run: |
+          $ErrorActionPreference="Stop"
+          $receipt=Join-Path $env:SHIRE_MATERIAL_STAGE "p1c01_material_intake_receipt.json"
+          if(-not (Test-Path -LiteralPath $receipt -PathType Leaf)){ throw "P1C01_MATERIAL_SURFACE_RECEIPT_MISSING" }
+          $r=Get-Content -LiteralPath $receipt -Raw | ConvertFrom-Json
+          if([int]$r.prepared_count -lt 6){ throw "P1C01_MATERIAL_SURFACE_PREPARED_TOO_LOW count=$($r.prepared_count)" }
+          if([int]$r.manual_queue_count -ne 0){ throw "P1C01_MATERIAL_SURFACE_MANUAL_QUEUE count=$($r.manual_queue_count)" }
+
+          $required=@(
+            "SH_DIRT_SOIL",
+            "SH_STONY_PATH",
+            "SH_WARM_PLASTER",
+            "SH_MOSS_STONE",
+            "SH_WOOD_INTERIOR",
+            "SH_TREE_BARK",
+            "SH_WOOD_INTERIOR_ALT",
+            "SH_GRASS_PATH"
+          )
+          $preparedIds=@($r.prepared | ForEach-Object { [string]$_.id })
+          foreach($id in $required){
+            if($preparedIds -notcontains $id){ throw "P1C01_MATERIAL_SURFACE_REQUIRED_ID_MISSING id=$id" }
+          }
+
+          foreach($item in @($r.prepared)){
+            $mtl=[string]$item.mtl_file
+            if(-not (Test-Path -LiteralPath $mtl -PathType Leaf)){ throw "P1C01_MATERIAL_SURFACE_MTL_MISSING id=$($item.id)" }
+            $lines=@(Get-Content -LiteralPath $mtl)
+            $checks=@(
+              "^newmtl\s+\S+",
+              "^Pr\s+[0-9.]+$",
+              "^Pm\s+[0-9.]+$",
+              "^Ks\s+[0-9.]+\s+[0-9.]+\s+[0-9.]+$",
+              "^map_Kd\s+\S+"
+            )
+            foreach($pattern in $checks){
+              if(@($lines | Where-Object { $_ -match $pattern }).Count -ne 1){
+                throw "P1C01_MATERIAL_SURFACE_MTL_DIRECTIVE_FAIL id=$($item.id) pattern=$pattern"
+              }
+            }
+          }
+          Write-Host "P1C01_MATERIAL_SURFACE_PREPARED_PASS count=$($r.prepared_count) required=$($required.Count)"
+
+      - name: Promote prepared surface sources to latest PR head
+        shell: powershell
+        run: |
+          $ErrorActionPreference="Stop"
+          if([string]::IsNullOrWhiteSpace($env:HEAD_BRANCH)){ throw "P1C01_MATERIAL_PROMOTION_BRANCH_MISSING" }
+
+          $stage=Join-Path $env:RUNNER_TEMP "p1c01-material-publish"
+          Remove-Item -LiteralPath $stage -Recurse -Force -ErrorAction SilentlyContinue
+          New-Item -ItemType Directory -Path $stage -Force | Out-Null
+          Copy-Item -LiteralPath (Join-Path $env:SHIRE_MATERIAL_STAGE "Prepared\*") -Destination $stage -Recurse -Force
+          Copy-Item -LiteralPath (Join-Path $env:SHIRE_MATERIAL_STAGE "p1c01_material_intake_receipt.json") -Destination (Join-Path $stage "P1C01MaterialSourceReceipt.json") -Force
+
+          & git.exe -C $env:SHIRE_MATERIAL_SOURCE config user.name "Shire Journey CI"
+          & git.exe -C $env:SHIRE_MATERIAL_SOURCE config user.email "shire-journey-ci@users.noreply.github.com"
+          & git.exe -C $env:SHIRE_MATERIAL_SOURCE lfs install --local
+          if($LASTEXITCODE -ne 0){ throw "P1C01_MATERIAL_LFS_INSTALL_FAIL" }
+
+          $published=$false
+          for($attempt=1; $attempt -le 3 -and -not $published; $attempt++){
+            Write-Host "P1C01_MATERIAL_SOURCE_PROMOTION_ATTEMPT attempt=$attempt/3 branch=$env:HEAD_BRANCH"
+            & git.exe -C $env:SHIRE_MATERIAL_SOURCE fetch --no-tags origin $env:HEAD_BRANCH
+            if($LASTEXITCODE -ne 0){ throw "P1C01_MATERIAL_PROMOTION_FETCH_FAIL attempt=$attempt" }
+            & git.exe -C $env:SHIRE_MATERIAL_SOURCE reset --hard FETCH_HEAD
+            if($LASTEXITCODE -ne 0){ throw "P1C01_MATERIAL_PROMOTION_RESET_FAIL attempt=$attempt" }
+
+            $dest=Join-Path $env:SHIRE_MATERIAL_SOURCE "SourceAssets\Production\Imported\P1C01Materials"
+            Remove-Item -LiteralPath $dest -Recurse -Force -ErrorAction SilentlyContinue
+            New-Item -ItemType Directory -Path $dest -Force | Out-Null
+            Copy-Item -LiteralPath (Join-Path $stage "*") -Destination $dest -Recurse -Force
+
+            & git.exe -C $env:SHIRE_MATERIAL_SOURCE add -- "SourceAssets/Production/Imported/P1C01Materials"
+            if($LASTEXITCODE -ne 0){ throw "P1C01_MATERIAL_PROMOTION_GIT_ADD_FAIL attempt=$attempt" }
+            $pending=@(& git.exe -C $env:SHIRE_MATERIAL_SOURCE status --porcelain -- "SourceAssets/Production/Imported/P1C01Materials")
+            if($pending.Count -eq 0){
+              Write-Host "P1C01_MATERIAL_SOURCE_ALREADY_PROMOTED"
+              $published=$true
+              break
+            }
+
+            & git.exe -C $env:SHIRE_MATERIAL_SOURCE commit -m "P1C01: promote corrected receipt-verified Shire surface sources"
+            if($LASTEXITCODE -ne 0){ throw "P1C01_MATERIAL_PROMOTION_COMMIT_FAIL attempt=$attempt" }
+            & git.exe -C $env:SHIRE_MATERIAL_SOURCE push origin ("HEAD:" + $env:HEAD_BRANCH)
+            if($LASTEXITCODE -eq 0){
+              Write-Host "P1C01_MATERIAL_SOURCE_PROMOTION_PASS branch=$env:HEAD_BRANCH attempt=$attempt"
+              $published=$true
+              break
+            }
+            Write-Host "P1C01_MATERIAL_SOURCE_PROMOTION_RETRY reason=non_fast_forward_or_branch_moved attempt=$attempt"
+          }
+          if(-not $published){ throw "P1C01_MATERIAL_SOURCE_PROMOTION_EXHAUSTED" }
+
+      - name: Remove isolated material checkout
+        if: always()
+        shell: cmd
+        run: |
+          @echo off
+          if defined SHIRE_MATERIAL_SOURCE if exist "%SHIRE_MATERIAL_SOURCE%" rmdir /S /Q "%SHIRE_MATERIAL_SOURCE%"
+          exit /b 0
