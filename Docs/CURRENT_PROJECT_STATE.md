@@ -4605,3 +4605,11 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - The existing workflow disk gate remains unchanged; the missing skeleton requirement is not waived.
 - Status: **UE4 ANIMATION TECHNICAL IMPORT PASS / PERSISTENCE ROOT-FIX SOURCE-IMPLEMENTED / FRESH EXACT-HEAD REVALIDATION PENDING**. AnimBP/runtime integration, PIE/device, visual, performance, and Gate 6/7 remain unaccepted.
 
+## 2026-10-05 - Frodo package-save UE_LOG compile root fix
+
+- Exact-head Render Capture run `37290506368` on `94c97b1f0c4a1331bf128e7468b9c3b638ed8960` reached the editor build and failed before capture on the new package-save helper.
+- Exact compiler root cause: UE4.27 `UE_LOG` requires a compile-time verbosity token; the helper passed `bSaved && bExists ? Display : Error` as the verbosity argument, producing the macro cascade beginning at `ShireFrodoAnimationImportCommandlet.cpp(217): error C3493`.
+- Root fix: use explicit success/failure branches with literal `Display` and `Error` verbosity tokens. Deterministic package persistence, five-package requirement, and all animation hard gates are unchanged.
+- The dedicated Frodo animation self-hosted job for the failing head was still queued when this defect was identified, so no additional UE4 import cycle is intentionally spent on the known compile error.
+- Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD COMPILE + PERSISTENCE REVALIDATION PENDING**.
+

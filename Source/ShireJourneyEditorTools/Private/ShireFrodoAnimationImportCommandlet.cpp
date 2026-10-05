@@ -214,15 +214,28 @@ int32 UShireFrodoAnimationImportCommandlet::Main(const FString& Params)
             true,
             SAVE_NoError);
         const bool bExists = IFileManager::Get().FileExists(*Filename);
-        UE_LOG(
-            LogTemp,
-            bSaved && bExists ? Display : Error,
-            TEXT("ShireFrodoAnimationImport: package-save label=%s asset=%s saved=%s exists=%s file=%s"),
-            Label,
-            *Asset->GetPathName(),
-            bSaved ? TEXT("yes") : TEXT("no"),
-            bExists ? TEXT("yes") : TEXT("no"),
-            *Filename);
+        if (bSaved && bExists)
+        {
+            UE_LOG(
+                LogTemp,
+                Display,
+                TEXT("ShireFrodoAnimationImport: package-save label=%s asset=%s saved=yes exists=yes file=%s"),
+                Label,
+                *Asset->GetPathName(),
+                *Filename);
+        }
+        else
+        {
+            UE_LOG(
+                LogTemp,
+                Error,
+                TEXT("ShireFrodoAnimationImport: package-save label=%s asset=%s saved=%s exists=%s file=%s"),
+                Label,
+                *Asset->GetPathName(),
+                bSaved ? TEXT("yes") : TEXT("no"),
+                bExists ? TEXT("yes") : TEXT("no"),
+                *Filename);
+        }
         return bSaved && bExists;
     };
 

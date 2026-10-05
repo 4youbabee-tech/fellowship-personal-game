@@ -4003,3 +4003,17 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | AnimBP / runtime Frodo | PENDING |
 | Human visual / PIE / device / performance / Gate 6+7 | NOT ACCEPTED |
 
+## 2026-10-05 - Frodo package-save logging compile fix
+
+| Control | State |
+|---|---|
+| Compile evidence run | `37290506368` |
+| Failing head | `94c97b1f0c4a1331bf128e7468b9c3b638ed8960` |
+| First compiler error | `ShireFrodoAnimationImportCommandlet.cpp(217): C3493` |
+| Root cause | dynamic ternary passed as UE_LOG verbosity |
+| Literal success/error verbosity branches | SOURCE-IMPLEMENTED |
+| Package-save hard gate | PRESERVED |
+| Dedicated animation UE4 job on failing head | was queued before fix |
+| Fresh compile / package persistence | PENDING |
+| AnimBP / runtime / visual / PIE / performance | NOT ACCEPTED |
+
