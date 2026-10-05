@@ -4133,3 +4133,14 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Rebased payload SHA256 verification | PRESERVED / REQUIRED |
 | Arbitrary path acceptance | FORBIDDEN |
 | Fresh promotion rerun | PENDING |
+
+## 2026-10-05 - Promotion wildcard copy semantics
+
+| Control | State |
+|---|---|
+| Literal wildcard copy defect | ROOT-FIXED |
+| Frodo source promotion wildcard copy | `-Path` |
+| Material source promotion wildcard copy | `-Path` |
+| Exact-file copies | `-LiteralPath` preserved |
+| Static regression guards | ADDED |
+| Fresh exact-head execution | PENDING |
