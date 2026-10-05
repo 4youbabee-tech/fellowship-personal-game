@@ -18,6 +18,11 @@ class FrodoUE4AnimationImportContract(unittest.TestCase):
             'ReferenceBoneCount != 48',
             'bUseT0AsRefPose = true',
             'UE4_ANIMATION_IMPORT_TECHNICAL_PASS',
+            'ExpectedRigObjectPath',
+            'ExpectedSequenceObjectPath',
+            'GetAssetByObjectPath',
+            'RigAssetData.AssetClass == USkeletalMesh::StaticClass()->GetFName()',
+            'SequenceAssetData.AssetClass != UAnimSequence::StaticClass()->GetFName()',
         ):
             self.assertIn(token, cpp)
 

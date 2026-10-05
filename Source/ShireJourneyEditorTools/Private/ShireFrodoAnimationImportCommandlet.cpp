@@ -3,6 +3,7 @@
 #include "Animation/AnimSequence.h"
 #include "Animation/Skeleton.h"
 #include "AssetImportTask.h"
+#include "AssetRegistryModule.h"
 #include "AssetToolsModule.h"
 #include "Engine/SkeletalMesh.h"
 #include "Factories/FbxAnimSequenceImportData.h"
@@ -128,23 +129,32 @@ int32 UShireFrodoAnimationImportCommandlet::Main(const FString& Params)
     RigTasks.Add(RigTask);
     AssetTools.Get().ImportAssetTasks(RigTasks);
 
-    USkeletalMesh* SkeletalMesh = nullptr;
-    for (UObject* Object : RigTask->Result)
+    const FString ExpectedRigObjectPath = FString::Printf(
+        TEXT("%s/SK_FRODO.SK_FRODO"),
+        *RigDestination);
+    FAssetRegistryModule& AssetRegistryModule =
+        FModuleManager::LoadModuleChecked<FAssetRegistryModule>(TEXT("AssetRegistry"));
+    const FAssetData RigAssetData =
+        AssetRegistryModule.Get().GetAssetByObjectPath(FName(*ExpectedRigObjectPath));
+
+    USkeletalMesh* SkeletalMesh =
+        FindObject<USkeletalMesh>(nullptr, *ExpectedRigObjectPath);
+    if (!SkeletalMesh && RigAssetData.IsValid())
     {
-        if (USkeletalMesh* Candidate = Cast<USkeletalMesh>(Object))
-        {
-            if (SkeletalMesh)
-            {
-                UE_LOG(LogTemp, Error, TEXT("ShireFrodoAnimationImport: multiple skeletal meshes returned"));
-                return 45;
-            }
-            SkeletalMesh = Candidate;
-        }
+        SkeletalMesh = Cast<USkeletalMesh>(RigAssetData.GetAsset());
     }
 
-    if (!SkeletalMesh)
+    if (!SkeletalMesh ||
+        !RigAssetData.IsValid() ||
+        RigAssetData.AssetClass != USkeletalMesh::StaticClass()->GetFName())
     {
-        UE_LOG(LogTemp, Error, TEXT("ShireFrodoAnimationImport: exact Rogue skeletal import returned no USkeletalMesh"));
+        UE_LOG(
+            LogTemp,
+            Error,
+            TEXT("ShireFrodoAnimationImport: exact Rogue skeletal registration failed path=%s assetRegistry=%s resultObjects=%d"),
+            *ExpectedRigObjectPath,
+            RigAssetData.IsValid() ? TEXT("valid") : TEXT("missing"),
+            RigTask->Result.Num());
         return 46;
     }
 
@@ -209,25 +219,32 @@ int32 UShireFrodoAnimationImportCommandlet::Main(const FString& Params)
         Tasks.Add(Task);
         AssetTools.Get().ImportAssetTasks(Tasks);
 
-        UAnimSequence* Sequence = nullptr;
-        int32 SequenceObjects = 0;
-        for (UObject* Object : Task->Result)
+        const FString ExpectedSequenceObjectPath = FString::Printf(
+            TEXT("%s/%s.%s"),
+            *AnimationDestination,
+            Clip.AssetName,
+            Clip.AssetName);
+        const FAssetData SequenceAssetData =
+            AssetRegistryModule.Get().GetAssetByObjectPath(FName(*ExpectedSequenceObjectPath));
+
+        UAnimSequence* Sequence =
+            FindObject<UAnimSequence>(nullptr, *ExpectedSequenceObjectPath);
+        if (!Sequence && SequenceAssetData.IsValid())
         {
-            if (UAnimSequence* Candidate = Cast<UAnimSequence>(Object))
-            {
-                ++SequenceObjects;
-                Sequence = Candidate;
-            }
+            Sequence = Cast<UAnimSequence>(SequenceAssetData.GetAsset());
         }
 
-        if (!Sequence || SequenceObjects != 1)
+        if (!Sequence ||
+            !SequenceAssetData.IsValid() ||
+            SequenceAssetData.AssetClass != UAnimSequence::StaticClass()->GetFName())
         {
             UE_LOG(
                 LogTemp,
                 Error,
-                TEXT("ShireFrodoAnimationImport: animation import failed role=%s sequences=%d resultObjects=%d"),
+                TEXT("ShireFrodoAnimationImport: animation registration failed role=%s path=%s assetRegistry=%s resultObjects=%d"),
                 Clip.Role,
-                SequenceObjects,
+                *ExpectedSequenceObjectPath,
+                SequenceAssetData.IsValid() ? TEXT("valid") : TEXT("missing"),
                 Task->Result.Num());
             return 48;
         }

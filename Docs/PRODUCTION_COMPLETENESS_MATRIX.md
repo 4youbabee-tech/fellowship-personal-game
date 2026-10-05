@@ -3948,3 +3948,23 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | AnimBP / runtime Frodo | PENDING |
 | Human visual / PIE / device / performance / Gate 6+7 | NOT ACCEPTED |
 
+## 2026-10-05 - Frodo UE4 imported-object discovery root fix
+
+| Control | State |
+|---|---|
+| Failing animation run | `37288340732` / FAILURE |
+| Failing exact head | `fc3b40621bc0b064139208b85a590e73e7377d11` |
+| Isolated exact checkout | PASS |
+| Exact payload SHA checks | PASS |
+| Isolated `ShireJourneyEditor` build | **SUCCESS** |
+| Prior module-missing failure | DID NOT RECUR |
+| UE4 FBX skeleton digestion | `Bones digested - 48` |
+| Failure | `Task->Result` returned no directly castable `USkeletalMesh` |
+| Exact-path AssetRegistry rig resolution | SOURCE-IMPLEMENTED |
+| Exact-path AssetRegistry sequence resolution | SOURCE-IMPLEMENTED |
+| T0 / 48 bones / linked skeleton hard gates | PRESERVED |
+| Frame / play-length gates | PRESERVED |
+| Fresh exact-head animation import | PENDING |
+| AnimBP / runtime Frodo | PENDING |
+| Human visual / PIE / device / performance / Gate 6+7 | NOT ACCEPTED |
+

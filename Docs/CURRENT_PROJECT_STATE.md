@@ -4574,3 +4574,12 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Human Wave2 run `37281245185` on the same head completed **SUCCESS**, including the direct UE4 skeletal gate and hosted Frodo static deformation stress.
 - Status: **ROOT-FIX SOURCE-IMPLEMENTED / FRESH EXACT-HEAD FRODO UE4 ANIMATION IMPORT REVALIDATION PENDING**. No AnimBP/runtime, PIE, device, visual, performance, or Gate 6/7 acceptance is claimed.
 
+## 2026-10-05 - Frodo UE4 animation imported-object discovery root fix
+
+- Exact-head animation run `37288340732` on `fc3b40621bc0b064139208b85a590e73e7377d11` proved the isolated build-root remediation: exact checkout, runner verification, payload SHA enforcement, and **Build ShireJourneyEditor once = SUCCESS** all completed before UE4 commandlet execution.
+- The earlier module-loading failure did not recur. UE4 reached FBX skeletal digestion and logged **`Bones digested - 48`**, then the commandlet exited 46 because `UAssetImportTask::Result` did not contain a directly castable `USkeletalMesh`.
+- This is an editor result-discovery defect, not a skeleton/FBX rejection. The existing production importer already uses the safer UE4.27 pattern: resolve the deterministic expected object path through AssetRegistry/resident object state after import.
+- Root fix: the dedicated Frodo commandlet now resolves `SK_FRODO` at the exact destination object path through `FAssetRegistryModule::GetAssetByObjectPath` plus resident-object lookup, validates the registered class, and uses the same deterministic object-path pattern for Idle/Walk/Run `UAnimSequence` assets. `Task->Result` is retained only as diagnostic count.
+- All previous hard gates remain: T0 ref pose, 48-bone sanity, identical linked `USkeleton`, >1 animation frame, finite nonzero play length, and exact hosted payload SHAs.
+- Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD UE4 ANIMATION IMPORT REVALIDATION PENDING**. No AnimBP/runtime, PIE, device, visual, performance, or Gate 6/7 acceptance is claimed.
+
