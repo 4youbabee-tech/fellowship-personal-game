@@ -4173,3 +4173,14 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Regression guard against self-push | ACTIVE |
 | New workflow state after fix | QUEUED / PENDING, not `action_required` |
 | Gate 6/7 acceptance | NOT ACCEPTED |
+
+## 2026-10-05 - Material verify-only test path reconciliation
+
+| Control | State |
+|---|---|
+| Failing lane | Material Surface Promotion #28 |
+| Failure layer | Hosted static contract only |
+| Cause | slash-vs-backslash assertion drift |
+| Warehouse/material content failure | NO |
+| SHA/receipt verification weakened | NO |
+| Fresh exact-head rerun | PENDING |
