@@ -1,0 +1,281 @@
+#include "ShireFrodoAnimationImportCommandlet.h"
+
+#include "Animation/AnimSequence.h"
+#include "Animation/Skeleton.h"
+#include "AssetImportTask.h"
+#include "AssetToolsModule.h"
+#include "Engine/SkeletalMesh.h"
+#include "Factories/FbxAnimSequenceImportData.h"
+#include "Factories/FbxImportUI.h"
+#include "Factories/FbxSkeletalMeshImportData.h"
+#include "HAL/FileManager.h"
+#include "Misc/Parse.h"
+#include "Misc/Paths.h"
+#include "Modules/ModuleManager.h"
+
+namespace ShireFrodoAnimationImport
+{
+    struct FClipSpec
+    {
+        const TCHAR* SourceFile;
+        const TCHAR* AssetName;
+        const TCHAR* Role;
+    };
+
+    static const FClipSpec RequiredClips[] =
+    {
+        { TEXT("Frodo_Idle_Retarget.fbx"), TEXT("A_Frodo_Idle"), TEXT("Idle") },
+        { TEXT("Frodo_Walk_Retarget.fbx"), TEXT("A_Frodo_Walk"), TEXT("Walk") },
+        { TEXT("Frodo_Run_Retarget.fbx"), TEXT("A_Frodo_Run"), TEXT("Run") }
+    };
+}
+
+UShireFrodoAnimationImportCommandlet::UShireFrodoAnimationImportCommandlet()
+{
+    IsClient = false;
+    IsServer = false;
+    IsEditor = true;
+    LogToConsole = true;
+    ShowErrorCount = true;
+}
+
+int32 UShireFrodoAnimationImportCommandlet::Main(const FString& Params)
+{
+    FString TargetFbx;
+    FString AnimationDir;
+    FString RigDestination = TEXT("/Game/Production/Characters/Rigs/FRODO");
+    FString AnimationDestination = TEXT("/Game/Production/Characters/Animations/FRODO");
+
+    if (!FParse::Value(*Params, TEXT("TargetFbx="), TargetFbx) ||
+        !FParse::Value(*Params, TEXT("AnimationDir="), AnimationDir))
+    {
+        UE_LOG(
+            LogTemp,
+            Error,
+            TEXT("ShireFrodoAnimationImport: required args missing; expected -TargetFbx=... -AnimationDir=..."));
+        return 41;
+    }
+
+    FParse::Value(*Params, TEXT("RigDestination="), RigDestination);
+    FParse::Value(*Params, TEXT("AnimationDestination="), AnimationDestination);
+
+    TargetFbx = FPaths::ConvertRelativePathToFull(TargetFbx);
+    AnimationDir = FPaths::ConvertRelativePathToFull(AnimationDir);
+
+    if (!FPaths::GetExtension(TargetFbx).Equals(TEXT("fbx"), ESearchCase::IgnoreCase) ||
+        !IFileManager::Get().FileExists(*TargetFbx))
+    {
+        UE_LOG(LogTemp, Error, TEXT("ShireFrodoAnimationImport: exact target FBX missing or invalid: %s"), *TargetFbx);
+        return 42;
+    }
+
+    if (!RigDestination.StartsWith(TEXT("/Game/")) ||
+        !AnimationDestination.StartsWith(TEXT("/Game/")))
+    {
+        UE_LOG(
+            LogTemp,
+            Error,
+            TEXT("ShireFrodoAnimationImport: destinations must be project /Game paths rig=%s animation=%s"),
+            *RigDestination,
+            *AnimationDestination);
+        return 43;
+    }
+
+    for (const ShireFrodoAnimationImport::FClipSpec& Clip : ShireFrodoAnimationImport::RequiredClips)
+    {
+        const FString ClipPath = FPaths::Combine(AnimationDir, Clip.SourceFile);
+        if (!IFileManager::Get().FileExists(*ClipPath) ||
+            !FPaths::GetExtension(ClipPath).Equals(TEXT("fbx"), ESearchCase::IgnoreCase))
+        {
+            UE_LOG(
+                LogTemp,
+                Error,
+                TEXT("ShireFrodoAnimationImport: required FBX animation missing role=%s file=%s"),
+                Clip.Role,
+                *ClipPath);
+            return 44;
+        }
+    }
+
+    FAssetToolsModule& AssetTools =
+        FModuleManager::LoadModuleChecked<FAssetToolsModule>(TEXT("AssetTools"));
+
+    UAssetImportTask* RigTask = NewObject<UAssetImportTask>();
+    RigTask->Filename = TargetFbx;
+    RigTask->DestinationPath = RigDestination;
+    RigTask->DestinationName = TEXT("SK_FRODO");
+    RigTask->bAutomated = true;
+    RigTask->bSave = true;
+    RigTask->bReplaceExisting = true;
+    RigTask->bReplaceExistingSettings = true;
+
+    UFbxImportUI* RigOptions = NewObject<UFbxImportUI>();
+    RigOptions->OriginalImportType = EFBXImportType::FBXIT_SkeletalMesh;
+    RigOptions->MeshTypeToImport = EFBXImportType::FBXIT_SkeletalMesh;
+    RigOptions->bAutomatedImportShouldDetectType = false;
+    RigOptions->bImportAsSkeletal = true;
+    RigOptions->bImportMesh = true;
+    RigOptions->bImportAnimations = false;
+    RigOptions->bImportMaterials = false;
+    RigOptions->bImportTextures = false;
+    if (RigOptions->SkeletalMeshImportData)
+    {
+        RigOptions->SkeletalMeshImportData->bUseT0AsRefPose = true;
+    }
+    RigTask->Options = RigOptions;
+
+    TArray<UAssetImportTask*> RigTasks;
+    RigTasks.Add(RigTask);
+    AssetTools.Get().ImportAssetTasks(RigTasks);
+
+    USkeletalMesh* SkeletalMesh = nullptr;
+    for (UObject* Object : RigTask->Result)
+    {
+        if (USkeletalMesh* Candidate = Cast<USkeletalMesh>(Object))
+        {
+            if (SkeletalMesh)
+            {
+                UE_LOG(LogTemp, Error, TEXT("ShireFrodoAnimationImport: multiple skeletal meshes returned"));
+                return 45;
+            }
+            SkeletalMesh = Candidate;
+        }
+    }
+
+    if (!SkeletalMesh)
+    {
+        UE_LOG(LogTemp, Error, TEXT("ShireFrodoAnimationImport: exact Rogue skeletal import returned no USkeletalMesh"));
+        return 46;
+    }
+
+    const int32 ReferenceBoneCount = SkeletalMesh->GetRefSkeleton().GetNum();
+    USkeleton* Skeleton = SkeletalMesh->GetSkeleton();
+    if (!Skeleton || ReferenceBoneCount != 48)
+    {
+        UE_LOG(
+            LogTemp,
+            Error,
+            TEXT("ShireFrodoAnimationImport: exact Rogue skeleton sanity failed bones=%d skeleton=%s"),
+            ReferenceBoneCount,
+            Skeleton ? *Skeleton->GetPathName() : TEXT("NONE"));
+        return 47;
+    }
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("ShireFrodoAnimationImport: exact-rig-pass mesh=%s bones=%d skeleton=%s use-t0-ref-pose=yes"),
+        *SkeletalMesh->GetPathName(),
+        ReferenceBoneCount,
+        *Skeleton->GetPathName());
+
+    int32 ImportedSequenceCount = 0;
+    for (const ShireFrodoAnimationImport::FClipSpec& Clip : ShireFrodoAnimationImport::RequiredClips)
+    {
+        const FString ClipPath = FPaths::Combine(AnimationDir, Clip.SourceFile);
+
+        UAssetImportTask* Task = NewObject<UAssetImportTask>();
+        Task->Filename = ClipPath;
+        Task->DestinationPath = AnimationDestination;
+        Task->DestinationName = Clip.AssetName;
+        Task->bAutomated = true;
+        Task->bSave = true;
+        Task->bReplaceExisting = true;
+        Task->bReplaceExistingSettings = true;
+
+        UFbxImportUI* Options = NewObject<UFbxImportUI>();
+        Options->OriginalImportType = EFBXImportType::FBXIT_Animation;
+        Options->MeshTypeToImport = EFBXImportType::FBXIT_Animation;
+        Options->bAutomatedImportShouldDetectType = false;
+        Options->bImportAsSkeletal = false;
+        Options->bImportMesh = false;
+        Options->bImportAnimations = true;
+        Options->bImportMaterials = false;
+        Options->bImportTextures = false;
+        Options->Skeleton = Skeleton;
+
+        if (Options->AnimSequenceImportData)
+        {
+            Options->AnimSequenceImportData->AnimationLength = EFBXAnimationLengthImportType::FBXALIT_ExportedTime;
+            Options->AnimSequenceImportData->bUseDefaultSampleRate = false;
+            Options->AnimSequenceImportData->CustomSampleRate = 0;
+            Options->AnimSequenceImportData->bImportCustomAttribute = false;
+            Options->AnimSequenceImportData->bImportBoneTracks = true;
+            Options->AnimSequenceImportData->bPreserveLocalTransform = false;
+        }
+        Task->Options = Options;
+
+        TArray<UAssetImportTask*> Tasks;
+        Tasks.Add(Task);
+        AssetTools.Get().ImportAssetTasks(Tasks);
+
+        UAnimSequence* Sequence = nullptr;
+        int32 SequenceObjects = 0;
+        for (UObject* Object : Task->Result)
+        {
+            if (UAnimSequence* Candidate = Cast<UAnimSequence>(Object))
+            {
+                ++SequenceObjects;
+                Sequence = Candidate;
+            }
+        }
+
+        if (!Sequence || SequenceObjects != 1)
+        {
+            UE_LOG(
+                LogTemp,
+                Error,
+                TEXT("ShireFrodoAnimationImport: animation import failed role=%s sequences=%d resultObjects=%d"),
+                Clip.Role,
+                SequenceObjects,
+                Task->Result.Num());
+            return 48;
+        }
+
+        const int32 FrameCount = Sequence->GetNumberOfFrames();
+        const float PlayLength = Sequence->GetPlayLength();
+        const bool bSameSkeleton = Sequence->GetSkeleton() == Skeleton;
+
+        if (!bSameSkeleton || FrameCount <= 1 || !FMath::IsFinite(PlayLength) || PlayLength <= 0.0f)
+        {
+            UE_LOG(
+                LogTemp,
+                Error,
+                TEXT("ShireFrodoAnimationImport: animation technical gate failed role=%s asset=%s same-skeleton=%s frames=%d play-length=%.6f"),
+                Clip.Role,
+                *Sequence->GetPathName(),
+                bSameSkeleton ? TEXT("yes") : TEXT("no"),
+                FrameCount,
+                PlayLength);
+            return 49;
+        }
+
+        ++ImportedSequenceCount;
+        UE_LOG(
+            LogTemp,
+            Display,
+            TEXT("ShireFrodoAnimationImport: animation-pass role=%s asset=%s skeleton=%s frames=%d play-length=%.6f"),
+            Clip.Role,
+            *Sequence->GetPathName(),
+            *Skeleton->GetPathName(),
+            FrameCount,
+            PlayLength);
+    }
+
+    if (ImportedSequenceCount != 3)
+    {
+        UE_LOG(
+            LogTemp,
+            Error,
+            TEXT("ShireFrodoAnimationImport: clip count mismatch imported=%d expected=3"),
+            ImportedSequenceCount);
+        return 50;
+    }
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("ShireFrodoAnimationImport: UE4_ANIMATION_IMPORT_TECHNICAL_PASS clips=3 bones=48 skeleton=%s"),
+        *Skeleton->GetPathName());
+    return 0;
+}
