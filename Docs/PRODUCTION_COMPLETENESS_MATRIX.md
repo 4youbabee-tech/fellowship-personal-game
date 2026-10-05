@@ -4035,3 +4035,16 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Fresh exact-head static/compile/runtime proof | PENDING |
 | Local owner-visible Frodo promotion | PENDING EXACT PAYLOAD STAGING |
 | Human visual / PIE / device / performance | NOT ACCEPTED |
+
+## 2026-10-05 - Frodo local runtime source promotion
+
+| Control | State |
+|---|---|
+| Exact validated Frodo target FBX promotion | SOURCE-IMPLEMENTED |
+| Exact validated Idle/Walk/Run FBX promotion | SOURCE-IMPLEMENTED |
+| Promotion provenance + SHA lock | SOURCE-IMPLEMENTED |
+| Local acceptance imports dedicated Frodo gate assets | SOURCE-IMPLEMENTED |
+| Local acceptance refuses proxy-only launch | SOURCE-IMPLEMENTED |
+| Fresh exact-head workflow proof | PENDING |
+| Owner-visible skeletal Frodo review | PENDING |
+| Human visual / PIE / device / performance / Gate 6+7 | NOT ACCEPTED |
