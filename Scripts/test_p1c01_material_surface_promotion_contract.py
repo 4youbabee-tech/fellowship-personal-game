@@ -54,16 +54,14 @@ class P1C01MaterialSurfacePromotionContract(unittest.TestCase):
             r'D:\actions-runner\_warehouse\ShireJourney',
             'P1C01_MATERIAL_SURFACE_PREPARED_PASS',
             'SourceAssets/Production/Imported/P1C01Materials',
-            'git.exe lfs version',
-            'git.exe -C $env:SHIRE_MATERIAL_SOURCE fetch --no-tags origin $env:HEAD_BRANCH',
-            'reset --hard FETCH_HEAD',
-            'P1C01_MATERIAL_SOURCE_PROMOTION_PASS',
+            'Verify tracked corrected Shire surface sources',
+            'P1C01_MATERIAL_SOURCE_TRACKED_PASS',
         ):
             self.assertIn(token, workflow)
-        self.assertIn('contents: write', workflow)
-        self.assertNotIn('push --force', workflow.lower())
-        self.assertNotIn('Copy-Item -LiteralPath (Join-Path $stage "*")', workflow)
-        self.assertIn('Copy-Item -Path (Join-Path $stage "*")', workflow)
+        self.assertIn('contents: read', workflow)
+        self.assertNotIn('contents: write', workflow)
+        self.assertNotIn('git.exe -C $env:SHIRE_MATERIAL_SOURCE push origin', workflow)
+        self.assertNotIn('P1C01_MATERIAL_SOURCE_PROMOTION_PASS', workflow)
         trigger_block = workflow.split('jobs:', 1)[0]
         self.assertNotIn('SourceAssets/Production/Imported/P1C01Materials', trigger_block)
 
