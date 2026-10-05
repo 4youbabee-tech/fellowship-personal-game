@@ -3818,3 +3818,24 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Retarget / UE4 animation import / AnimBP / runtime | PENDING |
 | Visual / PIE / device / performance | NOT ACCEPTED |
 
+## 2026-10-05 - Frodo exact source selection + hosted retarget gate
+
+| Control | State |
+|---|---|
+| Selector revalidation run | `37272572478` / SUCCESS |
+| Selector validated head | `e87526dacfed91a47024c4e4ac915a17c90b0f82` |
+| Idle source | Unreal `AL_Standard.fbx` / `Idle_Loop` / EXACT_ACTION_LEAF |
+| Walk source | Unreal `AL_Standard.fbx` / `Walk_Loop` / EXACT_ACTION_LEAF |
+| Run source | Unreal `AL_Standard.fbx` / `Jog_Fwd_Loop` / EXACT_ACTION_LEAF |
+| Source semantic coverage | 15/15 |
+| Target normalized Rogue SHA | `75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be` |
+| Source archive SHA | `18ff1a7215f4852b320203e8aaf02a1578b5c8eef9027fbaedfcedc7b85a3ac2` |
+| Unreal animation FBX SHA | `c836c5d47de2a414818f7644632ac43aa84475df6709f4514b9410d232800fd9` |
+| Hosted retarget gate source | IMPLEMENTED |
+| Nonzero target deformation required per clip | YES |
+| Derivative FBX re-import required | YES |
+| Self-hosted UE4 before retarget pass | NO |
+| Fresh hosted retarget validation | PENDING |
+| UE4 animation import / AnimBP / runtime | PENDING |
+| Visual / PIE / device / performance | NOT ACCEPTED |
+
