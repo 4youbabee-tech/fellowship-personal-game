@@ -10,8 +10,10 @@
 #include "Factories/FbxImportUI.h"
 #include "Factories/FbxSkeletalMeshImportData.h"
 #include "HAL/FileManager.h"
+#include "Misc/PackageName.h"
 #include "Misc/Parse.h"
 #include "Misc/Paths.h"
+#include "UObject/Package.h"
 #include "Modules/ModuleManager.h"
 
 namespace ShireFrodoAnimationImport
@@ -179,7 +181,53 @@ int32 UShireFrodoAnimationImportCommandlet::Main(const FString& Params)
         ReferenceBoneCount,
         *Skeleton->GetPathName());
 
+    auto SaveExactAssetPackage = [](UObject* Asset, const TCHAR* Label) -> bool
+    {
+        if (!Asset)
+        {
+            UE_LOG(LogTemp, Error, TEXT("ShireFrodoAnimationImport: package-save missing asset label=%s"), Label);
+            return false;
+        }
+
+        UPackage* Package = Asset->GetOutermost();
+        if (!Package || Package == GetTransientPackage())
+        {
+            UE_LOG(LogTemp, Error, TEXT("ShireFrodoAnimationImport: package-save invalid package label=%s asset=%s"),
+                Label, *Asset->GetPathName());
+            return false;
+        }
+
+        const FString Filename = FPackageName::LongPackageNameToFilename(
+            Package->GetName(),
+            FPackageName::GetAssetPackageExtension());
+        IFileManager::Get().MakeDirectory(*FPaths::GetPath(Filename), true);
+        Package->MarkPackageDirty();
+
+        const bool bSaved = UPackage::SavePackage(
+            Package,
+            Asset,
+            RF_Public | RF_Standalone,
+            *Filename,
+            GError,
+            nullptr,
+            false,
+            true,
+            SAVE_NoError);
+        const bool bExists = IFileManager::Get().FileExists(*Filename);
+        UE_LOG(
+            LogTemp,
+            bSaved && bExists ? Display : Error,
+            TEXT("ShireFrodoAnimationImport: package-save label=%s asset=%s saved=%s exists=%s file=%s"),
+            Label,
+            *Asset->GetPathName(),
+            bSaved ? TEXT("yes") : TEXT("no"),
+            bExists ? TEXT("yes") : TEXT("no"),
+            *Filename);
+        return bSaved && bExists;
+    };
+
     int32 ImportedSequenceCount = 0;
+    TArray<UAnimSequence*> ImportedSequences;
     for (const ShireFrodoAnimationImport::FClipSpec& Clip : ShireFrodoAnimationImport::RequiredClips)
     {
         const FString ClipPath = FPaths::Combine(AnimationDir, Clip.SourceFile);
@@ -267,6 +315,7 @@ int32 UShireFrodoAnimationImportCommandlet::Main(const FString& Params)
             return 49;
         }
 
+        ImportedSequences.Add(Sequence);
         ++ImportedSequenceCount;
         UE_LOG(
             LogTemp,
@@ -288,6 +337,26 @@ int32 UShireFrodoAnimationImportCommandlet::Main(const FString& Params)
             ImportedSequenceCount);
         return 50;
     }
+
+    bool bPersistencePass =
+        SaveExactAssetPackage(SkeletalMesh, TEXT("skeletal-mesh")) &&
+        SaveExactAssetPackage(Skeleton, TEXT("skeleton"));
+    for (UAnimSequence* Sequence : ImportedSequences)
+    {
+        bPersistencePass =
+            SaveExactAssetPackage(Sequence, TEXT("animation-sequence")) &&
+            bPersistencePass;
+    }
+    if (!bPersistencePass)
+    {
+        UE_LOG(LogTemp, Error, TEXT("ShireFrodoAnimationImport: deterministic package persistence failed"));
+        return 51;
+    }
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("ShireFrodoAnimationImport: UE4_ANIMATION_PACKAGE_PERSISTENCE_PASS assets=5"));
 
     UE_LOG(
         LogTemp,

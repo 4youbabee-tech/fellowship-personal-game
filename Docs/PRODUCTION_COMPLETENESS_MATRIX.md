@@ -3981,3 +3981,25 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Fresh exact-head revalidation | PENDING |
 | UE4 animation import / AnimBP / runtime | PENDING |
 
+## 2026-10-05 - Frodo UE4 animation import technical pass + persistence fix
+
+| Control | State |
+|---|---|
+| Evidence run | `37289482279` |
+| Exact head | `a0713481121a76b2f226cd4358b2a470ffa4f90d` |
+| Hosted artifact identity / SHA | PASS |
+| Isolated exact checkout | PASS |
+| ShireJourneyEditor build | **SUCCESS** |
+| Exact Frodo rig | PASS / 48 bones / linked USkeleton / T0 |
+| Idle import | PASS / 76 frames / 2.500000 s |
+| Walk import | PASS / 41 frames / 1.333333 s |
+| Run import | PASS / 29 frames / 0.933333 s |
+| UE4 animation technical marker | **PASS** |
+| Post-import missing package | `SK_FRODO_Skeleton.uasset` |
+| Failure classification | PACKAGE PERSISTENCE AFTER TECHNICAL PASS |
+| Deterministic mesh+skeleton+3 sequence save | SOURCE-IMPLEMENTED |
+| Existing disk package gate | PRESERVED |
+| Fresh exact-head persistence validation | PENDING |
+| AnimBP / runtime Frodo | PENDING |
+| Human visual / PIE / device / performance / Gate 6+7 | NOT ACCEPTED |
+

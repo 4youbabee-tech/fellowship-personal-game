@@ -4590,3 +4590,18 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Root fix: correct the hosted assertion to require the actual rejection condition. No runtime/import gate is weakened and no UE4 retry is spent until this static guard passes.
 - Status: **TEST ROOT-FIX SOURCE-IMPLEMENTED / EXACT-HEAD REVALIDATION PENDING**.
 
+## 2026-10-05 - Frodo UE4 animation technical import PASS; package persistence root fix
+
+- Exact-head run `37289482279` on `a0713481121a76b2f226cd4358b2a470ffa4f90d` passed hosted artifact identity, isolated exact checkout, exact Windows payload SHA checks, and **Build ShireJourneyEditor once = SUCCESS**.
+- The dedicated UE4 commandlet then passed the actual rig/animation technical gate:
+  - exact rig: `/Game/Production/Characters/Rigs/FRODO/SK_FRODO.SK_FRODO`
+  - **48 reference bones**, linked `/Game/Production/Characters/Rigs/FRODO/SK_FRODO_Skeleton.SK_FRODO_Skeleton`, T0 ref pose enabled
+  - Idle: **76 frames / 2.500000 s**
+  - Walk: **41 frames / 1.333333 s**
+  - Run: **29 frames / 0.933333 s**
+  - marker: `UE4_ANIMATION_IMPORT_TECHNICAL_PASS clips=3 bones=48`
+- Post-import disk verification then failed only because `SK_FRODO_Skeleton.uasset` had not been persisted as a standalone package, despite the linked `USkeleton` being valid in memory. This is a persistence defect after technical import, not an FBX/retarget/skeleton rejection.
+- Root fix: the commandlet now deterministically saves the skeletal mesh, linked skeleton, and all three animation-sequence packages via `UPackage::SavePackage`, verifies each file exists, and emits `UE4_ANIMATION_PACKAGE_PERSISTENCE_PASS assets=5` before the technical-pass marker.
+- The existing workflow disk gate remains unchanged; the missing skeleton requirement is not waived.
+- Status: **UE4 ANIMATION TECHNICAL IMPORT PASS / PERSISTENCE ROOT-FIX SOURCE-IMPLEMENTED / FRESH EXACT-HEAD REVALIDATION PENDING**. AnimBP/runtime integration, PIE/device, visual, performance, and Gate 6/7 remain unaccepted.
+
