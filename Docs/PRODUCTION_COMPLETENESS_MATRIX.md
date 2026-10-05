@@ -3968,3 +3968,16 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | AnimBP / runtime Frodo | PENDING |
 | Human visual / PIE / device / performance / Gate 6+7 | NOT ACCEPTED |
 
+## 2026-10-05 - Frodo AssetRegistry hosted guard correction
+
+| Control | State |
+|---|---|
+| Failing run | `37289335569` / hosted preflight FAILURE |
+| Exact head | `242a90707e7f9a9a4db88e6971487e83deaa288a` |
+| Self-hosted UE4 reserved | NO |
+| Importer AssetRegistry code rejected | NO |
+| Test defect | asserted `==` instead of fail-closed `!=` class condition |
+| Hosted contract correction | SOURCE-IMPLEMENTED |
+| Fresh exact-head revalidation | PENDING |
+| UE4 animation import / AnimBP / runtime | PENDING |
+

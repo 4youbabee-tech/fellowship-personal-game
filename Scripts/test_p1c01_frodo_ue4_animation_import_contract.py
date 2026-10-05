@@ -21,7 +21,7 @@ class FrodoUE4AnimationImportContract(unittest.TestCase):
             'ExpectedRigObjectPath',
             'ExpectedSequenceObjectPath',
             'GetAssetByObjectPath',
-            'RigAssetData.AssetClass == USkeletalMesh::StaticClass()->GetFName()',
+            'RigAssetData.AssetClass != USkeletalMesh::StaticClass()->GetFName()',
             'SequenceAssetData.AssetClass != UAnimSequence::StaticClass()->GetFName()',
         ):
             self.assertIn(token, cpp)

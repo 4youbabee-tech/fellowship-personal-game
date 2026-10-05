@@ -4583,3 +4583,10 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - All previous hard gates remain: T0 ref pose, 48-bone sanity, identical linked `USkeleton`, >1 animation frame, finite nonzero play length, and exact hosted payload SHAs.
 - Status: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD UE4 ANIMATION IMPORT REVALIDATION PENDING**. No AnimBP/runtime, PIE, device, visual, performance, or Gate 6/7 acceptance is claimed.
 
+## 2026-10-05 - Frodo AssetRegistry contract guard correction
+
+- Exact-head run `37289335569` on `242a90707e7f9a9a4db88e6971487e83deaa288a` failed in the hosted static contract before any self-hosted UE4 reservation.
+- The importer source was not the failing layer. The new test accidentally asserted the acceptance form `RigAssetData.AssetClass == USkeletalMesh...` while the implementation correctly expresses the fail-closed rejection condition as `RigAssetData.AssetClass != USkeletalMesh...`.
+- Root fix: correct the hosted assertion to require the actual rejection condition. No runtime/import gate is weakened and no UE4 retry is spent until this static guard passes.
+- Status: **TEST ROOT-FIX SOURCE-IMPLEMENTED / EXACT-HEAD REVALIDATION PENDING**.
+
