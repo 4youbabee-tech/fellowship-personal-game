@@ -3001,7 +3001,7 @@ else:
     pg176_prepare = read(ROOT / "Scripts" / "prepare_p1c01_material_intake.ps1")
     for pg176_marker in [
         "Get-FileHash -LiteralPath $dest -Algorithm SHA256",
-        '"Ks $ksText $ksText $ksText"',
+        '("Ks {0} {0} {0}" -f $ksText)',
         'state="INTAKE_QC_PREPARED"',
         "forbidden_bmp",
     ]:
