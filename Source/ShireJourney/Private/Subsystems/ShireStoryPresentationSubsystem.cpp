@@ -88,6 +88,8 @@ void UShireStoryPresentationSubsystem::BuildCueLibrary()
         TEXT("Cam_PlayerStealth"), TEXT("Dlg_ShireRootHide"), TEXT("Amb_RootHide"), TEXT("Mus_BlackRiderLowPulse"), TEXT("Sfx_HoovesNear"), 7.0f);
     AddCue(TEXT("FerryEscape"), EShireStoryPresentationMode::GameplayBlend,
         TEXT("Cam_FerryEscape"), TEXT("Dlg_ShireFerry"), TEXT("Amb_Brandywine"), TEXT("Mus_FerryEscape"), TEXT("Sfx_FerryWoodWater"), 12.0f);
+    AddCue(TEXT("FerryEscapeComplete"), EShireStoryPresentationMode::GameplayBlend,
+        TEXT("Cam_FerryEscape"), NAME_None, TEXT("Amb_Brandywine"), TEXT("Mus_FerryEscape"), TEXT("Sfx_FerryWoodWater"), 4.0f);
 
     AddCue(TEXT("IsengardArrival"), EShireStoryPresentationMode::GameplayBlend,
         TEXT("Cam_IsengardArrival"), TEXT("Dlg_IsengardArrival"), TEXT("Amb_IsengardApproach"), TEXT("Mus_IsengardSuspicion"), TEXT("Sfx_OrthancWind"), 10.0f);
