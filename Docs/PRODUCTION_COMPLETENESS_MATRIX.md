@@ -4405,3 +4405,13 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Owner-facing vs technical lane conflation | GUARDED |
 | Current BMP inventory drift | GUARDED |
 | Historical review records preservation | INTENTIONAL |
+
+## 2026-10-06 - Frodo winner consistency guard
+
+| Control | State |
+|---|---|
+| Preparation winner SHA | 75d715f6... |
+| ValidatedRuntime provenance target SHA | 75d715f6... |
+| Historical eff0e799 hard-coded test | REMOVED |
+| Prep/provenance equality | GUARDED |
+| Exact-head hosted proof | PENDING |
