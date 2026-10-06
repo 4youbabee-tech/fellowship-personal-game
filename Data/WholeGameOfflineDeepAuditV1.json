@@ -142,5 +142,63 @@
     "rule": "Only the existing fail-closed hosted branch cleanup script may delete reviewed refs; unique Edoras source-prep branches remain preserved until selective reconciliation."
   },
   "runner_return_handoff": "When UE4-27-Windows returns, stop this exceptional whole-game offline lane as the primary activity and execute Data/P1C01RunnerHandoffV1.json without replanning. P1C01 remains the sole runtime-changing chapter.",
-  "evidence_boundary": "STATIC/SOURCE AUDIT ONLY. No PIE/device/visual/audio/performance/Gate 6/7 acceptance."
+  "evidence_boundary": "STATIC/SOURCE AUDIT ONLY. No PIE/device/visual/audio/performance/Gate 6/7 acceptance.",
+  "final_pre_runner_sweep_2026_10_06": {
+    "status": "SOURCE_IMPLEMENTED_HOSTED_VALIDATION_PENDING",
+    "repository_hygiene": {
+      "tracked_file_count": 946,
+      "bmp_files": 0,
+      "generated_runtime_directories_tracked": 0,
+      "headers_outside_public": 0,
+      "cpp_outside_private": 0,
+      "validated_runtime_fbx_count": 4,
+      "validated_runtime_obj_count": 0,
+      "production_audio_wav_masters": 0
+    },
+    "runtime_asset_loading": {
+      "heavy_runtime_loadobject_found": false,
+      "staticloadobject_found": false,
+      "synchronous_runtime_loadobject_scope": "ENGINE_BASICSHAPES_FALLBACK_ONLY",
+      "production_heavy_asset_contract": "FSoftObjectPath/TSoft refs plus UShireChapterAssetStreamingSubsystem RequestAsyncLoad",
+      "evidence_boundary": "STATIC SOURCE REVIEW ONLY"
+    },
+    "authority_review": {
+      "quest_owner": "UShireQuestSubsystem",
+      "population_owner": "ALivingWorldDirector",
+      "npc_context_owner": "UShireNPCContextSubsystem",
+      "world_commit_owner": "AChapterWorldRouter",
+      "streaming_owner": "UShireChapterAssetStreamingSubsystem",
+      "second_story_or_population_authority_found": false,
+      "per_frame_full_world_npc_context_scan_found": false
+    },
+    "p1c01_terminal": {
+      "quest": "FerryEscape",
+      "stage": 2,
+      "story_beat": "FerryEscapeComplete",
+      "automatic_p1c02_start": false,
+      "restore_contract": "PRESERVE_P1C01_TERMINAL_IDENTITY_ONE_PUBLICATION_ZERO_EXTRA_WORLD_COMMITS"
+    },
+    "branch_hygiene": {
+      "active_p1c01_refs": [
+        "production/p1c01-definitive-chapter-closeout-2026-10-04"
+      ],
+      "preserved_unique_prep_refs": [
+        "prep/f2-03-edoras-mega-source-v1",
+        "prep/f2-03-edoras-mega-source-v2"
+      ],
+      "preserved_archive_refs": [
+        "archive/pre-build-salvage-20260930"
+      ],
+      "reviewed_dead_p1c01_refs_remaining": 0
+    },
+    "known_runner_only_evidence_remaining": [
+      "UE4.27 compile/import/package and .uasset persistence",
+      "collision/traversal and progression deadlock observation",
+      "animation/deformation/render quality",
+      "audio WAV import/playback/listening and mix",
+      "disk save/load runtime behavior",
+      "DX11 1280x720 FPS/RAM/VRAM/frame-time tails",
+      "human visual/pacing Gate 6/7"
+    ]
+  }
 }
