@@ -109,6 +109,28 @@ def main():
     check(any(x.get("id") == "DEC-105" and x.get("status") == "ACCEPTED"
               for x in governor.get("decisions", [])), "governor_dec105", errors)
 
+    execution = governor.get("execution_control", {})
+    focus = governor.get("current_focus", {})
+    dev_mode = governor.get("development_mode", {})
+    one_shot = governor.get("p1c01_mega_wave_closure_2026_10_04", {})
+    check(execution.get("mode") == "ACTIVE_ONE_SHOT_CHAPTER_FINISH",
+          "governor_one_shot_execution_mode", errors)
+    check(execution.get("active_lane") == "P1C01_ONE_SHOT_SHIRE_CHAPTER_FINISH",
+          "governor_one_shot_owner_lane", errors)
+    check(focus.get("production_lane") == "W01_P1C01_PRODUCTION_VERTICAL_SLICE" and
+          dev_mode.get("id") == focus.get("production_lane"),
+          "governor_one_shot_technical_lane", errors)
+    check(one_shot.get("current_mega_wave") == "P1C01-ONE-SHOT-FINISH",
+          "governor_one_shot_current_wave", errors)
+
+    perf_req = next((x for x in governor.get("requirements", [])
+                     if x.get("id") == "REQ-PERF-001"), {})
+    current_perf_refs = " ".join(str(x) for x in perf_req.get("implementation_refs", []))
+    check("24 BMP production sources total" not in current_perf_refs,
+          "governor_current_bmp_inventory_stale", errors)
+    check("0 BMP" in current_perf_refs,
+          "governor_current_bmp_inventory_missing", errors)
+
     active = "production/p1c01-definitive-chapter-closeout-2026-10-04"
     preserve = {x.get("branch") for x in branches.get("preserve_pending_salvage", [])}
     check(active in set(branches.get("active_work_branches", [])), "active_branch_protection", errors)
