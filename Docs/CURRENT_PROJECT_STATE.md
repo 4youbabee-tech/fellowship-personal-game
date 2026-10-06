@@ -4815,3 +4815,16 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Validation fix: Pre-Unreal now forbids automatic FerryEscape -> P1C02/RoadToBree bridging and requires the far-bank terminal beat instead.
 - Persistence audit fix: restoring a terminal P1C01 FerryEscape stage-2 save must preserve P1C01, publish exactly once, cause zero extra world commits, and leave the committed Shire world intact.
 - Status remains **SOURCE-IMPLEMENTED / HOSTED VALIDATION PENDING**. No compile/PIE/device/visual/performance claim is made.
+
+## 2026-10-06 - Final pre-runner comprehensive sweep
+
+- Final offline pre-runner sweep is now machine-guarded in `Scripts/audit_whole_game_offline_saturation.py`.
+- Repository census: 946 tracked files; 0 BMP; 0 tracked Binaries/DerivedDataCache/Intermediate/Saved/.vs; all runtime/editor headers are under Public and all .cpp are under Private.
+- ValidatedRuntime contains the four established Frodo FBX files and no OBJ. Production character OBJ stock remains source/fallback only and is explicitly forbidden as final animated delivery.
+- Runtime source scan found no `StaticLoadObject`. Direct runtime `LoadObject` occurrences are limited to `/Engine/BasicShapes/` fallback assets/material; production-heavy loading stays behind soft paths and the async chapter streaming subsystem.
+- `UShireNPCContextSubsystem` contains no actor scan/spawn authority. `ALivingWorldDirector` retains bounded 0.75s maintenance plus pooled ambient NPC/interaction/motion acquisition/release; its persistent ambient registry scan is commit/reset reconciliation, not a per-frame context rebuild.
+- P1C01 terminal contract is now guarded end-to-end: FerryEscape stage 2 / FerryEscapeComplete; no automatic P1C02 start; terminal restore remains P1C01 with one persistence publication and zero extra world commits.
+- PG-192 closure workflow drift was root-fixed: P1C01 Chapter Closure Pack is non-cancellable so a newer PR event cannot abort the long one-shot source train.
+- Current ProjectGovernor performance note now reflects the actual tracked tree: 0 BMP. Historical review records remain historical and were not rewritten.
+- Remaining proof is engine/device/human only: compile/import/package, collision/traversal, animation/render, audio playback, disk roundtrip, FPS/RAM/VRAM/frame-time tails and Gate 6/7.
+- Status: **SOURCE-IMPLEMENTED / HOSTED STATIC VALIDATION PENDING**. P1C02 remains LOCKED.
