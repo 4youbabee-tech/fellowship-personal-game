@@ -143,7 +143,7 @@
     "runtime_successor": "GANDALF",
     "source_preparation": "ALL_P1C01_REQUIRED_CHARACTERS_IN_PARALLEL",
     "integration_rule": "Source/QC preparation may advance without the runner. Runtime promotion remains serialized where predecessor gates require it.",
-    "current_blocker": "SELF_HOSTED_UE4_RUNNER_UNAVAILABLE"
+    "current_blocker": "FRODO_CHARACTER_SPECIFIC_EXACT_HEAD_RENDER_RUNTIME_PROOF_AND_SEVEN_FINAL_PRODUCTION_FBX_BUNDLES_PENDING"
   },
   "technical_winner": {
     "character": "FRODO",

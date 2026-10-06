@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "pack_id": "P1C01_OFFLINE_SATURATION_PACK_V1",
-  "status": "ACTIVE_WHILE_SELF_HOSTED_RUNNER_UNAVAILABLE",
-  "purpose": "Finish every P1C01 source/code/data/QC task that does not require UE4 or target-device evidence so runner return is spent on integration/evidence rather than planning.",
+  "status": "DORMANT_RUNNER_AVAILABLE_REACTIVATE_ON_OUTAGE",
+  "purpose": "Retained fail-safe outage pack for finishing P1C01 source/code/data/QC work when UE4/device execution becomes unavailable; primary effort has returned to P1C01 One-Shot execution.",
   "source_scope": [
     "F1-01",
     "F1-02",
@@ -73,6 +73,6 @@
     "world_hero_source_gap_count": 5,
     "gameplay_static_gaps_recorded": true,
     "p1c02_auto_open_source_paths_removed": true,
-    "compile_runtime_proof": "PENDING_RUNNER"
+    "compile_runtime_proof": "EXACT_HEAD_9706CC_UE4_BUILD_IMPORT_PACKAGE_HEADLESS_PROVEN_HUMAN_PIE_DEVICE_PENDING"
   }
 }

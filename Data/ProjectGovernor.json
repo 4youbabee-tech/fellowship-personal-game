@@ -6512,62 +6512,76 @@
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
     "rule": "P1C01 is the sole runtime-changing chapter. VISIBLE SHIRE FIRST is the active tie-breaker: aggressively improve human character presentation plus natural terrain, landmarks, architecture, roads/hedges/woodland/Ferry, vegetation/materials and lighting in large coherent production packets. The Lead Game Architect resolves routine blockers through root-cause research, broad legal/open-source discovery and reusable pipelines without waiting on the owner. Exactly one runtime-changing P1C01 writer remains authoritative; do not open P1C02 runtime until P1C01 Gate 6/7 is accepted with real evidence. Definitive P1C01 closeout means the full Shire-through-Bucklebury/Ferry chapter, including production character presentation, world beauty, living-world/gameplay/audio/save reliability and exact-build Gate 6/7 evidence; settlement source completion alone is not chapter completion.",
     "machine_baseline": {
-      "runtime_sha": "1066cf022723fcdef9bfac66519f5b0f9c1e03a4",
-      "pre_unreal": "#1109 SUCCESS",
-      "unreal": "#893 SUCCESS",
-      "current_develop": "017c3bc26ecfa1dadc75f10398ead01b5fe0ca22",
-      "current_static": "#1113 SUCCESS",
-      "cleanup": "#11 SUCCESS",
-      "warehouse": "#264 SUCCESS",
-      "scope": "D runtime/content merge has fresh UE4.27.2 build/import/runtime/package proof. Subsequent develop changes are administrative CI/cleanup/governance only and do not create new gameplay acceptance."
+      "runtime_sha": "9706cc72367be7e8dd14422808abba63597c8511",
+      "pre_unreal": "#2060 FAILURE before executable steps (hosted startup/infrastructure; no validator output)",
+      "unreal": "#1654 overall FAILURE because hosted classifier failed; self-hosted UE4.27.2 C++ Build job 112468931752 SUCCESS",
+      "runner_health": "RUNNER_HEALTH_PASS identity=IDEAPAD320\\user sessionId=2 listenerPid=69276 workerCount=1",
+      "engine_proof": [
+        "ShireJourneyEditor build success",
+        "production import success",
+        "Automation QA 2/2 pass",
+        "headless P1C01-P1C08 chapter audits pass",
+        "route/state/fault/pending-transition/persistence audits pass",
+        "W00 package pass",
+        "packaged Data JSON 37/37 pass",
+        "packaged startup observed 6s pass"
+      ],
+      "scope": "Exact-head machine/runtime-headless evidence only. Human PIE, character visual deformation, production audio listening, target-device FPS/VRAM and Gate 6/7 remain pending."
     },
     "w01_freeze": "RELEASED_BY_W00_EXIT",
     "story_source_note": "Permanent full-journey source contract active; F2-03 Edoras is the next source/preparation wave while P1C01 remains the sole runtime-changing lane.",
     "runtime_chapter_sequence": "Data/P1C01RuntimeChapterSequenceV1.json"
   },
   "immediate_next_large_actions": [
-    "1. While the UE4 runner is unavailable, run WHOLE_GAME_OFFLINE_SATURATION: reconcile all 23 source chapters, route synchronization and future asset demand without activating later runtime chapters.",
-    "2. Fill the whole-game warehouse/source queue from provenance-clear providers, prioritizing reusable humanoid bases/outfits/animation, horse/fauna, hero/support world kits, audio and battle/VFX gaps; keep actual payload state explicit.",
-    "3. Retire reviewed dead refs through hosted fail-closed cleanup while preserving the active P1C01 PR and unique Edoras source-prep branches.",
-    "4. Continue P1C01 source readiness in parallel; do not re-plan or open Bree.",
-    "5. On runner return, execute Data/P1C01RunnerHandoffV1.json and finish P1C01 One-Shot through Gate 6/7 before any P1C02 runtime start."
+    "1. Complete this final static stabilization packet and obtain fresh hosted/static validation when GitHub-hosted execution is available; do not interpret zero-step hosted failures as game defects.",
+    "2. Continue P1C01 One-Shot from the proven exact-head UE4 build/import/package baseline: Frodo character-specific runtime/render proof first, then the seven remaining required final FBX character bundles by dependency.",
+    "3. Finish Shire world/render presentation, production WAV master intake/playback, and F1-01/F1-02/F1-03 human gameplay/reliability through FerryEscape.",
+    "4. Run target-device DX11 1280x720 measurements and human visual/audio/gameplay Gate 6/7 review.",
+    "5. Keep P1C02/Bree runtime locked after P1C01 Gate 6/7 until the owner explicitly commands P1C02."
   ],
   "session_handoff": {
-    "checkpoint_id": "CP-W01-P1C01-C4-MERGED-D-NEXT",
-    "source_head": "1d0580926299e4fac635bcb847343a49c444d4f1",
-    "branch": "none",
-    "pull_request": 0,
+    "checkpoint_id": "P1C01_FINAL_STATIC_CLEANUP_TO_ONE_SHOT_EXECUTION_2026_10_06",
+    "source_head": "9706cc72367be7e8dd14422808abba63597c8511",
+    "branch": "production/p1c01-definitive-chapter-closeout-2026-10-04",
+    "pull_request": 329,
     "verified": {
-      "last_full_machine_green": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1: Pre-Unreal #869 SUCCESS + Unreal #704 SUCCESS full chain",
-      "latest_automated_closure": "809e56a9e1dc4b453e02a0b04b6875a71df21933: Pre-Unreal #880 SUCCESS + Unreal #715 SUCCESS validation-policy inherit + Branch Cleanup #3 SUCCESS",
-      "owner_pie": "develop@809e56a9: P1C01 ShireStartupGrounding PASS stableSeconds=2.0 ground=yes drop=1.8 drift=0.0; player remained grounded; owner reported zero same-session Mobility is Static / SetStaticMesh search matches",
-      "proof_boundary": "P1C01 startup-grounding/warning-tail PIE evidence only; no device/visual/performance acceptance."
+      "exact_head_runner_health": "RUNNER_HEALTH_PASS identity=IDEAPAD320\\user sessionId=2 listenerPid=69276 workerCount=1",
+      "exact_head_engine_job": "Unreal Build Validation #1654 self-hosted job 112468931752 SUCCESS",
+      "compile_import_package": "ShireJourneyEditor build + production import + Windows package + 37/37 packaged Data + packaged startup SUCCESS",
+      "headless_runtime": "Automation QA and P1C01-P1C08 chapter plus route/state/fault/persistence audits SUCCESS",
+      "proof_boundary": "Machine/headless evidence only; not human PIE/device-performance/visual/audio-listening/Gate 6/7 acceptance."
     },
     "exact_head_scope": [
-      "CP154 full Pre-Unreal chain",
-      "UE4.27.2 compile/import",
+      "runner health",
+      "UE4.27.2 C++ compile",
+      "production asset import",
       "Automation QA",
-      "startup",
-      "P1C01-P1C08 headless runtime",
-      "route/story state roundtrip",
-      "warning-debt guard",
-      "Warehouse no-delta gate"
+      "headless startup and chapter audits",
+      "route/story/fault/pending-transition/persistence audits",
+      "Windows cook/package",
+      "packaged Data verification",
+      "packaged executable startup"
     ],
-    "active_wave": "C4 merged; D lighting/sky/fog/low-cost water next with Mega Asset Promotion in parallel.",
+    "active_wave": "P1C01-ONE-SHOT-FINISH",
     "next_actions": [
-      "Start D fixed-state lighting / sky / fog / low-cost water from current verified develop after the required exact-head gate.",
-      "Run Mega Asset Promotion in parallel: advance registered warehouse items through staging and intake QC toward READY_FOR_IMPORT without treating warehouse presence as runtime integration.",
-      "Promote only validated assets into UE4.27 in bounded category batches; preserve provenance, FBX-only animated production, PNG/TGA textures, soft references/async heavy loading, pooling and HISM/ISM/LOD/culling.",
-      "Continue character presentation, living motion/fauna, quest/audio polish and target-device profiling after D according to the registered production train.",
-      "Keep broad later-region runtime expansion behind Gate 6/7 human visual, pacing and target-device evidence."
+      "Resolve hosted/static zero-step infrastructure separately from source defects and obtain fresh static execution after this packet.",
+      "Run Frodo character-specific exact-head import/animation/render proof.",
+      "Acquire/promote final FBX bundles for Bilbo, Gandalf, Sam, Merry, Pippin, Black Rider and Black Rider horse with provenance/QC.",
+      "Finish P1C01 world/render and production WAV import/playback.",
+      "Human-test F1-01/F1-02/F1-03 Shire path through FerryEscape including persistence/retry/skip/backtrack.",
+      "Measure target device at DX11 1280x720 and perform human Gate 6/7.",
+      "Do not open P1C02 without explicit owner command after Gate 6/7."
     ],
     "unverified_acceptance": [
+      "Frodo exact-head human visual deformation/animation acceptance",
+      "seven remaining named-character final production FBX bundles",
+      "production WAV playback/listening acceptance",
       "P1C01 full traversal/quest/save-load human PIE acceptance",
-      "target-device 720p Low-Medium performance profiling",
+      "target-device 720p FPS/frame-time/RAM/VRAM profiling",
       "P1C01 visual/pacing/NPC-believability acceptance",
-      "real audio listening/mix acceptance after production bank/spatial layer integration"
+      "Gate 6/7 acceptance"
     ],
-    "scope_rule": "Machine/headless evidence never substitutes for PIE/device/visual/human acceptance. Warehouse/source coverage never substitutes for IMPORTED/INTEGRATED/ACCEPTED state.",
+    "scope_rule": "Machine/headless evidence never substitutes for PIE/device/visual/human acceptance. Warehouse/source coverage never substitutes for imported/integrated/accepted state.",
     "validation_snapshot": {
       "last_green": {
         "sha": "1d0580926299e4fac635bcb847343a49c444d4f1",
@@ -6583,18 +6597,25 @@
         }
       },
       "latest_observed": {
-        "sha": "1d0580926299e4fac635bcb847343a49c444d4f1",
+        "sha": "9706cc72367be7e8dd14422808abba63597c8511",
         "pre_unreal": {
-          "sha": "1d0580926299e4fac635bcb847343a49c444d4f1",
-          "run_id": 36236911136,
-          "status": "SUCCESS"
+          "sha": "9706cc72367be7e8dd14422808abba63597c8511",
+          "run_id": 37518726348,
+          "status": "FAILURE"
         },
         "unreal": {
-          "sha": "1d0580926299e4fac635bcb847343a49c444d4f1",
-          "run_id": 36236911127,
-          "status": "SUCCESS"
+          "sha": "9706cc72367be7e8dd14422808abba63597c8511",
+          "run_id": 37518726450,
+          "status": "FAILURE"
         }
       }
+    },
+    "exact_head_self_hosted_engine_job": {
+      "workflow_run_id": 37518726450,
+      "workflow_run_number": 1654,
+      "job_id": 112468931752,
+      "conclusion": "SUCCESS",
+      "note": "Overall workflow is red only because the hosted classifier job failed before executable steps; the self-hosted fail-closed fallback executed and passed the engine chain."
     }
   },
   "governor_role": {
@@ -8759,11 +8780,11 @@
   },
   "runner_unavailable_policy_2026_10_06": {
     "status": "ACTIVE_PERMANENT_CONDITIONAL_POLICY",
-    "latest_observed_state": "RUNNER_RETURN_PROVEN_ON_P1C01_CLOSURE_40_SOURCE_HEAD",
-    "latest_observed_sha": "591cebb1000984cec62141f516d4018d646c939f",
-    "latest_observed_run": "P1C01 Chapter Closure Pack #40 / run 37429971478",
-    "latest_runner_health_step": "Verify runner session health = success",
-    "resume_state": "PRIMARY_P1C01_ONE_SHOT_EXECUTION_RESUMED",
+    "latest_observed_state": "RUNNER_HEALTH_AND_ENGINE_EXECUTION_PROVEN_ON_EXACT_HEAD",
+    "latest_observed_sha": "9706cc72367be7e8dd14422808abba63597c8511",
+    "latest_observed_run": "Unreal Build Validation #1654 / self-hosted UE4.27.2 C++ Build job 112468931752",
+    "latest_runner_health_step": "RUNNER_HEALTH_PASS identity=IDEAPAD320\\user sessionId=2 listenerPid=69276 workerCount=1",
+    "resume_state": "PRIMARY_P1C01_ONE_SHOT_EXECUTION_ACTIVE",
     "trigger": "UE4-27-Windows is not accepting jobs or is physically unavailable.",
     "rule": "Runner unavailability never idles the active chapter. Continue every safe source/code/data/provenance/QC/hosted-static task that does not require UE4 or target-device evidence. Execute Data/P1C01RunnerHandoffV1.json when the runner returns.",
     "genuinely_runner_blocked": [
@@ -8780,13 +8801,14 @@
   "whole_game_offline_saturation_exception_2026_10_06": {
     "status": "INACTIVE_AFTER_RUNNER_RETURN_PROOF",
     "deactivation_evidence": {
-      "source_head": "591cebb1000984cec62141f516d4018d646c939f",
-      "workflow": "P1C01 Chapter Closure Pack",
-      "run_number": 40,
-      "run_id": 37429971478,
+      "source_head": "9706cc72367be7e8dd14422808abba63597c8511",
+      "workflow": "Unreal Build Validation",
+      "run_number": 1654,
+      "run_id": 37518726450,
+      "self_hosted_job_id": 112468931752,
       "runner_health_step": "success",
-      "closure_pack_step": "success",
-      "evidence_boundary": "Runner/session health plus source-closure execution only; no UE compile, PIE, device, visual, audio-playback or performance acceptance."
+      "engine_chain_step": "success",
+      "evidence_boundary": "Exact-head runner health plus UE4.27.2 compile/import/Automation/headless audits/package/packaged-startup evidence. No human PIE, target-device FPS/VRAM, visual/audio-listening or Gate 6/7 acceptance."
     },
     "runtime_authority": "P1C01_ONLY",
     "canonical_source_scope": "F1-01 through F3-07 preparation",
@@ -8812,27 +8834,26 @@
     "warehouse_batch": "Data/WholeGameWarehouseSaturationBatchV3.json"
   },
   "final_static_cleanup_snapshot_2026_10_06": {
-    "status": "STATIC_RISK_AUDIT_COMPLETE_RUNTIME_EVIDENCE_PENDING",
-    "source_head": "591cebb1000984cec62141f516d4018d646c939f",
+    "status": "STATIC_CLEANUP_RECONCILED_EXACT_HEAD_ENGINE_CHAIN_PROVEN_ACCEPTANCE_PENDING",
+    "source_head": "9706cc72367be7e8dd14422808abba63597c8511",
     "scope": "FINAL_PRE_RUNNER_PRE_CHAPTER_CLEANUP",
     "confirmed_findings": [
       "P1C01 FerryEscape stage 2 remains a committed P1C01 terminal state and no generated ferry trigger or restored-terminal repair auto-opens P1C02.",
       "ShireGameMode P1C02 StartChapter calls reviewed in the cleanup are non-shipping runtime audit harness paths, not gameplay auto-open authority.",
-      "No StaticLoadObject, LoadSynchronous, runtime OBJ path or runtime BMP path was found in the reviewed ShireJourney C++ source.",
-      "Direct LoadObject occurrences found by the source sweep are limited to /Engine/BasicShapes fallback meshes/materials; production-heavy residency remains soft/async.",
+      "No StaticLoadObject, LoadSynchronous, runtime OBJ path or runtime BMP path was found in the reviewed ShireJourney production runtime paths; direct LoadObject findings are Engine BasicShapes fallback content only.",
       "ALivingWorldDirector retains ambient population pooling authority with bounded maintenance; UShireNPCContextSubsystem remains context/schedule/knowledge authority.",
-      "AChapterWorldRouter actor enumeration is transition cleanup, not per-frame traversal scanning; UShireAudioSubsystem named-voice actor resolution remains a runtime measurement risk rather than a proven defect.",
-      "Repeated world detail remains HISM/ISM/AWorldDetailCluster and no actor-per-prop replacement was authorized.",
-      "Repository branch inventory preserves only main, develop, the active P1C01 branch, archive recovery and two unique Edoras preparation branches.",
-      "P1C01 Chapter Closure Pack #40 succeeded on the source head and its Verify runner session health, preflight and closure-pack steps all succeeded.",
-      "The remaining red workflows on the source head failed before any job step executed; downstream UE jobs were skipped where applicable, so those reds are not validator or UE compile/runtime failure evidence."
+      "AChapterWorldRouter actor enumeration is transition cleanup, not per-frame traversal scanning; repeated world detail remains HISM/ISM/AWorldDetailCluster.",
+      "P1C01 Chapter Closure Pack #48 succeeded on the exact head through no-closure-input reuse; no unnecessary closure source train was rerun.",
+      "Unreal Build Validation #1654 self-hosted UE4.27.2 C++ Build job 112468931752 succeeded on the exact head after hosted-classifier fallback.",
+      "The exact-head self-hosted job proved runner health, ShireJourneyEditor compile, production import, Automation QA, headless startup/chapter/state/fault/persistence audits, Windows package, 37/37 packaged Data JSON verification and packaged startup.",
+      "Pre-Unreal #2060 and Whole Game Offline Saturation #41 failed before executable steps; they provide no validator failure evidence.",
+      "Whole Game Offline Saturation validator drift was found and repaired: the audit no longer falsely requires the temporary outage exception to remain active after proven runner return."
     ],
     "explicit_runtime_evidence_requirements": [
-      "Fresh Pre-Unreal/static workflow execution after the stabilization commit; current hosted failures are zero-step infrastructure/setup failures with no validator output.",
-      "UE4.27.2 compile/import/package on the execution head.",
-      "Frodo exact-head runtime animation/render evidence and real production FBX bundles for Bilbo, Gandalf, Sam, Merry, Pippin, Black Rider and Black Rider horse.",
-      "Production WAV import and in-engine playback evidence.",
-      "F1-01/F1-02/F1-03 P1C01 gameplay through FerryEscape including collision/traversal, retry, skip, backtrack, return-to-control and disk save/load roundtrip.",
+      "Fresh hosted/static execution after this stabilization packet; current hosted failures are zero-step infrastructure/setup failures with no validator output.",
+      "Frodo exact-head character-specific animation/render evidence and final production FBX bundles for Bilbo, Gandalf, Sam, Merry, Pippin, Black Rider and Black Rider horse.",
+      "Production WAV masters with provenance plus in-engine playback/listening evidence.",
+      "Human P1C01 F1-01/F1-02/F1-03 gameplay through FerryEscape including collision/traversal, retry, cinematic skip equivalence, backtrack, return-to-control and real disk save/load roundtrip.",
       "Target-device DX11 1280x720 FPS/frame-time/RAM/VRAM/streaming observations.",
       "Human visual/audio/gameplay Gate 6/7 review."
     ],
@@ -8844,7 +8865,7 @@
       "Hosted Unreal classifier zero-step infrastructure failure must not deadlock the engine lane. Unreal Build Validation now starts the self-hosted job when the hosted classifier itself fails and runs the same fail-closed classify_unreal_validation.ps1 after exact-head checkout; successful hosted classification remains preferred.",
       "Closure #44 exposed a workflow-definition corruption in the generated anti-churn YAML before any job ran. The closure workflow must be rebuilt from the exact known-good #40 source rather than patched incrementally; the rebuilt form is accepted for publication only when it contains exactly one checkout, classifier, runner-health, preflight, Mega Pack and cleanup step."
     ],
-    "evidence_boundary": "STATIC-RISK-AUDITED plus source-closure runner proof only. This snapshot is not COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED or Gate 6/7 ACCEPTED."
+    "evidence_boundary": "STATIC CLEANUP RECONCILED. Parent exact head 9706cc72367be7e8dd14422808abba63597c8511 has COMPILE/IMPORT/PACKAGE/HEADLESS-RUNTIME evidence from the successful self-hosted job inside Unreal Build #1654. No human PIE, DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED or Gate 6/7 ACCEPTED claim."
   },
   "p1c01_gameplay_execution_2026_10_06": {
     "status": "SOURCE_IMPLEMENTED_ENGINE_PROOF_PENDING",

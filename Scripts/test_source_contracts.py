@@ -1203,5 +1203,18 @@ class SourceContractTests(unittest.TestCase):
             self.assertIn(token, script)
 
 
+    def test_whole_game_offline_audit_accepts_proven_runner_return_state(self):
+        root = Path(__file__).resolve().parents[1]
+        governor = json.loads((root / "Data" / "ProjectGovernor.json").read_text(encoding="utf-8"))
+        exception = governor["whole_game_offline_saturation_exception_2026_10_06"]
+        self.assertEqual(exception["status"], "INACTIVE_AFTER_RUNNER_RETURN_PROOF")
+        self.assertEqual(exception["runtime_authority"], "P1C01_ONLY")
+        self.assertEqual(exception["deactivation_evidence"]["runner_health_step"], "success")
+        audit = (root / "Scripts" / "audit_whole_game_offline_saturation.py").read_text(encoding="utf-8")
+        self.assertIn("ACTIVE_WHILE_UE4_RUNNER_UNAVAILABLE", audit)
+        self.assertIn("INACTIVE_AFTER_RUNNER_RETURN_PROOF", audit)
+        self.assertIn("governor_offline_exception_return_evidence", audit)
+
+
 if __name__ == "__main__":
     unittest.main()

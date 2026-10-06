@@ -4579,3 +4579,32 @@ Evidence boundary: source/runtime authoring only until exact-head validation and
 | P1C02/Bree | LOCKED |
 
 Evidence boundary: prior-head engine/package proof + current source repair only. No Gate 6/7 promotion.
+
+
+## 2026-10-06 - Final cleanup / exact-head One-Shot readiness reconciliation
+
+| Control | Current truth |
+|---|---|
+| Audited exact head | `9706cc72367be7e8dd14422808abba63597c8511` |
+| Runner health | PASS inside Unreal Build #1654 self-hosted job `112468931752` |
+| UE4.27.2 editor compile | PASS on audited exact head |
+| Production import | PASS on audited exact head |
+| Automation QA | PASS, 2/2 tests |
+| Headless P1C01-P1C08 audits | PASS |
+| Route/state/fault/persistence audits | PASS |
+| Windows package | PASS |
+| Packaged runtime Data | PASS, 37/37 |
+| Packaged startup | PASS, observed 6s |
+| Aggregate Unreal workflow | RED only because hosted classifier failed before executable steps; self-hosted fallback job passed |
+| Pre-Unreal #2060 | ZERO-STEP hosted failure; no validator result |
+| Whole Game Offline #41 | ZERO-STEP hosted failure; no validator result |
+| Whole-game audit outage-state drift | ROOT-FIXED + regression guard added |
+| P1C01 Ferry terminal | `FerryEscapeComplete / WC_P1C01_FERRY_END`, no auto-Bree |
+| Frodo 48-bone technical bundle | TRACKED / STATIC_DEFORMATION_STRESS_PASS; fresh character-specific render proof pending |
+| Other required P1C01 final FBX bundles | 0/7 complete |
+| Production WAV masters | 0 at tracked snapshot; intake/playback pending |
+| Human PIE / target-device / visual / performance | PENDING / NOT CLAIMED |
+| Gate 6/7 | NOT ACCEPTED |
+| P1C02/Bree | LOCKED; also requires explicit owner command after Gate 6/7 |
+
+Evidence boundary: exact-head machine/headless evidence does not substitute for human PIE, visual/audio listening, target-device FPS/VRAM or Gate 6/7.

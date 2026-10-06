@@ -1,43 +1,48 @@
 {
   "schema_version": 1,
   "handoff_id": "P1C01_RUNNER_HANDOFF_V1",
-  "status": "CLOSURE_SOURCE_TRAIN_RUN_PROVEN_CONTINUE_ONE_SHOT_EXECUTION",
-  "rule": "Do not restart planning or rerun the already-proven closure source train without a closure-relevant change. P1C01 Chapter Closure Pack #40 proved runner session health and source closure on source head 591cebb1000984cec62141f516d4018d646c939f. Continue the One-Shot train from hosted/static exact-head validation, then UE4 build/import/package and the remaining runtime/device/human lanes.",
+  "status": "EXACT_HEAD_ENGINE_CHAIN_PROVEN_CONTINUE_ONE_SHOT_EXECUTION",
+  "rule": "Do not restart planning or rerun the closure source train without a closure-relevant change. On exact head 9706cc72367be7e8dd14422808abba63597c8511, Closure #48 succeeded by reuse and Unreal Build #1654 self-hosted job 112468931752 proved runner health plus UE4.27.2 compile/import/headless/package/startup. Hosted Pre-Unreal remains a zero-step infrastructure/startup failure, not validator evidence. Continue P1C01 One-Shot with Frodo-specific runtime/render proof and remaining content/acceptance lanes.",
   "execution_order": [
     {
       "order": 1,
       "id": "RUNNER_HEALTH",
       "expected": "RUNNER_HEALTH_PASS",
-      "status": "SATISFIED_BY_CLOSURE_40_SOURCE_HEAD",
-      "evidence": "P1C01 Chapter Closure Pack #40 step 'Verify runner session health' = success"
+      "status": "SATISFIED_EXACT_HEAD_UNREAL_1654",
+      "evidence": "RUNNER_HEALTH_PASS identity=IDEAPAD320\\user sessionId=2 listenerPid=69276 workerCount=1"
     },
     {
       "order": 2,
       "id": "P1C01_CLOSURE_SOURCE_TRAIN",
       "workflow": "P1C01 Chapter Closure Pack",
       "status": "SATISFIED_REUSE_DO_NOT_RERUN",
-      "evidence": "P1C01 Chapter Closure Pack #40 = success on 591cebb1000984cec62141f516d4018d646c939f"
+      "evidence": "Closure #48 = success on exact head; no closure payload delta, so the prior executed closure proof is reused."
     },
     {
       "order": 3,
       "id": "PRE_UNREAL",
       "workflow": "Pre-Unreal Validation",
-      "status": "NEXT_REQUIRED"
+      "status": "HOSTED_ZERO_STEP_INFRASTRUCTURE_BLOCKED",
+      "evidence": "Pre-Unreal #2060 failed before executable steps; no validator output."
     },
     {
       "order": 4,
       "id": "UNREAL_BUILD_IMPORT_PACKAGE",
-      "workflow": "Unreal Build Validation"
+      "workflow": "Unreal Build Validation",
+      "status": "SATISFIED_SELF_HOSTED_JOB",
+      "evidence": "Run #1654 job 112468931752 SUCCESS on exact head despite hosted classifier failure."
     },
     {
       "order": 5,
       "id": "FRODO_RUNTIME",
-      "workflow": "P1C01 Frodo UE4 Animation Import"
+      "workflow": "P1C01 Frodo UE4 Animation Import",
+      "status": "NEXT_REQUIRED",
+      "expected": "Tracked 48-bone Frodo Idle/Walk/Run runtime and rendered deformation evidence."
     },
     {
       "order": 6,
       "id": "REQUIRED_CHARACTER_SUCCESSORS",
-      "expected": "Gandalf then remaining P1C01 named-character bundles as gates allow"
+      "expected": "Bilbo, Gandalf, Sam, Merry, Pippin, Black Rider and Black Rider horse final production FBX bundles by dependency."
     },
     {
       "order": 7,
@@ -47,22 +52,22 @@
     {
       "order": 8,
       "id": "AUDIO_RUNTIME",
-      "expected": "WAV import/playback evidence"
+      "expected": "Production WAV masters + provenance + in-engine playback/listening evidence."
     },
     {
       "order": 9,
       "id": "PIE_MISSION_SAVE",
-      "expected": "route/collision/retry/skip/rejoin/disk save-load"
+      "expected": "F1-01/F1-02/F1-03 route/collision/retry/skip/backtrack/return-to-control/real disk save-load."
     },
     {
       "order": 10,
       "id": "TARGET_DEVICE",
-      "expected": "DX11 1280x720 >=30 FPS with RAM/VRAM/streaming/NPC observations"
+      "expected": "DX11 1280x720 >=30 FPS target floor with frame-time/RAM/VRAM/streaming/NPC observations."
     },
     {
       "order": 11,
       "id": "HUMAN_GATE_6_7",
-      "expected": "region visual/pacing/audio/return-to-control acceptance"
+      "expected": "Chapter-specific visual/pacing/audio/gameplay/reliability acceptance."
     }
   ],
   "forbidden": [
@@ -73,32 +78,56 @@
     "CI self-push"
   ],
   "last_proven_runner_health": {
-    "source_head": "591cebb1000984cec62141f516d4018d646c939f",
-    "workflow": "P1C01 Chapter Closure Pack",
-    "run_number": 40,
-    "run_id": 37429971478,
+    "source_head": "9706cc72367be7e8dd14422808abba63597c8511",
+    "workflow": "Unreal Build Validation",
+    "run_number": 1654,
+    "run_id": 37518726450,
+    "job_id": 112468931752,
     "step": "Verify runner session health",
     "conclusion": "success",
-    "boundary": "Runner/session health within this run only; not a claim that the host remains continuously online after the run."
+    "evidence": "RUNNER_HEALTH_PASS identity=IDEAPAD320\\user sessionId=2 listenerPid=69276 workerCount=1",
+    "boundary": "Runner/session health during this exact-head job only; not a claim that the host remains continuously online."
   },
   "closure_source_train": {
-    "source_head": "591cebb1000984cec62141f516d4018d646c939f",
-    "workflow": "P1C01 Chapter Closure Pack",
-    "run_number": 40,
-    "run_id": 37429971478,
-    "conclusion": "success",
-    "successful_steps": [
-      "exact isolated checkout",
-      "runner session health",
-      "fast closure preflight",
-      "P1C01 Chapter Closure Mega Pack V2"
-    ],
-    "reuse_rule": "Reuse across this administrative/static-cleanup descendant only while closure-relevant source/warehouse-pack inputs remain unchanged. Success proves source/preparation outputs only."
+    "exact_head": "9706cc72367be7e8dd14422808abba63597c8511",
+    "latest_workflow": "P1C01 Chapter Closure Pack",
+    "latest_run_number": 48,
+    "latest_run_id": 37518726523,
+    "latest_conclusion": "success",
+    "latest_execution": "REUSED_NO_CLOSURE_INPUT_DELTA",
+    "executed_source_baseline": {
+      "source_head": "591cebb1000984cec62141f516d4018d646c939f",
+      "run_number": 40,
+      "run_id": 37429971478,
+      "conclusion": "success"
+    },
+    "reuse_rule": "Do not rerun unless closure payload inputs change. Success proves source/preparation outputs only."
   },
   "hosted_failure_classification": {
-    "source_head": "591cebb1000984cec62141f516d4018d646c939f",
-    "observed": "Pre-Unreal and the listed hosted prerequisite jobs failed with zero executable steps; downstream UE jobs were skipped where applicable.",
-    "classification": "CI_PRE_STEP_INFRASTRUCTURE_OR_SETUP_FAILURE_EXACT_CAUSE_UNAVAILABLE",
+    "source_head": "9706cc72367be7e8dd14422808abba63597c8511",
+    "observed": "Pre-Unreal #2060 and Whole Game Offline Saturation #41 failed before executable steps; Unreal Build hosted classifier also failed before steps, while the self-hosted fallback job passed.",
+    "classification": "HOSTED_PRE_STEP_INFRASTRUCTURE_OR_STARTUP_FAILURE_NO_VALIDATOR_OUTPUT",
     "rule": "Do not repair gameplay/C++ merely from these red conclusions. Require actual validator/job output before attributing a source defect."
+  },
+  "exact_head_engine_evidence": {
+    "source_head": "9706cc72367be7e8dd14422808abba63597c8511",
+    "workflow_run": 37518726450,
+    "workflow_run_number": 1654,
+    "self_hosted_job": 112468931752,
+    "job_conclusion": "success",
+    "proven": [
+      "UE4.27.2 runner/session health",
+      "ShireJourneyEditor compile",
+      "production asset import",
+      "Automation QA",
+      "headless playable startup",
+      "P1C01-P1C08 headless chapter audits",
+      "route/story/fault/pending-transition/persistence audits",
+      "warning-debt guard",
+      "Windows cook/package",
+      "packaged Data 37/37",
+      "packaged startup observed 6s"
+    ],
+    "evidence_boundary": "COMPILE/IMPORT/PACKAGE/HEADLESS-RUNTIME evidence only. Not human PIE, device performance, visual, audio-listening or Gate 6/7 acceptance."
   }
 }

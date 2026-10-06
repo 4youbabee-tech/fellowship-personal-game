@@ -1416,3 +1416,15 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - `/Game/Production/Imported/P1C01Materials` is now a bounded always-cook directory, covering DirtSoil, StonyPath, TreeBark and MossStone without broad warehouse residency.
 - No new texture family, density, hard reference or synchronous load is introduced.
 - Fresh packaged startup must prove the bank resolves all four before this blocker is considered closed.
+
+
+## 2026-10-06 - P1C01 final cleanup stabilization ledger entry
+
+- Runtime chapter authority remains **P1C01 only**; P1C02/Bree remains locked.
+- Exact audited head `9706cc72367be7e8dd14422808abba63597c8511` completed the self-hosted UE4.27.2 engine chain inside Unreal Build #1654 job `112468931752`: runner health, compile, production import, Automation QA, headless chapter/state/reliability audits, package, packaged Data and packaged startup.
+- No new gameplay/world actor authority was introduced. `AShirePrototypeWorldBuilder`, `ALivingWorldDirector`, `UShireNPCContextSubsystem`, `UShireQuestSubsystem`, `UShireAudioSubsystem` and `UShireChapterAssetStreamingSubsystem` ownership remains unchanged.
+- Static cleanup root-fix is validator/governance truth repair: Whole Game Offline Saturation now models DEC-105 as a conditional outage exception instead of falsely requiring it to stay active after runner return.
+- Character-prep and audio-master manifests no longer describe “runner unavailable” as the blocker. Actual blockers are final production FBX/WAV content and chapter-specific human/device evidence.
+- Ferry terminal contract remains `FerryEscape stage 2 -> FerryEscapeComplete -> WC_P1C01_FERRY_END`, with no automatic P1C02 transition.
+- No blind density, synchronous heavy production loading, crowd Spawn/Destroy churn, animated final OBJ, BMP texture, or extra AI/story/audio authority was added.
+- Evidence state: **parent audited head COMPILE/IMPORT/PACKAGE/HEADLESS-RUNTIME PROVEN; human PIE/device/visual/performance/Gate 6/7 pending**.

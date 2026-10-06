@@ -4943,3 +4943,17 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Root fix adds that bounded chapter material folder to `DirectoriesToAlwaysCook`. Runtime loading remains soft/async through `UShireChapterAssetStreamingSubsystem`; no synchronous fallback or broad warehouse residency is introduced.
 - A regression contract now proves the P1C01 bank contains exactly those four imported soft material identities and packaging explicitly cooks their folder.
 - Evidence boundary: **SOURCE-IMPLEMENTED ROOT FIX / fresh exact-head cook+packaged-launch proof pending**. Prior-head engine proof applies only to its SHA; current-head PIE/device/visual/performance/Gate 6/7 remain pending.
+
+
+## 2026-10-06 - Final static cleanup stabilization / exact-head engine reconciliation
+
+- Cleanup baseline: PR #329 exact head `9706cc72367be7e8dd14422808abba63597c8511`.
+- Fresh runner evidence exists on that exact head from Unreal Build Validation #1654 self-hosted job `112468931752`: `RUNNER_HEALTH_PASS identity=IDEAPAD320\\user sessionId=2 listenerPid=69276 workerCount=1`.
+- The self-hosted job completed UE4.27.2 ShireJourneyEditor compile, production import, Automation QA, headless P1C01-P1C08 chapter/state/fault/persistence audits, Windows package, `37/37` packaged runtime Data verification and a 6-second packaged-startup observation.
+- The aggregate workflow is red only because its GitHub-hosted classifier failed before executable steps. Pre-Unreal #2060 and Whole Game Offline Saturation #41 likewise failed before executable steps and produced no validator evidence.
+- Root-fix: `Scripts/audit_whole_game_offline_saturation.py` incorrectly required the temporary DEC-105 outage exception to remain `ACTIVE_WHILE_UE4_RUNNER_UNAVAILABLE` after the Governor had deactivated it on proven runner return. The audit now accepts only the governed active/inactive states and requires explicit runner-return evidence when inactive; source-contract regression coverage was added.
+- Governor, runner handoff, character-prep blocker, audio-master status and offline-saturation status were reconciled to current truth. P1C01 remains the sole runtime-changing chapter.
+- Ferry ownership remains unchanged: `FerryEscape stage 2 -> FerryEscapeComplete -> WC_P1C01_FERRY_END`. No P1C02/RoadToBree auto-open path was reintroduced.
+- Source boundary remains explicit: F1-03 locks the eventual canonical postcondition “Hobbits reach Bree”; runtime topology keeps P1C01 ending at Ferry and P1C02 owning Bree arrival, so Ferry completion alone is not recorded as full F1-03 completion.
+- Remaining blockers are content/human/device evidence: Frodo character-specific render/runtime proof, seven final production FBX character bundles, production WAV masters/playback, full human P1C01 gameplay/reliability, target-device measurements and Gate 6/7.
+- Evidence boundary for `9706cc72367b`: **COMPILE/IMPORT/PACKAGE/HEADLESS-RUNTIME PROVEN**. Human PIE, DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED and Gate 6/7 remain **NOT CLAIMED**. This stabilization commit itself requires fresh static validation after publication.

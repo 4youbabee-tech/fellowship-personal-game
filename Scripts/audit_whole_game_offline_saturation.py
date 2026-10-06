@@ -102,8 +102,17 @@ def main():
           "warehouse_false_staging_guard", errors)
 
     exception = governor.get("whole_game_offline_saturation_exception_2026_10_06", {})
-    check(exception.get("status") == "ACTIVE_WHILE_UE4_RUNNER_UNAVAILABLE",
+    exception_status = exception.get("status")
+    check(exception_status in {
+              "ACTIVE_WHILE_UE4_RUNNER_UNAVAILABLE",
+              "INACTIVE_AFTER_RUNNER_RETURN_PROOF",
+          },
           "governor_offline_exception", errors)
+    if exception_status == "INACTIVE_AFTER_RUNNER_RETURN_PROOF":
+        return_evidence = exception.get("deactivation_evidence", {})
+        check(bool(return_evidence.get("source_head")) and
+              return_evidence.get("runner_health_step") == "success",
+              "governor_offline_exception_return_evidence", errors)
     check(exception.get("runtime_authority") == "P1C01_ONLY",
           "governor_runtime_serialization", errors)
     check(any(x.get("id") == "DEC-105" and x.get("status") == "ACCEPTED"

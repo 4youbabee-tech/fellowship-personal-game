@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "manifest_id": "P1C01_AUDIO_MASTER_SLOT_MAP_V1",
-  "status": "OFFLINE_MASTER_PREPARATION_ACTIVE_UE_IMPORT_BLOCKED_BY_RUNNER",
+  "status": "WAV_MASTER_INTAKE_PENDING_RUNTIME_PLAYBACK_NOT_YET_ELIGIBLE",
   "authority": [
     "Data/P1C01CompleteAudioBankV1.json",
     "Data/P1C01AudioFoleyAmbiencePrepV1.json",
