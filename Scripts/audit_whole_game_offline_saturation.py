@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -118,6 +119,150 @@ def main():
           "offline_workflow_runner_isolation", errors)
     check("ubuntu-latest" in workflow and "windows-latest" in workflow,
           "offline_hosted_jobs", errors)
+
+    # Final pre-runner repository hygiene and architecture sweep.
+    repo_files = [p for p in ROOT.rglob("*") if p.is_file()]
+    repo_rel = [p.relative_to(ROOT).as_posix() for p in repo_files]
+
+    check(not any(p.lower().endswith(".bmp") for p in repo_rel),
+          "forbidden_bmp_source_present", errors)
+    check(not any(p.startswith(("Binaries/","DerivedDataCache/","Intermediate/","Saved/",".vs/"))
+                  for p in repo_rel), "generated_runtime_directory_tracked", errors)
+
+    source_headers = [p for p in repo_rel if p.startswith("Source/") and p.lower().endswith(".h")]
+    source_cpp = [p for p in repo_rel if p.startswith("Source/") and p.lower().endswith(".cpp")]
+    check(all("/Public/" in p for p in source_headers),
+          "cpp_header_outside_public", errors)
+    check(all("/Private/" in p for p in source_cpp),
+          "cpp_source_outside_private", errors)
+
+    validated_runtime = [p for p in repo_rel if p.startswith("SourceAssets/ValidatedRuntime/")]
+    check(not any(p.lower().endswith(".obj") for p in validated_runtime),
+          "validated_runtime_contains_obj", errors)
+    check(all(not p.lower().endswith(".fbx") or "/ValidatedRuntime/" in p
+              for p in repo_rel if p.startswith("SourceAssets/ValidatedRuntime/")),
+          "validated_runtime_fbx_path_guard", errors)
+
+    runtime_cpp_paths = [
+        p for p in ROOT.glob("Source/ShireJourney/Private/**/*.cpp")
+        if p.is_file()
+    ]
+    runtime_loads = []
+    runtime_static_loads = []
+    runtime_finders = []
+    load_re = re.compile(
+        r'LoadObject<[^>]+>\s*\([^;]*?TEXT\("([^"]+)"\)[^;]*?\);',
+        flags=re.S,
+    )
+    finder_re = re.compile(
+        r'ConstructorHelpers::FObjectFinder<[^>]+>\s+[A-Za-z_][A-Za-z0-9_]*'
+        r'\s*\(\s*TEXT\("([^"]+)"\)\s*\)',
+        flags=re.S,
+    )
+    for source_path in runtime_cpp_paths:
+        source_text = source_path.read_text(encoding="utf-8", errors="replace")
+        rel = source_path.relative_to(ROOT).as_posix()
+        for match in load_re.finditer(source_text):
+            runtime_loads.append((rel, match.group(1)))
+        if "StaticLoadObject" in source_text:
+            runtime_static_loads.append(rel)
+        for match in finder_re.finditer(source_text):
+            runtime_finders.append((rel, match.group(1)))
+
+    check(all(asset.startswith("/Engine/BasicShapes/") for _, asset in runtime_loads),
+          "heavy_runtime_loadobject_detected", errors)
+    check(not runtime_static_loads, "runtime_staticloadobject_detected", errors)
+    check(all(asset.startswith("/Engine/BasicShapes/") for _, asset in runtime_finders),
+          "runtime_fobjectfinder_non_engine_asset", errors)
+
+    streaming_cpp = read("Source/ShireJourney/Private/Subsystems/ShireChapterAssetStreamingSubsystem.cpp")
+    check("RequestAsyncLoad" in streaming_cpp,
+          "chapter_streaming_async_request_missing", errors)
+    check("LoadObject<" not in streaming_cpp and "StaticLoadObject" not in streaming_cpp,
+          "chapter_streaming_sync_load_returned", errors)
+
+    npc_context_cpp = read("Source/ShireJourney/Private/Subsystems/ShireNPCContextSubsystem.cpp")
+    for forbidden_context_scan in ["GetAllActorsOfClass", "TActorIterator<", "SpawnActor<"]:
+        check(forbidden_context_scan not in npc_context_cpp,
+              "npc_context_authority_or_fullworld_scan_" + forbidden_context_scan.replace("<",""),
+              errors)
+
+    living_cpp = read("Source/ShireJourney/Private/World/LivingWorldDirector.cpp")
+    for required_pool_symbol in [
+        "AcquireAmbientNPC", "ReleaseAmbientNPCToPool",
+        "AcquireInteraction", "ReleaseInteractionToPool",
+        "AcquireAmbientMotionActor", "ReleaseAmbientMotionToPool",
+    ]:
+        check(required_pool_symbol in living_cpp,
+              "living_world_pool_contract_" + required_pool_symbol, errors)
+    check("NextMaintenanceTime = Now + 0.75f;" in living_cpp,
+          "living_world_bounded_maintenance_interval", errors)
+    check("GetAllActorsOfClass" not in living_cpp,
+          "living_world_fullworld_getallactors_scan", errors)
+
+    router_cpp = read("Source/ShireJourney/Private/World/ChapterWorldRouter.cpp")
+    check("PrimaryActorTick.bCanEverTick = false;" in router_cpp,
+          "chapter_router_tick_disabled", errors)
+
+    shire_builder_cpp = read("Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp")
+    story_flow_cpp = read("Source/ShireJourney/Private/Subsystems/ShireStoryFlowSubsystem.cpp")
+    presentation_cpp = read("Source/ShireJourney/Private/Subsystems/ShireStoryPresentationSubsystem.cpp")
+    story_plan = read("Data/StoryBeatPlan.csv")
+    for forbidden_bridge in [
+        'StartChapter(TEXT("P1C02"), TEXT("RoadToBree"), 0)',
+        'FerryFarSide->NextChapterId=TEXT("P1C02")',
+        'FerryFarSide->NextChapterQuestId=TEXT("RoadToBree")',
+    ]:
+        check(forbidden_bridge not in (shire_builder_cpp + story_flow_cpp),
+              "p1c01_auto_bree_bridge_returned", errors)
+    check('FerryFarSide->StoryBeatId=TEXT("FerryEscapeComplete");' in shire_builder_cpp,
+          "ferry_terminal_storybeat_missing", errors)
+    check('AddCue(TEXT("FerryEscapeComplete")' in presentation_cpp,
+          "ferry_terminal_presentation_missing", errors)
+    check(",FerryEscapeComplete," in story_plan,
+          "ferry_terminal_storyplan_missing", errors)
+
+    runtime_contracts = read("Scripts/runtime_audit_contracts.py")
+    check("legacy-terminal preserved=yes canonical-publications=1 worldCommits=0 chapter=P1C01"
+          in runtime_contracts, "terminal_restore_contract_drift", errors)
+
+    closure_workflow = read(".github/workflows/p1c01-chapter-closure.yml")
+    check("cancel-in-progress: false" in closure_workflow,
+          "closure_train_cancellable", errors)
+
+    char_map = load("Data/P1C01CharacterBundleCompletionV1.json")
+    required_cast = {
+        "FRODO","BILBO","GANDALF","SAM","MERRY","PIPPIN","BLACK_RIDER","BLACK_RIDER_HORSE"
+    }
+    actual_cast = {x.get("id") for x in char_map.get("required_characters", [])}
+    check(actual_cast == required_cast, "p1c01_required_cast_drift", errors)
+    check("OBJ_AS_FINAL_ANIMATED_CHARACTER" in char_map.get("forbidden", []),
+          "animated_obj_guard_missing", errors)
+
+    audio_map = load("Data/P1C01AudioMasterSlotMapV1.json")
+    required_audio = {
+        "VOICE_SCRIPTED","VOICE_CONTEXTUAL","CHARACTER_EFFORTS","FOOTSTEPS",
+        "CHARACTER_FOLEY","BAG_END_INTERIOR","FARM_CART_WORK","NATURE_AMBIENCE",
+        "SOCIAL_PARTY","FERRY_WATER","BLACK_RIDER_THREAT","MUSIC","ACCESSIBILITY_METADATA"
+    }
+    actual_audio = {x.get("id") for x in audio_map.get("required_families", [])}
+    check(actual_audio == required_audio, "p1c01_audio_family_drift", errors)
+
+    mission_map = load("Data/P1C01MissionRuntimeAcceptanceMatrixV1.json")
+    terminal = mission_map.get("p1c01_terminal_contract", {})
+    check(terminal.get("quest_id") == "FerryEscape" and
+          terminal.get("terminal_stage") == 2 and
+          terminal.get("terminal_story_beat") == "FerryEscapeComplete" and
+          terminal.get("auto_start_p1c02") is False,
+          "p1c01_terminal_contract_drift", errors)
+    f103 = next((x for x in mission_map.get("missions", []) if x.get("id") == "F1-03"), {})
+    check(f103.get("source_locked_postcondition") == "Hobbits reach Bree." and
+          "P1C02 owns Bree arrival/opening" in f103.get("topology_rule", ""),
+          "f1_03_source_runtime_boundary_drift", errors)
+
+    handoff = load("Data/P1C01RunnerHandoffV1.json")
+    check("opening P1C02 automatically" in handoff.get("forbidden", []),
+          "runner_handoff_p1c02_lock_missing", errors)
 
     if errors:
         for error in errors:
