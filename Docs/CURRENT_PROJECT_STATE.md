@@ -4893,3 +4893,13 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - This was an orchestration-source defect introduced by the cleanup packet, not a runner, validator, game-code or UE4 failure.
 - The workflow was rebuilt from the last known-good Closure #40 definition, then the delta classifier was reapplied with structural checks confirming exactly one classifier, runner-health, preflight, Mega Pack and cleanup step.
 - Evidence boundary: **SOURCE-REPAIRED / fresh workflow execution required**. No runtime acceptance is implied.
+
+
+## 2026-10-06 - Hosted classifier outage bypass without gate weakening
+
+- Closure #43 proved the self-hosted runner was accepting work and exact checkout succeeded, then failed only in the newly added delta classifier. Root cause from the job log: PR execution used the temporary merge SHA instead of the PR head, and PowerShell `ErrorActionPreference=Stop` terminated on `git cat-file` stderr before the intended fetch fallback.
+- The closure workflow now targets `github.event.pull_request.head.sha || github.sha` and performs an explicit bounded fetch of the delta base before diff classification.
+- Separately, GitHub-hosted jobs continue to fail with zero executable steps before any validator logic runs. Unreal Build Validation is therefore fail-closed but non-blocking: hosted classification stays preferred; if that job itself fails before producing a valid mode, the self-hosted UE4 job performs the same `classify_unreal_validation.ps1` after exact-head checkout and runner-health verification.
+- This is not a gate bypass. The same classifier still decides full/core/asset/acceptance/inherit. It only moves classification onto the available runner when GitHub-hosted infrastructure supplies no executable job.
+- Current goal remains immediate P1C01 engine execution. P1C02/Bree remains locked.
+- Evidence boundary: **SOURCE-IMPLEMENTED CI ORCHESTRATION FIX / fresh exact-head workflow proof pending**.

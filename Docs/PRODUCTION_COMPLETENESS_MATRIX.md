@@ -4496,3 +4496,19 @@ Evidence boundary: CI orchestration source change only; Gate 6/7 remains unchang
 | Structural duplicate/malformed guard | PASS BEFORE REPUBLISH |
 | Fresh workflow proof | PENDING |
 | Gate 6/7 effect | NONE |
+
+
+## 2026-10-06 - Engine-lane continuity under hosted zero-step outage
+
+| Control | State |
+|---|---|
+| Closure #43 exact checkout | PASS on self-hosted runner |
+| Closure #43 classifier | FAILED / ROOT CAUSE IDENTIFIED |
+| Wrong PR identity | temporary merge SHA -> FIXED to exact PR head |
+| PowerShell native stderr abort | ROOT-FIXED via explicit base fetch |
+| Hosted Pre-Unreal / Unreal classifier | ZERO-STEP INFRASTRUCTURE FAILURE |
+| Hosted classifier preferred path | PRESERVED |
+| Self-hosted classifier fallback | SOURCE-IMPLEMENTED / SAME FAIL-CLOSED SCRIPT |
+| UE gate weakening | NONE |
+| Fresh exact-head UE4 execution | PENDING WORKFLOW PROOF |
+| P1C02/Bree | LOCKED |

@@ -41,9 +41,9 @@ jobs:
       - ue4-27
     timeout-minutes: 180
     env:
-      TARGET_SHA: ${{ github.sha }}
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       EVENT_NAME: ${{ github.event_name }}
-      DELTA_BASE_SHA: ${{ github.event.before }}
+      DELTA_BASE_SHA: ${{ github.event.before || github.event.pull_request.base.sha }}
 
     steps:
       - name: Checkout exact closure head into isolated temp source
@@ -78,7 +78,7 @@ jobs:
       - name: Classify closure-relevant delta
         shell: powershell
         run: |
-          $ErrorActionPreference = 'Stop'
+          $ErrorActionPreference = 'Continue'
           $runClosure = $true
           $reason = 'fail-safe'
           $base = $env:DELTA_BASE_SHA
@@ -87,19 +87,64 @@ jobs:
           if ($env:EVENT_NAME -eq 'workflow_dispatch') {
             $reason = 'manual-dispatch'
           }
-          elseif ([string]::IsNullOrWhiteSpace($base) -or $base -match '^0+$') {
+          elseif ([string]::IsNullOrWhiteSpace($base) -or $base -match '^0+
+
+            $closureInputs = @(
+              'Data/P1C01MaterialImportWaveV2.json',
+              'Data/WarehouseP1C01ClosurePromotionTrainV2.json',
+              'Data/P1C01ChapterClosureMegaPackV2.json',
+              'Data/P1C01OneShotChapterFinishV1.json',
+              'Scripts/preflight_p1c01_chapter_closure_pack_v2.ps1',
+              'Scripts/run_p1c01_chapter_closure_pack_v2.ps1'
+            )
+            $relevant = @($changed | Where-Object { $closureInputs -contains $_ })
+            if ($relevant.Count -eq 0) {
+              $runClosure = $false
+              $reason = 'no-closure-input-delta'
+            }
+            else {
+              $reason = 'closure-input-delta:' + ($relevant -join ',')
+            }
+          }
+
+          "RUN_P1C01_CLOSURE=$($runClosure.ToString().ToLowerInvariant())" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          Write-Host "P1C01_CLOSURE_DELTA_CLASSIFICATION run=$runClosure reason=$reason base=$base target=$target"
+
+      - name: Verify runner session health
+        if: env.RUN_P1C01_CLOSURE == 'true'
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_CLOSURE_SOURCE%\Scripts\verify_runner_session.ps1"
+
+      - name: Fast closure preflight
+        if: env.RUN_P1C01_CLOSURE == 'true'
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_CLOSURE_SOURCE%\Scripts\preflight_p1c01_chapter_closure_pack_v2.ps1" -ManifestPath "%SHIRE_CLOSURE_SOURCE%\Data\P1C01ChapterClosureMegaPackV2.json"
+
+      - name: Run P1C01 Chapter Closure Mega Pack V2
+        if: env.RUN_P1C01_CLOSURE == 'true'
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_CLOSURE_SOURCE%\Scripts\run_p1c01_chapter_closure_pack_v2.ps1" -ManifestPath "%SHIRE_CLOSURE_SOURCE%\Data\P1C01ChapterClosureMegaPackV2.json"
+
+      - name: Remove isolated closure source checkout
+        if: always()
+        shell: cmd
+        run: |
+          @echo off
+          if defined SHIRE_CLOSURE_SOURCE if exist "%SHIRE_CLOSURE_SOURCE%" rmdir /S /Q "%SHIRE_CLOSURE_SOURCE%"
+          exit /b 0
+) {
             $reason = 'missing-base-fail-safe'
           }
           else {
             Set-Location -LiteralPath $env:SHIRE_CLOSURE_SOURCE
-            & git cat-file -e "$base^{commit}" 2>$null
-            if ($LASTEXITCODE -ne 0) {
-              & git -c credential.helper= -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=20 fetch --no-tags --depth=1 origin $base
-              if ($LASTEXITCODE -ne 0) { throw "Unable to fetch closure delta base $base" }
-            }
+
+            & git -c credential.helper= -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=20 fetch --no-tags --depth=1 origin $base
+            $fetchExit = $LASTEXITCODE
+            if ($fetchExit -ne 0) { throw "Unable to fetch closure delta base $base" }
 
             $changed = @(& git diff --name-only $base $target)
-            if ($LASTEXITCODE -ne 0) { throw 'Unable to classify closure delta.' }
+            $diffExit = $LASTEXITCODE
+            if ($diffExit -ne 0) { throw 'Unable to classify closure delta.' }
 
             $closureInputs = @(
               'Data/P1C01MaterialImportWaveV2.json',

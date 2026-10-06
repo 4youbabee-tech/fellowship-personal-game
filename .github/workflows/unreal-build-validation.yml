@@ -262,7 +262,7 @@ jobs:
 
   unreal-build:
     needs: classify
-    if: needs.classify.outputs.mode != 'inherit'
+    if: always() && (needs.classify.result == 'failure' || needs.classify.outputs.mode != 'inherit')
     name: UE4.27.2 C++ Build
     runs-on:
       - self-hosted
@@ -361,21 +361,41 @@ jobs:
         shell: cmd
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\verify_runner_session.ps1"'
 
-      - name: Import hosted Unreal classification
+      - name: Resolve Unreal classification with self-hosted fail-closed fallback
         shell: powershell
+        env:
+          HOSTED_CLASSIFIER_RESULT: ${{ needs.classify.result }}
+          HOSTED_MODE: ${{ needs.classify.outputs.mode }}
+          HOSTED_REASON: ${{ needs.classify.outputs.reason }}
+          HOSTED_PARENT_SHA: ${{ needs.classify.outputs.parent_sha }}
+          HOSTED_RESUME_STAGE: ${{ needs.classify.outputs.resume_stage }}
+          HOSTED_RESET_INTERMEDIATES: ${{ needs.classify.outputs.reset_intermediates }}
+          HOSTED_FULL: ${{ needs.classify.outputs.full }}
+          HOSTED_CORE: ${{ needs.classify.outputs.core }}
+          HOSTED_ASSET: ${{ needs.classify.outputs.asset }}
+          HOSTED_ACCEPTANCE: ${{ needs.classify.outputs.acceptance }}
+          GH_TOKEN: ${{ github.token }}
         run: |
-          Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_UNREAL_MODE=${{ needs.classify.outputs.mode }}"
-          Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_UNREAL_DECISION_REASON=${{ needs.classify.outputs.reason }}"
-          Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_UNREAL_PARENT_SHA=${{ needs.classify.outputs.parent_sha }}"
-          Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_ACCEPTANCE_RESUME_STAGE=${{ needs.classify.outputs.resume_stage }}"
-          Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_RESET_INTERMEDIATES=${{ needs.classify.outputs.reset_intermediates }}"
-          Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_FULL_UNREAL_REQUIRED=${{ needs.classify.outputs.full }}"
-          Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_CORE_UNREAL_REQUIRED=${{ needs.classify.outputs.core }}"
-          Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_ASSET_IMPORT_ONLY=${{ needs.classify.outputs.asset }}"
-          Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_ACCEPTANCE_ONLY=${{ needs.classify.outputs.acceptance }}"
-          if ("${{ needs.classify.outputs.mode }}" -notin @("full","core","asset","acceptance")) {
-            throw "Unexpected hosted Unreal mode: ${{ needs.classify.outputs.mode }}"
+          $ErrorActionPreference = 'Stop'
+          $validModes = @('full','core','asset','acceptance','inherit')
+          if ($env:HOSTED_CLASSIFIER_RESULT -eq 'success' -and $validModes -contains $env:HOSTED_MODE) {
+            Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_UNREAL_MODE=$env:HOSTED_MODE"
+            Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_UNREAL_DECISION_REASON=$env:HOSTED_REASON"
+            Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_UNREAL_PARENT_SHA=$env:HOSTED_PARENT_SHA"
+            Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_ACCEPTANCE_RESUME_STAGE=$env:HOSTED_RESUME_STAGE"
+            Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_RESET_INTERMEDIATES=$env:HOSTED_RESET_INTERMEDIATES"
+            Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_FULL_UNREAL_REQUIRED=$env:HOSTED_FULL"
+            Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_CORE_UNREAL_REQUIRED=$env:HOSTED_CORE"
+            Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_ASSET_IMPORT_ONLY=$env:HOSTED_ASSET"
+            Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_ACCEPTANCE_ONLY=$env:HOSTED_ACCEPTANCE"
+            Write-Host "UNREAL_CLASSIFIER_SOURCE hosted mode=$env:HOSTED_MODE"
+            exit 0
           }
+
+          Write-Host "UNREAL_CLASSIFIER_FALLBACK_START hostedResult=$env:HOSTED_CLASSIFIER_RESULT hostedMode=$env:HOSTED_MODE"
+          & "$env:GITHUB_WORKSPACE\Scripts\classify_unreal_validation.ps1"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Write-Host "UNREAL_CLASSIFIER_FALLBACK_PASS source=self-hosted"
 
       - name: Scrub checkout credential from persistent Git metadata
         shell: cmd

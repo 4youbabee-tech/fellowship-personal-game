@@ -1372,3 +1372,12 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - The closure workflow has been rebuilt from the known-good #40 source before reapplying the latest-event delta classifier.
 - This repair changes CI orchestration only. No Shire world, quest, NPC, loading, audio, save or performance behavior changed.
 - Evidence boundary: **SOURCE-REPAIRED; fresh workflow proof pending**.
+
+
+## 2026-10-06 - Continuous P1C01 build lane under hosted CI outage
+
+- The engine lane is no longer allowed to deadlock solely because a GitHub-hosted classifier receives zero executable steps.
+- Hosted classification remains first choice. If it fails before producing a valid classification, the available self-hosted UE4 runner performs the exact same classifier after exact-head checkout and runner-health verification.
+- Closure delta classification now uses the actual PR head rather than the temporary merge commit and explicitly fetches its comparison base before running `git diff`.
+- No Shire world density, story flow, population authority, asset-loading rule, audio rule or Gate 6/7 criterion changed.
+- This packet exists only to keep the already-authorized P1C01 One-Shot build moving while preserving fail-closed validation.
