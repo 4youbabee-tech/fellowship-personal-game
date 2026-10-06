@@ -1331,3 +1331,13 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - A restored terminal save at `P1C01 / FrodoMain / P1C01_Main / FerryEscape stage 2` must remain in that committed Shire identity.
 - This change preserves the One-Shot chapter policy and prevents runtime/save tooling from bypassing the Gate 6/7 predecessor lock.
 - Evidence boundary: source/runtime contract correction only; hosted validation and UE4 evidence remain pending.
+
+## 2026-10-06 - Final pre-runner structural hygiene sweep
+
+- No new world density was added during this sweep. The pass is structural: source format, ownership, loading, pooling, chapter boundary and repository hygiene.
+- Repeated environmental detail remains HISM/ISM/`AWorldDetailCluster`; no actor-per-prop expansion was authorized.
+- `ALivingWorldDirector` remains the sole ambient population/pooling authority. Its pool acquisition paths may create an actor only when the relevant pool is empty; normal release returns actors to bounded pools, with destruction only for pool overflow/shutdown.
+- `UShireNPCContextSubsystem` remains data/context/schedule authority only and has no actor enumeration or spawn path.
+- Heavy production residency stays soft/async. The only direct runtime `LoadObject` forms found by the sweep are Engine BasicShapes fallback assets/materials, not production warehouse assets.
+- The Bucklebury far-bank terminal remains inside the committed Shire world; Bree geometry/population/runtime may not be instantiated by that trigger, story-flow repair or save restoration.
+- Runtime collision, silhouette/readability, foliage/material presentation, water/rope/ferry traversal and frame-time quality remain runner/human evidence and are not inferred from this static sweep.
