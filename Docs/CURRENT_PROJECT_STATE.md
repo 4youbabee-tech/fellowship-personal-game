@@ -4848,3 +4848,10 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - The authoritative technical winner remains the tracked KayKit Rogue normalized FBX with SHA `75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be`.
 - Root fix removes the isolated historical assertion: the test now cross-checks `P1C01CharacterRigAnimationPrepV1.json` against `SourceAssets/ValidatedRuntime/FRODO/provenance.json`, then pins the current winner SHA. Future winner changes must update provenance and preparation truth together rather than leaving a hidden test constant.
 - Status: **SOURCE-IMPLEMENTED / exact-head hosted proof pending**.
+
+## 2026-10-06 - Offline audit failure diagnostics hardened
+
+- The final hosted whole-game audit is fail-closed and now preserves its complete stdout/stderr as a short-lived GitHub artifact on every run, including failures.
+- Bash `pipefail` keeps the Python audit exit code authoritative; the diagnostic artifact cannot turn a failed audit green.
+- This removes a control-plane blind spot where GitHub's job-log download endpoint could temporarily return BlobNotFound and hide the exact static failure code from the architect.
+- Evidence boundary remains static/hosted only.
