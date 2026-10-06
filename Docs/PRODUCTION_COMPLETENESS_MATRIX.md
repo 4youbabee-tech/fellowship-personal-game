@@ -4396,3 +4396,12 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Offline runtime authority | P1C01_ONLY |
 | Validator forced rollback to ACTIVE_GATE_FIRST | REMOVED |
 | Exact-head hosted proof | PENDING |
+
+## 2026-10-06 - Final sweep regression guards
+
+| Regression guard | State |
+|---|---|
+| DEC-104 one-shot mode drift | GUARDED |
+| Owner-facing vs technical lane conflation | GUARDED |
+| Current BMP inventory drift | GUARDED |
+| Historical review records preservation | INTENTIONAL |
