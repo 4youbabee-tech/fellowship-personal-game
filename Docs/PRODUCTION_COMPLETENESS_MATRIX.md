@@ -4608,3 +4608,19 @@ Evidence boundary: prior-head engine/package proof + current source repair only.
 | P1C02/Bree | LOCKED; also requires explicit owner command after Gate 6/7 |
 
 Evidence boundary: exact-head machine/headless evidence does not substitute for human PIE, visual/audio listening, target-device FPS/VRAM or Gate 6/7.
+
+
+## 2026-10-06 - Frodo import CI fallback contract
+
+| Control | State |
+|---|---|
+| Hosted artifact preflight | PREFERRED; current infrastructure returns zero-step failure |
+| Self-hosted fallback on hosted failure | SOURCE-IMPLEMENTED |
+| Exact-head checkout on fallback | REQUIRED |
+| Static Frodo import contract on fallback | REQUIRED |
+| Exact FBX SHA256 verification | REQUIRED |
+| UE4.27.2 48-bone import gate | REQUIRED |
+| Runtime integration allowed by technical gate | FALSE |
+| Human visual/PIE/device acceptance | PENDING / NOT CLAIMED |
+
+The fallback removes CI infrastructure deadlock; it does not weaken the Frodo evidence boundary.

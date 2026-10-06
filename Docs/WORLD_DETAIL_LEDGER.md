@@ -1428,3 +1428,12 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Ferry terminal contract remains `FerryEscape stage 2 -> FerryEscapeComplete -> WC_P1C01_FERRY_END`, with no automatic P1C02 transition.
 - No blind density, synchronous heavy production loading, crowd Spawn/Destroy churn, animated final OBJ, BMP texture, or extra AI/story/audio authority was added.
 - Evidence state: **parent audited head COMPILE/IMPORT/PACKAGE/HEADLESS-RUNTIME PROVEN; human PIE/device/visual/performance/Gate 6/7 pending**.
+
+
+## 2026-10-06 - Frodo import gate CI availability hardening
+
+- No character/world runtime authority changed.
+- The Frodo technical import lane now has a fail-closed self-hosted fallback when its GitHub-hosted preflight cannot start.
+- Fallback repeats the static import contract before exact artifact hashes, UE4.27.2 build/import and the existing 48-bone technical checks.
+- Final animated delivery remains FBX-only; no OBJ/BMP/synchronous heavy-load path is introduced.
+- Evidence boundary remains technical import only until exact-head rendered/human/device proof exists.

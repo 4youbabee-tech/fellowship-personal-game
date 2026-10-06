@@ -4957,3 +4957,11 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Source boundary remains explicit: F1-03 locks the eventual canonical postcondition “Hobbits reach Bree”; runtime topology keeps P1C01 ending at Ferry and P1C02 owning Bree arrival, so Ferry completion alone is not recorded as full F1-03 completion.
 - Remaining blockers are content/human/device evidence: Frodo character-specific render/runtime proof, seven final production FBX character bundles, production WAV masters/playback, full human P1C01 gameplay/reliability, target-device measurements and Gate 6/7.
 - Evidence boundary for `9706cc72367b`: **COMPILE/IMPORT/PACKAGE/HEADLESS-RUNTIME PROVEN**. Human PIE, DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED and Gate 6/7 remain **NOT CLAIMED**. This stabilization commit itself requires fresh static validation after publication.
+
+
+## 2026-10-06 - Frodo exact-head hosted-preflight fallback hardening
+
+- The next required P1C01 character lane was blocked before UE4 execution because `P1C01 Frodo UE4 Animation Import` required a GitHub-hosted preflight job, and that hosted job is currently failing with zero executable steps.
+- Root-fix keeps the hosted preflight preferred, but allows the self-hosted UE4 gate to start when the hosted job itself fails. On fallback, the Windows job performs exact-head checkout, resolves an existing local Python interpreter, re-runs the static Frodo import contract, re-downloads the exact historical rig/retarget artifacts, re-verifies all SHA256 bytes, builds ShireJourneyEditor and performs the existing 48-bone technical import checks.
+- A real hosted validation failure cannot silently promote content: the fallback repeats the static contract and the downstream exact-byte/UE4 checks remain fail-closed.
+- This is CI availability hardening only. Frodo remains **NOT VISUALLY ACCEPTED / NOT PIE-TESTED / NOT DEVICE-TESTED** until new evidence exists.

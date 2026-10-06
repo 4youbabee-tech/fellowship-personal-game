@@ -80,6 +80,7 @@ jobs:
   ue4_animation_import:
     name: UE4.27.2 exact-skeleton animation import gate
     needs: hosted_artifact_preflight
+    if: ${{ always() && (needs.hosted_artifact_preflight.result == 'success' || needs.hosted_artifact_preflight.result == 'failure') }}
     runs-on:
       - self-hosted
       - Windows
@@ -130,6 +131,25 @@ jobs:
           if not exist "ShireJourney.uproject" exit /b 76
           echo SHIRE_FRODO_UE4_SOURCE=!SRC!>>"%GITHUB_ENV%"
           echo P1C01_FRODO_UE4_ISOLATED_CHECKOUT_PASS sha=!CHECKED_SHA! source=!SRC!
+
+      - name: Resolve local Python for hosted-preflight fallback
+        if: needs.hosted_artifact_preflight.result != 'success'
+        shell: cmd
+        run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_FRODO_UE4_SOURCE%\Scripts\resolve_runtime_python.ps1"'
+
+      - name: Re-run static import contract on self-hosted fallback
+        if: needs.hosted_artifact_preflight.result != 'success'
+        shell: powershell
+        run: |
+          $ErrorActionPreference="Stop"
+          if(-not $env:PYTHON_EXE){ throw "FRODO_UE4_FALLBACK_PYTHON_MISSING" }
+          Push-Location $env:SHIRE_FRODO_UE4_SOURCE
+          try {
+            & $env:PYTHON_EXE -m unittest Scripts/test_p1c01_frodo_ue4_animation_import_contract.py
+            if($LASTEXITCODE -ne 0){ throw "FRODO_UE4_FALLBACK_STATIC_CONTRACT_FAIL exit=$LASTEXITCODE" }
+          }
+          finally { Pop-Location }
+          Write-Host "P1C01_FRODO_HOSTED_PREFLIGHT_FALLBACK_PASS"
 
       - name: Verify exact checkout and runner
         shell: cmd
