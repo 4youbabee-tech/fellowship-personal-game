@@ -2039,8 +2039,8 @@ bool AShirePlayerCharacter::RunLegacyTerminalRestoreAuditSetup()
         return false;
     }
 
-    // Simulate a legacy terminal P1C01 save that must canonicalize to P1C02
-    // while restore broadcasts are still suppressed.
+    // Simulate a terminal P1C01 save. The owner-explicit chapter gate means
+    // restore must preserve FerryEscape stage 2 in P1C01 rather than opening Bree.
     Legacy->CurrentChapterId = TEXT("P1C01");
     Legacy->CurrentRouteId = TEXT("FrodoMain");
     Legacy->CurrentEpisodeId = TEXT("P1C01_Main");
