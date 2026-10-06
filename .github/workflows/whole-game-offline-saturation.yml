@@ -39,7 +39,18 @@ jobs:
         with:
           python-version: '3.11'
       - name: Audit whole-game offline saturation
-        run: python Scripts/audit_whole_game_offline_saturation.py
+        shell: bash
+        run: |
+          set -o pipefail
+          python Scripts/audit_whole_game_offline_saturation.py 2>&1 | tee whole-game-offline-audit.log
+      - name: Preserve offline audit diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: whole-game-offline-audit-${{ github.run_id }}-${{ github.run_attempt }}
+          path: whole-game-offline-audit.log
+          if-no-files-found: error
+          retention-days: 7
 
   retire-reviewed-dead-refs:
     if: github.event_name == 'pull_request' && github.head_ref == 'production/p1c01-definitive-chapter-closeout-2026-10-04'
