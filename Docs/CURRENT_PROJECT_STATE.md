@@ -4855,3 +4855,11 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Bash `pipefail` keeps the Python audit exit code authoritative; the diagnostic artifact cannot turn a failed audit green.
 - This removes a control-plane blind spot where GitHub's job-log download endpoint could temporarily return BlobNotFound and hide the exact static failure code from the architect.
 - Evidence boundary remains static/hosted only.
+
+## 2026-10-06 - Frodo deformation gate metadata reconciled
+
+- Final sweep found a second stale Frodo metadata surface: `Data/P1C01HumanDeformationGateV1.json` still exposed the superseded `eff0e799...` / 161-bone predecessor as operational metadata even though the current winner is the tracked 48-bone KayKit Rogue derivative.
+- The gate now points operationally to SHA `75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be`, 48 bones, T0 reference pose, and the established STATIC_DEFORMATION_STRESS_PASS displacement evidence.
+- The old 161-bone predecessor is retained only inside an explicitly `HISTORICAL_SUPERSEDED` snapshot so rejection/history evidence is not erased.
+- Source-contract regression coverage now requires deformation-gate winner == tracked Frodo provenance winner and 48-bone/T0 truth.
+- Fresh exact-head UE4 runtime/render/human evidence remains pending.
