@@ -4424,3 +4424,15 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Pipe exit remains fail-closed | YES |
 | Artifact retention | 7 days |
 | Engine/device evidence implication | NONE |
+
+## 2026-10-06 - Frodo deformation metadata consistency
+
+| Control | State |
+|---|---|
+| Current deformation winner SHA | 75d715f6... |
+| Current reference bones | 48 |
+| T0 reference pose | TRUE |
+| Static deformation state | STATIC_DEFORMATION_STRESS_PASS |
+| Old eff0e799 / 161-bone metadata | HISTORICAL_SUPERSEDED ONLY |
+| Gate/provenance equality regression guard | ADDED |
+| Fresh UE4 runtime/render proof | PENDING |
