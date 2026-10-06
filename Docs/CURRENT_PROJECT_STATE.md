@@ -4877,3 +4877,11 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - No gameplay/world/architecture C++ was changed merely for cleanup because no causal defect was proven in the reviewed paths.
 - Remaining evidence is explicit, not hidden: fresh hosted/static execution after this stabilization commit; UE4.27.2 compile/import/package; Frodo runtime; seven remaining named-character final FBX bundles; production WAV import/playback; full P1C01 mission/save/retry/skip/backtrack pass; target-device profiling; and human Gate 6/7 review.
 - Current evidence state after this packet: **STATIC-RISK-AUDITED / SOURCE-CLOSURE-RUN-PROVEN; COMPILE/PIE/DEVICE/VISUAL/PERFORMANCE/GATE 6/7 PENDING**. P1C02 remains locked.
+
+
+## 2026-10-06 - Closure retrigger churn root fix
+
+- A documentation/governance-only synchronize on PR #329 still launched P1C01 Chapter Closure Pack #41 because GitHub pull-request path filtering continues to see closure files already present in the accumulated PR diff.
+- Root fix is in the closure workflow itself: after exact checkout it classifies the latest event delta against the six closure payload inputs. If none changed, runner-health/preflight/Mega Pack steps are skipped; manual dispatch and missing delta-base identity remain fail-safe full runs.
+- This prevents later docs/static stabilization commits from needlessly repeating an already-proven multi-hour source closure train while preserving fail-closed execution when closure payload really changes.
+- Evidence boundary: **SOURCE-IMPLEMENTED CI ROOT FIX / fresh workflow execution pending**. No UE4, PIE, device, visual or performance state changes.

@@ -4467,3 +4467,19 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Human Gate 6/7 | NOT ACCEPTED |
 
 Evidence boundary: **STATIC-RISK-AUDITED / SOURCE-CLOSURE-RUN-PROVEN only**. No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED or PERFORMANCE-ACCEPTED status is promoted by this packet.
+
+
+## 2026-10-06 - Closure retrigger churn guard
+
+| Control | State |
+|---|---|
+| Docs-only PR synchronize retriggered Closure #41 | CONFIRMED CI ORCHESTRATION DEFECT |
+| Root cause | PR path filter sees accumulated PR diff |
+| Latest-event delta classifier | SOURCE-IMPLEMENTED |
+| Closure payload inputs classified | 6 explicit files |
+| Docs/governance-only delta | SKIP HEAVY CLOSURE STEPS |
+| Manual dispatch / missing base | FAIL-SAFE FULL EXECUTION |
+| Fresh guard execution | PENDING |
+| Runtime acceptance effect | NONE |
+
+Evidence boundary: CI orchestration source change only; Gate 6/7 remains unchanged.

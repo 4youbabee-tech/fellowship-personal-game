@@ -8836,6 +8836,10 @@
       "Target-device DX11 1280x720 FPS/frame-time/RAM/VRAM/streaming observations.",
       "Human visual/audio/gameplay Gate 6/7 review."
     ],
+    "ci_root_fixes": [
+      "P1C01 Chapter Closure pull_request path filtering can retrigger on documentation-only synchronize events because GitHub evaluates the accumulated PR diff. The closure workflow therefore classifies the latest event delta inside the self-hosted job and skips runner-health/preflight/Mega Pack execution when none of the six closure payload inputs changed.",
+      "Workflow-control-only changes are not treated as closure payload changes; manual dispatch remains fail-safe full execution, and missing delta-base identity remains fail-safe full execution."
+    ],
     "evidence_boundary": "STATIC-RISK-AUDITED plus source-closure runner proof only. This snapshot is not COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED or Gate 6/7 ACCEPTED."
   }
 }

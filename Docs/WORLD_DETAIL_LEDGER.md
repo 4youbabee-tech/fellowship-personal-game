@@ -1355,3 +1355,12 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - No density, actor-per-prop expansion or authority duplication was introduced in this cleanup.
 - The next unresolved chapter work is runtime evidence and real production content integration, not another planning/micro-wave pass.
 - Evidence boundary: **STATIC-RISK-AUDITED / SOURCE-CLOSURE-RUN-PROVEN**. P1C02 remains locked until real P1C01 Gate 6/7 plus explicit owner command.
+
+
+## 2026-10-06 - P1C01 closure workflow anti-churn guard
+
+- A docs/governance-only PR synchronization retriggered Closure Pack #41 even though the source closure payload had already passed on #40. The cause is accumulated PR-diff path matching, not a new world/content requirement.
+- The workflow now compares the latest event delta to the six actual closure payload inputs before expensive work. No relevant delta means the source train is inherited and the heavy closure steps are skipped.
+- Manual dispatch and unresolvable delta identity remain fail-safe full execution.
+- No world, character, density, story, loading or runtime authority was changed by this guard.
+- Evidence boundary: **SOURCE-IMPLEMENTED CI HYGIENE**, fresh workflow behavior pending.
