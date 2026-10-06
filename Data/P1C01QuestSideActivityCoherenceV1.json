@@ -2,7 +2,7 @@
   "schema_version": 1,
   "chapter_id": "P1C01",
   "car_id": "QUEST_SIDE_ACTIVITY_COHERENCE",
-  "status": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
+  "status": "SOURCE_IMPLEMENTED_F1_02_F1_03_GAMEPLAY_GAPS_CLOSED_EXACT_HEAD_PROOF_PENDING",
   "predecessor": {
     "car_id": "LIVING_SHIRE",
     "pr": 196,
@@ -34,7 +34,26 @@
     ],
     "idempotent_completion": true,
     "optional_reward_cannot_advance_required_anchor": true,
-    "optional_failure_cannot_change_canon": true
+    "optional_failure_cannot_change_canon": true,
+    "source_backed_urgency_exceptions": [
+      {
+        "activity": "SIDE_SHIRE_RING_INVESTIGATION",
+        "required_active_quest": "RingSecret"
+      },
+      {
+        "activity": "SIDE_SHIRE_BAG_END_PACKING",
+        "required_active_quest": "RingSecret"
+      },
+      {
+        "activity": "SIDE_SHIRE_STEALTH_DEPARTURE",
+        "required_active_quest": "LeavingHome"
+      },
+      {
+        "activity": "SIDE_SHIRE_ROOT_HIDE",
+        "required_active_quest": "KeepOffRoad"
+      }
+    ],
+    "urgency_exception_rule": "Only activities explicitly marked allow_during_p1c01_urgency=true and bound to the exact required_active_quest may survive P1C01 urgency suppression; all other optional content remains suppressed."
   },
-  "acceptance_boundary": "SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27.2 PROOF PENDING. No PIE/device/visual/pacing/performance acceptance is claimed."
+  "acceptance_boundary": "SOURCE-IMPLEMENTED F1-01/F1-02/F1-03 SHIRE OPTIONAL GAMEPLAY / EXACT-HEAD STATIC + UE4.27 PROOF PENDING. No PIE/device/visual/pacing/performance acceptance is claimed."
 }

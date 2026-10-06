@@ -64,6 +64,8 @@ struct FShireSideActivityProgressionDefinition
     FName ChapterId = NAME_None;
     FName AvailableAfterStoryBeat = NAME_None;
     FName EndsBeforeStoryBeat = NAME_None;
+    FName RequiredActiveQuestId = NAME_None;
+    bool bAllowDuringP1C01Urgency = false;
 };
 
 struct FShireChapterProductionDefinition

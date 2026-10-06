@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "CONTEXTUAL_SIDE_ACTIVITY_PLAN_V1",
-  "status": "P1C01_PARTY_FIREWORKS_RUNTIME_SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
+  "status": "P1C01_F1_01_F1_02_F1_03_SHIRE_OPTIONAL_RUNTIME_SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
   "purpose": "Add optional game-like side activities that plausibly happen inside the time, place and character context of the Peter Jackson film story without creating an alternate main story.",
   "canon_rule": "The film spine is mandatory. Side activities are unseen gap-fill moments only: plausible things the player could have done between film anchors.",
   "hard_rules": [
@@ -152,6 +152,108 @@
           "may_change_canon_outcome": false,
           "future_knowledge_allowed": false,
           "urgency_policy": "Immediately expires when BilboDisappearance closes the party-safe window."
+        },
+        {
+          "id": "SIDE_SHIRE_RING_INVESTIGATION",
+          "title": "What the Ring Reveals",
+          "type": "OBSERVATION_CHALLENGE",
+          "available_after": "RingWarning",
+          "ends_before": "LeavingHomeRoad",
+          "required_active_quest": "RingSecret",
+          "allow_during_p1c01_urgency": true,
+          "participants": [
+            "Frodo",
+            "Gandalf"
+          ],
+          "film_context": "Inside Bag End after Gandalf's warning, Frodo can inspect a bounded set of already-established clues without learning anything beyond the current RingSecret knowledge state.",
+          "mechanics": [
+            "inspect three Bag End evidence points",
+            "revisit only facts already established by Gandalf",
+            "completion records a Chronicle/knowledge reflection only"
+          ],
+          "discovery_reward_id": "SHIRE_RING_INVESTIGATION",
+          "canon_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false,
+          "future_knowledge_allowed": false,
+          "urgency_policy": "Allowed only while RingSecret is the active quest; expires before departure."
+        },
+        {
+          "id": "SIDE_SHIRE_BAG_END_PACKING",
+          "title": "Pack for the Road",
+          "type": "CAMP_PREPARATION",
+          "available_after": "RingWarning",
+          "ends_before": "LeavingHomeRoad",
+          "required_active_quest": "RingSecret",
+          "allow_during_p1c01_urgency": true,
+          "participants": [
+            "Frodo",
+            "Sam"
+          ],
+          "film_context": "Frodo prepares ordinary travel items in Bag End before leaving. The activity cannot delay or change the required departure.",
+          "mechanics": [
+            "check three lightweight travel-preparation points",
+            "confirm provisions and clothing",
+            "completion changes only optional progression/Chronicle state"
+          ],
+          "discovery_reward_id": "SHIRE_BAG_END_PACKING",
+          "canon_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false,
+          "future_knowledge_allowed": false,
+          "urgency_policy": "Allowed only during RingSecret preparation and expires when LeavingHomeRoad commits the departure."
+        },
+        {
+          "id": "SIDE_SHIRE_STEALTH_DEPARTURE",
+          "title": "Leave Without a Stir",
+          "type": "STEALTH_LITE",
+          "available_after": "RingWarning",
+          "ends_before": "LeavingHomeRoad",
+          "required_active_quest": "LeavingHome",
+          "allow_during_p1c01_urgency": true,
+          "participants": [
+            "Frodo",
+            "Sam"
+          ],
+          "film_context": "Frodo and Sam leave Hobbiton quietly through hedges and lanes without creating a new pursuer or changing the departure outcome.",
+          "mechanics": [
+            "stay crouched through three departure-route checkpoints",
+            "standing resets only the optional route",
+            "complete before crossing the main LeavingHomeRoad trigger"
+          ],
+          "discovery_reward_id": "SHIRE_STEALTH_DEPARTURE",
+          "canon_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false,
+          "future_knowledge_allowed": false,
+          "urgency_policy": "Allowed only while LeavingHome is active; ends exactly when LeavingHomeRoad is committed."
+        },
+        {
+          "id": "SIDE_SHIRE_ROOT_HIDE",
+          "title": "Hold Still Beneath the Road",
+          "type": "STEALTH_LITE",
+          "available_after": "BlackRiderApproach",
+          "ends_before": "FerryEscape",
+          "required_active_quest": "KeepOffRoad",
+          "allow_during_p1c01_urgency": true,
+          "participants": [
+            "Frodo",
+            "Sam",
+            "Merry",
+            "Pippin"
+          ],
+          "film_context": "At the wooded-road hiding corridor, the group practices the source-backed hide/noise-control loop under Black Rider pressure without changing pursuit chronology.",
+          "mechanics": [
+            "stay crouched through three short cover points around the hollow root",
+            "breaking cover resets only the optional mastery sequence",
+            "the mandatory KeepOffRoad quest remains authoritative"
+          ],
+          "discovery_reward_id": "SHIRE_ROOT_HIDE",
+          "canon_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false,
+          "future_knowledge_allowed": false,
+          "urgency_policy": "Allowed only during KeepOffRoad and expires as FerryEscape begins."
         }
       ]
     },

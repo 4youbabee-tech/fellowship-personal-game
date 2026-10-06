@@ -320,6 +320,29 @@ class SourceContractTests(unittest.TestCase):
             self.assertFalse(row["may_change_canon_outcome"])
             self.assertFalse(row["future_knowledge_allowed"])
 
+        for activity_id, reward_id, required_quest in (
+            ("SIDE_SHIRE_RING_INVESTIGATION", "SHIRE_RING_INVESTIGATION", "RingSecret"),
+            ("SIDE_SHIRE_BAG_END_PACKING", "SHIRE_BAG_END_PACKING", "RingSecret"),
+            ("SIDE_SHIRE_STEALTH_DEPARTURE", "SHIRE_STEALTH_DEPARTURE", "LeavingHome"),
+            ("SIDE_SHIRE_ROOT_HIDE", "SHIRE_ROOT_HIDE", "KeepOffRoad"),
+        ):
+            row = by_id[activity_id]
+            self.assertEqual(row["discovery_reward_id"], reward_id)
+            self.assertEqual(row["required_active_quest"], required_quest)
+            self.assertTrue(row["allow_during_p1c01_urgency"])
+            self.assertFalse(row["may_advance_required_anchor"])
+            self.assertFalse(row["may_change_canon_outcome"])
+            self.assertFalse(row["future_knowledge_allowed"])
+
+        world = (root / "Source" / "ShireJourney" / "Private" / "World" / "ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        for discovery_id in (
+            "SHIRE_RING_INVESTIGATION",
+            "SHIRE_BAG_END_PACKING",
+            "SHIRE_STEALTH_DEPARTURE",
+            "SHIRE_ROOT_HIDE",
+        ):
+            self.assertIn(discovery_id, world)
+
 
     def test_p1c01_character_presentation_is_explicit_and_async(self):
         root = Path(__file__).resolve().parents[1]
@@ -448,6 +471,10 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("JourneyDiscoveryIds.Contains(DiscoveryId)", source)
         for quest_id in ("RingSecret", "LeavingHome", "KeepOffRoad", "FerryEscape"):
             self.assertIn(f'ActiveQuestId == TEXT("{quest_id}")', source)
+        self.assertIn("RequiredActiveQuestId", header)
+        self.assertIn("bAllowDuringP1C01Urgency", header)
+        self.assertIn("Definition.RequiredActiveQuestId != ActiveQuestId", source)
+        self.assertIn("!Definition.bAllowDuringP1C01Urgency", source)
 
 
 

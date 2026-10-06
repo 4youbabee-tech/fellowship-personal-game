@@ -408,23 +408,23 @@
       },
       {
         "id": "F1_02_INVESTIGATION_TUTORIAL",
-        "state": "EXPLICIT_DATA_AUTHORING_GAP",
-        "detail": "RingSecret main-quest coverage exists, but the source-backed optional investigation tutorial is not represented as a dedicated P1C01 side-activity/discovery entry."
+        "state": "SOURCE_IMPLEMENTED_RUNTIME_PROOF_PENDING",
+        "detail": "RingSecret investigation is now represented by SIDE_SHIRE_RING_INVESTIGATION and SHIRE_RING_INVESTIGATION, bound fail-closed to active RingSecret and the RingWarning-to-LeavingHomeRoad window."
       },
       {
         "id": "F1_02_PACKING",
-        "state": "EXPLICIT_DATA_AUTHORING_GAP",
-        "detail": "The source-backed packing optional window is not represented in ContextualSideActivityPlan."
+        "state": "SOURCE_IMPLEMENTED_RUNTIME_PROOF_PENDING",
+        "detail": "Bag End packing is now represented by SIDE_SHIRE_BAG_END_PACKING and SHIRE_BAG_END_PACKING, bound fail-closed to active RingSecret before LeavingHomeRoad."
       },
       {
         "id": "F1_02_STEALTH_DEPARTURE",
-        "state": "MAIN_QUEST_SKELETON_PRESENT_RUNTIME_MECHANIC_PROOF_PENDING",
-        "detail": "LeavingHome exists and the source calls for stealth departure, but exact stealth interaction/return-to-control behavior still needs runtime evidence."
+        "state": "SOURCE_IMPLEMENTED_RUNTIME_MECHANIC_PROOF_PENDING",
+        "detail": "LeavingHome now has a crouch-gated SIDE_SHIRE_STEALTH_DEPARTURE world challenge before the LeavingHomeRoad commit; runtime crouch/collision/return-to-control proof remains pending."
       },
       {
         "id": "F1_03_ENVIRONMENTAL_HIDING",
-        "state": "PARTIAL_STATIC",
-        "detail": "KeepOffRoad and RootHide/wooded-road landmark staging exist. The RootHide landmark is not currently a JourneyDiscoveryRewardPlan reward entry, and runtime stealth reliability remains unproven."
+        "state": "SOURCE_IMPLEMENTED_RUNTIME_STEALTH_PROOF_PENDING",
+        "detail": "KeepOffRoad/RootHide now has a crouch-gated SIDE_SHIRE_ROOT_HIDE mastery challenge around the hollow-root corridor while the mandatory quest remains authoritative."
       },
       {
         "id": "F1_03_FERRY",
@@ -443,10 +443,10 @@
       }
     ],
     "next_offline_authoring_targets": [
-      "Author a bounded F1-02 investigation tutorial entry using existing RingSecret knowledge limits.",
-      "Author a bounded Bag End packing interaction before LeavingHome without changing the locked departure outcome.",
-      "Connect safe pre-pressure road/environment discoveries to the existing JourneyDiscovery system only where pacing allows; do not add optional detours during active Black Rider urgency.",
-      "Keep save/checkpoint/skip/retry requirements explicit for runner return."
+      "Run exact-head UE4 compile/automation for the newly wired F1-02/F1-03 gameplay loops.",
+      "Exercise investigation/packing/stealth-departure/RootHide retry and abandon behavior in PIE.",
+      "Keep save/checkpoint/skip/backtrack requirements explicit through FerryEscape.",
+      "Do not open P1C02/Bree from this packet."
     ],
     "no_silent_omission_rule": "Each source-backed optional/gameplay item is either mapped above or carried as an explicit gap; nothing here opens Bree."
   },

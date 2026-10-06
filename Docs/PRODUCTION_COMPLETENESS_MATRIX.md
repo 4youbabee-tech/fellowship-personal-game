@@ -4524,3 +4524,26 @@ Evidence boundary: CI orchestration source change only; Gate 6/7 remains unchang
 | Rebuild source | exact known-good Closure #40 workflow |
 | Structural step counts before commit | 1 checkout / 1 classifier / 1 health / 1 preflight / 1 Mega Pack / 1 cleanup |
 | Fresh workflow proof | PENDING |
+
+
+## 2026-10-06 - P1C01 One-Shot gameplay closure packet
+
+| Lane | State |
+|---|---|
+| F1-01 party/social/fireworks | SOURCE-IMPLEMENTED / runtime proof pending |
+| F1-02 investigation tutorial | SOURCE-IMPLEMENTED via `SHIRE_RING_INVESTIGATION` |
+| F1-02 packing | SOURCE-IMPLEMENTED via `SHIRE_BAG_END_PACKING` |
+| F1-02 stealth departure | SOURCE-IMPLEMENTED via crouch-gated `SHIRE_STEALTH_DEPARTURE` |
+| F1-03 environmental/road hiding | SOURCE-IMPLEMENTED via crouch-gated `SHIRE_ROOT_HIDE` |
+| F1-03 FerryEscape | existing terminal source path preserved |
+| P1C02/Bree auto-open | FORBIDDEN / LOCKED |
+| Side-activity authority | `UShireQuestSubsystem` preserved |
+| Urgency exceptions | FAIL-CLOSED: exact active quest + explicit allow flag required |
+| New story authority | NONE |
+| New per-frame scan | NONE |
+| New heavy sync load | NONE |
+| Fresh exact-head static/compile | PENDING |
+| PIE retry/abandon/backtrack | PENDING |
+| Gate 6/7 | NOT ACCEPTED |
+
+Evidence boundary: source/runtime authoring only until exact-head validation and engine evidence complete.

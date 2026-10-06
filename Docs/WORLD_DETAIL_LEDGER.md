@@ -1388,3 +1388,14 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Closure #44 did not execute a runner job; its failure was workflow-definition syntax caused by duplicated classifier text.
 - The workflow has been reconstructed from the exact #40 known-good source rather than patched in place.
 - No game/runtime/world data changed in this repair. P1C01 remains active and P1C02 remains locked.
+
+
+## 2026-10-06 - P1C01 Bag End departure + wooded-road gameplay integration
+
+- Bag End now carries source-backed playable investigation and packing loops during the RingSecret window, using the existing traversal-challenge actor and Journey Discovery pipeline rather than adding a parallel quest system.
+- The Hobbiton departure corridor now carries a crouch-gated stealth-departure loop that expires when `LeavingHomeRoad` commits.
+- The wooded-road hollow-root corridor now carries a crouch-gated RootHide mastery loop while `KeepOffRoad` remains the mandatory quest authority.
+- These actors are bounded, non-ticking traversal challenges; no heavy asset residency or actor-density wave is introduced.
+- Optional completion never advances a mandatory quest anchor. Main story triggers remain the only authority for RingSecret/LeavingHome/KeepOffRoad/FerryEscape progression.
+- P1C01 remains geographically bounded to the Shire through Bucklebury Ferry. No Bree geometry, population or story runtime is authorized.
+- Evidence boundary: **SOURCE-IMPLEMENTED**. Collision readability, crouch behavior, retry/abandon, return-to-control and pacing require fresh UE4/PIE evidence.

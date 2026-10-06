@@ -4911,3 +4911,16 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - The closure workflow has now been rebuilt again from the exact known-good #40 source, with only three controlled changes: exact PR-head identity, explicit delta-base fetch, and conditional skip of runner-health/preflight/Mega Pack when no closure payload changed.
 - Structural verification before commit: exactly one checkout, classifier, runner-health, preflight, Mega Pack and cleanup step.
 - This corrects the prior documentation wording that treated the anti-churn definition as already repaired. Fresh workflow execution is still required.
+
+
+## 2026-10-06 - P1C01 One-Shot gameplay execution begins: F1-02/F1-03 source gaps wired
+
+- P1C01 is now in direct chapter execution, not another planning/cleanup wave.
+- Source review confirms F1-02 requires investigation tutorial, packing and stealth departure; F1-03 Shire ownership requires road hiding/environmental hiding and FerryEscape while Bree remains P1C02.
+- A real runtime-authoring defect was found: P1C01 urgency suppression disabled every side activity during `RingSecret`, `LeavingHome`, `KeepOffRoad` and `FerryEscape`, making the required F1-02/F1-03 optional gameplay impossible to express through the existing side-activity system.
+- Root fix keeps fail-closed main-quest priority but adds two explicit data fields: `required_active_quest` and `allow_during_p1c01_urgency`. Urgency exceptions are accepted only when both are present; ordinary optional content remains suppressed.
+- New P1C01 runtime-authored loops: `SIDE_SHIRE_RING_INVESTIGATION`, `SIDE_SHIRE_BAG_END_PACKING`, `SIDE_SHIRE_STEALTH_DEPARTURE`, and `SIDE_SHIRE_ROOT_HIDE`.
+- `AShirePrototypeWorldBuilder` now places bounded three-gate challenges for all four loops. Investigation/packing do not advance the story; stealth departure and RootHide require crouch. Their availability is still owned by `UShireQuestSubsystem`.
+- Four matching Journey Discovery rewards were added; all are first-time/idempotent, story_effect=NONE, cannot advance required anchors, and cannot change canon.
+- F1-03 still terminates P1C01 at `FerryEscapeComplete / WC_P1C01_FERRY_END`; no Bree runtime was opened.
+- Evidence state: **SOURCE-IMPLEMENTED / STATIC CONTRACTS ADDED / fresh exact-head compile+runtime proof pending**. No PIE/device/visual/performance/Gate 6/7 acceptance is claimed.

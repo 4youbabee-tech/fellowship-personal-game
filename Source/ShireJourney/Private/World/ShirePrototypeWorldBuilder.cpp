@@ -2089,6 +2089,73 @@ void AShirePrototypeWorldBuilder::SpawnSideStories()
             0.0f);
     }
 
+    // P1C01 One-Shot F1-02/F1-03 source-backed optional loops.
+    // These challenges never advance required quest anchors; availability remains
+    // fail-closed inside UShireQuestSubsystem to the exact active quest/story window.
+    AShireTraversalChallenge* RingInvestigation = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(-2240, -650, 72), FRotator::ZeroRotator);
+    if (RingInvestigation)
+    {
+        RingInvestigation->ConfigureActivityChallenge(
+            TEXT("SHIRE_RING_INVESTIGATION"),
+            FText::FromString(TEXT("What the Ring Reveals")),
+            TEXT("OBSERVATION_CHALLENGE"),
+            FVector(0, 0, 0),
+            FVector(85, 35, 0),
+            FVector(165, -20, 0),
+            false,
+            0.0f,
+            TEXT("Side_RingInvestigationComplete"));
+    }
+
+    AShireTraversalChallenge* BagEndPacking = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(-2070, -500, 72), FRotator::ZeroRotator);
+    if (BagEndPacking)
+    {
+        BagEndPacking->ConfigureActivityChallenge(
+            TEXT("SHIRE_BAG_END_PACKING"),
+            FText::FromString(TEXT("Pack for the Road")),
+            TEXT("CAMP_PREPARATION"),
+            FVector(0, 0, 0),
+            FVector(95, -35, 0),
+            FVector(180, 30, 0),
+            false,
+            0.0f,
+            TEXT("Side_BagEndPackingComplete"));
+    }
+
+    AShireTraversalChallenge* StealthDeparture = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(1110, -280, 75), FRotator::ZeroRotator);
+    if (StealthDeparture)
+    {
+        StealthDeparture->ConfigureActivityChallenge(
+            TEXT("SHIRE_STEALTH_DEPARTURE"),
+            FText::FromString(TEXT("Leave Without a Stir")),
+            TEXT("STEALTH_LITE"),
+            FVector(0, 0, 0),
+            FVector(170, 90, 0),
+            FVector(340, 185, 0),
+            true,
+            0.0f,
+            TEXT("Side_StealthDepartureComplete"));
+    }
+
+    AShireTraversalChallenge* RootHideMastery = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(14170, 1040, 70), FRotator::ZeroRotator);
+    if (RootHideMastery)
+    {
+        RootHideMastery->ConfigureActivityChallenge(
+            TEXT("SHIRE_ROOT_HIDE"),
+            FText::FromString(TEXT("Hold Still Beneath the Road")),
+            TEXT("STEALTH_LITE"),
+            FVector(0, 0, 0),
+            FVector(155, 55, 0),
+            FVector(315, 115, 0),
+            true,
+            0.0f,
+            TEXT("Side_RootHideMasteryComplete"));
+    }
+
     AShireNPC* Maggot=GetWorld()->SpawnActor<AShireNPC>(FVector(6200,-1500,65),FRotator(0,155,0));
     if(Maggot)
     {

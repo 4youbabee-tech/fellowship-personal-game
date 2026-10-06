@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "manifest_id": "P1C01_MISSION_RUNTIME_ACCEPTANCE_MATRIX_V1",
-  "status": "OFFLINE_AUTHORING_COMPLETE_RUNTIME_EVIDENCE_PENDING",
+  "status": "SOURCE_IMPLEMENTED_F1_01_F1_02_F1_03_SHIRE_GAMEPLAY_RUNTIME_EVIDENCE_PENDING",
   "authority": [
     "01_STORY_AND_TIMELINE_BIBLE",
     "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE",
@@ -46,7 +46,12 @@
         "investigation tutorial",
         "packing",
         "stealth departure"
-      ]
+      ],
+      "source_implementation": {
+        "investigation_tutorial": "SHIRE_RING_INVESTIGATION / world traversal challenge / RingSecret-only",
+        "packing": "SHIRE_BAG_END_PACKING / world traversal challenge / RingSecret-only",
+        "stealth_departure": "SHIRE_STEALTH_DEPARTURE / crouch-gated world traversal challenge / LeavingHome-only"
+      }
     },
     {
       "id": "F1-03",
@@ -63,7 +68,12 @@
         "ferry escape",
         "environmental hiding"
       ],
-      "topology_rule": "P1C01 owns Shire roads/Bucklebury through FerryEscape. P1C02 owns Bree arrival/opening; do not claim full F1-03 completion at the Ferry endpoint alone."
+      "topology_rule": "P1C01 owns Shire roads/Bucklebury through FerryEscape. P1C02 owns Bree arrival/opening; do not claim full F1-03 completion at the Ferry endpoint alone.",
+      "source_implementation": {
+        "road_hiding": "SHIRE_ROOT_HIDE / crouch-gated challenge around RootHide / KeepOffRoad-only",
+        "ferry_escape": "FerryEscape stages 0-2 ending at FerryEscapeComplete inside P1C01",
+        "bree_runtime": "LOCKED / not instantiated by P1C01"
+      }
     }
   ],
   "qa_matrix": [
@@ -85,5 +95,5 @@
     "auto_start_p1c02": false,
     "p1c02_start_rule": "Only after P1C01 Gate 6/7 has chapter-specific evidence and the owner explicitly starts P1C02."
   },
-  "boundary_repair_state": "SOURCE_IMPLEMENTED_COMPILE_RUNTIME_PROOF_PENDING"
+  "boundary_repair_state": "SOURCE_IMPLEMENTED_CHAPTER_GAMEPLAY_GAPS_CLOSED_COMPILE_RUNTIME_PROOF_PENDING"
 }

@@ -1352,18 +1352,22 @@ bool UShireQuestSubsystem::LoadSideActivityPlan()
                 FString ActivityType;
                 FString AvailableAfter;
                 FString EndsBefore;
+                FString RequiredActiveQuestId;
                 Activity->TryGetStringField(TEXT("discovery_reward_id"), DiscoveryId);
                 Activity->TryGetStringField(TEXT("id"), ActivityId);
                 Activity->TryGetStringField(TEXT("type"), ActivityType);
                 Activity->TryGetStringField(TEXT("available_after"), AvailableAfter);
                 Activity->TryGetStringField(TEXT("ends_before"), EndsBefore);
+                Activity->TryGetStringField(TEXT("required_active_quest"), RequiredActiveQuestId);
 
                 bool bMayAdvanceRequiredAnchor = false;
                 bool bMayChangeCanonOutcome = false;
                 bool bFutureKnowledgeAllowed = false;
+                bool bAllowDuringP1C01Urgency = false;
                 Activity->TryGetBoolField(TEXT("may_advance_required_anchor"), bMayAdvanceRequiredAnchor);
                 Activity->TryGetBoolField(TEXT("may_change_canon_outcome"), bMayChangeCanonOutcome);
                 Activity->TryGetBoolField(TEXT("future_knowledge_allowed"), bFutureKnowledgeAllowed);
+                Activity->TryGetBoolField(TEXT("allow_during_p1c01_urgency"), bAllowDuringP1C01Urgency);
 
                 if (DiscoveryId.IsEmpty() || ActivityId.IsEmpty() || ActivityType.IsEmpty() ||
                     AvailableAfter.IsEmpty() || EndsBefore.IsEmpty())
@@ -1376,6 +1380,13 @@ bool UShireQuestSubsystem::LoadSideActivityPlan()
                 if (bMayAdvanceRequiredAnchor || bMayChangeCanonOutcome || bFutureKnowledgeAllowed)
                 {
                     UE_LOG(LogTemp, Error, TEXT("SideActivityRuntime: rejected canon-unsafe activity id=%s"), *ActivityId);
+                    continue;
+                }
+
+                if (bAllowDuringP1C01Urgency && RequiredActiveQuestId.IsEmpty())
+                {
+                    UE_LOG(LogTemp, Error,
+                        TEXT("SideActivityRuntime: urgency activity missing required quest id=%s"), *ActivityId);
                     continue;
                 }
 
@@ -1408,6 +1419,10 @@ bool UShireQuestSubsystem::LoadSideActivityPlan()
                 Definition.ChapterId = ChapterName;
                 Definition.AvailableAfterStoryBeat = FName(*AvailableAfter);
                 Definition.EndsBeforeStoryBeat = FName(*EndsBefore);
+                Definition.RequiredActiveQuestId = RequiredActiveQuestId.IsEmpty()
+                    ? NAME_None
+                    : FName(*RequiredActiveQuestId);
+                Definition.bAllowDuringP1C01Urgency = bAllowDuringP1C01Urgency;
                 SideActivityProgressionDefinitions.Add(Definition.DiscoveryId, Definition);
                 SideActivityDefinitionsById.Add(Definition.ActivityId, Definition);
             }
@@ -1453,7 +1468,10 @@ bool UShireQuestSubsystem::IsSideActivityDefinitionAvailable(
     const FShireSideActivityProgressionDefinition& Definition) const
 {
     if (Definition.RouteId != CurrentRouteId || Definition.ChapterId != CurrentChapterId) return false;
-    if (IsMainQuestUrgencySuppressingSideActivities()) return false;
+    if (Definition.RequiredActiveQuestId != NAME_None &&
+        Definition.RequiredActiveQuestId != ActiveQuestId) return false;
+    if (IsMainQuestUrgencySuppressingSideActivities() &&
+        !Definition.bAllowDuringP1C01Urgency) return false;
     if (Definition.AvailableAfterStoryBeat != NAME_None &&
         !HasStoryBeatTriggered(Definition.AvailableAfterStoryBeat)) return false;
     if (Definition.EndsBeforeStoryBeat != NAME_None &&
