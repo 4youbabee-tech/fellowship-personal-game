@@ -4841,3 +4841,10 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - The hosted whole-game sweep now also fails if DEC-104 one-shot execution drifts back to the older execution identity, if the owner-facing P1C01 lane and technical W01 lane are conflated, or if current REQ-PERF-001 texture truth regresses to the obsolete 24-BMP inventory statement.
 - Historical external-review records are intentionally preserved as historical snapshots; only current authoritative implementation truth is required to say 0 tracked BMP.
 - This turns the two concrete governance drifts found during the final audit into regression guards rather than one-time manual fixes.
+
+## 2026-10-06 - Frodo source-contract stale SHA root correction
+
+- Exact-head Pre-Unreal progressed through core/governor/deep audits and exposed one stale source-contract assertion: `test_p1c01_targeted_quaternius_animation_intake_is_one_pack_only` still hard-coded the superseded Frodo normalized SHA `eff0e799...`.
+- The authoritative technical winner remains the tracked KayKit Rogue normalized FBX with SHA `75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be`.
+- Root fix removes the isolated historical assertion: the test now cross-checks `P1C01CharacterRigAnimationPrepV1.json` against `SourceAssets/ValidatedRuntime/FRODO/provenance.json`, then pins the current winner SHA. Future winner changes must update provenance and preparation truth together rather than leaving a hidden test constant.
+- Status: **SOURCE-IMPLEMENTED / exact-head hosted proof pending**.
