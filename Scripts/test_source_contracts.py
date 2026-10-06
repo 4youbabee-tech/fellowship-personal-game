@@ -924,9 +924,15 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("Run", pack["intended_use"])
 
         prep = json.loads((root / "Data" / "P1C01CharacterRigAnimationPrepV1.json").read_text(encoding="utf-8"))
+        provenance = json.loads(
+            (root / "SourceAssets" / "ValidatedRuntime" / "FRODO" / "provenance.json")
+            .read_text(encoding="utf-8-sig"))
         self.assertEqual(
             prep["technical_winner"]["normalized_sha256"],
-            "eff0e79980f90d49deada0aa37ad8be5975a86330348e4ae6fa49d3171fad570")
+            provenance["target_sha256"])
+        self.assertEqual(
+            provenance["target_sha256"],
+            "75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be")
         self.assertEqual(prep["active_animation_intake"]["stage_scope"], "ONE_PACK_ONLY")
         self.assertEqual(prep["active_animation_intake"]["required_initial_clips"], ["Idle", "Walk", "Run"])
 
