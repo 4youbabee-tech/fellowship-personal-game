@@ -1381,3 +1381,10 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Closure delta classification now uses the actual PR head rather than the temporary merge commit and explicitly fetches its comparison base before running `git diff`.
 - No Shire world density, story flow, population authority, asset-loading rule, audio rule or Gate 6/7 criterion changed.
 - This packet exists only to keep the already-authorized P1C01 One-Shot build moving while preserving fail-closed validation.
+
+
+## 2026-10-06 - Closure definition clean rebuild
+
+- Closure #44 did not execute a runner job; its failure was workflow-definition syntax caused by duplicated classifier text.
+- The workflow has been reconstructed from the exact #40 known-good source rather than patched in place.
+- No game/runtime/world data changed in this repair. P1C01 remains active and P1C02 remains locked.

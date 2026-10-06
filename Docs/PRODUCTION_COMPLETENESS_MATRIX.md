@@ -4512,3 +4512,15 @@ Evidence boundary: CI orchestration source change only; Gate 6/7 remains unchang
 | UE gate weakening | NONE |
 | Fresh exact-head UE4 execution | PENDING WORKFLOW PROOF |
 | P1C02/Bree | LOCKED |
+
+
+## 2026-10-06 - Closure #44 parse-failure correction
+
+| Control | State |
+|---|---|
+| Closure #44 | WORKFLOW-DEFINITION FAILURE / 0 JOBS |
+| Game/UE failure | NO |
+| Cause | duplicated/misplaced classifier text in generated YAML |
+| Rebuild source | exact known-good Closure #40 workflow |
+| Structural step counts before commit | 1 checkout / 1 classifier / 1 health / 1 preflight / 1 Mega Pack / 1 cleanup |
+| Fresh workflow proof | PENDING |

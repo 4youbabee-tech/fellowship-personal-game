@@ -4903,3 +4903,11 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - This is not a gate bypass. The same classifier still decides full/core/asset/acceptance/inherit. It only moves classification onto the available runner when GitHub-hosted infrastructure supplies no executable job.
 - Current goal remains immediate P1C01 engine execution. P1C02/Bree remains locked.
 - Evidence boundary: **SOURCE-IMPLEMENTED CI ORCHESTRATION FIX / fresh exact-head workflow proof pending**.
+
+
+## 2026-10-06 - Closure workflow rebuilt again from #40 after #44 parse failure
+
+- Closure #44 failed at workflow-definition time before any job. Inspection showed the previous text patch had duplicated/misplaced the classifier block even though the intended logic was correct.
+- The closure workflow has now been rebuilt again from the exact known-good #40 source, with only three controlled changes: exact PR-head identity, explicit delta-base fetch, and conditional skip of runner-health/preflight/Mega Pack when no closure payload changed.
+- Structural verification before commit: exactly one checkout, classifier, runner-health, preflight, Mega Pack and cleanup step.
+- This corrects the prior documentation wording that treated the anti-churn definition as already repaired. Fresh workflow execution is still required.
