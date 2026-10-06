@@ -4086,13 +4086,21 @@ for path in sorted(SOURCE.rglob("*.cpp")):
         if source_quest in definitions and target_quest in definitions and source_quest != target_quest:
             transition_graph[source_quest].add(target_quest)
 
-# Critical runtime handoff guard must explicitly bridge the Shire terminal quest to Bree.
+# P1C01 terminal gate: FerryEscape stage 2 is a valid committed chapter end.
+# Bree/P1C02 is owner-explicit and must not be auto-opened by restore or world triggers.
 story_flow_cpp = read(resolve_source("ShireStoryFlowSubsystem.cpp"))
-if 'QuestId == TEXT("FerryEscape")' not in story_flow_cpp:
-    fail("Story-flow guard does not monitor FerryEscape terminal state")
-if 'StartChapter(TEXT("P1C02"), TEXT("RoadToBree"), 0)' not in story_flow_cpp:
-    fail("Story-flow guard does not hand off Shire terminal state to P1C02 / RoadToBree")
-transition_graph["FerryEscape"].add("RoadToBree")
+shire_builder_cpp = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))
+for forbidden_bridge in [
+    'StartChapter(TEXT("P1C02"), TEXT("RoadToBree"), 0)',
+    'FerryFarSide->NextChapterId=TEXT("P1C02")',
+    'FerryFarSide->NextChapterQuestId=TEXT("RoadToBree")',
+]:
+    if forbidden_bridge in (story_flow_cpp + shire_builder_cpp):
+        fail("P1C01 terminal gate illegally auto-opens P1C02 / RoadToBree")
+if 'FerryFarSide->StoryBeatId=TEXT("FerryEscapeComplete");' not in shire_builder_cpp:
+    fail("P1C01 Ferry far-side terminal beat is missing")
+# Do not add a FerryEscape -> RoadToBree graph edge. Later chapter starts are
+# independently auditable entry points, but runtime promotion remains predecessor/owner gated.
 
 reachable: set[str] = set()
 # Every chapter start is an authoritative runtime entry point through the world router/debug
