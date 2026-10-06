@@ -4835,3 +4835,9 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Root correction preserves both layers rather than reverting the Governor: the owner-facing lane is `P1C01_ONE_SHOT_SHIRE_CHAPTER_FINISH`; the technical production focus/development mode remains `W01_P1C01_PRODUCTION_VERTICAL_SLICE`.
 - The validator now accepts only the legacy gate-first mode or the explicit one-shot mode; in one-shot mode it requires active `P1C01-ONE-SHOT-FINISH` plus `P1C01_ONLY` runtime authority during offline saturation.
 - Evidence remains **SOURCE-IMPLEMENTED / HOSTED VALIDATION PENDING** until the new exact-head hosted run completes.
+
+## 2026-10-06 - Final sweep governance regressions are now guarded
+
+- The hosted whole-game sweep now also fails if DEC-104 one-shot execution drifts back to the older execution identity, if the owner-facing P1C01 lane and technical W01 lane are conflated, or if current REQ-PERF-001 texture truth regresses to the obsolete 24-BMP inventory statement.
+- Historical external-review records are intentionally preserved as historical snapshots; only current authoritative implementation truth is required to say 0 tracked BMP.
+- This turns the two concrete governance drifts found during the final audit into regression guards rather than one-time manual fixes.
