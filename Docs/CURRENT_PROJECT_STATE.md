@@ -4806,3 +4806,12 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Important evidence boundary: static reasoning does **not** prove collision-free traversal, visual-artifact absence, hitch-free play, audio quality or target FPS. Those remain chapter-specific runner/PIE/device/human evidence.
 - Branch hygiene is prepared through the existing fail-closed hosted cleanup path. The active PR branch plus develop/main, archive recovery and the two unique Edoras preparation refs are explicitly protected.
 - Status: **SOURCE-IMPLEMENTED / HOSTED STATIC VALIDATION PENDING**. P1C02 runtime remains LOCKED.
+
+## 2026-10-06 - Pre-runner terminal-gate reconciliation
+
+- Latest hosted Pre-Unreal exposed three real consistency failures around the P1C01 ferry terminal: the far-bank story beat `FerryEscapeComplete` had no presentation cue, the validator still expected an automatic P1C01 -> P1C02 bridge, and the persistence edge audit still expected a terminal P1C01 save to canonicalize into Bree.
+- The owner-facing chapter policy is the opposite: P1C01 must end cleanly at FerryEscape stage 2 and P1C02 remains owner/predecessor gated until P1C01 Gate 6/7 acceptance.
+- Source fix: `FerryEscapeComplete` now has a bounded presentation cue and a StoryBeatPlan row that reuses the existing ferry camera/audio family without opening Bree.
+- Validation fix: Pre-Unreal now forbids automatic FerryEscape -> P1C02/RoadToBree bridging and requires the far-bank terminal beat instead.
+- Persistence audit fix: restoring a terminal P1C01 FerryEscape stage-2 save must preserve P1C01, publish exactly once, cause zero extra world commits, and leave the committed Shire world intact.
+- Status remains **SOURCE-IMPLEMENTED / HOSTED VALIDATION PENDING**. No compile/PIE/device/visual/performance claim is made.
