@@ -4358,3 +4358,29 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Pre-Unreal latest-head proof | PENDING |
 | UE4.27 compile/runtime proof | PENDING RUNNER |
 | Gate 6/7 | NOT ACCEPTED |
+
+## 2026-10-06 - Final pre-runner sweep matrix
+
+| Control | Current state |
+|---|---|
+| Tracked files | 946 |
+| BMP tracked | 0 |
+| Generated runtime directories tracked | 0 |
+| Headers outside Public | 0 |
+| CPP outside Private | 0 |
+| ValidatedRuntime FBX / OBJ | 4 / 0 |
+| Production WAV masters | 0 |
+| Runtime StaticLoadObject | 0 |
+| Runtime LoadObject outside Engine/BasicShapes fallback | 0 found |
+| Chapter streaming async RequestAsyncLoad | PRESENT |
+| NPCContext actor scans / spawning authority | 0 / 0 |
+| LivingWorld pooled NPC/interactions/motion | PRESENT |
+| LivingWorld bounded maintenance | 0.75s |
+| P1C01 auto-opens P1C02 | FORBIDDEN |
+| Ferry terminal restore | P1C01 / FerryEscape stage 2 |
+| Closure train cancellation | DISABLED |
+| Reviewed dead P1C01 refs remaining | 0 |
+| Hosted final sweep | PENDING |
+| UE4 compile/import/package | PENDING RUNNER |
+| PIE/device/visual/performance | NOT ACCEPTED |
+| Gate 6/7 | NOT ACCEPTED |
