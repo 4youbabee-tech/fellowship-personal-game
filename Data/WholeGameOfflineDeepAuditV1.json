@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "audit_id": "WHOLE_GAME_OFFLINE_DEEP_AUDIT_V1",
+  "status": "STATIC_REVIEW_PACKET_SOURCE_IMPLEMENTED_HOSTED_VALIDATION_PENDING",
+  "parent_head": "eebb313b6a782234302ad20d6620dcdfd0e5ddd6",
+  "scope": "Full campaign source/data/architecture/preproduction from F1-01 through F3-07 while UE4 runner is unavailable. Runtime chapter expansion is forbidden.",
+  "source_governance": {
+    "authority_order": [
+      "Current project rules / approved implementation decisions",
+      "Film trilogy + supplied screenplays",
+      "Tolkien The Lord of the Rings + Appendices",
+      "Sources 01-10 production interpretation",
+      "External/fan/generated references only"
+    ],
+    "rotk_supersession": "Source 11 states that the Return of the King screenplay is now present and supersedes older Sources 01-07 notes that ROTK lacked a screenplay. Future ROTK verification must use supplied ROTK screenplay + film before old MASTER-SUMMARY shorthand.",
+    "canonical_chapter_count": 23,
+    "canonical_sequence": [
+      "F1-01",
+      "F1-02",
+      "F1-03",
+      "F1-04",
+      "F1-05",
+      "F1-06",
+      "F1-07",
+      "F1-08",
+      "F2-01",
+      "F2-02",
+      "F2-03",
+      "F2-04",
+      "F2-05",
+      "F2-06",
+      "F2-07",
+      "F2-08",
+      "F3-01",
+      "F3-02",
+      "F3-03",
+      "F3-04",
+      "F3-05",
+      "F3-06",
+      "F3-07"
+    ]
+  },
+  "path_and_story_findings": [
+    {
+      "id": "WG-AUD-001",
+      "severity": "HIGH",
+      "state": "ROOT_FIXED_IN_THIS_PACKET",
+      "finding": "WholeGameChapterAssetDemandMatrixV1 contained future/other-chapter asset pollution (Bree+Ent demand in F1-03, Ent in unrelated chapters, Mordor/Black Gate/lava in Amon Hen and Pelennor, active siege demand in Return/Farewell).",
+      "risk": "Wrong warehouse acquisition, inflated future streaming banks, and accidental chapter visual/state contamination.",
+      "repair": "Reconcile all 23 rows to WholeGameChapterProductionPacketsV1 source location/focus/outcome; remove the concrete cross-chapter families; add a hosted regression guard."
+    },
+    {
+      "id": "WG-AUD-002",
+      "severity": "MEDIUM",
+      "state": "ROOT_FIXED_IN_THIS_PACKET",
+      "finding": "GlobalWarehouseSourceRegistryV2 declared source_count=102 while its sources array contained 142 unique entries.",
+      "risk": "Manager/automation can undercount source coverage and make incorrect saturation decisions.",
+      "repair": "Set declared count from actual array and guard exact equality."
+    },
+    {
+      "id": "WG-AUD-003",
+      "severity": "CRITICAL",
+      "state": "PRESERVED",
+      "finding": "Post-Amon-Hen route graph already uses independent Rohan/Ring-bearer/Gondor/Rohan-late lanes with synchronization barriers.",
+      "risk": "A future lane that advances a shared world state early would corrupt chronology and save continuity.",
+      "repair": "No redesign. Keep Data/WholeGameRoutePromotionGraphV1.json as the preparation graph and require barrier/state checks before any future runtime promotion."
+    }
+  ],
+  "architecture_static_review": {
+    "quest_story": {
+      "owner": "UShireQuestSubsystem",
+      "result": "OWNER_BOUNDARY_PRESERVED",
+      "note": "No second quest/story authority is authorized by this audit."
+    },
+    "world_commit": {
+      "owner": "AChapterWorldRouter",
+      "result": "STATIC_RISK_AUDITED",
+      "note": "GetAllActorsOfClass cleanup scans occur in chapter transition cleanup, not normal per-frame traversal. This is not accepted as hitch-free until measured on target hardware."
+    },
+    "streaming": {
+      "owner": "UShireChapterAssetStreamingSubsystem",
+      "result": "STATIC_ARCHITECTURE_PASS_RUNTIME_MEASUREMENT_PENDING",
+      "evidence": "Reviewed implementation has zero LoadObject/StaticLoadObject calls and uses FStreamableManager RequestAsyncLoad paths.",
+      "risk": "Cold/warm residency, first-use render/PSO, VRAM pressure and cancellation timing still require runner/device evidence."
+    },
+    "living_world": {
+      "owner": "ALivingWorldDirector",
+      "result": "STATIC_ARCHITECTURE_PASS_RUNTIME_MEASUREMENT_PENDING",
+      "evidence": "Population/event work is commit-gated; maintenance is bounded at 0.75s; ambient NPC/interactions/motion have pools. Persistent ambient TActorIterator reconciliation occurs on committed chapter reset, not per frame.",
+      "risk": "Transition reset and activation bursts still require frame-time tail measurement."
+    },
+    "npc_context": {
+      "owner": "UShireNPCContextSubsystem",
+      "result": "STATIC_ARCHITECTURE_PASS",
+      "evidence": "Social/dialogue/mood data loads once; committed chapter/route/episode/quest context is stored without world actor scans; dialogue is suppressed while logical world identity is uncommitted.",
+      "interaction_with_living_world": "Director queries bounded context state; NPCContext never owns population spawning. No per-frame full-world context rebuild was found in the reviewed path."
+    },
+    "persistence": {
+      "owner": "AShirePlayerCharacter + UShireQuestSubsystem + AChapterWorldRouter",
+      "result": "STATIC_RISK_AUDITED",
+      "evidence": "Automatic checkpoints use AsyncSaveGameToSlot and preserve captured snapshot/world revision.",
+      "risk": "User QuickSave/QuickLoad still uses synchronous SaveGameToSlot/LoadGameFromSlot. Treat as a target-device hitch risk, not a confirmed defect, until measured; do not rewrite without evidence."
+    },
+    "player_visual_fallback": {
+      "result": "STATIC_NOTE",
+      "note": "Prototype style can synchronously LoadObject only the engine BasicShapeMaterial fallback. This is not a heavy production asset load; heavy production character assets remain separate async paths."
+    }
+  },
+  "physical_visual_performance_boundary": [
+    "Static reasoning cannot prove collision-free traversal, visual artifact absence, audio quality, no hitching, no shader/streaming stutter, or 30 FPS.",
+    "Those remain runner/PIE/target-device/human evidence items and must be executed chapter-by-chapter under the One-Shot model.",
+    "The purpose of this audit is to eliminate source/data/architecture mistakes before expensive chapter execution."
+  ],
+  "warehouse_findings": {
+    "repository_snapshot": {
+      "sourceasset_files": 423,
+      "production_files": 416,
+      "validated_runtime_files": 5,
+      "fbx": 4,
+      "obj": 352,
+      "png": 8,
+      "tga": 24,
+      "production_audio_wav_masters": 0
+    },
+    "meaning": "The repository has broad static-source stock but a very small final animated FBX footprint. Warehouse growth should prioritize reusable rig/animation/creature/audio/world hero gaps rather than more blind static duplication.",
+    "batch": "Data/WholeGameWarehouseSaturationBatchV3.json"
+  },
+  "branch_hygiene": {
+    "stale_reviewed_delete_refs": [
+      "production/p1c01-frodo-human-breakthrough-2026-10-03",
+      "production/p1c01-shire-exterior-closeout-2026-10-04",
+      "production/p1c01-shire-settlement-final-polish-2026-10-04"
+    ],
+    "preserve": [
+      "develop",
+      "main",
+      "production/p1c01-definitive-chapter-closeout-2026-10-04",
+      "archive/pre-build-salvage-20260930",
+      "prep/f2-03-edoras-mega-source-v1",
+      "prep/f2-03-edoras-mega-source-v2"
+    ],
+    "rule": "Only the existing fail-closed hosted branch cleanup script may delete reviewed refs; unique Edoras source-prep branches remain preserved until selective reconciliation."
+  },
+  "runner_return_handoff": "When UE4-27-Windows returns, stop this exceptional whole-game offline lane as the primary activity and execute Data/P1C01RunnerHandoffV1.json without replanning. P1C01 remains the sole runtime-changing chapter.",
+  "evidence_boundary": "STATIC/SOURCE AUDIT ONLY. No PIE/device/visual/audio/performance/Gate 6/7 acceptance."
+}

@@ -1,0 +1,336 @@
+{
+  "schema_version": 1,
+  "batch_id": "WHOLE_GAME_WAREHOUSE_SATURATION_BATCH_V3",
+  "status": "CANDIDATES_INDEXED_NOT_STAGED",
+  "parent_head": "eebb313b6a782234302ad20d6620dcdfd0e5ddd6",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25",
+    "Data/WholeGameResourceGapAuditV2.json",
+    "Data/GlobalWarehouseSourceRegistryV2.json",
+    "Data/TrilogyProductionAssetWarehouse.json"
+  ],
+  "rules": [
+    "Whole-game source/warehouse preparation is allowed while the UE4 runner is unavailable; runtime chapter promotion is not.",
+    "Animated final production assets are FBX only. OBJ/Blend may be source/intermediate for static or conversion workflows, never final animated promotion.",
+    "Production texture sources are PNG/TGA; BMP is rejected.",
+    "Every acquired file needs provider, source page, license/terms marker, acquisition date, original filename, SHA256, intended slot and QC disposition.",
+    "No LOTR fan/IP replica enters Production without independently clear rights.",
+    "Do not mirror entire providers. Keep the best-fit 1-3 candidates per warehouse slot."
+  ],
+  "candidates": [
+    {
+      "id": "QUATERNIUS_UNIVERSAL_BASE_CHARACTERS_2025",
+      "provider": "QUATERNIUS",
+      "source_url": "https://quaternius.com/packs/universalbasecharacters.html",
+      "license": "CC0",
+      "access_mode": "MANUAL_ITEM_DOWNLOAD_UNLESS_PROVIDER_SUPPORTED_DIRECT_URL",
+      "advertised": "6 base characters, humanoid rig, animation-friendly topology, ~13k triangles average, FBX/glTF",
+      "intended_slots": [
+        "generic original named-character construction",
+        "ambient humanoid families",
+        "retarget validation"
+      ],
+      "target_regions": [
+        "ALL_HUMANOID_REGIONS"
+      ],
+      "state": "CANDIDATE_NOT_STAGED",
+      "caution": "Generic base only. Project-specific identity/costume/art is required; never present stock as a named film likeness."
+    },
+    {
+      "id": "QUATERNIUS_UNIVERSAL_ANIMATION_LIBRARY_2025",
+      "provider": "QUATERNIUS",
+      "source_url": "https://quaternius.com/packs/universalanimationlibrary.html",
+      "license": "CC0",
+      "access_mode": "MANUAL_ITEM_DOWNLOAD_UNLESS_PROVIDER_SUPPORTED_DIRECT_URL",
+      "advertised": "120+ humanoid animations; FBX/GLB/Blend; locomotion, crawl, swim, sit, death and more",
+      "intended_slots": [
+        "common humanoid locomotion",
+        "hobbit retarget candidates",
+        "ranger/elf/dwarf/wizard base motion before project cleanup"
+      ],
+      "target_regions": [
+        "ALL"
+      ],
+      "state": "CANDIDATE_NOT_STAGED",
+      "caution": "Each rig family still needs retarget/root-motion/deformation/UE4.27 QC."
+    },
+    {
+      "id": "QUATERNIUS_MODULAR_CHARACTER_OUTFITS_FANTASY_2025",
+      "provider": "QUATERNIUS",
+      "source_url": "https://quaternius.com/packs/modularcharacteroutfitsfantasy.html",
+      "license": "CC0",
+      "access_mode": "MANUAL_ITEM_DOWNLOAD_UNLESS_PROVIDER_SUPPORTED_DIRECT_URL",
+      "advertised": "12 outfits / 62 modular parts, humanoid rig, FBX/glTF",
+      "intended_slots": [
+        "generic costume construction",
+        "background culture silhouettes",
+        "original named-character base dressing"
+      ],
+      "target_regions": [
+        "SHIRE",
+        "BREE",
+        "ROHAN",
+        "GONDOR",
+        "RIVENDELL_SUPPORT"
+      ],
+      "state": "CANDIDATE_NOT_STAGED",
+      "caution": "Culture-specific silhouettes still require project-authored adaptation."
+    },
+    {
+      "id": "QUATERNIUS_ULTIMATE_ANIMATED_ANIMALS_2021",
+      "provider": "QUATERNIUS",
+      "source_url": "https://quaternius.com/packs/ultimateanimatedanimals.html",
+      "license": "CC0",
+      "access_mode": "MANUAL_ITEM_DOWNLOAD_UNLESS_PROVIDER_SUPPORTED_DIRECT_URL",
+      "advertised": "12 animated animals with 12+ animations each; FBX available",
+      "intended_slots": [
+        "horse/fauna candidate family",
+        "farm animals",
+        "ambient wildlife"
+      ],
+      "target_regions": [
+        "SHIRE",
+        "BREE",
+        "ROHAN",
+        "ITHILIEN",
+        "GONDOR"
+      ],
+      "state": "CANDIDATE_NOT_STAGED",
+      "caution": "Horse/rider sync and quadruped deformation need dedicated runtime QC."
+    },
+    {
+      "id": "MAKEHUMAN_ORIGINAL_HUMANOID_EXPORT",
+      "provider": "MAKEHUMAN",
+      "source_url": "https://static.makehumancommunity.org/makehuman/faq/can_i_sell_models_created_with_makehuman.html",
+      "license": "EXPORTED_MODELS_CC0",
+      "access_mode": "MANUAL_TOOL",
+      "advertised": "MakeHuman exported models are CC0 under the documented export license",
+      "intended_slots": [
+        "original hero/support humanoid bases where stock pack identity is insufficient"
+      ],
+      "target_regions": [
+        "ALL_HUMANOID_REGIONS"
+      ],
+      "state": "CANDIDATE_TOOL_NOT_RUN",
+      "caution": "Generated mesh still needs topology/material/skeleton cleanup and FBX export before animated production intake."
+    },
+    {
+      "id": "MIXAMO_HUMANOID_MOTION",
+      "provider": "MIXAMO",
+      "source_url": "https://helpx.adobe.com/creative-cloud/faq/mixamo-faq.html",
+      "license": "ROYALTY_FREE_PER_ADOBE_FAQ",
+      "access_mode": "AUTH_REQUIRED_MANUAL_ACQUISITION",
+      "advertised": "Characters and animations may be used royalty-free in video games; current auto-rigger/animation library is biped humanoid only",
+      "intended_slots": [
+        "humanoid animation gap filling",
+        "retarget source"
+      ],
+      "target_regions": [
+        "ALL_HUMANOID_REGIONS"
+      ],
+      "state": "CANDIDATE_AUTH_REQUIRED",
+      "caution": "No automation bypass; record exact downloaded motion identity and retarget settings."
+    },
+    {
+      "id": "POLY_HAVEN_CC0_TARGETED_API",
+      "provider": "POLY_HAVEN",
+      "source_url": "https://polyhaven.com/license",
+      "api_url": "https://api.polyhaven.com/assets",
+      "license": "CC0",
+      "access_mode": "PUBLIC_API_TARGETED_ONLY",
+      "advertised": "CC0 HDRIs, textures and 3D models; official public API available",
+      "intended_slots": [
+        "hero/support PBR surfaces",
+        "HDRI references",
+        "selected rocks/terrain/nature models"
+      ],
+      "target_regions": [
+        "ALL"
+      ],
+      "state": "CANDIDATE_API_QUEUE",
+      "caution": "Website scraping is forbidden by provider terms. Use the official API; default material intake should target 2K and avoid raw high-poly repeated foliage."
+    },
+    {
+      "id": "AMBIENTCG_CC0_PBR_TARGETED",
+      "provider": "AMBIENTCG",
+      "source_url": "https://ambientcg.com/",
+      "license": "CC0",
+      "access_mode": "PUBLIC_SITE_API_TARGETED_ONLY",
+      "advertised": "PBR materials/HDRIs/models; CC0",
+      "intended_slots": [
+        "stone",
+        "wood",
+        "plaster",
+        "roof",
+        "soil",
+        "snow",
+        "ash",
+        "fabric",
+        "water-adjacent surfaces"
+      ],
+      "target_regions": [
+        "ALL"
+      ],
+      "state": "CANDIDATE_API_QUEUE",
+      "caution": "Prefer 2K target-laptop inputs; preserve higher resolutions only for justified hero sources."
+    },
+    {
+      "id": "KENNEY_NATURE_KIT",
+      "provider": "KENNEY",
+      "source_url": "https://kenney.nl/assets/nature-kit",
+      "license": "CC0",
+      "access_mode": "AUTO_RESOLVE_STAGE",
+      "advertised": "330 nature models",
+      "intended_slots": [
+        "support trees",
+        "rocks",
+        "foliage",
+        "layout/support ecology"
+      ],
+      "target_regions": [
+        "SHIRE",
+        "FANGORN_SUPPORT",
+        "ITHILIEN_SUPPORT",
+        "ROHAN_SUPPORT"
+      ],
+      "state": "CANDIDATE_NOT_STAGED",
+      "caution": "Support/filler unless visual review proves hero suitability."
+    },
+    {
+      "id": "KENNEY_CASTLE_KIT",
+      "provider": "KENNEY",
+      "source_url": "https://kenney.nl/assets/castle-kit",
+      "license": "CC0",
+      "access_mode": "AUTO_RESOLVE_STAGE",
+      "advertised": "75 medieval/castle models",
+      "intended_slots": [
+        "fortification support",
+        "blockout-to-support props"
+      ],
+      "target_regions": [
+        "HELM_DEEP",
+        "GONDOR",
+        "BREE_SUPPORT"
+      ],
+      "state": "CANDIDATE_NOT_STAGED",
+      "caution": "Not a substitute for region-specific hero architecture."
+    },
+    {
+      "id": "KENNEY_MODULAR_CAVE_KIT_2026",
+      "provider": "KENNEY",
+      "source_url": "https://kenney.nl/assets/modular-cave-kit",
+      "license": "CC0",
+      "access_mode": "AUTO_RESOLVE_STAGE",
+      "advertised": "40 modular cave models",
+      "intended_slots": [
+        "cave support",
+        "underground traversal support"
+      ],
+      "target_regions": [
+        "MORIA_SUPPORT",
+        "PATHS_OF_DEAD_SUPPORT",
+        "SHELOB_SUPPORT"
+      ],
+      "state": "CANDIDATE_NOT_STAGED",
+      "caution": "Hero Moria/Paths silhouettes remain project-specific."
+    },
+    {
+      "id": "OGA_DANIEL_ANDERSSON_MEDIEVAL_PROPS_1_3",
+      "provider": "OPENGAMEART",
+      "source_urls": [
+        "https://opengameart.org/content/medieval-props-pack-1",
+        "https://opengameart.org/content/medieval-props-pack-2",
+        "https://opengameart.org/content/medieval-props-pack-3"
+      ],
+      "license": "CC0",
+      "access_mode": "AUTO_STAGE_WHEN_DIRECT_FILE_AND_LICENSE_KNOWN",
+      "advertised": "CC0 medieval village prop collections; Blend source archives",
+      "intended_slots": [
+        "furniture",
+        "village clutter",
+        "farm/work props",
+        "interior/exterior support"
+      ],
+      "target_regions": [
+        "SHIRE",
+        "BREE",
+        "ROHAN",
+        "GONDOR_SUPPORT"
+      ],
+      "state": "CANDIDATE_NOT_STAGED",
+      "caution": "Static-source lane only until normalized/exported; inspect normals/UVs/materials before READY_FOR_IMPORT."
+    },
+    {
+      "id": "OGA_DANIEL_ANDERSSON_MODULAR_MEDIEVAL_BUILDINGS",
+      "provider": "OPENGAMEART",
+      "source_url": "https://opengameart.org/content/modular-medieval-building-pack",
+      "license": "CC0",
+      "access_mode": "AUTO_STAGE_WHEN_DIRECT_FILE_AND_LICENSE_KNOWN",
+      "advertised": "Modular roofs, stairs, extensions, chimneys, balconies, house bases, doors and windows",
+      "intended_slots": [
+        "Bree/support settlement architecture",
+        "Rohan/Gondor support construction"
+      ],
+      "target_regions": [
+        "BREE",
+        "ROHAN_SUPPORT",
+        "GONDOR_SUPPORT"
+      ],
+      "state": "CANDIDATE_NOT_STAGED",
+      "caution": "Blend source; project conversion/optimization required. Do not flatten culture identity."
+    },
+    {
+      "id": "OGA_RIGGED_HORSE_CC0",
+      "provider": "OPENGAMEART",
+      "source_url": "https://opengameart.org/content/rigged-horse",
+      "license": "CC0",
+      "access_mode": "AUTO_STAGE_WHEN_DIRECT_FILE_AND_LICENSE_KNOWN",
+      "advertised": "CC0 rigged horse source",
+      "intended_slots": [
+        "horse technical candidate",
+        "Black Rider horse fallback research",
+        "Rohan mount pipeline"
+      ],
+      "target_regions": [
+        "P1C01_SOURCE_PREP",
+        "ROHAN"
+      ],
+      "state": "CANDIDATE_NOT_STAGED",
+      "caution": "Final animated promotion must be FBX; rider seat/socket, gait set, collision and deformation must pass dedicated QC."
+    },
+    {
+      "id": "SONNISS_GDC_2026_TARGETED",
+      "provider": "SONNISS_GDC",
+      "source_url": "https://gdc.sonniss.com/",
+      "license_url": "https://sonniss.com/gdc-bundle-license/",
+      "license": "SONNISS_GDC_V2_EFFECTIVE_2026_08_27_FOR_NEW_DOWNLOADS",
+      "access_mode": "MANUAL_TARGETED_BUNDLE_INTAKE",
+      "advertised": "Large royalty-free GDC sound-effects bundle",
+      "intended_slots": [
+        "ambience",
+        "foley",
+        "creatures",
+        "weather",
+        "combat",
+        "household",
+        "boats",
+        "horses",
+        "siege"
+      ],
+      "target_regions": [
+        "ALL"
+      ],
+      "state": "CANDIDATE_NOT_STAGED",
+      "caution": "Do not ingest or runtime-load the entire bundle. Select only needed WAV masters and retain download-date/license-version provenance."
+    }
+  ],
+  "priority_order": [
+    "humanoid bases/outfits/animation shared across many chapters",
+    "horse/fauna and mounted support",
+    "generic medieval props/architecture support",
+    "2K PBR surfaces and nature support",
+    "whole-game audio depth"
+  ],
+  "staging_boundary": "This batch increases the candidate warehouse/source queue only. No entry is STAGED, READY_FOR_IMPORT, IMPORTED, INTEGRATED or ACCEPTED until its actual payload and receipt exist."
+}

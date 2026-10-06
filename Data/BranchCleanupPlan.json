@@ -4,7 +4,7 @@
   "authority": "Data/ProjectGovernor.json",
   "canonical_branch": "develop",
   "stable_release_branch": "main",
-  "status": "CLEAN_ACTIVE_DELETE_QUEUE_ZERO_WITH_EXPLICIT_PENDING_SALVAGE",
+  "status": "ACTIVE_P1C01_WITH_REVIEWED_STALE_DELETE_QUEUE_AND_PRESERVED_UNIQUE_SALVAGE",
   "truth_boundary": "This plan records branch hygiene only. It does not claim PIE/device/visual acceptance.",
   "preserve": [
     {
@@ -71,7 +71,9 @@
       "archive/pre-build-salvage-20260930"
     ]
   },
-  "active_work_branches": [],
+  "active_work_branches": [
+    "production/p1c01-definitive-chapter-closeout-2026-10-04"
+  ],
   "preserve_pending_salvage": [
     {
       "branch": "archive/pre-build-salvage-20260930",
@@ -620,5 +622,28 @@
       "Each listed ref is a closed PR head whose useful current work was selectively reconciled before closure.",
       "This is repository hygiene only; no runtime or acceptance claim."
     ]
+  },
+  "whole_game_offline_saturation_cleanup_2026_10_06": {
+    "parent_head": "eebb313b6a782234302ad20d6620dcdfd0e5ddd6",
+    "execution": "GITHUB_HOSTED_ONLY",
+    "delete_reviewed": [
+      "production/p1c01-frodo-human-breakthrough-2026-10-03",
+      "production/p1c01-shire-exterior-closeout-2026-10-04",
+      "production/p1c01-shire-settlement-final-polish-2026-10-04"
+    ],
+    "preserve": [
+      "develop",
+      "main",
+      "production/p1c01-definitive-chapter-closeout-2026-10-04",
+      "archive/pre-build-salvage-20260930",
+      "prep/f2-03-edoras-mega-source-v1",
+      "prep/f2-03-edoras-mega-source-v2"
+    ],
+    "evidence": [
+      "The three delete refs are already explicitly dispositioned as superseded in stale_branch_retirement_2026_10_04 and are present in delete_after_merge.",
+      "The two Edoras prep refs contain unique source-preproduction and remain preserve_pending_salvage.",
+      "The current P1C01 ref is an active PR head and is additionally protected in active_work_branches."
+    ],
+    "rule": "Use Scripts/run_branch_cleanup.ps1 only. No blind ref deletion."
   }
 }

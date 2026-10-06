@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "matrix_id": "WHOLE_GAME_CHAPTER_ASSET_DEMAND_MATRIX_V1",
-  "status": "SOURCE_DEMAND_REGISTERED",
+  "status": "SOURCE_DEMAND_RECONCILED_STATIC_VALIDATION_PENDING",
   "authority": [
     "Data/WholeGameChapterProductionPacketsV1.json",
     "Data/ContinuousProductionWaveQueueV2.json",
@@ -53,7 +53,12 @@
         "ue4_27_dx11_720p_30fps_floor"
       ],
       "acquisition_state": "SOURCE_DEMAND_REGISTERED",
-      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row.",
+      "source_title": "Prologue & Ring history",
+      "source_primary_location": "Middle-earth / Shire",
+      "source_playable_present_focus": "Bilbo, Frodo, Gandalf",
+      "source_locked_postcondition": "Bilbo leaves; Ring passes to Frodo.",
+      "roster_truth_rule": "source_playable_present_focus is mandatory story presence; character_families are acquisition buckets only and are not an exhaustive roster."
     },
     {
       "chapter_id": "F1-02",
@@ -89,7 +94,12 @@
         "ue4_27_dx11_720p_30fps_floor"
       ],
       "acquisition_state": "SOURCE_DEMAND_REGISTERED",
-      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row.",
+      "source_title": "Shadow of the Past",
+      "source_primary_location": "Bag End / Shire",
+      "source_playable_present_focus": "Frodo, Gandalf, Sam",
+      "source_locked_postcondition": "Frodo leaves the Shire.",
+      "roster_truth_rule": "source_playable_present_focus is mandatory story presence; character_families are acquisition buckets only and are not an exhaustive roster."
     },
     {
       "chapter_id": "F1-03",
@@ -98,29 +108,23 @@
       "environment_families": [
         "hobbit_rural_architecture",
         "hedgerows_fields_gardens",
-        "shire_roads_bridges_fences",
-        "bree_timber_stone_town",
-        "inn_stable_gate_interiors"
+        "shire_roads_bridges_fences"
       ],
       "character_families": [
         "nazgul_rider_mount",
         "frodo_hero",
         "sam_hero",
         "merry_hero",
-        "pippin_hero",
-        "ent_scale_creature_support"
+        "pippin_hero"
       ],
       "animation_families": [
         "mounted_pursuit",
         "threat_search",
         "hobbit_hero_locomotion_interaction",
-        "hobbit_companion",
-        "large_creature_walk_interact"
+        "hobbit_companion"
       ],
       "audio_families": [
-        "birds_breeze_farm_village",
-        "warm_interior_foley",
-        "crowded_inn_rain_night_town"
+        "birds_breeze_farm_village"
       ],
       "vfx_families": [
         "bounded_weather_atmosphere"
@@ -133,7 +137,13 @@
         "ue4_27_dx11_720p_30fps_floor"
       ],
       "acquisition_state": "SOURCE_DEMAND_REGISTERED",
-      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row.",
+      "source_title": "Road to Bree",
+      "source_primary_location": "Shire roads / Bucklebury",
+      "source_playable_present_focus": "Frodo, Sam, Merry, Pippin",
+      "source_locked_postcondition": "Hobbits reach Bree.",
+      "roster_truth_rule": "source_playable_present_focus is mandatory story presence; character_families are acquisition buckets only and are not an exhaustive roster.",
+      "demand_correction_note": "Road to Bree source demand stops at Shire roads/Bucklebury. Bree/inn stock belongs F1-04/P1C02; Ent stock belongs F2-02/F2-08."
     },
     {
       "chapter_id": "F1-04",
@@ -148,15 +158,13 @@
       "character_families": [
         "nazgul_rider_mount",
         "aragorn_hero",
-        "frodo_hero",
-        "ent_scale_creature_support"
+        "frodo_hero"
       ],
       "animation_families": [
         "mounted_pursuit",
         "threat_search",
         "human_hero_locomotion_combat",
         "hobbit_hero_locomotion_interaction",
-        "large_creature_walk_interact",
         "combat_reactions_death",
         "formation_or_encounter_motion"
       ],
@@ -175,7 +183,13 @@
         "ue4_27_dx11_720p_30fps_floor"
       ],
       "acquisition_state": "SOURCE_DEMAND_REGISTERED",
-      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row.",
+      "source_title": "Bree & Weathertop",
+      "source_primary_location": "Bree / Weathertop",
+      "source_playable_present_focus": "Hobbits, Aragorn, Nazgul",
+      "source_locked_postcondition": "Party races for Rivendell.",
+      "roster_truth_rule": "source_playable_present_focus is mandatory story presence; character_families are acquisition buckets only and are not an exhaustive roster.",
+      "demand_correction_note": "Bree/Weathertop keeps Nazgul/Aragorn/Hobbit demand; Ent stock removed as future-lane contamination."
     },
     {
       "chapter_id": "F1-05",
@@ -186,12 +200,10 @@
         "waterfalls_cliffs_gardens"
       ],
       "character_families": [
-        "frodo_hero",
-        "ent_scale_creature_support"
+        "frodo_hero"
       ],
       "animation_families": [
         "hobbit_hero_locomotion_interaction",
-        "large_creature_walk_interact",
         "social_dialogue_gestures"
       ],
       "audio_families": [
@@ -208,7 +220,13 @@
         "ue4_27_dx11_720p_30fps_floor"
       ],
       "acquisition_state": "SOURCE_DEMAND_REGISTERED",
-      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row.",
+      "source_title": "Rivendell & Fellowship",
+      "source_primary_location": "Rivendell",
+      "source_playable_present_focus": "Frodo, Council, Fellowship",
+      "source_locked_postcondition": "Nine depart.",
+      "roster_truth_rule": "source_playable_present_focus is mandatory story presence; character_families are acquisition buckets only and are not an exhaustive roster.",
+      "demand_correction_note": "Rivendell/Council/Fellowship has no Ent demand. Exact roster truth is carried by source_playable_present_focus."
     },
     {
       "chapter_id": "F1-06",
@@ -245,7 +263,12 @@
         "ue4_27_dx11_720p_30fps_floor"
       ],
       "acquisition_state": "SOURCE_DEMAND_REGISTERED",
-      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row.",
+      "source_title": "Caradhras & Moria",
+      "source_primary_location": "Misty Mountains / Moria",
+      "source_playable_present_focus": "Fellowship",
+      "source_locked_postcondition": "Gandalf falls; Fellowship escapes.",
+      "roster_truth_rule": "source_playable_present_focus is mandatory story presence; character_families are acquisition buckets only and are not an exhaustive roster."
     },
     {
       "chapter_id": "F1-07",
@@ -275,7 +298,12 @@
         "ue4_27_dx11_720p_30fps_floor"
       ],
       "acquisition_state": "SOURCE_DEMAND_REGISTERED",
-      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row.",
+      "source_title": "Lorien & Anduin",
+      "source_primary_location": "Lothlorien / Anduin",
+      "source_playable_present_focus": "Fellowship, Galadriel",
+      "source_locked_postcondition": "Fellowship reaches Amon Hen.",
+      "roster_truth_rule": "source_playable_present_focus is mandatory story presence; character_families are acquisition buckets only and are not an exhaustive roster."
     },
     {
       "chapter_id": "F1-08",
@@ -283,10 +311,7 @@
       "runtime_integration_allowed": false,
       "environment_families": [
         "great_river_corridor",
-        "ancient_ruins_woodland",
-        "mordor_volcanic_wasteland",
-        "black_gate_fortification",
-        "lava_ash_rock"
+        "ancient_ruins_woodland"
       ],
       "character_families": [
         "aragorn_hero",
@@ -307,21 +332,24 @@
       "audio_families": [
         "combat_impacts_shouts_environment"
       ],
-      "vfx_families": [
-        "ash_smoke_fire_lava"
-      ],
+      "vfx_families": [],
       "interaction_families": [
         "boats_river_travel"
       ],
       "performance_risks": [
         "large_battle_density",
-        "volcanic_vfx_budget",
         "pooled_crowd_budget",
         "pooled_actor_budget",
         "ue4_27_dx11_720p_30fps_floor"
       ],
       "acquisition_state": "SOURCE_DEMAND_REGISTERED",
-      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row.",
+      "source_title": "Breaking of the Fellowship",
+      "source_primary_location": "Amon Hen",
+      "source_playable_present_focus": "Frodo, Sam, Aragorn, Boromir, Uruk-hai",
+      "source_locked_postcondition": "Three parallel campaigns begin.",
+      "roster_truth_rule": "source_playable_present_focus is mandatory story presence; character_families are acquisition buckets only and are not an exhaustive roster.",
+      "demand_correction_note": "Amon Hen ends Part I. Mordor/Black Gate/lava demand belongs F3-05/F3-06, not F1-08."
     },
     {
       "chapter_id": "F2-01",
@@ -335,7 +363,6 @@
         "giant_tree_roots"
       ],
       "character_families": [
-        "ent_scale_creature_support",
         "aragorn_hero",
         "merry_hero",
         "pippin_hero",
@@ -354,7 +381,6 @@
       ],
       "interaction_families": [
         "mounted_support",
-        "large_creature_traversal",
         "stealth_detection",
         "contextual_cover_or_disguise"
       ],
@@ -363,7 +389,13 @@
         "ue4_27_dx11_720p_30fps_floor"
       ],
       "acquisition_state": "SOURCE_DEMAND_REGISTERED",
-      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row.",
+      "source_title": "Three Hunters / Captives",
+      "source_primary_location": "Rohan / Fangorn edge",
+      "source_playable_present_focus": "Aragorn, Legolas, Gimli, Merry, Pippin",
+      "source_locked_postcondition": "Paths converge around Fangorn/Rohan.",
+      "roster_truth_rule": "source_playable_present_focus is mandatory story presence; character_families are acquisition buckets only and are not an exhaustive roster.",
+      "demand_correction_note": "Fangorn edge may use forest/root environment, but Ent character/traversal demand begins with F2-02."
     },
     {
       "chapter_id": "F2-02",
@@ -398,7 +430,12 @@
         "ue4_27_dx11_720p_30fps_floor"
       ],
       "acquisition_state": "SOURCE_DEMAND_REGISTERED",
-      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row.",
+      "source_title": "Fangorn & Gandalf Returned",
+      "source_primary_location": "Fangorn",
+      "source_playable_present_focus": "Merry, Pippin, Treebeard; Hunters, Gandalf",
+      "source_locked_postcondition": "Gandalf leads hunters to Edoras.",
+      "roster_truth_rule": "source_playable_present_focus is mandatory story presence; character_families are acquisition buckets only and are not an exhaustive roster."
     },
     {
       "chapter_id": "F2-03",
@@ -411,13 +448,11 @@
       ],
       "character_families": [
         "aragorn_hero",
-        "gandalf_hero",
-        "ent_scale_creature_support"
+        "gandalf_hero"
       ],
       "animation_families": [
         "human_hero_locomotion_combat",
         "staff_robed_humanoid",
-        "large_creature_walk_interact",
         "social_dialogue_gestures"
       ],
       "audio_families": [
@@ -434,7 +469,13 @@
         "ue4_27_dx11_720p_30fps_floor"
       ],
       "acquisition_state": "SOURCE_DEMAND_REGISTERED",
-      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row.",
+      "source_title": "Edoras",
+      "source_primary_location": "Rohan",
+      "source_playable_present_focus": "Theoden, Eowyn, Eomer, Gandalf, Aragorn",
+      "source_locked_postcondition": "Rohan evacuates toward Helm's Deep.",
+      "roster_truth_rule": "source_playable_present_focus is mandatory story presence; character_families are acquisition buckets only and are not an exhaustive roster.",
+      "demand_correction_note": "Edoras source focus is Rohan court/characters; Ent stock removed."
     },
     {
       "chapter_id": "F2-04",
@@ -466,7 +507,12 @@
         "ue4_27_dx11_720p_30fps_floor"
       ],
       "acquisition_state": "SOURCE_DEMAND_REGISTERED",
-      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row.",
+      "source_title": "Road & Helm's Deep Prep",
+      "source_primary_location": "Rohan / Helm's Deep",
+      "source_playable_present_focus": "Rohan party",
+      "source_locked_postcondition": "Uruk army arrives.",
+      "roster_truth_rule": "source_playable_present_focus is mandatory story presence; character_families are acquisition buckets only and are not an exhaustive roster."
     },
     {
       "chapter_id": "F2-05",
@@ -501,7 +547,12 @@
         "ue4_27_dx11_720p_30fps_floor"
       ],
       "acquisition_state": "SOURCE_DEMAND_REGISTERED",
-      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row.",
+      "source_title": "Battle of Helm's Deep",
+      "source_primary_location": "Helm's Deep",
+      "source_playable_present_focus": "Aragorn, Legolas, Gimli, Theoden",
+      "source_locked_postcondition": "Rohan survives.",
+      "roster_truth_rule": "source_playable_present_focus is mandatory story presence; character_families are acquisition buckets only and are not an exhaustive roster."
     },
     {
       "chapter_id": "F2-06",
@@ -535,7 +586,12 @@
         "ue4_27_dx11_720p_30fps_floor"
       ],
       "acquisition_state": "SOURCE_DEMAND_REGISTERED",
-      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row.",
+      "source_title": "Frodo, Sam & Gollum",
+      "source_primary_location": "Emyn Muil / Dead Marshes",
+      "source_playable_present_focus": "Frodo, Sam, Gollum",
+      "source_locked_postcondition": "Approach to Black Gate.",
+      "roster_truth_rule": "source_playable_present_focus is mandatory story presence; character_families are acquisition buckets only and are not an exhaustive roster."
     },
     {
       "chapter_id": "F2-07",
@@ -573,7 +629,12 @@
         "ue4_27_dx11_720p_30fps_floor"
       ],
       "acquisition_state": "SOURCE_DEMAND_REGISTERED",
-      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row.",
+      "source_title": "Ithilien & Faramir",
+      "source_primary_location": "Ithilien / Henneth Annun",
+      "source_playable_present_focus": "Frodo, Sam, Gollum, Faramir",
+      "source_locked_postcondition": "Frodo continues toward Mordor.",
+      "roster_truth_rule": "source_playable_present_focus is mandatory story presence; character_families are acquisition buckets only and are not an exhaustive roster."
     },
     {
       "chapter_id": "F2-08",
@@ -611,7 +672,12 @@
         "ue4_27_dx11_720p_30fps_floor"
       ],
       "acquisition_state": "SOURCE_DEMAND_REGISTERED",
-      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row.",
+      "source_title": "Ents & Isengard",
+      "source_primary_location": "Fangorn / Isengard",
+      "source_playable_present_focus": "Merry, Pippin, Treebeard",
+      "source_locked_postcondition": "Saruman's war machine broken.",
+      "roster_truth_rule": "source_playable_present_focus is mandatory story presence; character_families are acquisition buckets only and are not an exhaustive roster."
     },
     {
       "chapter_id": "F3-01",
@@ -646,7 +712,12 @@
         "ue4_27_dx11_720p_30fps_floor"
       ],
       "acquisition_state": "SOURCE_DEMAND_REGISTERED",
-      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row.",
+      "source_title": "Isengard Aftermath / Palantir",
+      "source_primary_location": "Isengard / Rohan road",
+      "source_playable_present_focus": "Fellowship allies, Pippin, Gandalf",
+      "source_locked_postcondition": "Gandalf rides with Pippin to Gondor.",
+      "roster_truth_rule": "source_playable_present_focus is mandatory story presence; character_families are acquisition buckets only and are not an exhaustive roster."
     },
     {
       "chapter_id": "F3-02",
@@ -684,7 +755,12 @@
         "ue4_27_dx11_720p_30fps_floor"
       ],
       "acquisition_state": "SOURCE_DEMAND_REGISTERED",
-      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row.",
+      "source_title": "Minas Tirith & Muster",
+      "source_primary_location": "Minas Tirith / Rohan",
+      "source_playable_present_focus": "Gandalf, Pippin; Theoden, Eowyn, Merry",
+      "source_locked_postcondition": "Armies move to war.",
+      "roster_truth_rule": "source_playable_present_focus is mandatory story presence; character_families are acquisition buckets only and are not an exhaustive roster."
     },
     {
       "chapter_id": "F3-03",
@@ -698,12 +774,10 @@
         "underground_dead_paths"
       ],
       "character_families": [
-        "aragorn_hero",
-        "ent_scale_creature_support"
+        "aragorn_hero"
       ],
       "animation_families": [
-        "human_hero_locomotion_combat",
-        "large_creature_walk_interact"
+        "human_hero_locomotion_combat"
       ],
       "audio_families": [
         "wind_horses_wood_hall"
@@ -718,7 +792,13 @@
         "ue4_27_dx11_720p_30fps_floor"
       ],
       "acquisition_state": "SOURCE_DEMAND_REGISTERED",
-      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row.",
+      "source_title": "Paths of the Dead",
+      "source_primary_location": "Dunharrow / Paths",
+      "source_playable_present_focus": "Aragorn, Legolas, Gimli",
+      "source_locked_postcondition": "Aragorn gains decisive force.",
+      "roster_truth_rule": "source_playable_present_focus is mandatory story presence; character_families are acquisition buckets only and are not an exhaustive roster.",
+      "demand_correction_note": "Paths of the Dead source focus is Aragorn/Legolas/Gimli; Ent stock removed."
     },
     {
       "chapter_id": "F3-04",
@@ -730,10 +810,7 @@
         "horse_culture_props",
         "gondor_white_stone_city",
         "pelennor_field",
-        "siege_fortification",
-        "mordor_volcanic_wasteland",
-        "black_gate_fortification",
-        "lava_ash_rock"
+        "siege_fortification"
       ],
       "character_families": [],
       "animation_families": [
@@ -746,8 +823,7 @@
         "combat_impacts_shouts_environment"
       ],
       "vfx_families": [
-        "siege_fire_smoke_dust",
-        "ash_smoke_fire_lava"
+        "siege_fire_smoke_dust"
       ],
       "interaction_families": [
         "mounted_support",
@@ -756,12 +832,17 @@
       "performance_risks": [
         "large_battle_density",
         "city_streaming_budget",
-        "volcanic_vfx_budget",
         "pooled_actor_budget",
         "ue4_27_dx11_720p_30fps_floor"
       ],
       "acquisition_state": "SOURCE_DEMAND_REGISTERED",
-      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row.",
+      "source_title": "Siege & Pelennor",
+      "source_primary_location": "Minas Tirith / Pelennor",
+      "source_playable_present_focus": "Gondor, Rohan, Mordor armies",
+      "source_locked_postcondition": "Mordor army defeated locally at great cost.",
+      "roster_truth_rule": "source_playable_present_focus is mandatory story presence; character_families are acquisition buckets only and are not an exhaustive roster.",
+      "demand_correction_note": "Pelennor uses Gondor/Rohan/siege battlefield demand. Mordor volcanic/Black Gate environment belongs F3-06."
     },
     {
       "chapter_id": "F3-05",
@@ -804,7 +885,12 @@
         "ue4_27_dx11_720p_30fps_floor"
       ],
       "acquisition_state": "SOURCE_DEMAND_REGISTERED",
-      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row.",
+      "source_title": "Cirith Ungol / Mordor",
+      "source_primary_location": "Cirith Ungol / Mordor",
+      "source_playable_present_focus": "Frodo, Sam, Gollum",
+      "source_locked_postcondition": "Ring-bearers reach Mount Doom.",
+      "roster_truth_rule": "source_playable_present_focus is mandatory story presence; character_families are acquisition buckets only and are not an exhaustive roster."
     },
     {
       "chapter_id": "F3-06",
@@ -836,7 +922,12 @@
         "ue4_27_dx11_720p_30fps_floor"
       ],
       "acquisition_state": "SOURCE_DEMAND_REGISTERED",
-      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row.",
+      "source_title": "Black Gate & Mount Doom",
+      "source_primary_location": "Mordor",
+      "source_playable_present_focus": "All major threads",
+      "source_locked_postcondition": "Sauron falls.",
+      "roster_truth_rule": "source_playable_present_focus is mandatory story presence; character_families are acquisition buckets only and are not an exhaustive roster."
     },
     {
       "chapter_id": "F3-07",
@@ -847,8 +938,6 @@
         "hedgerows_fields_gardens",
         "shire_roads_bridges_fences",
         "gondor_white_stone_city",
-        "pelennor_field",
-        "siege_fortification",
         "grey_havens_coastal_elven_port",
         "shore_boat_ship_support"
       ],
@@ -861,20 +950,40 @@
         "warm_interior_foley",
         "sea_wind_harbor"
       ],
-      "vfx_families": [
-        "siege_fire_smoke_dust"
-      ],
+      "vfx_families": [],
       "interaction_families": [
         "chapter_context_interactions"
       ],
       "performance_risks": [
-        "large_battle_density",
         "city_streaming_budget",
         "ue4_27_dx11_720p_30fps_floor"
       ],
       "acquisition_state": "SOURCE_DEMAND_REGISTERED",
-      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row."
+      "evidence_boundary": "Asset-family demand only; no asset is READY_FOR_IMPORT, integrated, visually accepted or performance accepted by this row.",
+      "source_title": "Return & Farewell",
+      "source_primary_location": "Minas Tirith / Shire / Grey Havens",
+      "source_playable_present_focus": "Survivors",
+      "source_locked_postcondition": "Main campaign complete.",
+      "roster_truth_rule": "source_playable_present_focus is mandatory story presence; character_families are acquisition buckets only and are not an exhaustive roster.",
+      "demand_correction_note": "Return/Farewell is post-war Minas Tirith/Shire/Grey Havens; active siege stock removed from default chapter demand."
     }
   ],
-  "evidence_boundary": "Source/acquisition demand mapping only. Provider selection, license evidence, payload receipts, intake QC, UE import and acceptance remain separate."
+  "evidence_boundary": "Source/acquisition demand mapping only. Provider selection, license evidence, payload receipts, intake QC, UE import and acceptance remain separate.",
+  "source_truth_ref": "Data/WholeGameChapterProductionPacketsV1.json",
+  "source_reconciliation_2026_10_06": {
+    "parent_head": "eebb313b6a782234302ad20d6620dcdfd0e5ddd6",
+    "reason": "Remove cross-chapter warehouse demand pollution before whole-game offline saturation.",
+    "corrected_chapters": [
+      "F1-03",
+      "F1-04",
+      "F1-05",
+      "F1-08",
+      "F2-01",
+      "F2-03",
+      "F3-03",
+      "F3-04",
+      "F3-07"
+    ],
+    "invariant": "All 23 rows inherit source title/location/focus/locked outcome from the source-grounded production packets. Runtime remains serialized to P1C01."
+  }
 }

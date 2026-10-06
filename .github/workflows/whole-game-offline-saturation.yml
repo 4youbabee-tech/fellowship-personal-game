@@ -1,0 +1,62 @@
+name: Whole Game Offline Saturation
+
+on:
+  pull_request:
+    branches: [develop]
+    paths:
+      - 'Data/WholeGame*.json'
+      - 'Data/GlobalWarehouseSourceRegistryV2.json'
+      - 'Data/TrilogyProductionAssetWarehouse.json'
+      - 'Data/BranchCleanupPlan.json'
+      - 'Data/ProjectGovernor.json'
+      - 'Scripts/audit_whole_game_offline_saturation.py'
+      - 'Scripts/run_branch_cleanup.ps1'
+      - '.github/workflows/whole-game-offline-saturation.yml'
+      - 'Docs/CURRENT_PROJECT_STATE.md'
+      - 'Docs/PRODUCTION_COMPLETENESS_MATRIX.md'
+      - 'Docs/WORLD_DETAIL_LEDGER.md'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: read
+
+concurrency:
+  group: whole-game-offline-saturation-${{ github.repository }}-${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  static-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          lfs: false
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Audit whole-game offline saturation
+        run: python Scripts/audit_whole_game_offline_saturation.py
+
+  retire-reviewed-dead-refs:
+    if: github.event_name == 'pull_request' && github.head_ref == 'production/p1c01-definitive-chapter-closeout-2026-10-04'
+    needs: static-audit
+    runs-on: windows-latest
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+      CLOSED_HEAD_REF: ''
+      CLOSED_HEAD_SHA: ''
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+          lfs: false
+          persist-credentials: true
+      - name: Retire only fail-closed reviewed refs
+        shell: powershell
+        run: .\Scripts\run_branch_cleanup.ps1 -PlanPath "Data/BranchCleanupPlan.json"

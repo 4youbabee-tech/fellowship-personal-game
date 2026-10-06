@@ -1769,10 +1769,17 @@
       "Every staged file must retain provider, source page, license class, size, hash, intended slot and state."
     ]
   },
-  "source_count": 102,
+  "source_count": 142,
   "source_bible_import": "Data/ResourceBibleSourceExpansionV1.json",
   "source_documents": [
     "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
   ],
-  "notes": " 2026-09-25: Master External Resource Bible adoption expanded high-value production/tooling lanes and corrected disabled/legacy sources."
+  "notes": " 2026-09-25: Master External Resource Bible adoption expanded high-value production/tooling lanes and corrected disabled/legacy sources.",
+  "reconciliation_2026_10_06": {
+    "parent_head": "eebb313b6a782234302ad20d6620dcdfd0e5ddd6",
+    "previous_declared_count": 102,
+    "actual_unique_source_count": 142,
+    "corrected_declared_count": 142,
+    "rule": "Declared source_count must equal the actual unique sources array length; candidates are not STAGED merely by registry presence."
+  }
 }

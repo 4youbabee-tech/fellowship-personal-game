@@ -4794,3 +4794,15 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - The gameplay audit makes F1-02 investigation/packing explicit authoring gaps, keeps stealth departure/Black Rider hiding/Ferry runtime proof open, and records retry/skip/backtrack/disk-roundtrip as evidence gaps rather than silently treating them as complete.
 - Hosted `P1C01 Offline Source Saturation` now fail-closes if either P1C01->P1C02 automatic source path returns and also checks the new source-intake contract.
 - Status: **SOURCE-IMPLEMENTED / HOSTED STATIC VALIDATION PENDING / UE4 COMPILE+RUNTIME PROOF PENDING**. No PIE/device/visual/performance/Gate 6/7 acceptance is claimed.
+
+## 2026-10-06 - Whole-game offline saturation / source-demand reconciliation
+
+- Owner-authorized exception while the UE4 runner is unavailable: prepare the whole game from F1-01 through F3-07 at source/data/provenance/QC level, while runtime remains serialized to P1C01 only.
+- Static audit found concrete cross-chapter demand pollution in `Data/WholeGameChapterAssetDemandMatrixV1.json`: Bree/inn and Ent families leaked into F1-03, Ent demand leaked into unrelated Rivendell/Edoras/Paths rows, Mordor/Black Gate/lava demand leaked into Amon Hen and Pelennor, and active siege demand leaked into Return/Farewell. The affected rows are reconciled to `Data/WholeGameChapterProductionPacketsV1.json` source title/location/focus/locked outcome.
+- `Data/GlobalWarehouseSourceRegistryV2.json` had declared `source_count=102` while the array contained 142 unique source records. The declared count is corrected to the actual array length.
+- `Data/WholeGameWarehouseSaturationBatchV3.json` records a selective, provenance-first candidate queue for reusable humanoid bases/outfits/animations, horse/fauna, support nature/architecture, medieval props and whole-game audio. Candidate presence is not staging/import/runtime evidence.
+- Repository source census at this packet: 423 SourceAssets files, 416 under Production, 5 under ValidatedRuntime; extension counts include 352 OBJ, 30 MTL, 8 PNG, 24 TGA and 4 FBX. The four FBX files are the established Frodo technical runtime bundle; OBJ volume is not animated-character completion.
+- Architecture static review preserves ownership: `UShireQuestSubsystem` story truth, `AChapterWorldRouter` world commit, `UShireChapterAssetStreamingSubsystem` async heavy-asset residency, `ALivingWorldDirector` pooled population/events and `UShireNPCContextSubsystem` committed context/schedules. No per-frame full-world context rebuild was found in the reviewed LivingWorld/NPCContext path.
+- Important evidence boundary: static reasoning does **not** prove collision-free traversal, visual-artifact absence, hitch-free play, audio quality or target FPS. Those remain chapter-specific runner/PIE/device/human evidence.
+- Branch hygiene is prepared through the existing fail-closed hosted cleanup path. The active PR branch plus develop/main, archive recovery and the two unique Edoras preparation refs are explicitly protected.
+- Status: **SOURCE-IMPLEMENTED / HOSTED STATIC VALIDATION PENDING**. P1C02 runtime remains LOCKED.

@@ -1310,3 +1310,15 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - The same audit exposed a chapter-topology defect: Ferry far-side completion and terminal-state restore could auto-open P1C02. The registered repair makes `FerryEscape stage 2` a valid P1C01 terminal state, records `FerryEscapeComplete`, and queues `WC_P1C01_FERRY_END` without starting Bree.
 - This is not a new canon outcome: it enforces the existing production ownership boundary (P1C01 through FerryEscape; P1C02 owns Bree arrival/opening) and keeps the source-locked wider F1-03 postcondition separate.
 - Evidence boundary: **SOURCE-IMPLEMENTED / SOURCE-CANDIDATE-ROUTED** only. UE4 compile, PIE, visual, device, audio playback, disk save/load and FPS evidence remain pending.
+
+## 2026-10-06 - WHOLE_GAME_OFFLINE_SATURATION registered and source-demand corrected
+
+- Temporary source/preproduction exception only while the UE4 runner is unavailable. Runtime writer ownership and chapter serialization do not change; P1C01 remains the sole runtime-changing chapter and Bree/P1C02 remains locked.
+- Whole-game preparation now spans the canonical F1-01..F3-07 mission set at source/data/provenance/QC level. Source 11 supersedes older Sources 01-07 ROTK screenplay-absence notes; future ROTK production verification must use the supplied ROTK screenplay and film before old MASTER-SUMMARY shorthand.
+- Chapter-demand reconciliation removes concrete future-lane contamination from Amon Hen, Pelennor, Return/Farewell and several Ent-unrelated chapters before warehouse growth continues.
+- Warehouse expansion is selective rather than indiscriminate: reusable humanoid bases/outfits/animation, horse/fauna, support nature/architecture, static medieval props and audio depth are prioritized because they unlock many future regions.
+- Candidate sources are registered with access/license/role boundaries. They are not promoted to STAGED/READY_FOR_IMPORT until actual payload receipts, SHA256 and technical QC exist.
+- Static system simulation result: `ALivingWorldDirector` remains population/pooling authority and consumes committed context without transferring spawn ownership to `UShireNPCContextSubsystem`; the context subsystem stores committed chapter/route/episode/quest state and resolves schedules/dialogue from loaded data rather than rebuilding context from world actors each frame.
+- Transition-time scans/pool resets and synchronous user QuickSave/QuickLoad remain measurement risks, not proven defects. Cold/warm streaming, collision, render hitching, p95/p99 frame tails, VRAM, audio playback and human visual quality remain runner/device evidence.
+- Repeated world detail remains HISM/ISM/`AWorldDetailCluster`; heavy assets remain soft/async; crowds remain pooled; PNG/TGA texture rule and FBX-only final animated delivery remain unchanged.
+- Evidence boundary: **SOURCE-IMPLEMENTED / STATIC-RISK-AUDITED** only. No PIE/device/visual/performance acceptance.

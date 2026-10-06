@@ -5770,6 +5770,33 @@
       ],
       "evidence_boundary": "PRODUCTION POLICY ONLY. This decision does not itself prove P1C01 complete or accepted.",
       "authority": "USER_EXPLICIT_DIRECTION"
+    },
+    {
+      "id": "DEC-105",
+      "title": "Runner-outage whole-game offline saturation is allowed while runtime remains serialized to P1C01",
+      "status": "ACCEPTED",
+      "priority": "CRITICAL",
+      "date": "2026-10-06",
+      "owner_direction": "While the UE4 runner/device is unavailable, use the time for a whole-game deep static audit, source and warehouse saturation, future chapter preparation and safe dead-branch cleanup. Do not open later runtime chapters. When the runner returns, immediately resume the existing P1C01 One-Shot handoff and finish the Shire before any P1C02 runtime work.",
+      "resolution": "Authorize WHOLE_GAME_OFFLINE_SATURATION as a temporary source/data/provenance/QC/repository-hygiene mode only. P1C01 remains the sole runtime-changing chapter. Source preparation may cover F1-01 through F3-07 and external legal/open assets, but runtime import/integration/acceptance stays predecessor-gated chapter by chapter.",
+      "implementation_contract": [
+        "Audit the canonical 23 mission chapters against source location, roster/focus, locked outcome, synchronization barriers and chapter asset demand.",
+        "Correct cross-chapter source/warehouse demand pollution before acquiring more stock.",
+        "Grow the warehouse/source candidate queue aggressively but selectively, preserving provider/license/source URL/hash/format/QC provenance and never equating CANDIDATE/STAGED with runtime integration.",
+        "Animated final production assets remain FBX; OBJ/Blend may only be source/intermediate according to asset rules. Production textures remain PNG/TGA; BMP is forbidden.",
+        "P1C02 and all later runtime chapters remain locked. Preparation-only work must carry runtime_integration_allowed=false or equivalent.",
+        "Dead branch cleanup may run only through the existing fail-closed hosted cleanup contract; preserve active PR heads, develop/main, archive recovery and unique Edoras source-prep branches.",
+        "On runner return, Data/P1C01RunnerHandoffV1.json resumes immediately without re-planning; P1C01 proceeds import/build/runtime/render/audio/PIE/device/Gate 6/7 as one One-Shot chapter."
+      ],
+      "evidence": [
+        "Data/WholeGameOfflineDeepAuditV1.json",
+        "Data/WholeGameWarehouseSaturationBatchV3.json",
+        "Data/WholeGameChapterAssetDemandMatrixV1.json",
+        "Data/GlobalWarehouseSourceRegistryV2.json",
+        "Data/BranchCleanupPlan.json"
+      ],
+      "evidence_boundary": "OFFLINE SOURCE/DATA/STATIC/REPOSITORY PREPARATION AUTHORIZATION ONLY. It is not runtime, PIE, device, visual, audio-listening or performance acceptance.",
+      "authority": "USER_EXPLICIT_DIRECTION"
     }
   ],
   "open_conflicts": [],
@@ -6499,11 +6526,11 @@
     "runtime_chapter_sequence": "Data/P1C01RuntimeChapterSequenceV1.json"
   },
   "immediate_next_large_actions": [
-    "1. Finish the active Frodo real-human lane with a multi-source asset factory: exact-source inventory -> repair/normalization where lawful -> UE4.27 technical gauntlet -> deformation/retarget -> AnimBP -> async runtime replacement.",
-    "2. Continue Visible Shire First with large player-facing packets: natural terrain silhouette, Bag End/Hobbiton landmarks and architecture, roads/hedges/woodland/Ferry, vegetation/material variation and lighting/presentation.",
-    "3. Convert recurring asset failures into reusable normalization/QC tooling rather than repeated manual retries; broaden legal/open candidate discovery whenever a source family is technically exhausted.",
-    "4. Keep target-device DX11 720p/30-FPS performance constraints active through HISM/ISM, culling, soft refs, async loading, LOD/material budgets and pooled NPCs.",
-    "5. Collect real Gate 6/7 PIE/device/visual/pacing/performance evidence only after the visible P1C01 vertical slice is materially transformed; do not open P1C02 runtime early."
+    "1. While the UE4 runner is unavailable, run WHOLE_GAME_OFFLINE_SATURATION: reconcile all 23 source chapters, route synchronization and future asset demand without activating later runtime chapters.",
+    "2. Fill the whole-game warehouse/source queue from provenance-clear providers, prioritizing reusable humanoid bases/outfits/animation, horse/fauna, hero/support world kits, audio and battle/VFX gaps; keep actual payload state explicit.",
+    "3. Retire reviewed dead refs through hosted fail-closed cleanup while preserving the active P1C01 PR and unique Edoras source-prep branches.",
+    "4. Continue P1C01 source readiness in parallel; do not re-plan or open Bree.",
+    "5. On runner return, execute Data/P1C01RunnerHandoffV1.json and finish P1C01 One-Shot through Gate 6/7 before any P1C02 runtime start."
   ],
   "session_handoff": {
     "checkpoint_id": "CP-W01-P1C01-C4-MERGED-D-NEXT",
@@ -8741,6 +8768,33 @@
       "disk save/load runtime proof",
       "target-device FPS/RAM/VRAM",
       "human Gate 6/7"
-    ]
+    ],
+    "whole_game_preparation_exception": "AUTHORIZED_BY_DEC_105",
+    "runtime_serialization_unchanged": "P1C01_ONLY"
+  },
+  "whole_game_offline_saturation_exception_2026_10_06": {
+    "status": "ACTIVE_WHILE_UE4_RUNNER_UNAVAILABLE",
+    "runtime_authority": "P1C01_ONLY",
+    "canonical_source_scope": "F1-01 through F3-07 preparation",
+    "allowed": [
+      "source and canon audits",
+      "whole-game chapter demand correction",
+      "external legal/open-source research and candidate registration",
+      "warehouse/source queue growth",
+      "provenance and QC manifests",
+      "hosted static validation",
+      "safe dead-branch cleanup",
+      "future chapter preparation with runtime_integration_allowed=false"
+    ],
+    "forbidden": [
+      "opening P1C02 or later runtime",
+      "promoting warehouse presence to imported/integrated/accepted",
+      "claiming PIE/device/visual/performance evidence from static audit",
+      "blind asset mirroring or density",
+      "CI self-push to the active PR branch"
+    ],
+    "runner_return_action": "Execute Data/P1C01RunnerHandoffV1.json immediately and return primary effort to P1C01-ONE-SHOT-FINISH.",
+    "audit": "Data/WholeGameOfflineDeepAuditV1.json",
+    "warehouse_batch": "Data/WholeGameWarehouseSaturationBatchV3.json"
   }
 }

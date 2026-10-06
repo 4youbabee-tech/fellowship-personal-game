@@ -4316,3 +4316,31 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Fresh hosted static validation | PENDING |
 | UE4.27 compile / runtime / disk roundtrip | PENDING RUNNER |
 | PIE / device / visual / performance / Gate 6+7 | NOT ACCEPTED |
+
+## 2026-10-06 - Whole-game offline saturation audit
+
+| Control | State |
+|---|---|
+| Canonical mission chapters audited | 23 |
+| Runtime-changing chapter | P1C01 ONLY |
+| Cross-chapter demand pollution | ROOT-FIX SOURCE-IMPLEMENTED |
+| Corrected demand rows | F1-03, F1-04, F1-05, F1-08, F2-01, F2-03, F3-03, F3-04, F3-07 |
+| Source registry declared/actual count | 142 / 142 after fix |
+| Repository SourceAssets files | 423 |
+| Production SourceAssets files | 416 |
+| ValidatedRuntime files | 5 |
+| Final animated FBX truth | 4 tracked Frodo technical FBX files |
+| OBJ source volume | 352 / STATIC-SOURCE ONLY, NOT ANIMATED COMPLETION |
+| Production Audio WAV masters | 0 |
+| Whole-game candidate batch | ADDED / CANDIDATE ONLY |
+| LivingWorldDirector population authority | PRESERVED |
+| ShireNPCContextSubsystem context authority | PRESERVED |
+| Per-frame full-world NPC context scan found | NO in reviewed path |
+| Heavy streaming subsystem sync LoadObject | 0 in reviewed streaming implementation |
+| Automatic checkpoint disk save | ASYNC PATH PRESENT |
+| QuickSave/QuickLoad sync disk path | STATIC HITCH RISK / DEVICE MEASUREMENT PENDING |
+| Dead-ref cleanup | HOSTED FAIL-CLOSED PREPARED |
+| Unique Edoras prep refs | PRESERVED |
+| Hosted static audit | PENDING |
+| UE4 compile / PIE / device / visual / performance | PENDING RUNNER |
+| Gate 6/7 | NOT ACCEPTED |

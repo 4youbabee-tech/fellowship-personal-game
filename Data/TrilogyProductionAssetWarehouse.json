@@ -876,5 +876,34 @@
       "test_requirement": "Relevant PIE/device/performance plus human visual/audio acceptance."
     }
   ],
-  "warehouse_parallelism_rule": "Fill CATALOGUED/CANDIDATE/STAGED continuously even when the self-hosted UE runner is unavailable. Do not wait for gameplay testing to build stock; do not bypass intake validation before READY_FOR_IMPORT."
+  "warehouse_parallelism_rule": "Fill CATALOGUED/CANDIDATE/STAGED continuously even when the self-hosted UE runner is unavailable. Do not wait for gameplay testing to build stock; do not bypass intake validation before READY_FOR_IMPORT.",
+  "offline_saturation_2026_10_06": {
+    "parent_head": "eebb313b6a782234302ad20d6620dcdfd0e5ddd6",
+    "mode": "WHOLE_GAME_OFFLINE_WAREHOUSE_SATURATION_WHILE_UE_RUNNER_UNAVAILABLE",
+    "candidate_batch": "Data/WholeGameWarehouseSaturationBatchV3.json",
+    "source_registry": "Data/GlobalWarehouseSourceRegistryV2.json",
+    "repository_source_inventory_snapshot": {
+      "total_sourceasset_files": 423,
+      "production_files": 416,
+      "validated_runtime_files": 5,
+      "extension_counts": {
+        "obj": 352,
+        "mtl": 30,
+        "json": 2,
+        "png": 8,
+        "tga": 24,
+        "fbx": 4,
+        "md": 3
+      },
+      "animated_final_truth": "The four tracked FBX files are the established Frodo validated-runtime technical bundle. Existing OBJ volume is static/source inventory and does not count as final animated-character completion.",
+      "production_audio_wav_master_count": 0
+    },
+    "gap_census": [
+      "23 canonical mission chapters are catalogued, but later runtime chapters remain preparation-only.",
+      "58 named-character catalogue slots exist; final production FBX/rig/animation completion is not established for the catalogue as a whole.",
+      "28 core location slots, 8 hero creature/threat slots and 9 battle-set slots remain warehouse demand, not acceptance.",
+      "Highest leverage gaps remain realistic humanoid/creature rigs, broad animation, region-specific hero architecture/vegetation, deep audio, battle/VFX and mounted systems."
+    ],
+    "truth_boundary": "Warehouse/catalogue/source-preparation only. Runtime residency and chapter activation remain serialized; no acceptance claim."
+  }
 }
