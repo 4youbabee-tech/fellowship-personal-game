@@ -4384,3 +4384,15 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | UE4 compile/import/package | PENDING RUNNER |
 | PIE/device/visual/performance | NOT ACCEPTED |
 | Gate 6/7 | NOT ACCEPTED |
+
+## 2026-10-06 - Execution-governance validator reconciliation
+
+| Control | State |
+|---|---|
+| Owner-facing execution mode | ACTIVE_ONE_SHOT_CHAPTER_FINISH |
+| Owner-facing lane | P1C01_ONE_SHOT_SHIRE_CHAPTER_FINISH |
+| Technical production lane | W01_P1C01_PRODUCTION_VERTICAL_SLICE |
+| Current mega wave | P1C01-ONE-SHOT-FINISH / ACTIVE |
+| Offline runtime authority | P1C01_ONLY |
+| Validator forced rollback to ACTIVE_GATE_FIRST | REMOVED |
+| Exact-head hosted proof | PENDING |
