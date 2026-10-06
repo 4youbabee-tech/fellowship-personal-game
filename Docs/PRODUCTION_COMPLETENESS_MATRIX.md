@@ -4256,7 +4256,8 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | P1C01 Material / Frodo UE4 / Render / Human Wave2 / Unreal Build lanes | QUEUED on previous head when diagnosed |
 | Gate weakening | NONE |
 | Fresh exact-head Pre-Unreal | PENDING |
-| Fresh exact-head UE4/closure execution | PENDING |
+| Fresh exact-source-head closure execution | SUCCESS — #40 on `591cebb1000984cec62141f516d4018d646c939f` |
+| Fresh exact-head UE4 build/import/package | PENDING |
 | PIE / visual / device / performance / Gate 6+7 | NOT ACCEPTED |
 
 ## 2026-10-06 - Runner availability / chapter execution unblock
@@ -4269,11 +4270,11 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Last proven runner-health time | 2026-10-05 21:15 UTC |
 | Runner still executing package work | observed through ~21:25 UTC |
 | First persistent queued self-hosted run | 21:35 UTC |
-| Current runner classification | NOT ACCEPTING JOBS / HOST-SIDE RECOVERY REQUIRED |
+| Current runner classification | PRIOR OUTAGE SUPERSEDED BY CLOSURE #40 RUNNER-HEALTH PASS; continuous-online state not inferred |
 | Exact host-side cause | NOT YET OBSERVED |
 | P1C01 Chapter Closure Pack PR trigger | SOURCE-IMPLEMENTED |
 | Superseded PR closure cancellation | SOURCE-IMPLEMENTED |
-| Fresh exact-head closure execution | PENDING RUNNER RECOVERY |
+| Fresh exact-source-head closure execution | SUCCESS — Closure Pack #40 |
 | PIE / device / visual / performance / Gate 6+7 | NOT ACCEPTED |
 
 ## 2026-10-06 - Offline world/audio/mission saturation
@@ -4290,7 +4291,7 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | F1-01/F1-02/F1-03 mission/QA map | ADDED |
 | P1C01/P1C02 F1-03 handoff boundary | PRESERVED |
 | Hosted offline saturation workflow | ADDED |
-| UE4/runtime/device evidence | PENDING RUNNER |
+| UE4/runtime/device evidence | PENDING EXECUTION / NOT PROVEN |
 
 ## 2026-10-06 - Offline source intake and P1C01 terminal boundary
 
@@ -4314,7 +4315,7 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Ferry terminal checkpoint | `WC_P1C01_FERRY_END` SOURCE-IMPLEMENTED |
 | Hosted boundary/source-intake guard | ADDED |
 | Fresh hosted static validation | PENDING |
-| UE4.27 compile / runtime / disk roundtrip | PENDING RUNNER |
+| UE4.27 compile / runtime / disk roundtrip | PENDING EXECUTION / NOT PROVEN |
 | PIE / device / visual / performance / Gate 6+7 | NOT ACCEPTED |
 
 ## 2026-10-06 - Whole-game offline saturation audit
@@ -4436,3 +4437,33 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Old eff0e799 / 161-bone metadata | HISTORICAL_SUPERSEDED ONLY |
 | Gate/provenance equality regression guard | ADDED |
 | Fresh UE4 runtime/render proof | PENDING |
+
+
+## 2026-10-06 - Final static-cleanup stabilization packet
+
+| Control | State |
+|---|---|
+| Audited source head | `591cebb1000984cec62141f516d4018d646c939f` |
+| P1C01 Chapter Closure Pack #40 | SUCCESS / SOURCE-CLOSURE RUN-PROVEN |
+| Runner-health step inside #40 | SUCCESS |
+| Hosted red jobs on audited head | ZERO EXECUTABLE STEPS / PRE-STEP INFRASTRUCTURE-SETUP CLASS |
+| Actual validator failure proven by those reds | NO |
+| Actual UE compile/runtime failure proven by those reds | NO |
+| Runtime `StaticLoadObject` found in ShireJourney sweep | 0 |
+| Runtime `LoadSynchronous` found in ShireJourney sweep | 0 |
+| Runtime OBJ/BMP paths found in ShireJourney sweep | 0 / 0 |
+| Direct `LoadObject` production-heavy asset debt found | 0; reviewed direct loads are Engine BasicShapes fallbacks |
+| LivingWorldDirector pooling ownership | PRESERVED |
+| NPCContext population spawn authority | NOT FOUND / OWNERSHIP PRESERVED |
+| Ferry auto-open to P1C02 | NOT FOUND IN REVIEWED LIVE PATHS |
+| Active runtime chapter | P1C01 ONLY |
+| P1C02/Bree | LOCKED |
+| Fresh hosted/static proof after stabilization commit | PENDING |
+| UE4.27 compile/import/package | PENDING |
+| Production named-character bundles beyond Frodo | 7 FINAL FBX BUNDLES PENDING |
+| Production Audio WAV masters/playback | 0 masters at census / runtime playback PENDING |
+| PIE mission/save/retry/skip/backtrack | PENDING |
+| Target-device DX11 720p profiling | PENDING |
+| Human Gate 6/7 | NOT ACCEPTED |
+
+Evidence boundary: **STATIC-RISK-AUDITED / SOURCE-CLOSURE-RUN-PROVEN only**. No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED or PERFORMANCE-ACCEPTED status is promoted by this packet.

@@ -1341,3 +1341,17 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Heavy production residency stays soft/async. The only direct runtime `LoadObject` forms found by the sweep are Engine BasicShapes fallback assets/materials, not production warehouse assets.
 - The Bucklebury far-bank terminal remains inside the committed Shire world; Bree geometry/population/runtime may not be instantiated by that trigger, story-flow repair or save restoration.
 - Runtime collision, silhouette/readability, foliage/material presentation, water/rope/ferry traversal and frame-time quality remain runner/human evidence and are not inferred from this static sweep.
+
+
+## 2026-10-06 - Final static cleanup closeout before P1C01 runtime execution
+
+- Exact source head reviewed: `591cebb1000984cec62141f516d4018d646c939f`.
+- Closure source train is no longer pending runner return: P1C01 Chapter Closure Pack #40 succeeded, including its runner-session-health, preflight and Mega Pack V2 steps. This does not establish UE import, PIE, device, visual, audio-playback or performance acceptance.
+- Runtime source audit found no synchronous production-heavy loader to root-fix: no `StaticLoadObject`, no `LoadSynchronous`, and direct `LoadObject` findings are limited to Engine BasicShapes fallback meshes/material. Production-heavy residency remains soft/async through the established streaming architecture.
+- No animated runtime OBJ or BMP texture path was found. The tracked OBJ stock remains source/static inventory only; final animated production delivery remains FBX.
+- `ALivingWorldDirector` remains ambient population/pooling authority. It acquires pooled NPC/interaction/motion actors and only spawns when the corresponding pool is empty; maintenance remains bounded. `UShireNPCContextSubsystem` remains context/schedule/knowledge authority.
+- Transition-time actor scans in `AChapterWorldRouter` and named-voice resolution scanning in `UShireAudioSubsystem` are retained as explicit measurement risks; neither was proven to be a per-frame traversal bottleneck by this static audit.
+- Ferry far-side ownership remains P1C01 terminal state: `FerryEscapeComplete` -> `WC_P1C01_FERRY_END`; no reviewed live story/world/restore path auto-opens Bree.
+- No density, actor-per-prop expansion or authority duplication was introduced in this cleanup.
+- The next unresolved chapter work is runtime evidence and real production content integration, not another planning/micro-wave pass.
+- Evidence boundary: **STATIC-RISK-AUDITED / SOURCE-CLOSURE-RUN-PROVEN**. P1C02 remains locked until real P1C01 Gate 6/7 plus explicit owner command.

@@ -4776,7 +4776,7 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Current classification: **RUNNER UNAVAILABLE / NOT ACCEPTING JOBS**, based on queue behavior. GitHub evidence cannot distinguish machine sleep/logout from listener/watchdog/registration failure without the Windows host responding.
 - Independent workflow defect found: `P1C01 Chapter Closure Pack` previously triggered only on push to `develop` or manual dispatch, so PR #329 could not automatically launch the One-Shot chapter source train.
 - Root fix: the closure workflow now supports `pull_request` to `develop`, includes the One-Shot manifest in path routing, uses PR-specific concurrency and cancels superseded PR closure runs.
-- Status remains **SOURCE-IMPLEMENTED / RUNNER RECOVERY + FRESH EXACT-HEAD EXECUTION PENDING**. No PIE/device/visual/performance acceptance is claimed.
+- This earlier outage classification is superseded by the later exact-source-head Closure Pack #40 proof below. No PIE/device/visual/performance acceptance is claimed.
 
 ## 2026-10-06 - Offline saturation world/audio/mission packet
 
@@ -4863,3 +4863,17 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - The old 161-bone predecessor is retained only inside an explicitly `HISTORICAL_SUPERSEDED` snapshot so rejection/history evidence is not erased.
 - Source-contract regression coverage now requires deformation-gate winner == tracked Frodo provenance winner and 48-bone/T0 truth.
 - Fresh exact-head UE4 runtime/render/human evidence remains pending.
+
+
+## 2026-10-06 - Final comprehensive static cleanup / Closure #40 reconciliation
+
+- PR #329 source head audited for this cleanup: `591cebb1000984cec62141f516d4018d646c939f`.
+- `P1C01 Chapter Closure Pack #40` (run `37429971478`) completed successfully on that source head. Its exact checkout, `Verify runner session health`, fast closure preflight and Mega Pack V2 steps all succeeded. This is runner/session + source-closure evidence only.
+- The red hosted/prerequisite runs on the same source head did not execute a single workflow step; downstream UE jobs were skipped where applicable. They are classified **CI PRE-STEP INFRASTRUCTURE/SETUP / EXACT CAUSE UNAVAILABLE**, not validator failure and not UE compile/runtime failure.
+- Full ShireJourney C++ static risk sweep found no `StaticLoadObject`, no `LoadSynchronous`, no runtime `.obj` path and no runtime `.bmp` path. Direct `LoadObject` use found by the sweep is Engine BasicShapes fallback content only.
+- P1C01 Ferry ownership is coherent: `FerryEscape stage 2` + `FerryEscapeComplete` + `WC_P1C01_FERRY_END` remain inside P1C01; neither the ferry trigger nor restored-terminal repair auto-opens `P1C02 / RoadToBree`.
+- Reviewed `ShireGameMode` P1C02 `StartChapter` calls are non-shipping runtime audit harnesses, not live auto-open gameplay. `AChapterWorldRouter` scans are transition cleanup, while `ALivingWorldDirector` remains bounded/pool-based and commit-synchronized.
+- Branch inventory is clean for the current policy: `main`, `develop`, active P1C01, archive recovery, and the two unique Edoras prep branches remain. The Edoras branches carry unique source-prep work and are intentionally preserved.
+- No gameplay/world/architecture C++ was changed merely for cleanup because no causal defect was proven in the reviewed paths.
+- Remaining evidence is explicit, not hidden: fresh hosted/static execution after this stabilization commit; UE4.27.2 compile/import/package; Frodo runtime; seven remaining named-character final FBX bundles; production WAV import/playback; full P1C01 mission/save/retry/skip/backtrack pass; target-device profiling; and human Gate 6/7 review.
+- Current evidence state after this packet: **STATIC-RISK-AUDITED / SOURCE-CLOSURE-RUN-PROVEN; COMPILE/PIE/DEVICE/VISUAL/PERFORMANCE/GATE 6/7 PENDING**. P1C02 remains locked.

@@ -8758,7 +8758,12 @@
     "evidence_boundary": "This contract governs continuity/management. It does not itself establish PIE, device, visual, performance or Gate 6/7 acceptance."
   },
   "runner_unavailable_policy_2026_10_06": {
-    "status": "ACTIVE_PERMANENT",
+    "status": "ACTIVE_PERMANENT_CONDITIONAL_POLICY",
+    "latest_observed_state": "RUNNER_RETURN_PROVEN_ON_P1C01_CLOSURE_40_SOURCE_HEAD",
+    "latest_observed_sha": "591cebb1000984cec62141f516d4018d646c939f",
+    "latest_observed_run": "P1C01 Chapter Closure Pack #40 / run 37429971478",
+    "latest_runner_health_step": "Verify runner session health = success",
+    "resume_state": "PRIMARY_P1C01_ONE_SHOT_EXECUTION_RESUMED",
     "trigger": "UE4-27-Windows is not accepting jobs or is physically unavailable.",
     "rule": "Runner unavailability never idles the active chapter. Continue every safe source/code/data/provenance/QC/hosted-static task that does not require UE4 or target-device evidence. Execute Data/P1C01RunnerHandoffV1.json when the runner returns.",
     "genuinely_runner_blocked": [
@@ -8773,7 +8778,16 @@
     "runtime_serialization_unchanged": "P1C01_ONLY"
   },
   "whole_game_offline_saturation_exception_2026_10_06": {
-    "status": "ACTIVE_WHILE_UE4_RUNNER_UNAVAILABLE",
+    "status": "INACTIVE_AFTER_RUNNER_RETURN_PROOF",
+    "deactivation_evidence": {
+      "source_head": "591cebb1000984cec62141f516d4018d646c939f",
+      "workflow": "P1C01 Chapter Closure Pack",
+      "run_number": 40,
+      "run_id": 37429971478,
+      "runner_health_step": "success",
+      "closure_pack_step": "success",
+      "evidence_boundary": "Runner/session health plus source-closure execution only; no UE compile, PIE, device, visual, audio-playback or performance acceptance."
+    },
     "runtime_authority": "P1C01_ONLY",
     "canonical_source_scope": "F1-01 through F3-07 preparation",
     "allowed": [
@@ -8796,5 +8810,32 @@
     "runner_return_action": "Execute Data/P1C01RunnerHandoffV1.json immediately and return primary effort to P1C01-ONE-SHOT-FINISH.",
     "audit": "Data/WholeGameOfflineDeepAuditV1.json",
     "warehouse_batch": "Data/WholeGameWarehouseSaturationBatchV3.json"
+  },
+  "final_static_cleanup_snapshot_2026_10_06": {
+    "status": "STATIC_RISK_AUDIT_COMPLETE_RUNTIME_EVIDENCE_PENDING",
+    "source_head": "591cebb1000984cec62141f516d4018d646c939f",
+    "scope": "FINAL_PRE_RUNNER_PRE_CHAPTER_CLEANUP",
+    "confirmed_findings": [
+      "P1C01 FerryEscape stage 2 remains a committed P1C01 terminal state and no generated ferry trigger or restored-terminal repair auto-opens P1C02.",
+      "ShireGameMode P1C02 StartChapter calls reviewed in the cleanup are non-shipping runtime audit harness paths, not gameplay auto-open authority.",
+      "No StaticLoadObject, LoadSynchronous, runtime OBJ path or runtime BMP path was found in the reviewed ShireJourney C++ source.",
+      "Direct LoadObject occurrences found by the source sweep are limited to /Engine/BasicShapes fallback meshes/materials; production-heavy residency remains soft/async.",
+      "ALivingWorldDirector retains ambient population pooling authority with bounded maintenance; UShireNPCContextSubsystem remains context/schedule/knowledge authority.",
+      "AChapterWorldRouter actor enumeration is transition cleanup, not per-frame traversal scanning; UShireAudioSubsystem named-voice actor resolution remains a runtime measurement risk rather than a proven defect.",
+      "Repeated world detail remains HISM/ISM/AWorldDetailCluster and no actor-per-prop replacement was authorized.",
+      "Repository branch inventory preserves only main, develop, the active P1C01 branch, archive recovery and two unique Edoras preparation branches.",
+      "P1C01 Chapter Closure Pack #40 succeeded on the source head and its Verify runner session health, preflight and closure-pack steps all succeeded.",
+      "The remaining red workflows on the source head failed before any job step executed; downstream UE jobs were skipped where applicable, so those reds are not validator or UE compile/runtime failure evidence."
+    ],
+    "explicit_runtime_evidence_requirements": [
+      "Fresh Pre-Unreal/static workflow execution after the stabilization commit; current hosted failures are zero-step infrastructure/setup failures with no validator output.",
+      "UE4.27.2 compile/import/package on the execution head.",
+      "Frodo exact-head runtime animation/render evidence and real production FBX bundles for Bilbo, Gandalf, Sam, Merry, Pippin, Black Rider and Black Rider horse.",
+      "Production WAV import and in-engine playback evidence.",
+      "F1-01/F1-02/F1-03 P1C01 gameplay through FerryEscape including collision/traversal, retry, skip, backtrack, return-to-control and disk save/load roundtrip.",
+      "Target-device DX11 1280x720 FPS/frame-time/RAM/VRAM/streaming observations.",
+      "Human visual/audio/gameplay Gate 6/7 review."
+    ],
+    "evidence_boundary": "STATIC-RISK-AUDITED plus source-closure runner proof only. This snapshot is not COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED or Gate 6/7 ACCEPTED."
   }
 }

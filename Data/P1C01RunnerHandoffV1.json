@@ -1,23 +1,28 @@
 {
   "schema_version": 1,
   "handoff_id": "P1C01_RUNNER_HANDOFF_V1",
-  "status": "READY_AS_EXECUTION_SEQUENCE_RUNNER_CURRENTLY_UNAVAILABLE",
-  "rule": "When UE4-27-Windows returns, do not restart planning. Sync the latest P1C01 head once, prove runner health, then execute the accumulated One-Shot train.",
+  "status": "CLOSURE_SOURCE_TRAIN_RUN_PROVEN_CONTINUE_ONE_SHOT_EXECUTION",
+  "rule": "Do not restart planning or rerun the already-proven closure source train without a closure-relevant change. P1C01 Chapter Closure Pack #40 proved runner session health and source closure on source head 591cebb1000984cec62141f516d4018d646c939f. Continue the One-Shot train from hosted/static exact-head validation, then UE4 build/import/package and the remaining runtime/device/human lanes.",
   "execution_order": [
     {
       "order": 1,
       "id": "RUNNER_HEALTH",
-      "expected": "RUNNER_HEALTH_PASS"
+      "expected": "RUNNER_HEALTH_PASS",
+      "status": "SATISFIED_BY_CLOSURE_40_SOURCE_HEAD",
+      "evidence": "P1C01 Chapter Closure Pack #40 step 'Verify runner session health' = success"
     },
     {
       "order": 2,
       "id": "P1C01_CLOSURE_SOURCE_TRAIN",
-      "workflow": "P1C01 Chapter Closure Pack"
+      "workflow": "P1C01 Chapter Closure Pack",
+      "status": "SATISFIED_REUSE_DO_NOT_RERUN",
+      "evidence": "P1C01 Chapter Closure Pack #40 = success on 591cebb1000984cec62141f516d4018d646c939f"
     },
     {
       "order": 3,
       "id": "PRE_UNREAL",
-      "workflow": "Pre-Unreal Validation"
+      "workflow": "Pre-Unreal Validation",
+      "status": "NEXT_REQUIRED"
     },
     {
       "order": 4,
@@ -66,5 +71,34 @@
     "blind density increase",
     "synchronous heavy loading",
     "CI self-push"
-  ]
+  ],
+  "last_proven_runner_health": {
+    "source_head": "591cebb1000984cec62141f516d4018d646c939f",
+    "workflow": "P1C01 Chapter Closure Pack",
+    "run_number": 40,
+    "run_id": 37429971478,
+    "step": "Verify runner session health",
+    "conclusion": "success",
+    "boundary": "Runner/session health within this run only; not a claim that the host remains continuously online after the run."
+  },
+  "closure_source_train": {
+    "source_head": "591cebb1000984cec62141f516d4018d646c939f",
+    "workflow": "P1C01 Chapter Closure Pack",
+    "run_number": 40,
+    "run_id": 37429971478,
+    "conclusion": "success",
+    "successful_steps": [
+      "exact isolated checkout",
+      "runner session health",
+      "fast closure preflight",
+      "P1C01 Chapter Closure Mega Pack V2"
+    ],
+    "reuse_rule": "Reuse across this administrative/static-cleanup descendant only while closure-relevant source/warehouse-pack inputs remain unchanged. Success proves source/preparation outputs only."
+  },
+  "hosted_failure_classification": {
+    "source_head": "591cebb1000984cec62141f516d4018d646c939f",
+    "observed": "Pre-Unreal and the listed hosted prerequisite jobs failed with zero executable steps; downstream UE jobs were skipped where applicable.",
+    "classification": "CI_PRE_STEP_INFRASTRUCTURE_OR_SETUP_FAILURE_EXACT_CAUSE_UNAVAILABLE",
+    "rule": "Do not repair gameplay/C++ merely from these red conclusions. Require actual validator/job output before attributing a source defect."
+  }
 }
