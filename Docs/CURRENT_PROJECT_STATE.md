@@ -4965,3 +4965,12 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Root-fix keeps the hosted preflight preferred, but allows the self-hosted UE4 gate to start when the hosted job itself fails. On fallback, the Windows job performs exact-head checkout, resolves an existing local Python interpreter, re-runs the static Frodo import contract, re-downloads the exact historical rig/retarget artifacts, re-verifies all SHA256 bytes, builds ShireJourneyEditor and performs the existing 48-bone technical import checks.
 - A real hosted validation failure cannot silently promote content: the fallback repeats the static contract and the downstream exact-byte/UE4 checks remain fail-closed.
 - This is CI availability hardening only. Frodo remains **NOT VISUALLY ACCEPTED / NOT PIE-TESTED / NOT DEVICE-TESTED** until new evidence exists.
+
+
+## 2026-10-07 - Closure checkout anti-waste root fix
+
+- P1C01 Closure #49 exposed a real runner-efficiency defect: the workflow fetched the exact head quickly, then spent almost twelve minutes materializing a working tree before discovering `run=False reason=no-closure-input-delta`.
+- Root cause: closure classification happened after working-tree checkout, and repository Git LFS filters apply to FBX/PNG/WAV/uasset/umap/exr paths.
+- Root fix: build only a lightweight Git object graph first with `GIT_LFS_SKIP_SMUDGE=1`, classify the exact base/head delta before any checkout, skip checkout entirely when no closure payload changed, and when closure work is required checkout with LFS hydration still disabled because the closure source train consumes manifests/scripts and persistent Warehouse state rather than repository binary payloads.
+- New Pre-Unreal contracts enforce classifier-before-checkout and reject any `git lfs pull` in this closure workflow.
+- This is runner-throughput infrastructure only; no gameplay, world, story, asset-residency or acceptance claim changed.

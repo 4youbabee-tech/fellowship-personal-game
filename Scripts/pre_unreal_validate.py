@@ -8699,6 +8699,19 @@ for symbol in [
     if symbol not in pg192_closure_workflow:
         fail(f"PG-192 dedicated closure workflow contract missing: {symbol}")
 for symbol in [
+    "Prepare lightweight closure graph",
+    "Classify closure-relevant delta before checkout",
+    "Checkout exact closure head without LFS hydration",
+    "GIT_LFS_SKIP_SMUDGE=1",
+    "P1C01_CLOSURE_GRAPH_READY",
+]:
+    if symbol not in pg192_closure_workflow:
+        fail(f"PG-192 closure anti-waste contract missing: {symbol}")
+if pg192_closure_workflow.index("Classify closure-relevant delta before checkout") > pg192_closure_workflow.index("Checkout exact closure head without LFS hydration"):
+    fail("PG-192 closure classifier must run before any working-tree checkout")
+if "git lfs pull" in pg192_closure_workflow.lower():
+    fail("PG-192 closure source train must not hydrate LFS payloads")
+for symbol in [
     "group: warehouse-stage-${{ github.repository }}",
     "cancel-in-progress: true",
     "timeout-minutes: 60",

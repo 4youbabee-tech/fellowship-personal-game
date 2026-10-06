@@ -4624,3 +4624,18 @@ Evidence boundary: exact-head machine/headless evidence does not substitute for 
 | Human visual/PIE/device acceptance | PENDING / NOT CLAIMED |
 
 The fallback removes CI infrastructure deadlock; it does not weaken the Frodo evidence boundary.
+
+
+## 2026-10-07 - Closure runner anti-waste contract
+
+| Control | State |
+|---|---|
+| Delta classification before working-tree checkout | SOURCE-IMPLEMENTED |
+| Lightweight exact-head graph fetch | SOURCE-IMPLEMENTED |
+| LFS smudge during classification | DISABLED |
+| No-delta working-tree checkout | SKIPPED |
+| Closure-required checkout | EXACT HEAD / LFS HYDRATION DISABLED |
+| Gameplay/runtime behavior changed | NO |
+| Fresh timing proof on new head | PENDING |
+
+Goal: spend self-hosted runner time on P1C01 build/import/runtime evidence rather than hydrating unrelated repository binaries for a closure no-op.

@@ -1437,3 +1437,12 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Fallback repeats the static import contract before exact artifact hashes, UE4.27.2 build/import and the existing 48-bone technical checks.
 - Final animated delivery remains FBX-only; no OBJ/BMP/synchronous heavy-load path is introduced.
 - Evidence boundary remains technical import only until exact-head rendered/human/device proof exists.
+
+
+## 2026-10-07 - Closure checkout anti-waste ledger
+
+- Corrected the self-hosted Closure source-train ordering after #49 showed an almost twelve-minute checkout before a no-op delta classification.
+- Closure classification now precedes working-tree checkout and runs from a lightweight exact Git graph with LFS smudge disabled.
+- No closure-relevant delta means no working-tree checkout at all.
+- If closure execution is required, the exact head is checked out with LFS hydration disabled; persistent Warehouse content remains the source-payload authority for the source train.
+- No runtime/world authority or chapter boundary changed.

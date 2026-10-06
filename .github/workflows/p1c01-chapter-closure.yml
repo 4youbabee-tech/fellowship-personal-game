@@ -46,13 +46,14 @@ jobs:
       DELTA_BASE_SHA: ${{ github.event.before || github.event.pull_request.base.sha }}
 
     steps:
-      - name: Checkout exact closure head into isolated temp source
+      - name: Prepare lightweight closure graph
         shell: cmd
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           @echo off
           setlocal EnableExtensions EnableDelayedExpansion
+          set "GIT_LFS_SKIP_SMUDGE=1"
           set "GITEXE="
           for /f "delims=" %%G in ('where git.exe 2^>nul') do if not defined GITEXE set "GITEXE=%%G"
           if not defined GITEXE if exist "C:\Program Files\Git\cmd\git.exe" set "GITEXE=C:\Program Files\Git\cmd\git.exe"
@@ -68,21 +69,18 @@ jobs:
           if errorlevel 1 exit /b 71
           "!GITEXE!" -c credential.helper= -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=20 fetch --no-tags --depth=2 origin !TARGET_SHA!
           if errorlevel 1 exit /b 72
-          "!GITEXE!" checkout -f FETCH_HEAD
-          if errorlevel 1 exit /b 73
-          for /f "delims=" %%H in ('"!GITEXE!" rev-parse HEAD') do set "CHECKED_SHA=%%H"
-          if /I not "!CHECKED_SHA!"=="!TARGET_SHA!" exit /b 74
           echo SHIRE_CLOSURE_SOURCE=!CLOSURE_SRC!>>"%GITHUB_ENV%"
-          echo P1C01_CLOSURE_EXACT_CHECKOUT_PASS sha=!CHECKED_SHA!
+          echo P1C01_CLOSURE_GRAPH_READY sha=!TARGET_SHA! source=!CLOSURE_SRC!
 
-      - name: Classify closure-relevant delta
+      - name: Classify closure-relevant delta before checkout
         shell: powershell
         run: |
-          $ErrorActionPreference = 'Continue'
+          $ErrorActionPreference = 'Stop'
           $runClosure = $true
           $reason = 'fail-safe'
           $base = $env:DELTA_BASE_SHA
           $target = $env:TARGET_SHA
+          Set-Location -LiteralPath $env:SHIRE_CLOSURE_SOURCE
 
           if ($env:EVENT_NAME -eq 'workflow_dispatch') {
             $reason = 'manual-dispatch'
@@ -91,14 +89,11 @@ jobs:
             $reason = 'missing-base-fail-safe'
           }
           else {
-            Set-Location -LiteralPath $env:SHIRE_CLOSURE_SOURCE
             & git -c credential.helper= -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=20 fetch --no-tags --depth=1 origin $base
-            $fetchExit = $LASTEXITCODE
-            if ($fetchExit -ne 0) { throw "Unable to fetch closure delta base $base" }
+            if ($LASTEXITCODE -ne 0) { throw "Unable to fetch closure delta base $base" }
 
             $changed = @(& git diff --name-only $base $target)
-            $diffExit = $LASTEXITCODE
-            if ($diffExit -ne 0) { throw 'Unable to classify closure delta.' }
+            if ($LASTEXITCODE -ne 0) { throw 'Unable to classify closure delta.' }
 
             $closureInputs = @(
               'Data/P1C01MaterialImportWaveV2.json',
@@ -120,6 +115,20 @@ jobs:
 
           "RUN_P1C01_CLOSURE=$($runClosure.ToString().ToLowerInvariant())" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           Write-Host "P1C01_CLOSURE_DELTA_CLASSIFICATION run=$runClosure reason=$reason base=$base target=$target"
+
+      - name: Checkout exact closure head without LFS hydration
+        if: env.RUN_P1C01_CLOSURE == 'true'
+        shell: cmd
+        run: |
+          @echo off
+          setlocal EnableExtensions EnableDelayedExpansion
+          set "GIT_LFS_SKIP_SMUDGE=1"
+          cd /d "%SHIRE_CLOSURE_SOURCE%"
+          git checkout -f %TARGET_SHA%
+          if errorlevel 1 exit /b 73
+          for /f "delims=" %%H in ('git rev-parse HEAD') do set "CHECKED_SHA=%%H"
+          if /I not "!CHECKED_SHA!"=="%TARGET_SHA%" exit /b 74
+          echo P1C01_CLOSURE_EXACT_CHECKOUT_PASS sha=!CHECKED_SHA! lfsHydration=skipped
 
       - name: Verify runner session health
         if: env.RUN_P1C01_CLOSURE == 'true'
