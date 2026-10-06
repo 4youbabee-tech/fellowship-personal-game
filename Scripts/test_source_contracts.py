@@ -342,6 +342,7 @@ class SourceContractTests(unittest.TestCase):
             "SHIRE_ROOT_HIDE",
         ):
             self.assertIn(discovery_id, world)
+        self.assertIn('HideUnderRoad->RequiredSideStoryBeat=TEXT("Side_RootHideMasteryComplete")', world)
 
 
     def test_p1c01_character_presentation_is_explicit_and_async(self):

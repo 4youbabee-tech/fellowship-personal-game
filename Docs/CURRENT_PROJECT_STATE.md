@@ -4924,3 +4924,12 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Four matching Journey Discovery rewards were added; all are first-time/idempotent, story_effect=NONE, cannot advance required anchors, and cannot change canon.
 - F1-03 still terminates P1C01 at `FerryEscapeComplete / WC_P1C01_FERRY_END`; no Bree runtime was opened.
 - Evidence state: **SOURCE-IMPLEMENTED / STATIC CONTRACTS ADDED / fresh exact-head compile+runtime proof pending**. No PIE/device/visual/performance/Gate 6/7 acceptance is claimed.
+
+
+## 2026-10-06 - Root Hide main-path bypass closed
+
+- Live-head review found that `SHIRE_ROOT_HIDE` existed as a crouched challenge, but the main `HideUnderRoad` quest trigger did not yet require its completion. A player could therefore advance `KeepOffRoad` by entering the trigger without completing the intended hiding sequence.
+- Root fix: `HideUnderRoad->RequiredSideStoryBeat = Side_RootHideMasteryComplete`.
+- `AShireQuestTrigger` already re-evaluates an overlapping player when a story beat is published, so completing the challenge releases the existing main trigger without polling or a second authority.
+- Static source-contract coverage now asserts the gate explicitly.
+- Evidence boundary: **SOURCE-IMPLEMENTED / STATIC-CONTRACTED; exact-head UE4 runtime proof pending**.

@@ -4547,3 +4547,15 @@ Evidence boundary: CI orchestration source change only; Gate 6/7 remains unchang
 | Gate 6/7 | NOT ACCEPTED |
 
 Evidence boundary: source/runtime authoring only until exact-head validation and engine evidence complete.
+
+
+## 2026-10-06 - Root Hide progression guard
+
+| Control | State |
+|---|---|
+| SHIRE_ROOT_HIDE activity | SOURCE-IMPLEMENTED |
+| Main KeepOffRoad trigger requires hide completion | SOURCE-IMPLEMENTED |
+| Bypass by walking directly through HideUnderRoad | CLOSED IN SOURCE |
+| Story-beat re-evaluation path | EXISTING / REUSED |
+| Extra polling / second quest authority | NONE |
+| Exact-head UE4 proof | PENDING |

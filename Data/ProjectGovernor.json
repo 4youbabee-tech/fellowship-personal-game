@@ -8845,5 +8845,20 @@
       "Closure #44 exposed a workflow-definition corruption in the generated anti-churn YAML before any job ran. The closure workflow must be rebuilt from the exact known-good #40 source rather than patched incrementally; the rebuilt form is accepted for publication only when it contains exactly one checkout, classifier, runner-health, preflight, Mega Pack and cleanup step."
     ],
     "evidence_boundary": "STATIC-RISK-AUDITED plus source-closure runner proof only. This snapshot is not COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED or Gate 6/7 ACCEPTED."
+  },
+  "p1c01_gameplay_execution_2026_10_06": {
+    "status": "SOURCE_IMPLEMENTED_ENGINE_PROOF_PENDING",
+    "chapter": "P1C01",
+    "implemented": [
+      "F1-02 Ring investigation",
+      "F1-02 Bag End packing",
+      "F1-02 stealth departure",
+      "F1-03 Root Hide crouched sequence"
+    ],
+    "root_hide_main_path_guard": "HideUnderRoad requires Side_RootHideMasteryComplete before KeepOffRoad stage progression.",
+    "ownership": "UShireQuestSubsystem remains quest/story authority; AShireTraversalChallenge is the bounded activity primitive.",
+    "urgency_rule": "Casual activities remain suppressed during danger; only exact required_active_quest plus allow_during_p1c01_urgency exceptions may execute.",
+    "chapter_boundary": "P1C01 still ends at FerryEscapeComplete/WC_P1C01_FERRY_END. P1C02/Bree remains locked.",
+    "evidence_boundary": "SOURCE-IMPLEMENTED / STATIC-CONTRACTED only. Exact-head UE4.27 compile/runtime, PIE, device, visual, performance and Gate 6/7 evidence remain pending."
   }
 }

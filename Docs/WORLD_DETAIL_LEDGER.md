@@ -1399,3 +1399,11 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Optional completion never advances a mandatory quest anchor. Main story triggers remain the only authority for RingSecret/LeavingHome/KeepOffRoad/FerryEscape progression.
 - P1C01 remains geographically bounded to the Shire through Bucklebury Ferry. No Bree geometry, population or story runtime is authorized.
 - Evidence boundary: **SOURCE-IMPLEMENTED**. Collision readability, crouch behavior, retry/abandon, return-to-control and pacing require fresh UE4/PIE evidence.
+
+
+## 2026-10-06 - Wooded-road Root Hide gameplay lock
+
+- The Black Rider wooded-road beat now requires the existing crouched `SHIRE_ROOT_HIDE` challenge to publish `Side_RootHideMasteryComplete` before the main `HideUnderRoad` quest trigger may advance.
+- This keeps the environmental hiding beat playable rather than decorative and reuses the existing story-beat-trigger re-evaluation path.
+- No new Tick, scan, population owner, heavy asset load or chapter transition was introduced.
+- P1C01 still ends at FerryEscape; Bree remains locked.

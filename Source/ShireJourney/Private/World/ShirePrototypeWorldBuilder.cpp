@@ -2505,6 +2505,7 @@ void AShirePrototypeWorldBuilder::SpawnStoryActors()
         HideUnderRoad->QuestId=TEXT("KeepOffRoad");
         HideUnderRoad->RequiredStage=0;
         HideUnderRoad->StageAfterTrigger=1;
+        HideUnderRoad->RequiredSideStoryBeat=TEXT("Side_RootHideMasteryComplete");
         HideUnderRoad->StoryBeatId=TEXT("RootHide");
         HideUnderRoad->ObjectiveMessage=FText::FromString(TEXT("Stay low and keep out of the Rider's sight."));
     }
