@@ -288,14 +288,34 @@ handoff = governor.get("session_handoff", {})
 # The Governor owns durable direction, gates and evidence, not rapidly-changing
 # transport metadata that can drift between commits without affecting the game.
 execution_control = governor.get("execution_control", {})
-if execution_control.get("mode") != "ACTIVE_GATE_FIRST":
-    fail("Governor execution control must remain ACTIVE_GATE_FIRST")
+execution_mode = execution_control.get("mode")
 current_focus = governor.get("current_focus", {})
 development_mode = governor.get("development_mode", {})
-if execution_control.get("active_lane") != current_focus.get("production_lane"):
-    fail("Governor execution lane disagrees with current focus")
+
+# The technical production lane remains W01, while DEC-104 adds a higher owner-facing
+# one-shot chapter lane. Validate both layers instead of forcing the pre-DEC-104
+# ACTIVE_GATE_FIRST identity back onto the Governor.
+if execution_mode not in {"ACTIVE_GATE_FIRST", "ACTIVE_ONE_SHOT_CHAPTER_FINISH"}:
+    fail("Governor execution control uses an unsupported mode")
+if execution_mode == "ACTIVE_GATE_FIRST":
+    if execution_control.get("active_lane") != current_focus.get("production_lane"):
+        fail("Governor execution lane disagrees with current focus")
+else:
+    one_shot = governor.get("p1c01_mega_wave_closure_2026_10_04", {})
+    if execution_control.get("active_lane") != "P1C01_ONE_SHOT_SHIRE_CHAPTER_FINISH":
+        fail("One-shot execution control lost the P1C01 owner-facing lane")
+    if one_shot.get("current_mega_wave") != "P1C01-ONE-SHOT-FINISH":
+        fail("One-shot execution control disagrees with the current P1C01 mega wave")
+    waves = one_shot.get("waves", [])
+    active_wave = next((wave for wave in waves if wave.get("id") == "P1C01-ONE-SHOT-FINISH"), None)
+    if not active_wave or active_wave.get("status") != "ACTIVE":
+        fail("P1C01 one-shot mega wave is not ACTIVE")
+    offline = governor.get("whole_game_offline_saturation_exception_2026_10_06", {})
+    if offline.get("runtime_authority") != "P1C01_ONLY":
+        fail("One-shot/offline execution lost P1C01-only runtime authority")
+
 if development_mode.get("id") != current_focus.get("production_lane"):
-    fail("Governor development mode disagrees with current focus")
+    fail("Governor development mode disagrees with current technical focus")
 
 allowed_bundles = set(execution_control.get("allowed_bundles", []))
 frozen_bundles = set(execution_control.get("frozen_bundles", []))
