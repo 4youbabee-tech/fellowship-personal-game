@@ -345,6 +345,27 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn('HideUnderRoad->RequiredSideStoryBeat=TEXT("Side_RootHideMasteryComplete")', world)
 
 
+    def test_p1c01_streamed_imported_materials_are_explicitly_cooked(self):
+        root = Path(__file__).resolve().parents[1]
+        plan = json.loads((root / "Data" / "ChapterAssetStreamingPlan.json").read_text(encoding="utf-8"))
+        p1 = plan["chapter_banks"]["P1C01"]["FrodoMain"]
+        imported = [p for p in p1 if "/Game/Production/Imported/P1C01Materials/" in p]
+        self.assertEqual(len(imported), 4)
+        for token in (
+            "MI_Sh_DirtSoil_PH",
+            "MI_Sh_StonyPath_PH",
+            "MI_Sh_TreeBark_PH",
+            "MI_Sh_MossStone_PH",
+        ):
+            self.assertTrue(any(token in p for p in imported))
+
+        game_ini = (root / "Config" / "DefaultGame.ini").read_text(encoding="utf-8")
+        self.assertIn(
+            '+DirectoriesToAlwaysCook=(Path="/Game/Production/Imported/P1C01Materials")',
+            game_ini,
+        )
+
+
     def test_p1c01_character_presentation_is_explicit_and_async(self):
         root = Path(__file__).resolve().parents[1]
         contract = json.loads((root / "Data" / "P1C01CharacterPresentationChapterV1.json").read_text(encoding="utf-8"))

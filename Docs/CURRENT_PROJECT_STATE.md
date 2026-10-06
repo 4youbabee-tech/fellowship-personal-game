@@ -4933,3 +4933,13 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - `AShireQuestTrigger` already re-evaluates an overlapping player when a story beat is published, so completing the challenge releases the existing main trigger without polling or a second authority.
 - Static source-contract coverage now asserts the gate explicitly.
 - Evidence boundary: **SOURCE-IMPLEMENTED / STATIC-CONTRACTED; exact-head UE4 runtime proof pending**.
+
+
+## 2026-10-06 - P1C01 packaged-startup imported-material cook blocker root fix
+
+- Exact prior UE baseline `906131be878f2ec8ebe82ff22814061099711908` compiled ShireJourneyEditor, imported 384 production files with 0 failures, passed Automation QA, headless startup, chapter audits, route/state/fault/persistence audits, built the Windows package, and verified all 37 packaged runtime Data JSON files.
+- Packaged launch then failed because the P1C01 streaming bank could not resolve four imported material instances: `MI_Sh_DirtSoil_PH`, `MI_Sh_StonyPath_PH`, `MI_Sh_TreeBark_PH`, and `MI_Sh_MossStone_PH`.
+- Root cause: these packages are referenced through soft paths stored in runtime JSON, which UE4 cooker dependency discovery does not treat as package references. Existing packaging settings did not include `/Game/Production/Imported/P1C01Materials`.
+- Root fix adds that bounded chapter material folder to `DirectoriesToAlwaysCook`. Runtime loading remains soft/async through `UShireChapterAssetStreamingSubsystem`; no synchronous fallback or broad warehouse residency is introduced.
+- A regression contract now proves the P1C01 bank contains exactly those four imported soft material identities and packaging explicitly cooks their folder.
+- Evidence boundary: **SOURCE-IMPLEMENTED ROOT FIX / fresh exact-head cook+packaged-launch proof pending**. Prior-head engine proof applies only to its SHA; current-head PIE/device/visual/performance/Gate 6/7 remain pending.

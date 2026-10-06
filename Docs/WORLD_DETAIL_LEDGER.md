@@ -1407,3 +1407,12 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - This keeps the environmental hiding beat playable rather than decorative and reuses the existing story-beat-trigger re-evaluation path.
 - No new Tick, scan, population owner, heavy asset load or chapter transition was introduced.
 - P1C01 still ends at FerryEscape; Bree remains locked.
+
+
+## 2026-10-06 - P1C01 imported Shire material cook residency repair
+
+- Packaged P1C01 startup exposed four missing imported Shire material instances required by the chapter streaming bank.
+- These are legitimate soft-bank members, not candidates for synchronous fallback. Their identities live in runtime JSON and therefore require explicit cooker inclusion.
+- `/Game/Production/Imported/P1C01Materials` is now a bounded always-cook directory, covering DirtSoil, StonyPath, TreeBark and MossStone without broad warehouse residency.
+- No new texture family, density, hard reference or synchronous load is introduced.
+- Fresh packaged startup must prove the bank resolves all four before this blocker is considered closed.

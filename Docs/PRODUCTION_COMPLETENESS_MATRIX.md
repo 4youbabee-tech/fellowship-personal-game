@@ -4559,3 +4559,23 @@ Evidence boundary: source/runtime authoring only until exact-head validation and
 | Story-beat re-evaluation path | EXISTING / REUSED |
 | Extra polling / second quest authority | NONE |
 | Exact-head UE4 proof | PENDING |
+
+
+## 2026-10-06 - P1C01 packaged material residency blocker
+
+| Control | State |
+|---|---|
+| Prior exact-head C++ build | SUCCESS on `906131be...` |
+| Production import | 384 files / 0 failures on prior exact head |
+| Automation + headless chapter/state audits | SUCCESS on prior exact head |
+| Windows package build | SUCCESS on prior exact head |
+| Packaged Data JSON | 37 / 37 verified |
+| Packaged launch | FAILED on prior exact head |
+| Missing streamed packages | 4 imported P1C01 material instances |
+| Root cause | runtime JSON soft paths invisible to cooker dependency discovery |
+| `/Game/Production/Imported/P1C01Materials` always-cook rule | SOURCE-IMPLEMENTED |
+| Regression guard | ADDED |
+| Fresh exact-head package launch | PENDING |
+| P1C02/Bree | LOCKED |
+
+Evidence boundary: prior-head engine/package proof + current source repair only. No Gate 6/7 promotion.
