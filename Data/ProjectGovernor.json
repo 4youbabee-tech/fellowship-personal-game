@@ -450,7 +450,7 @@
         "one major generated region at a time",
         "low/medium 720p target",
         "Environmental-life V9 uses ephemeral non-colliding actors, bounded event caps and shadowless point-light accents.",
-        "Texture-source review on develop: 24 BMP production sources total ~0.53 MiB; source container size is not runtime VRAM. Runtime streaming/GPU evidence remains the performance authority."
+        "Current tracked-source sweep on the active candidate reports 0 BMP files. Production texture intake is PNG/TGA under DEC-105; source container format/size is not runtime VRAM evidence. Runtime streaming/GPU residency remains target-device evidence."
       ],
       "missing_work": [
         "focused target-device traversal/performance observation for current production Shire",
