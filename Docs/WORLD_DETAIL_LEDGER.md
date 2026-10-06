@@ -1322,3 +1322,12 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Transition-time scans/pool resets and synchronous user QuickSave/QuickLoad remain measurement risks, not proven defects. Cold/warm streaming, collision, render hitching, p95/p99 frame tails, VRAM, audio playback and human visual quality remain runner/device evidence.
 - Repeated world detail remains HISM/ISM/`AWorldDetailCluster`; heavy assets remain soft/async; crowds remain pooled; PNG/TGA texture rule and FBX-only final animated delivery remain unchanged.
 - Evidence boundary: **SOURCE-IMPLEMENTED / STATIC-RISK-AUDITED** only. No PIE/device/visual/performance acceptance.
+
+## 2026-10-06 - Ferry terminal ownership clarified before runner return
+
+- P1C01 ends on the far side of the Brandywine with `FerryEscapeComplete`; this is a chapter-terminal presentation/checkpoint beat, not permission to instantiate Bree.
+- `FerryEscapeComplete` reuses the existing ferry camera/ambience/music/SFX family for a short confirmation and returns player control.
+- No world trigger, StoryFlow repair, persistence repair or validator is allowed to auto-open `P1C02 / RoadToBree`.
+- A restored terminal save at `P1C01 / FrodoMain / P1C01_Main / FerryEscape stage 2` must remain in that committed Shire identity.
+- This change preserves the One-Shot chapter policy and prevents runtime/save tooling from bypassing the Gate 6/7 predecessor lock.
+- Evidence boundary: source/runtime contract correction only; hosted validation and UE4 evidence remain pending.
