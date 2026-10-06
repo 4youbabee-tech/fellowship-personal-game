@@ -936,6 +936,20 @@ class SourceContractTests(unittest.TestCase):
         self.assertEqual(prep["active_animation_intake"]["stage_scope"], "ONE_PACK_ONLY")
         self.assertEqual(prep["active_animation_intake"]["required_initial_clips"], ["Idle", "Walk", "Run"])
 
+        deformation = json.loads(
+            (root / "Data" / "P1C01HumanDeformationGateV1.json").read_text(encoding="utf-8"))
+        self.assertEqual(
+            deformation["predecessor"]["winner_sha256"],
+            provenance["target_sha256"])
+        self.assertEqual(deformation["predecessor"]["reference_bones"], 48)
+        self.assertTrue(deformation["predecessor"]["t0_reference_pose"])
+        self.assertEqual(
+            deformation["current_static_deformation_evidence"]["state"],
+            "STATIC_DEFORMATION_STRESS_PASS")
+        self.assertEqual(
+            deformation["superseded_predecessor_snapshot"]["status"],
+            "HISTORICAL_SUPERSEDED")
+
         classifier = (root / "Scripts" / "classify_warehouse_validation.ps1").read_text(encoding="utf-8")
         workflow = (root / ".github" / "workflows" / "warehouse-stage.yml").read_text(encoding="utf-8")
         for token in (
