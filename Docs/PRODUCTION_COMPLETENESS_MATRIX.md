@@ -4344,3 +4344,17 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Hosted static audit | PENDING |
 | UE4 compile / PIE / device / visual / performance | PENDING RUNNER |
 | Gate 6/7 | NOT ACCEPTED |
+
+## 2026-10-06 - P1C01 terminal gate pre-runner correction
+
+| Check | State |
+|---|---|
+| FerryEscapeComplete presentation coverage | SOURCE-IMPLEMENTED |
+| StoryBeatPlan terminal beat | SOURCE-IMPLEMENTED |
+| Automatic P1C01 -> P1C02 bridge | FORBIDDEN |
+| Terminal P1C01 save restore identity | MUST REMAIN P1C01 |
+| Persistence publication count | EXPECT 1 |
+| Extra world commit from terminal restore | EXPECT 0 |
+| Pre-Unreal latest-head proof | PENDING |
+| UE4.27 compile/runtime proof | PENDING RUNNER |
+| Gate 6/7 | NOT ACCEPTED |
