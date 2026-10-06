@@ -862,38 +862,41 @@ void AShireGameMode::BeginPlay()
                 }
 
                 if (Audit->Step == 1 &&
-                    !Router->IsWorldCommitted(
-                        TEXT("P1C02"),
-                        TEXT("FrodoMain"),
-                        TEXT("P1C02_Main")))
+                    (Quests->GetPersistenceRestorePublicationSerial() !=
+                         Audit->OriginPublicationSerial + 1 ||
+                     Player->IsWorldTransitionHeld()))
                 {
                     return;
                 }
 
                 if (Audit->Step == 1)
                 {
-                const bool bCanonicalIdentity =
-                    Quests->GetCurrentChapterId() == TEXT("P1C02") &&
+                const bool bTerminalIdentity =
+                    Quests->GetCurrentChapterId() == TEXT("P1C01") &&
                     Quests->GetCurrentRouteId() == TEXT("FrodoMain") &&
-                    Quests->GetCurrentEpisodeId() == TEXT("P1C02_Main") &&
-                    Quests->GetActiveQuestId() == TEXT("RoadToBree") &&
-                    Quests->GetActiveQuestStage() == 0;
+                    Quests->GetCurrentEpisodeId() == TEXT("P1C01_Main") &&
+                    Quests->GetActiveQuestId() == TEXT("FerryEscape") &&
+                    Quests->GetActiveQuestStage() == 2 &&
+                    Router->IsWorldCommitted(
+                        TEXT("P1C01"),
+                        TEXT("FrodoMain"),
+                        TEXT("P1C01_Main"));
                 const bool bOnePublication =
                     Quests->GetPersistenceRestorePublicationSerial() ==
                     Audit->OriginPublicationSerial + 1;
-                const bool bOneWorldCommit =
-                    Router->GetWorldRevision() == Audit->OriginRevision + 1;
+                const bool bZeroWorldCommits =
+                    Router->GetWorldRevision() == Audit->OriginRevision;
                 const bool bReleased = !Player->IsWorldTransitionHeld();
 
-                if (!bCanonicalIdentity || !bOnePublication || !bOneWorldCommit || !bReleased)
+                if (!bTerminalIdentity || !bOnePublication || !bZeroWorldCommits || !bReleased)
                 {
                     UE_LOG(
                         LogTemp,
                         Error,
-                        TEXT("ShirePersistenceEdgeAudit: FAIL canonical=%s publicationOnce=%s worldCommitOnce=%s released=%s revision=%u originRevision=%u publication=%u originPublication=%u"),
-                        bCanonicalIdentity ? TEXT("yes") : TEXT("no"),
+                        TEXT("ShirePersistenceEdgeAudit: FAIL terminalPreserved=%s publicationOnce=%s worldCommitZero=%s released=%s revision=%u originRevision=%u publication=%u originPublication=%u"),
+                        bTerminalIdentity ? TEXT("yes") : TEXT("no"),
                         bOnePublication ? TEXT("yes") : TEXT("no"),
-                        bOneWorldCommit ? TEXT("yes") : TEXT("no"),
+                        bZeroWorldCommits ? TEXT("yes") : TEXT("no"),
                         bReleased ? TEXT("yes") : TEXT("no"),
                         Router->GetWorldRevision(),
                         Audit->OriginRevision,
@@ -906,7 +909,7 @@ void AShireGameMode::BeginPlay()
                 UE_LOG(
                     LogTemp,
                     Display,
-                    TEXT("ShirePersistenceEdgeAudit: PASS legacy-terminal canonical-publications=1 worldCommits=1 chapter=P1C02"));
+                    TEXT("ShirePersistenceEdgeAudit: PASS legacy-terminal preserved=yes canonical-publications=1 worldCommits=0 chapter=P1C01"));
 
                 if (!Player->RunStaleCheckpointCompletionAudit())
                 {
