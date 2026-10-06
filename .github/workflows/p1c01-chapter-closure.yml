@@ -87,25 +87,7 @@ jobs:
           if ($env:EVENT_NAME -eq 'workflow_dispatch') {
             $reason = 'manual-dispatch'
           }
-          elseif ([string]::IsNullOrWhiteSpace($base) -or $base -match '^0+
-      - name: Fast closure preflight
-        if: env.RUN_P1C01_CLOSURE == 'true'
-        shell: cmd
-        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_CLOSURE_SOURCE%\Scripts\preflight_p1c01_chapter_closure_pack_v2.ps1" -ManifestPath "%SHIRE_CLOSURE_SOURCE%\Data\P1C01ChapterClosureMegaPackV2.json"
-
-      - name: Run P1C01 Chapter Closure Mega Pack V2
-        if: env.RUN_P1C01_CLOSURE == 'true'
-        shell: cmd
-        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_CLOSURE_SOURCE%\Scripts\run_p1c01_chapter_closure_pack_v2.ps1" -ManifestPath "%SHIRE_CLOSURE_SOURCE%\Data\P1C01ChapterClosureMegaPackV2.json"
-
-      - name: Remove isolated closure source checkout
-        if: always()
-        shell: cmd
-        run: |
-          @echo off
-          if defined SHIRE_CLOSURE_SOURCE if exist "%SHIRE_CLOSURE_SOURCE%" rmdir /S /Q "%SHIRE_CLOSURE_SOURCE%"
-          exit /b 0
-) {
+          elseif ([string]::IsNullOrWhiteSpace($base) -or $base -match '^0+$') {
             $reason = 'missing-base-fail-safe'
           }
           else {
@@ -146,10 +128,12 @@ jobs:
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_CLOSURE_SOURCE%\Scripts\verify_runner_session.ps1"
 
       - name: Fast closure preflight
+        if: env.RUN_P1C01_CLOSURE == 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_CLOSURE_SOURCE%\Scripts\preflight_p1c01_chapter_closure_pack_v2.ps1" -ManifestPath "%SHIRE_CLOSURE_SOURCE%\Data\P1C01ChapterClosureMegaPackV2.json"
 
       - name: Run P1C01 Chapter Closure Mega Pack V2
+        if: env.RUN_P1C01_CLOSURE == 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_CLOSURE_SOURCE%\Scripts\run_p1c01_chapter_closure_pack_v2.ps1" -ManifestPath "%SHIRE_CLOSURE_SOURCE%\Data\P1C01ChapterClosureMegaPackV2.json"
 

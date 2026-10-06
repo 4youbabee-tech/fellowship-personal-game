@@ -4885,3 +4885,11 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Root fix is in the closure workflow itself: after exact checkout it classifies the latest event delta against the six closure payload inputs. If none changed, runner-health/preflight/Mega Pack steps are skipped; manual dispatch and missing delta-base identity remain fail-safe full runs.
 - This prevents later docs/static stabilization commits from needlessly repeating an already-proven multi-hour source closure train while preserving fail-closed execution when closure payload really changes.
 - Evidence boundary: **SOURCE-IMPLEMENTED CI ROOT FIX / fresh workflow execution pending**. No UE4, PIE, device, visual or performance state changes.
+
+
+## 2026-10-06 - Closure guard definition repair
+
+- Closure #42 failed at workflow-definition time before any job existed because the first anti-churn edit malformed the YAML while composing the embedded PowerShell block.
+- This was an orchestration-source defect introduced by the cleanup packet, not a runner, validator, game-code or UE4 failure.
+- The workflow was rebuilt from the last known-good Closure #40 definition, then the delta classifier was reapplied with structural checks confirming exactly one classifier, runner-health, preflight, Mega Pack and cleanup step.
+- Evidence boundary: **SOURCE-REPAIRED / fresh workflow execution required**. No runtime acceptance is implied.

@@ -1364,3 +1364,11 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Manual dispatch and unresolvable delta identity remain fail-safe full execution.
 - No world, character, density, story, loading or runtime authority was changed by this guard.
 - Evidence boundary: **SOURCE-IMPLEMENTED CI HYGIENE**, fresh workflow behavior pending.
+
+
+## 2026-10-06 - Closure anti-churn guard repair
+
+- Closure #42 never reached a job; the first guard edit malformed the workflow definition itself.
+- The closure workflow has been rebuilt from the known-good #40 source before reapplying the latest-event delta classifier.
+- This repair changes CI orchestration only. No Shire world, quest, NPC, loading, audio, save or performance behavior changed.
+- Evidence boundary: **SOURCE-REPAIRED; fresh workflow proof pending**.

@@ -4483,3 +4483,16 @@ Evidence boundary: **STATIC-RISK-AUDITED / SOURCE-CLOSURE-RUN-PROVEN only**. No 
 | Runtime acceptance effect | NONE |
 
 Evidence boundary: CI orchestration source change only; Gate 6/7 remains unchanged.
+
+
+## 2026-10-06 - Closure guard definition repair
+
+| Control | State |
+|---|---|
+| Closure #42 workflow-definition failure | ROOT CAUSE IDENTIFIED |
+| Cause | malformed YAML from first embedded-script edit |
+| Runner/game/UE failure | NO |
+| Rebuild base | last known-good Closure #40 workflow source |
+| Structural duplicate/malformed guard | PASS BEFORE REPUBLISH |
+| Fresh workflow proof | PENDING |
+| Gate 6/7 effect | NONE |
