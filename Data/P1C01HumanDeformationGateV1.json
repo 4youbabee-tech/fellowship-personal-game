@@ -1,14 +1,15 @@
 {
   "schema_version": 1,
   "gate_id": "P1C01_FRODO_STATIC_DEFORMATION_GATE_V1",
-  "status": "RUN34_T0_REF_POSE_REIMPORT_ROOT_FIX_IMPLEMENTED",
+  "status": "STATIC_DEFORMATION_STRESS_PASS_CURRENT_TECHNICAL_WINNER",
   "runtime_chapter": "P1C01",
   "predecessor": {
-    "technical_gate": "Human Wave 2 UE4 technical winner",
-    "required_result": "PASS",
-    "winner_sha256": "resolved dynamically from exact-run UE4 receipt",
-    "known_prior_winner": "eff0e79980f90d49deada0aa37ad8be5975a86330348e4ae6fa49d3171fad570",
-    "reference_bones": 161
+    "technical_gate": "Current tracked Frodo technical winner",
+    "required_result": "STATIC_DEFORMATION_STRESS_PASS",
+    "winner_sha256": "75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be",
+    "reference_bones": 48,
+    "provenance": "SourceAssets/ValidatedRuntime/FRODO/provenance.json",
+    "t0_reference_pose": true
   },
   "required_joint_families": [
     "pelvis",
@@ -54,8 +55,8 @@
     "modular_frodo_fallback": true,
     "loading": "existing soft/async UShireChapterAssetStreamingSubsystem path"
   },
-  "next_gate": "Targeted Idle/Walk/Run inventory + retarget compatibility, then human rendered deformation review.",
-  "evidence_boundary": "Numerical static deformation stress only, now fail-closed on deform-bone identity, weighted influence and non-zero evaluated deformation. Prior zero-displacement PASS is superseded. No rendered visual, retarget, AnimBP, runtime, PIE, device or FPS acceptance.",
+  "next_gate": "Fresh exact-head UE4 import/runtime presentation of tracked Idle/Walk/Run on the 48-bone winner, then human rendered deformation review.",
+  "evidence_boundary": "Current 48-bone tracked Frodo technical winner has STATIC_DEFORMATION_STRESS_PASS evidence. No fresh exact-head runtime render, human visual, PIE, device or FPS acceptance is claimed.",
   "prior_evidence_correction_2026_10_04": {
     "status": "SUPERSEDED_FALSE_GREEN",
     "observed": "Prior artifact marked all stress scenarios passed while every max_vertex_displacement was 0.0.",
@@ -91,5 +92,20 @@
     "use_t0_as_ref_pose_remediation": true,
     "missing_bind_pose_bones_still_hard_reject": true,
     "rationale": "Use T0 as ref pose is an import normalization requested by UE4.27, not an acceptance waiver. Any residual bind-pose warning still rejects the candidate."
+  },
+  "superseded_predecessor_snapshot": {
+    "status": "HISTORICAL_SUPERSEDED",
+    "technical_gate": "Human Wave 2 UE4 technical winner",
+    "winner_sha256": "eff0e79980f90d49deada0aa37ad8be5975a86330348e4ae6fa49d3171fad570",
+    "reference_bones": 161,
+    "note": "Historical Human Wave 2 predecessor snapshot only; not current Frodo metadata."
+  },
+  "current_static_deformation_evidence": {
+    "state": "STATIC_DEFORMATION_STRESS_PASS",
+    "shoulder_max_displacement_approx": 1.324,
+    "elbow_max_displacement_approx": 1.815,
+    "knee_max_displacement_approx": 0.408,
+    "locomotion_max_displacement_approx": 0.658,
+    "boundary": "Static numerical deformation evidence only; fresh exact-head UE4 runtime/render/human review remains pending."
   }
 }
