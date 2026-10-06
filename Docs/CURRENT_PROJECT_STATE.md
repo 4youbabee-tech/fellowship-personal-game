@@ -4828,3 +4828,10 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Current ProjectGovernor performance note now reflects the actual tracked tree: 0 BMP. Historical review records remain historical and were not rewritten.
 - Remaining proof is engine/device/human only: compile/import/package, collision/traversal, animation/render, audio playback, disk roundtrip, FPS/RAM/VRAM/frame-time tails and Gate 6/7.
 - Status: **SOURCE-IMPLEMENTED / HOSTED STATIC VALIDATION PENDING**. P1C02 remains LOCKED.
+
+## 2026-10-06 - Governor one-shot validator root correction
+
+- Hosted Pre-Unreal reached full core validation, then exposed a governance-validator regression: `Data/ProjectGovernor.json` had already moved to the accepted DEC-104 owner-facing mode `ACTIVE_ONE_SHOT_CHAPTER_FINISH`, while `Scripts/project_governor.py` still hard-required the older `ACTIVE_GATE_FIRST` identity and required the owner-facing lane to equal the technical W01 lane.
+- Root correction preserves both layers rather than reverting the Governor: the owner-facing lane is `P1C01_ONE_SHOT_SHIRE_CHAPTER_FINISH`; the technical production focus/development mode remains `W01_P1C01_PRODUCTION_VERTICAL_SLICE`.
+- The validator now accepts only the legacy gate-first mode or the explicit one-shot mode; in one-shot mode it requires active `P1C01-ONE-SHOT-FINISH` plus `P1C01_ONLY` runtime authority during offline saturation.
+- Evidence remains **SOURCE-IMPLEMENTED / HOSTED VALIDATION PENDING** until the new exact-head hosted run completes.
