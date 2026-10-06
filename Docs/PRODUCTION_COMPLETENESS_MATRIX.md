@@ -4415,3 +4415,12 @@ Production cadence is owner-command driven, not hourly scheduled automation.
 | Historical eff0e799 hard-coded test | REMOVED |
 | Prep/provenance equality | GUARDED |
 | Exact-head hosted proof | PENDING |
+
+## 2026-10-06 - Offline audit observability
+
+| Control | State |
+|---|---|
+| Audit stdout/stderr preserved on failure | YES |
+| Pipe exit remains fail-closed | YES |
+| Artifact retention | 7 days |
+| Engine/device evidence implication | NONE |
