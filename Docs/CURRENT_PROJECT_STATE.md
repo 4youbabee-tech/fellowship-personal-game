@@ -5233,3 +5233,8 @@ Runtime Shire atmosphere was adjusted in `ShirePrototypeWorldBuilder`: stronger 
 ### P1C01 broad-surface material pass (2026-10-08)
 
 The exact #1694 render was reviewed from the integrated artifact. Exposure and camera readability improved, but the six views still showed large flat-color green/white terrain surfaces and low-detail blockout presentation. The next production packet applies the already-verified P1C01 grass-path material locally to the broad ground, hill, and slope HISM components. It does not mutate the common asset bank, add synchronous loads, change collision, or increase actor density. Fresh exact-head UE4 build/render/package evidence is required; no visual, device, performance, or Gate 6/7 acceptance is claimed.
+
+
+### P1C01 visual-delta classifier correction (2026-10-08)
+
+The material packet changed Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp, but #1695 correctly proved only the core lane because the classifier inherited the green parent and skipped capture/package. That evidence boundary is insufficient for a world-presentation change. The classifier now routes world-builder deltas through the full UE4 lane, forcing fresh six-shot render, cook/package, packaged startup, and artifact review. No visual, device, performance, or Gate 6/7 acceptance is inferred from #1695.

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "manifest_id": "P1C01_WORLD_MICRO_DETAIL_COMPLETION_V1",
-  "status": "WORLD_MATERIAL_SURFACE_PASS_SOURCE_IMPLEMENTED_RENDER_REPROOF_PENDING",
+  "status": "WORLD_MATERIAL_SURFACE_PASS_SOURCE_IMPLEMENTED_FULL_RENDER_REPROOF_REQUIRED",
   "authority": [
     "Data/ProjectGovernor.json",
     "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
@@ -131,6 +131,6 @@
       "Several review views remain compositionally close to geometry",
       "Named-character and living-world presence remains insufficient in the captured views"
     ],
-    "disposition": "Next packet applies the verified Shire grass-path material locally to broad terrain HISM surfaces; fresh exact-head render is required before judging improvement."
+    "disposition": "Classifier correction now forces the full UE4 render/package lane for world-builder deltas; #1696 must produce fresh six-shot and packaged evidence before judging the material pass."
   }
 }

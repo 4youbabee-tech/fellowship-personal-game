@@ -589,6 +589,14 @@ $policyOnlyTouched = @()
 $acceptanceTouched = @()
 foreach($p in $changed){
     $n=$p -replace "\\","/"
+    # World-builder edits change what the player actually sees. They must always
+    # consume the full UE4 capture/package lane instead of inheriting a core-only
+    # parent proof that omits rendered evidence.
+    if($n -eq "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp"){
+        $fullImpact += $n
+        Write-Host "FULL_UNREAL_VISUAL_PRESENTATION_FILE $n"
+        continue
+    }
 
     if(
         $n.StartsWith("Docs/") -or
