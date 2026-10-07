@@ -223,7 +223,7 @@ concurrency:
   # Cancel only superseded runs from the same PR branch. Different PRs/develop stay
   # distinct here and are still physically serialized by the single self-hosted runner.
   group: unreal-build-${{ github.repository }}-${{ github.event_name == 'pull_request' && github.head_ref || 'develop' }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' && github.head_ref != 'production/p1c01-definitive-chapter-closeout-2026-10-04' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   classify:
@@ -505,6 +505,7 @@ jobs:
         run: '"%GITHUB_WORKSPACE%\Scripts\ci_capture_p1c01_visuals.cmd"'
 
       - name: Upload integrated P1C01 rendered evidence
+        continue-on-error: true
         if: always() && (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_ASSET_IMPORT_ONLY == 'true')
         uses: actions/upload-artifact@v4
         with:
@@ -579,6 +580,7 @@ jobs:
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\capture_runner_hardware.ps1"'
 
       - name: Upload playable P1C01 Windows package
+        continue-on-error: true
         if: success() && env.SHIRE_FULL_UNREAL_REQUIRED == 'true'
         uses: actions/upload-artifact@v4
         with:

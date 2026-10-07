@@ -1575,3 +1575,12 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Corrected two misplaced status assertions introduced during schema reconciliation.
 - No world, quest, character, audio, streaming or chapter authority changed.
 - P1C02/Bree remains locked.
+
+
+## 2026-10-07 - Runner throughput and validator-root repair
+
+- Corrected persistent-runner hygiene validation to distinguish generated local directories from committed generated content.
+- Extended discovery-reward declaration coherence to implemented contextual side activities without changing canon/story outcomes.
+- Restored safe cancellation of superseded same-PR Unreal runs to free the single UE4 device for the newest exact head.
+- Made artifact transport non-blocking; local build/log validation remains authoritative.
+- No runtime ownership, density, synchronous heavy-loading policy, or chapter boundary changed.

@@ -1446,5 +1446,34 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("P1C01_ONE_SHOT_STATIC_GATE_PASS", workflow)
 
 
+    def test_one_shot_pipeline_cancels_superseded_same_pr_runs_and_keeps_uploads_nonblocking(self):
+        root = Path(__file__).resolve().parents[1]
+        workflow = (root / ".github" / "workflows" / "unreal-build-validation.yml").read_text(encoding="utf-8")
+        self.assertIn(
+            "group: unreal-build-${{ github.repository }}-${{ github.event_name == 'pull_request' && github.head_ref || 'develop' }}",
+            workflow,
+        )
+        self.assertIn("cancel-in-progress: ${{ github.event_name == 'pull_request' }}", workflow)
+        self.assertNotIn(
+            "github.head_ref != 'production/p1c01-definitive-chapter-closeout-2026-10-04'",
+            workflow.split("concurrency:", 1)[1].split("jobs:", 1)[0],
+        )
+        for step_name in (
+            "Upload integrated P1C01 rendered evidence",
+            "Upload playable P1C01 Windows package",
+        ):
+            block = workflow.split(f"- name: {step_name}", 1)[1].split("- name:", 1)[0]
+            self.assertIn("continue-on-error: true", block)
+
+    def test_pre_unreal_generated_dir_and_discovery_validation_are_persistent_runner_safe(self):
+        root = Path(__file__).resolve().parents[1]
+        validator = (root / "Scripts" / "pre_unreal_validate.py").read_text(encoding="utf-8")
+        self.assertIn('["git", "ls-files", "--", dirname]', validator)
+        self.assertNotIn('(ROOT / dirname).exists()', validator)
+        self.assertIn("side_activity_reward_ids", validator)
+        self.assertIn("exploration_discoveries | side_activity_reward_ids", validator)
+        self.assertIn("artifact transport must be non-blocking", validator)
+
+
 if __name__ == "__main__":
     unittest.main()

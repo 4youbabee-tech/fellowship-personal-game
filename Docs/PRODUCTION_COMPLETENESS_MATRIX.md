@@ -4873,3 +4873,15 @@ This is runner-throughput cleanup only; fresh exact-head production presentation
 | Character Presentation status mismatch | ALIGNED TO PERSISTENT-FRODO CURRENT STATUS |
 | Production/runtime code changed | NO |
 | Fresh exact-head One-Shot gate | REQUIRED |
+
+
+## 2026-10-07 - One-Shot execution throughput root fix
+
+| Bottleneck | Root disposition |
+|---|---|
+| Persistent runner `Binaries/Intermediate/Saved` existence | CHECK GIT TRACKING, NOT WORKTREE EXISTENCE |
+| New P1C01 side-activity reward IDs marked “unknown” | DECLARATION MODEL INCLUDES CONTEXTUAL SIDE ACTIVITIES |
+| Superseded same-PR Unreal runs kept alive | CANCELLED BY BRANCH-SCOPED CONCURRENCY |
+| Artifact quota/upload can mask engine truth | UPLOADS NON-BLOCKING |
+| Source-contract suite | 55/55 PASSED on #1677 before Pre-Unreal |
+| Fresh exact-head Pre-Unreal/UE4 proof | PENDING AFTER ROOT FIX |

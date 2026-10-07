@@ -5142,3 +5142,15 @@ The same train now owns exact-head source/static contracts, UE4 build, persisten
 - Party Social Loop remains `SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING`; Character Presentation is correctly `FRODO_PERSISTENT_RUNTIME_IMPORT_SOURCE_IMPLEMENTED_RENDER_REPROOF_PENDING`.
 - No production/gameplay/runtime source changed in this correction.
 - Fresh exact-head One-Shot execution remains required before engine evidence can advance.
+
+
+## 2026-10-07 - One-Shot pipeline root fix: persistent-runner-safe validation and queue isolation
+
+- Build #1677 proved the full 55-test source-contract suite is green; the remaining stop was Pre-Unreal validation drift plus one discovery-declaration model gap.
+- Root fixes:
+  - generated build directories are now rejected only when **Git-tracked**, not merely because `Binaries/DerivedDataCache/Intermediate/Saved/.vs` exist on the persistent self-hosted runner;
+  - Journey discovery validation now treats `ContextualSideActivityPlan.discovery_reward_id` values as declared discoveries alongside exploration-envelope discoveries, matching the implemented Ring investigation / Bag End packing / stealth-departure / Root Hide loops;
+  - Unreal concurrency again cancels superseded runs from the **same PR branch**, eliminating obsolete builds queued behind newer heads while branch-specific groups preserve unrelated work;
+  - rendered-evidence and playable-package artifact uploads are non-blocking transport steps so storage/quota failures cannot mask engine/logging truth.
+- PG-026/PG-167 validators were updated to enforce the stronger current semantics rather than obsolete exact strings.
+- No gameplay/story/world authority was weakened. P1C02 remains locked.

@@ -637,12 +637,26 @@ if discovery_reward_data:
     except json.JSONDecodeError as exc:
         fail(f"Invalid ExplorationEnvelopePlan.json while validating discovery rewards: {exc}")
 
-    declared_discoveries = {
+    exploration_discoveries = {
         str(item.get("id") or "").strip()
         for chapter in exploration_for_rewards.get("chapters", [])
         for item in chapter.get("optional_discoveries", [])
         if isinstance(item, dict)
     }
+
+    side_activity_reward_ids = set()
+    try:
+        side_reward_source = json.loads(read(ROOT / "Data" / "ContextualSideActivityPlan.json"))
+        side_activity_reward_ids = {
+            str(activity.get("discovery_reward_id") or "").strip()
+            for chapter in side_reward_source.get("chapters", [])
+            for activity in chapter.get("activities", [])
+            if isinstance(activity, dict) and str(activity.get("discovery_reward_id") or "").strip()
+        }
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid ContextualSideActivityPlan.json while validating discovery rewards: {exc}")
+
+    declared_discoveries = exploration_discoveries | side_activity_reward_ids
     reward_rows = discovery_reward_data.get("discovery_rewards", [])
     reward_ids = [str(item.get("discovery_id") or "").strip() for item in reward_rows]
     if len(reward_ids) != len(set(reward_ids)):
@@ -3584,7 +3598,18 @@ retry_contract_ok = (
 if custom_checkout_ok and not retry_contract_ok:
     fail("PG-026: custom exact-commit acquisition must use bounded resilient retries")
 if "uses: actions/upload-artifact@v4" in unreal_ci:
-    fail("PG-026: failure logging must not depend on artifact upload while storage quota can mask the primary error")
+    upload_blocks = re.findall(
+        r"(?ms)^\s*- name: (Upload[^\n]+)\n(.*?)(?=^\s*- name: |\Z)",
+        unreal_ci,
+    )
+    for upload_name, upload_body in upload_blocks:
+        if "continue-on-error: true" not in upload_body:
+            fail(
+                "PG-026: artifact transport must be non-blocking so storage quota cannot "
+                f"mask engine/logging evidence: {upload_name.strip()}"
+            )
+if "Collect Unreal build logs" not in unreal_ci or "Report failure log location" not in unreal_ci:
+    fail("PG-026: local failure logging/reporting must remain independent of artifact transport")
 concurrency_group_ok = (
     "group: unreal-build-${{ github.repository }}-${{ github.event_name == 'pull_request' && github.head_ref || 'develop' }}" in unreal_ci
     or "group: unreal-build-${{ github.repository }}-ue4-device" in unreal_ci
@@ -3594,11 +3619,7 @@ cancel_values = [
     for value in re.findall(r"(?m)^\s*cancel-in-progress:\s*(.+?)\s*$", unreal_ci)
 ]
 allowed_cancel_values = {
-    "false",
     "${{ github.event_name == 'pull_request' }}",
-    "${{ startsWith(github.head_ref, 'acceptance/') }}",
-    "group: unreal-build-${{ github.repository }}-${{ github.event_name == 'pull_request' && github.head_ref || 'develop' }}",
-    "cancel-in-progress: ${{ github.event_name == 'pull_request' }}",
 }
 if (
     not concurrency_group_ok
@@ -4121,8 +4142,26 @@ if important_unreachable:
     warn("Quest definitions not proven reachable by static graph: " + ", ".join(important_unreachable))
 
 for dirname in ["Binaries", "DerivedDataCache", "Intermediate", "Saved", ".vs"]:
-    if (ROOT / dirname).exists():
-        fail(f"Generated directory should not be committed: {dirname}")
+    try:
+        tracked_proc = subprocess.run(
+            ["git", "ls-files", "--", dirname],
+            cwd=ROOT,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            check=False,
+        )
+    except Exception as exc:
+        fail(f"Cannot inspect tracked generated directory {dirname}: {exc}")
+        continue
+    if tracked_proc.returncode != 0:
+        fail(
+            f"Cannot inspect tracked generated directory {dirname}: "
+            + tracked_proc.stderr.strip()
+        )
+        continue
+    if tracked_proc.stdout.strip():
+        fail(f"Generated directory contains committed files: {dirname}")
 
 engine_ini = read(ROOT / "Config" / "DefaultEngine.ini")
 if "ShireGameMode" not in engine_ini:
