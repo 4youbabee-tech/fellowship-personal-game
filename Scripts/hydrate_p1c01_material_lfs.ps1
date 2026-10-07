@@ -8,7 +8,11 @@ Set-Location -LiteralPath $RepoRoot
 
 $GitCommand = Get-Command git.exe -ErrorAction Stop
 $GitExe = $GitCommand.Source
-$IncludePattern = 'SourceAssets/Production/Imported/P1C01Materials/**'
+$IncludePatterns = @(
+    'SourceAssets/Production/Imported/P1C01Materials/**',
+    'SourceAssets/ValidatedRuntime/FRODO/*.fbx'
+)
+$IncludePattern = ($IncludePatterns -join ',')
 
 & $GitExe lfs version
 if ($LASTEXITCODE -ne 0) {
@@ -80,4 +84,22 @@ if ($BadFiles.Count -gt 0) {
     throw "P1C01_LFS_HYDRATION_FAILED invalid=$($BadFiles.Count)"
 }
 
+$FrodoRoot = Join-Path $RepoRoot 'SourceAssets\ValidatedRuntime\FRODO'
+$FrodoChecks = @(
+    @('SK_FRODO_Validated.fbx','75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be'),
+    @('Frodo_Idle_Retarget.fbx','ee81650714587d2a1a638f3ff0c1a8239ea555bf84959e96ce5d037af3f33cd3'),
+    @('Frodo_Walk_Retarget.fbx','c4091b7881a4e9e810e70bb7f3abed58683dff5bacf54e26ccb2e926e4c9e688'),
+    @('Frodo_Run_Retarget.fbx','4a4d10d91343dbd701c535d30ea9d9384ca74596cd7720cf6bfdd1c6328e1fc1')
+)
+foreach ($Row in $FrodoChecks) {
+    $Path = Join-Path $FrodoRoot $Row[0]
+    if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) {
+        throw "P1C01_LFS_HYDRATION_FAILED reason=frodo-fbx-missing path=$Path"
+    }
+    $Actual = (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()
+    if ($Actual -ne $Row[1]) {
+        throw "P1C01_LFS_HYDRATION_FAILED reason=frodo-hash path=$Path expected=$($Row[1]) actual=$Actual"
+    }
+}
 Write-Host "P1C01_LFS_TEXTURE_HYDRATION_PASS pngs=$($Pngs.Count) include=$IncludePattern"
+Write-Host "P1C01_LFS_FRODO_HYDRATION_PASS assets=$($FrodoChecks.Count)"

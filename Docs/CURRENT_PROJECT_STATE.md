@@ -5052,3 +5052,11 @@ Evidence boundary: **SOURCE-IMPLEMENTED root fix** on top of previously proven U
 - It still fails immediately on `core-packages-missing`, production material compile failure, or missing instanced-static-mesh material usage.
 - This prevents a false red from identifier casing while also strengthening the evidence requirement from “package absent warning not seen” to “async rig actually became ready and active.”
 - Fresh exact-head execution is still required. No visual/PIE/device acceptance is claimed from this source correction.
+
+
+## 2026-10-07 - Frodo pre-import hydration dependency closed
+
+- The normal production import already persists the proven Frodo 48-bone rig + Idle/Walk/Run packages.
+- The P1C01 hydration pass now explicitly pulls the four tracked `SourceAssets/ValidatedRuntime/FRODO/*.fbx` LFS objects before the runner scrubs credentials or starts UE import.
+- The exact four known SHA256 identities are verified immediately after hydration.
+- This closes the remaining pointer/stale-binary risk in the production path. Fresh exact-head UE4 import/render evidence is still required.

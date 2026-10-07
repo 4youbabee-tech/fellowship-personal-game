@@ -8918,5 +8918,13 @@
       "render capture fails closed on Frodo/package/material fallback"
     ],
     "evidence_boundary": "Source-implemented only until fresh exact-head render confirms no fallback. No human PIE/device/visual/performance/Gate 6/7 acceptance."
+  },
+  "p1c01_frodo_preimport_hydration_2026_10_07": {
+    "status": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
+    "include": "SourceAssets/ValidatedRuntime/FRODO/*.fbx",
+    "exact_sha256_count": 4,
+    "consumer": "Scripts/ci_import_production_assets.cmd -> ShireFrodoAnimationImport",
+    "rationale": "Hydrate exact tracked FBX bytes before normal production import and before runner credential scrubbing can make a fallback git-lfs pull unreliable.",
+    "acceptance_boundary": "No runtime/visual/device/Gate 6/7 acceptance until fresh exact-head evidence."
   }
 }

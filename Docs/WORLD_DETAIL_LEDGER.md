@@ -1504,3 +1504,10 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Corrected the render evidence guard to distinguish runtime identity `Frodo` from content-folder token `FRODO`.
 - The P1C01 render now requires proof that the async rig is both loaded and applied before it can report production readiness.
 - No runtime authority, asset format, density, chapter transition or synchronous-load policy changed.
+
+
+## 2026-10-07 - Frodo production input hydration
+
+- Added the exact tracked Frodo FBX bundle to the existing bounded P1C01 pre-import LFS hydration pass.
+- Runtime remains soft/async through `UShireChapterAssetStreamingSubsystem`; no synchronous heavy runtime loading or new authority was introduced.
+- P1C02 remains locked.

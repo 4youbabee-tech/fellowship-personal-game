@@ -4748,3 +4748,13 @@ Historical 161-bone Human Wave 2 metadata is superseded and may not be used as c
 | Default/invalid instanced material warnings | HARD FAIL |
 | Fresh exact-head render | PENDING |
 | Visual acceptance | NOT CLAIMED |
+
+
+## 2026-10-07 - Frodo runtime input hydration
+
+| Control | State |
+|---|---|
+| Frodo validated-runtime FBX LFS hydration | SOURCE-IMPLEMENTED |
+| Four exact FBX SHA checks before production import | SOURCE-IMPLEMENTED |
+| Fresh persistent-package runtime proof | PENDING |
+| Fresh render production-readiness PASS | PENDING |

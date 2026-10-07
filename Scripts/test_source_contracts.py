@@ -1313,5 +1313,19 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("reason=frodo_async_rig_ready_not_observed", capture)
 
 
+    def test_p1c01_lfs_hydration_preloads_exact_frodo_runtime_fbx(self):
+        root = Path(__file__).resolve().parents[1]
+        hydrate = (root / "Scripts" / "hydrate_p1c01_material_lfs.ps1").read_text(encoding="utf-8")
+        self.assertIn("SourceAssets/ValidatedRuntime/FRODO/*.fbx", hydrate)
+        self.assertIn("P1C01_LFS_FRODO_HYDRATION_PASS", hydrate)
+        for sha in (
+            "75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be",
+            "ee81650714587d2a1a638f3ff0c1a8239ea555bf84959e96ce5d037af3f33cd3",
+            "c4091b7881a4e9e810e70bb7f3abed58683dff5bacf54e26ccb2e926e4c9e688",
+            "4a4d10d91343dbd701c535d30ea9d9384ca74596cd7720cf6bfdd1c6328e1fc1",
+        ):
+            self.assertIn(sha, hydrate)
+
+
 if __name__ == "__main__":
     unittest.main()
