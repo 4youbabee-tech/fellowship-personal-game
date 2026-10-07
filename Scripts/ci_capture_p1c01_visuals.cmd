@@ -28,11 +28,15 @@ if not exist "%SCREENSHOT_ROOT%" mkdir "%SCREENSHOT_ROOT%" >nul 2>nul
 
 echo P1C01_RENDER_CAPTURE_BEGIN sha=%SHORT_SHA% map=/Engine/Maps/Entry renderer=DX11 resolution=1280x720
 
-call "%WORKSPACE%\Scripts\ci_import_production_assets.cmd"
-set "IMPORT_EXIT=!ERRORLEVEL!"
-if not "!IMPORT_EXIT!"=="0" (
-  echo P1C01_RENDER_CAPTURE_FAIL reason=production_import exit=!IMPORT_EXIT!
-  exit /b !IMPORT_EXIT!
+if /I "%SHIRE_SKIP_PRODUCTION_IMPORT%"=="1" (
+  echo P1C01_RENDER_CAPTURE_REUSE_IMPORT workspace="%WORKSPACE%"
+) else (
+  call "%WORKSPACE%\Scripts\ci_import_production_assets.cmd"
+  set "IMPORT_EXIT=!ERRORLEVEL!"
+  if not "!IMPORT_EXIT!"=="0" (
+    echo P1C01_RENDER_CAPTURE_FAIL reason=production_import exit=!IMPORT_EXIT!
+    exit /b !IMPORT_EXIT!
+  )
 )
 
 call :Capture "01_BagEnd_Hill" -3160 -1760 440 -8 37 0

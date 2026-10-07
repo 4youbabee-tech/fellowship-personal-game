@@ -1327,5 +1327,22 @@ class SourceContractTests(unittest.TestCase):
             self.assertIn(sha, hydrate)
 
 
+    def test_p1c01_render_is_integrated_into_unreal_build_without_duplicate_import(self):
+        root = Path(__file__).resolve().parents[1]
+        unreal = (root / ".github" / "workflows" / "unreal-build-validation.yml").read_text(encoding="utf-8")
+        render = (root / ".github" / "workflows" / "p1c01-shire-render-capture.yml").read_text(encoding="utf-8")
+        capture = (root / "Scripts" / "ci_capture_p1c01_visuals.cmd").read_text(encoding="utf-8")
+
+        self.assertIn("Capture P1C01 production Shire on existing UE workspace", unreal)
+        self.assertIn('SHIRE_SKIP_PRODUCTION_IMPORT: "1"', unreal)
+        self.assertIn("Upload integrated P1C01 rendered evidence", unreal)
+        self.assertIn("P1C01_RENDER_CAPTURE_REUSE_IMPORT", capture)
+
+        on_block = render[render.index("on:"):render.index("permissions:")]
+        self.assertIn("workflow_dispatch:", on_block)
+        self.assertNotIn("pull_request:", on_block)
+        self.assertNotIn("push:", on_block)
+
+
 if __name__ == "__main__":
     unittest.main()

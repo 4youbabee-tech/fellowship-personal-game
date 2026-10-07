@@ -2,32 +2,6 @@ name: P1C01 Shire Render Capture
 
 on:
   workflow_dispatch:
-  pull_request:
-    branches:
-      - develop
-    paths:
-      - "Scripts/ci_capture_p1c01_visuals.cmd"
-      - "Scripts/ci_import_production_assets.cmd"
-      - ".github/workflows/p1c01-shire-render-capture.yml"
-      - "Source/**"
-      - "Config/**"
-      - "SourceAssets/Production/**"
-      - "ShireJourney.uproject"
-  push:
-    branches:
-      - production/p1c01-definitive-chapter-closeout-2026-10-04
-    paths:
-      - "Scripts/ci_capture_p1c01_visuals.cmd"
-      - "Scripts/ci_import_production_assets.cmd"
-      - ".github/workflows/p1c01-shire-render-capture.yml"
-      - "Source/**"
-      - "Config/**"
-      - "SourceAssets/Production/**"
-      - "ShireJourney.uproject"
-
-concurrency:
-  group: p1c01-shire-render-capture
-  cancel-in-progress: true
 
 permissions:
   contents: read

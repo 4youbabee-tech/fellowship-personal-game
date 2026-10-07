@@ -6533,11 +6533,11 @@
     "runtime_chapter_sequence": "Data/P1C01RuntimeChapterSequenceV1.json"
   },
   "immediate_next_large_actions": [
-    "1. Run fresh exact-head Unreal production import + Shire Render Capture and require P1C01_RENDER_PRODUCTION_READINESS_PASS.",
-    "2. If the fresh render is clean, inspect the six captures and continue direct visible world upgrade rather than generic CI cleanup.",
-    "3. Advance Bilbo, Gandalf, Sam, Merry, Pippin, Black Rider and Black Rider horse final production FBX bundles; Frodo remains first visible runtime proof.",
-    "4. Advance production WAV master intake/playback and full F1-01/F1-02/F1-03 human traversal/reliability through FerryEscape.",
-    "5. Measure DX11 1280x720 target-device performance and complete human Gate 6/7; keep P1C02 locked."
+    "1. Run the unified exact-head Unreal build/import/render lane and require P1C01_RENDER_PRESENTATION_TECHNICAL_PASS from the same workspace.",
+    "2. Inspect fresh Bag End/Hobbiton/Party Field/Water-Mill/Bywater-edge/Ferry captures and root-fix any remaining visible production fallback.",
+    "3. Advance the seven remaining required P1C01 final FBX character bundles without restarting historical Frodo source-factory lanes.",
+    "4. Finish production WAV masters/playback and human F1-01/F1-02/F1-03 reliability through FerryEscape.",
+    "5. Target-device DX11 1280x720 profiling and Gate 6/7; P1C02 remains locked."
   ],
   "session_handoff": {
     "checkpoint_id": "P1C01_FINAL_STATIC_CLEANUP_TO_ONE_SHOT_EXECUTION_2026_10_06",
@@ -8874,7 +8874,8 @@
       "Render Capture #219 self-hosted fallback reached Windows but failed on a malformed PowerShell regex token before classification; fixed to '^0+$' and hardened git-show target construction.",
       "P1C01CharacterRigAnimationPrepV1.json was missing from Closure workflow path triggers/delta inputs despite being the direct Character Intake manifest; added so active-cast/source-prep changes cannot silently skip intake.",
       "Render workflow inspection found duplicate/corrupted trailing content after the first fallback repair. The workflow was fully rebuilt from the last known-good three-job structure with exactly one self-hosted fail-closed classifier/capture path, and regression contracts now assert singular job/block structure.",
-      "Frodo UE4 import now classifies the current delta before any checkout/build/import. Unrelated PR synchronizations inherit the already-proven 48-bone technical import boundary and skip heavy self-hosted work; Frodo/import-impact deltas still fail closed to a fresh exact-head gate."
+      "Frodo UE4 import now classifies the current delta before any checkout/build/import. Unrelated PR synchronizations inherit the already-proven 48-bone technical import boundary and skip heavy self-hosted work; Frodo/import-impact deltas still fail closed to a fresh exact-head gate.",
+      "Single-runner duplication removed: automatic P1C01 render now executes inside Unreal Build Validation after the existing production import using SHIRE_SKIP_PRODUCTION_IMPORT=1; the standalone render workflow is manual-only."
     ],
     "evidence_boundary": "STATIC CLEANUP RECONCILED. Parent exact head 9706cc72367be7e8dd14422808abba63597c8511 has COMPILE/IMPORT/PACKAGE/HEADLESS-RUNTIME evidence from the successful self-hosted job inside Unreal Build #1654. No human PIE, DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED or Gate 6/7 ACCEPTED claim."
   },

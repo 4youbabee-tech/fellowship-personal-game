@@ -4758,3 +4758,16 @@ Historical 161-bone Human Wave 2 metadata is superseded and may not be used as c
 | Four exact FBX SHA checks before production import | SOURCE-IMPLEMENTED |
 | Fresh persistent-package runtime proof | PENDING |
 | Fresh render production-readiness PASS | PENDING |
+
+
+## 2026-10-07 - Unified heavy runner lane
+
+| Heavy operation | Previous | Current |
+|---|---|---|
+| Editor build for Unreal validation | 1x | 1x |
+| Editor build for auto render | additional 1x | removed |
+| Production import for Unreal validation | 1x | 1x |
+| Production import for auto render | additional 1x | reused |
+| Automated Shire render | separate self-hosted workflow | integrated into Unreal build workspace |
+| Standalone render workflow | auto on PR/push | manual diagnostic only |
+| Render technical blockers | fail-closed | unchanged |

@@ -1511,3 +1511,11 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Added the exact tracked Frodo FBX bundle to the existing bounded P1C01 pre-import LFS hydration pass.
 - Runtime remains soft/async through `UShireChapterAssetStreamingSubsystem`; no synchronous heavy runtime loading or new authority was introduced.
 - P1C02 remains locked.
+
+
+## 2026-10-07 - P1C01 self-hosted runner consolidation
+
+- Consolidated production import and Shire render into the main Unreal build workspace to eliminate duplicate editor build/import work on the single self-hosted runner.
+- The capture script can reuse the already-imported workspace but still performs all six viewpoints and the technical presentation blocker scan.
+- The standalone render workflow is retained for manual diagnostics only.
+- No gameplay/world/audio authority, chapter boundary, density or runtime loading policy changed.

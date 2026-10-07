@@ -464,6 +464,23 @@ jobs:
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_import_production_assets.cmd"'
 
+      - name: Capture P1C01 production Shire on existing UE workspace
+        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_ASSET_IMPORT_ONLY == 'true'
+        shell: cmd
+        env:
+          SHIRE_SKIP_PRODUCTION_IMPORT: "1"
+        run: '"%GITHUB_WORKSPACE%\Scripts\ci_capture_p1c01_visuals.cmd"'
+
+      - name: Upload integrated P1C01 rendered evidence
+        if: always() && (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_ASSET_IMPORT_ONLY == 'true')
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1c01-shire-render-integrated-${{ env.TARGET_SHA }}
+          path: |
+            Saved/Automation/P1C01VisualCapture/**
+          if-no-files-found: error
+          retention-days: 14
+
       - name: Resolve local Python for runtime observation
         if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
         shell: cmd

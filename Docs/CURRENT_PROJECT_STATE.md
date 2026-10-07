@@ -5060,3 +5060,14 @@ Evidence boundary: **SOURCE-IMPLEMENTED root fix** on top of previously proven U
 - The P1C01 hydration pass now explicitly pulls the four tracked `SourceAssets/ValidatedRuntime/FRODO/*.fbx` LFS objects before the runner scrubs credentials or starts UE import.
 - The exact four known SHA256 identities are verified immediately after hydration.
 - This closes the remaining pointer/stale-binary risk in the production path. Fresh exact-head UE4 import/render evidence is still required.
+
+
+## 2026-10-07 - Unified Unreal/Render execution lane to remove duplicate heavy work
+
+The single self-hosted UE4 runner was spending time twice on the same exact head: the standalone Shire Render workflow performed its own checkout/build/production import, then Unreal Build Validation repeated checkout/build/import before QA/package.
+
+The P1C01 render is now integrated into the existing Unreal Build Validation workspace immediately after production import. `ci_capture_p1c01_visuals.cmd` supports `SHIRE_SKIP_PRODUCTION_IMPORT=1` so the integrated lane reuses the already-built editor and already-imported production assets. Render evidence is uploaded from the same Unreal run.
+
+The standalone `P1C01 Shire Render Capture` workflow remains available only through manual dispatch for diagnostics; it no longer auto-runs on every PR synchronize/push.
+
+This is a runner-throughput change only. It does not weaken the fail-closed presentation gate or acceptance boundary.
