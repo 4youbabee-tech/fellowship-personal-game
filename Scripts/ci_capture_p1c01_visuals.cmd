@@ -68,10 +68,16 @@ for %%L in ("%RUN_DIR%\*.log") do (
 )
 if "!VISUAL_GATE_FAIL!"=="1" exit /b 80
 
-findstr /S /I /C:"CharacterVisual: skeletal production rig active id=FRODO" "%RUN_DIR%\*.log" >nul
+findstr /S /I /C:"CharacterRigStreaming: ready id=Frodo" "%RUN_DIR%\*.log" >nul
+if errorlevel 1 (
+  echo P1C01_RENDER_CAPTURE_FAIL reason=frodo_async_rig_ready_not_observed dir="%RUN_DIR%"
+  exit /b 81
+)
+
+findstr /S /I /C:"CharacterVisual: skeletal production rig active id=Frodo" "%RUN_DIR%\*.log" >nul
 if errorlevel 1 (
   echo P1C01_RENDER_CAPTURE_FAIL reason=frodo_production_rig_not_observed dir="%RUN_DIR%"
-  exit /b 81
+  exit /b 82
 )
 echo P1C01_RENDER_PRODUCTION_READINESS_PASS frodoRig=active defaultMaterialFallback=no
 

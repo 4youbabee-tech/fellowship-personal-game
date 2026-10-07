@@ -5041,3 +5041,14 @@ Root repair:
 - Render Capture is upgraded from “six screenshots exist” to a fail-closed production-readiness gate: it fails if Frodo core packages are missing, if production foliage compile falls back, if instanced-mesh usage warnings appear, or if the skeletal Frodo production rig is never observed active.
 
 Evidence boundary: **SOURCE-IMPLEMENTED root fix** on top of previously proven UE4 compile/import/package/headless evidence. Fresh exact-head render is required before claiming the visual blockers are closed. No PIE/device/visual/performance/Gate 6/7 acceptance is claimed.
+
+
+## 2026-10-07 - Frodo render identity gate correction
+
+- Runtime character streaming uses the stable gameplay id `Frodo`, while the content folder token is `FRODO`. The first strict render gate accidentally searched for `CharacterVisual: skeletal production rig active id=FRODO`, which cannot match the player runtime log emitted from `TryApplyProductionRig(VisualId.ToString())`.
+- The render gate now requires both exact runtime signals before the six-shot evidence can pass:
+  - `CharacterRigStreaming: ready id=Frodo`
+  - `CharacterVisual: skeletal production rig active id=Frodo`
+- It still fails immediately on `core-packages-missing`, production material compile failure, or missing instanced-static-mesh material usage.
+- This prevents a false red from identifier casing while also strengthening the evidence requirement from “package absent warning not seen” to “async rig actually became ready and active.”
+- Fresh exact-head execution is still required. No visual/PIE/device acceptance is claimed from this source correction.

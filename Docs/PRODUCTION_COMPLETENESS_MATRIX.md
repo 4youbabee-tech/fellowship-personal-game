@@ -4734,3 +4734,17 @@ Historical 161-bone Human Wave 2 metadata is superseded and may not be used as c
 | Remaining named characters | 7 final FBX bundles still absent | OPEN | Not accepted |
 | Production WAV masters | 0 tracked at snapshot | OPEN | Not accepted |
 | Human PIE / target device / Gate 6/7 | Not proven | OPEN | NOT ACCEPTED |
+
+
+## 2026-10-07 - Frodo render runtime identity gate
+
+| Check | Requirement |
+|---|---|
+| Runtime character id | `Frodo` |
+| Content folder token | `FRODO` |
+| Async rig-ready log | REQUIRED |
+| Skeletal production-rig-active log | REQUIRED |
+| `core-packages-missing` | HARD FAIL |
+| Default/invalid instanced material warnings | HARD FAIL |
+| Fresh exact-head render | PENDING |
+| Visual acceptance | NOT CLAIMED |

@@ -1304,5 +1304,14 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("EnsureInstancedStaticMeshUsage(ProductionFoliageFarParent", importer)
 
 
+    def test_p1c01_render_gate_requires_exact_frodo_async_runtime_identity(self):
+        root = Path(__file__).resolve().parents[1]
+        capture = (root / "Scripts" / "ci_capture_p1c01_visuals.cmd").read_text(encoding="utf-8")
+        self.assertIn("CharacterRigStreaming: ready id=Frodo", capture)
+        self.assertIn("CharacterVisual: skeletal production rig active id=Frodo", capture)
+        self.assertNotIn("CharacterVisual: skeletal production rig active id=FRODO", capture)
+        self.assertIn("reason=frodo_async_rig_ready_not_observed", capture)
+
+
 if __name__ == "__main__":
     unittest.main()

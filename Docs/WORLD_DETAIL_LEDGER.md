@@ -1497,3 +1497,10 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Foliage/surface material master repair is editor/import-time only and preserves HISM/ISM ownership for repeated detail.
 - No new density wave, no new population authority, no P1C02 transition, and no Bree runtime opening were introduced.
 - Fresh rendered evidence is mandatory before visual acceptance.
+
+
+## 2026-10-07 - Frodo async render evidence guard
+
+- Corrected the render evidence guard to distinguish runtime identity `Frodo` from content-folder token `FRODO`.
+- The P1C01 render now requires proof that the async rig is both loaded and applied before it can report production readiness.
+- No runtime authority, asset format, density, chapter transition or synchronous-load policy changed.
