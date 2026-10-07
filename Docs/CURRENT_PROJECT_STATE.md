@@ -5248,3 +5248,8 @@ The latest visual packet manifest is now also a full-lane trigger. This closes t
 ### P1C01 material packet runtime-stability root fix (2026-10-08)
 
 Unreal Build Validation #1697 proved the broad-surface grass-path override was not runtime-safe on the validated DX11 runner: build and import passed, but the first HUD-free capture stalled before BeginPlay and failed with `screenshot_timeout` after 75 seconds. The override is removed from the large ground/hill/slope HISM components; the previously proven local Shire materials and bounded imported detail-material overrides remain. This is a root-fix commit only. Fresh exact-head render, packaged startup, performance, and human/device acceptance remain required; no visual, device, performance, or Gate 6/7 acceptance is claimed.
+
+
+### P1C01 presentation composition and lighting packet (2026-10-08)
+
+The #1698 artifact was technically complete but visual review still found low-detail blockout surfaces, close/occluded compositions, dark interior framing, and no visible character hero read in the six HUD-free views. The next packet adjusts only the review-route camera anchors and bounded runtime presentation: lower sun intensity, stronger sky fill, lighter/shorter fog contribution, controlled exposure, saturation, and contrast. Fresh exact-head capture/package evidence is required; this is not VISUALLY-ACCEPTED, DEVICE-TESTED, PERFORMANCE-ACCEPTED, or Gate 6/7 evidence.

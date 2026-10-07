@@ -39,17 +39,17 @@ if /I "%SHIRE_SKIP_PRODUCTION_IMPORT%"=="1" (
   )
 )
 
-call :Capture "01_BagEnd_Hill" -3160 -1760 75 -2 37 0
+call :Capture "01_BagEnd_Hill" -2900 -1450 140 -8 40 0
 if errorlevel 1 exit /b !ERRORLEVEL!
-call :Capture "02_Hobbiton_Common" -1540 -650 75 -2 32 0
+call :Capture "02_Hobbiton_Common" -1750 -500 130 -8 32 0
 if errorlevel 1 exit /b !ERRORLEVEL!
-call :Capture "03_Party_Field" -880 520 75 -2 32 0
+call :Capture "03_Party_Field" -1200 700 135 -7 32 0
 if errorlevel 1 exit /b !ERRORLEVEL!
-call :Capture "04_Water_Mill_Bridge" -1830 260 75 -2 2 0
+call :Capture "04_Water_Mill_Bridge" -2100 100 130 -8 2 0
 if errorlevel 1 exit /b !ERRORLEVEL!
-call :Capture "05_Bywater_Facing_Edge" 720 -540 75 -2 14 0
+call :Capture "05_Bywater_Facing_Edge" 500 -700 130 -7 14 0
 if errorlevel 1 exit /b !ERRORLEVEL!
-call :Capture "06_Bucklebury_Ferry" 21900 -1550 105 -3 18 0
+call :Capture "06_Bucklebury_Ferry" 21700 -1300 150 -8 18 0
 if errorlevel 1 exit /b !ERRORLEVEL!
 
 set "VISUAL_GATE_FAIL=0"

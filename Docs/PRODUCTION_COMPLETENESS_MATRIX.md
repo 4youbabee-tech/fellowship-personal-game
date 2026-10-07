@@ -5005,3 +5005,13 @@ The latest visual packet manifest is now also a full-lane trigger. This closes t
 | Fresh six-shot render/package | Not produced by #1697; all later runtime/package steps skipped | Required after root fix |
 | VISUALLY-ACCEPTED / DEVICE-TESTED / PERFORMANCE-ACCEPTED / Gate 6/7 | No concrete evidence | NOT CLAIMED |
 | P1C02 Bree | No chapter expansion | LOCKED |
+
+
+## 2026-10-08 — P1C01 composition/lighting packet
+
+| Item | #1698 evidence | Next disposition |
+|---|---|---|
+| Six HUD-free captures | Technically produced and uploaded; visual review still shows low-detail/blockout surfaces, several close/occluded views, dark interior, and no clear hero-character read | Camera/exposure/fill packet implemented; fresh review required |
+| Runtime/package | Build/import/QA/startup/route-save/cook/package passed | Re-run required after packet |
+| Human visual/audio/gameplay/performance/device acceptance | Not evidenced | NOT CLAIMED |
+| P1C02 Bree | P1C01 gates incomplete | LOCKED |

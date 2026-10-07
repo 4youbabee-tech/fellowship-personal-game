@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "manifest_id": "P1C01_WORLD_MICRO_DETAIL_COMPLETION_V1",
-  "status": "WORLD_MATERIAL_SURFACE_PASS_RUNTIME_STABILITY_ROOT_FIXED",
+  "status": "WORLD_PRESENTATION_COMPOSITION_LIGHTING_PACKET_IMPLEMENTED",
   "authority": [
     "Data/ProjectGovernor.json",
     "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
@@ -123,15 +123,15 @@
     "target": "8 GB RAM / ~2 GB VRAM / DX11 / 1280x720 / 30 FPS floor"
   },
   "latest_render_diagnosis": {
-    "exact_head": "cb05105741b809ba1c82ba67423a06c63d2e13c4",
-    "artifact": "p1c01-shire-render-integrated-cb05105741b809ba1c82ba67423a06c63d2e13c4",
-    "evidence": "Unreal Build Validation #1697 passed C++ build and production import, then failed the first integrated HUD-free capture before BeginPlay with P1C01_RENDER_CAPTURE_FAIL reason=screenshot_timeout name=01_BagEnd_Hill. The six-shot/package/runtime lanes were skipped.",
+    "exact_head": "9bd7ca461d5dabc9d8d8c8b208c151f8d837003c",
+    "artifact": "p1c01-shire-render-integrated-9bd7ca461d5dabc9d8d8c8b208c151f8d837003c",
+    "evidence": "Unreal Build Validation #1698 passed the integrated six-shot capture, runtime audits, cook/package, packaged startup, and runner hardware-boundary collection. Artifact review still found low-detail/blockout surfaces, close/occluded compositions, dark interior framing, and no clear visible hero-character read.",
     "blockers": [
-      "The new MI_Sh_GrassPath_PH broad ground/hill/slope HISM override stalled the first render on the validated DX11 runner",
-      "Fresh exact-head six-shot render, packaged startup, and performance evidence remain required",
-      "Named-character, living-world, audio, and human/device presentation evidence remain insufficient"
+      "World remains visibly low-detail/blockout in the reviewed captures",
+      "Hero-character and living-world presentation is not yet visually evidenced",
+      "Human visual/audio/gameplay/device/performance acceptance remains incomplete"
     ],
-    "disposition": "Removed the broad grass-path HISM override while preserving the known-safe local Shire materials and bounded imported detail-material overrides. The next exact-head run must reprove capture, package, and runtime behavior before another visual packet."
+    "disposition": "Implemented a bounded presentation packet: safer road-level camera anchors for all six review shots plus lower sun, stronger sky fill, reduced fog wash, controlled exposure, saturation, and contrast. Fresh exact-head render/package evidence is required."
   },
   "force_full_render_reproof": true
 }

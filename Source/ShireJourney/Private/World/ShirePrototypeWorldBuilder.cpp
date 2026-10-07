@@ -982,7 +982,7 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
             // UE4.27 requires the light to be movable before changing the actor rotation in PIE.
             SunComponent->SetMobility(EComponentMobility::Movable);
             Sun->SetActorRotation(FRotator(-38.0f, -28.0f, 0.0f));
-            SunComponent->SetIntensity(3.05f);
+            SunComponent->SetIntensity(2.35f);
             SunComponent->SetLightColor(FLinearColor(1.0f, 0.90f, 0.78f));
             SunComponent->SetCastShadows(true);
             SunComponent->SetAtmosphereSunLight(true);
@@ -1036,12 +1036,12 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
     {
         if (UExponentialHeightFogComponent* FogComponent = HeightFog->GetComponent())
         {
-            FogComponent->SetFogDensity(0.0055f);
-            FogComponent->SetFogHeightFalloff(0.20f);
+            FogComponent->SetFogDensity(0.0035f);
+            FogComponent->SetFogHeightFalloff(0.18f);
             FogComponent->SetFogInscatteringColor(FLinearColor(0.70f, 0.76f, 0.68f));
             FogComponent->SetDirectionalInscatteringColor(FLinearColor(0.95f, 0.84f, 0.68f));
-            FogComponent->SetStartDistance(1400.0f);
-            FogComponent->SetFogMaxOpacity(0.48f);
+            FogComponent->SetStartDistance(1800.0f);
+            FogComponent->SetFogMaxOpacity(0.32f);
             FogComponent->SetVolumetricFog(false);
         }
     }
@@ -1069,7 +1069,7 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
         if (USkyLightComponent* SkyComponent = Cast<USkyLightComponent>(Sky->GetLightComponent()))
         {
             SkyComponent->SetMobility(EComponentMobility::Movable);
-            SkyComponent->SetIntensity(1.05f);
+            SkyComponent->SetIntensity(1.30f);
             SkyComponent->bLowerHemisphereIsBlack = false;
             SkyComponent->RecaptureSky();
         }
@@ -1103,17 +1103,23 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
         PostProcess->BlendWeight = 1.0f;
 
         PostProcess->Settings.bOverride_AutoExposureMinBrightness = true;
-        PostProcess->Settings.AutoExposureMinBrightness = 0.78f;
+        PostProcess->Settings.AutoExposureMinBrightness = 0.66f;
         PostProcess->Settings.bOverride_AutoExposureMaxBrightness = true;
-        PostProcess->Settings.AutoExposureMaxBrightness = 1.10f;
+        PostProcess->Settings.AutoExposureMaxBrightness = 1.35f;
         PostProcess->Settings.bOverride_AutoExposureBias = true;
-        PostProcess->Settings.AutoExposureBias = -0.08f;
+        PostProcess->Settings.AutoExposureBias = 0.10f;
 
         PostProcess->Settings.bOverride_BloomIntensity = true;
-        PostProcess->Settings.BloomIntensity = 0.10f;
+        PostProcess->Settings.BloomIntensity = 0.08f;
         PostProcess->Settings.bOverride_VignetteIntensity = true;
-        PostProcess->Settings.VignetteIntensity = 0.12f;
+        PostProcess->Settings.VignetteIntensity = 0.08f;
+        PostProcess->Settings.bOverride_ColorSaturation = true;
+        PostProcess->Settings.ColorSaturation = FVector4(0.92f, 0.92f, 0.92f, 1.0f);
+        PostProcess->Settings.bOverride_ColorContrast = true;
+        PostProcess->Settings.ColorContrast = FVector4(1.06f, 1.06f, 1.06f, 1.0f);
     }
+
+    UE_LOG(LogTemp, Display, TEXT("P1C01_PRESENTATION_LIGHTING_PASS sun=2.35 sky=1.30 fogStart=1800 fogOpacity=0.32 exposure=0.10 saturation=0.92 contrast=1.06"));
 }
 
 
