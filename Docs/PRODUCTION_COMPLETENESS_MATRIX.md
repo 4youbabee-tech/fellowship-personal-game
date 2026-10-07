@@ -4979,3 +4979,8 @@ The first camera-presentation patch had a source line-ending serialization defec
 ### P1C01 world atmosphere pass (2026-10-07)
 
 Runtime Shire atmosphere was adjusted in `ShirePrototypeWorldBuilder`: stronger warm sun/sky contribution, lower exponential fog density/opacity, and longer fog start distance. The intent is to make the playable Shire readable on the validated DX11 hardware profile while preserving bounded post-process cost. This remains a presentation pass; fresh build/render evidence is required and no VISUALLY-ACCEPTED or PERFORMANCE-ACCEPTED claim is made.
+
+
+### P1C01 broad-surface material pass (2026-10-08)
+
+The exact #1694 render was reviewed from the integrated artifact. Exposure and camera readability improved, but the six views still showed large flat-color green/white terrain surfaces and low-detail blockout presentation. The next production packet applies the already-verified P1C01 grass-path material locally to the broad ground, hill, and slope HISM components. It does not mutate the common asset bank, add synchronous loads, change collision, or increase actor density. Fresh exact-head UE4 build/render/package evidence is required; no visual, device, performance, or Gate 6/7 acceptance is claimed.

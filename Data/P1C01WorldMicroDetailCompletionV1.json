@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "manifest_id": "P1C01_WORLD_MICRO_DETAIL_COMPLETION_V1",
-  "status": "PRODUCTION_WORLD_PRESENT_MATERIAL_ROOT_FIX_SOURCE_IMPLEMENTED_RENDER_REPROOF_PENDING",
+  "status": "WORLD_MATERIAL_SURFACE_PASS_SOURCE_IMPLEMENTED_RENDER_REPROOF_PENDING",
   "authority": [
     "Data/ProjectGovernor.json",
     "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
@@ -123,14 +123,14 @@
     "target": "8 GB RAM / ~2 GB VRAM / DX11 / 1280x720 / 30 FPS floor"
   },
   "latest_render_diagnosis": {
-    "exact_head": "e85e7be9dc619d24063dc5b89c55267a801a5eaa",
-    "artifact": "p1c01-shire-render-capture-e85e7be9dc619d24063dc5b89c55267a801a5eaa",
-    "evidence": "Six 1280x720 DX11 captures produced successfully, but visual review/logs showed prototype/fallback presentation.",
+    "exact_head": "58794f153c2052cbb4857e18dcc8c438288e606e",
+    "artifact": "p1c01-shire-render-integrated-58794f153c2052cbb4857e18dcc8c438288e606e",
+    "evidence": "Unreal Build Validation #1694 succeeded through UE4.27.2 build, production import, six integrated captures, runtime audits, Windows package and packaged startup. Exact artifact review confirmed exposure/camera improvement but rejected visual acceptance.",
     "blockers": [
-      "M_ProductionFoliage SimpleGrassWind missing AdditionalWPO input caused default-material fallback",
-      "M_ProductionFoliage and M_ProductionSurface missing InstancedStaticMeshes material usage",
-      "Frodo production packages absent at runtime, causing modular fallback"
+      "Broad ground/hill/slope surfaces still read as flat-color blockout rather than authored terrain",
+      "Several review views remain compositionally close to geometry",
+      "Named-character and living-world presence remains insufficient in the captured views"
     ],
-    "disposition": "Root fixes source-implemented; fresh exact-head render required before any visual acceptance."
+    "disposition": "Next packet applies the verified Shire grass-path material locally to broad terrain HISM surfaces; fresh exact-head render is required before judging improvement."
   }
 }
