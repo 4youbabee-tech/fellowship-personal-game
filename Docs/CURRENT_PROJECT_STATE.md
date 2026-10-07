@@ -5003,3 +5003,13 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Closure now treats that manifest as a closure-relevant input in push, PR path filtering, and runtime delta classification.
 - Regression contracts assert the render fallback parse-safe tokens and the character-prep closure dependency.
 - Evidence boundary: **SOURCE-IMPLEMENTED root fixes only until fresh exact-head workflow execution**.
+
+
+## 2026-10-07 - Render workflow full root-rebuild after structural corruption
+
+- Follow-up inspection found the prior render fallback file had duplicated tail content in addition to the PowerShell parser defect. The malformed duplicate started after the first complete upload block and made the workflow structurally invalid.
+- Root repair is a full clean rebuild of `.github/workflows/p1c01-shire-render-capture.yml` from the last known-good three-job structure, then re-application of the fail-closed self-hosted classifier fallback exactly once.
+- The rebuilt workflow has one `classify`, one `inherit`, one `capture` job, one fallback classifier step and one rendered-evidence upload step.
+- Hosted classification remains preferred. Hosted zero-step failure routes to a lightweight self-hosted Git/LFS-smudge-disabled classification. Heavy checkout/LFS/build/capture happens only when the classifier requires fresh visual evidence.
+- Regression tests now assert singular job/block structure in addition to the parse-safe `'^0+$'` condition and explicit `$targetSpec`.
+- Evidence boundary: **SOURCE-IMPLEMENTED structural root repair; fresh exact-head workflow proof pending**.

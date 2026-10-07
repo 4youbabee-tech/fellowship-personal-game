@@ -4692,3 +4692,18 @@ Historical 161-bone Human Wave 2 metadata is superseded and may not be used as c
 | Fresh exact-head render fallback proof | PENDING |
 | Fresh exact-head Character Intake proof | PENDING |
 | P1C02/Bree | LOCKED |
+
+
+## 2026-10-07 - Render workflow structural repair
+
+| Control | State |
+|---|---|
+| Duplicate/corrupted render workflow tail | REMOVED BY FULL REBUILD |
+| Hosted classifier | PREFERRED |
+| Self-hosted fail-closed fallback | PRESENT ONCE |
+| Fallback LFS smudge | DISABLED |
+| Capture job count | 1 |
+| Upload rendered evidence step count | 1 |
+| Parse-safe base SHA regex | `'^0+$'` |
+| Fresh exact-head render execution | PENDING |
+| Human visual acceptance | NOT CLAIMED |

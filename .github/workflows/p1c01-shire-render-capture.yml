@@ -65,7 +65,7 @@ jobs:
   inherit:
     name: Inherit unchanged visual-tree evidence
     needs: classify
-    if: needs.classify.outputs.capture != 'true'
+    if: ${{ always() && needs.classify.result == 'success' && needs.classify.outputs.capture != 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Record inherited evidence boundary
@@ -99,35 +99,42 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GITHUB_EVENT_NAME: ${{ github.event_name }}
         run: |
-          $ErrorActionPreference="Stop"
-          $env:GIT_LFS_SKIP_SMUDGE="1"
-          $root=Join-Path $env:RUNNER_TEMP ("shire-render-classifier-"+$env:GITHUB_RUN_ID+"-"+$env:GITHUB_RUN_ATTEMPT)
+          $ErrorActionPreference = "Stop"
+          $env:GIT_LFS_SKIP_SMUDGE = "1"
+          $root = Join-Path $env:RUNNER_TEMP ("shire-render-classifier-" + $env:GITHUB_RUN_ID + "-" + $env:GITHUB_RUN_ATTEMPT)
           Remove-Item -LiteralPath $root -Recurse -Force -ErrorAction SilentlyContinue
           New-Item -ItemType Directory -Path $root -Force | Out-Null
           Push-Location $root
           try {
             git init | Out-Host
-            if($LASTEXITCODE -ne 0){ throw "P1C01_RENDER_FALLBACK_GIT_INIT_FAIL" }
-            git remote add origin ("https://x-access-token:"+$env:GH_TOKEN+"@github.com/"+$env:GITHUB_REPOSITORY+".git")
-            if($LASTEXITCODE -ne 0){ throw "P1C01_RENDER_FALLBACK_REMOTE_FAIL" }
+            if ($LASTEXITCODE -ne 0) { throw "P1C01_RENDER_FALLBACK_GIT_INIT_FAIL" }
+
+            git remote add origin ("https://x-access-token:" + $env:GH_TOKEN + "@github.com/" + $env:GITHUB_REPOSITORY + ".git")
+            if ($LASTEXITCODE -ne 0) { throw "P1C01_RENDER_FALLBACK_REMOTE_FAIL" }
+
             git -c credential.helper= -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=20 fetch --no-tags --depth=32 origin $env:TARGET_SHA
-            if($LASTEXITCODE -ne 0){ throw "P1C01_RENDER_FALLBACK_HEAD_FETCH_FAIL" }
-            if($env:BASE_SHA -and $env:BASE_SHA -notmatch '^0+
+            if ($LASTEXITCODE -ne 0) { throw "P1C01_RENDER_FALLBACK_HEAD_FETCH_FAIL" }
+
+            if ($env:BASE_SHA -and $env:BASE_SHA -notmatch '^0+$') {
               git -c credential.helper= -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=20 fetch --no-tags --depth=1 origin $env:BASE_SHA
-              if($LASTEXITCODE -ne 0){ throw "P1C01_RENDER_FALLBACK_BASE_FETCH_FAIL" }
+              if ($LASTEXITCODE -ne 0) { throw "P1C01_RENDER_FALLBACK_BASE_FETCH_FAIL" }
             }
-            $scriptPath=Join-Path $root "classify_p1c01_render_capture.ps1"
-            $targetSpec=$env:TARGET_SHA + ":Scripts/classify_p1c01_render_capture.ps1"
-            $scriptText=@(git show $targetSpec)
-            if($LASTEXITCODE -ne 0 -or $scriptText.Count -eq 0){ throw "P1C01_RENDER_FALLBACK_SCRIPT_EXTRACT_FAIL" }
+
+            $scriptPath = Join-Path $root "classify_p1c01_render_capture.ps1"
+            $targetSpec = $env:TARGET_SHA + ":Scripts/classify_p1c01_render_capture.ps1"
+            $scriptText = @(git show $targetSpec)
+            if ($LASTEXITCODE -ne 0 -or $scriptText.Count -eq 0) { throw "P1C01_RENDER_FALLBACK_SCRIPT_EXTRACT_FAIL" }
             $scriptText | Set-Content -LiteralPath $scriptPath -Encoding UTF8
+
             & $scriptPath
-            if($LASTEXITCODE -ne 0){ throw "P1C01_RENDER_FALLBACK_CLASSIFIER_FAIL exit=$LASTEXITCODE" }
-            $output=@(Get-Content -LiteralPath $env:GITHUB_OUTPUT)
-            $capture=[string](($output | Where-Object {$_ -like 'capture=*'} | Select-Object -Last 1) -replace '^capture=','')
-            $reason=[string](($output | Where-Object {$_ -like 'reason=*'} | Select-Object -Last 1) -replace '^reason=','')
-            $baseSha=[string](($output | Where-Object {$_ -like 'base_sha=*'} | Select-Object -Last 1) -replace '^base_sha=','')
-            if($capture -notin @("true","false")){ throw "P1C01_RENDER_FALLBACK_DECISION_INVALID capture=$capture" }
+            if ($LASTEXITCODE -ne 0) { throw "P1C01_RENDER_FALLBACK_CLASSIFIER_FAIL exit=$LASTEXITCODE" }
+
+            $output = @(Get-Content -LiteralPath $env:GITHUB_OUTPUT)
+            $capture = [string](($output | Where-Object { $_ -like "capture=*" } | Select-Object -Last 1) -replace "^capture=","")
+            $reason = [string](($output | Where-Object { $_ -like "reason=*" } | Select-Object -Last 1) -replace "^reason=","")
+            $baseSha = [string](($output | Where-Object { $_ -like "base_sha=*" } | Select-Object -Last 1) -replace "^base_sha=","")
+            if ($capture -notin @("true","false")) { throw "P1C01_RENDER_FALLBACK_DECISION_INVALID capture=$capture" }
+
             "SHIRE_RENDER_CAPTURE=$capture" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
             "SHIRE_RENDER_REASON=$reason" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
             "SHIRE_RENDER_BASE=$baseSha" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
@@ -170,85 +177,6 @@ jobs:
       - name: Build ShireJourneyEditor for capture
         if: env.SHIRE_RENDER_CAPTURE == 'true'
         shell: cmd
-        env:
-          TARGET_SHA: ${{ env.TARGET_SHA }}
-        run: |
-          call Scripts\ci_build_unreal.cmd
-          if errorlevel 1 exit /b %ERRORLEVEL%
-
-      - name: Capture P1C01 production Shire
-        if: env.SHIRE_RENDER_CAPTURE == 'true'
-        shell: cmd
-        run: Scripts\ci_capture_p1c01_visuals.cmd
-
-      - name: Upload rendered evidence
-        if: always() && env.SHIRE_RENDER_CAPTURE == 'true'
-        uses: actions/upload-artifact@v4
-        with:
-          name: p1c01-shire-render-capture-${{ env.TARGET_SHA }}
-          path: |
-            Saved/Automation/P1C01VisualCapture/**
-          if-no-files-found: error
-          retention-days: 14
-){
-              git -c credential.helper= -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=20 fetch --no-tags --depth=1 origin $env:BASE_SHA
-              if($LASTEXITCODE -ne 0){ throw "P1C01_RENDER_FALLBACK_BASE_FETCH_FAIL" }
-            }
-            $scriptPath=Join-Path $root "classify_p1c01_render_capture.ps1"
-            $scriptText=@(git show ("${env:TARGET_SHA}:Scripts/classify_p1c01_render_capture.ps1"))
-            if($LASTEXITCODE -ne 0 -or $scriptText.Count -eq 0){ throw "P1C01_RENDER_FALLBACK_SCRIPT_EXTRACT_FAIL" }
-            $scriptText | Set-Content -LiteralPath $scriptPath -Encoding UTF8
-            & $scriptPath
-            if($LASTEXITCODE -ne 0){ throw "P1C01_RENDER_FALLBACK_CLASSIFIER_FAIL exit=$LASTEXITCODE" }
-            $output=@(Get-Content -LiteralPath $env:GITHUB_OUTPUT)
-            $capture=[string](($output | Where-Object {$_ -like 'capture=*'} | Select-Object -Last 1) -replace '^capture=','')
-            $reason=[string](($output | Where-Object {$_ -like 'reason=*'} | Select-Object -Last 1) -replace '^reason=','')
-            $baseSha=[string](($output | Where-Object {$_ -like 'base_sha=*'} | Select-Object -Last 1) -replace '^base_sha=','')
-            if($capture -notin @("true","false")){ throw "P1C01_RENDER_FALLBACK_DECISION_INVALID capture=$capture" }
-            "SHIRE_RENDER_CAPTURE=$capture" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-            "SHIRE_RENDER_REASON=$reason" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-            "SHIRE_RENDER_BASE=$baseSha" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-            Write-Host "P1C01_RENDER_FALLBACK_DECISION capture=$capture reason=$reason base=$baseSha"
-          }
-          finally {
-            Pop-Location
-            Remove-Item -LiteralPath $root -Recurse -Force -ErrorAction SilentlyContinue
-          }
-
-      - name: Record fallback inherited evidence boundary
-        if: env.SHIRE_RENDER_CAPTURE == 'false'
-        shell: powershell
-        run: |
-          Write-Host "P1C01_RENDER_FALLBACK_INHERITED base=$env:SHIRE_RENDER_BASE head=$env:TARGET_SHA reason=$env:SHIRE_RENDER_REASON; no fresh render and no visual acceptance claimed."
-
-      - name: Checkout exact PR head
-        if: env.SHIRE_RENDER_CAPTURE == 'true'
-        uses: actions/checkout@v4
-        with:
-          clean: true
-          fetch-depth: 0
-          ref: ${{ env.TARGET_SHA }}
-
-      - name: Hydrate P1C01 material LFS sources
-        if: env.SHIRE_RENDER_CAPTURE == 'true'
-        shell: powershell
-        run: '& "$env:GITHUB_WORKSPACE\Scripts\hydrate_p1c01_material_lfs.ps1"'
-
-      - name: Verify exact checkout
-        if: env.SHIRE_RENDER_CAPTURE == 'true'
-        shell: powershell
-        run: |
-          $expected = "$env:TARGET_SHA"
-          $actual = (git rev-parse HEAD).Trim()
-          Write-Host "P1C01_CAPTURE_EXACT_HEAD expected=$expected actual=$actual"
-          if ($actual -ne $expected) { throw "Exact-head checkout mismatch" }
-          git status --short
-
-      - name: Build ShireJourneyEditor for capture
-        if: env.SHIRE_RENDER_CAPTURE == 'true'
-        shell: cmd
-        env:
-          TARGET_SHA: ${{ env.TARGET_SHA }}
         run: |
           call Scripts\ci_build_unreal.cmd
           if errorlevel 1 exit /b %ERRORLEVEL%

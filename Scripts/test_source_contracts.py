@@ -1221,12 +1221,14 @@ class SourceContractTests(unittest.TestCase):
         workflow = (root / ".github" / "workflows" / "p1c01-shire-render-capture.yml").read_text(encoding="utf-8")
         self.assertIn("always() && (needs.classify.result == 'failure' || needs.classify.outputs.capture == 'true')", workflow)
         self.assertIn("Reclassify visual delta on self-hosted fallback", workflow)
-        self.assertIn('GIT_LFS_SKIP_SMUDGE="1"', workflow)
+        self.assertIn('GIT_LFS_SKIP_SMUDGE = "1"', workflow)
         self.assertIn("P1C01_RENDER_FALLBACK_DECISION", workflow)
         self.assertIn("P1C01_RENDER_FALLBACK_INHERITED", workflow)
         self.assertIn("if: env.SHIRE_RENDER_CAPTURE == 'true'", workflow)
         self.assertIn("no fresh render and no visual acceptance claimed", workflow)
-
+        self.assertEqual(workflow.count("\n  capture:\n"), 1)
+        self.assertEqual(workflow.count("Reclassify visual delta on self-hosted fallback"), 1)
+        self.assertEqual(workflow.count("Upload rendered evidence"), 1)
 
     def test_p1c01_character_priority_stays_inside_required_shire_cast(self):
         root = Path(__file__).resolve().parents[1]
@@ -1245,10 +1247,11 @@ class SourceContractTests(unittest.TestCase):
     def test_p1c01_render_fallback_script_is_parse_safe(self):
         root = Path(__file__).resolve().parents[1]
         workflow = (root / ".github" / "workflows" / "p1c01-shire-render-capture.yml").read_text(encoding="utf-8")
-        self.assertIn("-notmatch '^0+", workflow)
+        self.assertIn("-notmatch '^0+$'", workflow)
         self.assertNotIn("-notmatch '^0+){", workflow)
-        self.assertIn('$targetSpec=$env:TARGET_SHA + ":Scripts/classify_p1c01_render_capture.ps1"', workflow)
+        self.assertIn('$targetSpec = $env:TARGET_SHA + ":Scripts/classify_p1c01_render_capture.ps1"', workflow)
         self.assertIn("git show $targetSpec", workflow)
+        self.assertNotIn("retention-days: 14\n){", workflow)
 
     def test_p1c01_character_prep_is_closure_input(self):
         root = Path(__file__).resolve().parents[1]

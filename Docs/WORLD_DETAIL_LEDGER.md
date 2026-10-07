@@ -1471,3 +1471,11 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Added the active P1C01 character-rig preparation manifest as a first-class closure trigger/input because Character Intake directly consumes it.
 - No gameplay/world authority, population ownership, asset-loading policy or chapter boundary changed.
 - Fresh exact-head runtime/visual evidence is still required before any acceptance promotion.
+
+
+## 2026-10-07 - Render workflow structural integrity repair
+
+- Rebuilt the P1C01 Shire Render Capture workflow cleanly after duplicate trailing YAML/PowerShell content was detected.
+- The resulting workflow retains the intended no-waste classifier-first architecture and one self-hosted capture authority.
+- No world geometry, density, character authority, audio authority or chapter transition behavior changed.
+- Fresh rendered evidence remains required before any visual acceptance claim.
