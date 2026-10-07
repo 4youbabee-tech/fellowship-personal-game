@@ -4969,3 +4969,8 @@ This is runner-throughput cleanup only; fresh exact-head production presentation
 ### P1C01 production presentation packet (2026-10-07)
 
 The playable camera now uses a wider third-person composition (320 cm spring arm, 74° FOV, raised socket) and a bounded +1.25 exposure bias to reduce geometry clipping and underexposed Shire presentation in the actual runtime camera. This is a presentation improvement only; it does not establish VISUALLY-ACCEPTED, DEVICE-TESTED, PERFORMANCE-ACCEPTED, or Gate 6/7 acceptance. Fresh packaged evidence from the resulting One-Shot run is required.
+
+
+### Camera packet corrective note (2026-10-07)
+
+The first camera-presentation patch had a source line-ending serialization defect and was rejected by the C++ gate before Unreal execution. The source was corrected at commit `90a9c0d9`; fresh full One-Shot evidence is required. No visual or performance acceptance is claimed from the failed run.
