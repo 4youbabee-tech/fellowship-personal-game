@@ -567,6 +567,15 @@ jobs:
         shell: cmd
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\capture_runner_hardware.ps1"'
 
+      - name: Upload playable P1C01 Windows package
+        if: success() && env.SHIRE_FULL_UNREAL_REQUIRED == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1c01-playable-windows-${{ env.TARGET_SHA }}
+          path: Saved/W00Package/WindowsNoEditor/**
+          if-no-files-found: error
+          retention-days: 7
+
       - name: Collect Unreal build logs
         if: always() && (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true' || env.SHIRE_ACCEPTANCE_ONLY == 'true')
         shell: cmd

@@ -8981,6 +8981,10 @@
       "Pre-Unreal Validation",
       "historical Human/Frodo-source/material/offline lanes"
     ],
-    "evidence_boundary": "Execution topology only; no PIE/device/visual/performance/Gate 6/7 acceptance."
+    "evidence_boundary": "Execution/output topology only until fresh exact-head run. No PIE/device/visual/performance/Gate 6/7 acceptance.",
+    "playable_artifact": "p1c01-playable-windows-<exact-head> after successful full train",
+    "additional_retired_automatic": [
+      "P1C01 KayKit Rig Technical Bridge"
+    ]
   }
 }

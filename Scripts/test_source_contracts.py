@@ -1396,5 +1396,18 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn('SHIRE_SKIP_PRODUCTION_IMPORT: "1"', unreal)
 
 
+    def test_p1c01_consolidated_train_exports_playable_and_retires_kaykit_precursor(self):
+        root = Path(__file__).resolve().parents[1]
+        unreal = (root / ".github" / "workflows" / "unreal-build-validation.yml").read_text(encoding="utf-8")
+        self.assertIn("Capture P1C01 production Shire on existing UE workspace", unreal)
+        self.assertIn("SHIRE_SKIP_PRODUCTION_IMPORT", unreal)
+        self.assertIn("Upload playable P1C01 Windows package", unreal)
+        self.assertIn("p1c01-playable-windows-", unreal)
+
+        kaykit = (root / ".github" / "workflows" / "p1c01-kaykit-rig-bridge.yml").read_text(encoding="utf-8")
+        self.assertIn("P1C01_DEFINITIVE_TRAIN_RETIREMENT", kaykit)
+        self.assertIn("production/p1c01-definitive-chapter-closeout-2026-10-04", kaykit)
+
+
 if __name__ == "__main__":
     unittest.main()

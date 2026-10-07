@@ -1539,3 +1539,10 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - P1C01 automatic execution is consolidated into one self-hosted train so runner time is spent on the chapter instead of competing historical lanes.
 - Integrated render reuses the production-imported workspace; no second world writer or asset authority is introduced.
 - Specialized historical workflows remain available for explicit diagnostics/manual use but do not automatically compete on PR #329.
+
+
+## 2026-10-07 - Playable artifact / precursor retirement ledger
+
+- The definitive P1C01 train now emits a playable Windows package artifact only after the integrated exact-head production path succeeds.
+- The superseded KayKit Frodo precursor no longer auto-runs on the definitive branch, protecting the single UE4 runner for visible Shire production.
+- No gameplay/world authority, population ownership, asset streaming law, or P1C02 boundary changed.

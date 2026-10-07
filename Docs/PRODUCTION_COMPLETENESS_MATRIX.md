@@ -4813,3 +4813,15 @@ This is runner-throughput cleanup only; fresh exact-head production presentation
 | Runtime/package | same job |
 | Closure/Frodo-import/Pre-Unreal legacy autos | skipped on definitive branch |
 | Acceptance claims | unchanged; human/device/Gate 6/7 pending |
+
+
+## 2026-10-07 - Definitive train owner-visible output
+
+| Control | State |
+|---|---|
+| Single automatic heavy P1C01 train | SOURCE-IMPLEMENTED |
+| Integrated build/import/render/runtime/package | SOURCE-IMPLEMENTED |
+| Playable Windows artifact after full success | SOURCE-IMPLEMENTED |
+| Historical KayKit precursor automatic PR lane | RETIRED on definitive branch |
+| Fresh exact-head execution | PENDING |
+| Human visual/device/performance Gate 6/7 | PENDING / NOT CLAIMED |

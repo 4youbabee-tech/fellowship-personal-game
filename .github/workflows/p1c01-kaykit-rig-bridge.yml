@@ -21,6 +21,7 @@ concurrency:
 
 jobs:
   hosted_static_bridge:
+    if: ${{ github.event_name != 'pull_request' || github.head_ref != 'production/p1c01-definitive-chapter-closeout-2026-10-04' }} # P1C01_DEFINITIVE_TRAIN_RETIREMENT
     name: Hosted KayKit source and FBX static gate
     runs-on: windows-latest
     outputs:
@@ -70,7 +71,7 @@ jobs:
   ue4_technical_bridge:
     name: UE4.27.2 KayKit skeletal technical gate
     needs: hosted_static_bridge
-    if: needs.hosted_static_bridge.outputs.selected_count != '0'
+    if: ${{ (github.event_name != 'pull_request' || github.head_ref != 'production/p1c01-definitive-chapter-closeout-2026-10-04') && needs.hosted_static_bridge.outputs.selected_count != '0' }} # P1C01_DEFINITIVE_TRAIN_RETIREMENT
     runs-on:
       - self-hosted
       - Windows

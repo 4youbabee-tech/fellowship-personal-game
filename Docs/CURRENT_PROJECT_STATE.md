@@ -5095,3 +5095,11 @@ This is a runner-throughput change only. It does not weaken the fail-closed pres
 PR #329 now consolidates automatic heavy execution around the existing Unreal Build Validation self-hosted workspace. The historical Closure, dedicated Frodo UE4 import and hosted Pre-Unreal roots are skipped for this definitive PR branch while remaining available outside it/manual pathways. The Unreal hosted classifier is also skipped here; its existing fail-closed self-hosted classifier resolves the exact-head delta locally.
 
 The same train now owns exact-head source/static contracts, UE4 build, persistent production import, integrated six-shot Shire capture on the already-imported workspace, runtime audits, package and packaged startup. This removes repeated build/import work and avoids hosted-startup red noise from determining the chapter's visible progress.
+
+
+## 2026-10-07 - Definitive train playable output + KayKit precursor retirement
+
+- The consolidated Unreal Build train is the sole automatic heavy P1C01 production path on the definitive branch: exact-head static gate, editor build, persistent Frodo production import, integrated six-shot render readiness gate, Automation/headless runtime audits, Windows package and packaged startup.
+- A successful full run now uploads the packaged `Saved/W00Package/WindowsNoEditor` tree as `p1c01-playable-windows-<exact-head>` for direct owner inspection/play.
+- The historical KayKit Rig Technical Bridge is retired from automatic PR execution on this branch because the current Frodo 48-bone tracked technical winner already supersedes that precursor. It remains available outside the definitive branch for explicit forensic/regeneration use.
+- Evidence remains exact-head fail-closed: artifact availability does not imply DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED or Gate 6/7 acceptance.
