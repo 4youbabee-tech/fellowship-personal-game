@@ -1584,3 +1584,10 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Restored safe cancellation of superseded same-PR Unreal runs to free the single UE4 device for the newest exact head.
 - Made artifact transport non-blocking; local build/log validation remains authoritative.
 - No runtime ownership, density, synchronous heavy-loading policy, or chapter boundary changed.
+
+
+## 2026-10-07 - Queue-policy test cleanup
+
+- Removed the final obsolete test assertion that required definitive-branch builds to remain non-cancelling.
+- The enforced policy now matches the low-waste runner architecture: same-PR superseded work cancels; unrelated branch work remains isolated.
+- No Shire world/gameplay/content authority changed.

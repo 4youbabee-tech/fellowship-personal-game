@@ -1428,11 +1428,15 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("production/p1c01-definitive-chapter-closeout-2026-10-04", kaykit)
 
 
-    def test_p1c01_definitive_unreal_run_is_non_cancelling(self):
+    def test_p1c01_definitive_unreal_run_cancels_only_superseded_same_pr_work(self):
         root = Path(__file__).resolve().parents[1]
         workflow = (root / ".github" / "workflows" / "unreal-build-validation.yml").read_text(encoding="utf-8")
         self.assertIn(
-            "cancel-in-progress: ${{ github.event_name == 'pull_request' && github.head_ref != 'production/p1c01-definitive-chapter-closeout-2026-10-04' }}",
+            "group: unreal-build-${{ github.repository }}-${{ github.event_name == 'pull_request' && github.head_ref || 'develop' }}",
+            workflow,
+        )
+        self.assertIn(
+            "cancel-in-progress: ${{ github.event_name == 'pull_request' }}",
             workflow,
         )
 

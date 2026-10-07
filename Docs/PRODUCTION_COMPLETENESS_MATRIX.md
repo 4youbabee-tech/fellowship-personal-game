@@ -4885,3 +4885,14 @@ This is runner-throughput cleanup only; fresh exact-head production presentation
 | Artifact quota/upload can mask engine truth | UPLOADS NON-BLOCKING |
 | Source-contract suite | 55/55 PASSED on #1677 before Pre-Unreal |
 | Fresh exact-head Pre-Unreal/UE4 proof | PENDING AFTER ROOT FIX |
+
+
+## 2026-10-07 - Final queue-policy assertion
+
+| Control | State |
+|---|---|
+| Same-PR superseded Unreal build cancellation | REQUIRED |
+| Cross-PR cancellation | PREVENTED BY BRANCH-SCOPED GROUP |
+| Obsolete definitive non-cancel assertion | REMOVED |
+| Production/gameplay code changed | NO |
+| Next exact-head One-Shot gate | REQUIRED |

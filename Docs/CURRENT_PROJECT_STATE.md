@@ -5154,3 +5154,11 @@ The same train now owns exact-head source/static contracts, UE4 build, persisten
   - rendered-evidence and playable-package artifact uploads are non-blocking transport steps so storage/quota failures cannot mask engine/logging truth.
 - PG-026/PG-167 validators were updated to enforce the stronger current semantics rather than obsolete exact strings.
 - No gameplay/story/world authority was weakened. P1C02 remains locked.
+
+
+## 2026-10-07 - Final queue-policy test reconciliation
+
+- Build #1678 reduced the One-Shot source gate to one failure.
+- The remaining failure was an obsolete test named `test_p1c01_definitive_unreal_run_is_non_cancelling`, which demanded the exact branch exception that had been removed to stop superseded builds consuming the single UE4 runner.
+- The test now asserts the intended safe policy: concurrency remains scoped by repository + PR branch, while `cancel-in-progress` is true for pull requests so only superseded work from the same branch is cancelled.
+- No production/runtime source changed.
