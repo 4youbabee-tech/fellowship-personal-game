@@ -1455,3 +1455,11 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Render Capture now has a fail-closed self-hosted classifier fallback for GitHub-hosted zero-step failures.
 - The fallback classifies from a lightweight Git graph with LFS smudge disabled. Heavy exact-head checkout, P1C01 material LFS hydration, editor build and screenshot capture occur only when the classification requires fresh visual evidence.
 - No new world actors, density, hard refs, synchronous loads or chapter transitions were added.
+
+
+## 2026-10-07 - Character scope/metadata cleanup
+
+- Corrected active P1C01 character priority to the exact required Shire cast: Frodo, Bilbo, Gandalf, Sam, Merry, Pippin, Black Rider and Black Rider horse.
+- Removed later Fellowship characters from active P1C01 priority while preserving them as future source-preparation-only entries.
+- Reconciled historical 161-bone Human Wave 2 metadata to the current 48-bone tracked Frodo technical winner.
+- No runtime character acceptance was invented; seven final FBX bundles plus Frodo rendered/human review remain open.

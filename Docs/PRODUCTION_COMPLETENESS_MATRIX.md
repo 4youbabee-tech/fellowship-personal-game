@@ -4661,3 +4661,20 @@ Goal: spend self-hosted runner time on P1C01 build/import/runtime evidence rathe
 | P1C02/Bree | LOCKED |
 
 Evidence boundary: **UE4 TECHNICAL IMPORT PROVEN** for Frodo. No PIE/device/visual/performance/Gate 6/7 acceptance claim.
+
+
+## 2026-10-07 - P1C01 required cast authority correction
+
+| Character | Current state |
+|---|---|
+| Frodo | 48-bone UE4 technical/core locomotion import proven; rendered/human review pending |
+| Bilbo | Final production rigged FBX bundle pending |
+| Gandalf | Final production rigged FBX bundle pending |
+| Sam | Final production rigged FBX bundle pending |
+| Merry | Final production rigged FBX bundle pending |
+| Pippin | Final production rigged FBX bundle pending |
+| Black Rider | Final production rigged FBX bundle pending |
+| Black Rider horse | Final production rigged FBX bundle pending |
+| Aragorn/Legolas/Gimli/Boromir | Not active P1C01 priority; source-prep-only |
+
+Historical 161-bone Human Wave 2 metadata is superseded and may not be used as current Frodo authority.

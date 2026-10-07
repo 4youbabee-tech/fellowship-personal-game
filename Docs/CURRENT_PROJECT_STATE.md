@@ -4984,3 +4984,12 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - This promotes Frodo from technical-source-only to **UE4 TECHNICAL IMPORT PROVEN** for the 48-bone rig + Idle/Walk/Run package path. It does **not** promote Frodo to human visual, PIE, device or performance acceptance.
 - Next blocker was `P1C01 Shire Render Capture`: hosted visual classifier zero-step failure caused both inherit and capture jobs to skip. Root-fix makes hosted classification preferred, but on hosted failure the self-hosted render job runs a lightweight no-LFS classifier. Only an actual/fail-safe visual delta is allowed to trigger heavy checkout/LFS/build/capture; an unchanged tree records an inherited boundary and exits without waste.
 - No gameplay/world/story authority changed; P1C02/Bree remains locked.
+
+
+## 2026-10-07 - Character lane scope correction after Frodo technical import
+
+- Frodo exact-head UE4 technical animation import is now proven on `f652af9d20e724d5990eaf3d7e4f8382d59e70a5`: 48-bone linked skeleton, exact tracked rig/Idle/Walk/Run hashes, generated packages and technical gate all passed.
+- A stale character-planning defect was removed: `P1C01CharacterRigAnimationPrepV1.json` still prioritized Aragorn/Gimli/Legolas/Boromir inside the active P1C01 character list while omitting Bilbo/Black Rider/horse. Active priority is now exactly Frodo, Bilbo, Gandalf, Sam, Merry, Pippin, Black Rider and Black Rider horse. Later Part-I characters remain preparation-only and cannot steal P1C01 runtime/source priority.
+- `P1C01HumanCharacterProductionWave2V1.json` still exposed its historical 161-bone winner as `latest_technical_winner`. It now records the current tracked 48-bone Frodo exact-head import as latest and marks the old source-factory transition superseded for Frodo.
+- Frodo is still not visually accepted. Current character gap is seven final production FBX bundles plus Frodo rendered/human review.
+- Regression coverage now enforces the exact eight-character P1C01 priority set and current 48-bone winner metadata.

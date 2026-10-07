@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "batch_id": "P1C01_CHARACTER_RIG_ANIMATION_PREP_V1",
-  "status": "P1C01_REQUIRED_CAST_SOURCE_SATURATION_ACTIVE_FRODO_TECHNICAL_WINNER_ESTABLISHED",
+  "status": "P1C01_REQUIRED_CAST_SOURCE_SATURATION_ACTIVE_FRODO_UE4_TECHNICAL_IMPORT_PROVEN",
   "authority": [
     "Data/ProjectGovernor.json",
     "Data/CharacterVisualProductionWaveV7.json",
@@ -13,47 +13,50 @@
     {
       "id": "FRODO",
       "rig_family": "HOBBIT_HUMANOID",
-      "priority": 1
+      "priority": 1,
+      "state": "TECHNICAL_IMPORT_PROVEN_NEXT_RENDER_HUMAN_REVIEW"
     },
     {
       "id": "GANDALF",
       "rig_family": "TALL_HUMANOID",
-      "priority": 1
+      "priority": 1,
+      "state": "FINAL_PRODUCTION_FBX_BUNDLE_GAP"
+    },
+    {
+      "id": "BILBO",
+      "rig_family": "HOBBIT_HUMANOID",
+      "priority": 1,
+      "state": "FINAL_PRODUCTION_FBX_BUNDLE_GAP"
     },
     {
       "id": "SAM",
       "rig_family": "HOBBIT_HUMANOID",
-      "priority": 2
-    },
-    {
-      "id": "ARAGORN",
-      "rig_family": "STANDARD_HUMANOID",
-      "priority": 2
-    },
-    {
-      "id": "GIMLI",
-      "rig_family": "DWARF_HUMANOID",
-      "priority": 2
-    },
-    {
-      "id": "LEGOLAS",
-      "rig_family": "STANDARD_HUMANOID",
-      "priority": 2
+      "priority": 2,
+      "state": "FINAL_PRODUCTION_FBX_BUNDLE_GAP"
     },
     {
       "id": "MERRY",
       "rig_family": "HOBBIT_HUMANOID",
-      "priority": 2
+      "priority": 2,
+      "state": "FINAL_PRODUCTION_FBX_BUNDLE_GAP"
     },
     {
       "id": "PIPPIN",
       "rig_family": "HOBBIT_HUMANOID",
-      "priority": 2
+      "priority": 2,
+      "state": "FINAL_PRODUCTION_FBX_BUNDLE_GAP"
     },
     {
-      "id": "BOROMIR",
-      "rig_family": "STANDARD_HUMANOID",
-      "priority": 2
+      "id": "BLACK_RIDER",
+      "rig_family": "TALL_HUMANOID_MOUNTED",
+      "priority": 2,
+      "state": "FINAL_PRODUCTION_FBX_BUNDLE_GAP"
+    },
+    {
+      "id": "BLACK_RIDER_HORSE",
+      "rig_family": "HORSE",
+      "priority": 2,
+      "state": "FINAL_PRODUCTION_FBX_BUNDLE_GAP"
     }
   ],
   "project_owned_fallback": {
@@ -136,14 +139,14 @@
     "UNLICENSED_EXTERNAL_PROMOTION",
     "FAKE_RIG_EVIDENCE"
   ],
-  "evidence_boundary": "Technical skeletal winner is evidenced. Animation staging/retarget/deformation/runtime/PIE/device/visual/FPS acceptance remains pending.",
+  "evidence_boundary": "Frodo 48-bone technical rig/static deformation/source persistence plus exact-head UE4 technical animation import are evidenced. Frodo human visual/runtime presentation and all seven remaining final production FBX bundles remain pending; no PIE/device/visual/FPS acceptance.",
   "owner_sequence_authority": "Data/P1C01RuntimeChapterSequenceV1.json",
   "active_scope": {
-    "runtime_predecessor": "FRODO",
-    "runtime_successor": "GANDALF",
+    "runtime_predecessor": "FRODO_TECHNICAL_IMPORT_PROVEN",
+    "runtime_successor": "GANDALF_AND_BILBO_SOURCE_BUNDLES",
     "source_preparation": "ALL_P1C01_REQUIRED_CHARACTERS_IN_PARALLEL",
     "integration_rule": "Source/QC preparation may advance without the runner. Runtime promotion remains serialized where predecessor gates require it.",
-    "current_blocker": "FRODO_CHARACTER_SPECIFIC_EXACT_HEAD_RENDER_RUNTIME_PROOF_AND_SEVEN_FINAL_PRODUCTION_FBX_BUNDLES_PENDING"
+    "current_blocker": "SEVEN_FINAL_PRODUCTION_FBX_BUNDLES_PLUS_FRODO_RENDERED_HUMAN_REVIEW_PENDING"
   },
   "technical_winner": {
     "character": "FRODO",
@@ -166,10 +169,17 @@
       "SourceAssets/ValidatedRuntime/FRODO/Frodo_Run_Retarget.fbx",
       "SourceAssets/ValidatedRuntime/FRODO/provenance.json"
     ],
-    "evidence_boundary": "Technical rig/deformation/source persistence only. Fresh exact-head runtime/visual/device acceptance remains pending."
+    "evidence_boundary": "Technical rig/deformation/source persistence only. Fresh exact-head runtime/visual/device acceptance remains pending.",
+    "exact_head_ue4_animation_import": {
+      "workflow": "P1C01 Frodo UE4 Animation Import",
+      "run_number": 113,
+      "job_id": 112508429836,
+      "exact_head": "f652af9d20e724d5990eaf3d7e4f8382d59e70a5",
+      "result": "UE4_ANIMATION_IMPORT_TECHNICAL_PASS clips=3 bones=48"
+    }
   },
   "active_animation_intake": {
-    "state": "TRACKED_VALIDATED_RUNTIME_CORE_PRESENT",
+    "state": "TRACKED_VALIDATED_RUNTIME_CORE_EXACT_HEAD_UE4_IMPORT_PROVEN",
     "required_initial_clips": [
       "Idle",
       "Walk",
@@ -185,7 +195,7 @@
       "Walk": "41 frames / 1.333333s",
       "Run": "29 frames / 0.933333s"
     },
-    "next_runner_work": "Fresh exact-head import/runtime presentation, then successor runtime promotion."
+    "next_runner_work": "Rendered/runtime presentation and human deformation review; in parallel advance final FBX bundles for Gandalf, Bilbo, Sam, Merry, Pippin, Black Rider and horse."
   },
   "p1c01_required_characters": [
     {

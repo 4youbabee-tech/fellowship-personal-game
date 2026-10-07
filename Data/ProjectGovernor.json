@@ -8849,7 +8849,9 @@
       "Pre-Unreal #2060 and Whole Game Offline Saturation #41 failed before executable steps; they provide no validator failure evidence.",
       "Whole Game Offline Saturation validator drift was found and repaired: the audit no longer falsely requires the temporary outage exception to remain active after proven runner return.",
       "Exact-head Frodo UE4 Animation Import #113 self-hosted job 112508429836 succeeded with exact artifact hashes, 48-bone skeleton, three animation clips, generated package checks and tracked validated-runtime FBX verification.",
-      "P1C01 Shire Render Capture zero-step hosted classifier failure was a CI deadlock rather than render/game failure. The render lane now fails closed to a lightweight self-hosted classifier and only performs heavy checkout/LFS/build/capture when fresh visual evidence is required."
+      "P1C01 Shire Render Capture zero-step hosted classifier failure was a CI deadlock rather than render/game failure. The render lane now fails closed to a lightweight self-hosted classifier and only performs heavy checkout/LFS/build/capture when fresh visual evidence is required.",
+      "Character-priority drift was corrected: active P1C01 source/runtime priority is now exactly Frodo, Bilbo, Gandalf, Sam, Merry, Pippin, Black Rider and Black Rider horse; Aragorn, Gimli, Legolas and Boromir remain future source-prep-only.",
+      "Historical Human Wave 2 161-bone latest-winner metadata was superseded by the current tracked 48-bone Frodo winner proven through exact-head UE4 Animation Import #113."
     ],
     "explicit_runtime_evidence_requirements": [
       "Fresh hosted/static execution after this stabilization packet; current hosted failures are zero-step infrastructure/setup failures with no validator output.",

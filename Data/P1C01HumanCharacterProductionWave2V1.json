@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "wave_id": "P1C01_HUMAN_CHARACTER_PRODUCTION_WAVE_2_V1",
-  "status": "RUN34_UE4_T0_REFERENCE_POSE_IMPORT_REMEDIATION_IMPLEMENTED",
+  "status": "HISTORICAL_FRODO_SOURCE_FACTORY_SUPERSEDED_BY_TRACKED_48_BONE_WINNER",
   "runtime_chapter": "P1C01",
   "target_character": "FRODO",
   "role": "HUMAN_SKELETAL_SOURCE_FACTORY_NOT_FINAL_LIKENESS",
@@ -138,7 +138,7 @@
     "ram_gb": 8,
     "vram_gb_approx": 2
   },
-  "evidence_boundary": "Technical winner is exact-head UE4.27 evidenced on Wave2 run #3. Deformation/retarget/runtime/PIE/device/rendered-visual/FPS acceptance remains pending.",
+  "evidence_boundary": "Historical source-factory evidence retained for provenance/rejection history. Current Frodo authority is the tracked 48-bone validated-runtime winner and exact-head UE4 Animation Import #113. No human visual/PIE/device/rendered-visual/FPS acceptance is implied.",
   "latest_hosted_baseline": {
     "workflow_run": 1,
     "exact_head": "8afa53cdee648cef196b914c5123d3e38677fc2c",
@@ -162,18 +162,18 @@
     "rationale": "PhysicsAsset auto-generation can be absent on small-bone rigs and is not authoritative for skeletal import validity."
   },
   "latest_technical_winner": {
-    "workflow_run": 3,
-    "exact_head": "c0ad882792ccef8c9e639e4eb1d7c3e9e6ce5e90",
-    "normalized_sha256": "eff0e79980f90d49deada0aa37ad8be5975a86330348e4ae6fa49d3171fad570",
+    "workflow_run": 113,
+    "exact_head": "f652af9d20e724d5990eaf3d7e4f8382d59e70a5",
+    "normalized_sha256": "75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be",
     "ue4_skeletal_registered": true,
-    "ue4_reference_bones": 161,
+    "ue4_reference_bones": 48,
     "ue4_linked_skeleton": true,
     "ue4_linked_skeleton_path": "/Game/Production/Characters/Rigs/FRODO/SK_FRODO_Skeleton.SK_FRODO_Skeleton",
-    "import_summary": "377 files, 0 failures",
-    "physics_asset_auto_generated": false,
-    "physics_asset_note": "UE4 reported small-bone auto-generation warning; separate sanity gate, not skeletal technical rejection.",
     "technical_gate": "PASS",
-    "next_gate": "DEFORMATION_AND_RETARGET"
+    "animation_import": "UE4_ANIMATION_IMPORT_TECHNICAL_PASS clips=3 bones=48",
+    "tracked_runtime_bundle": "SourceAssets/ValidatedRuntime/FRODO",
+    "next_gate": "RENDERED_RUNTIME_PRESENTATION_AND_HUMAN_VISUAL_REVIEW",
+    "evidence_boundary": "Exact-head UE4 technical import only; no human visual/PIE/device/performance acceptance."
   },
   "hosted_deformation_preflight": {
     "required": true,
@@ -213,16 +213,8 @@
     "render_transitive_proof": "If immediate parent has no green render, nearest green first-parent ancestor may be inherited only when Source/Config/SourceAssets/uproject/capture/import visual-content paths are unchanged."
   },
   "next_source_transition": {
-    "family": "KayKit Adventurers",
-    "immutable_revision": "672074b73ba276876a19e8816ecdc5241817ab47",
-    "target_raw_entries": [
-      "Rogue.fbx",
-      "RogueHooded.fbx",
-      "Knight.fbx"
-    ],
-    "historical_raw_policy": "Raw rejected Rogue/Knight exact SHA payloads are never sent directly to UE4 again.",
-    "normalized_derivative_policy": "A distinct normalized FBX SHA may proceed only after hosted weighted-joint/deformation pass and unchanged UE4 hard gates.",
-    "runtime_promotion_allowed": false
+    "state": "SUPERSEDED_FOR_FRODO",
+    "rule": "Do not rerun historical Frodo source-factory selection unless the tracked 48-bone winner is invalidated by new concrete evidence. P1C01 source effort moves to the seven remaining required character bundles."
   },
   "semantic_joint_aliases": {
     "pelvis": [

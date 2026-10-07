@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "manifest_id": "P1C01_CHARACTER_BUNDLE_COMPLETION_V1",
-  "status": "OFFLINE_SOURCE_PREPARATION_ACTIVE",
+  "status": "FRODO_TECHNICAL_IMPORT_PROVEN_SEVEN_FINAL_BUNDLES_PENDING",
   "authority": [
     "Data/ProjectGovernor.json",
     "01_STORY_AND_TIMELINE_BIBLE",
@@ -9,7 +9,7 @@
     "10_3D_VISUAL_ASSET_ATLAS_PRODUCTION",
     "Data/P1C01CharacterRigAnimationPrepV1.json"
   ],
-  "rule": "Every required animated P1C01 named character must reach a rigged FBX production bundle. Existing OBJ pieces are fallback/reference only. Source preparation may advance for all required characters while runtime promotion remains dependency-gated.",
+  "rule": "Every required animated P1C01 named character must reach a rigged FBX production bundle. Frodo has a proven 48-bone technical/core-locomotion import but still requires rendered/human review; the other seven remain final production FBX bundle gaps. Existing OBJ pieces are fallback/reference only.",
   "required_characters": [
     {
       "id": "FRODO",
@@ -22,9 +22,12 @@
       "current_sources": {
         "legacy_obj_count": 9,
         "validated_runtime_fbx_count": 4,
-        "provenance_count": 1
+        "provenance_count": 1,
+        "exact_head_ue4_technical_import": 1,
+        "ue4_reference_bones": 48,
+        "ue4_animation_clip_count": 3
       },
-      "source_state": "TECHNICAL_WINNER_AND_CORE_LOCOMOTION_TRACKED",
+      "source_state": "UE4_TECHNICAL_RIG_AND_CORE_LOCOMOTION_IMPORT_PROVEN_RENDERED_HUMAN_REVIEW_PENDING",
       "final_bundle": [
         "skeletal FBX",
         "Idle",

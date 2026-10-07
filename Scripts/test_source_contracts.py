@@ -1228,5 +1228,19 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("no fresh render and no visual acceptance claimed", workflow)
 
 
+    def test_p1c01_character_priority_stays_inside_required_shire_cast(self):
+        root = Path(__file__).resolve().parents[1]
+        prep = json.loads((root / "Data" / "P1C01CharacterRigAnimationPrepV1.json").read_text(encoding="utf-8"))
+        required = {"FRODO","BILBO","GANDALF","SAM","MERRY","PIPPIN","BLACK_RIDER","BLACK_RIDER_HORSE"}
+        self.assertEqual({row["id"] for row in prep["priority_characters"]}, required)
+        self.assertEqual(set(prep["part1_not_p1c01_source_prep_only"]), {"ARAGORN","GIMLI","LEGOLAS","BOROMIR"})
+        self.assertEqual(prep["technical_winner"]["ue4_reference_bones"], 48)
+
+        wave2 = json.loads((root / "Data" / "P1C01HumanCharacterProductionWave2V1.json").read_text(encoding="utf-8"))
+        self.assertEqual(wave2["latest_technical_winner"]["ue4_reference_bones"], 48)
+        self.assertEqual(wave2["latest_technical_winner"]["technical_gate"], "PASS")
+        self.assertEqual(wave2["next_source_transition"]["state"], "SUPERSEDED_FOR_FRODO")
+
+
 if __name__ == "__main__":
     unittest.main()
