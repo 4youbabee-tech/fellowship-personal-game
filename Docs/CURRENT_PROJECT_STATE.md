@@ -5103,3 +5103,11 @@ The same train now owns exact-head source/static contracts, UE4 build, persisten
 - A successful full run now uploads the packaged `Saved/W00Package/WindowsNoEditor` tree as `p1c01-playable-windows-<exact-head>` for direct owner inspection/play.
 - The historical KayKit Rig Technical Bridge is retired from automatic PR execution on this branch because the current Frodo 48-bone tracked technical winner already supersedes that precursor. It remains available outside the definitive branch for explicit forensic/regeneration use.
 - Evidence remains exact-head fail-closed: artifact availability does not imply DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED or Gate 6/7 acceptance.
+
+
+## 2026-10-07 - Definitive Unreal train non-cancelling completion rule
+
+- The definitive P1C01 branch now lets an in-progress unified Unreal build/import/render/runtime/package run finish even when a newer commit arrives. This removes the observed cancel/requeue loop that repeatedly discarded useful UE4 work.
+- Other PR branches keep normal superseded-run cancellation.
+- The unified lane already produces integrated six-shot Shire render evidence and, on full success, uploads a playable Windows package artifact.
+- This scheduling repair does not itself prove the current head; fresh completed engine evidence is still required.

@@ -6533,11 +6533,11 @@
     "runtime_chapter_sequence": "Data/P1C01RuntimeChapterSequenceV1.json"
   },
   "immediate_next_large_actions": [
-    "1. Execute the unified exact-head Unreal build/import/render lane and require the persistent Frodo/material presentation gate to pass.",
-    "2. Inspect the fresh six Shire captures and root-fix any remaining visible fallback instead of opening new CI waves.",
-    "3. Advance Bilbo, Gandalf, Sam, Merry, Pippin, Black Rider and Black Rider horse final production FBX bundles.",
+    "1. Let the unified definitive P1C01 Unreal train finish without cancellation and upload both integrated render evidence and the playable Windows package when full validation succeeds.",
+    "2. Inspect the fresh six Shire captures; require Frodo async-ready + skeletal production rig active and no material fallback.",
+    "3. Advance final production FBX bundles for Bilbo, Gandalf, Sam, Merry, Pippin, Black Rider and Black Rider horse.",
     "4. Finish production WAV masters/playback and human F1-01/F1-02/F1-03 traversal/reliability through FerryEscape.",
-    "5. Run DX11 1280x720 target-device profiling and human Gate 6/7; keep P1C02 locked."
+    "5. Run DX11 1280x720 target-device profiling and Gate 6/7; P1C02 remains locked."
   ],
   "session_handoff": {
     "checkpoint_id": "P1C01_FINAL_STATIC_CLEANUP_TO_ONE_SHOT_EXECUTION_2026_10_06",
@@ -8986,5 +8986,13 @@
     "additional_retired_automatic": [
       "P1C01 KayKit Rig Technical Bridge"
     ]
+  },
+  "p1c01_unreal_completion_policy_2026_10_07": {
+    "status": "DEFINITIVE_BRANCH_RUNS_NON_CANCELLING",
+    "branch": "production/p1c01-definitive-chapter-closeout-2026-10-04",
+    "rule": "An in-progress unified P1C01 Unreal build/import/render/runtime/package train must finish even if a newer commit arrives on the definitive branch.",
+    "other_prs": "Normal superseded-run cancellation remains enabled outside the definitive branch.",
+    "rationale": "Repeated branch commits were cancelling engine runs and discarding useful work, producing apparent build stagnation.",
+    "acceptance_boundary": "Scheduling only; fresh completed engine evidence required."
   }
 }

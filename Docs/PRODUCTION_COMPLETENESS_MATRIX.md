@@ -4825,3 +4825,14 @@ This is runner-throughput cleanup only; fresh exact-head production presentation
 | Historical KayKit precursor automatic PR lane | RETIRED on definitive branch |
 | Fresh exact-head execution | PENDING |
 | Human visual/device/performance Gate 6/7 | PENDING / NOT CLAIMED |
+
+
+## 2026-10-07 - Definitive Unreal train non-cancelling completion rule
+
+| Control | State |
+|---|---|
+| Definitive P1C01 in-progress Unreal run cancellation by newer commit | DISABLED |
+| Other PR cancellation policy | PRESERVED |
+| Unified build/import/render/package lane | ACTIVE |
+| Playable Windows artifact export | CONFIGURED |
+| Fresh exact-head completion | PENDING |

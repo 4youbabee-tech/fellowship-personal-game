@@ -1546,3 +1546,9 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - The definitive P1C01 train now emits a playable Windows package artifact only after the integrated exact-head production path succeeds.
 - The superseded KayKit Frodo precursor no longer auto-runs on the definitive branch, protecting the single UE4 runner for visible Shire production.
 - No gameplay/world authority, population ownership, asset streaming law, or P1C02 boundary changed.
+
+
+## 2026-10-07 - Definitive Unreal train non-cancelling completion rule
+
+- The definitive P1C01 UE train is allowed to finish instead of being cancelled by branch churn.
+- This is runner scheduling only; no world density/authority, loading policy, NPC lifecycle or Bree boundary changed.
