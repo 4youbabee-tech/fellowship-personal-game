@@ -982,7 +982,7 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
             // UE4.27 requires the light to be movable before changing the actor rotation in PIE.
             SunComponent->SetMobility(EComponentMobility::Movable);
             Sun->SetActorRotation(FRotator(-38.0f, -28.0f, 0.0f));
-            SunComponent->SetIntensity(2.45f);
+            SunComponent->SetIntensity(3.05f);
             SunComponent->SetLightColor(FLinearColor(1.0f, 0.90f, 0.78f));
             SunComponent->SetCastShadows(true);
             SunComponent->SetAtmosphereSunLight(true);
@@ -1036,12 +1036,12 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
     {
         if (UExponentialHeightFogComponent* FogComponent = HeightFog->GetComponent())
         {
-            FogComponent->SetFogDensity(0.0070f);
+            FogComponent->SetFogDensity(0.0055f);
             FogComponent->SetFogHeightFalloff(0.20f);
             FogComponent->SetFogInscatteringColor(FLinearColor(0.70f, 0.76f, 0.68f));
             FogComponent->SetDirectionalInscatteringColor(FLinearColor(0.95f, 0.84f, 0.68f));
-            FogComponent->SetStartDistance(1000.0f);
-            FogComponent->SetFogMaxOpacity(0.62f);
+            FogComponent->SetStartDistance(1400.0f);
+            FogComponent->SetFogMaxOpacity(0.48f);
             FogComponent->SetVolumetricFog(false);
         }
     }
@@ -1069,7 +1069,7 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
         if (USkyLightComponent* SkyComponent = Cast<USkyLightComponent>(Sky->GetLightComponent()))
         {
             SkyComponent->SetMobility(EComponentMobility::Movable);
-            SkyComponent->SetIntensity(0.68f);
+            SkyComponent->SetIntensity(1.05f);
             SkyComponent->bLowerHemisphereIsBlack = false;
             SkyComponent->RecaptureSky();
         }
@@ -1103,9 +1103,9 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
         PostProcess->BlendWeight = 1.0f;
 
         PostProcess->Settings.bOverride_AutoExposureMinBrightness = true;
-        PostProcess->Settings.AutoExposureMinBrightness = 0.72f;
+        PostProcess->Settings.AutoExposureMinBrightness = 0.78f;
         PostProcess->Settings.bOverride_AutoExposureMaxBrightness = true;
-        PostProcess->Settings.AutoExposureMaxBrightness = 0.96f;
+        PostProcess->Settings.AutoExposureMaxBrightness = 1.10f;
         PostProcess->Settings.bOverride_AutoExposureBias = true;
         PostProcess->Settings.AutoExposureBias = -0.08f;
 
