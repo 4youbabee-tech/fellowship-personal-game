@@ -4678,3 +4678,17 @@ Evidence boundary: **UE4 TECHNICAL IMPORT PROVEN** for Frodo. No PIE/device/visu
 | Aragorn/Legolas/Gimli/Boromir | Not active P1C01 priority; source-prep-only |
 
 Historical 161-bone Human Wave 2 metadata is superseded and may not be used as current Frodo authority.
+
+
+## 2026-10-07 - Render/character intake execution blocker fixes
+
+| Control | State |
+|---|---|
+| Render fallback PowerShell parse defect | ROOT-FIXED |
+| Render fallback base-SHA zero test | `'^0+$'` restored |
+| Render classifier script extraction | explicit `$targetSpec` |
+| Character rig prep manifest closure trigger | ADDED |
+| Character rig prep manifest closure delta input | ADDED |
+| Fresh exact-head render fallback proof | PENDING |
+| Fresh exact-head Character Intake proof | PENDING |
+| P1C02/Bree | LOCKED |

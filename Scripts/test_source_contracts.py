@@ -1242,5 +1242,22 @@ class SourceContractTests(unittest.TestCase):
         self.assertEqual(wave2["next_source_transition"]["state"], "SUPERSEDED_FOR_FRODO")
 
 
+    def test_p1c01_render_fallback_script_is_parse_safe(self):
+        root = Path(__file__).resolve().parents[1]
+        workflow = (root / ".github" / "workflows" / "p1c01-shire-render-capture.yml").read_text(encoding="utf-8")
+        self.assertIn("-notmatch '^0+", workflow)
+        self.assertNotIn("-notmatch '^0+){", workflow)
+        self.assertIn('$targetSpec=$env:TARGET_SHA + ":Scripts/classify_p1c01_render_capture.ps1"', workflow)
+        self.assertIn("git show $targetSpec", workflow)
+
+    def test_p1c01_character_prep_is_closure_input(self):
+        root = Path(__file__).resolve().parents[1]
+        workflow = (root / ".github" / "workflows" / "p1c01-chapter-closure.yml").read_text(encoding="utf-8")
+        token = "Data/P1C01CharacterRigAnimationPrepV1.json"
+        self.assertGreaterEqual(workflow.count(token), 3)
+        intake = (root / "Scripts" / "prepare_p1c01_character_rig_intake.ps1").read_text(encoding="utf-8")
+        self.assertIn('ManifestPath = "Data/P1C01CharacterRigAnimationPrepV1.json"', intake)
+
+
 if __name__ == "__main__":
     unittest.main()

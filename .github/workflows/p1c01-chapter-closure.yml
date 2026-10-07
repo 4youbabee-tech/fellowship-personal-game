@@ -9,6 +9,7 @@ on:
       - 'Data/WarehouseP1C01ClosurePromotionTrainV2.json'
       - 'Data/P1C01ChapterClosureMegaPackV2.json'
       - 'Data/P1C01OneShotChapterFinishV1.json'
+      - 'Data/P1C01CharacterRigAnimationPrepV1.json'
       - 'Scripts/preflight_p1c01_chapter_closure_pack_v2.ps1'
       - 'Scripts/run_p1c01_chapter_closure_pack_v2.ps1'
   pull_request:
@@ -19,6 +20,7 @@ on:
       - 'Data/WarehouseP1C01ClosurePromotionTrainV2.json'
       - 'Data/P1C01ChapterClosureMegaPackV2.json'
       - 'Data/P1C01OneShotChapterFinishV1.json'
+      - 'Data/P1C01CharacterRigAnimationPrepV1.json'
       - 'Scripts/preflight_p1c01_chapter_closure_pack_v2.ps1'
       - 'Scripts/run_p1c01_chapter_closure_pack_v2.ps1'
       - '.github/workflows/p1c01-chapter-closure.yml'
@@ -100,6 +102,7 @@ jobs:
               'Data/WarehouseP1C01ClosurePromotionTrainV2.json',
               'Data/P1C01ChapterClosureMegaPackV2.json',
               'Data/P1C01OneShotChapterFinishV1.json',
+              'Data/P1C01CharacterRigAnimationPrepV1.json',
               'Scripts/preflight_p1c01_chapter_closure_pack_v2.ps1',
               'Scripts/run_p1c01_chapter_closure_pack_v2.ps1'
             )

@@ -4993,3 +4993,13 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - `P1C01HumanCharacterProductionWave2V1.json` still exposed its historical 161-bone winner as `latest_technical_winner`. It now records the current tracked 48-bone Frodo exact-head import as latest and marks the old source-factory transition superseded for Frodo.
 - Frodo is still not visually accepted. Current character gap is seven final production FBX bundles plus Frodo rendered/human review.
 - Regression coverage now enforces the exact eight-character P1C01 priority set and current 48-bone winner metadata.
+
+
+## 2026-10-07 - Render fallback parser root-fix + character-intake trigger repair
+
+- Render Capture #219 reached the self-hosted fallback but failed before classification with a PowerShell parser error. Exact defect: malformed regex token `-notmatch '^0+){` left the string unterminated.
+- Root-fix restores the intended `-notmatch '^0+$'` condition and replaces the inline `git show` target interpolation with an explicit `$targetSpec` string before extraction.
+- A second production-flow defect was corrected: `Data/P1C01CharacterRigAnimationPrepV1.json` is the manifest consumed by `prepare_p1c01_character_rig_intake.ps1`, but it was missing from P1C01 Closure workflow triggers and closure-delta inputs. Character-priority/source changes could therefore skip Character Intake entirely.
+- Closure now treats that manifest as a closure-relevant input in push, PR path filtering, and runtime delta classification.
+- Regression contracts assert the render fallback parse-safe tokens and the character-prep closure dependency.
+- Evidence boundary: **SOURCE-IMPLEMENTED root fixes only until fresh exact-head workflow execution**.

@@ -1463,3 +1463,11 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Removed later Fellowship characters from active P1C01 priority while preserving them as future source-preparation-only entries.
 - Reconciled historical 161-bone Human Wave 2 metadata to the current 48-bone tracked Frodo technical winner.
 - No runtime character acceptance was invented; seven final FBX bundles plus Frodo rendered/human review remain open.
+
+
+## 2026-10-07 - Render fallback / character intake dependency repair
+
+- Fixed a CI-only parser defect that prevented the self-hosted Shire render classifier from running.
+- Added the active P1C01 character-rig preparation manifest as a first-class closure trigger/input because Character Intake directly consumes it.
+- No gameplay/world authority, population ownership, asset-loading policy or chapter boundary changed.
+- Fresh exact-head runtime/visual evidence is still required before any acceptance promotion.
