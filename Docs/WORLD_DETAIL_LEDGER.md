@@ -1552,3 +1552,11 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 
 - The definitive P1C01 UE train is allowed to finish instead of being cancelled by branch churn.
 - This is runner scheduling only; no world density/authority, loading policy, NPC lifecycle or Bree boundary changed.
+
+
+## 2026-10-07 - One-Shot source-gate harness repair
+
+- Added explicit `Scripts/` Python module resolution to the self-hosted One-Shot static/source gate.
+- The repair removes a harness-level blocker that prevented the actual Shire engine build from starting.
+- No world density, streaming authority, character ownership, quest flow or P1C02 boundary changed.
+- Fresh exact-head engine evidence is required before any runtime/visual acceptance promotion.

@@ -5111,3 +5111,12 @@ The same train now owns exact-head source/static contracts, UE4 build, persisten
 - Other PR branches keep normal superseded-run cancellation.
 - The unified lane already produces integrated six-shot Shire render evidence and, on full success, uploads a playable Windows package artifact.
 - This scheduling repair does not itself prove the current head; fresh completed engine evidence is still required.
+
+
+## 2026-10-07 - One-Shot static gate Python path root fix
+
+- Unreal Build #1674 did not fail in C++ or UE4.27.2. It stopped before engine execution in the exact-head One-Shot source gate because `Scripts/test_source_contracts.py` imports `source_contracts` as a sibling module while the workflow launched unittest from repository root without `Scripts/` on `PYTHONPATH`.
+- Exact failure: `ModuleNotFoundError: No module named 'source_contracts'`, followed by `P1C01_ONE_SHOT_SOURCE_CONTRACT_FAIL exit=1`.
+- Root fix: the self-hosted One-Shot gate now resolves `$GITHUB_WORKSPACE/Scripts`, prepends it to `PYTHONPATH`, preserves any existing Python path, and only then runs the source-contract suite and Pre-Unreal validator.
+- Regression coverage locks the Python-path setup ahead of unittest execution.
+- This is a CI harness repair only. It does not change gameplay acceptance status. The current production-material and persistent Frodo runtime fixes remain in the exact-head source and still require fresh engine/render proof after this gate is cleared.

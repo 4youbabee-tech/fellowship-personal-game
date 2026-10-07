@@ -1418,5 +1418,14 @@ class SourceContractTests(unittest.TestCase):
         )
 
 
+    def test_one_shot_static_gate_sets_scripts_pythonpath_before_unittest(self):
+        root = Path(__file__).resolve().parents[1]
+        workflow = (root / ".github" / "workflows" / "unreal-build-validation.yml").read_text(encoding="utf-8")
+        self.assertIn('$scriptsRoot = Join-Path $env:GITHUB_WORKSPACE "Scripts"', workflow)
+        self.assertIn('$env:PYTHONPATH = if ([string]::IsNullOrWhiteSpace($existingPythonPath))', workflow)
+        self.assertIn('& $env:PYTHON_EXE -m unittest Scripts/test_source_contracts.py', workflow)
+        self.assertIn("P1C01_ONE_SHOT_STATIC_GATE_PASS", workflow)
+
+
 if __name__ == "__main__":
     unittest.main()

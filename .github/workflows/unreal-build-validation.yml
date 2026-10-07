@@ -407,6 +407,17 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           if (-not $env:PYTHON_EXE) { throw 'P1C01_ONE_SHOT_STATIC_PYTHON_MISSING' }
+          $scriptsRoot = Join-Path $env:GITHUB_WORKSPACE "Scripts"
+          if (-not (Test-Path -LiteralPath $scriptsRoot -PathType Container)) {
+            throw "P1C01_ONE_SHOT_SCRIPTS_ROOT_MISSING path=$scriptsRoot"
+          }
+          $existingPythonPath = [string]$env:PYTHONPATH
+          $env:PYTHONPATH = if ([string]::IsNullOrWhiteSpace($existingPythonPath)) {
+            $scriptsRoot
+          } else {
+            $scriptsRoot + [IO.Path]::PathSeparator + $existingPythonPath
+          }
+
           Push-Location $env:GITHUB_WORKSPACE
           try {
             & $env:PYTHON_EXE -m unittest Scripts/test_source_contracts.py

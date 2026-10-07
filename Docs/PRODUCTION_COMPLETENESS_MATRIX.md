@@ -4836,3 +4836,16 @@ This is runner-throughput cleanup only; fresh exact-head production presentation
 | Unified build/import/render/package lane | ACTIVE |
 | Playable Windows artifact export | CONFIGURED |
 | Fresh exact-head completion | PENDING |
+
+
+## 2026-10-07 - One-Shot execution blocker
+
+| Control | Current state |
+|---|---|
+| Unreal Build #1674 engine execution | BLOCKED BEFORE UE4 by Python import-path defect |
+| Exact failure | `ModuleNotFoundError: source_contracts` |
+| One-Shot source gate PYTHONPATH | ROOT-FIXED |
+| Regression guard | ADDED |
+| C++/UE4 defect proven by #1674 | NO |
+| Fresh exact-head build/import/render/package | REQUIRED AFTER FIX |
+| Gate 6/7 | NOT ACCEPTED |
