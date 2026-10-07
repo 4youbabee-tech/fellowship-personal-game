@@ -1,3 +1,9 @@
+## 2026-10-08 - P1C01 character material slot coverage root fix
+
+- #1702 captured the intended material branch: the foreground ambient Hobbit body changed to the production green palette, proving M_ProductionSurface was selected. The head and limb meshes still retained white/grey regions because the runtime override touched slot 0 only while those meshes expose additional material slots.
+- Root fix: player modular pieces and NPC modular pieces now apply their bounded production MID across every material slot, preserving each component's chosen color/roughness/metallic values. Skeletal palette coverage remains unchanged and also already iterates all skeletal slots.
+- A fresh exact-head render/package run is required. The world is still not visually accepted; no device/performance/Gate 6/7 claim is made.
+
 ## 2026-10-08 - P1C01 static NPC material branch root fix
 
 - #1701 reproof logs confirmed the loaded M_ProductionSurface fallback was available, but generic ambient NPCs still selected BasicShapeMaterial because ApplySurface gated the production parent on bProductionVisual.

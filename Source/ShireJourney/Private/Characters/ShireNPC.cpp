@@ -674,13 +674,16 @@ void AShireNPC::ApplyPrototypeStyle()
             return;
         }
 
-        UMaterialInstanceDynamic* MID = UMaterialInstanceDynamic::Create(Parent, this);
-        if (MID)
+        const int32 MaterialSlots = FMath::Max(Component->GetNumMaterials(), 1);
+        for (int32 Slot = 0; Slot < MaterialSlots; ++Slot)
         {
-            MID->SetVectorParameterValue(TEXT("Color"), Color);
-            MID->SetScalarParameterValue(TEXT("Roughness"), FMath::Clamp(Roughness, 0.0f, 1.0f));
-            MID->SetScalarParameterValue(TEXT("Metallic"), FMath::Clamp(Metallic, 0.0f, 1.0f));
-            Component->SetMaterial(0, MID);
+            if (UMaterialInstanceDynamic* MID = UMaterialInstanceDynamic::Create(Parent, this))
+            {
+                MID->SetVectorParameterValue(TEXT("Color"), Color);
+                MID->SetScalarParameterValue(TEXT("Roughness"), FMath::Clamp(Roughness, 0.0f, 1.0f));
+                MID->SetScalarParameterValue(TEXT("Metallic"), FMath::Clamp(Metallic, 0.0f, 1.0f));
+                Component->SetMaterial(Slot, MID);
+            }
         }
     };
 

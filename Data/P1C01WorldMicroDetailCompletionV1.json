@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "manifest_id": "P1C01_WORLD_MICRO_DETAIL_COMPLETION_V1",
-  "status": "STATIC_NPC_MATERIAL_BRANCH_ROOT_FIXED",
+  "status": "CHARACTER_MATERIAL_SLOT_COVERAGE_ROOT_FIXED",
   "authority": [
     "Data/ProjectGovernor.json",
     "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
@@ -123,15 +123,15 @@
     "target": "8 GB RAM / ~2 GB VRAM / DX11 / 1280x720 / 30 FPS floor"
   },
   "latest_render_diagnosis": {
-    "exact_head": "15e0d8136dcbe0c500969ca9b0611a8a168322aa",
-    "artifact": "p1c01-shire-render-integrated-15e0d8136dcbe0c500969ca9b0611a8a168322aa",
-    "evidence": "The #1701 capture completed and logs confirmed player skeletal palette application plus material fallback loading. Source review found generic NPC ApplySurface still selected BasicShapeMaterial whenever bProductionVisual was false, explaining the unchanged white modular residents.",
+    "exact_head": "42666c2256df904eeb02c491f5ffea441e89a559",
+    "artifact": "p1c01-shire-render-integrated-42666c2256df904eeb02c491f5ffea441e89a559",
+    "evidence": "#1702 completed capture and showed the production palette on the foreground NPC body, but white/grey head and limb regions remained. Source review identified slot-0-only material application on modular player/NPC components.",
     "blockers": [
-      "Fresh exact-head six-shot render/package required after the generic NPC material branch fix",
+      "Fresh exact-head reproof required after all-slot material application",
       "World remains visibly low-detail/blockout in reviewed captures",
       "Human visual/audio/gameplay/device/performance acceptance remains incomplete"
     ],
-    "disposition": "Root-fixed generic NPC material branch so modular ambient residents use M_ProductionSurface whenever available; BasicShapeMaterial is final fail-safe only. Run the next full One-Shot before any acceptance decision."
+    "disposition": "Implemented all-slot material coverage for player and NPC modular components while preserving existing async skeletal ownership and bounded runtime cost. Next One-Shot must reprove character readability."
   },
   "force_full_render_reproof": true
 }

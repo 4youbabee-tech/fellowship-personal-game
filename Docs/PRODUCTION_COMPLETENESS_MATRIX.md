@@ -1,3 +1,14 @@
+## 2026-10-08 - P1C01 character material slot coverage root fix
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| #1702 diagnostic render | CAPTURED / NOT ACCEPTED | Production surface visibly reached the NPC body, while head/limb regions stayed white/grey due to slot-0-only application |
+| Modular character material coverage | SOURCE-REPAIRED / EXACT-HEAD REPROOF PENDING | Player and NPC surface application now iterates every material slot |
+| Skeletal character palette | PRESERVED | Existing player/NPC skeletal paths already iterate all resolved skeletal slots |
+| P1C01 visual/world density | NOT ACCEPTED | Low-poly/blockout environment and incomplete living-world detail remain visible |
+| P1C02 Bree | LOCKED | No runtime integration before P1C01 gates pass |
+| Device / performance / Gate 6-7 | NOT ACCEPTED | No qualifying human/device evidence supplied |
+
 ## 2026-10-08 - P1C01 static NPC material branch root fix
 
 | Area | Status | Evidence / boundary |
