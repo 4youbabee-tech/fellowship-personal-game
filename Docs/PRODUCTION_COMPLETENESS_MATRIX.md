@@ -4945,3 +4945,13 @@ This is runner-throughput cleanup only; fresh exact-head production presentation
 | Windows package | New artifact p1c01-playable-windows-b7521522b8085c88fed2adeb2a73f1aa64a512a4 uploaded | Packaged startup observed; not device-tested |
 | Gate 6 / Gate 7 | Human visual/audio/gameplay/performance evidence incomplete | NOT ACCEPTED |
 | Bree / P1C02 | No route or chapter expansion occurred | LOCKED |
+
+
+## 2026-10-07 — P1C01 review-route framing correction
+
+| Capture concern | Root cause | Remediation | Acceptance |
+|---|---|---|---|
+| Aerial/blockout-looking views | Harness actor Z was 390–520 units above the Shire | Road-level Z 75–105, low pitch | Fresh capture required |
+| HUD obscures visual review | Default gameplay HUD remained enabled | ShowFlag.HUD 0 and ShowFlag.2D 0 in capture command | Fresh capture required |
+| Gameplay impact | Capture-only command changes | No runtime/gameplay/world authority change | Unchanged |
+| Gate 6/7 | No human visual/device/performance evidence yet | Remains blocked | NOT ACCEPTED |

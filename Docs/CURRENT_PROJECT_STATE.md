@@ -5199,3 +5199,10 @@ The same train now owns exact-head source/static contracts, UE4 build, persisten
 - **Visual disposition:** the unobstructed views still show a low-detail/blockout Shire and capture presentation with debug HUD/high overview framing. They are evidence for diagnosis, not production visual acceptance.
 - **Next bounded production target:** replace prototype/blockout presentation across the six P1C01 checkpoints and produce a character-scale, HUD-free review route. Do not open Bree/P1C02.
 - **Acceptance boundary:** STATIC/COMPILE/RUNTIME/PACKAGE evidence is current for this exact head; PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED and Gate 6/7 remain unclaimed.
+
+
+## 2026-10-07 — P1C01 review-route framing correction
+
+- The prior six renders were technically clean after Frodo calibration, but the harness positioned the player 390–520 Unreal units above the Shire. That made the evidence an aerial overview instead of a production review at character scale.
+- The capture harness now uses road-level actor Z values (75–105), a low review pitch, and `ShowFlag.HUD 0` / `ShowFlag.2D 0` for HUD-free screenshots. This is capture-only; gameplay camera, world coordinates, quest state and runtime authority are unchanged.
+- Fresh exact-head UE4 evidence is required before judging visual quality again.
