@@ -1598,3 +1598,11 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Added explicit Chronicle display labels to the four implemented P1C01 contextual side activities and bound validation to those labels.
 - Moved runner-session health verification ahead of bounded LFS hydration so an unhealthy self-hosted session fails before heavy file work.
 - No runtime authority, population ownership, story outcome or Bree boundary changed.
+
+
+## 2026-10-07 - Discovery label authority single-owner repair
+
+- Refined Chronicle/discovery validation to avoid duplicate authority while preserving strict label coherence.
+- ExplorationEnvelope owns labels for exploration discoveries; ContextualSideActivityPlan owns labels only for contextual side-only discoveries.
+- The four P1C01 side-only activity rewards remain explicitly labelled and story-neutral.
+- No world density, runtime authority, chapter transition or P1C02 scope changed.

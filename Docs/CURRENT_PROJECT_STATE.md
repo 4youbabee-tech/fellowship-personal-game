@@ -5171,3 +5171,12 @@ The same train now owns exact-head source/static contracts, UE4 build, persisten
 - PG-145B now validates the real first heavy self-hosted action: runner health must precede P1C01 LFS hydration. The Unreal workflow order was changed to verify the interactive/watchdog-owned runner session immediately after exact checkout, then hydrate bounded LFS content.
 - This removes unnecessary heavy I/O when the runner session is unhealthy and preserves the side-activity Chronicle provenance contract without relaxing display-label coherence.
 - No canon outcome, quest authority, world density or chapter boundary changed.
+
+
+## 2026-10-07 - PG-085 side-only discovery label authority refinement
+
+- Unreal Build #1680 passed exact checkout, runner-health-before-hydration, bounded LFS hydration and the 55-test source-contract suite.
+- Its remaining Pre-Unreal blocker was PG-085 overreach: contextual activities whose discovery IDs already exist in `ExplorationEnvelopePlan` were incorrectly required to duplicate `discovery_display_label`.
+- Root rule is now single-owner and fail-closed: `ExplorationEnvelopePlan.label` remains authoritative for exploration-declared discoveries; only contextual **side-only** discovery IDs require `ContextualSideActivityPlan.discovery_display_label`. If both are authored they must match.
+- The four P1C01 side-only discoveries retain explicit labels matching `JourneyDiscoveryRewardPlan.display_label`.
+- No gameplay, canon, chapter, streaming or acceptance state changed. Fresh exact-head One-Shot engine proof remains required.

@@ -6936,12 +6936,13 @@ for pg85_chapter in pg85_side.get("chapters", []):
         pg85_reward_label = str(pg85_activity.get("discovery_display_label") or "").strip()
         if not pg85_reward_id:
             continue
-        if not pg85_reward_label:
-            fail(f"PG-085 contextual discovery missing discovery_display_label: {pg85_reward_id}")
-            continue
         prior_label = pg85_labels.get(pg85_reward_id)
-        if prior_label and prior_label != pg85_reward_label:
-            fail(f"PG-085 discovery label authority conflict: {pg85_reward_id}")
+        if prior_label:
+            if pg85_reward_label and prior_label != pg85_reward_label:
+                fail(f"PG-085 discovery label authority conflict: {pg85_reward_id}")
+            continue
+        if not pg85_reward_label:
+            fail(f"PG-085 side-only discovery missing discovery_display_label: {pg85_reward_id}")
             continue
         pg85_labels[pg85_reward_id] = pg85_reward_label
 for pg85_reward in pg85_rewards.get("discovery_rewards", []):

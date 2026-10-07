@@ -4907,3 +4907,16 @@ This is runner-throughput cleanup only; fresh exact-head production presentation
 | Canon/story outcome changed | NO |
 | Heavy load policy weakened | NO |
 | Fresh exact-head Pre-Unreal/UE4 proof | REQUIRED |
+
+
+## 2026-10-07 - PG-085 final Pre-Unreal refinement
+
+| Case | Authority |
+|---|---|
+| Exploration-declared discovery | `ExplorationEnvelopePlan.label` |
+| Contextual side-only discovery | `ContextualSideActivityPlan.discovery_display_label` |
+| Both labels present | MUST MATCH |
+| Build #1680 source contracts | PASS, 55 tests |
+| Build #1680 Pre-Unreal | BLOCKED ONLY BY PRIOR PG-085 OVERREACH |
+| Fresh exact-head UE4 build/import/render/package | PENDING |
+| Gate 6/7 | NOT ACCEPTED |
