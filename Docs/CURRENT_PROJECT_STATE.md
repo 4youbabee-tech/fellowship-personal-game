@@ -4974,3 +4974,13 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Root fix: build only a lightweight Git object graph first with `GIT_LFS_SKIP_SMUDGE=1`, classify the exact base/head delta before any checkout, skip checkout entirely when no closure payload changed, and when closure work is required checkout with LFS hydration still disabled because the closure source train consumes manifests/scripts and persistent Warehouse state rather than repository binary payloads.
 - New Pre-Unreal contracts enforce classifier-before-checkout and reject any `git lfs pull` in this closure workflow.
 - This is runner-throughput infrastructure only; no gameplay, world, story, asset-residency or acceptance claim changed.
+
+
+## 2026-10-07 - Frodo technical import proven / render lane fallback hardening
+
+- Exact head `f652af9d20e724d5990eaf3d7e4f8382d59e70a5` now has successful self-hosted Frodo UE4.27.2 technical import evidence from `P1C01 Frodo UE4 Animation Import #113`, job `112508429836`.
+- Exact log markers include `P1C01_FRODO_HOSTED_PREFLIGHT_FALLBACK_PASS`, `P1C01_FRODO_UE4_ANIMATION_WINDOWS_HASH_PASS`, `UE4_ANIMATION_IMPORT_TECHNICAL_PASS clips=3 bones=48`, `P1C01_FRODO_UE4_ANIMATION_IMPORT_GATE_PASS`, `P1C01_FRODO_UE4_ANIMATION_EVIDENCE_PASS` and `P1C01_FRODO_RUNTIME_SOURCE_TRACKED_PASS assets=4 mutation=no`.
+- The same exact head also completed the self-hosted Unreal Build Validation #1657 engine chain successfully: compile/import/Automation/headless chapter+state audits/package/packaged startup all passed inside job `112514218554`. Aggregate workflow red remains hosted-classifier infrastructure only.
+- This promotes Frodo from technical-source-only to **UE4 TECHNICAL IMPORT PROVEN** for the 48-bone rig + Idle/Walk/Run package path. It does **not** promote Frodo to human visual, PIE, device or performance acceptance.
+- Next blocker was `P1C01 Shire Render Capture`: hosted visual classifier zero-step failure caused both inherit and capture jobs to skip. Root-fix makes hosted classification preferred, but on hosted failure the self-hosted render job runs a lightweight no-LFS classifier. Only an actual/fail-safe visual delta is allowed to trigger heavy checkout/LFS/build/capture; an unchanged tree records an inherited boundary and exits without waste.
+- No gameplay/world/story authority changed; P1C02/Bree remains locked.

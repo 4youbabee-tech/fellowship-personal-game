@@ -1446,3 +1446,12 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - No closure-relevant delta means no working-tree checkout at all.
 - If closure execution is required, the exact head is checked out with LFS hydration disabled; persistent Warehouse content remains the source-payload authority for the source train.
 - No runtime/world authority or chapter boundary changed.
+
+
+## 2026-10-07 - Frodo technical import evidence + render lane resilience
+
+- Frodo 48-bone technical rig and three tracked animation clips completed the exact-head UE4.27.2 import gate successfully on `f652af9d20e724d5990eaf3d7e4f8382d59e70a5`.
+- This is technical import/package evidence only; no visual acceptance was inferred.
+- Render Capture now has a fail-closed self-hosted classifier fallback for GitHub-hosted zero-step failures.
+- The fallback classifies from a lightweight Git graph with LFS smudge disabled. Heavy exact-head checkout, P1C01 material LFS hydration, editor build and screenshot capture occur only when the classification requires fresh visual evidence.
+- No new world actors, density, hard refs, synchronous loads or chapter transitions were added.

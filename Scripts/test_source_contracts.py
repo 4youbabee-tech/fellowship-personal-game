@@ -1216,5 +1216,17 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("governor_offline_exception_return_evidence", audit)
 
 
+    def test_p1c01_render_capture_fails_closed_to_self_hosted_classifier(self):
+        root = Path(__file__).resolve().parents[1]
+        workflow = (root / ".github" / "workflows" / "p1c01-shire-render-capture.yml").read_text(encoding="utf-8")
+        self.assertIn("always() && (needs.classify.result == 'failure' || needs.classify.outputs.capture == 'true')", workflow)
+        self.assertIn("Reclassify visual delta on self-hosted fallback", workflow)
+        self.assertIn('GIT_LFS_SKIP_SMUDGE="1"', workflow)
+        self.assertIn("P1C01_RENDER_FALLBACK_DECISION", workflow)
+        self.assertIn("P1C01_RENDER_FALLBACK_INHERITED", workflow)
+        self.assertIn("if: env.SHIRE_RENDER_CAPTURE == 'true'", workflow)
+        self.assertIn("no fresh render and no visual acceptance claimed", workflow)
+
+
 if __name__ == "__main__":
     unittest.main()

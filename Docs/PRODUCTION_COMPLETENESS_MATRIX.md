@@ -4639,3 +4639,25 @@ The fallback removes CI infrastructure deadlock; it does not weaken the Frodo ev
 | Fresh timing proof on new head | PENDING |
 
 Goal: spend self-hosted runner time on P1C01 build/import/runtime evidence rather than hydrating unrelated repository binaries for a closure no-op.
+
+
+## 2026-10-07 - Frodo technical import and render fallback status
+
+| Control | State |
+|---|---|
+| Frodo exact target FBX SHA verification | PASS |
+| Frodo Idle/Walk/Run derivative SHA verification | PASS |
+| UE4.27.2 Frodo skeleton import | PASS |
+| Imported skeleton bone count | 48 |
+| Imported animation clip count | 3 |
+| Generated UE packages | PASS |
+| Tracked validated runtime FBX bundle | PASS, 4 assets / no mutation |
+| Frodo human visual acceptance | PENDING / NOT CLAIMED |
+| Exact-head UE4 build/import/package/headless chain | PASS inside Unreal #1657 self-hosted job |
+| Hosted render classifier | ZERO-STEP infrastructure failure |
+| Self-hosted render classification fallback | SOURCE-IMPLEMENTED |
+| Heavy capture on no visual delta | BLOCKED/SKIPPED by design |
+| Heavy capture on real/fail-safe visual delta | ENABLED |
+| P1C02/Bree | LOCKED |
+
+Evidence boundary: **UE4 TECHNICAL IMPORT PROVEN** for Frodo. No PIE/device/visual/performance/Gate 6/7 acceptance claim.

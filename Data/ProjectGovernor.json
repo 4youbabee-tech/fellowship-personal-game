@@ -6533,11 +6533,11 @@
     "runtime_chapter_sequence": "Data/P1C01RuntimeChapterSequenceV1.json"
   },
   "immediate_next_large_actions": [
-    "1. Complete this final static stabilization packet and obtain fresh hosted/static validation when GitHub-hosted execution is available; do not interpret zero-step hosted failures as game defects.",
-    "2. Continue P1C01 One-Shot from the proven exact-head UE4 build/import/package baseline: Frodo character-specific runtime/render proof first, then the seven remaining required final FBX character bundles by dependency.",
-    "3. Finish Shire world/render presentation, production WAV master intake/playback, and F1-01/F1-02/F1-03 human gameplay/reliability through FerryEscape.",
-    "4. Run target-device DX11 1280x720 measurements and human visual/audio/gameplay Gate 6/7 review.",
-    "5. Keep P1C02/Bree runtime locked after P1C01 Gate 6/7 until the owner explicitly commands P1C02."
+    "1. Obtain fresh Shire render evidence through the fail-closed render fallback when the visual classifier requires capture; do not spend runner time on unchanged visual trees.",
+    "2. Continue P1C01 character lane after Frodo technical import: acquire/promote final production FBX bundles for Bilbo, Gandalf, Sam, Merry, Pippin, Black Rider and Black Rider horse.",
+    "3. Finish full Shire world/render presentation and production WAV master import/playback.",
+    "4. Human-test F1-01/F1-02/F1-03 through FerryEscape including collision, retry, skip equivalence, backtrack and real disk save/load.",
+    "5. Measure target device DX11 1280x720 and complete human Gate 6/7. P1C02 remains locked pending explicit owner command."
   ],
   "session_handoff": {
     "checkpoint_id": "P1C01_FINAL_STATIC_CLEANUP_TO_ONE_SHOT_EXECUTION_2026_10_06",
@@ -8847,7 +8847,9 @@
       "Unreal Build Validation #1654 self-hosted UE4.27.2 C++ Build job 112468931752 succeeded on the exact head after hosted-classifier fallback.",
       "The exact-head self-hosted job proved runner health, ShireJourneyEditor compile, production import, Automation QA, headless startup/chapter/state/fault/persistence audits, Windows package, 37/37 packaged Data JSON verification and packaged startup.",
       "Pre-Unreal #2060 and Whole Game Offline Saturation #41 failed before executable steps; they provide no validator failure evidence.",
-      "Whole Game Offline Saturation validator drift was found and repaired: the audit no longer falsely requires the temporary outage exception to remain active after proven runner return."
+      "Whole Game Offline Saturation validator drift was found and repaired: the audit no longer falsely requires the temporary outage exception to remain active after proven runner return.",
+      "Exact-head Frodo UE4 Animation Import #113 self-hosted job 112508429836 succeeded with exact artifact hashes, 48-bone skeleton, three animation clips, generated package checks and tracked validated-runtime FBX verification.",
+      "P1C01 Shire Render Capture zero-step hosted classifier failure was a CI deadlock rather than render/game failure. The render lane now fails closed to a lightweight self-hosted classifier and only performs heavy checkout/LFS/build/capture when fresh visual evidence is required."
     ],
     "explicit_runtime_evidence_requirements": [
       "Fresh hosted/static execution after this stabilization packet; current hosted failures are zero-step infrastructure/setup failures with no validator output.",
@@ -8870,7 +8872,7 @@
     "evidence_boundary": "STATIC CLEANUP RECONCILED. Parent exact head 9706cc72367be7e8dd14422808abba63597c8511 has COMPILE/IMPORT/PACKAGE/HEADLESS-RUNTIME evidence from the successful self-hosted job inside Unreal Build #1654. No human PIE, DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED or Gate 6/7 ACCEPTED claim."
   },
   "p1c01_gameplay_execution_2026_10_06": {
-    "status": "SOURCE_IMPLEMENTED_ENGINE_PROOF_PENDING",
+    "status": "SOURCE_IMPLEMENTED_ENGINE_PROOF_PRESENT_CHARACTER_VISUAL_AND_HUMAN_ACCEPTANCE_PENDING",
     "chapter": "P1C01",
     "implemented": [
       "F1-02 Ring investigation",
@@ -8882,6 +8884,6 @@
     "ownership": "UShireQuestSubsystem remains quest/story authority; AShireTraversalChallenge is the bounded activity primitive.",
     "urgency_rule": "Casual activities remain suppressed during danger; only exact required_active_quest plus allow_during_p1c01_urgency exceptions may execute.",
     "chapter_boundary": "P1C01 still ends at FerryEscapeComplete/WC_P1C01_FERRY_END. P1C02/Bree remains locked.",
-    "evidence_boundary": "SOURCE-IMPLEMENTED / STATIC-CONTRACTED only. Exact-head UE4.27 compile/runtime, PIE, device, visual, performance and Gate 6/7 evidence remain pending."
+    "evidence_boundary": "Source gameplay is implemented; exact-head UE4 compile/import/package/headless runtime is proven and Frodo 48-bone technical import is proven. Human PIE, visual/audio, target-device performance and Gate 6/7 remain pending."
   }
 }
