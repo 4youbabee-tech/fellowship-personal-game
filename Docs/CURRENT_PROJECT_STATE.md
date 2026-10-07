@@ -5071,3 +5071,12 @@ The P1C01 render is now integrated into the existing Unreal Build Validation wor
 The standalone `P1C01 Shire Render Capture` workflow remains available only through manual dispatch for diagnostics; it no longer auto-runs on every PR synchronize/push.
 
 This is a runner-throughput change only. It does not weaken the fail-closed presentation gate or acceptance boundary.
+
+
+## 2026-10-07 - Active production lane focus after Unreal/Render unification
+
+- The automatic Shire render now reuses the exact Unreal Build workspace after production import, removing the second editor build/import previously required by the standalone render job.
+- To stop historical/outage pipelines from creating repeated red noise on every PR synchronize, six lanes are now manual-only while the active UE4 runner is available: Human Wave 2, Frodo Hosted Retarget, Frodo Animation Source Inventory, Material Surface Promotion, P1C01 Offline Saturation, and Whole Game Offline Saturation.
+- These lanes remain available through manual dispatch if the current winner is invalidated, source regeneration is explicitly needed, or the runner becomes unavailable.
+- Automatic heavy work is now concentrated on Unreal Build + integrated Shire render, with Closure/Character Intake remaining delta-gated.
+- No acceptance claim is changed by this scheduling correction.

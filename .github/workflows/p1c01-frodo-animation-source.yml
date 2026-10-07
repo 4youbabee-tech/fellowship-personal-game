@@ -1,13 +1,8 @@
 name: P1C01 Frodo Animation Source Inventory
 
+# Historical Frodo predecessor lane: manual forensic/regeneration only after the tracked 48-bone winner became authoritative.
 on:
-  pull_request:
-    branches: [develop]
-    paths:
-      - 'Data/P1C01FrodoAnimationSourceV1.json'
-      - 'Scripts/run_p1c01_frodo_animation_source_inventory.py'
-      - 'Scripts/test_p1c01_frodo_animation_source_contract.py'
-      - '.github/workflows/p1c01-frodo-animation-source.yml'
+  workflow_dispatch:
 
 permissions:
   contents: read

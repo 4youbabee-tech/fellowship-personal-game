@@ -1,14 +1,8 @@
 name: P1C01 Material Surface Promotion
 
+# Legacy material source-promotion lane: manual only; normal production import/render owns current material integration proof.
 on:
-  pull_request:
-    branches: [develop]
-    paths:
-      - 'Data/P1C01MaterialImportWaveV1.json'
-      - 'Scripts/prepare_p1c01_material_intake.ps1'
-      - 'Scripts/test_p1c01_material_mtl_contract.ps1'
-      - 'Scripts/test_p1c01_material_surface_promotion_contract.py'
-      - '.github/workflows/p1c01-material-surface-promotion.yml'
+  workflow_dispatch:
 
 permissions:
   contents: read

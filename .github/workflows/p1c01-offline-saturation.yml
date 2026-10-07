@@ -1,21 +1,9 @@
 name: P1C01 Offline Source Saturation
+
+# Runner-outage/offline lane: manual only while active P1C01 UE4 execution is available.
 on:
-  pull_request:
-    branches: [develop]
-    paths:
-      - 'Data/P1C01*.json'
-      - 'Data/ProjectGovernor.json'
-      - 'Scripts/audit_p1c01_offline_saturation.py'
-      - 'Data/ContextualSideActivityPlan.json'
-      - 'Data/JourneyDiscoveryRewardPlan.json'
-      - 'Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp'
-      - 'Source/ShireJourney/Private/World/ShireQuestTrigger.cpp'
-      - 'Source/ShireJourney/Private/Subsystems/ShireStoryFlowSubsystem.cpp'
-      - '.github/workflows/p1c01-offline-saturation.yml'
-      - 'Docs/CURRENT_PROJECT_STATE.md'
-      - 'Docs/PRODUCTION_COMPLETENESS_MATRIX.md'
-      - 'Docs/WORLD_DETAIL_LEDGER.md'
   workflow_dispatch:
+
 permissions:
   contents: read
 concurrency:

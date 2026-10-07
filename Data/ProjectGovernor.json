@@ -6533,11 +6533,11 @@
     "runtime_chapter_sequence": "Data/P1C01RuntimeChapterSequenceV1.json"
   },
   "immediate_next_large_actions": [
-    "1. Run the unified exact-head Unreal build/import/render lane and require P1C01_RENDER_PRESENTATION_TECHNICAL_PASS from the same workspace.",
-    "2. Inspect fresh Bag End/Hobbiton/Party Field/Water-Mill/Bywater-edge/Ferry captures and root-fix any remaining visible production fallback.",
-    "3. Advance the seven remaining required P1C01 final FBX character bundles without restarting historical Frodo source-factory lanes.",
-    "4. Finish production WAV masters/playback and human F1-01/F1-02/F1-03 reliability through FerryEscape.",
-    "5. Target-device DX11 1280x720 profiling and Gate 6/7; P1C02 remains locked."
+    "1. Execute the unified exact-head Unreal build/import/render lane and require the persistent Frodo/material presentation gate to pass.",
+    "2. Inspect the fresh six Shire captures and root-fix any remaining visible fallback instead of opening new CI waves.",
+    "3. Advance Bilbo, Gandalf, Sam, Merry, Pippin, Black Rider and Black Rider horse final production FBX bundles.",
+    "4. Finish production WAV masters/playback and human F1-01/F1-02/F1-03 traversal/reliability through FerryEscape.",
+    "5. Run DX11 1280x720 target-device profiling and human Gate 6/7; keep P1C02 locked."
   ],
   "session_handoff": {
     "checkpoint_id": "P1C01_FINAL_STATIC_CLEANUP_TO_ONE_SHOT_EXECUTION_2026_10_06",
@@ -8927,5 +8927,25 @@
     "consumer": "Scripts/ci_import_production_assets.cmd -> ShireFrodoAnimationImport",
     "rationale": "Hydrate exact tracked FBX bytes before normal production import and before runner credential scrubbing can make a fallback git-lfs pull unreliable.",
     "acceptance_boundary": "No runtime/visual/device/Gate 6/7 acceptance until fresh exact-head evidence."
+  },
+  "p1c01_active_production_focus_2026_10_07": {
+    "status": "ACTIVE",
+    "runtime_chapter": "P1C01_ONLY",
+    "objective": "Use the single UE4 runner for visible P1C01 production integration instead of repeating superseded/offline precursor workflows.",
+    "automatic_priority": [
+      "Unreal Build Validation with integrated P1C01 Shire render",
+      "P1C01 Chapter Closure/Character Intake only on closure-relevant delta"
+    ],
+    "manual_only": [
+      "P1C01 Human Character Production Wave 2",
+      "P1C01 Frodo Hosted Animation Retarget",
+      "P1C01 Frodo Animation Source Inventory",
+      "P1C01 Material Surface Promotion",
+      "P1C01 Offline Source Saturation",
+      "Whole Game Offline Saturation"
+    ],
+    "reactivation_rule": "Manual dispatch only for explicit forensic/regeneration work or runner outage; never infer current production failure from these dormant predecessor lanes.",
+    "p1c02_runtime_opened": false,
+    "evidence_boundary": "Scheduling/throughput authority only; no PIE/device/visual/performance/Gate 6/7 acceptance."
   }
 }

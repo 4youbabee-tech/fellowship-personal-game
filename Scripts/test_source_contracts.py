@@ -1344,5 +1344,23 @@ class SourceContractTests(unittest.TestCase):
         self.assertNotIn("push:", on_block)
 
 
+    def test_p1c01_superseded_and_offline_workflows_are_manual_only_during_active_runner_execution(self):
+        root = Path(__file__).resolve().parents[1]
+        manual_only = (
+            "p1c01-human-wave2.yml",
+            "p1c01-frodo-animation-retarget.yml",
+            "p1c01-frodo-animation-source.yml",
+            "p1c01-material-surface-promotion.yml",
+            "p1c01-offline-saturation.yml",
+            "whole-game-offline-saturation.yml",
+        )
+        for name in manual_only:
+            workflow = (root / ".github" / "workflows" / name).read_text(encoding="utf-8")
+            on_block = workflow[workflow.index("on:"):workflow.index("permissions:")]
+            self.assertIn("workflow_dispatch:", on_block, name)
+            self.assertNotIn("pull_request:", on_block, name)
+            self.assertNotIn("push:", on_block, name)
+
+
 if __name__ == "__main__":
     unittest.main()

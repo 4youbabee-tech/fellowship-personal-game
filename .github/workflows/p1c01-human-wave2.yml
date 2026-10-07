@@ -1,18 +1,8 @@
 name: P1C01 Human Character Production Wave 2
 
+# Historical Frodo predecessor lane: manual forensic/regeneration only after the tracked 48-bone winner became authoritative.
 on:
-  pull_request:
-    branches: [develop]
-    paths:
-      - 'Data/P1C01HumanCharacterProductionWave2V1.json'
-      - 'Scripts/stage_p1c01_human_wave2.ps1'
-      - 'Scripts/run_p1c01_human_wave2_ue4.ps1'
-      - 'Scripts/run_p1c01_human_wave3_deformation.py'
-      - 'Scripts/probe_p1c01_human_fbx_deformation.py'
-      - 'Data/P1C01HumanDeformationGateV1.json'
-      - 'Scripts/test_p1c01_human_wave2_contract.py'
-      - 'Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp'
-      - '.github/workflows/p1c01-human-wave2.yml'
+  workflow_dispatch:
 
 permissions:
   contents: read

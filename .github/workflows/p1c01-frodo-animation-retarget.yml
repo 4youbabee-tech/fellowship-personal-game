@@ -1,15 +1,8 @@
 name: P1C01 Frodo Hosted Animation Retarget
 
+# Historical Frodo predecessor lane: manual forensic/regeneration only after the tracked 48-bone winner became authoritative.
 on:
-  pull_request:
-    branches: [develop]
-    paths:
-      - 'Data/P1C01FrodoAnimationRetargetV1.json'
-      - 'Scripts/run_p1c01_frodo_animation_retarget.py'
-      - 'Scripts/test_p1c01_frodo_animation_retarget_contract.py'
-      - 'Scripts/stage_p1c01_human_wave2.ps1'
-      - 'Data/P1C01HumanCharacterProductionWave2V1.json'
-      - '.github/workflows/p1c01-frodo-animation-retarget.yml'
+  workflow_dispatch:
 
 permissions:
   contents: read

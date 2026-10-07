@@ -1519,3 +1519,10 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - The capture script can reuse the already-imported workspace but still performs all six viewpoints and the technical presentation blocker scan.
 - The standalone render workflow is retained for manual diagnostics only.
 - No gameplay/world/audio authority, chapter boundary, density or runtime loading policy changed.
+
+
+## 2026-10-07 - P1C01 production runner focus
+
+- Automatic work is now concentrated on the unified Unreal build/import/render lane and delta-relevant Closure/Character Intake.
+- Historical Frodo source-generation, legacy material-promotion and runner-outage saturation workflows are retained as manual diagnostics only.
+- No world writer, population, NPC-context, quest, audio or streaming authority changed; P1C02/Bree remains locked.

@@ -1,20 +1,7 @@
 name: Whole Game Offline Saturation
 
+# Runner-outage/offline lane: manual only while active P1C01 UE4 execution is available.
 on:
-  pull_request:
-    branches: [develop]
-    paths:
-      - 'Data/WholeGame*.json'
-      - 'Data/GlobalWarehouseSourceRegistryV2.json'
-      - 'Data/TrilogyProductionAssetWarehouse.json'
-      - 'Data/BranchCleanupPlan.json'
-      - 'Data/ProjectGovernor.json'
-      - 'Scripts/audit_whole_game_offline_saturation.py'
-      - 'Scripts/run_branch_cleanup.ps1'
-      - '.github/workflows/whole-game-offline-saturation.yml'
-      - 'Docs/CURRENT_PROJECT_STATE.md'
-      - 'Docs/PRODUCTION_COMPLETENESS_MATRIX.md'
-      - 'Docs/WORLD_DETAIL_LEDGER.md'
   workflow_dispatch:
 
 permissions:

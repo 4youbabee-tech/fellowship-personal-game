@@ -4771,3 +4771,19 @@ Historical 161-bone Human Wave 2 metadata is superseded and may not be used as c
 | Automated Shire render | separate self-hosted workflow | integrated into Unreal build workspace |
 | Standalone render workflow | auto on PR/push | manual diagnostic only |
 | Render technical blockers | fail-closed | unchanged |
+
+
+## 2026-10-07 - Active production runner allocation
+
+| Lane | Automatic state |
+|---|---|
+| Unreal Build + integrated Shire render | ACTIVE |
+| Chapter Closure / Character Intake | ACTIVE only for relevant delta |
+| Human Wave 2 | MANUAL ONLY |
+| Frodo Hosted Retarget | MANUAL ONLY |
+| Frodo Animation Source Inventory | MANUAL ONLY |
+| Material Surface Promotion | MANUAL ONLY |
+| P1C01 Offline Saturation | MANUAL ONLY |
+| Whole Game Offline Saturation | MANUAL ONLY |
+
+This is runner-throughput cleanup only; fresh exact-head production presentation evidence remains pending.
