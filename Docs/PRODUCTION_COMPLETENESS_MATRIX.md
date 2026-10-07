@@ -4798,3 +4798,18 @@ This is runner-throughput cleanup only; fresh exact-head production presentation
 | Five physical Frodo .uasset files | REQUIRED |
 | Fresh unified Unreal/render proof | PENDING |
 | Human visual/PIE/device acceptance | NOT CLAIMED |
+
+
+## 2026-10-07 - Consolidated P1C01 execution topology
+
+| Concern | Definitive #329 path |
+|---|---|
+| Automatic heavy lane | Unreal Build Validation self-hosted job |
+| Hosted Unreal classifier | skipped on definitive branch |
+| Exact-head classification | self-hosted fail-closed |
+| Static/source gate | inside same job before UE work |
+| Build/import | once |
+| Six-shot render | same imported workspace |
+| Runtime/package | same job |
+| Closure/Frodo-import/Pre-Unreal legacy autos | skipped on definitive branch |
+| Acceptance claims | unchanged; human/device/Gate 6/7 pending |

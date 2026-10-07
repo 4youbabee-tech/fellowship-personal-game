@@ -1377,5 +1377,24 @@ class SourceContractTests(unittest.TestCase):
             self.assertIn(token, script)
 
 
+    def test_p1c01_definitive_branch_consolidates_automatic_ci_into_unreal_train(self):
+        root = Path(__file__).resolve().parents[1]
+        branch = "production/p1c01-definitive-chapter-closeout-2026-10-04"
+        guard = "github.event_name != 'pull_request' || github.head_ref != '" + branch + "'"
+        for relative in (
+            ".github/workflows/p1c01-chapter-closure.yml",
+            ".github/workflows/p1c01-frodo-ue4-animation-import.yml",
+            ".github/workflows/pre-unreal-validation.yml",
+        ):
+            self.assertIn(guard, (root / relative).read_text(encoding="utf-8"))
+        unreal = (root / ".github" / "workflows" / "unreal-build-validation.yml").read_text(encoding="utf-8")
+        self.assertIn(guard, unreal)
+        self.assertIn("P1C01_ONE_SHOT_STATIC_GATE_PASS", unreal)
+        self.assertIn("-m unittest Scripts/test_source_contracts.py", unreal)
+        self.assertIn("Scripts/pre_unreal_validate.py", unreal)
+        self.assertIn("Capture P1C01 production Shire on existing UE workspace", unreal)
+        self.assertIn('SHIRE_SKIP_PRODUCTION_IMPORT: "1"', unreal)
+
+
 if __name__ == "__main__":
     unittest.main()

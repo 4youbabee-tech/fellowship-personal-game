@@ -5088,3 +5088,10 @@ This is a runner-throughput change only. It does not weaken the fail-closed pres
 - The gate now verifies the five expected .uasset files physically exist on disk immediately after commandlet success instead of trusting log markers alone.
 - Exact required files: skeletal mesh, skeleton, Idle, Walk and Run packages under Content/Production/Characters.
 - This change exists to trigger and harden the current unified Unreal build/import/render proof. It is not visual/PIE/device acceptance.
+
+
+## 2026-10-07 - Definitive P1C01 automatic train consolidation
+
+PR #329 now consolidates automatic heavy execution around the existing Unreal Build Validation self-hosted workspace. The historical Closure, dedicated Frodo UE4 import and hosted Pre-Unreal roots are skipped for this definitive PR branch while remaining available outside it/manual pathways. The Unreal hosted classifier is also skipped here; its existing fail-closed self-hosted classifier resolves the exact-head delta locally.
+
+The same train now owns exact-head source/static contracts, UE4 build, persistent production import, integrated six-shot Shire capture on the already-imported workspace, runtime audits, package and packaged startup. This removes repeated build/import work and avoids hosted-startup red noise from determining the chapter's visible progress.

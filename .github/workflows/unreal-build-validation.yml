@@ -227,6 +227,7 @@ concurrency:
 
 jobs:
   classify:
+    if: ${{ github.event_name != 'pull_request' || github.head_ref != 'production/p1c01-definitive-chapter-closeout-2026-10-04' }}
     name: Hosted Unreal lane classifier
     runs-on: windows-latest
     timeout-minutes: 10
@@ -396,6 +397,27 @@ jobs:
           & "$env:GITHUB_WORKSPACE\Scripts\classify_unreal_validation.ps1"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           Write-Host "UNREAL_CLASSIFIER_FALLBACK_PASS source=self-hosted"
+
+      - name: Resolve local Python for One-Shot source gate
+        shell: cmd
+        run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\resolve_runtime_python.ps1"'
+
+      - name: Run exact-head One-Shot static/source gate
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if (-not $env:PYTHON_EXE) { throw 'P1C01_ONE_SHOT_STATIC_PYTHON_MISSING' }
+          Push-Location $env:GITHUB_WORKSPACE
+          try {
+            & $env:PYTHON_EXE -m unittest Scripts/test_source_contracts.py
+            if ($LASTEXITCODE -ne 0) { throw "P1C01_ONE_SHOT_SOURCE_CONTRACT_FAIL exit=$LASTEXITCODE" }
+            & $env:PYTHON_EXE Scripts/pre_unreal_validate.py
+            if ($LASTEXITCODE -ne 0) { throw "P1C01_ONE_SHOT_PRE_UNREAL_FAIL exit=$LASTEXITCODE" }
+          }
+          finally {
+            Pop-Location
+          }
+          Write-Host "P1C01_ONE_SHOT_STATIC_GATE_PASS head=$env:TARGET_SHA"
 
       - name: Scrub checkout credential from persistent Git metadata
         shell: cmd

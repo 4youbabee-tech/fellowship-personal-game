@@ -8958,5 +8958,29 @@
     "reactivation_rule": "Manual dispatch only for explicit forensic/regeneration work or runner outage; never infer current production failure from these dormant predecessor lanes.",
     "p1c02_runtime_opened": false,
     "evidence_boundary": "Scheduling/throughput authority only; no PIE/device/visual/performance/Gate 6/7 acceptance."
+  },
+  "p1c01_one_shot_ci_consolidation_2026_10_07": {
+    "status": "SOURCE_IMPLEMENTED_EXACT_HEAD_EXECUTION_PENDING",
+    "branch": "production/p1c01-definitive-chapter-closeout-2026-10-04",
+    "automatic_train": "Unreal Build Validation self-hosted UE4.27.2 C++ Build job",
+    "train_order": [
+      "exact-head checkout",
+      "P1C01 LFS hydration",
+      "runner health",
+      "self-hosted fail-closed delta classification",
+      "source contracts + pre-unreal static gate",
+      "UE4 editor build",
+      "production import including persistent Frodo runtime",
+      "integrated six-shot P1C01 render gate",
+      "Automation/headless runtime audits",
+      "Windows package + packaged startup"
+    ],
+    "retired_automatic_on_branch": [
+      "P1C01 Chapter Closure Pack",
+      "P1C01 Frodo UE4 Animation Import",
+      "Pre-Unreal Validation",
+      "historical Human/Frodo-source/material/offline lanes"
+    ],
+    "evidence_boundary": "Execution topology only; no PIE/device/visual/performance/Gate 6/7 acceptance."
   }
 }

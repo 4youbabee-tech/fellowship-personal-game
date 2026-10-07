@@ -19,6 +19,7 @@ concurrency:
 
 jobs:
   hosted_artifact_preflight:
+    if: ${{ github.event_name != 'pull_request' || github.head_ref != 'production/p1c01-definitive-chapter-closeout-2026-10-04' }}
     name: Hosted exact artifact identity preflight
     runs-on: ubuntu-latest
     timeout-minutes: 20

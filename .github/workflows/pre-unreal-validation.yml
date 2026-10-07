@@ -18,7 +18,8 @@ concurrency:
 
 jobs:
   validate:
-    # Static/policy work is isolated on a GitHub-hosted Windows runner.
+    if: ${{ github.event_name != 'pull_request' || github.head_ref != 'production/p1c01-definitive-chapter-closeout-2026-10-04' }}
+    # Historical hosted/static lane remains available outside the definitive One-Shot branch.
     # This keeps the UE4 self-hosted machine reserved for engine/runtime jobs.
     runs-on: windows-latest
     timeout-minutes: 8

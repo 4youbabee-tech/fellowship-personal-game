@@ -1532,3 +1532,10 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 
 - Added direct disk existence checks for the five production Frodo UE packages after the existing exact-SHA FBX import.
 - No runtime authority, world density, synchronous runtime load or P1C02 transition was introduced.
+
+
+## 2026-10-07 - Definitive One-Shot production-train topology
+
+- P1C01 automatic execution is consolidated into one self-hosted train so runner time is spent on the chapter instead of competing historical lanes.
+- Integrated render reuses the production-imported workspace; no second world writer or asset authority is introduced.
+- Specialized historical workflows remain available for explicit diagnostics/manual use but do not automatically compete on PR #329.
