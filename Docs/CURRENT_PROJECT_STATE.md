@@ -5080,3 +5080,11 @@ This is a runner-throughput change only. It does not weaken the fail-closed pres
 - These lanes remain available through manual dispatch if the current winner is invalidated, source regeneration is explicitly needed, or the runner becomes unavailable.
 - Automatic heavy work is now concentrated on Unreal Build + integrated Shire render, with Closure/Character Intake remaining delta-gated.
 - No acceptance claim is changed by this scheduling correction.
+
+
+## 2026-10-07 - Frodo persistent package file gate
+
+- The normal production-import path already persists the tracked 48-bone Frodo rig plus Idle/Walk/Run through the UE4 commandlet.
+- The gate now verifies the five expected .uasset files physically exist on disk immediately after commandlet success instead of trusting log markers alone.
+- Exact required files: skeletal mesh, skeleton, Idle, Walk and Run packages under Content/Production/Characters.
+- This change exists to trigger and harden the current unified Unreal build/import/render proof. It is not visual/PIE/device acceptance.

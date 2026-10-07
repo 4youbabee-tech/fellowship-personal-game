@@ -87,5 +87,19 @@ if errorlevel 1 exit /b 58
 findstr /C:"UE4_ANIMATION_IMPORT_TECHNICAL_PASS clips=3 bones=48" "%FRODOLOG%" >nul
 if errorlevel 1 exit /b 59
 
+set "FRODO_PACKAGE_ROOT=%GITHUB_WORKSPACE%\Content\Production\Characters"
+for %%P in (
+  "%FRODO_PACKAGE_ROOT%\Rigs\FRODO\SK_FRODO.uasset"
+  "%FRODO_PACKAGE_ROOT%\Rigs\FRODO\SK_FRODO_Skeleton.uasset"
+  "%FRODO_PACKAGE_ROOT%\Animations\FRODO\A_Frodo_Idle.uasset"
+  "%FRODO_PACKAGE_ROOT%\Animations\FRODO\A_Frodo_Walk.uasset"
+  "%FRODO_PACKAGE_ROOT%\Animations\FRODO\A_Frodo_Run.uasset"
+) do (
+  if not exist "%%~P" (
+    echo P1C01_FRODO_PERSISTENT_PACKAGE_FILE_FAIL path="%%~P"
+    exit /b 60
+  )
+)
+echo P1C01_FRODO_PERSISTENT_PACKAGE_FILE_PASS packages=5
 echo P1C01_FRODO_PERSISTENT_RUNTIME_IMPORT_PASS packages=5 bones=48 clips=3
 exit /b 0

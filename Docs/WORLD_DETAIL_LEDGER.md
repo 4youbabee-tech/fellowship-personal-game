@@ -1526,3 +1526,9 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Automatic work is now concentrated on the unified Unreal build/import/render lane and delta-relevant Closure/Character Intake.
 - Historical Frodo source-generation, legacy material-promotion and runner-outage saturation workflows are retained as manual diagnostics only.
 - No world writer, population, NPC-context, quest, audio or streaming authority changed; P1C02/Bree remains locked.
+
+
+## 2026-10-07 - Frodo package persistence hardening
+
+- Added direct disk existence checks for the five production Frodo UE packages after the existing exact-SHA FBX import.
+- No runtime authority, world density, synchronous runtime load or P1C02 transition was introduced.

@@ -8918,7 +8918,18 @@
       "SimpleGrassWind AdditionalWPO bound explicitly and existing master repaired",
       "render capture fails closed on Frodo/package/material fallback"
     ],
-    "evidence_boundary": "Source-implemented only until fresh exact-head render confirms no fallback. No human PIE/device/visual/performance/Gate 6/7 acceptance."
+    "evidence_boundary": "Source-implemented only until fresh exact-head render confirms no fallback. No human PIE/device/visual/performance/Gate 6/7 acceptance.",
+    "package_file_gate": {
+      "status": "SOURCE_IMPLEMENTED_FRESH_EXACT_HEAD_PROOF_PENDING",
+      "required_files": [
+        "Content/Production/Characters/Rigs/FRODO/SK_FRODO.uasset",
+        "Content/Production/Characters/Rigs/FRODO/SK_FRODO_Skeleton.uasset",
+        "Content/Production/Characters/Animations/FRODO/A_Frodo_Idle.uasset",
+        "Content/Production/Characters/Animations/FRODO/A_Frodo_Walk.uasset",
+        "Content/Production/Characters/Animations/FRODO/A_Frodo_Run.uasset"
+      ],
+      "rule": "Normal production import is not considered Frodo-persistent unless all five files physically exist after exact-SHA import."
+    }
   },
   "p1c01_frodo_preimport_hydration_2026_10_07": {
     "status": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",

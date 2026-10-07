@@ -4787,3 +4787,14 @@ Historical 161-bone Human Wave 2 metadata is superseded and may not be used as c
 | Whole Game Offline Saturation | MANUAL ONLY |
 
 This is runner-throughput cleanup only; fresh exact-head production presentation evidence remains pending.
+
+
+## 2026-10-07 - Frodo persistent package physical gate
+
+| Item | State |
+|---|---|
+| Commandlet package persistence marker | REQUIRED |
+| 48-bone / 3-clip technical marker | REQUIRED |
+| Five physical Frodo .uasset files | REQUIRED |
+| Fresh unified Unreal/render proof | PENDING |
+| Human visual/PIE/device acceptance | NOT CLAIMED |

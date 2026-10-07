@@ -1362,5 +1362,20 @@ class SourceContractTests(unittest.TestCase):
             self.assertNotIn("push:", on_block, name)
 
 
+    def test_p1c01_persistent_frodo_import_verifies_physical_uasset_files(self):
+        root = Path(__file__).resolve().parents[1]
+        script = (root / "Scripts" / "ci_import_production_assets.cmd").read_text(encoding="utf-8")
+        for token in (
+            "SK_FRODO.uasset",
+            "SK_FRODO_Skeleton.uasset",
+            "A_Frodo_Idle.uasset",
+            "A_Frodo_Walk.uasset",
+            "A_Frodo_Run.uasset",
+            "P1C01_FRODO_PERSISTENT_PACKAGE_FILE_PASS packages=5",
+            "P1C01_FRODO_PERSISTENT_PACKAGE_FILE_FAIL",
+        ):
+            self.assertIn(token, script)
+
+
 if __name__ == "__main__":
     unittest.main()
