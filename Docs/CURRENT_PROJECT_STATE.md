@@ -5189,3 +5189,13 @@ The same train now owns exact-head source/static contracts, UE4 build, persisten
 - **Root-level remediation:** the production skeletal attachment now converts the validated metre-space source to Unreal centimetres (0.010) at the mesh boundary and aligns it to the active collision capsule. It does not alter quest, route, save, collision, streaming ownership, NPC context, or LivingWorldDirector population authority.
 - **Regression gate:** the render-capture train now requires the Frodo calibration log before accepting a capture artifact.
 - **Status:** implementation is pending fresh exact-head UE4 build/render evidence. No PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED, or Gate 6/7 claim is made. P1C02/Bree remains locked.
+
+
+## 2026-10-07 — P1C01 calibrated render evidence, exact-head result
+
+- **Exact head:** b7521522b8085c88fed2adeb2a73f1aa64a512a4.
+- **Unreal Build Validation #1682:** SUCCESS. Exact checkout, runner health, LFS hydration, static/source gate, UE4.27.2 C++ build, production import, integrated six-shot capture, Automation Framework QA, headless startup/chapter/story audits, warning-debt guard, Windows cook/package, package-data verification, packaged EXE launch and artifact upload all completed successfully.
+- **Render evidence:** the capture logs observed `CharacterVisual: skeletal production rig calibration id=Frodo scale=0.010 capsuleHalfHeight=60.0`; Frodo no longer occludes the six views. This validates the calibration remediation in rendered evidence.
+- **Visual disposition:** the unobstructed views still show a low-detail/blockout Shire and capture presentation with debug HUD/high overview framing. They are evidence for diagnosis, not production visual acceptance.
+- **Next bounded production target:** replace prototype/blockout presentation across the six P1C01 checkpoints and produce a character-scale, HUD-free review route. Do not open Bree/P1C02.
+- **Acceptance boundary:** STATIC/COMPILE/RUNTIME/PACKAGE evidence is current for this exact head; PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED and Gate 6/7 remain unclaimed.

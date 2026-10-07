@@ -4932,3 +4932,16 @@ This is runner-throughput cleanup only; fresh exact-head production presentation
 | Gameplay / story / saves | No authority or state logic changed by this remediation | UNCHANGED |
 | Gate 6 / Gate 7 | Human visual, audio, gameplay and target-device evidence still absent | NOT ACCEPTED |
 | P1C02 / Bree | Scope remains closed | LOCKED |
+
+
+## 2026-10-07 — P1C01 calibrated exact-head One-Shot
+
+| Evidence | Exact result | Acceptance meaning |
+|---|---|---|
+| Commit | b7521522b8085c88fed2adeb2a73f1aa64a512a4 | Current calibrated source head |
+| Unreal Build Validation #1682 | SUCCESS | Build/import/runtime/package evidence on target self-hosted runner |
+| Frodo skeletal calibration | Render log observed scale=0.010, capsuleHalfHeight=60.0 | Render calibration validated; player no longer blocks world shots |
+| Six integrated renders | Unobstructed, but visibly low-detail/blockout and HUD/overview framed | Diagnostic evidence only; NOT visually accepted |
+| Windows package | New artifact p1c01-playable-windows-b7521522b8085c88fed2adeb2a73f1aa64a512a4 uploaded | Packaged startup observed; not device-tested |
+| Gate 6 / Gate 7 | Human visual/audio/gameplay/performance evidence incomplete | NOT ACCEPTED |
+| Bree / P1C02 | No route or chapter expansion occurred | LOCKED |
