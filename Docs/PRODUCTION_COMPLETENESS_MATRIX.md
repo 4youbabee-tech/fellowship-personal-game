@@ -4707,3 +4707,14 @@ Historical 161-bone Human Wave 2 metadata is superseded and may not be used as c
 | Parse-safe base SHA regex | `'^0+$'` |
 | Fresh exact-head render execution | PENDING |
 | Human visual acceptance | NOT CLAIMED |
+
+
+## 2026-10-07 - Frodo technical import anti-repeat gate
+
+| Control | State |
+|---|---|
+| Lightweight delta classification before Frodo checkout | SOURCE-IMPLEMENTED |
+| No-impact Frodo re-import | SKIPPED / inherited technical boundary |
+| Frodo-impact delta | Fresh exact-head heavy gate required |
+| LFS/build/import on unrelated commit | BLOCKED |
+| Human visual/PIE/device acceptance | NOT INHERITED / still pending |

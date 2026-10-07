@@ -1479,3 +1479,10 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - The resulting workflow retains the intended no-waste classifier-first architecture and one self-hosted capture authority.
 - No world geometry, density, character authority, audio authority or chapter transition behavior changed.
 - Fresh rendered evidence remains required before any visual acceptance claim.
+
+
+## 2026-10-07 - Frodo self-hosted runner budget protection
+
+- Added a classifier-first guard to the Frodo UE4 technical import lane so unrelated PR synchronizations do not repeatedly consume self-hosted UE4 time.
+- Technical evidence may be inherited only when the explicit Frodo/import impact tree is unchanged.
+- No character asset, skeleton, gameplay authority or runtime acceptance state was changed by this infrastructure guard.

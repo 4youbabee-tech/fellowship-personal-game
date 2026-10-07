@@ -5013,3 +5013,12 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - Hosted classification remains preferred. Hosted zero-step failure routes to a lightweight self-hosted Git/LFS-smudge-disabled classification. Heavy checkout/LFS/build/capture happens only when the classifier requires fresh visual evidence.
 - Regression tests now assert singular job/block structure in addition to the parse-safe `'^0+$'` condition and explicit `$targetSpec`.
 - Evidence boundary: **SOURCE-IMPLEMENTED structural root repair; fresh exact-head workflow proof pending**.
+
+
+## 2026-10-07 - Frodo import anti-repeat classifier
+
+- Exact-head Frodo technical import is already proven for the tracked 48-bone rig and Idle/Walk/Run bundle.
+- Because the Frodo workflow file is part of the long-lived PR diff, GitHub may schedule the workflow again on unrelated PR synchronizations. That was causing redundant self-hosted checkout/build/import work.
+- The self-hosted Frodo gate now performs a lightweight Git delta classification before checkout. Only changes to the Frodo validated-runtime bundle, Frodo import commandlet/editor-tools tree, relevant build/runner scripts, Config/uproject, or the workflow/contract itself require a fresh heavy import.
+- Unrelated changes record `P1C01_FRODO_IMPORT_INHERITED` and skip checkout, artifact download, build, import, package verification and cleanup work.
+- This inherits technical evidence only. It never upgrades human visual/PIE/device/performance acceptance.
