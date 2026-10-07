@@ -664,10 +664,11 @@ void AShireNPC::ApplyPrototypeStyle()
             return;
         }
 
+        // Generic ambient residents still use the authored modular mesh
+        // set. They must receive the same resident production surface as
+        // named characters; BasicShapeMaterial is only the final fail-safe.
         UMaterialInterface* Parent =
-            (bProductionVisual && ProductionSurfaceMaterial)
-                ? ProductionSurfaceMaterial
-                : BasicMaterial;
+            ProductionSurfaceMaterial ? ProductionSurfaceMaterial : BasicMaterial;
         if (!Parent)
         {
             return;

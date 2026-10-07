@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "manifest_id": "P1C01_WORLD_MICRO_DETAIL_COMPLETION_V1",
-  "status": "CHARACTER_IDENTITY_MATERIAL_FALLBACK_ROOT_FIXED",
+  "status": "STATIC_NPC_MATERIAL_BRANCH_ROOT_FIXED",
   "authority": [
     "Data/ProjectGovernor.json",
     "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
@@ -123,15 +123,15 @@
     "target": "8 GB RAM / ~2 GB VRAM / DX11 / 1280x720 / 30 FPS floor"
   },
   "latest_render_diagnosis": {
-    "exact_head": "0509679d7afce56fe26899a5acb5b1674dd3ce0d",
-    "artifact": "p1c01-shire-render-integrated-0509679d7afce56fe26899a5acb5b1674dd3ce0d",
-    "evidence": "The #1700 render artifact captured six shots and logs confirmed skeletal Frodo palette application. Visual review still showed white modular NPCs; source inspection identified M_ProductionSurface being resolved but not loaded before the Engine BasicShapeMaterial fallback.",
+    "exact_head": "15e0d8136dcbe0c500969ca9b0611a8a168322aa",
+    "artifact": "p1c01-shire-render-integrated-15e0d8136dcbe0c500969ca9b0611a8a168322aa",
+    "evidence": "The #1701 capture completed and logs confirmed player skeletal palette application plus material fallback loading. Source review found generic NPC ApplySurface still selected BasicShapeMaterial whenever bProductionVisual was false, explaining the unchanged white modular residents.",
     "blockers": [
-      "Fresh exact-head reproof of the static NPC/player material fallback is required",
+      "Fresh exact-head six-shot render/package required after the generic NPC material branch fix",
       "World remains visibly low-detail/blockout in reviewed captures",
       "Human visual/audio/gameplay/device/performance acceptance remains incomplete"
     ],
-    "disposition": "Root-fixed static presentation material fallback: load the existing M_ProductionSurface once when it is not resident, then retain Engine BasicShapeMaterial only as the final fail-safe. Run #1701 for exact-head render/package evidence."
+    "disposition": "Root-fixed generic NPC material branch so modular ambient residents use M_ProductionSurface whenever available; BasicShapeMaterial is final fail-safe only. Run the next full One-Shot before any acceptance decision."
   },
   "force_full_render_reproof": true
 }

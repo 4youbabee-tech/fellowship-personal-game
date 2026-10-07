@@ -1,3 +1,13 @@
+## 2026-10-08 - P1C01 static NPC material branch root fix
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| Generic NPC material branch | SOURCE-REPAIRED / EXACT-HEAD REPROOF PENDING | ApplySurface now selects M_ProductionSurface whenever available instead of conditioning it on bProductionVisual |
+| Named/skeletal character path | PRESERVED | Existing dedicated mesh selection, async rig ownership, URO, and palette handoff remain unchanged |
+| P1C01 visual world | NOT ACCEPTED | #1701 reproof was captured before this third root fix; fresh six-shot artifact required |
+| P1C02 Bree | LOCKED | No runtime integration before P1C01 gates pass |
+| Device / performance / Gate 6-7 | NOT ACCEPTED | No qualifying human/device evidence supplied |
+
 ## 2026-10-08 - P1C01 material fallback root fix
 
 | Area | Status | Evidence / boundary |

@@ -1,3 +1,9 @@
+## 2026-10-08 - P1C01 static NPC material branch root fix
+
+- #1701 reproof logs confirmed the loaded M_ProductionSurface fallback was available, but generic ambient NPCs still selected BasicShapeMaterial because ApplySurface gated the production parent on bProductionVisual.
+- Root fix: all modular NPC residents now use the resident production surface whenever available; BasicShapeMaterial is retained only as the final unavailable-material fail-safe. Named-character mesh selection, skeletal rig ownership, and bounded LivingWorld population remain unchanged.
+- A fresh exact-head render/package run is required. Visual/device/performance/Gate 6/7 acceptance remains unclaimed.
+
 ## 2026-10-08 - P1C01 material fallback root fix
 
 - The #1700 render artifact proved the skeletal Frodo palette path executed, but the white figures in the reviewed frames were modular NPCs whose static presentation had fallen back to UE Engine BasicShapeMaterial because M_ProductionSurface was only resolved, not loaded, at first style application.
