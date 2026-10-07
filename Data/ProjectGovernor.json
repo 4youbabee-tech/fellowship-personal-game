@@ -6533,11 +6533,11 @@
     "runtime_chapter_sequence": "Data/P1C01RuntimeChapterSequenceV1.json"
   },
   "immediate_next_large_actions": [
-    "1. Run the repaired exact-head Pre-Unreal gate and continue on the newest PR head only; superseded same-PR Unreal runs now cancel automatically.",
-    "2. Complete UE4.27.2 compile and normal production import, including persistent 48-bone Frodo rig/Idle-Walk-Run package generation.",
-    "3. Capture the six Shire checkpoints and require no Frodo core-package fallback, no foliage compile failure and no InstancedStaticMeshes default-material fallback.",
-    "4. Package and launch the playable Windows build, then advance seven remaining final FBX characters, production WAV audio and human gameplay/reliability.",
-    "5. Keep P1C02/Bree locked until chapter-specific Gate 6/7 and explicit owner command."
+    "1. Run the exact-head One-Shot static gate after Chronicle-label and health-order repairs; expect fail-fast runner validation before any LFS hydration.",
+    "2. Continue immediately into UE4.27.2 compile/import on green static proof.",
+    "3. Prove persistent 48-bone Frodo packages are resident/streamable and production foliage/surface materials compile without default fallback in the six fresh Shire captures.",
+    "4. Produce the playable Windows package, then continue seven remaining final FBX characters, production WAV audio and human F1-01/F1-02/F1-03 reliability.",
+    "5. Keep P1C02/Bree locked until real P1C01 Gate 6/7 plus explicit owner command."
   ],
   "session_handoff": {
     "checkpoint_id": "P1C01_FINAL_STATIC_CLEANUP_TO_ONE_SHOT_EXECUTION_2026_10_06",
@@ -8880,7 +8880,8 @@
       "One-Shot Build #1675 executed all 55 source-contract tests after the PYTHONPATH repair and exposed six stale assertions tied to superseded schemas/status strings. The tests were reconciled to current streaming-bank, validated-runtime Frodo, definitive-train retirement, quest progress and render-log contracts without relaxing the underlying gates.",
       "One-Shot Build #1676 reduced source-contract failures to two misplaced status assertions introduced during reconciliation; Party Social Loop and Character Presentation assertions were restored to their distinct current states with no production-source change.",
       "Build #1677 passed all 55 source-contract tests and exposed Pre-Unreal drift: persistent-runner generated directories were checked by filesystem existence, side-activity discovery rewards were omitted from the declared discovery set, same-PR Unreal runs were not cancelled on the definitive branch, and artifact transport could still mask engine truth. All four contracts were root-fixed without weakening runtime gates.",
-      "Build #1678 reduced the source-contract suite to one obsolete definitive-branch non-cancellation assertion. It was replaced by the intended branch-scoped same-PR supersession policy so the newest One-Shot head gets the single UE4 runner without cancelling unrelated branches."
+      "Build #1678 reduced the source-contract suite to one obsolete definitive-branch non-cancellation assertion. It was replaced by the intended branch-scoped same-PR supersession policy so the newest One-Shot head gets the single UE4 runner without cancelling unrelated branches.",
+      "Build #1679 reduced Pre-Unreal to two root causes: contextual side-only discoveries lacked explicit Chronicle label authority, and runner health was validated after bounded LFS hydration. ContextualSideActivityPlan now owns matching discovery_display_label fields and runner health now precedes hydration."
     ],
     "evidence_boundary": "STATIC CLEANUP RECONCILED. Parent exact head 9706cc72367be7e8dd14422808abba63597c8511 has COMPILE/IMPORT/PACKAGE/HEADLESS-RUNTIME evidence from the successful self-hosted job inside Unreal Build #1654. No human PIE, DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED or Gate 6/7 ACCEPTED claim."
   },

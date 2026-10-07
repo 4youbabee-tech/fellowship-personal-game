@@ -4896,3 +4896,14 @@ This is runner-throughput cleanup only; fresh exact-head production presentation
 | Obsolete definitive non-cancel assertion | REMOVED |
 | Production/gameplay code changed | NO |
 | Next exact-head One-Shot gate | REQUIRED |
+
+
+## 2026-10-07 - Final Pre-Unreal blockers
+
+| Blocker | Root fix |
+|---|---|
+| 4 contextual Chronicle labels marked drifted | EXPLICIT `discovery_display_label` AUTHORITY ADDED AND MATCHED |
+| Runner health checked after LFS hydration | HEALTH MOVED BEFORE HYDRATION |
+| Canon/story outcome changed | NO |
+| Heavy load policy weakened | NO |
+| Fresh exact-head Pre-Unreal/UE4 proof | REQUIRED |

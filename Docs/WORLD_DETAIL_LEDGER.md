@@ -1591,3 +1591,10 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Removed the final obsolete test assertion that required definitive-branch builds to remain non-cancelling.
 - The enforced policy now matches the low-waste runner architecture: same-PR superseded work cancels; unrelated branch work remains isolated.
 - No Shire world/gameplay/content authority changed.
+
+
+## 2026-10-07 - Chronicle provenance and runner fail-fast ordering
+
+- Added explicit Chronicle display labels to the four implemented P1C01 contextual side activities and bound validation to those labels.
+- Moved runner-session health verification ahead of bounded LFS hydration so an unhealthy self-hosted session fails before heavy file work.
+- No runtime authority, population ownership, story outcome or Bree boundary changed.

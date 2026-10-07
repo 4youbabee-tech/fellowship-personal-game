@@ -354,13 +354,13 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: '"%GITHUB_WORKSPACE%\..\fellowship_exact_checkout.cmd"'
 
-      - name: Hydrate P1C01 material LFS sources
-        shell: powershell
-        run: '& "$env:GITHUB_WORKSPACE\Scripts\hydrate_p1c01_material_lfs.ps1"'
-
       - name: Verify runner session health
         shell: cmd
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\verify_runner_session.ps1"'
+
+      - name: Hydrate P1C01 material LFS sources
+        shell: powershell
+        run: '& "$env:GITHUB_WORKSPACE\Scripts\hydrate_p1c01_material_lfs.ps1"'
 
       - name: Resolve Unreal classification with self-hosted fail-closed fallback
         shell: powershell

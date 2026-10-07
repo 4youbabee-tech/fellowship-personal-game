@@ -5162,3 +5162,12 @@ The same train now owns exact-head source/static contracts, UE4 build, persisten
 - The remaining failure was an obsolete test named `test_p1c01_definitive_unreal_run_is_non_cancelling`, which demanded the exact branch exception that had been removed to stop superseded builds consuming the single UE4 runner.
 - The test now asserts the intended safe policy: concurrency remains scoped by repository + PR branch, while `cancel-in-progress` is true for pull requests so only superseded work from the same branch is cancelled.
 - No production/runtime source changed.
+
+
+## 2026-10-07 - Chronicle side-discovery authority + runner-health ordering root fix
+
+- Build #1679 reduced Pre-Unreal to five failures with two shared roots.
+- PG-085 now has an explicit source-of-truth for contextual side-activity Chronicle labels. The four P1C01 side-only discovery rewards now carry `discovery_display_label` directly in `ContextualSideActivityPlan.json`, matching the corresponding `JourneyDiscoveryRewardPlan.display_label`.
+- PG-145B now validates the real first heavy self-hosted action: runner health must precede P1C01 LFS hydration. The Unreal workflow order was changed to verify the interactive/watchdog-owned runner session immediately after exact checkout, then hydrate bounded LFS content.
+- This removes unnecessary heavy I/O when the runner session is unhealthy and preserves the side-activity Chronicle provenance contract without relaxing display-label coherence.
+- No canon outcome, quest authority, world density or chapter boundary changed.

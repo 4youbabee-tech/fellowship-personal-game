@@ -1479,5 +1479,39 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("artifact transport must be non-blocking", validator)
 
 
+    def test_p1c01_contextual_discovery_labels_are_explicit_and_match_reward_plan(self):
+        root = Path(__file__).resolve().parents[1]
+        side = json.loads((root / "Data" / "ContextualSideActivityPlan.json").read_text(encoding="utf-8"))
+        rewards = json.loads((root / "Data" / "JourneyDiscoveryRewardPlan.json").read_text(encoding="utf-8"))
+        reward_labels = {
+            row["discovery_id"]: row["display_label"]
+            for row in rewards["discovery_rewards"]
+        }
+        required = {
+            "SHIRE_RING_INVESTIGATION",
+            "SHIRE_BAG_END_PACKING",
+            "SHIRE_STEALTH_DEPARTURE",
+            "SHIRE_ROOT_HIDE",
+        }
+        observed = {}
+        for chapter in side["chapters"]:
+            if chapter.get("route") != "FrodoMain" or chapter.get("chapter") != "P1C01":
+                continue
+            for activity in chapter.get("activities", []):
+                reward_id = activity.get("discovery_reward_id")
+                if reward_id in required:
+                    observed[reward_id] = activity.get("discovery_display_label")
+        self.assertEqual(set(observed), required)
+        for reward_id in required:
+            self.assertEqual(observed[reward_id], reward_labels[reward_id])
+
+    def test_runner_health_precedes_p1c01_lfs_hydration(self):
+        root = Path(__file__).resolve().parents[1]
+        workflow = (root / ".github" / "workflows" / "unreal-build-validation.yml").read_text(encoding="utf-8")
+        health = workflow.index("- name: Verify runner session health")
+        hydration = workflow.index("- name: Hydrate P1C01 material LFS sources")
+        self.assertLess(health, hydration)
+
+
 if __name__ == "__main__":
     unittest.main()

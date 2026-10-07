@@ -176,7 +176,8 @@
           "may_advance_required_anchor": false,
           "may_change_canon_outcome": false,
           "future_knowledge_allowed": false,
-          "urgency_policy": "Allowed only while RingSecret is the active quest; expires before departure."
+          "urgency_policy": "Allowed only while RingSecret is the active quest; expires before departure.",
+          "discovery_display_label": "Bounded Ring investigation inside Bag End"
         },
         {
           "id": "SIDE_SHIRE_BAG_END_PACKING",
@@ -201,7 +202,8 @@
           "may_advance_required_anchor": false,
           "may_change_canon_outcome": false,
           "future_knowledge_allowed": false,
-          "urgency_policy": "Allowed only during RingSecret preparation and expires when LeavingHomeRoad commits the departure."
+          "urgency_policy": "Allowed only during RingSecret preparation and expires when LeavingHomeRoad commits the departure.",
+          "discovery_display_label": "Packing ordinary provisions before leaving Bag End"
         },
         {
           "id": "SIDE_SHIRE_STEALTH_DEPARTURE",
@@ -226,7 +228,8 @@
           "may_advance_required_anchor": false,
           "may_change_canon_outcome": false,
           "future_knowledge_allowed": false,
-          "urgency_policy": "Allowed only while LeavingHome is active; ends exactly when LeavingHomeRoad is committed."
+          "urgency_policy": "Allowed only while LeavingHome is active; ends exactly when LeavingHomeRoad is committed.",
+          "discovery_display_label": "Quiet departure through Hobbiton hedges"
         },
         {
           "id": "SIDE_SHIRE_ROOT_HIDE",
@@ -253,7 +256,8 @@
           "may_advance_required_anchor": false,
           "may_change_canon_outcome": false,
           "future_knowledge_allowed": false,
-          "urgency_policy": "Allowed only during KeepOffRoad and expires as FerryEscape begins."
+          "urgency_policy": "Allowed only during KeepOffRoad and expires as FerryEscape begins.",
+          "discovery_display_label": "Hold still beneath the wooded road under Rider pressure"
         }
       ]
     },

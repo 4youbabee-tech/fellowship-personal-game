@@ -6925,6 +6925,25 @@ pg85_labels = {
     for item in chapter.get("optional_discoveries", [])
     if isinstance(item, dict)
 }
+pg85_side = json.loads(read(ROOT / "Data" / "ContextualSideActivityPlan.json"))
+for pg85_chapter in pg85_side.get("chapters", []):
+    if not isinstance(pg85_chapter, dict):
+        continue
+    for pg85_activity in pg85_chapter.get("activities", []):
+        if not isinstance(pg85_activity, dict):
+            continue
+        pg85_reward_id = str(pg85_activity.get("discovery_reward_id") or "").strip()
+        pg85_reward_label = str(pg85_activity.get("discovery_display_label") or "").strip()
+        if not pg85_reward_id:
+            continue
+        if not pg85_reward_label:
+            fail(f"PG-085 contextual discovery missing discovery_display_label: {pg85_reward_id}")
+            continue
+        prior_label = pg85_labels.get(pg85_reward_id)
+        if prior_label and prior_label != pg85_reward_label:
+            fail(f"PG-085 discovery label authority conflict: {pg85_reward_id}")
+            continue
+        pg85_labels[pg85_reward_id] = pg85_reward_label
 for pg85_reward in pg85_rewards.get("discovery_rewards", []):
     if not isinstance(pg85_reward, dict):
         continue
@@ -8465,7 +8484,7 @@ if "workflow_dispatch:" not in pg145b_health_workflow or "verify_runner_session.
     fail("PG-145B manual runner health workflow is incomplete")
 
 for pg145b_path, pg145b_before in [
-    (ROOT / ".github" / "workflows" / "unreal-build-validation.yml", "Import hosted Unreal classification"),
+    (ROOT / ".github" / "workflows" / "unreal-build-validation.yml", "Hydrate P1C01 material LFS sources"),
     (ROOT / ".github" / "workflows" / "warehouse-stage.yml", "Stage Poly Haven CC0 batch"),
 ]:
     pg145b_text = read(pg145b_path)
