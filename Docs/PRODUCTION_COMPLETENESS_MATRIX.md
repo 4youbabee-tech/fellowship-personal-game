@@ -4994,3 +4994,14 @@ The material packet changed Source/ShireJourney/Private/World/ShirePrototypeWorl
 ### P1C01 full-render trigger completion (2026-10-08)
 
 The latest visual packet manifest is now also a full-lane trigger. This closes the last-commit classifier gap: a visual/material packet cannot inherit a core-only result merely because its world-builder source landed in the previous commit. The next exact-head run must include six fresh captures, cook/package, packaged startup, and artifact inspection. Acceptance remains unclaimed.
+
+
+## 2026-10-08 — P1C01 broad-surface material runtime-stability correction
+
+| Item | Evidence | Disposition |
+|---|---|---|
+| #1697 exact-head UE4.27.2 build/import | Build and production import passed on `cb05105741b809ba1c82ba67423a06c63d2e13c4` | Technical only |
+| First integrated render | `P1C01_RENDER_CAPTURE_FAIL reason=screenshot_timeout name=01_BagEnd_Hill`; UE stopped before BeginPlay | Root cause isolated to the new broad grass-path HISM override; removed |
+| Fresh six-shot render/package | Not produced by #1697; all later runtime/package steps skipped | Required after root fix |
+| VISUALLY-ACCEPTED / DEVICE-TESTED / PERFORMANCE-ACCEPTED / Gate 6/7 | No concrete evidence | NOT CLAIMED |
+| P1C02 Bree | No chapter expansion | LOCKED |

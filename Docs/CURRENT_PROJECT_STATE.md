@@ -5243,3 +5243,8 @@ The material packet changed Source/ShireJourney/Private/World/ShirePrototypeWorl
 ### P1C01 full-render trigger completion (2026-10-08)
 
 The latest visual packet manifest is now also a full-lane trigger. This closes the last-commit classifier gap: a visual/material packet cannot inherit a core-only result merely because its world-builder source landed in the previous commit. The next exact-head run must include six fresh captures, cook/package, packaged startup, and artifact inspection. Acceptance remains unclaimed.
+
+
+### P1C01 material packet runtime-stability root fix (2026-10-08)
+
+Unreal Build Validation #1697 proved the broad-surface grass-path override was not runtime-safe on the validated DX11 runner: build and import passed, but the first HUD-free capture stalled before BeginPlay and failed with `screenshot_timeout` after 75 seconds. The override is removed from the large ground/hill/slope HISM components; the previously proven local Shire materials and bounded imported detail-material overrides remain. This is a root-fix commit only. Fresh exact-head render, packaged startup, performance, and human/device acceptance remain required; no visual, device, performance, or Gate 6/7 acceptance is claimed.

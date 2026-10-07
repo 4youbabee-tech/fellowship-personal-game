@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "manifest_id": "P1C01_WORLD_MICRO_DETAIL_COMPLETION_V1",
-  "status": "WORLD_MATERIAL_SURFACE_PASS_FULL_RENDER_TRIGGERED",
+  "status": "WORLD_MATERIAL_SURFACE_PASS_RUNTIME_STABILITY_ROOT_FIXED",
   "authority": [
     "Data/ProjectGovernor.json",
     "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
@@ -123,15 +123,15 @@
     "target": "8 GB RAM / ~2 GB VRAM / DX11 / 1280x720 / 30 FPS floor"
   },
   "latest_render_diagnosis": {
-    "exact_head": "58794f153c2052cbb4857e18dcc8c438288e606e",
-    "artifact": "p1c01-shire-render-integrated-58794f153c2052cbb4857e18dcc8c438288e606e",
-    "evidence": "Unreal Build Validation #1694 succeeded through UE4.27.2 build, production import, six integrated captures, runtime audits, Windows package and packaged startup. Exact artifact review confirmed exposure/camera improvement but rejected visual acceptance.",
+    "exact_head": "cb05105741b809ba1c82ba67423a06c63d2e13c4",
+    "artifact": "p1c01-shire-render-integrated-cb05105741b809ba1c82ba67423a06c63d2e13c4",
+    "evidence": "Unreal Build Validation #1697 passed C++ build and production import, then failed the first integrated HUD-free capture before BeginPlay with P1C01_RENDER_CAPTURE_FAIL reason=screenshot_timeout name=01_BagEnd_Hill. The six-shot/package/runtime lanes were skipped.",
     "blockers": [
-      "Broad ground/hill/slope surfaces still read as flat-color blockout rather than authored terrain",
-      "Several review views remain compositionally close to geometry",
-      "Named-character and living-world presence remains insufficient in the captured views"
+      "The new MI_Sh_GrassPath_PH broad ground/hill/slope HISM override stalled the first render on the validated DX11 runner",
+      "Fresh exact-head six-shot render, packaged startup, and performance evidence remain required",
+      "Named-character, living-world, audio, and human/device presentation evidence remain insufficient"
     ],
-    "disposition": "Classifier correction now forces the full UE4 render/package lane for world-builder deltas; #1696 must produce fresh six-shot and packaged evidence before judging the material pass."
+    "disposition": "Removed the broad grass-path HISM override while preserving the known-safe local Shire materials and bounded imported detail-material overrides. The next exact-head run must reprove capture, package, and runtime behavior before another visual packet."
   },
   "force_full_render_reproof": true
 }

@@ -313,9 +313,6 @@ void AShirePrototypeWorldBuilder::BeginPlay()
         TEXT("/Game/Production/Imported/P1C01Materials/SH_DIRT_SOIL/MI_Sh_DirtSoil_PH.MI_Sh_DirtSoil_PH"));
     UMaterialInterface* HighFidelityPathMaterial = ResolveResidentMaterial(
         TEXT("/Game/Production/Imported/P1C01Materials/SH_STONY_PATH/MI_Sh_StonyPath_PH.MI_Sh_StonyPath_PH"));
-    UMaterialInterface* HighFidelityGrassMaterial = ResolveResidentMaterial(
-        TEXT("/Game/Production/Imported/P1C01Materials/SH_GRASS_PATH/MI_Sh_GrassPath_PH.MI_Sh_GrassPath_PH"));
-
     UMaterialInterface* HighFidelityBarkMaterial = ResolveResidentMaterial(
         TEXT("/Game/Production/Imported/P1C01Materials/SH_TREE_BARK/MI_Sh_TreeBark_PH.MI_Sh_TreeBark_PH"));
     UMaterialInterface* HighFidelityStoneMaterial = ResolveResidentMaterial(
@@ -392,19 +389,9 @@ void AShirePrototypeWorldBuilder::BeginPlay()
         if (PropertyFenceInstances) PropertyFenceInstances->SetMaterial(0, ShireWoodMaterial);
     }
 
-    // P1C01-only high-fidelity surface replacement. All four materials must already
-    // be resident through UShireChapterAssetStreamingSubsystem; this path performs
-    // no synchronous load and does not increase HISM instance counts.
-    // Use the verified grass-path albedo on broad Shire terrain as a local chapter
-    // surface treatment. This removes the flat-color read from the large ground/hill
-    // HISM surfaces while keeping the common asset bank untouched and load-free.
-    if (HighFidelityGrassMaterial)
-    {
-        if (GroundTileInstances) GroundTileInstances->SetMaterial(0, HighFidelityGrassMaterial);
-        if (GeographyHillInstances) GeographyHillInstances->SetMaterial(0, HighFidelityGrassMaterial);
-        if (GeographySlopeInstances) GeographySlopeInstances->SetMaterial(0, HighFidelityGrassMaterial);
-    }
-
+    // P1C01-only high-fidelity surface replacement for bounded detail components.
+    // These materials must already be resident through UShireChapterAssetStreamingSubsystem;
+    // this path performs no synchronous load and does not increase HISM instance counts.
     if (HighFidelityDirtMaterial)
     {
         if (GardenSoilInstances) GardenSoilInstances->SetMaterial(0, HighFidelityDirtMaterial);
@@ -427,13 +414,12 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     UE_LOG(
         LogTemp,
         Display,
-        TEXT("P1C01_SHIRE_LOCAL_MATERIAL_OVERRIDE grass=%s earth=%s bark=%s leaves=%s wood=%s hfGrass=%s hfDirt=%s hfPath=%s hfBark=%s hfStone=%s commonAssetsMutated=no syncLoad=no densityIncrease=no"),
+        TEXT("P1C01_SHIRE_LOCAL_MATERIAL_OVERRIDE grass=%s earth=%s bark=%s leaves=%s wood=%s hfDirt=%s hfPath=%s hfBark=%s hfStone=%s hfGrass=deferred commonAssetsMutated=no syncLoad=no densityIncrease=no"),
         ShireGrassMaterial ? TEXT("resident") : TEXT("missing"),
         ShireEarthMaterial ? TEXT("resident") : TEXT("missing"),
         ShireBarkMaterial ? TEXT("resident") : TEXT("missing"),
         ShireLeavesMaterial ? TEXT("resident") : TEXT("missing"),
         ShireWoodMaterial ? TEXT("resident") : TEXT("missing"),
-        HighFidelityGrassMaterial ? TEXT("resident") : TEXT("missing"),
         HighFidelityDirtMaterial ? TEXT("resident") : TEXT("missing"),
         HighFidelityPathMaterial ? TEXT("resident") : TEXT("missing"),
         HighFidelityBarkMaterial ? TEXT("resident") : TEXT("missing"),
