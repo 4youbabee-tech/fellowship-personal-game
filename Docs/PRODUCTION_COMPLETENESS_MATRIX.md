@@ -4964,3 +4964,8 @@ This is runner-throughput cleanup only; fresh exact-head production presentation
 | HUD visible in review screenshots | Native `AShireHUD::DrawHUD()` bypasses `ShowFlag.HUD` | Capture-only `-ShireVisualCapture` early return | Review harness only |
 | Normal game HUD | No commandline flag in normal startup | Unchanged | Gameplay preserved |
 | Visual acceptance | Fresh HUD-free artifact not yet reviewed | Pending | Gate 6/7 blocked |
+
+
+### P1C01 production presentation packet (2026-10-07)
+
+The playable camera now uses a wider third-person composition (320 cm spring arm, 74° FOV, raised socket) and a bounded +1.25 exposure bias to reduce geometry clipping and underexposed Shire presentation in the actual runtime camera. This is a presentation improvement only; it does not establish VISUALLY-ACCEPTED, DEVICE-TESTED, PERFORMANCE-ACCEPTED, or Gate 6/7 acceptance. Fresh packaged evidence from the resulting One-Shot run is required.
