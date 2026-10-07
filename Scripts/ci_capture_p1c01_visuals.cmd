@@ -48,6 +48,10 @@ if errorlevel 1 exit /b !ERRORLEVEL!
 call :Capture "06_Bucklebury_Ferry" 21900 -1550 520 -9 18 0
 if errorlevel 1 exit /b !ERRORLEVEL!
 
+powershell.exe -NoProfile -ExecutionPolicy Bypass -Command ^
+  "$logs=@(Get-ChildItem -LiteralPath '%RUN_DIR%' -File -Filter '*.log' -ErrorAction Stop); $all=($logs | ForEach-Object { Get-Content -LiteralPath $_.FullName -Raw }) -join [Environment]::NewLine; $errors=@(); if($all -match 'CharacterRigStreaming: unavailable id=Frodo reason=core-packages-missing'){ $errors += 'frodo_runtime_packages_missing' }; if($all -notmatch 'CharacterVisual: skeletal production rig active id=FRODO'){ $errors += 'frodo_production_rig_not_active' }; if($all -match 'M_ProductionFoliage.*Failed to compile Material'){ $errors += 'foliage_material_compile_failure' }; if($all -match 'M_ProductionFoliage.*missing bUsedWithInstancedStaticMeshes=True'){ $errors += 'foliage_hism_usage_missing' }; if($all -match 'M_ProductionSurface.*missing bUsedWithInstancedStaticMeshes=True'){ $errors += 'surface_hism_usage_missing' }; if($errors.Count -gt 0){ Write-Host ('P1C01_RENDER_PRODUCTION_GATE_FAIL reasons=' + ($errors -join ',')); exit 12 }; Write-Host 'P1C01_RENDER_PRODUCTION_GATE_PASS frodo=production materials=compiled hismUsage=ready'"
+if errorlevel 1 exit /b 80
+
 for /f %%C in ('powershell.exe -NoProfile -Command "@(Get-ChildItem -LiteralPath '%RUN_DIR%' -File -Filter '*.png' -ErrorAction SilentlyContinue).Count"') do set "PNG_COUNT=%%C"
 if not "!PNG_COUNT!"=="6" (
   echo P1C01_RENDER_CAPTURE_FAIL reason=unexpected_capture_count expected=6 actual=!PNG_COUNT! dir="%RUN_DIR%"
