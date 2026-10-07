@@ -83,7 +83,13 @@ if errorlevel 1 (
   echo P1C01_RENDER_CAPTURE_FAIL reason=frodo_production_rig_not_observed dir="%RUN_DIR%"
   exit /b 82
 )
-echo P1C01_RENDER_PRODUCTION_READINESS_PASS frodoRig=active defaultMaterialFallback=no
+findstr /S /I /C:"CharacterVisual: skeletal production rig calibration id=Frodo scale=0.010" "%RUN_DIR%\*.log" >nul
+if errorlevel 1 (
+  echo P1C01_RENDER_CAPTURE_FAIL reason=frodo_skeletal_scale_calibration_not_observed dir="%RUN_DIR%"
+  exit /b 83
+)
+
+echo P1C01_RENDER_PRODUCTION_READINESS_PASS frodoRig=active calibration=0.010 defaultMaterialFallback=no
 
 for /f %%C in ('powershell.exe -NoProfile -Command "@(Get-ChildItem -LiteralPath '%RUN_DIR%' -File -Filter '*.png' -ErrorAction SilentlyContinue).Count"') do set "PNG_COUNT=%%C"
 if not "!PNG_COUNT!"=="6" (

@@ -5180,3 +5180,12 @@ The same train now owns exact-head source/static contracts, UE4 build, persisten
 - Root rule is now single-owner and fail-closed: `ExplorationEnvelopePlan.label` remains authoritative for exploration-declared discoveries; only contextual **side-only** discovery IDs require `ContextualSideActivityPlan.discovery_display_label`. If both are authored they must match.
 - The four P1C01 side-only discoveries retain explicit labels matching `JourneyDiscoveryRewardPlan.display_label`.
 - No gameplay, canon, chapter, streaming or acceptance state changed. Fresh exact-head One-Shot engine proof remains required.
+
+
+## 2026-10-07 — P1C01 render-evidence calibration remediation
+
+- **Observed exact-head evidence:** Unreal Build Validation #1681 on 7bae402f8726addd577a838e074ce4ed04bc91de succeeded through real UE4.27.2 build, production import, six rendered captures, Automation Framework/runtime audits, Windows cook/package and packaged startup. This is technical/playable evidence only.
+- **Visual finding:** all six integrated captures were obstructed by an uncalibrated, oversized skeletal Frodo. The captures therefore cannot be used as visual-quality or character-presentation acceptance.
+- **Root-level remediation:** the production skeletal attachment now converts the validated metre-space source to Unreal centimetres (0.010) at the mesh boundary and aligns it to the active collision capsule. It does not alter quest, route, save, collision, streaming ownership, NPC context, or LivingWorldDirector population authority.
+- **Regression gate:** the render-capture train now requires the Frodo calibration log before accepting a capture artifact.
+- **Status:** implementation is pending fresh exact-head UE4 build/render evidence. No PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED, or Gate 6/7 claim is made. P1C02/Bree remains locked.

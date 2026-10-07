@@ -4920,3 +4920,15 @@ This is runner-throughput cleanup only; fresh exact-head production presentation
 | Build #1680 Pre-Unreal | BLOCKED ONLY BY PRIOR PG-085 OVERREACH |
 | Fresh exact-head UE4 build/import/render/package | PENDING |
 | Gate 6/7 | NOT ACCEPTED |
+
+
+## 2026-10-07 — P1C01 render evidence disposition
+
+| Area | Current evidence | Status |
+|---|---|---|
+| Exact-head engine/package train | Unreal Build Validation #1681, head 7bae402f8726addd577a838e074ce4ed04bc91de | TECHNICAL / PLAYABLE PASS |
+| Six Shire captures | Produced, but each is obstructed by oversized uncalibrated Frodo skeletal mesh | NOT VALID FOR VISUAL ACCEPTANCE |
+| Skeletal calibration fix | Meter-to-centimetre scale is applied at the character mesh boundary and capture logs must observe it | IMPLEMENTED — FRESH UE4 EVIDENCE REQUIRED |
+| Gameplay / story / saves | No authority or state logic changed by this remediation | UNCHANGED |
+| Gate 6 / Gate 7 | Human visual, audio, gameplay and target-device evidence still absent | NOT ACCEPTED |
+| P1C02 / Bree | Scope remains closed | LOCKED |

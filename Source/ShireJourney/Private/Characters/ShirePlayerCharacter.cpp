@@ -250,7 +250,17 @@ bool AShirePlayerCharacter::TryApplyProductionRig(const FString& RigFolder)
         return false;
     }
 
+    // The validated Frodo FBX is authored in metre-space while this character's
+    // capsule and world coordinates are Unreal centimetres. Apply the conversion
+    // only at the skeletal attachment boundary: streaming keeps ownership of the
+    // asset, and gameplay/collision/save transforms remain untouched.
+    constexpr float ProductionRigScale = 0.01f;
     GetMesh()->SetSkeletalMesh(SkeletalMesh);
+    GetMesh()->SetRelativeScale3D(FVector(ProductionRigScale));
+    GetMesh()->SetRelativeLocation(FVector(
+        0.0f,
+        0.0f,
+        -GetCapsuleComponent()->GetScaledCapsuleHalfHeight()));
     GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     GetMesh()->bEnableUpdateRateOptimizations = true;
     GetMesh()->VisibilityBasedAnimTickOption =
@@ -302,6 +312,14 @@ bool AShirePlayerCharacter::TryApplyProductionRig(const FString& RigFolder)
             Piece->SetVisibility(false, true);
         }
     }
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("CharacterVisual: skeletal production rig calibration id=%s scale=%.3f capsuleHalfHeight=%.1f"),
+        *RigFolder,
+        ProductionRigScale,
+        GetCapsuleComponent()->GetScaledCapsuleHalfHeight());
 
     UE_LOG(
         LogTemp,
