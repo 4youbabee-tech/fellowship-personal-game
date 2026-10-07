@@ -4849,3 +4849,17 @@ This is runner-throughput cleanup only; fresh exact-head production presentation
 | C++/UE4 defect proven by #1674 | NO |
 | Fresh exact-head build/import/render/package | REQUIRED AFTER FIX |
 | Gate 6/7 | NOT ACCEPTED |
+
+
+## 2026-10-07 - One-Shot source-contract gate reconciliation
+
+| Contract blocker from #1675 | Disposition |
+|---|---|
+| `chapter_banks` KeyError | TEST UPDATED TO CURRENT `banks/P1C01/assets` SCHEMA |
+| obsolete animation `stage_scope` KeyError | TEST UPDATED TO CURRENT TRACKED VALIDATED-RUNTIME CORE |
+| character presentation old status | TEST UPDATED TO CURRENT PERSISTENT-FRODO SOURCE STATE |
+| quest coherence old status | TEST UPDATED TO CURRENT F1-02/F1-03 SOURCE-CLOSED STATE |
+| KayKit exact conditional string | TEST UPDATED TO ASSERT RETIREMENT + NONZERO SURVIVOR GUARD |
+| render Frodo ID case | TEST UPDATED TO ACTUAL `id=Frodo` LOG CONTRACT |
+| Gameplay/C++ defect proven by these failures | NO |
+| Fresh exact-head engine run | REQUIRED |

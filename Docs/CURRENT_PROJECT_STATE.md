@@ -5120,3 +5120,16 @@ The same train now owns exact-head source/static contracts, UE4 build, persisten
 - Root fix: the self-hosted One-Shot gate now resolves `$GITHUB_WORKSPACE/Scripts`, prepends it to `PYTHONPATH`, preserves any existing Python path, and only then runs the source-contract suite and Pre-Unreal validator.
 - Regression coverage locks the Python-path setup ahead of unittest execution.
 - This is a CI harness repair only. It does not change gameplay acceptance status. The current production-material and persistent Frodo runtime fixes remain in the exact-head source and still require fresh engine/render proof after this gate is cleared.
+
+
+## 2026-10-07 - One-Shot source-contract schema reconciliation
+
+- One-Shot Build #1675 confirmed the Python module-path repair: `source_contracts` imported correctly and the suite executed all 55 tests.
+- The remaining stop was six stale assertions, not UE4/game failure:
+  - streaming plan test still expected removed `chapter_banks/P1C01/FrodoMain` schema instead of current `banks/P1C01/assets`;
+  - animation-intake test expected obsolete `stage_scope=ONE_PACK_ONLY` even though Frodo now owns a tracked exact-head validated runtime core;
+  - character-presentation and quest-side-activity tests expected older generic status strings instead of the current explicit progress states;
+  - KayKit test expected the pre-retirement exact `if` line instead of the stronger definitive-train retirement guard;
+  - render-readiness test expected `id=FRODO` while runtime evidence uses `id=Frodo` and `findstr /I` is intentionally case-insensitive.
+- The tests were reconciled to current schemas/statuses while preserving their safety intent: four imported P1C01 material soft paths still must be cooked, Frodo remains 48-bone/Idle-Walk-Run tracked, rejected KayKit payloads stay non-requeueable, render capture still rejects fallback Frodo/default materials, and no acceptance boundary is weakened.
+- Fresh exact-head One-Shot execution is required after this test-only reconciliation.

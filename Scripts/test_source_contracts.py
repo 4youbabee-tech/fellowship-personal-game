@@ -289,7 +289,10 @@ class SourceContractTests(unittest.TestCase):
     def test_p1c01_party_social_loop_is_bounded_and_windowed(self):
         root = Path(__file__).resolve().parents[1]
         contract = json.loads((root / "Data" / "P1C01PartySocialLoopChapterV1.json").read_text(encoding="utf-8"))
-        self.assertEqual(contract["status"], "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING")
+        self.assertEqual(
+            contract["status"],
+            "FRODO_PERSISTENT_RUNTIME_IMPORT_SOURCE_IMPLEMENTED_RENDER_REPROOF_PENDING",
+        )
         self.assertEqual(contract["runtime_budget"]["max_hism_cluster_actors"], 4)
         self.assertEqual(contract["runtime_budget"]["max_hism_instances"], 56)
         self.assertEqual(contract["runtime_budget"]["max_state_variant_props"], 8)
@@ -348,8 +351,9 @@ class SourceContractTests(unittest.TestCase):
     def test_p1c01_streamed_imported_materials_are_explicitly_cooked(self):
         root = Path(__file__).resolve().parents[1]
         plan = json.loads((root / "Data" / "ChapterAssetStreamingPlan.json").read_text(encoding="utf-8"))
-        p1 = plan["chapter_banks"]["P1C01"]["FrodoMain"]
-        imported = [p for p in p1 if "/Game/Production/Imported/P1C01Materials/" in p]
+        p1 = plan["banks"]["P1C01"]
+        self.assertEqual(p1["route"], "FrodoMain")
+        imported = [p for p in p1["assets"] if "/Game/Production/Imported/P1C01Materials/" in p]
         self.assertEqual(len(imported), 4)
         for token in (
             "MI_Sh_DirtSoil_PH",
@@ -475,7 +479,10 @@ class SourceContractTests(unittest.TestCase):
     def test_p1c01_quest_side_activity_coherence_is_quest_owned_and_windowed(self):
         root = Path(__file__).resolve().parents[1]
         contract = json.loads((root / "Data" / "P1C01QuestSideActivityCoherenceV1.json").read_text(encoding="utf-8"))
-        self.assertEqual(contract["status"], "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING")
+        self.assertEqual(
+            contract["status"],
+            "SOURCE_IMPLEMENTED_F1_02_F1_03_GAMEPLAY_GAPS_CLOSED_EXACT_HEAD_PROOF_PENDING",
+        )
         coherence = contract["coherence_contract"]
         self.assertTrue(coherence["main_quest_priority"])
         self.assertTrue(coherence["clean_expiry_on_closing_story_beat"])
@@ -982,8 +989,15 @@ class SourceContractTests(unittest.TestCase):
         self.assertEqual(
             provenance["target_sha256"],
             "75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be")
-        self.assertEqual(prep["active_animation_intake"]["stage_scope"], "ONE_PACK_ONLY")
+        self.assertEqual(
+            prep["active_animation_intake"]["state"],
+            "TRACKED_VALIDATED_RUNTIME_CORE_EXACT_HEAD_UE4_IMPORT_PROVEN",
+        )
         self.assertEqual(prep["active_animation_intake"]["required_initial_clips"], ["Idle", "Walk", "Run"])
+        self.assertEqual(
+            set(prep["active_animation_intake"]["tracked_clips"].keys()),
+            {"Idle", "Walk", "Run"},
+        )
 
         deformation = json.loads(
             (root / "Data" / "P1C01HumanDeformationGateV1.json").read_text(encoding="utf-8"))
@@ -1085,7 +1099,12 @@ class SourceContractTests(unittest.TestCase):
 
         workflow = (root / ".github" / "workflows" / "p1c01-kaykit-rig-bridge.yml").read_text(encoding="utf-8")
         self.assertIn("selected_count: ${{ steps.outcome.outputs.selected_count }}", workflow)
-        self.assertIn("if: needs.hosted_static_bridge.outputs.selected_count != '0'", workflow)
+        self.assertIn("needs.hosted_static_bridge.outputs.selected_count != '0'", workflow)
+        self.assertIn("P1C01_DEFINITIVE_TRAIN_RETIREMENT", workflow)
+        self.assertIn(
+            "github.head_ref != 'production/p1c01-definitive-chapter-closeout-2026-10-04'",
+            workflow,
+        )
 
         ue4 = (root / "Scripts" / "run_p1c01_kaykit_rig_bridge_ue4.ps1").read_text(encoding="utf-8")
         self.assertNotIn("archive_sha256=[string]$receipt.archive_sha256", ue4)
@@ -1270,7 +1289,7 @@ class SourceContractTests(unittest.TestCase):
             "reason=frodo_core_packages_missing",
             "reason=foliage_material_compile",
             "reason=instanced_material_usage",
-            "CharacterVisual: skeletal production rig active id=FRODO",
+            "CharacterVisual: skeletal production rig active id=Frodo",
         ):
             self.assertIn(token, capture)
 

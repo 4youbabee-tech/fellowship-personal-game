@@ -1560,3 +1560,11 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - The repair removes a harness-level blocker that prevented the actual Shire engine build from starting.
 - No world density, streaming authority, character ownership, quest flow or P1C02 boundary changed.
 - Fresh exact-head engine evidence is required before any runtime/visual acceptance promotion.
+
+
+## 2026-10-07 - Static contract drift repair
+
+- Reconciled six stale source-contract assertions to current project schemas and explicit P1C01 progress states.
+- No runtime/world/content authority changed in this packet.
+- The repaired tests continue to enforce async character loading, bounded streaming/cook paths, known-rejection retirement, persistent Frodo production import, and render rejection of prototype/default-material fallback.
+- P1C02/Bree remains locked.
