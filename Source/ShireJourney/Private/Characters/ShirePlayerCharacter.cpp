@@ -81,7 +81,9 @@ AShirePlayerCharacter::AShirePlayerCharacter()
     FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
     FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
     FollowCamera->bUsePawnControlRotation = false;
-    FollowCamera->SetFieldOfView(74.0f);\n    FollowCamera->PostProcessSettings.bOverride_AutoExposureBias = true;\n    FollowCamera->PostProcessSettings.AutoExposureBias = 1.25f;
+    FollowCamera->SetFieldOfView(74.0f);
+    FollowCamera->PostProcessSettings.bOverride_AutoExposureBias = true;
+    FollowCamera->PostProcessSettings.AutoExposureBias = 1.25f;
 
     FootstepComponent = CreateDefaultSubobject<UShireFootstepComponent>(TEXT("FootstepComponent"));
 
