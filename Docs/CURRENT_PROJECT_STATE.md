@@ -5213,3 +5213,8 @@ The same train now owns exact-head source/static contracts, UE4 build, persisten
 - Road-level review captures succeeded, but the native Canvas HUD remained visible because `AShireHUD::DrawHUD()` is independent of the engine HUD show flag.
 - Added a capture-only `-ShireVisualCapture` commandline guard inside `AShireHUD::DrawHUD()`. Normal gameplay HUD behavior is unchanged; review captures now omit quest card, bars, and debug journey counters.
 - Fresh exact-head UE4 render evidence is required again. No visual acceptance or Gate 6/7 claim is made.
+
+
+### P1C01 production presentation packet (2026-10-07)
+
+The playable camera now uses a wider third-person composition (320 cm spring arm, 74° FOV, raised socket) and a bounded +1.25 exposure bias to reduce geometry clipping and underexposed Shire presentation in the actual runtime camera. This is a presentation improvement only; it does not establish VISUALLY-ACCEPTED, DEVICE-TESTED, PERFORMANCE-ACCEPTED, or Gate 6/7 acceptance. Fresh packaged evidence from the resulting One-Shot run is required.
