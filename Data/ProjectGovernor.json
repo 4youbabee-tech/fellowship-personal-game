@@ -6533,11 +6533,11 @@
     "runtime_chapter_sequence": "Data/P1C01RuntimeChapterSequenceV1.json"
   },
   "immediate_next_large_actions": [
-    "1. Obtain fresh Shire render evidence through the fail-closed render fallback when the visual classifier requires capture; do not spend runner time on unchanged visual trees.",
-    "2. Continue P1C01 character lane after Frodo technical import: acquire/promote final production FBX bundles for Bilbo, Gandalf, Sam, Merry, Pippin, Black Rider and Black Rider horse.",
-    "3. Finish full Shire world/render presentation and production WAV master import/playback.",
-    "4. Human-test F1-01/F1-02/F1-03 through FerryEscape including collision, retry, skip equivalence, backtrack and real disk save/load.",
-    "5. Measure target device DX11 1280x720 and complete human Gate 6/7. P1C02 remains locked pending explicit owner command."
+    "1. Run fresh exact-head Unreal production import + Shire Render Capture and require P1C01_RENDER_PRODUCTION_READINESS_PASS.",
+    "2. If the fresh render is clean, inspect the six captures and continue direct visible world upgrade rather than generic CI cleanup.",
+    "3. Advance Bilbo, Gandalf, Sam, Merry, Pippin, Black Rider and Black Rider horse final production FBX bundles; Frodo remains first visible runtime proof.",
+    "4. Advance production WAV master intake/playback and full F1-01/F1-02/F1-03 human traversal/reliability through FerryEscape.",
+    "5. Measure DX11 1280x720 target-device performance and complete human Gate 6/7; keep P1C02 locked."
   ],
   "session_handoff": {
     "checkpoint_id": "P1C01_FINAL_STATIC_CLEANUP_TO_ONE_SHOT_EXECUTION_2026_10_06",
@@ -8851,9 +8851,7 @@
       "Exact-head Frodo UE4 Animation Import #113 self-hosted job 112508429836 succeeded with exact artifact hashes, 48-bone skeleton, three animation clips, generated package checks and tracked validated-runtime FBX verification.",
       "P1C01 Shire Render Capture zero-step hosted classifier failure was a CI deadlock rather than render/game failure. The render lane now fails closed to a lightweight self-hosted classifier and only performs heavy checkout/LFS/build/capture when fresh visual evidence is required.",
       "Character-priority drift was corrected: active P1C01 source/runtime priority is now exactly Frodo, Bilbo, Gandalf, Sam, Merry, Pippin, Black Rider and Black Rider horse; Aragorn, Gimli, Legolas and Boromir remain future source-prep-only.",
-      "Historical Human Wave 2 161-bone latest-winner metadata was superseded by the current tracked 48-bone Frodo winner proven through exact-head UE4 Animation Import #113.",
-      "Fresh P1C01 render artifact exposed the real presentation bottleneck: Frodo technical FBX packages were not persisted by the normal production-import path, so runtime fell back to modular presentation; production import now persists the tracked 48-bone rig + three locomotion clips.",
-      "Fresh P1C01 render logs exposed production material fallback: M_ProductionFoliage failed SimpleGrassWind compilation because AdditionalWPO was unbound and production surface/foliage masters lacked instanced-static-mesh usage. Both are root-repaired in the editor production importer."
+      "Historical Human Wave 2 161-bone latest-winner metadata was superseded by the current tracked 48-bone Frodo winner proven through exact-head UE4 Animation Import #113."
     ],
     "explicit_runtime_evidence_requirements": [
       "Fresh hosted/static execution after this stabilization packet; current hosted failures are zero-step infrastructure/setup failures with no validator output.",
@@ -8880,7 +8878,7 @@
     "evidence_boundary": "STATIC CLEANUP RECONCILED. Parent exact head 9706cc72367be7e8dd14422808abba63597c8511 has COMPILE/IMPORT/PACKAGE/HEADLESS-RUNTIME evidence from the successful self-hosted job inside Unreal Build #1654. No human PIE, DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED or Gate 6/7 ACCEPTED claim."
   },
   "p1c01_gameplay_execution_2026_10_06": {
-    "status": "VISIBLE_RUNTIME_PRESENTATION_ROOT_FIX_IMPLEMENTED_FRESH_RENDER_PENDING",
+    "status": "SOURCE_IMPLEMENTED_ENGINE_PROOF_PRESENT_CHARACTER_VISUAL_AND_HUMAN_ACCEPTANCE_PENDING",
     "chapter": "P1C01",
     "implemented": [
       "F1-02 Ring investigation",
@@ -8892,6 +8890,32 @@
     "ownership": "UShireQuestSubsystem remains quest/story authority; AShireTraversalChallenge is the bounded activity primitive.",
     "urgency_rule": "Casual activities remain suppressed during danger; only exact required_active_quest plus allow_during_p1c01_urgency exceptions may execute.",
     "chapter_boundary": "P1C01 still ends at FerryEscapeComplete/WC_P1C01_FERRY_END. P1C02/Bree remains locked.",
-    "evidence_boundary": "Previous exact-head engine/render execution proved the defects: runtime Frodo package absence and material fallback. Root fixes are source-implemented. Fresh UE4 compile/import/render must pass before any visual/PIE/device/Gate 6/7 promotion."
+    "evidence_boundary": "Source gameplay is implemented; exact-head UE4 compile/import/package/headless runtime is proven and Frodo 48-bone technical import is proven. Human PIE, visual/audio, target-device performance and Gate 6/7 remain pending."
+  },
+  "p1c01_visual_bottleneck_root_fix_2026_10_07": {
+    "status": "SOURCE_IMPLEMENTED_FRESH_EXACT_HEAD_RENDER_REQUIRED",
+    "evidence_head": "e85e7be9dc619d24063dc5b89c55267a801a5eaa",
+    "render_workflow": "P1C01 Shire Render Capture #223",
+    "self_hosted_render_job": 112657283187,
+    "render_artifact": {
+      "id": 11465258588,
+      "captures": 6,
+      "resolution": "1280x720",
+      "renderer": "DX11",
+      "digest": "sha256:9c365a6cb27a6d4fa195eebb074f9e5d64018393228f7d789100446102c75718"
+    },
+    "proven_blockers": [
+      "Frodo core UE packages missing in normal runtime despite technical FBX gate success",
+      "M_ProductionFoliage SimpleGrassWind missing AdditionalWPO and falling back to default material",
+      "M_ProductionFoliage/M_ProductionSurface missing InstancedStaticMeshes usage"
+    ],
+    "root_fixes": [
+      "normal production import persists exact tracked Frodo rig+skeleton+Idle+Walk+Run packages",
+      "bounded Frodo rig/animation cook directories added",
+      "surface/foliage/far-foliage masters force InstancedStaticMeshes usage",
+      "SimpleGrassWind AdditionalWPO bound explicitly and existing master repaired",
+      "render capture fails closed on Frodo/package/material fallback"
+    ],
+    "evidence_boundary": "Source-implemented only until fresh exact-head render confirms no fallback. No human PIE/device/visual/performance/Gate 6/7 acceptance."
   }
 }

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "car_id": "P1C01_CHARACTER_PRESENTATION_V1",
-  "status": "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING",
+  "status": "FRODO_PERSISTENT_RUNTIME_IMPORT_SOURCE_IMPLEMENTED_RENDER_REPROOF_PENDING",
   "authority": [
     "Data/ProjectGovernor.json",
     "Docs/WORLD_DETAIL_LEDGER.md",
@@ -45,7 +45,14 @@
     "skeletal_visibility_tick": "OnlyTickPoseWhenRendered",
     "update_rate_optimization": true,
     "per_frame_asset_scan": false,
-    "synchronous_heavy_load": false
+    "synchronous_heavy_load": false,
+    "frodo_persistent_runtime_package_import": true,
+    "frodo_current_bone_count": 48,
+    "frodo_core_locomotion_clips": [
+      "Idle",
+      "Walk",
+      "Run"
+    ]
   },
   "performance_budget": {
     "target_profile": "6th-gen i7 / 8GB RAM / ~2GB VRAM / DX11 / 720p Low-Medium",
@@ -66,7 +73,7 @@
     "later_device": [
       "720p Low-Medium FPS/frame-time/hitches/RAM/VRAM"
     ],
-    "boundary": "Source implementation candidate. Exact-head Pre-Unreal + UE4.27.2 pending; PIE/device/visual/deformation/performance remain separate evidence."
+    "boundary": "Frodo persistent production package import is source-implemented from the tracked 48-bone validated runtime FBX bundle. Fresh exact-head render must observe the skeletal production rig active; human visual/PIE/device/performance acceptance remains separate."
   },
   "runtime_implementation": {
     "stable_npc_identity_field": "AShireNPC::ProductionCharacterId",
@@ -79,6 +86,7 @@
     ],
     "frodo_future_weapon_guard": "AShirePlayerCharacter::ShouldShowPrototypeWeaponForCurrentStory",
     "async_rig_owner": "UShireChapterAssetStreamingSubsystem",
-    "fallback_retained_until_complete_rig_pair": true
+    "fallback_retained_until_complete_rig_pair": true,
+    "frodo_persistent_import": "Scripts/ci_import_production_assets.cmd -> ShireFrodoAnimationImport using SourceAssets/ValidatedRuntime/FRODO exact hashes"
   }
 }

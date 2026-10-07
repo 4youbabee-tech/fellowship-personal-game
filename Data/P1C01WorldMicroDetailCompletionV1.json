@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "manifest_id": "P1C01_WORLD_MICRO_DETAIL_COMPLETION_V1",
-  "status": "REGISTERED_SOURCE_PREPARATION_ONLY_NO_BLIND_DENSITY",
+  "status": "PRODUCTION_WORLD_PRESENT_MATERIAL_ROOT_FIX_SOURCE_IMPLEMENTED_RENDER_REPROOF_PENDING",
   "authority": [
     "Data/ProjectGovernor.json",
     "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
@@ -121,5 +121,16 @@
     "blind_density_wave": false,
     "synchronous_heavy_load": false,
     "target": "8 GB RAM / ~2 GB VRAM / DX11 / 1280x720 / 30 FPS floor"
+  },
+  "latest_render_diagnosis": {
+    "exact_head": "e85e7be9dc619d24063dc5b89c55267a801a5eaa",
+    "artifact": "p1c01-shire-render-capture-e85e7be9dc619d24063dc5b89c55267a801a5eaa",
+    "evidence": "Six 1280x720 DX11 captures produced successfully, but visual review/logs showed prototype/fallback presentation.",
+    "blockers": [
+      "M_ProductionFoliage SimpleGrassWind missing AdditionalWPO input caused default-material fallback",
+      "M_ProductionFoliage and M_ProductionSurface missing InstancedStaticMeshes material usage",
+      "Frodo production packages absent at runtime, causing modular fallback"
+    ],
+    "disposition": "Root fixes source-implemented; fresh exact-head render required before any visual acceptance."
   }
 }

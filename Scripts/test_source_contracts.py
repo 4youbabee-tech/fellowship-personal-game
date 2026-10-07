@@ -1262,17 +1262,46 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn('ManifestPath = "Data/P1C01CharacterRigAnimationPrepV1.json"', intake)
 
 
-    def test_p1c01_production_import_persists_frodo_and_repairs_instanced_materials(self):
+    def test_p1c01_render_requires_real_frodo_and_nonfallback_materials(self):
+        root = Path(__file__).resolve().parents[1]
+        capture = (root / "Scripts" / "ci_capture_p1c01_visuals.cmd").read_text(encoding="utf-8")
+        for token in (
+            "P1C01_RENDER_PRODUCTION_READINESS_PASS",
+            "reason=frodo_core_packages_missing",
+            "reason=foliage_material_compile",
+            "reason=instanced_material_usage",
+            "CharacterVisual: skeletal production rig active id=FRODO",
+        ):
+            self.assertIn(token, capture)
+
+    def test_p1c01_production_import_persists_current_frodo_runtime_bundle(self):
+        root = Path(__file__).resolve().parents[1]
+        script = (root / "Scripts" / "ci_import_production_assets.cmd").read_text(encoding="utf-8")
+        for token in (
+            "SK_FRODO_Validated.fbx",
+            "Frodo_Idle_Retarget.fbx",
+            "Frodo_Walk_Retarget.fbx",
+            "Frodo_Run_Retarget.fbx",
+            "P1C01_FRODO_PERSISTENT_RUNTIME_HASH_PASS",
+            "P1C01_FRODO_PERSISTENT_RUNTIME_IMPORT_PASS",
+            "UE4_ANIMATION_PACKAGE_PERSISTENCE_PASS assets=5",
+            "UE4_ANIMATION_IMPORT_TECHNICAL_PASS clips=3 bones=48",
+        ):
+            self.assertIn(token, script)
+
+        game_ini = (root / "Config" / "DefaultGame.ini").read_text(encoding="utf-8")
+        self.assertIn('+DirectoriesToAlwaysCook=(Path="/Game/Production/Characters/Rigs/FRODO")', game_ini)
+        self.assertIn('+DirectoriesToAlwaysCook=(Path="/Game/Production/Characters/Animations/FRODO")', game_ini)
+
+    def test_p1c01_production_materials_support_hism_and_complete_grass_wind(self):
         root = Path(__file__).resolve().parents[1]
         importer = (root / "Source" / "ShireJourneyEditorTools" / "Private" / "ShireProductionImportCommandlet.cpp").read_text(encoding="utf-8")
-        import_cmd = (root / "Scripts" / "ci_import_production_assets.cmd").read_text(encoding="utf-8")
         self.assertIn("MATUSAGE_InstancedStaticMeshes", importer)
-        self.assertIn("AdditionalWPOInput = SimpleWind->GetInput(3)", importer)
         self.assertIn("RepairSimpleGrassWindAdditionalWPO", importer)
-        self.assertIn("P1C01_FRODO_PERSISTENT_RUNTIME_IMPORT_PASS packages=5 bones=48 clips=3", import_cmd)
-        self.assertIn("SourceAssets\\ValidatedRuntime\\FRODO", import_cmd)
-        self.assertIn("ShireFrodoAnimationImport", import_cmd)
-        self.assertNotIn("runtime_integration_allowed=$true", import_cmd)
+        self.assertIn("AdditionalWPOInput = SimpleWind->GetInput(3)", importer)
+        self.assertIn("EnsureInstancedStaticMeshUsage(ProductionMaterialParent", importer)
+        self.assertIn("EnsureInstancedStaticMeshUsage(ProductionFoliageParent", importer)
+        self.assertIn("EnsureInstancedStaticMeshUsage(ProductionFoliageFarParent", importer)
 
 
 if __name__ == "__main__":

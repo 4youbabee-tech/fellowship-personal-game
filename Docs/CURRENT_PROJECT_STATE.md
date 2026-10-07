@@ -5024,12 +5024,20 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - This inherits technical evidence only. It never upgrades human visual/PIE/device/performance acceptance.
 
 
-## 2026-10-07 - Render-evidence root cause repair: persistent Frodo + material compile
+## 2026-10-07 - P1C01 visual bottleneck root-fix: persistent Frodo + production materials
 
-Fresh exact-head render evidence exposed two concrete runtime defects rather than a generic “art quality” problem.
+Fresh exact-head render evidence on `e85e7be9dc619d24063dc5b89c55267a801a5eaa` proved the render pipeline itself works: six DX11 1280x720 captures were produced and uploaded, and the self-hosted UE4 render job completed successfully. Human visual acceptance is **not** granted because the captures/logs exposed real production blockers.
 
-1. Frodo's tracked 48-bone FBX + Idle/Walk/Run technical import was green, but the normal production-import path did not persist those UE packages into the runtime workspace. Render logs therefore reported `CharacterRigStreaming: unavailable id=Frodo reason=core-packages-missing fallback=modular`. The production import now verifies the four tracked FBX SHA256 identities, hydrates their LFS bytes only when needed, invokes the existing UE4.27 Frodo import commandlet, and requires `UE4_ANIMATION_PACKAGE_PERSISTENCE_PASS assets=5` plus `clips=3 bones=48`. This reuses the proven FBX source and does not create a second runtime authority.
+Root causes from the capture logs:
+- `CharacterRigStreaming: unavailable id=Frodo reason=core-packages-missing fallback=modular`: the tracked 48-bone FBX technical winner was being imported only in a transient technical gate, then removed, so normal production import/render did not have persistent Frodo UE packages.
+- `M_ProductionFoliage ... Failed to compile Material` with `SimpleGrassWind: Missing function input 'AdditionalWPO'`: foliage fell back to the UE default material.
+- `M_ProductionFoliage` and `M_ProductionSurface` reported missing `bUsedWithInstancedStaticMeshes=True`, causing HISM/ISM material fallback/recompile debt.
 
-2. Render logs showed `M_ProductionFoliage` compilation failure because UE4.27 `SimpleGrassWind` had no `AdditionalWPO` input, and both foliage/surface masters lacked `bUsedWithInstancedStaticMeshes`. The editor production importer now binds a zero AdditionalWPO input and enforces instanced-static-mesh usage on the surface, foliage and far-foliage masters before deterministic save.
+Root repair:
+- Normal production import now verifies/hydrates only the exact tracked Frodo FBX bundle, enforces the known SHA256 identities, runs `ShireFrodoAnimationImport`, and persists the skeletal mesh/skeleton/Idle/Walk/Run packages in the active production workspace.
+- Frodo rig/animation folders are explicitly included in cook because runtime soft paths/JSON do not create hard cook dependencies.
+- Production surface/foliage/far-foliage masters are explicitly enabled for Instanced Static Mesh usage.
+- `SimpleGrassWind` now receives an explicit zero `AdditionalWPO` input; existing generated foliage masters are repaired deterministically on import.
+- Render Capture is upgraded from “six screenshots exist” to a fail-closed production-readiness gate: it fails if Frodo core packages are missing, if production foliage compile falls back, if instanced-mesh usage warnings appear, or if the skeletal Frodo production rig is never observed active.
 
-The prior six render images are evidence of the defect, not visual acceptance: they show a coherent route/world but prototype-like materials/characters. Fresh exact-head render is required after this packet. P1C02/Bree remains locked.
+Evidence boundary: **SOURCE-IMPLEMENTED root fix** on top of previously proven UE4 compile/import/package/headless evidence. Fresh exact-head render is required before claiming the visual blockers are closed. No PIE/device/visual/performance/Gate 6/7 acceptance is claimed.

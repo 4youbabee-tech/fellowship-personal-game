@@ -4720,14 +4720,17 @@ Historical 161-bone Human Wave 2 metadata is superseded and may not be used as c
 | Human visual/PIE/device acceptance | NOT INHERITED / still pending |
 
 
-## 2026-10-07 - Visible Shire blocker root-fix
+## 2026-10-07 - P1C01 visible-build bottleneck matrix
 
-| Blocker | Before | Root repair |
-|---|---|---|
-| Frodo in runtime | UE4 technical import PASS, runtime packages missing, modular fallback | Normal production import now persists tracked 48-bone rig + Idle/Walk/Run packages |
-| Foliage material | SimpleGrassWind compile failure: AdditionalWPO missing | Bind zero AdditionalWPO and resave |
-| Instanced surface/foliage usage | UE warnings forced Default Material on HISM/ISM | Enforce `MATUSAGE_InstancedStaticMeshes` on production masters |
-| Prior render artifact | 6 captures produced, visually prototype-like | Diagnostic evidence only, not visually accepted |
-| Next proof | none | Fresh exact-head production import + render capture required |
-
-Acceptance boundary: SOURCE-IMPLEMENTED until new UE4 compile/import/render evidence exists. No VISUALLY-ACCEPTED/PIE-TESTED/DEVICE-TESTED claim.
+| Item | Previous exact-head evidence | Root fix state | Acceptance |
+|---|---|---|---|
+| Render capture machinery | 6/6 DX11 1280x720 captures, self-hosted job success | PROVEN WORKING | Evidence only |
+| Frodo technical FBX/animation import | 48 bones, 3 clips, exact hashes PASS | PROVEN TECHNICAL | Not visual accepted |
+| Frodo persistent runtime UE packages | Missing during normal render; modular fallback observed | SOURCE-IMPLEMENTED in normal production import | Fresh render pending |
+| Frodo cook inclusion | Missing bounded rig/animation cook directories | SOURCE-IMPLEMENTED | Package repro proof pending |
+| M_ProductionFoliage compile | FAILED: missing SimpleGrassWind AdditionalWPO | ROOT-FIX SOURCE-IMPLEMENTED | Fresh render pending |
+| Surface/Foliage HISM usage | Missing InstancedStaticMeshes usage warning | ROOT-FIX SOURCE-IMPLEMENTED | Fresh render pending |
+| Render production-readiness gate | Only counted screenshots | FAIL-CLOSED runtime/log checks added | Fresh exact-head run pending |
+| Remaining named characters | 7 final FBX bundles still absent | OPEN | Not accepted |
+| Production WAV masters | 0 tracked at snapshot | OPEN | Not accepted |
+| Human PIE / target device / Gate 6/7 | Not proven | OPEN | NOT ACCEPTED |

@@ -532,7 +532,9 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         if (!Material)
         {
             ++Failed;
-            UE_LOG(LogTemp, Error, TEXT("ShireProductionImport material usage repair failed: label=%s reason=master-not-material"), Label);
+            UE_LOG(LogTemp, Error,
+                TEXT("ShireProductionImport material usage repair failed: label=%s reason=master-not-material"),
+                Label);
             return false;
         }
 
@@ -544,8 +546,10 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         }
         Material->MarkPackageDirty();
         ImportedMaterialPackages.AddUnique(Material->GetOutermost());
-        UE_LOG(LogTemp, Display, TEXT("ShireProductionImport instanced-material-usage pass: label=%s recompile=%s"),
-            Label, bNeedsRecompile ? TEXT("yes") : TEXT("no"));
+        UE_LOG(LogTemp, Display,
+            TEXT("ShireProductionImport instanced-material-usage pass: label=%s recompile=%s"),
+            Label,
+            bNeedsRecompile ? TEXT("yes") : TEXT("no"));
         return true;
     };
 
@@ -555,7 +559,8 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         if (!Material)
         {
             ++Failed;
-            UE_LOG(LogTemp, Error, TEXT("ShireProductionImport foliage repair failed: master-not-material"));
+            UE_LOG(LogTemp, Error,
+                TEXT("ShireProductionImport foliage repair failed: master-not-material"));
             return false;
         }
 
@@ -577,7 +582,8 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             if (!AdditionalWPOInput)
             {
                 ++Failed;
-                UE_LOG(LogTemp, Error, TEXT("ShireProductionImport foliage repair failed: AdditionalWPO input missing"));
+                UE_LOG(LogTemp, Error,
+                    TEXT("ShireProductionImport foliage repair failed: AdditionalWPO input missing"));
                 return false;
             }
 
@@ -599,7 +605,8 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             ImportedMaterialPackages.AddUnique(Material->GetOutermost());
         }
 
-        UE_LOG(LogTemp, Display, TEXT("ShireProductionImport foliage-additional-wpo pass: found=%s repaired=%s"),
+        UE_LOG(LogTemp, Display,
+            TEXT("ShireProductionImport foliage-additional-wpo pass: found=%s repaired=%s"),
             bFoundSimpleGrassWind ? TEXT("yes") : TEXT("no"),
             bChanged ? TEXT("yes") : TEXT("no"));
         return true;

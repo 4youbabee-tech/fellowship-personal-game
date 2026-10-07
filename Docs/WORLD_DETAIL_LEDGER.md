@@ -1488,9 +1488,12 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - No character asset, skeleton, gameplay authority or runtime acceptance state was changed by this infrastructure guard.
 
 
-## 2026-10-07 - Runtime presentation root repair
+## 2026-10-07 - P1C01 visual runtime integration root fix
 
-- Promoted the already tracked Frodo FBX technical winner into the normal production-import path so its UE packages can exist when P1C01 starts; async runtime ownership remains `UShireChapterAssetStreamingSubsystem`.
-- Repaired UE4.27 foliage master creation/persistence for `SimpleGrassWind.AdditionalWPO` and HISM/ISM material usage.
-- No additional runtime population authority, synchronous heavy asset load, blind density, or Bree transition was introduced.
-- Fresh exact-head render is mandatory before any visual acceptance.
+- The first useful six-shot render artifact was inspected directly. It confirms the authored Shire route exists but remains visually prototype-heavy.
+- Runtime logs identified exact causes rather than a generic “art quality” problem: Frodo production packages missing, foliage material compile failure, and HISM material usage debt.
+- Production import now makes the tracked Frodo 48-bone rig + Idle/Walk/Run packages part of the normal active workspace instead of transient gate-only evidence.
+- The persistent character path still uses runtime soft object paths and `FStreamableManager::RequestAsyncLoad`; no synchronous heavy runtime load was introduced.
+- Foliage/surface material master repair is editor/import-time only and preserves HISM/ISM ownership for repeated detail.
+- No new density wave, no new population authority, no P1C02 transition, and no Bree runtime opening were introduced.
+- Fresh rendered evidence is mandatory before visual acceptance.
