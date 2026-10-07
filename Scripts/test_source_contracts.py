@@ -1262,5 +1262,18 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn('ManifestPath = "Data/P1C01CharacterRigAnimationPrepV1.json"', intake)
 
 
+    def test_p1c01_production_import_persists_frodo_and_repairs_instanced_materials(self):
+        root = Path(__file__).resolve().parents[1]
+        importer = (root / "Source" / "ShireJourneyEditorTools" / "Private" / "ShireProductionImportCommandlet.cpp").read_text(encoding="utf-8")
+        import_cmd = (root / "Scripts" / "ci_import_production_assets.cmd").read_text(encoding="utf-8")
+        self.assertIn("MATUSAGE_InstancedStaticMeshes", importer)
+        self.assertIn("AdditionalWPOInput = SimpleWind->GetInput(3)", importer)
+        self.assertIn("RepairSimpleGrassWindAdditionalWPO", importer)
+        self.assertIn("P1C01_FRODO_PERSISTENT_RUNTIME_IMPORT_PASS packages=5 bones=48 clips=3", import_cmd)
+        self.assertIn("SourceAssets\\ValidatedRuntime\\FRODO", import_cmd)
+        self.assertIn("ShireFrodoAnimationImport", import_cmd)
+        self.assertNotIn("runtime_integration_allowed=$true", import_cmd)
+
+
 if __name__ == "__main__":
     unittest.main()

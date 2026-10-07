@@ -22,6 +22,7 @@
 #include "Misc/Parse.h"
 #include "Materials/Material.h"
 #include "Materials/MaterialExpressionScalarParameter.h"
+#include "Materials/MaterialExpressionConstant3Vector.h"
 #include "Materials/MaterialExpressionTextureSampleParameter2D.h"
 #include "Materials/MaterialExpressionMultiply.h"
 #include "Materials/MaterialExpressionMaterialFunctionCall.h"
@@ -525,6 +526,85 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         return SaveFailures == 0;
     };
 
+    auto EnsureInstancedStaticMeshUsage = [&](UMaterialInterface* Interface, const TCHAR* Label) -> bool
+    {
+        UMaterial* Material = Cast<UMaterial>(Interface);
+        if (!Material)
+        {
+            ++Failed;
+            UE_LOG(LogTemp, Error, TEXT("ShireProductionImport material usage repair failed: label=%s reason=master-not-material"), Label);
+            return false;
+        }
+
+        bool bNeedsRecompile = false;
+        Material->SetMaterialUsage(bNeedsRecompile, MATUSAGE_InstancedStaticMeshes);
+        if (bNeedsRecompile)
+        {
+            Material->PostEditChange();
+        }
+        Material->MarkPackageDirty();
+        ImportedMaterialPackages.AddUnique(Material->GetOutermost());
+        UE_LOG(LogTemp, Display, TEXT("ShireProductionImport instanced-material-usage pass: label=%s recompile=%s"),
+            Label, bNeedsRecompile ? TEXT("yes") : TEXT("no"));
+        return true;
+    };
+
+    auto RepairSimpleGrassWindAdditionalWPO = [&](UMaterialInterface* Interface) -> bool
+    {
+        UMaterial* Material = Cast<UMaterial>(Interface);
+        if (!Material)
+        {
+            ++Failed;
+            UE_LOG(LogTemp, Error, TEXT("ShireProductionImport foliage repair failed: master-not-material"));
+            return false;
+        }
+
+        bool bFoundSimpleGrassWind = false;
+        bool bChanged = false;
+        for (UMaterialExpression* Expression : Material->Expressions)
+        {
+            UMaterialExpressionMaterialFunctionCall* FunctionCall =
+                Cast<UMaterialExpressionMaterialFunctionCall>(Expression);
+            if (!FunctionCall ||
+                !FunctionCall->MaterialFunction ||
+                !FunctionCall->MaterialFunction->GetName().Equals(TEXT("SimpleGrassWind"), ESearchCase::CaseSensitive))
+            {
+                continue;
+            }
+
+            bFoundSimpleGrassWind = true;
+            FExpressionInput* AdditionalWPOInput = FunctionCall->GetInput(3);
+            if (!AdditionalWPOInput)
+            {
+                ++Failed;
+                UE_LOG(LogTemp, Error, TEXT("ShireProductionImport foliage repair failed: AdditionalWPO input missing"));
+                return false;
+            }
+
+            if (!AdditionalWPOInput->Expression)
+            {
+                UMaterialExpressionConstant3Vector* ZeroAdditionalWPO =
+                    NewObject<UMaterialExpressionConstant3Vector>(Material);
+                ZeroAdditionalWPO->Constant = FLinearColor::Black;
+                Material->Expressions.Add(ZeroAdditionalWPO);
+                AdditionalWPOInput->Expression = ZeroAdditionalWPO;
+                bChanged = true;
+            }
+        }
+
+        if (bChanged)
+        {
+            Material->PostEditChange();
+            Material->MarkPackageDirty();
+            ImportedMaterialPackages.AddUnique(Material->GetOutermost());
+        }
+
+        UE_LOG(LogTemp, Display, TEXT("ShireProductionImport foliage-additional-wpo pass: found=%s repaired=%s"),
+            bFoundSimpleGrassWind ? TEXT("yes") : TEXT("no"),
+            bChanged ? TEXT("yes") : TEXT("no"));
+        return true;
+    };
+
     // UE4.27 unattended OBJ import does not reliably persist simple MTL-created
     // material packages. Create a deterministic project-owned master surface first,
     // then bind authored MTL instances to it. This gives production geometry a real
@@ -611,6 +691,8 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             UE_LOG(LogTemp, Error, TEXT("ShireProductionImport failed to create M_ProductionSurface master material."));
         }
     }
+
+    EnsureInstancedStaticMeshUsage(ProductionMaterialParent, TEXT("surface"));
 
     // D: create a deterministic texture-free water master. Runtime residency is
     // owned by the chapter bank; this editor-only creation path does not authorize
@@ -804,12 +886,19 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                 FExpressionInput* WindIntensityInput = SimpleWind->GetInput(0);
                 FExpressionInput* WindWeightInput = SimpleWind->GetInput(1);
                 FExpressionInput* WindSpeedInput = SimpleWind->GetInput(2);
+                FExpressionInput* AdditionalWPOInput = SimpleWind->GetInput(3);
 
-                if (WindIntensityInput && WindWeightInput && WindSpeedInput)
+                if (WindIntensityInput && WindWeightInput && WindSpeedInput && AdditionalWPOInput)
                 {
+                    UMaterialExpressionConstant3Vector* ZeroAdditionalWPO =
+                        NewObject<UMaterialExpressionConstant3Vector>(FoliageMaterial);
+                    ZeroAdditionalWPO->Constant = FLinearColor::Black;
+                    FoliageMaterial->Expressions.Add(ZeroAdditionalWPO);
+
                     WindIntensityInput->Expression = WindIntensityParameter;
                     WindWeightInput->Expression = WindWeightParameter;
                     WindSpeedInput->Expression = WindSpeedParameter;
+                    AdditionalWPOInput->Expression = ZeroAdditionalWPO;
 
                     FoliageMaterial->Expressions.Add(SimpleWind);
                     FoliageMaterial->WorldPositionOffset.Expression = SimpleWind;
@@ -845,6 +934,8 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         }
     }
 
+    EnsureInstancedStaticMeshUsage(ProductionFoliageParent, TEXT("foliage"));
+    RepairSimpleGrassWindAdditionalWPO(ProductionFoliageParent);
 
     // Far foliage uses a separate no-WPO master. C3/C4 will bind this to distant
     // LOD material slots so far vegetation removes wind vertex instructions entirely.
@@ -938,6 +1029,8 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                 TEXT("ShireProductionImport failed to create M_ProductionFoliageFar master material."));
         }
     }
+
+    EnsureInstancedStaticMeshUsage(ProductionFoliageFarParent, TEXT("foliage-far"));
 
     int32 SynthesizedMaterialAssets = 0;
 

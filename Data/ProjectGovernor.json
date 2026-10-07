@@ -8851,7 +8851,9 @@
       "Exact-head Frodo UE4 Animation Import #113 self-hosted job 112508429836 succeeded with exact artifact hashes, 48-bone skeleton, three animation clips, generated package checks and tracked validated-runtime FBX verification.",
       "P1C01 Shire Render Capture zero-step hosted classifier failure was a CI deadlock rather than render/game failure. The render lane now fails closed to a lightweight self-hosted classifier and only performs heavy checkout/LFS/build/capture when fresh visual evidence is required.",
       "Character-priority drift was corrected: active P1C01 source/runtime priority is now exactly Frodo, Bilbo, Gandalf, Sam, Merry, Pippin, Black Rider and Black Rider horse; Aragorn, Gimli, Legolas and Boromir remain future source-prep-only.",
-      "Historical Human Wave 2 161-bone latest-winner metadata was superseded by the current tracked 48-bone Frodo winner proven through exact-head UE4 Animation Import #113."
+      "Historical Human Wave 2 161-bone latest-winner metadata was superseded by the current tracked 48-bone Frodo winner proven through exact-head UE4 Animation Import #113.",
+      "Fresh P1C01 render artifact exposed the real presentation bottleneck: Frodo technical FBX packages were not persisted by the normal production-import path, so runtime fell back to modular presentation; production import now persists the tracked 48-bone rig + three locomotion clips.",
+      "Fresh P1C01 render logs exposed production material fallback: M_ProductionFoliage failed SimpleGrassWind compilation because AdditionalWPO was unbound and production surface/foliage masters lacked instanced-static-mesh usage. Both are root-repaired in the editor production importer."
     ],
     "explicit_runtime_evidence_requirements": [
       "Fresh hosted/static execution after this stabilization packet; current hosted failures are zero-step infrastructure/setup failures with no validator output.",
@@ -8878,7 +8880,7 @@
     "evidence_boundary": "STATIC CLEANUP RECONCILED. Parent exact head 9706cc72367be7e8dd14422808abba63597c8511 has COMPILE/IMPORT/PACKAGE/HEADLESS-RUNTIME evidence from the successful self-hosted job inside Unreal Build #1654. No human PIE, DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED or Gate 6/7 ACCEPTED claim."
   },
   "p1c01_gameplay_execution_2026_10_06": {
-    "status": "SOURCE_IMPLEMENTED_ENGINE_PROOF_PRESENT_CHARACTER_VISUAL_AND_HUMAN_ACCEPTANCE_PENDING",
+    "status": "VISIBLE_RUNTIME_PRESENTATION_ROOT_FIX_IMPLEMENTED_FRESH_RENDER_PENDING",
     "chapter": "P1C01",
     "implemented": [
       "F1-02 Ring investigation",
@@ -8890,6 +8892,6 @@
     "ownership": "UShireQuestSubsystem remains quest/story authority; AShireTraversalChallenge is the bounded activity primitive.",
     "urgency_rule": "Casual activities remain suppressed during danger; only exact required_active_quest plus allow_during_p1c01_urgency exceptions may execute.",
     "chapter_boundary": "P1C01 still ends at FerryEscapeComplete/WC_P1C01_FERRY_END. P1C02/Bree remains locked.",
-    "evidence_boundary": "Source gameplay is implemented; exact-head UE4 compile/import/package/headless runtime is proven and Frodo 48-bone technical import is proven. Human PIE, visual/audio, target-device performance and Gate 6/7 remain pending."
+    "evidence_boundary": "Previous exact-head engine/render execution proved the defects: runtime Frodo package absence and material fallback. Root fixes are source-implemented. Fresh UE4 compile/import/render must pass before any visual/PIE/device/Gate 6/7 promotion."
   }
 }

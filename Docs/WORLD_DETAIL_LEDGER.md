@@ -1486,3 +1486,11 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Added a classifier-first guard to the Frodo UE4 technical import lane so unrelated PR synchronizations do not repeatedly consume self-hosted UE4 time.
 - Technical evidence may be inherited only when the explicit Frodo/import impact tree is unchanged.
 - No character asset, skeleton, gameplay authority or runtime acceptance state was changed by this infrastructure guard.
+
+
+## 2026-10-07 - Runtime presentation root repair
+
+- Promoted the already tracked Frodo FBX technical winner into the normal production-import path so its UE packages can exist when P1C01 starts; async runtime ownership remains `UShireChapterAssetStreamingSubsystem`.
+- Repaired UE4.27 foliage master creation/persistence for `SimpleGrassWind.AdditionalWPO` and HISM/ISM material usage.
+- No additional runtime population authority, synchronous heavy asset load, blind density, or Bree transition was introduced.
+- Fresh exact-head render is mandatory before any visual acceptance.

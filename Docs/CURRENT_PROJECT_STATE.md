@@ -5022,3 +5022,14 @@ Current truth: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING / RENDERED V
 - The self-hosted Frodo gate now performs a lightweight Git delta classification before checkout. Only changes to the Frodo validated-runtime bundle, Frodo import commandlet/editor-tools tree, relevant build/runner scripts, Config/uproject, or the workflow/contract itself require a fresh heavy import.
 - Unrelated changes record `P1C01_FRODO_IMPORT_INHERITED` and skip checkout, artifact download, build, import, package verification and cleanup work.
 - This inherits technical evidence only. It never upgrades human visual/PIE/device/performance acceptance.
+
+
+## 2026-10-07 - Render-evidence root cause repair: persistent Frodo + material compile
+
+Fresh exact-head render evidence exposed two concrete runtime defects rather than a generic “art quality” problem.
+
+1. Frodo's tracked 48-bone FBX + Idle/Walk/Run technical import was green, but the normal production-import path did not persist those UE packages into the runtime workspace. Render logs therefore reported `CharacterRigStreaming: unavailable id=Frodo reason=core-packages-missing fallback=modular`. The production import now verifies the four tracked FBX SHA256 identities, hydrates their LFS bytes only when needed, invokes the existing UE4.27 Frodo import commandlet, and requires `UE4_ANIMATION_PACKAGE_PERSISTENCE_PASS assets=5` plus `clips=3 bones=48`. This reuses the proven FBX source and does not create a second runtime authority.
+
+2. Render logs showed `M_ProductionFoliage` compilation failure because UE4.27 `SimpleGrassWind` had no `AdditionalWPO` input, and both foliage/surface masters lacked `bUsedWithInstancedStaticMeshes`. The editor production importer now binds a zero AdditionalWPO input and enforces instanced-static-mesh usage on the surface, foliage and far-foliage masters before deterministic save.
+
+The prior six render images are evidence of the defect, not visual acceptance: they show a coherent route/world but prototype-like materials/characters. Fresh exact-head render is required after this packet. P1C02/Bree remains locked.

@@ -4718,3 +4718,16 @@ Historical 161-bone Human Wave 2 metadata is superseded and may not be used as c
 | Frodo-impact delta | Fresh exact-head heavy gate required |
 | LFS/build/import on unrelated commit | BLOCKED |
 | Human visual/PIE/device acceptance | NOT INHERITED / still pending |
+
+
+## 2026-10-07 - Visible Shire blocker root-fix
+
+| Blocker | Before | Root repair |
+|---|---|---|
+| Frodo in runtime | UE4 technical import PASS, runtime packages missing, modular fallback | Normal production import now persists tracked 48-bone rig + Idle/Walk/Run packages |
+| Foliage material | SimpleGrassWind compile failure: AdditionalWPO missing | Bind zero AdditionalWPO and resave |
+| Instanced surface/foliage usage | UE warnings forced Default Material on HISM/ISM | Enforce `MATUSAGE_InstancedStaticMeshes` on production masters |
+| Prior render artifact | 6 captures produced, visually prototype-like | Diagnostic evidence only, not visually accepted |
+| Next proof | none | Fresh exact-head production import + render capture required |
+
+Acceptance boundary: SOURCE-IMPLEMENTED until new UE4 compile/import/render evidence exists. No VISUALLY-ACCEPTED/PIE-TESTED/DEVICE-TESTED claim.
