@@ -1,3 +1,10 @@
+## 2026-10-08 - P1C01 character identity and living-world packet
+
+- The exact-head #1699 integrated render/package run is technically green: six-shot capture, runtime audits, cook/package, packaged launch, and hardware-boundary collection all passed. Real artifact review improved composition/lighting, but still showed low-poly/blockout world surfaces and weak/white skeletal character identity.
+- Root cause targeted in this packet: async-resolved skeletal rigs did not receive a resident production material palette at the rig handoff, so a technically active Frodo/NPC rig could read as a white mannequin while modular identity pieces were hidden.
+- Runtime repair: both AShirePlayerCharacter and AShireNPC now apply a bounded palette using the existing /Game/Production/Materials/M_ProductionSurface to every resolved skeletal material slot, with no new streaming path, no per-frame work, and existing URO/visibility-tick controls preserved.
+- P1C01 living-world population, dialogue, quest ownership, save/load, audio ownership, and P1C02 lock are unchanged. This packet is not visual acceptance; a fresh exact-head render and packaged evidence are required before any gate status changes.
+
 ## 2026-10-01 - Critical-gap receipt supersession parity
 
 - Warehouse #306 at `develop@5ec1307aa749741fa10c801c288b101ef4b5292a` proved the canonical inventory audit is clean: 18,925 payload files / 6,745,968,858 bytes / 239 active receipt records / 428 superseded / zero hash, missing, license, dangerous, or duplicate-hash failures.

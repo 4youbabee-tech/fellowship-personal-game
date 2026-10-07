@@ -167,6 +167,39 @@ bool AShireNPC::TryApplyProductionRig(const FString& RigFolder)
     }
 
     GetMesh()->SetSkeletalMesh(SkeletalMesh);
+
+    // Preserve a readable production identity when an imported NPC rig has
+    // no resident authored material after async resolution. The palette is
+    // deliberately bounded to the existing production surface material and
+    // never creates per-frame work or a new streaming path.
+    if (UMaterialInterface* ProductionSurface = Cast<UMaterialInterface>(
+            FSoftObjectPath(TEXT("/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface")).ResolveObject()))
+    {
+        const FLinearColor Primary(0.22f, 0.30f, 0.14f);
+        const FLinearColor Secondary(0.29f, 0.18f, 0.08f);
+        const FLinearColor Skin(0.66f, 0.44f, 0.28f);
+        const FLinearColor Accent(0.09f, 0.14f, 0.08f);
+        int32 AppliedSlots = 0;
+        for (int32 Slot = 0; Slot < GetMesh()->GetNumMaterials(); ++Slot)
+        {
+            if (UMaterialInstanceDynamic* MID = UMaterialInstanceDynamic::Create(ProductionSurface, this))
+            {
+                const FLinearColor& Color =
+                    Slot % 4 == 1 ? Secondary :
+                    Slot % 4 == 2 ? Skin :
+                    Slot % 4 == 3 ? Accent : Primary;
+                MID->SetVectorParameterValue(TEXT("Color"), Color);
+                MID->SetScalarParameterValue(TEXT("Roughness"), Slot % 4 == 2 ? 0.56f : 0.78f);
+                MID->SetScalarParameterValue(TEXT("Metallic"), 0.0f);
+                GetMesh()->SetMaterial(Slot, MID);
+                ++AppliedSlots;
+            }
+        }
+        UE_LOG(LogTemp, Display,
+            TEXT("ProductionRig: npc skeletal palette applied characterId=%s slots=%d"),
+            *RequestedProductionRigId.ToString(), AppliedSlots);
+    }
+
     GetMesh()->SetAnimInstanceClass(AnimClass);
     GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     GetMesh()->bEnableUpdateRateOptimizations = true;

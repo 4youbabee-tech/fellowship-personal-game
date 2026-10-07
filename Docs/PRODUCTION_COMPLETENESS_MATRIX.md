@@ -1,3 +1,15 @@
+## 2026-10-08 - P1C01 character identity and living-world packet
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| Exact-head technical baseline | MACHINE-GREEN / #1699 | Six-shot render capture, runtime audits, cook/package, packaged launch, and runner hardware boundary passed; artifact review still found blockout surfaces and weak/white character read |
+| Skeletal hero/NPC material identity | SOURCE-IMPLEMENTED / EXACT-HEAD REPROOF PENDING | Player and NPC rig handoff now applies resident M_ProductionSurface palette per skeletal material slot; no new streaming path or per-frame material work |
+| Character rig/animation ownership | PRESERVED | Existing async ShireChapterAssetStreamingSubsystem, URO, and rendered-pose tick policy remain authoritative |
+| Living-world population | UNCHANGED / TARGET 18 | No blind density increase; existing bounded persistent residents and LivingWorld pools remain in control |
+| P1C01 visual/world density | NOT ACCEPTED | #1699 real renders remain low-poly/blockout; next reproof must show improved character readability and living-world presentation |
+| P1C02 Bree | LOCKED | No runtime integration until P1C01 completion gates pass |
+| Device / performance / Gate 6-7 | NOT ACCEPTED | No human device, FPS/frame-time, memory, or Gate 6/7 evidence supplied |
+
 ## 2026-10-01 - Critical-gap receipt parity matrix
 
 | Area | Status | Evidence / boundary |

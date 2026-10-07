@@ -258,6 +258,40 @@ bool AShirePlayerCharacter::TryApplyProductionRig(const FString& RigFolder)
     // asset, and gameplay/collision/save transforms remain untouched.
     constexpr float ProductionRigScale = 0.01f;
     GetMesh()->SetSkeletalMesh(SkeletalMesh);
+
+    // The imported Frodo FBX can arrive with a valid rig but no authored UE
+    // material instance after the async handoff. Give the skeletal hero a
+    // bounded, resident palette so a successful rig cannot read as an
+    // unlit white mannequin in review captures. This touches only the
+    // already-resolved character mesh and keeps the streaming owner intact.
+    if (UMaterialInterface* ProductionSurface = Cast<UMaterialInterface>(
+            FSoftObjectPath(TEXT("/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface")).ResolveObject()))
+    {
+        const FLinearColor Primary(0.24f, 0.31f, 0.15f);
+        const FLinearColor Secondary(0.33f, 0.20f, 0.09f);
+        const FLinearColor Skin(0.68f, 0.46f, 0.30f);
+        const FLinearColor Accent(0.10f, 0.16f, 0.09f);
+        int32 AppliedSlots = 0;
+        for (int32 Slot = 0; Slot < GetMesh()->GetNumMaterials(); ++Slot)
+        {
+            if (UMaterialInstanceDynamic* MID = UMaterialInstanceDynamic::Create(ProductionSurface, this))
+            {
+                const FLinearColor& Color =
+                    Slot % 4 == 1 ? Secondary :
+                    Slot % 4 == 2 ? Skin :
+                    Slot % 4 == 3 ? Accent : Primary;
+                MID->SetVectorParameterValue(TEXT("Color"), Color);
+                MID->SetScalarParameterValue(TEXT("Roughness"), Slot % 4 == 2 ? 0.56f : 0.78f);
+                MID->SetScalarParameterValue(TEXT("Metallic"), 0.0f);
+                GetMesh()->SetMaterial(Slot, MID);
+                ++AppliedSlots;
+            }
+        }
+        UE_LOG(LogTemp, Display,
+            TEXT("CharacterVisual: skeletal palette applied id=%s slots=%d"),
+            *RigFolder, AppliedSlots);
+    }
+
     GetMesh()->SetRelativeScale3D(FVector(ProductionRigScale));
     GetMesh()->SetRelativeLocation(FVector(
         0.0f,

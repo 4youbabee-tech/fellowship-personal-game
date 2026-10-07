@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "manifest_id": "P1C01_WORLD_MICRO_DETAIL_COMPLETION_V1",
-  "status": "WORLD_PRESENTATION_COMPOSITION_LIGHTING_PACKET_IMPLEMENTED",
+  "status": "CHARACTER_IDENTITY_LIVING_WORLD_PACKET_IMPLEMENTED",
   "authority": [
     "Data/ProjectGovernor.json",
     "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
@@ -123,15 +123,15 @@
     "target": "8 GB RAM / ~2 GB VRAM / DX11 / 1280x720 / 30 FPS floor"
   },
   "latest_render_diagnosis": {
-    "exact_head": "9bd7ca461d5dabc9d8d8c8b208c151f8d837003c",
-    "artifact": "p1c01-shire-render-integrated-9bd7ca461d5dabc9d8d8c8b208c151f8d837003c",
-    "evidence": "Unreal Build Validation #1698 passed the integrated six-shot capture, runtime audits, cook/package, packaged startup, and runner hardware-boundary collection. Artifact review still found low-detail/blockout surfaces, close/occluded compositions, dark interior framing, and no clear visible hero-character read.",
+    "exact_head": "07f1af562329780daac1521cba350fe2f0e1120a",
+    "artifact": "p1c01-shire-render-integrated-07f1af562329780daac1521cba350fe2f0e1120a",
+    "evidence": "Unreal Build Validation #1699 passed the integrated six-shot capture, runtime audits, cook/package, packaged startup, and runner hardware-boundary collection. Real artifact review found wider, more readable compositions and some visible figures, but environmental surfaces remain low-detail/blockout and skeletal character identity remains weak/white in the reviewed captures.",
     "blockers": [
       "World remains visibly low-detail/blockout in the reviewed captures",
-      "Hero-character and living-world presentation is not yet visually evidenced",
+      "Skeletal hero/NPC material identity requires exact-head reproof after palette handoff",
       "Human visual/audio/gameplay/device/performance acceptance remains incomplete"
     ],
-    "disposition": "Implemented a bounded presentation packet: safer road-level camera anchors for all six review shots plus lower sun, stronger sky fill, reduced fog wash, controlled exposure, saturation, and contrast. Fresh exact-head render/package evidence is required."
+    "disposition": "Implemented a bounded character identity packet: apply resident production palette to every resolved player/NPC skeletal material slot while preserving async ownership, URO, and no per-frame material work. Fresh exact-head render/package evidence is required."
   },
   "force_full_render_reproof": true
 }
