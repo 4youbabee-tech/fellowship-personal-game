@@ -4863,3 +4863,13 @@ This is runner-throughput cleanup only; fresh exact-head production presentation
 | render Frodo ID case | TEST UPDATED TO ACTUAL `id=Frodo` LOG CONTRACT |
 | Gameplay/C++ defect proven by these failures | NO |
 | Fresh exact-head engine run | REQUIRED |
+
+
+## 2026-10-07 - Final static gate correction
+
+| #1676 remaining failure | Resolution |
+|---|---|
+| Party Social Loop status mismatch | RESTORED TO ITS OWN CURRENT STATUS |
+| Character Presentation status mismatch | ALIGNED TO PERSISTENT-FRODO CURRENT STATUS |
+| Production/runtime code changed | NO |
+| Fresh exact-head One-Shot gate | REQUIRED |

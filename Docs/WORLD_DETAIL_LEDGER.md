@@ -1568,3 +1568,10 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - No runtime/world/content authority changed in this packet.
 - The repaired tests continue to enforce async character loading, bounded streaming/cook paths, known-rejection retirement, persistent Frodo production import, and render rejection of prototype/default-material fallback.
 - P1C02/Bree remains locked.
+
+
+## 2026-10-07 - Test placement correction
+
+- Corrected two misplaced status assertions introduced during schema reconciliation.
+- No world, quest, character, audio, streaming or chapter authority changed.
+- P1C02/Bree remains locked.

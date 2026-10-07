@@ -289,10 +289,7 @@ class SourceContractTests(unittest.TestCase):
     def test_p1c01_party_social_loop_is_bounded_and_windowed(self):
         root = Path(__file__).resolve().parents[1]
         contract = json.loads((root / "Data" / "P1C01PartySocialLoopChapterV1.json").read_text(encoding="utf-8"))
-        self.assertEqual(
-            contract["status"],
-            "FRODO_PERSISTENT_RUNTIME_IMPORT_SOURCE_IMPLEMENTED_RENDER_REPROOF_PENDING",
-        )
+        self.assertEqual(contract["status"], "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING")
         self.assertEqual(contract["runtime_budget"]["max_hism_cluster_actors"], 4)
         self.assertEqual(contract["runtime_budget"]["max_hism_instances"], 56)
         self.assertEqual(contract["runtime_budget"]["max_state_variant_props"], 8)
@@ -373,7 +370,10 @@ class SourceContractTests(unittest.TestCase):
     def test_p1c01_character_presentation_is_explicit_and_async(self):
         root = Path(__file__).resolve().parents[1]
         contract = json.loads((root / "Data" / "P1C01CharacterPresentationChapterV1.json").read_text(encoding="utf-8"))
-        self.assertEqual(contract["status"], "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING")
+        self.assertEqual(
+            contract["status"],
+            "FRODO_PERSISTENT_RUNTIME_IMPORT_SOURCE_IMPLEMENTED_RENDER_REPROOF_PENDING",
+        )
         self.assertFalse(contract["runtime_contract"]["frodo_future_weapon_in_p1c01"])
         self.assertTrue(contract["runtime_contract"]["named_story_npcs_use_explicit_character_ids"])
         self.assertFalse(contract["runtime_contract"]["synchronous_heavy_load"])

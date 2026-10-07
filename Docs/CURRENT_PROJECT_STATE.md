@@ -5133,3 +5133,12 @@ The same train now owns exact-head source/static contracts, UE4 build, persisten
   - render-readiness test expected `id=FRODO` while runtime evidence uses `id=Frodo` and `findstr /I` is intentionally case-insensitive.
 - The tests were reconciled to current schemas/statuses while preserving their safety intent: four imported P1C01 material soft paths still must be cooked, Frodo remains 48-bone/Idle-Walk-Run tracked, rejected KayKit payloads stay non-requeueable, render capture still rejects fallback Frodo/default materials, and no acceptance boundary is weakened.
 - Fresh exact-head One-Shot execution is required after this test-only reconciliation.
+
+
+## 2026-10-07 - Final source-contract placement correction
+
+- One-Shot Build #1676 reduced the static gate to exactly two failures.
+- Both were test-reconciliation placement mistakes: the persistent-Frodo status assertion had been applied to the Party Social Loop test, while Character Presentation still expected its prior generic status.
+- Party Social Loop remains `SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING`; Character Presentation is correctly `FRODO_PERSISTENT_RUNTIME_IMPORT_SOURCE_IMPLEMENTED_RENDER_REPROOF_PENDING`.
+- No production/gameplay/runtime source changed in this correction.
+- Fresh exact-head One-Shot execution remains required before engine evidence can advance.
