@@ -5223,3 +5223,8 @@ The playable camera now uses a wider third-person composition (320 cm spring arm
 ### Camera packet corrective note (2026-10-07)
 
 The first camera-presentation patch had a source line-ending serialization defect and was rejected by the C++ gate before Unreal execution. The source was corrected at commit `90a9c0d9`; fresh full One-Shot evidence is required. No visual or performance acceptance is claimed from the failed run.
+
+
+### P1C01 world atmosphere pass (2026-10-07)
+
+Runtime Shire atmosphere was adjusted in `ShirePrototypeWorldBuilder`: stronger warm sun/sky contribution, lower exponential fog density/opacity, and longer fog start distance. The intent is to make the playable Shire readable on the validated DX11 hardware profile while preserving bounded post-process cost. This remains a presentation pass; fresh build/render evidence is required and no VISUALLY-ACCEPTED or PERFORMANCE-ACCEPTED claim is made.
