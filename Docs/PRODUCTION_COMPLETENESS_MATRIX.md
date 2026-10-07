@@ -1,3 +1,13 @@
+## 2026-10-08 - P1C01 material fallback root fix
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| #1700 diagnostic render | CAPTURED / NOT ACCEPTED | Frodo rig palette logged as applied; visible modular NPCs remained white, identifying static material fallback as the root cause |
+| Static NPC/player presentation material | SOURCE-REPAIRED / EXACT-HEAD #1701 PENDING | M_ProductionSurface now loads once as fallback before Engine BasicShapeMaterial |
+| Runtime/performance boundary | PRESERVED | Fallback occurs during style application only; no per-frame work or new streaming owner |
+| P1C01 visual/device/performance/Gate 6-7 | NOT ACCEPTED | Fresh exact-head capture/package and human/device evidence still required |
+| P1C02 Bree | LOCKED | No runtime integration before P1C01 gates pass |
+
 ## 2026-10-08 - P1C01 character identity and living-world packet
 
 | Area | Status | Evidence / boundary |

@@ -389,7 +389,13 @@ bool AShirePlayerCharacter::ShouldShowPrototypeWeaponForCurrentStory(FName Visua
 
 void AShirePlayerCharacter::ApplyPrototypeStyle()
 {
-    UMaterialInterface* BasicMaterial = Cast<UMaterialInterface>(FSoftObjectPath(TEXT("/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface")).ResolveObject());
+    UMaterialInterface* BasicMaterial = Cast<UMaterialInterface>(
+        FSoftObjectPath(TEXT("/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface")).ResolveObject());
+    if (!BasicMaterial)
+    {
+        BasicMaterial = LoadObject<UMaterialInterface>(
+            nullptr, TEXT("/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface"));
+    }
     if (!BasicMaterial)
     {
         BasicMaterial = LoadObject<UMaterialInterface>(nullptr,

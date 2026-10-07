@@ -233,7 +233,13 @@ void AShireNPC::ApplyPrototypeStyle()
 {
     UMaterialInterface* BasicMaterial = LoadObject<UMaterialInterface>(
         nullptr, TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
-    UMaterialInterface* ProductionSurfaceMaterial = Cast<UMaterialInterface>(FSoftObjectPath(TEXT("/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface")).ResolveObject());
+    UMaterialInterface* ProductionSurfaceMaterial = Cast<UMaterialInterface>(
+        FSoftObjectPath(TEXT("/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface")).ResolveObject());
+    if (!ProductionSurfaceMaterial)
+    {
+        ProductionSurfaceMaterial = LoadObject<UMaterialInterface>(
+            nullptr, TEXT("/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface"));
+    }
     if (!BasicMaterial && !ProductionSurfaceMaterial)
     {
         bVisualStyleApplied = true;

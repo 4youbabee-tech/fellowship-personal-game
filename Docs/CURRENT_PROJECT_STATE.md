@@ -1,3 +1,9 @@
+## 2026-10-08 - P1C01 material fallback root fix
+
+- The #1700 render artifact proved the skeletal Frodo palette path executed, but the white figures in the reviewed frames were modular NPCs whose static presentation had fallen back to UE Engine BasicShapeMaterial because M_ProductionSurface was only resolved, not loaded, at first style application.
+- Root fix in this packet: player and NPC presentation now load the existing M_ProductionSurface synchronously only as a one-time material fallback when the resident object is not yet resolved; Engine BasicShapeMaterial remains the final fail-safe. This is bounded to style application and does not add per-frame work, new assets, or a new streaming owner.
+- #1700 remained technically in progress at the time of this correction; its render artifact is evidence for diagnosis only. A fresh exact-head #1701 render/package run is required. Visual acceptance, device acceptance, performance acceptance, and Gate 6/7 remain unclaimed.
+
 ## 2026-10-08 - P1C01 character identity and living-world packet
 
 - The exact-head #1699 integrated render/package run is technically green: six-shot capture, runtime audits, cook/package, packaged launch, and hardware-boundary collection all passed. Real artifact review improved composition/lighting, but still showed low-poly/blockout world surfaces and weak/white skeletal character identity.

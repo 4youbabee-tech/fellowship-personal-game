@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "manifest_id": "P1C01_WORLD_MICRO_DETAIL_COMPLETION_V1",
-  "status": "CHARACTER_IDENTITY_LIVING_WORLD_PACKET_IMPLEMENTED",
+  "status": "CHARACTER_IDENTITY_MATERIAL_FALLBACK_ROOT_FIXED",
   "authority": [
     "Data/ProjectGovernor.json",
     "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
@@ -123,15 +123,15 @@
     "target": "8 GB RAM / ~2 GB VRAM / DX11 / 1280x720 / 30 FPS floor"
   },
   "latest_render_diagnosis": {
-    "exact_head": "07f1af562329780daac1521cba350fe2f0e1120a",
-    "artifact": "p1c01-shire-render-integrated-07f1af562329780daac1521cba350fe2f0e1120a",
-    "evidence": "Unreal Build Validation #1699 passed the integrated six-shot capture, runtime audits, cook/package, packaged startup, and runner hardware-boundary collection. Real artifact review found wider, more readable compositions and some visible figures, but environmental surfaces remain low-detail/blockout and skeletal character identity remains weak/white in the reviewed captures.",
+    "exact_head": "0509679d7afce56fe26899a5acb5b1674dd3ce0d",
+    "artifact": "p1c01-shire-render-integrated-0509679d7afce56fe26899a5acb5b1674dd3ce0d",
+    "evidence": "The #1700 render artifact captured six shots and logs confirmed skeletal Frodo palette application. Visual review still showed white modular NPCs; source inspection identified M_ProductionSurface being resolved but not loaded before the Engine BasicShapeMaterial fallback.",
     "blockers": [
-      "World remains visibly low-detail/blockout in the reviewed captures",
-      "Skeletal hero/NPC material identity requires exact-head reproof after palette handoff",
+      "Fresh exact-head reproof of the static NPC/player material fallback is required",
+      "World remains visibly low-detail/blockout in reviewed captures",
       "Human visual/audio/gameplay/device/performance acceptance remains incomplete"
     ],
-    "disposition": "Implemented a bounded character identity packet: apply resident production palette to every resolved player/NPC skeletal material slot while preserving async ownership, URO, and no per-frame material work. Fresh exact-head render/package evidence is required."
+    "disposition": "Root-fixed static presentation material fallback: load the existing M_ProductionSurface once when it is not resident, then retain Engine BasicShapeMaterial only as the final fail-safe. Run #1701 for exact-head render/package evidence."
   },
   "force_full_render_reproof": true
 }
