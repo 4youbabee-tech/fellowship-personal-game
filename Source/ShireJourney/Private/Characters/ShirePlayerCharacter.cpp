@@ -70,18 +70,18 @@ AShirePlayerCharacter::AShirePlayerCharacter()
 
     CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
     CameraBoom->SetupAttachment(RootComponent);
-    CameraBoom->TargetArmLength = 260.0f;
+    CameraBoom->TargetArmLength = 320.0f;
     CameraBoom->bUsePawnControlRotation = true;
     CameraBoom->bEnableCameraLag = true;
     CameraBoom->CameraLagSpeed = 8.5f;
     CameraBoom->CameraLagMaxDistance = 65.0f;
-    CameraBoom->SetRelativeLocation(FVector(0.0f, 0.0f, 52.0f));
-    CameraBoom->SocketOffset = FVector(0.0f, 28.0f, 10.0f);
+    CameraBoom->SetRelativeLocation(FVector(0.0f, 0.0f, 62.0f));
+    CameraBoom->SocketOffset = FVector(0.0f, 22.0f, 14.0f);
 
     FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
     FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
     FollowCamera->bUsePawnControlRotation = false;
-    FollowCamera->SetFieldOfView(78.0f);
+    FollowCamera->SetFieldOfView(74.0f);\n    FollowCamera->PostProcessSettings.bOverride_AutoExposureBias = true;\n    FollowCamera->PostProcessSettings.AutoExposureBias = 1.25f;
 
     FootstepComponent = CreateDefaultSubobject<UShireFootstepComponent>(TEXT("FootstepComponent"));
 
