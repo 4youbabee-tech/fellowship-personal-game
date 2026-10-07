@@ -4955,3 +4955,12 @@ This is runner-throughput cleanup only; fresh exact-head production presentation
 | HUD obscures visual review | Default gameplay HUD remained enabled | ShowFlag.HUD 0 and ShowFlag.2D 0 in capture command | Fresh capture required |
 | Gameplay impact | Capture-only command changes | No runtime/gameplay/world authority change | Unchanged |
 | Gate 6/7 | No human visual/device/performance evidence yet | Remains blocked | NOT ACCEPTED |
+
+
+## 2026-10-07 — P1C01 HUD-free capture guard
+
+| Concern | Root cause | Fix | Scope |
+|---|---|---|---|
+| HUD visible in review screenshots | Native `AShireHUD::DrawHUD()` bypasses `ShowFlag.HUD` | Capture-only `-ShireVisualCapture` early return | Review harness only |
+| Normal game HUD | No commandline flag in normal startup | Unchanged | Gameplay preserved |
+| Visual acceptance | Fresh HUD-free artifact not yet reviewed | Pending | Gate 6/7 blocked |

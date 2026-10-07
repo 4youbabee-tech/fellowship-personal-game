@@ -5,10 +5,15 @@
 #include "Engine/Canvas.h"
 #include "Engine/Engine.h"
 #include "Engine/GameInstance.h"
+#include "Misc/Parse.h"
 
 void AShireHUD::DrawHUD()
 {
     Super::DrawHUD();
+    if (FParse::Param(FCommandLine::Get(), TEXT("ShireVisualCapture")))
+    {
+        return;
+    }
     if (!Canvas || !GetWorld())
     {
         return;

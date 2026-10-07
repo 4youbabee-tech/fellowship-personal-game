@@ -5206,3 +5206,10 @@ The same train now owns exact-head source/static contracts, UE4 build, persisten
 - The prior six renders were technically clean after Frodo calibration, but the harness positioned the player 390–520 Unreal units above the Shire. That made the evidence an aerial overview instead of a production review at character scale.
 - The capture harness now uses road-level actor Z values (75–105), a low review pitch, and `ShowFlag.HUD 0` / `ShowFlag.2D 0` for HUD-free screenshots. This is capture-only; gameplay camera, world coordinates, quest state and runtime authority are unchanged.
 - Fresh exact-head UE4 evidence is required before judging visual quality again.
+
+
+## 2026-10-07 — P1C01 HUD-free capture guard
+
+- Road-level review captures succeeded, but the native Canvas HUD remained visible because `AShireHUD::DrawHUD()` is independent of the engine HUD show flag.
+- Added a capture-only `-ShireVisualCapture` commandline guard inside `AShireHUD::DrawHUD()`. Normal gameplay HUD behavior is unchanged; review captures now omit quest card, bars, and debug journey counters.
+- Fresh exact-head UE4 render evidence is required again. No visual acceptance or Gate 6/7 claim is made.
