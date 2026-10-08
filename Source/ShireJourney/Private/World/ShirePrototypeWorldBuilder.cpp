@@ -702,6 +702,31 @@ void AShirePrototypeWorldBuilder::SpawnHobbitHole(const FVector& Location, float
         EntryShrubScale, FLinearColor(0.10f, 0.32f, 0.08f), FRotator(0.0f, -18.0f, 0.0f), false);
     SpawnShape(EntryShrubMesh, Location + FVector(-105.0f, 92.0f, 24.0f) * Scale,
         EntryShrubScale, FLinearColor(0.12f, 0.36f, 0.09f), FRotator(0.0f, 21.0f, 0.0f), false);
+
+    // Bag End is the first close-up landmark in P1C01. Add a tiny authored-prop
+    // porch dressing pass only on the hero-scale production facade, reusing resident
+    // meshes and keeping every added prop non-blocking. Smaller Hobbiton homes keep
+    // the cheaper shared facade path.
+    if (bHasProductionFacade && Scale > 1.0f)
+    {
+        if (ProductionFlowerBoxMesh)
+        {
+            SpawnShape(ProductionFlowerBoxMesh, Location + FVector(-128.0f, -74.0f, 70.0f) * Scale,
+                FVector(0.34f, 0.22f, 0.28f) * Scale, FLinearColor::White, FRotator(0.0f, -4.0f, 0.0f), false);
+            SpawnShape(ProductionFlowerBoxMesh, Location + FVector(-128.0f, 74.0f, 70.0f) * Scale,
+                FVector(0.34f, 0.22f, 0.28f) * Scale, FLinearColor::White, FRotator(0.0f, 4.0f, 0.0f), false);
+        }
+        if (ProductionLanternMesh)
+        {
+            SpawnShape(ProductionLanternMesh, Location + FVector(-140.0f, -38.0f, 88.0f) * Scale,
+                FVector(0.36f) * Scale, WarmGlass, FRotator(0.0f, -10.0f, 0.0f), false);
+        }
+        if (ProductionBenchMesh)
+        {
+            SpawnShape(ProductionBenchMesh, Location + FVector(-132.0f, 124.0f, 26.0f) * Scale,
+                FVector(0.52f) * Scale, Timber, FRotator(0.0f, -12.0f, 0.0f), false);
+        }
+    }
 }
 
 

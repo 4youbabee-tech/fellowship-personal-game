@@ -241,6 +241,21 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("        SpawnShape(CubeMesh, Location + FVector(35.0f, -45.0f, 170.0f) * Scale,", hole)
         self.assertIn("    // Existing non-blocking doorstep and planted entry stay in place;", hole)
 
+    def test_p1c01_bag_end_hero_facade_gets_bounded_authored_porch_trim(self):
+        root = Path(__file__).resolve().parents[1]
+        source = (root / "Source" / "ShireJourney" / "Private" / "World" /
+                  "ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        start = source.index("void AShirePrototypeWorldBuilder::SpawnHobbitHole(")
+        end = source.index("\nvoid AShirePrototypeWorldBuilder::", start + 1)
+        hole = source[start:end]
+        self.assertIn("if (bHasProductionFacade && Scale > 1.0f)", hole)
+        self.assertEqual(hole.count("ProductionFlowerBoxMesh"), 3)
+        self.assertEqual(hole.count("ProductionLanternMesh"), 2)
+        self.assertEqual(hole.count("ProductionBenchMesh"), 2)
+        self.assertIn("Location + FVector(-128.0f, -74.0f, 70.0f) * Scale", hole)
+        self.assertIn("Location + FVector(-132.0f, 124.0f, 26.0f) * Scale", hole)
+        self.assertIn("false);\n        }\n    }", hole)
+
     def test_p1c01_shire_world_density_is_bounded_and_instanced(self):
         root = Path(__file__).resolve().parents[1]
         contract = json.loads((root / "Data" / "P1C01ShireWorldDensityCarV1.json").read_text(encoding="utf-8"))

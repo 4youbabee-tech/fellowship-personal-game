@@ -1,3 +1,12 @@
+## 2026-10-08 - P1C01 Bag End hero porch trim packet (pending exact-head proof)
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Prior exact-head validation | MACHINE-GREEN ON PREVIOUS HEAD | #1747 passed C++ build/import/render/audits/package/startup on `5ac2f36c`; artifacts `11556812632` render and `11557931212` playable |
+| Bag End porch trim | SOURCE IMPLEMENTED / CI PENDING | Hero-scale production facade gets two flower boxes, one lantern and one bench; all non-blocking resident meshes |
+| Runtime safety | PRESERVED | No new loads, collisions, tick, quest/AI behavior, density wave, chapter unlock or P1C02 scope |
+| UE4.27.2 compile/import/render/package on new head | PENDING NEW RUN | Required before claiming this packet is validated |
+| VISUALLY-ACCEPTED / DEVICE-TESTED / PERFORMANCE-ACCEPTED / Gate 6-7 | NOT ACCEPTED | Still requires chapter-specific evidence and review |
+
 ## 2026-10-08 - P1C01 CVBP visual production packet: authored Hobbit-hole facade cleanup (pending exact-head proof)
 | Area | Status | Evidence boundary |
 |---|---|---|
