@@ -738,3 +738,10 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 
 **Evidence boundary:** SOURCE-IMPLEMENTED; exact-head CI static and UE4.27.2 build/render/runtime/package rerun pending. No PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, FPS/VRAM or Gate 6/7 acceptance.
 
+### CI regression — repeated full Unreal work after a late same-HEAD failure (2026-10-09)
+
+**Failure mode:** GitHub Actions rerun starts the job from step 1, even when exact-head compile/import/render/runtime had passed and only package/startup failed. Blind bypass based only on a successful text log, earlier SHA or previous job result would be unsafe.
+
+**Root invariant:** the Governor permits resume only on the identical checked-out commit and unchanged UE4 engine, with SHA256 fingerprints of the required resident outputs, valid stage-specific reports and a verified predecessor receipt. Any missing/altered inputs or evidence reopens the affected stage and all downstream stages. Static validation, runner health, packaged startup and human Gate 6/7 checks remain required.
+
+**Regression check:** `Scripts/test_ci_resume_proof.py` probes missing receipts, other SHA, altered character asset, missing screenshot, failed runtime result, modified package manifest, changed engine and predecessor dependency. Offline tests passed (6/6); fresh Windows runner integration remains pending. This optimisation is not a chapter acceptance label.

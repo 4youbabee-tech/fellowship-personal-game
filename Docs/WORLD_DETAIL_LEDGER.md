@@ -1,3 +1,9 @@
+## 2026-10-09 - P1C01 visual successor packet staged after #1772 evidence, no runtime replacement yet
+
+- Source: exact-head #1772 seven rendered evidence shots (Bag End, Hobbiton, Party Field, Mill Bridge, Bywater edge, Ferry, wooded road). Visual diagnostic: low-poly village/folliage, sparse Party Field framing, simplistic bridge and ferry shoreline. Existing builder and asset-streaming subsystem remain sole consumers and loading owners.
+- REGISTERED NEXT VISIBLE WAVE only: (1) licensed final animated FBX Bilbo/Gandalf/Sam/Merry/Pippin/Black Rider/horse and Frodo human deformation review, (2) physically believable pastoral terrain/tree/hedge/architecture silhouettes through preexisting HISM and soft/async banks, (3) Bag End/Party Field identity and real WAV, (4) seven-angle plus manual PIE device review. Do not add anonymous filler assets or density beyond profile until measured.
+- Gate: unchanged UE4.27.2 DX11 720p 30 FPS target, 8GB RAM, ~2GB VRAM, 1K/2K packed PNG/TGA, async FStreamableManager, pooled NPCs. Runtime implementation of new art is **NOT** completed in this administrative/CI packet; register and require provenance/QC before production promotion. Gate 6/7 remains open; Bree locked.
+
 ## 2026-10-08 - P1C01 HIGH_FIDELITY_SURFACE_REPLACEMENT: Bucklebury ferry shoreline land-foliage correction
 - Authorized under registered P1C01 `HIGH_FIDELITY_SURFACE_REPLACEMENT` after seven-shot visual triage: `06_Bucklebury_Ferry` displays land vegetation intruding into the water. Corrected geometry ownership rather than camera/capture masking or added density.
 - `SpawnVillage` Brandywine surface (FerryX=23500,Y=-500) is a 14x60 basic cube with 700cm X and 3000cm Y half-size. The deterministic `ShireLayout::IsInsideFerryWaterBuffer` excludes three land-tree HISM generators (+260cm bank buffer) and grass (+95cm); relocates one existing flower bed by 335cm to dry land. Keep native river reeds under their existing dedicated wetland pass.

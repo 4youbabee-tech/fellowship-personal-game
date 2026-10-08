@@ -1514,6 +1514,25 @@ class SourceContractTests(unittest.TestCase):
         self.assertNotIn("cancel-in-progress: false", concurrency)
 
 
+    def test_p1c01_same_head_resume_requires_receipts_and_preserves_acceptance(self):
+        root = Path(__file__).resolve().parents[1]
+        workflow = (root / ".github" / "workflows" / "unreal-build-validation.yml").read_text(encoding="utf-8")
+        receipt = (root / "Scripts" / "ci_resume_proof.py").read_text(encoding="utf-8")
+        for symbol in (
+            "Probe same-head CI stage receipts",
+            "Record same-head import checkpoint",
+            "Record same-head core checkpoint",
+            "Record same-head package checkpoint",
+            "SHIRE_RESUME_IMPORT",
+            "SHIRE_RESUME_CORE",
+            "SHIRE_RESUME_PACKAGE",
+            "Launch and observe packaged executable",
+        ):
+            self.assertIn(symbol, workflow)
+        self.assertIn("stage output file bytes or inventory changed", receipt)
+        self.assertIn("predecessor proof invalid", receipt)
+        self.assertIn("MACHINE_STAGE_ONLY_NOT_PIE_DEVICE_VISUAL_GATE_6_7", receipt)
+
     def test_one_shot_static_gate_sets_scripts_pythonpath_before_unittest(self):
         root = Path(__file__).resolve().parents[1]
         workflow = (root / ".github" / "workflows" / "unreal-build-validation.yml").read_text(encoding="utf-8")

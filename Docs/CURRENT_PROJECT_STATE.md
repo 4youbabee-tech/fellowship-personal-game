@@ -1,3 +1,12 @@
+## 2026-10-09 - P1C01 continued production: #1772 green, safe resume stage implementation
+
+- Exact-head PR #329 / `71e42bf850132db462fbea5abaac4de9f29633b5`: Unreal Build #1772 (37841736884) **SUCCESS** across static/source, UE4.27.2 compile, production import, seven 1280x720 Shire captures, Automation QA, startup/chapter/state/persistence tests, warning-debt, Windows cook/package, 37/37 packaged data and packaged executable startup. Render artifact 11578711832; Windows artifact 11578891697 (~166.6MB). Evidence belongs to this HEAD only.
+- Owner throughput directive recorded in sole authority `Data/ProjectGovernor.json:ci_resume_stage_policy_2026_10_09`: minimize repeated administrative/technical work, retain exact-head engine evidence, avoid retry loops, and finish **P1C01** under Gate 6/7 without opening Bree.
+- Added `Scripts/ci_resume_proof.py` and focused tests; self-hosted workflow probes exact-head import/core/package receipts after the mandatory static gate, then reuses only identical-SHA, byte-hashed resident outputs/engine/predecessor proof. A missing/invalid receipt fails closed to full affected-stage execution; mandatory packaged startup and human acceptance are not skipped.
+- Offline receipt unit tests 6/6 passed on 2026-10-09. **SOURCE-IMPLEMENTED / STATIC-VALIDATED BY TARGETED LOCAL TESTS, Windows workflow proof pending.** No new C++ gameplay edits, import assets or final character FBX claimed.
+- Reviewed seven original #1772 captured 1280x720 PNGs: Bag End/Hobbiton coherent but still low-poly/stylized proxy; Party Field sparse/flat; Water/Mill/Bridge rudimentary; Ferry/wooded-road camera areas still have proxy silhouettes and distant-surface issues. This is a diagnostic human inspection, **not VISUALLY-ACCEPTED**.
+- Remaining P1C01: real final character bundles (Bilbo, Gandalf, Sam, Merry, Pippin, Black Rider and horse), terrain/vegetation/architecture replacements, audio masters/listening, end-to-end PIE route/save/pacing, DX11 720p laptop FPS/VRAM, Gate 6/7 acceptance. No P1C02 runtime.
+
 ## 2026-10-08 - P1C01 #1771 CI source-contract root repair (exact-head rerun pending)
 
 - Unreal Build Validation #1771 / run `37834419766` FAILED at source-contract tests (62/64 passed) on PR #329 exact head `fb043343db02f910f60cf085ea191a758f5e1e16`. Checkout, runner health, LFS hydration and self-hosted classification passed; UE4 C++ build, import, render, runtime and package did **not** execute on that failed head.

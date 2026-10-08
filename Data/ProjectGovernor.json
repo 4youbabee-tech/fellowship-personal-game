@@ -3062,12 +3062,14 @@
         "Independent source/static/documentation checks may run in parallel; runtime-changing promotion remains serialized.",
         "The integrated Unreal train owns exact-head build, import, render, runtime QA, save/route audit, cook/package and packaged startup.",
         "Materially linked changes are grouped into production packets; documentation-only edits do not trigger repeated heavy Unreal gates.",
-        "Every new programmer can resume from the Governor, CURRENT_PROJECT_STATE and the exact PR/HEAD/run/artifact boundary."
+        "Every new programmer can resume from the Governor, CURRENT_PROJECT_STATE and the exact PR/HEAD/run/artifact boundary.",
+        "P1C01 fail-closed CIResume checkpoint proof (Scripts/ci_resume_proof.py): exact SHA, engine identity, asset/result SHA256 and sequential import/core/package provenance; all unsupported cases rerun mandatory gates."
       ],
       "missing_work": [
         "Continue replacing proxy characters and environment kits with production FBX assets and provenance/QC.",
         "Obtain target-device 720p DX11 FPS/frame-time/RAM/VRAM/streaming evidence.",
-        "Complete human visual, audio and gameplay review for Gate 6/7."
+        "Complete human visual, audio and gameplay review for Gate 6/7.",
+        "Implement and measure fail-closed same-head resumable CI checkpoint re-use on the Windows runner; no repeat engine stages when byte-proven predecessor outputs survive and no source/engine change occurred."
       ],
       "acceptance_criteria": [
         "Real runtime/asset output increases per production packet without bypassing exact-head validation.",
@@ -9173,13 +9175,15 @@
     "active_runtime_chapter": "P1C01_ONLY",
     "next_chapter": "P1C02_LOCKED",
     "definitive_pr": "329",
-    "exact_head": "cc6b26f760959a5acf0de002781ace239201ff50",
+    "exact_head": "71e42bf850132db462fbea5abaac4de9f29633b5",
     "latest_full_machine_train": {
       "workflow": "Unreal Build Validation",
-      "run_number": 1749,
-      "run_id": 37810345771,
+      "run_number": 1772,
+      "run_id": 37841736884,
       "conclusion": "success",
-      "artifact_id": 11566746046
+      "artifact_id": 11578891697,
+      "exact_head": "71e42bf850132db462fbea5abaac4de9f29633b5",
+      "render_artifact_id": 11578711832
     },
     "speed_policy": [
       "Group linked production changes into larger bounded packets.",
@@ -9187,9 +9191,54 @@
       "Use one integrated exact-head Unreal train for build/import/render/runtime/package.",
       "Do not repeat heavy Unreal gates for documentation-only ancestry when the Governor permits reuse.",
       "Fix failures at the causal layer and rerun the exact failed gate.",
-      "Continue safe source/asset preparation while the serialized runtime train is running."
+      "Continue safe source/asset preparation while the serialized runtime train is running.",
+      "Optional exact-HEAD persistent-runner receipts may reuse proven import/core/package outputs on a retry of the identical SHA only; failures, missing bytes or changed engine must redo the affected stage and all later dependent stages. Fresh commits must revalidate runtime work.",
+      "Never weaken pre-Unreal/source checks or report static/compile/headless evidence as human PIE/device/visual performance acceptance."
     ],
     "acceptance_boundary": "Machine train success is not human PIE, DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED or Gate 6/7 acceptance."
   },
-  "last_updated": "2026-10-08"
+  "last_updated": "2026-10-09",
+  "ci_resume_stage_policy_2026_10_09": {
+    "status": "SOURCE_IMPLEMENTED_WINDOWS_RUNNER_VALIDATION_PENDING",
+    "owner_direction": "Reduce administrative friction, redundant builds, repetitive validation; complete the existing P1C01 chapter using safe reuse and root fixes rather than retry loops.",
+    "reference_build": {
+      "run": 1772,
+      "id": 37841736884,
+      "sha": "71e42bf850132db462fbea5abaac4de9f29633b5",
+      "conclusion": "success",
+      "render_artifact": 11578711832,
+      "windows_package_artifact": 11578891697
+    },
+    "resume_contract": {
+      "scope": "identical exact Git SHA on persistent self-hosted UE4 runner only",
+      "proofs": [
+        "UE4 engine binary identity",
+        "compiled runtime DLL and asset SHA256 inventories",
+        "Frodo technical import log markers and 5 package files",
+        "seven exact-head 1280x720 capture PNG+log outputs",
+        "Automation log and all passing headless audit result JSONs",
+        "packaged executable, PAK SHA256, and 37/37 packaged Data report",
+        "predecessor receipt digest"
+      ],
+      "fallback": "missing, changed or invalid receipt -> rerun this and dependent stages",
+      "non_skip": [
+        "source/static validation on every attempt",
+        "runner ownership/health",
+        "UE4 required package launch observation",
+        "target-device and human Gate 6/7 acceptance"
+      ],
+      "technical_implementation": [
+        "Scripts/ci_resume_proof.py",
+        "Scripts/test_ci_resume_proof.py",
+        ".github/workflows/unreal-build-validation.yml"
+      ],
+      "evidence": "offline six-test suite passed; Windows exact-head CI pending"
+    },
+    "active_chapter_completion": {
+      "chapter": "P1C01",
+      "state": "ACTIVE_NOT_ACCEPTED",
+      "next_visible_packet": "character final FBX + Shire terrain/foliage/architecture replacements; 7-shot review shows low-poly/proxy surfaces, weak party field read, tree geometry and distant Ferry detail",
+      "scope_limit": "no P1C02 runtime before Gate 6/7 accepted"
+    }
+  }
 }

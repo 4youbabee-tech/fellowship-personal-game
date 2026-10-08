@@ -434,6 +434,13 @@ jobs:
           }
           Write-Host "P1C01_ONE_SHOT_STATIC_GATE_PASS head=$env:TARGET_SHA"
 
+      - name: Probe same-head CI stage receipts
+        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
+        shell: powershell
+        run: |
+          & $env:PYTHON_EXE "$env:GITHUB_WORKSPACE\Scripts\ci_resume_proof.py" probe --root "$env:GITHUB_WORKSPACE" --head "$env:TARGET_SHA"
+          if ($LASTEXITCODE -ne 0) { throw "SHIRE_STAGE_RESUME_PROBE_FAIL exit=$LASTEXITCODE" }
+
       - name: Scrub checkout credential from persistent Git metadata
         shell: cmd
         run: |
@@ -492,18 +499,24 @@ jobs:
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\verify_runtime_source_workspace.ps1"'
 
       - name: Build ShireJourneyEditor
-        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
+        if: ((env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')) && env.SHIRE_RESUME_IMPORT != 'true'
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_build_unreal.cmd"'
 
       - name: Import production assets in UE4.27.2
-        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
+        if: ((env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')) && env.SHIRE_RESUME_IMPORT != 'true'
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_import_production_assets.cmd"'
 
+      - name: Record same-head import checkpoint
+        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true') && env.SHIRE_RESUME_IMPORT != 'true'
+        shell: powershell
+        run: |
+          & $env:PYTHON_EXE "$env:GITHUB_WORKSPACE\Scripts\ci_resume_proof.py" record --root "$env:GITHUB_WORKSPACE" --head "$env:TARGET_SHA" --stage import
+
       - name: Capture P1C01 production Shire on existing UE workspace
         id: p1c01_shire_capture
-        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_ASSET_IMPORT_ONLY == 'true'
+        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_ASSET_IMPORT_ONLY == 'true') && env.SHIRE_RESUME_CORE != 'true'
         shell: cmd
         env:
           SHIRE_SKIP_PRODUCTION_IMPORT: "1"
@@ -511,7 +524,7 @@ jobs:
 
       - name: Upload integrated P1C01 rendered evidence
         continue-on-error: true
-        if: always() && steps.p1c01_shire_capture.outcome == 'success' && (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_ASSET_IMPORT_ONLY == 'true')
+        if: always() && steps.p1c01_shire_capture.outcome == 'success' && env.SHIRE_RESUME_CORE != 'true' && (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_ASSET_IMPORT_ONLY == 'true')
         uses: actions/upload-artifact@v4
         with:
           name: p1c01-shire-render-integrated-${{ env.TARGET_SHA }}
@@ -526,39 +539,51 @@ jobs:
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\resolve_runtime_python.ps1"'
 
       - name: Run ShireJourney Automation Framework QA
-        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
+        if: ((env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')) && env.SHIRE_RESUME_CORE != 'true'
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_run_project_automation.cmd"'
 
       - name: Headless playable startup smoke
-        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
+        if: ((env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')) && env.SHIRE_RESUME_CORE != 'true'
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_runtime_startup.cmd"'
 
       - name: Headless chapter-by-chapter runtime audit
-        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_CORE_UNREAL_REQUIRED == 'true' && env.SHIRE_ASSET_IMPORT_ONLY != 'true'))
+        if: ((env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_CORE_UNREAL_REQUIRED == 'true' && env.SHIRE_ASSET_IMPORT_ONLY != 'true'))) && env.SHIRE_RESUME_CORE != 'true'
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_runtime_chapters.cmd"'
 
       - name: Headless route/story state roundtrip audit
-        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_CORE_UNREAL_REQUIRED == 'true' && env.SHIRE_ASSET_IMPORT_ONLY != 'true'))
+        if: ((env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_CORE_UNREAL_REQUIRED == 'true' && env.SHIRE_ASSET_IMPORT_ONLY != 'true'))) && env.SHIRE_RESUME_CORE != 'true'
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_runtime_state.cmd"'
 
       - name: Summarize and guard runtime warning debt
-        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_CORE_UNREAL_REQUIRED == 'true' && env.SHIRE_ASSET_IMPORT_ONLY != 'true'))
+        if: ((env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_CORE_UNREAL_REQUIRED == 'true' && env.SHIRE_ASSET_IMPORT_ONLY != 'true'))) && env.SHIRE_RESUME_CORE != 'true'
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_warning_debt.cmd"'
 
+      - name: Record same-head core checkpoint
+        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_CORE_UNREAL_REQUIRED == 'true' && env.SHIRE_ASSET_IMPORT_ONLY != 'true')) && env.SHIRE_RESUME_CORE != 'true'
+        shell: powershell
+        run: |
+          & $env:PYTHON_EXE "$env:GITHUB_WORKSPACE\Scripts\ci_resume_proof.py" record --root "$env:GITHUB_WORKSPACE" --head "$env:TARGET_SHA" --stage core
+
       - name: Build cook stage and archive real Windows package
-        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_ACCEPTANCE_ONLY == 'true' && env.SHIRE_ACCEPTANCE_RESUME_STAGE != 'startup')
+        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_ACCEPTANCE_ONLY == 'true' && env.SHIRE_ACCEPTANCE_RESUME_STAGE != 'startup')) && env.SHIRE_RESUME_PACKAGE != 'true'
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_package_w00.cmd"'
 
       - name: Verify packaged Runtime Data JSON payload
-        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_ACCEPTANCE_ONLY == 'true' && env.SHIRE_ACCEPTANCE_RESUME_STAGE != 'startup')
+        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_ACCEPTANCE_ONLY == 'true' && env.SHIRE_ACCEPTANCE_RESUME_STAGE != 'startup')) && env.SHIRE_RESUME_PACKAGE != 'true'
         shell: cmd
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\verify_packaged_runtime_data.ps1"'
+
+      - name: Record same-head package checkpoint
+        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true' && env.SHIRE_RESUME_PACKAGE != 'true'
+        shell: powershell
+        run: |
+          & $env:PYTHON_EXE "$env:GITHUB_WORKSPACE\Scripts\ci_resume_proof.py" record --root "$env:GITHUB_WORKSPACE" --head "$env:TARGET_SHA" --stage package
 
       - name: Validate inherited packaged artifact
         if: env.SHIRE_ACCEPTANCE_ONLY == 'true' && env.SHIRE_ACCEPTANCE_RESUME_STAGE == 'startup'

@@ -1,3 +1,16 @@
+## 2026-10-09 - Verified #1772 baseline, fail-closed same-head resume and remaining Shire
+
+| Scope | State | Evidence / next hard gate |
+|---|---|---|
+| PR #329, HEAD `71e42bf85013` | MACHINE-GREEN | Unreal Build #1772 SUCCESS; seven captures + Windows package + startup |
+| Windows playable | PACKAGE-LAUNCH-PROVEN | Artifact 11578891697; not whole-route PIE/device proof |
+| Same-SHA resume support | SOURCE-IMPLEMENTED / OFFLINE UNIT TESTED | Six local tests pass; next Windows run must establish CI behavior. Any altered file/engine/HEAD triggers required rerun |
+| Bag End/Hobbiton/Party Field | NOT VISUALLY ACCEPTED | #1772 PNG inspection: remaining low-poly/proxy geometry, sparse party field and basic material silhouette |
+| Ferry/woodland/roads | NOT VISUALLY ACCEPTED | More authentic hero natural geometry, foliage, river bank and authored world detail needed; no blind density |
+| Named Shire cast | CONTENT-PENDING | Seven production FBX character/mount bundles plus human Frodo deformation acceptance |
+| Audio/PIE/device | OPEN | Final WAV intake; chapter traversal/save/lifecycle; DX11 720p real FPS/VRAM |
+| Gate 6/7 and Bree | OPEN / LOCKED | No release or P1C02 without human/device evidence |
+
 ## 2026-10-08 - P1C01 #1771 Governor-aligned CI cancellation repair
 
 | Area | Status | Evidence / boundary |
