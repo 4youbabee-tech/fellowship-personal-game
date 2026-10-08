@@ -1,3 +1,16 @@
+## 2026-10-08 - P1C01 #1727 grass calibration proof and Shire texture double-tint correction
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| #1727 technical train | MACHINE-GREEN | Exact-head build/import, six captures, runtime audits, zero warning debt, cook/package, 37/37 data, 6s startup, hardware snapshot, and artifact uploads passed |
+| Artifacts | FRESH / DIAGNOSTIC | Render `11530339862`; playable `11531119433`; streaming preflight 271/271 |
+| Broad-grass calibration | VISUAL IMPROVEMENT VERIFIED / NOT ACCEPTED | Same crop moved from saturation/lightness ~0.88/0.15 to ~0.61/0.29; turf is lighter and less emerald |
+| Shire material root cause | VERIFIED IN SOURCE | Grass/Dirt/Bark/Leaves/Stone/Wood/DoorGreen albedo means already approximate their MTL `Kd`, producing a second colour multiplication |
+| Texture double-tint correction | SOURCE-FIXED / FULL RUN REQUIRED | Importer neutralizes `Color` only for texture-backed exact `World/Shire` materials; flat-colour and non-Shire materials retain authored Kd |
+| Runtime/performance boundary | PRESERVED | No texture, mesh, density, actor, collision, streaming-owner, runtime-load, gameplay, camera, lighting, or other-chapter material change |
+| VISUALLY-ACCEPTED / DEVICE-TESTED / PERFORMANCE-ACCEPTED / Gate 6-7 | NOT ACCEPTED | Fresh render reproof, final character/world/micro-detail, target-device metrics, audio/gameplay acceptance remain required |
+| P1C02 Bree | LOCKED | Begin only after P1C01 completion gates genuinely pass |
+
 ## 2026-10-08 - P1C01 #1726 terrain identity proof and broad-grass tint calibration
 
 | Area | Status | Evidence / boundary |

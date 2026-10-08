@@ -1157,9 +1157,27 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                 if (Instance)
                 {
                     Instance->SetParentEditorOnly(DesiredMaterialParent);
+
+                    // The project-owned World/Shire albedo TGAs already encode the
+                    // authored surface colour (their means closely match the MTL Kd
+                    // values). Multiplying those textures by the same coloured Kd
+                    // double-tints grass, wood, bark, leaves and stone into crushed,
+                    // over-saturated output. Neutralize only texture-backed Shire
+                    // world instances; flat-colour and non-Shire material contracts
+                    // retain their authored Kd multiplier.
+                    const bool bNeutralShireTextureTint =
+                        !CurrentAlbedoMap.IsEmpty() &&
+                        RelativeDir.Equals(
+                            TEXT("World/Shire"),
+                            ESearchCase::IgnoreCase);
+                    const FLinearColor AppliedBaseColor =
+                        bNeutralShireTextureTint
+                            ? FLinearColor::White
+                            : CurrentBaseColor;
+
                     Instance->SetVectorParameterValueEditorOnly(
                         FMaterialParameterInfo(TEXT("Color")),
-                        CurrentBaseColor);
+                        AppliedBaseColor);
                     Instance->SetScalarParameterValueEditorOnly(
                         FMaterialParameterInfo(TEXT("Roughness")),
                         FMath::Clamp(CurrentRoughness, 0.0f, 1.0f));
@@ -1200,14 +1218,17 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                     UE_LOG(
                         LogTemp,
                         Display,
-                        TEXT("ShireProductionImport material response: identity=%s parent=%s foliage=%s roughness=%.3f metallic=%.3f specular=%.3f albedo=%s"),
+                        TEXT("ShireProductionImport material response: identity=%s parent=%s foliage=%s roughness=%.3f metallic=%.3f specular=%.3f albedo=%s baseColorMode=%s"),
                         *CurrentMaterialName,
                         *DesiredMaterialParent->GetPathName(),
                         bApprovedFoliageIdentity ? TEXT("yes") : TEXT("no"),
                         CurrentRoughness,
                         CurrentMetallic,
                         CurrentSpecular,
-                        CurrentAlbedoMap.IsEmpty() ? TEXT("none") : *CurrentAlbedoMap);
+                        CurrentAlbedoMap.IsEmpty() ? TEXT("none") : *CurrentAlbedoMap,
+                        bNeutralShireTextureTint
+                            ? TEXT("neutral-texture")
+                            : TEXT("authored-kd"));
 
                     Instance->PostEditChange();
                     Instance->MarkPackageDirty();

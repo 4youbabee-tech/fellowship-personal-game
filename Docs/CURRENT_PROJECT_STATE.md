@@ -1,3 +1,13 @@
+## 2026-10-08 - P1C01 #1727 grass calibration proof and Shire texture double-tint correction
+
+- Unreal Build Validation #1727 completed successfully on exact head `58577a7a07f966e827a2a9048101c6883aa51166`. Source/static gate, UE4.27.2 build/import, six-shot capture, Automation/runtime audits, zero warning debt, cook/package, 37/37 packaged Runtime Data, 6s packaged executable startup, hardware snapshot, and artifact uploads all passed.
+- Fresh evidence: render artifact `11530339862`, playable artifact `11531119433`, 271/271 streamed assets, and no default-material fallback. The runner snapshot remains Intel i7-6498DU with 8,457,560,064 bytes RAM; this is not target-device or performance acceptance.
+- Same-crop Bag End measurement verifies the broad-grass calibration: mean saturation fell from approximately 0.88 to 0.61 and mean lightness rose from approximately 0.15 to 0.29. The six shots now read as lighter pastoral turf instead of dark emerald, while the chapter remains visibly low-poly/blockout and NOT VISUALLY-ACCEPTED.
+- Source audit found the same double-tint pattern across the project-owned Shire albedo bank: the Grass, Dirt, Bark, Leaves, Stone, Wood, and DoorGreen texture means closely match their authored MTL `Kd` colours, so multiplying texture by the same colour again crushes and over-saturates multiple surfaces.
+- This packet changes only the production importer: texture-backed materials whose normalized source directory is exactly `World/Shire` receive a neutral white `Color` multiplier. Flat-colour materials and every non-Shire material retain authored `Kd`; external P1C01 materials already use neutral `Kd`.
+- No source texture, mesh, actor count, density, collision, streaming ownership, runtime load, gameplay, camera, lighting, or other-chapter material is changed. Fresh exact-head full One-Shot and six-shot review are required.
+- P1C01 visual/device/performance/Gate 6/7 remain NOT ACCEPTED; P1C02 Bree remains LOCKED.
+
 ## 2026-10-08 - P1C01 #1726 terrain identity proof and broad-grass tint calibration
 
 - Unreal Build Validation #1726 completed successfully on exact head `edd97e7a179b564da656ae61d91212b3ae36ece5`. Source/static gate, UE4.27.2 build/import, six-shot capture, Automation/runtime audits, zero warning debt, cook/package, 37/37 packaged Runtime Data, 6s packaged executable startup, hardware snapshot, and artifact uploads all passed.
