@@ -227,7 +227,7 @@ concurrency:
 
 jobs:
   classify:
-    if: ${{ github.event_name != 'pull_request' || github.head_ref != 'production/p1c01-definitive-chapter-closeout-2026-10-04' }}
+    if: ${{ !startsWith(github.head_ref, 'prep/') && (github.event_name != 'pull_request' || github.head_ref != 'production/p1c01-definitive-chapter-closeout-2026-10-04') }}
     name: Hosted Unreal lane classifier
     runs-on: windows-latest
     timeout-minutes: 10
@@ -263,7 +263,7 @@ jobs:
 
   unreal-build:
     needs: classify
-    if: always() && (needs.classify.result == 'failure' || needs.classify.outputs.mode != 'inherit')
+    if: ${{ !startsWith(github.head_ref, 'prep/') && always() && (needs.classify.result == 'failure' || needs.classify.outputs.mode != 'inherit') }}
     name: UE4.27.2 C++ Build
     runs-on:
       - self-hosted
