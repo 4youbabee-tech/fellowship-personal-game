@@ -241,7 +241,7 @@ class SourceContractTests(unittest.TestCase):
         )
 
         life = json.loads((root / "Data" / "WorldLifeSaturationPlan.json").read_text(encoding="utf-8"))
-        self.assertEqual(life["baseline_population_targets"]["P1C01"], 18)
+        self.assertEqual(life["baseline_population_targets"]["P1C01"], 22)
 
         source = (root / "Source" / "ShireJourney" / "Private" / "World" / "ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
         start = source.index("void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()")
@@ -473,7 +473,7 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("BuildBehaviorSnapshot", context_cpp)
 
         life = json.loads((root / "Data" / "WorldLifeSaturationPlan.json").read_text(encoding="utf-8"))
-        self.assertEqual(life["baseline_population_targets"]["P1C01"], 18)
+        self.assertEqual(life["baseline_population_targets"]["P1C01"], 22)
 
 
 

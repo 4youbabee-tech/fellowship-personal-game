@@ -1,3 +1,11 @@
+## 2026-10-08 - P1C01 #1744 One-Shot pre-build root repair (rerun required)
+
+- PR #329 exact head `2a2e508c` ran Unreal Build Validation #1744; self-hosted job `113297733064` failed **before Unreal compile** in `Scripts.test_source_contracts` (3 assertions), not in UE4 C++/UHT.
+- Root issue 1: two tests still asserted the historical P1C01 population target of 18 against the new `Data/WorldLifeSaturationPlan.json` active target of 22. The previous P1C01 density-car and living-world 18-person budgets remain historical snapshots. Only the two **active world-life plan** assertions are updated to 22; `ALivingWorldDirector` still clamps JSON targets to 24 and retains pooling/cull ownership.
+- Root issue 2: the independent Frodo import workflow used `github.ref_name` to suppress the definitive PR branch. GitHub pull requests expose a merge ref there; the guard now checks `github.head_ref` for PRs and preserves the direct-branch dispatch exclusion. The one-shot Unreal workflow stays the single P1C01 closeout executor.
+- This commit is a bounded source/CI regression fix only; no new NPC actors, hero meshes/animation, chapter/content unlocks, synchronous heavy loads, or runtime budgets were added. Exact-head rerun of the source gate, UE4.27.2 build/import, render, audits, cook/package/startup remains REQUIRED.
+- Chapter status: STATIC FIX / CI RERUN PENDING, NOT visually/PIE/device/performance accepted. P1C02 Bree remains locked under Gate 6/7. Older #1733 rendered/package evidence applies only to its own source head.
+
 ## 2026-10-08 - P1C01 Frodo import workflow root-fix
 
 - Root Hide packet is on current head `1db531b428e981b973d903350c801768d5b9d212`; the prior Frodo import run #191 failed at workflow level with zero jobs.

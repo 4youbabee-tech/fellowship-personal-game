@@ -34,7 +34,7 @@ env:
 
 jobs:
   hosted_artifact_preflight:
-    if: ${{ github.ref_name != 'production/p1c01-definitive-chapter-closeout-2026-10-04' }}
+    if: ${{ (github.event_name != 'pull_request' || github.head_ref != 'production/p1c01-definitive-chapter-closeout-2026-10-04') && github.ref_name != 'production/p1c01-definitive-chapter-closeout-2026-10-04' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
@@ -83,7 +83,7 @@ jobs:
           echo "$RUN_FBX_SHA  $root/retarget/output/Frodo_Run_Retarget.fbx" | sha256sum -c -
 
   ue4_animation_import:
-    if: ${{ github.ref_name != 'production/p1c01-definitive-chapter-closeout-2026-10-04' }}
+    if: ${{ (github.event_name != 'pull_request' || github.head_ref != 'production/p1c01-definitive-chapter-closeout-2026-10-04') && github.ref_name != 'production/p1c01-definitive-chapter-closeout-2026-10-04' }}
     needs: hosted_artifact_preflight
     runs-on: [self-hosted, Windows, X64, ue4-27]
     timeout-minutes: 90

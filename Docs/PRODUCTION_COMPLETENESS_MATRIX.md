@@ -1,3 +1,14 @@
+## 2026-10-08 - P1C01 #1744 source-gate blocker correction (exact-head rerun pending)
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| #1744 failure | SOURCE-CONTRACT FAIL BEFORE UE4 | `Scripts.test_source_contracts` 3 failed assertions; UE4 build/import/package not executed |
+| Active Shire population | TARGET 22 / CLAMP 24 | Fix two stale 18-target checks against active WorldLifeSaturationPlan; historical car contracts remain unchanged; pooled Director ownership preserved |
+| Frodo standalone CI lane | PR GUARD CORRECTED | Check `github.head_ref` to skip definitive closeout PR; preserve `workflow_dispatch` branch exclusion and single One-Shot authority |
+| Exact-head Pre-Unreal / UE4.27.2 / rendered / package | PENDING RERUN | Commit and workflow must run on new exact PR head; previous #1733 artifacts do not validate new head |
+| PIE / target device / visual / audio / performance / Gate 6-7 | NOT ACCEPTED | No new in-engine acceptance evidence claimed |
+| P1C02 Bree | LOCKED | No new runtime chapter |
+
 ## 2026-10-08 - P1C01 Frodo import workflow root-fix
 
 | Area | Status | Evidence / boundary |
