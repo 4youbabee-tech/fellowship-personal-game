@@ -1,3 +1,11 @@
+## 2026-10-08 - P1C01 Merry/Pippin residency proof and Ferry composition packet
+
+- #1722 completed successfully on exact head 70b4ff7290c81aa8c4a74967a90d83aafeb3ff9b: UE4.27.2 build/import, six-shot render capture/upload, Automation/startup/chapter/state/transition/fault/persistence audits, warning-debt guard, cook, packaged Runtime Data, packaged startup, runner hardware boundary, and playable upload.
+- Render artifact 11525803952 was reviewed. The new Merry/Pippin static identity paths import and resolve as named-static, but their skeletal rig remains explicitly unavailable because this packet did not invent a rig/AnimBP pair. The world remains low-poly/blockout; Water Mill still reads Gandalf as a white modular silhouette, and Bucklebury Ferry has a large white foreground obstruction.
+- Playable artifact 11527470004 is fresh and machine-green: W00_STREAMING_ASSET_PREFLIGHT_PASS expected=271 missing=0, W00_PACKAGED_DATA_PASS expected=37 verified=37, W00_PACKAGED_STARTUP_PASS observed=6s, warning debt all zero, and runner boundary Intel i7-6498DU / 8,457,560,064 bytes RAM. This is not target-device or performance acceptance.
+- Root fix in this packet: move only the Bucklebury Ferry review camera to x=21700 y=-1900 z=450 pitch=-12 yaw=18, lifting/backing it away from the foreground obstruction while preserving the six-shot HUD-free route. No gameplay, asset residency, actor density, collision, or runtime loader change.
+- Fresh exact-head #1723 full One-Shot and render review are required. P1C01 visual/device/performance/Gate 6/7 remain NOT ACCEPTED; P1C02 Bree remains LOCKED.
+
 ## 2026-10-08 - P1C01 Merry/Pippin bounded identity residency packet
 
 - Root cause from the reviewed #1721 render: the P1C01 runtime already spawns Merry and Pippin on the Bag End-to-Ferry route and ShireNPC has dedicated mesh/sword/cloak resolution for them, but the committed P1C01 async bank carried only Gandalf, Bilbo, and Sam identity packages. Those actors therefore remained on the generic modular fallback in the visual route.

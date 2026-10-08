@@ -1,3 +1,15 @@
+## 2026-10-08 - P1C01 Merry/Pippin residency proof and Ferry composition packet
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| #1722 technical train | MACHINE-GREEN | Exact-head build/import, six-shot capture, runtime audits, warning guard, cook, packaged Runtime Data/startup, hardware boundary, and playable upload all passed |
+| Merry/Pippin static residency | VERIFIED / RIG OPEN | Import and named-static resolution observed; skeletal core packages remain unavailable and are not claimed as rig acceptance |
+| Render artifact | FRESH / DIAGNOSTIC | Artifact 11525803952; low-poly/blockout remains, Water Mill has white Gandalf silhouette and Ferry has a large foreground obstruction |
+| Playable package | MACHINE-GREEN / NOT DEVICE-ACCEPTED | Artifact 11527470004; expected=271/missing=0, packaged data=37/37, startup=6s |
+| Ferry composition | SOURCE-FIXED / #1723 REQUIRED | Camera moved to x=21700 y=-1900 z=450 pitch=-12 yaw=18 to clear the foreground obstruction |
+| Visual/device/performance/Gate 6-7 | NOT ACCEPTED | Human final-fidelity review and target-device FPS/frame-time/pacing evidence remain open |
+| P1C02 Bree | LOCKED | Begin only after P1C01 completion gates genuinely pass |
+
 ## 2026-10-08 - P1C01 Merry/Pippin bounded identity residency packet
 
 | Area | Status | Evidence / boundary |

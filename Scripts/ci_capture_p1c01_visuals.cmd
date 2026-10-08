@@ -49,7 +49,7 @@ call :Capture "04_Water_Mill_Bridge" -2100 100 130 -8 2 0
 if errorlevel 1 exit /b !ERRORLEVEL!
 call :Capture "05_Bywater_Facing_Edge" 500 -700 130 -7 14 0
 if errorlevel 1 exit /b !ERRORLEVEL!
-call :Capture "06_Bucklebury_Ferry" 21700 -1300 150 -8 18 0
+call :Capture "06_Bucklebury_Ferry" 21700 -1900 450 -12 18 0
 if errorlevel 1 exit /b !ERRORLEVEL!
 
 set "VISUAL_GATE_FAIL=0"
