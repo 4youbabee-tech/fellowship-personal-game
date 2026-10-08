@@ -154,6 +154,20 @@ It then prints **BACKLOG MEMORY (NOT EXECUTION ORDER)** for unfinished CRITICAL/
 
 Development phases are registered in `development_mode_contract` inside the Governor. That contract owns mode identity, supersedes relationships and the labels that require manual/device evidence. Validators consume the shared semantic helper; they must not keep independent mode allowlists or decide proof honesty from prose wording.
 
+## Continuous Verified Build Protocol (CVBP) — permanent operating method
+
+The authoritative policy is `Data/ProjectGovernor.json#continuous_verified_build_protocol_2026_10_08`; this is a human-readable guide, **not a second manager or gate**. CVBP is the established milestone-based Continuous Engineering Progress practice, formalized for live, evidenced delivery.
+
+- **Act through the tools:** choose the active Governor-authorized P1C01 production milestone and actually work/commit/verify it; do not substitute planning for deliverables.
+- **Keep the owner informed during work:** stage number, what really changed, commit/PR, CI run/job and logs, artifacts/real screenshots, evidence grade, blocker, next action. Provide updates as milestones finish, not only in a huge final recap.
+- **Repair precise root causes:** inspect failing exact-head logs, fix the smallest broken layer, rerun the relevant gate and continue unrelated allowed preparation; never delete genuine technical, save, canon, license or device safeguards.
+- **Prioritize visible improvement:** coherent production packets and real art/character/world/audio/runtime quality over bureaucracy, repeated documentation-only builds or meaningless micro-commits.
+- **Resume without chat history:** on the live PR/Governor-linked record, write compact branch/SHA, last green CI, artifact IDs/URLs, proven and pending levels, open blocker and exact next production task. Re-read it when a chat fills.
+- **Stay honest:** static/build/headless tests do not imply PIE, target-device FPS, accepted visuals or Gate 6/7. No autonomous background execution without an active job or specifically requested automation.
+
+Historical working example, not a permanent active-head instruction: P1C01 PR #329, `c371b5b2f14e`, Unreal Build Validation #1746 succeeded at source/compile/import/render/headless/package/startup while human visual, PIE, device performance and Gate 6/7 remained pending.
+
+Follow Governor `execution_control` for current direction, dependencies and scope. No new runtime chapter opens from this reporting policy.
 ## Current rule
 
 The active lane is **W01_P1C01_PRODUCTION_VERTICAL_SLICE** under the P1C01 vertical-slice gate.

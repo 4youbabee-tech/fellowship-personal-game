@@ -43,6 +43,7 @@
     "Parallel source/PDF/warehouse/asset-preparation lanes may advance without repeating engine gates for administrative-only changes; promotion into runtime remains serialized and technical safety/performance/runtime-data gates stay fail-closed.",
     "Permanent branch closeout invariant: every completed temporary branch is exact-head validated, merged into develop immediately, and its remote ref is deleted after merge so develop never lags completed work. Only an active PR head or a branch with verified unique unsalvaged commits may remain temporarily.",
     "Maximum Safe Production is the default for all eligible project production work even when the owner does not explicitly say 'start chapter' or repeat the throughput instruction.",
+    "Continuous Verified Build Protocol (CVBP) is the permanent evidence-rich real-time milestone reporting/handoff method; it changes no canon, safety, performance or Gate 6/7 criterion. See continuous_verified_build_protocol_2026_10_08.",
     "Story scope is experience-first, not summary-first: the Timeline organizes sequence but never caps detail; compatible Tolkien book-only events/details should be playable when safe, and meaningful discovered source material may not be silently omitted.",
     "Closing a temporary PR is an explicit branch-lifecycle disposition. If it closes unmerged, any useful unique work must first be selectively salvaged into the current authority or recorded by exact commit SHA/disposition; after closure the unchanged remote head ref is deleted. A moved ref or active PR head is preserved as new work."
   ],
@@ -8473,5 +8474,34 @@
       "When a better proven method is discovered, update the Governor with evidence and supersede the old method explicitly rather than drifting informally."
     ],
     "evidence_claim_boundary": "COMPILE/STATIC/UE4 machine evidence never implies PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED or FPS acceptance without chapter-specific proof."
+  },
+  "continuous_verified_build_protocol_2026_10_08": {
+    "status": "ACTIVE_PERMANENT_OWNER_DIRECTION",
+    "name": "Shire Journey — Continuous Verified Build Protocol (CVBP)",
+    "arabic_name": "بروتوكول البناء المتواصل الموثق بالأدلة",
+    "relationship": "Named real-time milestone execution/reporting method of lead_engineering_operating_policy_2026_10_04. Data/ProjectGovernor.json remains the sole authority; no second manager or new gate.",
+    "goal": "Maximize safe visible game production, minimize administrative churn, show actual progress continuously with exact proof and preserve a recoverable GitHub handoff.",
+    "execution_loop": [
+      "Start from the Governor active lane, project source references and live GitHub exact head; do not re-plan completed milestones or open a predecessor-gated chapter.",
+      "For substantial work, briefly announce ordered milestones; perform actual edits, commits, reviews, build/test runs and asset work when tools are available, not planning-only replies.",
+      "Give concise live updates during meaningful phases: what changed, real commit/PR/Actions run, step/test outcome, actual blockage and next action. Never claim a running step already passed.",
+      "For a failure, inspect its log and exact source head, classify its root cause, repair the smallest safe layer, re-run the appropriate gate and continue independent permitted production work.",
+      "After machine success, assess concrete player-visible quality and remaining character/world/audio/playability gaps; treat green CI as technical evidence only, never automatic chapter acceptance.",
+      "On handoff or context limits, store the exact branch/SHA/PR/run/artifact evidence, verification levels, blockers and next authorized production action on the active GitHub PR/Governor-linked record; avoid pasting giant logs into chat."
+    ],
+    "milestone_report_fields": [
+      "number and milestone target",
+      "real files/code/assets changed",
+      "Commit SHA / PR link",
+      "GitHub Actions run/job and result",
+      "log lines / artifacts / render examples",
+      "honest STATIC / COMPILE / PIE / DEVICE / VISUAL evidence level",
+      "blocker if any and fix",
+      "next action"
+    ],
+    "speed_and_safety": "Use large coherent reviewable production packets, avoid redundant docs-only UE build and repeated CI churn, keep async heavy assets, soft refs, NPC pooling, FBX animated assets, PNG/TGA channel-packed textures, license/provenance, story/save/route, 720p low-spec performance and Gate 6/7 fail-closed.",
+    "proof_boundary": "STATIC-VALIDATED, COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED and PERFORMANCE-ACCEPTED require their own chapter/build evidence; Windows executable startup and screenshots alone do not imply complete game or owner acceptance.",
+    "runtime_limits": "Updates occur during an active ChatGPT/tools session, running GitHub jobs or explicit automations. Never promise invisible autonomous work or unconditional one-day completion. ChatGPT Work quota/context limits are outside code governance.",
+    "historical_reference": "2026-10-08 PR #329 c371b5b2f14e / UE4 #1746: 61/61 source tests, engine compile, production/Frodo import, 7 true engine shots, headless QA, Windows package and startup succeeded; chapter visual/PIE/device/Gate 6/7 signoff remained pending. Example only, not permanent head."
   }
 }
