@@ -1,3 +1,14 @@
+## 2026-10-08 - P1C01 #1724 render review and linear palette correction
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| #1724 technical train | MACHINE-GREEN | Exact-head full One-Shot passed build/import, capture, runtime audits, zero-warning guard, cook, packaged startup, hardware snapshot, and both artifact uploads |
+| Render artifact | FRESH / DIAGNOSTIC | 11529560160; Ferry remains clear, but Water Mill side-by-side shows Gandalf hat/hair/beard still pale under direct light |
+| Playable package | MACHINE-GREEN / NOT DEVICE-ACCEPTED | 11529616135; 271/271 streaming assets, 37/37 packaged data, 6s startup |
+| Gandalf readability | ROOT CAUSE CORRECTED / FULL RUN REQUIRED | First pass used overly bright linear RGB; coat/trousers/hair/beard/hat/cloak now use calibrated low-linear graphite/gray values |
+| Visual/device/performance/Gate 6-7 | NOT ACCEPTED | Final fidelity, target-device FPS/frame-time/pacing, and human acceptance remain open |
+| P1C02 Bree | LOCKED | Begin only after P1C01 completion gates genuinely pass |
+
 ## 2026-10-08 - P1C01 Ferry composition proof and Gandalf contrast packet
 
 | Area | Status | Evidence / boundary |

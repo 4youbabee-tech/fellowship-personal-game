@@ -411,9 +411,9 @@ void AShireNPC::ApplyPrototypeStyle()
         PrototypeHead->SetRelativeLocation(FVector(0.0f, 0.0f, PrototypeHeadBaseZ));
         PrototypeHair->SetRelativeLocation(FVector(-1.0f, 0.0f, PrototypeHairBaseZ));
         const bool bSaruman = Name.Equals(TEXT("Saruman"), ESearchCase::IgnoreCase);
-        Coat = bSaruman ? FLinearColor(0.70f, 0.69f, 0.64f) : FLinearColor(0.16f, 0.17f, 0.16f);
-        Trousers = bSaruman ? FLinearColor(0.50f, 0.49f, 0.45f) : FLinearColor(0.10f, 0.11f, 0.10f);
-        Hair = bSaruman ? FLinearColor(0.82f, 0.80f, 0.74f) : FLinearColor(0.72f, 0.70f, 0.64f);
+        Coat = bSaruman ? FLinearColor(0.70f, 0.69f, 0.64f) : FLinearColor(0.055f, 0.060f, 0.055f);
+        Trousers = bSaruman ? FLinearColor(0.50f, 0.49f, 0.45f) : FLinearColor(0.028f, 0.032f, 0.028f);
+        Hair = bSaruman ? FLinearColor(0.82f, 0.80f, 0.74f) : FLinearColor(0.22f, 0.21f, 0.19f);
     }
     else if (Name.Equals(TEXT("Gimli"), ESearchCase::IgnoreCase))
     {
@@ -1014,7 +1014,7 @@ void AShireNPC::ApplyPrototypeStyle()
             bGandalfBeard ? FRotator::ZeroRotator : FRotator(90.0f, 0.0f, 0.0f));
         ApplySurface(PrototypeBeard, bSaruman
             ? FLinearColor(0.84f, 0.82f, 0.76f)
-            : FLinearColor(0.50f, 0.49f, 0.45f), 0.74f, 0.0f);
+            : FLinearColor(0.18f, 0.17f, 0.15f), 0.74f, 0.0f);
 
         if (bGandalfVisual)
         {
@@ -1025,7 +1025,7 @@ void AShireNPC::ApplyPrototypeStyle()
             PrototypeHeadpiece->SetRelativeLocation(FVector(-1.0f, 0.0f, PrototypeHairBaseZ + 10.0f));
             PrototypeHeadpiece->SetRelativeScale3D(
                 bGandalfHat ? FVector(1.0f) : FVector(0.18f, 0.42f, 0.22f));
-            ApplySurface(PrototypeHeadpiece, FLinearColor(0.13f, 0.14f, 0.13f), 0.84f, 0.0f);
+            ApplySurface(PrototypeHeadpiece, FLinearColor(0.040f, 0.045f, 0.040f), 0.84f, 0.0f);
 
             const bool bGandalfCloak = TryMesh(
                 PrototypeCloak,
@@ -1035,7 +1035,7 @@ void AShireNPC::ApplyPrototypeStyle()
             PrototypeCloak->SetRelativeLocation(PrototypeCloakBase);
             PrototypeCloak->SetRelativeScale3D(
                 bGandalfCloak ? FVector(1.0f) : FVector(0.14f, 0.46f, 0.72f));
-            ApplySurface(PrototypeCloak, FLinearColor(0.15f, 0.16f, 0.15f), 0.86f, 0.0f);
+            ApplySurface(PrototypeCloak, FLinearColor(0.055f, 0.060f, 0.055f), 0.86f, 0.0f);
         }
     }
     else if (bGaladriel || bElrond || bArwen)

@@ -1,3 +1,11 @@
+## 2026-10-08 - P1C01 #1724 render review and linear palette correction
+
+- #1724 completed successfully on exact head c8b4ff4aa895f88ea40855cdae77915785fc6c44. Static/source gate, UE4.27.2 build/import, six-shot capture, Automation/startup/chapter/state/transition/fault/persistence audits, zero warning debt, cook, packaged Runtime Data, packaged executable startup, runner hardware snapshot, and playable upload all passed.
+- Fresh render artifact 11529560160 and playable artifact 11529616135 were inspected. Machine evidence remains green: 271/271 streaming assets, 37/37 packaged data, 6s packaged startup, and no default-material fallback. This is not target-device or performance acceptance.
+- Side-by-side review of Water Mill shows the first graphite packet darkened Gandalf's coat only modestly; the directly lit hat, hair, and beard still read pale. The packet is therefore not visually verified and creates no visual/Gate 6/7 claim.
+- Root cause is color-space calibration: the runtime values feed M_ProductionSurface as linear RGB, so 0.13-0.50 maps to substantially brighter displayed values before scene lighting/exposure. This correction moves only Gandalf's coat, trousers, hair, beard, hat, and cloak into bounded low-linear graphite/gray values. No mesh, rig, actor count, gameplay, collision, streaming, camera, or lighting change is introduced.
+- Fresh exact-head full One-Shot and human render review are required. P1C01 visual/device/performance/Gate 6/7 remain NOT ACCEPTED; P1C02 Bree remains LOCKED.
+
 ## 2026-10-08 - P1C01 Ferry composition proof and Gandalf contrast packet
 
 - #1723 completed successfully on exact head cb1c30e0e5cb02999d5a507cd6be0ff08962f9b9. Static gate, UE4.27.2 build/import, six-shot render, runtime audits, warning guard, cook, packaged Runtime Data, packaged startup, runner hardware boundary, and playable upload all passed.
