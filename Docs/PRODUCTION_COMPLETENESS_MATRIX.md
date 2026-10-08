@@ -1,3 +1,13 @@
+## 2026-10-08 - P1C01 packaged named-identity cook closure
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| #1715 packaged launch | FAILED / ROOT IDENTIFIED | Cook/data verification passed, then the packaged executable logged 17 unresolved P1C01 named static packages and rolled back chapter commit |
+| Named static cook residency | SOURCE-FIXED / NEXT FULL RUN REQUIRED | Gandalf, Bilbo, and Sam directories are now explicit cook inputs; async ownership remains in ChapterAssetStreamingPlan |
+| Frodo skeletal material usage | SOURCE-FIXED / #1716 RUNNING | Import commandlet persists `MATUSAGE_SkeletalMesh` on `M_ProductionSurface` |
+| P1C01 visual/device/performance/Gate 6-7 | NOT ACCEPTED | Packaged playable launch, target-device metrics, and human visual acceptance remain required |
+| P1C02 Bree | LOCKED | No chapter integration before P1C01 completion gates pass |
+
 ## 2026-10-08 - P1C01 Frodo skeletal material usage repair
 
 | Area | Status | Evidence / boundary |

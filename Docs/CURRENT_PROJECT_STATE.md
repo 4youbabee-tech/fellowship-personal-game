@@ -1,3 +1,10 @@
+## 2026-10-08 - P1C01 packaged named-identity cook closure
+
+- #1715 completed source/build/import, six-shot capture, runtime audits, cook, and packaged Runtime Data verification, but the packaged executable failed during chapter asset commit: `ChapterAssetStreaming` reported 17 unresolved named static packages for Gandalf, Bilbo, and Sam, followed by rollback. The same log still contained the `M_ProductionSurface` skeletal usage warning; both are being treated as root causes, not acceptance evidence.
+- Root fix for the packaged asset failure: the three bounded P1C01 named-identity folders are now explicit `DirectoriesToAlwaysCook` inputs, matching the async ChapterAssetStreamingPlan ownership. No broad character-directory cook or new runtime loader is introduced.
+- #1716 is the exact-head validation for the skeletal material usage repair on `b06bccef`; the cook-closure delta requires a subsequent full exact-head validation.
+- P1C01 visual/device/performance/Gate 6/7 remain NOT ACCEPTED; P1C02 Bree remains LOCKED.
+
 ## 2026-10-08 - P1C01 Frodo skeletal material usage repair
 
 - #1715 produced a fresh six-shot integrated render artifact and positive named-static identity logs for Sam, Gandalf, and Bilbo; the reviewed frames remain diagnostic low-poly/blockout evidence, and the packaged/EXE lane was still running when this source packet was prepared.
