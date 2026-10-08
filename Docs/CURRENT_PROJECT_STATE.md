@@ -1,3 +1,10 @@
+## 2026-10-08 - P1C01 Bag End composition reproof on #1721
+
+- #1721 completed the exact 07a2df17dfddd9624c02e2fbf91ab0da2e0ec424 full One-Shot: source/static gate, UE4.27.2 build/import, six-shot render capture/upload, Automation/startup/chapter/state/transition/fault/persistence audits, warning-debt guard, cook, packaged Runtime Data, packaged startup, runner hardware boundary, and playable upload.
+- Fresh render artifact: 11525434158 (p1c01-shire-render-integrated-07a2df17dfddd9624c02e2fbf91ab0da2e0ec424). Human review confirms the Bag End frame now reads the village/valley instead of being dominated by the foreground hill; the underlying world and characters remain visibly low-poly/blockout and below final visual fidelity.
+- Fresh playable artifact: 11526545683 (p1c01-playable-windows-07a2df17dfddd9624c02e2fbf91ab0da2e0ec424). Packaged startup, Runtime Data, and runner-boundary evidence passed. This is package/playable evidence, not target-device or performance acceptance.
+- P1C01 remains NOT ACCEPTED for visual/device/performance/Gate 6/7; P1C02 Bree remains LOCKED. The next packet must improve real character/world presentation and re-run the full evidence lane.
+
 ## 2026-10-08 - P1C01 Bag End composition/occlusion packet
 
 - #1719 is technically/playably machine-green, but visual review of artifact `11524864108` found `01_BagEnd_Hill` dominated by a foreground geography plane; Bag End and the valley read are materially occluded.

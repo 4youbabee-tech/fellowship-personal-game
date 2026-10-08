@@ -1,3 +1,14 @@
+## 2026-10-08 - P1C01 Bag End composition reproof on #1721
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| #1721 exact-head technical train | MACHINE-GREEN | Source/static, UE4.27.2 build/import, six-shot render, runtime audits, warning guard, cook, packaged Runtime Data/startup, runner boundary, and playable upload all passed |
+| Bag End composition | PARTIAL ROOT-FIX VERIFIED | Artifact 11525434158 now reads the village/valley; the prior foreground occlusion is reduced, but this is not a final-fidelity visual acceptance |
+| Character/world presentation | DIAGNOSTIC / OPEN | Reviewed render remains low-poly/blockout with weak character readability and insufficient micro-detail/living-world fidelity |
+| Playable package | MACHINE-GREEN / NOT DEVICE-ACCEPTED | Artifact 11526545683; package/startup evidence passed, without target-device sign-off |
+| Performance / P1C01 Gate 6-7 | NOT ACCEPTED | No target-device FPS/frame-time/pacing evidence or human final visual acceptance |
+| P1C02 Bree | LOCKED | No chapter integration before P1C01 completion gates genuinely pass |
+
 ## 2026-10-08 - P1C01 Bag End composition/occlusion packet
 
 | Area | Status | Evidence / boundary |
