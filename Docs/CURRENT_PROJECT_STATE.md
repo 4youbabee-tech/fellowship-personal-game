@@ -5607,3 +5607,12 @@ The repository Governor is the sole authority for this operating method and its 
 ## 2026-10-08 — PG-078 and governance-ancestor classifier root fix
 
 #1752 failed before Unreal because the newly recorded CVBP requirement was not yet represented in Data/MasterExecutionRoadmap.json; it was reconciled in commit d438ef0. The same incident exposed a throughput defect: safe governance/doc-only ancestry could miss the prior green core Unreal proof and fall back to an unnecessary full train. Scripts/classify_unreal_validation.ps1 now checks the nearest safe ancestor's core Unreal proof before tree-equivalent fallback, with a regression assertion in Scripts/test_unreal_classifier.ps1. Runtime, asset, story, save, performance and acceptance gates are unchanged.
+
+
+## 2026-10-08 - P1C01 capture lifecycle root-fix packet
+
+- Exact-head Unreal Validation #1765 on 2b01ecce035eeef097706362de0b44273e75179c passed checkout, 64/64 static/source tests, UE4.27.2 C++ build, and 384-file production import.
+- It failed at the fifth visual capture with P1C01_RENDER_CAPTURE_FAIL reason=screenshot_timeout name=05_Bywater_Facing_Edge; the existing capture contract allowed only 75 seconds and did not prove that the previous UE4 process had drained before launching the next shot.
+- Root fix on the production P1C01 branch: increase the bounded first-frame wait to 150 seconds, explicitly drain project-owned UE4Editor.exe processes for up to 30 seconds between shots, fail with a distinct drain-timeout code, and print process/log diagnostics on screenshot timeout.
+- Added Scripts/test_p1c01_capture_contract.py and wired it into the exact-head static gate. This is a capture/CI reliability fix only; it adds no runtime gameplay, actors, collision, synchronous loading, chapter unlock, or production asset.
+- Fresh exact-head Unreal/render/runtime/package proof is required on the new head. #1765 remains FAILED evidence for the old capture contract; no PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED, or Gate 6/7 claim is made. P1C02 Bree remains locked.
