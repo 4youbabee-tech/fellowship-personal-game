@@ -313,6 +313,8 @@ void AShirePrototypeWorldBuilder::BeginPlay()
         TEXT("/Game/Production/Imported/P1C01Materials/SH_DIRT_SOIL/MI_Sh_DirtSoil_PH.MI_Sh_DirtSoil_PH"));
     UMaterialInterface* HighFidelityPathMaterial = ResolveResidentMaterial(
         TEXT("/Game/Production/Imported/P1C01Materials/SH_STONY_PATH/MI_Sh_StonyPath_PH.MI_Sh_StonyPath_PH"));
+    UMaterialInterface* HighFidelityGrassMaterial = ResolveResidentMaterial(
+        TEXT("/Game/Production/Imported/P1C01Materials/SH_GRASS_PATH/MI_Sh_GrassPath_PH.MI_Sh_GrassPath_PH"));
     UMaterialInterface* HighFidelityBarkMaterial = ResolveResidentMaterial(
         TEXT("/Game/Production/Imported/P1C01Materials/SH_TREE_BARK/MI_Sh_TreeBark_PH.MI_Sh_TreeBark_PH"));
     UMaterialInterface* HighFidelityStoneMaterial = ResolveResidentMaterial(
@@ -401,6 +403,12 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     {
         if (PathStoneInstances) PathStoneInstances->SetMaterial(0, HighFidelityPathMaterial);
     }
+    if (HighFidelityGrassMaterial)
+    {
+        if (GroundTileInstances) GroundTileInstances->SetMaterial(0, HighFidelityGrassMaterial);
+        if (GeographyHillInstances) GeographyHillInstances->SetMaterial(0, HighFidelityGrassMaterial);
+        if (GeographySlopeInstances) GeographySlopeInstances->SetMaterial(0, HighFidelityGrassMaterial);
+    }
     if (HighFidelityBarkMaterial)
     {
         if (DistantTreeTrunkInstances) DistantTreeTrunkInstances->SetMaterial(0, HighFidelityBarkMaterial);
@@ -414,7 +422,7 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     UE_LOG(
         LogTemp,
         Display,
-        TEXT("P1C01_SHIRE_LOCAL_MATERIAL_OVERRIDE grass=%s earth=%s bark=%s leaves=%s wood=%s hfDirt=%s hfPath=%s hfBark=%s hfStone=%s hfGrass=deferred commonAssetsMutated=no syncLoad=no densityIncrease=no"),
+        TEXT("P1C01_SHIRE_LOCAL_MATERIAL_OVERRIDE grass=%s earth=%s bark=%s leaves=%s wood=%s hfDirt=%s hfPath=%s hfBark=%s hfStone=%s hfGrass=%s commonAssetsMutated=no syncLoad=no densityIncrease=no"),
         ShireGrassMaterial ? TEXT("resident") : TEXT("missing"),
         ShireEarthMaterial ? TEXT("resident") : TEXT("missing"),
         ShireBarkMaterial ? TEXT("resident") : TEXT("missing"),
@@ -423,7 +431,8 @@ void AShirePrototypeWorldBuilder::BeginPlay()
         HighFidelityDirtMaterial ? TEXT("resident") : TEXT("missing"),
         HighFidelityPathMaterial ? TEXT("resident") : TEXT("missing"),
         HighFidelityBarkMaterial ? TEXT("resident") : TEXT("missing"),
-        HighFidelityStoneMaterial ? TEXT("resident") : TEXT("missing"));
+        HighFidelityStoneMaterial ? TEXT("resident") : TEXT("missing"),
+        HighFidelityGrassMaterial ? TEXT("resident") : TEXT("missing"));
 
     BuildPrototypeWorld();
 

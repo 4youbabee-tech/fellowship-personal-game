@@ -1,3 +1,11 @@
+## 2026-10-08 - P1C01 high-fidelity grass/ground readability packet
+
+- #1704 is technically green on the exact branch head: C++ build, production import, six-shot render capture, runtime QA, chapter audit, route/save roundtrip, cook/package, packaged launch, runner hardware-boundary collection, and artifact upload all passed.
+- The reviewed #1704 artifact is still diagnostic rather than visual acceptance: the Shire is readable and the Frodo rig reports active at scale 0.010, but broad ground/terrain surfaces remain visibly low-detail/blockout.
+- Root cause targeted in this packet: the resident SH_GRASS_PATH material was imported but not promoted onto the broad repeated ground/hill/slope HISM surfaces; the previous path only used the grass-family fallback.
+- Runtime repair: resolve the already-imported MI_Sh_GrassPath_PH resident material and apply it only to the existing GroundTileInstances, GeographyHillInstances, and GeographySlopeInstances. No new actor density, collision, sync load, per-instance tick, or common-asset mutation is introduced.
+- A fresh exact-head #1705 render/package run is required. VISUALLY-ACCEPTED, DEVICE-TESTED, PERFORMANCE-ACCEPTED, and Gate 6/7 remain unclaimed; P1C02 Bree remains LOCKED.
+
 ## 2026-10-08 - P1C01 all-slot patch compile root fix
 
 - Unreal Build Validation #1703 failed at the C++ build, not at Unreal runtime: MSVC C4456 reported a nested MID declaration in ShirePlayerCharacter.cpp after the all-slot patch retained the previous outer MID guard.

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "manifest_id": "P1C01_WORLD_MICRO_DETAIL_COMPLETION_V1",
-  "status": "ALL_SLOT_PATCH_COMPILE_ROOT_FIXED",
+  "status": "GRASS_GROUND_READABILITY_PACKET_SOURCE_IMPLEMENTED",
   "authority": [
     "Data/ProjectGovernor.json",
     "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
@@ -123,15 +123,15 @@
     "target": "8 GB RAM / ~2 GB VRAM / DX11 / 1280x720 / 30 FPS floor"
   },
   "latest_render_diagnosis": {
-    "exact_head": "9afcbd69c5885f32631842f1fc7e3269f67dc211",
-    "artifact": "p1c01-shire-render-integrated-42666c2256df904eeb02c491f5ffea441e89a559",
-    "evidence": "#1703 failed before runtime at MSVC C4456 in the player all-slot material lambda; #1702 remains the latest valid technical render/package evidence.",
+    "exact_head": "a3f0fca39ef7c8951f140659e36986403c6569e1",
+    "artifact": "p1c01-shire-render-integrated-a3f0fca39ef7c8951f140659e36986403c6569e1",
+    "evidence": "#1704 completed the full exact-head technical/playable train. Six rendered shots were inspected; Frodo calibration/rig readiness passed, but broad ground and terrain still read as low-detail/blockout.",
     "blockers": [
-      "Fresh exact-head build and render required after nested MID fix",
-      "World remains visibly low-detail/blockout in reviewed captures",
+      "Fresh exact-head #1705 render/package required after resident grass-path material promotion",
+      "World remains visually low-detail/blockout in reviewed captures",
       "Human visual/audio/gameplay/device/performance acceptance remains incomplete"
     ],
-    "disposition": "Root-fixed the compile defect without changing the all-slot material intent. Run #1704 for exact-head reproof."
+    "disposition": "Implemented a resident-only grass-path material packet for the broad ground, hill, and slope HISM surfaces. Reproof #1705 is required before any visual or gate status changes."
   },
   "force_full_render_reproof": true
 }

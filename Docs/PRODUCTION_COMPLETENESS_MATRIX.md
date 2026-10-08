@@ -1,3 +1,14 @@
+## 2026-10-08 - P1C01 high-fidelity grass/ground readability packet
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| #1704 exact-head train | TECHNICAL / PLAYABLE PASS | Six captures, runtime audits, cook/package, packaged launch, and artifact upload passed on a3f0fca3 |
+| Reviewed render | DIAGNOSTIC / NOT VISUALLY-ACCEPTED | Frodo rig active and calibrated; broad ground/terrain remains low-detail/blockout |
+| Broad grass/ground material | SOURCE-IMPLEMENTED / #1705 PENDING | Resident MI_Sh_GrassPath_PH now targets the existing ground/hill/slope HISM components only |
+| Performance boundary | PRESERVED | No density increase, sync load, collision change, per-instance tick, or common asset mutation |
+| P1C01 visual/device/performance/Gate 6-7 | NOT ACCEPTED | No qualifying human visual/device/frame-time evidence |
+| P1C02 Bree | LOCKED | No chapter integration before P1C01 gates pass |
+
 ## 2026-10-08 - P1C01 all-slot patch compile root fix
 
 | Area | Status | Evidence / boundary |
