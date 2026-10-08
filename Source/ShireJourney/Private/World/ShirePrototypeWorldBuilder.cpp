@@ -363,11 +363,28 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     // P1C01-local material correction. The Common asset bank stays globally untouched;
     // only this chapter's repeated components are overridden with already-resident,
     // texture-backed Shire materials. ResolveResidentMaterial never performs a sync load.
+    bool bBroadTerrainNeutralTintApplied = false;
     if (ShireGrassMaterial)
     {
-        if (GroundTileInstances) GroundTileInstances->SetMaterial(0, ShireGrassMaterial);
-        if (GeographyHillInstances) GeographyHillInstances->SetMaterial(0, ShireGrassMaterial);
-        if (GeographySlopeInstances) GeographySlopeInstances->SetMaterial(0, ShireGrassMaterial);
+        // TX_ShGrass already carries authored green albedo. The imported Grass
+        // instance also carries a green Kd multiplier, which double-tints large
+        // surfaces into an unnaturally saturated emerald. Neutralize only the
+        // broad-terrain multiplier through one shared MID; foliage keeps its
+        // authored material response and no additional instances or loads are added.
+        UMaterialInterface* BroadTerrainGrassMaterial = ShireGrassMaterial;
+        if (UMaterialInstanceDynamic* BroadTerrainGrassMID =
+                UMaterialInstanceDynamic::Create(ShireGrassMaterial, this))
+        {
+            BroadTerrainGrassMID->SetVectorParameterValue(
+                TEXT("Color"),
+                FLinearColor::White);
+            BroadTerrainGrassMaterial = BroadTerrainGrassMID;
+            bBroadTerrainNeutralTintApplied = true;
+        }
+
+        if (GroundTileInstances) GroundTileInstances->SetMaterial(0, BroadTerrainGrassMaterial);
+        if (GeographyHillInstances) GeographyHillInstances->SetMaterial(0, BroadTerrainGrassMaterial);
+        if (GeographySlopeInstances) GeographySlopeInstances->SetMaterial(0, BroadTerrainGrassMaterial);
     }
     if (ShireEarthMaterial)
     {
@@ -421,7 +438,7 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     UE_LOG(
         LogTemp,
         Display,
-        TEXT("P1C01_SHIRE_LOCAL_MATERIAL_OVERRIDE grass=%s earth=%s bark=%s leaves=%s wood=%s hfDirt=%s hfPath=%s hfBark=%s hfStone=%s hfGrass=%s broadGround=shire-grass commonAssetsMutated=no syncLoad=no densityIncrease=no"),
+        TEXT("P1C01_SHIRE_LOCAL_MATERIAL_OVERRIDE grass=%s earth=%s bark=%s leaves=%s wood=%s hfDirt=%s hfPath=%s hfBark=%s hfStone=%s hfGrass=%s broadGround=%s commonAssetsMutated=no syncLoad=no densityIncrease=no"),
         ShireGrassMaterial ? TEXT("resident") : TEXT("missing"),
         ShireEarthMaterial ? TEXT("resident") : TEXT("missing"),
         ShireBarkMaterial ? TEXT("resident") : TEXT("missing"),
@@ -431,7 +448,10 @@ void AShirePrototypeWorldBuilder::BeginPlay()
         HighFidelityPathMaterial ? TEXT("resident") : TEXT("missing"),
         HighFidelityBarkMaterial ? TEXT("resident") : TEXT("missing"),
         HighFidelityStoneMaterial ? TEXT("resident") : TEXT("missing"),
-        HighFidelityGrassMaterial ? TEXT("resident") : TEXT("missing"));
+        HighFidelityGrassMaterial ? TEXT("resident") : TEXT("missing"),
+        bBroadTerrainNeutralTintApplied
+            ? TEXT("shire-grass-neutral-tint")
+            : TEXT("shire-grass-authored-tint"));
 
     BuildPrototypeWorld();
 

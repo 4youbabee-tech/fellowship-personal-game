@@ -1,3 +1,12 @@
+## 2026-10-08 - P1C01 #1726 terrain identity proof and broad-grass tint calibration
+
+- Unreal Build Validation #1726 completed successfully on exact head `edd97e7a179b564da656ae61d91212b3ae36ece5`. Source/static gate, UE4.27.2 build/import, six-shot capture, Automation/runtime audits, zero warning debt, cook/package, 37/37 packaged Runtime Data, 6s packaged executable startup, hardware snapshot, and artifact uploads all passed.
+- Fresh evidence: render artifact `11530516713`, playable artifact `11529869066`, and 271/271 streamed assets. The runner remained Intel i7-6498DU with 8,457,560,064 bytes RAM; this is not target-device or performance acceptance.
+- Six-shot comparison verifies the broad-terrain identity correction: Bag End, Hobbiton, Party Field, Bywater, and Ferry terrain no longer read as the beige soil-dominant `grass_path_2` surface. The same evidence shows the restored Shire Grass material is excessively emerald/saturated and paths remain visually pale; the chapter is still low-poly/blockout and NOT VISUALLY-ACCEPTED.
+- Root cause for the broad grass saturation is a double tint: `TX_ShGrass` already carries green albedo, while the synthesized Grass instance multiplies it by a second green `Kd` value. This packet creates one shared P1C01-local dynamic material instance for broad ground/hills/slopes and sets only its `Color` multiplier to neutral white. Foliage keeps its authored response.
+- No source texture, mesh, actor count, HISM density, collision, streaming ownership, synchronous load, gameplay, camera, lighting, or common asset is changed. Fresh exact-head full One-Shot and six-shot comparison are required.
+- P1C01 visual/device/performance/Gate 6/7 remain NOT ACCEPTED; P1C02 Bree remains LOCKED.
+
 ## 2026-10-08 - P1C01 Gandalf contrast proof and broad-terrain identity correction
 
 - Unreal Build Validation #1725 completed successfully on exact head `9579d3f2e20f4a7374e2aadcf93fcce165c45447`. Source/static gate, UE4.27.2 build/import, six-shot capture, Automation and runtime audits, warning-debt guard, cook/package, packaged Runtime Data, packaged executable startup, hardware snapshot, and both artifact uploads passed.

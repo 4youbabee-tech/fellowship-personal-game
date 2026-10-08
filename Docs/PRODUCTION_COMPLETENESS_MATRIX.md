@@ -1,3 +1,16 @@
+## 2026-10-08 - P1C01 #1726 terrain identity proof and broad-grass tint calibration
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| #1726 technical train | MACHINE-GREEN | Exact-head build/import, six captures, runtime audits, zero warning debt, cook/package, 37/37 data, 6s startup, hardware snapshot, and artifact uploads passed |
+| Artifacts | FRESH / DIAGNOSTIC | Render `11530516713`; playable `11529869066`; streaming preflight 271/271 |
+| Broad terrain identity | VISUAL IMPROVEMENT VERIFIED / NOT ACCEPTED | Soil-dominant beige override is gone across the route; current Shire Grass reads excessively emerald/saturated |
+| Saturation root cause | IDENTIFIED | Authored green `TX_ShGrass` is multiplied by a second green MTL `Kd` tint |
+| Broad-grass calibration | SOURCE-FIXED / FULL RUN REQUIRED | One shared P1C01-local MID neutralizes only the broad-terrain `Color` multiplier; foliage retains authored response |
+| Runtime/performance boundary | PRESERVED | No density, actor, collision, streaming-owner, sync-load, gameplay, camera, lighting, texture, or common-asset change |
+| VISUALLY-ACCEPTED / DEVICE-TESTED / PERFORMANCE-ACCEPTED / Gate 6-7 | NOT ACCEPTED | Fresh render reproof, path/material refinement, final-fidelity review, target-device metrics, audio/gameplay acceptance remain required |
+| P1C02 Bree | LOCKED | Begin only after P1C01 completion gates genuinely pass |
+
 ## 2026-10-08 - P1C01 Gandalf contrast proof and broad-terrain identity correction
 
 | Area | Status | Evidence / boundary |
