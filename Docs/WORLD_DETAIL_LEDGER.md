@@ -1606,3 +1606,10 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - ExplorationEnvelope owns labels for exploration discoveries; ContextualSideActivityPlan owns labels only for contextual side-only discoveries.
 - The four P1C01 side-only activity rewards remain explicitly labelled and story-neutral.
 - No world density, runtime authority, chapter transition or P1C02 scope changed.
+
+
+## 2026-10-08 - P1C01 production-importer validation ownership repair
+
+- No new world feature is introduced. This entry closes a validation ownership defect that could let Shire material/presentation importer changes inherit old engine proof without fresh captures.
+- `ShireProductionImportCommandlet.cpp` now belongs only to the definitive P1C01 full visual train for automatic validation. Historical Human Wave2 inheritance no longer owns it.
+- Any future importer change must rebuild/import/capture before world-detail presentation evidence can be promoted.

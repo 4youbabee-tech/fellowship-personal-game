@@ -5326,3 +5326,14 @@ The latest visual packet manifest is now also a full-lane trigger. This closes t
 | Runtime/package | Build/import/QA/startup/route-save/cook/package passed | Re-run required after packet |
 | Human visual/audio/gameplay/performance/device acceptance | Not evidenced | NOT CLAIMED |
 | P1C02 Bree | P1C01 gates incomplete | LOCKED |
+
+
+## 2026-10-08 - #1728 evidence correction / importer validation ownership
+
+| Area | State | Evidence / boundary |
+|---|---|---|
+| Head `94fc87e824e262fa66ece2367ab18ce5aa361fcf` | STATIC-VALIDATED / FULL ENGINE RERUN REQUIRED | #1728 ran source/static gate but inherited parent engine proof; all UE4/render/package steps skipped |
+| Shire texture double-tint importer change | SOURCE-IMPLEMENTED | fresh exact-head import/render proof still required |
+| Production importer classifier ownership | ROOT-FIXED / RERUN PENDING | removed from Human Wave2 safe/inherit allowlists; retained in full visual-impact set |
+| Visual / device / performance / Gate 6-7 | NOT ACCEPTED | unchanged |
+| Bree / P1C02 | LOCKED | unchanged |

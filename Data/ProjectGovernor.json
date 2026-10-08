@@ -9001,5 +9001,26 @@
     "other_prs": "Normal superseded-run cancellation remains enabled outside the definitive branch.",
     "rationale": "Repeated branch commits were cancelling engine runs and discarding useful work, producing apparent build stagnation.",
     "acceptance_boundary": "Scheduling only; fresh completed engine evidence required."
+  },
+  "p1c01_production_importer_classifier_root_fix_2026_10_08": {
+    "status": "SOURCE_IMPLEMENTED_FRESH_FULL_UNREAL_REQUIRED",
+    "parent_head": "94fc87e824e262fa66ece2367ab18ce5aa361fcf",
+    "observed_run": {
+      "workflow": "Unreal Build Validation",
+      "run_number": 1728,
+      "conclusion": "success",
+      "actual_mode": "inherit",
+      "actual_reason": "dedicated-human-wave2-owns-editor-build-and-ue4-gate",
+      "engine_steps_skipped": true
+    },
+    "defect": "The production importer remained in historical Human Wave2 inheritance/safe-delta allowlists despite being a definitive P1C01 full visual-presentation input.",
+    "root_fix": [
+      "Remove importer from Test-CoreProofSafeInterveningDelta safe exact list.",
+      "Remove importer from dedicatedHumanWave2Exact.",
+      "Remove importer from the main safeExact inheritance list.",
+      "Keep importer in FULL_UNREAL_VISUAL_PRESENTATION_FILE classification.",
+      "Add production-importer-visual -> full regression."
+    ],
+    "evidence_boundary": "Fresh exact-head full UE4 build/import/render/runtime/package required. No visual/device/performance/Gate 6/7 acceptance."
   }
 }

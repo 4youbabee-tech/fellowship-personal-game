@@ -5451,3 +5451,12 @@ Unreal Build Validation #1697 proved the broad-surface grass-path override was n
 ### P1C01 presentation composition and lighting packet (2026-10-08)
 
 The #1698 artifact was technically complete but visual review still found low-detail blockout surfaces, close/occluded compositions, dark interior framing, and no visible character hero read in the six HUD-free views. The next packet adjusts only the review-route camera anchors and bounded runtime presentation: lower sun intensity, stronger sky fill, lighter/shorter fog contribution, controlled exposure, saturation, and contrast. Fresh exact-head capture/package evidence is required; this is not VISUALLY-ACCEPTED, DEVICE-TESTED, PERFORMANCE-ACCEPTED, or Gate 6/7 evidence.
+
+
+## 2026-10-08 - P1C01 production-importer classifier root fix
+
+- Live head `94fc87e824e262fa66ece2367ab18ce5aa361fcf` produced Unreal Build Validation #1728 = SUCCESS, but the actual classification was `mode=inherit` with reason `dedicated-human-wave2-owns-editor-build-and-ue4-gate`.
+- #1728 therefore did **not** run UE4 compile/import/render/runtime/package for the texture double-tint importer correction; those steps were skipped. The importer correction remains **SOURCE-IMPLEMENTED / STATIC-VALIDATED**, not fresh engine/render proven.
+- Root fix: `ShireProductionImportCommandlet.cpp` is removed from all three historical safe/dedicated Human Wave2 inheritance allowlists while remaining explicitly classified as `FULL_UNREAL_VISUAL_PRESENTATION_FILE`.
+- Regression coverage now requires an importer-only visual delta to classify `full` and rejects reintroduction into the Human Wave2 short-circuit.
+- No gameplay, world authority, chapter boundary, density, streaming ownership or asset residency change is introduced. P1C02/Bree remains locked.
