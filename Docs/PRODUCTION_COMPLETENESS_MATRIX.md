@@ -1,3 +1,14 @@
+## 2026-10-09 — P1C01 scenic instancing + route cleanup production packet
+
+| Area | Candidate implementation | Test/evidence boundary |
+|---|---|---|
+| Shire repeated scenic actor overhead | SOURCE-IMPLEMENTED: 65 authored decorative placements across 11 call sites queued by mesh to <=15 resident HISM cluster actors; unchanged instance count and transforms | Exact-head source contract and UE4.27.2 compile still required; no measured FPS gain claimed |
+| Chapter transition generated-detail lifetime | SOURCE-IMPLEMENTED: `ClearPrototypeBuilders()` cleans tagged `AWorldDetailCluster` alongside static actors | Static guard added; headless route/state validation and PIE remain required |
+| Ferry collision/interaction | PRESERVED: original `ProductionCommonFootbridgeMesh` collision-bearing actor not batched | Collision and crossing must be exercised in PIE |
+| Existing production asset importer | UNCHANGED: project-owned `ShireProductionImport` retained; no duplicate Python importer or Jenkins | #1772 prior build green only |
+| Shire visual completion | OPEN: real 7 character/mount FBX bundles, natural architecture/foliage/terrain, audio and review | No VISUALLY-ACCEPTED/DEVICE-TESTED/performance or Gate 6/7 claim |
+| Bree P1C02 | LOCKED | No runtime expansion |
+
 ## 2026-10-09 - Verified #1772 baseline, fail-closed same-head resume and remaining Shire
 
 | Scope | State | Evidence / next hard gate |

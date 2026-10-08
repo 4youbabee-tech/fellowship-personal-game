@@ -745,3 +745,12 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 **Root invariant:** the Governor permits resume only on the identical checked-out commit and unchanged UE4 engine, with SHA256 fingerprints of the required resident outputs, valid stage-specific reports and a verified predecessor receipt. Any missing/altered inputs or evidence reopens the affected stage and all downstream stages. Static validation, runner health, packaged startup and human Gate 6/7 checks remain required.
 
 **Regression check:** `Scripts/test_ci_resume_proof.py` probes missing receipts, other SHA, altered character asset, missing screenshot, failed runtime result, modified package manifest, changed engine and predecessor dependency. Offline tests passed (6/6); fresh Windows runner integration remains pending. This optimisation is not a chapter acceptance label.
+
+### P1C01 regression — generated HISM detail survives chapter reload (2026-10-09)
+
+**Trigger/risk:** `SpawnScenicDetailPass` constructed many no-collision single-mesh actors for recurring decor despite an established `AWorldDetailCluster` class. `AChapterWorldRouter::ClearPrototypeBuilders` removed tagged static-mesh/text actors and prototype builders but did not enumerate the independent tagged `AWorldDetailCluster` actors. Over repeated chapter/route transitions this creates stale decorative HISM clusters and potential RAM/draw overhead.
+
+**Structural correction:** Batch the existing scenic CP52/CP53 decorative placements by resident mesh identity into `AWorldDetailCluster` with no new source loads/instance density/ticks. Preserve the Ferry footbridge collision actor and original positions/rotations/scales. Router now removes generated clusters by existing `RuntimePrototypeGenerated` tag at transition time; it never removes untagged actor decorations.
+
+**Machine guard:** `Scripts/test_source_contracts.py:test_p1c01_scenic_reuse_groups_existing_details_and_cleans_them_on_transition` plus `Data/ProjectGuardRules.json:p1c01_scenic_cluster_cleanup_guard`. This guards source structure and budget; it is **not** PIE verification of crossing/save/transition nor measured GPU/VRAM/FPS proof.
+

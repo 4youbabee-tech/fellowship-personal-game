@@ -1,3 +1,12 @@
+## 2026-10-09 — P1C01 measured-bottleneck follow-up from programmer review: scenic actor batching
+
+- This is the **next P1C01 runtime-changing candidate after #1773**, not a new chapter or system. The programmer report's actionable HISM recommendation is implemented by reusing the existing `AWorldDetailCluster` component; Jenkins, Gauntlet, UE5 Geometry Scripting, new Python importer and blind GC tuning are not introduced.
+- `ShirePrototypeWorldBuilder.cpp`: consolidate 65 maximum existing no-collision scenic placements in 11 source call sites into at most 15 HISM cluster actors, subject to resident mesh availability. Exact location/rotation/scale and existing imported mesh/material identity remain unchanged; no new art asset or density increase.
+- `ChapterWorldRouter.cpp`: clear tagged `AWorldDetailCluster` actors on chapter/route replacement alongside tagged static mesh actors. This closes a concrete orphan-cluster risk without touching the living-world/NPC/quest/save ownership.
+- `Data/P1C01ScenicBatchOptimizationV1.json`, Governor `DEC-106`, `Scripts/test_source_contracts.py` and Guardian updated in the **same candidate**, with source and performance boundary documented in `WORLD_DETAIL_LEDGER.md`.
+- New change classification: **SOURCE-IMPLEMENTED / STATIC CHECKS PENDING exact HEAD; COMPILE-TESTED NOT YET**. Prior #1772 green package and #1773 intermediate progress do not validate this new candidate. Real DX11 720p performance, full PIE and Gate 6/7 remain pending.
+- Runtime route remains P1C01 (Bag End → Hobbiton → Party Field → wooded road → Bucklebury Ferry); P1C02 is locked. Seven final FBX character/mount bundles, higher-fidelity terrain/foliage/architecture and audio remain separate open production work.
+
 ## 2026-10-09 - P1C01 continued production: #1772 green, safe resume stage implementation
 
 - Exact-head PR #329 / `71e42bf850132db462fbea5abaac4de9f29633b5`: Unreal Build #1772 (37841736884) **SUCCESS** across static/source, UE4.27.2 compile, production import, seven 1280x720 Shire captures, Automation QA, startup/chapter/state/persistence tests, warning-debt, Windows cook/package, 37/37 packaged data and packaged executable startup. Render artifact 11578711832; Windows artifact 11578891697 (~166.6MB). Evidence belongs to this HEAD only.

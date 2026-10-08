@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "plan_id": "P1C01_SCENIC_BATCH_OPTIMIZATION_V1",
+  "status": "SOURCE_IMPLEMENTED_ENGINE_VALIDATION_PENDING",
+  "runtime_chapter": "P1C01",
+  "governor_authority": "Data/ProjectGovernor.json:DEC-106",
+  "reason": "Reuse existing AWorldDetailCluster HISM for already-authored low-collision roadside, village, woodland and ferry-bank decoration. Avoid one AStaticMeshActor per visual prop and clean generated HISM clusters on chapter transitions.",
+  "canonical_reference": [
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE: Shire/Hobbiton pastoral hills, domestic scale, river crossing and readable geography",
+    "Data/P1C01VisibleWorldReuseBindingPacketV1.json",
+    "Data/P1C01ShireVisualFinishWaveV1.json"
+  ],
+  "scope": {
+    "source": "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp:SpawnScenicDetailPass",
+    "cleanup": "Source/ShireJourney/Private/World/ChapterWorldRouter.cpp:ClearPrototypeBuilders",
+    "queued_call_sites": 11,
+    "existing_max_decor_instances": 65,
+    "max_distinct_mesh_groups": 15,
+    "ferry_collision_actor": "ProductionCommonFootbridgeMesh",
+    "no_new_instances": true,
+    "zero_added_sources": true
+  },
+  "runtime_contract": {
+    "new_meshes": false,
+    "new_synchronous_loads": false,
+    "new_tick": false,
+    "new_gameplay_actor_spawn": false,
+    "new_runtime_system": false,
+    "preserve_ferry_footbridge_collision": true,
+    "preserve_original_transforms": true,
+    "preserve_existing_asset_materials": true,
+    "preserve_quest_anchors_and_save_keys": true,
+    "generated_actor_tag": "RuntimePrototypeGenerated",
+    "batch_actor_tag": "P1C01ScenicBatch",
+    "inherited_cluster_class": "AWorldDetailCluster",
+    "hism_cull_start_cm": 0,
+    "hism_cull_end_cm": 32000,
+    "note": "Culling end 32000cm retains all P1C01 authored scenic corridor distances; tune only after DX11/720p profile."
+  },
+  "performance_target": {
+    "cpu": "i7 6th generation",
+    "system_ram_gb": 8,
+    "vram_class_gb": 2,
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "fps_floor": 30,
+    "measurements_pending": [
+      "actor counts and draw calls before/after",
+      "frame time 99th percentile",
+      "RAM and VRAM",
+      "streaming and GC hitch",
+      "chapter transitions and save/load"
+    ]
+  },
+  "regression": {
+    "source_test": "Scripts/test_source_contracts.py:test_p1c01_scenic_reuse_groups_existing_details_and_cleans_them_on_transition",
+    "engine_evidence": "Unreal Build Validation exact-head C++ build + Automation + Headless route/state; later PIE traversal and performance on target hardware",
+    "accepting_state": "No PIE/device/visual/performance acceptance until user-review and hardware evidence"
+  },
+  "deferred_from_programmer_proposal": [
+    "Do not add Jenkins: GitHub Actions and BuildCookRun exist and were machine-green on #1772.",
+    "Do not move to UE5-only Geometry Scripting or unsupported DynamicMesh APIs.",
+    "Do not enable editor Python globally or add a parallel importer; ShireProductionImport already imports tracked assets.",
+    "Do not change GC/streaming CVars without measured evidence.",
+    "Do not enable Gauntlet framework by default before identifying tests missed by current Automation/Headless suite."
+  ],
+  "evidence_boundary": "STATIC SOURCE PREPARED / COMPILE-TESTED PENDING. No PIE/device/visual/performance acceptance or chapter closure."
+}

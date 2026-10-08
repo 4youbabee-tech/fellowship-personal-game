@@ -198,5 +198,12 @@
     "interactive_workspace_policy": "Developer clone only; GitHub Actions _work is runner-exclusive.",
     "local_helper_branch_switch_forbidden": true,
     "pre_ubt_source_integrity_required": true
+  },
+  "p1c01_scenic_cluster_cleanup_guard": {
+    "plan": "Data/P1C01ScenicBatchOptimizationV1.json",
+    "source": "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp",
+    "cleanup": "Source/ShireJourney/Private/World/ChapterWorldRouter.cpp",
+    "regression": "Scripts/test_source_contracts.py:test_p1c01_scenic_reuse_groups_existing_details_and_cleans_them_on_transition",
+    "design_limit": "65 authored instances, 11 queue sites, <=15 resident mesh groups, preserve Ferry collision and existing assets"
   }
 }

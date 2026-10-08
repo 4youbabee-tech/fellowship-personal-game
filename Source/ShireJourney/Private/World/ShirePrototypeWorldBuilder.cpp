@@ -6025,6 +6025,32 @@ void AShirePrototypeWorldBuilder::SpawnScenicDetailPass()
         }
     }
 
+
+    // Batch only already-resident, no-collision decorative meshes. Preserve their
+    // exact authored positions/scales/materials and leave gameplay collision actors
+    // (notably the Ferry footbridge) on the existing SpawnProd path.
+    // This replaces dozens of separate AStaticMeshActors with one existing
+    // AWorldDetailCluster/HISM actor per resident mesh identity. No Tick or loading.
+    TMap<UStaticMesh*, TArray<FTransform>> ScenicBatches;
+    int32 QueuedScenicInstances = 0;
+    auto QueueScenic = [this, &ScenicBatches, &QueuedScenicInstances](
+        UStaticMesh* Mesh, const FVector& Location, const FVector& Scale,
+        const FRotator& Rotation, bool bCollision)
+    {
+        if (!Mesh)
+        {
+            return;
+        }
+        if (bCollision)
+        {
+            // Do not silently turn a traversable/colliding landmark into decor.
+            SpawnShape(Mesh, Location, Scale, FLinearColor::White, Rotation, true);
+            return;
+        }
+        ScenicBatches.FindOrAdd(Mesh).Emplace(Rotation, Location, Scale);
+        ++QueuedScenicInstances;
+    };
+
     // CP52: saturate the playable Shire with the reusable common kit. These are
     // deliberately non-blocking details around existing safe traversal corridors.
     const FVector SharedTrees[] = {
@@ -6034,7 +6060,7 @@ void AShirePrototypeWorldBuilder::SpawnScenicDetailPass()
     };
     for (int32 Index = 0; Index < UE_ARRAY_COUNT(SharedTrees); ++Index)
     {
-        SpawnProd(ProductionCommonBroadleafTreeMesh, SharedTrees[Index],
+        QueueScenic(ProductionCommonBroadleafTreeMesh, SharedTrees[Index],
             FVector(0.72f + 0.05f * (Index % 3)),
             FRotator(0.0f, static_cast<float>((Index * 41) % 360), 0.0f), false);
     }
@@ -6046,7 +6072,7 @@ void AShirePrototypeWorldBuilder::SpawnScenicDetailPass()
     };
     for (int32 Index = 0; Index < UE_ARRAY_COUNT(FieldFences); ++Index)
     {
-        SpawnProd(ProductionCommonVillageFenceMesh, FieldFences[Index], FVector(0.78f),
+        QueueScenic(ProductionCommonVillageFenceMesh, FieldFences[Index], FVector(0.78f),
             FRotator(0.0f, Index < 6 ? 0.0f : 3.0f, 0.0f), false);
     }
 
@@ -6056,7 +6082,7 @@ void AShirePrototypeWorldBuilder::SpawnScenicDetailPass()
     };
     for (int32 Index = 0; Index < UE_ARRAY_COUNT(RuralClutter); ++Index)
     {
-        SpawnProd(Index % 2 == 0 ? ProductionCommonWoodPileMesh : ProductionCommonFallenLogMesh,
+        QueueScenic(Index % 2 == 0 ? ProductionCommonWoodPileMesh : ProductionCommonFallenLogMesh,
             RuralClutter[Index], FVector(0.72f + 0.04f * (Index % 3)),
             FRotator(0.0f, static_cast<float>((Index * 53) % 360), 0.0f), false);
     }
@@ -6067,7 +6093,7 @@ void AShirePrototypeWorldBuilder::SpawnScenicDetailPass()
     };
     for (int32 Index = 0; Index < UE_ARRAY_COUNT(Ferns); ++Index)
     {
-        SpawnProd(ProductionCommonFernClumpMesh, Ferns[Index],
+        QueueScenic(ProductionCommonFernClumpMesh, Ferns[Index],
             FVector(0.62f + 0.05f * (Index % 3)),
             FRotator(0.0f, static_cast<float>((Index * 67) % 360), 0.0f), false);
     }
@@ -6078,7 +6104,7 @@ void AShirePrototypeWorldBuilder::SpawnScenicDetailPass()
     };
     for (int32 Index = 0; Index < UE_ARRAY_COUNT(Reeds); ++Index)
     {
-        SpawnProd(ProductionCommonReedClusterMesh, Reeds[Index], FVector(0.72f),
+        QueueScenic(ProductionCommonReedClusterMesh, Reeds[Index], FVector(0.72f),
             FRotator(0.0f, static_cast<float>(Index * 31), 0.0f), false);
     }
 
@@ -6109,7 +6135,7 @@ void AShirePrototypeWorldBuilder::SpawnScenicDetailPass()
     };
     for (int32 Index = 0; Index < UE_ARRAY_COUNT(FarmGoods); ++Index)
     {
-        SpawnProd(Index % 3 == 0 ? CommonHayBale : (Index % 3 == 1 ? CommonCargoCrate : CommonSackBale),
+        QueueScenic(Index % 3 == 0 ? CommonHayBale : (Index % 3 == 1 ? CommonCargoCrate : CommonSackBale),
             FarmGoods[Index], FVector(0.68f + 0.04f * (Index % 2)),
             FRotator(0.0f, static_cast<float>((Index * 37) % 360), 0.0f), false);
     }
@@ -6120,20 +6146,20 @@ void AShirePrototypeWorldBuilder::SpawnScenicDetailPass()
     };
     for (int32 Index = 0; Index < UE_ARRAY_COUNT(SocialProps); ++Index)
     {
-        SpawnProd(Index % 2 == 0 ? CommonLongBench : CommonBarrel,
+        QueueScenic(Index % 2 == 0 ? CommonLongBench : CommonBarrel,
             SocialProps[Index], FVector(0.68f),
             FRotator(0.0f, Index % 2 == 0 ? 8.0f : -12.0f, 0.0f), false);
     }
 
-    SpawnProd(CommonMarketCanopy, FVector(-470,80,10), FVector(0.78f), FRotator(0.0f,-6.0f,0.0f), false);
-    SpawnProd(CommonMarketCanopy, FVector(30,40,10), FVector(0.74f), FRotator(0.0f,5.0f,0.0f), false);
+    QueueScenic(CommonMarketCanopy, FVector(-470,80,10), FVector(0.78f), FRotator(0.0f,-6.0f,0.0f), false);
+    QueueScenic(CommonMarketCanopy, FVector(30,40,10), FVector(0.74f), FRotator(0.0f,5.0f,0.0f), false);
 
     const FVector RiverPosts[] = {
         FVector(22200,-760,0), FVector(22420,-740,0), FVector(23180,290,0), FVector(23400,310,0)
     };
     for (const FVector& P : RiverPosts)
     {
-        SpawnProd(CommonRopePost, P, FVector(0.74f), FRotator::ZeroRotator, false);
+        QueueScenic(CommonRopePost, P, FVector(0.74f), FRotator::ZeroRotator, false);
     }
     SpawnProd(CommonRiverBoat, FVector(23080,-300,-10), FVector(0.62f), FRotator(0.0f,7.0f,0.0f), false);
 
@@ -6143,10 +6169,56 @@ void AShirePrototypeWorldBuilder::SpawnScenicDetailPass()
     };
     for (int32 Index = 0; Index < UE_ARRAY_COUNT(WoodlandFloor); ++Index)
     {
-        SpawnProd(Index % 2 == 0 ? CommonTreeStump : CommonMushrooms,
+        QueueScenic(Index % 2 == 0 ? CommonTreeStump : CommonMushrooms,
             WoodlandFloor[Index], FVector(0.72f + 0.05f * (Index % 3)),
             FRotator(0.0f, static_cast<float>(Index * 43), 0.0f), false);
     }
+
+
+    // Late flush: the batches include the CP52 scenic and CP53 lived-in passes,
+    // but do not touch the Ferry interaction actors or the quest-owned route.
+    int32 ScenicClusterActors = 0;
+    int32 FlushedScenicInstances = 0;
+    int32 FallbackScenicActors = 0;
+    for (const TPair<UStaticMesh*, TArray<FTransform>>& Pair : ScenicBatches)
+    {
+        if (!Pair.Key || Pair.Value.Num() == 0 || !GetWorld())
+        {
+            continue;
+        }
+        AWorldDetailCluster* Cluster = GetWorld()->SpawnActor<AWorldDetailCluster>();
+        if (!Cluster)
+        {
+            // Retain the authored decor instead of losing it under actor budget
+            // pressure. The normal path is instancing, the failure path is safe.
+            for (const FTransform& InstanceTransform : Pair.Value)
+            {
+                if (SpawnShape(Pair.Key, InstanceTransform.GetLocation(),
+                    InstanceTransform.GetScale3D(), FLinearColor::White,
+                    InstanceTransform.Rotator(), false))
+                {
+                    ++FallbackScenicActors;
+                }
+            }
+            continue;
+        }
+        Cluster->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
+        Cluster->Tags.AddUnique(TEXT("P1C01ScenicBatch"));
+        Cluster->Configure(Pair.Key, false, 0, 32000);
+        for (const FTransform& InstanceTransform : Pair.Value)
+        {
+            Cluster->AddDetailInstance(
+                InstanceTransform.GetLocation(),
+                InstanceTransform.Rotator(),
+                InstanceTransform.GetScale3D());
+        }
+        ++ScenicClusterActors;
+        FlushedScenicInstances += Cluster->GetDetailCount();
+    }
+    UE_LOG(
+        LogTemp, Display,
+        TEXT("P1C01_SCENIC_BATCH grouped=%d instances=%d queued=%d fallbackActors=%d collision=none syncLoad=no"),
+        ScenicClusterActors, FlushedScenicInstances, QueuedScenicInstances, FallbackScenicActors);
 
     // Root-hide presentation packet: reuse existing no-collision HISM owners to give
     // the concealment beat a readable layered silhouette without adding actors, ticks,

@@ -1,3 +1,12 @@
+## 2026-10-09 — P1C01 scenic-instancing optimization registered for existing production assets
+
+- **Authorized chapter/scope:** Only P1C01, existing `AShirePrototypeWorldBuilder::SpawnScenicDetailPass`; no new chapter, story event, actor behavior, imported source, character animation or texture.
+- **Source basis:** Source 03 Shire/Hobbiton pastoral hills, warm domestic scale, road/river spatial readability; existing `Data/P1C01VisibleWorldReuseBindingPacketV1.json`; programmer report's HISM/draw-call recommendation. Reuse already-resident Shire/Common FBX/static-source asset results through the existing streaming bank.
+- **Change:** Batch the existing 65 maximum decorative instances across 11 repeated placement call sites into up to 15 existing `AWorldDetailCluster` HISM actors (only actual resident meshes). Preserve world transforms, imported materials and all visual counts. Do not change the Ferry footbridge collision actor, quest anchors, gameplay route or save keys.
+- **Root maintenance defect:** `AChapterWorldRouter::ClearPrototypeBuilders` did not explicitly destroy tagged `AWorldDetailCluster` instances while it destroyed tagged `AStaticMeshActor` instances. Add tagged-cluster cleanup so Shire decorative objects cannot survive a route/chapter rebuild.
+- **Safety constraints:** no synchronous heavy load, new Tick, spawning NPCs, unrestricted geometry growth, or HLOD generation on the small runner. Conservative 32,000cm visual cull endpoint prevents unintended near-route missing props; tune only after DX11 720p frame-time/VRAM evidence.
+- **Gate:** source implementation + focused regression added. Status `SOURCE_IMPLEMENTED / COMPILE_PENDING`; no PIE/DEVICE/VISUAL/PERFORMANCE acceptance, no Gate 6/7 closure.
+
 ## 2026-10-09 - P1C01 visual successor packet staged after #1772 evidence, no runtime replacement yet
 
 - Source: exact-head #1772 seven rendered evidence shots (Bag End, Hobbiton, Party Field, Mill Bridge, Bywater edge, Ferry, wooded road). Visual diagnostic: low-poly village/folliage, sparse Party Field framing, simplistic bridge and ferry shoreline. Existing builder and asset-streaming subsystem remain sole consumers and loading owners.

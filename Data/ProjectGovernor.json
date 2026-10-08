@@ -2855,7 +2855,8 @@
         "Data/WholeGameProductionExecutionQueueV1.json runs in ACTIVE_MAXIMUM_SAFE_PREPARATION_RUNTIME_SERIALIZED mode.",
         "Data/MasterExecutionRoadmap.json is reconciled to the current P1C01 + parallel whole-game preparation state.",
         "Warehouse #286 clean inventory audit proves the active-receipt warehouse can continue production; full maximum-safe lane saturation remains operational work in progress.",
-        "Hosted Unreal preflight classification reserves the self-hosted UE4.27 machine only for full/core/asset/acceptance modes; source/preproduction/static-only deltas remain on GitHub-hosted validation lanes without weakening exact-head engine gates."
+        "Hosted Unreal preflight classification reserves the self-hosted UE4.27 machine only for full/core/asset/acceptance modes; source/preproduction/static-only deltas remain on GitHub-hosted validation lanes without weakening exact-head engine gates.",
+        "DEC-106 applies the user's accepted UE4.27 report's HISM optimisation to already-authored P1C01 scenic placement while preserving existing world ownership, collision and exact-head gates."
       ]
     },
     {
@@ -5840,6 +5841,39 @@
       ],
       "evidence_boundary": "OFFLINE SOURCE/DATA/STATIC/REPOSITORY PREPARATION AUTHORIZATION ONLY. It is not runtime, PIE, device, visual, audio-listening or performance acceptance.",
       "authority": "USER_EXPLICIT_DIRECTION"
+    },
+    {
+      "id": "DEC-106",
+      "title": "P1C01 batches already-authored non-collision scenic meshes in existing HISM clusters and cleans them during route transitions",
+      "status": "ACCEPTED",
+      "priority": "HIGH",
+      "date": "2026-10-09",
+      "origin": "Owner asked to implement the useful performance/automation recommendations from an external UE4.27 engineering review and continue finishing P1C01.",
+      "requirements": [
+        "REQ-PROD-011",
+        "REQ-PERF-003",
+        "REQ-WORLD-003"
+      ],
+      "resolution": "Reuse the existing AWorldDetailCluster and ShirePrototypeWorldBuilder, not an editor/world authority rewrite. Batch previously separate small decorative static-mesh actors in CP52/CP53 by already-resident mesh identity, keep coordinates and count, and ensure AChapterWorldRouter tears down tagged HISM clusters when rebuilding/changing chapter.",
+      "implementation_contract": [
+        "No new assets or synchronous heavy loading; streaming asset lifetime continues under UShireChapterAssetStreamingSubsystem with FStreamableManager.",
+        "Same 65 maximum authored scenic instances from 11 repeated call sites, grouped into at most 15 distinct resident mesh HISM clusters; route/collision actors stay separate.",
+        "Existing ferry footbridge collision, quest/save keys, NPC pooling, and chapter staging remain unchanged.",
+        "Generated AWorldDetailCluster actors must have RuntimePrototypeGenerated tag and be destroyed on chapter/route unload.",
+        "Do not add Jenkins, Gauntlet, an alternate importer, UE5-only Geometry Scripting, arbitrary GC tuning or unverified HLODs.",
+        "Keep exactly one P1C01 runtime-changing authority and one integrated exact-head UE4.27.2 train; keep P1C02 locked.",
+        "Update ledger, source contract, Project Guardian, CURRENT_PROJECT_STATE and PRODUCTION_COMPLETENESS_MATRIX in same code change.",
+        "Gate 6/7 cannot be promoted from static/compile/headless CI; require real PIE, human visuals, target laptop DX11 720p/30FPS measurements."
+      ],
+      "evidence": [
+        "Data/P1C01ScenicBatchOptimizationV1.json",
+        "Docs/WORLD_DETAIL_LEDGER.md",
+        "Scripts/test_source_contracts.py",
+        "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp",
+        "Source/ShireJourney/Private/World/ChapterWorldRouter.cpp",
+        "Predecessor Unreal Build #1773 success (run 37846247974, exact HEAD 08cbbf38); implementation itself awaits a newer exact-head run."
+      ],
+      "evidence_boundary": "SOURCE IMPLEMENTATION / FRESH EXACT-HEAD COMPILE AND RUNTIME VALIDATION PENDING. No target-device/PIE/visual/Gate6/7 accepted."
     }
   ],
   "open_conflicts": [],
@@ -9175,15 +9209,15 @@
     "active_runtime_chapter": "P1C01_ONLY",
     "next_chapter": "P1C02_LOCKED",
     "definitive_pr": "329",
-    "exact_head": "71e42bf850132db462fbea5abaac4de9f29633b5",
+    "exact_head": "08cbbf38dd4aa7687287765bb8b8ebbcabde0cca",
     "latest_full_machine_train": {
       "workflow": "Unreal Build Validation",
-      "run_number": 1772,
-      "run_id": 37841736884,
+      "run_number": 1773,
+      "run_id": 37846247974,
       "conclusion": "success",
-      "artifact_id": 11578891697,
-      "exact_head": "71e42bf850132db462fbea5abaac4de9f29633b5",
-      "render_artifact_id": 11578711832
+      "exact_head": "08cbbf38dd4aa7687287765bb8b8ebbcabde0cca",
+      "artifact_id": 11580501897,
+      "render_artifact_id": 11579359709
     },
     "speed_policy": [
       "Group linked production changes into larger bounded packets.",
@@ -9199,7 +9233,7 @@
   },
   "last_updated": "2026-10-09",
   "ci_resume_stage_policy_2026_10_09": {
-    "status": "SOURCE_IMPLEMENTED_WINDOWS_RUNNER_VALIDATION_PENDING",
+    "status": "WINDOWS_CHECKPOINT_RECORDING_PROVEN_SAME_SHA_SKIP_NOT_YET_EXERCISED",
     "owner_direction": "Reduce administrative friction, redundant builds, repetitive validation; complete the existing P1C01 chapter using safe reuse and root fixes rather than retry loops.",
     "reference_build": {
       "run": 1772,
@@ -9232,7 +9266,7 @@
         "Scripts/test_ci_resume_proof.py",
         ".github/workflows/unreal-build-validation.yml"
       ],
-      "evidence": "offline six-test suite passed; Windows exact-head CI pending"
+      "evidence": "Build #1773 success on exact head 08cbbf38: One-Shot source gate, receipt probe and import/core/package recording steps all successful. Reuse/skip after a later failure on identical HEAD has not been demonstrated. Only recording is proven."
     },
     "active_chapter_completion": {
       "chapter": "P1C01",

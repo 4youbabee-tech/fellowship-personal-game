@@ -287,6 +287,56 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("DistantTreeCanopyInstances->AddInstance", scenic)
         self.assertIn("WoodlandTreeInstances->AddInstance", natural)
 
+    def test_p1c01_scenic_reuse_groups_existing_details_and_cleans_them_on_transition(self):
+        root = Path(__file__).resolve().parents[1]
+        contract = json.loads(
+            (root / "Data" / "P1C01ScenicBatchOptimizationV1.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(contract["runtime_chapter"], "P1C01")
+        self.assertEqual(contract["scope"]["queued_call_sites"], 11)
+        self.assertEqual(contract["scope"]["existing_max_decor_instances"], 65)
+        self.assertEqual(contract["scope"]["max_distinct_mesh_groups"], 15)
+        self.assertFalse(contract["runtime_contract"]["new_meshes"])
+        self.assertFalse(contract["runtime_contract"]["new_synchronous_loads"])
+        self.assertFalse(contract["runtime_contract"]["new_tick"])
+        self.assertTrue(contract["runtime_contract"]["preserve_ferry_footbridge_collision"])
+
+        builder = (root / "Source" / "ShireJourney" / "Private" / "World" /
+                   "ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        scenic_start = builder.index("void AShirePrototypeWorldBuilder::SpawnScenicDetailPass()")
+        scenic_end = builder.index("void AShirePrototypeWorldBuilder::BuildPrototypeWorld()", scenic_start)
+        scenic = builder[scenic_start:scenic_end]
+        batch_start = scenic.index("// Batch only already-resident, no-collision decorative meshes.")
+        batch_end = scenic.index("// Root-hide presentation packet:", batch_start)
+        batch = scenic[batch_start:batch_end]
+
+        self.assertIn("TMap<UStaticMesh*, TArray<FTransform>> ScenicBatches;", batch)
+        self.assertEqual(batch.count("QueueScenic("), 11)
+        self.assertEqual(batch.count("SpawnProd("), 4)
+        self.assertIn("SpawnProd(ProductionCommonFootbridgeMesh", batch)
+        self.assertIn("FVector(22680,-420,8)", batch)
+        self.assertIn("SpawnShape(Mesh, Location, Scale, FLinearColor::White, Rotation, true)", batch)
+        self.assertIn("Cluster->Configure(Pair.Key, false, 0, 32000)", batch)
+        self.assertIn("Cluster->AddDetailInstance(", batch)
+        self.assertIn("P1C01_SCENIC_BATCH", batch)
+        self.assertIn('Cluster->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"))', batch)
+        for forbidden in (
+            "LoadObject<", "StaticLoadObject", "RequestSyncLoad",
+            "SpawnActor<AShireAmbientNPC>", 'TEXT("P1C02")',
+        ):
+            self.assertNotIn(forbidden, batch)
+
+        router = (root / "Source" / "ShireJourney" / "Private" / "World" /
+                  "ChapterWorldRouter.cpp").read_text(encoding="utf-8")
+        self.assertIn('#include "WorldDetailCluster.h"', router)
+        clear_start = router.index("void AChapterWorldRouter::ClearPrototypeBuilders()")
+        clear_end = router.index("FVector AChapterWorldRouter::GetChapterSpawnLocation(", clear_start)
+        clear = router[clear_start:clear_end]
+        self.assertIn(
+            'DestroyTaggedOfClass(AWorldDetailCluster::StaticClass(), TEXT("RuntimePrototypeGenerated"));',
+            clear,
+        )
+
     def test_p1c01_shire_world_density_is_bounded_and_instanced(self):
         root = Path(__file__).resolve().parents[1]
         contract = json.loads((root / "Data" / "P1C01ShireWorldDensityCarV1.json").read_text(encoding="utf-8"))

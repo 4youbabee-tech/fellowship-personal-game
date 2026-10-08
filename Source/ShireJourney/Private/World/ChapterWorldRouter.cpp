@@ -11,6 +11,7 @@
 #include "ShireNPCContextSubsystem.h"
 #include "ShirePlayerCharacter.h"
 #include "ShirePrototypeWorldBuilder.h"
+#include "WorldDetailCluster.h"
 #include "ShireQuestSubsystem.h"
 #include "ShireQuestTrigger.h"
 #include "ShireSaveGame.h"
@@ -236,6 +237,10 @@ void AChapterWorldRouter::ClearPrototypeBuilders()
     DestroyAllOfClass(AFellowshipEnemyPrototype::StaticClass());
     DestroyTaggedOfClass(AStaticMeshActor::StaticClass(), TEXT("RuntimePrototypeGenerated"));
     DestroyTaggedOfClass(ATextRenderActor::StaticClass(), TEXT("RuntimePrototypeGenerated"));
+    // Decorative HISM clusters are independent actors, not children destroyed with
+    // their Shire builder. Clear them on every chapter unload to prevent stale
+    // instanced meshes and memory from accumulating after save/load transitions.
+    DestroyTaggedOfClass(AWorldDetailCluster::StaticClass(), TEXT("RuntimePrototypeGenerated"));
     DestroyAllOfClass(AShirePrototypeWorldBuilder::StaticClass());
     DestroyAllOfClass(ABreePrototypeWorldBuilder::StaticClass());
     DestroyAllOfClass(AFellowshipChapterWorldBuilder::StaticClass());
