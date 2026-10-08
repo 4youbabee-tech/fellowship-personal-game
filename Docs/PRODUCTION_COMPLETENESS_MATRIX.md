@@ -1,3 +1,14 @@
+## 2026-10-08 - P1C01 named static identity residency packet
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| #1709 technical train | MACHINE-GREEN | Build/import, six captures, runtime audits, cook/package, EXE launch, and playable artifact passed |
+| #1709 character evidence | DIAGNOSTIC / ROOT IDENTIFIED | Frodo skeletal rig active; named NPC logs report core-packages-missing and renders retain modular/primitive identity |
+| Named static identity residency | SOURCE-IMPLEMENTED / #1710 PENDING | Bounded Gandalf/Bilbo/Sam/Merry/Pippin/Hamfast/Rosie/FarmerMaggot mesh packages added to P1C01 async bank |
+| Named skeletal rigs | OPEN / NOT INVENTED | No complete named-cast skeletal mesh + AnimBP package evidence exists yet |
+| P1C01 visual/device/performance/Gate 6-7 | NOT ACCEPTED | Fresh exact-head render/package and human/device evidence remain required |
+| P1C02 Bree | LOCKED | No chapter integration before P1C01 gates pass |
+
 ## 2026-10-08 - P1C01 streaming audit reconciliation
 
 | Area | Status | Evidence / boundary |

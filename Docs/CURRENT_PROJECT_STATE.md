@@ -1,3 +1,10 @@
+## 2026-10-08 - P1C01 named static identity residency packet
+
+- #1709 is technically green and its six render logs show hfGrass=resident, but named cast requests still report core-packages-missing for skeletal rigs and the reviewed frames retain primitive/modular identity fallback.
+- Root cause: OBJ-imported named identity packages are present in SourceAssets/Production/Characters, while the P1C01 async bank carried only common Hobbit/static pieces. ResolveObject therefore could not promote the dedicated Gandalf/Bilbo/Sam/Merry/Pippin/Hamfast/Rosie/FarmerMaggot meshes at presentation time.
+- Source fix: promote the bounded named static identity set into the P1C01 ChapterAssetStreamingPlan and record its ownership in the character presentation manifest. This does not invent skeletal rigs or synchronous loads; the missing named skeletal core remains explicitly unaccepted.
+- Fresh exact-head #1710 UE4/render/package proof is required. P1C01 visual/device/performance/Gate 6/7 remain unclaimed and P1C02 Bree remains LOCKED.
+
 ## 2026-10-08 - P1C01 streaming audit reconciliation
 
 - #1708 passed the source contract after the five-material expectation was corrected, then stopped in PG-226 preflight because the valid grass-bank addition changed the derived P1C01 bank count from 88 to 89 and the unique package total from 243 to 244.
