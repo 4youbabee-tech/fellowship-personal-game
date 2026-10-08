@@ -5655,3 +5655,9 @@ The repository Governor is the sole authority for this operating method and its 
 - Root fix on the production P1C01 branch: increase the bounded first-frame wait to 150 seconds, explicitly drain project-owned UE4Editor.exe processes for up to 30 seconds between shots, fail with a distinct drain-timeout code, and print process/log diagnostics on screenshot timeout.
 - Added Scripts/test_p1c01_capture_contract.py and wired it into the exact-head static gate. This is a capture/CI reliability fix only; it adds no runtime gameplay, actors, collision, synchronous loading, chapter unlock, or production asset.
 - Fresh exact-head Unreal/render/runtime/package proof is required on the new head. #1765 remains FAILED evidence for the old capture contract; no PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED, or Gate 6/7 claim is made. P1C02 Bree remains locked.
+## 2026-10-09 — #1776 source-gate regression and contract correction
+
+- Exact-head run #1776 checked out `9b17b31661fc65ef24a8dbbe47ceacb8e35321fa` and passed runner health, source hydration and classification, then failed before Unreal at `Scripts.test_source_contracts.SourceContractTests.test_p1c01_party_social_loop_is_bounded_and_windowed`.
+- Root cause: that existing regression still expected 4 HISM cluster calls, 4 cluster actors, 56 instances, and a hard-coded `populationTarget=18` log. The Party Field batch now correctly has 4 ring clusters plus up to 6 grouped prop meshes (10), 48+14=62 HISM placements, and logs population ownership instead of a stale target.
+- Corrected the static test, `P1C01PartySocialLoopChapterV1.json` budgets, and scenic manifest in the follow-up. Exact-head static rerun and UE4 build remain pending; no run #1776 compile evidence exists. No gameplay or population target changed.
+

@@ -5603,3 +5603,13 @@ The latest visual packet manifest is now also a full-lane trigger. This closes t
 | UE4.27.2/render/runtime/package proof | PENDING | Must run on the new exact head |
 | PIE / DEVICE / VISUAL / PERFORMANCE / Gate 6/7 | NOT ACCEPTED | No new acceptance evidence exists |
 | P1C02 Bree | LOCKED | No chapter transition |
+## 2026-10-09 — Party Field batch contract reconciliation
+
+| Area | Result | Evidence |
+|---|---|---|
+| First new-head static attempt | FAILED before Unreal at stale Party Social Loop count assertion | Unreal Build Validation #1776, commit `9b17b31661fc65ef24a8dbbe47ceacb8e35321fa` |
+| Root cause | Test/plan still expected 4 clusters and 56 HISM instances; new groups produce at most 10 clusters and 62 unchanged placements | Exact failing assertion: `body.count("SpawnPartyCluster(") == 4` |
+| Corrective change | Reconciled test, runtime-budget manifest, and owner-based population log assertion | SOURCE CORRECTION COMMITTED; new exact-head gate pending |
+| UE4.27.2 / runtime / package | NOT RUN on #1776 | Must pass on corrected exact head |
+| PIE/device/visual/performance/Gate 6/7 | OPEN | No acceptance inferred |
+

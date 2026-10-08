@@ -399,8 +399,8 @@ class SourceContractTests(unittest.TestCase):
         root = Path(__file__).resolve().parents[1]
         contract = json.loads((root / "Data" / "P1C01PartySocialLoopChapterV1.json").read_text(encoding="utf-8"))
         self.assertEqual(contract["status"], "SOURCE_IMPLEMENTED_EXACT_HEAD_PROOF_PENDING")
-        self.assertEqual(contract["runtime_budget"]["max_hism_cluster_actors"], 4)
-        self.assertEqual(contract["runtime_budget"]["max_hism_instances"], 56)
+        self.assertEqual(contract["runtime_budget"]["max_hism_cluster_actors"], 10)
+        self.assertEqual(contract["runtime_budget"]["max_hism_instances"], 62)
         self.assertEqual(contract["runtime_budget"]["max_state_variant_props"], 8)
         self.assertEqual(contract["architecture"]["ambient_population_target_p1c01"], 18)
 
@@ -408,9 +408,9 @@ class SourceContractTests(unittest.TestCase):
         start = source.index("void AShirePrototypeWorldBuilder::SpawnPartySocialLoopPass()")
         end = source.index("void AShirePrototypeWorldBuilder::SpawnSideStories()", start)
         body = source[start:end]
-        self.assertEqual(body.count("SpawnPartyCluster("), 4)
+        self.assertEqual(body.count("SpawnPartyCluster("), 5)
         self.assertIn("PARTY_SOCIAL_LOOP_PASS", body)
-        self.assertIn("populationTarget=18", body)
+        self.assertIn("populationOwner=LivingWorldDirector", body)
         for forbidden in ("LoadObject<", "StaticLoadObject", "RequestSyncLoad", "SpawnActor<AShireAmbientNPC>"):
             self.assertNotIn(forbidden, body)
 

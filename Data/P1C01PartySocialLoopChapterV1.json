@@ -28,8 +28,8 @@
     "per_frame_scan": false
   },
   "runtime_budget": {
-    "max_hism_cluster_actors": 4,
-    "max_hism_instances": 56,
+    "max_hism_cluster_actors": 10,
+    "max_hism_instances": 62,
     "max_unique_party_props": 16,
     "max_state_variant_props": 8,
     "max_new_optional_trigger_or_challenge_actors": 6,
@@ -74,8 +74,8 @@
     "state_function": "ApplyPartyStoryVariant",
     "world_marker": "PARTY_SOCIAL_LOOP_PASS",
     "state_marker": "PARTY_SOCIAL_STORY_VARIANT",
-    "hism_cluster_configured": 4,
-    "hism_instance_configured": 48,
+    "hism_cluster_configured": 10,
+    "hism_instance_configured": 62,
     "static_party_props_configured": 14,
     "setup_state_props_configured": 4,
     "celebration_state_props_configured": 4,

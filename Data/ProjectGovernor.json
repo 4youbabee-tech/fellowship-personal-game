@@ -5896,16 +5896,17 @@
         "Preserve dynamic shadow casting for the batched props; other AWorldDetailCluster call sites retain their current default.",
         "Use the 32000cm cull endpoint already established for authored P1C01 scenery; no target-device performance gain is claimed without measurement.",
         "No change to PartyField anchors, quest/save keys, NavMesh, NPC schedules/population, route transitions, or P1C02 lock.",
-        "Update source regression, scenic batch manifest, WORLD_DETAIL_LEDGER, PROJECT_GUARDIAN, CURRENT_PROJECT_STATE and PRODUCTION_COMPLETENESS_MATRIX in the same production change."
+        "Update source regression, party social-loop budget manifest, scenic batch manifest, WORLD_DETAIL_LEDGER, PROJECT_GUARDIAN, CURRENT_PROJECT_STATE and PRODUCTION_COMPLETENESS_MATRIX in the same production change."
       ],
       "evidence": [
         "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp:SpawnPartySocialLoopPass",
         "Source/ShireJourney/Public/World/WorldDetailCluster.h",
         "Source/ShireJourney/Private/World/WorldDetailCluster.cpp",
         "Scripts/test_source_contracts.py:test_p1c01_party_social_static_dressing_batches_existing_transforms_by_mesh",
-        "Data/P1C01ScenicBatchOptimizationV1.json"
+        "Data/P1C01ScenicBatchOptimizationV1.json",
+        "P1C01PartySocialLoopChapterV1.json reconciled to 10 maximum HISM clusters and 62 existing instances."
       ],
-      "evidence_boundary": "SOURCE IMPLEMENTED / FOCUSED STATIC REGRESSION REQUIRED / FRESH EXACT-HEAD UE4.27.2 C++ BUILD AND P1C01 RUNTIME PROOF PENDING. No measured FPS/draw-call, PIE, DEVICE, visual or Gate 6/7 acceptance is claimed.",
+      "evidence_boundary": "The first exact-head source-gate attempt (#1776) exposed stale party-loop assertions (4 clusters/56 instances/4 cluster calls and a hard-coded population log) after the accepted batch extended the layout to 10 cluster groups/62 instances/5 calls. Those source/data assertions were reconciled together; fresh exact-head static and UE4.27.2 proof is still pending. No measured FPS/draw-call, PIE, DEVICE, visual or Gate 6/7 acceptance is claimed.",
       "authority": "OWNER_AUTHORIZED_P1C01_PERFORMANCE_SCOPE"
     }
   ],

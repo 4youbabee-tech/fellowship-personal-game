@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "plan_id": "P1C01_SCENIC_BATCH_OPTIMIZATION_V1",
-  "status": "PARTY_SOCIAL_STATIC_DRESSING_BATCH_SOURCE_IMPLEMENTED_EXACT_HEAD_UE4_PROOF_PENDING",
+  "status": "PARTY_STATIC_BATCH_SOURCE_CONTRACT_CORRECTED_EXACT_HEAD_UE4_PROOF_PENDING",
   "runtime_chapter": "P1C01",
-  "governor_authority": "Data/ProjectGovernor.json:DEC-106",
+  "governor_authority": "Data/ProjectGovernor.json:DEC-106 + DEC-107",
   "reason": "Reuse existing AWorldDetailCluster HISM for already-authored low-collision roadside, village, woodland and ferry-bank decoration. Avoid one AStaticMeshActor per visual prop and clean generated HISM clusters on chapter transitions.",
   "canonical_reference": [
     "03_WORLD_LOCATIONS_AND_MAP_BIBLE: Shire/Hobbiton pastoral hills, domestic scale, river crossing and readable geography",

@@ -769,3 +769,11 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 
 **Guard:** Pre-Unreal PG-026 asserts the head-derived upload path and prohibits the persistent-history broad glob. Artifact transport remains `continue-on-error: true` to avoid misclassifying transport quota as engine failure. Reconfirm archive size after a new actual capture before claiming measured speedup.
 
+### Regression — Party Field HISM batch left stale source-budget assertions (2026-10-09)
+
+**Observed on exact head `9b17b31661fc65ef24a8dbbe47ceacb8e35321fa`:** Unreal Build Validation #1776 failed in the source gate, before Unreal, because `test_p1c01_party_social_loop_is_bounded_and_windowed` still required four `SpawnPartyCluster` calls. Adding the resident-mesh prop groups also makes the correct upper bound ten clusters and 62 HISM instances (48 existing ring placements plus the same 14 existing Party props); the initial update had not reconciled the preexisting party-loop plan/test.
+
+**Root fix:** Update the source assertion and `Data/P1C01PartySocialLoopChapterV1.json` budget together; assert `populationOwner=LivingWorldDirector` instead of a hard-coded population target in the log. The actual population plan, Party anchors, actor-state variants, props/transforms, NPC owner, and gameplay remain unchanged.
+
+**Regression signal:** `Scripts/test_source_contracts.py:test_p1c01_party_social_loop_is_bounded_and_windowed` plus `test_p1c01_party_social_static_dressing_batches_existing_transforms_by_mesh`. Re-run exact-head source gate and Unreal build before promoting beyond SOURCE-IMPLEMENTED. No PIE/device/performance/Gate 6/7 claim.
+
