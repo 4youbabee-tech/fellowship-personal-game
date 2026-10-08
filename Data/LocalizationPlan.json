@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "plan_id": "P1C01_LOCALIZATION_ARABIC_V1",
+  "status": "PREPARED_NOT_IMPORTED",
+  "authority": "Data/ProjectGovernor.json",
+  "scope": "English source keys plus Arabic localization foundation for P1C01",
+  "rules": [
+    "All player-facing runtime text uses FText and stable keys",
+    "English remains source language",
+    "Arabic is additive localization and does not rewrite canon",
+    "Test RTL, shaping, BiDi, wrapping, mixed Latin names, numbers and punctuation",
+    "Dialogue remains original project text and never copies Tolkien or film dialogue verbatim"
+  ],
+  "languages": [
+    {
+      "id": "en",
+      "role": "SOURCE",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "ar",
+      "role": "LOCALIZATION",
+      "status": "MANIFEST_READY"
+    }
+  ],
+  "font_candidates": [
+    {
+      "name": "Noto Sans Arabic",
+      "license": "OFL-1.1",
+      "url": "https://fontsource.org/fonts/noto-sans-arabic"
+    },
+    {
+      "name": "Cairo",
+      "license": "OFL-1.1",
+      "url": "https://fontsource.org/fonts/cairo"
+    },
+    {
+      "name": "Tajawal",
+      "license": "OFL-1.1",
+      "url": "https://fontsource.org/fonts/tajawal"
+    }
+  ],
+  "first_key_groups": [
+    "menu",
+    "settings",
+    "objective",
+    "interaction",
+    "save_load",
+    "subtitle",
+    "accessibility"
+  ],
+  "qa_matrix": [
+    "short text",
+    "long text",
+    "two-line wrap",
+    "mixed Arabic/Latin",
+    "mixed digits",
+    "punctuation",
+    "speaker names",
+    "subtitle timing",
+    "safe area",
+    "720p readability"
+  ],
+  "promotion_rule": "Localization data may be prepared in parallel; runtime integration waits for the next bounded exact-head packet."
+}
