@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "manifest_id": "P1C01_ROAD_THREAT_FERRY_CANON_PASS_V1",
-  "status": "SOURCE_IMPLEMENTED_FRESH_EXACT_HEAD_UE4_RENDER_REQUIRED",
+  "status": "SOURCE_IMPLEMENTED_ROOT_HIDE_HISM_PACKET_EXACT_HEAD_VALIDATION_PENDING",
   "runtime_chapter": "P1C01",
   "runtime_writer": "AShirePrototypeWorldBuilder",
   "authority": [
@@ -61,5 +61,20 @@
     "runtime_sync_load": false,
     "final_animated_character_bundle": false,
     "evidence_required": "Fresh exact-head 7-shot/runtime train must observe BLACK_RIDER_PRESENTATION log and human review remains required."
+  },
+  "root_hide_detail_packet": {
+    "state": "SOURCE_IMPLEMENTED",
+    "owner": "existing_HISM_components",
+    "counts": {
+      "trees": 6,
+      "shrubs": 8,
+      "rocks": 4
+    },
+    "location": "wooded_road_root_hide_concealment_beat",
+    "collision": "none",
+    "tick": "none",
+    "synchronous_load": false,
+    "gameplay_behavior_changed": false,
+    "validation_required": "fresh_exact_head_full_oneshot_render_runtime_package"
   }
 }

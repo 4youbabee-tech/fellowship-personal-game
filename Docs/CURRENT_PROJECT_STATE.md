@@ -1,3 +1,10 @@
+## 2026-10-08 - P1C01 root-hide living-world detail packet
+
+- On exact source head `751c7fb5e7279547ee71497783d709007bae6a9c`, the prior Unreal validation #1734 was green but remained governance/docs-only and produced no new playable/render artifact.
+- This bounded source packet adds six existing-HISM tree instances, eight shrub instances and four rock instances around the Root Hide concealment beat in `SpawnRoadThreatAndFerryCanonPass`.
+- The packet reuses already-resident production meshes and existing no-collision HISM owners. It adds no actor-per-prop, tick, collision, synchronous load, gameplay trigger, patrol, quest, or chapter-boundary behavior.
+- Fresh exact-head One-Shot/render review is required. This is a visible source improvement, not PIE/device/performance/visual acceptance; P1C01 Gate 6/7 remain open and P1C02 Bree remains locked.
+
 ## 2026-10-08 - P1C01 #1733 patrol-axis road-threat evidence
 
 - Unreal Build Validation #1733 completed successfully on exact head `b0e4c0807fbb72778c546370d2b2ad46a8a2e0a3` through `mode=full`: UE4.27.2 build/import, seven captures, Automation/runtime/state audits, zero guarded warning debt, cook/package, 37/37 packaged Runtime Data, 6s packaged startup, hardware snapshot, and both artifact uploads.

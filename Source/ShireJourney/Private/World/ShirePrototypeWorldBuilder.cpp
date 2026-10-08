@@ -6042,6 +6042,72 @@ void AShirePrototypeWorldBuilder::SpawnScenicDetailPass()
             WoodlandFloor[Index], FVector(0.72f + 0.05f * (Index % 3)),
             FRotator(0.0f, static_cast<float>(Index * 43), 0.0f), false);
     }
+
+    // Root-hide presentation packet: reuse existing no-collision HISM owners to give
+    // the concealment beat a readable layered silhouette without adding actors, ticks,
+    // collision, synchronous loads, or a new world authority.
+    int32 RootHideTreeCount = 0;
+    int32 RootHideShrubCount = 0;
+    int32 RootHideRockCount = 0;
+
+    if (WoodlandTreeInstances && WoodlandTreeInstances->GetStaticMesh())
+    {
+        const FVector RootHideTrees[] = {
+            FVector(14050.0f, 1460.0f, 0.0f), FVector(14450.0f, 1590.0f, 0.0f),
+            FVector(14850.0f, 1520.0f, 0.0f), FVector(15200.0f, 1450.0f, 0.0f),
+            FVector(14300.0f, 1810.0f, 0.0f), FVector(15000.0f, 1820.0f, 0.0f)
+        };
+        for (int32 Index = 0; Index < UE_ARRAY_COUNT(RootHideTrees); ++Index)
+        {
+            WoodlandTreeInstances->AddInstance(FTransform(
+                FRotator(0.0f, static_cast<float>((Index * 53 + 17) % 360), 0.0f),
+                RootHideTrees[Index],
+                FVector(0.68f + 0.05f * static_cast<float>(Index % 3))));
+            ++RootHideTreeCount;
+        }
+    }
+
+    if (ShrubInstances && ShrubInstances->GetStaticMesh())
+    {
+        const FVector RootHideShrubs[] = {
+            FVector(14150.0f, 1200.0f, 35.0f), FVector(14500.0f, 1320.0f, 35.0f),
+            FVector(14900.0f, 1250.0f, 35.0f), FVector(15300.0f, 1360.0f, 35.0f),
+            FVector(14200.0f, 1540.0f, 35.0f), FVector(14600.0f, 1640.0f, 35.0f),
+            FVector(15000.0f, 1570.0f, 35.0f), FVector(15400.0f, 1680.0f, 35.0f)
+        };
+        for (int32 Index = 0; Index < UE_ARRAY_COUNT(RootHideShrubs); ++Index)
+        {
+            ShrubInstances->AddInstance(FTransform(
+                FRotator(0.0f, static_cast<float>((Index * 41 + 9) % 360), 0.0f),
+                RootHideShrubs[Index],
+                FVector(0.52f + 0.04f * static_cast<float>(Index % 4))));
+            ++RootHideShrubCount;
+        }
+    }
+
+    if (RockInstances && RockInstances->GetStaticMesh())
+    {
+        const FVector RootHideRocks[] = {
+            FVector(14280.0f, 1080.0f, 16.0f), FVector(14620.0f, 1170.0f, 18.0f),
+            FVector(15020.0f, 1100.0f, 17.0f), FVector(15400.0f, 1220.0f, 16.0f)
+        };
+        for (int32 Index = 0; Index < UE_ARRAY_COUNT(RootHideRocks); ++Index)
+        {
+            RockInstances->AddInstance(FTransform(
+                FRotator(0.0f, static_cast<float>((Index * 67 + 5) % 360), 0.0f),
+                RootHideRocks[Index],
+                FVector(0.42f + 0.05f * static_cast<float>(Index % 2))));
+            ++RootHideRockCount;
+        }
+    }
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("P1C01_ROOT_HIDE_DETAIL trees=%d shrubs=%d rocks=%d owner=existing_hism collision=none tick=none syncLoad=no"),
+        RootHideTreeCount,
+        RootHideShrubCount,
+        RootHideRockCount);
 }
 
 void AShirePrototypeWorldBuilder::BuildPrototypeWorld()

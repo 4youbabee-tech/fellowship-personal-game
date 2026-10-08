@@ -1,3 +1,13 @@
+## 2026-10-08 - P1C01 root-hide living-world detail packet
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| Root Hide detail packet | SOURCE IMPLEMENTED | Six tree + eight shrub + four rock instances added through existing HISM owners |
+| Runtime safety | PRESERVED | No new actors, tick, collision, sync load, patrol, trigger, quest, or chapter change |
+| Exact-head validation | PENDING | New source head must complete the full One-Shot/render/package path |
+| VISUALLY-ACCEPTED / DEVICE-TESTED / PERFORMANCE-ACCEPTED / Gate 6-7 | NOT ACCEPTED | Source change alone cannot establish these claims |
+| P1C02 Bree | LOCKED | Remains gated behind P1C01 completion evidence |
+
 ## 2026-10-08 - P1C01 #1733 patrol-axis road-threat evidence
 
 | Area | Status | Evidence / boundary |
