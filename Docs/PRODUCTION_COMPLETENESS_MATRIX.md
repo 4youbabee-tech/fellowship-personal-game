@@ -5346,3 +5346,33 @@ The latest visual packet manifest is now also a full-lane trigger. This closes t
 | Classifier repair | STATIC-PASS | #1729 confirms policy repair source gate, but inherited engine proof |
 | Production importer behavior | FULL EXACT-HEAD REPROOF QUEUED BY SOURCE TOUCH | no-behavior-change importer anchor forces corrected classifier through full lane |
 | Visual / device / performance / Gate 6-7 | NOT ACCEPTED | unchanged |
+
+
+## 2026-10-08 - P1C01 road-threat / Ferry canon construction
+
+| Area | State | Evidence / boundary |
+|---|---|---|
+| Wooded-road RootHide enclosure | SOURCE-IMPLEMENTED | 6 tree + 8 shrub + 4 rock HISM; one fallen-log hero detail; no trigger/patrol change |
+| Bucklebury Ferry far-bank path | SOURCE-IMPLEMENTED | 12 path-stone HISM + 2 rope-coil hero details; existing Ferry gameplay unchanged |
+| Repeated-detail architecture | PRESERVED | existing HISM components only; no per-instance Tick; no sync heavy load |
+| Hero actor increase | BOUNDED | 3 non-colliding visual-only actors |
+| F1-03 P1C01 boundary label | CORRECTED | Ferry terminal / P1C02 locked; full F1-03 completion not claimed |
+| Fresh exact-head UE4 build/render/runtime/package | PENDING | required before any promotion |
+| Bag End interior final kit | CONTENT GAP | dedicated production interior FBX kit/provenance still absent |
+| Seven non-Frodo final animated character bundles | CONTENT GAP | Bilbo, Gandalf, Sam, Merry, Pippin, Black Rider, horse |
+| Production WAV/runtime playback | CONTENT GAP | masters + provenance + UE playback evidence pending |
+| Device/performance/Gate 6-7 | NOT ACCEPTED | unchanged |
+
+| Wooded-road dedicated render evidence | SOURCE-IMPLEMENTED / RERUN PENDING | seventh HUD-free shot `07_Wooded_Road_Hide`; capture count gate = 7 |
+
+
+## 2026-10-08 - #1730 parent proof and next construction packet
+
+| Area | State | Evidence / boundary |
+|---|---|---|
+| Exact head 2a2158c2 | COMPILE-TESTED + FULL MACHINE TRAIN PASS | #1730 build/import/render/Automation/runtime audits/cook/package/executable launch all SUCCESS |
+| #1730 render review | HUMAN-REVIEWED / NOT VISUALLY-ACCEPTED | settlement readable but low-poly/proxy; Party framing weak; Ferry still needs hero/far-bank finish |
+| Playable Windows artifact | MACHINE-LAUNCH-PROVEN | `p1c01-playable-windows-2a2158c2...` |
+| Black Rider current static production proxy materials | SOURCE-FIXED / RERUN PENDING | authored materials preserved; fallback-only BasicShape coloring; runtime LoadObject removed |
+| Black Rider + horse final animated FBX | CONTENT GAP | still not final animated/rigged bundles |
+| New road/Ferry 7-shot packet | SOURCE-IMPLEMENTED / RERUN PENDING | dedicated `07_Wooded_Road_Hide` plus existing six locations |

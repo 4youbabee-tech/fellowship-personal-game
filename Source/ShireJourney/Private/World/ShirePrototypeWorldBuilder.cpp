@@ -5363,6 +5363,153 @@ void AShirePrototypeWorldBuilder::SpawnShireSettlementCanonFinishPass()
 }
 
 
+void AShirePrototypeWorldBuilder::SpawnRoadThreatAndFerryCanonPass()
+{
+    int32 RootTreeInstances = 0;
+    int32 RootShrubInstances = 0;
+    int32 RootRockInstances = 0;
+    int32 FarBankPathInstances = 0;
+    int32 HeroProps = 0;
+
+    auto AddInstance = [](UHierarchicalInstancedStaticMeshComponent* Component,
+        const FVector& Location, const FVector& Scale, float Yaw)
+    {
+        if (!Component || !Component->GetStaticMesh())
+        {
+            return false;
+        }
+
+        Component->AddInstance(FTransform(
+            FRotator(0.0f, Yaw, 0.0f),
+            Location,
+            Scale));
+        return true;
+    };
+
+    // Source-aligned wooded-road shelter: the player hides behind a great roadside
+    // root/tree mass while the mounted Rider passes. Keep the authored trigger and
+    // traversal centre clear; this is visual enclosure only.
+    const struct FCanonPlacement
+    {
+        FVector Location;
+        FVector Scale;
+        float Yaw;
+    } RootTrees[] = {
+        { FVector(14140, 1510,   0), FVector(0.86f),  18.0f },
+        { FVector(14420, 1580,   0), FVector(0.92f), -14.0f },
+        { FVector(14740, 1515,   0), FVector(0.82f),  31.0f },
+        { FVector(14120,  690,   0), FVector(0.78f), -28.0f },
+        { FVector(14780,  735,   0), FVector(0.88f),  11.0f },
+        { FVector(15040, 1190,   0), FVector(0.80f), -19.0f }
+    };
+    for (const FCanonPlacement& P : RootTrees)
+    {
+        if (AddInstance(WoodlandTreeInstances, P.Location, P.Scale, P.Yaw))
+        {
+            ++RootTreeInstances;
+        }
+    }
+
+    const FCanonPlacement RootShrubs[] = {
+        { FVector(14210,1320, 5), FVector(0.28f,0.24f,0.22f),  12.0f },
+        { FVector(14310,1460, 5), FVector(0.31f,0.26f,0.23f), -17.0f },
+        { FVector(14630,1450, 5), FVector(0.27f,0.23f,0.22f),  33.0f },
+        { FVector(14820,1320, 5), FVector(0.30f,0.25f,0.23f), -29.0f },
+        { FVector(14190, 850, 5), FVector(0.26f,0.23f,0.21f),  47.0f },
+        { FVector(14300, 760, 5), FVector(0.29f,0.24f,0.22f), -41.0f },
+        { FVector(14730, 790, 5), FVector(0.28f,0.24f,0.22f),  21.0f },
+        { FVector(14910, 930, 5), FVector(0.31f,0.25f,0.23f), -12.0f }
+    };
+    for (const FCanonPlacement& P : RootShrubs)
+    {
+        if (AddInstance(ShrubInstances, P.Location, P.Scale, P.Yaw))
+        {
+            ++RootShrubInstances;
+        }
+    }
+
+    const FCanonPlacement RootRocks[] = {
+        { FVector(14170,1070, 3), FVector(0.18f,0.15f,0.11f),  14.0f },
+        { FVector(14350, 900, 3), FVector(0.15f,0.13f,0.10f), -23.0f },
+        { FVector(14760,1040, 3), FVector(0.17f,0.14f,0.10f),  37.0f },
+        { FVector(14900,1220, 3), FVector(0.16f,0.14f,0.10f), -31.0f }
+    };
+    for (const FCanonPlacement& P : RootRocks)
+    {
+        if (AddInstance(RockInstances, P.Location, P.Scale, P.Yaw))
+        {
+            ++RootRockInstances;
+        }
+    }
+
+    if (ProductionCommonFallenLogMesh)
+    {
+        if (AStaticMeshActor* Log = SpawnShape(
+            ProductionCommonFallenLogMesh,
+            FVector(14410, 1390, 8),
+            FVector(0.72f),
+            FLinearColor::White,
+            FRotator(0.0f, 24.0f, 0.0f),
+            false))
+        {
+            Log->Tags.AddUnique(TEXT("P1C01RootHideCanonDetail"));
+            ++HeroProps;
+        }
+    }
+
+    // The far side of Bucklebury Ferry rises away from the landing. A bounded
+    // winding path makes that geography legible without opening Bree/P1C02.
+    for (int32 Index = 0; Index < 12; ++Index)
+    {
+        const float Alpha = static_cast<float>(Index) / 11.0f;
+        const float X = FMath::Lerp(ShireLayout::FerryX + 690.0f, ShireLayout::FerryX + 1780.0f, Alpha);
+        const float Y = -500.0f + FMath::Sin(Alpha * PI * 2.25f) * 190.0f;
+        const float Z = FMath::Lerp(8.0f, 145.0f, Alpha);
+        const float Scale = 0.17f + 0.02f * static_cast<float>(Index % 3);
+        if (AddInstance(
+            PathStoneInstances,
+            FVector(X, Y, Z),
+            FVector(Scale * 1.35f, Scale, 0.055f),
+            static_cast<float>((Index * 41) % 360)))
+        {
+            ++FarBankPathInstances;
+        }
+    }
+
+    if (ProductionCommonRopeCoilMesh)
+    {
+        const FVector RopeCoils[] = {
+            FVector(ShireLayout::FerryX - 760.0f, -680.0f, 10.0f),
+            FVector(ShireLayout::FerryX - 725.0f, -330.0f, 10.0f)
+        };
+        for (int32 Index = 0; Index < UE_ARRAY_COUNT(RopeCoils); ++Index)
+        {
+            if (AStaticMeshActor* Coil = SpawnShape(
+                ProductionCommonRopeCoilMesh,
+                RopeCoils[Index],
+                FVector(0.58f),
+                FLinearColor::White,
+                FRotator(0.0f, static_cast<float>(Index * 37 - 18), 0.0f),
+                false))
+            {
+                Coil->Tags.AddUnique(TEXT("P1C01FerryCanonDetail"));
+                ++HeroProps;
+            }
+        }
+    }
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("P1C01_ROAD_THREAT_FERRY_CANON_PASS rootTrees=%d rootShrubs=%d rootRocks=%d farBankPath=%d heroProps=%d repeatedDetail=HISM collision=none p1c02=locked"),
+        RootTreeInstances,
+        RootShrubInstances,
+        RootRockInstances,
+        FarBankPathInstances,
+        HeroProps);
+}
+
+
 void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()
 {
     if (!GetWorld())
@@ -5922,6 +6069,7 @@ void AShirePrototypeWorldBuilder::BuildPrototypeWorld()
     SpawnShireSettlementCompletionPass();
     SpawnShireSettlementFinalPolishPass();
     SpawnShireSettlementCanonFinishPass();
+    SpawnRoadThreatAndFerryCanonPass();
     SpawnWorldDensityDetailPass();
     SpawnBagEndHeroPass();
     SpawnPartySocialLoopPass();

@@ -1618,3 +1618,23 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 ## 2026-10-08 - P1C01 importer exact-head reproof anchor
 
 - No world/detail behavior changed. A comment-only source touch on the production importer intentionally routes the next exact head through the corrected full visual train so the existing Shire material correction receives real UE4 import/render evidence.
+
+
+## 2026-10-08 - P1C01 wooded-road threat / Bucklebury Ferry canon detail
+
+- Existing chapter detail only; no new feature/chapter. Source alignment comes from the supplied story/canon material: the road encounter reads as a mounted Black Rider passing a roadside tree/root shelter, while Bucklebury Ferry reads as a broad landing/flat ferry with water-edge posts/lamps/reeds and a rising far-bank path.
+- Added bounded RootHide visual enclosure around the existing gameplay corridor: 6 tree, 8 shrub and 4 rock HISM instances plus one non-colliding fallen-log hero detail. Existing `RootHide`, `KeepOffRoad`, Black Rider patrol and detection logic are untouched.
+- Added 12 HISM path stones to make the far bank climb away from the Ferry landing plus two non-colliding rope-coil landing details.
+- Repeated detail stays on existing HISM components; no new collision, Tick, synchronous production load, world authority or population ownership.
+- P1C02/Bree remains locked. Fresh exact-head full UE4/render evidence is required before visual acceptance.
+
+- Added a seventh exact-head review shot for the wooded-road hide corridor; the capture finalizer now fails closed unless all 7 images exist.
+
+
+## 2026-10-08 - #1730 visual review and Black Rider material preservation
+
+- Exact head `2a2158c2...` produced fresh six-shot rendered evidence and a launched Windows package. Review confirms material/importer correction is machine-proven, but the chapter is not visually accepted.
+- The rendered settlement is materially more coherent than the earlier blank/blockout state, yet the visible asset language is still low-poly/proxy and Party/Ferry presentation still needs construction.
+- Current Black Rider production proxy had a concrete presentation defect: after resident production meshes resolved, `ApplyPrototypeStyle` replaced their authored materials with Engine BasicShape dynamic material. The pending packet preserves authored production materials and colours only unresolved primitive fallbacks.
+- Runtime synchronous `LoadObject` is removed from this Black Rider presentation path; fallback material is constructor-resident Engine content.
+- This does not substitute for the required final animated Black Rider/horse FBX bundles.

@@ -42,54 +42,76 @@ ABlackRiderPrototype::ABlackRiderPrototype()
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMesh(TEXT("/Engine/BasicShapes/Cube.Cube"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CylinderMesh(TEXT("/Engine/BasicShapes/Cylinder.Cylinder"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereMesh(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
+    static ConstructorHelpers::FObjectFinder<UMaterialInterface> BasicMaterial(
+        TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
     if (CubeMesh.Succeeded()) HorseBody->SetStaticMesh(CubeMesh.Object);
     if (CylinderMesh.Succeeded()) RiderBody->SetStaticMesh(CylinderMesh.Object);
     if (SphereMesh.Succeeded()) RiderHead->SetStaticMesh(SphereMesh.Object);
+    FallbackMaterial = BasicMaterial.Succeeded() ? BasicMaterial.Object : nullptr;
 }
 
 void ABlackRiderPrototype::ApplyPrototypeStyle()
 {
     auto TryMesh = [](UStaticMeshComponent* Component, const TCHAR* AssetPath) -> bool
     {
-        if (!Component) return false;
+        if (!Component)
+        {
+            return false;
+        }
+
         if (UStaticMesh* Mesh = Cast<UStaticMesh>(FSoftObjectPath(AssetPath).ResolveObject()))
         {
             Component->SetStaticMesh(Mesh);
             Component->SetRelativeScale3D(FVector(1.0f));
             return true;
         }
+
         return false;
     };
 
-    const bool bProductionVisual =
-        TryMesh(HorseBody, TEXT("/Game/Production/Enemies/BlackRider/SM_BlackRider_Horse.SM_BlackRider_Horse")) &&
-        TryMesh(RiderBody, TEXT("/Game/Production/Enemies/BlackRider/SM_BlackRider_Rider.SM_BlackRider_Rider")) &&
+    const bool bProductionHorse =
+        TryMesh(HorseBody, TEXT("/Game/Production/Enemies/BlackRider/SM_BlackRider_Horse.SM_BlackRider_Horse"));
+    const bool bProductionRider =
+        TryMesh(RiderBody, TEXT("/Game/Production/Enemies/BlackRider/SM_BlackRider_Rider.SM_BlackRider_Rider"));
+    const bool bProductionHead =
         TryMesh(RiderHead, TEXT("/Game/Production/Enemies/BlackRider/SM_BlackRider_Head.SM_BlackRider_Head"));
 
-    UMaterialInterface* BasicMaterial = LoadObject<UMaterialInterface>(
-        nullptr, TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
-    if (!BasicMaterial)
+    // Production meshes keep their imported/authored materials. Only unresolved
+    // Engine-primitive fallbacks receive deterministic dark prototype colours.
+    auto ApplyFallbackColor = [this](UStaticMeshComponent* Component, const FLinearColor& Color)
     {
-        return;
-    }
-
-    auto ApplyColor = [this, BasicMaterial](UStaticMeshComponent* Component, const FLinearColor& Color)
-    {
-        if (!Component)
+        if (!Component || !FallbackMaterial)
         {
             return;
         }
 
-        if (UMaterialInstanceDynamic* MID = UMaterialInstanceDynamic::Create(BasicMaterial, this))
+        if (UMaterialInstanceDynamic* MID = UMaterialInstanceDynamic::Create(FallbackMaterial, this))
         {
             MID->SetVectorParameterValue(TEXT("Color"), Color);
             Component->SetMaterial(0, MID);
         }
     };
 
-    ApplyColor(HorseBody, FLinearColor(0.055f, 0.045f, 0.040f));
-    ApplyColor(RiderBody, FLinearColor(0.025f, 0.025f, 0.030f));
-    ApplyColor(RiderHead, FLinearColor(0.015f, 0.015f, 0.018f));
+    if (!bProductionHorse)
+    {
+        ApplyFallbackColor(HorseBody, FLinearColor(0.055f, 0.045f, 0.040f));
+    }
+    if (!bProductionRider)
+    {
+        ApplyFallbackColor(RiderBody, FLinearColor(0.025f, 0.025f, 0.030f));
+    }
+    if (!bProductionHead)
+    {
+        ApplyFallbackColor(RiderHead, FLinearColor(0.015f, 0.015f, 0.018f));
+    }
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("BLACK_RIDER_PRESENTATION productionHorse=%s productionRider=%s productionHead=%s authoredMaterialsPreserved=yes runtimeSyncLoad=no"),
+        bProductionHorse ? TEXT("yes") : TEXT("no"),
+        bProductionRider ? TEXT("yes") : TEXT("no"),
+        bProductionHead ? TEXT("yes") : TEXT("no"));
 }
 
 void ABlackRiderPrototype::UpdateRideMotion(float DeltaSeconds)

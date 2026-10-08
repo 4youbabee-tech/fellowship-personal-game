@@ -5468,3 +5468,27 @@ The #1698 artifact was technically complete but visual review still found low-de
 - This packet intentionally touches the already-fixed production importer with a no-behavior-change reproof anchor so the corrected classifier must classify the exact head as `full`.
 - The purpose is to prove the existing World/Shire texture double-tint correction through the complete One-Shot build/import/six-shot/runtime/package/startup lane without changing material behavior again.
 - Evidence remains STATIC-VALIDATED until that full run completes. P1C02/Bree remains locked.
+
+
+## 2026-10-08 - P1C01 wooded-road threat + Bucklebury Ferry canon completion packet
+
+- Construction resumed on the **existing P1C01 chapter only**. No Bree/P1C02 runtime content is opened.
+- Source-aligned visible-world completion adds a bounded wooded-road shelter around the existing `RootHide` beat: 6 tree HISM instances, 8 shrub HISM instances, 4 rock HISM instances and one non-colliding fallen-log hero detail. The authored quest trigger, Black Rider patrol, detection logic and story outcome are unchanged.
+- Bucklebury Ferry gains a readable far-bank winding path using 12 existing path-stone HISM instances plus two non-colliding rope-coil landing details. Existing broad landing, flat ferry boat, lamps, reeds and far-bank geometry remain owned by the same world writer.
+- The runtime mission label for F1-03 is corrected back to the real chapter boundary: `P1C01_SHIRE_ROADS_THROUGH_BUCKLEBURY_FERRY_TERMINAL_P1C02_LOCKED`. P1C01 still does not claim full F1-03 completion because the source-locked postcondition reaches Bree.
+- Architecture remains bounded: existing HISM components for repeated detail, 3 limited hero actors total, no per-instance Tick, no synchronous production load, no new collision, no new population authority.
+- Remaining hard content gaps are explicit: dedicated Bag End production interior kit, final animated FBX bundles for Bilbo/Gandalf/Sam/Merry/Pippin/Black Rider/horse, production WAV masters/runtime playback, and target-device performance/human Gate 6/7.
+- Evidence boundary for this packet: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD FULL UE4 PROOF REQUIRED**.
+
+- Render evidence for this construction packet expands from six to seven shots by adding `07_Wooded_Road_Hide`; expected capture count is now 7 so the new threat corridor is directly reviewable.
+
+
+## 2026-10-08 - #1730 full parent proof + Black Rider presentation root fix
+
+- Exact head `2a2158c2b9af39f613888ba16485141e6c6f3700` completed **Unreal Build Validation #1730** successfully through the full definitive train: UE4.27.2 editor build, production import, six-shot render capture, Automation QA, playable startup, chapter audit, route/story roundtrip, warning-debt guard, cook/package, Runtime Data verification and packaged executable launch.
+- Exact artifacts: `p1c01-shire-render-integrated-2a2158c2b9af39f613888ba16485141e6c6f3700` and `p1c01-playable-windows-2a2158c2b9af39f613888ba16485141e6c6f3700`.
+- Human review of those six images is **NOT visual acceptance**: Bag End/Hobbiton now read as a dense coherent settlement but remain visibly low-poly/proxy; Party Field is not framed strongly enough; Water/Mill/Bridge is readable with Gandalf visible but proxy-level; Ferry is readable but still needs stronger far-bank/hero presentation.
+- The next construction packet therefore adds the wooded-road RootHide/Ferry canon detail and expands the evidence route to 7 images with `07_Wooded_Road_Hide`.
+- A real Black Rider visual defect is also root-fixed: resident production horse/rider/head meshes now preserve imported/authored materials. Deterministic dark BasicShape material is applied only to unresolved Engine primitive fallbacks, and the runtime `LoadObject` of BasicShape material is removed in favor of constructor-time Engine fallback setup.
+- This Black Rider fix improves the current static production proxy only. It is **not** the missing final animated Black Rider/horse FBX bundle.
+- Evidence boundary for the new packet remains **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD FULL UE4 PROOF REQUIRED**.

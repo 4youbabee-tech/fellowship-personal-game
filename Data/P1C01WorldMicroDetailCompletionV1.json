@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "manifest_id": "P1C01_WORLD_MICRO_DETAIL_COMPLETION_V1",
-  "status": "GRASS_GROUND_STREAMING_BANK_ROOT_FIXED_REPROOF_PENDING",
+  "status": "ROAD_THREAT_FERRY_CANON_SOURCE_IMPLEMENTED_FRESH_EXACT_HEAD_REPROOF_PENDING",
   "authority": [
     "Data/ProjectGovernor.json",
     "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
@@ -123,16 +123,46 @@
     "target": "8 GB RAM / ~2 GB VRAM / DX11 / 1280x720 / 30 FPS floor"
   },
   "latest_render_diagnosis": {
-    "exact_head": "47ab44289a27f3ea81aafb67f4375b58b1dd86ce",
-    "artifact": "p1c01-shire-render-integrated-9af2df909dc7a6270e4c8d2d26bc85ed9ed22b66",
-    "evidence": "#1706 was blocked by the source contract before Unreal because a temporary BeginPlay LoadObject fallback violated the no-synchronous-production-load rule. #1705 remains the latest failed capture with hfGrass=deferred.",
-    "blockers": [
-      "Fresh exact-head #1707 source/UE4/render/package proof required after adding grass material to the P1C01 async bank",
-      "No valid current six-shot render exists after the #1705 screenshot timeout",
-      "World remains visually low-detail/blockout in the last valid reviewed render",
-      "Human visual/audio/gameplay/device/performance acceptance remains incomplete"
+    "exact_head": "2a2158c2b9af39f613888ba16485141e6c6f3700",
+    "workflow": "Unreal Build Validation #1730",
+    "run_id": 37755437092,
+    "render_artifact": "p1c01-shire-render-integrated-2a2158c2b9af39f613888ba16485141e6c6f3700",
+    "playable_artifact": "p1c01-playable-windows-2a2158c2b9af39f613888ba16485141e6c6f3700",
+    "machine_evidence": [
+      "ShireJourneyEditor build SUCCESS",
+      "production asset import SUCCESS",
+      "six-shot P1C01 capture SUCCESS",
+      "Automation Framework QA SUCCESS",
+      "headless playable startup SUCCESS",
+      "chapter runtime audit SUCCESS",
+      "route/story state roundtrip audit SUCCESS",
+      "warning-debt guard SUCCESS",
+      "cook/package SUCCESS",
+      "packaged Runtime Data JSON verification SUCCESS",
+      "packaged executable launch SUCCESS"
     ],
-    "disposition": "Root-fixed grass material residency at the ChapterAssetStreamingPlan owner boundary; the builder now remains ResolveResident-only. Treat #1706 as static-contract failure and require #1707."
+    "human_render_review": {
+      "state": "REVIEWED_NOT_VISUALLY_ACCEPTED",
+      "observations": [
+        "Bag End/Hobbiton now read as a populated coherent settlement, but geometry/material language remains visibly low-poly/proxy rather than final production art.",
+        "Party Field capture does not yet present the party space strongly enough from the review camera.",
+        "Water/Mill/Bridge is readable and includes a visible Gandalf identity proxy, but character and environment presentation remain proxy-level.",
+        "Bucklebury Ferry reads as a broad water crossing with landing/boat/reeds, but far-bank route language and hero detail still need strengthening."
+      ]
+    },
+    "disposition": "Use #1730 as exact-head machine proof for the material/importer correction only. Continue P1C01 production construction; do not promote VISUALLY-ACCEPTED, DEVICE-TESTED, PERFORMANCE-ACCEPTED or Gate 6/7."
   },
-  "force_full_render_reproof": true
+  "force_full_render_reproof": true,
+  "latest_completion_packet": {
+    "packet": "Data/P1C01RoadThreatFerryCanonPassV1.json",
+    "source_head": "2a2158c2b9af39f613888ba16485141e6c6f3700",
+    "additions": [
+      "Wooded-road root shelter visual enclosure around the existing RootHide gameplay corridor.",
+      "Bounded HISM tree/shrub/rock breakup around the Black Rider hiding beat.",
+      "Far-bank winding Ferry path using existing path-stone HISM.",
+      "Two rope-coil landing details plus one fallen-log hero detail; no new collision or gameplay authority."
+    ],
+    "p1c02_runtime_opened": false,
+    "proof_required": "Fresh exact-head full UE4.27 build/import/7-shot render/runtime/package train after the road-threat/Ferry/Black-Rider presentation packet."
+  }
 }

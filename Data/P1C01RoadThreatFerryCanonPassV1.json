@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "manifest_id": "P1C01_ROAD_THREAT_FERRY_CANON_PASS_V1",
+  "status": "SOURCE_IMPLEMENTED_FRESH_EXACT_HEAD_UE4_RENDER_REQUIRED",
+  "runtime_chapter": "P1C01",
+  "runtime_writer": "AShirePrototypeWorldBuilder",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "01_STORY_AND_TIMELINE_BIBLE",
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "Docs/WORLD_DETAIL_LEDGER.md"
+  ],
+  "source_alignment": {
+    "wooded_road": [
+      "Black Rider encounter is a mounted full-sized rider on a black horse.",
+      "Roadside concealment reads as a large tree/root shelter with long grass and woodland cover.",
+      "The visual pass must not alter the KeepOffRoad trigger, detection logic, patrol endpoints, or canonical outcome."
+    ],
+    "bucklebury_ferry": [
+      "Ferry lane resolves to a broad wooden landing and a large flat ferry boat.",
+      "Water-edge landing is framed by posts/lamps/reeds.",
+      "Far bank rises away from the landing on a winding path.",
+      "This pass stops at the P1C01 Ferry terminal and does not instantiate Bree."
+    ]
+  },
+  "visible_budget": {
+    "root_tree_hism_instances": 6,
+    "root_shrub_hism_instances": 8,
+    "root_rock_hism_instances": 4,
+    "far_bank_path_hism_instances": 12,
+    "limited_hero_actors": 3,
+    "total_hism_instances": 30,
+    "capture_count_after_packet": 7,
+    "dedicated_wooded_road_shot": "07_Wooded_Road_Hide"
+  },
+  "architecture_contract": {
+    "repeated_detail": "EXISTING_HISM_COMPONENTS_ONLY",
+    "new_world_authority": false,
+    "per_instance_tick": false,
+    "synchronous_heavy_load": false,
+    "actor_per_prop_density": false,
+    "new_collision": false,
+    "gameplay_trigger_changes": false,
+    "p1c02_runtime_opened": false,
+    "resident_production_assets_only": true
+  },
+  "runtime_dependencies": {
+    "living_world_population_owner": "ALivingWorldDirector unchanged",
+    "npc_context_owner": "UShireNPCContextSubsystem unchanged",
+    "story_truth_owner": "UShireQuestSubsystem unchanged"
+  },
+  "evidence_boundary": "SOURCE-IMPLEMENTED until fresh exact-head UE4.27 build/import/render/runtime/package proof. No VISUALLY-ACCEPTED, DEVICE-TESTED, PERFORMANCE-ACCEPTED or Gate 6/7 claim.",
+  "black_rider_presentation_fix": {
+    "scope": "CURRENT_STATIC_PRODUCTION_PROXY_ONLY_NOT_FINAL_ANIMATED_FBXS",
+    "changes": [
+      "Preserve imported/authored materials whenever resident Black Rider horse/rider/head production meshes resolve.",
+      "Apply BasicShape dynamic colour only to unresolved Engine primitive fallbacks.",
+      "Move BasicShape fallback material lookup to ConstructorHelpers instead of runtime LoadObject."
+    ],
+    "runtime_sync_load": false,
+    "final_animated_character_bundle": false,
+    "evidence_required": "Fresh exact-head 7-shot/runtime train must observe BLACK_RIDER_PRESENTATION log and human review remains required."
+  }
+}

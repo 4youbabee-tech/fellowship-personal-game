@@ -140,6 +140,7 @@ private:
     void SpawnShireSettlementCompletionPass();
     void SpawnShireSettlementFinalPolishPass();
     void SpawnShireSettlementCanonFinishPass();
+    void SpawnRoadThreatAndFerryCanonPass();
     void SpawnWorldDensityDetailPass();
     void SpawnBagEndHeroPass();
     void SpawnPartySocialLoopPass();

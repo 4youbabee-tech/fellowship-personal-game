@@ -51,6 +51,8 @@ call :Capture "05_Bywater_Facing_Edge" 500 -700 130 -7 14 0
 if errorlevel 1 exit /b !ERRORLEVEL!
 call :Capture "06_Bucklebury_Ferry" 21700 -1900 450 -12 18 0
 if errorlevel 1 exit /b !ERRORLEVEL!
+call :Capture "07_Wooded_Road_Hide" 13600 1800 180 -5 -55 0
+if errorlevel 1 exit /b !ERRORLEVEL!
 
 set "VISUAL_GATE_FAIL=0"
 for %%L in ("%RUN_DIR%\*.log") do (
@@ -92,8 +94,8 @@ if errorlevel 1 (
 echo P1C01_RENDER_PRODUCTION_READINESS_PASS frodoRig=active calibration=0.010 defaultMaterialFallback=no
 
 for /f %%C in ('powershell.exe -NoProfile -Command "@(Get-ChildItem -LiteralPath '%RUN_DIR%' -File -Filter '*.png' -ErrorAction SilentlyContinue).Count"') do set "PNG_COUNT=%%C"
-if not "!PNG_COUNT!"=="6" (
-  echo P1C01_RENDER_CAPTURE_FAIL reason=unexpected_capture_count expected=6 actual=!PNG_COUNT! dir="%RUN_DIR%"
+if not "!PNG_COUNT!"=="7" (
+  echo P1C01_RENDER_CAPTURE_FAIL reason=unexpected_capture_count expected=7 actual=!PNG_COUNT! dir="%RUN_DIR%"
   exit /b 79
 )
 

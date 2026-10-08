@@ -1205,8 +1205,10 @@ class SourceContractTests(unittest.TestCase):
         for shot in (
             "01_BagEnd_Hill", "02_Hobbiton_Common", "03_Party_Field",
             "04_Water_Mill_Bridge", "05_Bywater_Facing_Edge", "06_Bucklebury_Ferry",
+            "07_Wooded_Road_Hide",
         ):
             self.assertIn(shot, script)
+        self.assertIn('expected=7 actual=!PNG_COUNT!', script)
 
     def test_p1c01_local_visual_acceptance_harness_preserves_evidence_boundary(self):
         root = Path(__file__).resolve().parents[1]
@@ -1512,6 +1514,80 @@ class SourceContractTests(unittest.TestCase):
         health = workflow.index("- name: Verify runner session health")
         hydration = workflow.index("- name: Hydrate P1C01 material LFS sources")
         self.assertLess(health, hydration)
+
+
+
+    def test_p1c01_road_threat_ferry_canon_pass_is_bounded_and_single_writer(self):
+        root = Path(__file__).resolve().parents[1]
+        contract = json.loads(
+            (root / "Data" / "P1C01RoadThreatFerryCanonPassV1.json").read_text(encoding="utf-8"))
+        self.assertEqual(contract["runtime_chapter"], "P1C01")
+        self.assertEqual(contract["runtime_writer"], "AShirePrototypeWorldBuilder")
+        self.assertEqual(contract["visible_budget"]["root_tree_hism_instances"], 6)
+        self.assertEqual(contract["visible_budget"]["root_shrub_hism_instances"], 8)
+        self.assertEqual(contract["visible_budget"]["root_rock_hism_instances"], 4)
+        self.assertEqual(contract["visible_budget"]["far_bank_path_hism_instances"], 12)
+        self.assertEqual(contract["visible_budget"]["limited_hero_actors"], 3)
+        self.assertEqual(contract["visible_budget"]["total_hism_instances"], 30)
+        self.assertFalse(contract["architecture_contract"]["new_world_authority"])
+        self.assertFalse(contract["architecture_contract"]["per_instance_tick"])
+        self.assertFalse(contract["architecture_contract"]["synchronous_heavy_load"])
+        self.assertFalse(contract["architecture_contract"]["new_collision"])
+        self.assertFalse(contract["architecture_contract"]["gameplay_trigger_changes"])
+        self.assertFalse(contract["architecture_contract"]["p1c02_runtime_opened"])
+
+        source = (root / "Source" / "ShireJourney" / "Private" / "World" / "ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        header = (root / "Source" / "ShireJourney" / "Public" / "World" / "ShirePrototypeWorldBuilder.h").read_text(encoding="utf-8")
+        self.assertIn("void SpawnRoadThreatAndFerryCanonPass();", header)
+
+        start = source.index("void AShirePrototypeWorldBuilder::SpawnRoadThreatAndFerryCanonPass()")
+        end = source.index("void AShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()", start)
+        body = source[start:end]
+        for token in (
+            "P1C01_ROAD_THREAT_FERRY_CANON_PASS",
+            "RootTrees[]",
+            "RootShrubs[]",
+            "RootRocks[]",
+            "ProductionCommonFallenLogMesh",
+            "ProductionCommonRopeCoilMesh",
+            "FarBankPathInstances",
+            "p1c02=locked",
+        ):
+            self.assertIn(token, body)
+
+        for forbidden in (
+            "LoadObject<",
+            "StaticLoadObject",
+            "RequestSyncLoad",
+            "SpawnActor<ALivingWorldDirector>",
+            "SpawnActor<AShireAmbientNPC>",
+            'TEXT("P1C02")',
+        ):
+            self.assertNotIn(forbidden, body)
+
+        build = source[source.index("void AShirePrototypeWorldBuilder::BuildPrototypeWorld()"):]
+        self.assertLess(build.index("SpawnShireSettlementCanonFinishPass();"), build.index("SpawnRoadThreatAndFerryCanonPass();"))
+        self.assertLess(build.index("SpawnRoadThreatAndFerryCanonPass();"), build.index("SpawnWorldDensityDetailPass();"))
+
+
+    def test_p1c01_black_rider_preserves_production_materials_without_runtime_sync_load(self):
+        root = Path(__file__).resolve().parents[1]
+        source = (root / "Source" / "ShireJourney" / "Private" / "Prototypes" / "BlackRiderPrototype.cpp").read_text(encoding="utf-8")
+        header = (root / "Source" / "ShireJourney" / "Public" / "Prototypes" / "BlackRiderPrototype.h").read_text(encoding="utf-8")
+
+        start = source.index("void ABlackRiderPrototype::ApplyPrototypeStyle()")
+        end = source.index("void ABlackRiderPrototype::UpdateRideMotion", start)
+        body = source[start:end]
+
+        self.assertIn("bProductionHorse", body)
+        self.assertIn("bProductionRider", body)
+        self.assertIn("bProductionHead", body)
+        self.assertIn("BLACK_RIDER_PRESENTATION", body)
+        self.assertIn("authoredMaterialsPreserved=yes", body)
+        self.assertIn("runtimeSyncLoad=no", body)
+        self.assertNotIn("LoadObject<", body)
+        self.assertIn("FallbackMaterial", header)
+        self.assertIn("FObjectFinder<UMaterialInterface> BasicMaterial", source)
 
 
 if __name__ == "__main__":

@@ -7,6 +7,7 @@
 class USceneComponent;
 class UStaticMeshComponent;
 class UShireQuestSubsystem;
+class UMaterialInterface;
 
 UCLASS()
 class SHIREJOURNEY_API ABlackRiderPrototype : public AActor
@@ -70,6 +71,9 @@ private:
 
     UPROPERTY()
     UShireQuestSubsystem* QuestSubsystem = nullptr;
+
+    UPROPERTY()
+    UMaterialInterface* FallbackMaterial = nullptr;
 
     bool bHeadingToB = true;
     bool bDetectionQuestActive = false;

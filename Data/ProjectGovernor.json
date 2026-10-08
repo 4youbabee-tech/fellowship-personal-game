@@ -9038,5 +9038,93 @@
       "packaged startup"
     ],
     "boundary": "No visual/device/performance/Gate 6/7 acceptance until the full exact-head run passes and render evidence is reviewed."
+  },
+  "p1c01_road_threat_ferry_canon_packet_2026_10_08": {
+    "status": "SOURCE_IMPLEMENTED_FRESH_EXACT_HEAD_FULL_UNREAL_REQUIRED",
+    "parent_head": "2a2158c2b9af39f613888ba16485141e6c6f3700",
+    "runtime_chapter": "P1C01",
+    "scope": "WOODED_ROAD_ROOT_HIDE_AND_BUCKLEBURY_FERRY_CANON_DETAIL_COMPLETION",
+    "source_alignment": [
+      "Road threat reads as mounted Black Rider passing a roadside tree/root shelter.",
+      "Bucklebury Ferry reads as a broad landing and flat ferry with water-edge posts/lamps/reeds and a rising far-bank path.",
+      "P1C01 ends at the Ferry terminal; Bree/P1C02 is not instantiated."
+    ],
+    "construction": {
+      "root_hide_hism": {
+        "trees": 6,
+        "shrubs": 8,
+        "rocks": 4
+      },
+      "far_bank_path_hism": 12,
+      "limited_hero_actors": 3,
+      "gameplay_trigger_changes": false,
+      "collision_changes": false,
+      "population_authority_changes": false
+    },
+    "architecture": {
+      "repeated_detail": "EXISTING_HISM_COMPONENTS_ONLY",
+      "heavy_sync_load": false,
+      "per_instance_tick": false,
+      "world_writer": "AShirePrototypeWorldBuilder",
+      "population_owner": "ALivingWorldDirector unchanged",
+      "npc_context_owner": "UShireNPCContextSubsystem unchanged"
+    },
+    "mission_boundary_repair": "P1C01_SHIRE_ROADS_THROUGH_BUCKLEBURY_FERRY_TERMINAL_P1C02_LOCKED",
+    "remaining_hard_gaps": [
+      "Dedicated Bag End production interior FBX kit + provenance/QC",
+      "Final animated FBX bundles for Bilbo, Gandalf, Sam, Merry, Pippin, Black Rider and Black Rider horse",
+      "Production WAV masters + provenance + UE import/playback",
+      "Target-device 720p DX11 FPS/frame-time/RAM/VRAM/streaming evidence",
+      "Human visual/audio/gameplay Gate 6/7 acceptance"
+    ],
+    "evidence_boundary": "SOURCE-IMPLEMENTED only until fresh exact-head full UE4.27 build/import/render/runtime/package proof; no VISUALLY-ACCEPTED, DEVICE-TESTED, PERFORMANCE-ACCEPTED or Gate 6/7 claim.",
+    "render_evidence": {
+      "expected_capture_count": 7,
+      "dedicated_new_shot": "07_Wooded_Road_Hide",
+      "state": "FRESH_EXACT_HEAD_RERUN_REQUIRED"
+    },
+    "black_rider_material_root_fix": {
+      "state": "SOURCE_IMPLEMENTED_FRESH_EXACT_HEAD_REPROOF_PENDING",
+      "defect": "Resolved production Black Rider horse/rider/head meshes were being overwritten with Engine BasicShape dynamic material.",
+      "fix": [
+        "Preserve imported/authored materials on resolved production meshes.",
+        "Apply dark BasicShape material only to unresolved Engine primitive fallbacks.",
+        "Use ConstructorHelpers for fallback Engine material; remove runtime LoadObject from presentation path."
+      ],
+      "final_animated_bundle": false
+    }
+  },
+  "p1c01_parent_full_reproof_2026_10_08": {
+    "status": "FULL_MACHINE_TRAIN_PASS_HUMAN_RENDER_REVIEW_NOT_ACCEPTED",
+    "exact_head": "2a2158c2b9af39f613888ba16485141e6c6f3700",
+    "workflow": "Unreal Build Validation #1730",
+    "run_id": 37755437092,
+    "machine_pass": [
+      "UE4.27.2 editor build",
+      "production asset import",
+      "six-shot rendered capture",
+      "Automation Framework QA",
+      "headless playable startup",
+      "chapter runtime audit",
+      "route/story roundtrip audit",
+      "runtime warning-debt guard",
+      "cook/package",
+      "Runtime Data JSON verification",
+      "packaged executable launch"
+    ],
+    "artifacts": [
+      "p1c01-shire-render-integrated-2a2158c2b9af39f613888ba16485141e6c6f3700",
+      "p1c01-playable-windows-2a2158c2b9af39f613888ba16485141e6c6f3700"
+    ],
+    "render_review": {
+      "status": "REVIEWED_NOT_VISUALLY_ACCEPTED",
+      "observations": [
+        "Bag End/Hobbiton settlement is coherent and populated but remains visibly low-poly/proxy.",
+        "Party Field framing is not yet strong enough for presentation acceptance.",
+        "Water/Mill/Bridge is readable and shows Gandalf proxy identity but remains proxy-level.",
+        "Bucklebury Ferry is readable but still needs far-bank/hero-detail finish."
+      ]
+    },
+    "evidence_boundary": "COMPILE-TESTED/full machine train proven for exact head only. No VISUALLY-ACCEPTED, DEVICE-TESTED, PERFORMANCE-ACCEPTED or Gate 6/7 acceptance."
   }
 }
