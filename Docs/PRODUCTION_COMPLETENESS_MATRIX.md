@@ -1,3 +1,14 @@
+## 2026-10-08 - P1C01 packaged/playable reproof on #1719
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| #1719 technical train | MACHINE-GREEN | Exact-head build/import, capture, runtime audits, cook, Runtime Data, packaged startup, and hardware-boundary steps all passed |
+| Render evidence | FRESH / DIAGNOSTIC | Artifact `11524864108`; Frodo rig active, resident materials, named-static Sam/Gandalf/Bilbo logs; reviewed images remain low-poly/blockout with occlusion |
+| Playable package | MACHINE-GREEN / NOT DEVICE-ACCEPTED | Artifact `11526030062`; packaged startup observed 6s and EXE uploaded; no target-device/human device sign-off |
+| Performance | NOT ACCEPTED | Runner hardware snapshot exists, but no target FPS/frame-time/pacing acceptance evidence |
+| P1C01 visual/Gate 6-7 | NOT ACCEPTED | Final world/character/micro-detail and human review gaps remain |
+| P1C02 Bree | LOCKED | Begin only after P1C01 completion gates genuinely pass |
+
 ## 2026-10-08 - P1C01 full-lane proof trigger for packaged cook closure
 
 | Area | Status | Evidence / boundary |

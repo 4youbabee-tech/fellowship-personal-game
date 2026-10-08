@@ -1,3 +1,10 @@
+## 2026-10-08 - P1C01 packaged/playable reproof on #1719
+
+- #1719 is machine-green on exact head `f32dd5e0d5139d758ca853cd2380142c6a4bc367`: source/static gate, UE4.27.2 build, 384-file import, six-shot render capture/upload, Automation QA, startup/chapter/state/transition/fault/persistence audits, warning-debt guard, cook, packaged Runtime Data, packaged startup, and runner hardware snapshot all passed.
+- Fresh render artifact: `11524864108` (`p1c01-shire-render-integrated-f32dd5e0d5139d758ca853cd2380142c6a4bc367`). Logs prove `P1C01_RENDER_PRODUCTION_READINESS_PASS frodoRig=active calibration=0.010 defaultMaterialFallback=no`, resident terrain materials, and named-static resolution for Sam, Gandalf, and Bilbo. The prior skeletal usage warning is absent from the six-shot logs.
+- Fresh playable artifact: `11526030062` (`p1c01-playable-windows-f32dd5e0d5139d758ca853cd2380142c6a4bc367`, 166,419,946 bytes). Packaged checks prove `W00_PACKAGED_STARTUP_PASS observed=6s`; runner boundary captured as Intel i7-6498DU / 8,457,560,064 bytes RAM. This is playable/package evidence, not target-device acceptance or performance acceptance.
+- Human render review still finds low-poly/blockout world surfaces, occluded composition, weak Frodo/party readability, and insufficient final micro-detail/living-world fidelity. P1C01 remains NOT ACCEPTED for visual/device/performance/Gate 6/7; P1C02 Bree remains LOCKED.
+
 ## 2026-10-08 - P1C01 full-lane proof trigger for packaged cook closure
 
 - #1718 passed the static gate but correctly inherited the green governance path because the preceding syntax repair changed only classifier/docs files; it produced no Unreal/render/package evidence and is not used for acceptance.
