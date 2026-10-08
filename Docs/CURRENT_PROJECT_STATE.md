@@ -1,3 +1,11 @@
+## 2026-10-08 - P1C01 #1733 patrol-axis road-threat evidence
+
+- Unreal Build Validation #1733 completed successfully on exact head `b0e4c0807fbb72778c546370d2b2ad46a8a2e0a3` through `mode=full`: UE4.27.2 build/import, seven captures, Automation/runtime/state audits, zero guarded warning debt, cook/package, 37/37 packaged Runtime Data, 6s packaged startup, hardware snapshot, and both artifact uploads.
+- Fresh evidence: render artifact `11544534826`, playable artifact `11545992505`, 271/271 streamed assets, package elapsed 60s, and Intel i7-6498DU / 8,457,560,064-byte RAM runner boundary. This is machine evidence only, not target-device or performance acceptance.
+- Human review verifies the patrol-axis composition correction: `07_Wooded_Road_Hide` is unobstructed and now clearly shows the road/fence line with the Black Rider centered on the patrol corridor, framed by roadside vegetation. This closes the camera-composition defect from #1731/#1732 and is a verified visual improvement.
+- The same image remains visibly low-poly/proxy: the Rider/horse silhouette is static and gray, and the root shelter is suggested by framing rather than final hero-quality geometry. Therefore the chapter remains NOT VISUALLY-ACCEPTED and the missing final animated character bundle/root-hide presentation remain production gaps.
+- P1C01 remains NOT DEVICE-TESTED / NOT PERFORMANCE-ACCEPTED; Gate 6/7 remain open. P1C02 Bree remains locked until P1C01 completion gates genuinely pass.
+
 ## 2026-10-08 - P1C01 #1732 south-vantage proof and patrol-axis camera correction
 
 - Unreal Build Validation #1732 completed successfully on exact head `d249007e71e0849c72873ffe9a61e1b624327f26` through `mode=full`: UE4.27.2 build/import, seven captures, Automation/runtime audits, zero guarded warning debt, cook/package, 37/37 packaged Runtime Data, 6s packaged startup, hardware snapshot, and both artifact uploads.

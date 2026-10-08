@@ -1,3 +1,15 @@
+## 2026-10-08 - P1C01 #1733 patrol-axis road-threat evidence
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| #1733 technical train | MACHINE-GREEN | Exact head `b0e4c080`; full build/import, 7 captures, runtime/state audits, zero guarded warning debt, package 60s, 37/37 data, 6s startup |
+| Artifacts | FRESH / DIAGNOSTIC | Render `11544534826`; playable `11545992505`; streaming 271/271 |
+| Wooded-road camera composition | VERIFIED VISUAL IMPROVEMENT | Unobstructed frame shows road/fence line and centered Black Rider on the patrol corridor |
+| Rider/root-hide presentation | NOT FINAL | Rider/horse remains static gray proxy; root shelter is framing-level, not hero-quality final geometry |
+| Runtime/gameplay boundary | PRESERVED | No world, quest, AI, patrol, collision, density, audio, or chapter-boundary change |
+| VISUALLY-ACCEPTED / DEVICE-TESTED / PERFORMANCE-ACCEPTED / Gate 6-7 | NOT ACCEPTED | Final character/world/audio/device evidence remains required |
+| P1C02 Bree | LOCKED | Begin only after P1C01 completion gates genuinely pass |
+
 ## 2026-10-08 - P1C01 #1732 south-vantage proof and patrol-axis camera correction
 
 | Area | Status | Evidence / boundary |
