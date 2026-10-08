@@ -1,3 +1,11 @@
+## 2026-10-09 — P1C01 Party Field static dressing HISM batch
+
+- Reused the existing resident meshes in `AShirePrototypeWorldBuilder::SpawnPartySocialLoopPass` to batch the same 14 non-colliding static placements: six picnic tables, two benches, two canopies, one loaded cart, two barrels and one haystack.
+- Grouped placements by `UStaticMesh*` into up to six existing `AWorldDetailCluster` actors. The source transforms, authored materials, dynamic-shadow flag and non-collision behavior are preserved; no placement or world density was added.
+- Party setup/celebration state variants remain their current actors so their hidden/state transitions retain the existing owner and lifecycle. Quest anchors, save keys, NPC population, NavMesh and route ownership are untouched.
+- Updated the existing cluster configuration to opt into dynamic shadows only for these Party Field props; other clusters keep the previous default. Generated clusters carry the existing cleanup tag.
+- Validation boundary: focused source regression is required, then fresh exact-head UE4.27.2 proof. This change has no measured draw-call/FPS claim and does not prove PIE, target-device, visual, or Gate 6/7 acceptance. P1C02 remains locked.
+
 ## 2026-10-09 — P1C01 scenic-instancing optimization registered for existing production assets
 
 - **Authorized chapter/scope:** Only P1C01, existing `AShirePrototypeWorldBuilder::SpawnScenicDetailPass`; no new chapter, story event, actor behavior, imported source, character animation or texture.

@@ -1,3 +1,12 @@
+## 2026-10-09 — P1C01 Party Field static prop batching
+
+| Area | Change | Evidence boundary |
+|---|---|---|
+| Party Field static dressing | Same 14 placements grouped by resident mesh into up to 6 existing HISM clusters; original transforms, materials, dynamic shadows and non-collision retained | SOURCE-IMPLEMENTED; exact-head static + UE4 proof pending |
+| Stateful party setup/celebration props | Remain actors under existing state ownership | No transition behavior change claimed |
+| Performance | Maximum separate actor count for these placements reduces 14 → 6 when all mesh groups resolve | Structural count only; no measured FPS/draw-call claim |
+| Story, save, traversal, NPCs, collisions, Bree | Unchanged; P1C02 stays locked | PIE/device/Gate 6/7 remain open |
+
 ## 2026-10-09 - P1C01 render evidence ZIP latency trim (CI only)
 
 | Area | Observed / corrected | Status |

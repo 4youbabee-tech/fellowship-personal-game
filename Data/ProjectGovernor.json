@@ -5874,6 +5874,39 @@
         "Predecessor Unreal Build #1773 success (run 37846247974, exact HEAD 08cbbf38); implementation itself awaits a newer exact-head run."
       ],
       "evidence_boundary": "SOURCE IMPLEMENTATION / FRESH EXACT-HEAD COMPILE AND RUNTIME VALIDATION PENDING. No target-device/PIE/visual/Gate6/7 accepted."
+    },
+    {
+      "id": "DEC-107",
+      "title": "P1C01 batches existing non-collision Party Field static dressing in resident HISM clusters",
+      "status": "ACCEPTED",
+      "priority": "HIGH",
+      "date": "2026-10-09",
+      "origin": "Owner instruction to continue P1C01 production using existing HISM/LOD/culling and already available assets; source audit identified fourteen non-colliding Party Field props currently spawned separately.",
+      "requirements": [
+        "REQ-PROD-011",
+        "REQ-PERF-003",
+        "REQ-WORLD-003"
+      ],
+      "resolution": "Reuse SpawnPartySocialLoopPass and AWorldDetailCluster to group the same fourteen static Party Field props by resident mesh. Preserve all local offsets, rotations, scales, materials, dynamic shadow visibility, and no-collision behavior; retain state-dependent party props as actors.",
+      "implementation_contract": [
+        "No new assets, meshes, placements, runtime systems, population authority, gameplay actors or synchronous loads.",
+        "Preserve the same six picnic table, two bench, two canopy, one loaded-cart, two barrel and one haystack placements.",
+        "Group only by already-resident UStaticMesh identity; at most six additional HISM cluster actors when every resident mesh resolves.",
+        "Keep all fourteen placements non-colliding and keep existing setup/celebration state actors unchanged.",
+        "Preserve dynamic shadow casting for the batched props; other AWorldDetailCluster call sites retain their current default.",
+        "Use the 32000cm cull endpoint already established for authored P1C01 scenery; no target-device performance gain is claimed without measurement.",
+        "No change to PartyField anchors, quest/save keys, NavMesh, NPC schedules/population, route transitions, or P1C02 lock.",
+        "Update source regression, scenic batch manifest, WORLD_DETAIL_LEDGER, PROJECT_GUARDIAN, CURRENT_PROJECT_STATE and PRODUCTION_COMPLETENESS_MATRIX in the same production change."
+      ],
+      "evidence": [
+        "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp:SpawnPartySocialLoopPass",
+        "Source/ShireJourney/Public/World/WorldDetailCluster.h",
+        "Source/ShireJourney/Private/World/WorldDetailCluster.cpp",
+        "Scripts/test_source_contracts.py:test_p1c01_party_social_static_dressing_batches_existing_transforms_by_mesh",
+        "Data/P1C01ScenicBatchOptimizationV1.json"
+      ],
+      "evidence_boundary": "SOURCE IMPLEMENTED / FOCUSED STATIC REGRESSION REQUIRED / FRESH EXACT-HEAD UE4.27.2 C++ BUILD AND P1C01 RUNTIME PROOF PENDING. No measured FPS/draw-call, PIE, DEVICE, visual or Gate 6/7 acceptance is claimed.",
+      "authority": "OWNER_AUTHORIZED_P1C01_PERFORMANCE_SCOPE"
     }
   ],
   "open_conflicts": [],

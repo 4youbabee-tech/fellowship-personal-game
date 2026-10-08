@@ -20,7 +20,8 @@ public:
         UStaticMesh* InMesh,
         bool bCollision,
         int32 StartCullDistance,
-        int32 EndCullDistance);
+        int32 EndCullDistance,
+        bool bCastDynamicShadow = false);
 
     void AddDetailInstance(
         const FVector& WorldLocation,

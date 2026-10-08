@@ -1874,27 +1874,28 @@ void AShirePrototypeWorldBuilder::SpawnPartySocialLoopPass()
     int32 InstanceCount = 0;
     auto SpawnPartyCluster = [this, &ClusterCount, &InstanceCount](
         UStaticMesh* Mesh, const TCHAR* Tag, int32 StartCull, int32 EndCull,
-        const TArray<FTransform>& Placements)
+        const TArray<FTransform>& Placements, bool bCastDynamicShadow) -> AWorldDetailCluster*
     {
         if (!Mesh || Placements.Num() == 0)
         {
-            return;
+            return nullptr;
         }
         AWorldDetailCluster* Cluster = GetWorld()->SpawnActor<AWorldDetailCluster>();
         if (!Cluster)
         {
-            return;
+            return nullptr;
         }
         Cluster->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
         Cluster->Tags.AddUnique(TEXT("P1C01PartySocialDetail"));
         Cluster->Tags.AddUnique(FName(Tag));
-        Cluster->Configure(Mesh, false, StartCull, EndCull);
+        Cluster->Configure(Mesh, false, StartCull, EndCull, bCastDynamicShadow);
         for (const FTransform& T : Placements)
         {
             Cluster->AddDetailInstance(T.GetLocation(), T.Rotator(), T.GetScale3D());
         }
         ++ClusterCount;
         InstanceCount += Cluster->GetDetailCount();
+        return Cluster;
     };
 
     auto RingPlacements = [&PartyCenter](float Radius, int32 Count, float Z, float Scale, float YawOffset)
@@ -1912,25 +1913,33 @@ void AShirePrototypeWorldBuilder::SpawnPartySocialLoopPass()
     };
 
     SpawnPartyCluster(CommonSackBale, TEXT("P1C01PartyFoodStores"), 800, 3800,
-        RingPlacements(610.0f, 12, 0.0f, 0.55f, 5.0f));
+        RingPlacements(610.0f, 12, 0.0f, 0.55f, 5.0f), false);
     SpawnPartyCluster(CommonCargoCrate, TEXT("P1C01PartySupplyCrates"), 900, 4200,
-        RingPlacements(760.0f, 12, 0.0f, 0.52f, 18.0f));
+        RingPlacements(760.0f, 12, 0.0f, 0.52f, 18.0f), false);
     SpawnPartyCluster(CommonFlowerPlanter, TEXT("P1C01PartyDecorPlanters"), 700, 3400,
-        RingPlacements(500.0f, 12, 0.0f, 0.50f, 2.0f));
+        RingPlacements(500.0f, 12, 0.0f, 0.50f, 2.0f), false);
     SpawnPartyCluster(ProductionLanternMesh, TEXT("P1C01PartyLanternRing"), 1000, 4600,
-        RingPlacements(880.0f, 12, 16.0f, 0.52f, 0.0f));
+        RingPlacements(880.0f, 12, 16.0f, 0.52f, 0.0f), false);
 
-    int32 StaticPropCount = 0;
-    auto SpawnPartyProp = [this, &StaticPropCount](
-        UStaticMesh* Mesh, const FVector& Location, const FVector& Scale, const FRotator& Rotation)
+    int32 StaticPropClusterCount = 0;
+    int32 StaticPropInstanceCount = 0;
+    TArray<UStaticMesh*> PartyStaticPropMeshes;
+    TArray<TArray<FTransform>> PartyStaticPropPlacements;
+    auto QueuePartyProp = [&PartyCenter, &PartyStaticPropMeshes, &PartyStaticPropPlacements](
+        UStaticMesh* Mesh, const FVector& Offset, const FVector& Scale, const FRotator& Rotation)
     {
-        AStaticMeshActor* Actor = SpawnShape(Mesh, Location, Scale, FLinearColor::White, Rotation, false);
-        if (Actor)
+        if (!Mesh)
         {
-            Actor->Tags.AddUnique(TEXT("P1C01PartySocialDetail"));
-            ++StaticPropCount;
+            return;
         }
-        return Actor;
+        int32 MeshIndex = PartyStaticPropMeshes.IndexOfByKey(Mesh);
+        if (MeshIndex == INDEX_NONE)
+        {
+            MeshIndex = PartyStaticPropMeshes.Add(Mesh);
+            PartyStaticPropPlacements.AddDefaulted();
+        }
+        PartyStaticPropPlacements[MeshIndex].Emplace(
+            Rotation, PartyCenter + Offset, Scale);
     };
 
     const FVector TableOffsets[] = {
@@ -1939,17 +1948,28 @@ void AShirePrototypeWorldBuilder::SpawnPartySocialLoopPass()
     };
     for (int32 Index = 0; Index < UE_ARRAY_COUNT(TableOffsets); ++Index)
     {
-        SpawnPartyProp(ProductionPicnicTableMesh, PartyCenter + TableOffsets[Index],
+        QueuePartyProp(ProductionPicnicTableMesh, TableOffsets[Index],
             FVector(0.72f), FRotator(0.0f, static_cast<float>((Index % 3) * 4 - 4), 0.0f));
     }
-    SpawnPartyProp(CommonLongBench, PartyCenter + FVector(-560,40,0), FVector(0.68f), FRotator(0,8,0));
-    SpawnPartyProp(CommonLongBench, PartyCenter + FVector(560,20,0), FVector(0.68f), FRotator(0,-8,0));
-    SpawnPartyProp(CommonMarketCanopy, PartyCenter + FVector(-260,-400,0), FVector(0.68f), FRotator(0,6,0));
-    SpawnPartyProp(CommonMarketCanopy, PartyCenter + FVector(300,-405,0), FVector(0.68f), FRotator(0,-6,0));
-    SpawnPartyProp(ProductionLoadedCartMesh, PartyCenter + FVector(780,-360,0), FVector(0.58f), FRotator(0,95,0));
-    SpawnPartyProp(CommonBarrel, PartyCenter + FVector(690,-250,0), FVector(0.60f), FRotator::ZeroRotator);
-    SpawnPartyProp(CommonBarrel, PartyCenter + FVector(735,-205,0), FVector(0.56f), FRotator(0,15,0));
-    SpawnPartyProp(ProductionHaystackMesh, PartyCenter + FVector(-760,-330,0), FVector(0.62f), FRotator(0,-12,0));
+    QueuePartyProp(CommonLongBench, FVector(-560,40,0), FVector(0.68f), FRotator(0,8,0));
+    QueuePartyProp(CommonLongBench, FVector(560,20,0), FVector(0.68f), FRotator(0,-8,0));
+    QueuePartyProp(CommonMarketCanopy, FVector(-260,-400,0), FVector(0.68f), FRotator(0,6,0));
+    QueuePartyProp(CommonMarketCanopy, FVector(300,-405,0), FVector(0.68f), FRotator(0,-6,0));
+    QueuePartyProp(ProductionLoadedCartMesh, FVector(780,-360,0), FVector(0.58f), FRotator(0,95,0));
+    QueuePartyProp(CommonBarrel, FVector(690,-250,0), FVector(0.60f), FRotator::ZeroRotator);
+    QueuePartyProp(CommonBarrel, FVector(735,-205,0), FVector(0.56f), FRotator(0,15,0));
+    QueuePartyProp(ProductionHaystackMesh, FVector(-760,-330,0), FVector(0.62f), FRotator(0,-12,0));
+
+    for (int32 MeshIndex = 0; MeshIndex < PartyStaticPropMeshes.Num(); ++MeshIndex)
+    {
+        if (AWorldDetailCluster* Cluster = SpawnPartyCluster(
+            PartyStaticPropMeshes[MeshIndex], TEXT("P1C01PartyPropCluster"),
+            0, 32000, PartyStaticPropPlacements[MeshIndex], true))
+        {
+            ++StaticPropClusterCount;
+            StaticPropInstanceCount += Cluster->GetDetailCount();
+        }
+    }
 
     auto SpawnStateProp = [this, &PartyCenter](
         TArray<AStaticMeshActor*>& Target, UStaticMesh* Mesh,
@@ -1979,8 +1999,8 @@ void AShirePrototypeWorldBuilder::SpawnPartySocialLoopPass()
 
     UE_LOG(
         LogTemp, Display,
-        TEXT("PARTY_SOCIAL_LOOP_PASS clusters=%d instances=%d staticProps=%d setupProps=%d celebrationProps=%d populationTarget=18 collision=none tick=none"),
-        ClusterCount, InstanceCount, StaticPropCount,
+        TEXT("PARTY_SOCIAL_LOOP_PASS clusters=%d instances=%d propClusters=%d propInstances=%d setupProps=%d celebrationProps=%d populationOwner=LivingWorldDirector collision=none tick=none"),
+        ClusterCount, InstanceCount, StaticPropClusterCount, StaticPropInstanceCount,
         PartySetupVariantActors.Num(), PartyCelebrationVariantActors.Num());
 }
 

@@ -23,7 +23,8 @@ void AWorldDetailCluster::Configure(
     UStaticMesh* InMesh,
     bool bCollision,
     int32 StartCullDistance,
-    int32 EndCullDistance)
+    int32 EndCullDistance,
+    bool bCastDynamicShadow)
 {
     if (!Instances)
     {
@@ -31,6 +32,7 @@ void AWorldDetailCluster::Configure(
     }
 
     Instances->SetStaticMesh(InMesh);
+    Instances->bCastDynamicShadow = bCastDynamicShadow;
     Instances->SetCollisionEnabled(
         bCollision ? ECollisionEnabled::QueryAndPhysics : ECollisionEnabled::NoCollision);
     Instances->SetCullDistances(

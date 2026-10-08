@@ -1,3 +1,10 @@
+## 2026-10-09 — P1C01 Party Field static dressing batch (source implementation)
+
+- Changed `SpawnPartySocialLoopPass` to group the same 14 static, non-colliding Party Field dressing placements by resident mesh using the existing `AWorldDetailCluster`; the maximum actor count for those props falls from 14 to 6 when all six mesh groups resolve.
+- Preserved each placement transform, authored mesh/material, dynamic-shadow rendering, and collision-disabled behavior. Stateful setup/celebration props remain actors. No additional world instances or assets were introduced.
+- The cluster API gained an opt-in dynamic-shadow setting; existing call sites retain their previous default. P1C01 population remains owned by `LivingWorldDirector`; no NPC, quest, save, NavMesh, route, or chapter transition logic changed.
+- Added source regression coverage and updated DEC-107 plus the existing scenic optimization manifest. Static contract is source-only until CI runs on this exact head; fresh UE4.27.2 build/runtime validation is pending. No PIE, device, visual, measured performance, or Gate 6/7 acceptance is claimed. P1C02 remains locked.
+
 ## 2026-10-09 - P1C01 exact-head visual evidence upload de-duplication
 
 - Inspected GitHub artifact `p1c01-shire-render-integrated-08cbbf38...` from Unreal #1773 (SUCCESS). The ZIP included **45 historical capture folders**, occupying ~290.7 MiB compressed; the actual seven PNGs plus seven logs from current `08cbbf38dd4a` used about **8.25 MiB**, roughly 97% redundant transport. Historical runner copies are left untouched; only upload selection is narrowed.

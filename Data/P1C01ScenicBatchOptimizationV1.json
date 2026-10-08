@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "P1C01_SCENIC_BATCH_OPTIMIZATION_V1",
-  "status": "SOURCE_IMPLEMENTED_ENGINE_VALIDATION_PENDING",
+  "status": "PARTY_SOCIAL_STATIC_DRESSING_BATCH_SOURCE_IMPLEMENTED_EXACT_HEAD_UE4_PROOF_PENDING",
   "runtime_chapter": "P1C01",
   "governor_authority": "Data/ProjectGovernor.json:DEC-106",
   "reason": "Reuse existing AWorldDetailCluster HISM for already-authored low-collision roadside, village, woodland and ferry-bank decoration. Avoid one AStaticMeshActor per visual prop and clean generated HISM clusters on chapter transitions.",
@@ -18,7 +18,18 @@
     "max_distinct_mesh_groups": 15,
     "ferry_collision_actor": "ProductionCommonFootbridgeMesh",
     "no_new_instances": true,
-    "zero_added_sources": true
+    "zero_added_sources": true,
+    "party_field_static_dressing": {
+      "existing_non_collision_placements": 14,
+      "existing_actor_upper_bound_before_batch": 14,
+      "distinct_resident_mesh_groups_max": 6,
+      "output_actor_upper_bound_after_batch": 6,
+      "actor_reduction_max": 8,
+      "placement_count_unchanged": true,
+      "transforms_unchanged": true,
+      "dynamic_shadows_preserved": true,
+      "stateful_setup_and_celebration_props_excluded": true
+    }
   },
   "runtime_contract": {
     "new_meshes": false,
@@ -35,7 +46,9 @@
     "inherited_cluster_class": "AWorldDetailCluster",
     "hism_cull_start_cm": 0,
     "hism_cull_end_cm": 32000,
-    "note": "Culling end 32000cm retains all P1C01 authored scenic corridor distances; tune only after DX11/720p profile."
+    "note": "Culling end 32000cm retains all P1C01 authored scenic corridor distances; tune only after DX11/720p profile.",
+    "party_static_props_remain_non_collision": true,
+    "p1c02_runtime_opened": false
   },
   "performance_target": {
     "cpu": "i7 6th generation",
@@ -55,7 +68,9 @@
   "regression": {
     "source_test": "Scripts/test_source_contracts.py:test_p1c01_scenic_reuse_groups_existing_details_and_cleans_them_on_transition",
     "engine_evidence": "Unreal Build Validation exact-head C++ build + Automation + Headless route/state; later PIE traversal and performance on target hardware",
-    "accepting_state": "No PIE/device/visual/performance acceptance until user-review and hardware evidence"
+    "accepting_state": "No PIE/device/visual/performance acceptance until user-review and hardware evidence",
+    "party_batch_source_test": "Scripts/test_source_contracts.py:test_p1c01_party_social_static_dressing_batches_existing_transforms_by_mesh",
+    "party_batch_engine_evidence": "Fresh exact-head Unreal Build Validation; compare actor count and frame-time on target profile before making performance claims."
   },
   "deferred_from_programmer_proposal": [
     "Do not add Jenkins: GitHub Actions and BuildCookRun exist and were machine-green on #1772.",

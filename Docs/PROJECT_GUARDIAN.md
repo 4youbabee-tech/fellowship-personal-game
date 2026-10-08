@@ -1,3 +1,9 @@
+### P1C01 Party Field static-dressing batch guard (2026-10-09)
+
+**Invariant:** the Party Field static dressing remains at the authored fourteen transforms: 6 picnic tables, 2 benches, 2 canopies, 1 loaded cart, 2 barrels and 1 haystack. `SpawnPartySocialLoopPass` groups these by resident mesh into no more than six `AWorldDetailCluster` HISM actors. HISM collision stays disabled; dynamic-shadow casting is explicitly retained for these grouped props. Setup/celebration variant actors remain outside this batch.
+
+**Regression signal:** `Scripts/test_source_contracts.py:test_p1c01_party_social_static_dressing_batches_existing_transforms_by_mesh`. This source guard is not engine proof. The exact head still requires UE4.27.2 compile/runtime validation and measured target-profile evidence before any FPS/draw-call or Gate 6/7 claim.
+
 # PROJECT GUARDIAN
 
 Project Guardian is the project's regression memory.

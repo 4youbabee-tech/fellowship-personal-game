@@ -1714,6 +1714,37 @@ class SourceContractTests(unittest.TestCase):
         self.assertLess(build.index("SpawnRoadThreatAndFerryCanonPass();"), build.index("SpawnWorldDensityDetailPass();"))
 
 
+    def test_p1c01_party_social_static_dressing_batches_existing_transforms_by_mesh(self):
+        root = Path(__file__).resolve().parents[1]
+        source = (root / "Source" / "ShireJourney" / "Private" / "World" / "ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        header = (root / "Source" / "ShireJourney" / "Public" / "World" / "WorldDetailCluster.h").read_text(encoding="utf-8")
+        cluster = (root / "Source" / "ShireJourney" / "Private" / "World" / "WorldDetailCluster.cpp").read_text(encoding="utf-8")
+        start = source.index("void AShirePrototypeWorldBuilder::SpawnPartySocialLoopPass()")
+        end = source.index("void AShirePrototypeWorldBuilder::SpawnSideStories()", start)
+        body = source[start:end]
+
+        self.assertIn("QueuePartyProp", body)
+        self.assertIn("PartyStaticPropMeshes.IndexOfByKey(Mesh)", body)
+        self.assertIn("PartyStaticPropPlacements[MeshIndex].Emplace(\n            Rotation, PartyCenter + Offset, Scale)", body)
+        self.assertIn('TEXT("P1C01PartyPropCluster")', body)
+        self.assertIn("0, 32000, PartyStaticPropPlacements[MeshIndex], true", body)
+        self.assertIn("P1C01PartySocialDetail", body)
+        self.assertNotIn("SpawnShape(", body[body.index("auto QueuePartyProp"):body.index("auto SpawnStateProp")])
+        self.assertIn("propClusters=%d propInstances=%d", body)
+        self.assertIn("populationOwner=LivingWorldDirector", body)
+
+        expected_existing_placements = (
+            "TableOffsets[]", "UE_ARRAY_COUNT(TableOffsets)",
+            "QueuePartyProp(CommonLongBench", "QueuePartyProp(CommonMarketCanopy",
+            "QueuePartyProp(ProductionLoadedCartMesh", "QueuePartyProp(CommonBarrel",
+            "QueuePartyProp(ProductionHaystackMesh",
+        )
+        for token in expected_existing_placements:
+            self.assertIn(token, body)
+        self.assertIn("bool bCastDynamicShadow = false", header)
+        self.assertIn("Instances->bCastDynamicShadow = bCastDynamicShadow", cluster)
+
+
     def test_p1c01_black_rider_preserves_production_materials_without_runtime_sync_load(self):
         root = Path(__file__).resolve().parents[1]
         source = (root / "Source" / "ShireJourney" / "Private" / "Prototypes" / "BlackRiderPrototype.cpp").read_text(encoding="utf-8")
