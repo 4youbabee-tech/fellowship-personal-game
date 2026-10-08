@@ -1613,3 +1613,8 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - No new world feature is introduced. This entry closes a validation ownership defect that could let Shire material/presentation importer changes inherit old engine proof without fresh captures.
 - `ShireProductionImportCommandlet.cpp` now belongs only to the definitive P1C01 full visual train for automatic validation. Historical Human Wave2 inheritance no longer owns it.
 - Any future importer change must rebuild/import/capture before world-detail presentation evidence can be promoted.
+
+
+## 2026-10-08 - P1C01 importer exact-head reproof anchor
+
+- No world/detail behavior changed. A comment-only source touch on the production importer intentionally routes the next exact head through the corrected full visual train so the existing Shire material correction receives real UE4 import/render evidence.

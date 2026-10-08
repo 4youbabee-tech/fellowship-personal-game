@@ -5460,3 +5460,11 @@ The #1698 artifact was technically complete but visual review still found low-de
 - Root fix: `ShireProductionImportCommandlet.cpp` is removed from all three historical safe/dedicated Human Wave2 inheritance allowlists while remaining explicitly classified as `FULL_UNREAL_VISUAL_PRESENTATION_FILE`.
 - Regression coverage now requires an importer-only visual delta to classify `full` and rejects reintroduction into the Human Wave2 short-circuit.
 - No gameplay, world authority, chapter boundary, density, streaming ownership or asset residency change is introduced. P1C02/Bree remains locked.
+
+
+## 2026-10-08 - P1C01 forced exact-head importer reproof
+
+- #1729 correctly validated the classifier repair itself but, because that commit was validation-policy/docs only, it inherited parent proof and did not execute UE4.
+- This packet intentionally touches the already-fixed production importer with a no-behavior-change reproof anchor so the corrected classifier must classify the exact head as `full`.
+- The purpose is to prove the existing World/Shire texture double-tint correction through the complete One-Shot build/import/six-shot/runtime/package/startup lane without changing material behavior again.
+- Evidence remains STATIC-VALIDATED until that full run completes. P1C02/Bree remains locked.

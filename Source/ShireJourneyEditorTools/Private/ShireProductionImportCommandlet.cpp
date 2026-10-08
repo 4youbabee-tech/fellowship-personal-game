@@ -1158,6 +1158,8 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                 {
                     Instance->SetParentEditorOnly(DesiredMaterialParent);
 
+                    // Exact-head reproof anchor: this production-material path is owned
+                    // by the definitive P1C01 full build/import/render/package train.
                     // The project-owned World/Shire albedo TGAs already encode the
                     // authored surface colour (their means closely match the MTL Kd
                     // values). Multiplying those textures by the same coloured Kd

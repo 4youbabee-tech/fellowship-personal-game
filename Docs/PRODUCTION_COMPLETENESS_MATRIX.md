@@ -5337,3 +5337,12 @@ The latest visual packet manifest is now also a full-lane trigger. This closes t
 | Production importer classifier ownership | ROOT-FIXED / RERUN PENDING | removed from Human Wave2 safe/inherit allowlists; retained in full visual-impact set |
 | Visual / device / performance / Gate 6-7 | NOT ACCEPTED | unchanged |
 | Bree / P1C02 | LOCKED | unchanged |
+
+
+## 2026-10-08 - Forced full reproof anchor
+
+| Area | State | Boundary |
+|---|---|---|
+| Classifier repair | STATIC-PASS | #1729 confirms policy repair source gate, but inherited engine proof |
+| Production importer behavior | FULL EXACT-HEAD REPROOF QUEUED BY SOURCE TOUCH | no-behavior-change importer anchor forces corrected classifier through full lane |
+| Visual / device / performance / Gate 6-7 | NOT ACCEPTED | unchanged |

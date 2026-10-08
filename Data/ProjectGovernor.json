@@ -9022,5 +9022,21 @@
       "Add production-importer-visual -> full regression."
     ],
     "evidence_boundary": "Fresh exact-head full UE4 build/import/render/runtime/package required. No visual/device/performance/Gate 6/7 acceptance."
+  },
+  "p1c01_importer_full_reproof_anchor_2026_10_08": {
+    "status": "FULL_EXACT_HEAD_QUEUED_BY_IMPORTER_SOURCE_TOUCH",
+    "parent_head": "b65b46e1465451dbb68f2c1893e5b4cdfcf1944f",
+    "reason": "#1729 validated classifier policy but inherited engine proof because the repair commit itself was policy/docs-only.",
+    "behavior_change": false,
+    "expected_classifier_mode": "full",
+    "required_evidence": [
+      "UE4.27.2 build",
+      "production import",
+      "six-shot render",
+      "runtime audits",
+      "cook/package",
+      "packaged startup"
+    ],
+    "boundary": "No visual/device/performance/Gate 6/7 acceptance until the full exact-head run passes and render evidence is reviewed."
   }
 }
