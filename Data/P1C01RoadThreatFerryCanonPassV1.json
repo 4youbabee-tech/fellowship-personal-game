@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "manifest_id": "P1C01_ROAD_THREAT_FERRY_CANON_PASS_V1",
-  "status": "SOURCE_IMPLEMENTED_ROOT_HIDE_HISM_PACKET_EXACT_HEAD_VALIDATION_PENDING",
+  "status": "SOURCE_IMPLEMENTED_FERRY_BANK_BREAKUP_PACKET_EXACT_HEAD_VALIDATION_PENDING",
   "runtime_chapter": "P1C01",
   "runtime_writer": "AShirePrototypeWorldBuilder",
   "authority": [
@@ -30,9 +30,11 @@
     "root_rock_hism_instances": 4,
     "far_bank_path_hism_instances": 12,
     "limited_hero_actors": 3,
-    "total_hism_instances": 30,
+    "total_hism_instances": 48,
     "capture_count_after_packet": 7,
-    "dedicated_wooded_road_shot": "07_Wooded_Road_Hide"
+    "dedicated_wooded_road_shot": "07_Wooded_Road_Hide",
+    "ferry_bank_reed_hism_instances": 12,
+    "ferry_bank_rock_hism_instances": 6
   },
   "architecture_contract": {
     "repeated_detail": "EXISTING_HISM_COMPONENTS_ONLY",
@@ -75,6 +77,21 @@
     "tick": "none",
     "synchronous_load": false,
     "gameplay_behavior_changed": false,
+    "validation_required": "fresh_exact_head_full_oneshot_render_runtime_package"
+  },
+  "ferry_bank_detail_packet": {
+    "state": "SOURCE_IMPLEMENTED",
+    "owner": "existing_HISM_components",
+    "counts": {
+      "reeds": 12,
+      "rocks": 6
+    },
+    "placement_boundary": "outside_authored_water_footprint_and_vegetation_buffer",
+    "collision": "none",
+    "tick": "none",
+    "synchronous_load": false,
+    "gameplay_behavior_changed": false,
+    "ferry_crossing_corridor_changed": false,
     "validation_required": "fresh_exact_head_full_oneshot_render_runtime_package"
   }
 }

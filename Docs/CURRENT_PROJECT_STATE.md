@@ -1,3 +1,10 @@
+## 2026-10-08 - P1C01 #1757 proof and bounded Ferry-bank breakup packet
+
+- Unreal Build Validation #1757 / run `37817555059` completed successfully on exact PR #329 head `6794569db9cc92ba54a678e81f060a10aed7d82f`: static/source gate, UE4.27.2 editor build, production import, seven-shot capture, Automation/runtime/state audits, cook/package, 37/37 packaged data and packaged startup all passed.
+- Fresh artifacts are render `11570400643` and playable Windows `11570501748` (166,627,977 bytes). They are exact-head machine evidence only, not PIE/device/performance/visual acceptance.
+- Human review of the seven images keeps P1C01 visually open: Bucklebury Ferry is readable, but both river edges remain exposed and flat. This bounded packet adds 12 resident reed-cluster and 6 resident rock HISM instances outside the authored water footprint and vegetation buffer.
+- No water topology/material, landing/boat, crossing corridor, trigger, quest, collision, actor, tick, synchronous load, population or chapter-boundary change. Fresh exact-head One-Shot/render comparison is required. P1C02 Bree remains locked and Gate 6/7 remain open.
+
 ## 2026-10-08 - P1C01 Brandywine ferry waterline root fix (fresh exact-head CI pending)
 - Predecessor #1748 succeeded on `e314995a0b3395d765f2ac1af0e4e48cfe23d866` through UE4.27.2 C++ build/import, seven-shot render, headless runtime/save QA, Windows package and startup. This proof belongs to that predecessor only.
 - Root-corrected `AShirePrototypeWorldBuilder` scenic/woodland HISM placement: the 14x60 scaled cube river centered at `(FerryX,-500)` spans X +/-700cm and Y +/-3000cm. Distant scenic trees, woodland tree bands and natural-route vista trees now reject water roots with 260cm buffer. Grass rejects wet surface with 95cm buffer; one ferry flower bed moves from X=FerryX-650 to X=FerryX-985.

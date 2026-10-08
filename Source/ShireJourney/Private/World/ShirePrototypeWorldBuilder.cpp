@@ -5424,6 +5424,8 @@ void AShirePrototypeWorldBuilder::SpawnRoadThreatAndFerryCanonPass()
     int32 RootShrubInstances = 0;
     int32 RootRockInstances = 0;
     int32 FarBankPathInstances = 0;
+    int32 FerryBankReedInstances = 0;
+    int32 FerryBankRockInstances = 0;
     int32 HeroProps = 0;
 
     auto AddInstance = [](UHierarchicalInstancedStaticMeshComponent* Component,
@@ -5531,6 +5533,47 @@ void AShirePrototypeWorldBuilder::SpawnRoadThreatAndFerryCanonPass()
         }
     }
 
+    // Break up the two exposed river edges with already-resident, collision-free
+    // HISM detail. Placements stay beyond the authored water footprint and its
+    // vegetation buffer, so the crossing corridor and Ferry gameplay remain clear.
+    const FCanonPlacement FerryBankReeds[] = {
+        { FVector(ShireLayout::FerryX - 985.0f,-2050.0f, 5.0f), FVector(0.34f,0.30f,0.42f),  11.0f },
+        { FVector(ShireLayout::FerryX - 990.0f,-1420.0f, 5.0f), FVector(0.31f,0.28f,0.39f), -19.0f },
+        { FVector(ShireLayout::FerryX - 980.0f, -760.0f, 5.0f), FVector(0.36f,0.31f,0.44f),  27.0f },
+        { FVector(ShireLayout::FerryX - 995.0f,  -40.0f, 5.0f), FVector(0.32f,0.29f,0.40f), -33.0f },
+        { FVector(ShireLayout::FerryX - 985.0f,  720.0f, 5.0f), FVector(0.35f,0.30f,0.43f),  38.0f },
+        { FVector(ShireLayout::FerryX - 990.0f, 1450.0f, 5.0f), FVector(0.30f,0.27f,0.38f), -12.0f },
+        { FVector(ShireLayout::FerryX + 985.0f,-1980.0f, 7.0f), FVector(0.33f,0.29f,0.41f), -16.0f },
+        { FVector(ShireLayout::FerryX + 990.0f,-1310.0f, 9.0f), FVector(0.36f,0.31f,0.44f),  23.0f },
+        { FVector(ShireLayout::FerryX + 980.0f, -650.0f,12.0f), FVector(0.31f,0.28f,0.39f), -29.0f },
+        { FVector(ShireLayout::FerryX + 995.0f,   80.0f,16.0f), FVector(0.35f,0.30f,0.43f),  34.0f },
+        { FVector(ShireLayout::FerryX + 985.0f,  810.0f,20.0f), FVector(0.32f,0.29f,0.40f), -37.0f },
+        { FVector(ShireLayout::FerryX + 990.0f, 1510.0f,24.0f), FVector(0.34f,0.30f,0.42f),  14.0f }
+    };
+    for (const FCanonPlacement& P : FerryBankReeds)
+    {
+        if (AddInstance(ReedInstances, P.Location, P.Scale, P.Yaw))
+        {
+            ++FerryBankReedInstances;
+        }
+    }
+
+    const FCanonPlacement FerryBankRocks[] = {
+        { FVector(ShireLayout::FerryX + 1040.0f,-1680.0f, 6.0f), FVector(0.20f,0.16f,0.12f),  17.0f },
+        { FVector(ShireLayout::FerryX + 1120.0f,-1060.0f,10.0f), FVector(0.17f,0.14f,0.10f), -26.0f },
+        { FVector(ShireLayout::FerryX + 1060.0f, -430.0f,15.0f), FVector(0.22f,0.17f,0.12f),  39.0f },
+        { FVector(ShireLayout::FerryX + 1140.0f,  300.0f,21.0f), FVector(0.18f,0.15f,0.11f), -34.0f },
+        { FVector(ShireLayout::FerryX + 1080.0f,  980.0f,27.0f), FVector(0.21f,0.16f,0.12f),  28.0f },
+        { FVector(ShireLayout::FerryX + 1160.0f, 1600.0f,34.0f), FVector(0.19f,0.15f,0.11f), -11.0f }
+    };
+    for (const FCanonPlacement& P : FerryBankRocks)
+    {
+        if (AddInstance(RockInstances, P.Location, P.Scale, P.Yaw))
+        {
+            ++FerryBankRockInstances;
+        }
+    }
+
     if (ProductionCommonRopeCoilMesh)
     {
         const FVector RopeCoils[] = {
@@ -5556,11 +5599,13 @@ void AShirePrototypeWorldBuilder::SpawnRoadThreatAndFerryCanonPass()
     UE_LOG(
         LogTemp,
         Display,
-        TEXT("P1C01_ROAD_THREAT_FERRY_CANON_PASS rootTrees=%d rootShrubs=%d rootRocks=%d farBankPath=%d heroProps=%d repeatedDetail=HISM collision=none p1c02=locked"),
+        TEXT("P1C01_ROAD_THREAT_FERRY_CANON_PASS rootTrees=%d rootShrubs=%d rootRocks=%d farBankPath=%d ferryBankReeds=%d ferryBankRocks=%d heroProps=%d repeatedDetail=HISM collision=none p1c02=locked"),
         RootTreeInstances,
         RootShrubInstances,
         RootRockInstances,
         FarBankPathInstances,
+        FerryBankReedInstances,
+        FerryBankRockInstances,
         HeroProps);
 }
 

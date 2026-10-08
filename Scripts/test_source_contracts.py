@@ -1589,8 +1589,10 @@ class SourceContractTests(unittest.TestCase):
         self.assertEqual(contract["visible_budget"]["root_shrub_hism_instances"], 8)
         self.assertEqual(contract["visible_budget"]["root_rock_hism_instances"], 4)
         self.assertEqual(contract["visible_budget"]["far_bank_path_hism_instances"], 12)
+        self.assertEqual(contract["visible_budget"]["ferry_bank_reed_hism_instances"], 12)
+        self.assertEqual(contract["visible_budget"]["ferry_bank_rock_hism_instances"], 6)
         self.assertEqual(contract["visible_budget"]["limited_hero_actors"], 3)
-        self.assertEqual(contract["visible_budget"]["total_hism_instances"], 30)
+        self.assertEqual(contract["visible_budget"]["total_hism_instances"], 48)
         self.assertFalse(contract["architecture_contract"]["new_world_authority"])
         self.assertFalse(contract["architecture_contract"]["per_instance_tick"])
         self.assertFalse(contract["architecture_contract"]["synchronous_heavy_load"])
@@ -1613,6 +1615,10 @@ class SourceContractTests(unittest.TestCase):
             "ProductionCommonFallenLogMesh",
             "ProductionCommonRopeCoilMesh",
             "FarBankPathInstances",
+            "FerryBankReeds[]",
+            "FerryBankRocks[]",
+            "FerryBankReedInstances",
+            "FerryBankRockInstances",
             "p1c02=locked",
         ):
             self.assertIn(token, body)

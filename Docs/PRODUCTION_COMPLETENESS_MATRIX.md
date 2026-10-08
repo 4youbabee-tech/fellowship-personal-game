@@ -1,3 +1,15 @@
+## 2026-10-08 - P1C01 #1757 proof and bounded Ferry-bank breakup packet
+
+| Area | Status | Evidence boundary |
+|---|---|---|
+| #1757 exact-head train | MACHINE-GREEN | Head `6794569`; UE4.27.2 build/import, 7 captures, runtime/state audits, cook/package and packaged startup passed |
+| Artifacts | FRESH / DIAGNOSTIC | Render `11570400643`; playable `11570501748` (166,627,977 bytes) |
+| Ferry-bank visual review | OPEN | Crossing is readable; river edges remain flat/exposed in the exact-head render |
+| Ferry-bank breakup | SOURCE IMPLEMENTED / RERUN REQUIRED | 12 reed + 6 rock placements through existing collision-free HISM components, beyond water footprint/buffer |
+| Runtime/gameplay boundary | PRESERVED | No water, boat/landing, traversal, trigger, quest, collision, actor, tick, sync-load, population or chapter change |
+| PIE/device/visual/performance/Gate 6-7 | NOT ACCEPTED | Fresh exact-head render/runtime/package evidence and human/device acceptance remain required |
+| P1C02 Bree | LOCKED | No Bree runtime scope opened |
+
 ## 2026-10-08 - P1C01 Brandywine ferry waterline root fix (fresh exact-head CI pending)
 | Area | Status | Evidence boundary |
 |---|---|---|
