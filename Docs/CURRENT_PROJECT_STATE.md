@@ -5523,3 +5523,13 @@ The #1698 artifact was technically complete but visual review still found low-de
 - A real Black Rider visual defect is also root-fixed: resident production horse/rider/head meshes now preserve imported/authored materials. Deterministic dark BasicShape material is applied only to unresolved Engine primitive fallbacks, and the runtime `LoadObject` of BasicShape material is removed in favor of constructor-time Engine fallback setup.
 - This Black Rider fix improves the current static production proxy only. It is **not** the missing final animated Black Rider/horse FBX bundle.
 - Evidence boundary for the new packet remains **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD FULL UE4 PROOF REQUIRED**.
+
+## 2026-10-08 - P1C01 bounded living-world density uplift
+
+- Construction continues inside **P1C01 / The Shire** only. Bree/P1C02 is not opened by this packet; Bree becomes eligible only after Shire Gate 6/7 evidence.
+- Runtime data contract `Data/WorldLifeSaturationPlan.json` now raises the P1C01 baseline population target from 18 to 22, still under the existing `ALivingWorldDirector` clamp of 24.
+- P1C01 baseline fill is tightened from 0.42s to 0.32s, with a wider residency band (`700/2850/6400 cm`) so ambient residents remain visible through Hobbiton, fields, road and Ferry capture movement.
+- P1C01 role mix adds original-game routine labels `MillHand` and `Neighbour`; these are ambient routine labels, not invented named canon identities.
+- Runtime micro-event contract `Data/LivingWorldEventPlan.json` now allows 4 nearby micro-events, 3 fauna groups, 9s minimum cadence, 5600 cm event cull and 4800 cm fauna cull.
+- Architecture remains bounded by the existing LivingWorldDirector pooling/culling path: no new persistent story actors, no synchronous heavy asset load, no quest/save ownership change, no future chapter runtime activation.
+- Evidence boundary: **DATA/RUNTIME-CONTRACT IMPLEMENTED; FRESH EXACT-HEAD UE4 BUILD/RENDER/RUNTIME/PACKAGE REQUIRED**. No visual, device, performance or Gate 6/7 acceptance is claimed.
