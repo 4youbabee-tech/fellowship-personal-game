@@ -7,7 +7,14 @@ on:
       - 'Source/ShireJourneyEditorTools/Public/ShireFrodoAnimationImportCommandlet.h'
       - 'Source/ShireJourneyEditorTools/Private/ShireFrodoAnimationImportCommandlet.cpp'
       - 'Scripts/test_p1c01_frodo_ue4_animation_import_contract.py'
+      - 'Scripts/ci_build_unreal.cmd'
+      - 'Scripts/verify_runner_session.ps1'
+      - 'Scripts/resolve_runtime_python.ps1'
+      - 'ShireJourney.uproject'
+      - 'Config/**'
+      - 'SourceAssets/ValidatedRuntime/FRODO/**'
       - '.github/workflows/p1c01-frodo-ue4-animation-import.yml'
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -17,611 +24,126 @@ concurrency:
   group: p1c01-frodo-ue4-animation-import-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
+env:
+  HUMAN_RUN_ID: 37243788900
+  RETARGET_RUN_ID: 37273783111
+  TARGET_FBX_SHA: 75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be
+  IDLE_FBX_SHA: ee81650714587d2a1a638f3ff0c1a8239ea555bf84959e96ce5d037af3f33cd3
+  WALK_FBX_SHA: c4091b7881a4e9e810e70bb7f3abed58683dff5bacf54e26ccb2e926e4c9e688
+  RUN_FBX_SHA: 4a4d10d91343dbd701c535d30ea9d9384ca74596cd7720cf6bfdd1c6328e1fc1
+
 jobs:
   hosted_artifact_preflight:
-    if: ${{ github.event_name != 'pull_request' || github.head_ref != 'production/p1c01-definitive-chapter-closeout-2026-10-04' }}
-    name: Hosted exact artifact identity preflight
+    if: ${{ github.ref_name != 'production/p1c01-definitive-chapter-closeout-2026-10-04' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
       TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-
     steps:
-      - name: Checkout exact PR head
+      - name: Checkout exact head
         uses: actions/checkout@v4
         with:
           ref: ${{ env.TARGET_SHA }}
           fetch-depth: 2
           persist-credentials: false
-
-      - name: Verify exact checkout
-        shell: bash
-        run: test "$(git rev-parse HEAD)" = "$TARGET_SHA"
-
-      - name: Static UE4 animation import contract
+      - name: Verify checkout and contract
         shell: bash
         run: |
           set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
           python3 -m unittest Scripts/test_p1c01_frodo_ue4_animation_import_contract.py
-          echo P1C01_FRODO_UE4_ANIMATION_CONTRACT_PASS
-
-      - name: Download exact Human #39 target artifact
-        if: env.SHIRE_FRODO_IMPORT_REQUIRED == 'true'
+      - name: Download exact Human artifact
         uses: actions/download-artifact@v4
         with:
           name: p1c01-human-wave2-hosted-157e4e857406a2ce28c18c96cdacfedfd0b07ab5
-          path: ${{ runner.temp }}/frodo-ue4-preflight/human
+          path: ${{ runner.temp }}/frodo-preflight/human
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
-          run-id: 37243788900
-
-      - name: Download exact hosted retarget artifact
-        if: env.SHIRE_FRODO_IMPORT_REQUIRED == 'true'
+          run-id: ${{ env.HUMAN_RUN_ID }}
+      - name: Download exact retarget artifact
         uses: actions/download-artifact@v4
         with:
           name: p1c01-frodo-hosted-retarget-be2815e278da30e3474158bc197686f521fb81c1
-          path: ${{ runner.temp }}/frodo-ue4-preflight/retarget
+          path: ${{ runner.temp }}/frodo-preflight/retarget
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
-          run-id: 37273783111
-
-      - name: Enforce exact target and derivative bytes
+          run-id: ${{ env.RETARGET_RUN_ID }}
+      - name: Verify exact artifact bytes
         shell: bash
         run: |
           set -euo pipefail
-          cd "$RUNNER_TEMP/frodo-ue4-preflight"
-          test -f human/normalized/candidate_02.fbx
-          test -f retarget/output/Frodo_Idle_Retarget.fbx
-          test -f retarget/output/Frodo_Walk_Retarget.fbx
-          test -f retarget/output/Frodo_Run_Retarget.fbx
-          echo '75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be  human/normalized/candidate_02.fbx' | sha256sum -c -
-          echo 'ee81650714587d2a1a638f3ff0c1a8239ea555bf84959e96ce5d037af3f33cd3  retarget/output/Frodo_Idle_Retarget.fbx' | sha256sum -c -
-          echo 'c4091b7881a4e9e810e70bb7f3abed58683dff5bacf54e26ccb2e926e4c9e688  retarget/output/Frodo_Walk_Retarget.fbx' | sha256sum -c -
-          echo '4a4d10d91343dbd701c535d30ea9d9384ca74596cd7720cf6bfdd1c6328e1fc1  retarget/output/Frodo_Run_Retarget.fbx' | sha256sum -c -
-          echo P1C01_FRODO_UE4_ANIMATION_ARTIFACT_PREFLIGHT_PASS
+          root="$RUNNER_TEMP/frodo-preflight"
+          test -f "$root/human/normalized/candidate_02.fbx"
+          test -f "$root/retarget/output/Frodo_Idle_Retarget.fbx"
+          test -f "$root/retarget/output/Frodo_Walk_Retarget.fbx"
+          test -f "$root/retarget/output/Frodo_Run_Retarget.fbx"
+          echo "$TARGET_FBX_SHA  $root/human/normalized/candidate_02.fbx" | sha256sum -c -
+          echo "$IDLE_FBX_SHA  $root/retarget/output/Frodo_Idle_Retarget.fbx" | sha256sum -c -
+          echo "$WALK_FBX_SHA  $root/retarget/output/Frodo_Walk_Retarget.fbx" | sha256sum -c -
+          echo "$RUN_FBX_SHA  $root/retarget/output/Frodo_Run_Retarget.fbx" | sha256sum -c -
 
   ue4_animation_import:
-    name: UE4.27.2 exact-skeleton animation import gate
+    if: ${{ github.ref_name != 'production/p1c01-definitive-chapter-closeout-2026-10-04' }}
     needs: hosted_artifact_preflight
-    if: ${{ always() && (needs.hosted_artifact_preflight.result == 'success' || needs.hosted_artifact_preflight.result == 'failure') }}
-    runs-on:
-      - self-hosted
-      - Windows
-      - X64
-      - ue4-27
+    runs-on: [self-hosted, Windows, X64, ue4-27]
     timeout-minutes: 90
     env:
       TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-      BASE_SHA: ${{ github.event.before || github.event.pull_request.base.sha }}
-      EVENT_NAME: ${{ github.event_name }}
-
     steps:
-      - name: Classify Frodo import delta before checkout
+      - name: Checkout exact head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          fetch-depth: 2
+          persist-credentials: false
+      - name: Verify runner and checkout
         shell: powershell
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: |
           $ErrorActionPreference = "Stop"
-          $required = $true
-          $reason = "fail-safe"
-          $base = [string]$env:BASE_SHA
-          $target = [string]$env:TARGET_SHA
-          $root = Join-Path $env:RUNNER_TEMP ("frodo-import-classifier-" + $env:GITHUB_RUN_ID + "-" + $env:GITHUB_RUN_ATTEMPT)
-          Remove-Item -LiteralPath $root -Recurse -Force -ErrorAction SilentlyContinue
-          New-Item -ItemType Directory -Path $root -Force | Out-Null
-          Push-Location $root
-          try {
-            git init | Out-Host
-            if ($LASTEXITCODE -ne 0) { throw "FRODO_IMPORT_CLASSIFIER_GIT_INIT_FAIL" }
-            git remote add origin ("https://x-access-token:" + $env:GH_TOKEN + "@github.com/" + $env:GITHUB_REPOSITORY + ".git")
-            if ($LASTEXITCODE -ne 0) { throw "FRODO_IMPORT_CLASSIFIER_REMOTE_FAIL" }
-            git -c credential.helper= -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=20 fetch --no-tags --depth=2 origin $target
-            if ($LASTEXITCODE -ne 0) { throw "FRODO_IMPORT_CLASSIFIER_HEAD_FETCH_FAIL" }
-
-            if ($env:EVENT_NAME -eq "workflow_dispatch") {
-              $reason = "manual-dispatch"
-            }
-            elseif ([string]::IsNullOrWhiteSpace($base) -or $base -match '^0+        shell: cmd
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          @echo off
-          setlocal EnableExtensions EnableDelayedExpansion
-          set "GITEXE="
-          for /f "delims=" %%G in ('where git.exe 2^>nul') do if not defined GITEXE set "GITEXE=%%G"
-          if not defined GITEXE if exist "C:\Program Files\Git\cmd\git.exe" set "GITEXE=C:\Program Files\Git\cmd\git.exe"
-          if not defined GITEXE exit /b 70
-
-          set "SRC=%RUNNER_TEMP%\shire-frodo-ue4-animation-src-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
-          if exist "!SRC!" rmdir /S /Q "!SRC!"
-          mkdir "!SRC!"
-          cd /d "!SRC!"
-          "!GITEXE!" init
-          if errorlevel 1 exit /b 71
-          "!GITEXE!" remote add origin "https://x-access-token:!GH_TOKEN!@github.com/%GITHUB_REPOSITORY%.git"
-          if errorlevel 1 exit /b 72
-
-          set ATTEMPT=0
-          :fetch
-          set /a ATTEMPT+=1
-          "!GITEXE!" -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=20 fetch --no-tags --prune --depth=2 origin !TARGET_SHA!
-          if not errorlevel 1 goto fetched
-          if !ATTEMPT! GEQ 3 exit /b 73
-          powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Start-Sleep -Seconds 3"
-          goto fetch
-
-          :fetched
-          "!GITEXE!" checkout -f FETCH_HEAD
-          if errorlevel 1 exit /b 74
-          "!GITEXE!" reset --hard !TARGET_SHA!
-          if errorlevel 1 exit /b 74
-          for /f "delims=" %%H in ('"!GITEXE!" rev-parse HEAD') do set "CHECKED_SHA=%%H"
-          if /I not "!CHECKED_SHA!"=="!TARGET_SHA!" exit /b 75
-          if not exist "ShireJourney.uproject" exit /b 76
-          echo SHIRE_FRODO_UE4_SOURCE=!SRC!>>"%GITHUB_ENV%"
-          echo P1C01_FRODO_UE4_ISOLATED_CHECKOUT_PASS sha=!CHECKED_SHA! source=!SRC!
-
-      - name: Resolve local Python for hosted-preflight fallback
-        if: env.SHIRE_FRODO_IMPORT_REQUIRED == 'true' && needs.hosted_artifact_preflight.result != 'success'
-        shell: cmd
-        run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_FRODO_UE4_SOURCE%\Scripts\resolve_runtime_python.ps1"'
-
-      - name: Re-run static import contract on self-hosted fallback
-        if: env.SHIRE_FRODO_IMPORT_REQUIRED == 'true' && needs.hosted_artifact_preflight.result != 'success'
-        shell: powershell
-        run: |
-          $ErrorActionPreference="Stop"
-          if(-not $env:PYTHON_EXE){ throw "FRODO_UE4_FALLBACK_PYTHON_MISSING" }
-          Push-Location $env:SHIRE_FRODO_UE4_SOURCE
-          try {
-            & $env:PYTHON_EXE -m unittest Scripts/test_p1c01_frodo_ue4_animation_import_contract.py
-            if($LASTEXITCODE -ne 0){ throw "FRODO_UE4_FALLBACK_STATIC_CONTRACT_FAIL exit=$LASTEXITCODE" }
-          }
-          finally { Pop-Location }
-          Write-Host "P1C01_FRODO_HOSTED_PREFLIGHT_FALLBACK_PASS"
-
-      - name: Verify exact checkout and runner
-        if: env.SHIRE_FRODO_IMPORT_REQUIRED == 'true'
-        shell: cmd
-        run: |
-          @echo off
-          if not defined SHIRE_FRODO_UE4_SOURCE exit /b 77
-          if not exist "%SHIRE_FRODO_UE4_SOURCE%\ShireJourney.uproject" exit /b 78
-          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_FRODO_UE4_SOURCE%\Scripts\verify_runner_session.ps1"
-
-      - name: Download exact Human #39 target artifact
+          if ((git rev-parse HEAD) -ne $env:TARGET_SHA) { throw "FRODO_UE4_EXACT_CHECKOUT_FAIL" }
+          & ".\Scripts\verify_runner_session.ps1"
+      - name: Download exact Human artifact
         uses: actions/download-artifact@v4
         with:
           name: p1c01-human-wave2-hosted-157e4e857406a2ce28c18c96cdacfedfd0b07ab5
           path: ${{ runner.temp }}\frodo-ue4-animation\human
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
-          run-id: 37243788900
-
-      - name: Download exact hosted retarget artifact
+          run-id: ${{ env.HUMAN_RUN_ID }}
+      - name: Download exact retarget artifact
         uses: actions/download-artifact@v4
         with:
           name: p1c01-frodo-hosted-retarget-be2815e278da30e3474158bc197686f521fb81c1
           path: ${{ runner.temp }}\frodo-ue4-animation\retarget
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
-          run-id: 37273783111
-
-      - name: Re-enforce exact bytes on Windows
-        if: env.SHIRE_FRODO_IMPORT_REQUIRED == 'true'
+          run-id: ${{ env.RETARGET_RUN_ID }}
+      - name: Verify hashes
         shell: powershell
         run: |
-          $ErrorActionPreference="Stop"
-          $checks=@(
-            @("$env:RUNNER_TEMP\frodo-ue4-animation\human\normalized\candidate_02.fbx","75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be"),
-            @("$env:RUNNER_TEMP\frodo-ue4-animation\retarget\output\Frodo_Idle_Retarget.fbx","ee81650714587d2a1a638f3ff0c1a8239ea555bf84959e96ce5d037af3f33cd3"),
-            @("$env:RUNNER_TEMP\frodo-ue4-animation\retarget\output\Frodo_Walk_Retarget.fbx","c4091b7881a4e9e810e70bb7f3abed58683dff5bacf54e26ccb2e926e4c9e688"),
-            @("$env:RUNNER_TEMP\frodo-ue4-animation\retarget\output\Frodo_Run_Retarget.fbx","4a4d10d91343dbd701c535d30ea9d9384ca74596cd7720cf6bfdd1c6328e1fc1")
+          $ErrorActionPreference = "Stop"
+          $checks = @(
+            @("$env:RUNNER_TEMP\frodo-ue4-animation\human\normalized\candidate_02.fbx", "$env:TARGET_FBX_SHA"),
+            @("$env:RUNNER_TEMP\frodo-ue4-animation\retarget\output\Frodo_Idle_Retarget.fbx", "$env:IDLE_FBX_SHA"),
+            @("$env:RUNNER_TEMP\frodo-ue4-animation\retarget\output\Frodo_Walk_Retarget.fbx", "$env:WALK_FBX_SHA"),
+            @("$env:RUNNER_TEMP\frodo-ue4-animation\retarget\output\Frodo_Run_Retarget.fbx", "$env:RUN_FBX_SHA")
           )
-          foreach($row in $checks){
-            if(-not (Test-Path -LiteralPath $row[0] -PathType Leaf)){ throw "FRODO_UE4_ANIMATION_PAYLOAD_MISSING path=$($row[0])" }
-            $actual=(Get-FileHash -LiteralPath $row[0] -Algorithm SHA256).Hash.ToLowerInvariant()
-            if($actual -ne $row[1]){ throw "FRODO_UE4_ANIMATION_HASH_FAIL path=$($row[0]) expected=$($row[1]) actual=$actual" }
+          foreach ($row in $checks) {
+            if (-not (Test-Path -LiteralPath $row[0] -PathType Leaf)) { throw "FRODO_PAYLOAD_MISSING" }
+            if ((Get-FileHash -LiteralPath $row[0] -Algorithm SHA256).Hash.ToLowerInvariant() -ne $row[1]) { throw "FRODO_HASH_FAIL" }
           }
-          Write-Host "P1C01_FRODO_UE4_ANIMATION_WINDOWS_HASH_PASS"
-
-      - name: Build ShireJourneyEditor once
-        if: env.SHIRE_FRODO_IMPORT_REQUIRED == 'true'
+      - name: Build editor
+        shell: cmd
+        run: call Scripts\ci_build_unreal.cmd
+      - name: Import exact animation bundle
         shell: cmd
         run: |
           @echo off
-          set "SHIRE_BUILD_WORKSPACE=%SHIRE_FRODO_UE4_SOURCE%"
-          call "%SHIRE_FRODO_UE4_SOURCE%\Scripts\ci_build_unreal.cmd"
-
-      - name: Import exact Rogue rig plus animation-only derivatives
-        if: env.SHIRE_FRODO_IMPORT_REQUIRED == 'true'
-        shell: cmd
-        run: |
-          @echo off
-          set "PROJECT=%SHIRE_FRODO_UE4_SOURCE%\ShireJourney.uproject"
           set "EDITORCMD=C:\Program Files\Epic Games\UE_4.27\Engine\Binaries\Win64\UE4Editor-Cmd.exe"
-          set "IMPORTLOG=%SHIRE_FRODO_UE4_SOURCE%\Saved\Logs\CI-FrodoAnimationImport.log"
+          set "LOG=%GITHUB_WORKSPACE%\Saved\Logs\CI-FrodoAnimationImport.log"
           if not exist "%EDITORCMD%" exit /b 50
-          if exist "%IMPORTLOG%" del /F /Q "%IMPORTLOG%"
-          "%EDITORCMD%" "%PROJECT%" -run=ShireFrodoAnimationImport -TargetFbx="%RUNNER_TEMP%\frodo-ue4-animation\human\normalized\candidate_02.fbx" -AnimationDir="%RUNNER_TEMP%\frodo-ue4-animation\retarget\output" -unattended -nop4 -nosplash -NoSound -abslog="%IMPORTLOG%"
-          set "IMPORT_EXIT=%ERRORLEVEL%"
-          if exist "%IMPORTLOG%" findstr /I /C:"ShireFrodoAnimationImport:" /C:"Error:" /C:"Warning:" "%IMPORTLOG%"
-          if not "%IMPORT_EXIT%"=="0" exit /b %IMPORT_EXIT%
-          findstr /C:"UE4_ANIMATION_IMPORT_TECHNICAL_PASS clips=3 bones=48" "%IMPORTLOG%" >nul
+          "%EDITORCMD%" "%GITHUB_WORKSPACE%\ShireJourney.uproject" -run=ShireFrodoAnimationImport -TargetFbx="%RUNNER_TEMP%\frodo-ue4-animation\human\normalized\candidate_02.fbx" -AnimationDir="%RUNNER_TEMP%\frodo-ue4-animation\retarget\output" -unattended -nop4 -nosplash -NoSound -abslog="%LOG%"
+          if errorlevel 1 exit /b %ERRORLEVEL%
+          findstr /C:"UE4_ANIMATION_IMPORT_TECHNICAL_PASS clips=3 bones=48" "%LOG%" >nul
           if errorlevel 1 exit /b 51
           echo P1C01_FRODO_UE4_ANIMATION_IMPORT_GATE_PASS
-
-      - name: Verify generated packages and stage evidence
-        if: env.SHIRE_FRODO_IMPORT_REQUIRED == 'true'
-        shell: powershell
-        run: |
-          $ErrorActionPreference="Stop"
-          $required=@(
-            "$env:SHIRE_FRODO_UE4_SOURCE\Content\Production\Characters\Rigs\FRODO\SK_FRODO.uasset",
-            "$env:SHIRE_FRODO_UE4_SOURCE\Content\Production\Characters\Rigs\FRODO\SK_FRODO_Skeleton.uasset",
-            "$env:SHIRE_FRODO_UE4_SOURCE\Content\Production\Characters\Animations\FRODO\A_Frodo_Idle.uasset",
-            "$env:SHIRE_FRODO_UE4_SOURCE\Content\Production\Characters\Animations\FRODO\A_Frodo_Walk.uasset",
-            "$env:SHIRE_FRODO_UE4_SOURCE\Content\Production\Characters\Animations\FRODO\A_Frodo_Run.uasset"
-          )
-          foreach($p in $required){ if(-not (Test-Path -LiteralPath $p -PathType Leaf)){ throw "FRODO_UE4_ANIMATION_PACKAGE_MISSING path=$p" } }
-          $stage=Join-Path $env:RUNNER_TEMP "frodo-ue4-animation-evidence"
-          Remove-Item -LiteralPath $stage -Recurse -Force -ErrorAction SilentlyContinue
-          New-Item -ItemType Directory -Path $stage -Force | Out-Null
-          Copy-Item -LiteralPath "$env:SHIRE_FRODO_UE4_SOURCE\Saved\Logs\CI-FrodoAnimationImport.log" -Destination (Join-Path $stage "CI-FrodoAnimationImport.log")
-          [ordered]@{
-            schema_version=1
-            status="UE4_ANIMATION_IMPORT_TECHNICAL_PASS"
-            exact_head=$env:TARGET_SHA
-            target_sha256="75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be"
-            idle_sha256="ee81650714587d2a1a638f3ff0c1a8239ea555bf84959e96ce5d037af3f33cd3"
-            walk_sha256="c4091b7881a4e9e810e70bb7f3abed58683dff5bacf54e26ccb2e926e4c9e688"
-            run_sha256="4a4d10d91343dbd701c535d30ea9d9384ca74596cd7720cf6bfdd1c6328e1fc1"
-            runtime_integration_allowed=$false
-            visual_accepted=$false
-            pie_tested=$false
-          } | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $stage "p1c01_frodo_ue4_animation_import.json") -Encoding UTF8
-          Write-Host "P1C01_FRODO_UE4_ANIMATION_EVIDENCE_PASS"
-
-      - name: Upload exact-head UE4 animation evidence
-        if: always() && env.SHIRE_FRODO_IMPORT_REQUIRED == 'true'
-        uses: actions/upload-artifact@v4
-        with:
-          name: p1c01-frodo-ue4-animation-${{ env.TARGET_SHA }}
-          path: ${{ runner.temp }}\frodo-ue4-animation-evidence
-          if-no-files-found: error
-          retention-days: 14
-
-      - name: Verify tracked validated Frodo runtime FBX sources
-        if: env.SHIRE_FRODO_IMPORT_REQUIRED == 'true'
-        shell: powershell
-        run: |
-          $ErrorActionPreference="Stop"
-          $root=Join-Path $env:SHIRE_FRODO_UE4_SOURCE "SourceAssets\ValidatedRuntime\FRODO"
-          $files=@(
-            @("SK_FRODO_Validated.fbx", "75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be"),
-            @("Frodo_Idle_Retarget.fbx", "ee81650714587d2a1a638f3ff0c1a8239ea555bf84959e96ce5d037af3f33cd3"),
-            @("Frodo_Walk_Retarget.fbx", "c4091b7881a4e9e810e70bb7f3abed58683dff5bacf54e26ccb2e926e4c9e688"),
-            @("Frodo_Run_Retarget.fbx", "4a4d10d91343dbd701c535d30ea9d9384ca74596cd7720cf6bfdd1c6328e1fc1")
-          )
-          foreach($row in $files){
-            $path=Join-Path $root $row[0]
-            if(-not (Test-Path -LiteralPath $path -PathType Leaf)){
-              throw "FRODO_RUNTIME_SOURCE_TRACKED_MISSING path=$path"
-            }
-            $actual=(Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
-            if($actual -ne $row[1]){
-              throw "FRODO_RUNTIME_SOURCE_TRACKED_HASH_FAIL path=$path actual=$actual expected=$($row[1])"
-            }
-          }
-
-          $provenancePath=Join-Path $root "provenance.json"
-          if(-not (Test-Path -LiteralPath $provenancePath -PathType Leaf)){
-            throw "FRODO_RUNTIME_SOURCE_PROVENANCE_MISSING"
-          }
-          $provenance=Get-Content -LiteralPath $provenancePath -Raw | ConvertFrom-Json
-          if([string]$provenance.target_sha256 -ne $files[0][1] -or
-             [string]$provenance.idle_sha256 -ne $files[1][1] -or
-             [string]$provenance.walk_sha256 -ne $files[2][1] -or
-             [string]$provenance.run_sha256 -ne $files[3][1]){
-            throw "FRODO_RUNTIME_SOURCE_PROVENANCE_HASH_FAIL"
-          }
-          Write-Host "P1C01_FRODO_RUNTIME_SOURCE_TRACKED_PASS assets=4 mutation=no"
-
-      - name: Cleanup transient Frodo gate assets
-        if: always() && env.SHIRE_FRODO_IMPORT_REQUIRED == 'true'
-        shell: powershell
-        run: |
-          $paths=@(
-            "$env:SHIRE_FRODO_UE4_SOURCE\Content\Production\Characters\Rigs\FRODO\SK_FRODO.uasset",
-            "$env:SHIRE_FRODO_UE4_SOURCE\Content\Production\Characters\Rigs\FRODO\SK_FRODO_Skeleton.uasset",
-            "$env:SHIRE_FRODO_UE4_SOURCE\Content\Production\Characters\Rigs\FRODO\SK_FRODO_PhysicsAsset.uasset",
-            "$env:SHIRE_FRODO_UE4_SOURCE\Content\Production\Characters\Animations\FRODO\A_Frodo_Idle.uasset",
-            "$env:SHIRE_FRODO_UE4_SOURCE\Content\Production\Characters\Animations\FRODO\A_Frodo_Walk.uasset",
-            "$env:SHIRE_FRODO_UE4_SOURCE\Content\Production\Characters\Animations\FRODO\A_Frodo_Run.uasset"
-          )
-          foreach($p in $paths){
-            $relative=$p.Substring($env:SHIRE_FRODO_UE4_SOURCE.Length+1).Replace('\','/')
-            $tracked=@(& git.exe -C $env:SHIRE_FRODO_UE4_SOURCE ls-files -- $relative 2>$null)
-            if($LASTEXITCODE -ne 0){ throw "FRODO_UE4_ANIMATION_CLEANUP_GIT_FAIL path=$relative" }
-            if($tracked.Count -eq 0){ Remove-Item -LiteralPath $p -Force -ErrorAction SilentlyContinue }
-          }
-          Write-Host "P1C01_FRODO_UE4_ANIMATION_CLEANUP_PASS"
-
-      - name: Remove isolated UE4 source checkout
-        if: always() && env.SHIRE_FRODO_IMPORT_REQUIRED == 'true'
-        shell: cmd
-        run: |
-          @echo off
-          if defined SHIRE_FRODO_UE4_SOURCE if exist "%SHIRE_FRODO_UE4_SOURCE%" rmdir /S /Q "%SHIRE_FRODO_UE4_SOURCE%"
-          exit /b 0
-) {
-              $reason = "missing-base-fail-safe"
-            }
-            else {
-              git -c credential.helper= -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=20 fetch --no-tags --depth=1 origin $base
-              if ($LASTEXITCODE -ne 0) { throw "FRODO_IMPORT_CLASSIFIER_BASE_FETCH_FAIL" }
-              $changed = @(git diff --name-only $base $target)
-              if ($LASTEXITCODE -ne 0) { throw "FRODO_IMPORT_CLASSIFIER_DIFF_FAIL" }
-              $relevant = @($changed | Where-Object {
-                $_ -eq ".github/workflows/p1c01-frodo-ue4-animation-import.yml" -or
-                $_ -eq "Scripts/test_p1c01_frodo_ue4_animation_import_contract.py" -or
-                $_ -eq "Scripts/ci_build_unreal.cmd" -or
-                $_ -eq "Scripts/verify_runner_session.ps1" -or
-                $_ -eq "Scripts/resolve_runtime_python.ps1" -or
-                $_ -eq "ShireJourney.uproject" -or
-                $_.StartsWith("Config/") -or
-                $_.StartsWith("Source/ShireJourneyEditorTools/") -or
-                $_.StartsWith("SourceAssets/ValidatedRuntime/FRODO/")
-              })
-              if ($relevant.Count -eq 0) {
-                $required = $false
-                $reason = "no-frodo-import-impact-delta"
-              }
-              else {
-                $reason = "frodo-import-impact:" + ($relevant -join ",")
-              }
-            }
-          }
-          finally {
-            Pop-Location
-            Remove-Item -LiteralPath $root -Recurse -Force -ErrorAction SilentlyContinue
-          }
-          "SHIRE_FRODO_IMPORT_REQUIRED=$($required.ToString().ToLowerInvariant())" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          "SHIRE_FRODO_IMPORT_REASON=$reason" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          Write-Host "P1C01_FRODO_IMPORT_DELTA_CLASSIFICATION required=$required reason=$reason base=$base target=$target"
-
-      - name: Record inherited Frodo technical import boundary
-        if: env.SHIRE_FRODO_IMPORT_REQUIRED == 'false'
-        shell: powershell
-        run: |
-          Write-Host "P1C01_FRODO_IMPORT_INHERITED head=$env:TARGET_SHA reason=$env:SHIRE_FRODO_IMPORT_REASON; prior 48-bone technical import evidence is unchanged; no fresh PIE/device/visual acceptance claimed."
-
-      - name: Checkout exact PR head into isolated UE4 source
-        if: env.SHIRE_FRODO_IMPORT_REQUIRED == 'true'
-        shell: cmd
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          @echo off
-          setlocal EnableExtensions EnableDelayedExpansion
-          set "GITEXE="
-          for /f "delims=" %%G in ('where git.exe 2^>nul') do if not defined GITEXE set "GITEXE=%%G"
-          if not defined GITEXE if exist "C:\Program Files\Git\cmd\git.exe" set "GITEXE=C:\Program Files\Git\cmd\git.exe"
-          if not defined GITEXE exit /b 70
-
-          set "SRC=%RUNNER_TEMP%\shire-frodo-ue4-animation-src-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
-          if exist "!SRC!" rmdir /S /Q "!SRC!"
-          mkdir "!SRC!"
-          cd /d "!SRC!"
-          "!GITEXE!" init
-          if errorlevel 1 exit /b 71
-          "!GITEXE!" remote add origin "https://x-access-token:!GH_TOKEN!@github.com/%GITHUB_REPOSITORY%.git"
-          if errorlevel 1 exit /b 72
-
-          set ATTEMPT=0
-          :fetch
-          set /a ATTEMPT+=1
-          "!GITEXE!" -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=20 fetch --no-tags --prune --depth=2 origin !TARGET_SHA!
-          if not errorlevel 1 goto fetched
-          if !ATTEMPT! GEQ 3 exit /b 73
-          powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Start-Sleep -Seconds 3"
-          goto fetch
-
-          :fetched
-          "!GITEXE!" checkout -f FETCH_HEAD
-          if errorlevel 1 exit /b 74
-          "!GITEXE!" reset --hard !TARGET_SHA!
-          if errorlevel 1 exit /b 74
-          for /f "delims=" %%H in ('"!GITEXE!" rev-parse HEAD') do set "CHECKED_SHA=%%H"
-          if /I not "!CHECKED_SHA!"=="!TARGET_SHA!" exit /b 75
-          if not exist "ShireJourney.uproject" exit /b 76
-          echo SHIRE_FRODO_UE4_SOURCE=!SRC!>>"%GITHUB_ENV%"
-          echo P1C01_FRODO_UE4_ISOLATED_CHECKOUT_PASS sha=!CHECKED_SHA! source=!SRC!
-
-      - name: Resolve local Python for hosted-preflight fallback
-        if: needs.hosted_artifact_preflight.result != 'success'
-        shell: cmd
-        run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_FRODO_UE4_SOURCE%\Scripts\resolve_runtime_python.ps1"'
-
-      - name: Re-run static import contract on self-hosted fallback
-        if: needs.hosted_artifact_preflight.result != 'success'
-        shell: powershell
-        run: |
-          $ErrorActionPreference="Stop"
-          if(-not $env:PYTHON_EXE){ throw "FRODO_UE4_FALLBACK_PYTHON_MISSING" }
-          Push-Location $env:SHIRE_FRODO_UE4_SOURCE
-          try {
-            & $env:PYTHON_EXE -m unittest Scripts/test_p1c01_frodo_ue4_animation_import_contract.py
-            if($LASTEXITCODE -ne 0){ throw "FRODO_UE4_FALLBACK_STATIC_CONTRACT_FAIL exit=$LASTEXITCODE" }
-          }
-          finally { Pop-Location }
-          Write-Host "P1C01_FRODO_HOSTED_PREFLIGHT_FALLBACK_PASS"
-
-      - name: Verify exact checkout and runner
-        shell: cmd
-        run: |
-          @echo off
-          if not defined SHIRE_FRODO_UE4_SOURCE exit /b 77
-          if not exist "%SHIRE_FRODO_UE4_SOURCE%\ShireJourney.uproject" exit /b 78
-          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_FRODO_UE4_SOURCE%\Scripts\verify_runner_session.ps1"
-
-      - name: Download exact Human #39 target artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: p1c01-human-wave2-hosted-157e4e857406a2ce28c18c96cdacfedfd0b07ab5
-          path: ${{ runner.temp }}\frodo-ue4-animation\human
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.repository }}
-          run-id: 37243788900
-
-      - name: Download exact hosted retarget artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: p1c01-frodo-hosted-retarget-be2815e278da30e3474158bc197686f521fb81c1
-          path: ${{ runner.temp }}\frodo-ue4-animation\retarget
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.repository }}
-          run-id: 37273783111
-
-      - name: Re-enforce exact bytes on Windows
-        shell: powershell
-        run: |
-          $ErrorActionPreference="Stop"
-          $checks=@(
-            @("$env:RUNNER_TEMP\frodo-ue4-animation\human\normalized\candidate_02.fbx","75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be"),
-            @("$env:RUNNER_TEMP\frodo-ue4-animation\retarget\output\Frodo_Idle_Retarget.fbx","ee81650714587d2a1a638f3ff0c1a8239ea555bf84959e96ce5d037af3f33cd3"),
-            @("$env:RUNNER_TEMP\frodo-ue4-animation\retarget\output\Frodo_Walk_Retarget.fbx","c4091b7881a4e9e810e70bb7f3abed58683dff5bacf54e26ccb2e926e4c9e688"),
-            @("$env:RUNNER_TEMP\frodo-ue4-animation\retarget\output\Frodo_Run_Retarget.fbx","4a4d10d91343dbd701c535d30ea9d9384ca74596cd7720cf6bfdd1c6328e1fc1")
-          )
-          foreach($row in $checks){
-            if(-not (Test-Path -LiteralPath $row[0] -PathType Leaf)){ throw "FRODO_UE4_ANIMATION_PAYLOAD_MISSING path=$($row[0])" }
-            $actual=(Get-FileHash -LiteralPath $row[0] -Algorithm SHA256).Hash.ToLowerInvariant()
-            if($actual -ne $row[1]){ throw "FRODO_UE4_ANIMATION_HASH_FAIL path=$($row[0]) expected=$($row[1]) actual=$actual" }
-          }
-          Write-Host "P1C01_FRODO_UE4_ANIMATION_WINDOWS_HASH_PASS"
-
-      - name: Build ShireJourneyEditor once
-        shell: cmd
-        run: |
-          @echo off
-          set "SHIRE_BUILD_WORKSPACE=%SHIRE_FRODO_UE4_SOURCE%"
-          call "%SHIRE_FRODO_UE4_SOURCE%\Scripts\ci_build_unreal.cmd"
-
-      - name: Import exact Rogue rig plus animation-only derivatives
-        shell: cmd
-        run: |
-          @echo off
-          set "PROJECT=%SHIRE_FRODO_UE4_SOURCE%\ShireJourney.uproject"
-          set "EDITORCMD=C:\Program Files\Epic Games\UE_4.27\Engine\Binaries\Win64\UE4Editor-Cmd.exe"
-          set "IMPORTLOG=%SHIRE_FRODO_UE4_SOURCE%\Saved\Logs\CI-FrodoAnimationImport.log"
-          if not exist "%EDITORCMD%" exit /b 50
-          if exist "%IMPORTLOG%" del /F /Q "%IMPORTLOG%"
-          "%EDITORCMD%" "%PROJECT%" -run=ShireFrodoAnimationImport -TargetFbx="%RUNNER_TEMP%\frodo-ue4-animation\human\normalized\candidate_02.fbx" -AnimationDir="%RUNNER_TEMP%\frodo-ue4-animation\retarget\output" -unattended -nop4 -nosplash -NoSound -abslog="%IMPORTLOG%"
-          set "IMPORT_EXIT=%ERRORLEVEL%"
-          if exist "%IMPORTLOG%" findstr /I /C:"ShireFrodoAnimationImport:" /C:"Error:" /C:"Warning:" "%IMPORTLOG%"
-          if not "%IMPORT_EXIT%"=="0" exit /b %IMPORT_EXIT%
-          findstr /C:"UE4_ANIMATION_IMPORT_TECHNICAL_PASS clips=3 bones=48" "%IMPORTLOG%" >nul
-          if errorlevel 1 exit /b 51
-          echo P1C01_FRODO_UE4_ANIMATION_IMPORT_GATE_PASS
-
-      - name: Verify generated packages and stage evidence
-        shell: powershell
-        run: |
-          $ErrorActionPreference="Stop"
-          $required=@(
-            "$env:SHIRE_FRODO_UE4_SOURCE\Content\Production\Characters\Rigs\FRODO\SK_FRODO.uasset",
-            "$env:SHIRE_FRODO_UE4_SOURCE\Content\Production\Characters\Rigs\FRODO\SK_FRODO_Skeleton.uasset",
-            "$env:SHIRE_FRODO_UE4_SOURCE\Content\Production\Characters\Animations\FRODO\A_Frodo_Idle.uasset",
-            "$env:SHIRE_FRODO_UE4_SOURCE\Content\Production\Characters\Animations\FRODO\A_Frodo_Walk.uasset",
-            "$env:SHIRE_FRODO_UE4_SOURCE\Content\Production\Characters\Animations\FRODO\A_Frodo_Run.uasset"
-          )
-          foreach($p in $required){ if(-not (Test-Path -LiteralPath $p -PathType Leaf)){ throw "FRODO_UE4_ANIMATION_PACKAGE_MISSING path=$p" } }
-          $stage=Join-Path $env:RUNNER_TEMP "frodo-ue4-animation-evidence"
-          Remove-Item -LiteralPath $stage -Recurse -Force -ErrorAction SilentlyContinue
-          New-Item -ItemType Directory -Path $stage -Force | Out-Null
-          Copy-Item -LiteralPath "$env:SHIRE_FRODO_UE4_SOURCE\Saved\Logs\CI-FrodoAnimationImport.log" -Destination (Join-Path $stage "CI-FrodoAnimationImport.log")
-          [ordered]@{
-            schema_version=1
-            status="UE4_ANIMATION_IMPORT_TECHNICAL_PASS"
-            exact_head=$env:TARGET_SHA
-            target_sha256="75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be"
-            idle_sha256="ee81650714587d2a1a638f3ff0c1a8239ea555bf84959e96ce5d037af3f33cd3"
-            walk_sha256="c4091b7881a4e9e810e70bb7f3abed58683dff5bacf54e26ccb2e926e4c9e688"
-            run_sha256="4a4d10d91343dbd701c535d30ea9d9384ca74596cd7720cf6bfdd1c6328e1fc1"
-            runtime_integration_allowed=$false
-            visual_accepted=$false
-            pie_tested=$false
-          } | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $stage "p1c01_frodo_ue4_animation_import.json") -Encoding UTF8
-          Write-Host "P1C01_FRODO_UE4_ANIMATION_EVIDENCE_PASS"
-
-      - name: Upload exact-head UE4 animation evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: p1c01-frodo-ue4-animation-${{ env.TARGET_SHA }}
-          path: ${{ runner.temp }}\frodo-ue4-animation-evidence
-          if-no-files-found: error
-          retention-days: 14
-
-      - name: Verify tracked validated Frodo runtime FBX sources
-        shell: powershell
-        run: |
-          $ErrorActionPreference="Stop"
-          $root=Join-Path $env:SHIRE_FRODO_UE4_SOURCE "SourceAssets\ValidatedRuntime\FRODO"
-          $files=@(
-            @("SK_FRODO_Validated.fbx", "75d715f6ce4673a650a4382bc4f86b7ae0baf0fe548cc63f9b6ded1800f669be"),
-            @("Frodo_Idle_Retarget.fbx", "ee81650714587d2a1a638f3ff0c1a8239ea555bf84959e96ce5d037af3f33cd3"),
-            @("Frodo_Walk_Retarget.fbx", "c4091b7881a4e9e810e70bb7f3abed58683dff5bacf54e26ccb2e926e4c9e688"),
-            @("Frodo_Run_Retarget.fbx", "4a4d10d91343dbd701c535d30ea9d9384ca74596cd7720cf6bfdd1c6328e1fc1")
-          )
-          foreach($row in $files){
-            $path=Join-Path $root $row[0]
-            if(-not (Test-Path -LiteralPath $path -PathType Leaf)){
-              throw "FRODO_RUNTIME_SOURCE_TRACKED_MISSING path=$path"
-            }
-            $actual=(Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
-            if($actual -ne $row[1]){
-              throw "FRODO_RUNTIME_SOURCE_TRACKED_HASH_FAIL path=$path actual=$actual expected=$($row[1])"
-            }
-          }
-
-          $provenancePath=Join-Path $root "provenance.json"
-          if(-not (Test-Path -LiteralPath $provenancePath -PathType Leaf)){
-            throw "FRODO_RUNTIME_SOURCE_PROVENANCE_MISSING"
-          }
-          $provenance=Get-Content -LiteralPath $provenancePath -Raw | ConvertFrom-Json
-          if([string]$provenance.target_sha256 -ne $files[0][1] -or
-             [string]$provenance.idle_sha256 -ne $files[1][1] -or
-             [string]$provenance.walk_sha256 -ne $files[2][1] -or
-             [string]$provenance.run_sha256 -ne $files[3][1]){
-            throw "FRODO_RUNTIME_SOURCE_PROVENANCE_HASH_FAIL"
-          }
-          Write-Host "P1C01_FRODO_RUNTIME_SOURCE_TRACKED_PASS assets=4 mutation=no"
-
-      - name: Cleanup transient Frodo gate assets
-        if: always()
-        shell: powershell
-        run: |
-          $paths=@(
-            "$env:SHIRE_FRODO_UE4_SOURCE\Content\Production\Characters\Rigs\FRODO\SK_FRODO.uasset",
-            "$env:SHIRE_FRODO_UE4_SOURCE\Content\Production\Characters\Rigs\FRODO\SK_FRODO_Skeleton.uasset",
-            "$env:SHIRE_FRODO_UE4_SOURCE\Content\Production\Characters\Rigs\FRODO\SK_FRODO_PhysicsAsset.uasset",
-            "$env:SHIRE_FRODO_UE4_SOURCE\Content\Production\Characters\Animations\FRODO\A_Frodo_Idle.uasset",
-            "$env:SHIRE_FRODO_UE4_SOURCE\Content\Production\Characters\Animations\FRODO\A_Frodo_Walk.uasset",
-            "$env:SHIRE_FRODO_UE4_SOURCE\Content\Production\Characters\Animations\FRODO\A_Frodo_Run.uasset"
-          )
-          foreach($p in $paths){
-            $relative=$p.Substring($env:SHIRE_FRODO_UE4_SOURCE.Length+1).Replace('\','/')
-            $tracked=@(& git.exe -C $env:SHIRE_FRODO_UE4_SOURCE ls-files -- $relative 2>$null)
-            if($LASTEXITCODE -ne 0){ throw "FRODO_UE4_ANIMATION_CLEANUP_GIT_FAIL path=$relative" }
-            if($tracked.Count -eq 0){ Remove-Item -LiteralPath $p -Force -ErrorAction SilentlyContinue }
-          }
-          Write-Host "P1C01_FRODO_UE4_ANIMATION_CLEANUP_PASS"
-
-      - name: Remove isolated UE4 source checkout
-        if: always()
-        shell: cmd
-        run: |
-          @echo off
-          if defined SHIRE_FRODO_UE4_SOURCE if exist "%SHIRE_FRODO_UE4_SOURCE%" rmdir /S /Q "%SHIRE_FRODO_UE4_SOURCE%"
-          exit /b 0

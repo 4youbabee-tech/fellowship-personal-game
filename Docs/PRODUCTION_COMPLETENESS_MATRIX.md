@@ -1,3 +1,13 @@
+## 2026-10-08 - P1C01 Frodo import workflow root-fix
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| Workflow #191 | WORKFLOW-DEFINITION-FAILED | Zero jobs; malformed classifier/duplicated tail |
+| Root repair | SOURCE FIXED | Single valid preflight/import workflow; closeout branch explicitly gated |
+| Frodo technical import | PENDING | #191 produced no valid UE4 import result |
+| P1C01 VISUAL / DEVICE / PERFORMANCE / Gate 6-7 | NOT ACCEPTED | Workflow repair adds no acceptance evidence |
+| P1C02 Bree | LOCKED | No chapter transition |
+
 ## 2026-10-08 - P1C01 root-hide living-world detail packet
 
 | Area | Status | Evidence / boundary |

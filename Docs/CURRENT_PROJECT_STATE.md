@@ -1,3 +1,10 @@
+## 2026-10-08 - P1C01 Frodo import workflow root-fix
+
+- Root Hide packet is on current head `1db531b428e981b973d903350c801768d5b9d212`; the prior Frodo import run #191 failed at workflow level with zero jobs.
+- Root cause was a malformed checked-in workflow: a PowerShell classifier `elseif` was concatenated with a CMD checkout step and a duplicated tail, so no valid job execution path existed.
+- Replaced it with one valid hosted artifact preflight and one self-hosted UE4.27 import gate, explicitly gated off the P1C01 closeout branch so the main One-Shot remains the sole closeout runner.
+- No Unreal/import/runtime/visual/device/performance acceptance is claimed from the workflow repair; exact-head validation remains pending.
+
 ## 2026-10-08 - P1C01 root-hide living-world detail packet
 
 - On exact source head `751c7fb5e7279547ee71497783d709007bae6a9c`, the prior Unreal validation #1734 was green but remained governance/docs-only and produced no new playable/render artifact.
