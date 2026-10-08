@@ -5540,3 +5540,9 @@ The #1698 artifact was technically complete but visual review still found low-de
 - Runtime micro-event contract `Data/LivingWorldEventPlan.json` now allows 4 nearby micro-events, 3 fauna groups, 9s minimum cadence, 5600 cm event cull and 4800 cm fauna cull.
 - Architecture remains bounded by the existing LivingWorldDirector pooling/culling path: no new persistent story actors, no synchronous heavy asset load, no quest/save ownership change, no future chapter runtime activation.
 - Evidence boundary: **DATA/RUNTIME-CONTRACT IMPLEMENTED; FRESH EXACT-HEAD UE4 BUILD/RENDER/RUNTIME/PACKAGE REQUIRED**. No visual, device, performance or Gate 6/7 acceptance is claimed.
+
+## 2026-10-08 - P1C01 exact-head reproof anchor after CI workflow repair
+
+- Added a no-runtime-effect `v12_exact_head_reproof_anchor` to `Data/WorldLifeSaturationPlan.json` so the next PR head requires Unreal Build Validation after the bounded Shire living-world density uplift and Frodo workflow syntax repair are both present.
+- This does not change P1C01 population, micro-event, fauna, residency, loading, acceptance, or Bree unlock behavior.
+- Evidence boundary remains unchanged: exact-head UE4 build/render/runtime/package proof is still required before any VISUALLY-ACCEPTED, PIE/device, performance, Gate 6, or Gate 7 claim.
