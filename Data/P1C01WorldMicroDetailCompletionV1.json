@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "manifest_id": "P1C01_WORLD_MICRO_DETAIL_COMPLETION_V1",
-  "status": "CHARACTER_MATERIAL_SLOT_COVERAGE_ROOT_FIXED",
+  "status": "ALL_SLOT_PATCH_COMPILE_ROOT_FIXED",
   "authority": [
     "Data/ProjectGovernor.json",
     "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
@@ -123,15 +123,15 @@
     "target": "8 GB RAM / ~2 GB VRAM / DX11 / 1280x720 / 30 FPS floor"
   },
   "latest_render_diagnosis": {
-    "exact_head": "42666c2256df904eeb02c491f5ffea441e89a559",
+    "exact_head": "9afcbd69c5885f32631842f1fc7e3269f67dc211",
     "artifact": "p1c01-shire-render-integrated-42666c2256df904eeb02c491f5ffea441e89a559",
-    "evidence": "#1702 completed capture and showed the production palette on the foreground NPC body, but white/grey head and limb regions remained. Source review identified slot-0-only material application on modular player/NPC components.",
+    "evidence": "#1703 failed before runtime at MSVC C4456 in the player all-slot material lambda; #1702 remains the latest valid technical render/package evidence.",
     "blockers": [
-      "Fresh exact-head reproof required after all-slot material application",
+      "Fresh exact-head build and render required after nested MID fix",
       "World remains visibly low-detail/blockout in reviewed captures",
       "Human visual/audio/gameplay/device/performance acceptance remains incomplete"
     ],
-    "disposition": "Implemented all-slot material coverage for player and NPC modular components while preserving existing async skeletal ownership and bounded runtime cost. Next One-Shot must reprove character readability."
+    "disposition": "Root-fixed the compile defect without changing the all-slot material intent. Run #1704 for exact-head reproof."
   },
   "force_full_render_reproof": true
 }

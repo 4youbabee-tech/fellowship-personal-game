@@ -1,3 +1,9 @@
+## 2026-10-08 - P1C01 all-slot patch compile root fix
+
+- Unreal Build Validation #1703 failed at the C++ build, not at Unreal runtime: MSVC C4456 reported a nested MID declaration in ShirePlayerCharacter.cpp after the all-slot patch retained the previous outer MID guard.
+- Root fix: removed the redundant outer guard and kept one MID allocation per material slot. The intended all-slot coverage is preserved for player and NPC modular surfaces.
+- #1703 did not produce valid new runtime evidence; the prior #1702 render remains diagnostic only. A fresh exact-head One-Shot is required.
+
 ## 2026-10-08 - P1C01 character material slot coverage root fix
 
 - #1702 captured the intended material branch: the foreground ambient Hobbit body changed to the production green palette, proving M_ProductionSurface was selected. The head and limb meshes still retained white/grey regions because the runtime override touched slot 0 only while those meshes expose additional material slots.

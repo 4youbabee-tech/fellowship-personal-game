@@ -1,3 +1,13 @@
+## 2026-10-08 - P1C01 all-slot patch compile root fix
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| #1703 build | FAILED / ROOT FIXED | MSVC C4456 nested MID declaration in the player all-slot lambda; no runtime evidence from that head |
+| All-slot material coverage | SOURCE-CORRECTED / #1704 PENDING | Redundant outer MID guard removed; one dynamic material is created per slot for player and NPC modular meshes |
+| #1702 technical baseline | MACHINE-GREEN | Previous head passed full build/capture/QA/package/EXE/hardware, but visual review remained incomplete |
+| P1C01 visual/device/performance/Gate 6-7 | NOT ACCEPTED | Fresh exact-head render and human/device evidence still required |
+| P1C02 Bree | LOCKED | No runtime integration before P1C01 gates pass |
+
 ## 2026-10-08 - P1C01 character material slot coverage root fix
 
 | Area | Status | Evidence / boundary |

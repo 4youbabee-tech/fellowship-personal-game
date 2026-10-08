@@ -412,18 +412,15 @@ void AShirePlayerCharacter::ApplyPrototypeStyle()
         {
             return;
         }
-        if (UMaterialInstanceDynamic* MID = UMaterialInstanceDynamic::Create(BasicMaterial, this))
+        const int32 MaterialSlots = FMath::Max(Component->GetNumMaterials(), 1);
+        for (int32 Slot = 0; Slot < MaterialSlots; ++Slot)
         {
-            const int32 MaterialSlots = FMath::Max(Component->GetNumMaterials(), 1);
-            for (int32 Slot = 0; Slot < MaterialSlots; ++Slot)
+            if (UMaterialInstanceDynamic* MID = UMaterialInstanceDynamic::Create(BasicMaterial, this))
             {
-                if (UMaterialInstanceDynamic* MID = UMaterialInstanceDynamic::Create(BasicMaterial, this))
-                {
-                    MID->SetVectorParameterValue(TEXT("Color"), Color);
-                    MID->SetScalarParameterValue(TEXT("Roughness"), FMath::Clamp(Roughness, 0.0f, 1.0f));
-                    MID->SetScalarParameterValue(TEXT("Metallic"), FMath::Clamp(Metallic, 0.0f, 1.0f));
-                    Component->SetMaterial(Slot, MID);
-                }
+                MID->SetVectorParameterValue(TEXT("Color"), Color);
+                MID->SetScalarParameterValue(TEXT("Roughness"), FMath::Clamp(Roughness, 0.0f, 1.0f));
+                MID->SetScalarParameterValue(TEXT("Metallic"), FMath::Clamp(Metallic, 0.0f, 1.0f));
+                Component->SetMaterial(Slot, MID);
             }
         }
     };
