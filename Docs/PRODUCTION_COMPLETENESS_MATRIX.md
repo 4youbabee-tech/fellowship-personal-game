@@ -5500,3 +5500,18 @@ The latest visual packet manifest is now also a full-lane trigger. This closes t
 | P1C01 data anchor | `Data/WorldLifeSaturationPlan.json` now includes a no-runtime-effect `v12_exact_head_reproof_anchor`. | Forces a fresh exact-head Unreal lane after CI workflow repair; gameplay values unchanged. |
 | Frodo workflow syntax | Corrupted workflow text was repaired before the anchor. | Removes structural CI failure noise; not a visual/runtime acceptance claim. |
 | Acceptance | Not accepted. | Fresh exact-head UE4 build/render/runtime/package proof is still required before Gate 6/7. |
+
+
+## 2026-10-08 — CVBP throughput policy
+
+| Control | State |
+|---|---|
+| Continuous Verified Build Protocol | ACTIVE / RECORDED IN GOVERNOR |
+| Linked production work | Group into bounded packets |
+| Independent static/source/docs checks | Parallel where outputs are independent |
+| Runtime-changing Unreal promotion | Serialized exact-head train |
+| Heavy UE repetition for docs-only ancestry | Avoid when Governor permits safe reuse |
+| Root-cause repair | Required before closure |
+| Story/licensing/save/performance/Gate 6/7 safeguards | PRESERVED |
+| #1749 machine train | SUCCESS on `cc6b26f760959a5acf0de002781ace239201ff50` |
+| Visual/device/performance/Gate 6/7 acceptance | NOT CLAIMED |
