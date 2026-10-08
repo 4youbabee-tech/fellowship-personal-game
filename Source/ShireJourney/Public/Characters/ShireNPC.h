@@ -213,6 +213,7 @@ private:
 
     void ApplyPrototypeStyle();
     void HandleProductionRigReady(FName CharacterId);
+    void HandleChapterAssetsCommitted(FName ChapterId, FName RouteId);
     bool TryApplyProductionRig(const FString& RigFolder);
     void UpdatePrototypeAnimation(float DeltaSeconds);
     void UpdatePrototypeActing(float DeltaSeconds);

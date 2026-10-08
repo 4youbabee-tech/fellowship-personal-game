@@ -1577,6 +1577,9 @@ void AShireNPC::BeginPlay()
             Streaming->OnCharacterRigReady.AddUObject(
                 this,
                 &AShireNPC::HandleProductionRigReady);
+            Streaming->OnChapterAssetsCommitted.AddUObject(
+                this,
+                &AShireNPC::HandleChapterAssetsCommitted);
         }
     }
 }
@@ -1589,6 +1592,7 @@ void AShireNPC::EndPlay(const EEndPlayReason::Type EndPlayReason)
                 GI->GetSubsystem<UShireChapterAssetStreamingSubsystem>())
         {
             Streaming->OnCharacterRigReady.RemoveAll(this);
+            Streaming->OnChapterAssetsCommitted.RemoveAll(this);
         }
     }
 
@@ -1604,6 +1608,32 @@ void AShireNPC::HandleProductionRigReady(FName CharacterId)
 
     bVisualStyleApplied = false;
     ApplyPrototypeStyle();
+}
+
+void AShireNPC::HandleChapterAssetsCommitted(FName ChapterId, FName RouteId)
+{
+    UGameInstance* GI = GetGameInstance();
+    UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    if (!Quests || Quests->GetCurrentChapterId() != ChapterId)
+    {
+        return;
+    }
+
+    // NPCs can be spawned before the chapter bank finishes its two-phase commit.
+    // Re-run the bounded ResolveObject promotion once residency is published so
+    // named static identity never gets stuck on the primitive fallback path.
+    bVisualStyleApplied = false;
+    ApplyPrototypeStyle();
+
+    if (ChapterId == TEXT("P1C01") && bUsingProductionVisual)
+    {
+        UE_LOG(
+            LogTemp,
+            Display,
+            TEXT("P1C01_CHARACTER_STATIC_IDENTITY character=%s visual=%s committed=yes"),
+            *DisplayName.ToString(),
+            *ResolveProductionCharacterId().ToString());
+    }
 }
 
 void AShireNPC::Tick(float DeltaSeconds)

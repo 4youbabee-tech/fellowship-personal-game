@@ -1,3 +1,10 @@
+## 2026-10-08 - P1C01 NPC static identity commit-boundary repair
+
+- #1712 used the corrected 50d57671 head and produced six fresh render captures; source/build/import/runtime audits/cook all passed, but packaged executable launch failed on the self-hosted runner. The reviewed render remains diagnostic only: P1C01 is still visually below acceptance, and no device/performance/Gate 6/7 claim is made.
+- Root cause isolated in AShireNPC: ApplyPrototypeStyle() could run before OnChapterAssetsCommitted, set bVisualStyleApplied=true, and never retry ResolveObject() after the resident P1C01 bank became visible. That leaves named NPCs on primitive/modular fallback even though the static identity packages are resident.
+- Source fix in this packet: subscribe NPCs to the chapter asset commit event, re-run the bounded style promotion only after the committed chapter matches the live quest chapter, and emit P1C01_CHARACTER_STATIC_IDENTITY evidence for successful named promotion. No synchronous load, per-frame scan, collision, or actor-density change is introduced.
+- Fresh exact-head One-Shot #1713 is required. P1C01 visual/device/performance/Gate 6/7 remain NOT ACCEPTED; P1C02 Bree remains LOCKED.
+
 ## 2026-10-08 - P1C01 common Hobbit fallback preservation
 
 - The named-identity bank reduction was correct in scope, but its first implementation filtered out the five common Hobbit meshes that the existing modular fallback still owns. That is a source/data defect in the in-flight #1711 head, not valid runtime evidence.

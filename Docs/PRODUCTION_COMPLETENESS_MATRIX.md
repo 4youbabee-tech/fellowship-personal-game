@@ -1,3 +1,14 @@
+## 2026-10-08 - P1C01 NPC static identity commit-boundary repair
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| #1712 technical train | MACHINE-GREEN WITH LAUNCH FAILURE | Source/build/import/capture/runtime audits/cook passed; packaged executable launch failed on the self-hosted runner |
+| Render review | DIAGNOSTIC / NOT ACCEPTED | Fresh six-shot render is still low-poly/blockout with unresolved character/world fidelity gaps |
+| NPC static identity retry | SOURCE-FIXED / #1713 REQUIRED | Re-applies ResolveObject() promotion after OnChapterAssetsCommitted; adds explicit P1C01_CHARACTER_STATIC_IDENTITY log |
+| Async/performance boundary | PRESERVED | No synchronous load, per-frame scan, actor-density increase, or collision change |
+| P1C01 visual/device/performance/Gate 6-7 | NOT ACCEPTED | Requires fresh exact-head render, packaged/playable evidence, target/device metrics, and human review |
+| P1C02 Bree | LOCKED | No chapter integration before P1C01 completion gates pass |
+
 ## 2026-10-08 - P1C01 common Hobbit fallback preservation
 
 | Area | Status | Evidence / boundary |
