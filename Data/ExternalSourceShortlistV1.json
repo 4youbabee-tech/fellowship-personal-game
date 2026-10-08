@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "registry_id": "P1C01_EXTERNAL_SOURCE_SHORTLIST_V1",
+  "authority": "Data/ProjectGovernor.json + project PDF source rules",
+  "status": "RESEARCH_SHORTLIST_ONLY",
+  "promotion_policy": "No download, import, runtime Content promotion, or LOTR fan-asset use is authorized by this registry alone. Every candidate requires per-asset license capture, checksum, technical QC, and exact-head UE4 validation.",
+  "target": {
+    "chapter": "P1C01",
+    "engine": "Unreal Engine 4.27.2",
+    "runtime_profile": "Windows DX11, 720p Balanced Medium/selective High, 30 FPS floor, approximately 2 GB VRAM",
+    "runtime_defaults": "1K/2K textures; 4K only for measured hero exceptions; FBX for animated production; PNG/TGA for textures"
+  },
+  "sources": [
+    {
+      "id": "SRC_ENV_POLYHAVEN",
+      "category": "environment_materials_hdris_models",
+      "priority": "A",
+      "url": "https://polyhaven.com/all",
+      "license_gate": "CC0/public-domain claim must be retained with provenance",
+      "candidate_use": ["grass", "soil", "bark", "wood", "stone", "roof", "rocks", "HDRI"],
+      "technical_gate": ["downsample runtime textures", "generate mipmaps", "validate UV/scale/collision/LODs"],
+      "status": "SHORTLISTED_NOT_DOWNLOADED"
+    },
+    {
+      "id": "SRC_ENV_AMBIENTCG",
+      "category": "environment_materials_hdris_models",
+      "priority": "A",
+      "url": "https://ambientcg.com/",
+      "license_gate": "CC0 per source page; retain asset-level metadata",
+      "candidate_use": ["PBR ground", "mud", "stone", "wood", "roof", "rock", "scattered leaves"],
+      "technical_gate": ["prefer 1K/2K runtime", "channel packing where compatible", "material-slot budget"],
+      "status": "SHORTLISTED_NOT_DOWNLOADED"
+    },
+    {
+      "id": "SRC_FAB_NATURE_MANUFACTURE",
+      "category": "shire_foliage_environment",
+      "priority": "B",
+      "url": "https://www.fab.com/listings/7861982c-92d2-43df-a75d-c07a7cee8b24?lang=en",
+      "license_gate": "standard Fab license and receipt required; no auto-promotion",
+      "candidate_use": ["trees", "foliage", "rocks", "ground cover"],
+      "technical_gate": ["confirm UE4.27 package", "profile foliage density", "HISM/foliage instances", "LOD and draw-call audit"],
+      "status": "SHORTLISTED_NOT_DOWNLOADED"
+    },
+    {
+      "id": "SRC_FAB_TEMPERATE_VEGETATION",
+      "category": "shire_foliage",
+      "priority": "B",
+      "url": "https://www.fab.com/listings/6a5ae8db-d80f-4b23-b276-87da390cfe56?lang=en",
+      "license_gate": "standard Fab license and receipt required",
+      "candidate_use": ["grass", "flowers", "ground foliage", "wind-ready vegetation"],
+      "technical_gate": ["UE4.27 compatibility check", "selective high hero zones only", "measure VRAM and FPS"],
+      "status": "SHORTLISTED_NOT_DOWNLOADED"
+    },
+    {
+      "id": "SRC_CHAR_MIXAMO",
+      "category": "characters_animation",
+      "priority": "B",
+      "url": "https://www.mixamo.com/",
+      "license_gate": "review current Adobe/Mixamo terms per downloaded asset",
+      "candidate_use": ["temporary animation retarget candidates", "non-LOTR generic NPC motion"],
+      "technical_gate": ["FBX only", "retarget test", "single skeleton strategy", "LOD/material cap"],
+      "status": "SHORTLISTED_NOT_DOWNLOADED"
+    },
+    {
+      "id": "SRC_ANIM_ROKOKO",
+      "category": "animation_mocap",
+      "priority": "B",
+      "url": "https://www.rokoko.com/resources/download-263-rokoko-motion-capture-assets",
+      "license_gate": "retain download page and commercial-use terms per asset",
+      "candidate_use": ["locomotion", "gesture", "magic-themed placeholder motion", "cinematic blocking"],
+      "technical_gate": ["FBX", "30 FPS normalization", "retarget and root-motion test"],
+      "status": "SHORTLISTED_NOT_DOWNLOADED"
+    },
+    {
+      "id": "SRC_AUDIO_SONNISS",
+      "category": "sfx_ambience_foley",
+      "priority": "A",
+      "url": "https://gdc.sonniss.com/",
+      "license_gate": "retain bundle license; filter to media-production-allowed files",
+      "candidate_use": ["wind", "water", "forest", "footsteps", "wood", "UI", "combat placeholders"],
+      "technical_gate": ["WAV source archive", "split by subsystem", "stream/voice concurrency budget", "no giant always-loaded bank"],
+      "status": "SHORTLISTED_NOT_DOWNLOADED"
+    },
+    {
+      "id": "SRC_AUDIO_KENNEY",
+      "category": "ui_audio",
+      "priority": "A",
+      "url": "https://kenney.nl/assets/ui-audio",
+      "license_gate": "CC0 provenance retained",
+      "candidate_use": ["menu", "confirm", "cancel", "toggle", "generic UI feedback"],
+      "technical_gate": ["convert/import only after catalog QC", "small resident bank"],
+      "status": "SHORTLISTED_NOT_DOWNLOADED"
+    },
+    {
+      "id": "SRC_UI_GAME_ICONS",
+      "category": "ui_icons",
+      "priority": "B",
+      "url": "https://game-icons.net/",
+      "license_gate": "CC BY 3.0; author credit ledger required",
+      "candidate_use": ["inventory", "activity", "map", "accessibility icons"],
+      "technical_gate": ["SVG/PNG normalization", "single icon style review", "credit manifest"],
+      "status": "SHORTLISTED_NOT_DOWNLOADED"
+    },
+    {
+      "id": "SRC_ARABIC_NOTO",
+      "category": "localization_fonts",
+      "priority": "A",
+      "url": "https://fonts.google.com/noto/specimen/Noto%2BSans%2BArabic",
+      "license_gate": "retain OFL text from official Google Fonts repository",
+      "candidate_use": ["Arabic UI", "subtitles", "menus"],
+      "technical_gate": ["UE Localization Dashboard", "FText", "Composite Font", "RTL/full shaping", "mixed Arabic/Latin/number subtitle QA"],
+      "status": "SHORTLISTED_NOT_DOWNLOADED"
+    },
+    {
+      "id": "SRC_ARABIC_TAJAWAL",
+      "category": "localization_fonts",
+      "priority": "A",
+      "url": "https://fonts.google.com/specimen/Tajawal",
+      "license_gate": "retain OFL text from official Google Fonts repository",
+      "candidate_use": ["Arabic UI alternate", "readability comparison"],
+      "technical_gate": ["same RTL/shaping/subtitle matrix", "compare against Noto before selecting"],
+      "status": "SHORTLISTED_NOT_DOWNLOADED"
+    }
+  ],
+  "hard_exclusions": [
+    "LOTR/Tolkien fan-made assets are reference/quarantine until rights are explicit",
+    "No OBJ as animated production input",
+    "No BMP runtime textures",
+    "No 8K/16K runtime defaults",
+    "No synchronous loading of heavy assets",
+    "No dense Spawn/Destroy NPC population",
+    "No asset import into shipping Content from this shortlist"
+  ],
+  "next_safe_action": "Select one sample per category, capture provenance/license/hash, run technical QC, and attach a review packet to the prep PR before any runtime promotion."
+}
