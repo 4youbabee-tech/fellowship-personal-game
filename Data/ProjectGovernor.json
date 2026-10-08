@@ -46,7 +46,8 @@
     "Maximum Safe Production is the default for all eligible project production work even when the owner does not explicitly say 'start chapter' or repeat the throughput instruction.",
     "Story scope is experience-first, not summary-first: the Timeline organizes sequence but never caps detail; compatible Tolkien book-only events/details should be playable when safe, and meaningful discovered source material may not be silently omitted.",
     "Closing a temporary PR is an explicit branch-lifecycle disposition. If it closes unmerged, any useful unique work must first be selectively salvaged into the current authority or recorded by exact commit SHA/disposition; after closure the unchanged remote head ref is deleted. A moved ref or active PR head is preserved as new work.",
-    "An active runtime chapter is one owner-facing One-Shot Mega Chapter Finish: preflight the complete chapter payload first, then continue through all required character/world/gameplay/audio/save/performance/acceptance lanes without asking the owner to re-authorize routine internal steps. Internal runtime-changing dependencies may remain serialized for safety; this never permits opening the next runtime chapter early."
+    "An active runtime chapter is one owner-facing One-Shot Mega Chapter Finish: preflight the complete chapter payload first, then continue through all required character/world/gameplay/audio/save/performance/acceptance lanes without asking the owner to re-authorize routine internal steps. Internal runtime-changing dependencies may remain serialized for safety; this never permits opening the next runtime chapter early.",
+    "Continuous Verified Build Protocol (CVBP) is the default production operating mode: execute meaningful linked work in bounded packets, persist every material decision in the Governor/handoff, use one integrated exact-head Unreal train, parallelize independent read-only/static checks, and never trade away story/canon, licensing, save integrity, performance, human review or Gate 6/7 evidence for speed."
   ],
   "requirement_status_values": [
     "REQUESTED",
@@ -3040,6 +3041,46 @@
       ],
       "checkpoint": "P1C01_GATE_6_7_ACCEPTED",
       "notes": "PARTIAL. Settlement source construction is machine-green, but production characters, rendered/human acceptance and target-device evidence remain open."
+    },
+    {
+      "id": "REQ-CVBP-001",
+      "title": "Continuous Verified Build Protocol throughput",
+      "category": "ProjectGovernance",
+      "priority": "CRITICAL",
+      "status": "IMPLEMENTED",
+      "origin": "Owner CVBP operating-method directive reaffirmed 2026-10-08",
+      "intent": "Increase real production throughput without increasing acceptance risk or losing project memory between chats and programmers.",
+      "evidence": [
+        "Data/ProjectGovernor.json",
+        "Docs/CURRENT_PROJECT_STATE.md",
+        "Docs/PRODUCTION_COMPLETENESS_MATRIX.md",
+        "PR #329",
+        "Unreal Build Validation #1749"
+      ],
+      "implementation_refs": [
+        "One owner-facing P1C01 One-Shot Mega Chapter Finish remains the active train.",
+        "Independent source/static/documentation checks may run in parallel; runtime-changing promotion remains serialized.",
+        "The integrated Unreal train owns exact-head build, import, render, runtime QA, save/route audit, cook/package and packaged startup.",
+        "Materially linked changes are grouped into production packets; documentation-only edits do not trigger repeated heavy Unreal gates.",
+        "Every new programmer can resume from the Governor, CURRENT_PROJECT_STATE and the exact PR/HEAD/run/artifact boundary."
+      ],
+      "missing_work": [
+        "Continue replacing proxy characters and environment kits with production FBX assets and provenance/QC.",
+        "Obtain target-device 720p DX11 FPS/frame-time/RAM/VRAM/streaming evidence.",
+        "Complete human visual, audio and gameplay review for Gate 6/7."
+      ],
+      "acceptance_criteria": [
+        "Real runtime/asset output increases per production packet without bypassing exact-head validation.",
+        "A failed gate is root-fixed and rerun at the failed layer.",
+        "Independent checks are combined or parallelized where their outputs are independent.",
+        "No new programmer needs chat history to recover active scope, blockers, evidence or next action.",
+        "Speed improvements do not create VISUALLY-ACCEPTED, DEVICE-TESTED, PERFORMANCE-ACCEPTED or Gate 6/7 claims without their required evidence."
+      ],
+      "dependencies": [
+        "REQ-MEM-001"
+      ],
+      "checkpoint": "CVBP-2026-10-08",
+      "notes": "The owner explicitly requested faster continuous building. This records throughput policy, not acceptance of P1C01."
     }
   ],
   "hard_invariants": [
@@ -9126,5 +9167,29 @@
       ]
     },
     "evidence_boundary": "COMPILE-TESTED/full machine train proven for exact head only. No VISUALLY-ACCEPTED, DEVICE-TESTED, PERFORMANCE-ACCEPTED or Gate 6/7 acceptance."
-  }
+  },
+  "current_cvbp": {
+    "status": "ACTIVE",
+    "active_runtime_chapter": "P1C01_ONLY",
+    "next_chapter": "P1C02_LOCKED",
+    "definitive_pr": "329",
+    "exact_head": "cc6b26f760959a5acf0de002781ace239201ff50",
+    "latest_full_machine_train": {
+      "workflow": "Unreal Build Validation",
+      "run_number": 1749,
+      "run_id": 37810345771,
+      "conclusion": "success",
+      "artifact_id": 11566746046
+    },
+    "speed_policy": [
+      "Group linked production changes into larger bounded packets.",
+      "Run independent static/source/documentation checks in parallel.",
+      "Use one integrated exact-head Unreal train for build/import/render/runtime/package.",
+      "Do not repeat heavy Unreal gates for documentation-only ancestry when the Governor permits reuse.",
+      "Fix failures at the causal layer and rerun the exact failed gate.",
+      "Continue safe source/asset preparation while the serialized runtime train is running."
+    ],
+    "acceptance_boundary": "Machine train success is not human PIE, DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED or Gate 6/7 acceptance."
+  },
+  "last_updated": "2026-10-08"
 }
