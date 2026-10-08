@@ -1,3 +1,9 @@
+## 2026-10-08 - P1C01 named identity bank startup correction
+
+- #1710 passed source/static, C++ build, and production import, but its first integrated capture timed out before BeginPlay/world logs after the P1C01 bank was expanded by 36 named static packages. No render or runtime acceptance evidence was produced.
+- Root fix: keep only the bounded visible core cast identity set (Gandalf, Bilbo, and Sam) in the initial P1C01 resident bank; retain other named static source inputs for a later staged packet. Audit metadata is recalculated from the reduced bank.
+- This preserves async ownership and avoids synchronous loads or per-frame scans. Fresh exact-head #1711 UE4/render/package proof is required; named skeletal rigs, visual/device/performance/Gate 6/7 remain unclaimed and P1C02 Bree remains LOCKED.
+
 ## 2026-10-08 - P1C01 named static identity residency packet
 
 - #1709 is technically green and its six render logs show hfGrass=resident, but named cast requests still report core-packages-missing for skeletal rigs and the reviewed frames retain primitive/modular identity fallback.

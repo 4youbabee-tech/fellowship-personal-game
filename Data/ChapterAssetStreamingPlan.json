@@ -103,11 +103,6 @@
         "/Game/Production/World/Shire/SM_ShWell.SM_ShWell",
         "/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface",
         "/Game/Production/Materials/M_ProductionWater.M_ProductionWater",
-        "/Game/Production/Characters/Hobbit/SM_Hobbit_Torso.SM_Hobbit_Torso",
-        "/Game/Production/Characters/Hobbit/SM_Hobbit_Head.SM_Hobbit_Head",
-        "/Game/Production/Characters/Hobbit/SM_Hobbit_Hair.SM_Hobbit_Hair",
-        "/Game/Production/Characters/Hobbit/SM_Hobbit_Arm.SM_Hobbit_Arm",
-        "/Game/Production/Characters/Hobbit/SM_Hobbit_Leg.SM_Hobbit_Leg",
         "/Game/Production/World/Common/SM_CommonBird.SM_CommonBird",
         "/Game/Production/World/Common/SM_CommonRabbit.SM_CommonRabbit",
         "/Game/Production/World/Common/SM_CommonButterfly.SM_CommonButterfly",
@@ -135,26 +130,7 @@
         "/Game/Production/Characters/Sam/SM_Sam_Head.SM_Sam_Head",
         "/Game/Production/Characters/Sam/SM_Sam_Hair.SM_Sam_Hair",
         "/Game/Production/Characters/Sam/SM_Sam_Sword.SM_Sam_Sword",
-        "/Game/Production/Characters/Sam/SM_Sam_Pack.SM_Sam_Pack",
-        "/Game/Production/Characters/Merry/SM_Merry_Torso.SM_Merry_Torso",
-        "/Game/Production/Characters/Merry/SM_Merry_Head.SM_Merry_Head",
-        "/Game/Production/Characters/Merry/SM_Merry_Hair.SM_Merry_Hair",
-        "/Game/Production/Characters/Merry/SM_Merry_Cloak.SM_Merry_Cloak",
-        "/Game/Production/Characters/Merry/SM_Merry_Sword.SM_Merry_Sword",
-        "/Game/Production/Characters/Pippin/SM_Pippin_Torso.SM_Pippin_Torso",
-        "/Game/Production/Characters/Pippin/SM_Pippin_Head.SM_Pippin_Head",
-        "/Game/Production/Characters/Pippin/SM_Pippin_Hair.SM_Pippin_Hair",
-        "/Game/Production/Characters/Pippin/SM_Pippin_Cloak.SM_Pippin_Cloak",
-        "/Game/Production/Characters/Pippin/SM_Pippin_Sword.SM_Pippin_Sword",
-        "/Game/Production/Characters/Hamfast/SM_Hamfast_Torso.SM_Hamfast_Torso",
-        "/Game/Production/Characters/Hamfast/SM_Hamfast_Head.SM_Hamfast_Head",
-        "/Game/Production/Characters/Hamfast/SM_Hamfast_Hair.SM_Hamfast_Hair",
-        "/Game/Production/Characters/Rosie/SM_Rosie_Torso.SM_Rosie_Torso",
-        "/Game/Production/Characters/Rosie/SM_Rosie_Head.SM_Rosie_Head",
-        "/Game/Production/Characters/Rosie/SM_Rosie_Hair.SM_Rosie_Hair",
-        "/Game/Production/Characters/FarmerMaggot/SM_FarmerMaggot_Torso.SM_FarmerMaggot_Torso",
-        "/Game/Production/Characters/FarmerMaggot/SM_FarmerMaggot_Head.SM_FarmerMaggot_Head",
-        "/Game/Production/Characters/FarmerMaggot/SM_FarmerMaggot_Hair.SM_FarmerMaggot_Hair"
+        "/Game/Production/Characters/Sam/SM_Sam_Pack.SM_Sam_Pack"
       ]
     },
     "P1C02": {
@@ -583,7 +559,7 @@
       "ShireNPC": 4
     },
     "chapter_bank_asset_counts": {
-      "P1C01": 125,
+      "P1C01": 101,
       "P1C02": 48,
       "P1C03": 47,
       "P1C04": 48,
@@ -594,7 +570,7 @@
       "GANDALF_ISENGARD": 10
     },
     "note": "This is a source/runtime architecture optimization contract, not proof of lower hitch or memory until measured on the target profile.",
-    "total_unique_production_packages": 280,
+    "total_unique_production_packages": 261,
     "total_unique_production_packages_rule": "Derived from unique /Game/Production package paths across all chapter banks; hosted preflight and package preflight must match this recorded manifest total."
   }
 }

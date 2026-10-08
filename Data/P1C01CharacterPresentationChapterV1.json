@@ -105,27 +105,8 @@
       "/Game/Production/Characters/Sam/SM_Sam_Head.SM_Sam_Head",
       "/Game/Production/Characters/Sam/SM_Sam_Hair.SM_Sam_Hair",
       "/Game/Production/Characters/Sam/SM_Sam_Sword.SM_Sam_Sword",
-      "/Game/Production/Characters/Sam/SM_Sam_Pack.SM_Sam_Pack",
-      "/Game/Production/Characters/Merry/SM_Merry_Torso.SM_Merry_Torso",
-      "/Game/Production/Characters/Merry/SM_Merry_Head.SM_Merry_Head",
-      "/Game/Production/Characters/Merry/SM_Merry_Hair.SM_Merry_Hair",
-      "/Game/Production/Characters/Merry/SM_Merry_Cloak.SM_Merry_Cloak",
-      "/Game/Production/Characters/Merry/SM_Merry_Sword.SM_Merry_Sword",
-      "/Game/Production/Characters/Pippin/SM_Pippin_Torso.SM_Pippin_Torso",
-      "/Game/Production/Characters/Pippin/SM_Pippin_Head.SM_Pippin_Head",
-      "/Game/Production/Characters/Pippin/SM_Pippin_Hair.SM_Pippin_Hair",
-      "/Game/Production/Characters/Pippin/SM_Pippin_Cloak.SM_Pippin_Cloak",
-      "/Game/Production/Characters/Pippin/SM_Pippin_Sword.SM_Pippin_Sword",
-      "/Game/Production/Characters/Hamfast/SM_Hamfast_Torso.SM_Hamfast_Torso",
-      "/Game/Production/Characters/Hamfast/SM_Hamfast_Head.SM_Hamfast_Head",
-      "/Game/Production/Characters/Hamfast/SM_Hamfast_Hair.SM_Hamfast_Hair",
-      "/Game/Production/Characters/Rosie/SM_Rosie_Torso.SM_Rosie_Torso",
-      "/Game/Production/Characters/Rosie/SM_Rosie_Head.SM_Rosie_Head",
-      "/Game/Production/Characters/Rosie/SM_Rosie_Hair.SM_Rosie_Hair",
-      "/Game/Production/Characters/FarmerMaggot/SM_FarmerMaggot_Torso.SM_FarmerMaggot_Torso",
-      "/Game/Production/Characters/FarmerMaggot/SM_FarmerMaggot_Head.SM_FarmerMaggot_Head",
-      "/Game/Production/Characters/FarmerMaggot/SM_FarmerMaggot_Hair.SM_FarmerMaggot_Hair"
+      "/Game/Production/Characters/Sam/SM_Sam_Pack.SM_Sam_Pack"
     ],
-    "named_static_identity_scope": "P1C01 async resident promotion for visible modular identity pieces; skeletal-rig availability remains separately gated"
+    "named_static_identity_scope": "P1C01 async resident promotion for the bounded visible core cast (Gandalf, Bilbo, Sam); additional named static identity packages remain staged source inputs until a later bounded packet"
   }
 }

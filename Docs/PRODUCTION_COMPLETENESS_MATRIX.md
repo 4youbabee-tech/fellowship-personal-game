@@ -1,3 +1,15 @@
+## 2026-10-08 - P1C01 named identity bank startup correction
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| #1710 source/build/import | PASS | Static gate, C++ build, and 384-file production import passed |
+| #1710 integrated capture | FAILED / INVALID | First shot timed out before BeginPlay/world logs after the 36-package identity-bank expansion; no render/package/runtime evidence |
+| Resident identity bank | SOURCE-CORRECTED / #1711 PENDING | Reduced to bounded Gandalf/Bilbo/Sam core packages; other named static inputs remain staged |
+| Async/performance boundary | PRESERVED | No synchronous load, per-frame scan, actor-density increase, or collision change |
+| Named skeletal rigs | OPEN / NOT INVENTED | No complete named-cast skeletal mesh + AnimBP package evidence exists |
+| P1C01 visual/device/performance/Gate 6-7 | NOT ACCEPTED | Fresh exact-head run and human/device evidence remain required |
+| P1C02 Bree | LOCKED | No chapter integration before P1C01 gates pass |
+
 ## 2026-10-08 - P1C01 named static identity residency packet
 
 | Area | Status | Evidence / boundary |
