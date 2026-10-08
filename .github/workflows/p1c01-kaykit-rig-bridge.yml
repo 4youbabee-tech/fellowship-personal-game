@@ -21,7 +21,7 @@ concurrency:
 
 jobs:
   hosted_static_bridge:
-    if: ${{ github.event_name != 'pull_request' || github.head_ref != 'production/p1c01-definitive-chapter-closeout-2026-10-04' }} # P1C01_DEFINITIVE_TRAIN_RETIREMENT
+    if: ${{ !startsWith(github.head_ref, 'prep/') && (github.event_name != 'pull_request' || github.head_ref != 'production/p1c01-definitive-chapter-closeout-2026-10-04') }} # P1C01_DEFINITIVE_TRAIN_RETIREMENT
     name: Hosted KayKit source and FBX static gate
     runs-on: windows-latest
     outputs:
