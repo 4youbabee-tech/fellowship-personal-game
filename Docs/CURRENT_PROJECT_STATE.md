@@ -1,3 +1,9 @@
+## 2026-10-08 - P1C01 full-lane proof trigger for packaged cook closure
+
+- #1718 passed the static gate but correctly inherited the green governance path because the preceding syntax repair changed only classifier/docs files; it produced no Unreal/render/package evidence and is not used for acceptance.
+- Root validation fix: retain an explicit, auditable cook-closure comment beside the three P1C01 named-identity cook inputs so the exact-head delta remains packaging-critical and forces the full One-Shot lane.
+- Fresh exact-head full validation #1719 is required for the skeletal-material and packaged named-identity fixes. P1C01 visual/device/performance/Gate 6/7 remain NOT ACCEPTED; P1C02 Bree remains LOCKED.
+
 ## 2026-10-08 - P1C01 validation classifier syntax repair
 
 - #1716 stopped in the self-hosted classifier before Unreal because the new importer full-lane condition placed PowerShell `-or` on a standalone line; this is a validation-script syntax failure, not engine evidence.

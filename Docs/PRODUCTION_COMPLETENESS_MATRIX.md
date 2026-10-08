@@ -1,3 +1,13 @@
+## 2026-10-08 - P1C01 full-lane proof trigger for packaged cook closure
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| #1718 validation routing | INHERITED / NON-EVIDENCE | Static gate passed but classifier/docs-only delta inherited green governance; no Unreal/render/package steps ran |
+| Packaged named identities | SOURCE-FIXED / #1719 REQUIRED | Cook-pinned Gandalf, Bilbo, and Sam folders must be verified by the full package and executable lane |
+| Frodo skeletal material usage | SOURCE-FIXED / #1719 REQUIRED | Importer persists `MATUSAGE_SkeletalMesh` on `M_ProductionSurface` |
+| P1C01 visual/device/performance/Gate 6-7 | NOT ACCEPTED | Fresh render, packaged launch, target-device metrics, and human visual acceptance remain required |
+| P1C02 Bree | LOCKED | No chapter integration before P1C01 completion gates pass |
+
 ## 2026-10-08 - P1C01 validation classifier syntax repair
 
 | Area | Status | Evidence / boundary |
