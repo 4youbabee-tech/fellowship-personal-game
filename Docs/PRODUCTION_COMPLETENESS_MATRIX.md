@@ -5422,3 +5422,15 @@ The latest visual packet manifest is now also a full-lane trigger. This closes t
 | Black Rider current static production proxy materials | SOURCE-FIXED / RERUN PENDING | authored materials preserved; fallback-only BasicShape coloring; runtime LoadObject removed |
 | Black Rider + horse final animated FBX | CONTENT GAP | still not final animated/rigged bundles |
 | New road/Ferry 7-shot packet | SOURCE-IMPLEMENTED / RERUN PENDING | dedicated `07_Wooded_Road_Hide` plus existing six locations |
+
+## 2026-10-08 - P1C01 bounded living-world density uplift
+
+| Area | State | Evidence / boundary |
+|---|---|---|
+| P1C01 baseline population target | DATA/RUNTIME-CONTRACT IMPLEMENTED | 18 -> 22, under existing ALivingWorldDirector clamp of 24 |
+| P1C01 residency profile | DATA/RUNTIME-CONTRACT IMPLEMENTED | spawn 0.32s, inner 700 cm, outer 2850 cm, cull 6400 cm |
+| P1C01 micro-events | DATA/RUNTIME-CONTRACT IMPLEMENTED | active cap 4, fauna cap 3, cadence 9s, cull 5600/4800 cm |
+| Runtime architecture | PRESERVED | existing pooling/culling, disposable events, no new persistent story actors |
+| Bree/P1C02 | LOCKED UNTIL SHIRE ACCEPTANCE | no Bree runtime activation in this packet |
+| Fresh exact-head UE4 proof | REQUIRED | build/render/runtime/package evidence pending |
+| Visual/device/performance/Gate 6-7 | NOT ACCEPTED | unchanged; no acceptance claimed |
