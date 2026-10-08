@@ -1,3 +1,14 @@
+## 2026-10-08 - P1C01 Ferry composition proof and Gandalf contrast packet
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| #1723 technical train | MACHINE-GREEN | Exact-head full One-Shot passed through package, packaged startup, runner boundary, and playable upload |
+| Ferry composition | VERIFIED / DIAGNOSTIC | Artifact 11527426022 clears the prior foreground obstruction and reads river, docks, boat, reeds, and approach; final fidelity remains open |
+| Playable package | MACHINE-GREEN / NOT DEVICE-ACCEPTED | Artifact 11526894329; 271/271 streaming assets, 37/37 packaged data, 6s startup, warning debt zero |
+| Gandalf readability | SOURCE-FIXED / FULL RUN REQUIRED | Graphite palette applied only to Gandalf coat/trousers/beard/hat/cloak to prevent pale silhouette collapse under current lighting |
+| Visual/device/performance/Gate 6-7 | NOT ACCEPTED | Low-poly world/characters and target-device FPS/frame-time/pacing evidence remain open |
+| P1C02 Bree | LOCKED | Begin only after P1C01 completion gates genuinely pass |
+
 ## 2026-10-08 - P1C01 Merry/Pippin residency proof and Ferry composition packet
 
 | Area | Status | Evidence / boundary |

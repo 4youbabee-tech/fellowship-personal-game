@@ -1,3 +1,11 @@
+## 2026-10-08 - P1C01 Ferry composition proof and Gandalf contrast packet
+
+- #1723 completed successfully on exact head cb1c30e0e5cb02999d5a507cd6be0ff08962f9b9. Static gate, UE4.27.2 build/import, six-shot render, runtime audits, warning guard, cook, packaged Runtime Data, packaged startup, runner hardware boundary, and playable upload all passed.
+- Fresh render artifact 11527426022 was reviewed. The raised/backed Ferry camera removes the large white foreground obstruction and now exposes the river split, docks, boat, reeds, and approach. This verifies the composition root fix, not final visual acceptance; terrain, foliage, architecture, and characters remain low-poly/blockout.
+- Fresh playable artifact 11526894329 is machine-green: streaming preflight expected=271 missing=0, packaged data 37/37, startup 6s, warning debt all zero, and the runner hardware snapshot passed. No target-device FPS/frame-time acceptance is inferred.
+- Next root cause from the same render: Gandalf at Water Mill remains a pale/white modular silhouette under the current P1C01 lighting even though his named-static mesh resolves. This packet darkens only Gandalf's production surface palette (coat, trousers, beard, hat, cloak) to a bounded graphite range for silhouette separation. No mesh, rig, actor count, gameplay, collision, streaming ownership, or lighting changes.
+- Fresh exact-head full One-Shot and human render review are required. P1C01 visual/device/performance/Gate 6/7 remain NOT ACCEPTED; P1C02 Bree remains LOCKED.
+
 ## 2026-10-08 - P1C01 Merry/Pippin residency proof and Ferry composition packet
 
 - #1722 completed successfully on exact head 70b4ff7290c81aa8c4a74967a90d83aafeb3ff9b: UE4.27.2 build/import, six-shot render capture/upload, Automation/startup/chapter/state/transition/fault/persistence audits, warning-debt guard, cook, packaged Runtime Data, packaged startup, runner hardware boundary, and playable upload.
