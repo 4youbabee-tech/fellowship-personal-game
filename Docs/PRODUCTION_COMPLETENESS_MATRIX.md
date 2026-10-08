@@ -5620,5 +5620,6 @@ The latest visual packet manifest is now also a full-lane trigger. This closes t
 | Area | Exact-head observation / correction | Evidence |
 |---|---|---|
 | Unreal #1777 (`d500cdcd`) | C++ compile, import (384 files / 0 failures), seven capture shots and finalizer passed; upload-directory selection then failed with Git `Needed a single revision` / exit 92 | Exact run logs |
-| Root correction | Select capture folder from validated `TARGET_SHA`; retain final PNG existence check; PG-026 and source-contract regression reject mutable HEAD lookup | SOURCE-IMPLEMENTED; exact-head rerun pending |
-| Remaining gates | Automation/headless runtime, package, PIE, device, human visual/audio/performance review, Gate 6/7 | Not run / pending |
+| Root correction | Select capture folder from validated `TARGET_SHA`; retain final PNG existence check; PG-026 and source-contract regression reject mutable HEAD lookup | FIXED; exact-folder artifact upload passed on #1778 |
+| Follow-up exact-head train | 68 source tests; UE4.27.2 compile; 384-file import; 7 captures; Automation; headless P1C01 and route/story roundtrip; Windows package; 37/37 Runtime Data; packaged startup | #1778 SUCCESS, SHA `d917784e309b649ce3989722a28e1b2172c018cc`; render artifact 11584693295; Windows artifact 11584714819 |
+| Remaining gates | Interactive PIE from chapter start to Ferry, target-device FPS/memory/streaming, human visual/audio/gameplay review and Gate 6/7 | NOT RUN / OPEN |

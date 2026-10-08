@@ -785,4 +785,6 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 
 **Root cause and correction:** The selector unnecessarily re-read `HEAD` from the persistent checkout after capture. It now takes the 12-character directory key directly from workflow-validated `TARGET_SHA`, retains the required seventh-shot existence check and exact-folder-only upload. PG-026 enforces that contract and a source regression covers the failure mode.
 
-**Evidence boundary:** #1777 has exact-head compile/import/render-capture generation evidence but is an overall failed run. Runtime/package proof on the correction SHA remains pending. No PIE, DEVICE-TESTED, VISUALLY-ACCEPTED, performance or Gate 6/7 claim.
+**Correction proof:** Unreal Build Validation #1778 / run `37857194895` on exact SHA `d917784e309b649ce3989722a28e1b2172c018cc` passed: 68 source-contract tests, UE4.27.2 compile, 384-file production import (zero failures), seven captures and exact-folder upload, Automation QA, headless P1C01 and route/story audits, Windows cook/package, 37/37 Runtime Data and packaged startup. Render artifact `11584693295`; package artifact `11584714819`.
+
+**Evidence boundary:** The machine train is green. Capture generation does not establish human visual acceptance; no interactive PIE, target-device performance, audio/gameplay acceptance or Gate 6/7 claim. P1C02 remains locked.
