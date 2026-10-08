@@ -1,3 +1,11 @@
+## 2026-10-08 - P1C01 #1731 seven-shot proof and wooded-road camera root fix
+
+- Unreal Build Validation #1731 completed successfully on exact head `4346e4a9ef6816cd4301af2e5ef9eb3ff7bbea78` through the full lane: classifier `mode=full`, UE4.27.2 build/import, seven captures, Automation/runtime audits, zero guarded warning debt, cook/package, 37/37 packaged Runtime Data, 6s packaged startup, hardware snapshot, and artifact uploads.
+- Fresh evidence: render artifact `11541164468`, playable artifact `11542006896`, 271/271 streamed assets, package elapsed 210s, and runner hardware Intel i7-6498DU with 8,457,560,064 bytes RAM. This remains machine evidence, not target-device or performance acceptance.
+- Human review of all seven images found the new `07_Wooded_Road_Hide` evidence unusable: the north-side camera at `(13600,1800,180)` is almost fully occluded by a foreground tree mass, so the road, mounted Rider, and root-hide relationship are not readable. The first six images remain coherent but visibly low-poly/proxy; the Ferry is readable as a crossing but not final art.
+- Root fix: move only the dedicated wooded-road evidence camera to an elevated south-side vantage `(13000,-1700,420)` with pitch/yaw `(-7,52)`, aimed across the Rider patrol toward the root shelter. Add an exact static regression for that composition. No runtime world, quest trigger, patrol, collision, density, gameplay, audio, or chapter-boundary behavior changes.
+- Fresh exact-head full One-Shot and seven-shot human review are required before this packet is verified. P1C01 remains NOT VISUALLY-ACCEPTED / NOT DEVICE-TESTED / NOT PERFORMANCE-ACCEPTED; Gate 6/7 remain open and P1C02 Bree remains locked.
+
 ## 2026-10-08 - P1C01 #1727 grass calibration proof and Shire texture double-tint correction
 
 - Unreal Build Validation #1727 completed successfully on exact head `58577a7a07f966e827a2a9048101c6883aa51166`. Source/static gate, UE4.27.2 build/import, six-shot capture, Automation/runtime audits, zero warning debt, cook/package, 37/37 packaged Runtime Data, 6s packaged executable startup, hardware snapshot, and artifact uploads all passed.

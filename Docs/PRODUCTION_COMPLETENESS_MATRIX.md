@@ -1,3 +1,15 @@
+## 2026-10-08 - P1C01 #1731 seven-shot proof and wooded-road camera root fix
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| #1731 technical train | MACHINE-GREEN | Exact head `4346e4a9`; full build/import, 7 captures, runtime audits, zero guarded warning debt, cook/package, 37/37 data, 6s startup |
+| Artifacts | FRESH / DIAGNOSTIC | Render `11541164468`; playable `11542006896`; streaming 271/271; package 210s |
+| Wooded-road dedicated shot | FAILED HUMAN REVIEW | Foreground tree mass occludes almost the entire frame; road, mounted Rider, and root-hide relationship are unreadable |
+| Camera composition correction | SOURCE-FIXED / FULL RERUN REQUIRED | Move shot from north low angle to elevated south-side `(13000,-1700,420,-7,52,0)`; exact regression added |
+| Runtime/gameplay boundary | PRESERVED | Capture-only change; world, triggers, Rider patrol, collision, density, audio, and chapter boundary unchanged |
+| VISUALLY-ACCEPTED / DEVICE-TESTED / PERFORMANCE-ACCEPTED / Gate 6-7 | NOT ACCEPTED | Fresh seven-shot review and final production content/device evidence remain required |
+| P1C02 Bree | LOCKED | Begin only after P1C01 completion gates genuinely pass |
+
 ## 2026-10-08 - P1C01 #1727 grass calibration proof and Shire texture double-tint correction
 
 | Area | Status | Evidence / boundary |
