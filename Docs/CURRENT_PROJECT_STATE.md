@@ -1,3 +1,9 @@
+## 2026-10-08 - P1C01 validation classifier syntax repair
+
+- #1716 stopped in the self-hosted classifier before Unreal because the new importer full-lane condition placed PowerShell `-or` on a standalone line; this is a validation-script syntax failure, not engine evidence.
+- Root fix: keep the commandlet path in the existing full-impact expression with valid PowerShell continuation syntax. The packaged cook-closure and skeletal-material fixes remain intact on the branch.
+- Fresh exact-head full One-Shot #1717 is required. P1C01 visual/device/performance/Gate 6/7 remain NOT ACCEPTED; P1C02 Bree remains LOCKED.
+
 ## 2026-10-08 - P1C01 packaged named-identity cook closure
 
 - #1715 completed source/build/import, six-shot capture, runtime audits, cook, and packaged Runtime Data verification, but the packaged executable failed during chapter asset commit: `ChapterAssetStreaming` reported 17 unresolved named static packages for Gandalf, Bilbo, and Sam, followed by rollback. The same log still contained the `M_ProductionSurface` skeletal usage warning; both are being treated as root causes, not acceptance evidence.

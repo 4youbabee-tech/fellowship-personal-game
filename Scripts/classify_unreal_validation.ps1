@@ -598,8 +598,7 @@ foreach($p in $changed){
         $n -eq "Source/ShireJourney/Private/Characters/ShireNPC.cpp" -or
         $n -eq "Source/ShireJourney/Public/Characters/ShireNPC.h" -or
         $n -eq "Source/ShireJourney/Private/Characters/ShirePlayerCharacter.cpp" -or
-        $n -eq "Source/ShireJourney/Public/Characters/ShirePlayerCharacter.h"
-        -or
+        $n -eq "Source/ShireJourney/Public/Characters/ShirePlayerCharacter.h" -or
         $n -eq "Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp"
     ){
         $fullImpact += $n
