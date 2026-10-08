@@ -1413,6 +1413,8 @@ class SourceContractTests(unittest.TestCase):
         unreal = (root / ".github" / "workflows" / "unreal-build-validation.yml").read_text(encoding="utf-8")
         self.assertIn(guard, unreal)
         self.assertIn("P1C01_ONE_SHOT_STATIC_GATE_PASS", unreal)
+        self.assertIn("id: p1c01_shire_capture", unreal)
+        self.assertIn("steps.p1c01_shire_capture.outcome == 'success'", unreal)
         self.assertIn("-m unittest Scripts/test_source_contracts.py", unreal)
         self.assertIn("Scripts/pre_unreal_validate.py", unreal)
         self.assertIn("Capture P1C01 production Shire on existing UE workspace", unreal)

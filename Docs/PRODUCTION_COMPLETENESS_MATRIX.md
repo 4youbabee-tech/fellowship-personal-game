@@ -1,3 +1,15 @@
+## 2026-10-08 - P1C01 #1745 fail-safe validator + render-evidence repair
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| #1745 source-contract suite | STATIC-VALIDATED | 61/61 unit tests passed on `e76fb0d` |
+| #1745 Pre-Unreal | FAILED | 5 errors: fauna cap 3>2; PG-111 plan V10/V11 identity + status; PG-113 event status V9/V10; PG-214 active target 18/22 |
+| Source and config repair | IMPLEMENTED / EXACT-HEAD RERUN REQUIRED | Align current-plan proof checks, hold fauna <=2, preserve P1C01 22 baseline within director clamp24 and existing pooling; no runtime C++ changed |
+| Exact-head render artifact integrity | GUARDED / NEW RUN PENDING | Require successful P1C01 capture step before upload; blocks upload of old persistent-runner images on early source failure |
+| UE4.27.2 compile/import/render/QA/package/startup | PENDING NEW RUN | #1745 stopped at Pre-Unreal; no new engine evidence |
+| PIE/target-device/performance/visual/audio and Gate 6/7 | NOT ACCEPTED | Requires real chapter/build observations |
+| P1C02 Bree | LOCKED | Cannot open before approved P1C01 closeout |
+
 ## 2026-10-08 - P1C01 #1744 source-gate blocker correction (exact-head rerun pending)
 
 | Area | Status | Evidence / boundary |

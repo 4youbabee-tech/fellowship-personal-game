@@ -1,3 +1,11 @@
+## 2026-10-08 - P1C01 #1745 Pre-Unreal validator contract alignment and stale-evidence guard
+
+- #1745 on exact head `e76fb0d` passed `Scripts.test_source_contracts` 61/61 but failed `Scripts/pre_unreal_validate.py` (5 reported errors) before UE4 build; run #1745 is NOT a compile/import/runtime acceptance.
+- Four validator defects were stale gates after the already-recorded living-world uplift: PG-111 active V11 plan identity/status, PG-113 V10 event-plan proof status, and PG-214 active P1C01 target 22 versus historical density-car snapshot 18. Align active-plan validators while preserving the historical 18-car invariant.
+- One real low-spec guard conflict remains: LivingWorldEventPlan configured 3 concurrent fauna groups, violating the <=2 budget required for the 8GB RAM / ~2GB VRAM target. Restore the fauna config and its narrative metadata to 2; retain independently bounded four total micro-events, 22 baseline residents, pooling/culling and story priority. No blanket density release or target-device performance claim.
+- The self-hosted persistent workspace uploaded >160MB of stale `Saved/Automation/P1C01VisualCapture` files even though #1745 stopped before capture. Add a capture-step outcome guard: render upload is permitted only after the corresponding exact-head capture succeeds, preventing misleading fresh-head artifacts and wasted failure-upload time.
+- Scope is validator/source/config and evidence hygiene on the EXISTING P1C01 One-Shot only. Exact-head source tests + UE4.27.2 compile/import/render/QA/cook/package/startup still required; final Frodo rig/deformation, visual/audio, PIE and target-device Gate 6/7 remain unaccepted. P1C02 remains locked.
+
 ## 2026-10-08 - P1C01 #1744 One-Shot pre-build root repair (rerun required)
 
 - PR #329 exact head `2a2e508c` ran Unreal Build Validation #1744; self-hosted job `113297733064` failed **before Unreal compile** in `Scripts.test_source_contracts` (3 assertions), not in UE4 C++/UHT.

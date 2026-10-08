@@ -4589,13 +4589,13 @@ if pg110_matrix.get("geometry_refinement_wave", {}).get("status") != "ENGINE_PRO
 if pg110_matrix.get("surface_material_wave", {}).get("status") != "ENGINE_PROVEN_PENDING_RENDERED_ACCEPTANCE":
     fail("PG-110 V7 surface wave must remain engine-proven while rendered acceptance is pending")
 
-# PG-111: V10 regional life must stay canon-safe, route-readable and performance-bounded.
+# PG-111: V11 regional life must stay canon-safe, route-readable and performance-bounded.
 pg111_plan = json.loads(read(ROOT / "Data" / "WorldLifeSaturationPlan.json"))
 pg111_targets = pg111_plan.get("baseline_population_targets", {})
 pg111_roles = pg111_plan.get("population_roles", {})
-if pg111_plan.get("plan_id") != "PART1_WORLD_ALIVE_SATURATION_V10":
-    fail("PG-111 V10 world-life plan identity changed")
-if pg111_plan.get("status") != "W01_P1C01_SINGLE_OWNER_BUDGET_AUTHORITY_IMPLEMENTED_PENDING_ENGINE_PROOF":
+if pg111_plan.get("plan_id") != "PART1_WORLD_ALIVE_SATURATION_V11":
+    fail("PG-111 V11 world-life plan identity changed")
+if pg111_plan.get("status") != "P1C01_BOUNDED_LIVING_WORLD_DENSITY_UPLIFT_EXACT_HEAD_REPROOF_QUEUED":
     fail("PG-111 W01 world-life proof boundary changed")
 if pg111_plan.get("micro_event_budget_authority") != "Data/LivingWorldEventPlan.json#region_budgets":
     fail("PG-111 micro-event budget authority must remain LivingWorldEventPlan#region_budgets")
@@ -4702,7 +4702,7 @@ for pg113_symbol in [
         fail(f"PG-113 environmental-life director wiring missing: {pg113_symbol}")
 
 pg113_event_plan = json.loads(read(ROOT / "Data" / "LivingWorldEventPlan.json"))
-if pg113_event_plan.get("status") != "V9_ENVIRONMENTAL_LIFE_RUNTIME_IMPLEMENTED_PENDING_ENGINE_PROOF":
+if pg113_event_plan.get("status") != "V10_P1C01_BOUNDED_DENSITY_RUNTIME_CONTRACT_PENDING_ENGINE_PROOF":
     fail("PG-113 living-world event proof boundary changed")
 pg113_moria = next(
     (row for row in pg113_event_plan.get("chapter_contracts", [])
@@ -6019,8 +6019,8 @@ if sum(int(row.get("max_instances", 0)) for row in pg214_categories if isinstanc
     fail("PG-214 category instance budgets must sum to 70")
 
 pg214_life = json.loads(read(ROOT / "Data" / "WorldLifeSaturationPlan.json"))
-if pg214_life.get("baseline_population_targets", {}).get("P1C01") != 18:
-    fail("PG-214 WorldLifeSaturationPlan P1C01 population target drifted above/below 18")
+if pg214_life.get("baseline_population_targets", {}).get("P1C01") != 22:
+    fail("PG-214 active WorldLifeSaturationPlan P1C01 target must be 22; historical density car remains 18")
 
 pg214_h = read(resolve_source("ShirePrototypeWorldBuilder.h"))
 pg214_cpp = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))

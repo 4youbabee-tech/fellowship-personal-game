@@ -498,6 +498,7 @@ jobs:
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_import_production_assets.cmd"'
 
       - name: Capture P1C01 production Shire on existing UE workspace
+        id: p1c01_shire_capture
         if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_ASSET_IMPORT_ONLY == 'true'
         shell: cmd
         env:
@@ -506,7 +507,7 @@ jobs:
 
       - name: Upload integrated P1C01 rendered evidence
         continue-on-error: true
-        if: always() && (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_ASSET_IMPORT_ONLY == 'true')
+        if: always() && steps.p1c01_shire_capture.outcome == 'success' && (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_ASSET_IMPORT_ONLY == 'true')
         uses: actions/upload-artifact@v4
         with:
           name: p1c01-shire-render-integrated-${{ env.TARGET_SHA }}
