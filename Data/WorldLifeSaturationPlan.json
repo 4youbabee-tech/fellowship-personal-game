@@ -1,11 +1,11 @@
 {
   "schema_version": 5,
-  "plan_id": "PART1_WORLD_ALIVE_SATURATION_V10",
-  "status": "W01_P1C01_SINGLE_OWNER_BUDGET_AUTHORITY_IMPLEMENTED_PENDING_ENGINE_PROOF",
+  "plan_id": "PART1_WORLD_ALIVE_SATURATION_V11",
+  "status": "P1C01_BOUNDED_LIVING_WORLD_DENSITY_UPLIFT_PENDING_ENGINE_PROOF",
   "purpose": "Make Part I feel continuously inhabited where film continuity and culture support habitation, with stronger culture-specific early-realm routines and chapter-tuned density budgets. Preserve fauna/environmental motion instead of invented civilians in exposed wilderness, Caradhras, Moria and Anduin/Amon Hen.",
   "runtime_owner": "ALivingWorldDirector + AShireAmbientNPC + AWorldAmbientMotionActor",
   "baseline_population_targets": {
-    "P1C01": 18,
+    "P1C01": 22,
     "P1C02": 16,
     "P1C03": 5,
     "P1C04": 12,
@@ -23,7 +23,9 @@
       "PartyGuest",
       "FerryWorker",
       "RoadWalker",
-      "PlayRunner"
+      "PlayRunner",
+      "MillHand",
+      "Neighbour"
     ],
     "P1C02": [
       "BreeTownsperson",
@@ -97,7 +99,8 @@
       "existing distance tick throttling, schedules, awareness and social conversations",
       "chapter-specific environmental motion micro-events",
       "shadowless bounded glow accents in Shire/Bree/Rivendell/Moria/Lothlorien",
-      "Moria danger and aftermath movement without civilian spawning"
+      "Moria danger and aftermath movement without civilian spawning",
+      "P1C01 bounded density uplift contract: baseline target 22, tighter spawn cadence, larger visible residency band and broader role mix"
     ],
     "not_claimed": [
       "final skeletal crowds",
@@ -108,7 +111,8 @@
       "human density/pacing acceptance",
       "final authored SFX/ambience assets",
       "final weather particle systems",
-      "final target-device living-world density acceptance"
+      "final target-device living-world density acceptance",
+      "final human review of the increased density in fresh render evidence"
     ]
   },
   "source_basis": [
@@ -143,11 +147,11 @@
   },
   "chapter_density_profiles": {
     "P1C01": {
-      "spawn_interval_seconds": 0.42,
-      "baseline_inner_radius_cm": 750,
-      "baseline_outer_radius_cm": 2400,
-      "baseline_cull_radius_cm": 5800,
-      "danger_population_fraction": 0.5
+      "spawn_interval_seconds": 0.32,
+      "baseline_inner_radius_cm": 700,
+      "baseline_outer_radius_cm": 2850,
+      "baseline_cull_radius_cm": 6400,
+      "danger_population_fraction": 0.45
     },
     "P1C02": {
       "spawn_interval_seconds": 0.48,
@@ -215,5 +219,19 @@
     "performance_rule": "Density quality is improved primarily through role variety, spatial profile and existing instanced/detail systems; this wave does not increase the eight chapter baseline population target counts.",
     "acceptance_boundary": "Exact-head UE4.27.2 validation is required. Target-device FPS/hitch/memory and rendered density/pacing remain separate acceptance evidence."
   },
-  "micro_event_budget_authority": "Data/LivingWorldEventPlan.json#region_budgets"
+  "micro_event_budget_authority": "Data/LivingWorldEventPlan.json#region_budgets",
+  "v11_p1c01_bounded_density_uplift": {
+    "source_basis": [
+      "03 World, Locations & Map Bible: Shire must read as inhabited around Hobbiton, fields, road and ferry while remaining story-safe.",
+      "06 Gameplay & Side Activities Bible: optional ambient life must not block mission progress.",
+      "11 Master Production Systems: crowd density uses object pooling, distance culling and reduced simulation rather than unbounded spawn/destroy."
+    ],
+    "implemented": [
+      "raises only P1C01 baseline target from 18 to 22, still below ALivingWorldDirector clamp of 24",
+      "tightens P1C01 baseline spawn cadence from 0.42s to 0.32s for faster visible fill during fresh playable capture",
+      "widens residency/cull band so characters remain visible longer through the Shire road/ferry route",
+      "adds MillHand and Neighbour original-game ambient role labels without claiming canon-specific named identities"
+    ],
+    "performance_boundary": "No new persistent story actors, no synchronous asset load, no chapter unlock, no change to Caradhras/Moria/Anduin guardrails. Fresh exact-head UE4 evidence is required."
+  }
 }
