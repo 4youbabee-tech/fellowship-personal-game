@@ -398,7 +398,8 @@
         "REQ-ENG-002",
         "REQ-EXEC-001",
         "REQ-AUDIT-001",
-        "REQ-GITHUB-001"
+        "REQ-GITHUB-001",
+        "REQ-CVBP-001"
       ],
       "work_ids": [
         "WORK-EXEC-001"
@@ -491,7 +492,8 @@
     "REQ-WORLD-003",
     "REQ-WORLD-004",
     "REQ-WORLD-005",
-    "REQ-WORLD-006"
+    "REQ-WORLD-006",
+    "REQ-CVBP-001"
   ],
   "tracked_active_work_ids": [
     "WORK-CHAR-001",
@@ -522,5 +524,5 @@
     "Continue P1C01 runtime closure as the sole runtime-changing lane.",
     "Continue Frodo/Gandalf skeletal candidate preparation and later-region source preparation in parallel without opening another runtime lane."
   ],
-  "last_reconciliation": "2026-09-29 MAXIMUM_SAFE_PRODUCTION_V1"
+  "last_reconciliation": "2026-10-08: REQ-CVBP-001 reconciled into CONTINUOUS_CONTROL after PG-078 exact-head failure; CVBP remains governance/throughput policy and does not alter P1C02 lock or acceptance gates."
 }
