@@ -1,0 +1,253 @@
+{
+  "schema_version": 1,
+  "plan_id": "P1C01_GLOBAL_CONTENT_INTAKE_V1",
+  "authority": "Data/ProjectGovernor.json",
+  "scope": "Global trilogy-inspired content inventory with P1C01 Shire promotion priority",
+  "status": "PREPARED_NOT_IMPORTED",
+  "active_runtime_chapter": "P1C01",
+  "promotion_rule": "Preparation may proceed in parallel; runtime promotion is serialized behind exact-head Unreal validation.",
+  "target_profile": {
+    "engine": "Unreal Engine 4.27.2",
+    "platform": "Windows DX11",
+    "resolution": "720p",
+    "quality": "Balanced Medium/selective High",
+    "ram_gb": 8,
+    "vram_class_gb": 2,
+    "fps_floor_target": 30
+  },
+  "categories": [
+    {
+      "id": "characters",
+      "priority": "P0",
+      "p1c01": [
+        "Frodo",
+        "Sam",
+        "Merry",
+        "Pippin",
+        "Bilbo",
+        "Gandalf"
+      ],
+      "requirements": [
+        "FBX animated production meshes",
+        "single retargetable skeleton strategy",
+        "LOD chain",
+        "limited material slots",
+        "async soft-reference residency"
+      ],
+      "sources": [
+        "Project PDFs 01-05",
+        "Fab",
+        "Mixamo",
+        "Rokoko"
+      ],
+      "status": "PREPARE_SAMPLE"
+    },
+    {
+      "id": "shire_architecture",
+      "priority": "P0",
+      "p1c01": [
+        "Bag End",
+        "Hobbiton",
+        "Party Field",
+        "Water Mill",
+        "fences",
+        "hedges",
+        "docks"
+      ],
+      "requirements": [
+        "modular FBX/static meshes",
+        "validated scale/pivot/UV/collision",
+        "hero and gameplay LODs"
+      ],
+      "sources": [
+        "Project PDFs 03,10",
+        "Fab",
+        "generic licensed marketplaces"
+      ],
+      "status": "PREPARE_SAMPLE"
+    },
+    {
+      "id": "terrain_materials",
+      "priority": "P0",
+      "p1c01": [
+        "grass",
+        "soil",
+        "worn path",
+        "bark",
+        "wood",
+        "stone",
+        "roof",
+        "wet bank"
+      ],
+      "requirements": [
+        "PNG/TGA",
+        "mipmaps",
+        "packed masks where useful",
+        "shared master materials",
+        "1K/2K runtime default"
+      ],
+      "sources": [
+        "Poly Haven",
+        "ambientCG",
+        "project-owned Shire bank"
+      ],
+      "status": "PREPARE_SAMPLE"
+    },
+    {
+      "id": "foliage_nature",
+      "priority": "P1",
+      "p1c01": [
+        "trees",
+        "shrubs",
+        "hedges",
+        "reeds",
+        "flowers",
+        "rocks",
+        "roots"
+      ],
+      "requirements": [
+        "HISM-compatible",
+        "wind cost bounded",
+        "foreground/midground/background tiers",
+        "LOD/impostor review"
+      ],
+      "sources": [
+        "Fab NatureManufacture",
+        "Poly Haven",
+        "ambientCG"
+      ],
+      "status": "PREPARE_SAMPLE"
+    },
+    {
+      "id": "ferry_water",
+      "priority": "P1",
+      "p1c01": [
+        "river water",
+        "banks",
+        "reeds",
+        "boat",
+        "docks"
+      ],
+      "requirements": [
+        "UE4.27 material compatibility",
+        "collision and gameplay anchors preserved",
+        "overdraw and texture budget"
+      ],
+      "sources": [
+        "Fab",
+        "Poly Haven",
+        "ambientCG"
+      ],
+      "status": "PREPARE_SAMPLE"
+    },
+    {
+      "id": "audio",
+      "priority": "P1",
+      "p1c01": [
+        "birds",
+        "breeze",
+        "farm work",
+        "distant laughter",
+        "carts",
+        "interiors",
+        "fire",
+        "cutlery",
+        "river"
+      ],
+      "requirements": [
+        "clean WAV",
+        "concurrency",
+        "attenuation",
+        "occlusion/reverb",
+        "streaming budget"
+      ],
+      "sources": [
+        "Sonniss GDC",
+        "approved CC0/CC-BY sources"
+      ],
+      "status": "PREPARE_SAMPLE"
+    },
+    {
+      "id": "vfx_lighting",
+      "priority": "P2",
+      "p1c01": [
+        "fireworks",
+        "dust",
+        "leaves",
+        "mist",
+        "water spray",
+        "weather"
+      ],
+      "requirements": [
+        "low-spec fallback",
+        "bounded emitters",
+        "no uncontrolled tick or overdraw"
+      ],
+      "sources": [
+        "Fab",
+        "project-authored"
+      ],
+      "status": "BACKLOG"
+    },
+    {
+      "id": "ui_localization",
+      "priority": "P1",
+      "p1c01": [
+        "menus",
+        "objectives",
+        "subtitles",
+        "settings",
+        "save/load"
+      ],
+      "requirements": [
+        "FText keys",
+        "Arabic RTL/BiDi/shaping",
+        "English source preserved"
+      ],
+      "sources": [
+        "Project UI plan",
+        "OFL font candidates"
+      ],
+      "status": "PREPARE_MANIFEST"
+    },
+    {
+      "id": "future_worlds",
+      "priority": "P2",
+      "p1c01": [],
+      "requirements": [
+        "do not open runtime chapter before P1C01 acceptance"
+      ],
+      "sources": [
+        "Project PDFs 03,07,10"
+      ],
+      "status": "CATALOG_ONLY"
+    }
+  ],
+  "intake_fields": [
+    "source_url",
+    "creator",
+    "license_terms",
+    "receipt_if_paid",
+    "download_date",
+    "original_filename",
+    "format",
+    "hash",
+    "intended_use",
+    "modifications",
+    "triangles",
+    "materials",
+    "texture_sizes",
+    "lods",
+    "collision",
+    "memory_estimate",
+    "review_status"
+  ],
+  "hard_rules": [
+    "No automatic LOTR fan-made production import",
+    "No OBJ for animated production",
+    "No BMP runtime textures",
+    "No heavy synchronous loading",
+    "Use TSoftObjectPtr/TSoftClassPtr and FStreamableManager",
+    "Use HISM/object pooling for repeated world/NPC content"
+  ]
+}
