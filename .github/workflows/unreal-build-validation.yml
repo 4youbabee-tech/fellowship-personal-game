@@ -422,6 +422,8 @@ jobs:
           try {
             & $env:PYTHON_EXE -m unittest Scripts/test_source_contracts.py
             if ($LASTEXITCODE -ne 0) { throw "P1C01_ONE_SHOT_SOURCE_CONTRACT_FAIL exit=$LASTEXITCODE" }
+            & $env:PYTHON_EXE -m unittest Scripts/test_p1c01_capture_contract.py
+            if ($LASTEXITCODE -ne 0) { throw "P1C01_CAPTURE_CONTRACT_FAIL exit=$LASTEXITCODE" }
             & $env:PYTHON_EXE Scripts/pre_unreal_validate.py
             if ($LASTEXITCODE -ne 0) { throw "P1C01_ONE_SHOT_PRE_UNREAL_FAIL exit=$LASTEXITCODE" }
           }
