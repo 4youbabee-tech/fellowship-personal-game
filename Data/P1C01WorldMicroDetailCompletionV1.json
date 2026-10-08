@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "manifest_id": "P1C01_WORLD_MICRO_DETAIL_COMPLETION_V1",
-  "status": "GRASS_GROUND_READABILITY_PACKET_SOURCE_IMPLEMENTED",
+  "status": "GRASS_GROUND_READABILITY_ROOT_FIXED_REPROOF_PENDING",
   "authority": [
     "Data/ProjectGovernor.json",
     "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
@@ -123,15 +123,16 @@
     "target": "8 GB RAM / ~2 GB VRAM / DX11 / 1280x720 / 30 FPS floor"
   },
   "latest_render_diagnosis": {
-    "exact_head": "a3f0fca39ef7c8951f140659e36986403c6569e1",
-    "artifact": "p1c01-shire-render-integrated-a3f0fca39ef7c8951f140659e36986403c6569e1",
-    "evidence": "#1704 completed the full exact-head technical/playable train. Six rendered shots were inspected; Frodo calibration/rig readiness passed, but broad ground and terrain still read as low-detail/blockout.",
+    "exact_head": "9af2df909dc7a6270e4c8d2d26bc85ed9ed22b66",
+    "artifact": "p1c01-shire-render-integrated-9af2df909dc7a6270e4c8d2d26bc85ed9ed22b66",
+    "evidence": "#1705 passed source/static, C++ build, Unreal verification, and production import, then failed at the first six-shot screenshot timeout. The same log recorded hfGrass=deferred at BeginPlay, so the new terrain material was not applied and no valid current render exists.",
     "blockers": [
-      "Fresh exact-head #1705 render/package required after resident grass-path material promotion",
-      "World remains visually low-detail/blockout in reviewed captures",
+      "Fresh exact-head #1706 capture/package required after bounded grass material residency fallback",
+      "The #1705 screenshot timeout is unresolved as a runner/runtime capture failure until reproof",
+      "World remains visually low-detail/blockout in the last valid reviewed render",
       "Human visual/audio/gameplay/device/performance acceptance remains incomplete"
     ],
-    "disposition": "Implemented a resident-only grass-path material packet for the broad ground, hill, and slope HISM surfaces. Reproof #1705 is required before any visual or gate status changes."
+    "disposition": "Root-fixed the proven grass material residency timing defect with a single persisted-package fallback. Treat #1705 as failed and require a full #1706 One-Shot."
   },
   "force_full_render_reproof": true
 }

@@ -1,3 +1,14 @@
+## 2026-10-08 - P1C01 grass/ground packet capture root fix
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| #1705 static/C++/import | PASS | Source gate, build, Unreal verification, and production import completed |
+| #1705 six-shot render | FAILED / INVALID | First shot ended with screenshot_timeout; runtime/package lanes skipped |
+| Grass-path residency | ROOT IDENTIFIED | Log reported hfGrass=deferred at BeginPlay despite persisted import material |
+| Root fix | SOURCE-IMPLEMENTED / #1706 PENDING | One bounded LoadObject fallback for MI_Sh_GrassPath_PH only |
+| P1C01 visual/device/performance/Gate 6-7 | NOT ACCEPTED | Failed capture supplies no acceptance evidence |
+| P1C02 Bree | LOCKED | No chapter integration before P1C01 gates pass |
+
 ## 2026-10-08 - P1C01 high-fidelity grass/ground readability packet
 
 | Area | Status | Evidence / boundary |

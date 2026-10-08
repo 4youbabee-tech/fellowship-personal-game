@@ -315,6 +315,16 @@ void AShirePrototypeWorldBuilder::BeginPlay()
         TEXT("/Game/Production/Imported/P1C01Materials/SH_STONY_PATH/MI_Sh_StonyPath_PH.MI_Sh_StonyPath_PH"));
     UMaterialInterface* HighFidelityGrassMaterial = ResolveResidentMaterial(
         TEXT("/Game/Production/Imported/P1C01Materials/SH_GRASS_PATH/MI_Sh_GrassPath_PH.MI_Sh_GrassPath_PH"));
+    if (!HighFidelityGrassMaterial)
+    {
+        // The import commandlet persists this one material package, but UE4.27 can
+        // leave it unresolved at the first BeginPlay after unattended import. Keep
+        // the fallback bounded to this single resident surface; do not broaden it
+        // into a synchronous asset sweep or a new streaming owner.
+        HighFidelityGrassMaterial = LoadObject<UMaterialInterface>(
+            nullptr,
+            TEXT("/Game/Production/Imported/P1C01Materials/SH_GRASS_PATH/MI_Sh_GrassPath_PH.MI_Sh_GrassPath_PH"));
+    }
     UMaterialInterface* HighFidelityBarkMaterial = ResolveResidentMaterial(
         TEXT("/Game/Production/Imported/P1C01Materials/SH_TREE_BARK/MI_Sh_TreeBark_PH.MI_Sh_TreeBark_PH"));
     UMaterialInterface* HighFidelityStoneMaterial = ResolveResidentMaterial(

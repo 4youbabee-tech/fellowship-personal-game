@@ -1,3 +1,10 @@
+## 2026-10-08 - P1C01 grass/ground packet capture root fix
+
+- #1705 passed source/static gate, C++ build, Unreal verification, and production import, but failed during the first six-shot screenshot with P1C01_RENDER_CAPTURE_FAIL reason=screenshot_timeout; all runtime/package steps were correctly skipped.
+- The #1705 render log also reported hfGrass=deferred at BeginPlay, proving the new resident grass-path material was not yet resolved when the terrain HISM override ran. The imported material package exists in the commandlet path, so this is a bounded residency timing defect, not evidence of a new world or gameplay failure.
+- Root fix: load only the persisted MI_Sh_GrassPath_PH package as a one-time fallback when ResolveResidentMaterial has not resolved it. No asset sweep, per-frame work, actor density, collision, or common-asset mutation is introduced.
+- Fresh exact-head #1706 capture/package evidence is required. The screenshot timeout remains a failed run; no current visual/device/performance/Gate 6/7 status is promoted, and P1C02 Bree remains LOCKED.
+
 ## 2026-10-08 - P1C01 high-fidelity grass/ground readability packet
 
 - #1704 is technically green on the exact branch head: C++ build, production import, six-shot render capture, runtime QA, chapter audit, route/save roundtrip, cook/package, packaged launch, runner hardware-boundary collection, and artifact upload all passed.
