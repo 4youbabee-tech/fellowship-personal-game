@@ -1,3 +1,16 @@
+## 2026-10-08 - P1C01 Gandalf contrast proof and broad-terrain identity correction
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| #1725 technical train | MACHINE-GREEN | Exact-head source/build/import, six captures, runtime audits, zero warning debt, cook/package, 37/37 packaged data, 6s packaged startup, hardware snapshot, and artifact uploads passed |
+| Artifacts | FRESH / DIAGNOSTIC | Render `11529198166`; playable `11529678974`; streamed assets 271/271 |
+| Gandalf readability | VISUAL IMPROVEMENT VERIFIED / CHAPTER NOT ACCEPTED | Water Mill comparison shows dark graphite hat/body/cloak with readable hair/beard separation; world remains low-poly/blockout |
+| Broad terrain root cause | IDENTIFIED | Soil-dominant Poly Haven `grass_path_2` was overriding 442 ground tiles plus hills/slopes; the source receipt marks true `SH_GRASS_GROUND` as pending |
+| Broad terrain correction | SOURCE-FIXED / FULL RUN REQUIRED | Remove only the mixed path-material override; retain texture-backed Shire Grass on terrain and bounded dirt/path/bark/stone overrides |
+| Runtime/performance boundary | PRESERVED | No density, actor, collision, streaming-owner, sync-load, gameplay, camera, or lighting change |
+| VISUALLY-ACCEPTED / DEVICE-TESTED / PERFORMANCE-ACCEPTED / Gate 6-7 | NOT ACCEPTED | Fresh render reproof, final-fidelity review, target-device metrics, audio/gameplay acceptance still required |
+| P1C02 Bree | LOCKED | Begin only after P1C01 completion gates genuinely pass |
+
 ## 2026-10-08 - P1C01 #1724 render review and linear palette correction
 
 | Area | Status | Evidence / boundary |

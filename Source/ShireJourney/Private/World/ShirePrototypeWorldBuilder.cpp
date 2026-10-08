@@ -403,12 +403,11 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     {
         if (PathStoneInstances) PathStoneInstances->SetMaterial(0, HighFidelityPathMaterial);
     }
-    if (HighFidelityGrassMaterial)
-    {
-        if (GroundTileInstances) GroundTileInstances->SetMaterial(0, HighFidelityGrassMaterial);
-        if (GeographyHillInstances) GeographyHillInstances->SetMaterial(0, HighFidelityGrassMaterial);
-        if (GeographySlopeInstances) GeographySlopeInstances->SetMaterial(0, HighFidelityGrassMaterial);
-    }
+    // MI_Sh_GrassPath_PH is sourced from the mixed grass_path_2 path material,
+    // not from the still-pending SH_GRASS_GROUND turf source. Keep that asset resident
+    // for later bounded path dressing, but do not wash the 442 broad terrain tiles,
+    // hills, and slopes with its soil-dominant albedo. Those components retain the
+    // texture-backed Shire Grass material assigned above.
     if (HighFidelityBarkMaterial)
     {
         if (DistantTreeTrunkInstances) DistantTreeTrunkInstances->SetMaterial(0, HighFidelityBarkMaterial);
@@ -422,7 +421,7 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     UE_LOG(
         LogTemp,
         Display,
-        TEXT("P1C01_SHIRE_LOCAL_MATERIAL_OVERRIDE grass=%s earth=%s bark=%s leaves=%s wood=%s hfDirt=%s hfPath=%s hfBark=%s hfStone=%s hfGrass=%s commonAssetsMutated=no syncLoad=no densityIncrease=no"),
+        TEXT("P1C01_SHIRE_LOCAL_MATERIAL_OVERRIDE grass=%s earth=%s bark=%s leaves=%s wood=%s hfDirt=%s hfPath=%s hfBark=%s hfStone=%s hfGrass=%s broadGround=shire-grass commonAssetsMutated=no syncLoad=no densityIncrease=no"),
         ShireGrassMaterial ? TEXT("resident") : TEXT("missing"),
         ShireEarthMaterial ? TEXT("resident") : TEXT("missing"),
         ShireBarkMaterial ? TEXT("resident") : TEXT("missing"),

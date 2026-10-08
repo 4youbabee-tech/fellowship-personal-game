@@ -1,3 +1,12 @@
+## 2026-10-08 - P1C01 Gandalf contrast proof and broad-terrain identity correction
+
+- Unreal Build Validation #1725 completed successfully on exact head `9579d3f2e20f4a7374e2aadcf93fcce165c45447`. Source/static gate, UE4.27.2 build/import, six-shot capture, Automation and runtime audits, warning-debt guard, cook/package, packaged Runtime Data, packaged executable startup, hardware snapshot, and both artifact uploads passed.
+- Evidence is current and bounded: render artifact `11529198166`, playable artifact `11529678974`, 271/271 streamed assets, 37/37 packaged data files, 6s packaged startup, and zero warning debt in every guarded category. The runner snapshot is Intel i7-6498DU with 8,457,560,064 bytes RAM; this is not target-device or performance acceptance.
+- Human comparison of `04_Water_Mill_Bridge.png` verifies the calibrated Gandalf palette as a material contrast improvement: hat, coat, and cloak now read graphite while hair/beard retain separation. The chapter remains visibly low-poly/blockout and is not VISUALLY-ACCEPTED.
+- The same six-shot artifact exposes the next root cause across all checkpoints: the Poly Haven `grass_path_2` material was being applied to all 442 broad ground tiles plus hills and slopes, so its soil-dominant albedo made the Shire read as beige terrain. The source receipt separately records the true `SH_GRASS_GROUND` material as pending.
+- This packet removes only that semantically incorrect broad-surface override. Existing terrain keeps the texture-backed Shire Grass material; imported dirt, stony-path, bark, and moss-stone overrides remain bounded to their intended components. No mesh, actor count, HISM density, collision, streaming ownership, synchronous load, gameplay, camera, or lighting changes.
+- Fresh exact-head full One-Shot and six-shot visual review are required. P1C01 visual/device/performance/Gate 6/7 remain NOT ACCEPTED; P1C02 Bree remains LOCKED.
+
 ## 2026-10-08 - P1C01 #1724 render review and linear palette correction
 
 - #1724 completed successfully on exact head c8b4ff4aa895f88ea40855cdae77915785fc6c44. Static/source gate, UE4.27.2 build/import, six-shot capture, Automation/startup/chapter/state/transition/fault/persistence audits, zero warning debt, cook, packaged Runtime Data, packaged executable startup, runner hardware snapshot, and playable upload all passed.
