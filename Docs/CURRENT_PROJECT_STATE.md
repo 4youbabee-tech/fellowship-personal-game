@@ -1,3 +1,9 @@
+## 2026-10-08 - P1C01 common Hobbit fallback preservation
+
+- The named-identity bank reduction was correct in scope, but its first implementation filtered out the five common Hobbit meshes that the existing modular fallback still owns. That is a source/data defect in the in-flight #1711 head, not valid runtime evidence.
+- Root fix: restore only the common Hobbit torso/head/hair/arm/leg packages while retaining the bounded Gandalf/Bilbo/Sam promotion set. The P1C01 audit is recalculated from the corrected bank.
+- Fresh exact-head #1712 UE4/render/package proof is required. No visual/device/performance/Gate 6/7 claim is made; named skeletal rigs remain open and P1C02 Bree remains LOCKED.
+
 ## 2026-10-08 - P1C01 named identity bank startup correction
 
 - #1710 passed source/static, C++ build, and production import, but its first integrated capture timed out before BeginPlay/world logs after the P1C01 bank was expanded by 36 named static packages. No render or runtime acceptance evidence was produced.

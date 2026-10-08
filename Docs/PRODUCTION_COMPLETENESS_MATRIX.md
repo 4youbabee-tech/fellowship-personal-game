@@ -1,3 +1,13 @@
+## 2026-10-08 - P1C01 common Hobbit fallback preservation
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| In-flight #1711 head | SUPERSEDED / SOURCE-CORRECTED | Bank reduction accidentally removed the five common Hobbit modular fallback packages; no acceptance evidence is inherited |
+| Corrected resident bank | SOURCE-IMPLEMENTED / #1712 PENDING | Restores common Hobbit torso/head/hair/arm/leg plus bounded Gandalf/Bilbo/Sam identity packages |
+| Async/performance boundary | PRESERVED | No synchronous load, per-frame scan, actor-density increase, or collision change |
+| P1C01 visual/device/performance/Gate 6-7 | NOT ACCEPTED | Fresh exact-head run remains required |
+| P1C02 Bree | LOCKED | No chapter integration before P1C01 gates pass |
+
 ## 2026-10-08 - P1C01 named identity bank startup correction
 
 | Area | Status | Evidence / boundary |

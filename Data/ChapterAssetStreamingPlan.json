@@ -130,7 +130,12 @@
         "/Game/Production/Characters/Sam/SM_Sam_Head.SM_Sam_Head",
         "/Game/Production/Characters/Sam/SM_Sam_Hair.SM_Sam_Hair",
         "/Game/Production/Characters/Sam/SM_Sam_Sword.SM_Sam_Sword",
-        "/Game/Production/Characters/Sam/SM_Sam_Pack.SM_Sam_Pack"
+        "/Game/Production/Characters/Sam/SM_Sam_Pack.SM_Sam_Pack",
+        "/Game/Production/Characters/Hobbit/SM_Hobbit_Torso.SM_Hobbit_Torso",
+        "/Game/Production/Characters/Hobbit/SM_Hobbit_Head.SM_Hobbit_Head",
+        "/Game/Production/Characters/Hobbit/SM_Hobbit_Hair.SM_Hobbit_Hair",
+        "/Game/Production/Characters/Hobbit/SM_Hobbit_Arm.SM_Hobbit_Arm",
+        "/Game/Production/Characters/Hobbit/SM_Hobbit_Leg.SM_Hobbit_Leg"
       ]
     },
     "P1C02": {
@@ -559,7 +564,7 @@
       "ShireNPC": 4
     },
     "chapter_bank_asset_counts": {
-      "P1C01": 101,
+      "P1C01": 106,
       "P1C02": 48,
       "P1C03": 47,
       "P1C04": 48,
