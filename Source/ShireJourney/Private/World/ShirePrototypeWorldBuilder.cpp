@@ -670,20 +670,26 @@ void AShirePrototypeWorldBuilder::SpawnHobbitHole(const FVector& Location, float
         }
     }
 
-    // Small readable accents remain: the source facade has no warm-glass material and
-    // no knob detail. These do not duplicate its structural silhouette.
-    SpawnShape(SphereMesh, Location + FVector(-94.0f * Scale, 21.0f * Scale, 56.0f * Scale),
-        FVector(0.045f) * Scale, FLinearColor(0.74f, 0.55f, 0.18f), FRotator::ZeroRotator, false);
-    for (float Side : { -1.0f, 1.0f })
+    // P1C01 art replacement: avoid placing cylinder-glass/primitive chimney pieces
+    // over the already-authored production facade. Their flat silhouettes produced
+    // obvious greybox overlays in the exact-head Bag End and Hobbiton captures.
+    // Retain them exclusively for the deterministic no-production-mesh fallback.
+    if (!bHasProductionFacade)
     {
-        const FVector Window = Location + FVector(-92.0f * Scale, Side * 58.0f * Scale, 68.0f * Scale);
-        SpawnShape(CylinderMesh, Window, FVector(0.16f, 0.16f, 0.018f) * Scale,
-            WarmGlass, FRotator(0.0f, 90.0f, 0.0f), false);
+        SpawnShape(SphereMesh, Location + FVector(-94.0f * Scale, 21.0f * Scale, 56.0f * Scale),
+            FVector(0.045f) * Scale, FLinearColor(0.74f, 0.55f, 0.18f), FRotator::ZeroRotator, false);
+        for (float Side : { -1.0f, 1.0f })
+        {
+            const FVector Window = Location + FVector(-92.0f * Scale, Side * 58.0f * Scale, 68.0f * Scale);
+            SpawnShape(CylinderMesh, Window, FVector(0.16f, 0.16f, 0.018f) * Scale,
+                WarmGlass, FRotator(0.0f, 90.0f, 0.0f), false);
+        }
+        SpawnShape(CubeMesh, Location + FVector(35.0f, -45.0f, 170.0f) * Scale,
+            FVector(0.18f, 0.18f, 0.48f) * Scale, Stone, FRotator::ZeroRotator, false);
     }
 
-    // Chimney, doorstep and planted entry soften the generated silhouette.
-    SpawnShape(CubeMesh, Location + FVector(35.0f, -45.0f, 170.0f) * Scale,
-        FVector(0.18f, 0.18f, 0.48f) * Scale, Stone, FRotator::ZeroRotator, false);
+    // Existing non-blocking doorstep and planted entry stay in place; the quest
+    // anchor, collision owner, density and streaming responsibilities do not move.
     SpawnShape(CubeMesh, Location + FVector(-122.0f, 0.0f, 8.0f) * Scale,
         FVector(0.42f, 0.70f, 0.10f) * Scale, Stone, FRotator::ZeroRotator, true);
     // Use the already-resident production shrub for the planted entry when available.

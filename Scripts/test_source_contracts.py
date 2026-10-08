@@ -228,6 +228,19 @@ class SourceContractTests(unittest.TestCase):
             self.assertEqual(cars[car_id]["status"], "GATED")
 
 
+    def test_p1c01_authored_hobbit_facade_has_no_primitive_overlays(self):
+        root = Path(__file__).resolve().parents[1]
+        source = (root / "Source" / "ShireJourney" / "Private" / "World" /
+                  "ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        start = source.index("void AShirePrototypeWorldBuilder::SpawnHobbitHole(")
+        end = source.index("\nvoid AShirePrototypeWorldBuilder::", start + 1)
+        hole = source[start:end]
+        self.assertIn("const bool bHasProductionFacade = ProductionTurfMoundMesh && ProductionHobbitFacadeMesh;", hole)
+        self.assertIn("// Retain them exclusively for the deterministic no-production-mesh fallback.", hole)
+        self.assertIn("if (!bHasProductionFacade)\n    {\n        SpawnShape(SphereMesh", hole)
+        self.assertIn("        SpawnShape(CubeMesh, Location + FVector(35.0f, -45.0f, 170.0f) * Scale,", hole)
+        self.assertIn("    // Existing non-blocking doorstep and planted entry stay in place;", hole)
+
     def test_p1c01_shire_world_density_is_bounded_and_instanced(self):
         root = Path(__file__).resolve().parents[1]
         contract = json.loads((root / "Data" / "P1C01ShireWorldDensityCarV1.json").read_text(encoding="utf-8"))

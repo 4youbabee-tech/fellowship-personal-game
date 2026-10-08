@@ -1,3 +1,8 @@
+## 2026-10-08 - P1C01 CVBP visual production packet: authored Hobbit-hole facade cleanup (pending exact-head proof)
+- Reused the existing `AShirePrototypeWorldBuilder::SpawnHobbitHole` production asset path (already resident/soft-streamed), retaining authored turf mound + round facade and unchanged quest/route/collision placement. Removed primitive cylinder window glass, proxy knob and cube chimney overlays **only** when the production facade exists; retained them for the no-asset fallback. No new actors/instances beyond prior counts, no asset format/loading changes, no World Composition migration.
+- Added a focused source regression test; existing One-Shot PR #329 must provide exact-head Static and UE4.27.2 compile/import/render/runtime proof. #1746 PASS belongs solely to previous `c371b5b` head and does not validate this new visual delta. No PIE/device/visual/FPS/Gate 6/7 acceptance is claimed.
+- CVBP and nonessential administrative-friction policy are documented in separate Governance PR #331; active P1C01 still uses one existing runtime writer, batched integration and technical fail-closed safety.
+
 ## 2026-10-08 - P1C01 #1745 Pre-Unreal validator contract alignment and stale-evidence guard
 
 - #1745 on exact head `e76fb0d` passed `Scripts.test_source_contracts` 61/61 but failed `Scripts/pre_unreal_validate.py` (5 reported errors) before UE4 build; run #1745 is NOT a compile/import/runtime acceptance.

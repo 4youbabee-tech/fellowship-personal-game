@@ -1,3 +1,10 @@
+## 2026-10-08 - P1C01 CVBP visual production packet: authored Hobbit-hole facade cleanup (pending exact-head proof)
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Authored Hobbit-hole facade cleanup | SOURCE IMPLEMENTED / CI PENDING | Production facade no longer receives window-cylinder/knob/cube-chimney overlays; fallback remains |
+| Static regression | ADDED / RUN PENDING | `test_p1c01_authored_hobbit_facade_has_no_primitive_overlays` |
+| UE4.27.2 compile/import/render, visual quality | NOT YET PROVEN ON NEW HEAD | #1746 proof belongs to predecessor; comparison images and Gate 6/7 evidence required |
+
 ## 2026-10-08 - P1C01 #1745 fail-safe validator + render-evidence repair
 
 | Area | Status | Evidence / boundary |

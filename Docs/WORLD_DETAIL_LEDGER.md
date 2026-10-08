@@ -1,3 +1,8 @@
+## 2026-10-08 - P1C01 CVBP visual production packet: authored Hobbit-hole facade cleanup (pending exact-head proof)
+- Reused the existing `AShirePrototypeWorldBuilder::SpawnHobbitHole` production asset path (already resident/soft-streamed), retaining authored turf mound + round facade and unchanged quest/route/collision placement. Removed primitive cylinder window glass, proxy knob and cube chimney overlays **only** when the production facade exists; retained them for the no-asset fallback. No new actors/instances beyond prior counts, no asset format/loading changes, no World Composition migration.
+- Added a focused source regression test; existing One-Shot PR #329 must provide exact-head Static and UE4.27.2 compile/import/render/runtime proof. #1746 PASS belongs solely to previous `c371b5b` head and does not validate this new visual delta. No PIE/device/visual/FPS/Gate 6/7 acceptance is claimed.
+- CVBP and nonessential administrative-friction policy are documented in separate Governance PR #331; active P1C01 still uses one existing runtime writer, batched integration and technical fail-closed safety.
+
 ## 2026-10-05 - P1C01 HIGH_FIDELITY_SURFACE_REPLACEMENT registered
 
 - Scope: replace owner-rejected flat/proxy Shire surface presentation inside the existing P1C01 world only; no new chapter, no Bree runtime opening, no density wave.
