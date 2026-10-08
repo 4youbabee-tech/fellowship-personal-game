@@ -1493,17 +1493,25 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("production/p1c01-definitive-chapter-closeout-2026-10-04", kaykit)
 
 
-    def test_p1c01_definitive_unreal_run_cancels_only_superseded_same_pr_work(self):
+    def test_p1c01_definitive_unreal_train_respects_governor_non_cancellation_policy(self):
         root = Path(__file__).resolve().parents[1]
         workflow = (root / ".github" / "workflows" / "unreal-build-validation.yml").read_text(encoding="utf-8")
+        governor = json.loads((root / "Data" / "ProjectGovernor.json").read_text(encoding="utf-8"))
+        policy = governor["p1c01_unreal_completion_policy_2026_10_07"]
+        self.assertEqual("DEFINITIVE_BRANCH_RUNS_NON_CANCELLING", policy["status"])
+        self.assertTrue(policy["branch"])
+        concurrency = workflow.split("concurrency:", 1)[1].split("jobs:", 1)[0]
         self.assertIn(
             "group: unreal-build-${{ github.repository }}-${{ github.event_name == 'pull_request' && github.head_ref || 'develop' }}",
-            workflow,
+            concurrency,
         )
-        self.assertIn(
-            "cancel-in-progress: ${{ github.event_name == 'pull_request' }}",
-            workflow,
+        expected_cancel = (
+            "cancel-in-progress: ${{ github.event_name == 'pull_request' && github.head_ref != '"
+            + policy["branch"]
+            + "' }}"
         )
+        self.assertIn(expected_cancel, concurrency)
+        self.assertNotIn("cancel-in-progress: false", concurrency)
 
 
     def test_one_shot_static_gate_sets_scripts_pythonpath_before_unittest(self):
@@ -1515,24 +1523,23 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("P1C01_ONE_SHOT_STATIC_GATE_PASS", workflow)
 
 
-    def test_one_shot_pipeline_cancels_superseded_same_pr_runs_and_keeps_uploads_nonblocking(self):
+    def test_one_shot_pipeline_preserves_definitive_train_and_keeps_uploads_nonblocking(self):
         root = Path(__file__).resolve().parents[1]
         workflow = (root / ".github" / "workflows" / "unreal-build-validation.yml").read_text(encoding="utf-8")
-        self.assertIn(
-            "group: unreal-build-${{ github.repository }}-${{ github.event_name == 'pull_request' && github.head_ref || 'develop' }}",
-            workflow,
-        )
-        self.assertIn("cancel-in-progress: ${{ github.event_name == 'pull_request' }}", workflow)
-        self.assertNotIn(
-            "github.head_ref != 'production/p1c01-definitive-chapter-closeout-2026-10-04'",
-            workflow.split("concurrency:", 1)[1].split("jobs:", 1)[0],
-        )
+        governor = json.loads((root / "Data" / "ProjectGovernor.json").read_text(encoding="utf-8"))
+        branch = governor["p1c01_unreal_completion_policy_2026_10_07"]["branch"]
+        concurrency = workflow.split("concurrency:", 1)[1].split("jobs:", 1)[0]
+        self.assertIn("cancel-in-progress: ${{ github.event_name == 'pull_request' && github.head_ref != '" + branch + "' }}", concurrency)
+        validator = (root / "Scripts" / "pre_unreal_validate.py").read_text(encoding="utf-8")
+        self.assertIn('p1c01_completion_policy = governor_data.get("p1c01_unreal_completion_policy_2026_10_07"', validator)
+        self.assertIn('p1c01_expected_cancel_value', validator)
         for step_name in (
             "Upload integrated P1C01 rendered evidence",
             "Upload playable P1C01 Windows package",
         ):
             block = workflow.split(f"- name: {step_name}", 1)[1].split("- name:", 1)[0]
             self.assertIn("continue-on-error: true", block)
+
 
     def test_pre_unreal_generated_dir_and_discovery_validation_are_persistent_runner_safe(self):
         root = Path(__file__).resolve().parents[1]

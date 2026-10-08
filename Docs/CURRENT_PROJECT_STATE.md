@@ -1,3 +1,10 @@
+## 2026-10-08 - P1C01 #1771 CI source-contract root repair (exact-head rerun pending)
+
+- Unreal Build Validation #1771 / run `37834419766` FAILED at source-contract tests (62/64 passed) on PR #329 exact head `fb043343db02f910f60cf085ea191a758f5e1e16`. Checkout, runner health, LFS hydration and self-hosted classification passed; UE4 C++ build, import, render, runtime and package did **not** execute on that failed head.
+- Root cause: two `Scripts/test_source_contracts.py` assertions and PG-026/PG-167/PG-175 pre-Unreal checks still required unconditional same-PR cancellation, while the authoritative `Data/ProjectGovernor.json:p1c01_unreal_completion_policy_2026_10_07` protects in-progress definitive P1C01 trains.
+- CI policy implementation now preserves any active definitive-branch Unreal train while other PR branches may cancel their own superseded runs. Source-contract tests and Pre-Unreal read the authoritative Governor branch rather than maintaining conflicting literals. Nonblocking artifact uploads and exact-head validation remain unchanged.
+- **Evidence boundary:** SOURCE-IMPLEMENTED / STATIC CI RE-RUN REQUIRED on the new exact head. This is a CI-only repair: no C++, quest, NPC, world, assets, save, performance, or P1C02 runtime changed. No PIE/device/visual/FPS/VRAM/Gate 6/7 acceptance is claimed.
+
 ## 2026-10-08 - P1C01 #1757 proof and bounded Ferry-bank breakup packet
 
 - Unreal Build Validation #1757 / run `37817555059` completed successfully on exact PR #329 head `6794569db9cc92ba54a678e81f060a10aed7d82f`: static/source gate, UE4.27.2 editor build, production import, seven-shot capture, Automation/runtime/state audits, cook/package, 37/37 packaged data and packaged startup all passed.

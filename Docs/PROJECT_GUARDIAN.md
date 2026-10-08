@@ -724,3 +724,17 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 **Guard:** P1C01 closeout tests now slice Bag End and Settlement Completion at their immediate next builder functions while preserving their exact bounded assertions.
 
 **Evidence boundary:** source-regression discipline only. Exact-head Pre-Unreal revalidation is still required; this is not PIE/device/visual acceptance.
+
+
+### CI regression — Governor-authoritative P1C01 One-Shot run cancellation (2026-10-08)
+
+**Observed failure:** Unreal Build #1771 on PR #329 exact head `fb043343` stopped before Unreal at 62/64 source-contract tests. Two tests expected unconditional PR cancellation; PG-026/PG-167/PG-175 also held that obsolete literal.
+
+**Root cause:** competing CI assertions were not reconciled to the accepted `Data/ProjectGovernor.json:p1c01_unreal_completion_policy_2026_10_07`. The actual workflow's global `cancel-in-progress: false` protected definitive P1C01 but unintentionally disabled supersession for unrelated PRs.
+
+**Permanent invariant and correction:** use a single branch-scoped Actions cancellation expression: the Governor-designated definitive P1C01 branch completes an in-progress engine/import/render/package train even after a new commit, while other PRs cancel only superseded runs from their own branch concurrency group. `Scripts/test_source_contracts.py` and `Scripts/pre_unreal_validate.py` derive the protected branch from the Governor; upload transport remains nonblocking.
+
+**Guards:** source-contract regressions plus Pre-Unreal PG-026, PG-167, PG-175; `Data/ProjectGuardRules.json:unreal_ci_concurrency_guard` records the machine-readable mapping.
+
+**Evidence boundary:** SOURCE-IMPLEMENTED; exact-head CI static and UE4.27.2 build/render/runtime/package rerun pending. No PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, FPS/VRAM or Gate 6/7 acceptance.
+

@@ -3610,6 +3610,22 @@ if "uses: actions/upload-artifact@v4" in unreal_ci:
             )
 if "Collect Unreal build logs" not in unreal_ci or "Report failure log location" not in unreal_ci:
     fail("PG-026: local failure logging/reporting must remain independent of artifact transport")
+# The Governor owns the definitive One-Shot runner lifetime, not a stale CI literal.
+p1c01_completion_policy = governor_data.get("p1c01_unreal_completion_policy_2026_10_07", {})
+p1c01_non_cancelling_branch = p1c01_completion_policy.get("branch")
+if (
+    p1c01_completion_policy.get("status") != "DEFINITIVE_BRANCH_RUNS_NON_CANCELLING"
+    or not isinstance(p1c01_non_cancelling_branch, str)
+    or not p1c01_non_cancelling_branch.strip()
+):
+    fail("PG-026: authoritative P1C01 Unreal non-cancellation policy missing")
+    p1c01_non_cancelling_branch = ""
+p1c01_expected_cancel_value = (
+    "${{ github.event_name == 'pull_request' && github.head_ref != '"
+    + p1c01_non_cancelling_branch
+    + "' }}"
+)
+
 concurrency_group_ok = (
     "group: unreal-build-${{ github.repository }}-${{ github.event_name == 'pull_request' && github.head_ref || 'develop' }}" in unreal_ci
     or "group: unreal-build-${{ github.repository }}-ue4-device" in unreal_ci
@@ -3619,7 +3635,7 @@ cancel_values = [
     for value in re.findall(r"(?m)^\s*cancel-in-progress:\s*(.+?)\s*$", unreal_ci)
 ]
 allowed_cancel_values = {
-    "${{ github.event_name == 'pull_request' }}",
+    p1c01_expected_cancel_value,
 }
 if (
     not concurrency_group_ok
@@ -5478,7 +5494,7 @@ for pg167_symbol in [
     "Data/BranchCleanupPlan.json",
     "Scripts/run_branch_cleanup.ps1",
     "group: unreal-build-${{ github.repository }}-${{ github.event_name == 'pull_request' && github.head_ref || 'develop' }}",
-    "cancel-in-progress: ${{ github.event_name == 'pull_request' }}",
+    "cancel-in-progress: " + p1c01_expected_cancel_value,
 ]:
     if pg167_symbol not in pg167_unreal:
         fail(f"PG-167 Unreal queue-isolation contract missing: {pg167_symbol}")
@@ -6079,7 +6095,7 @@ pg175_classifier = read(ROOT / "Scripts" / "classify_unreal_validation.ps1")
 pg175_latency = read(ROOT / "Docs" / "CI_LATENCY_REVIEW_2026-09-26.md")
 
 for pg175_required in [
-    "cancel-in-progress: ${{ github.event_name == 'pull_request' }}",
+    "cancel-in-progress: " + p1c01_expected_cancel_value,
     "http.lowSpeedLimit=1000",
     "http.lowSpeedTime=20",
     "Fetching exact PR head attempt %%ATTEMPT%% of 3",

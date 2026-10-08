@@ -183,6 +183,16 @@
     "P1C08",
     "P1G01"
   ],
+  "unreal_ci_concurrency_guard": {
+    "policy_source": "Data/ProjectGovernor.json:p1c01_unreal_completion_policy_2026_10_07",
+    "regression_checks": [
+      "Scripts/test_source_contracts.py",
+      "Scripts/pre_unreal_validate.py:PG-026",
+      "Scripts/pre_unreal_validate.py:PG-167",
+      "Scripts/pre_unreal_validate.py:PG-175"
+    ],
+    "scope": "Governance-authoritative static CI policy; no runtime or acceptance shortcut"
+  },
   "canonical_development": {
     "branch": "develop",
     "interactive_workspace_policy": "Developer clone only; GitHub Actions _work is runner-exclusive.",

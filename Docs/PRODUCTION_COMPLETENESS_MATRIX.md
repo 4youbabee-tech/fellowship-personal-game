@@ -1,3 +1,14 @@
+## 2026-10-08 - P1C01 #1771 Governor-aligned CI cancellation repair
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| PR #329 head `fb043343`, Unreal Build #1771 | SOURCE-CONTRACT FAIL | 64 tests ran, two policy assertions failed; no engine compile/import/render/runtime/package occurred on this head |
+| Root-cause layer | CONFLICTING CI CONTRACTS | Workflow disabled all cancellation; tests/PG-026/167/175 expected generic PR cancellation; Governor protects definitive P1C01 only |
+| CI correction | SOURCE-IMPLEMENTED / EXACT-HEAD RE-RUN REQUIRED | Definitive branch non-cancelling, other PRs same-branch supersession; Governor-derived guards and regression tests |
+| Packaged Windows / seven-shot Shire evidence | PREDECESSOR ONLY | #1757 succeeded at `6794569`; evidence does not transfer to new runtime HEAD |
+| Gameplay and performance | UNCHANGED / NOT ACCEPTED | No gameplay edits; real DX11 720p FPS/VRAM and PIE/device/visual/Gate 6/7 remain outstanding |
+| P1C02 Bree | LOCKED | No runtime expansion authorized |
+
 ## 2026-10-08 - P1C01 #1757 proof and bounded Ferry-bank breakup packet
 
 | Area | Status | Evidence boundary |

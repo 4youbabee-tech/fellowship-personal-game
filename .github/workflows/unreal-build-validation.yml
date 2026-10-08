@@ -223,8 +223,9 @@ concurrency:
   # Cancel only superseded runs from the same PR branch. Different PRs/develop stay
   # distinct here and are still physically serialized by the single self-hosted runner.
   group: unreal-build-${{ github.repository }}-${{ github.event_name == 'pull_request' && github.head_ref || 'develop' }}
-  # Never cancel an active UE4 train; runners are expensive and exact-head work must finish.
-  cancel-in-progress: false
+  # Keep the Governor-designated definitive P1C01 train alive across branch updates.
+  # Other PRs cancel only their own superseded same-branch runs.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' && github.head_ref != 'production/p1c01-definitive-chapter-closeout-2026-10-04' }}
 
 jobs:
   classify:
