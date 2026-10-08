@@ -5515,3 +5515,12 @@ The latest visual packet manifest is now also a full-lane trigger. This closes t
 | Story/licensing/save/performance/Gate 6/7 safeguards | PRESERVED |
 | #1749 machine train | SUCCESS on `cc6b26f760959a5acf0de002781ace239201ff50` |
 | Visual/device/performance/Gate 6/7 acceptance | NOT CLAIMED |
+
+
+## 2026-10-08 — CI throughput root fix
+
+| Issue | Root fix | Acceptance boundary |
+|---|---|---|
+| #1752 PG-078 failure | Reconciled REQ-CVBP-001 into MasterExecutionRoadmap | Governance gate restored |
+| Safe docs/governance ancestry causing unnecessary full UE4 fallback | Classifier now reuses nearest green core Unreal proof before tree-equivalent fallback | No runtime proof is fabricated; runtime-changing deltas remain full/core/asset as classified |
+| Regression guard | test_unreal_classifier.ps1 assertion added | Fresh exact-head checks still required for runtime/visual/device/Gate 6/7 changes |
