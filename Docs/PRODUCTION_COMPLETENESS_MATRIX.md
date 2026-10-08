@@ -1,3 +1,12 @@
+## 2026-10-08 - P1C01 Bag End composition/occlusion packet
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| #1719 render | TECHNICAL / DIAGNOSTIC | Six captures passed and packaged/playable proof passed, but Bag End shot is occluded by foreground geography |
+| Bag End composition | SOURCE-FIXED / #1720 REQUIRED | Review camera raised and backed off; fresh image must prove Bag End/valley readability |
+| P1C01 visual/device/performance/Gate 6-7 | NOT ACCEPTED | Visual human review, target device evidence, and measured performance remain open |
+| P1C02 Bree | LOCKED | No chapter integration before P1C01 completion gates pass |
+
 ## 2026-10-08 - P1C01 packaged/playable reproof on #1719
 
 | Area | Status | Evidence / boundary |

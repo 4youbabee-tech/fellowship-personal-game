@@ -1,3 +1,9 @@
+## 2026-10-08 - P1C01 Bag End composition/occlusion packet
+
+- #1719 is technically/playably machine-green, but visual review of artifact `11524864108` found `01_BagEnd_Hill` dominated by a foreground geography plane; Bag End and the valley read are materially occluded.
+- Root fix in this packet: move only the Bag End review camera to `x=-2900 y=-1700 z=500 pitch=-14 yaw=40`, lifting it above the foreground hill while preserving the same six-shot route and HUD-free evidence contract. No gameplay authority, asset bank, collision, density, or runtime loader changes.
+- Fresh exact-head #1720 full One-Shot and render review are required. P1C01 visual/device/performance/Gate 6/7 remain NOT ACCEPTED; P1C02 Bree remains LOCKED.
+
 ## 2026-10-08 - P1C01 packaged/playable reproof on #1719
 
 - #1719 is machine-green on exact head `f32dd5e0d5139d758ca853cd2380142c6a4bc367`: source/static gate, UE4.27.2 build, 384-file import, six-shot render capture/upload, Automation QA, startup/chapter/state/transition/fault/persistence audits, warning-debt guard, cook, packaged Runtime Data, packaged startup, and runner hardware snapshot all passed.

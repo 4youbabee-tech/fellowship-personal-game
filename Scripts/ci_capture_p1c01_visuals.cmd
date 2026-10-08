@@ -39,7 +39,7 @@ if /I "%SHIRE_SKIP_PRODUCTION_IMPORT%"=="1" (
   )
 )
 
-call :Capture "01_BagEnd_Hill" -2900 -1450 140 -8 40 0
+call :Capture "01_BagEnd_Hill" -2900 -1700 500 -14 40 0
 if errorlevel 1 exit /b !ERRORLEVEL!
 call :Capture "02_Hobbiton_Common" -1750 -500 130 -8 32 0
 if errorlevel 1 exit /b !ERRORLEVEL!
