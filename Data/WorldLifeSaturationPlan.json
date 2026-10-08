@@ -1,7 +1,7 @@
 {
   "schema_version": 5,
   "plan_id": "PART1_WORLD_ALIVE_SATURATION_V11",
-  "status": "P1C01_BOUNDED_LIVING_WORLD_DENSITY_UPLIFT_EXACT_HEAD_REPROOF_REQUESTED",
+  "status": "P1C01_BOUNDED_LIVING_WORLD_DENSITY_UPLIFT_EXACT_HEAD_REPROOF_QUEUED",
   "purpose": "Make Part I feel continuously inhabited where film continuity and culture support habitation, with stronger culture-specific early-realm routines and chapter-tuned density budgets. Preserve fauna/environmental motion instead of invented civilians in exposed wilderness, Caradhras, Moria and Anduin/Amon Hen.",
   "runtime_owner": "ALivingWorldDirector + AShireAmbientNPC + AWorldAmbientMotionActor",
   "baseline_population_targets": {
@@ -240,5 +240,12 @@
     "purpose": "Re-run Unreal Build Validation on a head that includes the bounded living-world density uplift and repaired Frodo animation import workflow syntax.",
     "runtime_effect": "none; no population, event, fauna, residency, loading, or Bree unlock values are changed by this anchor.",
     "acceptance_boundary": "Does not claim PIE, device, visual, performance, package, or Gate 6/7 acceptance."
+  },
+  "v13_exact_head_unreal_validation_anchor": {
+    "date_utc": "2026-10-08",
+    "scope": "P1C01 Shire only",
+    "purpose": "Keep the final PR head data-scoped so Unreal Build Validation runs after the CI workflow repair and reproof documentation commits.",
+    "runtime_effect": "none; this anchor intentionally changes no gameplay numeric values, no loading policy, no Bree unlock state, and no acceptance flags.",
+    "acceptance_boundary": "Fresh exact-head UE4 evidence is required before any visual, PIE, device, performance, Gate 6, or Gate 7 claim."
   }
 }
