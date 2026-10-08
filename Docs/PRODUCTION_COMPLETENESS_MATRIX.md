@@ -1,3 +1,12 @@
+## 2026-10-08 - P1C01 full-capture trigger for NPC identity proof
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| #1714 classifier correction | GREEN / INHERITED | Classifier routes character presentation deltas to full, but the classifier-only commit produced no new render |
+| Static identity evidence | CODE-INSTRUMENTED / #1715 REQUIRED | Named mesh promotion now emits P1C01_CHARACTER_STATIC_IDENTITY_RESOLVED |
+| P1C01 visual/device/performance/Gate 6-7 | NOT ACCEPTED | Fresh six-shot render, playable/package evidence, target/device metrics, and human review remain required |
+| P1C02 Bree | LOCKED | No chapter integration before P1C01 completion gates pass |
+
 ## 2026-10-08 - P1C01 character-presentation validation routing repair
 
 | Area | Status | Evidence / boundary |

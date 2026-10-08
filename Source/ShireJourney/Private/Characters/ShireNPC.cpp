@@ -631,6 +631,21 @@ void AShireNPC::ApplyPrototypeStyle()
     }
 
     bUsingProductionVisual = bProductionVisual;
+    if (bProductionVisual && Name.Equals(TEXT("Gandalf"), ESearchCase::IgnoreCase) ||
+        bProductionVisual && Name.Equals(TEXT("Bilbo"), ESearchCase::IgnoreCase) ||
+        bProductionVisual && Name.Equals(TEXT("Sam"), ESearchCase::IgnoreCase) ||
+        bProductionVisual && Name.Equals(TEXT("Merry"), ESearchCase::IgnoreCase) ||
+        bProductionVisual && Name.Equals(TEXT("Pippin"), ESearchCase::IgnoreCase) ||
+        bProductionVisual && Name.Equals(TEXT("Hamfast Gamgee"), ESearchCase::IgnoreCase) ||
+        bProductionVisual && Name.Equals(TEXT("Rosie Cotton"), ESearchCase::IgnoreCase) ||
+        bProductionVisual && Name.Equals(TEXT("Farmer Maggot"), ESearchCase::IgnoreCase))
+    {
+        UE_LOG(
+            LogTemp,
+            Display,
+            TEXT("P1C01_CHARACTER_STATIC_IDENTITY_RESOLVED character=%s meshFoundation=named-static"),
+            *Name);
+    }
     if (bProductionVisual)
     {
         PrototypeTorso->SetRelativeScale3D(FVector(1));

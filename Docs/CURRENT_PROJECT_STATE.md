@@ -1,4 +1,8 @@
-## 2026-10-08 - P1C01 character-presentation validation routing repair
+## 2026-10-08 - P1C01 full-capture trigger for NPC identity proof
+
+- #1714 validated the classifier-routing correction itself and completed via inherited green governance path; it intentionally produced no new Unreal/render artifact.
+- Added an explicit runtime log at the named static mesh promotion point. Together with the post-commit reapply handler, the next character-source delta must run the full One-Shot and expose whether the named identity actually resolves in the six Shire shots.
+- P1C01 remains NOT ACCEPTED for visual/device/performance/Gate 6/7; P1C02 Bree remains LOCKED until the fresh evidence closes the chapter gates.## 2026-10-08 - P1C01 character-presentation validation routing repair
 
 - #1713 compiled, imported, and passed runtime QA/startup/chapter/state audits, but the classifier correctly treated the NPC source packet as core-only, so the integrated capture/upload steps were skipped. No fresh render evidence exists for the commit-boundary retry yet.
 - Validation root fix: character presentation source/header deltas now enter the full Unreal lane, alongside the world builder and P1C01 visual-world manifest. The next exact-head run must execute capture/upload so the NPC static-identity retry is visually inspectable.
