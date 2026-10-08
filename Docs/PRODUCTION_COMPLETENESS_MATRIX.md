@@ -1,3 +1,13 @@
+## 2026-10-08 - P1C01 streaming audit reconciliation
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| #1708 source contract | PASS | Five imported-material contract passed on exact head |
+| #1708 PG-226 preflight | FAILED / ROOT FIXED | Recorded P1C01 bank count 88 and unique total 243 lagged derived 89 and 244 after grass-bank addition |
+| Streaming audit metadata | SOURCE-CORRECTED / #1709 PENDING | ChapterAssetStreamingPlan now records P1C01=89 and total unique packages=244 |
+| P1C01 visual/device/performance/Gate 6-7 | NOT ACCEPTED | #1708 stopped before Unreal; fresh exact-head run required |
+| P1C02 Bree | LOCKED | No chapter integration before P1C01 gates pass |
+
 ## 2026-10-08 - P1C01 grass-bank contract reconciliation
 
 | Area | Status | Evidence / boundary |

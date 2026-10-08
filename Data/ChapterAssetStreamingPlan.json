@@ -547,7 +547,7 @@
       "ShireNPC": 4
     },
     "chapter_bank_asset_counts": {
-      "P1C01": 88,
+      "P1C01": 89,
       "P1C02": 48,
       "P1C03": 47,
       "P1C04": 48,
@@ -558,7 +558,7 @@
       "GANDALF_ISENGARD": 10
     },
     "note": "This is a source/runtime architecture optimization contract, not proof of lower hitch or memory until measured on the target profile.",
-    "total_unique_production_packages": 243,
+    "total_unique_production_packages": 244,
     "total_unique_production_packages_rule": "Derived from unique /Game/Production package paths across all chapter banks; hosted preflight and package preflight must match this recorded manifest total."
   }
 }

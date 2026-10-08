@@ -1,3 +1,9 @@
+## 2026-10-08 - P1C01 streaming audit reconciliation
+
+- #1708 passed the source contract after the five-material expectation was corrected, then stopped in PG-226 preflight because the valid grass-bank addition changed the derived P1C01 bank count from 88 to 89 and the unique package total from 243 to 244.
+- Root fix: ChapterAssetStreamingPlan.audit now records the derived 89 P1C01 assets and 244 unique production packages. The runtime bank remains async-owned; no synchronous load, density, collision, or gameplay authority changed.
+- Fresh exact-head #1709 UE4/build/render/package evidence is required. #1708 has no Unreal evidence; visual/device/performance/Gate 6/7 remain unclaimed and P1C02 Bree remains LOCKED.
+
 ## 2026-10-08 - P1C01 grass-bank contract reconciliation
 
 - #1707 reached the exact-head static gate but correctly stopped before Unreal: the streaming-bank fix added the persisted MI_Sh_GrassPath_PH package, while the source contract still asserted the previous four-material count.
