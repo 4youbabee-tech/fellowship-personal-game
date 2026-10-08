@@ -1,3 +1,15 @@
+## 2026-10-08 - P1C01 #1732 south-vantage proof and patrol-axis camera correction
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| #1732 technical train | MACHINE-GREEN | Exact head `d249007e`; full build/import, 7 captures, runtime audits, zero guarded warning debt, package 60s, 37/37 data, 6s startup |
+| Artifacts | FRESH / DIAGNOSTIC | Render `11544401572`; playable `11543803923`; streaming 271/271 |
+| First wooded-road camera correction | OCCLUDER REMOVED / COMPOSITION STILL FAILED | Elevated frame is too wide and foliage-heavy; patrol, road, and root shelter do not read as one beat |
+| Patrol-axis camera correction | SOURCE-FIXED / FULL RERUN REQUIRED | `(12800,-620,200,-4,24,0)` looks east along the Rider patrol with shelter retained on frame right; exact regression updated |
+| Runtime/gameplay boundary | PRESERVED | Capture-only change; world, quest, AI, patrol, collision, density, audio, and chapter boundary unchanged |
+| VISUALLY-ACCEPTED / DEVICE-TESTED / PERFORMANCE-ACCEPTED / Gate 6-7 | NOT ACCEPTED | Fresh shot review and final production content/device evidence remain required |
+| P1C02 Bree | LOCKED | Begin only after P1C01 completion gates genuinely pass |
+
 ## 2026-10-08 - P1C01 #1731 seven-shot proof and wooded-road camera root fix
 
 | Area | Status | Evidence / boundary |

@@ -1,3 +1,11 @@
+## 2026-10-08 - P1C01 #1732 south-vantage proof and patrol-axis camera correction
+
+- Unreal Build Validation #1732 completed successfully on exact head `d249007e71e0849c72873ffe9a61e1b624327f26` through `mode=full`: UE4.27.2 build/import, seven captures, Automation/runtime audits, zero guarded warning debt, cook/package, 37/37 packaged Runtime Data, 6s packaged startup, hardware snapshot, and both artifact uploads.
+- Fresh evidence: render artifact `11544401572`, playable artifact `11543803923`, 271/271 streamed assets, 60s package elapsed, and Intel i7-6498DU / 8,457,560,064-byte RAM runner boundary. This is not target-device or performance acceptance.
+- Human review verifies that the first camera correction removed the near-black foreground occluder, but the elevated south-side frame is too wide and foliage-heavy: the Rider patrol, road line, and root shelter still do not read as one gameplay beat. The packet therefore remains NOT visually verified.
+- Root correction: place the dedicated shot at `(12800,-620,200)` with pitch/yaw `(-4,24)`, just behind patrol endpoint A and looking east along the complete Rider patrol while retaining the root shelter on the right side of the frame. The exact coordinate regression is updated. This remains capture-only: no world, quest, AI, patrol, collision, density, gameplay, audio, or chapter-boundary change.
+- Fresh exact-head full One-Shot and human review of `07_Wooded_Road_Hide` are required. P1C01 remains NOT VISUALLY-ACCEPTED / NOT DEVICE-TESTED / NOT PERFORMANCE-ACCEPTED; Gate 6/7 remain open and P1C02 Bree remains locked.
+
 ## 2026-10-08 - P1C01 #1731 seven-shot proof and wooded-road camera root fix
 
 - Unreal Build Validation #1731 completed successfully on exact head `4346e4a9ef6816cd4301af2e5ef9eb3ff7bbea78` through the full lane: classifier `mode=full`, UE4.27.2 build/import, seven captures, Automation/runtime audits, zero guarded warning debt, cook/package, 37/37 packaged Runtime Data, 6s packaged startup, hardware snapshot, and artifact uploads.

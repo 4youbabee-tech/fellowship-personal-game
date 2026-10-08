@@ -1209,7 +1209,7 @@ class SourceContractTests(unittest.TestCase):
         ):
             self.assertIn(shot, script)
         self.assertIn('expected=7 actual=!PNG_COUNT!', script)
-        self.assertIn('call :Capture "07_Wooded_Road_Hide" 13000 -1700 420 -7 52 0', script)
+        self.assertIn('call :Capture "07_Wooded_Road_Hide" 12800 -620 200 -4 24 0', script)
 
     def test_p1c01_local_visual_acceptance_harness_preserves_evidence_boundary(self):
         root = Path(__file__).resolve().parents[1]
