@@ -592,7 +592,14 @@ foreach($p in $changed){
     # World-builder edits change what the player actually sees. They must always
     # consume the full UE4 capture/package lane instead of inheriting a core-only
     # parent proof that omits rendered evidence.
-    if($n -eq "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp" -or $n -eq "Data/P1C01WorldMicroDetailCompletionV1.json"){
+    if(
+        $n -eq "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp" -or
+        $n -eq "Data/P1C01WorldMicroDetailCompletionV1.json" -or
+        $n -eq "Source/ShireJourney/Private/Characters/ShireNPC.cpp" -or
+        $n -eq "Source/ShireJourney/Public/Characters/ShireNPC.h" -or
+        $n -eq "Source/ShireJourney/Private/Characters/ShirePlayerCharacter.cpp" -or
+        $n -eq "Source/ShireJourney/Public/Characters/ShirePlayerCharacter.h"
+    ){
         $fullImpact += $n
         Write-Host "FULL_UNREAL_VISUAL_PRESENTATION_FILE $n"
         continue

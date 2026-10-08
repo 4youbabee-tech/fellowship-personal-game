@@ -1,3 +1,13 @@
+## 2026-10-08 - P1C01 character-presentation validation routing repair
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| #1713 source/core train | TECHNICALLY IN PROGRESS | Build/import/runtime audits passed; capture/upload were skipped by classifier because character source was core-only |
+| Character presentation routing | SOURCE-FIXED / #1714 REQUIRED | NPC/player character source/header deltas now force full Unreal capture/package lane |
+| NPC static identity repair | IMPLEMENTED / UNPROVEN | Commit-boundary reapply exists in 0ad2ed09; no fresh render yet |
+| P1C01 visual/device/performance/Gate 6-7 | NOT ACCEPTED | Fresh exact-head render plus packaged/playable/device evidence still required |
+| P1C02 Bree | LOCKED | No chapter integration before P1C01 completion gates pass |
+
 ## 2026-10-08 - P1C01 NPC static identity commit-boundary repair
 
 | Area | Status | Evidence / boundary |

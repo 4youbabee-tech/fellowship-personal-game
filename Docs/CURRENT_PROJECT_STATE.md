@@ -1,3 +1,9 @@
+## 2026-10-08 - P1C01 character-presentation validation routing repair
+
+- #1713 compiled, imported, and passed runtime QA/startup/chapter/state audits, but the classifier correctly treated the NPC source packet as core-only, so the integrated capture/upload steps were skipped. No fresh render evidence exists for the commit-boundary retry yet.
+- Validation root fix: character presentation source/header deltas now enter the full Unreal lane, alongside the world builder and P1C01 visual-world manifest. The next exact-head run must execute capture/upload so the NPC static-identity retry is visually inspectable.
+- No acceptance claim is added: P1C01 visual/device/performance/Gate 6/7 remain NOT ACCEPTED and P1C02 Bree remains LOCKED.
+
 ## 2026-10-08 - P1C01 NPC static identity commit-boundary repair
 
 - #1712 used the corrected 50d57671 head and produced six fresh render captures; source/build/import/runtime audits/cook all passed, but packaged executable launch failed on the self-hosted runner. The reviewed render remains diagnostic only: P1C01 is still visually below acceptance, and no device/performance/Gate 6/7 claim is made.
