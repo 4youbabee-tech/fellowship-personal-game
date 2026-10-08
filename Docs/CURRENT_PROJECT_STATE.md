@@ -1,3 +1,10 @@
+## 2026-10-08 - P1C01 Frodo skeletal material usage repair
+
+- #1715 produced a fresh six-shot integrated render artifact and positive named-static identity logs for Sam, Gandalf, and Bilbo; the reviewed frames remain diagnostic low-poly/blockout evidence, and the packaged/EXE lane was still running when this source packet was prepared.
+- Root cause isolated for the persistent `LogSkeletalMesh` warning: the project-owned `M_ProductionSurface` master was repaired for instanced static meshes but not for `MATUSAGE_SkeletalMesh`, while the runtime applies that material after resolving `SK_FRODO`.
+- Root fix: the UE4.27 production import commandlet now persists the skeletal-mesh usage flag on `M_ProductionSurface`, and the classifier routes this importer delta through the full capture/package lane.
+- P1C01 visual/device/performance/Gate 6/7 remain NOT ACCEPTED; P1C02 Bree remains LOCKED.
+
 ## 2026-10-08 - P1C01 full-capture trigger for NPC identity proof
 
 - #1714 validated the classifier-routing correction itself and completed via inherited green governance path; it intentionally produced no new Unreal/render artifact.

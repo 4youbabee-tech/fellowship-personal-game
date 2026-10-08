@@ -1,3 +1,12 @@
+## 2026-10-08 - P1C01 Frodo skeletal material usage repair
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| #1715 integrated render | DIAGNOSTIC / FRESH | Artifact `11524780290`; six-shot capture succeeded and named-static logs resolved Sam/Gandalf/Bilbo, but reviewed images remain low-poly/blockout |
+| Frodo skeletal material usage | ROOT-FIXED / #1716 REQUIRED | Import commandlet now persists `MATUSAGE_SkeletalMesh` on `M_ProductionSurface`; full One-Shot must confirm warning debt is reduced |
+| P1C01 visual/device/performance/Gate 6-7 | NOT ACCEPTED | Packaged/playable, target-device metrics, and human visual acceptance are still required |
+| P1C02 Bree | LOCKED | No chapter integration before P1C01 completion gates pass |
+
 ## 2026-10-08 - P1C01 full-capture trigger for NPC identity proof
 
 | Area | Status | Evidence / boundary |

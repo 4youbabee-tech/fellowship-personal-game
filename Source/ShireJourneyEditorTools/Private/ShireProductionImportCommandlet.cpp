@@ -553,6 +553,33 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         return true;
     };
 
+    auto EnsureSkeletalMeshUsage = [&](UMaterialInterface* Interface, const TCHAR* Label) -> bool
+    {
+        UMaterial* Material = Cast<UMaterial>(Interface);
+        if (!Material)
+        {
+            ++Failed;
+            UE_LOG(LogTemp, Error,
+                TEXT("ShireProductionImport skeletal-material usage repair failed: label=%s reason=master-not-material"),
+                Label);
+            return false;
+        }
+
+        bool bNeedsRecompile = false;
+        Material->SetMaterialUsage(bNeedsRecompile, MATUSAGE_SkeletalMesh);
+        if (bNeedsRecompile)
+        {
+            Material->PostEditChange();
+        }
+        Material->MarkPackageDirty();
+        ImportedMaterialPackages.AddUnique(Material->GetOutermost());
+        UE_LOG(LogTemp, Display,
+            TEXT("ShireProductionImport skeletal-material-usage pass: label=%s recompile=%s"),
+            Label,
+            bNeedsRecompile ? TEXT("yes") : TEXT("no"));
+        return true;
+    };
+
     auto RepairSimpleGrassWindAdditionalWPO = [&](UMaterialInterface* Interface) -> bool
     {
         UMaterial* Material = Cast<UMaterial>(Interface);
@@ -700,6 +727,7 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
     }
 
     EnsureInstancedStaticMeshUsage(ProductionMaterialParent, TEXT("surface"));
+    EnsureSkeletalMeshUsage(ProductionMaterialParent, TEXT("surface"));
 
     // D: create a deterministic texture-free water master. Runtime residency is
     // owned by the chapter bank; this editor-only creation path does not authorize
