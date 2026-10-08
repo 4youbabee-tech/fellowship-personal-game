@@ -1,3 +1,10 @@
+## 2026-10-08 - P1C01 grass material streaming-bank root fix
+
+- #1706 was correctly blocked by the exact-head source contract before Unreal: the temporary LoadObject fallback inside ShirePrototypeWorldBuilder::BeginPlay violated the no-synchronous-production-load rule.
+- Root cause is now closed at the ownership boundary: MI_Sh_GrassPath_PH was imported/persisted but absent from the P1C01 ChapterAssetStreamingPlan bank, so ResolveResidentMaterial could legitimately remain deferred at BeginPlay.
+- Root fix: add MI_Sh_GrassPath_PH to the P1C01 async resident bank and remove the BeginPlay LoadObject fallback. The world builder remains ResolveResident-only; no new streaming owner, asset sweep, density, collision, or per-frame work is added.
+- Fresh exact-head #1707 source/UE4/render/package reproof is required. #1705 remains a failed screenshot-timeout run and #1706 has no Unreal evidence. Visual/device/performance/Gate 6/7 remain unclaimed; P1C02 Bree remains LOCKED.
+
 ## 2026-10-08 - P1C01 grass/ground packet capture root fix
 
 - #1705 passed source/static gate, C++ build, Unreal verification, and production import, but failed during the first six-shot screenshot with P1C01_RENDER_CAPTURE_FAIL reason=screenshot_timeout; all runtime/package steps were correctly skipped.

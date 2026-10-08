@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "manifest_id": "P1C01_WORLD_MICRO_DETAIL_COMPLETION_V1",
-  "status": "GRASS_GROUND_READABILITY_ROOT_FIXED_REPROOF_PENDING",
+  "status": "GRASS_GROUND_STREAMING_BANK_ROOT_FIXED_REPROOF_PENDING",
   "authority": [
     "Data/ProjectGovernor.json",
     "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
@@ -123,16 +123,16 @@
     "target": "8 GB RAM / ~2 GB VRAM / DX11 / 1280x720 / 30 FPS floor"
   },
   "latest_render_diagnosis": {
-    "exact_head": "9af2df909dc7a6270e4c8d2d26bc85ed9ed22b66",
+    "exact_head": "47ab44289a27f3ea81aafb67f4375b58b1dd86ce",
     "artifact": "p1c01-shire-render-integrated-9af2df909dc7a6270e4c8d2d26bc85ed9ed22b66",
-    "evidence": "#1705 passed source/static, C++ build, Unreal verification, and production import, then failed at the first six-shot screenshot timeout. The same log recorded hfGrass=deferred at BeginPlay, so the new terrain material was not applied and no valid current render exists.",
+    "evidence": "#1706 was blocked by the source contract before Unreal because a temporary BeginPlay LoadObject fallback violated the no-synchronous-production-load rule. #1705 remains the latest failed capture with hfGrass=deferred.",
     "blockers": [
-      "Fresh exact-head #1706 capture/package required after bounded grass material residency fallback",
-      "The #1705 screenshot timeout is unresolved as a runner/runtime capture failure until reproof",
+      "Fresh exact-head #1707 source/UE4/render/package proof required after adding grass material to the P1C01 async bank",
+      "No valid current six-shot render exists after the #1705 screenshot timeout",
       "World remains visually low-detail/blockout in the last valid reviewed render",
       "Human visual/audio/gameplay/device/performance acceptance remains incomplete"
     ],
-    "disposition": "Root-fixed the proven grass material residency timing defect with a single persisted-package fallback. Treat #1705 as failed and require a full #1706 One-Shot."
+    "disposition": "Root-fixed grass material residency at the ChapterAssetStreamingPlan owner boundary; the builder now remains ResolveResident-only. Treat #1706 as static-contract failure and require #1707."
   },
   "force_full_render_reproof": true
 }

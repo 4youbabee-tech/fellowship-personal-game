@@ -1,3 +1,14 @@
+## 2026-10-08 - P1C01 grass material streaming-bank root fix
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| #1706 source gate | FAILED / ROOT FIXED | Contract rejected BeginPlay LoadObject fallback; no Unreal execution or render evidence |
+| Grass-path residency | ROOT IDENTIFIED | MI_Sh_GrassPath_PH was persisted by import but absent from the P1C01 async bank, leaving hfGrass=deferred |
+| Root fix | SOURCE-IMPLEMENTED / #1707 PENDING | Added grass material to ChapterAssetStreamingPlan P1C01 bank; removed synchronous fallback |
+| World-builder streaming policy | PRESERVED | ResolveResident-only; no new owner, asset sweep, or game-thread load |
+| P1C01 visual/device/performance/Gate 6-7 | NOT ACCEPTED | No qualifying current render or human/device/frame-time evidence |
+| P1C02 Bree | LOCKED | No chapter integration before P1C01 gates pass |
+
 ## 2026-10-08 - P1C01 grass/ground packet capture root fix
 
 | Area | Status | Evidence / boundary |
