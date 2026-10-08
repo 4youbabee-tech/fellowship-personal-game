@@ -35,7 +35,7 @@ concurrency:
 
 jobs:
   closure:
-    if: ${{ github.event_name != 'pull_request' || github.head_ref != 'production/p1c01-definitive-chapter-closeout-2026-10-04' }}
+    if: ${{ !startsWith(github.head_ref, 'prep/') && (github.event_name != 'pull_request' || github.head_ref != 'production/p1c01-definitive-chapter-closeout-2026-10-04') }}
     name: Run P1C01 closure source train
     runs-on:
       - self-hosted
