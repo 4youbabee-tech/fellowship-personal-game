@@ -8,6 +8,9 @@ set "UE_ROOT=C:\Program Files\Epic Games\UE_4.27"
 set "EDITOR=%UE_ROOT%\Engine\Binaries\Win64\UE4Editor.exe"
 set "CAPTURE_ROOT=%WORKSPACE%\Saved\Automation\P1C01VisualCapture"
 set "SCREENSHOT_ROOT=%WORKSPACE%\Saved\Screenshots\Windows"
+rem Capture contract: allow slow first-frame startup, then drain UE4 before the next shot.
+set "CAPTURE_WAIT_SECONDS=150"
+set "PROCESS_DRAIN_SECONDS=30"
 
 if not exist "%PROJECT%" (
   echo P1C01_RENDER_CAPTURE_FAIL reason=project_missing path="%PROJECT%"
@@ -122,15 +125,28 @@ echo P1C01_RENDER_CAPTURE_SHOT_BEGIN name=%SHOT_NAME% x=%X% y=%Y% z=%Z% pitch=%P
 start "" /B "%EDITOR%" "%PROJECT%" /Engine/Maps/Entry -game -log -abslog="%LOG_FILE%" -d3d11 -ResX=1280 -ResY=720 -Windowed -NoSplash -NoSound -ShireVisualCapture -ExecCmds="ShowFlag.HUD 0,ShowFlag.2D 0,BugItGo %X% %Y% %Z% %PITCH% %YAW% %ROLL%,HighResShot 1"
 
 powershell.exe -NoProfile -ExecutionPolicy Bypass -Command ^
-  "$deadline=(Get-Date).AddSeconds(75); $before=@(); if(Test-Path -LiteralPath '%BEFORE_FILE%'){$before=Get-Content -LiteralPath '%BEFORE_FILE%'}; $shot=$null; do { Start-Sleep -Milliseconds 750; $shot=Get-ChildItem -LiteralPath '%SCREENSHOT_ROOT%' -Recurse -File -Filter '*.png' -ErrorAction SilentlyContinue | Where-Object { $before -notcontains $_.FullName } | Sort-Object LastWriteTime -Descending | Select-Object -First 1 } while(-not $shot -and (Get-Date) -lt $deadline); if(-not $shot){exit 3}; Copy-Item -LiteralPath $shot.FullName -Destination '%RUN_DIR%\%SHOT_NAME%.png' -Force; exit 0"
+  "$deadline=(Get-Date).AddSeconds(%CAPTURE_WAIT_SECONDS%); $before=@(); if(Test-Path -LiteralPath '%BEFORE_FILE%'){$before=Get-Content -LiteralPath '%BEFORE_FILE%'}; $shot=$null; do { Start-Sleep -Milliseconds 750; $shot=Get-ChildItem -LiteralPath '%SCREENSHOT_ROOT%' -Recurse -File -Filter '*.png' -ErrorAction SilentlyContinue | Where-Object { $before -notcontains $_.FullName } | Sort-Object LastWriteTime -Descending | Select-Object -First 1 } while(-not $shot -and (Get-Date) -lt $deadline); if(-not $shot){exit 3}; Copy-Item -LiteralPath $shot.FullName -Destination '%RUN_DIR%\%SHOT_NAME%.png' -Force; exit 0"
 set "WAIT_EXIT=!ERRORLEVEL!"
 
 powershell.exe -NoProfile -Command "Get-CimInstance Win32_Process -Filter \"Name='UE4Editor.exe'\" | Where-Object { $_.CommandLine -like '*ShireJourney.uproject*' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }"
+set "STOP_EXIT=!ERRORLEVEL!"
 if exist "%BEFORE_FILE%" del /F /Q "%BEFORE_FILE%" >nul 2>nul
 
+rem Do not start the next shot while the previous UE4 process still owns GPU/streaming resources.
+powershell.exe -NoProfile -ExecutionPolicy Bypass -Command ^
+  "$deadline=(Get-Date).AddSeconds(%PROCESS_DRAIN_SECONDS%); do { $procs=@(Get-CimInstance Win32_Process -Filter \"Name='UE4Editor.exe'\" | Where-Object { $_.CommandLine -like '*ShireJourney.uproject*' }); if($procs.Count -eq 0){exit 0}; Start-Sleep -Milliseconds 500 } while((Get-Date) -lt $deadline); $procs | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }; exit 4"
+set "DRAIN_EXIT=!ERRORLEVEL!"
+if not "!DRAIN_EXIT!"=="0" (
+  echo P1C01_RENDER_CAPTURE_FAIL reason=ue4_process_drain_timeout name=%SHOT_NAME% seconds=%PROCESS_DRAIN_SECONDS% log="%LOG_FILE%"
+  if exist "%LOG_FILE%" powershell.exe -NoProfile -Command "Get-Content -LiteralPath '%LOG_FILE%' -Tail 160"
+  exit /b 84
+)
+echo P1C01_RENDER_CAPTURE_PROCESS_DRAIN_PASS name=%SHOT_NAME% seconds=%PROCESS_DRAIN_SECONDS%
+
 if not "!WAIT_EXIT!"=="0" (
-  echo P1C01_RENDER_CAPTURE_FAIL reason=screenshot_timeout name=%SHOT_NAME% log="%LOG_FILE%"
-  if exist "%LOG_FILE%" powershell.exe -NoProfile -Command "Get-Content -LiteralPath '%LOG_FILE%' -Tail 120"
+  echo P1C01_RENDER_CAPTURE_FAIL reason=screenshot_timeout name=%SHOT_NAME% waitSeconds=%CAPTURE_WAIT_SECONDS% log="%LOG_FILE%"
+  if exist "%LOG_FILE%" powershell.exe -NoProfile -Command "Get-Content -LiteralPath '%LOG_FILE%' -Tail 160"
+  powershell.exe -NoProfile -Command "Get-CimInstance Win32_Process -Filter \"Name='UE4Editor.exe'\" | Where-Object { $_.CommandLine -like '*ShireJourney.uproject*' } | Select-Object ProcessId,CommandLine | Format-List"
   exit /b 78
 )
 
