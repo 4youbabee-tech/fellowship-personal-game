@@ -20,12 +20,12 @@
     "STORY_AFTERMATH"
   ],
   "region_budgets": {
-    "max_active_micro_events_near_player": 3,
-    "max_active_fauna_groups_near_player": 2,
+    "max_active_micro_events_near_player": 4,
+    "max_active_fauna_groups_near_player": 3,
     "max_persistent_micro_event_actors": 0,
-    "min_seconds_between_event_starts": 12,
-    "event_cull_distance_cm": 5000,
-    "fauna_cull_distance_cm": 4200,
+    "min_seconds_between_event_starts": 9,
+    "event_cull_distance_cm": 5600,
+    "fauna_cull_distance_cm": 4800,
     "offscreen_simulation": "STATE_ONLY"
   },
   "rules": [
@@ -42,7 +42,8 @@
     "Environmental motion may add physical atmosphere but never owns quest or save state.",
     "Moria environmental life is motion, echoes/aftermath implication and threat response; civilian life remains forbidden.",
     "Ambient glow accents are bounded, shadowless and disposable under performance pressure.",
-    "Source 11 living-world guidance: use authored routines plus state-aware systemic behavior, not maximum simulation."
+    "Source 11 living-world guidance: use authored routines plus state-aware systemic behavior, not maximum simulation.",
+    "P1C01 density uplift may run four nearby micro-events and three fauna groups only through ALivingWorldDirector pooling/culling; it is not persistent crowd spawning."
   ],
   "chapter_contracts": [
     {
@@ -58,8 +59,8 @@
         "PROP_MOTION",
         "DANGER_REACTION"
       ],
-      "target_density": "HIGH",
-      "notes": "Village/fields/road should feel inhabited; Black Rider state suppresses casual life locally."
+      "target_density": "VERY_HIGH_BOUNDED",
+      "notes": "Village/fields/road/ferry should feel strongly inhabited; Black Rider state suppresses casual life locally. Density remains bounded by pooling, culling and exact-head validation."
     },
     {
       "chapter": "P1C02",
@@ -317,7 +318,7 @@
       "story_safe": true
     }
   ],
-  "status": "V9_ENVIRONMENTAL_LIFE_RUNTIME_IMPLEMENTED_PENDING_ENGINE_PROOF",
+  "status": "V10_P1C01_BOUNDED_DENSITY_RUNTIME_CONTRACT_PENDING_ENGINE_PROOF",
   "player_interaction_policy": {
     "enabled_event_types": [
       "WORK_ACTIVITY",
@@ -381,5 +382,20 @@
         "no invented civilian camp population"
       ]
     }
+  },
+  "p1c01_bounded_density_uplift": {
+    "implemented": [
+      "micro-event cap raised 3 to 4",
+      "fauna group cap raised 2 to 3",
+      "minimum event cadence reduced 12s to 9s",
+      "event cull distance raised 5000cm to 5600cm",
+      "fauna cull distance raised 4200cm to 4800cm"
+    ],
+    "guardrails": [
+      "ambient events remain disposable",
+      "no persistent rewards or story state",
+      "danger suppresses casual interactions",
+      "fresh runtime/render/package proof required"
+    ]
   }
 }
