@@ -5661,3 +5661,10 @@ The repository Governor is the sole authority for this operating method and its 
 - Root cause: that existing regression still expected 4 HISM cluster calls, 4 cluster actors, 56 instances, and a hard-coded `populationTarget=18` log. The Party Field batch now correctly has 4 ring clusters plus up to 6 grouped prop meshes (10), 48+14=62 HISM placements, and logs population ownership instead of a stale target.
 - Corrected the static test, `P1C01PartySocialLoopChapterV1.json` budgets, and scenic manifest in the follow-up. Exact-head static rerun and UE4 build remain pending; no run #1776 compile evidence exists. No gameplay or population target changed.
 
+
+
+## 2026-10-09 — P1C01 capture upload selector root fix
+
+- Unreal Build Validation #1777 on exact head `d500cdcd661d0b9276beb383d156ad009783881a` passed the source gate, UE4.27.2 C++ build, production import (384 files, zero failures), and all seven rendered capture shots. The capture finalizer passed, then the capture step failed with `fatal: Needed a single revision` and exit 92 while re-reading Git HEAD for artifact selection. Runtime audits/package did not run on this head.
+- The capture folder is now selected from the already validated `TARGET_SHA` supplied to the exact-head checkout, and still requires the seventh PNG before artifact upload. PG-026 and a source regression prevent reintroducing a mutable runner `git rev-parse HEAD` lookup.
+- This repairs CI evidence transport only. #1777 proves compile/import/render-capture generation on its exact SHA, but the run is overall failed; runtime/package must be revalidated on the correction head. Captures are not PIE, device, visual acceptance, performance, or Gate 6/7 evidence. P1C02 remains locked.

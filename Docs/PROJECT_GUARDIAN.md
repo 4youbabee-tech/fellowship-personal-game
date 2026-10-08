@@ -777,3 +777,12 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 
 **Regression signal:** `Scripts/test_source_contracts.py:test_p1c01_party_social_loop_is_bounded_and_windowed` plus `test_p1c01_party_social_static_dressing_batches_existing_transforms_by_mesh`. Re-run exact-head source gate and Unreal build before promoting beyond SOURCE-IMPLEMENTED. No PIE/device/performance/Gate 6/7 claim.
 
+
+
+### Regression — P1C01 capture selector re-read invalid Git HEAD (2026-10-09)
+
+**Observed:** Unreal Build Validation #1777 for `d500cdcd661d0b9276beb383d156ad009783881a` passed the exact-head source gate, UE4.27.2 build, production import and all seven capture shots. The capture finalizer succeeded. The following batch-selector command emitted `fatal: Needed a single revision` and exited 92, so runtime/package stages did not run.
+
+**Root cause and correction:** The selector unnecessarily re-read `HEAD` from the persistent checkout after capture. It now takes the 12-character directory key directly from workflow-validated `TARGET_SHA`, retains the required seventh-shot existence check and exact-folder-only upload. PG-026 enforces that contract and a source regression covers the failure mode.
+
+**Evidence boundary:** #1777 has exact-head compile/import/render-capture generation evidence but is an overall failed run. Runtime/package proof on the correction SHA remains pending. No PIE, DEVICE-TESTED, VISUALLY-ACCEPTED, performance or Gate 6/7 claim.

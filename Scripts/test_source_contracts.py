@@ -1765,5 +1765,18 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("FObjectFinder<UMaterialInterface> BasicMaterial", source)
 
 
+    def test_p1c01_capture_upload_uses_validated_target_sha(self):
+        root = Path(__file__).resolve().parents[1]
+        workflow = (root / ".github" / "workflows" / "unreal-build-validation.yml").read_text(encoding="utf-8")
+        capture_start = "      - name: Capture P1C01 production Shire on existing UE workspace"
+        upload_start = "      - name: Upload integrated P1C01 rendered evidence"
+        capture = workflow.split(capture_start, 1)[1].split(upload_start, 1)[0]
+
+        self.assertIn("SHIRE_CAPTURE_HEAD_SHORT=%TARGET_SHA:~0,12%", capture)
+        self.assertNotIn("rev-parse --short=12 HEAD", capture)
+        self.assertIn("07_Wooded_Road_Hide.png", capture)
+        self.assertIn("SHIRE_CAPTURE_CURRENT_DIR=Saved/Automation/P1C01VisualCapture/%SHIRE_CAPTURE_HEAD_SHORT%", capture)
+
+
 if __name__ == "__main__":
     unittest.main()

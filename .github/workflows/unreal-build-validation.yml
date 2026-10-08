@@ -525,9 +525,8 @@ jobs:
           call "%GITHUB_WORKSPACE%\Scripts\ci_capture_p1c01_visuals.cmd"
           if errorlevel 1 exit /b %ERRORLEVEL%
           rem Upload only the exact-head seven-shot batch, not years of Saved/ runner history.
-          set "SHIRE_CAPTURE_HEAD_SHORT="
-          for /f "delims=" %%H in ('git -C "%GITHUB_WORKSPACE%" rev-parse --short=12 HEAD') do set "SHIRE_CAPTURE_HEAD_SHORT=%%H"
-          if not defined SHIRE_CAPTURE_HEAD_SHORT exit /b 92
+          set "SHIRE_CAPTURE_HEAD_SHORT=%TARGET_SHA:~0,12%"
+          if "%SHIRE_CAPTURE_HEAD_SHORT%"=="" exit /b 92
           if not exist "%GITHUB_WORKSPACE%\Saved\Automation\P1C01VisualCapture\%SHIRE_CAPTURE_HEAD_SHORT%\07_Wooded_Road_Hide.png" exit /b 93
           echo SHIRE_CAPTURE_CURRENT_DIR=Saved/Automation/P1C01VisualCapture/%SHIRE_CAPTURE_HEAD_SHORT%>>"%GITHUB_ENV%"
 

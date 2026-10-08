@@ -3619,8 +3619,8 @@ else:
     capture_cmd = unreal_ci.split(capture_block_start, 1)[1].split(capture_upload_start, 1)[0]
     capture_upload = unreal_ci.split(capture_upload_start, 1)[1].split("      - name:", 1)[0]
     if (
-        "SHIRE_CAPTURE_HEAD_SHORT" not in capture_cmd
-        or "rev-parse --short=12 HEAD" not in capture_cmd
+        "SHIRE_CAPTURE_HEAD_SHORT=%TARGET_SHA:~0,12%" not in capture_cmd
+        or "rev-parse --short=12 HEAD" in capture_cmd
         or "SHIRE_CAPTURE_CURRENT_DIR=Saved/Automation/P1C01VisualCapture/%SHIRE_CAPTURE_HEAD_SHORT%" not in capture_cmd
         or "if not exist" not in capture_cmd
         or "${{ env.SHIRE_CAPTURE_CURRENT_DIR }}/**" not in capture_upload

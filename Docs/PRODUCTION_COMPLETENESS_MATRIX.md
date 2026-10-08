@@ -5613,3 +5613,12 @@ The latest visual packet manifest is now also a full-lane trigger. This closes t
 | UE4.27.2 / runtime / package | NOT RUN on #1776 | Must pass on corrected exact head |
 | PIE/device/visual/performance/Gate 6/7 | OPEN | No acceptance inferred |
 
+
+
+## 2026-10-09 — P1C01 capture upload selector correction
+
+| Area | Exact-head observation / correction | Evidence |
+|---|---|---|
+| Unreal #1777 (`d500cdcd`) | C++ compile, import (384 files / 0 failures), seven capture shots and finalizer passed; upload-directory selection then failed with Git `Needed a single revision` / exit 92 | Exact run logs |
+| Root correction | Select capture folder from validated `TARGET_SHA`; retain final PNG existence check; PG-026 and source-contract regression reject mutable HEAD lookup | SOURCE-IMPLEMENTED; exact-head rerun pending |
+| Remaining gates | Automation/headless runtime, package, PIE, device, human visual/audio/performance review, Gate 6/7 | Not run / pending |
