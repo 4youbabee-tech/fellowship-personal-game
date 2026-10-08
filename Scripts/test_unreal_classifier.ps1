@@ -117,6 +117,10 @@ if (-not $source.Contains('Test-TreeEquivalentCoreProof $GitExe $candidate')) {
 if (-not $source.Contains('source=$proofSource')) {
     throw 'Classifier transitive governance proof source marker missing'
 }
+if (-not $source.Contains('candidateCore = Test-ParentCoreUnrealGreen')) {
+    throw 'Classifier must reuse a green core Unreal ancestor across safe governance/doc ancestry'
+}
+
 Write-Host 'UNREAL_CLASSIFIER_TRANSITIVE_GOVERNANCE_TREE_PROOF_PASS'
 
 
