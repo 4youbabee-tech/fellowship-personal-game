@@ -5536,3 +5536,15 @@ The latest visual packet manifest is now also a full-lane trigger. This closes t
 | #1752 PG-078 failure | Reconciled REQ-CVBP-001 into MasterExecutionRoadmap | Governance gate restored |
 | Safe docs/governance ancestry causing unnecessary full UE4 fallback | Classifier now reuses nearest green core Unreal proof before tree-equivalent fallback | No runtime proof is fabricated; runtime-changing deltas remain full/core/asset as classified |
 | Regression guard | test_unreal_classifier.ps1 assertion added | Fresh exact-head checks still required for runtime/visual/device/Gate 6/7 changes |
+
+## 2026-10-08 - P1C01 capture lifecycle root-fix packet
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| #1765 exact-head train | FAILED / ROOT CAUSE ISOLATED | Checkout, 64/64 static tests, UE4.27.2 build and 384-file import passed; capture failed at 05_Bywater_Facing_Edge after the 75s screenshot wait |
+| Capture lifecycle | SOURCE-FIXED / FRESH RUN REQUIRED | 150s bounded first-frame wait, 30s UE4 process drain between shots, distinct drain timeout, and timeout diagnostics |
+| Regression contract | SOURCE-FIXED | Scripts/test_p1c01_capture_contract.py runs in the exact-head static gate |
+| Runtime/gameplay boundary | PRESERVED | No C++ gameplay, world, actors, collision, loading ownership, chapter, or production asset changes |
+| UE4.27.2/render/runtime/package proof | PENDING | Must run on fix branch exact head |
+| PIE / DEVICE / VISUAL / PERFORMANCE / Gate 6/7 | NOT ACCEPTED | No new acceptance evidence exists |
+| P1C02 Bree | LOCKED | No chapter transition |
