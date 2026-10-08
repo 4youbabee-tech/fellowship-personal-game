@@ -1,3 +1,9 @@
+## 2026-10-08 - P1C01 grass-bank contract reconciliation
+
+- #1707 reached the exact-head static gate but correctly stopped before Unreal: the streaming-bank fix added the persisted MI_Sh_GrassPath_PH package, while the source contract still asserted the previous four-material count.
+- Root cause is closed in the contract owner: the P1C01 bank now has five imported production materials (dirt, grass path, stony path, tree bark, and moss stone), and the test explicitly verifies all five.
+- No runtime code, synchronous load, density, collision, or asset ownership was weakened. Fresh exact-head #1708 UE4/build/render/package evidence is required; visual/device/performance/Gate 6/7 remain unclaimed and P1C02 Bree remains LOCKED.
+
 ## 2026-10-08 - P1C01 grass material streaming-bank root fix
 
 - #1706 was correctly blocked by the exact-head source contract before Unreal: the temporary LoadObject fallback inside ShirePrototypeWorldBuilder::BeginPlay violated the no-synchronous-production-load rule.

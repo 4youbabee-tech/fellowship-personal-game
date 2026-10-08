@@ -1,3 +1,13 @@
+## 2026-10-08 - P1C01 grass-bank contract reconciliation
+
+| Area | Status | Evidence / boundary |
+|---|---|---|
+| #1707 static/source gate | FAILED / ROOT FIXED | Exact-head contract expected 4 imported P1C01 materials after the valid grass-bank addition; Unreal was not executed |
+| P1C01 streamed imported-material contract | SOURCE-CORRECTED / #1708 PENDING | Contract now expects five materials and names MI_Sh_GrassPath_PH explicitly alongside dirt, stony path, tree bark, and moss stone |
+| Streaming ownership | PRESERVED | Grass remains an async ChapterAssetStreamingPlan resident; no synchronous fallback or new owner |
+| P1C01 visual/device/performance/Gate 6-7 | NOT ACCEPTED | #1707 supplied no render/package evidence; fresh exact-head run required |
+| P1C02 Bree | LOCKED | No chapter integration before P1C01 gates pass |
+
 ## 2026-10-08 - P1C01 grass material streaming-bank root fix
 
 | Area | Status | Evidence / boundary |

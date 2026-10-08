@@ -351,12 +351,13 @@ class SourceContractTests(unittest.TestCase):
         p1 = plan["banks"]["P1C01"]
         self.assertEqual(p1["route"], "FrodoMain")
         imported = [p for p in p1["assets"] if "/Game/Production/Imported/P1C01Materials/" in p]
-        self.assertEqual(len(imported), 4)
+        self.assertEqual(len(imported), 5)
         for token in (
             "MI_Sh_DirtSoil_PH",
             "MI_Sh_StonyPath_PH",
             "MI_Sh_TreeBark_PH",
             "MI_Sh_MossStone_PH",
+            "MI_Sh_GrassPath_PH",
         ):
             self.assertTrue(any(token in p for p in imported))
 
