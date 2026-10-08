@@ -5444,3 +5444,11 @@ The latest visual packet manifest is now also a full-lane trigger. This closes t
 | Bree/P1C02 | LOCKED UNTIL SHIRE ACCEPTANCE | no Bree runtime activation in this packet |
 | Fresh exact-head UE4 proof | REQUIRED | build/render/runtime/package evidence pending |
 | Visual/device/performance/Gate 6-7 | NOT ACCEPTED | unchanged; no acceptance claimed |
+
+## 2026-10-08 - Exact-head reproof anchor after CI workflow repair
+
+| Area | Status | Evidence Boundary |
+| --- | --- | --- |
+| P1C01 data anchor | `Data/WorldLifeSaturationPlan.json` now includes a no-runtime-effect `v12_exact_head_reproof_anchor`. | Forces a fresh exact-head Unreal lane after CI workflow repair; gameplay values unchanged. |
+| Frodo workflow syntax | Corrupted workflow text was repaired before the anchor. | Removes structural CI failure noise; not a visual/runtime acceptance claim. |
+| Acceptance | Not accepted. | Fresh exact-head UE4 build/render/runtime/package proof is still required before Gate 6/7. |
