@@ -1,3 +1,12 @@
+## 2026-10-08 - P1C01 Brandywine ferry waterline root fix (fresh exact-head CI pending)
+| Area | Status | Evidence boundary |
+|---|---|---|
+| Immediate predecessor | MACHINE-GREEN PREVIOUS HEAD | #1748 SUCCESS on `e314995a`: UE4.27.2 compile/import, seven renders, runtime/save QA, package/startup |
+| Ferry source placement | SOURCE IMPLEMENTED / CI PENDING | Existing HISM grass + 3 tree-placement paths reject authored water footprint; one riverbank flower bed moved onto dry bank |
+| Gameplay/asset budget | PRESERVED BY CODE | Ferry triggers, boat, docks, navigation, collisions, population, asset residency unchanged; same-or-fewer land HISM instances |
+| Regression | ADDED / CI PENDING | `test_p1c01_bucklebury_ferry_excludes_land_vegetation_from_water` checks guard calls, extents and unchanged mission endpoints |
+| Compile/PIE/device/visual/performance/Gate6-7 | NOT ACCEPTED ON NEW HEAD | New exact-head source, UE4, 7-shot evidence required; human/device acceptance remains outstanding |
+
 ## 2026-10-08 - P1C01 Bag End hero porch trim packet (pending exact-head proof)
 | Area | Status | Evidence boundary |
 |---|---|---|

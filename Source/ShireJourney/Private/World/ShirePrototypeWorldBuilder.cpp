@@ -39,6 +39,15 @@ namespace ShireLayout
     constexpr float FieldsX = 7600.0f;
     constexpr float WoodedRoadX = 14500.0f;
     constexpr float FerryX = 23500.0f;
+
+    // The river is a collision-free 14 x 60 basic cube at (FerryX, -500).
+    // Keep visual land foliage off its water footprint without moving the
+    // existing quest landings, boat, dock or traversal corridor.
+    static bool IsInsideFerryWaterBuffer(const FVector& Position, float BankBufferCm)
+    {
+        return FMath::Abs(Position.X - FerryX) < 700.0f + BankBufferCm &&
+            FMath::Abs(Position.Y + 500.0f) < 3000.0f + BankBufferCm;
+    }
 }
 
 namespace
@@ -919,6 +928,11 @@ void AShirePrototypeWorldBuilder::SpawnFoliagePass()
             const float Angle = FMath::DegreesToRadians(static_cast<float>((Ring * 137 + GrassIndex * 29) % 360));
             const float Radius = 95.0f + 58.0f * static_cast<float>(Ring % 8);
             const FVector Base = Center + FVector(FMath::Cos(Angle) * Radius, FMath::Sin(Angle) * Radius, 0.0f);
+            // Land grass stays on the bank; authored wetland reeds are a separate pass.
+            if (ShireLayout::IsInsideFerryWaterBuffer(Base, 95.0f))
+            {
+                continue;
+            }
             const float Size = 0.09f + 0.012f * static_cast<float>((Ring + GrassIndex) % 4);
             const float Height = 0.18f + 0.020f * static_cast<float>((Ring + GrassIndex) % 5);
 
@@ -934,7 +948,7 @@ void AShirePrototypeWorldBuilder::SpawnFoliagePass()
         FVector(-2140,-690,38), FVector(-1990,-680,38), FVector(-1270,-560,38),
         FVector(-300,1180,38), FVector(20,1260,38), FVector(350,1180,38),
         FVector(6200,-1480,38), FVector(6480,-1390,38), FVector(6900,-1540,38),
-        FVector(ShireLayout::FerryX-650,-920,38)
+        FVector(ShireLayout::FerryX-985,-920,38)
     };
     for (int32 Index = 0; Index < UE_ARRAY_COUNT(FlowerBeds); ++Index)
     {
@@ -3298,6 +3312,11 @@ void AShirePrototypeWorldBuilder::SpawnVisibleShireMegaPass()
                     const float Phase = static_cast<float>(Index) * 1.17f + SideY * 0.0007f;
                     const float Y = SideY + FMath::Sin(Phase) * SpreadY;
                     const float Scale = BaseScale * (0.86f + 0.06f * static_cast<float>(Index % 5));
+                    // Exclude tree roots from the river; keep the same bounded HISM owner.
+                    if (ShireLayout::IsInsideFerryWaterBuffer(FVector(X, Y, 0.0f), 260.0f))
+                    {
+                        continue;
+                    }
                     WoodlandTreeInstances->AddInstance(FTransform(
                         FRotator(0.0f, static_cast<float>((Index * 47 + FMath::Abs(static_cast<int32>(SideY))) % 360), 0.0f),
                         FVector(X, Y, 0.0f),
@@ -3601,9 +3620,14 @@ void AShirePrototypeWorldBuilder::SpawnNaturalRouteMegaPass()
             }
 
             const float Scale = 0.62f + 0.06f * static_cast<float>(Index % 5);
+            const FVector TreeOrigin(X, Side * Distance, 0.0f);
+            if (ShireLayout::IsInsideFerryWaterBuffer(TreeOrigin, 260.0f))
+            {
+                continue;
+            }
             WoodlandTreeInstances->AddInstance(FTransform(
                 FRotator(0.0f, static_cast<float>((Index * 47) % 360), 0.0f),
-                FVector(X, Side * Distance, 0.0f),
+                TreeOrigin,
                 FVector(Scale)));
             ++VistaTreeCount;
         }
@@ -5752,6 +5776,11 @@ void AShirePrototypeWorldBuilder::SpawnScenicDetailPass()
             const float S = 0.61f
                 + 0.07f * static_cast<float>((Index + (Side > 0 ? 1 : 0)) % 5)
                 + 0.035f * FMath::Sin(static_cast<float>(Index) * 0.67f);
+            // Suppress both resident-mesh and fallback scenic tree roots within water.
+            if (ShireLayout::IsInsideFerryWaterBuffer(FVector(X, Y, 0.0f), 260.0f))
+            {
+                continue;
+            }
             if (ProductionTreeTrunkMesh && ProductionTreeCanopyMesh)
             {
                 DistantTreeTrunkInstances->AddInstance(FTransform(

@@ -256,6 +256,32 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("Location + FVector(-132.0f, 124.0f, 26.0f) * Scale", hole)
         self.assertIn("false);\n        }\n    }", hole)
 
+    def test_p1c01_bucklebury_ferry_excludes_land_vegetation_from_water(self):
+        root = Path(__file__).resolve().parents[1]
+        source = (root / "Source" / "ShireJourney" / "Private" / "World" /
+                  "ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        self.assertIn("static bool IsInsideFerryWaterBuffer(const FVector& Position, float BankBufferCm)", source)
+        self.assertIn("FMath::Abs(Position.X - FerryX) < 700.0f + BankBufferCm", source)
+        self.assertIn("FMath::Abs(Position.Y + 500.0f) < 3000.0f + BankBufferCm", source)
+
+        def body(name):
+            begin = source.index("void AShirePrototypeWorldBuilder::" + name + "(")
+            end = source.index("\nvoid AShirePrototypeWorldBuilder::", begin + 1)
+            return source[begin:end]
+
+        foliage = body("SpawnFoliagePass")
+        mega = body("SpawnVisibleShireMegaPass")
+        natural = body("SpawnNaturalRouteMegaPass")
+        scenic = body("SpawnScenicDetailPass")
+        self.assertIn("ShireLayout::IsInsideFerryWaterBuffer(Base, 95.0f)", foliage)
+        self.assertIn("FVector(ShireLayout::FerryX-985,-920,38)", foliage)
+        self.assertIn("ShireLayout::IsInsideFerryWaterBuffer(FVector(X, Y, 0.0f), 260.0f)", mega)
+        self.assertIn("ShireLayout::IsInsideFerryWaterBuffer(TreeOrigin, 260.0f)", natural)
+        self.assertIn("ShireLayout::IsInsideFerryWaterBuffer(FVector(X, Y, 0.0f), 260.0f)", scenic)
+        self.assertIn("FVector(14.0f,60.0f,0.18f)", source)
+        self.assertIn("FVector(NearX,-500,90)", source)
+        self.assertIn("FVector(FarX,-500,90)", source)
+
     def test_p1c01_shire_world_density_is_bounded_and_instanced(self):
         root = Path(__file__).resolve().parents[1]
         contract = json.loads((root / "Data" / "P1C01ShireWorldDensityCarV1.json").read_text(encoding="utf-8"))
