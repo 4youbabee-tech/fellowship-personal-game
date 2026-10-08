@@ -281,6 +281,11 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("FVector(14.0f,60.0f,0.18f)", source)
         self.assertIn("FVector(NearX,-500,90)", source)
         self.assertIn("FVector(FarX,-500,90)", source)
+        # Scenic production/fallback pairs share the same exclusion decision.
+        self.assertEqual(scenic.count("IsInsideFerryWaterBuffer("), 1)
+        self.assertIn("DistantTreeTrunkInstances->AddInstance", scenic)
+        self.assertIn("DistantTreeCanopyInstances->AddInstance", scenic)
+        self.assertIn("WoodlandTreeInstances->AddInstance", natural)
 
     def test_p1c01_shire_world_density_is_bounded_and_instanced(self):
         root = Path(__file__).resolve().parents[1]
