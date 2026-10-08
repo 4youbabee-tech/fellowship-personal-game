@@ -223,7 +223,7 @@ concurrency:
   # Cancel only superseded runs from the same PR branch. Different PRs/develop stay
   # distinct here and are still physically serialized by the single self-hosted runner.
   group: unreal-build-${{ github.repository }}-${{ github.event_name == 'pull_request' && github.head_ref || 'develop' }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  cancel-in-progress: false
 
 jobs:
   classify:
