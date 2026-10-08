@@ -5595,3 +5595,8 @@ The owner reaffirmed Continuous Verified Build Protocol as the active production
 | Next engineering focus | Production FBX character/world replacement, audio, device/performance evidence | Gate 6/7 still open |
 
 The repository Governor is the sole authority for this operating method and its acceptance boundary.
+
+
+## 2026-10-08 — PG-078 and governance-ancestor classifier root fix
+
+#1752 failed before Unreal because the newly recorded CVBP requirement was not yet represented in Data/MasterExecutionRoadmap.json; it was reconciled in commit d438ef0. The same incident exposed a throughput defect: safe governance/doc-only ancestry could miss the prior green core Unreal proof and fall back to an unnecessary full train. Scripts/classify_unreal_validation.ps1 now checks the nearest safe ancestor's core Unreal proof before tree-equivalent fallback, with a regression assertion in Scripts/test_unreal_classifier.ps1. Runtime, asset, story, save, performance and acceptance gates are unchanged.
