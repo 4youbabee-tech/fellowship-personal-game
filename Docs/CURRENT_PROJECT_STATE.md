@@ -1,3 +1,10 @@
+## 2026-10-09 - P1C01 exact-head visual evidence upload de-duplication
+
+- Inspected GitHub artifact `p1c01-shire-render-integrated-08cbbf38...` from Unreal #1773 (SUCCESS). The ZIP included **45 historical capture folders**, occupying ~290.7 MiB compressed; the actual seven PNGs plus seven logs from current `08cbbf38dd4a` used about **8.25 MiB**, roughly 97% redundant transport. Historical runner copies are left untouched; only upload selection is narrowed.
+- `.github/workflows/unreal-build-validation.yml`: after successful capture the existing CMD step finds the verified current Git short SHA, checks `07_Wooded_Road_Hide.png`, exports `SHIRE_CAPTURE_CURRENT_DIR`, then uploads only that exact `Saved/Automation/P1C01VisualCapture/<sha>/**` directory. Artifact transport remains nonblocking, while missing current-head evidence fails capture selection.
+- `Scripts/pre_unreal_validate.py`: PG-026 guard requires current-head artifact selection and rejects broad historical capture upload paths. No gameplay, assets, C++, import commandlets, package/cook, movement, saving, P1C02 or acceptance gates change.
+- **EVIDENCE:** predecessor #1773 was exact-head machine-green; ZIP inventory measured locally. Proposed CI-only upload fix remains SOURCE-PREPARED pending next exact-head source/static check; no claim of realized upload-size reduction until a future capture uploads the narrowed artifact. This is a speed/transport change, not PIE or Gate 6/7 acceptance.
+
 ## 2026-10-09 — P1C01 measured-bottleneck follow-up from programmer review: scenic actor batching
 
 - This is the **next P1C01 runtime-changing candidate after #1773**, not a new chapter or system. The programmer report's actionable HISM recommendation is implemented by reusing the existing `AWorldDetailCluster` component; Jenkins, Gauntlet, UE5 Geometry Scripting, new Python importer and blind GC tuning are not introduced.

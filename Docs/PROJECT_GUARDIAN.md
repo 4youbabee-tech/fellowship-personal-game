@@ -754,3 +754,12 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 
 **Machine guard:** `Scripts/test_source_contracts.py:test_p1c01_scenic_reuse_groups_existing_details_and_cleans_them_on_transition` plus `Data/ProjectGuardRules.json:p1c01_scenic_cluster_cleanup_guard`. This guards source structure and budget; it is **not** PIE verification of crossing/save/transition nor measured GPU/VRAM/FPS proof.
 
+
+### CI regression — P1C01 visual upload includes persistent runner history (2026-10-09)
+
+**Observed:** Unreal Build #1773 artifact ZIP contained 45 short-SHA seven-shot capture directories from the persistent self-hosted runner. Compressed archive payload ~290.7 MiB; the current head directory `08cbbf38dd4a` alone is ~8.25 MiB. Old capture files are useful historical local evidence, but uploading them on every build wastes storage and network time.
+
+**Structural correction:** Keep recording seven current-head screenshots/logs exactly as before. The same capture step derives verified `git rev-parse --short=12 HEAD`, checks that `07_Wooded_Road_Hide.png` exists, writes the exact relative directory to `GITHUB_ENV`, and uploads only that short-SHA directory. No deleting Saved history, no source/engine changes, no loss of required current evidence.
+
+**Guard:** Pre-Unreal PG-026 asserts the head-derived upload path and prohibits the persistent-history broad glob. Artifact transport remains `continue-on-error: true` to avoid misclassifying transport quota as engine failure. Reconfirm archive size after a new actual capture before claiming measured speedup.
+

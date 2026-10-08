@@ -1,3 +1,13 @@
+## 2026-10-09 - P1C01 render evidence ZIP latency trim (CI only)
+
+| Area | Observed / corrected | Status |
+|---|---|---|
+| Source artifact bloat (#1773) | 45 capture folders / ~290.7 MiB compressed; current SHA's seven PNG+log pairs ~8.25 MiB | MEASURED ZIP INVENTORY |
+| Upload latest exact-head evidence only | Workflow exports short SHA after capture, guards final PNG and points upload to current capture directory | SOURCE-PREPARED / TARGET CI PENDING |
+| Regression prevention | PG-026 `Scripts/pre_unreal_validate.py` refuses generic persistent-history glob | STATIC CHECK PENDING |
+| Runtime/build correctness | No C++/FBX/world/persistence/package or renderer behavior changed | Unaffected; previous #1773 green remains historical |
+| Visual/PIE/device/Gate 6/7 | Still open | No acceptance or runtime optimization claimed |
+
 ## 2026-10-09 — P1C01 scenic instancing + route cleanup production packet
 
 | Area | Candidate implementation | Test/evidence boundary |

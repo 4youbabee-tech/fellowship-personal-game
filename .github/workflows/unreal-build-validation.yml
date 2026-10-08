@@ -520,7 +520,16 @@ jobs:
         shell: cmd
         env:
           SHIRE_SKIP_PRODUCTION_IMPORT: "1"
-        run: '"%GITHUB_WORKSPACE%\Scripts\ci_capture_p1c01_visuals.cmd"'
+        run: |
+          @echo off
+          call "%GITHUB_WORKSPACE%\Scripts\ci_capture_p1c01_visuals.cmd"
+          if errorlevel 1 exit /b %ERRORLEVEL%
+          rem Upload only the exact-head seven-shot batch, not years of Saved/ runner history.
+          set "SHIRE_CAPTURE_HEAD_SHORT="
+          for /f "delims=" %%H in ('git -C "%GITHUB_WORKSPACE%" rev-parse --short=12 HEAD') do set "SHIRE_CAPTURE_HEAD_SHORT=%%H"
+          if not defined SHIRE_CAPTURE_HEAD_SHORT exit /b 92
+          if not exist "%GITHUB_WORKSPACE%\Saved\Automation\P1C01VisualCapture\%SHIRE_CAPTURE_HEAD_SHORT%\07_Wooded_Road_Hide.png" exit /b 93
+          echo SHIRE_CAPTURE_CURRENT_DIR=Saved/Automation/P1C01VisualCapture/%SHIRE_CAPTURE_HEAD_SHORT%>>"%GITHUB_ENV%"
 
       - name: Upload integrated P1C01 rendered evidence
         continue-on-error: true
@@ -529,7 +538,7 @@ jobs:
         with:
           name: p1c01-shire-render-integrated-${{ env.TARGET_SHA }}
           path: |
-            Saved/Automation/P1C01VisualCapture/**
+            ${{ env.SHIRE_CAPTURE_CURRENT_DIR }}/**
           if-no-files-found: error
           retention-days: 14
 

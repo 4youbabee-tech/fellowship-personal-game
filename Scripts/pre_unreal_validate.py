@@ -3608,6 +3608,26 @@ if "uses: actions/upload-artifact@v4" in unreal_ci:
                 "PG-026: artifact transport must be non-blocking so storage quota cannot "
                 f"mask engine/logging evidence: {upload_name.strip()}"
             )
+# PG-026: upload evidence from this exact capture SHA, not every persistent-runner
+# directory accumulated in Saved/Automation/P1C01VisualCapture. A prior job may
+# have dozens of complete older seven-shot folders (hundreds of redundant MB).
+capture_block_start = "      - name: Capture P1C01 production Shire on existing UE workspace"
+capture_upload_start = "      - name: Upload integrated P1C01 rendered evidence"
+if capture_block_start not in unreal_ci or capture_upload_start not in unreal_ci:
+    fail("PG-026: P1C01 visual capture/upload steps missing")
+else:
+    capture_cmd = unreal_ci.split(capture_block_start, 1)[1].split(capture_upload_start, 1)[0]
+    capture_upload = unreal_ci.split(capture_upload_start, 1)[1].split("      - name:", 1)[0]
+    if (
+        "SHIRE_CAPTURE_HEAD_SHORT" not in capture_cmd
+        or "rev-parse --short=12 HEAD" not in capture_cmd
+        or "SHIRE_CAPTURE_CURRENT_DIR=Saved/Automation/P1C01VisualCapture/%SHIRE_CAPTURE_HEAD_SHORT%" not in capture_cmd
+        or "if not exist" not in capture_cmd
+        or "${{ env.SHIRE_CAPTURE_CURRENT_DIR }}/**" not in capture_upload
+        or "Saved/Automation/P1C01VisualCapture/**" in capture_upload
+    ):
+        fail("PG-026: evidence upload must select only this exact-head seven-shot folder")
+
 if "Collect Unreal build logs" not in unreal_ci or "Report failure log location" not in unreal_ci:
     fail("PG-026: local failure logging/reporting must remain independent of artifact transport")
 # The Governor owns the definitive One-Shot runner lifetime, not a stale CI literal.
