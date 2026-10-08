@@ -1,12 +1,11 @@
-## 2026-10-08 - P1C01 Bag End composition reproof on #1721
+## 2026-10-08 - P1C01 Merry/Pippin bounded identity residency packet
 
 | Area | Status | Evidence / boundary |
 |---|---|---|
-| #1721 exact-head technical train | MACHINE-GREEN | Source/static, UE4.27.2 build/import, six-shot render, runtime audits, warning guard, cook, packaged Runtime Data/startup, runner boundary, and playable upload all passed |
-| Bag End composition | PARTIAL ROOT-FIX VERIFIED | Artifact 11525434158 now reads the village/valley; the prior foreground occlusion is reduced, but this is not a final-fidelity visual acceptance |
-| Character/world presentation | DIAGNOSTIC / OPEN | Reviewed render remains low-poly/blockout with weak character readability and insufficient micro-detail/living-world fidelity |
-| Playable package | MACHINE-GREEN / NOT DEVICE-ACCEPTED | Artifact 11526545683; package/startup evidence passed, without target-device sign-off |
-| Performance / P1C01 Gate 6-7 | NOT ACCEPTED | No target-device FPS/frame-time/pacing evidence or human final visual acceptance |
+| Merry/Pippin source contract | IMPLEMENTED / FULL RUN REQUIRED | Ten dedicated static identity paths added to the P1C01 bank and presentation manifest; common Hobbit limbs remain shared |
+| Packaging ownership | SOURCE-FIXED / FULL RUN REQUIRED | Only Characters/Merry and Characters/Pippin are added to DirectoriesToAlwaysCook; async chapter ownership remains unchanged |
+| P1C01 bank audit | RECALCULATED | P1C01=116 assets; unique production packages=271 |
+| Visual/device/performance/Gate 6-7 | NOT ACCEPTED | Requires exact-head render review, packaged/playable evidence, target-device metrics, and human acceptance |
 | P1C02 Bree | LOCKED | No chapter integration before P1C01 completion gates genuinely pass |
 
 ## 2026-10-08 - P1C01 Bag End composition/occlusion packet

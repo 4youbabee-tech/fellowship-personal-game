@@ -1,9 +1,8 @@
-## 2026-10-08 - P1C01 Bag End composition reproof on #1721
+## 2026-10-08 - P1C01 Merry/Pippin bounded identity residency packet
 
-- #1721 completed the exact 07a2df17dfddd9624c02e2fbf91ab0da2e0ec424 full One-Shot: source/static gate, UE4.27.2 build/import, six-shot render capture/upload, Automation/startup/chapter/state/transition/fault/persistence audits, warning-debt guard, cook, packaged Runtime Data, packaged startup, runner hardware boundary, and playable upload.
-- Fresh render artifact: 11525434158 (p1c01-shire-render-integrated-07a2df17dfddd9624c02e2fbf91ab0da2e0ec424). Human review confirms the Bag End frame now reads the village/valley instead of being dominated by the foreground hill; the underlying world and characters remain visibly low-poly/blockout and below final visual fidelity.
-- Fresh playable artifact: 11526545683 (p1c01-playable-windows-07a2df17dfddd9624c02e2fbf91ab0da2e0ec424). Packaged startup, Runtime Data, and runner-boundary evidence passed. This is package/playable evidence, not target-device or performance acceptance.
-- P1C01 remains NOT ACCEPTED for visual/device/performance/Gate 6/7; P1C02 Bree remains LOCKED. The next packet must improve real character/world presentation and re-run the full evidence lane.
+- Root cause from the reviewed #1721 render: the P1C01 runtime already spawns Merry and Pippin on the Bag End-to-Ferry route and ShireNPC has dedicated mesh/sword/cloak resolution for them, but the committed P1C01 async bank carried only Gandalf, Bilbo, and Sam identity packages. Those actors therefore remained on the generic modular fallback in the visual route.
+- This packet adds only the ten existing Merry/Pippin static identity packages (torso, head, hair, cloak, sword for each), records them in P1C01CharacterPresentationChapterV1, and pins only their two character folders for packaging. Common Hobbit limbs remain shared; no synchronous load, per-frame scan, actor-density increase, collision change, or new streaming owner is introduced.
+- The bank audit is recalculated from the manifest: P1C01 116 assets and 271 unique production packages. Exact-head full One-Shot is required to prove import, residency, packaged startup, render readability, and playable stability. P1C01 visual/device/performance/Gate 6/7 remain NOT ACCEPTED; P1C02 Bree remains LOCKED.
 
 ## 2026-10-08 - P1C01 Bag End composition/occlusion packet
 
