@@ -5577,3 +5577,21 @@ The #1698 artifact was technically complete but visual review still found low-de
 - Added a no-runtime-effect `v12_exact_head_reproof_anchor` to `Data/WorldLifeSaturationPlan.json` so the next PR head requires Unreal Build Validation after the bounded Shire living-world density uplift and Frodo workflow syntax repair are both present.
 - This does not change P1C01 population, micro-event, fauna, residency, loading, acceptance, or Bree unlock behavior.
 - Evidence boundary remains unchanged: exact-head UE4 build/render/runtime/package proof is still required before any VISUALLY-ACCEPTED, PIE/device, performance, Gate 6, or Gate 7 claim.
+
+
+## 2026-10-08 — CVBP operating method reaffirmed
+
+The owner reaffirmed Continuous Verified Build Protocol as the active production method. P1C01/The Shire remains the only runtime chapter in production; P1C02/Bree remains locked until Shire closure evidence. Throughput is increased by grouping linked production changes, parallelizing independent static/source/documentation checks, and keeping one integrated exact-head UE4.27.2 train for build/import/render/runtime/save/package—not by removing story, licensing, performance, human review or Gate 6/7 requirements.
+
+| Item | Current evidence | Boundary |
+|---|---|---|
+| PR | #329 open | Not merged |
+| Exact HEAD | `cc6b26f760959a5acf0de002781ace239201ff50` | All evidence must match this SHA |
+| Unreal Build | #1749 / run 37810345771 | SUCCESS machine train |
+| Windows artifact | 11566746046 / 166,625,612 bytes | Packaged startup proven; not device-tested |
+| Render | 7 captures produced | Human visual acceptance not granted |
+| P1C01 | Active | Proxy/low-poly and final content gaps remain |
+| P1C02 Bree | Locked | Must not open early |
+| Next engineering focus | Production FBX character/world replacement, audio, device/performance evidence | Gate 6/7 still open |
+
+The repository Governor is the sole authority for this operating method and its acceptance boundary.
