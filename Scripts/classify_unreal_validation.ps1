@@ -113,13 +113,20 @@ function Test-NearestSafeGovernanceAncestorGreen([string]$GitExe, [string]$Paren
         if (-not (Test-SafeGovernanceDelta $GitExe $candidate $HeadSha $SafeExact)) { continue }
 
         $candidateGreen = Test-ParentWholeWorkflowGreen $candidate
+        $candidateCore = $false
         $candidateTreeProof = $false
         if (-not $candidateGreen) {
+            # Safe governance/doc ancestry may sit after a green core train without
+            # having a whole-workflow run of its own. Reuse that exact core proof;
+            # do not turn documentation-only deltas into an unnecessary full UE4 run.
+            $candidateCore = Test-ParentCoreUnrealGreen $candidate
+        }
+        if (-not $candidateGreen -and -not $candidateCore) {
             $candidateTreeProof = Test-TreeEquivalentCoreProof $GitExe $candidate
         }
-        if (-not $candidateGreen -and -not $candidateTreeProof) { continue }
+        if (-not $candidateGreen -and -not $candidateCore -and -not $candidateTreeProof) { continue }
 
-        $proofSource = if ($candidateGreen) { "direct-workflow" } else { "tree-equivalent-core" }
+        $proofSource = if ($candidateGreen) { "direct-workflow" } elseif ($candidateCore) { "core-workflow" } else { "tree-equivalent-core" }
         Write-Host "TRANSITIVE_GOVERNANCE_PROOF_PASS ancestor=$candidate parent=$ParentSha head=$HeadSha source=$proofSource"
         return $true
     }
