@@ -1955,9 +1955,9 @@ void AShirePrototypeWorldBuilder::SpawnPartySocialLoopPass()
     QueuePartyProp(CommonLongBench, FVector(560,20,0), FVector(0.68f), FRotator(0,-8,0));
     QueuePartyProp(CommonMarketCanopy, FVector(-260,-400,0), FVector(0.68f), FRotator(0,6,0));
     QueuePartyProp(CommonMarketCanopy, FVector(300,-405,0), FVector(0.68f), FRotator(0,-6,0));
-    QueuePartyProp(ProductionLoadedCartMesh, FVector(780,-360,0), FVector(0.58f), FRotator(0,95,0));
-    QueuePartyProp(CommonBarrel, FVector(690,-250,0), FVector(0.60f), FRotator::ZeroRotator);
-    QueuePartyProp(CommonBarrel, FVector(735,-205,0), FVector(0.56f), FRotator(0,15,0));
+    QueuePartyProp(ProductionLoadedCartMesh, FVector(520,-120,0), FVector(0.58f), FRotator(0,95,0));
+    QueuePartyProp(CommonBarrel, FVector(590,-80,0), FVector(0.60f), FRotator::ZeroRotator);
+    QueuePartyProp(CommonBarrel, FVector(640,-30,0), FVector(0.56f), FRotator(0,15,0));
     QueuePartyProp(ProductionHaystackMesh, FVector(-760,-330,0), FVector(0.62f), FRotator(0,-12,0));
 
     for (int32 MeshIndex = 0; MeshIndex < PartyStaticPropMeshes.Num(); ++MeshIndex)

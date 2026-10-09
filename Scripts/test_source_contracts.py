@@ -411,6 +411,10 @@ class SourceContractTests(unittest.TestCase):
         self.assertEqual(body.count("SpawnPartyCluster("), 5)
         self.assertIn("PARTY_SOCIAL_LOOP_PASS", body)
         self.assertIn("populationOwner=LivingWorldDirector", body)
+        self.assertIn("QueuePartyProp(ProductionLoadedCartMesh, FVector(520,-120,0)", body)
+        self.assertIn("QueuePartyProp(CommonBarrel, FVector(590,-80,0)", body)
+        self.assertIn("QueuePartyProp(CommonBarrel, FVector(640,-30,0)", body)
+        self.assertNotIn("QueuePartyProp(ProductionLoadedCartMesh, FVector(780,-360,0)", body)
         for forbidden in ("LoadObject<", "StaticLoadObject", "RequestSyncLoad", "SpawnActor<AShireAmbientNPC>"):
             self.assertNotIn(forbidden, body)
 

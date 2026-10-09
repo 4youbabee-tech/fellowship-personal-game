@@ -1,3 +1,10 @@
+## 2026-10-09 - P1C01 Party Field fireworks visual anchor alignment
+
+- Repositioned the existing Party Field loaded-cart and paired barrel dressing inside `AShirePrototypeWorldBuilder::SpawnPartySocialLoopPass` so the already-authored props frame the `SHIRE_FIREWORKS_SAFETY` activity near Gandalf's fireworks beat.
+- This is a placement-only runtime polish pass: no new meshes, no new HISM instances, no new actors, no collision changes, no quest/save/NavMesh movement, no synchronous loads and no P1C02 activation.
+- Added a focused source contract proving the old distant cart placement is gone and the new party-field prop anchors remain inside the existing bounded party social loop.
+- Evidence boundary: STATIC-VALIDATED source contract only until exact-head CI/UE4.27.2 build/import/render/runtime proof runs. No PIE, device, visual, performance or Gate 6/7 acceptance is claimed.
+
 ## 2026-10-09 — P1C01 Party Field static dressing HISM batch
 
 - Reused the existing resident meshes in `AShirePrototypeWorldBuilder::SpawnPartySocialLoopPass` to batch the same 14 non-colliding static placements: six picnic tables, two benches, two canopies, one loaded cart, two barrels and one haystack.
