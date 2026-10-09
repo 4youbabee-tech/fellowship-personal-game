@@ -1,0 +1,338 @@
+{
+  "schema_version": 1,
+  "packet_id": "P1C01_HIGH_FIDELITY_ASSET_WAREHOUSE_INTAKE_V1",
+  "status": "LEGAL_SOURCE_QUEUE_PREPARED_NOT_RUNTIME_IMPORTED",
+  "date": "2026-10-09",
+  "scope": {
+    "primary": "P1C01 Shire visual realism and named-character replacement",
+    "secondary": "post-Shire source queue only; no P1C02 runtime unlock or gameplay activation",
+    "source_documents_sampled": [
+      "00_PROJECT_SOURCE_RULES",
+      "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+      "10_3D_VISUAL_ASSET_ATLAS_PRODUCTION",
+      "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    ]
+  },
+  "guardrails": [
+    "No LOTR/franchise fan-made asset enters Production automatically; franchise references remain Reference/Quarantine unless rights are clear.",
+    "No book or film dialogue/text is copied into assets, quests or UI.",
+    "Animated production characters require FBX, skeleton, skin weights, animation coverage and UE4.27 import proof.",
+    "Textures are PNG/TGA only; BMP is prohibited.",
+    "Default runtime textures target 1K/2K for approximately 2GB VRAM; 4K only for measured hero assets.",
+    "Heavy assets use soft references and async streaming; no synchronous LoadObject for large content.",
+    "NPC crowds keep object pooling/shared skeleton and material strategy."
+  ],
+  "source_priority": {
+    "generic_environment_props": [
+      {
+        "source": "Poly Haven",
+        "license": "CC0",
+        "use": "PBR textures, HDRIs, selected 3D models for high-quality Shire surface/material replacement",
+        "status": "APPROVED_SOURCE_LADDER",
+        "proof": "https://polyhaven.com/license"
+      },
+      {
+        "source": "ambientCG",
+        "license": "CC0",
+        "use": "PBR wood/stone/grass/dirt/thatch material sets",
+        "status": "APPROVED_SOURCE_LADDER",
+        "proof": "Project External Resource Bible Priority A"
+      },
+      {
+        "source": "Quaternius",
+        "license": "site license requires per-pack review; do not redistribute standalone assets",
+        "use": "stylized nature, medieval village, farm buildings, furniture, animals, boats where compatible",
+        "status": "PER_PACK_REVIEW_REQUIRED",
+        "proof": "https://quaternius.com/"
+      },
+      {
+        "source": "Kenney",
+        "license": "CC0",
+        "use": "low-poly filler props, distant nature or prototype-safe replacements where style/scale matches",
+        "status": "APPROVED_FOR_BOUNDED_USE",
+        "proof": "https://kenney.nl/assets"
+      }
+    ],
+    "characters": [
+      {
+        "source": "KayKit Adventurers",
+        "license": "CC0-1.0",
+        "use": "rigged/animated FBX technical probes for missing named P1C01 character bundles",
+        "status": "QUEUED_IN_P1C01KayKitRigTechnicalBridgeV1",
+        "proof": "https://kaylousberg.itch.io/kaykit-adventurers"
+      },
+      {
+        "source": "Mixamo",
+        "license": "account/terms review required",
+        "use": "humanoid animation retarget candidates only after manual terms/account flow",
+        "status": "MANUAL_REVIEW_REQUIRED"
+      },
+      {
+        "source": "Quaternius Universal/Modular Character Packs",
+        "license": "per-pack review required",
+        "use": "higher coverage humanoid candidate search after current KayKit gate",
+        "status": "NEXT_SOURCE_QUEUE"
+      }
+    ],
+    "audio": [
+      {
+        "source": "Sonniss GDC",
+        "license": "pack/license review per download",
+        "use": "ambience/foley source queue",
+        "status": "MANUAL_REVIEW_REQUIRED"
+      },
+      {
+        "source": "Freesound",
+        "license": "filter CC0/CC-BY only",
+        "use": "birds, footsteps, water, wood creaks, party ambience",
+        "status": "PER_ASSET_REVIEW_REQUIRED"
+      }
+    ]
+  },
+  "p1c01_needed_bundles": [
+    {
+      "area": "Bag End",
+      "visual_target": "lived-in round geometry, circular door/window treatment, garden, mailbox, shelves, rugs, tableware, warm interior lighting",
+      "asset_families": [
+        "round-door/window kit",
+        "hobbit-hole facade modules",
+        "wood/stone/thatch PBR",
+        "interior furniture",
+        "books/tableware/food props",
+        "garden flowers/fence/tools"
+      ],
+      "preferred_sources": [
+        "Quaternius Medieval Village/Farm Buildings/Furniture",
+        "Poly Haven/ambientCG/cgbookcase PBR",
+        "Kenney filler only if scale/style matches"
+      ],
+      "qc": [
+        "preserve interaction points",
+        "no collision regression",
+        "material slots <= budget",
+        "LOD/cull settings required"
+      ]
+    },
+    {
+      "area": "Hobbiton",
+      "visual_target": "pastoral hills, readable dominant landmark silhouettes, gardens, paths, fences, populated village life",
+      "asset_families": [
+        "hill facade set",
+        "trees/bushes/flowers",
+        "fences/lanes/market props",
+        "ambient domestic clutter"
+      ],
+      "preferred_sources": [
+        "Quaternius Stylized Nature/Farm Buildings/Medieval Village",
+        "Poly Haven/ambientCG terrain and vegetation textures"
+      ],
+      "qc": [
+        "NavMesh remains walkable",
+        "no density inflation beyond performance budget",
+        "HISM/LOD/culling before adding actors"
+      ]
+    },
+    {
+      "area": "Party Field",
+      "visual_target": "birthday-party scene dressing with tables, tents, bunting, lanterns and free NPC/player flow",
+      "asset_families": [
+        "tables/benches",
+        "tents/canopies",
+        "lanterns",
+        "food/barrels/crates",
+        "bunting/garlands"
+      ],
+      "preferred_sources": [
+        "Quaternius Fantasy Props/Furniture/Food",
+        "Kenney props only for distant filler"
+      ],
+      "qc": [
+        "player/NPC paths clear",
+        "non-colliding dressing grouped through existing WorldDetailCluster/HISM"
+      ]
+    },
+    {
+      "area": "The Water / Mill / Bridge",
+      "visual_target": "mill, bridge, banks, reeds, stones, water material and worn wood/stone surfaces",
+      "asset_families": [
+        "mill/waterwheel pieces",
+        "wood bridge planks/rails",
+        "riverbank plants/reeds",
+        "stone/wood/water PBR"
+      ],
+      "preferred_sources": [
+        "Quaternius Farm Buildings/Medieval Village/Nature",
+        "Poly Haven/ambientCG water/wood/stone"
+      ],
+      "qc": [
+        "Bucklebury and bridge collision unchanged",
+        "streaming cost measured",
+        "no quest marker movement"
+      ]
+    },
+    {
+      "area": "Shire Roads & Woodland",
+      "visual_target": "layered lanes and woodland depth without blocking Black Rider hide/travel route",
+      "asset_families": [
+        "trees",
+        "shrubs",
+        "grasses",
+        "rocks",
+        "road/dirt/leaf materials",
+        "fallen branches"
+      ],
+      "preferred_sources": [
+        "Quaternius Stylized Nature",
+        "Poly Haven/ambientCG ground materials",
+        "Kenney distant filler"
+      ],
+      "qc": [
+        "hide route sightlines preserved",
+        "Cull distances set",
+        "HISM batching used for repeats"
+      ]
+    },
+    {
+      "area": "Bucklebury Ferry",
+      "visual_target": "boat, pier, ropes, riverbank, water edge and crossing path with believable prop density",
+      "asset_families": [
+        "small boat/ferry",
+        "dock/pier",
+        "rope/coils",
+        "water/riverbank PBR",
+        "reeds/stones"
+      ],
+      "preferred_sources": [
+        "Quaternius Ships/Pirate/Farm/Medieval props where license passes",
+        "Poly Haven/ambientCG wood/water"
+      ],
+      "qc": [
+        "crossing trigger/collision unchanged",
+        "boarding segment remains playable"
+      ]
+    }
+  ],
+  "character_needed_bundles": [
+    {
+      "character": "Frodo",
+      "current": "48-bone technical import + 3 animations exists; human visual acceptance pending",
+      "next_assets": [
+        "final head/body/clothing materials",
+        "deformation screenshots",
+        "idle/walk/run interaction proof"
+      ]
+    },
+    {
+      "character": "Gandalf",
+      "current": "missing final animated FBX",
+      "queued_candidate": "KayKit Mage.fbx technical source probe",
+      "next_assets": [
+        "staff/robe silhouette",
+        "human-scale correction",
+        "walk/idle/talk animation coverage"
+      ]
+    },
+    {
+      "character": "Bilbo",
+      "current": "missing final animated FBX",
+      "queued_candidate": "KayKit Knight.fbx scale/deformation probe",
+      "next_assets": [
+        "elder hobbit costume/material pass",
+        "facial/head variation",
+        "domestic animation set"
+      ]
+    },
+    {
+      "character": "Sam",
+      "current": "missing final animated FBX",
+      "queued_candidate": "KayKit Knight.fbx scale/deformation probe",
+      "next_assets": [
+        "gardener costume/pack/hand props",
+        "companion locomotion"
+      ]
+    },
+    {
+      "character": "Merry",
+      "current": "missing final animated FBX",
+      "queued_candidate": "KayKit Knight.fbx scale/deformation probe",
+      "next_assets": [
+        "hobbit costume variant",
+        "companion locomotion"
+      ]
+    },
+    {
+      "character": "Pippin",
+      "current": "missing final animated FBX",
+      "queued_candidate": "KayKit Knight.fbx scale/deformation probe",
+      "next_assets": [
+        "hobbit costume variant",
+        "companion locomotion"
+      ]
+    },
+    {
+      "character": "Black Rider",
+      "current": "missing final animated FBX",
+      "queued_candidate": "KayKit Barbarian.fbx negative-control humanoid probe",
+      "next_assets": [
+        "hooded rider body",
+        "threat silhouette",
+        "mounted/standing animation coverage"
+      ]
+    },
+    {
+      "character": "Black Rider Horse",
+      "current": "missing final animated FBX",
+      "queued_candidate": null,
+      "next_assets": [
+        "horse skeletal mesh",
+        "walk/trot/idle",
+        "mounted rider compatibility"
+      ],
+      "source_queue": [
+        "Quaternius Ultimate Animated Animal Pack / Farm Animal Pack after license review"
+      ]
+    }
+  ],
+  "post_shire_preparation_only": [
+    {
+      "chapter_area": "Bree",
+      "asset_families": [
+        "timber/stone buildings",
+        "rain/wet cobble materials",
+        "inn furniture",
+        "gates/signage",
+        "crowd NPC variants"
+      ],
+      "status": "SOURCE_QUEUE_ONLY_P1C02_LOCKED"
+    },
+    {
+      "chapter_area": "Old Forest / woodland transition",
+      "asset_families": [
+        "denser trees",
+        "roots",
+        "fog/HDRI",
+        "dark woodland materials"
+      ],
+      "status": "SOURCE_QUEUE_ONLY"
+    },
+    {
+      "chapter_area": "road pursuit continuity",
+      "asset_families": [
+        "roadside props",
+        "camp gear",
+        "horse/rider animation continuity"
+      ],
+      "status": "SOURCE_QUEUE_ONLY"
+    }
+  ],
+  "intake_qc_pipeline": [
+    "Download only from official source/API/manual permitted channel.",
+    "Record source_url, creator, license, terms, filename, download date, category, intended use, sha256.",
+    "Static gate: extension, size, texture resolution, FBX version, skeleton/skin/animation markers, no BMP.",
+    "UE4 import gate through existing ShireProductionImport only.",
+    "Runtime gate: soft references, async loading, HISM/LOD/culling, no new per-prop Tick.",
+    "Gameplay gate: collision/NavMesh/quests/save-load/story state unchanged.",
+    "Visual gate: seven Shire shots plus human PIE review before VISUALLY-ACCEPTED."
+  ],
+  "evidence_boundary": "Preparation manifest only; no asset is final until downloaded/imported/QC-tested on the exact commit."
+}
