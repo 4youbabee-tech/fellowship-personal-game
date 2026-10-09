@@ -1,3 +1,10 @@
+## 2026-10-09 - P1C01 legal character-FBX intake resumed (source implemented)
+
+- Responding to the live PIE screenshot showing block/proxy characters, resumed real visual production intake instead of only monitoring CI. Added immutable KayKit Adventurers CC0 raw-FBX candidates for missing P1C01 named-character gaps: `Mage.fbx` for Gandalf technical robe/staff deformation probing, `Knight.fbx` for Bilbo/Sam/Merry/Pippin body-scale probing, and `Barbarian.fbx` as a Black Rider humanoid deformation probe. Payloads are pinned to revision `672074b73ba276876a19e8816ecdc5241817ab47` and SHA256-locked in `Data/P1C01KayKitRigTechnicalBridgeV1.json`.
+- Re-enabled the KayKit rig bridge workflow for PR #329 and changed its transient UE4 import target from misleading `FRODO/SK_FRODO` to `P1C01_TECHNICAL_BRIDGE/SK_P1C01_KAYKIT_TECHNICAL`. The stage script now fails closed on candidate SHA mismatch and carries candidate-role provenance into the receipt.
+- Added `Data/P1C01HighFidelityAssetWarehouseIntakeV1.json` as the warehouse-ready source queue for Shire and post-Shire high-visual assets, grounded in the uploaded project source rules, world/location bible, visual atlas and external resource bible. It keeps P1C02 runtime locked while preparing Bree/woodland/road-pursuit source categories.
+- Evidence boundary: **SOURCE-IMPLEMENTED / STATIC-VALIDATED locally for downloaded FBX version 7400 and hashes only**. UE4.27 skeletal import, deformation, animation, material, LOD, PIE, device performance and human visual acceptance remain pending; no final Tolkien likeness is claimed.
+
 ## 2026-10-09 — Root repair of #1784 six-field camera argument parsing
 
 - Exact-head Unreal Build Validation #1784 (run 37905659232; commit 48572701f16e) **FAILED** only in the first image capture. Static/source, UE4.27.2 editor compile and production asset import passed; no seven-shot/runtime QA/package evidence exists for that head.
