@@ -1,12 +1,6 @@
 name: P1C01 Adaptive High-Fidelity CC0 Source Stage
 
 on:
-  pull_request:
-    branches: [develop]
-    paths:
-      - 'Scripts/stage_p1c01_polyhaven_adaptive.py'
-      - 'Scripts/test_p1c01_polyhaven_adaptive.py'
-      - '.github/workflows/p1c01-adaptive-highfidelity-source.yml'
   workflow_dispatch:
 
 permissions:

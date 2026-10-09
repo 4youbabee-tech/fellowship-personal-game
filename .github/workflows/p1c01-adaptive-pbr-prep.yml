@@ -1,12 +1,6 @@
 name: P1C01 Existing Adaptive Source PBR Conversion
 
 on:
-  pull_request:
-    branches: [develop]
-    paths:
-      - 'Scripts/prepare_p1c01_adaptive_pbr.py'
-      - 'Scripts/test_p1c01_adaptive_pbr.py'
-      - '.github/workflows/p1c01-adaptive-pbr-prep.yml'
   workflow_dispatch:
 
 permissions:

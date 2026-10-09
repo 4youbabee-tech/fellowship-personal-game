@@ -11,7 +11,7 @@ jobs:
   persistent_cc0_intake:
     name: Hash verify and stage 99 FBX sources and 98 prepared PBR candidates (no UE)
     runs-on: [self-hosted, Windows, X64, ue4-27]
-    timeout-minutes: 45
+    timeout-minutes: 30
     env:
       SOURCE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
       STAGING_WAREHOUSE: 'D:\actions-runner\_warehouse\ShireJourney'
@@ -49,27 +49,34 @@ jobs:
           if ($code -eq 0) { "already=true" | Out-File -FilePath $env:GITHUB_OUTPUT -Append; exit 0 }
           if ($code -eq 3) { "already=false" | Out-File -FilePath $env:GITHUB_OUTPUT -Append; exit 0 }
           exit $code
-      - name: Download original 39 sources only if missing
+
+      - name: Resume verified 39 original sources in 4 MiB durable checkpoints
         if: steps.reuse.outputs.already == 'false'
-        uses: actions/download-artifact@v4
-        with:
-          run-id: 37985180302
-          name: p1c01-adaptive-polyhaven-source-fac5bba5fac633ed9989d3b5f180b46b3ed43817
-          github-token: ${{ github.token }}
-          path: ${{ runner.temp }}/source-39
-      - name: Download prepared 39 FBX/PNG only if missing
+        shell: powershell
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          & $env:SHIRE_PYTHON Scripts/resume_p1c01_artifact_checkpoint.py --manifest Data/P1C01PinnedArtifactCheckpointsV1.json --key source39 --warehouse-root "$env:STAGING_WAREHOUSE"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Resume 39 converted FBX/PBR without refetching valid chunks
         if: steps.reuse.outputs.already == 'false'
-        uses: actions/download-artifact@v4
-        with:
-          run-id: 37988147700
-          name: p1c01-adaptive-pbr-08787c078fa1f4e52f15927ca9777fd22602626d
-          github-token: ${{ github.token }}
-          path: ${{ runner.temp }}/pbr-39
-      - name: Save and audit wave 39 before any other large download
+        shell: powershell
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          & $env:SHIRE_PYTHON Scripts/resume_p1c01_artifact_checkpoint.py --manifest Data/P1C01PinnedArtifactCheckpointsV1.json --key pbr39 --warehouse-root "$env:STAGING_WAREHOUSE"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Save wave39 permanently and immediately audit receipts
         if: steps.reuse.outputs.already == 'false'
         shell: powershell
         run: |
-          & $env:SHIRE_PYTHON Scripts/stage_p1c01_adaptive_pbr_warehouse.py --source-root "$env:RUNNER_TEMP/source-39" --pbr-root "$env:RUNNER_TEMP/pbr-39" --warehouse-root "$env:STAGING_WAREHOUSE" --wave p1c01_wave39 --expected-source 39 --expected-prepared 39 --run-id "$env:GITHUB_RUN_ID"
+          $root=Join-Path $env:STAGING_WAREHOUSE '_p1c01_transfer_checkpoints'
+          $src=Join-Path $root 'artifact_11643315007\extracted'
+          $pbr=Join-Path $root 'artifact_11643837934\extracted'
+          & $env:SHIRE_PYTHON Scripts/stage_p1c01_adaptive_pbr_warehouse.py --source-root "$src" --pbr-root "$pbr" --warehouse-root "$env:STAGING_WAREHOUSE" --wave p1c01_wave39 --expected-source 39 --expected-prepared 39 --run-id "$env:GITHUB_RUN_ID"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Audit canonical warehouse after persistent save
+        shell: powershell
+        run: |
           & powershell.exe -NoProfile -ExecutionPolicy Bypass -File Scripts/audit_warehouse_inventory.ps1 -Root "$env:STAGING_WAREHOUSE"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

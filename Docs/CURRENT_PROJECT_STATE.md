@@ -1,3 +1,10 @@
+## 2026-10-10 — Durable 4MiB restart checkpoints and no repeated expensive PR-wide acquisition
+
+- Owner observed electricity/network instability and rejected repeated long downloads/builds. Root cause: GitHub PR path filters saw entire PR diff, retriggering expensive 39-PBR conversion and 60-model acquisition for governance-only commits. Two duplicated self-hosted warehouse writers also contended for one runner; 75-minute download canceled before writes.
+- Corrective source-only transport `Scripts/resume_p1c01_artifact_checkpoint.py`: pinned source GitHub Actions artifact ID, exact archive byte length and SHA256; 4 MiB range transfers with per-chunk SHA256 journal in permanent warehouse, fsync and atomic checkpoint writes. Reuse completed chunks, re-fetch uncommitted tail only, fail closed on tampering, 6GiB free reserve and pinned archive SHA256. Whitelisted ZIP entry extraction with atomic CRC-checked files and durable extracted-state receipt. No provider re-download, UE4 import or visual claim.
+- Exactly one manual serialized source-only warehouse job for wave39: check existing SHA256 first, recover 39 source and PBR chunks, persist 39 and run canonical warehouse audit. Separate 60 wave reserved for independent follow-up after first checkpoint. Removed automatic pull_request triggers from expensive **adaptive 39-PBR and 60-source** workflows, while five-lane *read-only* regression remains eligible. No re-execution of existing expensive successful workflows on unrelated changes.
+- **Acceptance boundary:** workflow design change and manifest only until actual hosted regression and Windows warehouse logs. No permanent source promotion or P1C01 Gate6/7 acceptance claimed.
+
 ## 2026-10-10 — 75-minute warehouse Artifact download failure; remove duplicate writer and split durable checkpoints
 
 - GitHub #37990910312 CANCELLED after 75 minutes: source 39 artifact took ~25m; PBR39 ~2.5m; source60 ~19m; PBR60 421,901,298-byte download ran 27m45s before cancellation. The first persistent commit and inventory audit were SKIPPED. No new persistent asset claim. Deprecation warning is not established cause.

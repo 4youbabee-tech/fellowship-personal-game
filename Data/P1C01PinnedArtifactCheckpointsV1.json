@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "status": "PINNED_IMMUTABLE_SOURCE_ONLY",
+  "authority": "DEC-078 DEC-104 REQ-PROD-011",
+  "artifacts": {
+    "source39": {
+      "artifact_id": 11643315007,
+      "source_run_id": 37985180302,
+      "name": "p1c01-adaptive-polyhaven-source-fac5bba5fac633ed9989d3b5f180b46b3ed43817",
+      "size_bytes": 245957831,
+      "digest": "sha256:e65079889dbb96766ae8c798517bd4a300223bc420e5ac590c9f44a4b979ff24"
+    },
+    "pbr39": {
+      "artifact_id": 11643837934,
+      "source_run_id": 37988147700,
+      "name": "p1c01-adaptive-pbr-08787c078fa1f4e52f15927ca9777fd22602626d",
+      "size_bytes": 197353784,
+      "digest": "sha256:b118661c8963337ac9087fac9dab1c9c41186b378d6f02dfd83a34e399f11baf"
+    },
+    "source60": {
+      "artifact_id": 11644157212,
+      "source_run_id": 37988147489,
+      "name": "p1c01-adaptive-polyhaven-source-08787c078fa1f4e52f15927ca9777fd22602626d",
+      "size_bytes": 491792410,
+      "digest": "sha256:306b3b1fb02b610293c2abbc3bf795d5bf61680711e7de4b1b94a45702a7f62f"
+    },
+    "pbr60": {
+      "artifact_id": 11644360758,
+      "source_run_id": 37988147489,
+      "name": "p1c01-adaptive-pbr-next-08787c078fa1f4e52f15927ca9777fd22602626d",
+      "size_bytes": 421901298,
+      "digest": "sha256:435e57fc7a5ecb79ee8c88f576011588087ec9a109706b3baa1ae48282e86fce"
+    }
+  }
+}
