@@ -801,31 +801,42 @@ void AChapterWorldRouter::PositionP1C01VisualCamera()
         return;
     }
 
-    FString PoseString;
-    if (!FParse::Value(FCommandLine::Get(), TEXT("ShireCapturePose="), PoseString))
+    // UE4 command-line Value parsing does not preserve comma-delimited tokens
+    // reliably. Pass one numeric scalar per switch instead.
+    static const TCHAR* PoseKeys[6] =
     {
-        UE_LOG(LogTemp, Error, TEXT("P1C01_RENDER_CAPTURE_FAIL reason=camera_pose_missing"));
-        return;
-    }
-
-    TArray<FString> PoseParts;
-    PoseString.ParseIntoArray(PoseParts, TEXT(","), false);
-    if (PoseParts.Num() != 6)
-    {
-        UE_LOG(LogTemp, Error, TEXT("P1C01_RENDER_CAPTURE_FAIL reason=camera_pose_invalid_fields"));
-        return;
-    }
+        TEXT("ShireCaptureX="),
+        TEXT("ShireCaptureY="),
+        TEXT("ShireCaptureZ="),
+        TEXT("ShireCapturePitch="),
+        TEXT("ShireCaptureYaw="),
+        TEXT("ShireCaptureRoll=")
+    };
 
     float Values[6] = {};
-    for (int32 Index = 0; Index < 6; ++Index)
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(PoseKeys); ++Index)
     {
-        if (!FDefaultValueHelper::ParseFloat(PoseParts[Index], Values[Index]) ||
+        FString Scalar;
+        if (!FParse::Value(FCommandLine::Get(), PoseKeys[Index], Scalar))
+        {
+            UE_LOG(LogTemp, Error,
+                TEXT("P1C01_RENDER_CAPTURE_FAIL reason=camera_pose_argument_missing key=%s"),
+                PoseKeys[Index]);
+            return;
+        }
+        if (!FDefaultValueHelper::ParseFloat(Scalar, Values[Index]) ||
             !FMath::IsFinite(Values[Index]))
         {
-            UE_LOG(LogTemp, Error, TEXT("P1C01_RENDER_CAPTURE_FAIL reason=camera_pose_invalid_numeric"));
+            UE_LOG(LogTemp, Error,
+                TEXT("P1C01_RENDER_CAPTURE_FAIL reason=camera_pose_invalid_numeric key=%s value=%s"),
+                PoseKeys[Index], *Scalar);
             return;
         }
     }
+
+    const FString PoseString = FString::Printf(
+        TEXT("%.3f,%.3f,%.3f,%.3f,%.3f,%.3f"),
+        Values[0], Values[1], Values[2], Values[3], Values[4], Values[5]);
 
     APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
     if (!PC)

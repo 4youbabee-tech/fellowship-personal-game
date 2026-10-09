@@ -1,3 +1,9 @@
+### P1C01 six-field deferred capture argument parsing guard (2026-10-09)
+
+**Real failure:** #1784 passed static, UE4 C++ compile and asset import, then emitted `P1C01_RENDER_CAPTURE_FAIL reason=camera_pose_invalid_fields` after P1C01 committed, resulting in a first-shot 150s timeout. The old `-ShireCapturePose=X,Y,Z,Pitch,Yaw,Roll` string must not be used with UE4 FParse token handling.
+
+**Permanent invariant:** pass each camera coordinate and orientation scalar through its own command-line argument, parse and validate all six individually in the existing P1C01-only router, print the failing key if unavailable/invalid, and keep world-revision, deferred camera, screenshot-request and artifact guards fail-closed. `Scripts/test_p1c01_capture_contract.py` rejects the old comma-delimited format. Fresh exact-head capture/runtime evidence still required.
+
 ### P1C01 pre-commit render capture invalidity guard (2026-10-09)
 
 **Observed defect:** on exact-head Unreal #1783, Water/Mill/Bridge \`High resolution screenshot saved\` (08:05:20.095) occurred before \`ShireChapterAudit: ... streamed=committed\` (08:05:23.607). The previous capture command teleported during the 2-second grounded world hold, sometimes requiring recovery. Seven successful screenshots therefore did not prove post-commit scene readiness.

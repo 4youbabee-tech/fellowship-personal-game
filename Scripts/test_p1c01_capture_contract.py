@@ -20,7 +20,18 @@ class P1C01CaptureContractTests(unittest.TestCase):
         header = (root / "Source" / "ShireJourney" / "Public" / "World" /
                   "ChapterWorldRouter.h").read_text(encoding="utf-8")
 
-        self.assertIn("-ShireCapturePose=%X%,%Y%,%Z%,%PITCH%,%YAW%,%ROLL%", script)
+        for argument in (
+            "-ShireCaptureX=%X%", "-ShireCaptureY=%Y%", "-ShireCaptureZ=%Z%",
+            "-ShireCapturePitch=%PITCH%", "-ShireCaptureYaw=%YAW%",
+            "-ShireCaptureRoll=%ROLL%",
+        ):
+            self.assertIn(argument, script)
+        self.assertNotIn("-ShireCapturePose=", script)
+        self.assertNotIn('TEXT("ShireCapturePose=")', router)
+        self.assertIn('TEXT("ShireCaptureX=")', router)
+        self.assertIn('TEXT("ShireCaptureRoll=")', router)
+        self.assertIn("UE_ARRAY_COUNT(PoseKeys)", router)
+        self.assertIn("reason=camera_pose_argument_missing key=%s", router)
         self.assertNotIn("HighResShot 1", script)
         self.assertNotIn("BugItGo %X% %Y%", script)
         for token in (

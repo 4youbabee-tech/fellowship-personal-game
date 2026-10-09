@@ -122,7 +122,7 @@ powershell.exe -NoProfile -Command "Get-ChildItem -LiteralPath '%SCREENSHOT_ROOT
 
 echo P1C01_RENDER_CAPTURE_SHOT_BEGIN name=%SHOT_NAME% x=%X% y=%Y% z=%Z% pitch=%PITCH% yaw=%YAW% roll=%ROLL%
 
-start "" /B "%EDITOR%" "%PROJECT%" /Engine/Maps/Entry -game -log -abslog="%LOG_FILE%" -d3d11 -ResX=1280 -ResY=720 -Windowed -NoSplash -NoSound -ShireVisualCapture -ShireCapturePose=%X%,%Y%,%Z%,%PITCH%,%YAW%,%ROLL% -ExecCmds="ShowFlag.HUD 0,ShowFlag.2D 0"
+start "" /B "%EDITOR%" "%PROJECT%" /Engine/Maps/Entry -game -log -abslog="%LOG_FILE%" -d3d11 -ResX=1280 -ResY=720 -Windowed -NoSplash -NoSound -ShireVisualCapture -ShireCaptureX=%X% -ShireCaptureY=%Y% -ShireCaptureZ=%Z% -ShireCapturePitch=%PITCH% -ShireCaptureYaw=%YAW% -ShireCaptureRoll=%ROLL% -ExecCmds="ShowFlag.HUD 0,ShowFlag.2D 0"
 
 powershell.exe -NoProfile -ExecutionPolicy Bypass -Command ^
   "$deadline=(Get-Date).AddSeconds(%CAPTURE_WAIT_SECONDS%); $before=@(); if(Test-Path -LiteralPath '%BEFORE_FILE%'){$before=Get-Content -LiteralPath '%BEFORE_FILE%'}; $shot=$null; do { Start-Sleep -Milliseconds 750; $shot=Get-ChildItem -LiteralPath '%SCREENSHOT_ROOT%' -Recurse -File -Filter '*.png' -ErrorAction SilentlyContinue | Where-Object { $before -notcontains $_.FullName } | Sort-Object LastWriteTime -Descending | Select-Object -First 1 } while(-not $shot -and (Get-Date) -lt $deadline); if(-not $shot){exit 3}; Copy-Item -LiteralPath $shot.FullName -Destination '%RUN_DIR%\%SHOT_NAME%.png' -Force; exit 0"

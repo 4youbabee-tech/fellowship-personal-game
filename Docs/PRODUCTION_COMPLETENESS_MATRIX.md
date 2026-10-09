@@ -1,3 +1,13 @@
+## 2026-10-09 — #1784 capture failure and corrected six-scalar contract
+
+| Scope | Evidence | Current boundary |
+|---|---|---|
+| #1784 C++/import | UE4.27.2 build and production asset import steps PASSED | COMPILE-TESTED on old 48572701 head only |
+| Capture failure | First shot timeout; deferred capture attempted only after P1C01 world-commit PASS, but CSV pose extraction yielded invalid field count | #1784 FAILED; no runtime/package proof |
+| Root correction | Six independent camera switches, per-field validation and explicit error key | SOURCE-IMPLEMENTED; next exact-head UE4 proof required |
+| Character/environment art | Still missing seven final FBX character/mount packages and realistic accepted landscape/architecture/foliage | VISUAL remains open |
+| PIE, device 30 FPS, Gate 6/7 | No new human/device acceptance, Bree locked | NOT ACCEPTED |
+
 ## 2026-10-09 — P1C01 render evidence integrity, not artistic closeout
 
 | Scope | Observed #1783 failure / bounded correction | Evidence boundary |
