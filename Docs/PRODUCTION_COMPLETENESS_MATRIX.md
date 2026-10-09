@@ -1,3 +1,11 @@
+## 2026-10-09 - KayKit UE4 gate failure triage
+
+| Scope | Evidence | Correction |
+|---|---|---|
+| UE4 rig bridge #304 | Editor build succeeded; hard gate failed with `GIT_LFS_POINTER_SOURCE` and missing albedo bindings for P1C01 material PNG pointers before FBX result classification | Isolate rig probe source tree so character QC imports only the candidate FBX |
+| Candidate status | `Mage.fbx` reached skeletal import markers and 48 bones but run exited on unrelated material import failures | Not accepted or rejected yet; rerun required |
+| Runtime impact | CI script only; no gameplay/world/collision/NavMesh change | SOURCE-IMPLEMENTED |
+
 ## 2026-10-09 - P1C01 named-character art intake batch
 
 | Scope | Change | Evidence boundary |
