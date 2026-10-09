@@ -5453,6 +5453,7 @@ void AShirePrototypeWorldBuilder::SpawnRoadThreatAndFerryCanonPass()
     int32 FerryBankReedInstances = 0;
     int32 FerryBankRockInstances = 0;
     int32 FerryDockInstances = 0;
+    int32 FerryUtilityInstances = 0;
     int32 HeroProps = 0;
 
     auto AddInstance = [](UHierarchicalInstancedStaticMeshComponent* Component,
@@ -5626,6 +5627,31 @@ void AShirePrototypeWorldBuilder::SpawnRoadThreatAndFerryCanonPass()
         }
     }
 
+    if (UStaticMesh* CommonFishingRack = ResolveResidentStaticMesh(
+        TEXT("/Game/Production/World/Common/SM_CommonFishingRack.SM_CommonFishingRack")))
+    {
+        const FCanonPlacement FerryUtilityDetails[] = {
+            { FVector(ShireLayout::FerryX - 900.0f, -1040.0f, 12.0f), FVector(0.55f),  18.0f },
+            { FVector(ShireLayout::FerryX + 910.0f,  1010.0f, 24.0f), FVector(0.52f), -22.0f }
+        };
+
+        FActorSpawnParameters Params;
+        Params.Owner = this;
+        Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+        if (AWorldDetailCluster* UtilityCluster = GetWorld()->SpawnActor<AWorldDetailCluster>(
+            FVector::ZeroVector, FRotator::ZeroRotator, Params))
+        {
+            UtilityCluster->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
+            UtilityCluster->Tags.AddUnique(TEXT("P1C01FerryCanonDetail"));
+            UtilityCluster->Configure(CommonFishingRack, false, 0, 26000);
+            for (const FCanonPlacement& P : FerryUtilityDetails)
+            {
+                UtilityCluster->AddDetailInstance(P.Location, FRotator(0.0f, P.Yaw, 0.0f), P.Scale);
+            }
+            FerryUtilityInstances += UtilityCluster->GetDetailCount();
+        }
+    }
+
     if (ProductionCommonRopeCoilMesh)
     {
         const FVector RopeCoils[] = {
@@ -5651,7 +5677,7 @@ void AShirePrototypeWorldBuilder::SpawnRoadThreatAndFerryCanonPass()
     UE_LOG(
         LogTemp,
         Display,
-        TEXT("P1C01_ROAD_THREAT_FERRY_CANON_PASS rootTrees=%d rootShrubs=%d rootRocks=%d farBankPath=%d ferryBankReeds=%d ferryBankRocks=%d ferryDock=%d heroProps=%d repeatedDetail=HISM collision=none p1c02=locked"),
+        TEXT("P1C01_ROAD_THREAT_FERRY_CANON_PASS rootTrees=%d rootShrubs=%d rootRocks=%d farBankPath=%d ferryBankReeds=%d ferryBankRocks=%d ferryDock=%d ferryUtility=%d heroProps=%d repeatedDetail=HISM collision=none p1c02=locked"),
         RootTreeInstances,
         RootShrubInstances,
         RootRockInstances,
@@ -5659,6 +5685,7 @@ void AShirePrototypeWorldBuilder::SpawnRoadThreatAndFerryCanonPass()
         FerryBankReedInstances,
         FerryBankRockInstances,
         FerryDockInstances,
+        FerryUtilityInstances,
         HeroProps);
 }
 

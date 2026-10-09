@@ -1,3 +1,10 @@
+## 2026-10-09 - P1C01 Bucklebury Ferry riverbank utility detail
+
+- Added two resident `SM_CommonFishingRack` placements on the Bucklebury Ferry riverbanks through a single non-colliding `AWorldDetailCluster`, improving the worked-river crossing read without importing assets.
+- The placements stay outside gameplay-owned crossing logic and do not move the ferry boat, dock segments, footbridge, quest triggers, route endpoints, save keys, NPC ownership, NavMesh or collision.
+- Updated the Road Threat/Ferry canon contract and source test to account for two clustered utility instances while keeping limited hero actors at three and P1C02 locked.
+- Evidence boundary: STATIC-VALIDATED source contract only until exact-head UE4.27.2 CI proof runs. No PIE, device, visual, performance or Gate 6/7 acceptance is claimed.
+
 ## 2026-10-09 - P1C01 Bucklebury Ferry dock segment boarding detail
 
 - Added two resident `SM_CommonDockSegment` placements at the Bucklebury Ferry near/far landing through a single `AWorldDetailCluster`, improving the boarding-stage read with existing production geometry.
