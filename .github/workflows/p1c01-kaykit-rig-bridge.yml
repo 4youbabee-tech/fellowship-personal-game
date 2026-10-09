@@ -19,6 +19,7 @@ concurrency:
   group: p1c01-kaykit-rig-bridge-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
+# LEGAL_INTAKE_HEAD_TRIGGER: 2026-10-09T09-25Z
 # LEGAL_INTAKE_RESUMED_2026_10_09: this bridge is active again for bounded legal FBX QC.
 # P1C01_DEFINITIVE_TRAIN_RETIREMENT historical guard retained for source-contract trace:
 # github.head_ref != 'production/p1c01-definitive-chapter-closeout-2026-10-04'
