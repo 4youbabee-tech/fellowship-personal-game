@@ -110,6 +110,27 @@ if([string]::IsNullOrWhiteSpace($OutputRoot)){ $OutputRoot=[string]$manifest.out
 if([string]::IsNullOrWhiteSpace($OutputRoot)){ throw "Output root missing" }
 New-Item -ItemType Directory -Path $OutputRoot -Force | Out-Null
 
+# DEC-109: A valid receipt of prepared output files lets us skip old archive
+# extraction. Reuse is proven by the original source SHA and each output SHA.
+$previousPrepared=@{}
+$previousReportPath=Join-Path $OutputRoot "p1c01_mega_promotion_latest.json"
+if(Test-Path -LiteralPath $previousReportPath -PathType Leaf){
+  try{
+    $previousReport=Get-Content -LiteralPath $previousReportPath -Raw | ConvertFrom-Json
+    foreach($old in @($previousReport.prepared)){
+      $key=([string]$old.class+"|"+[string]$old.provider+"|"+[string]$old.staged_sha256+"|"+[string]$old.prepared_root).ToLowerInvariant()
+      $previousPrepared[$key]=$old
+    }
+    Write-Host ("P1C01_NEW_ONLY_RECEIPT_RESUME previous="+$previousPrepared.Count)
+  }catch{
+    Write-Host ("P1C01_NEW_ONLY_RECEIPT_REFRESH reason="+$_.Exception.Message)
+  }
+}
+$reusedCount=0
+$newlyPreparedCount=0
+$newlyPreparedBytes=[int64]0
+$minimumFreeReserveBytes=[int64]6442450944
+
 $receiptRows=@()
 $seen=@{}
 $badReceipts=@()
@@ -157,7 +178,11 @@ foreach($selector in @($manifest.classes | Sort-Object order)){
     continue
   }
 
-  $selected=@($matches | Sort-Object provider,asset_id,asset_slug,path | Select-Object -First ([int]$selector.max_items))
+  # Old fixed per-class First N cap could consume every slot with existing
+  # receipts and starve newly downloaded sources. Walk all matching receipts,
+  # deduplicating valid prepared outputs and checking live storage per new file.
+  $selected=@($matches | Sort-Object provider,asset_id,asset_slug,path)
+  Write-Host ("P1C01_NEW_ONLY_CLASS_SCAN class="+[string]$selector.id+" eligible="+$selected.Count+" legacy_cap_ignored=yes")
   foreach($row in $selected){
     if(-not (Test-Path -LiteralPath $row.path -PathType Leaf)){
       $manualQueue += [ordered]@{class=[string]$selector.id;provider=$row.provider;asset_id=$row.asset_id;path=$row.path;reason="receipt_file_missing"}
@@ -179,7 +204,35 @@ foreach($selector in @($manifest.classes | Sort-Object order)){
     if([string]::IsNullOrWhiteSpace($safeId)){ $safeId=[IO.Path]::GetFileNameWithoutExtension($row.path) }
     $safeId=$safeId -replace '[^A-Za-z0-9_.-]','_'
     $dest=Join-Path $OutputRoot (([string]$selector.id)+"\"+(([string]$row.provider) -replace '[^A-Za-z0-9_.-]','_')+"\"+$safeId)
-    New-Item -ItemType Directory -Path $dest -Force | Out-Null
+    $reuseKey=([string]$selector.id+"|"+[string]$row.provider+"|"+$actual+"|"+$dest).ToLowerInvariant()
+    if($previousPrepared.ContainsKey($reuseKey)){
+      $old=$previousPrepared[$reuseKey]
+      $oldProof=@(Get-OptionalPropertyValue $old "prepared_hashes" @())
+      $stillValid=($oldProof.Count -gt 0 -and $oldProof.Count -eq [int]$old.prepared_files)
+      if($stillValid){
+        foreach($part in $oldProof){
+          $rel=[string]$part.path
+          $pieces=@($rel.Replace([char]92,'/').Split('/') | Where-Object { $_ -ne '' })
+          if([IO.Path]::IsPathRooted($rel) -or @($pieces | Where-Object { $_ -eq '..' }).Count -gt 0){
+            $stillValid=$false; break
+          }
+          $outputFile=Join-Path $dest $rel
+          if(-not (Test-Path -LiteralPath $outputFile -PathType Leaf)){
+            $stillValid=$false; break
+          }
+          $existingFile=Get-Item -LiteralPath $outputFile
+          if([int64]$existingFile.Length -ne [int64]$part.size -or (Get-FileHash -LiteralPath $outputFile -Algorithm SHA256).Hash.ToLowerInvariant() -ne ([string]$part.sha256).ToLowerInvariant()){
+            $stillValid=$false; break
+          }
+        }
+      }
+      if($stillValid){
+        $prepared += $old
+        $reusedCount++
+        Write-Host ("P1C01_NEW_ONLY_REUSED class="+[string]$selector.id+" source_sha256="+$actual+" files="+$old.prepared_files)
+        continue
+      }
+    }
 
     $allowed=@()
     foreach($f in @($selector.required_formats)){
@@ -192,6 +245,31 @@ foreach($selector in @($manifest.classes | Sort-Object order)){
       }
     }
     $allowed=@($allowed | Select-Object -Unique)
+
+    # No arbitrary count cap: storage, archive safety and real source QC
+    # determine how much can be added to this wave.
+    try{
+      $requiredBytes=[int64](Get-Item -LiteralPath $row.path).Length
+      if($ext -eq ".zip"){
+        $entries=@(Get-SafeArchiveEntries -ArchivePath $row.path)
+        $requiredBytes=[int64]0
+        foreach($entry in $entries){
+          if($allowed.Count -eq 0 -or $allowed -contains [string]$entry.extension){
+            $requiredBytes += [int64]$entry.size
+          }
+        }
+      }
+      $targetDrive=[IO.DriveInfo]::new((Get-Item -LiteralPath $OutputRoot).PSDrive.Root)
+      $freeBytes=[int64]$targetDrive.AvailableFreeSpace
+      if($freeBytes -lt $minimumFreeReserveBytes + $requiredBytes){
+        $pending += [ordered]@{class=[string]$selector.id;provider=$row.provider;asset_id=$row.asset_id;path=$row.path;reason="safe_storage_reserve_exhausted";free_bytes=$freeBytes;required_bytes=$requiredBytes;reserve_bytes=$minimumFreeReserveBytes}
+        Write-Host ("P1C01_NEW_ONLY_STORAGE_DEFER class="+[string]$selector.id+" free="+$freeBytes+" need="+$requiredBytes)
+        continue
+      }
+    }catch{
+      $manualQueue += [ordered]@{class=[string]$selector.id;provider=$row.provider;asset_id=$row.asset_id;path=$row.path;reason="new_asset_preflight_rejected";detail=$_.Exception.Message}
+      continue
+    }
 
     $copiedFiles=0
     $copiedBytes=[int64]0
@@ -218,6 +296,7 @@ foreach($selector in @($manifest.classes | Sort-Object order)){
         continue
       }
       $target=Join-Path $dest ([IO.Path]::GetFileName($row.path))
+      New-Item -ItemType Directory -Path $dest -Force | Out-Null
       Copy-Item -LiteralPath $row.path -Destination $target -Force
       $copiedFiles=1
       $copiedBytes=(Get-Item -LiteralPath $target).Length
@@ -229,7 +308,19 @@ foreach($selector in @($manifest.classes | Sort-Object order)){
     foreach($rf in $required){ if($formatCounts.ContainsKey($rf) -and [int]$formatCounts[$rf] -gt 0){ $requiredPresent=$true; break } }
     $state=if($copiedFiles -le 0){"STAGED_NO_SELECTED_FILES"}elseif($requiredPresent){"INTAKE_QC_PREPARED"}else{"STAGED_FORMAT_DEBT"}
 
+    $fileHashes=@()
+    foreach($preparedFile in @(Get-ChildItem -LiteralPath $dest -Recurse -File -ErrorAction Stop)){
+      $relative=$preparedFile.FullName.Substring($dest.Length).TrimStart([char]92,[char]47)
+      $fileHashes += [ordered]@{
+        path=$relative
+        size=[int64]$preparedFile.Length
+        sha256=(Get-FileHash -LiteralPath $preparedFile.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+      }
+    }
+    $newlyPreparedCount++
+    $newlyPreparedBytes += $copiedBytes
     $prepared += [ordered]@{
+      prepared_hashes=$fileHashes
       class=[string]$selector.id
       provider=$row.provider
       batch_id=$row.batch_id
@@ -256,6 +347,11 @@ $report=[ordered]@{
   bad_receipt_count=$badReceipts.Count
   prepared_count=$prepared.Count
   intake_qc_prepared_count=@($prepared | Where-Object {$_.state -eq "INTAKE_QC_PREPARED"}).Count
+  reused_existing_count=$reusedCount
+  newly_prepared_count=$newlyPreparedCount
+  newly_prepared_bytes=$newlyPreparedBytes
+  selection_rule="ALL_ELIGIBLE_NEW_NOT_LEGACY_FIRST_N"
+  minimum_free_storage_reserve_bytes=$minimumFreeReserveBytes
   pending_count=$pending.Count
   manual_queue_count=$manualQueue.Count
   prepared=$prepared
@@ -273,6 +369,7 @@ $report=[ordered]@{
 $outPath=Join-Path $OutputRoot "p1c01_mega_promotion_latest.json"
 $report | ConvertTo-Json -Depth 12 | Set-Content -LiteralPath $outPath -Encoding UTF8
 
+Write-Host ("P1C01_NEW_ONLY_SOURCE_SUMMARY new="+$newlyPreparedCount+" new_bytes="+$newlyPreparedBytes+" reused="+$reusedCount+" deferred="+$pending.Count)
 if($badReceipts.Count -gt 0 -or $manualQueue.Count -gt 0){
   Write-Host ("P1C01_MEGA_PROMOTION_PASS_WITH_MANUAL_QUEUE prepared="+$prepared.Count+" intakeQC="+$report.intake_qc_prepared_count+" pending="+$pending.Count+" manual="+$manualQueue.Count+" badReceipts="+$badReceipts.Count+" report="+$outPath)
   foreach($entry in $manualQueue){ Write-Host ("P1C01_MEGA_PROMOTION_MANUAL_QUEUE "+($entry | ConvertTo-Json -Compress -Depth 6)) }

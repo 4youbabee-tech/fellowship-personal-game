@@ -24,7 +24,8 @@
     "package_rule": "One chapter closure train owns P1C01 preparation. Raw Warehouse stock may grow by multiple GB; Git/LFS promotion is evidence-gated and runtime residency stays separately bounded.",
     "quarantine_rule": "Provider/asset/source failures quarantine only that car. Infrastructure/inventory/storage corruption is hard-fail.",
     "no_duplicate_rule": "Legacy overlapping P1C01 staging/promotion/export/intake steps are suppressed while this pack runs.",
-    "runtime_boundary": "Source/QC lanes may parallelize and quarantine provider-local failures; exactly one runtime-changing integration authority advances through exact-head gates."
+    "runtime_boundary": "Source/QC lanes may parallelize and quarantine provider-local failures; exactly one runtime-changing integration authority advances through exact-head gates.",
+    "asset_first_progressive_policy": "DEC-109: source-only pushes accumulate every qualified NEW asset; no repeated global administrative audit; full chapter Unreal and Gate6/7 at final closeout."
   },
   "target_profile": {
     "engine": "UE4.27.2",
@@ -47,7 +48,9 @@
     "kaykit_packs": 8,
     "opengameart_assets": 17,
     "promotion_selector_ceiling": 187,
-    "material_wave_items": 26
+    "material_wave_items": 26,
+    "eligible_source_selection": "ALL_NEW_RECEIPTS_NO_LEGACY_FIRST_N; bounded by real storage 6GiB reserve and safe ZIP/source QC",
+    "promotion_selector_ceiling_is_legacy_metadata": true
   },
   "cars": [
     {

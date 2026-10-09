@@ -1144,6 +1144,34 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("WarehouseQuaterniusAnimationBatchV1.json", workflow)
         self.assertIn("stage_quaternius_warehouse.ps1", workflow)
 
+    def test_dec109_new_assets_first_and_final_chapter_review(self):
+        root = Path(__file__).resolve().parents[1]
+        governor = json.loads((root / "Data/ProjectGovernor.json").read_text(encoding="utf-8"))
+        self.assertTrue(any(d["id"] == "DEC-109" for d in governor["decisions"]))
+        pack = (root / "Scripts/run_p1c01_chapter_closure_pack_v2.ps1").read_text(encoding="utf-8")
+        self.assertIn("[switch]$AssetFirst", pack)
+        self.assertIn("P1C01_ASSET_FIRST_ADMIN_DEFER", pack)
+        self.assertIn("MEGA_PROMOTION", pack)
+        promotion = (root / "Scripts/run_warehouse_p1c01_mega_promotion.ps1").read_text(encoding="utf-8")
+        self.assertIn("P1C01_NEW_ONLY_CLASS_SCAN", promotion)
+        self.assertIn("P1C01_NEW_ONLY_REUSED", promotion)
+        self.assertIn("prepared_hashes", promotion)
+        self.assertIn("safe_storage_reserve_exhausted", promotion)
+        self.assertNotIn("Select-Object -First ([int]$selector.max_items)", promotion)
+        closure = (root / ".github/workflows/p1c01-chapter-closure.yml").read_text(encoding="utf-8")
+        self.assertIn("P1C01_ASSET_FIRST_WAVE_EXECUTE", closure)
+        self.assertIn("production/p1c01-bulk-smart-ci-governor-2026-10-09", closure)
+        kaykit = (root / ".github/workflows/p1c01-kaykit-rig-bridge.yml").read_text(encoding="utf-8")
+        self.assertIn("workflow_dispatch:", kaykit)
+        self.assertNotIn("  pull_request:", kaykit)
+        self.assertIn("timeout-minutes: 45", kaykit)
+        importer = (root / "Scripts/ci_import_production_assets.cmd").read_text(encoding="utf-8")
+        bridge = (root / "Scripts/run_p1c01_kaykit_rig_bridge_ue4.ps1").read_text(encoding="utf-8")
+        self.assertIn("SHIRE_KAYKIT_RIG_ISOLATED_PROBE", importer)
+        self.assertIn("KAYKIT_RIG_ISOLATED_IMPORT_PASS", importer)
+        self.assertIn("call :import_frodo_runtime", importer)
+        self.assertIn("SHIRE_KAYKIT_RIG_ISOLATED_PROBE", bridge)
+
     def test_p1c01_kaykit_rig_bridge_is_bounded_and_non_runtime(self):
         root = Path(__file__).resolve().parents[1]
         packet = json.loads((root / "Data" / "P1C01KayKitRigTechnicalBridgeV1.json").read_text(encoding="utf-8"))

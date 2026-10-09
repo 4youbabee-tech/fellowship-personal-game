@@ -1,23 +1,16 @@
 name: P1C01 KayKit Rig Technical Bridge
 
 on:
-  pull_request:
-    branches: [develop]
-    paths:
-      - 'Data/P1C01KayKitRigTechnicalBridgeV1.json'
-      - 'Data/WarehouseKayKitGitHubAcquisitionBatchV1.json'
-      - 'Scripts/stage_p1c01_kaykit_rig_bridge.ps1'
-      - 'Scripts/run_p1c01_kaykit_rig_bridge_ue4.ps1'
-      - 'Scripts/ci_import_production_assets.cmd'
-      - 'Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp'
-      - '.github/workflows/p1c01-kaykit-rig-bridge.yml'
+  # An expensive skeletal UE4 technical gate is a chapter closeout operation,
+  # not a per-commit or per-import administrative check.
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
   group: p1c01-kaykit-rig-bridge-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 # LEGAL_INTAKE_HEAD_TRIGGER: 2026-10-09T09-25Z
 # LEGAL_INTAKE_RESUMED_2026_10_09: this bridge is active again for bounded legal FBX QC.
@@ -80,7 +73,7 @@ jobs:
       - Windows
       - X64
       - ue4-27
-    timeout-minutes: 90
+    timeout-minutes: 45
     env:
       TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
 
@@ -110,7 +103,7 @@ jobs:
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\Scripts\ci_build_unreal.cmd"'
 
-      - name: Run unchanged UE4 skeletal hard gates and stop on first clean pass
+      - name: Run isolated KayKit UE4 technical gate without unrelated Frodo LFS
         shell: powershell
         run: |
           & "$env:GITHUB_WORKSPACE\Scripts\run_p1c01_kaykit_rig_bridge_ue4.ps1" -StaticReceiptPath "$env:RUNNER_TEMP\shire-kaykit-rig-bridge\p1c01_kaykit_rig_bridge_static.json" -ArtifactRoot "$env:RUNNER_TEMP\shire-kaykit-rig-bridge" -OutputRoot "$env:RUNNER_TEMP\shire-kaykit-rig-ue4"

@@ -82,8 +82,19 @@ foreach($candidate in $selected){
 
     if(Test-Path -LiteralPath $importLog){ Remove-Item -LiteralPath $importLog -Force }
     Write-Host ("KAYKIT_RIG_UE4_PROBE_BEGIN file="+$candidate.filename+" sha256="+$expectedSha+" isolated-source=yes")
-    & $importScript "-EnableCharacterRigImport"
-    $importExit = [int]$LASTEXITCODE
+    # Set this one-call opt-in only while the real source tree is isolated.
+    $savedIsolatedFlag=[Environment]::GetEnvironmentVariable("SHIRE_KAYKIT_RIG_ISOLATED_PROBE","Process")
+    try{
+      $env:SHIRE_KAYKIT_RIG_ISOLATED_PROBE="1"
+      & $importScript "-EnableCharacterRigImport"
+      $importExit = [int]$LASTEXITCODE
+    }finally{
+      if($null -eq $savedIsolatedFlag){
+        Remove-Item -LiteralPath Env:SHIRE_KAYKIT_RIG_ISOLATED_PROBE -ErrorAction SilentlyContinue
+      }else{
+        $env:SHIRE_KAYKIT_RIG_ISOLATED_PROBE=$savedIsolatedFlag
+      }
+    }
   }
   finally {
     Restore-ProductionSource

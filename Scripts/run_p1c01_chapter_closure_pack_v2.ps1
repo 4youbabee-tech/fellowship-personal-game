@@ -1,7 +1,8 @@
 param(
   [string]$ManifestPath = "Data/P1C01ChapterClosureMegaPackV2.json",
   [string]$WarehouseRoot = "D:\actions-runner\_warehouse\ShireJourney",
-  [string]$ReportRoot = ""
+  [string]$ReportRoot = "",
+  [switch]$AssetFirst
 )
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
@@ -66,6 +67,13 @@ function Invoke-ManifestScript {
 }
 
 foreach($car in @($manifest.cars | Sort-Object order)){
+  # DEC-109: New asset acquisition/promotions stay active; global admin scans
+  # and old coverage reports wait for the definitive full closeout.
+  if($AssetFirst -and ([string]$car.id) -in @("INVENTORY_AUDIT","SATURATION_REPORT","CRITICAL_GAP_PREP","PROVIDER_RESOLUTION","FINAL_INVENTORY_AUDIT")){
+    Add-CarResult ([string]$car.id) "DEFERRED_TO_CLOSEOUT" 0 "asset-first only; retain per-source SHA256 and storage QC"
+    Write-Host ("P1C01_ASSET_FIRST_ADMIN_DEFER id="+[string]$car.id)
+    continue
+  }
   switch([string]$car.id){
     "PREFLIGHT_STORAGE" {
       Invoke-Car $car {
@@ -73,11 +81,19 @@ foreach($car in @($manifest.cars | Sort-Object order)){
         $drive=[IO.DriveInfo]::new($warehouseItem.PSDrive.Root)
         $reserve=[int64]$manifest.storage_policy.minimum_free_disk_reserve_bytes
         $free=[int64]$drive.AvailableFreeSpace
-        $existing=@(Get-ChildItem -LiteralPath $WarehouseRoot -Recurse -File -ErrorAction SilentlyContinue)
-        $sum=($existing | Measure-Object -Property Length -Sum).Sum
-        $existingBytes=if($null -eq $sum){[int64]0}else{[int64]$sum}
+        $existing=@()
+        $existingBytes=[int64]0
+        if(-not $AssetFirst){
+          $existing=@(Get-ChildItem -LiteralPath $WarehouseRoot -Recurse -File -ErrorAction SilentlyContinue)
+          $sum=($existing | Measure-Object -Property Length -Sum).Sum
+          $existingBytes=if($null -eq $sum){[int64]0}else{[int64]$sum}
+        }
         if($free -lt $reserve){ throw "warehouse free-space reserve not met: free=$free reserve=$reserve" }
-        Write-Host ("P1C01_CLOSURE_PACK_STORAGE_PASS existingFiles="+$existing.Count+" existingBytes="+$existingBytes+" freeBytes="+$free+" reserveBytes="+$reserve)
+        if($AssetFirst){
+          Write-Host ("P1C01_CLOSURE_PACK_STORAGE_PASS existingFiles=deferred existingBytes=deferred freeBytes="+$free+" reserveBytes="+$reserve)
+        }else{
+          Write-Host ("P1C01_CLOSURE_PACK_STORAGE_PASS existingFiles="+$existing.Count+" existingBytes="+$existingBytes+" freeBytes="+$free+" reserveBytes="+$reserve)
+        }
       }
       if($hardFailure){ break }
     }
@@ -126,29 +142,40 @@ foreach($car in @($manifest.cars | Sort-Object order)){
 $passCount=@($results | Where-Object {$_.state -eq "PASS"}).Count
 $quarantineCount=@($results | Where-Object {$_.state -eq "QUARANTINED_CONTINUE"}).Count
 $hardCount=@($results | Where-Object {$_.state -eq "HARD_FAILURE"}).Count
-$files=@(Get-ChildItem -LiteralPath $WarehouseRoot -Recurse -File -ErrorAction SilentlyContinue)
-$sum=($files | Measure-Object -Property Length -Sum).Sum
-$bytes=if($null -eq $sum){[int64]0}else{[int64]$sum}
+$files=@()
+$bytes=[int64]0
+if(-not $AssetFirst){
+  $files=@(Get-ChildItem -LiteralPath $WarehouseRoot -Recurse -File -ErrorAction SilentlyContinue)
+  $sum=($files | Measure-Object -Property Length -Sum).Sum
+  $bytes=if($null -eq $sum){[int64]0}else{[int64]$sum}
+}else{
+  Write-Host "P1C01_ASSET_FIRST_NO_REDUNDANT_GLOBAL_WAREHOUSE_SCAN"
+}
 $report=[ordered]@{
   schema_version=2
   pack_id=[string]$manifest.pack_id
   generated_at_utc=[DateTime]::UtcNow.ToString("o")
   warehouse_root=$WarehouseRoot
-  warehouse_files=$files.Count
-  warehouse_bytes=$bytes
+  warehouse_files=$(if($AssetFirst){$null}else{$files.Count})
+  warehouse_bytes=$(if($AssetFirst){$null}else{$bytes})
   car_count=$results.Count
   passed=$passCount
   quarantined=$quarantineCount
   hard_failures=$hardCount
   cars=$results
+  execution_mode=$(if($AssetFirst){"ASSET_FIRST_NEW_ONLY"}else{"FULL_CLOSEOUT"})
+  deferred_admin_count=@($results | Where-Object {$_.state -eq "DEFERRED_TO_CLOSEOUT"}).Count
+  warehouse_global_inventory_scanned=(-not $AssetFirst)
   execution_rule="Large chapter source cars continue independently; only infrastructure failure stops the pack."
   acceptance_boundary="Source/acquisition/preparation only; no UE import/integration/PIE/device/visual/performance acceptance."
 }
+$reportedFiles=if($AssetFirst){"deferred"}else{[string]$files.Count}
+$reportedBytes=if($AssetFirst){"deferred"}else{[string]$bytes}
 $reportPath=Join-Path $ReportRoot "p1c01_chapter_closure_pack_v2_latest.json"
 $report | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $reportPath -Encoding UTF8
 if($hardFailure){
-  Write-Host ("P1C01_CHAPTER_CLOSURE_PACK_V2_FAIL passed="+$passCount+" quarantined="+$quarantineCount+" hard="+$hardCount+" files="+$files.Count+" bytes="+$bytes+" report="+$reportPath)
+  Write-Host ("P1C01_CHAPTER_CLOSURE_PACK_V2_FAIL passed="+$passCount+" quarantined="+$quarantineCount+" hard="+$hardCount+" files="+$reportedFiles+" bytes="+$reportedBytes+" report="+$reportPath)
   exit 41
 }
-Write-Host ("P1C01_CHAPTER_CLOSURE_PACK_V2_PASS passed="+$passCount+" quarantined="+$quarantineCount+" hard=0 files="+$files.Count+" bytes="+$bytes+" report="+$reportPath)
+Write-Host ("P1C01_CHAPTER_CLOSURE_PACK_V2_PASS passed="+$passCount+" quarantined="+$quarantineCount+" hard=0 files="+$reportedFiles+" bytes="+$reportedBytes+" report="+$reportPath)
 exit 0

@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+      - production/p1c01-bulk-smart-ci-governor-2026-10-09
     paths:
       - 'Data/P1C01MaterialImportWaveV2.json'
       - 'Data/WarehouseP1C01ClosurePromotionTrainV2.json'
@@ -12,6 +13,8 @@ on:
       - 'Data/P1C01CharacterRigAnimationPrepV1.json'
       - 'Scripts/preflight_p1c01_chapter_closure_pack_v2.ps1'
       - 'Scripts/run_p1c01_chapter_closure_pack_v2.ps1'
+      - 'Scripts/run_warehouse_p1c01_mega_promotion.ps1'
+      - '.github/workflows/p1c01-chapter-closure.yml'
   pull_request:
     branches:
       - develop
@@ -30,12 +33,12 @@ permissions:
   contents: write
 
 concurrency:
-  group: p1c01-chapter-closure-${{ github.repository }}-${{ github.event_name == 'pull_request' && github.head_ref || 'develop' }}
+  group: p1c01-chapter-closure-${{ github.repository }}-${{ github.ref_name }}
   cancel-in-progress: false
 
 jobs:
   closure:
-    if: ${{ github.event_name != 'pull_request' || github.head_ref != 'production/p1c01-definitive-chapter-closeout-2026-10-04' }}
+    if: ${{ github.event_name != 'pull_request' }}
     name: Run P1C01 closure source train
     runs-on:
       - self-hosted
@@ -105,7 +108,9 @@ jobs:
               'Data/P1C01OneShotChapterFinishV1.json',
               'Data/P1C01CharacterRigAnimationPrepV1.json',
               'Scripts/preflight_p1c01_chapter_closure_pack_v2.ps1',
-              'Scripts/run_p1c01_chapter_closure_pack_v2.ps1'
+              'Scripts/run_p1c01_chapter_closure_pack_v2.ps1',
+              'Scripts/run_warehouse_p1c01_mega_promotion.ps1',
+              '.github/workflows/p1c01-chapter-closure.yml'
             )
             $relevant = @($changed | Where-Object { $closureInputs -contains $_ })
             if ($relevant.Count -eq 0) {
@@ -144,10 +149,19 @@ jobs:
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_CLOSURE_SOURCE%\Scripts\preflight_p1c01_chapter_closure_pack_v2.ps1" -ManifestPath "%SHIRE_CLOSURE_SOURCE%\Data\P1C01ChapterClosureMegaPackV2.json"
 
-      - name: Run P1C01 Chapter Closure Mega Pack V2
+      - name: Execute new source assets first and defer admin-only audits
         if: env.RUN_P1C01_CLOSURE == 'true'
-        shell: cmd
-        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_CLOSURE_SOURCE%\Scripts\run_p1c01_chapter_closure_pack_v2.ps1" -ManifestPath "%SHIRE_CLOSURE_SOURCE%\Data\P1C01ChapterClosureMegaPackV2.json"
+        shell: powershell
+        run: |
+          $params=@("-ManifestPath", "$env:SHIRE_CLOSURE_SOURCE\Data\P1C01ChapterClosureMegaPackV2.json")
+          if($env:GITHUB_REF_NAME -eq "production/p1c01-bulk-smart-ci-governor-2026-10-09") {
+            $params += "-AssetFirst"
+            Write-Host "P1C01_ASSET_FIRST_WAVE_EXECUTE"
+          } else {
+            Write-Host "P1C01_FULL_SOURCE_CLOSEOUT_EXECUTE"
+          }
+          & powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$env:SHIRE_CLOSURE_SOURCE\Scripts\run_p1c01_chapter_closure_pack_v2.ps1" @params
+          if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}
 
       - name: Remove isolated closure source checkout
         if: always()

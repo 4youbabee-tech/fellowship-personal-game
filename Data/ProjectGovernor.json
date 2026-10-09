@@ -47,7 +47,8 @@
     "Story scope is experience-first, not summary-first: the Timeline organizes sequence but never caps detail; compatible Tolkien book-only events/details should be playable when safe, and meaningful discovered source material may not be silently omitted.",
     "Closing a temporary PR is an explicit branch-lifecycle disposition. If it closes unmerged, any useful unique work must first be selectively salvaged into the current authority or recorded by exact commit SHA/disposition; after closure the unchanged remote head ref is deleted. A moved ref or active PR head is preserved as new work.",
     "An active runtime chapter is one owner-facing One-Shot Mega Chapter Finish: preflight the complete chapter payload first, then continue through all required character/world/gameplay/audio/save/performance/acceptance lanes without asking the owner to re-authorize routine internal steps. Internal runtime-changing dependencies may remain serialized for safety; this never permits opening the next runtime chapter early.",
-    "Continuous Verified Build Protocol (CVBP) is the default production operating mode: execute meaningful linked work in bounded packets, persist every material decision in the Governor/handoff, use one integrated exact-head Unreal train, parallelize independent read-only/static checks, and never trade away story/canon, licensing, save integrity, performance, human review or Gate 6/7 evidence for speed."
+    "Continuous Verified Build Protocol (CVBP) is the default production operating mode: execute meaningful linked work in bounded packets, persist every material decision in the Governor/handoff, use one integrated exact-head Unreal train, parallelize independent read-only/static checks, and never trade away story/canon, licensing, save integrity, performance, human review or Gate 6/7 evidence for speed.",
+    "DEC-109 default in every Work session: maximize NEW qualified P1C01 asset intake; suppress repeated global administrative work and full Unreal runs for source-only additions; final closeout keeps full Gate6/7."
   ],
   "requirement_status_values": [
     "REQUESTED",
@@ -5930,6 +5931,32 @@
         "Never claim staged sources, compile or automated screenshot implies finished playable characters or Gate 6/7."
       ],
       "evidence_boundary": "Policy and code proposed for CI; no UE4, PIE, device, visual or throughput acceptance claimed."
+    },
+    {
+      "id": "DEC-109",
+      "title": "Permanent P1C01 Asset First: qualify all new files, defer redundant administration",
+      "status": "ACCEPTED",
+      "priority": "CRITICAL",
+      "date": "2026-10-09",
+      "origin": "Owner demands immediate bulk ingestion and no repeated heavy full tests until actual chapter closeout.",
+      "requirements": [
+        "REQ-PROD-011",
+        "REQ-P1C01-CLOSEOUT-001"
+      ],
+      "resolution": "Use the AssetFirst source wave with all eligible new source receipts, SHA256 reuse and 6GiB reserve; defer global whole-warehouse admin and repeated KayKit runs. Mandatory per-source integrity and runtime-impact tests remain. Full exact-head C++/import/world/PIE/device Gate 6/7 at final P1C01 closeout.",
+      "implementation_contract": [
+        "Process every eligible new source with validated provenance, rights, SHA, FBX/PNG/TGA/WAV and safe archive extraction.",
+        "Reuse unchanged prepared output after comparing source SHA and output SHA inventory; do not re-extract it.",
+        "Defer repeated warehouse inventory, saturation, critical gap/provider reports until chapter closeout.",
+        "Replace automatic KayKit skeletal PR workflow with an explicit manual technical gate and do not invoke unrelated Frodo LFS inside isolated candidate import.",
+        "Protect single warehouse writer, one UE runtime integrator, low-spec budgets, C++ tests for impactful runtime changes and full Gate6/7 before P1C02."
+      ],
+      "evidence": [
+        "Scripts/run_p1c01_chapter_closure_pack_v2.ps1",
+        "Scripts/run_warehouse_p1c01_mega_promotion.ps1",
+        ".github/workflows/p1c01-chapter-closure.yml"
+      ],
+      "evidence_boundary": "SOURCE-IMPLEMENTED ONLY, CI/exact-head UE4 and final art acceptance pending."
     }
   ],
   "open_conflicts": [],

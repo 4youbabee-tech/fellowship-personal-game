@@ -42,6 +42,16 @@ findstr /C:"ShireProductionImport:" "%IMPORTLOG%" | findstr /C:"0 failures" >nul
 if errorlevel 1 exit /b 51
 echo UE4.27.2 production asset import succeeded.
 
+rem KayKit isolated character technical QC is NOT Frodo production intake.
+rem The switch is accepted only with an exact single-FBX isolated source tree.
+if /I "%SHIRE_KAYKIT_RIG_ISOLATED_PROBE%"=="1" (
+  if /I not "%~1"=="-EnableCharacterRigImport" exit /b 65
+  if not exist "%GITHUB_WORKSPACE%\SourceAssets\Production\Characters\Rigs\P1C01_TECHNICAL_BRIDGE\SK_P1C01_KAYKIT_TECHNICAL.fbx" exit /b 66
+  if exist "%GITHUB_WORKSPACE%\SourceAssets\Production\Imported" exit /b 67
+  echo KAYKIT_RIG_ISOLATED_IMPORT_PASS frodo_lfs_skipped=yes
+  exit /b 0
+)
+
 call :import_frodo_runtime
 if errorlevel 1 exit /b !ERRORLEVEL!
 echo UE4.27.2 production asset import + persistent Frodo runtime import succeeded.

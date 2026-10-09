@@ -261,5 +261,12 @@
     }
   ],
   "selector_ceiling_total": 187,
-  "evidence_boundary": "Large chapter preparation only. Source count/bytes do not imply UE import, runtime integration, visual quality, PIE, device or performance acceptance."
+  "evidence_boundary": "Large chapter preparation only. Source count/bytes do not imply UE import, runtime integration, visual quality, PIE, device or performance acceptance.",
+  "new_only_selection": {
+    "mode": "EVERY_ELIGIBLE_RECEIPT",
+    "previous_max_items": "LEGACY_ANNOTATION_NOT_ENFORCED",
+    "reuse": "source SHA256 and every staged file SHA256/size must match previous receipt",
+    "stop": "real disk reserve / bad hash / unsafe format / archive / provenance only",
+    "physical_min_free_gib": 6
+  }
 }
