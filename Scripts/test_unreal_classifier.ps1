@@ -11,8 +11,8 @@ function Test-Git {
     $global:LASTEXITCODE = 0
     switch ($args[0]) {
         'fetch' { return }
-        'diff' { return $script:Case.Paths }
-        'rev-parse' { return 'candidate-parent' }
+        'diff' { if (-not $script:FirstDiffParent) { $script:FirstDiffParent = [string]$args[2] }; return $script:Case.Paths }
+        'rev-parse' { if ($script:Case.ParentUnavailable) { $global:LASTEXITCODE = 1; return }; return 'candidate-parent' }
         'rev-list' { return @('candidate-parent') }
         default { throw "Unexpected Git call: $args" }
     }
@@ -58,6 +58,7 @@ $cases = @(
 $oldWorkspace = $env:GITHUB_WORKSPACE
 $oldBase = $env:BASE_SHA
 $oldTarget = $env:TARGET_SHA
+$oldEvent = $env:GITHUB_EVENT_NAME
 $oldToken = $env:GH_TOKEN
 $oldLocation = Get-Location
 try {
@@ -65,11 +66,14 @@ try {
     $env:BASE_SHA = 'integration-base'
     $env:TARGET_SHA = 'candidate'
     $env:GH_TOKEN = 'mock-no-network'
+    $env:GITHUB_EVENT_NAME = 'pull_request'
     foreach ($caseItem in $cases) {
         $script:Case = $caseItem
         $script:ActualMode = ''
         $script:ActualReset = $false
+        $script:FirstDiffParent = ''
         & $program
+        if ($script:FirstDiffParent -ne 'candidate-parent') { throw 'PR must classify exact first parent' }
         if ($script:ActualMode -ne $caseItem.Mode) {
             throw "$($caseItem.Name): expected $($caseItem.Mode), got $script:ActualMode"
         }
@@ -79,10 +83,17 @@ try {
         }
         Write-Host "CLASSIFIER_TEST_PASS $($caseItem.Name) mode=$script:ActualMode reset=$script:ActualReset"
     }
+    $env:GITHUB_EVENT_NAME = 'pull_request'
+    $script:Case = @{Name='missing-parent'; Paths=@('README.md'); Proof=$true; ParentUnavailable=$true; TreeProof=$false}
+    $script:ActualMode = ''
+    & $program
+    if ($script:ActualMode -ne 'full') { throw 'Missing PR first parent must fail closed' }
+    Write-Host 'CLASSIFIER_TEST_PASS missing-first-parent-fail-closed'
 } finally {
     $env:GITHUB_WORKSPACE = $oldWorkspace
     $env:BASE_SHA = $oldBase
     $env:TARGET_SHA = $oldTarget
+    $env:GITHUB_EVENT_NAME = $oldEvent
     $env:GH_TOKEN = $oldToken
     Set-Location $oldLocation
 }

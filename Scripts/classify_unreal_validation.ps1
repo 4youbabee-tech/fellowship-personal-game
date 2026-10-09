@@ -449,12 +449,20 @@ Set-Location $env:GITHUB_WORKSPACE
 $git = Get-GitExe
 if (-not $git) { Set-Mode "full" "git-unavailable-fail-safe" ""; exit 0 }
 
+# For pull requests, BASE_SHA can be the original PR base and causes
+# repeated full-branch audits. Classify the exact candidate against its first parent.
 $parentSha = ""
-if ($env:BASE_SHA) {
-    $parentSha = $env:BASE_SHA.Trim()
-}
-if (-not $parentSha) {
-    $parentSha = (& $git rev-parse "HEAD^").Trim()
+if ($env:GITHUB_EVENT_NAME -eq "pull_request") {
+    $direct = @(& $git rev-parse "$($env:TARGET_SHA)^" 2>$null)
+    if ($LASTEXITCODE -ne 0 -or $direct.Count -ne 1 -or -not $direct[0]) {
+        Set-Mode "full" "pr-first-parent-unavailable-fail-safe" ""
+        exit 0
+    }
+    $parentSha = ([string]$direct[0]).Trim()
+    Write-Host "UNREAL_PR_FIRST_PARENT_DELTA head=$($env:TARGET_SHA) parent=$parentSha"
+} else {
+    if ($env:BASE_SHA) { $parentSha = $env:BASE_SHA.Trim() }
+    if (-not $parentSha) { $parentSha = (& $git rev-parse "$($env:TARGET_SHA)^").Trim() }
 }
 if (-not $parentSha) { Set-Mode "full" "parent-unavailable-fail-safe" ""; exit 0 }
 

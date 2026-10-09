@@ -1,3 +1,9 @@
+## 2026-10-09 — DEC-108 permanent qualified bulk production and Smart CI candidate
+- Owner policy: all future Work sessions default to largest *qualified* chapter-scale batch and avoid micro-commit/heavy-UE churn. Existing Governor DEC-078/104 remain binding. Raise upload thresholds only after measured runner headroom/LFS quota, not arbitrary byte targets.
+- Exact PR delta: Unreal classifier now compares the candidate with its direct Git first parent, not the PR integration base; unresolvable parent fails closed to full. Prior exact-head ancestor proof conditions and final P1C01 Gate 6/7 remain mandatory.
+- Current KayKit Rig #314 and Unreal #1803 were active at audit; this work is isolated to separate branch, preserving the active P1C01 PR. No final art assets or new UE4 import results claimed.
+- Proof: SOURCE-IMPLEMENTED / CI NOT YET EXECUTED. Human PIE/device/visual and target FPS still pending. P1C02 runtime locked.
+
 ## 2026-10-09 - Source-contract alignment for resumed KayKit intake
 
 | Scope | Change | Evidence boundary |

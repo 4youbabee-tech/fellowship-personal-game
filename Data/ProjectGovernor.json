@@ -2856,7 +2856,8 @@
         "Data/MasterExecutionRoadmap.json is reconciled to the current P1C01 + parallel whole-game preparation state.",
         "Warehouse #286 clean inventory audit proves the active-receipt warehouse can continue production; full maximum-safe lane saturation remains operational work in progress.",
         "Hosted Unreal preflight classification reserves the self-hosted UE4.27 machine only for full/core/asset/acceptance modes; source/preproduction/static-only deltas remain on GitHub-hosted validation lanes without weakening exact-head engine gates.",
-        "DEC-106 applies the user's accepted UE4.27 report's HISM optimisation to already-authored P1C01 scenic placement while preserving existing world ownership, collision and exact-head gates."
+        "DEC-106 applies the user's accepted UE4.27 report's HISM optimisation to already-authored P1C01 scenic placement while preserving existing world ownership, collision and exact-head gates.",
+        "DEC-108 makes maximum-qualified bulk waves and parent-accurate Smart CI permanent Work defaults."
       ]
     },
     {
@@ -5908,6 +5909,27 @@
       ],
       "evidence_boundary": "The first exact-head source-gate attempt (#1776) exposed stale party-loop assertions (4 clusters/56 instances/4 cluster calls and a hard-coded population log) after the accepted batch extended the layout to 10 cluster groups/62 instances/5 calls. Those source/data assertions were reconciled together; fresh exact-head static and UE4.27.2 proof is still pending. No measured FPS/draw-call, PIE, DEVICE, visual or Gate 6/7 acceptance is claimed.",
       "authority": "OWNER_AUTHORIZED_P1C01_PERFORMANCE_SCOPE"
+    },
+    {
+      "id": "DEC-108",
+      "title": "Permanent maximum qualified bulk production and Smart CI",
+      "date": "2026-10-09",
+      "status": "ACCEPTED",
+      "priority": "CRITICAL",
+      "origin": "Owner demands a permanent Work manager default for larger qualified asset waves and avoidance of redundant heavy Unreal builds.",
+      "requirements": [
+        "REQ-PROD-011",
+        "REQ-CVBP-001"
+      ],
+      "resolution": "Default every session to maximum qualified chapter-wide source preparation with one serialized warehouse writer and Unreal runtime integrator. Classify new PR head against its direct parent rather than cumulative PR base; preserve proof-based fail-closed Unreal gates and Gate 6/7.",
+      "implementation_contract": [
+        "Batch eligible licensed FBX, PNG/TGA and WAV source files in large logical chapter waves; hash, QC and segregate runtime imports.",
+        "Do not raise fixed 48MiB/item or 640MiB/batch budgets without measured disk and LFS quota proof; prioritize actual files integrated over bytes uploaded.",
+        "Do not push micro-commits while the single Unreal runner is occupied; preserve active KayKit/UE jobs.",
+        "Run static source tests each candidate, safely inherit only genuinely green parent/tree proof; final P1C01 needs full exact-head Unreal gates and human/device acceptance.",
+        "Never claim staged sources, compile or automated screenshot implies finished playable characters or Gate 6/7."
+      ],
+      "evidence_boundary": "Policy and code proposed for CI; no UE4, PIE, device, visual or throughput acceptance claimed."
     }
   ],
   "open_conflicts": [],
@@ -9308,5 +9330,15 @@
       "next_visible_packet": "character final FBX + Shire terrain/foliage/architecture replacements; 7-shot review shows low-poly/proxy surfaces, weak party field read, tree geometry and distant Ferry detail",
       "scope_limit": "no P1C02 runtime before Gate 6/7 accepted"
     }
+  },
+  "maximum_qualified_bulk_smart_ci_policy_2026_10_09": {
+    "status": "PERMANENT_OWNER_DEFAULT_IMPLEMENTED_IN_SOURCE",
+    "manager_default": "Every future Work session; no repeated owner prompt",
+    "scope": "P1C01 one-shot current chapter plus parallel source-only later chapter preparation",
+    "batch": "largest useful licensed SHA256-verified qualified source wave permitted by actual quota, warehouse reserve and runner health",
+    "ci": "PR exact first-parent delta and safe proof inheritance; no repeating full Unreal for purely safe docs; risky deltas fail closed",
+    "preserve": "48MiB/source and 640MiB/material branch until measured authorized adjustment",
+    "runtime": "One writer, async soft assets, pooling, HISM/LOD, DX11 720p ~2GB VRAM 30fps target",
+    "acceptance": "P1C01 still open; Gate 6/7 and human device testing required"
   }
 }
