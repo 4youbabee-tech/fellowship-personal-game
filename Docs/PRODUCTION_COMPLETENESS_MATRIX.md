@@ -1,3 +1,11 @@
+## 2026-10-09 - Source-contract alignment for resumed KayKit intake
+
+| Scope | Change | Evidence boundary |
+|---|---|---|
+| Static/source contracts | Updated KayKit contract from retired 2-candidate Frodo-only bridge to bounded multi-character legal-intake bridge | SOURCE-IMPLEMENTED; next CI required |
+| Known rejections | Rogue/RogueHooded SHA rejection expectations remain enforced | STATIC guard preserved |
+| Workflow trace | Added `LEGAL_INTAKE_RESUMED_2026_10_09` plus historical retirement marker comment | No runtime change |
+
 ## 2026-10-09 - KayKit UE4 gate failure triage
 
 | Scope | Evidence | Correction |
