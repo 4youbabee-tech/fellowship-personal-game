@@ -29,8 +29,10 @@ if($target -ne $null){
 }
 $sourceRelativePlatform = $sourceRelative.Replace("/", "\\")
 $contentRelativePlatform = $contentRelative.Replace("/", "\\")
-$sourceDestination = Join-Path (Join-Path $root "SourceAssets\Production") $sourceRelativePlatform
+$productionRoot = Join-Path $root "SourceAssets\Production"
+$sourceDestination = Join-Path $productionRoot $sourceRelativePlatform
 $contentDir = Join-Path $root $contentRelativePlatform
+$sourceIsolationBackup = Join-Path $OutputRoot "SourceAssets_Production_Backup"
 $generated = @(
   (Join-Path $contentDir ($assetName + ".uasset")),
   (Join-Path $contentDir ($assetName + "_Skeleton.uasset")),
@@ -45,6 +47,21 @@ function Remove-TransientRigAssets {
   Remove-Item -LiteralPath $sourceDestination -Force -ErrorAction SilentlyContinue
 }
 
+function Enter-IsolatedRigSource {
+  if(Test-Path -LiteralPath $sourceIsolationBackup){ Remove-Item -LiteralPath $sourceIsolationBackup -Recurse -Force }
+  if(Test-Path -LiteralPath $productionRoot){
+    Move-Item -LiteralPath $productionRoot -Destination $sourceIsolationBackup -Force
+  }
+  New-Item -ItemType Directory -Path $productionRoot -Force | Out-Null
+}
+
+function Restore-ProductionSource {
+  Remove-Item -LiteralPath $productionRoot -Recurse -Force -ErrorAction SilentlyContinue
+  if(Test-Path -LiteralPath $sourceIsolationBackup){
+    Move-Item -LiteralPath $sourceIsolationBackup -Destination $productionRoot -Force
+  }
+}
+
 $results = @()
 $technicalPass = $null
 foreach($candidate in $selected){
@@ -56,15 +73,21 @@ foreach($candidate in $selected){
   $actualSha = (Get-FileHash -LiteralPath $candidatePath -Algorithm SHA256).Hash.ToLowerInvariant()
   if($actualSha -ne $expectedSha){ throw "KAYKIT_RIG_UE4_ARTIFACT_HASH_FAIL file=$($candidate.filename) expected=$expectedSha actual=$actualSha" }
 
-  New-Item -ItemType Directory -Path (Split-Path $sourceDestination -Parent) -Force | Out-Null
-  Copy-Item -LiteralPath $candidatePath -Destination $sourceDestination -Force
-  $copiedSha = (Get-FileHash -LiteralPath $sourceDestination -Algorithm SHA256).Hash.ToLowerInvariant()
-  if($copiedSha -ne $expectedSha){ throw "KAYKIT_RIG_UE4_COPY_HASH_FAIL file=$($candidate.filename)" }
+  Enter-IsolatedRigSource
+  try {
+    New-Item -ItemType Directory -Path (Split-Path $sourceDestination -Parent) -Force | Out-Null
+    Copy-Item -LiteralPath $candidatePath -Destination $sourceDestination -Force
+    $copiedSha = (Get-FileHash -LiteralPath $sourceDestination -Algorithm SHA256).Hash.ToLowerInvariant()
+    if($copiedSha -ne $expectedSha){ throw "KAYKIT_RIG_UE4_COPY_HASH_FAIL file=$($candidate.filename)" }
 
-  if(Test-Path -LiteralPath $importLog){ Remove-Item -LiteralPath $importLog -Force }
-  Write-Host ("KAYKIT_RIG_UE4_PROBE_BEGIN file="+$candidate.filename+" sha256="+$expectedSha)
-  & $importScript "-EnableCharacterRigImport"
-  $importExit = [int]$LASTEXITCODE
+    if(Test-Path -LiteralPath $importLog){ Remove-Item -LiteralPath $importLog -Force }
+    Write-Host ("KAYKIT_RIG_UE4_PROBE_BEGIN file="+$candidate.filename+" sha256="+$expectedSha+" isolated-source=yes")
+    & $importScript "-EnableCharacterRigImport"
+    $importExit = [int]$LASTEXITCODE
+  }
+  finally {
+    Restore-ProductionSource
+  }
   if($importExit -ne 0){ throw "KAYKIT_RIG_UE4_IMPORT_INFRA_FAIL file=$($candidate.filename) exit=$importExit" }
   if(-not (Test-Path -LiteralPath $importLog -PathType Leaf)){ throw "KAYKIT_RIG_UE4_LOG_MISSING file=$($candidate.filename)" }
 
