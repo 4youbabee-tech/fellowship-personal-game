@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "id": "P1C01_POLYHAVEN_PHOTOREAL_FIRST_WAVE_QC_V1",
+  "owner_intent": "REALISTIC_PRIVATE_OFFLINE_NONCOMMERCIAL_SHIRE_SCENE",
+  "source_project": "https://polyhaven.com/models",
+  "source_license": "CC0",
+  "source_evidence": {
+    "head": "2172b67ad5c6945a11cf104d2159b845d35280e8",
+    "workflow_run_id": 37967806668,
+    "workflow_conclusion": "success",
+    "artifact_id": 11633548712,
+    "artifact_size_zip_bytes": 30879038,
+    "staged_assets": 5,
+    "staged_data_files": 28,
+    "verified_provider_md5_and_sha256": true,
+    "raw_source_total_bytes": 31337420,
+    "online_unit_test_count": 7,
+    "online_unit_test_result": "PASS"
+  },
+  "offline_source_research_evidence": {
+    "recorded_on": "2026-10-09",
+    "fbx_version": 7400,
+    "fbx_meshed_assets": 5,
+    "png_conversion_count": 19,
+    "png_resolution": [
+      1024,
+      1024
+    ],
+    "total_triangles": 44127,
+    "uv_and_normal_layers_present_all": true,
+    "smoothing_group_layers_found": 0,
+    "offline_converter_unit_tests_passed": 2,
+    "additional_download_unit_tests_passed": 7,
+    "offline_candidate_zip_filename": "shire_p1c01_polyhaven_static_fbx_png_1k_candidate.zip",
+    "offline_candidate_zip_bytes": 21286254,
+    "offline_candidate_zip_sha256": "13050017c1f6ec66d3c27106e5bbcf863a592a88c2e79dbf835c20db5bfaf42e"
+  },
+  "assets": [
+    {
+      "id": "painted_wooden_bench",
+      "fbx_sha256": "db95b2b8a305cd4555d75dcd48f2e042f0d6c0dc0a3f76e8a782dc97680a279e",
+      "triangles": 630,
+      "uv_layers": 1,
+      "normal_layers": 1,
+      "png_count": 3
+    },
+    {
+      "id": "wooden_crate_01",
+      "fbx_sha256": "ec345cfafc1cbea85a4a181b259c8f62975b527e3b604d53dcaa9f6373744216",
+      "triangles": 6576,
+      "uv_layers": 3,
+      "normal_layers": 3,
+      "png_count": 3
+    },
+    {
+      "id": "folding_wooden_stool",
+      "fbx_sha256": "b1244e7dcb94cccb6174ea448b3929fc7b36e2b3d46c6475ce1806ee40415fd4",
+      "triangles": 6324,
+      "uv_layers": 1,
+      "normal_layers": 1,
+      "png_count": 3
+    },
+    {
+      "id": "wooden_lantern_01",
+      "fbx_sha256": "e5999ce0f88c01289604cb14852e7f4875110f87728a9dbdf6241df76284a9f5",
+      "triangles": 8321,
+      "uv_layers": 3,
+      "normal_layers": 3,
+      "png_count": 7
+    },
+    {
+      "id": "wicker_basket_01",
+      "fbx_sha256": "5a2e727874471029484f56c4490b8c88ee1aa9874118c6ad5b5771828aaf35e1",
+      "triangles": 22276,
+      "uv_layers": 1,
+      "normal_layers": 1,
+      "png_count": 3
+    }
+  ],
+  "pipeline": {
+    "reproducible_converter": "Scripts/build_p1c01_png_materials.py",
+    "converter_tests": "Scripts/test_p1c01_polyhaven_png_conversion.py",
+    "hosted_stage_workflow": ".github/workflows/p1c01-polyhaven-source-stage.yml",
+    "mapping": "1K BaseColor RGB PNG, 1K DirectX NormalDX PNG, 1K ORM (R AO white fallback, G roughness, B metallic); preserve FBX bytes. Lantern also has 1K Glass opacity PNG.",
+    "must_not_assume": "No AO scan exists in source; use white AO fallback, do not pretend scanned AO. JPEG/EXR originals are preserved in first artifact."
+  },
+  "risk_and_pending": [
+    "Source FBX lacks explicit LayerElementSmoothing despite embedded normals: static Unreal importer must inspect normals and compute tangents correctly; do not treat absence alone as skeletal KayKit fatal.",
+    "Five static models are not retopologized or decimated; wicker basket 22,276 triangles is too dense for broad HISM repetition until reduced LOD available.",
+    "No FBX imported into UE4.27.2 in this source-only wave; no PIE, visual quality, render, shadow/material fidelity, target-device FPS or Gate 6/7 acceptance proof.",
+    "Source/converted artifacts expire; promote only authorized and technically qualified assets through normal content pipeline."
+  ],
+  "status": "SOURCE_PROVEN_QC_AND_LOCAL_PNG_CONVERSION; REPRODUCIBLE_HOSTED_PNG_CONVERSION_PENDING",
+  "truth_state": "STATIC-VALIDATED_ONLY"
+}

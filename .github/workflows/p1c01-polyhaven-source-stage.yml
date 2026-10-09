@@ -7,6 +7,8 @@ on:
       - 'Data/P1C01PhotorealSourcePilotV1.json'
       - 'Scripts/stage_p1c01_polyhaven.py'
       - 'Scripts/test_p1c01_polyhaven_source_intake.py'
+      - 'Scripts/build_p1c01_png_materials.py'
+      - 'Scripts/test_p1c01_polyhaven_png_conversion.py'
       - '.github/workflows/p1c01-polyhaven-source-stage.yml'
   workflow_dispatch:
 
@@ -50,6 +52,7 @@ jobs:
             --max-total-mb 80
 
       - name: Verify source-receipt truth boundary
+        id: source_gate
         shell: bash
         run: |
           set -euo pipefail
@@ -64,6 +67,68 @@ jobs:
           assert all(r['stage'] in ('STAGED_SOURCE_ONLY','QUARANTINED_SOURCE_INTAKE') for r in j['asset_results'])
           print('P1C01_POLYHAVEN_RECEIPT_VALID count=5 staged='+str(j['source_assets_staged'])+' quarantined='+str(j['source_assets_quarantined']))
           PY
+          python3 - <<'PY'
+          import json,os
+          from pathlib import Path
+          p=Path(os.environ['RUNNER_TEMP'])/'shire-p1c01-polyhaven-photoreal'/'p1c01_polyhaven_source_receipt.json'
+          j=json.loads(p.read_text())
+          with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf8') as out:
+            out.write('five_ready='+str(j['source_assets_staged']==5 and j['source_assets_quarantined']==0).lower()+'\n')
+          PY
+
+      - name: Set up Python for hosted source texture conversion
+        if: steps.source_gate.outputs.five_ready == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Convert staged source maps to 1K game-ready PNG candidate
+        if: steps.source_gate.outputs.five_ready == 'true'
+        shell: bash
+        env:
+          OPENCV_IO_ENABLE_OPENEXR: '1'
+        run: |
+          set -euo pipefail
+          python -m pip install --quiet --disable-pip-version-check 'numpy>=1.26,<3' 'Pillow>=10,<13' 'opencv-python-headless>=4.9,<5'
+          python -m unittest discover -s Scripts -p test_p1c01_polyhaven_png_conversion.py -v
+          python Scripts/build_p1c01_png_materials.py \
+            --source "$RUNNER_TEMP/shire-p1c01-polyhaven-photoreal/assets" \
+            --output "$RUNNER_TEMP/shire-p1c01-polyhaven-png"
+
+      - name: Verify five preserved FBX meshes and nineteen 1K PNG candidates
+        if: steps.source_gate.outputs.five_ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,json,os
+          from pathlib import Path
+          from PIL import Image
+          root=Path(os.environ['RUNNER_TEMP'])
+          src=root/'shire-p1c01-polyhaven-photoreal'/'assets'
+          dst=root/'shire-p1c01-polyhaven-png'
+          receipt=json.loads((dst/'p1c01_png_material_conversion_receipt.json').read_text())
+          assert receipt['status']=='SOURCE_TEXTURES_CONVERTED_STATIC_ONLY'
+          assert receipt['asset_count']==5
+          p=list(dst.rglob('*.png'));f=list(dst.rglob('*.fbx'))
+          assert len(p)==19 and len(f)==5,(len(p),len(f))
+          for png in p:
+            with Image.open(png) as im: assert im.size==(1024,1024)
+          for item in receipt['assets']:
+            target=dst/item['fbx_path']; original=src/item['asset_id']/(item['asset_id']+'.fbx')
+            assert hashlib.sha256(target.read_bytes()).hexdigest()==hashlib.sha256(original.read_bytes()).hexdigest()==item['fbx_sha256']
+          print('P1C01_POLYHAVEN_PNG_QC_PASS meshes=5 textures=19; NOT_UE4_IMPORTED')
+          PY
+
+      - name: Upload converted static FBX and PNG source candidates
+        if: steps.source_gate.outputs.five_ready == 'true' && success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1c01-polyhaven-fbx-png-${{ env.TARGET_SHA }}
+          path: ${{ runner.temp }}/shire-p1c01-polyhaven-png
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 6
 
       - name: Upload CC0 source candidates and receipt
         if: always()

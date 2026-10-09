@@ -924,6 +924,16 @@
     "photoreal_static_intake_pilot": "Data/P1C01PhotorealSourcePilotV1.json",
     "original_source_bible": "Data/MasterExternalResourceBibleAdoptionV1.json",
     "no_overclaim": "Catalogued 225 PDF links and 142 curated registry entries pre-exist; new pilot adds five concrete candidates, not 225 newly downloaded assets.",
-    "personal_offline_policy": "Data/PrivateOfflineAssetPolicyV1.json: local experiment allowed, no public repo redistribution of private-only materials."
+    "personal_offline_policy": "Data/PrivateOfflineAssetPolicyV1.json: local experiment allowed, no public repo redistribution of private-only materials.",
+    "photoreal_static_source_real_gate": {
+      "head": "2172b67ad5c6945a11cf104d2159b845d35280e8",
+      "run_id": 37967806668,
+      "artifact_id": 11633548712,
+      "source_qualified": 5,
+      "source_quarantined": 0,
+      "png_material_converter": "Scripts/build_p1c01_png_materials.py",
+      "real_static_mesh_qc": "Data/P1C01PolyHavenFirstWaveQCV1.json",
+      "rendered_in_unreal": false
+    }
   }
 }

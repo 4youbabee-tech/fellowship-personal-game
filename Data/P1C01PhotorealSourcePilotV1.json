@@ -2,7 +2,7 @@
   "schema_version": 1,
   "packet_id": "P1C01_POLYHAVEN_PHOTOREAL_STATIC_FBX_SOURCE_WAVE_V1",
   "asset_category": "STATIC_MESH",
-  "status": "SOURCED_CANDIDATES_FOR_BOUNDED_HOSTED_STAGE",
+  "status": "HOSTED_SOURCE_STAGED_FIVE_OF_FIVE_NEW_CONVERSION_ACTION_ADDED",
   "date": "2026-10-09",
   "scope": "Shire-only high visual fidelity candidate intake; source-first and isolated from Unreal runner.",
   "owner_policy": "PERSONAL_OFFLINE_NONCOMMERCIAL",
@@ -45,11 +45,12 @@
       "intended_scene": "Bag End garden / Hobbiton common",
       "priority": "P0",
       "review_note": "Good game-size geometry; rural weathering; visually inspect antique red paint against source atlas.",
-      "state": "CATALOGUED_CANDIDATE_NOT_YET_DOWNLOADED",
+      "state": "STAGED_SOURCE_ONLY_CC0_ARTIFACT",
       "accepted_to_game": false,
       "source_format": "FBX native 1K selected via official API",
       "texture_requirement": "Original PNG/TGA where offered, JPEG/EXR quarantined for conversion, finalized packed 1K masks",
-      "static_mesh_only": true
+      "static_mesh_only": true,
+      "evidence_run": 37967806668
     },
     {
       "provider_asset_id": "wooden_crate_01",
@@ -62,11 +63,12 @@
       "intended_scene": "Hobbiton market / farm gate",
       "priority": "P0",
       "review_note": "Check metal details and crate silhouette against film-inspired Shire; no shipping-container aesthetic.",
-      "state": "CATALOGUED_CANDIDATE_NOT_YET_DOWNLOADED",
+      "state": "STAGED_SOURCE_ONLY_CC0_ARTIFACT",
       "accepted_to_game": false,
       "source_format": "FBX native 1K selected via official API",
       "texture_requirement": "Original PNG/TGA where offered, JPEG/EXR quarantined for conversion, finalized packed 1K masks",
-      "static_mesh_only": true
+      "static_mesh_only": true,
+      "evidence_run": 37967806668
     },
     {
       "provider_asset_id": "folding_wooden_stool",
@@ -79,11 +81,12 @@
       "intended_scene": "Party Field / gardener workspace",
       "priority": "P0",
       "review_note": "Workshop shape possible; candidate not a canonical Hobbit stool until visual review.",
-      "state": "CATALOGUED_CANDIDATE_NOT_YET_DOWNLOADED",
+      "state": "STAGED_SOURCE_ONLY_CC0_ARTIFACT",
       "accepted_to_game": false,
       "source_format": "FBX native 1K selected via official API",
       "texture_requirement": "Original PNG/TGA where offered, JPEG/EXR quarantined for conversion, finalized packed 1K masks",
-      "static_mesh_only": true
+      "static_mesh_only": true,
+      "evidence_run": 37967806668
     },
     {
       "provider_asset_id": "wooden_lantern_01",
@@ -96,11 +99,12 @@
       "intended_scene": "Bag End exterior / Hobbiton lanes",
       "priority": "P1",
       "review_note": "Multiple materials including glass/wax; keep cheap glass shader and material slots.",
-      "state": "CATALOGUED_CANDIDATE_NOT_YET_DOWNLOADED",
+      "state": "STAGED_SOURCE_ONLY_CC0_ARTIFACT",
       "accepted_to_game": false,
       "source_format": "FBX native 1K selected via official API",
       "texture_requirement": "Original PNG/TGA where offered, JPEG/EXR quarantined for conversion, finalized packed 1K masks",
-      "static_mesh_only": true
+      "static_mesh_only": true,
+      "evidence_run": 37967806668
     },
     {
       "provider_asset_id": "wicker_basket_01",
@@ -113,11 +117,12 @@
       "intended_scene": "Bag End kitchen / produce market",
       "priority": "P1",
       "review_note": "Needs aggressive LOD and low texture count; distance props may use optimized proxy.",
-      "state": "CATALOGUED_CANDIDATE_NOT_YET_DOWNLOADED",
+      "state": "STAGED_SOURCE_ONLY_CC0_ARTIFACT",
       "accepted_to_game": false,
       "source_format": "FBX native 1K selected via official API",
       "texture_requirement": "Original PNG/TGA where offered, JPEG/EXR quarantined for conversion, finalized packed 1K masks",
-      "static_mesh_only": true
+      "static_mesh_only": true,
+      "evidence_run": 37967806668
     }
   ],
   "gate_sequence": [
@@ -129,5 +134,12 @@
     "only then attempt single serialized UE4.27 production import and appearance comparison; Gate6/7 not inferred"
   ],
   "evaluation_rule": "Store download artifacts privately on GitHub with receipt, not new public repository binary revisions until intake QC and size caps. No heavy Unreal build from resource-only commit.",
-  "evidence_boundary": "Provider listings verified from their source pages; none of these five assets has been downloaded/imported in this revision."
+  "evidence_boundary": "Provider listings verified from their source pages; none of these five assets has been downloaded/imported in this revision.",
+  "source_verified_gate": {
+    "run_id": 37967806668,
+    "artifact_id": 11633548712,
+    "source_files": 28,
+    "source_bytes": 31337420,
+    "quarantined": 0
+  }
 }

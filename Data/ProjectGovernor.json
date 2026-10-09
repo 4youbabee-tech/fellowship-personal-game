@@ -9250,7 +9250,7 @@
       "wicker_basket_01"
     ],
     "intake_state": "CANDIDATE_SOURCE_UNTIL_RUN_RECEIPT_PROVES_STAGING",
-    "next_action": "On hosted stage receipt review genuinely downloaded files, texture formats, retopo/LODs and 2GB VRAM budgets, then use existing P1C01 runtime lane to test only approved improvements.",
+    "next_action": "Exact-source hosted stage now adds conversion to 1K PNG output and second source artifact; only after converted artifact inspect and serialized UE4.27.2 import candidate with LOD/perf.",
     "hard_gates": [
       "FBX static mesh native only; animated production FBX rig and independent skeletal quality gates",
       "1K PNG/TGA channel packed textures after preprocessing and source provenance",
@@ -9258,9 +9258,27 @@
       "FStreamableManager async heavy residency, no redundant NPC Spawn/Destroy, HISM props",
       "No source/artifact = no asset; a hosted workflow may succeed with quarantined results and that does not count as production intake"
     ],
-    "status": "RESEARCHED_SOURCE_SCRIPT_COMMITTED_NOT_YET_PROVEN_BY_HOSTED_STAGE",
+    "status": "SOURCE_ACTUALLY_STAGED_AND_HASH_VERIFIED_HOSTED_CONVERTED_PIPELINE_CANDIDATE",
     "visual_acceptance": "NOT_VISUALLY_ACCEPTED_UNTIL_IN_ENGINE_HUMAN_REVIEW",
     "copyright": "Shire lore/style references remain governed by source PDFs; no direct reproduction of protected model art without appropriate use authorization.",
-    "last_updated": "2026-10-09"
+    "last_updated": "2026-10-09",
+    "first_real_source_gate": {
+      "workflow_run_id": 37967806668,
+      "workflow_conclusion": "success",
+      "first_source_artifact_id": 11633548712,
+      "first_source_artifact_size_bytes": 30879038,
+      "actual_source_qualified_assets": 5,
+      "original_file_count": 28,
+      "original_file_bytes": 31337420,
+      "actual_download_policy": "Official Poly Haven API 1K native FBX and dependent textures with MD5 and SHA256 receipt",
+      "hosted_source_unit_tests": 7
+    },
+    "converter_checkpoint": {
+      "source_and_local_tests": "Local static source evidence 5 FBX, 19 PNG, 44,127 source triangles, 28 source SHA verified; no UE4 import",
+      "new_converter": "Scripts/build_p1c01_png_materials.py",
+      "new_converter_tests": "Scripts/test_p1c01_polyhaven_png_conversion.py",
+      "source_quality": "No explicit LayerElementSmoothing in source FBX; normals and UV present; must check static UE4 importer"
+    },
+    "qc_receipt": "Data/P1C01PolyHavenFirstWaveQCV1.json"
   }
 }
