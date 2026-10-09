@@ -1144,6 +1144,18 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("WarehouseQuaterniusAnimationBatchV1.json", workflow)
         self.assertIn("stage_quaternius_warehouse.ps1", workflow)
 
+    def test_asset_first_archive_path_and_rebased_provenance_guards(self):
+        root = Path(__file__).resolve().parents[1]
+        promote = (root / "Scripts/run_warehouse_p1c01_mega_promotion.ps1").read_text(encoding="utf-8")
+        self.assertIn("Resolve-WarehousePayloadPath", promote)
+        self.assertIn("P1C01_NEW_ONLY_COMPACT_ARCHIVE_ROOT", promote)
+        self.assertIn("archive_relative_path_exceeds_windows_limit", promote)
+        self.assertIn("receipt_sha256_mismatch", promote)
+        self.assertIn("safe_storage_reserve_exhausted", promote)
+        pack = (root / "Scripts/run_p1c01_chapter_closure_pack_v2.ps1").read_text(encoding="utf-8")
+        self.assertIn("if($AssetFirst){ $budget.minimum_exported_materials=1", pack)
+        self.assertIn("P1C01_ASSET_FIRST_PROGRESSIVE_EXPORT", pack)
+
     def test_dec109_new_assets_first_and_final_chapter_review(self):
         root = Path(__file__).resolve().parents[1]
         governor = json.loads((root / "Data/ProjectGovernor.json").read_text(encoding="utf-8"))

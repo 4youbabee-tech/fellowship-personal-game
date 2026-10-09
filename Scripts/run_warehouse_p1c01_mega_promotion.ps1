@@ -20,6 +20,31 @@ function Test-DangerousExtension([string]$Extension) {
   return ([string]$Extension).ToLowerInvariant() -in @(".exe",".msi",".cmd",".bat",".ps1",".vbs",".js",".scr",".com")
 }
 
+# Receipts from the legacy C: runner must resolve to the current Warehouse
+# on D: ONLY under the canonical /ShireJourney/ root. Per-file SHA is checked
+# after rebasing, so this is never permission to trust a fabricated receipt.
+function Resolve-WarehousePayloadPath {
+  param([string]$Path,[string]$WarehouseRoot)
+  if([string]::IsNullOrWhiteSpace($Path)){ return $Path }
+  if(Test-Path -LiteralPath $Path -PathType Leaf){ return $Path }
+  $normalized=$Path.Replace([char]92,'/')
+  $marker='/ShireJourney/'
+  $index=$normalized.IndexOf($marker,[StringComparison]::OrdinalIgnoreCase)
+  if($index -lt 0){ return $Path }
+  $relative=$normalized.Substring($index + $marker.Length)
+  if([string]::IsNullOrWhiteSpace($relative)){ return $Path }
+  $pieces=@($relative.Split('/') | Where-Object { $_ -ne '' })
+  if(@($pieces | Where-Object { $_ -eq '..' -or $_ -eq '.' }).Count -gt 0){ return $Path }
+  $rootFull=[IO.Path]::GetFullPath($WarehouseRoot).TrimEnd([char]92,[char]47)
+  $candidate=[IO.Path]::GetFullPath((Join-Path $rootFull ($relative.Replace('/',[IO.Path]::DirectorySeparatorChar))))
+  if(-not $candidate.StartsWith(($rootFull + [IO.Path]::DirectorySeparatorChar),[StringComparison]::OrdinalIgnoreCase)){ return $Path }
+  if(Test-Path -LiteralPath $candidate -PathType Leaf){
+    $script:RebasedReceiptCount++
+    return $candidate
+  }
+  return $Path
+}
+
 function Test-SelectorMatch {
   param([object]$Selector,[object]$Row)
   $providers=@($Selector.providers | ForEach-Object { ([string]$_).ToUpperInvariant() })
@@ -131,6 +156,7 @@ $newlyPreparedCount=0
 $newlyPreparedBytes=[int64]0
 $minimumFreeReserveBytes=[int64]6442450944
 
+$RebasedReceiptCount=0
 $receiptRows=@()
 $seen=@{}
 $badReceipts=@()
@@ -150,6 +176,7 @@ foreach($receiptFile in @(Get-ChildItem -LiteralPath $WarehouseRoot -Recurse -Fi
       $sha=([string](Get-OptionalPropertyValue $item "archive_sha256" "")).ToLowerInvariant()
     }
     if([string]::IsNullOrWhiteSpace($path)){ continue }
+    $path=Resolve-WarehousePayloadPath -Path $path -WarehouseRoot $WarehouseRoot
     $key=($path.ToLowerInvariant()+"|"+$sha)
     if($seen.ContainsKey($key)){ continue }
     $seen[$key]=$true
@@ -204,6 +231,34 @@ foreach($selector in @($manifest.classes | Sort-Object order)){
     if([string]::IsNullOrWhiteSpace($safeId)){ $safeId=[IO.Path]::GetFileNameWithoutExtension($row.path) }
     $safeId=$safeId -replace '[^A-Za-z0-9_.-]','_'
     $dest=Join-Path $OutputRoot (([string]$selector.id)+"\"+(([string]$row.provider) -replace '[^A-Za-z0-9_.-]','_')+"\"+$safeId)
+    if($ext -eq ".zip"){
+      # ExtractToFile on stock Windows has a practical MAX_PATH limit.
+      # Preserve archive-relative paths, but shorten only the extraction root
+      # for an archive whose eligible entry would otherwise exceed 240 chars.
+      try{
+        $archiveEntries=@(Get-SafeArchiveEntries -ArchivePath $row.path)
+        $maxRelativeLength=0
+        foreach($entry in $archiveEntries){
+          if(([string]$entry.extension).ToLowerInvariant() -in @(".fbx",".png",".tga",".wav",".obj")){
+            $maxRelativeLength=[Math]::Max($maxRelativeLength,([string]$entry.name).Length)
+          }
+        }
+        if(($dest.Length + 1 + $maxRelativeLength) -gt 238){
+          $category=([string]$selector.id).Replace("P1C01_","")
+          if($category.Length -gt 8){ $category=$category.Substring(0,8) }
+          $shortRoot=Join-Path $WarehouseRoot "_pj"
+          $dest=Join-Path $shortRoot ($category+"_"+$actual.Substring(0,22))
+          if(($dest.Length + 1 + $maxRelativeLength) -gt 242){
+            $manualQueue += [ordered]@{class=[string]$selector.id;path=$row.path;reason="archive_relative_path_exceeds_windows_limit";longest_relative=$maxRelativeLength}
+            continue
+          }
+          Write-Host ("P1C01_NEW_ONLY_COMPACT_ARCHIVE_ROOT class="+[string]$selector.id+" sha="+$actual.Substring(0,12))
+        }
+      }catch{
+        $manualQueue += [ordered]@{class=[string]$selector.id;path=$row.path;reason="archive_path_preflight_failed";detail=$_.Exception.Message}
+        continue
+      }
+    }
     $reuseKey=([string]$selector.id+"|"+[string]$row.provider+"|"+$actual+"|"+$dest).ToLowerInvariant()
     if($previousPrepared.ContainsKey($reuseKey)){
       $old=$previousPrepared[$reuseKey]
@@ -344,6 +399,7 @@ $report=[ordered]@{
   train_id=[string]$manifest.train_id
   generated_at_utc=[DateTime]::UtcNow.ToString("o")
   source_receipt_rows=$receiptRows.Count
+  source_paths_rebased_from_legacy_runner=$RebasedReceiptCount
   bad_receipt_count=$badReceipts.Count
   prepared_count=$prepared.Count
   intake_qc_prepared_count=@($prepared | Where-Object {$_.state -eq "INTAKE_QC_PREPARED"}).Count
@@ -369,7 +425,7 @@ $report=[ordered]@{
 $outPath=Join-Path $OutputRoot "p1c01_mega_promotion_latest.json"
 $report | ConvertTo-Json -Depth 12 | Set-Content -LiteralPath $outPath -Encoding UTF8
 
-Write-Host ("P1C01_NEW_ONLY_SOURCE_SUMMARY new="+$newlyPreparedCount+" new_bytes="+$newlyPreparedBytes+" reused="+$reusedCount+" deferred="+$pending.Count)
+Write-Host ("P1C01_NEW_ONLY_SOURCE_SUMMARY new="+$newlyPreparedCount+" new_bytes="+$newlyPreparedBytes+" reused="+$reusedCount+" rebased="+$RebasedReceiptCount+" deferred="+$pending.Count)
 if($badReceipts.Count -gt 0 -or $manualQueue.Count -gt 0){
   Write-Host ("P1C01_MEGA_PROMOTION_PASS_WITH_MANUAL_QUEUE prepared="+$prepared.Count+" intakeQC="+$report.intake_qc_prepared_count+" pending="+$pending.Count+" manual="+$manualQueue.Count+" badReceipts="+$badReceipts.Count+" report="+$outPath)
   foreach($entry in $manualQueue){ Write-Host ("P1C01_MEGA_PROMOTION_MANUAL_QUEUE "+($entry | ConvertTo-Json -Compress -Depth 6)) }

@@ -120,6 +120,7 @@ foreach($car in @($manifest.cars | Sort-Object order)){
       Invoke-Car $car {
         $resolved=Resolve-ChildManifest ([string]$car.manifest)
         $budget=$car.export_budget
+        if($AssetFirst){ $budget.minimum_exported_materials=1; Write-Host "P1C01_ASSET_FIRST_PROGRESSIVE_EXPORT min_sources=1 full_closeout_minimum_unchanged=yes" }
         Invoke-ChildPowerShell -ScriptPath (Join-Path $PSScriptRoot "export_p1c01_material_source_branch.ps1") -ChildArgs @("-ManifestPath",$resolved,"-WarehouseRoot",$WarehouseRoot,"-GeneratedBranch",([string]$car.generated_branch),"-MaxSingleSourceBytes",([int64]$budget.max_single_source_bytes),"-MaxBatchSourceBytes",([int64]$budget.max_batch_source_bytes),"-MinimumExportedMaterials",([int]$budget.minimum_exported_materials))
       }
     }
