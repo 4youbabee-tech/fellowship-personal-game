@@ -1,0 +1,76 @@
+name: P1C01 Poly Haven Photoreal Source Stage
+
+on:
+  pull_request:
+    branches: [develop]
+    paths:
+      - 'Data/P1C01PhotorealSourcePilotV1.json'
+      - 'Scripts/stage_p1c01_polyhaven.py'
+      - 'Scripts/test_p1c01_polyhaven_source_intake.py'
+      - '.github/workflows/p1c01-polyhaven-source-stage.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: p1c01-polyhaven-source-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  hosted_source_intake:
+    name: Bounded 1K native-FBX CC0 source staging (NO UE4)
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Checkout exact candidate head without LFS hydration
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          fetch-depth: 1
+          persist-credentials: false
+          lfs: false
+
+      - name: Verify exact SHA and run fast offline source-unit tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          python3 -m unittest discover -s Scripts -p test_p1c01_polyhaven_source_intake.py -v
+
+      - name: Stage bounded source-only Poly Haven 1K FBX and textures
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 Scripts/stage_p1c01_polyhaven.py \
+            --manifest Data/P1C01PhotorealSourcePilotV1.json \
+            --output "$RUNNER_TEMP/shire-p1c01-polyhaven-photoreal" \
+            --max-total-mb 80
+
+      - name: Verify source-receipt truth boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          p=Path(os.environ['RUNNER_TEMP'])/'shire-p1c01-polyhaven-photoreal'/'p1c01_polyhaven_source_receipt.json'
+          j=json.loads(p.read_text(encoding='utf-8'))
+          assert j['execution_scope']=='HOSTED_SOURCE_ONLY_NO_UNREAL'
+          assert j['source_assets_staged']+j['source_assets_quarantined']==5
+          assert j['total_staged_file_bytes']<=80*1024*1024
+          assert all(r['stage'] in ('STAGED_SOURCE_ONLY','QUARANTINED_SOURCE_INTAKE') for r in j['asset_results'])
+          print('P1C01_POLYHAVEN_RECEIPT_VALID count=5 staged='+str(j['source_assets_staged'])+' quarantined='+str(j['source_assets_quarantined']))
+          PY
+
+      - name: Upload CC0 source candidates and receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1c01-polyhaven-source-${{ env.TARGET_SHA }}
+          path: ${{ runner.temp }}/shire-p1c01-polyhaven-photoreal
+          if-no-files-found: warn
+          retention-days: 14
+          compression-level: 6

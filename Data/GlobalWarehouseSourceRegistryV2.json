@@ -1781,5 +1781,19 @@
     "actual_unique_source_count": 142,
     "corrected_declared_count": 142,
     "rule": "Declared source_count must equal the actual unique sources array length; candidates are not STAGED merely by registry presence."
+  },
+  "p1c01_photoreal_source_policy_2026_10_09": {
+    "owner_home_noncommercial": true,
+    "source_bible_count": 225,
+    "curated_source_registry_count_unchanged": 142,
+    "director": "Data/ProjectGovernor.json#p1c01_photo_real_source_first_2026_10_09",
+    "provider_tool_wallet": "Data/External3DGenerationToolRegistryV1.json",
+    "selected_native_fbx_pilot": "Data/P1C01PhotorealSourcePilotV1.json",
+    "first_preference": "Quixel Megascans / Fab when source item accessible and compatible, Poly Haven CC0 scanned assets for no-cost immediate intake.",
+    "api_stage": "Scripts/stage_p1c01_polyhaven.py official API /files/{id}, 1K native FBX + dependencies, 80MB cap, stage hosted only.",
+    "registered_candidates": 5,
+    "acquired_candidates_before_first_hosted_run": 0,
+    "status": "PILOT_REGISTERED_NOT_YET_RUN",
+    "rights": "Private/noncommercial scope does not eliminate download/access controls or waive game lore/source-provenance boundary."
   }
 }

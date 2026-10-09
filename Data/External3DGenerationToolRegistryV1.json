@@ -13,7 +13,7 @@
       "official_repository": "https://github.com/microsoft/TRELLIS.2",
       "official_weights": "https://huggingface.co/microsoft/TRELLIS.2-4B",
       "verified_on": "2026-10-09",
-      "candidate_status": "CATALOGUED_TOOL_NOT_INSTALLED_NOT_INTEGRATED",
+      "candidate_status": "WITHDRAWN_BY_OWNER_HISTORICAL_ONLY",
       "capability": "Image-to-3D textured static mesh generation with Base Color/Roughness/Metallic/Opacity; upstream output GLB.",
       "code_and_model_license": "MIT; keep copyright and license notice when applicable",
       "license_cautions": [
@@ -32,21 +32,386 @@
         "Direct production animated characters or horses without manual retopology, humanoid skeletal rig, animation and deformation QC",
         "Any copyrighted reference image without rights"
       ],
-      "intake_pipeline": [
-        "Run externally only if approved service/GPU is available.",
-        "Record source image rights, prompt, model version, generated mesh and cost.",
-        "Review front/back silhouette, manifold/smoothing/UVs, collision dimensions and story canon.",
-        "Blender conversion from GLB to static FBX (skeletal FBX plus validated animations for characters only).",
-        "Reduce triangles/LOD/collision; export PNG/TGA channel-packed textures with 1K default when suitable and preserve PBR provenance.",
-        "Keep candidate in warehouse quarantine until hash/license/performance/import checks pass; only then promote on serialized P1C01 runtime lane."
-      ],
-      "gate_policy": "No new runtime chapter or Gate 6/7 status change; candidate/tool catalogue only. No GPU job, inference or file acquisition performed.",
+      "intake_pipeline": [],
+      "gate_policy": "Retired source reference only. No active production or external GPU pilot.",
       "sources": [
         "https://github.com/microsoft/TRELLIS.2",
         "https://github.com/microsoft/TRELLIS.2/blob/main/LICENSE"
       ],
-      "owner_decision": "PREFERRED_CANDIDATE_TO_EVALUATE_FOR_SHIRE_STATIC_PROPS_ALONGSIDE_EXISTING_TOOLS",
-      "session_handoff": "Future agents: consult this registry at session start; evaluate TRELLIS.2 alongside current licensed asset sources and Blender/FBX/UE4 pipeline. Illustrative images are not output proof. Generated models require license, visual, canon and performance reviews before promotion."
+      "owner_decision": "REVOKED_2026_10_09_OWNER_CANCELLED_NO_GPU",
+      "session_handoff": "HISTORY ONLY: do NOT recommend, install, run or queue Microsoft TRELLIS.2 unless the owner explicitly reauthorizes it.",
+      "active": false,
+      "history_note": "Illustrative images were not actual tested outputs. No inference was performed."
+    },
+    {
+      "id": "MESHY_AI_CLOUD",
+      "name": "Meshy AI",
+      "category": "CLOUD_IMAGE_TO_3D",
+      "active": true,
+      "priority": 1,
+      "official_url": "https://www.meshy.ai/",
+      "requires_local_ai_gpu": false,
+      "access_free_tier": "Official detailed Free FAQ: 100 credits/month; up to 10 free downloadable Meshy 6 Lite generations per month. Regular Meshy 6/7 generations cannot be downloaded on Free. Other summaries say no downloads: choose 6 Lite explicitly and recheck account before relying on export.",
+      "license_and_commercial_rights": "Free generations CC BY 4.0, attribution required for distribution; private offline remains private-use classified.",
+      "export_and_unreal_route": "If 'Meshy 6 Lite' eligible free export is actually allowed, download native FBX + textures and source hash; do not assume Meshy 6/7 free downloads.",
+      "shire_roles": [
+        "Original Shire baskets, furniture, barrels, props"
+      ],
+      "references": [
+        "https://help.meshy.ai/en/articles/15696428-what-is-included-on-the-free-plan",
+        "https://help.meshy.ai/en/articles/15724161-how-to-export-meshy-models-with-colors-and-textures"
+      ],
+      "state": "OFFICIAL_INFO_VERIFIED_ACCOUNT_FREE_EXPORT_NOT_TESTED",
+      "quality_boundary": "Official marketing or example images are NOT quality proof for any Shire asset. Compare actual downloaded FBX before accepting.",
+      "acquisition_gate": "Optional limited 6 Lite proof only when a connected provider account/download permission is available. No CLI/API on free plan; do not automate login or paywall."
+    },
+    {
+      "id": "TRIPO_STUDIO_CLOUD",
+      "name": "Tripo AI Studio",
+      "category": "CLOUD_IMAGE_TO_3D",
+      "active": true,
+      "priority": 2,
+      "official_url": "https://www.tripo3d.ai/pricing",
+      "requires_local_ai_gpu": false,
+      "access_free_tier": "200 Studio free credits/month; public outputs, limited downloads",
+      "license_and_commercial_rights": "CONFLICT: Free pricing advertises public models under CC BY 4.0 (ordinarily commercial-compatible), but official Tripo Help Center says Free subscribers lack commercial use rights and require paid subscriptions. Apply restrictive Help/Terms and require written clarification before commercial use.",
+      "export_and_unreal_route": "FBX/GLB supported by platform, check free-tier export details",
+      "shire_roles": [
+        "Non-commercial quality comparison of single original prop only"
+      ],
+      "references": [
+        "https://www.tripo3d.ai/pricing",
+        "https://www.tripo3d.ai/help/privacy-policy/how-to-use-tripo-models-commercially"
+      ],
+      "state": "RESEARCHED_OFFICIAL_ONLY_NOT_ACCOUNT_TESTED_NOT_INSTALLED_NOT_IMPORTED",
+      "quality_boundary": "Official marketing or example images are NOT quality proof for any Shire asset. Compare actual downloaded FBX before accepting.",
+      "acquisition_gate": "Record source, item rights, URL, cost, hashes, UV, smoothing, poly count, LOD, texture packing and 2GB VRAM measurements before import."
+    },
+    {
+      "id": "SLOYD_BROWSER",
+      "name": "Sloyd",
+      "category": "CLOUD_TEMPLATE_3D",
+      "active": true,
+      "priority": 3,
+      "official_url": "https://www.sloyd.ai/pricing",
+      "requires_local_ai_gpu": false,
+      "access_free_tier": "Guest provides 1 AI generation/day and downloads of community models, not own generated models. Guest exports GLB/OBJ community items with personal-use license.",
+      "license_and_commercial_rights": "Guest personal-only; paid Plus/Pro commercial license; no commercial free export",
+      "export_and_unreal_route": "Guest community-model exports limited to GLB/OBJ; paid subscription may provide GLB/OBJ/FBX for generated models. Game integration only after rights + FBX conversion.",
+      "shire_roles": [
+        "Repeatable small modular furniture and stylized background drafts"
+      ],
+      "references": [
+        "https://www.sloyd.ai/pricing",
+        "https://app.sloyd.ai/pricing"
+      ],
+      "state": "RESEARCHED_OFFICIAL_ONLY_NOT_ACCOUNT_TESTED_NOT_INSTALLED_NOT_IMPORTED",
+      "quality_boundary": "Official marketing or example images are NOT quality proof for any Shire asset. Compare actual downloaded FBX before accepting.",
+      "acquisition_gate": "Record source, item rights, URL, cost, hashes, UV, smoothing, poly count, LOD, texture packing and 2GB VRAM measurements before import."
+    },
+    {
+      "id": "HYPER3D_RODIN",
+      "name": "Hyper3D Rodin",
+      "category": "CLOUD_IMAGE_TO_3D",
+      "active": true,
+      "priority": 4,
+      "official_url": "https://hyper3d.ai/pricing?lang=en",
+      "requires_local_ai_gpu": false,
+      "access_free_tier": "Free preview/generate before confirmation; modern output generally pay-by-result",
+      "license_and_commercial_rights": "Payment/export and rights tier-specific; require purchase authorization before spend",
+      "export_and_unreal_route": "Generated 3D export/low-poly options depend on plan",
+      "shire_roles": [
+        "Compare high-detail hero-quality static props if budget authorized"
+      ],
+      "references": [
+        "https://hyper3d.ai/pricing?lang=en"
+      ],
+      "state": "RESEARCHED_OFFICIAL_ONLY_NOT_ACCOUNT_TESTED_NOT_INSTALLED_NOT_IMPORTED",
+      "quality_boundary": "Official marketing or example images are NOT quality proof for any Shire asset. Compare actual downloaded FBX before accepting.",
+      "acquisition_gate": "Record source, item rights, URL, cost, hashes, UV, smoothing, poly count, LOD, texture packing and 2GB VRAM measurements before import."
+    },
+    {
+      "id": "EPIC_REALITYSCAN_MOBILE",
+      "name": "Epic RealityScan Mobile",
+      "category": "MOBILE_CLOUD_PHOTOGRAMMETRY",
+      "active": true,
+      "priority": 5,
+      "official_url": "https://dev.epicgames.com/documentation/en-us/realityscan-mobile/realityscan-documentation",
+      "requires_local_ai_gpu": false,
+      "access_free_tier": "Free-to-download Android/iOS app; requires supported phone/ARCore and Epic login",
+      "license_and_commercial_rights": "Capture only own/authorized real-world objects and check service terms",
+      "export_and_unreal_route": "Android exports GLB; optimize/convert to static FBX via Blender",
+      "shire_roles": [
+        "Original scanned rocks, pots, baskets, furniture, timber"
+      ],
+      "references": [
+        "https://dev.epicgames.com/documentation/realityscan-mobile/RealityScan-System-Requirements-and-Installation?lang=en-US",
+        "https://dev.epicgames.com/documentation/realityscan-mobile/realityscan-1-5-version?lang=en-US"
+      ],
+      "state": "RESEARCHED_OFFICIAL_ONLY_NOT_ACCOUNT_TESTED_NOT_INSTALLED_NOT_IMPORTED",
+      "quality_boundary": "Official marketing or example images are NOT quality proof for any Shire asset. Compare actual downloaded FBX before accepting.",
+      "acquisition_gate": "Record source, item rights, URL, cost, hashes, UV, smoothing, poly count, LOD, texture packing and 2GB VRAM measurements before import."
+    },
+    {
+      "id": "POLY_HAVEN",
+      "name": "Poly Haven",
+      "category": "REALISTIC_CC0_ASSET_LIBRARY",
+      "active": true,
+      "priority": 6,
+      "official_url": "https://polyhaven.com/models",
+      "requires_local_ai_gpu": false,
+      "access_free_tier": "Free forever/no account; no AI generation required",
+      "license_and_commercial_rights": "CC0 source models, PBR textures, HDRIs",
+      "export_and_unreal_route": "Static mesh source export to FBX if needed; PNG/TGA textures",
+      "shire_roles": [
+        "First choice for ready-made photorealistic environment assets"
+      ],
+      "references": [
+        "https://polyhaven.com/",
+        "https://polyhaven.com/about-contact"
+      ],
+      "state": "RESEARCHED_OFFICIAL_ONLY_NOT_ACCOUNT_TESTED_NOT_INSTALLED_NOT_IMPORTED",
+      "quality_boundary": "Official marketing or example images are NOT quality proof for any Shire asset. Compare actual downloaded FBX before accepting.",
+      "acquisition_gate": "Record source, item rights, URL, cost, hashes, UV, smoothing, poly count, LOD, texture packing and 2GB VRAM measurements before import."
+    },
+    {
+      "id": "FAB_FREE_MARKETPLACE",
+      "name": "Fab by Epic",
+      "category": "LICENSED_ASSET_MARKETPLACE",
+      "active": true,
+      "priority": 7,
+      "official_url": "https://www.fab.com",
+      "requires_local_ai_gpu": false,
+      "access_free_tier": "Free-filtered assets as listed; also paid assets",
+      "license_and_commercial_rights": "Per-item Fab Standard or other license. Commercial game integration possible under Standard, but standalone redistribution forbidden",
+      "export_and_unreal_route": "Per-item FBX/UE options: confirm 4.27 compatible download, format and dependencies",
+      "shire_roles": [
+        "Free realistic scanned foliage, props, architecture, rock scatter"
+      ],
+      "references": [
+        "https://www.fab.com/eula"
+      ],
+      "state": "RESEARCHED_OFFICIAL_ONLY_NOT_ACCOUNT_TESTED_NOT_INSTALLED_NOT_IMPORTED",
+      "quality_boundary": "Official marketing or example images are NOT quality proof for any Shire asset. Compare actual downloaded FBX before accepting.",
+      "acquisition_gate": "Record source, item rights, URL, cost, hashes, UV, smoothing, poly count, LOD, texture packing and 2GB VRAM measurements before import."
+    },
+    {
+      "id": "QUATERNIUS",
+      "name": "Quaternius",
+      "category": "GAME_ASSET_PACKS",
+      "active": true,
+      "priority": 8,
+      "official_url": "https://quaternius.com",
+      "requires_local_ai_gpu": false,
+      "access_free_tier": "Free packs; some direct FBX",
+      "license_and_commercial_rights": "Per-pack CC0 for certain old packs; newer global QAL terms may apply; verify every pack",
+      "export_and_unreal_route": "Choose static FBX, skeletal FBX only after actual technical gate",
+      "shire_roles": [
+        "Stylized village background props, not photoreal hero defaults"
+      ],
+      "references": [
+        "https://quaternius.com/license.html",
+        "https://quaternius.com/packs/medievalvillage.html"
+      ],
+      "state": "RESEARCHED_OFFICIAL_ONLY_NOT_ACCOUNT_TESTED_NOT_INSTALLED_NOT_IMPORTED",
+      "quality_boundary": "Official marketing or example images are NOT quality proof for any Shire asset. Compare actual downloaded FBX before accepting.",
+      "acquisition_gate": "Record source, item rights, URL, cost, hashes, UV, smoothing, poly count, LOD, texture packing and 2GB VRAM measurements before import."
+    },
+    {
+      "id": "KENNEY_ASSETS",
+      "name": "Kenney",
+      "category": "CC0_GAME_ASSET_PACKS",
+      "active": true,
+      "priority": 9,
+      "official_url": "https://kenney.nl/assets",
+      "requires_local_ai_gpu": false,
+      "access_free_tier": "Free downloadable packs",
+      "license_and_commercial_rights": "Per-pack CC0 as listed on asset page",
+      "export_and_unreal_route": "Check included format, convert static parts to FBX if necessary",
+      "shire_roles": [
+        "Small food/tableware and low-poly background scene dressing"
+      ],
+      "references": [
+        "https://kenney.nl/assets/food-kit",
+        "https://kenney.nl/assets/prototype-kit"
+      ],
+      "state": "RESEARCHED_OFFICIAL_ONLY_NOT_ACCOUNT_TESTED_NOT_INSTALLED_NOT_IMPORTED",
+      "quality_boundary": "Official marketing or example images are NOT quality proof for any Shire asset. Compare actual downloaded FBX before accepting.",
+      "acquisition_gate": "Record source, item rights, URL, cost, hashes, UV, smoothing, poly count, LOD, texture packing and 2GB VRAM measurements before import."
+    },
+    {
+      "id": "QUIXEL_MEGASCANS_FAB",
+      "name": "Quixel Megascans via Fab",
+      "category": "TOP_PHOTOREAL_SCAN_SOURCE",
+      "active": true,
+      "official_url": "https://www.fab.com",
+      "project_priority": "AAA_VISUAL_FIRST",
+      "availability_and_rights": "Photogrammetry realism benchmark. Specific scanned FBX assets and materials, some listed free; others paid. Fab Standard or item license.",
+      "pipeline": "Static FBX from asset listing if available; strip unsupported UE5-only materials/geometry, 1K texture target + LODs.",
+      "official_reference": "https://quixel.com/license",
+      "state": "SOURCE_CATALOGUED_REAL_ITEMS_SELECTED_NOT_DOWNLOADED",
+      "no_current_evidence": "No model from this provider has been downloaded, imported, human visually accepted or device-tested in this intake."
+    },
+    {
+      "id": "AMBIENTCG",
+      "name": "ambientCG",
+      "category": "PBR_CC0_TEXTURES",
+      "active": true,
+      "official_url": "https://ambientcg.com",
+      "project_priority": "SUPPORTING",
+      "availability_and_rights": "Reusable scanned PBR surfaces, public CC0 per site. Excellent supplement to existing Poly Haven materials.",
+      "pipeline": "Download 1K/2K textures, pack masks into PNG/TGA, keep DX normals.",
+      "official_reference": "https://ambientcg.com",
+      "state": "SOURCE_CATALOGUED_NO_FILES",
+      "no_current_evidence": "No model from this provider has been downloaded, imported, human visually accepted or device-tested in this intake."
+    },
+    {
+      "id": "ADOBE_MIXAMO",
+      "name": "Adobe Mixamo",
+      "category": "FREE_HUMANOID_RIGGING_AND_ANIMATIONS",
+      "active": true,
+      "official_url": "https://www.mixamo.com",
+      "project_priority": "ANIMATION_FIRST",
+      "availability_and_rights": "Adobe ID needed; royalty-free games use of humanoid animations; cannot replace equine animation rig.",
+      "pipeline": "Rigged FBX/animations, retarget and deform gate in UE4.27.2.",
+      "official_reference": "https://helpx.adobe.com/creative-cloud/faq/mixamo-faq.html",
+      "state": "SOURCE_CATALOGUED_NO_ACCOUNT_IMPORT",
+      "no_current_evidence": "No model from this provider has been downloaded, imported, human visually accepted or device-tested in this intake."
+    },
+    {
+      "id": "REALLUSION_ACCURIG",
+      "name": "Reallusion AccuRIG",
+      "category": "FREE_HUMANOID_RIGGING",
+      "active": true,
+      "official_url": "https://www.reallusion.com/auto-rig/accurig/",
+      "project_priority": "SUPPORTING",
+      "availability_and_rights": "Free guided humanoid rigging; free install, account sign-in and Windows workstation required.",
+      "pipeline": "Exports rigged FBX per official Reallusion documentation; verify skinning and polygon budgets.",
+      "official_reference": "https://manual.reallusion.com/AccuRig-2/2.0/09-add-motions/export.htm",
+      "state": "SOURCE_CATALOGUED_NOT_INSTALLED",
+      "no_current_evidence": "No model from this provider has been downloaded, imported, human visually accepted or device-tested in this intake."
+    },
+    {
+      "id": "SKETCHFAB_DOWNLOADABLE",
+      "name": "Sketchfab downloadable models",
+      "category": "ASSET_AGGREGATOR_LICENSE_PER_ITEM",
+      "active": true,
+      "official_url": "https://sketchfab.com",
+      "project_priority": "SUPPORTING",
+      "availability_and_rights": "Thousands of 3D scans/models; mixed copyright and downloadable asset terms. Non-commercial licenses may apply to offline private build ONLY if conditions allow.",
+      "pipeline": "Download explicitly licensed assets and document source; convert static to FBX, no generic franchise fan-asset intake.",
+      "official_reference": "https://sketchfab.com",
+      "state": "SOURCE_CATALOGUED_NO_ITEM_APPROVED",
+      "no_current_evidence": "No model from this provider has been downloaded, imported, human visually accepted or device-tested in this intake."
+    },
+    {
+      "id": "BLENDER_TOOLCHAIN",
+      "name": "Blender",
+      "category": "LOCAL_STATIC_ASSET_PREPARATION",
+      "active": true,
+      "official_url": "https://www.blender.org",
+      "project_priority": "SUPPORTING",
+      "availability_and_rights": "Free open-source modeling/retopology/UV/LOD/baking/FBX exporter; existing workflow complement.",
+      "pipeline": "Supports reducing heavy photogrammetry meshes and exporting optimized FBX with PNG/TGA textures.",
+      "official_reference": "https://www.blender.org",
+      "state": "EXISTING_PREFERRED_OFFLINE_EDITOR_IF_AVAILABLE",
+      "no_current_evidence": "No model from this provider has been downloaded, imported, human visually accepted or device-tested in this intake."
+    },
+    {
+      "id": "POLYCAM",
+      "name": "Polycam",
+      "category": "CLOUD_AND_MOBILE_PHOTOGRAMMETRY",
+      "active": true,
+      "official_url": "https://poly.cam/",
+      "project_priority": "SUPPORTING",
+      "availability_and_rights": "Phone-scanned geometry; free/paid features and exports vary by plan; own photographed objects only.",
+      "pipeline": "Clean generated mesh, retopo UV bake and export static FBX.",
+      "official_reference": "https://poly.cam/",
+      "state": "RESEARCH_ONLY_NO_SCAN",
+      "no_current_evidence": "No model from this provider has been downloaded, imported, human visually accepted or device-tested in this intake."
+    },
+    {
+      "id": "SCANIVERSE",
+      "name": "Scaniverse",
+      "category": "FREE_MOBILE_3D_SCANNING",
+      "active": true,
+      "official_url": "https://scaniverse.com/",
+      "project_priority": "SUPPORTING",
+      "availability_and_rights": "Own-object capture by smartphone; source rights and model quality inspected individually.",
+      "pipeline": "Export available mesh, convert static to FBX, resize textures and optimize.",
+      "official_reference": "https://scaniverse.com/",
+      "state": "RESEARCH_ONLY_NO_SCAN",
+      "no_current_evidence": "No model from this provider has been downloaded, imported, human visually accepted or device-tested in this intake."
+    },
+    {
+      "id": "THE_BASE_MESH",
+      "name": "The Base Mesh",
+      "category": "CC0_MODELING_STARTER_MESHES",
+      "active": true,
+      "official_url": "https://www.thebasemesh.com/",
+      "project_priority": "SUPPORTING",
+      "availability_and_rights": "Clean topology source starting points for furniture and props; not finished photoreal assets.",
+      "pipeline": "Material authoring, UV/LOD, FBX export and Unreal QC required.",
+      "official_reference": "https://www.thebasemesh.com/faq",
+      "state": "RESEARCH_ONLY_NO_ASSETS",
+      "no_current_evidence": "No model from this provider has been downloaded, imported, human visually accepted or device-tested in this intake."
     }
-  ]
+  ],
+  "retired_ids": [
+    "MICROSOFT_TRELLIS_2"
+  ],
+  "active_shortlist": [
+    "QUIXEL_MEGASCANS_FAB",
+    "POLY_HAVEN",
+    "FAB_FREE_MARKETPLACE",
+    "AMBIENTCG",
+    "ADOBE_MIXAMO",
+    "REALLUSION_ACCURIG",
+    "BLENDER_TOOLCHAIN",
+    "SKETCHFAB_DOWNLOADABLE",
+    "MESHY_AI_CLOUD",
+    "EPIC_REALITYSCAN_MOBILE",
+    "TRIPO_STUDIO_CLOUD",
+    "QUATERNIUS",
+    "KENNEY_ASSETS",
+    "THE_BASE_MESH",
+    "POLYCAM",
+    "SCANIVERSE",
+    "SLOYD_BROWSER",
+    "HYPER3D_RODIN"
+  ],
+  "owner_override_2026_10_09": {
+    "status": "OWNER_CANCELLED_TRELLIS_NO_GPU",
+    "retire_old_preference": true,
+    "allow_resurrection_only_on_explicit_new_owner_command": true,
+    "quality_note": "Only provider-owned documentation and actually downloaded items are evidence; generated marketing previews are not production-ready proof.",
+    "quality_goal": "Shire first scene should look natural and photo-real in-scene at 720p/30FPS target; supplier preview images are not Unreal screenshots."
+  },
+  "selection_policy_2026_10_09": {
+    "priority_1": "Reuse existing approved/staged/licensed quality resources; prefer CC0 photorealistic and FBX before paying for generation.",
+    "priority_2": "Meshy official detailed 2026 FAQ grants up to 10 Meshy 6 Lite free downloads/month, but not regular Meshy 6/7; personal-home account eligibility and FBX quality not tested. Prefer no-account Poly Haven CC0 source assets for active production.",
+    "priority_3": "Tripo and Sloyd free account outputs for research/non-commercial comparisons only; paid terms require owner authorization and legal review.",
+    "priority_4": "RealityScan captures physical objects with mobile compatibility and subject permissions, convert Android GLB to FBX.",
+    "priority_5": "Fab free models on per-item license/engine-compatible basis; compare imported output with commercial plan where necessary.",
+    "asset_pipeline": "Static FBX; animated skeletal FBX; texture PNG/TGA packed; proper UV, normals, LODs, collisions, affordable geometry/2GB VRAM, no synchronous heavy asset load, HISM/object-pooling where appropriate.",
+    "source_quality": "Forum leads are advisory only, not provider/license proof; every practical source needs updated official evidence and exact item record.",
+    "chapter_policy": "P1C01 before P1C02; no Gate 6/7 claim from resource catalogue.",
+    "no_gpu_prerequisite": "No local image-to-3D model or additional GPU rental is authorized; web services may run on provider GPUs without project hardware, only if account/credits are available.",
+    "highest_photorealism": "Quixel Megascans via Fab photogrammetry is primary visual-realism benchmark when the specific item is free/legally accessible, downloadable as UE4-compatible FBX or convertible, and optimized. Poly Haven CC0 scanned assets are default zero-cost source.",
+    "personal_home_use": "Owner confirms PRIVATE_OFFLINE_NON_COMMERCIAL. Personal-only third-party licenses are permitted after quick explicit terms check; this does not waive copyright, site login requirements, paywalls, no-redistribution provisions or source attribution obligations.",
+    "bible_anchor": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25.pdf (owner-provided, 225 catalogued sources) and 11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX.pdf; prefer Priority A within each category.",
+    "production_batch": "First evaluate grounded candidate item URLs in Data/P1C01PhotorealSourcePilotV1.json; only stage acquired/downloaded assets after verifying item rights, actual FBX+PNG source, SHA256 and basic topology without new runtime build.",
+    "model_quality_priority": "First physically scanned, realistic models from Fab/Quixel Megascans and Poly Haven with bounded game triangles; AI promo visuals are not evidence of resulting meshes.",
+    "offline_noncommercial_law": "User owns private/noncommercial home project; private-only terms may permit local use if explicitly allowed. The original 225-source PDF and existing DEC-037 preserve access rights, attribution, and no redistribution of private media."
+  },
+  "last_updated": "2026-10-09",
+  "source_bible_coverage": {
+    "original_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25",
+    "original_classified_sources": 225,
+    "existing_curated_registry": "Data/GlobalWarehouseSourceRegistryV2.json",
+    "existing_curated_registry_count": 142,
+    "derived_adoption": "Data/MasterExternalResourceBibleAdoptionV1.json",
+    "pilot_specific_new_targets": "Data/P1C01PhotorealSourcePilotV1.json"
+  },
+  "production_director": "Data/ProjectGovernor.json#p1c01_photo_real_source_first_2026_10_09"
 }

@@ -9193,10 +9193,74 @@
   },
   "last_updated": "2026-10-09",
   "external_visual_tool_directive_2026_10_09": {
-    "status": "ACTIVE_OWNER_PREFERENCE",
+    "status": "REVOKED_BY_OWNER_2026_10_09",
     "tool": "Microsoft TRELLIS.2",
     "registry": "Data/External3DGenerationToolRegistryV1.json",
-    "rule": "Future production sessions must consider TRELLIS.2 alongside the existing approved asset and Blender/FBX/UE4 toolchain for image-to-static-3D props. Keep it in the resource wallet. Only promote generated assets after legal provenance, canon, mesh optimization, quality, and UE4 import/performance checks. No direct local inference on ~2GB VRAM device. No P1C02 runtime or Gate 6/7 acceptance implied.",
-    "evidence": "REGISTERED_ONLY_NOT_RUN"
+    "rule": "DEPRECATED: Original preference explicitly withdrawn. Do NOT consider, propose, install, run or schedule TRELLIS.2 in Shire Journey unless the owner issues a new explicit direction.",
+    "evidence": "No TRELLIS.2 inference had been performed. Historical registration only.",
+    "revoked_reason": "Owner has no suitable NVIDIA 24GB VRAM GPU, rejects GPU rentals for this tool and requests available no-local-GPU alternatives.",
+    "superseded_by": "external_3d_production_selection_2026_10_09"
+  },
+  "external_3d_production_selection_2026_10_09": {
+    "status": "ACTIVE_OWNER_DIRECTIVE",
+    "owner_choice": "Retire Microsoft TRELLIS.2 from active governance and discover browser/cloud substitutes usable without the project's local GPU.",
+    "tool_registry": "Data/External3DGenerationToolRegistryV1.json",
+    "retired_tool_ids": [
+      "MICROSOFT_TRELLIS_2"
+    ],
+    "active_resource_research_priority": [
+      "QUIXEL_MEGASCANS_FAB",
+      "POLY_HAVEN",
+      "FAB_FREE_MARKETPLACE",
+      "AMBIENTCG",
+      "ADOBE_MIXAMO",
+      "REALLUSION_ACCURIG",
+      "BLENDER_TOOLCHAIN",
+      "MESHY_AI_CLOUD",
+      "EPIC_REALITYSCAN_MOBILE",
+      "TRIPO_STUDIO_CLOUD"
+    ],
+    "implementation_rule": "Continue Shire runtime work on the serialized P1C01 lane while independent resource catalog/rights checks occur; reuse existing legal source assets before spending money or rebuilding.",
+    "cloud_rule": "Meshy and similar online inference use provider hardware; no local GPU required. Free tier is not a guaranteed free production export; record current service credits, output rights and FBX availability at actual use.",
+    "licensing_rule": "Use free/paid source strictly according to provider and item license, source image rights, attribution and commercial use. No unapproved purchases or signups.",
+    "asset_quality_rule": "Only static FBX or skeletal FBX as appropriate after retopo/smoothing/UV/LOD/collision, PNG/TGA PBR channels with texture budgets and real UE4.27.2 import checks. Do not assume screenshots are generated outputs.",
+    "production_restrictions": "2GB VRAM / 8GB RAM / UE4.27.2, FStreamableManager asynchronous heavy loading, soft references, pooled NPCs and HISM repetition; never claim PIE/device/visual acceptance without evidence.",
+    "session_handoff": "Any future agent must obey this superseding withdrawal, skip TRELLIS.2 completely unless newly authorized, and use active registry shortlist and existing approved warehouse assets instead.",
+    "current_state": "DOCUMENTED_ONLY_NO_NEW_SUBSTITUTE_MODEL_GENERATED",
+    "highest_visual_quality_policy": "Photorealism FIRST: per-item Quixel Megascans/Fab photogrammetry (only engine-compatible source FBX/eligible rights) and CC0 Poly Haven physically scanned 3D, PBR, and HDRIs. Avoid mistaking an AI promotional render for shipped Unreal image quality.",
+    "owner_use_classification": "PRIVATE_OFFLINE_ONLY (existing DEC-037); eligible personal-only licences may enter isolated private intake, but website download/access controls, copyright, source metadata, and no public asset redistribution still apply.",
+    "ai_cloud_access_correction": "Meshy current detailed Free Plan FAQ permits 10 downloads/month for Meshy 6 Lite only; Meshy 6/7 regular models require paid subscription. Verify selection/account plan before dependency on export. Tripo free commercial rights are disputed; private-only lab remains separate."
+  },
+  "p1c01_photo_real_source_first_2026_10_09": {
+    "id": "P1C01_PHOTOREAL_POLYHAVEN_NATIVE_FBX_SOURCE_PILOT",
+    "owner_goal": "Select highest-quality photorealistic high-efficiency Shire props; use legal personal-only sources but prefer CC0 to remove recurring compliance friction.",
+    "source_bible": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25 (68 pages, 225 classified sources)",
+    "existing_index": "Data/MasterExternalResourceBibleAdoptionV1.json / Data/GlobalWarehouseSourceRegistryV2.json (142 curated sources already exist)",
+    "tool_wallet": "Data/External3DGenerationToolRegistryV1.json",
+    "pilot_manifest": "Data/P1C01PhotorealSourcePilotV1.json",
+    "source_stage_script": "Scripts/stage_p1c01_polyhaven.py",
+    "hosted_workflow": ".github/workflows/p1c01-polyhaven-source-stage.yml",
+    "test_script": "Scripts/test_p1c01_polyhaven_source_intake.py",
+    "delivery": "Five grounded CC0 candidate native-FBX 1K models staged through Poly Haven official Public API into an exact-HEAD GitHub hosted runner artifact with hashes, ≤80 MB total and an 8-minute timebox; no self-hosted Unreal or local GPU required.",
+    "source_ids": [
+      "painted_wooden_bench",
+      "wooden_crate_01",
+      "folding_wooden_stool",
+      "wooden_lantern_01",
+      "wicker_basket_01"
+    ],
+    "intake_state": "CANDIDATE_SOURCE_UNTIL_RUN_RECEIPT_PROVES_STAGING",
+    "next_action": "On hosted stage receipt review genuinely downloaded files, texture formats, retopo/LODs and 2GB VRAM budgets, then use existing P1C01 runtime lane to test only approved improvements.",
+    "hard_gates": [
+      "FBX static mesh native only; animated production FBX rig and independent skeletal quality gates",
+      "1K PNG/TGA channel packed textures after preprocessing and source provenance",
+      "No blanket import of source 8K/16K or >30MB files to 2GB VRAM runtime",
+      "FStreamableManager async heavy residency, no redundant NPC Spawn/Destroy, HISM props",
+      "No source/artifact = no asset; a hosted workflow may succeed with quarantined results and that does not count as production intake"
+    ],
+    "status": "RESEARCHED_SOURCE_SCRIPT_COMMITTED_NOT_YET_PROVEN_BY_HOSTED_STAGE",
+    "visual_acceptance": "NOT_VISUALLY_ACCEPTED_UNTIL_IN_ENGINE_HUMAN_REVIEW",
+    "copyright": "Shire lore/style references remain governed by source PDFs; no direct reproduction of protected model art without appropriate use authorization.",
+    "last_updated": "2026-10-09"
   }
 }

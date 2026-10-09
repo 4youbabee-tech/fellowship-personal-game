@@ -354,5 +354,53 @@
     "bytes": 1199482,
     "sha256": "dec78252ee2e0d4650a5cb1eca0dfd6099f55b956713fb70471300b5270708d5",
     "role": "External production-source and tooling authority; does not override canon/story bibles."
+  },
+  "reaffirmation_2026_10_09": {
+    "owner_private_noncommercial": "Project is a home/private offline visual experience. Use private-only asset intake lane for otherwise permitted personal source materials; no blanket disregard of providers' access terms.",
+    "owner_quality_target": "Physically based, photogrammetric high-fidelity Shire, but performance scaled to UE4.27.2 i7 gen6, 8GB RAM, ~2GB VRAM and 720p 30FPS.",
+    "preferred_search_paths_from_original_bible": {
+      "static_environment": [
+        "Fab / Quixel Megascans",
+        "Poly Haven Models",
+        "ambientCG (PBR)",
+        "Quaternius",
+        "Sketchfab/CGTrader per-asset"
+      ],
+      "characters": [
+        "Fab",
+        "Mixamo",
+        "AccuRIG",
+        "ActorCore"
+      ],
+      "animation": [
+        "Mixamo",
+        "Rokoko",
+        "Fab"
+      ],
+      "nature": [
+        "Poly Haven Nature",
+        "Fab Nature & Plants",
+        "Xfrog/Globe Plants (selective)"
+      ],
+      "photogrammetry": [
+        "RealityScan Mobile",
+        "Polycam",
+        "KIRI Engine",
+        "Scaniverse",
+        "Meshroom + Blender for reconstruction/cleanup"
+      ],
+      "texturing": [
+        "Poly Haven Textures",
+        "ambientCG",
+        "cgbookcase",
+        "ShareTextures",
+        "Material Maker"
+      ],
+      "not_a_blanket_license": "Source Bible distinguishes GREEN-OPEN, GREEN-LICENSED, BLUE-PERSONAL, YELLOW-PER-ASSET, REFERENCE-ONLY and QUARANTINE."
+    },
+    "practical_visual_pilot": "Data/P1C01PhotorealSourcePilotV1.json",
+    "current_tool_wallet": "Data/External3DGenerationToolRegistryV1.json",
+    "existing_142_curated_sources": "Data/GlobalWarehouseSourceRegistryV2.json",
+    "avoid_duplicate_indexing": "This addendum does not claim to re-acquire all 225 document entries; use existing canonical adoption + global registry."
   }
 }

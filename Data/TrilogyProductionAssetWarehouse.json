@@ -906,6 +906,24 @@
     ],
     "truth_boundary": "Warehouse/catalogue/source-preparation only. Runtime residency and chapter activation remain serialized; no acceptance claim."
   },
-  "external_3d_generation_tool_registry": "Data/External3DGenerationToolRegistryV1.json"
-
+  "external_3d_generation_tool_registry": "Data/External3DGenerationToolRegistryV1.json",
+  "external_3d_generation_selection_2026_10_09": {
+    "registry": "Data/External3DGenerationToolRegistryV1.json",
+    "director": "Data/ProjectGovernor.json#external_3d_production_selection_2026_10_09",
+    "retired_preference": "MICROSOFT_TRELLIS_2",
+    "selection_order": [
+      "Quixel Megascans on Fab if free/licensed & UE4.27 source-compatible",
+      "Already warehoused CC0 PBR materials & static meshes",
+      "Poly Haven CC0 photoreal static FBX via official API",
+      "Fab per-item free compatible sources",
+      "Meshy 6 Lite quality test/free downloads when actually eligible",
+      "Phone 3D scanning of owned objects"
+    ],
+    "asset_state": "RESEARCH_ONLY; not downloaded/imported/approved",
+    "rule": "No local 24GB GPU, no TRELLIS reruns, no spending without owner approval; first P1C01 visual quality, documented licenses and lower machine risk.",
+    "photoreal_static_intake_pilot": "Data/P1C01PhotorealSourcePilotV1.json",
+    "original_source_bible": "Data/MasterExternalResourceBibleAdoptionV1.json",
+    "no_overclaim": "Catalogued 225 PDF links and 142 curated registry entries pre-exist; new pilot adds five concrete candidates, not 225 newly downloaded assets.",
+    "personal_offline_policy": "Data/PrivateOfflineAssetPolicyV1.json: local experiment allowed, no public repo redistribution of private-only materials."
+  }
 }
