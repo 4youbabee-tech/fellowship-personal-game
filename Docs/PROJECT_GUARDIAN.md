@@ -1,3 +1,11 @@
+### P1C01 KayKit rig bridge source-isolation guard (2026-10-09)
+
+**Real failure:** KayKit Rig Technical Bridge #304 built `ShireJourneyEditor` successfully, then `Run unchanged UE4 skeletal hard gates` failed with `KAYKIT_RIG_UE4_IMPORT_INFRA_FAIL file=Mage.fbx exit=3`. The import log shows `GIT_LFS_POINTER_SOURCE` for existing P1C01 material PNG pointers and eight missing albedo bindings. This contaminated the character-rig QC lane before a valid accept/reject decision on the candidate FBX.
+
+**Root correction:** the KayKit UE4 rig bridge now isolates `SourceAssets/Production` during each candidate probe, stages only `Characters/Rigs/P1C01_TECHNICAL_BRIDGE/SK_P1C01_KAYKIT_TECHNICAL.fbx`, runs the existing `ShireProductionImport` commandlet, and restores the original source tree in `finally`. This keeps the lane focused on skeletal import hard gates and avoids using unrelated material pointer debt as a character rejection.
+
+**Boundary:** CI script source fix only. Candidate visual/rig acceptance still requires a fresh UE4.27 bridge run and artifact evidence.
+
 ### P1C01 six-field deferred capture argument parsing guard (2026-10-09)
 
 **Real failure:** #1784 passed static, UE4 C++ compile and asset import, then emitted `P1C01_RENDER_CAPTURE_FAIL reason=camera_pose_invalid_fields` after P1C01 committed, resulting in a first-shot 150s timeout. The old `-ShireCapturePose=X,Y,Z,Pitch,Yaw,Roll` string must not be used with UE4 FParse token handling.
