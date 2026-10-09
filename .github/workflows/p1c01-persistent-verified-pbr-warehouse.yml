@@ -1,5 +1,10 @@
 name: P1C01 Persistent Verified Poly Haven PBR Source Intake
 on:
+  pull_request:
+    branches: [develop]
+    paths:
+      - '.github/workflows/p1c01-persistent-verified-pbr-warehouse.yml'
+      - 'Scripts/stage_p1c01_adaptive_pbr_warehouse.py'
   workflow_dispatch:
 permissions:
   contents: read
@@ -13,7 +18,7 @@ jobs:
     runs-on: [self-hosted, Windows, X64, ue4-27]
     timeout-minutes: 75
     env:
-      SOURCE_HEAD: "08787c078fa1f4e52f15927ca9777fd22602626d"
+      SOURCE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
       STAGING_WAREHOUSE: 'D:\actions-runner\_warehouse\ShireJourney'
     steps:
       - name: Exact-source checkout
