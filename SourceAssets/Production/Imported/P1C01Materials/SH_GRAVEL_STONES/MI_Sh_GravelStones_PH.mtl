@@ -1,0 +1,8 @@
+# Generated P1C01 external material intake.
+newmtl MI_Sh_GravelStones_PH
+Kd 1.0 1.0 1.0
+Pr 0.8800
+Pm 0.0000
+Ks 0.0200 0.0200 0.0200
+map_Kd TX_SH_GRAVEL_STONES_BaseColor.png
+
