@@ -9191,5 +9191,12 @@
     ],
     "acceptance_boundary": "Machine train success is not human PIE, DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED or Gate 6/7 acceptance."
   },
-  "last_updated": "2026-10-08"
+  "last_updated": "2026-10-09",
+  "external_visual_tool_directive_2026_10_09": {
+    "status": "ACTIVE_OWNER_PREFERENCE",
+    "tool": "Microsoft TRELLIS.2",
+    "registry": "Data/External3DGenerationToolRegistryV1.json",
+    "rule": "Future production sessions must consider TRELLIS.2 alongside the existing approved asset and Blender/FBX/UE4 toolchain for image-to-static-3D props. Keep it in the resource wallet. Only promote generated assets after legal provenance, canon, mesh optimization, quality, and UE4 import/performance checks. No direct local inference on ~2GB VRAM device. No P1C02 runtime or Gate 6/7 acceptance implied.",
+    "evidence": "REGISTERED_ONLY_NOT_RUN"
+  }
 }
