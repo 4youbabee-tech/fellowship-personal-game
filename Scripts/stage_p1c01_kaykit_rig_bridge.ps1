@@ -68,6 +68,10 @@ foreach($candidate in @($candidates | Select-Object -First $maxCandidates)){
   $ascii=[Text.Encoding]::ASCII.GetString($bytes)
   $version=Get-FbxVersion -Bytes $bytes -Ascii $ascii
   $sha=(Get-FileHash -LiteralPath $dest -Algorithm SHA256).Hash.ToLowerInvariant()
+  $expectedSha=([string]$candidate.expected_sha256).ToLowerInvariant()
+  if(-not [string]::IsNullOrWhiteSpace($expectedSha) -and $sha -ne $expectedSha){
+    throw "KAYKIT_RIG_PAYLOAD_HASH_FAIL file=$filename expected=$expectedSha actual=$sha"
+  }
   $hasGeometry=$ascii.Contains("Geometry")
   $hasModel=$ascii.Contains("Model")
   $hasLimb=$ascii.Contains("LimbNode")
@@ -92,6 +96,9 @@ foreach($candidate in @($candidates | Select-Object -First $maxCandidates)){
     skin=$hasSkin
     cluster=$hasCluster
     animation=$hasAnim
+    expected_sha256=$expectedSha
+    source_git_blob_sha=[string]$candidate.source_git_blob_sha
+    p1c01_candidate_roles=@($candidate.p1c01_candidate_roles)
     known_rejection=$knownRejection
     static_pass=$staticPass
   }
@@ -109,8 +116,14 @@ $receipt=[ordered]@{
   scanned_count=$rows.Count
   known_rejection_count=$knownRejectedRows.Count
   selected_count=$selected.Count
-  selected_candidates=@($selected | Select-Object entry,filename,source_url,extracted_path,bytes,sha256,fbx_version,animation)
-  candidates=@($rows | Select-Object entry,filename,source_url,bytes,sha256,fbx_version,geometry,model,limb_node,skin,cluster,animation,known_rejection,static_pass)
+  target_character=[string]$manifest.target_character
+  technical_import_target=[ordered]@{
+    source_relative="Characters/Rigs/P1C01_TECHNICAL_BRIDGE/SK_P1C01_KAYKIT_TECHNICAL.fbx"
+    content_dir="Content/Production/Characters/Rigs/P1C01_TECHNICAL_BRIDGE"
+    asset_name="SK_P1C01_KAYKIT_TECHNICAL"
+  }
+  selected_candidates=@($selected | Select-Object entry,filename,source_url,extracted_path,bytes,sha256,expected_sha256,source_git_blob_sha,fbx_version,animation,p1c01_candidate_roles)
+  candidates=@($rows | Select-Object entry,filename,source_url,bytes,sha256,expected_sha256,source_git_blob_sha,fbx_version,geometry,model,limb_node,skin,cluster,animation,p1c01_candidate_roles,known_rejection,static_pass)
   runtime_integration_allowed=$false
   final_likeness=$false
   evidence_boundary="Official raw-source/license/hash/static FBX structure only. Real UE4.27 skeletal technical import gate is next."
