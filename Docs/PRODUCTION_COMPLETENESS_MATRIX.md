@@ -1,3 +1,9 @@
+## 2026-10-09 — Five hosted tracks live, precise PG-078 root repair
+
+- New owner-confirmed DEC-104 / PR #335 first exact-head run [five-lane #1](https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/37978590310) **SUCCESS** on `e22434b812b71a20ba9375e71d7fc54e74baa486`: five distinct hosted matrix jobs completed successfully and published five source-only metadata reports, without Git LFS, UE4 or warehouse mutation.
+- Concurrent Pre-Unreal [#2225](https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/37978590228) **FAILED** PG-078 `tracked unfinished requirement snapshot is stale` because REQ-PROD-011 gained a concrete missing-work tracking entry while `Data/MasterExecutionRoadmap.json.tracked_unfinished_requirement_ids` was not synchronized. The requirement was already mapped to `CONTINUOUS_MAXIMUM_SAFE_PRODUCTION`; this commit regenerates the tracked unfinished-ID snapshot from the exact Governor (60 entries), without disabling, weakening or changing validator semantics.
+- **Revalidation pending** on the new exact HEAD. Five-lane PASS is source/read-only coordination proof, not binary warehouse upload or visual completion. Only serialized valid source intake may place eligible new files into persistent warehouse.
+
 ## 2026-10-09 — Owner-confirmed permanent five-lane maximum-safe throughput
 
 - Direct live `develop` Governor review found **REQ-PROD-011 and DEC-078 already active**: throughput must be adaptive and maximal by default without further owner reminders. **DEC-104** explicitly groups existing preparation work into five independent operational tracks: serialized UE4 runtime; serialized persistent warehouse and legal asset intake; skeletal characters/animation; realistic visual Shire world; and gameplay/NPC/quest/save/audio/Arabic presentation.
