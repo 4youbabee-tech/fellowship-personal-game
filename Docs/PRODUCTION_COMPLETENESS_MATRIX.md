@@ -1,3 +1,10 @@
+## 2026-10-09 — Owner-confirmed permanent five-lane maximum-safe throughput
+
+- Direct live `develop` Governor review found **REQ-PROD-011 and DEC-078 already active**: throughput must be adaptive and maximal by default without further owner reminders. **DEC-104** explicitly groups existing preparation work into five independent operational tracks: serialized UE4 runtime; serialized persistent warehouse and legal asset intake; skeletal characters/animation; realistic visual Shire world; and gameplay/NPC/quest/save/audio/Arabic presentation.
+- Candidate branch adds `Scripts/p1c01_five_lane_preflight.py` and five-way parallel hosted runner workflow `.github/workflows/p1c01-five-lane-maxsafe.yml`. Runs every lane against the exact PR SHA with **no Git LFS, Unreal, persistent warehouse write, login bypass, or synthetic claims of new downloads**; all eligible metadata candidates and existing 180 visual slots are scanned and five source-only receipt artifacts published. The existing single serialized UE and warehouse workflows remain responsible for mutating their resources; no duplicate runner contention.
+- Maximum file intake is **not** unbounded single-job ZIP/VRAM/residency; follow `Data/MaximumSafeProductionModeV1.json` with >=6GiB warehouse reserve and measured per-file/wave/network/provider/artifact budgets. The warehouse source catalogue and existing legal source pipelines remain the actual acquisition path. Source/library inventory scales independently from the 2GB VRAM runtime working set.
+- At authoring, exact-head hosted proof is **PENDING**. This wave itself does not import new FBX, produce new cinematic content, complete the Shire, or satisfy Gate 6/7. Keep P1C02 runtime closed. Existing PR #329 Unreal lane and #332 photoreal intake lane continue independently.
+
 ## 2026-10-01 - Critical-gap receipt parity matrix
 
 | Area | Status | Evidence / boundary |

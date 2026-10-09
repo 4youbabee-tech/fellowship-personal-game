@@ -2852,7 +2852,11 @@
         "Data/WholeGameProductionExecutionQueueV1.json runs in ACTIVE_MAXIMUM_SAFE_PREPARATION_RUNTIME_SERIALIZED mode.",
         "Data/MasterExecutionRoadmap.json is reconciled to the current P1C01 + parallel whole-game preparation state.",
         "Warehouse #286 clean inventory audit proves the active-receipt warehouse can continue production; full maximum-safe lane saturation remains operational work in progress.",
-        "Hosted Unreal preflight classification reserves the self-hosted UE4.27 machine only for full/core/asset/acceptance modes; source/preproduction/static-only deltas remain on GitHub-hosted validation lanes without weakening exact-head engine gates."
+        "Hosted Unreal preflight classification reserves the self-hosted UE4.27 machine only for full/core/asset/acceptance modes; source/preproduction/static-only deltas remain on GitHub-hosted validation lanes without weakening exact-head engine gates.",
+        "DEC-104 operationalizes five simultaneous bounded tracks as an overlay on DEC-078 and Data/MaximumSafeProductionModeV1.json; no competing decision authority or more than one runtime/warehouse writer."
+      ],
+      "missing_work": [
+        "Five-lane hosted exact-head metadata/source-candidate checks must run successfully; real bulk acquisition, persistent storage and UE4 material/character/world imports remain subject to their own run receipts and visual/device gates."
       ]
     },
     {
@@ -5658,6 +5662,37 @@
         "Branch, validation, merge and cleanup are serialized per car."
       ],
       "evidence_boundary": "OWNER GOVERNANCE AND EXECUTION ORDER. Candidate, import, compile, PIE, device, visual, pacing and performance evidence remain separate."
+    },
+    {
+      "id": "DEC-104",
+      "title": "Make five independent maximum-safe production tracks the default execution pattern",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-PROD-011",
+        "REQ-WAREHOUSE-001",
+        "REQ-PERF-001",
+        "REQ-STABILITY-001"
+      ],
+      "resolution": "Owner reaffirms DEC-078 as permanent: maximize actual safe throughput without asking again. Operate five grouped tracks concurrently where dependencies and runner capacity permit: (1) one serialized UE4 runtime build/integration, (2) licensed source acquisition and warehouse QC with exactly one persistent writer, (3) skeletal characters/animation FBX preparation, (4) Shire visual world/terrain/architecture/vegetation/water/material preparation, (5) gameplay/NPC/quest/save/audio/Arabic presentation preparation and static QA. Group existing technical lanes; do not create competing authority or bypass gates.",
+      "implementation_contract": [
+        "Read Data/ProjectGovernor.json first at every meaningful production resumption and follow its existing priorities; DEC-078 remains in force without repeated owner prompting.",
+        "Saturate all eligible independent source/catalogue/candidate tasks per wave, not fixed tiny candidate quotas; shard bounded by actual source byte sizes, service quotas, runtime/worker memory, network timeouts and available storage.",
+        "Keep exactly one self-hosted runtime-changing integration lane and exactly one persistent warehouse-writing lane. Hosted read-only scans and generated candidate outputs may run concurrently with these two serialized resources.",
+        "Five operational lanes are a grouping of the already-authorized maximum-safe technical lanes; their hosted preflight may publish candidate plans but not silently mutate the warehouse or Unreal Content.",
+        "For source staging, use the existing provider-specific approved intake/warehouse workflows; require exact source URLs, license/entitlement, checksums and stable receipts. No account bypass or paid assets; quarantine corrupt/rejected items and never reattempt identical known-bad KayKit payloads.",
+        "Use dynamic resource-aware sharding across all eligible candidates; cap single-file and per-wave bytes by measured runner/network budgets and preserve >=6 GiB persistent warehouse disk reserve. No unlimited single ZIP or unlimited simultaneous uploads.",
+        "Save file quality stages separately: INDEXED, DOWNLOADED, HASHED_QC, READY_FOR_IMPORT, UE_IMPORTED, VISUAL_REVIEWED. Not all indexed items are files; no source/static pass implies Unreal/PIE/device acceptance.",
+        "P1C01 stays the only active runtime chapter until its Gate 6/7 visual, gameplay and target-device evidence is accepted. Whole-trilogy source stocking and future region design may continue.",
+        "Batch coherent changes and run fast exact-head hosted preflights before expensive Unreal; preserve compile, save/load, NPC pooling/async loading, route, performance and runtime integrity checks."
+      ],
+      "rationale": "Owner explicitly requested that the already approved fastest-safe production policy be applied automatically, with five concurrent non-conflicting operational lanes and maximized safe asset upload throughput. REQ-PROD-011 and DEC-078 already authorize multi-lane work but lacked a concrete five-way hosted coordination proof.",
+      "evidence": [
+        "REQ-PROD-011 and DEC-078 already accepted on develop",
+        "Data/MaximumSafeProductionModeV1.json; Data/WholeGameProductionExecutionQueueV1.json",
+        "Scripts/p1c01_five_lane_preflight.py and .github/workflows/p1c01-five-lane-maxsafe.yml (new exact-head hosted proof to run)",
+        "Docs/CURRENT_PROJECT_STATE.md and Docs/PRODUCTION_COMPLETENESS_MATRIX.md (candidate-state boundaries)"
+      ],
+      "evidence_boundary": "Operational five-lane metadata/source preflight and CI coordination; no assertion of new assets downloaded, permanently stored, UE imported, visually accepted, or tested at 30 FPS."
     }
   ],
   "open_conflicts": [],
