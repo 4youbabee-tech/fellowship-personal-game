@@ -18,13 +18,25 @@ $receipt = Get-Content -LiteralPath $StaticReceiptPath -Raw | ConvertFrom-Json
 $selected = @($receipt.selected_candidates)
 if($selected.Count -lt 1){ throw "KAYKIT_RIG_UE4_NO_SELECTED_CANDIDATES" }
 
-$sourceDestination = Join-Path $root "SourceAssets\Production\Characters\Rigs\FRODO\SK_FRODO.fbx"
-$contentDir = Join-Path $root "Content\Production\Characters\Rigs\FRODO"
+$target = $receipt.technical_import_target
+$sourceRelative = "Characters/Rigs/P1C01_TECHNICAL_BRIDGE/SK_P1C01_KAYKIT_TECHNICAL.fbx"
+$contentRelative = "Content/Production/Characters/Rigs/P1C01_TECHNICAL_BRIDGE"
+$assetName = "SK_P1C01_KAYKIT_TECHNICAL"
+if($target -ne $null){
+  if(-not [string]::IsNullOrWhiteSpace([string]$target.source_relative)){ $sourceRelative = [string]$target.source_relative }
+  if(-not [string]::IsNullOrWhiteSpace([string]$target.content_dir)){ $contentRelative = [string]$target.content_dir }
+  if(-not [string]::IsNullOrWhiteSpace([string]$target.asset_name)){ $assetName = [string]$target.asset_name }
+}
+$sourceRelativePlatform = $sourceRelative.Replace("/", "\\")
+$contentRelativePlatform = $contentRelative.Replace("/", "\\")
+$sourceDestination = Join-Path (Join-Path $root "SourceAssets\Production") $sourceRelativePlatform
+$contentDir = Join-Path $root $contentRelativePlatform
 $generated = @(
-  (Join-Path $contentDir "SK_FRODO.uasset"),
-  (Join-Path $contentDir "SK_FRODO_Skeleton.uasset"),
-  (Join-Path $contentDir "SK_FRODO_PhysicsAsset.uasset")
+  (Join-Path $contentDir ($assetName + ".uasset")),
+  (Join-Path $contentDir ($assetName + "_Skeleton.uasset")),
+  (Join-Path $contentDir ($assetName + "_PhysicsAsset.uasset"))
 )
+$importMarkerPath = "/" + $sourceRelative.Replace("\\", "/")
 $importScript = Join-Path $root "Scripts\ci_import_production_assets.cmd"
 $importLog = Join-Path $root "Saved\Logs\CI-ProductionAssetImport.log"
 
@@ -60,8 +72,8 @@ foreach($candidate in $selected){
   $begin = -1
   $result = -1
   for($i=0; $i -lt $lines.Count; $i++){
-    if($lines[$i].Contains("ShireProductionImport: skeletal FBX import") -and $lines[$i].Contains("/Characters/Rigs/FRODO/SK_FRODO.fbx")){ $begin=$i }
-    if($begin -ge 0 -and $lines[$i].Contains("ShireProductionImport result:") -and $lines[$i].Contains("/Characters/Rigs/FRODO/SK_FRODO.fbx |")){ $result=$i; break }
+    if($lines[$i].Contains("ShireProductionImport: skeletal FBX import") -and $lines[$i].Contains($importMarkerPath)){ $begin=$i }
+    if($begin -ge 0 -and $lines[$i].Contains("ShireProductionImport result:") -and $lines[$i].Contains($importMarkerPath + " |")){ $result=$i; break }
   }
   if($begin -lt 0 -or $result -lt 0){ throw "KAYKIT_RIG_UE4_IMPORT_MARKERS_MISSING file=$($candidate.filename)" }
 
@@ -79,8 +91,8 @@ foreach($candidate in $selected){
   if($segment -match "has no UV set"){ $reasons += "MISSING_UV_SET" }
   $reasons = @($reasons | Sort-Object -Unique)
 
-  $meshAsset = Join-Path $contentDir "SK_FRODO.uasset"
-  $skeletonAsset = Join-Path $contentDir "SK_FRODO_Skeleton.uasset"
+  $meshAsset = Join-Path $contentDir ($assetName + ".uasset")
+  $skeletonAsset = Join-Path $contentDir ($assetName + "_Skeleton.uasset")
   $assetsExist = (Test-Path -LiteralPath $meshAsset -PathType Leaf) -and (Test-Path -LiteralPath $skeletonAsset -PathType Leaf)
   if(-not $assetsExist -and $reasons.Count -eq 0){ $reasons += "GENERATED_SKELETAL_ASSETS_MISSING" }
 
