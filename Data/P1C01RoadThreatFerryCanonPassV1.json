@@ -30,14 +30,15 @@
     "root_rock_hism_instances": 4,
     "far_bank_path_hism_instances": 12,
     "limited_hero_actors": 3,
-    "total_hism_instances": 48,
+    "ferry_dock_cluster_instances": 2,
+    "total_hism_instances": 50,
     "capture_count_after_packet": 7,
     "dedicated_wooded_road_shot": "07_Wooded_Road_Hide",
     "ferry_bank_reed_hism_instances": 12,
     "ferry_bank_rock_hism_instances": 6
   },
   "architecture_contract": {
-    "repeated_detail": "EXISTING_HISM_COMPONENTS_ONLY",
+    "repeated_detail": "EXISTING_HISM_COMPONENTS_OR_AWORLDDETAILCLUSTER_ONLY",
     "new_world_authority": false,
     "per_instance_tick": false,
     "synchronous_heavy_load": false,

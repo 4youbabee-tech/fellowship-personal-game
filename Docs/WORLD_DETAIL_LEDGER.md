@@ -1,3 +1,10 @@
+## 2026-10-09 - P1C01 Bucklebury Ferry dock segment boarding detail
+
+- Added two resident `SM_CommonDockSegment` placements at the Bucklebury Ferry near/far landing through a single `AWorldDetailCluster`, improving the boarding-stage read with existing production geometry.
+- The dock dressing is non-colliding, tagged for existing runtime cleanup, and does not move the Ferry boat, footbridge, quest triggers, route endpoints, NavMesh, save keys, story state or Bucklebury crossing collision.
+- Updated the Road Threat/Ferry canon contract and source test to account for two clustered dock instances while keeping limited hero actors at three and P1C02 locked.
+- Evidence boundary: STATIC-VALIDATED source contract only until exact-head UE4.27.2 CI proof runs. No PIE, device, visual, performance or Gate 6/7 acceptance is claimed.
+
 ## 2026-10-09 - P1C01 Bag End garden arch and mailbox dressing
 
 - Added existing resident Shire production meshes for a Bag End garden arch and mailbox inside `AShirePrototypeWorldBuilder::SpawnBagEndHeroPass`, closing two visible `BAG_END_EXTERIOR_GARDEN` micro-detail slots without introducing new asset imports.

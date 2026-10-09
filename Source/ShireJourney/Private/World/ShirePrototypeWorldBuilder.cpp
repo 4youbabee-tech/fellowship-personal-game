@@ -5452,6 +5452,7 @@ void AShirePrototypeWorldBuilder::SpawnRoadThreatAndFerryCanonPass()
     int32 FarBankPathInstances = 0;
     int32 FerryBankReedInstances = 0;
     int32 FerryBankRockInstances = 0;
+    int32 FerryDockInstances = 0;
     int32 HeroProps = 0;
 
     auto AddInstance = [](UHierarchicalInstancedStaticMeshComponent* Component,
@@ -5600,6 +5601,31 @@ void AShirePrototypeWorldBuilder::SpawnRoadThreatAndFerryCanonPass()
         }
     }
 
+    if (UStaticMesh* CommonDockSegment = ResolveResidentStaticMesh(
+        TEXT("/Game/Production/World/Common/SM_CommonDockSegment.SM_CommonDockSegment")))
+    {
+        const FCanonPlacement FerryDockSegments[] = {
+            { FVector(ShireLayout::FerryX - 760.0f, -505.0f, 8.0f), FVector(0.62f),  4.0f },
+            { FVector(ShireLayout::FerryX + 760.0f, -505.0f, 12.0f), FVector(0.58f), -6.0f }
+        };
+
+        FActorSpawnParameters Params;
+        Params.Owner = this;
+        Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+        if (AWorldDetailCluster* DockCluster = GetWorld()->SpawnActor<AWorldDetailCluster>(
+            FVector::ZeroVector, FRotator::ZeroRotator, Params))
+        {
+            DockCluster->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
+            DockCluster->Tags.AddUnique(TEXT("P1C01FerryCanonDetail"));
+            DockCluster->Configure(CommonDockSegment, false, 0, 32000);
+            for (const FCanonPlacement& P : FerryDockSegments)
+            {
+                DockCluster->AddDetailInstance(P.Location, FRotator(0.0f, P.Yaw, 0.0f), P.Scale);
+            }
+            FerryDockInstances += DockCluster->GetDetailCount();
+        }
+    }
+
     if (ProductionCommonRopeCoilMesh)
     {
         const FVector RopeCoils[] = {
@@ -5625,13 +5651,14 @@ void AShirePrototypeWorldBuilder::SpawnRoadThreatAndFerryCanonPass()
     UE_LOG(
         LogTemp,
         Display,
-        TEXT("P1C01_ROAD_THREAT_FERRY_CANON_PASS rootTrees=%d rootShrubs=%d rootRocks=%d farBankPath=%d ferryBankReeds=%d ferryBankRocks=%d heroProps=%d repeatedDetail=HISM collision=none p1c02=locked"),
+        TEXT("P1C01_ROAD_THREAT_FERRY_CANON_PASS rootTrees=%d rootShrubs=%d rootRocks=%d farBankPath=%d ferryBankReeds=%d ferryBankRocks=%d ferryDock=%d heroProps=%d repeatedDetail=HISM collision=none p1c02=locked"),
         RootTreeInstances,
         RootShrubInstances,
         RootRockInstances,
         FarBankPathInstances,
         FerryBankReedInstances,
         FerryBankRockInstances,
+        FerryDockInstances,
         HeroProps);
 }
 
