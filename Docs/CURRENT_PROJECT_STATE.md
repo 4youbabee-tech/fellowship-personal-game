@@ -1,3 +1,9 @@
+## 2026-10-09 — External candidate: Microsoft TRELLIS.2 (source-only catalogue)
+- Official upstream: https://github.com/microsoft/TRELLIS.2 ; source and model MIT; nvdiffrast/nvdiffrec retain separate licenses. Produces image-conditioned static textured 3D GLB with PBR channels.
+- Unreal suitability: external concept/static-prop source ONLY after GLB -> cleaned, optimized FBX, UVs/LODs/collision, 1K-class PNG/TGA packed channels as appropriate and provenance/copyright audit. No production skeletal character or horse approved without dedicated rig/deformation gates.
+- Official inference prerequisite Linux/NVIDIA >=24GB VRAM, so not on the 2GB-target GPU. GitHub source is free, cloud compute/demos not assured free.
+- Recorded candidate in Data/External3DGenerationToolRegistryV1.json and linked from Data/TrilogyProductionAssetWarehouse.json; status CATALOGUED_TOOL_NOT_INSTALLED_NOT_INTEGRATED. No runtime, assets, device test or Gate 6/7 claims.
+
 ## 2026-10-08 - P1C01 Brandywine ferry waterline root fix (fresh exact-head CI pending)
 - Predecessor #1748 succeeded on `e314995a0b3395d765f2ac1af0e4e48cfe23d866` through UE4.27.2 C++ build/import, seven-shot render, headless runtime/save QA, Windows package and startup. This proof belongs to that predecessor only.
 - Root-corrected `AShirePrototypeWorldBuilder` scenic/woodland HISM placement: the 14x60 scaled cube river centered at `(FerryX,-500)` spans X +/-700cm and Y +/-3000cm. Distant scenic trees, woodland tree bands and natural-route vista trees now reject water roots with 260cm buffer. Grass rejects wet surface with 95cm buffer; one ferry flower bed moves from X=FerryX-650 to X=FerryX-985.

@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "registry_id": "SHIRE_JOURNEY_EXTERNAL_3D_GENERATION_TOOLS_V1",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/TrilogyProductionAssetWarehouse.json",
+    "Docs/WORLD_DETAIL_LEDGER.md"
+  ],
+  "tools": [
+    {
+      "id": "MICROSOFT_TRELLIS_2",
+      "name": "Microsoft TRELLIS.2",
+      "official_repository": "https://github.com/microsoft/TRELLIS.2",
+      "official_weights": "https://huggingface.co/microsoft/TRELLIS.2-4B",
+      "verified_on": "2026-10-09",
+      "candidate_status": "CATALOGUED_TOOL_NOT_INSTALLED_NOT_INTEGRATED",
+      "capability": "Image-to-3D textured static mesh generation with Base Color/Roughness/Metallic/Opacity; upstream output GLB.",
+      "code_and_model_license": "MIT; keep copyright and license notice when applicable",
+      "license_cautions": [
+        "NVIDIA nvdiffrast and nvdiffrec have separate license terms; audit before actual hosted/commercial deployment.",
+        "Source images and any third-party services must have suitable permissions and independent pricing/terms."
+      ],
+      "hardware": "Official local workflow Linux + NVIDIA GPU with >=24GB VRAM; tested A100/H100. Not supported by 2GB VRAM target.",
+      "cost": "Open-source MIT code/model freely available; GPU compute or third-party hosted demos may cost money; no promise of free browser service.",
+      "fit_for_shire": [
+        "Static decorative props: garden tools, crockery, barrels, baskets, sacks, furniture, isolated rocks and landmark dressing after author review.",
+        "Early concepts for Hobbit-hole architectural detailing before mesh repair."
+      ],
+      "not_approved_for": [
+        "Runtime inference on target device",
+        "Direct insertion of unoptimized 1M-triangle/4K-texture GLB assets into UE4",
+        "Direct production animated characters or horses without manual retopology, humanoid skeletal rig, animation and deformation QC",
+        "Any copyrighted reference image without rights"
+      ],
+      "intake_pipeline": [
+        "Run externally only if approved service/GPU is available.",
+        "Record source image rights, prompt, model version, generated mesh and cost.",
+        "Review front/back silhouette, manifold/smoothing/UVs, collision dimensions and story canon.",
+        "Blender conversion from GLB to static FBX (skeletal FBX plus validated animations for characters only).",
+        "Reduce triangles/LOD/collision; export PNG/TGA channel-packed textures with 1K default when suitable and preserve PBR provenance.",
+        "Keep candidate in warehouse quarantine until hash/license/performance/import checks pass; only then promote on serialized P1C01 runtime lane."
+      ],
+      "gate_policy": "No new runtime chapter or Gate 6/7 status change; candidate/tool catalogue only. No GPU job, inference or file acquisition performed.",
+      "sources": [
+        "https://github.com/microsoft/TRELLIS.2",
+        "https://github.com/microsoft/TRELLIS.2/blob/main/LICENSE"
+      ]
+    }
+  ]
+}

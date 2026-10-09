@@ -905,5 +905,7 @@
       "Highest leverage gaps remain realistic humanoid/creature rigs, broad animation, region-specific hero architecture/vegetation, deep audio, battle/VFX and mounted systems."
     ],
     "truth_boundary": "Warehouse/catalogue/source-preparation only. Runtime residency and chapter activation remain serialized; no acceptance claim."
-  }
+  },
+  "external_3d_generation_tool_registry": "Data/External3DGenerationToolRegistryV1.json"
+
 }

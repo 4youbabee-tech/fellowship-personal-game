@@ -1,3 +1,9 @@
+## 2026-10-09 — External candidate: Microsoft TRELLIS.2 (source-only catalogue)
+- Official upstream: https://github.com/microsoft/TRELLIS.2 ; source and model MIT; nvdiffrast/nvdiffrec retain separate licenses. Produces image-conditioned static textured 3D GLB with PBR channels.
+- Unreal suitability: external concept/static-prop source ONLY after GLB -> cleaned, optimized FBX, UVs/LODs/collision, 1K-class PNG/TGA packed channels as appropriate and provenance/copyright audit. No production skeletal character or horse approved without dedicated rig/deformation gates.
+- Official inference prerequisite Linux/NVIDIA >=24GB VRAM, so not on the 2GB-target GPU. GitHub source is free, cloud compute/demos not assured free.
+- Recorded candidate in Data/External3DGenerationToolRegistryV1.json and linked from Data/TrilogyProductionAssetWarehouse.json; status CATALOGUED_TOOL_NOT_INSTALLED_NOT_INTEGRATED. No runtime, assets, device test or Gate 6/7 claims.
+
 ## 2026-10-08 - P1C01 HIGH_FIDELITY_SURFACE_REPLACEMENT: Bucklebury ferry shoreline land-foliage correction
 - Authorized under registered P1C01 `HIGH_FIDELITY_SURFACE_REPLACEMENT` after seven-shot visual triage: `06_Bucklebury_Ferry` displays land vegetation intruding into the water. Corrected geometry ownership rather than camera/capture masking or added density.
 - `SpawnVillage` Brandywine surface (FerryX=23500,Y=-500) is a 14x60 basic cube with 700cm X and 3000cm Y half-size. The deterministic `ShireLayout::IsInsideFerryWaterBuffer` excludes three land-tree HISM generators (+260cm bank buffer) and grass (+95cm); relocates one existing flower bed by 335cm to dry land. Keep native river reeds under their existing dedicated wetland pass.
