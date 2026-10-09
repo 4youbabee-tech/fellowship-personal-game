@@ -1,3 +1,9 @@
+## 2026-10-09 — CI change filter source-path proof (#4) and documentation-only skip exercise
+
+- Poly Haven source-only run #4 [37970874523](https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/37970874523) SUCCESS: `P1C01_SOURCE_CHANGE_GATE needs_stage=true reason=source_inputs_changed base=3058c5df553827de7f9bfb39bd27e30f90560952` correctly detected real workflow/source-test changes.
+- 8/8 source regression tests and 4/4 PBR PNG conversion tests passed. `P1C01_POLYHAVEN_PNG_QC_PASS meshes=5 textures=19; NOT_UE4_IMPORTED`. New converted Artifact 11635108093, alongside prior successful equivalent Artifact 11634558521; no target device or human visual claim.
+- This new commit edits ONLY this documentation page, intentionally leaving input files/manifest/workflow untouched. Expect the fast source-delta classifier to emit `needs_stage=false reason=docs_only_no_source_changes` and skip source acquisition/PNG conversion/artifact. This sentence is an expected condition until a new run provides actual proof; do not mark success prematurely.
+
 ## 2026-10-09 — Stop duplicate hosted Poly Haven downloads on docs-only PR commits
 
 - Root cause observed: source-only `P1C01 Poly Haven Photoreal Source Stage #3`, [run 37969924700](https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/37969924700), ran SUCCESS at doc-only head `3058c5df5538` from cumulative PR paths filter. That commit did not modify asset manifest/script files, yet repeated actual network source acquisition/texture conversion (51 seconds).
