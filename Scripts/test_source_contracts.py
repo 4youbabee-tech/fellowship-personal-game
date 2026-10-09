@@ -1156,6 +1156,22 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("if($AssetFirst){ $budget.minimum_exported_materials=1", pack)
         self.assertIn("P1C01_ASSET_FIRST_PROGRESSIVE_EXPORT", pack)
 
+    def test_p1c01_source_fetch_retries_without_refetching_green_parent(self):
+        root = Path(__file__).resolve().parents[1]
+        wf = (root / ".github/workflows/p1c01-chapter-closure.yml").read_text(encoding="utf-8")
+        self.assertIn("for /L %%R in (1,1,3)", wf)
+        self.assertIn("P1C01_CLOSURE_SOURCE_FETCH_ATTEMPT", wf)
+        self.assertIn("P1C01_CLOSURE_SOURCE_FETCH_PASS", wf)
+        self.assertIn("P1C01_CLOSURE_SOURCE_FETCH_FAIL attempts=3", wf)
+        self.assertIn("http.version=HTTP/1.1", wf)
+        self.assertIn("http.lowSpeedTime=45", wf)
+        self.assertIn('git cat-file -e "$base^{commit}"', wf)
+        self.assertIn("P1C01_CLOSURE_DELTA_BASE_REUSED", wf)
+        self.assertIn("Unable to fetch closure delta base", wf)
+        self.assertIn("P1C01_CLOSURE_EXACT_CHECKOUT_PASS", wf)
+        self.assertLess(wf.index("P1C01_CLOSURE_SOURCE_FETCH_ATTEMPT"),
+                        wf.index("Classify closure-relevant delta before checkout"))
+
     def test_source_only_network_probe_retains_full_unreal_health(self):
         root = Path(__file__).resolve().parents[1]
         health = (root / "Scripts/verify_runner_session.ps1").read_text(encoding="utf-8")

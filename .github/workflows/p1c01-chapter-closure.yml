@@ -73,8 +73,26 @@ jobs:
           if errorlevel 1 exit /b 70
           "!GITEXE!" -c credential.helper= remote add origin "https://x-access-token:!GH_TOKEN!@github.com/%GITHUB_REPOSITORY%.git"
           if errorlevel 1 exit /b 71
-          "!GITEXE!" -c credential.helper= -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=20 fetch --no-tags --depth=2 origin !TARGET_SHA!
-          if errorlevel 1 exit /b 72
+          rem Network can be very slow: bounded retries preserve exact SHA.
+          rem Do not start another complete UE train simply because curl stalled.
+          set "FETCH_OK="
+          for /L %%R in (1,1,3) do (
+            if not defined FETCH_OK (
+              echo P1C01_CLOSURE_SOURCE_FETCH_ATTEMPT attempt=%%R/3
+              "!GITEXE!" -c credential.helper= -c http.version=HTTP/1.1 -c http.lowSpeedLimit=128 -c http.lowSpeedTime=45 fetch --no-tags --depth=2 origin !TARGET_SHA!
+              if not errorlevel 1 (
+                set "FETCH_OK=1"
+                echo P1C01_CLOSURE_SOURCE_FETCH_PASS attempt=%%R
+              ) else (
+                echo P1C01_CLOSURE_SOURCE_FETCH_RETRY attempt=%%R
+                if not "%%R"=="3" powershell.exe -NoProfile -Command "Start-Sleep -Seconds 4"
+              )
+            )
+          )
+          if not defined FETCH_OK (
+            echo P1C01_CLOSURE_SOURCE_FETCH_FAIL attempts=3
+            exit /b 72
+          )
           echo SHIRE_CLOSURE_SOURCE=!CLOSURE_SRC!>>"%GITHUB_ENV%"
           echo P1C01_CLOSURE_GRAPH_READY sha=!TARGET_SHA! source=!CLOSURE_SRC!
 
@@ -95,8 +113,20 @@ jobs:
             $reason = 'missing-base-fail-safe'
           }
           else {
-            & git -c credential.helper= -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=20 fetch --no-tags --depth=1 origin $base
-            if ($LASTEXITCODE -ne 0) { throw "Unable to fetch closure delta base $base" }
+            # A depth-2 exact-head fetch already contains the direct parent
+            # for our one-commit production waves. Do not pull it again.
+            & git cat-file -e "$base^{commit}" 2>$null
+            if ($LASTEXITCODE -eq 0) {
+              Write-Host "P1C01_CLOSURE_DELTA_BASE_REUSED sha=$base"
+            } else {
+              $baseFetched = $false
+              for($try=1;$try -le 3;$try++){
+                & git -c credential.helper= -c http.version=HTTP/1.1 -c http.lowSpeedLimit=128 -c http.lowSpeedTime=45 fetch --no-tags --depth=1 origin $base
+                if ($LASTEXITCODE -eq 0) { $baseFetched = $true; break }
+                if($try -lt 3){Start-Sleep -Seconds 4}
+              }
+              if (-not $baseFetched) { throw "Unable to fetch closure delta base $base after 3 attempts" }
+            }
 
             $changed = @(& git diff --name-only $base $target)
             if ($LASTEXITCODE -ne 0) { throw 'Unable to classify closure delta.' }
