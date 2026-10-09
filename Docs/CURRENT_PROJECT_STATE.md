@@ -1,3 +1,9 @@
+## 2026-10-09 — Governor-persistent TRELLIS.2 preference for future agents
+- Owner approved Microsoft TRELLIS.2 as a *preferred evaluation candidate* alongside current Poly Haven / existing approved content sources, Blender/FBX conversion and Unreal 4.27.2 workflows for original static props and details.
+- Authority: `Data/ProjectGovernor.json#external_visual_tool_directive_2026_10_09`. Operating instructions and prerequisites: `Data/External3DGenerationToolRegistryV1.json`. Any new ChatGPT/development session should consult both before acquiring or authoring additional static assets.
+- Source-only decision, not a generated or imported asset. Illustrative images are not tool-generated evidence. Cloud GPU costs, input rights, dependency licensing, FBX retopology/LOD/UV/collision and target-performance checks still apply. P1C01 runtime gate unchanged; P1C02 locked.
+- Evidence status: STATIC-VALIDATED for documented choice only; NO INFERENCE, COMPILE, PIE, DEVICE or VISUAL acceptance claim.
+
 ## 2026-10-09 — External candidate: Microsoft TRELLIS.2 (source-only catalogue)
 - Official upstream: https://github.com/microsoft/TRELLIS.2 ; source and model MIT; nvdiffrast/nvdiffrec retain separate licenses. Produces image-conditioned static textured 3D GLB with PBR channels.
 - Unreal suitability: external concept/static-prop source ONLY after GLB -> cleaned, optimized FBX, UVs/LODs/collision, 1K-class PNG/TGA packed channels as appropriate and provenance/copyright audit. No production skeletal character or horse approved without dedicated rig/deformation gates.
