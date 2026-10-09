@@ -250,6 +250,35 @@ def verify_existing(wave_dir: Path, src_digest: str, pbr_digest: str) -> dict:
     return receipt
 
 
+
+def check_staged_wave(warehouse_root: Path, wave: str, expected_source: int,
+                      expected_prepared: int) -> bool:
+    """Fail closed on tampered existing files; skip expensive download only after full digest audit."""
+    if not SLUG.fullmatch(wave):
+        raise StageError("WAVE_ID_UNSAFE")
+    final = warehouse_root / "_p1c01_adaptive_polyhaven" / wave
+    if not final.exists():
+        print("P1C01_PBR_WAREHOUSE_NOT_PRESENT wave=" + wave, flush=True)
+        return False
+    if final.is_symlink():
+        raise StageError("PERSISTENT_WAVE_SYMLINK_FORBIDDEN")
+    receipt = read_json(final / "receipt_adaptive_pbr.json")
+    if (receipt.get("stage") != "PERSISTENT_WAREHOUSE_SOURCE_ONLY"
+            or receipt.get("wave") != wave
+            or receipt.get("original_source_count") != expected_source
+            or receipt.get("converted_fbx_count") != expected_prepared
+            or len(receipt.get("asset_ids", [])) != expected_source):
+        raise StageError("PERSISTENT_WAVE_METADATA_MISMATCH")
+    src_digest = file_hashes(final / "source_receipt_original.json")[1]
+    pbr_digest = file_hashes(final / "pbr_receipt_original.json")[1]
+    verify_existing(final, src_digest, pbr_digest)
+    if len(receipt.get("files", [])) < expected_source:
+        raise StageError("PERSISTENT_WAVE_FILE_COUNT_MISMATCH")
+    print("P1C01_PBR_WAREHOUSE_REUSE_PASS wave=" + wave
+          + " files=" + str(len(receipt["files"])) + " sha256=pass", flush=True)
+    return True
+
+
 def stage(source_root: Path, pbr_root: Path, warehouse_root: Path, wave: str,
           expected_source: int, expected_prepared: int, reserve_bytes: int = RESERVE_BYTES,
           run_id: str = "local", reject_prior_ids: Path | None = None) -> dict:
@@ -384,15 +413,21 @@ def stage(source_root: Path, pbr_root: Path, warehouse_root: Path, wave: str,
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--source-root", type=Path, required=True)
-    parser.add_argument("--pbr-root", type=Path, required=True)
+    parser.add_argument("--source-root", type=Path)
+    parser.add_argument("--pbr-root", type=Path)
     parser.add_argument("--warehouse-root", type=Path, required=True)
     parser.add_argument("--wave", required=True)
     parser.add_argument("--expected-source", type=int, required=True)
     parser.add_argument("--expected-prepared", type=int, required=True)
     parser.add_argument("--run-id", default="local")
     parser.add_argument("--reject-prior-ids", type=Path)
+    parser.add_argument("--check-existing", action="store_true", help="verify persistent wave to skip re-download; 3=absent")
     args = parser.parse_args()
+    if args.check_existing:
+        return 0 if check_staged_wave(args.warehouse_root, args.wave,
+                                      args.expected_source, args.expected_prepared) else 3
+    if args.source_root is None or args.pbr_root is None:
+        parser.error("--source-root and --pbr-root required for staging")
     stage(args.source_root, args.pbr_root, args.warehouse_root, args.wave,
           args.expected_source, args.expected_prepared,
           run_id=args.run_id, reject_prior_ids=args.reject_prior_ids)

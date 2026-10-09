@@ -1,3 +1,9 @@
+## 2026-10-10 — 75-minute warehouse Artifact download failure; remove duplicate writer and split durable checkpoints
+
+- GitHub #37990910312 CANCELLED after 75 minutes: source 39 artifact took ~25m; PBR39 ~2.5m; source60 ~19m; PBR60 421,901,298-byte download ran 27m45s before cancellation. The first persistent commit and inventory audit were SKIPPED. No new persistent asset claim. Deprecation warning is not established cause.
+- Corrected process: dedicated warehouse writer is manually dispatched only and operates on 39-source wave first. Full SHA256 existing-wave check skips already-stored files; two necessary verified artifacts are fetched only if missing; commit wave39 and run warehouse inventory audit immediately. Separate 60-source followup only after successful durable wave39, not part of long four-download job. Removed duplicate warehouse writer from five-lane preflight. Add offline no-network regression tests for staging, reuse, source/receipt corruption, and path attacks.
+- Follow-up GitHub exact-head tests PENDING. The existing long-run failure is confirmed; final Gate6/7 remains UNACCEPTED, P1C02 CLOSED.
+
 ## 2026-10-09 — Persistent source writer Python Runner PATH failure and exact fix
 
 - Workflow #37990747432 attempted serialized stage but failed **before downloading or writing assets**: actual step line `Python was not found; run without arguments to install from the Microsoft Store` on self-hosted Windows. The machine's previous UE run #37988147537 exposes installed toolchain `D:\\actions-runner\\_work\\_tool\\Python\\3.11.9\\x64\\python.exe`; writer workflow must resolve a known existing Python binary and persist the exact path to GITHUB_ENV, not depend on `python` App Execution Alias. Other source-only prep continues independent. Next exact-head workflow must demonstrate full receipt/hash copy and warehouse inventory audit; no persistent-stage success claimed yet.

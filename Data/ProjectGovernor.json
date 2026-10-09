@@ -2861,7 +2861,8 @@
         "Five-lane hosted exact-head metadata/source-candidate checks must run successfully; real bulk acquisition, persistent storage and UE4 material/character/world imports remain subject to their own run receipts and visual/device gates.",
         "Prove 39-of-39 recovered PBR material conversion and hash-verified exclusion + resumed wave 2 on exact-head hosted CI, then persistent warehouse QC and UE import/LOD/collision/PIE/device/visual gates.",
         "Dispatch exact-head serialized Windows warehouse intake and audit SHA256/MD5 receipt, preserve 6GiB reserve. Next queue is actual UE import/LOD/collision/visual, human named-character presentation and device Gate6/7.",
-        "Fix and rerun self-hosted Python PATH failure in run 37990747432 before persistent writer can be called staged; do not conflate GitHub artifact with warehouse file."
+        "Fix and rerun self-hosted Python PATH failure in run 37990747432 before persistent writer can be called staged; do not conflate GitHub artifact with warehouse file.",
+        "Cancelled #37990910312 during 422MB fourth artifact download at 75 minute limit; no permanent writes. Split into resumable wave39 and wave60 jobs and remove duplicate writer; exact-head validation required."
       ]
     },
     {
