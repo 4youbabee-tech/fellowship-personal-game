@@ -61,3 +61,12 @@ jobs:
           path: ${{ runner.temp }}/p1c01-polyhaven-existing-artifact-qc.json
           if-no-files-found: error
           retention-days: 14
+
+      - name: Preserve exactly verified FBX and PNG candidates in 90-day GitHub artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1c01-polyhaven-qc-preserved-fbx-png-${{ env.TARGET_SHA }}
+          path: ${{ runner.temp }}/p1c01-polyhaven-existing-fbx-png
+          if-no-files-found: error
+          retention-days: 90
+          compression-level: 0
