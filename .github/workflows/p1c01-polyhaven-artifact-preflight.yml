@@ -1,0 +1,63 @@
+name: P1C01 Poly Haven Existing Artifact Preflight
+
+on:
+  pull_request:
+    branches: [develop]
+    paths:
+      - 'Scripts/verify_p1c01_polyhaven_candidate.py'
+      - 'Scripts/test_p1c01_polyhaven_candidate_preflight.py'
+      - '.github/workflows/p1c01-polyhaven-artifact-preflight.yml'
+      - 'Data/P1C01PolyHavenFirstWaveQCV1.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: p1c01-polyhaven-existing-artifact-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  qc_existing_artifact:
+    name: Existing 5 FBX + 19 PNG source preflight (NO UE4)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Checkout exact candidate without Git LFS
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          fetch-depth: 1
+          persist-credentials: false
+          lfs: false
+
+      - name: Retrieve converted artifact from proven source run (not provider)
+        uses: actions/download-artifact@v4
+        with:
+          name: p1c01-polyhaven-fbx-png-f1220e3cefdb6638cdd5b720221cf293c3ccd01a
+          run-id: 37970874523
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/p1c01-polyhaven-existing-fbx-png
+
+      - name: Validate SHA-locked 1K PBR files without Unreal
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          python3 -m pip install --quiet --disable-pip-version-check 'Pillow>=10,<13'
+          python3 -m unittest discover -s Scripts -p test_p1c01_polyhaven_candidate_preflight.py -v
+          python3 Scripts/verify_p1c01_polyhaven_candidate.py \
+            --bundle "$RUNNER_TEMP/p1c01-polyhaven-existing-fbx-png" \
+            --qc-reference Data/P1C01PolyHavenFirstWaveQCV1.json \
+            --output "$RUNNER_TEMP/p1c01-polyhaven-existing-artifact-qc.json"
+
+      - name: Upload source-preflight report only
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1c01-polyhaven-existing-artifact-qc-${{ env.TARGET_SHA }}
+          path: ${{ runner.temp }}/p1c01-polyhaven-existing-artifact-qc.json
+          if-no-files-found: error
+          retention-days: 14

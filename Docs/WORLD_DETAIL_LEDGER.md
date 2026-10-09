@@ -1,3 +1,11 @@
+## 2026-10-09 — Existing five-asset FBX/PNG artifact preflight (candidate, remote verification pending)
+
+- New bounded hosted workflow `.github/workflows/p1c01-polyhaven-artifact-preflight.yml` retrieves the **existing** converted artifact from Poly Haven source run #4 (37970874523, artifact 11635108093) using GitHub Actions, with `lfs: false` and **no provider re-download** or Unreal runner. Source run #5 completed green as an intentional docs-only skip and supplied **no new artifact**; do not mistake its workflow SUCCESS for a source re-stage.
+- New `Scripts/verify_p1c01_polyhaven_candidate.py` checks 5 binary FBX against independently recorded source SHA256, 19 PNG file SHA256, names, 1024-pixel dimensions, image modes and white-AO ORM channels. Detects untracked files/path traversal and writes a source-only QC receipt. Prior triangle/UV/normal counts are tied to source checksums and are **not new UE4 observations**.
+- New offline regression `Scripts/test_p1c01_polyhaven_candidate_preflight.py` passed **5/5 locally** on synthetic artifact fixtures (valid bundle, corrupt FBX, manipulated ORM, extra file, unsafe path); hosted exact-head check pending. Wicker basket (22,276 prior source triangles) remains held for LOD/collision/UE4 import review; other four require UE4 normals/tangents/material/collision review too.
+- This packet is **STATIC-SOURCE-PREFLIGHT ONLY**, not imported, not visually accepted, not PIE or device tested. No P1C02/runtime changes. Do not run a new Unreal cook because of this source-only commit.
+- Unreal build #1810 at HEAD `a13209021a7645e44706cace8143e341e4217d35` had passed its build/cook/startup stages but was still `in_progress` uploading the Windows package at the time of this review. Await the final workflow conclusion and matching artifact before calling the complete run successful.
+
 ## 2026-10-09 — Stop duplicate hosted Poly Haven downloads on docs-only PR commits
 
 - Root cause observed: source-only `P1C01 Poly Haven Photoreal Source Stage #3`, [run 37969924700](https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/37969924700), ran SUCCESS at doc-only head `3058c5df5538` from cumulative PR paths filter. That commit did not modify asset manifest/script files, yet repeated actual network source acquisition/texture conversion (51 seconds).
