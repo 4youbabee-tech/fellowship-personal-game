@@ -1,3 +1,9 @@
+## 2026-10-09 - P1C01 KayKit UE4 rig gate source-isolation fix (source implemented)
+
+- Investigated KayKit Rig Technical Bridge #304 failure on exact head `2aaac8014865`. `Build ShireJourneyEditor once` passed; the UE4 hard gate failed before judging `Mage.fbx` because `ci_import_production_assets.cmd -EnableCharacterRigImport` imported the entire `SourceAssets/Production` tree and hit existing material Git LFS pointer files under `Imported/P1C01Materials/*_BaseColor.png`.
+- Root correction: `Scripts/run_p1c01_kaykit_rig_bridge_ue4.ps1` now isolates the rig probe by temporarily moving the production source tree aside, creating a minimal `SourceAssets/Production/Characters/Rigs/P1C01_TECHNICAL_BRIDGE` tree with only the candidate FBX, running the existing importer, then restoring the original source tree in `finally`.
+- Evidence boundary: **SOURCE-IMPLEMENTED**. The previous #304 failure is classified as import-infrastructure contamination, not a valid character-FBX rejection. Next CI rerun must prove whether Mage/Knight/Barbarian pass or fail actual UE4 skeletal hard gates.
+
 ## 2026-10-09 - P1C01 legal character-FBX intake resumed (source implemented)
 
 - Responding to the live PIE screenshot showing block/proxy characters, resumed real visual production intake instead of only monitoring CI. Added immutable KayKit Adventurers CC0 raw-FBX candidates for missing P1C01 named-character gaps: `Mage.fbx` for Gandalf technical robe/staff deformation probing, `Knight.fbx` for Bilbo/Sam/Merry/Pippin body-scale probing, and `Barbarian.fbx` as a Black Rider humanoid deformation probe. Payloads are pinned to revision `672074b73ba276876a19e8816ecdc5241817ab47` and SHA256-locked in `Data/P1C01KayKitRigTechnicalBridgeV1.json`.
