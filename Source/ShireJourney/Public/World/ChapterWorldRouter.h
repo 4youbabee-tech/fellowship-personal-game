@@ -65,9 +65,16 @@ private:
     bool MovePlayerToChapterStart(FName ChapterId, bool bRestoreRouteTransform);
     void SetPlayerWorldHold(bool bHold);
     void VerifyPlayerGroundingStability(FName ChapterId, FVector PlacedLocation);
+    // CI render-only: frame acquisition waits for the committed playable world.
+    void QueueP1C01VisualCapture();
+    void PositionP1C01VisualCamera();
+    void RequestP1C01VisualScreenshot();
     UShireChapterAssetStreamingSubsystem* AssetStreamingSubsystem = nullptr;
 
     FTimerHandle GroundingStabilityTimer;
+    FTimerHandle P1C01VisualPoseTimer;
+    FTimerHandle P1C01VisualScreenshotTimer;
+    uint32 P1C01VisualCaptureRevision = 0;
     FName PendingGroundingCommitChapterId = NAME_None;
     FName PendingGroundingCommitRouteId = NAME_None;
     FName PendingGroundingCommitEpisodeId = NAME_None;

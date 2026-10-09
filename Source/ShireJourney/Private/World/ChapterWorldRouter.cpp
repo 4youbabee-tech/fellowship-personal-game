@@ -26,10 +26,13 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Pawn.h"
+#include "GameFramework/PlayerController.h"
 #include "Kismet/GameplayStatics.h"
 #include "Misc/CommandLine.h"
+#include "Misc/DefaultValueHelper.h"
 #include "Misc/Parse.h"
 #include "TimerManager.h"
+#include "UnrealClient.h"
 
 namespace ShireGrounding
 {
@@ -104,6 +107,9 @@ void AChapterWorldRouter::EndPlay(const EEndPlayReason::Type EndPlayReason)
         AssetStreamingSubsystem = nullptr;
     }
 
+    GetWorldTimerManager().ClearTimer(P1C01VisualPoseTimer);
+    GetWorldTimerManager().ClearTimer(P1C01VisualScreenshotTimer);
+    P1C01VisualCaptureRevision = 0;
     LastCommittedRollbackSnapshot = nullptr;
     Super::EndPlay(EndPlayReason);
 }
@@ -760,6 +766,112 @@ void AChapterWorldRouter::VerifyPlayerGroundingStability(FName ChapterId, FVecto
 
     OnWorldCommitted.Broadcast(WorldRevision);
     SetPlayerWorldHold(false);
+    if (CommittedChapterId == TEXT("P1C01") && CommittedRouteId == TEXT("FrodoMain"))
+    {
+        QueueP1C01VisualCapture();
+    }
+}
+
+void AChapterWorldRouter::QueueP1C01VisualCapture()
+{
+    // Never interfere with an ordinary game, PIE session or other chapters.
+    if (!GetWorld() || !FParse::Param(FCommandLine::Get(), TEXT("ShireVisualCapture")))
+    {
+        return;
+    }
+
+    P1C01VisualCaptureRevision = WorldRevision;
+    GetWorldTimerManager().SetTimer(
+        P1C01VisualPoseTimer,
+        this,
+        &AChapterWorldRouter::PositionP1C01VisualCamera,
+        0.75f,
+        false);
+}
+
+void AChapterWorldRouter::PositionP1C01VisualCamera()
+{
+    if (P1C01VisualCaptureRevision == 0 ||
+        P1C01VisualCaptureRevision != WorldRevision ||
+        LastLoadedChapterId != TEXT("P1C01") ||
+        LastLoadedRouteId != TEXT("FrodoMain") ||
+        bPlayerWorldHoldActive)
+    {
+        UE_LOG(LogTemp, Error, TEXT("P1C01_RENDER_CAPTURE_FAIL reason=world_revision_not_committed"));
+        return;
+    }
+
+    FString PoseString;
+    if (!FParse::Value(FCommandLine::Get(), TEXT("ShireCapturePose="), PoseString))
+    {
+        UE_LOG(LogTemp, Error, TEXT("P1C01_RENDER_CAPTURE_FAIL reason=camera_pose_missing"));
+        return;
+    }
+
+    TArray<FString> PoseParts;
+    PoseString.ParseIntoArray(PoseParts, TEXT(","), false);
+    if (PoseParts.Num() != 6)
+    {
+        UE_LOG(LogTemp, Error, TEXT("P1C01_RENDER_CAPTURE_FAIL reason=camera_pose_invalid_fields"));
+        return;
+    }
+
+    float Values[6] = {};
+    for (int32 Index = 0; Index < 6; ++Index)
+    {
+        if (!FDefaultValueHelper::ParseFloat(PoseParts[Index], Values[Index]) ||
+            !FMath::IsFinite(Values[Index]))
+        {
+            UE_LOG(LogTemp, Error, TEXT("P1C01_RENDER_CAPTURE_FAIL reason=camera_pose_invalid_numeric"));
+            return;
+        }
+    }
+
+    APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
+    if (!PC)
+    {
+        UE_LOG(LogTemp, Error, TEXT("P1C01_RENDER_CAPTURE_FAIL reason=controller_unavailable"));
+        return;
+    }
+
+    // BugItGo is only issued AFTER the chapter grounding barrier. Previously
+    // ExecCmds teleported during world hold, causing recovery and pre-commit shots.
+    PC->ConsoleCommand(FString::Printf(
+        TEXT("BugItGo %.3f %.3f %.3f %.3f %.3f %.3f"),
+        Values[0], Values[1], Values[2], Values[3], Values[4], Values[5]), true);
+
+    UE_LOG(LogTemp, Display,
+        TEXT("P1C01_RENDER_CAMERA_READY chapter=P1C01 worldCommitted=yes revision=%u pose=%s"),
+        WorldRevision, *PoseString);
+
+    // Give the viewport multiple frames to settle after camera reposition.
+    GetWorldTimerManager().SetTimer(
+        P1C01VisualScreenshotTimer,
+        this,
+        &AChapterWorldRouter::RequestP1C01VisualScreenshot,
+        1.25f,
+        false);
+}
+
+void AChapterWorldRouter::RequestP1C01VisualScreenshot()
+{
+    if (P1C01VisualCaptureRevision == 0 ||
+        P1C01VisualCaptureRevision != WorldRevision ||
+        LastLoadedChapterId != TEXT("P1C01") ||
+        LastLoadedRouteId != TEXT("FrodoMain") ||
+        bPlayerWorldHoldActive)
+    {
+        UE_LOG(LogTemp, Error, TEXT("P1C01_RENDER_CAPTURE_FAIL reason=screenshot_world_not_committed"));
+        return;
+    }
+
+    // Requested through the game viewport on the next frame. The CMD caller
+    // observes a fresh screenshot file and refuses to accept pre-commit shots.
+    UE_LOG(LogTemp, Display,
+        TEXT("P1C01_RENDER_CAPTURE_REQUESTED chapter=P1C01 worldCommitted=yes revision=%u"),
+        WorldRevision);
+    FScreenshotRequest::RequestScreenshot(false);
+    P1C01VisualCaptureRevision = 0;
 }
 
 void AChapterWorldRouter::LoadChapterWorld(FName ChapterId, bool bRestoreRouteTransform)
@@ -768,6 +880,10 @@ void AChapterWorldRouter::LoadChapterWorld(FName ChapterId, bool bRestoreRouteTr
     {
         return;
     }
+
+    GetWorldTimerManager().ClearTimer(P1C01VisualPoseTimer);
+    GetWorldTimerManager().ClearTimer(P1C01VisualScreenshotTimer);
+    P1C01VisualCaptureRevision = 0;
 
     UGameInstance* GI = GetGameInstance();
     UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;

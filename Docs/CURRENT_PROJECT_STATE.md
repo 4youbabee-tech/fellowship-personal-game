@@ -1,3 +1,10 @@
+## 2026-10-09 — P1C01 visual-capture ordering root correction (exact-head proof pending)
+
+- Directly inspected PR #329 Unreal Build #1783's seven PNG+log pairs at \`3b9ad3a08241\`. \`04_Water_Mill_Bridge.log\` shows \`High resolution screenshot saved\` at 08:05:20.095, while \`ShireChapterAudit: loaded=P1C01 ... streamed=committed\` appeared at 08:05:23.607. The previous \`-ExecCmds=BugItGo...,HighResShot 1\` also teleported during grounding hold, triggering recovery on multiple shots. This proves that the prior capture automation sampled the scene before the committed playable state; passing captures cannot be treated as post-load visual evidence.
+- Root change: the P1C01-only capture mode now gives the selected pose to the router via \`-ShireCapturePose\`. Only after a successful grounded \`ShireWorldCommit: PASS\` does the router issue \`BugItGo\`, wait for scene settling and request \`FScreenshotRequest\`. The CMD capture fails closed if any fresh screenshot lacks the committed-world, camera and request evidence. Timers are revision-scoped and cancelled on world swaps/EndPlay; regular gameplay, quests, NPC/streaming ownership, save and P1C02 are unchanged.
+- Test: \`Scripts/test_p1c01_capture_contract.py\` gains a regression for deferred capture, pose and fail-closed requirements. **SOURCE-IMPLEMENTED; next exact-head static, UE4.27.2 build, 7-shot capture and package are pending.** Even successful refreshed shots will require human PIE, art replacement/visual approval, target-device FPS/VRAM and Gate 6/7. The seven missing final character/mount FBX bundles remain an external content blocker.
+
+
 ## 2026-10-09 — P1C01 Party Field static dressing batch (source implementation)
 
 - Changed `SpawnPartySocialLoopPass` to group the same 14 static, non-colliding Party Field dressing placements by resident mesh using the existing `AWorldDetailCluster`; the maximum actor count for those props falls from 14 to 6 when all six mesh groups resolve.

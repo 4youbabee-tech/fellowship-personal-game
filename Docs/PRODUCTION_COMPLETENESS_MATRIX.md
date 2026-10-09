@@ -1,3 +1,14 @@
+## 2026-10-09 — P1C01 render evidence integrity, not artistic closeout
+
+| Scope | Observed #1783 failure / bounded correction | Evidence boundary |
+|---|---|---|
+| 7-shot render acceptance timing | Water/Mill/Bridge screenshot 08:05:20.095 preceded committed chapter 08:05:23.607; early BugItGo also disturbed grounding | Real log defect, corrected in source; new exact-head evidence pending |
+| Deferred 7-shot acquisition | CLI pose consumed by P1C01-only committed router, staged camera and viewport screenshot timers, cancelled on world swap | SOURCE-IMPLEMENTED; no engine compile yet |
+| Fail-closed automation | Per-shot commit, applied BugItGo, camera-ready and screenshot-request guards plus source regression | CI static and render proof pending |
+| Character/world appearance | Existing low-poly/proxy art, seven final FBX bundles, environment realism and audio still missing | No human visual or gameplay acceptance |
+| PIE / target-device / Gate 6/7 | No change to required manual tests, FPS/VRAM measurements or P1C02 lock | NOT ACCEPTED |
+
+
 ## 2026-10-09 — P1C01 Party Field static prop batching
 
 | Area | Change | Evidence boundary |

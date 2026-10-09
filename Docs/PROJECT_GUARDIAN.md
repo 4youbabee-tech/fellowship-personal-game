@@ -1,3 +1,10 @@
+### P1C01 pre-commit render capture invalidity guard (2026-10-09)
+
+**Observed defect:** on exact-head Unreal #1783, Water/Mill/Bridge \`High resolution screenshot saved\` (08:05:20.095) occurred before \`ShireChapterAudit: ... streamed=committed\` (08:05:23.607). The previous capture command teleported during the 2-second grounded world hold, sometimes requiring recovery. Seven successful screenshots therefore did not prove post-commit scene readiness.
+
+**Root correction:** the render-only P1C01 router receives a six-value camera pose, waits for committed grounding, applies the pose, waits for render frames and requests one screenshot. Chapter revision guards and timer cleanup prevent stale captures; normal gameplay/PIE/persistence/NPC/canon are unchanged. The capture CMD rejects screenshots without the matching committed-world, camera-applied and request markers. \`Scripts/test_p1c01_capture_contract.py\` preserves this invariant. New exact-head UE4.27 build/render proof is still required; no visual or performance acceptance follows automatically.
+
+
 ### P1C01 Party Field static-dressing batch guard (2026-10-09)
 
 **Invariant:** the Party Field static dressing remains at the authored fourteen transforms: 6 picnic tables, 2 benches, 2 canopies, 1 loaded cart, 2 barrels and 1 haystack. `SpawnPartySocialLoopPass` groups these by resident mesh into no more than six `AWorldDetailCluster` HISM actors. HISM collision stays disabled; dynamic-shadow casting is explicitly retained for these grouped props. Setup/celebration variant actors remain outside this batch.

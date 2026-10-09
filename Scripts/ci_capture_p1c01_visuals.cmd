@@ -122,7 +122,7 @@ powershell.exe -NoProfile -Command "Get-ChildItem -LiteralPath '%SCREENSHOT_ROOT
 
 echo P1C01_RENDER_CAPTURE_SHOT_BEGIN name=%SHOT_NAME% x=%X% y=%Y% z=%Z% pitch=%PITCH% yaw=%YAW% roll=%ROLL%
 
-start "" /B "%EDITOR%" "%PROJECT%" /Engine/Maps/Entry -game -log -abslog="%LOG_FILE%" -d3d11 -ResX=1280 -ResY=720 -Windowed -NoSplash -NoSound -ShireVisualCapture -ExecCmds="ShowFlag.HUD 0,ShowFlag.2D 0,BugItGo %X% %Y% %Z% %PITCH% %YAW% %ROLL%,HighResShot 1"
+start "" /B "%EDITOR%" "%PROJECT%" /Engine/Maps/Entry -game -log -abslog="%LOG_FILE%" -d3d11 -ResX=1280 -ResY=720 -Windowed -NoSplash -NoSound -ShireVisualCapture -ShireCapturePose=%X%,%Y%,%Z%,%PITCH%,%YAW%,%ROLL% -ExecCmds="ShowFlag.HUD 0,ShowFlag.2D 0"
 
 powershell.exe -NoProfile -ExecutionPolicy Bypass -Command ^
   "$deadline=(Get-Date).AddSeconds(%CAPTURE_WAIT_SECONDS%); $before=@(); if(Test-Path -LiteralPath '%BEFORE_FILE%'){$before=Get-Content -LiteralPath '%BEFORE_FILE%'}; $shot=$null; do { Start-Sleep -Milliseconds 750; $shot=Get-ChildItem -LiteralPath '%SCREENSHOT_ROOT%' -Recurse -File -Filter '*.png' -ErrorAction SilentlyContinue | Where-Object { $before -notcontains $_.FullName } | Sort-Object LastWriteTime -Descending | Select-Object -First 1 } while(-not $shot -and (Get-Date) -lt $deadline); if(-not $shot){exit 3}; Copy-Item -LiteralPath $shot.FullName -Destination '%RUN_DIR%\%SHOT_NAME%.png' -Force; exit 0"
@@ -155,5 +155,26 @@ if not exist "%RUN_DIR%\%SHOT_NAME%.png" (
   exit /b 77
 )
 
-echo P1C01_RENDER_CAPTURE_SHOT_PASS name=%SHOT_NAME% file="%RUN_DIR%\%SHOT_NAME%.png"
+rem Fail closed unless the shot was requested by the committed P1C01 router.
+findstr /I /C:"ShireWorldCommit: PASS chapter=P1C01" "%LOG_FILE%" >nul
+if errorlevel 1 (
+  echo P1C01_RENDER_CAPTURE_FAIL reason=precommit_capture name=%SHOT_NAME% log="%LOG_FILE%"
+  exit /b 85
+)
+findstr /I /C:"LogCheatManager: BugItGo to:" "%LOG_FILE%" >nul
+if errorlevel 1 (
+  echo P1C01_RENDER_CAPTURE_FAIL reason=deferred_camera_not_applied name=%SHOT_NAME% log="%LOG_FILE%"
+  exit /b 86
+)
+findstr /I /C:"P1C01_RENDER_CAMERA_READY chapter=P1C01 worldCommitted=yes" "%LOG_FILE%" >nul
+if errorlevel 1 (
+  echo P1C01_RENDER_CAPTURE_FAIL reason=deferred_camera_not_ready name=%SHOT_NAME% log="%LOG_FILE%"
+  exit /b 87
+)
+findstr /I /C:"P1C01_RENDER_CAPTURE_REQUESTED chapter=P1C01 worldCommitted=yes" "%LOG_FILE%" >nul
+if errorlevel 1 (
+  echo P1C01_RENDER_CAPTURE_FAIL reason=precommit_screenshot_request name=%SHOT_NAME% log="%LOG_FILE%"
+  exit /b 88
+)
+echo P1C01_RENDER_CAPTURE_SHOT_PASS name=%SHOT_NAME% worldCommitted=yes file="%RUN_DIR%\%SHOT_NAME%.png"
 exit /b 0
