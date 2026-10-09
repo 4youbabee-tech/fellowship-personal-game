@@ -1,3 +1,13 @@
+## 2026-10-09 - P1C01 named-character art intake batch
+
+| Scope | Change | Evidence boundary |
+|---|---|---|
+| Legal FBX source intake | Added KayKit CC0 immutable raw candidates Mage/Knight/Barbarian with SHA256 locks for missing P1C01 character gaps | SOURCE-IMPLEMENTED; local hash/FBX-version static proof only |
+| UE4 skeletal QC lane | Re-enabled KayKit bridge on PR #329 and moved transient import target to P1C01_TECHNICAL_BRIDGE | CI/UE4 proof pending on next exact head |
+| Warehouse preparation | Added `Data/P1C01HighFidelityAssetWarehouseIntakeV1.json` covering Shire area asset families, character gaps, source priority, QC gates and post-Shire source queue | SOURCE-IMPLEMENTED; assets still require download/import/QC before acceptance |
+| Final character completion | No final Gandalf/Bilbo/Sam/Merry/Pippin/Black Rider/Horse acceptance claimed | Still requires import pass, deformation, animation, material/LOD, PIE and visual approval |
+| Runtime risk | No gameplay replacement, no quest/save/NavMesh/collision change in this batch | Runtime impact limited to CI import staging |
+
 ## 2026-10-09 — #1784 capture failure and corrected six-scalar contract
 
 | Scope | Evidence | Current boundary |
