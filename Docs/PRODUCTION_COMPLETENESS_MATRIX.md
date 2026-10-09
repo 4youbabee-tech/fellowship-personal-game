@@ -1,3 +1,8 @@
+## 2026-10-09 — Adaptive wave minimum-remaining-byte guard correction
+
+- Static regression fixture for the new adaptive source wave uses 100,000 bytes of available storage; guard must not assume every candidate consumes >=1 MiB. Correct early-stop bound to <1024 remaining bytes, leaving the **actual per-file provider-size and overall byte caps** authoritative. This fixes exact source-layer gating rather than reducing testing or attempting unbounded retries.
+- The hosted source-only workflow remains required to pass its own exact HEAD before any new staged asset receipts count as evidence; no UE4 build requested by this corrective commit.
+
 ## 2026-10-09 — Dynamic source acquisition beyond fixed five-model pilot
 
 - New selectively searched P1C01 high-fidelity **Poly Haven official CC0** source-only workflow `.github/workflows/p1c01-adaptive-highfidelity-source.yml`, backed by `Scripts/stage_p1c01_polyhaven_adaptive.py` and five no-network tests. Selects matching Shire outdoor, rustic architecture, vegetation, stones, garden and prop model metadata from provider's public API, excludes five previously staged models, then acquires 1K native static FBX and original texture dependencies. Each asset receives provider MD5 verification + SHA256 receipt; rejects traversal, invalid extension/host, malformed sources and oversize payloads.

@@ -174,7 +174,7 @@ def stage(output: Path, *, max_total_bytes: int, single_limit: int, seconds: int
     accepted, quarantine = [], []
     used = 0
     for score, slug, entry in eligible:
-        if time.monotonic() >= deadline - 12 or max_total_bytes - used < 1024 * 1024:
+        if time.monotonic() >= deadline - 12 or max_total_bytes - used < 1024:
             break
         asset_dir = output / 'assets' / slug
         try:
