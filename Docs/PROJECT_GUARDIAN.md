@@ -1,3 +1,11 @@
+### P1C01 KayKit legal-intake source contract alignment (2026-10-09)
+
+**Observed defect:** Unreal Build #1794 failed at the One-Shot static/source gate because tests still required the KayKit workflow to be retired and the manifest to contain exactly two direct candidates. That contract contradicted the current production command to resume legal external asset intake for the missing P1C01 character bundles.
+
+**Correction:** source contracts now require the new bounded Mage/Knight/Barbarian candidates with SHA locks and role provenance, while continuing to enforce the Rogue/RogueHooded known rejection list. The workflow carries an explicit legal-intake-resumed marker and retains the historical retirement text only as trace evidence.
+
+**Boundary:** source/test alignment only. No final character acceptance is claimed until UE4 skeletal gate, deformation, animation, material/LOD, PIE and visual review pass.
+
 ### P1C01 KayKit rig bridge source-isolation guard (2026-10-09)
 
 **Real failure:** KayKit Rig Technical Bridge #304 built `ShireJourneyEditor` successfully, then `Run unchanged UE4 skeletal hard gates` failed with `KAYKIT_RIG_UE4_IMPORT_INFRA_FAIL file=Mage.fbx exit=3`. The import log shows `GIT_LFS_POINTER_SOURCE` for existing P1C01 material PNG pointers and eight missing albedo bindings. This contaminated the character-rig QC lane before a valid accept/reject decision on the candidate FBX.
