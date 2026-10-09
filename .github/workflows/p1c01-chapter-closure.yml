@@ -141,8 +141,15 @@ jobs:
 
       - name: Verify runner session health
         if: env.RUN_P1C01_CLOSURE == 'true'
-        shell: cmd
-        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_CLOSURE_SOURCE%\Scripts\verify_runner_session.ps1"
+        shell: powershell
+        run: |
+          $params=@()
+          if($env:GITHUB_REF_NAME -eq "production/p1c01-bulk-smart-ci-governor-2026-10-09"){
+            $params += "-SourceOnlyGitHttpsProbe"
+            Write-Host "P1C01_SOURCE_ONLY_NETWORK_PROOF mode=git-https"
+          }
+          & powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$env:SHIRE_CLOSURE_SOURCE\Scripts\verify_runner_session.ps1" @params
+          if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}
 
       - name: Fast closure preflight
         if: env.RUN_P1C01_CLOSURE == 'true'
@@ -162,6 +169,46 @@ jobs:
           }
           & powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$env:SHIRE_CLOSURE_SOURCE\Scripts\run_p1c01_chapter_closure_pack_v2.ps1" @params
           if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}
+
+      - name: Publish exact source wave count and partial failures
+        if: env.RUN_P1C01_CLOSURE == 'true'
+        shell: powershell
+        run: |
+          $root="D:\actions-runner\_warehouse\ShireJourney"
+          $pack=Join-Path $root "_p1c01_chapter_closure_pack_v2\p1c01_chapter_closure_pack_v2_latest.json"
+          if(-not (Test-Path -LiteralPath $pack -PathType Leaf)){throw "P1C01_SOURCE_WAVE_RECEIPT_MISSING"}
+          $p=Get-Content -LiteralPath $pack -Raw | ConvertFrom-Json
+          Write-Host "P1C01_SOURCE_WAVE_RECEIPT_STATE passed=$($p.passed_count) quarantined=$($p.quarantined_count) hard=$($p.hard_failure_count) mode=$($p.execution_mode)"
+          $promo=Join-Path $root "_p1c01_chapter_closure_promotion_v2\p1c01_mega_promotion_latest.json"
+          if(Test-Path -LiteralPath $promo -PathType Leaf){
+            $q=Get-Content -LiteralPath $promo -Raw | ConvertFrom-Json
+            Write-Host "P1C01_QUALIFIED_SOURCE_METRICS newly_prepared=$($q.newly_prepared_count) newly_prepared_bytes=$($q.newly_prepared_bytes) reused=$($q.reused_existing_count) qc_ready=$($q.intake_qc_prepared_count) pending=$($q.pending_count) manual=$($q.manual_queue_count) receipt_rebased=$($q.source_paths_rebased_from_legacy_runner)"
+            @(
+              "### P1C01 warehouse source wave (not playable integration)"
+              "- Exact SHA: $env:TARGET_SHA"
+              "- New prepared source rows: $($q.newly_prepared_count)"
+              "- New prepared source bytes: $($q.newly_prepared_bytes)"
+              "- Reused SHA256-proven source rows: $($q.reused_existing_count)"
+              "- Intake QC candidate rows: $($q.intake_qc_prepared_count)"
+              "- Pending / manual queue: $($q.pending_count) / $($q.manual_queue_count)"
+              "- Administrative or blocked cars: $($p.quarantined_count)"
+              "- **Not proof of UE import, live chapter visual, device or Gate 6/7.**"
+            ) | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8 -Append
+          } else {
+            Write-Warning "P1C01_SOURCE_WAVE_PROMOTION_RECEIPT_MISSING"
+          }
+
+      - name: Upload durable P1C01 source intake receipts
+        if: env.RUN_P1C01_CLOSURE == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1c01-warehouse-source-receipts-${{ github.run_id }}
+          path: |
+            D:/actions-runner/_warehouse/ShireJourney/_p1c01_chapter_closure_pack_v2/p1c01_chapter_closure_pack_v2_latest.json
+            D:/actions-runner/_warehouse/ShireJourney/_p1c01_chapter_closure_promotion_v2/p1c01_mega_promotion_latest.json
+            D:/actions-runner/_warehouse/ShireJourney/_p1c01_character_intake/p1c01_character_rig_intake_receipt.json
+          if-no-files-found: warn
+          retention-days: 14
 
       - name: Remove isolated closure source checkout
         if: always()

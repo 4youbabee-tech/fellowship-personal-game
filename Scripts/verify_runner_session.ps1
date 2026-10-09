@@ -1,6 +1,7 @@
 param(
     [string]$ExpectedRunnerName = "UE4-27-Windows",
-    [string]$TaskName = "ShireJourney-GitHubRunner-Watchdog"
+    [string]$TaskName = "ShireJourney-GitHubRunner-Watchdog",
+    [switch]$SourceOnlyGitHttpsProbe
 )
 
 Set-StrictMode -Version Latest
@@ -107,6 +108,29 @@ foreach ($worker in $workers) {
 }
 Write-Host ("RUNNER_HEALTH_PROCESS_PASS listenerPid=" + $listener.ProcessId + " workers=" + $workers.Count + " sessionId=" + $currentSession)
 
+if($SourceOnlyGitHttpsProbe) {
+    # The source train already fetched its exact SHA with Git over HTTPS.
+    # Probe the same authenticated transport instead of treating an
+    # independent raw-TCP timeout as a failure after a successful Git fetch.
+    # This does NOT weaken interactive runner/watchdog/temp/storage checks,
+    # or the actual provider downloads and later Git LFS push.
+    if(-not $env:SHIRE_CLOSURE_SOURCE -or
+       -not (Test-Path -LiteralPath (Join-Path $env:SHIRE_CLOSURE_SOURCE ".git"))) {
+        Fail "source-git-https-checkout-missing"
+    }
+    $git=Get-Command git.exe -ErrorAction SilentlyContinue
+    if(-not $git){ Fail "source-git-https-client-missing" }
+    $probePassed=$false
+    for($attempt=1;$attempt -le 2;$attempt++){
+        $gitLines=@(& $git.Source -c credential.helper= -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=8 -C $env:SHIRE_CLOSURE_SOURCE ls-remote --heads origin 2>$null)
+        $ok=($LASTEXITCODE -eq 0 -and $gitLines.Count -gt 0)
+        Write-Host ("RUNNER_HEALTH_NETWORK_GIT_HTTPS_ATTEMPT attempt="+$attempt+"/2 result="+$ok)
+        if($ok){ $probePassed=$true; break }
+        if($attempt -lt 2){ Start-Sleep -Seconds 3 }
+    }
+    if(-not $probePassed){ Fail "source-git-https-unreachable attempts=2" }
+    Write-Host "RUNNER_HEALTH_NETWORK_PASS github443=true mode=source-git-https proof=remote-heads"
+} else {
 $NetworkProbeAttempts = 3
 $NetworkProbeTimeoutMilliseconds = 5000
 $NetworkProbeRetryDelaySeconds = 2
@@ -142,6 +166,8 @@ if (-not $networkReachable) {
     Fail ("github-443-unreachable attempts=" + $NetworkProbeAttempts + " timeoutMs=" + $NetworkProbeTimeoutMilliseconds)
 }
 Write-Host ("RUNNER_HEALTH_NETWORK_PASS github443=true attemptsUsed=" + $networkAttemptsUsed)
+
+}
 
 $probeRoot = if ($env:RUNNER_TEMP) { $env:RUNNER_TEMP } else { $env:TEMP }
 $probe = Join-Path $probeRoot ("shire-runner-health-" + [Guid]::NewGuid().ToString("N") + ".tmp")

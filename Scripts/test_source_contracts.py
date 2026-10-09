@@ -1156,6 +1156,19 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("if($AssetFirst){ $budget.minimum_exported_materials=1", pack)
         self.assertIn("P1C01_ASSET_FIRST_PROGRESSIVE_EXPORT", pack)
 
+    def test_source_only_network_probe_retains_full_unreal_health(self):
+        root = Path(__file__).resolve().parents[1]
+        health = (root / "Scripts/verify_runner_session.ps1").read_text(encoding="utf-8")
+        self.assertIn("[switch]$SourceOnlyGitHttpsProbe", health)
+        self.assertIn("git-https-unreachable", health)
+        self.assertIn("ls-remote --heads origin", health)
+        self.assertIn("github-443-unreachable", health)
+        workflow = (root / ".github/workflows/p1c01-chapter-closure.yml").read_text(encoding="utf-8")
+        self.assertIn("- name: Verify runner session health", workflow)
+        self.assertIn("-SourceOnlyGitHttpsProbe", workflow)
+        self.assertIn("P1C01_QUALIFIED_SOURCE_METRICS", workflow)
+        self.assertIn("actions/upload-artifact@v4", workflow)
+
     def test_dec109_new_assets_first_and_final_chapter_review(self):
         root = Path(__file__).resolve().parents[1]
         governor = json.loads((root / "Data/ProjectGovernor.json").read_text(encoding="utf-8"))
