@@ -1148,17 +1148,26 @@ class SourceContractTests(unittest.TestCase):
         root = Path(__file__).resolve().parents[1]
         packet = json.loads((root / "Data" / "P1C01KayKitRigTechnicalBridgeV1.json").read_text(encoding="utf-8"))
         self.assertEqual(packet["runtime_chapter"], "P1C01")
-        self.assertEqual(packet["role"], "TECHNICAL_RIG_DEFORMATION_BRIDGE_NOT_FINAL_LIKENESS")
+        self.assertIn(packet["role"], {
+            "TECHNICAL_RIG_DEFORMATION_BRIDGE_NOT_FINAL_LIKENESS",
+            "TECHNICAL_RIG_DEFORMATION_BRIDGE_FOR_MISSING_P1C01_NAMED_CHARACTERS_NOT_FINAL_LIKENESS",
+        })
         self.assertEqual(packet["source"]["provider"], "KAYKIT")
         self.assertEqual(packet["source"]["license"], "CC0-1.0")
         self.assertEqual(packet["source"]["required_final_format"], "FBX")
         self.assertEqual(packet["source"]["delivery_mode"], "DIRECT_OFFICIAL_RAW_FBX")
         self.assertTrue(packet["source"]["license_url"].startswith("https://raw.githubusercontent.com/KayKit-Game-Assets/"))
-        self.assertEqual(len(packet["source"]["direct_candidates"]), 2)
+        candidate_names = {candidate["filename"] for candidate in packet["source"]["direct_candidates"]}
+        self.assertGreaterEqual(len(candidate_names), 3)
+        self.assertTrue({"Mage.fbx", "Knight.fbx", "Barbarian.fbx"}.issubset(candidate_names))
+        self.assertTrue({"Rogue.fbx", "RogueHooded.fbx"}.issubset(candidate_names))
         for candidate in packet["source"]["direct_candidates"]:
             self.assertTrue(candidate["filename"].lower().endswith(".fbx"))
             self.assertTrue(candidate["url"].startswith("https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/"))
-        self.assertEqual(packet["candidate_policy"]["maximum_ue4_candidates"], 2)
+            if candidate["filename"] in {"Mage.fbx", "Knight.fbx", "Barbarian.fbx"}:
+                self.assertIn("expected_sha256", candidate)
+                self.assertIn("p1c01_candidate_roles", candidate)
+        self.assertGreaterEqual(packet["candidate_policy"]["maximum_ue4_candidates"], 3)
         self.assertFalse(packet["candidate_policy"]["final_likeness"])
         self.assertTrue(packet["runtime_contract"]["modular_frodo_fallback"])
         self.assertFalse(packet["runtime_contract"]["synchronous_heavy_load"])
@@ -1193,6 +1202,7 @@ class SourceContractTests(unittest.TestCase):
             self.assertNotIn(forbidden, probe)
 
         self.assertIn("Hosted KayKit source and FBX static gate", workflow)
+        self.assertIn("LEGAL_INTAKE_RESUMED_2026_10_09", workflow)
         self.assertIn("UE4.27.2 KayKit skeletal technical gate", workflow)
         self.assertIn("needs: hosted_static_bridge", workflow)
         self.assertIn("ci_build_unreal.cmd", workflow)
