@@ -1,3 +1,10 @@
+## 2026-10-09 — P1C01 17-family material source integration packet (candidate)
+- P1C01 source branch at `3ed721854ebc` held 17 CC0 Poly Haven surface families; closure head `0385afad81bb` held 8, so this packet reuses 9 previously-published material groups (18 Git blobs: 9 MTLs and 9 Git LFS PNG pointers), plus the 17-family source receipt. No provider redownload, media recompression or new characters.
+- Receipt pointer cross-check: 17/17 Git LFS OID values match the recorded material SHA256; 17/17 MTL files contain the expected material/texture identities and roughness/metallic scalars. These are source/static checks only, NOT hydrated binary QC.
+- Added `Scripts/verify_p1c01_material_receipt.py` plus 7 targeted offline regression tests. The Unreal one-shot static/source step now runs the tests and requires 17 hydrated, SHA256-matching PNGs and matching MTLs before UE4 import. Git CRLF/LF MTL normalization is narrowly verified against the original producer receipt SHA256; unexpected changes fail closed.
+- Actual UE4 import, material-instance persistence, runtime binding, human PIE, target device 30 FPS, visual/audio/pacing and Gate 6/7 acceptance: **PENDING** until GitHub's exact candidate SHA and runtime capture provide chapter-specific proof. The active one-writer P1C01 PR #329 remains the integration lane; P1C02 stays locked.
+- Review boundary: branch source asset intake is not a quality claim and must not change the single resident-streaming / 2GB VRAM budget.
+
 ## 2026-10-09 - P1C01 Bucklebury Ferry riverbank utility detail
 
 - Added two resident `SM_CommonFishingRack` placements on the Bucklebury Ferry riverbanks through a single non-colliding `AWorldDetailCluster`, improving the worked-river crossing read without importing assets.

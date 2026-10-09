@@ -426,6 +426,10 @@ jobs:
             if ($LASTEXITCODE -ne 0) { throw "P1C01_ONE_SHOT_SOURCE_CONTRACT_FAIL exit=$LASTEXITCODE" }
             & $env:PYTHON_EXE -m unittest Scripts/test_p1c01_capture_contract.py
             if ($LASTEXITCODE -ne 0) { throw "P1C01_CAPTURE_CONTRACT_FAIL exit=$LASTEXITCODE" }
+            & $env:PYTHON_EXE -m unittest Scripts/test_p1c01_material_receipt.py
+            if ($LASTEXITCODE -ne 0) { throw "P1C01_MATERIAL_RECEIPT_REGRESSION_FAIL exit=$LASTEXITCODE" }
+            & $env:PYTHON_EXE Scripts/verify_p1c01_material_receipt.py --require-hydrated --min-materials 17
+            if ($LASTEXITCODE -ne 0) { throw "P1C01_MATERIAL_RECEIPT_QC_FAIL exit=$LASTEXITCODE" }
             & $env:PYTHON_EXE Scripts/pre_unreal_validate.py
             if ($LASTEXITCODE -ne 0) { throw "P1C01_ONE_SHOT_PRE_UNREAL_FAIL exit=$LASTEXITCODE" }
           }
