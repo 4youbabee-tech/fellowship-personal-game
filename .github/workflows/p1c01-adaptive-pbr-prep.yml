@@ -67,7 +67,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 Scripts/prepare_p1c01_adaptive_pbr.py --source-artifact "$RUNNER_TEMP/existing-source.zip" --output "$RUNNER_TEMP/p1c01-adaptive-pbr"
+          python3 Scripts/prepare_p1c01_adaptive_pbr.py --source-artifact "$RUNNER_TEMP/existing-source.zip" --output "$RUNNER_TEMP/p1c01-adaptive-pbr" --source-run-id 37979256311 --source-artifact-id 11640236408
+          python3 - <<'PY'
+          import json,os,pathlib
+          r=json.loads((pathlib.Path(os.environ["RUNNER_TEMP"])/"p1c01-adaptive-pbr"/"p1c01_adaptive_pbr_receipt.json").read_text())
+          assert r["input_assets"] == 39 and r["prepared_assets"] == 39 and r["prepared_png"] >= 146, r
+          assert r["held_material_variants_total"] == 1 and not r["quarantined"], r
+          print("P1C01_39_SOURCE_PBR_QC_PASS prepared=39 quarantine=0 held_alt_diffuse=1 NOT_UE4_IMPORTED")
+          PY
 
       - name: Upload converted source candidates plus status/biome receipt
         if: success()

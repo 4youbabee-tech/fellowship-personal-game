@@ -36,7 +36,23 @@ def pixels(blob,ext,gray=False):
     if a.ndim!=3 or a.shape[2]<3: raise QCError('MISSING_RGB')
     return a[:,:,:3]
 
-def convert(archive,output):
+def material_groups(tex):
+    """Preserve a dry diffuse-only color variant as held; never invent normal maps."""
+    prefixes=sorted({re.sub(r'_diff_1k\.[^.]+$','',k) for k in tex
+                     if re.search(r'_diff_1k\.(png|jpg|jpeg|tga)$',k)})
+    if not prefixes: raise QCError('NO_DIFFUSE')
+    def has(prefix,role):
+        return any(re.fullmatch(re.escape(prefix)+'_'+role+r'_1k\.[^.]+',n) for n in tex)
+    complete=[prefix for prefix in prefixes if has(prefix,'nor_gl') and has(prefix,'rough')]
+    if not complete: raise QCError('NO_COMPLETE_MATERIAL')
+    held=[]
+    for prefix in prefixes:
+        if prefix in complete: continue
+        if prefix.endswith('_dry') and prefix[:-4] in complete: held.append(prefix)
+        else: raise QCError('BAD_MAP_nor_gl_OR_rough')
+    return complete,held
+
+def convert(archive,output,source_run_id=None,source_artifact_id=None):
     output.mkdir(parents=True,exist_ok=True)
     with zipfile.ZipFile(archive) as z:
         names=z.namelist()
@@ -62,9 +78,20 @@ def convert(archive,output):
                 fbx=data.get(slug+'.fbx')
                 if not fbx or not fbx.startswith(b'Kaydara FBX Binary'): raise QCError('BAD_FBX')
                 tex=[k for k in data if k.startswith('textures/')]
-                prefixes=sorted({re.sub(r'_diff_1k\.[^.]+$','',k) for k in tex if re.search(r'_diff_1k\.(png|jpg|jpeg|tga)$',k)})
-                if not prefixes: raise QCError('NO_DIFFUSE')
-                out.mkdir(parents=True,exist_ok=True); rows=[]
+                prefixes,held_prefixes=material_groups(tex)
+                out.mkdir(parents=True,exist_ok=True); rows=[]; held_variants=[]
+                for variant in held_prefixes:
+                    matches=[n for n in tex if re.fullmatch(re.escape(variant)+r'_diff_1k\.[^.]+',n)]
+                    if len(matches)!=1: raise QCError('AMBIGUOUS_HELD_VARIANT')
+                    original=matches[0]
+                    hold=out/'holds'/('TX_'+variant.split('/')[-1]+'_BaseColor_HOLD.png')
+                    hold.parent.mkdir(parents=True,exist_ok=True)
+                    Image.fromarray(pixels(data[original],Path(original).suffix)).save(hold,format='PNG',optimize=True)
+                    held_variants.append({'path':str(hold.relative_to(output)),
+                                          'bytes':hold.stat().st_size,'sha256':sha(hold.read_bytes()),
+                                          'source_path':original,'source_sha256':sha(data[original]),
+                                          'status':'HOLD_MATERIAL_VARIANT_NO_INDEPENDENT_NORMAL_ROUGHNESS',
+                                          'eligible_for_ue_import':False})
                 for prefix in prefixes:
                     def find(role,mandatory=False):
                         m=[k for k in tex if re.fullmatch(re.escape(prefix)+'_'+role+r'_1k\.[^.]+',k)]
@@ -84,16 +111,16 @@ def convert(archive,output):
                         Image.fromarray(arr).save(target,format='PNG',optimize=True)
                         rows.append({'path':str(target.relative_to(output)),'role':kind,'bytes':target.stat().st_size,'sha256':sha(target.read_bytes()),'resolution':[1024,1024]})
                 target=out/(slug+'.fbx');target.write_bytes(fbx)
-                completed.append({'id':slug,'status':'HOLD_BIOME' if slug in HOLD_BIOME else 'HOLD_IDENTITY' if slug in HOLD_ID else 'STATIC_SOURCE_QC_ONLY','fbx_sha256':sha(fbx),'fbx_path':str(target.relative_to(output)),'maps':rows,'fbx_bytes':len(fbx),'unreal_imported':False,'lod_collision_verified':False,'visual_accepted':False})
+                completed.append({'id':slug,'status':'HOLD_BIOME' if slug in HOLD_BIOME else 'HOLD_IDENTITY' if slug in HOLD_ID else 'STATIC_SOURCE_QC_ONLY','fbx_sha256':sha(fbx),'fbx_path':str(target.relative_to(output)),'maps':rows,'held_material_variants':held_variants,'fbx_bytes':len(fbx),'unreal_imported':False,'lod_collision_verified':False,'visual_accepted':False})
             except (QCError,ValueError,KeyError,OSError,zipfile.BadZipFile) as e:
                 quarantined.append({'id':slug,'error':type(e).__name__+':'+str(e)[:140]})
                 shutil.rmtree(out,ignore_errors=True)
-        report={'schema_version':1,'stage':'SOURCE_FBX_PNG_CANDIDATES_ONLY','source_run_id':37979256311,'source_artifact_id':11640236408,'input_assets':len(receipt['accepted']),'prepared_assets':len(completed),'prepared_fbx':len(completed),'prepared_png':sum(len(x['maps']) for x in completed),'quarantined':quarantined,'biome_hold':[x['id'] for x in completed if x['status']=='HOLD_BIOME'],'identity_hold':[x['id'] for x in completed if x['status']=='HOLD_IDENTITY'],'assets':completed,'evidence_boundary':'No UE4 import, LOD, collision, visual acceptance, PIE, target device or persistent warehouse write.'}
+        report={'schema_version':1,'stage':'SOURCE_FBX_PNG_CANDIDATES_ONLY','source_run_id':source_run_id,'source_artifact_id':source_artifact_id,'source_receipt_sha256':sha(z.read('p1c01_adaptive_polyhaven_receipt.json')),'input_assets':len(receipt['accepted']),'prepared_assets':len(completed),'prepared_fbx':len(completed),'prepared_png':sum(len(x['maps']) for x in completed),'held_material_variants_total':sum(len(x['held_material_variants']) for x in completed),'quarantined':quarantined,'biome_hold':[x['id'] for x in completed if x['status']=='HOLD_BIOME'],'identity_hold':[x['id'] for x in completed if x['status']=='HOLD_IDENTITY'],'assets':completed,'evidence_boundary':'No UE4 import, LOD, collision, visual acceptance, PIE, target device or persistent warehouse write.'}
         (output/'p1c01_adaptive_pbr_receipt.json').write_text(json.dumps(report,indent=2)+'\n')
         print('P1C01_ADAPTIVE_PBR_QC prepared='+str(len(completed))+' png='+str(report['prepared_png'])+' quarantined='+str(len(quarantined))+' NOT_UE4_IMPORTED',flush=True)
         return report
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('--source-artifact',type=Path,required=True);p.add_argument('--output',type=Path,required=True);a=p.parse_args()
-    result=convert(a.source_artifact,a.output)
+    p=argparse.ArgumentParser();p.add_argument('--source-artifact',type=Path,required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--source-run-id',type=int);p.add_argument('--source-artifact-id',type=int);a=p.parse_args()
+    result=convert(a.source_artifact,a.output,a.source_run_id,a.source_artifact_id)
     raise SystemExit(0 if result['prepared_assets'] else 2)

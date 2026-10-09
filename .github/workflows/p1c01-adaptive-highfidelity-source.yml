@@ -11,6 +11,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
   group: p1c01-adaptive-ph-${{ github.event.pull_request.number || github.ref }}
@@ -20,7 +21,7 @@ jobs:
   source_intake:
     name: Adaptive selected 1K FBX source acquisition (NO UE4)
     runs-on: ubuntu-latest
-    timeout-minutes: 14
+    timeout-minutes: 18
     env:
       TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
@@ -39,15 +40,24 @@ jobs:
           test "$(git rev-parse HEAD)" = "$TARGET_SHA"
           python3 -m unittest discover -s Scripts -p test_p1c01_polyhaven_adaptive.py -v
 
-      - name: Fill adaptive 240 MiB source shard from official CC0 API
+      - name: Reuse the previous 39-source CC0 artifact, not provider redownload
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 37985180302
+          name: p1c01-adaptive-polyhaven-source-fac5bba5fac633ed9989d3b5f180b46b3ed43817
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/p1c01-previous-source
+
+      - name: Fill new measured 480 MiB source shard excluding hash-verified prior models
         shell: bash
         run: |
           set -euo pipefail
           python3 Scripts/stage_p1c01_polyhaven_adaptive.py \
             --output "$RUNNER_TEMP/p1c01-adaptive-polyhaven" \
-            --max-total-mb 240 \
+            --max-total-mb 480 \
             --max-single-mb 30 \
-            --max-seconds 420
+            --max-seconds 660 \
+            --previous-source-dir "$RUNNER_TEMP/p1c01-previous-source"
 
       - name: Upload measured CC0 source bundle and SHA256 receipt (original maps, not Unreal)
         if: always()
@@ -58,3 +68,66 @@ jobs:
           if-no-files-found: warn
           compression-level: 6
           retention-days: 30
+
+  pbr_next_source_only:
+    name: Convert the new CC0 shard to 1K PBR PNG (no Unreal)
+    needs: source_intake
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      OPENCV_IO_ENABLE_OPENEXR: '1'
+    steps:
+      - name: Checkout exact head without LFS
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          persist-credentials: false
+          lfs: false
+          fetch-depth: 1
+
+      - name: Validate material converter and prepare image tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          python3 -m pip install -q --disable-pip-version-check 'numpy>=1.26,<3' 'opencv-python-headless>=4.9,<5' 'Pillow>=10,<13'
+          python3 -m unittest discover -s Scripts -p test_p1c01_adaptive_pbr.py -v
+
+      - name: Reuse only the new exact-run source artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: p1c01-adaptive-polyhaven-source-${{ env.TARGET_SHA }}
+          path: ${{ runner.temp }}/p1c01-new-source
+
+      - name: Repack source as temporary archive without provider requests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os,pathlib,zipfile
+          root=pathlib.Path(os.environ['RUNNER_TEMP'])/'p1c01-new-source'
+          target=pathlib.Path(os.environ['RUNNER_TEMP'])/'new-source.zip'
+          with zipfile.ZipFile(target,'w',compression=zipfile.ZIP_STORED,allowZip64=True) as archive:
+              for file in sorted(root.rglob('*')):
+                  if file.is_file(): archive.write(file,file.relative_to(root).as_posix())
+          PY
+
+      - name: Convert every eligible source and preserve quarantine
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 Scripts/prepare_p1c01_adaptive_pbr.py \
+            --source-artifact "$RUNNER_TEMP/new-source.zip" \
+            --output "$RUNNER_TEMP/p1c01-next-pbr" \
+            --source-run-id "${{ github.run_id }}"
+
+      - name: Upload wave two PNG/FBX candidates and SHA256 receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1c01-adaptive-pbr-next-${{ env.TARGET_SHA }}
+          path: ${{ runner.temp }}/p1c01-next-pbr
+          if-no-files-found: warn
+          retention-days: 30
+          compression-level: 6

@@ -160,15 +160,49 @@ def save_verified(spec: dict, target: Path, deadline: float) -> dict:
         part.unlink(missing_ok=True)
 
 
+
+def verify_previous_source(root: Path) -> set[str]:
+    """Exclude only fully checksum-verified prior CC0 assets, not guessed filenames."""
+    try:
+        data=json.loads((root/'p1c01_adaptive_polyhaven_receipt.json').read_text(encoding='utf-8'))
+    except (OSError, ValueError) as e:
+        raise IntakeError('PREVIOUS_RECEIPT_MISSING_OR_INVALID') from e
+    accepted=data.get('accepted')
+    if (data.get('license')!='CC0' or not isinstance(accepted,list)
+        or not accepted or data.get('source_assets_staged')!=len(accepted)):
+        raise IntakeError('PREVIOUS_RECEIPT_INCONSISTENT')
+    seen=set()
+    for item in accepted:
+        slug=item.get('id')
+        if not isinstance(slug,str) or not SLUG.fullmatch(slug) or slug in seen:
+            raise IntakeError('PREVIOUS_DUPLICATE_OR_BAD_ID')
+        records=item.get('files')
+        if not isinstance(records,list) or not records:
+            raise IntakeError('PREVIOUS_SOURCE_NO_FILES')
+        for entry in records:
+            rel=safe_relative(entry.get('relative_file'))
+            file=root/'assets'/slug/rel
+            if file.is_symlink() or not file.is_file():
+                raise IntakeError('PREVIOUS_SOURCE_MISSING_FILE')
+            raw=file.read_bytes()
+            if (len(raw)!=entry.get('bytes')
+                or hashlib.sha256(raw).hexdigest()!=entry.get('sha256')
+                or hashlib.md5(raw).hexdigest()!=entry.get('md5')):
+                raise IntakeError('PREVIOUS_SOURCE_HASH_MISMATCH')
+        seen.add(slug)
+    return seen
+
 def stage(output: Path, *, max_total_bytes: int, single_limit: int, seconds: int,
-          listing: dict | None = None, metadata_loader=read_json, file_loader=save_verified) -> dict:
+          listing: dict | None = None, metadata_loader=read_json, file_loader=save_verified,
+          verified_previous_ids: set[str] | None = None) -> dict:
     start = time.monotonic()
     deadline = start + seconds
     assets = listing if listing is not None else read_json(API + '/assets?t=models')
     if not isinstance(assets, dict):
         raise IntakeError('BAD_MODEL_LIST')
+    previous=verified_previous_ids or set()
     ranked = sorted(((score_asset(slug, entry), slug, entry) for slug, entry in assets.items()
-                     if isinstance(slug, str)), key=lambda x: (-x[0], x[1]))
+                     if isinstance(slug, str) and slug not in previous), key=lambda x: (-x[0], x[1]))
     eligible = [(score, slug, entry) for score, slug, entry in ranked if score >= 3]
     output.mkdir(parents=True, exist_ok=True)
     accepted, quarantine = [], []
@@ -205,6 +239,7 @@ def stage(output: Path, *, max_total_bytes: int, single_limit: int, seconds: int
         'credit': 'Powered by Poly Haven', 'license': 'CC0',
         'mode': 'HOSTED_SOURCE_ONLY_NO_UNREAL_NO_PERSISTENT_WAREHOUSE_MUTATION',
         'source_assets_eligible': len(eligible),
+        'previous_staged_verified_and_excluded':len(previous),
         'source_assets_staged': len(accepted),
         'source_assets_quarantined_or_deferred': len(quarantine),
         'source_bytes_staged': used, 'max_source_bytes': max_total_bytes,
@@ -227,11 +262,14 @@ def main() -> int:
     p.add_argument('--max-total-mb', type=int, default=240)
     p.add_argument('--max-single-mb', type=int, default=30)
     p.add_argument('--max-seconds', type=int, default=420)
+    p.add_argument('--previous-source-dir', type=Path, help='verified prior artifact root')
     args = p.parse_args()
     if not 1 <= args.max_total_mb <= 512 or not 1 <= args.max_single_mb <= 30 or not 20 <= args.max_seconds <= 900:
         raise SystemExit('SOURCE_STAGE_RESOURCE_BUDGET_INVALID')
+    prior_ids=verify_previous_source(args.previous_source_dir) if args.previous_source_dir else set()
     result = stage(args.output, max_total_bytes=args.max_total_mb * 1024**2,
-                   single_limit=args.max_single_mb * 1024**2, seconds=args.max_seconds)
+                   single_limit=args.max_single_mb * 1024**2, seconds=args.max_seconds,
+                   verified_previous_ids=prior_ids)
     # No falsely-green empty artifact: if all source models are rejected,
     # a receipt still exists but the source lane reports failure for diagnosis.
     return 0 if result['source_assets_staged'] > 0 else 2

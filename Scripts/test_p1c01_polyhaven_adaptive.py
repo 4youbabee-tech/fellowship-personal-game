@@ -47,6 +47,40 @@ class AdaptiveSourceTests(unittest.TestCase):
             self.assertEqual(out['source_assets_quarantined_or_deferred'],0)
             self.assertEqual(out['mode'],'HOSTED_SOURCE_ONLY_NO_UNREAL_NO_PERSISTENT_WAREHOUSE_MUTATION')
 
+    def test_resume_hash_verified_and_no_reacquisition(self):
+        original=b'Kaydara FBX Binary  \x00\x1a\x00'
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp)/'prior'
+            path=root/'assets'/'shrub_01'/'shrub_01.fbx'
+            path.parent.mkdir(parents=True)
+            path.write_bytes(original)
+            receipt={'license':'CC0','source_assets_staged':1,
+                     'accepted':[{'id':'shrub_01','files':[{
+                         'relative_file':'shrub_01.fbx','bytes':len(original),
+                         'sha256':hashlib.sha256(original).hexdigest(),
+                         'md5':hashlib.md5(original).hexdigest()}]}]}
+            (root/'p1c01_adaptive_polyhaven_receipt.json').write_text(json.dumps(receipt))
+            old=impl.verify_previous_source(root)
+            self.assertEqual(old,{'shrub_01'})
+            listing={'shrub_01':{'type':2,'name':'Shrub garden'},
+                     'shrub_02':{'type':2,'name':'Shrub garden'}}
+            filedata={'fbx':{'1k':{'fbx':{**record('f.fbx',original),
+                                        'include':{'textures/diff_1k.png':record('a.png',b'123')}}}}}
+            def loader(spec,target,deadline):
+                payload=original if target.suffix=='.fbx' else b'123'
+                target.parent.mkdir(parents=True,exist_ok=True)
+                target.write_bytes(payload)
+                return {'relative_file':spec['name'],'bytes':len(payload),
+                        'sha256':hashlib.sha256(payload).hexdigest()}
+            got=impl.stage(Path(temp)/'next', max_total_bytes=10000,single_limit=1024,seconds=60,
+                           listing=listing,metadata_loader=lambda _:filedata,
+                           file_loader=loader,verified_previous_ids=old)
+            self.assertEqual(got['source_assets_staged'],1)
+            self.assertEqual(got['accepted'][0]['id'],'shrub_02')
+            self.assertEqual(got['previous_staged_verified_and_excluded'],1)
+            path.write_bytes(b'bad')
+            with self.assertRaisesRegex(impl.IntakeError,'PREVIOUS_SOURCE_HASH_MISMATCH'):
+                impl.verify_previous_source(root)
     def test_existing_five_not_redownloaded(self):
         self.assertEqual(impl.score_asset('painted_wooden_bench', {'type':2,'name':'Wooden Bench'}),0)
         self.assertGreater(impl.score_asset('old_wood_gate',{'type':2,'name':'Old Wood Gate'}),0)
