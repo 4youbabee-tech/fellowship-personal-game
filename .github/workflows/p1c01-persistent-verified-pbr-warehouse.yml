@@ -32,7 +32,16 @@ jobs:
         shell: powershell
         run: |
           if ((git rev-parse HEAD) -ne $env:SOURCE_HEAD) { throw "PERSISTENT_INTAKE_HEAD_DRIFT" }
-          & python -m py_compile Scripts/stage_p1c01_adaptive_pbr_warehouse.py
+          $candidates=@(
+            'D:\actions-runner\_work\_tool\Python\3.11.9\x64\python.exe',
+            (Join-Path $env:RUNNER_TOOL_CACHE 'Python\3.11.9\x64\python.exe')
+          )
+          $tool=Get-Command python.exe -ErrorAction SilentlyContinue
+          if ($tool) { $candidates+= [string]$tool.Source }
+          $py=$candidates | Where-Object { $_ -and (Test-Path -LiteralPath $_ -PathType Leaf) } | Select-Object -First 1
+          if (-not $py) { throw "PERSISTENT_INTAKE_PYTHON_TOOL_MISSING" }
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value ("SHIRE_PYTHON="+$py)
+          & $py -m py_compile Scripts/stage_p1c01_adaptive_pbr_warehouse.py
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           if (-not (Test-Path -LiteralPath $env:STAGING_WAREHOUSE -PathType Container)) { throw "PERSISTENT_WAREHOUSE_ABSENT" }
       - name: Fetch original certified 39 sources (no provider redownload)
@@ -66,13 +75,13 @@ jobs:
       - name: Commit wave 39 with SHA256+MD5 and >=6 GiB disk reserve
         shell: powershell
         run: |
-          & python Scripts/stage_p1c01_adaptive_pbr_warehouse.py --source-root "$env:RUNNER_TEMP/source-39" --pbr-root "$env:RUNNER_TEMP/pbr-39" --warehouse-root "$env:STAGING_WAREHOUSE" --wave p1c01_wave39 --expected-source 39 --expected-prepared 39 --run-id "$env:GITHUB_RUN_ID"
+          & $env:SHIRE_PYTHON Scripts/stage_p1c01_adaptive_pbr_warehouse.py --source-root "$env:RUNNER_TEMP/source-39" --pbr-root "$env:RUNNER_TEMP/pbr-39" --warehouse-root "$env:STAGING_WAREHOUSE" --wave p1c01_wave39 --expected-source 39 --expected-prepared 39 --run-id "$env:GITHUB_RUN_ID"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Commit wave 60 without restaging the original 39
         shell: powershell
         run: |
           $existing=Join-Path $env:STAGING_WAREHOUSE '_p1c01_adaptive_polyhaven\p1c01_wave39\receipt_adaptive_pbr.json'
-          & python Scripts/stage_p1c01_adaptive_pbr_warehouse.py --source-root "$env:RUNNER_TEMP/source-60" --pbr-root "$env:RUNNER_TEMP/pbr-60" --warehouse-root "$env:STAGING_WAREHOUSE" --wave p1c01_wave60 --expected-source 60 --expected-prepared 59 --reject-prior-ids "$existing" --run-id "$env:GITHUB_RUN_ID"
+          & $env:SHIRE_PYTHON Scripts/stage_p1c01_adaptive_pbr_warehouse.py --source-root "$env:RUNNER_TEMP/source-60" --pbr-root "$env:RUNNER_TEMP/pbr-60" --warehouse-root "$env:STAGING_WAREHOUSE" --wave p1c01_wave60 --expected-source 60 --expected-prepared 59 --reject-prior-ids "$existing" --run-id "$env:GITHUB_RUN_ID"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Audit canonical persistent warehouse receipts
         shell: powershell

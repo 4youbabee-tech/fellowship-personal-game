@@ -1,3 +1,7 @@
+## 2026-10-09 — Persistent source writer Python Runner PATH failure and exact fix
+
+- Workflow #37990747432 attempted serialized stage but failed **before downloading or writing assets**: actual step line `Python was not found; run without arguments to install from the Microsoft Store` on self-hosted Windows. The machine's previous UE run #37988147537 exposes installed toolchain `D:\\actions-runner\\_work\\_tool\\Python\\3.11.9\\x64\\python.exe`; writer workflow must resolve a known existing Python binary and persist the exact path to GITHUB_ENV, not depend on `python` App Execution Alias. Other source-only prep continues independent. Next exact-head workflow must demonstrate full receipt/hash copy and warehouse inventory audit; no persistent-stage success claimed yet.
+
 ## 2026-10-09 — 99 source FBX recovery wave, 98 PBR-ready source conversions and guarded persistent warehouse intake
 
 - Exact-head PR #335 @ `08787c07`: source #37988147489 SUCCESS `P1C01_ADAPTIVE_SOURCE_STAGE eligible=183 staged=60 files=315 bytes=502931425 quarantine=123; NOT_UE4_IMPORTED`; conversion in same run SUCCESS `prepared=59 png=211 quarantined=1 NOT_UE4_IMPORTED`. The other 39 models are reused via prior artifact, not re-downloaded.
