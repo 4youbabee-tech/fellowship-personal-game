@@ -160,6 +160,39 @@
       "evidence": "P1C01 KayKit Rig Technical Bridge #13",
       "exact_head": "30b0392aa9abe5223d6adfe0958c93cd9cf28631",
       "disposition": "REJECTED_TECHNICAL_DO_NOT_REQUEUE"
+    },
+    {
+      "filename": "Mage.fbx",
+      "sha256": "93b401d56e2547316f8841a4ac0086011c64d79185c9cb7623567c2dbf125c7d",
+      "ue4_reference_bones": 48,
+      "reasons": [
+        "MISSING_SMOOTHING_GROUPS"
+      ],
+      "evidence": "P1C01 KayKit Rig Technical Bridge #315 / GitHub Actions run 37949111947 / job 113883906723",
+      "exact_head": "84a9aae6d7c58ab5682ee9fa590457051ca83cfc",
+      "disposition": "REJECTED_TECHNICAL_DO_NOT_REQUEUE"
+    },
+    {
+      "filename": "Knight.fbx",
+      "sha256": "b25e35cc7eaaa3c7c103f10a4f41fde1cbd81936fede9aa9ae4efbd29d40ba1b",
+      "ue4_reference_bones": 51,
+      "reasons": [
+        "MISSING_SMOOTHING_GROUPS"
+      ],
+      "evidence": "P1C01 KayKit Rig Technical Bridge #315 / GitHub Actions run 37949111947 / job 113883906723",
+      "exact_head": "84a9aae6d7c58ab5682ee9fa590457051ca83cfc",
+      "disposition": "REJECTED_TECHNICAL_DO_NOT_REQUEUE"
+    },
+    {
+      "filename": "Barbarian.fbx",
+      "sha256": "902a7c0092714c21f148b42ca8921ba7ac66e74f16c8af5088a3d224663ed597",
+      "ue4_reference_bones": 49,
+      "reasons": [
+        "MISSING_SMOOTHING_GROUPS"
+      ],
+      "evidence": "P1C01 KayKit Rig Technical Bridge #315 / GitHub Actions run 37949111947 / job 113883906723",
+      "exact_head": "84a9aae6d7c58ab5682ee9fa590457051ca83cfc",
+      "disposition": "REJECTED_TECHNICAL_DO_NOT_REQUEUE"
     }
   ],
   "latest_exact_evidence": {
@@ -196,5 +229,14 @@
     ],
     "license": "CC0-1.0",
     "license_sha256": "ae322141814056dda0deea7540d74c41d87aee1da319977cd1bd84ee5a923629"
+  },
+  "latest_technical_rejection_evidence_2026_10_09": {
+    "run_id": 37949111947,
+    "run_number": 315,
+    "conclusion": "failure",
+    "cause": "All three immutable KayKit FBX candidates registered skeletal meshes but lacked required smoothing groups",
+    "infrastructure_bottleneck": "First candidate's Frodo LFS hydrate began 15:36:02Z and next candidate started 16:25:07Z; experimental import unnecessarily called production Frodo hydrator",
+    "treatment": "Pre-exclude exact hashes and require smoothing layer in hosted stage; isolated UE4 probe skips Frodo runtime import, while normal imports remain strict.",
+    "runtime_replacement_allowed": false
   }
 }

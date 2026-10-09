@@ -1212,18 +1212,41 @@ class SourceContractTests(unittest.TestCase):
         root = Path(__file__).resolve().parents[1]
         manifest = json.loads((root / "Data" / "P1C01KayKitRigTechnicalBridgeV1.json").read_text(encoding="utf-8"))
         known = {row["sha256"]: row for row in manifest["known_technical_rejections"]}
-        self.assertEqual(set(known.keys()), {
+        historical = {
             "93a9ee0a67ae69b2d815050234acad2004c3b8af7d294b916e52609c8195eb71",
             "4a773f074695c6c089cc6f059eed85da080928a4a4137af4e38b177139d4cc27",
-        })
-        for row in known.values():
-            self.assertEqual(row["ue4_reference_bones"], 48)
-            self.assertEqual(set(row["reasons"]), {"MISSING_BIND_POSE_BONES", "MISSING_SMOOTHING_GROUPS"})
+        }
+        latest = {
+            "93b401d56e2547316f8841a4ac0086011c64d79185c9cb7623567c2dbf125c7d",
+            "b25e35cc7eaaa3c7c103f10a4f41fde1cbd81936fede9aa9ae4efbd29d40ba1b",
+            "902a7c0092714c21f148b42ca8921ba7ac66e74f16c8af5088a3d224663ed597",
+        }
+        self.assertEqual(set(known), historical | latest)
+        for digest, row in known.items():
+            self.assertGreater(row["ue4_reference_bones"], 0)
+            self.assertIn("MISSING_SMOOTHING_GROUPS", row["reasons"])
+            if digest in historical:
+                self.assertIn("MISSING_BIND_POSE_BONES", row["reasons"])
+            else:
+                self.assertEqual(set(row["reasons"]), {"MISSING_SMOOTHING_GROUPS"})
+                self.assertIn("#315", row["evidence"])
             self.assertEqual(row["disposition"], "REJECTED_TECHNICAL_DO_NOT_REQUEUE")
 
         stage = (root / "Scripts" / "stage_p1c01_kaykit_rig_bridge.ps1").read_text(encoding="utf-8")
         self.assertIn("STATIC_BRIDGE_EXHAUSTED_KNOWN_REJECTIONS", stage)
         self.assertIn("$knownRejected.ContainsKey($sha)", stage)
+        self.assertIn("LayerElementSmoothing", stage)
+        self.assertIn("KAYKIT_RIG_EARLY_REJECT", stage)
+        self.assertIn("KAYKIT_RIG_STATIC_NO_QUALIFIED_CANDIDATE", stage)
+        self.assertIn("STATIC_BRIDGE_NO_QUALIFIED_CANDIDATES", stage)
+        isolated = (root / "Scripts" / "ci_import_production_assets.cmd").read_text(encoding="utf-8")
+        probe = (root / "Scripts" / "run_p1c01_kaykit_rig_bridge_ue4.ps1").read_text(encoding="utf-8")
+        self.assertIn("SHIRE_TECHNICAL_RIG_BRIDGE_ONLY", isolated)
+        self.assertIn('if /I "%~1"=="-EnableCharacterRigImport"', isolated)
+        self.assertIn("KAYKIT_RIG_ISOLATED_IMPORT_PASS", isolated)
+        self.assertIn("SHIRE_TECHNICAL_RIG_BRIDGE_ONLY", probe)
+        self.assertIn("Remove-Item Env:SHIRE_TECHNICAL_RIG_BRIDGE_ONLY", probe)
+
 
         workflow = (root / ".github" / "workflows" / "p1c01-kaykit-rig-bridge.yml").read_text(encoding="utf-8")
         self.assertIn("selected_count: ${{ steps.outcome.outputs.selected_count }}", workflow)

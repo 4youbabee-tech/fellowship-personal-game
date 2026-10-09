@@ -9308,5 +9308,43 @@
       "next_visible_packet": "character final FBX + Shire terrain/foliage/architecture replacements; 7-shot review shows low-poly/proxy surfaces, weak party field read, tree geometry and distant Ferry detail",
       "scope_limit": "no P1C02 runtime before Gate 6/7 accepted"
     }
+  },
+  "p1c01_failure_avoidance_directive_2026_10_09": {
+    "id": "P1C01_FAILURE_AVOIDANCE_AND_TRELLIS_FEASIBILITY_2026_10_09",
+    "active_runtime": "P1C01_ONLY",
+    "next_runtime": "P1C02_LOCKED",
+    "objective": "Avoid repeated 40-90 minute failures by front-loading exact-hash rejection, small source gates, no redundant Frodo LFS for isolated KayKit rig probes, bounded self-hosted technical jobs, and one exact-head integrated Unreal train.",
+    "exact_evidence": {
+      "kaykit_failed_run": 37949111947,
+      "rejected_asset_files": [
+        "Mage.fbx",
+        "Knight.fbx",
+        "Barbarian.fbx"
+      ],
+      "technical_reason": "MISSING_SMOOTHING_GROUPS",
+      "failing_task": "KAYKIT_RIG_UE4_BRIDGE_EXHAUSTED probed=3",
+      "bottleneck": "First KayKit candidate invoked production Frodo LFS hydration at 15:36:02Z; next candidate started at 16:25:07Z.",
+      "integrated_build_success_run": 37949111966,
+      "integrated_build_head": "84a9aae6d7c58ab5682ee9fa590457051ca83cfc"
+    },
+    "required_implementation": [
+      "Blacklist exact SHA256 values previously rejected by UE4 in hosted source preflight, and record those reasons instead of failing hours later.",
+      "Require FBX smoothing metadata at fast source gate before expensive UE4 import; full UE4 technical gate remains required for any newly qualified FBX.",
+      "In isolated KayKit technical bridge only, do not invoke independent Frodo persistent animation import or Frodo LFS. Normal production import must still verify all Frodo packages.",
+      "Candidate-only QC with zero qualified candidates must be REJECTED/SKIPPED as a factual source outcome, not claimed as technical acceptance.",
+      "Bound hosted KayKit source job to 12 minutes and self-hosted UE4 KayKit job to 18 minutes, without cancelling an already-running predecessor.",
+      "Preserve package/render/runtime Gate 6/7 validation and exact-head acceptance; no 'zero failures forever' guarantee.",
+      "Keep TRELLIS.2 as preferred external evaluation source for visual static props, together with existing tools, but never use production GPU resources without compatible hardware and budget.",
+      "Treat official TRELLIS.2 published Linux + NVIDIA >=24GB VRAM as a hard feasibility prerequisite; current execution environment has no NVIDIA GPU, so model inference is BLOCKED_UNSUPPORTED_GPU, not a pass.",
+      "Next practical TRELLIS pilot on approved 24GB+ Linux GPU: single owned/licensed original Shire barrel/basket image -> generated GLB -> evaluated FBX + PNG/TGA textures, bounded mesh/VRAM/LOD/import tests.",
+      "Collect backlog and improve Frodo/person-specific skeletal visual presentation, Shire settlement, water/ferry, quests, dialogue/audio, save/load, performance, and lighting on a single prioritized P1C01 closeout lane."
+    ],
+    "truth_boundary": "Changes are source-only until exact-HEAD CI passes; no new TRELLIS-generated asset, Unreal run, human PIE, device performance or visual acceptance has been proven from this patch.",
+    "resource_links": [
+      "Data/External3DGenerationToolRegistryV1.json",
+      "Data/P1C01KayKitRigTechnicalBridgeV1.json",
+      "Docs/WORLD_DETAIL_LEDGER.md"
+    ],
+    "evidence_status": "STATIC-VALIDATED_POLICY_AND_SOURCE_ANALYSIS"
   }
 }

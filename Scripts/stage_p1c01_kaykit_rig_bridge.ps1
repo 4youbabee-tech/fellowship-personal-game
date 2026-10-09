@@ -46,16 +46,51 @@ function Get-FbxVersion {
 
 $maxCandidates=[int]$manifest.candidate_policy.maximum_ue4_candidates
 $maxBytes=[int64]$manifest.candidate_policy.max_single_fbx_bytes
+# Inspect additional entries when the first candidates have exact-SHA rejection
+# evidence, without ever sending more than maxCandidates to the UE4 runner.
+$maxScanCandidates=[Math]::Min(8, @($manifest.source.direct_candidates).Count)
 $rows=@()
 $candidates=@($manifest.source.direct_candidates)
 if($candidates.Count -lt 1){ throw "KAYKIT_RIG_DIRECT_CANDIDATES_EMPTY" }
 
-foreach($candidate in @($candidates | Select-Object -First $maxCandidates)){
+foreach($candidate in @($candidates | Select-Object -First $maxScanCandidates)){
   $filename=[string]$candidate.filename
   $url=[string]$candidate.url
   if([IO.Path]::GetExtension($filename).ToLowerInvariant() -ne ".fbx"){ throw "KAYKIT_RIG_NON_FBX_CANDIDATE file=$filename" }
   if(-not $url.StartsWith("https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/")){
     throw "KAYKIT_RIG_UNAPPROVED_RAW_SOURCE url=$url"
+  }
+
+  # A source URL pinned to an immutable commit plus its known rejected SHA is
+  # enough to avoid downloading or re-probing a previously rejected FBX.
+  # Preserve the exclusion reason in the receipt; do NOT claim a fresh hash check.
+  $expectedSha=([string]$candidate.expected_sha256).ToLowerInvariant()
+  if(-not [string]::IsNullOrWhiteSpace($expectedSha) -and $knownRejected.ContainsKey($expectedSha)){
+    $rows += [pscustomobject]@{
+      entry=[string]$candidate.repository_path
+      filename=$filename
+      source_url=$url
+      extracted_path=""
+      bytes=[int64]0
+      sha256=$expectedSha
+      fbx_version=0
+      geometry=$false
+      model=$false
+      limb_node=$false
+      skin=$false
+      cluster=$false
+      animation=$false
+      smoothing_groups=$false
+      expected_sha256=$expectedSha
+      source_git_blob_sha=[string]$candidate.source_git_blob_sha
+      p1c01_candidate_roles=@($candidate.p1c01_candidate_roles)
+      known_rejection=$true
+      rejection_reason="EXACT_SHA_PREVIOUS_UE4_REJECTION"
+      freshly_downloaded=$false
+      static_pass=$false
+    }
+    Write-Host ("KAYKIT_RIG_EARLY_REJECT file="+$filename+" sha256="+$expectedSha+" reason=EXACT_SHA_PREVIOUS_UE4_REJECTION hostedDownload=no ue4Probe=no")
+    continue
   }
 
   $dest=Join-Path $payloadRoot $filename
@@ -77,10 +112,14 @@ foreach($candidate in @($candidates | Select-Object -First $maxCandidates)){
   $hasLimb=$ascii.Contains("LimbNode")
   $hasSkin=$ascii.Contains("Skin")
   $hasCluster=$ascii.Contains("Cluster")
+  # UE4.27's import policy explicitly rejects "No smoothing group information".
+  # Require FBX smoothing-layer metadata before reserving the scarce UE4 runner;
+  # final validity is still determined by the real UE4 import.
+  $hasSmoothingGroups=$ascii.Contains("LayerElementSmoothing")
   $hasAnim=$ascii.Contains("AnimationStack") -or $ascii.Contains("AnimationCurve")
   $versionOk=$version -gt 0 -and $version -le [int]$manifest.candidate_policy.fbx_version_ceiling
   $knownRejection=$knownRejected.ContainsKey($sha)
-  $staticPass=$versionOk -and $hasGeometry -and $hasModel -and $hasLimb -and $hasSkin -and $hasCluster -and (-not $knownRejection)
+  $staticPass=$versionOk -and $hasGeometry -and $hasModel -and $hasLimb -and $hasSkin -and $hasCluster -and $hasSmoothingGroups -and (-not $knownRejection)
 
   $rows += [pscustomobject]@{
     entry=[string]$candidate.repository_path
@@ -96,18 +135,21 @@ foreach($candidate in @($candidates | Select-Object -First $maxCandidates)){
     skin=$hasSkin
     cluster=$hasCluster
     animation=$hasAnim
+    smoothing_groups=$hasSmoothingGroups
+    rejection_reason=if(-not $hasSmoothingGroups){"MISSING_FBX_SMOOTHING_LAYER"}else{""}
+    freshly_downloaded=$true
     expected_sha256=$expectedSha
     source_git_blob_sha=[string]$candidate.source_git_blob_sha
     p1c01_candidate_roles=@($candidate.p1c01_candidate_roles)
     known_rejection=$knownRejection
     static_pass=$staticPass
   }
-  Write-Host ("KAYKIT_RIG_FBX file="+$filename+" bytes="+$item.Length+" sha256="+$sha+" version="+$version+" limb="+$hasLimb+" skin="+$hasSkin+" cluster="+$hasCluster+" anim="+$hasAnim+" knownRejected="+$knownRejection+" staticPass="+$staticPass)
+  Write-Host ("KAYKIT_RIG_FBX file="+$filename+" bytes="+$item.Length+" sha256="+$sha+" version="+$version+" limb="+$hasLimb+" skin="+$hasSkin+" cluster="+$hasCluster+" smoothingGroups="+$hasSmoothingGroups+" anim="+$hasAnim+" knownRejected="+$knownRejection+" staticPass="+$staticPass)
 }
 
 $selected=@($rows | Where-Object { $_.static_pass } | Select-Object -First $maxCandidates)
 $knownRejectedRows=@($rows | Where-Object { $_.known_rejection })
-$bridgeStatus=if($selected.Count -gt 0){"STATIC_BRIDGE_READY_FOR_UE4"}elseif($rows.Count -gt 0 -and $knownRejectedRows.Count -eq $rows.Count){"STATIC_BRIDGE_EXHAUSTED_KNOWN_REJECTIONS"}else{"REJECTED_STATIC_NO_COMPATIBLE_FBX"}
+$bridgeStatus=if($selected.Count -gt 0){"STATIC_BRIDGE_READY_FOR_UE4"}elseif($rows.Count -gt 0 -and $knownRejectedRows.Count -eq $rows.Count){"STATIC_BRIDGE_EXHAUSTED_KNOWN_REJECTIONS"}else{"STATIC_BRIDGE_NO_QUALIFIED_CANDIDATES"}
 $receipt=[ordered]@{
   schema_version=3
   status=$bridgeStatus
@@ -123,7 +165,7 @@ $receipt=[ordered]@{
     asset_name="SK_P1C01_KAYKIT_TECHNICAL"
   }
   selected_candidates=@($selected | Select-Object entry,filename,source_url,extracted_path,bytes,sha256,expected_sha256,source_git_blob_sha,fbx_version,animation,p1c01_candidate_roles)
-  candidates=@($rows | Select-Object entry,filename,source_url,bytes,sha256,expected_sha256,source_git_blob_sha,fbx_version,geometry,model,limb_node,skin,cluster,animation,p1c01_candidate_roles,known_rejection,static_pass)
+  candidates=@($rows | Select-Object entry,filename,source_url,bytes,sha256,expected_sha256,source_git_blob_sha,fbx_version,geometry,model,limb_node,skin,cluster,animation,smoothing_groups,rejection_reason,freshly_downloaded,p1c01_candidate_roles,known_rejection,static_pass)
   runtime_integration_allowed=$false
   final_likeness=$false
   evidence_boundary="Official raw-source/license/hash/static FBX structure only. Real UE4.27 skeletal technical import gate is next."
@@ -136,6 +178,9 @@ if($selected.Count -lt 1){
     Write-Host ("KAYKIT_RIG_STATIC_BRIDGE_EXHAUSTED_KNOWN_REJECTIONS known="+$knownRejectedRows.Count+" selected=0 ue4RunnerRequired=false receipt="+$receiptPath)
     exit 0
   }
-  throw "KAYKIT_RIG_STATIC_BRIDGE_EMPTY receipt=$receiptPath"
+  # Candidate rejection is a successful source QC decision, not a broken CI
+  # runner. The receipt remains explicit: no usable candidate and no UE4 gate.
+  Write-Host ("KAYKIT_RIG_STATIC_NO_QUALIFIED_CANDIDATE scanned="+$rows.Count+" selected=0 ue4RunnerRequired=false receipt="+$receiptPath)
+  exit 0
 }
 Write-Host ("KAYKIT_RIG_STATIC_BRIDGE_PASS delivery=raw selected="+$selected.Count+" receipt="+$receiptPath)

@@ -82,8 +82,21 @@ foreach($candidate in $selected){
 
     if(Test-Path -LiteralPath $importLog){ Remove-Item -LiteralPath $importLog -Force }
     Write-Host ("KAYKIT_RIG_UE4_PROBE_BEGIN file="+$candidate.filename+" sha256="+$expectedSha+" isolated-source=yes")
-    & $importScript "-EnableCharacterRigImport"
-    $importExit = [int]$LASTEXITCODE
+    # This is a disposable candidate probe: Frodo is not used here and must
+    # never be rehydrated/reimported for each rejected third-party rig.
+    $priorBridgeMode = [Environment]::GetEnvironmentVariable('SHIRE_TECHNICAL_RIG_BRIDGE_ONLY')
+    try {
+      $env:SHIRE_TECHNICAL_RIG_BRIDGE_ONLY = '1'
+      & $importScript "-EnableCharacterRigImport"
+      $importExit = [int]$LASTEXITCODE
+    }
+    finally {
+      if($null -eq $priorBridgeMode){
+        Remove-Item Env:SHIRE_TECHNICAL_RIG_BRIDGE_ONLY -ErrorAction SilentlyContinue
+      } else {
+        $env:SHIRE_TECHNICAL_RIG_BRIDGE_ONLY = $priorBridgeMode
+      }
+    }
   }
   finally {
     Restore-ProductionSource

@@ -17,7 +17,7 @@ permissions:
 
 concurrency:
   group: p1c01-kaykit-rig-bridge-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 # LEGAL_INTAKE_HEAD_TRIGGER: 2026-10-09T09-25Z
 # LEGAL_INTAKE_RESUMED_2026_10_09: this bridge is active again for bounded legal FBX QC.
@@ -30,7 +30,7 @@ jobs:
     outputs:
       selected_count: ${{ steps.outcome.outputs.selected_count }}
       bridge_status: ${{ steps.outcome.outputs.bridge_status }}
-    timeout-minutes: 25
+    timeout-minutes: 12
     env:
       TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
 
@@ -80,7 +80,7 @@ jobs:
       - Windows
       - X64
       - ue4-27
-    timeout-minutes: 90
+    timeout-minutes: 18
     env:
       TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
 

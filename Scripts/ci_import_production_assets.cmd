@@ -42,6 +42,13 @@ findstr /C:"ShireProductionImport:" "%IMPORTLOG%" | findstr /C:"0 failures" >nul
 if errorlevel 1 exit /b 51
 echo UE4.27.2 production asset import succeeded.
 
+rem Only the isolated FBX candidate probe may skip Frodo's expensive LFS/
+rem animation lane. Shipping and regular production imports still require it.
+if /I "%~1"=="-EnableCharacterRigImport" if /I "%SHIRE_TECHNICAL_RIG_BRIDGE_ONLY%"=="1" (
+  echo KAYKIT_RIG_ISOLATED_IMPORT_PASS frodoPersistentImport=skipped notShippingProof=yes
+  exit /b 0
+)
+
 call :import_frodo_runtime
 if errorlevel 1 exit /b !ERRORLEVEL!
 echo UE4.27.2 production asset import + persistent Frodo runtime import succeeded.

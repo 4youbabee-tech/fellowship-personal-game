@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "P1C01_TRELLIS_2_FEASIBILITY_PILOT_V1",
+  "generated_on": "2026-10-09",
+  "official_upstream": "https://github.com/microsoft/TRELLIS.2",
+  "official_model": "https://huggingface.co/microsoft/TRELLIS.2-4B",
+  "state": "BLOCKED_UNSUPPORTED_GPU_NO_INFERENCE_EXECUTED",
+  "hardware_probe": {
+    "nvidia_smi": "NOT_AVAILABLE",
+    "pytorch_cuda_available": false,
+    "required_nvidia_vram_gb": 24,
+    "current_environment_has_supported_gpu": false
+  },
+  "go_no_go_rule": "No expensive install or inference unless compatible Linux NVIDIA GPU >=24GB and approved cloud expense are available; no low-spec runtime inference.",
+  "trial_definition": {
+    "count": 1,
+    "asset_type": "Shire original wicker basket or barrel",
+    "input": "Project-owned or properly licensed single reference image",
+    "expected_generator_output": "GLB with PBR",
+    "post_processing": "Blender retopology/LOD/UV/clean normals/appropriate collision; export STATIC FBX and PNG/TGA color/channel-packed maps",
+    "max_ue4_artefact": "static mesh with soft asset path / asynchronous residency; do not import unoptimized generator geometry",
+    "required_evidence": [
+      "generation wall-clock seconds and provider cost",
+      "original input rights/provenance",
+      "GLB source hash and actual polygons/triangles",
+      "FBX conversion and PNG/TGA hashes",
+      "Unreal import results and no smoothing warnings",
+      "HISM/LOD collision and material budget for 2GB VRAM at 720p",
+      "manual visible comparison to already approved source assets"
+    ]
+  },
+  "decision": "TRELLIS.2 remains preferred evaluation candidate, but alternative approved CC0 geometry is used for current P1C01 until a real pilot can be run.",
+  "acceptance_boundary": "Actual 3D generation experiment NOT RUN; feasibility/preflight test only; static JSON receipt no visual claim."
+}
