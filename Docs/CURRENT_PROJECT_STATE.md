@@ -1,3 +1,9 @@
+## 2026-10-09 - KayKit source contracts updated for resumed legal intake
+
+- Updated `Scripts/test_source_contracts.py` so the source gate reflects the current production decision: KayKit is no longer only a retired two-candidate Frodo precursor; it now accepts the bounded Mage/Knight/Barbarian legal-intake set while preserving the two known Rogue/RogueHooded technical rejections.
+- Added an explicit `LEGAL_INTAKE_RESUMED_2026_10_09` workflow marker and kept the historical retirement guard text as trace evidence, without disabling the PR #329 bridge.
+- Evidence boundary: **SOURCE-IMPLEMENTED**. This fixes #1794 static/source contract drift; UE4 skeletal result still comes from the KayKit bridge rerun.
+
 ## 2026-10-09 - P1C01 KayKit UE4 rig gate source-isolation fix (source implemented)
 
 - Investigated KayKit Rig Technical Bridge #304 failure on exact head `2aaac8014865`. `Build ShireJourneyEditor once` passed; the UE4 hard gate failed before judging `Mage.fbx` because `ci_import_production_assets.cmd -EnableCharacterRigImport` imported the entire `SourceAssets/Production` tree and hit existing material Git LFS pointer files under `Imported/P1C01Materials/*_BaseColor.png`.
