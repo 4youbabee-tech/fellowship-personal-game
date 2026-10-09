@@ -1237,6 +1237,8 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("$knownRejected.ContainsKey($sha)", stage)
         self.assertIn("LayerElementSmoothing", stage)
         self.assertIn("KAYKIT_RIG_EARLY_REJECT", stage)
+        self.assertIn("PSObject.Properties.Name -contains 'source_git_blob_sha'", stage)
+        self.assertIn("source_git_blob_sha=$gitBlobSha", stage)
         self.assertIn("KAYKIT_RIG_STATIC_NO_QUALIFIED_CANDIDATE", stage)
         self.assertIn("STATIC_BRIDGE_NO_QUALIFIED_CANDIDATES", stage)
         isolated = (root / "Scripts" / "ci_import_production_assets.cmd").read_text(encoding="utf-8")

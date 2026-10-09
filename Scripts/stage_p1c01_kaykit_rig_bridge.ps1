@@ -56,6 +56,11 @@ if($candidates.Count -lt 1){ throw "KAYKIT_RIG_DIRECT_CANDIDATES_EMPTY" }
 foreach($candidate in @($candidates | Select-Object -First $maxScanCandidates)){
   $filename=[string]$candidate.filename
   $url=[string]$candidate.url
+  # Optional field: the official repository manifest omits this for legacy Rogue probes.
+  # StrictMode must not throw on a missing property during early rejection.
+  $gitBlobSha = if($candidate.PSObject.Properties.Name -contains 'source_git_blob_sha'){
+    [string]$candidate.source_git_blob_sha
+  } else { '' }
   if([IO.Path]::GetExtension($filename).ToLowerInvariant() -ne ".fbx"){ throw "KAYKIT_RIG_NON_FBX_CANDIDATE file=$filename" }
   if(-not $url.StartsWith("https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/")){
     throw "KAYKIT_RIG_UNAPPROVED_RAW_SOURCE url=$url"
@@ -82,7 +87,7 @@ foreach($candidate in @($candidates | Select-Object -First $maxScanCandidates)){
       animation=$false
       smoothing_groups=$false
       expected_sha256=$expectedSha
-      source_git_blob_sha=[string]$candidate.source_git_blob_sha
+      source_git_blob_sha=$gitBlobSha
       p1c01_candidate_roles=@($candidate.p1c01_candidate_roles)
       known_rejection=$true
       rejection_reason="EXACT_SHA_PREVIOUS_UE4_REJECTION"
@@ -139,7 +144,7 @@ foreach($candidate in @($candidates | Select-Object -First $maxScanCandidates)){
     rejection_reason=if(-not $hasSmoothingGroups){"MISSING_FBX_SMOOTHING_LAYER"}else{""}
     freshly_downloaded=$true
     expected_sha256=$expectedSha
-    source_git_blob_sha=[string]$candidate.source_git_blob_sha
+    source_git_blob_sha=$gitBlobSha
     p1c01_candidate_roles=@($candidate.p1c01_candidate_roles)
     known_rejection=$knownRejection
     static_pass=$staticPass
