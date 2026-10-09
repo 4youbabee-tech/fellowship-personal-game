@@ -5954,7 +5954,8 @@
       "evidence": [
         "Scripts/run_p1c01_chapter_closure_pack_v2.ps1",
         "Scripts/run_warehouse_p1c01_mega_promotion.ps1",
-        ".github/workflows/p1c01-chapter-closure.yml"
+        ".github/workflows/p1c01-chapter-closure.yml",
+        "P1C01 Source Wave #201 2026-10-09: 129 newly prepared rows 1,540,430,611 bytes, 62 reused, 188 QC; 17 materials 284,896,345 bytes, LFS 21/21 304 MB; GitHub generated commit d24596c; material source tracking pending UE import."
       ],
       "evidence_boundary": "SOURCE-IMPLEMENTED ONLY, CI/exact-head UE4 and final art acceptance pending."
     }
@@ -9367,5 +9368,36 @@
     "preserve": "48MiB/source and 640MiB/material branch until measured authorized adjustment",
     "runtime": "One writer, async soft assets, pooling, HISM/LOD, DX11 720p ~2GB VRAM 30fps target",
     "acceptance": "P1C01 still open; Gate 6/7 and human device testing required"
+  },
+  "p1c01_asset_first_wave_201_material_tracking_2026_10_09": {
+    "status": "17_RECEIPT_VERIFIED_SOURCE_MATERIALS_TRACKED_IN_STAGING_PENDING_UE_IMPORT",
+    "source_wave_run_id": 37930094030,
+    "source_wave_sha": "f9be64c1309e9279008bc7b07e3a1bb4c061b6ba",
+    "source_branch": "generated/p1c01-chapter-closure-material-source-v2",
+    "source_commit": "d24596c76c2cc2baaf23f3dc5d2acd64f0995f29",
+    "source_material_sets": 17,
+    "previously_tracked_sets": 8,
+    "new_sets": 9,
+    "source_material_bytes": 284896345,
+    "source_material_quarantine_count": 0,
+    "lfs_upload_log": "Uploading LFS objects: 100% (21/21), 304 MB, done",
+    "artifact_id": 11616381193,
+    "bulk_promotion_receipt": {
+      "prepared_rows": 191,
+      "qc_prepared_rows": 188,
+      "newly_prepared_rows": 129,
+      "newly_prepared_bytes": 1540430611,
+      "reused_existing_rows": 62,
+      "pending_rows": 3,
+      "manual_queue_rows": 2,
+      "rebased_legacy_paths": 392
+    },
+    "remaining_source_gaps": [
+      "Quaternius public source page yielded no direct archive (17 unresolved)",
+      "MATERIAL_SOURCE_EXPORT post-upload checkout safeguard returned SCRIPT_LOST; actual Git branch and LFS push succeeded",
+      "Seven final animated FBX character/mount bundles remain missing"
+    ],
+    "visual_gate": "No UE4 import/runtime binding/PIE/device/visual/performance Gate6/7 claimed. Active chapter PR #329 remains unchanged.",
+    "performance_rule": "Only source asset tracking here; streaming resident VRAM limit unchanged."
   }
 }
