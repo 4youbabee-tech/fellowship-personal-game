@@ -26,16 +26,44 @@ jobs:
     timeout-minutes: 8
     env:
       TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      PR_ACTION: ${{ github.event.action || 'manual' }}
+      PR_BEFORE: ${{ github.event.before || '' }}
     steps:
       - name: Checkout exact candidate head without LFS hydration
         uses: actions/checkout@v4
         with:
           ref: ${{ env.TARGET_SHA }}
-          fetch-depth: 1
+          fetch-depth: 16
           persist-credentials: false
           lfs: false
 
+      - name: Detect exact source-input changes (skip documentation-only push)
+        id: source_delta
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          reason=initial_or_manual
+          base=none
+          needs_stage=true
+          if [[ "$GITHUB_EVENT_NAME" == 'pull_request' && "$PR_ACTION" == 'synchronize' ]]; then
+            base="$PR_BEFORE"
+            if [[ ! "$base" =~ ^[0-9a-f]{40}$ ]] || ! git cat-file -e "$base^{commit}" 2>/dev/null; then
+              base="$(git rev-parse HEAD^)"
+            fi
+            changed="$(git diff --name-only "$base" HEAD)"
+            if printf '%s\n' "$changed" | grep -Eq '^(\.github/workflows/p1c01-polyhaven-source-stage\.yml|Data/P1C01PhotorealSourcePilotV1\.json|Scripts/(stage_p1c01_polyhaven|test_p1c01_polyhaven_source_intake|build_p1c01_png_materials|test_p1c01_polyhaven_png_conversion)\.py)$'; then
+              reason=source_inputs_changed
+            else
+              needs_stage=false
+              reason=docs_only_no_source_changes
+            fi
+          fi
+          echo "needs_stage=$needs_stage" >> "$GITHUB_OUTPUT"
+          echo "P1C01_SOURCE_CHANGE_GATE needs_stage=$needs_stage reason=$reason base=$base"
+
       - name: Verify exact SHA and run fast offline source-unit tests
+        if: steps.source_delta.outputs.needs_stage == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -43,6 +71,7 @@ jobs:
           python3 -m unittest discover -s Scripts -p test_p1c01_polyhaven_source_intake.py -v
 
       - name: Stage bounded source-only Poly Haven 1K FBX and textures
+        if: steps.source_delta.outputs.needs_stage == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -52,6 +81,7 @@ jobs:
             --max-total-mb 80
 
       - name: Verify source-receipt truth boundary
+        if: steps.source_delta.outputs.needs_stage == 'true'
         id: source_gate
         shell: bash
         run: |
@@ -131,7 +161,7 @@ jobs:
           compression-level: 6
 
       - name: Upload CC0 source candidates and receipt
-        if: always()
+        if: always() && steps.source_delta.outputs.needs_stage == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: p1c01-polyhaven-source-${{ env.TARGET_SHA }}

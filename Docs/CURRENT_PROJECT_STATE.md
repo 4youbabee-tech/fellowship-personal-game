@@ -1,3 +1,10 @@
+## 2026-10-09 — Stop duplicate hosted Poly Haven downloads on docs-only PR commits
+
+- Root cause observed: source-only `P1C01 Poly Haven Photoreal Source Stage #3`, [run 37969924700](https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/37969924700), ran SUCCESS at doc-only head `3058c5df5538` from cumulative PR paths filter. That commit did not modify asset manifest/script files, yet repeated actual network source acquisition/texture conversion (51 seconds).
+- Changed `.github/workflows/p1c01-polyhaven-source-stage.yml`: exact-HEAD `source_delta` gate compares `github.event.before` when usable (otherwise first-parent HEAD^) and filters **source input path names**, not PR cumulative file history. On docs-only changes, skip source tests/download/PNG conversion/upload entirely, and emit `P1C01_SOURCE_CHANGE_GATE needs_stage=false reason=docs_only_no_source_changes`. Preserve normal full source lane on real FBX manifest/converter/workflow changes or manual launch.
+- Added offline regression in `Scripts/test_p1c01_polyhaven_source_intake.py` verifying required docs-only names do not match and actual source paths match, and that metadata-only run does not upload empty source bundle. Tests/hosted exact-head proof pending new run; no guarantee of forever-zero CI failures. This is independent of self-hosted UE4 P1C01 serialized runtime.
+- Readable external-source catalogue and linked 68-page/225-source PDF remain intact, TRELLIS.2 withdrawn, five CC0 FBX + nineteen prepared PNG candidates physically available in GitHub Artifacts; still no new in-engine human visual/device acceptance.
+
 ## 2026-10-09 — Exact-head hosted P1C01 texture conversion reproof: SUCCESS
 
 - `P1C01 Poly Haven Photoreal Source Stage #2` at exact HEAD `4f973f66d17bf341ede94a27b0ba93aa2bcceb88`, [GitHub run 37969482224](https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/37969482224), **SUCCESS**, 17:53:47Z–17:54:40Z = **53 seconds**. Source-only CI (no self-hosted Unreal, GPU, purchase or account).

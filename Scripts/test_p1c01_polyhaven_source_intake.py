@@ -70,5 +70,38 @@ class StageTests(unittest.TestCase):
             self.assertEqual(d['state'],'NO_QUALIFIED_ASSETS_STAGED')
 
 
+    def test_source_delta_guard_ignores_docs_but_not_asset_scripts(self):
+        import re
+        import subprocess
+        workflow = (Path(__file__).resolve().parents[1] / ".github" / "workflows" /
+                    "p1c01-polyhaven-source-stage.yml").read_text(encoding="utf-8")
+        self.assertIn("docs_only_no_source_changes", workflow)
+        self.assertIn("needs_stage=false", workflow)
+        self.assertIn("PR_BEFORE:", workflow)
+        self.assertIn("if: always() && steps.source_delta.outputs.needs_stage == 'true'", workflow)
+        match = re.search(r"grep -Eq '([^']+)'", workflow)
+        self.assertIsNotNone(match)
+        pattern = match.group(1)
+        for filename in [
+            "Docs/CURRENT_PROJECT_STATE.md",
+            "Docs/PRODUCTION_COMPLETENESS_MATRIX.md",
+            "Data/ProjectGovernor.json",
+            "Data/P1C01PolyHavenFirstWaveQCV1.json",
+        ]:
+            result = subprocess.run(["grep", "-Eq", pattern], input=filename + "\n",
+                                    text=True, capture_output=True)
+            self.assertEqual(result.returncode, 1, filename)
+        for filename in [
+            "Data/P1C01PhotorealSourcePilotV1.json",
+            "Scripts/stage_p1c01_polyhaven.py",
+            "Scripts/build_p1c01_png_materials.py",
+            ".github/workflows/p1c01-polyhaven-source-stage.yml",
+        ]:
+            result = subprocess.run(["grep", "-Eq", pattern], input=filename + "\n",
+                                    text=True, capture_output=True)
+            self.assertEqual(result.returncode, 0, filename)
+
+
+
 if __name__ == '__main__':
     unittest.main()

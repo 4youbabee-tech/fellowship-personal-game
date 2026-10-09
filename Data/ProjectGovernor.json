@@ -9301,5 +9301,20 @@
       "status": "SOURCE_STAGED_AND_TEXTURES_CONVERTED_ON_HOSTED_RUNNER",
       "acceptance": "STATIC-VALIDATED; not UE4-IMPORTED/PIE/DEVICE/VISUALLY-ACCEPTED"
     }
+  },
+  "p1c01_photoreal_source_ci_duplicate_prevention_2026_10_09": {
+    "root_cause": "GitHub pull_request paths filters consider the cumulative PR diff on synchronize, so docs-only commit 3058c5df still ran 53-second source downloads/conversion run 37969924700 even though no source inputs changed.",
+    "implemented_change": "Workflow hosted classify step checks PR_BEFORE if available else exact first-parent HEAD^ diff (shallow checkout depth 16) for strictly named source-only paths, and skips source QA/download/EXR conversion/Artifact steps on docs-only changes.",
+    "source_changed_patterns": [
+      "Data/P1C01PhotorealSourcePilotV1.json",
+      "Scripts/stage_p1c01_polyhaven.py",
+      "Scripts/test_p1c01_polyhaven_source_intake.py",
+      "Scripts/build_p1c01_png_materials.py",
+      "Scripts/test_p1c01_polyhaven_png_conversion.py",
+      ".github/workflows/p1c01-polyhaven-source-stage.yml"
+    ],
+    "proof_boundary": "Bash regex local static smoke and GitHub unit test cover doc vs source names; new exact-head workflow run required before claiming CI skip proven.",
+    "runtime_policy": "Never spend self-hosted UE4 time on this private source warehouse step; do not cancel active runtime P1C01 PR329; avoid status claims on docs-only skipped QA.",
+    "caveat": "If multiple new commits are pushed together and github.event.before is absent, fallback HEAD^ may inspect last commit only; use explicit manual workflow_dispatch when uncertain."
   }
 }
