@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
   "packet_id": "P1C01_KAYKIT_RIG_TECHNICAL_BRIDGE_V1",
-  "status": "KAYKIT_DIRECT_RAW_RIG_FAMILY_TECHNICALLY_REJECTED_RECORDED",
+  "status": "KAYKIT_MULTI_CHARACTER_DIRECT_RAW_CANDIDATES_READY_FOR_UE4_GATE",
   "runtime_chapter": "P1C01",
-  "target_character": "FRODO",
-  "role": "TECHNICAL_RIG_DEFORMATION_BRIDGE_NOT_FINAL_LIKENESS",
+  "target_character": "P1C01_NAMED_CHARACTER_TECHNICAL_BRIDGE",
+  "role": "TECHNICAL_RIG_DEFORMATION_BRIDGE_FOR_MISSING_P1C01_NAMED_CHARACTERS_NOT_FINAL_LIKENESS",
   "source": {
     "provider": "KAYKIT",
     "publisher": "Kay Lousberg",
@@ -23,18 +23,59 @@
     "export_archive_note": "Repository .gitattributes marks Characters/fbx and Assets/fbx export-ignore; GitHub source ZIP intentionally omits FBX payloads.",
     "direct_candidates": [
       {
+        "filename": "Mage.fbx",
+        "repository_path": "addons/kaykit_character_pack_adventures/Characters/fbx/Mage.fbx",
+        "url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/672074b73ba276876a19e8816ecdc5241817ab47/addons/kaykit_character_pack_adventures/Characters/fbx/Mage.fbx",
+        "expected_sha256": "93b401d56e2547316f8841a4ac0086011c64d79185c9cb7623567c2dbf125c7d",
+        "source_git_blob_sha": "78a42299871507d5322592fc02905e66dfb738ca",
+        "p1c01_candidate_roles": [
+          "GANDALF_TECHNICAL_ROBE_STAFF_BODY_PROBE"
+        ]
+      },
+      {
+        "filename": "Knight.fbx",
+        "repository_path": "addons/kaykit_character_pack_adventures/Characters/fbx/Knight.fbx",
+        "url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/672074b73ba276876a19e8816ecdc5241817ab47/addons/kaykit_character_pack_adventures/Characters/fbx/Knight.fbx",
+        "expected_sha256": "b25e35cc7eaaa3c7c103f10a4f41fde1cbd81936fede9aa9ae4efbd29d40ba1b",
+        "source_git_blob_sha": "101848795913dea0d37ac3ec9352fdf9dd024010",
+        "p1c01_candidate_roles": [
+          "BILBO_SAM_MERRY_PIPPIN_HOBBIT_BODY_SCALE_PROBE"
+        ]
+      },
+      {
+        "filename": "Barbarian.fbx",
+        "repository_path": "addons/kaykit_character_pack_adventures/Characters/fbx/Barbarian.fbx",
+        "url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/672074b73ba276876a19e8816ecdc5241817ab47/addons/kaykit_character_pack_adventures/Characters/fbx/Barbarian.fbx",
+        "expected_sha256": "902a7c0092714c21f148b42ca8921ba7ac66e74f16c8af5088a3d224663ed597",
+        "source_git_blob_sha": "0d0fb472fac31bb5cfcf48d5f2baec1556800d59",
+        "p1c01_candidate_roles": [
+          "BLACK_RIDER_HUMANOID_DEFORMATION_NEGATIVE_SCALE_PROBE"
+        ]
+      },
+      {
         "filename": "Rogue.fbx",
         "repository_path": "addons/kaykit_character_pack_adventures/Characters/fbx/Rogue.fbx",
-        "url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/main/addons/kaykit_character_pack_adventures/Characters/fbx/Rogue.fbx",
-        "texture_url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/main/addons/kaykit_character_pack_adventures/Characters/fbx/rogue_texture.png"
+        "url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/672074b73ba276876a19e8816ecdc5241817ab47/addons/kaykit_character_pack_adventures/Characters/fbx/Rogue.fbx",
+        "texture_url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/672074b73ba276876a19e8816ecdc5241817ab47/addons/kaykit_character_pack_adventures/Characters/fbx/rogue_texture.png",
+        "expected_sha256": "93a9ee0a67ae69b2d815050234acad2004c3b8af7d294b916e52609c8195eb71",
+        "p1c01_candidate_roles": [
+          "HISTORICAL_REJECTED_FRODO_BODY_PROBE"
+        ]
       },
       {
         "filename": "RogueHooded.fbx",
         "repository_path": "addons/kaykit_character_pack_adventures/Characters/fbx/RogueHooded.fbx",
-        "url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/main/addons/kaykit_character_pack_adventures/Characters/fbx/RogueHooded.fbx",
-        "texture_url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/main/addons/kaykit_character_pack_adventures/Characters/fbx/rogue_texture.png"
+        "url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/672074b73ba276876a19e8816ecdc5241817ab47/addons/kaykit_character_pack_adventures/Characters/fbx/RogueHooded.fbx",
+        "texture_url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/672074b73ba276876a19e8816ecdc5241817ab47/addons/kaykit_character_pack_adventures/Characters/fbx/rogue_texture.png",
+        "expected_sha256": "4a773f074695c6c089cc6f059eed85da080928a4a4137af4e38b177139d4cc27",
+        "p1c01_candidate_roles": [
+          "HISTORICAL_REJECTED_FRODO_HOODED_BODY_PROBE"
+        ]
       }
-    ]
+    ],
+    "source_revision": "672074b73ba276876a19e8816ecdc5241817ab47",
+    "license_sha256": "ae322141814056dda0deea7540d74c41d87aee1da319977cd1bd84ee5a923629",
+    "provenance_note": "KayKit Adventurers official GitHub raw FBX files are consumed from immutable revision 672074b73ba276876a19e8816ecdc5241817ab47; public source confirms CC0, FBX/glTF, rigged/animated optimized characters."
   },
   "verified_source_properties": {
     "fully_rigged_animated_characters": 4,
@@ -45,18 +86,26 @@
     "fbx_available": true
   },
   "candidate_policy": {
-    "maximum_ue4_candidates": 2,
+    "maximum_ue4_candidates": 3,
     "fbx_version_ceiling": 7500,
     "preferred_entries": [
-      "Rogue.fbx",
-      "RogueHooded.fbx"
+      "Mage.fbx",
+      "Knight.fbx",
+      "Barbarian.fbx"
     ],
     "max_single_fbx_bytes": 33554432,
     "final_likeness": false,
     "source_delivery": "DIRECT_RAW_OFFICIAL_GITHUB_FILES_ONLY",
-    "known_rejections_excluded_from_ue4_requeue": true
+    "known_rejections_excluded_from_ue4_requeue": true,
+    "character_coverage_intent": {
+      "gandalf": "Mage.fbx technical robe/staff silhouette and deformation probe only; no final Tolkien/film likeness claim.",
+      "hobbits": "Knight.fbx small-body scale/deformation probe for Bilbo/Sam/Merry/Pippin only; final character art still gated by human visual review.",
+      "black_rider": "Barbarian.fbx humanoid deformation negative-control; final rider/horse bundle remains missing until dedicated assets pass QC.",
+      "horse": "No horse FBX candidate in this batch; remains FINAL_ANIMATED_BUNDLE_GAP."
+    }
   },
   "technical_gate": [
+    "immutable source revision + expected payload SHA256 for each direct candidate",
     "exact archive and payload SHA256",
     "FBX version <= 7500",
     "Geometry + Model + LimbNode + Skin + Cluster",
@@ -69,10 +118,10 @@
     "generated skeletal mesh + skeleton assets exist"
   ],
   "next_if_pass": [
-    "deformation/reference-pose/limb/hands-feet/root-scale hierarchy review",
-    "embedded animation coverage inspection",
-    "Idle/Walk/Run locomotion proof",
-    "AnimBP prototype only after deformation pass",
+    "promote passing candidate into named character-specific source intake only after UE4 skeletal import passes",
+    "run deformation/reference-pose/limb/hands-feet/root-scale hierarchy review per target character",
+    "add/validate Idle/Walk/Run locomotion coverage for promoted character bundles",
+    "reject any candidate with UE4 bind-pose, smoothing, UV or generated-asset failures",
     "async runtime promotion only after all gates"
   ],
   "runtime_contract": {
@@ -81,11 +130,11 @@
     "loading": "FStreamableManager asynchronous",
     "synchronous_heavy_load": false
   },
-  "evidence_boundary": "Technical rig bridge only. No final Frodo likeness, runtime, PIE, device, rendered visual or FPS acceptance.",
+  "evidence_boundary": "Technical multi-character rig bridge only. No final Tolkien likeness, runtime replacement, PIE, device, rendered visual or Gate 6/7 acceptance.",
   "latest_source_correction": {
-    "evidence": ".gitattributes export-ignore excludes Characters/fbx from GitHub source archives",
-    "action": "download exact official raw FBX files directly from raw.githubusercontent.com",
-    "asset_disposition": "ROGUE_AND_ROGUE_HOODED_TECHNICALLY_REJECTED_DO_NOT_REQUEUE"
+    "evidence": ".gitattributes export-ignore excludes Characters/fbx from GitHub source archives; user authorized external legal asset acquisition for missing visual production work.",
+    "action": "stage immutable official raw FBX candidates Mage/Knight/Barbarian with SHA256 locks before UE4.27 skeletal QC; keep Rogue/RogueHooded only as known rejected historical controls.",
+    "asset_disposition": "NEW_CANDIDATES_READY_FOR_UE4_QC_ROGUE_AND_ROGUE_HOODED_REMAIN_REJECTED"
   },
   "known_technical_rejections": [
     {
@@ -124,5 +173,28 @@
     "ue4_candidate_result": "BOTH_REJECTED_TECHNICAL",
     "tooling_defect": "UE4 receipt writer referenced archive_sha256 although direct-raw schema has no archive_sha256",
     "runtime_integration_allowed": false
+  },
+  "latest_intake_expansion": {
+    "exact_head_before_change": "48572701f16edc5eb56d60ab62a9ee719aed9677",
+    "date": "2026-10-09",
+    "candidates": [
+      {
+        "filename": "Mage.fbx",
+        "sha256": "93b401d56e2547316f8841a4ac0086011c64d79185c9cb7623567c2dbf125c7d",
+        "intended_p1c01_gap": "Gandalf technical rig source probe"
+      },
+      {
+        "filename": "Knight.fbx",
+        "sha256": "b25e35cc7eaaa3c7c103f10a4f41fde1cbd81936fede9aa9ae4efbd29d40ba1b",
+        "intended_p1c01_gap": "Bilbo/Sam/Merry/Pippin hobbit-body technical rig source probe"
+      },
+      {
+        "filename": "Barbarian.fbx",
+        "sha256": "902a7c0092714c21f148b42ca8921ba7ac66e74f16c8af5088a3d224663ed597",
+        "intended_p1c01_gap": "Black Rider humanoid deformation negative-control probe"
+      }
+    ],
+    "license": "CC0-1.0",
+    "license_sha256": "ae322141814056dda0deea7540d74c41d87aee1da319977cd1bd84ee5a923629"
   }
 }
