@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "manifest_id": "P1C01_CHARACTER_BUNDLE_COMPLETION_V1",
-  "status": "FRODO_TECHNICAL_IMPORT_PROVEN_SEVEN_FINAL_BUNDLES_PENDING",
+  "status": "FRODO_TECHNICAL_IMPORT_PROVEN_KAYKIT_MULTI_CHARACTER_CANDIDATES_QUEUED_SEVEN_FINAL_BUNDLES_PENDING",
   "authority": [
     "Data/ProjectGovernor.json",
     "01_STORY_AND_TIMELINE_BIBLE",
@@ -207,5 +207,32 @@
     "SYNCHRONOUS_HEAVY_LOAD",
     "HARD_HEAVY_RUNTIME_REFERENCE",
     "UNPROVEN_LIKENESS_EQUALS_FINAL_ART"
-  ]
+  ],
+  "latest_intake_expansion": {
+    "date": "2026-10-09",
+    "source": "Data/P1C01KayKitRigTechnicalBridgeV1.json",
+    "exact_head_before_change": "48572701f16edc5eb56d60ab62a9ee719aed9677",
+    "legal_source": "KayKit Adventurers CC0-1.0 official GitHub raw FBX files",
+    "candidates": [
+      {
+        "character_gap": "Gandalf",
+        "file": "Mage.fbx",
+        "sha256": "93b401d56e2547316f8841a4ac0086011c64d79185c9cb7623567c2dbf125c7d",
+        "state": "QUEUED_FOR_UE4_27_SKELETAL_QC"
+      },
+      {
+        "character_gap": "Bilbo/Sam/Merry/Pippin",
+        "file": "Knight.fbx",
+        "sha256": "b25e35cc7eaaa3c7c103f10a4f41fde1cbd81936fede9aa9ae4efbd29d40ba1b",
+        "state": "QUEUED_FOR_UE4_27_SKELETAL_QC"
+      },
+      {
+        "character_gap": "Black Rider humanoid probe",
+        "file": "Barbarian.fbx",
+        "sha256": "902a7c0092714c21f148b42ca8921ba7ac66e74f16c8af5088a3d224663ed597",
+        "state": "QUEUED_FOR_UE4_27_SKELETAL_QC"
+      }
+    ],
+    "boundary": "These are legal technical rig candidates, not final likeness approvals. Runtime promotion requires UE4 import pass, deformation review, animation coverage, material/LOD checks, PIE and visual acceptance."
+  }
 }
