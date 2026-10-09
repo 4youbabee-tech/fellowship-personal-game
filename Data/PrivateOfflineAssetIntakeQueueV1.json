@@ -72,12 +72,14 @@
       "known_license": "CC0",
       "format": "FBX (source listed, not yet acquired)",
       "expected_use": "Bag End garden",
-      "notes": "One of the exact 1K/FBX source-only API pilot candidates. Not actually staged until hosted artifact receipt confirms hashes. Scene/style + LOD + PNG/TGA QC required. Offline/private classification; never blindly mark Unreal imported. Source staged and hashed, run 37967806668 Artifact 11633548712; texture converter pending exact-head hosted reproof; not UE4 imported, no scene visual acceptance.",
+      "notes": "One of the exact 1K/FBX source-only API pilot candidates. Not actually staged until hosted artifact receipt confirms hashes. Scene/style + LOD + PNG/TGA QC required. Offline/private classification; never blindly mark Unreal imported. Source staged and hashed, run 37967806668 Artifact 11633548712; texture converter pending exact-head hosted reproof; not UE4 imported, no scene visual acceptance. New exact-head hosted 1K PNG conversion SUCCESS run 37969482224, artifact 11634558521, source-only. No Unreal import or visual approval.",
       "local_filename": null,
       "hash": null,
       "size_bytes": null,
       "source_artifact_id": 11633548712,
-      "source_run_id": 37967806668
+      "source_run_id": 37967806668,
+      "normalized_artifact_id": 11634558521,
+      "normalized_format": "FBX static + 1K PNG/ORM DirectX material candidates"
     },
     {
       "intake_id": "P1C01_CC0_PH_WOODEN_CRATE_01",
@@ -89,12 +91,14 @@
       "known_license": "CC0",
       "format": "FBX (source listed, not yet acquired)",
       "expected_use": "Hobbiton market",
-      "notes": "One of the exact 1K/FBX source-only API pilot candidates. Not actually staged until hosted artifact receipt confirms hashes. Scene/style + LOD + PNG/TGA QC required. Offline/private classification; never blindly mark Unreal imported. Source staged and hashed, run 37967806668 Artifact 11633548712; texture converter pending exact-head hosted reproof; not UE4 imported, no scene visual acceptance.",
+      "notes": "One of the exact 1K/FBX source-only API pilot candidates. Not actually staged until hosted artifact receipt confirms hashes. Scene/style + LOD + PNG/TGA QC required. Offline/private classification; never blindly mark Unreal imported. Source staged and hashed, run 37967806668 Artifact 11633548712; texture converter pending exact-head hosted reproof; not UE4 imported, no scene visual acceptance. New exact-head hosted 1K PNG conversion SUCCESS run 37969482224, artifact 11634558521, source-only. No Unreal import or visual approval.",
       "local_filename": null,
       "hash": null,
       "size_bytes": null,
       "source_artifact_id": 11633548712,
-      "source_run_id": 37967806668
+      "source_run_id": 37967806668,
+      "normalized_artifact_id": 11634558521,
+      "normalized_format": "FBX static + 1K PNG/ORM DirectX material candidates"
     },
     {
       "intake_id": "P1C01_CC0_PH_FOLDING_WOODEN_STOOL",
@@ -106,12 +110,14 @@
       "known_license": "CC0",
       "format": "FBX (source listed, not yet acquired)",
       "expected_use": "Party Field",
-      "notes": "One of the exact 1K/FBX source-only API pilot candidates. Not actually staged until hosted artifact receipt confirms hashes. Scene/style + LOD + PNG/TGA QC required. Offline/private classification; never blindly mark Unreal imported. Source staged and hashed, run 37967806668 Artifact 11633548712; texture converter pending exact-head hosted reproof; not UE4 imported, no scene visual acceptance.",
+      "notes": "One of the exact 1K/FBX source-only API pilot candidates. Not actually staged until hosted artifact receipt confirms hashes. Scene/style + LOD + PNG/TGA QC required. Offline/private classification; never blindly mark Unreal imported. Source staged and hashed, run 37967806668 Artifact 11633548712; texture converter pending exact-head hosted reproof; not UE4 imported, no scene visual acceptance. New exact-head hosted 1K PNG conversion SUCCESS run 37969482224, artifact 11634558521, source-only. No Unreal import or visual approval.",
       "local_filename": null,
       "hash": null,
       "size_bytes": null,
       "source_artifact_id": 11633548712,
-      "source_run_id": 37967806668
+      "source_run_id": 37967806668,
+      "normalized_artifact_id": 11634558521,
+      "normalized_format": "FBX static + 1K PNG/ORM DirectX material candidates"
     },
     {
       "intake_id": "P1C01_CC0_PH_WOODEN_LANTERN_01",
@@ -123,12 +129,14 @@
       "known_license": "CC0",
       "format": "FBX (source listed, not yet acquired)",
       "expected_use": "Bag End / Hobbiton lanes",
-      "notes": "One of the exact 1K/FBX source-only API pilot candidates. Not actually staged until hosted artifact receipt confirms hashes. Scene/style + LOD + PNG/TGA QC required. Offline/private classification; never blindly mark Unreal imported. Source staged and hashed, run 37967806668 Artifact 11633548712; texture converter pending exact-head hosted reproof; not UE4 imported, no scene visual acceptance.",
+      "notes": "One of the exact 1K/FBX source-only API pilot candidates. Not actually staged until hosted artifact receipt confirms hashes. Scene/style + LOD + PNG/TGA QC required. Offline/private classification; never blindly mark Unreal imported. Source staged and hashed, run 37967806668 Artifact 11633548712; texture converter pending exact-head hosted reproof; not UE4 imported, no scene visual acceptance. New exact-head hosted 1K PNG conversion SUCCESS run 37969482224, artifact 11634558521, source-only. No Unreal import or visual approval.",
       "local_filename": null,
       "hash": null,
       "size_bytes": null,
       "source_artifact_id": 11633548712,
-      "source_run_id": 37967806668
+      "source_run_id": 37967806668,
+      "normalized_artifact_id": 11634558521,
+      "normalized_format": "FBX static + 1K PNG/ORM DirectX material candidates"
     },
     {
       "intake_id": "P1C01_CC0_PH_WICKER_BASKET_01",
@@ -140,12 +148,14 @@
       "known_license": "CC0",
       "format": "FBX (source listed, not yet acquired)",
       "expected_use": "Bag End kitchen",
-      "notes": "One of the exact 1K/FBX source-only API pilot candidates. Not actually staged until hosted artifact receipt confirms hashes. Scene/style + LOD + PNG/TGA QC required. Offline/private classification; never blindly mark Unreal imported. Source staged and hashed, run 37967806668 Artifact 11633548712; texture converter pending exact-head hosted reproof; not UE4 imported, no scene visual acceptance.",
+      "notes": "One of the exact 1K/FBX source-only API pilot candidates. Not actually staged until hosted artifact receipt confirms hashes. Scene/style + LOD + PNG/TGA QC required. Offline/private classification; never blindly mark Unreal imported. Source staged and hashed, run 37967806668 Artifact 11633548712; texture converter pending exact-head hosted reproof; not UE4 imported, no scene visual acceptance. New exact-head hosted 1K PNG conversion SUCCESS run 37969482224, artifact 11634558521, source-only. No Unreal import or visual approval.",
       "local_filename": null,
       "hash": null,
       "size_bytes": null,
       "source_artifact_id": 11633548712,
-      "source_run_id": 37967806668
+      "source_run_id": 37967806668,
+      "normalized_artifact_id": 11634558521,
+      "normalized_format": "FBX static + 1K PNG/ORM DirectX material candidates"
     }
   ]
 }

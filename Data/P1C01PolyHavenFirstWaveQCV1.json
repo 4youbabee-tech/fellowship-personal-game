@@ -90,6 +90,27 @@
     "No FBX imported into UE4.27.2 in this source-only wave; no PIE, visual quality, render, shadow/material fidelity, target-device FPS or Gate 6/7 acceptance proof.",
     "Source/converted artifacts expire; promote only authorized and technically qualified assets through normal content pipeline."
   ],
-  "status": "SOURCE_PROVEN_QC_AND_LOCAL_PNG_CONVERSION; REPRODUCIBLE_HOSTED_PNG_CONVERSION_PENDING",
-  "truth_state": "STATIC-VALIDATED_ONLY"
+  "status": "HOSTED_SOURCE_AND_1K_TEXTURE_CONVERSION_PROVEN; UE4_IMPORT_NOT_RUN",
+  "truth_state": "STATIC-VALIDATED_ONLY",
+  "hosted_png_reproduction": {
+    "head": "4f973f66d17bf341ede94a27b0ba93aa2bcceb88",
+    "run_id": 37969482224,
+    "run_number": 2,
+    "run_conclusion": "success",
+    "run_started_at": "2026-10-09T17:53:47Z",
+    "run_updated_at": "2026-10-09T17:54:40Z",
+    "elapsed_seconds": 53,
+    "source_artifact_id": 11635141171,
+    "source_artifact_zip_bytes": 30879038,
+    "converted_fbx_png_artifact_id": 11634558521,
+    "converted_artifact_zip_bytes": 21293902,
+    "original_files": 28,
+    "converted_fbx": 5,
+    "converted_png": 19,
+    "source_unit_tests": "7/7 PASS",
+    "conversion_unit_tests": "4/4 PASS",
+    "converted_receipt_marker": "P1C01_POLYHAVEN_PNG_QC_PASS meshes=5 textures=19; NOT_UE4_IMPORTED",
+    "status": "SOURCE_STAGED_AND_TEXTURES_CONVERTED_ON_HOSTED_RUNNER",
+    "acceptance": "STATIC-VALIDATED; not UE4-IMPORTED/PIE/DEVICE/VISUALLY-ACCEPTED"
+  }
 }

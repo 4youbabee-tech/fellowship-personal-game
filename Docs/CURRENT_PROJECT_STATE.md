@@ -1,3 +1,10 @@
+## 2026-10-09 — Exact-head hosted P1C01 texture conversion reproof: SUCCESS
+
+- `P1C01 Poly Haven Photoreal Source Stage #2` at exact HEAD `4f973f66d17bf341ede94a27b0ba93aa2bcceb88`, [GitHub run 37969482224](https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/37969482224), **SUCCESS**, 17:53:47Z–17:54:40Z = **53 seconds**. Source-only CI (no self-hosted Unreal, GPU, purchase or account).
+- Source tests **7/7 PASS**, PNG-converter tests **4/4 PASS**. Download + texture conversion verified: source bundle **5 FBX + 23 source textures**, output **5 unmodified FBX + 19 1K PNG textures** with standard BaseColor, DirectX normal and R/G/B ORM packing; explicit marker: `P1C01_POLYHAVEN_PNG_QC_PASS meshes=5 textures=19; NOT_UE4_IMPORTED`.
+- Actual two published GitHub Artifacts: original `11635141171` (30,879,038-byte ZIP) and **converted FBX/PNG** `11634558521` (21,293,902-byte ZIP). Both retention 14 days. `Data/P1C01PolyHavenFirstWaveQCV1.json` now records exact-head reproof and local FBX 44,127-source-triangle observations.
+- Validated state: `STATIC-VALIDATED` for source acquisition and texture prep. **No Unreal mesh import yet, no review of actual rendered light/material look, no human PIE, no device 30 FPS and no Gate 6/7 completion claim.** Next action: normal/UV/smoothing import and LOD/collision/material-slot proof; private-only game and RETIRED TRELLIS.2 decisions unchanged.
+
 ## 2026-10-09 — P1C01 photoreal source intake proven; reproducible FBX + 1K PNG second stage
 
 - **Actual successful source acquisition:** P1C01 Poly Haven Photoreal Source Stage #1, run `37967806668` at exact prep HEAD `2172b67ad5c6`, SUCCESS. Five real native FBX source assets plus 23 source texture files (28 source payload files), 31,337,420 bytes total; 7 hosted source-only tests PASS; official Poly Haven source-provider MD5 and locally measured SHA256 receipts, quarantined=0. GitHub source Artifact **11633548712**, packed 30,879,038 bytes, retention 14d.

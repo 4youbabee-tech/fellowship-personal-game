@@ -9250,7 +9250,7 @@
       "wicker_basket_01"
     ],
     "intake_state": "CANDIDATE_SOURCE_UNTIL_RUN_RECEIPT_PROVES_STAGING",
-    "next_action": "Exact-source hosted stage now adds conversion to 1K PNG output and second source artifact; only after converted artifact inspect and serialized UE4.27.2 import candidate with LOD/perf.",
+    "next_action": "Optimize FBX geometry/LODs/normals and material slots as needed, then queue EXACT-HEAD serial UE4.27 P1C01 source importer candidate test; independently compare real in-engine visual screenshots. No new P1C02.",
     "hard_gates": [
       "FBX static mesh native only; animated production FBX rig and independent skeletal quality gates",
       "1K PNG/TGA channel packed textures after preprocessing and source provenance",
@@ -9258,7 +9258,7 @@
       "FStreamableManager async heavy residency, no redundant NPC Spawn/Destroy, HISM props",
       "No source/artifact = no asset; a hosted workflow may succeed with quarantined results and that does not count as production intake"
     ],
-    "status": "SOURCE_ACTUALLY_STAGED_AND_HASH_VERIFIED_HOSTED_CONVERTED_PIPELINE_CANDIDATE",
+    "status": "HOSTED_SOURCE_AND_1K_TEXTURE_CONVERSION_PASSED",
     "visual_acceptance": "NOT_VISUALLY_ACCEPTED_UNTIL_IN_ENGINE_HUMAN_REVIEW",
     "copyright": "Shire lore/style references remain governed by source PDFs; no direct reproduction of protected model art without appropriate use authorization.",
     "last_updated": "2026-10-09",
@@ -9279,6 +9279,27 @@
       "new_converter_tests": "Scripts/test_p1c01_polyhaven_png_conversion.py",
       "source_quality": "No explicit LayerElementSmoothing in source FBX; normals and UV present; must check static UE4 importer"
     },
-    "qc_receipt": "Data/P1C01PolyHavenFirstWaveQCV1.json"
+    "qc_receipt": "Data/P1C01PolyHavenFirstWaveQCV1.json",
+    "actual_second_artifact_result": {
+      "head": "4f973f66d17bf341ede94a27b0ba93aa2bcceb88",
+      "run_id": 37969482224,
+      "run_number": 2,
+      "run_conclusion": "success",
+      "run_started_at": "2026-10-09T17:53:47Z",
+      "run_updated_at": "2026-10-09T17:54:40Z",
+      "elapsed_seconds": 53,
+      "source_artifact_id": 11635141171,
+      "source_artifact_zip_bytes": 30879038,
+      "converted_fbx_png_artifact_id": 11634558521,
+      "converted_artifact_zip_bytes": 21293902,
+      "original_files": 28,
+      "converted_fbx": 5,
+      "converted_png": 19,
+      "source_unit_tests": "7/7 PASS",
+      "conversion_unit_tests": "4/4 PASS",
+      "converted_receipt_marker": "P1C01_POLYHAVEN_PNG_QC_PASS meshes=5 textures=19; NOT_UE4_IMPORTED",
+      "status": "SOURCE_STAGED_AND_TEXTURES_CONVERTED_ON_HOSTED_RUNNER",
+      "acceptance": "STATIC-VALIDATED; not UE4-IMPORTED/PIE/DEVICE/VISUALLY-ACCEPTED"
+    }
   }
 }
