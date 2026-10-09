@@ -21,7 +21,6 @@ concurrency:
 
 jobs:
   hosted_static_bridge:
-    if: ${{ github.event_name != 'pull_request' || github.head_ref != 'production/p1c01-definitive-chapter-closeout-2026-10-04' }} # P1C01_DEFINITIVE_TRAIN_RETIREMENT
     name: Hosted KayKit source and FBX static gate
     runs-on: windows-latest
     outputs:
@@ -71,7 +70,7 @@ jobs:
   ue4_technical_bridge:
     name: UE4.27.2 KayKit skeletal technical gate
     needs: hosted_static_bridge
-    if: ${{ (github.event_name != 'pull_request' || github.head_ref != 'production/p1c01-definitive-chapter-closeout-2026-10-04') && needs.hosted_static_bridge.outputs.selected_count != '0' }} # P1C01_DEFINITIVE_TRAIN_RETIREMENT
+    if: ${{ needs.hosted_static_bridge.outputs.selected_count != '0' }}
     runs-on:
       - self-hosted
       - Windows
@@ -129,10 +128,10 @@ jobs:
         shell: powershell
         run: |
           foreach($relative in @(
-            "SourceAssets/Production/Characters/Rigs/FRODO/SK_FRODO.fbx",
-            "Content/Production/Characters/Rigs/FRODO/SK_FRODO.uasset",
-            "Content/Production/Characters/Rigs/FRODO/SK_FRODO_Skeleton.uasset",
-            "Content/Production/Characters/Rigs/FRODO/SK_FRODO_PhysicsAsset.uasset"
+            "SourceAssets/Production/Characters/Rigs/P1C01_TECHNICAL_BRIDGE/SK_P1C01_KAYKIT_TECHNICAL.fbx",
+            "Content/Production/Characters/Rigs/P1C01_TECHNICAL_BRIDGE/SK_P1C01_KAYKIT_TECHNICAL.uasset",
+            "Content/Production/Characters/Rigs/P1C01_TECHNICAL_BRIDGE/SK_P1C01_KAYKIT_TECHNICAL_Skeleton.uasset",
+            "Content/Production/Characters/Rigs/P1C01_TECHNICAL_BRIDGE/SK_P1C01_KAYKIT_TECHNICAL_PhysicsAsset.uasset"
           )) {
             $tracked = @(& git.exe -C $env:GITHUB_WORKSPACE ls-files -- $relative 2>$null)
             if($LASTEXITCODE -ne 0) { throw "KAYKIT_RIG_BRIDGE_CLEANUP_GIT_FAIL path=$relative" }
