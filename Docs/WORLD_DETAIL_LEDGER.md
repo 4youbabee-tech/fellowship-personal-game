@@ -1,3 +1,10 @@
+## 2026-10-09 - P1C01 Bag End garden arch and mailbox dressing
+
+- Added existing resident Shire production meshes for a Bag End garden arch and mailbox inside `AShirePrototypeWorldBuilder::SpawnBagEndHeroPass`, closing two visible `BAG_END_EXTERIOR_GARDEN` micro-detail slots without introducing new asset imports.
+- The props are non-colliding hero dressing around the Bag End approach; no quest anchors, NPCs, save keys, NavMesh corridors, chapter transitions, synchronous loads, Tick, P1C02 activation or interior-completion claim changed.
+- Added a focused source contract proving the resident asset paths and exact Bag End placements remain in the bounded Bag End hero pass.
+- Evidence boundary: STATIC-VALIDATED source contract only until exact-head CI/UE4.27.2 proof runs. No PIE, device, visual, performance or Gate 6/7 acceptance is claimed.
+
 ## 2026-10-09 - P1C01 Party Field fireworks visual anchor alignment
 
 - Repositioned the existing Party Field loaded-cart and paired barrel dressing inside `AShirePrototypeWorldBuilder::SpawnPartySocialLoopPass` so the already-authored props frame the `SHIRE_FIREWORKS_SAFETY` activity near Gandalf's fireworks beat.

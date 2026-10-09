@@ -3093,6 +3093,10 @@ void AShirePrototypeWorldBuilder::SpawnBagEndHeroPass()
         TEXT("/Game/Production/World/Common/SM_CommonSackBale.SM_CommonSackBale"));
     UStaticMesh* CommonWheelbarrow = ResolveResidentStaticMesh(
         TEXT("/Game/Production/World/Common/SM_CommonWheelbarrow.SM_CommonWheelbarrow"));
+    UStaticMesh* ShireGardenArch = ResolveResidentStaticMesh(
+        TEXT("/Game/Production/World/Shire/SM_ShGardenArch.SM_ShGardenArch"));
+    UStaticMesh* ShireMailbox = ResolveResidentStaticMesh(
+        TEXT("/Game/Production/World/Shire/SM_ShMailbox.SM_ShMailbox"));
 
     int32 ClusterCount = 0;
     int32 InstanceCount = 0;
@@ -3200,6 +3204,8 @@ void AShirePrototypeWorldBuilder::SpawnBagEndHeroPass()
     SpawnHeroProp(ProductionCrateMesh, BagEnd + FVector(365,230,0), FVector(0.56f), FRotator(0,-11,0));
     SpawnHeroProp(ProductionLanternMesh, BagEnd + FVector(220,-170,18), FVector(0.56f), FRotator::ZeroRotator);
     SpawnHeroProp(ProductionFlowerBoxMesh, BagEnd + FVector(-25,185,0), FVector(0.62f), FRotator(0,-5,0));
+    SpawnHeroProp(ShireGardenArch, BagEnd + FVector(430,-40,0), FVector(0.62f), FRotator(0,82,0));
+    SpawnHeroProp(ShireMailbox, BagEnd + FVector(565,-235,0), FVector(0.56f), FRotator(0,64,0));
 
     auto SpawnVariantProp = [this, &BagEnd](
         TArray<AStaticMeshActor*>& Target,

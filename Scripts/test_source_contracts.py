@@ -385,6 +385,10 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("BAG_END_HERO_PASS", body)
         self.assertIn("populationTarget=18", body)
         self.assertIn("Configure(Mesh, false", body)
+        self.assertIn("SM_ShGardenArch.SM_ShGardenArch", body)
+        self.assertIn("SM_ShMailbox.SM_ShMailbox", body)
+        self.assertIn("SpawnHeroProp(ShireGardenArch, BagEnd + FVector(430,-40,0)", body)
+        self.assertIn("SpawnHeroProp(ShireMailbox, BagEnd + FVector(565,-235,0)", body)
         for forbidden in ("LoadObject<", "StaticLoadObject", "RequestSyncLoad", "SpawnActor<AShireAmbientNPC>"):
             self.assertNotIn(forbidden, body)
 
