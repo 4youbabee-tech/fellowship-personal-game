@@ -44,7 +44,9 @@
       "sources": [
         "https://github.com/microsoft/TRELLIS.2",
         "https://github.com/microsoft/TRELLIS.2/blob/main/LICENSE"
-      ]
+      ],
+      "owner_decision": "PREFERRED_CANDIDATE_TO_EVALUATE_FOR_SHIRE_STATIC_PROPS_ALONGSIDE_EXISTING_TOOLS",
+      "session_handoff": "Future agents: consult this registry at session start; evaluate TRELLIS.2 alongside current licensed asset sources and Blender/FBX/UE4 pipeline. Illustrative images are not output proof. Generated models require license, visual, canon and performance reviews before promotion."
     }
   ]
 }
