@@ -8563,5 +8563,29 @@
       "When a better proven method is discovered, update the Governor with evidence and supersede the old method explicitly rather than drifting informally."
     ],
     "evidence_claim_boundary": "COMPILE/STATIC/UE4 machine evidence never implies PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED or FPS acceptance without chapter-specific proof."
+  },
+  "owner_fast_batch_intake_policy_2026_10_11": {
+    "policy_id": "OWNER_FAST_BATCH_INTAKE_2026_10_11",
+    "status": "OWNER_REQUEST_REGISTERED_IMPLEMENTATION_PENDING",
+    "requested_on": "2026-10-11",
+    "objective": "Minimize administrative handling and redundant testing; rapidly build P1C01 in large coherent production waves while continuing licensed independent preparation for all 28 regions.",
+    "owner_directives": [
+      "Prefer repair/convert/repackage over rejecting a technically fixable candidate because of naming, source packaging or ingest format.",
+      "Accept eligible source formats for offline conversion to required UE4.27.2 runtime FBX and channel-packed PNG/TGA rather than insisting originals arrive production-ready.",
+      "Reuse successful unchanged SHA256 evidence and existing license/entitlement receipts instead of repeated full checks, downloads or heavy builds.",
+      "Use one cheap source/hash/geometry check at intake, targeted conversion QC only for modified output, and actual UE/PIE/target-device gates at promotion/acceptance; no redundant wide scans on unchanged inputs.",
+      "Run large resource-bounded chapter-sized asset integration waves with deterministic checkpoints; quarantine individual bad candidates and continue unrelated eligible work.",
+      "Keep five independent preparation/QA lanes occupied whenever available and serialize exactly one Unreal runtime writer and one persistent warehouse writer.",
+      "Stage future-region assets, characters, audio and architecture concurrently; keep future chapter runtime locked until P1C01 Gate 6/7 evidence."
+    ],
+    "minimal_nonwaivable_checks": [
+      "Usable license or explicit right to use assets; do not bypass copyright or access controls.",
+      "Basic file trust, no executable payload accepted as passive asset, integrity and source provenance receipt.",
+      "UE4.27 compatibility, real FBX export/import quality, materials and UVs and functional collision where needed.",
+      "Soft/async runtime assets, pooled crowds, instanced foliage, bounded memory/VRAM and real 720p 30FPS device performance testing.",
+      "Real Gate 6/7 acceptance, original canon/story order, truthful evidence classification."
+    ],
+    "workflow_rule": "No new CI/workflow fan-out merely for owner policy/docs changes; choose fast targeted checks and avoid extra full Unreal rebuilds unless real runtime inputs changed.",
+    "evidence_boundary": "Policy registration only. Existing PR #352 and other running work are not cancelled; no new P1C01 visual/runtime/Gate acceptance is claimed."
   }
 }

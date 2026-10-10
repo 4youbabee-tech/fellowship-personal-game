@@ -178,5 +178,23 @@
     "truth_boundary": "Hosted preparation outputs are candidate/evidence reports, not new downloaded models, UE import or device/visual acceptance.",
     "governor_work_start": "Scripts/governor_work_start.py"
   },
-  "governor_work_start": "Scripts/governor_work_start.py"
+  "governor_work_start": "Scripts/governor_work_start.py",
+  "owner_fast_intake_2026_10_11": {
+    "authority": "Data/ProjectGovernor.json#owner_fast_batch_intake_policy_2026_10_11",
+    "status": "OWNER_REQUEST_REGISTERED_IMPLEMENTATION_PENDING",
+    "rule": "Reduce administrative friction; accept lawful technically repairable source formats and automatically convert to UE4.27 compatible FBX/PNG/TGA; reuse receipts and limit repeated tests; process large resource-bounded P1C01 batches while independent regions preparation continues.",
+    "minimum_guards": [
+      "usage_rights",
+      "source_integrity",
+      "real_engine_import_quality",
+      "runtime_memory_fps",
+      "Gate_6_7_evidence",
+      "one_runtime_writer_one_warehouse_writer"
+    ],
+    "not_allowed": [
+      "bypass_usage_rights",
+      "disable_proven_quality_gates",
+      "declare_future_chapter_runtime_accepted"
+    ]
+  }
 }

@@ -1,3 +1,7 @@
+## 2026-10-11 — Owner accelerated intake / large chapter batch (POLICY ONLY)
+
+- Registered Owner Fast Batch Intake in the sole Governor: permit lawful source-format intake and automatic correction/conversion with minimal administrative review, reuse intact receipts, targeted changed-input checks, dynamic large P1C01 integration waves and five preparation lanes. No actual asset imported, runtime code changed, Unreal build executed, or Gate 6/7 closed in this policy candidate. PR #352 Blender/PBR work stays independent; do not cancel live workflows. P1C02 remains closed.
+
 ## 2026-10-10 — Owner living social landscape standard, Shire-first / all regions (design requirement)
 
 - Documented the owner-requested living-social-landscape production standard for Hobbiton and the other 28 planned regions as design/acceptance criteria in the existing Governor REQ-WORLD-001, Living World blueprint/feature plan, and WORLD_DETAIL_LEDGER. No runtime changes, source downloads, new chapter unlock, PIE/device/visual acceptance or FPS evidence. Independent preparatory work remains eligible under DEC-104, while P1C01 Runtime warning debt / material-slot proof are blocked pending actual repair and green checks.

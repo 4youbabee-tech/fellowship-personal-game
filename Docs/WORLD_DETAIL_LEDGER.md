@@ -1,3 +1,7 @@
+## 2026-10-11 — Owner fast intake, large P1C01 chapter wave and whole-game source throughput
+
+Owner explicitly requests relaxing bureaucratic admission rules and redundant checks, accepting useful assets in varied ORIGINAL source formats **when lawfully usable**, converting/repairing them to valid FBX and PNG/TGA for runtime, and prioritizing large coherent chapter-sized production waves. Keep existing DEC-078 / DEC-104 parallel tracks, exactly one runtime writer and one warehouse writer, and future-region asset prep for 28 regions. Minimum necessary acceptance evidence still applies (license/entitlement, source integrity, import quality, performance, Gate 6/7). This is a production-policy instruction, not visual/runtime completion. Reference: OWNER_FAST_BATCH_INTAKE_2026_10_11 in ProjectGovernor.json.
+
 ## 2026-10-10 — Owner living social landscape standard, Shire-first / all regions (design requirement)
 
 - **Scope:** the owner-provided Bag End / Bagshot Row morning image is a visual reference for an inhabited, purposeful and socially legible settlement, not a literal asset, canon proof, or visual acceptance. In P1C01, place Bag End above Bagshot Row with coherent footpaths, gardens, worked plots, neighboring Hobbit dwellings and a believable gardener route; distinct homes/workplaces should read as a community instead of static props.
