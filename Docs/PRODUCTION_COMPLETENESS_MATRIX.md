@@ -1,3 +1,7 @@
+## 2026-10-11 — Fast local PIE preview (tooling, no chapter-completeness credit)
+
+- Created local Windows `SHIRE_FAST_PIE_PREVIEW.bat` plus static test/documentation to remove redundant sync/build/package steps for unchanged local UE4.27.2 editor content. Added clear hard stops for missing compiled editor modules and confirmation that the user must explicitly click Play. No new Shire interior, real PBR material wiring, skeletal animation, gameplay integration, or Windows deliverable is produced by this tooling. P1C01 Gate 6/7 and owner DX11 720p stable 30 FPS proof remain pending. Five production owners can each operate independent preparation substreams, without an extra runtime or warehouse writer.
+
 ## 2026-10-11 — Accelerated intake policy only, not content completion
 
 - Owner-approved operational direction: remove redundant administrative admission checks, fast-path lawful repairable candidates, keep real asset rights and technical acceptance, consolidate large P1C01 waves and prepare 28-region art/characters concurrently. **Status: policy registered; implementation and runtime output pending**. No increase in visual, PIE, device, FPS or Gate 6/7 completion.
