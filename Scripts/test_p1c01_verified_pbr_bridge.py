@@ -166,6 +166,19 @@ class VerifiedPBRBridgeTest(unittest.TestCase):
         self.assertIn("CI-PlayableStartup.log",workflow)
         self.assertIn("P1C01_PBR_RUNTIME_PRESENCE_FAILED",workflow)
 
+    def test_pr_core_qa_without_redundant_windows_package(self):
+        root=Path(__file__).resolve().parents[1]
+        workflow=(root/".github/workflows/p1c01-verified-pbr-production.yml").read_text()
+        self.assertIn('set "PYTHON_EXE=%SHIRE_PBR_PYTHON%"',workflow)
+        self.assertIn('call "Scripts\\ci_run_project_automation.cmd"',workflow)
+        for step in (
+            "Cook and archive Windows test build with verified visual assets",
+            "Audit packaged Runtime Data JSON",
+            "Launch actual packaged executable and check Shire startup",
+        ):
+            self.assertIn("      - name: "+step+"\n        if: github.event_name != 'pull_request'",workflow)
+        self.assertIn("if: success() && github.event_name != 'pull_request'",workflow)
+
     def test_import_receipt_requires_real_material_slot_log(self):
         staged=bridge.stage(self.warehouse,self.project)
         slug=staged[0]["id"]
