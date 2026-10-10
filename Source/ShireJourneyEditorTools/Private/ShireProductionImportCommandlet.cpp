@@ -1464,57 +1464,6 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             }
 
 
-            // Poly Haven verified static FBX is staged with its separately hash-verified
-            // source-side MTL and 1K PNG. UE4's FBX importer is told not to generate
-            // arbitrary new materials, so explicitly bind the authored material when
-            // the imported geometry exposes exactly one slot. Multiple slots require
-            // a dedicated per-section source review; do not guess a texture identity.
-            if (SourceExtension == TEXT("fbx") &&
-                Relative.StartsWith(TEXT("World/Shire/VerifiedPBR/"), ESearchCase::CaseSensitive))
-            {
-                if (StaticMaterials.Num() == 1)
-                {
-                    const FString VerifiedMaterialName = TEXT("MI_P1C01_") + AssetName;
-                    const FString VerifiedMaterialPath = FString::Printf(
-                        TEXT("%s/%s.%s"),
-                        *DestinationPath,
-                        *VerifiedMaterialName,
-                        *VerifiedMaterialName);
-                    UMaterialInterface* VerifiedMaterial =
-                        FindObject<UMaterialInterface>(nullptr, *VerifiedMaterialPath);
-                    if (!VerifiedMaterial &&
-                        FPackageName::DoesPackageExist(
-                            FString::Printf(TEXT("%s/%s"), *DestinationPath, *VerifiedMaterialName)))
-                    {
-                        VerifiedMaterial = LoadObject<UMaterialInterface>(
-                            nullptr, *VerifiedMaterialPath);
-                    }
-
-                    if (VerifiedMaterial)
-                    {
-                        StaticMaterials[0].MaterialInterface = VerifiedMaterial;
-                        StaticMaterials[0].MaterialSlotName = FName(*VerifiedMaterialName);
-                        StaticMaterials[0].ImportedMaterialSlotName = FName(*VerifiedMaterialName);
-                        UE_LOG(LogTemp, Display,
-                            TEXT("P1C01_VERIFIED_PBR_IMPORT_BIND_PASS mesh=%s material=%s slots=1"),
-                            *AssetName, *VerifiedMaterialPath);
-                    }
-                    else
-                    {
-                        ++Failed;
-                        UE_LOG(LogTemp, Error,
-                            TEXT("P1C01_VERIFIED_PBR_IMPORT_BIND_FAIL mesh=%s material=%s"),
-                            *AssetName, *VerifiedMaterialPath);
-                    }
-                }
-                else
-                {
-                    UE_LOG(LogTemp, Warning,
-                        TEXT("P1C01_VERIFIED_PBR_IMPORT_MULTI_SLOT_QC_REQUIRED mesh=%s slots=%d"),
-                        *AssetName, StaticMaterials.Num());
-                }
-            }
-
             for (int32 MaterialIndex = 0; MaterialIndex < StaticMaterials.Num(); ++MaterialIndex)
             {
                 FStaticMaterial& StaticMaterial = StaticMaterials[MaterialIndex];
