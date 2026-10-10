@@ -1,3 +1,7 @@
+## 2026-10-10 — Frodo deformation workflow evidence integrity correction (candidate)
+
+- Regression root cause: Human Wave 2 #38052762961 hosted deformation job reported FileNotFoundError for p1c01_human_wave2_ue4.json while Blender process returned success to CI without --python-exit-code. Fix candidate adds unique recursive artifact receipt discovery, fail-closed Blender exit, required JSON and explicit PASS/boundary assertions. Exact-head rerun pending.
+
 ## 2026-10-10 — P1C01 mandatory Project Governor work-start and five-lane enforcement
 
 - DEC-104 is enforced as a mandatory physical production entrypoint. Existing five-lane read-only preflight is NOT proof of generated assets. Scripts/governor_work_start.py runs the full Project Governor and checks DEC-078/104/105, REQ-PROD-011, active P1C01 gate, one runtime writer, one warehouse writer, 6 GiB reserve and five lane identities before production.
