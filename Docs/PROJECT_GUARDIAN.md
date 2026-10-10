@@ -1,3 +1,8 @@
+## 2026-10-10 — P1C01 smoothing warning diagnostic candidate
+
+- Observed Windows UE warning-debt failure: `Missing smoothing groups: 17 > 0`, exit 65, before packaging. 17 is occurrence count, not proven unique mesh count.
+- Candidate `Scripts/warning_debt_guard.py` retains zero ceiling and prints per-occurrence log file, line and nearest FBX/OBJ source context (UNKNOWN_SOURCE when unavailable), to enable root-cause asset repair rather than suppress warnings. This is diagnostics only; source geometry not repaired. Exact-head static and UE evidence pending; no PIE/device/visual acceptance or Gate 6/7 credit. Independent character, source and warehouse preparation continues; do not rerun UE solely for this metadata change.
+
 ## 2026-10-10 — P1C01 package inventory and UE4 import false-green protections
 
 - Risk: hashed FBX, saved `.uasset` pairs and generic Unreal startup may be green, yet material-slot binding is not proven and package preflight fails because `total_unique_production_packages` is stale after PBR bank promotion. Fail-closed rule: require each selected P1C01 FBX's own UE import material-slot log evidence, then atomically recompute existing streaming audit counts from the actual resident-bank manifest and require runtime actor placement log before Windows package delivery. Add deterministic positive and negative regression tests; do not mark human visual or hardware gates from headless CI.
