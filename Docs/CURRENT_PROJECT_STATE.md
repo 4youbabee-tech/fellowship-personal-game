@@ -1,3 +1,8 @@
+## 2026-10-10 — PR-triggered full-cast candidate validation enabled
+- Follow-up fix: `warehouse-stage.yml` and `p1c01-hero-skeletal-candidate-wave.yml` now run on PR path changes for the Quaternius full-cast candidate files.
+- Reason: PR #329 branch validation must not wait for develop push or manual dispatch when we are producing P1C01 assets from the active PR lane.
+- Boundary: this enables staging/ranking proof only; it still does not claim import, PIE, device, visual or Gate 6/7 acceptance.
+
 ## 2026-10-10 — P1C01 full-cast Quaternius candidate staging wired
 - Exact PR #329 head before this batch: `a13209021a7645e44706cace8143e341e4217d35`; KayKit bridge #321 and Unreal Build #1810 were green, but KayKit returned `STATIC_BRIDGE_EXHAUSTED_KNOWN_REJECTIONS`, so no final character candidate was accepted.
 - Production change: expanded the existing Quaternius hero-candidate manifest from Frodo/Gandalf-only staging into a bounded full-cast P1C01 candidate queue for Frodo, Bilbo, Gandalf, Sam, Merry, Pippin, Black Rider and Black Rider Horse.
