@@ -1,3 +1,7 @@
+## 2026-10-11 — No redundant full UE build for owner local-PIE launch tool
+
+- Apply owner-requested minimum administrative friction: local preview launcher + its unit contract are non-runtime changes. Existing strict classifier only permits skipping a full Windows/Unreal lane if exact green parent proof can be inherited; otherwise full validation remains mandatory. Do not weaken FBX materials/import, global async bank, canon, P1C01 Gate 6/7 or owner-target 30 FPS checks. Historical Run #38092759311 demonstrated the prior false full-impact classification.
+
 ## 2026-10-11 — Fast-path measurement tooling without relaxing P1C01 acceptance
 
 - The exact-owner-laptop Gate 6/7 evidence evaluator is an acceptance-data tool. CI should not repeat an expensive full UE package only because that evaluator changes, when the exact ancestor already has valid engine proof. The classifier keeps fail-closed behavior without parent proof and continues normal expensive tests for runtime, asset, streaming, packaging and shader-impacting deltas. No gameplay, world visuals, new chapter or target FPS acceptance is claimed.
