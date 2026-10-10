@@ -73,6 +73,11 @@ jobs:
       - name: Import real production assets into UE4 .uasset
         shell: cmd
         run: call "Scripts\ci_import_production_assets.cmd"
+      - name: Fail closed on missing material slots in actual UE4 import log
+        shell: powershell
+        run: |
+          & $env:SHIRE_PBR_PYTHON Scripts/verify_verified_shire_import.py --project-root "$env:GITHUB_WORKSPACE" --import-log "$env:GITHUB_WORKSPACE/Saved/Logs/CI-ProductionAssetImport.log"
+          if ($LASTEXITCODE -ne 0) { throw 'P1C01_PBR_MATERIAL_SLOT_PROOF_FAILED' }
       - name: Fail closed on missing UE assets then update existing async chapter bank
         shell: powershell
         run: |

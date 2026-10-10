@@ -1,3 +1,11 @@
+## 2026-10-10 — licensed 16-region ambientCG physical source receipt
+
+- Whole-game ambientCG source intake Run #38057877090 staged 22 SHA256-verified files, skipped 24, staged 1,178,435,662 bytes with post-intake disk reserve 175,388,110,848 bytes, per real Windows job log. This belongs to approved whole-game source preparation only, never authorizes additional runtime chapters or claims visuals.
+
+## 2026-10-10 — P1C01 existing verified-PBR bank consistency defect registration
+
+- No new lore, landmark placement or chapter is introduced. Within the already approved P1C01 source-to-Unreal import lane, correct stale soft-asset bank package-count bookkeeping and the unused wrong-receipt/wrong-log-token PBR import verifier. The existing generic Windows package preflight uses a unique package count while the stage script appended new P1C01 mesh paths without updating it. Require per-mesh import/material slot evidence, then strict package manifest consistency; preserve original placement anchors, immutable SHA256 warehouse, one writer, 6GiB free reserve and no runtime synchronous asset loads. VISUAL, PIE, DEVICE, 30FPS and Gate 6/7 acceptance remain open.
+
 ## 2026-10-10 — P1C01 PBR actual runtime decoration visibility guard
 
 - Existing P1C01 asset bridge can produce correct .uasset files while startup still resolves zero resident meshes. Treat this as a same-chapter visibility defect, not a new chapter or new lore feature. Extend the serialized source-to-Unreal workflow with fail-closed runtime `P1C01_PBR_DECOR_RUNTIME` observed placement versus authorized `P1C01VerifiedWorldDecor.json` accents and async bank; no synchronous loading, new world owner or additional actor density. Keep Gate 6/7 visual/device acceptance separate.
@@ -18,6 +26,18 @@
 - Existing `UShireChapterAssetStreamingSubsystem` preloads selected soft paths via `Data/ChapterAssetStreamingPlan.json`. Existing `AShirePrototypeWorldBuilder` adds at most 16 optional, non-colliding, low-shadow static decorative pieces after world commit and never synchronously loads meshes. Canonical route/story/quest ownership and actor pooling remain unchanged.
 - A dedicated GitHub-hosted offline source test + serialized Windows UE4.27.2 workflow runs actual source stage, editor build, production import, `.uasset` presence, automation, startup, all chapters, state persistence, warning guard, cook and packaged startup. Only success can publish a playable Windows **test candidate**. The new visual packet is NOT declared PIE, device, human visual or Gate 6/7 accepted.
 - Until exact-head tests run, this is a source implementation candidate. Fix compile/import/runtime failures on this same PR before merge; avoid new feature lanes until machine-green. No final Windows release requested.
+
+## 2026-10-10 — ambientCG cross-lane duplicate download regression guard (candidate)
+
+- Observed live warehouse #38057877090 SUCCESS: `AMBIENTCG_WAREHOUSE_STAGE_PASS files=22 skipped=24 bytes=1178435662`, `REGION_SOURCE_RECEIPT_AUDIT_PASS files=22 skipped=24 reserve=175388110848`. These are actual SHA256-audited source-only bytes, not Unreal imports.
+- Root-cause in `Scripts/stage_ambientcg_warehouse.ps1`: ten regional material queries can return the same provider asset ID. Run logs show repeated downloads of Rock064, Ground111 and PavingStones151; prior script only guarded identical destination paths and did not deduplicate across category folders. Add accepted-ID set updated ONLY after successful source SHA256 receipt; skip later duplicate IDs before network requests. Byte-cap failure must not remove previously valid cached archive; do not trigger or repeat the completed batch. Existing Quaternius zero-payload Pre-Unreal step also checks the ambientCG dedup code order offline.
+- Candidate until exact-head preflight. One persistent warehouse writer and 6 GiB reserve retained. No P1C01 runtime change, PIE, target-device FPS, visual or Gate6/7 credit.
+
+## 2026-10-10 — ambientCG cross-lane duplicate download regression guard (candidate)
+
+- Observed live warehouse #38057877090 SUCCESS: `AMBIENTCG_WAREHOUSE_STAGE_PASS files=22 skipped=24 bytes=1178435662`, `REGION_SOURCE_RECEIPT_AUDIT_PASS files=22 skipped=24 reserve=175388110848`. These are actual SHA256-audited source-only bytes, not Unreal imports.
+- Root-cause in `Scripts/stage_ambientcg_warehouse.ps1`: ten regional material queries can return the same provider asset ID. Run logs show repeated downloads of Rock064, Ground111 and PavingStones151; prior script only guarded identical destination paths and did not deduplicate across category folders. Add accepted-ID set updated ONLY after successful source SHA256 receipt; skip later duplicate IDs before network requests. Byte-cap failure must not remove previously valid cached archive; do not trigger or repeat the completed batch. Existing Quaternius zero-payload Pre-Unreal step also checks the ambientCG dedup code order offline.
+- Candidate until exact-head preflight. One persistent warehouse writer and 6 GiB reserve retained. No P1C01 runtime change, PIE, target-device FPS, visual or Gate6/7 credit.
 
 ## 2026-10-10 — Confirmed GitHub default branch is develop
 

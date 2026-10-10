@@ -1,3 +1,7 @@
+## 2026-10-10 — P1C01 package inventory and UE4 import false-green protections
+
+- Risk: hashed FBX, saved `.uasset` pairs and generic Unreal startup may be green, yet material-slot binding is not proven and package preflight fails because `total_unique_production_packages` is stale after PBR bank promotion. Fail-closed rule: require each selected P1C01 FBX's own UE import material-slot log evidence, then atomically recompute existing streaming audit counts from the actual resident-bank manifest and require runtime actor placement log before Windows package delivery. Add deterministic positive and negative regression tests; do not mark human visual or hardware gates from headless CI.
+
 ## 2026-10-10 — P1C01 missing physical PBR placement false-green prevention
 
 - Regression risk: a successful import and gameplay startup can still display zero verified PBR decorations when soft objects are not resident at world build time. New deterministic offline cases plus a real headless-runtime placement-count verifier must block shipping the P1C01 PBR test candidate if `P1C01_PBR_DECOR_RUNTIME` is missing, partial, or has omitted objects, even when all `.uasset` packages exist. Retain one runtime writer and no false PIE/device/visual labels. Exact-head runtime evidence pending.
@@ -14,6 +18,18 @@
 - Existing `UShireChapterAssetStreamingSubsystem` preloads selected soft paths via `Data/ChapterAssetStreamingPlan.json`. Existing `AShirePrototypeWorldBuilder` adds at most 16 optional, non-colliding, low-shadow static decorative pieces after world commit and never synchronously loads meshes. Canonical route/story/quest ownership and actor pooling remain unchanged.
 - A dedicated GitHub-hosted offline source test + serialized Windows UE4.27.2 workflow runs actual source stage, editor build, production import, `.uasset` presence, automation, startup, all chapters, state persistence, warning guard, cook and packaged startup. Only success can publish a playable Windows **test candidate**. The new visual packet is NOT declared PIE, device, human visual or Gate 6/7 accepted.
 - Until exact-head tests run, this is a source implementation candidate. Fix compile/import/runtime failures on this same PR before merge; avoid new feature lanes until machine-green. No final Windows release requested.
+
+## 2026-10-10 — ambientCG cross-lane duplicate download regression guard (candidate)
+
+- Observed live warehouse #38057877090 SUCCESS: `AMBIENTCG_WAREHOUSE_STAGE_PASS files=22 skipped=24 bytes=1178435662`, `REGION_SOURCE_RECEIPT_AUDIT_PASS files=22 skipped=24 reserve=175388110848`. These are actual SHA256-audited source-only bytes, not Unreal imports.
+- Root-cause in `Scripts/stage_ambientcg_warehouse.ps1`: ten regional material queries can return the same provider asset ID. Run logs show repeated downloads of Rock064, Ground111 and PavingStones151; prior script only guarded identical destination paths and did not deduplicate across category folders. Add accepted-ID set updated ONLY after successful source SHA256 receipt; skip later duplicate IDs before network requests. Byte-cap failure must not remove previously valid cached archive; do not trigger or repeat the completed batch. Existing Quaternius zero-payload Pre-Unreal step also checks the ambientCG dedup code order offline.
+- Candidate until exact-head preflight. One persistent warehouse writer and 6 GiB reserve retained. No P1C01 runtime change, PIE, target-device FPS, visual or Gate6/7 credit.
+
+## 2026-10-10 — ambientCG cross-lane duplicate download regression guard (candidate)
+
+- Observed live warehouse #38057877090 SUCCESS: `AMBIENTCG_WAREHOUSE_STAGE_PASS files=22 skipped=24 bytes=1178435662`, `REGION_SOURCE_RECEIPT_AUDIT_PASS files=22 skipped=24 reserve=175388110848`. These are actual SHA256-audited source-only bytes, not Unreal imports.
+- Root-cause in `Scripts/stage_ambientcg_warehouse.ps1`: ten regional material queries can return the same provider asset ID. Run logs show repeated downloads of Rock064, Ground111 and PavingStones151; prior script only guarded identical destination paths and did not deduplicate across category folders. Add accepted-ID set updated ONLY after successful source SHA256 receipt; skip later duplicate IDs before network requests. Byte-cap failure must not remove previously valid cached archive; do not trigger or repeat the completed batch. Existing Quaternius zero-payload Pre-Unreal step also checks the ambientCG dedup code order offline.
+- Candidate until exact-head preflight. One persistent warehouse writer and 6 GiB reserve retained. No P1C01 runtime change, PIE, target-device FPS, visual or Gate6/7 credit.
 
 ## 2026-10-10 — P1C01 mandatory Project Governor work-start and five-lane enforcement
 

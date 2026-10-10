@@ -168,6 +168,19 @@ def activate(project):
     for row in receipt["assets"]:
         if row["mesh"] not in bank:bank.append(row["mesh"])
     bank.sort()
+    # Package preflight verifies this derived unique-package count. Recompute it
+    # after appending verified source assets, rather than shipping stale metadata.
+    audit=plan.get("audit")
+    check(isinstance(audit,dict) and isinstance(audit.get("chapter_bank_asset_counts"),dict),
+          "STREAMING_PACKAGE_AUDIT_MISSING")
+    packages=set()
+    for record in plan["banks"].values():
+        for path in record.get("assets",[]):
+            check(isinstance(path,str) and path.startswith("/Game/Production/") and "." in path,
+                  "STREAMING_PACKAGE_PATH_INVALID")
+            packages.add(path.split(".",1)[0])
+    audit["chapter_bank_asset_counts"]["P1C01"]=len(bank)
+    audit["total_unique_production_packages"]=len(packages)
     plan_path.write_text(json.dumps(plan,indent=2)+"\n")
     visual={"schema_version":1,"chapter":"P1C01","status":"UE_PACKAGES_PRESENT_RENDER_QC_PENDING",
             "accents":[{"asset":row["mesh"],"location":row["location"],"category":row["category"]}

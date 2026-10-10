@@ -1,3 +1,14 @@
+## 2026-10-10 — actual ambientCG warehouse result and Frodo gate integration
+
+- Whole-game warehouse Run #38057877090 on develop source head a50e117259c3f5b779af67adad9ec8f5855e139c COMPLETED SUCCESS: AMBIENTCG_WAREHOUSE_STAGE_PASS files=22 skipped=24 bytes=1178435662; REGION_SOURCE_RECEIPT_AUDIT_PASS files=22 skipped=24 reserve=175388110848. Licensed hashed source-only; not UE-imported.
+- Frodo technical deformation PR #346 merged to develop as 3b20cac4d01d1b7cf05581b211f4f88f510a2c54 after exact-head Pre #38058581392, Unreal #38058581341, and Human Wave2 #38058581318 all SUCCESS. Old PR #340/#343 closed. Real character locomotion/visual/PIE/device/Gate 6/7 not accepted.
+
+## 2026-10-10 — P1C01 actual PBR UE import and package-manifest mismatch correction (candidate)
+
+- Strict review found that `p1c01_verified_pbr_bridge.py` appended imported soft PBR meshes to the active P1C01 bank but retained stale `audit.total_unique_production_packages` and `audit.chapter_bank_asset_counts.P1C01`. The existing Windows package preflight requires those counts to match real unique packages and would fail after a successful UE import. Recompute both from actual bank contents only after successful asset package existence gates, preserving exact source and save/streaming ownership.
+- Existing `verify_verified_shire_import.py` targeted an unused receipt name and absent log marker, allowing no real all-selected material-slot proof. Repair it to require `source_stage_receipt.json`, nonempty current `CI-ProductionAssetImport.log`, every selected static FBX and material `.uasset`, and the importer `P1C01_VERIFIED_PBR_IMPORT_QC` marker per exact slug/material. Fail before runtime activation if even one is unbound. Add offline negative/positive regression cases; retain headless `P1C01_PBR_DECOR_RUNTIME` gate.
+- Candidate code queued behind the already in-progress exact-head Unreal run to avoid canceling a costly build under REQ-PROD-011. New commit/CI and actual UE import, packaging, PIE/device/visual/30FPS Gate 6/7 acceptance remain separate evidence, not implied.
+
 ## 2026-10-10 — P1C01 real-runtime imported PBR presence gate (candidate)
 
 - An engine build, .uasset existence and successful generic startup do not establish that Shire's verified PBR objects are resident and placed. Add `Scripts/verify_p1c01_pbr_runtime.py` to the existing one-writer PBR workflow after P1C01 headless startup and before packaging; it fail-closes on missing log, missing soft bank entries, unauthorized accent inventory, zero/partial placement or omits. Existing `P1C01_PBR_DECOR_RUNTIME` log is the physical assertion, not a fabricated visual screenshot. Offline negative tests added to the current exact-head PBR bridge suite. Fresh CI and true UE import/placement evidence PENDING. No PIE, device, visual or Gate 6/7 acceptance.
@@ -22,6 +33,31 @@
 - Existing `UShireChapterAssetStreamingSubsystem` preloads selected soft paths via `Data/ChapterAssetStreamingPlan.json`. Existing `AShirePrototypeWorldBuilder` adds at most 16 optional, non-colliding, low-shadow static decorative pieces after world commit and never synchronously loads meshes. Canonical route/story/quest ownership and actor pooling remain unchanged.
 - A dedicated GitHub-hosted offline source test + serialized Windows UE4.27.2 workflow runs actual source stage, editor build, production import, `.uasset` presence, automation, startup, all chapters, state persistence, warning guard, cook and packaged startup. Only success can publish a playable Windows **test candidate**. The new visual packet is NOT declared PIE, device, human visual or Gate 6/7 accepted.
 - Until exact-head tests run, this is a source implementation candidate. Fix compile/import/runtime failures on this same PR before merge; avoid new feature lanes until machine-green. No final Windows release requested.
+
+## 2026-10-10 — avoid pointless Unreal recompiles for standalone warehouse regression tests (candidate)
+
+- `Scripts/test_warehouse_provider_zero_payload_fail_closed.ps1` is a network-free provider/ambientCG guard, not Runtime code. Its new source-only checks should run in Pre-Unreal without reserving the one UE4.27 machine. Add the explicit test script to both push/PR Unreal-workflow paths-ignore lists; the existing `Scripts/stage_*warehouse*.ps1` rule already excludes the warehouse adapter. Actual P1C01 runtime work remains on its own exact-head UE gate. No compile claim for this candidate.
+
+## 2026-10-10 — ambientCG cross-lane duplicate download regression guard (candidate)
+
+- Observed live warehouse #38057877090 SUCCESS: `AMBIENTCG_WAREHOUSE_STAGE_PASS files=22 skipped=24 bytes=1178435662`, `REGION_SOURCE_RECEIPT_AUDIT_PASS files=22 skipped=24 reserve=175388110848`. These are actual SHA256-audited source-only bytes, not Unreal imports.
+- Root-cause in `Scripts/stage_ambientcg_warehouse.ps1`: ten regional material queries can return the same provider asset ID. Run logs show repeated downloads of Rock064, Ground111 and PavingStones151; prior script only guarded identical destination paths and did not deduplicate across category folders. Add accepted-ID set updated ONLY after successful source SHA256 receipt; skip later duplicate IDs before network requests. Byte-cap failure must not remove previously valid cached archive; do not trigger or repeat the completed batch. Existing Quaternius zero-payload Pre-Unreal step also checks the ambientCG dedup code order offline.
+- Candidate until exact-head preflight. One persistent warehouse writer and 6 GiB reserve retained. No P1C01 runtime change, PIE, target-device FPS, visual or Gate6/7 credit.
+
+## 2026-10-10 — avoid pointless Unreal recompiles for standalone warehouse regression tests (candidate)
+
+- `Scripts/test_warehouse_provider_zero_payload_fail_closed.ps1` is a network-free provider/ambientCG guard, not Runtime code. Its new source-only checks should run in Pre-Unreal without reserving the one UE4.27 machine. Add the explicit test script to both push/PR Unreal-workflow paths-ignore lists; the existing `Scripts/stage_*warehouse*.ps1` rule already excludes the warehouse adapter. Actual P1C01 runtime work remains on its own exact-head UE gate. No compile claim for this candidate.
+
+## 2026-10-10 — ambientCG cross-lane duplicate download regression guard (candidate)
+
+- Observed live warehouse #38057877090 SUCCESS: `AMBIENTCG_WAREHOUSE_STAGE_PASS files=22 skipped=24 bytes=1178435662`, `REGION_SOURCE_RECEIPT_AUDIT_PASS files=22 skipped=24 reserve=175388110848`. These are actual SHA256-audited source-only bytes, not Unreal imports.
+- Root-cause in `Scripts/stage_ambientcg_warehouse.ps1`: ten regional material queries can return the same provider asset ID. Run logs show repeated downloads of Rock064, Ground111 and PavingStones151; prior script only guarded identical destination paths and did not deduplicate across category folders. Add accepted-ID set updated ONLY after successful source SHA256 receipt; skip later duplicate IDs before network requests. Byte-cap failure must not remove previously valid cached archive; do not trigger or repeat the completed batch. Existing Quaternius zero-payload Pre-Unreal step also checks the ambientCG dedup code order offline.
+- Candidate until exact-head preflight. One persistent warehouse writer and 6 GiB reserve retained. No P1C01 runtime change, PIE, target-device FPS, visual or Gate6/7 credit.
+
+## 2026-10-10 — Frodo deformation gate forward-port onto current develop (candidate)
+
+- PR #343 exact-head #38057554992: hosted source/normalization, UE4.27.2 skeletal technical gate, and Blender deformation jobs concluded SUCCESS; Unreal Build #38057555101 and Pre-Unreal #38057555072 concluded SUCCESS. Earlier PR #340 run #38056805116 recorded `BLENDER_NUMPY_READY`, `HUMAN_WAVE3_DEFORMATION_PASS`, `HUMAN_WAVE3_STATIC_DEFORMATION_RECEIPT_PASS`. PR #343 could not merge cleanly with evolved develop; preserve its exact code and contract regression on a fresh develop-based branch, without duplicating it from #340.
+- Existing source-only fix enforces `--python-exit-code 93`, NumPy, unique hosted/UE4 receipts, nonempty result and `STATIC_DEFORMATION_STRESS_PASS` with visual/runtime acceptance explicitly false. This is a production candidate until its new exact-head tests pass; no Frodo final art, PIE/device, target FPS, VISUAL or Gate 6/7 acceptance is claimed. P1C02 remains CLOSED.
 
 ## 2026-10-10 — Confirmed GitHub default branch is develop
 

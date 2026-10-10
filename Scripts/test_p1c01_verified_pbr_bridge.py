@@ -9,6 +9,7 @@ import unittest
 from unittest.mock import patch
 import p1c01_verified_pbr_bridge as bridge
 import verify_p1c01_pbr_runtime as runtime_presence
+import verify_verified_shire_import as import_qc
 
 class VerifiedPBRBridgeTest(unittest.TestCase):
     def setUp(self):
@@ -18,7 +19,9 @@ class VerifiedPBRBridgeTest(unittest.TestCase):
         self.project=self.work/"project"
         (self.project/"Data").mkdir(parents=True)
         (self.project/"Data/ChapterAssetStreamingPlan.json").write_text(
-            json.dumps({"banks":{"P1C01":{"assets":["/Game/Production/World/Shire/existing.existing"]}}}))
+            json.dumps({"banks":{"P1C01":{"assets":["/Game/Production/World/Shire/existing.existing"]}},
+                        "audit":{"chapter_bank_asset_counts":{"P1C01":1},
+                                 "total_unique_production_packages":1}}))
         self.warehouse=self.work/"warehouse"
         self.wave="test_wave"
         self.wave_root=self.warehouse/"_p1c01_adaptive_polyhaven"/self.wave
@@ -99,6 +102,8 @@ class VerifiedPBRBridgeTest(unittest.TestCase):
         bridge.activate(self.project)
         p=json.loads((self.project/"Data/ChapterAssetStreamingPlan.json").read_text())
         self.assertEqual(len(p["banks"]["P1C01"]["assets"]),2)
+        self.assertEqual(p["audit"]["chapter_bank_asset_counts"]["P1C01"],2)
+        self.assertEqual(p["audit"]["total_unique_production_packages"],2)
         visual=json.loads((self.project/"Data/P1C01VerifiedWorldDecor.json").read_text())
         self.assertEqual(visual["status"],"UE_PACKAGES_PRESENT_RENDER_QC_PENDING")
         self.assertEqual(visual["accents"][0]["location"],rows[0]["location"])
@@ -160,6 +165,39 @@ class VerifiedPBRBridgeTest(unittest.TestCase):
         self.assertIn("Scripts/verify_p1c01_pbr_runtime.py",workflow)
         self.assertIn("CI-PlayableStartup.log",workflow)
         self.assertIn("P1C01_PBR_RUNTIME_PRESENCE_FAILED",workflow)
+
+    def test_import_receipt_requires_real_material_slot_log(self):
+        staged=bridge.stage(self.warehouse,self.project)
+        slug=staged[0]["id"]
+        folder=self.project/"Content/Production/World/Shire/VerifiedPBR"/slug
+        folder.mkdir(parents=True)
+        (folder/(slug+".uasset")).write_bytes(b"x"*4000)
+        (folder/("MI_P1C01_"+slug+".uasset")).write_bytes(b"x"*4000)
+        logfile=self.project/"Saved/Logs/CI-ProductionAssetImport.log"
+        logfile.parent.mkdir(parents=True)
+        logfile.write_text(
+            "P1C01_VERIFIED_PBR_IMPORT_QC mesh="+slug+
+            " material="+staged[0]["material"]+" lodCount=1 collision=decor-only\n")
+        proof=import_qc.verify(self.project,logfile)
+        self.assertEqual(proof["confirmed_mesh_material_pairs"],1)
+        logfile.write_text(
+            "P1C01_VERIFIED_PBR_IMPORT_QC mesh="+slug+
+            " material="+staged[0]["material"]+" lodCount=0 collision=decor-only\n")
+        with self.assertRaisesRegex(import_qc.ImportProofError,"PBR_RENDER_LOD_NOT_PROVEN"):
+            import_qc.verify(self.project,logfile)
+        logfile.write_text("ShireProductionImport: 0 failures\n")
+        with self.assertRaisesRegex(import_qc.ImportProofError,"PBR_MATERIAL_SLOT_NOT_PROVEN"):
+            import_qc.verify(self.project,logfile)
+        logfile.unlink()
+        with self.assertRaisesRegex(import_qc.ImportProofError,"UE_IMPORT_LOG_MISSING"):
+            import_qc.verify(self.project,logfile)
+
+    def test_warehouse_import_workflow_requires_slot_and_package_gates(self):
+        root=Path(__file__).resolve().parents[1]
+        w=(root/".github/workflows/p1c01-verified-pbr-production.yml").read_text()
+        self.assertIn("Scripts/verify_verified_shire_import.py",w)
+        self.assertIn("P1C01_PBR_MATERIAL_SLOT_PROOF_FAILED",w)
+        self.assertIn("Scripts/verify_p1c01_pbr_runtime.py",w)
 
 if __name__=="__main__":
     unittest.main()
