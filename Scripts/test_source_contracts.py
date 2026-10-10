@@ -1083,6 +1083,48 @@ class SourceContractTests(unittest.TestCase):
         self.assertTrue(any("bootstrap_local_p1c01_visuals.cmd" in item for item in world["missing_work"]))
 
 
+    def test_p1c01_quaternius_full_cast_candidate_batch_is_wired_to_warehouse(self):
+        root = Path(__file__).resolve().parents[1]
+        batch = json.loads((root / "Data" / "WarehouseQuaterniusHeroCandidateBatchV1.json").read_text(encoding="utf-8"))
+        self.assertEqual(batch["batch_id"], "WAREHOUSE_QUATERNIUS_P1C01_FULL_CAST_CANDIDATE_V2")
+        self.assertEqual(batch["status"], "AUTHORIZED_FOR_TARGETED_FULL_CAST_STAGING")
+        self.assertEqual(batch["provider"], "QUATERNIUS")
+        pack_ids = {pack["id"] for pack in batch["source_pages"]}
+        for pack_id in (
+            "QTN_UNIVERSAL_BASE_CHARACTERS",
+            "QTN_RPG_CHARACTERS",
+            "QTN_FANTASY_OUTFITS",
+            "QTN_UNIVERSAL_ANIMATION_LIBRARY",
+            "QTN_ULTIMATE_MODULAR_MEN",
+            "QTN_ULTIMATE_ANIMATED_CHARACTERS",
+            "QTN_ULTIMATE_ANIMATED_ANIMALS",
+            "QTN_FARM_ANIMALS",
+        ):
+            self.assertIn(pack_id, pack_ids)
+        for pack in batch["source_pages"]:
+            self.assertEqual(pack["observed_page_license"], "CC0")
+            self.assertEqual(pack["required_final_format"], "FBX")
+        targets = {target["character"] for target in batch["character_targets"]}
+        self.assertEqual(
+            targets,
+            {"FRODO", "BILBO", "GANDALF", "SAM", "MERRY", "PIPPIN", "BLACK_RIDER", "BLACK_RIDER_HORSE"},
+        )
+        self.assertIn("no FBX 2018 export", batch["evidence_boundary"])
+
+        wave = json.loads((root / "Data" / "P1C01HeroSkeletalCandidateWaveV1.json").read_text(encoding="utf-8"))
+        self.assertEqual(wave["wave_id"], "P1C01_FULL_CAST_SKELETAL_CANDIDATE_V2")
+        self.assertEqual(wave["success_boundary"]["minimum_character_pools_with_candidates"], 8)
+        self.assertEqual(wave["exact_head_candidate_gate"]["current_target"], "FULL_CAST_FIRST_PASS")
+        self.assertIn("BLACK_RIDER_HORSE", {character["id"] for character in wave["priority_characters"]})
+
+        classifier = (root / "Scripts" / "classify_warehouse_validation.ps1").read_text(encoding="utf-8")
+        workflow = (root / ".github" / "workflows" / "warehouse-stage.yml").read_text(encoding="utf-8")
+        self.assertIn("WH_STAGE_QUATERNIUS_HERO", classifier)
+        self.assertIn("Data/WarehouseQuaterniusHeroCandidateBatchV1.json", classifier)
+        self.assertIn("Stage Quaternius P1C01 hero candidate batch", workflow)
+        self.assertIn("WarehouseQuaterniusHeroCandidateBatchV1.json", workflow)
+
+
     def test_p1c01_targeted_quaternius_animation_intake_is_one_pack_only(self):
         root = Path(__file__).resolve().parents[1]
         manifest = json.loads((root / "Data" / "WarehouseQuaterniusAnimationBatchV1.json").read_text(encoding="utf-8"))
