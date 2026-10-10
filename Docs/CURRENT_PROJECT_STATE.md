@@ -1,3 +1,9 @@
+## 2026-10-10 — P1C01 full-cast Quaternius candidate staging wired
+- Exact PR #329 head before this batch: `a13209021a7645e44706cace8143e341e4217d35`; KayKit bridge #321 and Unreal Build #1810 were green, but KayKit returned `STATIC_BRIDGE_EXHAUSTED_KNOWN_REJECTIONS`, so no final character candidate was accepted.
+- Production change: expanded the existing Quaternius hero-candidate manifest from Frodo/Gandalf-only staging into a bounded full-cast P1C01 candidate queue for Frodo, Bilbo, Gandalf, Sam, Merry, Pippin, Black Rider and Black Rider Horse.
+- CI change: warehouse classifier/workflow now has `WH_STAGE_QUATERNIUS_HERO` and stages `Data/WarehouseQuaterniusHeroCandidateBatchV1.json` directly instead of ignoring that path.
+- Evidence boundary: STATIC-VALIDATED once source contracts pass. No UE4 import, PIE, device, performance or visual acceptance is claimed until exact-head proof exists.
+
 ## 2026-10-09 — Hosted KayKit first-run regression (fix before further hardware probes)
 - Exact run #320 (37962782520) failed in hosted source QC after three confirmed hash-based rejections had already fired, at `stage_p1c01_kaykit_rig_bridge.ps1:69`: `PropertyNotFoundStrict: source_git_blob_sha`. The historical Rogue entries lack optional `source_git_blob_sha` in the manifest. Expensive self-hosted KayKit gate correctly SKIPPED, so old hour-long failure avoided; source classification itself needs the null-safe guard.
 - Fix: read optional `source_git_blob_sha` through PSObject.Properties.Name with fallback empty value in both early-rejection and normal receipt records. No easing of SHA/hash/skeletal quality gates or acceptance. Exact-head reproof pending new run.
