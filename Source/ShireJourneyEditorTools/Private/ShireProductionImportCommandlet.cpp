@@ -1222,6 +1222,20 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                 ImportOptions->StaticMeshImportData->NormalImportMethod = EFBXNormalImportMethod::FBXNIM_ImportNormalsAndTangents;
             }
             Task->Options = ImportOptions;
+            // Verified source PBR sidecars were already checked against the immutable
+            // warehouse receipt. Use existing MTL material synthesis above and the
+            // shared deterministic slot recovery below; never invent FBX textures.
+            if (Relative.StartsWith(TEXT("World/Shire/VerifiedPBR/"), ESearchCase::CaseSensitive))
+            {
+                const FString VerifiedMaterialName = FString::Printf(
+                    TEXT("MI_P1C01_%s"), *Task->DestinationName);
+                AuthoredMaterialNames.Add(VerifiedMaterialName);
+                bAuthoredMaterialImportForced = true;
+                AuthoredMaterialDestinationPaths.Add(DestinationPath);
+                UE_LOG(LogTemp, Display,
+                    TEXT("P1C01_VERIFIED_PBR_MATERIAL_BIND source=%s slot=%s"),
+                    *Filename, *VerifiedMaterialName);
+            }
             UE_LOG(LogTemp, Display, TEXT("ShireProductionImport static FBX enabled: %s -> %s"), *Filename, *DestinationPath);
         }
         else if (SourceExtension == TEXT("obj"))
