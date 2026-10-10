@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "scope": "WHOLE_GAME_CHARACTER_SOURCE_PREPARATION_ONLY",
+  "runtime_chapter": "P1C01",
+  "state": "RESEARCHED_NOT_DOWNLOADED",
+  "governor": "Data/ProjectGovernor.json",
+  "source_date": "2026-10-10",
+  "candidates": [
+    {
+      "id": "QUATERNIUS_MODULAR_FANTASY_2025",
+      "url": "https://quaternius.com/packs/modularcharacteroutfitsfantasy.html",
+      "license_claim": "CC0 per provider",
+      "format_claim": [
+        "FBX",
+        "Blend"
+      ],
+      "contents_claim": "12 outfits and 62 parts; humanoid rig; three texture variations",
+      "possible_usage": [
+        "Shire villagers prototype",
+        "Bree travelers",
+        "Rohan townsfolk",
+        "Gondor civilians"
+      ],
+      "gate": "LICENSE_DOWNLOAD_HASH_RIG_VISUAL_QC_PENDING"
+    },
+    {
+      "id": "QUATERNIUS_RPG_CHARACTERS_2020",
+      "url": "https://quaternius.com/packs/rpgcharacters.html",
+      "license_claim": "CC0 per provider",
+      "format_claim": [
+        "FBX",
+        "Blend"
+      ],
+      "contents_claim": "6 rigged animated textured fantasy characters",
+      "possible_usage": [
+        "rig regression",
+        "background NPC prototypes"
+      ],
+      "gate": "LICENSE_DOWNLOAD_HASH_RIG_VISUAL_QC_PENDING"
+    },
+    {
+      "id": "BLENDER_HUMAN_BASE_MESH_2025",
+      "url": "https://www.blender.org/download/demo-files/",
+      "license_claim": "CC0 per publisher for Human Base Meshes",
+      "format_claim": [
+        "Blend"
+      ],
+      "contents_claim": "Human Base Meshes v1.4.1; requires Blender 4.2+",
+      "possible_usage": [
+        "authored hero mesh foundations",
+        "body proportion studies"
+      ],
+      "gate": "CONVERSION_TO_FBX_AND_FULL_RIG_REQUIRED"
+    }
+  ],
+  "restrictions": [
+    "Source discovery is not acquisition, import, rendered validation, or character identity acceptance.",
+    "Confirm each downloaded file's exact license and source before SHA256 persistent intake.",
+    "Only FBX skeletal assets may be promoted to Unreal; use PNG/TGA channel-packed textures.",
+    "Do not infer a likeness or lore-correct character from generic fantasy meshes.",
+    "Reuse audited licensed warehouse files and avoid redownload.",
+    "Never open another runtime chapter or claim Gate 6/7 acceptance from this candidate list."
+  ]
+}
