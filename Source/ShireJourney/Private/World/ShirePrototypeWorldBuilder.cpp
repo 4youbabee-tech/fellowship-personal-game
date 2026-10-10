@@ -24,6 +24,8 @@
 #include "Engine/TextRenderActor.h"
 #include "EngineUtils.h"
 #include "Dom/JsonObject.h"
+#include "Dom/JsonValue.h"
+#include "Engine/StaticMesh.h"
 #include "Misc/FileHelper.h"
 #include "Misc/Paths.h"
 #include "Serialization/JsonReader.h"
