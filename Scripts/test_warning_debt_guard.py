@@ -7,6 +7,15 @@ import warning_debt_guard as guard
 
 
 class WarningDebtGuardTests(unittest.TestCase):
+    def test_smoothing_warning_source_context(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            log = Path(tmp) / "CI-ProductionAssetImport.log"
+            log.write_text("Importing /assets/shire/bridge.fbx\\nNo smoothing group information was found\\n", encoding="utf-8")
+            evidence = guard.smoothing_warning_sources([log])
+            self.assertEqual(len(evidence), 1)
+            self.assertEqual(evidence[0][2], "/assets/shire/bridge.fbx")
+            self.assertEqual(evidence[0][1], 2)
+
     def test_repeated_same_mesh_counts_once(self):
         text = "\n".join([
             "FBXImport: Warning: SM_Frodo_Head has degenerate tangent bases",
