@@ -28,9 +28,9 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           & "$env:GITHUB_WORKSPACE/Scripts/verify_runner_session.ps1"
-          if($LASTEXITCODE -ne 0){ throw 'RUNNER_HEALTH_FAIL' }
+          if(-not $?) { throw 'RUNNER_HEALTH_FAIL' }
           & "$env:GITHUB_WORKSPACE/Scripts/run_governor_work_start.ps1" -Lane WAREHOUSE_ASSET_INTAKE -Workspace $env:GITHUB_WORKSPACE
-          if($LASTEXITCODE -ne 0){ throw 'GOVERNOR_FAIL' }
+          if(-not $?) { throw 'GOVERNOR_FAIL' }
       - name: Check 6 GiB disk reserve before downloads
         shell: powershell
         run: |
@@ -44,7 +44,7 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           & "$env:GITHUB_WORKSPACE/Scripts/stage_ambientcg_warehouse.ps1" -ManifestPath "$env:GITHUB_WORKSPACE/Data/WarehouseAmbientCGTrilogyRegionExpansionV3.json"
-          if($LASTEXITCODE -ne 0){ throw 'REGIONAL_SOURCE_STAGE_FAILED' }
+          if(-not $?) { throw 'REGIONAL_SOURCE_STAGE_FAILED' }
       - name: Verify intake receipt and preserve disk reserve
         shell: powershell
         run: |
