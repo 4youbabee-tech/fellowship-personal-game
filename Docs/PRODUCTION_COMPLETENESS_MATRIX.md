@@ -1,3 +1,9 @@
+## 2026-10-10 P1C01 checkpoint transport and source-only UE evidence reuse gate
+
+- On PR #335 exact head `ce8faa666d368f11b868963e85aecf8c7cda351d`, Pre-Unreal #38003230133 SUCCESS, Five-Lane #38003230032 SUCCESS, UE4 #38003230111 SUCCESS incl Editor and package; no need to rebuild this source revision merely to stage external CC0 artifacts. Source-only PBR had 39/39 and 59/60 conversions at proven earlier runs, not UE imported.
+- Source-only correction: added nine synthetic power/network-loss, corrupt-checkpoint, SHA256, ZIP safety and resume/no-double-fetch tests; tests must pass hosted CI before transferring large artifacts. Newly approved classifier checks only immediate-parent delta for an explicitly restricted set of source-only scripts/workflows/governance docs, verifies exact-parent full Unreal workflow SUCCESS via GitHub and chooses `inherit` only if both prove safe. This prevents cumulative PR diff from reclassifying successful source-only changes as new full UE compiles. Runtime changes still take existing full/core routes.
+- Persistent checkpoint code remains unproven until the real Windows runner writes and verifies 4MiB chunks, full Artifact SHA256, source receipts and <=6GiB reserve. Manual single-writer wave39 persists before any wave60; Gate6/7 P1C01 not accepted. If hosted regression fails, repair it before dispatch; do not run another 75-minute all-artifact download.
+
 ## 2026-10-10 — Durable 4MiB restart checkpoints and no repeated expensive PR-wide acquisition
 
 - Owner observed electricity/network instability and rejected repeated long downloads/builds. Root cause: GitHub PR path filters saw entire PR diff, retriggering expensive 39-PBR conversion and 60-model acquisition for governance-only commits. Two duplicated self-hosted warehouse writers also contended for one runner; 75-minute download canceled before writes.

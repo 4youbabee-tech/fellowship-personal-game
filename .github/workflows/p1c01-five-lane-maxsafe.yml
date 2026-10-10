@@ -11,6 +11,9 @@ on:
       - '.github/workflows/p1c01-five-lane-maxsafe.yml'
       - 'Scripts/stage_p1c01_adaptive_pbr_warehouse.py'
       - 'Scripts/test_p1c01_adaptive_pbr_warehouse.py'
+      - 'Scripts/resume_p1c01_artifact_checkpoint.py'
+      - 'Scripts/test_resume_p1c01_artifact_checkpoint.py'
+      - 'Scripts/classify_unreal_validation.ps1'
   workflow_dispatch:
 
 permissions:
@@ -60,6 +63,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 -m unittest discover -s Scripts -p test_p1c01_adaptive_pbr_warehouse.py -v
+          python3 -m unittest discover -s Scripts -p test_resume_p1c01_artifact_checkpoint.py -v
 
       - name: Produce complete bounded read-only lane report
         shell: bash
