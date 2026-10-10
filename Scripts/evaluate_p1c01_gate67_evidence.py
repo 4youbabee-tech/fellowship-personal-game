@@ -14,6 +14,10 @@ TARGET = {
     "height": 720,
     "quality": "Balanced Medium / selective High where visually important",
     "fps_floor": 30.0,
+    "cpu": "Intel Core i7-6498DU",
+    "gpu": "AMD Radeon R5 M330",
+    "vram_mb": 2039,
+    "os": "Windows 11 Pro",
 }
 ROUTES = [
     "Bag End interior traversal",
@@ -37,8 +41,21 @@ def evaluate(payload):
 
     if not head or len(head) < 7:
         return fail("missing exact_head")
-    if not str(hardware.get("cpu","")).strip() or not hardware.get("ram_gb") or not hardware.get("vram_gb_class"):
+    if not str(hardware.get("cpu","")).strip() or not hardware.get("ram_gb") or not hardware.get("vram_gb_class") or not str(hardware.get("gpu","")).strip() or not str(hardware.get("os","")).strip() or hardware.get("vram_mb") is None:
         return {"status":"INCOMPLETE","accepted":False,"reason":"missing hardware identity"}
+    cpu = " ".join(str(hardware["cpu"]).lower().split())
+    gpu = " ".join(str(hardware["gpu"]).lower().split())
+    os_name = " ".join(str(hardware["os"]).lower().split())
+    if (TARGET["cpu"].lower() not in cpu or TARGET["gpu"].lower() not in gpu or
+            TARGET["os"].lower() not in os_name or
+            "64-bit" not in os_name or int(hardware["ram_gb"]) != 8 or
+            int(hardware["vram_gb_class"]) != 2 or int(hardware["vram_mb"]) != TARGET["vram_mb"]):
+        return fail("hardware does not match owner target device")
+    if hardware.get("directx_ultimate_supported") is True:
+        return fail("inconsistent reported DirectX Ultimate hardware contract")
+    # OS-installed DX12 is not the Unreal DX11 renderer; the actual RHI is checked in profile.
+    if not str(payload.get("device_runtime_evidence","")).strip() or not str(payload.get("executable_identity","")).strip():
+        return {"status":"INCOMPLETE","accepted":False,"reason":"missing physical gameplay execution evidence"}
     if profile.get("renderer") != TARGET["renderer"] or profile.get("width") != TARGET["width"] or profile.get("height") != TARGET["height"] or profile.get("quality") != TARGET["quality"]:
         return fail("wrong target profile")
 
@@ -53,6 +70,8 @@ def evaluate(payload):
         average=row.get("avg_fps")
         if minimum is None or average is None:
             return {"status":"INCOMPLETE","accepted":False,"reason":f"missing fps measurement: {name}"}
+        if row.get("p95_frame_ms") is None or row.get("p99_frame_ms") is None or row.get("resident_ram_mb") is None or row.get("texture_or_vram_mb") is None:
+            return {"status":"INCOMPLETE","accepted":False,"reason":f"missing frame-time or memory measurement: {name}"}
         if float(minimum) < TARGET["fps_floor"]:
             return fail(f"route below 30 FPS floor: {name}")
         if row.get("blocking_streaming_hitch") is True:
