@@ -266,6 +266,18 @@
           "status": "DEFERRED",
           "evidence": [],
           "notes": "Roll out only after Shire pattern and current hard gate are healthy."
+        },
+        {
+          "id": "LIVING-SOCIAL-LANDSCAPE-P1C01",
+          "status": "PLANNED",
+          "evidence": [],
+          "notes": "Owner 2026-10-10 visual benchmark: Bag End / Bagshot Row hierarchy, households, working gardeners, purposeful NPC travel/conversation, cultivated foliage, micro-ambience. Await P1C01 human rendered/PIE/device review; no acceptance inferred."
+        },
+        {
+          "id": "LIVING-SOCIAL-LANDSCAPE-ALL-REGIONS",
+          "status": "DEFERRED",
+          "evidence": [],
+          "notes": "Apply the same inhabited-world principle, with region-appropriate social/ecological identity, to all 28 region production plans. Preparation allowed; runtime for later regions gated until P1C01 Gate 6/7. Do not invent civilians in ruins/wilderness/danger."
         }
       ]
     }
