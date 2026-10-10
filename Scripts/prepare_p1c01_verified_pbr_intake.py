@@ -120,6 +120,20 @@ def stage(warehouse,project):
                 finally:
                     if tmp.exists():tmp.unlink()
             copied.append({"name":target.name,"bytes":row["bytes"],"sha256":want})
+        # Use the established UE4 material-synthesis importer. The new FBX slot
+        # binding below is limited to one verified material per static mesh.
+        material_name="MI_P1C01_"+slug
+        mtl=dest/(slug+".mtl")
+        albedo=next(f["name"] for f in copied if f["name"].endswith("_BaseColor.png"))
+        mtl_text=("newmtl "+material_name+"\\nKd 1 1 1\\nPr 0.68\\n"
+                  "Pm 0\\nKs 0.1 0.1 0.1\\nmap_Kd "+albedo+"\\n")
+        if mtl.exists():
+            need(mtl.read_text(encoding="utf-8")==mtl_text,
+                 "MATERIAL_SIDECAR_DRIFT:"+slug)
+        else:
+            mtl.write_text(mtl_text,encoding="utf-8")
+        copied.append({"name":mtl.name,"bytes":mtl.stat().st_size,
+                       "sha256":digest(mtl),"role":"MTL_ALBEDO_BINDING"})
         results.append({"id":slug,"wave":w,"files":copied,
                         "asset":"/Game/Production/World/Shire/VerifiedPBR/"+slug+"/"+slug+"."+slug,
                         "qc":"SOURCE_SHA256_PASSED_UE_GEOMETRY_LOD_COLLISION_AND_VISUAL_PENDING"})
