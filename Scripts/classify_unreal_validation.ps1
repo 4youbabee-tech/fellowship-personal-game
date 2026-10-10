@@ -543,6 +543,8 @@ $safeExact = @(
     "Scripts/governor_handoff.py",
     "Scripts/test_governor_handoff.py",
     "Scripts/test_unreal_classifier.ps1",
+    "SHIRE_FAST_PIE_PREVIEW.bat",
+    "Scripts/test_fast_pie_preview.py",
     "Data/ProjectGovernor.json",
     "Data/DeepProjectAudit.json",
     "Data/MasterExecutionRoadmap.json",

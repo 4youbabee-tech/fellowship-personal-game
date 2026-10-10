@@ -1,3 +1,7 @@
+## 2026-10-11 — Root-cause repair of local PIE classifier (PR #359)
+
+- Pre-Unreal Run #38093231196 failed `pie-preview-safe-with-proof: expected inherit, got full`: the two exact paths appeared only in the transitive core-proof allowlist, not in the main `$safeExact` set used by `$fullImpact`. Add them to the actual exact-path classifier and cover lookalike names, mixed runtime and Config changes in the real classifier regression. Parent engine proof remains mandatory, otherwise full validation. PR #358's actual preview command/test still requires exact-head static execution prior to merging. Candidate awaiting CI; no new Unreal/PIE/device/visual/FPS acceptance.
+
 ## 2026-10-11 — Local PIE tooling CI reduction (proof-required)
 
 - Corrects classification of exactly `SHIRE_FAST_PIE_PREVIEW.bat` and `Scripts/test_fast_pie_preview.py`, allowing established green exact-parent engine evidence reuse and preventing repeated full UE builds for unchanged gameplay. Fails closed to full Unreal when inherited proof is missing. Evidence: #38092759311 classifier `FULL_UNREAL_FILE` for these two paths. No chapter progression, gameplay, asset, device, visual or FPS acceptance produced.
