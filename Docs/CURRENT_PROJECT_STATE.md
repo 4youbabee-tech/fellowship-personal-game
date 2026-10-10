@@ -1,3 +1,7 @@
+## 2026-10-10 — ambientCG whole-region intake zero-result correction (candidate)
+
+- Real run #38057505000 reached official ambientCG API and returned `AMBIENTCG_WAREHOUSE_STAGE_PASS files=0 skipped=0 bytes=0`; hard receipt gate correctly FAILED with `REGION_INTAKE_ZERO_VERIFIED_FILES`. Multiword natural-language keyword queries found no eligible ZIP records. Replace them with ten concise asset-family terms while preserving region mapping, CC0 license, 2K-PNG source QC, single serialized warehouse writer and >=6 GiB free-space reserve. Await exact-head and real staged SHA256 evidence; no files or visual/PIE/device acceptance claimed.
+
 ## 2026-10-10 — Whole-game warehouse PowerShell stale exit code repair (candidate)
 
 - Real warehouse run #38056824745 FAILED in manager/runner health step after its own `RUNNER_HEALTH_PASS` log. Root cause: checking stale `$LASTEXITCODE` after a PowerShell script invocation, which does not guarantee reset of that native command exit variable. Correct step guards to check `$?` immediately after script calls; preserve Project Governor, staged receipt SHA256 audit and 6 GiB reserve. No provider downloads occurred in failing run; correction awaits exact-head CI and rerun.
