@@ -139,6 +139,11 @@ jobs:
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_quaternius_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseQuaterniusAcquisitionBatchV1.json" -RecordManualQueue
 
+      - name: Stage Quaternius P1C01 hero candidate batch
+        if: env.WH_STAGE_QUATERNIUS_HERO == 'true'
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_quaternius_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseQuaterniusHeroCandidateBatchV1.json" -RecordManualQueue
+
       - name: Stage Quaternius animation-only batch
         if: env.WH_STAGE_QUATERNIUS_ANIM == 'true'
         shell: cmd
