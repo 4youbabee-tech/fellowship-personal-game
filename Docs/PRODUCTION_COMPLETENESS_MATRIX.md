@@ -1,3 +1,8 @@
+## 2026-10-10 — Confirmed GitHub default branch is develop
+
+- Live GitHub repository metadata reports `default_branch=develop`. Owner confirms develop is canonical default/integration/programmer-handoff; `main` remains stable/release only. Updated existing `Data/ProjectGovernor.json` branch_workflow notes to remove stale assertion that main is default; no new Governor authority, no runtime content change.
+- Whole-game ambientCG material query correction PR #344 merged to develop as commit `a50e117259c3f5b779af67adad9ec8f5855e139c`; exact-head physical source intake result still pending. The owner did not authorize extra runtime chapter; P1C01 only, Gate 6/7 remains unaccepted.
+
 ## 2026-10-10 — ambientCG whole-region intake zero-result correction (candidate)
 
 - Real run #38057505000 reached official ambientCG API and returned `AMBIENTCG_WAREHOUSE_STAGE_PASS files=0 skipped=0 bytes=0`; hard receipt gate correctly FAILED with `REGION_INTAKE_ZERO_VERIFIED_FILES`. Multiword natural-language keyword queries found no eligible ZIP records. Replace them with ten concise asset-family terms while preserving region mapping, CC0 license, 2K-PNG source QC, single serialized warehouse writer and >=6 GiB free-space reserve. Await exact-head and real staged SHA256 evidence; no files or visual/PIE/device acceptance claimed.
