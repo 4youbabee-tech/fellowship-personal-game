@@ -117,6 +117,19 @@ class PersistentIntakeTests(unittest.TestCase):
             with self.assertRaisesRegex(impl.StageError, "PBR_SOURCE_RECEIPT_SHA256_MISMATCH"):
                 impl.validate_inputs(source, pbr, 1, 1)
 
+
+    def test_nested_original_relative_path_remains_posix_on_windows(self):
+        """Nested provider textures must retain '/' for portable persistent receipts."""
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            source, pbr = self.fake_inputs(root)
+            plan = impl.validate_inputs(source, pbr, 1, 1)
+            rows = plan["originals"]["weathered_gate_01"]
+            self.assertTrue(any(row["rel"] == "textures/gate_diff_1k.png" for row in rows))
+            self.assertTrue(all("\\\\" not in row["rel"] for row in rows))
+            receipt = impl.stage(source, pbr, root / "warehouse", "p1c01_wave39", 1, 1, reserve_bytes=0)
+            self.assertTrue(any("textures/gate_diff_1k.png" in row["file"].replace("\\\\", "/") for row in receipt["files"]))
+
     def test_no_symlink_or_traversal_receipts(self):
         for value in ("../bad.fbx", "/absolute.fbx", "C:/evil.fbx", "..\\bad.fbx"):
             with self.assertRaisesRegex(impl.StageError, "UNSAFE_RELATIVE_PATH"):

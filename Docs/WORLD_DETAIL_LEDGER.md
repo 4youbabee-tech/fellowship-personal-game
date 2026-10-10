@@ -1,3 +1,7 @@
+## 2026-10-10 — registered Windows-only warehouse nested-path regression before patch
+
+P1C01 storage intake is part of the already-approved scope. Preserve existing SHA256-verified 39 sources/PBR archives; fix receipt normalization only, test offline, then resume source-only warehouse intake after successful isolated gate. Do not add assets or promote source to UE without QC.
+
 ## 2026-10-10 — P1C01 runtime entry map defect registration before implementation
 
 The current Windows package and headless tests use `/Engine/Maps/Templates/Template_Default`, while the existing local Shire visual bootstrap explicitly targets `/Engine/Maps/Entry` to avoid the template floor. Owner instructed immediate full chapter shipping. Treat this as an existing P1C01 visual/runtime delivery defect; align default editor/game, cook, audit and packaged startup on Entry; fail closed until exact-head UE4.27.2 checks pass. Preserve chronology, soft asset constraints, one-runner/one-warehouse-writer and Gate 6/7. This does not add any new story, character or P1C02 gameplay.
