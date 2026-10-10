@@ -1,3 +1,11 @@
+## 2026-10-10 — P1C01 source-to-visible UE4 PBR bridge production (candidate)
+
+- Reuse two immutable Poly Haven CC0 39/60 source waves, validate SHA256 original receipts and per-file hashes, choose at most 16 qualified single-material **static FBX** props within a 144 MiB source cap; imported textures are 1K PNG. Quarantine/hold, oversized, unknown-multi-material, and unsupported files are not promoted. No new source-provider downloads.
+- Scripts/p1c01_verified_pbr_bridge.py stages ignored generated source assets into SourceAssets/Production/World/Shire/VerifiedPBR; the existing UE4.27.2 importer synthesizes a material instance and now fails on missing/wrong single-material slots and invalid mesh geometry. Only after .uasset files exist does the bridge append soft paths to the existing P1C01 async bank and materialize Data/P1C01VerifiedWorldDecor.json.
+- AShirePrototypeWorldBuilder renders up to 16 small world accents from resident soft objects without collision, actor ticking, extra NPC ownership, canonical route transforms or new chapters. Verified subset source maps include BaseColor, NormalDX and packed ORM; only albedo/material slot is bound this pass, so full PBR shader fidelity is **not claimed**.
+- .github/workflows/p1c01-verified-pbr-production.yml schedules real UE editor build, source import, uasset verification, Automation, startup, chapter/save round-trip, compressed Windows package and packaged startup before uploading a test build. This workflow is not a five-lane read-only report.
+- All evidence **PENDING exact-head CI and runner execution**; no PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, 30 FPS, or Gate6/7 claims. No move to P1C02 runtime.
+
 ## 2026-10-10 — P1C01 physical CC0 PBR-to-UE4 visual production bridge (candidate, evidence pending)
 
 - Manager authority: DEC-078/104/105, REQ-PROD-011, W01/P1C01 only. Actual persistent warehouse Run #38049193046 completed SUCCESS, providing immutable 39+60 source and 39+59 prepared PBR files; this is source storage evidence, not engine/render evidence.
