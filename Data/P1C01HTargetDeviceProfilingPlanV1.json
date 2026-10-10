@@ -15,9 +15,17 @@
     "ram_gb": 8,
     "vram_gb_class": 2,
     "renderer": "DX11",
-    "resolution": "720p",
-    "quality": "Low-Medium",
-    "fps_floor": 30
+    "resolution": "1280x720",
+    "quality": "Balanced Medium / selective High where visually important",
+    "fps_floor": 30,
+    "cpu_model": "Intel Core i7-6498DU @ 2.50GHz",
+    "gpu_model": "AMD Radeon R5 M330",
+    "gpu_vram_reported_mb": 2039,
+    "os": "Windows 11 Pro 64-bit",
+    "directx_runtime_installed": "DirectX 12",
+    "dx12_ultimate_supported": false,
+    "stable_fps_goal": 30,
+    "evidence_status": "OWNER_HARDWARE_SPEC_RECORDED_DEVICE_RUNTIME_NOT_TESTED"
   },
   "representative_routes": [
     "Bag End interior traversal",
@@ -41,7 +49,8 @@
     "active pooled NPC/fauna counts",
     "audio concurrency",
     "streaming stalls/hitches",
-    "save/load and chapter transition hitch observations"
+    "save/load and chapter transition hitch observations",
+    "p95/p99 frame time from actual target device and GPU identification including active Radeon R5 M330"
   ],
   "fail_closed_rules": [
     "Do not increase foliage/detail density to hide visual gaps before profiling.",
