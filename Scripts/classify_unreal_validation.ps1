@@ -383,7 +383,6 @@ function Test-CoreProofSafeInterveningDelta([string]$GitExe, [string]$BaseSha, [
         "Scripts/test_deep_project_audit.py",
         "Scripts/source_contracts.py",
         "Scripts/test_source_contracts.py",
-    "Scripts/evaluate_p1c01_gate67_evidence.py",
         "Scripts/verify_runner_session.ps1",
         "Scripts/test_runtime_smoke.py",
         "Scripts/runtime_smoke.py",
