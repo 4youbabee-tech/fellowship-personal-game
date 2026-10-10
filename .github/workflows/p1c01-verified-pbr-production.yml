@@ -1,5 +1,13 @@
 name: P1C01 Verified PBR Visible World Production
 on:
+  pull_request:
+    branches: [develop]
+    paths:
+      - '.github/workflows/p1c01-verified-pbr-production.yml'
+      - 'Scripts/normalize_verified_pbr_blender.py'
+      - 'Scripts/preflight_p1c01_verified_fbx.py'
+      - 'Scripts/p1c01_verified_pbr_bridge.py'
+      - 'Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp'
   push:
     branches: [develop]
     paths:
