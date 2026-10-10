@@ -1040,8 +1040,13 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                     ShireProductionImport::IsApprovedFoliageMaterialIdentity(CurrentMaterialName);
                 const bool bVerifiedPBR = DestinationPath.StartsWith(
                     TEXT("/Game/Production/World/Shire/VerifiedPBR/"));
-                UMaterialInterface* DesiredMaterialParent = bVerifiedPBR
-                    ? VerifiedPBRParent : ProductionMaterialParent;
+                UMaterialInterface* DesiredMaterialParent = ProductionMaterialParent;
+                // Preserve PG-169 foliage's default parent invariant; verified PBR
+                // overrides its own assets, never Shire's authored foliage identities.
+                if (bVerifiedPBR)
+                {
+                    DesiredMaterialParent = VerifiedPBRParent;
+                }
                 if (bVerifiedPBR && !VerifiedPBRParent)
                 {
                     ++Failed;
