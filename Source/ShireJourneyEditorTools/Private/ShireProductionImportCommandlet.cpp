@@ -359,6 +359,46 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         return 4;
     }
 
+
+    // Verified PBR derivatives are produced BEFORE Unreal by the Blender QC gate.
+    // Overlay onto the disposable working copy only; preserve permanent CC0 hashes.
+    const FString DerivedRoot = FPaths::Combine(
+        FPaths::ProjectSavedDir(), TEXT("P1C01NormalizedFBX"));
+    const FString VerifiedSourceRoot = FPaths::Combine(
+        SourceRoot, TEXT("World/Shire/VerifiedPBR"));
+    TArray<FString> VerifiedSourceFbx;
+    IFileManager::Get().FindFilesRecursive(
+        VerifiedSourceFbx, *VerifiedSourceRoot, TEXT("*.fbx"), true, false, false);
+    if (VerifiedSourceFbx.Num() > 0)
+    {
+        for (const FString& VerifiedSource : VerifiedSourceFbx)
+        {
+            const FString AssetId = FPaths::GetBaseFilename(VerifiedSource);
+            const FString RelativeAsset = FString::Printf(
+                TEXT("World/Shire/VerifiedPBR/%s/%s.fbx"), *AssetId, *AssetId);
+            const FString ExpectedSource = FPaths::Combine(SourceRoot, RelativeAsset);
+            if (!FPaths::IsSamePath(VerifiedSource, ExpectedSource))
+            {
+                UE_LOG(LogTemp, Error, TEXT("P1C01_FBX_SOURCE_LAYOUT_INVALID file=%s"),
+                    *VerifiedSource);
+                return 87;
+            }
+            const FString Derived = FPaths::Combine(
+                DerivedRoot, AssetId, AssetId + TEXT(".fbx"));
+            const FString Target = FPaths::Combine(WorkingRoot, RelativeAsset);
+            if (!FPaths::FileExists(Derived) ||
+                !PlatformFile.CopyFile(*Target, *Derived))
+            {
+                UE_LOG(LogTemp, Error, TEXT("P1C01_FBX_DERIVED_REQUIRED asset=%s"),
+                    *AssetId);
+                return 88;
+            }
+            UE_LOG(LogTemp, Display,
+                TEXT("P1C01_FBX_DERIVED_WORKING_COPY asset=%s source=%s"),
+                *AssetId, *Derived);
+        }
+    }
+
     TArray<FString> SourceFiles;
     TArray<FString> TextureFiles;
     TArray<FString> MeshFiles;
