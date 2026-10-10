@@ -448,13 +448,17 @@ jobs:
         shell: cmd
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\verify_runtime_source_workspace.ps1"'
 
+      - name: Resolve Python for source-quality preflight
+        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
+        shell: cmd
+        run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\resolve_runtime_python.ps1"'
+
       - name: Reject unnormalized verified PBR assets before costly engine build
         if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
         shell: cmd
         run: |
           @echo off
-          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\resolve_runtime_python.ps1"
-          if errorlevel 1 exit /b 85
+          if not defined PYTHON_EXE exit /b 85
           "%PYTHON_EXE%" Scripts\\preflight_p1c01_verified_fbx.py --project-root "%GITHUB_WORKSPACE%"
           if errorlevel 1 exit /b 85
       - name: Build ShireJourneyEditor
