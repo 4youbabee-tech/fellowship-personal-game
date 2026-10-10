@@ -1,0 +1,39 @@
+name: P1C01 Checkpoint Offline Recovery Tests
+on:
+  push:
+    branches:
+      - ops/p1c01-five-lane-maxsafe-2026-10-09
+      - ops/p1c01-checkpoint-recovery-2026-10-10
+    paths:
+      - Scripts/resume_p1c01_artifact_checkpoint.py
+      - Scripts/test_artifact_checkpoint_recovery.py
+      - .github/workflows/p1c01-checkpoint-offline-recovery.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: p1c01-recovery-offline-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  checkpoint-regression:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          lfs: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run network-free recovery fault injection
+        run: python Scripts/test_artifact_checkpoint_recovery.py
+      - name: Existing legacy checkpoint regressions
+        run: python Scripts/test_resume_p1c01_artifact_checkpoint.py -v
+      - name: Record platform identity and no-runtime scope
+        run: |
+          python -c "import hashlib,platform,pathlib; p=pathlib.Path('Scripts/resume_p1c01_artifact_checkpoint.py'); print('CHECKPOINT_OFFLINE_REGRESSION_PASS platform='+platform.platform()+' source_sha256='+hashlib.sha256(p.read_bytes()).hexdigest()); print('WAREHOUSE=NOT_RUN UNREAL=NOT_RUN PIE=NOT_RUN DEVICE=NOT_RUN VISUAL=NOT_ACCEPTED')"

@@ -71,11 +71,13 @@ function Test-IncrementalSourceOnlyHeadDelta([string]$GitExe, [string]$TargetSha
             $n -eq "Data/P1C01PinnedArtifactCheckpointsV1.json" -or
             $n -eq "Scripts/resume_p1c01_artifact_checkpoint.py" -or
             $n -eq "Scripts/test_resume_p1c01_artifact_checkpoint.py" -or
+            $n -eq "Scripts/test_artifact_checkpoint_recovery.py" -or
             $n -eq "Scripts/stage_p1c01_adaptive_pbr_warehouse.py" -or
             $n -eq "Scripts/test_p1c01_adaptive_pbr_warehouse.py" -or
             $n -eq "Scripts/classify_unreal_validation.ps1" -or
             $n -eq ".github/workflows/p1c01-five-lane-maxsafe.yml" -or
             $n -eq ".github/workflows/p1c01-persistent-verified-pbr-warehouse.yml" -or
+            $n -eq ".github/workflows/p1c01-checkpoint-offline-recovery.yml" -or
             $n -eq ".github/workflows/p1c01-adaptive-pbr-prep.yml" -or
             $n -eq ".github/workflows/p1c01-adaptive-highfidelity-source.yml"
         )

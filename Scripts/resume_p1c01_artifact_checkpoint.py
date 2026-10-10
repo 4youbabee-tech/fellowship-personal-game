@@ -8,6 +8,9 @@ persistent source inventory. The separate single-writer promotes source assets.
 from __future__ import annotations
 
 import argparse
+from contextlib import contextmanager
+from functools import wraps
+import tempfile
 import hashlib
 import json
 import os
@@ -46,20 +49,86 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+@contextmanager
+def artifact_writer(directory: Path):
+    """Nonblocking cross-process lock; kernel releases it on process/power failure."""
+    directory.mkdir(parents=True, exist_ok=True)
+    lockfile = directory / ".writer.lock"
+    if directory.is_symlink() or lockfile.is_symlink():
+        raise CheckpointError("ARTIFACT_LOCK_SYMLINK_FORBIDDEN")
+    fd = os.open(str(lockfile), os.O_RDWR | os.O_CREAT | getattr(os, "O_NOFOLLOW", 0), 0o600)
+    with os.fdopen(fd, "r+b") as handle:
+        if os.fstat(handle.fileno()).st_size == 0:
+            handle.write(b"0")
+            handle.flush()
+            os.fsync(handle.fileno())
+        handle.seek(0)
+        try:
+            if os.name == "nt":
+                import msvcrt
+                msvcrt.locking(handle.fileno(), msvcrt.LK_NBLCK, 1)
+            else:
+                import fcntl
+                fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except OSError as exc:
+            raise CheckpointError("ARTIFACT_WRITER_LOCKED") from exc
+        try:
+            yield
+        finally:
+            handle.seek(0)
+            if os.name == "nt":
+                import msvcrt
+                msvcrt.locking(handle.fileno(), msvcrt.LK_UNLCK, 1)
+            else:
+                import fcntl
+                fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+
+
+def locked_download(fn):
+    @wraps(fn)
+    def wrapped(cache_root, entry, *args, **kwargs):
+        validate_entry(entry)
+        with artifact_writer(cache_root / ("artifact_" + str(entry["artifact_id"]))):
+            return fn(cache_root, entry, *args, **kwargs)
+    return wrapped
+
+
+def locked_extraction(fn):
+    @wraps(fn)
+    def wrapped(archive, *args, **kwargs):
+        with artifact_writer(archive.parent):
+            return fn(archive, *args, **kwargs)
+    return wrapped
+
+
 def atomic_json(path: Path, document: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_name(path.name + ".writing")
-    with tmp.open("w", encoding="utf-8") as out:
-        json.dump(document, out, indent=2, sort_keys=True)
-        out.write("\n")
-        out.flush()
-        os.fsync(out.fileno())
-    os.replace(tmp, path)
+    tmp = None
+    try:
+        with tempfile.NamedTemporaryFile(
+                mode="w", encoding="utf-8", prefix=path.name + ".",
+                suffix=".writing", dir=path.parent, delete=False) as out:
+            tmp = Path(out.name)
+            json.dump(document, out, indent=2, sort_keys=True)
+            out.write("\n")
+            out.flush()
+            os.fsync(out.fileno())
+        os.replace(tmp, path)
+    finally:
+        if tmp is not None and tmp.exists():
+            tmp.unlink()
 
 
 def secure_relative(raw: str) -> Path:
     if not isinstance(raw, str) or not raw or len(raw) > 245 or "\\" in raw or ":" in raw or "\x00" in raw:
         raise CheckpointError("ARTIFACT_UNSAFE_PATH")
+    # PurePosixPath collapses ./ and //; inspect the raw spelling first.
+    parts = raw.split("/")
+    if any(p in ("", ".", "..") for p in parts):
+        raise CheckpointError("ARTIFACT_UNSAFE_PATH")
+    if any(re.match(r"(?i)^(?:con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\..*)?$", p)
+           or any(ord(c) < 32 or c in '<>"|?*' for c in p) for p in parts):
+        raise CheckpointError("ARTIFACT_WINDOWS_PATH_UNSAFE")
     posix = PurePosixPath(raw)
     if posix.is_absolute() or any(p in (".", "..", "") for p in posix.parts):
         raise CheckpointError("ARTIFACT_UNSAFE_PATH")
@@ -73,11 +142,12 @@ def secure_relative(raw: str) -> Path:
 def validate_entry(entry: dict) -> None:
     if not isinstance(entry, dict):
         raise CheckpointError("INVALID_TRANSFER_MANIFEST")
-    if (not isinstance(entry.get("artifact_id"), int) or entry["artifact_id"] <= 0
-            or not isinstance(entry.get("size_bytes"), int) or entry["size_bytes"] <= 0
+    if (type(entry.get("artifact_id")) is not int or entry["artifact_id"] <= 0
+            or type(entry.get("size_bytes")) is not int or entry["size_bytes"] <= 0
             or not isinstance(entry.get("name"), str) or not entry["name"]
-            or not DIGEST.fullmatch(entry.get("digest", ""))
-            or not isinstance(entry.get("source_run_id"), int)):
+            or not isinstance(entry.get("digest"), str)
+            or not DIGEST.fullmatch(entry["digest"])
+            or type(entry.get("source_run_id")) is not int or entry["source_run_id"] <= 0):
         raise CheckpointError("INVALID_PINNED_ARTIFACT_METADATA")
 
 
@@ -106,12 +176,18 @@ def _check_chunk_journal(part: Path, journal_path: Path, entry: dict, chunk_size
         checkpoint = json.loads(journal_path.read_text(encoding="utf-8"))
     except (OSError, ValueError) as exc:
         raise CheckpointError("ARTIFACT_CHECKPOINT_CORRUPT") from exc
+    if not isinstance(checkpoint, dict):
+        raise CheckpointError("ARTIFACT_CHECKPOINT_CORRUPT")
     for key in ("artifact_id", "name", "digest", "size_bytes", "chunk_size"):
         if checkpoint.get(key) != expected[key]:
             raise CheckpointError("ARTIFACT_CHECKPOINT_IDENTITY_DRIFT:" + key)
     chunks = checkpoint.get("completed_chunks")
     if not isinstance(chunks, list) or not all(isinstance(x, str) and re.fullmatch("[0-9a-f]{64}", x) for x in chunks):
         raise CheckpointError("ARTIFACT_CHUNK_JOURNAL_MALFORMED")
+    if len(chunks) > (entry["size_bytes"] + chunk_size - 1) // chunk_size:
+        raise CheckpointError("ARTIFACT_CHUNK_JOURNAL_MALFORMED")
+    if not part.exists() and not chunks:
+        return checkpoint  # crash after initial journal fsync, before .part creation
     length = sum(min(chunk_size, entry["size_bytes"] - i * chunk_size)
                  for i in range(len(chunks)))
     if not part.exists() or part.stat().st_size < length:
@@ -130,6 +206,7 @@ def _check_chunk_journal(part: Path, journal_path: Path, entry: dict, chunk_size
     return checkpoint
 
 
+@locked_download
 def download_chunks(cache_root: Path, entry: dict, fetch_range,
                     *, chunk_size: int = CHUNK_BYTES, reserve_bytes: int = DISK_RESERVE,
                     sleep_fn=time.sleep) -> Path:
@@ -165,9 +242,10 @@ def download_chunks(cache_root: Path, entry: dict, fetch_range,
             block = None
             for attempt in range(3):
                 try:
-                    block = fetch_range(offset, offset + count - 1, entry["size_bytes"])
-                    if not isinstance(block, bytes) or len(block) != count:
+                    candidate = fetch_range(offset, offset + count - 1, entry["size_bytes"])
+                    if not isinstance(candidate, bytes) or len(candidate) != count:
                         raise CheckpointError("ARTIFACT_RANGE_LENGTH_MISMATCH")
+                    block = candidate  # only verified bytes may enter the durable journal
                     break
                 except (CheckpointError, TimeoutError, OSError, urllib.error.URLError) as exc:
                     last_exc = exc
@@ -290,6 +368,7 @@ def _crc_existing(path: Path, expected_size: int, crc32_expected: int) -> bool:
     return (crc & 0xffffffff) == crc32_expected
 
 
+@locked_extraction
 def extract_verified_zip(archive: Path, *, reserve_bytes: int = DISK_RESERVE) -> Path:
     # Archive SHA256 has already been matched against pinned GitHub metadata.
     if archive.name != "verified.zip":
@@ -308,6 +387,8 @@ def extract_verified_zip(archive: Path, *, reserve_bytes: int = DISK_RESERVE) ->
             check_free_space(parent, info.file_size, reserve_bytes)
             target.parent.mkdir(parents=True, exist_ok=True)
             tmp = target.with_name(target.name + ".partial")
+            if tmp.is_symlink():
+                raise CheckpointError("ARTIFACT_EXTRACT_TEMP_SYMLINK_FORBIDDEN")
             crc, count = 0, 0
             try:
                 with zipped.open(info) as src, tmp.open("wb") as out:
