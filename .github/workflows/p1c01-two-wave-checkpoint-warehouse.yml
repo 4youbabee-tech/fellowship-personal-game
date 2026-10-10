@@ -2,9 +2,10 @@ name: P1C01 Two-Wave Durable 99-Asset Warehouse Intake
 on:
   push:
     branches:
-      - ops/p1c01-five-lane-maxsafe-2026-10-09
+      - develop
     paths:
       - 'Data/P1C01TwoWaveWarehouseActivationV1.json'
+      - '.github/workflows/p1c01-two-wave-checkpoint-warehouse.yml'
   workflow_dispatch:
 permissions:
   contents: read
