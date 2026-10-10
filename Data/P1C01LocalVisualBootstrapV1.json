@@ -64,5 +64,14 @@
       "No PACING-ACCEPTED claim",
       "No PERFORMANCE-ACCEPTED claim"
     ]
+  },
+  "playable_delivery_2026_10_10": {
+    "scope": "P1C01_DELIVERY_BUILD_GATE",
+    "requested_map": "/Engine/Maps/Entry",
+    "reason": "The historical tooling-only preview showed that Template_Default floor could mask the Shire. Separate owner-authorized delivery change updates actual game default, headless runtime, cooker and packaged startup to Entry.",
+    "expected_artifact": "ShireJourney-P1C01-Windows-<exact_head>",
+    "evidence_state": "CODE_SUBMITTED_UNTESTED_ON_NEW_HEAD",
+    "runtime_character_import": "NOT_PROVEN",
+    "gate6_7": "NOT_ACCEPTED"
   }
 }

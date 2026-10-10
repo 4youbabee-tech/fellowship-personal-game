@@ -131,7 +131,7 @@ $argList = @(
     "-clientconfig=Development",
     "-build",
     "-cook",
-    "-map=/Engine/Maps/Templates/Template_Default",
+    "-map=/Engine/Maps/Entry",
     "-stage",
     ("-stagingdirectory=`"" + $stage + "`""),
     "-pak",

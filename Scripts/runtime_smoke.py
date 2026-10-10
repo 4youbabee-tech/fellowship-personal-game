@@ -128,7 +128,7 @@ def main():
         name = log_name_for(chapter, args.mode)
         log = log_dir / (name + ".log")
         command = [str(args.editor.resolve()), str(args.project.resolve()),
-                   "/Engine/Maps/Templates/Template_Default", "-game", "-nullrhi",
+                   "/Engine/Maps/Entry", "-game", "-nullrhi",
                    "-unattended", "-nop4", "-nosplash", "-NoSound",
                    "-ShireCIRuntimeAudit", f"-abslog={log}"]
         if chapter:

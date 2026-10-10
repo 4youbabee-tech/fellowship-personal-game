@@ -188,5 +188,26 @@
     "interactive_workspace_policy": "Developer clone only; GitHub Actions _work is runner-exclusive.",
     "local_helper_branch_switch_forbidden": true,
     "pre_ubt_source_integrity_required": true
+  },
+  "p1c01_playable_delivery_entry_map_contract": {
+    "chapter": "P1C01",
+    "scope": "runtime_map_and_shipping",
+    "state": "STATIC_GUARD_ADDED_UNTESTED_ON_EXACT_HEAD",
+    "files": [
+      "Config/DefaultEngine.ini",
+      "Scripts/runtime_smoke.py",
+      "Scripts/ci_package_w00.ps1",
+      "Scripts/verify_packaged_startup.ps1",
+      ".github/workflows/unreal-build-validation.yml"
+    ],
+    "test": "Scripts/test_p1c01_delivery_entry_map.py",
+    "required_map": "/Engine/Maps/Entry",
+    "requirements": [
+      "Entry map cooked",
+      "Editor and Game defaults agree",
+      "Packaged startup verifies chapter=P1C01",
+      "Windows candidate uploaded only on successful CI startup"
+    ],
+    "acceptance_credit": false
   }
 }

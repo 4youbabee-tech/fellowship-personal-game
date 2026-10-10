@@ -1,3 +1,10 @@
+## 2026-10-10 — P1C01 first downloadable playable candidate, fail closed
+
+- On the owner-approved P1C01 delivery lane, patched the game's default editor/game map, headless runtime smoke, packaging cook map and packaged startup observation to `/Engine/Maps/Entry`. This follows `Data/P1C01LocalVisualBootstrapV1.json` that identifies the engine `Template_Default` floor as a visual masking defect.
+- The existing exact-head `Unreal Build Validation` workflow now runs `Scripts/test_p1c01_delivery_entry_map.py` on hosted Windows **before** the UE runner and uploads the real `WindowsNoEditor` folder **only after** full/acceptance packaged startup passes. The artifact is a Windows playable **candidate**, not automatically a finished or visually approved chapter.
+- Exact-head CI, ZIP/artifact upload result, integration of warehouse Poly Haven PBR, hero animation, chapter-specific PIE, target 720p/30 FPS and human visual Gate 6/7 **remain unproven as of commit authoring**. Warehouse Run #38042482514 remains independently checkpointed; no second warehouse writer is launched.
+- No C++ modifications; after CI the next user-visible result must be a working Windows candidate download if and only if GitHub Actions created it.
+
 ## 2026-10-10 — one coordinated P1C01 source warehouse production batch (99 FBX originals)
 
 - Owner requested one completion batch rather than repeated administrative waves. Added `Data/P1C01TwoWaveWarehouseActivationV1.json` and push-triggered `.github/workflows/p1c01-two-wave-checkpoint-warehouse.yml`: exact-head single-writer Windows runner uses previously produced pinned GitHub Artifacts, 20-case plus legacy offline regression tests, 4 MiB SHA256/fsync recovery, wave39 persisted/audited before wave60 begins, no second provider download or rollback of wave39.

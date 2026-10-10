@@ -1,3 +1,7 @@
+## 2026-10-10 — P1C01 runtime entry map defect registration before implementation
+
+The current Windows package and headless tests use `/Engine/Maps/Templates/Template_Default`, while the existing local Shire visual bootstrap explicitly targets `/Engine/Maps/Entry` to avoid the template floor. Owner instructed immediate full chapter shipping. Treat this as an existing P1C01 visual/runtime delivery defect; align default editor/game, cook, audit and packaged startup on Entry; fail closed until exact-head UE4.27.2 checks pass. Preserve chronology, soft asset constraints, one-runner/one-warehouse-writer and Gate 6/7. This does not add any new story, character or P1C02 gameplay.
+
 ## 2026-10-10 — registered source batch before activation
 
 P1C01 one coordinated source-only intake requested: restore two pinned Poly Haven batches (39 originals/39 prepared, 60 originals/59 prepared with one quarantined). Each batch has independent full-hash permanent receipt and failure isolation. Preserve DEC-078/104/105, exact-head gates, single writer, 6 GiB disk floor. Follow with asset visual/geometry/LOD/collision QC and serialized UE integration only when eligible; this registration does **not** authorize skipping these checks or treating warehouse source files as visible characters. Source authority: 01, 02, 03, 07 and 11 production PDFs.
