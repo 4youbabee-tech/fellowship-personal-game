@@ -125,8 +125,8 @@ def stage(warehouse,project):
         material_name="MI_P1C01_"+slug
         mtl=dest/(slug+".mtl")
         albedo=next(f["name"] for f in copied if f["name"].endswith("_BaseColor.png"))
-        mtl_text=("newmtl "+material_name+"\\nKd 1 1 1\\nPr 0.68\\n"
-                  "Pm 0\\nKs 0.1 0.1 0.1\\nmap_Kd "+albedo+"\\n")
+        mtl_text=("newmtl "+material_name+"\nKd 1 1 1\nPr 0.68\n"
+                  "Pm 0\nKs 0.1 0.1 0.1\nmap_Kd "+albedo+"\n")
         if mtl.exists():
             need(mtl.read_text(encoding="utf-8")==mtl_text,
                  "MATERIAL_SIDECAR_DRIFT:"+slug)
