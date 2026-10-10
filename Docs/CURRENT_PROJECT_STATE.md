@@ -1,3 +1,7 @@
+## 2026-10-11 — PIE-first local fast preview production wave (candidate)
+
+- Added `SHIRE_FAST_PIE_PREVIEW.bat` for owner-local Unreal Engine 4.27.2 DX11 720p preview without automatic sync, C++ build or Windows package. Open editor and click Play to inspect local current content. Fails before launch when the project, editor or compiled ShireJourney editor module is missing. Added a source contract test and `Docs/FAST_PIE_PREVIEW_AND_PRODUCTION_SPEED.md`. Full `SHIRE_PIE_VERIFY.bat`, UE importer and packaged Windows build still apply at integration and final Gate 6/7 stages. This change does not affect PR #355 PBR import runtime or unlock P1C02. **Source/tooling only, no PIE, DEVICE, VISUAL or PERFORMANCE test is claimed.**
+
 ## 2026-10-11 — Owner accelerated intake / large chapter batch (POLICY ONLY)
 
 - Registered Owner Fast Batch Intake in the sole Governor: permit lawful source-format intake and automatic correction/conversion with minimal administrative review, reuse intact receipts, targeted changed-input checks, dynamic large P1C01 integration waves and five preparation lanes. No actual asset imported, runtime code changed, Unreal build executed, or Gate 6/7 closed in this policy candidate. PR #352 Blender/PBR work stays independent; do not cancel live workflows. P1C02 remains closed.
