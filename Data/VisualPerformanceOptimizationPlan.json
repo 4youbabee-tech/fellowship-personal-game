@@ -8,11 +8,19 @@
     "engine": "UE4.27.2",
     "platform": "Windows",
     "renderer": "DX11",
-    "resolution": "720p",
-    "quality": "Low-Medium",
+    "resolution": "1280x720",
+    "quality": "Balanced Medium / selective High where visually important",
     "fps_floor": 30,
     "ram_gb": 8,
-    "vram_class_gb": 2
+    "vram_class_gb": 2,
+    "cpu_model": "Intel Core i7-6498DU @ 2.50GHz",
+    "gpu_model": "AMD Radeon R5 M330",
+    "gpu_vram_reported_mb": 2039,
+    "os": "Windows 11 Pro 64-bit",
+    "directx_runtime_installed": "DirectX 12",
+    "dx12_ultimate_supported": false,
+    "stable_fps_goal": 30,
+    "evidence_status": "OWNER_HARDWARE_SPEC_RECORDED_DEVICE_RUNTIME_NOT_TESTED"
   },
   "architecture": {
     "world_memory": {
@@ -58,7 +66,8 @@
     "transition hitch",
     "representative production-mesh LOD audit",
     "representative master/material-instance shader cost",
-    "bounded CSM versus distance-field candidate comparison where relevant"
+    "bounded CSM versus distance-field candidate comparison where relevant",
+    "Capture exact Radeon R5 M330 DX11 720p p95/p99 and CPU/GPU RAM/VRAM on owner laptop"
   ],
   "non_goals": [
     "Do not replace working chapter routing with World Composition by default.",
