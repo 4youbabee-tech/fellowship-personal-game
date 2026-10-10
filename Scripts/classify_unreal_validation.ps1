@@ -333,6 +333,8 @@ function Test-CoreProofSafeInterveningDelta([string]$GitExe, [string]$BaseSha, [
     "Scripts/governor_handoff.py",
     "Scripts/test_governor_handoff.py",
     "Scripts/test_unreal_classifier.ps1",
+    "Scripts/test_fast_pie_preview.py",
+    "SHIRE_FAST_PIE_PREVIEW.bat",
         "Data/ProjectGovernor.json",
         "Data/DeepProjectAudit.json",
         "Data/BranchCleanupPlan.json",
