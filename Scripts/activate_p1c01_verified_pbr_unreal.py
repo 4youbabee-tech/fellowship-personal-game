@@ -15,7 +15,7 @@ def main(root: Path):
         slug=row["id"]
         package=root/"Content/Production/World/Shire/VerifiedPBR"/slug
         paths=(package/(slug+".uasset"),package/("MI_P1C01_"+slug+".uasset"),
-               package/("TX_"+slug+"_BaseColor.uasset"))
+               package/(row["basecolor_asset"]+".uasset"))
         for path in paths:
             if not path.is_file() or path.stat().st_size<1024:
                 raise ValueError("UNREAL_IMPORT_PACKAGE_MISSING:"+str(path))
