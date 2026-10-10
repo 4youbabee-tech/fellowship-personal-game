@@ -137,7 +137,12 @@ def stage(warehouse,project,limit=16,max_bytes=144*1024*1024):
         material_text="newmtl "+material+"\nKd 1 1 1\nPr 0.68\nPm 0\nmap_Kd "+files["BaseColor"]+"\n"
         if mtl.exists():check(mtl.read_text(encoding="utf-8")==material_text,"MTL_CHANGED")
         else:mtl.write_text(material_text,encoding="utf-8")
+        anchors={"village":((2800,2150,0),(4050,-2100,0),(5900,2250,0)),
+                 "road":((9500,2300,0),(11600,-2300,0),(16600,2200,0)),
+                 "garden":((700,1400,0),(1500,-1800,0),(4300,2300,0))}
+        location=anchors[item["category"]][(len(outputs)//3)%3]
         outputs.append({"id":slug,"category":item["category"],"wave":item["wave"],
+                        "location":list(location),
                         "mesh":"/Game/Production/"+ROOT_REL.as_posix()+"/"+slug+"/"+slug+"."+slug,
                         "material":"/Game/Production/"+ROOT_REL.as_posix()+"/"+slug+"/"+material+"."+material,
                         "state":"SOURCE_HASH_QC_ONLY"})
@@ -164,6 +169,11 @@ def activate(project):
         if row["mesh"] not in bank:bank.append(row["mesh"])
     bank.sort()
     plan_path.write_text(json.dumps(plan,indent=2)+"\n")
+    visual={"schema_version":1,"chapter":"P1C01","status":"UE_PACKAGES_PRESENT_RENDER_QC_PENDING",
+            "accents":[{"asset":row["mesh"],"location":row["location"],"category":row["category"]}
+                       for row in receipt["assets"]],
+            "note":"No collision/nav or visual acceptance proven; decorative only."}
+    (project/"Data/P1C01VerifiedWorldDecor.json").write_text(json.dumps(visual,indent=2)+"\n")
     print("P1C01_UE_PBR_SOURCE_ASSETS_PRESENT count="+str(len(receipt["assets"]))+
           " runtimeBank="+str(len(bank))+" visualNotAccepted=true")
 
