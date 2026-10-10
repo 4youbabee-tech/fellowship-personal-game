@@ -1,3 +1,7 @@
+## 2026-10-10 — P1C01 verified PBR material-parent regression (PG-169)
+
+- CI #38052565591 FAILED: original C3 foliage parent invariant `DesiredMaterialParent = ProductionMaterialParent` was displaced by conditional new PBR master selection. Restored original default assignment with explicit verified-PBR-only override, preserving foliage identity and preventing regression. Exact-head Pre-Unreal retest pending; no Unreal visual/P1C01 Gate6/7 proof yet.
+
 ## 2026-10-10 — P1C01 physical CC0 PBR-to-UE4 visual production bridge (candidate, evidence pending)
 
 - Manager authority: DEC-078/104/105, REQ-PROD-011, W01/P1C01 only. Actual persistent warehouse Run #38049193046 completed SUCCESS, providing immutable 39+60 source and 39+59 prepared PBR files; this is source storage evidence, not engine/render evidence.
