@@ -128,7 +128,7 @@ class PersistentIntakeTests(unittest.TestCase):
             self.assertTrue(any(row["rel"] == "textures/gate_diff_1k.png" for row in rows))
             self.assertTrue(all("\\\\" not in row["rel"] for row in rows))
             receipt = impl.stage(source, pbr, root / "warehouse", "p1c01_wave39", 1, 1, reserve_bytes=0)
-            self.assertTrue(any("textures/gate_diff_1k.png" in row["file"].replace("\\\\", "/") for row in receipt["files"]))
+            self.assertTrue(any("textures/gate_diff_1k.png" in row["file"].replace(chr(92), "/") for row in receipt["files"]))
 
     def test_no_symlink_or_traversal_receipts(self):
         for value in ("../bad.fbx", "/absolute.fbx", "C:/evil.fbx", "..\\bad.fbx"):
