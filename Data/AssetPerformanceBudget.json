@@ -4,12 +4,23 @@
   "status": "MEASUREMENT_BASELINE_REQUIRED",
   "target_profile": {
     "resolution": "1280x720",
-    "quality": "Low-Medium",
-    "fps_floor": 30
+    "quality": "Balanced Medium / selective High where visually important",
+    "fps_floor": 30,
+    "cpu_model": "Intel Core i7-6498DU @ 2.50GHz",
+    "gpu_model": "AMD Radeon R5 M330",
+    "gpu_vram_reported_mb": 2039,
+    "os": "Windows 11 Pro 64-bit",
+    "directx_runtime_installed": "DirectX 12",
+    "dx12_ultimate_supported": false,
+    "renderer": "DX11",
+    "stable_fps_goal": 30,
+    "evidence_status": "OWNER_HARDWARE_SPEC_RECORDED_DEVICE_RUNTIME_NOT_TESTED",
+    "ram_gb": 8,
+    "vram_gb_class": 2
   },
   "policy": {
     "hard_scene_budgets_enabled": false,
-    "reason": "Do not invent per-chapter triangle or texture-memory ceilings before measured target-device baselines exist.",
+    "reason": "Do not invent per-chapter triangle or texture-memory ceilings before measured target-device baselines exist. Stable 30 FPS must be measured on owner i7-6498DU/R5 M330, not estimated from nominal specs.",
     "source_audit_role": "Report source triangle equivalents, source bytes, texture dimensions and structural defects on every production-asset batch.",
     "engine_measurement_required_for": [
       "draw calls",
