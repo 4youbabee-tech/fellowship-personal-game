@@ -1,7 +1,7 @@
 {
-  "schema_version": 2,
-  "wave_id": "P1C01_FRODO_GANDALF_SKELETAL_CANDIDATE_V1",
-  "status": "FRODO_FIRST_EXACT_TOKEN_AND_STATIC_FBX_QC",
+  "schema_version": 3,
+  "wave_id": "P1C01_FULL_CAST_SKELETAL_CANDIDATE_V2",
+  "status": "FULL_CAST_QUATERNIUS_SHORTLIST_READY_KAYKIT_EXHAUSTED",
   "authority": [
     "Data/ProjectGovernor.json",
     "Data/CharacterVisualProductionWaveV7.json",
@@ -17,7 +17,7 @@
       "id": "FRODO",
       "rig_family": "HOBBIT_HUMANOID",
       "priority": 1,
-      "target": "first playable Shire skeletal quality bar",
+      "target": "playable Shire skeletal quality bar",
       "max_ranked_candidates": 8,
       "required_any_tokens": [
         "hobbit",
@@ -48,8 +48,8 @@
       "id": "GANDALF",
       "rig_family": "TALL_HUMANOID",
       "priority": 2,
-      "target": "parallel playable tall-humanoid skeletal quality bar",
-      "max_ranked_candidates": 6,
+      "target": "tall-humanoid wizard/story NPC skeletal quality bar",
+      "max_ranked_candidates": 8,
       "required_any_tokens": [
         "wizard",
         "mage",
@@ -73,6 +73,169 @@
         "chef",
         "young"
       ]
+    },
+    {
+      "id": "BILBO",
+      "rig_family": "HOBBIT_HUMANOID",
+      "priority": 3,
+      "target": "elder/civilian named NPC skeletal bundle",
+      "max_ranked_candidates": 6,
+      "required_any_tokens": [
+        "old",
+        "elder",
+        "villager",
+        "casual",
+        "base",
+        "male",
+        "worker"
+      ],
+      "required_all_tokens": [],
+      "excluded_tokens": [
+        "female",
+        "goblin",
+        "zombie",
+        "ninja",
+        "pirate",
+        "soldier",
+        "knight",
+        "cowboy",
+        "viking"
+      ]
+    },
+    {
+      "id": "SAM",
+      "rig_family": "HOBBIT_HUMANOID",
+      "priority": 4,
+      "target": "companion gardener skeletal bundle",
+      "max_ranked_candidates": 6,
+      "required_any_tokens": [
+        "small",
+        "short",
+        "worker",
+        "villager",
+        "casual",
+        "base",
+        "male"
+      ],
+      "required_all_tokens": [],
+      "excluded_tokens": [
+        "female",
+        "goblin",
+        "zombie",
+        "ninja",
+        "pirate",
+        "soldier",
+        "knight",
+        "cowboy",
+        "viking"
+      ]
+    },
+    {
+      "id": "MERRY",
+      "rig_family": "HOBBIT_HUMANOID",
+      "priority": 5,
+      "target": "companion ferry/hide skeletal bundle",
+      "max_ranked_candidates": 6,
+      "required_any_tokens": [
+        "small",
+        "short",
+        "adventurer",
+        "villager",
+        "casual",
+        "base",
+        "male"
+      ],
+      "required_all_tokens": [],
+      "excluded_tokens": [
+        "female",
+        "goblin",
+        "zombie",
+        "ninja",
+        "pirate",
+        "soldier",
+        "knight",
+        "cowboy",
+        "viking"
+      ]
+    },
+    {
+      "id": "PIPPIN",
+      "rig_family": "HOBBIT_HUMANOID",
+      "priority": 6,
+      "target": "companion ferry/hide skeletal bundle",
+      "max_ranked_candidates": 6,
+      "required_any_tokens": [
+        "small",
+        "short",
+        "adventurer",
+        "villager",
+        "casual",
+        "base",
+        "male"
+      ],
+      "required_all_tokens": [],
+      "excluded_tokens": [
+        "female",
+        "goblin",
+        "zombie",
+        "ninja",
+        "pirate",
+        "soldier",
+        "knight",
+        "cowboy",
+        "viking"
+      ]
+    },
+    {
+      "id": "BLACK_RIDER",
+      "rig_family": "THREAT_HUMANOID_MOUNTED",
+      "priority": 7,
+      "target": "generic legal mounted threat silhouette skeletal bundle",
+      "max_ranked_candidates": 6,
+      "required_any_tokens": [
+        "dark",
+        "hood",
+        "hooded",
+        "cloak",
+        "rider",
+        "rogue",
+        "knight",
+        "mage"
+      ],
+      "required_all_tokens": [],
+      "excluded_tokens": [
+        "hobbit",
+        "small",
+        "child",
+        "farmer",
+        "bright",
+        "hero",
+        "franchise",
+        "nazgul",
+        "ringwraith"
+      ]
+    },
+    {
+      "id": "BLACK_RIDER_HORSE",
+      "rig_family": "EQUINE_MOUNT",
+      "priority": 8,
+      "target": "threat horse skeletal bundle with gait coverage",
+      "max_ranked_candidates": 4,
+      "required_any_tokens": [
+        "horse",
+        "mount",
+        "equine"
+      ],
+      "required_all_tokens": [],
+      "excluded_tokens": [
+        "cow",
+        "pig",
+        "sheep",
+        "goat",
+        "chicken",
+        "dog",
+        "cat"
+      ]
     }
   ],
   "authorized_source_packs": [
@@ -80,6 +243,10 @@
     "QTN_RPG_CHARACTERS",
     "QTN_FANTASY_OUTFITS",
     "QTN_UNIVERSAL_ANIMATION_LIBRARY",
+    "QTN_ULTIMATE_MODULAR_MEN",
+    "QTN_ULTIMATE_ANIMATED_CHARACTERS",
+    "QTN_ULTIMATE_ANIMATED_ANIMALS",
+    "QTN_FARM_ANIMALS",
     "OGA_QTN_ULTIMATE_ANIMATED_CHARACTERS_CC0"
   ],
   "candidate_policy": {
@@ -126,6 +293,61 @@
       "character",
       "fantasy",
       "base"
+    ],
+    "BILBO": [
+      "old",
+      "elder",
+      "male",
+      "villager",
+      "casual",
+      "base",
+      "social",
+      "party"
+    ],
+    "SAM": [
+      "small",
+      "short",
+      "worker",
+      "gardener",
+      "villager",
+      "casual",
+      "male",
+      "base"
+    ],
+    "MERRY": [
+      "small",
+      "short",
+      "adventurer",
+      "villager",
+      "casual",
+      "male",
+      "base"
+    ],
+    "PIPPIN": [
+      "small",
+      "short",
+      "adventurer",
+      "villager",
+      "casual",
+      "male",
+      "base"
+    ],
+    "BLACK_RIDER": [
+      "dark",
+      "hood",
+      "hooded",
+      "cloak",
+      "rider",
+      "mounted",
+      "threat"
+    ],
+    "BLACK_RIDER_HORSE": [
+      "horse",
+      "mount",
+      "equine",
+      "gallop",
+      "walk",
+      "idle"
     ]
   },
   "required_qc": [
@@ -164,11 +386,11 @@
   },
   "success_boundary": {
     "minimum_fbx_candidates_total": 2,
-    "minimum_character_pools_with_candidates": 2,
+    "minimum_character_pools_with_candidates": 8,
     "warehouse_inventory_must_be_clean": true,
-    "output_state": "FRODO_STATIC_FBX_QC_REQUIRED_NOT_IMPORTED"
+    "output_state": "FULL_CAST_STATIC_FBX_QC_REQUIRED_NOT_IMPORTED"
   },
-  "evidence_boundary": "Exact filename-token candidate ranking plus static FBX structure probing only. No FBX 2018 export confirmation, UE4 skeletal import, skeleton/skin quality, retarget/deformation, final character likeness, runtime replacement, PIE, device, visual or performance acceptance is claimed.",
+  "evidence_boundary": "Exact filename-token candidate ranking plus static FBX structure probing only. KayKit direct candidates are exhausted by exact SHA; this wave moves to Quaternius/warehouse candidates but claims no FBX 2018 export, UE4 import, skeleton/skin quality, retarget/deformation, final character likeness, runtime replacement, PIE, device, visual or performance acceptance.",
   "owner_sequence_authority": "Data/P1C01RuntimeChapterSequenceV1.json",
   "owner_execution_order": [
     "FRODO",
@@ -178,11 +400,11 @@
     "required": true,
     "report_artifact_required": true,
     "runtime_integration_remains_false_until_qc_promotion": true,
-    "current_target": "FRODO_FIRST",
-    "request_id": "P1C01_FRODO_QC_2026_10_01_V1",
-    "requested_utc": "2026-10-01T00:40:00Z",
-    "requested_character": "FRODO",
-    "expected_output": "FRODO_STATIC_FBX_QC_REQUIRED_NOT_IMPORTED"
+    "current_target": "FULL_CAST_FIRST_PASS",
+    "request_id": "P1C01_FULL_CAST_QC_2026_10_10_V2",
+    "requested_utc": "2026-10-10T00:00:00Z",
+    "requested_character": "FULL_CAST",
+    "expected_output": "FULL_CAST_STATIC_FBX_QC_REQUIRED_NOT_IMPORTED"
   },
   "frodo_static_fbx_qc": {
     "active_character": "FRODO",
@@ -209,6 +431,34 @@
     "output_state": "STATIC_FBX_STRUCTURE_PRESENT_UE4_IMPORT_REQUIRED",
     "ready_for_import": false,
     "evidence_boundary": "Static FBX header/marker evidence only; no FBX 2018 export, UE4 import, deformation, final likeness, runtime, PIE, device, visual or performance acceptance."
+  },
+  "full_cast_static_fbx_qc": {
+    "active_characters": [
+      "FRODO",
+      "BILBO",
+      "GANDALF",
+      "SAM",
+      "MERRY",
+      "PIPPIN",
+      "BLACK_RIDER",
+      "BLACK_RIDER_HORSE"
+    ],
+    "source_manifest": "Data/WarehouseQuaterniusHeroCandidateBatchV1.json",
+    "minimum_static_structure_pass_candidates": 4,
+    "required_static_markers": [
+      "Geometry",
+      "Model",
+      "LimbNode",
+      "Deformer",
+      "Skin",
+      "Cluster"
+    ],
+    "optional_animation_markers": [
+      "AnimationStack",
+      "AnimationCurve"
+    ],
+    "output_state": "STATIC_FBX_STRUCTURE_PRESENT_UE4_IMPORT_REQUIRED",
+    "ready_for_import": false,
+    "evidence_boundary": "Static FBX header/marker evidence only; no UE4 import, deformation, final likeness, runtime, PIE, device, visual or performance acceptance."
   }
 }
-
