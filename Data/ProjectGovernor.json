@@ -13,7 +13,17 @@
     "fps_floor_target": 30,
     "ram_gb": 8,
     "gpu_vram_class_gb": 2,
-    "visual_quality_rule": "The supported low-spec profile must still look intentional, attractive and game-ready. Preserve higher perceived quality for hero characters, nearby architecture, terrain readability, key materials and primary lighting; recover performance first from distant shadows, far-detail density, nonessential effects, LOD/cull distance and other lower-salience costs. Do not globally flatten the game to Low merely to meet the frame target."
+    "visual_quality_rule": "The supported low-spec profile must still look intentional, attractive and game-ready. Preserve higher perceived quality for hero characters, nearby architecture, terrain readability, key materials and primary lighting; recover performance first from distant shadows, far-detail density, nonessential effects, LOD/cull distance and other lower-salience costs. Do not globally flatten the game to Low merely to meet the frame target.",
+    "cpu_model": "Intel Core i7-6498DU @ 2.50GHz",
+    "gpu_model": "AMD Radeon R5 M330",
+    "gpu_vram_reported_mb": 2039,
+    "os": "Windows 11 Pro 64-bit",
+    "os_architecture": "64-bit",
+    "directx_runtime_installed": "DirectX 12",
+    "dx12_ultimate_supported": false,
+    "runtime_api_contract": "UE4.27.2 uses DX11/D3D11 RHI for the target. Installed Windows DirectX 12 does not establish D3D12 GPU feature level or DX12 Ultimate support.",
+    "stable_fps_target": "Sustained 30 FPS or higher at 1280x720 on the physical owner target across representative P1C01 routes, with frame-time (including p95/p99), hitch and memory measurements; not yet tested.",
+    "hardware_identity_provenance": "Owner-reported specifications 2026-10-11; physical target-device runtime/performance proof not collected."
   },
   "product_north_star": [
     "Let the player live the Peter Jackson film story as a playable adventure rather than inventing a replacement main story.",
@@ -451,14 +461,17 @@
         "one major generated region at a time",
         "low/medium 720p target",
         "Environmental-life V9 uses ephemeral non-colliding actors, bounded event caps and shadowless point-light accents.",
-        "Texture-source review on develop: 24 BMP production sources total ~0.53 MiB; source container size is not runtime VRAM. Runtime streaming/GPU evidence remains the performance authority."
+        "Texture-source review on develop: 24 BMP production sources total ~0.53 MiB; source container size is not runtime VRAM. Runtime streaming/GPU evidence remains the performance authority.",
+        "Owner's exact primary target (2026-10-11): Intel Core i7-6498DU @ 2.50GHz, AMD Radeon R5 M330 (2039 MB reported VRAM), 8 GB RAM, Windows 11 Pro 64-bit (DirectX 12 runtime, no DX12 Ultimate); UE4.27.2 DX11 RHI, 1280x720, stable 30 FPS goal. Hardware identity is owner-reported, not an FPS measurement."
       ],
       "missing_work": [
         "focused target-device traversal/performance observation for current production Shire",
-        "Measure V9 environmental-motion/light cost on target hardware; disable glow before motion under pressure."
+        "Measure V9 environmental-motion/light cost on target hardware; disable glow before motion under pressure.",
+        "Capture real P1C01 runtime FPS/frame-time p95/p99, hitch, active GPU/RAM/VRAM and DX11 profile on the owner's exact i7-6498DU/R5 M330/Windows 11 Pro laptop; do not infer DEVICE-TESTED from runner or static evidence."
       ],
       "acceptance_criteria": [
-        "30 FPS floor target at 720p Low/Medium without severe memory pressure or unplayable hitching"
+        "30 FPS floor target at 720p Low/Medium without severe memory pressure or unplayable hitching",
+        "Do not accept stable 30 FPS or device performance without a real same-build run on the owner-reported i7-6498DU / Radeon R5 M330 / 8 GB RAM / Windows 11 Pro 64-bit laptop, using DX11 at 1280x720, with route-by-route measured FPS, p95/p99 frame time, hitches and RAM/VRAM evidence."
       ],
       "dependencies": [
         "REQ-WORLD-001",
@@ -3010,7 +3023,7 @@
     },
     {
       "id": "INV-PERFORMANCE",
-      "description": "Features must remain compatible with the target laptop profile: Windows DX11, 720p, Low/Medium, 30 FPS floor target, 8 GB RAM, roughly 2 GB VRAM-class GPU.",
+      "description": "Features must remain compatible with the owner's primary measured-to-be target: Intel Core i7-6498DU @ 2.50GHz, AMD Radeon R5 M330, 2039 MB reported VRAM (2 GB class), 8 GB RAM, Windows 11 Pro 64-bit, DirectX 12 runtime without DX12 Ultimate. UE4.27.2 continues to render through DX11 at 1280x720 with a stable 30 FPS objective; DEVICE/PERFORMANCE remain NOT_TESTED until physical target-device gameplay measurements exist.",
       "auto_override": false
     },
     {
@@ -5582,7 +5595,7 @@
       "resolution": "SAVE_LOAD_LONG_SESSION PR #200 is now exact-head machine-green and merged. Keep TARGET_DEVICE_PROFILE_AND_GATE67 as fail-closed acceptance infrastructure on current develop; target-device and human evidence are still required before Gate 6/7 can close.",
       "implementation_contract": [
         "Register WORLD_DETAIL_LEDGER and Data/P1C01TargetDeviceGate67V1.json before any acceptance tooling.",
-        "Target profile remains 6th-gen i7 class, 8 GB RAM, ~2 GB VRAM class, DX11, 1280x720 Balanced Medium with selective High treatment for visually important content, 30 FPS floor.",
+        "Target identity is now exact by owner direction 2026-10-11: Intel Core i7-6498DU @ 2.50GHz, AMD Radeon R5 M330 with 2039 MB reported VRAM, 8 GB RAM and Windows 11 Pro 64-bit (OS DirectX 12, no DX12 Ultimate). Keep UE4.27.2 DX11, 1280x720, Balanced Medium with selective High for visually important content, stable 30 FPS objective and mandatory physical device measurements.",
         "Acceptance evidence must be tied to exact git head, hardware identity and tested renderer/resolution/quality profile.",
         "Missing route measurements, missing human review or missing target-device observations must yield INCOMPLETE/NOT_RUN, never inferred acceptance.",
         "Static/compile/PIE/device/visual/pacing/performance labels remain independent and may not be promoted by another lane's evidence.",
@@ -6014,7 +6027,7 @@
       "fresh exact-head Pre-Unreal for the active W01 candidate",
       "UE4.27.2 core validation for C++/Data deltas",
       "P1C01 human rendered review as ordered production stages land",
-      "target-device DX11 720p Low-Medium profiling before density or expensive presentation expansion",
+      "Physical owner i7-6498DU / Radeon R5 M330 / Windows 11 Pro 64-bit DX11 1280x720 route FPS/frame-time/VRAM profiling before density or expensive presentation expansion.",
       "Gate 6/7 human visual, pacing and performance evidence before broad Part II/III runtime production"
     ],
     "note": "W00 architectural stabilization closed on develop@809e56a9 after owner-side P1C01 grounding/warning-tail proof. W01/P1C01 is now the sole production vertical slice.",
