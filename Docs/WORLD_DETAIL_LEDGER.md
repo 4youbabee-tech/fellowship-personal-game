@@ -1,3 +1,9 @@
+## 2026-10-10 — Legal full-cast/horse source queue after KayKit exhaustion
+- User-provided Facebook link is treated as visual reference only unless a usable asset license/source is proven; no social-media asset is imported into Production.
+- Quaternius official pages verified during this batch expose CC0 license and FBX formats for Universal Animation Library, Ultimate Modular Men, Ultimate Animated Character Pack, Ultimate Animated Animal Pack and Farm Animal Pack.
+- The Black Rider horse now has a specific legal animated-equine source queue; Black Rider humanoid remains a generic legal threat-silhouette candidate only, with no franchise/fan asset acceptance.
+- No world density, navmesh, Bucklebury Ferry collision, quest points or runtime ownership changed in this batch.
+
 ## 2026-10-09 — Hosted KayKit first-run regression (fix before further hardware probes)
 - Exact run #320 (37962782520) failed in hosted source QC after three confirmed hash-based rejections had already fired, at `stage_p1c01_kaykit_rig_bridge.ps1:69`: `PropertyNotFoundStrict: source_git_blob_sha`. The historical Rogue entries lack optional `source_git_blob_sha` in the manifest. Expensive self-hosted KayKit gate correctly SKIPPED, so old hour-long failure avoided; source classification itself needs the null-safe guard.
 - Fix: read optional `source_git_blob_sha` through PSObject.Properties.Name with fallback empty value in both early-rejection and normal receipt records. No easing of SHA/hash/skeletal quality gates or acceptance. Exact-head reproof pending new run.
