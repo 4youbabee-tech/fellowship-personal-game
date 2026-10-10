@@ -15,7 +15,7 @@ $report = [ordered]@{
   ram_bytes=[int64]$computer.TotalPhysicalMemory
   os=[ordered]@{ caption=[string]$os.Caption; version=[string]$os.Version; build=[string]$os.BuildNumber }
   gpu=@($gpu | ForEach-Object { [ordered]@{ name=[string]$_.Name; adapter_ram=[int64]$_.AdapterRAM; driver=[string]$_.DriverVersion } })
-  target_contract=[ordered]@{ cpu_class="6th gen i7"; ram_gb=8; vram_gb=2; renderer="DX11"; resolution="1280x720"; fps_floor=30 }
+  target_contract=[ordered]@{ cpu_model="Intel Core i7-6498DU @ 2.50GHz"; gpu_model="AMD Radeon R5 M330"; gpu_vram_reported_mb=2039; ram_gb=8; os="Windows 11 Pro 64-bit"; os_directx_installed="DirectX 12"; dx12_ultimate_supported=$false; renderer="DX11"; resolution="1280x720"; fps_floor=30; stable_fps_unproven=$true }
   classification="RUNNER_HARDWARE_SNAPSHOT_ONLY"
   note="Do not promote to DEVICE_TESTED unless this runner is confirmed to be the intended target laptop and representative runtime frame/memory measurements are captured."
 }
