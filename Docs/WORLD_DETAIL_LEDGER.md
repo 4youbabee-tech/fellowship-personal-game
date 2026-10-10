@@ -1,3 +1,7 @@
+## 2026-10-11 — DEC-106 owner flexible asset intake
+
+Owner explicitly requests removal of unnecessary *source intake* rigidity. Accept useful licensed safe OBJ/GLB/GLTF/BLEND/BMP or unconventional FBX **as source candidates** for offline conversion; do not reject solely for source extension, naming or absent smoothing group. Deliver Unreal 4.27.2-compliant FBX for animated assets, optimized static meshes, PNG/TGA compressed packed PBR textures and tested import/material/LOD/collision or skeletal validity. Quarantine candidate-specific failures, preserve original hash/licenses; proceed with other useful assets. This is a production policy change, **not removal of safety, source-canon, low-end performance, runtime gating, or truthful evidence**. Owner wants Shire closure prioritized and warehouse coverage across 28 regions. Code conversion changes have NOT been implemented in this PR; DEC-106 / REQ-ASSET-FLEX-001 are REQUESTED policy awaiting tool implementation and proof.
+
 ## 2026-10-10 — Owner living social landscape standard, Shire-first / all regions (design requirement)
 
 - **Scope:** the owner-provided Bag End / Bagshot Row morning image is a visual reference for an inhabited, purposeful and socially legible settlement, not a literal asset, canon proof, or visual acceptance. In P1C01, place Bag End above Bagshot Row with coherent footpaths, gardens, worked plots, neighboring Hobbit dwellings and a believable gardener route; distinct homes/workplaces should read as a community instead of static props.
