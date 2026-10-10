@@ -125,7 +125,7 @@ def main():
                "map_Kd "+Path(maps["BaseColor"]["file"]).name,
                "map_Bump "+Path(maps["NormalDX"]["file"]).name,
                "map_ORM "+Path(maps["ORM"]["file"]).name,""]
-        text="\\n".join(lines)
+        text="\n".join(lines)
         if sidecar.exists():guard(sidecar.read_text(encoding="utf-8")==text,"MTL_DRIFT")
         else:sidecar.write_text(text,encoding="utf-8")
         counts[group]+=1
@@ -140,7 +140,7 @@ def main():
     out=args.project_root/"Saved/P1C01VerifiedPBR/source_stage_receipt.json"
     out.parent.mkdir(parents=True,exist_ok=True)
     out.write_text(json.dumps({"status":"HASH_VERIFIED_SOURCE_ONLY","selected":selected,
-            "selected_count":len(selected),"source_bytes":total,"ue_imported":False},indent=2)+"\\n")
+            "selected_count":len(selected),"source_bytes":total,"ue_imported":False},indent=2)+"\n")
     guard(bool(selected),"NO_ELIGIBLE_SHIRE_STATIC_PBR_SOURCE")
     print("P1C01_PBR_STAGE_PASS count="+str(len(selected))+" bytes="+str(total)+" ueImported=false")
 if __name__=="__main__":
