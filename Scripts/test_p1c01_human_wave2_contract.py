@@ -64,6 +64,12 @@ class HumanWave2ContractTests(unittest.TestCase):
         self.assertIn("ls-files --others --exclude-standard",workflow)
         self.assertIn("Hosted Frodo static deformation stress",workflow)
         self.assertIn("run_p1c01_human_wave3_deformation.py",workflow)
+        self.assertIn("--python-exit-code 93",workflow)
+        self.assertIn("HUMAN_WAVE3_RECEIPT_CARDINALITY_FAIL",workflow)
+        self.assertIn("HUMAN_WAVE3_RECEIPT_NOT_WRITTEN",workflow)
+        self.assertIn("HUMAN_WAVE3_STATIC_DEFORMATION_RECEIPT_PASS",workflow)
+        self.assertIn('receipt.get("status") != "STATIC_DEFORMATION_STRESS_PASS"',workflow)
+        self.assertIn("set -euo pipefail",workflow)
         deformation=(root/"Scripts"/"run_p1c01_human_wave3_deformation.py").read_text(encoding="utf-8")
         for token in ("shoulders","elbows","knees","hands_feet","locomotion_stress","visual_deformation_accepted","retarget_accepted"):
             self.assertIn(token,deformation)
