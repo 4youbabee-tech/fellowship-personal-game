@@ -49,6 +49,11 @@ jobs:
           $a = $pins.artifacts
           if ($a.source39.artifact_id -ne 11643315007 -or $a.pbr39.artifact_id -ne 11643837934 -or $a.source60.artifact_id -ne 11644157212 -or $a.pbr60.artifact_id -ne 11644360758) { throw "P1C01_PINNED_ARTIFACT_IDS_DRIFT" }
           Write-Host "P1C01_TWO_WAVE_PINNED_PREFLIGHT_PASS"
+      - name: Require Project Governor before persistent warehouse mutation
+        shell: powershell
+        run: |
+          & $env:SHIRE_PYTHON Scripts/governor_work_start.py --lane WAREHOUSE_ASSET_INTAKE
+          if ($LASTEXITCODE -ne 0) { throw 'P1C01_GOVERNOR_WAREHOUSE_REJECTED' }
       - name: Offline checkpoint interruption/resume/corruption tests (no network)
         shell: powershell
         run: |
