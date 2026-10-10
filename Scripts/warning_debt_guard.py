@@ -35,6 +35,23 @@ def measure(text: str, pattern: re.Pattern, identity_group):
     identities = sorted({m.group(identity_group) for m in matches})
     return len(identities), identities
 
+def smoothing_warning_sources(files):
+    """Report exact import log/line context without hiding zero-tolerance debt."""
+    pattern = CHECKS[0][1]
+    evidence = []
+    for path in files:
+        lines = decode(path).splitlines()
+        for index, line in enumerate(lines):
+            if pattern.search(line):
+                # A preceding import context often includes the source FBX/OBJ name.
+                nearby = lines[max(0, index - 8):index + 1]
+                candidates = []
+                for context in nearby:
+                    candidates.extend(re.findall(r"[^\\s\\\"']+\\.(?:fbx|obj)", context, re.I))
+                evidence.append((path.name, index + 1, candidates[-1] if candidates else "UNKNOWN_SOURCE", line.strip()[:220]))
+    return evidence
+
+
 def is_runtime_log(path: Path) -> bool:
     return any(path.name.startswith(prefix) for prefix in RUNTIME_LOG_PREFIXES)
 
@@ -65,6 +82,14 @@ def main() -> int:
 
     print("Warning-debt evidence files: " + " | ".join(path.name for path in files))
     print("Warning-debt runtime files: " + " | ".join(runtime_files))
+
+    sources = smoothing_warning_sources(files)
+    if sources:
+        print("SMOOTHING_WARNING_SOURCE_EVIDENCE total=" + str(len(sources)))
+        for filename, line_no, source, warning in sources[:40]:
+            print(f"SMOOTHING_WARNING_SOURCE file={filename} line={line_no} asset={source} warning={warning}")
+        if len(sources) > 40:
+            print("SMOOTHING_WARNING_SOURCE_TRUNCATED remaining=" + str(len(sources) - 40))
 
     rows, failures = [], []
     for name, pattern, ceiling, identity_group, scope in CHECKS:
