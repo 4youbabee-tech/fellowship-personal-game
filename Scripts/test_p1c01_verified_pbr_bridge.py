@@ -110,7 +110,7 @@ class VerifiedPBRBridgeTest(unittest.TestCase):
         self.assertIn("StaticMaterials.Num() != 1",code)
         self.assertIn("SpawnVerifiedPBRDecor();",world)
         self.assertIn("ECollisionEnabled::NoCollision",world)
-        self.assertIn("ResolveResidentStaticMesh(*Path)",world)
+        self.assertIn("ResolveResidentStaticMesh(*AssetPath)",world)
         self.assertIn("P1C01VerifiedWorldDecor.json",
             (root/"Source/ShireJourney/ShireJourney.Build.cs").read_text())
 if __name__=="__main__":
