@@ -1,0 +1,159 @@
+name: P1C01 Two-Wave Durable 99-Asset Warehouse Intake
+on:
+  push:
+    branches:
+      - ops/p1c01-five-lane-maxsafe-2026-10-09
+    paths:
+      - 'Data/P1C01TwoWaveWarehouseActivationV1.json'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: warehouse-stage-${{ github.repository }}
+  cancel-in-progress: false
+jobs:
+  two_wave_durable_source:
+    name: Recover and persist wave39 then wave60; no Unreal
+    runs-on: [self-hosted, Windows, X64, ue4-27]
+    timeout-minutes: 180
+    env:
+      STAGING_WAREHOUSE: 'D:\actions-runner\_warehouse\ShireJourney'
+    steps:
+      - name: Exact-head checkout; do not pull LFS
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          lfs: false
+          fetch-depth: 1
+      - name: Verify pinned batch identity and Python
+        shell: powershell
+        run: |
+          if ((git rev-parse HEAD) -ne $env:GITHUB_SHA) { throw "P1C01_EXACT_HEAD_MISMATCH" }
+          if (-not (Test-Path -LiteralPath $env:STAGING_WAREHOUSE -PathType Container)) { throw "P1C01_PERSISTENT_WAREHOUSE_MISSING" }
+          $choices = @('D:\actions-runner\_work\_tool\Python\3.11.9\x64\python.exe')
+          if ($env:RUNNER_TOOL_CACHE) { $choices += (Join-Path $env:RUNNER_TOOL_CACHE 'Python\3.11.9\x64\python.exe') }
+          $python = Get-Command python.exe -ErrorAction SilentlyContinue
+          if ($python) { $choices += [string]$python.Source }
+          $exe = $choices | Where-Object { $_ -and (Test-Path -LiteralPath $_ -PathType Leaf) } | Select-Object -First 1
+          if (-not $exe) { throw "P1C01_PYTHON_MISSING" }
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value ("SHIRE_PYTHON="+$exe)
+          & $exe -m py_compile Scripts/resume_p1c01_artifact_checkpoint.py Scripts/stage_p1c01_adaptive_pbr_warehouse.py
+          if ($LASTEXITCODE -ne 0) { throw "P1C01_PYTHON_COMPILE_FAIL" }
+          $config = Get-Content Data/P1C01TwoWaveWarehouseActivationV1.json -Raw | ConvertFrom-Json
+          $pins = Get-Content Data/P1C01PinnedArtifactCheckpointsV1.json -Raw | ConvertFrom-Json
+          if ($config.batch_id -ne "P1C01_PINNED_POLYHAVEN_WAREHOUSE_99_SOURCE_ONE_RELEASE" -or $config.phases.Count -ne 2 -or $pins.status -ne "PINNED_IMMUTABLE_SOURCE_ONLY") { throw "P1C01_PINNED_BATCH_DRIFT" }
+          if ($config.controls.reserve_bytes -lt 6442450944) { throw "P1C01_WAREHOUSE_RESERVE_DRIFT" }
+          $a = $pins.artifacts
+          if ($a.source39.artifact_id -ne 11643315007 -or $a.pbr39.artifact_id -ne 11643837934 -or $a.source60.artifact_id -ne 11644157212 -or $a.pbr60.artifact_id -ne 11644360758) { throw "P1C01_PINNED_ARTIFACT_IDS_DRIFT" }
+          Write-Host "P1C01_TWO_WAVE_PINNED_PREFLIGHT_PASS"
+      - name: Offline checkpoint interruption/resume/corruption tests (no network)
+        shell: powershell
+        run: |
+          & $env:SHIRE_PYTHON Scripts/test_artifact_checkpoint_recovery.py
+          if ($LASTEXITCODE -ne 0) { throw "P1C01_RECOVERY_20_CASES_FAILED" }
+          & $env:SHIRE_PYTHON Scripts/test_resume_p1c01_artifact_checkpoint.py -v
+          if ($LASTEXITCODE -ne 0) { throw "P1C01_LEGACY_RECOVERY_TESTS_FAILED" }
+          Write-Host "P1C01_OFFLINE_RECOVERY_TESTS_PASS"
+      - name: Check fully verified prior wave39; skip all network if present
+        id: wave39
+        shell: powershell
+        run: |
+          & $env:SHIRE_PYTHON Scripts/stage_p1c01_adaptive_pbr_warehouse.py --warehouse-root "$env:STAGING_WAREHOUSE" --wave p1c01_wave39 --expected-source 39 --expected-prepared 39 --check-existing
+          $code = $LASTEXITCODE
+          if ($code -eq 0) { "reused=true" | Out-File -FilePath $env:GITHUB_OUTPUT -Append; exit 0 }
+          if ($code -eq 3) { "reused=false" | Out-File -FilePath $env:GITHUB_OUTPUT -Append; exit 0 }
+          throw "P1C01_WAVE39_EXISTING_INTEGRITY_FAIL exit=$code"
+      - name: Resume wave39 original source artifact in durable 4MiB parts
+        if: steps.wave39.outputs.reused == 'false'
+        shell: powershell
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          & $env:SHIRE_PYTHON Scripts/resume_p1c01_artifact_checkpoint.py --manifest Data/P1C01PinnedArtifactCheckpointsV1.json --key source39 --warehouse-root "$env:STAGING_WAREHOUSE"
+          if ($LASTEXITCODE -ne 0) { throw "P1C01_SOURCE39_RESUME_FAILED" }
+      - name: Resume wave39 prepared PBR archive
+        if: steps.wave39.outputs.reused == 'false'
+        shell: powershell
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          & $env:SHIRE_PYTHON Scripts/resume_p1c01_artifact_checkpoint.py --manifest Data/P1C01PinnedArtifactCheckpointsV1.json --key pbr39 --warehouse-root "$env:STAGING_WAREHOUSE"
+          if ($LASTEXITCODE -ne 0) { throw "P1C01_PBR39_RESUME_FAILED" }
+      - name: Permanently commit and digest-audit wave39 independently
+        if: steps.wave39.outputs.reused == 'false'
+        shell: powershell
+        run: |
+          $root = Join-Path $env:STAGING_WAREHOUSE '_p1c01_transfer_checkpoints'
+          $source = Join-Path $root 'artifact_11643315007\extracted'
+          $pbr = Join-Path $root 'artifact_11643837934\extracted'
+          & $env:SHIRE_PYTHON Scripts/stage_p1c01_adaptive_pbr_warehouse.py --source-root "$source" --pbr-root "$pbr" --warehouse-root "$env:STAGING_WAREHOUSE" --wave p1c01_wave39 --expected-source 39 --expected-prepared 39 --run-id "$env:GITHUB_RUN_ID"
+          if ($LASTEXITCODE -ne 0) { throw "P1C01_WAVE39_PERMANENT_STAGE_FAIL" }
+      - name: Independent wave39 verification checkpoint
+        shell: powershell
+        run: |
+          & $env:SHIRE_PYTHON Scripts/stage_p1c01_adaptive_pbr_warehouse.py --warehouse-root "$env:STAGING_WAREHOUSE" --wave p1c01_wave39 --expected-source 39 --expected-prepared 39 --check-existing
+          if ($LASTEXITCODE -ne 0) { throw "P1C01_WAVE39_POST_STAGE_HASH_AUDIT_FAIL" }
+          & powershell.exe -NoProfile -ExecutionPolicy Bypass -File Scripts/audit_warehouse_inventory.ps1 -Root "$env:STAGING_WAREHOUSE"
+          if ($LASTEXITCODE -ne 0) { throw "P1C01_WAREHOUSE_INVENTORY_AFTER39_FAIL" }
+      - name: Check fully verified prior wave60; skip all network if present
+        id: wave60
+        shell: powershell
+        run: |
+          & $env:SHIRE_PYTHON Scripts/stage_p1c01_adaptive_pbr_warehouse.py --warehouse-root "$env:STAGING_WAREHOUSE" --wave p1c01_wave60 --expected-source 60 --expected-prepared 59 --check-existing
+          $code = $LASTEXITCODE
+          if ($code -eq 0) { "reused=true" | Out-File -FilePath $env:GITHUB_OUTPUT -Append; exit 0 }
+          if ($code -eq 3) { "reused=false" | Out-File -FilePath $env:GITHUB_OUTPUT -Append; exit 0 }
+          throw "P1C01_WAVE60_EXISTING_INTEGRITY_FAIL exit=$code"
+      - name: Resume wave60 original source artifact in durable 4MiB parts
+        if: steps.wave60.outputs.reused == 'false'
+        shell: powershell
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          & $env:SHIRE_PYTHON Scripts/resume_p1c01_artifact_checkpoint.py --manifest Data/P1C01PinnedArtifactCheckpointsV1.json --key source60 --warehouse-root "$env:STAGING_WAREHOUSE"
+          if ($LASTEXITCODE -ne 0) { throw "P1C01_SOURCE60_RESUME_FAILED" }
+      - name: Resume wave60 prepared PBR archive
+        if: steps.wave60.outputs.reused == 'false'
+        shell: powershell
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          & $env:SHIRE_PYTHON Scripts/resume_p1c01_artifact_checkpoint.py --manifest Data/P1C01PinnedArtifactCheckpointsV1.json --key pbr60 --warehouse-root "$env:STAGING_WAREHOUSE"
+          if ($LASTEXITCODE -ne 0) { throw "P1C01_PBR60_RESUME_FAILED" }
+      - name: Permanently commit and digest-audit wave60; never rollback wave39
+        if: steps.wave60.outputs.reused == 'false'
+        shell: powershell
+        run: |
+          $root = Join-Path $env:STAGING_WAREHOUSE '_p1c01_transfer_checkpoints'
+          $source = Join-Path $root 'artifact_11644157212\extracted'
+          $pbr = Join-Path $root 'artifact_11644360758\extracted'
+          $prior = Join-Path $env:STAGING_WAREHOUSE '_p1c01_adaptive_polyhaven\p1c01_wave39\receipt_adaptive_pbr.json'
+          if (-not (Test-Path -LiteralPath $prior -PathType Leaf)) { throw "P1C01_WAVE39_DEPENDENCY_RECEIPT_MISSING" }
+          & $env:SHIRE_PYTHON Scripts/stage_p1c01_adaptive_pbr_warehouse.py --source-root "$source" --pbr-root "$pbr" --warehouse-root "$env:STAGING_WAREHOUSE" --wave p1c01_wave60 --expected-source 60 --expected-prepared 59 --reject-prior-ids "$prior" --run-id "$env:GITHUB_RUN_ID"
+          if ($LASTEXITCODE -ne 0) { throw "P1C01_WAVE60_PERMANENT_STAGE_FAIL" }
+      - name: Independent wave60 verification and final inventory integrity
+        shell: powershell
+        run: |
+          & $env:SHIRE_PYTHON Scripts/stage_p1c01_adaptive_pbr_warehouse.py --warehouse-root "$env:STAGING_WAREHOUSE" --wave p1c01_wave60 --expected-source 60 --expected-prepared 59 --check-existing
+          if ($LASTEXITCODE -ne 0) { throw "P1C01_WAVE60_POST_STAGE_HASH_AUDIT_FAIL" }
+          & powershell.exe -NoProfile -ExecutionPolicy Bypass -File Scripts/audit_warehouse_inventory.ps1 -Root "$env:STAGING_WAREHOUSE"
+          if ($LASTEXITCODE -ne 0) { throw "P1C01_FINAL_WAREHOUSE_INVENTORY_FAIL" }
+          Write-Host "P1C01_TWO_WAVE_DURABLE_WAREHOUSE_PASS sourceFBX=99 preparedStaticFBX=98 quarantined=1 UE_IMPORT=false Gate67=false"
+      - name: Export source-only checkpoint receipt (never gameplay acceptance)
+        if: always()
+        shell: powershell
+        run: |
+          $r = Join-Path $env:RUNNER_TEMP 'p1c01-two-wave-source-only-status.json'
+          $a = Join-Path $env:STAGING_WAREHOUSE '_p1c01_adaptive_polyhaven\p1c01_wave39\receipt_adaptive_pbr.json'
+          $b = Join-Path $env:STAGING_WAREHOUSE '_p1c01_adaptive_polyhaven\p1c01_wave60\receipt_adaptive_pbr.json'
+          [ordered]@{schema_version=1;commit=$env:GITHUB_SHA;run_id=$env:GITHUB_RUN_ID;wave39_receipt_present=(Test-Path -LiteralPath $a -PathType Leaf);wave60_receipt_present=(Test-Path -LiteralPath $b -PathType Leaf);source_only=$true;ue_imported=$false;pie_tested=$false;device_tested=$false;visual_accepted=$false;gate67_accepted=$false} | ConvertTo-Json -Depth 3 | Set-Content -LiteralPath $r -Encoding UTF8
+      - name: Upload source-only run status
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1c01-two-wave-source-only-status
+          path: ${{ runner.temp }}/p1c01-two-wave-source-only-status.json
+          if-no-files-found: warn
+          retention-days: 30

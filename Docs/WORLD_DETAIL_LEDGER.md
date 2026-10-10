@@ -1,3 +1,7 @@
+## 2026-10-10 — registered source batch before activation
+
+P1C01 one coordinated source-only intake requested: restore two pinned Poly Haven batches (39 originals/39 prepared, 60 originals/59 prepared with one quarantined). Each batch has independent full-hash permanent receipt and failure isolation. Preserve DEC-078/104/105, exact-head gates, single writer, 6 GiB disk floor. Follow with asset visual/geometry/LOD/collision QC and serialized UE integration only when eligible; this registration does **not** authorize skipping these checks or treating warehouse source files as visible characters. Source authority: 01, 02, 03, 07 and 11 production PDFs.
+
 ## 2026-10-10 — P1C01 recovery implementation registration, no new feature
 
 Registered the bounded checkpoint transport recovery as a continuation of DEC-078, DEC-104 and DEC-105: preserve the 20 already-tested source-only fault cases, prohibit archive redownload or warehouse overwrite without receipt checks, require network-free regression before the first transfer, keep one writer and 6 GiB reserve. This is infrastructure repair, not new narrative scope or chapter acceptance.

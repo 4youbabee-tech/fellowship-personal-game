@@ -1,3 +1,9 @@
+## 2026-10-10 — one coordinated P1C01 source warehouse production batch (99 FBX originals)
+
+- Owner requested one completion batch rather than repeated administrative waves. Added `Data/P1C01TwoWaveWarehouseActivationV1.json` and push-triggered `.github/workflows/p1c01-two-wave-checkpoint-warehouse.yml`: exact-head single-writer Windows runner uses previously produced pinned GitHub Artifacts, 20-case plus legacy offline regression tests, 4 MiB SHA256/fsync recovery, wave39 persisted/audited before wave60 begins, no second provider download or rollback of wave39.
+- Evidence status on commit creation: **PENDING new workflow run**. Wave39 and wave60 persistent receipts/audits are required; prior source conversion evidence is reusable, not a substitute. No UE import, player rig/animation, chapter PIE, device FPS or human visual acceptance is claimed. Existing acceptance gates remain unchanged.
+- Canon/source boundary: Source 07 F1-01 birthday/party and Ring outcome; current P1C01 includes broader Shire/road runtime, so do not relabel later F1-02/F1-03 source outcomes as independently accepted.
+
 ## 2026-10-10 — P1C01 recovery convergence on PR #335 (source-only)
 
 - Recovery source and network-free 20-case fault-injection suite are reused from validated side branch commit `8c5b296bd4cd024745f3666ce45802ea0e74f004` (prior Linux+Windows https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/38007549312 SUCCESS). An exact-merged-head rerun is **PENDING**; no fresh result is asserted before it finishes.

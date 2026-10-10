@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "batch_id": "P1C01_PINNED_POLYHAVEN_WAREHOUSE_99_SOURCE_ONE_RELEASE",
+  "chapter": "P1C01",
+  "status": "AUTHORIZED_SOURCE_ONLY_CHECKPOINTED_INTAKE",
+  "reason": "Save both previously-produced CC0 Poly Haven PBR source waves on persistent warehouse with independent durable checkpoints and no new provider downloads.",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "DEC-078",
+    "DEC-104",
+    "DEC-105",
+    "REQ-PROD-011"
+  ],
+  "pinned_manifest": "Data/P1C01PinnedArtifactCheckpointsV1.json",
+  "phases": [
+    {
+      "id": "WAVE_39",
+      "source_artifact_key": "source39",
+      "pbr_artifact_key": "pbr39",
+      "wave": "p1c01_wave39",
+      "expected_source_fbx": 39,
+      "expected_prepared_fbx": 39,
+      "required_prior_wave": null
+    },
+    {
+      "id": "WAVE_60",
+      "source_artifact_key": "source60",
+      "pbr_artifact_key": "pbr60",
+      "wave": "p1c01_wave60",
+      "expected_source_fbx": 60,
+      "expected_prepared_fbx": 59,
+      "required_prior_wave": "p1c01_wave39"
+    }
+  ],
+  "controls": {
+    "reserve_bytes": 6442450944,
+    "chunk_bytes": 4194304,
+    "one_persistent_writer": true,
+    "first_wave_immediately_committed": true,
+    "no_duplicate_polyhaven_provider_downloads": true,
+    "hard_fail_on_integrity_mismatch": true,
+    "reuse_full_sha256_valid_existing_files": true,
+    "source_to_runtime_promotion": false
+  },
+  "evidence_required": [
+    "P1C01_PBR_WAREHOUSE_STAGE_PASS or P1C01_PBR_WAREHOUSE_REUSE_PASS for each wave",
+    "WAREHOUSE_INVENTORY_AUDIT_PASS",
+    "GitHub action run for exact source head",
+    "receipt_adaptive_pbr.json for each completed wave"
+  ],
+  "forbidden_claims": [
+    "UE_IMPORT_COMPLETE",
+    "FINAL_HERO_CHARACTERS",
+    "PIE_TESTED",
+    "DEVICE_TESTED",
+    "VISUAL_ACCEPTED",
+    "P1C01_GATE67_ACCEPTED"
+  ],
+  "exit_boundary": "Both source waves may be warehouse-ready, but cannot be imported into Unreal/used in Shire without per-asset shape/LOD/collision/material identity QC and hero skeletal/animation evidence."
+}
