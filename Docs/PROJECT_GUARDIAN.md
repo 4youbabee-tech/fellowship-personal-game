@@ -1,3 +1,7 @@
+## 2026-10-10 — PG-026 release artifact versus failure-logs contract
+
+- Pre-Unreal #38045489962 failed: PG-026 failure logging may not depend on artifact upload quota. On isolated fix PR #336, removed `always()` log artifact upload, kept console failure logs and allowed a success-only packaged Windows playable candidate. Static exact-head checks and UE results pending. No Gate6/7 credit.
+
 ## 2026-10-10 — Windows warehouse nested original texture path
 
 Observed `StageError: UNSAFE_RELATIVE_PATH` at `persist()` in Windows job 114185324499; nested provider `Path` was stringified using Windows separators. Enforce platform-independent `.as_posix()` serialization for receipt keys and add real nested PNG offline test. Full source39/pbr39 archives remain durable and must not be re-fetched. See run #38042482514.

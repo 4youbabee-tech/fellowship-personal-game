@@ -1,3 +1,7 @@
+## 2026-10-10 — PG-026 release artifact versus failure-logs contract
+
+- Pre-Unreal #38045489962 failed: PG-026 failure logging may not depend on artifact upload quota. On isolated fix PR #336, removed `always()` log artifact upload, kept console failure logs and allowed a success-only packaged Windows playable candidate. Static exact-head checks and UE results pending. No Gate6/7 credit.
+
 ## 2026-10-10 — P1C01 warehouse Windows nested relative-path root cause isolated
 
 - Real failure Run #38042482514: source39 245957831 B and pbr39 197353784 B **SHA256 verified and extracted** on persistent warehouse; staging wave39 then failed `StageError: UNSAFE_RELATIVE_PATH` at `stage_p1c01_adaptive_pbr_warehouse.py:358/331` on Windows. No wave39 permanent receipt, wave60 not started.
