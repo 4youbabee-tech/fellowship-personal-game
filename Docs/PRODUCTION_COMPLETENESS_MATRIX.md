@@ -1,3 +1,10 @@
+## 2026-10-10 — Physical smoothing-group normalization candidate for P1C01 verified PBR FBX
+
+- Failure evidence: real self-hosted Unreal Run #38070598019 (and #38072314471) stopped at zero-tolerance missing smoothing data, 17 log occurrences across 16 source IDs. This is NOT a compiler failure. PBR production Run #38070597970 additionally failed the actual mesh/material-slot proof. PR #350 diagnostic change alone did not repair any geometry.
+- **Source repair approach:** Add Blender source-to-derived binary FBX re-export with real smoothing layers, single static mesh and one authored material slot, UV/finite/degenerated-face checks and re-import of the generated derivative; save the result and original/derived SHA256 receipt under ignored Saved/P1C01NormalizedFBX. The persistent 99-source warehouse and SourceAssets originals are read-only; UE commandlet overlays only the derived source onto its disposable working copy before import.
+- **Fail fast:** preflight on both regular Unreal and P1C01 Verified PBR production lanes runs before costly UE build; missing Blender when normalization is required or failed geometry/smoothing/slot export aborts. Existing zero warning debt and real material-slot receipt gates are not disabled.
+- **Evidence boundary:** code and 6 standalone Python preflight mock/regression tests only; no physical Blender on the CC0 warehouse has run in this session and no exact-head GitHub CI success yet. P1C01 remains NOT ACCEPTED; no PIE/device/visual/FPS or Gate 6/7 claim. The independent warehouse, skeletal, scene and audio prep lanes may continue; no workflow is cancelled or rerun by this candidate.
+
 ## 2026-10-10 — Owner living social landscape standard, Shire-first / all regions (design requirement)
 
 - Scope/requirements documentation candidate only: living social landscape first in P1C01, later region-specific adaptation (28-region design coverage). Status PLANNED/DEFERRED as appropriate; no new asset files, UE import, character art, measurable visual acceptance, performance credit or Gate 6/7 completion.
