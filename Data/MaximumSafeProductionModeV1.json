@@ -178,5 +178,24 @@
     "truth_boundary": "Hosted preparation outputs are candidate/evidence reports, not new downloaded models, UE import or device/visual acceptance.",
     "governor_work_start": "Scripts/governor_work_start.py"
   },
-  "governor_work_start": "Scripts/governor_work_start.py"
+  "governor_work_start": "Scripts/governor_work_start.py",
+  "owner_fast_intake_2026_10_11": {
+    "authority": "Data/ProjectGovernor.json#owner_fast_batch_intake_policy_2026_10_11",
+    "status": "OWNER_REQUEST_REGISTERED_IMPLEMENTATION_PENDING",
+    "rule": "Minimize administration and repeated checks; process all lawful technically repairable sources by offline conversion to supported runtime formats. Use large resource-bounded P1C01 waves and parallel future-region preparation, with targeted changed-input checks and no unnecessary costly Unreal runs.",
+    "minimum_guards": [
+      "asset_use_rights",
+      "safe_and_reproducible_source_integrity",
+      "UE4_27_compatible_output_QC",
+      "P1C01_runtime_placement_and_performance",
+      "Gate_6_7_real_evidence",
+      "single_runtime_and_warehouse_writers"
+    ],
+    "non_goals": [
+      "waive_rights_to_use",
+      "disable_real_runtime_acceptance",
+      "unlock_P1C02_without_P1C01_acceptance",
+      "claim_five_active_lanes_without_evidence"
+    ]
+  }
 }
