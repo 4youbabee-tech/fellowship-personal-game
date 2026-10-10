@@ -46,7 +46,7 @@ def evaluate(payload):
     cpu = " ".join(str(hardware["cpu"]).lower().split())
     gpu = " ".join(str(hardware["gpu"]).lower().split())
     os_name = " ".join(str(hardware["os"]).lower().split())
-    if (TARGET["cpu"].lower() not in cpu or TARGET["gpu"].lower() not in gpu or
+    if ("i7-6498du" not in cpu or TARGET["gpu"].lower() not in gpu or
             TARGET["os"].lower() not in os_name or
             "64-bit" not in os_name or int(hardware["ram_gb"]) != 8 or
             int(hardware["vram_gb_class"]) != 2 or int(hardware["vram_mb"]) != TARGET["vram_mb"]):
