@@ -1,9 +1,27 @@
 """Blender worker for derived P1C01 static PBR FBX. The warehouse originals are immutable."""
 import argparse, math, os, sys
+import bmesh
 import bpy
 
 def require(ok, why):
     if not ok: raise RuntimeError("P1C01_FBX_NORMALIZE_FAIL:"+why)
+
+def clean_mesh(obj):
+    bpy.context.view_layer.objects.active=obj
+    obj.select_set(True)
+    bpy.ops.object.mode_set(mode='EDIT')
+    bm=bmesh.from_edit_mesh(obj.data)
+    before=len(bm.faces)
+    degenerate=[f for f in bm.faces if (not math.isfinite(f.calc_area())) or f.calc_area()<=1e-11]
+    if degenerate:
+        bmesh.ops.delete(bm, geom=degenerate, context='FACES')
+    bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.000001)
+    bmesh.update_edit_mesh(obj.data)
+    bpy.ops.object.mode_set(mode='OBJECT')
+    obj.select_set(False)
+    removed=before-len(obj.data.polygons)
+    if removed:
+        print("P1C01_FBX_NORMALIZE_CLEANED asset_mesh="+obj.name+" removed_degenerate_faces="+str(removed),flush=True)
 
 def inspect(objects):
     count=0
@@ -24,6 +42,9 @@ def main(src,dst,asset):
     require('FINISHED' in bpy.ops.import_scene.fbx(filepath=os.path.abspath(src),use_custom_normals=True),"IMPORT_FAILED")
     meshes=sorted([o for o in bpy.context.scene.objects if o.type=='MESH'],key=lambda o:o.name)
     require(meshes and not any(o.type=='ARMATURE' for o in bpy.context.scene.objects),"NON_STATIC_FBX")
+    bpy.ops.object.select_all(action='DESELECT')
+    for mesh in meshes:
+        clean_mesh(mesh)
     count=inspect(meshes)
     bpy.ops.object.select_all(action='DESELECT')
     for m in meshes: m.select_set(True)
