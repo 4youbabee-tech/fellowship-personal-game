@@ -133,6 +133,7 @@ def main():
         selected.append({"id":slug,"group":group,"location":list(location),
                          "asset":"/Game/Production/"+PREFIX.as_posix()+"/"+slug+"/"+slug+"."+slug,
                          "material":"/Game/Production/"+PREFIX.as_posix()+"/"+slug+"/"+material+"."+material,
+                         "basecolor_asset":Path(maps["BaseColor"]["file"]).stem,
                          "radius_cm":90,"source_wave":root.name})
     # Physical importer has not run yet. Keep the runtime registry empty until
     # exact UE4 packages are subsequently proven on disk.
