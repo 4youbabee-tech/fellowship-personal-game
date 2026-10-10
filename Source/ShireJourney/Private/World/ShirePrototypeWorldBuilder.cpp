@@ -23,6 +23,11 @@
 #include "Engine/StaticMeshActor.h"
 #include "Engine/TextRenderActor.h"
 #include "EngineUtils.h"
+#include "Dom/JsonObject.h"
+#include "Misc/FileHelper.h"
+#include "Misc/Paths.h"
+#include "Serialization/JsonReader.h"
+#include "Serialization/JsonSerializer.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Materials/MaterialInterface.h"
 #include "UObject/ConstructorHelpers.h"
@@ -302,6 +307,7 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     if (ProductionCommonReedClusterMesh) ReedInstances->SetStaticMesh(ProductionCommonReedClusterMesh);
 
     BuildPrototypeWorld();
+    SpawnVerifiedPBRWorldDecorations();
 
     if (UGameInstance* GI = GetGameInstance())
     {
@@ -377,6 +383,90 @@ AStaticMeshActor* AShirePrototypeWorldBuilder::SpawnShape(
     }
 
     return Actor;
+}
+
+
+void AShirePrototypeWorldBuilder::SpawnVerifiedPBRWorldDecorations()
+{
+    // The existing ChapterAssetStreamingSubsystem loads the bank asynchronously
+    // before ChapterWorldRouter creates this world builder. No LoadObject here.
+    const FString PlanPath = FPaths::Combine(
+        FPaths::ProjectDir(), TEXT("Data/ChapterAssetStreamingPlan.json"));
+    FString JsonText;
+    if (!FFileHelper::LoadFileToString(JsonText, *PlanPath))
+    {
+        return;
+    }
+    TSharedPtr<FJsonObject> Root;
+    const TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JsonText);
+    if (!FJsonSerializer::Deserialize(Reader, Root) || !Root.IsValid())
+    {
+        return;
+    }
+    const TArray<TSharedPtr<FJsonValue>>* Decorations = nullptr;
+    if (!Root->TryGetArrayField(TEXT("p1c01_verified_world_decoration"), Decorations) ||
+        !Decorations)
+    {
+        return;
+    }
+
+    int32 Spawned = 0;
+    int32 Unresolved = 0;
+    const int32 Limit = FMath::Min(Decorations->Num(), 16);
+    for (int32 Index = 0; Index < Limit; ++Index)
+    {
+        const TSharedPtr<FJsonObject> Record =
+            (*Decorations)[Index].IsValid() ? (*Decorations)[Index]->AsObject() : nullptr;
+        if (!Record.IsValid())
+        {
+            continue;
+        }
+        FString AssetPath;
+        if (!Record->TryGetStringField(TEXT("asset"), AssetPath) ||
+            !AssetPath.StartsWith(TEXT("/Game/Production/World/Shire/VerifiedPBR/")))
+        {
+            continue;
+        }
+        const TArray<TSharedPtr<FJsonValue>>* Coordinates = nullptr;
+        if (!Record->TryGetArrayField(TEXT("location"), Coordinates) ||
+            !Coordinates || Coordinates->Num() != 3)
+        {
+            continue;
+        }
+        // Only optional, non-colliding detail beyond the authored playable road.
+        UStaticMesh* Mesh = Cast<UStaticMesh>(FSoftObjectPath(AssetPath).ResolveObject());
+        if (!Mesh)
+        {
+            ++Unresolved;
+            continue;
+        }
+        const FVector Bounds = Mesh->GetBounds().BoxExtent;
+        const float Radius = Mesh->GetBounds().SphereRadius;
+        if (!FMath::IsFinite(Radius) || Radius < 1.0f)
+        {
+            ++Unresolved;
+            continue;
+        }
+        const float Scale = FMath::Clamp(85.0f / Radius, 0.05f, 2.0f);
+        const FVector Location(
+            static_cast<float>((*Coordinates)[0]->AsNumber()),
+            static_cast<float>((*Coordinates)[1]->AsNumber()),
+            static_cast<float>((*Coordinates)[2]->AsNumber()) + Bounds.Z * Scale);
+        if (AStaticMeshActor* Actor = SpawnShape(
+            Mesh, Location, FVector(Scale), FLinearColor::White,
+            FRotator(0.0f, static_cast<float>(Index * 47), 0.0f), false))
+        {
+            Actor->Tags.AddUnique(TEXT("P1C01VerifiedStaticDecor"));
+            if (UStaticMeshComponent* Component = Actor->GetStaticMeshComponent())
+            {
+                Component->SetCastShadow(false);
+            }
+            ++Spawned;
+        }
+    }
+    UE_LOG(LogTemp, Display,
+        TEXT("P1C01_VERIFIED_PBR_WORLD_DECOR spawned=%d unresolved=%d requested=%d collision=none stage=RENDER_REVIEW_PENDING"),
+        Spawned, Unresolved, Limit);
 }
 
 void AShirePrototypeWorldBuilder::SpawnWaterSurface(
