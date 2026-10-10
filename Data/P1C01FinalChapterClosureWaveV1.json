@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "wave_id": "P1C01_FINAL_CHAPTER_CLOSURE_WAVE_V1",
+  "status": "RUNTIME_INTEGRATION_ACTIVE_NOT_ACCEPTED",
+  "runtime_chapter": "P1C01",
+  "owner_directive": "Shire first in runtime; whole Middle-earth in parallel asset production.",
+  "source_authority": [
+    "Data/ProjectGovernor.json",
+    "Data/MaximumSafeProductionModeV1.json",
+    "Docs/DEVELOPMENT_GATES.md",
+    "Docs/CURRENT_PROJECT_STATE.md",
+    "Docs/PRODUCTION_COMPLETENESS_MATRIX.md",
+    "Docs/WORLD_DETAIL_LEDGER.md",
+    "Docs/LIVING_WORLD_AI_BLUEPRINT.md",
+    "00_PROJECT_SOURCE_RULES",
+    "01_STORY_AND_TIMELINE_BIBLE",
+    "02_CHARACTERS_AND_RELATIONSHIPS_BIBLE",
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+    "04_PEOPLES_LORE_ARTIFACTS_AND_CULTURES",
+    "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "10_3D_VISUAL_ASSET_ATLAS_PRODUCTION",
+    "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX"
+  ],
+  "policy": {
+    "fast_asset_intake": true,
+    "minimum_redundant_checks": true,
+    "large_integrated_chapter_waves": true,
+    "preserve_legal_source_receipts": true,
+    "do_not_modify_warehouse_originals": true,
+    "derived_fbx_only_for_physical_repair": true,
+    "zero_missing_smoothing_groups_required": true,
+    "no_acceptance_from_green_build_only": true,
+    "no_p1c02_runtime_before_p1c01_acceptance": true
+  },
+  "current_primary_blocker": {
+    "id": "P1C01_VERIFIED_PBR_DERIVED_FBX_PROOF",
+    "latest_failed_run": 38083290428,
+    "failed_job": "Normalize actual PBR FBX on isolated hosted Blender",
+    "failed_log_signal": "P1C01_FBX_NORMALIZE_FAIL:DEGENERATE_FACE:rock_face_02",
+    "fix_commit": "f64ea50f5fa357ad9a23c9034efed70e68725aed",
+    "fix_summary": "Clean non-finite and zero-area faces in the derived Blender mesh before strict inspection and FBX smoothing export; leave source warehouse FBX unchanged.",
+    "proof_needed_next": [
+      "Exact-head Blender preflight on real 16 transferred FBX files",
+      "Derived FBX SHA256 receipts",
+      "LayerElementSmoothing present in every derived FBX",
+      "Single imported static mesh and one material slot per selected asset",
+      "Unreal import receipt with material package presence",
+      "P1C01_PBR_DECOR_RUNTIME placed count greater than zero and omitted count zero"
+    ]
+  },
+  "definition_of_done": {
+    "visual_world": [
+      "Bag End exterior and interior readable as the main lived-in hub",
+      "Hobbiton homes, gardens, hedges, lanes and domestic props",
+      "Bagshot Row hierarchy below Bag End hill",
+      "Party Field setup, tables, social routes and celebration state variants",
+      "Roads, fences, bridge, mill, water and surrounding farms",
+      "Trees, flowers, crop rows, rocks, props and low-cost water surface",
+      "Morning, party and danger atmosphere variants",
+      "Verified PBR accents imported, material-bound and visible at runtime"
+    ],
+    "living_world": [
+      "Hobbit residents with roles, schedules and bounded social exchanges",
+      "Farmers, gardeners, market roles, party guests, ferry/road workers and children-like play-runner ambience as non-story actors",
+      "Birds, rabbits, butterflies, lantern/wind/prop motion and environmental sound hooks",
+      "Danger state suppresses casual life locally without freezing all world motion",
+      "LivingWorldDirector remains population and micro-event owner",
+      "ShireNPCContextSubsystem remains context, schedule, relationship and dialogue owner"
+    ],
+    "characters": [
+      "Frodo",
+      "Bilbo",
+      "Gandalf",
+      "Sam",
+      "Merry",
+      "Pippin",
+      "Shire ambient residents required by the chapter"
+    ],
+    "gameplay": [
+      "Player movement, camera and collision",
+      "Chapter quests and party setup flow",
+      "Original bounded dialogue and contextual greetings",
+      "Fireworks or celebration-safe equivalent where current source window permits",
+      "Cinematic handoff and skip equivalence",
+      "Audio and Arabic subtitle readiness where the subsystem supports it",
+      "Save/load and route state roundtrip",
+      "NPC interactions and ambient micro-event prompts",
+      "Area transitions remain P1C01-only until gate acceptance"
+    ],
+    "acceptance_evidence_required": [
+      "UE4.27.2 exact-head build",
+      "Imported assets and runtime presence",
+      "Playable Windows package",
+      "PIE functional evidence",
+      "Human visual review",
+      "Target-device or target-class 720p/30 FPS measurement",
+      "Gate 6/7 evidence according to DEVELOPMENT_GATES.md"
+    ]
+  },
+  "five_lanes": {
+    "runtime": {
+      "state": "BLOCKED_ON_EXACT_HEAD_PBR_PROOF_THEN_UNREAL_IMPORT_RUNTIME",
+      "next": "Run Blender preflight against f64ea50, then import and verify material slots/runtime placement."
+    },
+    "warehouse": {
+      "state": "CONTINUE_PREPARATION_WITH_REUSED_RECEIPTS",
+      "next": "Keep original source files immutable; prepare only changed or newly useful assets with SHA256 receipts."
+    },
+    "characters": {
+      "state": "TECHNICAL_BRIDGE_EXISTS_VISUAL_ACCEPTANCE_PENDING",
+      "next": "Continue FBX rig/animation/LOD proof for main and ambient characters without replacing named heroes by generic meshes."
+    },
+    "visual_world": {
+      "state": "SETTLEMENT_IMPLEMENTED_MACHINE_GREEN_PBR_VISIBILITY_PENDING",
+      "next": "Promote verified PBR accents and replace remaining high-salience proxy reads after import proof."
+    },
+    "gameplay_audio_qa": {
+      "state": "SYSTEMS_PRESENT_ACCEPTANCE_EVIDENCE_PENDING",
+      "next": "Run chapter-specific PIE, package startup, save/load, audio/subtitle and performance evidence after PBR import succeeds."
+    }
+  },
+  "acceptance_boundary": {
+    "pie_tested": false,
+    "device_tested": false,
+    "visually_accepted": false,
+    "gate_6_accepted": false,
+    "gate_7_accepted": false,
+    "reason": "This contract makes final closure measurable and staged into the package, but it is not itself runtime acceptance."
+  }
+}
