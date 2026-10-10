@@ -1,3 +1,7 @@
+## 2026-10-11 — Owner exact low-spec target device (configuration documentation only)
+
+- Primary user-reported hardware: Intel Core i7-6498DU @ 2.50GHz, AMD Radeon R5 M330 with 2039 MB reported VRAM, 8 GB RAM, Windows 11 Pro 64-bit (Windows DirectX 12 without DX12 Ultimate). Keep UE4.27.2 with DX11 RHI, 1280x720, Balanced Medium with selective High for salient visuals, and target stable 30 FPS. The authoritative target and acceptance policy are recorded in Data/ProjectGovernor.json, with P1C01 profiling/QA contracts synchronized. No runtime graphics setting, new asset, P1C01 import/CI execution, Windows packaged build or device benchmark is claimed by this docs/acceptance wave. P1C01 PERFORMANCE remains NOT_TESTED; Gate 6/7 remains unaccepted. Independent PR #355 runtime work is untouched.
+
 ## 2026-10-11 — Owner accelerated intake / large chapter batch (POLICY ONLY)
 
 - Registered Owner Fast Batch Intake in the sole Governor: permit lawful source-format intake and automatic correction/conversion with minimal administrative review, reuse intact receipts, targeted changed-input checks, dynamic large P1C01 integration waves and five preparation lanes. No actual asset imported, runtime code changed, Unreal build executed, or Gate 6/7 closed in this policy candidate. PR #352 Blender/PBR work stays independent; do not cancel live workflows. P1C02 remains closed.
