@@ -34,11 +34,6 @@
 #include "Materials/MaterialInterface.h"
 #include "UObject/ConstructorHelpers.h"
 #include "UObject/SoftObjectPath.h"
-#include "Dom/JsonObject.h"
-#include "Misc/FileHelper.h"
-#include "Misc/Paths.h"
-#include "Serialization/JsonReader.h"
-#include "Serialization/JsonSerializer.h"
 
 namespace ShireLayout
 {
@@ -314,7 +309,6 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     if (ProductionCommonReedClusterMesh) ReedInstances->SetStaticMesh(ProductionCommonReedClusterMesh);
 
     BuildPrototypeWorld();
-    SpawnVerifiedPBRDecor();
     SpawnVerifiedPBRWorldDecorations();
 
     if (UGameInstance* GI = GetGameInstance())
@@ -333,77 +327,6 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     ApplyPartyStoryVariant();
 }
 
-
-void AShirePrototypeWorldBuilder::SpawnVerifiedPBRDecor()
-{
-    // Verified source geometry is decorative only. World/quest/NPC ownership
-    // remains unchanged and soft assets must already be in the resident bank.
-    const FString Manifest = FPaths::Combine(
-        FPaths::ProjectDir(), TEXT("Data/P1C01VerifiedWorldDecor.json"));
-    FString Json;
-    if (!FFileHelper::LoadFileToString(Json, *Manifest))
-    {
-        return;
-    }
-    TSharedPtr<FJsonObject> Root;
-    if (!FJsonSerializer::Deserialize(TJsonReaderFactory<>::Create(Json), Root) ||
-        !Root.IsValid() ||
-        Root->GetStringField(TEXT("status")) != TEXT("UE_PACKAGES_PRESENT_RENDER_QC_PENDING"))
-    {
-        return;
-    }
-    const TArray<TSharedPtr<FJsonValue>>* Accents = nullptr;
-    if (!Root->TryGetArrayField(TEXT("accents"), Accents) || !Accents)
-    {
-        return;
-    }
-    int32 Spawned = 0;
-    int32 Missing = 0;
-    for (const TSharedPtr<FJsonValue>& Value : *Accents)
-    {
-        if (Spawned + Missing >= 16) break;
-        const TSharedPtr<FJsonObject> Item = Value.IsValid() ? Value->AsObject() : nullptr;
-        FString Path;
-        const TArray<TSharedPtr<FJsonValue>>* Coords = nullptr;
-        if (!Item.IsValid() ||
-            !Item->TryGetStringField(TEXT("asset"), Path) ||
-            !Path.StartsWith(TEXT("/Game/Production/World/Shire/VerifiedPBR/")) ||
-            !Item->TryGetArrayField(TEXT("location"), Coords) ||
-            !Coords || Coords->Num() != 3)
-        {
-            ++Missing;
-            continue;
-        }
-        UStaticMesh* Mesh = ResolveResidentStaticMesh(*Path);
-        if (!Mesh || Mesh->GetBounds().SphereRadius <= 1.0f)
-        {
-            ++Missing;
-            continue;
-        }
-        const FVector Location(
-            (*Coords)[0]->AsNumber(), (*Coords)[1]->AsNumber(), (*Coords)[2]->AsNumber());
-        if (FMath::Abs(Location.X) > 26000.0f ||
-            FMath::Abs(Location.Y) > 6000.0f ||
-            FMath::Abs(Location.Z) > 1000.0f)
-        {
-            ++Missing;
-            continue;
-        }
-        const float Scale = FMath::Clamp(90.0f / Mesh->GetBounds().SphereRadius, 0.02f, 1.5f);
-        if (AStaticMeshActor* Actor = SpawnShape(
-            Mesh, Location, FVector(Scale), FLinearColor::White, FRotator::ZeroRotator, false))
-        {
-            UStaticMeshComponent* Component = Actor->GetStaticMeshComponent();
-            Component->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-            Component->SetCastShadow(false);
-            Actor->Tags.AddUnique(TEXT("P1C01VerifiedPBRDecor"));
-            ++Spawned;
-        }
-    }
-    UE_LOG(LogTemp, Display,
-        TEXT("P1C01_PBR_DECOR_RUNTIME placed=%d missing=%d collision=none bank=async"),
-        Spawned, Missing);
-}
 
 void AShirePrototypeWorldBuilder::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
