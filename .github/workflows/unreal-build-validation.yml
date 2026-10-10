@@ -453,10 +453,9 @@ jobs:
         shell: cmd
         run: |
           @echo off
-          set "PYTHON_EXE=%GITHUB_WORKSPACE%\\Scripts\\resolve_runtime_python.ps1"
           powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\resolve_runtime_python.ps1"
           if errorlevel 1 exit /b 85
-          python Scripts\\preflight_p1c01_verified_fbx.py --project-root "%GITHUB_WORKSPACE%"
+          "%PYTHON_EXE%" Scripts\\preflight_p1c01_verified_fbx.py --project-root "%GITHUB_WORKSPACE%"
           if errorlevel 1 exit /b 85
       - name: Build ShireJourneyEditor
         if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
