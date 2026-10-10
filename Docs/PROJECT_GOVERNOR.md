@@ -8,6 +8,10 @@
 > Other documents and plans may describe implementation details, story, world design or engineering,
 > but they do not independently override the Governor.
 
+## Owner's primary target device (2026-10-11)
+
+The authoritative exact hardware identity is in `Data/ProjectGovernor.json#target_profile`: Intel Core i7-6498DU @ 2.50GHz, AMD Radeon R5 M330 with 2039 MB reported VRAM (2 GB class), 8 GB RAM, Windows 11 Pro 64-bit. Windows reports DirectX 12 without DX12 Ultimate; this does **not** change the UE4.27.2 Windows runtime rendering contract from DX11. The primary measured target is 1280x720, Balanced Medium with selective High for hero elements, with **stable 30 FPS** as an unproven objective. Only same-build real-gameplay profiling on this owner laptop can qualify DEVICE-TESTED / performance acceptance. Historical CI hardware snapshots and build success cannot.
+
 ## New developer / new AI session entry
 
 The repository has one onboarding path:
