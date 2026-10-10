@@ -29,3 +29,6 @@ Thumbs.db
 # Owner private-offline experimental media. Keep payloads out of repository history.
 SourceAssets/PrivateOffline/
 !SourceAssets/PrivateOffline/README.md
+
+# Recreated from hash-verified licensed warehouse, no raw binary in git history.
+SourceAssets/Production/World/Shire/VerifiedPBR/

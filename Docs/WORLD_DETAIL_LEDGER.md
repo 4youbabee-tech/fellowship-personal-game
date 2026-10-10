@@ -1,3 +1,38 @@
+## 2026-10-10 — licensed 16-region ambientCG physical source receipt
+
+- Whole-game ambientCG source intake Run #38057877090 staged 22 SHA256-verified files, skipped 24, staged 1,178,435,662 bytes with post-intake disk reserve 175,388,110,848 bytes, per real Windows job log. This belongs to approved whole-game source preparation only, never authorizes additional runtime chapters or claims visuals.
+
+## 2026-10-10 — P1C01 existing verified-PBR bank consistency defect registration
+
+- No new lore, landmark placement or chapter is introduced. Within the already approved P1C01 source-to-Unreal import lane, correct stale soft-asset bank package-count bookkeeping and the unused wrong-receipt/wrong-log-token PBR import verifier. The existing generic Windows package preflight uses a unique package count while the stage script appended new P1C01 mesh paths without updating it. Require per-mesh import/material slot evidence, then strict package manifest consistency; preserve original placement anchors, immutable SHA256 warehouse, one writer, 6GiB free reserve and no runtime synchronous asset loads. VISUAL, PIE, DEVICE, 30FPS and Gate 6/7 acceptance remain open.
+
+## 2026-10-10 — P1C01 PBR actual runtime decoration visibility guard
+
+- Existing P1C01 asset bridge can produce correct .uasset files while startup still resolves zero resident meshes. Treat this as a same-chapter visibility defect, not a new chapter or new lore feature. Extend the serialized source-to-Unreal workflow with fail-closed runtime `P1C01_PBR_DECOR_RUNTIME` observed placement versus authorized `P1C01VerifiedWorldDecor.json` accents and async bank; no synchronous loading, new world owner or additional actor density. Keep Gate 6/7 visual/device acceptance separate.
+
+## 2026-10-10 — P1C01 source-to-visible UE4 PBR bridge production (candidate)
+
+- Reuse two immutable Poly Haven CC0 39/60 source waves, validate SHA256 original receipts and per-file hashes, choose at most 16 qualified single-material **static FBX** props within a 144 MiB source cap; imported textures are 1K PNG. Quarantine/hold, oversized, unknown-multi-material, and unsupported files are not promoted. No new source-provider downloads.
+- Scripts/p1c01_verified_pbr_bridge.py stages ignored generated source assets into SourceAssets/Production/World/Shire/VerifiedPBR; the existing UE4.27.2 importer synthesizes a material instance and now fails on missing/wrong single-material slots and invalid mesh geometry. Only after .uasset files exist does the bridge append soft paths to the existing P1C01 async bank and materialize Data/P1C01VerifiedWorldDecor.json.
+- AShirePrototypeWorldBuilder renders up to 16 small world accents from resident soft objects without collision, actor ticking, extra NPC ownership, canonical route transforms or new chapters. Verified subset source maps include BaseColor, NormalDX and packed ORM; BaseColor, tangent NormalDX and packed ORM wiring is present in source; actual UE import and visual shader fidelity require evidence.
+- .github/workflows/p1c01-verified-pbr-production.yml schedules real UE editor build, source import, uasset verification, Automation, startup, chapter/save round-trip, compressed Windows package and packaged startup before uploading a test build. This workflow is not a five-lane read-only report.
+- All evidence **PENDING exact-head CI and runner execution**; no PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, 30 FPS, or Gate6/7 claims. No move to P1C02 runtime.
+
+## 2026-10-10 — P1C01 physical CC0 PBR-to-UE4 visual production bridge (candidate, evidence pending)
+
+- Manager authority: DEC-078/104/105, REQ-PROD-011, W01/P1C01 only. Actual persistent warehouse Run #38049193046 completed SUCCESS, providing immutable 39+60 source and 39+59 prepared PBR files; this is source storage evidence, not engine/render evidence.
+- This PR adds an exact SHA256 checked, bounded (up to 16 static assets / 144 MiB) source bridge from the persistent two-wave CC0 warehouse into the existing `SourceAssets/Production/World/Shire/VerifiedPBR` importer. Reject held-identity, held-biome, corrupted, multimap/multi-material and non-Shire/unrelated candidates. Avoid provider redownload, hard runtime references and any character FBX.
+- Unreal importer now binds verified single-material FBX to a real PBR master: BaseColor + tangent-space NormalDX + packed ORM (ambient occlusion R, roughness G, metallic B), with non-sRGB packed/normal imports. Preserve existing OBJ asset bank unchanged.
+- Existing `UShireChapterAssetStreamingSubsystem` preloads selected soft paths via `Data/ChapterAssetStreamingPlan.json`. Existing `AShirePrototypeWorldBuilder` adds at most 16 optional, non-colliding, low-shadow static decorative pieces after world commit and never synchronously loads meshes. Canonical route/story/quest ownership and actor pooling remain unchanged.
+- A dedicated GitHub-hosted offline source test + serialized Windows UE4.27.2 workflow runs actual source stage, editor build, production import, `.uasset` presence, automation, startup, all chapters, state persistence, warning guard, cook and packaged startup. Only success can publish a playable Windows **test candidate**. The new visual packet is NOT declared PIE, device, human visual or Gate 6/7 accepted.
+- Until exact-head tests run, this is a source implementation candidate. Fix compile/import/runtime failures on this same PR before merge; avoid new feature lanes until machine-green. No final Windows release requested.
+
+## 2026-10-10 — ambientCG cross-lane duplicate download regression guard (candidate)
+
+- Observed live warehouse #38057877090 SUCCESS: `AMBIENTCG_WAREHOUSE_STAGE_PASS files=22 skipped=24 bytes=1178435662`, `REGION_SOURCE_RECEIPT_AUDIT_PASS files=22 skipped=24 reserve=175388110848`. These are actual SHA256-audited source-only bytes, not Unreal imports.
+- Root-cause in `Scripts/stage_ambientcg_warehouse.ps1`: ten regional material queries can return the same provider asset ID. Run logs show repeated downloads of Rock064, Ground111 and PavingStones151; prior script only guarded identical destination paths and did not deduplicate across category folders. Add accepted-ID set updated ONLY after successful source SHA256 receipt; skip later duplicate IDs before network requests. Byte-cap failure must not remove previously valid cached archive; do not trigger or repeat the completed batch. Existing Quaternius zero-payload Pre-Unreal step also checks the ambientCG dedup code order offline.
+- Candidate until exact-head preflight. One persistent warehouse writer and 6 GiB reserve retained. No P1C01 runtime change, PIE, target-device FPS, visual or Gate6/7 credit.
+
 ## 2026-10-10 — ambientCG cross-lane duplicate download regression guard (candidate)
 
 - Observed live warehouse #38057877090 SUCCESS: `AMBIENTCG_WAREHOUSE_STAGE_PASS files=22 skipped=24 bytes=1178435662`, `REGION_SOURCE_RECEIPT_AUDIT_PASS files=22 skipped=24 reserve=175388110848`. These are actual SHA256-audited source-only bytes, not Unreal imports.
