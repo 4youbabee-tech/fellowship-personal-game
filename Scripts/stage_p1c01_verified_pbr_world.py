@@ -22,8 +22,8 @@ LOCATIONS = {"village": [(2600,2050,0),(3500,-1900,0),(4900,1800,0),(6200,-1950,
 FBX_MAGIC = b"Kaydara FBX Binary"
 PNG_MAGIC = bytes.fromhex("89504e470d0a1a0a")
 OVERLAY = Path("World/Shire/VerifiedPBR")
-SHA = re.compile(r"[0-9a-f]{64}\\Z")
-SLUG = re.compile(r"[a-z0-9_]{3,80}\\Z")
+SHA = re.compile(r"[0-9a-f]{64}\Z")
+SLUG = re.compile(r"[a-z0-9_]{3,80}\Z")
 
 class Reject(ValueError): pass
 def require(value, reason):
@@ -81,7 +81,7 @@ def inventory(warehouse):
             groups={}
             for m in a.get("maps",[]):
                 name=Path(m["path"]).name
-                v=re.fullmatch(r"TX_(.+)_(BaseColor|NormalDX|ORM|OpacityMask)\\.png",name)
+                v=re.fullmatch(r"TX_(.+)_(BaseColor|NormalDX|ORM|OpacityMask)\.png",name)
                 if not v or m.get("resolution")!=[1024,1024]:groups={};break
                 group,role=v.groups()
                 groups.setdefault(group,{})[role]=(m,name)
@@ -139,7 +139,7 @@ def stage(warehouse,project):
             products.append(checked_copy(root,name,receipt,target/Path(name).name,
                                          FBX_MAGIC if role=="fbx" else PNG_MAGIC))
         mname="MI_P1C01_"+slug
-        material="\\n".join(("newmtl "+mname,"Kd 1 1 1","Pr 0.68","Pm 0",
+        material="\n".join(("newmtl "+mname,"Kd 1 1 1","Pr 0.68","Pm 0",
                             "map_Kd "+Path(entries["BaseColor"][0]).name,
                             "map_Bump "+Path(entries["NormalDX"][0]).name,
                             "map_ORM "+Path(entries["ORM"][0]).name,""))
@@ -159,7 +159,7 @@ def stage(warehouse,project):
             "evidence_boundary":"Source QC only. No UE import, LOD, collision, PIE, FPS or visual acceptance."}
     p=project/"Saved/P1C01VerifiedPBR/source_stage_receipt.json"
     p.parent.mkdir(parents=True,exist_ok=True)
-    p.write_text(json.dumps(report,indent=2)+"\\n",encoding="utf-8")
+    p.write_text(json.dumps(report,indent=2)+"\n",encoding="utf-8")
     print("P1C01_PBR_VERIFIED_SOURCE_PASS items="+str(len(selected))+" bytes="+str(bytes_total))
     return report
 
@@ -176,13 +176,13 @@ def activate(project):
     bank=plan["banks"]["P1C01"]["assets"]
     for item in report["selected"]:
         if item["asset"] not in bank:bank.append(item["asset"])
-    planpath.write_text(json.dumps(plan,indent=2)+"\\n",encoding="utf-8")
+    planpath.write_text(json.dumps(plan,indent=2)+"\n",encoding="utf-8")
     metadata={"schema_version":1,"status":"UE_PACKAGE_PRESENCE_ONLY",
       "chapter":"P1C01","selected_count":len(report["selected"]),
       "accents":[{k:item[k] for k in ("id","category","asset","location","target_radius_cm")}
                  for item in report["selected"]],
       "evidence_boundary":"uasset presence; gameplay, collision, PIE, visual and device unaccepted."}
-    (project/"Data/P1C01VerifiedWorldDecor.json").write_text(json.dumps(metadata,indent=2)+"\\n",encoding="utf-8")
+    (project/"Data/P1C01VerifiedWorldDecor.json").write_text(json.dumps(metadata,indent=2)+"\n",encoding="utf-8")
     print("P1C01_PBR_UE_PACKAGE_PRESENCE_PASS count="+str(metadata["selected_count"]))
     return metadata
 
