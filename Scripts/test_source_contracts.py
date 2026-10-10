@@ -1083,6 +1083,20 @@ class SourceContractTests(unittest.TestCase):
         self.assertTrue(any("bootstrap_local_p1c01_visuals.cmd" in item for item in world["missing_work"]))
 
 
+    def test_p1c01_full_cast_candidate_workflows_run_on_pr_paths(self):
+        root = Path(__file__).resolve().parents[1]
+        warehouse_workflow = (root / ".github" / "workflows" / "warehouse-stage.yml").read_text(encoding="utf-8")
+        hero_workflow = (root / ".github" / "workflows" / "p1c01-hero-skeletal-candidate-wave.yml").read_text(encoding="utf-8")
+        for workflow in (warehouse_workflow, hero_workflow):
+            self.assertIn("pull_request:", workflow)
+            self.assertIn("branches:", workflow)
+            self.assertIn("develop", workflow)
+            self.assertIn("Data/WarehouseQuaterniusHeroCandidateBatchV1.json", workflow)
+            self.assertIn("Data/P1C01HeroSkeletalCandidateWaveV1.json", workflow)
+        self.assertIn("github.event.pull_request.head.sha || github.sha", warehouse_workflow)
+        self.assertIn("P1C01 Full Cast Skeletal Candidate Wave", hero_workflow)
+
+
     def test_p1c01_quaternius_full_cast_candidate_batch_is_wired_to_warehouse(self):
         root = Path(__file__).resolve().parents[1]
         batch = json.loads((root / "Data" / "WarehouseQuaterniusHeroCandidateBatchV1.json").read_text(encoding="utf-8"))
