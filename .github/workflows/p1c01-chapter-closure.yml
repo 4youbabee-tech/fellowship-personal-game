@@ -16,7 +16,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: p1c01-chapter-closure-${{ github.repository }}
+  group: warehouse-stage-${{ github.repository }}
   cancel-in-progress: false
 
 jobs:
@@ -64,6 +64,14 @@ jobs:
       - name: Verify runner session health
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_CLOSURE_SOURCE%\Scripts\verify_runner_session.ps1"
+
+      - name: Require Project Governor for warehouse and presentation preparation
+        shell: cmd
+        run: |
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_CLOSURE_SOURCE%\Scripts\run_governor_work_start.ps1" -Lane WAREHOUSE_ASSET_INTAKE -Workspace "%SHIRE_CLOSURE_SOURCE%"
+          if errorlevel 1 exit /b 65
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_CLOSURE_SOURCE%\Scripts\run_governor_work_start.ps1" -Lane GAMEPLAY_PRESENTATION_PREP -Workspace "%SHIRE_CLOSURE_SOURCE%"
+          if errorlevel 1 exit /b 66
 
       - name: Fast closure preflight
         shell: cmd

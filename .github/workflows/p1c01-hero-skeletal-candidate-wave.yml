@@ -53,6 +53,10 @@ jobs:
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_HERO_RIG_SRC%\Scripts\verify_runner_session.ps1"
 
+      - name: Require Project Governor before skeletal preparation
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_HERO_RIG_SRC%\Scripts\run_governor_work_start.ps1" -Lane SKELETAL_CHARACTER_PREP -Workspace "%SHIRE_HERO_RIG_SRC%"
+
       - name: Fast PowerShell preflight
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_HERO_RIG_SRC%\Scripts\test_powershell_syntax.ps1"

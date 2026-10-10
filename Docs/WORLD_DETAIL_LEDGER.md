@@ -1,3 +1,9 @@
+## 2026-10-10 — P1C01 mandatory Project Governor work-start and five-lane enforcement
+
+- DEC-104 is enforced as a mandatory physical production entrypoint. Existing five-lane read-only preflight is NOT proof of generated assets. Scripts/governor_work_start.py runs the full Project Governor and checks DEC-078/104/105, REQ-PROD-011, active P1C01 gate, one runtime writer, one warehouse writer, 6 GiB reserve and five lane identities before production.
+- Production workflows for Unreal, warehouse, skeletal characters, visual source and chapter closure now require the manager. Pre-Unreal regression tests forbid their bypass. Chapter closure source writer shares warehouse-stage concurrency with durable source staging.
+- Evidence: source changes submitted for exact-head CI. No new Unreal asset import, chapter PIE, target device measurement or visual acceptance is inferred. The existing warehouse #38049193046 is independent and not cancelled.
+
 ## 2026-10-10 — registered Windows-only warehouse nested-path regression before patch
 
 P1C01 storage intake is part of the already-approved scope. Preserve existing SHA256-verified 39 sources/PBR archives; fix receipt normalization only, test offline, then resume source-only warehouse intake after successful isolated gate. Do not add assets or promote source to UE without QC.

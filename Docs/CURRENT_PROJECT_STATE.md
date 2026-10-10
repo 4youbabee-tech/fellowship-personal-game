@@ -1,3 +1,9 @@
+## 2026-10-10 — P1C01 mandatory Project Governor work-start and five-lane enforcement
+
+- DEC-104 is enforced as a mandatory physical production entrypoint. Existing five-lane read-only preflight is NOT proof of generated assets. Scripts/governor_work_start.py runs the full Project Governor and checks DEC-078/104/105, REQ-PROD-011, active P1C01 gate, one runtime writer, one warehouse writer, 6 GiB reserve and five lane identities before production.
+- Production workflows for Unreal, warehouse, skeletal characters, visual source and chapter closure now require the manager. Pre-Unreal regression tests forbid their bypass. Chapter closure source writer shares warehouse-stage concurrency with durable source staging.
+- Evidence: source changes submitted for exact-head CI. No new Unreal asset import, chapter PIE, target device measurement or visual acceptance is inferred. The existing warehouse #38049193046 is independent and not cancelled.
+
 ## 2026-10-10 — One-shot P1C01 durable 99-source warehouse activation on develop (PENDING)
 
 - Root-cause audit: `p1c01-five-lane-maxsafe.yml` only runs five read-only metadata reports; no asset import/Unreal authoring occurs in these lanes. The two-wave durable 99-FBX warehouse workflow only pushed automatically on the now-merged `ops/p1c01-five-lane-maxsafe-2026-10-09` source branch, so the previously repaired Windows nested-path issue had no completed persistent warehouse re-run after merge.

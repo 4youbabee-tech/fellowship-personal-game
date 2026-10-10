@@ -55,6 +55,7 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          python3 Scripts/governor_work_start.py --lane "${{ matrix.lane }}"
           python3 -m unittest discover -s Scripts -p test_p1c01_five_lane_preflight.py -v
 
       - name: Test persisted warehouse receipts offline

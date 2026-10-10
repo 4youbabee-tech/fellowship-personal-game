@@ -5699,7 +5699,8 @@
         "Use dynamic resource-aware sharding across all eligible candidates; cap single-file and per-wave bytes by measured runner/network budgets and preserve >=6 GiB persistent warehouse disk reserve. No unlimited single ZIP or unlimited simultaneous uploads.",
         "Save file quality stages separately: INDEXED, DOWNLOADED, HASHED_QC, READY_FOR_IMPORT, UE_IMPORTED, VISUAL_REVIEWED. Not all indexed items are files; no source/static pass implies Unreal/PIE/device acceptance.",
         "P1C01 stays the only active runtime chapter until its Gate 6/7 visual, gameplay and target-device evidence is accepted. Whole-trilogy source stocking and future region design may continue.",
-        "Batch coherent changes and run fast exact-head hosted preflights before expensive Unreal; preserve compile, save/load, NPC pooling/async loading, route, performance and runtime integrity checks."
+        "Batch coherent changes and run fast exact-head hosted preflights before expensive Unreal; preserve compile, save/load, NPC pooling/async loading, route, performance and runtime integrity checks.",
+        "Mandatory five-lane worker entry: Scripts/governor_work_start.py invokes the full Project Governor before real physical production. Tests fail if any P1C01 production workflow bypasses manager checks. Preserve one warehouse writer, one Unreal runtime writer, checkpoint reuse and Gate 6/7."
       ],
       "rationale": "Owner explicitly requested that the already approved fastest-safe production policy be applied automatically, with five concurrent non-conflicting operational lanes and maximized safe asset upload throughput. REQ-PROD-011 and DEC-078 already authorize multi-lane work but lacked a concrete five-way hosted coordination proof.",
       "evidence": [
