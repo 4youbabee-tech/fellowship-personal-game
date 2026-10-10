@@ -43,6 +43,10 @@ jobs:
         shell: bash
         run: test "$(git rev-parse HEAD)" = "$TARGET_SHA"
 
+      - name: Require Project Governor before human source factory
+        shell: bash
+        run: python3 Scripts/governor_work_start.py --lane SKELETAL_CHARACTER_PREP
+
       - name: Install bounded Blender normalizer
         shell: bash
         run: |
