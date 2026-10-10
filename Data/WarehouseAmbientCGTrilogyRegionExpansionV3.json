@@ -10,8 +10,8 @@
   "target_attribute": "2K-PNG",
   "search_lanes": [
     {
-      "q": "white limestone wall stone",
-      "limit": 6,
+      "q": "Limestone",
+      "limit": 12,
       "category": "GONDOR_WHITE_CITY",
       "use": [
         "Minas Tirith wall, gate and citadel support stones"
@@ -22,8 +22,8 @@
       ]
     },
     {
-      "q": "weathered fortress stone block",
-      "limit": 6,
+      "q": "Rock",
+      "limit": 12,
       "category": "ROHAN_HELMS_DEEP",
       "use": [
         "Helm's Deep walls, Hornburg, culvert and battle-worn masonry"
@@ -33,8 +33,8 @@
       ]
     },
     {
-      "q": "rusted dark stone metal",
-      "limit": 6,
+      "q": "Metal",
+      "limit": 12,
       "category": "ISENGARD_INDUSTRIAL",
       "use": [
         "Isengard black tower and war machinery support"
@@ -44,8 +44,8 @@
       ]
     },
     {
-      "q": "straw thatch roof wood",
-      "limit": 6,
+      "q": "Wood",
+      "limit": 12,
       "category": "ROHAN_SETTLEMENT",
       "use": [
         "Meduseld roof and timber town support"
@@ -55,8 +55,8 @@
       ]
     },
     {
-      "q": "light stone mossy tiles",
-      "limit": 6,
+      "q": "Stone",
+      "limit": 12,
       "category": "ELVEN_TERRACE",
       "use": [
         "Rivendell courts and Lothlorien sanctuary stone accents"
@@ -67,8 +67,8 @@
       ]
     },
     {
-      "q": "aged tree bark moss",
-      "limit": 6,
+      "q": "Bark",
+      "limit": 12,
       "category": "ANCIENT_FOREST",
       "use": [
         "Fangorn and forest-region bark, roots and ground dressing"
@@ -80,8 +80,8 @@
       ]
     },
     {
-      "q": "broken bricks stone rubble",
-      "limit": 6,
+      "q": "Bricks",
+      "limit": 12,
       "category": "OSGILIATH_RUINS",
       "use": [
         "Ruined Osgiliath roads, riverfront ruins and Amon Hen support"
@@ -93,8 +93,8 @@
       ]
     },
     {
-      "q": "wet stone coastal paving",
-      "limit": 6,
+      "q": "Paving",
+      "limit": 12,
       "category": "GREY_HAVENS_PORT",
       "use": [
         "Grey Havens stone quay and weathered river-side paths"
@@ -105,8 +105,8 @@
       ]
     },
     {
-      "q": "dry gravel mud battlefield",
-      "limit": 6,
+      "q": "Ground",
+      "limit": 12,
       "category": "PELENNOR_BATTLEFIELD",
       "use": [
         "Pre-battle, siege and aftermath terrain support"
@@ -117,8 +117,8 @@
       ]
     },
     {
-      "q": "rough dark rock moss cave",
-      "limit": 6,
+      "q": "Cave",
+      "limit": 12,
       "category": "MORGUL_FORTRESS",
       "use": [
         "Minas Morgul, Cirith Ungol and haunted ruin accents"
@@ -142,6 +142,7 @@
     "Search by region-specific material family, reuse across regions via source SHA256 and receipts.",
     "Stage under one serialized persistent warehouse writer and preserve at least 6 GiB disk reserve.",
     "Only 2K-PNG ZIP source stock; PNG/TGA packed masks for runtime require later import QC.",
-    "Catalogued, downloaded and hashed assets are not UE-imported; no later-region runtime or visual acceptance."
+    "Catalogued, downloaded and hashed assets are not UE-imported; no later-region runtime or visual acceptance.",
+    "Keep provider search query concise: ambientCG keyword matching returned zero candidates for multiword thematic sentences in run 38057505000; thematic filtering is applied later during intake QC."
   ]
 }
