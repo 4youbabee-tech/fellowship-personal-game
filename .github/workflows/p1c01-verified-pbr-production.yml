@@ -1,0 +1,121 @@
+name: P1C01 Verified PBR Visible World Production
+on:
+  push:
+    branches: [develop]
+    paths:
+      - '.github/workflows/p1c01-verified-pbr-production.yml'
+      - 'Scripts/p1c01_verified_pbr_bridge.py'
+      - 'Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp'
+      - 'Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: p1c01-verified-pbr-runtime-${{ github.repository }}
+  cancel-in-progress: false
+jobs:
+  import_visible_shire:
+    name: Reuse 99 sources, import visible Shire, package playable candidate
+    runs-on: [self-hosted, Windows, X64, ue4-27]
+    timeout-minutes: 180
+    env:
+      SHIRE_WAREHOUSE_ROOT: 'D:\actions-runner\_warehouse\ShireJourney'
+    steps:
+      - name: Exact-head checkout (no LFS, no persisted credentials)
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+          persist-credentials: false
+          lfs: false
+      - name: Governor and physical runner health
+        shell: cmd
+        run: |
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\verify_runner_session.ps1"
+          if errorlevel 1 exit /b 40
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\run_governor_work_start.ps1" -Lane RUNTIME_BUILD -Workspace "%GITHUB_WORKSPACE%"
+          if errorlevel 1 exit /b 41
+      - name: Prove permanent 39+60 checksum receipts (no provider redownload)
+        shell: powershell
+        run: |
+          $ErrorActionPreference='Stop'
+          $candidates=@('D:\actions-runner\_work\_tool\Python\3.11.9\x64\python.exe')
+          if($env:RUNNER_TOOL_CACHE){$candidates+=(Join-Path $env:RUNNER_TOOL_CACHE 'Python\3.11.9\x64\python.exe')}
+          $cmd=Get-Command python.exe -ErrorAction SilentlyContinue
+          if($cmd){$candidates+=[string]$cmd.Source}
+          $py=$candidates|Where-Object{$_ -and (Test-Path -LiteralPath $_ -PathType Leaf)}|Select-Object -First 1
+          if(-not $py){throw 'P1C01_VERIFIED_PBR_PYTHON_MISSING'}
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value ("SHIRE_PBR_PYTHON="+$py)
+          & $py Scripts/stage_p1c01_adaptive_pbr_warehouse.py --warehouse-root "$env:SHIRE_WAREHOUSE_ROOT" --wave p1c01_wave39 --expected-source 39 --expected-prepared 39 --check-existing
+          if($LASTEXITCODE -ne 0){throw 'WAVE39_NOT_VERIFIED'}
+          & $py Scripts/stage_p1c01_adaptive_pbr_warehouse.py --warehouse-root "$env:SHIRE_WAREHOUSE_ROOT" --wave p1c01_wave60 --expected-source 60 --expected-prepared 59 --check-existing
+          if($LASTEXITCODE -ne 0){throw 'WAVE60_NOT_VERIFIED'}
+          Write-Host 'P1C01_VERIFIED_TWO_WAVE_SOURCE_PASS originals=99 prepared=98'
+      - name: Stage bounded FBX and 1K PNG source from verified warehouse
+        shell: powershell
+        run: |
+          & $env:SHIRE_PBR_PYTHON Scripts/p1c01_verified_pbr_bridge.py --project-root "$env:GITHUB_WORKSPACE" --warehouse-root "$env:SHIRE_WAREHOUSE_ROOT"
+          if($LASTEXITCODE -ne 0){throw 'P1C01_VERIFIED_SOURCE_STAGE_FAILED'}
+      - name: Prepare UE4.27.2 runtime source and build environment
+        shell: cmd
+        run: |
+          call "Scripts\ci_verify_unreal.cmd"
+          if errorlevel 1 exit /b 51
+          call "Scripts\ci_wait_for_unreal_editor.cmd"
+          if errorlevel 1 exit /b 52
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\prepare_runtime_source_layout.ps1"
+          if errorlevel 1 exit /b 53
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\prepare_msvc_environment.ps1"
+          if errorlevel 1 exit /b 54
+      - name: Build real UE4 editor and source commandlet
+        shell: cmd
+        run: call "Scripts\ci_build_unreal.cmd"
+      - name: Import real production assets into UE4 .uasset
+        shell: cmd
+        run: call "Scripts\ci_import_production_assets.cmd"
+      - name: Fail closed on missing UE assets then update existing async chapter bank
+        shell: powershell
+        run: |
+          & $env:SHIRE_PBR_PYTHON Scripts/p1c01_verified_pbr_bridge.py --project-root "$env:GITHUB_WORKSPACE" --activate-after-import
+          if($LASTEXITCODE -ne 0){throw 'P1C01_VERIFIED_UE_ACTIVATION_FAILED'}
+      - name: Resolve local gameplay observer and run UE Automation
+        shell: cmd
+        run: |
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\resolve_runtime_python.ps1"
+          if errorlevel 1 exit /b 61
+          call "Scripts\ci_run_project_automation.cmd"
+          if errorlevel 1 exit /b 62
+      - name: Boot Shire, verify route and save-state continuity
+        shell: cmd
+        run: |
+          call "Scripts\ci_runtime_startup.cmd"
+          if errorlevel 1 exit /b 70
+          call "Scripts\ci_runtime_chapters.cmd"
+          if errorlevel 1 exit /b 71
+          call "Scripts\ci_runtime_state.cmd"
+          if errorlevel 1 exit /b 72
+          call "Scripts\ci_warning_debt.cmd"
+          if errorlevel 1 exit /b 73
+      - name: Cook and archive Windows test build with verified visual assets
+        shell: cmd
+        run: call "Scripts\ci_package_w00.cmd"
+      - name: Audit packaged Runtime Data JSON
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\verify_packaged_runtime_data.ps1"
+      - name: Launch actual packaged executable and check Shire startup
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\verify_packaged_startup.ps1"
+      - name: Publish actual playable build only after successful runtime checks
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ShireJourney-P1C01-Verified-PBR-${{ github.sha }}
+          path: Saved/W00Package/WindowsNoEditor/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Report exact acceptance boundary
+        if: always()
+        shell: powershell
+        run: |
+          Write-Host "P1C01_VERIFIED_PBR_PRODUCTION_RUN head=$env:GITHUB_SHA"
+          Write-Host "PIE, DEVICE, VISUAL and Gate6/7 remain unaccepted without evidence."
