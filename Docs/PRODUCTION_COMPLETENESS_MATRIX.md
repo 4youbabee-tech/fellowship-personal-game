@@ -1,3 +1,7 @@
+## 2026-10-11 — DEC-106 owner flexible asset intake
+
+Owner explicitly requests removal of unnecessary *source intake* rigidity. Accept useful licensed safe OBJ/GLB/GLTF/BLEND/BMP or unconventional FBX **as source candidates** for offline conversion; do not reject solely for source extension, naming or absent smoothing group. Deliver Unreal 4.27.2-compliant FBX for animated assets, optimized static meshes, PNG/TGA compressed packed PBR textures and tested import/material/LOD/collision or skeletal validity. Quarantine candidate-specific failures, preserve original hash/licenses; proceed with other useful assets. This is a production policy change, **not removal of safety, source-canon, low-end performance, runtime gating, or truthful evidence**. Owner wants Shire closure prioritized and warehouse coverage across 28 regions. Code conversion changes have NOT been implemented in this PR; DEC-106 / REQ-ASSET-FLEX-001 are REQUESTED policy awaiting tool implementation and proof.
+
 ## 2026-10-10 — Owner living social landscape standard, Shire-first / all regions (design requirement)
 
 - Scope/requirements documentation candidate only: living social landscape first in P1C01, later region-specific adaptation (28-region design coverage). Status PLANNED/DEFERRED as appropriate; no new asset files, UE import, character art, measurable visual acceptance, performance credit or Gate 6/7 completion.
