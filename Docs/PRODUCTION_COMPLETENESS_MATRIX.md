@@ -1,3 +1,7 @@
+## 2026-10-10 — Frodo deformation workflow evidence integrity correction (candidate)
+
+- P1C01 Human Wave 2 #38052762961 has a green aggregate but hosted deformation job #114217909522 emitted FileNotFoundError for its UE4 receipt. Isolated fix branch makes receipt discovery unique and fail-closed, adds --python-exit-code 93, validates actual STATIC_DEFORMATION_STRESS_PASS JSON, and adds a static regression contract. Candidate not yet exact-head validated; no deformation, visual, PIE, device, or Gate 6/7 acceptance.
+
 ## 2026-10-10 — P1C01 mandatory Project Governor work-start and five-lane enforcement
 
 - DEC-104 is enforced as a mandatory physical production entrypoint. Existing five-lane read-only preflight is NOT proof of generated assets. Scripts/governor_work_start.py runs the full Project Governor and checks DEC-078/104/105, REQ-PROD-011, active P1C01 gate, one runtime writer, one warehouse writer, 6 GiB reserve and five lane identities before production.
