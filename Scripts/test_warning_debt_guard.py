@@ -89,6 +89,15 @@ class WarningDebtGuardTests(unittest.TestCase):
             self.assertEqual(evidence[0][:3], ("CI-ProductionAssetImport.log", 2, "/tmp/test_house.fbx"))
             self.assertEqual(guard.measure(guard.decode(log), guard.CHECKS[0][1], None)[0], 1)
 
+    def test_smoothing_warning_source_context_retains_failure_evidence(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            log = Path(tmp) / "CI-ProductionAssetImport.log"
+            log.write_text("Importing Props/TestProp.fbx\\nNo smoothing group information was found\\n", encoding="utf-8")
+            evidence = guard.smoothing_warning_sources([log])
+            self.assertEqual(len(evidence), 1)
+            self.assertIn("TestProp.fbx", evidence[0][2])
+            self.assertEqual(evidence[0][1], 2)
+
     def test_occurrence_gate_still_counts_each_unidentified_warning(self):
         pattern = re.compile(r"No smoothing group information", re.I)
         count, identities = guard.measure(
