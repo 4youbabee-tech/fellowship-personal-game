@@ -1,3 +1,9 @@
+## 2026-10-10 — Whole-game licensed ambientCG regional intake V3 (candidate)
+
+- Added ten bounded material search lanes for 16 source-indexed regional IDs (including Minas Tirith, Helm's Deep, Edoras, Osgiliath, Rivendell, Fangorn, Isengard, Pelennor and Grey Havens) using existing public ambientCG 2K-PNG CC0 adapter, not a new material system. Register source queries and multi-region reuse; exact provider asset IDs are only assigned by live API staging.
+- New separate source-only intake workflow shares the existing serialized warehouse-stage concurrency group, requires Project Governor and Windows runner, checks 6 GiB disk floor before and after stage, requires SHA256 verified nonempty receipt, and does not access Unreal Content or open another runtime chapter.
+- Branch/pre-merge state: MANIFEST_AND_WORKFLOW_CREATED, STAGING_NOT_RUN; no new downloads, verified inventory additions, Unreal integration, PIE, device, visual or Gate 6/7 acceptance. On merge to develop the path-scoped production workflow will run; check receipt results and quarantine failures before declaring intake success.
+
 ## 2026-10-10 — P1C01 mandatory Project Governor work-start and five-lane enforcement
 
 - DEC-104 is enforced as a mandatory physical production entrypoint. Existing five-lane read-only preflight is NOT proof of generated assets. Scripts/governor_work_start.py runs the full Project Governor and checks DEC-078/104/105, REQ-PROD-011, active P1C01 gate, one runtime writer, one warehouse writer, 6 GiB reserve and five lane identities before production.

@@ -1,0 +1,70 @@
+name: Whole-game ambientCG regional source intake V3
+on:
+  push:
+    branches: [develop]
+    paths:
+      - 'Data/WarehouseAmbientCGTrilogyRegionExpansionV3.json'
+      - '.github/workflows/whole-game-ambientcg-region-expansion-v3.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: warehouse-stage-${{ github.repository }}
+  cancel-in-progress: false
+jobs:
+  region_source_intake:
+    name: Licensed whole-game source warehouse intake
+    runs-on: [self-hosted, Windows, X64, ue4-27]
+    timeout-minutes: 90
+    steps:
+      - name: Checkout exact source head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          lfs: false
+      - name: Enforce manager and runner health
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          & "$env:GITHUB_WORKSPACE/Scripts/verify_runner_session.ps1"
+          if($LASTEXITCODE -ne 0){ throw 'RUNNER_HEALTH_FAIL' }
+          & "$env:GITHUB_WORKSPACE/Scripts/run_governor_work_start.ps1" -Lane WAREHOUSE_ASSET_INTAKE -Workspace $env:GITHUB_WORKSPACE
+          if($LASTEXITCODE -ne 0){ throw 'GOVERNOR_FAIL' }
+      - name: Check 6 GiB disk reserve before downloads
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $root = 'D:\actions-runner\_warehouse\ShireJourney'
+          $drive = [System.IO.DriveInfo]::new([System.IO.Path]::GetPathRoot($root))
+          if($drive.AvailableFreeSpace -lt 6442450944){ throw 'WAREHOUSE_RESERVE_PRECHECK_FAIL' }
+          Write-Host ('WAREHOUSE_FREE_BEFORE=' + $drive.AvailableFreeSpace)
+      - name: Stage licensed 2K PNG archive candidates through existing provider adapter
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          & "$env:GITHUB_WORKSPACE/Scripts/stage_ambientcg_warehouse.ps1" -ManifestPath "$env:GITHUB_WORKSPACE/Data/WarehouseAmbientCGTrilogyRegionExpansionV3.json"
+          if($LASTEXITCODE -ne 0){ throw 'REGIONAL_SOURCE_STAGE_FAILED' }
+      - name: Verify intake receipt and preserve disk reserve
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $root='D:\actions-runner\_warehouse\ShireJourney\ambientCG_Trilogy'
+          $file=Join-Path $root 'receipt_WAREHOUSE_AMBIENTCG_TRILOGY_REGION_EXPANSION_V3.json'
+          if(-not (Test-Path -LiteralPath $file -PathType Leaf)){throw 'REGION_INTAKE_RECEIPT_MISSING'}
+          $r=Get-Content -LiteralPath $file -Raw | ConvertFrom-Json
+          $valid=0
+          foreach($item in @($r.files)){
+            if(-not (Test-Path -LiteralPath $item.file -PathType Leaf)){throw 'REGION_INTAKE_FILE_MISSING'}
+            $hash=(Get-FileHash -LiteralPath $item.file -Algorithm SHA256).Hash.ToLowerInvariant()
+            if($hash -ne ([string]$item.sha256).ToLowerInvariant()){throw 'REGION_INTAKE_SHA_MISMATCH'}
+            $valid++
+          }
+          $drive=[System.IO.DriveInfo]::new([System.IO.Path]::GetPathRoot($root))
+          if($drive.AvailableFreeSpace -lt 6442450944){throw 'WAREHOUSE_RESERVE_POSTCHECK_FAIL'}
+          Write-Host ("REGION_SOURCE_RECEIPT_AUDIT_PASS files=$valid skipped=$(@($r.skipped).Count) reserve=$($drive.AvailableFreeSpace)")
+          if($valid -eq 0){throw 'REGION_INTAKE_ZERO_VERIFIED_FILES'}
+      - name: Record source only boundary
+        if: always()
+        shell: powershell
+        run: Write-Host 'SOURCE-ONLY; no UE import, runtime promotion, PIE, device, visuals or Gate 6/7 acceptance'
