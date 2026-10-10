@@ -563,6 +563,11 @@ class SourceContractTests(unittest.TestCase):
         self.assertEqual(contract["target_profile"]["resolution_height"], 720)
         self.assertEqual(contract["target_profile"]["quality"], "Balanced Medium / selective High where visually important")
         self.assertEqual(contract["target_profile"]["fps_floor"], 30)
+        self.assertEqual(contract["target_profile"]["cpu_model"], "Intel Core i7-6498DU @ 2.50GHz")
+        self.assertEqual(contract["target_profile"]["gpu_model"], "AMD Radeon R5 M330")
+        self.assertEqual(contract["target_profile"]["gpu_vram_reported_mb"], 2039)
+        self.assertEqual(contract["target_profile"]["os"], "Windows 11 Pro 64-bit")
+        self.assertEqual(contract["target_profile"]["renderer"], "DX11")
         self.assertFalse(any(contract["current_claims"].values()))
 
         evaluator = (root / "Scripts" / "evaluate_p1c01_gate67_evidence.py").read_text(encoding="utf-8")
@@ -575,6 +580,15 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn('return-to-control continuity not proven', evaluator)
         self.assertIn('"DEVICE_TESTED":True', evaluator)
         self.assertIn('"PERFORMANCE_ACCEPTED":True', evaluator)
+
+        governor = json.loads((root / "Data" / "ProjectGovernor.json").read_text(encoding="utf-8"))
+        for key in ("cpu_model", "gpu_model", "gpu_vram_reported_mb", "os"):
+            self.assertEqual(contract["target_profile"][key], governor["target_profile"][key])
+        self.assertEqual(governor["region_quality"][0]["gates"]["PERFORMANCE"], "NOT_TESTED")
+        self.assertIn("missing physical gameplay execution evidence", evaluator)
+        self.assertIn("hardware does not match owner target device", evaluator)
+        self.assertIn("p95_frame_ms", evaluator)
+        self.assertIn("p99_frame_ms", evaluator)
 
 
     def test_p1c01_authored_shire_wave_bc_is_bounded_and_single_writer(self):
