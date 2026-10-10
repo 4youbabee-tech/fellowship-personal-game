@@ -100,8 +100,9 @@ jobs:
         run: |
           set -euo pipefail
           sudo apt-get update
-          sudo apt-get install -y blender
+          sudo apt-get install -y blender python3-numpy
           blender --version | head -n 1
+          blender --background --factory-startup --python-exit-code 85 --python-expr 'import numpy; print("P1C01_BLENDER_NUMPY_READY", numpy.__version__)'
       - name: Re-export and re-import 16 static FBX with smoothing and one slot
         shell: bash
         run: |
