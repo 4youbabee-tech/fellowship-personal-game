@@ -1,3 +1,8 @@
+## 2026-10-10 — P1C01 warning-debt source diagnostics (candidate)
+
+- Owner-supplied Windows screenshot shows warning-debt exit 65: `Missing smoothing groups: 17 > 0`. These are occurrences, not 17 verified distinct meshes. Existing zero ceiling remains unchanged.
+- `Scripts/warning_debt_guard.py` now reports log filename, line number, candidate source FBX/OBJ from nearby context and raw warning line before failure; unknown asset identities remain explicitly UNKNOWN_SOURCE. This is diagnostic/early triage only, NOT an FBX source geometry repair. Fail closed and avoid rerunning expensive Unreal until offending exact asset sources are isolated and re-exported/fixed. No PIE, FPS, visual or Gate 6/7 claim.
+
 
 ## 2026-10-10 — Whole-game character CC0 source candidate research (preparation only)
 
