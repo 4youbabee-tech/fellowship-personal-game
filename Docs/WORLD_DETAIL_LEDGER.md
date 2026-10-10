@@ -1,3 +1,9 @@
+
+## 2026-10-10 — Whole-game character CC0 source candidate research (preparation only)
+
+- Created `Data/WholeGameCharacterSourceCandidates20261010.json` with Quaternius Modular Fantasy Outfits, Quaternius RPG Characters and Blender Human Base Meshes candidate sources for visual/rig research across the 28-region production scope. This is source-discovery metadata only: license-per-download, exact format, SHA256, rig compatibility, proportions, LODs and render/art acceptance are pending. No files downloaded to persistent warehouse, no Unreal import, no new runtime chapter, no P1C01 Gate 6/7 credit.
+- Continue only within existing Governor-approved P1C01-first runtime + independent whole-game asset preparation policy. One warehouse writer, no duplicate downloads; no generic third-party mesh is accepted as a named Tolkien hero without original character-specific art and canon review.
+
 ## 2026-10-10 — licensed 16-region ambientCG physical source receipt
 
 - Whole-game ambientCG source intake Run #38057877090 staged 22 SHA256-verified files, skipped 24, staged 1,178,435,662 bytes with post-intake disk reserve 175,388,110,848 bytes, per real Windows job log. This belongs to approved whole-game source preparation only, never authorizes additional runtime chapters or claims visuals.

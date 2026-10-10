@@ -1,3 +1,9 @@
+
+## 2026-10-10 — Whole-game character CC0 source candidate research (preparation only)
+
+- Created `Data/WholeGameCharacterSourceCandidates20261010.json` with Quaternius Modular Fantasy Outfits, Quaternius RPG Characters and Blender Human Base Meshes candidate sources for visual/rig research across the 28-region production scope. This is source-discovery metadata only: license-per-download, exact format, SHA256, rig compatibility, proportions, LODs and render/art acceptance are pending. No files downloaded to persistent warehouse, no Unreal import, no new runtime chapter, no P1C01 Gate 6/7 credit.
+- Continue only within existing Governor-approved P1C01-first runtime + independent whole-game asset preparation policy. One warehouse writer, no duplicate downloads; no generic third-party mesh is accepted as a named Tolkien hero without original character-specific art and canon review.
+
 ## 2026-10-10 — actual ambientCG warehouse result and Frodo gate integration
 
 - Whole-game warehouse Run #38057877090 on develop source head a50e117259c3f5b779af67adad9ec8f5855e139c COMPLETED SUCCESS: AMBIENTCG_WAREHOUSE_STAGE_PASS files=22 skipped=24 bytes=1178435662; REGION_SOURCE_RECEIPT_AUDIT_PASS files=22 skipped=24 reserve=175388110848. Licensed hashed source-only; not UE-imported.
