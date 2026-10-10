@@ -1,0 +1,29 @@
+name: P1C01 Verified PBR Offline Source QC
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: p1c01-verified-pbr-runtime-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  verified-source-tests:
+    name: Offline deterministic PBR source and quarantine QC
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          lfs: false
+      - name: Exact-head Project Governor and source regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 Scripts/governor_work_start.py --lane VISUAL_WORLD_PREP
+          python3 -m unittest discover -s Scripts -p 'test_p1c01_verified_pbr_to_unreal.py' -v
+
