@@ -32,6 +32,7 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          python3 Scripts/governor_work_start.py --lane VISUAL_WORLD_PREP
           python3 -m unittest discover -s Scripts -p test_p1c01_polyhaven_adaptive.py -v
 
       - name: Reuse the previous 39-source CC0 artifact, not provider redownload
