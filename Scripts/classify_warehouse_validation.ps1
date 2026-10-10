@@ -7,7 +7,7 @@ function Write-Flag([string]$Name, [bool]$Value) {
 
 function Enable-All {
     foreach($name in @(
-        "WH_STAGE_POLYHAVEN","WH_STAGE_OGA","WH_STAGE_QUATERNIUS","WH_STAGE_QUATERNIUS_ANIM","WH_STAGE_AMBIENTCG",
+        "WH_STAGE_POLYHAVEN","WH_STAGE_OGA","WH_STAGE_QUATERNIUS","WH_STAGE_QUATERNIUS_HERO","WH_STAGE_QUATERNIUS_ANIM","WH_STAGE_AMBIENTCG",
         "WH_STAGE_AMBIENTCG_TRILOGY","WH_STAGE_KENNEY","WH_STAGE_KAYKIT",
         "WH_RUN_AUDIT","WH_RUN_SATURATION","WH_RUN_PREP","WH_RUN_PROVIDER_RESOLUTION","WH_RUN_P1C01_PROMOTION","WH_RUN_CHARACTER_INTAKE","WH_RUN_P1C01_MATERIAL_EXPORT","WH_RUN_P1C01_CHAPTER_PACK"
     )) {
@@ -71,6 +71,7 @@ $flags = [ordered]@{
     WH_STAGE_POLYHAVEN=$false
     WH_STAGE_OGA=$false
     WH_STAGE_QUATERNIUS=$false
+    WH_STAGE_QUATERNIUS_HERO=$false
     WH_STAGE_QUATERNIUS_ANIM=$false
     WH_STAGE_AMBIENTCG=$false
     WH_STAGE_AMBIENTCG_TRILOGY=$false
@@ -108,6 +109,12 @@ foreach($raw in $changed) {
         "Scripts/stage_opengameart_audio.ps1" { $flags.WH_STAGE_OGA=$true; $providerTouched=$true; continue }
 
         "Data/WarehouseQuaterniusAcquisitionBatchV1.json" { $flags.WH_STAGE_QUATERNIUS=$true; $providerTouched=$true; continue }
+        "Data/WarehouseQuaterniusHeroCandidateBatchV1.json" {
+            $flags.WH_STAGE_QUATERNIUS_HERO=$true
+            $flags.WH_RUN_CHARACTER_INTAKE=$true
+            $flags.WH_RUN_AUDIT=$true
+            continue
+        }
         "Data/WarehouseQuaterniusAnimationBatchV1.json" {
             $flags.WH_STAGE_QUATERNIUS_ANIM=$true
             $flags.WH_RUN_CHARACTER_INTAKE=$true
