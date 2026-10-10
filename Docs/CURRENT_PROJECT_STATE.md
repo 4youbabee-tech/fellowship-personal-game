@@ -1,3 +1,7 @@
+## 2026-10-10 — P1C01 import PG-169 regression repair
+
+- Exact-head Pre-Unreal #38052565591 FAILED at Validate project structure: `PG-169 C3 implementation invariant missing: DesiredMaterialParent = ProductionMaterialParent`. Root cause is the verified PBR material parent ternary replacing an existing strict foliage-parent invariant. Replaced ternary with the approved default parent assignment plus an explicit PBR-only override, preserving foliage inheritance. Regression rerun pending on new candidate HEAD. No new UE/PIE/device/visual acceptance from this change.
+
 ## 2026-10-10 — P1C01 source-to-visible UE4 PBR bridge production (candidate)
 
 - Reuse two immutable Poly Haven CC0 39/60 source waves, validate SHA256 original receipts and per-file hashes, choose at most 16 qualified single-material **static FBX** props within a 144 MiB source cap; imported textures are 1K PNG. Quarantine/hold, oversized, unknown-multi-material, and unsupported files are not promoted. No new source-provider downloads.
