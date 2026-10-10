@@ -1,3 +1,8 @@
+## 2026-10-10 — Confirmed GitHub default branch is develop
+
+- Live GitHub repository metadata reports `default_branch=develop`. Owner confirms develop is canonical default/integration/programmer-handoff; `main` remains stable/release only. Updated existing `Data/ProjectGovernor.json` branch_workflow notes to remove stale assertion that main is default; no new Governor authority, no runtime content change.
+- Whole-game ambientCG material query correction PR #344 merged to develop as commit `a50e117259c3f5b779af67adad9ec8f5855e139c`; exact-head physical source intake result still pending. The owner did not authorize extra runtime chapter; P1C01 only, Gate 6/7 remains unaccepted.
+
 ## 2026-10-10 — Whole-game licensed ambientCG regional intake V3 (candidate)
 
 - Added ten bounded material search lanes for 16 source-indexed regional IDs (including Minas Tirith, Helm's Deep, Edoras, Osgiliath, Rivendell, Fangorn, Isengard, Pelennor and Grey Havens) using existing public ambientCG 2K-PNG CC0 adapter, not a new material system. Register source queries and multi-region reuse; exact provider asset IDs are only assigned by live API staging.
