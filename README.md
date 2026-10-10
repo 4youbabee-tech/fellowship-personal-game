@@ -93,12 +93,13 @@ The broader Part I skeleton and later-region warehouse/source preparation may pr
 
 ## Hardware target
 
-- Intel Core i7 6th gen
-- 8 GB RAM
-- GPU around 2 GB VRAM
-- Windows / DirectX 11
-- 720p / 30 FPS initial floor
-- Low/Medium scalability
+- CPU: Intel Core i7-6498DU @ 2.50GHz
+- GPU: AMD Radeon R5 M330, 2039 MB reported VRAM (2 GB class)
+- RAM: 8 GB
+- OS: Windows 11 Pro 64-bit (DirectX 12 installed, no DX12 Ultimate)
+- Unreal Engine 4.27.2 runtime renderer: DX11 (the OS DirectX version does not change this)
+- 1280x720; Balanced Medium with selective High where visually important
+- Goal: stable 30 FPS, **not measured/accepted** until a real owner-laptop gameplay run proves it
 
 ## Engine
 
