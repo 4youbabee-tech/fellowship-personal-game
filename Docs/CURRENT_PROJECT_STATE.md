@@ -1,3 +1,7 @@
+## 2026-10-11 — Target-device acceptance-only CI fast lane (candidate)
+
+- Follow owner minimum-administration policy: classify `Scripts/evaluate_p1c01_gate67_evidence.py` as an acceptance-only change, not a blanket Unreal runtime/config/package change. The real Unreal classifier in PR #356 logged `INCREMENTAL_SOURCE_ONLY_BLOCKED file=Scripts/evaluate_p1c01_gate67_evidence.py` and `UNREAL_VALIDATION_DECISION mode=full ... reason=engine-runtime-config-or-unclassified-delta` on Run #38091586642. This change does not grant a general bypass: acceptance mode requires existing green parent core engine evidence, otherwise remains full/fail-closed; P1C01 import, C++ and Windows runtime changes continue normal gates. Added classifier cases for parent proof and absent proof. No UE/PIE/device/visual acceptance from this source change.
+
 ## 2026-10-11 — Owner accelerated intake / large chapter batch (POLICY ONLY)
 
 - Registered Owner Fast Batch Intake in the sole Governor: permit lawful source-format intake and automatic correction/conversion with minimal administrative review, reuse intact receipts, targeted changed-input checks, dynamic large P1C01 integration waves and five preparation lanes. No actual asset imported, runtime code changed, Unreal build executed, or Gate 6/7 closed in this policy candidate. PR #352 Blender/PBR work stays independent; do not cancel live workflows. P1C02 remains closed.

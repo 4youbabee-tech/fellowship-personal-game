@@ -612,6 +612,7 @@ $acceptanceExact = @(
     "Scripts/verify_packaged_runtime_data.ps1",
     "Scripts/verify_packaged_startup.ps1",
     "Scripts/capture_runner_hardware.ps1",
+    "Scripts/evaluate_p1c01_gate67_evidence.py",
     "Scripts/verify_runtime_source_workspace.ps1"
 )
 

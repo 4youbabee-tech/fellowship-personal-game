@@ -1,3 +1,7 @@
+## 2026-10-11 — Fast-path measurement tooling without relaxing P1C01 acceptance
+
+- The exact-owner-laptop Gate 6/7 evidence evaluator is an acceptance-data tool. CI should not repeat an expensive full UE package only because that evaluator changes, when the exact ancestor already has valid engine proof. The classifier keeps fail-closed behavior without parent proof and continues normal expensive tests for runtime, asset, streaming, packaging and shader-impacting deltas. No gameplay, world visuals, new chapter or target FPS acceptance is claimed.
+
 ## 2026-10-11 — Owner fast intake, large P1C01 chapter wave and whole-game source throughput
 
 Owner explicitly requests relaxing bureaucratic admission rules and redundant checks, accepting useful assets in varied ORIGINAL source formats **when lawfully usable**, converting/repairing them to valid FBX and PNG/TGA for runtime, and prioritizing large coherent chapter-sized production waves. Keep existing DEC-078 / DEC-104 parallel tracks, exactly one runtime writer and one warehouse writer, and future-region asset prep for 28 regions. Minimum necessary acceptance evidence still applies (license/entitlement, source integrity, import quality, performance, Gate 6/7). This is a production-policy instruction, not visual/runtime completion. Reference: OWNER_FAST_BATCH_INTAKE_2026_10_11 in ProjectGovernor.json.

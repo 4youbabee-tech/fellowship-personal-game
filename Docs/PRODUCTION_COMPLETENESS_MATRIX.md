@@ -1,3 +1,7 @@
+## 2026-10-11 — Minimum redundant checks: device-evaluator CI classifier correction (candidate)
+
+- Corrected file classification for `Scripts/evaluate_p1c01_gate67_evidence.py`: acceptance-only with proven exact-parent core engine run can reuse that engine evidence; absent engine proof retains full validation. Regression cases added to `Scripts/test_unreal_classifier.ps1`. This does not build/alter Shire visuals, imported meshes, quests or any P1C02 runtime; P1C01 PERFORMANCE / PIE / DEVICE / VISUAL / Gate 6/7 remain unaccepted. Run #38091586642 previously classified the evaluator as `mode=full`; fresh exact-head static/regression proof is required before merging.
+
 ## 2026-10-11 — Accelerated intake policy only, not content completion
 
 - Owner-approved operational direction: remove redundant administrative admission checks, fast-path lawful repairable candidates, keep real asset rights and technical acceptance, consolidate large P1C01 waves and prepare 28-region art/characters concurrently. **Status: policy registered; implementation and runtime output pending**. No increase in visual, PIE, device, FPS or Gate 6/7 completion.

@@ -20,7 +20,7 @@ function Test-Git {
 function Test-ParentWholeWorkflowGreen([string]$ParentSha) {
     return $script:Case.Proof -and $ParentSha -eq 'candidate-parent'
 }
-function Test-ParentCoreUnrealGreen([string]$ParentSha) { return $true }
+function Test-ParentCoreUnrealGreen([string]$ParentSha) { return [bool]$script:Case.Proof }
 function Test-TreeEquivalentCoreProof([string]$GitExe, [string]$ParentSha) { return [bool]$script:Case.TreeProof }
 function Set-Mode([string]$Mode, [string]$Reason, [string]$ParentSha, [string]$ResumeStage = 'none', [bool]$ResetIntermediates = $false) {
     $script:ActualMode = $Mode
@@ -48,6 +48,8 @@ $cases = @(
     @{Name='config'; Paths=@('README.md','Config/DefaultGame.ini'); Proof=$true; Mode='full'; Reset=$false; TreeProof=$false},
     @{Name='build-rules'; Paths=@('Source/ShireJourney.Target.cs'); Proof=$true; Mode='full'; Reset=$true; TreeProof=$false},
     @{Name='streaming'; Paths=@('Data/ChapterAssetStreamingPlan.json'); Proof=$true; Mode='full'; TreeProof=$false},
+    @{Name='target-device-evaluator'; Paths=@('Scripts/evaluate_p1c01_gate67_evidence.py','Docs/CURRENT_PROJECT_STATE.md','Docs/PRODUCTION_COMPLETENESS_MATRIX.md'); Proof=$true; Mode='acceptance'; TreeProof=$false},
+    @{Name='target-device-evaluator-no-proof'; Paths=@('Scripts/evaluate_p1c01_gate67_evidence.py'); Proof=$false; Mode='full'; TreeProof=$false},
     @{Name='unknown-script'; Paths=@('Scripts/new_unknown_tool.ps1'); Proof=$true; Mode='full'; TreeProof=$false},
     @{Name='runtime-data'; Paths=@('Data/QuestDefinitions.json'); Proof=$true; Mode='core'; TreeProof=$false},
     @{Name='editor-assets'; Paths=@('Source/ShireJourneyEditorTools/Import.cpp'); Proof=$true; Mode='asset'; TreeProof=$false},
