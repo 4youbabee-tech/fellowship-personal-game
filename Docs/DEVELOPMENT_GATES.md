@@ -41,15 +41,16 @@ For story/world changes test:
 A compiled feature is not automatically PIE-TESTED.
 
 ## Gate 4 — Target-device test
-Test early on the intended laptop:
-- DX11,
-- 720p,
-- Low/Medium,
-- 8 GB RAM target,
-- ~2 GB VRAM target,
-- 30 FPS floor.
+Test early on the owner's primary physical laptop:
+- Intel Core i7-6498DU @ 2.50GHz,
+- AMD Radeon R5 M330 GPU (2039 MB reported VRAM, 2 GB class),
+- Windows 11 Pro 64-bit; OS DirectX 12 present, no DX12 Ultimate,
+- UE4.27.2 **DX11 RHI**, not a forced DX12 renderer,
+- 1280x720; Balanced Medium with selective High for important visuals,
+- 8 GB RAM,
+- stable 30 FPS target (not yet performance accepted).
 
-Performance testing is not an end-of-project task.
+Record exact executable/commit and device identity, per-route FPS and p95/p99 frame time, hitch counts, resident RAM/texture/VRAM measurements and representative traversal. Build/runner hardware snapshots alone are NOT DEVICE-TESTED. Performance testing is not an end-of-project task.
 
 ## Gate 5 — Documentation/data sync
 Story, chapter, route, dialogue or music changes must update matching reference material in the same logical change.
