@@ -198,8 +198,43 @@ jobs:
       - name: Stress shoulders elbows knees hands and feet on UE4 winner
         shell: bash
         run: |
-          mkdir -p "$RUNNER_TEMP/shire-human-wave3/deformation"
-          blender --background --factory-startup             --python "$GITHUB_WORKSPACE/Scripts/run_p1c01_human_wave3_deformation.py" --             --hosted-receipt "$RUNNER_TEMP/shire-human-wave3/hosted/p1c01_human_wave2_hosted.json"             --ue4-receipt "$RUNNER_TEMP/shire-human-wave3/ue4/p1c01_human_wave2_ue4.json"             --artifact-root "$RUNNER_TEMP/shire-human-wave3/hosted"             --output "$RUNNER_TEMP/shire-human-wave3/deformation/p1c01_human_wave3_deformation.json"
+          set -euo pipefail
+          proof_root="$RUNNER_TEMP/shire-human-wave3"
+          mkdir -p "$proof_root/deformation"
+          mapfile -t hosted_receipts < <(find "$proof_root/hosted" -type f -name 'p1c01_human_wave2_hosted.json' -print)
+          mapfile -t ue4_receipts < <(find "$proof_root/ue4" -type f -name 'p1c01_human_wave2_ue4.json' -print)
+          if [[ ${#hosted_receipts[@]} -ne 1 || ${#ue4_receipts[@]} -ne 1 ]]; then
+            echo "HUMAN_WAVE3_RECEIPT_CARDINALITY_FAIL hosted=${#hosted_receipts[@]} ue4=${#ue4_receipts[@]}" >&2
+            exit 91
+          fi
+          source_root="$proof_root/hosted"
+          if [[ ! -d "$source_root/normalized" ]]; then
+            mapfile -t normalized_dirs < <(find "$source_root" -type d -name normalized -print)
+            if [[ ${#normalized_dirs[@]} -ne 1 ]]; then
+              echo "HUMAN_WAVE3_NORMALIZED_ROOT_MISSING_OR_AMBIGUOUS" >&2
+              exit 92
+            fi
+            source_root="${normalized_dirs[0]%/normalized}"
+          fi
+          report="$proof_root/deformation/p1c01_human_wave3_deformation.json"
+          blender --background --factory-startup --python-exit-code 93 \
+            --python "$GITHUB_WORKSPACE/Scripts/run_p1c01_human_wave3_deformation.py" -- \
+            --hosted-receipt "${hosted_receipts[0]}" \
+            --ue4-receipt "${ue4_receipts[0]}" \
+            --artifact-root "$source_root" \
+            --output "$report"
+          test -s "$report" || { echo "HUMAN_WAVE3_RECEIPT_NOT_WRITTEN" >&2; exit 94; }
+          python3 - "$report" <<'PY'
+          import json
+          import sys
+          with open(sys.argv[1], encoding="utf-8") as proof:
+              receipt = json.load(proof)
+          if receipt.get("status") != "STATIC_DEFORMATION_STRESS_PASS":
+              raise SystemExit("HUMAN_WAVE3_STATIC_DEFORMATION_NOT_PASSED")
+          if receipt.get("visual_deformation_accepted") is not False or receipt.get("runtime_integration_allowed") is not False:
+              raise SystemExit("HUMAN_WAVE3_ACCEPTANCE_BOUNDARY_INVALID")
+          print("HUMAN_WAVE3_STATIC_DEFORMATION_RECEIPT_PASS")
+          PY
 
       - name: Upload deformation-stress evidence
         if: always()
