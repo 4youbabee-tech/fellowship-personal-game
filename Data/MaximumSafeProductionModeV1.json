@@ -175,6 +175,8 @@
     "persistent_free_space_reserve_gib": 6,
     "unbounded_item_count_policy": "Do not impose fixed tiny per-wave item ceilings for metadata planning. Stage binary bytes only within provider/legal/available-disk/time/rate/memory/artifact constraints; partition deterministically into bounded safe segments.",
     "hosted_only_preflight": ".github/workflows/p1c01-five-lane-maxsafe.yml",
-    "truth_boundary": "Hosted preparation outputs are candidate/evidence reports, not new downloaded models, UE import or device/visual acceptance."
-  }
+    "truth_boundary": "Hosted preparation outputs are candidate/evidence reports, not new downloaded models, UE import or device/visual acceptance.",
+    "governor_work_start": "Scripts/governor_work_start.py"
+  },
+  "governor_work_start": "Scripts/governor_work_start.py"
 }
