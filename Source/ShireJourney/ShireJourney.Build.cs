@@ -70,6 +70,7 @@ public class ShireJourney : ModuleRules
         RuntimeDependencies.Add("$(ProjectDir)/Data/HeroCharacterEquipmentSilhouetteV4.json", StagedFileType.NonUFS);
         RuntimeDependencies.Add("$(ProjectDir)/Data/ChapterAssetStreamingPlan.json", StagedFileType.NonUFS);
         RuntimeDependencies.Add("$(ProjectDir)/Data/P1C01VerifiedWorldDecor.json", StagedFileType.NonUFS);
+        RuntimeDependencies.Add("$(ProjectDir)/Data/P1C01FinalChapterClosureWaveV1.json", StagedFileType.NonUFS);
         RuntimeDependencies.Add("$(ProjectDir)/Data/AssetPerformanceBudget.json", StagedFileType.NonUFS);
         RuntimeDependencies.Add("$(ProjectDir)/Data/EnsembleFilmMissionPlan.json", StagedFileType.NonUFS);
         RuntimeDependencies.Add("$(ProjectDir)/Data/FilmSideContentMasterPlan.json", StagedFileType.NonUFS);
