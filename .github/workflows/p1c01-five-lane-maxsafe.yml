@@ -1,0 +1,82 @@
+name: P1C01 Five-Lane Maximum Safe Source Preflight
+
+on:
+  pull_request:
+    branches: [develop]
+    paths:
+      - 'Data/ProjectGovernor.json'
+      - 'Data/MaximumSafeProductionModeV1.json'
+      - 'Scripts/p1c01_five_lane_preflight.py'
+      - 'Scripts/test_p1c01_five_lane_preflight.py'
+      - '.github/workflows/p1c01-five-lane-maxsafe.yml'
+      - 'Scripts/stage_p1c01_adaptive_pbr_warehouse.py'
+      - 'Scripts/test_p1c01_adaptive_pbr_warehouse.py'
+      - 'Scripts/resume_p1c01_artifact_checkpoint.py'
+      - 'Scripts/test_resume_p1c01_artifact_checkpoint.py'
+      - 'Scripts/classify_unreal_validation.ps1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: p1c01-five-safe-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  independent_preparation_tracks:
+    name: ${{ matrix.lane }} - read-only candidate preflight
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        lane:
+          - RUNTIME_BUILD
+          - WAREHOUSE_ASSET_INTAKE
+          - SKELETAL_CHARACTER_PREP
+          - VISUAL_WORLD_PREP
+          - GAMEPLAY_PRESENTATION_PREP
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Checkout exact SHA without LFS or credentials persistence
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          fetch-depth: 1
+          persist-credentials: false
+          lfs: false
+
+      - name: Prove exact head and run five-lane regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          python3 -m unittest discover -s Scripts -p test_p1c01_five_lane_preflight.py -v
+
+      - name: Test persisted warehouse receipts offline
+        if: matrix.lane == 'WAREHOUSE_ASSET_INTAKE'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m unittest discover -s Scripts -p test_p1c01_adaptive_pbr_warehouse.py -v
+          python3 -m unittest discover -s Scripts -p test_resume_p1c01_artifact_checkpoint.py -v
+
+      - name: Produce complete bounded read-only lane report
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 Scripts/p1c01_five_lane_preflight.py \
+            --lane "${{ matrix.lane }}" \
+            --output "$RUNNER_TEMP/p1c01-${{ matrix.lane }}-candidate-report.json"
+
+      - name: Upload per-lane source/report artifact (no binaries or Unreal)
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1c01-five-lane-${{ matrix.lane }}-${{ env.TARGET_SHA }}
+          path: ${{ runner.temp }}/p1c01-${{ matrix.lane }}-candidate-report.json
+          if-no-files-found: error
+          retention-days: 30

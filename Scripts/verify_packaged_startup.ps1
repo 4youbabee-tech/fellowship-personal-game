@@ -12,7 +12,7 @@ if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) { throw "Packaged executa
 if (Test-Path -LiteralPath $log) { Remove-Item -LiteralPath $log -Force }
 
 $args = @(
-    "/Engine/Maps/Templates/Template_Default",
+    "/Engine/Maps/Entry",
     "-game",
     "-windowed",
     "-ResX=1280",

@@ -133,5 +133,48 @@
   "success_definition": "Production lanes remain saturated without violating any hard stop, while runtime integration stays serialized and evidence-backed.",
   "evidence_boundary": "Execution architecture and current live warehouse evidence only. No PIE/device/visual/pacing/performance acceptance is implied.",
   "active_source_wave": "F2-04 Road & Helm's Deep Prep",
-  "active_source_wave_status": "SOURCE_ARCHITECTURE_IMPLEMENTATION_ACTIVE_RUNTIME_MAPPING_UNASSIGNED"
+  "active_source_wave_status": "SOURCE_ARCHITECTURE_IMPLEMENTATION_ACTIVE_RUNTIME_MAPPING_UNASSIGNED",
+  "five_lane_operating_overlay": {
+    "policy": "DEC-104",
+    "status": "OWNER_ACCEPTED_IMPLEMENTATION_CANDIDATE",
+    "source_of_truth": "Data/ProjectGovernor.json",
+    "throughput": "ALL_ELIGIBLE_WITH_ADAPTIVE_BYTE_AND_STORAGE_GUARDS",
+    "track_count": 5,
+    "tracks": [
+      {
+        "id": "RUNTIME_BUILD",
+        "owns": "single serialized UE4 self-hosted build/import/QA integration; evidence collection may run hosted",
+        "persistent_writer": false,
+        "runtime_writer": true
+      },
+      {
+        "id": "WAREHOUSE_ASSET_INTAKE",
+        "owns": "licensed high-quality source catalogue, candidate ranking, source-only acquisition/QC; sole warehouse writer serialized",
+        "persistent_writer": true,
+        "runtime_writer": false
+      },
+      {
+        "id": "SKELETAL_CHARACTER_PREP",
+        "owns": "Skeletal FBX and animation candidate inventory, rig/smoothing/retarget/deformation source QC",
+        "persistent_writer": false,
+        "runtime_writer": false
+      },
+      {
+        "id": "VISUAL_WORLD_PREP",
+        "owns": "Bag End/Hobbiton/Party Field/roads/water/ferry landscape and material source/placement/LOD/collision QC",
+        "persistent_writer": false,
+        "runtime_writer": false
+      },
+      {
+        "id": "GAMEPLAY_PRESENTATION_PREP",
+        "owns": "NPC pooling/quest/save/audio/localization/Arabic RTL and regression source QA",
+        "persistent_writer": false,
+        "runtime_writer": false
+      }
+    ],
+    "persistent_free_space_reserve_gib": 6,
+    "unbounded_item_count_policy": "Do not impose fixed tiny per-wave item ceilings for metadata planning. Stage binary bytes only within provider/legal/available-disk/time/rate/memory/artifact constraints; partition deterministically into bounded safe segments.",
+    "hosted_only_preflight": ".github/workflows/p1c01-five-lane-maxsafe.yml",
+    "truth_boundary": "Hosted preparation outputs are candidate/evidence reports, not new downloaded models, UE import or device/visual acceptance."
+  }
 }

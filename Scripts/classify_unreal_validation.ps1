@@ -54,6 +54,43 @@ function Get-GitHubHeaders {
     }
 }
 
+function Test-IncrementalSourceOnlyHeadDelta([string]$GitExe, [string]$TargetSha) {
+    # PR base diff can include weeks of previously-validated source-only changes.
+    # Only allow inherited UE evidence when the immediate-parent build was green,
+    # AND the incremental diff has no game-runtime, Config, .uasset, Build.cs
+    # or editor import-tool changes. Fail closed on unknown deltas.
+    $parent = (& $GitExe rev-parse "$TargetSha^").Trim()
+    if ($LASTEXITCODE -ne 0 -or -not $parent) { return $false }
+    $delta = @(& $GitExe diff --name-only $parent $TargetSha)
+    if ($LASTEXITCODE -ne 0 -or $delta.Count -eq 0) { return $false }
+    foreach ($path in $delta) {
+        $n = $path -replace "\\", "/"
+        $allowed = (
+            $n.StartsWith("Docs/") -or
+            $n -eq "Data/ProjectGovernor.json" -or
+            $n -eq "Data/P1C01PinnedArtifactCheckpointsV1.json" -or
+            $n -eq "Scripts/resume_p1c01_artifact_checkpoint.py" -or
+            $n -eq "Scripts/test_resume_p1c01_artifact_checkpoint.py" -or
+            $n -eq "Scripts/test_artifact_checkpoint_recovery.py" -or
+            $n -eq "Scripts/stage_p1c01_adaptive_pbr_warehouse.py" -or
+            $n -eq "Scripts/test_p1c01_adaptive_pbr_warehouse.py" -or
+            $n -eq "Scripts/classify_unreal_validation.ps1" -or
+            $n -eq ".github/workflows/p1c01-five-lane-maxsafe.yml" -or
+            $n -eq ".github/workflows/p1c01-persistent-verified-pbr-warehouse.yml" -or
+            $n -eq ".github/workflows/p1c01-checkpoint-offline-recovery.yml" -or
+            $n -eq ".github/workflows/p1c01-adaptive-pbr-prep.yml" -or
+            $n -eq ".github/workflows/p1c01-adaptive-highfidelity-source.yml"
+        )
+        if (-not $allowed) {
+            Write-Host "INCREMENTAL_SOURCE_ONLY_BLOCKED file=$n"
+            return $false
+        }
+    }
+    if (-not (Test-ParentWholeWorkflowGreen $parent)) { return $false }
+    Write-Host "INCREMENTAL_SOURCE_ONLY_UE_REUSE parent=$parent head=$TargetSha files=$($delta.Count)"
+    return $true
+}
+
 function Test-ParentWholeWorkflowGreen([string]$ParentSha) {
     if (-not $env:GH_TOKEN) { return $false }
     try {
@@ -439,6 +476,14 @@ function Test-ParentAcceptanceDataGreen([string]$ParentSha) {
 Set-Location $env:GITHUB_WORKSPACE
 $git = Get-GitExe
 if (-not $git) { Set-Mode "full" "git-unavailable-fail-safe" ""; exit 0 }
+
+# Check incremental edits before the accumulated PR diff. A full, exact-parent
+# green UE run is required; otherwise fall through to the existing strict paths.
+if (Test-IncrementalSourceOnlyHeadDelta $git $env:TARGET_SHA) {
+    $reuseParent = (& $git rev-parse "$($env:TARGET_SHA)^").Trim()
+    Set-Mode "inherit" "source-only-delta-inherits-exact-parent-green-unreal" $reuseParent
+    exit 0
+}
 
 $parentSha = ""
 if ($env:BASE_SHA) {

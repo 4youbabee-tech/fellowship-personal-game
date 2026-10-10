@@ -2084,6 +2084,9 @@
         "Prototype one existing named Shire NPC over the current memory/social/context stack.",
         "Add real-event witness/share/learn propagation with canon/knowledge gates.",
         "Add optional local bounded expression only after deterministic behavior is proven."
+      ],
+      "implementation_refs": [
+        "2026-10-10 owner reaffirmation: context-aware locality and real-event witness memory; offline deterministic fallback, non-authoritative optional local phrasing; no runtime acceptance."
       ]
     },
     {
@@ -2852,7 +2855,24 @@
         "Data/WholeGameProductionExecutionQueueV1.json runs in ACTIVE_MAXIMUM_SAFE_PREPARATION_RUNTIME_SERIALIZED mode.",
         "Data/MasterExecutionRoadmap.json is reconciled to the current P1C01 + parallel whole-game preparation state.",
         "Warehouse #286 clean inventory audit proves the active-receipt warehouse can continue production; full maximum-safe lane saturation remains operational work in progress.",
-        "Hosted Unreal preflight classification reserves the self-hosted UE4.27 machine only for full/core/asset/acceptance modes; source/preproduction/static-only deltas remain on GitHub-hosted validation lanes without weakening exact-head engine gates."
+        "Hosted Unreal preflight classification reserves the self-hosted UE4.27 machine only for full/core/asset/acceptance modes; source/preproduction/static-only deltas remain on GitHub-hosted validation lanes without weakening exact-head engine gates.",
+        "DEC-104 operationalizes five simultaneous bounded tracks as an overlay on DEC-078 and Data/MaximumSafeProductionModeV1.json; no competing decision authority or more than one runtime/warehouse writer.",
+        "2026-10-09: P1C01 exact-source artifact 11643315007 / 37985180302 produced 39 FBX and 211 files; conversion artifact 11641884955 / 37985180453 yielded 38 converted FBX, 142 1K PNG with only nettle dry alternative quarantined. Independent receipt audit passed 211 per-file MD5+SHA256 and 142 output PNG SHA256/size checks. New corrective source-only wave and no-redownload exact-head CI pending.",
+        "Source run 37988147489 succeeded: 60 new CC0 FBX + 315 source files, 502931425 bytes, prepared PBR 59 FBX/211 PNG with one quarantine. PBR source run 37988147700 succeeded: 39 FBX/146 PNG, zero quarantine. Single-writer persistent artifact intake script and dispatch workflow added, stage execution not yet proven.",
+        "2026-10-10 corrective checkpoint transport: immutable GitHub artifact IDs/sizes/SHA256, persistent 4MiB journal+fsync, reuse, standalone manual source-only wave39 dispatch; fixed duplicate PR-wide costly intake triggers. Evidence pending exact-head hosted tests and real warehouse run.",
+        "2026-10-10 PR335 source-only CI checkpoint tests and incremental parent-green UE skip classifier added; results pending on newly committed exact head; real artifact persistent write and Gate6/7 not proven.",
+        "2026-10-10 merged existing recovery source/test into PR #335 from recovery branch; staged 20-case offline Linux+Windows workflow and strict warehouse pre-transfer gate. Proof for integrated head pending Actions. Prior runs reused; no runtime/content import claimed.",
+        "2026-10-10: Owner-approved P1C01 99-asset PBR SOURCE-ONLY one-batch warehouse intake activation. Two independently durable phases source39/pbr39 then source60/pbr60 (one writer, SHA256 pinned, offline fault tests, 6GiB reserve, no provider redownload). Workflow results pending; never equals UE import, real characters, PIE/device/visual acceptance.",
+        "2026-10-10 P1C01 playable Windows delivery candidate: correct default Editor/Game map, headless runtime and cook/startup paths to /Engine/Maps/Entry, preventing engine Template_Default floor from masking spawned Shire; add exact-head machine suite regression and upload WindowsNoEditor artifact ONLY after packaged startup proof. Actual CI result, packaged download, PIE, target-device FPS and human visual acceptance are PENDING. Active Gate 6/7 remains unchanged.",
+        "2026-10-10 StageError UNSAFE_RELATIVE_PATH observed in Windows warehouse Run #38042482514 after both wave39 artifacts fully hash-verified and extracted. Repair Windows-only Path.__str__ separator conversion by using Path.as_posix() for provider source receipt relative_file normalization; add offline nested path test and single-wave residue reuse. Candidate source-only fix; exact-head CI and full warehouse receipt pending. Do not redownload previous archives.",
+        "2026-10-10 P1C01 release delivery PG-026 reconciliation: allow success-gated WindowsNoEditor artifact only AFTER successful startup; prohibit quota-limited failure-log upload. Primary diagnostic evidence remains Actions console. Exact-head tests pending; no Gate6/7 credit."
+      ],
+      "missing_work": [
+        "Five-lane hosted exact-head metadata/source-candidate checks must run successfully; real bulk acquisition, persistent storage and UE4 material/character/world imports remain subject to their own run receipts and visual/device gates.",
+        "Prove 39-of-39 recovered PBR material conversion and hash-verified exclusion + resumed wave 2 on exact-head hosted CI, then persistent warehouse QC and UE import/LOD/collision/PIE/device/visual gates.",
+        "Dispatch exact-head serialized Windows warehouse intake and audit SHA256/MD5 receipt, preserve 6GiB reserve. Next queue is actual UE import/LOD/collision/visual, human named-character presentation and device Gate6/7.",
+        "Fix and rerun self-hosted Python PATH failure in run 37990747432 before persistent writer can be called staged; do not conflate GitHub artifact with warehouse file.",
+        "Cancelled #37990910312 during 422MB fourth artifact download at 75 minute limit; no permanent writes. Split into resumable wave39 and wave60 jobs and remove duplicate writer; exact-head validation required."
       ]
     },
     {
@@ -5658,6 +5678,66 @@
         "Branch, validation, merge and cleanup are serialized per car."
       ],
       "evidence_boundary": "OWNER GOVERNANCE AND EXECUTION ORDER. Candidate, import, compile, PIE, device, visual, pacing and performance evidence remain separate."
+    },
+    {
+      "id": "DEC-104",
+      "title": "Make five independent maximum-safe production tracks the default execution pattern",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-PROD-011",
+        "REQ-WAREHOUSE-001",
+        "REQ-PERF-001",
+        "REQ-STABILITY-001"
+      ],
+      "resolution": "Owner reaffirms DEC-078 as permanent: maximize actual safe throughput without asking again. Operate five grouped tracks concurrently where dependencies and runner capacity permit: (1) one serialized UE4 runtime build/integration, (2) licensed source acquisition and warehouse QC with exactly one persistent writer, (3) skeletal characters/animation FBX preparation, (4) Shire visual world/terrain/architecture/vegetation/water/material preparation, (5) gameplay/NPC/quest/save/audio/Arabic presentation preparation and static QA. Group existing technical lanes; do not create competing authority or bypass gates.",
+      "implementation_contract": [
+        "Read Data/ProjectGovernor.json first at every meaningful production resumption and follow its existing priorities; DEC-078 remains in force without repeated owner prompting.",
+        "Saturate all eligible independent source/catalogue/candidate tasks per wave, not fixed tiny candidate quotas; shard bounded by actual source byte sizes, service quotas, runtime/worker memory, network timeouts and available storage.",
+        "Keep exactly one self-hosted runtime-changing integration lane and exactly one persistent warehouse-writing lane. Hosted read-only scans and generated candidate outputs may run concurrently with these two serialized resources.",
+        "Five operational lanes are a grouping of the already-authorized maximum-safe technical lanes; their hosted preflight may publish candidate plans but not silently mutate the warehouse or Unreal Content.",
+        "For source staging, use the existing provider-specific approved intake/warehouse workflows; require exact source URLs, license/entitlement, checksums and stable receipts. No account bypass or paid assets; quarantine corrupt/rejected items and never reattempt identical known-bad KayKit payloads.",
+        "Use dynamic resource-aware sharding across all eligible candidates; cap single-file and per-wave bytes by measured runner/network budgets and preserve >=6 GiB persistent warehouse disk reserve. No unlimited single ZIP or unlimited simultaneous uploads.",
+        "Save file quality stages separately: INDEXED, DOWNLOADED, HASHED_QC, READY_FOR_IMPORT, UE_IMPORTED, VISUAL_REVIEWED. Not all indexed items are files; no source/static pass implies Unreal/PIE/device acceptance.",
+        "P1C01 stays the only active runtime chapter until its Gate 6/7 visual, gameplay and target-device evidence is accepted. Whole-trilogy source stocking and future region design may continue.",
+        "Batch coherent changes and run fast exact-head hosted preflights before expensive Unreal; preserve compile, save/load, NPC pooling/async loading, route, performance and runtime integrity checks."
+      ],
+      "rationale": "Owner explicitly requested that the already approved fastest-safe production policy be applied automatically, with five concurrent non-conflicting operational lanes and maximized safe asset upload throughput. REQ-PROD-011 and DEC-078 already authorize multi-lane work but lacked a concrete five-way hosted coordination proof.",
+      "evidence": [
+        "REQ-PROD-011 and DEC-078 already accepted on develop",
+        "Data/MaximumSafeProductionModeV1.json; Data/WholeGameProductionExecutionQueueV1.json",
+        "Scripts/p1c01_five_lane_preflight.py and .github/workflows/p1c01-five-lane-maxsafe.yml (new exact-head hosted proof to run)",
+        "Docs/CURRENT_PROJECT_STATE.md and Docs/PRODUCTION_COMPLETENESS_MATRIX.md (candidate-state boundaries)"
+      ],
+      "evidence_boundary": "Operational five-lane metadata/source preflight and CI coordination; no assertion of new assets downloaded, permanently stored, UE imported, visually accepted, or tested at 30 FPS."
+    },
+    {
+      "id": "DEC-105",
+      "title": "Owner-directed P1C01 cinematic story-safe NPC depth and durable recovery proof",
+      "status": "ACCEPTED",
+      "priority": "CRITICAL",
+      "date": "2026-10-10",
+      "requirements": [
+        "REQ-EXP-002",
+        "REQ-NPC-005",
+        "REQ-NPC-006",
+        "REQ-PROD-011"
+      ],
+      "resolution": "Preserve original Ring-history intro, original film-compatible Frodo/Bilbo playable gap-fill before Gandalf cart arrival, story-safe exploration, location/event-aware NPCs, and maximum-safe checkpoints. This decision registers direction, not feature implementation or chapter acceptance.",
+      "implementation_contract": [
+        "Keep FILM_CORE chronology and locked outcomes; classify original early Frodo/Bilbo gameplay FILM_EXPANDED and source-review before editing story beats.",
+        "Use existing quest, cinematic, LivingWorldDirector, ShireNPCContextSubsystem, dialogue, audio and asset-streaming owners; no parallel authorities.",
+        "Preserve offline-only deterministic NPC knowledge and emotion system; any optional local language-expression adapter has no quest/canon authority.",
+        "P1C01 only; first recover pinned 39 batch after offline fault tests and real Windows verification, then independent 60 batch.",
+        "One warehouse writer and one Unreal runner; no repeated provider download or builds for unchanged inputs.",
+        "Never claim PIE/device/visual/pacing/Gate 6/7 maturity from hosted tests."
+      ],
+      "evidence": [
+        "Docs/WORLD_DETAIL_LEDGER.md",
+        "Scripts/test_artifact_checkpoint_recovery.py",
+        ".github/workflows/p1c01-checkpoint-offline-recovery.yml",
+        "https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/38007549312"
+      ],
+      "evidence_boundary": "Owner direction registered. Exact recovery source/test content previously achieved 20 offline checks on Linux and Windows at 8c5b296bd4cd024745f3666ce45802ea0e74f004, workflow run #38007549312 SUCCESS. Integrated PR #335 head needs fresh exact-head checks; no warehouse stage, PIE, device, visuals, or Gate 6/7 evidence."
     }
   ],
   "open_conflicts": [],

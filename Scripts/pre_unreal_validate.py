@@ -3532,8 +3532,13 @@ retry_contract_ok = (
 )
 if custom_checkout_ok and not retry_contract_ok:
     fail("PG-026: custom exact-commit acquisition must use bounded resilient retries")
+# Successful package upload is delivery, not failure logging.
+# Preserve console-only diagnostics so artifact quota cannot hide a root failure.
 if "uses: actions/upload-artifact@v4" in unreal_ci:
-    fail("PG-026: failure logging must not depend on artifact upload while storage quota can mask the primary error")
+    if "name: Upload P1C01 Windows playable candidate" not in unreal_ci or "if: success() &&" not in unreal_ci:
+        fail("PG-026: delivery upload must be gated by successful packaged startup")
+    if "name: Upload P1C01 packaging evidence" in unreal_ci:
+        fail("PG-026: failure logs must remain in Actions console, not quota-limited artifact upload")
 concurrency_group_ok = (
     "group: unreal-build-${{ github.repository }}-${{ github.event_name == 'pull_request' && github.head_ref || 'develop' }}" in unreal_ci
     or "group: unreal-build-${{ github.repository }}-ue4-device" in unreal_ci
