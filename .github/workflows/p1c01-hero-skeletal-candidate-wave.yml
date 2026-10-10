@@ -1,6 +1,15 @@
-name: P1C01 Frodo Gandalf Skeletal Candidate Wave
+name: P1C01 Full Cast Skeletal Candidate Wave
 
 on:
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - 'Data/WarehouseQuaterniusHeroCandidateBatchV1.json'
+      - 'Data/P1C01HeroSkeletalCandidateWaveV1.json'
+      - 'Scripts/run_p1c01_hero_skeletal_candidate_wave.ps1'
+      - 'Scripts/prepare_p1c01_character_rig_intake.ps1'
+      - '.github/workflows/p1c01-hero-skeletal-candidate-wave.yml'
   workflow_dispatch:
 
 concurrency:
@@ -9,7 +18,7 @@ concurrency:
 
 jobs:
   prepare:
-    name: Rank Frodo Gandalf skeletal candidates
+    name: Rank P1C01 full-cast skeletal candidates
     runs-on:
       - self-hosted
       - Windows
