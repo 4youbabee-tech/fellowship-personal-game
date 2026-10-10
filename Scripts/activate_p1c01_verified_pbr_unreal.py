@@ -25,14 +25,14 @@ def main(root: Path):
     for row in records:
         if row["asset"] not in assets:assets.append(row["asset"])
     # Exactly the existing async streamable bank preloads these decorative meshes.
-    path.write_text(json.dumps(plan,indent=2)+"\\n",encoding="utf-8")
+    path.write_text(json.dumps(plan,indent=2)+"\n",encoding="utf-8")
     visual={"schema_version":1,"chapter":"P1C01",
             "status":"IMPORTED_STATIC_UASSETS_PENDING_GEOMETRY_AND_RENDER_REVIEW",
             "accents":[{"asset":r["asset"],"id":r["id"],"location":r["location"],
                         "radius_cm":r["radius_cm"]} for r in records],
             "evidence_boundary":"UE import files exist, not PIE, DEVICE, VISUAL or Gate6/7"}
     (root/"Data/P1C01VerifiedWorldDecor.json").write_text(
-        json.dumps(visual,indent=2)+"\\n",encoding="utf-8")
+        json.dumps(visual,indent=2)+"\n",encoding="utf-8")
     print("P1C01_PBR_UE_PACKAGE_ACTIVATION_PASS count="+str(len(records))+
           " pendingVisualAndDevice=true")
 
