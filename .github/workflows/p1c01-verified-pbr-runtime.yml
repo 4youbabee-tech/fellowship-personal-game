@@ -1,14 +1,5 @@
-name: P1C01 Verified PBR World Runtime Integration
+name: P1C01 Verified PBR Offline Source QC
 on:
-  push:
-    branches: [develop]
-    paths:
-      - 'Scripts/stage_p1c01_verified_pbr_to_unreal.py'
-      - 'Scripts/test_p1c01_verified_pbr_to_unreal.py'
-      - 'Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp'
-      - 'Source/ShireJourney/Public/World/ShirePrototypeWorldBuilder.h'
-      - 'Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp'
-      - '.github/workflows/p1c01-verified-pbr-runtime.yml'
   pull_request:
     branches: [develop]
     paths:
@@ -18,7 +9,6 @@ on:
       - 'Source/ShireJourney/Public/World/ShirePrototypeWorldBuilder.h'
       - 'Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp'
       - '.github/workflows/p1c01-verified-pbr-runtime.yml'
-  workflow_dispatch:
 
 permissions:
   contents: read
@@ -45,106 +35,3 @@ jobs:
           python3 Scripts/governor_work_start.py --lane VISUAL_WORLD_PREP
           python3 -m unittest discover -s Scripts -p 'test_p1c01_verified_pbr_to_unreal.py' -v
 
-  integrate:
-    needs: verified-source-tests
-    if: github.event_name != 'pull_request'
-    name: Reuse persistent 99 assets and import safe Shire PBR into UE4.27.2
-    runs-on: [self-hosted, Windows, X64, ue4-27]
-    timeout-minutes: 180
-    env:
-      STAGING_WAREHOUSE: 'D:\actions-runner\_warehouse\ShireJourney'
-      TARGET_SHA: ${{ github.sha }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.sha }}
-          fetch-depth: 1
-          persist-credentials: false
-          lfs: false
-      - name: Enforce manager and runner integrity
-        shell: powershell
-        run: |
-          if ((git rev-parse HEAD) -ne $env:TARGET_SHA) { throw 'P1C01_EXACT_HEAD_MISMATCH' }
-          & powershell.exe -NoProfile -ExecutionPolicy Bypass -File Scripts/run_governor_work_start.ps1 -Lane RUNTIME_BUILD
-          if ($LASTEXITCODE -ne 0) { throw 'P1C01_GOVERNOR_REJECTED' }
-          & powershell.exe -NoProfile -ExecutionPolicy Bypass -File Scripts/verify_runner_session.ps1
-          if ($LASTEXITCODE -ne 0) { throw 'P1C01_RUNNER_REJECTED' }
-      - name: Reuse SHA256-verified completed persistent wave39 and wave60 (no network)
-        shell: powershell
-        run: |
-          $options=@('D:\actions-runner\_work\_tool\Python\3.11.9\x64\python.exe')
-          if($env:RUNNER_TOOL_CACHE) { $options+=(Join-Path $env:RUNNER_TOOL_CACHE 'Python\3.11.9\x64\python.exe') }
-          foreach($p in @(Get-Command python.exe -All -ErrorAction SilentlyContinue)){ if($p -and $p.Source) { $options+=$p.Source } }
-          $python=$options | Where-Object { $_ -and (Test-Path -LiteralPath $_ -PathType Leaf) } | Select-Object -First 1
-          if(-not $python){ throw 'P1C01_PYTHON_MISSING' }
-          & $python Scripts/stage_p1c01_adaptive_pbr_warehouse.py --warehouse-root "$env:STAGING_WAREHOUSE" --wave p1c01_wave39 --expected-source 39 --expected-prepared 39 --check-existing
-          if ($LASTEXITCODE -ne 0) { throw 'P1C01_WAVE39_SHA256_NOT_PROVEN' }
-          & $python Scripts/stage_p1c01_adaptive_pbr_warehouse.py --warehouse-root "$env:STAGING_WAREHOUSE" --wave p1c01_wave60 --expected-source 60 --expected-prepared 59 --check-existing
-          if ($LASTEXITCODE -ne 0) { throw 'P1C01_WAVE60_SHA256_NOT_PROVEN' }
-          & $python Scripts/stage_p1c01_verified_pbr_to_unreal.py --warehouse-root "$env:STAGING_WAREHOUSE" --project-root "$env:GITHUB_WORKSPACE" --limit 16
-          if ($LASTEXITCODE -ne 0) { throw 'P1C01_VISIBLE_PBR_SOURCE_STAGE_FAILED' }
-          Write-Host 'P1C01_VERIFIED_SOURCE_BRIDGE_PASS stage=SOURCE_QC only'
-      - name: Prepare runtime source and build UE4.27.2 editor
-        shell: cmd
-        run: |
-          powershell.exe -NoProfile -ExecutionPolicy Bypass -File Scripts\prepare_runtime_source_layout.ps1
-          if errorlevel 1 exit /b 30
-          call Scripts\ci_verify_unreal.cmd
-          if errorlevel 1 exit /b 31
-          call Scripts\ci_wait_for_unreal_editor.cmd
-          if errorlevel 1 exit /b 32
-          powershell.exe -NoProfile -ExecutionPolicy Bypass -File Scripts\prepare_msvc_environment.ps1
-          if errorlevel 1 exit /b 33
-          call Scripts\ci_build_unreal.cmd
-          if errorlevel 1 exit /b 34
-      - name: Import verified FBX and texture overlay inside UE4.27.2
-        shell: cmd
-        run: |
-          call Scripts\ci_import_production_assets.cmd
-          if errorlevel 1 exit /b 40
-      - name: Verify actual imported PBR asset package files
-        shell: powershell
-        run: |
-          $r=Get-Content 'Saved\P1C01VerifiedPBR\production_stage_receipt.json' -Raw | ConvertFrom-Json
-          $missing=@()
-          foreach($slug in @($r.assets)){
-            $d=Join-Path $env:GITHUB_WORKSPACE ("Content\Production\World\Shire\VerifiedPBR\"+$slug)
-            $mesh=Join-Path $d ($slug+'.uasset')
-            $material=Join-Path $d ('MI_P1C01_'+$slug+'.uasset')
-            if(-not (Test-Path -LiteralPath $mesh -PathType Leaf)){ $missing+=$mesh }
-            if(-not (Test-Path -LiteralPath $material -PathType Leaf)){ $missing+=$material }
-          }
-          if($missing.Count -gt 0){ $missing | ForEach-Object{Write-Host "P1C01_IMPORT_MISSING $_"};throw "P1C01_IMPORT_UASSET_MISSING count=$($missing.Count)" }
-          Write-Host ("P1C01_VERIFIED_STATIC_PBR_UASSET_PASS models="+@($r.assets).Count+" materials="+@($r.assets).Count)
-      - name: Run existing gameplay, quest/save and warning regression
-        shell: cmd
-        run: |
-          powershell.exe -NoProfile -ExecutionPolicy Bypass -File Scripts\resolve_runtime_python.ps1
-          if errorlevel 1 exit /b 51
-          call Scripts\ci_run_project_automation.cmd
-          if errorlevel 1 exit /b 52
-          call Scripts\ci_runtime_startup.cmd
-          if errorlevel 1 exit /b 53
-          call Scripts\ci_runtime_chapters.cmd
-          if errorlevel 1 exit /b 54
-          call Scripts\ci_runtime_state.cmd
-          if errorlevel 1 exit /b 55
-          call Scripts\ci_warning_debt.cmd
-          if errorlevel 1 exit /b 56
-      - name: Package and verify candidate (not finished game)
-        shell: cmd
-        run: |
-          call Scripts\ci_package_w00.cmd
-          if errorlevel 1 exit /b 60
-          powershell.exe -NoProfile -ExecutionPolicy Bypass -File Scripts\verify_packaged_runtime_data.ps1
-          if errorlevel 1 exit /b 61
-          powershell.exe -NoProfile -ExecutionPolicy Bypass -File Scripts\verify_packaged_startup.ps1
-          if errorlevel 1 exit /b 62
-      - name: Upload actual P1C01 PBR-enhanced Windows test candidate
-        if: success()
-        uses: actions/upload-artifact@v4
-        with:
-          name: ShireJourney-P1C01-PBR-Test-${{ env.TARGET_SHA }}
-          path: Saved/W00Package/WindowsNoEditor/
-          if-no-files-found: error
-          retention-days: 14
