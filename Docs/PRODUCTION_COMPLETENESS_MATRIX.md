@@ -1,3 +1,7 @@
+## 2026-10-10 — Owner living social landscape standard, Shire-first / all regions (design requirement)
+
+- Scope/requirements documentation candidate only: living social landscape first in P1C01, later region-specific adaptation (28-region design coverage). Status PLANNED/DEFERRED as appropriate; no new asset files, UE import, character art, measurable visual acceptance, performance credit or Gate 6/7 completion.
+
 
 ## 2026-10-10 — Whole-game character CC0 source candidate research (preparation only)
 

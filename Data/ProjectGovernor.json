@@ -171,7 +171,8 @@
         "Run Scripts/bootstrap_local_p1c01_visuals.cmd on the owner workstation so ignored Content/Production assets are generated and /Engine/Maps/Entry is launched instead of the white Template_Default preview.",
         "Human rendered/PIE review of the machine-green P1C01 Shire settlement for density, traversal readability, social life and story-state presentation; correct only defects observed in that review.",
         "Target-device 720p/DX11 performance validation for the integrated settlement and living-world population.",
-        "Additional fauna/environmental polish remains optional and must be evidence-driven rather than blind density escalation."
+        "Additional fauna/environmental polish remains optional and must be evidence-driven rather than blind density escalation.",
+        "Record and validate the owner 2026-10-10 Bag End / Bagshot Row living social landscape reference in P1C01 first; stage 28-region culture/settlement-specific prep only, with all further chapter runtime locked until Gate 6/7 evidence."
       ],
       "acceptance_criteria": [
         "Ordinary traversal repeatedly reveals believable activity or environmental storytelling",
@@ -179,14 +180,16 @@
         "Target laptop performance remains acceptable",
         "Each chapter records living-world acceptance separately",
         "Sparse/danger regions must still feel authored through environment/wildlife/threat motion without inventing unsupported civilian populations.",
-        "Meaningful supported player/environment contacts produce bounded visible/audible responses without violating story authority or the target-laptop performance budget."
+        "Meaningful supported player/environment contacts produce bounded visible/audible responses without violating story authority or the target-laptop performance budget.",
+        "Each inhabited settlement, across the planned 28-region scope, is designed as a coherent living social landscape with readable home/work/route hierarchy, culturally appropriate inhabitants, purposeful routines, everyday exchanges, vegetation and ambient audio; sparse or dangerous regions use canon-correct environmental life instead of invented civilian crowds.",
+        "P1C01 Hobbiton/Bag End/Bagshot Row establishes the first observed quality benchmark via human rendered review of route hierarchy, gardener/home/work routines, NPC interactions and time/story reactions before runtime rollout to later regions."
       ],
       "dependencies": [
         "REQ-WORLD-002",
         "REQ-NPC-001"
       ],
       "checkpoint": "LIVING_WORLD_ROADMAP",
-      "notes": "Living-world systems remain implemented; P1C01 settlement source composition is machine-green through PR #314/#318. Requirement remains PARTIAL until local production bootstrap, human rendered review and target-device performance evidence exist."
+      "notes": "Living-world systems remain implemented; P1C01 settlement source composition is machine-green through PR #314/#318. Requirement remains PARTIAL until local production bootstrap, human rendered review and target-device performance evidence exist. Owner reaffirmed 2026-10-10 that this inhabited-world/social-landscape standard applies to all regional towns and settlements, adapted to lore; visual reference is a design target, not evidence of acceptance."
     },
     {
       "id": "REQ-WORLD-002",
