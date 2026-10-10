@@ -1,3 +1,7 @@
+## 2026-10-11 — Exact target hardware reference, not an FPS result
+
+- Device contract documented: Intel Core i7-6498DU @ 2.50GHz / AMD Radeon R5 M330 / 2039 MB VRAM reported / 8 GB RAM / Windows 11 Pro 64-bit; installed DirectX 12 without DX12 Ultimate; UE4.27.2 remains DX11, 1280x720, Balanced Medium + selective High, stable 30 FPS objective. Updated primary ProjectGovernor and active Gate 6/7, performance-budget, profiling and QA metadata. This only confirms documentation consistency; no actual target-laptop run, FPS samples, frame-time distribution, RAM/VRAM residency proof, PIE, DEVICE-TESTED, or VISUALLY-ACCEPTED proof. P1C01 remains NOT ACCEPTED.
+
 ## 2026-10-11 — Accelerated intake policy only, not content completion
 
 - Owner-approved operational direction: remove redundant administrative admission checks, fast-path lawful repairable candidates, keep real asset rights and technical acceptance, consolidate large P1C01 waves and prepare 28-region art/characters concurrently. **Status: policy registered; implementation and runtime output pending**. No increase in visual, PIE, device, FPS or Gate 6/7 completion.
