@@ -526,19 +526,6 @@ jobs:
           compression-level: 0
           retention-days: 14
 
-      - name: Upload P1C01 packaging evidence
-        if: always() && (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_ACCEPTANCE_ONLY == 'true')
-        uses: actions/upload-artifact@v4
-        with:
-          name: ShireJourney-P1C01-BuildLogs-${{ env.TARGET_SHA }}
-          path: |
-            Saved/Logs/CI-W00-*.log
-            Saved/Logs/CI-ProductionAssetImport.log
-            Saved/Logs/CI-W00-PackagedData.json
-            Saved/Logs/CI-W00-PackagedStartup.log
-          if-no-files-found: warn
-          retention-days: 14
-
       - name: Collect Unreal build logs
         if: always() && (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true' || env.SHIRE_ACCEPTANCE_ONLY == 'true')
         shell: cmd

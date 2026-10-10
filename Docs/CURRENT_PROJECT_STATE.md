@@ -1,3 +1,13 @@
+## 2026-10-10 — PG-026 release artifact versus failure-logs contract
+
+- Pre-Unreal #38045489962 failed: PG-026 failure logging may not depend on artifact upload quota. On isolated fix PR #336, removed `always()` log artifact upload, kept console failure logs and allowed a success-only packaged Windows playable candidate. Static exact-head checks and UE results pending. No Gate6/7 credit.
+
+## 2026-10-10 — P1C01 warehouse Windows nested relative-path root cause isolated
+
+- Real failure Run #38042482514: source39 245957831 B and pbr39 197353784 B **SHA256 verified and extracted** on persistent warehouse; staging wave39 then failed `StageError: UNSAFE_RELATIVE_PATH` at `stage_p1c01_adaptive_pbr_warehouse.py:358/331` on Windows. No wave39 permanent receipt, wave60 not started.
+- Root cause: `str(safe_path(...))` uses Windows backslashes when nested provider receipt paths (e.g. `textures/gate_diff_1k.png`) are converted, but `safe_path` correctly disallows backslashes in durable receipt keys. Minimal patch changes validated relative path serialization to `.as_posix()`, with a nested texture real fixture regression. Preserve cache; do not download source39/pbr39 again.
+- The exact-head Windows/Linux regression and real persistent warehouse evidence remain pending. No UE/PIE/device/visual acceptance claimed. This work lives on an isolated fix branch to avoid canceling active PR #335 packaging CI.
+
 ## 2026-10-10 — P1C01 first downloadable playable candidate, fail closed
 
 - On the owner-approved P1C01 delivery lane, patched the game's default editor/game map, headless runtime smoke, packaging cook map and packaged startup observation to `/Engine/Maps/Entry`. This follows `Data/P1C01LocalVisualBootstrapV1.json` that identifies the engine `Template_Default` floor as a visual masking defect.

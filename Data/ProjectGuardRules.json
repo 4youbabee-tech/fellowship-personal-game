@@ -209,5 +209,14 @@
       "Windows candidate uploaded only on successful CI startup"
     ],
     "acceptance_credit": false
+  },
+  "p1c01_warehouse_nested_windows_posix": {
+    "regression": "Run #38042482514, stage persistent wave39 fails UNSAFE_RELATIVE_PATH only on Windows after SHA256 source39/pbr39 PASS",
+    "root_cause": "str(Path('textures/gate_diff_1k.png')) inserts backslashes under Windows",
+    "fixed_rule": "Normalize validated provider relative receipt paths with PurePosix-compatible .as_posix() before concatenating persistent forward-slash paths.",
+    "scope": "P1C01_SOURCE_ONLY",
+    "offline_regression": "Scripts/test_p1c01_adaptive_pbr_warehouse.py::PersistentIntakeTests::test_nested_original_relative_path_remains_posix_on_windows",
+    "evidence": "PENDING exact-head host regressions on Linux/Windows and actual wave39 permanent stage audit",
+    "acceptance_credit": false
   }
 }

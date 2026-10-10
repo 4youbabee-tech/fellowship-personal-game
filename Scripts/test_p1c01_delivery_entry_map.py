@@ -48,6 +48,7 @@ class P1C01DeliveryEntryMapContract(unittest.TestCase):
         self.assertIn("path: Saved/W00Package/WindowsNoEditor/", wf)
         self.assertIn("if-no-files-found: error", wf)
         self.assertIn("actions/upload-artifact@v4", wf)
+        self.assertNotIn("name: Upload P1C01 packaging evidence", wf)
         self.assertLess(wf.index("name: Launch and observe packaged executable"),
                         wf.index("name: Upload P1C01 Windows playable candidate"))
 

@@ -1,0 +1,31 @@
+name: P1C01 Warehouse Windows Nested Path Regression
+on:
+  push:
+    branches: [fix/p1c01-windows-warehouse-paths-2026-10-10]
+    paths:
+      - 'Scripts/stage_p1c01_adaptive_pbr_warehouse.py'
+      - 'Scripts/test_p1c01_adaptive_pbr_warehouse.py'
+      - '.github/workflows/p1c01-windows-warehouse-path-regression.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline-persistent-source-regression:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          lfs: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Prove nested provider paths on Windows and Linux
+        run: python Scripts/test_p1c01_adaptive_pbr_warehouse.py -v
+      - name: Record source-only scope
+        run: python -c "import hashlib,pathlib,platform; p=pathlib.Path('Scripts/stage_p1c01_adaptive_pbr_warehouse.py'); print('P1C01_WAREHOUSE_NESTED_PATH_REGRESSION_PASS platform='+platform.system()+' source_sha256='+hashlib.sha256(p.read_bytes()).hexdigest()); print('UNREAL=NOT_RUN WAREHOUSE=NOT_MUTATED GATE67=NOT_ACCEPTED')"

@@ -133,7 +133,7 @@ def validate_inputs(source_root: Path, pbr_root: Path, expected_source: int,
             raise StageError("SOURCE_FILES_MISSING:" + slug)
         rows = []
         for f in item["files"]:
-            rel = str(safe_path(f.get("relative_file")))
+            rel = safe_path(f.get("relative_file")).as_posix()
             src_rel = "assets/" + slug + "/" + rel.replace("\\", "/")
             key = src_rel.lower()
             if key in seen_lower:
