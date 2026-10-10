@@ -1,3 +1,12 @@
+## 2026-10-10 — P1C01 physical CC0 PBR-to-UE4 visual production bridge (candidate, evidence pending)
+
+- Manager authority: DEC-078/104/105, REQ-PROD-011, W01/P1C01 only. Actual persistent warehouse Run #38049193046 completed SUCCESS, providing immutable 39+60 source and 39+59 prepared PBR files; this is source storage evidence, not engine/render evidence.
+- This PR adds an exact SHA256 checked, bounded (up to 16 static assets / 144 MiB) source bridge from the persistent two-wave CC0 warehouse into the existing `SourceAssets/Production/World/Shire/VerifiedPBR` importer. Reject held-identity, held-biome, corrupted, multimap/multi-material and non-Shire/unrelated candidates. Avoid provider redownload, hard runtime references and any character FBX.
+- Unreal importer now binds verified single-material FBX to a real PBR master: BaseColor + tangent-space NormalDX + packed ORM (ambient occlusion R, roughness G, metallic B), with non-sRGB packed/normal imports. Preserve existing OBJ asset bank unchanged.
+- Existing `UShireChapterAssetStreamingSubsystem` preloads selected soft paths via `Data/ChapterAssetStreamingPlan.json`. Existing `AShirePrototypeWorldBuilder` adds at most 16 optional, non-colliding, low-shadow static decorative pieces after world commit and never synchronously loads meshes. Canonical route/story/quest ownership and actor pooling remain unchanged.
+- A dedicated GitHub-hosted offline source test + serialized Windows UE4.27.2 workflow runs actual source stage, editor build, production import, `.uasset` presence, automation, startup, all chapters, state persistence, warning guard, cook and packaged startup. Only success can publish a playable Windows **test candidate**. The new visual packet is NOT declared PIE, device, human visual or Gate 6/7 accepted.
+- Until exact-head tests run, this is a source implementation candidate. Fix compile/import/runtime failures on this same PR before merge; avoid new feature lanes until machine-green. No final Windows release requested.
+
 ## 2026-10-10 — P1C01 mandatory Project Governor work-start and five-lane enforcement
 
 - DEC-104 is enforced as a mandatory physical production entrypoint. Existing five-lane read-only preflight is NOT proof of generated assets. Scripts/governor_work_start.py runs the full Project Governor and checks DEC-078/104/105, REQ-PROD-011, active P1C01 gate, one runtime writer, one warehouse writer, 6 GiB reserve and five lane identities before production.
