@@ -56,6 +56,15 @@ jobs:
         run: |
           & $env:SHIRE_PBR_PYTHON Scripts/p1c01_verified_pbr_bridge.py --project-root "$env:GITHUB_WORKSPACE" --warehouse-root "$env:SHIRE_WAREHOUSE_ROOT"
           if($LASTEXITCODE -ne 0){throw 'P1C01_VERIFIED_SOURCE_STAGE_FAILED'}
+      - name: Fail fast on FBX smoothing and mesh slots before expensive Unreal build
+        shell: powershell
+        run: |
+          $ErrorActionPreference='Stop'
+          $blender=Get-Command blender.exe -ErrorAction SilentlyContinue
+          $args=@('Scripts/preflight_p1c01_verified_fbx.py','--project-root',"$env:GITHUB_WORKSPACE",'--require-source')
+          if($blender){ $args+=@('--blender',[string]$blender.Source) }
+          & $env:SHIRE_PBR_PYTHON @args
+          if($LASTEXITCODE -ne 0){throw 'P1C01_FBX_PHYSICAL_NORMALIZATION_FAILED_BEFORE_UE'}
       - name: Prepare UE4.27.2 runtime source and build environment
         shell: cmd
         run: |
