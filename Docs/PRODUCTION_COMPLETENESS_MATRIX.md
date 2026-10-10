@@ -1,3 +1,7 @@
+## 2026-10-10 — Human Wave 2 fail-closed rerun exposes missing Blender numpy (candidate repair)
+
+- Exact-head workflow run #38056167116 now correctly FAILED in hosted deformation job #114226283880 (rather than false-green), with `ModuleNotFoundError: No module named 'numpy'` from Blender FBX importer and exit code 93. Fix installs python3-numpy in the deformation job and probes numpy inside Blender before evaluating a candidate. Exact-head retest pending; no deformation, visual, PIE, device, or Gate 6/7 acceptance.
+
 ## 2026-10-10 — Frodo deformation workflow evidence integrity correction (candidate)
 
 - P1C01 Human Wave 2 #38052762961 has a green aggregate but hosted deformation job #114217909522 emitted FileNotFoundError for its UE4 receipt. Isolated fix branch makes receipt discovery unique and fail-closed, adds --python-exit-code 93, validates actual STATIC_DEFORMATION_STRESS_PASS JSON, and adds a static regression contract. Candidate not yet exact-head validated; no deformation, visual, PIE, device, or Gate 6/7 acceptance.
