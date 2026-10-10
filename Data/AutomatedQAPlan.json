@@ -5,11 +5,20 @@
   "authority": "Data/ProjectGovernor.json",
   "engine": "Unreal Engine 4.27.2",
   "target_profile": {
-    "resolution": "720p",
-    "quality": "Low-Medium",
+    "resolution": "1280x720",
+    "quality": "Balanced Medium / selective High where visually important",
     "ram_gb": 8,
     "gpu_vram_class_gb": 2,
-    "fps_floor_target": 30
+    "fps_floor_target": 30,
+    "cpu_model": "Intel Core i7-6498DU @ 2.50GHz",
+    "gpu_model": "AMD Radeon R5 M330",
+    "gpu_vram_reported_mb": 2039,
+    "os": "Windows 11 Pro 64-bit",
+    "directx_runtime_installed": "DirectX 12",
+    "dx12_ultimate_supported": false,
+    "renderer": "DX11",
+    "stable_fps_goal": 30,
+    "evidence_status": "OWNER_HARDWARE_SPEC_RECORDED_DEVICE_RUNTIME_NOT_TESTED"
   },
   "layers": [
     {
@@ -43,7 +52,8 @@
     "Navigation tests use deterministic routes, not random wandering.",
     "Memory/hitch thresholds come from target-device evidence; time dilation is not treated as equivalent to real-duration soak.",
     "Animation/T-pose gates apply only to actors declared production-skeletal-ready.",
-    "Headless asset/shader checks never promote visual acceptance."
+    "Headless asset/shader checks never promote visual acceptance.",
+    "DEVICE_TESTED and 30 FPS stable acceptance require real owner i7-6498DU/R5 M330/Windows 11 Pro DX11 gameplay telemetry, never static files or Windows runner identity."
   ],
   "first_wave_tests": [
     "ShireJourney.QA.Save.DefaultState",
