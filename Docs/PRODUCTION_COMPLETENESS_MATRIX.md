@@ -1,3 +1,7 @@
+## 2026-10-10 — P1C01 smoothing warning diagnosis candidate
+
+- Owner screenshot shows `Missing smoothing groups: 17 > 0` and exit 65; 17 occurrences are not proven distinct assets. Add log-file/line/context diagnostics to warning-debt guard without relaxing zero tolerance. This does not fix source FBX meshes or establish PIE/device/visual Gate 6/7 acceptance. Re-export offending sources after identity proof; avoid an unjustified costly UE rebuild.
+
 ## 2026-10-10 — P1C01 smoothing warning diagnostic source attribution (candidate)
 
 - Actual Windows UE warning debt failed with `Missing smoothing groups: 17 > 0`, exit 65, after a costly build. `Scripts/warning_debt_guard.py` now prints filename, line, nearby FBX/OBJ source and warning text before its existing zero-tolerance rejection, without suppressing warnings. Source identification is best-effort; `UNKNOWN_SOURCE` requires original import logs and source-side Blender FBX normals/smoothing remediation.
