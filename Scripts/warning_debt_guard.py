@@ -47,7 +47,7 @@ def smoothing_warning_sources(files):
                 nearby = lines[max(0, index - 8):index + 1]
                 candidates = []
                 for context in nearby:
-                    candidates.extend(re.findall(r"[^\\s\\\"']+\\.(?:fbx|obj)", context, re.I))
+                    candidates.extend(re.findall(r"[^\s\"']+\.(?:fbx|obj)", context, re.I))
                 evidence.append((path.name, index + 1, candidates[-1] if candidates else "UNKNOWN_SOURCE", line.strip()[:220]))
     return evidence
 
