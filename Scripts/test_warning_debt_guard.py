@@ -101,7 +101,7 @@ class WarningDebtGuardTests(unittest.TestCase):
     def test_smoothing_warning_source_context_retains_failure_evidence(self):
         with tempfile.TemporaryDirectory() as tmp:
             log = Path(tmp) / "CI-ProductionAssetImport.log"
-            log.write_text("Importing Props/TestProp.fbx\\nNo smoothing group information was found\n", encoding="utf-8")
+            log.write_text("Importing Props/TestProp.fbx\nNo smoothing group information was found\n", encoding="utf-8")
             evidence = guard.smoothing_warning_sources([log])
             self.assertEqual(len(evidence), 1)
             self.assertIn("TestProp.fbx", evidence[0][2])
