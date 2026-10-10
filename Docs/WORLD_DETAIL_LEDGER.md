@@ -1,3 +1,8 @@
+## 2026-10-10 — Facebook reference opened and bounded
+- Opened `https://www.facebook.com/share/1MMMZbtcz5/`; it resolved to the public `Tales of the Rings` Facebook page with an accessible post list after closing the login prompt.
+- Observed reference context: Tolkien lore documentary page and recent `Lighting of the Beacons` post. No usable asset license or direct production-download grant was visible.
+- Production rule: use this link only as a visual/mood reference. Do not import or copy page media/text into game assets without independent license evidence.
+
 ## 2026-10-10 — Legal full-cast/horse source queue after KayKit exhaustion
 - User-provided Facebook link is treated as visual reference only unless a usable asset license/source is proven; no social-media asset is imported into Production.
 - Quaternius official pages verified during this batch expose CC0 license and FBX formats for Universal Animation Library, Ultimate Modular Men, Ultimate Animated Character Pack, Ultimate Animated Animal Pack and Farm Animal Pack.
