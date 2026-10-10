@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "batch_id": "WAREHOUSE_QUATERNIUS_P1C01_HERO_CANDIDATE_V1",
-  "status": "AUTHORIZED_FOR_TARGETED_STAGING",
+  "batch_id": "WAREHOUSE_QUATERNIUS_P1C01_FULL_CAST_CANDIDATE_V2",
+  "status": "AUTHORIZED_FOR_TARGETED_FULL_CAST_STAGING",
   "provider": "QUATERNIUS",
   "license": "PER_PACK_PAGE_LICENSE_CAPTURE_REQUIRED",
-  "purpose": "Bounded prerequisite staging for the exact-head P1C01 Frodo/Gandalf skeletal candidate gate. This manifest contains only the four source packs authorized by P1C01HeroSkeletalCandidateWaveV1.",
+  "purpose": "Bounded prerequisite staging for P1C01 named-character and threat-mount skeletal candidate gates after KayKit candidate exhaustion. This manifest contains only official Quaternius CC0 packs mapped to required P1C01 roles; staging is not runtime promotion.",
   "staging_root": "D:\\actions-runner\\_warehouse\\ShireJourney\\Quaternius",
   "source_pages": [
     {
@@ -38,14 +38,175 @@
       "required_final_format": "FBX",
       "observed_page_license": "CC0",
       "license_capture": "OFFICIAL_PACK_PAGE_VERIFIED_2026-09-27"
+    },
+    {
+      "id": "QTN_ULTIMATE_MODULAR_MEN",
+      "url": "https://quaternius.com/packs/ultimatemodularcharacters.html",
+      "category": "CHARACTER_BASE",
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_PACK_PAGE_VERIFIED_2026-10-10",
+      "intended_use": [
+        "Bilbo/Sam/Merry/Pippin humanoid body/outfit candidate pool",
+        "Gandalf tall-humanoid robe/beard/staff-adjacent candidate pool after filename/QC review"
+      ]
+    },
+    {
+      "id": "QTN_ULTIMATE_ANIMATED_CHARACTERS",
+      "url": "https://quaternius.com/packs/ultimatedanimatedcharacter.html",
+      "category": "NPC_CHARACTER_BASE",
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_PACK_PAGE_VERIFIED_2026-10-10",
+      "intended_use": [
+        "full-cast animated fallback candidate pool",
+        "Black Rider humanoid silhouette candidate only after non-franchise visual review"
+      ]
+    },
+    {
+      "id": "QTN_ULTIMATE_ANIMATED_ANIMALS",
+      "url": "https://quaternius.com/packs/ultimateanimatedanimals.html",
+      "category": "THREAT_MOUNT_FAUNA",
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_PACK_PAGE_VERIFIED_2026-10-10",
+      "intended_use": [
+        "Black Rider horse skeletal/animation candidate pool",
+        "horse gait coverage static/UE4 QC"
+      ]
+    },
+    {
+      "id": "QTN_FARM_ANIMALS",
+      "url": "https://quaternius.com/packs/farmanimal.html",
+      "category": "SHIRE_FAUNA",
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_PACK_PAGE_VERIFIED_2026-10-10",
+      "intended_use": [
+        "Shire livestock ambience candidates",
+        "secondary horse/pony candidate fallback only after QC"
+      ]
     }
   ],
   "rules": [
-    "Only the four P1C01 hero-candidate source packs are staged by this bounded prerequisite batch.",
-    "Only public downloads discovered from the official Quaternius pack pages are eligible; interactive/store-only routes remain unresolved.",
+    "Only the P1C01 full-cast candidate source packs are staged by this bounded prerequisite batch.",
+    "Only public downloads discovered from official Quaternius pack pages are eligible; interactive/store-only routes remain unresolved/manual-source.",
     "Animated production-character candidates must reach the project as FBX; OBJ is not accepted as final animated-character evidence.",
     "Production textures are PNG/TGA only; BMP is forbidden.",
+    "Filename-token ranking may shortlist candidates but must not claim final likeness or canon accuracy.",
+    "Black Rider candidates must be generic legal threat silhouettes only; no franchise/fan asset enters Production.",
     "Staging does not promote any asset to READY_FOR_IMPORT, runtime integration, PIE, device, visual or performance acceptance."
   ],
-  "evidence_boundary": "Warehouse prerequisite only. Candidate ranking, import and runtime promotion remain separately gated."
+  "evidence_boundary": "Warehouse prerequisite only. Download/SHA receipt, static FBX structure, UE4 skeletal import, retarget/deformation review and human visual acceptance remain separately gated.",
+  "character_targets": [
+    {
+      "character": "FRODO",
+      "candidate_sources": [
+        "QTN_UNIVERSAL_BASE_CHARACTERS",
+        "QTN_RPG_CHARACTERS",
+        "QTN_ULTIMATE_MODULAR_MEN"
+      ],
+      "required_qc": [
+        "FBX skeletal mesh",
+        "skin weights",
+        "idle/walk/run or retargetable humanoid locomotion",
+        "short/small/adventurer/villager filename-token ranking",
+        "human visual review"
+      ]
+    },
+    {
+      "character": "BILBO",
+      "candidate_sources": [
+        "QTN_ULTIMATE_MODULAR_MEN",
+        "QTN_RPG_CHARACTERS",
+        "QTN_ULTIMATE_ANIMATED_CHARACTERS"
+      ],
+      "required_qc": [
+        "elder/civilian filename-token ranking",
+        "talk/social gestures",
+        "party/departure interaction coverage",
+        "human visual review"
+      ]
+    },
+    {
+      "character": "GANDALF",
+      "candidate_sources": [
+        "QTN_ULTIMATE_MODULAR_MEN",
+        "QTN_RPG_CHARACTERS",
+        "QTN_FANTASY_OUTFITS",
+        "QTN_UNIVERSAL_ANIMATION_LIBRARY"
+      ],
+      "required_qc": [
+        "wizard/mage/old/beard/robe/staff token ranking",
+        "staff-compatible locomotion",
+        "talk/fireworks/investigation gestures",
+        "human visual review"
+      ]
+    },
+    {
+      "character": "SAM",
+      "candidate_sources": [
+        "QTN_UNIVERSAL_BASE_CHARACTERS",
+        "QTN_ULTIMATE_MODULAR_MEN",
+        "QTN_UNIVERSAL_ANIMATION_LIBRARY"
+      ],
+      "required_qc": [
+        "short/casual/worker/villager token ranking",
+        "carry/pack and crouch/hide coverage",
+        "companion material pass"
+      ]
+    },
+    {
+      "character": "MERRY",
+      "candidate_sources": [
+        "QTN_UNIVERSAL_BASE_CHARACTERS",
+        "QTN_ULTIMATE_MODULAR_MEN",
+        "QTN_UNIVERSAL_ANIMATION_LIBRARY"
+      ],
+      "required_qc": [
+        "short/casual/adventurer token ranking",
+        "ferry interaction coverage",
+        "companion material pass"
+      ]
+    },
+    {
+      "character": "PIPPIN",
+      "candidate_sources": [
+        "QTN_UNIVERSAL_BASE_CHARACTERS",
+        "QTN_ULTIMATE_MODULAR_MEN",
+        "QTN_UNIVERSAL_ANIMATION_LIBRARY"
+      ],
+      "required_qc": [
+        "short/casual/adventurer token ranking",
+        "ferry interaction coverage",
+        "companion material pass"
+      ]
+    },
+    {
+      "character": "BLACK_RIDER",
+      "candidate_sources": [
+        "QTN_ULTIMATE_ANIMATED_CHARACTERS",
+        "QTN_RPG_CHARACTERS",
+        "QTN_FANTASY_OUTFITS"
+      ],
+      "required_qc": [
+        "dark hooded/cloaked threat token ranking",
+        "mounted socket/posture compatibility",
+        "no franchise asset or copyrighted likeness"
+      ]
+    },
+    {
+      "character": "BLACK_RIDER_HORSE",
+      "candidate_sources": [
+        "QTN_ULTIMATE_ANIMATED_ANIMALS",
+        "QTN_FARM_ANIMALS"
+      ],
+      "required_qc": [
+        "horse skeletal mesh",
+        "idle/walk/trot/run/gallop coverage",
+        "rider socket/capsule compatibility",
+        "nav/collision review"
+      ]
+    }
+  ]
 }
