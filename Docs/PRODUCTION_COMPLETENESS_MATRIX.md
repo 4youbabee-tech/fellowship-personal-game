@@ -1,3 +1,7 @@
+## 2026-10-11 — Accelerated intake policy only, not content completion
+
+- Owner-approved operational direction: remove redundant administrative admission checks, fast-path lawful repairable candidates, keep real asset rights and technical acceptance, consolidate large P1C01 waves and prepare 28-region art/characters concurrently. **Status: policy registered; implementation and runtime output pending**. No increase in visual, PIE, device, FPS or Gate 6/7 completion.
+
 ## 2026-10-10 — Owner living social landscape standard, Shire-first / all regions (design requirement)
 
 - Scope/requirements documentation candidate only: living social landscape first in P1C01, later region-specific adaptation (28-region design coverage). Status PLANNED/DEFERRED as appropriate; no new asset files, UE import, character art, measurable visual acceptance, performance credit or Gate 6/7 completion.
