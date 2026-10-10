@@ -1,3 +1,7 @@
+## 2026-10-11 — P1C01 16-source UE import proven, QA/packaging workflow adjustment unproven
+
+- Run #38090317097 **real UE import**: `P1C01_PBR_UNREAL_IMPORT_QC_PASS bound=16 unbound=0 visualAccepted=false`; `ShireProductionImport: 440 files, 0 failures`; `P1C01_UE_PBR_SOURCE_ASSETS_PRESENT count=16 runtimeBank=100 visualNotAccepted=true`. These are UE importer/source-bank signals, **not actual in-world placement, render acceptance, game play, or stable target-device FPS**. Existing workflow failed before UE Automation due same-step missing PYTHON_EXE (exit 62). Corrected QA Python injection and deferred Windows cook/archive only on pull-request preview; retain packaged Windows candidate/startup on develop push or explicit workflow_dispatch. Newly edited head requires full relevant CI results; visuals, runtime placement, PIE, device, Gate6/7 remain unaccepted.
+
 ## 2026-10-11 — Accelerated intake policy only, not content completion
 
 - Owner-approved operational direction: remove redundant administrative admission checks, fast-path lawful repairable candidates, keep real asset rights and technical acceptance, consolidate large P1C01 waves and prepare 28-region art/characters concurrently. **Status: policy registered; implementation and runtime output pending**. No increase in visual, PIE, device, FPS or Gate 6/7 completion.
