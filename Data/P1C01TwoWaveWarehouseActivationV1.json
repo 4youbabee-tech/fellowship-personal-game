@@ -56,5 +56,12 @@
     "VISUAL_ACCEPTED",
     "P1C01_GATE67_ACCEPTED"
   ],
-  "exit_boundary": "Both source waves may be warehouse-ready, but cannot be imported into Unreal/used in Shire without per-asset shape/LOD/collision/material identity QC and hero skeletal/animation evidence."
+  "exit_boundary": "Both source waves may be warehouse-ready, but cannot be imported into Unreal/used in Shire without per-asset shape/LOD/collision/material identity QC and hero skeletal/animation evidence.",
+  "activation_2026_10_10": {
+    "mode": "ONE_SHOT_DEVELOP_PUSH_AFTER_GATED_PR_MERGE",
+    "reason": "Previous source-branch-only trigger never executed after #335 merged into develop; run existing pinned checkpoint recovery once from current develop without redownloading providers.",
+    "workflow": ".github/workflows/p1c01-two-wave-checkpoint-warehouse.yml",
+    "expected_result": "PENDING_RUN_SHA256_AND_DURABLE_RECEIPTS",
+    "safety": "ONE_PERSISTENT_WRITER_6GIB_RESERVE_SEQUENTIAL_39_THEN_60_NO_UE_ACCEPTANCE"
+  }
 }

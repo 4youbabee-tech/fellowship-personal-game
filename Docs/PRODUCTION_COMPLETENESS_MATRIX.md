@@ -1,3 +1,8 @@
+## 2026-10-10 — P1C01 production bottleneck: source-only five lanes vs blocked durable warehouse (PENDING)
+
+- Verified `five-lane` workflow is *five read-only preflight lanes*, not five concurrently writing Unreal production assets. The durable 99-asset warehouse workflow targeted a merged temporary source branch and required manual dispatch after merge, leaving real 39/60 receipt promotion unproven. This change targets a one-shot `develop` merge activation of the existing exact-head durable warehouse train with SHA256 cache reuse, serialized writer, and 6 GiB reserve.
+- Status: `SOURCE_PIPELINE_TRIGGER_PREPARED_NOT_YET_RUN`; `99_SOURCE_FBX_UNREAL_IMPORT=NOT_PROVEN`; `P1C01_GATE67=NOT_ACCEPTED`. A real durable warehouse success and separate authored runtime import/PIE/performance evidence remain required.
+
 ## 2026-10-10 — PG-026 release artifact versus failure-logs contract
 
 - Pre-Unreal #38045489962 failed: PG-026 failure logging may not depend on artifact upload quota. On isolated fix PR #336, removed `always()` log artifact upload, kept console failure logs and allowed a success-only packaged Windows playable candidate. Static exact-head checks and UE results pending. No Gate6/7 credit.

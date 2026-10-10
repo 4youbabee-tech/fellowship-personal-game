@@ -1,3 +1,9 @@
+## 2026-10-10 — One-shot P1C01 durable 99-source warehouse activation on develop (PENDING)
+
+- Root-cause audit: `p1c01-five-lane-maxsafe.yml` only runs five read-only metadata reports; no asset import/Unreal authoring occurs in these lanes. The two-wave durable 99-FBX warehouse workflow only pushed automatically on the now-merged `ops/p1c01-five-lane-maxsafe-2026-10-09` source branch, so the previously repaired Windows nested-path issue had no completed persistent warehouse re-run after merge.
+- Change: retain single warehouse writer, immutable pinned GitHub artifacts, SHA256 checkpoints, 6 GiB reserve, wave39-then-wave60 durability; enable one-time `develop` push activation via the workflow/activation manifest. Once merged the workflow should be queued behind any running self-hosted Unreal work, not run in parallel on the same runner. This is source-only and does not import into Unreal.
+- Evidence is **PENDING** until an actual Actions run shows receipts for 39+60, warehouse inventory passes, and runtime integration subsequently proves the assets in UE. Do not mark Gate6/7, PIE, device or visual acceptance from this change.
+
 ## 2026-10-10 — PG-026 release artifact versus failure-logs contract
 
 - Pre-Unreal #38045489962 failed: PG-026 failure logging may not depend on artifact upload quota. On isolated fix PR #336, removed `always()` log artifact upload, kept console failure logs and allowed a success-only packaged Windows playable candidate. Static exact-head checks and UE results pending. No Gate6/7 credit.
