@@ -1,3 +1,7 @@
+## 2026-10-10 — P1C01 missing physical PBR placement false-green prevention
+
+- Regression risk: a successful import and gameplay startup can still display zero verified PBR decorations when soft objects are not resident at world build time. New deterministic offline cases plus a real headless-runtime placement-count verifier must block shipping the P1C01 PBR test candidate if `P1C01_PBR_DECOR_RUNTIME` is missing, partial, or has omitted objects, even when all `.uasset` packages exist. Retain one runtime writer and no false PIE/device/visual labels. Exact-head runtime evidence pending.
+
 ## 2026-10-10 — P1C01 verified PBR material-parent regression (PG-169)
 
 - CI #38052565591 FAILED: original C3 foliage parent invariant `DesiredMaterialParent = ProductionMaterialParent` was displaced by conditional new PBR master selection. Restored original default assignment with explicit verified-PBR-only override, preserving foliage identity and preventing regression. Exact-head Pre-Unreal retest pending; no Unreal visual/P1C01 Gate6/7 proof yet.

@@ -1,3 +1,7 @@
+## 2026-10-10 — P1C01 PBR actual runtime decoration visibility guard
+
+- Existing P1C01 asset bridge can produce correct .uasset files while startup still resolves zero resident meshes. Treat this as a same-chapter visibility defect, not a new chapter or new lore feature. Extend the serialized source-to-Unreal workflow with fail-closed runtime `P1C01_PBR_DECOR_RUNTIME` observed placement versus authorized `P1C01VerifiedWorldDecor.json` accents and async bank; no synchronous loading, new world owner or additional actor density. Keep Gate 6/7 visual/device acceptance separate.
+
 ## 2026-10-10 — P1C01 source-to-visible UE4 PBR bridge production (candidate)
 
 - Reuse two immutable Poly Haven CC0 39/60 source waves, validate SHA256 original receipts and per-file hashes, choose at most 16 qualified single-material **static FBX** props within a 144 MiB source cap; imported textures are 1K PNG. Quarantine/hold, oversized, unknown-multi-material, and unsupported files are not promoted. No new source-provider downloads.

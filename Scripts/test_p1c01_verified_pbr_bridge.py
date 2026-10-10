@@ -8,6 +8,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 import p1c01_verified_pbr_bridge as bridge
+import verify_p1c01_pbr_runtime as runtime_presence
 
 class VerifiedPBRBridgeTest(unittest.TestCase):
     def setUp(self):
@@ -113,5 +114,52 @@ class VerifiedPBRBridgeTest(unittest.TestCase):
         self.assertIn("ResolveResidentStaticMesh(*AssetPath)",world)
         self.assertIn("P1C01VerifiedWorldDecor.json",
             (root/"Source/ShireJourney/ShireJourney.Build.cs").read_text())
+    def test_runtime_presence_requires_real_shire_actor_placements(self):
+        rows=bridge.stage(self.warehouse,self.project)
+        slug=rows[0]["id"]
+        folder=self.project/"Content/Production/World/Shire/VerifiedPBR"/slug
+        folder.mkdir(parents=True)
+        (folder/(slug+".uasset")).write_bytes(b"x"*4000)
+        (folder/("MI_P1C01_"+slug+".uasset")).write_bytes(b"x"*4000)
+        bridge.activate(self.project)
+        logfile=self.project/"Saved/Logs/CI-PlayableStartup.log"
+        logfile.parent.mkdir(parents=True)
+        logfile.write_text("P1C01_PBR_DECOR_RUNTIME placed=1 omitted=0 collision=none visual=pending\n")
+        receipt=runtime_presence.verify(self.project,logfile)
+        self.assertEqual(receipt["expected_decor"],1)
+        self.assertFalse("VISUALLY_ACCEPTED" in receipt["status"])
+        logfile.write_text("P1C01_PBR_DECOR_RUNTIME placed=0 omitted=1 collision=none visual=pending\n")
+        with self.assertRaisesRegex(runtime_presence.RuntimePresenceError,"PBR_RUNTIME_PLACEMENT_MISMATCH"):
+            runtime_presence.verify(self.project,logfile)
+        logfile.unlink()
+        with self.assertRaisesRegex(runtime_presence.RuntimePresenceError,"PBR_RUNTIME_LOG_MISSING"):
+            runtime_presence.verify(self.project,logfile)
+
+    def test_runtime_presence_never_bypasses_streaming_bank(self):
+        rows=bridge.stage(self.warehouse,self.project)
+        slug=rows[0]["id"]
+        folder=self.project/"Content/Production/World/Shire/VerifiedPBR"/slug
+        folder.mkdir(parents=True)
+        (folder/(slug+".uasset")).write_bytes(b"x"*4000)
+        (folder/("MI_P1C01_"+slug+".uasset")).write_bytes(b"x"*4000)
+        bridge.activate(self.project)
+        logfile=self.project/"Saved/Logs/CI-PlayableStartup.log"
+        logfile.parent.mkdir(parents=True)
+        logfile.write_bytes(("P1C01_PBR_DECOR_RUNTIME placed=1 omitted=0 collision=none visual=pending\n").encode("utf-16"))
+        self.assertEqual(runtime_presence.verify(self.project,logfile)["expected_decor"],1)
+        streaming=self.project/"Data/ChapterAssetStreamingPlan.json"
+        data=json.loads(streaming.read_text())
+        data["banks"]["P1C01"]["assets"]=[]
+        streaming.write_text(json.dumps(data))
+        with self.assertRaisesRegex(runtime_presence.RuntimePresenceError,"PBR_NOT_IN_ACTIVE_ASYNC_BANK"):
+            runtime_presence.verify(self.project,logfile)
+
+    def test_runtime_production_workflow_enforces_presence(self):
+        root=Path(__file__).resolve().parents[1]
+        workflow=(root/".github/workflows/p1c01-verified-pbr-production.yml").read_text()
+        self.assertIn("Scripts/verify_p1c01_pbr_runtime.py",workflow)
+        self.assertIn("CI-PlayableStartup.log",workflow)
+        self.assertIn("P1C01_PBR_RUNTIME_PRESENCE_FAILED",workflow)
+
 if __name__=="__main__":
     unittest.main()

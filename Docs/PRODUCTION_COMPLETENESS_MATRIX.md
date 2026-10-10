@@ -1,3 +1,7 @@
+## 2026-10-10 — P1C01 PBR runtime presence truth gate (candidate)
+
+- Closing a visual Shire requires actual world placement, not only FBX source QC, .uasset presence or `W00_PACKAGED_STARTUP_PASS`. PBR workflow now requires explicit non-zero full placement in `Saved/Logs/CI-PlayableStartup.log` with matching async P1C01 bank entries and no omitted assets, prior to packaging; emits `P1C01_PBR_RUNTIME_PRESENCE_PASS` only upon observed log evidence. Regression fixtures cover missing log, zero placement, absent streaming bank and UTF-16 log. This is source-candidate validation only until a real exact-head run; no P1C01 chapter visual, target FPS or human Gate 6/7 credit.
+
 ## 2026-10-10 — P1C01 verified PBR material-parent regression (PG-169)
 
 - CI #38052565591 FAILED: original C3 foliage parent invariant `DesiredMaterialParent = ProductionMaterialParent` was displaced by conditional new PBR master selection. Restored original default assignment with explicit verified-PBR-only override, preserving foliage identity and preventing regression. Exact-head Pre-Unreal retest pending; no Unreal visual/P1C01 Gate6/7 proof yet.

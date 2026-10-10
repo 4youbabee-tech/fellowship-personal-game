@@ -96,6 +96,11 @@ jobs:
           if errorlevel 1 exit /b 72
           call "Scripts\ci_warning_debt.cmd"
           if errorlevel 1 exit /b 73
+      - name: Prove imported Shire PBR actually appears in headless runtime
+        shell: powershell
+        run: |
+          & $env:SHIRE_PBR_PYTHON Scripts/verify_p1c01_pbr_runtime.py --project-root "$env:GITHUB_WORKSPACE" --runtime-log "$env:GITHUB_WORKSPACE/Saved/Logs/CI-PlayableStartup.log"
+          if ($LASTEXITCODE -ne 0) { throw 'P1C01_PBR_RUNTIME_PRESENCE_FAILED' }
       - name: Cook and archive Windows test build with verified visual assets
         shell: cmd
         run: call "Scripts\ci_package_w00.cmd"

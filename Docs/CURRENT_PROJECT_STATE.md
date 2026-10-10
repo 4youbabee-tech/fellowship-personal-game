@@ -1,3 +1,7 @@
+## 2026-10-10 — P1C01 real-runtime imported PBR presence gate (candidate)
+
+- An engine build, .uasset existence and successful generic startup do not establish that Shire's verified PBR objects are resident and placed. Add `Scripts/verify_p1c01_pbr_runtime.py` to the existing one-writer PBR workflow after P1C01 headless startup and before packaging; it fail-closes on missing log, missing soft bank entries, unauthorized accent inventory, zero/partial placement or omits. Existing `P1C01_PBR_DECOR_RUNTIME` log is the physical assertion, not a fabricated visual screenshot. Offline negative tests added to the current exact-head PBR bridge suite. Fresh CI and true UE import/placement evidence PENDING. No PIE, device, visual or Gate 6/7 acceptance.
+
 ## 2026-10-10 — P1C01 import PG-169 regression repair
 
 - Exact-head Pre-Unreal #38052565591 FAILED at Validate project structure: `PG-169 C3 implementation invariant missing: DesiredMaterialParent = ProductionMaterialParent`. Root cause is the verified PBR material parent ternary replacing an existing strict foliage-parent invariant. Replaced ternary with the approved default parent assignment plus an explicit PBR-only override, preserving foliage inheritance. Regression rerun pending on new candidate HEAD. No new UE/PIE/device/visual acceptance from this change.
