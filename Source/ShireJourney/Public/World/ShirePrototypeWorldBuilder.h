@@ -125,6 +125,7 @@ private:
     void ConfigureFoliageInstances();
     void SpawnFoliagePass();
     void SpawnScenicDetailPass();
+    void SpawnVerifiedPBRDecor();
     void SpawnGeographyFoundationPass();
     void SpawnAuthoredShireLandmarkPass();
     void SpawnHobbitonArchitecturePass();
