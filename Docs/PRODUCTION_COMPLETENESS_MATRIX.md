@@ -1,3 +1,14 @@
+## 2026-10-10 — Checkpoint source hardening candidate (DEC-105)
+
+| Scope | Current evidence boundary |
+|---|---|
+| Existing PR #335 exact head ce8faa6... | Pre-Unreal #38003230133 SUCCESS; Unreal #38003230111 SUCCESS; Five-Lane #38003230032 SUCCESS (predecessor ONLY) |
+| Offline recovery script repairs | CODE CANDIDATE; hosted Linux/Windows regression pending exact branch HEAD |
+| Planned 20 regression cases | Network-free local fixtures; interruption/resume, journal corruption, short range, locking, disk reserve, archive and ZIP path integrity |
+| 39/60 permanent warehouse receipts | NOT RUN by this change; no asset promoted |
+| Narrative / context-aware NPC | REQUIREMENTS REGISTERED, RUNTIME UNCHANGED |
+| P1C01 Gate 6/7, PIE, device, performance, pacing, visual | NOT ACCEPTED; human/target-device evidence required |
+
 ## 2026-10-10 — Durable 4MiB restart checkpoints and no repeated expensive PR-wide acquisition
 
 - Owner observed electricity/network instability and rejected repeated long downloads/builds. Root cause: GitHub PR path filters saw entire PR diff, retriggering expensive 39-PBR conversion and 60-model acquisition for governance-only commits. Two duplicated self-hosted warehouse writers also contended for one runner; 75-minute download canceled before writes.

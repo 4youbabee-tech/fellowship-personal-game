@@ -248,7 +248,8 @@
           ],
           "notes": "Runtime bounded dialogue guard/selection/cache history is implemented; PIE/content acceptance remains."
         }
-      ]
+      ],
+      "owner_requirement_update_2026_10_10": "Original regional/factual event awareness remains offline deterministic with existing ShireNPCContextSubsystem/LivingWorldDirector/Quest authority; optional local non-authoritative phrasing only. This is an unimplemented requirement reaffirmation, not phase validation."
     },
     {
       "id": "LW6",

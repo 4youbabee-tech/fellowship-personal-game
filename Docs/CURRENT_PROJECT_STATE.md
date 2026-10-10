@@ -1,3 +1,7 @@
+## 2026-10-10 — DEC-105 source-only checkpoint repair and owner agreement intake
+
+Registered P1C01 cinematic/expanded story, exploration, and offline contextual-NPC direction with existing owner boundaries; no gameplay change. Candidate checkpoint transport hardening adds per-artifact OS file locks, validates short transfer responses before journaling, repairs interrupted empty-journal recovery, rejects malformed pinned metadata and unsafe Windows ZIP members/temporary symlinks. New network-free fault-injection tests target 20 cases across hosted Linux and Windows. Source-only change: no provider downloads, warehouse receipt, UE4 import/build, or P1C01 visual/device acceptance from this packet. Evidence pending exact-head workflow. PR #335 already had exact-head Pre-Unreal #38003230133 SUCCESS, Unreal #38003230111 SUCCESS, and Five-Lane #38003230032 SUCCESS at ce8faa666d368f11b868963e85aecf8c7cda351d; these are predecessor evidence, not candidate proof.
+
 ## 2026-10-10 — Durable 4MiB restart checkpoints and no repeated expensive PR-wide acquisition
 
 - Owner observed electricity/network instability and rejected repeated long downloads/builds. Root cause: GitHub PR path filters saw entire PR diff, retriggering expensive 39-PBR conversion and 60-model acquisition for governance-only commits. Two duplicated self-hosted warehouse writers also contended for one runner; 75-minute download canceled before writes.

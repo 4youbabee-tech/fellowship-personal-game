@@ -2084,6 +2084,9 @@
         "Prototype one existing named Shire NPC over the current memory/social/context stack.",
         "Add real-event witness/share/learn propagation with canon/knowledge gates.",
         "Add optional local bounded expression only after deterministic behavior is proven."
+      ],
+      "implementation_refs": [
+        "2026-10-10 owner reaffirmation: context-aware locality and real-event witness memory; offline deterministic fallback, non-authoritative optional local phrasing; no runtime acceptance."
       ]
     },
     {
@@ -5700,6 +5703,34 @@
         "Docs/CURRENT_PROJECT_STATE.md and Docs/PRODUCTION_COMPLETENESS_MATRIX.md (candidate-state boundaries)"
       ],
       "evidence_boundary": "Operational five-lane metadata/source preflight and CI coordination; no assertion of new assets downloaded, permanently stored, UE imported, visually accepted, or tested at 30 FPS."
+    },
+    {
+      "id": "DEC-105",
+      "title": "Owner-directed P1C01 cinematic story-safe NPC depth and durable recovery proof",
+      "status": "ACCEPTED",
+      "priority": "CRITICAL",
+      "date": "2026-10-10",
+      "requirements": [
+        "REQ-EXP-002",
+        "REQ-NPC-005",
+        "REQ-NPC-006",
+        "REQ-PROD-011"
+      ],
+      "resolution": "Preserve original Ring-history intro, original film-compatible Frodo/Bilbo playable gap-fill before Gandalf cart arrival, story-safe exploration, location/event-aware NPCs, and maximum-safe checkpoints. This decision registers direction, not feature implementation or chapter acceptance.",
+      "implementation_contract": [
+        "Keep FILM_CORE chronology and locked outcomes; classify original early Frodo/Bilbo gameplay FILM_EXPANDED and source-review before editing story beats.",
+        "Use existing quest, cinematic, LivingWorldDirector, ShireNPCContextSubsystem, dialogue, audio and asset-streaming owners; no parallel authorities.",
+        "Preserve offline-only deterministic NPC knowledge and emotion system; any optional local language-expression adapter has no quest/canon authority.",
+        "P1C01 only; first recover pinned 39 batch after offline fault tests and real Windows verification, then independent 60 batch.",
+        "One warehouse writer and one Unreal runner; no repeated provider download or builds for unchanged inputs.",
+        "Never claim PIE/device/visual/pacing/Gate 6/7 maturity from hosted tests."
+      ],
+      "evidence": [
+        "Docs/WORLD_DETAIL_LEDGER.md",
+        "Scripts/test_artifact_checkpoint_recovery.py",
+        ".github/workflows/p1c01-checkpoint-offline-recovery.yml"
+      ],
+      "evidence_boundary": "OWNER DIRECTION REGISTERED + RECOVERY SOURCE PATCH CANDIDATE; exact-head hosted Linux/Windows results pending. No warehouse stage or gameplay visual/PIE/device evidence."
     }
   ],
   "open_conflicts": [],
