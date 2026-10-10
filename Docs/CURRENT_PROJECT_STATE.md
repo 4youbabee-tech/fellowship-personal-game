@@ -1,3 +1,9 @@
+## 2026-10-10 — P1C01 recovery convergence on PR #335 (source-only)
+
+- Recovery source and network-free 20-case fault-injection suite are reused from validated side branch commit `8c5b296bd4cd024745f3666ce45802ea0e74f004` (prior Linux+Windows https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/38007549312 SUCCESS). An exact-merged-head rerun is **PENDING**; no fresh result is asserted before it finishes.
+- The pinned 39-asset warehouse workflow now runs the network-free suite before any checkpoint download; existing single-writer concurrency and the 6 GiB storage reserve remain unchanged. Wave39 actual durable intake/audit is **NOT YET PROVEN**; wave60 stays separate and gated.
+- No UE4 C++/runtime/content assets were modified by this change: no repeated Unreal build, import, PIE, device or visual acceptance is claimed. P1C01 remains open, Gate 6/7 pending. PR #335 production metadata from prior head is preserved.
+
 ## 2026-10-10 P1C01 checkpoint transport and source-only UE evidence reuse gate
 
 - On PR #335 exact head `ce8faa666d368f11b868963e85aecf8c7cda351d`, Pre-Unreal #38003230133 SUCCESS, Five-Lane #38003230032 SUCCESS, UE4 #38003230111 SUCCESS incl Editor and package; no need to rebuild this source revision merely to stage external CC0 artifacts. Source-only PBR had 39/39 and 59/60 conversions at proven earlier runs, not UE imported.

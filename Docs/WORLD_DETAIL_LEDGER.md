@@ -1,3 +1,7 @@
+## 2026-10-10 — P1C01 recovery implementation registration, no new feature
+
+Registered the bounded checkpoint transport recovery as a continuation of DEC-078, DEC-104 and DEC-105: preserve the 20 already-tested source-only fault cases, prohibit archive redownload or warehouse overwrite without receipt checks, require network-free regression before the first transfer, keep one writer and 6 GiB reserve. This is infrastructure repair, not new narrative scope or chapter acceptance.
+
 ## 2026-10-10 P1C01 checkpoint transport and source-only UE evidence reuse gate
 
 - On PR #335 exact head `ce8faa666d368f11b868963e85aecf8c7cda351d`, Pre-Unreal #38003230133 SUCCESS, Five-Lane #38003230032 SUCCESS, UE4 #38003230111 SUCCESS incl Editor and package; no need to rebuild this source revision merely to stage external CC0 artifacts. Source-only PBR had 39/39 and 59/60 conversions at proven earlier runs, not UE imported.

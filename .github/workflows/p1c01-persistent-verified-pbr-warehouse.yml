@@ -40,6 +40,12 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           if (-not (Test-Path -LiteralPath $env:STAGING_WAREHOUSE -PathType Container)) { throw "PERSISTENT_WAREHOUSE_ABSENT" }
 
+      - name: Prove network-free checkpoint regressions before artifact transfer
+        shell: powershell
+        run: |
+          & $env:SHIRE_PYTHON Scripts/test_artifact_checkpoint_recovery.py
+          if ($LASTEXITCODE -ne 0) { throw 'P1C01_CHECKPOINT_OFFLINE_REGRESSION_FAILED' }
+
       - name: Check saved wave 39 using full SHA256, avoid unnecessary download
         id: reuse
         shell: powershell
