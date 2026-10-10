@@ -23,6 +23,7 @@
 #include "Materials/MaterialExpressionScalarParameter.h"
 #include "Materials/MaterialExpressionTextureSampleParameter2D.h"
 #include "Materials/MaterialExpressionMultiply.h"
+#include "Materials/MaterialExpressionComponentMask.h"
 #include "Materials/MaterialExpressionMaterialFunctionCall.h"
 #include "Materials/MaterialFunction.h"
 #include "Materials/MaterialExpressionVectorParameter.h"
@@ -434,6 +435,7 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
     {
         FString MaterialObjectPath;
         FString TextureObjectPath;
+        FName ParameterName = FName(TEXT("AlbedoTexture"));
     };
     TArray<FPendingAlbedoBinding> PendingAlbedoBindings;
 
@@ -917,6 +919,75 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         }
     }
 
+
+    // Separate PBR master keeps legacy OBJ materials unchanged while giving the
+    // verified CC0 FBX assets real BaseColor, tangent-space Normal and packed ORM.
+    const TCHAR* VerifiedParentPath =
+        TEXT("/Game/Production/Materials/M_P1C01VerifiedPBR.M_P1C01VerifiedPBR");
+    UMaterialInterface* VerifiedPBRParent =
+        FindObject<UMaterialInterface>(nullptr, VerifiedParentPath);
+    if (!VerifiedPBRParent && FPackageName::DoesPackageExist(
+        TEXT("/Game/Production/Materials/M_P1C01VerifiedPBR")))
+    {
+        VerifiedPBRParent = LoadObject<UMaterialInterface>(nullptr, VerifiedParentPath);
+    }
+    if (!VerifiedPBRParent)
+    {
+        UMaterialFactoryNew* Factory = NewObject<UMaterialFactoryNew>();
+        UMaterial* Master = Cast<UMaterial>(AssetTools.Get().CreateAsset(
+            TEXT("M_P1C01VerifiedPBR"), TEXT("/Game/Production/Materials"),
+            UMaterial::StaticClass(), Factory));
+        if (Master)
+        {
+            auto AddSample = [&](const TCHAR* ParameterName, const TCHAR* TexturePath,
+                                 EMaterialSamplerType SamplerType)
+                -> UMaterialExpressionTextureSampleParameter2D*
+            {
+                UMaterialExpressionTextureSampleParameter2D* Node =
+                    NewObject<UMaterialExpressionTextureSampleParameter2D>(Master);
+                Node->ParameterName = FName(ParameterName);
+                Node->SamplerType = SamplerType;
+                Node->Texture = LoadObject<UTexture2D>(nullptr, TexturePath);
+                Master->Expressions.Add(Node);
+                return Node;
+            };
+            UMaterialExpressionTextureSampleParameter2D* Color = AddSample(
+                TEXT("AlbedoTexture"),
+                TEXT("/Engine/EngineResources/WhiteSquareTexture.WhiteSquareTexture"),
+                SAMPLERTYPE_Color);
+            UMaterialExpressionTextureSampleParameter2D* Normal = AddSample(
+                TEXT("NormalTexture"),
+                TEXT("/Engine/EngineMaterials/DefaultNormal.DefaultNormal"),
+                SAMPLERTYPE_Normal);
+            UMaterialExpressionTextureSampleParameter2D* ORM = AddSample(
+                TEXT("ORMTexture"),
+                TEXT("/Engine/EngineResources/WhiteSquareTexture.WhiteSquareTexture"),
+                SAMPLERTYPE_LinearColor);
+            auto Channel = [&](bool R, bool G, bool B) -> UMaterialExpressionComponentMask*
+            {
+                UMaterialExpressionComponentMask* Mask =
+                    NewObject<UMaterialExpressionComponentMask>(Master);
+                Mask->Input.Expression = ORM;
+                Mask->R = R;
+                Mask->G = G;
+                Mask->B = B;
+                Master->Expressions.Add(Mask);
+                return Mask;
+            };
+            Master->BaseColor.Expression = Color;
+            Master->Normal.Expression = Normal;
+            Master->AmbientOcclusion.Expression = Channel(true, false, false);
+            Master->Roughness.Expression = Channel(false, true, false);
+            Master->Metallic.Expression = Channel(false, false, true);
+            Master->PostEditChange();
+            Master->MarkPackageDirty();
+            ImportedMaterialPackages.AddUnique(Master->GetOutermost());
+            VerifiedPBRParent = Master;
+            UE_LOG(LogTemp, Display,
+                TEXT("P1C01_VERIFIED_PBR_MASTER_CREATED albedo=yes normal=yes orm=packed"));
+        }
+    }
+
     int32 SynthesizedMaterialAssets = 0;
 
     if (ProductionMaterialParent)
@@ -967,7 +1038,18 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
 
                 const bool bApprovedFoliageIdentity =
                     ShireProductionImport::IsApprovedFoliageMaterialIdentity(CurrentMaterialName);
-                UMaterialInterface* DesiredMaterialParent = ProductionMaterialParent;
+                const bool bVerifiedPBR = DestinationPath.StartsWith(
+                    TEXT("/Game/Production/World/Shire/VerifiedPBR/"));
+                UMaterialInterface* DesiredMaterialParent = bVerifiedPBR
+                    ? VerifiedPBRParent : ProductionMaterialParent;
+                if (bVerifiedPBR && !VerifiedPBRParent)
+                {
+                    ++Failed;
+                    UE_LOG(LogTemp, Error,
+                        TEXT("P1C01_VERIFIED_PBR_MASTER_MISSING material=%s"),
+                        *CurrentMaterialName);
+                    return;
+                }
                 if (bApprovedFoliageIdentity)
                 {
                     if (!ProductionFoliageParent)
@@ -1042,9 +1124,36 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                             *TextureAssetName);
 
                         PendingAlbedoBindings.Add({
-                            ObjectPath,
-                            TextureObjectPath
+                            ObjectPath, TextureObjectPath, FName(TEXT("AlbedoTexture"))
                         });
+                        if (bVerifiedPBR)
+                        {
+                            // Only the QC-staged single-material family reaches here:
+                            // require all three packed map roles on this identical slug.
+                            const FString BaseSuffix = TEXT("_BaseColor.png");
+                            if (!CurrentAlbedoMap.EndsWith(BaseSuffix))
+                            {
+                                ++Failed;
+                                UE_LOG(LogTemp, Error,
+                                    TEXT("P1C01_VERIFIED_PBR_BAD_MAP_IDENTITY material=%s"),
+                                    *CurrentMaterialName);
+                                return;
+                            }
+                            const FString Prefix = CurrentAlbedoMap.LeftChop(BaseSuffix.Len());
+                            for (const TCHAR* Role : { TEXT("NormalDX"), TEXT("ORM") })
+                            {
+                                const FString RelativeMap = Prefix + TEXT("_") + Role + TEXT(".png");
+                                const FString MapObject = FPaths::GetBaseFilename(RelativeMap);
+                                const FString MapPath = FString::Printf(
+                                    TEXT("%s/%s.%s"), *TextureDestinationPath,
+                                    *MapObject, *MapObject);
+                                PendingAlbedoBindings.Add({
+                                    ObjectPath, MapPath,
+                                    FName(FCString::Strcmp(Role, TEXT("ORM")) == 0
+                                        ? TEXT("ORMTexture") : TEXT("NormalTexture"))
+                                });
+                            }
+                        }
                     }
 
                     UE_LOG(
@@ -1406,6 +1515,27 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             ImportedAsset = LoadObject<UObject>(nullptr, *ExpectedObjectPath);
         }
 
+        // Packed grayscale channels must never be gamma corrected. DirectX
+        // tangent-space normal is a normal map, not sRGB albedo.
+        if (UTexture2D* ImportedTexture = Cast<UTexture2D>(ImportedAsset))
+        {
+            if (Relative.StartsWith(TEXT("World/Shire/VerifiedPBR/")))
+            {
+                if (AssetName.EndsWith(TEXT("_ORM")))
+                {
+                    ImportedTexture->CompressionSettings = TC_Masks;
+                    ImportedTexture->SRGB = false;
+                }
+                else if (AssetName.EndsWith(TEXT("_NormalDX")))
+                {
+                    ImportedTexture->CompressionSettings = TC_Normalmap;
+                    ImportedTexture->SRGB = false;
+                }
+                ImportedTexture->PostEditChange();
+                ImportedTexture->MarkPackageDirty();
+            }
+        }
+
         int32 MarkedMaterialPackages = 0;
         if (UStaticMesh* ImportedMesh = Cast<UStaticMesh>(ImportedAsset))
         {
@@ -1720,7 +1850,7 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         if (Instance && Texture)
         {
             Instance->SetTextureParameterValueEditorOnly(
-                FMaterialParameterInfo(TEXT("AlbedoTexture")),
+                FMaterialParameterInfo(Binding.ParameterName),
                 Texture);
             Instance->PostEditChange();
             Instance->MarkPackageDirty();
