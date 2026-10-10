@@ -1414,6 +1414,55 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             // imported material package dirty so the final SaveDirtyPackages pass writes
             // the mesh and its material dependencies together.
             TArray<FStaticMaterial>& StaticMaterials = ImportedMesh->GetStaticMaterials();
+            if (Relative.StartsWith(TEXT("World/Shire/VerifiedPBR/"), ESearchCase::CaseSensitive))
+            {
+                // Material slot must be authentic, not a generic fallback.
+                if (StaticMaterials.Num() != 1 ||
+                    ImportedMesh->GetBounds().SphereRadius <= KINDA_SMALL_NUMBER)
+                {
+                    ++Failed;
+                    UE_LOG(LogTemp, Error,
+                        TEXT("P1C01_VERIFIED_PBR_IMPORT_REJECT mesh=%s reason=multi-slot-or-invalid-bounds slots=%d"),
+                        *AssetName, StaticMaterials.Num());
+                }
+                else
+                {
+                    const FString MaterialName = TEXT("MI_P1C01_") + AssetName;
+                    const FString MaterialObjectPath = FString::Printf(
+                        TEXT("%s/%s.%s"), *DestinationPath, *MaterialName, *MaterialName);
+                    UMaterialInterface* VerifiedMaterial =
+                        FindObject<UMaterialInterface>(nullptr, *MaterialObjectPath);
+                    if (!VerifiedMaterial)
+                    {
+                        const FString MaterialPackage = DestinationPath / MaterialName;
+                        if (FPackageName::DoesPackageExist(MaterialPackage))
+                        {
+                            VerifiedMaterial = LoadObject<UMaterialInterface>(
+                                nullptr, *MaterialObjectPath);
+                        }
+                    }
+                    if (!VerifiedMaterial)
+                    {
+                        ++Failed;
+                        UE_LOG(LogTemp, Error,
+                            TEXT("P1C01_VERIFIED_PBR_IMPORT_REJECT mesh=%s reason=material-missing expected=%s"),
+                            *AssetName, *MaterialObjectPath);
+                    }
+                    else
+                    {
+                        StaticMaterials[0].MaterialInterface = VerifiedMaterial;
+                        StaticMaterials[0].MaterialSlotName = FName(*MaterialName);
+                        StaticMaterials[0].ImportedMaterialSlotName = FName(*MaterialName);
+                        ImportedMesh->MarkPackageDirty();
+                        UE_LOG(LogTemp, Display,
+                            TEXT("P1C01_VERIFIED_PBR_IMPORT_QC mesh=%s material=%s lodCount=%d collision=decor-only"),
+                            *AssetName, *MaterialObjectPath,
+                            ImportedMesh->GetRenderData()
+                                ? ImportedMesh->GetRenderData()->LODResources.Num() : 0);
+                    }
+                }
+            }
+
 
             // Poly Haven verified static FBX is staged with its separately hash-verified
             // source-side MTL and 1K PNG. UE4's FBX importer is told not to generate
