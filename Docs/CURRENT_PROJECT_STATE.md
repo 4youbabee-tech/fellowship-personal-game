@@ -1,3 +1,8 @@
+## 2026-10-10 — Frodo deformation exact-head technical PASS, safe forward-port
+
+- Original corrective PR #340 passed exact-head UE4 Build and Human Wave 2 #38056805116 (jobs #114226870748, #114227070478, #114228164762): BLENDER_NUMPY_READY; HUMAN_WAVE3_DEFORMATION_PASS; HUMAN_WAVE3_STATIC_DEFORMATION_RECEIPT_PASS. Forward-port from stale PR onto current develop to avoid merge conflicts.
+- Blender script failure now propagates, unique UE4 receipt is required, python3-numpy is installed, and JSON PASS plus explicit no-runtime/no-visual assertions gate the job. This is TECHNICAL STATIC DEFORMATION ONLY: no visual, playable, PIE, device, performance or Gate 6/7 acceptance.
+
 ## 2026-10-10 — Whole-game warehouse PowerShell stale exit code repair (candidate)
 
 - Real warehouse run #38056824745 FAILED in manager/runner health step after its own `RUNNER_HEALTH_PASS` log. Root cause: checking stale `$LASTEXITCODE` after a PowerShell script invocation, which does not guarantee reset of that native command exit variable. Correct step guards to check `$?` immediately after script calls; preserve Project Governor, staged receipt SHA256 audit and 6 GiB reserve. No provider downloads occurred in failing run; correction awaits exact-head CI and rerun.
