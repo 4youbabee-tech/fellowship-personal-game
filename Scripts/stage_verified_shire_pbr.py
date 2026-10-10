@@ -58,6 +58,10 @@ def stage(warehouse,project,max_items=MAX_FILES,max_bytes=MAX_BYTES):
                and digest(root/"pbr_receipt_original.json")[1]==meta.get("pbr_receipt_sha256"),
                "PINNED_RECEIPT_HASH_MISMATCH")
         pbr=load(root/"pbr_receipt_original.json")
+        demand(len(meta.get("asset_ids",[]))==n
+               and pbr.get("prepared_assets")==ready
+               and len(pbr.get("assets",[]))==ready,
+               "RECEIPT_ASSET_COUNT_DRIFT")
         rows={}
         for row in meta.get("files",[]):
             path=Path(str(row["file"]))
