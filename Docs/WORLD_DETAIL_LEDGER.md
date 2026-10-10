@@ -1,3 +1,7 @@
+## 2026-10-11 — Reference low-spec owner laptop registered before performance tuning
+
+- Recorded exact primary device for performance-sensitive Shire details: Intel Core i7-6498DU @ 2.50GHz; AMD Radeon R5 M330 (2039 MB reported VRAM); 8 GB RAM; Windows 11 Pro 64-bit, DirectX 12 installed without DX12 Ultimate. UE4.27.2 remains DX11 RHI at 1280x720; stable 30 FPS is the objective, not a measured result. All optimization experiments must protect visual landmarks and preserve the existing async loading/HISM/LOD/pooling architecture. No device test or Gate 6/7 acceptance is implied by reference registration.
+
 ## 2026-10-11 — Owner fast intake, large P1C01 chapter wave and whole-game source throughput
 
 Owner explicitly requests relaxing bureaucratic admission rules and redundant checks, accepting useful assets in varied ORIGINAL source formats **when lawfully usable**, converting/repairing them to valid FBX and PNG/TGA for runtime, and prioritizing large coherent chapter-sized production waves. Keep existing DEC-078 / DEC-104 parallel tracks, exactly one runtime writer and one warehouse writer, and future-region asset prep for 28 regions. Minimum necessary acceptance evidence still applies (license/entitlement, source integrity, import quality, performance, Gate 6/7). This is a production-policy instruction, not visual/runtime completion. Reference: OWNER_FAST_BATCH_INTAKE_2026_10_11 in ProjectGovernor.json.
