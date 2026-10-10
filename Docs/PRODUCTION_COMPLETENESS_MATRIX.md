@@ -1,3 +1,7 @@
+## 2026-10-10 — Candidate-validation CI route updated
+- Warehouse and hero skeletal candidate workflows now have targeted pull-request triggers for `Data/WarehouseQuaterniusHeroCandidateBatchV1.json` and `Data/P1C01HeroSkeletalCandidateWaveV1.json`.
+- Expected evidence after the next run: warehouse staging/manual-source receipt plus full-cast static candidate report where available.
+
 ## 2026-10-10 — Character-source completion delta
 - P1C01 named-character source gap moved from KayKit retry to Quaternius full-cast candidate staging.
 - `Data/P1C01HeroSkeletalCandidateWaveV1.json` now covers eight required P1C01 character pools and keeps `runtime_integration_allowed=false`.
