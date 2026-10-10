@@ -7,6 +7,11 @@
 #include "ShireTraversalChallenge.h"
 #include "WorldDetailCluster.h"
 
+#include "Dom/JsonObject.h"
+#include "Misc/FileHelper.h"
+#include "Misc/Paths.h"
+#include "Serialization/JsonReader.h"
+#include "Serialization/JsonSerializer.h"
 #include "Components/BoxComponent.h"
 #include "Components/DirectionalLightComponent.h"
 #include "Components/ExponentialHeightFogComponent.h"
@@ -309,6 +314,7 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     if (ProductionCommonReedClusterMesh) ReedInstances->SetStaticMesh(ProductionCommonReedClusterMesh);
 
     BuildPrototypeWorld();
+    SpawnVerifiedPBRDecor();
 
     if (UGameInstance* GI = GetGameInstance())
     {
@@ -326,6 +332,93 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     ApplyPartyStoryVariant();
 }
 
+
+void AShirePrototypeWorldBuilder::SpawnVerifiedPBRDecor()
+{
+    // Optional collision-free decoration using the already async-loaded Shire bank.
+    // Missing or unapproved meshes are skipped. No actor-by-prop tick is introduced.
+    const FString Path = FPaths::Combine(
+        FPaths::ProjectDir(), TEXT("Data/P1C01VerifiedWorldDecor.json"));
+    FString Source;
+    if (!FFileHelper::LoadFileToString(Source, *Path))
+    {
+        return;
+    }
+    TSharedPtr<FJsonObject> Root;
+    if (!FJsonSerializer::Deserialize(
+            TJsonReaderFactory<>::Create(Source), Root) || !Root.IsValid())
+    {
+        return;
+    }
+    FString Status;
+    if (!Root->TryGetStringField(TEXT("status"), Status) ||
+        (Status != TEXT("UE_PACKAGES_PRESENT_RENDER_QC_PENDING") &&
+         Status != TEXT("IMPORTED_STATIC_UASSETS_PENDING_GEOMETRY_AND_RENDER_REVIEW")))
+    {
+        return;
+    }
+    const TArray<TSharedPtr<FJsonValue>>* Accents = nullptr;
+    if (!Root->TryGetArrayField(TEXT("accents"), Accents) || !Accents)
+    {
+        return;
+    }
+    int32 Placed = 0;
+    int32 Omitted = 0;
+    for (const TSharedPtr<FJsonValue>& Value : *Accents)
+    {
+        if (Placed + Omitted >= 16)
+        {
+            break;
+        }
+        const TSharedPtr<FJsonObject> Accent =
+            Value.IsValid() ? Value->AsObject() : nullptr;
+        FString AssetPath;
+        const TArray<TSharedPtr<FJsonValue>>* Coordinates = nullptr;
+        if (!Accent.IsValid() ||
+            !Accent->TryGetStringField(TEXT("asset"), AssetPath) ||
+            !AssetPath.StartsWith(TEXT("/Game/Production/World/Shire/VerifiedPBR/")) ||
+            !Accent->TryGetArrayField(TEXT("location"), Coordinates) ||
+            !Coordinates || Coordinates->Num() != 3)
+        {
+            ++Omitted;
+            continue;
+        }
+        UStaticMesh* Mesh = ResolveResidentStaticMesh(*AssetPath);
+        if (!Mesh || Mesh->GetBounds().SphereRadius < 1.0f)
+        {
+            ++Omitted;
+            continue;
+        }
+        const FVector Position(
+            static_cast<float>((*Coordinates)[0]->AsNumber()),
+            static_cast<float>((*Coordinates)[1]->AsNumber()),
+            static_cast<float>((*Coordinates)[2]->AsNumber()));
+        if (!FMath::IsFinite(Position.X) ||
+            !FMath::IsFinite(Position.Y) ||
+            !FMath::IsFinite(Position.Z) ||
+            FMath::Abs(Position.X) > 26000.0f ||
+            FMath::Abs(Position.Y) > 6000.0f ||
+            FMath::Abs(Position.Z) > 1000.0f)
+        {
+            ++Omitted;
+            continue;
+        }
+        const float Radius = Mesh->GetBounds().SphereRadius;
+        const float Scale = FMath::Clamp(90.0f / Radius, 0.02f, 1.5f);
+        const FVector CenteredPosition = Position - Mesh->GetBounds().Origin * Scale;
+        if (AStaticMeshActor* Decor = SpawnShape(
+                Mesh, CenteredPosition, FVector(Scale),
+                FLinearColor::White, FRotator::ZeroRotator, false))
+        {
+            Decor->Tags.AddUnique(TEXT("P1C01VerifiedPBRDecor"));
+            Decor->GetStaticMeshComponent()->SetCastShadow(false);
+            ++Placed;
+        }
+    }
+    UE_LOG(LogTemp, Display,
+        TEXT("P1C01_PBR_DECOR_RUNTIME placed=%d omitted=%d collision=none visual=pending"),
+        Placed, Omitted);
+}
 
 void AShirePrototypeWorldBuilder::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
