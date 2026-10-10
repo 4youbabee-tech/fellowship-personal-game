@@ -1,3 +1,9 @@
+## 2026-10-10 — Character-source completion delta
+- P1C01 named-character source gap moved from KayKit retry to Quaternius full-cast candidate staging.
+- `Data/P1C01HeroSkeletalCandidateWaveV1.json` now covers eight required P1C01 character pools and keeps `runtime_integration_allowed=false`.
+- `Data/WarehouseQuaterniusHeroCandidateBatchV1.json` now records official CC0/FBX source packs for humanoids, universal animation, animated character fallback and horse/fauna candidates.
+- Remaining blockers: download/SHA receipt, static FBX structure, UE4.27 skeletal import, deformation, LOD/material review, PIE, visual and target-device performance.
+
 ## 2026-10-09 — Hosted KayKit first-run regression (fix before further hardware probes)
 - Exact run #320 (37962782520) failed in hosted source QC after three confirmed hash-based rejections had already fired, at `stage_p1c01_kaykit_rig_bridge.ps1:69`: `PropertyNotFoundStrict: source_git_blob_sha`. The historical Rogue entries lack optional `source_git_blob_sha` in the manifest. Expensive self-hosted KayKit gate correctly SKIPPED, so old hour-long failure avoided; source classification itself needs the null-safe guard.
 - Fix: read optional `source_git_blob_sha` through PSObject.Properties.Name with fallback empty value in both early-rejection and normal receipt records. No easing of SHA/hash/skeletal quality gates or acceptance. Exact-head reproof pending new run.
