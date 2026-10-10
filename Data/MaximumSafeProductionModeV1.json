@@ -10,13 +10,21 @@
   "purpose": "Operate Shire Journey at the highest evidence-safe production throughput without weakening canon, provenance, runtime serialization, target-device performance or Gate 6/7.",
   "target_profile": {
     "engine": "UE4.27.2",
-    "platform": "Windows",
+    "platform": "Windows 11 Pro 64-bit",
     "renderer": "DX11",
     "resolution": "1280x720",
-    "quality": "Low-Medium",
+    "quality": "Balanced Medium / selective High where visually important",
     "fps_floor": 30,
     "ram_gb": 8,
-    "vram_gb_class": 2
+    "vram_gb_class": 2,
+    "cpu_model": "Intel Core i7-6498DU @ 2.50GHz",
+    "gpu_model": "AMD Radeon R5 M330",
+    "gpu_vram_reported_mb": 2039,
+    "os": "Windows 11 Pro 64-bit",
+    "directx_runtime_installed": "DirectX 12",
+    "dx12_ultimate_supported": false,
+    "stable_fps_goal": 30,
+    "evidence_status": "OWNER_HARDWARE_SPEC_RECORDED_DEVICE_RUNTIME_NOT_TESTED"
   },
   "live_baseline": {
     "develop_head": "df90f41bbb0dae15c7774afcbb3db21a3acd0cf2",
