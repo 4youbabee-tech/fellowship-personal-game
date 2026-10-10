@@ -64,6 +64,8 @@ class HumanWave2ContractTests(unittest.TestCase):
         self.assertIn("ls-files --others --exclude-standard",workflow)
         self.assertIn("Hosted Frodo static deformation stress",workflow)
         self.assertIn("run_p1c01_human_wave3_deformation.py",workflow)
+        self.assertIn("sudo apt-get install -y blender python3-numpy",workflow)
+        self.assertIn("BLENDER_NUMPY_READY",workflow)
         self.assertIn("--python-exit-code 93",workflow)
         self.assertIn("HUMAN_WAVE3_RECEIPT_CARDINALITY_FAIL",workflow)
         self.assertIn("HUMAN_WAVE3_RECEIPT_NOT_WRITTEN",workflow)
