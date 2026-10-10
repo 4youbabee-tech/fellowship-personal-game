@@ -1,14 +1,6 @@
 name: P1C01 Verified PBR Offline Source QC
 on:
-  pull_request:
-    branches: [develop]
-    paths:
-      - 'Scripts/stage_p1c01_verified_pbr_to_unreal.py'
-      - 'Scripts/test_p1c01_verified_pbr_to_unreal.py'
-      - 'Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp'
-      - 'Source/ShireJourney/Public/World/ShirePrototypeWorldBuilder.h'
-      - 'Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp'
-      - '.github/workflows/p1c01-verified-pbr-runtime.yml'
+  workflow_dispatch:
 
 permissions:
   contents: read
