@@ -20,7 +20,7 @@ function Test-Git {
 function Test-ParentWholeWorkflowGreen([string]$ParentSha) {
     return $script:Case.Proof -and $ParentSha -eq 'candidate-parent'
 }
-function Test-ParentCoreUnrealGreen([string]$ParentSha) { return $true }
+function Test-ParentCoreUnrealGreen([string]$ParentSha) { return [bool]$script:Case.Proof }
 function Test-TreeEquivalentCoreProof([string]$GitExe, [string]$ParentSha) { return [bool]$script:Case.TreeProof }
 function Set-Mode([string]$Mode, [string]$Reason, [string]$ParentSha, [string]$ResumeStage = 'none', [bool]$ResetIntermediates = $false) {
     $script:ActualMode = $Mode
