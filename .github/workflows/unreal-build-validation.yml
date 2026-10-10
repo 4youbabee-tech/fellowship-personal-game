@@ -259,6 +259,10 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      - name: Require Project Governor before Unreal lane classification
+        shell: pwsh
+        run: python Scripts/governor_work_start.py --lane RUNTIME_BUILD
+
       - name: Test playable entry map, package cook path and delivery artifact contract
         shell: pwsh
         run: python Scripts/test_p1c01_delivery_entry_map.py
