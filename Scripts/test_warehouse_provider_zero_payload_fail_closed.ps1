@@ -67,3 +67,37 @@ if([string]$q[0].automation -notmatch "^MANUAL_"){
 }
 
 Write-Host ("WAREHOUSE_ZERO_PAYLOAD_GUARD_PASS quaternius=manual failClosed=true manualQueueCalls=" + $manualQueueLines.Count + " manifests=" + ($expectedManualQueueManifests -join ","))
+
+# AmbientCG repeat search terms must not re-download the same licensed source, or
+# erase a prior valid archive when another region exhausts the bounded byte cap.
+$ambientCGPath = Join-Path $projectRoot "Scripts\stage_ambientcg_warehouse.ps1"
+if(-not (Test-Path -LiteralPath $ambientCGPath -PathType Leaf)){ throw "AMBIENTCG_DEDUP_SCRIPT_MISSING" }
+$ambientCGScript = Get-Content -LiteralPath $ambientCGPath -Raw
+foreach($token in @(
+    '$acceptedIds = @{}',
+    '$idKey=$id.ToLowerInvariant()',
+    '$acceptedIds.ContainsKey($idKey)',
+    'reason="duplicate_in_current_wave"',
+    'WAREHOUSE_AMBIENTCG_DUPLICATE_SKIP',
+    'reason="batch_byte_cap_before_download"',
+    '$downloadedThisAttempt=$false',
+    '$downloadedThisAttempt=$true',
+    'if($downloadedThisAttempt){ Remove-Item -LiteralPath $dest -Force }',
+    '$acceptedIds[$idKey] = $true',
+    'Test-WarehouseReceiptReusable',
+    'Test-WarehouseZipReadable',
+    'Get-FileHash $dest -Algorithm SHA256'
+)){
+    if(-not $ambientCGScript.Contains($token)){ throw "AMBIENTCG_DEDUP_GUARD_MISSING token=$token" }
+}
+$dedupPos=$ambientCGScript.IndexOf('$acceptedIds.ContainsKey($idKey)')
+$downloadPos=$ambientCGScript.IndexOf('Invoke-WarehouseDownload -Uri')
+$recordPos=$ambientCGScript.IndexOf('$receipt.files += [ordered]@{')
+$acceptPos=$ambientCGScript.IndexOf('$acceptedIds[$idKey] = $true')
+if(-not ($dedupPos -lt $downloadPos -and $downloadPos -lt $recordPos -and $recordPos -lt $acceptPos)){
+    throw "AMBIENTCG_DEDUP_GUARD_ORDER_INVALID"
+}
+if($ambientCGScript.Contains('max_download_bytes){ Remove-Item $dest -Force')){
+    throw "AMBIENTCG_EXISTING_CACHE_REMOVAL_UNSAFE"
+}
+Write-Host "WAREHOUSE_AMBIENTCG_DEDUP_CONTRACT_PASS networkFree=true shaGuard=true acceptedOnce=true"

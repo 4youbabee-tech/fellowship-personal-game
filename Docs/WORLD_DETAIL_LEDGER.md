@@ -1,3 +1,9 @@
+## 2026-10-10 — ambientCG cross-lane duplicate download regression guard (candidate)
+
+- Observed live warehouse #38057877090 SUCCESS: `AMBIENTCG_WAREHOUSE_STAGE_PASS files=22 skipped=24 bytes=1178435662`, `REGION_SOURCE_RECEIPT_AUDIT_PASS files=22 skipped=24 reserve=175388110848`. These are actual SHA256-audited source-only bytes, not Unreal imports.
+- Root-cause in `Scripts/stage_ambientcg_warehouse.ps1`: ten regional material queries can return the same provider asset ID. Run logs show repeated downloads of Rock064, Ground111 and PavingStones151; prior script only guarded identical destination paths and did not deduplicate across category folders. Add accepted-ID set updated ONLY after successful source SHA256 receipt; skip later duplicate IDs before network requests. Byte-cap failure must not remove previously valid cached archive; do not trigger or repeat the completed batch. Existing Quaternius zero-payload Pre-Unreal step also checks the ambientCG dedup code order offline.
+- Candidate until exact-head preflight. One persistent warehouse writer and 6 GiB reserve retained. No P1C01 runtime change, PIE, target-device FPS, visual or Gate6/7 credit.
+
 ## 2026-10-10 — Confirmed GitHub default branch is develop
 
 - Live GitHub repository metadata reports `default_branch=develop`. Owner confirms develop is canonical default/integration/programmer-handoff; `main` remains stable/release only. Updated existing `Data/ProjectGovernor.json` branch_workflow notes to remove stale assertion that main is default; no new Governor authority, no runtime content change.

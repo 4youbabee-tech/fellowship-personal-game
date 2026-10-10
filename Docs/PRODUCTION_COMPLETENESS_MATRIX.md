@@ -1,3 +1,13 @@
+## 2026-10-10 — avoid pointless Unreal recompiles for standalone warehouse regression tests (candidate)
+
+- `Scripts/test_warehouse_provider_zero_payload_fail_closed.ps1` is a network-free provider/ambientCG guard, not Runtime code. Its new source-only checks should run in Pre-Unreal without reserving the one UE4.27 machine. Add the explicit test script to both push/PR Unreal-workflow paths-ignore lists; the existing `Scripts/stage_*warehouse*.ps1` rule already excludes the warehouse adapter. Actual P1C01 runtime work remains on its own exact-head UE gate. No compile claim for this candidate.
+
+## 2026-10-10 — ambientCG cross-lane duplicate download regression guard (candidate)
+
+- Observed live warehouse #38057877090 SUCCESS: `AMBIENTCG_WAREHOUSE_STAGE_PASS files=22 skipped=24 bytes=1178435662`, `REGION_SOURCE_RECEIPT_AUDIT_PASS files=22 skipped=24 reserve=175388110848`. These are actual SHA256-audited source-only bytes, not Unreal imports.
+- Root-cause in `Scripts/stage_ambientcg_warehouse.ps1`: ten regional material queries can return the same provider asset ID. Run logs show repeated downloads of Rock064, Ground111 and PavingStones151; prior script only guarded identical destination paths and did not deduplicate across category folders. Add accepted-ID set updated ONLY after successful source SHA256 receipt; skip later duplicate IDs before network requests. Byte-cap failure must not remove previously valid cached archive; do not trigger or repeat the completed batch. Existing Quaternius zero-payload Pre-Unreal step also checks the ambientCG dedup code order offline.
+- Candidate until exact-head preflight. One persistent warehouse writer and 6 GiB reserve retained. No P1C01 runtime change, PIE, target-device FPS, visual or Gate6/7 credit.
+
 ## 2026-10-10 — Frodo deformation gate forward-port onto current develop (candidate)
 
 - PR #343 exact-head #38057554992: hosted source/normalization, UE4.27.2 skeletal technical gate, and Blender deformation jobs concluded SUCCESS; Unreal Build #38057555101 and Pre-Unreal #38057555072 concluded SUCCESS. Earlier PR #340 run #38056805116 recorded `BLENDER_NUMPY_READY`, `HUMAN_WAVE3_DEFORMATION_PASS`, `HUMAN_WAVE3_STATIC_DEFORMATION_RECEIPT_PASS`. PR #343 could not merge cleanly with evolved develop; preserve its exact code and contract regression on a fresh develop-based branch, without duplicating it from #340.
