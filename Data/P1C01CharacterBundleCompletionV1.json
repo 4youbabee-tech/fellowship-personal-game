@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "manifest_id": "P1C01_CHARACTER_BUNDLE_COMPLETION_V1",
-  "status": "FRODO_TECHNICAL_IMPORT_PROVEN_KAYKIT_MULTI_CHARACTER_CANDIDATES_QUEUED_SEVEN_FINAL_BUNDLES_PENDING",
+  "status": "FRODO_TECHNICAL_IMPORT_PROVEN_KAYKIT_EXHAUSTED_QUATERNIUS_FULL_CAST_CANDIDATES_WIRED_SEVEN_FINAL_BUNDLES_PENDING",
   "authority": [
     "Data/ProjectGovernor.json",
     "01_STORY_AND_TIMELINE_BIBLE",
@@ -234,5 +234,23 @@
       }
     ],
     "boundary": "These are legal technical rig candidates, not final likeness approvals. Runtime promotion requires UE4 import pass, deformation review, animation coverage, material/LOD checks, PIE and visual acceptance."
+  },
+  "latest_intake_resolution": {
+    "date": "2026-10-10",
+    "exact_head_before_change": "a13209021a7645e44706cace8143e341e4217d35",
+    "kaykit_result": "EXHAUSTED_BY_EXACT_SHA_KNOWN_REJECTIONS",
+    "next_source": "Data/WarehouseQuaterniusHeroCandidateBatchV1.json",
+    "source_basis": "Official Quaternius pack pages show CC0 license and FBX formats for modular men, animated characters, animated animals/farm animals and universal animation library.",
+    "characters_covered": [
+      "FRODO",
+      "BILBO",
+      "GANDALF",
+      "SAM",
+      "MERRY",
+      "PIPPIN",
+      "BLACK_RIDER",
+      "BLACK_RIDER_HORSE"
+    ],
+    "boundary": "This wires legal full-cast candidates and CI staging. It does not claim any candidate is imported, final-looking, PIE tested, visually accepted or device tested."
   }
 }
