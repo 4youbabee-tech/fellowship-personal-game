@@ -1,3 +1,7 @@
+## 2026-10-10 — P1C01 smoothing warning evidence localization (candidate)
+
+- Real UE build screenshot failed Warning Debt at `Missing smoothing groups: 17 > 0`, exit 65, after ~12 minutes. This is 17 warning occurrences, not yet identified distinct meshes. Source-only change prints CI log filenames, line numbers and nearby FBX/OBJ names while retaining zero tolerance. Offline regression added; exact-head CI and actual mesh remediation pending. No PIE/device/visual/Gate 6/7 claim.
+
 ## 2026-10-10 — P1C01 smoothing warning failure diagnostics (candidate)
 
 - Observed Windows UE4 build warning debt hard-stop: `Missing smoothing groups: 17 > 0`, exit 65. This records 17 warning occurrences, not necessarily 17 unique FBX identities. The actual offending source meshes are not yet identified by the supplied screenshot.
