@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "batch_id": "WAREHOUSE_AMBIENTCG_TRILOGY_REGION_EXPANSION_V3",
+  "status": "AUTHORIZED_FOR_STAGING",
+  "provider": "AMBIENTCG",
+  "license": "CC0",
+  "api_base": "https://ambientcg.com/api/v2/full_json",
+  "staging_root": "D:\\actions-runner\\_warehouse\\ShireJourney\\ambientCG_Trilogy",
+  "max_download_bytes": 1200000000,
+  "target_attribute": "2K-PNG",
+  "search_lanes": [
+    {
+      "q": "white limestone wall stone",
+      "limit": 6,
+      "category": "GONDOR_WHITE_CITY",
+      "use": [
+        "Minas Tirith wall, gate and citadel support stones"
+      ],
+      "region_ids": [
+        "MINAS_TIRITH",
+        "OSGILIATH"
+      ]
+    },
+    {
+      "q": "weathered fortress stone block",
+      "limit": 6,
+      "category": "ROHAN_HELMS_DEEP",
+      "use": [
+        "Helm's Deep walls, Hornburg, culvert and battle-worn masonry"
+      ],
+      "region_ids": [
+        "HELMS_DEEP"
+      ]
+    },
+    {
+      "q": "rusted dark stone metal",
+      "limit": 6,
+      "category": "ISENGARD_INDUSTRIAL",
+      "use": [
+        "Isengard black tower and war machinery support"
+      ],
+      "region_ids": [
+        "ISENGARD_ORTHANC"
+      ]
+    },
+    {
+      "q": "straw thatch roof wood",
+      "limit": 6,
+      "category": "ROHAN_SETTLEMENT",
+      "use": [
+        "Meduseld roof and timber town support"
+      ],
+      "region_ids": [
+        "EDORAS_MEDUSELD"
+      ]
+    },
+    {
+      "q": "light stone mossy tiles",
+      "limit": 6,
+      "category": "ELVEN_TERRACE",
+      "use": [
+        "Rivendell courts and Lothlorien sanctuary stone accents"
+      ],
+      "region_ids": [
+        "RIVENDELL",
+        "LOTHLORIEN"
+      ]
+    },
+    {
+      "q": "aged tree bark moss",
+      "limit": 6,
+      "category": "ANCIENT_FOREST",
+      "use": [
+        "Fangorn and forest-region bark, roots and ground dressing"
+      ],
+      "region_ids": [
+        "FANGORN",
+        "LOTHLORIEN",
+        "ITHILIEN"
+      ]
+    },
+    {
+      "q": "broken bricks stone rubble",
+      "limit": 6,
+      "category": "OSGILIATH_RUINS",
+      "use": [
+        "Ruined Osgiliath roads, riverfront ruins and Amon Hen support"
+      ],
+      "region_ids": [
+        "OSGILIATH",
+        "WEATHERTOP",
+        "ANDUIN_AMON_HEN"
+      ]
+    },
+    {
+      "q": "wet stone coastal paving",
+      "limit": 6,
+      "category": "GREY_HAVENS_PORT",
+      "use": [
+        "Grey Havens stone quay and weathered river-side paths"
+      ],
+      "region_ids": [
+        "GREY_HAVENS",
+        "ANDUIN_AMON_HEN"
+      ]
+    },
+    {
+      "q": "dry gravel mud battlefield",
+      "limit": 6,
+      "category": "PELENNOR_BATTLEFIELD",
+      "use": [
+        "Pre-battle, siege and aftermath terrain support"
+      ],
+      "region_ids": [
+        "PELENNOR_FIELDS",
+        "HELMS_DEEP"
+      ]
+    },
+    {
+      "q": "rough dark rock moss cave",
+      "limit": 6,
+      "category": "MORGUL_FORTRESS",
+      "use": [
+        "Minas Morgul, Cirith Ungol and haunted ruin accents"
+      ],
+      "region_ids": [
+        "MINAS_MORGUL",
+        "CIRITH_UNGOL",
+        "PATHS_OF_THE_DEAD"
+      ]
+    }
+  ],
+  "source_authority": [
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "Data/WholeGameRegionProductionPacketsV1.json",
+    "Data/GlobalWarehouseSourceRegistryV2.json"
+  ],
+  "rules": [
+    "Use provider official public API and CC0 files only; resolve exact source URLs from provider response at staging time.",
+    "Never redownload a matching valid cached asset or write duplicate archive bytes for a region.",
+    "Search by region-specific material family, reuse across regions via source SHA256 and receipts.",
+    "Stage under one serialized persistent warehouse writer and preserve at least 6 GiB disk reserve.",
+    "Only 2K-PNG ZIP source stock; PNG/TGA packed masks for runtime require later import QC.",
+    "Catalogued, downloaded and hashed assets are not UE-imported; no later-region runtime or visual acceptance."
+  ]
+}
