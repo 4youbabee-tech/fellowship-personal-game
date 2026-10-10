@@ -44,7 +44,8 @@
     "Permanent branch closeout invariant: every completed temporary branch is exact-head validated, merged into develop immediately, and its remote ref is deleted after merge so develop never lags completed work. Only an active PR head or a branch with verified unique unsalvaged commits may remain temporarily.",
     "Maximum Safe Production is the default for all eligible project production work even when the owner does not explicitly say 'start chapter' or repeat the throughput instruction.",
     "Story scope is experience-first, not summary-first: the Timeline organizes sequence but never caps detail; compatible Tolkien book-only events/details should be playable when safe, and meaningful discovered source material may not be silently omitted.",
-    "Closing a temporary PR is an explicit branch-lifecycle disposition. If it closes unmerged, any useful unique work must first be selectively salvaged into the current authority or recorded by exact commit SHA/disposition; after closure the unchanged remote head ref is deleted. A moved ref or active PR head is preserved as new work."
+    "Closing a temporary PR is an explicit branch-lifecycle disposition. If it closes unmerged, any useful unique work must first be selectively salvaged into the current authority or recorded by exact commit SHA/disposition; after closure the unchanged remote head ref is deleted. A moved ref or active PR head is preserved as new work.",
+    "Owner DEC-106: incoming useful source assets are format-flexible and conversion-first; only derived Unreal-compatible outputs require final FBX/PBR and runtime-quality contracts. Quarantine individual bad conversions without blocking independent valid candidates. Licensing, security, story accuracy, performance and truthful acceptance remain mandatory."
   ],
   "requirement_status_values": [
     "REQUESTED",
@@ -2985,6 +2986,25 @@
         "REQ-QA-002",
         "REQ-PERF-001"
       ]
+    },
+    {
+      "id": "REQ-ASSET-FLEX-001",
+      "title": "Accept useful source assets flexibly; normalize instead of rejecting by input format",
+      "category": "AssetPipeline",
+      "priority": "CRITICAL",
+      "status": "REQUESTED",
+      "origin": "Explicit owner instruction 2026-10-11 to remove unnecessarily rigid asset intake rules",
+      "intent": "Do not reject useful asset candidates merely due to original extension, naming, mesh structure, materials or missing source smoothing metadata. Ingest to a quarantined conversion/staging area, adapt through deterministic source-to-engine normalization, then import high-quality engine-compatible FBX/PBR derivatives. Prioritize finished playable Shire and fast reusable intake for all 28 regions.",
+      "acceptance_criteria": [
+        "Source candidates of varied standard exchange formats are accepted for conversion assessment rather than denied by their initial format alone.",
+        "Animated Unreal-import deliverable remains compliant FBX; input .obj/.glb/.gltf/.blend or other supported assets may be converted to FBX if they are safe, licensed and technically transformable.",
+        "Incoming .bmp or loose/unpacked texture maps may be transformed into compressed channel-packed PNG/TGA engine deliverables where technically appropriate rather than rejected at intake.",
+        "Each converted asset must pass material/UV/normal/smoothing/LOD/collision or skeletal validity appropriate to role; invalid objects are quarantined individually and independent production continues.",
+        "No false import/visual/PIE/device/FPS acceptance; preserve source traceability, QA evidence and target 720p/30 FPS hardware constraints."
+      ],
+      "dependencies": [
+        "REQ-WORLD-001"
+      ]
     }
   ],
   "hard_invariants": [
@@ -5746,6 +5766,25 @@
         "https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/38007549312"
       ],
       "evidence_boundary": "Owner direction registered. Exact recovery source/test content previously achieved 20 offline checks on Linux and Windows at 8c5b296bd4cd024745f3666ce45802ea0e74f004, workflow run #38007549312 SUCCESS. Integrated PR #335 head needs fresh exact-head checks; no warehouse stage, PIE, device, visuals, or Gate 6/7 evidence."
+    },
+    {
+      "id": "DEC-106",
+      "title": "Owner-directed flexible source intake and conversion-first quality",
+      "status": "ACCEPTED",
+      "priority": "CRITICAL",
+      "date": "2026-10-11",
+      "requirements": [
+        "REQ-ASSET-FLEX-001"
+      ],
+      "owner_direction": "Remove unnecessary asset-reception format and candidate-selection rigidity. Accept anything genuinely useful for the personal Shire Journey production, convert it to a correct performant UE4.27.2 deliverable, preserve high visual quality, and do not block independent production because an optional candidate needs repair.",
+      "resolution": "Input format is not a hard rejection criterion. Separate permissive source acquisition (quarantine/transform) from engine-runtime acceptance (real UE-compatible output and proof). Keep license/security/source integrity, canon compatibility, target hardware budgets, serialized writers, and no-fake-test rules. Conversion failures quarantine that candidate, not the whole wave unless it is required for the current chapter.",
+      "implementation_contract": [
+        "Before any Unreal load, use an appropriate offline converter/importer to produce FBX (animated/skeletal) or approved static engine meshes, compressed PNG/TGA packed maps, and verified scene/material metadata.",
+        "Do not delete valuable assets solely because they arrive as OBJ, GLB, GLTF, BLEND, BMP or with absent smoothing groups; classify input as CONVERSION_PENDING and repair or substitute when needed.",
+        "Stage/source candidates for all regions in parallel; promotion to runtime follows the existing project chapter gates.",
+        "Use fast reusable per-asset conversion and fail only affected candidate; mandatory scene elements remain explicit blockers until they have a working replacement."
+      ],
+      "evidence_boundary": "OWNER POLICY RECORD ONLY; conversion tools and Unreal acceptance remain to be proven."
     }
   ],
   "open_conflicts": [],
