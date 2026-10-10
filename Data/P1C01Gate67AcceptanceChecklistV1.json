@@ -31,12 +31,13 @@
       "save/load resumes the intended chapter/world state"
     ],
     "target_device": [
-      "hardware identity matching target class",
+      "Exact owner laptop identity: Intel Core i7-6498DU @ 2.50GHz, AMD Radeon R5 M330 (2039 MB reported VRAM), 8 GB RAM, Windows 11 Pro 64-bit; DX11 game renderer (Windows reports DX12, no DX12 Ultimate)",
       "720p Low-Medium profile",
       "route-by-route FPS/frame-time evidence",
       "streaming hitch observations",
       "VRAM/texture pressure observations",
-      "NPC/fauna activation budget observations"
+      "NPC/fauna activation budget observations",
+      "Same-build sustained 30 FPS goal: per-route measured min/average FPS, p95/p99 frame time, streaming hitches, process RAM and GPU/texture residency; no acceptance without real laptop execution"
     ],
     "human_review": [
       "Shire/Bag End visual readability",
@@ -57,5 +58,17 @@
     "PERFORMANCE-ACCEPTED requires target-device measurements that meet the declared performance gate."
   ],
   "promotion_rule": "No wider runtime-region promotion until the ProjectGovernor Gate 6/7 requirements are satisfied with real evidence. Preparation for later regions may continue in parallel.",
-  "evidence_boundary": "Checklist only; P1C01 is not Gate 6/7 accepted by creation of this file."
+  "evidence_boundary": "Checklist only; P1C01 is not Gate 6/7 accepted by creation of this file.",
+  "primary_target_device": {
+    "cpu_model": "Intel Core i7-6498DU @ 2.50GHz",
+    "gpu_model": "AMD Radeon R5 M330",
+    "gpu_vram_reported_mb": 2039,
+    "os": "Windows 11 Pro 64-bit",
+    "directx_runtime_installed": "DirectX 12",
+    "dx12_ultimate_supported": false,
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "stable_fps_goal": 30,
+    "device_tested": false
+  }
 }
