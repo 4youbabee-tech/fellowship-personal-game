@@ -1,3 +1,7 @@
+## 2026-10-10 — avoid pointless Unreal recompiles for standalone warehouse regression tests (candidate)
+
+- `Scripts/test_warehouse_provider_zero_payload_fail_closed.ps1` is a network-free provider/ambientCG guard, not Runtime code. Its new source-only checks should run in Pre-Unreal without reserving the one UE4.27 machine. Add the explicit test script to both push/PR Unreal-workflow paths-ignore lists; the existing `Scripts/stage_*warehouse*.ps1` rule already excludes the warehouse adapter. Actual P1C01 runtime work remains on its own exact-head UE gate. No compile claim for this candidate.
+
 ## 2026-10-10 — ambientCG cross-lane duplicate download regression guard (candidate)
 
 - Observed live warehouse #38057877090 SUCCESS: `AMBIENTCG_WAREHOUSE_STAGE_PASS files=22 skipped=24 bytes=1178435662`, `REGION_SOURCE_RECEIPT_AUDIT_PASS files=22 skipped=24 reserve=175388110848`. These are actual SHA256-audited source-only bytes, not Unreal imports.
