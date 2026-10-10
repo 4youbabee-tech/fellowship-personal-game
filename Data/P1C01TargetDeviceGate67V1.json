@@ -20,7 +20,15 @@
     "resolution_height": 720,
     "quality": "Balanced Medium / selective High where visually important",
     "fps_floor": 30,
-    "visual_quality_rule": "Preserve strong perceived quality for hero characters, nearby architecture, terrain readability, key materials and primary lighting; recover performance first from lower-salience distant/far-detail costs."
+    "visual_quality_rule": "Preserve strong perceived quality for hero characters, nearby architecture, terrain readability, key materials and primary lighting; recover performance first from lower-salience distant/far-detail costs.",
+    "cpu_model": "Intel Core i7-6498DU @ 2.50GHz",
+    "gpu_model": "AMD Radeon R5 M330",
+    "gpu_vram_reported_mb": 2039,
+    "os": "Windows 11 Pro 64-bit",
+    "directx_runtime_installed": "DirectX 12",
+    "dx12_ultimate_supported": false,
+    "stable_fps_goal": 30,
+    "evidence_status": "OWNER_HARDWARE_SPEC_RECORDED_DEVICE_RUNTIME_NOT_TESTED"
   },
   "representative_routes": [
     "Bag End interior traversal",
@@ -42,7 +50,9 @@
     "NPC/fauna activation observations",
     "audio concurrency observations",
     "save/load continuity",
-    "cinematic return-to-control continuity"
+    "cinematic return-to-control continuity",
+    "Evidence captured from exact owner device CPU+R5 M330+Windows 11 Pro with actual DX11 game RHI, not runner identification only",
+    "Per-route p95/p99 frame time and hitch count along with min/average FPS"
   ],
   "fail_closed": {
     "missing_route_measurement": "INCOMPLETE",
