@@ -9,6 +9,15 @@ on:
       - 'Source/ShireJourney/Public/World/ShirePrototypeWorldBuilder.h'
       - 'Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp'
       - '.github/workflows/p1c01-verified-pbr-runtime.yml'
+  pull_request:
+    branches: [develop]
+    paths:
+      - 'Scripts/stage_p1c01_verified_pbr_to_unreal.py'
+      - 'Scripts/test_p1c01_verified_pbr_to_unreal.py'
+      - 'Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp'
+      - 'Source/ShireJourney/Public/World/ShirePrototypeWorldBuilder.h'
+      - 'Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp'
+      - '.github/workflows/p1c01-verified-pbr-runtime.yml'
   workflow_dispatch:
 
 permissions:
@@ -38,6 +47,7 @@ jobs:
 
   integrate:
     needs: verified-source-tests
+    if: github.event_name != 'pull_request'
     name: Reuse persistent 99 assets and import safe Shire PBR into UE4.27.2
     runs-on: [self-hosted, Windows, X64, ue4-27]
     timeout-minutes: 180
