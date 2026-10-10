@@ -1,3 +1,8 @@
+## 2026-10-10 — Frodo deformation gate forward-port onto current develop (candidate)
+
+- PR #343 exact-head #38057554992: hosted source/normalization, UE4.27.2 skeletal technical gate, and Blender deformation jobs concluded SUCCESS; Unreal Build #38057555101 and Pre-Unreal #38057555072 concluded SUCCESS. Earlier PR #340 run #38056805116 recorded `BLENDER_NUMPY_READY`, `HUMAN_WAVE3_DEFORMATION_PASS`, `HUMAN_WAVE3_STATIC_DEFORMATION_RECEIPT_PASS`. PR #343 could not merge cleanly with evolved develop; preserve its exact code and contract regression on a fresh develop-based branch, without duplicating it from #340.
+- Existing source-only fix enforces `--python-exit-code 93`, NumPy, unique hosted/UE4 receipts, nonempty result and `STATIC_DEFORMATION_STRESS_PASS` with visual/runtime acceptance explicitly false. This is a production candidate until its new exact-head tests pass; no Frodo final art, PIE/device, target FPS, VISUAL or Gate 6/7 acceptance is claimed. P1C02 remains CLOSED.
+
 ## 2026-10-10 — Confirmed GitHub default branch is develop
 
 - Live GitHub repository metadata reports `default_branch=develop`. Owner confirms develop is canonical default/integration/programmer-handoff; `main` remains stable/release only. Updated existing `Data/ProjectGovernor.json` branch_workflow notes to remove stale assertion that main is default; no new Governor authority, no runtime content change.
