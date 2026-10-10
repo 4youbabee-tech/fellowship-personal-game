@@ -45,13 +45,24 @@ on:
       - 'Scripts/run_p1c01_mega_chapter_pack.ps1'
       - 'Scripts/classify_warehouse_validation.ps1'
       - '.github/workflows/warehouse-stage.yml'
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - 'Data/WarehouseQuaterniusHeroCandidateBatchV1.json'
+      - 'Data/P1C01HeroSkeletalCandidateWaveV1.json'
+      - 'Scripts/classify_warehouse_validation.ps1'
+      - 'Scripts/stage_quaternius_warehouse.ps1'
+      - 'Scripts/prepare_p1c01_character_rig_intake.ps1'
+      - '.github/workflows/warehouse-stage.yml'
+      - '.github/workflows/p1c01-hero-skeletal-candidate-wave.yml'
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: warehouse-stage-${{ github.repository }}
+  group: warehouse-stage-${{ github.repository }}-${{ github.event_name == 'pull_request' && github.head_ref || 'develop' }}
   cancel-in-progress: true
 
 jobs:
@@ -64,8 +75,8 @@ jobs:
       - ue4-27
     timeout-minutes: 60
     env:
-      TARGET_SHA: ${{ github.sha }}
-      BASE_SHA: ${{ github.event.before }}
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      BASE_SHA: ${{ github.event.before || github.event.pull_request.base.sha }}
 
     steps:
       - name: Checkout exact warehouse head into isolated temp source
