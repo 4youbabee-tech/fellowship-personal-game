@@ -41,7 +41,8 @@ class CloudShireAssetTests(unittest.TestCase):
         cloud = (ROOT / ".github/workflows/cloud-p1c01-asset-production.yml").read_text(encoding="utf-8")
         self.assertGreaterEqual(workflow.count("'Tools/CloudAssetBuild/**'"), 2)
         self.assertIn("runs-on: ubuntu-latest", cloud)
-        self.assertNotIn("self-hosted", cloud)
+        self.assertEqual(cloud.count("runs-on: ubuntu-latest"), 2)
+        self.assertNotRegex(cloud, r"(?m)^\s*(?:-\s*)?self-hosted\s*$")
         self.assertIn("actions/upload-artifact@v4", cloud)
         self.assertNotIn("workflow_dispatch:", cloud)
 
