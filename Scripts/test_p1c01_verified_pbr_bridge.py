@@ -108,6 +108,19 @@ class VerifiedPBRBridgeTest(unittest.TestCase):
         self.assertEqual(visual["status"],"UE_PACKAGES_PRESENT_RENDER_QC_PENDING")
         self.assertEqual(visual["accents"][0]["location"],rows[0]["location"])
 
+    def test_unreal_importer_profiles_actual_cost_centers(self):
+        root=Path(__file__).resolve().parents[1]
+        code=(root/"Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp").read_text()
+        for marker in ("working_copy", "inventory", "asset_tasks", "final_save", "cleanup", "total"):
+            self.assertIn("SHIRE_IMPORT_PROFILE stage="+marker, code)
+        self.assertIn("FPlatformTime::Seconds()",code)
+        self.assertIn("TextureTaskSeconds",code)
+        self.assertIn("ObjTaskSeconds",code)
+        self.assertIn("FbxTaskSeconds",code)
+        self.assertIn("SlowestTaskFile",code)
+        self.assertIn("AssetTools.Get().ImportAssetTasks(Tasks);",code)
+        self.assertIn("Task->bReplaceExisting = true;",code)
+
     def test_world_importer_and_async_contract(self):
         root=Path(__file__).resolve().parents[1]
         code=(root/"Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp").read_text()
