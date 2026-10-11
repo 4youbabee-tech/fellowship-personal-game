@@ -10,7 +10,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACT_PATH = ROOT / "Data" / "P1C01FinalChapterClosureWaveV1.json"
-BUILD_CS_PATH = ROOT / "Source" / "ShireJourney" / "ShireJourney.Build.cs"
 
 
 class P1C01FinalClosureContractTests(unittest.TestCase):
@@ -18,7 +17,7 @@ class P1C01FinalClosureContractTests(unittest.TestCase):
         self.assertTrue(CONTRACT_PATH.is_file(), f"Missing {CONTRACT_PATH}")
         return json.loads(CONTRACT_PATH.read_text(encoding="utf-8"))
 
-    def test_final_closure_contract_is_staged_and_truthful(self) -> None:
+    def test_final_closure_contract_is_source_only_and_truthful(self) -> None:
         contract = self.load_contract()
 
         self.assertEqual(contract["runtime_chapter"], "P1C01")
