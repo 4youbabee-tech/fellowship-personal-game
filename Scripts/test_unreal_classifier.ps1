@@ -214,3 +214,34 @@ try {
     $env:SHIRE_EXPLICIT_CHAPTER_PACKAGE = $oldFlag2
     Remove-Item -LiteralPath $probeFile -ErrorAction SilentlyContinue
 }
+
+
+# Exercise the actual branch-cleanup PR array decoder on PowerShell 5.1,
+# including Invoke-RestMethod's nested Object[] response shape.
+$cleanupSource = Get-Content -LiteralPath (Join-Path $PSScriptRoot "run_branch_cleanup.ps1") -Raw
+$helperStart = $cleanupSource.IndexOf("function Get-OpenPullRefs {")
+$helperEnd = $cleanupSource.IndexOf('$pullUri =', $helperStart)
+if ($helperStart -lt 0 -or $helperEnd -le $helperStart) {
+    throw "BRANCH_CLEANUP_ACTIVE_PR_DECODER_MISSING"
+}
+. ([scriptblock]::Create($cleanupSource.Substring($helperStart, $helperEnd - $helperStart)))
+$prA = [pscustomobject]@{ head = [pscustomobject]@{ ref = 'production/open-test-alpha' } }
+$prB = [pscustomobject]@{ head = [pscustomobject]@{ ref = 'production/open-test-beta' } }
+$two = @($prA, $prB)
+$nested = New-Object 'object[]' 1
+$nested[0] = $two
+foreach ($example in @(
+    @{Name='flat'; Input=$two; Expected=2},
+    @{Name='nested'; Input=$nested; Expected=2},
+    @{Name='single'; Input=$prA; Expected=1},
+    @{Name='empty'; Input=@(); Expected=0}
+)) {
+    $refs = @(Get-OpenPullRefs -PullResponse $example.Input)
+    if ($refs.Count -ne $example.Expected) {
+        throw "BRANCH_CLEANUP_ACTIVE_PR_ARRAY_FAIL case=$($example.Name) count=$($refs.Count) expected=$($example.Expected)"
+    }
+    if ($example.Expected -gt 0 -and $refs[0] -cne 'production/open-test-alpha') {
+        throw "BRANCH_CLEANUP_ACTIVE_PR_REF_MISMATCH case=$($example.Name)"
+    }
+    Write-Host "BRANCH_CLEANUP_ACTIVE_PR_ARRAY_PASS case=$($example.Name) count=$($refs.Count)"
+}
