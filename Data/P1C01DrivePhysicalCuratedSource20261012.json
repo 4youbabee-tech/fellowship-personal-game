@@ -1,0 +1,537 @@
+{
+  "archive_bytes": 206148715,
+  "chapter": "P1C01",
+  "collision_tested_in_ue4": false,
+  "counts_by_lane": {
+    "FOLIAGE_NATURE": 63,
+    "POLYHAVEN_PBR": 108,
+    "PRIORITY_PBR": 12,
+    "REGIONAL_SURFACE_PREP": 36,
+    "SHIRE_ARCHITECTURE": 44
+  },
+  "curated_physical_file_count": 230,
+  "deduplicated_alias_count": 33,
+  "device_tested": false,
+  "engine_imported": false,
+  "gate6_7_closed": false,
+  "lod_assigned_in_ue4": false,
+  "logical_asset_bindings": 263,
+  "nature_lod_families": {
+    "flower_wild": [
+      {
+        "asset": "Nature/Meshes/SM_Sh_flower_wild_LOD0.fbx",
+        "collision_source_count": 0,
+        "lod": 0,
+        "polygons": 390
+      },
+      {
+        "asset": "Nature/Meshes/SM_Sh_flower_wild_LOD1.fbx",
+        "collision_source_count": 0,
+        "lod": 1,
+        "polygons": 208
+      },
+      {
+        "asset": "Nature/Meshes/SM_Sh_flower_wild_LOD2.fbx",
+        "collision_source_count": 0,
+        "lod": 2,
+        "polygons": 104
+      }
+    ],
+    "garden_reed": [
+      {
+        "asset": "Nature/Meshes/SM_Sh_garden_reed_LOD0.fbx",
+        "collision_source_count": 0,
+        "lod": 0,
+        "polygons": 108
+      },
+      {
+        "asset": "Nature/Meshes/SM_Sh_garden_reed_LOD1.fbx",
+        "collision_source_count": 0,
+        "lod": 1,
+        "polygons": 60
+      },
+      {
+        "asset": "Nature/Meshes/SM_Sh_garden_reed_LOD2.fbx",
+        "collision_source_count": 0,
+        "lod": 2,
+        "polygons": 30
+      }
+    ],
+    "grass_meadow": [
+      {
+        "asset": "Nature/Meshes/SM_Sh_grass_meadow_LOD0.fbx",
+        "collision_source_count": 0,
+        "lod": 0,
+        "polygons": 192
+      },
+      {
+        "asset": "Nature/Meshes/SM_Sh_grass_meadow_LOD1.fbx",
+        "collision_source_count": 0,
+        "lod": 1,
+        "polygons": 108
+      },
+      {
+        "asset": "Nature/Meshes/SM_Sh_grass_meadow_LOD2.fbx",
+        "collision_source_count": 0,
+        "lod": 2,
+        "polygons": 54
+      }
+    ],
+    "rock_field": [
+      {
+        "asset": "Nature/Meshes/SM_Sh_rock_field_LOD0.fbx",
+        "collision_source_count": 1,
+        "lod": 0,
+        "polygons": 100
+      },
+      {
+        "asset": "Nature/Meshes/SM_Sh_rock_field_LOD1.fbx",
+        "collision_source_count": 1,
+        "lod": 1,
+        "polygons": 60
+      },
+      {
+        "asset": "Nature/Meshes/SM_Sh_rock_field_LOD2.fbx",
+        "collision_source_count": 1,
+        "lod": 2,
+        "polygons": 20
+      }
+    ],
+    "rock_river": [
+      {
+        "asset": "Nature/Meshes/SM_Sh_rock_river_LOD0.fbx",
+        "collision_source_count": 1,
+        "lod": 0,
+        "polygons": 100
+      },
+      {
+        "asset": "Nature/Meshes/SM_Sh_rock_river_LOD1.fbx",
+        "collision_source_count": 1,
+        "lod": 1,
+        "polygons": 60
+      },
+      {
+        "asset": "Nature/Meshes/SM_Sh_rock_river_LOD2.fbx",
+        "collision_source_count": 1,
+        "lod": 2,
+        "polygons": 20
+      }
+    ],
+    "shrub_gorse": [
+      {
+        "asset": "Nature/Meshes/SM_Sh_shrub_gorse_LOD0.fbx",
+        "collision_source_count": 0,
+        "lod": 0,
+        "polygons": 260
+      },
+      {
+        "asset": "Nature/Meshes/SM_Sh_shrub_gorse_LOD1.fbx",
+        "collision_source_count": 0,
+        "lod": 1,
+        "polygons": 140
+      },
+      {
+        "asset": "Nature/Meshes/SM_Sh_shrub_gorse_LOD2.fbx",
+        "collision_source_count": 0,
+        "lod": 2,
+        "polygons": 80
+      }
+    ],
+    "shrub_hawthorn": [
+      {
+        "asset": "Nature/Meshes/SM_Sh_shrub_hawthorn_LOD0.fbx",
+        "collision_source_count": 0,
+        "lod": 0,
+        "polygons": 260
+      },
+      {
+        "asset": "Nature/Meshes/SM_Sh_shrub_hawthorn_LOD1.fbx",
+        "collision_source_count": 0,
+        "lod": 1,
+        "polygons": 140
+      },
+      {
+        "asset": "Nature/Meshes/SM_Sh_shrub_hawthorn_LOD2.fbx",
+        "collision_source_count": 0,
+        "lod": 2,
+        "polygons": 80
+      }
+    ],
+    "shrub_hedge": [
+      {
+        "asset": "Nature/Meshes/SM_Sh_shrub_hedge_LOD0.fbx",
+        "collision_source_count": 0,
+        "lod": 0,
+        "polygons": 260
+      },
+      {
+        "asset": "Nature/Meshes/SM_Sh_shrub_hedge_LOD1.fbx",
+        "collision_source_count": 0,
+        "lod": 1,
+        "polygons": 140
+      },
+      {
+        "asset": "Nature/Meshes/SM_Sh_shrub_hedge_LOD2.fbx",
+        "collision_source_count": 0,
+        "lod": 2,
+        "polygons": 80
+      }
+    ],
+    "tree_apple": [
+      {
+        "asset": "Nature/Meshes/SM_Sh_tree_apple_LOD0.fbx",
+        "collision_source_count": 1,
+        "lod": 0,
+        "polygons": 452
+      },
+      {
+        "asset": "Nature/Meshes/SM_Sh_tree_apple_LOD1.fbx",
+        "collision_source_count": 1,
+        "lod": 1,
+        "polygons": 256
+      },
+      {
+        "asset": "Nature/Meshes/SM_Sh_tree_apple_LOD2.fbx",
+        "collision_source_count": 1,
+        "lod": 2,
+        "polygons": 126
+      }
+    ],
+    "tree_elm": [
+      {
+        "asset": "Nature/Meshes/SM_Sh_tree_elm_LOD0.fbx",
+        "collision_source_count": 1,
+        "lod": 0,
+        "polygons": 452
+      },
+      {
+        "asset": "Nature/Meshes/SM_Sh_tree_elm_LOD1.fbx",
+        "collision_source_count": 1,
+        "lod": 1,
+        "polygons": 256
+      },
+      {
+        "asset": "Nature/Meshes/SM_Sh_tree_elm_LOD2.fbx",
+        "collision_source_count": 1,
+        "lod": 2,
+        "polygons": 126
+      }
+    ],
+    "tree_oak": [
+      {
+        "asset": "Nature/Meshes/SM_Sh_tree_oak_LOD0.fbx",
+        "collision_source_count": 1,
+        "lod": 0,
+        "polygons": 452
+      },
+      {
+        "asset": "Nature/Meshes/SM_Sh_tree_oak_LOD1.fbx",
+        "collision_source_count": 1,
+        "lod": 1,
+        "polygons": 256
+      },
+      {
+        "asset": "Nature/Meshes/SM_Sh_tree_oak_LOD2.fbx",
+        "collision_source_count": 1,
+        "lod": 2,
+        "polygons": 126
+      }
+    ],
+    "tree_willow": [
+      {
+        "asset": "Nature/Meshes/SM_Sh_tree_willow_LOD0.fbx",
+        "collision_source_count": 1,
+        "lod": 0,
+        "polygons": 532
+      },
+      {
+        "asset": "Nature/Meshes/SM_Sh_tree_willow_LOD1.fbx",
+        "collision_source_count": 1,
+        "lod": 1,
+        "polygons": 296
+      },
+      {
+        "asset": "Nature/Meshes/SM_Sh_tree_willow_LOD2.fbx",
+        "collision_source_count": 1,
+        "lod": 2,
+        "polygons": 146
+      }
+    ]
+  },
+  "output_zip": "SHIRE_P1C01_CURATED_SOURCE_20261012.zip",
+  "output_zip_bytes": 181360681,
+  "output_zip_md5": "0eb37064563aa69d452d78c147e8e04b",
+  "output_zip_sha256": "e1fb6687cb047bbead4eea8d177f11fd75e368cce169a5c30e66fbf39ecfd79f",
+  "pie_tested": false,
+  "polyhaven_material_family_count": 36,
+  "polyhaven_quarantine": [
+    {
+      "reason": "MISSING_REQUIRED_MAPS",
+      "slug": "wooden_barrels_01",
+      "source": "GH11704614644_polyhaven_shard1.zip"
+    }
+  ],
+  "priority_material_family_count": 4,
+  "quarantine": [
+    {
+      "count": 36,
+      "reason": "LEGACY_ASCII_FBX_SOURCE_NOT_SELECTED",
+      "source_archive": "Shire_Nature_Wave_20261011.zip"
+    },
+    {
+      "count": 36,
+      "reason": "BYTE_IDENTICAL_DUPLICATE_NATURE_FBX_ALREADY_SELECTED",
+      "source_archive": "GH11706518373_Shire_Nature_Binary_36_FBX.zip"
+    },
+    {
+      "count": 1,
+      "item": "wooden_barrels_01",
+      "reason": "MISSING_REQUIRED_MAPS",
+      "source_archive": "GH11704614644_polyhaven_shard1.zip"
+    },
+    {
+      "count": 1,
+      "quality_reasons": [
+        "EXCESS_ZERO_WEIGHT_RATIO"
+      ],
+      "reason": "NONPRODUCTION_HERO_RIG_CANDIDATE_REJECTED",
+      "source_archive": "GH11705468534_frodo_source.zip"
+    }
+  ],
+  "rig_review_zip": "SHIRE_P1C01_RIG_REVIEW_ONLY_20261012.zip",
+  "rights_boundary": "CC0 provider assertions are present in signed? NO: unsigned embedded receipts only. Human source rights review still required; project-original assets are project-attributed.",
+  "schema_version": 1,
+  "scope": "SOURCE_ONLY_NOT_UNREAL_IMPORTED",
+  "sha256_duplicate_content_groups_within_output": [
+    {
+      "copies": [
+        "Nature/Textures/T_Sh_Bark_NormalDX.png",
+        "Nature/Textures/T_Sh_Grass_NormalDX.png",
+        "Nature/Textures/T_Sh_Hedge_NormalDX.png",
+        "Nature/Textures/T_Sh_LeafAutumn_NormalDX.png",
+        "Nature/Textures/T_Sh_LeafGreen_NormalDX.png",
+        "Nature/Textures/T_Sh_Reed_NormalDX.png",
+        "Nature/Textures/T_Sh_Soil_NormalDX.png",
+        "Nature/Textures/T_Sh_Stone_NormalDX.png",
+        "Nature/Textures/T_Sh_Wildflower_NormalDX.png"
+      ],
+      "extension": ".png",
+      "sha256": "7617614592a2c8fb502a2bfaa43d4450b63f84171d6c3b6e2c6871742624644c"
+    },
+    {
+      "copies": [
+        "Nature/Textures/T_Sh_Bark_ORM.png",
+        "Nature/Textures/T_Sh_Reed_ORM.png"
+      ],
+      "extension": ".png",
+      "sha256": "b3990acdc38547873ae7e0dcdc20aba4be67ee93032060cddc297753c83b2680"
+    },
+    {
+      "copies": [
+        "PBR/Priority/Bark/T_Sh_Bark_BaseColor_CC0_1K.png",
+        "PBR/PolyHaven/bark_brown_01/TX_PH_bark_brown_01_BaseColor.png"
+      ],
+      "extension": ".png",
+      "sha256": "324e196ec6c6ee35103e332372e242e11153ba740bce40cd58c8c8262d163210"
+    },
+    {
+      "copies": [
+        "PBR/Priority/Bark/T_Sh_Bark_NormalDX_CC0_1K.png",
+        "PBR/PolyHaven/bark_brown_01/TX_PH_bark_brown_01_NormalDX.png"
+      ],
+      "extension": ".png",
+      "sha256": "e0fb2f45bbe192cd58851179c78df6c72496ecdc27c1b036ccfebd0bcac5e8f7"
+    },
+    {
+      "copies": [
+        "PBR/Priority/Bark/T_Sh_Bark_ORM_CC0_1K.png",
+        "PBR/PolyHaven/bark_brown_01/TX_PH_bark_brown_01_ORM.png"
+      ],
+      "extension": ".png",
+      "sha256": "e7ede7d4aa5a409f28439cbc46570dae8374f6b1bb6e262cffc2a3e5cef38e1c"
+    },
+    {
+      "copies": [
+        "PBR/Priority/Grass/T_Sh_Grass_BaseColor_CC0_1K.png",
+        "PBR/PolyHaven/leafy_grass/TX_PH_leafy_grass_BaseColor.png"
+      ],
+      "extension": ".png",
+      "sha256": "557d80dfeee6967e47efc0c9be00d7e8b055fc703d5202ef4bf679dc18dc1206"
+    },
+    {
+      "copies": [
+        "PBR/Priority/Grass/T_Sh_Grass_NormalDX_CC0_1K.png",
+        "PBR/PolyHaven/leafy_grass/TX_PH_leafy_grass_NormalDX.png"
+      ],
+      "extension": ".png",
+      "sha256": "6596d19dc07089e2a3a0b5685d41b2560b74565b60272a531a9d12c9a7c751d0"
+    },
+    {
+      "copies": [
+        "PBR/Priority/Grass/T_Sh_Grass_ORM_CC0_1K.png",
+        "PBR/PolyHaven/leafy_grass/TX_PH_leafy_grass_ORM.png"
+      ],
+      "extension": ".png",
+      "sha256": "8cfc6092dc8fa534f03c30cbf542a4f48f1bf0ceadcee7bec7b4e5886ca848d9"
+    },
+    {
+      "copies": [
+        "PBR/Priority/Soil/T_Sh_Soil_BaseColor_CC0_1K.png",
+        "PBR/PolyHaven/dirt/TX_PH_dirt_BaseColor.png"
+      ],
+      "extension": ".png",
+      "sha256": "93df4d35fb4f3c27dc79c160f2661554ff2dd76e9fdf769f28354b3ec958f40f"
+    },
+    {
+      "copies": [
+        "PBR/Priority/Soil/T_Sh_Soil_NormalDX_CC0_1K.png",
+        "PBR/PolyHaven/dirt/TX_PH_dirt_NormalDX.png"
+      ],
+      "extension": ".png",
+      "sha256": "83e051f926e7d174ecd3c79d6b847df3370b2605a1d842bce87c2b35718d756e"
+    },
+    {
+      "copies": [
+        "PBR/Priority/Soil/T_Sh_Soil_ORM_CC0_1K.png",
+        "PBR/PolyHaven/wooden_floor_02/TX_PH_wooden_floor_02_ORM.png",
+        "PBR/PolyHaven/plastered_wall/TX_PH_plastered_wall_ORM.png",
+        "PBR/PolyHaven/dark_rock/TX_PH_dark_rock_ORM.png",
+        "PBR/PolyHaven/rocky_terrain/TX_PH_rocky_terrain_ORM.png",
+        "PBR/PolyHaven/dirt/TX_PH_dirt_ORM.png",
+        "PBR/PolyHaven/rock_surface/TX_PH_rock_surface_ORM.png",
+        "PBR/PolyHaven/gravel_stones/TX_PH_gravel_stones_ORM.png",
+        "PBR/PolyHaven/painted_plaster_wall/TX_PH_painted_plaster_wall_ORM.png",
+        "PBR/PolyHaven/patterned_cobblestone/TX_PH_patterned_cobblestone_ORM.png",
+        "PBR/PolyHaven/rock_face/TX_PH_rock_face_ORM.png",
+        "PBR/PolyHaven/wood_floor/TX_PH_wood_floor_ORM.png",
+        "PBR/PolyHaven/worn_plaster_wall/TX_PH_worn_plaster_wall_ORM.png",
+        "PBR/PolyHaven/gravel_road/TX_PH_gravel_road_ORM.png"
+      ],
+      "extension": ".png",
+      "sha256": "2ab1ba3a1d040ec9a7256006c2193625451ad03301ab808cb97d1fb389abbf84"
+    },
+    {
+      "copies": [
+        "PBR/Priority/Stone/T_Sh_Stone_BaseColor_CC0_1K.png",
+        "PBR/PolyHaven/mossy_rock/TX_PH_mossy_rock_BaseColor.png"
+      ],
+      "extension": ".png",
+      "sha256": "97f435d33dd577cfed99bc868ec9cf4e177a708544414017db7b8ca797bb5b35"
+    },
+    {
+      "copies": [
+        "PBR/Priority/Stone/T_Sh_Stone_NormalDX_CC0_1K.png",
+        "PBR/PolyHaven/mossy_rock/TX_PH_mossy_rock_NormalDX.png"
+      ],
+      "extension": ".png",
+      "sha256": "7c9afa195acd62659dbc412bd6dc7fc54ef22d2869fdb801d39ced2e0ff43c59"
+    },
+    {
+      "copies": [
+        "PBR/Priority/Stone/T_Sh_Stone_ORM_CC0_1K.png",
+        "PBR/PolyHaven/mossy_rock/TX_PH_mossy_rock_ORM.png"
+      ],
+      "extension": ".png",
+      "sha256": "e06870ebc3bc00d9965268a270dfba624fe80ec670e620d20888a3ddb911678a"
+    }
+  ],
+  "shire_region_material_bindings": {
+    "BAG_END": [
+      "bagend_plaster",
+      "oak_timber",
+      "shire_earth"
+    ],
+    "SHIRE_HOBBITON": [
+      "shire_meadow",
+      "shire_earth",
+      "mossy_stone",
+      "oak_timber"
+    ]
+  },
+  "source_drive_archives": [
+    {
+      "bytes": 32452009,
+      "md5": "b490181057e98881ab1f97818330835f",
+      "name": "GH11704614644_polyhaven_shard1.zip",
+      "sha256": "d0e931f51e36fb4a541ffb1e156b16ab32d790790d03bc8c9ef664dc8cb156f0",
+      "zip_crc": "PASS",
+      "zip_members": 25
+    },
+    {
+      "bytes": 45046272,
+      "md5": "dea1317c4a78a44eccbd11e835f81c42",
+      "name": "GH11704654471_polyhaven_shard2.zip",
+      "sha256": "c61755457e9547e9fa981d8dc327ab6b43ae9f036fb5242a758b87d30cc7f368",
+      "zip_crc": "PASS",
+      "zip_members": 28
+    },
+    {
+      "bytes": 9761013,
+      "md5": "cdef9a1c54a6d3deb27ee3df9e55c51e",
+      "name": "GH11705009927_shire_28regions.zip",
+      "sha256": "45cd2098345c3831d699ad81ede0cc187387858f1dd3f6bbcd5ab883e3d2498b",
+      "zip_crc": "PASS",
+      "zip_members": 1
+    },
+    {
+      "bytes": 45982428,
+      "md5": "4be86272f27912028c8113a5fc2d8292",
+      "name": "GH11705438692_polyhaven_shard3.zip",
+      "sha256": "24c5ae3024cc8da2db19c9d91925de51153b627b837c8015f12f0907585fa210",
+      "zip_crc": "PASS",
+      "zip_members": 28
+    },
+    {
+      "bytes": 3198236,
+      "md5": "99882118eec9d8204be2ccbb9f3cd0aa",
+      "name": "GH11705468534_frodo_source.zip",
+      "sha256": "b9b29c1f978643a77ea3766622dc66cd21ec081a919b85dae5aa27e08c81134b",
+      "zip_crc": "PASS",
+      "zip_members": 11
+    },
+    {
+      "bytes": 47383353,
+      "md5": "1361b0250775de380626b3b4f0488b11",
+      "name": "GH11705506123_polyhaven_shard0.zip",
+      "sha256": "538b99a6175b657440eac67a6e49d44db0d2510ee1a46cc122595099ca41e965",
+      "zip_crc": "PASS",
+      "zip_members": 31
+    },
+    {
+      "bytes": 467079,
+      "md5": "9fcef2029f66879006615547d6b86e07",
+      "name": "GH11706518373_Shire_Nature_Binary_36_FBX.zip",
+      "sha256": "45746e3aa6a19021a0e717160b6cbcdc0343ba20c5cd7072189908cb0c1d7586",
+      "zip_crc": "PASS",
+      "zip_members": 37
+    },
+    {
+      "bytes": 551245,
+      "md5": "d7918e8049cdb14da2f13978b13b3bf9",
+      "name": "SHIRE_NATURE_UE427_BINARY_FBX_PNG_SOURCE_INTAKE_20261011.zip",
+      "sha256": "940bd5679ff27e97fbf9ae214fd62cb57c0d760ca99a3a37e6353e3afa423fc6",
+      "zip_crc": "PASS",
+      "zip_members": 65
+    },
+    {
+      "bytes": 21034491,
+      "md5": "8cb1d6bfabd7e88413dbda64e18c93d1",
+      "name": "SHIRE_PRIORITY_LICENSED_PBR_4_MATERIALS_20261011.zip",
+      "sha256": "ff8c2d70377c89461e362a928c45157a6fea31353184c256cba2fd7fc3c48068",
+      "zip_crc": "PASS",
+      "zip_members": 13
+    },
+    {
+      "bytes": 272589,
+      "md5": "b8dae1193bead74b1ae114dd99039a46",
+      "name": "Shire_Nature_Wave_20261011.zip",
+      "sha256": "16809e17ecb91a732f6ea6b684a49801cef0cbf514e0abed3028db827f7a3a56",
+      "zip_crc": "PASS",
+      "zip_members": 65
+    }
+  ],
+  "source_integrity": "ACTUAL_BYTES_VERIFIED_IN_THIS_CHAT_CONTAINER",
+  "target": "UE4.27.2 DX11 720p 30FPS 8GB RAM 2GB VRAM",
+  "tool_sha256": "ccf5205e16f5dfd3fb93af1fa8e6f27792f8daf2c76d2a204bd8c55e992df868",
+  "visual_accepted": false
+}

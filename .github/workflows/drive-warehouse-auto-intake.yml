@@ -11,6 +11,8 @@ on:
       - 'Scripts/validate_drive_source_bundles.py'
       - 'Scripts/verify_drive_warehouse_receipts.py'
       - 'Scripts/test_verify_drive_warehouse_receipts.py'
+      - 'Scripts/curate_p1c01_drive_source.py'
+      - 'Scripts/test_curate_p1c01_drive_source.py'
       - 'Scripts/test_validate_drive_source_bundles.py'
       - '.github/workflows/drive-warehouse-auto-intake.yml'
 permissions:
@@ -33,6 +35,8 @@ jobs:
       - run: python -m unittest discover -s Scripts -p "test_validate_drive_source_bundles.py" -v
       - run: python -m unittest discover -s Scripts -p "test_verify_drive_warehouse_receipts.py" -v
       - run: python -m py_compile Scripts/verify_drive_warehouse_receipts.py
+      - run: python -m unittest discover -s Scripts -p "test_curate_p1c01_drive_source.py" -v
+      - run: python -m py_compile Scripts/curate_p1c01_drive_source.py
   transfer:
     if: github.event_name != 'pull_request'
     needs: static
@@ -86,6 +90,15 @@ jobs:
               & $pyLauncher.Source -3.12 $audit --warehouse-root 'D:\actions-runner\_warehouse\ShireJourney' --out $auditReport
             }
             if ($LASTEXITCODE -ne 0) { throw 'DRIVE_PHYSICAL_QC_FAILED' }
+            # Only after the ten physical SHA/MD5 source receipts pass, curate existing bytes.
+            # No UE4 import, license approval, remote deletion, or chapter promotion.
+            $curator = Join-Path $p 'Scripts\curate_p1c01_drive_source.py'
+            if ($pythonExe) {
+              & $pythonExe $curator --warehouse-root 'D:\actions-runner\_warehouse\ShireJourney'
+            } else {
+              & $pyLauncher.Source -3.12 $curator --warehouse-root 'D:\actions-runner\_warehouse\ShireJourney'
+            }
+            if ($LASTEXITCODE -ne 0) { throw 'DRIVE_CURATED_SOURCE_PRODUCTION_FAILED' }
             # Only verified staging is unattended. Remote deletion requires separately
             # established import acceptance and independent backup evidence.
             # No automatic cleanup is invoked by this scheduled writer.
