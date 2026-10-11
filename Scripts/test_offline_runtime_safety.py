@@ -105,6 +105,21 @@ class OfflineRuntimeSafetyTests(unittest.TestCase):
         self.assertIn("SetPlayerWorldHold(true);", failure)
         self.assertLess(failure.index("SetPlayerWorldHold(true);"), len(failure))
 
+    def test_pending_restored_transform_blocks_gameplay_input_and_saves(self):
+        cpp = source(PLAYER_CPP)
+        names = ("MoveForward", "MoveRight", "StartJump", "StartSprint",
+                 "StartCrouch", "Interact", "PrimaryAttack", "UseSupply",
+                 "QuickSave", "QuickLoad", "SaveAutomaticCheckpoint")
+        for name in names:
+            begin = cpp.index("AShirePlayerCharacter::" + name + "(")
+            brace = cpp.index("{", begin)
+            end = cpp.index("\n}", brace)
+            with self.subTest(name=name):
+                self.assertIn("bPendingSaveRestoreTransform", cpp[brace:end])
+        restore = body_between(cpp, "bool AShirePlayerCharacter::TryApplyPendingSaveRestoreTransform(",
+                               "bool AShirePlayerCharacter::RestoreSaveSnapshot(")
+        self.assertIn("bPendingSaveRestoreTransform = false;", restore)
+
     def test_self_hosted_requires_manual_opt_in(self):
         workflow = source(".github/workflows/unreal-build-validation.yml")
         self.assertIn("run_self_hosted:", workflow)
