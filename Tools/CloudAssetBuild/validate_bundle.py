@@ -10,7 +10,9 @@ from PIL import Image
 
 from materials import REGION_PLAN, REGION_FAMILIES, SURFACES, sha256, validate_canon_map
 
-REQUIRED_MESHES = {"RoundDoor", "PicketFence", "PartyTable", "GardenCart"}
+REQUIRED_MESHES = {"RoundDoor", "PicketFence", "PartyTable", "GardenCart",
+                   "RoundWindow", "GardenHedge", "OakTree", "StorageBarrel",
+                   "FarmGate", "GardenPlanter"}
 
 
 def validate(out: Path, require_meshes: bool = True):
@@ -50,7 +52,7 @@ def validate(out: Path, require_meshes: bool = True):
         mesh_receipt = json.loads((out / "fbx_receipt.json").read_text(encoding="utf-8"))
         assert mesh_receipt["runtime_imported"] is False and mesh_receipt["skeletal_or_animated"] is False
         objects = mesh_receipt["objects"]
-        assert len(objects) == 8 and mesh_receipt["asset_count"] == 4
+        assert len(objects) == 2 * len(REQUIRED_MESHES) and mesh_receipt["asset_count"] == len(REQUIRED_MESHES)
         assert {x["asset"] for x in objects} == REQUIRED_MESHES
         assert {(x["asset"], x["lod"]) for x in objects} == {
             (asset, lod) for asset in REQUIRED_MESHES for lod in (0, 1)}
@@ -63,7 +65,7 @@ def validate(out: Path, require_meshes: bool = True):
             assert x["reimport_uv_layers"] >= 1
             assert x["collider_count"] >= 1
             assert 1 <= x["material_slots"] <= 6
-        print("CLOUD_ASSET_STATIC_VALIDATION_PASS materials=12 textures=36 region_bindings=28 binary_fbx=8")
+        print(f"CLOUD_ASSET_STATIC_VALIDATION_PASS materials=12 textures=36 region_bindings=28 binary_fbx={len(objects)}")
     else:
         print("CLOUD_MATERIAL_STATIC_VALIDATION_PASS materials=12 textures=36 region_bindings=28")
     return True
