@@ -2647,8 +2647,11 @@ for pg170_forbidden in [
 
 branch_cleanup_script = read(ROOT / "Scripts" / "run_branch_cleanup.ps1")
 for pg170_cleanup_symbol in [
-    "$_.PSObject.Properties['head']",
-    "$_.head.PSObject.Properties['ref']",
+    "function Get-OpenPullRefs",
+    "$row.PSObject.Properties['head']",
+    "$row.head.PSObject.Properties['ref']",
+    "BRANCH_CLEANUP_ACTIVE_PR_ENUMERATED",
+    "Get-OpenPullRefs -PullResponse $activeBranchResponse",
 ]:
     if pg170_cleanup_symbol not in branch_cleanup_script:
         fail(f"PG-170 branch cleanup lost empty/open-PR response hardening: {pg170_cleanup_symbol}")
