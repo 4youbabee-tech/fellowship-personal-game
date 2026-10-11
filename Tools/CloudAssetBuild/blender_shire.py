@@ -23,6 +23,7 @@ MODELS = ("RoundDoor", "PicketFence", "PartyTable", "GardenCart",
 PALETTE = {
     "oak_timber": (0.37, 0.19, 0.08, 1.0),
     "shire_meadow": (0.26, 0.45, 0.12, 1.0),
+    "shire_earth": (0.40, 0.29, 0.19, 1.0),
     "bagend_plaster": (0.72, 0.54, 0.31, 1.0),
     "mossy_stone": (0.29, 0.32, 0.20, 1.0),
     "charred_basalt": (0.12, 0.11, 0.10, 1.0),

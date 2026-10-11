@@ -54,7 +54,7 @@ jobs:
 
       - name: Reuse unchanged SHA-bound 1K material sources from hosted cache
         id: material_cache
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         with:
           path: |
             ${{ env.ASSET_OUT }}/materials
@@ -67,6 +67,15 @@ jobs:
 
       - name: Validate all original PNG payloads and channel-packing receipts
         run: python3 Tools/CloudAssetBuild/validate_bundle.py --out "$ASSET_OUT" --materials-only
+
+      - name: Save validated unchanged material payload before optional Blender steps
+        if: steps.material_cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ${{ env.ASSET_OUT }}/materials
+            ${{ env.ASSET_OUT }}/materials_receipt.json
+          key: p1c01-28region-original-materials-1k-v1-${{ hashFiles('Tools/CloudAssetBuild/materials.py', 'Data/WholeGameRegionProductionPacketsV1.json') }}
 
       - name: Export 22 original Shire meshes, LOD0 and LOD1, with UCX collision
         run: blender --background --factory-startup --python-exit-code 3 -t 2 --python Tools/CloudAssetBuild/blender_shire.py -- --out "$ASSET_OUT"
