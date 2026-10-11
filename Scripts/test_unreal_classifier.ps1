@@ -46,6 +46,7 @@ $cases = @(
     @{Name='frodo-lowpoly-dummy-source-inventory'; Paths=@('Data/P1C01OpenGameArtLowpolyDummyCandidateV1.json','Scripts/inspect_p1c01_frodo_lowpoly_dummy_candidate.ps1','.github/workflows/p1c01-frodo-lowpoly-dummy-source-inventory.yml','Docs/CURRENT_PROJECT_STATE.md'); Proof=$true; Mode='inherit'; TreeProof=$false},
     @{Name='human-wave2-dedicated'; Paths=@('Data/P1C01HumanCharacterProductionWave2V1.json','Scripts/stage_p1c01_human_wave2.ps1','Scripts/run_p1c01_human_wave2_ue4.ps1','Scripts/test_p1c01_human_wave2_contract.py','.github/workflows/p1c01-human-wave2.yml','Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp','Scripts/classify_unreal_validation.ps1','Scripts/test_unreal_classifier.ps1','Docs/CURRENT_PROJECT_STATE.md'); Proof=$false; Mode='inherit'; TreeProof=$false},
     @{Name='whole-game-source-packets'; Paths=@('Data/WholeGameChapterAssetDemandMatrixV1.json','Data/WholeGameChapterProductionPacketsV1.json','Scripts/test_whole_game_chapter_production_packets.ps1','Docs/CURRENT_PROJECT_STATE.md'); Proof=$true; Mode='inherit'; TreeProof=$false},
+    @{Name='whole-game-cloud-warehouse-queue'; Paths=@('Data/WholeGameCloudWarehouseMaterialQueueV1.json','Scripts/validate_whole_game_cloud_warehouse_queue.py','Scripts/test_validate_whole_game_cloud_warehouse_queue.py','Docs/OFFLINE_FAST_PRODUCTION_PROTOCOL.md'); Proof=$true; Mode='inherit'; TreeProof=$false},
     @{Name='pie-preview-safe-with-proof'; Paths=@('SHIRE_FAST_PIE_PREVIEW.bat','Scripts/test_fast_pie_preview.py','Docs/CURRENT_PROJECT_STATE.md'); Proof=$true; Mode='inherit'; TreeProof=$false},
     @{Name='pie-preview-safe-no-proof'; Paths=@('SHIRE_FAST_PIE_PREVIEW.bat','Scripts/test_fast_pie_preview.py'); Proof=$false; Mode='full'; TreeProof=$false},
     @{Name='pie-preview-lookalike-fail-closed'; Paths=@('SHIRE_FAST_PIE_PREVIEW.bat.bak','Scripts/test_fast_pie_preview.py.disabled'); Proof=$true; Mode='full'; Package=$true; TreeProof=$false},
@@ -137,6 +138,12 @@ if (-not $source.Contains('"Scripts/test_unreal_classifier.ps1"')) {
 }
 if (-not $source.Contains('"Scripts/validate_p1c01_cloud_assembly.py"')) {
     throw 'Cloud Shire assembly validator exact allowlist missing'
+}
+if (-not $source.Contains('"Data/WholeGameCloudWarehouseMaterialQueueV1.json"')) {
+    throw 'Whole-game cloud warehouse queue exact allowlist missing'
+}
+if (-not $source.Contains('"Scripts/validate_whole_game_cloud_warehouse_queue.py"')) {
+    throw 'Whole-game cloud warehouse validator exact allowlist missing'
 }
 if (-not $source.Contains('"Data/P1C01BagEndHeroTrimSourceProbeV1.json"')) {
     throw 'Bag End hero trim source packet exact allowlist missing'
