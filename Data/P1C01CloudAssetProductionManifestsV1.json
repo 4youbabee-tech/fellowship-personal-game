@@ -1,0 +1,893 @@
+{
+  "schema_version": 1,
+  "manifest_id": "P1C01_CLOUD_ASSET_PRODUCTION_MANIFESTS_V1",
+  "status": "ACTIVE_SOURCE_ONLY_PRODUCTION_READY",
+  "created_on": "2026-10-11",
+  "authority": [
+    "Data/ProjectGovernor.json#owner_fast_batch_intake_policy_2026_10_11",
+    "Data/MaximumSafeProductionModeV1.json#owner_offline_fast_production_2026_10_11",
+    "Data/SourceGroundedProductionPacketsV1.json",
+    "Data/WholeGameCloudWarehouseMaterialQueueV1.json"
+  ],
+  "objective": "Turn source-grounded P1C01 and whole-game warehouse requirements into concrete cloud-preparable asset, material, Blender QC, and character factory manifests while the Windows runner is offline.",
+  "runner_boundary": {
+    "cloud_now": [
+      "manifest_generation",
+      "source_receipt_rows",
+      "SHA256_receipt_requirements",
+      "derived_output_path_planning",
+      "Blender_QC_script_inputs",
+      "PBR_material_channel_contracts",
+      "character_factory_task_rows",
+      "mission_activity_data_rows"
+    ],
+    "runner_later": [
+      "UE4_editor_import",
+      "material_instance_binding_evidence",
+      "PIE",
+      "Windows_package",
+      "runtime_visual_review",
+      "target_device_performance",
+      "Gate_6_7_acceptance"
+    ]
+  },
+  "static_world_asset_batches": [
+    {
+      "id": "P1C01_STATIC_BAG_END_EXTERIOR",
+      "priority": 1,
+      "target_location": "Bag End hill exterior",
+      "source_packet": "P1C01_SHIRE_LOCATION_STATE_PACKET",
+      "required_asset_groups": [
+        "round green door",
+        "round windows",
+        "hill facade",
+        "chimney",
+        "path to door",
+        "fence",
+        "garden beds",
+        "mailbox/signage placeholder"
+      ],
+      "material_families": [
+        "warm plaster",
+        "aged wood",
+        "moss stone",
+        "grass path",
+        "garden soil"
+      ],
+      "cloud_outputs": [
+        "source_receipt_manifest",
+        "derived_fbx_manifest",
+        "texture_set_manifest",
+        "lod_collision_plan"
+      ],
+      "qc_checks": [
+        "scale_pivot_axis",
+        "uv0_present",
+        "normals_present",
+        "material_slots_named",
+        "degenerate_faces_repaired_on_derived_copy",
+        "simple_collision_plan"
+      ]
+    },
+    {
+      "id": "P1C01_STATIC_BAG_END_INTERIOR",
+      "priority": 1,
+      "target_location": "Bag End rooms/interior hub",
+      "source_packet": "P1C01_BAG_END_INTERIOR_PACKET",
+      "required_asset_groups": [
+        "round rooms",
+        "fireplace",
+        "table",
+        "chairs",
+        "bookshelves",
+        "maps",
+        "pantry props",
+        "kitchen props",
+        "Ring table hero slot"
+      ],
+      "material_families": [
+        "aged wood",
+        "warm plaster",
+        "cloth",
+        "iron hardware",
+        "paper parchment",
+        "ceramic"
+      ],
+      "cloud_outputs": [
+        "room_prop_manifest",
+        "hero_prop_manifest",
+        "streaming_anchor_manifest",
+        "interaction_anchor_manifest"
+      ],
+      "qc_checks": [
+        "walkable_clearance_plan",
+        "doorway_companion_clearance",
+        "uv0_present",
+        "normals_present",
+        "material_slots_named",
+        "lightmap_uv_plan"
+      ]
+    },
+    {
+      "id": "P1C01_STATIC_HOBBITON_BAGSHOT_ROW",
+      "priority": 1,
+      "target_location": "Hobbiton and Bagshot Row",
+      "source_packet": "P1C01_SHIRE_LOCATION_STATE_PACKET",
+      "required_asset_groups": [
+        "hobbit hole facades",
+        "round doors",
+        "small gardens",
+        "lane props",
+        "fences",
+        "laundry/household props",
+        "small carts"
+      ],
+      "material_families": [
+        "warm plaster",
+        "aged wood",
+        "thatch",
+        "grass path",
+        "garden soil",
+        "moss stone"
+      ],
+      "cloud_outputs": [
+        "modular_facade_manifest",
+        "repeatable_prop_manifest",
+        "HISM_candidate_list"
+      ],
+      "qc_checks": [
+        "instancing_candidate_marked",
+        "collision_complexity_budget",
+        "lod_or_culling_plan",
+        "material_slot_reuse"
+      ]
+    },
+    {
+      "id": "P1C01_STATIC_PARTY_FIELD_FIREWORKS",
+      "priority": 1,
+      "target_location": "Party Field",
+      "source_packet": "P1C01_GAMEPLAY_MISSION_PACKET",
+      "required_asset_groups": [
+        "party tree area",
+        "tables",
+        "benches",
+        "banners",
+        "lanterns",
+        "food props",
+        "firework racks",
+        "safe launch markers"
+      ],
+      "material_families": [
+        "cloth",
+        "aged wood",
+        "paper",
+        "iron hardware",
+        "grass path"
+      ],
+      "cloud_outputs": [
+        "party_setup_activity_manifest",
+        "firework_prop_manifest",
+        "crowd_anchor_manifest"
+      ],
+      "qc_checks": [
+        "activity_anchor_ids",
+        "safe_interaction_radius",
+        "material_slots_named",
+        "lod_plan_for_crowd_props"
+      ]
+    },
+    {
+      "id": "P1C01_STATIC_ROADS_WATER_MILL_BRIDGES",
+      "priority": 2,
+      "target_location": "Shire roads, bridges, stream and mill",
+      "source_packet": "P1C01_SHIRE_LOCATION_STATE_PACKET",
+      "required_asset_groups": [
+        "dirt roads",
+        "stone/wood bridges",
+        "mill shell",
+        "water edge props",
+        "river stones",
+        "path signs"
+      ],
+      "material_families": [
+        "mud road",
+        "moss stone",
+        "aged wood",
+        "water",
+        "grass path"
+      ],
+      "cloud_outputs": [
+        "route_readability_manifest",
+        "water_material_contract",
+        "bridge_collision_plan"
+      ],
+      "qc_checks": [
+        "navigation_clearance",
+        "slope_budget",
+        "collision_plan",
+        "water_shader_later_runner_evidence"
+      ]
+    },
+    {
+      "id": "P1C01_STATIC_NATURE_FARMS_GARDENS",
+      "priority": 1,
+      "target_location": "Hills, farms, gardens, trees and flowers",
+      "source_packet": "P1C01_LIVING_WORLD_PACKET",
+      "required_asset_groups": [
+        "trees",
+        "hedges",
+        "flowers",
+        "crop rows",
+        "farm tools",
+        "insect/bird ambient placeholders",
+        "wind-reactive foliage candidates"
+      ],
+      "material_families": [
+        "leaf",
+        "bark",
+        "grass",
+        "garden soil",
+        "flower petals",
+        "tool wood/iron"
+      ],
+      "cloud_outputs": [
+        "foliage_HISM_manifest",
+        "wind_animation_candidate_manifest",
+        "farm_activity_prop_manifest"
+      ],
+      "qc_checks": [
+        "HISM_candidate_marked",
+        "foliage_density_budget",
+        "lod_or_culling_plan",
+        "texture_resolution_budget"
+      ]
+    }
+  ],
+  "material_application_batches": [
+    {
+      "id": "MAT_SHIRE_WARM_PLASTER",
+      "priority": 1,
+      "target_assets": [
+        "Bag End exterior",
+        "hobbit hole facades",
+        "interior walls"
+      ],
+      "texture_contract": [
+        "basecolor_png_or_tga",
+        "normal_png_or_tga",
+        "ORM_channel_packed_when_available"
+      ],
+      "quality_checks": [
+        "no_missing_texture_paths",
+        "1k_2k_default",
+        "texel_density_notes",
+        "material_slot_name_matches_manifest"
+      ]
+    },
+    {
+      "id": "MAT_SHIRE_AGED_WOOD",
+      "priority": 1,
+      "target_assets": [
+        "doors",
+        "windows",
+        "tables",
+        "benches",
+        "fences",
+        "carts",
+        "mill"
+      ],
+      "texture_contract": [
+        "basecolor",
+        "normal",
+        "roughness_or_ORM"
+      ],
+      "quality_checks": [
+        "grain_direction_notes",
+        "slot_reuse",
+        "lod_material_consistency"
+      ]
+    },
+    {
+      "id": "MAT_SHIRE_THATCH_AND_GRASS",
+      "priority": 1,
+      "target_assets": [
+        "hobbit hole roofs",
+        "hills",
+        "paths",
+        "Party Field",
+        "Bagshot Row"
+      ],
+      "texture_contract": [
+        "basecolor",
+        "normal",
+        "roughness",
+        "optional_height_for_blender_only"
+      ],
+      "quality_checks": [
+        "target_vram_budget",
+        "tiling_scale_notes",
+        "distant_lod_readability"
+      ]
+    },
+    {
+      "id": "MAT_SHIRE_STONE_SOIL_WATER",
+      "priority": 2,
+      "target_assets": [
+        "bridge stones",
+        "garden soil",
+        "river edge",
+        "mill stream"
+      ],
+      "texture_contract": [
+        "basecolor",
+        "normal",
+        "roughness_or_ORM"
+      ],
+      "quality_checks": [
+        "wetness_variant_marked",
+        "collision_separate_from_visual_mesh",
+        "water_runtime_evidence_later"
+      ]
+    },
+    {
+      "id": "MAT_CHARACTER_HOBBIT_CLOTH_LEATHER",
+      "priority": 1,
+      "target_assets": [
+        "Frodo",
+        "Bilbo",
+        "Sam",
+        "Merry",
+        "Pippin",
+        "hobbit villagers"
+      ],
+      "texture_contract": [
+        "basecolor",
+        "normal",
+        "roughness",
+        "optional_mask"
+      ],
+      "quality_checks": [
+        "limited_material_slots",
+        "skeleton_safe_assignments",
+        "LOD_material_consistency",
+        "no_generic_main_character_substitution"
+      ]
+    }
+  ],
+  "character_factory_batches": [
+    {
+      "id": "CHAR_FRODO_P1C01",
+      "priority": 1,
+      "role": "Ring-bearer early Shire",
+      "source_packet": "P1C01_HOBBIT_CHARACTER_PACKET",
+      "cloud_outputs": [
+        "character_schema_row",
+        "costume_layer_manifest",
+        "skeletal_fbx_qc_requirements",
+        "dialogue_profile_keys"
+      ],
+      "qc_checks": [
+        "not_power_fantasy_warrior",
+        "hobbit_scale",
+        "materials_bound",
+        "skeleton_and_deformation_later_evidence"
+      ]
+    },
+    {
+      "id": "CHAR_BILBO_P1C01",
+      "priority": 1,
+      "role": "Birthday host and Ring handoff",
+      "source_packet": "P1C01_HOBBIT_CHARACTER_PACKET",
+      "cloud_outputs": [
+        "elder_hobbit_costume_manifest",
+        "party_scene_anchor_manifest",
+        "cinematic_contract_keys"
+      ],
+      "qc_checks": [
+        "face_hair_costume_variant_notes",
+        "material_slots_named",
+        "postcondition_handoff_keys"
+      ]
+    },
+    {
+      "id": "CHAR_GANDALF_P1C01",
+      "priority": 1,
+      "role": "Wizard visitor, fireworks and Ring warning",
+      "source_packet": "P1C01_HOBBIT_CHARACTER_PACKET",
+      "cloud_outputs": [
+        "robe_hat_staff_cart_fireworks_manifest",
+        "rare_magic_guardrail_notes",
+        "dialogue_context_keys"
+      ],
+      "qc_checks": [
+        "staff_and_hat_attachment_slots",
+        "firework_prop_links",
+        "magic_not_spam_guardrail"
+      ]
+    },
+    {
+      "id": "CHAR_SAM_MERRY_PIPPIN_P1C01",
+      "priority": 1,
+      "role": "Core hobbit companions and social/stealth activity leads",
+      "source_packet": "P1C01_HOBBIT_CHARACTER_PACKET",
+      "cloud_outputs": [
+        "three_character_schema_rows",
+        "party_and_road_activity_links",
+        "relationship_keys"
+      ],
+      "qc_checks": [
+        "distinct_silhouettes",
+        "hobbit_scale",
+        "limited_material_slots",
+        "activity_anchors"
+      ]
+    },
+    {
+      "id": "CHAR_BACKGROUND_HOBBITS_P1C01",
+      "priority": 2,
+      "role": "Farmers, gardeners, families, party guests",
+      "source_packet": "P1C01_LIVING_WORLD_PACKET",
+      "cloud_outputs": [
+        "archetype_schedule_rows",
+        "pooled_spawn_group_manifest",
+        "variant_costume_manifest"
+      ],
+      "qc_checks": [
+        "poolable_archetypes",
+        "distance_fidelity_tiers",
+        "no_main_character_substitution"
+      ]
+    }
+  ],
+  "blender_qc_pipeline": {
+    "inputs": [
+      "source_receipt_manifest",
+      "raw_source_path",
+      "derived_output_path",
+      "material_family",
+      "intended_unreal_folder"
+    ],
+    "derived_copy_rules": [
+      "never_modify_original_sources",
+      "write_sha256_for_original_and_derived",
+      "record_transform_scale_units",
+      "record_repair_operations"
+    ],
+    "static_mesh_checks": [
+      "binary_or_supported_import",
+      "degenerate_faces_repaired_on_derived_copy",
+      "uv0_present",
+      "normals_present",
+      "smoothing_or_custom_normals_present",
+      "material_slots_preserved",
+      "tri_count_budget_recorded"
+    ],
+    "skeletal_mesh_checks": [
+      "skeleton_present",
+      "deformation_smoke_test",
+      "bone_scale_warning_recorded",
+      "LOD_plan",
+      "material_slot_limit",
+      "retarget_notes"
+    ],
+    "output_manifests": [
+      "derived_fbx_manifest",
+      "texture_manifest",
+      "material_slot_report",
+      "qc_error_report",
+      "unreal_import_batch_manifest"
+    ]
+  },
+  "gameplay_activity_rows": [
+    {
+      "id": "ACT_F1_01",
+      "name": "Bilbo Birthday Setup",
+      "source_kind": "FILM_MOMENT",
+      "cloud_data_outputs": [
+        "stable_activity_id",
+        "party_table_anchor_ids",
+        "guest_interaction_keys",
+        "idempotent_reward_flags"
+      ],
+      "runner_later_evidence": [
+        "objective_flow",
+        "save_reload",
+        "party_state_visible"
+      ]
+    },
+    {
+      "id": "ACT_F1_02",
+      "name": "Gandalf Fireworks",
+      "source_kind": "FILM_MOMENT",
+      "cloud_data_outputs": [
+        "firework_prop_ids",
+        "safe_launch_anchor_ids",
+        "reaction_dialogue_keys"
+      ],
+      "runner_later_evidence": [
+        "firework_runtime_effect",
+        "NPC_reactions",
+        "no_save_inside_unstable_setpiece"
+      ]
+    },
+    {
+      "id": "ACT_F1_03",
+      "name": "Dragon Firework Mishap",
+      "source_kind": "FILM_MOMENT",
+      "cloud_data_outputs": [
+        "Merry_Pippin_activity_keys",
+        "fixed_outcome_contract",
+        "comic_stealth_interaction_flags"
+      ],
+      "runner_later_evidence": [
+        "fixed_outcome_preserved",
+        "cinematic_skip_parity"
+      ]
+    },
+    {
+      "id": "ACT_F1_04",
+      "name": "Road Hiding",
+      "source_kind": "FILM_MOMENT",
+      "cloud_data_outputs": [
+        "road_cover_anchor_ids",
+        "noise_visibility_tuning_notes",
+        "Black_Rider_threat_placeholder_contract"
+      ],
+      "runner_later_evidence": [
+        "stealth_tutorial_path",
+        "companion_does_not_break_stealth"
+      ]
+    }
+  ],
+  "whole_game_seed_material_families": [
+    {
+      "region_id": "REGION_01_SHIRE_HOBBITON",
+      "runtime_status": "RUNTIME_FIRST",
+      "identity": "Hobbit pastoral village",
+      "source_guidance": "Hobbit domestic agrarian comfort; warm plaster, aged wood, paths, gardens, farms.",
+      "cloud_seed_outputs": [
+        "material_family_receipts",
+        "reference_only_or_production_tier",
+        "texture_budget",
+        "Blender_QC_queue_row"
+      ]
+    },
+    {
+      "region_id": "REGION_02_BUCKLAND_OLD_FOREST",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "hedged border and ancient woodland",
+      "source_guidance": "Use World Locations, Peoples/Lore and Mission Matrix identity before importing materials.",
+      "cloud_seed_outputs": [
+        "material_family_receipts",
+        "reference_only_or_production_tier",
+        "texture_budget",
+        "Blender_QC_queue_row"
+      ]
+    },
+    {
+      "region_id": "REGION_03_BREE",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "mixed Mannish/Hobbit road town",
+      "source_guidance": "Use World Locations, Peoples/Lore and Mission Matrix identity before importing materials.",
+      "cloud_seed_outputs": [
+        "material_family_receipts",
+        "reference_only_or_production_tier",
+        "texture_budget",
+        "Blender_QC_queue_row"
+      ]
+    },
+    {
+      "region_id": "REGION_04_WEATHERTOP",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "ruined hilltop watch place",
+      "source_guidance": "Use World Locations, Peoples/Lore and Mission Matrix identity before importing materials.",
+      "cloud_seed_outputs": [
+        "material_family_receipts",
+        "reference_only_or_production_tier",
+        "texture_budget",
+        "Blender_QC_queue_row"
+      ]
+    },
+    {
+      "region_id": "REGION_05_RIVENDELL",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "Elven valley refuge",
+      "source_guidance": "Elven memory/craft/light/organic architecture; realm-specific motifs.",
+      "cloud_seed_outputs": [
+        "material_family_receipts",
+        "reference_only_or_production_tier",
+        "texture_budget",
+        "Blender_QC_queue_row"
+      ]
+    },
+    {
+      "region_id": "REGION_06_MISTY_MOUNTAINS",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "snow mountain passes",
+      "source_guidance": "Use World Locations, Peoples/Lore and Mission Matrix identity before importing materials.",
+      "cloud_seed_outputs": [
+        "material_family_receipts",
+        "reference_only_or_production_tier",
+        "texture_budget",
+        "Blender_QC_queue_row"
+      ]
+    },
+    {
+      "region_id": "REGION_07_MORIA_GATE",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "ancient lake gate and cliff wall",
+      "source_guidance": "Dwarven stonecraft, lineage, darkness, interior streaming and high-contrast readability.",
+      "cloud_seed_outputs": [
+        "material_family_receipts",
+        "reference_only_or_production_tier",
+        "texture_budget",
+        "Blender_QC_queue_row"
+      ]
+    },
+    {
+      "region_id": "REGION_08_MORIA_INTERIOR",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "Dwarven underground halls",
+      "source_guidance": "Dwarven stonecraft, lineage, darkness, interior streaming and high-contrast readability.",
+      "cloud_seed_outputs": [
+        "material_family_receipts",
+        "reference_only_or_production_tier",
+        "texture_budget",
+        "Blender_QC_queue_row"
+      ]
+    },
+    {
+      "region_id": "REGION_09_LOTHLORIEN",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "golden Elven forest",
+      "source_guidance": "Elven memory/craft/light/organic architecture; realm-specific motifs.",
+      "cloud_seed_outputs": [
+        "material_family_receipts",
+        "reference_only_or_production_tier",
+        "texture_budget",
+        "Blender_QC_queue_row"
+      ]
+    },
+    {
+      "region_id": "REGION_10_ANDUIN",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "river journey corridor",
+      "source_guidance": "Use World Locations, Peoples/Lore and Mission Matrix identity before importing materials.",
+      "cloud_seed_outputs": [
+        "material_family_receipts",
+        "reference_only_or_production_tier",
+        "texture_budget",
+        "Blender_QC_queue_row"
+      ]
+    },
+    {
+      "region_id": "REGION_11_AMON_HEN",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "ancient seat and forested slopes",
+      "source_guidance": "Use World Locations, Peoples/Lore and Mission Matrix identity before importing materials.",
+      "cloud_seed_outputs": [
+        "material_family_receipts",
+        "reference_only_or_production_tier",
+        "texture_budget",
+        "Blender_QC_queue_row"
+      ]
+    },
+    {
+      "region_id": "REGION_12_ROHAN_GRASSLANDS",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "wide horse plains",
+      "source_guidance": "Horse culture, timber/leather, green/gold, halls, cavalry readability.",
+      "cloud_seed_outputs": [
+        "material_family_receipts",
+        "reference_only_or_production_tier",
+        "texture_budget",
+        "Blender_QC_queue_row"
+      ]
+    },
+    {
+      "region_id": "REGION_13_EDORAS",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "hill settlement and golden hall",
+      "source_guidance": "Horse culture, timber/leather, green/gold, halls, cavalry readability.",
+      "cloud_seed_outputs": [
+        "material_family_receipts",
+        "reference_only_or_production_tier",
+        "texture_budget",
+        "Blender_QC_queue_row"
+      ]
+    },
+    {
+      "region_id": "REGION_14_HELMS_DEEP",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "stone fortress and war staging",
+      "source_guidance": "Horse culture, timber/leather, green/gold, halls, cavalry readability.",
+      "cloud_seed_outputs": [
+        "material_family_receipts",
+        "reference_only_or_production_tier",
+        "texture_budget",
+        "Blender_QC_queue_row"
+      ]
+    },
+    {
+      "region_id": "REGION_15_FANGORN",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "ancient sentient forest",
+      "source_guidance": "Use World Locations, Peoples/Lore and Mission Matrix identity before importing materials.",
+      "cloud_seed_outputs": [
+        "material_family_receipts",
+        "reference_only_or_production_tier",
+        "texture_budget",
+        "Blender_QC_queue_row"
+      ]
+    },
+    {
+      "region_id": "REGION_16_ISENGARD",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "industrial ring and tower",
+      "source_guidance": "Use World Locations, Peoples/Lore and Mission Matrix identity before importing materials.",
+      "cloud_seed_outputs": [
+        "material_family_receipts",
+        "reference_only_or_production_tier",
+        "texture_budget",
+        "Blender_QC_queue_row"
+      ]
+    },
+    {
+      "region_id": "REGION_17_GONDOR_FIELDS",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "outer farms and road to Minas Tirith",
+      "source_guidance": "Stone, lineage, stewardship, White Tree/black-white military identity.",
+      "cloud_seed_outputs": [
+        "material_family_receipts",
+        "reference_only_or_production_tier",
+        "texture_budget",
+        "Blender_QC_queue_row"
+      ]
+    },
+    {
+      "region_id": "REGION_18_MINAS_TIRITH",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "white city tiers",
+      "source_guidance": "Stone, lineage, stewardship, White Tree/black-white military identity.",
+      "cloud_seed_outputs": [
+        "material_family_receipts",
+        "reference_only_or_production_tier",
+        "texture_budget",
+        "Blender_QC_queue_row"
+      ]
+    },
+    {
+      "region_id": "REGION_19_OSGILIATH",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "ruined river city",
+      "source_guidance": "Stone, lineage, stewardship, White Tree/black-white military identity.",
+      "cloud_seed_outputs": [
+        "material_family_receipts",
+        "reference_only_or_production_tier",
+        "texture_budget",
+        "Blender_QC_queue_row"
+      ]
+    },
+    {
+      "region_id": "REGION_20_ITHILIEN",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "green ranger woodland",
+      "source_guidance": "Use World Locations, Peoples/Lore and Mission Matrix identity before importing materials.",
+      "cloud_seed_outputs": [
+        "material_family_receipts",
+        "reference_only_or_production_tier",
+        "texture_budget",
+        "Blender_QC_queue_row"
+      ]
+    },
+    {
+      "region_id": "REGION_21_DEAD_MARSHES",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "haunted wetland",
+      "source_guidance": "Use World Locations, Peoples/Lore and Mission Matrix identity before importing materials.",
+      "cloud_seed_outputs": [
+        "material_family_receipts",
+        "reference_only_or_production_tier",
+        "texture_budget",
+        "Blender_QC_queue_row"
+      ]
+    },
+    {
+      "region_id": "REGION_22_CIRITH_UNGOL",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "mountain pass and tower",
+      "source_guidance": "Use World Locations, Peoples/Lore and Mission Matrix identity before importing materials.",
+      "cloud_seed_outputs": [
+        "material_family_receipts",
+        "reference_only_or_production_tier",
+        "texture_budget",
+        "Blender_QC_queue_row"
+      ]
+    },
+    {
+      "region_id": "REGION_23_MORDOR_PLAINS",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "ash wasteland and war roads",
+      "source_guidance": "Black/red war industry, ash, threat, corruption; no civilian crowd logic.",
+      "cloud_seed_outputs": [
+        "material_family_receipts",
+        "reference_only_or_production_tier",
+        "texture_budget",
+        "Blender_QC_queue_row"
+      ]
+    },
+    {
+      "region_id": "REGION_24_MOUNT_DOOM",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "volcanic climax space",
+      "source_guidance": "Use World Locations, Peoples/Lore and Mission Matrix identity before importing materials.",
+      "cloud_seed_outputs": [
+        "material_family_receipts",
+        "reference_only_or_production_tier",
+        "texture_budget",
+        "Blender_QC_queue_row"
+      ]
+    },
+    {
+      "region_id": "REGION_25_GREY_HAVENS",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "Elven harbor and departure",
+      "source_guidance": "Elven memory/craft/light/organic architecture; realm-specific motifs.",
+      "cloud_seed_outputs": [
+        "material_family_receipts",
+        "reference_only_or_production_tier",
+        "texture_budget",
+        "Blender_QC_queue_row"
+      ]
+    },
+    {
+      "region_id": "REGION_26_EREBOR_DALE",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "Dwarven mountain and Mannish valley",
+      "source_guidance": "Use World Locations, Peoples/Lore and Mission Matrix identity before importing materials.",
+      "cloud_seed_outputs": [
+        "material_family_receipts",
+        "reference_only_or_production_tier",
+        "texture_budget",
+        "Blender_QC_queue_row"
+      ]
+    },
+    {
+      "region_id": "REGION_27_MIRKWOOD",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "dense enchanted forest",
+      "source_guidance": "Use World Locations, Peoples/Lore and Mission Matrix identity before importing materials.",
+      "cloud_seed_outputs": [
+        "material_family_receipts",
+        "reference_only_or_production_tier",
+        "texture_budget",
+        "Blender_QC_queue_row"
+      ]
+    },
+    {
+      "region_id": "REGION_28_LAKE_TOWN",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "wooden town on water",
+      "source_guidance": "Use World Locations, Peoples/Lore and Mission Matrix identity before importing materials.",
+      "cloud_seed_outputs": [
+        "material_family_receipts",
+        "reference_only_or_production_tier",
+        "texture_budget",
+        "Blender_QC_queue_row"
+      ]
+    }
+  ],
+  "evidence_boundary": {
+    "claimed_now": "Concrete cloud-source production manifests, validators, and classifier allowlists for asset prep.",
+    "not_claimed_until_runner_evidence": [
+      "IMPORTED_IN_UNREAL",
+      "MATERIALS_BOUND_IN_RUNTIME",
+      "PIE_TESTED",
+      "DEVICE_TESTED",
+      "VISUALLY_ACCEPTED",
+      "GATE_6_ACCEPTED",
+      "GATE_7_ACCEPTED",
+      "P1C01_COMPLETE"
+    ]
+  }
+}

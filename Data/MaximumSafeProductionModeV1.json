@@ -249,6 +249,17 @@
       "p1c01_packet_count": 7,
       "region_guidance_count": 28,
       "purpose": "Turn the attached production bibles into cloud-checkable Shire P1C01 and whole-game warehouse execution packets without requiring the Windows runner."
+    },
+    "cloud_asset_manifest_outputs": {
+      "status": "P1C01_CLOUD_ASSET_MANIFEST_VALIDATION_READY",
+      "manifest": "Data/P1C01CloudAssetProductionManifestsV1.json",
+      "validator": "Scripts/validate_p1c01_cloud_asset_manifests.py",
+      "tests": "Scripts/test_validate_p1c01_cloud_asset_manifests.py",
+      "static_world_batches": 6,
+      "material_batches": 5,
+      "character_batches": 5,
+      "whole_game_seed_regions": 28,
+      "purpose": "Convert source-grounded packets into concrete cloud-preparable asset/material/character/Blender QC queues while the Windows runner is offline."
     }
   }
 }
