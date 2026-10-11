@@ -946,7 +946,10 @@ void AShirePlayerCharacter::Tick(float DeltaSeconds)
     // old-world coordinates even when the world identity is already committed.
     // A rejected async dispatch stays pending, with a bounded retry interval.
     PendingCheckpointRetrySeconds = FMath::Max(0.0f, PendingCheckpointRetrySeconds - DeltaSeconds);
-    if (PendingChapterCheckpointId != NAME_None &&
+    // Headless audits verify disk persistence explicitly. Do not repeatedly
+    // attempt automatic gameplay checkpoints when that path is audit-disabled.
+    if (!FParse::Param(FCommandLine::Get(), TEXT("ShireCIRuntimeAudit")) &&
+        PendingChapterCheckpointId != NAME_None &&
         !bWorldTransitionHeld &&
         !bPendingSaveRestoreTransform &&
         PendingCheckpointRetrySeconds <= 0.0f &&
