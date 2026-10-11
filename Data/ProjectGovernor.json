@@ -8785,5 +8785,13 @@
     "correction": "Leave player at last transform, engage world hold, return failure and invoke existing rollback transaction",
     "regression": "Scripts/test_offline_runtime_safety.py::test_no_ground_never_teleports_to_unvalidated_requested_location",
     "boundary": "No UE compile/PIE/device/visual acceptance. Offline hosted checks only; no self-hosted Windows runner."
+  },
+  "p1c01_deferred_restore_input_guard_2026_10_11": {
+    "status": "SOURCE_PATCH_PENDING_HOSTED_CI",
+    "scope": "P1C01_INPUT_RELIABILITY",
+    "fix": "Block player movement, gameplay actions, quick save/load and auto checkpoint during pending save restore transform; keep camera and cinematic skip.",
+    "test": "Scripts/test_offline_runtime_safety.py",
+    "runner": "OWNER_WINDOWS_SELF_HOSTED_OFF",
+    "deferred": "Real UE4.27 compile, PIE movement/restore roundtrip, target-device and visual acceptance"
   }
 }
