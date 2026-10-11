@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "id": "P1C01_BAG_END_HUB_ASSEMBLY_V1",
+  "status": "SOURCE_ONLY_IMPORT_PENDING",
+  "region": "P1C01",
+  "area": "BAG_END_INTERIOR",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/P1C01CloudShireAssemblyPlanV1.json",
+    "Data/P1C01CloudAssetProductionManifestsV1.json",
+    "Data/P1C01WorldBuildIntakePacketV1.json",
+    "Docs/DEVELOPMENT_GATES.md"
+  ],
+  "purpose": "Concrete source-only handoff for Bag End playable interior hub without asserting Unreal import or testing",
+  "scene_states": [
+    "BILBO_OCCUPIED",
+    "FRODO_DEPARTURE",
+    "EPILOGUE_READY"
+  ],
+  "production_groups": [
+    {
+      "id": "HUB_SHELL",
+      "scope": [
+        "round rooms",
+        "circular doors and windows",
+        "walkable floor",
+        "walls and ceiling",
+        "hearth"
+      ],
+      "asset_status": "REQUIRES_ITEM_LEVEL_RECEIPT_AND_IMPORT_PROOF",
+      "placement": "authored modular interior; do not imply source exists",
+      "collision": "simple blocking for walls/floor; doorway/companion clearance; separate door trigger",
+      "materials": [
+        "SH_WARM_PLASTER",
+        "SH_WOOD_INTERIOR",
+        "SH_STONE_TILES"
+      ]
+    },
+    {
+      "id": "HUB_DOMESTIC_PROPS",
+      "scope": [
+        "table",
+        "chairs",
+        "bookshelves",
+        "books and maps",
+        "pantry",
+        "kitchenware",
+        "lamps"
+      ],
+      "asset_status": "REQUIRES_ITEM_LEVEL_RECEIPT_AND_IMPORT_PROOF",
+      "placement": "readable lanes between entry, table, hearth and pantry",
+      "collision": "hero furniture simple collision; clutter no expensive collision",
+      "materials": [
+        "SH_WOOD_INTERIOR",
+        "SH_BROWN_LEATHER"
+      ]
+    },
+    {
+      "id": "HUB_INTERACTION_ANCHORS",
+      "scope": [
+        "main door",
+        "Ring table hero slot",
+        "hearth focal point",
+        "Bilbo conversation",
+        "Gandalf story context"
+      ],
+      "asset_status": "DESIGN_ANCHORS_ONLY",
+      "placement": "story state and interaction registry must own stable IDs; avoid raw world hard references",
+      "collision": "interaction volumes never block walkable passage",
+      "materials": []
+    },
+    {
+      "id": "HUB_AUDIO_LIGHTING",
+      "scope": [
+        "warm lamps",
+        "hearth ambience",
+        "door creak",
+        "interior footsteps",
+        "subtitle-safe dialogue"
+      ],
+      "asset_status": "SOURCE_PREP_ONLY",
+      "placement": "localized attenuation; limit simultaneous emitters; avoid dynamic shadow proliferation",
+      "collision": "none",
+      "materials": []
+    }
+  ],
+  "traversal_contract": {
+    "route": [
+      "ENTRY_DOOR",
+      "MAIN_ROOM",
+      "RING_TABLE",
+      "HEARTH",
+      "PANTRY",
+      "RETURN_ENTRY"
+    ],
+    "requirements": [
+      "uninterrupted player walking",
+      "NPC companion clearance",
+      "camera sightline to interactable hero slot",
+      "accessible return path",
+      "no collision from visual clutter"
+    ],
+    "acceptance": "PENDING_PIE"
+  },
+  "runtime_contract": {
+    "assets": "TSoftObjectPtr / TSoftClassPtr",
+    "streaming": "FStreamableManager async; no synchronous heavy LoadObject",
+    "crowds": "pooled ambient NPCs, no dense Spawn/Destroy",
+    "instancing": "ISM/HISM for safe repeating decor",
+    "state_owner": "LivingWorldDirector owns population and microevents; ShireNPCContextSubsystem owns NPC context/dialogue/schedule",
+    "working_set": "region/zone residency bounded for target ~2GB VRAM and 8GB RAM"
+  },
+  "source_asset_rules": {
+    "mesh_delivery": "FBX only for UE import; derived repairs on copies",
+    "textures": "PNG/TGA, channel-packed masks when appropriate; default 1K/2K",
+    "receipts": "source URI/licensing, SHA256, derived SHA256, slot and UV QC before import",
+    "reject_as_imported_without": "real UE4.27 exact-head import receipt and Asset Registry proof"
+  },
+  "five_lane_handoff": {
+    "WAREHOUSE_ASSET_INTAKE": "resolve each furniture/architecture/material source to a licensed SHA256 receipt",
+    "VISUAL_WORLD_PREP": "Blender derivative static meshes, UV0, smoothing, material slots, LOD/collision and room anchor manifest",
+    "SKELETAL_CHARACTER_PREP": "Bilbo, Gandalf and Frodo animation candidates and scale/deformation review",
+    "GAMEPLAY_PRESENTATION_PREP": "stable interaction IDs, state-specific objectives, original English VO and Arabic RTL subtitle keys",
+    "RUNTIME_BUILD": "blocked on self-hosted UE4.27 import/compile and chapter Gate 6/7"
+  },
+  "evidence": {
+    "static_plan_created": true,
+    "physical_meshes_generated": false,
+    "unreal_imported": false,
+    "compile_tested": false,
+    "pie_tested": false,
+    "device_tested": false,
+    "visually_accepted": false,
+    "gate_6_7_accepted": false
+  }
+}

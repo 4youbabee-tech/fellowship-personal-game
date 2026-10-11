@@ -1,3 +1,5 @@
+**2026-10-11 P1C01 Bag End hub source-only production candidate:** `Data/P1C01BagEndHubAssemblyV1.json` adds a detailed canonical interior assembly handoff (shell, domestic props, interactive anchors, audio/light), state variants, traversal/collision/streaming/NPC ownership contracts and five-lane item-level receipt tasks. No geometry generated, warehouse bytes acquired, Unreal import, compile, PIE, device, visual or Gate 6/7 proof; exact-head hosted validation pending. Existing P1C01 runtime scope unchanged.
+
 ## 2026-10-11 — #365 CI regression correction (candidate)
 
 - Exact-head Pre-Unreal #38102533805 failed in two source contract assertions: one obsolete manual-only trigger expectation and one new test using literal escaped newlines. The dedicated PBR lane intentionally runs on PR but never cooks/packages except manual dispatch. Corrected assertions and tightened package gates; requires new exact-head CI success. No runtime/device/visual acceptance.
