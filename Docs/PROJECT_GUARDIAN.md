@@ -1,5 +1,7 @@
-## 2026-10-11 — NPC density fallback invariant
-Missing chapter overrides must restore global density/radii/cadence, not the previously visited chapter settings. Regression: Scripts/test_living_world_density_fallback.py. Exact-head CI and UE proof pending.
+## 2026-10-11 — NPC density fallback invariant (PR #400 integration)
+Missing chapter-specific profiles must recover global spawn interval and inner/outer/cull radii, not previously active world chapter overrides. Guard: Scripts/test_living_world_density_fallback.py. Real UE runtime and target device regression remain required.
+
+**2026-10-11 P1C01 save restore overlap trigger candidate:** UE runner #1969 observed P1C08 after-route-change restore fail (quest stages/story beats/NPC memory/route progress). Pre-commit overlapping trigger may mutate restored story while placement pending. Candidate sets pending saved-player transform before CommitPersistenceRestore and extends IsGameplayWorldCommitted guard. Source regression added; exact-head CI, UE transition audit and PIE remain pending. No Gate 6/7 promotion.
 
 ## 2026-10-11 — Whole-game regional CC0 material receipt cache correction (candidate)
 
