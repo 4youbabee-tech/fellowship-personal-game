@@ -840,10 +840,10 @@ if($acceptanceTouched.Count -gt 0){
         }
 
         # Pure device-evidence/acceptance helpers avoid Windows packaging.
-        Set-Mode "acceptance" "acceptance-only-delta-inherits-parent-core-unreal-proof" $parentSha "none" $false $acceptancePackageCritical
+        Set-Mode "acceptance" "acceptance-only-delta-defers-package-to-closeout" $parentSha "none" $false $false
         exit 0
     }
-    Set-Mode "full" "acceptance-delta-parent-core-proof-missing-fail-safe" $parentSha "none" $false $acceptancePackageCritical
+    Set-Mode "full" "acceptance-delta-parent-core-proof-missing-defer-package" $parentSha "none" $false $false
     exit 0
 }
 
