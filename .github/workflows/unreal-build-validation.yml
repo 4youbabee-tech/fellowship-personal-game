@@ -231,6 +231,11 @@ on:
       - 'Scripts/classify_warehouse_validation.ps1'
   workflow_dispatch:
     inputs:
+      run_self_hosted:
+        description: 'Owner authorization required: run UE4.27 on Windows self-hosted runner for this manual dispatch only'
+        required: false
+        type: boolean
+        default: false
       package_windows:
         description: 'Explicit Windows cook/package for chapter closeout or release; normal development skips it'
         required: false
@@ -299,7 +304,11 @@ jobs:
   unreal-build:
     needs: classify
     # The offline owner runner is reserved for real engine work, not policy/docs.
-    if: needs.classify.outputs.full == 'true' || needs.classify.outputs.core == 'true' || (needs.classify.outputs.acceptance == 'true' && needs.classify.outputs.resume_stage == 'startup') || needs.classify.outputs.package == 'true'
+    if: >-
+      ${{ github.event_name == 'workflow_dispatch' && inputs.run_self_hosted == true &&
+          (needs.classify.outputs.full == 'true' || needs.classify.outputs.core == 'true' ||
+           (needs.classify.outputs.acceptance == 'true' && needs.classify.outputs.resume_stage == 'startup') ||
+           needs.classify.outputs.package == 'true') }}
     name: UE4.27.2 C++ Build
     runs-on:
       - self-hosted

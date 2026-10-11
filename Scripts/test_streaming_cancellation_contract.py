@@ -48,8 +48,15 @@ class StreamingCancellationContract(unittest.TestCase):
 
     def test_transition_checkpoint_waits_for_committed_world(self):
         tick = self.player.split('::Tick(float DeltaSeconds)', 1)[1].split('::BeginPlay()', 1)[0]
-        self.assertIn('PendingChapterCheckpointId != NAME_None && IsCurrentWorldCommitted()', tick)
+        self.assertIn('PendingChapterCheckpointId != NAME_None &&', tick)
+        self.assertIn('IsCurrentWorldCommitted()', tick)
+        self.assertIn('!bPendingSaveRestoreTransform', tick)
+        self.assertIn('!bWorldTransitionHeld', tick)
+        self.assertIn('PendingCheckpointRetrySeconds <= 0.0f', tick)
         self.assertLess(tick.index('IsCurrentWorldCommitted()'), tick.index('SaveAutomaticCheckpoint'))
+        self.assertLess(
+            tick.index('if (SaveAutomaticCheckpoint(CheckpointId, true))'),
+            tick.index('PendingChapterCheckpointId = NAME_None;'))
         begin = self.player.split('::BeginPlay()', 1)[1].split('::EndPlay(', 1)[0]
         self.assertIn('PendingChapterCheckpointId = TEXT("WC_P1C01_START")', begin)
         self.assertNotIn('SaveAutomaticCheckpoint(TEXT("WC_P1C01_START")', begin)

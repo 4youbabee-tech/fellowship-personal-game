@@ -131,6 +131,9 @@ jobs:
       - name: Test mandatory five-lane Project Governor work-start
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_governor_work_start.py" -v
 
+      - name: Test offline checkpoint, cinematic handoff, audio race and runner authorization
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_pending_checkpoint_dispatch.py" -v && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_offline_runtime_safety.py" -v
+
       - name: Test asset audit memory and failure handling
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_asset_quality_audit.py" -v
 

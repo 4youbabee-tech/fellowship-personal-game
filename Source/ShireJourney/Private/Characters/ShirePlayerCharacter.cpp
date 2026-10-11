@@ -942,12 +942,28 @@ void AShirePlayerCharacter::Tick(float DeltaSeconds)
         TryApplyPendingSaveRestoreTransform();
     }
 
-    if (PendingChapterCheckpointId != NAME_None && IsCurrentWorldCommitted())
+    // Saving while a restored pawn transform is still pending can persist
+    // old-world coordinates even when the world identity is already committed.
+    // A rejected async dispatch stays pending, with a bounded retry interval.
+    PendingCheckpointRetrySeconds = FMath::Max(0.0f, PendingCheckpointRetrySeconds - DeltaSeconds);
+    if (PendingChapterCheckpointId != NAME_None &&
+        !bWorldTransitionHeld &&
+        !bPendingSaveRestoreTransform &&
+        PendingCheckpointRetrySeconds <= 0.0f &&
+        IsCurrentWorldCommitted())
     {
         const FName CheckpointId = PendingChapterCheckpointId;
-        PendingChapterCheckpointId = NAME_None;
-        SaveAutomaticCheckpoint(CheckpointId, true);
-        UE_LOG(LogTemp, Display, TEXT("SafeCheckpoint: commit-barrier=PASS id=%s"), *CheckpointId.ToString());
+        if (SaveAutomaticCheckpoint(CheckpointId, true))
+        {
+            PendingChapterCheckpointId = NAME_None;
+            PendingCheckpointRetrySeconds = 0.0f;
+            UE_LOG(LogTemp, Display, TEXT("SafeCheckpoint: commit-barrier=PASS dispatch=accepted id=%s"), *CheckpointId.ToString());
+        }
+        else
+        {
+            PendingCheckpointRetrySeconds = 1.0f;
+            UE_LOG(LogTemp, Warning, TEXT("SafeCheckpoint: dispatch=rejected retry=1s id=%s"), *CheckpointId.ToString());
+        }
     }
 
     AttackCooldownRemaining = FMath::Max(0.0f, AttackCooldownRemaining - DeltaSeconds);
@@ -985,6 +1001,11 @@ void AShirePlayerCharacter::BeginPlay()
         {
             Presentation->OnCinematicStateChanged.AddDynamic(this, &AShirePlayerCharacter::HandleCinematicStateChanged);
             Presentation->OnCameraCueRequested.AddDynamic(this, &AShirePlayerCharacter::HandleStoryCameraCue);
+            // If possession/spawn occurs during a running cue, inherit its lock.
+            if (Presentation->IsCinematicLocked())
+            {
+                HandleCinematicStateChanged(true);
+            }
         }
         if (UShireQuestSubsystem* Quests = GI->GetSubsystem<UShireQuestSubsystem>())
         {
@@ -1052,6 +1073,7 @@ void AShirePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
     PlayerInputComponent->BindAction(TEXT("PrimaryAttack"), IE_Pressed, this, &AShirePlayerCharacter::PrimaryAttack);
     PlayerInputComponent->BindAction(TEXT("QuickSave"), IE_Pressed, this, &AShirePlayerCharacter::QuickSave);
     PlayerInputComponent->BindAction(TEXT("QuickLoad"), IE_Pressed, this, &AShirePlayerCharacter::QuickLoad);
+    PlayerInputComponent->BindAction(TEXT("SkipCinematic"), IE_Pressed, this, &AShirePlayerCharacter::SkipActiveCinematic);
 #if !UE_BUILD_SHIPPING
     PlayerInputComponent->BindAction(TEXT("DebugPreviousChapter"), IE_Pressed, this, &AShirePlayerCharacter::DebugPreviousChapter);
     PlayerInputComponent->BindAction(TEXT("DebugNextChapter"), IE_Pressed, this, &AShirePlayerCharacter::DebugNextChapter);
@@ -1207,6 +1229,23 @@ void AShirePlayerCharacter::UpdateStoryCameraCue(float DeltaSeconds)
         CameraBoom->SocketOffset, DesiredSocket, DeltaSeconds, bStoryCameraCueActive ? 3.5f : 4.5f);
     FollowCamera->SetFieldOfView(FMath::FInterpTo(
         FollowCamera->FieldOfView, DesiredFOV, DeltaSeconds, bStoryCameraCueActive ? 3.0f : 4.5f));
+}
+
+void AShirePlayerCharacter::SkipActiveCinematic()
+{
+    // The presentation subsystem owns cue timing and cinematic lock state.
+    // Skipping must not mutate canon beats or quest progression.
+    if (UGameInstance* GI = GetGameInstance())
+    {
+        if (UShireStoryPresentationSubsystem* Presentation =
+                GI->GetSubsystem<UShireStoryPresentationSubsystem>())
+        {
+            if (Presentation->IsCinematicLocked())
+            {
+                Presentation->RequestSkipActivePresentation();
+            }
+        }
+    }
 }
 
 void AShirePlayerCharacter::HandleCinematicStateChanged(bool bLocked)

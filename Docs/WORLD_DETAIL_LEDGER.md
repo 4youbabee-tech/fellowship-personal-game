@@ -1,3 +1,23 @@
+## 2026-10-11 — False-positive player placement success in ChapterWorldRouter
+- Proven source behavior: PlacePlayerAtCommittedTransform and MovePlayerToChapterStart ignore SetActorLocationAndRotation(bool) return and log PLACED / return true even if movement fails (e.g. immovable root). This can mark restore/start as successful while pawn remains at old coordinates and later enable control.
+- Correct only the two success-bearing placement functions: inspect teleport return, write reason=actor-teleport-rejected and return false before any success log; route caller already handles placement failure with rollback/hold. Keep ResolveGroundedSpawnLocation capsule/no-obstacle logic, existing transaction and pool/async owners. Static regression guard, no Engine acceptance without runner.
+
+## 2026-10-11 — Pending restore/checkpoint retry collision guard
+- Observed Tick runs deferred save transform placement, then can dispatch a pending checkpoint as soon as IsCurrentWorldCommitted even if bPendingSaveRestoreTransform is still true; the snapshot can use an ungrounded old pawn transform while restore is pending. Previous failed SaveAutomaticCheckpoint dispatch is retried every frame, potentially hammering snapshot construction under a persistent failure.
+- Guard pending checkpoint against bWorldTransitionHeld and bPendingSaveRestoreTransform. Retry rejected dispatch at bounded 1 second intervals without discarding checkpoint identity; accepted dispatch clears pending and retains callback-owned durable success. No new save system. Tests remain source/STATIC until real engine checks.
+
+## 2026-10-11 — Offline gameplay continuity sweep: cinematic handoff, audio race, runner authorization
+- Evidence, cinematic: HandleStoryBeat can replace an active Cinematic cue with a Gameplay/GameplayBlend cue while bCinematicLocked remains true until obsolete timer expiry; no SkipCinematic action existed in DefaultInput.ini. Repair via existing UShireStoryPresentationSubsystem release and owner-only skip callback; never mutate canonical story beats from skip.
+- Evidence, audio: ShireAudioSubsystem checks only a name-derived LoadKey before late async callback; cancelling/re-requesting the same cue can let the cancelled delegate consume a newer ownership key and play stale audio. Repair with monotonic generation ID per request and cancellation, preserving existing StreamableManager and bounded audio caches.
+- Safety, runner: Unreal Build Validation currently schedules an unauthorised self-hosted UE4.27 job for PR C++ diffs even though owner requests offline-only. Gate self-hosted job behind explicit manual workflow_dispatch input disabled by default; hosted classifier/pre-Unreal remain available.
+- Source-only, no new assets or Runtime chapter; P1C01 prioritized, no P1C02 expansion. No COMPILE-TESTED/PIE-TESTED/DEVICE-TESTED claims. Add hosted static regression tests on exact PR head; preserve existing skip timing and soft asset ownership. No Windows self-hosted runner activation.
+
+## 2026-10-11 — P1C01 checkpoint dispatch rejection regression (registered before implementation)
+
+- Evidence: ShirePlayerCharacter.cpp Tick clears PendingChapterCheckpointId before SaveAutomaticCheckpoint returns, then logs commit-barrier=PASS regardless of failure. SaveAutomaticCheckpoint may reject an unavailable snapshot/router or audit-guarded dispatch, losing the intended save point.
+- Minimal repair: preserve pending checkpoint until dispatch is accepted; do not call successful dispatch durable disk-save. Keep existing async owner, world commit barrier, revision guard, and source-only test. Do not activate Windows self-hosted runner or open P1C02 runtime.
+- Proof: current source bug identified; candidate repair requires exact-head Pre-Unreal before STATIC-VALIDATED. PIE/device/FPS remain untested.
+
 ## 2026-10-11 — P1C01 SHIRE NATURE BINARY BLENDER LOD PROMOTION (registered before implementation)
 
 - Basis: 03_WORLD_LOCATIONS_AND_MAP_BIBLE (Shire pastoral hills, lanes, gardens and farms), 10_3D_VISUAL_ASSET_ATLAS_PRODUCTION modeling priority, Data/WholeGameRegionProductionPacketsV1.json (SHIRE_HOBBITON); Governor DEC-103/104 and original ASCII source nature wave staged privately in Drive. This promotes the **same twelve** nature families; it must not fabricate an unrelated second library.

@@ -109,6 +109,10 @@ private:
 
     FStreamableManager StreamableManager;
     TMap<FName, TSharedPtr<FStreamableHandle>> PendingAudioLoads;
+    // An identical category/cue can be re-requested after cancellation.
+    // A unique token prevents an older async completion from claiming the new load.
+    TMap<FName, uint64> PendingAudioRequestTokens;
+    uint64 NextAudioRequestToken = 0;
     FName PendingVoiceCue = NAME_None;
     bool bVoiceActive = false;
 
@@ -123,7 +127,8 @@ private:
         FName Category,
         FName CueId,
         FSoftObjectPath AssetPath,
-        FName LoadKey);
+        FName LoadKey,
+        uint64 RequestToken);
     void CancelPendingAudioCategory(FName Category);
     bool CanPlaySfxNow(FName CueId, bool bStoryCritical);
     void StartVoicePlayback(FName CueId, USoundBase* Sound);

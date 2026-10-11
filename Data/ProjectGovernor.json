@@ -8755,5 +8755,26 @@
       "Claiming Blender render or UE accept without evidence"
     ],
     "gate_boundary": "Source-only: NO COMPILE/PIE/DEVICE/VISUAL/GATE6/7 acceptance"
+  },
+  "p1c01_checkpoint_dispatch_rejection_guard_2026_10_11": {
+    "status": "OFFLINE_RUNTIME_RELIABILITY_SOURCE_PATCH_PENDING_EXACT_HEAD_HOSTED_CI",
+    "scope": "P1C01_RUNTIME_BUG_FIX_ONLY",
+    "finding": "Tick cleared pending chapter checkpoint before async save request acceptance and unconditionally logged commit-barrier PASS",
+    "source": "Source/ShireJourney/Private/Characters/ShirePlayerCharacter.cpp",
+    "guard": "Scripts/test_pending_checkpoint_dispatch.py",
+    "repair": "Only clear pending ID on successful SaveAutomaticCheckpoint dispatch, not on rejected dispatch; callback still owns durable-save verdict",
+    "evidence_boundary": "CURRENT SOURCE CANDIDATE ONLY; hosted exact-head CI pending; no UE build/PIE/device/visual; manually selected Windows runner explicitly prohibited until owner authorization",
+    "authority": "PROJECT_GOVERNOR_SINGLE_DECISION_SOURCE",
+    "extended_scope": {
+      "checkpoint": "retain pending checkpoint on failed dispatch; gate deferred restore location and limit retry to 1 second",
+      "world_spawn": "check SetActorLocationAndRotation return for route restore and chapter start; fail closed on rejected teleport",
+      "cinematic": "interrupt-to-gameplay releases input lock; Escape skips only presentation and preserves quest state; late-spawn player inherits active lock",
+      "audio": "match async sound callback by monotonic token as well as category/cue to reject stale callbacks after cancellation/re-request",
+      "self_hosted": "Explicit workflow_dispatch run_self_hosted=true required, false by default; hosted Pre-Unreal and classifier unaffected"
+    },
+    "regression_scripts": [
+      "Scripts/test_pending_checkpoint_dispatch.py",
+      "Scripts/test_offline_runtime_safety.py"
+    ]
   }
 }

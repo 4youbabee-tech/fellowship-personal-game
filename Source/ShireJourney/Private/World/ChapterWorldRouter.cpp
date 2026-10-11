@@ -461,12 +461,20 @@ bool AChapterWorldRouter::PlacePlayerAtCommittedTransform(
         return false;
     }
 
-    PlayerPawn->SetActorLocationAndRotation(
-        GroundedLocation,
-        RequestedRotation,
-        false,
-        nullptr,
-        ETeleportType::TeleportPhysics);
+    // A grounded, collision-free candidate can still fail actor relocation.
+    // Never publish a successful restore when the actor rejected the teleport.
+    if (!PlayerPawn->SetActorLocationAndRotation(
+            GroundedLocation,
+            RequestedRotation,
+            false,
+            nullptr,
+            ETeleportType::TeleportPhysics))
+    {
+        UE_LOG(LogTemp, Error,
+            TEXT("ShireSaveRestore: FAIL chapter=%s route=%s episode=%s reason=actor-teleport-rejected"),
+            *ChapterId.ToString(), *RouteId.ToString(), *EpisodeId.ToString());
+        return false;
+    }
 
     if (ACharacter* Character = Cast<ACharacter>(PlayerPawn))
     {
@@ -541,12 +549,20 @@ bool AChapterWorldRouter::MovePlayerToChapterStart(FName ChapterId, bool bRestor
         return false;
     }
 
-    PlayerPawn->SetActorLocationAndRotation(
-        GroundedLocation,
-        RequestedRotation,
-        false,
-        nullptr,
-        ETeleportType::TeleportPhysics);
+    // Grounding alone does not prove the pawn accepted the relocation.
+    if (!PlayerPawn->SetActorLocationAndRotation(
+            GroundedLocation,
+            RequestedRotation,
+            false,
+            nullptr,
+            ETeleportType::TeleportPhysics))
+    {
+        SetPlayerWorldHold(true);
+        UE_LOG(LogTemp, Error,
+            TEXT("ShireStartupGrounding: FAIL chapter=%s reason=actor-teleport-rejected"),
+            *ChapterId.ToString());
+        return false;
+    }
 
     if (ACharacter* Character = Cast<ACharacter>(PlayerPawn))
     {

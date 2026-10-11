@@ -4686,8 +4686,20 @@ if "committed already-resident chapter=%s route=%s" not in pg129_stream:
 if "IsChapterBankReady(ChapterId, RouteId)" not in pg129_stream:
     fail("PG-129 resident-bank replay guard missing")
 
-if "if (!PendingAudioLoads.Contains(LoadKey))" not in pg129_audio:
-    fail("PG-129 cancelled async audio callback can still resurrect stale playback")
+# PG-129 v2: a category/cue key alone is insufficient because a cancelled load
+# can be re-requested with the exact same key before the old delegate returns.
+pg129_audio_h = read(resolve_source("ShireAudioSubsystem.h"))
+if not all(
+    symbol in pg129_audio_h + pg129_audio
+    for symbol in (
+        "PendingAudioRequestTokens",
+        "uint64 RequestToken",
+        "PendingAudioRequestTokens.Add(LoadKey, RequestToken)",
+        "PendingAudioRequestTokens.Remove(It.Key())",
+        "PendingAudioRequestTokens.FindRef(LoadKey) != RequestToken",
+    )
+):
+    fail("PG-129 async audio generation-token cancellation guard missing")
 
 # PG-130: import warning debt must converge toward zero instead of accepting a permanent ceiling.
 pg130_importer = read(ROOT / "Source" / "ShireJourneyEditorTools" / "Private" / "ShireProductionImportCommandlet.cpp")

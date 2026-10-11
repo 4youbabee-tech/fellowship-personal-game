@@ -39,6 +39,7 @@ void UShireAudioSubsystem::Initialize(FSubsystemCollectionBase& Collection)
     ActiveMusicCue = NAME_None;
     PendingVoiceCue = NAME_None;
     PendingAudioLoads.Empty();
+    PendingAudioRequestTokens.Empty();
     PendingSpatialSfx.Empty();
     LastSfxPlaybackTimeSeconds.Empty();
     RecentDecorativeSfxStartTimes.Empty();
@@ -96,6 +97,7 @@ void UShireAudioSubsystem::Deinitialize()
         }
     }
     PendingAudioLoads.Empty();
+    PendingAudioRequestTokens.Empty();
     PendingSpatialSfx.Empty();
     LastSfxPlaybackTimeSeconds.Empty();
     RecentDecorativeSfxStartTimes.Empty();
@@ -174,7 +176,13 @@ void UShireAudioSubsystem::RequestAudioAssetAsync(
             return;
         }
         PendingAudioLoads.Remove(LoadKey);
+        PendingAudioRequestTokens.Remove(LoadKey);
     }
+
+    // Register a token before RequestAsyncLoad: a resident asset can complete
+    // immediately, before a streamable handle is returned to this call.
+    const uint64 RequestToken = ++NextAudioRequestToken;
+    PendingAudioRequestTokens.Add(LoadKey, RequestToken);
 
     TArray<FSoftObjectPath> Assets;
     Assets.Add(AssetPath);
@@ -186,9 +194,11 @@ void UShireAudioSubsystem::RequestAudioAssetAsync(
             Category,
             CueId,
             AssetPath,
-            LoadKey));
+            LoadKey,
+            RequestToken));
 
-    if (Handle.IsValid())
+    // Do not retain a completed handle if the callback ran synchronously.
+    if (Handle.IsValid() && PendingAudioRequestTokens.FindRef(LoadKey) == RequestToken)
     {
         PendingAudioLoads.Add(LoadKey, Handle);
         UE_LOG(
@@ -197,6 +207,10 @@ void UShireAudioSubsystem::RequestAudioAssetAsync(
             TEXT("AudioStreaming: request category=%s cue=%s"),
             *Category.ToString(),
             *CueId.ToString());
+    }
+    else if (!Handle.IsValid())
+    {
+        PendingAudioRequestTokens.Remove(LoadKey);
     }
 }
 
@@ -214,6 +228,7 @@ void UShireAudioSubsystem::CancelPendingAudioCategory(FName Category)
         {
             It.Value()->CancelHandle();
         }
+        PendingAudioRequestTokens.Remove(It.Key());
         It.RemoveCurrent();
     }
 }
@@ -222,14 +237,17 @@ void UShireAudioSubsystem::HandleAsyncAudioReady(
     FName Category,
     FName CueId,
     FSoftObjectPath AssetPath,
-    FName LoadKey)
+    FName LoadKey,
+    uint64 RequestToken)
 {
-    // CancelPendingAudioCategory removes the ownership record before cancelling.
-    // A late delegate from a cancelled request must never resurrect stale audio.
-    if (!PendingAudioLoads.Contains(LoadKey))
+    // A cancelled callback may arrive after the same cue is requested again.
+    // Comparing only LoadKey would incorrectly accept the obsolete completion.
+    if (PendingAudioRequestTokens.FindRef(LoadKey) != RequestToken)
     {
         return;
     }
+    PendingAudioRequestTokens.Remove(LoadKey);
+    PendingAudioLoads.Remove(LoadKey);
 
     USoundBase* Sound = Cast<USoundBase>(AssetPath.ResolveObject());
     if (!Sound)

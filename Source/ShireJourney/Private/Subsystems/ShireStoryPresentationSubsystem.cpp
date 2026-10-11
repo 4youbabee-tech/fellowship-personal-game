@@ -231,6 +231,13 @@ void UShireStoryPresentationSubsystem::HandleStoryBeat(FName StoryBeatId)
         ActiveCue.AmbienceCue = TEXT("Amb_DefaultRegion");
     }
 
+    // A newer gameplay cue supersedes a cinematic cue. Do not leave the
+    // player locked until the obsolete cinematic timer expires.
+    if (bCinematicLocked && ActiveCue.Mode != EShireStoryPresentationMode::Cinematic)
+    {
+        ReleaseCinematicLock();
+    }
+
     if (UGameInstance* GI = GetGameInstance())
     {
         if (UShireDialogueSubsystem* Dialogue = GI->GetSubsystem<UShireDialogueSubsystem>())

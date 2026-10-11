@@ -113,6 +113,7 @@ protected:
     void ToggleWorldMap();
     void QuickSave();
     void QuickLoad();
+    void SkipActiveCinematic();
     void DebugPreviousChapter();
     void DebugNextChapter();
     void DebugToggleParallelRoute();
@@ -267,6 +268,7 @@ private:
     bool bWorldMapOpen = false;
     float PrototypeIdlePhase = 0.0f;
     FName PendingChapterCheckpointId = NAME_None;
+    float PendingCheckpointRetrySeconds = 0.0f;
     bool bPendingSaveRestoreTransform = false;
     FVector PendingSaveRestoreLocation = FVector::ZeroVector;
     FRotator PendingSaveRestoreRotation = FRotator::ZeroRotator;
