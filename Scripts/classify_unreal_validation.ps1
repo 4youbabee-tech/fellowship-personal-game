@@ -754,6 +754,13 @@ if($coreImpact.Count -gt 0){
 }
 
 if($acceptanceTouched.Count -gt 0){
+    # Packaging and packaged-executable verifiers require a real package when
+    # no same-content package+data proof is available, even if the editor build
+    # itself can inherit core proof.
+    $acceptancePackageCritical = @($acceptanceTouched | Where-Object {
+        $_ -in @("Scripts/ci_package_w00.ps1", "Scripts/ci_package_w00.cmd",
+                 "Scripts/verify_packaged_runtime_data.ps1", "Scripts/verify_packaged_startup.ps1")
+    }).Count -gt 0
     $acceptanceCoreProof = (Test-ParentCoreUnrealGreen $parentSha)
     if(-not $acceptanceCoreProof){
         $acceptanceCoreProof = Test-TreeEquivalentCoreProof $git $parentSha
@@ -777,15 +784,11 @@ if($acceptanceTouched.Count -gt 0){
             exit 0
         }
 
-        # Package tooling itself still needs cook/packaged-data/startup proof.
-        # Pure device-evidence/acceptance helpers do not trigger a new Windows build.
-        $acceptancePackageCritical = @($acceptanceTouched | Where-Object {
-            $_ -in @("Scripts/ci_package_w00.ps1", "Scripts/ci_package_w00.cmd", "Scripts/verify_packaged_runtime_data.ps1")
-        }).Count -gt 0
+        # Pure device-evidence/acceptance helpers avoid Windows packaging.
         Set-Mode "acceptance" "acceptance-only-delta-inherits-parent-core-unreal-proof" $parentSha "none" $false $acceptancePackageCritical
         exit 0
     }
-    Set-Mode "full" "acceptance-delta-parent-core-proof-missing-fail-safe" $parentSha
+    Set-Mode "full" "acceptance-delta-parent-core-proof-missing-fail-safe" $parentSha "none" $false $acceptancePackageCritical
     exit 0
 }
 
