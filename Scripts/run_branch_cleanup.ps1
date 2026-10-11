@@ -120,8 +120,51 @@ function Remove-RemoteBranch {
         return $false
     }
 
-    Write-Host "BRANCH_CLEANUP_DELETE branch=$Branch reason=$Reason"
-    & git push origin --delete $Branch
+    $remoteSha = (($existing[0] -split "\s+")[0]).Trim()
+    $reviewed = @($plan.reviewed_superseded_refs_2026_10_11 | Where-Object {
+        $null -ne $_ -and ([string]$_.branch).Equals($Branch, [System.StringComparison]::Ordinal)
+    })
+    if ($reviewed.Count -gt 1) { throw "Duplicate reviewed supersession records for $Branch" }
+    if ($reviewed.Count -eq 1) {
+        $record = $reviewed[0]
+        $expected = [string]$record.expected_head_sha
+        if ($expected -notmatch '^[0-9a-fA-F]{40}$' -or
+            -not $remoteSha.Equals($expected, [System.StringComparison]::OrdinalIgnoreCase)) {
+            Write-Host "BRANCH_CLEANUP_REVIEWED_SHA_MOVED branch=$Branch remoteSha=$remoteSha expectedSha=$expected"
+            return $false
+        }
+        $closedPr = Invoke-RestMethod -Method Get -Uri "https://api.github.com/repos/$Repository/pulls/$($record.closed_pr)" -Headers $headers
+        if ($closedPr.state -ne 'closed' -or [bool]$closedPr.merged -or
+            [string]$closedPr.head.ref -cne $Branch -or
+            [string]$closedPr.head.sha -cne $expected) {
+            Write-Host "BRANCH_CLEANUP_REVIEWED_CLOSED_PR_UNSAFE branch=$Branch"
+            return $false
+        }
+        $replacementPr = Invoke-RestMethod -Method Get -Uri "https://api.github.com/repos/$Repository/pulls/$($record.replacement_pr)" -Headers $headers
+        $replacementSha = [string]$record.replacement_merge_sha
+        if (-not [bool]$replacementPr.merged -or $replacementPr.state -ne 'closed' -or
+            [string]$replacementPr.merge_commit_sha -cne $replacementSha) {
+            Write-Host "BRANCH_CLEANUP_REVIEWED_REPLACEMENT_UNSAFE branch=$Branch"
+            return $false
+        }
+        $proof = Invoke-RestMethod -Method Get -Uri "https://api.github.com/repos/$Repository/compare/$replacementSha...develop" -Headers $headers
+        if ([string]$proof.status -notin @('ahead','identical')) {
+            Write-Host "BRANCH_CLEANUP_REVIEWED_NOT_IN_DEVELOP branch=$Branch status=$($proof.status)"
+            return $false
+        }
+        Write-Host "BRANCH_CLEANUP_REVIEWED_SHA_PASS branch=$Branch sha=$remoteSha supersededByPR=$($record.replacement_pr)"
+    }
+    else {
+        # A stale allowlist name must never delete newly divergent work.
+        $encodedBranch = [System.Uri]::EscapeDataString($Branch)
+        $difference = Invoke-RestMethod -Method Get -Uri "https://api.github.com/repos/$Repository/compare/develop...$encodedBranch" -Headers $headers
+        if ([int]$difference.ahead_by -ne 0) {
+            Write-Host "BRANCH_CLEANUP_KEEP_UNREVIEWED_UNIQUE branch=$Branch ahead=$($difference.ahead_by)"
+            return $false
+        }
+    }
+    Write-Host "BRANCH_CLEANUP_DELETE branch=$Branch reason=$Reason sha=$remoteSha"
+    & git push "--force-with-lease=${remoteRef}:$remoteSha" origin ":$remoteRef"
     if ($LASTEXITCODE -ne 0) {
         throw "Failed to delete approved stale branch: $Branch"
     }
@@ -162,7 +205,7 @@ if (-not [string]::IsNullOrWhiteSpace($ClosedHeadRef)) {
             }
             else {
                 Write-Host "BRANCH_CLEANUP_CLOSED_HEAD_DELETE branch=$closedBranch sha=$remoteSha"
-                & git push origin --delete $closedBranch
+                & git push "--force-with-lease=${remoteRef}:$remoteSha" origin ":$remoteRef"
                 if ($LASTEXITCODE -ne 0) {
                     throw "Failed to delete exact closed PR head branch: $closedBranch"
                 }
