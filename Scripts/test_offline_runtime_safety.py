@@ -188,5 +188,19 @@ class OfflineRuntimeSafetyTests(unittest.TestCase):
         self.assertIn("inputs.run_self_hosted == true", guard)
         self.assertNotIn("github.event_name == 'pull_request' &&", guard)
 
+    def test_restore_publication_cannot_reactivate_overlapping_triggers(self):
+        cpp = source(PLAYER_CPP)
+        restore = body_between(cpp, "bool AShirePlayerCharacter::RestoreSaveSnapshot(", "#if !UE_BUILD_SHIPPING")
+        barrier = restore.index("bPendingSaveRestoreTransform = true;")
+        publish = restore.index("QuestSubsystem->CommitPersistenceRestore(true);")
+        self.assertLess(barrier, publish)
+        self.assertIn("bPendingSaveRestoreTransform = false;", restore[publish:])
+        authority = body_between(cpp, "bool AShirePlayerCharacter::IsGameplayWorldCommitted() const",
+                                 "bool AShirePlayerCharacter::IsCurrentWorldCommitted() const")
+        self.assertIn("!bPendingSaveRestoreTransform", authority)
+        triggers = source("Source/ShireJourney/Private/World/ShireQuestTrigger.cpp")
+        self.assertIn("!Player->IsGameplayWorldCommitted()", triggers)
+
+
 if __name__ == "__main__":
     unittest.main()
