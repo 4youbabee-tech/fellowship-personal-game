@@ -1,3 +1,7 @@
+## 2026-10-11 — #365 CI regression correction (candidate)
+
+- Exact-head Pre-Unreal #38102533805 failed in two source contract assertions: one obsolete manual-only trigger expectation and one new test using literal escaped newlines. The dedicated PBR lane intentionally runs on PR but never cooks/packages except manual dispatch. Corrected assertions and tightened package gates; requires new exact-head CI success. No runtime/device/visual acceptance.
+
 ## 2026-10-11 — P1C01 verified PBR importer integration on PR #365 (candidate)
 
 - Physical Blender FBX normalization from #355 is forward-ported into the active #365 source stage: copied from `Saved/P1C01NormalizedFBX` into ignored `Saved/ShireProductionImportWorking` only; tracked warehouse FBX is never altered. The commandlet rejects missing derivative receipt, malformed source layout, or missing derived FBX.
