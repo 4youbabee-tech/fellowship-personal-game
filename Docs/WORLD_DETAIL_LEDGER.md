@@ -1,3 +1,9 @@
+## 2026-10-11 — Drive source acceptance preflight before any future UE promotion
+
+- Registered pre-import safety work under existing W01/P1C01 Drive intake: require physically hashed, path-safe, nested-archive and receipt-validated batches to avoid importing duplicate, ASCII, unlicensed or incomplete candidates. The ten archived source files were copied into the ChatGPT work container only, not into the owner Windows D: warehouse.
+- Source evidence: 10 archives, 206148715 bytes, 10/10 source integrity PASS; 36 duplicated binary nature FBX, 36 ASCII-only older nature FBX, 44 modular binary FBX, 36 complete Poly Haven CC0 sets across four shards, one Poly Haven candidate quarantined for missing maps. Need independent Windows warehouse and actual UE import/PIE evidence before promotion.
+- Implement `Scripts/validate_drive_source_bundles.py` as optional preflight over real staged ZIPs and an eight-case offline regression; record the physical receipt without altering runtime policy or Drive deletion authorization.
+
 ## 2026-10-11 — P1C01 source warehouse single-writer repair (registered before implementation)
 
 Existing PR #402 included two scheduled pipelines targeting the same persistent D: warehouse with divergent receipts and no cross-workflow lock. Avoid duplicate downloads / competing writers by removing the redundant private/hourly path, keeping the approved root-scoped two-hour source-only pipeline, adding runner session guard and explicit license review. Safety boundary: transfer never means import acceptance; no unattended remote deletion.

@@ -1,3 +1,7 @@
+## 2026-10-11 — Never count a ZIP filename as an imported Unreal asset
+
+Offline preflight now verifies member paths, CRC, nested ZIP, physically referenced SHA receipts, 7400 binary-vs-ASCII FBX, PNG header dimensions and provider CC0 claims. Never promote source-integrity PASS to import/PIE or device acceptance. Deduplicate byte-identical Shire nature FBX across packages; quarantine unfinished Poly Haven `wooden_barrels_01`. Hosted CI must execute the eight regression tests. Source-only, no runtime activation.
+
 ## 2026-10-11 — Duplicate Drive warehouse writer regression
 
 Two independently scheduled Drive ZIP intake workflows/scripts used disjoint receipts under the same physical warehouse. Consolidate to one scheduled writer, test that the second workflow is absent and cleanup is not scheduled, require watchdog health and retain fail-closed license/import provenance status. Exact-head hosted tests required; no runner ingestion claimed.

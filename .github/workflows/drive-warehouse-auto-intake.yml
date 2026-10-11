@@ -8,6 +8,8 @@ on:
     paths:
       - 'Scripts/drive_warehouse_sync.py'
       - 'Scripts/test_drive_warehouse_sync.py'
+      - 'Scripts/validate_drive_source_bundles.py'
+      - 'Scripts/test_validate_drive_source_bundles.py'
       - '.github/workflows/drive-warehouse-auto-intake.yml'
 permissions:
   contents: read
@@ -25,7 +27,8 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m unittest discover -s Scripts -p "test_drive_warehouse_sync.py" -v
-      - run: python -m py_compile Scripts/drive_warehouse_sync.py
+      - run: python -m py_compile Scripts/drive_warehouse_sync.py Scripts/validate_drive_source_bundles.py
+      - run: python -m unittest discover -s Scripts -p "test_validate_drive_source_bundles.py" -v
   transfer:
     if: github.event_name != 'pull_request'
     needs: static
