@@ -8776,5 +8776,14 @@
       "Scripts/test_pending_checkpoint_dispatch.py",
       "Scripts/test_offline_runtime_safety.py"
     ]
+  },
+  "p1c01_invalid_ground_transition_fallback_2026_10_11": {
+    "status": "SOURCE_PATCH_PENDING_EXACT_HEAD_HOSTED_VALIDATION",
+    "owner": "ChapterWorldRouter",
+    "scope": "P1C01 runtime reliability correction only",
+    "source_defect": "Unsafe SetActorLocationAndRotation(RequestedLocation) after failed ResolveGroundedSpawnLocation",
+    "correction": "Leave player at last transform, engage world hold, return failure and invoke existing rollback transaction",
+    "regression": "Scripts/test_offline_runtime_safety.py::test_no_ground_never_teleports_to_unvalidated_requested_location",
+    "boundary": "No UE compile/PIE/device/visual acceptance. Offline hosted checks only; no self-hosted Windows runner."
   }
 }

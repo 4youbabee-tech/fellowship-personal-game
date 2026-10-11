@@ -531,12 +531,9 @@ bool AChapterWorldRouter::MovePlayerToChapterStart(FName ChapterId, bool bRestor
     FVector GroundedLocation;
     if (!ResolveGroundedSpawnLocation(PlayerPawn, RequestedLocation, GroundedLocation))
     {
-        PlayerPawn->SetActorLocationAndRotation(
-            RequestedLocation,
-            RequestedRotation,
-            false,
-            nullptr,
-            ETeleportType::TeleportPhysics);
+        // The requested destination has no safe floor. Keep the pawn at its
+        // last position so the existing transaction rollback can recover
+        // without ever placing it in void or blocked world geometry.
         SetPlayerWorldHold(true);
         UE_LOG(
             LogTemp,

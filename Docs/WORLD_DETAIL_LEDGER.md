@@ -1,3 +1,7 @@
+## 2026-10-11 — P1C01 invalid-ground transition fallback (registered before implementation)
+- Source defect: ChapterWorldRouter::MovePlayerToChapterStart checks ResolveGroundedSpawnLocation and, when grounding fails, still teleports the pawn to requested unvalidated coordinates before holding movement. A failed destination placement must not move the pawn into void/blocked geometry. Retain last safe transform, hold input, return false and let existing rollback transaction handle recovery.
+- Scope: surgical fail-closed branch change only. Keep existing collision/slope solver, transaction owners and no P1C02 runtime feature. Add hosted source regression asserting no teleport before failed-ground return. No COMPILE/PIE/DEVICE/visual claim; self-hosted runner disabled.
+
 ## 2026-10-11 — False-positive player placement success in ChapterWorldRouter
 - Proven source behavior: PlacePlayerAtCommittedTransform and MovePlayerToChapterStart ignore SetActorLocationAndRotation(bool) return and log PLACED / return true even if movement fails (e.g. immovable root). This can mark restore/start as successful while pawn remains at old coordinates and later enable control.
 - Correct only the two success-bearing placement functions: inspect teleport return, write reason=actor-teleport-rejected and return false before any success log; route caller already handles placement failure with rollback/hold. Keep ResolveGroundedSpawnLocation capsule/no-obstacle logic, existing transaction and pool/async owners. Static regression guard, no Engine acceptance without runner.

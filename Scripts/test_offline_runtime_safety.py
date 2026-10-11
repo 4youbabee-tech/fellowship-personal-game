@@ -95,6 +95,16 @@ class OfflineRuntimeSafetyTests(unittest.TestCase):
             self.assertLess(body.index("reason=actor-teleport-rejected"), body.index("return true;"))
         self.assertIn("SetPlayerWorldHold(true)", start)
 
+    def test_no_ground_never_teleports_to_unvalidated_requested_location(self):
+        router = source("Source/ShireJourney/Private/World/ChapterWorldRouter.cpp")
+        start = body_between(router, "bool AChapterWorldRouter::MovePlayerToChapterStart(",
+                             "void AChapterWorldRouter::VerifyPlayerGroundingStability(")
+        failure = start.split("if (!ResolveGroundedSpawnLocation(PlayerPawn, RequestedLocation, GroundedLocation))", 1)[1].split("reason=no-blocking-ground", 1)[0]
+        self.assertNotIn("SetActorLocationAndRotation(", failure)
+        self.assertNotIn("SetActorLocation(", failure)
+        self.assertIn("SetPlayerWorldHold(true);", failure)
+        self.assertLess(failure.index("SetPlayerWorldHold(true);"), len(failure))
+
     def test_self_hosted_requires_manual_opt_in(self):
         workflow = source(".github/workflows/unreal-build-validation.yml")
         self.assertIn("run_self_hosted:", workflow)
