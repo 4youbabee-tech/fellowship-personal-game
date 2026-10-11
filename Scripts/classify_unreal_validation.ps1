@@ -77,6 +77,7 @@ function Test-IncrementalSourceOnlyHeadDelta([string]$GitExe, [string]$TargetSha
             $n -eq "Data/MaximumSafeProductionModeV1.json" -or
             $n -eq "Data/OfflineFastProductionQueueV1.json" -or
             $n -eq "Data/P1C01CloudShireAssemblyPlanV1.json" -or
+            $n -eq "Data/WholeGameCloudWarehouseMaterialQueueV1.json" -or
             $n -eq "Data/P1C01PinnedArtifactCheckpointsV1.json" -or
             $n -eq "Scripts/resume_p1c01_artifact_checkpoint.py" -or
             $n -eq "Scripts/test_resume_p1c01_artifact_checkpoint.py" -or
@@ -85,6 +86,8 @@ function Test-IncrementalSourceOnlyHeadDelta([string]$GitExe, [string]$TargetSha
             $n -eq "Scripts/test_offline_production_classifier.py" -or
             $n -eq "Scripts/validate_p1c01_cloud_assembly.py" -or
             $n -eq "Scripts/test_validate_p1c01_cloud_assembly.py" -or
+            $n -eq "Scripts/validate_whole_game_cloud_warehouse_queue.py" -or
+            $n -eq "Scripts/test_validate_whole_game_cloud_warehouse_queue.py" -or
             $n -eq "Scripts/stage_p1c01_adaptive_pbr_warehouse.py" -or
             $n -eq "Scripts/test_p1c01_adaptive_pbr_warehouse.py" -or
             $n -eq "Scripts/classify_unreal_validation.ps1" -or
@@ -586,6 +589,9 @@ $safeExact = @(
     "Scripts/test_offline_production_classifier.py",
     "Scripts/validate_p1c01_cloud_assembly.py",
     "Scripts/test_validate_p1c01_cloud_assembly.py",
+    "Data/WholeGameCloudWarehouseMaterialQueueV1.json",
+    "Scripts/validate_whole_game_cloud_warehouse_queue.py",
+    "Scripts/test_validate_whole_game_cloud_warehouse_queue.py",
     "Data/DeepProjectAudit.json",
     "Data/MasterExecutionRoadmap.json",
     "Data/PIEVerificationEvidence.json",
