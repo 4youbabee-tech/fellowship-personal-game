@@ -2,6 +2,8 @@
 import argparse, math, os, sys
 import bmesh
 import bpy
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from verified_pbr_uv_repair import repaired_face_uvs
 
 def require(ok, why):
     if not ok: raise RuntimeError("P1C01_FBX_NORMALIZE_FAIL:"+why)
@@ -18,6 +20,22 @@ def clean_mesh(obj):
     # Never weld UV seam/hard-normal vertices: remove only topology orphaned by face cleanup.
     orphans=[v for v in bm.verts if not v.link_faces]
     if orphans: bmesh.ops.delete(bm, geom=orphans, context='VERTS')
+    bm.normal_update()
+    uv_layer=bm.loops.layers.uv.active
+    require(uv_layer is not None, "MISSING_UV_LAYER:"+obj.name)
+    repaired_uv_faces=0
+    for face in bm.faces:
+        loops=list(face.loops)
+        authored=tuple((float(loop[uv_layer].uv.x),float(loop[uv_layer].uv.y)) for loop in loops)
+        positions=tuple(tuple(float(x) for x in loop.vert.co) for loop in loops)
+        normal=tuple(float(x) for x in face.normal)
+        corrected,changed=repaired_face_uvs(authored,positions,normal)
+        if changed:
+            for loop,uv in zip(loops,corrected):
+                loop[uv_layer].uv=uv
+            repaired_uv_faces+=1
+    print("P1C01_FBX_UV_TANGENT_REPAIR asset_mesh="+obj.name+
+          " corrected_faces="+str(repaired_uv_faces)+" valid_uv_untouched=yes no_vertex_weld=yes",flush=True)
     bmesh.update_edit_mesh(obj.data)
     bpy.ops.object.mode_set(mode='OBJECT')
     obj.select_set(False)

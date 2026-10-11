@@ -106,7 +106,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: Saved/P1C01NormalizedFBX/
-          key: p1c01-normalized-${{ runner.os }}-${{ env.SHIRE_BLENDER_VERSION }}-${{ hashFiles('Scripts/normalize_verified_pbr_blender.py', 'Scripts/preflight_p1c01_verified_fbx.py', 'SourceAssets/Production/World/Shire/VerifiedPBR/**/*.fbx') }}
+          key: p1c01-normalized-${{ runner.os }}-${{ env.SHIRE_BLENDER_VERSION }}-${{ hashFiles('Scripts/normalize_verified_pbr_blender.py', 'Scripts/verified_pbr_uv_repair.py', 'Scripts/preflight_p1c01_verified_fbx.py', 'SourceAssets/Production/World/Shire/VerifiedPBR/**/*.fbx') }}
       - name: Re-export and re-import 16 static FBX with smoothing and one slot
         shell: bash
         run: |

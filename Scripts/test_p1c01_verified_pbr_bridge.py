@@ -12,6 +12,19 @@ import verify_p1c01_pbr_runtime as runtime_presence
 import verify_verified_shire_import as import_qc
 
 class VerifiedPBRBridgeTest(unittest.TestCase):
+    def test_persistent_runner_isolation_does_not_bypass_dedicated_receipts(self):
+        root=Path(__file__).resolve().parents[1]
+        importer=(root/"Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp").read_text(encoding="utf-8")
+        generic=(root/".github/workflows/unreal-build-validation.yml").read_text(encoding="utf-8")
+        dedicated=(root/".github/workflows/p1c01-verified-pbr-production.yml").read_text(encoding="utf-8")
+        self.assertIn("SkipEphemeralVerifiedPBR",generic)
+        self.assertNotIn("SkipEphemeralVerifiedPBR",dedicated)
+        self.assertIn("DeleteDirectory(*WorkingVerifiedRoot, false, true)",importer)
+        self.assertIn("P1C01_EPHEMERAL_STAGE_ISOLATION_FAILED",importer)
+        self.assertIn("VerifiedSourceFbx.Num() > 0 && !bSkipEphemeralVerifiedPBR",importer)
+        self.assertIn("P1C01_FBX_DERIVED_RECEIPT_REQUIRED",importer)
+        self.assertIn("Scripts/preflight_p1c01_verified_fbx.py --project-root",dedicated)
+
     def setUp(self):
         self.root=tempfile.TemporaryDirectory()
         self.addCleanup(self.root.cleanup)

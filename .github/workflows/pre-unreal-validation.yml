@@ -158,9 +158,6 @@ jobs:
       - name: Test Governor semantic contracts
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_governance_contracts.py" -v
 
-      - name: Test P1C01 warning-debt guard with source FBX identities
-        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_warning_debt_guard.py" -v
-
       - name: Test warning-debt guard semantics
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_warning_debt_guard.py" -v
 

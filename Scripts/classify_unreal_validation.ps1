@@ -357,7 +357,6 @@ function Test-CoreProofSafeInterveningDelta([string]$GitExe, [string]$BaseSha, [
     "Scripts/run_p1c01_human_wave2_ue4.ps1",
     "Scripts/test_p1c01_human_wave2_contract.py",
     ".github/workflows/p1c01-human-wave2.yml",
-    "Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp",
     "Scripts/inspect_p1c01_frodo_lowpoly_dummy_candidate.ps1",
     ".github/workflows/p1c01-frodo-lowpoly-dummy-source-inventory.yml",
     "Scripts/stage_p1c01_bag_end_trim_official_receipt.ps1",
@@ -532,7 +531,6 @@ $dedicatedHumanWave2Exact = @(
     "Scripts/run_p1c01_human_wave2_ue4.ps1",
     "Scripts/test_p1c01_human_wave2_contract.py",
     ".github/workflows/p1c01-human-wave2.yml",
-    "Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp",
     "Scripts/classify_unreal_validation.ps1",
     "Scripts/test_unreal_classifier.ps1"
 )
@@ -592,7 +590,6 @@ $safeExact = @(
     "Scripts/run_p1c01_human_wave2_ue4.ps1",
     "Scripts/test_p1c01_human_wave2_contract.py",
     ".github/workflows/p1c01-human-wave2.yml",
-    "Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp",
     "Scripts/inspect_p1c01_frodo_lowpoly_dummy_candidate.ps1",
     ".github/workflows/p1c01-frodo-lowpoly-dummy-source-inventory.yml",
     "Scripts/stage_p1c01_bag_end_trim_official_receipt.ps1",
@@ -644,6 +641,9 @@ $acceptanceExact = @(
 $pbrNonPackagingImpact = @(
     ".github/workflows/p1c01-verified-pbr-production.yml",
     "Scripts/normalize_verified_pbr_blender.py",
+    "Scripts/verified_pbr_uv_repair.py",
+    "Scripts/warning_debt_guard.py",
+    "Scripts/test_warning_debt_guard.py",
     "Scripts/preflight_p1c01_verified_fbx.py",
     "Scripts/test_preflight_p1c01_verified_fbx.py",
     "Scripts/test_p1c01_verified_pbr_bridge.py",

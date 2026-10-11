@@ -3,6 +3,7 @@ import hashlib,json,subprocess,tempfile,unittest
 from pathlib import Path
 from unittest.mock import patch
 import preflight_p1c01_verified_fbx as qc
+from verified_pbr_uv_repair import collapsed_uv_face, repaired_face_uvs
 
 BINARY=b"Kaydara FBX Binary"+b"X"*350
 NORMAL=BINARY+b"LayerElementSmoothing"+b"Y"*300
@@ -67,6 +68,30 @@ class DerivedFBXTests(unittest.TestCase):
         target.write_bytes(NORMAL+b"TAMPERED")
         with self.assertRaisesRegex(qc.SourceQCError,"DERIVED_FBX_NOT_READY"):
             qc.execute(self.root,verify_only=True)
+
+    def test_valid_uv_seam_remains_unchanged(self):
+        uv=((0.0,0.0),(1.0,0.0),(0.0,1.0))
+        actual,changed=repaired_face_uvs(uv,((0,0,0),(1,0,0),(0,1,0)),(0,0,1))
+        self.assertFalse(changed)
+        self.assertEqual(actual,uv)
+
+    def test_collapsed_uv_face_is_repaired(self):
+        actual,changed=repaired_face_uvs(((0,0),(0,0),(0,0)),
+                                         ((0,0,0),(1,0,0),(0,1,0)),(0,0,1))
+        self.assertTrue(changed)
+        self.assertFalse(collapsed_uv_face(actual))
+
+    def test_collinear_projection_has_fallback(self):
+        actual,changed=repaired_face_uvs(((0,0),(0,0),(0,0)),
+                                         ((0,0,0),(1,0,0),(2,0,0)),(0,0,1))
+        self.assertTrue(changed)
+        self.assertFalse(collapsed_uv_face(actual))
+
+    def test_blender_worker_repairs_only_uv_loops(self):
+        worker=Path(__file__).with_name("normalize_verified_pbr_blender.py").read_text(encoding="utf-8")
+        self.assertIn("repaired_face_uvs(authored,positions,normal)",worker)
+        self.assertIn("loop[uv_layer].uv=uv",worker)
+        self.assertNotIn("bmesh.ops.remove_doubles",worker)
 
     def test_optional_missing_no_acceptance(self):
         self.original.unlink()

@@ -338,6 +338,9 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
 {
     const double ProfileStartedSeconds = FPlatformTime::Seconds();
     const bool bEnableCharacterRigImport = FParse::Param(*Params, TEXT("EnableCharacterRigImport"));
+    // Generic CI isolates stale PBR staging on persistent runners. Verified PBR CI
+    // does not pass this flag: it still requires a validated derived SHA256 receipt.
+    const bool bSkipEphemeralVerifiedPBR = FParse::Param(*Params, TEXT("SkipEphemeralVerifiedPBR"));
     UE_LOG(
         LogTemp,
         Display,
@@ -362,6 +365,23 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         return 4;
     }
 
+    if (bSkipEphemeralVerifiedPBR)
+    {
+        // Only ignored Saved/ working-copy files are removed, not SourceAssets,
+        // original FBX/PNG/TGA, derived FBX, or their original SHA256 receipts.
+        const FString WorkingVerifiedRoot = FPaths::Combine(
+            WorkingRoot, TEXT("World/Shire/VerifiedPBR"));
+        if (IFileManager::Get().DirectoryExists(*WorkingVerifiedRoot) &&
+            !IFileManager::Get().DeleteDirectory(*WorkingVerifiedRoot, false, true))
+        {
+            UE_LOG(LogTemp, Error, TEXT("P1C01_EPHEMERAL_STAGE_ISOLATION_FAILED path=%s"),
+                *WorkingVerifiedRoot);
+            return 89;
+        }
+        UE_LOG(LogTemp, Display,
+            TEXT("P1C01_EPHEMERAL_STAGE_ISOLATED working-copy-only=yes originals-preserved=yes"));
+    }
+
     // Verified Blender FBX is a disposable derivative, never a warehouse rewrite.
     // The dedicated CI lane SHA-verifies Saved/P1C01NormalizedFBX/receipt.json
     // against the staged original before calling this commandlet.
@@ -372,7 +392,7 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
     TArray<FString> VerifiedSourceFbx;
     IFileManager::Get().FindFilesRecursive(
         VerifiedSourceFbx, *VerifiedSourceRoot, TEXT("*.fbx"), true, false, false);
-    if (VerifiedSourceFbx.Num() > 0)
+    if (VerifiedSourceFbx.Num() > 0 && !bSkipEphemeralVerifiedPBR)
     {
         if (!FPaths::FileExists(FPaths::Combine(DerivedRoot, TEXT("receipt.json"))))
         {

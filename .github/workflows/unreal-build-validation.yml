@@ -469,7 +469,7 @@ jobs:
       - name: Import production assets in UE4.27.2
         if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
         shell: cmd
-        run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_import_production_assets.cmd"'
+        run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_import_production_assets.cmd" -SkipEphemeralVerifiedPBR'
 
       - name: Resolve local Python for runtime observation
         if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
