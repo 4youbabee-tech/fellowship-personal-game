@@ -1,3 +1,11 @@
+## 2026-10-11 — Root-cause repair of local PIE classifier (PR #359)
+
+- This is the existing Governor-approved P1C01 development throughput fix, not a new world-detail feature. Pre-Unreal Run #38093231196 failed `pie-preview-safe-with-proof: expected inherit, got full`: the two exact paths appeared only in the transitive core-proof allowlist, not in the main `$safeExact` set used by `$fullImpact`. Add them to the actual exact-path classifier and cover lookalike names, mixed runtime and Config changes in the real classifier regression. Parent engine proof remains mandatory, otherwise full validation. PR #358's actual preview command/test still requires exact-head static execution prior to merging. Candidate awaiting CI; no new Unreal/PIE/device/visual/FPS acceptance.
+
+## 2026-10-11 — No redundant full UE build for owner local-PIE launch tool
+
+- Apply owner-requested minimum administrative friction: local preview launcher + its unit contract are non-runtime changes. Existing strict classifier only permits skipping a full Windows/Unreal lane if exact green parent proof can be inherited; otherwise full validation remains mandatory. Do not weaken FBX materials/import, global async bank, canon, P1C01 Gate 6/7 or owner-target 30 FPS checks. Historical Run #38092759311 demonstrated the prior false full-impact classification.
+
 ## 2026-10-11 — Fast-path measurement tooling without relaxing P1C01 acceptance
 
 - The exact-owner-laptop Gate 6/7 evidence evaluator is an acceptance-data tool. CI should not repeat an expensive full UE package only because that evaluator changes, when the exact ancestor already has valid engine proof. The classifier keeps fail-closed behavior without parent proof and continues normal expensive tests for runtime, asset, streaming, packaging and shader-impacting deltas. No gameplay, world visuals, new chapter or target FPS acceptance is claimed.
