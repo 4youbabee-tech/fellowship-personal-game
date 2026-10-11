@@ -1,3 +1,7 @@
+## 2026-10-12 — P1C01 physical ten-archive source curation and no-duplicate visual batch
+
+Existing W01/DEC-090/104 scope only: consume all ten source Drive ZIPs before acquiring new assets. Generate 12 nature FBX families (LOD0/1/2), 22 original Shire modular architecture families (LOD0/1), complete 52 source PBR families in distinct provenance namespaces (4 priority + 36 Poly Haven CC0-claimed + 12 project-original regional), and report any 33 content hash aliases without duplicating bytes. Quarantine 36 repeated binary FBX, 36 ASCII FBX, one incomplete barrel material, and rejected Frodo generic rig candidate. The ChatGPT physical curated bundle was written only in its container (not D:). Source-automation job may reproduce it into D: after 10/10 exact SHA/MD5 receipt QC; no legacy source deleted. UE static mesh LOD assignment, importer package creation, material slots, collision, 720p profile and Gate 6/7 remain separate evidence-specific gates. ProjectGovernor stays sole authority.
+
 ## 2026-10-12 — Physical ten-ZIP Warehouse attestation before any Shire import
 
 Registered existing W01 Drive source-only verification improvement. It does not introduce new runtime/chapter scope: require on-disk D: size/SHA256/remote MD5/ZIP and FBX-format proof for all ten specified Drive ZIPs, archive-level license review, quarantine of ASCII and incomplete/duplicated candidates, and a source-only five-wave queue. The existing authorized schedule is unchanged and no unattended Drive deletion or UE import is allowed. Engine, device, visual and Gate 6/7 remain open.
