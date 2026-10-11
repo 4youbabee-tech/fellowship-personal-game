@@ -34,7 +34,7 @@ def safe_remote_name(name):
 def inventory(rclone, remote):
     found = []
     for folder in ROOT_FOLDERS:
-        output = call(rclone, "lsjson", "--files-only", remote + "/" + folder)
+        output = call(rclone, "lsjson", "--hash", "--files-only", remote + "/" + folder)
         for item in json.loads(output):
             name = safe_remote_name(item["Name"])
             if not name.lower().endswith(".zip"):
@@ -69,7 +69,7 @@ def ingest(rclone, remote, root, min_free_gb=6):
                 existing = json.loads(receipt_path.read_text(encoding="utf-8"))
             if (existing and destination.is_file() and destination.stat().st_size == size
                     and existing.get("sha256") == sha256(destination)
-                    and existing.get("remote_md5") == md5):
+                    and md5 and existing.get("remote_md5") == md5):
                 print("DRIVE_INTAKE_REUSED", folder, name, flush=True)
                 continue
             free = shutil.disk_usage(root).free
@@ -81,6 +81,8 @@ def ingest(rclone, remote, root, min_free_gb=6):
                      remote + "/" + folder + "/" + name, str(temp))
                 if temp.stat().st_size != size:
                     raise RuntimeError("REMOTE_SIZE_MISMATCH")
+                if not md5:
+                    raise RuntimeError("REMOTE_MD5_REQUIRED_FAIL_CLOSED")
                 if md5:
                     h = hashlib.md5()
                     with open(temp, "rb") as f:
