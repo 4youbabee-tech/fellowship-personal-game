@@ -14,6 +14,7 @@
 #include "StaticMeshResources.h"
 #include "Engine/Texture2D.h"
 #include "HAL/FileManager.h"
+#include "HAL/PlatformTime.h"
 #include "HAL/PlatformFilemanager.h"
 #include "Misc/FileHelper.h"
 #include "Misc/PackageName.h"
@@ -335,6 +336,7 @@ UShireProductionImportCommandlet::UShireProductionImportCommandlet()
 
 int32 UShireProductionImportCommandlet::Main(const FString& Params)
 {
+    const double ProfileStartedSeconds = FPlatformTime::Seconds();
     const bool bEnableCharacterRigImport = FParse::Param(*Params, TEXT("EnableCharacterRigImport"));
     UE_LOG(
         LogTemp,
@@ -351,6 +353,7 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
     // injected smoothing-group text into real .obj source files, which made
     // GitHub Desktop show hundreds/thousands of local changes after one-click
     // import. Work on an ignored Saved/ copy so source assets stay byte-stable.
+    const double WorkingCopyStartedSeconds = FPlatformTime::Seconds();
     IFileManager::Get().DeleteDirectory(*WorkingRoot, false, true);
     IPlatformFile& PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
     if (!PlatformFile.CopyDirectoryTree(*WorkingRoot, *SourceRoot, true))
@@ -358,6 +361,10 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         UE_LOG(LogTemp, Error, TEXT("ShireProductionImport: failed to create working copy %s from %s"), *WorkingRoot, *SourceRoot);
         return 4;
     }
+
+    UE_LOG(LogTemp, Display, TEXT("SHIRE_IMPORT_PROFILE stage=working_copy seconds=%.3f"),
+        FPlatformTime::Seconds() - WorkingCopyStartedSeconds);
+    const double InventoryStartedSeconds = FPlatformTime::Seconds();
 
     TArray<FString> SourceFiles;
     TArray<FString> TextureFiles;
@@ -414,6 +421,8 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         MeshFiles.Num(),
         StaticFbxFiles.Num(),
         CharacterFbxFiles.Num());
+    UE_LOG(LogTemp, Display, TEXT("SHIRE_IMPORT_PROFILE stage=inventory seconds=%.3f sourceFiles=%d"),
+        FPlatformTime::Seconds() - InventoryStartedSeconds, SourceFiles.Num());
 
     if (!bEnableCharacterRigImport)
     {
@@ -1280,6 +1289,12 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
     TSet<FString> AuthoredMaterialDestinationPaths;
     int32 RecoveredMaterialBindings = 0;
     int32 GeneratedUVSourceMeshes = 0;
+    double TextureTaskSeconds = 0.0;
+    double ObjTaskSeconds = 0.0;
+    double FbxTaskSeconds = 0.0;
+    double CharacterTaskSeconds = 0.0;
+    double SlowestTaskSeconds = 0.0;
+    FString SlowestTaskFile;
 
     for (const FString& Filename : SourceFiles)
     {
@@ -1476,7 +1491,30 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
 
         TArray<UAssetImportTask*> Tasks;
         Tasks.Add(Task);
+        const double TaskStartedSeconds = FPlatformTime::Seconds();
         AssetTools.Get().ImportAssetTasks(Tasks);
+        const double TaskSeconds = FPlatformTime::Seconds() - TaskStartedSeconds;
+        if (bCharacterRigFbx)
+        {
+            CharacterTaskSeconds += TaskSeconds;
+        }
+        else if (SourceExtension == TEXT("fbx"))
+        {
+            FbxTaskSeconds += TaskSeconds;
+        }
+        else if (SourceExtension == TEXT("obj"))
+        {
+            ObjTaskSeconds += TaskSeconds;
+        }
+        else
+        {
+            TextureTaskSeconds += TaskSeconds;
+        }
+        if (TaskSeconds > SlowestTaskSeconds)
+        {
+            SlowestTaskSeconds = TaskSeconds;
+            SlowestTaskFile = Relative;
+        }
 
         const FString AssetName = FPaths::GetBaseFilename(Filename);
         const FString ExpectedObjectPath = FString::Printf(
@@ -1830,6 +1868,11 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         }
     }
 
+    UE_LOG(LogTemp, Display,
+        TEXT("SHIRE_IMPORT_PROFILE stage=asset_tasks textureSeconds=%.3f objSeconds=%.3f fbxSeconds=%.3f characterSeconds=%.3f slowestSeconds=%.3f slowestFile=%s"),
+        TextureTaskSeconds, ObjTaskSeconds, FbxTaskSeconds, CharacterTaskSeconds,
+        SlowestTaskSeconds, *SlowestTaskFile);
+
     int32 BoundAlbedoTextures = 0;
     int32 MissingAlbedoTextures = 0;
     for (const FPendingAlbedoBinding& Binding : PendingAlbedoBindings)
@@ -1933,6 +1976,7 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             ImportedMaterialPackages.Num());
     }
 
+    const double FinalSaveStartedSeconds = FPlatformTime::Seconds();
     // OBJ import may create secondary material packages that UE4.27 does not
     // consistently include in UAssetImportTask::ImportedObjectPaths. Save those exact
     // packages explicitly before the broader dirty-package pass; on unattended UE4.27
@@ -1970,6 +2014,8 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         Display,
         TEXT("ShireProductionImport secondary package save: %s"),
         bSavedDirtyPackages ? TEXT("ok") : TEXT("no-dirty-or-failed"));
+    UE_LOG(LogTemp, Display, TEXT("SHIRE_IMPORT_PROFILE stage=final_save seconds=%.3f packages=%d"),
+        FPlatformTime::Seconds() - FinalSaveStartedSeconds, ImportedMaterialPackages.Num());
 
     int32 MissingMaterialFiles = 0;
     for (UPackage* Package : ImportedMaterialPackages)
@@ -2013,7 +2059,12 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
 
     // The copy is only needed during import. Best-effort cleanup keeps Saved/
     // smaller; if interrupted, .gitignore still prevents it becoming source debt.
+    const double CleanupStartedSeconds = FPlatformTime::Seconds();
     IFileManager::Get().DeleteDirectory(*WorkingRoot, false, true);
+    UE_LOG(LogTemp, Display, TEXT("SHIRE_IMPORT_PROFILE stage=cleanup seconds=%.3f"),
+        FPlatformTime::Seconds() - CleanupStartedSeconds);
+    UE_LOG(LogTemp, Display, TEXT("SHIRE_IMPORT_PROFILE stage=total seconds=%.3f files=%d failures=%d"),
+        FPlatformTime::Seconds() - ProfileStartedSeconds, SourceFiles.Num(), Failed);
 
     return Failed == 0 ? 0 : 3;
 }
