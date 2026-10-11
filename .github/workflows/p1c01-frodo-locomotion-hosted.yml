@@ -1,0 +1,53 @@
+name: P1C01 Hosted Frodo Source Locomotion
+on:
+  pull_request:
+    branches: [develop]
+    paths:
+      - 'Tools/CloudAssetBuild/frodo_locomotion.py'
+      - '.github/workflows/p1c01-frodo-locomotion-hosted.yml'
+permissions:
+  contents: read
+jobs:
+  export_locomotion:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          persist-credentials: false
+      - name: Governor and exact head
+        run: |
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          python3 Scripts/governor_work_start.py --lane SKELETAL_CHARACTER_PREP
+      - name: Install Blender
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y blender python3-numpy
+      - name: Normalize provenance-checked CC0 rig
+        shell: pwsh
+        run: |
+          & "$env:GITHUB_WORKSPACE/Scripts/stage_p1c01_human_wave2.ps1" -ManifestPath "$env:GITHUB_WORKSPACE/Data/P1C01HumanCharacterProductionWave2V1.json" -OutputRoot "$env:RUNNER_TEMP/frodo-rig" -BlenderExecutable blender
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Generate three actual animation FBX and reimport
+        shell: bash
+        run: |
+          set -euo pipefail
+          blender --background --factory-startup --python-exit-code 93 --python Tools/CloudAssetBuild/frodo_locomotion.py -- --rig "$RUNNER_TEMP/frodo-rig/normalized/candidate_01.fbx" --out "$RUNNER_TEMP/frodo-locomotion"
+          python3 - "$RUNNER_TEMP/frodo-locomotion/frodo_locomotion_receipt.json" <<'PY'
+          import json,sys
+          r=json.load(open(sys.argv[1]))
+          assert len(r['clips'])==3
+          assert {x['clip'] for x in r['clips']}=={'Idle','Walk','Run'}
+          assert all(x['reimport_keys']>=12 for x in r['clips'])
+          assert r['unreal_imported'] is False
+          print("FRODO_LOCOMOTION_SOURCE_STATIC_PASS")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: p1c01-frodo-three-locomotion-fbx-${{ env.TARGET_SHA }}
+          path: ${{ runner.temp }}/frodo-locomotion
+          if-no-files-found: error
+          retention-days: 7
