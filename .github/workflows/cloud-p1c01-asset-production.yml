@@ -1,0 +1,135 @@
+name: Cloud Shire Physical FBX and 28-Region PBR Source Build
+
+on:
+  pull_request:
+    branches: [develop]
+    paths:
+      - 'Tools/CloudAssetBuild/**'
+      - '.github/workflows/cloud-p1c01-asset-production.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloud-shire-assets-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  original_pbr_and_static_fbx:
+    name: Generate and reimport original static source assets
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      ASSET_OUT: ${{ github.workspace }}/_BuildArtifacts/shire-cloud-original-assets
+      TARGET_SHA: ${{ github.event.pull_request.head.sha }}
+    steps:
+      - name: Checkout exact PR source HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          fetch-depth: 2
+          persist-credentials: false
+
+      - name: Require exact head and production gate boundary
+        run: |
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          python3 Scripts/governor_work_start.py --lane VISUAL_WORLD_PREP
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          gov = json.loads(Path('Data/ProjectGovernor.json').read_text())
+          assert gov['execution_control']['active_lane'] == 'W01_P1C01_PRODUCTION_VERTICAL_SLICE'
+          print('CLOUD_SOURCE_ONLY_GATE_PASS')
+          PY
+
+      - name: Install Python dependencies and hosted Blender
+        run: |
+          python3 -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'Pillow>=10,<13'
+          sudo apt-get update -qq
+          sudo apt-get install -y blender
+          blender --version | head -n 1
+
+      - name: Run reproducible material unit tests first
+        run: python3 Tools/CloudAssetBuild/test_assets.py
+
+      - name: Generate 12 physical material sets for 28 canonical regions
+        run: python3 Tools/CloudAssetBuild/materials.py --out "$ASSET_OUT" --size 1024
+
+      - name: Validate all original PNG payloads and channel-packing receipts
+        run: python3 Tools/CloudAssetBuild/validate_bundle.py --out "$ASSET_OUT" --materials-only
+
+      - name: Export 4 original Shire meshes, LOD0 and LOD1, with UCX collision
+        run: blender --background --factory-startup --python-exit-code 3 -t 2 --python Tools/CloudAssetBuild/blender_shire.py -- --out "$ASSET_OUT"
+
+      - name: Validate real binary FBX after Blender re-import
+        run: python3 Tools/CloudAssetBuild/validate_bundle.py --out "$ASSET_OUT"
+
+      - name: Create portable compressed source handoff
+        run: |
+          python3 - <<'PY'
+          import os, pathlib, zipfile, hashlib
+          root = pathlib.Path(os.environ["ASSET_OUT"])
+          zip_path = root.parent / "shire-p1c01-28-region-original-materials-static-fbx.zip"
+          with zipfile.ZipFile(zip_path, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=6) as z:
+              for path in sorted(root.rglob("*")):
+                  if path.is_file():
+                      z.write(path, arcname=path.relative_to(root))
+          with zip_path.open("rb") as f:
+              digest=hashlib.file_digest(f, "sha256").hexdigest()
+          print("SHIRE_PHYSICAL_ASSET_SOURCE_ZIP bytes=", zip_path.stat().st_size,
+                "sha256=", digest)
+          print("SHIRE_PHYSICAL_SOURCE_ONLY_NOT_UE_IMPORTED")
+          PY
+
+      - name: Upload physical asset ZIP with SHA256 receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: cloud-p1c01-28regions-original-pbr-fbx-${{ env.TARGET_SHA }}
+          path: ${{ github.workspace }}/_BuildArtifacts/shire-p1c01-28-region-original-materials-static-fbx.zip
+          if-no-files-found: error
+          retention-days: 7
+          compression-level: 0
+
+  frodo_skeletal_source_prep:
+    name: Hosted Frodo base-rig FBX source (NO UE runner)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    timeout-minutes: 35
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha }}
+      RIG_OUT: ${{ github.workspace }}/_BuildArtifacts/shire-cloud-frodo-source
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          fetch-depth: 2
+          persist-credentials: false
+
+      - name: Confirm source-only character lane
+        run: |
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          python3 Scripts/governor_work_start.py --lane SKELETAL_CHARACTER_PREP
+
+      - name: Install Blender without self-hosted runner
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y blender python3-numpy
+          blender --version | head -n 1
+
+      - name: Fetch provenance-constrained CC0 base and build normalized skeletal FBX
+        shell: pwsh
+        run: |
+          & "$env:GITHUB_WORKSPACE/Scripts/stage_p1c01_human_wave2.ps1" -ManifestPath "$env:GITHUB_WORKSPACE/Data/P1C01HumanCharacterProductionWave2V1.json" -OutputRoot "$env:RIG_OUT" -BlenderExecutable "blender"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Upload source and skin-readiness receipt (not hero likeness)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cloud-frodo-base-rig-source-${{ env.TARGET_SHA }}
+          path: ${{ env.RIG_OUT }}
+          if-no-files-found: warn
+          retention-days: 7
+
+# No UE4, PIE, self-hosted, Windows Cook, packaging or device-FPS tasks.
