@@ -1,3 +1,12 @@
+## 2026-10-11 — APPROVED_POLYHAVEN_37_CLOUD_SOURCE physical production before implementation
+
+- Authority: ProjectGovernor DEC-104, OWNER_FAST_BATCH_INTAKE_2026_10_11, REQ-WAREHOUSE-001, REQ-PROD-011 and authorized Data/WarehouseAcquisitionBatchV1.json; 37 registered Poly Haven CC0 source material slugs, reused by region-specific needs across the existing exact 28 WholeGameRegionProductionPackets.
+- Immediate real output target: GitHub-hosted four bounded source shards, each physically downloads only approved provider API 1K (fallback 2K) PBR PNG channels, validates actual payloads and provider MD5 when supplied, generates 1024px BaseColor/DirectX Normal/ORM PNG triplets and publishes per-file SHA256, actual bytes and CC0 provenance receipts. Missing assets are explicitly quarantined, not invented.
+- This uses the already-approved provider and exact registered 37 slugs; it does not silently grant entitlement for paid/subscription sources or make all 28 runtime regions visually ready. Dedicated source/rig/architecture/audio lanes retain their existing authority.
+- GitHub-hosted Actions/cache artifacts are TEMPORARY cloud staging, not the persistent D: owner warehouse; runner is OFF until owner's night authorization. Do not schedule or touch self-hosted Windows jobs. Transfer/commit persistent warehouse data only after owner authorizes the supervised runner, preserving single writer and 6GiB free reserve.
+- Cost and hardware: source sharding and per-file/cumulative limits; 1K channel-packed textures for ~2GB VRAM target; no UE4 import, no scene integration, no heavy synchronous runtime loads, and no P1C02 runtime expansion.
+- Proof boundary: REGISTERED before implementation, then network-free STATIC-VALIDATED and exact-head hosted physically downloaded source evidence. NEVER equate source artifacts with Unreal assets, final characters, visual, device, PIE, FPS or Gate 6/7 acceptance.
+
 ## 2026-10-11 — P1C01_FRODO_SOURCE_LOCOMOTION registered before production
 
 - Owner authority: Data/ProjectGovernor.json DEC-103/DEC-104; sole runtime chapter P1C01, no P1C02 runtime; source order Frodo before Gandalf.
