@@ -612,8 +612,8 @@
   ],
   "audit_2026_10_11": {
     "checked_develop_sha": "a004d47b6c7d4681a328d88a12fc5de4819e1f11",
-    "method": "GitHub compare develop...branch for all 29 noncanonical live branches; inspected PR #369 + diff + replacement #372",
-    "evidence": "All inspected unpaired branches were nonzero ahead; preserve them except explicitly superseded #369 source ref with reviewed four-file policy-only diff and immutable expected SHA.",
+    "method": "Compared each live noncanonical branch with develop using the GitHub compare API; separately inspected closed PR #369 and the resulting replacement #372.",
+    "evidence": "All inspected noncanonical feature/source refs had nonzero unique commits ahead at audit time; preserve them except explicitly superseded #369 source ref, whose unique diff covered four policy/docs files and whose immutable head SHA was recorded.",
     "protected": [
       "develop",
       "main",
