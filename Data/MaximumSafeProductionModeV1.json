@@ -232,6 +232,14 @@
         "python3 -m unittest Scripts/test_validate_p1c01_cloud_assembly.py",
         "python3 -m unittest Scripts/test_offline_production_classifier.py"
       ]
+    },
+    "whole_game_cloud_warehouse_outputs": {
+      "status": "WHOLE_GAME_CLOUD_WAREHOUSE_QUEUE_VALIDATION_READY",
+      "queue": "Data/WholeGameCloudWarehouseMaterialQueueV1.json",
+      "validator": "Scripts/validate_whole_game_cloud_warehouse_queue.py",
+      "tests": "Scripts/test_validate_whole_game_cloud_warehouse_queue.py",
+      "region_count": 28,
+      "purpose": "Prepare organized material kits, source rights receipts, SHA256 reuse, Blender QC and import batch manifests for every game region while keeping runtime activation locked to P1C01."
     }
   }
 }
