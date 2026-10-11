@@ -1,3 +1,6 @@
+## 2026-10-11 — PR #360 fast PIE tooling salvage (candidate)
+Recovered only `SHIRE_FAST_PIE_PREVIEW.bat`, `Scripts/test_fast_pie_preview.py`, and its usage guide onto current develop candidate. Launcher is opt-in and reuses existing compiled UE4.27 binaries without import/cook/package. No tested PIE, runtime, visual, device or Gate 6/7 evidence; exact-head static CI pending.
+
 **2026-10-11 P1C01 Bag End hub source-only production candidate:** `Data/P1C01BagEndHubAssemblyV1.json` adds a detailed canonical interior assembly handoff (shell, domestic props, interactive anchors, audio/light), state variants, traversal/collision/streaming/NPC ownership contracts and five-lane item-level receipt tasks. No geometry generated, warehouse bytes acquired, Unreal import, compile, PIE, device, visual or Gate 6/7 proof; exact-head hosted validation pending. Existing P1C01 runtime scope unchanged.
 
 ## 2026-10-11 — #365 CI regression correction (candidate)
