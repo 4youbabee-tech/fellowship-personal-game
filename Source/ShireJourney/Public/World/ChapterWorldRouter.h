@@ -58,6 +58,8 @@ private:
     void ClearPrototypeBuilders();
     AActor* SpawnWorldForRequest(FName ChapterId, FName RouteId, FName& OutBuilderName);
     void RollbackFailedWorldSwap(FName PreviousChapterId, FName PreviousRouteId);
+    void ClearPendingGroundingBarrier();
+    void ClearPendingWorldTransaction(bool bCancelStreamingRequest);
     void CaptureCommittedRollbackSnapshot();
     bool RestoreCommittedWorldFromSnapshot(FName FallbackChapterId, FName FallbackRouteId);
     FVector GetChapterSpawnLocation(FName ChapterId) const;

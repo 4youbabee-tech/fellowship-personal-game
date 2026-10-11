@@ -38,9 +38,12 @@ class StreamingCancellationContract(unittest.TestCase):
 
     def test_return_to_visible_world_clears_obsolete_request(self):
         body = self.router.split('if (LastLoadedRouteId == RouteId', 1)[1].split('return;', 1)[0]
+        self.assertIn('ClearPendingWorldTransaction(true);', body)
+        helper = self.router.split('::ClearPendingWorldTransaction(bool bCancelStreamingRequest)', 1)[1].split('::ClearPrototypeBuilders()', 1)[0]
         for contract in ('PendingChapterId = NAME_None', 'PendingRouteId = NAME_None',
-                         'PendingEpisodeId = NAME_None', 'CancelPendingRequest()'):
-            self.assertIn(contract, body)
+                         'PendingEpisodeId = NAME_None', 'CancelPendingRequest()',
+                         'ClearPendingGroundingBarrier()'):
+            self.assertIn(contract, helper)
 
     def test_resident_fast_path_also_cancels_pending(self):
         body = self.stream.split('if (IsChapterBankReady(ChapterId, RouteId))', 1)[1].split('return;', 1)[0]
