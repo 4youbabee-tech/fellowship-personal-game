@@ -147,6 +147,17 @@ class OfflineRuntimeSafetyTests(unittest.TestCase):
         self.assertIn("ClearPendingWorldTransaction(true);", rollback)
         self.assertLess(rollback.index("ClearPendingWorldTransaction(true);"),
                         rollback.index("SetPlayerWorldHold(true);"))
+    def test_npc_committed_context_accepts_zero_revision_as_valid_commit(self):
+        cpp = source("Source/ShireJourney/Private/Subsystems/ShireNPCContextSubsystem.cpp")
+        method = body_between(cpp, "void UShireNPCContextSubsystem::SetCommittedWorldContext(",
+                              "bool UShireNPCContextSubsystem::IsLogicalWorldContextCommitted()")
+        guard = method.split("CommittedChapterId = ChapterId;", 1)[0]
+        self.assertIn("ChapterId.IsNone() || RouteId.IsNone() || EpisodeId.IsNone()", guard)
+        self.assertNotIn("WorldRevision == 0", guard)
+        self.assertLess(method.index("CommittedWorldRevision = WorldRevision;"),
+                        method.index("bHasCommittedWorldContext = true;"))
+
+
 
     def test_living_world_initial_commit_synchronizes_before_population(self):
         header = source("Source/ShireJourney/Public/World/LivingWorldDirector.h")

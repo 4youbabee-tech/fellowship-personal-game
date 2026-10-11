@@ -876,7 +876,7 @@ void UShireNPCContextSubsystem::SetCommittedWorldContext(
     FName ActiveQuestId,
     int32 ActiveQuestStage)
 {
-    if (ChapterId.IsNone() || RouteId.IsNone() || EpisodeId.IsNone() || WorldRevision == 0)
+    if (ChapterId.IsNone() || RouteId.IsNone() || EpisodeId.IsNone())
     {
         return;
     }

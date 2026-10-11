@@ -27,3 +27,7 @@ Source-only audit identified that a stale `OnChapterAssetsReady` callback could 
 
 Source-only audit identified that the living-world director could skip first-run chapter reset if the first committed `AChapterWorldRouter` revision was `0`, because `AppliedWorldRevision` also started at `0`. The source fix uses an unapplied sentinel and applies `ActiveChapterId` only after router commit confirmation. Required runner validation when authorized: start P1C01 from a clean save and from a restored save, verify `LivingWorldCommitSync` logs on first visible world, confirm baseline Hobbiton/Bag End population, weather context and micro-event timing initialize once, and verify no duplicate NPCs after route/episode transitions.
 
+## Added Offline Fix Candidate — NPC Committed Context Revision Guard
+
+Source-only audit identified that `UShireNPCContextSubsystem::SetCommittedWorldContext` rejected `WorldRevision == 0`. The fix treats revision as an ordering token, not a validity flag, and validates the actual world identity fields instead. Required runner validation when authorized: force initial and rollback world commits, confirm NPC dialogue/schedule context reports committed immediately, and verify no conversation uses destination quest state before router commit.
+
