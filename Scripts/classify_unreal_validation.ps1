@@ -1,16 +1,21 @@
 $ErrorActionPreference = "Stop"
 
-function Set-Mode([string]$Mode, [string]$Reason, [string]$ParentSha, [string]$ResumeStage = "none", [bool]$ResetIntermediates = $false) {
+# Package promotion is a separate whole-game decision from compile/runtime validation.
+# Normal full fallback still builds/tests Unreal but does not cook Windows unless
+# the change affects packaging or a chapter/release gate is explicitly requested.
+function Set-Mode([string]$Mode, [string]$Reason, [string]$ParentSha, [string]$ResumeStage = "none", [bool]$ResetIntermediates = $false, [bool]$PackageRequired = $false) {
     $full = if ($Mode -eq "full") { "true" } else { "false" }
     $core = if ($Mode -eq "core" -or $Mode -eq "asset") { "true" } else { "false" }
     $asset = if ($Mode -eq "asset") { "true" } else { "false" }
     $acceptance = if ($Mode -eq "acceptance") { "true" } else { "false" }
+    $package = if ($PackageRequired) { "true" } else { "false" }
 
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_UNREAL_MODE=$Mode"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_FULL_UNREAL_REQUIRED=$full"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_CORE_UNREAL_REQUIRED=$core"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_ASSET_IMPORT_ONLY=$asset"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_ACCEPTANCE_ONLY=$acceptance"
+    Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_PACKAGE_REQUIRED=$package"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_ACCEPTANCE_RESUME_STAGE=$ResumeStage"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_UNREAL_DECISION_REASON=$Reason"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_UNREAL_PARENT_SHA=$ParentSha"
@@ -22,13 +27,14 @@ function Set-Mode([string]$Mode, [string]$Reason, [string]$ParentSha, [string]$R
         Add-Content -LiteralPath $env:GITHUB_OUTPUT -Value "core=$core"
         Add-Content -LiteralPath $env:GITHUB_OUTPUT -Value "asset=$asset"
         Add-Content -LiteralPath $env:GITHUB_OUTPUT -Value "acceptance=$acceptance"
+        Add-Content -LiteralPath $env:GITHUB_OUTPUT -Value "package=$package"
         Add-Content -LiteralPath $env:GITHUB_OUTPUT -Value "resume_stage=$ResumeStage"
         Add-Content -LiteralPath $env:GITHUB_OUTPUT -Value "reason=$Reason"
         Add-Content -LiteralPath $env:GITHUB_OUTPUT -Value "parent_sha=$ParentSha"
         Add-Content -LiteralPath $env:GITHUB_OUTPUT -Value ("reset_intermediates=" + ($(if($ResetIntermediates){"true"}else{"false"})))
     }
 
-    Write-Host "UNREAL_VALIDATION_DECISION mode=$Mode full=$full core=$core asset=$asset acceptance=$acceptance resume=$ResumeStage resetIntermediates=$ResetIntermediates parent=$ParentSha reason=$Reason"
+    Write-Host "UNREAL_VALIDATION_DECISION mode=$Mode full=$full core=$core asset=$asset acceptance=$acceptance package=$package resume=$ResumeStage resetIntermediates=$ResetIntermediates parent=$ParentSha reason=$Reason"
 }
 
 function Get-GitExe {
@@ -479,6 +485,16 @@ Set-Location $env:GITHUB_WORKSPACE
 $git = Get-GitExe
 if (-not $git) { Set-Mode "full" "git-unavailable-fail-safe" ""; exit 0 }
 
+# Manual closeout is available for every chapter in the trilogy, not P1C01 only.
+# Requires the actual Windows cook, packaged-data verification and executable boot.
+if ($env:SHIRE_EXPLICIT_CHAPTER_PACKAGE -eq "true") {
+    if ($env:GITHUB_EVENT_NAME -ne "workflow_dispatch") {
+        throw "SHIRE_PACKAGE_MANUAL_DISPATCH_REQUIRED"
+    }
+    Set-Mode "full" "explicit-whole-game-chapter-or-release-package" "" "none" $false $true
+    exit 0
+}
+
 # Check incremental edits before the accumulated PR diff. A full, exact-parent
 # green UE run is required; otherwise fall through to the existing strict paths.
 if (Test-IncrementalSourceOnlyHeadDelta $git $env:TARGET_SHA) {
@@ -680,7 +696,7 @@ foreach($p in $changed){
 
 if($fullImpact.Count -gt 0){
     $fullImpact | ForEach-Object { Write-Host "FULL_UNREAL_FILE $_" }
-    Set-Mode "full" "engine-runtime-config-or-unclassified-delta" $parentSha "none" $requiresCleanCompile
+    Set-Mode "full" "engine-runtime-config-or-unclassified-delta" $parentSha "none" $requiresCleanCompile $true
     exit 0
 }
 
@@ -761,7 +777,12 @@ if($acceptanceTouched.Count -gt 0){
             exit 0
         }
 
-        Set-Mode "acceptance" "acceptance-only-delta-inherits-parent-core-unreal-proof" $parentSha
+        # Package tooling itself still needs cook/packaged-data/startup proof.
+        # Pure device-evidence/acceptance helpers do not trigger a new Windows build.
+        $acceptancePackageCritical = @($acceptanceTouched | Where-Object {
+            $_ -in @("Scripts/ci_package_w00.ps1", "Scripts/ci_package_w00.cmd", "Scripts/verify_packaged_runtime_data.ps1")
+        }).Count -gt 0
+        Set-Mode "acceptance" "acceptance-only-delta-inherits-parent-core-unreal-proof" $parentSha "none" $false $acceptancePackageCritical
         exit 0
     }
     Set-Mode "full" "acceptance-delta-parent-core-proof-missing-fail-safe" $parentSha
