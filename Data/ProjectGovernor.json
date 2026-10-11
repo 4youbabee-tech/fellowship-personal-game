@@ -8755,5 +8755,15 @@
       "Claiming Blender render or UE accept without evidence"
     ],
     "gate_boundary": "Source-only: NO COMPILE/PIE/DEVICE/VISUAL/GATE6/7 acceptance"
+  },
+  "p1c01_checkpoint_dispatch_rejection_guard_2026_10_11": {
+    "status": "SOURCE_PATCH_PENDING_EXACT_HEAD_CI_AND_UE_TEST",
+    "scope": "P1C01_RUNTIME_BUG_FIX_ONLY",
+    "finding": "Tick cleared pending chapter checkpoint before async save request acceptance and unconditionally logged commit-barrier PASS",
+    "source": "Source/ShireJourney/Private/Characters/ShirePlayerCharacter.cpp",
+    "guard": "Scripts/test_pending_checkpoint_dispatch.py",
+    "repair": "Only clear pending ID on successful SaveAutomaticCheckpoint dispatch, not on rejected dispatch; callback still owns durable-save verdict",
+    "evidence_boundary": "No UE4.27 compile/PIE/device/human acceptance; Windows runner intentionally off",
+    "authority": "PROJECT_GOVERNOR_SINGLE_DECISION_SOURCE"
   }
 }
