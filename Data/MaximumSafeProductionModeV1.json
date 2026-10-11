@@ -221,6 +221,17 @@
     ],
     "batching_rule": "Batch source/cloud-safe changes into coherent production packets; reuse unchanged SHA256 receipts and avoid repeated wide scans or expensive builds.",
     "license_admin_rule": "For private home-use production, record simple first-use rights/provenance receipts for new sources and do not repeat manual license review for unchanged approved assets.",
-    "evidence_boundary": "This is cloud-first production-speed implementation policy only. It does not claim runtime, visual, package, target-device or Gate 6/7 evidence."
+    "evidence_boundary": "This is cloud-first production-speed implementation policy only. It does not claim runtime, visual, package, target-device or Gate 6/7 evidence.",
+    "current_cloud_production_outputs": {
+      "status": "P1C01_CLOUD_ASSEMBLY_VALIDATION_READY",
+      "plan": "Data/P1C01CloudShireAssemblyPlanV1.json",
+      "validator": "Scripts/validate_p1c01_cloud_assembly.py",
+      "tests": "Scripts/test_validate_p1c01_cloud_assembly.py",
+      "expected_local_checks": [
+        "python3 Scripts/validate_p1c01_cloud_assembly.py",
+        "python3 -m unittest Scripts/test_validate_p1c01_cloud_assembly.py",
+        "python3 -m unittest Scripts/test_offline_production_classifier.py"
+      ]
+    }
   }
 }
