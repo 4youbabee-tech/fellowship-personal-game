@@ -289,6 +289,13 @@ bool ALivingWorldDirector::LoadLifeSaturationContract()
         }
     }
 
+    // Capture global defaults before chapter overrides; missing profiles must
+    // not inherit the previously active region's spawn/cull parameters.
+    BasePopulationInnerRadius = PopulationInnerRadius;
+    BasePopulationOuterRadius = PopulationOuterRadius;
+    BasePopulationCullRadius = PopulationCullRadius;
+    BasePopulationSpawnInterval = PopulationSpawnInterval;
+
     PopulationProfilesByChapter.Empty();
     const TSharedPtr<FJsonObject>* Profiles = nullptr;
     if (Root->TryGetObjectField(TEXT("chapter_density_profiles"), Profiles) && Profiles && Profiles->IsValid())
@@ -481,6 +488,10 @@ void ALivingWorldDirector::ApplyPopulationProfile()
     const FChapterPopulationProfile* Profile = PopulationProfilesByChapter.Find(ActiveChapterId);
     if (!Profile)
     {
+        PopulationSpawnInterval = BasePopulationSpawnInterval;
+        PopulationInnerRadius = BasePopulationInnerRadius;
+        PopulationOuterRadius = BasePopulationOuterRadius;
+        PopulationCullRadius = BasePopulationCullRadius;
         DangerPopulationFraction = 0.50f;
         return;
     }
