@@ -74,6 +74,7 @@ function Test-IncrementalSourceOnlyHeadDelta([string]$GitExe, [string]$TargetSha
         $allowed = (
             $n.StartsWith("Docs/") -or
             $n -eq "Data/ProjectGovernor.json" -or
+            $n -eq "Data/MaximumSafeProductionModeV1.json" -or
             $n -eq "Data/OfflineFastProductionQueueV1.json" -or
             $n -eq "Data/P1C01CloudShireAssemblyPlanV1.json" -or
             $n -eq "Data/P1C01PinnedArtifactCheckpointsV1.json" -or
@@ -87,6 +88,7 @@ function Test-IncrementalSourceOnlyHeadDelta([string]$GitExe, [string]$TargetSha
             $n -eq "Scripts/stage_p1c01_adaptive_pbr_warehouse.py" -or
             $n -eq "Scripts/test_p1c01_adaptive_pbr_warehouse.py" -or
             $n -eq "Scripts/classify_unreal_validation.ps1" -or
+            $n -eq "Scripts/test_unreal_classifier.ps1" -or
             $n -eq ".github/workflows/p1c01-five-lane-maxsafe.yml" -or
             $n -eq ".github/workflows/p1c01-persistent-verified-pbr-warehouse.yml" -or
             $n -eq ".github/workflows/p1c01-checkpoint-offline-recovery.yml" -or
@@ -577,6 +579,13 @@ $safeExact = @(
     "SHIRE_FAST_PIE_PREVIEW.bat",
     "Scripts/test_fast_pie_preview.py",
     "Data/ProjectGovernor.json",
+    "Data/MaximumSafeProductionModeV1.json",
+    "Data/OfflineFastProductionQueueV1.json",
+    "Data/P1C01CloudShireAssemblyPlanV1.json",
+    "Scripts/offline_production_classifier.py",
+    "Scripts/test_offline_production_classifier.py",
+    "Scripts/validate_p1c01_cloud_assembly.py",
+    "Scripts/test_validate_p1c01_cloud_assembly.py",
     "Data/DeepProjectAudit.json",
     "Data/MasterExecutionRoadmap.json",
     "Data/PIEVerificationEvidence.json",
