@@ -20,12 +20,25 @@ jobs:
       STAGING_WAREHOUSE: 'D:\actions-runner\_warehouse\ShireJourney'
       RCLONE_CONFIG_B64: ${{ secrets.SHIRE_DRIVE_RCLONE_CONFIG_B64 }}
     steps:
-      - name: Checkout into isolated source folder
-        uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-          path: _drive_intake_source
-          lfs: false
+      - name: Fetch exact source into RUNNER_TEMP (leave UE workspace untouched)
+        shell: powershell
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $src=Join-Path $env:RUNNER_TEMP ('shire-drive-src-'+$env:GITHUB_RUN_ID)
+          if (Test-Path -LiteralPath $src) { throw 'DRIVE_SOURCE_TEMP_EXISTS' }
+          New-Item -ItemType Directory -Path $src | Out-Null
+          git -C $src init -q
+          if ($LASTEXITCODE -ne 0) { throw 'DRIVE_GIT_INIT_FAILED' }
+          git -C $src remote add origin ('https://github.com/'+$env:GITHUB_REPOSITORY+'.git')
+          $auth=[Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes('x-access-token:'+$env:GH_TOKEN))
+          git -c ('http.extraheader=AUTHORIZATION: basic '+$auth) -C $src fetch --depth=1 origin $env:GITHUB_SHA
+          if ($LASTEXITCODE -ne 0) { throw 'DRIVE_GIT_FETCH_FAILED' }
+          git -C $src checkout --detach FETCH_HEAD
+          if ($LASTEXITCODE -ne 0) { throw 'DRIVE_GIT_CHECKOUT_FAILED' }
+          $head=git -C $src rev-parse HEAD
+          if ($head -ne $env:GITHUB_SHA) { throw 'DRIVE_EXACT_HEAD_MISMATCH' }
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value ('SHIRE_DRIVE_SOURCE='+$src)
       - name: Check Drive credential and executable without touching Unreal workspace
         shell: powershell
         run: |
@@ -43,7 +56,7 @@ jobs:
       - name: Ingest Drive ZIPs and write SHA256 receipts
         shell: powershell
         run: |
-          python.exe _drive_intake_source/Scripts/sync_drive_warehouse.py --remote shire-drive: --warehouse "$env:STAGING_WAREHOUSE"
+          python.exe "$env:SHIRE_DRIVE_SOURCE/Scripts/sync_drive_warehouse.py" --remote shire-drive: --warehouse "$env:STAGING_WAREHOUSE"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Delete temporary OAuth config only
         if: always()
