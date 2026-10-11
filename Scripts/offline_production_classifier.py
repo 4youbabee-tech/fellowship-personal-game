@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Classify repository changes for source-only production while the UE runner is offline."""
+"""Classify repository changes for source-only production while the self-hosted UE runner is resting."""
 
 from __future__ import annotations
 
@@ -66,7 +66,7 @@ def _matches(path: str, patterns: tuple[str, ...]) -> str | None:
 def classify_path(path: str) -> Classification:
     runner_match = _matches(path, MANUAL_RUNNER_PATTERNS)
     if runner_match:
-        return Classification(path, "manual_runner_required", runner_match)
+        return Classification(path, "self_hosted_runner_required", runner_match)
 
     prep_match = _matches(path, ASSET_PREP_PATTERNS)
     if prep_match:
@@ -85,14 +85,14 @@ def classify(paths: list[str]) -> dict[str, object]:
     for entry in entries:
         buckets.setdefault(entry.bucket, []).append(entry.path)
 
-    blocked = any(entry.bucket == "manual_runner_required" for entry in entries)
+    blocked = any(entry.bucket == "self_hosted_runner_required" for entry in entries)
     source_only = bool(entries) and not blocked and all(
         entry.bucket in {"hosted_source_only", "asset_prep_source_only"} for entry in entries
     )
 
     return {
         "runner_offline_safe": source_only,
-        "windows_runner_blocked": blocked,
+        "self_hosted_runner_blocked": blocked,
         "summary": buckets,
         "entries": [entry.__dict__ for entry in entries],
     }
@@ -110,14 +110,14 @@ def main(argv: list[str] | None = None) -> int:
     if args.json:
         print(json.dumps(result, indent=2, sort_keys=True))
     else:
-        if result["windows_runner_blocked"]:
-            print("OFFLINE_PRODUCTION_BLOCKED_WINDOWS_RUNNER")
+        if result["self_hosted_runner_blocked"]:
+            print("CLOUD_FIRST_BLOCKED_SELF_HOSTED_RUNNER")
         elif result["runner_offline_safe"]:
-            print("OFFLINE_PRODUCTION_SOURCE_ONLY_PASS")
+            print("CLOUD_FIRST_SOURCE_OR_HOSTED_PASS")
         else:
-            print("OFFLINE_PRODUCTION_REVIEW_REQUIRED")
+            print("CLOUD_FIRST_REVIEW_REQUIRED")
 
-    return 2 if result["windows_runner_blocked"] else 0
+    return 2 if result["self_hosted_runner_blocked"] else 0
 
 
 if __name__ == "__main__":
