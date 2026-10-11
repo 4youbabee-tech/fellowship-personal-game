@@ -57,8 +57,8 @@ jobs:
             python (Join-Path $p 'Scripts\drive_warehouse_sync.py') --mode ingest --rclone-config $config
             if ($LASTEXITCODE -ne 0) { throw 'DRIVE_INGEST_FAILED' }
             # Only verified staging is unattended. Remote deletion requires separately
-          # established import acceptance and independent backup evidence.
-          # No automatic cleanup is invoked by this scheduled writer.
+            # established import acceptance and independent backup evidence.
+            # No automatic cleanup is invoked by this scheduled writer.
           } finally {
             if (Test-Path $p) {
               git -C $p remote set-url origin "https://github.com/$env:GITHUB_REPOSITORY.git" 2>$null
