@@ -723,6 +723,14 @@ foreach($p in $changed){
         continue
     }
 
+    # Dedicated PBR workflow source-policy edits are tested on hosted CI;
+    # the actual importer/normalizer remains engine-impacting and serialized.
+    if($n -eq ".github/workflows/p1c01-verified-pbr-production.yml" -or
+       $n -eq "Scripts/test_p1c01_verified_pbr_bridge.py"){
+        $policyOnlyTouched += $n
+        continue
+    }
+
     if($pbrNonPackagingImpact -contains $n){
         $coreImpact += $n
         continue
@@ -763,7 +771,9 @@ $hostedPolicyExact = @(
     "Scripts/classify_unreal_validation.ps1",
     "Scripts/test_unreal_classifier.ps1",
     "Scripts/test_p1c01_delivery_entry_map.py",
-    ".github/workflows/unreal-build-validation.yml"
+    ".github/workflows/unreal-build-validation.yml",
+    ".github/workflows/p1c01-verified-pbr-production.yml",
+    "Scripts/test_p1c01_verified_pbr_bridge.py"
 )
 $hostedPolicyOnly = ($policyOnlyTouched.Count -gt 0 -and
     @($changed | Where-Object {
