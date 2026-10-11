@@ -1,3 +1,5 @@
+**PG-170 contract alignment (2026-10-11):** exact-head Pre-Unreal `38135715043` FAILED at outdated static assertions for legacy `$_` PR-row dereference. The *real* PowerShell array decoder regressions passed (flat=2, nested=2, single=1, empty=0). `Scripts/pre_unreal_validate.py` now checks the actual `$row` guards and `Get-OpenPullRefs` reuse rather than prior variable spelling. New exact-head hosted CI pending; no engine/PIE/device evidence.
+
 ## 2026-10-11 — Branch Cleanup live-open-PR array decoder regression (candidate)
 
 - Investigated hosted cleanup run `38135341955` after successful reviewed retirement. The run logged `activePrHeads=0` even though GitHub had open PRs. Exact per-branch rechecks and nonzero-ahead fallback preserved unique heads in that run, but bulk PR protection was not reliably visible.
