@@ -1,3 +1,9 @@
+## 2026-10-11 — Offline gameplay continuity sweep: cinematic handoff, audio race, runner authorization
+- Evidence, cinematic: HandleStoryBeat can replace an active Cinematic cue with a Gameplay/GameplayBlend cue while bCinematicLocked remains true until obsolete timer expiry; no SkipCinematic action existed in DefaultInput.ini. Repair via existing UShireStoryPresentationSubsystem release and owner-only skip callback; never mutate canonical story beats from skip.
+- Evidence, audio: ShireAudioSubsystem checks only a name-derived LoadKey before late async callback; cancelling/re-requesting the same cue can let the cancelled delegate consume a newer ownership key and play stale audio. Repair with monotonic generation ID per request and cancellation, preserving existing StreamableManager and bounded audio caches.
+- Safety, runner: Unreal Build Validation currently schedules an unauthorised self-hosted UE4.27 job for PR C++ diffs even though owner requests offline-only. Gate self-hosted job behind explicit manual workflow_dispatch input disabled by default; hosted classifier/pre-Unreal remain available.
+- Source-only, no new assets or Runtime chapter; P1C01 prioritized, no P1C02 expansion. No COMPILE-TESTED/PIE-TESTED/DEVICE-TESTED claims. Add hosted static regression tests on exact PR head; preserve existing skip timing and soft asset ownership. No Windows self-hosted runner activation.
+
 ## 2026-10-11 — P1C01 checkpoint dispatch rejection regression (registered before implementation)
 
 - Evidence: ShirePlayerCharacter.cpp Tick clears PendingChapterCheckpointId before SaveAutomaticCheckpoint returns, then logs commit-barrier=PASS regardless of failure. SaveAutomaticCheckpoint may reject an unavailable snapshot/router or audit-guarded dispatch, losing the intended save point.
