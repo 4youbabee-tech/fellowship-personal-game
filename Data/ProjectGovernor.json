@@ -2870,7 +2870,8 @@
         "2026-10-10 StageError UNSAFE_RELATIVE_PATH observed in Windows warehouse Run #38042482514 after both wave39 artifacts fully hash-verified and extracted. Repair Windows-only Path.__str__ separator conversion by using Path.as_posix() for provider source receipt relative_file normalization; add offline nested path test and single-wave residue reuse. Candidate source-only fix; exact-head CI and full warehouse receipt pending. Do not redownload previous archives.",
         "2026-10-10 P1C01 release delivery PG-026 reconciliation: allow success-gated WindowsNoEditor artifact only AFTER successful startup; prohibit quota-limited failure-log upload. Primary diagnostic evidence remains Actions console. Exact-head tests pending; no Gate6/7 credit.",
         "2026-10-10: verified 39+60 warehouse static source-to-UE visual bridge introduced via Scripts/p1c01_verified_pbr_bridge.py and .github/workflows/p1c01-verified-pbr-production.yml. Stage only SHA256-verified CC0 single-material FBX + 1K PNG, reject held/unsuitable stock, then require exact UE .uasset existence, async bank integration, runtime and packaged checks. All results pending exact-head workflow; not complete Gate6/7.",
-        "2026-10-10 P1C01 visible PBR UE4 source bridge: immutable warehouse Run #38049193046 SUCCESS, SHA256 selected static FBX 1K BaseColor/NormalDX/ORM, budgeted CC0 import, existing async ChapterAssetStreamingPlan and decorative world builder. PR validation and UE4/PIE/visual/target device evidence PENDING; no Gate6/7 credit."
+        "2026-10-10 P1C01 visible PBR UE4 source bridge: immutable warehouse Run #38049193046 SUCCESS, SHA256 selected static FBX 1K BaseColor/NormalDX/ORM, budgeted CC0 import, existing async ChapterAssetStreamingPlan and decorative world builder. PR validation and UE4/PIE/visual/target device evidence PENDING; no Gate6/7 credit.",
+        "DEC-106 establishes all-game chapter-closeout Windows packaging cadence: routine source/runtime edits retain relevant Unreal validation, while package/cook/upload is reserved for an explicit milestone/release or packaging-critical change."
       ],
       "missing_work": [
         "Five-lane hosted exact-head metadata/source-candidate checks must run successfully; real bulk acquisition, persistent storage and UE4 material/character/world imports remain subject to their own run receipts and visual/device gates.",
@@ -5746,6 +5747,33 @@
         "https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/38007549312"
       ],
       "evidence_boundary": "Owner direction registered. Exact recovery source/test content previously achieved 20 offline checks on Linux and Windows at 8c5b296bd4cd024745f3666ce45802ea0e74f004, workflow run #38007549312 SUCCESS. Integrated PR #335 head needs fresh exact-head checks; no warehouse stage, PIE, device, visuals, or Gate 6/7 evidence."
+    },
+    {
+      "id": "DEC-106",
+      "title": "Use chapter-closeout Windows packaging cadence across the entire Shire Journey game",
+      "status": "ACCEPTED",
+      "priority": "HIGH",
+      "date": "2026-10-11",
+      "requirements": [
+        "REQ-PROD-011",
+        "REQ-GITHUB-001"
+      ],
+      "resolution": "Treat Windows Cook/Package and large playable artifact upload as chapter-completion/release evidence, not routine per-edit tests for any of the game's regions. Continue strict source, import, compile, headless story/save/runtime checks appropriate to changed inputs. Explicit manual package and changes to Config, Build.cs/Target.cs, chapter asset streaming, packaging/cook/release, or unknown-impact scripts retain fail-closed real package testing.",
+      "implementation_contract": [
+        "Apply the same decision to all Part I/II/III chapters and regions, with P1C01 still the only active runtime production benchmark until Gate 6/7 closes.",
+        "Use an explicit GitHub workflow_dispatch package_windows=true for chapter closeout/release; normal push/PR editor/core/full fallback compilation must not automatically create and upload WindowsNoEditor unless packaging-impacting.",
+        "Package-required classification must be independent from Unreal full/core/asset validation and subject to exact-head checks; preserving full failure/error logs and failing relevant gates.",
+        "A completed chapter still needs a real packaged executable, packaged runtime data, appropriate chapter-specific runtime/gameplay/PIE/device/visual acceptance and source-canon confirmation. The current P1C01-grounded packaged startup is not acceptance for another chapter.",
+        "Do not duplicate upload of an unchanged package during startup-only evidence rechecks; reuse verified parent proof only under existing strict ancestry conditions.",
+        "Never skip package validation for Config, Build.cs, Target.cs, streaming-banks, package/cook/release tooling or an unknown potentially packaging-affecting path. If impact cannot be classified safely, fail closed."
+      ],
+      "evidence": [
+        ".github/workflows/unreal-build-validation.yml",
+        "Scripts/classify_unreal_validation.ps1",
+        "Scripts/test_unreal_classifier.ps1",
+        "Docs/DEVELOPMENT_GATES.md"
+      ],
+      "evidence_boundary": "Rule + source/CI changes are a candidate pending exact-head Pre-Unreal and actual representative Windows runner comparison. No fresh package, PIE, device, visual, FPS or Gate 6/7 evidence is claimed."
     }
   ],
   "open_conflicts": [],
@@ -8587,5 +8615,26 @@
     ],
     "workflow_rule": "No new CI/workflow fan-out merely for owner policy/docs changes; choose fast targeted checks and avoid extra full Unreal rebuilds unless real runtime inputs changed.",
     "evidence_boundary": "Policy registration only. Existing PR #352 and other running work are not cancelled; no new P1C01 visual/runtime/Gate acceptance is claimed."
+  },
+  "chapter_closeout_package_policy_2026_10_11": {
+    "owner_scope": "ALL_GAME_ALL_CHAPTERS_NOT_SHIRE_ONLY",
+    "status": "CANDIDATE_PENDING_CI",
+    "trigger": "Manual workflow_dispatch package_windows=true on a chapter closure or release, plus automatically on packaging-impacting changes.",
+    "normal_development": "Static/source checks, UE4.27 compile/import/startup/story/save/runtime gates depending on changed code/assets; avoid repeated WindowsNoEditor Cook/Package/Upload.",
+    "mandatory_early_package_triggers": [
+      "Config/**",
+      "**/*.Build.cs",
+      "**/*.Target.cs",
+      "ShireJourney.uproject",
+      "Data/ChapterAssetStreamingPlan.json",
+      "**/Package*",
+      "**/Packaging*",
+      "**/Cook*",
+      "**/Release*",
+      "packaged-data verifier",
+      "packaged-startup verifier without valid inherited package/data proof",
+      "unclassified potentially packaging-impacting paths"
+    ],
+    "acceptance_boundary": "Shipping a chapter requires concrete packaged executable and chapter-specific acceptance evidence, not merely successful compile or existing Shire startup marker."
   }
 }

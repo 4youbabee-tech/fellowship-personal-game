@@ -57,6 +57,7 @@ on:
       - 'Scripts/test_warehouse_saturation_empty_sum.ps1'
       - 'Scripts/test_warehouse_provider_zero_payload_fail_closed.ps1'
       - 'Scripts/test_p1c01_verified_pbr_bridge.py'
+      - 'Scripts/test_p1c01_delivery_entry_map.py'
       - 'Data/MasterExecutionRoadmap.json'
       - 'Data/ExternalAssetManifest.json'
       - 'Data/*Warehouse*.json'
@@ -186,6 +187,7 @@ on:
       - 'Scripts/test_warehouse_saturation_empty_sum.ps1'
       - 'Scripts/test_warehouse_provider_zero_payload_fail_closed.ps1'
       - 'Scripts/test_p1c01_verified_pbr_bridge.py'
+      - 'Scripts/test_p1c01_delivery_entry_map.py'
       - 'Data/MasterExecutionRoadmap.json'
       - 'Data/ExternalAssetManifest.json'
       - 'Data/*Warehouse*.json'
@@ -226,6 +228,12 @@ on:
       - 'Scripts/warehouse_network.ps1'
       - 'Scripts/classify_warehouse_validation.ps1'
   workflow_dispatch:
+    inputs:
+      package_windows:
+        description: 'Explicit Windows cook/package for chapter closeout or release; normal development skips it'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -245,6 +253,7 @@ jobs:
     env:
       TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+      SHIRE_EXPLICIT_CHAPTER_PACKAGE: ${{ github.event_name == 'workflow_dispatch' && inputs.package_windows == true }}
     outputs:
       mode: ${{ steps.classify.outputs.mode }}
       reason: ${{ steps.classify.outputs.reason }}
@@ -255,6 +264,7 @@ jobs:
       core: ${{ steps.classify.outputs.core }}
       asset: ${{ steps.classify.outputs.asset }}
       acceptance: ${{ steps.classify.outputs.acceptance }}
+      package: ${{ steps.classify.outputs.package }}
     steps:
       - name: Checkout exact candidate for classification
         uses: actions/checkout@v4
@@ -389,6 +399,7 @@ jobs:
           Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_CORE_UNREAL_REQUIRED=${{ needs.classify.outputs.core }}"
           Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_ASSET_IMPORT_ONLY=${{ needs.classify.outputs.asset }}"
           Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_ACCEPTANCE_ONLY=${{ needs.classify.outputs.acceptance }}"
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_PACKAGE_REQUIRED=${{ needs.classify.outputs.package }}"
           if ("${{ needs.classify.outputs.mode }}" -notin @("full","core","asset","acceptance")) {
             throw "Unexpected hosted Unreal mode: ${{ needs.classify.outputs.mode }}"
           }
@@ -491,12 +502,12 @@ jobs:
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_warning_debt.cmd"'
 
       - name: Build cook stage and archive real Windows package
-        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_ACCEPTANCE_ONLY == 'true' && env.SHIRE_ACCEPTANCE_RESUME_STAGE != 'startup')
+        if: env.SHIRE_PACKAGE_REQUIRED == 'true'
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_package_w00.cmd"'
 
       - name: Verify packaged Runtime Data JSON payload
-        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_ACCEPTANCE_ONLY == 'true' && env.SHIRE_ACCEPTANCE_RESUME_STAGE != 'startup')
+        if: env.SHIRE_PACKAGE_REQUIRED == 'true'
         shell: cmd
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\verify_packaged_runtime_data.ps1"'
 
@@ -515,17 +526,17 @@ jobs:
           Write-Host ('W00_INHERITED_PACKAGE_DATA_PASS exe=' + $exe + ' verified=' + $j.verified_count)"
 
       - name: Launch and observe packaged executable
-        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_ACCEPTANCE_ONLY == 'true'
+        if: env.SHIRE_PACKAGE_REQUIRED == 'true' || env.SHIRE_ACCEPTANCE_ONLY == 'true'
         shell: cmd
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\verify_packaged_startup.ps1"'
 
       - name: Capture runner hardware acceptance boundary
-        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_ACCEPTANCE_ONLY == 'true'
+        if: env.SHIRE_PACKAGE_REQUIRED == 'true' || env.SHIRE_ACCEPTANCE_ONLY == 'true'
         shell: cmd
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\capture_runner_hardware.ps1"'
 
       - name: Upload P1C01 Windows playable candidate
-        if: success() && (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_ACCEPTANCE_ONLY == 'true')
+        if: success() && env.SHIRE_PACKAGE_REQUIRED == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: ShireJourney-P1C01-Windows-${{ env.TARGET_SHA }}

@@ -4,6 +4,7 @@
 This checks source/config contracts only, never claims PIE, visual or device acceptance.
 """
 from pathlib import Path
+import json
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -51,6 +52,27 @@ class P1C01DeliveryEntryMapContract(unittest.TestCase):
         self.assertNotIn("name: Upload P1C01 packaging evidence", wf)
         self.assertLess(wf.index("name: Launch and observe packaged executable"),
                         wf.index("name: Upload P1C01 Windows playable candidate"))
+
+    def test_game_wide_windows_package_is_chapter_closeout_not_every_build(self):
+        wf = source(".github/workflows/unreal-build-validation.yml")
+        classifier = source("Scripts/classify_unreal_validation.ps1")
+        governor = json.loads(source("Data/ProjectGovernor.json"))
+
+        self.assertIn("package_windows:", wf)
+        self.assertIn("type: boolean", wf)
+        self.assertIn("SHIRE_EXPLICIT_CHAPTER_PACKAGE:", wf)
+        self.assertIn("package: ${{ steps.classify.outputs.package }}", wf)
+        self.assertIn("SHIRE_PACKAGE_REQUIRED=${{ needs.classify.outputs.package }}", wf)
+        for step in ("Build cook stage and archive real Windows package",
+                     "Verify packaged Runtime Data JSON payload"):
+            self.assertIn("name: " + step + "\n        if: env.SHIRE_PACKAGE_REQUIRED == 'true'", wf)
+        self.assertIn("if: success() && env.SHIRE_PACKAGE_REQUIRED == 'true'", wf)
+        self.assertIn("SHIRE_EXPLICIT_CHAPTER_PACKAGE", classifier)
+        self.assertIn("Set-Mode \"full\" \"explicit-whole-game-chapter-or-release-package\"", classifier)
+        self.assertIn("SHIRE_PACKAGE_REQUIRED", classifier)
+        self.assertEqual(governor["chapter_closeout_package_policy_2026_10_11"]
+                         ["owner_scope"], "ALL_GAME_ALL_CHAPTERS_NOT_SHIRE_ONLY")
+        self.assertTrue(any(d["id"] == "DEC-106" for d in governor["decisions"]))
 
     def test_does_not_claim_final_visual_or_device(self):
         workflow = source(".github/workflows/unreal-build-validation.yml")

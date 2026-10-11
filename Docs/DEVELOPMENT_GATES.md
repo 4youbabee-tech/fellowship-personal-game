@@ -155,3 +155,16 @@ That is how this project "learns from mistakes".
 - Batch management/documentation updates by meaningful production wave.
 - Source indexing, provenance capture and non-runtime warehouse staging do not require an Unreal build.
 - Gate 6/7 still controls broad runtime expansion; whole-game source and asset preparation may proceed in parallel.
+- Whole-game Windows packaging cadence (DEC-106): normal chapter authoring does not require
+  `Cook/Package` or uploading a multi-hundred-MiB `WindowsNoEditor` artifact every time.
+  Keep the source/UE4 compile, UHT, asset import, runtime/story/save tests appropriate
+  to each changed input. This applies uniformly to every chapter and region.
+- Run Windows `Cook/Package`, packaged Runtime Data audit, actual executable startup
+  and artifact upload for an explicitly requested chapter-closeout/release build.
+  Package-critical configuration, Build.cs/Target.cs, streaming banks, cook/package/release
+  code or unclassified packaging-impact changes must still package immediately.
+- Do not call a chapter complete from a default P1C01 packaged-startup check: each chapter
+  requires its own gameplay, persistence, PIE, device and visual evidence under Gate 6/7.
+  The initial general-purpose CI package gate remains P1C01-rooted until deeper chapters
+  are opened with actual evidence and separate acceptance checks.
+
