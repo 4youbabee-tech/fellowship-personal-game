@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 35
     env:
-      ASSET_OUT: ${{ runner.temp }}/shire-cloud-original-assets
+      ASSET_OUT: ${{ github.workspace }}/_BuildArtifacts/shire-cloud-original-assets
       TARGET_SHA: ${{ github.event.pull_request.head.sha }}
     steps:
       - name: Checkout exact PR source HEAD
@@ -85,7 +85,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: cloud-p1c01-28regions-original-pbr-fbx-${{ env.TARGET_SHA }}
-          path: ${{ runner.temp }}/shire-p1c01-28-region-original-materials-static-fbx.zip
+          path: ${{ github.workspace }}/_BuildArtifacts/shire-p1c01-28-region-original-materials-static-fbx.zip
           if-no-files-found: error
           retention-days: 7
           compression-level: 0
@@ -97,7 +97,7 @@ jobs:
     timeout-minutes: 35
     env:
       TARGET_SHA: ${{ github.event.pull_request.head.sha }}
-      RIG_OUT: ${{ runner.temp }}/shire-cloud-frodo-source
+      RIG_OUT: ${{ github.workspace }}/_BuildArtifacts/shire-cloud-frodo-source
     steps:
       - name: Checkout exact PR head
         uses: actions/checkout@v4
