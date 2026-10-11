@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "checklist_id": "P1C01_GATE_6_7_ACCEPTANCE_CHECKLIST_V1",
-  "status": "PREPARED_NOT_ACCEPTED",
+  "status": "ENGINE_IMPORT_RUNTIME_GREEN_PACKAGE_DEVICE_VISUAL_PENDING",
   "authority": [
     "Data/ProjectGovernor.json",
     "Data/P1C01C3FoliageMaterialIdentityPlanV1.json",
@@ -57,5 +57,21 @@
     "PERFORMANCE-ACCEPTED requires target-device measurements that meet the declared performance gate."
   ],
   "promotion_rule": "No wider runtime-region promotion until the ProjectGovernor Gate 6/7 requirements are satisfied with real evidence. Preparation for later regions may continue in parallel.",
-  "evidence_boundary": "Checklist only; P1C01 is not Gate 6/7 accepted by creation of this file."
+  "evidence_boundary": "P1C01 now has exact self-hosted UE4 compile, production import, automation/runtime audit, state roundtrip, and warning-debt success evidence for the recorded run. Gate 6/7 remains open until package, PIE-specific traversal, target-device profiling, and human visual review are completed.",
+  "latest_engine_evidence": {
+    "evidence_file": "Data/P1C01EngineImportRuntimeEvidence20261012.json",
+    "run_id": 38182847685,
+    "commit_sha": "a101ee242cce0b33a1a92f0217d282236d6fc8db",
+    "ue4_compile": "success",
+    "production_import": "ShireProductionImport: 440 files, 0 failures",
+    "verified_pbr_material_binds": 16,
+    "verified_pbr_import_qc": 16,
+    "warning_debt_zero": true,
+    "automation_runtime_audits": "success",
+    "package_windows": "skipped",
+    "pie_tested": false,
+    "device_tested": false,
+    "visually_accepted": false,
+    "gate_6_7_closed": false
+  }
 }
