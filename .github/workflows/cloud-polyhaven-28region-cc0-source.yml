@@ -1,0 +1,44 @@
+name: Cloud Poly Haven Licensed CC0 Material Sources
+on:
+  pull_request:
+    branches: [develop]
+    paths:
+      - 'Tools/CloudAssetBuild/polyhaven_cloud_warehouse.py'
+      - 'Tools/CloudAssetBuild/test_polyhaven_cloud_warehouse.py'
+      - '.github/workflows/cloud-polyhaven-28region-cc0-source.yml'
+permissions:
+  contents: read
+jobs:
+  material_shards:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha }}
+      ASSET_OUT: ${{ runner.temp }}/cloud-polyhaven-physical
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          persist-credentials: false
+      - name: Exact HEAD and Governor lane
+        run: |
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          python3 Scripts/governor_work_start.py --lane WAREHOUSE_ASSET_INTAKE
+      - name: Test converter without network
+        run: |
+          python3 -m pip install -q 'Pillow>=10,<13'
+          python3 -m unittest discover -s Tools/CloudAssetBuild -p 'test_polyhaven_cloud_warehouse.py' -v
+      - name: Generate actual licensed textures and SHA receipts
+        run: python3 Tools/CloudAssetBuild/polyhaven_cloud_warehouse.py --out "$ASSET_OUT" --shard ${{ matrix.shard }}
+      - name: Verify exact physical PNG bytes
+        run: python3 Tools/CloudAssetBuild/polyhaven_cloud_warehouse.py --out "$ASSET_OUT" --shard ${{ matrix.shard }} --verify-only
+      - uses: actions/upload-artifact@v4
+        with:
+          name: polyhaven-cc0-material-shard${{ matrix.shard }}-${{ env.TARGET_SHA }}
+          path: ${{ env.ASSET_OUT }}/shard_${{ matrix.shard }}
+          retention-days: 30
+          if-no-files-found: error
