@@ -363,8 +363,19 @@ void UShireQuestSubsystem::SetQuestStage(FName QuestId, int32 NewStage)
     }
 
     const int32 ClampedStage = FMath::Max(0, NewStage);
+    if (const int32* ExistingStage = QuestStages.Find(QuestId))
+    {
+        if (*ExistingStage == ClampedStage)
+        {
+            return;
+        }
+    }
+
     QuestStages.Add(QuestId, ClampedStage);
-    OnQuestStageChanged.Broadcast(QuestId, ClampedStage);
+    if (!bPersistenceRestoreInProgress)
+    {
+        OnQuestStageChanged.Broadcast(QuestId, ClampedStage);
+    }
 }
 
 void UShireQuestSubsystem::AdvanceQuest(FName QuestId, int32 Amount)
