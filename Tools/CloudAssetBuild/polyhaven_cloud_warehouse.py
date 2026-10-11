@@ -39,7 +39,7 @@ def select(tree):
  for path,item in nodes(tree):
   if "png" not in path or not any(x in path for x in ("1k","2k")):continue
   if not urllib.parse.urlsplit(item["url"]).path.lower().endswith(".png"):continue
-  channel=next((k for k in ("diff","nor_dx","nor_gl","rough","ao","metal") if k in path),None)
+  channel=next((k for k in ("diff","nor_dx","nor_gl","rough","ao","metal") if any(token==k or token.startswith(k) for token in path)),None)
   if channel is None:continue
   urlcheck(item["url"])
   size=int(item.get("size") or 0)
