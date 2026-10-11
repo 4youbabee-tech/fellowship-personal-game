@@ -4,7 +4,7 @@
   "authority": "Data/ProjectGovernor.json",
   "canonical_branch": "develop",
   "stable_release_branch": "main",
-  "status": "CLEAN_ACTIVE_DELETE_QUEUE_ZERO_WITH_EXPLICIT_PENDING_SALVAGE",
+  "status": "REVIEWED_SUPERSEDED_REF_RETIREMENT_PENDING_EXACT_HEAD_CI",
   "truth_boundary": "This plan records branch hygiene only. It does not claim PIE/device/visual acceptance.",
   "preserve": [
     {
@@ -40,7 +40,8 @@
     "production/p1c01-shire-automated-render-capture-v1-2026-10-04",
     "production/p1c01-local-visual-acceptance-harness-2026-10-04",
     "governance/root-cause-no-patching-2026-10-04",
-    "maintenance/stale-branch-retirement-2026-10-04"
+    "maintenance/stale-branch-retirement-2026-10-04",
+    "policy/cloud-first-no-routine-windows-package-20261011"
   ],
   "safety_rules": [
     "Never delete develop or main.",
@@ -51,7 +52,8 @@
     "Never bulk-merge or auto-delete a divergent branch with unique commits; selectively salvage or explicitly supersede it first.",
     "Branches with unresolved unique commits remain protected until reviewed.",
     "Cleanup runs only from an exact-head develop merge checkout on GitHub-hosted Windows.",
-    "A PR must not be closed while it is the only named salvage source; salvage or record the exact commit SHA first. Closing a PR declares that branch lifecycle finished."
+    "A PR must not be closed while it is the only named salvage source; salvage or record the exact commit SHA first. Closing a PR declares that branch lifecycle finished.",
+    "Reviewed superseded divergent refs require an immutable expected remote SHA plus a closed historical PR and verified merged replacement SHA on develop before deletion; moved or unverifiable refs must be kept."
   ],
   "final_audit": {
     "status": "FINAL_LEGACY_REF_RETIREMENT_AUTHORIZED",
@@ -589,5 +591,36 @@
       "Each listed ref is a closed PR head whose useful current work was selectively reconciled before closure.",
       "This is repository hygiene only; no runtime or acceptance claim."
     ]
+  },
+  "reviewed_superseded_refs_2026_10_11": [
+    {
+      "branch": "policy/cloud-first-no-routine-windows-package-20261011",
+      "expected_head_sha": "5ccc60523247138e324887929b6b8f1c85db0931",
+      "closed_pr": 369,
+      "closed_pr_merged": false,
+      "replacement_pr": 372,
+      "replacement_merge_sha": "a004d47b6c7d4681a328d88a12fc5de4819e1f11",
+      "reviewed_changed_paths": [
+        "Data/ProjectGovernor.json",
+        "Data/MaximumSafeProductionModeV1.json",
+        "Docs/CURRENT_PROJECT_STATE.md",
+        "Docs/PRODUCTION_COMPLETENESS_MATRIX.md"
+      ],
+      "disposition": "PR #369 was closed without merge. Its early Windows package policy candidate is intentionally superseded by manual-only whole-game DEC-106 implemented in merged #372; preserve old head SHA for forensic comparison. No FBX/PBR/runtime assets existed in its unique diff.",
+      "safety": "Check exact remote SHA, closed #369 head, merged #372 commit, and replacement ancestor in develop immediately before any deletion. On moved ref or API failure, leave branch intact."
+    }
+  ],
+  "audit_2026_10_11": {
+    "checked_develop_sha": "a004d47b6c7d4681a328d88a12fc5de4819e1f11",
+    "method": "GitHub compare develop...branch for all 29 noncanonical live branches; inspected PR #369 + diff + replacement #372",
+    "evidence": "All inspected unpaired branches were nonzero ahead; preserve them except explicitly superseded #369 source ref with reviewed four-file policy-only diff and immutable expected SHA.",
+    "protected": [
+      "develop",
+      "main",
+      "archive/pre-build-salvage-20260930",
+      "prep/f2-03-edoras-mega-source-v1",
+      "prep/f2-03-edoras-mega-source-v2"
+    ],
+    "future_work": "Individually reconcile other branches for FBX, tangents, skeletal, materials, Preview, PBR; no age-only deletion."
   }
 }
