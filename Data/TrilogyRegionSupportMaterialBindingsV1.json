@@ -1,0 +1,236 @@
+{
+  "schema_version": 1,
+  "authority": "Data/ProjectGovernor.json",
+  "status": "SOURCE_PREP_ONLY",
+  "source_package": "shire_journey_28_regions_support_pbr_1k.zip (separate user-delivered file, not GitHub staged)",
+  "material_families": [
+    "shire_meadow",
+    "shire_earth",
+    "bagend_plaster",
+    "oak_timber",
+    "mossy_stone",
+    "weathered_granite",
+    "frosted_rock",
+    "ancient_bark",
+    "golden_leaf_floor",
+    "wetland_peat",
+    "white_limestone",
+    "charred_basalt"
+  ],
+  "materials_count": 12,
+  "physical_png_count": 36,
+  "format": "PNG 1024x1024 BaseColor NormalDX ORM",
+  "regions": [
+    {
+      "id": "SHIRE_HOBBITON",
+      "support_surfaces": [
+        "shire_meadow",
+        "shire_earth",
+        "mossy_stone"
+      ]
+    },
+    {
+      "id": "BAG_END",
+      "support_surfaces": [
+        "bagend_plaster",
+        "oak_timber",
+        "shire_earth"
+      ]
+    },
+    {
+      "id": "BREE",
+      "support_surfaces": [
+        "oak_timber",
+        "mossy_stone",
+        "shire_earth"
+      ]
+    },
+    {
+      "id": "WEATHERTOP",
+      "support_surfaces": [
+        "weathered_granite",
+        "mossy_stone"
+      ]
+    },
+    {
+      "id": "RIVENDELL",
+      "support_surfaces": [
+        "mossy_stone",
+        "white_limestone",
+        "ancient_bark"
+      ]
+    },
+    {
+      "id": "CARADHRAS",
+      "support_surfaces": [
+        "frosted_rock",
+        "weathered_granite"
+      ]
+    },
+    {
+      "id": "MORIA",
+      "support_surfaces": [
+        "weathered_granite",
+        "charred_basalt"
+      ]
+    },
+    {
+      "id": "LOTHLORIEN",
+      "support_surfaces": [
+        "golden_leaf_floor",
+        "ancient_bark",
+        "mossy_stone"
+      ]
+    },
+    {
+      "id": "ANDUIN_AMON_HEN",
+      "support_surfaces": [
+        "mossy_stone",
+        "weathered_granite",
+        "ancient_bark"
+      ]
+    },
+    {
+      "id": "FANGORN",
+      "support_surfaces": [
+        "ancient_bark",
+        "wetland_peat",
+        "mossy_stone"
+      ]
+    },
+    {
+      "id": "EDORAS_MEDUSELD",
+      "support_surfaces": [
+        "oak_timber",
+        "shire_meadow",
+        "shire_earth"
+      ]
+    },
+    {
+      "id": "HELMS_DEEP",
+      "support_surfaces": [
+        "weathered_granite",
+        "mossy_stone"
+      ]
+    },
+    {
+      "id": "ISENGARD_ORTHANC",
+      "support_surfaces": [
+        "charred_basalt",
+        "weathered_granite",
+        "wetland_peat"
+      ]
+    },
+    {
+      "id": "EMYN_MUIL",
+      "support_surfaces": [
+        "weathered_granite",
+        "mossy_stone"
+      ]
+    },
+    {
+      "id": "DEAD_MARSHES",
+      "support_surfaces": [
+        "wetland_peat",
+        "mossy_stone"
+      ]
+    },
+    {
+      "id": "ITHILIEN",
+      "support_surfaces": [
+        "shire_meadow",
+        "mossy_stone",
+        "ancient_bark"
+      ]
+    },
+    {
+      "id": "HENNETH_ANNUN",
+      "support_surfaces": [
+        "mossy_stone",
+        "weathered_granite"
+      ]
+    },
+    {
+      "id": "MINAS_TIRITH",
+      "support_surfaces": [
+        "white_limestone",
+        "weathered_granite"
+      ]
+    },
+    {
+      "id": "OSGILIATH",
+      "support_surfaces": [
+        "white_limestone",
+        "weathered_granite",
+        "mossy_stone"
+      ]
+    },
+    {
+      "id": "MINAS_MORGUL",
+      "support_surfaces": [
+        "weathered_granite",
+        "charred_basalt"
+      ]
+    },
+    {
+      "id": "CIRITH_UNGOL",
+      "support_surfaces": [
+        "charred_basalt",
+        "weathered_granite"
+      ]
+    },
+    {
+      "id": "SHELOBS_LAIR",
+      "support_surfaces": [
+        "charred_basalt",
+        "wetland_peat"
+      ]
+    },
+    {
+      "id": "PELENNOR_FIELDS",
+      "support_surfaces": [
+        "shire_earth",
+        "shire_meadow",
+        "weathered_granite"
+      ]
+    },
+    {
+      "id": "PATHS_OF_THE_DEAD",
+      "support_surfaces": [
+        "weathered_granite",
+        "charred_basalt"
+      ]
+    },
+    {
+      "id": "BLACK_GATE_MORANNON",
+      "support_surfaces": [
+        "charred_basalt",
+        "weathered_granite"
+      ]
+    },
+    {
+      "id": "MORDOR_GORGOROTH",
+      "support_surfaces": [
+        "charred_basalt",
+        "shire_earth"
+      ]
+    },
+    {
+      "id": "MOUNT_DOOM",
+      "support_surfaces": [
+        "charred_basalt",
+        "weathered_granite"
+      ]
+    },
+    {
+      "id": "GREY_HAVENS",
+      "support_surfaces": [
+        "white_limestone",
+        "oak_timber",
+        "mossy_stone"
+      ]
+    }
+  ],
+  "runtime_integrated": false,
+  "source_only": true
+}

@@ -1,3 +1,10 @@
+## 2026-10-11 — 28-region offline support PBR production packet (source-only)
+
+- Actual external standalone production deliverable: 12 project-authored algorithmic support surface families, each with 1K PNG BaseColor/NormalDX/ORM = 36 PNG files. All SHA256 hashes were checked against generated receipt; 5/5 local source tests passed. User receives ZIP separately; binary content is NOT in the GitHub tree or persistent warehouse.
+- Data/TrilogyRegionSupportMaterialBindingsV1.json maps project-authorized material families to each of the 28 regions; no new region runtime or chapter gate.
+- This is budget support material, not photogrammetry, scanned hero PBR, final Bag End materials, character assets, Blender import or UE4 import. Source staging from external providers could not execute because this session's offline container has no direct DNS/HTTPS access to them. No new third-party downloads or supplier archive receipts are claimed.
+- No 720p FPS, PIE, device, visual, deformation or Gate 6/7 result is implied. Keep separate staged source ZIP until review, asset intake, and Unreal promotion are authorized.
+
 ## 2026-10-11 — #365 CI regression correction (candidate)
 
 - Exact-head Pre-Unreal #38102533805 failed in two source contract assertions: one obsolete manual-only trigger expectation and one new test using literal escaped newlines. The dedicated PBR lane intentionally runs on PR but never cooks/packages except manual dispatch. Corrected assertions and tightened package gates; requires new exact-head CI success. No runtime/device/visual acceptance.
