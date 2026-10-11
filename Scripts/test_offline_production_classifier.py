@@ -18,13 +18,13 @@ class OfflineProductionClassifierTests(unittest.TestCase):
         )
 
         self.assertTrue(result["runner_offline_safe"])
-        self.assertFalse(result["windows_runner_blocked"])
+        self.assertFalse(result["self_hosted_runner_blocked"])
 
-    def test_runtime_source_requires_manual_runner(self):
+    def test_runtime_source_requires_self_hosted_runner(self):
         result = classify(["Source/ShireJourney/Private/ShirePrototypeWorldBuilder.cpp"])
 
         self.assertFalse(result["runner_offline_safe"])
-        self.assertTrue(result["windows_runner_blocked"])
+        self.assertTrue(result["self_hosted_runner_blocked"])
 
     def test_pbr_prep_scripts_stay_source_only(self):
         entry = classify_path("Scripts/preflight_p1c01_verified_fbx.py")
@@ -35,7 +35,7 @@ class OfflineProductionClassifierTests(unittest.TestCase):
         result = classify(["Tools/new-helper.txt"])
 
         self.assertFalse(result["runner_offline_safe"])
-        self.assertFalse(result["windows_runner_blocked"])
+        self.assertFalse(result["self_hosted_runner_blocked"])
 
 
 if __name__ == "__main__":
