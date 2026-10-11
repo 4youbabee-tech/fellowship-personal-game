@@ -10,9 +10,14 @@ SOURCE = ROOT / "Source/ShireJourney/Private/Characters/ShirePlayerCharacter.cpp
 class PendingCheckpointGuardTest(unittest.TestCase):
     def test_dispatch_rejection_preserves_pending_checkpoint(self):
         text = SOURCE.read_text(encoding="utf-8")
-        start = text.index("if (PendingChapterCheckpointId != NAME_None &&")
-        end = text.index("AttackCooldownRemaining =", start)
-        block = text[start:end]
+        tick = text.split("void AShirePlayerCharacter::Tick(float DeltaSeconds)", 1)[1].split(
+            "void AShirePlayerCharacter::BeginPlay()", 1)[0]
+        guard = 'if (!FParse::Param(FCommandLine::Get(), TEXT("ShireCIRuntimeAudit")) &&'
+        start = tick.index(guard)
+        end = tick.index("AttackCooldownRemaining =", start)
+        block = tick[start:end]
+        self.assertIn("PendingChapterCheckpointId != NAME_None", block)
+        self.assertLess(block.index(guard), block.index("PendingChapterCheckpointId != NAME_None"))
         self.assertIn("if (SaveAutomaticCheckpoint(CheckpointId, true))", block)
         success = block.split("if (SaveAutomaticCheckpoint(CheckpointId, true))", 1)[1]
         self.assertIn("PendingChapterCheckpointId = NAME_None;", success)
