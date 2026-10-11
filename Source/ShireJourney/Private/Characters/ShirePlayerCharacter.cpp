@@ -1270,7 +1270,7 @@ void AShirePlayerCharacter::HandleCinematicStateChanged(bool bLocked)
 
 void AShirePlayerCharacter::MoveForward(float Value)
 {
-    if (!bCinematicInputLocked && !bWorldTransitionHeld && Controller && !FMath::IsNearlyZero(Value))
+    if (!bCinematicInputLocked && !bWorldTransitionHeld && !bPendingSaveRestoreTransform && Controller && !FMath::IsNearlyZero(Value))
     {
         const FRotator Rotation = Controller->GetControlRotation();
         const FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
@@ -1280,7 +1280,7 @@ void AShirePlayerCharacter::MoveForward(float Value)
 
 void AShirePlayerCharacter::MoveRight(float Value)
 {
-    if (!bCinematicInputLocked && !bWorldTransitionHeld && Controller && !FMath::IsNearlyZero(Value))
+    if (!bCinematicInputLocked && !bWorldTransitionHeld && !bPendingSaveRestoreTransform && Controller && !FMath::IsNearlyZero(Value))
     {
         const FRotator Rotation = Controller->GetControlRotation();
         const FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
@@ -1306,7 +1306,7 @@ void AShirePlayerCharacter::LookUpAtRate(float Value)
 
 void AShirePlayerCharacter::StartJump()
 {
-    if (!bCinematicInputLocked && !bWorldTransitionHeld)
+    if (!bCinematicInputLocked && !bWorldTransitionHeld && !bPendingSaveRestoreTransform)
     {
         Jump();
     }
@@ -1319,7 +1319,7 @@ void AShirePlayerCharacter::StopJump()
 
 void AShirePlayerCharacter::StartSprint()
 {
-    if (!bCinematicInputLocked && !bWorldTransitionHeld)
+    if (!bCinematicInputLocked && !bWorldTransitionHeld && !bPendingSaveRestoreTransform)
     {
         bSprintRequested = true;
         if (!bStaminaExhausted && CurrentStamina > 5.0f)
@@ -1434,7 +1434,7 @@ void AShirePlayerCharacter::RestoreTransactionalPlayerState(
 
 void AShirePlayerCharacter::UseSupply()
 {
-    if (bCinematicInputLocked || bWorldTransitionHeld || !IsCurrentWorldCommitted())
+    if (bCinematicInputLocked || bPendingSaveRestoreTransform || bWorldTransitionHeld || !IsCurrentWorldCommitted())
     {
         return;
     }
@@ -1530,7 +1530,7 @@ void AShirePlayerCharacter::ToggleWorldMap()
 
 void AShirePlayerCharacter::StartCrouch()
 {
-    if (!bCinematicInputLocked && IsGameplayWorldCommitted())
+    if (!bCinematicInputLocked && !bPendingSaveRestoreTransform && IsGameplayWorldCommitted())
     {
         Crouch();
     }
@@ -1622,7 +1622,7 @@ float AShirePlayerCharacter::TakeDamage(
 
 void AShirePlayerCharacter::PrimaryAttack()
 {
-    if (bCinematicInputLocked || AttackCooldownRemaining > 0.0f || !IsCombatAvailable() || !GetWorld())
+    if (bCinematicInputLocked || bPendingSaveRestoreTransform || AttackCooldownRemaining > 0.0f || !IsCombatAvailable() || !GetWorld())
     {
         return;
     }
@@ -1654,7 +1654,7 @@ void AShirePlayerCharacter::PrimaryAttack()
 
 void AShirePlayerCharacter::Interact()
 {
-    if (bCinematicInputLocked || bWorldTransitionHeld || !IsCurrentWorldCommitted() ||
+    if (bCinematicInputLocked || bPendingSaveRestoreTransform || bWorldTransitionHeld || !IsCurrentWorldCommitted() ||
         !FollowCamera || !GetWorld())
     {
         return;
@@ -2276,7 +2276,7 @@ bool AShirePlayerCharacter::StartCheckpointSnapshotSave(
 bool AShirePlayerCharacter::SaveAutomaticCheckpoint(FName CheckpointId, bool bShowHUD)
 {
     if (FParse::Param(FCommandLine::Get(), TEXT("ShireCIRuntimeAudit"))) return false;
-    if (CheckpointId == NAME_None || bWorldTransitionHeld || !IsCurrentWorldCommitted()) return false;
+    if (CheckpointId == NAME_None || bWorldTransitionHeld || bPendingSaveRestoreTransform || !IsCurrentWorldCommitted()) return false;
 
     UShireSaveGame* Save = CreateSaveSnapshot(CheckpointId, true);
     if (!Save) return false;
@@ -2831,7 +2831,7 @@ bool AShirePlayerCharacter::RunSaveRoundtripAudit()
 void AShirePlayerCharacter::QuickSave()
 {
     if (FParse::Param(FCommandLine::Get(), TEXT("ShireCIRuntimeAudit"))) return;
-    if (bWorldTransitionHeld || !IsCurrentWorldCommitted()) return;
+    if (bWorldTransitionHeld || bPendingSaveRestoreTransform || !IsCurrentWorldCommitted()) return;
     UShireSaveGame* Save = CreateSaveSnapshot(NAME_None, false);
     const bool bSaved = Save && UGameplayStatics::SaveGameToSlot(
         Save,
@@ -2852,7 +2852,7 @@ void AShirePlayerCharacter::QuickSave()
 void AShirePlayerCharacter::QuickLoad()
 {
     if (FParse::Param(FCommandLine::Get(), TEXT("ShireCIRuntimeAudit"))) return;
-    if (bWorldTransitionHeld) return;
+    if (bWorldTransitionHeld || bPendingSaveRestoreTransform) return;
     if (!UGameplayStatics::DoesSaveGameExist(
         ShireSaveConstants::SlotName,
         ShireSaveConstants::UserIndex))

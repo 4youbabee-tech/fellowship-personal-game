@@ -1,3 +1,9 @@
+## 2026-10-11 — P1C01 pending restore input/action guard (registered before implementation)
+
+- Source: `ShirePlayerCharacter.cpp` sets `bPendingSaveRestoreTransform=true` after restore but `MoveForward`, `MoveRight`, jump/sprint, `Interact`, `UseSupply`, `QuickSave`, `QuickLoad` and `SaveAutomaticCheckpoint` do not consistently check this flag. When world commit removes transition hold before deferred grounding succeeds, player input can mutate or persist the stale transform.
+- Repair within existing player owner only: block gameplay mutation and save/load while restore transform pending; preserve camera look, skip presentation, and world-router ability to settle/restore. Keep guard cheap on per-frame axis inputs (boolean, no GetActorOfClass each input event). Do not open P1C02 runtime.
+- Proof: new hosted source regressions plus Pre-Unreal exact-head CI. UE compile, PIE, target-device and visual acceptance remain deferred. Windows self-hosted runner OFF.
+
 ## 2026-10-11 — P1C01 invalid-ground transition fallback (registered before implementation)
 - Source defect: ChapterWorldRouter::MovePlayerToChapterStart checks ResolveGroundedSpawnLocation and, when grounding fails, still teleports the pawn to requested unvalidated coordinates before holding movement. A failed destination placement must not move the pawn into void/blocked geometry. Retain last safe transform, hold input, return false and let existing rollback transaction handle recovery.
 - Scope: surgical fail-closed branch change only. Keep existing collision/slope solver, transaction owners and no P1C02 runtime feature. Add hosted source regression asserting no teleport before failed-ground return. No COMPILE/PIE/DEVICE/visual claim; self-hosted runner disabled.
