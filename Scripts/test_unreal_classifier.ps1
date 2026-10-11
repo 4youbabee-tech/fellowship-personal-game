@@ -59,6 +59,8 @@ $cases = @(
     @{Name='streaming'; Paths=@('Data/ChapterAssetStreamingPlan.json'); Proof=$true; Mode='full'; Package=$false; TreeProof=$false},
     @{Name='target-device-evaluator'; Paths=@('Scripts/evaluate_p1c01_gate67_evidence.py','Docs/CURRENT_PROJECT_STATE.md','Docs/PRODUCTION_COMPLETENESS_MATRIX.md'); Proof=$true; Mode='acceptance'; TreeProof=$false},
     @{Name='target-device-evaluator-no-proof'; Paths=@('Scripts/evaluate_p1c01_gate67_evidence.py'); Proof=$false; Mode='full'; TreeProof=$false},
+    @{Name='pbr-workflow-hosted-only'; Paths=@('.github/workflows/p1c01-verified-pbr-production.yml','Scripts/test_p1c01_verified_pbr_bridge.py'); Proof=$false; Mode='static'; TreeProof=$false},
+    @{Name='pbr-workflow-mixed-engine-still-core'; Paths=@('.github/workflows/p1c01-verified-pbr-production.yml','Scripts/normalize_verified_pbr_blender.py'); Proof=$true; Mode='core'; Package=$false; TreeProof=$false},
     @{Name='pbr-import-toolchain-must-run-core'; Paths=@('.github/workflows/p1c01-verified-pbr-production.yml','Scripts/normalize_verified_pbr_blender.py','Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp'); Proof=$true; Mode='core'; Package=$false; TreeProof=$false},
     @{Name='pbr-import-toolchain-unproven-fallback'; Paths=@('.github/workflows/p1c01-verified-pbr-production.yml','Scripts/preflight_p1c01_verified_fbx.py','Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp'); Proof=$false; Mode='full'; Package=$false; TreeProof=$false},
     @{Name='unknown-script'; Paths=@('Scripts/new_unknown_tool.ps1'); Proof=$true; Mode='full'; Package=$false; TreeProof=$false},
