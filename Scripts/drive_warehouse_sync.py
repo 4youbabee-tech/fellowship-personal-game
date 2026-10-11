@@ -96,7 +96,8 @@ def ingest(binary, config, remote, root, max_files):
         md5 = f["Hashes"]["MD5"].lower()
         old = list(receipts.glob(remote_id + "-*.json")) if receipts.exists() else []
         if any((lambda rec: rec.get("remote_path") == rel and rec.get("remote_size") == size
-                and rec.get("remote_md5") == md5 and Path(rec["local_path"]).is_file()
+                and rec.get("remote_md5") == md5 and Path(rec.get("local_path", "__missing__")).is_file()
+                and Path(rec.get("local_path", "__missing__")).resolve().parent == (base / "files" / PurePosixPath(rel).parts[0]).resolve()
                 and sha(Path(rec["local_path"])) == rec.get("sha256"))
                (json.loads(p.read_text(encoding="utf-8"))) for p in old):
             reused += 1
