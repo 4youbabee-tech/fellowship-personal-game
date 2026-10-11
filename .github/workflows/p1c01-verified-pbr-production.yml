@@ -1,12 +1,9 @@
 name: P1C01 Verified PBR Visible World Production
+# The main Unreal Build Validation already compiles/imports/tests these source changes.
+# Keep this extended 99-source PBR promotion/package lane opt-in to avoid a second
+# expensive self-hosted compile/cook for the same develop commit.
+# Manually dispatch it for verified PBR promotion after reviewing main UE proof.
 on:
-  push:
-    branches: [develop]
-    paths:
-      - '.github/workflows/p1c01-verified-pbr-production.yml'
-      - 'Scripts/p1c01_verified_pbr_bridge.py'
-      - 'Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp'
-      - 'Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp'
   workflow_dispatch:
 permissions:
   contents: read
@@ -122,6 +119,7 @@ jobs:
           name: ShireJourney-P1C01-Verified-PBR-${{ github.sha }}
           path: Saved/W00Package/WindowsNoEditor/
           if-no-files-found: error
+          compression-level: 0  # packaged binary content: prioritize upload CPU time
           retention-days: 14
       - name: Report exact acceptance boundary
         if: always()
