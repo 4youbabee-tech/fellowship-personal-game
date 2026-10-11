@@ -942,15 +942,27 @@ void AShirePlayerCharacter::Tick(float DeltaSeconds)
         TryApplyPendingSaveRestoreTransform();
     }
 
-    if (PendingChapterCheckpointId != NAME_None && IsCurrentWorldCommitted())
+    // Saving while a restored pawn transform is still pending can persist
+    // old-world coordinates even when the world identity is already committed.
+    // A rejected async dispatch stays pending, with a bounded retry interval.
+    PendingCheckpointRetrySeconds = FMath::Max(0.0f, PendingCheckpointRetrySeconds - DeltaSeconds);
+    if (PendingChapterCheckpointId != NAME_None &&
+        !bWorldTransitionHeld &&
+        !bPendingSaveRestoreTransform &&
+        PendingCheckpointRetrySeconds <= 0.0f &&
+        IsCurrentWorldCommitted())
     {
         const FName CheckpointId = PendingChapterCheckpointId;
-        // A committed world permits dispatch, but dispatch can still fail.
-        // Keep the checkpoint pending until the save owner accepts a snapshot.
         if (SaveAutomaticCheckpoint(CheckpointId, true))
         {
             PendingChapterCheckpointId = NAME_None;
+            PendingCheckpointRetrySeconds = 0.0f;
             UE_LOG(LogTemp, Display, TEXT("SafeCheckpoint: commit-barrier=PASS dispatch=accepted id=%s"), *CheckpointId.ToString());
+        }
+        else
+        {
+            PendingCheckpointRetrySeconds = 1.0f;
+            UE_LOG(LogTemp, Warning, TEXT("SafeCheckpoint: dispatch=rejected retry=1s id=%s"), *CheckpointId.ToString());
         }
     }
 
