@@ -1054,5 +1054,15 @@ class SourceContractTests(unittest.TestCase):
         self.assertNotIn("git push origin --delete", cleanup)
 
 
+    def test_living_world_density_profile_fallback_regression(self):
+        # Always execute this guard in the existing Pre-Unreal unittest lane.
+        # A standalone test file alone is not included by CI's targeted discovery.
+        import runpy
+        runpy.run_path(
+            str(Path(__file__).with_name("test_living_world_density_fallback.py")),
+            run_name="__density_fallback_regression__",
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
