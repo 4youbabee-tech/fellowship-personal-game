@@ -8272,7 +8272,10 @@ pg145_unreal_workflow = read(ROOT / ".github" / "workflows" / "unreal-build-vali
 for pg145_hosted_classifier_symbol in [
     "Hosted Unreal lane classifier",
     "fetch-depth: 0",
-    "needs.classify.outputs.mode != 'inherit'",
+    "needs.classify.outputs.full == 'true' || needs.classify.outputs.core == 'true'",
+    "needs.classify.outputs.acceptance == 'true'",
+    "needs.classify.outputs.package == 'true'",
+    "Exercise real classifier regression on GitHub-hosted Windows",
 ]:
     if pg145_hosted_classifier_symbol not in pg145_unreal_workflow:
         fail(f"PG-145 hosted Unreal preflight contract missing: {pg145_hosted_classifier_symbol}")
