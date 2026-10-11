@@ -945,9 +945,13 @@ void AShirePlayerCharacter::Tick(float DeltaSeconds)
     if (PendingChapterCheckpointId != NAME_None && IsCurrentWorldCommitted())
     {
         const FName CheckpointId = PendingChapterCheckpointId;
-        PendingChapterCheckpointId = NAME_None;
-        SaveAutomaticCheckpoint(CheckpointId, true);
-        UE_LOG(LogTemp, Display, TEXT("SafeCheckpoint: commit-barrier=PASS id=%s"), *CheckpointId.ToString());
+        // A committed world permits dispatch, but dispatch can still fail.
+        // Keep the checkpoint pending until the save owner accepts a snapshot.
+        if (SaveAutomaticCheckpoint(CheckpointId, true))
+        {
+            PendingChapterCheckpointId = NAME_None;
+            UE_LOG(LogTemp, Display, TEXT("SafeCheckpoint: commit-barrier=PASS dispatch=accepted id=%s"), *CheckpointId.ToString());
+        }
     }
 
     AttackCooldownRemaining = FMath::Max(0.0f, AttackCooldownRemaining - DeltaSeconds);
