@@ -45,7 +45,7 @@ jobs:
           $config = Join-Path $env:APPDATA 'rclone\rclone.conf'
           if (!(Test-Path $config)) { throw 'DRIVE_AUTH_MISSING configure rclone once for watchdog user' }
           if (!(Test-Path 'D:\actions-runner\_warehouse\ShireJourney')) { throw 'WAREHOUSE_MISSING' }
-          # Watchdog service-free user session can retain PATH from before winget installation.
+          # Watchdog interactive session can retain PATH from before package setup.
           # Refresh trusted Windows machine/user PATH without modifying installed binaries.
           $machinePath = [Environment]::GetEnvironmentVariable('Path', 'Machine')
           $userPath = [Environment]::GetEnvironmentVariable('Path', 'User')
