@@ -1,3 +1,10 @@
+## 2026-10-11 — Offline P1C01 verified FBX UV/tangent source repair candidate
+
+- Real prior evidence: P1C01 Verified PBR run 38102674300, import job 114366146590 imported 440 production sources with 0 failed imports; UE FBXImport reported nearly-zero tangents and bi-normals for `rock_face_01` and `wooden_crate_02`. The same run's general warning-debt summary read zero, but that does not invalidate the actual importer diagnostics. Earlier #362 recorded 17 smoothing-group warnings on a distinct candidate; this source change does **not** claim their resolution.
+- New Blender-only derived-mesh work: selective planar re-UV of *only* collapsed/nonfinite face UV islands after degenerates are removed. Valid face UVs, mesh coordinates, and source FBX stay untouched. TSpace FBX export/reimport and existing material-slot check remain mandatory; unrecoverable face geometry fails closed.
+- SHA256 derivative receipt schema v2 now binds each reused file to the input FBX, the exact normalizer script, the UV helper, and derivative bytes. PBR cache key follows both source scripts. No heavy runtime load, mesh count, NPC density, or chapter activation changes.
+- Verification boundary: source regression is runnable without UE/Blender; Unreal diagnostic rerun, geometric/visual inspection, character deformation, 720p target-device performance and Gate 6/7 are **PENDING**. This source-only candidate intentionally does not request GitHub Actions while the owner laptop is off.
+
 ## 2026-10-11 — #365 CI regression correction (candidate)
 
 - Exact-head Pre-Unreal #38102533805 failed in two source contract assertions: one obsolete manual-only trigger expectation and one new test using literal escaped newlines. The dedicated PBR lane intentionally runs on PR but never cooks/packages except manual dispatch. Corrected assertions and tightened package gates; requires new exact-head CI success. No runtime/device/visual acceptance.

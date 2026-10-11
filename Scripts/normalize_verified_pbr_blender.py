@@ -3,6 +3,10 @@ import argparse, math, os, sys
 import bmesh
 import bpy
 
+# Blender --python does not always include the worker folder in sys.path.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from p1c01_derived_fbx_uv import needs_uv_repair, project_face_uv
+
 def require(ok, why):
     if not ok: raise RuntimeError("P1C01_FBX_NORMALIZE_FAIL:"+why)
 
@@ -24,6 +28,31 @@ def clean_mesh(obj):
     removed=before-len(obj.data.polygons)
     if removed:
         print("P1C01_FBX_NORMALIZE_CLEANED asset_mesh="+obj.name+" removed_degenerate_faces="+str(removed),flush=True)
+
+
+def repair_degenerate_uvs(obj):
+    """Touch only collapsed face UV rings on the derived mesh, not valid seams."""
+    bpy.context.view_layer.objects.active=obj
+    obj.select_set(True)
+    bpy.ops.object.mode_set(mode='EDIT')
+    bm=bmesh.from_edit_mesh(obj.data)
+    uv_layer=bm.loops.layers.uv.active
+    require(uv_layer is not None, "MISSING_UV:"+obj.name)
+    repaired=0
+    for face in bm.faces:
+        old_uv=[tuple(float(x) for x in loop[uv_layer].uv) for loop in face.loops]
+        if needs_uv_repair(old_uv):
+            xyz=[tuple(float(x) for x in loop.vert.co) for loop in face.loops]
+            new_uvs=project_face_uv(xyz, tuple(float(x) for x in face.normal))
+            for loop,new_uv in zip(face.loops,new_uvs):
+                loop[uv_layer].uv = new_uv
+            repaired+=1
+    bmesh.update_edit_mesh(obj.data)
+    bpy.ops.object.mode_set(mode='OBJECT')
+    obj.select_set(False)
+    if repaired:
+        print("P1C01_FBX_UV_REPAIRED asset_mesh="+obj.name+" faces="+str(repaired),flush=True)
+    return repaired
 
 def inspect(objects):
     count=0
@@ -47,6 +76,7 @@ def main(src,dst,asset):
     bpy.ops.object.select_all(action='DESELECT')
     for mesh in meshes:
         clean_mesh(mesh)
+        repair_degenerate_uvs(mesh)
     count=inspect(meshes)
     bpy.ops.object.select_all(action='DESELECT')
     for m in meshes: m.select_set(True)

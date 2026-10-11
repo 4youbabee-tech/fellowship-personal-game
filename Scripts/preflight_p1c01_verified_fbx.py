@@ -39,6 +39,8 @@ def execute(project,blender=None,required=False,verify_only=False):
     receipt=output/"receipt.json"
     prior=json.loads(receipt.read_text(encoding="utf-8")) if receipt.is_file() else {}
     old={x["id"]:x for x in prior.get("assets",[])}
+    normalizer_sha=sha(ROOT/"Scripts/normalize_verified_pbr_blender.py")
+    uv_helper_sha=sha(ROOT/"Scripts/p1c01_derived_fbx_uv.py")
     results=[]
     reused=0
     tool=None
@@ -48,7 +50,10 @@ def execute(project,blender=None,required=False,verify_only=False):
         src_sha=sha(source)
         target=output/slug/(slug+".fbx")
         row=old.get(slug,{})
-        reuse=(row.get("source_sha256")==src_sha and row.get("derived_sha256") and
+        reuse=(row.get("source_sha256")==src_sha and
+               row.get("normalizer_sha256")==normalizer_sha and
+               row.get("uv_helper_sha256")==uv_helper_sha and
+               row.get("derived_sha256") and
                valid_derived(target) and sha(target)==row["derived_sha256"])
         if reuse:
             reused+=1
@@ -71,11 +76,13 @@ def execute(project,blender=None,required=False,verify_only=False):
                 temp.replace(target)
             finally:
                 if temp.exists():temp.unlink()
-        results.append({"id":slug,"source_sha256":src_sha,"derived_sha256":sha(target),
+        results.append({"id":slug,"source_sha256":src_sha,
+                        "normalizer_sha256":normalizer_sha,"uv_helper_sha256":uv_helper_sha,
+                        "derived_sha256":sha(target),
                         "derived_bytes":target.stat().st_size})
     if not verify_only:
         output.mkdir(parents=True,exist_ok=True)
-        receipt.write_text(json.dumps({"schema_version":1,"stage":"DERIVED_STATIC_FBX_QC",
+        receipt.write_text(json.dumps({"schema_version":2,"stage":"DERIVED_STATIC_FBX_QC",
             "warehouse_mutated":False,"source_mutated":False,"assets":results},indent=2)+"\n",encoding="utf-8")
     print("P1C01_FBX_NORMALIZATION_PREFLIGHT_PASS count="+str(len(results))+" reused="+str(reused)+" normalized="+str(len(results)-reused),flush=True)
     return results
