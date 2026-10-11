@@ -59,7 +59,7 @@ jobs:
         run: python3 Tools/CloudAssetBuild/validate_bundle.py --out "$ASSET_OUT" --materials-only
 
       - name: Export 4 original Shire meshes, LOD0 and LOD1, with UCX collision
-        run: blender --background --factory-startup -t 2 --python Tools/CloudAssetBuild/blender_shire.py -- --out "$ASSET_OUT"
+        run: blender --background --factory-startup --python-exit-code 3 -t 2 --python Tools/CloudAssetBuild/blender_shire.py -- --out "$ASSET_OUT"
 
       - name: Validate real binary FBX after Blender re-import
         run: python3 Tools/CloudAssetBuild/validate_bundle.py --out "$ASSET_OUT"

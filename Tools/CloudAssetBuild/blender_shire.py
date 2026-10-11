@@ -216,12 +216,16 @@ def make_one(asset, level, out):
     fbx = meshes / (visual_name + ".fbx")
     bpy.ops.export_scene.fbx(
         filepath=str(fbx), use_selection=True, object_types={"MESH"},
-        version="BIN7400", mesh_smooth_type="FACE", add_leaf_bones=False,
+        mesh_smooth_type="FACE", add_leaf_bones=False,
         use_mesh_modifiers=True, apply_unit_scale=True, global_scale=1.0,
         axis_forward="-Y", axis_up="Z", path_mode="RELATIVE",
         bake_anim=False, embed_textures=False)
-    if not fbx.read_bytes().startswith(b"Kaydara FBX Binary"):
+    fbx_header = fbx.read_bytes()[:27]
+    if not fbx_header.startswith(b"Kaydara FBX Binary"):
         raise ValueError("FBX_NOT_BINARY")
+    binary_version = int.from_bytes(fbx_header[23:27], "little")
+    if binary_version != 7400:
+        raise ValueError(f"FBX_VERSION_NOT_7400: {binary_version}")
     original_polys = len(visual.data.polygons)
     # Physical file reimport: checks mesh survives FBX export, independently of
     # the original Blender scene. NOT the Unreal Asset Registry import gate.
