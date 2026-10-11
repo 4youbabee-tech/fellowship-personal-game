@@ -191,6 +191,14 @@ void UShireNPCContextSubsystem::Deinitialize()
     ChapterPressureById.Empty();
     FilmContextsByRouteChapter.Empty();
     bDataReady = false;
+    bHasCommittedWorldContext = false;
+    CommittedChapterId = NAME_None;
+    CommittedRouteId = NAME_None;
+    CommittedEpisodeId = NAME_None;
+    CommittedActiveQuestId = NAME_None;
+    CommittedActiveQuestStage = 0;
+    CommittedWorldRevision = 0;
+    WeatherState = TEXT("CLEAR");
     Super::Deinitialize();
 }
 
