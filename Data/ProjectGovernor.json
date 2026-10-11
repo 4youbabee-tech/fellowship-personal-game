@@ -8634,6 +8634,31 @@
         "PIE/runtime/device/Gate 6/7 claims without actual evidence"
       ],
       "evidence_boundary": "Policy and tooling update only; no new runtime, visual, package, device or Gate acceptance is claimed."
+    },
+    "current_cloud_production_outputs_2026_10_11": {
+      "status": "P1C01_CLOUD_ASSEMBLY_PRODUCTION_STARTED",
+      "pr": 368,
+      "branch": "production/offline-fast-production-20261011",
+      "outputs": [
+        "Data/P1C01CloudShireAssemblyPlanV1.json",
+        "Scripts/validate_p1c01_cloud_assembly.py",
+        "Scripts/test_validate_p1c01_cloud_assembly.py"
+      ],
+      "source_basis": [
+        "03_WORLD_LOCATIONS_AND_MAP_BIBLE pages 2-3",
+        "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX pages 2-3",
+        "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE pages 2-3",
+        "10_3D_VISUAL_ASSET_ATLAS_PRODUCTION pages 1-2"
+      ],
+      "coverage": [
+        "Bag End exterior/interior",
+        "Hobbiton and Bagshot Row",
+        "Party Field/fireworks",
+        "Shire roads, water, mill/bridge, gardens, nature",
+        "Frodo, Bilbo, Gandalf, Sam, Merry, Pippin",
+        "living Shire schedule inputs"
+      ],
+      "evidence_boundary": "Cloud/source assembly plan and validator only. No self-hosted UE import, PIE, package, visual review, target-device performance or Gate 6/7 acceptance is claimed."
     }
   },
   "chapter_closeout_package_policy_2026_10_11": {
