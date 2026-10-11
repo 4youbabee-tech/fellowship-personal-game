@@ -101,6 +101,9 @@ jobs:
       - name: Test Unreal validation lane selection
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_unreal_classifier.ps1"
 
+      - name: Test fast local PIE preview execution contract
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_fast_pie_preview.py" -v
+
       - name: Parse all PowerShell scripts
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_powershell_syntax.ps1"
 

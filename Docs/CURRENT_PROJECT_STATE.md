@@ -1,3 +1,7 @@
+## 2026-10-11 — Fast local PIE preview forward-port from PR #358
+
+- Ported launcher and direct static regression verbatim from PR #358 onto current develop following merged #359. The new local launcher requires existing UE4.27.2/editor DLL, starts DX11 at 1280x720, never builds/imports/cooks/syncs and makes no PIE/DEVICE/VISUAL/FPS claims. Unlike #358, the standalone regression is now executed in exact-head Pre-Unreal Validation. Retain all P1C01 Gate 6/7, final Windows build and operator visual validation. Status: candidate awaiting exact-head CI.
+
 ## 2026-10-11 — Root-cause repair of local PIE classifier (PR #359)
 
 - Pre-Unreal Run #38093231196 failed `pie-preview-safe-with-proof: expected inherit, got full`: the two exact paths appeared only in the transitive core-proof allowlist, not in the main `$safeExact` set used by `$fullImpact`. Add them to the actual exact-path classifier and cover lookalike names, mixed runtime and Config changes in the real classifier regression. Parent engine proof remains mandatory, otherwise full validation. PR #358's actual preview command/test still requires exact-head static execution prior to merging. Candidate awaiting CI; no new Unreal/PIE/device/visual/FPS acceptance.
