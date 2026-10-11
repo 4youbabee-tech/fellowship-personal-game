@@ -1,0 +1,1099 @@
+{
+  "schema_version": 1,
+  "queue_id": "WHOLE_GAME_CLOUD_WAREHOUSE_MATERIAL_QUEUE_V1",
+  "status": "ACTIVE_CLOUD_SOURCE_PREP_SELF_HOSTED_RUNTIME_LOCKED",
+  "created_on": "2026-10-11",
+  "authority": [
+    "Data/ProjectGovernor.json#owner_fast_batch_intake_policy_2026_10_11",
+    "Data/MaximumSafeProductionModeV1.json#owner_offline_fast_production_2026_10_11",
+    "Data/OfflineFastProductionQueueV1.json"
+  ],
+  "objective": "Prepare the entire game warehouse and Blender/material source queues in organized cloud-safe batches while P1C01 remains the only runtime activation target.",
+  "runner_boundary": {
+    "allowed_now": [
+      "source catalogs",
+      "material kit manifests",
+      "Blender QC contracts",
+      "SHA256 receipt reuse plans",
+      "derived FBX/PNG/TGA/ORM staging specifications",
+      "static validators and classifier tests"
+    ],
+    "blocked_until_self_hosted_runner_returns": [
+      "UE4 import commandlets",
+      "PIE traversal",
+      "Windows cook/package",
+      "target-device FPS",
+      "visual acceptance",
+      "Gate 6/7 claims"
+    ]
+  },
+  "root_cause_fixes": [
+    {
+      "blocker": "Git terminal clone/credentials unavailable",
+      "root_fix": "Use GitHub Connector read/write APIs for branches, commits, PRs and workflow evidence; do not stop production on terminal clone failure.",
+      "guard": "Connector-written files plus PR #368 evidence"
+    },
+    {
+      "blocker": "Self-hosted UE4 job queued by source-only metadata",
+      "root_fix": "Classify cloud-first metadata, validators and tests as source/governance safe in Scripts/classify_unreal_validation.ps1.",
+      "guard": "Scripts/test_unreal_classifier.ps1 cloud-first-shire-assembly case"
+    },
+    {
+      "blocker": "Linux Blender failed because NumPy was missing",
+      "root_fix": "Keep Blender readiness checks and python3-numpy dependency before conversion runs; fail before expensive Unreal.",
+      "guard": "Blender readiness contract in prep batches"
+    },
+    {
+      "blocker": "Binary FBX sources lacked LayerElementSmoothing",
+      "root_fix": "Preserve originals; create derived FBX copies with normals/tangents/material slots and zero missing smoothing requirement.",
+      "guard": "FBX static preflight before Unreal import"
+    },
+    {
+      "blocker": "Degenerate faces risk during normalization",
+      "root_fix": "Clean only derived meshes in Blender, preserve UVs/normals/material indices, and emit SHA256 receipts for originals and outputs.",
+      "guard": "degenerate_faces_zero_or_repaired_derivative_only"
+    },
+    {
+      "blocker": "Repeated full scans/builds slowed production",
+      "root_fix": "Reuse unchanged SHA256 receipts and run validators only for changed queues/scripts until runtime evidence is needed.",
+      "guard": "incremental_source_only_classifier"
+    }
+  ],
+  "material_quality_contract": {
+    "texture_sets": [
+      "base_color",
+      "normal",
+      "orm_or_ao_roughness_metallic",
+      "height_optional",
+      "emissive_optional"
+    ],
+    "ue4_compatibility": [
+      "PNG_or_TGA",
+      "power_of_two_preferred",
+      "linear_ORM",
+      "sRGB_base_color_only",
+      "material_slot_names_stable"
+    ],
+    "blender_qc": [
+      "remove_degenerate_faces_on_derivatives",
+      "preserve_uvs",
+      "preserve_custom_normals",
+      "preserve_material_slots",
+      "export_binary_fbx"
+    ],
+    "unreal_import_contract": [
+      "zero_missing_smoothing_groups",
+      "material_slot_count_nonzero",
+      "collision_strategy_declared",
+      "LOD_or_cull_strategy_declared"
+    ]
+  },
+  "warehouse_layout": {
+    "originals": "SourceAssets/Warehouse/Originals/<provider>/<asset_id>/",
+    "derived": "SourceAssets/Warehouse/Derived/<region>/<asset_id>/",
+    "receipts": "Data/WarehouseReceipts/<provider>/<asset_id>.sha256.json",
+    "material_kits": "Data/MaterialKits/<region>/<kit_id>.json",
+    "unreal_pending_batches": "Data/ImportBatches/<chapter_or_region>/<batch_id>.json"
+  },
+  "p1c01_immediate_batches": [
+    {
+      "id": "P1C01_BAG_END_COMPLETE_VISUAL_KIT",
+      "status": "CLOUD_READY_SELF_HOSTED_IMPORT_PENDING",
+      "includes": [
+        "exterior hill shell",
+        "round doors/windows",
+        "interior rooms",
+        "hearth",
+        "pantry",
+        "books/maps",
+        "lighting"
+      ],
+      "material_kits": [
+        "SH_WARM_PLASTER",
+        "SH_WOOD_INTERIOR",
+        "SH_STONE_TILES",
+        "SH_BROWN_LEATHER",
+        "SH_MOSS_STONE"
+      ],
+      "blender_tasks": [
+        "scale normalization",
+        "collision proxy authoring",
+        "derived FBX export",
+        "slot name audit"
+      ]
+    },
+    {
+      "id": "P1C01_HOBBITON_BAGSHOT_ROW_SOCIAL_KIT",
+      "status": "CLOUD_READY_SELF_HOSTED_IMPORT_PENDING",
+      "includes": [
+        "Hobbit-hole facades",
+        "gardens",
+        "fences",
+        "lanes",
+        "carts",
+        "farm props"
+      ],
+      "material_kits": [
+        "SH_GRASS_GROUND",
+        "SH_GRASS_PATH",
+        "SH_DIRT_SOIL",
+        "SH_TREE_BARK"
+      ],
+      "blender_tasks": [
+        "HISM-ready repeated props",
+        "LOD proxy grouping",
+        "vegetation material check"
+      ]
+    },
+    {
+      "id": "P1C01_PARTY_FIELD_FIREWORKS_KIT",
+      "status": "CLOUD_READY_SELF_HOSTED_IMPORT_PENDING",
+      "includes": [
+        "party tree",
+        "tables",
+        "tents",
+        "benches",
+        "firework crates",
+        "launch anchors"
+      ],
+      "material_kits": [
+        "SH_RUSTIC_PATH",
+        "SH_WOOD_INTERIOR_ALT",
+        "SH_GRASS_GROUND"
+      ],
+      "blender_tasks": [
+        "collision-safe placement proxies",
+        "material slot consistency",
+        "firework anchor metadata"
+      ]
+    },
+    {
+      "id": "P1C01_CHARACTERS_LIVING_WORLD_SOURCE_KIT",
+      "status": "CLOUD_READY_SELF_HOSTED_IMPORT_PENDING",
+      "includes": [
+        "Frodo",
+        "Bilbo",
+        "Gandalf",
+        "Sam",
+        "Merry",
+        "Pippin",
+        "ambient Hobbit citizens"
+      ],
+      "material_kits": [
+        "hobbit cloth",
+        "skin",
+        "hair",
+        "leather",
+        "wizard cloth"
+      ],
+      "blender_tasks": [
+        "rig/skeleton inventory",
+        "deformation guard",
+        "LOD plan",
+        "animation source mapping"
+      ]
+    }
+  ],
+  "regions": [
+    {
+      "index": 1,
+      "id": "REGION_01_SHIRE_HOBBITON",
+      "chapter_scope": "P1C01",
+      "identity": "Hobbit pastoral village",
+      "runtime_status": "RUNTIME_FIRST",
+      "material_targets": [
+        "warm plaster",
+        "aged wood",
+        "grass path",
+        "garden soil",
+        "moss stone"
+      ],
+      "required_asset_groups": [
+        "Bag End exterior/interior",
+        "Hobbiton core",
+        "Bagshot Row",
+        "Party Field"
+      ],
+      "character_or_creature_source_prep": [
+        "hobbit adults",
+        "gardeners",
+        "farmers"
+      ],
+      "qc_required_before_unreal": [
+        "source_rights_receipt",
+        "sha256_original_receipt",
+        "derived_copy_only",
+        "blender_static_qc",
+        "material_slot_validation",
+        "lod_or_culling_plan",
+        "collision_strategy",
+        "import_batch_manifest"
+      ]
+    },
+    {
+      "index": 2,
+      "id": "REGION_02_BUCKLAND_OLD_FOREST",
+      "chapter_scope": "F1_LATER",
+      "identity": "hedged border and ancient woodland",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "material_targets": [
+        "dark bark",
+        "leaf litter",
+        "wet roots",
+        "mist ground"
+      ],
+      "required_asset_groups": [
+        "hedges",
+        "forest trails",
+        "Old Man Willow approach"
+      ],
+      "character_or_creature_source_prep": [
+        "traveler hobbits",
+        "forest ambience"
+      ],
+      "qc_required_before_unreal": [
+        "source_rights_receipt",
+        "sha256_original_receipt",
+        "derived_copy_only",
+        "blender_static_qc",
+        "material_slot_validation",
+        "lod_or_culling_plan",
+        "collision_strategy",
+        "import_batch_manifest"
+      ]
+    },
+    {
+      "index": 3,
+      "id": "REGION_03_BREE",
+      "chapter_scope": "F1_LATER",
+      "identity": "mixed Mannish/Hobbit road town",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "material_targets": [
+        "mud road",
+        "half timber",
+        "thatch",
+        "tavern wood"
+      ],
+      "required_asset_groups": [
+        "Prancing Pony",
+        "town gate",
+        "market street"
+      ],
+      "character_or_creature_source_prep": [
+        "townsfolk",
+        "inn staff",
+        "travelers"
+      ],
+      "qc_required_before_unreal": [
+        "source_rights_receipt",
+        "sha256_original_receipt",
+        "derived_copy_only",
+        "blender_static_qc",
+        "material_slot_validation",
+        "lod_or_culling_plan",
+        "collision_strategy",
+        "import_batch_manifest"
+      ]
+    },
+    {
+      "index": 4,
+      "id": "REGION_04_WEATHERTOP",
+      "chapter_scope": "F1_LATER",
+      "identity": "ruined hilltop watch place",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "material_targets": [
+        "weathered stone",
+        "dead grass",
+        "ash scorch",
+        "cold rock"
+      ],
+      "required_asset_groups": [
+        "ruin ring",
+        "camp approach",
+        "ridge silhouettes"
+      ],
+      "character_or_creature_source_prep": [
+        "Ranger silhouette candidates"
+      ],
+      "qc_required_before_unreal": [
+        "source_rights_receipt",
+        "sha256_original_receipt",
+        "derived_copy_only",
+        "blender_static_qc",
+        "material_slot_validation",
+        "lod_or_culling_plan",
+        "collision_strategy",
+        "import_batch_manifest"
+      ]
+    },
+    {
+      "index": 5,
+      "id": "REGION_05_RIVENDELL",
+      "chapter_scope": "F1_LATER",
+      "identity": "Elven valley refuge",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "material_targets": [
+        "pale carved stone",
+        "fine wood",
+        "autumn leaf",
+        "clear water"
+      ],
+      "required_asset_groups": [
+        "terraces",
+        "bridges",
+        "halls",
+        "waterfalls"
+      ],
+      "character_or_creature_source_prep": [
+        "Elven residents",
+        "council figures"
+      ],
+      "qc_required_before_unreal": [
+        "source_rights_receipt",
+        "sha256_original_receipt",
+        "derived_copy_only",
+        "blender_static_qc",
+        "material_slot_validation",
+        "lod_or_culling_plan",
+        "collision_strategy",
+        "import_batch_manifest"
+      ]
+    },
+    {
+      "index": 6,
+      "id": "REGION_06_MISTY_MOUNTAINS",
+      "chapter_scope": "F1_LATER",
+      "identity": "snow mountain passes",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "material_targets": [
+        "snow",
+        "ice rock",
+        "wind scoured stone",
+        "cold cloth"
+      ],
+      "required_asset_groups": [
+        "pass trails",
+        "cliffs",
+        "storm shelters"
+      ],
+      "character_or_creature_source_prep": [
+        "travel party cold variants"
+      ],
+      "qc_required_before_unreal": [
+        "source_rights_receipt",
+        "sha256_original_receipt",
+        "derived_copy_only",
+        "blender_static_qc",
+        "material_slot_validation",
+        "lod_or_culling_plan",
+        "collision_strategy",
+        "import_batch_manifest"
+      ]
+    },
+    {
+      "index": 7,
+      "id": "REGION_07_MORIA_GATE",
+      "chapter_scope": "F1_LATER",
+      "identity": "ancient lake gate and cliff wall",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "material_targets": [
+        "dark stone",
+        "wet cliff",
+        "moonlit water",
+        "rune metal"
+      ],
+      "required_asset_groups": [
+        "West Gate",
+        "watcher lake",
+        "stone stairs"
+      ],
+      "character_or_creature_source_prep": [
+        "fellowship travel states"
+      ],
+      "qc_required_before_unreal": [
+        "source_rights_receipt",
+        "sha256_original_receipt",
+        "derived_copy_only",
+        "blender_static_qc",
+        "material_slot_validation",
+        "lod_or_culling_plan",
+        "collision_strategy",
+        "import_batch_manifest"
+      ]
+    },
+    {
+      "index": 8,
+      "id": "REGION_08_MORIA_INTERIOR",
+      "chapter_scope": "F1_LATER",
+      "identity": "Dwarven underground halls",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "material_targets": [
+        "black stone",
+        "dwarven metal",
+        "dust",
+        "torch soot"
+      ],
+      "required_asset_groups": [
+        "mines",
+        "halls",
+        "bridges",
+        "tombs"
+      ],
+      "character_or_creature_source_prep": [
+        "goblin/orc source prep",
+        "fellowship"
+      ],
+      "qc_required_before_unreal": [
+        "source_rights_receipt",
+        "sha256_original_receipt",
+        "derived_copy_only",
+        "blender_static_qc",
+        "material_slot_validation",
+        "lod_or_culling_plan",
+        "collision_strategy",
+        "import_batch_manifest"
+      ]
+    },
+    {
+      "index": 9,
+      "id": "REGION_09_LOTHLORIEN",
+      "chapter_scope": "F1_LATER",
+      "identity": "golden Elven forest",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "material_targets": [
+        "gold leaves",
+        "silver bark",
+        "woven platforms",
+        "soft moss"
+      ],
+      "required_asset_groups": [
+        "mallorn trees",
+        "flets",
+        "riverbanks"
+      ],
+      "character_or_creature_source_prep": [
+        "Elven guards",
+        "Galadhrim"
+      ],
+      "qc_required_before_unreal": [
+        "source_rights_receipt",
+        "sha256_original_receipt",
+        "derived_copy_only",
+        "blender_static_qc",
+        "material_slot_validation",
+        "lod_or_culling_plan",
+        "collision_strategy",
+        "import_batch_manifest"
+      ]
+    },
+    {
+      "index": 10,
+      "id": "REGION_10_ANDUIN",
+      "chapter_scope": "F1_LATER",
+      "identity": "river journey corridor",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "material_targets": [
+        "river water",
+        "bank stone",
+        "reed",
+        "boat wood"
+      ],
+      "required_asset_groups": [
+        "shore camps",
+        "boat routes",
+        "rapids"
+      ],
+      "character_or_creature_source_prep": [
+        "boat party states"
+      ],
+      "qc_required_before_unreal": [
+        "source_rights_receipt",
+        "sha256_original_receipt",
+        "derived_copy_only",
+        "blender_static_qc",
+        "material_slot_validation",
+        "lod_or_culling_plan",
+        "collision_strategy",
+        "import_batch_manifest"
+      ]
+    },
+    {
+      "index": 11,
+      "id": "REGION_11_AMON_HEN",
+      "chapter_scope": "F1_LATER",
+      "identity": "ancient seat and forested slopes",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "material_targets": [
+        "old stone",
+        "pine floor",
+        "broken masonry",
+        "war dirt"
+      ],
+      "required_asset_groups": [
+        "seat ruin",
+        "slopes",
+        "shore"
+      ],
+      "character_or_creature_source_prep": [
+        "Uruk source prep",
+        "fellowship split"
+      ],
+      "qc_required_before_unreal": [
+        "source_rights_receipt",
+        "sha256_original_receipt",
+        "derived_copy_only",
+        "blender_static_qc",
+        "material_slot_validation",
+        "lod_or_culling_plan",
+        "collision_strategy",
+        "import_batch_manifest"
+      ]
+    },
+    {
+      "index": 12,
+      "id": "REGION_12_ROHAN_GRASSLANDS",
+      "chapter_scope": "F2",
+      "identity": "wide horse plains",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "material_targets": [
+        "dry grass",
+        "horse leather",
+        "weathered timber",
+        "packed dirt"
+      ],
+      "required_asset_groups": [
+        "plains",
+        "farmsteads",
+        "watch ridges"
+      ],
+      "character_or_creature_source_prep": [
+        "Rohirrim riders",
+        "villagers"
+      ],
+      "qc_required_before_unreal": [
+        "source_rights_receipt",
+        "sha256_original_receipt",
+        "derived_copy_only",
+        "blender_static_qc",
+        "material_slot_validation",
+        "lod_or_culling_plan",
+        "collision_strategy",
+        "import_batch_manifest"
+      ]
+    },
+    {
+      "index": 13,
+      "id": "REGION_13_EDORAS",
+      "chapter_scope": "F2",
+      "identity": "hill settlement and golden hall",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "material_targets": [
+        "gold wood",
+        "thatch",
+        "wind grass",
+        "banner cloth"
+      ],
+      "required_asset_groups": [
+        "Meduseld",
+        "terraces",
+        "stables"
+      ],
+      "character_or_creature_source_prep": [
+        "Rohan court",
+        "guards",
+        "civilians"
+      ],
+      "qc_required_before_unreal": [
+        "source_rights_receipt",
+        "sha256_original_receipt",
+        "derived_copy_only",
+        "blender_static_qc",
+        "material_slot_validation",
+        "lod_or_culling_plan",
+        "collision_strategy",
+        "import_batch_manifest"
+      ]
+    },
+    {
+      "index": 14,
+      "id": "REGION_14_HELMS_DEEP",
+      "chapter_scope": "F2",
+      "identity": "stone fortress and war staging",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "material_targets": [
+        "fortress stone",
+        "wet rock",
+        "iron",
+        "war mud"
+      ],
+      "required_asset_groups": [
+        "Deeping Wall",
+        "keep",
+        "causeway"
+      ],
+      "character_or_creature_source_prep": [
+        "Rohan soldiers",
+        "Uruk forces"
+      ],
+      "qc_required_before_unreal": [
+        "source_rights_receipt",
+        "sha256_original_receipt",
+        "derived_copy_only",
+        "blender_static_qc",
+        "material_slot_validation",
+        "lod_or_culling_plan",
+        "collision_strategy",
+        "import_batch_manifest"
+      ]
+    },
+    {
+      "index": 15,
+      "id": "REGION_15_FANGORN",
+      "chapter_scope": "F2",
+      "identity": "ancient sentient forest",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "material_targets": [
+        "old bark",
+        "deep moss",
+        "humid soil",
+        "fallen branches"
+      ],
+      "required_asset_groups": [
+        "tree halls",
+        "shadowed paths",
+        "clearings"
+      ],
+      "character_or_creature_source_prep": [
+        "Ent source prep",
+        "forest ambience"
+      ],
+      "qc_required_before_unreal": [
+        "source_rights_receipt",
+        "sha256_original_receipt",
+        "derived_copy_only",
+        "blender_static_qc",
+        "material_slot_validation",
+        "lod_or_culling_plan",
+        "collision_strategy",
+        "import_batch_manifest"
+      ]
+    },
+    {
+      "index": 16,
+      "id": "REGION_16_ISENGARD",
+      "chapter_scope": "F2",
+      "identity": "industrial ring and tower",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "material_targets": [
+        "black stone",
+        "iron plate",
+        "ash ground",
+        "burned wood"
+      ],
+      "required_asset_groups": [
+        "Orthanc base",
+        "forges",
+        "pits"
+      ],
+      "character_or_creature_source_prep": [
+        "Uruk workers",
+        "war machines"
+      ],
+      "qc_required_before_unreal": [
+        "source_rights_receipt",
+        "sha256_original_receipt",
+        "derived_copy_only",
+        "blender_static_qc",
+        "material_slot_validation",
+        "lod_or_culling_plan",
+        "collision_strategy",
+        "import_batch_manifest"
+      ]
+    },
+    {
+      "index": 17,
+      "id": "REGION_17_GONDOR_FIELDS",
+      "chapter_scope": "F3",
+      "identity": "outer farms and road to Minas Tirith",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "material_targets": [
+        "pale stone",
+        "field soil",
+        "olive wood",
+        "road dust"
+      ],
+      "required_asset_groups": [
+        "Pelennor approaches",
+        "farms",
+        "road camps"
+      ],
+      "character_or_creature_source_prep": [
+        "Gondor civilians",
+        "soldiers"
+      ],
+      "qc_required_before_unreal": [
+        "source_rights_receipt",
+        "sha256_original_receipt",
+        "derived_copy_only",
+        "blender_static_qc",
+        "material_slot_validation",
+        "lod_or_culling_plan",
+        "collision_strategy",
+        "import_batch_manifest"
+      ]
+    },
+    {
+      "index": 18,
+      "id": "REGION_18_MINAS_TIRITH",
+      "chapter_scope": "F3",
+      "identity": "white city tiers",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "material_targets": [
+        "white limestone",
+        "polished stone",
+        "banner cloth",
+        "dark metal"
+      ],
+      "required_asset_groups": [
+        "city gates",
+        "tiers",
+        "citadel"
+      ],
+      "character_or_creature_source_prep": [
+        "guards",
+        "citizens",
+        "court"
+      ],
+      "qc_required_before_unreal": [
+        "source_rights_receipt",
+        "sha256_original_receipt",
+        "derived_copy_only",
+        "blender_static_qc",
+        "material_slot_validation",
+        "lod_or_culling_plan",
+        "collision_strategy",
+        "import_batch_manifest"
+      ]
+    },
+    {
+      "index": 19,
+      "id": "REGION_19_OSGILIATH",
+      "chapter_scope": "F3",
+      "identity": "ruined river city",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "material_targets": [
+        "broken stone",
+        "river mud",
+        "charred beam",
+        "war dust"
+      ],
+      "required_asset_groups": [
+        "bridges",
+        "ruins",
+        "river crossings"
+      ],
+      "character_or_creature_source_prep": [
+        "Gondor rangers",
+        "orcs"
+      ],
+      "qc_required_before_unreal": [
+        "source_rights_receipt",
+        "sha256_original_receipt",
+        "derived_copy_only",
+        "blender_static_qc",
+        "material_slot_validation",
+        "lod_or_culling_plan",
+        "collision_strategy",
+        "import_batch_manifest"
+      ]
+    },
+    {
+      "index": 20,
+      "id": "REGION_20_ITHILIEN",
+      "chapter_scope": "F3",
+      "identity": "green ranger woodland",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "material_targets": [
+        "fern floor",
+        "moss rock",
+        "ranger leather",
+        "stream water"
+      ],
+      "required_asset_groups": [
+        "hidden camps",
+        "woodland paths",
+        "ambush spaces"
+      ],
+      "character_or_creature_source_prep": [
+        "Rangers",
+        "travel party"
+      ],
+      "qc_required_before_unreal": [
+        "source_rights_receipt",
+        "sha256_original_receipt",
+        "derived_copy_only",
+        "blender_static_qc",
+        "material_slot_validation",
+        "lod_or_culling_plan",
+        "collision_strategy",
+        "import_batch_manifest"
+      ]
+    },
+    {
+      "index": 21,
+      "id": "REGION_21_DEAD_MARSHES",
+      "chapter_scope": "F3",
+      "identity": "haunted wetland",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "material_targets": [
+        "marsh water",
+        "peat mud",
+        "pale fog",
+        "dead reeds"
+      ],
+      "required_asset_groups": [
+        "bog paths",
+        "water pools",
+        "mist beds"
+      ],
+      "character_or_creature_source_prep": [
+        "Gollum source prep",
+        "ambient threats"
+      ],
+      "qc_required_before_unreal": [
+        "source_rights_receipt",
+        "sha256_original_receipt",
+        "derived_copy_only",
+        "blender_static_qc",
+        "material_slot_validation",
+        "lod_or_culling_plan",
+        "collision_strategy",
+        "import_batch_manifest"
+      ]
+    },
+    {
+      "index": 22,
+      "id": "REGION_22_CIRITH_UNGOL",
+      "chapter_scope": "F3",
+      "identity": "mountain pass and tower",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "material_targets": [
+        "black rock",
+        "web material",
+        "rust metal",
+        "sickly stone"
+      ],
+      "required_asset_groups": [
+        "pass",
+        "tower",
+        "cavern edge"
+      ],
+      "character_or_creature_source_prep": [
+        "orc guards",
+        "Shelob source prep"
+      ],
+      "qc_required_before_unreal": [
+        "source_rights_receipt",
+        "sha256_original_receipt",
+        "derived_copy_only",
+        "blender_static_qc",
+        "material_slot_validation",
+        "lod_or_culling_plan",
+        "collision_strategy",
+        "import_batch_manifest"
+      ]
+    },
+    {
+      "index": 23,
+      "id": "REGION_23_MORDOR_PLAINS",
+      "chapter_scope": "F3",
+      "identity": "ash wasteland and war roads",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "material_targets": [
+        "ash soil",
+        "lava rock",
+        "black iron",
+        "smoke haze"
+      ],
+      "required_asset_groups": [
+        "plains",
+        "trenches",
+        "army roads"
+      ],
+      "character_or_creature_source_prep": [
+        "orcs",
+        "war beasts"
+      ],
+      "qc_required_before_unreal": [
+        "source_rights_receipt",
+        "sha256_original_receipt",
+        "derived_copy_only",
+        "blender_static_qc",
+        "material_slot_validation",
+        "lod_or_culling_plan",
+        "collision_strategy",
+        "import_batch_manifest"
+      ]
+    },
+    {
+      "index": 24,
+      "id": "REGION_24_MOUNT_DOOM",
+      "chapter_scope": "F3",
+      "identity": "volcanic climax space",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "material_targets": [
+        "lava",
+        "obsidian",
+        "ash dust",
+        "heated stone"
+      ],
+      "required_asset_groups": [
+        "cracks",
+        "interior path",
+        "summit"
+      ],
+      "character_or_creature_source_prep": [
+        "Frodo/Sam/Gollum final states"
+      ],
+      "qc_required_before_unreal": [
+        "source_rights_receipt",
+        "sha256_original_receipt",
+        "derived_copy_only",
+        "blender_static_qc",
+        "material_slot_validation",
+        "lod_or_culling_plan",
+        "collision_strategy",
+        "import_batch_manifest"
+      ]
+    },
+    {
+      "index": 25,
+      "id": "REGION_25_GREY_HAVENS",
+      "chapter_scope": "EPILOGUE",
+      "identity": "Elven harbor and departure",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "material_targets": [
+        "pale wood",
+        "harbor stone",
+        "calm water",
+        "sail cloth"
+      ],
+      "required_asset_groups": [
+        "quays",
+        "ships",
+        "shore road"
+      ],
+      "character_or_creature_source_prep": [
+        "Elves",
+        "Hobbit epilogue variants"
+      ],
+      "qc_required_before_unreal": [
+        "source_rights_receipt",
+        "sha256_original_receipt",
+        "derived_copy_only",
+        "blender_static_qc",
+        "material_slot_validation",
+        "lod_or_culling_plan",
+        "collision_strategy",
+        "import_batch_manifest"
+      ]
+    },
+    {
+      "index": 26,
+      "id": "REGION_26_EREBOR_DALE",
+      "chapter_scope": "EXPANSION_PREP",
+      "identity": "Dwarven mountain and Mannish valley",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "material_targets": [
+        "carved granite",
+        "dwarven metal",
+        "market stone",
+        "fur cloth"
+      ],
+      "required_asset_groups": [
+        "mountain gate",
+        "Dale streets",
+        "workshops"
+      ],
+      "character_or_creature_source_prep": [
+        "Dwarves",
+        "Dale civilians"
+      ],
+      "qc_required_before_unreal": [
+        "source_rights_receipt",
+        "sha256_original_receipt",
+        "derived_copy_only",
+        "blender_static_qc",
+        "material_slot_validation",
+        "lod_or_culling_plan",
+        "collision_strategy",
+        "import_batch_manifest"
+      ]
+    },
+    {
+      "index": 27,
+      "id": "REGION_27_MIRKWOOD",
+      "chapter_scope": "EXPANSION_PREP",
+      "identity": "dense enchanted forest",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "material_targets": [
+        "dark bark",
+        "webbing",
+        "fungus",
+        "wet leaves"
+      ],
+      "required_asset_groups": [
+        "forest tracks",
+        "Elven paths",
+        "spider zones"
+      ],
+      "character_or_creature_source_prep": [
+        "woodland elves",
+        "spider source prep"
+      ],
+      "qc_required_before_unreal": [
+        "source_rights_receipt",
+        "sha256_original_receipt",
+        "derived_copy_only",
+        "blender_static_qc",
+        "material_slot_validation",
+        "lod_or_culling_plan",
+        "collision_strategy",
+        "import_batch_manifest"
+      ]
+    },
+    {
+      "index": 28,
+      "id": "REGION_28_LAKE_TOWN",
+      "chapter_scope": "EXPANSION_PREP",
+      "identity": "wooden town on water",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "material_targets": [
+        "weathered planks",
+        "lake water",
+        "rope",
+        "tarred wood"
+      ],
+      "required_asset_groups": [
+        "dock streets",
+        "warehouses",
+        "boat channels"
+      ],
+      "character_or_creature_source_prep": [
+        "lake-town citizens",
+        "guards"
+      ],
+      "qc_required_before_unreal": [
+        "source_rights_receipt",
+        "sha256_original_receipt",
+        "derived_copy_only",
+        "blender_static_qc",
+        "material_slot_validation",
+        "lod_or_culling_plan",
+        "collision_strategy",
+        "import_batch_manifest"
+      ]
+    }
+  ],
+  "evidence_boundary": "Cloud/source production queue only. Does not claim Unreal import, PIE, Windows package, target-device performance, visual acceptance or Gate 6/7 completion."
+}
