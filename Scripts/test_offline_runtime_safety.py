@@ -76,6 +76,13 @@ class OfflineRuntimeSafetyTests(unittest.TestCase):
         self.assertLess(callback.index("PendingAudioRequestTokens.FindRef(LoadKey) != RequestToken"),
                         callback.index("Cast<USoundBase>(AssetPath.ResolveObject())"))
 
+    def test_pg129_validator_requires_stronger_audio_generation_guard(self):
+        preflight = source("Scripts/pre_unreal_validate.py")
+        self.assertIn("PG-129 async audio generation-token cancellation guard missing", preflight)
+        self.assertIn("PendingAudioRequestTokens.FindRef(LoadKey) != RequestToken", preflight)
+        self.assertIn("PendingAudioRequestTokens.Remove(It.Key())", preflight)
+        self.assertNotIn('if "if (!PendingAudioLoads.Contains(LoadKey))" not in pg129_audio:', preflight)
+
     def test_player_placement_must_observe_teleport_result(self):
         cpp = source("Source/ShireJourney/Private/World/ChapterWorldRouter.cpp")
         restore = body_between(cpp, "bool AChapterWorldRouter::PlacePlayerAtCommittedTransform(",
