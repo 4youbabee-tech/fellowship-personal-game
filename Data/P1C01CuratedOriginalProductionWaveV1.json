@@ -1,0 +1,112 @@
+{
+  "authority": "Data/ProjectGovernor.json",
+  "chapter": "P1C01",
+  "evidence": {
+    "device": "NOT_TESTED",
+    "gate67": "OPEN",
+    "pie": "NOT_TESTED",
+    "python_source_staging": "STATIC-VALIDATED / locally physical bytes",
+    "ue_import": "NOT_TESTED",
+    "visual": "NOT_ACCEPTED"
+  },
+  "governor_lane_count": 5,
+  "id": "P1C01_CURATED_ORIGINAL_REAL_SOURCE_WAVE_V1",
+  "import_contract": {
+    "already_validated_import": false,
+    "commandlet": "ShireProductionImport",
+    "editor_postimport": "Scripts/ue4_p1c01_curated_postimport.py",
+    "manual_ue_gate": "P1C01_REAL_BUILD_IMPORT_REQUIRED",
+    "stage_script": "Scripts/stage_p1c01_curated_original.py"
+  },
+  "local_source_staging_status": "143_FILES_PHYSICALLY_STAGED_IN_CHAT_CONTAINER_STATIC_VALIDATED_ONLY",
+  "logical_workstreams": [
+    {
+      "file_bindings": 12,
+      "governor_lane": "VISUAL_WORLD_PREP",
+      "id": "L01_TREES",
+      "state": "LOCAL_SOURCE_STAGED_ONLY"
+    },
+    {
+      "file_bindings": 24,
+      "governor_lane": "VISUAL_WORLD_PREP",
+      "id": "L02_GROUND_AND_FOLIAGE",
+      "state": "LOCAL_SOURCE_STAGED_ONLY"
+    },
+    {
+      "file_bindings": 16,
+      "governor_lane": "VISUAL_WORLD_PREP",
+      "id": "L03_BAG_END_HERO_ARCH",
+      "state": "LOCAL_SOURCE_STAGED_ONLY"
+    },
+    {
+      "file_bindings": 20,
+      "governor_lane": "VISUAL_WORLD_PREP",
+      "id": "L04_HOBBITON_VILLAGE_PROPS",
+      "state": "LOCAL_SOURCE_STAGED_ONLY"
+    },
+    {
+      "file_bindings": 63,
+      "governor_lane": "WAREHOUSE_ASSET_INTAKE",
+      "id": "L05_ORIGINAL_SURFACES",
+      "state": "LOCAL_SOURCE_STAGED_ONLY"
+    },
+    {
+      "file_bindings": 8,
+      "governor_lane": "VISUAL_WORLD_PREP",
+      "id": "L06_ROAD_AND_FERRY_PROPS",
+      "state": "LOCAL_SOURCE_STAGED_ONLY"
+    },
+    {
+      "file_bindings": 0,
+      "governor_lane": "SKELETAL_CHARACTER_PREP",
+      "id": "L07_CHARACTER_QC_REVIEW_ONLY",
+      "state": "SOURCE_REVIEW_OR_ENGINE_QA_HOLD"
+    },
+    {
+      "file_bindings": 0,
+      "governor_lane": "GAMEPLAY_PRESENTATION_PREP",
+      "id": "L08_AUDIO_AND_RUNTIME_QA_REVIEW_ONLY",
+      "state": "SOURCE_REVIEW_OR_ENGINE_QA_HOLD"
+    }
+  ],
+  "notes": [
+    "No new runtime chapter opens",
+    "No forced universal low quality",
+    "No synchronous heavy runtime loads",
+    "No crowd Spawn/Destroy pressure",
+    "Use existing HISM/ISM and object pools",
+    "Unreal Editor material binding must be reviewed"
+  ],
+  "persistent_warehouse_writer_count": 1,
+  "profile": {
+    "engine": "UE4.27.2",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "vram_gb": 2
+  },
+  "runtime_writer_count": 1,
+  "schema_version": 1,
+  "source_archive_manifest_sha256": "65ae0447840725746614220d8135a65c9b897ba8326d69c756cf5e1a50519b7b",
+  "source_authority": {
+    "architecture": "PROJECT_ORIGINAL_PROCEDURAL",
+    "external_pbr": "RECEIPT_CC0_CLAIM_REQUIRES_REVIEW",
+    "nature": "PROJECT_ORIGINAL_PROCEDURAL",
+    "regional_pbr": "PROJECT_ORIGINAL_SOURCE"
+  },
+  "unreal4_status": "COMMANDLET_IMPORT_AND_EDITOR_LOD_PENDING",
+  "validated_counts": {
+    "base_static_mesh_families": 34,
+    "curated_logical_bindings": 263,
+    "curated_unique_files": 230,
+    "external_png_source_held_for_license": 120,
+    "lod_sidecars": 46,
+    "original_binary_fbx": 80,
+    "original_owned_source_stage_files": 143,
+    "original_packed_png": 63,
+    "original_pbr_material_triplets": 21,
+    "ten_source_zips": 10
+  },
+  "windows_warehouse_status": "NOT_YET_PHYSICALLY_ATTESTED_BY_NEW_WINDOWS_RUN"
+}
