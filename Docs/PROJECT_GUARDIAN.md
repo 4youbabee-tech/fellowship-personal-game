@@ -1,6 +1,18 @@
 ## 2026-10-11 — NPC density fallback invariant (PR #400 integration)
 Missing chapter-specific profiles must recover global spawn interval and inner/outer/cull radii, not previously active world chapter overrides. Guard: Scripts/test_living_world_density_fallback.py. Real UE runtime and target device regression remain required.
 
+## 2026-10-11 — Never count a ZIP filename as an imported Unreal asset
+
+Offline preflight now verifies member paths, CRC, nested ZIP, physically referenced SHA receipts, 7400 binary-vs-ASCII FBX, PNG header dimensions and provider CC0 claims. Never promote source-integrity PASS to import/PIE or device acceptance. Deduplicate byte-identical Shire nature FBX across packages; quarantine unfinished Poly Haven `wooden_barrels_01`. Hosted CI must execute the eight regression tests. Source-only, no runtime activation.
+
+## 2026-10-11 — Duplicate Drive warehouse writer regression
+
+Two independently scheduled Drive ZIP intake workflows/scripts used disjoint receipts under the same physical warehouse. Consolidate to one scheduled writer, test that the second workflow is absent and cleanup is not scheduled, require watchdog health and retain fail-closed license/import provenance status. Exact-head hosted tests required; no runner ingestion claimed.
+
+**2026-10-11 auto Drive warehouse candidate:** Added two-hour scheduled Windows source ZIP intake (Scripts/drive_warehouse_sync.py) and narrow exact-ID/hash/independent-backup/actual import-evidence cleanup. Uses isolated runner temp source and persistent D warehouse. One-time private rclone OAuth required; no first transfer, Unreal import or cleanup has been proven. Gate 6/7 unchanged. Hosted regressions pending.
+
+**2026-10-11 Automatic private Drive intake candidate:** Introduced `Scripts/sync_drive_warehouse.py` and `.github/workflows/private-drive-warehouse-intake.yml` on dedicated infra branch. Hourly self-hosted warehouse-only schedule, exact-SHA temporary checkout, persistent `D:\actions-runner\_warehouse\ShireJourney\_drive_intake`, immutable SHA256 receipts, Drive MD5 match, ZIP CRC and path-safety checks, minimum 6 GiB free. This **does not** make Drive credentials available on runner: requires separately configured `SHIRE_DRIVE_RCLONE_CONFIG_B64` and rclone executable with private `shire-drive:` root restricted to the authorized Drive folder. No Drive deletion is implemented or allowed until independent backup, local integrity and import/disposition proof; do not purge sole sources. Candidate only, no actual runner sync or static CI proof yet; P1C01 Engine gate unchanged.
+
 **2026-10-11 P1C01 save restore overlap trigger candidate:** UE runner #1969 observed P1C08 after-route-change restore fail (quest stages/story beats/NPC memory/route progress). Pre-commit overlapping trigger may mutate restored story while placement pending. Candidate sets pending saved-player transform before CommitPersistenceRestore and extends IsGameplayWorldCommitted guard. Source regression added; exact-head CI, UE transition audit and PIE remain pending. No Gate 6/7 promotion.
 
 ## 2026-10-11 — Whole-game regional CC0 material receipt cache correction (candidate)

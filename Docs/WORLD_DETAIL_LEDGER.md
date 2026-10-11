@@ -1,6 +1,25 @@
 ## 2026-10-11 — Existing living-world density fallback correction (PR #400)
 Registered source-only fix before integration: absent chapter density override currently leaks population cadence and radii from prior chapter. Candidate restores global settings in ApplyPopulationProfile; no new chapter scope, no Unreal acceptance claim.
 
+## 2026-10-11 — Drive source acceptance preflight before any future UE promotion
+
+- Registered pre-import safety work under existing W01/P1C01 Drive intake: require physically hashed, path-safe, nested-archive and receipt-validated batches to avoid importing duplicate, ASCII, unlicensed or incomplete candidates. The ten archived source files were copied into the ChatGPT work container only, not into the owner Windows D: warehouse.
+- Source evidence: 10 archives, 206148715 bytes, 10/10 source integrity PASS; 36 duplicated binary nature FBX, 36 ASCII-only older nature FBX, 44 modular binary FBX, 36 complete Poly Haven CC0 sets across four shards, one Poly Haven candidate quarantined for missing maps. Need independent Windows warehouse and actual UE import/PIE evidence before promotion.
+- Implement `Scripts/validate_drive_source_bundles.py` as optional preflight over real staged ZIPs and an eight-case offline regression; record the physical receipt without altering runtime policy or Drive deletion authorization.
+
+## 2026-10-11 — P1C01 source warehouse single-writer repair (registered before implementation)
+
+Existing PR #402 included two scheduled pipelines targeting the same persistent D: warehouse with divergent receipts and no cross-workflow lock. Avoid duplicate downloads / competing writers by removing the redundant private/hourly path, keeping the approved root-scoped two-hour source-only pipeline, adding runner session guard and explicit license review. Safety boundary: transfer never means import acceptance; no unattended remote deletion.
+
+## 2026-10-11 — Automatic Google Drive temporary warehouse intake and guarded cleanup (registered BEFORE implementation)
+
+- Owner direction: while runner/PC is off, authorized asset batches remain in private Drive; when Windows runner returns, ingest all four approved staging categories automatically into the permanent D: warehouse, verify hashes, retain durable receipts, and never strand source assets in Drive.
+- Scope: source warehouse intake only (not UE gameplay, P1C02 runtime or chapter acceptance). Reuse existing persistent warehouse, no Unreal project workspace or runner identity mutation.
+- Credential boundary: private Drive's ChatGPT connector does NOT supply GitHub Actions OAuth. Dedicated least-privilege rclone credentials must exist on runner/Actions before automatic transfer can succeed. Never grant public Drive access or commit OAuth tokens.
+- Execution: bounded queued self-hosted asset-only workflow, SHA256 and remote MD5 checks and ZIP CRC scan, idempotent persistent receipts, 6 GiB warehouse disk reserve; missing credentials must fail closed with unmistakable warning.
+- Cleanup: NEVER age-delete or remove after download alone; only a previously ingested managed file whose same-ID remote checksum still matches, independent verified backup exists, and import/usage acceptance disposition is explicitly recorded. Keep remote until that proof exists, then perform narrow exact-object deletion with durable receipt.
+- Required proof: exact-head hosted unit regressions plus first real self-hosted sync with persistent local hashes and inventory; acceptance/import remains separate. No claim that Drive was already downloaded to PC.
+
 ## 2026-10-11 — P1C01 persistent restore overlap trigger race (observed UE run #1969)
 
 - Evidence: UE4.27 manual Build Validation Run 38163212516 / C++ Build job 114540430858 compiled and passed standalone state/chapter sweeps, but in multi-chapter transition audit P1C08 after returning Frodo route logged `StoryPresentation: beat=AnduinDeparture` within `ShirePersistenceRestore` publication, then `ShireStateAudit: persistence-fields=FAIL fields=runtime-quest-stages,runtime-story-beats,runtime-npc-memory,runtime-route-progress` and `ShireTransitionAudit: FAIL disk-save` (exit 65).
