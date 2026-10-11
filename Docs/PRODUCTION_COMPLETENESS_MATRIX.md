@@ -1,3 +1,9 @@
+## 2026-10-11 — Branch Cleanup live-open-PR array decoder regression (candidate)
+
+- Investigated hosted cleanup run `38135341955` after successful reviewed retirement. The run logged `activePrHeads=0` even though GitHub had open PRs. Exact per-branch rechecks and nonzero-ahead fallback preserved unique heads in that run, but bulk PR protection was not reliably visible.
+- Root-cause mitigation: normalize both flat and nested Windows PowerShell `Invoke-RestMethod` PR JSON arrays with `Get-OpenPullRefs`; use the same normalizer for the initial active-head set and exact per-branch recheck. Preserve fail-closed SHA lease, closed/replacement-PR proof, archive/Edoras protections and zero-ahead policy unchanged.
+- Hosted PowerShell classifier regression now executes the actual helper against flat/two-level/single/empty PR samples. **Evidence status:** source candidate pending exact-head Pre-Unreal/Five-Lane; previous #373 branch deletion remains proven at `38135341955`. No UE compile, FBX import, PIE, device, FPS, visual, or Gate 6/7 claim.
+
 ## 2026-10-11 — Post-#372 reviewed stale-ref retirement (PR candidate)
 
 - **Policy:** DEC-106 reconciled after merged PR #372 (merge `a004d47b6c7d4681a328d88a12fc5de4819e1f11`) with exact-head GitHub-hosted Pre-Unreal SUCCESS `38134887589` and Five-Lane SUCCESS `38134887757`. Classified **STATIC-VALIDATED**. All WindowsNoEditor packages remain owner-requested chapter/release closeout only; engine compile/PIE/device/visual/Gate6/7 remains unproven.
