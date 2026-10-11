@@ -113,6 +113,7 @@ protected:
     void ToggleWorldMap();
     void QuickSave();
     void QuickLoad();
+    void SkipActiveCinematic();
     void DebugPreviousChapter();
     void DebugNextChapter();
     void DebugToggleParallelRoute();
