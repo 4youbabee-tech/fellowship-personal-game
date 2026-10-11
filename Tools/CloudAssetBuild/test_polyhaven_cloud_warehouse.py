@@ -12,5 +12,5 @@ class Tests(unittest.TestCase):
  def test_channel_pack(self):
   raw=io.BytesIO();Image.new("RGB",(1024,1024),(110,85,70)).save(raw,"PNG")
   self.assertEqual(m.decode(raw.getvalue(),"RGB").size,(1024,1024))
-  self.assertEqual(m.png(Image.new("RGB",(1024,1024))).startswith(b"\\x89PNG".decode("unicode_escape").encode("latin1")),True)
+  self.assertEqual(m.png(Image.new("RGB",(1024,1024))).startswith(bytes.fromhex("89504e47")),True)
 if __name__=="__main__":unittest.main()
