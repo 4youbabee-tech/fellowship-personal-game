@@ -80,4 +80,4 @@ jobs:
           name: p1c01-five-lane-${{ matrix.lane }}-${{ env.TARGET_SHA }}
           path: ${{ runner.temp }}/p1c01-${{ matrix.lane }}-candidate-report.json
           if-no-files-found: error
-          retention-days: 30
+          retention-days: 7
