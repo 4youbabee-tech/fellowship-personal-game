@@ -1,3 +1,5 @@
+2026-10-11 P1C01 NO-GROUND SPAWN FALLBACK SOURCE PATCH: ChapterWorldRouter::MovePlayerToChapterStart previously performed SetActorLocationAndRotation(RequestedLocation,...) even after ResolveGroundedSpawnLocation failed. Now retains pawn's last position, sets world hold and returns false for existing transaction rollback to recover. Added test_no_ground_never_teleports_to_unvalidated_requested_location in hosted Scripts/test_offline_runtime_safety.py; existing Pre-Unreal wiring runs it. This is SOURCE PATCH PENDING EXACT HEAD STATIC VALIDATION only. No UE compile, PIE, DEVICE, VRAM or VISUAL evidence; Windows Self-Hosted Runner not activated.
+
 2026-10-11 OFFLINE P1C01 PLAYER RELIABILITY FIXES — SOURCE CANDIDATE (exact-head CI pending):
 - Automatic checkpoint dispatch no longer loses pending ID on failed request; pending restore transform blocks checkpoint snapshots, rejected saves retry no faster than once per second. Async disk success remains separate callback evidence.
 - ChapterWorldRouter now handles SetActorLocationAndRotation rejection on both save restore and chapter start: do not log PLACED or return true for rejected teleport.
