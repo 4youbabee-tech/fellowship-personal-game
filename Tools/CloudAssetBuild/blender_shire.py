@@ -78,7 +78,10 @@ def box(name, pos, scale, family, out, bevel=0.0):
     obj = bpy.context.object
     obj.name = name
     obj.dimensions = scale
-    return finish(obj, family, out, bevel)
+    # Width must be substantially smaller than the thinnest edge; Blender
+    # Bevel can create zero-area faces on 0.025m stepping stones otherwise.
+    safe_bevel = min(bevel, min(scale) * 0.16) if bevel else 0.0
+    return finish(obj, family, out, safe_bevel)
 
 
 def cylinder(name, pos, radius, depth, family, out, vertices, rotation=(0, 0, 0)):

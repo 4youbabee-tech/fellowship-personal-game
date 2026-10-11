@@ -83,6 +83,7 @@ class CloudShireAssetTests(unittest.TestCase):
         self.assertIn("FBX_VERSION_NOT_7400", source)
         self.assertIn("collision_groups", source)
         self.assertNotIn('version="BIN7400"', source)
+        self.assertIn("safe_bevel = min(bevel, min(scale) * 0.16)", source)
 
     def test_pbr_source_cache_fails_closed_on_changed_content(self):
         workflow = (ROOT / ".github/workflows/cloud-p1c01-asset-production.yml").read_text(encoding="utf-8")
