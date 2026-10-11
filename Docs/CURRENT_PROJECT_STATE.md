@@ -1,3 +1,5 @@
+**2026-10-11 checkpoint reconciliation (candidate):** Live GitHub inventory observed 30 branches and 14 open PRs. Created `Docs/RECOVERY_CHECKPOINT_2026-10-11.md` on branch `ops/checkpoint-branch-reconciliation-20261011`; compared #366 (2 ahead/41 behind), #367 (1 ahead/41 behind), #374 (4 ahead/19 behind), and older checkpoint recovery (1 ahead/97 behind) against develop. All divergent: preserve pending selective salvage and exact-head checks. No PR merged, branch deleted, UE compile, PIE, device, FPS, visual or Gate 6/7 proof from this checkpoint. This is repository-source documentation only, pending exact-head static CI.
+
 **PG-170 contract alignment (2026-10-11):** exact-head Pre-Unreal `38135715043` FAILED at outdated static assertions for legacy `$_` PR-row dereference. The *real* PowerShell array decoder regressions passed (flat=2, nested=2, single=1, empty=0). `Scripts/pre_unreal_validate.py` now checks the actual `$row` guards and `Get-OpenPullRefs` reuse rather than prior variable spelling. New exact-head hosted CI pending; no engine/PIE/device evidence.
 
 ## 2026-10-11 — Branch Cleanup live-open-PR array decoder regression (candidate)
