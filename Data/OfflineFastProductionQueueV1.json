@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "plan_id": "CLOUD_FIRST_FAST_PRODUCTION_QUEUE_V1",
+  "status": "ACTIVE_CLOUD_FIRST_WHILE_OWNER_SELF_HOSTED_RUNNER_RESTS",
+  "created_on": "2026-10-11",
+  "authority": [
+    "Data/ProjectGovernor.json#owner_fast_batch_intake_policy_2026_10_11",
+    "Data/MaximumSafeProductionModeV1.json#owner_offline_fast_production_2026_10_11"
+  ],
+  "owner_constraint": "Owner laptop and Windows self-hosted Unreal runner are resting; continue cloud-hosted GitHub/source production and do not queue self-hosted UE4 jobs unless truly necessary.",
+  "objective": "Keep P1C01 and whole-game production moving through cloud-safe preparation, deterministic receipts, GitHub-hosted/static validation and batchable artifacts that can be promoted when the self-hosted runner is intentionally available.",
+  "source_only_allowed_now": [
+    "repo policy/data/docs updates",
+    "GitHub-hosted Linux/Windows static validation",
+    "Python and PowerShell prep tooling that does not invoke Unreal",
+    "asset manifests, SHA256 receipt reuse and candidate ranking",
+    "FBX/PNG/TGA/ORM preparation scripts and static regressions",
+    "P1C01 placement, import and material mapping manifests",
+    "28-region source queue metadata without runtime activation",
+    "PR creation/review when changed paths do not match self-hosted Unreal workflows"
+  ],
+  "blocked_until_runner_available": [
+    "UE4 editor import commandlets on self-hosted Windows",
+    "PIE/runtime screenshots or visual acceptance",
+    "Windows cook/package/upload on the owner runner",
+    "target-device 720p DX11 FPS measurements",
+    "Gate 6/7 acceptance claims"
+  ],
+  "ci_policy": {
+    "open_pr_when_runner_offline": true,
+    "reason": "Cloud-hosted GitHub checks are allowed. PR creation is allowed when changed paths avoid workflows that queue the self-hosted UE4 Windows runner.",
+    "safe_branch_rule": "Create source/cloud-safe branches from latest develop, classify changed paths, then open PRs only when self-hosted workflows are not selected.",
+    "batching_rule": "Accumulate related source-only work into one branch/commit set; avoid micro-commits that create superseded checks.",
+    "reuse_rule": "Reuse unchanged SHA256 receipts and previous successful tests; rerun only tests affected by modified files.",
+    "self_hosted_block_rule": "If changed paths select UE4 import/build/package/warehouse workflows that require labels [self-hosted, Windows, X64, ue4-27], keep the branch ready and wait for explicit runner availability."
+  },
+  "license_policy": {
+    "private_home_use_note": "The owner has declared the game personal/home-use and not for publication or sale.",
+    "reduced_admin_rule": "Record a simple first-use source/right-to-use receipt for new external assets; do not block production with repeated license review for unchanged approved sources.",
+    "nonwaivable_rule": "Do not bypass access controls, copyright restrictions or executable-payload trust checks."
+  },
+  "p1c01_priority_order": [
+    "Bag End exterior/interior source pack readiness",
+    "Hobbiton and Bagshot Row placement/material manifests",
+    "Party Field, road, mill, water, bridge and garden manifests",
+    "Frodo/Bilbo/Gandalf/Sam/Merry/Pippin skeletal source QC",
+    "living Shire schedules, dialogue metadata, ambience and Arabic subtitle/UI source prep",
+    "incremental import batch manifest for the first runner return"
+  ],
+  "whole_middle_earth_parallel_prep": {
+    "runtime_activation": "LOCKED_UNTIL_P1C01_GATE_6_7",
+    "allowed": [
+      "source cataloguing",
+      "license/right-to-use receipt creation",
+      "SHA256 inventory",
+      "Blender/static conversion plans",
+      "region identity and material-kit manifests"
+    ]
+  },
+  "evidence_boundary": "This file enables faster cloud/source production only. It does not claim imported assets, PIE, Windows package, device performance, visual acceptance or Gate 6/7 completion."
+}

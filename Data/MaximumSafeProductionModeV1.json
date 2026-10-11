@@ -181,7 +181,7 @@
   "governor_work_start": "Scripts/governor_work_start.py",
   "owner_fast_intake_2026_10_11": {
     "authority": "Data/ProjectGovernor.json#owner_fast_batch_intake_policy_2026_10_11",
-    "status": "OWNER_REQUEST_REGISTERED_IMPLEMENTATION_PENDING",
+    "status": "ACTIVE_IMPLEMENTATION_STARTED_SOURCE_ONLY",
     "rule": "Reduce administrative friction; accept lawful technically repairable source formats and automatically convert to UE4.27 compatible FBX/PNG/TGA; reuse receipts and limit repeated tests; process large resource-bounded P1C01 batches while independent regions preparation continues.",
     "minimum_guards": [
       "usage_rights",
@@ -196,5 +196,70 @@
       "disable_proven_quality_gates",
       "declare_future_chapter_runtime_accepted"
     ]
+  },
+  "owner_offline_fast_production_2026_10_11": {
+    "authority": "Data/ProjectGovernor.json#owner_fast_batch_intake_policy_2026_10_11",
+    "status": "ACTIVE_CLOUD_FIRST_WHILE_OWNER_SELF_HOSTED_RUNNER_RESTS",
+    "source_queue": "Data/OfflineFastProductionQueueV1.json",
+    "classifier": "Scripts/offline_production_classifier.py",
+    "protocol": "Docs/OFFLINE_FAST_PRODUCTION_PROTOCOL.md",
+    "runner_rule": "Use GitHub-hosted cloud/static validation freely when useful, but do not queue self-hosted UE4/Windows import/build/package jobs while the owner laptop is resting unless explicitly necessary.",
+    "allowed_now": [
+      "source-only branches and PRs",
+      "GitHub-hosted static tests",
+      "repo manifests and receipts",
+      "offline conversion/QC tools",
+      "Blender/PBR/FBX preparation scripts that do not invoke Unreal",
+      "28-region source-prep metadata without runtime activation"
+    ],
+    "blocked_until_runner_returns": [
+      "self-hosted UE4 import commandlets",
+      "PIE/runtime validation",
+      "Windows cook/package/upload on the owner runner",
+      "target-device 720p DX11 FPS",
+      "Gate 6/7 acceptance"
+    ],
+    "batching_rule": "Batch source/cloud-safe changes into coherent production packets; reuse unchanged SHA256 receipts and avoid repeated wide scans or expensive builds.",
+    "license_admin_rule": "For private home-use production, record simple first-use rights/provenance receipts for new sources and do not repeat manual license review for unchanged approved assets.",
+    "evidence_boundary": "This is cloud-first production-speed implementation policy only. It does not claim runtime, visual, package, target-device or Gate 6/7 evidence.",
+    "current_cloud_production_outputs": {
+      "status": "P1C01_CLOUD_ASSEMBLY_VALIDATION_READY",
+      "plan": "Data/P1C01CloudShireAssemblyPlanV1.json",
+      "validator": "Scripts/validate_p1c01_cloud_assembly.py",
+      "tests": "Scripts/test_validate_p1c01_cloud_assembly.py",
+      "expected_local_checks": [
+        "python3 Scripts/validate_p1c01_cloud_assembly.py",
+        "python3 -m unittest Scripts/test_validate_p1c01_cloud_assembly.py",
+        "python3 -m unittest Scripts/test_offline_production_classifier.py"
+      ]
+    },
+    "whole_game_cloud_warehouse_outputs": {
+      "status": "WHOLE_GAME_CLOUD_WAREHOUSE_QUEUE_VALIDATION_READY",
+      "queue": "Data/WholeGameCloudWarehouseMaterialQueueV1.json",
+      "validator": "Scripts/validate_whole_game_cloud_warehouse_queue.py",
+      "tests": "Scripts/test_validate_whole_game_cloud_warehouse_queue.py",
+      "region_count": 28,
+      "purpose": "Prepare organized material kits, source rights receipts, SHA256 reuse, Blender QC and import batch manifests for every game region while keeping runtime activation locked to P1C01."
+    },
+    "source_grounded_packet_outputs": {
+      "status": "SOURCE_GROUNDED_PRODUCTION_PACKET_VALIDATION_READY",
+      "packet": "Data/SourceGroundedProductionPacketsV1.json",
+      "validator": "Scripts/validate_source_grounded_production_packets.py",
+      "tests": "Scripts/test_validate_source_grounded_production_packets.py",
+      "p1c01_packet_count": 7,
+      "region_guidance_count": 28,
+      "purpose": "Turn the attached production bibles into cloud-checkable Shire P1C01 and whole-game warehouse execution packets without requiring the Windows runner."
+    },
+    "cloud_asset_manifest_outputs": {
+      "status": "P1C01_CLOUD_ASSET_MANIFEST_VALIDATION_READY",
+      "manifest": "Data/P1C01CloudAssetProductionManifestsV1.json",
+      "validator": "Scripts/validate_p1c01_cloud_asset_manifests.py",
+      "tests": "Scripts/test_validate_p1c01_cloud_asset_manifests.py",
+      "static_world_batches": 6,
+      "material_batches": 5,
+      "character_batches": 5,
+      "whole_game_seed_regions": 28,
+      "purpose": "Convert source-grounded packets into concrete cloud-preparable asset/material/character/Blender QC queues while the Windows runner is offline."
+    }
   }
 }

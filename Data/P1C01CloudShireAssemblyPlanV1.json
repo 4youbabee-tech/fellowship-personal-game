@@ -1,0 +1,253 @@
+{
+  "schema_version": 1,
+  "plan_id": "P1C01_CLOUD_SHIRE_ASSEMBLY_PLAN_V1",
+  "status": "CLOUD_READY_SELF_HOSTED_IMPORT_PENDING",
+  "chapter": "P1C01",
+  "created_on": "2026-10-11",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/OfflineFastProductionQueueV1.json",
+    "Data/P1C01Gate67AcceptanceChecklistV1.json",
+    "Data/P1C01MaterialImportWaveV2.json",
+    "Data/NPCSocialModel.json",
+    "Data/LivingWorldFeaturePlan.json"
+  ],
+  "source_grounding": [
+    {
+      "source": "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+      "pages": [2, 3],
+      "uses": [
+        "The Shire / Hobbiton pastoral hills, lanes, farms, Hobbit-holes",
+        "Warm domestic scale, circular doors, gardens",
+        "Bag End as dense lived-in Hobbit interior with round geometry",
+        "Birthday, departure and epilogue state variants"
+      ]
+    },
+    {
+      "source": "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+      "pages": [2, 3],
+      "uses": [
+        "F1-01 Bilbo, Frodo, Gandalf in Middle-earth / Shire",
+        "Party setup, social onboarding and fireworks optional window",
+        "Bilbo leaves and Ring passes to Frodo postcondition",
+        "F1-02 Bag End / Shire with Frodo, Gandalf, Sam and Ring danger confirmation"
+      ]
+    },
+    {
+      "source": "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE",
+      "pages": [2, 3],
+      "uses": [
+        "Bilbo birthday setup",
+        "Gandalf fireworks",
+        "Dragon firework mishap",
+        "Road hiding as the next Shire-road skill ramp"
+      ]
+    },
+    {
+      "source": "10_3D_VISUAL_ASSET_ATLAS_PRODUCTION",
+      "pages": [1, 2],
+      "uses": [
+        "Visual atlas is modeling aid only; project sources and film scenes outrank generated plates",
+        "Major locations require exterior massing, entrances, interiors, rooms, circulation, modular architecture, materials, props, lighting and gameplay access"
+      ]
+    }
+  ],
+  "cloud_execution_boundary": {
+    "allowed_now": [
+      "manifest validation",
+      "source/reference indexing",
+      "asset family assignment",
+      "material slot mapping",
+      "NPC schedule and interaction specification",
+      "import batch definition"
+    ],
+    "requires_self_hosted_runner": [
+      "UE4 import commandlet",
+      "PIE traversal check",
+      "Windows package",
+      "target-device FPS capture",
+      "visual acceptance"
+    ],
+    "truth_rule": "Do not promote any item beyond CLOUD_READY_SELF_HOSTED_IMPORT_PENDING until self-hosted Unreal evidence exists."
+  },
+  "required_scene_coverage": [
+    "BAG_END_EXTERIOR",
+    "BAG_END_INTERIOR",
+    "HOBBITON_CORE",
+    "BAGSHOT_ROW",
+    "PARTY_FIELD",
+    "SHIRE_ROADS",
+    "WATER_MILL_BRIDGE",
+    "GARDENS_ORCHARDS",
+    "AMBIENT_NATURE"
+  ],
+  "scene_assembly_batches": [
+    {
+      "id": "BAG_END_EXTERIOR_INTERIOR",
+      "priority": 1,
+      "areas": ["BAG_END_EXTERIOR", "BAG_END_INTERIOR"],
+      "state_variants": ["BILBO_OCCUPIED", "FRODO_DEPARTURE", "EPILOGUE_READY"],
+      "asset_families": [
+        "round green door and circular-window modules",
+        "hill-embedded Hobbit-hole shell",
+        "warm plaster, stone edging, wood trim",
+        "hearth, pantry, writing desk, maps/books, shelves, tableware",
+        "low warm lamps and domestic clutter"
+      ],
+      "materials_from_wave": [
+        "SH_WARM_PLASTER",
+        "SH_PLASTER_ALT",
+        "SH_WOOD_INTERIOR",
+        "SH_STONE_TILES",
+        "SH_BROWN_LEATHER",
+        "SH_MOSS_STONE"
+      ],
+      "import_policy": "derived assets only; originals remain in warehouse/source receipts",
+      "runner_gate": "SELF_HOSTED_IMPORT_REQUIRED"
+    },
+    {
+      "id": "HOBBITON_BAGSHOT_ROW_SOCIAL_CORE",
+      "priority": 2,
+      "areas": ["HOBBITON_CORE", "BAGSHOT_ROW", "GARDENS_ORCHARDS"],
+      "state_variants": ["BIRTHDAY_STATE", "DEPARTURE_STATE"],
+      "asset_families": [
+        "clustered Hobbit-hole facades with readable home/work hierarchy",
+        "garden fences, hedges, vegetable beds, flower beds",
+        "lane props, baskets, carts, crates, laundry, tools",
+        "orchard rows and worked soil"
+      ],
+      "materials_from_wave": [
+        "SH_GRASS_GROUND",
+        "SH_GRASS_PATH",
+        "SH_DIRT_SOIL",
+        "SH_DAMP_SOIL",
+        "SH_WOOD_CHIPS",
+        "SH_TREE_BARK"
+      ],
+      "import_policy": "HISM/ISM for repeated foliage and small props; actor count stays bounded",
+      "runner_gate": "SELF_HOSTED_IMPORT_REQUIRED"
+    },
+    {
+      "id": "PARTY_FIELD_FIREWORKS",
+      "priority": 3,
+      "areas": ["PARTY_FIELD"],
+      "state_variants": ["PARTY_SETUP", "PARTY_ACTIVE", "POST_PARTY_CLEANUP"],
+      "asset_families": [
+        "party tree landmark",
+        "tables, tents, benches and food props",
+        "firework crates and safe launch anchors",
+        "ambient crowd gathering zones",
+        "dragon firework authored path marker"
+      ],
+      "activities": ["ACT_F1_01", "ACT_F1_02", "ACT_F1_03"],
+      "materials_from_wave": [
+        "SH_GRASS_GROUND",
+        "SH_RUSTIC_PATH",
+        "SH_WOOD_INTERIOR_ALT",
+        "SH_BROWN_LEATHER"
+      ],
+      "runner_gate": "SELF_HOSTED_IMPORT_REQUIRED"
+    },
+    {
+      "id": "ROADS_WATER_MILL_BRIDGE",
+      "priority": 4,
+      "areas": ["SHIRE_ROADS", "WATER_MILL_BRIDGE", "AMBIENT_NATURE"],
+      "state_variants": ["LOW_THREAT_DAY", "DEPARTURE_TENSION"],
+      "asset_families": [
+        "curved pastoral road kit with readable vista anchors",
+        "small bridge and water-mill support kit",
+        "riverbank stones and reeds",
+        "hedgerow/woodland edge breakup",
+        "ambient birds, insects, wind and water audio markers"
+      ],
+      "materials_from_wave": [
+        "SH_STONY_PATH",
+        "SH_COBBLESTONE",
+        "SH_ROCK_EDGE",
+        "SH_FOREST_FLOOR",
+        "SH_LEAF_LITTER"
+      ],
+      "activities": ["ACT_F1_04"],
+      "runner_gate": "SELF_HOSTED_IMPORT_REQUIRED"
+    }
+  ],
+  "character_roster": [
+    {
+      "id": "PLAYER_FRODO",
+      "role": "playable",
+      "cloud_ready_work": ["skeleton/animation candidate inventory", "material slot naming contract", "dialogue subtitle source rows"],
+      "runner_gate": "SELF_HOSTED_IMPORT_REQUIRED"
+    },
+    {
+      "id": "NPC_BILBO",
+      "role": "story elder",
+      "source_profile": "Data/NPCSocialModel.json#NPC_BILBO",
+      "cloud_ready_work": ["Bag End / Party Field placement anchors", "birthday departure state dialogue tags"],
+      "runner_gate": "SELF_HOSTED_IMPORT_REQUIRED"
+    },
+    {
+      "id": "NPC_GANDALF",
+      "role": "wizard guide",
+      "source_profile": "Data/NPCSocialModel.json#NPC_GANDALF",
+      "cloud_ready_work": ["arrival route anchor", "firework activity anchor", "Ring revelation dialogue tags"],
+      "runner_gate": "SELF_HOSTED_IMPORT_REQUIRED"
+    },
+    {
+      "id": "NPC_SAM",
+      "role": "gardener companion",
+      "source_profile": "Data/NPCSocialModel.json#NPC_SAM",
+      "cloud_ready_work": ["gardening/home-work route", "overheard Ring-danger gate", "departure route anchor"],
+      "runner_gate": "SELF_HOSTED_IMPORT_REQUIRED"
+    },
+    {
+      "id": "NPC_MERRY",
+      "role": "companion / party mischief",
+      "source_profile": "Data/NPCSocialModel.json#NPC_MERRY",
+      "cloud_ready_work": ["Party Field social route", "dragon firework mishap tag"],
+      "runner_gate": "SELF_HOSTED_IMPORT_REQUIRED"
+    },
+    {
+      "id": "NPC_PIPPIN",
+      "role": "companion / party mischief",
+      "source_profile": "Data/NPCSocialModel.json#NPC_PIPPIN",
+      "cloud_ready_work": ["Party Field social route", "dragon firework mishap tag"],
+      "runner_gate": "SELF_HOSTED_IMPORT_REQUIRED"
+    }
+  ],
+  "living_shire_director_inputs": [
+    {
+      "id": "SHIRE_MORNING_WORK",
+      "time_window": "MORNING",
+      "roles": ["GARDENER", "FARMER", "RESIDENT"],
+      "anchors": ["GARDENS_ORCHARDS", "BAGSHOT_ROW", "HOBBITON_CORE"],
+      "behaviors": ["garden_tend", "carry_basket", "neighbor_greeting"],
+      "pooling": "ambient aggregate, distance-throttled"
+    },
+    {
+      "id": "SHIRE_PARTY_SOCIAL",
+      "time_window": "BIRTHDAY_EVENING",
+      "roles": ["RESIDENT", "SOCIAL_CONTACT", "COMPANION"],
+      "anchors": ["PARTY_FIELD"],
+      "behaviors": ["table_chat", "watch_fireworks", "react_to_mishap"],
+      "pooling": "bounded crowd pockets"
+    },
+    {
+      "id": "SHIRE_DEPARTURE_TENSION",
+      "time_window": "DEPARTURE_NIGHT",
+      "roles": ["COMPANION"],
+      "anchors": ["BAG_END_INTERIOR", "SHIRE_ROADS"],
+      "behaviors": ["quiet_departure", "road_hiding_prep", "low_voice_dialogue"],
+      "pooling": "named story only plus minimal ambience"
+    }
+  ],
+  "cloud_verification": {
+    "validator": "Scripts/validate_p1c01_cloud_assembly.py",
+    "must_cover": {
+      "scene_areas": 9,
+      "characters": 6,
+      "activities": 4,
+      "living_inputs": 3
+    }
+  },
+  "evidence_boundary": "This is an actionable cloud production assembly plan. It does not claim assets were imported into Unreal, rendered in PIE, accepted visually, packaged for Windows or validated on target hardware."
+}

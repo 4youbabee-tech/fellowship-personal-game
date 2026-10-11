@@ -33,6 +33,7 @@ $marker = 'Set-Location $env:GITHUB_WORKSPACE'
 if (-not $source.Contains($marker)) { throw 'Classifier entry point missing' }
 $program = [scriptblock]::Create($source.Replace($marker, $mocks + [Environment]::NewLine + $marker).Replace('exit 0', 'return'))
 $cases = @(
+    @{Name='cloud-first-shire-assembly'; Paths=@('Data/ProjectGovernor.json','Data/MaximumSafeProductionModeV1.json','Data/OfflineFastProductionQueueV1.json','Data/P1C01CloudShireAssemblyPlanV1.json','Data/SourceGroundedProductionPacketsV1.json','Data/P1C01CloudAssetProductionManifestsV1.json','Scripts/offline_production_classifier.py','Scripts/test_offline_production_classifier.py','Scripts/validate_p1c01_cloud_assembly.py','Scripts/test_validate_p1c01_cloud_assembly.py','Scripts/validate_source_grounded_production_packets.py','Scripts/test_validate_source_grounded_production_packets.py','Scripts/validate_p1c01_cloud_asset_manifests.py','Scripts/test_validate_p1c01_cloud_asset_manifests.py','Docs/OFFLINE_FAST_PRODUCTION_PROTOCOL.md'); Proof=$true; Mode='inherit'; TreeProof=$false},
     @{Name='onboarding'; Paths=@('README.md','Scripts/new_developer_onboarding.ps1','Scripts/pre_unreal_validate.py'); Proof=$true; Mode='inherit'; TreeProof=$false},
     @{Name='handoff'; Paths=@('Scripts/governor_handoff.py','Scripts/test_governor_handoff.py'); Proof=$true; Mode='inherit'; TreeProof=$false},
     @{Name='p1c01-material-tooling'; Paths=@('Scripts/prepare_p1c01_material_intake.ps1','Scripts/promote_p1c01_material_intake.ps1','Scripts/run_p1c01_material_pipeline.ps1','Scripts/export_p1c01_material_source_branch.ps1','Scripts/pre_unreal_validate.py','Docs/CURRENT_PROJECT_STATE.md'); Proof=$true; Mode='inherit'; TreeProof=$false},
@@ -45,6 +46,7 @@ $cases = @(
     @{Name='frodo-lowpoly-dummy-source-inventory'; Paths=@('Data/P1C01OpenGameArtLowpolyDummyCandidateV1.json','Scripts/inspect_p1c01_frodo_lowpoly_dummy_candidate.ps1','.github/workflows/p1c01-frodo-lowpoly-dummy-source-inventory.yml','Docs/CURRENT_PROJECT_STATE.md'); Proof=$true; Mode='inherit'; TreeProof=$false},
     @{Name='human-wave2-dedicated'; Paths=@('Data/P1C01HumanCharacterProductionWave2V1.json','Scripts/stage_p1c01_human_wave2.ps1','Scripts/run_p1c01_human_wave2_ue4.ps1','Scripts/test_p1c01_human_wave2_contract.py','.github/workflows/p1c01-human-wave2.yml','Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp','Scripts/classify_unreal_validation.ps1','Scripts/test_unreal_classifier.ps1','Docs/CURRENT_PROJECT_STATE.md'); Proof=$false; Mode='inherit'; TreeProof=$false},
     @{Name='whole-game-source-packets'; Paths=@('Data/WholeGameChapterAssetDemandMatrixV1.json','Data/WholeGameChapterProductionPacketsV1.json','Scripts/test_whole_game_chapter_production_packets.ps1','Docs/CURRENT_PROJECT_STATE.md'); Proof=$true; Mode='inherit'; TreeProof=$false},
+    @{Name='whole-game-cloud-warehouse-queue'; Paths=@('Data/WholeGameCloudWarehouseMaterialQueueV1.json','Scripts/validate_whole_game_cloud_warehouse_queue.py','Scripts/test_validate_whole_game_cloud_warehouse_queue.py','Docs/OFFLINE_FAST_PRODUCTION_PROTOCOL.md'); Proof=$true; Mode='inherit'; TreeProof=$false},
     @{Name='pie-preview-safe-with-proof'; Paths=@('SHIRE_FAST_PIE_PREVIEW.bat','Scripts/test_fast_pie_preview.py','Docs/CURRENT_PROJECT_STATE.md'); Proof=$true; Mode='inherit'; TreeProof=$false},
     @{Name='pie-preview-safe-no-proof'; Paths=@('SHIRE_FAST_PIE_PREVIEW.bat','Scripts/test_fast_pie_preview.py'); Proof=$false; Mode='full'; TreeProof=$false},
     @{Name='pie-preview-lookalike-fail-closed'; Paths=@('SHIRE_FAST_PIE_PREVIEW.bat.bak','Scripts/test_fast_pie_preview.py.disabled'); Proof=$true; Mode='full'; Package=$true; TreeProof=$false},
@@ -124,6 +126,36 @@ if (-not $source.Contains('rev-parse --verify --quiet "$ParentSha^{object}"')) {
 }
 if (-not $source.Contains('TREE_EQUIVALENT_PARENT_FETCH_REQUIRED')) {
     throw 'Classifier shallow-history fallback marker missing'
+}
+if (-not $source.Contains('"Data/P1C01CloudAssetProductionManifestsV1.json"')) {
+    throw 'P1C01 cloud asset production manifest exact allowlist missing'
+}
+if (-not $source.Contains('"Scripts/validate_p1c01_cloud_asset_manifests.py"')) {
+    throw 'P1C01 cloud asset manifest validator exact allowlist missing'
+}
+if (-not $source.Contains('"Data/SourceGroundedProductionPacketsV1.json"')) {
+    throw 'Source-grounded production packet exact allowlist missing'
+}
+if (-not $source.Contains('"Scripts/validate_source_grounded_production_packets.py"')) {
+    throw 'Source-grounded validator exact allowlist missing'
+}
+if (-not $source.Contains('"Data/P1C01CloudShireAssemblyPlanV1.json"')) {
+    throw 'Cloud Shire assembly plan exact allowlist missing'
+}
+if (-not $source.Contains('"Data/MaximumSafeProductionModeV1.json"')) {
+    throw 'Maximum Safe production mode exact allowlist missing'
+}
+if (-not $source.Contains('"Scripts/test_unreal_classifier.ps1"')) {
+    throw 'Unreal classifier self-test incremental allowlist missing'
+}
+if (-not $source.Contains('"Scripts/validate_p1c01_cloud_assembly.py"')) {
+    throw 'Cloud Shire assembly validator exact allowlist missing'
+}
+if (-not $source.Contains('"Data/WholeGameCloudWarehouseMaterialQueueV1.json"')) {
+    throw 'Whole-game cloud warehouse queue exact allowlist missing'
+}
+if (-not $source.Contains('"Scripts/validate_whole_game_cloud_warehouse_queue.py"')) {
+    throw 'Whole-game cloud warehouse validator exact allowlist missing'
 }
 if (-not $source.Contains('"Data/P1C01BagEndHeroTrimSourceProbeV1.json"')) {
     throw 'Bag End hero trim source packet exact allowlist missing'

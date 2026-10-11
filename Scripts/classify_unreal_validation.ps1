@@ -74,13 +74,30 @@ function Test-IncrementalSourceOnlyHeadDelta([string]$GitExe, [string]$TargetSha
         $allowed = (
             $n.StartsWith("Docs/") -or
             $n -eq "Data/ProjectGovernor.json" -or
+            $n -eq "Data/MaximumSafeProductionModeV1.json" -or
+            $n -eq "Data/OfflineFastProductionQueueV1.json" -or
+            $n -eq "Data/P1C01CloudShireAssemblyPlanV1.json" -or
+            $n -eq "Data/WholeGameCloudWarehouseMaterialQueueV1.json" -or
+            $n -eq "Data/SourceGroundedProductionPacketsV1.json" -or
+            $n -eq "Data/P1C01CloudAssetProductionManifestsV1.json" -or
             $n -eq "Data/P1C01PinnedArtifactCheckpointsV1.json" -or
             $n -eq "Scripts/resume_p1c01_artifact_checkpoint.py" -or
             $n -eq "Scripts/test_resume_p1c01_artifact_checkpoint.py" -or
             $n -eq "Scripts/test_artifact_checkpoint_recovery.py" -or
+            $n -eq "Scripts/offline_production_classifier.py" -or
+            $n -eq "Scripts/test_offline_production_classifier.py" -or
+            $n -eq "Scripts/validate_p1c01_cloud_assembly.py" -or
+            $n -eq "Scripts/test_validate_p1c01_cloud_assembly.py" -or
+            $n -eq "Scripts/validate_whole_game_cloud_warehouse_queue.py" -or
+            $n -eq "Scripts/test_validate_whole_game_cloud_warehouse_queue.py" -or
+            $n -eq "Scripts/validate_source_grounded_production_packets.py" -or
+            $n -eq "Scripts/test_validate_source_grounded_production_packets.py" -or
+            $n -eq "Scripts/validate_p1c01_cloud_asset_manifests.py" -or
+            $n -eq "Scripts/test_validate_p1c01_cloud_asset_manifests.py" -or
             $n -eq "Scripts/stage_p1c01_adaptive_pbr_warehouse.py" -or
             $n -eq "Scripts/test_p1c01_adaptive_pbr_warehouse.py" -or
             $n -eq "Scripts/classify_unreal_validation.ps1" -or
+            $n -eq "Scripts/test_unreal_classifier.ps1" -or
             $n -eq ".github/workflows/p1c01-five-lane-maxsafe.yml" -or
             $n -eq ".github/workflows/p1c01-persistent-verified-pbr-warehouse.yml" -or
             $n -eq ".github/workflows/p1c01-checkpoint-offline-recovery.yml" -or
@@ -343,6 +360,13 @@ function Test-CoreProofSafeInterveningDelta([string]$GitExe, [string]$BaseSha, [
     "Scripts/test_fast_pie_preview.py",
     "SHIRE_FAST_PIE_PREVIEW.bat",
         "Data/ProjectGovernor.json",
+    "Data/MaximumSafeProductionModeV1.json",
+    "Data/OfflineFastProductionQueueV1.json",
+    "Data/P1C01CloudShireAssemblyPlanV1.json",
+    "Scripts/offline_production_classifier.py",
+    "Scripts/test_offline_production_classifier.py",
+    "Scripts/validate_p1c01_cloud_assembly.py",
+    "Scripts/test_validate_p1c01_cloud_assembly.py",
         "Data/DeepProjectAudit.json",
         "Data/BranchCleanupPlan.json",
         "Data/ProjectSourcePdfRegistryV1.json",
@@ -564,6 +588,16 @@ $safeExact = @(
     "SHIRE_FAST_PIE_PREVIEW.bat",
     "Scripts/test_fast_pie_preview.py",
     "Data/ProjectGovernor.json",
+    "Data/MaximumSafeProductionModeV1.json",
+    "Data/OfflineFastProductionQueueV1.json",
+    "Data/P1C01CloudShireAssemblyPlanV1.json",
+    "Scripts/offline_production_classifier.py",
+    "Scripts/test_offline_production_classifier.py",
+    "Scripts/validate_p1c01_cloud_assembly.py",
+    "Scripts/test_validate_p1c01_cloud_assembly.py",
+    "Data/WholeGameCloudWarehouseMaterialQueueV1.json",
+    "Scripts/validate_whole_game_cloud_warehouse_queue.py",
+    "Scripts/test_validate_whole_game_cloud_warehouse_queue.py",
     "Data/DeepProjectAudit.json",
     "Data/MasterExecutionRoadmap.json",
     "Data/PIEVerificationEvidence.json",
