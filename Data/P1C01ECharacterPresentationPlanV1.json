@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "P1C01_E_CHARACTER_PRESENTATION_V1",
-  "status": "PREPARED_NOT_RUNTIME_STARTED",
+  "status": "ENGINE_IMPORT_GREEN_CHARACTER_VISUAL_CLOSEOUT_PENDING",
   "authority": [
     "Data/ProjectGovernor.json",
     "Data/P1C01WorldBuildIntakePacketV1.json",
@@ -9,7 +9,7 @@
     "DEC-038",
     "DEC-039"
   ],
-  "prerequisite": "D environment presentation runtime pass must be engine-green before E runtime implementation starts.",
+  "prerequisite": "SATISFIED: P1C01 engine/import/headless runtime evidence recorded in Data/P1C01EngineImportRuntimeEvidence20261012.json. Character runtime/visual closeout remains pending.",
   "purpose": "Prepare named/support Shire character presentation without replacing existing gameplay ownership or creating cloud-dependent character logic.",
   "asset_contract": {
     "final_animated_format": "FBX only",
@@ -52,5 +52,6 @@
     "Human PIE visual review remains mandatory.",
     "Target-device profiling remains mandatory before performance acceptance."
   ],
-  "evidence_boundary": "Preparation only. No compile/PIE/device/visual/performance acceptance claim."
+  "evidence_boundary": "Engine/import evidence exists for P1C01, but named character deformation, retarget, runtime presence, PIE visual review, device profiling and human acceptance are still pending.",
+  "closeout_contract": "Data/P1C01CharacterLivingShireCloseoutV1.json"
 }
