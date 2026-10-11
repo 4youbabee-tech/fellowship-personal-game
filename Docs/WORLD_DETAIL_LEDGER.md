@@ -1,3 +1,7 @@
+## 2026-10-11 — Seven-day GitHub Actions artifact cleanup (candidate)
+- Owner authorized removal of ALL repository GitHub Actions artifacts older than seven days. New `.github/workflows/actions-artifact-cleanup.yml` uses scheduled daily and manual triggers, GitHub-hosted Ubuntu, scoped `actions: write`, complete paginated inventory before deletion, age cutoff in UTC and summary reporting of count/bytes/failures. No source assets, Git history, workflow runs or caches are deleted by this workflow.
+- This is a candidate branch pending PR/exact-head CI and merge into develop. No cleanup run, confirmed freed bytes, UE compile, PIE, device test or Gate 6/7 acceptance is claimed.
+
 ## 2026-10-11 — #365 CI regression correction (candidate)
 
 - Exact-head Pre-Unreal #38102533805 failed in two source contract assertions: one obsolete manual-only trigger expectation and one new test using literal escaped newlines. The dedicated PBR lane intentionally runs on PR but never cooks/packages except manual dispatch. Corrected assertions and tightened package gates; requires new exact-head CI success. No runtime/device/visual acceptance.
