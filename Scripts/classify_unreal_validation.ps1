@@ -771,6 +771,7 @@ $hostedPolicyExact = @(
     "Scripts/classify_unreal_validation.ps1",
     "Scripts/test_unreal_classifier.ps1",
     "Scripts/test_p1c01_delivery_entry_map.py",
+    "Scripts/pre_unreal_validate.py",
     ".github/workflows/unreal-build-validation.yml",
     ".github/workflows/p1c01-verified-pbr-production.yml",
     "Scripts/test_p1c01_verified_pbr_bridge.py"
