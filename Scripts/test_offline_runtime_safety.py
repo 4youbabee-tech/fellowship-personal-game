@@ -148,6 +148,26 @@ class OfflineRuntimeSafetyTests(unittest.TestCase):
         self.assertLess(rollback.index("ClearPendingWorldTransaction(true);"),
                         rollback.index("SetPlayerWorldHold(true);"))
 
+    def test_living_world_initial_commit_synchronizes_before_population(self):
+        header = source("Source/ShireJourney/Public/World/LivingWorldDirector.h")
+        cpp = source("Source/ShireJourney/Private/World/LivingWorldDirector.cpp")
+
+        self.assertIn("uint32 AppliedWorldRevision = MAX_uint32;", header)
+
+        begin = body_between(cpp, "void ALivingWorldDirector::BeginPlay()",
+                             "void ALivingWorldDirector::EndPlay(")
+        self.assertNotIn("ActiveChapterId = QuestSubsystem->GetCurrentChapterId();", begin)
+        self.assertIn("SynchronizeCommittedWorld();", begin)
+
+        sync = body_between(cpp, "bool ALivingWorldDirector::SynchronizeCommittedWorld()",
+                            "void ALivingWorldDirector::ResetForCurrentChapter()")
+        self.assertIn("Router->IsWorldCommitted(", sync)
+        self.assertLess(sync.index("Router->IsWorldCommitted("),
+                        sync.index("ActiveChapterId = QuestSubsystem->GetCurrentChapterId();"))
+        self.assertLess(sync.index("ActiveChapterId = QuestSubsystem->GetCurrentChapterId();"),
+                        sync.index("ResetForCurrentChapter();"))
+
+
 
     def test_self_hosted_requires_manual_opt_in(self):
         workflow = source(".github/workflows/unreal-build-validation.yml")

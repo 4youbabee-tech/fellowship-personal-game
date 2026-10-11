@@ -22,3 +22,8 @@ This is a **deferred validation queue**, not proof of defect resolution. No Wind
 ## Added Offline Fix Candidate — Stale Asset-Ready Rollback
 
 Source-only audit identified that a stale `OnChapterAssetsReady` callback could previously return after quest/save state changed without clearing the pending world transaction. The fix adds stale-ready rollback plus shared cleanup for pending route/episode/chapter and grounding-barrier timers. Required runner validation when authorized: force overlapping chapter/route/episode changes while async asset preload is pending, then verify no player hold deadlock, no stale world commit, and no delayed grounding timer mutates the restored world.
+
+## Added Offline Fix Candidate — LivingWorld Initial Commit Sync
+
+Source-only audit identified that the living-world director could skip first-run chapter reset if the first committed `AChapterWorldRouter` revision was `0`, because `AppliedWorldRevision` also started at `0`. The source fix uses an unapplied sentinel and applies `ActiveChapterId` only after router commit confirmation. Required runner validation when authorized: start P1C01 from a clean save and from a restored save, verify `LivingWorldCommitSync` logs on first visible world, confirm baseline Hobbiton/Bag End population, weather context and micro-event timing initialize once, and verify no duplicate NPCs after route/episode transitions.
+
