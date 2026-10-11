@@ -1,3 +1,7 @@
+## 2026-10-12 — Physical ten-ZIP Warehouse attestation before any Shire import
+
+Registered existing W01 Drive source-only verification improvement. It does not introduce new runtime/chapter scope: require on-disk D: size/SHA256/remote MD5/ZIP and FBX-format proof for all ten specified Drive ZIPs, archive-level license review, quarantine of ASCII and incomplete/duplicated candidates, and a source-only five-wave queue. The existing authorized schedule is unchanged and no unattended Drive deletion or UE import is allowed. Engine, device, visual and Gate 6/7 remain open.
+
 **2026-10-12 Drive runner PATH regression candidate:** Manual Drive workflow run `38176536748` reached self-hosted Windows `UE4-27-Windows` but transfer failed before any copy at `RCLONE_MISSING`, despite owner interactive rclone connectivity and configuration. Candidate refreshes persisted machine/user PATH inside the existing watchdog job, resolves `rclone.exe` and Python/py without installing or changing the runner, then passes explicit rclone executable path to the source-only ingest script. No successful physical transfer, ZIP receipt, Unreal import, PIE/device/visual or Gate 6/7 claim; preserve read-only Drive and fail-closed auth and deletion guards.
 
 ## 2026-10-11 — Drive source acceptance preflight before any future UE promotion

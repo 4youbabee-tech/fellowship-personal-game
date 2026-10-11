@@ -9,6 +9,8 @@ on:
       - 'Scripts/drive_warehouse_sync.py'
       - 'Scripts/test_drive_warehouse_sync.py'
       - 'Scripts/validate_drive_source_bundles.py'
+      - 'Scripts/verify_drive_warehouse_receipts.py'
+      - 'Scripts/test_verify_drive_warehouse_receipts.py'
       - 'Scripts/test_validate_drive_source_bundles.py'
       - '.github/workflows/drive-warehouse-auto-intake.yml'
 permissions:
@@ -29,6 +31,8 @@ jobs:
       - run: python -m unittest discover -s Scripts -p "test_drive_warehouse_sync.py" -v
       - run: python -m py_compile Scripts/drive_warehouse_sync.py Scripts/validate_drive_source_bundles.py
       - run: python -m unittest discover -s Scripts -p "test_validate_drive_source_bundles.py" -v
+      - run: python -m unittest discover -s Scripts -p "test_verify_drive_warehouse_receipts.py" -v
+      - run: python -m py_compile Scripts/verify_drive_warehouse_receipts.py
   transfer:
     if: github.event_name != 'pull_request'
     needs: static
@@ -73,6 +77,15 @@ jobs:
             & $pyLauncher.Source -3.12 (Join-Path $p 'Scripts\drive_warehouse_sync.py') --mode ingest --rclone-config $config --rclone-bin $rclone.Source
           }
             if ($LASTEXITCODE -ne 0) { throw 'DRIVE_INGEST_FAILED' }
+            # Read-only physical D: audit after ingest; never calls UE or approves licenses.
+            $audit = Join-Path $p 'Scripts\verify_drive_warehouse_receipts.py'
+            $auditReport = 'D:\actions-runner\_warehouse\ShireJourney\_drive_temp_staging\reports\source_qc_latest.json'
+            if ($pythonExe) {
+              & $pythonExe $audit --warehouse-root 'D:\actions-runner\_warehouse\ShireJourney' --out $auditReport
+            } else {
+              & $pyLauncher.Source -3.12 $audit --warehouse-root 'D:\actions-runner\_warehouse\ShireJourney' --out $auditReport
+            }
+            if ($LASTEXITCODE -ne 0) { throw 'DRIVE_PHYSICAL_QC_FAILED' }
             # Only verified staging is unattended. Remote deletion requires separately
             # established import acceptance and independent backup evidence.
             # No automatic cleanup is invoked by this scheduled writer.
