@@ -76,6 +76,18 @@ class OfflineRuntimeSafetyTests(unittest.TestCase):
         self.assertLess(callback.index("PendingAudioRequestTokens.FindRef(LoadKey) != RequestToken"),
                         callback.index("Cast<USoundBase>(AssetPath.ResolveObject())"))
 
+    def test_player_placement_must_observe_teleport_result(self):
+        cpp = source("Source/ShireJourney/Private/World/ChapterWorldRouter.cpp")
+        restore = body_between(cpp, "bool AChapterWorldRouter::PlacePlayerAtCommittedTransform(",
+                                  "bool AChapterWorldRouter::MovePlayerToChapterStart(")
+        start = body_between(cpp, "bool AChapterWorldRouter::MovePlayerToChapterStart(",
+                                "void AChapterWorldRouter::VerifyPlayerGroundingStability(")
+        for body in (restore, start):
+            self.assertIn("if (!PlayerPawn->SetActorLocationAndRotation(", body)
+            self.assertIn("reason=actor-teleport-rejected", body)
+            self.assertLess(body.index("reason=actor-teleport-rejected"), body.index("return true;"))
+        self.assertIn("SetPlayerWorldHold(true)", start)
+
     def test_self_hosted_requires_manual_opt_in(self):
         workflow = source(".github/workflows/unreal-build-validation.yml")
         self.assertIn("run_self_hosted:", workflow)
