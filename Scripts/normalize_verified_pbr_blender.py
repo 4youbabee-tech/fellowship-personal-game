@@ -15,7 +15,9 @@ def clean_mesh(obj):
     degenerate=[f for f in bm.faces if (not math.isfinite(f.calc_area())) or f.calc_area()<=1e-11]
     if degenerate:
         bmesh.ops.delete(bm, geom=degenerate, context='FACES')
-    bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.000001)
+    # Never weld UV seam/hard-normal vertices: remove only topology orphaned by face cleanup.
+    orphans=[v for v in bm.verts if not v.link_faces]
+    if orphans: bmesh.ops.delete(bm, geom=orphans, context='VERTS')
     bmesh.update_edit_mesh(obj.data)
     bpy.ops.object.mode_set(mode='OBJECT')
     obj.select_set(False)

@@ -1,3 +1,11 @@
+## 2026-10-11 — P1C01 verified PBR importer integration on PR #365 (candidate)
+
+- Physical Blender FBX normalization from #355 is forward-ported into the active #365 source stage: copied from `Saved/P1C01NormalizedFBX` into ignored `Saved/ShireProductionImportWorking` only; tracked warehouse FBX is never altered. The commandlet rejects missing derivative receipt, malformed source layout, or missing derived FBX.
+- Existing real UE4 material-slot/Asset Registry checks, /Game/Production packages, and chapter async world bank remain the activation authority. Exact hash validation runs in the dedicated workflow before the UE import commandlet; source-only/mocked tests do not claim imported geometry.
+- FBX normalizer no longer welds coincident vertices across valid UV/hard-normal seams. Cache keys include exact original FBX hashes, normalization scripts and installed Blender version; a cache hit still runs receipt/SHA256 verification. Normalized/reused totals are logged.
+- Dedicated PBR PR pipeline stages 16 sourced FBX, runs Blender, imports into UE4, audits materials and tests headless Shire placement. Windows package/upload is excluded from PR and develop push; final package requires explicit dispatch. Classifier treats named PBR toolchain changes as engine-impacting but not Windows-packaging-critical; unknown paths still fail closed.
+- Evidence: PR #365 previous source-only head `90e69e6a` passed Pre-Unreal run `38102045664`. **These NEW importer/workflow edits require fresh exact-head Pre-Unreal and UE/PBR proof.** No PIE, device, visual, actual FPS, Gate 6/7 acceptance or 17-warning elimination is claimed; do not open P1C02 Runtime. $8 Actions ceiling unchanged.
+
 ## 2026-10-11 — P1C01 derived FBX hash-cache tooling candidate
 
 - Forward-ported the verified Blender normalization script and SHA256-bound derived-FBX preflight from PR #355 onto current develop as a source-only integration candidate, with exact-head Pre-Unreal regression. This does NOT activate new runtime assets, modify the actual UE importer, or solve all 17 smoothing warnings on develop. Original CC0 FBX is immutable; generated derivatives live in ignored Saved/. The importer overlay/physical UE binding, PIE, device 30 FPS, full playthrough and Gate6/7 remain unaccepted. Windows packaging is not requested; preserve DEC-106 and $8 CI budget ceiling.

@@ -40,6 +40,7 @@ def execute(project,blender=None,required=False,verify_only=False):
     prior=json.loads(receipt.read_text(encoding="utf-8")) if receipt.is_file() else {}
     old={x["id"]:x for x in prior.get("assets",[])}
     results=[]
+    reused=0
     tool=None
     for source in files:
         slug=source.parent.name
@@ -49,6 +50,8 @@ def execute(project,blender=None,required=False,verify_only=False):
         row=old.get(slug,{})
         reuse=(row.get("source_sha256")==src_sha and row.get("derived_sha256") and
                valid_derived(target) and sha(target)==row["derived_sha256"])
+        if reuse:
+            reused+=1
         if not reuse:
             check(not verify_only,"DERIVED_FBX_NOT_READY:"+slug)
             if tool is None:
@@ -74,7 +77,7 @@ def execute(project,blender=None,required=False,verify_only=False):
         output.mkdir(parents=True,exist_ok=True)
         receipt.write_text(json.dumps({"schema_version":1,"stage":"DERIVED_STATIC_FBX_QC",
             "warehouse_mutated":False,"source_mutated":False,"assets":results},indent=2)+"\n",encoding="utf-8")
-    print("P1C01_FBX_NORMALIZATION_PREFLIGHT_PASS count="+str(len(results)),flush=True)
+    print("P1C01_FBX_NORMALIZATION_PREFLIGHT_PASS count="+str(len(results))+" reused="+str(reused)+" normalized="+str(len(results)-reused),flush=True)
     return results
 def main():
     p=argparse.ArgumentParser()

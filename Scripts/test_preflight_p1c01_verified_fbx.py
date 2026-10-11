@@ -51,6 +51,23 @@ class DerivedFBXTests(unittest.TestCase):
             "derived_sha256":qc.sha(target)}]}))
         with self.assertRaisesRegex(qc.SourceQCError,"DERIVED_FBX_NOT_READY"):
             qc.execute(self.root,verify_only=True)
+    def test_original_uv_seams_are_not_welded_by_normalizer(self):
+        worker=Path(__file__).with_name("normalize_verified_pbr_blender.py").read_text(encoding="utf-8")
+        self.assertNotIn("bmesh.ops.remove_doubles",worker)
+        self.assertIn("orphans=[v for v in bm.verts if not v.link_faces]",worker)
+        self.assertIn("LayerElementSmoothing",worker)
+
+    def test_modified_but_structurally_valid_cached_derived_is_rejected(self):
+        target=self.root/"Saved/P1C01NormalizedFBX/barrel_01/barrel_01.fbx"
+        target.parent.mkdir(parents=True)
+        target.write_bytes(NORMAL)
+        (target.parent.parent/"receipt.json").write_text(json.dumps({"assets":[{
+            "id":"barrel_01","source_sha256":qc.sha(self.original),
+            "derived_sha256":qc.sha(target)}]}))
+        target.write_bytes(NORMAL+b"TAMPERED")
+        with self.assertRaisesRegex(qc.SourceQCError,"DERIVED_FBX_NOT_READY"):
+            qc.execute(self.root,verify_only=True)
+
     def test_optional_missing_no_acceptance(self):
         self.original.unlink()
         self.assertEqual(qc.execute(self.root),[])
