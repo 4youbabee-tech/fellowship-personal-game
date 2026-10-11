@@ -12,7 +12,8 @@ from materials import REGION_PLAN, REGION_FAMILIES, SURFACES, sha256, validate_c
 
 REQUIRED_MESHES = {"RoundDoor", "PicketFence", "PartyTable", "GardenCart",
                    "RoundWindow", "GardenHedge", "OakTree", "StorageBarrel",
-                   "FarmGate", "GardenPlanter"}
+                   "FarmGate", "GardenPlanter",
+                   "BagEndFrontWall", "RoundRoomWallArc", "RoundRoomFloor", "Hearth", "Bookcase", "HobbitBed", "WoodenFootbridge", "MillWheel", "PartyCanopy", "StonePath", "LanternPost", "VillageWell"}
 
 
 def validate(out: Path, require_meshes: bool = True):
@@ -64,6 +65,23 @@ def validate(out: Path, require_meshes: bool = True):
             assert 0 < x["reimport_polygons"] <= 15000
             assert x["reimport_uv_layers"] >= 1
             assert x["collider_count"] >= 1
+            assert len(x["ucx_boxes"]) == x["collider_count"]
+            assert all(all(float(d) > 0 for d in box["dimensions_m"])
+                       for box in x["ucx_boxes"])
+            if x["asset"] == "BagEndFrontWall":
+                # The hero doorway must remain physically open at walking height.
+                # Do not certify Unreal collision from this source-space guard.
+                lower_obstacles = [
+                    b for b in x["ucx_boxes"]
+                    if b["center_m"][2] - b["dimensions_m"][2] / 2 < 2.05
+                    and b["center_m"][2] + b["dimensions_m"][2] / 2 > 0.1
+                ]
+                assert all(abs(b["center_m"][0]) - b["dimensions_m"][0]/2 > 1.05
+                           for b in lower_obstacles)
+            if x["asset"] == "PartyCanopy":
+                assert len(x["ucx_boxes"]) == 4
+                assert all(abs(b["center_m"][0]) > 1.8
+                           for b in x["ucx_boxes"])
             assert 1 <= x["material_slots"] <= 6
         print(f"CLOUD_ASSET_STATIC_VALIDATION_PASS materials=12 textures=36 region_bindings=28 binary_fbx={len(objects)}")
     else:

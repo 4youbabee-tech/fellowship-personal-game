@@ -52,13 +52,32 @@ jobs:
       - name: Run reproducible material unit tests first
         run: python3 Tools/CloudAssetBuild/test_assets.py
 
+      - name: Reuse unchanged SHA-bound 1K material sources from hosted cache
+        id: material_cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ${{ env.ASSET_OUT }}/materials
+            ${{ env.ASSET_OUT }}/materials_receipt.json
+          key: p1c01-28region-original-materials-1k-v1-${{ hashFiles('Tools/CloudAssetBuild/materials.py', 'Data/WholeGameRegionProductionPacketsV1.json') }}
+
       - name: Generate 12 physical material sets for 28 canonical regions
+        if: steps.material_cache.outputs.cache-hit != 'true'
         run: python3 Tools/CloudAssetBuild/materials.py --out "$ASSET_OUT" --size 1024
 
       - name: Validate all original PNG payloads and channel-packing receipts
         run: python3 Tools/CloudAssetBuild/validate_bundle.py --out "$ASSET_OUT" --materials-only
 
-      - name: Export 10 original Shire meshes, LOD0 and LOD1, with UCX collision
+      - name: Save validated unchanged material payload before optional Blender steps
+        if: steps.material_cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ${{ env.ASSET_OUT }}/materials
+            ${{ env.ASSET_OUT }}/materials_receipt.json
+          key: p1c01-28region-original-materials-1k-v1-${{ hashFiles('Tools/CloudAssetBuild/materials.py', 'Data/WholeGameRegionProductionPacketsV1.json') }}
+
+      - name: Export 22 original Shire meshes, LOD0 and LOD1, with UCX collision
         run: blender --background --factory-startup --python-exit-code 3 -t 2 --python Tools/CloudAssetBuild/blender_shire.py -- --out "$ASSET_OUT"
 
       - name: Validate real binary FBX after Blender re-import
