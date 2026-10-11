@@ -51,17 +51,31 @@ $headers = @{
     Accept = "application/vnd.github+json"
     "X-GitHub-Api-Version" = "2022-11-28"
 }
-$pullUri = "https://api.github.com/repos/$Repository/pulls?state=open&per_page=100"
-$openPulls = @(Invoke-RestMethod -Method Get -Uri $pullUri -Headers $headers)
-$activeHeads = @(
-    $openPulls |
-        ForEach-Object {
-            if ($null -ne $_ -and $_.PSObject.Properties['head'] -and $null -ne $_.head -and $_.head.PSObject.Properties['ref']) {
-                [string]$_.head.ref
+function Get-OpenPullRefs {
+    param([AllowNull()][object]$PullResponse)
+
+    # Windows PowerShell Invoke-RestMethod can expose a JSON array either as
+    # distinct PSCustomObjects or as a single nested Object[] pipeline item.
+    # Flatten both shapes; never misclassify real open PR heads as "zero".
+    $refs = New-Object 'System.Collections.Generic.List[string]'
+    foreach ($outer in @($PullResponse)) {
+        foreach ($row in @($outer)) {
+            if ($null -ne $row -and $row.PSObject.Properties['head'] -and
+                $null -ne $row.head -and $row.head.PSObject.Properties['ref']) {
+                $ref = [string]$row.head.ref
+                if (-not [string]::IsNullOrWhiteSpace($ref)) {
+                    [void]$refs.Add($ref)
+                }
             }
-        } |
-        Where-Object { $_ }
-)
+        }
+    }
+    return $refs.ToArray()
+}
+
+$pullUri = "https://api.github.com/repos/$Repository/pulls?state=open&per_page=100"
+$openPulls = Invoke-RestMethod -Method Get -Uri $pullUri -Headers $headers
+$activeHeads = @(Get-OpenPullRefs -PullResponse $openPulls)
+Write-Host "BRANCH_CLEANUP_ACTIVE_PR_ENUMERATED count=$($activeHeads.Count)"
 
 function Test-BranchHasOpenPull {
     param([Parameter(Mandatory = $true)][string]$Branch)
@@ -80,17 +94,10 @@ function Test-BranchHasOpenPull {
         throw "Unable to recheck active PR ownership for branch: $Branch :: $($_.Exception.Message)"
     }
 
-    # PowerShell wraps $null as a one-element array when using @($null). Filter null
-    # responses and require an exact head.ref match so an empty GitHub array is inactive.
+    # Reuse the exact same array flattening guard in the live per-branch recheck.
     $activeForBranch = @(
-        $activeBranchResponse |
-            Where-Object {
-                $null -ne $_ -and
-                $_.PSObject.Properties['head'] -and
-                $null -ne $_.head -and
-                $_.head.PSObject.Properties['ref'] -and
-                ([string]$_.head.ref).Equals($Branch, [System.StringComparison]::Ordinal)
-            }
+        Get-OpenPullRefs -PullResponse $activeBranchResponse |
+            Where-Object { ([string]$_).Equals($Branch, [System.StringComparison]::Ordinal) }
     )
     $isActive = $activeForBranch.Count -gt 0
     Write-Host "BRANCH_CLEANUP_ACTIVE_HEAD_RECHECK branch=$Branch active=$($isActive.ToString().ToLowerInvariant()) count=$($activeForBranch.Count)"
