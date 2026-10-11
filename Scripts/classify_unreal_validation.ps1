@@ -8,7 +8,13 @@ function Set-Mode([string]$Mode, [string]$Reason, [string]$ParentSha, [string]$R
     $core = if ($Mode -eq "core" -or $Mode -eq "asset") { "true" } else { "false" }
     $asset = if ($Mode -eq "asset") { "true" } else { "false" }
     $acceptance = if ($Mode -eq "acceptance") { "true" } else { "false" }
-    $package = if ($PackageRequired) { "true" } else { "false" }
+    # A full engine check cannot authorize a Windows cook/package by itself.
+    $manualPackage = ($env:GITHUB_EVENT_NAME -eq "workflow_dispatch" -and
+                      $env:SHIRE_EXPLICIT_CHAPTER_PACKAGE -eq "true")
+    if ($PackageRequired -and -not $manualPackage) {
+        Write-Host "WINDOWS_PACKAGE_DEFERRED mode=$Mode reason=$Reason requires-explicit-dispatch=true"
+    }
+    $package = if ($PackageRequired -and $manualPackage) { "true" } else { "false" }
 
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_UNREAL_MODE=$Mode"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_FULL_UNREAL_REQUIRED=$full"
@@ -508,7 +514,7 @@ function Test-ParentAcceptanceDataGreen([string]$ParentSha) {
 
 Set-Location $env:GITHUB_WORKSPACE
 $git = Get-GitExe
-if (-not $git) { Set-Mode "full" "git-unavailable-fail-safe" "" "none" $false $true; exit 0 }
+if (-not $git) { Set-Mode "full" "git-unavailable-no-automatic-package" "" "none" $false $false; exit 0 }
 
 # Manual closeout is available for every chapter in the trilogy, not P1C01 only.
 # Requires the actual Windows cook, packaged-data verification and executable boot.
@@ -535,7 +541,7 @@ if ($env:BASE_SHA) {
 if (-not $parentSha) {
     $parentSha = (& $git rev-parse "HEAD^").Trim()
 }
-if (-not $parentSha) { Set-Mode "full" "parent-unavailable-fail-safe" "" "none" $false $true; exit 0 }
+if (-not $parentSha) { Set-Mode "full" "parent-unavailable-no-automatic-package" "" "none" $false $false; exit 0 }
 
 $changed = @(& $git diff --name-only $parentSha $env:TARGET_SHA)
 if ($LASTEXITCODE -ne 0) {
@@ -546,7 +552,7 @@ if ($LASTEXITCODE -ne 0) {
     }
 }
 if ($LASTEXITCODE -ne 0 -or $changed.Count -eq 0) {
-    Set-Mode "full" "delta-unavailable-fail-safe" $parentSha "none" $false $true
+    Set-Mode "full" "delta-unavailable-no-automatic-package" $parentSha "none" $false $false
     exit 0
 }
 
@@ -749,9 +755,30 @@ foreach($p in $changed){
     $fullImpact += $n
 }
 
+# Only narrow exact-path governance/CI policy edits may stay hosted-only.
+# This is a STATIC check, never an inherited Unreal compile or runtime proof.
+$hostedPolicyExact = @(
+    "Data/ProjectGovernor.json",
+    "Data/MaximumSafeProductionModeV1.json",
+    "Scripts/classify_unreal_validation.ps1",
+    "Scripts/test_unreal_classifier.ps1",
+    "Scripts/test_p1c01_delivery_entry_map.py",
+    ".github/workflows/unreal-build-validation.yml"
+)
+$hostedPolicyOnly = ($policyOnlyTouched.Count -gt 0 -and
+    @($changed | Where-Object {
+        $n = $_ -replace "\\", "/"
+        -not ($n.StartsWith("Docs/") -or ($hostedPolicyExact -contains $n))
+    }).Count -eq 0)
+if ($hostedPolicyOnly -and $fullImpact.Count -eq 0 -and
+    $coreImpact.Count -eq 0 -and $acceptanceTouched.Count -eq 0) {
+    Set-Mode "static" "exact-governance-and-unreal-classifier-policy-hosted-only" $parentSha
+    exit 0
+}
+
 if($fullImpact.Count -gt 0){
     $fullImpact | ForEach-Object { Write-Host "FULL_UNREAL_FILE $_" }
-    Set-Mode "full" "engine-runtime-config-or-unclassified-delta" $parentSha "none" $requiresCleanCompile $true
+    Set-Mode "full" "engine-runtime-config-or-unclassified-delta-package-deferred" $parentSha "none" $requiresCleanCompile $false
     exit 0
 }
 
@@ -809,13 +836,8 @@ if($coreImpact.Count -gt 0){
 }
 
 if($acceptanceTouched.Count -gt 0){
-    # Packaging and packaged-executable verifiers require a real package when
-    # no same-content package+data proof is available, even if the editor build
-    # itself can inherit core proof.
-    $acceptancePackageCritical = @($acceptanceTouched | Where-Object {
-        $_ -in @("Scripts/ci_package_w00.ps1", "Scripts/ci_package_w00.cmd",
-                 "Scripts/verify_packaged_runtime_data.ps1", "Scripts/verify_packaged_startup.ps1")
-    }).Count -gt 0
+    # Package-related verifier edits still need static/core proof; a fresh
+    # Windows package is deferred until explicitly dispatched for closeout.
     $acceptanceCoreProof = (Test-ParentCoreUnrealGreen $parentSha)
     if(-not $acceptanceCoreProof){
         $acceptanceCoreProof = Test-TreeEquivalentCoreProof $git $parentSha
