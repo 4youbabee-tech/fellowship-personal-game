@@ -1,3 +1,10 @@
+## 2026-10-11 — Manual-only Windows packaging + hosted policy regression (PR candidate)
+
+- DEC-106 production implementation on current develop after PR #370: `workflow_dispatch package_windows=true` exclusively enables WindowsNoEditor Cook, data proof, packaged startup, hardware capture and large artifact upload. Config/Build.cs/unknown/failed-classifier paths still take the appropriate UE compile/import/runtime lane when the owner runner is available, but never cause a routine package.
+- Narrow exact-path-only `static` classification for governance/classifier workflow/Docs updates runs the real PowerShell classifier regression on GitHub-hosted Windows without reserving the owner's UE runner or implying an inherited Unreal build proof. Acceptance-only changes without packaged-startup resume also stay on hosted-only classification.
+- Regression covers real Set-Mode output across pull request, default manual dispatch and explicitly requested chapter package; config/unknown/no-proof cases remain strictly classified. Governor and MaximumSafeMode updated together; P1C01 runtime scope and Gate 6/7 unchanged.
+- **Evidence boundary:** Source policy candidate. Exact-head hosted CI results pending; no new UE4 compile, FBX import, PIE, device FPS, visual acceptance, Windows package, or Gate 6/7 credit.
+
 ## 2026-10-11 — #365 CI regression correction (candidate)
 
 - Exact-head Pre-Unreal #38102533805 failed in two source contract assertions: one obsolete manual-only trigger expectation and one new test using literal escaped newlines. The dedicated PBR lane intentionally runs on PR but never cooks/packages except manual dispatch. Corrected assertions and tightened package gates; requires new exact-head CI success. No runtime/device/visual acceptance.
