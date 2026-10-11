@@ -73,5 +73,16 @@
     "device_tested": false,
     "visually_accepted": false,
     "gate_6_7_closed": false
-  }
+  },
+  "previous_status": "PREPARED_NOT_ACCEPTED",
+  "status_history": [
+    {
+      "status": "PREPARED_NOT_ACCEPTED",
+      "meaning": "Checklist existed but no exact self-hosted UE4 compile/import/runtime evidence had been recorded in this checklist."
+    },
+    {
+      "status": "ENGINE_IMPORT_RUNTIME_GREEN_PACKAGE_DEVICE_VISUAL_PENDING",
+      "meaning": "Engine compile/import/headless runtime evidence exists; package, PIE-specific traversal, device profiling, visual acceptance, and Gate 6/7 remain open."
+    }
+  ]
 }
