@@ -1019,5 +1019,40 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("delivery_mode=[string]$receipt.delivery_mode", ue4)
 
 
+    def test_reviewed_superseded_branch_cleanup_is_exact_sha_and_replacement_gated(self):
+        root = Path(__file__).resolve().parents[1]
+        plan = json.loads((root / "Data" / "BranchCleanupPlan.json").read_text(encoding="utf-8"))
+        branch = "policy/cloud-first-no-routine-windows-package-20261011"
+        reviewed = plan["reviewed_superseded_refs_2026_10_11"]
+        self.assertEqual(len(reviewed), 1)
+        item = reviewed[0]
+        self.assertEqual(item["branch"], branch)
+        self.assertIn(branch, plan["delete_after_merge"])
+        self.assertEqual(item["expected_head_sha"], "5ccc60523247138e324887929b6b8f1c85db0931")
+        self.assertEqual(item["closed_pr"], 369)
+        self.assertEqual(item["replacement_pr"], 372)
+        self.assertEqual(item["replacement_merge_sha"], "a004d47b6c7d4681a328d88a12fc5de4819e1f11")
+        self.assertEqual(set(item["reviewed_changed_paths"]), {
+            "Data/ProjectGovernor.json",
+            "Data/MaximumSafeProductionModeV1.json",
+            "Docs/CURRENT_PROJECT_STATE.md",
+            "Docs/PRODUCTION_COMPLETENESS_MATRIX.md",
+        })
+        cleanup = (root / "Scripts" / "run_branch_cleanup.ps1").read_text(encoding="utf-8")
+        for guard in (
+            "reviewed_superseded_refs_2026_10_11",
+            "BRANCH_CLEANUP_REVIEWED_SHA_MOVED",
+            "BRANCH_CLEANUP_REVIEWED_CLOSED_PR_UNSAFE",
+            "BRANCH_CLEANUP_REVIEWED_REPLACEMENT_UNSAFE",
+            "BRANCH_CLEANUP_REVIEWED_NOT_IN_DEVELOP",
+            "BRANCH_CLEANUP_REVIEWED_SHA_PASS",
+            "BRANCH_CLEANUP_KEEP_UNREVIEWED_UNIQUE",
+            "--force-with-lease=${remoteRef}:$remoteSha",
+            "compare/$replacementSha...develop",
+        ):
+            self.assertIn(guard, cleanup, guard)
+        self.assertNotIn("git push origin --delete", cleanup)
+
+
 if __name__ == "__main__":
     unittest.main()

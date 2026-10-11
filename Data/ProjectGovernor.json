@@ -5758,14 +5758,14 @@
         "REQ-PROD-011",
         "REQ-GITHUB-001"
       ],
-      "resolution": "Treat Windows Cook/Package and large playable artifact upload as chapter-completion/release evidence, not routine per-edit tests for any of the game's regions. Continue strict source, import, compile, headless story/save/runtime checks appropriate to changed inputs. Explicit manual package and changes to Config, Build.cs/Target.cs, chapter asset streaming, packaging/cook/release, or unknown-impact scripts retain fail-closed real package testing.",
+      "resolution": "Treat Windows Cook/Package and playable artifact upload exclusively as an explicit chapter closeout/release workflow_dispatch with package_windows=true across the whole game. Config, Build.cs/Target.cs, streaming, package/cook tooling and unknown-impact edits still require truthful fail-closed Unreal compile/import/runtime validation as appropriate, but routine push/PR never automatically cooks or packages WindowsNoEditor.",
       "implementation_contract": [
-        "Apply the same decision to all Part I/II/III chapters and regions, with P1C01 still the only active runtime production benchmark until Gate 6/7 closes.",
-        "Use an explicit GitHub workflow_dispatch package_windows=true for chapter closeout/release; normal push/PR editor/core/full fallback compilation must not automatically create and upload WindowsNoEditor unless packaging-impacting.",
-        "Package-required classification must be independent from Unreal full/core/asset validation and subject to exact-head checks; preserving full failure/error logs and failing relevant gates.",
-        "A completed chapter still needs a real packaged executable, packaged runtime data, appropriate chapter-specific runtime/gameplay/PIE/device/visual acceptance and source-canon confirmation. The current P1C01-grounded packaged startup is not acceptance for another chapter.",
-        "Do not duplicate upload of an unchanged package during startup-only evidence rechecks; reuse verified parent proof only under existing strict ancestry conditions.",
-        "Never skip package validation for Config, Build.cs, Target.cs, streaming-banks, package/cook/release tooling or an unknown potentially packaging-affecting path. If impact cannot be classified safely, fail closed."
+        "Applies to all Part I/II/III regions, with P1C01 the only active runtime benchmark until Gate 6/7 closes.",
+        "Explicit workflow_dispatch package_windows=true is the sole WindowsNoEditor Cook/Package/Upload trigger; default manual dispatch, push and pull requests cannot authorize packaging.",
+        "Unreal full/core/asset modes and engine validations remain truthful and independent from a separate explicit package authorization; unknown or unsafe changes cannot be silently treated as source-only.",
+        "Static-only governance/CI policy changes use GitHub-hosted regression without reserving offline self-hosted UE Windows; actual importer/runtime source changes continue appropriate Unreal QA when the owner runner is enabled.",
+        "A chapter can only close with actual executable, packaged payload, chapter-specific runtime/PIE/device/visual/performance and canon evidence. No waiver is conveyed by deferring packaging.",
+        "On packaged-startup resume, only reuse an already proven same-content package+data receipt; never infer acceptance from source/regression success."
       ],
       "evidence": [
         ".github/workflows/unreal-build-validation.yml",
@@ -5773,7 +5773,7 @@
         "Scripts/test_unreal_classifier.ps1",
         "Docs/DEVELOPMENT_GATES.md"
       ],
-      "evidence_boundary": "Rule + source/CI changes are a candidate pending exact-head Pre-Unreal and actual representative Windows runner comparison. No fresh package, PIE, device, visual, FPS or Gate 6/7 evidence is claimed."
+      "evidence_boundary": "PR #372 merged a004d47b6c7d4681a328d88a12fc5de4819e1f11, exact-head hosted Pre-Unreal #38134887589 SUCCESS and Five-Lane #38134887757 SUCCESS. STATIC-VALIDATED source/CI only. Manual Windows packaging, UE compile, PIE, DEVICE, VISUAL, FPS and Gate 6/7 are NOT tested/accepted by this change."
     }
   ],
   "open_conflicts": [],
@@ -8663,7 +8663,7 @@
   },
   "chapter_closeout_package_policy_2026_10_11": {
     "owner_scope": "ALL_GAME_ALL_CHAPTERS_NOT_SHIRE_ONLY",
-    "status": "IMPLEMENTATION_CANDIDATE_PENDING_EXACT_HEAD_STATIC_CI",
+    "status": "IMPLEMENTED_STATIC_VALIDATED_WINDOWS_ACCEPTANCE_PENDING",
     "trigger": "Explicit manual workflow_dispatch with package_windows=true for actual chapter closeout or release only; ordinary push, PR, scheduled checks and default dispatch never cook/package/upload WindowsNoEditor.",
     "normal_development": "GitHub-hosted source/static/regression checks; UE4.27 compile/import/startup/story/save/runtime tests for affected engine paths when the owner runner is available. Full-mode and unknown/config/Build.cs changes do not automatically request Windows packaging.",
     "mandatory_early_package_triggers": [],
@@ -8688,6 +8688,17 @@
       "Acceptance-only source changes with no packaged-startup resume do not queue the self-hosted runner.",
       "Exact-path-only governance/workflow changes run hosted regression without claiming inherited UE proof.",
       "Chapter closeout still requires fresh exact-head package/data/executable, route/save/performance/visual acceptance."
-    ]
+    ],
+    "static_evidence": {
+      "merged_pr": 372,
+      "merge_commit": "a004d47b6c7d4681a328d88a12fc5de4819e1f11",
+      "pre_unreal_run": 38134887589,
+      "pre_unreal_result": "success",
+      "five_lane_run": 38134887757,
+      "five_lane_result": "success",
+      "classification": "STATIC-VALIDATED",
+      "unreal_compile_executed": false,
+      "windows_package_executed": false
+    }
   }
 }

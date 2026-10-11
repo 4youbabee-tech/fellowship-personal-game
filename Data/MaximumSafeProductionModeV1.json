@@ -264,7 +264,7 @@
   },
   "owner_chapter_closeout_package_2026_10_11": {
     "authority": "Data/ProjectGovernor.json#chapter_closeout_package_policy_2026_10_11 / DEC-106",
-    "status": "IMPLEMENTATION_CANDIDATE_PENDING_EXACT_HEAD_CI",
+    "status": "IMPLEMENTED_STATIC_VALIDATED_WINDOWS_ACCEPTANCE_PENDING",
     "trigger": "Manual workflow_dispatch package_windows=true for chapter closeout/release; no automatic WindowsNoEditor package or upload",
     "normal_development": "Hosted static plus precise UE compile/import/runtime QA for changed engine inputs; governance-only is hosted-only",
     "deferred_inputs": [
@@ -278,6 +278,13 @@
     ],
     "fail_closed": "Missing git/delta, unknown paths and absent parent UE proof still require truthful full engine validation, without auto-packaging",
     "acceptance_boundary": "PIE/device/visual/30 FPS/Gate 6/7 need actual evidence",
-    "runner_offline_rule": "Never reserve self-hosted Windows for governance-only and offline source preparation"
+    "runner_offline_rule": "Never reserve self-hosted Windows for governance-only and offline source preparation",
+    "evidence": {
+      "merged_pr": 372,
+      "merge_commit": "a004d47b6c7d4681a328d88a12fc5de4819e1f11",
+      "pre_unreal_run": 38134887589,
+      "five_lane_run": 38134887757,
+      "status": "HOSTED_STATIC_ONLY"
+    }
   }
 }
