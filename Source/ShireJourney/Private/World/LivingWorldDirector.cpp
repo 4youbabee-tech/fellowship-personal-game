@@ -41,7 +41,6 @@ void ALivingWorldDirector::BeginPlay()
         {
             QuestSubsystem->OnChapterChanged.AddDynamic(this, &ALivingWorldDirector::HandleChapterChanged);
             QuestSubsystem->OnExperienceChanged.AddDynamic(this, &ALivingWorldDirector::HandleExperienceChanged);
-            ActiveChapterId = QuestSubsystem->GetCurrentChapterId();
         }
     }
 

@@ -50,7 +50,7 @@ private:
     UShireQuestSubsystem* QuestSubsystem = nullptr;
 
     TWeakObjectPtr<AChapterWorldRouter> WorldRouter;
-    uint32 AppliedWorldRevision = 0;
+    uint32 AppliedWorldRevision = MAX_uint32;
     bool SynchronizeCommittedWorld();
     void HandleWorldCommitted(uint32 Revision);
 
