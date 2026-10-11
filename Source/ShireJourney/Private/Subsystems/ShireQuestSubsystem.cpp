@@ -1980,10 +1980,26 @@ void UShireQuestSubsystem::RestoreQuestState(const TMap<FName, int32>& InStages,
         return;
     }
 
-    QuestStages = InStages;
+    QuestStages.Empty();
+    for (const TPair<FName, int32>& Pair : InStages)
+    {
+        if (Pair.Key != NAME_None)
+        {
+            QuestStages.Add(Pair.Key, FMath::Max(0, Pair.Value));
+        }
+    }
+
+    CompletedStoryBeats.Empty();
+    for (const FName StoryBeatId : InCompletedStoryBeats)
+    {
+        if (StoryBeatId != NAME_None)
+        {
+            CompletedStoryBeats.AddUnique(StoryBeatId);
+        }
+    }
+
     ActiveQuestId = InActiveQuestId;
     CurrentChapterId = CanonicalChapterId;
-    CompletedStoryBeats = InCompletedStoryBeats;
     CurrentRouteId = CanonicalRouteId;
     CurrentEpisodeId = CanonicalEpisodeId;
     PlayableCharacterId = CanonicalPlayableCharacterId;
