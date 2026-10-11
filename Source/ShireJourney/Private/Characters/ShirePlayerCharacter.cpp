@@ -989,6 +989,11 @@ void AShirePlayerCharacter::BeginPlay()
         {
             Presentation->OnCinematicStateChanged.AddDynamic(this, &AShirePlayerCharacter::HandleCinematicStateChanged);
             Presentation->OnCameraCueRequested.AddDynamic(this, &AShirePlayerCharacter::HandleStoryCameraCue);
+            // If possession/spawn occurs during a running cue, inherit its lock.
+            if (Presentation->IsCinematicLocked())
+            {
+                HandleCinematicStateChanged(true);
+            }
         }
         if (UShireQuestSubsystem* Quests = GI->GetSubsystem<UShireQuestSubsystem>())
         {
