@@ -1,0 +1,76 @@
+name: Cleanup Actions artifacts older than seven days
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 3 * * *'
+permissions:
+  actions: write
+  contents: read
+concurrency:
+  group: actions-artifact-cleanup
+  cancel-in-progress: false
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Delete expired artifacts (repository only)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import datetime, json, os, time, urllib.error, urllib.parse, urllib.request
+          repo = os.environ['GH_REPO']
+          api = 'https://api.github.com'
+          token = os.environ['GH_TOKEN']
+          cutoff = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=7)
+          headers = {'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json',
+                     'X-GitHub-Api-Version': '2022-11-28', 'User-Agent': 'shire-actions-cleanup'}
+          def request(method, path):
+              for retry in range(4):
+                  try:
+                      with urllib.request.urlopen(urllib.request.Request(api + path, headers=headers, method=method), timeout=30) as response:
+                          data = response.read()
+                          return json.loads(data) if data else {}
+                  except urllib.error.HTTPError as error:
+                      if error.code in (429, 500, 502, 503, 504) and retry < 3:
+                          time.sleep(2 ** retry + 1)
+                          continue
+                      raise RuntimeError(f'GitHub API {method} {path}: HTTP {error.code}') from error
+          # Snapshot IDs before deletion to prevent pagination shifts and skipped entries.
+          artifacts = []
+          page = 1
+          while True:
+              payload = request('GET', f'/repos/{repo}/actions/artifacts?per_page=100&page={page}')
+              batch = payload.get('artifacts', [])
+              artifacts.extend(batch)
+              if len(batch) < 100:
+                  break
+              page += 1
+          targets = []
+          for artifact in artifacts:
+              created = datetime.datetime.fromisoformat(artifact['created_at'].replace('Z', '+00:00'))
+              if created < cutoff:
+                  targets.append(artifact)
+          total = sum(int(a.get('size_in_bytes', 0)) for a in targets)
+          print(f'REPO={repo} CUTOFF_UTC={cutoff.isoformat()} SCANNED={len(artifacts)} ELIGIBLE={len(targets)} ELIGIBLE_BYTES={total}', flush=True)
+          deleted, deleted_bytes, failures = 0, 0, []
+          for a in targets:
+              try:
+                  request('DELETE', f"/repos/{repo}/actions/artifacts/{a['id']}")
+                  deleted += 1
+                  deleted_bytes += int(a.get('size_in_bytes', 0))
+              except Exception as exc:
+                  failures.append(f"{a['id']}: {exc}")
+          print(f'DELETED={deleted} DELETED_BYTES={deleted_bytes} FAILURES={len(failures)}', flush=True)
+          for failure in failures:
+              print('ERROR ' + failure, flush=True)
+          if os.environ.get('GITHUB_STEP_SUMMARY'):
+              with open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as f:
+                  f.write(f'## Seven-day artifact cleanup\n\nRepository: {repo}\n\nCutoff (UTC): {cutoff.isoformat()}\n\nScanned: {len(artifacts)}\n\nDeleted: {deleted}\n\nDeleted stored bytes (reported): {deleted_bytes}\n\nFailures: {len(failures)}\n\n')
+          if failures:
+              raise SystemExit(1)
+          PY
