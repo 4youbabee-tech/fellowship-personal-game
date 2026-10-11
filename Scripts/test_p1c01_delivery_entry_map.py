@@ -65,8 +65,12 @@ class P1C01DeliveryEntryMapContract(unittest.TestCase):
         self.assertIn("SHIRE_PACKAGE_REQUIRED=${{ needs.classify.outputs.package }}", wf)
         for step in ("Build cook stage and archive real Windows package",
                      "Verify packaged Runtime Data JSON payload"):
-            self.assertIn("name: " + step + "\n        if: env.SHIRE_PACKAGE_REQUIRED == 'true'", wf)
-        self.assertIn("if: success() && env.SHIRE_PACKAGE_REQUIRED == 'true'", wf)
+            self.assertIn("name: " + step + "\n        if: github.event_name == 'workflow_dispatch' && inputs.package_windows == true && env.SHIRE_PACKAGE_REQUIRED == 'true'", wf)
+        self.assertIn("if: success() && github.event_name == 'workflow_dispatch' && inputs.package_windows == true && env.SHIRE_PACKAGE_REQUIRED == 'true'", wf)
+        self.assertIn("name: Exercise real classifier regression on GitHub-hosted Windows", wf)
+        self.assertIn("needs.classify.outputs.full == 'true' || needs.classify.outputs.core == 'true'", wf)
+        self.assertIn('Set-Mode "static" "exact-governance-and-unreal-classifier-policy-hosted-only"', classifier)
+        self.assertEqual(governor["chapter_closeout_package_policy_2026_10_11"]["mandatory_early_package_triggers"], [])
         self.assertIn("SHIRE_EXPLICIT_CHAPTER_PACKAGE", classifier)
         self.assertIn("Set-Mode \"full\" \"explicit-whole-game-chapter-or-release-package\"", classifier)
         self.assertIn("SHIRE_PACKAGE_REQUIRED", classifier)
