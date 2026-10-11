@@ -8700,5 +8700,26 @@
       "unreal_compile_executed": false,
       "windows_package_executed": false
     }
+  },
+  "cloud_warehouse_drive_policy_2026_10_11": {
+    "status": "OWNER_REQUEST_CAPTURED_PENDING_GITHUB_ACTIONS_AUTH",
+    "date": "2026-10-11",
+    "owner_direction": "Use the connected private Google Drive folder as cloud staging for licensed physical FBX/PNG/animation source output, reducing GitHub artifact storage; document the workflow so incoming programmers know current production priorities.",
+    "folder_id": "1bMZp-XKcQjCj3fYxLoISDtqG9W5aSzyq",
+    "folder_url": "https://drive.google.com/drive/folders/1bMZp-XKcQjCj3fYxLoISDtqG9W5aSzyq",
+    "observed_subfolders": [
+      "01_Characters_Animations",
+      "02_Shire_P1C01",
+      "03_WholeGame_28Regions",
+      "04_PBR_Materials"
+    ],
+    "contracts": [
+      "Google Drive ChatGPT connection does not authorize GitHub Actions to upload; separate least-privilege OAuth or rclone GitHub secret is required.",
+      "Cloud outputs are staged with SHA256 and license receipts; verify remote uploads before deleting GitHub artifacts.",
+      "Keep code, governance, manifests and PR evidence in GitHub; store large physical binary assets in Drive with a short artifact handoff window.",
+      "No public folder sharing or credentials committed to the public repository.",
+      "Persistent Windows D: warehouse and UE import remain unavailable until explicit owner runner authorization; P1C02 runtime remains gated.",
+      "Respect available 15 GB Drive quota and storage budgeting; do not claim automatic sync or migrated assets before evidence."
+    ]
   }
 }
