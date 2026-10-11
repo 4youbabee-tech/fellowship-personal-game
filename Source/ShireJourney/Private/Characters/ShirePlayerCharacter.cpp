@@ -1776,7 +1776,7 @@ bool AShirePlayerCharacter::ValidateSaveSnapshotBounds(const UShireSaveGame* Sav
 
 bool AShirePlayerCharacter::IsGameplayWorldCommitted() const
 {
-    return !bWorldTransitionHeld && IsCurrentWorldCommitted();
+    return !bWorldTransitionHeld && !bPendingSaveRestoreTransform && IsCurrentWorldCommitted();
 }
 
 bool AShirePlayerCharacter::IsCurrentWorldCommitted() const
@@ -1932,6 +1932,17 @@ bool AShirePlayerCharacter::RestoreSaveSnapshot(
     Supplies = FMath::Clamp(Save->PlayerSupplies, 0, MaxSupplies);
     bStaminaExhausted = CurrentStamina <= 0.0f;
 
+    // Mark the player non-interactive BEFORE broadcasting restored quest state.
+    // An already-resident world can release its hold synchronously; overlapping
+    // world triggers must never mutate the snapshot before saved placement.
+    PendingSaveRestoreLocation = Save->PlayerLocation;
+    PendingSaveRestoreRotation = Save->PlayerRotation;
+    PendingSaveRestoreChapterId = Save->CurrentChapterId;
+    PendingSaveRestoreRouteId = Save->CurrentRouteId;
+    PendingSaveRestoreEpisodeId = Save->CurrentEpisodeId;
+    PendingSaveRestoreSuccessMessage = SuccessMessage;
+    bPendingSaveRestoreTransform = true;
+
     QuestSubsystem->CommitPersistenceRestore(true);
 
     const bool bIdentityRepaired =
@@ -1958,14 +1969,6 @@ bool AShirePlayerCharacter::RestoreSaveSnapshot(
             *QuestSubsystem->GetCurrentEpisodeId().ToString());
         return true;
     }
-
-    PendingSaveRestoreLocation = Save->PlayerLocation;
-    PendingSaveRestoreRotation = Save->PlayerRotation;
-    PendingSaveRestoreChapterId = Save->CurrentChapterId;
-    PendingSaveRestoreRouteId = Save->CurrentRouteId;
-    PendingSaveRestoreEpisodeId = Save->CurrentEpisodeId;
-    PendingSaveRestoreSuccessMessage = SuccessMessage;
-    bPendingSaveRestoreTransform = true;
 
     if (!TryApplyPendingSaveRestoreTransform())
     {
