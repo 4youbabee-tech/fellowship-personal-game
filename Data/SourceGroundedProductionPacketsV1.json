@@ -1,0 +1,534 @@
+{
+  "schema_version": 1,
+  "packet_id": "SOURCE_GROUNDED_PRODUCTION_PACKETS_V1",
+  "status": "ACTIVE_CLOUD_SOURCE_PREP_READY",
+  "created_on": "2026-10-11",
+  "authority": [
+    "Data/ProjectGovernor.json#owner_fast_batch_intake_policy_2026_10_11",
+    "Data/MaximumSafeProductionModeV1.json#owner_offline_fast_production_2026_10_11",
+    "project_sources/01-11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX.pdf",
+    "project_sources/03-02_CHARACTERS_AND_RELATIONSHIPS_BIBLE.pdf",
+    "project_sources/05-04_PEOPLES_LORE_ARTIFACTS_AND_CULTURES-1-.pdf",
+    "project_sources/08-03_WORLD_LOCATIONS_AND_MAP_BIBLE-1-.pdf",
+    "project_sources/09-06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE-1-.pdf",
+    "project_sources/10-07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX-1-.pdf",
+    "project_sources/12-10_3D_VISUAL_ASSET_ATLAS_PRODUCTION.pdf",
+    "project_sources/15-SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25-1-.pdf"
+  ],
+  "source_authority_priority": [
+    "current_project_rules_and_owner_approved_decisions",
+    "film_trilogy_and_supplied_screenplays",
+    "tolkien_book_appendices_and_project_lore_files",
+    "project_sources_01_to_10",
+    "external_references_fan_art_and_generated_visual_aids"
+  ],
+  "source_conflict_policy": {
+    "film_scene_present": "Preserve film outcome, staging intent and canonical postconditions.",
+    "film_silent": "Use Tolkien/project lore when it does not contradict locked film outcomes.",
+    "gameplay_bridge": "Mark as DESIGN_ORIGINAL and keep canonical postconditions fixed.",
+    "generated_or_external_visual": "Use as modeling aid only; never override project canon, character identity or mission state."
+  },
+  "external_resource_intake_policy": {
+    "objective": "Keep production moving while laptop/Windows runner is offline by accepting useful lawful and technically repairable sources into source-only prep queues.",
+    "required_receipt_fields": [
+      "source_url_or_local_artifact",
+      "creator_or_uploader",
+      "license_or_personal_use_note",
+      "original_filename",
+      "download_or_capture_date",
+      "sha256_original",
+      "intended_use",
+      "modifications",
+      "derived_output_path"
+    ],
+    "license_tiers": [
+      "GREEN-OPEN",
+      "GREEN-LICENSED",
+      "BLUE-PERSONAL",
+      "YELLOW-PER-ASSET",
+      "REFERENCE-ONLY",
+      "QUARANTINE",
+      "DISABLED"
+    ],
+    "personal_home_use_acceleration": "For non-commercial home use, reduce repeated administrative review after first receipt, but keep provenance and quarantine unclear franchise-specific assets.",
+    "format_policy": {
+      "static_meshes": "Convert useful sources into UE4.27-ready derived FBX without editing originals.",
+      "skeletal_characters": "Skeletal FBX with skeleton, materials, LOD intent and retarget/deformation validation before runtime acceptance.",
+      "textures": "PNG/TGA preferred; prepare ORM/channel-packed outputs where useful; avoid shipping oversized uncompressed sources.",
+      "texture_budget": "Default 1K/2K for target 2GB VRAM; 4K only for measured hero assets; 8K/16K source downscale only."
+    }
+  },
+  "p1c01_packets": [
+    {
+      "id": "P1C01_SHIRE_LOCATION_STATE_PACKET",
+      "priority": 1,
+      "source_basis": [
+        "World Locations Bible",
+        "Mission Matrix F1-01/F1-02",
+        "Master Production Systems"
+      ],
+      "scope": [
+        "Shire",
+        "Hobbiton",
+        "Bagshot Row",
+        "Party Field",
+        "Shire roads",
+        "water/mill/bridges",
+        "gardens/farms"
+      ],
+      "deliverables_cloud_safe": [
+        "asset_manifest_for_circular_doors_windows_roofs_garden_props_paths_fences_mill_bridge_water",
+        "state_variant_manifest_birthday_departure_post_war",
+        "streaming_and_instancing_notes_for_hills_trees_farms_flowers",
+        "collision_lod_culling_plan_for_target_720p_30fps"
+      ],
+      "unreal_later_evidence_required": [
+        "imported_static_meshes",
+        "material_slots_visible",
+        "collision_checked",
+        "runtime_presence"
+      ]
+    },
+    {
+      "id": "P1C01_BAG_END_INTERIOR_PACKET",
+      "priority": 1,
+      "source_basis": [
+        "World Locations Bible Bag End dossier",
+        "Mission Matrix F1-01/F1-02"
+      ],
+      "scope": [
+        "Bag End exterior",
+        "Bag End interior",
+        "round rooms",
+        "lived-in props",
+        "inventory/tutorial hub",
+        "Ring revelation setup"
+      ],
+      "deliverables_cloud_safe": [
+        "room_prop_manifest",
+        "round_geometry_modeling_requirements",
+        "hero_asset_slots_for_one_ring_table_fireplace_books_maps_food_storage",
+        "entry_exit_anchor_list"
+      ],
+      "unreal_later_evidence_required": [
+        "interior_streamed_or_loaded",
+        "interactable_props_present",
+        "save_safe_anchor_valid"
+      ]
+    },
+    {
+      "id": "P1C01_HOBBIT_CHARACTER_PACKET",
+      "priority": 1,
+      "source_basis": [
+        "Characters Bible",
+        "Mission Matrix F1-01/F1-02",
+        "Gameplay Bible"
+      ],
+      "roster": [
+        "Frodo",
+        "Bilbo",
+        "Gandalf",
+        "Sam",
+        "Merry",
+        "Pippin",
+        "hobbit_farmers",
+        "hobbit_gardeners",
+        "party_guests"
+      ],
+      "deliverables_cloud_safe": [
+        "character_schema_rows_with_provenance_chapter_availability_relationships_equipment_dialogue_profiles",
+        "Blender_character_factory_queue_for_mesh_material_skeleton_animation_lod",
+        "deformation_qc_manifest_for_existing_human_factory_outputs",
+        "fallback_policy_preventing_generic_main_character_replacements"
+      ],
+      "guardrails": [
+        "Frodo is not a power fantasy warrior",
+        "Gandalf magic remains rare and purposeful",
+        "Merry and Pippin support stealth/social/situational play"
+      ],
+      "unreal_later_evidence_required": [
+        "skeletal_mesh_import",
+        "materials_bound",
+        "animations_previewed",
+        "runtime_interaction"
+      ]
+    },
+    {
+      "id": "P1C01_GAMEPLAY_MISSION_PACKET",
+      "priority": 1,
+      "source_basis": [
+        "Gameplay Bible",
+        "Mission Matrix"
+      ],
+      "chapters": [
+        {
+          "id": "F1-01",
+          "playable": [
+            "Bilbo",
+            "Frodo",
+            "Gandalf"
+          ],
+          "critical_path": "Ring history establishes stakes; Bilbo prepares birthday; Gandalf arrives.",
+          "optional_window": [
+            "Bilbo birthday setup",
+            "social onboarding",
+            "Gandalf fireworks"
+          ],
+          "canonical_postcondition": "Bilbo leaves; Ring passes to Frodo."
+        },
+        {
+          "id": "F1-02",
+          "playable": [
+            "Frodo",
+            "Gandalf",
+            "Sam"
+          ],
+          "critical_path": "Gandalf confirms Ring danger and Sauron connection.",
+          "optional_window": [
+            "investigation tutorial",
+            "packing",
+            "stealth departure"
+          ],
+          "canonical_postcondition": "Frodo leaves the Shire."
+        }
+      ],
+      "required_system_contracts": [
+        "quest_state_machine",
+        "autosave_safe_boundaries",
+        "cinematic_skip_parity",
+        "idempotent_optional_rewards",
+        "no_circular_dependencies"
+      ],
+      "unreal_later_evidence_required": [
+        "fresh_start_path",
+        "checkpoint_reload",
+        "cinematic_skip_postconditions",
+        "optional_abandon_safe"
+      ]
+    },
+    {
+      "id": "P1C01_AUDIO_UI_ARABIC_PACKET",
+      "priority": 2,
+      "source_basis": [
+        "Master Production Systems",
+        "External Resource Bible"
+      ],
+      "audio_identity": [
+        "birds",
+        "breeze_in_hedges",
+        "farm_work",
+        "distant_laughter",
+        "carts",
+        "warm_interiors",
+        "fire_and_cutlery"
+      ],
+      "ui_localization": [
+        "FText",
+        "Localization Dashboard",
+        "Arabic subtitles",
+        "RTL full shaping",
+        "Composite Font",
+        "Noto/Cairo/Tajawal candidate fonts"
+      ],
+      "deliverables_cloud_safe": [
+        "audio_cue_manifest",
+        "subtitle_key_manifest",
+        "arabic_font_candidate_manifest",
+        "accessibility_checklist"
+      ],
+      "unreal_later_evidence_required": [
+        "compiled_localization",
+        "subtitle_display_test",
+        "audio_cues_loaded"
+      ]
+    },
+    {
+      "id": "P1C01_LIVING_WORLD_PACKET",
+      "priority": 1,
+      "source_basis": [
+        "Master Production Systems",
+        "LivingWorldDirector requirement",
+        "Shire social landscape owner directive"
+      ],
+      "systems_to_reuse": [
+        "LivingWorldDirector",
+        "ShireNPCContextSubsystem",
+        "object_pooling",
+        "FStreamableManager",
+        "TSoftObjectPtr",
+        "TSoftClassPtr",
+        "ISM/HISM"
+      ],
+      "states": [
+        "Home/Routine",
+        "Alert",
+        "Threat",
+        "Battle",
+        "Aftermath",
+        "Story override"
+      ],
+      "deliverables_cloud_safe": [
+        "npc_archetype_schedule_table_for_farmers_gardeners_families_party_guests",
+        "distance_fidelity_rules",
+        "background_population_density_by_chapter_state",
+        "wildlife_and_ambient_life_manifest"
+      ],
+      "unreal_later_evidence_required": [
+        "npc_schedule_runtime_tick",
+        "pool_reuse_observed",
+        "near_far_lod_behavior",
+        "context_dialogue_changes"
+      ]
+    },
+    {
+      "id": "P1C01_MATERIAL_TECH_PACKET",
+      "priority": 1,
+      "source_basis": [
+        "External Resource Bible",
+        "3D Visual Asset Atlas",
+        "UE folder ownership rules"
+      ],
+      "deliverables_cloud_safe": [
+        "derived_fbx_only_for_repaired_meshes",
+        "sha256_original_receipts",
+        "material_slot_preservation_checks",
+        "uv_normals_smoothing_checks",
+        "png_tga_orm_texture_queue",
+        "sourceassets_never_referenced_by_shipping_maps_rule"
+      ],
+      "unreal_later_evidence_required": [
+        "UE_import_manifest",
+        "material_instance_binding",
+        "runtime_visual_presence"
+      ]
+    }
+  ],
+  "whole_game_source_guided_regions": [
+    {
+      "id": "REGION_01_SHIRE_HOBBITON",
+      "chapter_scope": "P1C01",
+      "runtime_status": "RUNTIME_FIRST",
+      "identity": "Hobbit pastoral village",
+      "source_guidance": "Hobbit domestic agrarian comfort; warm plaster, aged wood, paths, gardens, farms."
+    },
+    {
+      "id": "REGION_02_BUCKLAND_OLD_FOREST",
+      "chapter_scope": "F1_LATER",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "hedged border and ancient woodland",
+      "source_guidance": "Use World Locations, Peoples/Lore and Mission Matrix identity before importing materials."
+    },
+    {
+      "id": "REGION_03_BREE",
+      "chapter_scope": "F1_LATER",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "mixed Mannish/Hobbit road town",
+      "source_guidance": "Use World Locations, Peoples/Lore and Mission Matrix identity before importing materials."
+    },
+    {
+      "id": "REGION_04_WEATHERTOP",
+      "chapter_scope": "F1_LATER",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "ruined hilltop watch place",
+      "source_guidance": "Use World Locations, Peoples/Lore and Mission Matrix identity before importing materials."
+    },
+    {
+      "id": "REGION_05_RIVENDELL",
+      "chapter_scope": "F1_LATER",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "Elven valley refuge",
+      "source_guidance": "Elven memory/craft/light/organic architecture; realm-specific motifs."
+    },
+    {
+      "id": "REGION_06_MISTY_MOUNTAINS",
+      "chapter_scope": "F1_LATER",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "snow mountain passes",
+      "source_guidance": "Use World Locations, Peoples/Lore and Mission Matrix identity before importing materials."
+    },
+    {
+      "id": "REGION_07_MORIA_GATE",
+      "chapter_scope": "F1_LATER",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "ancient lake gate and cliff wall",
+      "source_guidance": "Dwarven stonecraft, lineage, darkness, interior streaming and high-contrast readability."
+    },
+    {
+      "id": "REGION_08_MORIA_INTERIOR",
+      "chapter_scope": "F1_LATER",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "Dwarven underground halls",
+      "source_guidance": "Dwarven stonecraft, lineage, darkness, interior streaming and high-contrast readability."
+    },
+    {
+      "id": "REGION_09_LOTHLORIEN",
+      "chapter_scope": "F1_LATER",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "golden Elven forest",
+      "source_guidance": "Elven memory/craft/light/organic architecture; realm-specific motifs."
+    },
+    {
+      "id": "REGION_10_ANDUIN",
+      "chapter_scope": "F1_LATER",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "river journey corridor",
+      "source_guidance": "Use World Locations, Peoples/Lore and Mission Matrix identity before importing materials."
+    },
+    {
+      "id": "REGION_11_AMON_HEN",
+      "chapter_scope": "F1_LATER",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "ancient seat and forested slopes",
+      "source_guidance": "Use World Locations, Peoples/Lore and Mission Matrix identity before importing materials."
+    },
+    {
+      "id": "REGION_12_ROHAN_GRASSLANDS",
+      "chapter_scope": "F2",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "wide horse plains",
+      "source_guidance": "Horse culture, timber/leather, green/gold, halls, cavalry readability."
+    },
+    {
+      "id": "REGION_13_EDORAS",
+      "chapter_scope": "F2",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "hill settlement and golden hall",
+      "source_guidance": "Horse culture, timber/leather, green/gold, halls, cavalry readability."
+    },
+    {
+      "id": "REGION_14_HELMS_DEEP",
+      "chapter_scope": "F2",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "stone fortress and war staging",
+      "source_guidance": "Horse culture, timber/leather, green/gold, halls, cavalry readability."
+    },
+    {
+      "id": "REGION_15_FANGORN",
+      "chapter_scope": "F2",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "ancient sentient forest",
+      "source_guidance": "Use World Locations, Peoples/Lore and Mission Matrix identity before importing materials."
+    },
+    {
+      "id": "REGION_16_ISENGARD",
+      "chapter_scope": "F2",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "industrial ring and tower",
+      "source_guidance": "Use World Locations, Peoples/Lore and Mission Matrix identity before importing materials."
+    },
+    {
+      "id": "REGION_17_GONDOR_FIELDS",
+      "chapter_scope": "F3",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "outer farms and road to Minas Tirith",
+      "source_guidance": "Stone, lineage, stewardship, White Tree/black-white military identity."
+    },
+    {
+      "id": "REGION_18_MINAS_TIRITH",
+      "chapter_scope": "F3",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "white city tiers",
+      "source_guidance": "Stone, lineage, stewardship, White Tree/black-white military identity."
+    },
+    {
+      "id": "REGION_19_OSGILIATH",
+      "chapter_scope": "F3",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "ruined river city",
+      "source_guidance": "Stone, lineage, stewardship, White Tree/black-white military identity."
+    },
+    {
+      "id": "REGION_20_ITHILIEN",
+      "chapter_scope": "F3",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "green ranger woodland",
+      "source_guidance": "Use World Locations, Peoples/Lore and Mission Matrix identity before importing materials."
+    },
+    {
+      "id": "REGION_21_DEAD_MARSHES",
+      "chapter_scope": "F3",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "haunted wetland",
+      "source_guidance": "Use World Locations, Peoples/Lore and Mission Matrix identity before importing materials."
+    },
+    {
+      "id": "REGION_22_CIRITH_UNGOL",
+      "chapter_scope": "F3",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "mountain pass and tower",
+      "source_guidance": "Use World Locations, Peoples/Lore and Mission Matrix identity before importing materials."
+    },
+    {
+      "id": "REGION_23_MORDOR_PLAINS",
+      "chapter_scope": "F3",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "ash wasteland and war roads",
+      "source_guidance": "Black/red war industry, ash, threat, corruption; no civilian crowd logic."
+    },
+    {
+      "id": "REGION_24_MOUNT_DOOM",
+      "chapter_scope": "F3",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "volcanic climax space",
+      "source_guidance": "Use World Locations, Peoples/Lore and Mission Matrix identity before importing materials."
+    },
+    {
+      "id": "REGION_25_GREY_HAVENS",
+      "chapter_scope": "EPILOGUE",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "Elven harbor and departure",
+      "source_guidance": "Elven memory/craft/light/organic architecture; realm-specific motifs."
+    },
+    {
+      "id": "REGION_26_EREBOR_DALE",
+      "chapter_scope": "EXPANSION_PREP",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "Dwarven mountain and Mannish valley",
+      "source_guidance": "Use World Locations, Peoples/Lore and Mission Matrix identity before importing materials."
+    },
+    {
+      "id": "REGION_27_MIRKWOOD",
+      "chapter_scope": "EXPANSION_PREP",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "dense enchanted forest",
+      "source_guidance": "Use World Locations, Peoples/Lore and Mission Matrix identity before importing materials."
+    },
+    {
+      "id": "REGION_28_LAKE_TOWN",
+      "chapter_scope": "EXPANSION_PREP",
+      "runtime_status": "SOURCE_ONLY_PREP",
+      "identity": "wooden town on water",
+      "source_guidance": "Use World Locations, Peoples/Lore and Mission Matrix identity before importing materials."
+    }
+  ],
+  "runner_boundary": {
+    "cloud_allowed_now": [
+      "source_receipts",
+      "SHA256_manifest_preparation",
+      "derived_asset_queue_specs",
+      "Blender_script_and_validation_prep",
+      "mission_and_dialogue_data_contracts",
+      "CI_classifier_updates",
+      "documentation_state_updates"
+    ],
+    "self_hosted_required_later": [
+      "Unreal_editor_import",
+      "PIE",
+      "Windows_package",
+      "runtime_visual_review",
+      "target_device_720p_30fps",
+      "Gate_6_7_acceptance"
+    ]
+  },
+  "evidence_boundary": {
+    "claimed_now": "Source-grounded production packets and validators are ready for cloud/static checks.",
+    "not_claimed_until_runner_evidence": [
+      "PIE_TESTED",
+      "DEVICE_TESTED",
+      "VISUALLY_ACCEPTED",
+      "GATE_6_ACCEPTED",
+      "GATE_7_ACCEPTED",
+      "P1C01_COMPLETE"
+    ]
+  }
+}

@@ -33,7 +33,7 @@ $marker = 'Set-Location $env:GITHUB_WORKSPACE'
 if (-not $source.Contains($marker)) { throw 'Classifier entry point missing' }
 $program = [scriptblock]::Create($source.Replace($marker, $mocks + [Environment]::NewLine + $marker).Replace('exit 0', 'return'))
 $cases = @(
-    @{Name='cloud-first-shire-assembly'; Paths=@('Data/ProjectGovernor.json','Data/MaximumSafeProductionModeV1.json','Data/OfflineFastProductionQueueV1.json','Data/P1C01CloudShireAssemblyPlanV1.json','Scripts/offline_production_classifier.py','Scripts/test_offline_production_classifier.py','Scripts/validate_p1c01_cloud_assembly.py','Scripts/test_validate_p1c01_cloud_assembly.py','Docs/OFFLINE_FAST_PRODUCTION_PROTOCOL.md'); Proof=$true; Mode='inherit'; TreeProof=$false},
+    @{Name='cloud-first-shire-assembly'; Paths=@('Data/ProjectGovernor.json','Data/MaximumSafeProductionModeV1.json','Data/OfflineFastProductionQueueV1.json','Data/P1C01CloudShireAssemblyPlanV1.json','Data/SourceGroundedProductionPacketsV1.json','Scripts/offline_production_classifier.py','Scripts/test_offline_production_classifier.py','Scripts/validate_p1c01_cloud_assembly.py','Scripts/test_validate_p1c01_cloud_assembly.py','Scripts/validate_source_grounded_production_packets.py','Scripts/test_validate_source_grounded_production_packets.py','Docs/OFFLINE_FAST_PRODUCTION_PROTOCOL.md'); Proof=$true; Mode='inherit'; TreeProof=$false},
     @{Name='onboarding'; Paths=@('README.md','Scripts/new_developer_onboarding.ps1','Scripts/pre_unreal_validate.py'); Proof=$true; Mode='inherit'; TreeProof=$false},
     @{Name='handoff'; Paths=@('Scripts/governor_handoff.py','Scripts/test_governor_handoff.py'); Proof=$true; Mode='inherit'; TreeProof=$false},
     @{Name='p1c01-material-tooling'; Paths=@('Scripts/prepare_p1c01_material_intake.ps1','Scripts/promote_p1c01_material_intake.ps1','Scripts/run_p1c01_material_pipeline.ps1','Scripts/export_p1c01_material_source_branch.ps1','Scripts/pre_unreal_validate.py','Docs/CURRENT_PROJECT_STATE.md'); Proof=$true; Mode='inherit'; TreeProof=$false},
@@ -126,6 +126,12 @@ if (-not $source.Contains('rev-parse --verify --quiet "$ParentSha^{object}"')) {
 }
 if (-not $source.Contains('TREE_EQUIVALENT_PARENT_FETCH_REQUIRED')) {
     throw 'Classifier shallow-history fallback marker missing'
+}
+if (-not $source.Contains('"Data/SourceGroundedProductionPacketsV1.json"')) {
+    throw 'Source-grounded production packet exact allowlist missing'
+}
+if (-not $source.Contains('"Scripts/validate_source_grounded_production_packets.py"')) {
+    throw 'Source-grounded validator exact allowlist missing'
 }
 if (-not $source.Contains('"Data/P1C01CloudShireAssemblyPlanV1.json"')) {
     throw 'Cloud Shire assembly plan exact allowlist missing'

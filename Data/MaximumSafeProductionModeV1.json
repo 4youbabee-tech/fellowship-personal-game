@@ -240,6 +240,15 @@
       "tests": "Scripts/test_validate_whole_game_cloud_warehouse_queue.py",
       "region_count": 28,
       "purpose": "Prepare organized material kits, source rights receipts, SHA256 reuse, Blender QC and import batch manifests for every game region while keeping runtime activation locked to P1C01."
+    },
+    "source_grounded_packet_outputs": {
+      "status": "SOURCE_GROUNDED_PRODUCTION_PACKET_VALIDATION_READY",
+      "packet": "Data/SourceGroundedProductionPacketsV1.json",
+      "validator": "Scripts/validate_source_grounded_production_packets.py",
+      "tests": "Scripts/test_validate_source_grounded_production_packets.py",
+      "p1c01_packet_count": 7,
+      "region_guidance_count": 28,
+      "purpose": "Turn the attached production bibles into cloud-checkable Shire P1C01 and whole-game warehouse execution packets without requiring the Windows runner."
     }
   }
 }
