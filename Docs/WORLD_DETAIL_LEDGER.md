@@ -1,3 +1,11 @@
+## 2026-10-11 — P1C01 SHIRE NATURE BINARY BLENDER LOD PROMOTION (registered before implementation)
+
+- Basis: 03_WORLD_LOCATIONS_AND_MAP_BIBLE (Shire pastoral hills, lanes, gardens and farms), 10_3D_VISUAL_ASSET_ATLAS_PRODUCTION modeling priority, Data/WholeGameRegionProductionPacketsV1.json (SHIRE_HOBBITON); Governor DEC-103/104 and original ASCII source nature wave staged privately in Drive. This promotes the **same twelve** nature families; it must not fabricate an unrelated second library.
+- Deliver actual new Blender-exported **FBX binary 7400** with LOD0/1/2, material slots, UV0, simple UCX trunk/stone collisions only, PNG BaseColor/NormalDX/ORM (foliage alpha where needed), Blender re-import geometry checks and per-byte SHA256 receipts. Trees Oak/Elm/Apple/Willow; hedge/hawthorn/gorse; field/river rocks; meadow grass/wildflowers/reeds. Use original procedural geometry, not imported film art or copyrighted model assets.
+- Hosted Ubuntu only; schedule at a bounded interval with fingerprint + existing-artifact dedup, no repeated identical production, no self-hosted Windows runner, no direct UE runtime modifications. Source artifacts may stage to private Drive only with separate credentials and verified upload. Do not delete sole copies.
+- Constraints: target 720p/30fps/~2GB VRAM; ≤512px packed PBR source channels, explicit LOD triangle reduction, foliage masked shaders assigned on Unreal import rather than claiming automatic configuration. P1C02 runtime remains closed under Gate6/7.
+- Proof boundary: REGISTERED now, later STATIC-VALIDATED with hosted Blender/export/reimport logs + physical artifact SHA256. This is NOT Unreal-imported, COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED, or VISUALLY-ACCEPTED.
+
 ## 2026-10-11 — APPROVED_POLYHAVEN_37_CLOUD_SOURCE physical production before implementation
 
 - Authority: ProjectGovernor DEC-104, OWNER_FAST_BATCH_INTAKE_2026_10_11, REQ-WAREHOUSE-001, REQ-PROD-011 and authorized Data/WarehouseAcquisitionBatchV1.json; 37 registered Poly Haven CC0 source material slugs, reused by region-specific needs across the existing exact 28 WholeGameRegionProductionPackets.

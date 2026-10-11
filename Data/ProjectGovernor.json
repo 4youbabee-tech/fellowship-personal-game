@@ -8732,5 +8732,28 @@
       "capacity": "Stop new batches before reaching 15GB quota; avoid overwriting previously validated sources"
     },
     "runner": "Do not activate Windows self-hosted runner until explicit owner approval"
+  },
+  "cloud_nature_blender_binary_wave_2026_10_11": {
+    "date": "2026-10-11",
+    "status": "CANDIDATE_SOURCE_NOT_YET_HOSTED_VALIDATED",
+    "owner_priority": "P1C01_SHIRE_TREES_NATURE_FIRST",
+    "source_basis": [
+      "DEC-103",
+      "DEC-104",
+      "Docs/WORLD_DETAIL_LEDGER.md",
+      "Data/WholeGameRegionProductionPacketsV1.json"
+    ],
+    "pipeline": "Tools/CloudAssetBuild/blender_nature.py",
+    "workflow": ".github/workflows/p1c01-hosted-nature-lods.yml",
+    "existing_source_batch": "Drive Shire_Nature_Wave_20261011.zip / 36 ASCII FBX and 27 PNG",
+    "proposed_binary_fbx_count": 36,
+    "actual_hosted_binary_fbx_count": 0,
+    "permitted": "Hosted Blender static-source batch only; reuse existing family ids and assets",
+    "blocked": [
+      "Windows self-hosted runner activation without owner authorization",
+      "UE/P1C02 runtime expansion",
+      "Claiming Blender render or UE accept without evidence"
+    ],
+    "gate_boundary": "Source-only: NO COMPILE/PIE/DEVICE/VISUAL/GATE6/7 acceptance"
   }
 }
