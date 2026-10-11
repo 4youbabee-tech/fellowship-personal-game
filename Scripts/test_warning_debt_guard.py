@@ -7,6 +7,23 @@ import warning_debt_guard as guard
 
 
 class WarningDebtGuardTests(unittest.TestCase):
+    def test_raw_verified_fbx_mesh_names_are_hard_warning_debt(self):
+        sample = "\n".join([
+            "FBXImport: Warning: rock_face_01 has some nearly zero tangents which can create some issues.",
+            "FBXImport: Warning: wooden_crate_02 has some nearly zero tangents which can create some issues.",
+            "LogInit: Display: FBXImport: Warning: rock_face_01 has some nearly zero tangents which can create some issues.",
+            "FBXImport: Warning: wooden_crate_02 has some nearly zero bi-normals which can create some issues.",
+        ])
+        by_name = {name: (pattern, ceiling, identity_group) for name, pattern, ceiling, identity_group, _scope in guard.CHECKS}
+        pattern, ceiling, group = by_name["Nearly-zero tangents"]
+        count, identities = guard.measure(sample, pattern, group)
+        self.assertEqual((count, ceiling), (2, 0))
+        self.assertEqual(identities, ["rock_face_01", "wooden_crate_02"])
+        pattern, ceiling, group = by_name["Nearly-zero binormals"]
+        count, identities = guard.measure(sample, pattern, group)
+        self.assertEqual((count, ceiling), (1, 0))
+        self.assertEqual(identities, ["wooden_crate_02"])
+
     def test_repeated_same_mesh_counts_once(self):
         text = "\n".join([
             "FBXImport: Warning: SM_Frodo_Head has degenerate tangent bases",

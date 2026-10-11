@@ -183,6 +183,17 @@ class VerifiedPBRBridgeTest(unittest.TestCase):
                      "Launch actual packaged executable and check Shire startup"):
             self.assertIn("      - name: "+step+"\n        if: github.event_name == 'workflow_dispatch'",workflow)
 
+    def test_pbr_only_tangent_recovery_preserves_authored_normals_and_uvs(self):
+        root=Path(__file__).resolve().parents[1]
+        importer=(root/"Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp").read_text()
+        self.assertIn("const bool bVerifiedPBRStaticFbx",importer)
+        self.assertIn("EFBXNormalImportMethod::FBXNIM_ImportNormals;",importer)
+        self.assertIn("EFBXNormalGenerationMethod::BuiltIn;",importer)
+        self.assertIn("P1C01_VERIFIED_PBR_TANGENT_POLICY",importer)
+        self.assertIn("EFBXNormalImportMethod::FBXNIM_ImportNormalsAndTangents;",importer)
+        self.assertIn("SHIRE_IMPORT_PROFILE stage=asset_tasks",importer)
+        self.assertIn("SHIRE_IMPORT_PROFILE stage=total",importer)
+
     def test_import_receipt_requires_real_material_slot_log(self):
         staged=bridge.stage(self.warehouse,self.project)
         slug=staged[0]["id"]

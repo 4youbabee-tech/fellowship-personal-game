@@ -8,11 +8,13 @@ from runtime_audit_contracts import RUNTIME_LOG_PREFIXES
 # name, regex, ceiling, identity_group, scope
 # scope="all": build/import/runtime evidence.
 # scope="runtime": startup/chapter/state logs only.
+# UE4 names FBX meshes by source slug (e.g. rock_face_01), not always SM_.
+# Do NOT permit silent zero-debt when the real FBX importer emitted warnings.
 CHECKS = [
     ("Missing smoothing groups", re.compile(r"No smoothing group information", re.I), 0, None, "all"),
-    ("Degenerate tangent bases", re.compile(r"\b(SM_[A-Za-z0-9_]+) has degenerate tangent bases", re.I), 0, 1, "all"),
-    ("Nearly-zero tangents", re.compile(r"\b(SM_[A-Za-z0-9_]+) has some nearly zero tangents", re.I), 0, 1, "all"),
-    ("Nearly-zero binormals", re.compile(r"\b(SM_[A-Za-z0-9_]+) has some nearly zero bi-normals", re.I), 0, 1, "all"),
+    ("Degenerate tangent bases", re.compile(r"\b([A-Za-z][A-Za-z0-9_]*) has degenerate tangent bases", re.I), 0, 1, "all"),
+    ("Nearly-zero tangents", re.compile(r"\b([A-Za-z][A-Za-z0-9_]*) has some nearly zero tangents", re.I), 0, 1, "all"),
+    ("Nearly-zero binormals", re.compile(r"\b([A-Za-z][A-Za-z0-9_]*) has some nearly zero bi-normals", re.I), 0, 1, "all"),
     ("Missing production master surface", re.compile(r"(M_ProductionSurface).*?(?:Can't find file|Failed to find object)", re.I), 0, 1, "all"),
     ("Missing world packages", re.compile(r"Failed to load '(/Game/Production/World/[^']+)'", re.I), 0, 1, "runtime"),
     ("Missing optional audio", re.compile(r"Failed to load '(/Game/Audio/[^']+)'", re.I), 0, 1, "runtime"),
