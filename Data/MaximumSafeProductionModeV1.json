@@ -261,5 +261,23 @@
       "whole_game_seed_regions": 28,
       "purpose": "Convert source-grounded packets into concrete cloud-preparable asset/material/character/Blender QC queues while the Windows runner is offline."
     }
+  },
+  "owner_chapter_closeout_package_2026_10_11": {
+    "authority": "Data/ProjectGovernor.json#chapter_closeout_package_policy_2026_10_11 / DEC-106",
+    "status": "IMPLEMENTATION_CANDIDATE_PENDING_EXACT_HEAD_CI",
+    "trigger": "Manual workflow_dispatch package_windows=true for chapter closeout/release; no automatic WindowsNoEditor package or upload",
+    "normal_development": "Hosted static plus precise UE compile/import/runtime QA for changed engine inputs; governance-only is hosted-only",
+    "deferred_inputs": [
+      "Config/**",
+      "**/*.Build.cs",
+      "**/*.Target.cs",
+      "ShireJourney.uproject",
+      "Data/ChapterAssetStreamingPlan.json",
+      "packaging/cook/release validators",
+      "unclassified potentially impacting paths"
+    ],
+    "fail_closed": "Missing git/delta, unknown paths and absent parent UE proof still require truthful full engine validation, without auto-packaging",
+    "acceptance_boundary": "PIE/device/visual/30 FPS/Gate 6/7 need actual evidence",
+    "runner_offline_rule": "Never reserve self-hosted Windows for governance-only and offline source preparation"
   }
 }

@@ -1,3 +1,13 @@
+**PG-145 static regression correction (2026-10-11):** Exact-head Pre-Unreal run `38134722720` failed only at the outdated hosted Unreal guard token `needs.classify.outputs.mode != 'inherit'`, after real classifier cases and packaging contract had already passed. Replaced that old expectation with explicit `full/core/acceptance/package` selection markers and added `Scripts/pre_unreal_validate.py` to the narrow hosted-only policy allowlist. Five-Lane run `38134722700` SUCCESS on previous head; new exact-head preflight remains pending. This is a CI test-contract fix, NOT real UE compile, PIE, device or chapter acceptance.
+
+## 2026-10-11 — Manual-only Windows packaging + hosted policy regression (PR candidate)
+
+- DEC-106 production implementation on current develop after PR #370: `workflow_dispatch package_windows=true` exclusively enables WindowsNoEditor Cook, data proof, packaged startup, hardware capture and large artifact upload. Config/Build.cs/unknown/failed-classifier paths still take the appropriate UE compile/import/runtime lane when the owner runner is available, but never cause a routine package.
+- Narrow exact-path-only `static` classification for governance/classifier workflow/Docs updates runs the real PowerShell classifier regression on GitHub-hosted Windows without reserving the owner's UE runner or implying an inherited Unreal build proof. Acceptance-only changes without packaged-startup resume also stay on hosted-only classification.
+- Regression covers real Set-Mode output across pull request, default manual dispatch and explicitly requested chapter package; config/unknown/no-proof cases remain strictly classified. Governor and MaximumSafeMode updated together; P1C01 runtime scope and Gate 6/7 unchanged.
+- Dedicated P1C01 Verified PBR workflow was a separate hidden duplicate self-hosted PR trigger. It is now manual `workflow_dispatch` only; optional `package_windows` defaults false, and cook, data/startup checks and artifact upload require true. The actual FBX import/UE QA remains available on deliberate dispatch; no import evidence is invented.
+- **Evidence boundary:** Source policy candidate. Exact-head hosted CI results pending; no new UE4 compile, FBX import, PIE, device FPS, visual acceptance, Windows package, or Gate 6/7 credit.
+
 ## 2026-10-11 — #365 CI regression correction (candidate)
 
 - Exact-head Pre-Unreal #38102533805 failed in two source contract assertions: one obsolete manual-only trigger expectation and one new test using literal escaped newlines. The dedicated PBR lane intentionally runs on PR but never cooks/packages except manual dispatch. Corrected assertions and tightened package gates; requires new exact-head CI success. No runtime/device/visual acceptance.

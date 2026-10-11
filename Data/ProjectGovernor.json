@@ -8663,10 +8663,12 @@
   },
   "chapter_closeout_package_policy_2026_10_11": {
     "owner_scope": "ALL_GAME_ALL_CHAPTERS_NOT_SHIRE_ONLY",
-    "status": "CANDIDATE_PENDING_CI",
-    "trigger": "Manual workflow_dispatch package_windows=true on a chapter closure or release, plus automatically on packaging-impacting changes.",
-    "normal_development": "Static/source checks, UE4.27 compile/import/startup/story/save/runtime gates depending on changed code/assets; avoid repeated WindowsNoEditor Cook/Package/Upload.",
-    "mandatory_early_package_triggers": [
+    "status": "IMPLEMENTATION_CANDIDATE_PENDING_EXACT_HEAD_STATIC_CI",
+    "trigger": "Explicit manual workflow_dispatch with package_windows=true for actual chapter closeout or release only; ordinary push, PR, scheduled checks and default dispatch never cook/package/upload WindowsNoEditor.",
+    "normal_development": "GitHub-hosted source/static/regression checks; UE4.27 compile/import/startup/story/save/runtime tests for affected engine paths when the owner runner is available. Full-mode and unknown/config/Build.cs changes do not automatically request Windows packaging.",
+    "mandatory_early_package_triggers": [],
+    "acceptance_boundary": "Deferring packaging never accepts a chapter or release. Shipping requires concrete packaged executable and chapter-specific acceptance evidence.",
+    "deferred_package_impact_inputs": [
       "Config/**",
       "**/*.Build.cs",
       "**/*.Target.cs",
@@ -8680,6 +8682,12 @@
       "packaged-startup verifier without valid inherited package/data proof",
       "unclassified potentially packaging-impacting paths"
     ],
-    "acceptance_boundary": "Shipping a chapter requires concrete packaged executable and chapter-specific acceptance evidence, not merely successful compile or existing Shire startup marker."
+    "execution_guards": [
+      "Classifier package=true requires BOTH workflow_dispatch and explicit package_windows=true.",
+      "Unreal workflow independently gates Windows Cook, packaged-data verification, packaged startup, hardware capture and artifact upload on explicit manual package.",
+      "Acceptance-only source changes with no packaged-startup resume do not queue the self-hosted runner.",
+      "Exact-path-only governance/workflow changes run hosted regression without claiming inherited UE proof.",
+      "Chapter closeout still requires fresh exact-head package/data/executable, route/save/performance/visual acceptance."
+    ]
   }
 }

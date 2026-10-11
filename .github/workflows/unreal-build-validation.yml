@@ -281,6 +281,10 @@ jobs:
         shell: pwsh
         run: python Scripts/test_p1c01_delivery_entry_map.py
 
+      - name: Exercise real classifier regression on GitHub-hosted Windows
+        shell: powershell
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File Scripts/test_unreal_classifier.ps1
+
       - name: Classify Unreal requirement without reserving UE4 machine
         id: classify
         shell: powershell
@@ -292,7 +296,8 @@ jobs:
 
   unreal-build:
     needs: classify
-    if: needs.classify.outputs.mode != 'inherit'
+    # The offline owner runner is reserved for real engine work, not policy/docs.
+    if: needs.classify.outputs.full == 'true' || needs.classify.outputs.core == 'true' || (needs.classify.outputs.acceptance == 'true' && needs.classify.outputs.resume_stage == 'startup') || needs.classify.outputs.package == 'true'
     name: UE4.27.2 C++ Build
     runs-on:
       - self-hosted
@@ -502,12 +507,12 @@ jobs:
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_warning_debt.cmd"'
 
       - name: Build cook stage and archive real Windows package
-        if: env.SHIRE_PACKAGE_REQUIRED == 'true'
+        if: github.event_name == 'workflow_dispatch' && inputs.package_windows == true && env.SHIRE_PACKAGE_REQUIRED == 'true'
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_package_w00.cmd"'
 
       - name: Verify packaged Runtime Data JSON payload
-        if: env.SHIRE_PACKAGE_REQUIRED == 'true'
+        if: github.event_name == 'workflow_dispatch' && inputs.package_windows == true && env.SHIRE_PACKAGE_REQUIRED == 'true'
         shell: cmd
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\verify_packaged_runtime_data.ps1"'
 
@@ -526,17 +531,17 @@ jobs:
           Write-Host ('W00_INHERITED_PACKAGE_DATA_PASS exe=' + $exe + ' verified=' + $j.verified_count)"
 
       - name: Launch and observe packaged executable
-        if: env.SHIRE_PACKAGE_REQUIRED == 'true' || env.SHIRE_ACCEPTANCE_ONLY == 'true'
+        if: (github.event_name == 'workflow_dispatch' && inputs.package_windows == true && env.SHIRE_PACKAGE_REQUIRED == 'true') || (env.SHIRE_ACCEPTANCE_ONLY == 'true' && env.SHIRE_ACCEPTANCE_RESUME_STAGE == 'startup')
         shell: cmd
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\verify_packaged_startup.ps1"'
 
       - name: Capture runner hardware acceptance boundary
-        if: env.SHIRE_PACKAGE_REQUIRED == 'true' || env.SHIRE_ACCEPTANCE_ONLY == 'true'
+        if: (github.event_name == 'workflow_dispatch' && inputs.package_windows == true && env.SHIRE_PACKAGE_REQUIRED == 'true') || (env.SHIRE_ACCEPTANCE_ONLY == 'true' && env.SHIRE_ACCEPTANCE_RESUME_STAGE == 'startup')
         shell: cmd
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\capture_runner_hardware.ps1"'
 
       - name: Upload P1C01 Windows playable candidate
-        if: success() && env.SHIRE_PACKAGE_REQUIRED == 'true'
+        if: success() && github.event_name == 'workflow_dispatch' && inputs.package_windows == true && env.SHIRE_PACKAGE_REQUIRED == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: ShireJourney-P1C01-Windows-${{ env.TARGET_SHA }}

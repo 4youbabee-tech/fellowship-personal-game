@@ -49,19 +49,21 @@ $cases = @(
     @{Name='whole-game-cloud-warehouse-queue'; Paths=@('Data/WholeGameCloudWarehouseMaterialQueueV1.json','Scripts/validate_whole_game_cloud_warehouse_queue.py','Scripts/test_validate_whole_game_cloud_warehouse_queue.py','Docs/OFFLINE_FAST_PRODUCTION_PROTOCOL.md'); Proof=$true; Mode='inherit'; TreeProof=$false},
     @{Name='pie-preview-safe-with-proof'; Paths=@('SHIRE_FAST_PIE_PREVIEW.bat','Scripts/test_fast_pie_preview.py','Docs/CURRENT_PROJECT_STATE.md'); Proof=$true; Mode='inherit'; TreeProof=$false},
     @{Name='pie-preview-safe-no-proof'; Paths=@('SHIRE_FAST_PIE_PREVIEW.bat','Scripts/test_fast_pie_preview.py'); Proof=$false; Mode='full'; TreeProof=$false},
-    @{Name='pie-preview-lookalike-fail-closed'; Paths=@('SHIRE_FAST_PIE_PREVIEW.bat.bak','Scripts/test_fast_pie_preview.py.disabled'); Proof=$true; Mode='full'; Package=$true; TreeProof=$false},
+    @{Name='pie-preview-lookalike-fail-closed'; Paths=@('SHIRE_FAST_PIE_PREVIEW.bat.bak','Scripts/test_fast_pie_preview.py.disabled'); Proof=$true; Mode='full'; Package=$false; TreeProof=$false},
     @{Name='pie-preview-mixed-runtime-fail-closed'; Paths=@('SHIRE_FAST_PIE_PREVIEW.bat','Source/ShireJourney/ShireQuestSubsystem.cpp'); Proof=$true; Mode='core'; TreeProof=$false},
-    @{Name='pie-preview-mixed-config-fail-closed'; Paths=@('Scripts/test_fast_pie_preview.py','Config/DefaultEngine.ini'); Proof=$true; Mode='full'; Package=$true; TreeProof=$false},
+    @{Name='pie-preview-mixed-config-fail-closed'; Paths=@('Scripts/test_fast_pie_preview.py','Config/DefaultEngine.ini'); Proof=$true; Mode='full'; Package=$false; TreeProof=$false},
     @{Name='no-proof'; Paths=@('README.md','Scripts/pre_unreal_validate.py'); Proof=$false; Mode='full'; TreeProof=$false},
     @{Name='mixed-story'; Paths=@('README.md','Scripts/pre_unreal_validate.py','Source/ShireJourney/ShireQuestSubsystem.cpp'); Proof=$true; Mode='core'; TreeProof=$false},
-    @{Name='config'; Paths=@('README.md','Config/DefaultGame.ini'); Proof=$true; Mode='full'; Reset=$false; Package=$true; TreeProof=$false},
-    @{Name='build-rules'; Paths=@('Source/ShireJourney.Target.cs'); Proof=$true; Mode='full'; Reset=$true; Package=$true; TreeProof=$false},
-    @{Name='streaming'; Paths=@('Data/ChapterAssetStreamingPlan.json'); Proof=$true; Mode='full'; Package=$true; TreeProof=$false},
+    @{Name='config'; Paths=@('README.md','Config/DefaultGame.ini'); Proof=$true; Mode='full'; Reset=$false; Package=$false; TreeProof=$false},
+    @{Name='build-rules'; Paths=@('Source/ShireJourney.Target.cs'); Proof=$true; Mode='full'; Reset=$true; Package=$false; TreeProof=$false},
+    @{Name='streaming'; Paths=@('Data/ChapterAssetStreamingPlan.json'); Proof=$true; Mode='full'; Package=$false; TreeProof=$false},
     @{Name='target-device-evaluator'; Paths=@('Scripts/evaluate_p1c01_gate67_evidence.py','Docs/CURRENT_PROJECT_STATE.md','Docs/PRODUCTION_COMPLETENESS_MATRIX.md'); Proof=$true; Mode='acceptance'; TreeProof=$false},
     @{Name='target-device-evaluator-no-proof'; Paths=@('Scripts/evaluate_p1c01_gate67_evidence.py'); Proof=$false; Mode='full'; TreeProof=$false},
+    @{Name='pbr-workflow-hosted-only'; Paths=@('.github/workflows/p1c01-verified-pbr-production.yml','Scripts/test_p1c01_verified_pbr_bridge.py'); Proof=$false; Mode='static'; TreeProof=$false},
+    @{Name='pbr-workflow-mixed-engine-still-core'; Paths=@('.github/workflows/p1c01-verified-pbr-production.yml','Scripts/normalize_verified_pbr_blender.py'); Proof=$true; Mode='core'; Package=$false; TreeProof=$false},
     @{Name='pbr-import-toolchain-must-run-core'; Paths=@('.github/workflows/p1c01-verified-pbr-production.yml','Scripts/normalize_verified_pbr_blender.py','Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp'); Proof=$true; Mode='core'; Package=$false; TreeProof=$false},
     @{Name='pbr-import-toolchain-unproven-fallback'; Paths=@('.github/workflows/p1c01-verified-pbr-production.yml','Scripts/preflight_p1c01_verified_fbx.py','Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp'); Proof=$false; Mode='full'; Package=$false; TreeProof=$false},
-    @{Name='unknown-script'; Paths=@('Scripts/new_unknown_tool.ps1'); Proof=$true; Mode='full'; Package=$true; TreeProof=$false},
+    @{Name='unknown-script'; Paths=@('Scripts/new_unknown_tool.ps1'); Proof=$true; Mode='full'; Package=$false; TreeProof=$false},
     @{Name='known-chapter-runtime-no-repackage'; Paths=@('Source/ShireJourney/Private/Story/ShireQuestSubsystem.cpp'); Proof=$true; Mode='core'; TreeProof=$false},
     @{Name='second-region-runtime-no-repackage'; Paths=@('Source/ShireJourney/Private/World/BreeDetailActor.cpp'); Proof=$false; Mode='full'; TreeProof=$false},
     @{Name='whole-game-runtime-no-parent-proof'; Paths=@('Data/QuestDefinitions.json'); Proof=$false; Mode='full'; TreeProof=$false},
@@ -73,8 +75,10 @@ $cases = @(
     @{Name='manual-validation-no-package'; Paths=@('Docs/CURRENT_PROJECT_STATE.md'); Proof=$true; Mode='inherit'; Dispatch=$false; TreeProof=$false},
     @{Name='runtime-data'; Paths=@('Data/QuestDefinitions.json'); Proof=$true; Mode='core'; TreeProof=$false},
     @{Name='editor-assets'; Paths=@('Source/ShireJourneyEditorTools/Import.cpp'); Proof=$true; Mode='asset'; TreeProof=$false},
-    @{Name='workflow-policy-tree-proof'; Paths=@('.github/workflows/unreal-build-validation.yml'); Proof=$false; Mode='inherit'; TreeProof=$true},
-    @{Name='workflow-policy-no-proof'; Paths=@('.github/workflows/unreal-build-validation.yml'); Proof=$false; Mode='full'; TreeProof=$false}
+    @{Name='hosted-policy-update-without-engine-proof'; Paths=@('Data/ProjectGovernor.json','Data/MaximumSafeProductionModeV1.json','Scripts/classify_unreal_validation.ps1','Scripts/test_unreal_classifier.ps1','Scripts/test_p1c01_delivery_entry_map.py','.github/workflows/unreal-build-validation.yml','Docs/CURRENT_PROJECT_STATE.md','Docs/PRODUCTION_COMPLETENESS_MATRIX.md'); Proof=$false; Mode='static'; Package=$false; TreeProof=$false},
+    @{Name='manual-dispatch-default-no-package'; Paths=@('Docs/CURRENT_PROJECT_STATE.md'); Proof=$true; Mode='inherit'; Package=$false; Event='workflow_dispatch'; TreeProof=$false},
+    @{Name='workflow-policy-tree-proof'; Paths=@('.github/workflows/unreal-build-validation.yml'); Proof=$false; Mode='static'; TreeProof=$true},
+    @{Name='workflow-policy-no-proof'; Paths=@('.github/workflows/unreal-build-validation.yml'); Proof=$false; Mode='static'; TreeProof=$false}
 )
 $oldWorkspace = $env:GITHUB_WORKSPACE
 $oldBase = $env:BASE_SHA
@@ -93,7 +97,7 @@ try {
         $script:ActualMode = ''
         $script:ActualReset = $false
         $script:ActualPackage = $false
-        $env:GITHUB_EVENT_NAME = if ($caseItem.Dispatch) { 'workflow_dispatch' } else { 'pull_request' }
+        $env:GITHUB_EVENT_NAME = if ($caseItem.Event) { $caseItem.Event } elseif ($caseItem.Dispatch) { 'workflow_dispatch' } else { 'pull_request' }
         $env:SHIRE_EXPLICIT_CHAPTER_PACKAGE = if ($caseItem.Dispatch) { 'true' } else { 'false' }
         & $program
         if ($script:ActualMode -ne $caseItem.Mode) {
@@ -173,3 +177,40 @@ if (-not $source.Contains('source=$proofSource')) {
     throw 'Classifier transitive governance proof source marker missing'
 }
 Write-Host 'UNREAL_CLASSIFIER_TRANSITIVE_GOVERNANCE_TREE_PROOF_PASS'
+
+
+# Probe real Set-Mode outputs: mocks above deliberately do not substitute for this.
+$prefix = $source.Substring(0, $source.IndexOf('function Get-GitExe'))
+if (-not $prefix.Contains('function Set-Mode')) { throw 'Real Set-Mode extraction failed' }
+$realSetMode = [scriptblock]::Create($prefix + [Environment]::NewLine +
+    'Set-Mode "full" "regression-probe" "" "none" $false $true')
+$oldGhEnv = $env:GITHUB_ENV
+$oldGhOutput = $env:GITHUB_OUTPUT
+$oldEvent2 = $env:GITHUB_EVENT_NAME
+$oldFlag2 = $env:SHIRE_EXPLICIT_CHAPTER_PACKAGE
+$probeFile = [System.IO.Path]::GetTempFileName()
+try {
+    $env:GITHUB_ENV = $probeFile
+    $env:GITHUB_OUTPUT = ''
+    foreach ($probe in @(
+        @{Event='pull_request'; Flag='true'; Package='false'},
+        @{Event='workflow_dispatch'; Flag='false'; Package='false'},
+        @{Event='workflow_dispatch'; Flag='true'; Package='true'}
+    )) {
+        Set-Content -LiteralPath $probeFile -Value ''
+        $env:GITHUB_EVENT_NAME = $probe.Event
+        $env:SHIRE_EXPLICIT_CHAPTER_PACKAGE = $probe.Flag
+        & $realSetMode
+        $expected = "SHIRE_PACKAGE_REQUIRED=$($probe.Package)"
+        if (-not (@(Get-Content -LiteralPath $probeFile) -contains $expected)) {
+            throw "REAL_PACKAGE_GUARD_FAIL event=$($probe.Event) flag=$($probe.Flag) expected=$expected"
+        }
+        Write-Host "REAL_PACKAGE_GUARD_PASS event=$($probe.Event) flag=$($probe.Flag) package=$($probe.Package)"
+    }
+} finally {
+    $env:GITHUB_ENV = $oldGhEnv
+    $env:GITHUB_OUTPUT = $oldGhOutput
+    $env:GITHUB_EVENT_NAME = $oldEvent2
+    $env:SHIRE_EXPLICIT_CHAPTER_PACKAGE = $oldFlag2
+    Remove-Item -LiteralPath $probeFile -ErrorAction SilentlyContinue
+}
