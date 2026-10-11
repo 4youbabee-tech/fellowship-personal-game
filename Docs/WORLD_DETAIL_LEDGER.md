@@ -1,3 +1,6 @@
+## 2026-10-11 — Existing living-world density fallback correction
+Registered before implementation: missing chapter-specific density overrides inherited previous region radii/cadence. Preserve base global settings and restore them on missing profile; no new runtime scope. Engine acceptance pending.
+
 ## 2026-10-11 — P1C01 pending restore input/action guard (registered before implementation)
 
 - Source: `ShirePlayerCharacter.cpp` sets `bPendingSaveRestoreTransform=true` after restore but `MoveForward`, `MoveRight`, jump/sprint, `Interact`, `UseSupply`, `QuickSave`, `QuickLoad` and `SaveAutomaticCheckpoint` do not consistently check this flag. When world commit removes transition hold before deferred grounding succeeds, player input can mutate or persist the stale transform.
