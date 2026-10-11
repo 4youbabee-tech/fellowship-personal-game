@@ -1,3 +1,12 @@
+## 2026-10-11 — Automatic Google Drive temporary warehouse intake and guarded cleanup (registered BEFORE implementation)
+
+- Owner direction: while runner/PC is off, authorized asset batches remain in private Drive; when Windows runner returns, ingest all four approved staging categories automatically into the permanent D: warehouse, verify hashes, retain durable receipts, and never strand source assets in Drive.
+- Scope: source warehouse intake only (not UE gameplay, P1C02 runtime or chapter acceptance). Reuse existing persistent warehouse, no Unreal project workspace or runner identity mutation.
+- Credential boundary: private Drive's ChatGPT connector does NOT supply GitHub Actions OAuth. Dedicated least-privilege rclone credentials must exist on runner/Actions before automatic transfer can succeed. Never grant public Drive access or commit OAuth tokens.
+- Execution: bounded queued self-hosted asset-only workflow, SHA256 and remote MD5 checks and ZIP CRC scan, idempotent persistent receipts, 6 GiB warehouse disk reserve; missing credentials must fail closed with unmistakable warning.
+- Cleanup: NEVER age-delete or remove after download alone; only a previously ingested managed file whose same-ID remote checksum still matches, independent verified backup exists, and import/usage acceptance disposition is explicitly recorded. Keep remote until that proof exists, then perform narrow exact-object deletion with durable receipt.
+- Required proof: exact-head hosted unit regressions plus first real self-hosted sync with persistent local hashes and inventory; acceptance/import remains separate. No claim that Drive was already downloaded to PC.
+
 ## 2026-10-11 — P1C01 pending restore input/action guard (registered before implementation)
 
 - Source: `ShirePlayerCharacter.cpp` sets `bPendingSaveRestoreTransform=true` after restore but `MoveForward`, `MoveRight`, jump/sprint, `Interact`, `UseSupply`, `QuickSave`, `QuickLoad` and `SaveAutomaticCheckpoint` do not consistently check this flag. When world commit removes transition hold before deferred grounding succeeds, player input can mutate or persist the stale transform.
