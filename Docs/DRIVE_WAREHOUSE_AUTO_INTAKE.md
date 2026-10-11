@@ -1,5 +1,10 @@
 # Automatic Google Drive warehouse intake
 
+## Single-writer correction (2026-10-11, PR #402)
+
+Use only `.github/workflows/drive-warehouse-auto-intake.yml` and `Scripts/drive_warehouse_sync.py`. The duplicate hourly `private-drive-warehouse-intake.yml` and separate `sync_drive_warehouse.py` pipeline were removed because they had independent scheduling, directories, and receipts, violating the one-persistent-warehouse-writer invariant. The scheduled workflow validates the interactive watchdog user session, performs source-only ingestion, and does not invoke Drive deletion. Every ingested ZIP is tagged `license_status=UNVERIFIED_NOT_IMPORTABLE`; original license/provenance and actual UE import must be reviewed before promotion. Optional `--mode cleanup` exists as a separate manual, independently-evidenced operation, not an unattended transfer side effect. The separate runner-side rclone OAuth profile is still required; no physical transfer has been observed.
+
+
 Candidate: runs on develop every two hours and queues while the laptop is off; a future scheduled window resumes if a queued job expires. Pull requests only run tests.
 
 One-time setup required on the interactive watchdog runner account: install rclone and real Python, configure a private rclone remote called `shirecloud` using OAuth, scoped to root_folder_id `1bMZp-XKcQjCj3fYxLoISDtqG9W5aSzyq`. Configuration must be saved at `%APPDATA%\rclone\rclone.conf`. ChatGPT's Google Drive connector cannot supply these runner credentials.

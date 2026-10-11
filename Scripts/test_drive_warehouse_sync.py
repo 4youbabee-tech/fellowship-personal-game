@@ -29,6 +29,16 @@ class DriveWarehouseTests(unittest.TestCase):
             root.mkdir()
             with patch.object(d,"run_rclone",side_effect=AssertionError("unallowed")):
                 d.cleanup("rclone",Path("x"),"shirecloud",root,Path(temp)/"missing")
+    def test_exactly_one_scheduled_writer_and_no_unattended_deletion(self):
+        root = Path(__file__).resolve().parents[1]
+        workflows = root / ".github" / "workflows"
+        self.assertFalse((workflows / "private-drive-warehouse-intake.yml").exists())
+        source = (workflows / "drive-warehouse-auto-intake.yml").read_text(encoding="utf-8")
+        self.assertIn("verify_runner_session.ps1", source)
+        self.assertNotIn("--mode cleanup", source)
+        script = (root / "Scripts" / "drive_warehouse_sync.py").read_text(encoding="utf-8")
+        self.assertIn('"license_status": "UNVERIFIED_NOT_IMPORTABLE"', script)
+
     def test_bad_md5_fails_closed(self):
         entry={"Path":"02_Shire_P1C01/nature.zip","ID":"1Abcdefghi12345","Size":100,"Hashes":{}}
         with patch.object(d,"run_rclone",return_value=json.dumps([entry])):

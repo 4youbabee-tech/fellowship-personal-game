@@ -123,6 +123,7 @@ def ingest(binary, config, remote, root, max_files):
                 "remote_id": remote_id, "remote_path": rel, "remote_size": size,
                 "remote_md5": md5, "sha256": h, "local_path": str(local),
                 "zip_entries": count, "state": "LOCAL_STAGED_NOT_IMPORTED",
+                "license_status": "UNVERIFIED_NOT_IMPORTABLE",
                 "created_utc": datetime.datetime.now(datetime.timezone.utc).isoformat()
             })
             staged += 1

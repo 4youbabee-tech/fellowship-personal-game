@@ -1,3 +1,7 @@
+## 2026-10-11 — P1C01 source warehouse single-writer repair (registered before implementation)
+
+Existing PR #402 included two scheduled pipelines targeting the same persistent D: warehouse with divergent receipts and no cross-workflow lock. Avoid duplicate downloads / competing writers by removing the redundant private/hourly path, keeping the approved root-scoped two-hour source-only pipeline, adding runner session guard and explicit license review. Safety boundary: transfer never means import acceptance; no unattended remote deletion.
+
 ## 2026-10-11 — Automatic Google Drive temporary warehouse intake and guarded cleanup (registered BEFORE implementation)
 
 - Owner direction: while runner/PC is off, authorized asset batches remain in private Drive; when Windows runner returns, ingest all four approved staging categories automatically into the permanent D: warehouse, verify hashes, retain durable receipts, and never strand source assets in Drive.
