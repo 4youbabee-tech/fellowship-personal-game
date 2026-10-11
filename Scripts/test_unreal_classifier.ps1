@@ -47,7 +47,7 @@ $cases = @(
     @{Name='whole-game-source-packets'; Paths=@('Data/WholeGameChapterAssetDemandMatrixV1.json','Data/WholeGameChapterProductionPacketsV1.json','Scripts/test_whole_game_chapter_production_packets.ps1','Docs/CURRENT_PROJECT_STATE.md'); Proof=$true; Mode='inherit'; TreeProof=$false},
     @{Name='pie-preview-safe-with-proof'; Paths=@('SHIRE_FAST_PIE_PREVIEW.bat','Scripts/test_fast_pie_preview.py','Docs/CURRENT_PROJECT_STATE.md'); Proof=$true; Mode='inherit'; TreeProof=$false},
     @{Name='pie-preview-safe-no-proof'; Paths=@('SHIRE_FAST_PIE_PREVIEW.bat','Scripts/test_fast_pie_preview.py'); Proof=$false; Mode='full'; TreeProof=$false},
-    @{Name='pie-preview-lookalike-fail-closed'; Paths=@('SHIRE_FAST_PIE_PREVIEW.bat.bak','Scripts/test_fast_pie_preview.py.disabled'); Proof=$true; Mode='full'; TreeProof=$false},
+    @{Name='pie-preview-lookalike-fail-closed'; Paths=@('SHIRE_FAST_PIE_PREVIEW.bat.bak','Scripts/test_fast_pie_preview.py.disabled'); Proof=$true; Mode='full'; Package=$true; TreeProof=$false},
     @{Name='pie-preview-mixed-runtime-fail-closed'; Paths=@('SHIRE_FAST_PIE_PREVIEW.bat','Source/ShireJourney/ShireQuestSubsystem.cpp'); Proof=$true; Mode='core'; TreeProof=$false},
     @{Name='pie-preview-mixed-config-fail-closed'; Paths=@('Scripts/test_fast_pie_preview.py','Config/DefaultEngine.ini'); Proof=$true; Mode='full'; Package=$true; TreeProof=$false},
     @{Name='no-proof'; Paths=@('README.md','Scripts/pre_unreal_validate.py'); Proof=$false; Mode='full'; TreeProof=$false},
