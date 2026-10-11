@@ -1,4 +1,4 @@
-**2026-10-12 P1C01 runtime stability integration:** LivingWorldDirector now snapshots global population density defaults before chapter overrides and restores them when a chapter lacks a profile; ShirePlayerCharacter suppresses only headless audit auto-checkpoint retry noise while preserving gameplay checkpointing and explicit disk roundtrip audits.
+**2026-10-12 Whole-map material readiness checkpoint:** Added source-level guardrails for all 28 region packets plus the P1C01 curated Shire batch. Current source readiness remains strongest for Shire/Hobbiton/Bag End; later regions are still production packets and material-prep targets, not opened runtime chapters.\n\n**2026-10-12 P1C01 runtime stability integration:** LivingWorldDirector now snapshots global population density defaults before chapter overrides and restores them when a chapter lacks a profile; ShirePlayerCharacter suppresses only headless audit auto-checkpoint retry noise while preserving gameplay checkpointing and explicit disk roundtrip audits.
 
 ## 2026-10-12 — W01/P1C01 original Shire FBX/PNG staging (registered before engine integration)
 
