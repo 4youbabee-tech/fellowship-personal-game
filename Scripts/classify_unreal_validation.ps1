@@ -483,7 +483,7 @@ function Test-ParentAcceptanceDataGreen([string]$ParentSha) {
 
 Set-Location $env:GITHUB_WORKSPACE
 $git = Get-GitExe
-if (-not $git) { Set-Mode "full" "git-unavailable-fail-safe" ""; exit 0 }
+if (-not $git) { Set-Mode "full" "git-unavailable-fail-safe" "" "none" $false $true; exit 0 }
 
 # Manual closeout is available for every chapter in the trilogy, not P1C01 only.
 # Requires the actual Windows cook, packaged-data verification and executable boot.
@@ -510,7 +510,7 @@ if ($env:BASE_SHA) {
 if (-not $parentSha) {
     $parentSha = (& $git rev-parse "HEAD^").Trim()
 }
-if (-not $parentSha) { Set-Mode "full" "parent-unavailable-fail-safe" ""; exit 0 }
+if (-not $parentSha) { Set-Mode "full" "parent-unavailable-fail-safe" "" "none" $false $true; exit 0 }
 
 $changed = @(& $git diff --name-only $parentSha $env:TARGET_SHA)
 if ($LASTEXITCODE -ne 0) {
@@ -521,7 +521,7 @@ if ($LASTEXITCODE -ne 0) {
     }
 }
 if ($LASTEXITCODE -ne 0 -or $changed.Count -eq 0) {
-    Set-Mode "full" "delta-unavailable-fail-safe" $parentSha
+    Set-Mode "full" "delta-unavailable-fail-safe" $parentSha "none" $false $true
     exit 0
 }
 
