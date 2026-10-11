@@ -1,0 +1,314 @@
+{
+  "archives": [
+    {
+      "byte_size": 32452009,
+      "failures": [],
+      "fbx_formats": {},
+      "file": "GH11704614644_polyhaven_shard1.zip",
+      "members": 25,
+      "nested": [],
+      "png_resolutions": {
+        "1024x1024": 24
+      },
+      "receipt": {
+        "polyhaven_mat_receipt_matches": 24,
+        "polyhaven_materials": 8,
+        "polyhaven_quarantined": [
+          {
+            "reason": "MISSING_REQUIRED_MAPS",
+            "slug": "wooden_barrels_01"
+          }
+        ]
+      },
+      "sha256": "d0e931f51e36fb4a541ffb1e156b16ab32d790790d03bc8c9ef664dc8cb156f0",
+      "source_integrity": "PASS",
+      "types": {
+        ".json": 1,
+        ".png": 24
+      },
+      "unreal_import_status": "NOT_TESTED",
+      "warnings": [
+        "SOURCE_SHARD_PARTIAL_QUARANTINED"
+      ]
+    },
+    {
+      "byte_size": 45046272,
+      "failures": [],
+      "fbx_formats": {},
+      "file": "GH11704654471_polyhaven_shard2.zip",
+      "members": 28,
+      "nested": [],
+      "png_resolutions": {
+        "1024x1024": 27
+      },
+      "receipt": {
+        "polyhaven_mat_receipt_matches": 27,
+        "polyhaven_materials": 9,
+        "polyhaven_quarantined": []
+      },
+      "sha256": "c61755457e9547e9fa981d8dc327ab6b43ae9f036fb5242a758b87d30cc7f368",
+      "source_integrity": "PASS",
+      "types": {
+        ".json": 1,
+        ".png": 27
+      },
+      "unreal_import_status": "NOT_TESTED",
+      "warnings": []
+    },
+    {
+      "byte_size": 9761013,
+      "failures": [],
+      "fbx_formats": {},
+      "file": "GH11705009927_shire_28regions.zip",
+      "members": 1,
+      "nested": [
+        {
+          "failures": [],
+          "fbx_formats": {
+            "FBX_BINARY_7400": 44
+          },
+          "members": 82,
+          "nested": [],
+          "path": "shire-p1c01-28-region-original-materials-static-fbx.zip",
+          "png_resolutions": {
+            "1024x1024": 36
+          },
+          "receipt": {
+            "modular_fbx_receipt_matches": 44,
+            "regional_bindings": 28
+          },
+          "types": {
+            ".fbx": 44,
+            ".json": 2,
+            ".png": 36
+          },
+          "warnings": []
+        }
+      ],
+      "png_resolutions": {},
+      "receipt": {},
+      "sha256": "45cd2098345c3831d699ad81ede0cc187387858f1dd3f6bbcd5ab883e3d2498b",
+      "source_integrity": "PASS",
+      "types": {
+        ".zip": 1
+      },
+      "unreal_import_status": "NOT_TESTED",
+      "warnings": []
+    },
+    {
+      "byte_size": 45982428,
+      "failures": [],
+      "fbx_formats": {},
+      "file": "GH11705438692_polyhaven_shard3.zip",
+      "members": 28,
+      "nested": [],
+      "png_resolutions": {
+        "1024x1024": 27
+      },
+      "receipt": {
+        "polyhaven_mat_receipt_matches": 27,
+        "polyhaven_materials": 9,
+        "polyhaven_quarantined": []
+      },
+      "sha256": "24c5ae3024cc8da2db19c9d91925de51153b627b837c8015f12f0907585fa210",
+      "source_integrity": "PASS",
+      "types": {
+        ".json": 1,
+        ".png": 27
+      },
+      "unreal_import_status": "NOT_TESTED",
+      "warnings": []
+    },
+    {
+      "byte_size": 3198236,
+      "failures": [],
+      "fbx_formats": {
+        "FBX_BINARY_7400": 3
+      },
+      "file": "GH11705468534_frodo_source.zip",
+      "members": 11,
+      "nested": [
+        {
+          "failures": [],
+          "fbx_formats": {
+            "FBX_BINARY_7400": 1
+          },
+          "members": 3,
+          "nested": [],
+          "path": "download/character_source.zip",
+          "png_resolutions": {
+            "1024x1024": 1
+          },
+          "receipt": {},
+          "types": {
+            ".blend": 1,
+            ".fbx": 1,
+            ".png": 1
+          },
+          "warnings": [
+            "SOURCE_ONLY_NOT_AUTORUN:source/Hero@BaseModel.blend"
+          ]
+        }
+      ],
+      "png_resolutions": {
+        "1024x1024": 1
+      },
+      "receipt": {
+        "hero_source_only": true
+      },
+      "sha256": "b9b29c1f978643a77ea3766622dc66cd21ec081a919b85dae5aa27e08c81134b",
+      "source_integrity": "PASS",
+      "types": {
+        ".blend": 1,
+        ".fbx": 3,
+        ".html": 1,
+        ".json": 3,
+        ".png": 1,
+        ".py": 1,
+        ".zip": 1
+      },
+      "unreal_import_status": "NOT_TESTED",
+      "warnings": [
+        "HERO_VISUAL_RETARGET_NOT_UE_ACCEPTED",
+        "SOURCE_ONLY_NOT_AUTORUN:download/source_page.html",
+        "SOURCE_ONLY_NOT_AUTORUN:normalize_human_wave2.py",
+        "SOURCE_ONLY_NOT_AUTORUN:source/src_01_Hero@BaseModel.blend"
+      ]
+    },
+    {
+      "byte_size": 47383353,
+      "failures": [],
+      "fbx_formats": {},
+      "file": "GH11705506123_polyhaven_shard0.zip",
+      "members": 31,
+      "nested": [],
+      "png_resolutions": {
+        "1024x1024": 30
+      },
+      "receipt": {
+        "polyhaven_mat_receipt_matches": 30,
+        "polyhaven_materials": 10,
+        "polyhaven_quarantined": []
+      },
+      "sha256": "538b99a6175b657440eac67a6e49d44db0d2510ee1a46cc122595099ca41e965",
+      "source_integrity": "PASS",
+      "types": {
+        ".json": 1,
+        ".png": 30
+      },
+      "unreal_import_status": "NOT_TESTED",
+      "warnings": []
+    },
+    {
+      "byte_size": 467079,
+      "failures": [],
+      "fbx_formats": {
+        "FBX_BINARY_7400": 36
+      },
+      "file": "GH11706518373_Shire_Nature_Binary_36_FBX.zip",
+      "members": 37,
+      "nested": [],
+      "png_resolutions": {},
+      "receipt": {
+        "nature_mesh_receipt_matches": 36
+      },
+      "sha256": "45746e3aa6a19021a0e717160b6cbcdc0343ba20c5cd7072189908cb0c1d7586",
+      "source_integrity": "PASS",
+      "types": {
+        ".fbx": 36,
+        ".json": 1
+      },
+      "unreal_import_status": "NOT_TESTED",
+      "warnings": []
+    },
+    {
+      "byte_size": 551245,
+      "failures": [],
+      "fbx_formats": {
+        "FBX_BINARY_7400": 36
+      },
+      "file": "SHIRE_NATURE_UE427_BINARY_FBX_PNG_SOURCE_INTAKE_20261011.zip",
+      "members": 65,
+      "nested": [],
+      "png_resolutions": {
+        "256x256": 27
+      },
+      "receipt": {
+        "nature_bundle_fbx_binding_count": 36,
+        "nature_bundle_hashes_matched": 63
+      },
+      "sha256": "940bd5679ff27e97fbf9ae214fd62cb57c0d760ca99a3a37e6353e3afa423fc6",
+      "source_integrity": "PASS",
+      "types": {
+        ".fbx": 36,
+        ".json": 1,
+        ".png": 27,
+        ".txt": 1
+      },
+      "unreal_import_status": "NOT_TESTED",
+      "warnings": []
+    },
+    {
+      "byte_size": 21034491,
+      "failures": [],
+      "fbx_formats": {},
+      "file": "SHIRE_PRIORITY_LICENSED_PBR_4_MATERIALS_20261011.zip",
+      "members": 13,
+      "nested": [],
+      "png_resolutions": {
+        "1024x1024": 12
+      },
+      "receipt": {
+        "priority_material_sets": [
+          "Bark",
+          "Grass",
+          "Soil",
+          "Stone"
+        ]
+      },
+      "sha256": "ff8c2d70377c89461e362a928c45157a6fea31353184c256cba2fd7fc3c48068",
+      "source_integrity": "PASS",
+      "types": {
+        ".json": 1,
+        ".png": 12
+      },
+      "unreal_import_status": "NOT_TESTED",
+      "warnings": []
+    },
+    {
+      "byte_size": 272589,
+      "failures": [],
+      "fbx_formats": {
+        "FBX_ASCII_SOURCE_ONLY": 36
+      },
+      "file": "Shire_Nature_Wave_20261011.zip",
+      "members": 65,
+      "nested": [],
+      "png_resolutions": {
+        "256x256": 27
+      },
+      "receipt": {},
+      "sha256": "16809e17ecb91a732f6ea6b684a49801cef0cbf514e0abed3028db827f7a3a56",
+      "source_integrity": "PASS",
+      "types": {
+        ".fbx": 36,
+        ".json": 1,
+        ".png": 27,
+        ".txt": 1
+      },
+      "unreal_import_status": "NOT_TESTED",
+      "warnings": []
+    }
+  ],
+  "schema_version": 1,
+  "scope": "OFFLINE_SOURCE_INTEGRITY_ONLY_NOT_UNREAL",
+  "summary": {
+    "archives": 10,
+    "device_validated": 0,
+    "pie_validated": 0,
+    "source_bytes": 206148715,
+    "source_integrity_fail": 0,
+    "source_integrity_pass": 10,
+    "unreal_imported": 0
+  }
+}

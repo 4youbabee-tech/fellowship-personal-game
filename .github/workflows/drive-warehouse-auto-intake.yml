@@ -1,0 +1,70 @@
+name: Drive Warehouse Auto Intake
+on:
+  schedule:
+    - cron: '17 */2 * * *'
+  workflow_dispatch:
+  pull_request:
+    branches: [develop]
+    paths:
+      - 'Scripts/drive_warehouse_sync.py'
+      - 'Scripts/test_drive_warehouse_sync.py'
+      - 'Scripts/validate_drive_source_bundles.py'
+      - 'Scripts/test_validate_drive_source_bundles.py'
+      - '.github/workflows/drive-warehouse-auto-intake.yml'
+permissions:
+  contents: read
+concurrency:
+  group: warehouse-stage-${{ github.repository }}
+  cancel-in-progress: false
+jobs:
+  static:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m unittest discover -s Scripts -p "test_drive_warehouse_sync.py" -v
+      - run: python -m py_compile Scripts/drive_warehouse_sync.py Scripts/validate_drive_source_bundles.py
+      - run: python -m unittest discover -s Scripts -p "test_validate_drive_source_bundles.py" -v
+  transfer:
+    if: github.event_name != 'pull_request'
+    needs: static
+    runs-on: [self-hosted, Windows, X64, ue4-27]
+    timeout-minutes: 50
+    steps:
+      - name: Isolated control checkout and drive intake
+        shell: powershell
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $p = Join-Path $env:RUNNER_TEMP ('shire-drive-' + $env:GITHUB_RUN_ID)
+          $config = Join-Path $env:APPDATA 'rclone\rclone.conf'
+          if (!(Test-Path $config)) { throw 'DRIVE_AUTH_MISSING configure rclone once for watchdog user' }
+          if (!(Test-Path 'D:\actions-runner\_warehouse\ShireJourney')) { throw 'WAREHOUSE_MISSING' }
+          if (!(Get-Command rclone.exe -ErrorAction SilentlyContinue)) { throw 'RCLONE_MISSING' }
+          try {
+            New-Item $p -ItemType Directory -Force | Out-Null
+            git -C $p init -q
+            git -C $p remote add origin "https://x-access-token:$env:GH_TOKEN@github.com/$env:GITHUB_REPOSITORY.git"
+            git -C $p fetch --depth=1 origin $env:GITHUB_SHA
+            if ($LASTEXITCODE -ne 0) { throw 'CONTROL_FETCH_FAILED' }
+            git -C $p remote set-url origin "https://github.com/$env:GITHUB_REPOSITORY.git"
+            git -C $p checkout -q --detach FETCH_HEAD
+            if ($LASTEXITCODE -ne 0 -or (git -C $p rev-parse HEAD).Trim() -ne $env:GITHUB_SHA) { throw 'CONTROL_SHA_MISMATCH' }
+            & (Join-Path $p 'Scripts\verify_runner_session.ps1')
+            if ($LASTEXITCODE -ne 0) { throw 'DRIVE_RUNNER_SESSION_UNHEALTHY' }
+            python (Join-Path $p 'Scripts\drive_warehouse_sync.py') --mode ingest --rclone-config $config
+            if ($LASTEXITCODE -ne 0) { throw 'DRIVE_INGEST_FAILED' }
+            # Only verified staging is unattended. Remote deletion requires separately
+            # established import acceptance and independent backup evidence.
+            # No automatic cleanup is invoked by this scheduled writer.
+          } finally {
+            if (Test-Path $p) {
+              git -C $p remote set-url origin "https://github.com/$env:GITHUB_REPOSITORY.git" 2>$null
+              Remove-Item $p -Recurse -Force -ErrorAction SilentlyContinue
+            }
+          }
