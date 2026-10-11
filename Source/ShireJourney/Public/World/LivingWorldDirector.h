@@ -44,6 +44,11 @@ private:
         float OuterRadius = 2600.0f;
         float CullRadius = 6200.0f;
         float DangerPopulationFraction = 0.50f;
+    // Immutable base density after WorldLifeSaturationPlan global defaults load.
+    float BasePopulationInnerRadius = 850.0f;
+    float BasePopulationOuterRadius = 2600.0f;
+    float BasePopulationCullRadius = 6200.0f;
+    float BasePopulationSpawnInterval = 0.35f;
     };
 
     UPROPERTY()
