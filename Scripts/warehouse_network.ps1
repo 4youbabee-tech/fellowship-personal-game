@@ -98,7 +98,8 @@ function Test-WarehouseZipReadable {
 function Test-WarehouseReceiptReusable {
     param(
         [Parameter(Mandatory=$true)][string]$ReceiptPath,
-        [Parameter(Mandatory=$true)][string]$BatchId
+        [Parameter(Mandatory=$true)][string]$BatchId,
+        [string]$ManifestSha256 = ""
     )
     if (-not (Test-Path -LiteralPath $ReceiptPath -PathType Leaf)) { return $false }
     try { $receipt = Get-Content -LiteralPath $ReceiptPath -Raw | ConvertFrom-Json }
@@ -107,6 +108,15 @@ function Test-WarehouseReceiptReusable {
         return $false
     }
     if ([string]$receipt.batch_id -ne $BatchId) { return $false }
+    # Legacy callers retain their existing receipt contract. Regional ambientCG
+    # requests opt in to strict manifest identity before any early exit.
+    if (-not [string]::IsNullOrWhiteSpace($ManifestSha256)) {
+        if ($ManifestSha256 -notmatch '^[0-9a-fA-F]{64}$') { return $false }
+        if (([string]$receipt.manifest_sha256).ToLowerInvariant() -ne $ManifestSha256.ToLowerInvariant()) {
+            Write-Host "WAREHOUSE_REUSE_MANIFEST_CHANGED batch=$BatchId"
+            return $false
+        }
+    }
     $files = @($receipt.files)
     if ($files.Count -le 0) { return $false }
 

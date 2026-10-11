@@ -101,3 +101,42 @@ if($ambientCGScript.Contains('max_download_bytes){ Remove-Item $dest -Force')){
     throw "AMBIENTCG_EXISTING_CACHE_REMOVAL_UNSAFE"
 }
 Write-Host "WAREHOUSE_AMBIENTCG_DEDUP_CONTRACT_PASS networkFree=true shaGuard=true acceptedOnce=true"
+
+
+# Regression: a prior valid archive cannot prove that an edited regional manifest
+# (new search terms, region mappings, texture attribute, or source rules) was staged.
+$networkScript = Join-Path $projectRoot "Scripts\\warehouse_network.ps1"
+$network = Get-Content -LiteralPath $networkScript -Raw
+foreach($token in @('ManifestSha256', 'WAREHOUSE_REUSE_MANIFEST_CHANGED')){
+    if(-not $network.Contains($token)){ throw "WAREHOUSE_MANIFEST_CACHE_GUARD_MISSING token=$token" }
+}
+foreach($token in @('$manifestSha256 = (Get-FileHash', '-ManifestSha256 $manifestSha256', 'manifest_sha256=$manifestSha256')){
+    if(-not $ambientCGScript.Contains($token)){ throw "AMBIENTCG_MANIFEST_FINGERPRINT_MISSING token=$token" }
+}
+if($ambientCGScript.Contains('WAREHOUSE_REFRESH_REMOVE')){ throw "AMBIENTCG_REFRESH_MUST_PRESERVE_VALID_CACHE" }
+. $networkScript
+$tmp = Join-Path ([IO.Path]::GetTempPath()) ("shire-ambientcg-cache-" + [Guid]::NewGuid().ToString("N"))
+try {
+    $source = Join-Path $tmp "source"
+    New-Item -ItemType Directory -Path $source -Force | Out-Null
+    [IO.File]::WriteAllText((Join-Path $source "tiny.txt"), "Licensed CC0 cache regression")
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    $zip = Join-Path $tmp "sample.zip"
+    [IO.Compression.ZipFile]::CreateFromDirectory($source, $zip)
+    $sum = (Get-FileHash -LiteralPath $zip -Algorithm SHA256).Hash.ToLowerInvariant()
+    $receipt = Join-Path $tmp "receipt.json"
+    $original = ('a' * 64)
+    $changed = ('b' * 64)
+    $sample = [ordered]@{batch_id='CACHE_TEST';manifest_sha256=$original;files=@([ordered]@{file=$zip;size=(Get-Item $zip).Length;sha256=$sum})}
+    $sample | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $receipt -Encoding UTF8
+    if(-not (Test-WarehouseReceiptReusable -ReceiptPath $receipt -BatchId 'CACHE_TEST' -ManifestSha256 $original)){ throw 'AMBIENTCG_UNCHANGED_CACHE_FALSE_NEGATIVE' }
+    if(Test-WarehouseReceiptReusable -ReceiptPath $receipt -BatchId 'CACHE_TEST' -ManifestSha256 $changed){ throw 'AMBIENTCG_STALE_MANIFEST_FALSE_GREEN' }
+    if(-not (Test-Path -LiteralPath $zip -PathType Leaf)){ throw 'AMBIENTCG_STALE_RECEIPT_MUST_PRESERVE_ARCHIVE' }
+    $sample.Remove('manifest_sha256')
+    $sample | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $receipt -Encoding UTF8
+    if(Test-WarehouseReceiptReusable -ReceiptPath $receipt -BatchId 'CACHE_TEST' -ManifestSha256 $original){ throw 'AMBIENTCG_LEGACY_RECEIPT_FALSE_GREEN' }
+    if(-not (Test-Path -LiteralPath $zip -PathType Leaf)){ throw 'AMBIENTCG_LEGACY_RECEIPT_MUST_PRESERVE_ARCHIVE' }
+    Write-Host 'AMBIENTCG_MANIFEST_CACHE_REGRESSION_PASS unchanged=true changed=false legacy=false preservesArchive=true'
+} finally {
+    Remove-Item -LiteralPath $tmp -Recurse -Force -ErrorAction SilentlyContinue
+}

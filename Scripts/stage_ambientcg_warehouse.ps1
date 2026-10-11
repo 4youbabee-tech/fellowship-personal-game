@@ -4,13 +4,15 @@ param(
 )
 $ErrorActionPreference = "Stop"
 . (Join-Path $PSScriptRoot "warehouse_network.ps1")
-$manifest = Get-Content $ManifestPath -Raw | ConvertFrom-Json
+$manifestFile = (Resolve-Path -LiteralPath $ManifestPath -ErrorAction Stop).ProviderPath
+$manifestSha256 = (Get-FileHash -LiteralPath $manifestFile -Algorithm SHA256).Hash.ToLowerInvariant()
+$manifest = Get-Content -LiteralPath $manifestFile -Raw | ConvertFrom-Json
 $root = [string]$manifest.staging_root
 New-Item -ItemType Directory -Path $root -Force | Out-Null
 $receiptPath=Join-Path $root ("receipt_"+$manifest.batch_id+".json")
-if (-not $Refresh -and (Test-WarehouseReceiptReusable -ReceiptPath $receiptPath -BatchId ([string]$manifest.batch_id))) { exit 0 }
+if (-not $Refresh -and (Test-WarehouseReceiptReusable -ReceiptPath $receiptPath -BatchId ([string]$manifest.batch_id) -ManifestSha256 $manifestSha256)) { exit 0 }
 $headers = @{ "User-Agent" = "ShireJourneyWarehouse/1.0"; "Accept" = "application/json" }
-$receipt = [ordered]@{ batch_id=$manifest.batch_id; provider=$manifest.provider; license=$manifest.license; staged_at_utc=[DateTime]::UtcNow.ToString("o"); files=@(); skipped=@(); total_bytes=0 }
+$receipt = [ordered]@{ batch_id=$manifest.batch_id; manifest_sha256=$manifestSha256; provider=$manifest.provider; license=$manifest.license; staged_at_utc=[DateTime]::UtcNow.ToString("o"); files=@(); skipped=@(); total_bytes=0 }
 # Keep one physical acquisition per CC0 asset ID across all regional search lanes.
 # A repeat query may mention the same source, but must not download it again.
 $acceptedIds = @{}
@@ -48,10 +50,8 @@ foreach($lane in $manifest.search_lanes){
     $dest=Join-Path $destDir $name
     $downloadedThisAttempt=$false
     try {
-      if($Refresh -and (Test-Path -LiteralPath $dest -PathType Leaf)){
-        Write-Host ("WAREHOUSE_REFRESH_REMOVE provider=AMBIENTCG path=" + $dest)
-        Remove-Item -LiteralPath $dest -Force
-      }
+      # Refresh re-evaluates the provider/manifest, never destroys a good CC0 ZIP.
+      # Bytes are downloaded only if the cached file is missing or invalid.
       if((Test-Path -LiteralPath $dest -PathType Leaf) -and -not (Test-WarehouseZipReadable -Path $dest)){
         Write-Warning ("AMBIENTCG_WAREHOUSE_REPAIR removing corrupt archive asset_id=" + $id + " path=" + $dest)
         Remove-Item -LiteralPath $dest -Force -ErrorAction SilentlyContinue
