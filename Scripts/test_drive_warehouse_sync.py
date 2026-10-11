@@ -39,6 +39,17 @@ class DriveWarehouseTests(unittest.TestCase):
         script = (root / "Scripts" / "drive_warehouse_sync.py").read_text(encoding="utf-8")
         self.assertIn('"license_status": "UNVERIFIED_NOT_IMPORTABLE"', script)
 
+    def test_runner_uses_refreshed_user_path_not_stale_watchdog_environment(self):
+        root = Path(__file__).resolve().parents[1]
+        workflow = (root / ".github" / "workflows" / "drive-warehouse-auto-intake.yml").read_text(encoding="utf-8")
+        self.assertIn("[Environment]::GetEnvironmentVariable('Path', 'User')", workflow)
+        self.assertIn("[Environment]::GetEnvironmentVariable('Path', 'Machine')", workflow)
+        self.assertIn("RCLONE_MISSING_AFTER_PATH_REFRESH", workflow)
+        self.assertIn("PYTHON_MISSING_AFTER_PATH_REFRESH", workflow)
+        self.assertIn("--rclone-bin $rclone.Source", workflow)
+        self.assertNotIn("winget install", workflow)
+        self.assertNotIn("--mode cleanup", workflow)
+
     def test_bad_md5_fails_closed(self):
         entry={"Path":"02_Shire_P1C01/nature.zip","ID":"1Abcdefghi12345","Size":100,"Hashes":{}}
         with patch.object(d,"run_rclone",return_value=json.dumps([entry])):
