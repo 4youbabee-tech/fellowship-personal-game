@@ -22,9 +22,10 @@ function Test-ParentWholeWorkflowGreen([string]$ParentSha) {
 }
 function Test-ParentCoreUnrealGreen([string]$ParentSha) { return [bool]$script:Case.Proof }
 function Test-TreeEquivalentCoreProof([string]$GitExe, [string]$ParentSha) { return [bool]$script:Case.TreeProof }
-function Set-Mode([string]$Mode, [string]$Reason, [string]$ParentSha, [string]$ResumeStage = 'none', [bool]$ResetIntermediates = $false) {
+function Set-Mode([string]$Mode, [string]$Reason, [string]$ParentSha, [string]$ResumeStage = 'none', [bool]$ResetIntermediates = $false, [bool]$PackageRequired = $false) {
     $script:ActualMode = $Mode
     $script:ActualReset = $ResetIntermediates
+    $script:ActualPackage = $PackageRequired
 }
 '@
 $marker = 'Set-Location $env:GITHUB_WORKSPACE'
@@ -47,15 +48,23 @@ $cases = @(
     @{Name='pie-preview-safe-no-proof'; Paths=@('SHIRE_FAST_PIE_PREVIEW.bat','Scripts/test_fast_pie_preview.py'); Proof=$false; Mode='full'; TreeProof=$false},
     @{Name='pie-preview-lookalike-fail-closed'; Paths=@('SHIRE_FAST_PIE_PREVIEW.bat.bak','Scripts/test_fast_pie_preview.py.disabled'); Proof=$true; Mode='full'; TreeProof=$false},
     @{Name='pie-preview-mixed-runtime-fail-closed'; Paths=@('SHIRE_FAST_PIE_PREVIEW.bat','Source/ShireJourney/ShireQuestSubsystem.cpp'); Proof=$true; Mode='core'; TreeProof=$false},
-    @{Name='pie-preview-mixed-config-fail-closed'; Paths=@('Scripts/test_fast_pie_preview.py','Config/DefaultEngine.ini'); Proof=$true; Mode='full'; TreeProof=$false},
+    @{Name='pie-preview-mixed-config-fail-closed'; Paths=@('Scripts/test_fast_pie_preview.py','Config/DefaultEngine.ini'); Proof=$true; Mode='full'; Package=$true; TreeProof=$false},
     @{Name='no-proof'; Paths=@('README.md','Scripts/pre_unreal_validate.py'); Proof=$false; Mode='full'; TreeProof=$false},
     @{Name='mixed-story'; Paths=@('README.md','Scripts/pre_unreal_validate.py','Source/ShireJourney/ShireQuestSubsystem.cpp'); Proof=$true; Mode='core'; TreeProof=$false},
-    @{Name='config'; Paths=@('README.md','Config/DefaultGame.ini'); Proof=$true; Mode='full'; Reset=$false; TreeProof=$false},
-    @{Name='build-rules'; Paths=@('Source/ShireJourney.Target.cs'); Proof=$true; Mode='full'; Reset=$true; TreeProof=$false},
-    @{Name='streaming'; Paths=@('Data/ChapterAssetStreamingPlan.json'); Proof=$true; Mode='full'; TreeProof=$false},
+    @{Name='config'; Paths=@('README.md','Config/DefaultGame.ini'); Proof=$true; Mode='full'; Reset=$false; Package=$true; TreeProof=$false},
+    @{Name='build-rules'; Paths=@('Source/ShireJourney.Target.cs'); Proof=$true; Mode='full'; Reset=$true; Package=$true; TreeProof=$false},
+    @{Name='streaming'; Paths=@('Data/ChapterAssetStreamingPlan.json'); Proof=$true; Mode='full'; Package=$true; TreeProof=$false},
     @{Name='target-device-evaluator'; Paths=@('Scripts/evaluate_p1c01_gate67_evidence.py','Docs/CURRENT_PROJECT_STATE.md','Docs/PRODUCTION_COMPLETENESS_MATRIX.md'); Proof=$true; Mode='acceptance'; TreeProof=$false},
     @{Name='target-device-evaluator-no-proof'; Paths=@('Scripts/evaluate_p1c01_gate67_evidence.py'); Proof=$false; Mode='full'; TreeProof=$false},
-    @{Name='unknown-script'; Paths=@('Scripts/new_unknown_tool.ps1'); Proof=$true; Mode='full'; TreeProof=$false},
+    @{Name='unknown-script'; Paths=@('Scripts/new_unknown_tool.ps1'); Proof=$true; Mode='full'; Package=$true; TreeProof=$false},
+    @{Name='known-chapter-runtime-no-repackage'; Paths=@('Source/ShireJourney/Private/Story/ShireQuestSubsystem.cpp'); Proof=$true; Mode='core'; TreeProof=$false},
+    @{Name='second-region-runtime-no-repackage'; Paths=@('Source/ShireJourney/Private/World/BreeDetailActor.cpp'); Proof=$false; Mode='full'; TreeProof=$false},
+    @{Name='whole-game-runtime-no-parent-proof'; Paths=@('Data/QuestDefinitions.json'); Proof=$false; Mode='full'; TreeProof=$false},
+    @{Name='whole-game-package-change'; Paths=@('Scripts/ci_package_w00.ps1'); Proof=$true; Mode='acceptance'; Package=$true; TreeProof=$false},
+    @{Name='whole-game-package-no-proof'; Paths=@('Scripts/ci_package_w00.ps1'); Proof=$false; Mode='full'; Package=$true; TreeProof=$false},
+    @{Name='packaged-startup-change'; Paths=@('Scripts/verify_packaged_startup.ps1'); Proof=$true; Mode='acceptance'; Package=$true; TreeProof=$false},
+    @{Name='manual-chapter-closeout'; Paths=@('Docs/CURRENT_PROJECT_STATE.md'); Proof=$true; Mode='full'; Package=$true; Dispatch=$true; TreeProof=$false},
+    @{Name='manual-validation-no-package'; Paths=@('Docs/CURRENT_PROJECT_STATE.md'); Proof=$true; Mode='inherit'; Dispatch=$false; TreeProof=$false},
     @{Name='runtime-data'; Paths=@('Data/QuestDefinitions.json'); Proof=$true; Mode='core'; TreeProof=$false},
     @{Name='editor-assets'; Paths=@('Source/ShireJourneyEditorTools/Import.cpp'); Proof=$true; Mode='asset'; TreeProof=$false},
     @{Name='workflow-policy-tree-proof'; Paths=@('.github/workflows/unreal-build-validation.yml'); Proof=$false; Mode='inherit'; TreeProof=$true},
@@ -65,6 +74,8 @@ $oldWorkspace = $env:GITHUB_WORKSPACE
 $oldBase = $env:BASE_SHA
 $oldTarget = $env:TARGET_SHA
 $oldToken = $env:GH_TOKEN
+$oldEvent = $env:GITHUB_EVENT_NAME
+$oldExplicit = $env:SHIRE_EXPLICIT_CHAPTER_PACKAGE
 $oldLocation = Get-Location
 try {
     $env:GITHUB_WORKSPACE = Split-Path -Parent $PSScriptRoot
@@ -75,6 +86,9 @@ try {
         $script:Case = $caseItem
         $script:ActualMode = ''
         $script:ActualReset = $false
+        $script:ActualPackage = $false
+        $env:GITHUB_EVENT_NAME = if ($caseItem.Dispatch) { 'workflow_dispatch' } else { 'pull_request' }
+        $env:SHIRE_EXPLICIT_CHAPTER_PACKAGE = if ($caseItem.Dispatch) { 'true' } else { 'false' }
         & $program
         if ($script:ActualMode -ne $caseItem.Mode) {
             throw "$($caseItem.Name): expected $($caseItem.Mode), got $script:ActualMode"
@@ -83,13 +97,19 @@ try {
         if ($script:ActualReset -ne $expectedReset) {
             throw "$($caseItem.Name): expected reset=$expectedReset, got reset=$script:ActualReset"
         }
-        Write-Host "CLASSIFIER_TEST_PASS $($caseItem.Name) mode=$script:ActualMode reset=$script:ActualReset"
+        $expectedPackage = if ($caseItem.ContainsKey('Package')) { [bool]$caseItem.Package } else { $false }
+        if ($script:ActualPackage -ne $expectedPackage) {
+            throw "$($caseItem.Name): expected package=$expectedPackage, got $script:ActualPackage"
+        }
+        Write-Host "CLASSIFIER_TEST_PASS $($caseItem.Name) mode=$script:ActualMode reset=$script:ActualReset package=$script:ActualPackage"
     }
 } finally {
     $env:GITHUB_WORKSPACE = $oldWorkspace
     $env:BASE_SHA = $oldBase
     $env:TARGET_SHA = $oldTarget
     $env:GH_TOKEN = $oldToken
+    $env:GITHUB_EVENT_NAME = $oldEvent
+    $env:SHIRE_EXPLICIT_CHAPTER_PACKAGE = $oldExplicit
     Set-Location $oldLocation
 }
 
