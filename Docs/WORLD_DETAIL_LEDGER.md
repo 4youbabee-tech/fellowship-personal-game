@@ -1,3 +1,10 @@
+## 2026-10-11 — P1C01 persistent restore overlap trigger race (observed UE run #1969)
+
+- Evidence: UE4.27 manual Build Validation Run 38163212516 / C++ Build job 114540430858 compiled and passed standalone state/chapter sweeps, but in multi-chapter transition audit P1C08 after returning Frodo route logged `StoryPresentation: beat=AnduinDeparture` within `ShirePersistenceRestore` publication, then `ShireStateAudit: persistence-fields=FAIL fields=runtime-quest-stages,runtime-story-beats,runtime-npc-memory,runtime-route-progress` and `ShireTransitionAudit: FAIL disk-save` (exit 65).
+- Root-cause candidate grounded in source: `RestoreSaveSnapshot` publishes `CommitPersistenceRestore` before marking pending player-transform restore. `OnExperienceChanged` may synchronously cancel a same-identity world request and release the player hold. Subsequent `OnActiveQuestChanged/OnQuestStageChanged` re-evaluate overlapping triggers while the saved location has not been restored; gameplay authority guard only checks router hold, not pending transform. These triggers can mutate the freshly restored quest/beat/NPC-memory snapshot.
+- Repair scope: in existing `ShirePlayerCharacter` only, set pending saved transform before publishing restore events and make `IsGameplayWorldCommitted` false until the pending transform is placed (or intentionally skipped for canonical legacy repair). No suppression of legitimate trigger interaction after successful placement and no runtime P1C02 feature.
+- Proof: source regression exact head and real UE4.27 transition/state save roundtrip required; no PIE/device/visual claim. Gate 6/7 remains blocked pending real engine result.
+
 ## 2026-10-11 — P1C01 pending restore input/action guard (registered before implementation)
 
 - Source: `ShirePlayerCharacter.cpp` sets `bPendingSaveRestoreTransform=true` after restore but `MoveForward`, `MoveRight`, jump/sprint, `Interact`, `UseSupply`, `QuickSave`, `QuickLoad` and `SaveAutomaticCheckpoint` do not consistently check this flag. When world commit removes transition hold before deferred grounding succeeds, player input can mutate or persist the stale transform.
