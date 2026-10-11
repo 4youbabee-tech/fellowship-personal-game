@@ -8702,7 +8702,7 @@
     }
   },
   "cloud_warehouse_drive_policy_2026_10_11": {
-    "status": "OWNER_REQUEST_CAPTURED_PENDING_GITHUB_ACTIONS_AUTH",
+    "status": "OWNER_APPROVED_STAGING_POLICY_AUTOMATION_PENDING_CREDENTIALS_AND_TRANSFER_PROOF",
     "date": "2026-10-11",
     "owner_direction": "Use the connected private Google Drive folder as cloud staging for licensed physical FBX/PNG/animation source output, reducing GitHub artifact storage; document the workflow so incoming programmers know current production priorities.",
     "folder_id": "1bMZp-XKcQjCj3fYxLoISDtqG9W5aSzyq",
@@ -8720,6 +8720,17 @@
       "No public folder sharing or credentials committed to the public repository.",
       "Persistent Windows D: warehouse and UE import remain unavailable until explicit owner runner authorization; P1C02 runtime remains gated.",
       "Respect available 15 GB Drive quota and storage budgeting; do not claim automatic sync or migrated assets before evidence."
-    ]
+    ],
+    "storage_role": "TEMPORARY_CLOUD_STAGING_WHILE_OWNER_LAPTOP_OFF",
+    "retention_rules": {
+      "upload": "Only licensed assets with provenance receipt, physical files and SHA256; stage to private Drive after explicit GitHub Actions authorization",
+      "post_upload": "Delete redundant GitHub artifacts only after matching remote checksum and durable upload receipt",
+      "drive_cleanup": "Delete only managed temporary batches after owner local persistent warehouse transfer receipt, complete SHA256 comparison and confirmed backup/import disposition; keep audit receipt in GitHub",
+      "unverified_or_untransferred": "Never delete automatically",
+      "expiry": "No unconditional age-based deletion of sole copies; flag old batches for review instead",
+      "scope": "Never delete existing owner files or unrelated Drive folders",
+      "capacity": "Stop new batches before reaching 15GB quota; avoid overwriting previously validated sources"
+    },
+    "runner": "Do not activate Windows self-hosted runner until explicit owner approval"
   }
 }
