@@ -48,7 +48,7 @@ def select(tree):
   if channel not in rows or key<rows[channel][0]:rows[channel]=(key,item)
  return {k:v[1] for k,v in rows.items()}
 def decode(raw,mode):
- if not raw.startswith(b"\\x89PNG\\r\\n\\x1a\\n".decode("unicode_escape").encode("latin1")):raise ValueError("NOT_PNG")
+ if not raw.startswith(bytes.fromhex("89504e470d0a1a0a")):raise ValueError("NOT_PNG")
  with Image.open(io.BytesIO(raw)) as img:
   img.load()
   if img.size not in ((1024,1024),(2048,2048)):raise ValueError("PNG_RESOLUTION_INVALID")
@@ -121,7 +121,7 @@ def main():
    quarantined.append({"slug":asset["slug"],"reason":str(e)[:120]});print("CC0_SOURCE_QUARANTINED "+asset["slug"]+" "+str(e)[:100],flush=True)
  out.mkdir(parents=True,exist_ok=True)
  receipt={"status":"CLOUD_SOURCE_STAGED" if materials else "CLOUD_SOURCE_EMPTY","shard":a.shard,"manifest_sha256":sha(manifest),"selected_assets":len([x for i,x in enumerate(assets) if i%4==a.shard]),"staged":len(materials),"physical_png":sum(len(x["outputs"]) for x in materials),"source_bytes":budget[0],"region_catalog_only":28,"materials":materials,"quarantined":quarantined,"unreal_imported":False,"owner_warehouse_written":False}
- (out/"receipt.json").write_text(json.dumps(receipt,indent=2)+"\\n")
+ (out/"receipt.json").write_text(json.dumps(receipt,indent=2)+"\n")
  if not materials:raise ValueError("EMPTY_SHARD")
  verify(out)
 if __name__=="__main__":main()
