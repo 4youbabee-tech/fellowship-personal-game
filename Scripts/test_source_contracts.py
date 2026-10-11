@@ -1054,5 +1054,16 @@ class SourceContractTests(unittest.TestCase):
         self.assertNotIn("git push origin --delete", cleanup)
 
 
+    def test_headless_audit_never_retries_disabled_auto_checkpoint(self):
+        root = Path(__file__).resolve().parents[1]
+        player = (root / "Source/ShireJourney/Private/Characters/ShirePlayerCharacter.cpp").read_text(encoding="utf-8")
+        tick = player.split("void AShirePlayerCharacter::Tick(float DeltaSeconds)", 1)[1].split("void AShirePlayerCharacter::BeginPlay()", 1)[0]
+        self.assertIn('if (!FParse::Param(FCommandLine::Get(), TEXT("ShireCIRuntimeAudit")) &&', tick)
+        self.assertIn("PendingChapterCheckpointId != NAME_None", tick)
+        self.assertIn("SaveAutomaticCheckpoint(CheckpointId, true)", tick)
+        audit = player.split("bool AShirePlayerCharacter::RunSaveRoundtripAudit()", 1)[1]
+        self.assertIn("UGameplayStatics::SaveGameToSlot(Before, Slot, 0)", audit)
+
+
 if __name__ == "__main__":
     unittest.main()
