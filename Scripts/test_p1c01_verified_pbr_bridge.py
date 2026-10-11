@@ -192,6 +192,19 @@ class VerifiedPBRBridgeTest(unittest.TestCase):
         with self.assertRaisesRegex(import_qc.ImportProofError,"UE_IMPORT_LOG_MISSING"):
             import_qc.verify(self.project,logfile)
 
+    def test_extended_pbr_workflow_requires_manual_dispatch_to_avoid_duplicate_build(self):
+        # General Unreal Build Validation already covers relevant source deltas.
+        # A second full PBR promotion/cook should be explicitly dispatched.
+        root=Path(__file__).resolve().parents[1]
+        workflow=(root/".github/workflows/p1c01-verified-pbr-production.yml").read_text()
+        triggers=workflow.split("permissions:",1)[0]
+        self.assertIn("workflow_dispatch:",triggers)
+        self.assertNotIn("  push:",triggers)
+        self.assertNotIn("  pull_request:",triggers)
+        self.assertIn("compression-level: 0",workflow)
+        self.assertIn("Scripts/verify_p1c01_pbr_runtime.py",workflow)
+        self.assertIn("Scripts/verify_verified_shire_import.py",workflow)
+
     def test_warehouse_import_workflow_requires_slot_and_package_gates(self):
         root=Path(__file__).resolve().parents[1]
         w=(root/".github/workflows/p1c01-verified-pbr-production.yml").read_text()
