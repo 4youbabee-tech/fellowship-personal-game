@@ -1064,6 +1064,5 @@ class SourceContractTests(unittest.TestCase):
         audit = player.split("bool AShirePlayerCharacter::RunSaveRoundtripAudit()", 1)[1]
         self.assertIn("UGameplayStatics::SaveGameToSlot(Before, Slot, 0)", audit)
 
-
 if __name__ == "__main__":
     unittest.main()

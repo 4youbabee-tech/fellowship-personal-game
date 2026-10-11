@@ -1,4 +1,7 @@
-**2026-10-11 red manual UE transition audit (candidate):** Observed `Headless route/story state roundtrip audit` exit 65 and `RUNTIME_SWEEP_SUMMARY mode=transitions failed=["startup"]`; exact first failing runtime predicate remains unknown. Independent confirmed audit-only bug: automatic checkpoint saves are deliberately denied under ShireCIRuntimeAudit but Tick reissued them every second. Candidate gates that retry loop off only in headless audit mode and adds source contract regression while preserving independent disk roundtrip. RED Unreal gate remains open until real exact-head engine rerun; no PIE/device acceptance. PR #400 density fix independent and not yet merged.
+## 2026-10-11 — Headless checkpoint spam regression (PR #401)
+Automatic checkpoint dispatch intentionally disabled by ShireCIRuntimeAudit must not be retried every Tick. Preserve normal gameplay and explicit disk-save audit. The separate persistence-fields mismatch and disk-save failure in run 38163212516 remain gated until a new real UE4 transition PASS. Structural test in Scripts/test_source_contracts.py and Scripts/test_pending_checkpoint_dispatch.py.
+
+**2026-10-11 P1C01 save restore overlap trigger candidate:** UE runner #1969 observed P1C08 after-route-change restore fail (quest stages/story beats/NPC memory/route progress). Pre-commit overlapping trigger may mutate restored story while placement pending. Candidate sets pending saved-player transform before CommitPersistenceRestore and extends IsGameplayWorldCommitted guard. Source regression added; exact-head CI, UE transition audit and PIE remain pending. No Gate 6/7 promotion.
 
 ## 2026-10-11 — Whole-game regional CC0 material receipt cache correction (candidate)
 

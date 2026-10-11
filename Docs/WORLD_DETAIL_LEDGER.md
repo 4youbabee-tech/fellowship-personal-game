@@ -1,9 +1,12 @@
-## 2026-10-11 — P1C01 Unreal headless transition regression triage (existing systems only)
+## 2026-10-11 — P1C01 headless checkpoint audit noise correction (PR #401)
+Registered existing-systems-only correction: prevent repeating audit-disabled automatic checkpoint attempts in ShireCIRuntimeAudit; retain real automatic checkpoints and disk roundtrip test in gameplay. Previous run 38163212516 failed multi-chapter P1C08 restored state and disk-save audit; suppression is not a functional fix for that failure. No new chapter scope, Unreal test still required.
 
-- Observed runner evidence: manual UE4.27.2 job reached `Headless route/story state roundtrip audit` and exited 65; terminal transition sweep reports `failed=["startup"]`. The screenshot alone does not show the first failing game assertion or the harness's detailed result JSON.
-- Proven separate noise defect: `AShirePlayerCharacter::SaveAutomaticCheckpoint` deliberately declines automatic saves under `-ShireCIRuntimeAudit`, while `Tick` repeatedly dispatches the pending chapter checkpoint every second, generating `SafeCheckpoint: dispatch-rejected` warnings even when CI uses its explicit independent disk roundtrip.
-- Candidate: skip automatic chapter-checkpoint dispatch only in headless audit mode, preserving real gameplay saves and independent disk-save acceptance. Keep failed transition gate red pending exact-head real-engine retest; improve CI-only transition wait diagnostics without relaxing the checks. No new chapter or runtime feature.
-- Runtime status: manual build/runtime failure observed; exact failing transition predicate not yet isolated. P1C01 Gate 6/7 stays open; no compile/PIE/device claim based on candidate modifications.
+## 2026-10-11 — P1C01 persistent restore overlap trigger race (observed UE run #1969)
+
+- Evidence: UE4.27 manual Build Validation Run 38163212516 / C++ Build job 114540430858 compiled and passed standalone state/chapter sweeps, but in multi-chapter transition audit P1C08 after returning Frodo route logged `StoryPresentation: beat=AnduinDeparture` within `ShirePersistenceRestore` publication, then `ShireStateAudit: persistence-fields=FAIL fields=runtime-quest-stages,runtime-story-beats,runtime-npc-memory,runtime-route-progress` and `ShireTransitionAudit: FAIL disk-save` (exit 65).
+- Root-cause candidate grounded in source: `RestoreSaveSnapshot` publishes `CommitPersistenceRestore` before marking pending player-transform restore. `OnExperienceChanged` may synchronously cancel a same-identity world request and release the player hold. Subsequent `OnActiveQuestChanged/OnQuestStageChanged` re-evaluate overlapping triggers while the saved location has not been restored; gameplay authority guard only checks router hold, not pending transform. These triggers can mutate the freshly restored quest/beat/NPC-memory snapshot.
+- Repair scope: in existing `ShirePlayerCharacter` only, set pending saved transform before publishing restore events and make `IsGameplayWorldCommitted` false until the pending transform is placed (or intentionally skipped for canonical legacy repair). No suppression of legitimate trigger interaction after successful placement and no runtime P1C02 feature.
+- Proof: source regression exact head and real UE4.27 transition/state save roundtrip required; no PIE/device/visual claim. Gate 6/7 remains blocked pending real engine result.
 
 ## 2026-10-11 — P1C01 pending restore input/action guard (registered before implementation)
 
