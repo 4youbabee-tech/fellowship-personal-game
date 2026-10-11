@@ -1,3 +1,5 @@
+**2026-10-12 self-hosted compile blocker fix:** Run `38181832965` proved current-head UE4 compile failure (`C2065 BasePopulation* undeclared`) after UHT succeeded. The fix rehomes the base density fallback members into `ALivingWorldDirector` and expands source tests. Await rerun for COMPILE-TESTED.
+
 **2026-10-12 P1C01 #400/#401 runtime regression integration:** NPC population profile fallback and CI-only checkpoint retry suppression are integrated on current develop with source regressions. This is not Gate 6/7 closure and does not claim current-head UE4 compile or PIE acceptance.
 
 **2026-10-12 P1C01 restore quest-state sanitization source fix:** `RestoreQuestState` now rejects empty restored quest/stage keys, clamps restored stage values to non-negative integers, and de-duplicates non-empty completed story beats before restoring active route/chapter/episode/player state. Regression coverage lives in `Scripts/test_offline_runtime_safety.py`; UE4 compile/PIE evidence remains pending a self-hosted run.
