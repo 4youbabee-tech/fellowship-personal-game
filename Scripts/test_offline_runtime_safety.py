@@ -180,6 +180,21 @@ class OfflineRuntimeSafetyTests(unittest.TestCase):
 
 
 
+    def test_restore_quest_state_sanitizes_stages_and_story_beats(self):
+        quest = source("Source/ShireJourney/Private/Subsystems/ShireQuestSubsystem.cpp")
+        restore = body_between(quest, "void UShireQuestSubsystem::RestoreQuestState(",
+                               "FName UShireQuestSubsystem::ResolveCanonicalNPCProfile(")
+        self.assertIn("QuestStages.Empty();", restore)
+        self.assertIn("for (const TPair<FName, int32>& Pair : InStages)", restore)
+        self.assertIn("Pair.Key != NAME_None", restore)
+        self.assertIn("QuestStages.Add(Pair.Key, FMath::Max(0, Pair.Value));", restore)
+        self.assertIn("CompletedStoryBeats.Empty();", restore)
+        self.assertIn("for (const FName StoryBeatId : InCompletedStoryBeats)", restore)
+        self.assertIn("StoryBeatId != NAME_None", restore)
+        self.assertIn("CompletedStoryBeats.AddUnique(StoryBeatId);", restore)
+        self.assertLess(restore.index("QuestStages.Empty();"), restore.index("ActiveQuestId = InActiveQuestId;"))
+        self.assertLess(restore.index("CompletedStoryBeats.Empty();"), restore.index("ActiveQuestId = InActiveQuestId;"))
+
     def test_self_hosted_requires_manual_opt_in(self):
         workflow = source(".github/workflows/unreal-build-validation.yml")
         self.assertIn("run_self_hosted:", workflow)
