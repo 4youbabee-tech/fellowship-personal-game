@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "contract_id": "P1C01_CHARACTER_LIVING_SHIRE_CLOSEOUT_V1",
+  "chapter": "P1C01",
+  "status": "ENGINE_IMPORT_GREEN_CHARACTER_VISUAL_RUNTIME_CLOSEOUT_PENDING",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/P1C01Gate67AcceptanceChecklistV1.json",
+    "Data/P1C01ECharacterPresentationPlanV1.json",
+    "Data/P1C01FLivingShirePlanV1.json",
+    "Data/P1C01HumanCharacterProductionWave2V1.json",
+    "02_CHARACTERS_AND_RELATIONSHIPS_BIBLE",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX"
+  ],
+  "truth_rule": "The Shire is not production-complete until required named characters and living-world NPC behavior have runtime presence, animation/material evidence, PIE traversal, target-device performance and human visual acceptance.",
+  "current_engine_evidence": {
+    "latest_recorded_evidence": "Data/P1C01EngineImportRuntimeEvidence20261012.json",
+    "run_id": 38182847685,
+    "production_import": "440 files, 0 failures",
+    "headless_runtime_audit": "success",
+    "warning_debt_zero": true
+  },
+  "required_named_characters": [
+    {
+      "id": "PLAYER_FRODO",
+      "required_for": [
+        "playable traversal",
+        "Ring handoff",
+        "departure route"
+      ],
+      "current_status": "TECHNICAL_WINNER_ONLY_NOT_FINAL_VISUAL",
+      "known_evidence": "P1C01HumanCharacterProductionWave2V1 latest technical winner: 161 reference bones, linked skeleton, import technical gate PASS",
+      "missing_evidence": [
+        "deformation review",
+        "Idle/Walk/Run retarget",
+        "AnimBP runtime promotion",
+        "material/silhouette approval",
+        "PIE visual review",
+        "device performance"
+      ]
+    },
+    {
+      "id": "NPC_BILBO",
+      "required_for": [
+        "LongExpectedParty",
+        "Ring handoff locked outcome",
+        "Bag End state"
+      ],
+      "current_status": "REQUIRED_RUNTIME_CHARACTER_PENDING",
+      "missing_evidence": [
+        "skeletal/static presentation asset path",
+        "material slots",
+        "animation/gesture coverage",
+        "dialogue/cinematic presence",
+        "PIE visual review"
+      ]
+    },
+    {
+      "id": "NPC_GANDALF",
+      "required_for": [
+        "road meeting",
+        "fireworks",
+        "Ring danger confirmation"
+      ],
+      "current_status": "REQUIRED_RUNTIME_CHARACTER_PENDING",
+      "missing_evidence": [
+        "presentation asset path",
+        "staff/firework interaction anchors",
+        "gesture/idle coverage",
+        "dialogue/cinematic presence",
+        "PIE visual review"
+      ]
+    },
+    {
+      "id": "NPC_SAM",
+      "required_for": [
+        "Bag End/Shire departure",
+        "F1-02 knowledge gate"
+      ],
+      "current_status": "REQUIRED_RUNTIME_CHARACTER_PENDING",
+      "missing_evidence": [
+        "presentation asset path",
+        "garden/work gesture coverage",
+        "context knowledge gate",
+        "PIE visual review"
+      ]
+    },
+    {
+      "id": "NPC_MERRY",
+      "required_for": [
+        "F1-03 Shire road/ferry party"
+      ],
+      "current_status": "REQUIRED_RUNTIME_CHARACTER_PENDING",
+      "missing_evidence": [
+        "presentation asset path",
+        "party/ferry runtime presence",
+        "locomotion/idle coverage",
+        "PIE visual review"
+      ]
+    },
+    {
+      "id": "NPC_PIPPIN",
+      "required_for": [
+        "F1-03 Shire road/ferry party"
+      ],
+      "current_status": "REQUIRED_RUNTIME_CHARACTER_PENDING",
+      "missing_evidence": [
+        "presentation asset path",
+        "party/ferry runtime presence",
+        "locomotion/idle coverage",
+        "PIE visual review"
+      ]
+    }
+  ],
+  "living_world_closeout": [
+    {
+      "id": "NPC_DAILY_SCHEDULES",
+      "owner_system": "LivingWorldDirector + ShireNPCContextSubsystem",
+      "required_evidence": [
+        "active NPC schedule snapshots",
+        "home/work/social anchors",
+        "time-of-day behavior variance",
+        "pool reuse without state leakage"
+      ]
+    },
+    {
+      "id": "CONTEXT_DIALOGUE_GATES",
+      "owner_system": "ShireNPCContextSubsystem + ShireQuestSubsystem",
+      "required_evidence": [
+        "no future knowledge leakage",
+        "relationship/context query coverage",
+        "canon-safe authored fallback dialogue"
+      ]
+    },
+    {
+      "id": "FAUNA_AMBIENCE_BUDGET",
+      "owner_system": "LivingWorldDirector + audio subsystem",
+      "required_evidence": [
+        "fauna admission budget",
+        "ambient audio state by location",
+        "no traversal/canon blockers",
+        "warning debt remains zero"
+      ]
+    }
+  ],
+  "acceptance_gates_required_before_closeout": [
+    "UE4.27 compile/import remains green on exact closeout head",
+    "Windows package/artifact produced and launch-observed",
+    "PIE-specific required route traversal succeeds through Bucklebury Ferry",
+    "Named character runtime presence and animation/material evidence captured",
+    "Living-world pool/schedule/context behavior observed",
+    "Target-device 720p/30 FPS profiling captured",
+    "Human visual acceptance recorded"
+  ],
+  "allowed_parallel_work": [
+    "Prepare and validate character source candidates",
+    "Prepare materials and region source packets for all 28 areas",
+    "Improve static validators and import manifests",
+    "Keep later runtime chapters gated until P1C01 Gate 6/7"
+  ],
+  "not_claimed": [
+    "P1C01_COMPLETE",
+    "CHARACTERS_FINAL_VISUAL",
+    "PIE_TESTED",
+    "DEVICE_TESTED",
+    "VISUALLY_ACCEPTED",
+    "GATE_6_7_CLOSED"
+  ]
+}
