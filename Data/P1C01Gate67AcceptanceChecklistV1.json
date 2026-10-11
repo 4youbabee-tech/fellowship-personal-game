@@ -84,5 +84,23 @@
       "status": "ENGINE_IMPORT_RUNTIME_GREEN_PACKAGE_DEVICE_VISUAL_PENDING",
       "meaning": "Engine compile/import/headless runtime evidence exists; package, PIE-specific traversal, device profiling, visual acceptance, and Gate 6/7 remain open."
     }
-  ]
+  ],
+  "character_living_closeout": {
+    "contract": "Data/P1C01CharacterLivingShireCloseoutV1.json",
+    "status": "CHARACTER_VISUAL_RUNTIME_CLOSEOUT_PENDING",
+    "required_named_characters": [
+      "PLAYER_FRODO",
+      "NPC_BILBO",
+      "NPC_GANDALF",
+      "NPC_SAM",
+      "NPC_MERRY",
+      "NPC_PIPPIN"
+    ],
+    "living_world_required": [
+      "NPC_DAILY_SCHEDULES",
+      "CONTEXT_DIALOGUE_GATES",
+      "FAUNA_AMBIENCE_BUDGET"
+    ],
+    "final_acceptance": false
+  }
 }
