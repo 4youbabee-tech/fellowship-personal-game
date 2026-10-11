@@ -122,6 +122,9 @@ jobs:
       - name: Validate project governor
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" Scripts\project_governor.py
 
+      - name: Test Blender FBX SHA receipt regression
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_preflight_p1c01_verified_fbx.py" -v
+
       - name: Verify source-to-Unreal PBR integrity and runtime contracts
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_p1c01_verified_pbr_bridge.py" -v
 

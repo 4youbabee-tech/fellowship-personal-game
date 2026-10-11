@@ -638,6 +638,20 @@ $acceptanceExact = @(
     "Scripts/verify_runtime_source_workspace.ps1"
 )
 
+# Explicit, bounded static PBR toolchain changes still require an exact-head UE
+# build/import proof; they do not independently require whole-game Windows packaging.
+# Never add these to transitive source-only evidence inheritance.
+$pbrNonPackagingImpact = @(
+    ".github/workflows/p1c01-verified-pbr-production.yml",
+    "Scripts/normalize_verified_pbr_blender.py",
+    "Scripts/preflight_p1c01_verified_fbx.py",
+    "Scripts/test_preflight_p1c01_verified_fbx.py",
+    "Scripts/test_p1c01_verified_pbr_bridge.py",
+    "Scripts/p1c01_verified_pbr_bridge.py",
+    "Scripts/verify_verified_shire_import.py",
+    "Scripts/verify_p1c01_pbr_runtime.py"
+)
+
 $fullImpact = @()
 $coreImpact = @()
 $policyOnlyTouched = @()
@@ -666,6 +680,11 @@ foreach($p in $changed){
     }
     if($acceptanceExact -contains $n){
         $acceptanceTouched += $n
+        continue
+    }
+
+    if($pbrNonPackagingImpact -contains $n){
+        $coreImpact += $n
         continue
     }
 

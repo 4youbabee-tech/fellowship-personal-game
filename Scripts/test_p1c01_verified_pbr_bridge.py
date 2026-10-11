@@ -166,6 +166,23 @@ class VerifiedPBRBridgeTest(unittest.TestCase):
         self.assertIn("CI-PlayableStartup.log",workflow)
         self.assertIn("P1C01_PBR_RUNTIME_PRESENCE_FAILED",workflow)
 
+    def test_normalized_fbx_must_reach_real_importer_before_material_binding(self):
+        root=Path(__file__).resolve().parents[1]
+        importer=(root/"Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp").read_text(encoding="utf-8")
+        workflow=(root/".github/workflows/p1c01-verified-pbr-production.yml").read_text(encoding="utf-8")
+        self.assertIn("P1C01_FBX_DERIVED_RECEIPT_REQUIRED",importer)
+        self.assertIn("P1C01_FBX_DERIVED_WORKING_COPY",importer)
+        self.assertIn("PlatformFile.CopyFile(*Target, *Derived)",importer)
+        self.assertIn("P1C01_FBX_NORMALIZATION_PREFLIGHT_PASS", (root/"Scripts/preflight_p1c01_verified_fbx.py").read_text())
+        self.assertIn("Scripts/preflight_p1c01_verified_fbx.py --project-root",workflow)
+        self.assertIn("--require-source --verify-only",workflow)
+        self.assertIn("actions/cache@v4",workflow)
+        self.assertNotIn("  push:\n    branches: [develop]",workflow)
+        for step in ("Cook and archive Windows test build with verified visual assets",
+                     "Audit packaged Runtime Data JSON",
+                     "Launch actual packaged executable and check Shire startup"):
+            self.assertIn("      - name: "+step+"\n        if: github.event_name == 'workflow_dispatch'",workflow)
+
     def test_import_receipt_requires_real_material_slot_log(self):
         staged=bridge.stage(self.warehouse,self.project)
         slug=staged[0]["id"]
@@ -200,7 +217,7 @@ class VerifiedPBRBridgeTest(unittest.TestCase):
         triggers=workflow.split("permissions:",1)[0]
         self.assertIn("workflow_dispatch:",triggers)
         self.assertNotIn("  push:",triggers)
-        self.assertNotIn("  pull_request:",triggers)
+        self.assertIn("  pull_request:",triggers)  # source-to-UE PR proof, no package
         self.assertIn("compression-level: 0",workflow)
         self.assertIn("Scripts/verify_p1c01_pbr_runtime.py",workflow)
         self.assertIn("Scripts/verify_verified_shire_import.py",workflow)

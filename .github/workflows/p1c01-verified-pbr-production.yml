@@ -1,9 +1,14 @@
 name: P1C01 Verified PBR Visible World Production
-# The main Unreal Build Validation already compiles/imports/tests these source changes.
-# Keep this extended 99-source PBR promotion/package lane opt-in to avoid a second
-# expensive self-hosted compile/cook for the same develop commit.
-# Manually dispatch it for verified PBR promotion after reviewing main UE proof.
 on:
+  pull_request:
+    branches: [develop]
+    paths:
+      - '.github/workflows/p1c01-verified-pbr-production.yml'
+      - 'Scripts/normalize_verified_pbr_blender.py'
+      - 'Scripts/preflight_p1c01_verified_fbx.py'
+      - 'Scripts/test_preflight_p1c01_verified_fbx.py'
+      - 'Scripts/p1c01_verified_pbr_bridge.py'
+      - 'Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp'
   workflow_dispatch:
 permissions:
   contents: read
@@ -11,17 +16,17 @@ concurrency:
   group: p1c01-verified-pbr-runtime-${{ github.repository }}
   cancel-in-progress: false
 jobs:
-  import_visible_shire:
-    name: Reuse 99 sources, import visible Shire, package playable candidate
+  stage_verified_sources:
+    name: Read-only PBR warehouse stage
     runs-on: [self-hosted, Windows, X64, ue4-27]
-    timeout-minutes: 180
+    timeout-minutes: 35
     env:
       SHIRE_WAREHOUSE_ROOT: 'D:\actions-runner\_warehouse\ShireJourney'
     steps:
       - name: Exact-head checkout (no LFS, no persisted credentials)
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 1
           persist-credentials: false
           lfs: false
@@ -53,6 +58,107 @@ jobs:
         run: |
           & $env:SHIRE_PBR_PYTHON Scripts/p1c01_verified_pbr_bridge.py --project-root "$env:GITHUB_WORKSPACE" --warehouse-root "$env:SHIRE_WAREHOUSE_ROOT"
           if($LASTEXITCODE -ne 0){throw 'P1C01_VERIFIED_SOURCE_STAGE_FAILED'}
+      - name: Transfer 16 SHA-checked source FBX and maps to Blender
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1c01-pbr-source-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            SourceAssets/Production/World/Shire/VerifiedPBR/
+            Saved/P1C01VerifiedPBR/source_stage_receipt.json
+          retention-days: 1
+          if-no-files-found: error
+  blender_normalize_pbr:
+    name: Normalize actual PBR FBX on isolated hosted Blender
+    needs: stage_verified_sources
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout exact branch HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Require Governor visual factory authorization
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = '${{ github.event.pull_request.head.sha || github.sha }}'
+          python3 Scripts/governor_work_start.py --lane VISUAL_WORLD_PREP
+      - name: Download warehouse source transfer
+        uses: actions/download-artifact@v4
+        with:
+          name: p1c01-pbr-source-${{ github.event.pull_request.head.sha || github.sha }}
+          path: ${{ github.workspace }}
+      - name: Install Blender only on hosted factory
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y blender python3-numpy
+          blender --version | head -n 1
+          blender --background --factory-startup --python-exit-code 85 --python-expr 'import numpy; print("P1C01_BLENDER_NUMPY_READY", numpy.__version__)'
+      - name: Key derived cache to installed Blender and exact source inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "SHIRE_BLENDER_VERSION=$(blender --version | head -n 1 | tr -cd 'A-Za-z0-9._-')" >> "$GITHUB_ENV"
+      - name: Restore SHA-scoped Blender derivative cache
+        uses: actions/cache@v4
+        with:
+          path: Saved/P1C01NormalizedFBX/
+          key: p1c01-normalized-${{ runner.os }}-${{ env.SHIRE_BLENDER_VERSION }}-${{ hashFiles('Scripts/normalize_verified_pbr_blender.py', 'Scripts/preflight_p1c01_verified_fbx.py', 'SourceAssets/Production/World/Shire/VerifiedPBR/**/*.fbx') }}
+      - name: Re-export and re-import 16 static FBX with smoothing and one slot
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 Scripts/preflight_p1c01_verified_fbx.py --project-root "$GITHUB_WORKSPACE" --blender blender --require-source
+          python3 Scripts/preflight_p1c01_verified_fbx.py --project-root "$GITHUB_WORKSPACE" --verify-only --require-source
+      - name: Transfer original-hash-bound derived FBX
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1c01-pbr-normalized-${{ github.event.pull_request.head.sha || github.sha }}
+          path: Saved/P1C01NormalizedFBX/
+          retention-days: 1
+          if-no-files-found: error
+
+  import_visible_shire:
+    name: Import real PBR; package only when explicitly dispatched
+    needs: blender_normalize_pbr
+    runs-on: [self-hosted, Windows, X64, ue4-27]
+    timeout-minutes: 180
+    steps:
+      - name: Exact-head checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+          lfs: false
+      - name: Governor and physical runner health
+        shell: cmd
+        run: |
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\verify_runner_session.ps1"
+          if errorlevel 1 exit /b 40
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\run_governor_work_start.ps1" -Lane RUNTIME_BUILD -Workspace "%GITHUB_WORKSPACE%"
+          if errorlevel 1 exit /b 41
+      - name: Restore verified source stage
+        uses: actions/download-artifact@v4
+        with:
+          name: p1c01-pbr-source-${{ github.event.pull_request.head.sha || github.sha }}
+          path: ${{ github.workspace }}
+      - name: Restore Blender-corrected FBX
+        uses: actions/download-artifact@v4
+        with:
+          name: p1c01-pbr-normalized-${{ github.event.pull_request.head.sha || github.sha }}
+          path: ${{ github.workspace }}/Saved/P1C01NormalizedFBX
+      - name: Verify actual source and derivative hashes before Unreal
+        shell: powershell
+        run: |
+          $ErrorActionPreference='Stop'
+          $py='D:\actions-runner\_work\_tool\Python\3.11.9\x64\python.exe'
+          if(-not (Test-Path -LiteralPath $py)){throw 'PBR_PYTHON_MISSING'}
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value ("SHIRE_PBR_PYTHON="+$py)
+          & $py Scripts/preflight_p1c01_verified_fbx.py --project-root "$env:GITHUB_WORKSPACE" --require-source --verify-only
+          if($LASTEXITCODE -ne 0){throw 'PBR_DERIVED_HASH_INVALID'}
       - name: Prepare UE4.27.2 runtime source and build environment
         shell: cmd
         run: |
@@ -85,6 +191,10 @@ jobs:
         run: |
           powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\resolve_runtime_python.ps1"
           if errorlevel 1 exit /b 61
+          rem resolve_runtime_python.ps1 writes GITHUB_ENV for subsequent steps only.
+          rem ci_run_project_automation.cmd runs in this SAME step, so seed PYTHON_EXE now.
+          set "PYTHON_EXE=%SHIRE_PBR_PYTHON%"
+          if not exist "%PYTHON_EXE%" exit /b 61
           call "Scripts\ci_run_project_automation.cmd"
           if errorlevel 1 exit /b 62
       - name: Boot Shire, verify route and save-state continuity
@@ -104,26 +214,30 @@ jobs:
           & $env:SHIRE_PBR_PYTHON Scripts/verify_p1c01_pbr_runtime.py --project-root "$env:GITHUB_WORKSPACE" --runtime-log "$env:GITHUB_WORKSPACE/Saved/Logs/CI-PlayableStartup.log"
           if ($LASTEXITCODE -ne 0) { throw 'P1C01_PBR_RUNTIME_PRESENCE_FAILED' }
       - name: Cook and archive Windows test build with verified visual assets
+        if: github.event_name == 'workflow_dispatch'
         shell: cmd
         run: call "Scripts\ci_package_w00.cmd"
       - name: Audit packaged Runtime Data JSON
+        if: github.event_name == 'workflow_dispatch'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\verify_packaged_runtime_data.ps1"
       - name: Launch actual packaged executable and check Shire startup
+        if: github.event_name == 'workflow_dispatch'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\verify_packaged_startup.ps1"
       - name: Publish actual playable build only after successful runtime checks
-        if: success()
+        if: success() && github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@v4
         with:
-          name: ShireJourney-P1C01-Verified-PBR-${{ github.sha }}
+          name: ShireJourney-P1C01-Verified-PBR-${{ github.event.pull_request.head.sha || github.sha }}
           path: Saved/W00Package/WindowsNoEditor/
           if-no-files-found: error
-          compression-level: 0  # packaged binary content: prioritize upload CPU time
+          compression-level: 0
           retention-days: 14
       - name: Report exact acceptance boundary
         if: always()
         shell: powershell
         run: |
           Write-Host "P1C01_VERIFIED_PBR_PRODUCTION_RUN head=$env:GITHUB_SHA"
+          Write-Host "PR: core UE import/automation/runtime proof only; Windows candidate packaging runs only on explicit workflow_dispatch."
           Write-Host "PIE, DEVICE, VISUAL and Gate6/7 remain unaccepted without evidence."
