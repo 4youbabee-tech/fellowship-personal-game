@@ -1,3 +1,9 @@
+## 2026-10-11 — P1C01 checkpoint dispatch rejection regression (registered before implementation)
+
+- Evidence: ShirePlayerCharacter.cpp Tick clears PendingChapterCheckpointId before SaveAutomaticCheckpoint returns, then logs commit-barrier=PASS regardless of failure. SaveAutomaticCheckpoint may reject an unavailable snapshot/router or audit-guarded dispatch, losing the intended save point.
+- Minimal repair: preserve pending checkpoint until dispatch is accepted; do not call successful dispatch durable disk-save. Keep existing async owner, world commit barrier, revision guard, and source-only test. Do not activate Windows self-hosted runner or open P1C02 runtime.
+- Proof: current source bug identified; candidate repair requires exact-head Pre-Unreal before STATIC-VALIDATED. PIE/device/FPS remain untested.
+
 ## 2026-10-11 — P1C01 SHIRE NATURE BINARY BLENDER LOD PROMOTION (registered before implementation)
 
 - Basis: 03_WORLD_LOCATIONS_AND_MAP_BIBLE (Shire pastoral hills, lanes, gardens and farms), 10_3D_VISUAL_ASSET_ATLAS_PRODUCTION modeling priority, Data/WholeGameRegionProductionPacketsV1.json (SHIRE_HOBBITON); Governor DEC-103/104 and original ASCII source nature wave staged privately in Drive. This promotes the **same twelve** nature families; it must not fabricate an unrelated second library.
