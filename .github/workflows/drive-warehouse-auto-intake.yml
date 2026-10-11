@@ -45,7 +45,17 @@ jobs:
           $config = Join-Path $env:APPDATA 'rclone\rclone.conf'
           if (!(Test-Path $config)) { throw 'DRIVE_AUTH_MISSING configure rclone once for watchdog user' }
           if (!(Test-Path 'D:\actions-runner\_warehouse\ShireJourney')) { throw 'WAREHOUSE_MISSING' }
-          if (!(Get-Command rclone.exe -ErrorAction SilentlyContinue)) { throw 'RCLONE_MISSING' }
+          # Watchdog service-free user session can retain PATH from before winget installation.
+          # Refresh only trusted Windows machine/user PATH; do not download or install binaries.
+          $machinePath = [Environment]::GetEnvironmentVariable('Path', 'Machine')
+          $userPath = [Environment]::GetEnvironmentVariable('Path', 'User')
+          $env:Path = @($machinePath, $userPath, $env:Path) -join ';'
+          $rclone = Get-Command rclone.exe -ErrorAction SilentlyContinue
+          if (!$rclone) { throw 'RCLONE_MISSING_AFTER_PATH_REFRESH' }
+          $python = Get-Command python.exe -ErrorAction SilentlyContinue
+          $pyLauncher = Get-Command py.exe -ErrorAction SilentlyContinue
+          $pythonExe = if ($python -and $python.Source -notlike '*WindowsApps*') { $python.Source } elseif ($pyLauncher) { $null } else { throw 'PYTHON_MISSING_AFTER_PATH_REFRESH' }
+          Write-Host "DRIVE_TOOLCHAIN_RESOLVED rclone=$($rclone.Source) python=$([bool]$pythonExe) pyLauncher=$([bool]$pyLauncher)"
           try {
             New-Item $p -ItemType Directory -Force | Out-Null
             git -C $p init -q
@@ -57,7 +67,11 @@ jobs:
             if ($LASTEXITCODE -ne 0 -or (git -C $p rev-parse HEAD).Trim() -ne $env:GITHUB_SHA) { throw 'CONTROL_SHA_MISMATCH' }
             & (Join-Path $p 'Scripts\verify_runner_session.ps1')
             if ($LASTEXITCODE -ne 0) { throw 'DRIVE_RUNNER_SESSION_UNHEALTHY' }
-            python (Join-Path $p 'Scripts\drive_warehouse_sync.py') --mode ingest --rclone-config $config
+            if ($pythonExe) {
+            & $pythonExe (Join-Path $p 'Scripts\drive_warehouse_sync.py') --mode ingest --rclone-config $config --rclone-bin $rclone.Source
+          } else {
+            & $pyLauncher.Source -3.12 (Join-Path $p 'Scripts\drive_warehouse_sync.py') --mode ingest --rclone-config $config --rclone-bin $rclone.Source
+          }
             if ($LASTEXITCODE -ne 0) { throw 'DRIVE_INGEST_FAILED' }
             # Only verified staging is unattended. Remote deletion requires separately
             # established import acceptance and independent backup evidence.

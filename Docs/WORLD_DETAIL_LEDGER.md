@@ -1,3 +1,5 @@
+**2026-10-12 Drive runner PATH regression candidate:** Manual Drive workflow run `38176536748` reached self-hosted Windows `UE4-27-Windows` but transfer failed before any copy at `RCLONE_MISSING`, despite owner interactive rclone connectivity and configuration. Candidate refreshes persisted machine/user PATH inside the existing watchdog job, resolves `rclone.exe` and Python/py without installing or changing the runner, then passes explicit rclone executable path to the source-only ingest script. No successful physical transfer, ZIP receipt, Unreal import, PIE/device/visual or Gate 6/7 claim; preserve read-only Drive and fail-closed auth and deletion guards.
+
 ## 2026-10-11 — Drive source acceptance preflight before any future UE promotion
 
 - Registered pre-import safety work under existing W01/P1C01 Drive intake: require physically hashed, path-safe, nested-archive and receipt-validated batches to avoid importing duplicate, ASCII, unlicensed or incomplete candidates. The ten archived source files were copied into the ChatGPT work container only, not into the owner Windows D: warehouse.
