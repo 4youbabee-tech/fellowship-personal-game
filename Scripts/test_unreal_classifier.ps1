@@ -129,6 +129,12 @@ if (-not $source.Contains('TREE_EQUIVALENT_PARENT_FETCH_REQUIRED')) {
 if (-not $source.Contains('"Data/P1C01CloudShireAssemblyPlanV1.json"')) {
     throw 'Cloud Shire assembly plan exact allowlist missing'
 }
+if (-not $source.Contains('"Data/MaximumSafeProductionModeV1.json"')) {
+    throw 'Maximum Safe production mode exact allowlist missing'
+}
+if (-not $source.Contains('"Scripts/test_unreal_classifier.ps1"')) {
+    throw 'Unreal classifier self-test incremental allowlist missing'
+}
 if (-not $source.Contains('"Scripts/validate_p1c01_cloud_assembly.py"')) {
     throw 'Cloud Shire assembly validator exact allowlist missing'
 }
