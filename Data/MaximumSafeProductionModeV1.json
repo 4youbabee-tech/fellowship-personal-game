@@ -195,6 +195,7 @@
       "bypass_usage_rights",
       "disable_proven_quality_gates",
       "declare_future_chapter_runtime_accepted"
-    ]
+    ],
+    "final_owner_direction": "No routine Windows package; cloud source prep and reusable green CI evidence; defer package to P1C01 chapter closeout or final release; no new future runtime."
   }
 }

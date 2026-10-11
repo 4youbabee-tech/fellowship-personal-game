@@ -8614,27 +8614,24 @@
       "Real Gate 6/7 acceptance, original canon/story order, truthful evidence classification."
     ],
     "workflow_rule": "No new CI/workflow fan-out merely for owner policy/docs changes; choose fast targeted checks and avoid extra full Unreal rebuilds unless real runtime inputs changed.",
-    "evidence_boundary": "Policy registration only. Existing PR #352 and other running work are not cancelled; no new P1C01 visual/runtime/Gate acceptance is claimed."
+    "evidence_boundary": "Policy registration only. Existing PR #352 and other running work are not cancelled; no new P1C01 visual/runtime/Gate acceptance is claimed.",
+    "final_owner_direction": "Cloud-first source preparation, batch commits, incremental SHA256 reuse, no routine Windows packaging; self-hosted UE runner only for engine-specific tests; targeted validation for actual changes, no broad bypass. P1C01 closeout/release packaging remains required."
   },
   "chapter_closeout_package_policy_2026_10_11": {
     "owner_scope": "ALL_GAME_ALL_CHAPTERS_NOT_SHIRE_ONLY",
-    "status": "CANDIDATE_PENDING_CI",
-    "trigger": "Manual workflow_dispatch package_windows=true on a chapter closure or release, plus automatically on packaging-impacting changes.",
+    "status": "OWNER_DIRECTIVE_CANDIDATE_PENDING_CI",
+    "trigger": "Explicit chapter P1C01 closeout candidate or final game release only; no routine WindowsNoEditor Cook/Package during development. Packaging-impacting edits receive static/config validation and are recorded for deferred packaging verification, not auto-package.",
     "normal_development": "Static/source checks, UE4.27 compile/import/startup/story/save/runtime gates depending on changed code/assets; avoid repeated WindowsNoEditor Cook/Package/Upload.",
-    "mandatory_early_package_triggers": [
+    "mandatory_early_package_triggers": [],
+    "acceptance_boundary": "Shipping a chapter requires concrete packaged executable and chapter-specific acceptance evidence, not merely successful compile or existing Shire startup marker.",
+    "deferred_package_impact_inputs": [
       "Config/**",
       "**/*.Build.cs",
       "**/*.Target.cs",
       "ShireJourney.uproject",
       "Data/ChapterAssetStreamingPlan.json",
-      "**/Package*",
-      "**/Packaging*",
-      "**/Cook*",
-      "**/Release*",
-      "packaged-data verifier",
-      "packaged-startup verifier without valid inherited package/data proof",
-      "unclassified potentially packaging-impacting paths"
+      "packaging/cook/release tools and validators"
     ],
-    "acceptance_boundary": "Shipping a chapter requires concrete packaged executable and chapter-specific acceptance evidence, not merely successful compile or existing Shire startup marker."
+    "explicit_guard": "Never claim packaged startup or Gate 6/7 based on deferred package proof. Runtime C++/import/story/save/asset quality tests remain when affected. Revisit workflow automatic package triggers before treating this policy as implemented."
   }
 }

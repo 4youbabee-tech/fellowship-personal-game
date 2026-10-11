@@ -1,3 +1,10 @@
+## 2026-10-11 - Owner final cloud-first speed directive (policy candidate)
+
+- Stop routine Windows Cook/Package/Upload. Reserve actual Windows packaging for P1C01 closeout candidate or final game release; preserve required engine integration, asset, save, and Gate 6/7 evidence.
+- Source-only work stays cloud-first; use narrow changed-file checks, valid SHA256 cache, batch commits, one warehouse writer and one Unreal writer. No self-hosted Windows runner for administrative/source-only changes.
+- Packaging-affecting changes are logged for deferred package verification, not silently accepted. Existing CI automatic packaging triggers must be reviewed/changed before this directive is considered implemented.
+- STATUS: policy candidate only, no workflow trigger change or CI run in this commit; no measured acceleration, PIE/device, Windows package or Gate 6/7 claim.
+
 ## 2026-10-11 — #365 CI regression correction (candidate)
 
 - Exact-head Pre-Unreal #38102533805 failed in two source contract assertions: one obsolete manual-only trigger expectation and one new test using literal escaped newlines. The dedicated PBR lane intentionally runs on PR but never cooks/packages except manual dispatch. Corrected assertions and tightened package gates; requires new exact-head CI success. No runtime/device/visual acceptance.
