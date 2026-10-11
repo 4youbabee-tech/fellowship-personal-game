@@ -1,3 +1,11 @@
+## 2026-10-11 — Post-#372 reviewed stale-ref retirement (PR candidate)
+
+- **Policy:** DEC-106 reconciled after merged PR #372 (merge `a004d47b6c7d4681a328d88a12fc5de4819e1f11`) with exact-head GitHub-hosted Pre-Unreal SUCCESS `38134887589` and Five-Lane SUCCESS `38134887757`. Classified **STATIC-VALIDATED**. All WindowsNoEditor packages remain owner-requested chapter/release closeout only; engine compile/PIE/device/visual/Gate6/7 remains unproven.
+- **Branch reviewed for retirement:** `policy/cloud-first-no-routine-windows-package-20261011`, exact SHA `5ccc60523247138e324887929b6b8f1c85db0931`, closed/unmerged PR #369. Unique delta contains four policy/docs files; policy intent superseded by merged PR #372, not by a claim of identical Git ancestry.
+- **Safety implementation:** `Data/BranchCleanupPlan.json` registers this exact ref/SHA, closed PR, replacement PR+merge. `Scripts/run_branch_cleanup.ps1` now fail-closes on moved SHA, active PR, missing replacement, missing merge ancestry, unknown unique refs and uses atomic Git `--force-with-lease` for both explicit and PR-head retirement.
+- **Remaining branch rule:** every other inspected noncanonical branch still has unique commits vs develop. Preserve FBX/Tangents/Skeletal/PBR/preview/generated material/Edoras candidates until selective reconciliation and proof. Do not delete by age or branch title.
+- **Current evidence boundary:** branch #369 cleanup is *authorized pending a successful hosted PR and actual cleanup log/ref-not-found proof*; no remote deletion or performance/visual acceptance claimed by this entry.
+
 **PG-145 static regression correction (2026-10-11):** Exact-head Pre-Unreal run `38134722720` failed only at the outdated hosted Unreal guard token `needs.classify.outputs.mode != 'inherit'`, after real classifier cases and packaging contract had already passed. Replaced that old expectation with explicit `full/core/acceptance/package` selection markers and added `Scripts/pre_unreal_validate.py` to the narrow hosted-only policy allowlist. Five-Lane run `38134722700` SUCCESS on previous head; new exact-head preflight remains pending. This is a CI test-contract fix, NOT real UE compile, PIE, device or chapter acceptance.
 
 ## 2026-10-11 — Manual-only Windows packaging + hosted policy regression (PR candidate)
