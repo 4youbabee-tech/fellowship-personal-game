@@ -1313,9 +1313,10 @@ int32 UShireNPCContextSubsystem::CountWords(const FString& Text) const
 
 bool UShireNPCContextSubsystem::IsDangerStateActive() const
 {
-    const UGameInstance* GI = GetGameInstance();
-    const UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
-    if (!Quests && !bHasCommittedWorldContext)
+    // Danger is world-facing state. Before the router publishes committed
+    // context, raw quest state may already point at a destination that is not
+    // visible yet, so fail closed instead of leaking future threat into NPCs.
+    if (!bHasCommittedWorldContext)
     {
         return false;
     }
