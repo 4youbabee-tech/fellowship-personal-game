@@ -17,6 +17,8 @@ SOURCE_ONLY_PATTERNS = (
     "Data/MaximumSafeProductionModeV1.json",
     "Scripts/offline_production_classifier.py",
     "Scripts/test_offline_production_classifier.py",
+    "Scripts/validate_p1c01_cloud_assembly.py",
+    "Scripts/test_validate_p1c01_cloud_assembly.py",
     "Data/*Warehouse*.json",
     "Data/*Source*.json",
     "Data/*Prep*.json",
