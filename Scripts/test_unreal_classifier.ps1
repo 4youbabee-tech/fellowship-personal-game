@@ -21,6 +21,7 @@ function Test-ParentWholeWorkflowGreen([string]$ParentSha) {
     return $script:Case.Proof -and $ParentSha -eq 'candidate-parent'
 }
 function Test-ParentCoreUnrealGreen([string]$ParentSha) { return [bool]$script:Case.Proof }
+function Test-ParentAcceptanceDataGreen([string]$ParentSha) { return [bool]$script:Case.PackageProof }
 function Test-TreeEquivalentCoreProof([string]$GitExe, [string]$ParentSha) { return [bool]$script:Case.TreeProof }
 function Set-Mode([string]$Mode, [string]$Reason, [string]$ParentSha, [string]$ResumeStage = 'none', [bool]$ResetIntermediates = $false, [bool]$PackageRequired = $false) {
     $script:ActualMode = $Mode
@@ -63,6 +64,7 @@ $cases = @(
     @{Name='whole-game-package-change'; Paths=@('Scripts/ci_package_w00.ps1'); Proof=$true; Mode='acceptance'; Package=$true; TreeProof=$false},
     @{Name='whole-game-package-no-proof'; Paths=@('Scripts/ci_package_w00.ps1'); Proof=$false; Mode='full'; Package=$true; TreeProof=$false},
     @{Name='packaged-startup-change'; Paths=@('Scripts/verify_packaged_startup.ps1'); Proof=$true; Mode='acceptance'; Package=$true; TreeProof=$false},
+    @{Name='packaged-startup-proven-reuse'; Paths=@('Scripts/verify_packaged_startup.ps1'); Proof=$true; Mode='acceptance'; Package=$false; PackageProof=$true; TreeProof=$false},
     @{Name='manual-chapter-closeout'; Paths=@('Docs/CURRENT_PROJECT_STATE.md'); Proof=$true; Mode='full'; Package=$true; Dispatch=$true; TreeProof=$false},
     @{Name='manual-validation-no-package'; Paths=@('Docs/CURRENT_PROJECT_STATE.md'); Proof=$true; Mode='inherit'; Dispatch=$false; TreeProof=$false},
     @{Name='runtime-data'; Paths=@('Data/QuestDefinitions.json'); Proof=$true; Mode='core'; TreeProof=$false},
