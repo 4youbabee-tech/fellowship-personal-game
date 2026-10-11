@@ -1,0 +1,54 @@
+name: Private Drive Warehouse Intake
+on:
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: private-drive-warehouse-intake-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  intake:
+    name: Verify and persist approved Drive source archives
+    runs-on: [self-hosted, Windows, X64, ue4-27]
+    timeout-minutes: 35
+    env:
+      STAGING_WAREHOUSE: 'D:\actions-runner\_warehouse\ShireJourney'
+      RCLONE_CONFIG_B64: ${{ secrets.SHIRE_DRIVE_RCLONE_CONFIG_B64 }}
+    steps:
+      - name: Checkout into isolated source folder
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          path: _drive_intake_source
+          lfs: false
+      - name: Check Drive credential and executable without touching Unreal workspace
+        shell: powershell
+        run: |
+          if (-not $env:RCLONE_CONFIG_B64) { throw 'DRIVE_INTAKE_CREDENTIAL_MISSING: configure SHIRE_DRIVE_RCLONE_CONFIG_B64' }
+          $tool=Get-Command rclone.exe -ErrorAction SilentlyContinue
+          if (-not $tool) { throw 'DRIVE_INTAKE_RCLONE_MISSING: install rclone.exe for runner user' }
+          $py=Get-Command python.exe -ErrorAction SilentlyContinue
+          if (-not $py) { throw 'DRIVE_INTAKE_PYTHON_MISSING' }
+          if (-not (Test-Path 'D:\actions-runner\_warehouse' -PathType Container)) { throw 'WAREHOUSE_VOLUME_MISSING' }
+          $config=Join-Path $env:RUNNER_TEMP ('shire-drive-private-'+$env:GITHUB_RUN_ID+'.conf')
+          $bytes=[Convert]::FromBase64String($env:RCLONE_CONFIG_B64)
+          [IO.File]::WriteAllBytes($config, $bytes)
+          Remove-Item Env:RCLONE_CONFIG_B64
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value ('RCLONE_CONFIG='+$config)
+      - name: Ingest Drive ZIPs and write SHA256 receipts
+        shell: powershell
+        run: |
+          python.exe _drive_intake_source/Scripts/sync_drive_warehouse.py --remote shire-drive: --warehouse "$env:STAGING_WAREHOUSE"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Delete temporary OAuth config only
+        if: always()
+        shell: powershell
+        run: |
+          if ($env:RCLONE_CONFIG -and (Test-Path -LiteralPath $env:RCLONE_CONFIG)) {
+            Remove-Item -LiteralPath $env:RCLONE_CONFIG -Force
+          }
