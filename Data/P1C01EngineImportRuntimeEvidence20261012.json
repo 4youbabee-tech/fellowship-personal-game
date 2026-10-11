@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "evidence_id": "P1C01_ENGINE_IMPORT_RUNTIME_EVIDENCE_20261012",
+  "chapter": "P1C01",
+  "commit_sha": "a101ee242cce0b33a1a92f0217d282236d6fc8db",
+  "workflow_run": {
+    "id": 38182847685,
+    "event": "workflow_dispatch",
+    "workflow": "Unreal Build Validation",
+    "job_id": 114598967718,
+    "job_name": "UE4.27.2 C++ Build",
+    "conclusion": "success"
+  },
+  "validated_steps": {
+    "verify_unreal_427_and_project": "success",
+    "build_shire_journey_editor": "success",
+    "production_asset_import": "success",
+    "automation_framework_qa": "success",
+    "headless_playable_startup_smoke": "success",
+    "headless_chapter_runtime_audit": "success",
+    "headless_route_story_state_roundtrip_audit": "success",
+    "runtime_warning_debt_guard": "success"
+  },
+  "import_evidence": {
+    "production_import_log_line": "ShireProductionImport: 440 files, 0 failures",
+    "imported_file_count": 440,
+    "import_failure_count": 0,
+    "verified_pbr_material_bind_count": 16,
+    "verified_pbr_import_qc_count": 16,
+    "derived_fbx_working_copy_count": 16,
+    "character_rig_import": "disabled"
+  },
+  "warning_debt": {
+    "missing_smoothing_groups": 0,
+    "degenerate_tangent_bases": 0,
+    "nearly_zero_tangents": 0,
+    "nearly_zero_binormals": 0,
+    "missing_production_master_surface": 0,
+    "missing_world_packages": 0,
+    "missing_optional_audio": 0,
+    "missing_optional_rigs": 0,
+    "defaultMat_references": 0,
+    "directional_light_mobility_warnings": 0,
+    "npc_spawn_collision_failures": 0,
+    "streaming_pool_scalability_override_warnings": 0
+  },
+  "evidence_status": {
+    "static_validated": true,
+    "compile_tested": true,
+    "production_import_tested": true,
+    "headless_runtime_audited": true,
+    "pie_tested": false,
+    "windows_package_created": false,
+    "device_tested": false,
+    "visually_accepted": false,
+    "gate_6_7_closed": false
+  },
+  "blockers_remaining": [
+    "Windows package/artifact was skipped because package_windows was not enabled for this workflow_dispatch.",
+    "PIE-specific chapter traversal evidence is still required before PIE-TESTED can be claimed.",
+    "Target-device 720p/30 FPS/VRAM profiling is still required before DEVICE/PERFORMANCE acceptance.",
+    "Human visual review is still required before VISUALLY-ACCEPTED and Gate 6/7 closure."
+  ],
+  "source_boundary": "This evidence upgrades P1C01 engine/import/headless-runtime status only. It does not close Gate 6/7 or open P1C02 runtime."
+}
