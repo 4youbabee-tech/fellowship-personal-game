@@ -120,6 +120,35 @@ class OfflineRuntimeSafetyTests(unittest.TestCase):
                                "bool AShirePlayerCharacter::RestoreSaveSnapshot(")
         self.assertIn("bPendingSaveRestoreTransform = false;", restore)
 
+    def test_stale_asset_ready_rolls_back_and_clears_pending_hold(self):
+        router = source("Source/ShireJourney/Private/World/ChapterWorldRouter.cpp")
+        header = source("Source/ShireJourney/Public/World/ChapterWorldRouter.h")
+        self.assertIn("void ClearPendingGroundingBarrier();", header)
+        self.assertIn("void ClearPendingWorldTransaction(bool bCancelStreamingRequest);", header)
+        helper = body_between(router, "void AChapterWorldRouter::ClearPendingWorldTransaction(",
+                              "void AChapterWorldRouter::ClearPrototypeBuilders(")
+        self.assertIn("AssetStreamingSubsystem->CancelPendingRequest();", helper)
+        self.assertIn("PendingRouteId = NAME_None;", helper)
+        self.assertIn("PendingEpisodeId = NAME_None;", helper)
+        self.assertIn("PendingChapterId = NAME_None;", helper)
+        self.assertIn("bPendingRestoreRouteTransform = false;", helper)
+        self.assertIn("ClearPendingGroundingBarrier();", helper)
+
+        ready = body_between(router, "void AChapterWorldRouter::HandleChapterAssetsReady(",
+                             "void AChapterWorldRouter::HandleChapterAssetsFailed(")
+        stale = ready.split("Quest/save state changed while assets were loading", 1)[1]
+        self.assertIn("stale-asset-ready", stale)
+        self.assertIn("RollbackFailedWorldSwap(LastLoadedChapterId, LastLoadedRouteId);", stale)
+        self.assertLess(stale.index("RollbackFailedWorldSwap(LastLoadedChapterId, LastLoadedRouteId);"),
+                        stale.index("return;"))
+
+        rollback = body_between(router, "void AChapterWorldRouter::RollbackFailedWorldSwap(",
+                                "void AChapterWorldRouter::CommitChapterWorld(")
+        self.assertIn("ClearPendingWorldTransaction(true);", rollback)
+        self.assertLess(rollback.index("ClearPendingWorldTransaction(true);"),
+                        rollback.index("SetPlayerWorldHold(true);"))
+
+
     def test_self_hosted_requires_manual_opt_in(self):
         workflow = source(".github/workflows/unreal-build-validation.yml")
         self.assertIn("run_self_hosted:", workflow)

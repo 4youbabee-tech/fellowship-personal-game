@@ -174,6 +174,31 @@ void AChapterWorldRouter::HandleExperienceChanged(FName RouteId, FName EpisodeId
     }
 }
 
+void AChapterWorldRouter::ClearPendingGroundingBarrier()
+{
+    GetWorldTimerManager().ClearTimer(GroundingStabilityTimer);
+    PendingGroundingCommitChapterId = NAME_None;
+    PendingGroundingCommitRouteId = NAME_None;
+    PendingGroundingCommitEpisodeId = NAME_None;
+    PendingGroundingBuilderName = NAME_None;
+    PendingGroundingPlacedLocation = FVector::ZeroVector;
+    GroundingRecoveryAttempts = 0;
+}
+
+void AChapterWorldRouter::ClearPendingWorldTransaction(bool bCancelStreamingRequest)
+{
+    if (bCancelStreamingRequest && AssetStreamingSubsystem)
+    {
+        AssetStreamingSubsystem->CancelPendingRequest();
+    }
+
+    PendingRouteId = NAME_None;
+    PendingEpisodeId = NAME_None;
+    PendingChapterId = NAME_None;
+    bPendingRestoreRouteTransform = false;
+    ClearPendingGroundingBarrier();
+}
+
 void AChapterWorldRouter::ClearPrototypeBuilders()
 {
     if (!GetWorld())
@@ -790,14 +815,7 @@ void AChapterWorldRouter::LoadChapterWorld(FName ChapterId, bool bRestoreRouteTr
     {
         // A -> pending B -> A: abandon B before returning to the visible world.
         // Otherwise its delayed completion would still swap the player into B.
-        PendingRouteId = NAME_None;
-        PendingEpisodeId = NAME_None;
-        PendingChapterId = NAME_None;
-        bPendingRestoreRouteTransform = false;
-        if (AssetStreamingSubsystem)
-        {
-            AssetStreamingSubsystem->CancelPendingRequest();
-        }
+        ClearPendingWorldTransaction(true);
 
         // A -> pending B -> A is complete only after stale pending work is gone.
         // During rollback this function is suppressed by bRollbackInProgress.
@@ -856,7 +874,18 @@ void AChapterWorldRouter::HandleChapterAssetsReady(FName ChapterId, FName RouteI
         Quests->GetCurrentRouteId() != RouteId ||
         Quests->GetCurrentEpisodeId() != PendingEpisodeId)
     {
-        // Quest/save state may have changed again while assets were loading.
+        // Quest/save state changed while assets were loading. Leaving the old
+        // pending request in place would keep the player held forever and allow a
+        // stale completion to commit later. Roll back to the last committed world
+        // and let the active quest state request a fresh transition if needed.
+        UE_LOG(
+            LogTemp,
+            Warning,
+            TEXT("ShireWorldCommit: stale-asset-ready chapter=%s route=%s pendingEpisode=%s rollback=yes"),
+            *ChapterId.ToString(),
+            *RouteId.ToString(),
+            *PendingEpisodeId.ToString());
+        RollbackFailedWorldSwap(LastLoadedChapterId, LastLoadedRouteId);
         return;
     }
 
@@ -1167,15 +1196,7 @@ void AChapterWorldRouter::RollbackFailedWorldSwap(
     FName PreviousChapterId,
     FName PreviousRouteId)
 {
-    if (AssetStreamingSubsystem)
-    {
-        AssetStreamingSubsystem->CancelPendingRequest();
-    }
-
-    PendingRouteId = NAME_None;
-    PendingEpisodeId = NAME_None;
-    PendingChapterId = NAME_None;
-    bPendingRestoreRouteTransform = false;
+    ClearPendingWorldTransaction(true);
     SetPlayerWorldHold(true);
 
     if (!RestoreCommittedWorldFromSnapshot(PreviousChapterId, PreviousRouteId))
@@ -1229,13 +1250,7 @@ void AChapterWorldRouter::CommitChapterWorld(
         return;
     }
 
-    GetWorldTimerManager().ClearTimer(GroundingStabilityTimer);
-    PendingGroundingCommitChapterId = NAME_None;
-    PendingGroundingCommitRouteId = NAME_None;
-    PendingGroundingCommitEpisodeId = NAME_None;
-    PendingGroundingBuilderName = NAME_None;
-    PendingGroundingPlacedLocation = FVector::ZeroVector;
-    GroundingRecoveryAttempts = 0;
+    ClearPendingGroundingBarrier();
 
     SetPlayerWorldHold(true);
     ClearPrototypeBuilders();

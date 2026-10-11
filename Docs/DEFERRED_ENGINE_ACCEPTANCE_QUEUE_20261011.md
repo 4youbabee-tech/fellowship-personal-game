@@ -18,3 +18,7 @@ This is a **deferred validation queue**, not proof of defect resolution. No Wind
 **Release rule:** No claims of COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED or P1C01 Gate 6/7 closure until relevant matching evidence exists. All tests are *deferred*, not silently passed.
 
 **At runner startup:** Obtain explicit owner approval; validate runner hardware/engine; build current develop exact SHA; run headless startup/route, state/save, import tests and PIE; profile device and perform human visual checks. Resolve any failures in PRs with synchronous status docs. Never run P1C02 runtime before P1C01 Gate 6/7 acceptance.
+
+## Added Offline Fix Candidate — Stale Asset-Ready Rollback
+
+Source-only audit identified that a stale `OnChapterAssetsReady` callback could previously return after quest/save state changed without clearing the pending world transaction. The fix adds stale-ready rollback plus shared cleanup for pending route/episode/chapter and grounding-barrier timers. Required runner validation when authorized: force overlapping chapter/route/episode changes while async asset preload is pending, then verify no player hold deadlock, no stale world commit, and no delayed grounding timer mutates the restored world.
