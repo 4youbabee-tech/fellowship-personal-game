@@ -8594,7 +8594,7 @@
   },
   "owner_fast_batch_intake_policy_2026_10_11": {
     "policy_id": "OWNER_FAST_BATCH_INTAKE_2026_10_11",
-    "status": "OWNER_REQUEST_REGISTERED_IMPLEMENTATION_PENDING",
+    "status": "ACTIVE_IMPLEMENTATION_STARTED_SOURCE_ONLY",
     "requested_on": "2026-10-11",
     "objective": "Minimize administrative handling and redundant testing; rapidly build P1C01 in large coherent production waves while continuing licensed independent preparation for all 28 regions.",
     "owner_directives": [
@@ -8614,7 +8614,27 @@
       "Real Gate 6/7 acceptance, original canon/story order, truthful evidence classification."
     ],
     "workflow_rule": "No new CI/workflow fan-out merely for owner policy/docs changes; choose fast targeted checks and avoid extra full Unreal rebuilds unless real runtime inputs changed.",
-    "evidence_boundary": "Policy registration only. Existing PR #352 and other running work are not cancelled; no new P1C01 visual/runtime/Gate acceptance is claimed."
+    "evidence_boundary": "Policy registration only. Existing PR #352 and other running work are not cancelled; no new P1C01 visual/runtime/Gate acceptance is claimed.",
+    "offline_runner_execution_update_2026_10_11": {
+      "status": "ACTIVE_WHILE_OWNER_LAPTOP_AND_WINDOWS_RUNNER_OFFLINE",
+      "source_queue": "Data/OfflineFastProductionQueueV1.json",
+      "classifier": "Scripts/offline_production_classifier.py",
+      "protocol": "Docs/OFFLINE_FAST_PRODUCTION_PROTOCOL.md",
+      "rule": "Continue source-only production and do not open, update or manually dispatch work that queues Windows runners while the owner runner/laptop is unavailable.",
+      "allowed": [
+        "batch repo manifests",
+        "SHA256 receipt reuse",
+        "offline FBX/PBR/material prep tooling",
+        "28-region source metadata",
+        "PR comments/body-only updates"
+      ],
+      "blocked": [
+        "self-hosted UE4 Windows import/build/package",
+        "github-hosted windows-latest PR checks when the owner forbids Windows runners",
+        "PIE/runtime/device/Gate 6/7 claims without actual evidence"
+      ],
+      "evidence_boundary": "Policy and tooling update only; no new runtime, visual, package, device or Gate acceptance is claimed."
+    }
   },
   "chapter_closeout_package_policy_2026_10_11": {
     "owner_scope": "ALL_GAME_ALL_CHAPTERS_NOT_SHIRE_ONLY",
