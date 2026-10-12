@@ -1,0 +1,69 @@
+name: Whole-game 140 distinct original FBX source wave
+on:
+  pull_request:
+    branches: [develop]
+    paths:
+      - 'Tools/CloudAssetBuild/blender_wave140.py'
+      - 'Tools/CloudAssetBuild/blender_regions.py'
+      - 'Tools/CloudAssetBuild/blender_shire.py'
+      - '.github/workflows/cloud-wholegame-140-source.yml'
+permissions:
+  contents: read
+concurrency:
+  group: whole-game-140-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  produce_distinct_140:
+    name: 70 unique families x LOD0/LOD1 binary FBX QC
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha }}
+      WAVE_OUT: ${{ github.workspace }}/_BuildArtifacts/wave140
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          persist-credentials: false
+      - name: Confirm governor and exact source identity
+        run: |
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          python3 Scripts/governor_work_start.py --lane VISUAL_WORLD_PREP
+          python3 -m py_compile Tools/CloudAssetBuild/blender_wave140.py
+      - name: Install hosted Blender
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y blender
+          blender --version | head -n 1
+      - name: Generate 140 original FBX and reimport each binary in Blender
+        run: blender --background --factory-startup --python-exit-code 3 -t 2 --python Tools/CloudAssetBuild/blender_wave140.py -- --out "$WAVE_OUT"
+      - name: Independently audit hashes and distinct identities
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          root = Path(os.environ["WAVE_OUT"])
+          r = json.loads((root / "wave140_receipt.json").read_text())
+          rows = r["objects"]
+          assert r["families"] == 70 and r["fbx_count"] == 140 and r["regions"] == 28
+          assert len(rows) == 140
+          assert len({(x["region_id"], x["role"], x["lod"]) for x in rows}) == 140
+          assert len({x["sha256"] for x in rows}) == 140
+          assert len({x["region_id"] for x in rows}) == 28
+          for x in rows:
+              p = root / x["path"]
+              data = p.read_bytes()
+              assert len(data) == x["bytes"] and hashlib.sha256(data).hexdigest() == x["sha256"]
+              assert data.startswith(b"Kaydara FBX Binary") and int.from_bytes(data[23:27], "little") == 7400
+              assert x["reimport_polygons"] > 0 and x["uv_layers"] > 0 and x["collider_count"] >= 1
+          assert r["unreal_imported"] is False and r["warehouse_persisted"] is False
+          print("WHOLEGAME_140_DISTINCT_FBX_QC_PASS files=140 families=70 regions=28")
+          PY
+      - name: Upload original source payload with receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: whole-game-140-distinct-original-fbx-${{ env.TARGET_SHA }}
+          path: ${{ env.WAVE_OUT }}
+          retention-days: 15
+          compression-level: 6
+          if-no-files-found: error
