@@ -4685,6 +4685,202 @@ void AShirePrototypeWorldBuilder::SpawnP1C01ChapterFinishWorldArtPass()
         ClusterCount, InstanceCount, HeroPropActors);
 }
 
+void AShirePrototypeWorldBuilder::SpawnP1C01RoutePartyFerryClosurePass()
+{
+    if (!GetWorld())
+    {
+        return;
+    }
+
+    struct FClosurePlacement
+    {
+        FVector Location;
+        FRotator Rotation;
+        FVector Scale;
+    };
+
+    int32 ClosureClusters = 0;
+    int32 ClosureInstances = 0;
+    int32 RouteProps = 0;
+
+    auto SpawnClosureCluster = [this, &ClosureClusters, &ClosureInstances](
+        UStaticMesh* Mesh,
+        const TCHAR* Tag,
+        int32 StartCullDistance,
+        int32 EndCullDistance,
+        const FClosurePlacement* Placements,
+        int32 PlacementCount)
+    {
+        if (!Mesh || !Tag || !Placements || PlacementCount <= 0)
+        {
+            return;
+        }
+
+        FActorSpawnParameters Params;
+        Params.Owner = this;
+        Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+        AWorldDetailCluster* Cluster = GetWorld()->SpawnActor<AWorldDetailCluster>(
+            FVector::ZeroVector, FRotator::ZeroRotator, Params);
+        if (!Cluster)
+        {
+            return;
+        }
+
+        Cluster->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
+        Cluster->Tags.AddUnique(TEXT("P1C01RoutePartyFerryClosure"));
+        Cluster->Tags.AddUnique(FName(Tag));
+        Cluster->Configure(Mesh, false, StartCullDistance, EndCullDistance);
+
+        for (int32 Index = 0; Index < PlacementCount; ++Index)
+        {
+            const FClosurePlacement& P = Placements[Index];
+            Cluster->AddDetailInstance(P.Location, P.Rotation, P.Scale);
+        }
+
+        ++ClosureClusters;
+        ClosureInstances += Cluster->GetDetailCount();
+    };
+
+    auto SpawnRouteProp = [this, &RouteProps](
+        UStaticMesh* Mesh,
+        const FVector& Location,
+        const FVector& Scale,
+        const FRotator& Rotation)
+    {
+        if (!Mesh)
+        {
+            return;
+        }
+
+        if (AStaticMeshActor* Actor = SpawnShape(Mesh, Location, Scale, FLinearColor::White, Rotation, false))
+        {
+            Actor->Tags.AddUnique(TEXT("P1C01RoutePartyFerryClosure"));
+            ++RouteProps;
+        }
+    };
+
+    const FVector PartyCenter(280.0f, 1320.0f, 0.0f);
+    const FClosurePlacement PartyBoundaryLanterns[] = {
+        { PartyCenter + FVector(-980,-260,14), FRotator(0,  6,0), FVector(0.50f) },
+        { PartyCenter + FVector(-780, 410,14), FRotator(0, -8,0), FVector(0.52f) },
+        { PartyCenter + FVector(-360, 720,14), FRotator(0, 12,0), FVector(0.50f) },
+        { PartyCenter + FVector( 160, 780,14), FRotator(0,-10,0), FVector(0.52f) },
+        { PartyCenter + FVector( 680, 550,14), FRotator(0,  8,0), FVector(0.50f) },
+        { PartyCenter + FVector( 960,  60,14), FRotator(0,-12,0), FVector(0.52f) },
+        { PartyCenter + FVector( 820,-520,14), FRotator(0,  9,0), FVector(0.50f) },
+        { PartyCenter + FVector( 280,-780,14), FRotator(0, -6,0), FVector(0.52f) },
+        { PartyCenter + FVector(-300,-740,14), FRotator(0, 10,0), FVector(0.50f) },
+        { PartyCenter + FVector(-760,-540,14), FRotator(0,-11,0), FVector(0.52f) }
+    };
+    SpawnClosureCluster(
+        ProductionLanternMesh,
+        TEXT("PartyFieldReadableLanternBoundary"),
+        1000,
+        5200,
+        PartyBoundaryLanterns,
+        UE_ARRAY_COUNT(PartyBoundaryLanterns));
+
+    const FClosurePlacement PartyFieldSeating[] = {
+        { PartyCenter + FVector(-720,-130,0), FRotator(0,  5,0), FVector(0.60f) },
+        { PartyCenter + FVector(-540, 210,0), FRotator(0, -7,0), FVector(0.60f) },
+        { PartyCenter + FVector(-180, 360,0), FRotator(0,  3,0), FVector(0.62f) },
+        { PartyCenter + FVector( 210, 330,0), FRotator(0, -4,0), FVector(0.62f) },
+        { PartyCenter + FVector( 560, 170,0), FRotator(0,  6,0), FVector(0.60f) },
+        { PartyCenter + FVector( 690,-170,0), FRotator(0, -8,0), FVector(0.60f) },
+        { PartyCenter + FVector( 350,-450,0), FRotator(0,  7,0), FVector(0.62f) },
+        { PartyCenter + FVector(-250,-470,0), FRotator(0, -5,0), FVector(0.62f) }
+    };
+    SpawnClosureCluster(
+        ProductionBenchMesh,
+        TEXT("PartyFieldOuterSeating"),
+        900,
+        4700,
+        PartyFieldSeating,
+        UE_ARRAY_COUNT(PartyFieldSeating));
+
+    const FClosurePlacement RoadReadableMarkers[] = {
+        { FVector( 2350,  520,0), FRotator(0, 18,0), FVector(0.68f) },
+        { FVector( 3560, -620,0), FRotator(0,-16,0), FVector(0.68f) },
+        { FVector( 4860,  610,0), FRotator(0, 14,0), FVector(0.70f) },
+        { FVector( 6240, -650,0), FRotator(0,-13,0), FVector(0.70f) },
+        { FVector( 7640,  700,0), FRotator(0, 12,0), FVector(0.68f) },
+        { FVector( 9080, -760,0), FRotator(0,-15,0), FVector(0.68f) },
+        { FVector(10680,  780,0), FRotator(0, 16,0), FVector(0.70f) },
+        { FVector(12220, -860,0), FRotator(0,-17,0), FVector(0.70f) },
+        { FVector(13920,  870,0), FRotator(0, 15,0), FVector(0.68f) },
+        { FVector(15720, -820,0), FRotator(0,-14,0), FVector(0.68f) },
+        { FVector(17620,  760,0), FRotator(0, 12,0), FVector(0.70f) },
+        { FVector(19780, -700,0), FRotator(0,-16,0), FVector(0.70f) }
+    };
+    SpawnClosureCluster(
+        ProductionCommonPathMarkerMesh,
+        TEXT("ReadableRoadToFerryMarkers"),
+        1400,
+        9000,
+        RoadReadableMarkers,
+        UE_ARRAY_COUNT(RoadReadableMarkers));
+
+    const FClosurePlacement FerryQueuePosts[] = {
+        { FVector(21860,-720,0), FRotator(0,  0,0), FVector(0.68f) },
+        { FVector(22220,-760,0), FRotator(0,  8,0), FVector(0.68f) },
+        { FVector(22580,-780,0), FRotator(0, -6,0), FVector(0.68f) },
+        { FVector(22940,-740,0), FRotator(0,  5,0), FVector(0.68f) },
+        { FVector(23300,-680,0), FRotator(0, -8,0), FVector(0.68f) },
+        { FVector(23660,-600,0), FRotator(0,  7,0), FVector(0.68f) },
+        { FVector(22100, 360,0), FRotator(0, 12,0), FVector(0.66f) },
+        { FVector(22480, 410,0), FRotator(0,-10,0), FVector(0.66f) },
+        { FVector(22860, 460,0), FRotator(0,  8,0), FVector(0.66f) },
+        { FVector(23240, 510,0), FRotator(0, -7,0), FVector(0.66f) },
+        { FVector(23620, 560,0), FRotator(0, 10,0), FVector(0.66f) },
+        { FVector(24000, 610,0), FRotator(0,-11,0), FVector(0.66f) }
+    };
+    SpawnClosureCluster(
+        ProductionCommonRopePostMesh,
+        TEXT("FerryArrivalQueuePosts"),
+        1000,
+        7200,
+        FerryQueuePosts,
+        UE_ARRAY_COUNT(FerryQueuePosts));
+
+    const FClosurePlacement FerryBankBreakup[] = {
+        { FVector(21740,-1260,-3), FRotator(0, 22,0), FVector(0.66f) },
+        { FVector(22160,-1340,-3), FRotator(0, 65,0), FVector(0.70f) },
+        { FVector(22620,-1390,-3), FRotator(0,105,0), FVector(0.68f) },
+        { FVector(23120,-1360,-3), FRotator(0,148,0), FVector(0.72f) },
+        { FVector(23600,-1290,-3), FRotator(0,191,0), FVector(0.66f) },
+        { FVector(24120,-1210,-3), FRotator(0,234,0), FVector(0.70f) },
+        { FVector(24620,-1110,-3), FRotator(0,277,0), FVector(0.68f) },
+        { FVector(22000, 760,-3), FRotator(0, 35,0), FVector(0.70f) },
+        { FVector(22480, 850,-3), FRotator(0, 78,0), FVector(0.68f) },
+        { FVector(22980, 940,-3), FRotator(0,121,0), FVector(0.72f) },
+        { FVector(23500,1010,-3), FRotator(0,164,0), FVector(0.66f) },
+        { FVector(24020,1080,-3), FRotator(0,207,0), FVector(0.70f) },
+        { FVector(24560,1160,-3), FRotator(0,250,0), FVector(0.68f) },
+        { FVector(25080,1240,-3), FRotator(0,293,0), FVector(0.72f) }
+    };
+    SpawnClosureCluster(
+        ProductionCommonReedClusterMesh,
+        TEXT("FerryBankForegroundBreakup"),
+        900,
+        6200,
+        FerryBankBreakup,
+        UE_ARRAY_COUNT(FerryBankBreakup));
+
+    SpawnRouteProp(ProductionCommonMarketCanopyMesh, PartyCenter + FVector(-860,70,0), FVector(0.64f), FRotator(0,86,0));
+    SpawnRouteProp(ProductionCommonMarketCanopyMesh, PartyCenter + FVector(860,90,0), FVector(0.64f), FRotator(0,94,0));
+    SpawnRouteProp(ProductionLoadedCartMesh, FVector(1920,-470,0), FVector(0.56f), FRotator(0,76,0));
+    SpawnRouteProp(ProductionCartMesh, FVector(6500,850,0), FVector(0.58f), FRotator(0,-62,0));
+    SpawnRouteProp(ProductionCommonFootbridgeMesh, FVector(18680,-430,5), FVector(0.66f), FRotator(0,88,0));
+    SpawnRouteProp(ProductionCommonRiverBoatMesh, FVector(23640,-470,10), FVector(0.82f), FRotator(0,91,0));
+    SpawnRouteProp(ProductionCommonRopeCoilMesh, FVector(23160,-560,10), FVector(0.58f), FRotator(0,18,0));
+    SpawnRouteProp(ProductionCommonRopeCoilMesh, FVector(23880,-330,10), FVector(0.56f), FRotator(0,-21,0));
+
+    UE_LOG(LogTemp, Display,
+        TEXT("P1C01_ROUTE_PARTY_FERRY_CLOSURE clusters=%d instances=%d routeProps=%d collision=none tick=none p1c02Runtime=no visual=pending"),
+        ClosureClusters, ClosureInstances, RouteProps);
+}
+
 
 
 
@@ -5900,6 +6096,7 @@ void AShirePrototypeWorldBuilder::BuildPrototypeWorld()
     SpawnVisibleShireMegaWaveD();
     SpawnShireVisualFinishWave();
     SpawnP1C01ChapterFinishWorldArtPass();
+    SpawnP1C01RoutePartyFerryClosurePass();
     SpawnShireSettlementCompletionPass();
     SpawnShireSettlementCanonFinishPass();
     SpawnWorldDensityDetailPass();

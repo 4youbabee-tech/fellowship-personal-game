@@ -146,6 +146,7 @@ private:
     void SpawnVisibleShireMegaWaveD();
     void SpawnShireVisualFinishWave();
     void SpawnP1C01ChapterFinishWorldArtPass();
+    void SpawnP1C01RoutePartyFerryClosurePass();
     void SpawnShireSettlementCompletionPass();
     void SpawnShireSettlementCanonFinishPass();
     void SpawnWorldDensityDetailPass();
