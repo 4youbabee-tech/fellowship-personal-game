@@ -87,7 +87,6 @@ def main(destination):
         "unreal_imported": False, "world_placed": False,
         "pie_tested": False, "device_tested": False, "visual_accepted": False
     }
-    atomic_json(destination, manifest)
     (destination / "novel50_receipt.json").write_text(
         json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print("NOVEL_REGION_50_BATCH_SOURCE_PASS batches=50 fbx=100", flush=True)
