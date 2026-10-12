@@ -19,6 +19,17 @@ WAREHOUSE = Path(r"D:\actions-runner\_warehouse\ShireJourney")
 RESERVE = 6 * 1024 ** 3
 FILE_ID = re.compile(r"^[A-Za-z0-9_-]{8,200}$")
 
+def pinned_archives():
+    # Repo's already byte-verified ten-ZIP SHA256 snapshot is the trust anchor,
+    # not optional MD5 metadata from Google Drive.
+    from verify_drive_warehouse_receipts import CATEGORIES as SOURCE_CATEGORIES
+    from verify_drive_warehouse_receipts import SNAPSHOT, load_expected
+    return {
+        SOURCE_CATEGORIES[name] + "/" + name: row
+        for name, row in load_expected(SNAPSHOT).items()
+    }
+
+
 def require_remote(config, remote):
     cp = configparser.RawConfigParser()
     if not cp.read(str(config), encoding="utf-8"):
@@ -73,6 +84,7 @@ def inventory(binary, config, remote):
     if not isinstance(records, list):
         raise RuntimeError("DRIVE_INVENTORY_INVALID")
     result = []
+    pinned = pinned_archives()
     for f in records:
         parts = PurePosixPath(f.get("Path", "")).parts
         if len(parts) != 2 or parts[0] not in CATEGORIES or not parts[1].lower().endswith(".zip"):
@@ -81,11 +93,14 @@ def inventory(binary, config, remote):
         md5 = (f.get("Hashes") or {}).get("MD5", "").lower()
         if not FILE_ID.fullmatch(f.get("ID", "")) or type(size) is not int or not 0 < size <= 1024 ** 3:
             raise RuntimeError("DRIVE_OBJECT_ID_OR_SIZE_INVALID")
-        if not re.fullmatch(r"[0-9a-f]{32}", md5) or "\\" in f["Path"]:
-            # Do not block every eligible source because one other remote ZIP
-            # lacks a Drive MD5. Quarantine this file; the ten-archive physical
-            # QC still rejects any missing required source.
-            print("DRIVE_OBJECT_QUARANTINED reason=missing-md5-or-invalid-path name=" +
+        is_remote_md5 = bool(re.fullmatch(r"[0-9a-f]{32}", md5))
+        known = pinned.get(f["Path"])
+        if "\\" in f["Path"] or (known and size != known["byte_size"]):
+            print("DRIVE_OBJECT_QUARANTINED reason=unsafe-path-or-pinned-size-mismatch name=" +
+                  repr(f["Path"]))
+            continue
+        if not is_remote_md5 and not known:
+            print("DRIVE_OBJECT_QUARANTINED reason=no-remote-md5-and-no-pinned-sha256 name=" +
                   repr(f["Path"]))
             continue
         result.append(f)
@@ -96,12 +111,19 @@ def ingest(binary, config, remote, root, max_files):
     receipts = base / "receipts"
     staged = reused = 0
     items = inventory(binary, config, remote)
+    pinned = pinned_archives()
     for f in items[:max_files]:
         remote_id, rel, size = f["ID"], f["Path"], f["Size"]
-        md5 = f["Hashes"]["MD5"].lower()
+        md5 = (f.get("Hashes") or {}).get("MD5", "").lower()
+        expected = pinned.get(rel)
+        md5_source = "REMOTE_VERIFIED" if md5 else "LOCAL_CALCULATED_PINNED_SHA256"
+        if not md5 and not expected:
+            raise RuntimeError("DRIVE_UNPINNED_MISSING_REMOTE_MD5")
         old = list(receipts.glob(remote_id + "-*.json")) if receipts.exists() else []
         if any((lambda rec: rec.get("remote_path") == rel and rec.get("remote_size") == size
-                and rec.get("remote_md5") == md5 and Path(rec.get("local_path", "__missing__")).is_file()
+                and (not md5 or rec.get("remote_md5") == md5)
+                and (not expected or rec.get("sha256") == expected["sha256"])
+                and Path(rec.get("local_path", "__missing__")).is_file()
                 and Path(rec.get("local_path", "__missing__")).resolve().parent == (base / "files" / PurePosixPath(rel).parts[0]).resolve()
                 and sha(Path(rec["local_path"])) == rec.get("sha256"))
                (json.loads(p.read_text(encoding="utf-8"))) for p in old):
@@ -116,17 +138,24 @@ def ingest(binary, config, remote, root, max_files):
         temp = Path(name)
         try:
             run_rclone(binary, config, "copyto", "--retries", "2", remote + ":" + rel, str(temp))
-            if temp.stat().st_size != size or sha(temp, "md5") != md5:
-                raise RuntimeError("DRIVE_DOWNLOAD_CHECKSUM_MISMATCH")
-            count = archive_qc(temp)
+            if temp.stat().st_size != size:
+                raise RuntimeError("DRIVE_DOWNLOAD_SIZE_MISMATCH")
             h = sha(temp)
+            local_md5 = sha(temp, "md5")
+            if expected and h != expected["sha256"]:
+                raise RuntimeError("DRIVE_PINNED_SHA256_MISMATCH")
+            if md5 and local_md5 != md5:
+                raise RuntimeError("DRIVE_DOWNLOAD_MD5_MISMATCH")
+            count = archive_qc(temp)
             local = directory / (remote_id + "-" + h[:16] + "-" + PurePosixPath(rel).name)
             if local.exists() and sha(local) != h:
                 raise RuntimeError("LOCAL_WAREHOUSE_FILE_COLLISION")
             os.replace(temp, local)
             atomic_json(receipts / (remote_id + "-" + h + ".json"), {
                 "remote_id": remote_id, "remote_path": rel, "remote_size": size,
-                "remote_md5": md5, "sha256": h, "local_path": str(local),
+                "remote_md5": md5 or local_md5,
+                "remote_md5_source": md5_source,
+                "sha256": h, "local_path": str(local),
                 "zip_entries": count, "state": "LOCAL_STAGED_NOT_IMPORTED",
                 "license_status": "UNVERIFIED_NOT_IMPORTABLE",
                 "created_utc": datetime.datetime.now(datetime.timezone.utc).isoformat()
