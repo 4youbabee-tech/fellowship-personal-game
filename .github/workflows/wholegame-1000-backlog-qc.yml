@@ -1,0 +1,25 @@
+name: Whole Game 1000 Task Backlog QC
+on:
+  pull_request:
+    branches: [develop]
+    paths:
+      - 'Data/WholeGame1000TaskExecutionBacklog20261013.json'
+      - 'Scripts/test_wholegame_1000_backlog.py'
+      - '.github/workflows/wholegame-1000-backlog-qc.yml'
+permissions:
+  contents: read
+jobs:
+  audit_backlog:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - name: Exact head and non-execution gate audit
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+          python3 Scripts/test_wholegame_1000_backlog.py
