@@ -79,9 +79,16 @@ class CloudShireAssetTests(unittest.TestCase):
             arg_index = primitive_family_index.get(node.func.id)
             if arg_index is None or len(node.args) <= arg_index:
                 continue
-            for literal in ast.walk(node.args[arg_index]):
-                if isinstance(literal, ast.Constant) and isinstance(literal.value, str):
-                    self.assertIn(literal.value, palette, "Unregistered PBR palette family")
+            expression = node.args[arg_index]
+            # Conditional material choices have asset-name literals in the
+            # condition. Check only output branches, never predicate operands.
+            material_branches = ((expression.body, expression.orelse)
+                                 if isinstance(expression, ast.IfExp)
+                                 else (expression,))
+            for branch in material_branches:
+                for literal in ast.walk(branch):
+                    if isinstance(literal, ast.Constant) and isinstance(literal.value, str):
+                        self.assertIn(literal.value, palette, "Unregistered PBR palette family")
         self.assertIn("UCX_", source)
         self.assertIn("FBX_VERSION_NOT_7400", source)
         self.assertIn("collision_groups", source)
