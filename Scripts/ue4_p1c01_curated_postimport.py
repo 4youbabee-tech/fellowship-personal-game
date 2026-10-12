@@ -55,6 +55,13 @@ def finish_materials(unreal, root, plan):
     parent = unreal.EditorAssetLibrary.load_asset(PBR_PARENT)
     if not parent or not isinstance(parent, unreal.MaterialInterface):
         raise RuntimeError('P1C01_PBR_MASTER_NOT_IMPORTER_AUTHORED')
+    # The master is authored by the existing production C++ importer. Validate
+    # its actual parameter identities rather than guessing from material names.
+    parent_params = {str(x) for x in unreal.MaterialEditingLibrary.get_texture_parameter_names(parent)}
+    print('P1C01_PBR_PARENT_PARAMETERS=' + ','.join(sorted(parent_params)), flush=True)
+    if not set(MAP_PARAMETERS.values()).issubset(parent_params):
+        raise RuntimeError('P1C01_PBR_MASTER_PARAMETER_SCHEMA_MISSING:' +
+                           ','.join(sorted(set(MAP_PARAMETERS.values()) - parent_params)))
     asset_tools = unreal.AssetToolsHelpers.get_asset_tools()
     instance_by_group, material_report, covered = {}, [], set()
     for group, maps in sorted(groups.items()):
@@ -78,6 +85,11 @@ def finish_materials(unreal, root, plan):
         if not instance or not isinstance(instance, unreal.MaterialInstanceConstant):
             raise RuntimeError('P1C01_MI_CREATE_FAILED:' + path)
         unreal.MaterialEditingLibrary.set_material_instance_parent(instance, parent)
+        # Cache the inherited parameter table before assigning textures.
+        unreal.MaterialEditingLibrary.update_material_instance(instance)
+        if (not instance.get_editor_property('parent') or
+                instance.get_editor_property('parent').get_path_name() != parent.get_path_name()):
+            raise RuntimeError('P1C01_MI_PARENT_ASSIGNMENT_FAILED:' + path)
         for kind, parameter in MAP_PARAMETERS.items():
             tex_path = maps[kind]['asset_path']
             if tex_path not in approved_textures or tex_path in covered:
@@ -85,9 +97,14 @@ def finish_materials(unreal, root, plan):
             tex = unreal.EditorAssetLibrary.load_asset(tex_path)
             if not tex or not isinstance(tex, unreal.Texture2D):
                 raise RuntimeError('P1C01_PBR_TEXTURE_MISSING:' + tex_path)
-            if not unreal.MaterialEditingLibrary.set_material_instance_texture_parameter_value(
-                    instance, parameter, tex):
-                raise RuntimeError('P1C01_PBR_TEXTURE_PARAMETER_MISSING:' + path + ':' + parameter)
+            setter_result = unreal.MaterialEditingLibrary.set_material_instance_texture_parameter_value(
+                instance, parameter, tex)
+            # Some UE editor builds report False for a successful setter.
+            # Never infer success/failure from the boolean: read back the
+            # actual persisted override identity after save (below).
+            if setter_result is False:
+                print('P1C01_PBR_TEXTURE_SETTER_FALSE_CHECK_READBACK asset=' +
+                      path + ' parameter=' + parameter, flush=True)
             covered.add(tex_path)
         unreal.MaterialEditingLibrary.update_material_instance(instance)
         if not unreal.EditorAssetLibrary.save_loaded_asset(instance, only_if_is_dirty=False):
@@ -104,7 +121,8 @@ def finish_materials(unreal, root, plan):
             texture_package = maps[kind]['asset_path']
             expected_object = texture_package + '.' + texture_package.rsplit('/', 1)[1]
             if not observed or observed.get_path_name() != expected_object:
-                raise RuntimeError('P1C01_MI_TEXTURE_NOT_PERSISTED:' + path + ':' + kind)
+                raise RuntimeError('P1C01_MI_TEXTURE_NOT_PERSISTED:' + path + ':' + kind +
+                                   ':actual=' + (observed.get_path_name() if observed else 'NONE'))
         instance_by_group[group] = reloaded
         material_report.append({'asset': path, 'source_group': group,
                                 'maps': {k: maps[k]['asset_path'] for k in MAP_PARAMETERS}})

@@ -82,7 +82,7 @@ class MockObject:
         return self.path
 
 class MockMaster(MockObject):
-    pass
+    params = ('AlbedoTexture', 'NormalTexture', 'ORMTexture')
 
 class MockInstance(MockObject):
     def __init__(self, path=''):
@@ -146,12 +146,15 @@ class MockEngine:
         self.AssetToolsHelpers = ToolsHelpers
         class Editing:
             @staticmethod
+            def get_texture_parameter_names(material): return list(material.params)
+            @staticmethod
             def set_material_instance_parent(obj, parent): obj.props['parent']=parent
             @staticmethod
             def set_material_instance_texture_parameter_value(obj, name, value):
                 if getattr(engine, 'fail_parameter', None)==name: return False
                 obj.parameters[name] = value
-                return True
+                # Simulate real editor regressions: False despite a valid write.
+                return not getattr(engine, 'false_but_applied', False)
             @staticmethod
             def get_material_instance_texture_parameter_value(obj, name): return obj.parameters.get(name)
             @staticmethod
@@ -270,7 +273,27 @@ class CuratedPlanTests(unittest.TestCase):
     def test_missing_master_parameter_fails_closed(self):
         engine = MockEngine(self.root)
         engine.fail_parameter = 'ORMTexture'
-        with self.assertRaisesRegex(RuntimeError, 'P1C01_PBR_TEXTURE_PARAMETER_MISSING'):
+        with self.assertRaisesRegex(RuntimeError, 'P1C01_MI_TEXTURE_NOT_PERSISTED'):
+            editor.editor_apply(engine, self.root)
+        self.assertFalse((self.root/'Saved/P1C01CuratedEditorPostImport/receipt.json').exists())
+
+    def test_setter_false_with_correct_persisted_texture_passes(self):
+        engine = MockEngine(self.root)
+        engine.false_but_applied = True
+        result = editor.editor_apply(engine, self.root)
+        self.assertEqual(result['created_or_updated_material_instances'], 21)
+        self.assertTrue(result['material_bindings_verified'])
+
+    def test_stale_pbr_master_with_no_required_parameters_rejected(self):
+        engine = MockEngine(self.root)
+        load = engine.EditorAssetLibrary.load_asset
+        def load_stale(path):
+            v = load(path)
+            if path == editor.PBR_PARENT:
+                v.params = ('WrongAlbedo', 'WrongORM')
+            return v
+        engine.EditorAssetLibrary.load_asset = load_stale
+        with self.assertRaisesRegex(RuntimeError, 'P1C01_PBR_MASTER_PARAMETER_SCHEMA_MISSING'):
             editor.editor_apply(engine, self.root)
         self.assertFalse((self.root/'Saved/P1C01CuratedEditorPostImport/receipt.json').exists())
 
