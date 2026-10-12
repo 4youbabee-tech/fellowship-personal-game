@@ -77,10 +77,10 @@ jobs:
             ${{ env.ASSET_OUT }}/materials_receipt.json
           key: p1c01-28region-original-materials-1k-v1-${{ hashFiles('Tools/CloudAssetBuild/materials.py', 'Data/WholeGameRegionProductionPacketsV1.json') }}
 
-      - name: Export 27 original Shire meshes, LOD0 and LOD1 (54 binary FBX) with UCX collision
+      - name: Export 41 original Shire meshes, LOD0 and LOD1 (82 binary FBX) with UCX collision
         run: blender --background --factory-startup --python-exit-code 3 -t 2 --python Tools/CloudAssetBuild/blender_shire.py -- --out "$ASSET_OUT"
 
-      - name: Validate 54 physical binary FBX after Blender re-import
+      - name: Validate 82 physical binary FBX after Blender re-import
         run: python3 Tools/CloudAssetBuild/validate_bundle.py --out "$ASSET_OUT"
 
       - name: Create portable compressed source handoff

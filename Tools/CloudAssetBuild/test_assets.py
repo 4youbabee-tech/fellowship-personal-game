@@ -56,13 +56,14 @@ class CloudShireAssetTests(unittest.TestCase):
                 and any(isinstance(t, ast.Name) and t.id == "MODELS" for t in n.targets)]
         self.assertEqual(len(rows), 1)
         models = ast.literal_eval(rows[0].value)
-        self.assertEqual(len(models), 27)
+        self.assertEqual(len(models), 41)
         self.assertEqual(len(set(models)), len(models))
         self.assertTrue({"BagEndFrontWall", "RoundRoomWallArc", "RoundRoomFloor",
                          "Hearth", "Bookcase", "HobbitBed", "WoodenFootbridge",
                          "PartyCanopy", "StonePath", "MillWheel",
                          "FerryLanding", "MooringPost", "WaymarkPost",
-                         "PartyBannerFrame", "GardenStoneBorder"}.issubset(models))
+                         "PartyBannerFrame", "GardenStoneBorder",
+                         "FerryQueueBench", "ReedPlanter", "OrchardCrate", "MarketStall", "MarketBasket", "HerbDryingRack", "RusticSign", "GrainSackStack", "WindowFlowerBox", "GateLantern", "BridgeRailing", "GardenTrellis", "FarmToolRack", "PartyServingCounter"}.issubset(models))
         # Validate family literals used by geometry primitives before the
         # expensive hosted Blender run; this guards the missing earth palette.
         palette_rows = [n for n in module.body
@@ -78,9 +79,16 @@ class CloudShireAssetTests(unittest.TestCase):
             arg_index = primitive_family_index.get(node.func.id)
             if arg_index is None or len(node.args) <= arg_index:
                 continue
-            for literal in ast.walk(node.args[arg_index]):
-                if isinstance(literal, ast.Constant) and isinstance(literal.value, str):
-                    self.assertIn(literal.value, palette, "Unregistered PBR palette family")
+            expression = node.args[arg_index]
+            # Conditional material choices have asset-name literals in the
+            # condition. Check only output branches, never predicate operands.
+            material_branches = ((expression.body, expression.orelse)
+                                 if isinstance(expression, ast.IfExp)
+                                 else (expression,))
+            for branch in material_branches:
+                for literal in ast.walk(branch):
+                    if isinstance(literal, ast.Constant) and isinstance(literal.value, str):
+                        self.assertIn(literal.value, palette, "Unregistered PBR palette family")
         self.assertIn("UCX_", source)
         self.assertIn("FBX_VERSION_NOT_7400", source)
         self.assertIn("collision_groups", source)

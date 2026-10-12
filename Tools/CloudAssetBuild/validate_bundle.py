@@ -14,7 +14,8 @@ REQUIRED_MESHES = {"RoundDoor", "PicketFence", "PartyTable", "GardenCart",
                    "RoundWindow", "GardenHedge", "OakTree", "StorageBarrel",
                    "FarmGate", "GardenPlanter",
                    "BagEndFrontWall", "RoundRoomWallArc", "RoundRoomFloor", "Hearth", "Bookcase", "HobbitBed", "WoodenFootbridge", "MillWheel", "PartyCanopy", "StonePath", "LanternPost", "VillageWell",
-                   "FerryLanding", "MooringPost", "WaymarkPost", "PartyBannerFrame", "GardenStoneBorder"}
+                   "FerryLanding", "MooringPost", "WaymarkPost", "PartyBannerFrame", "GardenStoneBorder",
+                   "FerryQueueBench", "ReedPlanter", "OrchardCrate", "MarketStall", "MarketBasket", "HerbDryingRack", "RusticSign", "GrainSackStack", "WindowFlowerBox", "GateLantern", "BridgeRailing", "GardenTrellis", "FarmToolRack", "PartyServingCounter"}
 
 
 def validate(out: Path, require_meshes: bool = True):
@@ -54,11 +55,11 @@ def validate(out: Path, require_meshes: bool = True):
         mesh_receipt = json.loads((out / "fbx_receipt.json").read_text(encoding="utf-8"))
         assert mesh_receipt["runtime_imported"] is False and mesh_receipt["skeletal_or_animated"] is False
         objects = mesh_receipt["objects"]
-        assert len(REQUIRED_MESHES) == 27
-        assert len(objects) == 54 and mesh_receipt["fbx_count"] == 54
+        assert len(REQUIRED_MESHES) == 41
+        assert len(objects) == 82 and mesh_receipt["fbx_count"] == 82
         assert mesh_receipt["asset_count"] == len(REQUIRED_MESHES)
-        assert len({x["path"] for x in objects}) == 54
-        assert len(list((out / "meshes").glob("*.fbx"))) == 54
+        assert len({x["path"] for x in objects}) == 82
+        assert len(list((out / "meshes").glob("*.fbx"))) == 82
         assert mesh_receipt["status"] == "GENERATED_BINARY_FBX_BLENDER_REIMPORT_QC"
         assert {x["asset"] for x in objects} == REQUIRED_MESHES
         assert {(x["asset"], x["lod"]) for x in objects} == {

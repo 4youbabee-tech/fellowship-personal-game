@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Headless Blender 4.x source kit: 27 static families / 54 real FBX.
+"""Headless Blender 4.x source kit: 41 static families / 82 real FBX.
 
 Models are ORIGINAL PROCEDURAL STATIC PROPS, not hero characters. Offline
 Blender reimport is checked, but Unreal FBX import/PIE remains a separate gate.
@@ -15,12 +15,13 @@ from pathlib import Path
 
 import bpy
 
-SOURCE_NAME = "SHIRE_P1C01_MODULAR_WORLD_AND_BAGEND_ASSET_WAVE_V4"
+SOURCE_NAME = "SHIRE_P1C01_MODULAR_WORLD_AND_BAGEND_ASSET_WAVE_V5"
 MODELS = ("RoundDoor", "PicketFence", "PartyTable", "GardenCart",
           "RoundWindow", "GardenHedge", "OakTree", "StorageBarrel", "FarmGate", "GardenPlanter",
           "BagEndFrontWall", "RoundRoomWallArc", "RoundRoomFloor", "Hearth", "Bookcase", "HobbitBed",
           "WoodenFootbridge", "MillWheel", "PartyCanopy", "StonePath", "LanternPost", "VillageWell",
-          "FerryLanding", "MooringPost", "WaymarkPost", "PartyBannerFrame", "GardenStoneBorder")
+          "FerryLanding", "MooringPost", "WaymarkPost", "PartyBannerFrame", "GardenStoneBorder",
+          "FerryQueueBench", "ReedPlanter", "OrchardCrate", "MarketStall", "MarketBasket", "HerbDryingRack", "RusticSign", "GrainSackStack", "WindowFlowerBox", "GateLantern", "BridgeRailing", "GardenTrellis", "FarmToolRack", "PartyServingCounter")
 PALETTE = {
     "oak_timber": (0.37, 0.19, 0.08, 1.0),
     "shire_meadow": (0.26, 0.45, 0.12, 1.0),
@@ -513,6 +514,43 @@ def draw_garden_stone_border(out, simple):
                 (1.08, 0.44, 0.10), "mossy_stone", out)
 
 
+
+EXTRA_SHIRE_PROPS = {
+    "FerryQueueBench": (2.2, 0.6, 0.9),
+    "ReedPlanter": (1.8, 0.7, 1.3),
+    "OrchardCrate": (1.2, 0.9, 0.65),
+    "MarketStall": (2.8, 1.6, 2.7),
+    "MarketBasket": (0.9, 0.8, 0.65),
+    "HerbDryingRack": (2.1, 0.45, 2.3),
+    "RusticSign": (1.5, 0.3, 2.3),
+    "GrainSackStack": (1.8, 1, 1.1),
+    "WindowFlowerBox": (1.8, 0.55, 0.85),
+    "GateLantern": (0.6, 0.6, 2.2),
+    "BridgeRailing": (3.4, 0.3, 1.3),
+    "GardenTrellis": (2.2, 0.3, 2.5),
+    "FarmToolRack": (2.4, 0.5, 2.2),
+    "PartyServingCounter": (2.9, 1.2, 1.1),
+}
+
+
+def draw_extra_shire_prop(out, simple, name):
+    w, d, h = EXTRA_SHIRE_PROPS[name]
+    tall = name in ("RusticSign", "GateLantern", "HerbDryingRack",
+                    "GardenTrellis", "FarmToolRack")
+    if tall:
+        box(name + "Post", (0, 0, h / 2), (.18, .18, h), "oak_timber", out)
+        box(name + "Board", (0, 0, h * .80), (w, d, .16), "oak_timber", out)
+    else:
+        box(name + "Base", (0, 0, h * .27), (w, d, h * .54), "oak_timber", out)
+        box(name + "Top", (0, 0, h * .72), (w * .92, d * .90, h * .28),
+            "bagend_plaster" if name in ("MarketStall", "GrainSackStack", "MarketBasket") else "oak_timber", out)
+    if not simple:
+        for x in (-w * .31, w * .31):
+            box(name + "Detail", (x, -d * .36, h * .52),
+                (.10, .12, max(.15, h * .40)),
+                "shire_meadow" if name in ("ReedPlanter", "WindowFlowerBox") else "oak_timber", out)
+
+
 def make_one(asset, level, out):
     global PARTS
     bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -541,7 +579,9 @@ def make_one(asset, level, out):
      "MooringPost": draw_mooring_post,
      "WaymarkPost": draw_waymark_post,
      "PartyBannerFrame": draw_party_banner_frame,
-     "GardenStoneBorder": draw_garden_stone_border }[asset](out, simple)
+     "GardenStoneBorder": draw_garden_stone_border,
+     **{key: (lambda o, simple, name=key: draw_extra_shire_prop(o, simple, name))
+        for key in EXTRA_SHIRE_PROPS} }[asset](out, simple)
     visual_name = "SM_Sh" + asset + "_LOD" + str(level)
     visual = join_visual(visual_name)
     bound = {
@@ -572,6 +612,7 @@ def make_one(asset, level, out):
         "WaymarkPost": ((0, 0, 1.22), (0.28, 0.28, 2.44)),
         "PartyBannerFrame": ((0, 0, 1.33), (3.26, 0.20, 2.66)),
         "GardenStoneBorder": ((0, 0, 0.36), (3.72, 0.48, 0.82)),
+        **{key: ((0, 0, dims[2] / 2), dims) for key, dims in EXTRA_SHIRE_PROPS.items()},
     }
     # UCX boxes deliberately avoid obstructing portals, canopy passages, bridge
     # traversal or the hollow room wall. Engine collision needs separate QA.
