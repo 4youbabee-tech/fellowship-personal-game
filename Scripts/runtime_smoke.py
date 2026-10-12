@@ -16,6 +16,23 @@ from runtime_audit_contracts import (
 
 
 FAILURE = re.compile(r"Fatal error:|Assertion failed|Ensure condition failed", re.I)
+CURATED_NATURE_MARKER = re.compile(
+    r"P1C01_CURATED_NATURE_WORLD families=(\d+) grounded=(\d+) max=(\d+)"
+)
+
+
+def curated_nature_observation(log_text):
+    """Report actual optional instances, not a rendered-world or PIE acceptance."""
+    match = CURATED_NATURE_MARKER.search(log_text)
+    if match:
+        families, grounded, maximum = (int(value) for value in match.groups())
+        return {"status": "instanced_unreviewed" if grounded else "zero_grounded",
+                "families": families, "grounded": grounded, "limit": maximum,
+                "pie_tested": False, "visual_accepted": False}
+    if "P1C01_CURATED_NATURE_WORLD deferred=5 optional-packages-not-staged" in log_text:
+        return {"status": "optional_packages_absent", "families": 0, "grounded": 0,
+                "pie_tested": False, "visual_accepted": False}
+    return {"status": "not_observed", "pie_tested": False, "visual_accepted": False}
 
 
 def read_log(path):
@@ -139,6 +156,8 @@ def main():
         except Exception as exc:
             result = {"passed": False, "error": str(exc), "log": str(log)}
         result["chapter"] = chapter or "startup"
+        if chapter == "P1C01" or args.mode == "startup":
+            result["curated_nature"] = curated_nature_observation(read_log(log))
         results.append(result)
         print(json.dumps(result), flush=True)
         if not result["passed"]:

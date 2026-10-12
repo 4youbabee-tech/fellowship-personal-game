@@ -485,16 +485,25 @@ void AShirePrototypeWorldBuilder::OnCuratedNatureLayerReady()
     {
         return;
     }
-    const FVector Anchors[] = {
-        FVector(-1900.0f, -1400.0f, 0.0f),
-        FVector(500.0f, 1700.0f, 0.0f),
-        FVector(ShireLayout::FieldsX, 1800.0f, 0.0f),
-        FVector(ShireLayout::WoodedRoadX, 1800.0f, 0.0f),
-        FVector(ShireLayout::FerryX - 1100.0f, 1800.0f, 0.0f)
+    // Reuse existing Shire anchors, not new quest or traversal locations.
+    // Each material family covers three authored areas within the 60-instance cap.
+    const FVector Anchors[5][3] = {
+        { FVector(-1900.0f,-1400.0f,0.0f), FVector(ShireLayout::FieldsX,-650.0f,0.0f),
+          FVector(ShireLayout::WoodedRoadX,650.0f,0.0f) },
+        { FVector(-1380.0f,260.0f,0.0f), FVector(22650.0f,-1220.0f,0.0f),
+          FVector(23950.0f,-1220.0f,0.0f) },
+        { FVector(ShireLayout::FieldsX,-650.0f,0.0f), FVector(ShireLayout::WoodedRoadX,650.0f,0.0f),
+          FVector(ShireLayout::FerryX,-650.0f,0.0f) },
+        { FVector(-1200.0f,1900.0f,0.0f), FVector(ShireLayout::WoodedRoadX,1400.0f,0.0f),
+          FVector(19000.0f,-1100.0f,0.0f) },
+        { FVector(-1950.0f,-750.0f,0.0f), FVector(500.0f,1000.0f,0.0f),
+          FVector(ShireLayout::FieldsX,600.0f,0.0f) }
     };
     const float Heights[] = {45.0f, 120.0f, 70.0f, 100.0f, 135.0f};
     int32 Families = 0;
     int32 Grounded = 0;
+    int32 MissingGround = 0;
+    int32 SteepGround = 0;
     for (int32 I = 0; I < CuratedNatureSources.Num(); ++I)
     {
         UHierarchicalInstancedStaticMeshComponent* Group = CuratedNatureGroups[I];
@@ -512,8 +521,8 @@ void AShirePrototypeWorldBuilder::OnCuratedNatureLayerReady()
         {
             const float Angle = FMath::DegreesToRadians(
                 static_cast<float>((J * 137 + I * 29) % 360));
-            const float Radius = 250.0f + 85.0f * static_cast<float>(J % 4);
-            const FVector Candidate = Anchors[I] +
+            const float Radius = 130.0f + 55.0f * static_cast<float>(J % 4);
+            const FVector Candidate = Anchors[I][J % 3] +
                 FVector(FMath::Cos(Angle) * Radius, FMath::Sin(Angle) * Radius, 0.0f);
             FHitResult Hit;
             FCollisionQueryParams Query(TEXT("P1C01CuratedNatureGround"), false, this);
@@ -521,6 +530,13 @@ void AShirePrototypeWorldBuilder::OnCuratedNatureLayerReady()
                     Hit, Candidate + FVector(0, 0, 1800),
                     Candidate - FVector(0, 0, 1500), ECC_Visibility, Query))
             {
+                ++MissingGround;
+                continue;
+            }
+            // Discard cliffs, vertical walls, and steep roof faces from decoration.
+            if (Hit.ImpactNormal.Z < 0.70f)
+            {
+                ++SteepGround;
                 continue;
             }
             const float MeshBottom = Bounds.Origin.Z - Bounds.BoxExtent.Z;
@@ -532,8 +548,8 @@ void AShirePrototypeWorldBuilder::OnCuratedNatureLayerReady()
         }
     }
     UE_LOG(LogTemp, Display,
-        TEXT("P1C01_CURATED_NATURE_WORLD families=%d grounded=%d max=60 collision=none async=1 PIE_device_visual=pending"),
-        Families, Grounded);
+        TEXT("P1C01_CURATED_NATURE_WORLD families=%d grounded=%d max=60 collision=none async=1 missingGround=%d steepGround=%d PIE_device_visual=pending"),
+        Families, Grounded, MissingGround, SteepGround);
 }
 
 void AShirePrototypeWorldBuilder::EndPlay(const EEndPlayReason::Type EndPlayReason)

@@ -3,6 +3,8 @@
 import pathlib
 import unittest
 
+from runtime_smoke import curated_nature_observation
+
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 CPP = ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp"
 HEADER = ROOT / "Source/ShireJourney/Public/World/ShirePrototypeWorldBuilder.h"
@@ -25,6 +27,28 @@ class CuratedNatureRuntimeContracts(unittest.TestCase):
         self.assertNotIn("LoadObject<", section)
         self.assertNotIn("LoadSynchronous", section)
         self.assertIn("bCuratedNatureRequested = true", section)
+
+    def test_multi_zone_traces_are_bounded_and_cull_preserved(self):
+        source = CPP.read_text(encoding="utf-8")
+        region = source.split("void AShirePrototypeWorldBuilder::OnCuratedNatureLayerReady()", 1)[1]
+        region = region.split("void AShirePrototypeWorldBuilder::EndPlay(", 1)[0]
+        self.assertIn("const FVector Anchors[5][3]", region)
+        self.assertIn("Anchors[I][J % 3]", region)
+        self.assertIn("Hit.ImpactNormal.Z < 0.70f", region)
+        self.assertIn("missingGround=%d steepGround=%d", region)
+        self.assertIn("J < 12", region)
+
+    def test_observation_is_truthful_and_not_pie_evidence(self):
+        observed = curated_nature_observation(
+            "P1C01_CURATED_NATURE_WORLD families=5 grounded=39 max=60 "
+            "collision=none async=1 missingGround=21 steepGround=0 PIE_device_visual=pending")
+        self.assertEqual("instanced_unreviewed", observed["status"])
+        self.assertEqual(39, observed["grounded"])
+        self.assertFalse(observed["visual_accepted"])
+        self.assertFalse(observed["pie_tested"])
+        self.assertEqual("optional_packages_absent", curated_nature_observation(
+            "P1C01_CURATED_NATURE_WORLD deferred=5 optional-packages-not-staged")["status"])
+        self.assertEqual("not_observed", curated_nature_observation("other log line")["status"])
 
     def test_existing_world_only_and_bound_grounded_instances(self):
         source = CPP.read_text(encoding="utf-8")
