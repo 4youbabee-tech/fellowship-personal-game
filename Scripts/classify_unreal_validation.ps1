@@ -8,6 +8,7 @@ function Set-Mode([string]$Mode, [string]$Reason, [string]$ParentSha, [string]$R
     $core = if ($Mode -eq "core" -or $Mode -eq "asset") { "true" } else { "false" }
     $asset = if ($Mode -eq "asset") { "true" } else { "false" }
     $acceptance = if ($Mode -eq "acceptance") { "true" } else { "false" }
+    $curated = if ($Mode -eq "curated") { "true" } else { "false" }
     # A full engine check cannot authorize a Windows cook/package by itself.
     $manualPackage = ($env:GITHUB_EVENT_NAME -eq "workflow_dispatch" -and
                       $env:SHIRE_EXPLICIT_CHAPTER_PACKAGE -eq "true")
@@ -16,6 +17,7 @@ function Set-Mode([string]$Mode, [string]$Reason, [string]$ParentSha, [string]$R
     }
     $package = if ($PackageRequired -and $manualPackage) { "true" } else { "false" }
 
+    Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_CURATED_REQUIRED=$curated"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_UNREAL_MODE=$Mode"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_FULL_UNREAL_REQUIRED=$full"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_CORE_UNREAL_REQUIRED=$core"
@@ -28,6 +30,7 @@ function Set-Mode([string]$Mode, [string]$Reason, [string]$ParentSha, [string]$R
     Add-Content -LiteralPath $env:GITHUB_ENV -Value ("SHIRE_RESET_INTERMEDIATES=" + ($(if($ResetIntermediates){"true"}else{"false"})))
 
     if (-not [string]::IsNullOrWhiteSpace([string]$env:GITHUB_OUTPUT)) {
+        Add-Content -LiteralPath $env:GITHUB_OUTPUT -Value "curated=$curated"
         Add-Content -LiteralPath $env:GITHUB_OUTPUT -Value "mode=$Mode"
         Add-Content -LiteralPath $env:GITHUB_OUTPUT -Value "full=$full"
         Add-Content -LiteralPath $env:GITHUB_OUTPUT -Value "core=$core"
@@ -40,7 +43,7 @@ function Set-Mode([string]$Mode, [string]$Reason, [string]$ParentSha, [string]$R
         Add-Content -LiteralPath $env:GITHUB_OUTPUT -Value ("reset_intermediates=" + ($(if($ResetIntermediates){"true"}else{"false"})))
     }
 
-    Write-Host "UNREAL_VALIDATION_DECISION mode=$Mode full=$full core=$core asset=$asset acceptance=$acceptance package=$package resume=$ResumeStage resetIntermediates=$ResetIntermediates parent=$ParentSha reason=$Reason"
+    Write-Host "UNREAL_VALIDATION_DECISION mode=$Mode curated=$curated full=$full core=$core asset=$asset acceptance=$acceptance package=$package resume=$ResumeStage resetIntermediates=$ResetIntermediates parent=$ParentSha reason=$Reason"
 }
 
 function Get-GitExe {
@@ -553,6 +556,34 @@ if ($LASTEXITCODE -ne 0) {
 }
 if ($LASTEXITCODE -ne 0 -or $changed.Count -eq 0) {
     Set-Mode "full" "delta-unavailable-no-automatic-package" $parentSha "none" $false $false
+    exit 0
+}
+
+# A source/editor-only P1C01 material/LOD bridge never needs a second
+# full C++ build or a broad runtime audit. Run the existing importer exactly
+# once inside the owner-authorized serialized Windows lane. Any unexpected
+# source, runtime or configuration change falls through to normal gates.
+$curatedAllowed = @(
+    "Scripts/p1c01_curated_ue_plan.py",
+    "Scripts/ue4_p1c01_curated_postimport.py",
+    "Scripts/test_p1c01_curated_ue_plan.py",
+    "Scripts/run_p1c01_curated_ue4.ps1",
+    "ShireJourney.uproject",
+    ".github/workflows/unreal-build-validation.yml",
+    ".github/workflows/pre-unreal-validation.yml",
+    "Scripts/classify_unreal_validation.ps1",
+    "Scripts/test_unreal_classifier.ps1",
+    "Scripts/drive_warehouse_sync.py",
+    "Scripts/test_drive_warehouse_sync.py"
+)
+$curatedChanged = @($changed | ForEach-Object { $_ -replace "\\","/" } |
+    Where-Object { -not $_.StartsWith("Docs/") })
+$curatedOnly = $curatedChanged.Count -gt 0 -and
+    ($curatedChanged -contains "Scripts/ue4_p1c01_curated_postimport.py") -and
+    @($curatedChanged | Where-Object { $curatedAllowed -notcontains $_ }).Count -eq 0
+if ($curatedOnly) {
+    $curatedChanged | ForEach-Object { Write-Host "CURATED_EDITOR_SOURCE_FILE $_" }
+    Set-Mode "curated" "owner-authorized-auto-windows-single-editor-curated-source" $parentSha
     exit 0
 }
 
