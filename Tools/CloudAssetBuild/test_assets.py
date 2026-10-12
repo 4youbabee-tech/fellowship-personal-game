@@ -56,13 +56,14 @@ class CloudShireAssetTests(unittest.TestCase):
                 and any(isinstance(t, ast.Name) and t.id == "MODELS" for t in n.targets)]
         self.assertEqual(len(rows), 1)
         models = ast.literal_eval(rows[0].value)
-        self.assertEqual(len(models), 27)
+        self.assertEqual(len(models), 41)
         self.assertEqual(len(set(models)), len(models))
         self.assertTrue({"BagEndFrontWall", "RoundRoomWallArc", "RoundRoomFloor",
                          "Hearth", "Bookcase", "HobbitBed", "WoodenFootbridge",
                          "PartyCanopy", "StonePath", "MillWheel",
                          "FerryLanding", "MooringPost", "WaymarkPost",
-                         "PartyBannerFrame", "GardenStoneBorder"}.issubset(models))
+                         "PartyBannerFrame", "GardenStoneBorder",
+                         "FerryQueueBench", "ReedPlanter", "OrchardCrate", "MarketStall", "MarketBasket", "HerbDryingRack", "RusticSign", "GrainSackStack", "WindowFlowerBox", "GateLantern", "BridgeRailing", "GardenTrellis", "FarmToolRack", "PartyServingCounter"}.issubset(models))
         # Validate family literals used by geometry primitives before the
         # expensive hosted Blender run; this guards the missing earth palette.
         palette_rows = [n for n in module.body
