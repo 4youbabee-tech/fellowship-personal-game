@@ -1,3 +1,6 @@
+## 2026-10-12 — UE4.27 MI factory compatibility
+**2026-10-12 UE4.27 MaterialInstanceConstantFactoryNew compatibility correction:** Epic's UE4.27 Python API does not expose `initial_parent` as an editor property on MaterialInstanceConstantFactoryNew. Do not write that unsupported property; create instance through the factory and call `unreal.MaterialEditingLibrary.set_material_instance_parent` (already supported and previously implemented). Offline mocked factory now rejects unsupported editor property setters to catch reintroduction. Exact-head Windows run, actual MI persisted bindings and visual/PIE/device proofs remain pending.
+
 **2026-10-12 P1C01 ten-source pinned-SHA intake integration:** Merge `develop@ddf2b89dd06fa10c276886b6792411bfbc62a950` (PR #418) into PR #415, keeping exact-head automatic curated UE4 writer. Ten-source Drive ingestion may use verified snapshot SHA256 when remote MD5 is unavailable. Original unlicensed source promotion, final UE import, PIE, visual and device acceptance remain gated by real evidence; the develop transfer Run 38225413271 was launched and its physical result must be read, not presumed.
 
 ## 2026-10-12 — Remote inventory quarantine to unblock automatic source intake

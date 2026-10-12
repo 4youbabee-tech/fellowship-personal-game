@@ -92,6 +92,10 @@ class MockInstance(MockObject):
     def set_editor_property(self, key, value): self.props[key] = value
     def get_editor_property(self, key): return self.props[key]
 
+class MockFactory:
+    def set_editor_property(self, key, value):
+        raise AssertionError('UNSUPPORTED_FACTORY_PROPERTY:' + str(key))
+
 class MockMesh(MockObject):
     def __init__(self, path=''):
         super().__init__(path)
@@ -114,7 +118,7 @@ class MockEngine:
     Texture2D = MockTexture
     MaterialInterface = MockMaster
     MaterialInstanceConstant = MockInstance
-    MaterialInstanceConstantFactoryNew = MockInstance
+    MaterialInstanceConstantFactoryNew = MockFactory
 
     class TextureCompressionSettings:
         TC_DEFAULT = 'TC_DEFAULT'

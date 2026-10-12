@@ -70,7 +70,8 @@ def finish_materials(unreal, root, plan):
             raise RuntimeError('P1C01_MATERIAL_PATH_OCCUPIED:' + path)
         if not instance:
             factory = unreal.MaterialInstanceConstantFactoryNew()
-            factory.set_editor_property('initial_parent', parent)
+            # UE4.27 Factory has no initial_parent editor property.
+            # Assign parent only through MaterialEditingLibrary below.
             instance = asset_tools.create_asset(
                 path.rsplit('/', 1)[1], path.rsplit('/', 1)[0],
                 unreal.MaterialInstanceConstant, factory)
