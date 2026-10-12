@@ -251,6 +251,10 @@ def editor_apply(unreal, root=ROOT):
     return report
 
 
-if __name__ == '__main__':
+# Execute only inside the owner-authorized Unreal Editor Python commandlet.
+# Unreal's file execution module naming varies with invocation; __name__ alone
+# is not a reliable production trigger. Offline tests import this module inertly.
+if os.environ.get('SHIRE_CURATED_EDITOR_RUN') == '1':
     import unreal
+    print('P1C01_CURATED_EDITOR_PYTHON_ENTERED', flush=True)
     editor_apply(unreal)

@@ -1,3 +1,6 @@
+## 2026-10-12 — Unreal Python commandlet invocation repair
+**2026-10-12 actual Windows UE4.27 import test Run 38226032895:** Existing ShireProductionImport commandlet completed `537 files, 0 failures` (2 minor tangent/binormal warnings), but `UE4Editor-Cmd -ExecutePythonScript` produced no Python entry or post-import receipt; fail reported `P1C01_CURATED_EDITOR_POSTIMPORT_RECEIPT_MISSING`. Follow Epic UE4.27 headless API: `-run=pythonscript -script=<file>` with explicit authorized environment entrypoint, stdout/abslog and targeted failure tail. No 21 MI/46 LOD success is claimed until next exact-head Windows receipt; old `537` file count is the legacy commandlet import only, not PIE/visual/device/scene acceptance.
+
 ## 2026-10-12 — UE4.27 MI factory compatibility
 **2026-10-12 UE4.27 MaterialInstanceConstantFactoryNew compatibility correction:** Epic's UE4.27 Python API does not expose `initial_parent` as an editor property on MaterialInstanceConstantFactoryNew. Do not write that unsupported property; create instance through the factory and call `unreal.MaterialEditingLibrary.set_material_instance_parent` (already supported and previously implemented). Offline mocked factory now rejects unsupported editor property setters to catch reintroduction. Exact-head Windows run, actual MI persisted bindings and visual/PIE/device proofs remain pending.
 

@@ -301,6 +301,20 @@ class CuratedPlanTests(unittest.TestCase):
 
 
 
+    def test_unreal_427_python_commandlet_has_non_silent_entrypoint(self):
+        root = Path(__file__).resolve().parents[1]
+        wrapper = (root/'Scripts/run_p1c01_curated_ue4.ps1').read_text(encoding='utf-8')
+        script = (root/'Scripts/ue4_p1c01_curated_postimport.py').read_text(encoding='utf-8')
+        self.assertIn("'-run=pythonscript'", wrapper)
+        self.assertIn('("-script=" + $script)', wrapper)
+        self.assertNotIn("-ExecutePythonScript=", wrapper)
+        self.assertIn("'-stdout'", wrapper)
+        self.assertIn('P1C01-Curated-EditorPython.log', wrapper)
+        self.assertIn("SHIRE_CURATED_EDITOR_RUN", wrapper)
+        self.assertIn("P1C01_CURATED_EDITOR_PYTHON_ENTERED", script)
+        self.assertIn("if os.environ.get('SHIRE_CURATED_EDITOR_RUN') == '1':", script)
+        self.assertNotIn("if __name__ == '__main__':", script)
+
     def test_auto_windows_curated_workflow_is_exact_head_and_single_writer(self):
         wf = (Path(__file__).resolve().parents[1] /
               '.github/workflows/unreal-build-validation.yml').read_text(encoding='utf-8')

@@ -3,7 +3,7 @@ param(
   [string]$Workspace = '',
   [string]$WarehouseRoot = 'D:\actions-runner\_warehouse\ShireJourney'
 )
-# Explicit manual owner-run UE4 source promotion. Does not dispatch a Workflow.
+# Owner-authorized exact-head automatic UE4 curated import. Single existing Windows writer.
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 if([string]::IsNullOrWhiteSpace($Workspace)) { $Workspace = Split-Path $PSScriptRoot -Parent }
@@ -43,10 +43,28 @@ try {
   $script = Join-Path $Workspace 'Scripts\ue4_p1c01_curated_postimport.py'
   $project = Join-Path $Workspace 'ShireJourney.uproject'
   $postreport = Join-Path $Workspace 'Saved\P1C01CuratedEditorPostImport\receipt.json'
+  $postlog = Join-Path $Workspace 'Saved\Logs\P1C01-Curated-EditorPython.log'
+  New-Item -Force -ItemType Directory -Path (Split-Path $postlog -Parent) | Out-Null
   if(Test-Path -LiteralPath $postreport) { Remove-Item -LiteralPath $postreport -Force }
-  & $editor $project ("-ExecutePythonScript=" + $script) '-unattended' '-nop4' '-nosplash' '-NoSound'
-  if($LASTEXITCODE -ne 0) { throw "P1C01_CURATED_EDITOR_POSTIMPORT_FAILED exit=$LASTEXITCODE" }
-  if(-not (Test-Path -LiteralPath $postreport -PathType Leaf)) { throw 'P1C01_CURATED_EDITOR_POSTIMPORT_RECEIPT_MISSING' }
+  if(Test-Path -LiteralPath $postlog) { Remove-Item -LiteralPath $postlog -Force }
+  # Epic UE4.27 headless commandlet contract. ExecutePythonScript full-editor
+  # option exited without running our script on the owner Windows runner.
+  $env:SHIRE_CURATED_EDITOR_RUN = '1'
+  try {
+    & $editor $project '-run=pythonscript' ("-script=" + $script) '-unattended' '-nop4' '-nosplash' '-NoSound' '-nullrhi' '-stdout' '-FullStdOutLogOutput' ("-abslog=" + $postlog)
+    $pythonExit = $LASTEXITCODE
+  } finally {
+    Remove-Item Env:\SHIRE_CURATED_EDITOR_RUN -ErrorAction SilentlyContinue
+  }
+  if($pythonExit -ne 0 -or -not (Test-Path -LiteralPath $postreport -PathType Leaf)) {
+    if(Test-Path -LiteralPath $postlog) {
+      Get-Content -LiteralPath $postlog -Tail 150 |
+        Where-Object { $_ -match 'LogPython|P1C01|Error:|Warning:' } |
+        Select-Object -Last 75 | ForEach-Object { Write-Host $_ }
+    }
+    if($pythonExit -ne 0) { throw "P1C01_CURATED_PYTHON_COMMANDLET_FAILED exit=$pythonExit" }
+    throw 'P1C01_CURATED_EDITOR_POSTIMPORT_RECEIPT_MISSING'
+  }
   $obs = Get-Content -LiteralPath $postreport -Raw | ConvertFrom-Json
   if($obs.target_sha -ne $ExpectedSha -or $obs.static_meshes_with_verified_lods -ne 34 -or
      $obs.imported_authored_sidecar_lods -ne 46 -or $obs.configured_packed_textures -ne 63 -or
@@ -55,7 +73,7 @@ try {
      $obs.exact_nature_single_slot_bindings -ne 8 -or
      $obs.physically_persisted_uasset_checks -ne 118 -or
      $obs.gate6_7_closed -ne $false) { throw 'P1C01_CURATED_EDITOR_POSTIMPORT_EVIDENCE_INVALID' }
-  Write-Host "P1C01_CURATED_MANUAL_UE4_PASS sha=$ExpectedSha meshes=34 lods=46 textures=63 instances=21 nature_slots=8 report=$postreport"
+  Write-Host "P1C01_CURATED_AUTOMATIC_UE4_PASS sha=$ExpectedSha meshes=34 lods=46 textures=63 instances=21 nature_slots=8 report=$postreport"
   Write-Host 'P1C01_GATE67_OPEN needs=tree-multislot-architecture-collision-world-placement-PIE-package-device-human-review'
 } finally {
   $env:GITHUB_WORKSPACE = $oldWorkspace
