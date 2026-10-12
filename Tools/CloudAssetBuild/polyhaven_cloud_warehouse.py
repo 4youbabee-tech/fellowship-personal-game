@@ -99,6 +99,13 @@ def verify(out):
     img.verify()
    count+=1
  if count!=rec["physical_png"]:raise ValueError("COUNT_MISMATCH")
+ if rec["staged"]!=len(rec["materials"]) or count!=3*len(rec["materials"]):raise ValueError("TRIPLET_COUNT_MISMATCH")
+ for material in rec["materials"]:
+  if material.get("license")!="CC0" or not material.get("source_page","").startswith("https://polyhaven.com/a/"):raise ValueError("LICENSE_PROVENANCE_MISSING")
+  if set(x["kind"] for x in material["outputs"])!={"BaseColor","NormalDX","ORM"}:raise ValueError("INCOMPLETE_TRIPLET")
+  for source in material["source_maps"]:
+   urlcheck(source["url"])
+   if len(source["sha256"])!=64 or source["bytes"]<=0:raise ValueError("SOURCE_MAP_PROVENANCE_BAD")
  print("CLOUD_CC0_SHA256_PASS physical_png="+str(count))
 def main():
  p=argparse.ArgumentParser();p.add_argument("--out",required=True);p.add_argument("--shard",type=int,required=True);p.add_argument("--verify-only",action="store_true")
