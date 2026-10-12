@@ -332,7 +332,8 @@ class CuratedPlanTests(unittest.TestCase):
         initial = engine.EditorAssetLibrary.load_asset
         def load(path):
             value = initial(path)
-            if path.endswith('SM_Sh_flower_wild_LOD0'):
+            if path.endswith('SM_Sh_flower_wild_LOD0') and len(value.materials) == 1:
+                # Preserve material assignments when the fake registry reloads.
                 value.materials = [None, None]
                 value.get_editor_property = (lambda key: [
                     MockSlot('Wildflower'), MockSlot('Stem')])
