@@ -1,3 +1,6 @@
+## 2026-10-12 — Drive metadata quarantine
+**2026-10-12 automatic Drive inventory fix (source candidate):** Scheduled Drive run 38191426114 failed on `DRIVE_OBJECT_CHECKSUM_OR_PATH_INVALID`. Quarantine an individual ZIP lacking rclone MD5 so valid files continue; do not accept that file into the trusted source inventory. Required ten-archive physical MD5/SHA/CRC verification and all Unreal/license/Gate 6/7 boundaries remain unchanged. GitHub-hosted regression needed on exact commit; neither transfer nor import is claimed here.
+
 **2026-10-12 Whole-map material readiness checkpoint:** Added source-level guardrails for all 28 region packets plus the P1C01 curated Shire batch. Current source readiness remains strongest for Shire/Hobbiton/Bag End; later regions are still production packets and material-prep targets, not opened runtime chapters.\n\n**2026-10-12 P1C01 runtime stability integration:** LivingWorldDirector now snapshots global population density defaults before chapter overrides and restores them when a chapter lacks a profile; ShirePlayerCharacter suppresses only headless audit auto-checkpoint retry noise while preserving gameplay checkpointing and explicit disk roundtrip audits.
 
 ## 2026-10-12 — W01/P1C01 original Shire FBX/PNG staging (registered before engine integration)
