@@ -1,0 +1,70 @@
+name: Hosted Branch Safety and Player Route Static Audit
+on:
+  pull_request:
+    branches: [develop]
+    paths:
+      - 'Scripts/audit_p1c01_player_experience.py'
+      - 'Scripts/hosted_branch_safety_cleanup.py'
+      - '.github/workflows/hosted-governance-route-audit.yml'
+  push:
+    branches: [develop]
+    paths:
+      - '.github/workflows/hosted-governance-route-audit.yml'
+      - 'Scripts/audit_p1c01_player_experience.py'
+      - 'Scripts/hosted_branch_safety_cleanup.py'
+permissions:
+  contents: read
+jobs:
+  player_route_static:
+    name: P1C01 interaction save and ferry static gap report
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Governor and Python contract
+        run: |
+          python3 Scripts/governor_work_start.py --lane VISUAL_WORLD_PREP
+          python3 -m py_compile Scripts/audit_p1c01_player_experience.py Scripts/hosted_branch_safety_cleanup.py
+      - name: Emit explicit unverified player-journey issues
+        run: |
+          python3 Scripts/audit_p1c01_player_experience.py --out _BuildArtifacts/player-route-audit.json
+          python3 - <<'PY'
+          import json
+          p=json.load(open('_BuildArtifacts/player-route-audit.json'))
+          assert p['mode']=='STATIC_GAP_AUDIT_ONLY'
+          assert p['gate6_closed'] is False and p['gate7_closed'] is False
+          assert len(p['findings']) >= 4
+          assert all(x['acceptance'] for x in p['findings'])
+          print('P1C01_ROUTE_REPORT_STATIC_PASS unverified_findings=',len(p['findings']))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: p1c01-player-route-static-gaps
+          path: _BuildArtifacts/player-route-audit.json
+          retention-days: 30
+          if-no-files-found: error
+  safe_branch_cleanup:
+    name: Delete only provably merged orphan branches (hosted)
+    if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      contents: write
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Audit live refs and purge merged-only orphan refs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH_AUDIT_PATH: branch-audit.json
+        run: |
+          python3 Scripts/hosted_branch_safety_cleanup.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hosted-branch-safety-deletion-receipt
+          path: branch-audit.json
+          retention-days: 30
+          if-no-files-found: warn
