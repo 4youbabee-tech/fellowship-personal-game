@@ -56,11 +56,13 @@ class CloudShireAssetTests(unittest.TestCase):
                 and any(isinstance(t, ast.Name) and t.id == "MODELS" for t in n.targets)]
         self.assertEqual(len(rows), 1)
         models = ast.literal_eval(rows[0].value)
-        self.assertEqual(len(models), 22)
+        self.assertEqual(len(models), 27)
         self.assertEqual(len(set(models)), len(models))
         self.assertTrue({"BagEndFrontWall", "RoundRoomWallArc", "RoundRoomFloor",
                          "Hearth", "Bookcase", "HobbitBed", "WoodenFootbridge",
-                         "PartyCanopy", "StonePath", "MillWheel"}.issubset(models))
+                         "PartyCanopy", "StonePath", "MillWheel",
+                         "FerryLanding", "MooringPost", "WaymarkPost",
+                         "PartyBannerFrame", "GardenStoneBorder"}.issubset(models))
         # Validate family literals used by geometry primitives before the
         # expensive hosted Blender run; this guards the missing earth palette.
         palette_rows = [n for n in module.body
@@ -82,6 +84,8 @@ class CloudShireAssetTests(unittest.TestCase):
         self.assertIn("UCX_", source)
         self.assertIn("FBX_VERSION_NOT_7400", source)
         self.assertIn("collision_groups", source)
+        self.assertIn('"fbx_count": len(meshes)', source)
+        self.assertIn('"FerryLanding": draw_ferry_landing', source)
         self.assertNotIn('version="BIN7400"', source)
         self.assertIn("safe_bevel = min(bevel, min(scale) * 0.16)", source)
 

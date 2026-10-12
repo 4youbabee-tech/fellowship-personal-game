@@ -13,7 +13,8 @@ from materials import REGION_PLAN, REGION_FAMILIES, SURFACES, sha256, validate_c
 REQUIRED_MESHES = {"RoundDoor", "PicketFence", "PartyTable", "GardenCart",
                    "RoundWindow", "GardenHedge", "OakTree", "StorageBarrel",
                    "FarmGate", "GardenPlanter",
-                   "BagEndFrontWall", "RoundRoomWallArc", "RoundRoomFloor", "Hearth", "Bookcase", "HobbitBed", "WoodenFootbridge", "MillWheel", "PartyCanopy", "StonePath", "LanternPost", "VillageWell"}
+                   "BagEndFrontWall", "RoundRoomWallArc", "RoundRoomFloor", "Hearth", "Bookcase", "HobbitBed", "WoodenFootbridge", "MillWheel", "PartyCanopy", "StonePath", "LanternPost", "VillageWell",
+                   "FerryLanding", "MooringPost", "WaymarkPost", "PartyBannerFrame", "GardenStoneBorder"}
 
 
 def validate(out: Path, require_meshes: bool = True):
@@ -53,7 +54,12 @@ def validate(out: Path, require_meshes: bool = True):
         mesh_receipt = json.loads((out / "fbx_receipt.json").read_text(encoding="utf-8"))
         assert mesh_receipt["runtime_imported"] is False and mesh_receipt["skeletal_or_animated"] is False
         objects = mesh_receipt["objects"]
-        assert len(objects) == 2 * len(REQUIRED_MESHES) and mesh_receipt["asset_count"] == len(REQUIRED_MESHES)
+        assert len(REQUIRED_MESHES) == 27
+        assert len(objects) == 54 and mesh_receipt["fbx_count"] == 54
+        assert mesh_receipt["asset_count"] == len(REQUIRED_MESHES)
+        assert len({x["path"] for x in objects}) == 54
+        assert len(list((out / "meshes").glob("*.fbx"))) == 54
+        assert mesh_receipt["status"] == "GENERATED_BINARY_FBX_BLENDER_REIMPORT_QC"
         assert {x["asset"] for x in objects} == REQUIRED_MESHES
         assert {(x["asset"], x["lod"]) for x in objects} == {
             (asset, lod) for asset in REQUIRED_MESHES for lod in (0, 1)}
@@ -61,7 +67,12 @@ def validate(out: Path, require_meshes: bool = True):
             path = (out / x["path"]).resolve()
             assert path.is_relative_to(out) and path.is_file()
             assert x["sha256"] == sha256(path) and x["bytes"] == path.stat().st_size
-            assert path.open("rb").read(22).startswith(b"Kaydara FBX Binary")
+            with path.open("rb") as stream:
+                header = stream.read(27)
+            assert path.stat().st_size > 1024
+            assert header.startswith(b"Kaydara FBX Binary")
+            assert int.from_bytes(header[23:27], "little") == 7400
+            assert x["export_format"] == "FBX_BINARY_7400"
             assert 0 < x["reimport_polygons"] <= 15000
             assert x["reimport_uv_layers"] >= 1
             assert x["collider_count"] >= 1
@@ -81,6 +92,13 @@ def validate(out: Path, require_meshes: bool = True):
             if x["asset"] == "PartyCanopy":
                 assert len(x["ucx_boxes"]) == 4
                 assert all(abs(b["center_m"][0]) > 1.8
+                           for b in x["ucx_boxes"])
+            if x["asset"] == "FerryLanding":
+                assert x["collider_count"] == 1
+                assert x["ucx_boxes"][0]["dimensions_m"][2] <= 0.25
+            if x["asset"] == "PartyBannerFrame":
+                assert x["collider_count"] == 2
+                assert all(abs(b["center_m"][0]) >= 1.5
                            for b in x["ucx_boxes"])
             assert 1 <= x["material_slots"] <= 6
         print(f"CLOUD_ASSET_STATIC_VALIDATION_PASS materials=12 textures=36 region_bindings=28 binary_fbx={len(objects)}")

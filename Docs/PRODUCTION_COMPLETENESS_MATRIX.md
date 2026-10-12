@@ -3833,3 +3833,11 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | develop / main / archive | PRESERVED |
 | Edoras prep refs | PRESERVED |
 | Runtime or Gate 6/7 effect | NONE |
+
+
+## 2026-10-12 - P1C01 cloud-source 54 FBX candidate (source-only)
+
+- Current develop cloud source producer exports 22 modular static mesh families x LOD0/LOD1 = 44 binary FBX; target in this candidate is 27 x 2 = 54. The five newly prepared families are FerryLanding, MooringPost, WaymarkPost, PartyBannerFrame and GardenStoneBorder, bounded to the already-authorized Shire / Party Field / Bucklebury Ferry visual needs.
+- Use the existing CloudAssetBuild Blender generator, material receipt, 28-region original PNG/ORM pack, UCX collision and Blender FBX reimport; no new source manager or runtime owner. Open passage and walkable ferry deck retain narrowly scoped UCX collision geometry.
+- Fail closed on 54 distinct physical files, FBX binary version 7400, exact SHA256/bytes, real reimport geometry and UVs, and 27 x 2 identity coverage. This is a candidate until exact-head GitHub-hosted Blender job and artifact are observed.
+- Warehouse promotion, UE4 importer / Content/Production persistence, package/PIE, screenshots, DX11 device FPS, human visual and Gate 6/7 acceptance remain separate and UNPROVEN. One warehouse writer and one UE4 runtime writer remain authoritative. No P1C02 runtime activation.
