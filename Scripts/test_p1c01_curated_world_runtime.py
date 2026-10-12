@@ -39,6 +39,10 @@ class CuratedNatureRuntimeContracts(unittest.TestCase):
         self.assertIn("missingGround=%d steepGround=%d", region)
         self.assertIn("I < 5 ? 12 : 8", region)
         self.assertIn("max=92", region)
+        self.assertIn("P1C01_CURATED_NATURE_FAMILY index=%d", region)
+        self.assertIn("materialSlots=%d", region)
+        self.assertIn("FamilyGrounded", region)
+        self.assertIn("Mesh->GetStaticMaterials().Num()", region)
 
     def test_observation_is_truthful_and_not_pie_evidence(self):
         observed = curated_nature_observation(
