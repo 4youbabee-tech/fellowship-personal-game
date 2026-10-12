@@ -84,6 +84,16 @@ class PhysicalWarehouseAuditTests(unittest.TestCase):
         self.assertEqual(result["state"], "SOURCE_QC_FAILED")
         self.assertTrue(any("SIZE_MISMATCH" in row["reason"] for row in result["errors"]))
 
+    def test_local_md5_with_pinned_sha_is_explicitly_distinguished(self):
+        _, path = self.add(A)
+        record = json.loads(path.read_text())
+        record["remote_md5_source"] = "LOCAL_CALCULATED_PINNED_SHA256"
+        path.write_text(json.dumps(record))
+        result = self.assess()
+        self.assertEqual(result["state"], "SOURCE_QC_PASS_IMPORT_BLOCKED")
+        self.assertEqual(result["archive_rows"][0]["md5_provenance"],
+                         "LOCAL_CALCULATED_PINNED_SHA256")
+
     def test_remote_md5_disagreement_fails(self):
         _, path = self.add(A)
         record = json.loads(path.read_text())

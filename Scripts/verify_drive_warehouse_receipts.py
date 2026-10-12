@@ -160,7 +160,10 @@ def assess(warehouse, snapshot, required_count=10):
                          and r.get("sha256") == item["sha256"]), -1):
                     raise ValueError("ZIP_RECEIPT_ENTRY_COUNT_MISMATCH")
                 digested_members.extend(member_hashes(archive, name))
+            receipt_match = next(r for r in records if r.get("remote_id") == remote_id
+                                 and r.get("sha256") == item["sha256"])
             row.update({"remote_id": remote_id, "local_md5": remote_md5,
+                        "md5_provenance": receipt_match.get("remote_md5_source", "REMOTE_VERIFIED"),
                         "physical_qc": "PASS", "archive_members": qc["members"],
                         "fbx_formats": qc["fbx_formats"], "material_receipt": qc["receipt"]})
         except (ValueError, OSError, KeyError, zipfile.BadZipFile) as err:
@@ -198,7 +201,7 @@ def assess(warehouse, snapshot, required_count=10):
         "verified_archive_count": sum(a["physical_qc"] == "PASS" for a in actual),
         "expected_archive_count": len(expected),
         "archive_rows": actual,
-        "sha256_and_remote_md5": "PER_FILE_PHYSICALLY_COMPARED_TO_RECEIPTS",
+        "sha256_and_remote_md5": "PINNED_SHA256_AND_LOCAL_MD5;REMOTE_MD5_IF_AVAILABLE",
         "asset_inventory": dict(sorted(counts.items())),
         "distinct_content_hash_count": len(hashes),
         "duplicate_groups": dupes,

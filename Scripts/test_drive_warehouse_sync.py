@@ -1,5 +1,7 @@
 import io
+import hashlib
 import json
+import shutil
 import tempfile
 import unittest
 import zipfile
@@ -49,6 +51,60 @@ class DriveWarehouseTests(unittest.TestCase):
         self.assertIn("--rclone-bin $rclone.Source", workflow)
         self.assertNotIn("winget install", workflow)
         self.assertNotIn("--mode cleanup", workflow)
+
+    def test_pinned_missing_remote_md5_downloads_only_on_matching_sha256(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "warehouse"
+            root.mkdir()
+            source = Path(temp) / "known.zip"
+            with zipfile.ZipFile(source, "w") as z:
+                z.writestr("Mesh/valid.fbx", b"KayKit-or-owner-source")
+            raw = source.read_bytes()
+            digest = hashlib.sha256(raw).hexdigest()
+            rel = "02_Shire_P1C01/known.zip"
+            record = {"Path": rel, "ID": "1Abcdefghi12345",
+                      "Size": len(raw), "Hashes": {}}
+            pin = {rel: {"sha256": digest, "byte_size": len(raw)}}
+            def fake_rclone(_binary, _config, *args):
+                if args[0] == "lsjson":
+                    return json.dumps([record])
+                if args[0] == "copyto":
+                    shutil.copyfile(source, args[-1])
+                    return ""
+                raise AssertionError("Unexpected operation")
+            with patch.object(d, "pinned_archives", return_value=pin), (
+                 patch.object(d, "run_rclone", side_effect=fake_rclone)):
+                d.ingest("rclone", Path("rclone.conf"), "shirecloud", root, 10)
+            receipts = list((root / "_drive_temp_staging" / "receipts").glob("*.json"))
+            self.assertEqual(len(receipts), 1)
+            saved = json.loads(receipts[0].read_text())
+            self.assertEqual(saved["sha256"], digest)
+            self.assertEqual(saved["remote_md5_source"], "LOCAL_CALCULATED_PINNED_SHA256")
+            self.assertEqual(saved["license_status"], "UNVERIFIED_NOT_IMPORTABLE")
+            self.assertTrue(Path(saved["local_path"]).is_file())
+
+    def test_pinned_changed_bytes_do_not_enter_warehouse(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "warehouse"
+            root.mkdir()
+            rel = "02_Shire_P1C01/known.zip"
+            valid = b"original"
+            record = {"Path": rel, "ID": "1Abcdefghi12345",
+                      "Size": len(valid), "Hashes": {}}
+            pin = {rel: {"sha256": hashlib.sha256(valid).hexdigest(),
+                         "byte_size": len(valid)}}
+            def fake_rclone(_binary, _config, *args):
+                if args[0] == "lsjson":
+                    return json.dumps([record])
+                if args[0] == "copyto":
+                    Path(args[-1]).write_bytes(b"tampered")
+                    return ""
+                raise AssertionError("Unexpected operation")
+            with patch.object(d, "pinned_archives", return_value=pin), (
+                 patch.object(d, "run_rclone", side_effect=fake_rclone)):
+                with self.assertRaisesRegex(RuntimeError, "DRIVE_PINNED_SHA256_MISMATCH"):
+                    d.ingest("rclone", Path("rclone.conf"), "shirecloud", root, 10)
+            self.assertFalse(list((root / "_drive_temp_staging" / "receipts").glob("*.json")))
 
     def test_bad_md5_is_quarantined_without_stopping_other_eligible_archives(self):
         entry={"Path":"02_Shire_P1C01/nature.zip","ID":"1Abcdefghi12345","Size":100,"Hashes":{}}
