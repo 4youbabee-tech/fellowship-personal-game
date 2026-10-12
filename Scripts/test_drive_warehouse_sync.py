@@ -50,8 +50,11 @@ class DriveWarehouseTests(unittest.TestCase):
         self.assertNotIn("winget install", workflow)
         self.assertNotIn("--mode cleanup", workflow)
 
-    def test_bad_md5_fails_closed(self):
+    def test_bad_md5_is_quarantined_without_stopping_other_eligible_archives(self):
         entry={"Path":"02_Shire_P1C01/nature.zip","ID":"1Abcdefghi12345","Size":100,"Hashes":{}}
+        valid={**entry,"Path":"02_Shire_P1C01/valid.zip","Hashes":{"MD5":"a"*32}}
+        with patch.object(d,"run_rclone",return_value=json.dumps([entry,valid])):
+            self.assertEqual(d.inventory("rclone",Path("x"),"shirecloud"),[valid])
         with patch.object(d,"run_rclone",return_value=json.dumps([entry])):
-            with self.assertRaisesRegex(RuntimeError,"CHECKSUM"): d.inventory("rclone",Path("x"),"shirecloud")
+            self.assertEqual(d.inventory("rclone",Path("x"),"shirecloud"),[])
 if __name__=="__main__": unittest.main()

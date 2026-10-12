@@ -572,7 +572,9 @@ $curatedAllowed = @(
     ".github/workflows/unreal-build-validation.yml",
     ".github/workflows/pre-unreal-validation.yml",
     "Scripts/classify_unreal_validation.ps1",
-    "Scripts/test_unreal_classifier.ps1"
+    "Scripts/test_unreal_classifier.ps1",
+    "Scripts/drive_warehouse_sync.py",
+    "Scripts/test_drive_warehouse_sync.py"
 )
 $curatedChanged = @($changed | ForEach-Object { $_ -replace "\\","/" } |
     Where-Object { -not $_.StartsWith("Docs/") })

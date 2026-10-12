@@ -82,7 +82,12 @@ def inventory(binary, config, remote):
         if not FILE_ID.fullmatch(f.get("ID", "")) or type(size) is not int or not 0 < size <= 1024 ** 3:
             raise RuntimeError("DRIVE_OBJECT_ID_OR_SIZE_INVALID")
         if not re.fullmatch(r"[0-9a-f]{32}", md5) or "\\" in f["Path"]:
-            raise RuntimeError("DRIVE_OBJECT_CHECKSUM_OR_PATH_INVALID")
+            # Do not block every eligible source because one other remote ZIP
+            # lacks a Drive MD5. Quarantine this file; the ten-archive physical
+            # QC still rejects any missing required source.
+            print("DRIVE_OBJECT_QUARANTINED reason=missing-md5-or-invalid-path name=" +
+                  repr(f["Path"]))
+            continue
         result.append(f)
     return sorted(result, key=lambda x: (x["Path"], x["ID"]))
 
