@@ -94,6 +94,26 @@ class CloudShireAssetTests(unittest.TestCase):
         self.assertIn("Tools/CloudAssetBuild/validate_bundle.py --out", workflow)
         self.assertEqual(workflow.count("runs-on: ubuntu-latest"), 2)
 
+    def test_shire_nature_tree_catalog_expands_without_runtime_claim(self):
+        import ast
+        source = (ROOT / "Tools/CloudAssetBuild/blender_nature.py").read_text(encoding="utf-8")
+        module = ast.parse(source)
+        rows = [n for n in module.body
+                if isinstance(n, ast.Assign)
+                and any(isinstance(t, ast.Name) and t.id == "FAMILIES" for t in n.targets)]
+        self.assertEqual(len(rows), 1)
+        families = ast.literal_eval(rows[0].value)
+        self.assertEqual(len(families), 18)
+        self.assertEqual(len(set(families)), 18)
+        self.assertTrue({"tree_birch", "tree_beech", "tree_party_oak",
+                         "tree_lane_poplar", "orchard_cluster",
+                         "shrub_blackberry"}.issubset(families))
+        workflow = (ROOT / ".github/workflows/p1c01-hosted-nature-lods.yml").read_text(encoding="utf-8")
+        self.assertIn("families=18 files=54", workflow)
+        self.assertIn("assert obj['families']==18", workflow)
+        self.assertIn("assert len(obj['objects'])==54", workflow)
+        self.assertIn("No UE4, PIE, self-hosted, Windows Cook, packaging or device-FPS tasks.", workflow)
+
 
 if __name__ == "__main__":
     unittest.main()
