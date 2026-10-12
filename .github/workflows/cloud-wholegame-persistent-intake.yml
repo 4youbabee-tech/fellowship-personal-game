@@ -2,10 +2,10 @@ name: Cloud Whole-game 138 FBX Persistent Source Warehouse
 on:
   pull_request:
     branches: [develop]
-    paths: ['Scripts/stage_cloud_wholegame_source.py', 'Scripts/test_stage_cloud_wholegame_source.py', 'Data/CloudWholeGameSourceArtifactPinV1.json', '.github/workflows/cloud-wholegame-persistent-intake.yml']
+    paths: ['Scripts/stage_cloud_wholegame_source.py', 'Scripts/test_stage_cloud_wholegame_source.py', 'Data/CloudWholeGameSourceArtifactPinV1.json', '.github/workflows/cloud-wholegame-persistent-intake.yml', 'Scripts/cloud138_unreal_intake.py', 'Scripts/test_cloud138_unreal_intake.py']
   push:
     branches: [develop]
-    paths: ['Scripts/stage_cloud_wholegame_source.py', 'Scripts/test_stage_cloud_wholegame_source.py', 'Data/CloudWholeGameSourceArtifactPinV1.json', '.github/workflows/cloud-wholegame-persistent-intake.yml']
+    paths: ['Scripts/stage_cloud_wholegame_source.py', 'Scripts/test_stage_cloud_wholegame_source.py', 'Data/CloudWholeGameSourceArtifactPinV1.json', '.github/workflows/cloud-wholegame-persistent-intake.yml', 'Scripts/cloud138_unreal_intake.py', 'Scripts/test_cloud138_unreal_intake.py']
 permissions:
   contents: read
   actions: read
@@ -66,5 +66,89 @@ jobs:
         with:
           name: cloud-wholegame-source-receipt-${{ github.sha }}
           path: D:\actions-runner\_warehouse\ShireJourney\_original_cloud_wholegame\1e1e5c9df5aeee75e130eed7891fdfb7b129c9fc\warehouse_receipt.json
+          if-no-files-found: warn
+          retention-days: 30
+
+  shire_unreal_intake:
+    name: P1C01 original Shire source to UE4 persisted assets
+    needs: single_writer_stage
+    if: github.event_name == 'push'
+    runs-on: [self-hosted, Windows, X64, ue4-27]
+    timeout-minutes: 90
+    env:
+      WAREHOUSE_ROOT: 'D:\actions-runner\_warehouse\ShireJourney'
+      TARGET_SHA: ${{ github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          lfs: false
+      - name: Verify exact head, governor and immutable source stage
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ((git rev-parse HEAD).Trim() -ne $env:TARGET_SHA) { throw 'CLOUD138_HEAD_DRIFT' }
+          python Scripts/governor_work_start.py --lane RUNTIME_BUILD
+          if ($LASTEXITCODE -ne 0) { throw 'CLOUD138_GOVERNOR_BLOCK' }
+          if (Get-Process -Name UE4Editor,UE4Editor-Cmd -ErrorAction SilentlyContinue) { throw 'CLOUD138_EDITOR_BUSY' }
+          python Scripts/cloud138_unreal_intake.py stage --workspace "$env:GITHUB_WORKSPACE" --warehouse-root "$env:WAREHOUSE_ROOT" --pin Data/CloudWholeGameSourceArtifactPinV1.json
+          if ($LASTEXITCODE -ne 0) { throw 'CLOUD138_STAGE_FAIL' }
+          python Scripts/cloud138_unreal_intake.py preflight --workspace "$env:GITHUB_WORKSPACE"
+          if ($LASTEXITCODE -ne 0) { throw 'CLOUD138_HASH_FAIL' }
+      - name: Build and existing production commandlet import
+        shell: cmd
+        run: |
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\prepare_runtime_source_layout.ps1"
+          if errorlevel 1 exit /b 41
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\repair_ue_engine_content_acl.ps1"
+          if errorlevel 1 exit /b 42
+          call "%GITHUB_WORKSPACE%\Scripts\ci_verify_unreal.cmd"
+          if errorlevel 1 exit /b 43
+          call "%GITHUB_WORKSPACE%\Scripts\ci_wait_for_unreal_editor.cmd"
+          if errorlevel 1 exit /b 44
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\prepare_msvc_environment.ps1"
+          if errorlevel 1 exit /b 45
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\verify_runtime_source_workspace.ps1"
+          if errorlevel 1 exit /b 46
+          call "%GITHUB_WORKSPACE%\Scripts\ci_build_unreal.cmd"
+          if errorlevel 1 exit /b 47
+          call "%GITHUB_WORKSPACE%\Scripts\ci_import_production_assets.cmd"
+          if errorlevel 1 exit /b 48
+      - name: UE4 original LOD and PBR postimport then fresh process reopen
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $exe = 'C:\Program Files\Epic Games\UE_4.27\Engine\Binaries\Win64\UE4Editor-Cmd.exe'
+          $project = Join-Path $env:GITHUB_WORKSPACE 'ShireJourney.uproject'
+          $script = Join-Path $env:GITHUB_WORKSPACE 'Scripts\cloud138_unreal_intake.py'
+          foreach ($mode in @('editor','reopen')) {
+            $receipt = Join-Path $env:GITHUB_WORKSPACE ("Saved\Cloud138Unreal\" + $mode + '.json')
+            $log = Join-Path $env:GITHUB_WORKSPACE ("Saved\Logs\Cloud138-" + $mode + '.log')
+            $env:SHIRE_CLOUD138_EDITOR_MODE = $mode
+            try {
+              & $exe $project '-run=pythonscript' ("-script=" + $script) '-unattended' '-nop4' '-nosplash' '-NoSound' '-nullrhi' '-stdout' ("-abslog=" + $log)
+              $code = $LASTEXITCODE
+            } finally { Remove-Item Env:\SHIRE_CLOUD138_EDITOR_MODE -ErrorAction SilentlyContinue }
+            if ($code -ne 0 -or -not (Test-Path -LiteralPath $receipt -PathType Leaf)) {
+              if (Test-Path -LiteralPath $log) { Get-Content -LiteralPath $log -Tail 100 }
+              throw "CLOUD138_UNREAL_FAIL mode=$mode code=$code"
+            }
+          }
+      - name: Store verified UE packages on D with SHA256
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          python Scripts/cloud138_unreal_intake.py persist --workspace "$env:GITHUB_WORKSPACE" --warehouse-root "$env:WAREHOUSE_ROOT" --pin Data/CloudWholeGameSourceArtifactPinV1.json
+          if ($LASTEXITCODE -ne 0) { throw 'CLOUD138_UASSET_PERSIST_FAIL' }
+      - name: Upload UE persistence evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cloud138-ue-intake-${{ github.sha }}
+          path: |
+            D:\actions-runner\_warehouse\ShireJourney\_unreal_cloud138\1e1e5c9df5aeee75e130eed7891fdfb7b129c9fc\unreal_receipt.json
+            Saved\Cloud138Unreal\*.json
+            Saved\Logs\Cloud138-*.log
           if-no-files-found: warn
           retention-days: 30
