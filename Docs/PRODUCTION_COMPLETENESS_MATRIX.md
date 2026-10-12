@@ -1,4 +1,16 @@
-## 2026-10-13 - P1C01 micro-event retry + readable response (candidate)\n\n| Funnel | This change | Proof/remaining gate |\n|---|---:|---|\n| New unique physical source FBX/PNG | 0 | Runtime code only; PR #443's 20 successful source shards are separate and not counted as new in this patch |\n| New persistent Warehouse files | 0 | No Warehouse transfer performed |\n| New persisted UE4 .uasset imports | 0 | No Windows/Unreal import performed |\n| New placed visual actors | 0 | Existing pooled world interactions only; no placement proof |\n| Gameplay behavior fixes | 2 source-level changes | Transient danger refusal no longer consumes event; prompt and response use distinct HUD slots; offline regression + exact-head CI candidate |\n| UE4 compile / PIE / target device / visual | PENDING | Must confirm at UE4.27.2 and P1C01, then review live scene and 720p target |\n| Source production separately observed | 20/20 successful shards | PR #443 Run 38313998425 has 20 uploaded shard receipt artifacts x 50 FBX; no cross-shard uniqueness, license review, Warehouse or gameplay conversion proof |\n\n## 2026-10-12 - P1C01 off-runner source asset Batch 01
+## 2026-10-13 - P1C01 micro-event retry + readable response (candidate)
+
+| Funnel | This change | Proof/remaining gate |
+|---|---:|---|
+| New unique physical source FBX/PNG | 0 | Runtime code only; PR #443's 20 successful source shards are separate and not counted as new in this patch |
+| New persistent Warehouse files | 0 | No Warehouse transfer performed |
+| New persisted UE4 .uasset imports | 0 | No Windows/Unreal import performed |
+| New placed visual actors | 0 | Existing pooled world interactions only; no placement proof |
+| Gameplay behavior fixes | 2 source-level changes | Transient danger refusal no longer consumes event; prompt and response use distinct HUD slots; offline regression + exact-head CI candidate |
+| UE4 compile / PIE / target device / visual | PENDING | Must confirm at UE4.27.2 and P1C01, then review live scene and 720p target |
+| Source production separately observed | 20/20 successful shards | PR #443 Run 38313998425 has 20 uploaded shard receipt artifacts x 50 FBX; no cross-shard uniqueness, license review, Warehouse or gameplay conversion proof |
+
+## 2026-10-12 - P1C01 off-runner source asset Batch 01
 
 | Area | Status | Evidence |
 |---|---|---|
