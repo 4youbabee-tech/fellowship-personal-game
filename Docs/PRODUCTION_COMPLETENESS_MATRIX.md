@@ -1,3 +1,14 @@
+## 2026-10-12 - P1C01 off-runner source asset Batch 01
+
+| Area | Status | Evidence |
+|---|---|---|
+| Generated source meshes | STATIC-VALIDATED locally / CI pending | 36 FBX members inside `SourceAssets/Production/World/Shire/Batch01OffRunner/P1C01_Batch01_SourceAssets.zip`; per-member SHA256 in `Data/P1C01SourceAssetBatch01Manifest.json` |
+| Generated textures | STATIC-VALIDATED locally / CI pending | 9 PNG base-color members in the same source archive; 64x64 RGBA validation and SHA256 receipt |
+| Windows Runner | NOT USED | Batch created and validated off-runner; classifier routes this path to hosted static mode |
+| Unreal import / `.uasset` persistence | PENDING | No Content Browser import or `.uasset` persistence claimed |
+| World placement | PENDING | No saved level/World Builder placement claimed for this batch yet |
+| PIE / device / visual / performance / Gate 6-7 | NOT ACCEPTED | Requires UE4 import, runtime placement, visual review and target-device evidence |
+
 2026-10-12 Cloud138 Windows warehouse runner blocker and recovery: develop PR #430 merged 9842ca5 with hosted static+Unreal exact-head validations green; first persistent transfer run 38294982859 failed before staging at Verify governor and persistent root because `pwsh: command not found` on self-hosted Windows machine. Fix candidate uses the installed Windows PowerShell (`shell: powershell`) on both Windows-only steps, preserving exact pinned artifact, SHA/CRC/UCX/LOD/provenance checks, one writer and source-only evidence boundary. Until repair run emits CLOUD_WHOLEGAME_PERSISTENT_WAREHOUSE_PASS and a persisted receipt, transferred file count for cloud138 remains 0 PROVEN. UE4 current-run evidence does not certify cloud138 import, PIE, device or visuals.
 
 2026-10-12 P1C01 / 28-region 138-FBX physical warehouse transfer candidate: Existing verified source Artifact 11767251532 from Run 38292163970, head 1e1e5c9, has 82 Shire FBX, 56 whole-game regional FBX and 36 existing packed PNG. New pinned single-writer Windows transfer workflow downloads the precise GitHub artifact, compares wrapper and inner SHA256, inspects 174 physical payloads and 3 source receipts, enforces FBX 7400/UCX/UV/LOD, region identity and PNG signatures, rejects unsafe ZIP membership, enforces reserve, writes atomically and rehashes persisted D: storage. Transfer is source-only: does NOT import .uasset into UE4, run PIE, profile target FPS, visually approve, or close P1C01 Gate6/7. This is source code CANDIDATE until hosted tests and actual Windows persistent receipt pass. No new physical FBX generated in this integration step.

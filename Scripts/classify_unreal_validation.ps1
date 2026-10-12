@@ -723,6 +723,30 @@ $pbrNonPackagingImpact = @(
     "Scripts/verify_p1c01_pbr_runtime.py"
 )
 
+$batch01SourceOnlyExact = @(
+    "Data/P1C01SourceAssetBatch01Manifest.json",
+    "Scripts/generate_p1c01_source_asset_batch01.py",
+    "Scripts/validate_p1c01_source_asset_batch01.py",
+    "Scripts/classify_unreal_validation.ps1",
+    "Scripts/test_unreal_classifier.ps1",
+    ".github/workflows/p1c01-source-asset-batch01.yml"
+)
+$batch01SourceOnlyPrefixes = @(
+    "SourceAssets/Production/World/Shire/Batch01OffRunner/"
+)
+$batch01SourceOnly = (@($changed | Where-Object {
+    $n = $_ -replace "\\","/"
+    $isAllowedPrefix = @($batch01SourceOnlyPrefixes | Where-Object { $n.StartsWith($_) }).Count -gt 0
+    -not ($n.StartsWith("Docs/") -or ($batch01SourceOnlyExact -contains $n) -or $isAllowedPrefix)
+}).Count -eq 0 -and @($changed | Where-Object {
+    $n = $_ -replace "\\","/"
+    ($batch01SourceOnlyExact -contains $n) -or (@($batch01SourceOnlyPrefixes | Where-Object { $n.StartsWith($_) }).Count -gt 0)
+}).Count -gt 0)
+if($batch01SourceOnly){
+    Set-Mode "static" "p1c01-batch01-offrunner-source-assets-hosted-static-only" $parentSha
+    exit 0
+}
+
 $fullImpact = @()
 $coreImpact = @()
 $policyOnlyTouched = @()
