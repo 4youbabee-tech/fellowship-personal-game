@@ -92,6 +92,16 @@ class PhysicalWarehouseAuditTests(unittest.TestCase):
         result = self.assess()
         self.assertIn("REMOTE_MD5_MISMATCH", result["errors"][0]["reason"])
 
+    def test_snapshot_sha_can_verify_when_drive_md5_unavailable(self):
+        _, path = self.add(A)
+        record = json.loads(path.read_text())
+        record["remote_md5"] = "DRIVE_MD5_UNAVAILABLE"
+        record["remote_md5_available"] = False
+        path.write_text(json.dumps(record))
+        result = self.assess()
+        self.assertEqual(result["state"], "SOURCE_QC_PASS_IMPORT_BLOCKED")
+        self.assertEqual(result["verified_archive_count"], 1)
+
     def test_path_escape_or_receipt_path_spoof_fails(self):
         _, receipt_path = self.add(A)
         record = json.loads(receipt_path.read_text())
