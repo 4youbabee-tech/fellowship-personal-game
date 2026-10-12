@@ -4695,3 +4695,8 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - This is NOT 140 produced FBX before exact-head hosted workflow and artifact receipt. Prior baseline remains 138 source FBX total; target 278 if all 140 are new unique and PASS. Previous session increment 56; prospective incremental growth +150%. Asset quality and Shire playable closure outrank the numeric target.
 - Warehouse transfer remains exclusively single writer; no second permanent-storage writer, no Unreal runtime promotion, no P1C02+ activation. External content rights unaffected (original procedural static source). P1C01 Gate 6/7 remains open; no new PIE/device/visual proof.
 - New gameplay/world ideas are not introduced by this wave; only support geometry categories (route, boundary, work, environment, wayfinding) constrained to existing regional production packets. Any physical world placement still requires source-to-runtime gate.
+
+## 2026-10-13 — Cloud-only CC0 Poly Haven material intake strengthening
+- Strengthened existing hosted Poly Haven 37 approved texture source lane; four independent hosted shards use documented Poly Haven API and verify real 1K PNG BaseColor, NormalDX, and packed ORM with SHA256 and CC0 source provenance. Network failures quarantine individual sources; no unverified files count.
+- Extra fail-closed QC demands complete triplets, individual original-map SHA/source URL, approved official CC0 attribution, and exact observed output count. PR run artifact required before any materials are counted as produced. Intended for existing 28-region source preparation, not runtime activation.
+- New Windows UE4 writer jobs: none. P1C01 Gate 6/7 open; .uasset count and visual placement unchanged by this source-only lane.
