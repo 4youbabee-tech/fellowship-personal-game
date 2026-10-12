@@ -17,7 +17,10 @@ class DriveWarehouseTests(unittest.TestCase):
     def test_only_approved_direct_zip(self):
         entry={"Path":"02_Shire_P1C01/nature.zip","ID":"1Abcdefghi12345","Size":100,"Hashes":{"MD5":"a"*32}}
         with patch.object(d,"run_rclone",return_value=json.dumps([entry,{**entry,"Path":"private/secret.zip"},{**entry,"Path":"02_Shire_P1C01/inner/other.zip"}])):
-            self.assertEqual(d.inventory("rclone",Path("dummy"),"shirecloud"),[entry])
+            items = d.inventory("rclone",Path("dummy"),"shirecloud")
+        self.assertEqual(len(items), 1)
+        for key, value in entry.items():
+            self.assertEqual(items[0][key], value)
     def test_zip_traversal_is_rejected(self):
         with tempfile.TemporaryDirectory() as temp:
             p=Path(temp)/"bad.zip"
@@ -57,8 +60,25 @@ class DriveWarehouseTests(unittest.TestCase):
     def test_bad_md5_is_quarantined_without_stopping_other_eligible_archives(self):
         entry={"Path":"02_Shire_P1C01/nature.zip","ID":"1Abcdefghi12345","Size":100,"Hashes":{}}
         valid={**entry,"Path":"02_Shire_P1C01/valid.zip","Hashes":{"MD5":"a"*32}}
-        with patch.object(d,"run_rclone",return_value=json.dumps([entry,valid])):
-            self.assertEqual(d.inventory("rclone",Path("x"),"shirecloud"),[valid])
-        with patch.object(d,"run_rclone",return_value=json.dumps([entry])):
+        with patch.object(d,"expected_sources",return_value={}):
+          with patch.object(d,"run_rclone",return_value=json.dumps([entry,valid])):
+            items=d.inventory("rclone",Path("x"),"shirecloud")
+        self.assertEqual(len(items),1)
+        for key, value in valid.items():
+            self.assertEqual(items[0][key], value)
+        with patch.object(d,"expected_sources",return_value={}):
+          with patch.object(d,"run_rclone",return_value=json.dumps([entry])):
             self.assertEqual(d.inventory("rclone",Path("x"),"shirecloud"),[])
+    def test_missing_drive_md5_is_allowed_for_sha_bound_snapshot_archive(self):
+        entry={"Path":"02_Shire_P1C01/SHIRE_NATURE_UE427_BINARY_FBX_PNG_SOURCE_INTAKE_20261011.zip",
+               "ID":"1Abcdefghi12345","Size":551245,"Hashes":{}}
+        expected={"SHIRE_NATURE_UE427_BINARY_FBX_PNG_SOURCE_INTAKE_20261011.zip":{
+            "byte_size":551245,
+            "sha256":"940bd5679ff27e97fbf9ae214fd62cb57c0d760ca99a3a37e6353e3afa423fc6"}}
+        with patch.object(d,"expected_sources",return_value=expected):
+          with patch.object(d,"run_rclone",return_value=json.dumps([entry])):
+            items=d.inventory("rclone",Path("x"),"shirecloud")
+        self.assertEqual(len(items),1)
+        self.assertFalse(items[0]["_md5_available"])
+        self.assertEqual(items[0]["_expected_sha256"], expected[Path(entry["Path"]).name]["sha256"])
 if __name__=="__main__": unittest.main()
