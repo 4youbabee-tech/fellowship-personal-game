@@ -261,7 +261,7 @@ class SourceContractTests(unittest.TestCase):
         source = (root / "Source" / "ShireJourney" / "Private" / "World" / "ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
         header = (root / "Source" / "ShireJourney" / "Public" / "World" / "ShirePrototypeWorldBuilder.h").read_text(encoding="utf-8")
         start = source.index("void AShirePrototypeWorldBuilder::SpawnP1C01ChapterFinishWorldArtPass()")
-        end = source.index("void AShirePrototypeWorldBuilder::SpawnShireSettlementCompletionPass()", start)
+        end = source.index("void AShirePrototypeWorldBuilder::SpawnP1C01RoutePartyFerryClosurePass()", start)
         body = source[start:end]
         build = source[source.index("void AShirePrototypeWorldBuilder::BuildPrototypeWorld()"):]
 
@@ -279,6 +279,36 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("FerryLandingReeds", body)
         self.assertLess(
             build.index("SpawnP1C01ChapterFinishWorldArtPass();"),
+            build.index("SpawnShireSettlementCompletionPass();"))
+        for forbidden in ("LoadObject<", "StaticLoadObject", "RequestSyncLoad", "SpawnActor<AShireAmbientNPC>"):
+            self.assertNotIn(forbidden, body)
+
+    def test_p1c01_route_party_ferry_closure_pass_is_bounded(self):
+        root = Path(__file__).resolve().parents[1]
+        source = (root / "Source" / "ShireJourney" / "Private" / "World" / "ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        header = (root / "Source" / "ShireJourney" / "Public" / "World" / "ShirePrototypeWorldBuilder.h").read_text(encoding="utf-8")
+        start = source.index("void AShirePrototypeWorldBuilder::SpawnP1C01RoutePartyFerryClosurePass()")
+        end = source.index("void AShirePrototypeWorldBuilder::SpawnShireSettlementCompletionPass()", start)
+        body = source[start:end]
+        build = source[source.index("void AShirePrototypeWorldBuilder::BuildPrototypeWorld()"):]
+
+        self.assertIn("void SpawnP1C01RoutePartyFerryClosurePass();", header)
+        self.assertIn("P1C01_ROUTE_PARTY_FERRY_CLOSURE", body)
+        self.assertEqual(body.count("SpawnClosureCluster("), 5)
+        self.assertIn("Cluster->Configure(Mesh, false", body)
+        self.assertIn("collision=none tick=none", body)
+        self.assertIn("visual=pending", body)
+        self.assertIn("p1c02Runtime=no", body)
+        self.assertIn("PartyFieldReadableLanternBoundary", body)
+        self.assertIn("PartyFieldOuterSeating", body)
+        self.assertIn("ReadableRoadToFerryMarkers", body)
+        self.assertIn("FerryArrivalQueuePosts", body)
+        self.assertIn("FerryBankForegroundBreakup", body)
+        self.assertLess(
+            build.index("SpawnP1C01ChapterFinishWorldArtPass();"),
+            build.index("SpawnP1C01RoutePartyFerryClosurePass();"))
+        self.assertLess(
+            build.index("SpawnP1C01RoutePartyFerryClosurePass();"),
             build.index("SpawnShireSettlementCompletionPass();"))
         for forbidden in ("LoadObject<", "StaticLoadObject", "RequestSyncLoad", "SpawnActor<AShireAmbientNPC>"):
             self.assertNotIn(forbidden, body)
