@@ -45,7 +45,7 @@ jobs:
           persist-credentials: false
           lfs: false
       - name: Verify governor and persistent root
-        shell: pwsh
+        shell: powershell
         run: |
           $ErrorActionPreference = 'Stop'
           if ((git rev-parse HEAD).Trim() -ne $env:GITHUB_SHA) { throw 'CLOUD_INTAKE_SOURCE_SHA_DRIFT' }
@@ -55,7 +55,7 @@ jobs:
           python -m unittest discover -s Scripts -p test_stage_cloud_wholegame_source.py -v
           if ($LASTEXITCODE -ne 0) { throw 'CLOUD_INTAKE_STATIC_TEST_FAIL' }
       - name: Persist only real verified source bytes
-        shell: pwsh
+        shell: powershell
         run: |
           $ErrorActionPreference = 'Stop'
           python Scripts/stage_cloud_wholegame_source.py --manifest Data/CloudWholeGameSourceArtifactPinV1.json --warehouse-root "$env:WAREHOUSE_ROOT"
