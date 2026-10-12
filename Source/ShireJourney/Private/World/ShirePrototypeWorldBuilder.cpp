@@ -186,11 +186,17 @@ AShirePrototypeWorldBuilder::AShirePrototypeWorldBuilder()
         TEXT("/Game/Production/World/Shire/CuratedP1C01/Nature/Meshes/SM_Sh_garden_reed_LOD0.SM_Sh_garden_reed_LOD0"),
         TEXT("/Game/Production/World/Shire/CuratedP1C01/Nature/Meshes/SM_Sh_rock_field_LOD0.SM_Sh_rock_field_LOD0"),
         TEXT("/Game/Production/World/Shire/CuratedP1C01/Nature/Meshes/SM_Sh_shrub_gorse_LOD0.SM_Sh_shrub_gorse_LOD0"),
-        TEXT("/Game/Production/World/Shire/CuratedP1C01/Nature/Meshes/SM_Sh_shrub_hedge_LOD0.SM_Sh_shrub_hedge_LOD0")
+        TEXT("/Game/Production/World/Shire/CuratedP1C01/Nature/Meshes/SM_Sh_shrub_hedge_LOD0.SM_Sh_shrub_hedge_LOD0"),
+        TEXT("/Game/Production/World/Shire/CuratedP1C01/Nature/Meshes/SM_Sh_tree_apple_LOD0.SM_Sh_tree_apple_LOD0"),
+        TEXT("/Game/Production/World/Shire/CuratedP1C01/Nature/Meshes/SM_Sh_tree_elm_LOD0.SM_Sh_tree_elm_LOD0"),
+        TEXT("/Game/Production/World/Shire/CuratedP1C01/Nature/Meshes/SM_Sh_tree_oak_LOD0.SM_Sh_tree_oak_LOD0"),
+        TEXT("/Game/Production/World/Shire/CuratedP1C01/Nature/Meshes/SM_Sh_tree_willow_LOD0.SM_Sh_tree_willow_LOD0")
     };
     const TCHAR* CuratedNames[] = {
         TEXT("CuratedMeadowGrass"), TEXT("CuratedRiverReeds"),
-        TEXT("CuratedFieldRocks"), TEXT("CuratedGorse"), TEXT("CuratedHedges")
+        TEXT("CuratedFieldRocks"), TEXT("CuratedGorse"), TEXT("CuratedHedges"),
+        TEXT("CuratedAppleTrees"), TEXT("CuratedElmTrees"),
+        TEXT("CuratedOakTrees"), TEXT("CuratedWillowTrees")
     };
     for (int32 I = 0; I < UE_ARRAY_COUNT(CuratedPaths); ++I)
     {
@@ -201,7 +207,9 @@ AShirePrototypeWorldBuilder::AShirePrototypeWorldBuilder()
         Group->SetCollisionEnabled(ECollisionEnabled::NoCollision);
         Group->SetGenerateOverlapEvents(false);
         Group->SetCastShadow(false);
-        Group->SetCullDistances(900, I == 2 ? 9000 : 6500);
+        // Trees are distant silhouette dressing, not traversable trunk blockers.
+        Group->SetCullDistances(I >= 5 ? 2800 : 900,
+                                I >= 5 ? 15500 : (I == 2 ? 9000 : 6500));
         CuratedNatureGroups.Add(Group);
         CuratedNatureSources.Add(
             TSoftObjectPtr<UStaticMesh>(FSoftObjectPath(CuratedPaths[I])));
@@ -453,7 +461,7 @@ void AShirePrototypeWorldBuilder::SpawnVerifiedPBRDecor()
 void AShirePrototypeWorldBuilder::RequestCuratedNatureLayer()
 {
     if (bCuratedNatureRequested || !GetWorld() ||
-        CuratedNatureSources.Num() != 5 || CuratedNatureGroups.Num() != 5)
+        CuratedNatureSources.Num() != 9 || CuratedNatureGroups.Num() != 9)
     {
         return;
     }
@@ -470,7 +478,7 @@ void AShirePrototypeWorldBuilder::RequestCuratedNatureLayer()
     if (Available.Num() == 0)
     {
         UE_LOG(LogTemp, Display,
-            TEXT("P1C01_CURATED_NATURE_WORLD deferred=5 optional-packages-not-staged"));
+            TEXT("P1C01_CURATED_NATURE_WORLD deferred=9 optional-packages-not-staged"));
         return;
     }
     CuratedNatureLoadHandle = CuratedNatureLoader.RequestAsyncLoad(
@@ -486,8 +494,9 @@ void AShirePrototypeWorldBuilder::OnCuratedNatureLayerReady()
         return;
     }
     // Reuse existing Shire anchors, not new quest or traversal locations.
-    // Each material family covers three authored areas within the 60-instance cap.
-    const FVector Anchors[5][3] = {
+    // Five ground-detail groups (12 each) and four tree groups (8 each):
+    // 92 optional, non-colliding HISM instances maximum. No new quest anchors.
+    const FVector Anchors[9][3] = {
         { FVector(-1900.0f,-1400.0f,0.0f), FVector(ShireLayout::FieldsX,-650.0f,0.0f),
           FVector(ShireLayout::WoodedRoadX,650.0f,0.0f) },
         { FVector(-1380.0f,260.0f,0.0f), FVector(22650.0f,-1220.0f,0.0f),
@@ -497,9 +506,19 @@ void AShirePrototypeWorldBuilder::OnCuratedNatureLayerReady()
         { FVector(-1200.0f,1900.0f,0.0f), FVector(ShireLayout::WoodedRoadX,1400.0f,0.0f),
           FVector(19000.0f,-1100.0f,0.0f) },
         { FVector(-1950.0f,-750.0f,0.0f), FVector(500.0f,1000.0f,0.0f),
-          FVector(ShireLayout::FieldsX,600.0f,0.0f) }
+          FVector(ShireLayout::FieldsX,600.0f,0.0f) },
+        // Imported original tree silhouettes stay off the primary traversal corridor.
+        { FVector(-2400.0f,1900.0f,0.0f), FVector(500.0f,1950.0f,0.0f),
+          FVector(ShireLayout::FieldsX,1800.0f,0.0f) },
+        { FVector(-800.0f,2300.0f,0.0f), FVector(ShireLayout::WoodedRoadX,2400.0f,0.0f),
+          FVector(19000.0f,1950.0f,0.0f) },
+        { FVector(-2600.0f,2100.0f,0.0f), FVector(ShireLayout::WoodedRoadX,1800.0f,0.0f),
+          FVector(20500.0f,1800.0f,0.0f) },
+        { FVector(21500.0f,-1850.0f,0.0f), FVector(23000.0f,-1950.0f,0.0f),
+          FVector(24500.0f,-1800.0f,0.0f) }
     };
-    const float Heights[] = {45.0f, 120.0f, 70.0f, 100.0f, 135.0f};
+    const float Heights[] = {45.0f, 120.0f, 70.0f, 100.0f, 135.0f,
+                              480.0f, 600.0f, 680.0f, 560.0f};
     int32 Families = 0;
     int32 Grounded = 0;
     int32 MissingGround = 0;
@@ -517,11 +536,13 @@ void AShirePrototypeWorldBuilder::OnCuratedNatureLayerReady()
             Heights[I] / (2.0f * Bounds.BoxExtent.Z), 0.05f, 3.0f);
         Group->SetStaticMesh(Mesh);
         ++Families;
-        for (int32 J = 0; J < 12; ++J)
+        for (int32 J = 0; J < (I < 5 ? 12 : 8); ++J)
         {
             const float Angle = FMath::DegreesToRadians(
                 static_cast<float>((J * 137 + I * 29) % 360));
-            const float Radius = 130.0f + 55.0f * static_cast<float>(J % 4);
+            const float Radius = I < 5
+                ? 130.0f + 55.0f * static_cast<float>(J % 4)
+                : 460.0f + 90.0f * static_cast<float>(J % 4);
             const FVector Candidate = Anchors[I][J % 3] +
                 FVector(FMath::Cos(Angle) * Radius, FMath::Sin(Angle) * Radius, 0.0f);
             FHitResult Hit;
@@ -548,7 +569,7 @@ void AShirePrototypeWorldBuilder::OnCuratedNatureLayerReady()
         }
     }
     UE_LOG(LogTemp, Display,
-        TEXT("P1C01_CURATED_NATURE_WORLD families=%d grounded=%d max=60 collision=none async=1 missingGround=%d steepGround=%d PIE_device_visual=pending"),
+        TEXT("P1C01_CURATED_NATURE_WORLD families=%d grounded=%d max=92 collision=none async=1 missingGround=%d steepGround=%d PIE_device_visual=pending"),
         Families, Grounded, MissingGround, SteepGround);
 }
 
