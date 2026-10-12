@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Headless Blender 4.x source kit: 22 static families / 44 real FBX.
+"""Headless Blender 4.x source kit: 27 static families / 54 real FBX.
 
 Models are ORIGINAL PROCEDURAL STATIC PROPS, not hero characters. Offline
 Blender reimport is checked, but Unreal FBX import/PIE remains a separate gate.
@@ -15,11 +15,12 @@ from pathlib import Path
 
 import bpy
 
-SOURCE_NAME = "SHIRE_P1C01_MODULAR_WORLD_AND_BAGEND_ASSET_WAVE_V3"
+SOURCE_NAME = "SHIRE_P1C01_MODULAR_WORLD_AND_BAGEND_ASSET_WAVE_V4"
 MODELS = ("RoundDoor", "PicketFence", "PartyTable", "GardenCart",
           "RoundWindow", "GardenHedge", "OakTree", "StorageBarrel", "FarmGate", "GardenPlanter",
           "BagEndFrontWall", "RoundRoomWallArc", "RoundRoomFloor", "Hearth", "Bookcase", "HobbitBed",
-          "WoodenFootbridge", "MillWheel", "PartyCanopy", "StonePath", "LanternPost", "VillageWell")
+          "WoodenFootbridge", "MillWheel", "PartyCanopy", "StonePath", "LanternPost", "VillageWell",
+          "FerryLanding", "MooringPost", "WaymarkPost", "PartyBannerFrame", "GardenStoneBorder")
 PALETTE = {
     "oak_timber": (0.37, 0.19, 0.08, 1.0),
     "shire_meadow": (0.26, 0.45, 0.12, 1.0),
@@ -450,6 +451,68 @@ def draw_village_well(out, simple):
                  0.15, 1.30, "oak_timber", out, 12, rotation=(0, math.pi/2, 0))
 
 
+def draw_ferry_landing(out, simple):
+    # Walkable shallow ferry landing: no monolithic UCX wall across the ferry approach.
+    box("LandingDeck", (0, 0, 0.52), (5.60, 2.50, 0.22),
+        "oak_timber", out, 0.010 if not simple else 0)
+    for y in (-1.15, 1.15):
+        for x in (-2.30, 2.30):
+            box("BanksideDeckPost", (x, y, 0.67),
+                (0.16, 0.16, 1.24), "oak_timber", out)
+    if not simple:
+        for x in (-1.90, -0.95, 0.0, 0.95, 1.90):
+            box("DeckPlankSeam", (x, 0, 0.647),
+                (0.045, 2.43, 0.018), "oak_timber", out)
+
+
+def draw_mooring_post(out, simple):
+    cylinder("MooringTimber", (0, 0, 0.54),
+             0.23, 1.08, "oak_timber", out, 10 if simple else 16)
+    cylinder("PostHead", (0, 0, 1.11),
+             0.28, 0.12, "oak_timber", out, 10 if simple else 16)
+    if not simple:
+        torus("MooringIronLoop", (0, 0, 0.91),
+              0.24, 0.035, "charred_basalt", out, 16)
+
+
+def draw_waymark_post(out, simple):
+    cylinder("WaymarkPole", (0, 0, 1.22),
+             0.13, 2.44, "oak_timber", out, 8 if simple else 12)
+    box("DirectionBoard", (0.53, 0, 2.03),
+        (1.35, 0.14, 0.29), "oak_timber", out)
+    if not simple:
+        box("SecondaryDirectionBoard", (-0.46, 0, 1.66),
+            (1.18, 0.14, 0.26), "oak_timber", out)
+
+
+def draw_party_banner_frame(out, simple):
+    # Open central passage: collision on flanking posts only, not hanging cloth.
+    for x in (-1.55, 1.55):
+        box("BannerStandLeg", (x, 0, 1.33),
+            (0.14, 0.15, 2.66), "oak_timber", out)
+    box("BannerCrossBeam", (0, 0, 2.64),
+        (3.23, 0.12, 0.14), "oak_timber", out)
+    box("DecorativeHangingFabric", (0, 0, 2.22),
+        (2.77, 0.065, 0.56), "bagend_plaster", out)
+    if not simple:
+        for x in (-1.17, 1.17):
+            box("BannerTie", (x, 0, 2.50),
+                (0.08, 0.16, 0.20), "oak_timber", out)
+
+
+def draw_garden_stone_border(out, simple):
+    box("LowGardenWall", (0, 0, 0.36),
+        (3.44, 0.34, 0.72), "mossy_stone", out,
+        0.012 if not simple else 0)
+    for x in (-1.65, 1.65):
+        box("GardenWallEndCap", (x, 0, 0.42),
+            (0.28, 0.44, 0.82), "mossy_stone", out)
+    if not simple:
+        for x in (-1.12, 0.0, 1.12):
+            box("GardenWallTopStone", (x, 0, 0.76),
+                (1.08, 0.44, 0.10), "mossy_stone", out)
+
+
 def make_one(asset, level, out):
     global PARTS
     bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -473,7 +536,12 @@ def make_one(asset, level, out):
      "PartyCanopy": draw_party_canopy,
      "StonePath": draw_stone_path,
      "LanternPost": draw_lantern_post,
-     "VillageWell": draw_village_well }[asset](out, simple)
+     "VillageWell": draw_village_well,
+     "FerryLanding": draw_ferry_landing,
+     "MooringPost": draw_mooring_post,
+     "WaymarkPost": draw_waymark_post,
+     "PartyBannerFrame": draw_party_banner_frame,
+     "GardenStoneBorder": draw_garden_stone_border }[asset](out, simple)
     visual_name = "SM_Sh" + asset + "_LOD" + str(level)
     visual = join_visual(visual_name)
     bound = {
@@ -499,6 +567,11 @@ def make_one(asset, level, out):
         "StonePath": ((0, 0, 0.052), (3.3, 2.70, 0.09)),
         "LanternPost": ((0, 0, 1.15), (0.24, 0.24, 2.3)),
         "VillageWell": ((0, 0, 0.7), (1.76, 1.76, 1.3)),
+        "FerryLanding": ((0, 0, 0.52), (5.60, 2.50, 0.22)),
+        "MooringPost": ((0, 0, 0.54), (0.48, 0.48, 1.12)),
+        "WaymarkPost": ((0, 0, 1.22), (0.28, 0.28, 2.44)),
+        "PartyBannerFrame": ((0, 0, 1.33), (3.26, 0.20, 2.66)),
+        "GardenStoneBorder": ((0, 0, 0.36), (3.72, 0.48, 0.82)),
     }
     # UCX boxes deliberately avoid obstructing portals, canopy passages, bridge
     # traversal or the hollow room wall. Engine collision needs separate QA.
@@ -527,6 +600,10 @@ def make_one(asset, level, out):
         "PartyCanopy": [
             ((x, y, 1.40), (0.13, 0.13, 2.80), 0)
             for x in (-2.05, 2.05) for y in (-1.28, 1.28)
+        ],
+        "PartyBannerFrame": [
+            ((x, 0, 1.33), (0.14, 0.15, 2.66), 0)
+            for x in (-1.55, 1.55)
         ],
     }
     colliders = []
