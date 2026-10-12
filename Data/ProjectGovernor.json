@@ -3013,6 +3013,25 @@
         "REQ-PERF-001",
         "REQ-QA-001"
       ]
+    },
+    {
+      "id": "REQ-PROD-013",
+      "title": "Owner requests mean executable delivery, not backlog creation",
+      "category": "ProjectGovernance",
+      "priority": "CRITICAL",
+      "status": "REQUESTED",
+      "origin": "Explicit owner correction 2026-10-13",
+      "intent": "Interpret an owner request for N tasks as a mandate to actually perform N materially distinct production operations where technically eligible, not generate N queued backlog entries or near-duplicate mesh files. Proactively source, build, import, place and verify genuinely useful gameplay assets within Governor and gate limits. Show only measured accomplishments and shortfalls.",
+      "evidence": [
+        "PR #443 source-only 1000-FBX candidate illustrates why item counts do not establish integrated game content"
+      ],
+      "implementation_refs": [
+        "Preserve source/warehouse/.uasset/world/PIE/device evidence separation",
+        "Prioritize owner-visible actual gameplay value and independent engineering execution"
+      ],
+      "missing_work": [
+        "Produce and verify usable new content, then progress source-to-world intake when Unreal environment available"
+      ]
     }
   ],
   "hard_invariants": [
