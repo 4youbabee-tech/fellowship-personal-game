@@ -168,3 +168,7 @@ Administrative state must not become a production bottleneck. Live PR numbers an
 
 The Governor reduces drift and makes bugs/contradictions hard to hide. It cannot truthfully guarantee zero bugs in a large game.
 Real UE4.27.2 compile, PIE, device tests and human play review remain mandatory.
+
+## 2026-10-12 — Owner accepted visible/playable production acceleration (DEC-107)
+
+Across all chapters, treat **rendered original assets placed in navigable game scenes, animated characters, real quest traversal and sound** as the delivery target. Reuse the existing importer and `SHIRE_FAST_PIE_PREVIEW.bat` rather than growing generic CI and manager scripts. After each actual C++ change run applicable exact-head Pre-Unreal/UE4 tests; do not defer safety checks or label compile as visual acceptance. Prepare source/FBX/animation/texture/audio packets for up to five chapters in parallel but preserve one Warehouse writer, one P1C01 runtime writer and predecessor Gate 6/7. Audit persistent ignored `Content/Production/` packages, source license/material slots, and the cooked build. The Governor field `visible_playable_production_protocol_2026_10_12` is authoritative, this guide is descriptive.
