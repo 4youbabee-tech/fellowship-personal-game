@@ -29,7 +29,7 @@ def curated_nature_observation(log_text):
         return {"status": "instanced_unreviewed" if grounded else "zero_grounded",
                 "families": families, "grounded": grounded, "limit": maximum,
                 "pie_tested": False, "visual_accepted": False}
-    if "P1C01_CURATED_NATURE_WORLD deferred=5 optional-packages-not-staged" in log_text:
+    if "P1C01_CURATED_NATURE_WORLD deferred=9 optional-packages-not-staged" in log_text:
         return {"status": "optional_packages_absent", "families": 0, "grounded": 0,
                 "pie_tested": False, "visual_accepted": False}
     return {"status": "not_observed", "pie_tested": False, "visual_accepted": False}

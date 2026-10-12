@@ -9,10 +9,11 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 CPP = ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp"
 HEADER = ROOT / "Source/ShireJourney/Public/World/ShirePrototypeWorldBuilder.h"
 ASSETS = ("grass_meadow", "garden_reed", "rock_field",
-          "shrub_gorse", "shrub_hedge")
+          "shrub_gorse", "shrub_hedge", "tree_apple",
+          "tree_elm", "tree_oak", "tree_willow")
 
 class CuratedNatureRuntimeContracts(unittest.TestCase):
-    def test_five_original_imported_assets_are_soft_and_optional(self):
+    def test_nine_original_imported_assets_are_soft_and_optional(self):
         source = CPP.read_text(encoding="utf-8")
         header = HEADER.read_text(encoding="utf-8")
         for key in ASSETS:
@@ -32,30 +33,31 @@ class CuratedNatureRuntimeContracts(unittest.TestCase):
         source = CPP.read_text(encoding="utf-8")
         region = source.split("void AShirePrototypeWorldBuilder::OnCuratedNatureLayerReady()", 1)[1]
         region = region.split("void AShirePrototypeWorldBuilder::EndPlay(", 1)[0]
-        self.assertIn("const FVector Anchors[5][3]", region)
+        self.assertIn("const FVector Anchors[9][3]", region)
         self.assertIn("Anchors[I][J % 3]", region)
         self.assertIn("Hit.ImpactNormal.Z < 0.70f", region)
         self.assertIn("missingGround=%d steepGround=%d", region)
-        self.assertIn("J < 12", region)
+        self.assertIn("I < 5 ? 12 : 8", region)
+        self.assertIn("max=92", region)
 
     def test_observation_is_truthful_and_not_pie_evidence(self):
         observed = curated_nature_observation(
-            "P1C01_CURATED_NATURE_WORLD families=5 grounded=39 max=60 "
+            "P1C01_CURATED_NATURE_WORLD families=9 grounded=68 max=92 "
             "collision=none async=1 missingGround=21 steepGround=0 PIE_device_visual=pending")
         self.assertEqual("instanced_unreviewed", observed["status"])
-        self.assertEqual(39, observed["grounded"])
+        self.assertEqual(68, observed["grounded"])
         self.assertFalse(observed["visual_accepted"])
         self.assertFalse(observed["pie_tested"])
         self.assertEqual("optional_packages_absent", curated_nature_observation(
-            "P1C01_CURATED_NATURE_WORLD deferred=5 optional-packages-not-staged")["status"])
+            "P1C01_CURATED_NATURE_WORLD deferred=9 optional-packages-not-staged")["status"])
         self.assertEqual("not_observed", curated_nature_observation("other log line")["status"])
 
     def test_existing_world_only_and_bound_grounded_instances(self):
         source = CPP.read_text(encoding="utf-8")
         header = HEADER.read_text(encoding="utf-8")
         self.assertIn("RequestCuratedNatureLayer();", source)
-        self.assertIn("CuratedNatureSources.Num() != 5", source)
-        self.assertIn("J < 12", source)
+        self.assertIn("CuratedNatureSources.Num() != 9", source)
+        self.assertIn("I < 5 ? 12 : 8", source)
         self.assertIn("LineTraceSingleByChannel", source)
         self.assertIn("ECollisionEnabled::NoCollision", source)
         self.assertIn("PIE_device_visual=pending", source)
