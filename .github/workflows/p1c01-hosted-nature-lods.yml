@@ -55,13 +55,14 @@ jobs:
           import json,hashlib,os,pathlib
           root=pathlib.Path(os.environ['OUT'])
           obj=json.loads((root/'nature_receipt.json').read_text())
-          assert len(obj['objects'])==36
+          assert obj['families']==18
+          assert len(obj['objects'])==54
           for x in obj['objects']:
               p=root/x['path']
               assert p.is_file() and hashlib.sha256(p.read_bytes()).hexdigest()==x['sha256']
               assert p.read_bytes().startswith(b'Kaydara FBX Binary')
               assert x['reimport_uv0'] and x['reimport_polygons']>0
-          print('NATURE_SOURCE_RECEIPT_PASS files=36')
+          print('NATURE_SOURCE_RECEIPT_PASS families=18 files=54')
           PY
       - uses: actions/upload-artifact@v4
         if: steps.dedup.outputs.skip != 'true'
@@ -71,3 +72,5 @@ jobs:
           retention-days: 7
           compression-level: 3
           if-no-files-found: error
+
+# No UE4, PIE, self-hosted, Windows Cook, packaging or device-FPS tasks.
