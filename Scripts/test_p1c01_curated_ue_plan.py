@@ -96,11 +96,21 @@ class MockFactory:
     def set_editor_property(self, key, value):
         raise AssertionError('UNSUPPORTED_FACTORY_PROPERTY:' + str(key))
 
+class MockSlot:
+    def __init__(self, name='Unassigned'):
+        self.name = name
+    def get_editor_property(self, key):
+        return self.name if key in ('material_slot_name', 'imported_material_slot_name') else None
+
 class MockMesh(MockObject):
     def __init__(self, path=''):
         super().__init__(path)
         self.verts=[120]
         self.materials=[None]
+    def get_editor_property(self, key):
+        if key == 'static_materials':
+            return [MockSlot() for _ in self.materials]
+        raise AssertionError('Unknown mesh property: '+key)
     def set_material(self, index, material): self.materials[index] = material
     def get_material(self, index): return self.materials[index]
 
@@ -239,6 +249,8 @@ class CuratedPlanTests(unittest.TestCase):
         self.assertEqual(21,outcome['created_or_updated_material_instances'])
         self.assertEqual(63,outcome['material_triplet_bindings'])
         self.assertEqual(8,outcome['exact_nature_single_slot_bindings'])
+        self.assertEqual(0,outcome['unresolved_nature_material_slots'])
+        self.assertTrue(outcome['nature_slot_bindings_verified'])
         self.assertEqual(118,outcome['physically_persisted_uasset_checks'])
         self.assertFalse(outcome['gate6_7_closed'])
         self.assertFalse(outcome['collision_nav_verified'])
@@ -297,7 +309,7 @@ class CuratedPlanTests(unittest.TestCase):
             editor.editor_apply(engine, self.root)
         self.assertFalse((self.root/'Saved/P1C01CuratedEditorPostImport/receipt.json').exists())
 
-    def test_ambiguous_nature_slot_fails_closed(self):
+    def test_ambiguous_nature_slot_is_reported_not_wrongly_bound(self):
         engine = MockEngine(self.root)
         initial = engine.EditorAssetLibrary.load_asset
         def load(path):
@@ -306,9 +318,30 @@ class CuratedPlanTests(unittest.TestCase):
                 value.materials = [None, None]
             return value
         engine.EditorAssetLibrary.load_asset = load
-        with self.assertRaisesRegex(RuntimeError, 'P1C01_NATURE_SLOT_IDENTITY_UNPROVEN'):
-            editor.editor_apply(engine, self.root)
-        self.assertFalse((self.root/'Saved/P1C01CuratedEditorPostImport/receipt.json').exists())
+        report = editor.editor_apply(engine, self.root)
+        self.assertEqual(report['created_or_updated_material_instances'], 21)
+        self.assertEqual(report['unresolved_nature_material_slots'], 1)
+        self.assertEqual(report['exact_nature_single_slot_bindings'], 7)
+        self.assertFalse(report['nature_slot_bindings_verified'])
+        self.assertEqual(report['unresolved_nature_slot_observations'][0]['reason'],
+                         'MULTI_SLOT_IDENTITY_UNPROVEN')
+        self.assertFalse(report['gate6_7_closed'])
+
+    def test_exact_named_multi_slot_binds_only_matching_surface(self):
+        engine = MockEngine(self.root)
+        initial = engine.EditorAssetLibrary.load_asset
+        def load(path):
+            value = initial(path)
+            if path.endswith('SM_Sh_flower_wild_LOD0'):
+                value.materials = [None, None]
+                value.get_editor_property = (lambda key: [
+                    MockSlot('Wildflower'), MockSlot('Stem')])
+            return value
+        engine.EditorAssetLibrary.load_asset = load
+        report = editor.editor_apply(engine, self.root)
+        self.assertEqual(report['exact_nature_single_slot_bindings'], 8)
+        self.assertEqual(report['unresolved_nature_material_slots'], 0)
+        self.assertEqual(report['nature_material_assignments'][0]['slot'], 0)
 
     def test_missing_physical_uasset_fails_closed(self):
         engine = MockEngine(self.root)

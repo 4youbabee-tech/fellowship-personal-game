@@ -72,7 +72,8 @@ def finish_materials(unreal, root, plan):
         path = ASSET_ROOT + 'Materials/MI_' + parts[0] + '_' + parts[1]
         if path in (x['asset'] for x in material_report):
             raise RuntimeError('P1C01_DUPLICATE_MATERIAL_ASSET:' + path)
-        instance = unreal.EditorAssetLibrary.load_asset(path)
+        instance = (unreal.EditorAssetLibrary.load_asset(path)
+                    if unreal.EditorAssetLibrary.does_asset_exist(path) else None)
         if instance and not isinstance(instance, unreal.MaterialInstanceConstant):
             raise RuntimeError('P1C01_MATERIAL_PATH_OCCUPIED:' + path)
         if not instance:
@@ -128,7 +129,7 @@ def finish_materials(unreal, root, plan):
                                 'maps': {k: maps[k]['asset_path'] for k in MAP_PARAMETERS}})
     if len(material_report) != 21 or covered != approved_textures:
         raise RuntimeError('P1C01_PBR_COVERAGE_MISMATCH')
-    bound = []
+    bound, held_slots = [], []
     for family, surface in sorted(NATURE_SURFACES.items()):
         mesh_id = 'Nature/SM_Sh_' + family
         group = 'Nature/T_Sh_' + surface
@@ -139,22 +140,47 @@ def finish_materials(unreal, root, plan):
         mesh = unreal.EditorAssetLibrary.load_asset(mesh_path)
         if not mesh or not isinstance(mesh, unreal.StaticMesh):
             raise RuntimeError('P1C01_NATURE_MESH_MISSING:' + mesh_path)
-        if unreal.EditorStaticMeshLibrary.get_number_materials(mesh) != 1:
-            raise RuntimeError('P1C01_NATURE_SLOT_IDENTITY_UNPROVEN:' + mesh_path)
+        slots = mesh.get_editor_property('static_materials')
+        slot_count = unreal.EditorStaticMeshLibrary.get_number_materials(mesh)
+        if slot_count <= 0 or len(slots) != slot_count:
+            raise RuntimeError('P1C01_NATURE_SLOT_TABLE_INVALID:' + mesh_path)
+        slot_labels = [{
+            'index': i,
+            'slot_name': str(slot.get_editor_property('material_slot_name')),
+            'imported_name': str(slot.get_editor_property('imported_material_slot_name')),
+        } for i, slot in enumerate(slots)]
+        # Exact source-tagged slot or a truly single-surface mesh only.
+        # Multi-material meshes without one unique proven identity are retained
+        # for source review; do not overwrite stems/leaves/extra sections.
+        known_labels = {surface, 'T_Sh_' + surface}
+        exact_slots = [item['index'] for item in slot_labels
+                       if item['slot_name'] in known_labels or item['imported_name'] in known_labels]
+        matched_slot = (exact_slots[0] if len(exact_slots) == 1 else
+                        0 if slot_count == 1 and not exact_slots else None)
+        if matched_slot is None:
+            held_slots.append({'mesh': mesh_path, 'source_group': group,
+                               'reason': 'MULTI_SLOT_IDENTITY_UNPROVEN',
+                               'observed_slots': slot_labels})
+            print('P1C01_NATURE_SLOT_HELD mesh=' + mesh_path +
+                  ' slots=' + json.dumps(slot_labels, sort_keys=True), flush=True)
+            continue
         assigned = instance_by_group[group]
-        mesh.set_material(0, assigned)
-        if not mesh.get_material(0) or mesh.get_material(0).get_path_name() != assigned.get_path_name():
+        mesh.set_material(matched_slot, assigned)
+        if (not mesh.get_material(matched_slot) or
+                mesh.get_material(matched_slot).get_path_name() != assigned.get_path_name()):
             raise RuntimeError('P1C01_NATURE_SLOT_ASSIGNMENT_FAILED:' + mesh_path)
         if not unreal.EditorAssetLibrary.save_loaded_asset(mesh, only_if_is_dirty=False):
             raise RuntimeError('P1C01_NATURE_MESH_SAVE_FAILED:' + mesh_path)
         require_real_package(unreal, mesh_path)
         observed_mesh = unreal.EditorAssetLibrary.load_asset(mesh_path)
-        if not observed_mesh.get_material(0) or observed_mesh.get_material(0).get_path_name() != assigned.get_path_name():
+        if (not observed_mesh.get_material(matched_slot) or
+                observed_mesh.get_material(matched_slot).get_path_name() != assigned.get_path_name()):
             raise RuntimeError('P1C01_NATURE_SLOT_NOT_PERSISTED:' + mesh_path)
-        bound.append({'mesh': mesh_path, 'slot': 0, 'material': assigned.get_path_name()})
-    if len(bound) != 8:
-        raise RuntimeError('P1C01_EIGHT_NATURE_BINDINGS_MISSING')
-    return material_report, bound
+        bound.append({'mesh': mesh_path, 'slot': matched_slot,
+                      'material': assigned.get_path_name()})
+    if len(bound) + len(held_slots) != 8:
+        raise RuntimeError('P1C01_NATURE_SCOPE_MISMATCH')
+    return material_report, bound, held_slots
 
 
 
@@ -232,7 +258,7 @@ def editor_apply(unreal, root=ROOT):
         require_real_package(unreal, row['asset'])
     for row in texture_rows:
         require_real_package(unreal, row['asset'])
-    material_rows, nature_bindings = finish_materials(unreal, root, plan)
+    material_rows, nature_bindings, held_nature_slots = finish_materials(unreal, root, plan)
     report = {
         'schema_version': 1,
         'chapter': 'P1C01', 'mode': 'UE4_EDITOR_CURATED_POSTIMPORT_OBSERVATION',
@@ -245,6 +271,8 @@ def editor_apply(unreal, root=ROOT):
         'created_or_updated_material_instances': len(material_rows),
         'material_triplet_bindings': 3 * len(material_rows),
         'exact_nature_single_slot_bindings': len(nature_bindings),
+        'unresolved_nature_material_slots': len(held_nature_slots),
+        'unresolved_nature_slot_observations': held_nature_slots,
         'material_observations': material_rows,
         'nature_material_assignments': nature_bindings,
         'imported_authored_sidecar_lods': sum(x['lod_count'] - 1 for x in outcomes),
@@ -252,7 +280,8 @@ def editor_apply(unreal, root=ROOT):
         'external_held_for_license': plan['counts']['license_held_external'],
         'mesh_observations': outcomes, 'texture_observations': texture_rows,
         'collision_review_pending': collision_review,
-        'material_bindings_verified': len(material_rows) == 21 and len(nature_bindings) == 8,
+        'material_bindings_verified': len(material_rows) == 21,
+        'nature_slot_bindings_verified': len(nature_bindings) == 8,
         'collision_nav_verified': False,
         'world_placement_verified': False,
         'character_final_verified': False,
@@ -260,10 +289,12 @@ def editor_apply(unreal, root=ROOT):
         'gate6_7_closed': False,
     }
     if (len(outcomes) != 34 or report['imported_authored_sidecar_lods'] != 46 or
-        len(texture_rows) != 63 or len(material_rows) != 21 or len(nature_bindings) != 8):
+        len(texture_rows) != 63 or len(material_rows) != 21 or
+        len(nature_bindings) + len(held_nature_slots) != 8):
         raise RuntimeError('P1C01_UNREAL_POSTIMPORT_COUNTS_UNEXPECTED')
     report_path.write_text(json.dumps(report, sort_keys=True, indent=2) + '\n', encoding='utf-8')
-    print('P1C01_CURATED_EDITOR_POSTIMPORT_PASS meshes=34 authoredLods=46 textures=63 material_instances=21 nature_bindings=8')
+    print('P1C01_CURATED_EDITOR_POSTIMPORT_PASS meshes=34 authoredLods=46 textures=63 material_instances=21 nature_bound=%d nature_held=%d' %
+          (len(nature_bindings), len(held_nature_slots)))
     print('P1C01_CURATED_EDITOR_POSTIMPORT_RECEIPT=' + str(report_path))
     print('BOUNDARY P1C01_EDITOR_ASSET_MATERIAL_ONLY_NOT_COLLISION_WORLD_PIE_DEVICE_VISUAL_ACCEPTANCE')
     return report
