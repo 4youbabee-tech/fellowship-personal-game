@@ -3,6 +3,16 @@ on:
   schedule:
     - cron: '17 */2 * * *'
   workflow_dispatch:
+  # Any approved Drive intake code change on develop runs one serialized
+  # physical D: transfer automatically. PRs remain hosted static-only.
+  push:
+    branches: [develop]
+    paths:
+      - '.github/workflows/drive-warehouse-auto-intake.yml'
+      - 'Scripts/drive_warehouse_sync.py'
+      - 'Scripts/verify_drive_warehouse_receipts.py'
+      - 'Scripts/curate_p1c01_drive_source.py'
+      - 'Scripts/stage_p1c01_curated_original.py'
   pull_request:
     branches: [develop]
     paths:
