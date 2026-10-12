@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "repository": "4youbabee-tech/fellowship-personal-game",
+  "workflow_run_id": 38292163970,
+  "artifact_id": 11767251532,
+  "artifact_name": "cloud-p1c01-28regions-original-pbr-fbx-1e1e5c9df5aeee75e130eed7891fdfb7b129c9fc",
+  "artifact_wrapper_bytes": 10477698,
+  "artifact_wrapper_sha256": "94dc4393dc784e389fa4976112ec4272f93da49207adc0def492abfb6853ef55",
+  "inner_zip_name": "shire-p1c01-28-region-original-materials-static-fbx.zip",
+  "source_zip_sha256": "f6638f2e101f682aab287ad04e228410c66be3c245df5f42d3d92a20fed695dd",
+  "source_commit": "1e1e5c9df5aeee75e130eed7891fdfb7b129c9fc",
+  "stage": "PINNED_CLOUD_ORIGINAL_PHYSICAL_SOURCE_ONLY",
+  "expected": {
+    "shire_mesh_fbx": 82,
+    "regional_support_fbx": 56,
+    "materials_png": 36,
+    "canonical_regions": 28,
+    "receipt_files": 3
+  },
+  "not_yet_proven": [
+    "WAREHOUSE_PERSISTENCE",
+    "UE4_IMPORT",
+    "PIE",
+    "DEVICE_FPS",
+    "VISUAL_ACCEPTANCE",
+    "GATE67"
+  ]
+}

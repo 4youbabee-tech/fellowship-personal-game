@@ -1,0 +1,70 @@
+name: Cloud Whole-game 138 FBX Persistent Source Warehouse
+on:
+  pull_request:
+    branches: [develop]
+    paths: ['Scripts/stage_cloud_wholegame_source.py', 'Scripts/test_stage_cloud_wholegame_source.py', 'Data/CloudWholeGameSourceArtifactPinV1.json', '.github/workflows/cloud-wholegame-persistent-intake.yml']
+  push:
+    branches: [develop]
+    paths: ['Scripts/stage_cloud_wholegame_source.py', 'Scripts/test_stage_cloud_wholegame_source.py', 'Data/CloudWholeGameSourceArtifactPinV1.json', '.github/workflows/cloud-wholegame-persistent-intake.yml']
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: warehouse-stage-${{ github.repository }}
+  cancel-in-progress: false
+jobs:
+  source_integrity:
+    name: Verify 138 FBX source warehouse contracts
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Run independent offline source integrity tests
+        run: |
+          python3 -m py_compile Scripts/stage_cloud_wholegame_source.py Scripts/test_stage_cloud_wholegame_source.py
+          python3 -m unittest discover -s Scripts -p test_stage_cloud_wholegame_source.py -v
+          python3 Scripts/governor_work_start.py --lane WAREHOUSE_ASSET_INTAKE
+  single_writer_stage:
+    name: Store hash-verified source on Windows persistent warehouse
+    needs: source_integrity
+    if: github.event_name == 'push'
+    runs-on: [self-hosted, Windows, X64, ue4-27]
+    timeout-minutes: 45
+    env:
+      WAREHOUSE_ROOT: 'D:\actions-runner\_warehouse\ShireJourney'
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Exact SHA checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          lfs: false
+      - name: Verify governor and persistent root
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ((git rev-parse HEAD).Trim() -ne $env:GITHUB_SHA) { throw 'CLOUD_INTAKE_SOURCE_SHA_DRIFT' }
+          python Scripts/governor_work_start.py --lane WAREHOUSE_ASSET_INTAKE
+          if ($LASTEXITCODE -ne 0) { throw 'GOVERNOR_WAREHOUSE_GATE_FAIL' }
+          if (-not (Test-Path -LiteralPath $env:WAREHOUSE_ROOT -PathType Container)) { throw 'PERSISTENT_WAREHOUSE_MISSING' }
+          python -m unittest discover -s Scripts -p test_stage_cloud_wholegame_source.py -v
+          if ($LASTEXITCODE -ne 0) { throw 'CLOUD_INTAKE_STATIC_TEST_FAIL' }
+      - name: Persist only real verified source bytes
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          python Scripts/stage_cloud_wholegame_source.py --manifest Data/CloudWholeGameSourceArtifactPinV1.json --warehouse-root "$env:WAREHOUSE_ROOT"
+          if ($LASTEXITCODE -ne 0) { throw 'CLOUD_WHOLEGAME_PHYSICAL_WAREHOUSE_QC_FAIL' }
+      - name: Upload persistent source-only receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cloud-wholegame-source-receipt-${{ github.sha }}
+          path: D:\actions-runner\_warehouse\ShireJourney\_original_cloud_wholegame\1e1e5c9df5aeee75e130eed7891fdfb7b129c9fc\warehouse_receipt.json
+          if-no-files-found: warn
+          retention-days: 30
