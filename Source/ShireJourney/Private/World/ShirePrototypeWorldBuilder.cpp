@@ -10,6 +10,7 @@
 #include "Dom/JsonObject.h"
 #include "Misc/FileHelper.h"
 #include "Misc/Paths.h"
+#include "Misc/PackageName.h"
 #include "Serialization/JsonReader.h"
 #include "Serialization/JsonSerializer.h"
 #include "Components/BoxComponent.h"
@@ -179,6 +180,33 @@ AShirePrototypeWorldBuilder::AShirePrototypeWorldBuilder()
     ReedInstances->SetGenerateOverlapEvents(false);
     ReedInstances->SetCastShadow(false);
 
+
+    const TCHAR* CuratedPaths[] = {
+        TEXT("/Game/Production/World/Shire/CuratedP1C01/Nature/Meshes/SM_Sh_grass_meadow_LOD0.SM_Sh_grass_meadow_LOD0"),
+        TEXT("/Game/Production/World/Shire/CuratedP1C01/Nature/Meshes/SM_Sh_garden_reed_LOD0.SM_Sh_garden_reed_LOD0"),
+        TEXT("/Game/Production/World/Shire/CuratedP1C01/Nature/Meshes/SM_Sh_rock_field_LOD0.SM_Sh_rock_field_LOD0"),
+        TEXT("/Game/Production/World/Shire/CuratedP1C01/Nature/Meshes/SM_Sh_shrub_gorse_LOD0.SM_Sh_shrub_gorse_LOD0"),
+        TEXT("/Game/Production/World/Shire/CuratedP1C01/Nature/Meshes/SM_Sh_shrub_hedge_LOD0.SM_Sh_shrub_hedge_LOD0")
+    };
+    const TCHAR* CuratedNames[] = {
+        TEXT("CuratedMeadowGrass"), TEXT("CuratedRiverReeds"),
+        TEXT("CuratedFieldRocks"), TEXT("CuratedGorse"), TEXT("CuratedHedges")
+    };
+    for (int32 I = 0; I < UE_ARRAY_COUNT(CuratedPaths); ++I)
+    {
+        UHierarchicalInstancedStaticMeshComponent* Group =
+            CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(CuratedNames[I]);
+        Group->SetupAttachment(RuntimeRoot);
+        Group->SetMobility(EComponentMobility::Movable);
+        Group->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+        Group->SetGenerateOverlapEvents(false);
+        Group->SetCastShadow(false);
+        Group->SetCullDistances(900, I == 2 ? 9000 : 6500);
+        CuratedNatureGroups.Add(Group);
+        CuratedNatureSources.Add(
+            TSoftObjectPtr<UStaticMesh>(FSoftObjectPath(CuratedPaths[I])));
+    }
+
     // Explicit cull bands keep the first production world pass bounded on the
     // i7/8 GB/~2 GB VRAM target. These are starting budgets, not acceptance proof.
     GrassInstances->SetCullDistances(1200, 5200);
@@ -315,6 +343,7 @@ void AShirePrototypeWorldBuilder::BeginPlay()
 
     BuildPrototypeWorld();
     SpawnVerifiedPBRDecor();
+    RequestCuratedNatureLayer();
 
     if (UGameInstance* GI = GetGameInstance())
     {
@@ -420,8 +449,100 @@ void AShirePrototypeWorldBuilder::SpawnVerifiedPBRDecor()
         Placed, Omitted);
 }
 
+
+void AShirePrototypeWorldBuilder::RequestCuratedNatureLayer()
+{
+    if (bCuratedNatureRequested || !GetWorld() ||
+        CuratedNatureSources.Num() != 5 || CuratedNatureGroups.Num() != 5)
+    {
+        return;
+    }
+    bCuratedNatureRequested = true;
+    TArray<FSoftObjectPath> Available;
+    for (const TSoftObjectPtr<UStaticMesh>& Source : CuratedNatureSources)
+    {
+        const FSoftObjectPath Path = Source.ToSoftObjectPath();
+        if (Path.IsValid() && FPackageName::DoesPackageExist(Path.GetLongPackageName()))
+        {
+            Available.Add(Path);
+        }
+    }
+    if (Available.Num() == 0)
+    {
+        UE_LOG(LogTemp, Display,
+            TEXT("P1C01_CURATED_NATURE_WORLD deferred=5 optional-packages-not-staged"));
+        return;
+    }
+    CuratedNatureLoadHandle = CuratedNatureLoader.RequestAsyncLoad(
+        Available, FStreamableDelegate::CreateUObject(
+            this, &AShirePrototypeWorldBuilder::OnCuratedNatureLayerReady));
+}
+
+void AShirePrototypeWorldBuilder::OnCuratedNatureLayerReady()
+{
+    UWorld* World = GetWorld();
+    if (!World)
+    {
+        return;
+    }
+    const FVector Anchors[] = {
+        FVector(-1900.0f, -1400.0f, 0.0f),
+        FVector(500.0f, 1700.0f, 0.0f),
+        FVector(ShireLayout::FieldsX, 1800.0f, 0.0f),
+        FVector(ShireLayout::WoodedRoadX, 1800.0f, 0.0f),
+        FVector(ShireLayout::FerryX - 1100.0f, 1800.0f, 0.0f)
+    };
+    const float Heights[] = {45.0f, 120.0f, 70.0f, 100.0f, 135.0f};
+    int32 Families = 0;
+    int32 Grounded = 0;
+    for (int32 I = 0; I < CuratedNatureSources.Num(); ++I)
+    {
+        UHierarchicalInstancedStaticMeshComponent* Group = CuratedNatureGroups[I];
+        UStaticMesh* Mesh = CuratedNatureSources[I].Get();
+        if (!Group || !Mesh || Mesh->GetBounds().BoxExtent.Z < 1.0f)
+        {
+            continue;
+        }
+        const FBoxSphereBounds Bounds = Mesh->GetBounds();
+        const float Scale = FMath::Clamp(
+            Heights[I] / (2.0f * Bounds.BoxExtent.Z), 0.05f, 3.0f);
+        Group->SetStaticMesh(Mesh);
+        ++Families;
+        for (int32 J = 0; J < 12; ++J)
+        {
+            const float Angle = FMath::DegreesToRadians(
+                static_cast<float>((J * 137 + I * 29) % 360));
+            const float Radius = 250.0f + 85.0f * static_cast<float>(J % 4);
+            const FVector Candidate = Anchors[I] +
+                FVector(FMath::Cos(Angle) * Radius, FMath::Sin(Angle) * Radius, 0.0f);
+            FHitResult Hit;
+            FCollisionQueryParams Query(TEXT("P1C01CuratedNatureGround"), false, this);
+            if (!World->LineTraceSingleByChannel(
+                    Hit, Candidate + FVector(0, 0, 1800),
+                    Candidate - FVector(0, 0, 1500), ECC_Visibility, Query))
+            {
+                continue;
+            }
+            const float MeshBottom = Bounds.Origin.Z - Bounds.BoxExtent.Z;
+            Group->AddInstanceWorldSpace(FTransform(
+                FRotator(0, static_cast<float>((J * 47 + I * 71) % 360), 0),
+                Hit.Location - FVector(0, 0, MeshBottom * Scale),
+                FVector(Scale)));
+            ++Grounded;
+        }
+    }
+    UE_LOG(LogTemp, Display,
+        TEXT("P1C01_CURATED_NATURE_WORLD families=%d grounded=%d max=60 collision=none async=1 PIE_device_visual=pending"),
+        Families, Grounded);
+}
+
 void AShirePrototypeWorldBuilder::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
+    if (CuratedNatureLoadHandle.IsValid())
+    {
+        CuratedNatureLoadHandle->CancelHandle();
+        CuratedNatureLoadHandle.Reset();
+    }
     if (QuestSubsystem)
     {
         QuestSubsystem->OnActiveQuestChanged.RemoveDynamic(this, &AShirePrototypeWorldBuilder::HandleActiveQuestChanged);

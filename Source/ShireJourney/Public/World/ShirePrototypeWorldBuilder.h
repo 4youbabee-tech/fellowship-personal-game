@@ -1,6 +1,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Engine/StreamableManager.h"
+#include "UObject/SoftObjectPtr.h"
 #include "GameFramework/Actor.h"
 #include "ShirePrototypeWorldBuilder.generated.h"
 
@@ -100,6 +102,12 @@ private:
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* RuralFenceInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* FernInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* ReedInstances;
+    // Optional P1C01 original FBX mesh decoration; never blocks story startup.
+    UPROPERTY() TArray<UHierarchicalInstancedStaticMeshComponent*> CuratedNatureGroups;
+    UPROPERTY() TArray<TSoftObjectPtr<UStaticMesh>> CuratedNatureSources;
+    FStreamableManager CuratedNatureLoader;
+    TSharedPtr<FStreamableHandle> CuratedNatureLoadHandle;
+    bool bCuratedNatureRequested = false;
     UPROPERTY() ADirectionalLight* RuntimeSun = nullptr;
     UPROPERTY() ASkyLight* RuntimeSky = nullptr;
     UPROPERTY() APostProcessVolume* RuntimePostProcess = nullptr;
@@ -123,6 +131,8 @@ private:
     void ConfigureMorningAtmosphere();
     void ConfigureFoliageInstances();
     void SpawnFoliagePass();
+    void RequestCuratedNatureLayer();
+    void OnCuratedNatureLayerReady();
     void SpawnScenicDetailPass();
     void SpawnVerifiedPBRDecor();
     void SpawnGeographyFoundationPass();
