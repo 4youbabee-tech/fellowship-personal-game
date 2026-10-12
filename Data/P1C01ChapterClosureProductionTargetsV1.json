@@ -1,0 +1,197 @@
+{
+  "schema_version": 1,
+  "target_id": "P1C01_CHAPTER_CLOSURE_PRODUCTION_TARGETS_V1",
+  "status": "SOURCE_TARGETS_LOCKED_RUNTIME_IMPORT_PENDING",
+  "runtime_chapter": "P1C01",
+  "runtime_writer": "AShirePrototypeWorldBuilder",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Docs/DEVELOPMENT_GATES.md",
+    "Data/P1C01VisibleShireMegaPassV1.json",
+    "Data/P1C01CloudAssetProductionManifestsV1.json",
+    "Data/P1C02BreePreproductionV1.json",
+    "Data/P1C03WeathertopFordPreproductionV1.json"
+  ],
+  "production_directive": {
+    "owner_request": "Accelerate real chapter production by having the assistant choose production-correct asset batches instead of waiting for one-file instructions.",
+    "implementation_rule": "Batch production should close visible world, character, mission, audio and next-chapter source needs, while keeping runtime activation serialized by Gate 6/7.",
+    "anti_pattern": "Do not acquire arbitrary large counts of unique trees, houses or characters when reusable modular families, HISM/ISM placement, LODs and verified Unreal import are the correct production unit."
+  },
+  "p1c01_closure_targets": {
+    "shire_nature": {
+      "source_family_target": 18,
+      "derived_fbx_lod_target": 54,
+      "runtime_instance_targets": {
+        "hedges": 148,
+        "woodland_trees": 177,
+        "rural_fences": 42,
+        "ferns": 72,
+        "reeds": 48
+      },
+      "production_method": "Generate and import reusable tree, shrub, hedge and ground-detail families with LOD0/LOD1/LOD2, then place through HISM lanes with explicit cull bands.",
+      "current_source_evidence": [
+        "Tools/CloudAssetBuild/blender_nature.py",
+        "Data/P1C01VisibleShireMegaPassV1.json"
+      ],
+      "remaining_runtime_work": [
+        "Run hosted Blender nature artifact job",
+        "Promote generated FBX/texture outputs into warehouse receipts",
+        "Import into UE4.27.2 on UE4-27-Windows",
+        "Bind materials and verify visible HISM lanes in the Shire map"
+      ]
+    },
+    "shire_architecture": {
+      "unique_modular_family_target": 12,
+      "placed_home_or_facade_target": 18,
+      "required_areas": [
+        "Bag End exterior",
+        "Bag End approved interiors",
+        "Hobbiton",
+        "Bagshot Row",
+        "Party Field",
+        "Bywater-facing edge"
+      ],
+      "production_method": "Use modular hobbit facades, doors, windows, turf mounds, fences, garden elements and mill/bridge kits; vary placement/materials instead of requiring 100 unique houses.",
+      "current_source_evidence": [
+        "SourceAssets/Production/World/Shire/SM_ShHobbitFacade.obj",
+        "SourceAssets/Production/World/Shire/SM_ShCottageHouse.obj",
+        "SourceAssets/Production/World/Shire/SM_ShTurfMound.obj",
+        "SourceAssets/Production/World/Shire/SM_ShMillHouse.obj",
+        "SourceAssets/Production/World/Shire/SM_ShStoneBridge.obj"
+      ],
+      "remaining_runtime_work": [
+        "Convert static source candidates to import-ready FBX where needed",
+        "Assign PBR material instances",
+        "Validate collision and walkable clearance",
+        "Place and review in Unreal"
+      ]
+    },
+    "shire_props_and_daily_life": {
+      "reusable_prop_family_target": 80,
+      "high_priority_groups": [
+        "party tables and benches",
+        "lanterns and banners",
+        "garden tools and farm tools",
+        "carts and crates",
+        "market and produce props",
+        "water-edge and mill dressing",
+        "interior pantry/kitchen/book props",
+        "signage and path readability props"
+      ],
+      "production_method": "Use source stock and generated variants as repeated low-cost props with pooled interaction anchors and culling rules.",
+      "current_source_evidence": [
+        "SourceAssets/Production/World/Shire",
+        "SourceAssets/Production/World/Common"
+      ],
+      "remaining_runtime_work": [
+        "Classify prop collision",
+        "Mark HISM candidates",
+        "Import and place only props with useful chapter function or visible life"
+      ]
+    },
+    "main_characters": {
+      "runtime_character_order": [
+        "Frodo",
+        "Bilbo",
+        "Gandalf",
+        "Sam",
+        "Merry",
+        "Pippin"
+      ],
+      "final_character_target": 6,
+      "ambient_npc_target": 18,
+      "current_static_source_foundation": [
+        "SourceAssets/Production/Characters/Frodo",
+        "SourceAssets/Production/Characters/Bilbo",
+        "SourceAssets/Production/Characters/Gandalf",
+        "SourceAssets/Production/Characters/Sam",
+        "SourceAssets/Production/Characters/Merry",
+        "SourceAssets/Production/Characters/Pippin",
+        "SourceAssets/Production/Characters/Hobbit",
+        "SourceAssets/Production/Characters/Rosie",
+        "SourceAssets/Production/Characters/Hamfast",
+        "SourceAssets/Production/Characters/FarmerMaggot"
+      ],
+      "not_final_evidence": "Existing OBJ body parts are static production foundations only; they do not prove rig, skin weights, animation blueprint, deformation, locomotion or runtime interaction.",
+      "remaining_runtime_work": [
+        "Acquire or generate licensed FBX skeletal candidates",
+        "Validate skeleton and deformation",
+        "Bind Idle/Walk/Run/Turn/Interaction",
+        "Create sockets/capsules/materials",
+        "Connect with ShireNPCContextSubsystem and LivingWorldDirector through soft references"
+      ]
+    },
+    "p1c01_mission_audio_cinematic": {
+      "mission_scope": [
+        "Bag End start and exploration",
+        "birthday party setup",
+        "Gandalf fireworks",
+        "Ring handoff and warning",
+        "road departure setup"
+      ],
+      "audio_source_targets": [
+        "wind",
+        "birds and insects",
+        "water",
+        "footsteps by surface",
+        "party ambience",
+        "UI interaction",
+        "licensed music cues or original placeholders"
+      ],
+      "cinematic_targets": [
+        "Bag End approach camera",
+        "Party Field arrival",
+        "firework reaction framing",
+        "Ring handoff close camera",
+        "chapter departure transition"
+      ],
+      "remaining_runtime_work": [
+        "Bind original dialogue and subtitles",
+        "Verify save/load through mission state",
+        "Verify no softlocks with NPC routines"
+      ]
+    }
+  },
+  "next_chapter_source_preparation": {
+    "runtime_activation_rule": "Do not activate P1C02 runtime before P1C01 Gate 6/7 acceptance.",
+    "allowed_now": [
+      "source asset discovery",
+      "license and SHA256 receipts",
+      "Blender conversion/QC",
+      "material and audio source prep",
+      "static support stock organization",
+      "character animation support research"
+    ],
+    "p1c02_bree_targets": {
+      "source_root": "SourceAssets/Production/World/Bree",
+      "priority_groups": [
+        "gate and road arrival",
+        "Prancing Pony exterior/interior",
+        "night rain/street dressing",
+        "mixed Men/Hobbits population support",
+        "rumor and social-stealth interaction props"
+      ]
+    },
+    "p1c03_weathertop_ford_targets": {
+      "source_root": "SourceAssets/Production/World/Weathertop",
+      "priority_groups": [
+        "ruined hilltop ring",
+        "camp and night attack dressing",
+        "wind/weather ambience",
+        "pursuit and wounded-state support",
+        "river crossing handoff source prep"
+      ]
+    }
+  },
+  "acceptance_boundary": {
+    "current_evidence_level": "STATIC-VALIDATED_PENDING",
+    "not_claimed": [
+      "UE Imported",
+      "COMPILE-TESTED",
+      "PIE-TESTED",
+      "DEVICE-TESTED",
+      "VISUALLY-ACCEPTED",
+      "P1C01 Gate 6/7 accepted"
+    ]
+  }
+}
