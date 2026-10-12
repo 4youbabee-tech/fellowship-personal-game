@@ -3003,7 +3003,8 @@
         "Consult live repository/project sources and relevant Epic UE4.27 official documentation plus tested mature developer practices when a material technical decision merits research; discriminate externally sourced advice from Shire-specific verification.",
         "Prepare legal, checked and deduplicated whole-game source inventory for 28 regions and all eight Part I runtime chapters using up to five independent safe preparation lanes and one persistent warehouse writer; P1C01 remains the only runtime-changing lane until predecessor Gate 6/7 evidence is accepted.",
         "No new claim of 30 FPS, PIE, device, visual, physical download, warehouse persistence or Unreal asset import without matching exact-head receipts, logs/screenshots or human acceptance.",
-        "Maintain a short and readable per-session outcome table; avoid building dashboards or generic CI infrastructure just to display percentages."
+        "Maintain a short and readable per-session outcome table; avoid building dashboards or generic CI infrastructure just to display percentages.",
+        "Raise the subsequent net-new verified physical-output stretch to +100% then +150% relative to preceding session's net-new volume when justified by independently useful unique assets; safely miss rather than falsify."
       ],
       "dependencies": [
         "REQ-PROD-011",
@@ -5859,6 +5860,32 @@
         "DEC-107 visible playable precedence; DEC-103 eight serialized chapters; DEC-104 five parallel safe preparation lanes"
       ],
       "evidence_boundary": "GOVERNANCE CONTRACT ONLY until candidate exact-head pre-unreal validation passes. The previously proven 54 binary source FBX are not evidence of warehouse persistence, UE import, in-world visibility, PIE, device FPS, human visual or chapter acceptance."
+    },
+    {
+      "id": "DEC-109",
+      "title": "Escalating net-new session output and 28-region original source preparation",
+      "status": "ACCEPTED",
+      "priority": "CRITICAL",
+      "date": "2026-10-12",
+      "requirements": [
+        "REQ-PROD-012",
+        "REQ-PROD-011",
+        "REQ-WAREHOUSE-001"
+      ],
+      "resolution": "Owner requests +100% incremental verified production next compared to the preceding 28 new FBX, then +150% incremental against that next observed result if worthwhile and safe. Preserve playable Shire priority while supplying all 28 canonical regions and later chapters via source-only lanes.",
+      "implementation_contract": [
+        "Use previous net-new physically verified 28 FBX, not cumulative 82, as next incremental denominator: target 56 physically new regional FBX, which doubles session-to-session additional assets; following 140 is aspirational, not guaranteed.",
+        "Produce 28 region-linked support mesh families with LOD0/LOD1 via existing Blender binary FBX7400 tooling, UV/UCX, Blender reimport, unique hashes and exact authoritative packet coverage; these are not final named landmarks.",
+        "Keep existing 82 source Shire files and 36 PNG maps without double counting; stage these into the single-writer warehouse and then serialized Unreal importer before claiming any in-world visual benefit.",
+        "P1C02+ runtime remains closed until P1C01 Gate 6/7. One runtime writer and one persistent warehouse writer remain.",
+        "Report actual generated, warehoused, imported and observed counts separately. A target is not a generated artifact or visual acceptance."
+      ],
+      "evidence": [
+        "Owner explicitly requested progressive +100% then +150% production growth, 2026-10-12",
+        "PR #428 cloud run 38290772798 generated 82 original source FBX, up 28 from 54",
+        "Data/WholeGameRegionProductionPacketsV1.json defines 28 canonical world regions"
+      ],
+      "evidence_boundary": "NEW 56-REGION SOURCE PRODUCTION IS ONLY A CANDIDATE BEFORE EXACT-HEAD BLENDER AND RECEIPT LOG. No warehouse/Unreal/PIE/device/visual acceptance."
     }
   ],
   "open_conflicts": [],
@@ -8931,15 +8958,15 @@
       "synchronize documentation with code, keep it concise"
     ],
     "current_batch": "PR #421 original Shire tree world integration waiting Windows UE4 compile/runtime; Frodo-first rig and Bag End scene after evidence",
-    "per_session_impact_priority": "DEC-108: report before/after physically generated, warehoused, UE imported and visible-playable outputs separately; pursue a +50% safe stretch for comparable units without hiding Gate 6/7 or GPU memory risks."
+    "per_session_impact_priority": "DEC-109: pursue +100% net-new safe unique output next, +150% later only if independently justified; visible route/warehouse/UE persistence outrank file-count growth."
   },
   "owner_session_impact_reporting_2026_10_12": {
-    "status": "OWNER_DIRECTED_CANDIDATE_PENDING_EXACT_HEAD_STATIC",
+    "status": "OWNER_ACCEPTED_REGISTERED_ON_DEVELOP",
     "policy_id": "DEC-108",
     "owner_role": "PLAYER_AND_PRODUCT_VISION",
     "lead_architect_role": "PROFESSIONAL_INDEPENDENT_ENGINEERING_ADVISER_AND_EXECUTION_OWNER",
     "per_session_delivery": "MANDATORY",
-    "growth_stretch_target_percent": 50,
+    "growth_stretch_target_percent": 100,
     "target_condition": "ONLY_COMPARABLE_SAFE_VERIFIED_OUTPUT; NOT_GUARANTEED",
     "formula": "(current_verified - previous_verified) / previous_verified * 100; N/A if previous_verified <= 0 or noncomparable",
     "scorecard_funnel": [
@@ -9013,19 +9040,17 @@
       "project-specific real execution tests"
     ],
     "current_comparable_physical_source_checkpoint": {
-      "original_source_commit": "407b35b414b0e6a84dbdab9f4041817446fd9b42",
-      "merged_into_develop": "b309d149c94b0c2b9c358fd86775facc365feb70",
-      "workflow_run_id": 38288336015,
-      "artifact_id": 11764013609,
-      "exact_generation_log": "SHIRE_BINARY_FBX_GENERATED assets=27 files=54 blender=4.0.2",
-      "physical_source_qc": "CLOUD_ASSET_STATIC_VALIDATION_PASS materials=12 textures=36 region_bindings=28 binary_fbx=54",
-      "binary_fbx_source_count": 54,
-      "material_png_count": 36,
-      "artifact_wrapper_bytes": 9841895,
-      "warehouse_persisted": "NOT_MEASURED_FOR_THIS_ARTIFACT",
-      "ue_imported": "NOT_MEASURED_FOR_THIS_ARTIFACT",
-      "visually_reviewed": false,
-      "comparator_warning": "44 was an earlier script target (22 families x 2), not an independently sourced comparable verified physical-run baseline in this contract. (54-44)/44 = +22.7% describes planned catalog capacity, not necessarily measured successive physical production."
+      "old_total": 54,
+      "new_total": 82,
+      "prior_net_new": 28,
+      "prior_growth_percent": 51.85,
+      "source_run": 38290772798,
+      "artifact_id": 11765397347,
+      "source_commit": "1ebe9deb8f744826a649e62ebb48e4317bf5c9d7",
+      "merged_commit": "a60e96fd1b7a3280ec008adfe797f255237304de",
+      "warehouse": "NO_PROOF_FOR_NEW_ARTIFACT",
+      "UE4": "NO_PROOF_FOR_NEW_ARTIFACT",
+      "visual": "NO_PROOF_FOR_NEW_ARTIFACT"
     },
     "warehouse_scope": "28 canonical world regions and Part I P1C01-P1C08 source-prep coverage, without duplicate writing; runtime remains P1C01-only",
     "concurrent_source_prep_max": 5,
@@ -9038,6 +9063,21 @@
       "using source generation as Unreal visual proof",
       "claiming 50% without comparable verified denominators",
       "reuploading duplicate hashes to inflate progress"
+    ],
+    "progressive_stretch_targets": [
+      {
+        "phase": "next",
+        "prior_net_new_fbx": 28,
+        "target_net_new_fbx": 56,
+        "delta_growth_percent": 100
+      },
+      {
+        "phase": "following_aspirational",
+        "prior_net_new_fbx": 56,
+        "target_net_new_fbx": 140,
+        "delta_growth_percent": 150,
+        "condition": "distinct useful content, safe verified generation and playable pipeline conversion"
+      }
     ]
   }
 }
