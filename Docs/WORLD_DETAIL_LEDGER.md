@@ -1,3 +1,7 @@
+## 2026-10-12 - 82 Shire original FBX production candidate
+
+Expands source candidate from hosted-proven 54 FBX / 27 Shire families (Run 38288336015) to 41 families / 82 FBX (14 new families, 28 additional LOD files; 51.85% target increase in comparable source count). New original procedural static props: FerryQueueBench, ReedPlanter, OrchardCrate, MarketStall, MarketBasket, HerbDryingRack, RusticSign, GrainSackStack, WindowFlowerBox, GateLantern, BridgeRailing, GardenTrellis, FarmToolRack, PartyServingCounter. Blender binary 7400, reimport UV/UCX, SHA receipts and 28-region material assets remain gated by exact-head GitHub Actions. This is NOT proof of actual 82 physical FBX yet. No automatic Warehouse/UE world residency, PIE, device FPS or visual acceptance claim. Preserve single Warehouse/UE runtime writers and Gate6/7.
+
 
 ## 2026-10-12 - DEC-108: accountable per-session growth and independent engineer judgement
 
