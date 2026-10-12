@@ -5774,6 +5774,34 @@
         "Docs/DEVELOPMENT_GATES.md"
       ],
       "evidence_boundary": "PR #372 merged a004d47b6c7d4681a328d88a12fc5de4819e1f11, exact-head hosted Pre-Unreal #38134887589 SUCCESS and Five-Lane #38134887757 SUCCESS. STATIC-VALIDATED source/CI only. Manual Windows packaging, UE compile, PIE, DEVICE, VISUAL, FPS and Gate 6/7 are NOT tested/accepted by this change."
+    },
+    {
+      "id": "DEC-107",
+      "title": "Owner-approved game-wide visible playable delivery and parallel chapter preparation",
+      "status": "ACCEPTED",
+      "priority": "CRITICAL",
+      "date": "2026-10-12",
+      "requirements": [
+        "REQ-PROD-011",
+        "REQ-WORLD-001",
+        "REQ-WORLD-002"
+      ],
+      "resolution": "Visible playable scenery, actual character motion, coherent story traversal, sound, target-device performance and human visual review outrank expanding CI scripts/docs/back-end without a measured blocker. Prep content for up to five chapters in independent source-only lanes concurrently; one warehouse writer and one P1C01 runtime-changing writer remain. Runtime chapter progression stays Gate 6/7 predecessor-gated.",
+      "implementation_contract": [
+        "Reuse verified 34 original Shire mesh families/46 sidecar LODs/63 textures/21 material instances and close world placement and material-slot/visible persistence gaps before redoing source import.",
+        "Finish Frodo-first skeletal animation and actual Bag End/Hobbiton/Ferry traversable environment; do not infer rendered beauty from import.",
+        "Keep five source/art/animation/audio chapter-prep lanes active when possible; no parallel conflicting Unreal world writers or future chapter runtime before predecessor gate.",
+        "Use only targeted existing CI and real UE4.27 checks for changed scope; no new generic workflow/dashboard scripts without a demonstrated failure.",
+        "Persist Content/Production .uasset residency/receipt to real editor/cook/package, because this directory is Git-ignored.",
+        "Use original FBX, PNG/TGA packed materials, asynchronous FStreamableManager, soft references, HISM/LOD/culling and pooled NPCs within 720p DX11 low-memory profile.",
+        "Each meaningful PR synchronizes current state and completeness and identifies exact SHA, CI, runtime, PIE, device, human visual evidence boundaries; never claim one as another."
+      ],
+      "evidence": [
+        "External owner-supplied Shire Journey production speed review, 2026-10-12, 7 pages",
+        "develop b6b3e302 original curated UE4.27 import receipts and P1C01 world builder",
+        "PR #421 pending original tree HISM integration"
+      ],
+      "evidence_boundary": "Accepted production decision only. No new Unreal build/PIE/device/visual acceptance. P1C01 Gate 6/7 open."
     }
   ],
   "open_conflicts": [],
@@ -6487,7 +6515,7 @@
   "current_focus": {
     "production_lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
-    "rule": "P1C01 is the sole runtime-changing chapter. VISIBLE SHIRE FIRST is the active tie-breaker: aggressively improve human character presentation plus natural terrain, landmarks, architecture, roads/hedges/woodland/Ferry, vegetation/materials and lighting in large coherent production packets. The Lead Game Architect resolves routine blockers through root-cause research, broad legal/open-source discovery and reusable pipelines without waiting on the owner. Exactly one runtime-changing P1C01 writer remains authoritative; do not open P1C02 runtime until P1C01 Gate 6/7 is accepted with real evidence.",
+    "rule": "Owner-accepted visible-playable delivery across entire game: P1C01 only runtime writer until Gate 6/7, while up to five independent future-chapter SOURCE_ONLY prep lanes run concurrently. Prioritize imported, rendered FBX/PBR scenery, real skeletal character animation, coherent playable quest routes and audio. Avoid new generic CI/docs without verified defect; maintain canon, save, low-spec, async/soft/HISM/pooling and exact evidence.",
     "machine_baseline": {
       "runtime_sha": "1066cf022723fcdef9bfac66519f5b0f9c1e03a4",
       "pre_unreal": "#1109 SUCCESS",
@@ -7449,6 +7477,20 @@
         "WORK-PERF-006"
       ],
       "next_action": "Validate drop 1. Then continue ordered P1C01 production; spatial audio/foley, vegetation material motion and skeletal IK remain scheduled inside later W01 stages rather than as parallel scope."
+    },
+    {
+      "id": "EXT-REV-2026-10-12-001",
+      "source": "Owner-uploaded seven-page Shire Journey production acceleration review",
+      "verification_status": "PARTIAL_LIVE_DEVELOP_RECONCILIATION",
+      "claim": "Scripts, CI and governance expand faster than visible playable content; the game lacks real accepted animated character visuals, route PIE and target-device profile.",
+      "verified_result": "Code retains primitive fallbacks and Content/Production assets are Git-ignored. Report's zero-FBX repo snapshot does not disprove later Windows editor imports of 34 family FBX/46 LOD/63 PNG/21 MI. PIE, visuals and 720p target evidence remain open.",
+      "disposition": "ACCEPT_WITH_CURRENT_EVIDENCE_CORRECTIONS",
+      "linked_requirements": [
+        "REQ-PROD-011",
+        "REQ-WORLD-001"
+      ],
+      "next_action": "Finish PR #421 exact-head Unreal check, audit imported .uasset persistence, implement Frodo and coherent playable Shire scenes; prepare later chapters source-only.",
+      "verification_sha": "b6b3e302aa5dbdfe50276fbbe5e2b72a9bb52b63"
     }
   ],
   "project_source_library": {
@@ -7682,11 +7724,12 @@
       "warehouse_run": 232
     },
     "next_actions": [
-      "Run the P1C01 Frodo/Gandalf skeletal Candidate Wave against the exact candidate head and inspect the warehouse receipt/report; do not infer readiness from filenames.",
-      "Promote and integrate Frodo first only after provenance, real skeleton, skin-weight, deformation, locomotion, material, socket and low-spec QC succeed; keep modular fallback visible until SK_Frodo plus ABP_Frodo_Locomotion resolve asynchronously.",
-      "After Frodo exact-head machine-green, repeat the proven path for Gandalf; do not fan out across additional characters.",
-      "Continue P1C01 in the registered A-I car order and keep P1C02-P1C08 runtime predecessor-gated.",
-      "Collect fail-closed Gate 6/7 evidence; no PIE/device/visual/pacing/performance claim may be inferred from CI."
+      "Complete PR #421 exact-head UE4.27 C++ and runtime checks; verify actual grounded imported tree mesh/material and retain Gate6/7 OPEN until real proof.",
+      "Audit Git-ignored Content/Production .uasset persistence from Windows editor to playable cook; repair only observed gaps.",
+      "Finish Frodo-first real skeletal locomotion and material/deformation QC using existing authorized source pipeline, retaining modular fallback until async resolved.",
+      "Deliver coherent Bag End-Hobbiton-Ferry scene/art/audio/quest/save slices, with preview and route evidence rather than administrative-only PRs.",
+      "Prepare licensed FBX/material/audio/animation for later chapters in up to five separate SOURCE_ONLY lanes concurrently; one warehouse and P1C01 runtime writer only.",
+      "Collect explicit Windows package, chapter PIE, DX11 720p FPS/VRAM and human visual/pacing Gate6/7 evidence before activating P1C02."
     ],
     "runner_infrastructure_guard": "HARD: service-mode runner ownership is eliminated, not merely discouraged. actions.runner.* must be absent or Stopped+Disabled pending deletion. UE4-27-Windows runs only via the interactive-user watchdog; NETWORK SERVICE/LOCAL SERVICE/SYSTEM are forbidden.",
     "production_freeze": {
@@ -8793,5 +8836,41 @@
     "test": "Scripts/test_offline_runtime_safety.py",
     "runner": "OWNER_WINDOWS_SELF_HOSTED_OFF",
     "deferred": "Real UE4.27 compile, PIE movement/restore roundtrip, target-device and visual acceptance"
+  },
+  "visible_playable_production_protocol_2026_10_12": {
+    "status": "OWNER_ACCEPTED",
+    "scope": "ALL_GAME_ALL_CHAPTERS",
+    "priority": "VISIBLE_PLAYABLE_DELIVERY_OVER_ADMINISTRATIVE_VOLUME",
+    "five_parallel_preparation_lanes": [
+      "characters and rigged FBX",
+      "regional scenery and architecture FBX",
+      "vegetation and packed PNG/TGA material kits",
+      "animation and audio",
+      "chapter-specific preproduction/source QA for future regions"
+    ],
+    "runtime_writer": "ONE_P1C01_UNTIL_GATE67",
+    "warehouse_writer": "ONE_APPROVED_WINDOWS_WRITER",
+    "output_metrics": [
+      "real imported and persistently available .uasset packages",
+      "actual in-world mesh instances and materially correct scenes",
+      "character locomotion and interaction on a playable route",
+      "PIE/save/quest traversability",
+      "measured target-device DX11 720p FPS/VRAM and human visual acceptance"
+    ],
+    "bottlenecks": [
+      "Game-imported Content/Production ignored in Git; require real runner package residence/cook evidence",
+      "Prototype geometry/fallbacks remain prominent",
+      "Frodo skeletal not finalized",
+      "No whole-P1C01 Gate6/7 evidence"
+    ],
+    "rules": [
+      "no speculative new CI or manager system",
+      "reuse existing import/preview and exact-head tests",
+      "quarantine only failed source item while continuing independent lanes",
+      "no unverified animation or license promotion",
+      "no P1C02+ runtime before accepted predecessor",
+      "synchronize documentation with code, keep it concise"
+    ],
+    "current_batch": "PR #421 original Shire tree world integration waiting Windows UE4 compile/runtime; Frodo-first rig and Bag End scene after evidence"
   }
 }
