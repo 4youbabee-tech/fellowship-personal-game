@@ -76,7 +76,10 @@ def create_fixture(root):
 class MockObject:
     def __init__(self, path=''):
         self.path = path
-    def get_path_name(self): return self.path
+    def get_path_name(self):
+        if self.path.startswith('/Game/'):
+            return self.path + '.' + self.path.rsplit('/', 1)[1]
+        return self.path
 
 class MockMaster(MockObject):
     pass
@@ -161,7 +164,7 @@ class MockEngine:
                 return engine.objects[path]
             @staticmethod
             def save_loaded_asset(asset,only_if_is_dirty=False):
-                rel = asset.get_path_name().removeprefix('/Game/') + '.uasset'
+                rel = asset.get_path_name().split('.', 1)[0].removeprefix('/Game/') + '.uasset'
                 target = engine.root/'Content'/rel
                 target.parent.mkdir(parents=True,exist_ok=True)
                 target.write_bytes(b'MOCK_ONLY_NOT_REAL_UASSET')
@@ -292,5 +295,20 @@ class CuratedPlanTests(unittest.TestCase):
             editor.editor_apply(engine, self.root)
         self.assertFalse((self.root/'Saved/P1C01CuratedEditorPostImport/receipt.json').exists())
 
+
+
+    def test_auto_windows_curated_workflow_is_exact_head_and_single_writer(self):
+        wf = (Path(__file__).resolve().parents[1] /
+              '.github/workflows/unreal-build-validation.yml').read_text(encoding='utf-8')
+        classifier = (Path(__file__).resolve().parents[1] /
+              'Scripts/classify_unreal_validation.ps1').read_text(encoding='utf-8')
+        self.assertIn("github.event_name == 'pull_request'", wf)
+        self.assertIn("needs.classify.outputs.curated == 'true'", wf)
+        self.assertIn("env.SHIRE_CURATED_REQUIRED == 'true'", wf)
+        self.assertIn('run_p1c01_curated_ue4.ps1', wf)
+        self.assertIn('Set-Mode "curated"', classifier)
+        self.assertIn("Scripts/ue4_p1c01_curated_postimport.py", classifier)
+        # The curated branch invokes its one importer through the wrapper.
+        self.assertNotIn("if: env.SHIRE_CURATED_REQUIRED == 'true'\n        shell: cmd", wf)
 
 if __name__=='__main__': unittest.main()

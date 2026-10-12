@@ -272,6 +272,7 @@ jobs:
       asset: ${{ steps.classify.outputs.asset }}
       acceptance: ${{ steps.classify.outputs.acceptance }}
       package: ${{ steps.classify.outputs.package }}
+      curated: ${{ steps.classify.outputs.curated }}
     steps:
       - name: Checkout exact candidate for classification
         uses: actions/checkout@v4
@@ -303,10 +304,14 @@ jobs:
 
   unreal-build:
     needs: classify
-    # The offline owner runner is reserved for real engine work, not policy/docs.
+    # Owner-authorized automatic exact-head Windows integration.
+    # Classification keeps docs/source-only edits on hosted CI; the single
+    # UE4-27 runner serializes only engine-impacting or curated importer work.
     if: >-
-      ${{ github.event_name == 'workflow_dispatch' && inputs.run_self_hosted == true &&
-          (needs.classify.outputs.full == 'true' || needs.classify.outputs.core == 'true' ||
+      ${{ (github.event_name == 'pull_request' || github.event_name == 'push' ||
+            (github.event_name == 'workflow_dispatch' && inputs.run_self_hosted == true)) &&
+          (needs.classify.outputs.curated == 'true' ||
+           needs.classify.outputs.full == 'true' || needs.classify.outputs.core == 'true' ||
            (needs.classify.outputs.acceptance == 'true' && needs.classify.outputs.resume_stage == 'startup') ||
            needs.classify.outputs.package == 'true') }}
     name: UE4.27.2 C++ Build
@@ -416,7 +421,8 @@ jobs:
           Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_ASSET_IMPORT_ONLY=${{ needs.classify.outputs.asset }}"
           Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_ACCEPTANCE_ONLY=${{ needs.classify.outputs.acceptance }}"
           Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_PACKAGE_REQUIRED=${{ needs.classify.outputs.package }}"
-          if ("${{ needs.classify.outputs.mode }}" -notin @("full","core","asset","acceptance")) {
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_CURATED_REQUIRED=${{ needs.classify.outputs.curated }}"
+          if ("${{ needs.classify.outputs.mode }}" -notin @("full","core","asset","acceptance","curated")) {
             throw "Unexpected hosted Unreal mode: ${{ needs.classify.outputs.mode }}"
           }
 
@@ -431,6 +437,14 @@ jobs:
           if not defined GITEXE if exist "%RUNNER_TEMP%\mingit-2.55.0.5\cmd\git.exe" set "GITEXE=%RUNNER_TEMP%\mingit-2.55.0.5\cmd\git.exe"
           if defined GITEXE "!GITEXE!" remote set-url origin "https://github.com/%GITHUB_REPOSITORY%.git" >nul 2>nul
           exit /b 0
+
+      - name: Automatic P1C01 curated original LOD and packed-material import
+        if: env.SHIRE_CURATED_REQUIRED == 'true'
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          & "$env:GITHUB_WORKSPACE\Scripts\run_p1c01_curated_ue4.ps1" -ExpectedSha "$env:TARGET_SHA" -Workspace "$env:GITHUB_WORKSPACE"
+          if ($LASTEXITCODE -ne 0) { throw "P1C01_CURATED_EDITOR_IMPORT_FAILED exit=$LASTEXITCODE" }
 
       - name: Governance/docs-only Unreal fast path
         if: env.SHIRE_UNREAL_MODE == 'inherit'

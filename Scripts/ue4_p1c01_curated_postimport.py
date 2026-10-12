@@ -100,7 +100,9 @@ def finish_materials(unreal, root, plan):
         for kind, parameter in MAP_PARAMETERS.items():
             observed = unreal.MaterialEditingLibrary.get_material_instance_texture_parameter_value(
                 reloaded, parameter)
-            if not observed or observed.get_path_name() != maps[kind]['asset_path']:
+            texture_package = maps[kind]['asset_path']
+            expected_object = texture_package + '.' + texture_package.rsplit('/', 1)[1]
+            if not observed or observed.get_path_name() != expected_object:
                 raise RuntimeError('P1C01_MI_TEXTURE_NOT_PERSISTED:' + path + ':' + kind)
         instance_by_group[group] = reloaded
         material_report.append({'asset': path, 'source_group': group,
