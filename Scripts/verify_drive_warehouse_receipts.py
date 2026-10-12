@@ -101,8 +101,10 @@ def verify_receipt(warehouse, name, expected, receipts):
     record = matches[0]
     remote_id = record.get("remote_id", "")
     remote_md5 = str(record.get("remote_md5", "")).lower()
+    remote_md5_available = record.get("remote_md5_available", True)
     if (not re.fullmatch(r"[A-Za-z0-9_-]{8,200}", remote_id)
-            or not re.fullmatch(r"[0-9a-f]{32}", remote_md5)
+            or not (re.fullmatch(r"[0-9a-f]{32}", remote_md5)
+                    or (remote_md5 == "drive_md5_unavailable" and remote_md5_available is False))
             or record.get("remote_size") != expected["byte_size"]
             or record.get("state") != "LOCAL_STAGED_NOT_IMPORTED"
             or record.get("license_status") != "UNVERIFIED_NOT_IMPORTABLE"):
@@ -116,7 +118,9 @@ def verify_receipt(warehouse, name, expected, receipts):
     if path.stat().st_size != expected["byte_size"]:
         raise ValueError("WAREHOUSE_SIZE_MISMATCH")
     local_sha, local_md5 = digests(path)
-    if local_sha != expected["sha256"] or local_md5 != remote_md5:
+    if local_sha != expected["sha256"]:
+        raise ValueError("WAREHOUSE_SHA256_MISMATCH")
+    if remote_md5_available is not False and local_md5 != remote_md5:
         raise ValueError("WAREHOUSE_SHA256_OR_REMOTE_MD5_MISMATCH")
     return path, remote_id, local_md5
 
