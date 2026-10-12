@@ -116,7 +116,10 @@ jobs:
             # Original-project asset stage only. Preserve the single persistent
             # source writer; no editor invocation or runtime acceptance here.
             $curatedSource = 'D:\actions-runner\_warehouse\ShireJourney\_drive_temp_staging\curated_p1c01\SHIRE_P1C01_CURATED_SOURCE_20261012.zip'
-            $originalStage = 'D:\actions-runner\_warehouse\ShireJourney\_drive_temp_staging\curated_ue4_original'
+            $originalStageRoot = 'D:\actions-runner\_warehouse\ShireJourney\_drive_temp_staging\curated_ue4_original'
+            $safeSha = $env:GITHUB_SHA
+            if ($safeSha -notmatch '^[0-9a-f]{40}$') { throw 'P1C01_CURATED_STAGE_SHA_INVALID' }
+            $originalStage = Join-Path $originalStageRoot $safeSha
             $stageTool = Join-Path $p 'Scripts\stage_p1c01_curated_original.py'
             if ($pythonExe) {
               & $pythonExe $stageTool --archive $curatedSource --workspace $originalStage
@@ -124,6 +127,16 @@ jobs:
               & $pyLauncher.Source -3.12 $stageTool --archive $curatedSource --workspace $originalStage
             }
             if ($LASTEXITCODE -ne 0) { throw 'P1C01_CURATED_ORIGINAL_STAGE_FAILED' }
+            $latest = Join-Path $originalStageRoot 'latest_stage.json'
+            $receipt = Join-Path $originalStage 'Saved\P1C01CuratedStage\receipt.json'
+            if (!(Test-Path -LiteralPath $receipt -PathType Leaf)) { throw 'P1C01_CURATED_ORIGINAL_STAGE_RECEIPT_MISSING' }
+            New-Item -Force -ItemType Directory -Path $originalStageRoot | Out-Null
+            @{
+              head_sha = $safeSha
+              stage_workspace = $originalStage
+              receipt = $receipt
+              state = 'SOURCE_STAGED_FOR_CURATED_UE4_IMPORT_NOT_IMPORTED'
+            } | ConvertTo-Json | Set-Content -LiteralPath $latest -Encoding UTF8
 
             # Only verified staging is unattended. Remote deletion requires separately
             # established import acceptance and independent backup evidence.
