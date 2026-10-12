@@ -256,6 +256,34 @@ class SourceContractTests(unittest.TestCase):
         self.assertNotIn("SpawnActor<AShireAmbientNPC>", body)
 
 
+    def test_p1c01_chapter_finish_world_art_pass_is_bounded(self):
+        root = Path(__file__).resolve().parents[1]
+        source = (root / "Source" / "ShireJourney" / "Private" / "World" / "ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        header = (root / "Source" / "ShireJourney" / "Public" / "World" / "ShirePrototypeWorldBuilder.h").read_text(encoding="utf-8")
+        start = source.index("void AShirePrototypeWorldBuilder::SpawnP1C01ChapterFinishWorldArtPass()")
+        end = source.index("void AShirePrototypeWorldBuilder::SpawnShireSettlementCompletionPass()", start)
+        body = source[start:end]
+        build = source[source.index("void AShirePrototypeWorldBuilder::BuildPrototypeWorld()"):]
+
+        self.assertIn("void SpawnP1C01ChapterFinishWorldArtPass();", header)
+        self.assertIn("P1C01_CHAPTER_FINISH_WORLD_ART", body)
+        self.assertEqual(body.count("SpawnFinishCluster("), 5)
+        self.assertIn("Cluster->Configure(Mesh, false", body)
+        self.assertIn("collision=none tick=none", body)
+        self.assertIn("visual=pending", body)
+        self.assertIn("p1c02Runtime=no", body)
+        self.assertIn("BagEndGardenEdges", body)
+        self.assertIn("HobbitonYardFlowerBoxes", body)
+        self.assertIn("WorkedFieldFenceRhythm", body)
+        self.assertIn("WoodedRoadUnderstory", body)
+        self.assertIn("FerryLandingReeds", body)
+        self.assertLess(
+            build.index("SpawnP1C01ChapterFinishWorldArtPass();"),
+            build.index("SpawnShireSettlementCompletionPass();"))
+        for forbidden in ("LoadObject<", "StaticLoadObject", "RequestSyncLoad", "SpawnActor<AShireAmbientNPC>"):
+            self.assertNotIn(forbidden, body)
+
+
     def test_p1c01_bag_end_hero_pass_is_bounded_and_state_driven(self):
         root = Path(__file__).resolve().parents[1]
         contract = json.loads((root / "Data" / "P1C01BagEndHeroChapterV1.json").read_text(encoding="utf-8"))
