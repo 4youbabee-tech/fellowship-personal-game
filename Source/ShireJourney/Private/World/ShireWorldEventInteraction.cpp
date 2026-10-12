@@ -129,7 +129,9 @@ void AShireWorldEventInteraction::Interact_Implementation(AActor* Interactor)
 
     if (!IsInteractionAllowed())
     {
-        DisableInteraction();
+        // Story danger and committed-world context can change while this micro-event
+        // is alive. Refusing an attempt must not mark the event consumed: the player
+        // may safely retry if the same event is still active after danger clears.
         return;
     }
 
@@ -140,7 +142,18 @@ void AShireWorldEventInteraction::Interact_Implementation(AActor* Interactor)
 
     if (!ResponseText.IsEmpty())
     {
-        ShowAlert(ResponseText, 2.4f);
+        if (APlayerController* PC = GetWorld() ? GetWorld()->GetFirstPlayerController() : nullptr)
+        {
+            if (AShireHUD* HUD = Cast<AShireHUD>(PC->GetHUD()))
+            {
+                // ShowAlert shares one slot: a second alert immediately erased the
+                // player's prompt. The wrapped dialogue channel renders separately.
+                HUD->ShowDialogue(
+                    FText::FromString(TEXT("A passing moment")),
+                    ResponseText,
+                    3.6f);
+            }
+        }
     }
 
     DisableInteraction();

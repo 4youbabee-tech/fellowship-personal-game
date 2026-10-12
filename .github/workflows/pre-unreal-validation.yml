@@ -161,6 +161,9 @@ jobs:
       - name: Test P1C01 multi-zone curated nature runtime evidence contract
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_p1c01_curated_world_runtime.py" -v
 
+      - name: Test P1C01 living micro-event transient danger and HUD feedback
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_p1c01_living_event_feedback.py" -v
+
       - name: Test Governor semantic contracts
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_governance_contracts.py" -v
 
