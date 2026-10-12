@@ -47,6 +47,10 @@ class DriveWarehouseTests(unittest.TestCase):
         self.assertIn("RCLONE_MISSING_AFTER_PATH_REFRESH", workflow)
         self.assertIn("PYTHON_MISSING_AFTER_PATH_REFRESH", workflow)
         self.assertIn("--rclone-bin $rclone.Source", workflow)
+        self.assertIn("$safeSha = $env:GITHUB_SHA", workflow)
+        self.assertIn("Join-Path $originalStageRoot $safeSha", workflow)
+        self.assertIn("P1C01_CURATED_ORIGINAL_STAGE_RECEIPT_MISSING", workflow)
+        self.assertIn("latest_stage.json", workflow)
         self.assertNotIn("winget install", workflow)
         self.assertNotIn("--mode cleanup", workflow)
 
