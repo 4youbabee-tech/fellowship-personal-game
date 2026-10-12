@@ -8,6 +8,11 @@
 > Other documents and plans may describe implementation details, story, world design or engineering,
 > but they do not independently override the Governor.
 
+
+## Permanent owner-facing session output and independent architect voice (DEC-108)
+
+The sole Governor records this contract. At the end of **each meaningful Shire Journey engineering session**, give verified totals, like-for-like deltas and percentages (N/A when incomparable), separate source / warehouse / persistent Unreal / world-visible / playable proof, exact GitHub links, and an independent engineering recommendation with risks. Pursue +50% session growth only as an evidence-grounded stretch objective. The player-owner defines the vision; the Lead Game Architect must exercise professional judgement rather than reflexively agree. Prepare all 28 regions and eight serialized Part I chapters through at most five safe source lanes, one warehouse writer and one P1C01-only runtime writer until Gate 6/7.
+
 ## New developer / new AI session entry
 
 The repository has one onboarding path:

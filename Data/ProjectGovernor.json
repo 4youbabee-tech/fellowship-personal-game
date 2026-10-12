@@ -2986,6 +2986,32 @@
         "REQ-QA-002",
         "REQ-PERF-001"
       ]
+    },
+    {
+      "id": "REQ-PROD-012",
+      "title": "Evidence-grounded per-session growth reporting and independent lead-architect recommendations",
+      "category": "ProductionPipeline",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Owner directive 2026-10-12: owner is an enjoyment-first player, requests visible production growth per work session, a 50% aspirational production increment, whole-game warehouse coverage, and an independent engineering recommendation in every substantial engineering handoff.",
+      "intent": "At every completed Shire Journey work session give the owner a simple, factual before/after production report and a professionally independent recommended next action, with persistent source-backed comparisons. Accelerate safe content production across the entire intended game while integrating the Shire into a visible playable world before promoting subsequent runtime chapters.",
+      "acceptance_criteria": [
+        "Every completed work-session handoff shows verified previous and current totals, absolute delta and percentage delta for like-for-like metrics with named evidence links, or explicitly reports NOT_MEASURED where a comparable baseline is unavailable.",
+        "Track physical source FBX/PNG/TGA/animation/audio separately from unique warehouse-stored bytes/assets, persistently UE-imported .uasset packages, in-world placed/resident assets and gameplay/route/character progress; never sum overlapping inventories or count listed/ZIP entries as imported/rendered assets.",
+        "Use +50% session-over-session as an aspirational, resource-constrained growth target for comparable eligible production outputs; missed targets require a root-cause explanation and a best safe alternative, not inflated counts, fabricated acceptance, duplicate files or relaxed gates.",
+        "Each substantial response contains an explicit lead architect opinion, chosen next action, likely player-visible gain, primary risk and evidence basis; respectfully disagree with the owner when required by gameplay, architecture, canon, evidence, performance or scope.",
+        "Consult live repository/project sources and relevant Epic UE4.27 official documentation plus tested mature developer practices when a material technical decision merits research; discriminate externally sourced advice from Shire-specific verification.",
+        "Prepare legal, checked and deduplicated whole-game source inventory for 28 regions and all eight Part I runtime chapters using up to five independent safe preparation lanes and one persistent warehouse writer; P1C01 remains the only runtime-changing lane until predecessor Gate 6/7 evidence is accepted.",
+        "No new claim of 30 FPS, PIE, device, visual, physical download, warehouse persistence or Unreal asset import without matching exact-head receipts, logs/screenshots or human acceptance.",
+        "Maintain a short and readable per-session outcome table; avoid building dashboards or generic CI infrastructure just to display percentages."
+      ],
+      "dependencies": [
+        "REQ-PROD-011",
+        "REQ-WAREHOUSE-001",
+        "REQ-EXEC-003",
+        "REQ-PERF-001",
+        "REQ-QA-001"
+      ]
     }
   ],
   "hard_invariants": [
@@ -5802,6 +5828,37 @@
         "PR #421 pending original tree HISM integration"
       ],
       "evidence_boundary": "Accepted production decision only. No new Unreal build/PIE/device/visual acceptance. P1C01 Gate 6/7 open."
+    },
+    {
+      "id": "DEC-108",
+      "title": "Permanent owner-facing session deltas, 50% stretch growth and independent architecture advice",
+      "status": "ACCEPTED",
+      "date": "2026-10-12",
+      "priority": "CRITICAL",
+      "requirements": [
+        "REQ-PROD-012",
+        "REQ-PROD-011",
+        "REQ-WAREHOUSE-001"
+      ],
+      "resolution": "Adopt one outcome-first report after every engineering session with honest like-for-like growth comparisons and persistent independent engineering judgement. Set 50% as a stretch objective for safe measurable output, not a non-waivable production quota. Preserve DEC-107 visible playable precedence, one persistent warehouse writer, one P1C01 runtime writer, exactly the existing five parallel source preparation tracks when safe, 28-region whole-game warehouse coverage and eight serialized Part I runtime chapters.",
+      "implementation_contract": [
+        "After each session report previous total, current total, numeric delta, comparable percentage growth (new-old)/old*100 and measurement unit for at least the most relevant verified delivered output; use N/A when baseline is zero/missing/different scope.",
+        "Distinguish COUNT_PLANNED, SOURCE_GENERATED_QC, WAREHOUSE_PERSISTED_QC, UE_IMPORTED_PERSISTED, WORLD_PLACED_OBSERVED and PLAYABLE_EVIDENCE; one status never silently promotes into another.",
+        "Count only unique, durable, attributable payload identities; reconcile SHA256 receipts, deduplicate paths and distinguish inner source ZIP SHA from Actions artifact wrapper SHA.",
+        "Track Shire player-facing progress separately from preparation across P1C02-P1C08 and all 28 canonical regions; report physical staged bytes, number of regions with QC-ready stock and remaining coverage, only if confirmed by live inventory receipts.",
+        "The lead architect must include an independent recommendation and politely challenge proposals that reward file volume over actual new rendered, playable, performant experience.",
+        "Use existing Governor/reporting and asset pipelines instead of creating new administrative systems or unbounded heavy workflow dispatch; keep safe resource limits and up to five independent source lanes.",
+        "Gate 6/7 remains fail-closed. No future chapter runtime activation and no false local-device/visual/performance acceptance.",
+        "Persist contract in the sole ProjectGovernor.json and synchronized supporting documentation; no separate decision authority."
+      ],
+      "rationale": "The owner evaluates progress as a player and wants a concrete, readable feeling of meaningful production after every session. A simple audited conversion funnel exposes whether FBX increases actually enter the warehouse and Unreal world; a stretch target encourages throughput without rewarding duplication or bypassing target-device and quality gates.",
+      "evidence": [
+        "Owner directive 2026-10-12",
+        "PR #426 exact-head CloudAssetBuild run 38288336015: SHIRE_BINARY_FBX_GENERATED assets=27 files=54 and CLOUD_ASSET_STATIC_VALIDATION_PASS binary_fbx=54",
+        "PR #426 merged b309d149c94b0c2b9c358fd86775facc365feb70",
+        "DEC-107 visible playable precedence; DEC-103 eight serialized chapters; DEC-104 five parallel safe preparation lanes"
+      ],
+      "evidence_boundary": "GOVERNANCE CONTRACT ONLY until candidate exact-head pre-unreal validation passes. The previously proven 54 binary source FBX are not evidence of warehouse persistence, UE import, in-world visibility, PIE, device FPS, human visual or chapter acceptance."
     }
   ],
   "open_conflicts": [],
@@ -7678,7 +7735,8 @@
     "audience": "OWNER",
     "automation_id": "6ab288ade9308191ae2410214f0b4d52",
     "schedule": "Daily 17:05 Asia/Beirut, re-enabled 2026-09-26; first scheduled report 2026-09-27",
-    "baseline_note": "40 is a historical planning baseline, not a fresh measurement. CompletionWaveMap maps W00 exit to 42; reconcile exit evidence before publishing a refreshed percentage. Daily delta unavailable without comparable snapshots."
+    "baseline_note": "40 is a historical planning baseline, not a fresh measurement. CompletionWaveMap maps W00 exit to 42; reconcile exit evidence before publishing a refreshed percentage. Daily delta unavailable without comparable snapshots.",
+    "session_report_rule": "In addition to the existing daily schedule, every engineering session reports DEC-108 baseline/actual/delta/growth and a lead architect recommendation with evidence. Do not alter daily cadence or reuse historical planning-completion percentage as an output measure."
   },
   "cross_system_audit_cycle": {
     "status": "ACTIVE_ENFORCED",
@@ -8633,7 +8691,8 @@
       "A new worker may improve implementation details but may not silently lower the visible-quality target, narrow source discovery, weaken technical gates, reopen rejected exact payloads or revert to backend-first delivery.",
       "When a better proven method is discovered, update the Governor with evidence and supersede the old method explicitly rather than drifting informally."
     ],
-    "evidence_claim_boundary": "COMPILE/STATIC/UE4 machine evidence never implies PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED or FPS acceptance without chapter-specific proof."
+    "evidence_claim_boundary": "COMPILE/STATIC/UE4 machine evidence never implies PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED or FPS acceptance without chapter-specific proof.",
+    "owner_opinion_in_every_handoff": "DEC-108: every substantive work-session reply includes the architect's independent judgement, reasons and principal tradeoff; politely reject unsafe or low-player-value owner suggestions while preserving owner product vision. Rely on official UE4.27/mature developer evidence where pertinent, but only project tests establish actual readiness."
   },
   "owner_fast_batch_intake_policy_2026_10_11": {
     "policy_id": "OWNER_FAST_BATCH_INTAKE_2026_10_11",
@@ -8871,6 +8930,114 @@
       "no P1C02+ runtime before accepted predecessor",
       "synchronize documentation with code, keep it concise"
     ],
-    "current_batch": "PR #421 original Shire tree world integration waiting Windows UE4 compile/runtime; Frodo-first rig and Bag End scene after evidence"
+    "current_batch": "PR #421 original Shire tree world integration waiting Windows UE4 compile/runtime; Frodo-first rig and Bag End scene after evidence",
+    "per_session_impact_priority": "DEC-108: report before/after physically generated, warehoused, UE imported and visible-playable outputs separately; pursue a +50% safe stretch for comparable units without hiding Gate 6/7 or GPU memory risks."
+  },
+  "owner_session_impact_reporting_2026_10_12": {
+    "status": "OWNER_DIRECTED_CANDIDATE_PENDING_EXACT_HEAD_STATIC",
+    "policy_id": "DEC-108",
+    "owner_role": "PLAYER_AND_PRODUCT_VISION",
+    "lead_architect_role": "PROFESSIONAL_INDEPENDENT_ENGINEERING_ADVISER_AND_EXECUTION_OWNER",
+    "per_session_delivery": "MANDATORY",
+    "growth_stretch_target_percent": 50,
+    "target_condition": "ONLY_COMPARABLE_SAFE_VERIFIED_OUTPUT; NOT_GUARANTEED",
+    "formula": "(current_verified - previous_verified) / previous_verified * 100; N/A if previous_verified <= 0 or noncomparable",
+    "scorecard_funnel": [
+      {
+        "name": "SOURCE_GENERATED_QC",
+        "units": [
+          "unique_fbx",
+          "unique_png_tga",
+          "animation_clips",
+          "approved_audio",
+          "bytes"
+        ],
+        "evidence": "actual exporter/importer QC log plus artifact item/hash receipts"
+      },
+      {
+        "name": "WAREHOUSE_PERSISTED_QC",
+        "units": [
+          "deduplicated_verified_payloads",
+          "unique_bytes",
+          "regions_covered"
+        ],
+        "evidence": "persistent single-writer warehouse receipt and storage inventory"
+      },
+      {
+        "name": "UE_IMPORTED_PERSISTED",
+        "units": [
+          "unique_uasset_packages",
+          "material_slots_bound",
+          "cook_retained"
+        ],
+        "evidence": "UE4.27 asset registry, editor import + re-open/cook receipt"
+      },
+      {
+        "name": "WORLD_PLACED_OBSERVED",
+        "units": [
+          "real_mesh_instances",
+          "scene_screenshots",
+          "landmarks_visible"
+        ],
+        "evidence": "chapter-specific runtime observation, real images, not source references"
+      },
+      {
+        "name": "PLAYABLE_EVIDENCE",
+        "units": [
+          "working_route_segments",
+          "quest_save_steps",
+          "locomotion",
+          "dx11_fps_ms",
+          "vram_mb"
+        ],
+        "evidence": "PIE/gameplay logs, human rendered review and target-device measurements"
+      }
+    ],
+    "per_session_owner_report_fields": [
+      "exact_comparison_baseline",
+      "verified_deliverables_by_funnel_stage",
+      "absolute_change",
+      "percent_change_or_NA",
+      "warehouse_by_28_regions_and_P1C01_to_P1C08",
+      "commit_and_PR_and_actions",
+      "test_label_and_acceptance_boundaries",
+      "independent_engineering_opinion",
+      "primary_risk",
+      "single_highest_value_next_action"
+    ],
+    "architecture_recommendation_rule": "Give the owner a decision, not reflexive agreement: state why it improves visible play, what would make it unsafe, which alternative was rejected, and what evidence would change the recommendation.",
+    "evidence_precedence": [
+      "live Governor and project source/commit evidence",
+      "Epic UE4.27 official documentation",
+      "reproducible mature developer/community engineering evidence",
+      "project-specific real execution tests"
+    ],
+    "current_comparable_physical_source_checkpoint": {
+      "original_source_commit": "407b35b414b0e6a84dbdab9f4041817446fd9b42",
+      "merged_into_develop": "b309d149c94b0c2b9c358fd86775facc365feb70",
+      "workflow_run_id": 38288336015,
+      "artifact_id": 11764013609,
+      "exact_generation_log": "SHIRE_BINARY_FBX_GENERATED assets=27 files=54 blender=4.0.2",
+      "physical_source_qc": "CLOUD_ASSET_STATIC_VALIDATION_PASS materials=12 textures=36 region_bindings=28 binary_fbx=54",
+      "binary_fbx_source_count": 54,
+      "material_png_count": 36,
+      "artifact_wrapper_bytes": 9841895,
+      "warehouse_persisted": "NOT_MEASURED_FOR_THIS_ARTIFACT",
+      "ue_imported": "NOT_MEASURED_FOR_THIS_ARTIFACT",
+      "visually_reviewed": false,
+      "comparator_warning": "44 was an earlier script target (22 families x 2), not an independently sourced comparable verified physical-run baseline in this contract. (54-44)/44 = +22.7% describes planned catalog capacity, not necessarily measured successive physical production."
+    },
+    "warehouse_scope": "28 canonical world regions and Part I P1C01-P1C08 source-prep coverage, without duplicate writing; runtime remains P1C01-only",
+    "concurrent_source_prep_max": 5,
+    "warehouse_writers": 1,
+    "runtime_writers": 1,
+    "acceptance_gate_status": "P1C01_GATE67_OPEN",
+    "prohibited_accounting": [
+      "counting commits as produced assets",
+      "summing zip wrapper and contents as separate outputs",
+      "using source generation as Unreal visual proof",
+      "claiming 50% without comparable verified denominators",
+      "reuploading duplicate hashes to inflate progress"
+    ]
   }
 }
