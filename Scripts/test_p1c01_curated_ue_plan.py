@@ -38,7 +38,7 @@ def create_fixture(root):
                         data, 'L01_TREES' if nature else 'L03_BAG_END_HERO_ARCH',
                         'UE4_COMMANDLET_BASE_STATIC_MESH' if lod==0 else 'UE4_EDITOR_LOD_ONLY_NOT_SEPARATE_MESH')
             levels[str(lod)] = entry
-        families.append({'id':scope+'/'+name,'expected_lod_count':len(levels),
+        families.append({'id':scope+'/SM_Sh_'+name,'expected_lod_count':len(levels),
                          'base_asset_path':bridge.ASSET_ROOT +
                              Path(levels['0']['source_file']).with_suffix('').as_posix(),
                          'lods':levels,
