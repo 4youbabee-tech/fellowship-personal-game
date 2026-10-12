@@ -536,6 +536,9 @@ void AShirePrototypeWorldBuilder::OnCuratedNatureLayerReady()
             Heights[I] / (2.0f * Bounds.BoxExtent.Z), 0.05f, 3.0f);
         Group->SetStaticMesh(Mesh);
         ++Families;
+        const int32 FamilyMissingGroundBefore = MissingGround;
+        const int32 FamilySteepGroundBefore = SteepGround;
+        int32 FamilyGrounded = 0;
         for (int32 J = 0; J < (I < 5 ? 12 : 8); ++J)
         {
             const float Angle = FMath::DegreesToRadians(
@@ -566,7 +569,16 @@ void AShirePrototypeWorldBuilder::OnCuratedNatureLayerReady()
                 Hit.Location - FVector(0, 0, MeshBottom * Scale),
                 FVector(Scale)));
             ++Grounded;
+            ++FamilyGrounded;
         }
+        // Actual mounted mesh, material-slot count and grounded placements.
+        // This is runtime evidence only: it does not establish rendered visual QC.
+        UE_LOG(LogTemp, Display,
+            TEXT("P1C01_CURATED_NATURE_FAMILY index=%d path=%s grounded=%d missingGround=%d steepGround=%d materialSlots=%d"),
+            I, *CuratedNatureSources[I].ToSoftObjectPath().ToString(),
+            FamilyGrounded, MissingGround - FamilyMissingGroundBefore,
+            SteepGround - FamilySteepGroundBefore,
+            Mesh->GetStaticMaterials().Num());
     }
     UE_LOG(LogTemp, Display,
         TEXT("P1C01_CURATED_NATURE_WORLD families=%d grounded=%d max=92 collision=none async=1 missingGround=%d steepGround=%d PIE_device_visual=pending"),
