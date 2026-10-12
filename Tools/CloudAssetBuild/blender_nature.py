@@ -3,7 +3,11 @@
 import bpy, math, random, json, hashlib, sys
 from pathlib import Path
 from mathutils import Vector
-FAMILIES=("tree_oak","tree_elm","tree_apple","tree_willow","shrub_hedge","shrub_hawthorn","shrub_gorse","rock_field","rock_river","grass_meadow","flower_wild","garden_reed")
+FAMILIES=(
+ "tree_oak","tree_elm","tree_apple","tree_willow","tree_birch","tree_beech",
+ "tree_party_oak","tree_lane_poplar","orchard_cluster",
+ "shrub_hedge","shrub_hawthorn","shrub_gorse","shrub_blackberry",
+ "rock_field","rock_river","grass_meadow","flower_wild","garden_reed")
 TRIS_LIMIT=(11000,5500,2600)
 def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
 def material(n,color):
@@ -24,26 +28,42 @@ def build(family,lod,out):
  dry=material("M_Sh_Dry",(0.43,0.34,0.12));rock=material("M_Sh_Stone",(0.36,0.39,0.34))
  flower=material("M_Sh_Flower",(0.61,0.35,0.44))
  nfactor=(1,.55,.27)[lod];parts=[]
- if family.startswith("tree"):
-  ht={"tree_oak":7,"tree_elm":8,"tree_apple":4.4,"tree_willow":7.7}[family]
-  spread={"tree_oak":3.1,"tree_elm":2.3,"tree_apple":2.1,"tree_willow":2.6}[family]
-  parts.append(branch((0,0,0),(0,0,ht*.73),.22 if family!="tree_apple" else .17,bark,10 if lod==0 else 6))
+ if family.startswith("tree") or family=="orchard_cluster":
+  ht={"tree_oak":7,"tree_elm":8,"tree_apple":4.4,"tree_willow":7.7,
+      "tree_birch":6.2,"tree_beech":7.4,"tree_party_oak":9.2,
+      "tree_lane_poplar":8.8,"orchard_cluster":4.2}[family]
+  spread={"tree_oak":3.1,"tree_elm":2.3,"tree_apple":2.1,"tree_willow":2.6,
+          "tree_birch":2.0,"tree_beech":3.0,"tree_party_oak":4.4,
+          "tree_lane_poplar":1.5,"orchard_cluster":3.8}[family]
+  trunk_radius=.17 if family in ("tree_apple","orchard_cluster") else .28 if family=="tree_party_oak" else .20
+  parts.append(branch((0,0,0),(0,0,ht*.73),trunk_radius,bark,10 if lod==0 else 6))
   count=max(3,round(10*nfactor))
   for i in range(count):
-   a=i*2*math.pi/count;z=ht*(.46+.32*i/count);x=spread*.67*math.cos(a);y=spread*.67*math.sin(a)
+   a=i*2*math.pi/count
+   z=ht*(.43+.34*i/count)
+   radius_scale=.42 if family=="tree_lane_poplar" else .78 if family=="tree_party_oak" else .67
+   x=spread*radius_scale*math.cos(a);y=spread*radius_scale*math.sin(a)
    parts.append(branch((0,0,z),(x,y,z+ht*.13),.065,bark,6 if lod<2 else 4))
-  leafcount=max(4,round((22 if family=="tree_willow" else 18)*nfactor))
+  leafcount=max(4,round((26 if family in ("tree_willow","tree_party_oak") else 18)*nfactor))
   for i in range(leafcount):
    a=i*2.39996; rad=spread*math.sqrt((i+.5)/leafcount)*.8
+   if family=="tree_lane_poplar": rad*=.48
    x=rad*math.cos(a);y=rad*math.sin(a);z=ht*(.68+.15*rng.random())
    if family=="tree_willow":z-=rad*.22
+   if family=="tree_birch": z+=.18*math.sin(i)
+   leaf_mat=flower if family=="tree_apple" and i%5==0 else leaf
    scale=(spread*.38,spread*.30,ht*(.17 if family!="tree_willow" else .23))
-   parts.append(create("FoliageCluster","ico",(x,y,z),scale,leaf))
+   parts.append(create("FoliageCluster","ico",(x,y,z),scale,leaf_mat))
+  if family=="orchard_cluster":
+   for offset in [(-1.2,.9,0),(1.1,-.8,0)]:
+    parts.append(branch(offset,(offset[0],offset[1],ht*.56),.13,bark,8 if lod==0 else 5))
+    parts.append(create("SmallOrchardCrown","ico",(offset[0],offset[1],ht*.68),(.95,.86,.72),leaf))
  elif family.startswith("shrub"):
   for i in range(max(3,round(13*nfactor))):
    a=i*2.39996;rad=(i%6)/6*1.08
    x=rad*math.cos(a);y=rad*math.sin(a);z=.52+rng.uniform(-.13,.15)
-   parts.append(create("BushCluster","ico",(x,y,z),(.5,.47,.49),leaf if family!="shrub_gorse" else dry))
+   mat=flower if family=="shrub_blackberry" and i%4==0 else leaf if family!="shrub_gorse" else dry
+   parts.append(create("BushCluster","ico",(x,y,z),(.5,.47,.49),mat))
  elif family.startswith("rock"):
   for i in range(max(1,round(5*nfactor))):
    x=rng.uniform(-1,1);y=rng.uniform(-.75,.75);h=rng.uniform(.3,.6)
@@ -73,7 +93,7 @@ def build(family,lod,out):
  polys=len(visual.data.polygons)
  if not 0<polys<TRIS_LIMIT[lod] or not visual.data.uv_layers:raise ValueError("INVALID_GEOMETRY "+name+" "+str(polys))
  colliders=[]
- if family.startswith("tree"):
+ if family.startswith("tree") or family=="orchard_cluster":
   colliders.append(create("UCX_"+name+"_00","cube",(0,0,ht*.36),(.46,.46,ht*.72),bark))
  elif family.startswith("rock"):
   colliders.append(create("UCX_"+name+"_00","cube",(0,0,.27),(1.8,1.5,.6),rock))
