@@ -97,6 +97,8 @@ class MockEngine:
                 return engine.objects[path]
             @staticmethod
             def save_loaded_asset(asset,only_if_is_dirty=False): return True
+            @staticmethod
+            def does_asset_exist(path): return path in engine.objects
         class MeshLibrary:
             @staticmethod
             def get_lod_count(mesh): return len(mesh.verts)
@@ -158,6 +160,13 @@ class CuratedPlanTests(unittest.TestCase):
         self.assertFalse(outcome['gate6_7_closed'])
         self.assertFalse(outcome['collision_nav_verified'])
         self.assertEqual(34,len(outcome['collision_review_pending']))
+
+    def test_missing_asset_registry_entry_fails_closed(self):
+        engine=MockEngine()
+        engine.EditorAssetLibrary.does_asset_exist=lambda path: False
+        with self.assertRaisesRegex(RuntimeError,'P1C01_STATIC_MESH_ASSET_REGISTRY_MISSING'):
+            editor.editor_apply(engine,self.root)
+        self.assertFalse((self.root/'Saved/P1C01CuratedEditorPostImport/receipt.json').exists())
 
     def test_failed_editor_import_does_not_leave_success_receipt(self):
         engine=MockEngine()

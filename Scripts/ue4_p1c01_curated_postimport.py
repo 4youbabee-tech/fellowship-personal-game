@@ -59,6 +59,8 @@ def editor_apply(unreal, root=ROOT):
                                      'simple_collisions': num_collision})
         if not unreal.EditorAssetLibrary.save_loaded_asset(asset, only_if_is_dirty=False):
             raise RuntimeError('P1C01_STATIC_MESH_PACKAGE_SAVE_FAILED:' + path)
+        if not unreal.EditorAssetLibrary.does_asset_exist(path):
+            raise RuntimeError('P1C01_STATIC_MESH_ASSET_REGISTRY_MISSING:' + path)
         outcomes.append({'asset': path, 'lod_count': count, 'vertices': lod_verts,
                          'material_slots': num_materials,
                          'simple_collisions': num_collision})
@@ -76,6 +78,8 @@ def editor_apply(unreal, root=ROOT):
         texture.set_editor_property('never_stream', False)
         if not unreal.EditorAssetLibrary.save_loaded_asset(texture, only_if_is_dirty=False):
             raise RuntimeError('P1C01_TEXTURE_PACKAGE_SAVE_FAILED:' + path)
+        if not unreal.EditorAssetLibrary.does_asset_exist(path):
+            raise RuntimeError('P1C01_TEXTURE_ASSET_REGISTRY_MISSING:' + path)
         if texture.get_editor_property('srgb') != (row['kind'] == 'BaseColor') or \
            texture.get_editor_property('compression_settings') != mapping[row['kind']]:
             raise RuntimeError('P1C01_TEXTURE_RELOADED_SETTINGS_MISMATCH:' + path)
@@ -87,6 +91,7 @@ def editor_apply(unreal, root=ROOT):
         'stage_receipt_sha256': plan['stage_receipt_sha256'],
         'source_manifest_sha256': plan['source_manifest_sha256'],
         'static_meshes_with_verified_lods': len(outcomes),
+        'asset_registry_path_checks': len(outcomes) + len(texture_rows),
         'imported_authored_sidecar_lods': sum(x['lod_count'] - 1 for x in outcomes),
         'configured_packed_textures': len(texture_rows),
         'external_held_for_license': plan['counts']['license_held_external'],
