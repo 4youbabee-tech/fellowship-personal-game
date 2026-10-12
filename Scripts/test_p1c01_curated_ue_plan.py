@@ -21,10 +21,15 @@ def create_fixture(root):
         inventory.append({'source':name, 'track':track, 'kind':kind})
         return {'source_file':name,'sha256':hashlib.sha256(blob).hexdigest()}
 
+    nature_names = ['flower_wild','garden_reed','grass_meadow','rock_field','rock_river',
+                    'shrub_gorse','shrub_hawthorn','shrub_hedge',
+                    'tree_apple','tree_elm','tree_oak','tree_willow']
+    nature_surfaces = ['Bark','Grass','Hedge','LeafAutumn','LeafGreen',
+                       'Reed','Soil','Stone','Wildflower']
     for i in range(34):
         nature = i < 12
         scope = 'Nature' if nature else 'Architecture'
-        name = ('tree' if nature else 'hobbit') + ('_%02d' % i)
+        name = nature_names[i] if nature else 'hobbit_%02d' % i
         levels = {}
         for lod in range(3 if nature else 2):
             rel = '%s/Meshes/SM_Sh_%s_LOD%d.fbx' % (scope, name, lod)
@@ -40,10 +45,11 @@ def create_fixture(root):
                          'collision_policy':'SIMPLE_REVIEW_TREE_TRUNK' if nature else 'SIMPLIFIED_AUTHOR_COLLIDER_REVIEW',
                          'hism_candidate':nature})
     for i in range(21):
-        group = ('Nature' if i<9 else 'Regional')+'/surface_%02d'%i
+        surface = ('T_Sh_'+nature_surfaces[i]) if i<9 else 'surface_%02d'%i
+        group = ('Nature' if i<9 else 'Regional')+'/'+surface
         triplet = {}
         for kind in ['BaseColor','NormalDX','ORM']:
-            rel = '%s/Textures/T_Surface%02d_%s.png' % ('Nature' if i<9 else 'Regional',i,kind)
+            rel = '%s/Textures/%s_%s.png' % ('Nature' if i<9 else 'Regional',surface,kind)
             entry = add(rel,bridge.CONTENT_ROOT,b'PNG fixture:'+rel.encode(),
                         'L05_ORIGINAL_SURFACES','UE4_COMMANDLET_TEXTURE')
             entry.update({'asset_path':bridge.ASSET_ROOT+Path(rel).with_suffix('').as_posix(),
@@ -67,12 +73,35 @@ def create_fixture(root):
     return receipt, path
 
 
-class MockMesh:
-    def __init__(self): self.verts=[120]
+class MockObject:
+    def __init__(self, path=''):
+        self.path = path
+    def get_path_name(self): return self.path
+
+class MockMaster(MockObject):
+    pass
+
+class MockInstance(MockObject):
+    def __init__(self, path=''):
+        super().__init__(path)
+        self.props = {}
+        self.parameters = {}
+    def set_editor_property(self, key, value): self.props[key] = value
+    def get_editor_property(self, key): return self.props[key]
+
+class MockMesh(MockObject):
+    def __init__(self, path=''):
+        super().__init__(path)
+        self.verts=[120]
+        self.materials=[None]
+    def set_material(self, index, material): self.materials[index] = material
+    def get_material(self, index): return self.materials[index]
 
 
-class MockTexture:
-    def __init__(self): self.props={}
+class MockTexture(MockObject):
+    def __init__(self, path=''):
+        super().__init__(path)
+        self.props={}
     def set_editor_property(self,k,v): self.props[k]=v
     def get_editor_property(self,k): return self.props[k]
 
@@ -80,23 +109,63 @@ class MockTexture:
 class MockEngine:
     StaticMesh = MockMesh
     Texture2D = MockTexture
+    MaterialInterface = MockMaster
+    MaterialInstanceConstant = MockInstance
+    MaterialInstanceConstantFactoryNew = MockInstance
 
     class TextureCompressionSettings:
         TC_DEFAULT = 'TC_DEFAULT'
         TC_NORMALMAP = 'TC_NORMALMAP'
         TC_MASKS = 'TC_MASKS'
 
-    def __init__(self):
+    def __init__(self, root):
+        self.root = Path(root)
         self.objects={}
         engine=self
+        class Paths:
+            @staticmethod
+            def project_content_dir(): return str(engine.root/'Content')
+        self.Paths = Paths
+        class Tools:
+            @staticmethod
+            def create_asset(name, folder, cls, factory):
+                path = folder+'/'+name
+                obj = MockInstance(path)
+                engine.objects[path] = obj
+                return obj
+        class ToolsHelpers:
+            @staticmethod
+            def get_asset_tools(): return Tools
+        self.AssetToolsHelpers = ToolsHelpers
+        class Editing:
+            @staticmethod
+            def set_material_instance_parent(obj, parent): obj.props['parent']=parent
+            @staticmethod
+            def set_material_instance_texture_parameter_value(obj, name, value):
+                if getattr(engine, 'fail_parameter', None)==name: return False
+                obj.parameters[name] = value
+                return True
+            @staticmethod
+            def get_material_instance_texture_parameter_value(obj, name): return obj.parameters.get(name)
+            @staticmethod
+            def update_material_instance(obj): pass
+        self.MaterialEditingLibrary = Editing
         class AssetLibrary:
             @staticmethod
             def load_asset(path):
                 if path not in engine.objects:
-                    engine.objects[path] = MockTexture() if '/Textures/' in path else MockMesh()
+                    if path == editor.PBR_PARENT: engine.objects[path] = MockMaster(path)
+                    elif '/Textures/' in path: engine.objects[path] = MockTexture(path)
+                    elif '/Materials/' in path: return None
+                    else: engine.objects[path] = MockMesh(path)
                 return engine.objects[path]
             @staticmethod
-            def save_loaded_asset(asset,only_if_is_dirty=False): return True
+            def save_loaded_asset(asset,only_if_is_dirty=False):
+                rel = asset.get_path_name().removeprefix('/Game/') + '.uasset'
+                target = engine.root/'Content'/rel
+                target.parent.mkdir(parents=True,exist_ok=True)
+                target.write_bytes(b'MOCK_ONLY_NOT_REAL_UASSET')
+                return True
             @staticmethod
             def does_asset_exist(path): return path in engine.objects
         class MeshLibrary:
@@ -111,7 +180,7 @@ class MockEngine:
                 elif index < len(mesh.verts): mesh.verts[index]=50-index
                 return index
             @staticmethod
-            def get_number_materials(mesh): return 1
+            def get_number_materials(mesh): return len(mesh.materials)
             @staticmethod
             def get_simple_collision_count(mesh): return 0
         self.EditorAssetLibrary = AssetLibrary
@@ -152,24 +221,28 @@ class CuratedPlanTests(unittest.TestCase):
             bridge.build_plan(self.root)
 
     def test_editor_records_only_lod_texture_observation(self):
-        engine=MockEngine()
+        engine=MockEngine(self.root)
         outcome=editor.editor_apply(engine,self.root)
         self.assertEqual(34,outcome['static_meshes_with_verified_lods'])
         self.assertEqual(46,outcome['imported_authored_sidecar_lods'])
         self.assertEqual(63,outcome['configured_packed_textures'])
+        self.assertEqual(21,outcome['created_or_updated_material_instances'])
+        self.assertEqual(63,outcome['material_triplet_bindings'])
+        self.assertEqual(8,outcome['exact_nature_single_slot_bindings'])
+        self.assertEqual(118,outcome['physically_persisted_uasset_checks'])
         self.assertFalse(outcome['gate6_7_closed'])
         self.assertFalse(outcome['collision_nav_verified'])
         self.assertEqual(34,len(outcome['collision_review_pending']))
 
     def test_missing_asset_registry_entry_fails_closed(self):
-        engine=MockEngine()
+        engine=MockEngine(self.root)
         engine.EditorAssetLibrary.does_asset_exist=lambda path: False
         with self.assertRaisesRegex(RuntimeError,'P1C01_STATIC_MESH_ASSET_REGISTRY_MISSING'):
             editor.editor_apply(engine,self.root)
         self.assertFalse((self.root/'Saved/P1C01CuratedEditorPostImport/receipt.json').exists())
 
     def test_failed_editor_import_does_not_leave_success_receipt(self):
-        engine=MockEngine()
+        engine=MockEngine(self.root)
         original=engine.EditorStaticMeshLibrary.import_lod
         engine.EditorStaticMeshLibrary.import_lod=lambda *args:-1
         try:
@@ -177,6 +250,46 @@ class CuratedPlanTests(unittest.TestCase):
                 editor.editor_apply(engine,self.root)
         finally:
             engine.EditorStaticMeshLibrary.import_lod=original
+        self.assertFalse((self.root/'Saved/P1C01CuratedEditorPostImport/receipt.json').exists())
+
+    def test_unavailable_existing_master_fails_closed(self):
+        engine = MockEngine(self.root)
+        original = engine.EditorAssetLibrary.load_asset
+        engine.EditorAssetLibrary.load_asset = lambda p: None if p == editor.PBR_PARENT else original(p)
+        with self.assertRaisesRegex(RuntimeError, 'P1C01_PBR_MASTER_NOT_IMPORTER_AUTHORED'):
+            editor.editor_apply(engine, self.root)
+        self.assertFalse((self.root/'Saved/P1C01CuratedEditorPostImport/receipt.json').exists())
+
+    def test_missing_master_parameter_fails_closed(self):
+        engine = MockEngine(self.root)
+        engine.fail_parameter = 'ORMTexture'
+        with self.assertRaisesRegex(RuntimeError, 'P1C01_PBR_TEXTURE_PARAMETER_MISSING'):
+            editor.editor_apply(engine, self.root)
+        self.assertFalse((self.root/'Saved/P1C01CuratedEditorPostImport/receipt.json').exists())
+
+    def test_ambiguous_nature_slot_fails_closed(self):
+        engine = MockEngine(self.root)
+        initial = engine.EditorAssetLibrary.load_asset
+        def load(path):
+            value = initial(path)
+            if path.endswith('SM_Sh_flower_wild_LOD0'):
+                value.materials = [None, None]
+            return value
+        engine.EditorAssetLibrary.load_asset = load
+        with self.assertRaisesRegex(RuntimeError, 'P1C01_NATURE_SLOT_IDENTITY_UNPROVEN'):
+            editor.editor_apply(engine, self.root)
+        self.assertFalse((self.root/'Saved/P1C01CuratedEditorPostImport/receipt.json').exists())
+
+    def test_missing_physical_uasset_fails_closed(self):
+        engine = MockEngine(self.root)
+        saved = engine.EditorAssetLibrary.save_loaded_asset
+        def incomplete(asset, only_if_is_dirty=False):
+            if isinstance(asset, MockInstance):
+                return True
+            return saved(asset, only_if_is_dirty)
+        engine.EditorAssetLibrary.save_loaded_asset = incomplete
+        with self.assertRaisesRegex(RuntimeError, 'P1C01_UASSET_NOT_PERSISTED'):
+            editor.editor_apply(engine, self.root)
         self.assertFalse((self.root/'Saved/P1C01CuratedEditorPostImport/receipt.json').exists())
 
 

@@ -50,9 +50,13 @@ try {
   $obs = Get-Content -LiteralPath $postreport -Raw | ConvertFrom-Json
   if($obs.target_sha -ne $ExpectedSha -or $obs.static_meshes_with_verified_lods -ne 34 -or
      $obs.imported_authored_sidecar_lods -ne 46 -or $obs.configured_packed_textures -ne 63 -or
+     $obs.created_or_updated_material_instances -ne 21 -or
+     $obs.material_triplet_bindings -ne 63 -or
+     $obs.exact_nature_single_slot_bindings -ne 8 -or
+     $obs.physically_persisted_uasset_checks -ne 118 -or
      $obs.gate6_7_closed -ne $false) { throw 'P1C01_CURATED_EDITOR_POSTIMPORT_EVIDENCE_INVALID' }
-  Write-Host "P1C01_CURATED_MANUAL_UE4_PASS sha=$ExpectedSha meshes=34 lods=46 textures=63 report=$postreport"
-  Write-Host 'P1C01_GATE67_OPEN needs=material-slot-collision-world-placement-PIE-package-device-human-review'
+  Write-Host "P1C01_CURATED_MANUAL_UE4_PASS sha=$ExpectedSha meshes=34 lods=46 textures=63 instances=21 nature_slots=8 report=$postreport"
+  Write-Host 'P1C01_GATE67_OPEN needs=tree-multislot-architecture-collision-world-placement-PIE-package-device-human-review'
 } finally {
   $env:GITHUB_WORKSPACE = $oldWorkspace
   $env:SHIRE_TARGET_SHA = $oldTarget
