@@ -4463,6 +4463,228 @@ void AShirePrototypeWorldBuilder::SpawnShireVisualFinishWave()
         RoadBreakupInstances, WoodlandLayerInstances, FerryFinishInstances, FerryHeroActors);
 }
 
+void AShirePrototypeWorldBuilder::SpawnP1C01ChapterFinishWorldArtPass()
+{
+    if (!GetWorld())
+    {
+        return;
+    }
+
+    struct FFinishPlacement
+    {
+        FVector Location;
+        FRotator Rotation;
+        FVector Scale;
+    };
+
+    int32 ClusterCount = 0;
+    int32 InstanceCount = 0;
+    int32 HeroPropActors = 0;
+
+    auto SpawnFinishCluster = [this, &ClusterCount, &InstanceCount](
+        UStaticMesh* Mesh,
+        const TCHAR* ClusterTag,
+        int32 StartCullDistance,
+        int32 EndCullDistance,
+        const FFinishPlacement* Placements,
+        int32 PlacementCount)
+    {
+        if (!Mesh || !ClusterTag || !Placements || PlacementCount <= 0)
+        {
+            return;
+        }
+
+        FActorSpawnParameters Params;
+        Params.Owner = this;
+        Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+        AWorldDetailCluster* Cluster = GetWorld()->SpawnActor<AWorldDetailCluster>(
+            FVector::ZeroVector, FRotator::ZeroRotator, Params);
+        if (!Cluster)
+        {
+            return;
+        }
+
+        Cluster->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
+        Cluster->Tags.AddUnique(TEXT("P1C01ChapterFinishWorldArt"));
+        Cluster->Tags.AddUnique(FName(ClusterTag));
+        Cluster->Configure(Mesh, false, StartCullDistance, EndCullDistance);
+
+        for (int32 Index = 0; Index < PlacementCount; ++Index)
+        {
+            const FFinishPlacement& P = Placements[Index];
+            Cluster->AddDetailInstance(P.Location, P.Rotation, P.Scale);
+        }
+
+        ++ClusterCount;
+        InstanceCount += Cluster->GetDetailCount();
+    };
+
+    auto SpawnHeroProp = [this, &HeroPropActors](
+        UStaticMesh* Mesh,
+        const FVector& Location,
+        const FVector& Scale,
+        const FRotator& Rotation)
+    {
+        if (!Mesh)
+        {
+            return;
+        }
+
+        if (AStaticMeshActor* Actor = SpawnShape(
+                Mesh, Location, Scale, FLinearColor::White, Rotation, false))
+        {
+            Actor->Tags.AddUnique(TEXT("P1C01ChapterFinishWorldArt"));
+            ++HeroPropActors;
+        }
+    };
+
+    const FFinishPlacement BagEndGardenEdges[] = {
+        { FVector(-2810,-690,2), FRotator(0,18,0), FVector(0.74f,0.62f,0.66f) },
+        { FVector(-2640,-790,2), FRotator(0,13,0), FVector(0.70f,0.60f,0.64f) },
+        { FVector(-2460,-845,2), FRotator(0,8,0), FVector(0.68f,0.58f,0.62f) },
+        { FVector(-2280,-870,2), FRotator(0,1,0), FVector(0.66f,0.58f,0.62f) },
+        { FVector(-1940,-795,2), FRotator(0,-12,0), FVector(0.70f,0.60f,0.64f) },
+        { FVector(-1770,-690,2), FRotator(0,-18,0), FVector(0.74f,0.62f,0.66f) },
+        { FVector(-2780,120,2), FRotator(0,-20,0), FVector(0.70f,0.60f,0.64f) },
+        { FVector(-2580,205,2), FRotator(0,-13,0), FVector(0.66f,0.58f,0.62f) },
+        { FVector(-2380,260,2), FRotator(0,-5,0), FVector(0.64f,0.56f,0.60f) },
+        { FVector(-2060,245,2), FRotator(0,9,0), FVector(0.66f,0.58f,0.62f) },
+        { FVector(-1870,165,2), FRotator(0,17,0), FVector(0.70f,0.60f,0.64f) },
+        { FVector(-1700,40,2), FRotator(0,22,0), FVector(0.74f,0.62f,0.66f) }
+    };
+    SpawnFinishCluster(
+        ProductionHedgeMesh,
+        TEXT("BagEndGardenEdges"),
+        900,
+        5600,
+        BagEndGardenEdges,
+        UE_ARRAY_COUNT(BagEndGardenEdges));
+
+    const FFinishPlacement HobbitonYardProps[] = {
+        { FVector(-1380, 980,0), FRotator(0, 12,0), FVector(0.62f) },
+        { FVector(-1040,1070,0), FRotator(0,-15,0), FVector(0.58f) },
+        { FVector( -720, 940,0), FRotator(0, 24,0), FVector(0.60f) },
+        { FVector( -360,1035,0), FRotator(0,-22,0), FVector(0.56f) },
+        { FVector(  120, 930,0), FRotator(0, 16,0), FVector(0.62f) },
+        { FVector(  540,1010,0), FRotator(0,-18,0), FVector(0.58f) },
+        { FVector(  980, 900,0), FRotator(0, 10,0), FVector(0.60f) },
+        { FVector(-1260,-980,0), FRotator(0,-10,0), FVector(0.60f) },
+        { FVector( -850,-1080,0), FRotator(0, 19,0), FVector(0.58f) },
+        { FVector( -420,-970,0), FRotator(0,-24,0), FVector(0.62f) },
+        { FVector(  120,-1050,0), FRotator(0, 21,0), FVector(0.56f) },
+        { FVector(  720,-940,0), FRotator(0,-12,0), FVector(0.60f) }
+    };
+    SpawnFinishCluster(
+        ProductionFlowerBoxMesh,
+        TEXT("HobbitonYardFlowerBoxes"),
+        650,
+        4300,
+        HobbitonYardProps,
+        UE_ARRAY_COUNT(HobbitonYardProps));
+
+    const FFinishPlacement WorkedFieldEdges[] = {
+        { FVector(3350,-1320,0), FRotator(0, 4,0), FVector(0.74f) },
+        { FVector(3820,-1335,0), FRotator(0,-2,0), FVector(0.72f) },
+        { FVector(4290,-1350,0), FRotator(0, 3,0), FVector(0.76f) },
+        { FVector(4760,-1365,0), FRotator(0,-4,0), FVector(0.70f) },
+        { FVector(5230,-1380,0), FRotator(0, 2,0), FVector(0.74f) },
+        { FVector(5700,-1395,0), FRotator(0,-3,0), FVector(0.72f) },
+        { FVector(6170,-1410,0), FRotator(0, 4,0), FVector(0.76f) },
+        { FVector(6640,-1425,0), FRotator(0,-2,0), FVector(0.70f) },
+        { FVector(7110,-1440,0), FRotator(0, 3,0), FVector(0.74f) },
+        { FVector(7580,-1455,0), FRotator(0,-4,0), FVector(0.72f) },
+        { FVector(8050,-1470,0), FRotator(0, 2,0), FVector(0.76f) },
+        { FVector(8520,-1485,0), FRotator(0,-3,0), FVector(0.70f) }
+    };
+    SpawnFinishCluster(
+        RuralFenceInstances ? RuralFenceInstances->GetStaticMesh() : nullptr,
+        TEXT("WorkedFieldFenceRhythm"),
+        1200,
+        7600,
+        WorkedFieldEdges,
+        UE_ARRAY_COUNT(WorkedFieldEdges));
+
+    const FFinishPlacement WoodedRoadUnderstory[] = {
+        { FVector(11180,-1160,0), FRotator(0, 11,0), FVector(0.58f) },
+        { FVector(11680, 1180,0), FRotator(0, 43,0), FVector(0.62f) },
+        { FVector(12220,-1235,0), FRotator(0, 77,0), FVector(0.60f) },
+        { FVector(12810, 1300,0), FRotator(0,115,0), FVector(0.64f) },
+        { FVector(13420,-1180,0), FRotator(0,151,0), FVector(0.58f) },
+        { FVector(14040, 1240,0), FRotator(0,188,0), FVector(0.62f) },
+        { FVector(14680,-1270,0), FRotator(0,224,0), FVector(0.60f) },
+        { FVector(15320, 1180,0), FRotator(0,260,0), FVector(0.64f) },
+        { FVector(15980,-1220,0), FRotator(0,297,0), FVector(0.58f) },
+        { FVector(16630, 1265,0), FRotator(0,333,0), FVector(0.62f) },
+        { FVector(17320,-1160,0), FRotator(0,  9,0), FVector(0.60f) },
+        { FVector(18100, 1130,0), FRotator(0, 47,0), FVector(0.64f) },
+        { FVector(18820,-1080,0), FRotator(0, 81,0), FVector(0.58f) },
+        { FVector(19500, 1030,0), FRotator(0,119,0), FVector(0.62f) }
+    };
+    SpawnFinishCluster(
+        ProductionCommonFernClumpMesh,
+        TEXT("WoodedRoadUnderstory"),
+        800,
+        5200,
+        WoodedRoadUnderstory,
+        UE_ARRAY_COUNT(WoodedRoadUnderstory));
+
+    const FFinishPlacement FerryLandingReads[] = {
+        { FVector(22020,-1160,-2), FRotator(0,  8,0), FVector(0.70f) },
+        { FVector(22380,-1200,-2), FRotator(0, 39,0), FVector(0.66f) },
+        { FVector(22740,-1240,-2), FRotator(0, 70,0), FVector(0.74f) },
+        { FVector(23100,-1280,-2), FRotator(0,101,0), FVector(0.68f) },
+        { FVector(23460,-1240,-2), FRotator(0,132,0), FVector(0.72f) },
+        { FVector(23820,-1200,-2), FRotator(0,163,0), FVector(0.66f) },
+        { FVector(24180,-1160,-2), FRotator(0,194,0), FVector(0.70f) },
+        { FVector(22260, 520,-2), FRotator(0, 24,0), FVector(0.68f) },
+        { FVector(22620, 560,-2), FRotator(0, 55,0), FVector(0.72f) },
+        { FVector(22980, 600,-2), FRotator(0, 86,0), FVector(0.66f) },
+        { FVector(23340, 640,-2), FRotator(0,117,0), FVector(0.70f) },
+        { FVector(23700, 680,-2), FRotator(0,148,0), FVector(0.74f) },
+        { FVector(24060, 720,-2), FRotator(0,179,0), FVector(0.68f) },
+        { FVector(24420, 760,-2), FRotator(0,210,0), FVector(0.72f) }
+    };
+    SpawnFinishCluster(
+        ProductionCommonReedClusterMesh,
+        TEXT("FerryLandingReeds"),
+        900,
+        6200,
+        FerryLandingReads,
+        UE_ARRAY_COUNT(FerryLandingReads));
+
+    const FVector BagEndProps[] = {
+        FVector(-2520,-615,0), FVector(-2360,-645,0), FVector(-1910,-520,0),
+        FVector(-1760,-380,0)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(BagEndProps); ++Index)
+    {
+        SpawnHeroProp(
+            Index % 2 == 0 ? ProductionLoadedCartMesh : ProductionBenchMesh,
+            BagEndProps[Index],
+            FVector(0.58f + 0.06f * static_cast<float>(Index % 2)),
+            FRotator(0.0f, static_cast<float>(-18 + Index * 13), 0.0f));
+    }
+
+    const FVector FerryHeroProps[] = {
+        FVector(22120,-760,0), FVector(22640,-840,0),
+        FVector(23480,-620,0), FVector(23940,-720,0),
+        FVector(23120, 360,0), FVector(23880, 430,0)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(FerryHeroProps); ++Index)
+    {
+        SpawnHeroProp(
+            Index < 4 ? ProductionCommonRopePostMesh : ProductionCommonPathMarkerMesh,
+            FerryHeroProps[Index],
+            FVector(Index < 4 ? 0.70f : 0.76f),
+            FRotator(0.0f, static_cast<float>((Index * 41) % 360), 0.0f));
+    }
+
+    UE_LOG(LogTemp, Display,
+        TEXT("P1C01_CHAPTER_FINISH_WORLD_ART clusters=%d instances=%d heroProps=%d collision=none tick=none p1c02Runtime=no visual=pending"),
+        ClusterCount, InstanceCount, HeroPropActors);
+}
+
 
 
 
@@ -5677,6 +5899,7 @@ void AShirePrototypeWorldBuilder::BuildPrototypeWorld()
     SpawnPresentationCompositionPass();
     SpawnVisibleShireMegaWaveD();
     SpawnShireVisualFinishWave();
+    SpawnP1C01ChapterFinishWorldArtPass();
     SpawnShireSettlementCompletionPass();
     SpawnShireSettlementCanonFinishPass();
     SpawnWorldDensityDetailPass();
