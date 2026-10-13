@@ -7,7 +7,7 @@ import tempfile
 import unittest
 
 from cloud138_unreal_intake import (
-    SOURCE_COMMIT, STAGE_REL, copy_exact, load_plan, saved_asset_path,
+    SOURCE_COMMIT, STAGE_REL, COLLISION_BOX_FALLBACK_FAMILIES, IMPORTANT_COLLISION, copy_exact, load_plan, saved_asset_path,
     persist, write_json,
 )
 
@@ -34,6 +34,13 @@ class Cloud138IntakeTests(unittest.TestCase):
             "ue_imported": False,
         })
         return rows
+
+    def test_collision_fallback_is_limited_to_closed_solid_shapes(self):
+        self.assertEqual(COLLISION_BOX_FALLBACK_FAMILIES,
+                         frozenset(("FerryLanding", "RoundDoor")))
+        self.assertTrue(COLLISION_BOX_FALLBACK_FAMILIES <= IMPORTANT_COLLISION)
+        self.assertNotIn("WoodenFootbridge", COLLISION_BOX_FALLBACK_FAMILIES)
+        self.assertNotIn("StonePath", COLLISION_BOX_FALLBACK_FAMILIES)
 
     def test_118_staged_hashes_pass(self):
         with tempfile.TemporaryDirectory() as tmp:
