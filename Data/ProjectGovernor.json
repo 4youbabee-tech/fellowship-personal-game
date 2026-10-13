@@ -9125,5 +9125,18 @@
       "new_game_content_this_policy_change": 0
     },
     "implementation_boundary": "Governor and subordinate PES handbook record policy; GitHub Actions scheduling is not technically enforced by this registration alone; runner workflow changes require separate verified code and CI evidence."
+  },
+  "pes_chapter_closeout_heavy_sweeps_2026_10_14": {
+    "status": "PROPOSED_IN_PR_UNTIL_MERGE",
+    "policy_id": "PES_CHAPTER_CLOSEOUT_ONLY_HEAVY_SWEEPS_2026_10_14",
+    "authority": "Data/ProjectGovernor.json",
+    "session_map": "Docs/PES_PRODUCTION_EXECUTION_SESSIONS.md",
+    "directive": "Run chapter-by-chapter sweep, route/story state roundtrip and global warning-debt audits only on explicit owner chapter closeout workflow_dispatch package_windows=true; do not rerun them per source/import/ordinary development commit.",
+    "minimum_during_production": "Keep hosted governor/static checks, changed-module unit tests, C++ compilation if runtime code changes, short startup smoke when applicable, dedicated Unreal importer/reopen/persist tests when assets change. Do not classify results as PIE/device/visual.",
+    "closeout": "At chapter closure run real chapter runtime sweeps, collision/traversal, state roundtrip, warning budget, package/cook and actual device and visual Gate 6/7 acceptance. Gate cannot close without evidence.",
+    "security": "Fail closed for C++/Config/unknown impact and required build checks; no permission to merge failing PR or infer visual acceptance from compile.",
+    "initial_measurement": "Screenshotted UE4.27 C++ job repeated long route/story tests within ordinary CI; policy reduces per-commit redundant audit work, not all validation.",
+    "implementation": "Workflow conditions explicitly require owner workflow_dispatch package_windows=true for the 3 broad audits. Other checks remain subject to existing classifier.",
+    "stage": "CI_POLICY_NOT_WORLD_ASSET_DELIVERY"
   }
 }
