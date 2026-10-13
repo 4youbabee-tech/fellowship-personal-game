@@ -3,6 +3,8 @@
 #if WITH_DEV_AUTOMATION_TESTS
 
 #include "ShireSaveGame.h"
+#include "ShireNPC.h"
+#include "Components/CapsuleComponent.h"
 
 #include "Dom/JsonObject.h"
 #include "Misc/FileHelper.h"
@@ -107,6 +109,34 @@ bool FShireQAStreamingBankPackagesTest::RunTest(const FString& Parameters)
     }
 
     TestTrue(TEXT("At least one streamed package must be audited"), AssetCount > 0);
+    return true;
+}
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(
+    FShireQANPCVisibilityInteractionTest,
+    "ShireJourney.QA.NPC.VisibilityInteraction",
+    EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FShireQANPCVisibilityInteractionTest::RunTest(const FString& Parameters)
+{
+    const AShireNPC* NPCDefaults = GetDefault<AShireNPC>();
+    if (!TestNotNull(TEXT("Interactable NPC class default must exist"), NPCDefaults))
+    {
+        return false;
+    }
+
+    const UCapsuleComponent* Capsule = NPCDefaults->GetCapsuleComponent();
+    if (!TestNotNull(TEXT("Interactable NPC capsule must exist"), Capsule))
+    {
+        return false;
+    }
+
+    // The camera's visibility trace must be able to reach a named NPC, while
+    // pawn movement collision remains governed by the existing capsule profile.
+    TestEqual(TEXT("Named NPC capsule must block interaction visibility traces"),
+        Capsule->GetCollisionResponseToChannel(ECC_Visibility), ECR_Block);
+    TestTrue(TEXT("Named NPC capsule must remain query-enabled"),
+        Capsule->GetCollisionEnabled() != ECollisionEnabled::NoCollision);
     return true;
 }
 

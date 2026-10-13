@@ -66,6 +66,22 @@ class RuntimeAuditContractTests(unittest.TestCase):
                 self.assertNotIn(marker, path.read_text(encoding="utf-8"),
                                  f"{path.name} duplicates {evidence_id}")
 
+    def test_p1c01_interactable_npc_capsule_blocks_player_visibility_trace(self):
+        player_source = (ROOT / "Source/ShireJourney/Private/Characters/ShirePlayerCharacter.cpp").read_text(encoding="utf-8")
+        npc_source = (ROOT / "Source/ShireJourney/Private/Characters/ShireNPC.cpp").read_text(encoding="utf-8")
+        event_source = (ROOT / "Source/ShireJourney/Private/World/ShireWorldEventInteraction.cpp").read_text(encoding="utf-8")
+        qa_source = (ROOT / "Source/ShireJourneyEditorTools/Private/Tests/ShireQAAutomationTests.cpp").read_text(encoding="utf-8")
+
+        self.assertIn("LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, Params)", player_source)
+        self.assertIn("UShireInteractable::StaticClass()", player_source)
+        constructor = npc_source.split("AShireNPC::AShireNPC()", 1)[1].split(
+            "bool AShireNPC::TryApplyProductionRig", 1)[0]
+        self.assertIn("GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);", constructor)
+        self.assertNotIn("SetCollisionResponseToAllChannels", constructor)
+        self.assertIn("InteractionMarker->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);", event_source)
+        self.assertIn("FShireQANPCVisibilityInteractionTest", qa_source)
+        self.assertIn("Capsule->GetCollisionResponseToChannel(ECC_Visibility), ECR_Block", qa_source)
+
     def test_state_ci_executes_every_registered_transaction_mode_once(self):
         text = (ROOT / "Scripts" / "ci_runtime_state.cmd").read_text(encoding="utf-8")
         for mode in STATE_SEQUENCE_MODES:

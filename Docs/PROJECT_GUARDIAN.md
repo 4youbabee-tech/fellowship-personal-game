@@ -787,3 +787,9 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 **Guard:** `Scripts/test_p1c01_hero_candidate_provenance_contract.ps1` requires intake provenance emission and exact-file fail-closed enforcement in the candidate wave.
 
 **Evidence boundary:** SOURCE-IMPLEMENTED until exact-head Pre-Unreal/Unreal validation and Warehouse candidate evidence succeed. This is not skeletal/deformation/visual/runtime acceptance.
+
+## 2026-10-13 — P1C01 named-NPC visibility trace collision regression (candidate)
+- Direct source inspection: player Interact() traces ECC_Visibility, while the default Pawn character capsule may ignore that channel; unlike the existing WorldEventInteraction marker, AShireNPC did not explicitly block it.
+- Bounded correction: interactive AShireNPC capsule blocks ECC_Visibility without changing other collision channels, movement or NavMesh; AShireAmbientNPC remains non-interactable and pooled. No new gameplay systems, story content or chapter runtime lane.
+- Guards: existing hosted Scripts/test_runtime_audit_contracts.py gains a paired player/NPC trace contract test; UE4 editor ShireJourney.QA.NPC.VisibilityInteraction checks the actual AShireNPC CDO collision response. Guardian machine contract records these entry points.
+- Evidence at authoring: STATIC SOURCE REVIEW ONLY; exact-head hosted CI and actual UE4.27 compile/editor test pending. No new FBX, persistent Warehouse/.uasset, world placement, playable interaction, voice, PIE, device, human visual or FPS credit. P1C01 Gate6/7 remains OPEN.
