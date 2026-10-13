@@ -252,8 +252,15 @@ def editor_mode(reopen=False):
                              "simple_collisions": collision})
     # Audit all critical collision assets before aborting: one expensive editor
     # run must expose the entire batch, never only the first offending mesh.
-    require(not missing_collision, "CLOUD138_WALKABLE_UCX_NOT_IMPORTED_BATCH:" +
+    # Permit durable import of the source package while quarantining ONLY the
+    # one known open bridge from any world/nav approval. Never fake a BOX.
+    quarantined_bridge = GAME_MESH + "/SM_ShWoodenFootbridge"
+    require(all(path == quarantined_bridge for path in missing_collision),
+            "CLOUD138_WALKABLE_UCX_NOT_IMPORTED_BATCH:" +
             ",".join(sorted(missing_collision)))
+    if missing_collision:
+        print("CLOUD138_NAV_QUARANTINE asset=" + quarantined_bridge +
+              " world_placement_forbidden=1 PIE_REQUIRED=1")
     for row in textures:
         path = row["asset"]
         tex = unreal.EditorAssetLibrary.load_asset(path)
@@ -318,6 +325,7 @@ def editor_mode(reopen=False):
               "verified_original_pbr_maps": len(textures), "mesh_material_bindings": 0,
               "total_new_uassets": len(observations) + len(textures) + len(all_materials),
               "parent_dependency": MASTER, "observations": observations,
+               "nav_quarantined_assets": sorted(missing_collision),
               "regional_fbx_unreal_imported": 0, "world_placed": False,
               "collision_nav_tested": False, "pie_tested": False, "device_tested": False,
               "visual_accepted": False, "gate67_closed": False}
@@ -339,6 +347,11 @@ def persist(warehouse_root, workspace, pin):
             editor.get("total_new_uassets") == reopened.get("total_new_uassets") == 89 and
             editor.get("stage_receipt_sha256") == reopened.get("stage_receipt_sha256") == digest(workspace / STAGE_REL),
             "CLOUD138_UNREAL_REOPEN_EVIDENCE_MISSING")
+    require(editor.get("nav_quarantined_assets") ==
+            reopened.get("nav_quarantined_assets") and
+            set(editor.get("nav_quarantined_assets", [])) <=
+            {GAME_MESH + "/SM_ShWoodenFootbridge"},
+            "CLOUD138_QUARANTINE_REOPEN_MISMATCH")
     require(pin["source_zip_sha256"] == stage_plan["source_zip_sha256"], "CLOUD138_PIN_CHANGED")
     assets = sorted({r["asset"] for r in stage_plan["source_rows"]} |
                     {GAME_MATERIAL + "/MI_Cloud138_" + r["family"]
@@ -377,6 +390,7 @@ def persist(warehouse_root, workspace, pin):
                  "shires_meshes": 41, "authored_lod1": 41, "pbr_textures": 36,
                  "pbr_instances": 12, "material_maps_bound": 36,
                  "mesh_material_slots_bound": 0, "regions_fbx_held": 56,
+                 "nav_quarantined_assets": editor["nav_quarantined_assets"],
                  "payload_bytes": sum(x["bytes"] for x in rows), "files": rows,
                  "world_placed": False, "collision_nav_tested": False,
                  "pie_tested": False, "device_tested": False, "visual_accepted": False,

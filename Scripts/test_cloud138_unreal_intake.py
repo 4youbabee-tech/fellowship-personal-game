@@ -48,6 +48,8 @@ class Cloud138IntakeTests(unittest.TestCase):
         script = (Path(__file__).resolve().parent / "cloud138_unreal_intake.py").read_text(encoding="utf-8")
         self.assertIn("missing_collision.append(path)", script)
         self.assertIn("join(sorted(missing_collision))", script)
+        self.assertIn("CLOUD138_NAV_QUARANTINE", script)
+        self.assertIn("CLOUD138_QUARANTINE_REOPEN_MISMATCH", script)
         ast.parse(script)
 
     def test_118_staged_hashes_pass(self):

@@ -91,6 +91,8 @@ class RuntimeAuditContractTests(unittest.TestCase):
         self.assertIn("CLOUD138_BOX_COLLISION_API_FAILED:", editor)
         self.assertIn("CLOUD138_BOX_COLLISION_REPAIR_FAILED:", editor)
         self.assertIn("CLOUD138_WALKABLE_UCX_NOT_IMPORTED_BATCH:", editor)
+        self.assertIn("CLOUD138_NAV_QUARANTINE", editor)
+        self.assertIn("all(path == quarantined_bridge for path in missing_collision)", editor)
         self.assertIn("missing_collision.append(path)", editor)
         self.assertIn("join(sorted(missing_collision))", editor)
         self.assertLess(editor.index(conditional), editor.index("if family in IMPORTANT_COLLISION and collision == 0:"))
