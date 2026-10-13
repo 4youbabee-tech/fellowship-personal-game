@@ -50,6 +50,21 @@ class OfflineRuntimeSafetyTests(unittest.TestCase):
         self.assertIn("Presentation->RequestSkipActivePresentation();", skip)
         self.assertNotIn("TriggerStoryBeat", skip)
 
+    def test_cinematic_lock_guards_save_and_load_without_disabling_skip(self):
+        cpp = source(PLAYER_CPP)
+        save = body_between(cpp, "void AShirePlayerCharacter::QuickSave()",
+                            "void AShirePlayerCharacter::QuickLoad()")
+        load = body_between(cpp, "void AShirePlayerCharacter::QuickLoad()",
+                            "void AShirePlayerCharacter::DebugToggleParallelRoute()")
+        for name, body in (("QuickSave", save), ("QuickLoad", load)):
+            with self.subTest(name=name):
+                self.assertIn("bCinematicInputLocked || bWorldTransitionHeld || bPendingSaveRestoreTransform", body)
+                self.assertIn("return;", body.split("bCinematicInputLocked", 1)[1].split(";", 1)[0] + ";")
+        skip = body_between(cpp, "void AShirePlayerCharacter::SkipActiveCinematic()",
+                            "void AShirePlayerCharacter::HandleCinematicStateChanged(")
+        self.assertIn("Presentation->RequestSkipActivePresentation();", skip)
+        self.assertNotIn("bCinematicInputLocked || bWorldTransitionHeld", skip)
+
     def test_spawn_during_cinematic_inherits_lock(self):
         cpp = source(PLAYER_CPP)
         start = body_between(cpp, "void AShirePlayerCharacter::BeginPlay()",
