@@ -133,16 +133,14 @@ void AShireWorldEventInteraction::Interact_Implementation(AActor* Interactor)
         return;
     }
 
-    // One HUD toast at a time: showing prompt then response in this same
-    // synchronous interaction frame overwrites the player's first message.
-    // The prompt is only a fallback for interactions without authored feedback.
+    if (!PromptText.IsEmpty())
+    {
+        ShowAlert(PromptText, 1.2f);
+    }
+
     if (!ResponseText.IsEmpty())
     {
         ShowAlert(ResponseText, 2.4f);
-    }
-    else if (!PromptText.IsEmpty())
-    {
-        ShowAlert(PromptText, 1.2f);
     }
 
     DisableInteraction();

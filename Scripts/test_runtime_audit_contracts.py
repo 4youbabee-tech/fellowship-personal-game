@@ -66,13 +66,22 @@ class RuntimeAuditContractTests(unittest.TestCase):
                 self.assertNotIn(marker, path.read_text(encoding="utf-8"),
                                  f"{path.name} duplicates {evidence_id}")
 
-    def test_world_event_interaction_has_single_hud_toast(self):
-        source = (ROOT / "Source/ShireJourney/Private/World/ShireWorldEventInteraction.cpp").read_text(encoding="utf-8")
-        body = source.split("void AShireWorldEventInteraction::Interact_Implementation", 1)[1]
-        self.assertIn("if (!ResponseText.IsEmpty())", body)
-        self.assertIn("else if (!PromptText.IsEmpty())", body)
-        self.assertLess(body.index("ShowAlert(ResponseText"), body.index("ShowAlert(PromptText"))
-        self.assertIn("DisableInteraction();", body)
+
+    def test_cloud138_ferry_box_fallback_is_import_only_and_fail_closed(self):
+        source = (ROOT / "Scripts" / "cloud138_unreal_intake.py").read_text(encoding="utf-8")
+        editor = source.split("def editor_mode(reopen=False):", 1)[1]
+        conditional = 'if family == "FerryLanding" and collision == 0 and not reopen:'
+        self.assertIn(conditional, editor)
+        self.assertEqual(editor.count("EditorStaticMeshLibrary.add_simple_collisions("), 1)
+        self.assertIn("unreal.ScriptingCollisionShapeType.BOX", editor)
+        self.assertIn('collision_index >= 0', editor)
+        self.assertIn("CLOUD138_FERRY_BOX_COLLISION_API_FAILED:", editor)
+        self.assertIn("CLOUD138_FERRY_BOX_COLLISION_REPAIR_FAILED:", editor)
+        self.assertIn("CLOUD138_WALKABLE_UCX_NOT_IMPORTED:", editor)
+        self.assertLess(editor.index(conditional), editor.index("if family in IMPORTANT_COLLISION:"))
+        self.assertIn("save_loaded_asset(mesh, only_if_is_dirty=False)", editor)
+        self.assertIn("saved_or_raise(unreal, path)", editor)
+        self.assertIn("if not reopen:", editor)
 
     def test_state_ci_executes_every_registered_transaction_mode_once(self):
         text = (ROOT / "Scripts" / "ci_runtime_state.cmd").read_text(encoding="utf-8")

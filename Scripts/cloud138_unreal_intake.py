@@ -230,8 +230,10 @@ def editor_mode(reopen=False):
             require(source is not None and
                     (root / source["target"]).is_file(),
                     "CLOUD138_FERRY_SOURCE_MISSING")
-            result = unreal.EditorStaticMeshLibrary.add_simple_collisions(
+            collision_index = unreal.EditorStaticMeshLibrary.add_simple_collisions(
                 mesh, unreal.ScriptingCollisionShapeType.BOX)
+            require(collision_index >= 0,
+                    "CLOUD138_FERRY_BOX_COLLISION_API_FAILED:" + path)
             collision = unreal.EditorStaticMeshLibrary.get_simple_collision_count(mesh)
             require(collision > 0, "CLOUD138_FERRY_BOX_COLLISION_REPAIR_FAILED:" + path)
             print("CLOUD138_FERRY_COLLISION_FALLBACK editor_box_created=1"
