@@ -34,7 +34,7 @@ MASTER = "/Game/Production/Materials/M_P1C01VerifiedPBR"
 MAPS = ("BaseColor", "NormalDX", "ORM")
 PARAMS = {"BaseColor": "AlbedoTexture", "NormalDX": "NormalTexture", "ORM": "ORMTexture"}
 IMPORTANT_COLLISION = {"RoundDoor", "WoodenFootbridge", "FerryLanding", "StonePath"}
-COLLISION_BOX_FALLBACK_FAMILIES = frozenset(("FerryLanding", "RoundDoor"))
+COLLISION_BOX_FALLBACK_FAMILIES = frozenset(("FerryLanding", "RoundDoor", "StonePath"))
 
 
 def digest(path):
@@ -223,7 +223,7 @@ def editor_mode(reopen=False):
         require(slots > 0, "CLOUD138_MESH_MATERIAL_SLOTS_MISSING:" + path)
         collision = unreal.EditorStaticMeshLibrary.get_simple_collision_count(mesh)
         # Some UE4 FBX imports lose authored UCX. Restrict editor fallback to
-        # the two known closed SOLID shapes only: a landing platform and a closed
+        # three known solid or flat surfaces: landing, walkable StonePath, and closed
         # round door. Never box open bridges, foliage or decorative meshes.
         # A RoundDoor box is only a closed-state proxy: opening/hinge traversal
         # requires separate PIE evidence, not this import check.
