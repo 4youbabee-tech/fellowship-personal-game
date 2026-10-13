@@ -9079,5 +9079,19 @@
         "condition": "distinct useful content, safe verified generation and playable pipeline conversion"
       }
     ]
+  },
+  "pes_production_execution_sessions_2026_10_13": {
+    "status": "OWNER_REQUESTED_IMPLEMENTATION_CANDIDATE",
+    "protocol_id": "PES_24_SESSION_CONTRACT_2026_10_13",
+    "authority": "Data/ProjectGovernor.json",
+    "schedule": "Docs/PES_PRODUCTION_EXECUTION_SESSIONS.md",
+    "definition": "Each owner Execution Order starts one numbered Production Execution Session PES-NNN; commits PRs and Actions runs are evidence generated within a session, not sessions.",
+    "sessions_total": 24,
+    "chapters": "PES-001..016 P1C01 only active runtime; PES-017..024 future Part I source-only until predecessor Gate 6/7",
+    "completion": "Never complete a PES without its specific persistent delivered result and required stage evidence; if blocked leave OPEN/BLOCKED and resume same ID; no fixed duration guarantee",
+    "concurrency": "five independent source lanes, one warehouse writer, one P1C01 Unreal runtime writer",
+    "report": "Mandatory before/after SHA, source unique hashes/QC, warehouse persisted receipt, Unreal imported/reopened .uasset, world-placed observed, playable evidence, exact tests/logs, FPS/VRAM if measured, commits/PRs/Actions/branch counts and per-stage growth percent or N/A",
+    "accounting": "Never count source-only files or CI passes as import, world placement, PIE/device or visual acceptance. Deduplicate assets.",
+    "safety": "Respect DEC-042 branch cleanup, project Governor, development gates, original canon, licensing, C++ doc sync, UE4.27.2, async soft refs/HISM/pooling, target low-spec constraints."
   }
 }
