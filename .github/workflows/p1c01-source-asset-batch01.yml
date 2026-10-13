@@ -1,0 +1,36 @@
+name: P1C01 Source Asset Batch01
+
+on:
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - 'Data/P1C01SourceAssetBatch01Manifest.json'
+      - 'Scripts/generate_p1c01_source_asset_batch01.py'
+      - 'Scripts/validate_p1c01_source_asset_batch01.py'
+      - 'SourceAssets/Production/World/Shire/Batch01OffRunner/**'
+      - '.github/workflows/p1c01-source-asset-batch01.yml'
+  push:
+    branches:
+      - develop
+    paths:
+      - 'Data/P1C01SourceAssetBatch01Manifest.json'
+      - 'Scripts/generate_p1c01_source_asset_batch01.py'
+      - 'Scripts/validate_p1c01_source_asset_batch01.py'
+      - 'SourceAssets/Production/World/Shire/Batch01OffRunner/**'
+      - '.github/workflows/p1c01-source-asset-batch01.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-source-assets:
+    name: Hosted static FBX/PNG validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+
+      - name: Validate generated P1C01 source assets
+        run: python3 Scripts/validate_p1c01_source_asset_batch01.py
