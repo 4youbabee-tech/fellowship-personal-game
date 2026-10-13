@@ -1,3 +1,14 @@
+## 2026-10-13 - P1C01 off-runner source asset Batch 02
+
+| Area | Status | Evidence |
+|---|---|---|
+| Generated source meshes | STATIC-VALIDATED locally / CI pending | 48 FBX members emitted by `Scripts/generate_p1c01_source_asset_batch02.py` into the workflow artifact ZIP; per-member SHA256 in the generated manifest |
+| Generated textures | STATIC-VALIDATED locally / CI pending | 16 PNG base-color members in the same source archive; 64x64 RGBA validation and SHA256 receipt |
+| Windows Runner | NOT USED | Batch created and validated off-runner; classifier routes this path to hosted static mode |
+| Unreal import / `.uasset` persistence | PENDING | No Content Browser import or `.uasset` persistence claimed |
+| World placement | PENDING | No saved level/World Builder placement claimed for this batch yet |
+| PIE / device / visual / performance / Gate 6-7 | NOT ACCEPTED | Requires UE4 import, runtime placement, visual review and target-device evidence |
+
 ## 2026-10-12 - P1C01 off-runner source asset Batch 01
 
 | Area | Status | Evidence |
