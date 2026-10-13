@@ -208,6 +208,7 @@ def editor_mode(reopen=False):
                "NormalDX": unreal.TextureCompressionSettings.TC_NORMALMAP,
                "ORM": unreal.TextureCompressionSettings.TC_MASKS}
     observations = []
+    missing_collision = []
     for family, row in sorted(meshes.items()):
         path = row["asset"]
         mesh = unreal.EditorAssetLibrary.load_asset(path)
@@ -241,14 +242,18 @@ def editor_mode(reopen=False):
             print("CLOUD138_COLLISION_FALLBACK family=" + family +
                   " editor_box_created=1 source_ucx_not_imported;"
                   " CLOSED_STATE_ONLY_NAV_PIE_REVIEW_REQUIRED")
-        if family in IMPORTANT_COLLISION:
-            require(collision > 0, "CLOUD138_WALKABLE_UCX_NOT_IMPORTED:" + path)
+        if family in IMPORTANT_COLLISION and collision == 0:
+            missing_collision.append(path)
         if not reopen:
             require(unreal.EditorAssetLibrary.save_loaded_asset(mesh, only_if_is_dirty=False),
                     "CLOUD138_MESH_SAVE_FAILED:" + path)
         saved_or_raise(unreal, path)
         observations.append({"asset": path, "lods": count, "slots": slots,
                              "simple_collisions": collision})
+    # Audit all critical collision assets before aborting: one expensive editor
+    # run must expose the entire batch, never only the first offending mesh.
+    require(not missing_collision, "CLOUD138_WALKABLE_UCX_NOT_IMPORTED_BATCH:" +
+            ",".join(sorted(missing_collision)))
     for row in textures:
         path = row["asset"]
         tex = unreal.EditorAssetLibrary.load_asset(path)

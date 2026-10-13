@@ -42,6 +42,14 @@ class Cloud138IntakeTests(unittest.TestCase):
         self.assertNotIn("WoodenFootbridge", COLLISION_BOX_FALLBACK_FAMILIES)
         self.assertIn("StonePath", COLLISION_BOX_FALLBACK_FAMILIES)
 
+    def test_critical_collision_audit_is_not_fail_fast(self):
+        import ast
+        from pathlib import Path
+        script = (Path(__file__).resolve().parent / "cloud138_unreal_intake.py").read_text(encoding="utf-8")
+        self.assertIn("missing_collision.append(path)", script)
+        self.assertIn("join(sorted(missing_collision))", script)
+        ast.parse(script)
+
     def test_118_staged_hashes_pass(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
