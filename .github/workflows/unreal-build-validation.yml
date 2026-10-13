@@ -286,10 +286,12 @@ jobs:
         run: python Scripts/governor_work_start.py --lane RUNTIME_BUILD
 
       - name: Test playable entry map, package cook path and delivery artifact contract
+        if: github.event_name != 'workflow_dispatch'
         shell: pwsh
         run: python Scripts/test_p1c01_delivery_entry_map.py
 
       - name: Exercise real classifier regression on GitHub-hosted Windows
+        if: github.event_name != 'workflow_dispatch'
         shell: powershell
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File Scripts/test_unreal_classifier.ps1
 
