@@ -790,6 +790,26 @@ if($batch03SourceOnly){
     exit 0
 }
 
+
+$audioBatch01SourceOnlyExact = @(
+    "Scripts/generate_p1c01_audio_source_batch01.py",
+    "Scripts/validate_p1c01_audio_source_batch01.py",
+    "Scripts/classify_unreal_validation.ps1",
+    "Scripts/test_unreal_classifier.ps1",
+    ".github/workflows/p1c01-audio-source-batch01.yml"
+)
+$audioBatch01SourceOnly = (@($changed | Where-Object {
+    $n = $_ -replace "\\","/"
+    -not ($n.StartsWith("Docs/") -or ($audioBatch01SourceOnlyExact -contains $n))
+}).Count -eq 0 -and @($changed | Where-Object {
+    $n = $_ -replace "\\","/"
+    ($audioBatch01SourceOnlyExact -contains $n)
+}).Count -gt 0)
+if($audioBatch01SourceOnly){
+    Set-Mode "static" "p1c01-audio-source-batch01-offrunner-hosted-static-only" $parentSha
+    exit 0
+}
+
 $fullImpact = @()
 $coreImpact = @()
 $policyOnlyTouched = @()
