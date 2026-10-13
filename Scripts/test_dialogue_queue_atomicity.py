@@ -44,5 +44,39 @@ class DialogueQueueAtomicityContracts(unittest.TestCase):
         self.assertNotIn("PendingLines = Lines;", body)
 
 
+    def test_stopped_dialogue_cancels_voice_before_state_reset_event(self):
+        source = SOURCE.read_text(encoding="utf-8")
+        stop = source.split("void UShireDialogueSubsystem::StopDialogue()", 1)[1].split(
+            "\nvoid UShireDialogueSubsystem::AdvanceQueue()", 1
+        )[0]
+        self.assertIn("if (bWasPlaying)", stop)
+        self.assertIn("OnVoiceCueRequested.Broadcast(NAME_None);", stop)
+        self.assertLess(stop.index("OnVoiceCueRequested.Broadcast(NAME_None);"),
+                        stop.index("OnDialogueStateChanged.Broadcast(false);"))
+
+    def test_unvoiced_subtitle_cancels_previous_voice(self):
+        source = SOURCE.read_text(encoding="utf-8")
+        advance = source.split("void UShireDialogueSubsystem::AdvanceQueue()", 1)[1]
+        self.assertIn("OnSubtitleChanged.Broadcast(CurrentLine);", advance)
+        self.assertIn("OnVoiceCueRequested.Broadcast(CurrentLine.VoiceCue);", advance)
+        self.assertNotIn("if (CurrentLine.VoiceCue != NAME_None)", advance)
+
+    def test_audio_none_cancels_async_and_active_voice_without_new_load(self):
+        audio = (ROOT / "Source" / "ShireJourney" / "Private" /
+                 "Subsystems" / "ShireAudioSubsystem.cpp").read_text(encoding="utf-8")
+        play = audio.split("void UShireAudioSubsystem::PlayVoiceCue(FName CueId)", 1)[1].split(
+            "\nvoid UShireAudioSubsystem::ClearPersistentAudio()", 1
+        )[0]
+        self.assertIn("if (CueId != NAME_None)", play)
+        self.assertIn("CancelPendingAudioCategory(ShireAudioAssetPaths::VoiceCategory);", play)
+        self.assertIn("PendingVoiceCue = CueId;", play)
+        self.assertIn("ActiveVoiceComponent->Stop();", play)
+        self.assertIn("if (CueId == NAME_None)\n    {\n        return;\n    }", play)
+        self.assertLess(play.index("ActiveVoiceComponent->Stop();"),
+                        play.index("if (CueId == NAME_None)"))
+        self.assertLess(play.index("if (CueId == NAME_None)"),
+                        play.index("ResolveVoiceAsset(CueId)"))
+
+
 if __name__ == "__main__":
     unittest.main()

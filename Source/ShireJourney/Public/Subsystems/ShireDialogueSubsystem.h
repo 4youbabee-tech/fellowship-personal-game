@@ -63,7 +63,8 @@ public:
     UPROPERTY(BlueprintAssignable, Category="Dialogue")
     FOnShireDialogueStateChanged OnDialogueStateChanged;
 
-    // An audio implementation can bind to this later and resolve VoiceCue IDs to SoundWave/SoundCue assets.
+    // The audio owner consumes VoiceCue IDs asynchronously. NAME_None explicitly
+    // cancels the preceding voice/stream request on stop or unvoiced subtitle.
     UPROPERTY(BlueprintAssignable, Category="Dialogue")
     FOnShireVoiceCueRequested OnVoiceCueRequested;
 

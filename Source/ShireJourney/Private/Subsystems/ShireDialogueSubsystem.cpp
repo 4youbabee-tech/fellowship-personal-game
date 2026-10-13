@@ -363,6 +363,9 @@ void UShireDialogueSubsystem::StopDialogue()
 
     if (bWasPlaying)
     {
+        // A stopped or replaced dialogue must silence its voice and invalidate
+        // in-flight async loads before a new subtitle/voice can begin.
+        OnVoiceCueRequested.Broadcast(NAME_None);
         OnDialogueStateChanged.Broadcast(false);
     }
 }
@@ -379,10 +382,9 @@ void UShireDialogueSubsystem::AdvanceQueue()
     PendingLines.RemoveAt(0);
 
     OnSubtitleChanged.Broadcast(CurrentLine);
-    if (CurrentLine.VoiceCue != NAME_None)
-    {
-        OnVoiceCueRequested.Broadcast(CurrentLine.VoiceCue);
-    }
+    // NAME_None also cancels voice from the preceding spoken line when the
+    // next authored line has subtitles but no available voice cue.
+    OnVoiceCueRequested.Broadcast(CurrentLine.VoiceCue);
 
     if (UWorld* World = GetWorld())
     {

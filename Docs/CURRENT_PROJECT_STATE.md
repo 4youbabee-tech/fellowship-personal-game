@@ -4717,3 +4717,7 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - New dedicated regression: Scripts/test_dialogue_queue_atomicity.py is wired into hosted Pre-Unreal and local static validation. This is a source-contract regression only; actual UE4.27.2 build, PIE conversational playback, voice output, device and human visual observations are still required.
 - No new in-world assets, regions or acceptance credit; P1C01 Gate 6/7 stays OPEN. Never label this candidate PIE-TESTED or COMPILE-TESTED without exact-head evidence.
 
+## 2026-10-13 — Follow-on dialogue voice cancellation regression (PR #454)
+- Source root cause: StopDialogue cleared subtitle/timer state without cancelling existing or asynchronously pending spoken voice; transitioning from a voiced line to a subtitle-only line also left the former voice playing.
+- Scoped repair: the existing OnVoiceCueRequested delegate uses NAME_None as a cancellation sentinel; the AudioSubsystem cancels the voice streaming category, invalidates PendingVoiceCue, and stops ActiveVoiceComponent before returning without loading a new asset. A valid cue retains the existing asynchronous pathway; no extra audio subsystem, asset or hard reference is added.
+- Three regression source-contract cases added to Scripts/test_dialogue_queue_atomicity.py (stop, subtitle-only handoff, audio cancellation ordering). Windows UE4.27.2 build, actual audible playback, PIE transitions and device review remain outstanding. No Gate 6/7 credit and no change to fourth-expansion authorization.
