@@ -81,7 +81,7 @@ class RuntimeAuditContractTests(unittest.TestCase):
                     self.assertIsInstance(node.value, ast.Call)
                     self.assertEqual(getattr(node.value.func, "id", None), "frozenset")
                     namespace["families"] = frozenset(ast.literal_eval(node.value.args[0]))
-        self.assertEqual(namespace.get("families"), frozenset(("FerryLanding", "RoundDoor")))
+        self.assertEqual(namespace.get("families"), frozenset(("FerryLanding", "RoundDoor", "StonePath")))
         editor = source.split("def editor_mode(reopen=False):", 1)[1]
         conditional = "if family in COLLISION_BOX_FALLBACK_FAMILIES and collision == 0 and not reopen:"
         self.assertIn(conditional, editor)
