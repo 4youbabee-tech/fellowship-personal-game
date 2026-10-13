@@ -747,6 +747,27 @@ if($batch01SourceOnly){
     exit 0
 }
 
+$batch02SourceOnlyExact = @(
+    "Scripts/generate_p1c01_source_asset_batch02.py",
+    "Scripts/validate_p1c01_source_asset_batch02.py",
+    "Scripts/classify_unreal_validation.ps1",
+    "Scripts/test_unreal_classifier.ps1",
+    ".github/workflows/p1c01-source-asset-batch02.yml"
+)
+$batch02SourceOnlyPrefixes = @()
+$batch02SourceOnly = (@($changed | Where-Object {
+    $n = $_ -replace "\\","/"
+    $isAllowedPrefix = @($batch02SourceOnlyPrefixes | Where-Object { $n.StartsWith($_) }).Count -gt 0
+    -not ($n.StartsWith("Docs/") -or ($batch02SourceOnlyExact -contains $n) -or $isAllowedPrefix)
+}).Count -eq 0 -and @($changed | Where-Object {
+    $n = $_ -replace "\\","/"
+    ($batch02SourceOnlyExact -contains $n) -or (@($batch02SourceOnlyPrefixes | Where-Object { $n.StartsWith($_) }).Count -gt 0)
+}).Count -gt 0)
+if($batch02SourceOnly){
+    Set-Mode "static" "p1c01-batch02-offrunner-source-assets-hosted-static-only" $parentSha
+    exit 0
+}
+
 $fullImpact = @()
 $coreImpact = @()
 $policyOnlyTouched = @()
