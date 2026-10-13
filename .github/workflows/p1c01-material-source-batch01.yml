@@ -1,0 +1,43 @@
+name: P1C01 Material Source Batch01
+
+on:
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - 'Scripts/generate_p1c01_material_source_batch01.py'
+      - 'Scripts/validate_p1c01_material_source_batch01.py'
+      - '.github/workflows/p1c01-material-source-batch01.yml'
+  push:
+    branches:
+      - develop
+    paths:
+      - 'Scripts/generate_p1c01_material_source_batch01.py'
+      - 'Scripts/validate_p1c01_material_source_batch01.py'
+      - '.github/workflows/p1c01-material-source-batch01.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-source-materials:
+    name: Hosted static PBR PNG validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+
+      - name: Generate P1C01 material source batch01
+        run: python3 Scripts/generate_p1c01_material_source_batch01.py
+
+      - name: Validate generated P1C01 material sources
+        run: python3 Scripts/validate_p1c01_material_source_batch01.py
+
+      - name: Upload generated material archive and manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1c01-material-source-batch01-offrunner
+          path: |
+            Data/P1C01MaterialSourceBatch01Manifest.json
+            SourceAssets/Production/Materials/Shire/Batch01OffRunner/P1C01_MaterialBatch01_PBRTextures.zip
