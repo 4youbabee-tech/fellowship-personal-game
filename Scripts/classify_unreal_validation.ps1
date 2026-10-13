@@ -869,6 +869,11 @@ foreach($p in $changed){
         continue
     }
 
+    if($n -eq "Scripts/test_pes_chapter_closeout_only.py"){
+        $policyOnlyTouched += $n
+        continue
+    }
+
     if($pbrNonPackagingImpact -contains $n){
         $coreImpact += $n
         continue
@@ -912,7 +917,8 @@ $hostedPolicyExact = @(
     "Scripts/pre_unreal_validate.py",
     ".github/workflows/unreal-build-validation.yml",
     ".github/workflows/p1c01-verified-pbr-production.yml",
-    "Scripts/test_p1c01_verified_pbr_bridge.py"
+    "Scripts/test_p1c01_verified_pbr_bridge.py",
+    "Scripts/test_pes_chapter_closeout_only.py"
 )
 $hostedPolicyOnly = ($policyOnlyTouched.Count -gt 0 -and
     @($changed | Where-Object {

@@ -75,3 +75,6 @@ Status: **REGISTERED ON DEVELOP** (PR #462 merged 319e07c8). This file is a subo
 | Blockers and next step | Exact technical blocker; do not silently close the PES |
 
 A PES is **COMPLETE** only when its own required outcome and evidence exist; documentation or source-only completion cannot claim visible-world acceptance. Where stage is defined SOURCE ONLY, mark that scope explicitly; never claim chapter complete.
+
+## Closeout-only broad tests — policy 2026-10-14
+During an ordinary PES development commit, keep only checks relevant to its changed files: hosted static/Governor, targeted source regressions, UE C++ build if engine/runtime source changed, quick startup smoke when runtime compile is needed, and dedicated editor import-reopen-persist when assets change. Do not run the **chapter-by-chapter sweep**, **route/story state roundtrip** or **global runtime warning-debt sweep** on every commit. They run together on explicit owner chapter closeout (`workflow_dispatch` with `package_windows=true`). Gate 6/7 still needs real PIE/device/visual/performance and other acceptance evidence; no skipped fatal safety conditions. This policy does not imply PES-001 is complete or any game asset is placed.
