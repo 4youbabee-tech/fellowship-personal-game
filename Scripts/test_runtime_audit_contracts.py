@@ -93,7 +93,7 @@ class RuntimeAuditContractTests(unittest.TestCase):
         self.assertIn("CLOUD138_WALKABLE_UCX_NOT_IMPORTED_BATCH:", editor)
         self.assertIn("missing_collision.append(path)", editor)
         self.assertIn("join(sorted(missing_collision))", editor)
-        self.assertLess(editor.index(conditional), editor.index("if family in IMPORTANT_COLLISION:"))
+        self.assertLess(editor.index(conditional), editor.index("if family in IMPORTANT_COLLISION and collision == 0:"))
         self.assertIn("save_loaded_asset(mesh, only_if_is_dirty=False)", editor)
         self.assertIn("saved_or_raise(unreal, path)", editor)
         self.assertIn("if not reopen:", editor)
