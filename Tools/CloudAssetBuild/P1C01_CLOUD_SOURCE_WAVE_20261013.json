@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "wave_id": "P1C01_CLOUD_SOURCE_WAVE_20261013",
+  "purpose": "Trigger the existing cloud P1C01 source producer on the exact current develop head.",
+  "scope": {
+    "shire_static_fbx_families": 41,
+    "shire_static_fbx_lods": 2,
+    "regional_fbx": 56,
+    "packed_png_materials": 36
+  },
+  "evidence_boundary": {
+    "source_generated": "pending_workflow",
+    "warehouse_persisted": false,
+    "unreal_imported": false,
+    "pie_tested": false,
+    "visually_accepted": false,
+    "gate6_7_closed": false
+  },
+  "execution_rule": "The existing cloud-p1c01-asset-production.yml is the sole producer; no duplicate generator or runtime writer is introduced."
+}
