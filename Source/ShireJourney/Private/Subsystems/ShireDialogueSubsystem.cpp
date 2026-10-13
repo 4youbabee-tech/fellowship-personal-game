@@ -323,34 +323,26 @@ bool UShireDialogueSubsystem::PlayDynamicSequence(
     const TArray<FShireDialogueLine>& Lines,
     FName DynamicCueId)
 {
-    PendingLines.Empty();
+    // Validate into a local buffer. An invalid dynamic request must not erase
+    // the queued lines or advance state of an already-playing conversation.
+    TArray<FShireDialogueLine> FilteredLines;
+    FilteredLines.Reserve(Lines.Num());
     for (const FShireDialogueLine& Line : Lines)
     {
         if (!Line.Subtitle.IsEmpty())
         {
-            PendingLines.Add(Line);
+            FilteredLines.Add(Line);
         }
     }
-    if (PendingLines.Num() == 0)
+    if (FilteredLines.Num() == 0)
     {
         return false;
     }
 
     StopDialogue();
     ActiveDialogueCue = DynamicCueId == NAME_None ? FName(TEXT("DynamicNPCSequence")) : DynamicCueId;
-    PendingLines = Lines;
-    for (int32 Index = PendingLines.Num() - 1; Index >= 0; --Index)
-    {
-        if (PendingLines[Index].Subtitle.IsEmpty())
-        {
-            PendingLines.RemoveAt(Index);
-        }
-    }
-    bPlaying = PendingLines.Num() > 0;
-    if (!bPlaying)
-    {
-        return false;
-    }
+    PendingLines = MoveTemp(FilteredLines);
+    bPlaying = true;
     OnDialogueStateChanged.Broadcast(true);
     AdvanceQueue();
     return true;
