@@ -1689,3 +1689,9 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 - Scoped repair: add bCinematicInputLocked to the two existing early-return guards. Preserve save snapshot and disk serialization code, existing world-hold/deferred-restore barriers, Escape SkipCinematic action, and all story/quest ownership.
 - Added a single source regression to Scripts/test_offline_runtime_safety.py (already executed by hosted Pre-Unreal) that verifies both guards and retention of the Skip action. No new story beat, world feature, voice asset or fourth-expansion restriction.
 - Source patch requires fresh exact-head hosted Pre-Unreal and later Windows UE4.27.2 compile, in-PIE cinematic input, F9 save/load post-skip, disk restore and target-device review. P1C01 Gate 6/7 still open.
+
+## 2026-10-13 — P1C01 corrupt rotation and route transform restore safety (PR #456 follow-on)
+- Further save audit showed RestoreSaveSnapshot checked finite player position/health/stamina/resolve but did not check saved Pitch/Yaw/Roll. A corrupted FRotator could be passed to world placement/SetActorLocationAndRotation.
+- Added finite-axis validation before BeginPersistenceRestore for the saved player rotation. Invalid input rejects the operation without starting the persistence transaction.
+- Canonicalization of FShireRouteProgress now checks all six transform components when bHasPlayerTransform is true. Corruption clears only the saved per-route transform and its validity flag; the canonical route identity, quests and story beats remain. The existing chapter grounded-spawn fallback handles missing saved coordinates.
+- One new regression in the existing offline runtime safety suite checks these conditions; exact-head hosted CI and later Windows Unreal build/corrupt-save PIE simulation remain required. No asset, world placement, chapter or Gate 6/7 credit; fourth expansion unchanged.

@@ -210,6 +210,30 @@ class OfflineRuntimeSafetyTests(unittest.TestCase):
         self.assertLess(restore.index("QuestStages.Empty();"), restore.index("ActiveQuestId = InActiveQuestId;"))
         self.assertLess(restore.index("CompletedStoryBeats.Empty();"), restore.index("ActiveQuestId = InActiveQuestId;"))
 
+    def test_restore_rejects_corrupt_player_rotation_and_sanitizes_route_transform(self):
+        player = source(PLAYER_CPP)
+        restore = body_between(player, "bool AShirePlayerCharacter::RestoreSaveSnapshot(",
+                               "#if !UE_BUILD_SHIPPING")
+        for axis in ("Pitch", "Yaw", "Roll"):
+            self.assertIn("!FMath::IsFinite(Save->PlayerRotation." + axis + ")", restore)
+        self.assertLess(restore.index("!FMath::IsFinite(Save->PlayerRotation.Pitch)"),
+                        restore.index("BeginPersistenceRestore()"))
+
+        quest = source("Source/ShireJourney/Private/Subsystems/ShireQuestSubsystem.cpp")
+        sanitize = body_between(quest, "void UShireQuestSubsystem::SanitizeRouteProgressMap(",
+                                "bool UShireQuestSubsystem::CanonicalizeRestoredExperienceIdentity(")
+        self.assertIn("if (Progress->bHasPlayerTransform &&", sanitize)
+        for axis in ("X", "Y", "Z"):
+            self.assertIn("!FMath::IsFinite(Progress->PlayerLocation." + axis + ")", sanitize)
+        for axis in ("Pitch", "Yaw", "Roll"):
+            self.assertIn("!FMath::IsFinite(Progress->PlayerRotation." + axis + ")", sanitize)
+        for token in ("Progress->bHasPlayerTransform = false;",
+                      "Progress->PlayerLocation = FVector::ZeroVector;",
+                      "Progress->PlayerRotation = FRotator::ZeroRotator;"):
+            self.assertIn(token, sanitize)
+        self.assertIn("InOutRouteProgress.Remove(RouteId);", sanitize)
+        self.assertIn("Progress->PlayableCharacterId = CharacterId;", sanitize)
+
     def test_self_hosted_requires_manual_opt_in(self):
         workflow = source(".github/workflows/unreal-build-validation.yml")
         self.assertIn("run_self_hosted:", workflow)

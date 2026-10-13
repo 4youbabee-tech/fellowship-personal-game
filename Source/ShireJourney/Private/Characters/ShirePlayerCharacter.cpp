@@ -1861,7 +1861,10 @@ bool AShirePlayerCharacter::RestoreSaveSnapshot(
         !FMath::IsFinite(Save->PlayerLocation.Z) ||
         !FMath::IsFinite(Save->PlayerHealth) ||
         !FMath::IsFinite(Save->PlayerStamina) ||
-        !FMath::IsFinite(Save->PlayerResolve))
+        !FMath::IsFinite(Save->PlayerResolve) ||
+        !FMath::IsFinite(Save->PlayerRotation.Pitch) ||
+        !FMath::IsFinite(Save->PlayerRotation.Yaw) ||
+        !FMath::IsFinite(Save->PlayerRotation.Roll))
     {
         UE_LOG(LogTemp, Error, TEXT("Save snapshot rejected: invalid numeric state."));
         return false;
