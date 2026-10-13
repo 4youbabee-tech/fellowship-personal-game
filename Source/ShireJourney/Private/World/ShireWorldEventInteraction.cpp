@@ -133,14 +133,16 @@ void AShireWorldEventInteraction::Interact_Implementation(AActor* Interactor)
         return;
     }
 
-    if (!PromptText.IsEmpty())
-    {
-        ShowAlert(PromptText, 1.2f);
-    }
-
+    // The HUD stores one alert at a time. Showing both in the same frame
+    // hides the prompt before it can ever be drawn. Prefer the authored
+    // interaction response; use the prompt when no response is available.
     if (!ResponseText.IsEmpty())
     {
         ShowAlert(ResponseText, 2.4f);
+    }
+    else if (!PromptText.IsEmpty())
+    {
+        ShowAlert(PromptText, 1.2f);
     }
 
     DisableInteraction();

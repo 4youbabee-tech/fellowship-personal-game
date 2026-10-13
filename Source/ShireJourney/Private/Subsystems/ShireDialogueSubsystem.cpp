@@ -323,34 +323,26 @@ bool UShireDialogueSubsystem::PlayDynamicSequence(
     const TArray<FShireDialogueLine>& Lines,
     FName DynamicCueId)
 {
-    PendingLines.Empty();
+    // Validate into a local buffer. An invalid dynamic request must not erase
+    // the queued lines or advance state of an already-playing conversation.
+    TArray<FShireDialogueLine> FilteredLines;
+    FilteredLines.Reserve(Lines.Num());
     for (const FShireDialogueLine& Line : Lines)
     {
         if (!Line.Subtitle.IsEmpty())
         {
-            PendingLines.Add(Line);
+            FilteredLines.Add(Line);
         }
     }
-    if (PendingLines.Num() == 0)
+    if (FilteredLines.Num() == 0)
     {
         return false;
     }
 
     StopDialogue();
     ActiveDialogueCue = DynamicCueId == NAME_None ? FName(TEXT("DynamicNPCSequence")) : DynamicCueId;
-    PendingLines = Lines;
-    for (int32 Index = PendingLines.Num() - 1; Index >= 0; --Index)
-    {
-        if (PendingLines[Index].Subtitle.IsEmpty())
-        {
-            PendingLines.RemoveAt(Index);
-        }
-    }
-    bPlaying = PendingLines.Num() > 0;
-    if (!bPlaying)
-    {
-        return false;
-    }
+    PendingLines = MoveTemp(FilteredLines);
+    bPlaying = true;
     OnDialogueStateChanged.Broadcast(true);
     AdvanceQueue();
     return true;
@@ -371,6 +363,9 @@ void UShireDialogueSubsystem::StopDialogue()
 
     if (bWasPlaying)
     {
+        // A stopped or replaced dialogue must silence its voice and invalidate
+        // in-flight async loads before a new subtitle/voice can begin.
+        OnVoiceCueRequested.Broadcast(NAME_None);
         OnDialogueStateChanged.Broadcast(false);
     }
 }
@@ -387,10 +382,9 @@ void UShireDialogueSubsystem::AdvanceQueue()
     PendingLines.RemoveAt(0);
 
     OnSubtitleChanged.Broadcast(CurrentLine);
-    if (CurrentLine.VoiceCue != NAME_None)
-    {
-        OnVoiceCueRequested.Broadcast(CurrentLine.VoiceCue);
-    }
+    // NAME_None also cancels voice from the preceding spoken line when the
+    // next authored line has subtitles but no available voice cue.
+    OnVoiceCueRequested.Broadcast(CurrentLine.VoiceCue);
 
     if (UWorld* World = GetWorld())
     {

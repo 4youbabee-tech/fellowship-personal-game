@@ -4729,3 +4729,43 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 
 ## 2026-10-13 — PR #437 source route audit retained after intake reconciliation
 - Hosted P1C01 route static gap report + original workflow only; Branch Cleanup remains existing sole janitor. P1C01 door, HUD, ferry, audio, save and FPS require UE/PIE/device evidence. No content or acceptance metric claimed, no fourth expansion restriction.
+
+
+## 2026-10-13 — Consolidated repair reconciliation evidence
+### Repair source 1
+## 2026-10-13 — P1C01 named-NPC visibility trace collision regression (candidate)
+- Direct source inspection: player Interact() traces ECC_Visibility, while the default Pawn character capsule may ignore that channel; unlike the existing WorldEventInteraction marker, AShireNPC did not explicitly block it.
+- Bounded correction: interactive AShireNPC capsule blocks ECC_Visibility without changing other collision channels, movement or NavMesh; AShireAmbientNPC remains non-interactable and pooled. No new gameplay systems, story content or chapter runtime lane.
+- Guards: existing hosted Scripts/test_runtime_audit_contracts.py gains a paired player/NPC trace contract test; UE4 editor ShireJourney.QA.NPC.VisibilityInteraction checks the actual AShireNPC CDO collision response. Guardian machine contract records these entry points.
+- Evidence at authoring: STATIC SOURCE REVIEW ONLY; exact-head hosted CI and actual UE4.27 compile/editor test pending. No new FBX, persistent Warehouse/.uasset, world placement, playable interaction, voice, PIE, device, human visual or FPS credit. P1C01 Gate6/7 remains OPEN.
+
+
+### Repair source 2
+## 2026-10-13 — Follow-on dialogue voice cancellation regression (PR #454)
+- Source root cause: StopDialogue cleared subtitle/timer state without cancelling existing or asynchronously pending spoken voice; transitioning from a voiced line to a subtitle-only line also left the former voice playing.
+- Scoped repair: the existing OnVoiceCueRequested delegate uses NAME_None as a cancellation sentinel; the AudioSubsystem cancels the voice streaming category, invalidates PendingVoiceCue, and stops ActiveVoiceComponent before returning without loading a new asset. A valid cue retains the existing asynchronous pathway; no extra audio subsystem, asset or hard reference is added.
+- Three regression source-contract cases added to Scripts/test_dialogue_queue_atomicity.py (stop, subtitle-only handoff, audio cancellation ordering). Windows UE4.27.2 build, actual audible playback, PIE transitions and device review remain outstanding. No Gate 6/7 credit and no change to fourth-expansion authorization.
+
+
+### Repair source 3
+## 2026-10-13 — P1C01 interaction HUD same-frame feedback repair candidate
+- Existing AShireWorldEventInteraction::Interact_Implementation called HUD ShowAlert(PromptText) then ShowAlert(ResponseText) synchronously. AShireHUD::ShowAlert owns one AlertMessage and expiry, so the response erased the prompt before any HUD DrawHUD frame. This is a real source-level feedback defect.
+- Bounded fix: show the authored response when present, otherwise the prompt; preserve one-time DisableInteraction(), actor collision, quest progression and audio. A source regression guard was added to the already-executed Pre-Unreal runtime-audit suite. No new world content is created.
+- Owner clarification: fourth expansion is NOT cancelled/frozen; this session prioritizes root repairs before expanding the playable runtime. Existing production commitments and P1C01 gates are unchanged.
+- Windows UE4.27.2 laptop runner is OFF (owner-supplied). Candidate cannot be called COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED until exact build and scenario-specific evidence exists. Gate 6/7 remains open.
+
+
+
+### Repair source 4
+## 2026-10-13 — P1C01 corrupt rotation and route transform restore safety (PR #456 follow-on)
+- Further save audit showed RestoreSaveSnapshot checked finite player position/health/stamina/resolve but did not check saved Pitch/Yaw/Roll. A corrupted FRotator could be passed to world placement/SetActorLocationAndRotation.
+- Added finite-axis validation before BeginPersistenceRestore for the saved player rotation. Invalid input rejects the operation without starting the persistence transaction.
+- Canonicalization of FShireRouteProgress now checks all six transform components when bHasPlayerTransform is true. Corruption clears only the saved per-route transform and its validity flag; the canonical route identity, quests and story beats remain. The existing chapter grounded-spawn fallback handles missing saved coordinates.
+- One new regression in the existing offline runtime safety suite checks these conditions; exact-head hosted CI and later Windows Unreal build/corrupt-save PIE simulation remain required. No asset, world placement, chapter or Gate 6/7 credit; fourth expansion unchanged.
+
+
+### Repair source 5
+## 2026-10-13 — Conflict-free FerryLanding collision source candidate (#435)
+- Reconciled #435 with develop using a non-force branch merge; carried only the scoped FerryLanding UE4.27 simple Box collision fallback and focused source regression. Excluded the duplicate world-event HUD change, which belongs exclusively to #455, to prevent competing edits.
+- Fail closed if the UE EditorStaticMeshLibrary.add_simple_collisions return index is negative, or if simple collision count remains zero. Only FerryLanding with zero imported simple collision in non-reopen editor mode may receive the fallback; other walkable assets retain strict required collision checks.
+- The repair path still requires actual UE4.27 Python commandlet execution, physical .uasset save/reopen/collision receipt, P1C01 ferry traversal/navigation, target-device DX11 720p FPS and human visual acceptance. No Gate 6/7 closure or fourth-expansion freeze.

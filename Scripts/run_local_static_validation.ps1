@@ -12,6 +12,7 @@ try {
         @("python","Scripts/deep_project_audit.py"),
         @("python","-m","unittest","discover","-s","Scripts","-p","test_runtime_smoke.py","-v"),
         @("python","-m","unittest","discover","-s","Scripts","-p","test_runtime_audit_contracts.py","-v"),
+        @("python","-m","unittest","discover","-s","Scripts","-p","test_dialogue_queue_atomicity.py","-v"),
         @("python","-m","unittest","discover","-s","Scripts","-p","test_source_contracts.py","-v"),
         @("python","-m","unittest","discover","-s","Scripts","-p","test_governance_contracts.py","-v"),
         @("python","-m","unittest","discover","-s","Scripts","-p","test_warning_debt_guard.py","-v"),
