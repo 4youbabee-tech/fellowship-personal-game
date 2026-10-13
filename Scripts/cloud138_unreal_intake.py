@@ -221,6 +221,23 @@ def editor_mode(reopen=False):
         slots = unreal.EditorStaticMeshLibrary.get_number_materials(mesh)
         require(slots > 0, "CLOUD138_MESH_MATERIAL_SLOTS_MISSING:" + path)
         collision = unreal.EditorStaticMeshLibrary.get_simple_collision_count(mesh)
+        # UE4 FBX can drop UCX from a flat walkable platform during automatic
+        # static-mesh import. Restrict fallback to FerryLanding's verified flat
+        # platform mesh; never auto-box doors, open bridges or foliage.
+        if family == "FerryLanding" and collision == 0 and not reopen:
+            source = next((r for r in plan["source_rows"] if r["kind"] == "mesh"
+                           and r["family"] == family and r["lod"] == 0), None)
+            require(source is not None and
+                    (root / source["target"]).is_file(),
+                    "CLOUD138_FERRY_SOURCE_MISSING")
+            collision_index = unreal.EditorStaticMeshLibrary.add_simple_collisions(
+                mesh, unreal.ScriptingCollisionShapeType.BOX)
+            require(collision_index >= 0,
+                    "CLOUD138_FERRY_BOX_COLLISION_API_FAILED:" + path)
+            collision = unreal.EditorStaticMeshLibrary.get_simple_collision_count(mesh)
+            require(collision > 0, "CLOUD138_FERRY_BOX_COLLISION_REPAIR_FAILED:" + path)
+            print("CLOUD138_FERRY_COLLISION_FALLBACK editor_box_created=1"
+                  " source_ucx_remains_not_engine_imported; NAV_PIE_REVIEW_REQUIRED")
         if family in IMPORTANT_COLLISION:
             require(collision > 0, "CLOUD138_WALKABLE_UCX_NOT_IMPORTED:" + path)
         if not reopen:

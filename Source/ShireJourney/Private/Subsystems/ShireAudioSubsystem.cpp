@@ -682,12 +682,12 @@ void UShireAudioSubsystem::StartVoicePlayback(FName CueId, USoundBase* Sound)
 
 void UShireAudioSubsystem::PlayVoiceCue(FName CueId)
 {
-    if (CueId == NAME_None)
+    // NAME_None is a cancellation command from the dialogue owner, not an
+    // invalid playback request. Never issue a synthetic voice request for it.
+    if (CueId != NAME_None)
     {
-        return;
+        OnVoiceRequested.Broadcast(CueId);
     }
-
-    OnVoiceRequested.Broadcast(CueId);
     CancelPendingAudioCategory(ShireAudioAssetPaths::VoiceCategory);
     PendingVoiceCue = CueId;
 
@@ -699,6 +699,11 @@ void UShireAudioSubsystem::PlayVoiceCue(FName CueId)
         ActiveVoiceComponent = nullptr;
         ApplyMusicDuck(false);
         OnVoicePlaybackStateChanged.Broadcast(false);
+    }
+
+    if (CueId == NAME_None)
+    {
+        return;
     }
 
     if (USoundBase* Sound = ResolveVoiceAsset(CueId))

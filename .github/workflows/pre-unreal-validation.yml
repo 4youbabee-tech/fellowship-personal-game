@@ -152,6 +152,9 @@ jobs:
       - name: Test runtime audit contract registry
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_runtime_audit_contracts.py" -v
 
+      - name: Guard active dialogue queue against invalid dynamic replacements
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_dialogue_queue_atomicity.py" -v
+
       - name: Test structural source contracts
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_source_contracts.py" -v
 

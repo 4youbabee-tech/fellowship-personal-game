@@ -23,6 +23,10 @@ AShireNPC::AShireNPC()
     PrimaryActorTick.bCanEverTick = true;
     GetCapsuleComponent()->SetCapsuleRadius(28.0f);
     GetCapsuleComponent()->SetCapsuleHalfHeight(60.0f);
+    // Player interaction traces ECC_Visibility; UE4's Pawn preset commonly ignores
+    // that channel. Opt in this interactable NPC only, keeping walking/pawn
+    // collision and the non-interactable ambient crowd profiles unchanged.
+    GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
     DisplayName = FText::FromString(TEXT("Hobbit"));
 
     PrototypeTorso = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeTorso"));

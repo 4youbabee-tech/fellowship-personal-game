@@ -218,5 +218,20 @@
     "offline_regression": "Scripts/test_p1c01_adaptive_pbr_warehouse.py::PersistentIntakeTests::test_nested_original_relative_path_remains_posix_on_windows",
     "evidence": "PENDING exact-head host regressions on Linux/Windows and actual wave39 permanent stage audit",
     "acceptance_credit": false
+  },
+  "p1c01_npc_visibility_interaction": {
+    "regression": "Named Shire NPC uses ACharacter Pawn capsule, which may ignore ECC_Visibility while player interaction uses ECC_Visibility",
+    "source_fix": "Source/ShireJourney/Private/Characters/ShireNPC.cpp - only interactive NPC capsule explicitly blocks ECC_Visibility",
+    "static_regression": "Scripts/test_runtime_audit_contracts.py::RuntimeAuditContractTests::test_p1c01_interactable_npc_capsule_blocks_player_visibility_trace",
+    "engine_regression": "ShireJourney.QA.NPC.VisibilityInteraction",
+    "scope": "P1C01_NAMED_NPC_INTERACTION_ONLY",
+    "required_future_evidence": [
+      "exact-head Pre-Unreal",
+      "UE4.27.2 compile and editor automation",
+      "P1C01 PIE camera trace and NPC dialogue",
+      "720p device/visual review before Gate6/7"
+    ],
+    "evidence_status": "SOURCE_PATCH_PENDING_EXACT_HEAD_CI",
+    "acceptance_credit": false
   }
 }
