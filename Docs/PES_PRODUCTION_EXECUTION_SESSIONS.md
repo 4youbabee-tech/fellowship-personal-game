@@ -1,6 +1,8 @@
 # SHIRE JOURNEY — PES Production Execution Sessions (24)
 
-Status: **proposed operational contract, pending exact-head validation and merge**. This file is a subordinate execution schedule; **Data/ProjectGovernor.json** and **Docs/DEVELOPMENT_GATES.md** govern all decisions and chapter gates.
+Status: **merged operational contract** (PR #462, develop merge `319e07c8db898f310ac5dc3e2ad52c344a17ea9b`); the checkpoint dashboard is subordinate to the Governor and is proposed separately. This file is a subordinate execution schedule; **Data/ProjectGovernor.json** and **Docs/DEVELOPMENT_GATES.md** govern all decisions and chapter gates.
+
+**Checkpoint tracking and developer handoff:** `Docs/PES_EXECUTION_CHECKPOINT_DASHBOARD.md` (five persistent CP stages, source/warehouse/import/world/closeout). All snapshots must be refreshed from live runs before work.
 
 ## Naming and delivery contract
 
