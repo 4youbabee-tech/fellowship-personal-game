@@ -9093,5 +9093,109 @@
     "report": "Mandatory before/after SHA, source unique hashes/QC, warehouse persisted receipt, Unreal imported/reopened .uasset, world-placed observed, playable evidence, exact tests/logs, FPS/VRAM if measured, commits/PRs/Actions/branch counts and per-stage growth percent or N/A",
     "accounting": "Never count source-only files or CI passes as import, world placement, PIE/device or visual acceptance. Deduplicate assets.",
     "safety": "Respect DEC-042 branch cleanup, project Governor, development gates, original canon, licensing, C++ doc sync, UE4.27.2, async soft refs/HISM/pooling, target low-spec constraints."
+  },
+  "pes_execution_dashboard_2026_10_14": {
+    "status": "OWNER_REQUESTED_CANDIDATE_PENDING_EXACT_HEAD_AND_MERGE",
+    "id": "PES_CHECKPOINT_DASHBOARD_V1",
+    "canonical_schedule": "Docs/PES_PRODUCTION_EXECUTION_SESSIONS.md",
+    "immutable_session_ids": "PES-001 through PES-024; preserve ordered identity and delivery scope. Modify only through explicit Governor decision.",
+    "current_session": "PES-001",
+    "current_session_status": "OPEN",
+    "visual_indicator_rule": "Display all five milestone labels and distinct PASSED/PARTIAL/IN_PROGRESS/BLOCKED/PENDING statuses. This is a stage tracker, NEVER a percent-complete claim.",
+    "stage_definitions": [
+      {
+        "id": "CP1",
+        "label": "SOURCE_AND_ASSET_REGISTRY_AUDIT",
+        "gate": "Source/Warehouse and UE AssetRegistry gap audit with deduplicated receipts"
+      },
+      {
+        "id": "CP2",
+        "label": "WAREHOUSE_PERSISTENCE",
+        "gate": "Verified reuse or persisted source bytes and receipt on approved Windows store"
+      },
+      {
+        "id": "CP3",
+        "label": "UNREAL_IMPORT_REOPEN",
+        "gate": "Real UE4 import and fresh-process reopening with actual .uasset hashes"
+      },
+      {
+        "id": "CP4",
+        "label": "WORLD_BINDING_OBSERVED",
+        "gate": "Actual P1C01 map/production world binding, observed actor instances, screenshot or runtime trace"
+      },
+      {
+        "id": "CP5",
+        "label": "VALIDATION_MERGE_CLOSEOUT",
+        "gate": "Exact-head appropriate automated checks, PIE/device/visual where required, safe merge and branch cleanup, full before/after report"
+      }
+    ],
+    "latest_evidence_snapshot": {
+      "observation_scope": "HISTORICAL_ONLY_REFRESH_LIVE_GITHUB_AND_WINDOWS_EVIDENCE_BEFORE_ACTION",
+      "observed_date_utc": "2026-10-14",
+      "baseline_develop_sha": "319e07c8db898f310ac5dc3e2ad52c344a17ea9b",
+      "repair_pr_number": 463,
+      "repair_head_at_observation": "37fef5717601f341ea3f854badf6c8c1ed05cc1e",
+      "recorded_checks": [
+        {
+          "run_id": 38467646516,
+          "check": "Pre-Unreal Validation",
+          "result": "SUCCESS_AT_OBSERVED_HEAD"
+        },
+        {
+          "run_id": 38467646373,
+          "check": "Unreal Build Validation",
+          "result": "QUEUED_AT_OBSERVATION"
+        },
+        {
+          "run_id": 38467646349,
+          "check": "Cloud138 import workflow",
+          "result": "PENDING_AT_OBSERVATION"
+        },
+        {
+          "run_id": 38460938061,
+          "check": "Source warehouse proof; earlier UE import attempt",
+          "result": "WAREHOUSE_REUSED_138_FBX_36_PNG_BUT_CLOUD138_ROUNDDOOR_COLLISION_FAILURE"
+        }
+      ],
+      "stage_state": [
+        {
+          "id": "CP1",
+          "status": "PARTIAL",
+          "note": "Cloud138 batch mapped; all-source and UE asset-registry gap audit not proven complete"
+        },
+        {
+          "id": "CP2",
+          "status": "PASSED_FOR_CLOUD138_SOURCE_BATCH",
+          "note": "Run 38460938061 logged CLOUD_WHOLEGAME_WAREHOUSE_REUSED fbx=138 png=36 regions=28; not whole-project Warehouse"
+        },
+        {
+          "id": "CP3",
+          "status": "BLOCKED",
+          "note": "Run 38460938061 failed editor validation at CLOUD138_WALKABLE_UCX_NOT_IMPORTED: SM_ShRoundDoor; PR 463 candidate retry awaits exact-head proof"
+        },
+        {
+          "id": "CP4",
+          "status": "PENDING",
+          "note": "Cloud138 plan explicitly world_placed=false; never infer world placement from import"
+        },
+        {
+          "id": "CP5",
+          "status": "PENDING",
+          "note": "No imported+reopened world proof or acceptance; PES-001 OPEN"
+        }
+      ]
+    },
+    "per_checkpoint_handoff_contract": [
+      "At every work start and after every material milestone, read Governor + live GitHub HEAD/PR/checks and existing persistent Windows receipts before modifying state.",
+      "Present one succinct indicator: PES ID | [CP1..CP5 statuses] | current blocker | concrete evidence | next acceptance condition.",
+      "Persist checkpoint progress as factual candidate changes on short-lived PR(s) targeting develop, validating exact head and merging promptly, then retire branch under DEC-042. Keep a dated historical evidence snapshot; avoid treating snapshots as branch/PR runtime gates.",
+      "Update the subordinate PES doc and CURRENT_PROJECT_STATE / PRODUCTION_COMPLETENESS_MATRIX / WORLD_DETAIL_LEDGER in the same implementation change where applicable; all decision authority remains solely in Governor.",
+      "After an independently verified PES acceptance, move to the next PES with a new initial checkpoint record. The owner should not have to repeat the 24-step schedule.",
+      "Mark the current session COMPLETE only when its own delivery criteria are proven; if engine/permission/runner gate blocks, retain OPEN/BLOCKED, capture exact logs and prepare independent safe source-only work without falsely advancing.",
+      "Per session report counts before and after by funnel stage and ((after-before)/before*100) or N/A when baseline unknown/zero. Include SHA/PR/Run IDs and real screenshots/FPS only when measured.",
+      "Never hold work indefinitely or promise continuous execution across product session limits. Submit durable GitHub workflows for long jobs; continue as far as environment permits, then leave a precise resumable handoff."
+    ],
+    "progress_presentation": "5-cell checkpoint strip and short factual updates at start, significant milestone, blocker, final. No invented completion percent, screenshots or operation totals.",
+    "pace_target": "Aim to close one bounded PES per Work session when real tests pass; this is not a guarantee and never bypasses Development Gates 6/7."
   }
 }
