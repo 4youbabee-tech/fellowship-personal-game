@@ -261,7 +261,7 @@ def main() -> int:
 
     manifest = {
         "schema_version": 1,
-        "batch_id": "P1C01_SOURCE_ASSET_BATCH02_OFFRUNNER",
+        "batch_id": "P1C01_SOURCE_ASSET_BATCH03_OFFRUNNER",
         "authority": "Data/ProjectGovernor.json",
         "production_scope": "P1C01 source asset generation outside Windows Runner",
         "runner_policy": "Windows Runner not used or required for this batch",
@@ -278,7 +278,7 @@ def main() -> int:
     MANIFEST.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     shutil.rmtree(build_dir)
     print(
-        "P1C01_SOURCE_ASSET_BATCH02_GENERATED "
+        "P1C01_SOURCE_ASSET_BATCH03_GENERATED "
         f"fbx={len(records)} png={len(texture_paths)} archive={ARCHIVE.relative_to(ROOT)} manifest={MANIFEST.relative_to(ROOT)}"
     )
     return 0
