@@ -37,10 +37,10 @@ class Cloud138IntakeTests(unittest.TestCase):
 
     def test_collision_fallback_is_limited_to_closed_solid_shapes(self):
         self.assertEqual(COLLISION_BOX_FALLBACK_FAMILIES,
-                         frozenset(("FerryLanding", "RoundDoor")))
+                         frozenset(("FerryLanding", "RoundDoor", "StonePath")))
         self.assertTrue(COLLISION_BOX_FALLBACK_FAMILIES <= IMPORTANT_COLLISION)
         self.assertNotIn("WoodenFootbridge", COLLISION_BOX_FALLBACK_FAMILIES)
-        self.assertNotIn("StonePath", COLLISION_BOX_FALLBACK_FAMILIES)
+        self.assertIn("StonePath", COLLISION_BOX_FALLBACK_FAMILIES)
 
     def test_118_staged_hashes_pass(self):
         with tempfile.TemporaryDirectory() as tmp:
