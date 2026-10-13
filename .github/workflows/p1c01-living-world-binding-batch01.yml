@@ -1,0 +1,39 @@
+name: P1C01 Living World Binding Batch01
+
+on:
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - 'Scripts/generate_p1c01_living_world_binding_batch01.py'
+      - 'Scripts/validate_p1c01_living_world_binding_batch01.py'
+      - '.github/workflows/p1c01-living-world-binding-batch01.yml'
+  push:
+    branches:
+      - develop
+    paths:
+      - 'Scripts/generate_p1c01_living_world_binding_batch01.py'
+      - 'Scripts/validate_p1c01_living_world_binding_batch01.py'
+      - '.github/workflows/p1c01-living-world-binding-batch01.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-binding-packet:
+    name: Hosted static living-world binding validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+      - name: Generate P1C01 living-world binding batch01
+        run: python3 Scripts/generate_p1c01_living_world_binding_batch01.py
+      - name: Validate generated P1C01 living-world binding
+        run: python3 Scripts/validate_p1c01_living_world_binding_batch01.py
+      - name: Upload generated binding packet
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1c01-living-world-binding-batch01-offrunner
+          path: |
+            Data/P1C01LivingWorldBindingBatch01.json
