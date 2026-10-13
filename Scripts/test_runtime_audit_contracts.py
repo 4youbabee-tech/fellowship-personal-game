@@ -66,6 +66,16 @@ class RuntimeAuditContractTests(unittest.TestCase):
                 self.assertNotIn(marker, path.read_text(encoding="utf-8"),
                                  f"{path.name} duplicates {evidence_id}")
 
+    def test_world_event_single_visible_interaction_feedback(self):
+        source = (ROOT / "Source/ShireJourney/Private/World/ShireWorldEventInteraction.cpp").read_text(encoding="utf-8")
+        body = source.split("void AShireWorldEventInteraction::Interact_Implementation", 1)[1]
+        self.assertIn("if (!ResponseText.IsEmpty())", body)
+        self.assertIn("else if (!PromptText.IsEmpty())", body)
+        self.assertLess(body.index("ShowAlert(ResponseText"), body.index("ShowAlert(PromptText"))
+        self.assertEqual(body.count("ShowAlert(ResponseText"), 1)
+        self.assertEqual(body.count("ShowAlert(PromptText"), 1)
+        self.assertIn("DisableInteraction();", body)
+
     def test_state_ci_executes_every_registered_transaction_mode_once(self):
         text = (ROOT / "Scripts" / "ci_runtime_state.cmd").read_text(encoding="utf-8")
         for mode in STATE_SEQUENCE_MODES:
