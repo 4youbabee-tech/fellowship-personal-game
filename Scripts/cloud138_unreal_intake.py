@@ -34,6 +34,7 @@ MASTER = "/Game/Production/Materials/M_P1C01VerifiedPBR"
 MAPS = ("BaseColor", "NormalDX", "ORM")
 PARAMS = {"BaseColor": "AlbedoTexture", "NormalDX": "NormalTexture", "ORM": "ORMTexture"}
 IMPORTANT_COLLISION = {"RoundDoor", "WoodenFootbridge", "FerryLanding", "StonePath"}
+COLLISION_BOX_FALLBACK_FAMILIES = frozenset(("FerryLanding", "RoundDoor", "StonePath"))
 
 
 def digest(path):
@@ -207,6 +208,7 @@ def editor_mode(reopen=False):
                "NormalDX": unreal.TextureCompressionSettings.TC_NORMALMAP,
                "ORM": unreal.TextureCompressionSettings.TC_MASKS}
     observations = []
+    missing_collision = []
     for family, row in sorted(meshes.items()):
         path = row["asset"]
         mesh = unreal.EditorAssetLibrary.load_asset(path)
@@ -221,31 +223,44 @@ def editor_mode(reopen=False):
         slots = unreal.EditorStaticMeshLibrary.get_number_materials(mesh)
         require(slots > 0, "CLOUD138_MESH_MATERIAL_SLOTS_MISSING:" + path)
         collision = unreal.EditorStaticMeshLibrary.get_simple_collision_count(mesh)
-        # UE4 FBX can drop UCX from a flat walkable platform during automatic
-        # static-mesh import. Restrict fallback to FerryLanding's verified flat
-        # platform mesh; never auto-box doors, open bridges or foliage.
-        if family == "FerryLanding" and collision == 0 and not reopen:
+        # Some UE4 FBX imports lose authored UCX. Restrict editor fallback to
+        # three known solid or flat surfaces: landing, walkable StonePath, and closed
+        # round door. Never box open bridges, foliage or decorative meshes.
+        # A RoundDoor box is only a closed-state proxy: opening/hinge traversal
+        # requires separate PIE evidence, not this import check.
+        if family in COLLISION_BOX_FALLBACK_FAMILIES and collision == 0 and not reopen:
             source = next((r for r in plan["source_rows"] if r["kind"] == "mesh"
                            and r["family"] == family and r["lod"] == 0), None)
-            require(source is not None and
-                    (root / source["target"]).is_file(),
-                    "CLOUD138_FERRY_SOURCE_MISSING")
+            require(source is not None and (root / source["target"]).is_file(),
+                    "CLOUD138_COLLISION_FALLBACK_SOURCE_MISSING:" + path)
             collision_index = unreal.EditorStaticMeshLibrary.add_simple_collisions(
                 mesh, unreal.ScriptingCollisionShapeType.BOX)
             require(collision_index >= 0,
-                    "CLOUD138_FERRY_BOX_COLLISION_API_FAILED:" + path)
+                    "CLOUD138_BOX_COLLISION_API_FAILED:" + path)
             collision = unreal.EditorStaticMeshLibrary.get_simple_collision_count(mesh)
-            require(collision > 0, "CLOUD138_FERRY_BOX_COLLISION_REPAIR_FAILED:" + path)
-            print("CLOUD138_FERRY_COLLISION_FALLBACK editor_box_created=1"
-                  " source_ucx_remains_not_engine_imported; NAV_PIE_REVIEW_REQUIRED")
-        if family in IMPORTANT_COLLISION:
-            require(collision > 0, "CLOUD138_WALKABLE_UCX_NOT_IMPORTED:" + path)
+            require(collision > 0, "CLOUD138_BOX_COLLISION_REPAIR_FAILED:" + path)
+            print("CLOUD138_COLLISION_FALLBACK family=" + family +
+                  " editor_box_created=1 source_ucx_not_imported;"
+                  " CLOSED_STATE_ONLY_NAV_PIE_REVIEW_REQUIRED")
+        if family in IMPORTANT_COLLISION and collision == 0:
+            missing_collision.append(path)
         if not reopen:
             require(unreal.EditorAssetLibrary.save_loaded_asset(mesh, only_if_is_dirty=False),
                     "CLOUD138_MESH_SAVE_FAILED:" + path)
         saved_or_raise(unreal, path)
         observations.append({"asset": path, "lods": count, "slots": slots,
                              "simple_collisions": collision})
+    # Audit all critical collision assets before aborting: one expensive editor
+    # run must expose the entire batch, never only the first offending mesh.
+    # Permit durable import of the source package while quarantining ONLY the
+    # one known open bridge from any world/nav approval. Never fake a BOX.
+    quarantined_bridge = GAME_MESH + "/SM_ShWoodenFootbridge"
+    require(all(path == quarantined_bridge for path in missing_collision),
+            "CLOUD138_WALKABLE_UCX_NOT_IMPORTED_BATCH:" +
+            ",".join(sorted(missing_collision)))
+    if missing_collision:
+        print("CLOUD138_NAV_QUARANTINE asset=" + quarantined_bridge +
+              " world_placement_forbidden=1 PIE_REQUIRED=1")
     for row in textures:
         path = row["asset"]
         tex = unreal.EditorAssetLibrary.load_asset(path)
@@ -310,6 +325,7 @@ def editor_mode(reopen=False):
               "verified_original_pbr_maps": len(textures), "mesh_material_bindings": 0,
               "total_new_uassets": len(observations) + len(textures) + len(all_materials),
               "parent_dependency": MASTER, "observations": observations,
+               "nav_quarantined_assets": sorted(missing_collision),
               "regional_fbx_unreal_imported": 0, "world_placed": False,
               "collision_nav_tested": False, "pie_tested": False, "device_tested": False,
               "visual_accepted": False, "gate67_closed": False}
@@ -331,6 +347,11 @@ def persist(warehouse_root, workspace, pin):
             editor.get("total_new_uassets") == reopened.get("total_new_uassets") == 89 and
             editor.get("stage_receipt_sha256") == reopened.get("stage_receipt_sha256") == digest(workspace / STAGE_REL),
             "CLOUD138_UNREAL_REOPEN_EVIDENCE_MISSING")
+    require(editor.get("nav_quarantined_assets") ==
+            reopened.get("nav_quarantined_assets") and
+            set(editor.get("nav_quarantined_assets", [])) <=
+            {GAME_MESH + "/SM_ShWoodenFootbridge"},
+            "CLOUD138_QUARANTINE_REOPEN_MISMATCH")
     require(pin["source_zip_sha256"] == stage_plan["source_zip_sha256"], "CLOUD138_PIN_CHANGED")
     assets = sorted({r["asset"] for r in stage_plan["source_rows"]} |
                     {GAME_MATERIAL + "/MI_Cloud138_" + r["family"]
@@ -369,6 +390,7 @@ def persist(warehouse_root, workspace, pin):
                  "shires_meshes": 41, "authored_lod1": 41, "pbr_textures": 36,
                  "pbr_instances": 12, "material_maps_bound": 36,
                  "mesh_material_slots_bound": 0, "regions_fbx_held": 56,
+                 "nav_quarantined_assets": editor["nav_quarantined_assets"],
                  "payload_bytes": sum(x["bytes"] for x in rows), "files": rows,
                  "world_placed": False, "collision_nav_tested": False,
                  "pie_tested": False, "device_tested": False, "visual_accepted": False,

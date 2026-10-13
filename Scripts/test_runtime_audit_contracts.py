@@ -67,18 +67,35 @@ class RuntimeAuditContractTests(unittest.TestCase):
                                  f"{path.name} duplicates {evidence_id}")
 
 
-    def test_cloud138_ferry_box_fallback_is_import_only_and_fail_closed(self):
+    def test_cloud138_solid_shape_fallback_is_import_only_and_fail_closed(self):
+        # Verify the guarded set and the actual integration boundary, not a
+        # brittle single-family source spelling. No open bridge/foliage proxy.
         source = (ROOT / "Scripts" / "cloud138_unreal_intake.py").read_text(encoding="utf-8")
+        namespace = {}
+        import ast
+        module = ast.parse(source)
+        for node in module.body:
+            if isinstance(node, ast.Assign):
+                targets = [target.id for target in node.targets if isinstance(target, ast.Name)]
+                if "COLLISION_BOX_FALLBACK_FAMILIES" in targets:
+                    self.assertIsInstance(node.value, ast.Call)
+                    self.assertEqual(getattr(node.value.func, "id", None), "frozenset")
+                    namespace["families"] = frozenset(ast.literal_eval(node.value.args[0]))
+        self.assertEqual(namespace.get("families"), frozenset(("FerryLanding", "RoundDoor", "StonePath")))
         editor = source.split("def editor_mode(reopen=False):", 1)[1]
-        conditional = 'if family == "FerryLanding" and collision == 0 and not reopen:'
+        conditional = "if family in COLLISION_BOX_FALLBACK_FAMILIES and collision == 0 and not reopen:"
         self.assertIn(conditional, editor)
         self.assertEqual(editor.count("EditorStaticMeshLibrary.add_simple_collisions("), 1)
         self.assertIn("unreal.ScriptingCollisionShapeType.BOX", editor)
-        self.assertIn('collision_index >= 0', editor)
-        self.assertIn("CLOUD138_FERRY_BOX_COLLISION_API_FAILED:", editor)
-        self.assertIn("CLOUD138_FERRY_BOX_COLLISION_REPAIR_FAILED:", editor)
-        self.assertIn("CLOUD138_WALKABLE_UCX_NOT_IMPORTED:", editor)
-        self.assertLess(editor.index(conditional), editor.index("if family in IMPORTANT_COLLISION:"))
+        self.assertIn("collision_index >= 0", editor)
+        self.assertIn("CLOUD138_BOX_COLLISION_API_FAILED:", editor)
+        self.assertIn("CLOUD138_BOX_COLLISION_REPAIR_FAILED:", editor)
+        self.assertIn("CLOUD138_WALKABLE_UCX_NOT_IMPORTED_BATCH:", editor)
+        self.assertIn("CLOUD138_NAV_QUARANTINE", editor)
+        self.assertIn("all(path == quarantined_bridge for path in missing_collision)", editor)
+        self.assertIn("missing_collision.append(path)", editor)
+        self.assertIn("join(sorted(missing_collision))", editor)
+        self.assertLess(editor.index(conditional), editor.index("if family in IMPORTANT_COLLISION and collision == 0:"))
         self.assertIn("save_loaded_asset(mesh, only_if_is_dirty=False)", editor)
         self.assertIn("saved_or_raise(unreal, path)", editor)
         self.assertIn("if not reopen:", editor)
