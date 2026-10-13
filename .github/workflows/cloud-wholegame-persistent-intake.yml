@@ -31,25 +31,24 @@ jobs:
   single_writer_stage:
     name: Store hash-verified source on Windows persistent warehouse
     needs: source_integrity
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && startsWith(github.head_ref, 'fix/pes001-cloud138-rounddoor-import-'))
+    if: github.event_name == 'push'
     runs-on: [self-hosted, Windows, X64, ue4-27]
     timeout-minutes: 45
     env:
       WAREHOUSE_ROOT: 'D:\actions-runner\_warehouse\ShireJourney'
-      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       GH_TOKEN: ${{ github.token }}
     steps:
       - name: Exact SHA checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ github.sha }}
           persist-credentials: false
           lfs: false
       - name: Verify governor and persistent root
         shell: powershell
         run: |
           $ErrorActionPreference = 'Stop'
-          if ((git rev-parse HEAD).Trim() -ne $env:TARGET_SHA) { throw 'CLOUD_INTAKE_SOURCE_SHA_DRIFT' }
+          if ((git rev-parse HEAD).Trim() -ne $env:GITHUB_SHA) { throw 'CLOUD_INTAKE_SOURCE_SHA_DRIFT' }
           python Scripts/governor_work_start.py --lane WAREHOUSE_ASSET_INTAKE
           if ($LASTEXITCODE -ne 0) { throw 'GOVERNOR_WAREHOUSE_GATE_FAIL' }
           if (-not (Test-Path -LiteralPath $env:WAREHOUSE_ROOT -PathType Container)) { throw 'PERSISTENT_WAREHOUSE_MISSING' }
@@ -73,16 +72,16 @@ jobs:
   shire_unreal_intake:
     name: P1C01 original Shire source to UE4 persisted assets
     needs: single_writer_stage
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && startsWith(github.head_ref, 'fix/pes001-cloud138-rounddoor-import-'))
+    if: github.event_name == 'push'
     runs-on: [self-hosted, Windows, X64, ue4-27]
     timeout-minutes: 90
     env:
       WAREHOUSE_ROOT: 'D:\actions-runner\_warehouse\ShireJourney'
-      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      TARGET_SHA: ${{ github.sha }}
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ github.sha }}
           persist-credentials: false
           lfs: false
       - name: Verify exact head, governor and immutable source stage
