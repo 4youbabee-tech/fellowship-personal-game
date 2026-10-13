@@ -1,0 +1,76 @@
+name: Fifty sequential novel whole-game FBX production batches
+on:
+  pull_request:
+    branches: [develop]
+    paths:
+      - 'Tools/CloudAssetBuild/blender_novel50.py'
+      - '.github/workflows/cloud-50-sequential-source.yml'
+permissions:
+  contents: read
+concurrency:
+  group: novel50-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  novel50:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha }}
+      ASSET_OUT: ${{ github.workspace }}/_BuildArtifacts/novel50
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          persist-credentials: false
+      - name: Check exact head and Governor permission
+        run: |
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          python3 Scripts/governor_work_start.py --lane VISUAL_WORLD_PREP
+          python3 -m py_compile Tools/CloudAssetBuild/blender_novel50.py
+      - name: Install headless Blender
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y blender python3-numpy
+      - name: Sequential production of 50 unique families and 100 LOD FBX
+        run: blender --background --factory-startup --python-exit-code 3 -t 2 --python Tools/CloudAssetBuild/blender_novel50.py -- --out "$ASSET_OUT"
+      - name: Verify receipt, identities, unique hashes and physical FBX
+        run: |
+          python3 - <<'PY'
+          import hashlib,json,os
+          from pathlib import Path
+          root=Path(os.environ["ASSET_OUT"])
+          r=json.loads((root/"novel50_receipt.json").read_text())
+          progress=json.loads((root/"batch_progress.json").read_text())
+          assert r["new_batch_count"]==50 and r["new_fbx_count"]==100
+          assert progress["completed_batches"]==50
+          assert r["regions_covered"]==28 and len(r["objects"])==100
+          assert len({(x["region_id"],x["role"]) for x in r["objects"]})==50
+          assert len({x["sha256"] for x in r["objects"]})==100
+          for x in r["objects"]:
+              p=(root/x["path"]).resolve()
+              assert p.is_relative_to(root.resolve()) and p.is_file()
+              data=p.read_bytes()
+              assert len(data)==x["bytes"]
+              assert hashlib.sha256(data).hexdigest()==x["sha256"]
+              assert data.startswith(b"Kaydara FBX Binary")
+              assert int.from_bytes(data[23:27],"little")==7400
+              assert x["uv_layers"]>0 and x["collider_count"]>0
+              assert x["reimport_polygons"]>0
+          assert r["warehouse_persisted"] is False and r["unreal_imported"] is False
+          print("NOVEL50_SOURCE_QC_PASS batch_count=50 fbx=100 regions=28")
+          PY
+      - name: Upload checked source artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: novel50-100-distinct-fbx-${{ env.TARGET_SHA }}
+          path: ${{ env.ASSET_OUT }}
+          retention-days: 30
+          if-no-files-found: error
+      - name: Upload partial receipt for diagnosis
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: novel50-failed-batch-${{ env.TARGET_SHA }}
+          path: ${{ env.ASSET_OUT }}/batch_progress.json
+          if-no-files-found: ignore
