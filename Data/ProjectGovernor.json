@@ -9081,7 +9081,7 @@
     ]
   },
   "pes_production_execution_sessions_2026_10_13": {
-    "status": "OWNER_REQUESTED_IMPLEMENTATION_CANDIDATE",
+    "status": "REGISTERED_ON_DEVELOP_ACTIVE",
     "protocol_id": "PES_24_SESSION_CONTRACT_2026_10_13",
     "authority": "Data/ProjectGovernor.json",
     "schedule": "Docs/PES_PRODUCTION_EXECUTION_SESSIONS.md",
@@ -9093,5 +9093,37 @@
     "report": "Mandatory before/after SHA, source unique hashes/QC, warehouse persisted receipt, Unreal imported/reopened .uasset, world-placed observed, playable evidence, exact tests/logs, FPS/VRAM if measured, commits/PRs/Actions/branch counts and per-stage growth percent or N/A",
     "accounting": "Never count source-only files or CI passes as import, world placement, PIE/device or visual acceptance. Deduplicate assets.",
     "safety": "Respect DEC-042 branch cleanup, project Governor, development gates, original canon, licensing, C++ doc sync, UE4.27.2, async soft refs/HISM/pooling, target low-spec constraints."
+  },
+  "pes_fast_batch_execution_2026_10_14": {
+    "status": "OWNER_REQUESTED_CANDIDATE_EXACT_HEAD_TEST_PENDING",
+    "policy_id": "PES_FAST_BATCH_2026_10_14",
+    "authority": "Data/ProjectGovernor.json",
+    "reason": "PES-001 spawned redundant whole-workflow runs after per-file commits: nine cancelled runs observed on old candidate heads. Fix scheduling and batching, not quality gates.",
+    "session_standard": "One compact complete candidate wave (code, tests, Governor and documentation) authored as ONE atomic multi-file git commit when technically possible, then exact-head hosted/static tests once, then one eligible Unreal/warehouse writer run; never push partial per-file commits that repeatedly start Windows jobs.",
+    "coalescing": "Do all read-only diagnostics and local/unit/source checks before making candidate commit. Accumulate related fixes, synchronize docs, verify once at exact final SHA. Fix proven regressions in a new bounded batch, not iterative speculative guessing.",
+    "retry_policy": "A machine gate failure opens one consolidated root-cause repair batch: harvest all failure identities and inspect siblings in source/asset family before next expensive run. Quarantine independent bad assets where contract permits. Repeat heavy gates only for materially changed input or when a prior exact-head run is invalid; cache/reuse proven SHA-equivalent source/Warehouse receipts.",
+    "runtime_policy": "Exactly one Windows Unreal writer and one persistent warehouse writer. Queue only gates required by affected paths and preserve baseline green evidence across safe admin-only ancestry as already allowed by Governor. Never cancel an in-flight persistent writer or race source copies.",
+    "session_gate": "Completion requires stage-specific real deliverable; if runner unavailable or expensive job cannot finish, status BLOCKED/OPEN and detailed explicit blocker, not fake COMPLETED. One-session finish is the planning target, not a bypass of compile/PIE/device/visual evidence.",
+    "preserve": [
+      "All 24 PES IDs remain unchanged",
+      "No removal of Gate 6/7",
+      "No stale SHA merge",
+      "No unsupported visual or FPS claim",
+      "Do not auto-apply box collisions to arbitrary geometry; confirm exact source identity and player collision with real UE evidence"
+    ],
+    "success_metrics": [
+      "number of redundant heavy runs per delivered import",
+      "number of unique assets imported-and-reopened",
+      "number of persistent uassets placed in P1C01",
+      "defects fixed per batch",
+      "wall-clock from exact-head to confirmed durable deliverable"
+    ],
+    "initial_observation": {
+      "candidate_pr": 463,
+      "observed_superseded_cancelled_runs": 9,
+      "cloud138_latest_failure": "CLOUD138_WALKABLE_UCX_NOT_IMPORTED:SM_ShStonePath",
+      "new_game_content_this_policy_change": 0
+    },
+    "implementation_boundary": "Governor and subordinate PES handbook record policy; GitHub Actions scheduling is not technically enforced by this registration alone; runner workflow changes require separate verified code and CI evidence."
   }
 }

@@ -1,6 +1,6 @@
 # SHIRE JOURNEY — PES Production Execution Sessions (24)
 
-Status: **proposed operational contract, pending exact-head validation and merge**. This file is a subordinate execution schedule; **Data/ProjectGovernor.json** and **Docs/DEVELOPMENT_GATES.md** govern all decisions and chapter gates.
+Status: **REGISTERED ON DEVELOP** (PR #462 merged 319e07c8). This file is a subordinate execution schedule; **Data/ProjectGovernor.json** and **Docs/DEVELOPMENT_GATES.md** govern all decisions and chapter gates.
 
 ## Naming and delivery contract
 
@@ -10,6 +10,16 @@ Status: **proposed operational contract, pending exact-head validation and merge
 - Track source-generated, source-QC, persistent Warehouse, imported/reopened UE .uasset, world-placed/observed, PIE-tested, device-tested and visually accepted **separately**. Filename counts, ZIP members, CI success, screenshots from references and duplicated source must never be promoted.
 - Follow DEC-042 branch lifecycle: create -> exact-head validate -> merge eligible work into develop -> safely delete temporary ref. Reuse existing cleanup tools. No blind deletion.
 - For actual C++ deltas, update CURRENT_PROJECT_STATE and PRODUCTION_COMPLETENESS_MATRIX in the same PR; update WORLD_DETAIL_LEDGER when world/decision changes. Source .h under Public; .cpp under Private. Observe async soft refs, FStreamableManager, HISM/ISM, pooled NPC, FBX rigged, packed PNG/TGA and target 8GB/2GB DX11 720p 30FPS proof.
+
+
+## PES fast-batch operating protocol (PES_FAST_BATCH_2026_10_14)
+
+- **One accountable PES, one finalized candidate wave.** Diagnose read-only first, group the repair + regression + required docs and Governor updates in **one atomic multi-file commit** rather than one commit per file. Each push restarts relevant PR workflows, so avoid premature pushes.
+- **Stage the cheap checks first.** Confirm exact HEAD, input receipts, source families and cached SHA results on the candidate. Then exact-head static/hosted tests, **one warranted Windows UE/warehouse run** after the set of changes is stable. Reuse the closest valid existing evidence only where current Governor classifier explicitly allows it.
+- **Failure batch discipline.** Extract exact failing assets and inventory siblings before fixing. Fix verified root causes collectively; quarantine independent failures without letting one unrelated defective asset block other source-only prep. Never broaden collision fallback without source evidence and a regression guard. A failed Windows run justifies a new bounded repair wave, not many guesses or repetitive full runs.
+- **Protected expensive lanes.** Exactly one Windows Unreal writer and one persistent Warehouse writer; no interrupting a currently active writer merely to start a newer speculative build. Prepping five source-only lanes remains allowed.
+- **Hard requirements untouched.** Keep Gate 6/7, file licensing, UE4.27 source/import/reopen/persistence proofs, world placement, PIE, device performance and visual review, mandatory doc sync and PR exact-head acceptance. Do not claim this policy change itself imports anything or suppresses CI automatically.
+- **Session-end scoreboard:** previous->current for all five asset funnel stages, newly committed files/SHAs, count of heavy runs *and wasted/cancelled runs*, evidence for real Unreal imports and placed instances, elapsed time if recorded, status and exact blocker. A PES one-session closeout is a target, not guaranteed technical success.
 
 ## Fixed PES map
 
