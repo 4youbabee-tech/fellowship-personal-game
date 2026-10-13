@@ -3930,6 +3930,8 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 - Prior #445 hosted run #38314955507: 20 source-shard jobs successful; 20 non-expired artifacts, nominal 1,000 FBX source target. Preserved original generator and workflow. Source candidates are not evidence of unique SHA256 files, UE4 import, warehouse residency, world placement, PIE, device FPS or visual acceptance.
 - Integrated onto latest develop, with no governor freeze and no Windows Unreal writer. Gate 6/7 remain open.
 
-## 2026-10-13 — #437 P1C01 player route static audit integration
-- Retain original hosted P1C01 static audit workflow + Scripts/audit_p1c01_player_experience.py from #437. This is a source gap report only, not a second janitor. Pre-existing Branch Cleanup remains sole branch deletion owner.
-- P1C01 Bag End/Ferry door traversal, FerryLanding collision, HUD, save state, NPCs and device FPS still require Unreal, PIE, device and visual proof; no Gate 6/7 credit. Preserve current production state and fourth-expansion authorization.
+## 2026-10-13 — Integrate #440 six-lane source gap audit
+- Retain six-lane source intake document and standalone receipt auditor as source-only production QA; no fabricated FBX or UE placement. Newer develop records including #443 and #445 preserved. Exact-head CI and Gate 6/7 evidence remain mandatory.
+
+## 2026-10-13 — PR #437 source route audit retained after intake reconciliation
+- Hosted P1C01 route static gap report + original workflow only; Branch Cleanup remains existing sole janitor. P1C01 door, HUD, ferry, audio, save and FPS require UE/PIE/device evidence. No content or acceptance metric claimed, no fourth expansion restriction.
