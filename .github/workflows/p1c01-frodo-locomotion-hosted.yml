@@ -4,6 +4,7 @@ on:
     branches: [develop]
     paths:
       - 'Tools/CloudAssetBuild/frodo_locomotion.py'
+      - 'Tools/CloudAssetBuild/test_frodo_locomotion.py'
       - '.github/workflows/p1c01-frodo-locomotion-hosted.yml'
 permissions:
   contents: read
@@ -22,6 +23,8 @@ jobs:
         run: |
           test "$(git rev-parse HEAD)" = "$TARGET_SHA"
           python3 Scripts/governor_work_start.py --lane SKELETAL_CHARACTER_PREP
+      - name: Guard Frodo naming and source-skeleton contract
+        run: python3 Tools/CloudAssetBuild/test_frodo_locomotion.py
       - name: Install Blender
         run: |
           sudo apt-get update -qq
