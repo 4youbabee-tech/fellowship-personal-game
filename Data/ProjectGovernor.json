@@ -9180,15 +9180,37 @@
     "truth": "Session stays OPEN for missing required screenshot/traversal/visual even if an internal batch was merged",
     "active_session": "PES-002 Bag End Exterior",
     "owner_approval": "Engineering actions within connected permissions authorized without repeated approval"
-  }
-  ,"pes_immediate_root_cause_repair_protocol_2026_10_14": {
+  },
+  "pes_immediate_root_cause_repair_protocol_2026_10_14": {
     "id": "DEC-PES-ROOT-20261014",
     "status": "OWNER_MANDATED",
     "active_session": "PES-002",
-    "loop": ["DETECT", "DIAGNOSE", "ROOT_CAUSE_FIX", "REBUILD_OR_REIMPORT_WHEN_AFFECTED", "RETEST", "INSPECT_EVIDENCE", "ACCEPT_OR_REPEAT"],
+    "loop": [
+      "DETECT",
+      "DIAGNOSE",
+      "ROOT_CAUSE_FIX",
+      "REBUILD_OR_REIMPORT_WHEN_AFFECTED",
+      "RETEST",
+      "INSPECT_EVIDENCE",
+      "ACCEPT_OR_REPEAT"
+    ],
     "continuation": "Continue through the active PES automatically without additional owner prompts while tools and permissions permit. Bundle routine engineering corrections into one coherent PR.",
     "validation": "Exact-head static plus changed-runtime UE compile; focused startup and screenshot/traversal when applicable; Gate 6/7 unchanged.",
     "failure_rule": "A failed mandatory proof remains failed, is diagnosed and repaired, and never becomes success by continue-on-error or documents alone.",
-    "scope_rule": "Do not open PES-003 while PES-002 screenshot, lighting/material/architecture review and traversal acceptance remain open."
+    "scope_rule": "Do not open PES-003 while PES-002 screenshot, lighting/material/architecture review and traversal acceptance remain open.",
+    "last_observed_render": {
+      "run_id": 38604332835,
+      "head_sha": "c6f55835a4b82c52e765aee7ad247d1a5e67f51b",
+      "artifact_id": 11915428403,
+      "archive_sha256": "9a0f79f1478f582aa14c8a9c8a2c48d2ae87486e9e4d626b04ad68aef78aaac7",
+      "render_review": "REJECTED",
+      "concrete_defects": [
+        "Bag End green cylinder door and circular glazing rendered as horizontal ovals due to yaw-only rotation about local Z",
+        "Visible modular/fallback named NPC bodies; actual render log CharacterRigStreaming unavailable packages-missing for Frodo/Bilbo/Gandalf and others",
+        "Flat/cluttered facade and terrain/architecture composition lack PES-002 visual acceptance"
+      ],
+      "followup": "Surgical cylinder-pitch fix authored on PR #477, compile and fresh three-view Unreal screenshots mandatory; rig assets and traversal remain blocked/unproven.",
+      "restrictions": "No P1C02/PES-003; no visual/PIE/device/FPS acceptance from CI-only results"
+    }
   }
 }

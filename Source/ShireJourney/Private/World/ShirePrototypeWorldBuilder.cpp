@@ -1003,6 +1003,9 @@ void AShirePrototypeWorldBuilder::SpawnHobbitHole(const FVector& Location, float
     // Imported production mound/facade replace the toy-like primitive silhouette when
     // available. The facade owns the round timber/door/window/sill geometry; runtime
     // primitives are retained only when that authored facade is unavailable.
+    // Engine/BasicShapes Cylinder has its disc normal along local Z. Pitch 90 degrees
+    // rotates the circular face into the YZ elevation of the west-facing (-X) facade.
+    // Yaw alone leaves the cylinders as horizontal discs (observed as green ovals).
     const bool bHasProductionFacade = ProductionTurfMoundMesh && ProductionHobbitFacadeMesh;
     if (bHasProductionFacade)
     {
@@ -1031,15 +1034,15 @@ void AShirePrototypeWorldBuilder::SpawnHobbitHole(const FVector& Location, float
             const FVector DoorCentre = Location + FVector(-165.0f * Scale, 0.0f, 72.0f * Scale);
             SpawnShape(CylinderMesh, DoorCentre,
                 FVector(0.68f, 0.68f, 0.055f) * Scale,
-                Timber, FRotator(0.0f, 90.0f, 0.0f), false);
+                Timber, FRotator(90.0f, 0.0f, 0.0f), false);
             SpawnShape(CylinderMesh, DoorCentre + FVector(-7.0f * Scale, 0.0f, 0.0f),
                 FVector(0.57f, 0.57f, 0.06f) * Scale,
-                DoorGreen, FRotator(0.0f, 90.0f, 0.0f), false);
+                DoorGreen, FRotator(90.0f, 0.0f, 0.0f), false);
             SpawnShape(SphereMesh, DoorCentre + FVector(-14.0f * Scale, 28.0f * Scale, -2.0f * Scale),
                 FVector(0.045f) * Scale, FLinearColor(0.82f,0.65f,0.28f),
                 FRotator::ZeroRotator, false);
             UE_LOG(LogTemp, Display,
-                TEXT("PES002_BAG_END_HERO_FACADE layout=west-facing moundOffsetX=360 moundCollision=none door=green-round proof=pending"));
+                TEXT("PES002_BAG_END_HERO_FACADE layout=west-facing moundOffsetX=360 moundCollision=none door=green-round proof=pending; PES002_BAG_END_ROUND_FACADE_ORIENTATION=pitch90"));
         }
     }
     else
@@ -1056,15 +1059,15 @@ void AShirePrototypeWorldBuilder::SpawnHobbitHole(const FVector& Location, float
     if (!bHasProductionFacade)
     {
         SpawnShape(CylinderMesh, Location + FVector(-83.0f * Scale, 0.0f, 55.0f * Scale),
-            FVector(0.51f, 0.51f, 0.075f) * Scale, Timber, FRotator(0.0f, 90.0f, 0.0f), false);
+            FVector(0.51f, 0.51f, 0.075f) * Scale, Timber, FRotator(90.0f, 0.0f, 0.0f), false);
         SpawnShape(CylinderMesh, Location + FVector(-88.0f * Scale, 0.0f, 55.0f * Scale),
-            FVector(0.43f, 0.43f, 0.050f) * Scale, DoorGreen, FRotator(0.0f, 90.0f, 0.0f), false);
+            FVector(0.43f, 0.43f, 0.050f) * Scale, DoorGreen, FRotator(90.0f, 0.0f, 0.0f), false);
 
         for (float Side : { -1.0f, 1.0f })
         {
             const FVector Window = Location + FVector(-88.0f * Scale, Side * 58.0f * Scale, 68.0f * Scale);
             SpawnShape(CylinderMesh, Window, FVector(0.22f, 0.22f, 0.035f) * Scale,
-                Timber, FRotator(0.0f, 90.0f, 0.0f), false);
+                Timber, FRotator(90.0f, 0.0f, 0.0f), false);
             SpawnShape(CubeMesh, Window + FVector(-2.0f * Scale, 0.0f, -27.0f * Scale),
                 FVector(0.10f, 0.30f, 0.045f) * Scale, Stone, FRotator::ZeroRotator, false);
         }
@@ -1078,7 +1081,7 @@ void AShirePrototypeWorldBuilder::SpawnHobbitHole(const FVector& Location, float
     {
         const FVector Window = Location + FVector(-92.0f * Scale, Side * 58.0f * Scale, 68.0f * Scale);
         SpawnShape(CylinderMesh, Window, FVector(0.16f, 0.16f, 0.018f) * Scale,
-            WarmGlass, FRotator(0.0f, 90.0f, 0.0f), false);
+            WarmGlass, FRotator(90.0f, 0.0f, 0.0f), false);
     }
 
     // Chimney, doorstep and planted entry soften the generated silhouette.

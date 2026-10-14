@@ -48,6 +48,18 @@ class PES002VisualContract(unittest.TestCase):
         self.assertIn('cap=4 collision=none tick=none', cpp)
         self.assertIn('cap=8 collision=none tick=none', cpp)
 
+    def test_round_door_and_windows_face_west_not_upwards(self):
+        cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        hobbit = cpp.split("void AShirePrototypeWorldBuilder::SpawnHobbitHole(", 1)[1].split(
+            "void AShirePrototypeWorldBuilder::SpawnFenceLine(", 1
+        )[0]
+        # UE4 Engine Cylinder uses local Z as its axis; yaw rotates in XY and
+        # cannot turn an upward-facing circle into an entrance on the west wall.
+        # Hero, fallback, timber rims and window glass all need pitch instead.
+        self.assertEqual(hobbit.count("FRotator(90.0f, 0.0f, 0.0f)"), 6)
+        self.assertNotIn("FRotator(0.0f, 90.0f, 0.0f)", hobbit)
+        self.assertIn("PES002_BAG_END_ROUND_FACADE_ORIENTATION=pitch90", hobbit)
+
     def test_baseline_sky_is_not_overwritten_with_dark_values(self):
         cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
         self.assertIn('SkyComponent->SetIntensity(1.12f);', cpp)
