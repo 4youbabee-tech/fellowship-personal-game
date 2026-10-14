@@ -9212,5 +9212,22 @@
       "followup": "Surgical cylinder-pitch fix authored on PR #477, compile and fresh three-view Unreal screenshots mandatory; rig assets and traversal remain blocked/unproven.",
       "restrictions": "No P1C02/PES-003; no visual/PIE/device/FPS acceptance from CI-only results"
     }
+  },
+  "pes002_character_visual_pilot_2026_10_14": {
+    "status": "OWNER_AUTHORIZED_SOURCE_PREPARATION_ACTIVE",
+    "active_pes": "PES-002",
+    "first_character": "Frodo",
+    "next_character": "Gandalf",
+    "policy": "Begin character production now in parallel source-preparation lane; preserve distinct PES runtime acceptance gates.",
+    "source_packet": "Data/P1C01CharacterVisualPilotV1.json",
+    "reason": "Bag End runtime render contains modular placeholders; character streaming reports packages-missing.",
+    "technical_path": "Use existing Frodo skeletal winner and source Idle/Walk/Run; require verified deformation, UE4.27 Skeleton/AnimBP, and human visual proof before promotion.",
+    "professional_reference": "Epic UE4.27 Animation Blueprints, BlendSpaces, retargeting and animation budget practices; tailor to 8GB RAM and 2GB VRAM.",
+    "scope_guard": "No new runtime PES, no premature Rig ACCEPTED state; PES-002 remains OPEN.",
+    "next_actions": [
+      "Focused source animation QA and real FBX receipt",
+      "UE4 import/animation binding once quality passes",
+      "Rendered Frodo then Gandalf review, actual movement and device profiling"
+    ]
   }
 }
