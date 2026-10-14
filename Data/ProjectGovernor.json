@@ -9297,4 +9297,67 @@
     "authority": "Supplement only; existing Governor, Gate 6/7, writer locks, evidence and documentation obligations prevail.",
     "active_pes": "PES-002 OPEN; PES-003 LOCKED"
   }
+  ,"pes002_owner_acceleration_2026_10_15": {
+    "status": "OWNER_APPROVED_SCOPE_REGISTERED_IMPLEMENTATION_PARTIAL",
+    "authority": "Data/ProjectGovernor.json",
+    "active_pes": "PES-002",
+    "integration_pr": 477,
+    "operating_policy": {
+      "m0_quick_index": "Docs/CURRENT_STATE_SHORT.md",
+      "mandatory_source_of_truth": "live Governor + exact-HEAD + scoped evidence search",
+      "no_deleted_history": true,
+      "one_runtime_pes": true,
+      "one_pes_pr": true,
+      "one_unreal_writer": true,
+      "one_warehouse_writer": true
+    },
+    "source_priorities": [
+      "Epic Paragon asset-specific license and UE4.27/LOD measured",
+      "Adobe Mixamo actual per-item terms and UE4 retarget",
+      "Poly Haven CC0",
+      "Quixel Megascans/Fab asset-specific license manual UE4.27 import",
+      "Quaternius / KayKit / 100 Avatars per-asset terms",
+      "Sketchfab exact permissible personal/CC-BY-NC attribution"
+    ],
+    "hard_safety": [
+      "Never upload a source asset to a public repository without explicit asset-level redistribution rights; restricted sources live in private warehouse, public repo metadata only",
+      "No film/game extracted or leaked models",
+      "Five characters require real skeletal/Idle/Walk/screenshots, cannot claim from listing",
+      "Target hardware 8GB/2GB/720p DX11 >=30FPS measured before hero acceptance"
+    ],
+    "planned_implementation": [
+      {
+        "id": "A",
+        "scope": "short M0",
+        "status": "CANDIDATE_IMPLEMENTED_STATIC_PENDING"
+      },
+      {
+        "id": "B",
+        "scope": "data driven decoration with asynchronous resident-only asset validation",
+        "status": "NOT_IMPLEMENTED"
+      },
+      {
+        "id": "C",
+        "scope": "single active PES PR",
+        "status": "POLICY_ACCEPTED_PR477_CURRENT"
+      },
+      {
+        "id": "D",
+        "scope": "four angle fixed Unreal capture and luminance threshold gate",
+        "status": "NOT_IMPLEMENTED"
+      },
+      {
+        "id": "E",
+        "scope": "Frodo Sam Merry Pippin Gandalf imported with skin Idle Walk",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "F",
+        "scope": "second Windows machine vs VM cost comparison",
+        "status": "PRELIMINARY_RELATIVE_COMPARISON_ONLY"
+      }
+    ],
+    "method_doc": "Docs/PES002_PRODUCTION_ACCELERATION_DECISIONS.md",
+    "evidence_boundary": "Source/admin only, not UE import/PIE/device/visual"
+  }
 }

@@ -129,6 +129,9 @@ jobs:
       - name: Validate project structure
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" Scripts\pre_unreal_validate.py
 
+      - name: Guard short M0 index and Governor acceleration policy
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_pes002_m0_quick_index.py" -v
+
       - name: Validate project governor
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" Scripts\project_governor.py
 

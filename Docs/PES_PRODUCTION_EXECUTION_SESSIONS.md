@@ -111,3 +111,6 @@ Every one of the 24 PES sessions must begin with a **read-only preproduction inv
 
 ## Owner-approved asset-first acceleration (2026-10-14)
 Governor key: `pes_asset_first_production_acceleration_policy_2026_10_14`. Prioritize licensed ready-made assets with real UE4 import/placement/render evidence; avoid redundant automation, use verified fast PIE, keep Windows builds planned, prepare 30-45 minute owner review and report actual assets, net game-code LOC and gate-based chapter progress. Keep existing per-code-batch state/matrix updates, M0-M7 evidence and Gate 6/7. No arbitrary 50% file quota. PES-002 remains OPEN.
+
+## 2026-10-15 M0 focused reference intake (supplement, no gate waiver)
+Read `Docs/CURRENT_STATE_SHORT.md` first for current *orientation only*. Then inspect live `Data/ProjectGovernor.json` and PR HEAD/Gate 6/7, existing source/test data, actual Unreal screenshots/warehouse rights and use targeted search into existing long historical ledgers. Short index NEVER replaces the Governor, Stage M0 evidence obligations, or exact-HEAD verification; historical ledgers stay intact. One runtime PES and one coherent PR, tracked under Governor key `pes002_owner_acceleration_2026_10_15`.
