@@ -9167,5 +9167,16 @@
     "deferred_tests": 35,
     "closeout": "Broad historical and cross-chapter static regressions via workflow_dispatch chapter_closeout_audits=true; no Gate 6/7 waiver",
     "failsafe": "PowerShell syntax, Governor, project structure, classification, packaging safety and strict source asset quality run on ordinary PR/push"
+  },
+  "pes_single_cohesive_batch_policy_2026_10_14": {
+    "status": "OWNER_MANDATED",
+    "applies_to": "PES-002..PES-024 and future PES",
+    "phase_1": "Read HEAD Governor gates lore existing assets, enumerate all session required outputs and blockers before coding",
+    "phase_2": "Prepare all eligible source assets, Unreal C++ world bindings, import manifests, tests and docs as one cohesive bounded PR whenever possible",
+    "phase_3": "Run only change-relevant static, build, import, startup and placement checks; defer chapter-wide audit/cook/package to closeout",
+    "phase_4": "Consolidate root-cause repairs, validate exact-head and report delivered receipts/commit/PR/run together; no repeated owner continue prompt",
+    "truth": "Session stays OPEN for missing required screenshot/traversal/visual even if an internal batch was merged",
+    "active_session": "PES-002 Bag End Exterior",
+    "owner_approval": "Engineering actions within connected permissions authorized without repeated approval"
   }
 }
