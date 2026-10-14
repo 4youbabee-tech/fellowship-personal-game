@@ -97,6 +97,66 @@ meshes=[o for o in bpy.context.scene.objects if o.type=="MESH"]
 if not armatures: raise RuntimeError("no armature")
 if not meshes: raise RuntimeError("no mesh")
 
+# Recover skinning only when the public source is missing real DEF limb weights.
+# Never treat a Rigify control or a mesh-parent relationship as deformation proof.
+import re
+if len(armatures) != 1:
+    raise RuntimeError("HUMAN_WAVE2_SKIN_REPAIR_MULTIPLE_ARMATURES")
+source_armature = armatures[0]
+bound_meshes = [m for m in meshes if any(
+    mod.type == "ARMATURE" and mod.object == source_armature for mod in m.modifiers
+)]
+if not bound_meshes:
+    raise RuntimeError("HUMAN_WAVE2_SKIN_REPAIR_NO_BOUND_MESH")
+primary_mesh = max(bound_meshes, key=lambda m: len(m.data.vertices))
+if len(primary_mesh.data.vertices) < 100:
+    raise RuntimeError("HUMAN_WAVE2_SKIN_REPAIR_PRIMARY_MESH_TOO_SMALL")
+
+def original_def_influence(mesh):
+    deform = {bone.name for bone in source_armature.data.bones if bone.use_deform}
+    names = {group.index: group.name for group in mesh.vertex_groups}
+    weighted = set()
+    for vertex in mesh.data.vertices:
+        for membership in vertex.groups:
+            name = names.get(membership.group)
+            if membership.weight > 0.00001 and name in deform:
+                weighted.add(name)
+    return weighted
+
+source_def_weights = original_def_influence(primary_mesh)
+skin_rebuilt = False
+# The baseline CC0 hero FBX reimport had only four weighted bones. Rebuild
+# the principal humanoid skin from the *existing licensed geometry/skeleton*,
+# not a substitute dummy rig. Blender bone-heat failures remain hard failures.
+if len(source_def_weights) < 13:
+    original_world = primary_mesh.matrix_world.copy()
+    for modifier in list(primary_mesh.modifiers):
+        if modifier.type == "ARMATURE":
+            primary_mesh.modifiers.remove(modifier)
+    primary_mesh.vertex_groups.clear()
+    primary_mesh.parent = None
+    primary_mesh.matrix_world = original_world
+    bpy.ops.object.select_all(action="DESELECT")
+    source_armature.hide_set(False)
+    source_armature.select_set(True)
+    primary_mesh.hide_set(False)
+    primary_mesh.select_set(True)
+    bpy.context.view_layer.objects.active = source_armature
+    try:
+        result = bpy.ops.object.parent_set(type="ARMATURE_AUTO", keep_transform=True)
+    except RuntimeError as exc:
+        raise RuntimeError("HUMAN_WAVE2_SKIN_REPAIR_BONE_HEAT_FAILED") from exc
+    if "FINISHED" not in result:
+        raise RuntimeError("HUMAN_WAVE2_SKIN_REPAIR_PARENT_FAILED")
+    if not any(mod.type == "ARMATURE" and mod.object == source_armature
+               for mod in primary_mesh.modifiers):
+        raise RuntimeError("HUMAN_WAVE2_SKIN_REPAIR_BINDING_MISSING")
+    if len(original_def_influence(primary_mesh)) < 13:
+        raise RuntimeError("HUMAN_WAVE2_SKIN_REPAIR_INSUFFICIENT_DEFORM_WEIGHTS")
+    skin_rebuilt = True
+    print("HUMAN_WAVE2_AUTO_REBIND_PRIMARY vertices=" +
+          str(len(primary_mesh.data.vertices)), flush=True)
+
 for o in bpy.context.scene.objects: o.select_set(False)
 for o in armatures + meshes:
     o.hide_set(False)
@@ -201,6 +261,8 @@ receipt={
     "zero_weight_vertex_count":zero_weight,"uv_layer_count":uv_layers,
     "finite_bounds":finite_bounds,"joint_name_coverage":coverage,
     "source_kind":args.source_kind,
+    "auto_skin_rebuilt":skin_rebuilt,
+    "source_def_weighted_bones_before_repair":len(source_def_weights),
     "exported_weighted_bone_count":len(influence),
     "exported_missing_limb_influence":missing_influence}
 with open(args.receipt,"w",encoding="utf-8") as f: json.dump(receipt,f,indent=2,sort_keys=True)

@@ -28,3 +28,9 @@
 2. Do not auto-promote FBX solely for having 161 bones, UVs or nonzero aggregate vertex weights; limbs and head must deform numerically under pose stress and be reviewed visually.
 3. No new PES runtime chapter, no synthetic screenshots, no source validation relabelled as PIE/device or visual acceptance.
 4. On a failing hardware build, inspect and repair that specific failure before further costly run; keep PES-002 OPEN.
+
+## 2026-10-14 Frodo source-skin repair candidate (no false green)
+
+- Actual hosted runs 38632883899 / 38632883791 at 166656aed failed before UE4: 4 exported weighted bones, missing all head/bilateral limb role weights. Do not requeue the unchanged payload or label the prior skeletal registration as an animation-ready Frodo.
+- Blender's armature automatic weights are applied only to the largest already-skinned character mesh when source DEF influence is insufficient; preserve licensed source geometry and armature, fail closed on missing binding, insufficient influence, failed bone heat or any of 13 post-export limb/head roles. This is a **repair experiment**, not accepted animation. Subsequent numerical stress and true UE4/visual acceptance remain obligatory.
+- Reference: Blender 4.0 Rigify docs https://docs.blender.org/manual/en/4.0/addons/rigging/rigify/index.html and Blender rigging source practice https://github.com/ahujasid/mcp-for-blender/blob/main/src/blender_mcp/guides/rigging.md . No import, FPS or rendered acceptance follows from a successful source workflow alone.

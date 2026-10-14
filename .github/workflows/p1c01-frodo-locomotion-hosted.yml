@@ -5,6 +5,8 @@ on:
     paths:
       - 'Tools/CloudAssetBuild/frodo_locomotion.py'
       - 'Tools/CloudAssetBuild/test_frodo_locomotion.py'
+      - 'Scripts/stage_p1c01_human_wave2.ps1'
+      - 'Data/P1C01HumanCharacterProductionWave2V1.json'
       - '.github/workflows/p1c01-frodo-locomotion-hosted.yml'
 permissions:
   contents: read

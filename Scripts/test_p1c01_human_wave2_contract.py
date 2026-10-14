@@ -4,6 +4,24 @@ from pathlib import Path
 
 
 class HumanWave2ContractTests(unittest.TestCase):
+    def test_source_rig_repair_is_strict_and_blender_code_parses(self):
+        # Guards the actual embedded Blender program, not only a README claim.
+        stage=(Path(__file__).resolve().parents[1]/"Scripts"/"stage_p1c01_human_wave2.ps1").read_text(encoding="utf-8")
+        blender_source=stage.split("\n@'\n",1)[1].split("\n'@\n",1)[0]
+        compile(blender_source, "normalize_human_wave2_embedded.py", "exec")
+        for marker in (
+            'parent_set(type="ARMATURE_AUTO", keep_transform=True)',
+            "HUMAN_WAVE2_SKIN_REPAIR_BONE_HEAT_FAILED",
+            "HUMAN_WAVE2_SKIN_REPAIR_INSUFFICIENT_DEFORM_WEIGHTS",
+            "HUMAN_WAVE2_SKIN_REPAIR_BINDING_MISSING",
+            "HUMAN_WAVE2_EXPORTED_SKIN_QC",
+            "EXPORTED_LIMB_SKIN_INFLUENCE_MISSING",
+            '"auto_skin_rebuilt":skin_rebuilt',
+        ):
+            self.assertIn(marker, stage)
+        self.assertIn("if len(source_def_weights) < 13:", blender_source)
+        self.assertIn('if(@($readiness.exported_missing_limb_influence).Count -gt 0)', stage)
+
     def test_human_wave2_is_bounded_fbx_only_at_ue4_and_non_runtime(self):
         root=Path(__file__).resolve().parents[1]
         packet=json.loads((root/"Data"/"P1C01HumanCharacterProductionWave2V1.json").read_text(encoding="utf-8"))
