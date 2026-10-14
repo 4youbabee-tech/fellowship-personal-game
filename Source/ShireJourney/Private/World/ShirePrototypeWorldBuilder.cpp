@@ -4817,6 +4817,34 @@ void AShirePrototypeWorldBuilder::SpawnP1C01ChapterFinishWorldArtPass()
         TEXT("PES002_BAG_END_PORCH_FLOWERS clusters=%d instances=%d cap=8 collision=none tick=none visual=pending"),
         ClusterCount - BeforeBagEndClusters, InstanceCount - BeforeBagEndInstances);
 
+    // PES-002: existing approved turf and stone assets provide a small bounded
+    // planted slope/property edge. These are visual-only HISM instances; no new
+    // ground collision is inferred and the walkable door corridor remains clear.
+    const FFinishPlacement BagEndSlopeTurf[] = {
+        { FVector(-2910,-950,12), FRotator(0, 14,0), FVector(0.82f,0.70f,0.26f) },
+        { FVector(-2700,-1040,12), FRotator(0,  7,0), FVector(0.88f,0.68f,0.24f) },
+        { FVector(-2490,-1110,12), FRotator(0,  0,0), FVector(0.86f,0.70f,0.25f) },
+        { FVector(-2270,-1080,12), FRotator(0,-12,0), FVector(0.82f,0.66f,0.24f) },
+        { FVector(-2060,-990,12), FRotator(0,-18,0), FVector(0.84f,0.68f,0.26f) },
+        { FVector(-1810,-890,12), FRotator(0,-25,0), FVector(0.80f,0.67f,0.23f) }
+    };
+    const int32 BagEndSlopeBefore = InstanceCount;
+    SpawnFinishCluster(ProductionTurfMoundMesh, TEXT("PES002BagEndSlopeTurf"),
+        1400, 7400, BagEndSlopeTurf, UE_ARRAY_COUNT(BagEndSlopeTurf));
+    const FFinishPlacement BagEndStoneEdge[] = {
+        { FVector(-2890,-1140,8), FRotator(0,  12,0), FVector(0.46f,0.36f,0.26f) },
+        { FVector(-2630,-1190,8), FRotator(0,   8,0), FVector(0.48f,0.38f,0.25f) },
+        { FVector(-2380,-1200,8), FRotator(0,  -2,0), FVector(0.44f,0.37f,0.26f) },
+        { FVector(-2120,-1170,8), FRotator(0, -10,0), FVector(0.47f,0.38f,0.25f) },
+        { FVector(-1880,-1070,8), FRotator(0, -18,0), FVector(0.45f,0.36f,0.25f) },
+        { FVector(-1610,-940,8), FRotator(0, -25,0), FVector(0.46f,0.38f,0.24f) }
+    };
+    SpawnFinishCluster(ProductionRockMesh, TEXT("PES002BagEndStonePropertyEdge"),
+        1300, 6800, BagEndStoneEdge, UE_ARRAY_COUNT(BagEndStoneEdge));
+    UE_LOG(LogTemp, Display,
+        TEXT("PES002_BAG_END_TERRAIN_EDGE instances=%d cap=12 collision=none tick=none material=resident visual=pending"),
+        InstanceCount - BagEndSlopeBefore);
+
     const FVector BagEndProps[] = {
         FVector(-2520,-615,0), FVector(-2360,-645,0), FVector(-1910,-520,0),
         FVector(-1760,-380,0)
