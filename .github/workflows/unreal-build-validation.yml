@@ -537,6 +537,22 @@ jobs:
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_runtime_startup.cmd"'
 
+      # PES-002 screenshot capture is best-effort evidence, never a false visual PASS.
+      - name: Attempt actual P1C01 visual proof capture
+        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
+        continue-on-error: true
+        shell: pwsh
+        run: '& "$env:GITHUB_WORKSPACE/Scripts/capture_pes002_bag_end_visual.ps1"'
+
+      - name: Upload PES-002 screenshot evidence
+        if: always() && (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
+        uses: actions/upload-artifact@v4
+        with:
+          name: pes002-bag-end-visual-${{ env.TARGET_SHA }}
+          path: Saved/PES002VisualProof/
+          if-no-files-found: warn
+          retention-days: 14
+
       # Whole-chapter sweeps are owner-dispatched at Gate 6/7 closeout, not per commit.
       - name: Headless chapter-by-chapter runtime audit
         if: github.event_name == 'workflow_dispatch' && inputs.package_windows == true && inputs.part1_closeout_approved == true && (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_CORE_UNREAL_REQUIRED == 'true' && env.SHIRE_ASSET_IMPORT_ONLY != 'true'))
