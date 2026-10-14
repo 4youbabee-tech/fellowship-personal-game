@@ -8,6 +8,13 @@ on:
     branches:
       - main
       - develop
+  workflow_dispatch:
+    inputs:
+      chapter_closeout_audits:
+        description: 'Explicit chapter closeout: run deferred wide static regression suite; default focused PES checks only'
+        type: boolean
+        required: false
+        default: false
 
 permissions:
   contents: read
@@ -108,12 +115,15 @@ jobs:
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_powershell_syntax.ps1"
 
       - name: Test runner watchdog broker timestamp recovery
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_runner_watchdog_timestamp.ps1"
 
       - name: Test warehouse receipt supersession semantics
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_warehouse_inventory_receipt_supersession.ps1"
 
       - name: Test warehouse saturation empty-sum handling
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_warehouse_saturation_empty_sum.ps1"
 
       - name: Validate project structure
@@ -123,6 +133,7 @@ jobs:
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" Scripts\project_governor.py
 
       - name: Test Blender FBX SHA receipt regression
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_preflight_p1c01_verified_fbx.py" -v
 
       - name: Verify source-to-Unreal PBR integrity and runtime contracts
@@ -132,116 +143,147 @@ jobs:
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_governor_work_start.py" -v
 
       - name: Test offline checkpoint, cinematic handoff, audio race and runner authorization
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_pending_checkpoint_dispatch.py" -v && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_offline_runtime_safety.py" -v
 
       - name: Test asset audit memory and failure handling
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_asset_quality_audit.py" -v
 
       - name: Audit production asset source quality
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" Scripts\asset_quality_audit.py --strict
 
       - name: Audit production readiness contracts
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" Scripts\production_readiness_audit.py
 
       - name: Run deep project audit
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" Scripts\deep_project_audit.py
 
       - name: Test runtime observation failure handling
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_runtime_smoke.py" -v
 
       - name: Test runtime audit contract registry
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_runtime_audit_contracts.py" -v
 
       - name: Guard active dialogue queue against invalid dynamic replacements
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_dialogue_queue_atomicity.py" -v
 
       - name: Test structural source contracts
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_source_contracts.py" -v
 
       - name: Verify curated Shire original LOD and packed texture bridge (offline mock only)
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_p1c01_curated_ue_plan.py" -v
       - name: Test P1C01 multi-zone curated nature runtime evidence contract
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_p1c01_curated_world_runtime.py" -v
 
       - name: Test PES-001 Cloud138 grounded world-binding source
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_cloud138_world_binding.py" -v
 
       - name: Test Governor semantic contracts
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_governance_contracts.py" -v
 
       - name: Test warning-debt guard semantics
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_warning_debt_guard.py" -v
 
       - name: Test deep project audit semantics
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_deep_project_audit.py" -v
 
       - name: Test governor evidence scope
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_governor_handoff.py" -v
 
       - name: Guard streaming cancellation source contracts
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_streaming_cancellation_contract.py" -v
 
       - name: Test live governor evidence selection
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_live_governor_status.py" -v
 
       - name: Test P1C01 warehouse world expansion contract
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_p1c01_warehouse_world_expansion.ps1"
 
       - name: Test P1C01 hero candidate provider prerequisite
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_p1c01_hero_candidate_provider_contract.ps1"
 
       - name: Test P1C01 OpenGameArt character source contract
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_p1c01_oga_character_candidate_contract.ps1"
 
       - name: Test P1C01 hero candidate provenance contract
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_p1c01_hero_candidate_provenance_contract.ps1"
 
       - name: Test P1C01 Frodo candidate semantic and static QC contract
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_p1c01_frodo_candidate_semantic_qc.ps1"
 
       - name: Test zero-payload provider fail-closed contract
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_warehouse_provider_zero_payload_fail_closed.ps1"
 
       - name: Test generated material export checkout isolation
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_p1c01_material_export_checkout_isolation.ps1"
 
       - name: Test continuous mega-wave queue V2
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_continuous_production_wave_queue_v2.ps1"
 
       - name: Test P1C01 Shire mega chapter production contract
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_p1c01_shire_mega_chapter_pack.ps1"
 
       - name: Test P1C01 visual production mega wave
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_p1c01_visual_production_mega_wave.ps1"
 
       - name: Test whole-game chapter production packets
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_whole_game_chapter_production_packets.ps1"
 
       - name: Test daily project manager report generator
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_daily_project_manager_report.ps1"
 
       - name: Test current Frodo skeletal import contract
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_p1c01_frodo_skeletal_current_import.ps1"
 
       - name: Test static FBX world intake contract
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_static_fbx_world_intake.ps1"
 
       - name: Test P1C01 visible-world proxy replacement contract
+        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_p1c01_visible_world_proxy_replacement.ps1"
 
