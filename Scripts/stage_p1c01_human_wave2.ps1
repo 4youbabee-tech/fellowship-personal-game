@@ -146,13 +146,63 @@ bpy.ops.export_scene.fbx(
 if not os.path.isfile(args.output) or os.path.getsize(args.output) <= 0:
     raise RuntimeError("FBX export missing")
 
+# Audit the EXPORTED FBX, not just the original .blend: Rigify control
+# weights may disappear during deform-only export while total weighted
+# vertices still looks healthy. A technical winner must move real limbs.
+import re
+bpy.ops.wm.read_factory_settings(use_empty=True)
+if "FINISHED" not in bpy.ops.import_scene.fbx(filepath=args.output):
+    raise RuntimeError("normalized FBX reimport failed")
+post_armatures=[o for o in bpy.context.scene.objects if o.type=="ARMATURE"]
+post_meshes=[o for o in bpy.context.scene.objects if o.type=="MESH"]
+if len(post_armatures)!=1:
+    raise RuntimeError("normalized FBX armature cardinality invalid")
+reimport_arm=post_armatures[0]
+influence={}
+for m in post_meshes:
+    if not any(mod.type=="ARMATURE" and mod.object==reimport_arm for mod in m.modifiers):
+        continue
+    by_index={g.index:g.name for g in m.vertex_groups}
+    for v in m.data.vertices:
+        for g in v.groups:
+            if g.weight>0.00001 and g.group in by_index:
+                name=by_index[g.group]
+                influence[name]=influence.get(name,0.0)+float(g.weight)
+required_roles=("upperarm","forearm","thigh","shin","foot","hand","head")
+def role_of(name):
+    stem=re.sub(r"[^a-z0-9]","",name.lower())
+    if "forearm" in stem or "lowerarm" in stem:return "forearm"
+    if "upperarm" in stem or "uparm" in stem:return "upperarm"
+    if "thigh" in stem or "upleg" in stem:return "thigh"
+    if "shin" in stem or "calf" in stem or "lowerleg" in stem:return "shin"
+    if "foot" in stem:return "foot"
+    if "hand" in stem:return "hand"
+    if "head" in stem:return "head"
+    return None
+weighted_bone_roles=set()
+for bone in reimport_arm.data.bones:
+    if influence.get(bone.name,0.0)<=1e-6:continue
+    role=role_of(bone.name)
+    if not role:continue
+    name=bone.name.lower()
+    side=("L" if re.search(r"(?:^|[.:_ -])(?:l|left)(?:$|[.:_ -])",name) or "left" in name
+          else "R" if re.search(r"(?:^|[.:_ -])(?:r|right)(?:$|[.:_ -])",name) or "right" in name
+          else None)
+    if role=="head":weighted_bone_roles.add("head")
+    elif side:weighted_bone_roles.add(side+"_"+role)
+needed={"head"}|{side+"_"+role for side in ("L","R") for role in required_roles if role!="head"}
+missing_influence=sorted(needed-weighted_bone_roles)
+print("HUMAN_WAVE2_EXPORTED_SKIN_QC missing="+",".join(missing_influence)+" weighted_bones="+str(len(influence)),flush=True)
+
 receipt={
     "armature_count":len(armatures),"mesh_count":len(meshes),"bone_count":bone_count,
     "deform_bone_count":deform_bone_count,
     "vertex_count":vertex_count,"weighted_vertex_count":weighted,
     "zero_weight_vertex_count":zero_weight,"uv_layer_count":uv_layers,
     "finite_bounds":finite_bounds,"joint_name_coverage":coverage,
-    "source_kind":args.source_kind}
+    "source_kind":args.source_kind,
+    "exported_weighted_bone_count":len(influence),
+    "exported_missing_limb_influence":missing_influence}
 with open(args.receipt,"w",encoding="utf-8") as f: json.dump(receipt,f,indent=2,sort_keys=True)
 print("HUMAN_WAVE2_BLENDER_PASS",json.dumps(receipt,sort_keys=True))
 '@ | Set-Content -LiteralPath $pythonPath -Encoding UTF8
@@ -194,6 +244,7 @@ foreach($src in $selectedSources){
   if([int]$readiness.uv_layer_count -le 0){ $qualityReasons+="MISSING_UV_LAYER" }
   if(-not [bool]$readiness.finite_bounds){ $qualityReasons+="NONFINITE_BOUNDS" }
   if($zeroWeightRatio -gt [double]$manifest.source_policy.max_zero_weight_ratio){ $qualityReasons+="EXCESS_ZERO_WEIGHT_RATIO" }
+  if(@($readiness.exported_missing_limb_influence).Count -gt 0){ $qualityReasons+="EXPORTED_LIMB_SKIN_INFLUENCE_MISSING" }
   $qualityPass=$qualityReasons.Count -eq 0
   $normalized += [pscustomobject]@{
     source_entry=[string]$src.entry; source_kind=[string]$src.extension; source_sha256=[string]$src.sha256; source_bytes=[int64]$src.bytes;
