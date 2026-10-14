@@ -59,14 +59,16 @@ class P1C01DeliveryEntryMapContract(unittest.TestCase):
         governor = json.loads(source("Data/ProjectGovernor.json"))
 
         self.assertIn("package_windows:", wf)
+        self.assertIn("part1_closeout_approved:", wf)
+        self.assertIn("default: false", wf)
         self.assertIn("type: boolean", wf)
         self.assertIn("SHIRE_EXPLICIT_CHAPTER_PACKAGE:", wf)
         self.assertIn("package: ${{ steps.classify.outputs.package }}", wf)
         self.assertIn("SHIRE_PACKAGE_REQUIRED=${{ needs.classify.outputs.package }}", wf)
         for step in ("Build cook stage and archive real Windows package",
                      "Verify packaged Runtime Data JSON payload"):
-            self.assertIn("name: " + step + "\n        if: github.event_name == 'workflow_dispatch' && inputs.package_windows == true && env.SHIRE_PACKAGE_REQUIRED == 'true'", wf)
-        self.assertIn("if: success() && github.event_name == 'workflow_dispatch' && inputs.package_windows == true && env.SHIRE_PACKAGE_REQUIRED == 'true'", wf)
+            self.assertIn("name: " + step + "\n        if: github.event_name == 'workflow_dispatch' && inputs.package_windows == true && inputs.part1_closeout_approved == true && env.SHIRE_PACKAGE_REQUIRED == 'true'", wf)
+        self.assertIn("if: success() && github.event_name == 'workflow_dispatch' && inputs.package_windows == true && inputs.part1_closeout_approved == true && env.SHIRE_PACKAGE_REQUIRED == 'true'", wf)
         self.assertIn("name: Exercise real classifier regression on GitHub-hosted Windows", wf)
         self.assertIn("needs.classify.outputs.full == 'true' || needs.classify.outputs.core == 'true'", wf)
         self.assertIn('Set-Mode "static" "exact-governance-and-unreal-classifier-policy-hosted-only"', classifier)
