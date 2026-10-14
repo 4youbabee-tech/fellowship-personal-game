@@ -4796,6 +4796,27 @@ void AShirePrototypeWorldBuilder::SpawnP1C01ChapterFinishWorldArtPass()
         FerryLandingReads,
         UE_ARRAY_COUNT(FerryLandingReads));
 
+    // PES-002 Bag End exterior: bounded resident-source garden layering, kept away
+    // from the round-door approach and existing road. Instanced, zero collision/tick.
+    const FFinishPlacement BagEndPorchFlowers[] = {
+        { FVector(-2790,-470,5), FRotator(0, 12,0), FVector(0.52f) },
+        { FVector(-2660,-490,5), FRotator(0,-15,0), FVector(0.56f) },
+        { FVector(-2520,-520,5), FRotator(0, 18,0), FVector(0.54f) },
+        { FVector(-2370,-560,5), FRotator(0,-12,0), FVector(0.50f) },
+        { FVector(-2110,-520,5), FRotator(0, 24,0), FVector(0.56f) },
+        { FVector(-1980,-460,5), FRotator(0,-21,0), FVector(0.52f) },
+        { FVector(-1830,-340,5), FRotator(0,  9,0), FVector(0.54f) },
+        { FVector(-1680,-235,5), FRotator(0,-17,0), FVector(0.50f) }
+    };
+    const int32 BeforeBagEndClusters = ClusterCount;
+    const int32 BeforeBagEndInstances = InstanceCount;
+    SpawnFinishCluster(
+        ProductionFlowerBoxMesh, TEXT("PES002BagEndPorchFlowers"), 600, 3900,
+        BagEndPorchFlowers, UE_ARRAY_COUNT(BagEndPorchFlowers));
+    UE_LOG(LogTemp, Display,
+        TEXT("PES002_BAG_END_PORCH_FLOWERS clusters=%d instances=%d cap=8 collision=none tick=none visual=pending"),
+        ClusterCount - BeforeBagEndClusters, InstanceCount - BeforeBagEndInstances);
+
     const FVector BagEndProps[] = {
         FVector(-2520,-615,0), FVector(-2360,-645,0), FVector(-1910,-520,0),
         FVector(-1760,-380,0)
