@@ -458,13 +458,13 @@ void AShirePrototypeWorldBuilder::BeginPlay()
                 ProofCamera->GetCameraComponent()->SetFieldOfView(48.0f);
                 PC->SetViewTarget(ProofCamera);
                 UE_LOG(LogTemp, Display,
-                    TEXT("PES002_CAPTURE_CAMERA_READY target=BagEnd x=-2210 y=-520 proofOnly=1 views=3"));
+                    TEXT("PES002_CAPTURE_CAMERA_READY target=BagEnd x=-2210 y=-520 proofOnly=1 views=4"));
 
                 // Three independent perspectives prevent accepting an accidental
                 // fence/roof/terrain occlusion from a single static camera position.
                 // Never move the player, quest triggers or gameplay collision.
                 TWeakObjectPtr<ACameraActor> WeakCamera(ProofCamera);
-                for (int32 ViewIndex = 0; ViewIndex < 3; ++ViewIndex)
+                for (int32 ViewIndex = 0; ViewIndex < 4; ++ViewIndex)
                 {
                     FTimerHandle ReframeTimer;
                     ProofWorld->GetTimerManager().SetTimer(ReframeTimer,
@@ -477,7 +477,8 @@ void AShirePrototypeWorldBuilder::BeginPlay()
                             const FVector Positions[] = {
                                 FVector(-3070.0f, -520.0f, 285.0f),
                                 FVector(-3000.0f, -1190.0f, 305.0f),
-                                FVector(-3020.0f, 170.0f, 300.0f)
+                                FVector(-3020.0f, 170.0f, 300.0f),
+                                FVector(-3220.0f, -520.0f, 520.0f)
                             };
                             const FVector LookAt(-2210.0f, -520.0f, 105.0f);
                             WeakCamera->SetActorLocationAndRotation(

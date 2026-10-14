@@ -1,4 +1,4 @@
-param([int]$WaitSeconds = 72)
+param([int]$WaitSeconds = 86)
 $ErrorActionPreference = "Stop"
 $root = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $exe = "C:\Program Files\Epic Games\UE_4.27\Engine\Binaries\Win64\UE4Editor.exe"
@@ -19,7 +19,7 @@ try {
 if (!(Test-Path $log) -or !(Select-String -Path $log -Pattern 'PES002_CAPTURE_CAMERA_READY target=BagEnd' -Quiet)) {
     throw "PES002_CAPTURE_CAMERA_NOT_CONFIRMED; inspect $log"
 }
-for ($view = 0; $view -lt 3; $view++) {
+for ($view = 0; $view -lt 4; $view++) {
     if (!(Select-String -Path $log -SimpleMatch -Pattern "PES002_CAPTURE_VIEW_READY view=$view target=BagEnd" -Quiet)) {
         throw "PES002_CAPTURE_VIEW_NOT_READY view=$view"
     }
@@ -41,5 +41,26 @@ for ($view = 0; $view -lt 3; $view++) {
     $destination = Join-Path $proof "BagEnd-P1C01-view$view-actual-runtime.png"
     Copy-Item $source $destination -Force
     $hash = (Get-FileHash $destination -Algorithm SHA256).Hash
+    # Use actual RGB pixels, not file size or success code. Sample only the
+    # central frame to avoid bright sky falsely masking black architecture.
+    Add-Type -AssemblyName System.Drawing
+    $bitmap = [System.Drawing.Bitmap]::FromFile($destination)
+    try {
+        [double]$total = 0
+        [int]$count = 0
+        for ($y = 144; $y -lt 648; $y += 24) {
+            for ($x = 128; $x -lt 1152; $x += 24) {
+                $pixel = $bitmap.GetPixel($x, $y)
+                $total += (0.2126 * $pixel.R + 0.7152 * $pixel.G + 0.0722 * $pixel.B)
+                $count++
+            }
+        }
+        if ($count -lt 500) { throw "PES002_LUMINANCE_NO_SAMPLES view=$view" }
+        $mean = $total / $count
+    } finally {
+        $bitmap.Dispose()
+    }
+    Write-Host ("PES002_LUMINANCE_METRIC view={0} mean={1:N2} threshold=35.0 samples={2}" -f $view,$mean,$count)
+    if ($mean -lt 35.0) { throw ("PES002_LUMINANCE_TOO_DARK view={0} mean={1:N2}" -f $view,$mean) }
     Write-Host "PES002_BAG_END_CAPTURE_PRESENT view=$view width=$width height=$height sha256=$hash image=$destination camera=BagEnd visualAccepted=false traversal=unproven"
 }
