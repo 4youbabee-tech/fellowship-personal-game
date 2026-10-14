@@ -651,10 +651,10 @@ void AShirePrototypeWorldBuilder::OnCloud138Ready()
     }
     // Existing route-side anchors, kept offset from the traversable corridor.
     const FVector Anchors[8][3] = {
-        {FVector(-1700,1400,0), FVector(900,1600,0), FVector(4100,1850,0)},
+        {FVector(-1700,1400,0), FVector(-1450,1200,0), FVector(-1900,1150,0)},
         {FVector(-1850,-1050,0), FVector(7600,1650,0), FVector(11200,2000,0)},
         {FVector(1250,1700,0), FVector(3800,1800,0), FVector(7200,1750,0)},
-        {FVector(-1700,1400,0), FVector(1100,1650,0), FVector(2800,1850,0)},
+        {FVector(-1700,1400,0), FVector(-1500,1350,0), FVector(-1850,1100,0)},
         {FVector(22200,-1850,0), FVector(23350,-2000,0), FVector(24100,-1750,0)},
         {FVector(-2000,1700,0), FVector(7600,1600,0), FVector(3350,1900,0)},
         {FVector(3450,1800,0), FVector(7600,1950,0), FVector(22500,-2000,0)},
@@ -662,6 +662,7 @@ void AShirePrototypeWorldBuilder::OnCloud138Ready()
     };
     const float Heights[8] = {80, 70, 60, 75, 85, 195, 100, 115};
     int32 Loaded = 0, Placed = 0, MissingGround = 0, SteepGround = 0;
+    int32 BagEndDecorPlaced = 0;
     for (int32 I = 0; I < Cloud138Sources.Num(); ++I)
     {
         UHierarchicalInstancedStaticMeshComponent* Group = Cloud138Groups[I];
@@ -700,6 +701,12 @@ void AShirePrototypeWorldBuilder::OnCloud138Ready()
                 FVector(Scale)));
             ++FamilyPlaced;
             ++Placed;
+            // PES-002: two existing Cloud138 families are concentrated around
+            // the established Bag End garden anchors, with no extra draw groups.
+            if (I == 0 || I == 3)
+            {
+                ++BagEndDecorPlaced;
+            }
         }
         UE_LOG(LogTemp, Display, TEXT("P1C01_CLOUD138_FAMILY path=%s grounded=%d slots=%d collision=none"),
                *Cloud138Sources[I].ToSoftObjectPath().ToString(), FamilyPlaced,
@@ -708,6 +715,8 @@ void AShirePrototypeWorldBuilder::OnCloud138Ready()
     UE_LOG(LogTemp, Display,
            TEXT("P1C01_CLOUD138_WORLD families=%d grounded=%d max=48 missingGround=%d steepGround=%d collision=none async=1 PIE_device_visual=pending"),
            Loaded, Placed, MissingGround, SteepGround);
+    UE_LOG(LogTemp, Display, TEXT("PES002_BAG_END_EXTERIOR_GARDEN_DRESSING grounded=%d requested=12 groups=2 collision=none async=1 visual=pending"),
+           BagEndDecorPlaced);
     if (Loaded > 0 && Placed > 0)
     {
         UE_LOG(LogTemp, Display, TEXT("P1C01_CLOUD138_WORLD_READY"));
