@@ -9159,5 +9159,13 @@
     "pes002_status": "ACTIVE_NO_BAG_END_EXTERIOR_ACCEPTANCE_YET",
     "deferred_visual_acceptance": "PES-002 screenshot/traversal evidence outstanding; Gate 6/7 and chapter PIE/device/visual remain unwaived",
     "bridge_collision": "SM_ShWoodenFootbridge NAV_QUARANTINED; no fabricated walkable collision"
+  },
+  "pes_hosted_fast_preunreal_2026_10_14": {
+    "status": "CANDIDATE_PENDING_EXACT_HEAD_CI",
+    "scope": "GitHub-hosted Pre-Unreal Validation only",
+    "default": "Focused exact-head static, Governor and safety contracts; Unreal engine impacted paths still require normal classifier and runner C++/import/startup.",
+    "deferred_tests": 35,
+    "closeout": "Broad historical and cross-chapter static regressions via workflow_dispatch chapter_closeout_audits=true; no Gate 6/7 waiver",
+    "failsafe": "PowerShell syntax, Governor, project structure, classification, packaging safety and strict source asset quality run on ordinary PR/push"
   }
 }
