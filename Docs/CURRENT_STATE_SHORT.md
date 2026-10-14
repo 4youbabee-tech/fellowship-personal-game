@@ -32,6 +32,7 @@ _Last verified: 2026-10-15; source of truth: Data/ProjectGovernor.json; this fil
 - Windows cloud/second builder: compare after measured current bottleneck and explicit owner cost authorization.
 
 ## M0 fast route
+- Unverified screenshots, source rigs, asset imports or CI signals never count as accepted production evidence; verify per-artifact SHA and stage.
 1. Read actual HEAD, active PR, live Actions, `Data/ProjectGovernor.json` relevant keys: `pes_session_transition_2026_10_14`, `pes_professional_preproduction_gate_2026_10_14`, `pes_single_cohesive_batch_policy_2026_10_14`, active gate and newest owner additions.
 2. Read `Docs/DEVELOPMENT_GATES.md`, PES-002 scope; search `Docs/CURRENT_PROJECT_STATE.md`, `Docs/PRODUCTION_COMPLETENESS_MATRIX.md`, `Docs/WORLD_DETAIL_LEDGER.md` and `Docs/PROJECT_GUARDIAN.md` for affected defect/asset/SHA, not full linear re-reading.
 3. Inspect genuine Unreal screenshots, licensing, dependencies, writer locks; choose one coherent candidate; cheapest static tests then exact-head Unreal and evidence.
