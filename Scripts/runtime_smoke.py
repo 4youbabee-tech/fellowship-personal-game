@@ -16,7 +16,7 @@ from runtime_audit_contracts import (
 
 
 FAILURE = re.compile(r"Fatal error:|Assertion failed|Ensure condition failed", re.I)
-CLOUD138_MARKER = re.compile(r"P1C01_CLOUD138_WORLD families=(\\d+) grounded=(\\d+) max=(\\d+)")
+CLOUD138_MARKER = re.compile(r"P1C01_CLOUD138_WORLD families=(\d+) grounded=(\d+) max=(\d+)")
 
 def cloud138_observation(log_text):
     match = CLOUD138_MARKER.search(log_text)
