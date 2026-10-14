@@ -9140,5 +9140,24 @@
     "initial_measurement": "Screenshotted UE4.27 C++ job repeated long route/story tests within ordinary CI; policy reduces per-commit redundant audit work, not all validation.",
     "implementation": "Workflow conditions explicitly require owner workflow_dispatch package_windows=true for the 3 broad audits. Other checks remain subject to existing classifier.",
     "stage": "CI_POLICY_NOT_WORLD_ASSET_DELIVERY"
+  },
+  "pes_session_transition_2026_10_14": {
+    "active_session": "PES-002",
+    "completed_sessions": [
+      "PES-001"
+    ],
+    "pes001_status": "DELIVERABLE_COMPLETE_COMPILE_TESTED_HEADLESS_PLACEMENT_PROVEN_NOT_VISUALLY_ACCEPTED",
+    "pes001_evidence": {
+      "github_actions_run": 38526869417,
+      "source_sha": "e1acb85a5f972f521de2f5888a52561d77bf6877",
+      "cloud138_uasset_packages": 90,
+      "cloud138_bytes": 19394460,
+      "cloud138_families": 8,
+      "cloud138_placed_instances": 48,
+      "automation_tests_passed": 3
+    },
+    "pes002_status": "ACTIVE_NO_BAG_END_EXTERIOR_ACCEPTANCE_YET",
+    "deferred_visual_acceptance": "PES-002 screenshot/traversal evidence outstanding; Gate 6/7 and chapter PIE/device/visual remain unwaived",
+    "bridge_collision": "SM_ShWoodenFootbridge NAV_QUARANTINED; no fabricated walkable collision"
   }
 }
