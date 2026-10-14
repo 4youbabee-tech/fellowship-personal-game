@@ -9278,5 +9278,23 @@
       "fps_goal": 30
     },
     "coordination": "One Governor, one canonical develop, one active runtime PES, one Unreal writer, one Warehouse writer; parallel independent preparation allowed only when approved."
+  },
+  "pes_asset_first_production_acceleration_policy_2026_10_14": {
+    "status": "OWNER_APPROVED_GOVERNOR_COMPATIBLE",
+    "priority": "Imported, world-placed, render-observed, accepted licensed assets and playable game systems over documentation volume.",
+    "rules": [
+      "Prefer properly licensed ready-made characters, trees, creatures, buildings and tools after license/provenance/UE4.27 compatibility and quality checks; procedural production remains allowed when justified, with no generic placeholder treated as final.",
+      "One concise owner-facing PES closure report; during work only short material blocker/decision updates, retaining M0-M7 evidence and any existing Governor-mandated stage reports.",
+      "Synchronize CURRENT_PROJECT_STATE and PRODUCTION_COMPLETENESS_MATRIX with each code-change batch, not merely at PES closure; this is an existing Governor requirement.",
+      "Avoid redundant CI workflows, scripts or plans; add or extend checks for documented defects, required acceptance evidence or Governor obligations.",
+      "Do not enforce arbitrary 50 percent game-code/assets line/file quotas; measure production value without padding or suppressing tests.",
+      "Use SHIRE_FAST_PIE_PREVIEW.bat for local iteration only if it exists and is verified; otherwise use existing valid UE4.27 preview route. Minimize full Windows builds to planned validation plus justified retests, without bypassing mandatory gates.",
+      "Provide 30-45 minute owner visual and traversal review checklist at PES closure.",
+      "While owner review pending, independently prepare next PES M0/warehouse sources only when Governor permits; no concurrent runtime PES.",
+      "Closure metrics: number of distinct UE_IMPORTED+WORLD_PLACED+RENDER_OBSERVED assets and accepted subset; net added game-code LOC excluding tests/docs/generated; chapter percentage computed from explicit gate denominator, or unknown if unavailable.",
+      "Secondary Windows build device/cloud service requires measured bottleneck, cost and owner authorization."
+    ],
+    "authority": "Supplement only; existing Governor, Gate 6/7, writer locks, evidence and documentation obligations prevail.",
+    "active_pes": "PES-002 OPEN; PES-003 LOCKED"
   }
 }
