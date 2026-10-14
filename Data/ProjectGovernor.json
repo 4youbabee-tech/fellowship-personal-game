@@ -9229,5 +9229,54 @@
       "UE4 import/animation binding once quality passes",
       "Rendered Frodo then Gandalf review, actual movement and device profiling"
     ]
+  },
+  "pes_professional_preproduction_gate_2026_10_14": {
+    "status": "OWNER_MANDATED_PERMANENT",
+    "applies_to": "Each of PES-001 through PES-024 and any production repair batches, subject to active PES and Governor Gate 6/7",
+    "sequence": [
+      "1. Confirm exact develop/active PR HEAD, Governor, chapter scope, lore and last real Unreal images/logs; inventory missing dependencies with status SOURCE_AVAILABLE/WAREHOUSE_PERSISTED/UE_IMPORTED/WORLD_PLACED/RENDER_OBSERVED/ACCEPTED.",
+      "2. Before writing assets/code, research the exact discipline: official Epic UE4.27 and Blender pipeline first, proven developer case studies and mature reproducible source code/issue discussions second; record versions, licensing and at least one concrete technique adapted to 8GB RAM/~2GB VRAM.",
+      "3. Character workflow must include silhouette/proportions, legal FBX, bone hierarchy, DEFORM skin vertex groups, exported-FBX per-limb influence, measured deformation, stable Skeleton and AnimBP/Idle-Walk-Run, collisions, live NPC presentation; refuse nondeforming rigs.",
+      "4. Building/world/terrain/water/foliage workflow must include reference art, dimensions and focal silhouette, deterministic UV/material slots, single expected mesh identity and package persistence, collision/NavMesh/traversal, instancing/LOD/culling where appropriate, lighting and actual render review.",
+      "5. Prepare all legal inputs, import/warehouse receipt, C++ bindings, art manifests, source QC, engine assertions, documentation and rollback plan OFFLINE before planned one cohesive commit and push. Respect one Unreal writer and one Warehouse writer.",
+      "6. Run cheapest source/static/license/FBX/UV/weights/asset path/contract checks first, then exact-head CI/UE4 import/automation/startup and real rendered screenshots on the same SHA; use actual profiling before claiming 30 FPS.",
+      "7. Failure: diagnose ALL related logs and source family, choose repair versus discard, consolidate one bounded root-cause batch, add prevention test, never retry unchanged failed payload. Do not suppress failures or lower thresholds.",
+      "8. Update current state and completeness matrix together with code, preserve project governor authority, record cited professional methods and decision, provide M1-M7 real-stage evidence and owner-readable progress."
+    ],
+    "required_preflight_record_fields": [
+      "session_id",
+      "scope_and_previous_gates",
+      "head_sha",
+      "visual_reference_and_lore",
+      "technical_professional_sources_versioned",
+      "asset_license_and_provenance",
+      "complete_missing_assets_and_dependencies",
+      "input_format_and_hash",
+      "import_package_identity",
+      "rig_skin_and_deformation_if_character",
+      "collision_navmesh_if_world",
+      "memory_drawcall_fps_budget",
+      "static_and_engine_tests",
+      "expected_visual_acceptance",
+      "owner_status_and_blockers"
+    ],
+    "precommit_no_go": [
+      "Any required source unavailable or rights unclear",
+      "Exported rig has no real limb/head skin influence",
+      "Referenced asset cannot persist as exact expected Unreal package",
+      "Unexpected placeholder shown as completed",
+      "Missing test/manifest/docs or active writer conflict"
+    ],
+    "single_push_goal": "One integrated session candidate push after a fully staged and locally preflighted packet; exception for failures only after material diagnosis and consolidated repair, never promise zero possible engine/device defects.",
+    "evidence_barrier": "Research or code/build success alone never equals PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED. Report true categories; do not open PES-003 while PES-002 remains OPEN.",
+    "fixed_targets": {
+      "engine": "Unreal Engine 4.27.2",
+      "cpu": "Intel i7 Gen6",
+      "ram_gb": 8,
+      "vram_gb_approx": 2,
+      "resolution": "1280x720",
+      "fps_goal": 30
+    },
+    "coordination": "One Governor, one canonical develop, one active runtime PES, one Unreal writer, one Warehouse writer; parallel independent preparation allowed only when approved."
   }
 }
