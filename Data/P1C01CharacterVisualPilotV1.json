@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "P1C01_CHARACTER_VISUAL_PILOT",
+  "status": "SOURCE_PREPARATION_ONLY",
+  "owner_direction": "Begin Frodo-first character production immediately alongside PES-002, then prepare Gandalf; do not treat placeholders as finished.",
+  "runtime_session": "PES-002",
+  "other_sessions": "PES-003, PES-009 and PES-010 remain not activated",
+  "canon_sources": [
+    "01_STORY_AND_TIMELINE_BIBLE",
+    "02_CHARACTERS_AND_RELATIONSHIPS_BIBLE",
+    "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX"
+  ],
+  "existing_pipeline": [
+    "Tools/CloudAssetBuild/frodo_locomotion.py",
+    "Data/P1C01CharacterRigAnimationPrepV1.json",
+    "Source/ShireJourney/Private/Subsystems/ShireChapterAssetStreamingSubsystem.cpp"
+  ],
+  "technical_gates": [
+    "Licensed real skeletal FBX and skin weights",
+    "Deformation/retarget QC",
+    "Idle/Walk/Run FBX source + UE4.27 Animation Blueprint",
+    "Soft references and async streaming",
+    "Rendered character appearance and traversal",
+    "720p DX11 30 FPS device proof"
+  ],
+  "professional_methods": [
+    "UE4.27 skeletal mesh, animation state machine and BlendSpace",
+    "animation budget and reduced offscreen updates",
+    "front, side and back visual character approval"
+  ],
+  "current_defect": "PES002 screenshot shows modular primitives; CharacterRigStreaming reports packages-missing",
+  "source_ready": false,
+  "ue_imported": false,
+  "pie_tested": false,
+  "device_tested": false,
+  "visually_accepted": false
+}
