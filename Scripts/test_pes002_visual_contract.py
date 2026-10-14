@@ -74,6 +74,16 @@ class PES002VisualContract(unittest.TestCase):
             plan["banks"]["P1C01"]["assets"],
         )
 
+    def test_hero_facade_import_is_single_named_package_not_split_groups(self):
+        src = (ROOT / "Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp").read_text(encoding="utf-8")
+        self.assertIn('Relative.Equals(TEXT("World/Shire/SM_ShBagEndHeroFacade.obj")', src)
+        self.assertIn('ImportOptions->StaticMeshImportData->bCombineMeshes = true;', src)
+        self.assertIn('ImportOptions->StaticMeshImportData->bAutoGenerateCollision = false;', src)
+        self.assertIn('PES002_HERO_FACADE_IMPORT_REJECT', src)
+        self.assertIn('bExactHeroPackageResolved &&', src)
+        # The 30-way split was observed on exact-head UE4.27 CI, not inferred from file count.
+        self.assertIn('FindObject<UStaticMesh>(nullptr, *ExpectedObjectPath)', src)
+
     def test_round_door_and_windows_face_west_not_upwards(self):
         cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
         hobbit = cpp.split("void AShirePrototypeWorldBuilder::SpawnHobbitHole(", 1)[1].split(

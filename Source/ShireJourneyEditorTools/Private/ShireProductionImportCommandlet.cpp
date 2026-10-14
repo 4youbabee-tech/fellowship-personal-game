@@ -1404,6 +1404,11 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         const FString DestinationPath = RelativeDir.IsEmpty()
             ? TEXT("/Game/Production")
             : FString::Printf(TEXT("/Game/Production/%s"), *RelativeDir);
+        // One authored Bag End facade contains many material sections, not
+        // independent buildings. Preserve a SINGLE expected package identity.
+        const bool bDedicatedBagEndFacade =
+            Relative.Equals(TEXT("World/Shire/SM_ShBagEndHeroFacade.obj"),
+                ESearchCase::IgnoreCase);
 
         UAssetImportTask* Task = NewObject<UAssetImportTask>();
         Task->Filename = Filename;
@@ -1557,6 +1562,16 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                 if (ImportOptions->StaticMeshImportData)
                 {
                     ImportOptions->StaticMeshImportData->bRemoveDegenerates = true;
+                    // Epic UE4.27 FbxStaticMeshImportData::bCombineMeshes:
+                    // prevent one authoring group per ring/sill from becoming
+                    // separate StaticMesh packages with no hero facade asset.
+                    // Scope strictly to the dedicated static facade; leave all
+                    // other imports, animated character rigs and materials alone.
+                    if (bDedicatedBagEndFacade)
+                    {
+                        ImportOptions->StaticMeshImportData->bCombineMeshes = true;
+                        ImportOptions->StaticMeshImportData->bAutoGenerateCollision = false;
+                    }
 
                     const bool bHasTextureCoordinates =
                         ShireProductionImport::HasObjTextureCoordinates(ObjSource);
@@ -1907,11 +1922,24 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         // UE4.27 import factories are not perfectly consistent about which result
         // collection they populate in unattended mode. Treat the import as successful
         // when any task result is reported or the expected asset can be resolved.
+        // The old importer reported SUCCESS for 30 split mesh paths even
+        // though /Game/Production/World/Shire/SM_ShBagEndHeroFacade was absent.
+        // The streaming plan and runtime need this exact named StaticMesh.
+        const bool bExactHeroPackageResolved =
+            !bDedicatedBagEndFacade ||
+            FindObject<UStaticMesh>(nullptr, *ExpectedObjectPath) != nullptr;
+        if (bDedicatedBagEndFacade && !bExactHeroPackageResolved)
+        {
+            UE_LOG(LogTemp, Error,
+                TEXT("PES002_HERO_FACADE_IMPORT_REJECT expected=%s paths=%d result=%d reason=exact-static-mesh-not-registered"),
+                *ExpectedObjectPath, Task->ImportedObjectPaths.Num(), Task->Result.Num());
+        }
         const bool bImported =
-            Task->ImportedObjectPaths.Num() > 0 ||
+            bExactHeroPackageResolved &&
+            (Task->ImportedObjectPaths.Num() > 0 ||
             Task->Result.Num() > 0 ||
             ImportedAsset != nullptr ||
-            bSkeletalAssetRegistered;
+            bSkeletalAssetRegistered);
 
         UE_LOG(
             LogTemp,

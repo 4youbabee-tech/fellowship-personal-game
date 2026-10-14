@@ -1,0 +1,30 @@
+# PES-002 — Professional asset production method (UE4.27.2)
+
+**Status:** professional reference applied to targeted source import repair; not a claim of rendered acceptance.
+
+## Proven methods chosen for this project
+
+| Discipline | Established professional method | PES-002 implementation / next gate |
+|---|---|---|
+| Character modeling | licensed humanoid art source, proportions and silhouette before rig; author face/hair/clothes appropriate to chapter | Frodo needs genuine model & costume QC from character bible; source CC0 base model is NOT final likeness |
+| Skinning & animation | bone hierarchy -> deform-bone vertex groups -> verified Armature modifier -> normalized weights -> real shoulder/elbow/knee stress -> common Skeleton -> Idle/Walk/Run, AnimBP retarget | imported candidate has just **4 weighted bones** in exported FBX, so reject; do not hide/fake pass; Blender weight paint or source replacement first |
+| Bag End architecture | compose curved earth-integrated hero silhouette, circular doorway, window trim, walkable threshold and proper UV/material slots; keep meshes grouped by authored asset | old unattended import split one OBJ into **30 assets**; importer now combines ONLY Bag End hero static facade and asserts expected named `UStaticMesh` |
+| Landscape and vegetation | repeated non-interactive foliage via ISM/HISM / Static Mesh Foliage, scalable LOD and cull distances; intentional near/far readability | prepare on existing world assets; no unmeasured NPC spawn or foliage density surge |
+| World interactions | one owner for NPC decisions, soft/async loaded assets, collision and traversal tested at quest anchor | no new director, keep NPCContext/LivingWorldDirector and pool |
+| Quality and delivery | stage art -> package identity -> exact-head imported and runtime mesh -> screenshot review -> traversal -> target hardware frame cost | Pre-Unreal alone cannot accept runtime; real Unreal 720p screenshots, Gate 6/7 and 30 FPS measurement remain open |
+
+### Primary professional references
+- Epic UE4.27 Static FBX Mesh Pipeline: https://dev.epicgames.com/documentation/unreal-engine/fbx-static-mesh-pipeline?application_version=4.27
+- Epic UE4.27 Skeletal Mesh Pipeline: https://dev.epicgames.com/documentation/unreal-engine/how-to-import-skeletal-meshes?application_version=4.27
+- Epic UE4.27 Skeleton Assets: https://dev.epicgames.com/documentation/en-us/unreal-engine/skeleton-assets?application_version=4.27
+- Epic UE4.27 Retargeting: https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-retargeting?application_version=4.27
+- Epic UE4.27 Static Mesh Foliage: https://dev.epicgames.com/documentation/en-us/unreal-engine/foliage-tool?application_version=4.27
+- Epic UE4.27 Performance Profiling: https://dev.epicgames.com/documentation/en-us/unreal-engine/performance-and-profiling-overview?application_version=4.27
+- Blender 4.0 Rigify: https://docs.blender.org/manual/en/4.0/addons/rigging/rigify/index.html
+- Blender 4.0 Vertex Group Weight Painting: https://docs.blender.org/manual/sr/4.0/sculpt_paint/weight_paint/usage.html
+
+### Source-level acceptance contract
+1. Only a **single object** named `/Game/Production/World/Shire/SM_ShBagEndHeroFacade.SM_ShBagEndHeroFacade` counts as hero facade import; split `ImportedObjectPaths` count alone does not.
+2. Do not auto-promote FBX solely for having 161 bones, UVs or nonzero aggregate vertex weights; limbs and head must deform numerically under pose stress and be reviewed visually.
+3. No new PES runtime chapter, no synthetic screenshots, no source validation relabelled as PIE/device or visual acceptance.
+4. On a failing hardware build, inspect and repair that specific failure before further costly run; keep PES-002 OPEN.
