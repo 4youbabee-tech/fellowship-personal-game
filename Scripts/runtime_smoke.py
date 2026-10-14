@@ -16,6 +16,17 @@ from runtime_audit_contracts import (
 
 
 FAILURE = re.compile(r"Fatal error:|Assertion failed|Ensure condition failed", re.I)
+CLOUD138_MARKER = re.compile(r"P1C01_CLOUD138_WORLD families=(\\d+) grounded=(\\d+) max=(\\d+)")
+
+def cloud138_observation(log_text):
+    match = CLOUD138_MARKER.search(log_text)
+    if match:
+        families, grounded, cap = map(int, match.groups())
+        return {"families":families, "grounded":grounded, "cap":cap,
+                "pie_tested":False, "visual_accepted":False}
+    return {"families":0, "grounded":0, "status":"not_observed",
+            "pie_tested":False, "visual_accepted":False}
+
 CURATED_NATURE_MARKER = re.compile(
     r"P1C01_CURATED_NATURE_WORLD families=(\d+) grounded=(\d+) max=(\d+)"
 )
@@ -151,13 +162,17 @@ def main():
         if chapter:
             command.append(f"-AuditChapter={chapter}")
         command.extend(extra_args_for(args.mode))
+        markers = required_markers(chapter, args.mode)
+        if args.mode == "startup" and (args.project.resolve().parent / "Saved/Cloud138Unreal/restored.json").is_file():
+            markers.append("P1C01_CLOUD138_WORLD_READY")
         try:
-            result = observe(command, log, required_markers(chapter, args.mode), args.timeout, args.observation)
+            result = observe(command, log, markers, args.timeout, args.observation)
         except Exception as exc:
             result = {"passed": False, "error": str(exc), "log": str(log)}
         result["chapter"] = chapter or "startup"
         if chapter == "P1C01" or args.mode == "startup":
             result["curated_nature"] = curated_nature_observation(read_log(log))
+            result["cloud138"] = cloud138_observation(read_log(log))
         results.append(result)
         print(json.dumps(result), flush=True)
         if not result["passed"]:

@@ -215,6 +215,36 @@ AShirePrototypeWorldBuilder::AShirePrototypeWorldBuilder()
             TSoftObjectPtr<UStaticMesh>(FSoftObjectPath(CuratedPaths[I])));
     }
 
+
+    // PES-001: only decorative, non-walkable Cloud138 meshes; exact warehouse packages
+    // are soft-referenced and streamed on demand, never synchronously loaded.
+    const TCHAR* Cloud138MeshPaths[] = {
+        TEXT("/Game/Production/World/Shire/Cloud138/SM_ShGardenPlanter.SM_ShGardenPlanter"),
+        TEXT("/Game/Production/World/Shire/Cloud138/SM_ShOrchardCrate.SM_ShOrchardCrate"),
+        TEXT("/Game/Production/World/Shire/Cloud138/SM_ShMarketBasket.SM_ShMarketBasket"),
+        TEXT("/Game/Production/World/Shire/Cloud138/SM_ShWindowFlowerBox.SM_ShWindowFlowerBox"),
+        TEXT("/Game/Production/World/Shire/Cloud138/SM_ShReedPlanter.SM_ShReedPlanter"),
+        TEXT("/Game/Production/World/Shire/Cloud138/SM_ShHerbDryingRack.SM_ShHerbDryingRack"),
+        TEXT("/Game/Production/World/Shire/Cloud138/SM_ShGrainSackStack.SM_ShGrainSackStack"),
+        TEXT("/Game/Production/World/Shire/Cloud138/SM_ShPartyServingCounter.SM_ShPartyServingCounter")
+    };
+    const TCHAR* Cloud138Names[] = {
+        TEXT("Cloud138GardenPlanter"),         TEXT("Cloud138OrchardCrate"),         TEXT("Cloud138MarketBasket"),         TEXT("Cloud138WindowFlowerBox"),         TEXT("Cloud138ReedPlanter"),         TEXT("Cloud138HerbDryingRack"),         TEXT("Cloud138GrainSackStack"),         TEXT("Cloud138PartyServingCounter")
+    };
+    for (int32 I = 0; I < UE_ARRAY_COUNT(Cloud138MeshPaths); ++I)
+    {
+        UHierarchicalInstancedStaticMeshComponent* Group =
+            CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(Cloud138Names[I]);
+        Group->SetupAttachment(RuntimeRoot);
+        Group->SetMobility(EComponentMobility::Movable);
+        Group->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+        Group->SetGenerateOverlapEvents(false);
+        Group->SetCastShadow(false);
+        Group->SetCullDistances(700, 6200);
+        Cloud138Groups.Add(Group);
+        Cloud138Sources.Add(TSoftObjectPtr<UStaticMesh>(FSoftObjectPath(Cloud138MeshPaths[I])));
+    }
+
     // Explicit cull bands keep the first production world pass bounded on the
     // i7/8 GB/~2 GB VRAM target. These are starting budgets, not acceptance proof.
     GrassInstances->SetCullDistances(1200, 5200);
@@ -352,6 +382,7 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     BuildPrototypeWorld();
     SpawnVerifiedPBRDecor();
     RequestCuratedNatureLayer();
+    RequestCloud138Layer();
 
     if (UGameInstance* GI = GetGameInstance())
     {
@@ -585,8 +616,111 @@ void AShirePrototypeWorldBuilder::OnCuratedNatureLayerReady()
         Families, Grounded, MissingGround, SteepGround);
 }
 
+
+void AShirePrototypeWorldBuilder::RequestCloud138Layer()
+{
+    if (bCloud138Requested || !GetWorld() || Cloud138Sources.Num() != 8 || Cloud138Groups.Num() != 8)
+    {
+        return;
+    }
+    bCloud138Requested = true;
+    TArray<FSoftObjectPath> Available;
+    for (const TSoftObjectPtr<UStaticMesh>& SoftMesh : Cloud138Sources)
+    {
+        const FSoftObjectPath Path = SoftMesh.ToSoftObjectPath();
+        if (Path.IsValid() && FPackageName::DoesPackageExist(Path.GetLongPackageName()))
+        {
+            Available.Add(Path);
+        }
+    }
+    if (Available.Num() == 0)
+    {
+        UE_LOG(LogTemp, Display, TEXT("P1C01_CLOUD138_WORLD deferred=8 packages-not-mounted"));
+        return;
+    }
+    Cloud138Handle = Cloud138Loader.RequestAsyncLoad(
+        Available, FStreamableDelegate::CreateUObject(this, &AShirePrototypeWorldBuilder::OnCloud138Ready));
+}
+
+void AShirePrototypeWorldBuilder::OnCloud138Ready()
+{
+    UWorld* World = GetWorld();
+    if (!World || IsActorBeingDestroyed())
+    {
+        return;
+    }
+    // Existing route-side anchors, kept offset from the traversable corridor.
+    const FVector Anchors[8][3] = {
+        {FVector(-1700,1400,0), FVector(900,1600,0), FVector(4100,1850,0)},
+        {FVector(-1850,-1050,0), FVector(7600,1650,0), FVector(11200,2000,0)},
+        {FVector(1250,1700,0), FVector(3800,1800,0), FVector(7200,1750,0)},
+        {FVector(-1700,1400,0), FVector(1100,1650,0), FVector(2800,1850,0)},
+        {FVector(22200,-1850,0), FVector(23350,-2000,0), FVector(24100,-1750,0)},
+        {FVector(-2000,1700,0), FVector(7600,1600,0), FVector(3350,1900,0)},
+        {FVector(3450,1800,0), FVector(7600,1950,0), FVector(22500,-2000,0)},
+        {FVector(3800,1750,0), FVector(5600,1900,0), FVector(9100,1900,0)}
+    };
+    const float Heights[8] = {80, 70, 60, 75, 85, 195, 100, 115};
+    int32 Loaded = 0, Placed = 0, MissingGround = 0, SteepGround = 0;
+    for (int32 I = 0; I < Cloud138Sources.Num(); ++I)
+    {
+        UHierarchicalInstancedStaticMeshComponent* Group = Cloud138Groups[I];
+        UStaticMesh* Mesh = Cloud138Sources[I].Get();
+        if (!Group || !Mesh || Mesh->GetBounds().BoxExtent.Z <= 1.0f)
+        {
+            continue;
+        }
+        const FBoxSphereBounds Bounds = Mesh->GetBounds();
+        const float Scale = FMath::Clamp(Heights[I] / (2.0f * Bounds.BoxExtent.Z), 0.1f, 2.5f);
+        Group->SetStaticMesh(Mesh);
+        ++Loaded;
+        int32 FamilyPlaced = 0;
+        for (int32 J = 0; J < 6; ++J)
+        {
+            const float Angle = FMath::DegreesToRadians(static_cast<float>((I*41 + J*131) % 360));
+            const float Radius = 80.0f + 65.0f * static_cast<float>(J % 3);
+            const FVector Point = Anchors[I][J%3] +
+                FVector(FMath::Cos(Angle)*Radius, FMath::Sin(Angle)*Radius, 0);
+            FHitResult Hit;
+            FCollisionQueryParams Query(TEXT("P1C01Cloud138Ground"), false, this);
+            if (!World->LineTraceSingleByChannel(Hit, Point+FVector(0,0,1800),
+                                                   Point-FVector(0,0,1500), ECC_Visibility, Query))
+            {
+                ++MissingGround;
+                continue;
+            }
+            if (Hit.ImpactNormal.Z < 0.70f)
+            {
+                ++SteepGround;
+                continue;
+            }
+            Group->AddInstanceWorldSpace(FTransform(
+                FRotator(0, static_cast<float>((I*53+J*47)%360), 0),
+                Hit.Location-FVector(0,0,(Bounds.Origin.Z-Bounds.BoxExtent.Z)*Scale),
+                FVector(Scale)));
+            ++FamilyPlaced;
+            ++Placed;
+        }
+        UE_LOG(LogTemp, Display, TEXT("P1C01_CLOUD138_FAMILY path=%s grounded=%d slots=%d collision=none"),
+               *Cloud138Sources[I].ToSoftObjectPath().ToString(), FamilyPlaced,
+               Mesh->GetStaticMaterials().Num());
+    }
+    UE_LOG(LogTemp, Display,
+           TEXT("P1C01_CLOUD138_WORLD families=%d grounded=%d max=48 missingGround=%d steepGround=%d collision=none async=1 PIE_device_visual=pending"),
+           Loaded, Placed, MissingGround, SteepGround);
+    if (Loaded > 0 && Placed > 0)
+    {
+        UE_LOG(LogTemp, Display, TEXT("P1C01_CLOUD138_WORLD_READY"));
+    }
+}
+
 void AShirePrototypeWorldBuilder::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
+    if (Cloud138Handle.IsValid())
+    {
+        Cloud138Handle->CancelHandle();
+        Cloud138Handle.Reset();
+    }
     if (CuratedNatureLoadHandle.IsValid())
     {
         CuratedNatureLoadHandle->CancelHandle();

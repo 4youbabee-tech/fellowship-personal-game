@@ -503,6 +503,13 @@ jobs:
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_import_production_assets.cmd"'
 
+      - name: Rehydrate exact SHA256 Cloud138 Unreal packages
+        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
+        shell: powershell
+        run: |
+          python Scripts/restore_cloud138_unreal.py --warehouse 'D:\\actions-runner\\_warehouse\\ShireJourney' --checkout "$env:GITHUB_WORKSPACE"
+          if ($LASTEXITCODE -ne 0) { throw 'CLOUD138_RESTORE_BLOCKED' }
+
       - name: Resolve local Python for runtime observation
         if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
         shell: cmd
