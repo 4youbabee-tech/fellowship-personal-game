@@ -108,6 +108,11 @@ private:
     FStreamableManager CuratedNatureLoader;
     TSharedPtr<FStreamableHandle> CuratedNatureLoadHandle;
     bool bCuratedNatureRequested = false;
+    UPROPERTY() TArray<UHierarchicalInstancedStaticMeshComponent*> Cloud138Groups;
+    UPROPERTY() TArray<TSoftObjectPtr<UStaticMesh>> Cloud138Sources;
+    FStreamableManager Cloud138Loader;
+    TSharedPtr<FStreamableHandle> Cloud138Handle;
+    bool bCloud138Requested = false;
     UPROPERTY() ADirectionalLight* RuntimeSun = nullptr;
     UPROPERTY() ASkyLight* RuntimeSky = nullptr;
     UPROPERTY() APostProcessVolume* RuntimePostProcess = nullptr;
@@ -133,6 +138,8 @@ private:
     void SpawnFoliagePass();
     void RequestCuratedNatureLayer();
     void OnCuratedNatureLayerReady();
+    void RequestCloud138Layer();
+    void OnCloud138Ready();
     void SpawnScenicDetailPass();
     void SpawnVerifiedPBRDecor();
     void SpawnGeographyFoundationPass();

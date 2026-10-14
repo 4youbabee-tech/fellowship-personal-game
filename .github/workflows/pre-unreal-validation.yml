@@ -164,6 +164,9 @@ jobs:
       - name: Test P1C01 multi-zone curated nature runtime evidence contract
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_p1c01_curated_world_runtime.py" -v
 
+      - name: Test PES-001 Cloud138 grounded world-binding source
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_cloud138_world_binding.py" -v
+
       - name: Test Governor semantic contracts
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_governance_contracts.py" -v
 
