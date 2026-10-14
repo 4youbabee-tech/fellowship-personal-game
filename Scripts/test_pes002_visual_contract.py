@@ -32,6 +32,15 @@ class PES002VisualContract(unittest.TestCase):
         section = workflow.split("      - name: Capture Bag End targeted P1C01 visual proof", 1)[1].split("      - name:", 1)[0]
         self.assertNotIn('continue-on-error: true', section)
 
+    def test_bag_end_hero_exterior_keeps_entrance_visible(self):
+        cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        self.assertIn('PES002_BAG_END_HERO_FACADE', cpp)
+        self.assertIn('FVector(260.0f, 0.0f, 28.0f * Scale)', cpp)
+        self.assertIn('FVector(1.34f, 1.55f, 1.16f) * Scale', cpp)
+        self.assertIn('FVector(0.57f, 0.57f, 0.06f) * Scale', cpp)
+        self.assertIn('!bBagEndHero', cpp)
+        self.assertIn('FVector(-2210.0f, -520.0f, 0.0f)', cpp)
+
     def test_baseline_sky_is_not_overwritten_with_dark_values(self):
         cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
         self.assertIn('SkyComponent->SetIntensity(1.12f);', cpp)

@@ -1006,10 +1006,41 @@ void AShirePrototypeWorldBuilder::SpawnHobbitHole(const FVector& Location, float
     const bool bHasProductionFacade = ProductionTurfMoundMesh && ProductionHobbitFacadeMesh;
     if (bHasProductionFacade)
     {
-        SpawnShape(ProductionTurfMoundMesh, Location + FVector(0.0f, 0.0f, 30.0f * Scale),
-            FVector(2.45f, 2.10f, 2.10f) * Scale, Turf, FRotator::ZeroRotator, true);
+        // P1C01 Bag End is the first (1.25x) home at a fixed canon/story anchor.
+        // Three actual 720p Unreal screenshots showed its 2.45x mound occluding
+        // the entire front elevation. Move ONLY this earth silhouette backward
+        // (+X, opposite the west-facing entrance), reduce its scale and remove
+        // its decorative collision. Keep the facade/doorstep blocking.
+        const bool bBagEndHero =
+            FVector::DistSquared2D(Location, FVector(-2210.0f, -520.0f, 0.0f))
+                < FMath::Square(25.0f);
+        const FVector MoundOffset = bBagEndHero
+            ? FVector(260.0f, 0.0f, 28.0f * Scale)
+            : FVector(0.0f, 0.0f, 30.0f * Scale);
+        const FVector MoundScale = bBagEndHero
+            ? FVector(1.34f, 1.55f, 1.16f) * Scale
+            : FVector(2.45f, 2.10f, 2.10f) * Scale;
+        SpawnShape(ProductionTurfMoundMesh, Location + MoundOffset,
+            MoundScale, Turf, FRotator::ZeroRotator, !bBagEndHero);
         SpawnShape(ProductionHobbitFacadeMesh, Location + FVector(-88.0f * Scale, 0.0f, 0.0f),
             FVector(1.0f) * Scale, Earth, FRotator::ZeroRotator, true);
+        if (bBagEndHero)
+        {
+            // Original, inexpensive readable green round entrance in front of
+            // imported facade. No animated door claim; story trigger unchanged.
+            const FVector DoorCentre = Location + FVector(-165.0f * Scale, 0.0f, 72.0f * Scale);
+            SpawnShape(CylinderMesh, DoorCentre,
+                FVector(0.68f, 0.68f, 0.055f) * Scale,
+                Timber, FRotator(0.0f, 90.0f, 0.0f), false);
+            SpawnShape(CylinderMesh, DoorCentre + FVector(-7.0f * Scale, 0.0f, 0.0f),
+                FVector(0.57f, 0.57f, 0.06f) * Scale,
+                DoorGreen, FRotator(0.0f, 90.0f, 0.0f), false);
+            SpawnShape(SphereMesh, DoorCentre + FVector(-14.0f * Scale, 28.0f * Scale, -2.0f * Scale),
+                FVector(0.045f) * Scale, FLinearColor(0.82f,0.65f,0.28f),
+                FRotator::ZeroRotator, false);
+            UE_LOG(LogTemp, Display,
+                TEXT("PES002_BAG_END_HERO_FACADE layout=west-facing moundOffsetX=260 moundCollision=none door=green-round proof=pending"));
+        }
     }
     else
     {
