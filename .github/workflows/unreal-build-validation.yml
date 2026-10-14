@@ -231,6 +231,11 @@ on:
       - 'Scripts/classify_warehouse_validation.ps1'
   workflow_dispatch:
     inputs:
+      pes_focused_unreal:
+        description: 'Run required focused UE4 editor build, persisted Cloud138 restore and P1C01 startup without Cook/Package or broad chapter sweeps'
+        required: false
+        type: boolean
+        default: false
       run_self_hosted:
         description: 'Owner authorization required: run UE4.27 on Windows self-hosted runner for this manual dispatch only'
         required: false
@@ -266,6 +271,7 @@ jobs:
     env:
       TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+      SHIRE_PES_FOCUSED_UNREAL: ${{ github.event_name == 'workflow_dispatch' && inputs.pes_focused_unreal == true && inputs.run_self_hosted == true }}
       SHIRE_EXPLICIT_CHAPTER_PACKAGE: ${{ github.event_name == 'workflow_dispatch' && inputs.package_windows == true && inputs.part1_closeout_approved == true }}
     outputs:
       mode: ${{ steps.classify.outputs.mode }}

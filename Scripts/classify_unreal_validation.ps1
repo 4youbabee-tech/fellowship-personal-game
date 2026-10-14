@@ -529,6 +529,17 @@ if ($env:SHIRE_EXPLICIT_CHAPTER_PACKAGE -eq "true") {
     exit 0
 }
 
+# Owner-authorized focused Unreal on manual PES production: bypass stale static
+# classifier inheritance while preserving all UE compile/import/startup gates.
+# Never permit this switch to trigger packaging or broad chapter acceptance.
+if ($env:SHIRE_PES_FOCUSED_UNREAL -eq "true") {
+    if ($env:GITHUB_EVENT_NAME -ne "workflow_dispatch" -or $env:SHIRE_EXPLICIT_CHAPTER_PACKAGE -eq "true") {
+        throw "PES_FOCUSED_UNREAL_DISPATCH_OR_CLOSEOUT_CONFLICT"
+    }
+    Set-Mode "core" "owner-authorized-focused-pes-unreal-no-package" "" "none" $false $false
+    exit 0
+}
+
 # Check incremental edits before the accumulated PR diff. A full, exact-parent
 # green UE run is required; otherwise fall through to the existing strict paths.
 if (Test-IncrementalSourceOnlyHeadDelta $git $env:TARGET_SHA) {
