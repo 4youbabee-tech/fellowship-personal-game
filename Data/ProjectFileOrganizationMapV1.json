@@ -5,7 +5,7 @@
   "authority": "Data/ProjectGovernor.json",
   "indexed_branch": "planning/living-world-completeness-v1",
   "indexed_head": "c3668ec48d439985fc8f075df3f23b1269671072",
-  "indexed_file_count": 651,
+  "indexed_file_count": 653,
   "purpose": "Make the large project navigable without relying on chat memory. Every important file has one declared role; authority, live execution, domain planning, historical snapshots, runtime data, source, automation and assets are not allowed to masquerade as each other.",
   "authority_chain": [
     "Data/ProjectGovernor.json = sole project-management decision authority.",
@@ -52,9 +52,9 @@
     "DOMAIN_PROGRAM_PLAN_WITH_STALE_EMBEDDED_CONTROL_METADATA": 1,
     "AUTHORITY": 2,
     "SUPPORTING_DOCUMENTATION": 18,
-    "AUTOMATION_OR_VALIDATION_SCRIPT": 51,
+    "AUTOMATION_OR_VALIDATION_SCRIPT": 52,
     "RUNTIME_OR_EDITOR_SOURCE": 71,
-    "SOURCE_ASSET": 400
+    "SOURCE_ASSET": 401
   },
   "core_control_files": [
     {
@@ -833,6 +833,10 @@
     },
     {
       "path": "Scripts/warning_debt_guard.py",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Tools/CloudAssetBuild/generate_bag_end_hero_facade.py",
       "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
     },
     {
@@ -2553,6 +2557,10 @@
     },
     {
       "path": "SourceAssets/Production/World/Shire/SM_ShHobbitFacade.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShBagEndHeroFacade.obj",
       "role": "SOURCE_ASSET"
     },
     {

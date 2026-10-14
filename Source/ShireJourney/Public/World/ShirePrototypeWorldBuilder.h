@@ -49,6 +49,7 @@ private:
     UPROPERTY() UStaticMesh* ProductionGrassClumpMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionFenceSegmentMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionHobbitFacadeMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionBagEndHeroFacadeMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionCartMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionBenchMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionMillWheelMesh = nullptr;

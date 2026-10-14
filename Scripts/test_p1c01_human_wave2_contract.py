@@ -75,6 +75,14 @@ class HumanWave2ContractTests(unittest.TestCase):
         deformation=(root/"Scripts"/"run_p1c01_human_wave3_deformation.py").read_text(encoding="utf-8")
         for token in ("shoulders","elbows","knees","hands_feet","locomotion_stress","visual_deformation_accepted","retarget_accepted"):
             self.assertIn(token,deformation)
+        for token in (
+            "vertex_group_weight",
+            "required deformation joints have no skin influence",
+            "minimum_required_displacement",
+            "rest[\"diag\"] * 0.0025",
+            "joint_skin_influence",
+        ):
+            self.assertIn(token, deformation)
         gate=json.loads((root/"Data"/"P1C01HumanDeformationGateV1.json").read_text(encoding="utf-8"))
         self.assertFalse(gate["runtime_contract"]["visual_deformation_accepted"])
         self.assertFalse(gate["runtime_contract"]["retarget_accepted"])

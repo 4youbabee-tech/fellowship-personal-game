@@ -1,3236 +1,333 @@
-2026-10-14 PES-002 CAMERA-EVIDENCE ROOT-CAUSE HERO FACADE CORRECTION: Inspected three actual UE4.27.2 1280x720 PNGs from Run 38563272174 artifact 11892194952, SHA256 view0 3128205E4EB4A7864C3BEE5CCFB9B65FA6AB26B1664BC3B8916763ACA80E0F28 / view1 1D58E33689BB179E890AFE2082F51D6A37717995D909DDF09DC92B59D7382FDE / view2 2BF76E5A5A040A19388771134F5EB0B87B3EBAF671C6585181C9DD51287ECAB9. Real images show restored textures/color but oversized green mound hides facade, plus dense foreground proxy fences/NPCs; no visual acceptance. Focused C++ candidate shifts only Bag End's earth mound +260cm behind its west-facing facade, reduces mass, gives hero turf nonblocking collision, retains existing blocking facade/story anchors, and adds a recognizable low-cost green round door silhouette and static source regression. This is a candidate pending exact-head build, new visual images and real traversal/collision evidence; physical authored facade mesh/material and target-device 30 FPS still not accepted. No PES-003.
-
-2026-10-14 PES-002 VISUAL REAL-RUNTIME DEFECT REPAIR WAVE: Exact-head PR #477 Run 38561717050 proved UE4.27 C++ build, 90 Cloud138 restored .uasset packages, three Automation tests, headless startup, runtime 1280x720 BagEnd-directed screenshot SHA256 EC7F6789E8B2F96F88BC0FFD417D857D787EE28F93D92C9640703F332AA98936 and 12/12 grounded Bag End Cloud138 props. Human examination of actual image REJECTED visual: rough grey buildings, low-detail NPCs, heavily occluded hero facade. The screenshot log directly identified M_ProductionFoliage shader default fallback due SimpleGrassWind required AdditionalWPO missing, and both M_ProductionSurface/M_ProductionFoliage bUsedWithInstancedStaticMeshes missing. Repair candidate modifies existing UE editor import material masters (including persisted assets) to add mandatory AdditionalWPO zero input, enable instanced material usage, save changed master .uasset; captures three Bag End angles to avoid accepting a misleading occlusion. This repair must be recompiled and inspected on a NEW Windows run; no visual/traversal/PIE/device acceptance claim and PES-002 remains OPEN.
-
-2026-10-14 PES-002 ROOT-CAUSE CI RETEST candidate: PR #477 exact-head af9e827 failed Pre-Unreal Run 38561472948 at PG-172 because three SkyLight RecaptureSky() calls violated the existing precisely two-call invariant. Root-cause change moves startup recapture exclusively to the deferred one-shot post-sky-init timer, retains the authored quest/story recapture, removes immediate duplicate and adds exact count regression to the focused PES contract test. No gate bypass; retest required. UE Build Run 38561473150 was still in progress at diagnosis. PES-002 OPEN.
-
-2026-10-14 PES-002 ROOT-CAUSE AND CAMERA/LIGHTING CORRECTION CANDIDATE (DEC-PES-ROOT-20261014): Source audit of develop@03df3c3 found prior HighResShot used the ordinary player view without aiming at Bag End; the received 1280x720 Unreal image shows dark/unpolished architecture and no accepted Bag End facade. This wave adds opt-in proof-only Bag End camera/framing after runtime world initialization, delayed capture and strict PNG/log/dimension checks; raises baseline sun/skylight/exposure and adds deferred sky recapture to address premature dim sky illumination. The camera is gated by -PES002VisualProof outside shipping and never moves the gameplay player or changes quest, nav, NPC or save ownership. Exact-head hosted static, real UE4.27.2 C++ build and a NEW screenshot/traversal proof must still pass. No physical new FBX/PNG/material import, no visual/PIE/device/traversal acceptance, and no Gate 6/7 closure are claimed. Active PES-002 remains OPEN; do not open PES-003.
-
-2026-10-14 PES-002 VISUAL EVIDENCE PIPELINE candidate: Added Scripts/capture_pes002_bag_end_visual.ps1 to launch real UE4Editor -game windowed 1280x720 and request HighResShot, fail if screenshot missing or only BMP. Connected optional fail-safe attempt and log/image Actions artifact to focused Windows Unreal workflow. This does NOT assert rendered success, PIE, traveler camera alignment, visual acceptance or traversal; screenshot review and actual evidence pending. Workflow capture is continue-on-error to avoid blocking validated C++ on headless display failure; screenshot absence stays PES-002 OPEN.
-
-2026-10-14 PES-002 Bag End Exterior follow-up: source-backed bounded HISM terrain-edge dressing using existing resident ProductionTurfMoundMesh and ProductionRockMesh: 6 garden slope pieces and 6 outer property stones, intentionally offset from the walkable door/road corridor, zero collision and no new draw-component per prop. Added runtime marker PES002_BAG_END_TERRAIN_EDGE (actual instances to be verified in UE). Existing facade uses ProductionHobbitFacadeMesh when resident; no new imported architecture or packed material claim. PIE/screenshot/traversal and Gate 6/7 still pending; PES-002 OPEN.
-
-2026-10-14 PES-002 integrated exterior candidate: reused existing resident `ProductionFlowerBoxMesh` via bounded no-collision/no-tick AWorldDetailCluster HISM, eight new porch/approach positions outside primary roadway, with `PES002_BAG_END_PORCH_FLOWERS` runtime receipt; no synchronous heavy loads, no new NPC spawns, no unsafe bridge collision. Other previously merged Bag End garden Cloud138 dressing remains present. This is a tangible exterior landscaping addition, not proof of imported new architecture/packed PBR or accepted screenshot/traversal. Exact-head UE4 compile/startup and actual visual/traversal evidence outstanding; PES-002 OPEN, Gate 6/7 OPEN.
-
-2026-10-14 PES ONE COMPLETE BATCH CONTRACT: Before each PES begins, inspect current develop HEAD, ProjectGovernor, gates, source/warehouse/Unreal receipts and chapter canon; enumerate the full named session deliverable and its exact assets, C++ changes, placement, focused tests and synchronized documents. Prepare one cohesive complete change wave and one PR whenever technically possible, not a parade of partial micro-PRs requiring owner 'continue'. After hosted source/static and necessary Unreal compile/import/startup run, repair verified failures in bounded corrective commits and retest; deliver a single evidence-based session report. Keep one Unreal writer/one Warehouse writer and no broad audits/package until chapter closeout. If missing actual screenshot/traversal/PIE/device evidence, remain OPEN and report blocker, not fake completeness. No automatic ongoing background work promise beyond a live execution.
-
-2026-10-14 PES-002 BAG END EXTERIOR actual C++ candidate: updated the existing async Cloud138 HISM GardenPlanter and WindowFlowerBox anchor arrays to concentrate 12 capped non-colliding instances around previously established Bag End garden coordinates; preserve all 8 Cloud138 families, maximum 48 placements, soft reference async streaming, terrain tracing and steep-ground rejects. Added `PES002_BAG_END_EXTERIOR_GARDEN_DRESSING grounded=<n> requested=12 groups=2 collision=none async=1 visual=pending` marker for exact-head UE4 test evidence. This is garden dressing only, NOT exterior architecture/terrain/PBR completion; COMPILE-TESTED pending Windows CI, rendered screenshot and traversability pending. Existing WoodenFootbridge remains NAV_QUARANTINED.
-
-2026-10-14 PRE-UNREAL FOCUSED PES CHANGE (PR candidate): default pre-unreal hosted checks retain exact-head source checkout, classifier regression, Windows packaging safety contract, PowerShell syntax, project structural validation, Project Governor, source-to-Unreal PBR integrity, Governor work-start and semantics, strict asset quality audit. 35 broader cross-chapter, historical provider/hero, warehouse regression, deep audit and reporting test steps are deferred to explicit workflow_dispatch chapter_closeout_audits=true, without disabling GitHub Unreal focused compile/import/startup or Gate 6/7. This is CI scheduling only, not a claim of FPS/visual acceptance.
-
-2026-10-14 VERIFIED SESSION TRANSITION (owner authorized): PES-001 Asset Recovery & Import = COMPLETE for its bounded import-and-placement deliverable only, supported by Windows Run 38526869417 on develop@e1acb85a5f972f521de2f5888a52561d77bf6877: UE4.27.2 ShireJourneyEditor build SUCCESS; CLOUD138_UE_RESTORED_SHA256_PASS files=90 bytes=19394460; AUTOMATION_SUITE_PASS tests=3; P1C01 headless startup PASS cloud138 families=8 grounded=48 cap=48. PES-001 PIE=false, device=false, visual_accepted=false, chapter Gate 6/7 remains OPEN; no FPS or human render claim. Owner explicitly defers human visual review to PES-002. PES-002 Bag End Exterior = ACTIVE, NOT COMPLETE: architecture/garden/terrain/packed-PBR and actual screenshot/traversal are its required deliverable, not demonstrated yet. Existing SM_ShWoodenFootbridge remains NAV_QUARANTINED; no unsupported traversal claims.
-
-2026-10-14 PES FOCUSED WINDOWS EXECUTION: fix previous manual Run 38525471144 incorrectly classified `static` and skipped Unreal. New explicitly owner-authorized workflow_dispatch input `pes_focused_unreal=true` with `run_self_hosted=true` forces classifier `core` (UE4 editor compile, importer, persisted Cloud138 restore, automation and P1C01 headless startup) while `package_windows=false`, `part1_closeout_approved=false` keeps Cook/Package and broad all-chapter audits off. Runtime evidence is not a visual screenshot/PIE claim. Current PES-001 OPEN until specific evidence proves its closure.
-
-2026-10-14 OWNER CI THROUGHPUT POLICY (implementation candidate; PES-001 OPEN): ordinary PES runs retain mandatory exact-head hosted/static guards, required changed-C++ UE build, asset import/reopen and focused startup only. Deferred until explicitly owner-approved Part I/chapter closeout: full chapter runtime sweep, full route/story roundtrip, global warning debt and Windows Cook/Stage/Package. Workflow now requires BOTH package_windows=true and part1_closeout_approved=true; accidental package_windows alone cannot activate these expensive stages. Does not delete Gate 6/7, PIE, device, visuals or project acceptance obligations. No new asset/PIE/device claim.
-
-2026-10-14 PES-001 ACTIVE IMPLEMENTATION CANDIDATE: 8 exact previously imported Cloud138 non-walkable FBX families are soft-streamed into the existing P1C01 ShirePrototypeWorldBuilder as 8 capped non-colliding HISM components (48 maximum instances, ground/steep-rejected); existing D: SHA256 persistent 90-uasset receipt is restored before headless runtime startup and required log marker P1C01_CLOUD138_WORLD_READY is audited. SM_ShWoodenFootbridge remains NAV_QUARANTINED and entirely excluded; no walking-surface collision acceptance is implied. Commit/source integration is not proof of successful engine build, persisted editor reopen on this HEAD, actual grounded instances, rendered image, PIE, device, Gate 6/7, or visual acceptance. PES-001 remains OPEN until evidence.
-
-2026-10-14 PES performance policy CANDIDATE: owner requested removal of recurring full chapter/story/state/warning sweeps until chapter closeout. CI conditions now defer exactly those 3 expensive runtime audit steps to manual owner workflow_dispatch package_windows=true. Preserve quick development compile/startup, dedicated importer/reopen/persist evidence and all Gate 6/7 acceptance. Policy change does not establish imported-world placement, PIE, device or visual evidence. Verify PR exact-head hosted tests before merging.
-
-2026-10-14 PES-001 quarantine candidate: last exact-head Windows Run 38475386875 found only SM_ShWoodenFootbridge missing imported simple UCX collision. To avoid a false box proxy or failing persistence of otherwise eligible assets, allow only this exact path as NAV_QUARANTINED in both editor and fresh reopen receipts; do not grant it world-placement or nav approval. Abort batch for ANY other critical missing collision; keep PIE/visual/device and Gate 6/7 unchanged. A successful import/persist receipt is NOT visual chapter completion. Physical tests on this proposed candidate are pending.
-
-PES-001 intake report: recovered source warehouse 138 FBX and 36 PNG; UE collision import failures RoundDoor, StonePath, and WoodenFootbridge, fail-closed until UE import/reopen/persist and world-placement proof. 2026-10-14 PES-001 latest Windows Run 38471186190: source receipt and warehouse stage passed, editor followup failed for WoodenFootbridge missing imported UCX collision. Bounded recovery now audits all critical missing-collision meshes before returning a batch failure, rather than requiring repeated multi-minute Windows runs for each next offender. Open bridge is NOT given inaccurate BOX collision. No restored/imported persisted Unreal uasset count or placed-world count may be promoted until fresh editor reopen and durable receipt plus world verification. This fix itself is diagnostic and source-level only.
-
-2026-10-14 PES-001 candidate follow-up: Cloud138 Windows import Run 38467646349 passed source stage and warehouse writer but failed editor mode on SM_ShStonePath with CLOUD138_WALKABLE_UCX_NOT_IMPORTED. Candidate now permits bounded BOX collision fallback for this known flat walkable source along with FerryLanding and closed RoundDoor, while preserving the guard against applying it to open WoodenFootbridge and foliage. This is only an import-proxy repair; traversal, world placement, PIE/device/visual and persistent UE package acceptance remain unproven. Exact-head revalidation required.
-
-2026-10-14 Fast PES owner decision CANDIDATE: In response to confirmed repeated expensive Windows workflows in PES-001, proposed Governor single-wave atomic batching, exact-head cheap-first validation, source-wide defect enumeration before heavy retry and safe evidence reuse. The 24 PES steps and Gate 6/7 remain unchanged. This administrative change alone produces zero game assets, UE imports, placement, PIE/device or visual proof. Live PR #463 remains the independent Cloud138 collision-intake repair and must not be merged on admin evidence.
-
-2026-10-13 P1C01 off-runner living-world binding Batch 01: Added a real static binding packet generator for the Shire player route without using Windows Runner. GitHub-hosted generation via `Scripts/generate_p1c01_living_world_binding_batch01.py` emits `Data/P1C01LivingWorldBindingBatch01.json` with 39 binding records across 13 P1C01 zones and morning/midday/evening bands. Each record maps material candidates, source audio candidates, prop-family candidates and NPC role/activity intent to performance contracts requiring HISM/ISM for repeated props, Soft References, no static-prop tick dependency, and explicit `placeholder_mesh_allowed=false` for NPC candidates. The packet is a source binding handoff only: Warehouse, Unreal import, world placement, PIE, device and visual/audio acceptance all remain PENDING until runner evidence exists.\n\n2026-10-13 P1C01 off-runner material source Batch 01: Added a real project-owned procedural PBR texture source pack candidate on current `develop` without using Windows Runner. GitHub-hosted generation via `Scripts/generate_p1c01_material_source_batch01.py` emits `SourceAssets/Production/Materials/Shire/Batch01OffRunner/P1C01_MaterialBatch01_PBRTextures.zip` containing 24 Shire material sets and 72 PNG maps: BaseColor, packed ORM (R=AO, G=Roughness, B=Metallic) and Normal. Coverage targets Bag End paint/brick/hearth/wood, garden ground/soil, Hobbiton thatch/plaster, Bagshot Row fence, Party Field canvas/ribbon/ceramic, road dirt/pebbles, wooded-road bark/roots, Mill Pond plank/stone, Ferry dock/rope, East Fields wheat/leaf, and market awning/wicker surfaces. The generated `Data/P1C01MaterialSourceBatch01Manifest.json` records per-map SHA256, target zone, surface family, PBR contract and explicit Warehouse/Unreal import/MaterialInstance/world binding = PENDING. No `.uasset`, material instance, runtime binding, PIE, device, visual acceptance, FPS or Gate 6/7 closure is claimed until Actions and later Unreal evidence exist.\n\n2026-10-13 P1C01 off-runner source audio Batch 01: Added a real project-owned procedural WAV source pack candidate on current `develop` without using Windows Runner. GitHub-hosted generation via `Scripts/generate_p1c01_audio_source_batch01.py` emits `SourceAssets/Production/Audio/Shire/Batch01OffRunner/P1C01_AudioBatch01_SourceAudio.zip` containing 32 mono 16-bit PCM WAV clips at 22050 Hz for Bag End room/hearth/door/object foley, Hobbiton lane and household foley, Party Field soft crowd/object details, grass/dirt footsteps, Wooded Road rustle/branch/bird nature, Mill Pond water/wheel/sack, Bywater waystone, Bucklebury Ferry river/rope/dock/oar and East Fields wind/crate sounds. The generated `Data/P1C01AudioSourceBatch01Manifest.json` records per-clip SHA256, duration, frame count, target zone, category, source license and explicit `Unreal import/SoundCue/world binding = PENDING`. No `.uasset`, SoundCue, runtime binding, PIE, device, visual/audio acceptance, FPS or Gate 6/7 closure is claimed until Actions and later Unreal evidence exist.\n\n2026-10-13 P1C01 off-runner source asset Batch 03: Added a third real project-owned procedural source pack candidate on current `develop` without using Windows Runner. GitHub-hosted generation via `Scripts/generate_p1c01_source_asset_batch03.py` emits `SourceAssets/Production/World/Shire/Batch03OffRunner/P1C01_Batch03_SourceAssets.zip` containing 48 ASCII FBX static meshes and 16 PNG base-color textures focused on Bag End interior/entry/garden, Party Field food/service props, Mill Pond utility props, Bucklebury Ferry mooring/dock/passenger details, Bywater Road wayfinding/planks, Wooded Road root/stump breakup, and East Fields harvest tools. The generated `Data/P1C01SourceAssetBatch03Manifest.json` records per-asset SHA256, target zone, material slot, dimensions/mesh counts, source license and explicit `Unreal import/world placement = PENDING`. No `.uasset`, UE import, PIE, device, visual acceptance, FPS or Gate 6/7 closure is claimed until Actions and later Unreal evidence exist.
-
-2026-10-13 P1C01 off-runner source asset Batch 02: Generated a second real project-owned procedural source pack on current `develop` without using Windows Runner. GitHub-hosted/local generation via `Scripts/generate_p1c01_source_asset_batch02.py` emits `SourceAssets/Production/World/Shire/Batch02OffRunner/P1C01_Batch02_SourceAssets.zip` containing 48 ASCII FBX static meshes and 16 PNG base-color textures for Bag End, Bag End Garden, Bagshot Row, Hobbiton, Party Field, Mill Bridge, Mill Pond, Bywater Road, Hobbiton Road, Wooded Road, Bucklebury Ferry, East Fields and Hobbiton Market dressing. The generated `Data/P1C01SourceAssetBatch02Manifest.json` records per-asset SHA256, target zone, material slot, dimensions/mesh counts, source license and explicit `Unreal import/world placement = PENDING`. Local validator opened the ZIP and passed `P1C01_SOURCE_ASSET_BATCH02_STATIC_PASS fbx=48 png=16 zones=13`. No `.uasset`, UE import, PIE, device, visual acceptance, FPS or Gate 6/7 closure is claimed.
-
-2026-10-12 P1C01 off-runner source asset Batch 01: Generated a real project-owned procedural source pack for P1C01 without using Windows Runner. `SourceAssets/Production/World/Shire/Batch01OffRunner/P1C01_Batch01_SourceAssets.zip` contains 36 ASCII FBX static meshes and 9 PNG base-color textures for Bag End, Hobbiton, Bagshot Row, Party Field, East Fields, Wooded Road, Mill Pond, Market and Bucklebury Ferry dressing. `Data/P1C01SourceAssetBatch01Manifest.json` records per-asset SHA256, target zone, material slot, dimensions/mesh counts, source license and explicit `Unreal import/world placement = PENDING`. Local validator opened the ZIP and passed `P1C01_SOURCE_ASSET_BATCH01_STATIC_PASS fbx=36 png=9 zones=10`; local `pre_unreal_validate.py` passed. No `.uasset`, UE import, PIE, device, visual acceptance, FPS or Gate 6/7 closure is claimed.
-
-2026-10-12 Cloud138 Windows warehouse runner blocker and recovery: develop PR #430 merged 9842ca5 with hosted static+Unreal exact-head validations green; first persistent transfer run 38294982859 failed before staging at Verify governor and persistent root because `pwsh: command not found` on self-hosted Windows machine. Fix candidate uses the installed Windows PowerShell (`shell: powershell`) on both Windows-only steps, preserving exact pinned artifact, SHA/CRC/UCX/LOD/provenance checks, one writer and source-only evidence boundary. Until repair run emits CLOUD_WHOLEGAME_PERSISTENT_WAREHOUSE_PASS and a persisted receipt, transferred file count for cloud138 remains 0 PROVEN. UE4 current-run evidence does not certify cloud138 import, PIE, device or visuals.
-
-2026-10-12 P1C01 / 28-region 138-FBX physical warehouse transfer candidate: Existing verified source Artifact 11767251532 from Run 38292163970, head 1e1e5c9, has 82 Shire FBX, 56 whole-game regional FBX and 36 existing packed PNG. New pinned single-writer Windows transfer workflow downloads the precise GitHub artifact, compares wrapper and inner SHA256, inspects 174 physical payloads and 3 source receipts, enforces FBX 7400/UCX/UV/LOD, region identity and PNG signatures, rejects unsafe ZIP membership, enforces reserve, writes atomically and rehashes persisted D: storage. Transfer is source-only: does NOT import .uasset into UE4, run PIE, profile target FPS, visually approve, or close P1C01 Gate6/7. This is source code CANDIDATE until hosted tests and actual Windows persistent receipt pass. No new physical FBX generated in this integration step.
-
-2026-10-12 DEC-109 / whole-game source candidate: Prior cloud Shire PR #428 produced 82 physically verified FBX, 28 more than prior 54. This candidate authors 28 original region support families x two LODs = 56 new FBX targeting +100% net-new throughput over the prior +28. Separate regional_meshes/ receipt, Blender reimport, UV, UCX and physical SHA256 integrity are mandatory. 36 existing packed PNGs reused without being counted as new. Preparation spans exactly the 28 canonical world packets, not final chapter runtime or hero landmarks; P1C02+ runtime remains gated. Source work and DEC-109 are candidates until exact-head checks pass. No new Warehouse persistence, UE import, PIE, device/FPS or visual approval.\n\n## 2026-10-12 - 82 Shire original FBX production candidate
-
-Expands source candidate from hosted-proven 54 FBX / 27 Shire families (Run 38288336015) to 41 families / 82 FBX (14 new families, 28 additional LOD files; 51.85% target increase in comparable source count). New original procedural static props: FerryQueueBench, ReedPlanter, OrchardCrate, MarketStall, MarketBasket, HerbDryingRack, RusticSign, GrainSackStack, WindowFlowerBox, GateLantern, BridgeRailing, GardenTrellis, FarmToolRack, PartyServingCounter. Blender binary 7400, reimport UV/UCX, SHA receipts and 28-region material assets remain gated by exact-head GitHub Actions. This is NOT proof of actual 82 physical FBX yet. No automatic Warehouse/UE world residency, PIE, device FPS or visual acceptance claim. Preserve single Warehouse/UE runtime writers and Gate6/7.
-
-
-## 2026-10-12 - DEC-108: accountable per-session growth and independent engineer judgement
-
-- Owner is an enjoyment-first player; independent Lead Architect makes and explains professional engineering choices (including polite disagreement), while owner retains product vision.
-- Each session reports exact baseline and new total, absolute change, comparable percentage, evidence/commit/PR/Actions, principal risk and recommended next high-player-value action. A +50% gain is a stretch target **only** for eligible, verified like-for-like production; missing baseline => N/A, no invented percentages.
-- Keep physical source-generated FBX/PNG/TGA, **unique persisted** warehouse, **persistent UE .uasset imported**, **actual world-placed**, and playable/PIE/device/visual evidence as separate funnels. Do not infer one from another or count duplicated ZIP source contents twice.
-- Prepare all 28 regions and P1C01-P1C08 through up to five safe parallel source lanes and one persistent warehouse writer, while one runtime writer remains on P1C01 until Gate6/7; future chapter preproduction is not runtime activation.
-- Baseline for the Cloud Shire source wave: PR #426 commit 407b35b, merged b309d149; hosted run 38288336015 generated and Blender-reimport-validated 54 binary FBX (27 families x 2 LOD), 36 PNG and an Actions artifact 11764013609 (9,841,895 wrapper bytes). 44 was the *previous authored target*, not proof of a previous comparable physically generated run. No warehouse/UE world/PIE/device/visual promotion from this receipt.
-- This policy-only change adds no game asset, importer, UE runtime or new CI workflow. Existing daily report remains; new **per-session** report is additional. Exact-head static CI is required before merging this candidate.
-
-**2026-10-12 P1C01 route/party/ferry closure pass (source candidate; exact-head checks pending):** Added a bounded `AShirePrototypeWorldBuilder::SpawnP1C01RoutePartyFerryClosurePass()` runtime layer after the chapter-finish world-art pass and before settlement completion. It adds five no-collision/no-Tick HISM clusters for Party Field boundary lanterns, outer seating, readable road-to-ferry markers, ferry queue rope posts and ferry-bank reed breakup, plus eight non-blocking route/party/ferry hero props. It reuses existing production meshes only, does not create a new asset/loading system, does not spawn NPCs, and keeps P1C02 runtime closed. This is not PIE, device, FPS or visual acceptance until Windows/Unreal evidence exists.
-
-**2026-10-12 P1C01 chapter-finish world art pass (source candidate; exact-head checks pending):** Added a bounded `AShirePrototypeWorldBuilder::SpawnP1C01ChapterFinishWorldArtPass()` runtime layer after the existing visual-finish pass and before settlement completion. It adds five no-collision/no-Tick HISM clusters for Bag End garden edges, Hobbiton yard flower boxes, worked-field fence rhythm, wooded-road understory and ferry landing reeds, plus ten non-blocking hero props around Bag End and the ferry. It reuses existing production meshes only, does not create a new asset/loading system, does not spawn NPCs, and keeps P1C02 runtime closed. This is not PIE, device, FPS or visual acceptance until Windows/Unreal evidence exists.
-
-**2026-10-12 P1C01 imported-tree runtime visibility evidence candidate (STATIC source preflight only; Windows exact-head pending):** Existing nine-family async HISM callback logs real per-family asset path, actually grounded instance count, missing/steep rejected traces and mesh material slot count. No new loading, instancing, authoring, NPC, quest or chapter authority, no extra workflow or per-Tick overhead. This closes an evidence blind spot, not the visual gate: real Unreal logs must prove loaded assets/placement; screenshots and human review still required. Existing regression updated; P1C01 Gate 6/7 remains open.
-
-**2026-10-12 game-wide owner-visible production pivot (policy candidate):** Adopt DEC-107 in Data/ProjectGovernor.json: prioritize imported rendered scenery, skeletal locomotion, playable quest/audio/save routes over speculative new CI/docs; up to five independent future-chapter asset/source prep lanes run concurrently while one Warehouse writer and P1C01-only runtime writer remain. Report's zero-FBX snapshot is older than Windows receipt with 34 FBX families/46 LOD/63 PNG/21 MI; actual in-world residency/material appearance, Frodo deformation, PIE, target-device and human visual remain unaccepted. Git ignores Content/Production/ .uasset, requiring persistence and packaging audit. PR #421 still pending Unreal tests. P1C02 runtime remains Gate6/7 predecessor-gated.
-
-**2026-10-12 P1C01 original-tree visual production candidate (STATIC-VALIDATED source only; UE4 Windows pending):** Extend the existing optional async-loaded original-Nature HISM world bridge from 5 ground-detail families (60 placements) to 9 families by adding the four previously source-curated/imported apple, elm, oak and willow FBX LOD0 meshes (8 placements each, maximum 92 total). Reuse three existing Shire route-area anchors per tree family, off-path ground traces, conservative height normalization and tree-specific distance culling. Missing .uasset packages safely skip, no hard reference/synchronous load, no new Tick, gameplay collision, NPC/quest/save ownership or P1C02 runtime. Update the existing runtime observation and regression, not a new workflow. Import receipts and code do not prove actual rendered trees, verified tree material slots, PIE, device FPS, visuals or Gate 6/7 acceptance.
-
-**2026-10-12 P1C01 multi-zone curated nature follow-through (candidate; Windows exact-head checks pending):** Five existing optional async-loaded non-colliding HISM nature families retain the shared maximum of 60 instances; the candidate distributes each family among three pre-existing Shire location anchors, rejects steep ground traces, counts missing/steep traces, and extends headless runtime evidence with the actual observed loaded-family/grounded-instance count or optional-package absence. Exact-head static test was wired to Pre-Unreal. No new mission/story authority, gameplay Tick, synchronous heavy loading, or P1C02 implementation. Package staging/PIE, target-device FPS, visual approval and Gate 6/7 remain pending.
-
-**2026-10-12 P1C01 in-world original mesh integration (new C++ candidate; COMPILE/PIE/DEVICE/visual pending):** After verified UE4.27 editor import 34 original mesh families, 46 sidecar LODs, 63 packed maps, 21 Material Instances and 7 nature single-slot bindings at Windows run 38228452433, the existing `AShirePrototypeWorldBuilder` requests five curated soft mesh paths using its own async `FStreamableManager`. It adds five capped non-colliding/no-Tick HISM groups at previously existing Shire anchors (12 placements per group, max 60), grounds them using actual world trace and normalizes bounds-based scale. Missing editor-only `.uasset` packages are entirely optional, never block chapter bank; pending request canceled at EndPlay. No changes to LivingWorldDirector, NPCContext, quest/save, or P1C02 Runtime. Flower multi-material unresolved; no guessed material overwrite. Static tests verify authored constraints but no world visual acceptance, 720p FPS, PIE, sound, NPC character completion, or Gate 6/7 evidence is claimed. Target exact head must pass UE4 C++ build and actual runtime placement audit.
-
-**2026-10-12 exact-head UE4.27 Run 38227642493:** 21 newly owned source-identity MaterialInstanceConstant assets with all 63 PBR texture overrides passed per-instance post-save readback, then the first `flower_wild` mesh failed because its real imported FBX has multiple material slots (not the assumed single slot). Do not blanket assign one material to the entire mesh. New scoped visual intake preserves all 34 authored LOD families/46 LOD sidecars/63 PNG/21 MI when material slot count is ambiguous, binds only truly single-slot surfaces or one exactly named source slot, emits a non-accepted `unresolved_nature_slot_observations` list and actual `nature_bound` vs `nature_held` counts. This allows truthful asset pipeline progress with isolated unresolved topology and no Gate 6/7 promotion. Windows exact-head and actual slot observation pending.
-
-**2026-10-12 P1C01 actual Unreal Python log Run 38226844047:** Commandlet entered (`P1C01_CURATED_EDITOR_PYTHON_ENTERED`) then falsely/actually rejected first texture setter: `P1C01_PBR_TEXTURE_PARAMETER_MISSING:...MI_Nature_T_Sh_Bark:AlbedoTexture`. Existing C++ verified master specifies exactly AlbedoTexture, NormalTexture, ORMTexture. Targeted remediation: check the real parent `get_texture_parameter_names`, refresh MI inheritance, set each override and judge by post-save `get_material_instance_texture_parameter_value` exact object identity, never setter bool alone; stop if stale master lacks authored parameter schema or any override is absent. Offline regressions cover setter False with applied value, absent value, stale master. No actual Windows material receipt, PIE, device or visual claim yet.
-
-**2026-10-12 actual Windows UE4.27 import test Run 38226032895:** Existing ShireProductionImport commandlet completed `537 files, 0 failures` (2 minor tangent/binormal warnings), but `UE4Editor-Cmd -ExecutePythonScript` produced no Python entry or post-import receipt; fail reported `P1C01_CURATED_EDITOR_POSTIMPORT_RECEIPT_MISSING`. Follow Epic UE4.27 headless API: `-run=pythonscript -script=<file>` with explicit authorized environment entrypoint, stdout/abslog and targeted failure tail. No 21 MI/46 LOD success is claimed until next exact-head Windows receipt; old `537` file count is the legacy commandlet import only, not PIE/visual/device/scene acceptance.
-
-**2026-10-12 UE4.27 MaterialInstanceConstantFactoryNew compatibility correction:** Epic's UE4.27 Python API does not expose `initial_parent` as an editor property on MaterialInstanceConstantFactoryNew. Do not write that unsupported property; create instance through the factory and call `unreal.MaterialEditingLibrary.set_material_instance_parent` (already supported and previously implemented). Offline mocked factory now rejects unsupported editor property setters to catch reintroduction. Exact-head Windows run, actual MI persisted bindings and visual/PIE/device proofs remain pending.
-
-**2026-10-12 P1C01 ten-source pinned-SHA intake integration:** Merge `develop@ddf2b89dd06fa10c276886b6792411bfbc62a950` (PR #418) into PR #415, keeping exact-head automatic curated UE4 writer. Ten-source Drive ingestion may use verified snapshot SHA256 when remote MD5 is unavailable. Original unlicensed source promotion, final UE import, PIE, visual and device acceptance remain gated by real evidence; the develop transfer Run 38225413271 was launched and its physical result must be read, not presumed.
-
-**2026-10-12 automated Windows/Drive dependency repair candidate:** Exact-head `fb6685a62edf178895f2713548ffcc143990fd36` Pre-Unreal and five-lane hosted PASS; Windows runner health PASS (interactive watchdog, disk 16.1GB). Actual automatic curated import FAILED `P1C01_CURATED_WAREHOUSE_ARCHIVE_MISSING` (run 38190185325). Scheduled Drive intake FAILED earlier `DRIVE_OBJECT_CHECKSUM_OR_PATH_INVALID` before transfer (run 38191426114). Targeted repair makes missing-MD5 ZIP candidates quarantined individually so one unrelated bad remote record cannot abort valid archive acquisition. Exact ten required source ZIPs, physical MD5/SHA/CRC, license, 6GiB reserve, and source-import Gate remain fail-closed. No manual dispatch, no bypass of engine or Gate 6/7 acceptance; fresh exact-head checks pending.
-
-**2026-10-12 P1C01 PR #415 owned-material post-import refinement (candidate, STATIC-VALIDATED pending fresh exact-head CI):** Reuse the existing editor-created `M_P1C01VerifiedPBR` master, create/update 21 source-identity MaterialInstanceConstant assets and set all 63 original BaseColor/NormalDX/ORM parameters. Only 8 named, source-owned single-slot Nature mesh families are eligible for deterministic binding; trees/architecture retain their slots pending verified multi-surface maps. Require actual .uasset package existence, registry identity, saved parent/parameter/slot verification; fail closed with no successful receipt for missing master, map, parameter, file or ambiguous slot. Editor-only/offline regression does NOT prove Windows UE4 import, world placement, collision/nav, PIE, 720p FPS, human visuals or Gate 6/7. 120 external PNG remain rights-held. The exact SHA and CI run evidence must be recorded after push; no automatic warehouse or engine dispatch.
-
-**2026-10-12 P1C01 curated editor Asset Registry fail-closed refinement (PR #415 candidate):** Both 34 base meshes and 63 owned PNG require EditorAssetLibrary registry visibility after editor save; missing registry objects abort without emitting acceptance receipt. Added offline regression. Exact-head engine import, real .uasset persistence, placed geometry, collisions/PIE/device/human visual remain pending.
-
-**2026-10-12 P1C01 curated original UE4 editor LOD+packed-texture bridge (ONE candidate wave; STATIC-VALIDATED ONLY):** 34 owned base FBX, 46 authored sidecar LODs and 63 owned PNG have a fail-closed ten-ZIP-Warehouse-QC -> pinned-stage-receipt -> existing ShireProductionImport -> UE4 EditorStaticMeshLibrary post-import pathway (Scripts/run_p1c01_curated_ue4.ps1). Six local offline mock tests passed; exact-head Pre-Unreal, UE4.27.2 compile/editor import, LOD/texture .uasset evidence, collision/nav, placement, PIE, package, target-device FPS and human visual approval are NOT established by this change. No outside PBR auto license promotion, no workflow auto dispatch. Gate 6/7 remains OPEN.
-
-**2026-10-12 P1C01 character/living-world reality boundary:** Project manager files now distinguish imported/headless-runtime-green Shire evidence from final character reality. Frodo remains a technical skeletal winner, not final visual runtime acceptance; Bilbo, Gandalf, Sam, Merry, Pippin and living-world schedule/dialogue/fauna behavior require dedicated runtime/PIE/device/visual proof before chapter closeout.\n\n**2026-10-12 P1C01 self-hosted UE4 import/runtime evidence recorded:** Workflow Run `38182847685` on commit `a101ee242cce0b33a1a92f0217d282236d6fc8db` completed the Windows self-hosted UE4.27 lane successfully: `Build ShireJourneyEditor`, `Import production assets in UE4.27.2`, Automation QA, playable startup smoke, chapter runtime audit, route/story state roundtrip, and warning-debt guard all succeeded. Import evidence includes `ShireProductionImport: 440 files, 0 failures`, 16 verified PBR material binds, 16 verified PBR import QC lines, 16 derived FBX working-copy lines, and zero warning debt for smoothing/tangents/world packages/defaultMat/NPC spawn collision. Windows package, PIE-specific traversal, target-device profiling, and human visual acceptance remain pending.\n\n**2026-10-12 whole-game region material readiness guard:** Added a GitHub-hosted audit for the 28 region production packets and current P1C01 curated source support. The guard verifies all region packets keep required deliverables/sourcing lanes, confirms the Shire/BAG_END source batch still has the expected foliage, surface, architecture, and nature LOD coverage, and preserves the rule that later runtime remains locked until P1C01 Gate 6/7 evidence exists.\n\n**2026-10-12 P1C01 curated import readiness guard:** Added a source-only audit for the curated Shire materials/mesh stage before Unreal promotion. It verifies the 34 mesh families, LOD sidecar rules, 21 BaseColor/NormalDX/ORM triplets, collision policy set, HISM nature candidates, and the 120 held external-license files so bad material/LOD preparation fails in GitHub-hosted checks before using the Windows runner. This does not claim UE import, PIE, device, or visual acceptance.\n\n**2026-10-12 UE4 compile fix for LivingWorld density fallback:** Self-hosted Run `38181832965` reached UE4.27 C++ build and failed in `LivingWorldDirector.cpp` because the new `BasePopulation*` fallback fields were mistakenly declared inside `FChapterPopulationProfile` rather than as `ALivingWorldDirector` members. This fix moves those fields to the actor member block and strengthens the static regression to reject the bad placement before another UE build.
-
-**2026-10-12 P1C01 integrated runtime regression batch:** Rebased the non-conflicting code fixes from open PR #400 and PR #401 onto current `develop`: LivingWorld density fallback now restores base global spawn/radius values when a chapter override is absent, and the headless `ShireCIRuntimeAudit` no longer hammers rejected automatic checkpoint retries while explicit disk roundtrip tests remain intact. Static regressions were added; exact-head UE4 compile/PIE remains pending manual workflow_dispatch evidence.
-
-**2026-10-12 offline restore quest-state sanitization fix:** Source audit found `UShireQuestSubsystem::RestoreQuestState` copied restored quest-stage and completed-story-beat collections directly after identity canonicalization. The fix now rebuilds restored quest stages from non-empty quest ids only, clamps negative stages to zero, rebuilds completed story beats from non-empty unique ids, and preserves the existing persistence-restore broadcast suppression. This is source/static validated only until the authorized UE4 build/PIE runner run proves compile and runtime behavior.
-
-**2026-10-12 P1C01 original source-to-UE4 staging candidate:** From the already-curated ten-Drive-ZIP batch, a strictly source-only tool prepares 34 original static FBX LOD0 families (12 nature, 22 architecture) plus 46 FBX LOD1/2 sidecars outside SourceAssets and 63 original PNG maps (21 BaseColor/NormalDX/ORM triplets). Source files and embedded manifest hashes are physically checked, fail-closed, path-safe, idempotent; third-party CC0-claimed 120 PNG are NOT auto-licensed or promoted. Eight logical asset/gameplay/QA workstreams run inside the existing authorized five producer lanes, not eight independent Windows writers. A 143-file source/sidecar stage was generated locally in ChatGPT container, and Python offline regressions passed; actual D: stage, UE import to .uasset, LOD binding, collision, NPC/gameplay, PIE, device, visual and Gate 6/7 acceptance remain UNPROVEN. New scheduled stage follows successful exact ten-ZIP Warehouse attestation without changing its concurrency/schedule/permissions or creating another persistent writer. Candidate requires exact-head Pre-Unreal/Drive CI.
-
-**2026-10-12 physical Shire source curation (LOCAL-CONTAINER ONLY; exact ten Drive ZIPs):** Independently downloaded 10 owner ZIPs totaling 206,148,715 bytes, validated entire on-disk ZIP SHA256/CRC and embedded per-file receipts, then curated 263 asset bindings into 230 SHA-unique physical files (80 binary FBX, 183 PNG bindings with 33 content aliases) from 12 nature families x3 LOD, 22 modular architecture families x2 LOD, 12 original regional PBR families, 4 priority Poly Haven PBR sets and 36 CC0-receipt PBR sets. Removed 36 duplicate binary FBX and 36 legacy ASCII FBX; held incomplete wooden_barrels_01 and a failing rig-weight candidate. Locally emitted SHIRE_P1C01_CURATED_SOURCE_20261012.zip (181,360,681 bytes; SHA256 e1fb6687cb047bbead4eea8d177f11fd75e368cce169a5c30e66fbf39ecfd79f) plus complete manifest, material contact sheet and separate rig-review archive. Six source-tool tests passed locally; Scripts/curate_p1c01_drive_source.py now reproduces a SHA-checked D: curated batch only after physical ten-ZIP QC, with 6GiB reserve and unchanged authorized scheduled trigger. This is NOT proof of D: transfer or Unreal import, LOD integration, collision, PIE, target FPS, human visual, or Gate 6/7; external licenses still require review.
-
-**2026-10-12 W01 source-only physical Warehouse QC candidate:** New Scripts/verify_drive_warehouse_receipts.py reads ten exact archived source SHA256 values from Data/DriveSourceLocalPreflight20261011.json, verifies every actual staged D: file SHA256 and computed MD5 against the transfer receipt, scans ZIP contents, exposes member-level FBX/PNG duplicate groups, quarantines ASCII FBX and incomplete provider material sets, and writes a read-only JSON source report with five explicitly blocked production waves. Integrated after the existing authorized Drive intake job, without changing its schedule/trigger/security identity, and with nine hosted regressions. Candidate status is STATIC-VALIDATED only after exact-head CI passes. No real new D: receipt, UE import, PIE/device/visual/performance or Gate 6/7 PASS claimed; licenses remain manual and import blocked.
-
-**2026-10-12 Drive runner PATH regression candidate:** Manual Drive workflow run `38176536748` reached self-hosted Windows `UE4-27-Windows` but transfer failed before any copy at `RCLONE_MISSING`, despite owner interactive rclone connectivity and configuration. Candidate refreshes persisted machine/user PATH inside the existing watchdog job, resolves `rclone.exe` and Python/py without installing or changing the runner, then passes explicit rclone executable path to the source-only ingest script. No successful physical transfer, ZIP receipt, Unreal import, PIE/device/visual or Gate 6/7 claim; preserve read-only Drive and fail-closed auth and deletion guards.
-
-**2026-10-11 P1C01 ten-bundle physical preflight (container, NOT Windows):** Retrieved all 10 owner Drive ZIPs into this session and audited 206,148,715 bytes; ZIP CRC/safe paths, source hash receipts, nested 28-region archive, FBX format and PNG headers passed 10/10. SHA-bound local receipt: `Data/DriveSourceLocalPreflight20261011.json`; permanent regression: `Scripts/validate_drive_source_bundles.py` + `Scripts/test_validate_drive_source_bundles.py` (8 offline tests passed). 36 binary Shire nature FBX are duplicated between two packages, distinct from the 36 old ASCII source FBX; modular nested pack contains 44 binary FBX and 36 PNG. Four Poly Haven shards contain 36 complete CC0-material triplets; `wooden_barrels_01` remained quarantined for MISSING_REQUIRED_MAPS. This is source-integrity evidence from ChatGPT container only, NOT a D: runner transfer, Unreal import, PIE, device test, visual approval or Gate 6/7 closure.
-
-**2026-10-11 PR #402 single warehouse writer safety correction:** Consolidated duplicate hourly/two-hour Drive jobs into a single scheduled source intake and receipt tree, added watchdog session verification, explicitly blocked unattended Drive deletions and tagged staged ZIPs as unverified for license/import. This is a source-only correction; no physical D: transfer, engine import or Gate 6/7 PASS is claimed.
-
-**2026-10-11 auto Drive warehouse candidate:** Added two-hour scheduled Windows source ZIP intake (Scripts/drive_warehouse_sync.py) and narrow exact-ID/hash/independent-backup/actual import-evidence cleanup. Uses isolated runner temp source and persistent D warehouse. One-time private rclone OAuth required; no first transfer, Unreal import or cleanup has been proven. Gate 6/7 unchanged. Hosted regressions pending.
-
-**2026-10-11 Automatic private Drive intake candidate:** Introduced `Scripts/sync_drive_warehouse.py` and `.github/workflows/private-drive-warehouse-intake.yml` on dedicated infra branch. Hourly self-hosted warehouse-only schedule, exact-SHA temporary checkout, persistent `D:\actions-runner\_warehouse\ShireJourney\_drive_intake`, immutable SHA256 receipts, Drive MD5 match, ZIP CRC and path-safety checks, minimum 6 GiB free. This **does not** make Drive credentials available on runner: requires separately configured `SHIRE_DRIVE_RCLONE_CONFIG_B64` and rclone executable with private `shire-drive:` root restricted to the authorized Drive folder. No Drive deletion is implemented or allowed until independent backup, local integrity and import/disposition proof; do not purge sole sources. Candidate only, no actual runner sync or static CI proof yet; P1C01 Engine gate unchanged.
-
-**2026-10-11 P1C01 save restore overlap trigger candidate:** UE runner #1969 observed P1C08 after-route-change restore fail (quest stages/story beats/NPC memory/route progress). Pre-commit overlapping trigger may mutate restored story while placement pending. Candidate sets pending saved-player transform before CommitPersistenceRestore and extends IsGameplayWorldCommitted guard. Source regression added; exact-head CI, UE transition audit and PIE remain pending. No Gate 6/7 promotion.
-
-**2026-10-11 offline quest stage idempotency/restore guard fix:** Source audit found `SetQuestStage` broadcast `OnQuestStageChanged` even when the requested stage already matched the stored stage, and did not suppress stage broadcasts during persistence restore while related StartQuest/StartChapter paths were already guarded. The setter is now idempotent and restore-suppressed, preventing duplicate trigger reevaluation and intermediate restore publication. Hosted regression added; UE/PIE validation remains pending runner evidence.\n\n**2026-10-11 offline NPC danger committed-context guard fix:** Source audit found `IsDangerStateActive()` could read raw quest state before any committed world context existed, allowing destination/future danger state to leak into world-facing NPC or ambience decisions. The function now fails closed until the router/NPC committed-context bridge has published visible world identity. Hosted regression added; UE/PIE validation remains pending runner evidence.\n\n**2026-10-11 offline NPC context teardown reset fix:** Source audit found `UShireNPCContextSubsystem::Deinitialize()` cleared loaded data but left committed world identity, quest snapshot, revision and weather state intact until object destruction. The subsystem now resets committed-context flags and weather before `Super::Deinitialize()`, preventing stale NPC dialogue/schedule context from surviving subsystem teardown, PIE restarts or world reinitialization. Hosted regression added; UE/PIE validation remains runner-gated.\n\n**2026-10-11 offline NPC committed-context zero revision fix:** Source audit found `UShireNPCContextSubsystem::SetCommittedWorldContext` rejected `WorldRevision == 0`, even though revision identity is an ordering token and commit validity is already carried by the explicit world-context call and non-empty chapter/route/episode. The guard now rejects only missing world identity, stores revision `0` when supplied, and then marks the context committed. Added hosted regression so first-run or rollback contexts cannot silently fall back to raw quest state. UE/PIE/device validation remains deferred.
-
-**2026-10-11 offline LivingWorld initial commit sync fix:** Source audit found that `ALivingWorldDirector` initialized `AppliedWorldRevision` to `0`, so an initial committed world with router revision `0` could skip `ResetForCurrentChapter()` and delay population/weather/profile setup until a later world transition. The director now starts with `MAX_uint32` as an unapplied sentinel and no longer assigns `ActiveChapterId` from raw quest state during `BeginPlay`; the active chapter is applied only after `AChapterWorldRouter::IsWorldCommitted(...)` confirms visible geometry. Added hosted static regression. Evidence target: GitHub-hosted Pre-Unreal/static only; UE compile/PIE/device/visual living-world acceptance remains deferred.
-
-**2026-10-11 offline stale asset-ready rollback fix:** Source-only runtime audit found a live-lock risk in `AChapterWorldRouter::HandleChapterAssetsReady`: if quest/save state changed while async chapter assets loaded, the handler returned without clearing `PendingChapter/Route/Episode` or releasing/rolling back the player world hold. Added a shared pending world transaction cleanup path, stale-ready rollback, and grounding-barrier timer cleanup. Evidence target: GitHub-hosted Pre-Unreal/static tests only; UE compile/PIE remains deferred in `Docs/DEFERRED_ENGINE_ACCEPTANCE_QUEUE_20261011.md` until owner authorizes the runner.
-
-2026-10-11 OFFLINE P1C01 DEFERRED RESTORE GUARD: ShirePlayerCharacter now blocks movement, jump, sprint, crouch, interaction, attack, supplies, QuickSave/QuickLoad and automatic checkpoint dispatch whenever bPendingSaveRestoreTransform is true. Camera look and cinematic skip remain available; no change to quest/world owner. Hosted source regression added. SOURCE CANDIDATE pending exact-head CI; not UE COMPILE/PIE/DEVICE/VISUAL accepted. Windows runner stays OFF.
-
-2026-10-11 P1C01 NO-GROUND SPAWN FALLBACK SOURCE PATCH: ChapterWorldRouter::MovePlayerToChapterStart previously performed SetActorLocationAndRotation(RequestedLocation,...) even after ResolveGroundedSpawnLocation failed. Now retains pawn's last position, sets world hold and returns false for existing transaction rollback to recover. Added test_no_ground_never_teleports_to_unvalidated_requested_location in hosted Scripts/test_offline_runtime_safety.py; existing Pre-Unreal wiring runs it. This is SOURCE PATCH PENDING EXACT HEAD STATIC VALIDATION only. No UE compile, PIE, DEVICE, VRAM or VISUAL evidence; Windows Self-Hosted Runner not activated.
-
-2026-10-11 OFFLINE P1C01 PLAYER RELIABILITY FIXES â€” SOURCE CANDIDATE (exact-head CI pending):
-- Automatic checkpoint dispatch no longer loses pending ID on failed request; pending restore transform blocks checkpoint snapshots, rejected saves retry no faster than once per second. Async disk success remains separate callback evidence.
-- ChapterWorldRouter now handles SetActorLocationAndRotation rejection on both save restore and chapter start: do not log PLACED or return true for rejected teleport.
-- Cinematicâ†’gameplay interrupts release presentation control lock immediately; Escape skips the active cinematic without mutating quest/canon state; pawn created mid-cinematic adopts active lock.
-- Async SFX/ambience/music/voice callback matches a monotonically increasing request token, preventing stale canceled callback claiming an identical newer cue key.
-- Self-hosted Unreal workflow is now manual opt-in only (workflow_dispatch run_self_hosted=true); Pre-Unreal/static and hosted classification remain automatic. Older already-queued runs have separate cancellation status and should not be assumed canceled until inspected.
-- Added Scripts/test_offline_runtime_safety.py and wired it plus test_pending_checkpoint_dispatch.py into hosted Pre-Unreal Validation. Source-level checks are NOT UE4.27 COMPILE, PIE, device FPS, imported assets or visual acceptance. Runtime P1C02 remains unopened.
-
-2026-10-11 P1C01 CHECKPOINT DISPATCH GUARD CANDIDATE: Repaired a provable source-level lost-checkpoint defect: Tick previously cleared PendingChapterCheckpointId before SaveAutomaticCheckpoint returned, while logging `commit-barrier=PASS` even on rejected dispatch. Now pending is cleared only if async/queued dispatch was accepted; disk-save completion remains callback-owned. Added Scripts/test_pending_checkpoint_dispatch.py regression guard and registered root cause in WORLD_DETAIL_LEDGER. Source-only candidate awaiting exact-head CI (STATIC-VALIDATED only after passing); no UE compile, PIE, device, FPS or visual acceptance. Windows self-hosted runner remains off.
-
-2026-10-11 Shire nature hosted Blender regression: exact-head Run 38150281161 FAILED in physical FBX export because Ubuntu Blender 4.0.2 FBX exporter raises `ModuleNotFoundError: No module named 'numpy'` (job 114502125020); source geometry execution reached exporter but zero validated binary FBX are credited. Updated hosted workflow to install `python3-numpy` beside Blender. New exact-head rerun required. No UE proof.
-
-2026-10-11 P1C01 Shire nature Blender production candidate: Added Tools/CloudAssetBuild/blender_nature.py and scheduled/PR hosted workflow p1c01-hosted-nature-lods.yml. Reuses twelve already defined nature families and produces 36 *proposed* binary FBX 7400 LOD0/1/2 with UV0, basic material slots, selective UCX trunk/rock collisions, Blender reimport and SHA256 receipts. No completed hosted run or new binary file may be credited before exact-head validation. Existing 27 PNG in Drive source batch are NOT republished by this workflow and require separate Unreal material binding. No Windows runner/UE4 compile/import/PIE/device/FPS/visual/Gate6/7 proof.
-
-2026-10-11 OWNER DRIVE TEMPORARY STAGING POLICY: Governor now defines private Google Drive as temporary staging only while laptop is off. Automatic Drive deletion is authorized ONLY for managed batches with physical local persistent copy and matching SHA256 plus transfer/import disposition receipt. No TTL deletion of sole copies, no deletion of unrelated owner files, no auto transfer claim until separate GitHub Actions OAuth/rclone credential is configured. No Windows self-hosted runner authorized. This is policy/STATIC-VALIDATED only; no live sync, transfer or deletion run evidence.
-
-**2026-10-11 licensed cloud stock intake candidate:** Existing 37 Poly Haven CC0 slug authority is now used to physically download/convert 1K BaseColor, NormalDX and packed ORM PNG files across four independent hosted shards; each shard writes SHA256/byte/provider URL/source receipt and quarantines missing maps without inventing assets. GitHub-hosted artifact stock is a temporary transfer source, not a permanent write to D:\\actions-runner\\_warehouse\\ShireJourney. 28-region packet index is available for reuse, but 28-region imported/rendered completion is NOT claimed. Local Pillow fixture regressions: 5 passed before GitHub candidate. GitHub exact-head production results pending. No owner Windows runner, no UE import, PIE, device, visual or Gate 6/7 acceptance. Runtime chapter remains P1C01 only.
-
-**2026-10-11 P1C01 Frodo hosted locomotion source candidate:** Registered in WORLD_DETAIL_LEDGER and added Tools/CloudAssetBuild/frodo_locomotion.py plus hosted-only p1c01-frodo-locomotion-hosted.yml. The candidate imports the provenance-checked CC0 Frodo normalized base FBX, drives bilateral deform limb rotations across original cyclic Idle/Walk/Run keyed actions, physically exports three binary skeletal animation FBX files and reimports to audit curve/key presence and SHA256. Source-only: no final Frodo visual likeness, UE import, UHT/compile, PIE, device, FPS, human visual acceptance or Gate 6/7 credit. Exact-head hosted CI evidence pending; Windows/self-hosted runner is not invoked. Existing async hero stream owner and pooled NPC ownership unchanged.
-
-**2026-10-11 P1C01 Blender thin-bevel geometry correction:** Exact-head hosted Run `38144899430` material tests and all physical 1K PNG source QC passed; GitHub Actions cache explicitly logged `Cache saved with key: p1c01-28region-original-materials-1k-v1-7a7920157b5d030369f21d7a2f85e6b86fa7209efb6242e7b506e6aeaddd812c`. The same run's FBX generator failed closed at `ValueError: DEGENERATE_FACE in SM_ShStonePath_LOD0` because the 0.018m edge bevel exceeded half the 0.025m stepping stone thickness. Universal root fix clamps each box's bevel to at most 16% of its thinnest dimension, with regression guard. No count credit for 44 FBX until the replacement exact-head Blender/validator job is SUCCESS. Frodo-hosted independent job again succeeded; owner self-hosted runner unchanged/off.
-
-**2026-10-11 P1C01 44-FBX wave static root correction:** Exact source head `48de633534bcb1c0f6ab5eb304256a7a0e7aa625` had hosted Pre-Unreal Run `38144645925` SUCCESS; hosted asset Run `38144645916` FAILED during Blender export after successful 36 1K PNG material generation and material hash/PNG QC. Log evidence: `KeyError: 'shire_earth'` in `blender_shire.py` PALETTE (a registration omission, not a broken source image). Fixed earth color registration and added Python-AST regression checking all literal primitive surface families against palette *before* Blender execution. Source cache now saves only hash-validated PBR immediately after QC, independently of subsequent FBX failure; cache entries must pass receipt/PNG/SHA validation at reuse. New exact-head cloud run required to credit 44 FBX, Bag End portal clearance and asset archive. Existing validated 20 FBX PR #384 remain unaffected. No Windows Runner, UE import, PIE/device/FPS/visual/Gate6/7 evidence.
-
-## 2026-10-11 â€” P1C01 real Bag End/Party Field architecture source wave, candidate
-
-- **Exact prior physical proof**: PR #384 merged into develop `338afbb8ae62d9bff48b65274aef6c8d270c3973`. Cloud physical Run `38143969791` SUCCESS on exact source SHA `c4cb4410bdbe7c71e34b27b6fdc6646e698969b0` with logs `SHIRE_BINARY_FBX_GENERATED assets=10 files=20 blender=4.0.2` and `CLOUD_ASSET_STATIC_VALIDATION_PASS materials=12 textures=36 region_bindings=28 binary_fbx=20`. Pre-Unreal Run `38143969807` SUCCESS. Source artifact `11703917651` (9,492,335 artifact bytes; internal ZIP 9,492,111 bytes; SHA256 `e6eaf5ceba4c86e3878948eda55eda6a339412f1e68023fd662df27c0d0c2658`), expires 2026-10-18. Frodo CC0 **base rig** prep SUCCESS with artifact `11703892613`; no final likeness/retarget.
-- **This separate active P1C01 physical production candidate** extends the existing modular static FBX generator (not Unreal runtime) from 10 to **22 original source mesh families / 44 binary FBX LOD0/LOD1**: BagEndFrontWall (separate portal blockers, walk-through gap), RoundRoomWallArc, RoundRoomFloor, Hearth, Bookcase, HobbitBed, WoodenFootbridge (separate walkway/rails), MillWheel (static-only source, rotation pending), PartyCanopy (open pole-only collision), StonePath, LanternPost, VillageWell. All are manually authored procedural DCC source parts, not film-exact replicas. Uses 36 original 1K PNG across 28 support-material region bindings unchanged. Blender 7400 binary export, real reimport and SHA256 proofs plus UCX AABB receipt and portal-clearance source guard. Material payload is now reusable via exact generator+regional packet SHA-bound GitHub-hosted cache; an unchanged cache must still pass complete file hash/PNG QC. All new physical outputs require *fresh exact-head hosted proof* and remain **pending until GitHub Actions success**.
-- **Movement/NPC/engine boundary**: These parts are modular source-only, not a collision-tested level. Source-space portal clearance check does not replace player/companion navigation PIE, real material/level import or ownership integration. NPC population remains owned by LivingWorldDirector, per-character context and schedules by ShireNPCContextSubsystem; only one runtime writer. No user Windows runner, heavy synchronous loads, 28-region Unreal import, true human visual/target FPS, or Gate6/7 acceptance claimed. P1C02 runtime stays gated; physical source for later regions may progress independently.
-
-## 2026-10-11 â€” REAL SOURCE DELIVERY #383 + Shire village-kit expansion candidate
-
-- **Delivered to hosted artifact on exact head (not Unreal):** PR #383 merge `8679c2f00e140d42f2ec8c9b2cf5863ba946bf1f`; Pre-Unreal `38143599104` SUCCESS; GitHub-hosted physical-source `38143599164` SUCCESS. 12 original reusable support families produced **36 actual PNG 1024px**, mapped to exactly the 28 IDs in `Data/WholeGameRegionProductionPacketsV1.json`. Blender 4.0.2 produced **8 binary FBX static assets** (4 families, LOD0+LOD1) and successfully re-imported/checked their meshes, UV, UCX colliders and SHA256 receipts. Actual source ZIP 9,332,298 bytes, SHA256 `a3e81ebc6b47c8b962d0de3be97df5b8785bcc8e72ce7b4489c462d444f0757c`; Actions artifact `11703677680`, retained through 2026-10-18. One original CC0 Frodo base rig source candidate passed hosted readiness (`HUMAN_WAVE2_HOSTED_PASS selected=1`, 89 deform bones, 1787/2229 weighted vertices); separate artifact `11703722494`. These are real physical source assets, **NOT Unreal imported**.
-- **This new source candidate expands P1C01 with 6 more original authored prop/foliage families:** RoundWindow, GardenHedge, OakTree, StorageBarrel, FarmGate, GardenPlanter; together 10 static models x 2 LOD = 20 FBX targets, keeping collision and UV static QC. The six are grounded in existing Hobbiton/Bag End domestic/cultural/settlement reference language, not claimed as film-exact replicas. Current expansion output / tests are pending exact-head hosted proof, and the first valid four families must not be re-labelled as an imported visual world.
-- **Critical separation:** No change to Unreal runtime, multiplayer, crowd lifecycle, interaction/canon lock, async residency, P1C02 gate or Windows self-hosted scheduling. A character source with a rig is **not** final Frodo appearance, animation, behavioral QA or accepted Shire chapter. 28-region material bindings are not 28-region Unreal material import; follow asset promotion gate when the owner runner returns. Next manual evidence: P1C01 current real import, character deformation/retarget, PIE, save/quest/npc, device 720p 30FPS, human visual/pacing Gate 6/7.
-
-**2026-10-11 cloud Blender FBX root fix:** Hosted Run `38143340309` generated and validated 36 physical 1024px PNG for 12 families / 28 region bindings but Blender 4.0 rejected the obsolete FBX operator argument `version=`. Static geometry construction succeeded only in memory; FBX receipts absent. Fix removes the argument, directly verifies binary FBX 7400 header version, and uses `--python-exit-code 3` so Blender script exceptions fail CI. Re-run exact-head required before counting binary FBX. No UE/PIE/device/visual acceptance.
-
-**2026-10-11 cloud source pipeline regression:** GitHub-hosted original PBR/FBX Run `38143197367` initially failed only in a brittle self-hosted exclusion *text* test (it matched a comment, not a runner label); separate hosted Frodo job SUCCESS and material numerical/PBR determinism tests 2/3 PASS. Narrowed regression to actual YAML runner declarations. Physical world FBX full-generation and import remain pending next exact-head run; no Windows runner was queued.
-
-**2026-10-11 SOURCE PRODUCTION CANDIDATE â€” P1C01 and whole-game PBR:** Added isolated cloud-only reproducible physical asset generators: 4 original Shire static prop families x 2 FBX LODs with UCX/UV QC, and 12 original 1K PBR-support material families x 3 PNG channels = 36 PNG, mapping to the exact 28 registered whole-game production packets. An optional hosted Frodo source factory reuses existing CC0 baseline with skin-readiness receipt; not a cinematic likeness or promoted runtime character. Artifacts must succeed on exact GitHub-hosted HEAD before any generated output may be counted. The Unreal build workflow ignores only `Tools/CloudAssetBuild/**` in both PR and develop path sets to prevent self-hosted runner booking for pure generators. No Unreal asset import, built scene, PIE, device, visual, FPS or Gate 6/7 evidence is claimed. New P1C02 runtime remains gated; 28-region imported status remains false.
-
-**2026-10-11 live recovery audit (source-only; PR candidate):** GitHub develop `86966cfde730a7e9b3432d73da46fc67995d6ba7` after PR #381; 31 refs / 13 open PRs at inspection. PR #380 head `9f5b6fd53d6c004bc728b479c46af680ea0d3b1f` remains open draft, diverged by one newer develop commit and merge-dirty; exact-head hosted Pre-Unreal Run `38141627675` SUCCESS but Unreal Run `38141627681` queued. No owner Windows runner was started or authorized by this wave. The only inspected zero-ahead noncanonical ref is `salvage/p1c01-fast-pie-ci-guard-20261011`; all other inspected working refs carry unique commits and are preserved. Eight Poly Haven CC0 P1C01 base-color Git-LFS pointer OIDs on `generated/p1c01-material-source-v1` match their source receipt; real LFS contents, image resolution, UE import and rendered quality remain unverified. See `Docs/RECOVERY_CHECKPOINT_2026-10-11.md`. No UE compile, PIE, FPS, device, human visual or Gate 6/7 acceptance implied.
-
-**2026-10-11 scoped fast-PIE salvage candidate:** Preserved three useful source files from PR #360: `SHIRE_FAST_PIE_PREVIEW.bat`, `Scripts/test_fast_pie_preview.py`, `Docs/FAST_PIE_PREVIEW_AND_PRODUCTION_SPEED.md`. No old workflow/authority files copied. This helper only launches an already-built local UE4 Editor; no automatic build, import, PIE session, FPS, device/visual/Gate 6/7 proof. Exact-head hosted CI pending; branch awaits merge.
-
-**2026-10-11 P1C01 Bag End hub source-only production candidate:** `Data/P1C01BagEndHubAssemblyV1.json` adds a detailed canonical interior assembly handoff (shell, domestic props, interactive anchors, audio/light), state variants, traversal/collision/streaming/NPC ownership contracts and five-lane item-level receipt tasks. No geometry generated, warehouse bytes acquired, Unreal import, compile, PIE, device, visual or Gate 6/7 proof; exact-head hosted validation pending. Existing P1C01 runtime scope unchanged.
-
-**2026-10-11 checkpoint reconciliation (candidate):** Live GitHub inventory observed 30 branches and 14 open PRs. Created `Docs/RECOVERY_CHECKPOINT_2026-10-11.md` on branch `ops/checkpoint-branch-reconciliation-20261011`; compared #366 (2 ahead/41 behind), #367 (1 ahead/41 behind), #374 (4 ahead/19 behind), and older checkpoint recovery (1 ahead/97 behind) against develop. All divergent: preserve pending selective salvage and exact-head checks. No PR merged, branch deleted, UE compile, PIE, device, FPS, visual or Gate 6/7 proof from this checkpoint. This is repository-source documentation only, pending exact-head static CI.
-
-**PG-170 contract alignment (2026-10-11):** exact-head Pre-Unreal `38135715043` FAILED at outdated static assertions for legacy `$_` PR-row dereference. The *real* PowerShell array decoder regressions passed (flat=2, nested=2, single=1, empty=0). `Scripts/pre_unreal_validate.py` now checks the actual `$row` guards and `Get-OpenPullRefs` reuse rather than prior variable spelling. New exact-head hosted CI pending; no engine/PIE/device evidence.
-
-## 2026-10-11 â€” Branch Cleanup live-open-PR array decoder regression (candidate)
-
-- Investigated hosted cleanup run `38135341955` after successful reviewed retirement. The run logged `activePrHeads=0` even though GitHub had open PRs. Exact per-branch rechecks and nonzero-ahead fallback preserved unique heads in that run, but bulk PR protection was not reliably visible.
-- Root-cause mitigation: normalize both flat and nested Windows PowerShell `Invoke-RestMethod` PR JSON arrays with `Get-OpenPullRefs`; use the same normalizer for the initial active-head set and exact per-branch recheck. Preserve fail-closed SHA lease, closed/replacement-PR proof, archive/Edoras protections and zero-ahead policy unchanged.
-- Hosted PowerShell classifier regression now executes the actual helper against flat/two-level/single/empty PR samples. **Evidence status:** source candidate pending exact-head Pre-Unreal/Five-Lane; previous #373 branch deletion remains proven at `38135341955`. No UE compile, FBX import, PIE, device, FPS, visual, or Gate 6/7 claim.
-
-## 2026-10-11 â€” Post-#372 reviewed stale-ref retirement (PR candidate)
-
-- **Policy:** DEC-106 reconciled after merged PR #372 (merge `a004d47b6c7d4681a328d88a12fc5de4819e1f11`) with exact-head GitHub-hosted Pre-Unreal SUCCESS `38134887589` and Five-Lane SUCCESS `38134887757`. Classified **STATIC-VALIDATED**. All WindowsNoEditor packages remain owner-requested chapter/release closeout only; engine compile/PIE/device/visual/Gate6/7 remains unproven.
-- **Branch reviewed for retirement:** `policy/cloud-first-no-routine-windows-package-20261011`, exact SHA `5ccc60523247138e324887929b6b8f1c85db0931`, closed/unmerged PR #369. Unique delta contains four policy/docs files; policy intent superseded by merged PR #372, not by a claim of identical Git ancestry.
-- **Safety implementation:** `Data/BranchCleanupPlan.json` registers this exact ref/SHA, closed PR, replacement PR+merge. `Scripts/run_branch_cleanup.ps1` now fail-closes on moved SHA, active PR, missing replacement, missing merge ancestry, unknown unique refs and uses atomic Git `--force-with-lease` for both explicit and PR-head retirement.
-- **Remaining branch rule:** every other inspected noncanonical branch still has unique commits vs develop. Preserve FBX/Tangents/Skeletal/PBR/preview/generated material/Edoras candidates until selective reconciliation and proof. Do not delete by age or branch title.
-- **Current evidence boundary:** branch #369 cleanup is *authorized pending a successful hosted PR and actual cleanup log/ref-not-found proof*; no remote deletion or performance/visual acceptance claimed by this entry.
-
-**PG-145 static regression correction (2026-10-11):** Exact-head Pre-Unreal run `38134722720` failed only at the outdated hosted Unreal guard token `needs.classify.outputs.mode != 'inherit'`, after real classifier cases and packaging contract had already passed. Replaced that old expectation with explicit `full/core/acceptance/package` selection markers and added `Scripts/pre_unreal_validate.py` to the narrow hosted-only policy allowlist. Five-Lane run `38134722700` SUCCESS on previous head; new exact-head preflight remains pending. This is a CI test-contract fix, NOT real UE compile, PIE, device or chapter acceptance.
-
-## 2026-10-11 â€” Manual-only Windows packaging + hosted policy regression (PR candidate)
-
-- DEC-106 production implementation on current develop after PR #370: `workflow_dispatch package_windows=true` exclusively enables WindowsNoEditor Cook, data proof, packaged startup, hardware capture and large artifact upload. Config/Build.cs/unknown/failed-classifier paths still take the appropriate UE compile/import/runtime lane when the owner runner is available, but never cause a routine package.
-- Narrow exact-path-only `static` classification for governance/classifier workflow/Docs updates runs the real PowerShell classifier regression on GitHub-hosted Windows without reserving the owner's UE runner or implying an inherited Unreal build proof. Acceptance-only changes without packaged-startup resume also stay on hosted-only classification.
-- Regression covers real Set-Mode output across pull request, default manual dispatch and explicitly requested chapter package; config/unknown/no-proof cases remain strictly classified. Governor and MaximumSafeMode updated together; P1C01 runtime scope and Gate 6/7 unchanged.
-- Dedicated P1C01 Verified PBR workflow was a separate hidden duplicate self-hosted PR trigger. It is now manual `workflow_dispatch` only; optional `package_windows` defaults false, and cook, data/startup checks and artifact upload require true. The actual FBX import/UE QA remains available on deliberate dispatch; no import evidence is invented.
-- **Evidence boundary:** Source policy candidate. Exact-head hosted CI results pending; no new UE4 compile, FBX import, PIE, device FPS, visual acceptance, Windows package, or Gate 6/7 credit.
-
-## 2026-10-11 â€” #365 CI regression correction (candidate)
-
-- Exact-head Pre-Unreal #38102533805 failed in two source contract assertions: one obsolete manual-only trigger expectation and one new test using literal escaped newlines. The dedicated PBR lane intentionally runs on PR but never cooks/packages except manual dispatch. Corrected assertions and tightened package gates; requires new exact-head CI success. No runtime/device/visual acceptance.
-
-## 2026-10-11 â€” P1C01 verified PBR importer integration on PR #365 (candidate)
-
-- Physical Blender FBX normalization from #355 is forward-ported into the active #365 source stage: copied from `Saved/P1C01NormalizedFBX` into ignored `Saved/ShireProductionImportWorking` only; tracked warehouse FBX is never altered. The commandlet rejects missing derivative receipt, malformed source layout, or missing derived FBX.
-- Existing real UE4 material-slot/Asset Registry checks, /Game/Production packages, and chapter async world bank remain the activation authority. Exact hash validation runs in the dedicated workflow before the UE import commandlet; source-only/mocked tests do not claim imported geometry.
-- FBX normalizer no longer welds coincident vertices across valid UV/hard-normal seams. Cache keys include exact original FBX hashes, normalization scripts and installed Blender version; a cache hit still runs receipt/SHA256 verification. Normalized/reused totals are logged.
-- Dedicated PBR PR pipeline stages 16 sourced FBX, runs Blender, imports into UE4, audits materials and tests headless Shire placement. Windows package/upload is excluded from PR and develop push; final package requires explicit dispatch. Classifier treats named PBR toolchain changes as engine-impacting but not Windows-packaging-critical; unknown paths still fail closed.
-- Evidence: PR #365 previous source-only head `90e69e6a` passed Pre-Unreal run `38102045664`. **These NEW importer/workflow edits require fresh exact-head Pre-Unreal and UE/PBR proof.** No PIE, device, visual, actual FPS, Gate 6/7 acceptance or 17-warning elimination is claimed; do not open P1C02 Runtime. $8 Actions ceiling unchanged.
-
-## 2026-10-11 â€” P1C01 derived FBX hash-cache tooling candidate
-
-- Forward-ported the verified Blender normalization script and SHA256-bound derived-FBX preflight from PR #355 onto current develop as a source-only integration candidate, with exact-head Pre-Unreal regression. This does NOT activate new runtime assets, modify the actual UE importer, or solve all 17 smoothing warnings on develop. Original CC0 FBX is immutable; generated derivatives live in ignored Saved/. The importer overlay/physical UE binding, PIE, device 30 FPS, full playthrough and Gate6/7 remain unaccepted. Windows packaging is not requested; preserve DEC-106 and $8 CI budget ceiling.
-
-## 2026-10-11 â€” Whole-game regional CC0 material receipt cache correction (candidate)
-
-- Root cause: `stage_ambientcg_warehouse.ps1` reused a previously green batch receipt based on batch ID and stored ZIP hashes alone. An edited region/query/quality manifest with the SAME batch ID could silently skip the new source intake, preventing material updates across the authorized whole-game region preparation. The repair writes `manifest_sha256` to new receipts and requires an exact manifest hash match for early reuse; legacy receipts fail closed and are re-evaluated without destroying valid cached ZIP bytes. Even `-Refresh` now keeps structurally valid archives rather than automatically deleting them. Existing SHA256/ZIP/disk reserve/CC0 checks and single warehouse writer remain active. A network-free PowerShell regression exercises unchanged, changed and legacy receipts with a real temporary ZIP, and checks that invalidating a receipt does not delete the archive. This is source-only preproduction for the existing 28-region packet set (Shire included), not proof of importing materials into 27 other runtime regions. Pre-Unreal and exact-head evidence pending; no Unreal/PIE/device/visual or Gate6/7 acceptance. User GitHub Actions budget ceiling $8 is unchanged.
-
-## 2026-10-11 â€” DEC-106 whole-game Windows package cadence (CI candidate)
-
-- Owner explicitly wants nonessential repeated engine checks minimized across the **entire Shire Journey game**, not P1C01 only; heavy Windows Cook/Package/WindowsNoEditor artifact upload should normally happen at chapter completion/release, not each source/asset/editing checkpoint. Sole authority is `Data/ProjectGovernor.json` DEC-106 and `chapter_closeout_package_policy_2026_10_11`, linked to REQ-PROD-011.
-- Real prior UE CI log #1884 recorded `W00_PACKAGE_PASS elapsedSeconds=211` and Windows candidate upload ~144 s for 332276215 bytes. These are existing reference costs, NOT a measured speedup.
-- `Scripts/classify_unreal_validation.ps1` now emits `package=true/false` independently from `full/core/asset/acceptance`. `.github/workflows/unreal-build-validation.yml` consumes that output for cook, packaged JSON, packaged executable startup and upload. Explicit `workflow_dispatch` `package_windows=true` forces full exact-head build + packaging. The standard full-mode fallback for changed game runtime/source **does not package** when the changed path is already known as non-packaging-impacting.
-- Packaging-critical `Config/**`, Build.cs/Target.cs, streaming bank, Cook/Package/Release and unknown potentially impacting paths still require full package proof immediately; package/startup validator changes require package proof unless safe same-content proof can be inherited. Startup-only retesting does not redundantly upload a large package.
-- `Scripts/test_unreal_classifier.ps1` includes whole-game example cases covering safe known runtime changes, no-proof fallback, manual closeout, config/streaming, package-tool changes, and unknown paths. Docs/Gates updated without changing code gameplay, canon, memory or renderer. No second Governor authority file.
-- This CI change is **SOURCE CANDIDATE / STATIC CHECKS PENDING** until exact-head Pre-Unreal / classifier regressions and real runner classifications. No UE4 compile, package, PIE, DEVICE, VISUAL, FPS or Gate 6/7 credit for this branch. P1C01 is still the sole active runtime chapter; future chapters need their own acceptance evidence.
-
-## 2026-10-11 â€” P1C01 GitHub Actions de-duplication and artifact transfer efficiency (candidate)
-
-- Owner-requested CI throughput repair, no new chapter/gameplay feature. The generic `.github/workflows/unreal-build-validation.yml` already covers affected UE runtime source paths; the specialized `.github/workflows/p1c01-verified-pbr-production.yml` also auto-ran on `develop` changes to the Shire world builder/import commandlet/bridge, risking a second compile/import/cook/package on the same limited Windows self-hosted runner.
-- The specialized 99-source Verified PBR import/package workflow is now `workflow_dispatch` only: it remains available for deliberate P1C01 visual asset promotion with checksum receipts, FBX/PNG source staging, actual UE4 import, material-slot/runtime-presence tests, save/route verification, cook/package and executable startup. This is not permission to bypass its evidence when promoting Verified PBR visuals or making Gate 6/7 claims.
-- `actions/upload-artifact@v4` in that manual packaged binary lane now uses `compression-level: 0`, matching the existing general Unreal package artifact optimization to reduce compression CPU time; upload/network speed improvement is not yet measured.
-- Added `Scripts/test_p1c01_verified_pbr_bridge.py` regression to ensure dispatch-only trigger, upload setting, and retention of import/runtime checks. The static test path is excluded from both general Unreal push/PR triggers and remains covered by Pre-Unreal Validation.
-- Source/CI-config review only so far. Exact-head Pre-Unreal, fresh UE workflow behavior, transfer benchmarks, PIE, target-device, visual acceptance, FPS and Gate 6/7 evidence are **pending**. Existing compile/runtime acceptance is not inherited across this change until verified by the project's proof classifier.
-
-## 2026-10-11 â€” Root-cause repair of local PIE classifier (PR #359)
-
-- Pre-Unreal Run #38093231196 failed `pie-preview-safe-with-proof: expected inherit, got full`: the two exact paths appeared only in the transitive core-proof allowlist, not in the main `$safeExact` set used by `$fullImpact`. Add them to the actual exact-path classifier and cover lookalike names, mixed runtime and Config changes in the real classifier regression. Parent engine proof remains mandatory, otherwise full validation. PR #358's actual preview command/test still requires exact-head static execution prior to merging. Candidate awaiting CI; no new Unreal/PIE/device/visual/FPS acceptance.
-
-## 2026-10-11 â€” Fix redundant full UE builds for local PIE launcher tooling
-
-- GitHub runner #38092759311 classified the new `SHIRE_FAST_PIE_PREVIEW.bat` and `Scripts/test_fast_pie_preview.py` as `FULL_UNREAL_FILE`, triggering an expensive full Unreal lane despite being a launcher/static-test-only change. On top of merged PR #357, the classifier now explicitly recognizes only those two audited source paths as safe source/tooling inputs and inherits engine proof solely when the parent already has a successful, matching whole Unreal workflow; otherwise it falls back to full validation. Two regression tests cover green-parent and no-proof. This does not remove the real P1C01 PBR import/automation/device Gate 6/7 nor claim PIE or new game visuals.
-
-## 2026-10-11 â€” Target-device acceptance-only CI fast lane (candidate)
-
-- Follow owner minimum-administration policy: classify `Scripts/evaluate_p1c01_gate67_evidence.py` as an acceptance-only change, not a blanket Unreal runtime/config/package change. The real Unreal classifier in PR #356 logged `INCREMENTAL_SOURCE_ONLY_BLOCKED file=Scripts/evaluate_p1c01_gate67_evidence.py` and `UNREAL_VALIDATION_DECISION mode=full ... reason=engine-runtime-config-or-unclassified-delta` on Run #38091586642. This change does not grant a general bypass: acceptance mode requires existing green parent core engine evidence, otherwise remains full/fail-closed; P1C01 import, C++ and Windows runtime changes continue normal gates. Added classifier cases for parent proof and absent proof. No UE/PIE/device/visual acceptance from this source change.
-
-## 2026-10-11 â€” Owner accelerated intake / large chapter batch (POLICY ONLY)
-
-- Registered Owner Fast Batch Intake in the sole Governor: permit lawful source-format intake and automatic correction/conversion with minimal administrative review, reuse intact receipts, targeted changed-input checks, dynamic large P1C01 integration waves and five preparation lanes. No actual asset imported, runtime code changed, Unreal build executed, or Gate 6/7 closed in this policy candidate. PR #352 Blender/PBR work stays independent; do not cancel live workflows. P1C02 remains closed.
-
-## 2026-10-10 â€” Owner living social landscape standard, Shire-first / all regions (design requirement)
-
-- Documented the owner-requested living-social-landscape production standard for Hobbiton and the other 28 planned regions as design/acceptance criteria in the existing Governor REQ-WORLD-001, Living World blueprint/feature plan, and WORLD_DETAIL_LEDGER. No runtime changes, source downloads, new chapter unlock, PIE/device/visual acceptance or FPS evidence. Independent preparatory work remains eligible under DEC-104, while P1C01 Runtime warning debt / material-slot proof are blocked pending actual repair and green checks.
-
-
-## 2026-10-10 â€” Whole-game character CC0 source candidate research (preparation only)
-
-- Created `Data/WholeGameCharacterSourceCandidates20261010.json` with Quaternius Modular Fantasy Outfits, Quaternius RPG Characters and Blender Human Base Meshes candidate sources for visual/rig research across the 28-region production scope. This is source-discovery metadata only: license-per-download, exact format, SHA256, rig compatibility, proportions, LODs and render/art acceptance are pending. No files downloaded to persistent warehouse, no Unreal import, no new runtime chapter, no P1C01 Gate 6/7 credit.
-- Continue only within existing Governor-approved P1C01-first runtime + independent whole-game asset preparation policy. One warehouse writer, no duplicate downloads; no generic third-party mesh is accepted as a named Tolkien hero without original character-specific art and canon review.
-
-## 2026-10-10 â€” actual ambientCG warehouse result and Frodo gate integration
-
-- Whole-game warehouse Run #38057877090 on develop source head a50e117259c3f5b779af67adad9ec8f5855e139c COMPLETED SUCCESS: AMBIENTCG_WAREHOUSE_STAGE_PASS files=22 skipped=24 bytes=1178435662; REGION_SOURCE_RECEIPT_AUDIT_PASS files=22 skipped=24 reserve=175388110848. Licensed hashed source-only; not UE-imported.
-- Frodo technical deformation PR #346 merged to develop as 3b20cac4d01d1b7cf05581b211f4f88f510a2c54 after exact-head Pre #38058581392, Unreal #38058581341, and Human Wave2 #38058581318 all SUCCESS. Old PR #340/#343 closed. Real character locomotion/visual/PIE/device/Gate 6/7 not accepted.
-
-## 2026-10-10 â€” P1C01 actual PBR UE import and package-manifest mismatch correction (candidate)
-
-- Strict review found that `p1c01_verified_pbr_bridge.py` appended imported soft PBR meshes to the active P1C01 bank but retained stale `audit.total_unique_production_packages` and `audit.chapter_bank_asset_counts.P1C01`. The existing Windows package preflight requires those counts to match real unique packages and would fail after a successful UE import. Recompute both from actual bank contents only after successful asset package existence gates, preserving exact source and save/streaming ownership.
-- Existing `verify_verified_shire_import.py` targeted an unused receipt name and absent log marker, allowing no real all-selected material-slot proof. Repair it to require `source_stage_receipt.json`, nonempty current `CI-ProductionAssetImport.log`, every selected static FBX and material `.uasset`, and the importer `P1C01_VERIFIED_PBR_IMPORT_QC` marker per exact slug/material. Fail before runtime activation if even one is unbound. Add offline negative/positive regression cases; retain headless `P1C01_PBR_DECOR_RUNTIME` gate.
-- Candidate code queued behind the already in-progress exact-head Unreal run to avoid canceling a costly build under REQ-PROD-011. New commit/CI and actual UE import, packaging, PIE/device/visual/30FPS Gate 6/7 acceptance remain separate evidence, not implied.
-
-## 2026-10-10 â€” P1C01 real-runtime imported PBR presence gate (candidate)
-
-- An engine build, .uasset existence and successful generic startup do not establish that Shire's verified PBR objects are resident and placed. Add `Scripts/verify_p1c01_pbr_runtime.py` to the existing one-writer PBR workflow after P1C01 headless startup and before packaging; it fail-closes on missing log, missing soft bank entries, unauthorized accent inventory, zero/partial placement or omits. Existing `P1C01_PBR_DECOR_RUNTIME` log is the physical assertion, not a fabricated visual screenshot. Offline negative tests added to the current exact-head PBR bridge suite. Fresh CI and true UE import/placement evidence PENDING. No PIE, device, visual or Gate 6/7 acceptance.
-
-## 2026-10-10 â€” P1C01 import PG-169 regression repair
-
-- Exact-head Pre-Unreal #38052565591 FAILED at Validate project structure: `PG-169 C3 implementation invariant missing: DesiredMaterialParent = ProductionMaterialParent`. Root cause is the verified PBR material parent ternary replacing an existing strict foliage-parent invariant. Replaced ternary with the approved default parent assignment plus an explicit PBR-only override, preserving foliage inheritance. Regression rerun pending on new candidate HEAD. No new UE/PIE/device/visual acceptance from this change.
-
-## 2026-10-10 â€” P1C01 source-to-visible UE4 PBR bridge production (candidate)
-
-- Reuse two immutable Poly Haven CC0 39/60 source waves, validate SHA256 original receipts and per-file hashes, choose at most 16 qualified single-material **static FBX** props within a 144 MiB source cap; imported textures are 1K PNG. Quarantine/hold, oversized, unknown-multi-material, and unsupported files are not promoted. No new source-provider downloads.
-- Scripts/p1c01_verified_pbr_bridge.py stages ignored generated source assets into SourceAssets/Production/World/Shire/VerifiedPBR; the existing UE4.27.2 importer synthesizes a material instance and now fails on missing/wrong single-material slots and invalid mesh geometry. Only after .uasset files exist does the bridge append soft paths to the existing P1C01 async bank and materialize Data/P1C01VerifiedWorldDecor.json.
-- AShirePrototypeWorldBuilder renders up to 16 small world accents from resident soft objects without collision, actor ticking, extra NPC ownership, canonical route transforms or new chapters. Verified subset source maps include BaseColor, NormalDX and packed ORM; BaseColor, tangent NormalDX and packed ORM wiring is present in source; actual UE import and visual shader fidelity require evidence.
-- .github/workflows/p1c01-verified-pbr-production.yml schedules real UE editor build, source import, uasset verification, Automation, startup, chapter/save round-trip, compressed Windows package and packaged startup before uploading a test build. This workflow is not a five-lane read-only report.
-- All evidence **PENDING exact-head CI and runner execution**; no PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, 30 FPS, or Gate6/7 claims. No move to P1C02 runtime.
-
-## 2026-10-10 â€” P1C01 physical CC0 PBR-to-UE4 visual production bridge (candidate, evidence pending)
-
-- Manager authority: DEC-078/104/105, REQ-PROD-011, W01/P1C01 only. Actual persistent warehouse Run #38049193046 completed SUCCESS, providing immutable 39+60 source and 39+59 prepared PBR files; this is source storage evidence, not engine/render evidence.
-- This PR adds an exact SHA256 checked, bounded (up to 16 static assets / 144 MiB) source bridge from the persistent two-wave CC0 warehouse into the existing `SourceAssets/Production/World/Shire/VerifiedPBR` importer. Reject held-identity, held-biome, corrupted, multimap/multi-material and non-Shire/unrelated candidates. Avoid provider redownload, hard runtime references and any character FBX.
-- Unreal importer now binds verified single-material FBX to a real PBR master: BaseColor + tangent-space NormalDX + packed ORM (ambient occlusion R, roughness G, metallic B), with non-sRGB packed/normal imports. Preserve existing OBJ asset bank unchanged.
-- Existing `UShireChapterAssetStreamingSubsystem` preloads selected soft paths via `Data/ChapterAssetStreamingPlan.json`. Existing `AShirePrototypeWorldBuilder` adds at most 16 optional, non-colliding, low-shadow static decorative pieces after world commit and never synchronously loads meshes. Canonical route/story/quest ownership and actor pooling remain unchanged.
-- A dedicated GitHub-hosted offline source test + serialized Windows UE4.27.2 workflow runs actual source stage, editor build, production import, `.uasset` presence, automation, startup, all chapters, state persistence, warning guard, cook and packaged startup. Only success can publish a playable Windows **test candidate**. The new visual packet is NOT declared PIE, device, human visual or Gate 6/7 accepted.
-- Until exact-head tests run, this is a source implementation candidate. Fix compile/import/runtime failures on this same PR before merge; avoid new feature lanes until machine-green. No final Windows release requested.
-
-## 2026-10-10 â€” avoid pointless Unreal recompiles for standalone warehouse regression tests (candidate)
-
-- `Scripts/test_warehouse_provider_zero_payload_fail_closed.ps1` is a network-free provider/ambientCG guard, not Runtime code. Its new source-only checks should run in Pre-Unreal without reserving the one UE4.27 machine. Add the explicit test script to both push/PR Unreal-workflow paths-ignore lists; the existing `Scripts/stage_*warehouse*.ps1` rule already excludes the warehouse adapter. Actual P1C01 runtime work remains on its own exact-head UE gate. No compile claim for this candidate.
-
-## 2026-10-10 â€” ambientCG cross-lane duplicate download regression guard (candidate)
-
-- Observed live warehouse #38057877090 SUCCESS: `AMBIENTCG_WAREHOUSE_STAGE_PASS files=22 skipped=24 bytes=1178435662`, `REGION_SOURCE_RECEIPT_AUDIT_PASS files=22 skipped=24 reserve=175388110848`. These are actual SHA256-audited source-only bytes, not Unreal imports.
-- Root-cause in `Scripts/stage_ambientcg_warehouse.ps1`: ten regional material queries can return the same provider asset ID. Run logs show repeated downloads of Rock064, Ground111 and PavingStones151; prior script only guarded identical destination paths and did not deduplicate across category folders. Add accepted-ID set updated ONLY after successful source SHA256 receipt; skip later duplicate IDs before network requests. Byte-cap failure must not remove previously valid cached archive; do not trigger or repeat the completed batch. Existing Quaternius zero-payload Pre-Unreal step also checks the ambientCG dedup code order offline.
-- Candidate until exact-head preflight. One persistent warehouse writer and 6 GiB reserve retained. No P1C01 runtime change, PIE, target-device FPS, visual or Gate6/7 credit.
-
-## 2026-10-10 â€” avoid pointless Unreal recompiles for standalone warehouse regression tests (candidate)
-
-- `Scripts/test_warehouse_provider_zero_payload_fail_closed.ps1` is a network-free provider/ambientCG guard, not Runtime code. Its new source-only checks should run in Pre-Unreal without reserving the one UE4.27 machine. Add the explicit test script to both push/PR Unreal-workflow paths-ignore lists; the existing `Scripts/stage_*warehouse*.ps1` rule already excludes the warehouse adapter. Actual P1C01 runtime work remains on its own exact-head UE gate. No compile claim for this candidate.
-
-## 2026-10-10 â€” ambientCG cross-lane duplicate download regression guard (candidate)
-
-- Observed live warehouse #38057877090 SUCCESS: `AMBIENTCG_WAREHOUSE_STAGE_PASS files=22 skipped=24 bytes=1178435662`, `REGION_SOURCE_RECEIPT_AUDIT_PASS files=22 skipped=24 reserve=175388110848`. These are actual SHA256-audited source-only bytes, not Unreal imports.
-- Root-cause in `Scripts/stage_ambientcg_warehouse.ps1`: ten regional material queries can return the same provider asset ID. Run logs show repeated downloads of Rock064, Ground111 and PavingStones151; prior script only guarded identical destination paths and did not deduplicate across category folders. Add accepted-ID set updated ONLY after successful source SHA256 receipt; skip later duplicate IDs before network requests. Byte-cap failure must not remove previously valid cached archive; do not trigger or repeat the completed batch. Existing Quaternius zero-payload Pre-Unreal step also checks the ambientCG dedup code order offline.
-- Candidate until exact-head preflight. One persistent warehouse writer and 6 GiB reserve retained. No P1C01 runtime change, PIE, target-device FPS, visual or Gate6/7 credit.
-
-## 2026-10-10 â€” Frodo deformation gate forward-port onto current develop (candidate)
-
-- PR #343 exact-head #38057554992: hosted source/normalization, UE4.27.2 skeletal technical gate, and Blender deformation jobs concluded SUCCESS; Unreal Build #38057555101 and Pre-Unreal #38057555072 concluded SUCCESS. Earlier PR #340 run #38056805116 recorded `BLENDER_NUMPY_READY`, `HUMAN_WAVE3_DEFORMATION_PASS`, `HUMAN_WAVE3_STATIC_DEFORMATION_RECEIPT_PASS`. PR #343 could not merge cleanly with evolved develop; preserve its exact code and contract regression on a fresh develop-based branch, without duplicating it from #340.
-- Existing source-only fix enforces `--python-exit-code 93`, NumPy, unique hosted/UE4 receipts, nonempty result and `STATIC_DEFORMATION_STRESS_PASS` with visual/runtime acceptance explicitly false. This is a production candidate until its new exact-head tests pass; no Frodo final art, PIE/device, target FPS, VISUAL or Gate 6/7 acceptance is claimed. P1C02 remains CLOSED.
-
-## 2026-10-10 â€” Confirmed GitHub default branch is develop
-
-- Live GitHub repository metadata reports `default_branch=develop`. Owner confirms develop is canonical default/integration/programmer-handoff; `main` remains stable/release only. Updated existing `Data/ProjectGovernor.json` branch_workflow notes to remove stale assertion that main is default; no new Governor authority, no runtime content change.
-- Whole-game ambientCG material query correction PR #344 merged to develop as commit `a50e117259c3f5b779af67adad9ec8f5855e139c`; exact-head physical source intake result still pending. The owner did not authorize extra runtime chapter; P1C01 only, Gate 6/7 remains unaccepted.
-
-## 2026-10-10 â€” ambientCG whole-region intake zero-result correction (candidate)
-
-- Real run #38057505000 reached official ambientCG API and returned `AMBIENTCG_WAREHOUSE_STAGE_PASS files=0 skipped=0 bytes=0`; hard receipt gate correctly FAILED with `REGION_INTAKE_ZERO_VERIFIED_FILES`. Multiword natural-language keyword queries found no eligible ZIP records. Replace them with ten concise asset-family terms while preserving region mapping, CC0 license, 2K-PNG source QC, single serialized warehouse writer and >=6 GiB free-space reserve. Await exact-head and real staged SHA256 evidence; no files or visual/PIE/device acceptance claimed.
-
-## 2026-10-10 â€” Whole-game warehouse PowerShell stale exit code repair (candidate)
-
-- Real warehouse run #38056824745 FAILED in manager/runner health step after its own `RUNNER_HEALTH_PASS` log. Root cause: checking stale `$LASTEXITCODE` after a PowerShell script invocation, which does not guarantee reset of that native command exit variable. Correct step guards to check `$?` immediately after script calls; preserve Project Governor, staged receipt SHA256 audit and 6 GiB reserve. No provider downloads occurred in failing run; correction awaits exact-head CI and rerun.
-
-## 2026-10-10 â€” Whole-game licensed ambientCG regional intake V3 (candidate)
-
-- Added ten bounded material search lanes for 16 source-indexed regional IDs (including Minas Tirith, Helm's Deep, Edoras, Osgiliath, Rivendell, Fangorn, Isengard, Pelennor and Grey Havens) using existing public ambientCG 2K-PNG CC0 adapter, not a new material system. Register source queries and multi-region reuse; exact provider asset IDs are only assigned by live API staging.
-- New separate source-only intake workflow shares the existing serialized warehouse-stage concurrency group, requires Project Governor and Windows runner, checks 6 GiB disk floor before and after stage, requires SHA256 verified nonempty receipt, and does not access Unreal Content or open another runtime chapter.
-- Branch/pre-merge state: MANIFEST_AND_WORKFLOW_CREATED, STAGING_NOT_RUN; no new downloads, verified inventory additions, Unreal integration, PIE, device, visual or Gate 6/7 acceptance. On merge to develop the path-scoped production workflow will run; check receipt results and quarantine failures before declaring intake success.
-
-## 2026-10-10 â€” P1C01 mandatory Project Governor work-start and five-lane enforcement
-
-- DEC-104 is enforced as a mandatory physical production entrypoint. Existing five-lane read-only preflight is NOT proof of generated assets. Scripts/governor_work_start.py runs the full Project Governor and checks DEC-078/104/105, REQ-PROD-011, active P1C01 gate, one runtime writer, one warehouse writer, 6 GiB reserve and five lane identities before production.
-- Production workflows for Unreal, warehouse, skeletal characters, visual source and chapter closure now require the manager. Pre-Unreal regression tests forbid their bypass. Chapter closure source writer shares warehouse-stage concurrency with durable source staging.
-- Evidence: source changes submitted for exact-head CI. No new Unreal asset import, chapter PIE, target device measurement or visual acceptance is inferred. The existing warehouse #38049193046 is independent and not cancelled.
-
-## 2026-10-10 â€” One-shot P1C01 durable 99-source warehouse activation on develop (PENDING)
-
-- Root-cause audit: `p1c01-five-lane-maxsafe.yml` only runs five read-only metadata reports; no asset import/Unreal authoring occurs in these lanes. The two-wave durable 99-FBX warehouse workflow only pushed automatically on the now-merged `ops/p1c01-five-lane-maxsafe-2026-10-09` source branch, so the previously repaired Windows nested-path issue had no completed persistent warehouse re-run after merge.
-- Change: retain single warehouse writer, immutable pinned GitHub artifacts, SHA256 checkpoints, 6 GiB reserve, wave39-then-wave60 durability; enable one-time `develop` push activation via the workflow/activation manifest. Once merged the workflow should be queued behind any running self-hosted Unreal work, not run in parallel on the same runner. This is source-only and does not import into Unreal.
-- Evidence is **PENDING** until an actual Actions run shows receipts for 39+60, warehouse inventory passes, and runtime integration subsequently proves the assets in UE. Do not mark Gate6/7, PIE, device or visual acceptance from this change.
-
-## 2026-10-10 â€” PG-026 release artifact versus failure-logs contract
-
-- Pre-Unreal #38045489962 failed: PG-026 failure logging may not depend on artifact upload quota. On isolated fix PR #336, removed `always()` log artifact upload, kept console failure logs and allowed a success-only packaged Windows playable candidate. Static exact-head checks and UE results pending. No Gate6/7 credit.
-
-## 2026-10-10 â€” P1C01 warehouse Windows nested relative-path root cause isolated
-
-- Real failure Run #38042482514: source39 245957831 B and pbr39 197353784 B **SHA256 verified and extracted** on persistent warehouse; staging wave39 then failed `StageError: UNSAFE_RELATIVE_PATH` at `stage_p1c01_adaptive_pbr_warehouse.py:358/331` on Windows. No wave39 permanent receipt, wave60 not started.
-- Root cause: `str(safe_path(...))` uses Windows backslashes when nested provider receipt paths (e.g. `textures/gate_diff_1k.png`) are converted, but `safe_path` correctly disallows backslashes in durable receipt keys. Minimal patch changes validated relative path serialization to `.as_posix()`, with a nested texture real fixture regression. Preserve cache; do not download source39/pbr39 again.
-- The exact-head Windows/Linux regression and real persistent warehouse evidence remain pending. No UE/PIE/device/visual acceptance claimed. This work lives on an isolated fix branch to avoid canceling active PR #335 packaging CI.
-
-## 2026-10-10 â€” P1C01 first downloadable playable candidate, fail closed
-
-- On the owner-approved P1C01 delivery lane, patched the game's default editor/game map, headless runtime smoke, packaging cook map and packaged startup observation to `/Engine/Maps/Entry`. This follows `Data/P1C01LocalVisualBootstrapV1.json` that identifies the engine `Template_Default` floor as a visual masking defect.
-- The existing exact-head `Unreal Build Validation` workflow now runs `Scripts/test_p1c01_delivery_entry_map.py` on hosted Windows **before** the UE runner and uploads the real `WindowsNoEditor` folder **only after** full/acceptance packaged startup passes. The artifact is a Windows playable **candidate**, not automatically a finished or visually approved chapter.
-- Exact-head CI, ZIP/artifact upload result, integration of warehouse Poly Haven PBR, hero animation, chapter-specific PIE, target 720p/30 FPS and human visual Gate 6/7 **remain unproven as of commit authoring**. Warehouse Run #38042482514 remains independently checkpointed; no second warehouse writer is launched.
-- No C++ modifications; after CI the next user-visible result must be a working Windows candidate download if and only if GitHub Actions created it.
-
-## 2026-10-10 â€” one coordinated P1C01 source warehouse production batch (99 FBX originals)
-
-- Owner requested one completion batch rather than repeated administrative waves. Added `Data/P1C01TwoWaveWarehouseActivationV1.json` and push-triggered `.github/workflows/p1c01-two-wave-checkpoint-warehouse.yml`: exact-head single-writer Windows runner uses previously produced pinned GitHub Artifacts, 20-case plus legacy offline regression tests, 4 MiB SHA256/fsync recovery, wave39 persisted/audited before wave60 begins, no second provider download or rollback of wave39.
-- Evidence status on commit creation: **PENDING new workflow run**. Wave39 and wave60 persistent receipts/audits are required; prior source conversion evidence is reusable, not a substitute. No UE import, player rig/animation, chapter PIE, device FPS or human visual acceptance is claimed. Existing acceptance gates remain unchanged.
-- Canon/source boundary: Source 07 F1-01 birthday/party and Ring outcome; current P1C01 includes broader Shire/road runtime, so do not relabel later F1-02/F1-03 source outcomes as independently accepted.
-
-## 2026-10-10 â€” P1C01 recovery convergence on PR #335 (source-only)
-
-- Recovery source and network-free 20-case fault-injection suite are reused from validated side branch commit `8c5b296bd4cd024745f3666ce45802ea0e74f004` (prior Linux+Windows https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/38007549312 SUCCESS). An exact-merged-head rerun is **PENDING**; no fresh result is asserted before it finishes.
-- The pinned 39-asset warehouse workflow now runs the network-free suite before any checkpoint download; existing single-writer concurrency and the 6 GiB storage reserve remain unchanged. Wave39 actual durable intake/audit is **NOT YET PROVEN**; wave60 stays separate and gated.
-- No UE4 C++/runtime/content assets were modified by this change: no repeated Unreal build, import, PIE, device or visual acceptance is claimed. P1C01 remains open, Gate 6/7 pending. PR #335 production metadata from prior head is preserved.
-
-## 2026-10-10 P1C01 checkpoint transport and source-only UE evidence reuse gate
-
-- On PR #335 exact head `ce8faa666d368f11b868963e85aecf8c7cda351d`, Pre-Unreal #38003230133 SUCCESS, Five-Lane #38003230032 SUCCESS, UE4 #38003230111 SUCCESS incl Editor and package; no need to rebuild this source revision merely to stage external CC0 artifacts. Source-only PBR had 39/39 and 59/60 conversions at proven earlier runs, not UE imported.
-- Source-only correction: added nine synthetic power/network-loss, corrupt-checkpoint, SHA256, ZIP safety and resume/no-double-fetch tests; tests must pass hosted CI before transferring large artifacts. Newly approved classifier checks only immediate-parent delta for an explicitly restricted set of source-only scripts/workflows/governance docs, verifies exact-parent full Unreal workflow SUCCESS via GitHub and chooses `inherit` only if both prove safe. This prevents cumulative PR diff from reclassifying successful source-only changes as new full UE compiles. Runtime changes still take existing full/core routes.
-- Persistent checkpoint code remains unproven until the real Windows runner writes and verifies 4MiB chunks, full Artifact SHA256, source receipts and <=6GiB reserve. Manual single-writer wave39 persists before any wave60; Gate6/7 P1C01 not accepted. If hosted regression fails, repair it before dispatch; do not run another 75-minute all-artifact download.
-
-## 2026-10-10 â€” Durable 4MiB restart checkpoints and no repeated expensive PR-wide acquisition
-
-- Owner observed electricity/network instability and rejected repeated long downloads/builds. Root cause: GitHub PR path filters saw entire PR diff, retriggering expensive 39-PBR conversion and 60-model acquisition for governance-only commits. Two duplicated self-hosted warehouse writers also contended for one runner; 75-minute download canceled before writes.
-- Corrective source-only transport `Scripts/resume_p1c01_artifact_checkpoint.py`: pinned source GitHub Actions artifact ID, exact archive byte length and SHA256; 4 MiB range transfers with per-chunk SHA256 journal in permanent warehouse, fsync and atomic checkpoint writes. Reuse completed chunks, re-fetch uncommitted tail only, fail closed on tampering, 6GiB free reserve and pinned archive SHA256. Whitelisted ZIP entry extraction with atomic CRC-checked files and durable extracted-state receipt. No provider re-download, UE4 import or visual claim.
-- Exactly one manual serialized source-only warehouse job for wave39: check existing SHA256 first, recover 39 source and PBR chunks, persist 39 and run canonical warehouse audit. Separate 60 wave reserved for independent follow-up after first checkpoint. Removed automatic pull_request triggers from expensive **adaptive 39-PBR and 60-source** workflows, while five-lane *read-only* regression remains eligible. No re-execution of existing expensive successful workflows on unrelated changes.
-- **Acceptance boundary:** workflow design change and manifest only until actual hosted regression and Windows warehouse logs. No permanent source promotion or P1C01 Gate6/7 acceptance claimed.
-
-## 2026-10-10 â€” 75-minute warehouse Artifact download failure; remove duplicate writer and split durable checkpoints
-
-- GitHub #37990910312 CANCELLED after 75 minutes: source 39 artifact took ~25m; PBR39 ~2.5m; source60 ~19m; PBR60 421,901,298-byte download ran 27m45s before cancellation. The first persistent commit and inventory audit were SKIPPED. No new persistent asset claim. Deprecation warning is not established cause.
-- Corrected process: dedicated warehouse writer is manually dispatched only and operates on 39-source wave first. Full SHA256 existing-wave check skips already-stored files; two necessary verified artifacts are fetched only if missing; commit wave39 and run warehouse inventory audit immediately. Separate 60-source followup only after successful durable wave39, not part of long four-download job. Removed duplicate warehouse writer from five-lane preflight. Add offline no-network regression tests for staging, reuse, source/receipt corruption, and path attacks.
-- Follow-up GitHub exact-head tests PENDING. The existing long-run failure is confirmed; final Gate6/7 remains UNACCEPTED, P1C02 CLOSED.
-
-## 2026-10-09 â€” Persistent source writer Python Runner PATH failure and exact fix
-
-- Workflow #37990747432 attempted serialized stage but failed **before downloading or writing assets**: actual step line `Python was not found; run without arguments to install from the Microsoft Store` on self-hosted Windows. The machine's previous UE run #37988147537 exposes installed toolchain `D:\\actions-runner\\_work\\_tool\\Python\\3.11.9\\x64\\python.exe`; writer workflow must resolve a known existing Python binary and persist the exact path to GITHUB_ENV, not depend on `python` App Execution Alias. Other source-only prep continues independent. Next exact-head workflow must demonstrate full receipt/hash copy and warehouse inventory audit; no persistent-stage success claimed yet.
-
-## 2026-10-09 â€” 99 source FBX recovery wave, 98 PBR-ready source conversions and guarded persistent warehouse intake
-
-- Exact-head PR #335 @ `08787c07`: source #37988147489 SUCCESS `P1C01_ADAPTIVE_SOURCE_STAGE eligible=183 staged=60 files=315 bytes=502931425 quarantine=123; NOT_UE4_IMPORTED`; conversion in same run SUCCESS `prepared=59 png=211 quarantined=1 NOT_UE4_IMPORTED`. The other 39 models are reused via prior artifact, not re-downloaded.
-- Previous 39 converted in #37988147700 SUCCESS: `P1C01_ADAPTIVE_PBR_QC prepared=39 png=146 quarantined=0 NOT_UE4_IMPORTED`. The held extra dry diffuse is source-only, not an invented normal map. Combined original models 99; PBR-prepared 98; quarantine 1. Artifacts expire in 30 days.
-- Unreal run #37988147537 SUCCESS exact head; Editor compile, existing production import, automation, headless P1C01 sweep, world-state roundtrip, packaging, startup. Log `W00_PACKAGE_PASS` and `W00_PACKAGED_STARTUP_PASS`; warning debt passed. This run does NOT import the new 99 external Poly Haven FBX.
-- Add `Scripts/stage_p1c01_adaptive_pbr_warehouse.py` and manual dispatch `.github/workflows/p1c01-persistent-verified-pbr-warehouse.yml`: one self-hosted writer guarded by the existing `warehouse-stage-` concurrency name. Reuses 4 numbered Artifacts and checks original source license/source-page, file inventories, per-file size/MD5/SHA256, binary FBX, prepared 1K PNG dimensions/hash, matching source receipt hash, quarantines and double-staging. Copies originals and generated sources to transaction directory, creates SHA256/licensing receipts, preserves 6 GiB free-space reserve, atomically promotes same-volume source wave and runs existing inventory audit. No paid assets, no provider downloads, no deletion of existing valid warehouse files, no claimed runtime imports.
-- **Unproven until dispatch logs**: persistent warehouse write and audit. Next real blocker: 99 FBX require UV/geometry/tangents/collision/LODs and visual matching before source-to-runtime import. Major hero Gandalf/Bilbo/Sam/Merry/Pippin rig/final presentation and human P1C01 DX11 720p 30FPS Gate 6/7 remain open. P1C02 remains CLOSED.
-
-## 2026-10-09 â€” P1C01 39-source integrity audit, nettle dry-map recovery and no-redownload wave two
-
-- **Observed exact-head evidence:** PR #335 @ `fac5bba5fac633ed9989d3b5f180b46b3ed43817`: CC0 source run 37985180302 SUCCESS (artifact 11643315007); PBR run 37985180453 SUCCESS (artifact 11641884955; `P1C01_ADAPTIVE_PBR_QC prepared=38 png=142 quarantined=1 NOT_UE4_IMPORTED`); Five-Lane Preflight 37985180297 SUCCESS; Pre-Unreal 37985180289 SUCCESS; UE4 run 37985180287 SUCCESS, including existing production import, Editor build, Automation, Windows package and packaged startup.
-- **Independent read-only ZIP audit:** all 211 files spanning 39 original Poly Haven CC0 source models matched size/MD5/SHA256; all 142 previously converted PNGs matched SHA256 and 1024x1024. Original `nettle_plant` quarantine was caused by `nettle_plant_dry_diff_1k.png`, a secondary BaseColor-only variation with no independent normal/roughness; source normals must never be invented.
-- **Follow-up code wave â€” exact-head CI pending:** convert the complete nettle primary PBR group, preserve the optional dry variant as a separate PNG with `HOLD_MATERIAL_VARIANT_NO_INDEPENDENT_NORMAL_ROUGHNESS` and source SHA256 (not UE import-eligible), require 39/39 prepared and zero quarantined after revalidation. Expand the next hosted Poly Haven source shard up to **480 MiB total / 30 MiB per source file / 660 seconds** with no arbitrary asset-count cap, hash-verify the existing 39 from prior GitHub Artifact and explicitly exclude them before new provider requests. New shard conversion is dependent on successful intake, while other hosted tracks stay independent.
-- **Boundaries:** this is generated **source-only**; GitHub Artifacts have 30-day retention and are not persistent warehouse receipts. Exactly one persistent warehouse writer and >=6 GiB free reserve remain mandatory; none of these candidates proves UE geometry/UV/LOD/collision, hero skeletal animation, playable scenes, pacing, PIE, target-device DX11 720p/30 FPS or human Gate 6/7 acceptance. P1C02 remains closed.
-
-## 2026-10-09 â€” Expanded P1C01 CC0 asset wave: 39 real FBX, now source-only PBR conversion
-
-- GitHub hosted adaptive source stage #2 `37979256311` SUCCESS exact SHA `17aa93bf`. Actual log `P1C01_ADAPTIVE_SOURCE_STAGE eligible=222 staged=39 files=211 bytes=251537607 quarantine=183; NOT_UE4_IMPORTED`. Confirmed ZIP Artifact **11640236408**, 245,957,831 compressed bytes: 39 FBX + 172 original EXR/JPEG/PNG textures. Of the 183 non-staged, **159 exceeded per-wave remaining budget and were deferred; 24 had a file >30MiB**. These do not represent 183 bad source files.
-- New `Scripts/prepare_p1c01_adaptive_pbr.py`, `Scripts/test_p1c01_adaptive_pbr.py` and hosted `.github/workflows/p1c01-adaptive-pbr-prep.yml` reuse the exact successful artifact **without provider/network acquisition, Git LFS or Unreal**; source SHA256/MD5 and inventory must match the receipt. Convert 1K BaseColor, DirectX green-flipped normal, R-AO/G-roughness/B-metallic masks plus 16-bit-safe alpha where present to PNG; preserve FBX bytes. Per-asset quarantine preserves source-only packet integrity.
-- Four non-Shire tropical candidates (`anthurium_botany_01`, `calathea_orbifolia_01`, `didelta_spinosa`, `pachira_aquatica_01`) explicitly biome-held; two ambiguous identities held. Other source candidates still need static FBX geometry/UV/smoothing/tangent, LOD/collision, material import and quality/performance review. **No new UE imports or visual acceptance claimed**.
-- Conversion Hosted exact-head run/test proof **PENDING** after this commit. Existing five parallel hosted preflights and UE4 #1821 are successful but not P1C01 Gate 6/7/DEVICE acceptance. The existing #329 remains sole runtime integration; all future library preparation may run independently.
-
-## 2026-10-09 â€” Adaptive wave minimum-remaining-byte guard correction
-
-- Static regression fixture for the new adaptive source wave uses 100,000 bytes of available storage; guard must not assume every candidate consumes >=1 MiB. Correct early-stop bound to <1024 remaining bytes, leaving the **actual per-file provider-size and overall byte caps** authoritative. This fixes exact source-layer gating rather than reducing testing or attempting unbounded retries.
-- The hosted source-only workflow remains required to pass its own exact HEAD before any new staged asset receipts count as evidence; no UE4 build requested by this corrective commit.
-
-## 2026-10-09 â€” Dynamic source acquisition beyond fixed five-model pilot
-
-- New selectively searched P1C01 high-fidelity **Poly Haven official CC0** source-only workflow `.github/workflows/p1c01-adaptive-highfidelity-source.yml`, backed by `Scripts/stage_p1c01_polyhaven_adaptive.py` and five no-network tests. Selects matching Shire outdoor, rustic architecture, vegetation, stones, garden and prop model metadata from provider's public API, excludes five previously staged models, then acquires 1K native static FBX and original texture dependencies. Each asset receives provider MD5 verification + SHA256 receipt; rejects traversal, invalid extension/host, malformed sources and oversize payloads.
-- **Real safety-driven scaling:** no arbitrary five-asset source limit; hosted wave limited by **240 MiB total source bytes, 30 MiB/file and 420 seconds** (plus GitHub 14-minute job), with per-asset quarantine and source-only artifact. Counts depend on actual suitable free provider content and cannot be claimed before the new run. Exceeding single-shard budget defers candidates rather than silently promoting them; future successful waves should process deferred candidates by verified resume/source checksums, never automatic blind redownload.
-- Originals may contain JPEG/EXR source dependencies; these remain SOURCE_STAGED only pending PNG/TGA conversion and FBX geometry/UV/smoothing/LOD/collision/import review. This workflow does NOT persistently mutate the shared warehouse, change UE Content, open P1C02 or establish target-device 30 FPS. Repository still uses the 6 GiB single-writer warehouse free-space safety reserve.
-- Five-lane hosted metadata preflight #1 was successful; on this commit the new adaptive acquisition/workflow status is **PENDING** until GitHub returns actual receipt/artifact. SOURCE != READY_FOR_IMPORT != VISUALLY_ACCEPTED.
-
-## 2026-10-09 â€” Five hosted tracks live, precise PG-078 root repair
-
-- New owner-confirmed DEC-104 / PR #335 first exact-head run [five-lane #1](https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/37978590310) **SUCCESS** on `e22434b812b71a20ba9375e71d7fc54e74baa486`: five distinct hosted matrix jobs completed successfully and published five source-only metadata reports, without Git LFS, UE4 or warehouse mutation.
-- Concurrent Pre-Unreal [#2225](https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/37978590228) **FAILED** PG-078 `tracked unfinished requirement snapshot is stale` because REQ-PROD-011 gained a concrete missing-work tracking entry while `Data/MasterExecutionRoadmap.json.tracked_unfinished_requirement_ids` was not synchronized. The requirement was already mapped to `CONTINUOUS_MAXIMUM_SAFE_PRODUCTION`; this commit regenerates the tracked unfinished-ID snapshot from the exact Governor (60 entries), without disabling, weakening or changing validator semantics.
-- **Revalidation pending** on the new exact HEAD. Five-lane PASS is source/read-only coordination proof, not binary warehouse upload or visual completion. Only serialized valid source intake may place eligible new files into persistent warehouse.
-
-## 2026-10-09 â€” Owner-confirmed permanent five-lane maximum-safe throughput
-
-- Direct live `develop` Governor review found **REQ-PROD-011 and DEC-078 already active**: throughput must be adaptive and maximal by default without further owner reminders. **DEC-104** explicitly groups existing preparation work into five independent operational tracks: serialized UE4 runtime; serialized persistent warehouse and legal asset intake; skeletal characters/animation; realistic visual Shire world; and gameplay/NPC/quest/save/audio/Arabic presentation.
-- Candidate branch adds `Scripts/p1c01_five_lane_preflight.py` and five-way parallel hosted runner workflow `.github/workflows/p1c01-five-lane-maxsafe.yml`. Runs every lane against the exact PR SHA with **no Git LFS, Unreal, persistent warehouse write, login bypass, or synthetic claims of new downloads**; all eligible metadata candidates and existing 180 visual slots are scanned and five source-only receipt artifacts published. The existing single serialized UE and warehouse workflows remain responsible for mutating their resources; no duplicate runner contention.
-- Maximum file intake is **not** unbounded single-job ZIP/VRAM/residency; follow `Data/MaximumSafeProductionModeV1.json` with >=6GiB warehouse reserve and measured per-file/wave/network/provider/artifact budgets. The warehouse source catalogue and existing legal source pipelines remain the actual acquisition path. Source/library inventory scales independently from the 2GB VRAM runtime working set.
-- At authoring, exact-head hosted proof is **PENDING**. This wave itself does not import new FBX, produce new cinematic content, complete the Shire, or satisfy Gate 6/7. Keep P1C02 runtime closed. Existing PR #329 Unreal lane and #332 photoreal intake lane continue independently.
-
-## 2026-10-01 - Critical-gap receipt supersession parity
-
-- Warehouse #306 at `develop@5ec1307aa749741fa10c801c288b101ef4b5292a` proved the canonical inventory audit is clean: 18,925 payload files / 6,745,968,858 bytes / 239 active receipt records / 428 superseded / zero hash, missing, license, dangerous, or duplicate-hash failures.
-- The next critical-gap preflight still read all historical receipt rows literally and therefore re-reported three retired `C:` records after the authoritative audit had superseded them.
-- Root fix: critical-gap preparation now applies the same active-root canonicalization and newest-receipt-per-normalized-payload selection before SHA256 verification. Same-receipt duplicates remain counted separately; genuine newest-record corruption remains fail-closed.
-- Hosted regression coverage now executes both the inventory audit and critical-gap preparation against the same real Windows migration fixture.
-- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + WAREHOUSE PROOF PENDING**. No payload refresh, Frodo/Gandalf acceptance, PIE, device, visual, pacing, performance, or Gate 6/7 claim.
-
-## 2026-10-01 - PG-207 real legacy-path fixture guard
-
-- Exact-head Pre-Unreal correctly rejected the real `C:\\actions-runner` migration fixture as though it were live runner configuration. This was a validator false positive after the fixture was corrected to the real Windows path form.
-- PG-207 now permits exactly one known historical-path literal in the dedicated receipt-supersession test and requires it to be the canonical fixture assignment. Any additional occurrence, any different test/script occurrence, or any workflow/config occurrence remains a fail-closed retired-root violation.
-- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL PENDING**. The D-root operational authority is unchanged.
-
-## 2026-10-01 - Warehouse real Windows path canonicalization correction
-
-- Warehouse #305 proved the prior root-rebase implementation still failed for real receipt paths such as `C:\actions-runner\_warehouse\ShireJourney\...`: the PowerShell source used C-style doubled backslashes, which are literal double characters in PowerShell rather than an escape sequence.
-- Root fix: receipt normalization now uses single Windows separators in replacement, marker matching, trim, and normalized-key operations. The regression fixture now uses the real single-backslash `C:\actions-runner\...` form recorded by the runner.
-- The two affected records are preserved for the targeted candidate gate: missing `snow_01_diff_2k.png` and hash-mismatched `rock_01_arm_2k.png` remain fail-closed until the bounded staging path repairs only them.
-- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + WAREHOUSE PROOF PENDING**. No blanket refresh and no Frodo/Gandalf or human/device acceptance claim.
-
-## 2026-10-01 - Warehouse candidate gate trigger hardening
-
-- Confirmed integration defect: Warehouse Stage #305 at `develop@9e87b1b45556e8429c1ef14dc12a931ce5a95fce` skipped both targeted provenance repair and the Frodo/Gandalf candidate report because GitHub's final merge subject did not retain the prior `P1C01_FRODO_CANDIDATE_QC` text marker.
-- Root fix: every relevant `Warehouse Stage` push now executes the bounded targeted provenance repair and exact-head candidate-report lane. These operations reuse verified payloads, purge only hash-mismatched payloads, and never authorize a blanket refresh.
-- This removes merge-subject wording as a runtime control plane while keeping the existing 20-minute repair bound, SHA256 receipt enforcement, fail-closed corruption handling, and artifact upload.
-- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + WAREHOUSE PROOF PENDING**. No Frodo/Gandalf acceptance, PIE, device, visual, pacing, performance, or Gate 6/7 claim is made.
-
-## 2026-10-01 - Warehouse migrated-receipt root rebasing
-
-- Warehouse Stage #304 on `develop@a75b2f810996289ba5795995563a7c83e406c526` proved the active payload root is `D:\\actions-runner\\_warehouse\\ShireJourney`, but two records inside the migrated Poly Haven V3 receipt still named the retired absolute `C:` root.
-- The inventory audit now canonicalizes any receipt path under `*\\actions-runner\\_warehouse\\ShireJourney` onto the explicitly supplied active warehouse root before provenance grouping, SHA256 verification, and license-snapshot verification.
-- This preserves payloads and lets newer same-payload receipts supersede historical records across runner-drive migration; it does not suppress genuine active-root missing files or hash mismatches.
-- Hosted regression coverage models a stale `C:` receipt against the active root and retains fail-closed enforcement for a tampered newest receipt.
-- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + WAREHOUSE PROOF PENDING**.
-- No full Poly Haven refresh is authorized by this repair; no gameplay, PIE, device, visual, pacing, performance, or Frodo-candidate acceptance is claimed.
-
-## 2026-10-01 - P1C01 Frodo candidate warehouse targeted-repair lane
-
-- Canonical failure head: `develop@b8cee93c01673fc2635f672ca0a0fbe1f543311a`; Warehouse Stage #302 ended **FAILURE** during `Repair candidate-gate material warehouse provenance` after approximately 54 minutes of job execution.
-- GitHub retained the active step without a terminal step conclusion and published neither job log nor candidate artifact. Therefore the terminal runner/service cause is not claimed, and no Frodo/Gandalf candidate result exists from #302.
-- Source inspection confirmed a failure amplifier: the candidate-gate path passed `-Refresh` to the full Poly Haven V4 batch (37 material/prop slugs, 2.6 GB byte cap), deleting every already-staged payload even when only one receipt hash was stale.
-- Root-fix candidate: receipt reuse now verifies recorded SHA256, purges only the mismatched payload, and lets the existing staging path redownload only missing/corrupt files. The candidate-gate repair step no longer forces full-batch refresh and is independently bounded to 20 minutes.
-- Regression coverage exercises a same-size content corruption so size-only validation cannot regress.
-- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + WAREHOUSE PROOF PENDING**.
-- Not claimed: COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, Frodo candidate acceptance, or runtime integration.
-
-## 2026-10-01 - P1C01 FOUNDATION_CORRECTIONS_V1 active
-
-- Canonical base: `develop@3ec3f725cb1dff42a762e36e39790b82a4801714`, which is machine-green after PR #207 (Pre-Unreal and Unreal Build Validation SUCCESS).
-- Confirmed Living Shire defect repair: builder-authored humanoid ambient residents were outside `LivingWorldDirector::GatherActiveAmbientNPCsNear()` candidate sources. The Director now performs a committed-world reconciliation pass, weakly registers persistent social-capable ambient residents, excludes Director-managed pooled actors/fauna, and includes that registry in the bounded nearby social query without taking lifecycle ownership.
-- Startup-order constraint is preserved: `AChapterWorldRouter` may commit/build before `ALivingWorldDirector` exists, so registration is Director-owned at committed-world reconciliation rather than pushed into each builder spawn site.
-- Footstep foundation hardening: `DefaultEngine.ini` defines Grass/Dirt/Stone/Wood physical surface types; `UShireFootstepComponent` prefers `UPhysicalMaterial::DetermineSurfaceType` and retains the existing identity fallback for legacy/proxy materials.
-- Hero skeletal intake policy now explicitly requires UE4.27 FBX 2018-compatible exports, keeps OBJ character pieces as `STATIC_MODULAR_FALLBACK_ONLY`, and aligns the visual target to **Balanced Medium / selective High** while retaining the 720p/30 FPS low-spec performance floor.
-- No fauna density increase, Niagara rewrite, Part II runtime expansion, synchronous heavy load, parallel AI/audio owner, or story/canon change is introduced.
-- Current status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27.2 PROOF PENDING** on this repair branch.
-- Not claimed: PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PACING-ACCEPTED or PERFORMANCE-ACCEPTED.
-
-## 2026-09-30 - P1C01 SAVE_LOAD_LONG_SESSION active
-
-- Predecessor SHIRE_AUDIO_IDENTITY: exact-head machine-green on PR #199 at `c258cebda8ae5749c54ed0aa6717582b89988fc3` with Pre-Unreal #1486 SUCCESS + Unreal Build #1159 SUCCESS; merged as `ec96e9e487ecbe91d9563848f685df4bd5c11b0d`.
-- Active runtime/reliability car: SAVE_LOAD_LONG_SESSION.
-- Existing restore transaction, world-revision checkpoint guard, queued snapshot coalescing, legacy canonicalization and committed-world transform grounding remain authoritative.
-- This car adds fail-closed bounded save-payload admission before restore mutation so long sessions/corrupt saves cannot expand persistence containers without limit.
-- Status: SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27.2 PROOF PENDING.
-- Human long-session PIE, device save/restore hitching and persistence-stress acceptance: PENDING / NOT CLAIMED.
-
-## 2026-09-30 - P1C01 SHIRE_AUDIO_IDENTITY active
-
-- Predecessor CINEMATIC_CONTROL_HANDOFF: exact-head machine-green on PR #198 at `46655d2ecdc02a3f1698c9fd0b1b14c09f767946` with Pre-Unreal #1484 SUCCESS + Unreal Build #1157 SUCCESS; merged as `3b38698c19a244fde8f2979d73f12cd829576b7f`.
-- Active runtime car: SHIRE_AUDIO_IDENTITY.
-- UShireAudioSubsystem remains sole runtime audio owner.
-- Shire identity targets: birds, breeze/hedges, farm/work, distant laughter, carts, warm interiors, fire/cutlery.
-- Runtime source adds a bounded decorative localized-SFX start budget while preserving story-critical cue priority, async loading, weak caching, shared attenuation, ambience/music fades and voice ducking.
-- Status: SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27.2 PROOF PENDING.
-- Final audio-bank import, playback/listening, PIE/device/pacing/performance acceptance: PENDING / NOT CLAIMED.
-
-## 2026-09-30 - P1C01 CINEMATIC_CONTROL_HANDOFF active
-
-- Predecessor QUEST_SIDE_ACTIVITY_COHERENCE: exact-head machine-green on PR #197 at `10fa10ac47deed372d3a29c14dd30c1c3b5a5522` with Pre-Unreal #1481 SUCCESS + Unreal Build #1154 SUCCESS; merged as `e926889f9328e238afaffb16f9f9dabf58ce9040`.
-- Active runtime car: CINEMATIC_CONTROL_HANDOFF.
-- UShireStoryPresentationSubsystem remains presentation-state owner; AStoryPresentationDirector remains transient camera owner; quest/save/world truth ownership is unchanged.
-- Scope: unify timed release / skip / chapter handoff onto one exit path so transient presentation cannot leave a stale camera or mutate story state.
-- Status: SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27.2 PROOF PENDING.
-- No PIE/device/visual/pacing/performance acceptance is claimed.
-
-## 2026-09-30 - P1C01 QUEST_SIDE_ACTIVITY_COHERENCE active
-
-- Predecessor LIVING_SHIRE: exact-head machine-green on PR #196 at `149c9570c2cbac4295b0b1c41dca5e06f2e7f5bc` with Pre-Unreal #1478 SUCCESS + Unreal Build #1151 SUCCESS; merged as `a478127559ab54f0ec938377a4962e6a75479d36`.
-- Active runtime car: QUEST_SIDE_ACTIVITY_COHERENCE.
-- UShireQuestSubsystem remains sole quest/story authority.
-- Runtime source now adds a bounded current-window activity projection, P1C01 urgency suppression and explicit duplicate-completion rejection.
-- Status: SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27.2 PROOF PENDING.
-- No PIE/device/visual/pacing/performance acceptance is claimed.
-
-## 2026-09-30 - P1C01 LIVING_SHIRE source implementation
-
-- CHARACTER_PRESENTATION predecessor closed on PR #195 exact head `24ffa0ddb35756a606fb166d010b1e7ca2940308`: Pre-Unreal #1475 SUCCESS, Unreal Build #1148 SUCCESS, merged as `66caf6168157e0ec171a1e7249ead245e45d8b42`.
-- Registered LIVING_SHIRE first in `Docs/WORLD_DETAIL_LEDGER.md`, `Data/P1C01LivingShireChapterV1.json` and Governor DEC-095.
-- Added `FShireNPCBehaviorSnapshot` / `BuildBehaviorSnapshot()` so scheduled ambient routine refresh coalesces danger, weather, schedule, anchor, regional mood and emotional state instead of rebuilding context through repeated independent queries.
-- Replaced per-NPC full-world `TActorIterator<AShireAmbientNPC>` social scans with `ALivingWorldDirector::GatherActiveAmbientNPCsNear()`, bounded to Director-managed baseline and active micro-event NPCs inside the requested radius.
-- Loaded and enforced the existing `max_active_fauna_groups_near_player=2` admission budget before FAUNA micro-events are selected.
-- Existing AmbientNPC / interaction / ambient-motion pools remain lifecycle owners; no parallel AI brain or streaming owner was added.
-- P1C01 ambient population target remains **18**. No density increase, synchronous heavy load or per-frame global context reconstruction was introduced.
-- Current status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27.2 PROOF PENDING**.
-- Not claimed: PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PACING-ACCEPTED or PERFORMANCE-ACCEPTED.
-
-## 2026-09-30 - P1C01 CHARACTER_PRESENTATION source implementation
-
-- Predecessor PARTY_AND_SOCIAL_LOOP is exact-head machine-green: PR #194 head `5e4814c9f2ec9acc3bae3df389936c1621bde9e0` passed Pre-Unreal #1472 and Unreal Build #1145, then merged to develop as `584b9522298e04f8a5a3d79e246c5f0483cce7c0`.
-- Registered CHARACTER_PRESENTATION before runtime code in `Data/P1C01CharacterPresentationChapterV1.json` and WORLD_DETAIL_LEDGER.
-- Added stable `AShireNPC::ProductionCharacterId` so hero rig/asset identity no longer depends on localized `DisplayName`. P1C01 story actors explicitly bind Gandalf Road, Bilbo, Gandalf at Bag End and Sam to stable production IDs.
-- Existing `UShireChapterAssetStreamingSubsystem` remains the only skeletal-rig residency owner: soft paths + `FStreamableManager::RequestAsyncLoad`, bounded package availability retry, modular fallback until mesh + AnimBP resolve, URO and rendered-only pose ticking.
-- Added story-aware player equipment presentation: Frodo's modular future sword presentation is suppressed inside P1C01 rather than leaking later named gear backward into the Shire chapter.
-- No population increase, new AI brain, per-frame asset scan, synchronous heavy production load or crowd Spawn/Destroy path was added.
-- Current status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27.2 PROOF PENDING**.
-- Not claimed: PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, DEFORMATION-ACCEPTED or PERFORMANCE-ACCEPTED.
-
-## 2026-09-30 - P1C01 SHIRE_WORLD_DENSITY runtime car source implementation
-
-- Predecessor mega integration is machine-green: PR #189 exact head `3680ab2fa52b7ebd7ec896ec10d2d2f9a60dd63c` passed Pre-Unreal #1465 and UE4.27.2 Unreal Build #1138, then merged to `develop@64b70c4532a7412a47c031d71bb4f972e7720096`.
-- LivingWorld member-local culling and the ambient pawn-cache regression guard therefore have exact-head machine proof on that PR. This is compile/headless-machine evidence, not human PIE/device/visual/performance acceptance.
-- First post-mega runtime car: `SHIRE_WORLD_DENSITY`. It adds only geometry/dressing through `ShirePrototypeWorldBuilder::SpawnWorldDensityDetailPass()` and existing zero-Tick `AWorldDetailCluster` HISM ownership.
-- Fixed budget: at most 5 cluster actors / 70 non-collision instances across wood piles, ferns, reeds, path markers and fallen logs. Missing production meshes are skipped; no synchronous load is introduced.
-- `WorldLifeSaturationPlan` P1C01 ambient population target remains **18**. LivingWorldDirector still owns ambient NPC budgets/pooling; ShireQuestSubsystem still owns story/quest state.
-- No quest coordinate, story anchor, crowd cap or chapter topology is changed by this car.
-- Current car status: **SOURCE-IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UE4.27.2 PROOF PENDING**.
-- Still not claimed: PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PACING-ACCEPTED or PERFORMANCE-ACCEPTED.
-
-## 2026-09-30 - W00 automated machine closure + P1C01 maximum-safe mega train V2
-
-- PR #184 exact head `d6ca8aac03f5a1da07609e61e790ddf8faad8eed` passed hosted Pre-Unreal #1435 and full UE4.27.2 Unreal Build #1108, then merged to `develop@4fb15dfff70bfda5a2c023c3d82b3008fb831edc`.
-- Exact machine evidence includes editor build, production import, Automation Framework QA, headless startup, chapter audit, route/state roundtrip, warning-debt guard, real Windows package, Runtime Data staging and packaged startup.
-- Packaged Data proof: `W00_PACKAGED_DATA_PASS expected=37 verified=37`.
-- Packaged runtime-consumption proof: `W00_PACKAGED_RUNTIME_DATA_READ_PASS marker=NPCContext: ready=yes`.
-- Packaged startup proof: `W00_PACKAGED_STARTUP_PASS observed=6s`.
-- Runner hardware snapshot: Intel i7-6498DU, 8,457,560,064 RAM bytes. This is a hardware snapshot only and is **not DEVICE-TESTED** because representative FPS/frame-time/VRAM acceptance has not been captured.
-- Automated W00 machine gates are therefore closed on the exact acceptance head. Human chapter traversal/readability/pacing, real audio playback/mix and target-device performance/visual evidence remain separate gates.
-- P1C01 mega train V2 is rebuilt from the merged canonical develop instead of resolving the old #185 conflict wholesale. It selectively preserves the confirmed LivingWorld member-local cull repair, PG-208/209/210/211/212+ guards, source-to-runtime disposition, save-schema audit and the 12-car maximum-safe production program.
-- No new runtime expansion car is promoted solely by W00 machine closure; each dependent car still follows Governor prerequisites and its own exact-head UE4 / later Gate 6/7 evidence.
-- No new PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED claim is made by this record.
-
-## 2026-09-30 - W00 packaged runtime Data-read proof guard
-
-- Remote branch-salvage cleanup is closed machine-wise: the 26 legacy heads are recoverable from `archive/pre-build-salvage-20260930`, and the final cleanup pass reduced persistent refs to `develop`, `main`, and the recovery-only archive before this short-lived validation branch was opened.
-- Construction resume is following the Governor's current W00 acceptance order rather than opening a new gameplay feature prematurely.
-- `Scripts/verify_packaged_startup.ps1` now requires the packaged executable to emit `NPCContext: ready=yes` in addition to startup/grounding/route markers. This closes the evidence gap between staged/parseable RuntimeDependencies and actual runtime consumption by `UShireNPCContextSubsystem`.
-- `Data/W00FinalClosurePlanV1.json` now defines W00-DATA-001 as staging + JSON syntax + packaged runtime consumption.
-- Current status: **SOURCE-IMPLEMENTED / EXACT-HEAD CI PROOF PENDING**. No PIE, device, FPS, audio-playback, pacing, or visual acceptance is claimed by this change.
-
-## 2026-09-30 - Final zero-ahead maintenance sweep before construction resume
-
-- PR #180 merged the last orphan-ref closeout after exact-head hosted Pre-Unreal SUCCESS.
-- The remaining non-canonical maintenance refs are now limited to the superseded `maintenance/final-prebuild-branch-cleanout-v1` plus this short-lived sweep branch.
-- This sweep explicitly queues both refs for guarded deletion; the merged sweep head will also be deleted by DEC-088 exact-head closeout.
-- Expected persistent refs after Branch Cleanup: `develop`, `main`, and recovery-only `archive/pre-build-salvage-20260930`.
-- After that branch-cleanup SUCCESS, repository hygiene is closed and substantive build work resumes from canonical `develop`.
-- Evidence boundary: repository hygiene only. No compile/PIE/device/visual/performance acceptance is claimed.
-
-## 2026-09-30 - Last orphan maintenance ref closeout
-
-- PR #178 merged the final legacy-ref retirement policy before PR #179 could merge; PR #179 therefore became a superseded maintenance branch rather than production work.
-- PR #179 exact head `a6b8bc300980bd2e8bc7c0132ea5e8b2d9d25e77` completed the full hosted Pre-Unreal chain successfully, then was closed unmerged after #178 landed first.
-- Branch Cleanup for #178 completed SUCCESS and explicitly deleted all 26 archived legacy working refs; its log ended with `deletedExplicit=26`, `keptUnique=1`, `planProtected=3`.
-- The only extra live ref after that pass is `maintenance/final-prebuild-branch-cleanout-v1`; it is now explicitly queued for deletion by this final closeout.
-- Expected final live refs: `develop`, `main`, and recovery-only `archive/pre-build-salvage-20260930`.
-- Evidence boundary: repository hygiene only. No compile/PIE/device/visual/performance acceptance is claimed.
-
-## 2026-09-30 - Final legacy-ref retirement before build resume
-
-- Recovery archive created at `archive/pre-build-salvage-20260930@a47eda59f31352676de44777845fbc01c38d2d0d`.
-- The archive commit captures all **26** remaining non-canonical legacy branch heads as commit parents; it is recovery-only and must never become an execution trunk.
-- All 26 captured legacy working refs are now explicitly queued for guarded deletion after this maintenance merge.
-- Canonical survivors after cleanup are `develop`, `main`, and the recovery-only archive branch.
-- Build-resume rule: once Branch Cleanup reports success and the canonical/archive refs remain present, branch cleanup is complete and substantive game construction resumes from `develop`.
-- Evidence boundary: repository/process hygiene only; no compile, PIE, device, visual or performance acceptance is claimed.
-
-## 2026-09-30 - Final runner-path and branch-lifecycle reconciliation
-
-- Owner-side cleanup finished with `OLD_C_RESIDUE_EXISTS=False` and `D_RUNNER_EXISTS=True`; the active persistent runner authority remains `D:\\actions-runner` and Warehouse authority remains `D:\\actions-runner\\_warehouse\\ShireJourney`.
-- Quick repository audit confirmed current runner/watchdog/service-guard defaults point to D, Warehouse Stage remains self-hosted on the D-backed persistent Warehouse, and hosted Pre-Unreal / Branch Cleanup remain off the UE4 device lane.
-- Governor drift is reconciled: REQ-STABILITY-003 / DEC-043 / DEC-047 now describe the current hosted static/admin architecture instead of the retired self-hosted static/admin design.
-- DEC-042 is strengthened by DEC-088: every merged temporary branch is closed by exact remote-head SHA deletion first, then guarded zero-ahead pruning. If the remote branch moved after merge, it is preserved as new work.
-- The next cleanup run explicitly removes strict ancestor/exact-head duplicate refs while unique production/provenance/material/graphics branches remain preserved for selective salvage.
-- Evidence boundary: infrastructure and repository hygiene only. No PIE/device/visual/performance or chapter acceptance is claimed.
-
-## 2026-09-30 - Second branch-hygiene pass
-
-- Eight clearly superseded remote branches are approved for post-merge deletion: duplicate main-entry workflow experiments, obsolete Warehouse diagnostic/supersession repairs, the pre-reconciliation hero skeletal candidate branch, and three stale repair branches.
-- Unique production/art/provenance/settings branches are explicitly protected in `preserve_pending_salvage`; branch age alone is not a deletion criterion.
-- Evidence boundary: repository hygiene only; no gameplay/PIE/device/visual/performance acceptance is claimed.
-
-## 2026-09-30 - Stale PR branch cleanup authorization
-
-- Closed stale PRs #171, #163, #167, #154, #159, #162 and #125 after live supersession/integration review.
-- Branch cleanup plan now explicitly authorizes deletion of their remote heads after this maintenance merge.
-- PR #125 runtime changes were checked by current-source symbols before closure: player pawn caching, pooled world interactions/ambient motion, SFX repeat guard and bounded character-rig availability retry are already present on develop.
-- PR #154 latest-receipt/supersession behavior is present in the current warehouse audit and regression test.
-- Evidence boundary: repository/branch hygiene only; no PIE/device/visual/performance acceptance is claimed.
-
-## 2026-09-30 - Runner root migration C -> D
-
-- Persistent self-hosted runner authority is now `D:\\actions-runner`; persistent Warehouse authority is `D:\\actions-runner\\_warehouse\\ShireJourney`.
-- Live GitHub runner proof after the move reported `RUNNER_HEALTH_WORKSPACE_PASS temp=D:\\actions-runner\\_work\\_temp` and `RUNNER_HEALTH_PASS` under the interactive watchdog-owned user session.
-- Repository runner/Warehouse defaults were migrated away from active `C:\\actions-runner` assumptions, including chapter source waves, Warehouse trains, watchdog/service guard defaults, and Warehouse Stage explicit paths.
-- The old C-side runner is retirement residue only; quarantine preserved the pre-retirement baseline of 28,252 files / 7,604,599,440 bytes before cleanup.
-- Evidence boundary: RUNNER ROOT / WORKSPACE / TOPOLOGY RUN-PROVEN. No PIE, packaged gameplay, visual, target-device performance, or chapter acceptance is claimed.
-
-## 2026-09-29 - P1C01 hero skeletal candidate diagnostic repair
-
-- Post-merge P1C01 Frodo/Gandalf skeletal candidate workflow run #1 reached the candidate-build step and failed there; checkout, runner health and PowerShell preflight all passed.
-- The candidate runner now prints bounded diagnostic counts and pending/blocked reasons before enforcing candidate coverage thresholds.
-- This change does not weaken candidate QC or promote generic FBX files; it only exposes why the persistent Warehouse did not satisfy the first candidate-run threshold.
-- Evidence boundary: DIAGNOSTIC TOOLING CHANGE / exact-head static validation pending. No rig import, PIE, device, visual or performance acceptance is claimed.
-
-
-## 2026-09-29 - F2-04 Road & Helm's Deep Prep Maximum-Safe Source V1
-
-- F2-04 is now the active Part II source/preparation wave after merged F2-03 Edoras.
-- Canonical chapter contract: refugees move under threat; defenses are prepared; optional window is escort/rescue/armory/wall prep/civilians; locked postcondition is Uruk army arrives.
-- Permanent full-journey governance applies: preserve road/refugee/fortress/civilian/preparation detail rather than jumping directly into siege combat.
-- Data/F204RoadHelmsDeepPrepMaximumSafeMegaSourceV1.json defines 36 categories, 19 landmark-tagged categories and 9 source banks under a 34,000-candidate fair-share ceiling.
-- Source success requires at least 16 populated landmark categories and 8 ready banks.
-- F2-05 siege phases/breach/retreat/mounted sortie/dawn counterattack remain outside this pack.
-- runtime_consumers=[] and runtime_mapping_status=NOT_ASSIGNED_DO_NOT_INVENT remain hard boundaries.
-- PG-206 protects canon, chapter boundaries, source breadth, format rules, warehouse reserve and runtime-ID safety.
-- DEC-086 owns this source wave.
-- P1C01 remains the sole runtime-changing chapter lane; Frodo/Gandalf skeletal-candidate preparation can continue in parallel as source/QC work.
-- Evidence boundary: SOURCE-IMPLEMENTED / STATIC-VALIDATION PENDING. No runtime integration, PIE, device, visual, pacing or performance acceptance is claimed.
-
-## 2026-09-29 - P1C01 Frodo/Gandalf skeletal candidate wave V1
-
-- The active P1C01 character-production path now includes a bounded Frodo/Gandalf skeletal candidate discovery/QC wave.
-- This wave is intentionally source/intake/QC only: it searches the already authorized staged character packs for real FBX candidates and ranks them into Frodo/Gandalf rig-family pools.
-- No candidate defaults to READY_FOR_IMPORT. Skeleton hierarchy, skin weights, retarget, deformation, animation coverage, materials, sockets and LOD/cull remain explicit QC gates.
-- Runtime handoff remains /Game/Production/Characters/Rigs/<Character>/ with SK_<Character> + ABP_<Character>_Locomotion, soft references and FStreamableManager asynchronous loading.
-- Existing modular characters remain visible until the full rig pair resolves; ShireNPCContextSubsystem and LivingWorldDirector ownership is unchanged.
-- DEC-085 owns this visible-character priority wave.
-- Evidence boundary: SOURCE/INTAKE/QC TOOLING IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING. No imported rig, PIE, device, visual or performance acceptance is claimed.
-
-## 2026-09-29 - F2-03 Edoras Maximum-Safe Source V1
-
-- F2-03 Edoras is the next Part II source-production wave; runtime identity remains unassigned.
-- Source-verified chapter contract: Theoden restored; political and military crisis clarified; optional window is court exploration, stables, equipment and social scenes; locked postcondition is Rohan evacuates toward Helm's Deep.
-- Permanent story governance applies: Edoras is not reduced to a single restoration set-piece. Compatible settlement, Meduseld/court, horse/stable, relationship, muster and departure detail remains in source scope.
-- Data/F203EdorasMaximumSafeMegaSourceV1.json defines 32 categories, 20 landmark-tagged categories and 8 source banks under a 32,000-candidate fair-share ceiling.
-- Source success requires at least 14 populated landmark categories and 7 ready banks.
-- F2-04 road/refugee escort/Helm's Deep preparation and F2-05 battle resolution remain outside this pack.
-- runtime_consumers=[] and runtime_mapping_status=NOT_ASSIGNED_DO_NOT_INVENT remain hard boundaries.
-- PG-204 protects canon, breadth, format rules, warehouse reserve and runtime-ID safety.
-- DEC-084 owns this F2-03 source wave.
-- Evidence boundary: SOURCE-IMPLEMENTED / STATIC-VALIDATION PENDING. No runtime integration, PIE, device, visual, pacing or performance acceptance is claimed.
-
-## 2026-09-29 - F2-02 exact-head static repair
-
-- Pre-Unreal #1401 reached the project-structure validator and failed because PG-203 requires every F2-02 tooling-only path to be ignored in both Unreal push and pull-request filters, while the reconciliation branch contained each path only once.
-- The Unreal workflow filter is corrected so all three F2-02 tooling paths are present in both filter lists.
-- This is a CI routing repair only; F2-02 story/source scope and runtime boundaries are unchanged.
-- Evidence boundary: fresh exact-head static validation is pending on the repaired head. No runtime or human acceptance promotion is claimed.
-
-## 2026-09-29 - F2-02 reconciled after permanent story/source governance
-
-- F2-02 Fangorn & Gandalf Returned source architecture is reconciled onto the post-PR #164 governance baseline.
-- Canonical outcome remains: Gandalf leads the hunters to Edoras.
-- Source pack remains 40 categories, 20 landmark categories, 9 banks, 32,000 candidate ceiling, fair-share scheduling and minimum 8 ready banks / 16 landmark categories.
-- Part II runtime identity remains unassigned: runtime_consumers=[] and runtime_mapping_status=NOT_ASSIGNED_DO_NOT_INVENT.
-- The permanent story contract now applies to this pack: no story shortcuts, no silent omission, and compatible Tolkien detail may enrich playable content without changing locked film outcomes.
-- Governor decision is DEC-083; DEC-081 and DEC-082 remain reserved for the permanent full-journey story/source rule and Arabic localization rule.
-- PG-203 and the F2-02 source runner/workflow are present on this reconciliation branch.
-- Evidence boundary: SOURCE / GOVERNANCE / TOOLING ONLY. Fresh exact-head Pre-Unreal is required on this reconciled head. No PIE, device, visual, pacing or performance acceptance is claimed.
-
-## 2026-09-29 - permanent full-journey story/source and Arabic localization governance
-
-- Owner direction is captured as permanent repository governance: the game is experience-first, not a shortened recap. Timeline is navigation/order only; film/screenplays lock film-driven continuity; Tolkien supplies compatible deeper detail and book-only events; Sources 02-11 drive production.
-- Compatible Tolkien material omitted/compressed by the films is a playable-content candidate when it preserves locked outcomes, chronology and character knowledge.
-- Zero-silent-omission disposition tracking is now part of the source contract for F1-01 through F3-07 chapter packets.
-- Localization product rule is fixed: English VO; Arabic subtitles/objectives/menus/settings/HUD/tutorial guidance; canonical Middle-earth map location labels remain in English; proper RTL/shaping/wrapping/font support is required.
-- New-developer entry is strengthened so story/source routing is discoverable from repository onboarding without chat history.
-- `Scripts/new_developer_onboarding.ps1` now exposes the source index/story rule/localization rule. This is tooling/onboarding code only; no gameplay runtime behavior or chapter maturity is promoted.
-- Evidence boundary: **SOURCE/GOVERNANCE/ONBOARDING IMPLEMENTED ON CANDIDATE BRANCH; exact-head static validation required before merge.** No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED claim is made.
-
-## 2026-09-29 - F2-01 Three Hunters / Captives Maximum-Safe Source V1
-
-- F2-01 is now the active **Part II maximum-safe source-production wave** after F1-08.
-- Canonical mission scope was checked against the supplied Mission, Story and World PDFs: Aragorn/Legolas/Gimli pursue the Uruk-hai; Merry/Pippin escape into Fangorn; locked postcondition is **Paths converge around Fangorn/Rohan**.
-- Safe optional focus is tracking, stamina and evidence reading.
-- The pack explicitly excludes F2-02 Treebeard/Ent mobilization and Gandalf-return resolution.
-- No Part II runtime ID is invented. `runtime_consumers=[]` and `runtime_mapping_status=NOT_ASSIGNED_DO_NOT_INVENT` remain hard guardrails until a dedicated runtime-ID migration/mapping decision exists.
-- `Data/F201ThreeHuntersCaptivesMaximumSafeMegaSourceV1.json` defines **38 categories**, **17 landmark-oriented categories**, **8 source banks**, **28,000 total candidate ceiling**, **2,600/category hard ceiling**, fair-share scheduling and landmark bonus 8.
-- Source banks cover Rohan pursuit, tracking/evidence, Uruk trail pressure, captive escape, Fangorn threshold, hunter characters/animation, audio/weather/foley and convergence handoff.
-- Source success requires at least **14 populated landmark categories** and **7 ready banks**.
-- Fangorn use is threshold-only in F2-01: dense trunks, roots, mist and disorientation setup without opening later Ent-state content.
-- `PG-202` protects canon outcome, later-chapter exclusions, candidate breadth, bank minimums, FBX-only animation, BMP rejection, inventory gate and the unassigned Part II runtime-ID boundary.
-- Exact-head validation and heavy source execution are **pending**.
-- Evidence boundary: **SOURCE-IMPLEMENTED / STATIC-VALIDATION PENDING**. No runtime integration, PIE, device, visual, pacing or performance acceptance is claimed.
-
-## 2026-09-29 - F1-08 Amon Hen / Breaking of the Fellowship Maximum-Safe Source V1
-
-- F1-08 is now the active **maximum-safe source-production wave** under `DEC-078`; legacy runtime consumer remains `P1C08` and runtime integration is still blocked behind P1C07 Gate 6/7.
-- Canonical mission scope was rechecked against the supplied Mission, Story, Character and World PDFs plus the supplied Fellowship screenplay. Locked outcome remains: Boromir falls; Merry/Pippin are captured; Frodo chooses Mordor; Sam follows; **three parallel campaigns begin**.
-- Boromir's character guardrail is preserved: his fall is tragic/redemptive after temptation, not generic villainization.
-- `Data/F108AmonHenBreakingMaximumSafeMegaSourceV1.json` defines **34 categories**, **18 landmark-oriented categories**, **7 source/streaming banks**, **24,000 total candidate ceiling**, **2,400/category hard ceiling**, and **landmark score bonus 8**.
-- Candidate selection uses a fair-share effective per-category budget so early broad categories cannot consume the whole pack before combat/capture/departure/aftermath banks receive coverage.
-- F1-08 banks cover calm arrival, decision/high-seat route, Uruk attack, Boromir defense/aftermath, capture/pursuit, Sam/Frodo departure and campaign-split aftermath.
-- Source success requires at least **14 populated landmark categories** and **6 ready banks**.
-- Amon Hen landmark identity now distinguishes the F1-07 river approach from the F1-08 break state: ancient high-seat/stone-route focal vista above the Parth Galen river shore, with calm/attack/aftermath state variants.
-- Tolkien material is used only as compatible landscape/landmark support (high-seat/watchwork, old stone route/stairs, Parth Galen, Rauros/Tol Brandir sightline language); the project film-first mission outcome remains authoritative.
-- `PG-201` guards canon outcome, Boromir guardrail, 34-category breadth, bank coverage, landmark minimums, FBX-only animation, BMP rejection, inventory gate, fair-share scheduling and tooling isolation from the Unreal build lane.
-- Exact-head validation and heavy source execution are **pending** for this branch.
-- Evidence boundary: **SOURCE-IMPLEMENTED / STATIC-VALIDATION PENDING**. No UE integration, PIE, device, visual, pacing or performance acceptance is claimed.
-
-## 2026-09-29 - Adaptive Maximum Safe Production Mode V1
-
-- Owner direction is now permanent project policy through `DEC-078` and `REQ-PROD-011`: use the already-built CI/warehouse/streaming/governance infrastructure to maximize real production throughput instead of advancing in tiny isolated increments.
-- `Data/MaximumSafeProductionModeV1.json` is the machine-readable execution contract. It defines parallel preparation lanes, the single runtime-changing lane, hard stops, quarantine/continue behavior, runtime residency policy and the ordered next production waves.
-- `Data/WholeGameProductionExecutionQueueV1.json` now runs in `ACTIVE_MAXIMUM_SAFE_PREPARATION_RUNTIME_SERIALIZED` mode. Persistent warehouse mutation remains single-writer; source/index/material/audio/character/world-prep lanes may proceed independently when dependencies permit.
-- `Data/MasterExecutionRoadmap.json` is reconciled away from stale W00/PR#67 control state. Current mode is P1C01 runtime closure plus parallel whole-game preparation, with F1-08 as the next maximum-safe mega source wave after F1-07.
-- Live Warehouse #286 evidence proved the receipt-supersession repair worked: `WAREHOUSE_INVENTORY_AUDIT_PASS payloadFiles=18697 bytes=6688457009 receipts=14 receiptRecords=667 activeRecords=239 superseded=428 duplicateGroups=0`.
-- Warehouse #286 later failed in `run_warehouse_saturation_train.ps1` because an empty verified set under StrictMode exposed no `.Sum` property. This is a reporting/tooling defect, not an inventory-capacity failure.
-- Saturation reporting now uses an empty-safe Int64 sum helper; `Scripts/test_warehouse_saturation_empty_sum.ps1` is wired into Pre-Unreal so an empty source lane must report `verified_bytes=0` instead of stopping the train.
-- Existing safety boundaries remain unchanged: FBX-only animated production assets, PNG/TGA production textures, no BMP, 6 GiB warehouse reserve, soft/async heavy runtime loading, pooled crowds, ISM/HISM + LOD/culling, predecessor Gate 6/7 and target-device profiling.
-- Evidence boundary: **SOURCE-IMPLEMENTED / exact-head validation pending** for this production-mode wave. Warehouse inventory clean is evidenced at the #286 audit step; the full Warehouse #286 workflow was not successful because of the later saturation-report defect. No PIE/device/visual/pacing/performance acceptance is claimed.
-
-## 2026-09-29 - F1-07 LÃ³rien & Anduin Landmark Mega Source V1
-
-- Canonical F1-07 source architecture is now registered for legacy runtime consumer `P1C07`.
-- Canon boundary is explicit: F1-07 prepares grief/recovery, rest/gifts, river journey, LothlÃ³rien and the Anduin/Amon Hen approach; **Breaking of the Fellowship / Uruk-attack resolution remains F1-08**.
-- `Data/F107LorienAnduinLandmarkMegaSourceSuperpackV1.json` defines **26 categories**, an **18,000 total candidate ceiling**, **2,000/category**, **landmark score bonus 7**, and at least **10 populated landmark categories** before source success.
-- LothlÃ³rien identity centers a golden/luminous sanctuary with vertical flets and organic bridges. Anduin identity centers river-axis readability, cliffs, ancient stone monuments and a readable Amon Hen approach.
-- `Data/Part1LandmarkIdentityPlanV1.json` now records `LOTHLORIEN` and `ANDUIN_F107_APPROACH` without renumbering runtime chapters.
-- `Scripts/run_f107_lorien_anduin_landmark_mega_source.ps1` reuses the proven inventory-gated shared-stock index architecture; animated candidates remain FBX-only and BMP is blocked.
-- `PG-200` guards size, landmark breadth, source formats, inventory gate, F1-08 exclusion, workflow contract and Unreal tooling isolation.
-- Governor `DEC-077` records the durable scope/architecture contract.
-- Heavy source execution remains blocked until persistent warehouse inventory is clean. P1C07 runtime integration remains predecessor Gate 6/7 gated.
-- Evidence boundary: **SOURCE-IMPLEMENTED / exact-head static validation pending**. No UE runtime, PIE, device, visual, pacing or performance acceptance is claimed.
-
-## 2026-09-29 - Warehouse receipt supersession semantics
-
-- Warehouse #285 isolated the current inventory blocker to `ambientCG\PLASTER\Plaster007_2K-PNG.zip`: historical batch `WAREHOUSE_AMBIENTCG_P1C01_V1` declares the old payload hash while the refreshed current payload is represented by the newer trilogy-foundation receipt path.
-- `Scripts/audit_warehouse_inventory.ps1` now resolves **one active provenance record per normalized payload path**. Newer parseable receipt provenance is active; older receipts stay preserved as `superseded` history instead of being treated as simultaneous hash authorities.
-- Windows path case/slash variants are normalized before grouping. Active-record hash, missing-reference and license checks remain fail-closed.
-- The inventory report now records total/active/superseded provenance counts and the old-to-new receipt relationship without rewriting or deleting historical receipts.
-- New `Scripts/test_warehouse_inventory_receipt_supersession.ps1` proves that a stale V1 hash is superseded by a valid newer V2 receipt, then proves a tampered active V2 payload still fails.
-- Pre-Unreal runs this synthetic regression on `windows-latest`.
-- Governor `DEC-076` records the permanent provenance rule.
-- Evidence boundary: **SOURCE-IMPLEMENTED / exact-head Pre-Unreal pending / persistent warehouse rerun pending**. Warehouse clean state and P1C01 closure continuation are not yet claimed.
-
-## 2026-09-29 - Interactive CI orchestration anti-hang rule
-
-- PR #153 is merged on develop; exact-head Pre-Unreal #1379 and Unreal #1095 both completed SUCCESS.
-- The recent apparent chat hangs were caused by repeated interactive polling while long GitHub Actions jobs were still running, not by a proven Unreal deadlock.
-- Governor `DEC-075` now limits repeated status polling for the same long-running workflow inside one interactive response.
-- After bounded checks, continuation moves to the scheduled automation/next run while independent safe work may continue on separate branches.
-- Exact-head validation, Gate 6/7 and evidence standards are unchanged.
-- Evidence boundary: **ORCHESTRATION FIX RECORDED**; no new runtime/device/visual/performance acceptance is claimed.
-
-## 2026-09-29 - F1-06 landmark scoring strengthened
-
-- F1-06 landmark categories now use a manifest-driven **landmark score bonus = 6** instead of a fixed small inline boost.
-- The source indexer therefore prioritizes strong landmark candidates ahead of generic dressing when keyword evidence is otherwise comparable.
-- `PG-199` now rejects a landmark score bonus below 6 and guards the runtime marker that consumes the configured bonus.
-- Duplicate older PR #152 was closed without merge; PR #153 is the single F1-06 path and is based on current develop with warehouse diagnostics preserved.
-- Evidence boundary: **SOURCE-IMPLEMENTED / fresh exact-head checks pending / no visual acceptance claimed**.
-
-## 2026-09-29 - PG-199 landmark/F1-06 regression guard
-
-- `PG-199` now statically guards the Part I landmark identity plan and F1-06 superpack.
-- It prevents silent reduction of the 16,000 total candidate ceiling, 1,800/category throughput, FBX-only animated rule, BMP block, inventory-clean gate, minimum landmark coverage, required Caradhras/Moria landmark categories, and tooling-only Unreal filter contract.
-- Evidence boundary remains **SOURCE-IMPLEMENTED / exact-head validation pending**.
-
-## 2026-09-29 - Part I Landmark Identity + F1-06 Caradhras/Moria Mega Source V1
-
-- New `Data/Part1LandmarkIdentityPlanV1.json` defines recognizable visual anchors for Shire/Hobbiton, Bag End, Bree, Weathertop, Rivendell, Caradhras and Moria.
-- The landmark rule is source/visual architecture: each production region must expose at least one dominant silhouette/vista or interior focal vista supporting navigation and cinematic continuity.
-- Low-spec landmark strategy prioritizes composition, silhouette, lighting/fog hierarchy, critical-vista preloading, LOD/HLOD or simplified distance proxies, and instanced repeated dressing over brute-force geometry.
-- Canonical **F1-06 Caradhras & Moria** now has `Data/F106CaradhrasMoriaLandmarkMegaSourceSuperpackV1.json` with **24 categories**, **16,000 total candidate ceiling** and **1,800/category**.
-- Runtime consumers remain legacy `P1C05 + P1C06` under the recorded F1/P1 reconciliation.
-- Caradhras identity centers high mountain-pass ridge readability under snow/wind/low visibility and storm escalation.
-- Moria identity centers monumental entrance/hall-axis geometry, routefinding landmarks, tomb-alert space and Balrog-escape visual hierarchy.
-- `Scripts/run_f106_caradhras_moria_landmark_mega_source.ps1` produces category indexes plus a separate landmark coverage report and fails if the configured landmark-source minimum is not populated.
-- Heavy F1-06 execution remains **WAREHOUSE-INVENTORY-GATED** while the current hash mismatch is unresolved.
-- Governor `DEC-073` and `DEC-074` record these contracts.
-- Evidence boundary: **SOURCE-IMPLEMENTED / exact-head validation pending / no visual acceptance claimed**.
-
-## 2026-09-29 - Warehouse hash-mismatch diagnostics hardening
-
-- P1C01 Closure Pack #2 reached inventory audit after seven successful cars, then hard-stopped on `hashMismatch=1` with no missing references, license mismatch, dangerous payload or bad receipt count.
-- Existing `warehouse_inventory_latest.json` already contains detailed mismatch rows, but the workflow log exposed only aggregate counts.
-- `Scripts/audit_warehouse_inventory.ps1` now emits bounded exact mismatch evidence (provider, batch, asset, kind, path, declared hash, actual hash) before failing.
-- Missing-reference and license-hash mismatch evidence are also emitted, capped at 20 rows per defect class.
-- No auto-delete, auto-quarantine or receipt rewrite is introduced.
-- Governor `DEC-072` records the evidence-first repair rule.
-- Evidence boundary: **SOURCE-IMPLEMENTED / mismatch itself unresolved until rerun evidence identifies the record**.
-
-## 2026-09-29 - F1-05 Rivendell & Fellowship Mega Source Superpack V1
-
-- Canonical scope: **F1-05 Rivendell & Fellowship**; legacy runtime consumer **P1C04**.
-- Critical path: Council chooses destruction of the Ring; Fellowship forms. Locked postcondition: Nine depart.
-- Rivendell world grammar: stone/wood integration, waterfalls, layered terraces; lore/relationships/equipment/council transition; arrival-wounded/Fellowship-formed variants.
-- New manifest defines **20 categories**, **12,000 total candidate ceiling**, **1,500/category**.
-- Coverage includes architecture/terraces, waterfalls/river, gardens, interiors, Council space, lore/library, equipment/armory, Fellowship characters/animations, Elven population, relationship scenes, healing/recovery, sanctuary audio/lighting, traversal, mounts, cinematic dressing, departure support, fauna and systemic interactions.
-- Heavy execution is inventory-clean gated because P1C01 Closure #2 reported `hashMismatch=1`.
-- Animated candidates remain FBX-only; BMP blocked; shared-stock indexing avoids multi-GB duplication.
-- Governor `DEC-071` records the permanent contract.
-- Runtime integration remains **GATED**.
-- Evidence boundary: **SOURCE-IMPLEMENTED / exact-head validation pending / heavy workflow not yet authorized until inventory clean**.
-
-## 2026-09-29 - F1-04 Bree & Weathertop Mega Source Superpack V1
-
-- New source-preparation lane registered for canonical **F1-04 Bree & Weathertop**, consumed by legacy runtime chapters **P1C02 + P1C03** under the existing F1/P1 reconciliation.
-- Canonical story boundary remains: Aragorn becomes guide; Ring use increases danger; Frodo is wounded; locked postcondition is the party racing for Rivendell.
-- Bree production grammar: timber/stone, rain, gates, crowded inn; social stealth, supplies, rumors and pursuit pressure; night-arrival/departure variants.
-- Weathertop production grammar: ruined hilltop watchtower, ancient stone ring, exposed skyline; camp tension and defensive encounter support; calm-approach/night-attack variants.
-- `Data/F104BreeWeathertopMegaSourceSuperpackV1.json` defines 16 source categories with a total candidate ceiling of 9000 and per-category ceiling of 1200.
-- `Scripts/run_f104_bree_weathertop_mega_source.ps1` indexes shared warehouse stock without duplicating payloads; animated categories accept FBX only and BMP textures are blocked.
-- `.github/workflows/f104-bree-weathertop-mega-source.yml` provides an isolated 180-minute source-preparation lane with exact-head checkout, runner-health gate and PowerShell syntax preflight.
-- F1-04 tooling-only paths are excluded from expensive Unreal validation.
-- Governor `DEC-070` records the permanent architecture/scope contract.
-- Runtime integration for P1C02/P1C03 remains **GATED behind predecessor acceptance**.
-- Evidence boundary: **SOURCE-IMPLEMENTED / exact-head validation pending**. No PIE/device/visual/performance acceptance is claimed.
-
-## 2026-09-29 - Develop production-train failures isolated and repaired in source
-
-- Develop merge head `d012f4c68f4e9d83b4b8ec4043b5df06c7a4d9a0` retained green core validation: Pre-Unreal #1363 SUCCESS and Unreal #1085 SUCCESS.
-- P1C01 Chapter Closure Pack #1 fast preflight passed with `cars=15`, ~23.3 GiB free and 6 GiB reserve, then the first storage car incorrectly hard-failed because `$LASTEXITCODE` had never been initialized after a pure PowerShell scriptblock.
-- Warehouse #283 prepared `8` material sources, created local generated commit `ef65959`, then failed during generated-branch remote-head lookup. The lookup used native `git ls-remote` inside a truncating PowerShell pipeline before checking the native exit code.
-- Part I Chapter Preparation Train #1 reached `chapters=7` and ignored `2964` blocked-format stock entries as designed, then Windows PowerShell 5.1 raised `Argument types do not match` while embedding a generic `List[object]` into the ordered report.
-- Source repairs now provide deterministic child-process exit handling, bounded non-pipelined remote lookup retries, and explicit `ToArray()` candidate materialization.
-- Governor `DEC-069` and Pre-Unreal `PG-196` lock the regression contract.
-- Sequential Chapter Queue #1 was SUCCESS and correctly skipped P1C02 source release because P1C01 Gate 6/7 is not ACCEPTED.
-- Evidence boundary: **SOURCE-IMPLEMENTED / rerun validation pending**. No PIE/device/visual/performance acceptance is claimed.
-
-## 2026-09-29 - #1082 direct-PID/CIM stale-commandlet recovery refinement
-
-- Unreal #1082 proved the stale CI commandlet still survived `Stop-Process -Force` and `taskkill /T /F`.
-- The blocker remained PID 14144, `UE4Editor-Cmd.exe` running the repository's unattended `Automation RunTests ShireJourney.QA;Quit` command against the active ShireJourney workspace under the same interactive owner.
-- Recovery now avoids tree-mode as the first Windows fallback because the commandlet's recorded parent is already dead. The sequence is now: `Stop-Process -Id -Force` -> direct `taskkill /PID <pid> /F` -> `Win32_Process.Terminate` via CIM, with explicit result markers.
-- The recovery path remains available only after the previously recorded workspace/project/unattended/recognized-commandlet/same-owner/orphan/age proof passes.
-- Interactive `UE4Editor` remains protected from kill-by-name recovery.
-- Evidence boundary: **SOURCE-IMPLEMENTED / fresh exact-head validation pending**.
-
-## 2026-09-29 - #1358/#1080 follow-up: proven stale CI commandlet + bounded tree recovery
-
-- Pre-Unreal #1358 failed only at legacy `PG-015` because that validator still expected the historical editor-only wait implementation.
-- Unreal Build #1080 produced concrete blocker identity for PID 14144: `UE4Editor-Cmd.exe`, owner `IDEAPAD320\user`, session 2, age ~4699 seconds, command line running the repository's unattended `Automation RunTests ShireJourney.QA;Quit` against the active ShireJourney workspace.
-- The parent PID reported by the process snapshot was no longer alive, satisfying the stale/orphan branch of the bounded recovery contract.
-- Initial `Stop-Process -Force` did not remove PID 14144 within the original 750 ms window; the source repair now waits longer and uses `taskkill /PID <pid> /T /F` only as a fallback after the same workspace/project/unattended/recognized-commandlet/same-owner/orphan/age proof succeeds.
-- Interactive `UE4Editor` is still never terminated by name.
-- `PG-015` now recognizes the shared editor+commandlet waiter and `PG-195` requires same-owner proof plus the bounded taskkill fallback marker.
-- Evidence boundary: **SOURCE-IMPLEMENTED / fresh exact-head validation pending**. This is not PIE/device/visual/performance acceptance.
-
-## 2026-09-29 - Continuous Part I train + Unreal #1068 root repair
-
-- Owner granted standing authorization for safe routine reversible production work without repeated "continue" prompts; real login/purchase/licensing/canon/destructive/human-acceptance boundaries still require owner action.
-- Unreal Build #1068 compiled `ShireJourneyEditor` successfully, then failed before import on `PRODUCTION_IMPORT_PREFLIGHT_EDITOR_RUNNING pids=14144`.
-- Root cause in the CI contract: `ci_wait_for_unreal_editor.cmd` observed only `UE4Editor` while production-import preflight observed `UE4Editor` and `UE4Editor-Cmd`. A false-clear path therefore existed for commandlets.
-- New `Scripts/wait_for_unreal_processes.ps1` observes both process families and emits PID/PPID/session/owner/age/command-line evidence. It never kills an interactive editor by name; bounded stale-commandlet recovery requires workspace ownership, unattended recognized CI commandlet, age threshold and no live parent.
-- `preflight_production_asset_import.ps1` now emits the same ownership diagnostics when a blocker survives.
-- `PG-195` statically guards this process-ownership contract.
-- Part I downstream preparation is now represented by `Data/Part1SequentialRuntimeChapterTrainV1.json` and `Scripts/run_part1_runtime_chapter_prep.ps1`.
-- Canonical source mission IDs remain F1-01..F1-08; existing runtime P1C01..P1C08 IDs remain legacy implementation boundaries. Current reconciliation: P1C01 spans F1-01/F1-02/F1-03; P1C02+P1C03 split F1-04; P1C04 maps F1-05; P1C05+P1C06 split F1-06; P1C07 maps F1-07; P1C08 maps F1-08.
-- `.github/workflows/part1-chapter-preparation.yml` prepares shared-stock candidate indexes for P1C02-P1C08 without duplicating warehouse payloads.
-- Runtime remains serialized. P1C01 is still active; P1C02 may open only after P1C01 Gate 6/7 becomes genuinely ACCEPTED.
-- Governor decisions `DEC-066`, `DEC-067` and `DEC-068` record these rules.
-- Evidence boundary: **SOURCE-IMPLEMENTED / fresh exact-head Pre-Unreal + Unreal validation pending**. No new PIE/device/visual/pacing/performance acceptance is claimed.
-
-## 2026-09-29 - Governor sync: sequential two-chapter queue + systemic reactivity direction
-
-- `DEC-064` now records the sequential production queue: **P1C01 remains the sole active runtime closure chapter; P1C02 Shadow of the Past may prepare source/warehouse work in advance but runtime integration stays closed until the official P1C01 Gate 6/7 acceptance record is ACCEPTED.**
-- Expected waiting state before that gate: `SEQUENTIAL_CHAPTER_QUEUE_WAIT`; waiting is not a workflow failure and does not imply P1C02 runtime progress.
-- `DEC-065` now records the durable production direction: **AAA Visual Quality + Systemic Reactivity + Intelligent NPCs + Living World + Strict Optimization**.
-- The new systemic-reactivity direction extends existing ownership (`ALivingWorldDirector`, `UShireNPCContextSubsystem`, `UShireQuestSubsystem` and world-router committed context). It explicitly rejects a second parallel world/NPC brain.
-- The identified future gap is a bounded environmental reaction contract for supported trees/foliage, water, doors/tools/props, fauna and NPC observers. Runtime implementation remains deferred behind the active P1C01 closure/integration sequence and target-device gates.
-- Documentation/governance status: **SOURCE-IMPLEMENTED / NOT ENGINE-VALIDATED BY THIS DOC CHANGE**.
-- No PIE, device, visual, pacing or performance acceptance is created by these records.
-
-## 2026-09-28 - Pre-Unreal #1332 seven-failure root fix
-
-- Pre-Unreal #1332 passed the repository-wide PowerShell parser gate: `POWERSHELL_SYNTAX_PASS files=47 errors=0`.
-- It then failed seven static contracts. Five were watchdog service-guard symbols removed by the earlier clean-source restoration; one was the new closure preflight missing from Unreal `paths-ignore`; one was PG-193 checking a doubly escaped workflow path literal.
-- The watchdog is now rebuilt from the clean single-body source with continuous service exclusion restored: `ServiceGuardPath`, `Invoke-ServiceOwnershipGuard`, `Invoke-RunnerServiceGuard`, and `SHIRE_RUNNER_WATCHDOG_SERVICE_GUARD_TRIGGER`. The guard executes at boot and every watchdog loop.
-- `Scripts/preflight_p1c01_chapter_closure_pack_v2.ps1` is now excluded from Unreal Build in both push and PR filters.
-- PG-193 now checks the real `test_powershell_syntax.ps1` workflow reference.
-- Unreal Build #1054 on the previous exact head completed **SUCCESS** after the new production-import preflight/retry changes; this does not validate the newer static fixes above.
-- Current maturity: **SOURCE-FIXED / EXACT-HEAD PRE-UNREAL RE-RUN PENDING / PR #145 NOT MERGED**.
-
-## 2026-09-28 - Red CI failures root-caused and architecture split
-
-- Pre-Unreal #1325 reached the new PowerShell parser gate successfully (`POWERSHELL_SYNTAX_PASS files=45 errors=0`) and then failed on PG-168 because the normal Warehouse workflow had been changed from its proven `cancel-in-progress: true` contract.
-- Root fix: the normal Warehouse workflow is restored to **60 minutes + cancellable**, while the large P1C01 Closure Pack moves to a dedicated `p1c01-chapter-closure.yml` workflow with its own concurrency group, **180-minute timeout**, and **cancel-in-progress: false**.
-- A cheap `preflight_p1c01_chapter_closure_pack_v2.ps1` now validates required scripts, parses the closure PowerShell set, validates child JSON manifests, and checks the disk reserve before any heavy acquisition car starts.
-- Unreal Build #1047 compiled `ShireJourneyEditor` successfully. Production import then reported `376 files, 0 failures`, but UE emitted a file-system save failure for `Content/Production/Textures/T_Cloth_Green.uasset` and the workflow correctly stopped.
-- The log does **not** prove whether that file was read-only or exclusively locked. DEC-062 therefore adds a measured preflight: no active editor process, write/delete probe, tracked-vs-untracked protection, read-only repair only for untracked generated uassets, and exclusive write-open checks. A save/delete-class importer failure gets exactly one bounded retry after re-preflight; all other importer failures fail immediately.
-- Current maturity: **SOURCE-REPAIRED / ROOT-CAUSE GUARDS IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UNREAL RE-RUN PENDING / NO PIE OR DEVICE CLAIM**.
-
-## 2026-09-28 - PR #145 root-cause hardening after Pre-Unreal #1318
-
-- Pre-Unreal #1318 **FAILED** at the new repository-wide PowerShell parser gate. This is expected fail-closed behavior: the new guard found real syntax corruption before merge.
-- It found two source defects: a duplicated tail in `export_p1c01_material_source_branch.ps1`, plus an older duplicated/corrupted `runner_watchdog.ps1`.
-- The exporter duplicate tail is removed. The watchdog is restored from exact historical commit `1066cf022723fcdef9bfac66519f5b0f9c1e03a4`, the newest inspected clean watchdog revision retaining later stale-worker protection.
-- DEC-060 records the watchdog restoration provenance; DEC-059 parser coverage remains active.
-- Maximum-throughput execution is hardened further: Warehouse Stage timeout is now 180 minutes and `cancel-in-progress=false`, so a large closure pack is allowed to finish while newer pushes queue instead of killing the active train.
-- Current PR #145 maturity after these fixes: **SOURCE-REPAIRED / EXACT-HEAD PRE-UNREAL RE-RUN PENDING / WAREHOUSE V2 EXECUTION PENDING / UE IMPORT NOT CLAIMED**.
-
-## 2026-09-28 - Warehouse #282 parser failure converted into a permanent prevention gate
-
-- Develop `0adc090f1caa92425322ac15d44b08b031f2ece0` passed Pre-Unreal #1317, but Warehouse #282 failed before material execution because `Scripts/export_p1c01_material_source_branch.ps1` contained an unterminated PowerShell expression/string around the explicit remote-SHA lease block.
-- This exposed a validation gap: Pre-Unreal checked policy/semantic markers but did not parse all PowerShell scripts.
-- The exporter publish block is repaired on the active P1C01 Closure Pack V2 branch.
-- DEC-059 adds `Scripts/test_powershell_syntax.ps1`, which recursively parses every `Scripts/**/*.ps1` with `System.Management.Automation.Language.Parser` on the hosted Windows Pre-Unreal lane and fails with file/line/column details on any parser error.
-- The parser guard is tooling-only and is excluded from Unreal Build triggers.
-- Current maturity for this repair: **SOURCE-FIXED / EXACT-HEAD PRE-UNREAL PROOF PENDING / WAREHOUSE RE-RUN PENDING**.
-
-## 2026-09-28 - P1C01 Chapter Closure Mega Pack V2 launched
-
-- DEC-058 encodes maximum P1C01 source throughput while keeping raw Warehouse, Git/LFS promotion and UE import as separate bounded layers.
-- One closure pack covers 37 Poly Haven assets, 17 ambientCG search lanes, 17 Quaternius packs, 12 Kenney packs, 8 KayKit packs and 17 OpenGameArt assets.
-- Internal promotion selector ceiling is 187 candidates across surfaces, architecture/props, nature, audio, fauna and character/animation support.
-- Material closure wave expands from 16 to 26 explicit Shire/Bag End materials. Generated-source promotion remains bounded at 48 MiB/source and 640 MiB/batch with minimum 18 exported items.
-- Closure Pack V2 enforces a 6 GiB free-disk reserve, never deletes original Warehouse payloads for space, and quarantines provider/asset/source failures while allowing independent cars to continue.
-- Overlapping legacy P1C01 Warehouse steps are suppressed while V2 owns the run. Unreal Build ignores the new control-plane manifests/scripts; actual binary/content integration remains a later bounded engine lane.
-- Current maturity: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING / V2 WAREHOUSE EXECUTION PENDING / UE IMPORT NOT CLAIMED**.
-
-## 2026-09-28 - Warehouse #281 root-cause publish-race repair
-
-- Pre-Unreal #1315: **SUCCESS** on develop `a8f78c897c838a82a12ed61ddfb899a4c1ded03a`.
-- Warehouse #281 reached the revised albedo/provenance lane and reported `P1C01_MATERIAL_INTAKE_PASS prepared=8 pending=8 manual=0`.
-- It then created local generated commit `2474500` with 17 material-source files, but publish failed with Git `stale info` on `generated/p1c01-material-source-v1`.
-- Root cause: bare `--force-with-lease` depends on a local remote-tracking ref, while isolated Warehouse checkouts intentionally do not fetch the generated branch. The source/QC result itself had already passed.
-- DEC-057 changes generated-branch publication to query the authoritative remote head with `ls-remote` and use an explicit `refs/heads/<branch>:<remote-sha>` lease. New branches use a normal create push. Ephemeral workflow auth no longer asks WinCred to persist credentials.
-- PG-191 statically rejects regression to implicit lease publishing.
-- Current maturity: **ROOT-CAUSE SOURCE-FIXED / EXACT-HEAD VALIDATION PENDING / GENERATED BRANCH REPUBLISH PENDING / UE IMPORT NOT STARTED**.
-
-## 2026-09-28 - Warehouse #280 PowerShell compatibility repair
-
-- Pre-Unreal #1313 passed on develop `1aa387353cb2e5d00ea934318e2eade3aa1a9094`.
-- Warehouse Stage #280 reached the selective P1C01 material-export lane and failed before material selection because Windows PowerShell 5.1 interpreted `return if(...)` as an invalid command at `prepare_p1c01_material_intake.ps1:122`.
-- The selector now uses PowerShell-compatible explicit control flow: null returns through an `if` block, otherwise the selected file path is returned on the following statement.
-- PG-190 now rejects the incompatible `return if(` form so this syntax regression cannot silently return.
-- No UE import, runtime C++, PIE, device, visual, or performance status changes from this repair.
-- Current maturity: **SOURCE-FIXED / PRE-UNREAL EXACT-HEAD PROOF PENDING / WAREHOUSE RE-RUN PENDING**.
-
-## 2026-09-28 - Warehouse #279 passed; generated material branch held for exact albedo provenance repair
-
-- Develop exact head `c1c3beeaa382086a320448bb95ce952f929fe6a6` passed Pre-Unreal #1311 and Warehouse Stage #279.
-- Warehouse #279 material lane succeeded: intake `prepared=8 pending=8 manual=0`; generated branch `generated/p1c01-material-source-v1` at `537d9e724e064dac8af52f1a8d6e3bc6f5111858` with 8 materials / 137,974,221 source bytes.
-- Mega Chapter Pack architecture is now machine-proven at the previous #279 input state: the revised material exporter no longer quarantines the car on the old 16 MiB source cap.
-- Before UE import, source review found an evidence-quality flaw in material intake: provenance was captured from the first matching warehouse row before the final base-color file was selected. Therefore the generated receipt cannot prove that `source_url` belongs to the exact selected PNG/TGA; two wood entries currently expose AO URLs.
-- DEC-056 holds this generated branch from UE import until intake requires explicit basecolor/albedo/diffuse/color semantics, rejects support-map/ambiguous names, and binds provenance to the exact selected file.
-- This is a QC hold, not a claim that the generated texture bytes are visually wrong. No UE import has been started from the held branch.
-- Current maturity: **WAREHOUSE SOURCE EXPORT RUN-PROVEN / UE IMPORT HELD FOR SOURCE-QC REGENERATION / PIE-DEVICE-VISUAL NOT CLAIMED**.
-
-## 2026-09-28 - PR #141 Pre-Unreal #1309 stale guard repair
-
-- Exact-head Pre-Unreal #1309 reached project-structure validation and failed on one stale PG-184 literal that still required the retired text `128 MB bounded limit`.
-- The failure was in static validation policy, not in the revised exporter execution path.
-- PG-184 now checks for the bounded batch-control symbol `MaxBatchSourceBytes`; PG-188 remains the exact authority for the new 32 MiB/source + 256 MiB/batch + minimum-six contract.
-- Current maturity: **SOURCE-FIXED / EXACT-HEAD STATIC RE-RUN PENDING / NO UE OR VISUAL ACCEPTANCE CLAIM**.
-
-## 2026-09-28 - Warehouse #278 proved Mega Chapter Pack; material export large-batch repair in progress
-
-- Develop exact head `14d34d2813544caf192d4edeca7a2cf11de7799f` merged PR #140 and passed Pre-Unreal #1308 plus Warehouse Stage #278.
-- Warehouse #278 executed P1C01 Mega Chapter Pack as one bounded step: `passed=3 quarantined=1 hard=0`.
-- Inventory proof moved to `payloadFiles=18676 bytes=6622954088 receipts=14 receiptRecords=667 duplicateGroups=215`.
-- Mega promotion remained `prepared=36 intakeQC=34 pending=3 manual=2 badReceipts=0`; ambientCG Plaster007 and KayKit Medieval Hexagon remain isolated manual blockers.
-- Material intake passed at `prepared=8 pending=8 manual=0`, but MATERIAL_SOURCE_EXPORT quarantined because `SH_DIRT_SOIL/TX_SH_DIRT_SOIL_BaseColor.png` exceeded the old 16 MiB per-source cap before the generated branch could be pushed.
-- DEC-055 now authorizes a larger but still bounded material promotion lane: 32 MiB per source, 256 MiB per generated batch, minimum six exported materials, and item-level quarantine instead of aborting the whole material car.
-- TGA is still not promoted until an explicit `*.tga` Git LFS rule exists; PNG remains LFS-tracked.
-- Runtime material cost is unchanged: one base-color sample plus scalar Roughness/Metallic/Specular. No extra runtime texture samples are authorized by this source-batch increase.
-- Current maturity of this repair: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC PROOF PENDING / POST-MERGE WAREHOUSE RE-RUN PENDING / UE IMPORT PENDING**.
-
-## 2026-09-28 - P1C01 Mega Chapter Pack V1 launched as the new batching model
-
-- ProjectGovernor DEC-054 now makes chapter-scale batching and workflow minimization a durable production rule.
-- `P1C01MegaChapterPackV1` groups four bounded cars into one Warehouse execution: inventory audit, mega promotion, material source export, and character intake.
-- The existing mega-promotion selector ceiling is 62 items across surfaces (20), architecture/props (18), audio/foley (10), fauna (6), and character/animation support (8). Actual promotion still depends on staged receipt-backed stock.
-- Warehouse #276 remains the latest concrete stock evidence: 13,389 payload files / 5,590,510,073 bytes / 14 receipts / 667 receipt records / 215 duplicate groups; prior mega promotion prepared 36 with 34 INTAKE_QC and two manual blockers.
-- Chapter-pack execution suppresses overlapping legacy P1C01 audit/promotion/export/character steps, so one coherent pack does not pay the same work twice.
-- Asset/source blockers quarantine their car and later independent cars continue; infrastructure failure remains fail-closed.
-- TGA LFS policy is intentionally deferred to the first binary promotion wave that needs it, so this control-plane pack does not wake Unreal unnecessarily.
-- Current maturity: **SOURCE-IMPLEMENTED / STATIC PROOF PENDING / RUNNER EXECUTION PENDING**.
-
-## 2026-09-28 - P1C01 material-tooling Unreal CI fast path
-
-- PR #137 exact head `bf7e08c8...` passed Pre-Unreal #1301 and full Unreal Build #1038, including editor build, production import, Automation Framework QA, startup smoke, chapter/route audits, Windows cook/package, packaged-data verification and packaged executable launch.
-- That evidence showed the rooted-manifest exporter repair was safe, but also exposed avoidable runner cost: source-only P1C01 material tooling changes were still waking the full Unreal pipeline.
-- Unreal Build Validation now ignores source-only changes to `prepare_p1c01_material_intake.ps1`, `promote_p1c01_material_intake.ps1`, `run_p1c01_material_pipeline.ps1` and `export_p1c01_material_source_branch.ps1` on pull requests; push already ignored the first three and now also ignores the exporter.
-- The classifier safe-tooling lists now include the exporter as well, so manual dispatch or safe mixed tooling/docs deltas can inherit a proven parent instead of falling through to full cook/package.
-- Runtime C++, SourceAssets, Config, Build.cs, Target.cs, streaming, cook/package and unclassified deltas retain their existing full/core/asset gates.
-- Current maturity: **CI POLICY SOURCE-IMPLEMENTED / PRE-UNREAL PROOF PENDING / NO RUNTIME ACCEPTANCE CLAIM**.
-
-## 2026-09-28 - Warehouse #276 rooted manifest exporter repair
-
-- Develop exact head `f24480b379fa544c6d1ad01e7a6247d69aac0c93` reached Warehouse Stage #276 on the supervised `IDEAPAD320` runner. Runner health passed with `listenerPid=524` and `workerCount=1`.
-- Upstream warehouse work completed before the final exporter failure: inventory `payloadFiles=13389 bytes=5590510073 receipts=14 receiptRecords=667 duplicateGroups=215`; P1C01 character intake `prepared=0 pending=4 blocked=0`; mega promotion `prepared=36 intakeQC=34 pending=3 manual=2 badReceipts=0`.
-- The two mega-promotion blockers remain isolated in manual queue: ambientCG `Plaster007` has a structurally corrupt ZIP, and KayKit `KAYKIT_MEDIEVAL_HEXAGON_1_0` failed selected extraction. Neither is allowed to stop the rest of the train.
-- P1C01 material intake itself passed with `prepared=8 pending=8 manual=0`. The run then failed only because `export_p1c01_material_source_branch.ps1` re-joined an already absolute `ManifestPath` with `ProjectRoot`, producing an invalid duplicated Windows path.
-- The exporter now keeps rooted manifest paths unchanged and joins only relative paths. PG-184 static validation now guards `IsPathRooted`, `ResolvedManifestPath`, the resolved-path `Get-Content` call, and rejects the old re-join expression.
-- No gameplay/runtime C++ changed in this repair.
-- Current maturity: **SOURCE-FIXED / EXACT-HEAD STATIC VALIDATION PENDING / GENERATED MATERIAL BRANCH PENDING / UE IMPORT PENDING**.
-
-## 2026-09-28 - P1C01 large material source promotion train
-
-- A concrete source-promotion bridge now converts the existing receipt-verified warehouse stock into a bounded Git branch instead of leaving material candidates only in the runner warehouse.
-- `prepare_p1c01_material_intake.ps1` now supports heterogeneous direct-file/archive receipt schemas, verifies SHA256 before use, performs bounded ZIP safety checks, isolates blocked items into a manual queue, and allows good prepared materials to continue.
-- `export_p1c01_material_source_branch.ps1` requires at least 8 prepared materials, caps each source file at 16 MB and the whole batch at 128 MB, and promotes only PNG/TGA base color plus scalar-material MTL files into `SourceAssets/Production/Imported/P1C01Materials`.
-- The Warehouse workflow owns a narrowly scoped generated branch `generated/p1c01-material-source-v1`; it does not merge that branch automatically. The next PR from that branch must pass normal exact-head Unreal validation so the existing UE4.27 production importer proves actual import.
-- Selective routing adds `WH_RUN_P1C01_MATERIAL_EXPORT`; provider refreshes can feed the material export, while unrelated Warehouse control-plane changes do not.
-- No gameplay/runtime C++ changed in this train.
-- Current maturity: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING / GENERATED MATERIAL BRANCH PENDING / UE IMPORT PENDING**.
-
-## 2026-09-28 - P1C01 immediate large intake unfreeze repair
-
-- Warehouse #275 failed only in P1C01 character intake after the Quaternius staging lane completed. Exact failure: PowerShell StrictMode raised `PropertyNotFoundStrict` while reading heterogeneous receipt rows that do not all expose `file/sha256/asset_slug` fields.
-- Character intake now reads both direct-file receipts (`file/sha256`) and archive receipts (`archive/archive_sha256`) through optional-property access, so one provider schema cannot stop the whole train.
-- The staged-stock mega promotion path also had 28 selected archives isolated in #274 because Windows PowerShell had not loaded `System.IO.Compression.FileSystem`; both P1C01 extraction paths now load that assembly explicitly before using `ZipFile`.
-- This repair intentionally targets the existing 5.4 GB staged warehouse first. On merge, selective Warehouse routing will rerun bounded inventory + P1C01 mega promotion + character intake, without restaging unrelated providers or running full saturation.
-- No gameplay/runtime C++ changed in this repair. Existing runtime develop validation remains independent.
-- Current maturity: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING / PERSISTENT WAREHOUSE EXECUTION PENDING**.
-
-## 2026-09-28 - P1C01 runtime salvage rebased onto current develop
-
-- PR #133 exact head `970a52f73ed5242d371ae7061011093765af42f6` completed Unreal Build #1033 successfully, including `Build ShireJourneyEditor` and `Import production assets in UE4.27.2`.
-- PR #133 could not be merged after develop advanced through the staged-stock promotion train, so its unique runtime/character-intake delta is being reapplied semantically on current develop instead of merging stale CI files.
-- Runtime delta retained: bounded interaction and ambient-motion pooling, cached player lookup, SFX repeat guard, and bounded asynchronous character-rig availability retry.
-- Character intake delta retained: four officially captured CC0 Quaternius candidates, hashed archive intake, FBX-only animated promotion, and manual-queue isolation for bad warehouse payloads.
-- Current develop Warehouse selective routing and P1C01 mega-promotion train remain authoritative; only additive character-intake routing is added.
-- Fresh exact-head static and Unreal proof for this rebased branch are pending. The #1033 success is evidence for the original PR #133 head only.
-- No PIE/device/visual/performance acceptance is claimed.
-
-## 2026-09-28 - P1C01 mega promotion train wired into selective Warehouse execution
-
-- The new P1C01 staged-stock promotion train is now part of the post-merge Warehouse path without reopening full provider staging.
-- Warehouse classifier introduces `WH_RUN_P1C01_PROMOTION`; only the new manifest/script select this phase (plus the bounded inventory audit).
-- Warehouse workflow executes the new phase only when selected. Existing control-plane, provider, saturation, critical-gap and provider-resolution routing remains unchanged.
-- PG-184 now guards receipt-hash verification, bounded selected extraction, manual-queue continuation, INTAKE_QC ceiling and the five P1C01 priority classes.
-- No C++/runtime source changed; PR #133 remains untouched while Unreal #1033 is queued.
-- Current maturity: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING / POST-MERGE WAREHOUSE EXECUTION PENDING**.
-
-## 2026-09-28 - P1C01 mega warehouse promotion preparation started
-
-- Production is continuing while PR #133 exact-head Unreal #1033 remains queued; the PR #133 head is intentionally left unchanged.
-- The fastest asset path is now to exploit the already-staged warehouse before adding more sources. The latest proven warehouse audit reported 13,377 payload files / 5,426,414,977 bytes.
-- New `WarehouseP1C01MegaPromotionTrainV1` prioritizes Shire surfaces, architecture/props, ambience/foley, fauna and character/animation support from already-authorized/staged providers.
-- New `run_warehouse_p1c01_mega_promotion.ps1` verifies receipt hashes, copies/extracts only selected bounded assets, rejects dangerous/BMP payloads, requires FBX for animated classes, and converts blockers into a manual queue instead of stopping the whole train.
-- Original warehouse payloads are never modified. The promotion ceiling remains `INTAKE_QC`; no item is called READY_FOR_IMPORT automatically.
-- No C++/runtime source changed in this preparation branch.
-- Current maturity: **SOURCE-IMPLEMENTED / HOSTED STATIC VALIDATION PENDING / WAREHOUSE EXECUTION PENDING**.
-
-## 2026-09-28 - PG-167 administrative runner guard aligned
-
-- Pre-Unreal #1289 proved the new hosted Python fast path works, emitting `PYTHON_FAST_PATH_PASS` with Python 3.12.10.
-- The only failure was stale PG-167 policy text that still required Branch Cleanup to run on the UE4 self-hosted runner, conflicting with the newly intended hosted-admin architecture.
-- PG-167 now requires `runs-on: windows-latest` for Branch Cleanup and explicitly forbids `self-hosted/ue4-27` there, while preserving merged-PR-only execution, exact-head isolated checkout and branch-safety checks.
-- This is a validator/policy-alignment repair only; no runtime/gameplay/acceptance gate is weakened.
-- Current maturity: **SOURCE-IMPLEMENTED / NEW EXACT-HEAD STATIC VALIDATION PENDING**.
-
-## 2026-09-28 - Administrative overhead trimmed without weakening gates
-
-- Requirement-ID bureaucracy is narrowed: only material product/story/architecture/acceptance/priority/external-dependency changes create new Governor requirements; status questions, clarifications, evidence refreshes and routine CI bookkeeping do not.
-- Branch Cleanup is moved from the supervised UE4 self-hosted runner to GitHub-hosted `windows-latest`; it keeps exact-head isolated checkout and active-PR/protected-branch safety.
-- Pre-Unreal keeps the complete static/governance/asset/deep-audit suite, but now resolves the already-provisioned hosted Python through a fast PATH probe first and falls back to the existing robust resolver only when needed.
-- PG-167/PG-176 guard the fast-path/fallback contract and forbid administrative branch cleanup from consuming the UE4 runner.
-- No C++ runtime, gameplay, story, asset acceptance, Gate 6/7, or evidence-promotion rule is weakened.
-- Current maturity: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING**.
-
-## 2026-09-28 - CI/Warehouse root repair released; production resumes
-
-- Exact repair head `0bd0e6952161f1c3fa5bb603d25813400c330f24` passed hosted Pre-Unreal #1285.
-- Develop merge head `26ff8f8838b4c9680c793fea5d942a314ad29be4` passed hosted Pre-Unreal #1286.
-- Self-hosted Warehouse #272 passed on the same develop head. Concrete runner proof: `RUNNER_HEALTH_PASS identity=IDEAPAD320\\user sessionId=1 listenerPid=6192 workerCount=1`.
-- Warehouse #272 classified the merged control-plane delta as `mode=selective ... phases=WH_RUN_AUDIT`; all provider staging/saturation/preparation/resolution trains were skipped.
-- Persistent inventory audit passed: `payloadFiles=13377 bytes=5426414977 receipts=14 receiptRecords=667 duplicateGroups=215`; final persistent footprint was `files=13392 bytes=5427039102`.
-- The run emitted `WAREHOUSE_SELECTIVE_EXECUTION_PASS`. No Unreal Build Validation run was triggered by this Warehouse/control-plane-only merge, proving the intended routing separation.
-- The Governor production freeze is therefore **RELEASED**. Resume the existing `W01_P1C01_PRODUCTION_VERTICAL_SLICE` only; this does not open a new chapter or waive Gate 6/7.
-- Evidence boundary: **STATIC-VALIDATED + SELF-HOSTED WAREHOUSE ROUTING PROVEN**. No new COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, or performance claim is created by this infrastructure repair.
-
-## 2026-09-28 - Warehouse control-plane proof routing hardened
-
-- PR #129 merged the #271 exact-source classifier correction at `61dd71845da4db3689c8a53f7d898ba5e81abb40`; hosted Pre-Unreal #1283 passed on its exact repair head.
-- A second routing defect was identified before wasting another full Warehouse run: `Scripts/classify_warehouse_validation.ps1` itself was absent from Warehouse Stage push paths, so its post-merge fix could not automatically prove the repaired self-hosted path.
-- Warehouse Stage now triggers on classifier changes. Workflow-only control-plane deltas select bounded persistent-inventory audit instead of all provider trains.
-- The classifier now ignores unrelated Docs/static-validator/runtime files that happen to share a commit with a warehouse-triggering path; such files no longer escalate selective execution to `mode=all`.
-- PG-184 now locks the exact-source classifier markers, classifier-trigger path, and bounded workflow-control-plane audit rule.
-- No gameplay/runtime content changed.
-- Current maturity: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING / POST-MERGE WAREHOUSE PROOF PENDING**.
-
-## 2026-09-28 - Warehouse #271 exact-source classifier repair
-
-- Post-merge Warehouse #271 ran on self-hosted runner `UE4-27-Windows` at develop merge head `542a6feef7e2985e40ed86f7242dd0a005be1395`.
-- Runner topology/health passed with interactive identity `IDEAPAD320\\user`, `legacyService=absent`, watchdog task present, one listener/worker, GitHub:443 connectivity, and workspace/resource checks.
-- The run failed before any provider/archive work because `classify_warehouse_validation.ps1` executed Git commands from the persistent runner workspace instead of the isolated `SHIRE_WAREHOUSE_SOURCE` checkout. Git therefore reported `fatal: bad object 542a6feef7e2985e40ed86f7242dd0a005be1395`.
-- Root correction: the classifier now fail-closes onto the isolated warehouse checkout, changes directory to that repository before diffing, and on a shallow-history miss fetches both exact head and base commits once before retrying.
-- No provider download, archive expansion, Unreal build, or gameplay source was executed by the failed run.
-- Current maturity: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING / POST-MERGE WAREHOUSE PROOF PENDING**.
-
-## 2026-09-28 - Pre-Unreal #1280 stale guard root correction
-
-- Exact-head `a8714aa3a1fb8ff0fb7be970d4bcfedb49139035` on hosted Pre-Unreal #1280 proved the isolated checkout, Python resolution, and Unreal classifier tests all succeeded.
-- Project structure validation reached `PRE-UNREAL CORE VALIDATION PASSED`, then failed on exactly three stale policy assertions in `pre_unreal_validate.py`: the old unconditional FULL-lane intermediate-reset expectation plus the old persistent self-hosted Pre-Unreal path/marker assumptions.
-- PG-145C now validates the actual `SHIRE_RESET_INTERMEDIATES` classifier gate; normal CORE/ASSET work preserves intermediates, while `.Build.cs`, `.Target.cs`, or `ShireJourney.uproject` changes remain the clean-compile trigger.
-- PG-176 now validates the GitHub-hosted isolated `%RUNNER_TEMP%\\shire-pre-unreal` checkout with `hosted=true` and rejects the legacy persistent self-hosted checkout tokens.
-- No runtime/gameplay source changed.
-- Current maturity: **SOURCE-IMPLEMENTED / NEW EXACT-HEAD STATIC VALIDATION PENDING**.
-
-## 2026-09-28 - Legacy CI guard migration completed
-
-- Hosted Pre-Unreal #1277 proved the classifier fix: all Unreal lane-selection tests passed, including the new build-rule reset case.
-- The remaining failure was entirely legacy policy drift inside `pre_unreal_validate.py`: PG-134/PG-167 still required the old self-hosted static lane, while PG-185 required the new hosted lane.
-- PG-134 and PG-167 are now migrated to the hosted exact-head static checkout contract; PG-185 now rejects the actual `- self-hosted` runner declaration instead of matching explanatory comments.
-- No runtime/gameplay behavior changed.
-- Current maturity: **SOURCE-IMPLEMENTED / NEW EXACT-HEAD STATIC RUN PENDING**.
-
-## 2026-09-28 - Warehouse corrupt-cache purge hardened
-
-- Receipt reuse now purges structurally corrupt cached ZIPs immediately instead of only returning non-reusable.
-- Critical-gap manifest now explicitly defines ZIP handling as read-only metadata inspection; physical extraction is deferred to explicit class-specific conversion/import work.
-- PG-184 now guards both the corrupt-cache purge marker and the metadata-only manifest contract.
-- Current maturity: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING**.
-
-## 2026-09-28 - Hosted Pre-Unreal classifier false-red repaired
-
-- Hosted Pre-Unreal #1269 proved the new GitHub-hosted Windows lane itself works: exact-head checkout and Python 3.12 resolution both succeeded.
-- The run failed only inside `test_unreal_classifier.ps1` because `$requiresCleanCompile` was referenced before initialization in the classifier path used by the test harness.
-- The classifier now initializes `$requiresCleanCompile` directly after delta resolution, before any mode decision.
-- This is a static classifier defect; it does not change runtime/gameplay state.
-- Current maturity: **SOURCE-IMPLEMENTED / NEW EXACT-HEAD STATIC RUN PENDING**.
-
-## 2026-09-28 - CI root repair V3: zero-waste trigger routing
-
-- Unreal Build Validation now treats `Data/MasterExecutionRoadmap.json` as governance-only, preventing roadmap-only PR sync from consuming the UE4 runner.
-- Warehouse critical-gap preparation now exits at receipt-integrity preflight before any archive inventory when missing/hash/bad-receipt blockers already exist.
-- PG-184 now locks the preflight marker so future changes cannot silently reintroduce delayed failure.
-- PR #128 is intentionally configured so repair commits should trigger only hosted Pre-Unreal validation; no Warehouse PR run and no Unreal run are expected from repair-only deltas.
-- Current maturity: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING**.
-
-## 2026-09-28 - CI root repair V2: split proof lanes and preserve build state
-
-- Production remains frozen while infrastructure is repaired.
-- Pre-Unreal static/policy validation is moved to GitHub-hosted `windows-latest`; it no longer consumes or queues behind the UE4 self-hosted runner.
-- Warehouse Stage remains self-hosted for access to the persistent warehouse, but no longer runs on pull-request synchronize.
-- New `Scripts/classify_warehouse_validation.ps1` selects only provider/phases affected by the landed `develop` delta; unknown/manual cases fail safe to the full warehouse path.
-- Warehouse-only scripts/data are excluded from Unreal Build Validation triggers.
-- Unreal validation keeps exact-head/fail-safe semantics but preserves `Intermediate/Build/Win64` and `Binaries/Win64` by default.
-- Clean intermediate reset is now requested only for `.Build.cs`, `.Target.cs`, or `ShireJourney.uproject` changes; compiler-pressure failures still get one bounded clean retry inside `ci_build_unreal.cmd`.
-- PG-184/PG-185 statically prevent regression to PR-synchronize warehouse runs, repeated ZIP extraction, self-hosted Pre-Unreal, or unconditional Unreal intermediate wipes.
-- Current maturity: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING**. Runtime/gameplay acceptance is unchanged.
-
-## 2026-09-28 - Production freeze for CI/warehouse root repair
-
-- Owner explicitly stopped active production work after repeated Warehouse #269/#270 failures consumed ~12-13 minutes each.
-- PRs #125, #126 and #127 were closed unmerged to stop new synchronize-triggered churn; their branches remain preserved so no source work is lost.
-- One already-running Unreal job from the closed production PR may finish because the available GitHub connector does not expose workflow cancellation; no new rerun is being started.
-- Root causes identified:
-  - PR-synchronize Warehouse execution had been reintroduced on the production branch.
-  - critical-gap QC physically re-extracted every ZIP on every run.
-  - receipt reuse checked presence/size but not ZIP structural readability.
-  - corrupt cached AmbientCG ZIPs could remain reusable forever.
-  - KayKit GitHub ZIP extraction hit Windows path/symlink semantics even though intake QC only needed metadata.
-  - duplicate receipt rows caused the same corrupt AmbientCG payload to be reported twice.
-- Repair branch `repair/ci-warehouse-root-fix-v1` now:
-  - keeps Warehouse off pull-request synchronize,
-  - validates ZIP structure before receipt reuse,
-  - removes/redownloads corrupt provider ZIPs,
-  - inventories ZIP entries read-only via `ZipFile::OpenRead` instead of `Expand-Archive`,
-  - deduplicates receipt records,
-  - prints exact blockers,
-  - guards the architecture with PG-184.
-- Current maturity: **SOURCE-IMPLEMENTED / STATIC VALIDATION NOT YET RUN**. No gameplay or acceptance promotion.
-
-## 2026-09-27 - Permanent runner topology machine proof
-
-- Owner-side Windows evidence now shows the legacy `actions.runner.*` service absent after successful deletion.
-- `ShireJourney-GitHubRunner-Watchdog` is Running as UserId `user` with `LogonType=Interactive`.
-- `Runner.Listener.exe` PID **6192** is owned by `IDEAPAD320\user`; watchdog log reports `SHIRE_RUNNER_WATCHDOG_ONLINE pid=6192 brokerListening=true`.
-- GitHub Unreal Build **#1021** on exact head `b22a5da34ba71ba583c8b5b2a026085a2e11feda` passed runner health with `legacyService=absent`, interactive identity/session, listener+worker ownership, GitHub:443 and workspace checks.
-- This closes the **runner ownership/topology** root cause for that exact machine state.
-- Unreal #1021 used the governance/docs-only fast path, so C++ build/import/PIE/package/gameplay/device/visual/performance acceptance was **not** produced.
-- Pre-Unreal #1256 was a validator false-red only: PG-183 searched for the literal `legacyService=absent` even though the verifier emits that value dynamically. The guard is corrected to validate the dynamic contract without weakening it.
-
-## 2026-09-27 - Runner root-cause architecture fix: remove service mode entirely
-
-- Root cause confirmed from owner-side Windows state plus Unreal #1000: two runner ownership paths coexisted. The legacy `actions.runner.*` service was **Running** and owned `Runner.Listener.exe` as `NT AUTHORITY\NETWORK SERVICE` while the watchdog task was also Running.
-- This is now treated as an architecture defect, not a daily repair task.
-- New permanent design: `actions.runner.*` is deleted by `Scripts/runner_service_guard.ps1`; if Windows temporarily retains a pending-deletion entry it must be **Stopped + Disabled**.
-- `install_runner_watchdog.ps1` installs the service guard beside the watchdog, removes service ownership, then starts the interactive-user watchdog.
-- `runner_watchdog.ps1` invokes the service guard at boot and every supervision loop, so a recreated service-mode runner is automatically stopped/deleted again.
-- `verify_runner_session.ps1` accepts only service absent or stopped-disabled plus the interactive-user listener/worker topology.
-- PG-145B now statically guards the permanent service-exclusion contract.
-- Physical machine repair still requires one elevated owner-side installer run; until that succeeds, current state is **ROOT-FIX SOURCE-IMPLEMENTED / DEVICE REPAIR PENDING**. No compile/PIE/device/visual/performance acceptance is implied.
-
-## 2026-09-27 - Permanent runner service-mode elimination
-
-- Root cause class confirmed by live evidence: the legacy `actions.runner.*` Windows service can be started under `NT AUTHORITY\NETWORK SERVICE` while the interactive watchdog also exists, creating competing runner ownership and repeated pre-build failures.
-- The permanent design now removes service mode instead of merely leaving it stopped/manual.
-- New `Scripts/runner_service_guard.ps1` stops, disables and deletes any `actions.runner.*` registration and terminates runner Listener/Worker processes owned by NETWORK SERVICE/LOCAL SERVICE/SYSTEM.
-- `install_runner_watchdog.ps1` installs both watchdog and guard, purges service mode first, then starts the interactive-user watchdog.
-- `runner_watchdog.ps1` invokes the guard at boot and during every supervision loop, so a resurrected service is automatically removed.
-- `verify_runner_session.ps1` now accepts only an absent service or a stopped+disabled pending-deletion entry.
-- PG-183 statically guards the permanent service-elimination contract.
-- Evidence boundary: **SOURCE-IMPLEMENTED / exact-head static validation pending / physical machine repair pending one-time elevated install**. No compile/PIE/device/visual/performance claim.
-
-## 2026-09-27 - Runner ownership directive promoted to top-level governance
-
-- The runner rule previously existed in scripts/guards and buried runner-history fields, but was not prominent enough in the Governor/onboarding path for a zero-context Work session.
-- New hard invariant: UE4-27-Windows runs only under the proven interactive Windows user through `ShireJourney-GitHubRunner-Watchdog`.
-- Legacy `actions.runner.*` Windows service must remain **Stopped / Manual** and must never be enabled or started as a fallback.
-- `NETWORK SERVICE`, `LOCAL SERVICE`, and `SYSTEM` are forbidden runner identities.
-- Worker/AI sessions may inspect health but may not change runner ownership/topology without explicit owner authorization.
-- README, PROJECT_GOVERNOR guide and one-command onboarding now surface this rule before production work.
-- Existing source guards remain authoritative: `install_runner_watchdog.ps1`, `verify_runner_session.ps1`, PG-145 and PG-145B.
-- Evidence boundary: **GOVERNANCE/HANDOFF SOURCE-IMPLEMENTED / exact-head static validation pending**. This does not prove the current physical Windows service/task state.
-
-## 2026-09-27 - Zero-context developer entry hardening
-
-- The repository default branch is `main`, while `develop` remains the canonical integration/programmer-handoff branch.
-- Develop onboarding now explicitly warns that `main` is a stable/release landing surface and that current execution truth must be read from `develop`.
-- `Docs/PROJECT_GOVERNOR.md` no longer hard-codes the historical D stage as the next runtime drop; current execution order comes from ProjectGovernor `current_focus` + `execution_control.next_actions` plus live GitHub state.
-- `Scripts/new_developer_onboarding.ps1` now emits a branch warning whenever the local checkout is not the canonical development branch.
-- A separate default-branch README redirect is required on `main` so a zero-context GitHub visitor reaches the develop Governor path immediately.
-- Evidence boundary: **SOURCE-IMPLEMENTED / static validation pending**. No runtime/PIE/device/visual/performance acceptance is implied.
-
-## 2026-09-27 - Warehouse provider-resolution train V3 prepared
-
-- V3 is stacked behind the critical-gap V2 branch and resolves provider/access blockers rather than adding another uncontrolled source list.
-- `WarehouseProviderResolutionTrainV3.json` defines 20 bounded resolution cars with at most three preferred and three fallback providers per technical slot.
-- `run_warehouse_provider_resolution.ps1` reads the live provider registry and existing warehouse receipts, classifies each provider as auto-capable, manual-only, auth-required, review-required or reference-only, and selects an already-staged/auto-capable provider when available.
-- It never converts login/OAuth/purchase/marketplace/reference lanes into automatic downloads and never promotes READY_FOR_IMPORT.
-- Warehouse Stage is extended so provider-resolution reporting runs after V1 saturation and V2 critical-gap preparation.
-- Current Quaternius V4 license capture opens staging attempts for 13 high-value packs, while store/interactive-only download resolution remains fail-closed.
-- Evidence boundary: **PROVIDER-RESOLUTION PREPARATION / exact-head validation pending**.
-
-## 2026-09-27 - Critical Quaternius license blockers reduced
-
-- Official Quaternius pack pages were rechecked for the highest-value unresolved character/animation/fauna/creature/architecture/nature/prop candidates.
-- `WarehouseQuaterniusAcquisitionBatchV1.json` advances to V4 and records explicit official-page `CC0` capture for 13 previously license-unresolved packs, including universal character bases, fantasy outfits, RPG characters, universal animations, monsters, medieval village megakit, buildings, modular ruins/dungeon, nature, animated animals, farm animals and fantasy props.
-- This changes only staging authorization. Public-download discovery remains mandatory; interactive/store-only routes stay unresolved and are never bypassed.
-- Receipt/SHA256 and extracted intake QC remain required before any `STAGED` or later promotion evidence is accepted.
-- Evidence boundary: **LICENSE-CAPTURE / SOURCE-PREPARATION** only; no pack is claimed downloaded/imported/integrated/accepted from this change.
-
-## 2026-09-27 - Warehouse receipt parser blocker repaired after first real V1 staging run
-
-- Warehouse Stage #265 completed all provider staging steps successfully and the persistent inventory audit passed with **247 payload files / 3,851,680,492 bytes / 13 receipts / 667 receipt records / 215 duplicate-hash groups**.
-- The run failed only in the V1 saturation report because heterogeneous receipt schemas omit optional fields such as `file`, `archive`, `sha256`, `asset_slug` or `state` on some rows while `Set-StrictMode -Version Latest` treated direct property access as fatal.
-- `run_warehouse_saturation_train.ps1` now uses explicit optional-property access for receipt/header/item fields and safely handles file-vs-archive receipt shapes.
-- `run_warehouse_critical_gap_preparation.ps1` received the same hardening before first execution so V2 does not repeat the same schema failure.
-- The fix does not relax evidence requirements: actual files still require SHA256 verification before they count as verified/prepared.
-- Evidence boundary: **warehouse staging/audit evidence is real; V1/V2 reporting fix requires fresh exact-head validation**. No READY_FOR_IMPORT, PIE, device, visual or performance acceptance is inferred.
-
-## 2026-09-27 - Critical warehouse gap preparation train V2
-
-- Warehouse saturation PR #121 completed exact-head Pre-Unreal #1159 SUCCESS and Unreal #926 SUCCESS and merged at `70e7a3c0a03a7dbebbe6c70d822bab7a06c59e87`.
-- Warehouse Stage #265 was queued from that merge to pull/audit the public provider-compatible warehouse lanes.
-- New V2 branch `warehouse/critical-gap-preparation-train-v2` adds a second 20-car train focused on the largest remaining production gaps rather than source discovery.
-- `run_warehouse_critical_gap_preparation.ps1` verifies receipt SHA256, expands ZIP copies into a separate prepared root, blocks executable/BMP payloads, inventories FBX character/animation/creature/static-mesh candidates, separates mesh conversion debt, groups production texture/audio/UI/terrain source classes, and emits per-car prepared/pending/blocked counts.
-- Warehouse Stage now invokes the V2 processor after normal staging, inventory audit and V1 saturation reporting.
-- V2 cannot promote any file to `READY_FOR_IMPORT`; skeleton/skin/deformation, visual/canon, PIE/device/performance and class-specific QC remain required.
-- Evidence boundary: **SOURCE/PREPARATION IMPLEMENTED / exact-head validation pending**.
-
-## 2026-09-27 - Warehouse train consolidation replaces stale-base prep PRs
-
-- The architecture/interiors/props preparation from former PR #119 and the character/audio/fauna preparation from former PR #120 are now consolidated onto `warehouse/p1c01-trilogy-saturation-train-v1`, which is based on post-#118 `develop`.
-- Consolidated artifacts include the architecture six-pack intake/QC lane plus character rig/animation, five-item Shire audio, and living-world fauna preparation scripts/manifests.
-- `pre_unreal_validate.py` now guards these consolidated lanes together with the 20-car warehouse saturation train.
-- This removes duplicated stale-base validation work while preserving all substantive preparation.
-- Evidence boundary remains **PREPARATION / STATIC CONTRACT**, pending exact-head validation of the consolidated branch.
-
-## 2026-09-27 - Trilogy warehouse saturation train V1 prepared
-
-- Material PR #118 reached exact-head Pre-Unreal #1155 SUCCESS and Unreal #922 SUCCESS and was merged to `develop` at `fc7c67123248d70e9f568ee83f7110210e556cd7`.
-- New warehouse branch `warehouse/p1c01-trilogy-saturation-train-v1` defines a **20-car** preparation sequence covering the largest remaining warehouse families across P1C01 and reusable trilogy stock.
-- `Data/WarehouseSaturationTrainV1.json` bounds each car to a small provider set and an explicit preparation ceiling. Authentication/account/purchase/manual-license lanes never auto-stage.
-- `Scripts/run_warehouse_saturation_train.ps1` can optionally invoke the existing public/provider-compatible staging lanes (Poly Haven, ambientCG, Quaternius, Kenney, KayKit, OpenGameArt), run the persistent inventory audit, and produce per-car receipt/hash/byte/state coverage.
-- `.github/workflows/warehouse-stage.yml` now triggers on the saturation manifest/orchestrator and emits the 20-car coverage report after normal staging/audit.
-- Pre-Unreal guards exact car count/order, unique IDs, bounded provider fan-out, safe preparation ceilings, FBX/PNG-TGA/WAV/runtime-loading rules and receipt-SHA256 evidence reporting.
-- Evidence boundary: **SOURCE/PREPARATION IMPLEMENTED / exact-head validation pending**. No newly planned car is READY_FOR_IMPORT, IMPORTED, INTEGRATED, PIE/device/visual/performance accepted from this change.
-
-## 2026-09-27 - Runner watchdog state-contract blocker repaired on active material branch
-
-- Unreal #915 and #920 both stopped before compilation at `Verify runner session health` with `RUNNER_HEALTH_FAIL watchdog-state state=Ready`.
-- Root cause is a validator-policy mismatch: `install_runner_watchdog.ps1` explicitly accepts both `Running` and `Ready` as healthy scheduled-task states, while `verify_runner_session.ps1` accepted only `Running`.
-- The verifier now accepts the same `Running|Ready` contract and continues into the stricter live process checks for exactly one interactive-user `Runner.Listener`, active `Runner.Worker`, session ownership, network, workspace and resources.
-- `Ready` is logged explicitly as `RUNNER_HEALTH_WATCHDOG_READY`; it is not relabeled as engine proof.
-- Evidence boundary: **CI validator-policy fix implemented / fresh exact-head rerun required**. No compile/import/PIE/device/visual claim is created by this repair.
-
-## 2026-09-27 - P1C01 material train expanded to the full authorized Poly Haven surface set
-
-- The active #118 material batch now covers all **16** Poly Haven Shire/Bag End surface candidates already authorized by `P1C01WarehousePromotionQueueV1.json`, rather than the earlier 8-item subset.
-- `Data/P1C01MaterialImportWaveV1.json` now carries bounded authored Roughness/Metallic/Specular scalars for every item and keeps every external candidate at `AUTHORIZED_FOR_STAGING` until receipt-backed intake exists.
-- `Scripts/prepare_p1c01_material_intake.ps1` now emits one PNG/TGA base-color candidate plus scalar `Pr/Pm/Ks`, SHA256 hashes for prepared base color and generated MTL, and richer prepared/pending/blocked counts.
-- `Scripts/pre_unreal_validate.py` now guards the 16-item completeness, queue authority, duplicate IDs/slugs, scalar bounds, low-spec material parameter contract, SHA256 preparation and BMP prohibition.
-- This expansion still adds no runtime texture sample beyond the existing albedo slot, does not increase foliage/detail density, and does not promote an external asset without source/license/receipt/SHA256 evidence.
-- The current Unreal validation blocker remains runner infrastructure: run #915 has repeatedly failed at `Verify runner session health` with `RUNNER_HEALTH_FAIL watchdog-state state=Ready` before UE4 build/import starts. The material implementation itself therefore remains **SOURCE-IMPLEMENTED / exact-head engine proof pending**.
-
-## 2026-09-27 - P1C01 Shire material surface-set train started
-
-- Active production batch: `P1C01_SHIRE_MATERIAL_SURFACE_SET_V1` on branch `production/p1c01-shire-material-surface-set-v1`.
-- Added `Data/P1C01ShireMaterialSurfaceSetV1.json` covering the existing project-owned Shire TGA palette (Bark, Dirt, DoorGreen, Grass, Leaves, Stone, Wood) and eight authored material identities.
-- `ShireProductionImportCommandlet` now carries a bounded `Specular` scalar on production surface and foliage masters and derives authored instance specular response from MTL `Ks` values. No extra texture samples, no foliage density increase and no new runtime heavy-load path were introduced.
-- Existing roughness/metallic values, foliage near/far split and TGA albedo bindings are preserved.
-- Train sequence after this batch: evidence-backed Poly Haven surface intake -> Shire support architecture/interiors -> living-world visual integration/polish. External items remain fail-closed without source/license/receipt/SHA256.
-- Evidence boundary: **SOURCE-IMPLEMENTED / exact-head validation pending**. No PIE/device/visual/performance acceptance is claimed.
-
-## 2026-09-27 - P1C01 player-experience convergence implementation
-
-Source-verified defects from the P1C01 interaction path are implemented as one bounded gameplay batch:
-
-- Bilbo's `ShireArrival -> LongExpectedParty` transition now waits for completion of his authored multi-line dialogue sequence through an explicit NPC opt-in flag; existing NPC hand-offs remain unchanged by default.
-- Raw `MouseX/MouseY` camera input no longer multiplies by frame DeltaSeconds; a direct `MouseLookSensitivity` scalar controls the mouse path.
-- Quick-load now gives the player a visible rejection message when `RestoreSaveSnapshot` returns false, while detailed rejection reasons remain in logs.
-- `AShireQuestTrigger` remains non-ticking and now tracks the overlapping player weakly, re-evaluating eligibility only on quest-stage, active-quest, story-beat and restored-state events. This closes the enter-too-early / remain-inside progression gap without a per-frame cost.
-- Dialogue subtitle rendering now uses bounded word wrapping in a taller 720p-safe dialogue box.
-- Map/Chronicle movement/damage behavior remains deliberately unchanged pending the explicit UX policy decision already registered in `WORLD_DETAIL_LEDGER.md`.
-
-Evidence boundary: **SOURCE-IMPLEMENTED / STATIC-REVIEWED**. Exact-head UE4.27 compile/runtime validation is required before any COMPILE-TESTED or PIE claim.
-
-## 2026-09-27 - Repeated MSVC stale-temp validation blocker contained
-
-- Unreal Build #896 failed on both attempt 1 and attempt 2 before asset import with `fatal error C1083: Cannot open compiler intermediate file`.
-- The MSVC probe proved the current temp root was writable (`shire-msvc-36281890705-2`), while the compiler failure referenced an older removed temp root (`shire-msvc-36280675863-1`). This isolates the failure to stale project build intermediates/action metadata rather than the production-import source change.
-- `Scripts/ci_build_unreal.cmd` now treats this exact C1083/compiler-intermediate signature as recoverable compiler-environment pressure: it clears only project Win64 intermediates/binaries and retries the build once, using the already-current TEMP/TMP environment.
-- Scope remains narrow and blocker-driven; this does not reopen general CI optimization work.
-- Evidence boundary: **CI_INFRA FIX CANDIDATE / fresh exact-head Unreal validation pending**.
-
-## 2026-09-27 - P1C01 one-click production import Engine-package dirty repair
-
-- Owner device run of `SHIRE_UPDATE_BUILD_LAUNCH.bat` reached the production-import phase and failed while UE4.27 attempted to save `/Engine/EngineMaterials/WorldGridMaterial`.
-- Root cause was source-confirmed in `ShireProductionImportCommandlet.cpp`: a referenced material package was marked dirty before the importer checked whether it belonged to `/Game/Production/`.
-- Repair candidate now gates both mesh-material and registry-recovery dirty marking to project-owned `/Game/Production/` packages only. Engine/plugin fallback materials are no longer marked dirty by the importer.
-- Scope is intentionally narrow: no gameplay, quest, save, world-layout or asset-content redesign.
-- Evidence boundary: **DEVICE-OBSERVED FAILURE + SOURCE-IMPLEMENTED FIX CANDIDATE**. Fresh exact-head Pre-Unreal/UE4.27 build+import proof is still required before calling the repair COMPILE/IMPORT tested.
-
-## 2026-09-27 - Legacy unique-root consolidation before final branch cleanup
-
-- Live GitHub audit confirmed the branches still shown in the repository are real refs, not merely historical Actions filters. They were not deleted earlier because each had `ahead_by > 0` and the cleanup correctly refused to destroy unique commits without disposition.
-- The seven remaining legacy refs have now been reviewed individually. None is allowed to become a second trunk: old CI/report experiments are superseded; `MegaProductionBuildV2.json` is already identical on develop; onboarding improvements are already integrated on current develop; old localization/P1C01-prep branch snapshots remain backlog/preparation intent only and do not override the current production order; the old Mega Promotion audit is superseded by later Warehouse #264 evidence.
-- All seven are now explicitly scheduled for deletion after this consolidation merge: `ops/actions-budget-isolation-v1`, `ops/daily-project-manager-report-v1`, `ops/onboarding-handoff-v2`, `planning/mega-production-resume-v1`, `planning/w01-localization-prototype-v1`, `planning/w01-p1c01-mega-prep-v1`, `warehouse/p1c01-mega-promotion-audit-v1`.
-- Expected repository roots after post-merge cleanup: **develop + main only**.
-- Failure/safety boundary: no runtime/gameplay/source asset content is changed and no UE4 build is requested. This is ADMIN_GOVERNANCE repository hygiene.
-- Evidence boundary: **STATIC-VALIDATED CANDIDATE / FRESH PRE-UNREAL + POST-MERGE CLEANUP PENDING**.
-
-## 2026-09-27 - New-developer handoff made drift-proof
-
-- The canonical entry remains `README.md -> PROJECT_GOVERNOR -> ProjectGovernor.json -> CURRENT_PROJECT_STATE -> DEVELOPMENT_GATES -> PROJECT_GUARDIAN`.
-- The README no longer embeds a copied "next production drop" that can become stale after merges. It now directs every programmer to the one-command onboarding reader and the evidence-backed current-state handoff.
-- `Scripts/new_developer_onboarding.ps1` now prints Governor-derived **Current status**, **Current focus**, active lane/gate/benchmark and **Next allowed actions**, plus the checked-out Git branch/HEAD.
-- Live baseline before this change: `develop@6e3e33e16edf4660f05e130f8f05b9d043cea958`; Pre-Unreal #1122 completed SUCCESS and there were no open PRs targeting `develop`.
-- This is administrative/onboarding only. It changes no gameplay/runtime/source asset behavior and creates no PIE/device/visual/performance acceptance.
-- Evidence boundary: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD PRE-UNREAL PENDING**.
-
-## 2026-09-27 - Validator self-repair after cleanup-parser repair
-
-- Pre-Unreal #1120 failed before project validation because the newly-added PG-167 parser-regression guard itself was malformed by the same unsafe text-splice method used in the prior cleanup optimization.
-- Failure class: **VALIDATOR_POLICY / ADMIN_GOVERNANCE**. The restored cleanup PowerShell source remains the previously machine-proven implementation; no runtime/gameplay file changed.
-- To avoid compounding the failure with another ad-hoc validator mutation, `Scripts/pre_unreal_validate.py` is restored exactly to the last develop-proven version from `77f4c01b625b426c27c08958b1f6468412ec1eaf`.
-- The permanent policy still lives in DEC-042 and the merged post-merge cleanup workflow; this repair only restores validator integrity.
-- Evidence boundary: **SOURCE CORRECTED / FRESH EXACT-HEAD PRE-UNREAL PENDING**.
-
-## 2026-09-27 - Branch Cleanup parser regression closed before production resume
-
-- Post-merge Branch Cleanup #12 failed in `Scripts/run_branch_cleanup.ps1` before deleting any branch because the attempted remote-enumeration optimization accidentally spliced `function Remove-RemoteBranch` into the `refs/heads/(.+)$` regex and duplicated the function body.
-- Failure class: **CI_INFRA / ADMIN_GOVERNANCE**, not GAME_RUNTIME. The exact develop head still passed Pre-Unreal #1119.
-- The cleanup script is restored to the previously machine-proven implementation from develop@4844e484, which already produced Branch Cleanup #11 SUCCESS and deleted 8 zero-ahead refs.
-- The new post-merge trigger and empty historical delete backlog remain in force, so the restored script no longer pays the old 66-ref repeated-check cost.
-- PG-167 now additionally rejects duplicate `Remove-RemoteBranch` definitions, missing/duplicated remote-ref parser lines, and the exact corruption signature seen in #12.
-- Evidence boundary: **SOURCE CORRECTED / FRESH EXACT-HEAD PRE-UNREAL + POST-MERGE CLEANUP PROOF PENDING**. No runtime/PIE/device/visual/performance claim is created.
-
-## 2026-09-27 - Permanent branch closeout agreement + interconnected-systems reassessment
-
-- Owner direction is now a durable DEC-042 invariant: every completed temporary branch is exact-head validated, merged into `develop` immediately, then its remote ref is deleted. `develop` must not lag completed work. Only active PR heads or verified unique-unsalvaged branches may remain temporarily.
-- Branch Cleanup is machine-guarded to run on merged-PR closeout, not ordinary develop pushes; it targets the merge commit, performs one live remote enumeration, preserves active/protected/unique branches, and removes merged/zero-ahead refs.
-- Governor transport clutter was reduced: stale branch/PR snapshots are no longer execution inputs; GitHub owns live transport state while ProjectGovernor owns durable decisions, lane order and evidence boundaries.
-- Quick static cross-system review found the ownership chain coherent: `ChapterWorldRouter` owns commit/rollback; `ShireChapterAssetStreamingSubsystem` owns async pending/resident asset handles; `ShireNPCContextSubsystem` consumes only committed world context; `LivingWorldDirector` applies life only after committed revision and pools ambient NPCs; checkpoint writes guard stale callbacks by committed context/revision.
-- Build-file audit remains clean: no tracked generated Binaries/Intermediate/Saved/DerivedDataCache/.vs/StagedBuilds/PDB/log/tmp/cache debris. Production source assets are not deleted blindly; animated final promotion remains FBX-only.
-- No concrete cross-system ownership cycle or new build-blocking architecture defect was found in this quick static reassessment. Production remains the active lane; root/administrative repair reopens only on concrete regression evidence.
-- Evidence boundary: **STATIC-VALIDATED CANDIDATE / FRESH PRE-UNREAL PENDING**. No PIE/device/visual/performance acceptance is created.
-
-## 2026-09-27 - Dead-branch cleanup made automatic and non-repetitive
-
-- The remaining self-cleanup gap is closed: Branch Cleanup now triggers after every merged PR and runs only for `merged == true`; manual dispatch remains available.
-- The old 66-entry historical `delete_after_merge` backlog is cleared. Cleanup no longer spends time rechecking already-absent branches on every run.
-- The cleanup script now enumerates remote refs once per run and reuses that set for explicit and zero-ahead deletion instead of issuing a separate `git ls-remote` query for each historical branch.
-- Zero-ahead auto-prune, active-PR protection, protected/salvage preservation and unique-commit retention remain fail-closed.
-- This closes the concrete speed/cleanup regression discovered after PR #105 left its merged branch ref alive until another cleanup run.
-- Evidence boundary: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL + POST-MERGE CLEANUP PROOF PENDING**. No runtime/PIE/device/visual/performance claim is created.
-
-## 2026-09-27 - Post-D production resume gate
-
-- D is complete at the machine-validation level: `develop@1066cf022723fcdef9bfac66519f5b0f9c1e03a4` passed Pre-Unreal #1109 and Unreal Build #893.
-- The later cleanup/governance-only head `017c3bc26ecfa1dadc75f10398ead01b5fe0ca22` passed Branch Cleanup #11 and Pre-Unreal #1113. Branch Cleanup removed 8 dead refs and the repository now retains only `develop`, `main`, and six branches with unique commits preserved for selective salvage.
-- Warehouse #264 is SUCCESS after the cleanup-shell repair.
-- Repository-tree audit found no tracked generated build junk under Binaries/Intermediate/Saved/DerivedDataCache/.vs/StagedBuilds and no tracked PDB/log/tmp/cache artifacts. `SourceAssets/Production` remains source input and is not deleted blindly.
-- The Governor is advanced past D. The next production order is: bounded evidence-backed Mega Asset Promotion/import-integration, then character presentation/skeletal-animation coverage, then Living Shire motion/fauna + quest/audio polish, with target-device profiling before density/expensive presentation expansion.
-- Administrative/root-repair work is no longer the active lane and may reopen only on concrete regression evidence.
-- Evidence boundary: **READY_FOR_SUBSTANTIVE_BUILD / STATIC + UE4 MACHINE PROOF AVAILABLE**. This is not PIE/device/visual/performance acceptance.
-
-## 2026-09-27 - Dead-branch cleanup root cause fixed
-
-- Live GitHub audit found the real gap: cleanup depended on a historical static `delete_after_merge` list, so newer merged branches created after that list could remain indefinitely even though DEC-042 required self-cleanup.
-- Verified zero-ahead refs queued for permanent deletion are `ci/fix-pwsh-cleanup-shells-v1`, `fix/character-rig-callback-ownership`, `ops/new-developer-entry-v1`, `production/p1c01-c3-foliage-identity-v1`, `production/p1c01-c4-foliage-evidence-v1`, `production/p1c01-c4-foliage-lod-cull-v1`, and `production/p1c01-d-lighting-water-mega-promotion-v1`.
-- Branch Cleanup now enumerates live remote refs every run and auto-deletes only refs that are not protected, are not active PR heads, and GitHub reports as exactly `ahead_by == 0` versus `develop`. The historical explicit list is now only a supplemental deletion queue.
-- Divergent refs with unique commits are not destroyed blindly. Six currently have unique commits and are protected for selective salvage/supersession review: actions-budget (7 ahead), daily-project-manager (4), mega-production-resume (19), localization prototype (6), P1C01 mega-prep (2), and mega-promotion-audit (4).
-- This repair branch `maintenance/root-auto-prune-v1` is itself queued for post-merge deletion so the fix cannot leave another dead ref behind.
-- PG-167 now guards the automatic zero-ahead discovery markers to prevent regression to manual-only cleanup.
-- Evidence boundary: **STATIC-VALIDATED CANDIDATE / FRESH PRE-UNREAL + POST-MERGE BRANCH-CLEANUP EXECUTION PENDING**. No gameplay/runtime/PIE/device/visual/performance claim is created.
-
-## 2026-09-27 - Self-hosted cleanup shell false-red repair
-
-- Branch Cleanup #9 completed its real cleanup logic and printed `BRANCH_CLEANUP_PASS deletedPlanCount=58 activePrHeads=0 planProtected=4 canonical=develop stable=main`, then the job was marked failed only because the final cleanup step used `shell: pwsh` and this Windows runner does not expose a `pwsh` executable.
-- Warehouse Stage #263 successfully reused/staged all provider batches, passed `WAREHOUSE_INVENTORY_AUDIT_PASS payloadFiles=247 bytes=3851680492 receipts=13 receiptRecords=667 duplicateGroups=215`, and printed `WAREHOUSE_FOOTPRINT files=261 bytes=3852292570`; it likewise failed only at the final `pwsh` cleanup wrapper.
-- Runner Health used the same unsupported cleanup shell and is corrected in the same atomic administrative wave.
-- All three isolated-temp cleanup steps now use the workflow's native `cmd` shell with bounded `rmdir /S /Q`; no Unreal workspace, persistent warehouse payload, runtime/gameplay source, or validation acceptance criteria are changed.
-- Failure class: **CI_INFRA cleanup-wrapper defect**, not GAME_RUNTIME and not warehouse-content failure.
-- Evidence boundary: **SOURCE CORRECTED / FRESH ADMIN WORKFLOW EXECUTION PENDING**. No PIE/device/visual/performance acceptance is created.
-
-## 2026-09-27 - D branch reconciled with merged CI architecture
-
-- PR #102 is merged to `develop@0afcc3000b06179086215386fbc95247dff15d03`; its isolated/persistent CI architecture is retained as the new integration parent.
-- PR #101 D runtime/content changes are preserved without reverting the CI/governance fixes. The D branch is reconciled as a two-parent merge rather than force-rebased.
-- Historical D head `65f3c687f1f05d378431c206ce726f3a50652135` had Pre-Unreal #1079 SUCCESS and Unreal Build #884 SUCCESS, but that evidence does not certify the new reconciled head.
-- Fresh exact-head Pre-Unreal and the UE4.27.2 validation lane are required on the reconciled head before PR #101 can merge.
-- Mega Asset Promotion remains bounded to staging/intake QC unless item-level provenance, license/entitlement, local staging receipt, SHA256 and class-specific QC support further promotion.
-- Evidence boundary: **RECONCILED SOURCE CANDIDATE / FRESH EXACT-HEAD MACHINE PROOF PENDING**. No PIE/device/visual/pacing/performance acceptance is claimed.
-
-## 2026-09-26 - D exact-head guard/count correction after #1074/#879
-
-- Exact D head `093c4950802eb9f58813dc232c9fffa5f6103f02` reached UE4.27.2 build/import/runtime execution before two guard-only failures.
-- Pre-Unreal #1074 failed PG-172 because the new validator incorrectly required exactly one `RecaptureSky()` call. The existing P1C01 architecture has two bounded call sites: startup configuration plus event-driven authored story-atmosphere refresh. There is still no Actor Tick or free-running day/night recapture.
-- Unreal Build #879 compiled and imported successfully; production import reported `376 files, 0 failures`. Startup, P1C01-P1C08, state, transitions, faults, pending-transition and persistence-edge runtime sweeps all reported passed. Warning debt also passed with zero tracked production/runtime debt.
-- #879 failed only at the later package streaming preflight because the old script hard-coded 238 unique production packages while D correctly added `M_ProductionWater`, producing 239.
-- The package preflight now reads the explicit audited `audit.total_unique_production_packages` manifest field and compares the independently reconstructed unique package set against it. The recorded D value is **239**.
-- Evidence boundary: the failed runs provide concrete compile/import/runtime observations but do **not** make the D head accepted. Fresh exact-head Pre-Unreal + UE4.27.2 validation is required after these corrections; no device/visual/performance acceptance is claimed.
-
-## 2026-09-26 - P1C01 D implementation candidate + Mega Asset Promotion launch
-
-- D is now the sole runtime-changing W01/P1C01 lane on `production/p1c01-d-lighting-water-mega-promotion-v1`, based on merged C4 develop `2845071119d926defd6ba94c970f43729bc51674`.
-- The existing fixed-state lighting stack remains bounded and event-driven: one primary directional sun strategy, SkyAtmosphere, non-volumetric ExponentialHeightFog, one startup skylight recapture, and no Actor Tick/day-night loop.
-- A new project-owned `M_ProductionWater` is created by the editor import pipeline as a texture-free opaque DefaultLit material with color/roughness/metallic/specular parameters. It adds no WPO, translucency, scene capture or planar reflection path.
-- P1C01's async chapter bank now owns `/Game/Production/Materials/M_ProductionWater.M_ProductionWater`; `AShirePrototypeWorldBuilder` only resolves the committed resident object and retains the existing lightweight blue fallback if it is absent.
-- The two already-established water surfaces are upgraded without topology change: **The Water beside the Mill** and **the Brandywine at Bucklebury Ferry**. Both remain collision-free, cast no shadow, and add no per-frame CPU simulation.
-- Quest/save/story state, traversal anchors, LivingWorldDirector ambient ownership, NPC pooling, C2/C3/C4 foliage density/material identity/cull ownership, and broad Part I/II/III runtime scope are unchanged.
-- PG-172 guards D against synchronous runtime loading, repeated skylight recapture, Actor Tick, planar-reflection and scene-capture regressions. PG-173 guards Mega Asset Promotion against evidence-free promotion.
-- Mega Asset Promotion is **launched only for staging/intake QC** using the existing queue and promotion policy. No candidate state has been advanced by metadata alone; READY_FOR_IMPORT still requires provenance/license, local staging receipt, SHA256 and class-specific QC.
-- Prior C4 proof used to open this lane: exact candidate `bc1e04062d8079fef73eae64f68c81772b4fc56c` passed Pre-Unreal #1070 and Unreal Build #875 before merge.
-- Evidence boundary for this D candidate: **SOURCE-IMPLEMENTED / EXACT-HEAD MACHINE PROOF PENDING**. No new PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PACING-ACCEPTED or PERFORMANCE-ACCEPTED claim is made.
-
-## 2026-09-27 - Deep-audit command recognizer aligned to isolated Pre-Unreal
-
-- Pre-Unreal #1105 reached the new head `2bcec3528619f07bd8917385d818d7a9be384d4c` through the persistent isolated checkout; exact-head checkout, classifier tests, project-structure validation, Project Governor, strict asset audit and production-readiness audit all passed.
-- #1105 then failed only in `deep_project_audit.py` with `Pre-Unreal workflow does not fail closed on structural asset-quality defects`.
-- The strict audit command was actually executed successfully in the same run as `cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" Scripts\\asset_quality_audit.py --strict`; the shared recognizer still accepted only the pre-isolation slash-only command shape.
-- `source_contracts.has_strict_asset_audit_command` now recognizes the isolated cmd working-directory prefix and either slash direction while retaining full-line rejection of comments, echo wrappers and failure-masking suffixes. Regression tests cover the exact Windows isolated command and the `|| true` rejection.
-- This is VALIDATOR_POLICY only. No gameplay/runtime/import/cook/package code changed, and no Unreal build is requested for this repair.
-- Evidence boundary: **STATIC VALIDATOR REPAIR / FRESH PRE-UNREAL EXACT-HEAD RERUN PENDING**.
-
-## 2026-09-27 - PG-167 final queue-isolation guard repair
-
-- Live PR state showed the branch had already advanced to `95dcdad171eb36b1309dadf248f9b1f98f12a05c` with the first PG-134/PG-167 repair commit.
-- Pre-Unreal #1104 proved exact-head isolated persistent checkout and all classifier cases passed at that head.
-- #1104 then failed only in project-structure validation with the exact stale policy requirement: `PG-167 Unreal queue-isolation contract missing: ${{ startsWith(github.head_ref, 'acceptance/') || startsWith(github.head_ref, 'production/') }}`.
-- The remaining PG-167 queue-isolation guard now requires the adopted branch-scoped Unreal concurrency group plus `cancel-in-progress: ${{ github.event_name == 'pull_request' }}`, matching same-PR superseded-run cancellation.
-- This wave changes validator policy/docs only. It does not request C++/import/runtime/cook/package work and does not create PIE/device/visual/performance evidence.
-- Evidence boundary: **STATIC VALIDATOR PATCH / FRESH PRE-UNREAL EXACT-HEAD RERUN PENDING**.
-
-## 2026-09-27 - Validator contracts aligned to isolated CI architecture
-
-- Pre-Unreal #1103 proved the isolated persistent checkout path itself works and exact-head verification passes.
-- Its failure was VALIDATOR_POLICY only: PG-134/PG-167 still required pre-rearchitecture implementation details.
-- PG-134 now validates the stable invariant: strict asset audit runs from the isolated persistent static checkout and the Unreal workspace cannot be deleted.
-- PG-167 now requires Branch Cleanup isolation instead of the interactive UE4 runner-health probe, and recognizes branch-scoped same-PR Unreal cancellation.
-- No runtime/gameplay code, story, movement, save, streaming or package behavior changed.
-- Evidence boundary: **STATIC VALIDATOR REPAIR / FRESH PRE-UNREAL RUN PENDING**.
-
-## 2026-09-26 - Persistent isolated Pre-Unreal checkout refinement
-
-- Isolation protected the Unreal workspace, but a fresh temporary Git repository still repeats repository transfer on every static validation.
-- Pre-Unreal now keeps a dedicated source checkout at `C:\actions-runner\_ci\pre-unreal`, physically separate from the Unreal build workspace.
-- Every run still fetches the exact target SHA, hard-resets to it, verifies HEAD equality and reruns all static/governance/source-quality checks.
-- Only the static Git object database persists so unchanged objects can be reused; Unreal `Intermediate`, `Binaries` and engine acceptance evidence are not shared through this lane.
-- Authenticated remote URL is scrubbed after exact checkout and again in the always-run cleanup step.
-- Evidence boundary: **SOURCE IMPLEMENTED / FRESH TIMING MEASUREMENT PENDING**.
-
-## 2026-09-26 - CI architecture reassessment and lane isolation
-
-- Comprehensive review concluded that the project quality direction is correct, but CI ownership was causing self-inflicted rebuilds and misleading red runs.
-- Recent reviewed window: 31 Unreal runs = 11 success / 17 cancelled / 3 failure; 31 Pre-Unreal runs = 11 success / 16 cancelled / 4 failure.
-- Major root cause: Pre-Unreal, Runner Health and Branch Cleanup could delete the same self-hosted GITHUB_WORKSPACE used by Unreal; Warehouse could delete its root .git. This destroyed Git/UBT incremental continuity.
-- Architecture is now redefined so Unreal Build Validation exclusively owns the persistent project workspace. Pre-Unreal, Runner Health, Branch Cleanup and Warehouse source checkouts use isolated RUNNER_TEMP directories.
-- Pre-Unreal remains self-hosted to avoid hosted-runner billing/capacity dependency; hosted Windows was tested and failed before step execution, so it is not part of the production architecture.
-- Failure triage is standardized as GAME_RUNTIME / VALIDATOR_POLICY / CI_INFRA / ADMIN_GOVERNANCE before runtime code is changed.
-- Coherent waves should use one atomic multi-file commit when possible to reduce superseded workflow churn.
-- Full runtime/story/save/streaming/package gates remain intact for relevant deltas; no quality gate was removed.
-- Canonical review: `Docs/CI_ARCHITECTURE_REASSESSMENT_2026-09-26.md`.
-- Evidence boundary: **SOURCE/ARCHITECTURE REASSESSED; FRESH TIMING MEASUREMENT PENDING**. No PIE/device/visual/performance acceptance is implied.
-
-## 2026-09-26 - Unreal CI root acceleration implemented
-
-- Measured logs confirmed three independent sources of wasted time: #888 spent about 11 minutes in exact checkout before cancellation; administrative PR heads repeatedly entered FULL Unreal; and repeated editor builds recreated the UBT makefile and compiled 76 actions at roughly 238-252 seconds each.
-- Unreal PR concurrency is now branch-scoped. A newer SHA cancels only an older run from the same PR branch; it cannot cancel D/develop or another runtime PR.
-- Unreal Build Validation no longer triggers for README/onboarding/handoff/classifier-test administrative-only changes. Pre-Unreal still validates those files.
-- Exact checkout no longer deletes the repository .git metadata. It reuses the self-hosted workspace, fetches with a 1000 B/s for 20 s low-speed cutoff, limits attempts to three, hard-resets/checks out the exact TARGET_SHA, verifies HEAD equality, then scrubs the authenticated remote URL.
-- The validation classifier now supports exact Git-tree proof reuse. A merge SHA may inherit core proof only when its tree SHA exactly equals a parent tree SHA that has the required green Unreal proof. This addresses the real C4 case where merged develop and the proven C4 candidate have the same tree object but different commit SHAs.
-- Unreal workflow/classifier/pre-unreal orchestration changes are treated as validation-policy-only when no runtime delta exists. They exercise exact checkout/classification/Pre-Unreal but do not rebuild/import/package simply to validate CI policy.
-- Packaging scripts themselves remain acceptance-impacting. Config, Build.cs, Target.cs, chapter-streaming, cook/package/release and unknown-impact paths remain fail-safe FULL.
-- Compile parallelism remains MaxParallelActions=1 for now; no blind binary cache or RAM-risk increase is introduced. First measure gains from removing redundant work.
-- PG-175 guards the bounded fetch, preserved Git checkout, administrative trigger exclusions, same-PR cancellation and exact tree-equivalent proof markers.
-- Evidence boundary: **CI ARCHITECTURE IMPLEMENTED / FRESH MEASUREMENT PENDING**. No runtime, PIE, device, visual, pacing or performance acceptance is created by this optimization.
-
-## 2026-09-26 - Persistent work-session handoff
-
-- Owner requested that the current conversation state be preserved with the project so a later session can continue without rediscovering the same CI/production issues.
-- Canonical continuation note: `Docs/WORK_SESSION_HANDOFF_2026-09-26.md`.
-- It records the measured PR102 CI latency, unnecessary FULL Unreal classification root cause, the #888 stalled-checkout cause/cancellation, #1083 success, #889 pending corrected measurement, and the GAME vs VALIDATOR vs CI/INFRA vs ADMIN failure-classification rule.
-- It also records the architectural policy: remove duplicate truth and magic constants, derive mutable counts from authoritative manifests, keep runtime safety strict, and prevent trivial administration from repeatedly blocking D + Mega Asset Promotion.
-- Evidence boundary: documentation/handoff only; no new runtime, PIE, device, visual, pacing or performance acceptance is created.
-
-## Administrative repetition root fix â€” 2026-09-26
-
-The validation snapshot is the sole handoff evidence authority. A stale legacy `source_head` is reported as a warning, not a production blocker. This supersedes the earlier requirement to keep duplicate fields synchronized by hand. Mixed-SHA evidence, unsuccessful green baselines, missing snapshots and missing human acceptance boundaries still fail validation. Regression tests cover both allowed metadata drift and rejected evidence corruption. Story continuity, living-world coherence, save/load integrity and target-device playability remain the production priorities. This change does not certify runtime or human acceptance.
-
-# Review checkpoint â€” 2026-09-26
-
-PR102 failed Governor validation because its historical `session_handoff.source_head` was moved to the current integration commit without matching validation evidence. Restore it to the recorded last-green SHA; keep the current integration baseline in `integration_train`. Future phase changes must preserve this distinction. No validation gate is disabled. Onboarding uses PG-174 because D lighting and Mega promotion already use PG-172/173 in PR101. C3/C4 are merged; D and bounded Mega promotion are in progress. Runtime, visual, device and performance acceptance remain separate and unproven by this administrative repair.
-
-## 2026-09-26 - Single new-developer / AI-session entry path
-
-- `README.md` is now the single repository entry point for a new human programmer, a new AI session, or a developer returning after a long break.
-- The canonical reading path is: `README` â†’ `PROJECT_GOVERNOR` â†’ `ProjectGovernor.json` â†’ `CURRENT_PROJECT_STATE` â†’ `DEVELOPMENT_GATES` â†’ `PROJECT_GUARDIAN`.
-- Added `Scripts/new_developer_onboarding.ps1`. It reads current Governor + Git state and prints authority, branch/HEAD, active lane/gate, benchmark, next actions, target hardware, required reading and evidence boundary.
-- The onboarding script is read-only project guidance; it is not a second manager and does not copy live PR numbers into governance.
-- ProjectGovernor handoff/next-actions were reconciled from old C3/C4 wording to the current train: **D lighting/sky/fog/low-cost water next + Mega Asset Promotion in parallel**.
-- PG-174 now guards the README entry path and onboarding-script contract so later maintenance cannot silently remove the manager entrance.
-- Evidence boundary: onboarding/governance change only. It does not create new PIE/device/visual/performance acceptance.
-
-## 2026-09-26 - Historical foliage guards decoupled from mutable phase labels
-
-- Final C4 closure exposed a validator design defect: PG-165/166 still required the overall materials/vegetation plan to retain a C1/C2-era top-level status, so legitimate progress to C4 was rejected even though C1/C2 invariants remained intact.
-- PG-165 now validates the durable C1 albedo/master-surface contract instead of freezing the plan at an old phase label.
-- PG-166 now validates recorded C2 machine evidence plus wind/performance invariants instead of requiring the top-level plan status to remain `C2_FOLIAGE_WIND_EXACT_HEAD_GREEN_MERGED_C3_READY`.
-- PG-171 accepts the prepared state or any explicit `C4_...` state while still enforcing all C4 source/evidence invariants and forbidding premature far-parent binding.
-- This prevents future D/later phase progression from reopening old C1/C2 validation failures solely because the project advanced.
-- Evidence boundary: validator repair only; fresh exact-head Pre-Unreal is required after this change. Unreal #873 already succeeded on the immediately preceding closure head.
-
-## 2026-09-26 - P1C01 C4 machine closure / D next
-
-- C4 candidate machine evidence: Pre-Unreal #1064 SUCCESS + Unreal Build #869 SUCCESS on `e881b32da6ae9713ccc096e8f213056aeef6af76`.
-- UE4.27 production import completed with `376 files, 0 failures`; warning debt returned to `defaultMat references = 0`.
-- Concrete C4 foliage evidence: all five audited P1C01 foliage meshes expose `lodCount=1` only. Grass/Hedge/Shrub/TreeCanopy remain near/mid on `M_ProductionFoliage`; TreeTrunk remains on `M_ProductionSurface` with authored `Bark`.
-- Because no `lodIndex > 0` exists, C4 closes with **NO far-parent binding**. `M_ProductionFoliageFar` remains available but unused until a real far LOD asset/section exists.
-- Existing HISM/ISM cull bands and foliage density remain unchanged.
-- C4 does not establish target-device overdraw/FPS acceptance; that remains a later profiling gate.
-- Next production drop after merge: **D â€” fixed-state lighting / sky / fog / low-cost water**.
-- Evidence state: machine-green / COMPILE-TESTED and import-observed. No new PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PACING-ACCEPTED, or PERFORMANCE-ACCEPTED claim.
-
-## 2026-09-26 - C4 source-material debt repair
-
-- C4 engine evidence exposed a real existing source-asset defect rather than a C4 runtime regression: `SM_ShTreeCanopy.obj` and `SM_ShTreeTrunk.obj` had no authored `mtllib/usemtl` declarations, so UE4.27 imported their only material slot as `defaultMat` / WorldGridMaterial.
-- `SM_ShTreeCanopy.obj` now references `ShireMaterials.mtl` and uses authored material identity `Leaves`.
-- `SM_ShTreeTrunk.obj` now references `ShireMaterials.mtl` and uses authored material identity `Bark`.
-- The zero-tolerance warning-debt guard was not weakened or bypassed.
-- C4 still performs no far-parent rebind, no foliage density increase, and no gameplay/save/LivingWorld ownership change.
-- Evidence boundary: source repair is **STATIC-VALIDATED candidate** only until the refreshed exact-head Pre-Unreal and UE4.27.2 production import/build succeed.
-
-## 2026-09-26 - P1C01 C4 foliage LOD/cull/overdraw evidence capture implemented
-
-- Candidate branch `production/p1c01-c4-foliage-lod-cull-v1` starts C4 only after merged C3 and merged-develop exact-head machine proof.
-- UE4.27 production import now audits exact P1C01 foliage mesh identities after import: `SM_ShGrassClump`, `SM_ShHedge`, `SM_ShShrub`, `SM_ShTreeCanopy`, and `SM_ShTreeTrunk`.
-- For every imported foliage mesh LOD section, the commandlet emits `C4_FOLIAGE_EVIDENCE` with LOD count/index, section/material indices, authored material identity, current parent, proposed parent, decision and reason.
-- Only a real `lodIndex > 0` plus an approved foliage material identity can become `FAR_LOD_ELIGIBLE_FOR_REVIEW`.
-- This evidence-capture step performs no far-parent rebind. `M_ProductionFoliageFar` remains unused unless engine evidence proves a qualifying far LOD.
-- Existing HISM cull bands remain unchanged: grass 1200/5200, flowers 800/3200, shrubs 1500/6500, distant tree trunk/canopy 5000/19000; no density increase.
-- Gameplay IDs, save/quest state, LivingWorld ownership, collision ownership and deterministic asset paths are unchanged.
-- Evidence boundary: **STATIC-VALIDATED candidate implementation** only. Exact-head Pre-Unreal + UE4.27.2 production import evidence is still required. No PIE/device/visual/performance acceptance is claimed.
-
-## 2026-09-26 - Root administrative blocker removal / thread consolidation
-
-- Owner direction: stop recurring stale-Governor/old-PR/board mismatch failures at the root and reduce parallel administrative threads.
-- `Scripts/project_governor.py` no longer treats volatile PR numbers or candidate branch names as fail-closed Governor truth. GitHub is the live authority for PR/branch/open/mergeable/workflow transport state.
-- `Data/ProjectGovernor.json` remains authoritative for durable requirements, priorities, active lane/gate, decisions and evidence boundaries.
-- PG-150 now checks authority semantics instead of exact PR/branch mirroring across human-readable files.
-- New PG-170 regression guard rejects reintroduction of the old PR/branch mismatch failure strings and requires branch-cleanup empty/open-PR response hardening.
-- `Scripts/run_branch_cleanup.ps1` now safely handles API results that do not expose `head.ref` under PowerShell StrictMode.
-- Failure discipline is lane-scoped: a real runtime/integration failure blocks that affected lane, while unrelated safe source/PDF/warehouse/design preparation may continue.
-- W00 remains closed unless concrete regression evidence reopens it.
-- The 24-hour Project Manager report remains informational and never blocks production.
-- C3 foliage identity implementation remains the active runtime change on PR #98.
-- Evidence boundary: these governance/maintenance changes are source-level only until exact-head validation completes; no PIE/device/visual/performance acceptance is claimed.
-
-## 2026-09-26 - P1C01 C3 stable foliage identity implemented
-
-- Candidate branch `production/p1c01-c3-foliage-identity-v1` implements the prepared C3 contract in `ShireProductionImportCommandlet.cpp`.
-- Exact approved authored material identities are limited to `Grass`, `Leaves`, `LeafGreen`, and `LeafGold` after trimming.
-- Approved identities bind their deterministic material instances to `M_ProductionFoliage`; all other authored identities remain on `M_ProductionSurface`.
-- `M_ProductionFoliageFar` remains unassigned in C3 and stays reserved for C4 after mesh/LOD/cull evidence.
-- Existing material instance object paths, AlbedoTexture bindings, Color/Roughness/Metallic values, world ownership, HISM/ISM population and foliage density are unchanged.
-- Pre-Unreal PG-169 now guards the exact identity set and rejects broad `Contains("Leaf")` / `Contains("Grass")` classification and premature far-parent binding.
-- Evidence boundary: **STATIC-VALIDATED candidate implementation** only until exact-head Pre-Unreal and UE4.27.2 asset/editor validation succeed. No PIE/device/visual/performance acceptance is claimed.
-
-## 2026-09-26 - Production resume checkpoint
-
-PR90, PR87/C2 and PR93 callback repair are merged. Candidate e2dd022 passed the full machine chain including rendered package startup. Post-merge verification is ongoing. C3 preparation and implementation can proceed independently of branch cleanup. Human pacing/visual/performance acceptance remains pending. Governor production_resume_checkpoint_2026_09_26 records completed and remaining work. Older cleanup prerequisites below are superseded by this checkpoint and the Governor maintenance policy.
-
-## 2026-09-26 - Post-C2 root cleanup and C3 launch gate
-- Governor stale-control reconciliation: historical PR #53/V6 repair wording and the already-completed Public/Private migration were removed from active/missing work; W00 stabilization and source migration are recorded closed, while real profiling/pooling/async-load audit debt remains open.
-- Classifier root fix: `Scripts/run_branch_cleanup.ps1` is now governance-safe when Unreal is otherwise awakened; cleanup-script maintenance may no longer force FULL/Cook/Package by falling through as an unclassified file.
-- Classifier contract unified: all 15 exact maintenance scripts excluded by the Unreal workflow are now safe in both main classification and transitive-core proof; co-changes can no longer promote them to FULL by omission.
-- PG-078 roadmap snapshot reconciled directly from current Governor after closing historical W00 stability work; the guard remains fail-closed against future active-work drift.
-
-
-
-
-
-- C2 final PR head `fd521dc308580fc44d0cdfdfed24273bacc37ff9` passed Pre-Unreal #1030 and Unreal Build #837.
-- C2 merged as `1d0580926299e4fac635bcb847343a49c444d4f1`; merged develop then passed Pre-Unreal #1031 and Unreal Build #838.
-- Evidence status: **COMPILE-TESTED + exact-head automated import/QA/startup machine green**. No PIE/device/visual/performance acceptance is claimed.
-- Root cleanup removes audited superseded CI/C2/warehouse refs and protects the two future-planning salvage branches that still contain content absent from develop.
-- C3 is prepared but runtime-not-started; it may begin only after Branch Cleanup succeeds and the survivor set is rechecked.
-
-## 2026-09-26 - C2 Governor handoff coherence correction
-
-- Pre-Unreal #1029 on `981996e62d3c595783bb80a43aee2352aeb65541` passed exact-head checkout, runner health, and PRE-UNREAL CORE VALIDATION, then failed `project_governor.py` with: `Legacy verified handoff must refer to the same last-green baseline`.
-- Root cause: the C2 rebase preparation incorrectly reused `session_handoff.source_head` for the current rebase parent. The Governor contract defines that legacy field as the last verified green baseline.
-- Correction: `session_handoff.source_head` is restored to `712a81cac150b7fdb338a4cf7554d4f27d4b5191`; the current C2 rebase parent remains correctly recorded in `integration_train.baseline=f4028a89f7d2c541cddcb987f43963be87e944e0`.
-- No C2 importer/material code changes are made by this correction. The branch remains one atomic C2 commit above hardened develop after the head rewrite.
-- Evidence boundary: **STATIC-VALIDATED CONTRACT CORRECTION; fresh exact-head Pre-Unreal and Fast Asset Lane required**. No PIE/device/visual/performance acceptance is claimed.
-
-## 2026-09-26 - C2 foliage wind rebased onto hardened develop
-
-- PR #87 remains the sole runtime-changing C2 lane and is rebuilt from `develop@f4028a89f7d2c541cddcb987f43963be87e944e0` rather than carrying its old infrastructure/governor snapshot.
-- C2 creates `M_ProductionFoliage` using UE4.27 SimpleGrassWind through `UMaterialExpressionMaterialFunctionCall` with `WindIntensity`, `WindSpeed`, and `WindWeight`.
-- `M_ProductionFoliageFar` intentionally has no WPO. Foliage density is unchanged and no Actor Tick is added.
-- C3 stable material identity and C4 LOD/cull/overdraw remain blocked until C2 exact-head Fast Asset Lane is green and C2 is merged.
-- The transplanted importer blob is exactly `66f12ff5926b96118f59fbc3cab893ebd01f6fff`, which has historical Pre-Unreal #924 + Unreal #759 evidence; this rebased PR head still requires fresh exact-head proof.
-- Evidence boundary: **STATIC-VALIDATED REBASE CANDIDATE; exact-head Pre-Unreal/Fast Asset Lane pending**. No PIE/device/visual/performance acceptance is claimed.
-
-## 2026-09-26 - Runner network health false-negative hardening
-
-- Pre-Unreal #1026 on `develop@8131166025fcceed7102e9a33844bd5e6f864cae` completed exact-head Git checkout and passed runner identity/service/watchdog/process ownership checks before one `github.com:443` probe returned false.
-- The runner network gate is now bounded and retrying: three TCP attempts to `github.com:443`, five seconds maximum per attempt, with a two-second delay between failed attempts.
-- The gate remains fail-closed: `RUNNER_HEALTH_FAIL github-443-unreachable` is emitted only after all three bounded attempts fail. Each attempt reports `RUNNER_HEALTH_NETWORK_ATTEMPT` and a success reports `RUNNER_HEALTH_NETWORK_PASS`.
-- PG-145B now guards the bounded TCP/retry markers rather than requiring the previous single `Test-NetConnection` call.
-- `Scripts/verify_runner_session.ps1` and `Scripts/pre_unreal_validate.py` remain excluded from the Unreal Build push/PR device lane, so this maintenance fix must not trigger FULL Unreal validation.
-- Evidence boundary: **STATIC-VALIDATED SOURCE CHANGE; fresh exact-head Pre-Unreal proof pending**. No PIE, device, visual or performance acceptance is claimed.
-
-## 2026-09-26 - Maintenance-only Unreal trigger closure
-
-- Added `Data/BranchCleanupPlan.json` and `Scripts/run_branch_cleanup.ps1` to both push and PR `paths-ignore` in Unreal Build Validation.
-- These branch-hygiene files are static/maintenance-only and must stay on Pre-Unreal; they must not consume the UE4 build device.
-- PG-167 now guards both exclusions so the heavy Unreal lane cannot be re-triggered by branch-cleanup maintenance.
-- Evidence boundary: **STATIC-VALIDATED SOURCE CHANGE; fresh Pre-Unreal proof pending**.
-
-## 2026-09-26 - Final CI/branch-hygiene hardening before production resumes
-
-- Removed the last known marketplace checkout dependencies from the self-hosted maintenance lanes: Branch Cleanup and Runner Health now use bounded local exact-head Git acquisition with three attempts and a 20-second low-speed cutoff.
-- Branch Cleanup no longer uses the implicit `shell: powershell`; it calls an explicit `-NoProfile -ExecutionPolicy Bypass` script after runner-health verification.
-- Added `Scripts/run_branch_cleanup.ps1`: cleanup now refuses protected refs, refuses any active PR head discovered from the GitHub API, treats already-absent approved refs as clean, hard-fails real deletion errors, and verifies `develop` plus `main` remain.
-- BranchCleanupPlan is synchronized to the current runtime lane: PR #87 / `production/w01-p1c01-foliage-wind-v3`. Identical stale `ci/validator-sync-v5` and PR #90's infrastructure branch are approved for deletion after integration.
-- PG-167 now guards these maintenance workflows against reintroducing marketplace checkout/raw PowerShell failure modes.
-- Pre-Unreal #1023 already passed exact-head checkout, runner health, Governor and all static audits on `c408c4c85d8bde3afbd805545401667442b6af34` in under one minute; this new maintenance hardening still requires its own fresh static pass before merge.
-- Evidence boundary: **STATIC-VALIDATED SOURCE CHANGE + prior exact-head Pre-Unreal success; fresh exact-head proof for this final hardening pending**. No PIE/device/visual/performance acceptance is claimed.
-
-## 2026-09-26 - PG-145B false-negative correction
-
-- Pre-Unreal #1020 proved runner session health and local Python resolution passed, then failed only because the static validator incorrectly searched `verify_runner_session.ps1` for three watchdog-only symbols: `WorkerIdleHangSeconds`, `Listening for Jobs`, and `stale-worker`.
-- PG-145B now validates session/ownership markers in `verify_runner_session.ps1` and stale-worker/broker-listening recovery markers in `runner_watchdog.ps1`, matching the actual system split.
-- This is a validator correction only; it does not weaken the runner health gate.
-- Evidence boundary: **STATIC-VALIDATED SOURCE CHANGE; fresh Pre-Unreal run pending**.
-
-## 2026-09-26 - Pre-Unreal checkout freeze root fix
-
-- Pre-Unreal #1019 was assigned to runner_id 21 but remained inside marketplace `actions/checkout@v4` until cancellation; no project validator or runner-health step executed.
-- Pre-Unreal now performs a bounded local exact-head Git checkout using the already installed Git client, the PR-head SHA, three fetch attempts, a 20-second Git low-speed cutoff, hard reset to the exact SHA, SHA verification, and `ShireJourney.uproject` presence verification.
-- The marketplace checkout dependency is removed from Pre-Unreal, so a stalled action download cannot consume the whole static-validation window.
-- PG-167 now fails static validation if marketplace checkout is reintroduced or the bounded exact-head checkout markers disappear.
-- Evidence boundary: **STATIC-VALIDATED SOURCE CHANGE; fresh Pre-Unreal machine run pending**. This infrastructure change does not imply PIE/device/visual/performance acceptance.
-
-## 2026-09-26 - Runner health owner normalization fix
-
-- Pre-Unreal #1017 proved the supervised job itself was running correctly on `UE4-27-Windows` as `IDEAPAD320\user` in session 1 with the legacy service stopped/manual, then the new health probe produced a false negative because Task Scheduler reported the same account as short-form `user`.
-- Runner health now compares the watchdog task owner by Windows SID rather than display-name string, so `user` and `IDEAPAD320\user` resolve to the same identity without weakening the ownership check.
-- Evidence boundary: source correction only until a fresh Pre-Unreal run reaches `RUNNER_HEALTH_PASS`.
-
-## 2026-09-26 - Fast production validation lane + stale-worker recovery
-
-- Root cause of the recurring 15-20 minute waste was split into runner acquisition/session failures and an overly broad Unreal validation lane.
-- Runner watchdog now verifies broker readiness with an actual `Listening for Jobs` log marker, not merely the existence of `Runner.Listener.exe`.
-- A stale `Runner.Worker` can no longer block the supervisor forever: after 300 seconds, it is recycled only when it has no descendant processes and its Worker diagnostic log has also been idle for the same window. Active build/cook/editor child processes remain protected.
-- Added a narrow `asset` Unreal mode for editor-tool/P1C01 material-authoring deltas. It still performs exact-head Editor build, production import, Automation QA and startup smoke, but skips unrelated chapter/state/warning-debt audits and never Cook/Packages.
-- CORE and ASSET runs no longer delete `Intermediate/Build/Win64` and `Binaries/Win64` before every build. UBT incremental dependency checking is used; the existing compiler-pressure retry still performs a clean project-intermediate reset if the build actually needs it. FULL validation remains clean-reset.
-- Runtime C++, Config, Build/Target, streaming/package/cook changes remain on CORE/FULL fail-closed paths. No gameplay/streaming/performance safety gate was waived.
-- The independent #1001 CRLF test defect is fixed by newline normalization and is not treated as a runner failure.
-- Evidence boundary: **STATIC-VALIDATED SOURCE CHANGE / fresh supervised exact-head run pending**. No PIE, device, visual or performance acceptance is claimed from this optimization.
-
-## 2026-09-26 - Runner health certification and false-failure separation
-
-- Added `Scripts/verify_runner_session.ps1` as a fail-fast machine/session probe for the supervised UE4 runner.
-- The probe rejects service identities (`NETWORK SERVICE` / `SYSTEM` / `LOCAL SERVICE`), session 0, missing same-session Explorer, wrong runner name, non-Manual/non-Stopped legacy runner service ownership, unhealthy watchdog ownership/state, duplicate/missing Listener, wrong Listener/Worker owner or session, GitHub:443 loss, unwritable runner temp, and missing GPU enumeration. It also reports free disk/RAM and monitor/GPU inventory.
-- Pre-Unreal, Unreal Build and Warehouse Stage now run this probe before expensive work. A dedicated manual `Runner Health Check` workflow provides a one-click, sub-minute runner-only diagnostic path.
-- This creates a clean fault boundary: if `RUNNER_HEALTH_PASS` occurs and a later Unreal/package step fails, the failure is no longer attributed to runner identity/session ownership without new evidence.
-- Fixed the independent Pre-Unreal #1001 failure by normalizing CRLF/CR newlines in decoded Unreal logs; the failure was `READY\r\n != READY\n`, not a runner fault.
-- Expanded Unreal path isolation so runner-health, runtime-smoke harness, and asset-audit maintenance remain on the fast Pre-Unreal lane and do not trigger a full UE4 build by themselves.
-- Corrected the PR-side mirror of the static-only ignore list so the same runner/CI maintenance paths are excluded consistently on both push and pull_request triggers.
-- Existing #823 evidence remains historical failure: the job ran as `NT AUTHORITY\NETWORK SERVICE` and packaged startup failed at D3D11 swap-chain creation `887A0022`. The newly installed watchdog/device state must produce a fresh runner-health pass before that cause is considered closed.
-- Evidence boundary: **STATIC-VALIDATED SOURCE CHANGE + OWNER DEVICE INSTALL OBSERVED; FRESH GITHUB RUNNER_HEALTH_PASS PENDING**. No PIE/device/performance acceptance is claimed yet.
-
-## 2026-09-26 - Targeted validation friction reduction and historical evidence reconciliation
-
-Owner requested immediate removal of unnecessary blockers without weakening game construction. Four explicit static-only Python audit/helper/test paths are excluded from automatic Unreal workflow triggers for both push and PR; Pre-Unreal still runs their checks. Mixed PRs and manual dispatch can still run Unreal. Runtime source, assets, configuration and package changes retain their existing gates. No error suppression or automatic acceptance was added.
-
-Governor REQ-SAVE-001, REQ-INTEGRATION-001 and REQ-STARTUP-001 now preserve their old missing-work lists as history and record successful machine stages from C2 head `2af6648209d8722247ca6f9a75b2b5082b6654d5`, run 36200615260. Their status remains PARTIAL. That run failed at rendered package startup (`CreateSwapChainResult`, `887A0022`, process identity NETWORK SERVICE); it does not prove current-head or human/device acceptance. Owner grounding evidence cited in active_gate still needs exact-SHA reconciliation before requirement promotion.
-
-Validation: targeted workflow filter checks only; no new engine/device proof. Existing run 36226722585 was left running. Current work remains W01/P1C01; remaining package-session/device and human acceptance work is not waived.
-
-## 2026-09-26 - Recurring CI failure: Python launcher contract
-
-Exact head `1e7be3da32a9d4f8cd85297260e5abce2e9492f2`, run 36226440287, passed structure, Governor, strict asset quality and readiness checks, then failed deep audit because it searched for a literal `python Scripts/asset_quality_audit.py --strict`. The workflow now correctly uses the resolved `"%PYTHON_EXE%"` interpreter. The guard recognizes supported direct one-line run commands without accepting comments, echoed commands, missing strict mode or masked shell failures.
-
-Validation: 11 local source-contract unit tests passed, including accepted launchers and negative command cases. Full exact-head Pre-Unreal remains pending. This changes static validation only; no runtime or performance acceptance. Governor handoff: `ci_recurrence_review_2026_09_26`. Packaged executable launch remains a separate open investigation.
-
-## 2026-09-26 - Runner supervision + fast core validation hardening
-
-- Root runner recurrence isolated: the scheduled watchdog can terminate while leaving a stale `Runner.Listener.exe`; GitHub then leaves jobs queued with `runner_id=0` even though a listener process still exists.
-- Permanent runner policy remains interactive-user watchdog ownership, not the legacy Windows service. The installer now keeps `actions.runner.*` stopped/manual, adds a five-minute repeating self-heal trigger in addition to AtLogOn, and the watchdog recycles an orphaned listener on supervisor restart only when no `Runner.Worker` is active.
-- The existing 150-second acknowledged-job-without-worker recovery remains in place.
-- Validation classifier now supports transitive CORE proof inheritance across first-parent preparation-only commits. A runtime/asset delta can therefore run build/import/runtime audits without repeating Cook/Package when an earlier green core ancestor exists and every intervening commit is explicitly preparation-safe.
-- Unsafe intervening files fail closed and force FULL validation.
-- Static validation now guards both the watchdog self-heal contract and the transitive core-proof contract.
-- Pre-Unreal no longer downloads/installs Python with `actions/setup-python`; it resolves the already installed local interpreter and runs under `cmd`, removing the repeated setup overhead and the execution-policy failure seen on #988 under the wrong service identity.
-- Warehouse staging no longer runs on pull-request synchronize events; source/manifest changes stage once after integration to `develop`, while Pre-Unreal statically guards the warehouse workflow. This removes repeated provider/audit passes from maintenance commits.
-- Live evidence before this change: Unreal #821 on exact C2 head `2af6648209d8722247ca6f9a75b2b5082b6654d5` completed Editor build, production import, Automation QA, startup smoke, chapter audit, route/state audit, warning guard, Cook and Runtime Data verification successfully; it then failed only at packaged executable launch. This demonstrates the waste the CORE path is intended to remove, but does not make #821 green.
-- Evidence boundary for this hardening branch: **STATIC-VALIDATED SOURCE CHANGE / DEVICE WATCHDOG REINSTALL PENDING**. No PIE-TESTED, DEVICE-TESTED or performance claim.
-
-## 2026-09-26 - P1C01 Poly Haven material staging wave V4 queued
-
-- Warehouse manifest now lists a verified source-page record for every currently authorized Poly Haven material slug, including the Shire grass, woodland, soil, leaf-litter and rustic-path additions.
-- Target remains 2K source intake; displacement/high-poly payloads remain excluded from this staging wave.
-- The repaired Warehouse Stage workflow will run the real provider staging + SHA256 inventory audit on the supervised Windows runner.
-- Evidence boundary: QUEUED FOR STAGING only; no STAGED/IMPORTED/INTEGRATED claim until receipts exist.
-
-## 2026-09-26 - Warehouse staging removed from hosted-error path
-
-- Warehouse staging now triggers from `develop` / relevant PR deltas instead of the obsolete comprehensive-foundation branch.
-- GitHub-hosted delta/no-stage jobs were removed; one supervised Windows job stages Poly Haven, OpenGameArt, Quaternius, ambientCG, Kenney and KayKit and audits the persistent warehouse.
-- Warehouse has its own concurrency group, so it no longer shares/cancels the UE4 validation group.
-- PG-168 prevents regression to hosted runners or the obsolete branch trigger.
-- Evidence boundary: workflow/source configuration only; a real warehouse staging receipt is still required before STAGED claims.
-
-## 2026-09-26 - CI validator synchronized with the new supervised runner policy
-
-- PG-026 now allows only acceptance/* or the sole active production/* PR to cancel superseded shared-device work.
-- PG-167 now enforces event-driven self-hosted Pre-Unreal/Branch Cleanup and the preparation-only Unreal queue isolation contract.
-- This removes a validator contradiction that would otherwise reject the newly adopted CI policy before repository tests could run.
-- Evidence boundary: STATIC source correction; fresh supervised-runner execution still pending.
-
-## 2026-09-26 - CI zero-step root bypass installed
-
-- Recurrent hosted `steps=null` / BlobNotFound failures are removed from the critical path: Pre-Unreal and Branch Cleanup now run only on the supervised self-hosted Windows UE4 runner.
-- The 20-minute Pre-Unreal schedule is removed.
-- Unreal Build Validation now ignores CI/docs/known preparation-only deltas so the single UE device lane is reserved for runtime-relevant work.
-- `Scripts/run_local_static_validation.ps1` mirrors the full static/governor/audit/unit-test chain for direct local execution independent of GitHub-hosted workers.
-- Evidence boundary: STATIC SOURCE CHANGE ONLY until the supervised runner executes these workflows.
-
-## 2026-09-26 - Immediate branch integration policy and dead-ref cleanup
-
-- **Owner rule:** completed temporary branches must merge meaningful work into `develop` immediately, then delete the branch ref.
-- **Safe dead refs queued now:** `ci/pr80-hosted-zero-step-fallback-20260926`, `production/w01-p1c01-hobbiton-bagend-v1`, `production/w01-p1c01-kickoff-v1`, `production/w01-p1c01-materials-vegetation-v1`, `production/w01-p1c01-world-foundation-v1`, `warehouse/p1c01-bulk-intake-v2`, plus this finished stability branch after merge.
-- **Active work preserved:** PR #80 `production/w01-p1c01-foliage-wind-v2`, PR #81 `planning/whole-game-world-build-v1`, and `planning/whole-game-production-prep-v2`.
-- **Unique-content quarantine:** old foliage-wind-v1, localization prototype and mega-prep branches are not deleted yet because they still contain commits unique versus develop; useful content must be selectively salvaged first.
-- **Evidence boundary:** repository/process hygiene only; no runtime acceptance change.
-
-
-## 2026-09-26 - P1C01 source-to-production bridge and local material pipeline
-
-- **Source packet:** `Data/P1C01SourceExtractionV1.json` converts the supplied PDFs into a compact Shire/Hobbiton/Bag End implementation packet while preserving source priority and VISUAL-ONLY boundaries.
-- **Production bridge:** `Data/P1C01SourceToProductionBridgeV1.json` maps source-grounded needs directly to the active material/warehouse candidate lanes.
-- **One-command local path:** `Scripts/run_p1c01_material_pipeline.ps1` stages Poly Haven + ambientCG, audits warehouse receipts/hashes, prepares the P1C01 material intake, and can optionally call the real UE4 production importer with `-RunUnrealImport`.
-- **CI independence:** this local preparation/import entry point exists specifically so public-source/material work can continue when GitHub-hosted checks or the Actions queue are unavailable; it does not bypass technical validation.
-- **Evidence boundary:** tooling is authored but not claimed as UE4-import-tested in this session because no self-hosted UE4 commandlet log has run on this branch.
-
-## 2026-09-26 - Massive build accelerated with source-PDF indexing and material-intake tooling
-
-- **Parallel preparation authorized:** source/PDF, warehouse, materials, audio, character/animation and later-region preparation may proceed together; runtime-changing integration remains serialized.
-- **Source PDFs indexed:** `Data/ProjectSourcePdfRegistryV1.json` records 15 owner-supplied PDFs by page count, byte size, SHA256 and authority role. Large source PDFs are not added to Git history.
-- **Smart fence active:** `Data/FastProductionSmartFenceV1.json` downgrades administrative-only friction to warning/pending states while keeping technical/runtime/performance safety blocking.
-- **P1C01 material intake:** `Data/P1C01MaterialImportWaveV1.json` selects eight Poly Haven CC0 Shire/Bag End surface families at the existing 2K intake target, with ambientCG fallback.
-- **Import tooling added:** `Scripts/prepare_p1c01_material_intake.ps1` prepares deterministic BaseColor + MTL input from staged warehouse receipts; `Scripts/promote_p1c01_material_intake.ps1` can feed those materials through the existing production importer using a temporary source overlay that is always removed afterward.
-- **Material master boundary preserved:** extra PBR maps are staged only; the current master remains AlbedoTexture + Color + scalar Roughness/Metallic until a separately gated material-cost pass.
-- **Source architecture bug carried forward:** migrated source paths are synchronized to the actual Public/Private layout on this lane.
-- **Evidence boundary:** STATIC/PREPARATION. No UE4 material import success is claimed until a real self-hosted intake receipt and commandlet log exist.
-
-## 2026-09-26 - Whole-game reuse, streaming and pooled-population architecture prepared
-
-- **Asset-family reuse:** `Data/WholeGameAssetFamilyCoverageV1.json` aggregates the 28 region packets into shared production families so repeated technical kits can be reused without erasing region-specific hero identity.
-- **Streaming residency:** `Data/WholeGameStreamingResidencyPlanV1.json` defines GLOBAL_TINY / REGION_ACTIVE / TRANSITION_OVERLAP / WAREHOUSE_ONLY tiers, soft-reference ownership, async FStreamableManager loading and post-commit handle release.
-- **Population architecture:** `Data/WholeGamePooledPopulationPlanV1.json` centralizes NPC/fauna pool admission under `LivingWorldDirector`, bounded context under `ShireNPCContextSubsystem`, quest facts under `ShireQuestSubsystem`, and forbids Spawn/Destroy bursts and global per-frame NPC scans.
-- **Low-spec objective:** these plans explicitly prevent the massive production campaign from turning into a global hard-reference or always-resident world that would exceed the 8GB RAM / ~2GB VRAM target.
-- **Evidence boundary:** PREPARATION only. No runtime memory, AI or performance acceptance is claimed.
-
-## 2026-09-26 - P1C01 downstream production stages prepared
-
-- **D prepared:** low-cost lighting/sky/fog/water plan with chapter-state ownership and no density escalation.
-- **E prepared:** character presentation plan with FBX-only animated intake, soft references, async loading, retarget/LOD/shadow evidence and pooling boundaries.
-- **F prepared:** Living Shire plan extends `LivingWorldDirector`, `ShireNPCContextSubsystem`, `ShireQuestSubsystem`, bounded dialogue/memory/social plans and pooled fauna without a parallel AI brain or per-NPC global polling.
-- **G prepared:** quest/cinematic/audio polish plan preserves DEC-038 locked beats, bounded control loss, original dialogue, save/route continuity and audio subsystem ownership.
-- **H prepared:** target-device profiling plan locks the i7 Gen6 / 8GB / ~2GB VRAM / DX11 / 720p Low-Medium / 30 FPS floor evidence route.
-- **Gate 6/7 prepared:** `Data/P1C01Gate67AcceptanceChecklistV1.json` separates static/compile/PIE/device/visual/performance proof so no preparation state can be mislabeled as acceptance.
-- **Runtime remains serialized:** these are preparation artifacts only; PR #80 C2 is still the sole runtime-changing lane.
-
-## 2026-09-26 - Massive production preparation resumed without opening another runtime lane
-
-- **Preparation branch:** `planning/whole-game-production-prep-v2` continues from PR #81 preparation head and is intentionally not opened as another runtime-changing PR.
-- **Whole-game execution:** `Data/WholeGameProductionExecutionQueueV1.json` now drives all 28 existing region packets across BPB-W1..W9 while preserving the P1C01 Gate 6/7 runtime barrier.
-- **P1C01 benchmark intake:** `Data/P1C01WarehousePromotionQueueV1.json` defines 28 concrete already-registered candidates across Shire/Bag End surfaces, support architecture/interiors, fauna review, support stock and audio/foley.
-- **Asset promotion guard:** `Data/ProductionAssetPromotionPolicyV1.json` locks provenance, FBX-only animated production intake, PNG/TGA textures, WAV masters, 1K/2K defaults, soft-reference/async loading, pooling and ISM/HISM requirements before promotion.
-- **Fail-closed sourcing:** Quaternius farm animals remain blocked at license capture because the current manifest does not record an observed per-pack license; no license was inferred.
-- **Evidence boundary:** PREPARATION / STATIC DATA AUTHORING only. No new COMPILE/PIE/DEVICE/VISUAL/PERFORMANCE acceptance is claimed.
-
-## 2026-09-25 - Source-grounded post-Amon-Hen promotion graph added
-
-- Added `Data/WholeGameRoutePromotionGraphV1.json` from the supplied `01_STORY_AND_TIMELINE_BIBLE` and `07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX`.
-- After Amon Hen, production/runtime planning is explicitly multi-threaded rather than falsely linear: Rohan, Ring-bearer, Gondor and late-Rohan lanes advance through synchronization barriers.
-- F2-01 through F3-07 chapter titles, locations and locked outcomes are recorded in the graph from project sources.
-- Shared cinematics/world-state changes wait for required peer-route barriers; local playable safe windows remain allowed under DEC-038.
-- This is planning only. P1C01 remains the sole active runtime benchmark until Gate 6/7.
-
-## 2026-09-25 - Whole-game region production packets created
-
-- Added `Data/WholeGameRegionProductionPacketsV1.json` on the global preparation lane.
-- Every registered world region now has a concrete production packet covering sourcing families and deliverables for terrain, materials, vegetation, architecture/interiors, water, lighting, characters, LivingWorld, audio, interactions, cinematics, collision/navmesh, streaming/memory, profiling and acceptance.
-- Packets are PREPRODUCTION only outside P1C01 until Gate 6/7; they are not runtime-integration claims.
-
-## 2026-09-25 - Whole-game world build campaign prepared in parallel
-
-- New preparation branch: `planning/whole-game-world-build-v1`, based on canonical `develop@4980c3c8...`.
-- Added `Data/WholeGameWorldBuildCoverageV1.json`, covering every world location in `TrilogyProductionAssetWarehouse.json`.
-- Every region now has the same required build layers: canon beats, playable safe windows, terrain, materials, vegetation, architecture, interiors, water, lighting/sky/fog, characters, NPC life, fauna, audio/foley, quests/interactions, cinematics, UI/localization, collision/navmesh, streaming/memory, performance profiling and human visual/pacing acceptance.
-- P1C01 remains the only active runtime benchmark until Gate 6/7. All later regions are preparation/authoring/warehouse lanes only for now.
-- This campaign operationalizes DEC-038 globally and consumes the DEC-039 resource registry without allowing assets to redefine canon.
-
-## 2026-09-25 - Master External Resource Bible audited and adopted
-
-- Audited the uploaded 68-page `SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25`, containing 225 classified external sources/tools.
-- Adopted it globally as sourcing authority through Governor decision `DEC-039`; it does not override story/canon sources or `DEC-038`.
-- Created `Data/MasterExternalResourceBibleAdoptionV1.json` with high-value adoption groups, conditional sources, reference/quarantine sources, disabled/redirected legacy sources and eight structured source waves.
-- Expanded `Data/GlobalWarehouseSourceRegistryV2.json` from 102 to 142 registered sources/tools on the first adoption pass.
-- Corrected `REPLICA_STUDIOS` to DISABLED and added redirects for legacy Unreal Marketplace, Texture Haven, CC0 Textures, old ArmorLab and Terrain.party routes.
-- Added high-value missing lanes including SpeedTree, Xfrog, Globe Plants, Material Maker, Materialize, ActionVFX, EmberGen, AccuRIG, MakeHuman, DeepMotion, Plask, Cascadeur, Scott Buckley, FreePD, Tabler Icons, Google Fonts, Poedit, USGS EarthExplorer, OpenTopography, QGIS, Gaea, World Machine, RealityScan, Meshroom, MeshLab, CloudCompare, Blender, GIMP, Krita, Audacity, REAPER and native UE4.27 AI/localization references.
-- Created `Data/BigProductionBuildLaunchV1.json` with nine whole-game production waves: surfaces; biomes; characters/animation; architecture/interiors; VFX/weather; audio/foley; music; terrain/scanning; Arabic/UI.
-- Truth boundary: registered/adopted sources are not automatically downloaded, READY_FOR_IMPORT, integrated or accepted. Existing evidence-state ladder remains binding.
-
-## 2026-09-25 - DEC-038 playable-film doctrine adopted
-
-- The owner has formally defined Shire Journey as a **playable film-from-inside experience**, not a cutscene chain and not an unrelated open world.
-- Locked film-continuity beats/outcomes remain immutable.
-- Between locked beats, every chapter should expose bounded **interactive safe windows** for embodied third-person exploration, optional conversations, household/world interactions, NPC life, fauna, environmental storytelling and side activities where canon allows.
-- Player freedom may change local flavor, discovery, pacing, minor relationship/state and optional content, but may not contradict chronology or invalidate a locked film outcome.
-- Cinematic/set-piece control is bounded and must return cleanly to the player.
-- When control returns after a canon beat, NPC/world/prop/audio state must reflect the new story state.
-- This doctrine is GLOBAL across the entire game from the opening through the final ending. F1-01/Bag End is only the first implementation benchmark; every later chapter/region must apply the same locked-beat + playable-safe-window pattern under its own canon constraints.
-- F1-01 example: playable pre-party/Bag End/Shire life may surround the locked Bilbo/Ring transition, but the transition itself follows project film continuity rather than an invented contradictory handoff.
-- Added dialogue in safe windows remains original project-authored text; no verbatim Tolkien/film dialogue.
-- Authority: `Data/ProjectGovernor.json` decision `DEC-038`.
-
-## 2026-09-25 - Owner private-offline asset policy adopted
-
-- Owner policy is now recorded as `DEC-037` in `Data/ProjectGovernor.json`.
-- New authority file: `Data/PrivateOfflineAssetPolicyV1.json`.
-- Two explicit lanes now exist:
-  - `PRIVATE_OFFLINE_ONLY`: commercial-clearance uncertainty does not block the owner's local/offline experimental build by itself. Assets stay tagged, replaceable and non-distributable.
-  - `DISTRIBUTABLE_FRAMEWORK`: remains strict; only assets with clear redistribution/commercial entitlement may ship in the reusable/sellable Framework.
-- Provider-access rules are unchanged: no login/paywall/DRM/anti-bot bypass or prohibited scraping.
-- Private payload isolation root: `SourceAssets/PrivateOffline/`; payloads are ignored by Git and must not become hard dependencies of the distributable Framework.
-- Bulk link/file intake registry is ready at `Data/PrivateOfflineAssetIntakeQueueV1.json`.
-- GitHub repository visibility was checked through the connected repository metadata and is currently `private`.
-- This policy changes asset classification/export eligibility only; it does not promote assets to READY_FOR_IMPORT/INTEGRATED/ACCEPTED without technical/engine evidence.
-
-## 2026-09-25 - Parallel Warehouse bulk-intake V2 active
-
-- Preparation branch: `warehouse/p1c01-bulk-intake-v2`, based on the current merged C1 baseline. This is **not** a second runtime-changing lane.
-- Poly Haven batch advanced to V2 with additional source-page-verified CC0 Shire ground families: leafy grass, forest floor, damp soil, leaf litter, rustic pathway and organic ground detail. Intake remains 2K and skips displacement/high-poly payloads.
-- Kenney batch advanced to V2 with additional CC0 cave/architecture support stock. These packs remain support/background stock, not hero LOTR art.
-- Quaternius intake now requires an explicit per-pack observed license before automatic download. Packs without per-page license evidence are skipped instead of inheriting a blanket provider assumption.
-- Verified Quaternius Farm Buildings is added as Shire support architecture with FBX as the required final format.
-- OpenGameArt audio batch advanced to V2 with CC0 multi-surface footsteps, fireplace loop, 100 wood/metal SFX and bird ambience. Non-WAV intake sources must be converted/auditioned to WAV masters before UE import.
-- Warehouse states remain honest: CANDIDATE/AUTHORIZED_FOR_STAGING/STAGED only. No READY_FOR_IMPORT, UE integration, PIE/device/visual/audio acceptance is claimed without matching receipts and later gates.
-- Runtime PR #78 remains isolated; warehouse preparation continues in parallel so production does not idle during Unreal validation.
-
-## 2026-09-25 - PR #77 handoff-status contract corrected
-
-- Unreal #731 completed **SUCCESS** on corrected Drop C1 head `3b2281c17b6111fd30f7614ca5d0df22a6dc572d`.
-- Pre-Unreal #896 reached the Governor and failed because `validation_snapshot.latest_observed.pre_unreal.status` used the descriptive token `FAILURE_VALIDATOR_PATH_ONLY`, while the handoff schema allows only `SUCCESS | FAILURE | CANCELLED | PENDING | IN_PROGRESS`.
-- Root correction: status is now the contract-valid `FAILURE`; the validator-only explanation is stored separately in a `note` field. This prevents recurrence without weakening the schema.
-- No C++/runtime/material implementation changed in this correction. Fresh exact-head Pre-Unreal is required before merge.
-
-## 2026-09-25 - PR #77 validator false-red root-fixed
-
-- Pre-Unreal #895 failed only because PG-165 incorrectly used the runtime `resolve_source()` helper for `ShireProductionImportCommandlet.cpp`, which lives in the separate `ShireJourneyEditorTools` module.
-- Unreal #730 on the same exact head `725ca99151b5438fab7ce48209c04a4ce05c681d` completed **SUCCESS**, so the Drop C1 editor build/production-import/core engine path itself is proven on that head.
-- Root correction: Pre-Unreal now has a dedicated `resolve_editor_source()` helper rooted at `Source/ShireJourneyEditorTools`; PG-165 uses that helper, preventing future editor-tool guards from being silently routed into the runtime module.
-- This correction is validator/docs/governance-only. Fresh exact-head Pre-Unreal is required; engine proof may inherit only under the established safe validation-policy ancestry rules.
-- Evidence boundary: Drop C1 is engine/core proven on the prior exact runtime head, but no PIE/device/visual material acceptance is inferred.
-
-## 2026-09-25 - W01/P1C01 Drop C1 material texture binding implemented
-
-- Parent `develop@712a81cac150b7fdb338a4cf7554d4f27d4b5191` is post-merge green: Pre-Unreal #894 SUCCESS + Unreal #729 SUCCESS.
-- Active branch: `production/w01-p1c01-materials-vegetation-v1`.
-- Verified source gap addressed: authored Shire MTL `map_Kd` entries are now carried into deterministic production material instances through an `AlbedoTexture` parameter.
-- `M_ProductionSurface` creation now uses `AlbedoTexture * Color` for BaseColor while preserving Roughness/Metallic.
-- Texture binding happens in the editor import commandlet after texture import; no gameplay runtime loading path is changed and no new synchronous heavy gameplay load is introduced.
-- This is **STATIC-VALIDATED / EXACT-HEAD PRE-UNREAL + UE4.27.2 CORE PROOF PENDING**. Wind/WPO is not yet claimed; that is Drop C2 after C1 is engine-green.
-
-## 2026-09-25 - PR #76 governance false-red corrected atomically
-
-- Pre-Unreal #890/#891/#892 did not reach an Unreal runtime failure. The remaining red was the Governor handoff invariant: `session_handoff.source_head` must equal `validation_snapshot.last_green.sha`.
-- Last-green proof is now recorded consistently as `b9a312ce2321f55a58bc5f24dd478b4839871006` with Pre-Unreal #888 SUCCESS + Unreal #723 SUCCESS.
-- Branch/PR surfaces already agree on `production/w01-p1c01-hobbiton-bagend-v1` / PR #76. This correction updates the baseline/evidence tuple in one atomic commit to avoid another chain of self-triggered governance runs.
-- Drop B architecture remains STATIC-VALIDATED until fresh exact-head Pre-Unreal + UE4.27.2 core green.
-
-## 2026-09-25 - W01/P1C01 Mega Production Drop B implemented
-
-- Parent: `develop@430d0a26f3b441f072740fc58285c0c0eb842d8c` after PR #75 merge.
-- Active branch: `production/w01-p1c01-hobbiton-bagend-v1`.
-- Drop B adds a bounded Hobbiton/Bag End architecture pass using already-resident production meshes: Bag End hero approach/property framing, domestic garden clusters, village common, Party Field dressing and working-Shire props.
-- Canon correction: visible Green Dragon-at-Hobbiton presentation was removed because the inn belongs at Bywater. The legacy `Discover_GreenDragon` ID remains unchanged for save compatibility.
-- Bag End interior remains explicitly incomplete because no dedicated production interior shell exists yet; no false completion is recorded.
-- Added PG-164 regression protection and synchronized architecture/performance plans.
-- Status: **STATIC-VALIDATED / EXACT-HEAD PRE-UNREAL + UE4.27.2 CORE PROOF PENDING**.
-
-## 2026-09-25 - PR #75 core engine proof passed; package red isolated to classifier/base-fetch path
-
-- Unreal #721 attempt 2 reached and passed the required **core** chain on exact head `5a58c8d3d33f07a2b3440f0ab85e42ca20c00695`: ShireJourneyEditor build, production import, Automation QA, startup smoke, P1C01-P1C08 runtime audit, route/state audit and warning-debt guard all succeeded.
-- The overall workflow red was **not** a C++/runtime failure. The classifier could not resolve the PR base because the stable checkout fetched only the PR head at depth 2; it fell back to `full` with `reason=delta-unavailable-fail-safe`.
-- That unnecessary full lane then failed inside the legacy W00 package helper before cook at `W00_DBGHELP_DESTINATION_WRITE_FAIL`: access denied while probing the staged `dbghelp.dll` destination.
-- This delta is ordinary C++/Data/world-production work, so project policy requires the **core** lane and no package/cook. The classifier now fetches the explicit PR base SHA on demand and retries the diff before any full-lane fail-safe.
-- Drop A remains source-complete and core-engine-proven on the previous exact head; the new classifier head still requires fresh Pre-Unreal + Unreal core workflow success before merge.
-
-## 2026-09-25 - W01/P1C01 Mega Production Drop A started
-
-- Canonical parent: `develop@ec3208919910b58bd6a87ce59c17e31312bd7bab` with Pre-Unreal #885 SUCCESS + Unreal #720 SUCCESS.
-- Active branch: `production/w01-p1c01-world-foundation-v1`; intended PR: #75 targeting `develop`.
-- W00 remains closed. PR #74 ambient ownership + budget authority is merged and machine-green.
-- Drop A implements the first production-world dependency: Shire terrain/geography foundation using deterministic HISM hills/slopes/riverbanks, explicit cull ranges and preserved quest/story anchors.
-- The old repeated actor-owned CP49 terrain silhouette layer is removed in favor of instancing. Existing broad collision foundation and startup grounding contracts are untouched.
-- Source-backed order remains: terrain/geography -> Hobbiton/Bag End -> materials/vegetation -> lighting/sky/fog/water -> character presentation -> living Shire -> quest/audio polish -> target-device profiling -> Gate 6/7.
-- Regression guard: PG-163 now enforces instanced geography ownership/cull bands and rejects a return to repeated terrain actor spawning.
-- Status: **STATIC-VALIDATED / EXACT-HEAD PRE-UNREAL + UE4.27.2 CORE PROOF PENDING**. No new PIE/device/visual/performance acceptance is claimed.
-
-## 2026-09-25 - PR #74 repeated red isolated to incomplete W00->W01 governance transition
-
-- Pre-Unreal #882 and #883 did **not** report an Unreal/runtime regression. They failed in Project Governor coherence because some fields still described the old W00 control point while current_focus/execution_control had already moved to W01.
-- #883 errors were branch/PR handoff mismatch, development-mode mismatch, stale blocking W00 gate/freeze assumptions, MASTER_EXECUTION_BOARD still on PR #73, and a stale legacy handoff baseline.
-- Root cause: the W00 -> W01 control-plane transition was only partially updated across governance surfaces. This is metadata/governance drift, not evidence that the ambient-ownership C++ change failed.
-- Correction is being applied as one atomic multi-file commit so the branch produces one new validation head rather than another sequence of self-triggered runs.
-- Status remains **STATIC-VALIDATED / FRESH PRE-UNREAL + UE4.27.2 CORE PROOF PENDING**.
-
-## 2026-09-25 - W01 validator follow-up after Pre-Unreal #881
-
-- Pre-Unreal #881 failed on the first W01 head because PG-035/PG-036/PG-111 still encoded the pre-W01 builder-owned Shire ambient implementation: they required direct Shire builder bird/activity assignments and the old WorldLifeSaturationPlan status.
-- This was validator drift against the intentional single-owner architecture, not evidence that the new runtime ownership change failed in UE4.
-- `Scripts/pre_unreal_validate.py` now validates Shire activity props through `LivingWorldDirector::ChooseBaselineProp`, Shire bird life through the P1C01 `FAUNA` + `EVT_FAUNA_BIRDS` data contract, the new single-owner world-life status/authority, and explicitly rejects any return of `SpawnActor<AShireAmbientNPC>` to `ShirePrototypeWorldBuilder`.
-- Fresh exact-head validation is running on `03e886a6ecc0673680975b11fdda3fbc711041d2`: Pre-Unreal #882 in progress; Unreal #717 pending at the time of this record.
-- Evidence boundary remains **STATIC-VALIDATED / FRESH ENGINE PROOF PENDING**.
-
-## 2026-09-25 - W01 drop 1 implemented: ambient single ownership and budget authority
-
-- Branch: `production/w01-p1c01-kickoff-v1`.
-- `ShirePrototypeWorldBuilder` no longer creates its own `AShireAmbientNPC` population. Ambient crowds are now owned by `ALivingWorldDirector` and therefore use its existing object pool, culling, target density and danger-thinning path.
-- Named/story NPCs and quest actors remain builder-owned; this change does not transfer canonical story ownership to the ambient system.
-- `LivingWorldEventPlan.json#region_budgets` is now the sole runtime authority for micro-event caps and event-start cadence. `WorldLifeSaturationPlan.json` is baseline-population density/role authority only.
-- P1C01 `PlayRunner` remains in the director-owned role set so the pre-adventure playful Shire beat is not silently lost when duplicate builder crowds are removed.
-- Static source checks: direct builder ambient spawn count = 0; old life-saturation micro-event override reads = 0.
-- Status: **STATIC-VALIDATED / FRESH PRE-UNREAL + UE4.27.2 COMPILE/RUNTIME PROOF PENDING**. No new PIE/device/visual/performance acceptance is claimed.
-
-## 2026-09-25 - W00 closed; W01/P1C01 production vertical slice opened
-
-- Canonical W00 close head: `develop@809e56a9e1dc4b453e02a0b04b6875a71df21933`.
-- GitHub evidence on that head: Pre-Unreal #880 SUCCESS; Unreal #715 SUCCESS via the explicit validation-policy-only inherit path; Branch Cleanup #3 SUCCESS with only `develop` and `main` remaining.
-- Owner-side P1C01 PIE evidence on the Documents clone: `ShireStartupGrounding: PASS chapter=P1C01 commitBarrier=yes stableSeconds=2.0 ground=yes drop=1.8 drift=0.0`; player remained grounded; owner reported no same-session Output Log matches for `Mobility is Static` or `SetStaticMesh`.
-- W00 architectural/root-repair lane is therefore **CLOSED**. Reopen it only for a concrete regression. This does not promote whole-chapter PIE, DEVICE-TESTED, VISUALLY-ACCEPTED or PERFORMANCE-ACCEPTED status.
-- W01/P1C01 is now the sole active production vertical slice. First code work remains: centralize ambient population ownership under `LivingWorldDirector` + pooling, then reconcile `LivingWorldEventPlan` vs `WorldLifeSaturationPlan` authority before any density increase.
-- The owner-forwarded sensory/reactive review was checked against live source. Accepted additions are spatial environmental audio + surface foley, performance-scaled vegetation material motion, and later skeletal Look-At/Foot IK. Corrected stale claims: ambient NPC player awareness/weather reactions already exist; audio already has async routing/fades/ducking; ambient pooling already exists in `LivingWorldDirector`.
-- Detailed accepted/corrected notes are registered in `Docs/WORLD_DETAIL_LEDGER.md` before implementation, satisfying the W01 scope gate.
-
-## 2026-09-25 - W00 lessons lock after current develop machine-green
-- Pre-Unreal #875 confirmed the PG-161 correction still used the wrong textual anchor (helper-function `Docs/` test instead of the main changed-file loop). The guard is now anchored inside `foreach($p in $changed)` so it inspects only the forbidden ordinary-safe branch. Exact-head rerun pending; this remains validator self-test work, not a game regression.
-- Pre-Unreal #871 exposed one self-test false positive in the new PG-161 guard: it confused the required explicit validation-policy-only path with forbidden ordinary metadata classification. The guard is narrowed structurally (PG-164); exact-head rerun is pending. This is validator logic, not an Unreal/game regression.
-- Current canonical `develop@ed3587aa9d1f0025a5f10778a6be8048e2c778d1` is now **COMPILE-TESTED + HEADLESS/PACKAGED-RUNTIME-VALIDATED** by Pre-Unreal #869 SUCCESS and Unreal #704 SUCCESS.
-- #704 passed UE4.27.2 editor build, production import, Automation, startup, P1C01-P1C08 runtime sweep, route/story roundtrip, warning-debt guard, Windows cook/package, 37 packaged Runtime Data JSON verification, packaged startup and hardware snapshot. This does **not** promote DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED, or final human PIE acceptance.
-- Two-day regression memory is being locked before W01: PG-161 prevents redundant full UE/package work across cancelled metadata parents by allowing only path-bounded safe-ancestry proof reuse; PG-162 locks immutable temp-copy local launchers; PG-163 locks develop/main-only programmer handoff discipline.
-- Root cause of the redundant #704 cook was classifier ancestry semantics, not a gameplay/package defect: a cancelled immediate metadata parent hid still-valid nearby green proof and triggered the fail-safe FULL lane. The classifier now has explicit safe transitive governance proof and validation-policy-only inheritance while remaining fail-closed for runtime/assets/config/streaming/packaging changes.
-- W00 remains open only for the final owner-side canonical-develop P1C01 PIE tail: `ShireStartupGrounding: PASS`, no fall, and no project-owned `SetStaticMesh ... Mobility is Static` warning. The local immutable-launcher rerun is captured in the same session.
-- No new gameplay feature wave starts before that evidence. If clean, close W00 and immediately open the P1C01 Shire production vertical slice under Gate 6/7.
-
-## 2026-09-25 - Post-cleanup canonical handoff
-- Remote branch cleanup is **complete**: Branch Cleanup run #1 succeeded and a live repository query returned exactly two branches: `develop` and `main`.
-- `develop` is now the sole canonical development/programmer-handoff lane; `main` remains stable release/scheduler ownership only.
-- No historical feature/repair PR remains open. The final metadata-only PR #72 exists only to remove stale PR #70 references from governance/docs and self-registers for deletion after merge.
-- Consolidated develop after PR #70 is `3108b2dd6354b196d36406935057c25feab2fec2`; post-merge Pre-Unreal #865 succeeded. Exact post-consolidation Unreal #700 has not been claimed green here.
-- W00 remains **AUTOMATED_CLOSURE_GREEN_HUMAN_PIE_WARNING_TAIL_PENDING**. The remaining owner-side proof is one P1C01 PIE observation with `ShireStartupGrounding: PASS`, no player fall, and no project-owned `SetStaticMesh ... Mobility is Static` warning.
-- No DEVICE-TESTED or VISUALLY-ACCEPTED status is promoted by repository cleanup.
-
-## 2026-09-25 - Final consolidation pass on PR #70
-- Final branch target for programmer handoff is now exactly **`develop`**; `main` remains release-only. The temporary generated-audio archive ref is also approved for deletion because its branch-only diff contained Data/Docs metadata, not WAV/UE binary masters, and the valid registries are already consolidated.
-- PR #70 is now the **single** maintenance consolidation train. The parallel PR #71 payload was selectively folded into #70; #71 is to be closed as superseded.
-- Branch cleanup is finalized for post-merge execution: preserve only `develop` and `main`; approved stale refs are deleted by `.github/workflows/branch-cleanup.yml` after the cleanup plan lands on `develop`.
-- Historical diverged runtime branches were audited rather than bulk-merged. Old pre-Public/Private runtime paths are superseded; only still-valid unique planning/audio/ops records were salvaged.
-- Generated-audio registries for the 103 scripted cues, P1C01 ambient speech, P1C01 complete-bank contract and named-character efforts are now consolidated in sanitized form without expiring signed delivery URLs. This is registry/intake evidence only, **not** UE playback/audio acceptance.
-- Both local launch controllers (`SHIRE_UPDATE_BUILD_LAUNCH.bat` and `SHIRE_PIE_VERIFY.bat`) execute from immutable temp copies so `git pull` cannot rewrite the batch currently being parsed. Local rerun proof remains pending.
-- Unreal validation cost contract is corrected: ordinary C++/runtime/Data/SourceAssets deltas use the **core** lane (build/import/Automation/runtime/warning checks) with **no package/cook**; Config/Build.cs/Target.cs/chapter-streaming/Package/Cook/Release deltas use the full package lane. Governance/docs/offline-maintenance deltas inherit green parent proof.
-- W00 remains **AUTOMATED CLOSURE GREEN / HUMAN PIE WARNING TAIL PENDING**. No new PIE/device/visual/performance acceptance is claimed by this maintenance pass.
-
-## 2026-09-25 - Develop consolidation / branch cleanup
-- Canonical development lane remains `develop`; stable release lane remains `main`.
-- W00 automated machine closure is green on `develop@9066d649...` via Pre-Unreal #821 and Unreal #656, inheriting full core UE4.27.2 proof from parent `fdbb6492...` / Unreal #655. Human P1C01 PIE grounding/warning-tail evidence is still pending and is not promoted here.
-- PR #70 is the active maintenance-only consolidation lane. Stale PR #62, #63 and #66 were closed as superseded; they must not be bulk-merged.
-- The local one-click launcher now executes from a temporary stable copy so a `git pull` cannot mutate the running batch file and corrupt branch detection.
-- Unreal validation now separates ordinary runtime/source/data changes from package/cook changes and classifies PRs against the canonical base SHA rather than only the previous branch commit; this prevents cancelled intermediate branch runs from forcing unnecessary full/package validation. Core runtime changes run build/import/Automation/runtime/warning gates without packaging; Build.cs/Target.cs/Config/streaming/packaging-critical changes still force the full package path.
-- Planning/warehouse records missing from canonical develop were salvaged: `LivingWorldSensoryCompletenessPlanV1.json`, `VoiceProductionMasterPlanV1.json`, `operation_recovery.py` + tests, and `WarehouseGapAuditSource09V1.json`.
-- Generated-audio intake metadata is consolidated directly into the canonical lane; no separate archive branch is required. Sanitized canonical registries for scripted voice, P1C01 ambient speech/barks, complete audio-bank coverage and named-character efforts are now also present on the consolidation lane; signed external download URLs are intentionally excluded.
-- `Data/BranchCleanupPlan.json` + `.github/workflows/branch-cleanup.yml` will remove approved stale remote branches after PR #70 lands on develop while preserving develop/main and explicitly retained audit/archive refs.
-
-## 2026-09-25 - C4996 / SetStaticMesh warning-debt guards added
-
-The remaining visible warning families are now encoded as hard regression guards. Canonical `develop` already uses `GetStaticMaterials()` in the production importer, so the old C4996 source pattern is absent. PG-159 now rejects any return to direct `UStaticMesh::StaticMaterials` access.
-
-For the PIE `SetStaticMesh ... Mobility is Static` warning family, the current Shire/Bree/Fellowship/Isengard `SpawnShape` implementations already set `EComponentMobility::Movable` before assigning the mesh. PG-160 now locks that ordering.
-
-Status: **STATIC-VALIDATED / FRESH COMPILE + PIE WARNING LOG PROOF PENDING**. Do not claim zero warnings until the fresh exact-head UE4.27 build and PIE log confirm it.
-
-## 2026-09-25 - Final workflow repair batch committed to canonical develop
-
-A single canonical interactive lane is now enforced: `develop`.
-
-Root repairs in commit `09f89ab472832b8f03b56cf09eddb4ec7e268af9`:
-- `SHIRE_UPDATE_BUILD_LAUNCH.bat` updates/builds/imports only the already-selected `develop` branch and never performs a silent branch switch.
-- `SHIRE_PIE_VERIFY.bat` verifies only `develop` and refuses the GitHub Actions runner workspace.
-- interactive Unreal use under `C:\actions-runner\_work` is blocked; the Documents developer clone and runner workspace remain physically isolated.
-- `Scripts/verify_runtime_source_workspace.ps1` validates every tracked Source .h/.cpp/.cs immediately before UBT and restores a tracked file from exact HEAD if a persistent runner workspace is missing it.
-- Unreal workflow now executes that source-integrity gate immediately before `Build ShireJourneyEditor`.
-- the Unreal classifier recognizes governance-only green parents as transitive core proof, preventing evidence-only commits from needlessly returning to a full engine pass.
-
-This batch responds to two observed regressions: the local launch helper previously returned the owner from the grounding-proven acceptance branch to stale `develop`, and Unreal #653 later reported a missing `ShireAmbientNPC.cpp` from the persistent runner workspace even though that file exists in Git.
-
-Evidence status: **STATIC-VALIDATED / FRESH PRE-UNREAL + UE4 BUILD/PIE PROOF PENDING**. Existing #651 automated acceptance and the earlier real P1C01 grounding observation remain historical evidence; this new workflow batch itself is not yet COMPILE-TESTED or PIE-TESTED.
-
-## 2026-09-25 - Real PIE closes P1C01 startup-grounding regression
-
-Exact tested head: `2427e6594f5adb3ea81f143dc19d4ecede8eecc9`.
-
-Owner real-PIE observation: the P1C01 player remained on the ground and did not fall.
-
-Chapter-specific Output Log evidence from the owner-provided screenshot:
-- `ShireStartupGrounding: PLACED chapter=P1C01 source=chapter-start requestedZ=130.0 groundedZ=76.0`
-- `ShireStartupGrounding: PASS chapter=P1C01 commitBarrier=yes stableSeconds=2.0 ground=yes drop=1.0 drift=0.0`
-
-This closes the specific player-fall/startup-grounding repair. It does **not** promote the whole P1C01 chapter to PIE-TESTED and does not claim DEVICE-TESTED, VISUALLY-ACCEPTED or PERFORMANCE-ACCEPTED. Chapter-wide traversal/quest/save-load/pacing/visual review remains a separate human acceptance tail.
-
-Next action: final W00 branch ancestry/cleanup audit, then close the repair lane and open W01 under Gate 6/7.
-
-## 2026-09-25 - Unreal #651 Attempt 2 closes automated W00 package/startup chain; runner background path proven
-
-Exact head `efdb2e291505472247fae921945b083b3cc1ce2c` completed the repaired machine path successfully after the foreground legacy `run.cmd` session was removed and the user-context watchdog-owned runner remained active.
-
-Fresh evidence:
-- Pre-Unreal #816: SUCCESS.
-- Warehouse #232: SUCCESS; hosted delta gate selected the no-delta fast path and the self-hosted Warehouse stage was skipped.
-- Unreal #651 Attempt 2: SUCCESS.
-- `Build ShireJourneyEditor`: SUCCESS.
-- production import, Automation QA, playable startup, P1C01-P1C08 runtime audit, route/story roundtrip and warning-debt guard: SUCCESS.
-- `W00_PACKAGE_PASS elapsedSeconds=182`.
-- `W00_PACKAGED_DATA_PASS expected=37 verified=37`.
-- `W00_PACKAGED_STARTUP_PASS observed=6s`.
-- `W00_RUNNER_HARDWARE_SNAPSHOT_PASS cpu=Intel(R) Core(TM) i7-6498DU CPU @ 2.50GHz ramBytes=8457560064`.
-
-The packaged-startup verifier requires the runtime marker `ShireStartupGrounding: PASS chapter=P1C01`, so automated packaged grounding reached that marker on #651. This is not human PIE evidence and does not close the player-fall issue by itself.
-
-Runner conclusion: the previous zero-step ten-minute failures are no longer treated as project-code failures. Their timing and shape match the still-open upstream GitHub Actions runner acquire-job hang family, while the local mitigation is to keep the runner under the proven Windows user context, keep the legacy NetworkService service disabled/manual, isolate Warehouse from the UE4 device unless a real Warehouse delta exists, and supervise the listener externally. #651 proves normal background execution after this architecture change; the watchdog's forced recovery branch itself has not yet been observed firing in production.
-
-Status: **AUTOMATED W00 CHAIN GREEN / HUMAN PIE GROUNDING PROOF PENDING**. Do not rerun green automated gates unless a dependency that can invalidate them changes.
-
-## 2026-09-25 - Self-hosted runner pre-step failure isolated; warehouse contention removed; watchdog root mitigation added
-
-Live GitHub evidence on exact head `a69147e4e34869bc43abfbce517ba8023b6027c8` isolates the new failure boundary outside repository steps. Unreal #650 was assigned to runner `UE4-27-Windows` (runner id 21) at 21:22:36Z, recorded **zero steps**, and failed at 21:32:37Z. Warehouse #231 was then assigned to the same runner at 21:32:39Z, also recorded **zero steps**, and failed at 21:42:39Z. Pre-Unreal #815, which runs on GitHub-hosted Ubuntu, succeeded on the same head. The a69147 commit did not modify the Unreal workflow.
-
-The repository-side repair removes avoidable pressure on that machine: Warehouse now computes the synchronize delta on `ubuntu-latest` first and never schedules its self-hosted stage job unless the current update contains a real Warehouse staging input. Workflow-control-only changes stay on the hosted skip path. When real Warehouse staging is required, it shares the UE4 device concurrency group instead of competing independently.
-
-A machine-side supervisor is now versioned as `Scripts/runner_watchdog.ps1` with installer `Scripts/install_runner_watchdog.ps1`. It watches the runner diagnostic stream for an acknowledged job that fails to produce a `Runner.Worker` within 150 seconds, then restarts only the stalled `Runner.Listener`; it also restarts a missing listener. The installer deliberately uses the interactive Windows user and disables legacy auto-start of any `actions.runner.*` service so the project does not silently fall back to the earlier NETWORK SERVICE identity.
-
-Evidence status: **STATIC-VALIDATED / LOCAL WATCHDOG INSTALL + RUNNER PROOF PENDING**. This does not claim Package/Packaged Startup/PIE/device/visual success on the new head. After the local watchdog is installed, the next machine action is one acceptance run, not a broad rerun wave.
-
-## 2026-09-25 - Packaged production streaming cook root fix after Unreal #649
-
-Unreal #649 isolated the real packaged-runtime blocker. Package creation and all 37 Runtime Data JSON files passed, and the packaged executable launched. P1C01 then failed closed with `ChapterAssetStreaming: unresolved-bank-assets ... missing=82`.
-
-The count proves the cook omission: P1C01 declares 83 streaming assets, while the prior packaging configuration always cooked only `/Game/Production/Materials`; exactly one P1C01 asset is in that directory. Therefore `83 - 1 = 82`, exactly matching runtime. The full streaming plan contains 238 unique production packages, and all 238 have matching project-owned import sources. Unreal #649 production import reported 376 files and 0 failures.
-
-The repair always cooks the exact current streaming-bank directory set: Materials, World, Characters/Common, Characters/Hobbit, and Enemies. Static coverage before commit is 238/238 with zero uncovered streaming paths. The package wrapper now parses the streaming plan before UAT and requires all 238 generated `.uasset` files to exist, so missing imported content fails in seconds rather than after cook/startup. The classifier treats only this exact four-line packaging-config change as acceptance-safe and recognizes transitive acceptance proof so chained verifier/package fixes do not unnecessarily return to the full Unreal chain.
-
-Status: **STATIC-VALIDATED / RUNNER_PROOF_PENDING**. No packaged-startup success is claimed on this repair head yet.
-
-## 2026-09-24 - Unreal #648: Package + 37 Runtime Data proven; resume at packaged startup
-
-Unreal #648 on exact head `9689a65ade82af5e1a87b63e344ed491c27c4079` produced the first valid packaged-acceptance proof:
-
-- `W00_PACKAGE_EXITCODE source=cmd-sidecar exit=0`
-- `W00_PACKAGE_PASS elapsedSeconds=300`
-- `W00_PACKAGED_DATA_PASS expected=37 verified=37`
-
-These gates are now green evidence and must **not** be repeated for a packaged-startup-verifier-only fix.
-
-The next step failed before producing a game/runtime verdict. `verify_packaged_startup.ps1` read an existing but still-empty log with `Get-Content -Raw`; PowerShell returned `$null`, and line 58 called `$text.Contains($marker)`, raising `InvokeMethodOnNull`.
-
-Repair:
-- startup log polling initializes `$text` to `""` and only replaces it when the raw read is non-null;
-- Pre-Unreal now rejects regressions of this empty-log case;
-- the acceptance classifier can inherit parent Package + Runtime Data proof for startup-verifier-only deltas;
-- that resume path skips UE verification, editor wait, package and Data gates;
-- before launching the packaged executable, CI proves the persisted `ShireJourney.exe` and the successful 37-file packaged-data report are still present locally.
-
-Next intended execution:
-`Inherited package/data artifact check -> Packaged Startup -> Hardware Snapshot`.
-
-Status: **PACKAGE PASS / 37 JSON PASS / PACKAGED STARTUP PROOF PENDING**. No PIE, visual, device, or player-falling closure is claimed.
-
-## 2026-09-24 - Fast-path rule and package exit truth after Unreal #647
-
-Unreal #647 on exact head `6fb1c5edd81989de853fface5e406d8cddab0099` provides fresh successful Core Unreal proof through the warning-debt guard. Those successful gates are **not to be repeated** for a package-wrapper-only fix.
-
-The package step itself was still making forward progress after about 25 minutes: the last evidence was `Cooked packages 251 Packages Remain 12 Total 263` with shader compilation still active. No terminal UAT result was logged before `ci_package_w00.ps1` emitted `W00_PACKAGE_EXITCODE_FAIL exitCode=<null>` and exited 97. This is a wrapper-result failure, not proof of a UAT/package failure.
-
-Repair:
-- RunUAT is called synchronously by a dedicated `cmd.exe` wrapper.
-- The wrapper writes the actual post-CALL `%ERRORLEVEL%` to `CI-W00-Package-exitcode.txt`.
-- PowerShell keeps heartbeat and bounded timeout only; it no longer trusts `$proc.ExitCode` for UAT truth.
-- Missing/invalid sidecar results fail immediately with explicit diagnostic codes.
-- PG-026 rejects reintroduction of `$proc.ExitCode` as RunUAT result authority.
-
-Execution rule: the child commit is acceptance-only and must inherit #647's green Core Unreal proof. The intended next sequence is only:
-`Verify UE -> Package -> 37 Runtime JSON -> Packaged Startup -> Hardware`.
-If classification unexpectedly becomes `full`, stop rather than spend another full Core Unreal cycle.
-
-Status: **STATIC-VALIDATED / RUNNER_PROOF_PENDING**. No Package PASS or downstream packaged acceptance is claimed yet.
-
-## 2026-09-24 - Grounding guard reconciliation after real PIE fall regression
-
-The new two-phase grounding commit barrier exposed two stale/strict validation assumptions. PG-122 correctly required the established delayed stability proof, while the runtime barrier had been shortened to 0.35 seconds. The runtime now waits a real **2.0 seconds** before grounding finalization and logs `stableSeconds=2.0`.
-
-PG-128 was stale relative to the new architecture: normal world publication moved out of `CommitChapterWorld` and into `VerifyPlayerGroundingStability`. The runtime already publishes `OnWorldCommitted.Broadcast(WorldRevision)` before `SetPlayerWorldHold(false)`. The validator now inspects that finalization function directly and also rejects any movement release from the pre-finalization commit setup.
-
-Status: **STATIC-VALIDATED / RUNNER + PIE PROOF PENDING**. The player-falling issue remains open until fresh UE4.27 compile/runtime evidence and real PIE observation confirm stable grounding.
-
-## 2026-09-24 - Player falling / grounding commit barrier root fix
-
-Real PIE evidence showed the player can still fall despite the earlier grounding logic. Root review found that `ChapterWorldRouter` resolved a grounded placement, but published the world as committed and released movement before proving CharacterMovement had actually settled on blocking ground. The previous stability check was CI-only and log-only.
-
-Root fix applied:
-- world commit is now two-phase,
-- player remains transition-held while CharacterMovement settles,
-- grounding stability is checked before `WorldRevision` / `OnWorldCommitted` publication,
-- one bounded re-ground attempt is allowed,
-- persistent instability keeps the player held and triggers rollback instead of releasing the pawn into a fall,
-- successful stability is now the condition that publishes the world and releases movement.
-
-Changed files:
-- `Source/ShireJourney/Private/World/ChapterWorldRouter.cpp`
-- `Source/ShireJourney/Public/World/ChapterWorldRouter.h`
-
-Status: STATIC-VALIDATED / COMPILE-AND-PIE-PROOF-PENDING. Do not claim the falling issue is closed until a fresh UE4.27 compile and real PIE observation show stable grounding without falling.
-
-## 2026-09-24 - W00 package truth, DbgHelp policy, and PG-026 repair
-
-Live PR #69 head `d94b7fe7797e9ef417b7dad2abde26dfc279e700` produced three decisive signals:
-
-- Pre-Unreal #808 failed only at PG-026 because the validator still required literal `cancel-in-progress: false`.
-- Unreal #643 completed Editor build, production import, Automation QA, headless startup, P1C01-P1C08 runtime audit, route/story roundtrip, and warning-debt guard successfully.
-- The same Unreal #643 did **not** package successfully despite the GitHub package step being marked success: UAT reached NonUFS staging, repeatedly failed writing the destination `WindowsNoEditor/Engine/Binaries/ThirdParty/DbgHelp/dbghelp.dll` with Access denied, then logged `ExitCode=1` / `BUILD FAILED`. The runner context is NetworkService. The following 37/37 `MISSING_RUNTIME_DATA` result is therefore downstream of incomplete staging and is not accepted as a final Runtime Data verdict.
-
-This repair applies four bounded changes before another acceptance run:
-
-- CI Game TargetRules disable UE's bundled DbgHelp only when `SHIRE_CI_NO_DEBUGINFO=1`; normal local game builds keep the default policy.
-- `ci_package_w00.ps1` proves the DbgHelp source is readable and the exact nested destination is writable before UAT, then calls `WaitForExit` / `Refresh`, rejects a null exit code, and propagates the concrete UAT code.
-- PG-026 accepts cancellation only when the workflow uses the exact `acceptance/*` head-ref expression; unconditional or broader cancellation remains invalid.
-- The Unreal classifier treats the Game `Target.cs` as acceptance-only **only** when its entire diff is the CI DbgHelp guard. Any other Target.cs change remains `full`.
-
-Status: **STATIC-VALIDATED / RUNNER_PROOF_PENDING**. No PIE, device, visual, performance, packaged-startup, or Runtime-Data acceptance is claimed by this code change.
-
-## 2026-09-24 - Acceptance Fast-Path and superseded-run cancellation
-
-Implemented a three-mode Unreal validation classifier:
-
-- `full`: C++ / Build.cs / Config / runtime-contract changes run the complete UE4 validation chain.
-- `acceptance`: packaging/verifier/acceptance-only changes inherit proven parent **core Unreal** steps and run only package -> packaged Data JSON -> packaged startup -> hardware gates.
-- `inherit`: docs/governance-only changes inherit a green parent workflow.
-
-Parent core proof is accepted only when the prior run has successful Editor build, production import, Automation QA, startup, P1C01-P1C08 audit, route/story roundtrip and warning-debt guard. A run that later fails only at an acceptance gate may therefore still provide valid core-engine evidence for the next acceptance-only fix.
-
-On `acceptance/*` branches, newer commits now cancel superseded runs in the shared UE4-device concurrency group. Normal/full validation branches remain serialized. This prevents obsolete acceptance heads from consuming another 20-25 minute engine pass.
-
-Status: **IMPLEMENTED / RUNNER_PROOF_PENDING**. No acceptance result is claimed until a fresh run demonstrates the fast path and final package/data/startup/hardware gates.
-
-## 2026-09-24 - PG-147 validator reconciled with explicit NonUFS runtime staging
-
-After the runtime Data staging fix, Pre-Unreal #800 failed because PG-147 still matched only the legacy one-argument `RuntimeDependencies.Add("$(ProjectDir)/Data/...json")` spelling. That validator behavior was stale and incorrectly rejected the new explicit `StagedFileType.NonUFS` contract.
-
-Fix applied: `source_contracts.py` now exposes `has_nonufs_runtime_dependency`, PG-147 requires the explicit NonUFS form, and regression tests cover correct NonUFS, legacy untyped rejection, and wrong UFS-type rejection.
-
-Interpretation: this failure was a validation-contract mismatch, not a new runtime/game defect. The next exact-head run must prove both static validation and packaged runtime Data staging.
-
-Status: STATIC_VALIDATOR_FIX_APPLIED / RUNNER_PROOF_PENDING.
-
-## 2026-09-24 - Known failure: packaged runtime Data JSON missing after successful package
-
-Unreal packaging progressed past the previous dbghelp.dll blocker. The package gate succeeded far enough for the next acceptance step to run, then `Verify packaged Runtime Data JSON` failed with `MISSING_RUNTIME_DATA` for the 37 JSON files declared in `ShireJourney.Build.cs`.
-
-Repository inspection confirmed the runtime contract: systems including `LivingWorldDirector` and `ShireNPCContextSubsystem` read JSON via `FPaths::ProjectDir()/Data/...`. Therefore the acceptance package must preserve these files as loose project-relative data under `ShireJourney/Data`, not merely hide them inside a pak or move them to `Content/Data`.
-
-Fix applied: all 37 `RuntimeDependencies.Add("$(ProjectDir)/Data/...")` entries in `ShireJourney.Build.cs` now explicitly use `StagedFileType.NonUFS`, so UE4 staging is instructed to copy them as loose NonUFS runtime files compatible with the existing loader paths.
-
-Status: FIX_APPLIED / RUNNER_PROOF_PENDING. No packaged-data acceptance is claimed until a fresh runner execution proves all 37 files exist, parse as JSON, and the packaged executable reaches runtime startup successfully.
-
-## 2026-09-24 - Known failure: UE4 packaging dbghelp.dll ACL loop
-
-Repeated W00 packaging failures were traced to `Engine/Binaries/ThirdParty/DbgHelp/dbghelp.dll` staging under the self-hosted Windows service account. The game build, cook and UnrealPak were not the demonstrated failure point; prior run #627 completed cook/pak and then failed copying dbghelp.dll. Run #630 moved the failure to a fast preflight and reproduced the same permission denial within seconds.
-
-The earlier mitigation (unique staging + explicit dbghelp copy preflight) was diagnostic, not a permanent fix. The packaging policy is now changed to add UE4 BuildCookRun `-nodebuginfo`, so debug-file staging is intentionally omitted for this acceptance package. The preflight now checks only generic staging-directory writability. This incident must not be rediscovered/reworked as a new defect unless a later log proves a different failure mode.
-
-Status: FIX_APPLIED / RUNNER_PROOF_PENDING. No packaged-build acceptance is claimed until the new exact head passes package -> staged Data JSON -> packaged startup -> hardware gates.
-
-## 2026-09-24 - W00 packaging delay root cause and bounded retry fix
-
-Unreal #627 proved that compile/import/Automation/startup/chapter/state/warning gates remained green. The final package step ran for about 37 minutes and failed **after cook/pak succeeded**: UnrealPak added 1665 files and exited 0, then AutomationTool repeatedly failed to copy `Engine/Binaries/ThirdParty/DbgHelp/dbghelp.dll` into the staged build with Windows `Access denied`.
-
-This is a staging/ACL file-copy blocker, not a demonstrated gameplay/source compile regression.
-
-Added `Scripts/ci_package_w00.ps1` and routed `ci_package_w00.cmd` through it. New behavior:
-- unique staging directory per workflow run/attempt,
-- explicit DbgHelp copy preflight before any expensive cook,
-- 30-second progress heartbeat,
-- bounded internal package timeout,
-- reuse of Unreal/DDC/cook cache where available,
-- no broad repair-wave reopen.
-
-Governor integration baseline was restored to `develop`; the acceptance branch is tracked separately.
-
-Status remains **ACCEPTANCE_FIX_IN_PROGRESS** until the next runner execution proves the package/data/startup gates. No PACKAGE-TESTED/DEVICE-TESTED/PIE-TESTED claim is made yet.
-
-## 2026-09-24 - W00 final closure wave started on isolated acceptance branch
-
-Architectural/root repair remains closed on exact green head `31b6e1c9958b6121ec7a00c07e038fec4ab36408` (Pre #791 SUCCESS, Unreal #626 attempt 2 SUCCESS, Warehouse #207 SUCCESS).
-
-A dedicated branch `acceptance/w00-final-closure-v1` now carries the final automatable W00 acceptance wave. Added `Data/W00FinalClosurePlanV1.json` plus runner scripts for: real Windows BuildCookRun packaging, verification of every `RuntimeDependencies` JSON staged into the package, packaged executable startup/grounding observation, and CPU/RAM/GPU/OS runner snapshot. The Unreal validation workflow now executes these gates after the existing compile/import/Automation/startup/chapter/state/warning suite.
-
-This wave does not claim PIE/device/visual/audio acceptance. Human-only traversal/collision, visual composition, pacing/fun, NPC believability and final listening/mix remain separate evidence. Scripted/ambient voice source generation also remains distinct from UE audio acceptance.
-
-W01 opening rule: if the new automated closure gates are green, the Governor may open the deferred W01-W06 large Part I production program. Broad architectural repair may reopen only for a concrete regression.
-
-## 2026-09-24 - W00 checkpoint CP-W00-156: one concrete PG-026 validator-drift repair
-
-CP155 exact head `3534e632e2085351149648aa7ec2d9b88d0badf1` completed **Unreal #625 SUCCESS** and **Warehouse #206 SUCCESS**. **Pre #790 failed only PG-026** before the rest of the static chain because the validator hard-coded the exact checkout as `--depth=1`.
-
-CP155 intentionally changed the bounded shallow checkout to `--depth=2` so the new fail-safe validation classifier can inspect the direct parent. Exact-head safety did not change: the workflow still resets hard to `TARGET_SHA`, rev-parses HEAD, compares the exact SHA, records `.ci-source-sha`, and fails on mismatch.
-
-CP156 changes only PG-026's structural contract to accept bounded shallow depth **1 or 2** while retaining all exact-SHA requirements. No gameplay/runtime logic changes. If fresh Pre-Unreal is green, the machine-repair lane closes and W00 proceeds only to packaged Data JSON, real authored audio, target-device profiling and human PIE/pacing/visual acceptance.
-
-## 2026-09-24 - W00 checkpoint CP-W00-155: final consolidated repair-closure wave
-
-Head `f524a83cd39510b956e4977571448d43100b628d` passed **Unreal #624 SUCCESS** and **Warehouse #205 SUCCESS**. Unreal #624 completed UE4.27.2 build/import, Automation, startup, P1C01-P1C08, state, transitions, faults, pending, persistence-edge and zero-warning-debt checks; material persistence reported `missing=0 tracked=225`.
-
-Pre #789 failed at one governance invariant only: `PG-078: tracked unfinished requirement snapshot is stale`. The exact mismatch is `REQ-ORG-001`, correctly VALIDATED in ProjectGovernor but still present in MasterExecutionRoadmap's unfinished snapshot. CP155 reconciles that snapshot without weakening the validator.
-
-The same final wave adds explicit already-resident bank recommit runtime evidence and a fail-safe Unreal fast path for governance/docs-only deltas whose direct parent already has successful Unreal evidence. Any source/runtime/CI/config/asset or unknown delta still runs the full UE4.27.2 chain.
-
-This is the last planned root-repair wave. CP155 gets one full run because it changes CI/runtime audit contracts. After it is green, root-code/validator/Governor cleanup stays closed unless a concrete new regression appears; W00 proceeds only to packaged Data, real audio, target-device profiling and human PIE/pacing/visual acceptance.
-
-No PIE/device/visual/performance acceptance is claimed here.
-
-## 2026-09-24 - W00 checkpoint CP-W00-154: exact-head machine-green reconciliation
-
-Exact head `ab7889d6b2dafc059220a0c0a3dc63decfe6b72e` is now **STATIC-VALIDATED + COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED**: **Pre-Unreal #788 SUCCESS** (run 35929433094), **Unreal Build #623 SUCCESS** (run 35929433086), and **Warehouse #204 SUCCESS** (run 35929433089).
-
-Pre #788 completed the full project-structure/Governor/asset-quality/readiness/deep/unit-test chain. Unreal #623 completed exact checkout, migrated-layout preparation, UE4.27.2 verification, MSVC setup, clean intermediates, ShireJourneyEditor build, production asset import, Automation Framework QA, startup smoke, P1C01-P1C08 headless chapter audit, route/story state roundtrip and warning-debt guard. Warehouse #204 correctly detected no staging-required delta and skipped heavy provider stages.
-
-The Public/Private migration and its known validator/persistent-runner correction families are therefore **machine-accepted on CP-W00-154**. Do not reopen root-code/validator/Governor cleanup unless a new concrete regression appears. W00 remains open only for packaged Data JSON runtime proof, real authored audio playback, target-device profiling and chapter-specific human PIE/pacing/visual acceptance.
-
-No **PIE-TESTED**, **DEVICE-TESTED**, **VISUALLY-ACCEPTED** or **PERFORMANCE-ACCEPTED** claim is made by this machine evidence.
-
-## 2026-09-24 - W00 checkpoint CP-W00-153: migration-consumer and persistent-runner repair
-
-CP152 head `9acc72b16e058a422428389fcefeb9af12fa0e98` has the intended physical Git tree: zero flat runtime .h/.cpp files, 32 headers under `Public/<Domain>` and 30 implementations under `Private/<Domain>`. Warehouse #202 succeeded.
-
-Its proof failed in two concrete migration-tooling families. Pre #786 still had historical direct reads such as `Source/ShireJourney/ShireGameMode.cpp`, so missing-file reads cascaded into false PG-109/129/131/133/136/137/138/140/142 failures. Unreal #621 reached UHT and failed on duplicate leaf headers because the persistent self-hosted worktree retained the old flat headers as **untracked leftovers** after the tracked files moved.
-
-CP153 fixes both systemically without changing gameplay: all real Pre-Unreal source reads resolve migrated basenames, the central runtime-evidence registry points at actual `Private/<Domain>` paths, the streaming source-contract test is layout-aware, and the Unreal workflow removes only obsolete architecture-mapped legacy files after confirming their migrated targets exist.
-
-Status: **SOURCE-LAYOUT INTACT / MIGRATION INTEGRATION REPAIRED / EXACT-HEAD VALIDATION PENDING**. No PIE/device/visual/audio/package acceptance is claimed.
-
-## 2026-09-24 - W00 checkpoint CP-W00-152: isolated Public/Private runtime-source migration
-
-Exact CP151 head `92f6d3aaad79f33eaf2385de292e6886d2c1b5da` is the new fully machine-green baseline: **Pre-Unreal #785 SUCCESS + Unreal #620 SUCCESS + Warehouse #201 SUCCESS**. The full static/governor/asset/readiness/deep/unit-test chain passed, and Unreal #620 passed compile/import/Automation/startup/chapter/state/transition/fault/pending/persistence-edge/warning-debt coverage.
-
-With the correction loop green, CP152 performs the already-approved architecture-only migration: all 62 runtime .h/.cpp entries move from the module root to their mapped `Public/<Domain>` and `Private/<Domain>` paths. Gameplay source blobs are unchanged. Build.cs no longer exports the entire module root; it exposes only explicit public domain include roots. Pre-Unreal and DeepProjectAudit now resolve runtime filenames recursively, and PG-154 rejects flat-root regression.
-
-CP152 is **SOURCE-LAYOUT-MIGRATED / EXACT-HEAD VALIDATION PENDING** until fresh Pre-Unreal and UE4.27.2 proof. No PIE/device/visual/audio/package acceptance is claimed.
-
-## 2026-09-24 - W00 checkpoint CP-W00-151: handoff evidence-lineage correction
-
-Exact CP150 head `2259242a772d3dd21a90cc10a8a4a2761be3b3dd` passed **Unreal #619 SUCCESS** and **Warehouse #200 SUCCESS**. Pre-Unreal #784 also passed **PRE-UNREAL CORE VALIDATION**, proving the prior PG-056 NameError is gone, then stopped in `project_governor.py` on one data-lineage invariant:
-
-`Legacy verified handoff must refer to the same last-green baseline`.
-
-The validator is correct. `session_handoff.source_head` is the verified historical baseline and must equal `validation_snapshot.last_green.sha`; the newer partially proven candidate belongs in `validation_snapshot.latest_observed`. CP151 corrects only that Governor data and does not weaken or duplicate the handoff validator.
-
-Status: **SOURCE/DATA-REPAIRED / EXACT-HEAD VALIDATION PENDING**. No PIE/device/visual/performance/audio-playback claim is added.
-
-## 2026-09-24 - W00 checkpoint CP-W00-150: close the CP149 refactor regression
-
-Exact CP149 head `e0b66dbccdf9e91f3cd6af0190008cf58ca31198` produced **Unreal #618 SUCCESS** and **Warehouse #199 SUCCESS**. Pre-Unreal #783 failed before the later static suite because PG-056 still referenced the local symbol `governor_mode_id`, which CP149 had intentionally removed while centralizing development-mode validation.
-
-This is a validator execution regression, not evidence of a new gameplay/runtime defect. CP150 removes the orphan alias completely: PG-056 reads `development_mode.id` directly from the Governor data only to decide whether the historical PIE verification-freeze guard is active. The data-owned mode contract remains the sole validation authority.
-
-CP150 status is **SOURCE-REPAIRED / EXACT-HEAD VALIDATION PENDING**. No PIE/device/visual/performance/audio-playback claim is added.
-
-## 2026-09-23 - W00 checkpoint CP-W00-149: data-owned development-mode validation
-
-CP-W00-148 parent `32af3140d1d297283de640144a58c3b32133d3d1` produced a clean split result: Unreal #617 SUCCESS and Warehouse #198 SUCCESS, while Pre-Unreal #782 stopped immediately on two PG-033 validator errors. No C++/runtime failure was reported by #617.
-
-Root cause: PG-033 carried a second hard-coded list of acceptable development modes and inferred manual-proof honesty by searching rule prose for words such as PIE/evidence/device/visual/performance. The Governor's legitimate `W00_ARCHITECTURAL_STABILIZATION` mode therefore looked invalid to the validator.
-
-CP-W00-149 moves mode IDs, supersedes relations and manual-only acceptance labels into structured `development_mode_contract` data owned by ProjectGovernor. Both Pre-Unreal and `project_governor.py` consume one shared `governance_contracts.py` helper, and unit tests guard unknown modes, supersedes drift, missing manual labels and prose-only fake proof.
-
-Status of this child checkpoint: **SOURCE-REPAIRED / EXACT-HEAD VALIDATION PENDING**. No PIE/device/visual/performance/audio-playback acceptance is claimed and no completeness percentage changes.
-
-## 2026-09-23 - W00 checkpoint CP-W00-148: Governor execution-truth hardening
-
-Exact parent `96398e7cc48277324113c7879a8d28e3b659757e` is **STATIC-VALIDATED + COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED**: Pre-Unreal #781 SUCCESS, Unreal #616 SUCCESS and Warehouse #197 SUCCESS. #616 passed UE4.27.2 compile/import, Automation 2/2, startup, P1C01-P1C08, state/continuous-transition/fault/pending/persistence-edge modes and warning-debt guard. #197 detected no staging-required delta and skipped heavy provider staging by design.
-
-The screenshot/log with `ShireRollbackAudit ... revisionAdvanced=no` belongs to older #615 on `6944cc0...`. #616 on the current parent passed the corrected split semantics.
-
-The next audit found governance drift, not a gameplay regression: stale PR #61/#53 metadata, `VISUAL_PRODUCTION_FIRST`, broad production actions, direct-develop workflow text and a source hierarchy that could make supporting docs/backlog look authoritative despite the W00 freeze.
-
-CP-W00-148 centralizes active-gate-first execution, explicitly freezes B1/B2/B3, reconciles PR #67/branch metadata and adds PG-150 so supporting management surfaces cannot drift silently. This child checkpoint is **SOURCE-REPAIRED / EXACT-HEAD VALIDATION PENDING** until fresh CI proves it.
-
-No PIE/device/visual/pacing/audio-playback acceptance is claimed and no production-completeness percentage is increased.
-
-## 2026-09-23 - W00 checkpoint CP-W00-147: separate invalid-request preflight from real rollback
-
-Two reds were collected before this repair.
-
-Pre-Unreal #780 on `6944cc0f...` failed PG-136 for `StartExperience`, but source inspection shows the authoritative subsystem identity still follows the correct order: transition intent is broadcast before bare `CurrentRouteId / CurrentChapterId / CurrentEpisodeId / PlayableCharacterId` mutation. The helper was falsely treating `TargetExisting->CurrentChapterId` and related route-progress sanitation fields as authoritative subsystem mutation. The structural helper is now qualifier-aware: writes through another object are ignored, while bare and `this->` member writes still count. DeepProjectAudit consumes the same helper.
-
-Unreal #614 on parent `333cbd0d...` exposed a second stale assumption. The new identity preflight correctly logged `ShireExperienceIdentity: rejected ... chapter=P1C99` before any transition request. The legacy fault audit then failed only because it expected `revisionAdvanced=yes`. That expectation is now wrong by design: a request rejected before transaction publication must leave identity, player state, NPC/LivingWorld authority and world revision unchanged. Real rollback remains tested separately by the forced valid-bank P1C02 async streaming failure, which must restore the origin and advance revision.
-
-Accordingly the fault evidence contract now distinguishes `ShireInvalidTransitionAudit` (rejected-before-transaction, revision unchanged) from `ShireStreamFailureAudit` (entered transaction, rollback, revision advanced). No production revision is artificially bumped merely to satisfy an obsolete test.
-
-Status of CP-W00-147: **SOURCE-REPAIRED / FRESH EXACT-HEAD PROOF PENDING**. The last exact head with both static and Unreal success remains `3ea40ce1...` (#778/#613). W01 remains blocked.
-
-## 2026-09-23 - W00 checkpoint CP-W00-146: PG-136 false red fixed at the validator architecture layer
-
-Pre-Unreal #779 on `333cbd0dd51d82215d4b9cc94793be507299f349` failed with `PG-136 StartChapter must publish transition intent before logical chapter mutation`. Direct source inspection shows the production transaction order is already correct: `OnWorldTransitionRequested.Broadcast(...)` executes before the authoritative `CurrentChapterId`, `CurrentEpisodeId`, and `PlayableCharacterId` assignments. The red was caused by validator drift: PG-136 searched specifically for the obsolete text `CurrentChapterId = ChapterId;`, while CP-W00-145 correctly canonicalized the destination through `TargetChapterId` and now assigns `CurrentChapterId = TargetChapterId;`.
-
-No C++ transaction reorder is made. CP-W00-146 fixes the root validation family instead. `Scripts/source_contracts.py` provides a reusable structural check that finds protected member assignments regardless of RHS spelling, ignores comments/string literals, and proves the transition signal occurs first. PG-136 uses the same helper for StartChapter and StartExperience, and a dedicated unit suite proves alias-RHS changes pass while mutation-first ordering fails.
-
-At reconciliation time Unreal #614 was still running: build/import/Automation/startup/chapter sweep had already passed, with the state/edge phase still active; Warehouse #195 remained queued. Therefore CP-W00-146 is **SOURCE-REPAIRED / FRESH EXACT-HEAD PROOF PENDING**. W01 remains blocked and no production-completeness percentage is increased.
-
-## 2026-09-23 - W00 checkpoint CP-W00-145: large root-cause closure wave
-
-Exact parent `3ea40ce1d68b6d5b961ed56a00117a75528e833e` is **STATIC-VALIDATED + COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED** by Pre-Unreal #778 and Unreal #613. #613 passed UE4.27.2 compile/import, Automation 2/2, startup, P1C01-P1C08, state, continuous transitions, rollback/stream-failure faults, delayed pending authority, persistence edges and all tracked project warning-debt ceilings at zero.
-
-Warehouse is still an infrastructure lane, not a gameplay regression. Push run #192 failed before project code on self-hosted network/DNS instability while acquiring checkout/repository data. PR run #193 then checked out successfully but failed immediately in `Detect current warehouse delta`: Windows PowerShell refused GitHub's generated temporary script under the machine execution policy (`PSSecurityException`, scripts disabled). Provider staging never began.
-
-CP-W00-145 folds several remaining W00 families into one guarded repair wave rather than waiting for them to surface one by one. Warehouse inline PowerShell now runs with explicit `-ExecutionPolicy Bypass`; marketplace `actions/checkout` is removed from that lane and replaced by bounded exact-head native Git retries. The experience-state contract is also centralized: authoritative Gandalf identity is `GandalfParallel / P1C01 / P1G01_Isengard / Gandalf`, matching the existing production data. Direct malformed requests fail closed before transition publication, while save/route-progress restore repairs known legacy aliases and rejects unsupported identities before publication.
-
-Persistence coverage is deepened from a synthetic stale callback to a real queued async-disk race. The CI-only edge audit now schedules two actual `AsyncSaveGameToSlot` writes from one committed world revision, crosses to another committed world, defers completion processing deterministically, and requires both writes to succeed while neither stale callback applies checkpoint effects. A separate static guard also compares every runtime C++ `Data/*.json` load with `ShireJourney.Build.cs` `RuntimeDependencies` so packaged-data declarations cannot drift unnoticed.
-
-Status of the new CP-W00-145 head is **SOURCE-REPAIRED / FRESH EXACT-HEAD PROOF PENDING**. W01 remains blocked; no production-completeness percentage is increased.
-
-## 2026-09-23 - W00 checkpoint CP-W00-144: warehouse red isolated from gameplay and repaired as an execution-family defect
-
-Exact parent `67ebc4ee4142c4df9c479c6b326631b767bc903a` is **STATIC-VALIDATED + COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED** by Pre-Unreal #777 and Unreal #612. Warehouse #191 alone failed after 32m57s. GitHub's structured job record ended with `Stage first Poly Haven CC0 batch` still marked `in_progress`; OpenGameArt/Quaternius/ambientCG/Kenney/KayKit and the final inventory audit never started, and the job exposes no finalized log blob. Therefore no unsupported claim is made about a specific provider exception. Previous Warehouse #190 completed the full provider chain successfully.
-
-The systemic issue is clear even without the missing terminal log: pull-request path matching is cumulative, so the heavy warehouse workflow can run again on stabilization commits that did not change warehouse inputs; provider scripts also used raw web calls and re-queried providers despite persistent receipts. CP-W00-144 adds a current-update delta gate, reusable receipt validation, a shared bounded retry/timeout layer, and atomic `.partial` downloads before rename. A provider/network interruption can no longer leave a partial file looking complete, and unrelated code commits should skip acquisition instead of spending many minutes touching external providers.
-
-PG-144 statically prevents warehouse provider scripts from bypassing the shared network helper and requires every heavy workflow step to be delta-gated. Status of the new head is **SOURCE-REPAIRED / FRESH EXACT-HEAD PROOF PENDING**. W01 remains blocked.
-
-## 2026-09-23 - W00 checkpoint CP-W00-143: semantic evidence-contract consolidation
-
-Parent head `aa8f80c89de1193728c1ff82b5876fdac0fdc7d3` split again: Warehouse #190 SUCCESS, Unreal #611 SUCCESS, Pre-Unreal #776 FAILURE. #611 gives exact-parent **COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED** evidence for compile/import, Automation 2/2, startup, P1C01-P1C08, state, transitions, rollback/stream-failure faults, delayed pending authority and persistence edges. The warning-debt gate remained zero for all tracked project categories, including the streaming-pool precedence warning.
-
-#776 exposed the remaining root of the repeated static reds. PG-070/074/079/080 and PG-129 still assumed that exact evidence strings physically lived in `runtime_smoke.py`. After PG-142 correctly moved those strings to a central registry, those older guards became stale even though the real runtime was green. CP-W00-143 therefore deepens the repair: `runtime_audit_contracts.py` now owns semantic evidence IDs, exact marker text, mode membership and C++ source anchors. Static validators ask for semantic IDs such as ring continuity, persistence commit, rollback or stale-checkpoint proof rather than searching another Python file for copied text.
-
-The same wave migrates DeepProjectAudit and runtime unit tests to the semantic registry and strengthens the de-duplication test so exact runtime evidence text is forbidden in all Python consumers. This is intended to eliminate the recurring class where a correct C++/runtime change turns Pre-Unreal red because a second or third copy of the old marker survives elsewhere.
-
-Status of CP-W00-143: **SOURCE-REPAIRED / FRESH EXACT-HEAD PROOF PENDING**. W00 remains open; W01 remains blocked.
-
-## 2026-09-23 - W00 checkpoint CP-W00-142: validation-contract consolidation wave
-
-Parent head `7636c7779156831660964cc5d44125efa4b480d1` produced a split result: Warehouse #189 SUCCESS, Unreal #610 SUCCESS, Pre-Unreal #775 FAILURE. #610 is concrete **COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED** evidence for that exact parent: UE4.27.2 compile/import, Automation 2/2, startup, P1C01-P1C08, state, transitions, rollback/stream-failure faults, delayed pending authority and the persistence-edge sweep all passed. Warning debt also reported `Streaming pool scalability override warnings = 0`. #775 failed on one stale static contract: PG-140 still searched for the old formatted checkpoint log template after #609 forced the C++ logger to split PASS/FAIL into static UE_LOG branches.
-
-That failure belongs to a recurring family: runtime evidence strings were copied independently into C++, `runtime_smoke.py`, `pre_unreal_validate.py` and unit tests. CP-W00-142 therefore does not patch one string. It introduces `Scripts/runtime_audit_contracts.py` as the single Python contract owner for required markers, mode arguments, log names, source anchors and warning-debt runtime log scope. Consumers import the registry; PG-124/133/136/137/138/139/140 consume registry semantics; a dedicated contract unit suite checks source anchors, state-mode execution and de-duplication.
-
-Status of the new CP-W00-142 head is **SOURCE-REPAIRED / FRESH EXACT-HEAD PROOF PENDING**. W00 remains open and W01 remains blocked.
-
-## 2026-09-23 - W00 checkpoint CP-W00-141: #774/#609 root causes repaired at source
-
-Candidate `621ad8617f7ebf1b973887fb61b4f46672d1226c` did **not** pass validation. Pre-Unreal #774 reached `PRE-UNREAL CORE VALIDATION PASSED`, then ProjectGovernor failed because CP-W00-140 had replaced `session_handoff` without its required `validation_snapshot.last_green/latest_observed` exact-SHA/run-ID/status records. Unreal #609 reached real UE4.27 compilation and failed first at `ShirePlayerCharacter.cpp:1954`: a runtime ternary was used as the `UE_LOG` verbosity token. UE4.27 requires a static verbosity token; the later parser/member diagnostics are treated as cascade from that root error.
-
-CP-W00-141 restores evidence lineage: last green remains `80fc54dc...` with Pre-Unreal #773 / Unreal #608, while latest observed records `621ad861...` with #774/#609 FAILURE. The checkpoint audit now logs through explicit Display/Error branches. PG-141 rejects future conditional `UE_LOG` verbosity before engine compilation, and the handoff regression tests explicitly reject checkpoint rewrites that drop `validation_snapshot`.
-
-Status: **SOURCE-REPAIRED / FRESH EXACT-HEAD PROOF PENDING**. W00 remains open and W01 remains blocked. No COMPILE-TESTED / STATIC-VALIDATED claim is made for CP-W00-141 yet.
-
-## 2026-09-23 - W00 checkpoint CP-W00-140: exact-head #608 green; closure/validation-authority wave started
-
-Exact PR #67 head `80fc54dc4e4571e57206bef28cc809e2dcb3ec62` completed Pre-Unreal #773, Warehouse #187 and Unreal Build #608 successfully. #608 compiled UE4.27.2 C++, imported production assets, passed ShireJourney.QA 2/2, startup, P1C01-P1C08, state persistence, continuous transitions, rollback fault injection, forced valid-bank stream failure, delayed pending-window authority and the zero-tolerance project warning-debt categories. This evidence is **COMPILE-TESTED + STATIC-VALIDATED + HEADLESS-RUNTIME-VALIDATED** for that exact SHA only. It is not PIE/device/visual/performance/audio-playback acceptance.
-
-The #608 log exposed a separate low-spec configuration authority defect: `DefaultEngine.ini` hard-set `r.Streaming.PoolSize=900`, so UE reported that TextureQuality scalability pool values were ignored as lower priority. The W00 closure wave removes the project-level override so `DefaultScalability.ini` owns 600/800/1000 MB tiers, adds a zero-tolerance warning guard for this precedence warning, and expands runtime warning-debt scope to transition/fault/pending/persistence-edge logs instead of only startup/chapter/state logs.
-
-PG-140 adds deterministic headless regression coverage for two persistence edges that were previously source-only: a legacy P1C01 terminal save must repair to one final canonical P1C02 publication/world commit, and a stale checkpoint completion carrying an older world revision must not heal or message the newer committed world. The real queued asynchronous write-across-revision case remains separately pending; this new callback guard does not overclaim that disk race.
-
-This checkpoint is the durable restart point if chat is lost. W00 remains open and W01 remains blocked. The new source/config wave is **SOURCE-REPAIRED / FRESH EXACT-HEAD PROOF PENDING** until its own Pre-Unreal and Unreal runs complete.
-
-## 2026-09-23 - Unreal #606 failure-path evidence exposed two more W00 contracts
-
-Unreal Build #606 on `1fdca1166cfd72099a42bbd02c9355b5f035562d` passed UE4.27.2 compile, production import, Automation, startup, P1C01-P1C08, state persistence and continuous transitions, then failed only in the new rollback fault audit. The failure was `freshSnapshot=no` while the same engine log showed rollback applying `health=67.0 stamina=54.0 resolve=43.0 supplies=2`, movement released, NPC context restored, LivingWorld synchronized and world revision advanced. The test sampled stamina/resolve after normal life ticking had resumed, so those values had legitimately begun changing. The fix is not to loosen rollback correctness: rollback now emits a dedicated `ShireRollbackSnapshotApplied` marker at the exact application point, while the later timer checks only stable health/supplies plus committed-system invariants.
-
-The same failure-path review found two additional systemic gaps. First, save restore changes world identity without necessarily calling `StartChapter`/`StartExperience` before persistence mutation, so it did not share PG-136's request-time rollback snapshot boundary. Save restore now begins the persistence transaction, publishes `PreparePersistenceWorldTransition` while the old logical world is still intact, and only then applies restored quest/route state. A failed save-driven world swap therefore has the same exact-origin rollback semantics as a normal chapter transition.
-
-Second, `ShireChapterAssetStreamingSubsystem` still treated a missing/empty bank or unavailable async handle as a compatibility success, and async completion did not verify that every bank asset actually resolved. That could allow a valid logical chapter to commit with fallback geometry rather than treating residency failure as a transaction failure. The next source wave removes that compatibility-success path: missing/empty banks, invalid handles and unresolved assets publish `OnChapterAssetsFailed`; ChapterWorldRouter keeps the previous resident bank pinned and executes atomic rollback. A CI-only forced P1C02 async failure proves the old bank remains resident and player/NPC/LivingWorld state returns to the exact origin.
-
-The same wave adds a bounded non-blocking CI delayed-ready hook. A dedicated pending-transition audit holds P1C02 ready publication for two seconds and requires, during the window, destination logical state to remain unusable by gameplay/NPC logic while LivingWorld remains on the prior committed revision. It then requires destination context, LivingWorld and player controls to move together only after final commit.
-
-PG-137 covers save-restore pre-mutation ownership and delayed transition authority. PG-138 covers fail-closed bank residency and streaming failure rollback. These changes are **source-level pending a fresh exact-head engine run**. Pre-Unreal #772 is green for the current PG-136 head, but no newer engine run yet proves PG-137/PG-138. W01 remains closed.
-
-## 2026-09-23 - Pre-Unreal #771 diagnostic correction for PG-136 fault injection
-
-Pre-Unreal #771 on `1fdca1166cfd72099a42bbd02c9355b5f035562d` failed before engine validation. The validator correctly rejected literal test-only references `P1C99` and `CI_InvalidTransition` as unknown production chapter/quest IDs, and the new PG-136 ordering check accidentally matched the fail-safe no-subsystem hold rather than the normal transition hold. The fault test now constructs its unsupported chapter ID at runtime and reuses the current authored quest identity, so production-reference validation remains strict. PG-136 now checks snapshot ordering against the normal transition hold while preserving the no-subsystem fail-safe hold.
-
-This is a validation/harness correction only. Unreal #606 for the failed static head is not acceptance evidence, and the PG-136 runtime repair still requires a fresh exact-head run.
-
-## 2026-09-23 - Unreal #605 exact-head green; rollback freshness root cause exposed and repaired at source
-
-Exact head `ddd0957d6201c8bf553825acd671c98a9be545ef` completed Pre-Unreal #770, Warehouse #184 and Unreal Build #605 successfully. #605 passed UE4.27.2 C++ build, production import, Automation, startup, the aggregate P1C01-P1C08 sweep, persistence/state roundtrip, continuous transitions and the zero-tolerance warning gate. The warning gate reported zero missing smoothing groups, zero degenerate tangent bases, zero nearly-zero tangents/binormals, zero missing production master surface/world packages, zero optional audio/rig debt, zero defaultMat references, zero light-mobility warnings and zero NPC spawn-collision failures. This is exact-head engine evidence for `ddd0957...` only; it is not PIE/device/visual/performance acceptance.
-
-Continued transaction simulation found a deeper rollback freshness defect that the green path did not exercise. `LastCommittedRollbackSnapshot` was refreshed when a world committed, but not necessarily at the instant a later transition was requested. If the player advanced quest/NPC/player-life state within a chapter and the next world swap failed, rollback could restore the older chapter-commit snapshot instead of the exact state immediately before the failed request. A second defect existed in the unsupported destination path: `CommitChapterWorld` cancelled pending work and returned without restoring the logical origin, potentially leaving the player hold active around an invalid destination.
-
-The source repair introduces a native pre-mutation `OnWorldTransitionRequested` boundary in `UShireQuestSubsystem`. `StartChapter` and `StartExperience` publish the intended destination before mutating logical chapter/route identity. `ChapterWorldRouter` subscribes at that boundary, captures a fresh rollback snapshot only when the current origin is fully committed, then raises the world/gameplay hold before destination mutation. Pending/uncommitted requests cannot overwrite that origin snapshot. Unsupported chapter/route pairs now execute the same atomic rollback path instead of clearing pending IDs and returning.
-
-The route/world support contract is also explicit: `FrodoMain` accepts P1C01-P1C08; `GandalfParallel` accepts its current P1C01/Isengard world identity. A new CI fault mode deliberately requests unsupported P1C99 after setting distinct live player values and requires rollback to restore exact origin identity, player-life state, NPC committed context, LivingWorld revision and movement release. Required marker: `ShireRollbackAudit: PASS unsupported-request restored=yes movementReleased=yes freshSnapshot=yes npcContext=yes livingWorld=yes`.
-
-PG-136 and the deep-project audit guard the pre-mutation snapshot, rollback-on-rejection and fault-injection evidence chain. This new wave is **source-level pending fresh exact-head validation**; #605 remains the proof boundary for its parent head. W01 remains closed and the production percentage is unchanged.
-
-## 2026-09-23 - PG-135 queued checkpoint snapshot ownership hardening
-
-Pre-Unreal #769 on exact head `e8b69e5b61f94ada054cbe5c7b1ed6408796c43e` passed every static gate, including the now-strict source asset audit with zero degenerate-UV assets, zero opposed-normal assets and zero structural errors. Unreal #604 had not completed when this follow-up source audit began.
-
-A further save-path simulation found a distinct async race that the PG-133 callback-origin guard did not fully close. When one automatic checkpoint save was already in flight, a second checkpoint stored only its `CheckpointId`. After the first callback completed, the second request called `SaveAutomaticCheckpoint` again and rebuilt its snapshot from whatever live world happened to exist at that later time. If a chapter transition occurred meanwhile, an old checkpoint ID could therefore serialize destination-world state, or the queued checkpoint could be discarded because the transition hold was active.
-
-PG-135 changes queued checkpoint ownership from ID-only to snapshot+origin. The second checkpoint now captures its full `UShireSaveGame` snapshot plus chapter, route, episode and committed world revision at the instant the checkpoint is reached. The queued request is dispatched directly from that captured snapshot after the current async write completes; it is never reconstructed from later live state. Its completion can still write the disk snapshot after a transition, while the existing origin/revision guard prevents old-world health/resolve/HUD effects from mutating the newer committed world. Both in-flight and queued snapshots are held by UPROPERTY references so GC cannot invalidate them during async serialization.
-
-PG-135 and deep-project audit now reject any return to ID-only queued checkpoint reconstruction. This is **source-level pending fresh exact-head validation** and does not advance W00 or production completion.
-
-## 2026-09-23 - Pre-Unreal #768 exposed the broader tangent-basis family; full source wave + strict CI
-
-Exact head `be5914d9b94d8e8bb5e25de88edab8a0dc089baf` passed the core validator, governor, source asset-quality script and production-readiness stages, then deep-project audit failed on one stale diagnostic token. More importantly, the asset-quality log exposed that the earlier three Unreal warning identities were only the visible edge of a broader authored-source class: 23 additional project-owned static OBJ assets contained degenerate UV triangles, and 7 of those also contained normals opposed to geometric face direction.
-
-This is being handled as one root-cause wave, not as 23 future warning patches. Every asset named by #768 is normalized to explicit triangulated face-local UVs and face-aligned normals. The set includes Balrog/Lurtz static proxy pieces, the Watcher tentacle proxy, Isengard industrial/static structures and Shire props. These remain static/non-animated OBJ assets; no exception is made to the final animated skeletal-FBX contract.
-
-The CI contract is also corrected. `asset_quality_audit.py` previously printed structural `ERROR:` lines but the Pre-Unreal workflow invoked it without `--strict`, so that step still appeared green. The workflow now runs `python Scripts/asset_quality_audit.py --strict`. PG-134 and deep-project audit both check that strict mode remains wired, so structural asset errors cannot silently become advisory again.
-
-The deep-audit diagnostic token is synchronized with the real opposed-normal error wording. No warning ceiling is raised and no W01 work is opened. This wave remains **SOURCE-REPAIRED / FRESH EXACT-HEAD PROOF PENDING**.
-
-## 2026-09-23 - Pre-Unreal #767 exposed a validator self-check mismatch, not a project defect
-
-Exact head `274b5d0dfd12d57e9250001409ea28e43e56d41c` entered the PG-134 tangent-space repair wave. Pre-Unreal #767 stopped in the core validator with one error before the asset-quality stage. The cause was internal validator drift: PG-134 searched for the phrase `opposes geometric face normal` while the source audit deliberately emits `oppose the geometric face normal`. The guarded behavior was present; the literal self-check was stale.
-
-The PG-134 token is synchronized with the actual source-audit contract. The early Pre-Unreal failure block is also changed to print every accumulated error before exit, matching the later failure block, so future validator failures are diagnostic rather than opaque.
-
-This is a validator-source correction only. It does not upgrade the PG-134 mesh repair to engine-proven status; Unreal #602 on the parent head remains separate evidence.
-
-## 2026-09-23 - Unreal #601 narrowed W00 to three source-mesh tangent defects; PG-134 repairs source data
-
-Exact head `34a9a2a8b2cf8f944ce4eae7e90fc7492809b9ab` reached substantially farther than the preceding failed heads. Unreal Build #601 completed UE4.27.2 C++ build, production import, Automation, startup, aggregate P1C01-P1C08 runtime, state roundtrip and continuous-transition runtime. The final warning-debt gate failed with exactly three unique nearly-zero tangent identities and the same three nearly-zero binormal identities: `SM_Balrog_Wing`, `SM_Lurtz_Blade`, and `SM_Isengard_IndustrialPitRim`. Missing smoothing groups, degenerate tangent bases, missing production master surface, missing runtime world packages, optional audio/rig debt, defaultMat references, light mobility warnings and NPC spawn collision failures were all zero in that gate.
-
-Source analysis isolated actual asset-data causes instead of relaxing the zero-warning policy. `SM_Balrog_Wing` and `SM_Lurtz_Blade` each contained four UV-degenerate triangles, which makes tangent derivation singular. `SM_Isengard_IndustrialPitRim` contained authored normals that oppose the geometric face direction on many triangles. These three project-owned procedural static OBJ sources are repaired with face-local non-degenerate UVs and face-aligned normals. This is an asset-source correction, not an animated-OBJ exception; final animated characters/creatures remain skeletal FBX only.
-
-The source-quality audit is also hardened so this class cannot silently return: degenerate UV triangles are structural errors, and strongly opposed/zero authored normals are structural errors before Unreal import. PG-134 requires both the guard and the repaired face-local basis. Warning ceilings remain zero.
-
-Pre-Unreal #766 separately failed because PG-037 still searched for the old async-checkpoint completion log format after PG-133 added `stateApplied` and `sameCommittedContext` evidence fields. The validator is updated to require the new stronger completion marker rather than reverting the runtime guard.
-
-Current status for this new wave is **source repair pending fresh exact-head proof**. #601 evidence remains valid only for `34a9a2a8...`; it does not prove the new mesh repairs. No PIE, device, visual or performance acceptance is claimed.
-
-## 2026-09-23 - Unreal #599 compile failure exposed API ownership defect; PG-133 transaction wave
-
-Exact head `cb8c789aff25d2d1f53c0bc7e37f47fe92607eeb` passed Pre-Unreal #764, then Unreal Build #599 failed during UE4.27.2 C++ compile at `ShireNPC.cpp(1394)`: `UShireNPCContextSubsystem::IsLogicalWorldContextCommitted` was called by the named-NPC runtime while still declared private. Import, Automation and runtime stages were skipped, so #599 provides no evidence for those stages.
-
-The compile root cause is corrected by making the read-only committed-context query part of the public NPCContext API while keeping committed-state mutation owned by the subsystem/router contract. A broader source simulation then found that the PG-131 world barrier still began too late: logical quest identity could advance and asynchronous preload could start before `SetPlayerWorldHold(true)`. The router now raises the authoritative hold at destination request time, not at destination construction time. Rapid A -> pending B -> A cancellation releases the hold only after stale async work is cancelled and the exact old world identity is again committed. Transition CI now requires one marker proving both held-during-swap and cancel-release.
-
-Persistent NPC memory aging is moved out of `StartChapter` into `CommitWorldBoundState`, called only after destination world/context commit. Restore-time NPC memory pruning is likewise deferred until the final canonical world commit. This prevents destructive persistent-state housekeeping from running against an uncommitted or intermediate repaired chapter.
-
-Async checkpoint completion is now origin-bound. The save captures chapter, route, episode and world revision when scheduled; a late callback may still complete its disk write, but health/stamina/resolve healing and HUD success effects are applied only if the callback still belongs to the exact same committed world revision. This closes cross-transition completion mutation without turning asynchronous disk I/O back into synchronous loading.
-
-Ambient social partner evaluation now uses one actor traversal instead of two, and ambient/named/enemy/mythic/Black Rider context-dependent logic is held behind the committed gameplay barrier during world swaps. This is architecture/performance hardening only; no FPS or device-performance claim is made.
-
-PG-133 plus deep-project audit guards these contracts. This new wave is **source-level pending fresh exact-head validation**. W01 remains closed; no completion percentage is increased.
-
-## 2026-09-23 - Restore repair ordering hardened before final world publication
-
-A further source simulation found a deeper save/restore race that was not covered by the earlier atomic restore patch. `CommitPersistenceRestore(true)` previously cleared the restore-in-progress flag and published `OnExperienceChanged` / `OnChapterChanged` before broadcasting `OnQuestStateRestored`. The StoryFlow legacy-repair handler therefore could run only after the router had already seen and potentially committed an intermediate legacy chapter/route identity. On already-resident banks this could become a synchronous double-commit window.
-
-The transaction is now ordered as: rebuild all persistence domains -> invoke the legacy-repair hook while persistence broadcasts remain suppressed -> let `StartChapter`, `StartExperience`, and `StartQuest` canonicalize silently -> release the restore barrier -> publish exactly one final repaired experience/chapter/quest snapshot. `StartExperience` also no longer captures the current pre-commit player transform into RouteProgress while restore is in progress.
-
-Player health/stamina/resolve/supplies are now restored before the final persistence publication because a matching resident bank can commit synchronously from the final broadcast and capture a rollback snapshot immediately. This prevents a rollback snapshot from containing restored quest state paired with stale player-life state.
-
-PG-132 and the deep-project audit enforce the repair-before-publish ordering and player-life-before-commit invariant. This wave is source-level pending fresh exact-head validation; no new compile/runtime acceptance is claimed yet.
-
-## 2026-09-23 - Pre-Unreal #762 test-harness regression isolated during transaction-barrier wave
-
-On exact head `7cb6ccf8e3e5d29c13048cb5eb9862b2268bd18a`, Pre-Unreal #762 failed in `test_runtime_smoke.py`, not in project structure/deep audit. Two harness defects were introduced while extending transition evidence: the new test referenced `runtime_smoke.required_markers` although only `required_markers` was imported, and the older transition test still assumed the mode had exactly one required marker. Both are corrected so transition mode requires the complete marker set, including `ShireTransitionBarrier: PASS held-during-swap=yes`.
-
-Unreal #597 was still compiling this SHA when the harness correction was prepared. Therefore #762 is not treated as a gameplay/runtime failure, and no engine acceptance is inferred for the follow-up head until fresh workflows run.
-
-## 2026-09-23 - Unreal #596 compile blocker isolated; world-transaction mutation barrier added
-
-Exact head `02e4dfb81dc4dababb3c0085369cc628c4704bb3` passed Pre-Unreal #761 and Warehouse #175, then Unreal Build #596 failed in C++ compile before import/runtime. The concrete blocker was UE4.27 overload ambiguity at `FPackageName::ObjectPathToPackageName(ProductionSurfacePath)` where `ProductionSurfacePath` was a `const TCHAR*`. No import/runtime claim is made for #596 because every later engine stage was skipped.
-
-The compile root cause is fixed by constructing an explicit `FString ProductionSurfaceObjectPath` before calling `ObjectPathToPackageName`, removing compiler overload ambiguity without changing runtime behavior.
-
-The broader audit also found a transaction-boundary gap: ChapterWorldRouter disabled CharacterMovement during async world swaps, but several gameplay mutation paths could still be invoked while the quest destination had moved ahead of committed geometry. This could allow interaction, quest triggers, traversal/puzzle completion, supplies, combat, or save actions to observe/mutate half-transition state even though movement itself was held.
-
-A shared player-side world-transition barrier is now mirrored directly from `ChapterWorldRouter::SetPlayerWorldHold`. Movement/jump/sprint, combat, interaction, supplies, checkpoint save/restore, quick save/load and player-life ticking all refuse gameplay mutation while the barrier is active. Quest triggers, traversal challenges, environmental puzzles, world-event interactions and named NPC interaction also require `IsGameplayWorldCommitted()`. Companion banter now requires `ShireNPCContextSubsystem::IsLogicalWorldContextCommitted()`, so old-world dialogue cannot start from destination quest state.
-
-The transition CI now deliberately requests a new chapter and checks, before destination commit, that the player is held and `IsGameplayWorldCommitted()==false`. Required marker: `ShireTransitionBarrier: PASS held-during-swap=yes`. PG-131 and the deep-project audit enforce these contracts statically.
-
-This source wave is **STATIC-VALIDATION PENDING** until the fresh Pre-Unreal workflow completes and **COMPILE-TESTED PENDING** until a new exact-head Unreal build passes C++ compile. W01 remains closed.
-
-## 2026-09-23 - Build #595 full chain green; warning tolerance converted into root-cause closure work
-
-Exact head `a148d1afa919fa63725e3760684d6eed061c5e40` completed Pre-Unreal #760, Warehouse #174 and Unreal Build #595 successfully. Unreal #595 passed UE4.27.2 C++ build, deterministic production import, Automation, startup, aggregate P1C01-P1C08 runtime, state persistence roundtrip, continuous transitions and the warning-debt step. This is the first exact head in this stabilization sequence to complete the entire required CI chain.
-
-That green result is not being treated as permission to ignore remaining evidence. The warning-debt report still contained 137 unique nearly-zero binormal identities plus matching tangent warnings, and the source audit reported 321/352 OBJ files without UVs and 334/352 without explicit normals. The previous guard allowed a ceiling of 150, so this class could remain permanently green without being eliminated.
-
-A new root-cause import-quality wave therefore changes the policy and the importer together. The production importer now normalizes UV-less OBJ files only in its ignored `Saved/ShireProductionImportWorking` copy, generating deterministic dominant-plane face UVs before import. It fails closed if a face cannot be safely parsed/projected. The tracked SourceAssets remain byte-stable. `M_ProductionSurface` also receives a package-existence preflight before any attempted synchronous editor-only recovery load, removing avoidable missing-package warning spam. The warning guard now requires zero degenerate tangent bases, zero nearly-zero tangents, zero nearly-zero binormals and zero missing-production-master-surface warnings. PG-130 makes those contracts fail-closed in Pre-Unreal.
-
-This stricter wave is **source-level pending fresh exact-head proof**. Build #595 remains valid evidence for its own SHA only. No PIE/device/visual/performance acceptance is claimed, and W01 remains closed until the stricter import gate is green.
-
-## 2026-09-23 - W00 persistence/transition root-cause repair wave after Unreal #594
-
-Unreal Build #594 on exact head `38c2c958121576b68a0bfaf4e276498d4fe89dad` materially narrowed the remaining W00 fault set. Runner/Engine Content access, clean intermediates, UE4.27.2 C++ build, deterministic production import, ShireJourney.QA, startup, and the aggregate P1C01-P1C08 sweep all passed. The previous production-surface defect is now engine-proven on that SHA: `CharacterSurfaceAudit: PASS persisted player skin/cloth surface state`. The state gate still failed with `disk-save-details written=yes restored=yes verified=no cleaned=yes`, so persistence is the active blocker.
-
-The new source wave fixes three architectural defects rather than relaxing the failing test. First, save restore now has an atomic logical transaction: quest/route, NPC memory, discoveries, progression and chronicle/map knowledge rebuild while broadcasts are suppressed, then publish once through `CommitPersistenceRestore`. Rollback uses the same transaction but publishes only after old-world geometry and player placement have been restored; a failed rollback invalidates committed-world identity and keeps movement fail-closed. Legacy terminal-save repair is also prevented from applying an old-world transform after it intentionally changes chapter identity.
-
-Second, the disk audit is expanded from a single `verified=yes/no` into field-level persistence evidence. It writes and reloads quest stages, route progress, a seeded Sam NPC-memory bucket, relationships/dialogue history, discoveries/milestones, progression, chronicle/map knowledge, player-life state and transform data. Serialized transforms remain exact; runtime player placement allows only the small vertical canonicalization caused by safe capsule grounding while horizontal drift remains tightly bounded. A failure now prints the exact field names instead of forcing another blind debug cycle.
-
-Third, two async ownership races were found by source simulation. An already-resident chapter bank could be reported ready but then fail `CommitPendingRequest` because no pending IDs existed, causing a false rollback during same-bank episode/save transitions; that path now commits the matching resident bank. Cancelled audio requests also now require their `LoadKey` to remain owned before a late async callback may resolve or play sound, preventing stale playback resurrection.
-
-PG-129 guards these transaction, same-bank and stale-audio invariants. This wave is **source repair pending fresh exact-head validation**. Do not call it PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED. W01 remains closed and the whole-game planning percentage is unchanged.
-
-## 2026-09-23 - Unreal #593 root cause isolated; commit-bound residency hardening applied
-
-Exact PR #67 head `5840863632d04a5fac284b472fe9e5641cd522b8` passed Pre-Unreal #758 and Warehouse #172. Unreal Build #593 passed runner/Engine Content preflight, UE4.27.2 C++ build, deterministic production import, ShireJourney.QA 2/2, startup, and the aggregate P1C01-P1C08 chapter sweep. The remaining state gate failed specifically at `CharacterSurfaceAudit: FAIL persisted player skin/cloth surface state`, followed by `ShireStateAudit: disk-save-roundtrip=FAIL`. The same log showed P1C03 world commit, NPC committed context, LivingWorld committed sync, and stable grounding.
-
-Source inspection identified a residency-order defect rather than a missing material package: `M_ProductionSurface` is an async chapter-bank member, while `AShirePlayerCharacter::BeginPlay` applied prototype MIDs before that bank became resident and had no post-residency reapply signal. The state audit also ran on the next tick before world commit and returned early on the surface check, masking the independent disk-save path.
-
-This W00 source wave adds a post-residency `OnChapterAssetsCommitted` contract, reapplies player surface state at that residency boundary, makes the state audit wait for the exact committed chapter/route/episode, and keeps disk-save testing running even when the surface invariant fails. Player movement now remains held until `OnWorldCommitted` publishes the committed revision/context on both normal commit and rollback. The previously implicit audio-residency assumption is replaced by bounded asynchronous `FStreamableManager` ownership in `ShireAudioSubsystem`; weak caches and short-lived request handles avoid pinning every sound for the GameInstance lifetime.
-
-PG-127 is now fail-closed: its escaped-newline check had been after the script success/exit block and could not fail CI. PG-128 adds regression guards for committed surface residency, state-audit ordering, movement-release ordering, and bounded asynchronous audio ownership.
-
-Evidence for this new source wave is not promoted beyond source inspection until fresh exact-head workflows run. No PIE, device, visual or target-FPS claim is made.
-
-## 2026-09-23 - systemic hardening phase, importer compile artifact repaired
-
-The project is still in W00 hardening / exact-head recovery rather than content expansion. Pre-Unreal #753 and Warehouse #167 are green on the prior head, while Unreal Build #588 reached the real 76-action UE4.27.2 C++ compile and failed only in `ShireProductionImportCommandlet.cpp` because a literal escaped `\n` sequence had been committed between the PNG and TGA discovery statements. That text produced C2017/C2065/C2143 at line 58.
-
-The importer source now contains a real newline, and PG-127 is strengthened so any literal `\n` or `\r\n` text artifact in that C++ source is rejected during Pre-Unreal instead of surviving until Unreal compilation. This is a source fix pending fresh exact-head compile proof.
-
-No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED promotion is claimed yet.
-
-## 2026-09-22 - stabilization gate status schema correction
-
-Pre-Unreal #748 surfaced a governance-schema mistake introduced by the stabilization freeze: `active_gate.status` was set to `ACTIVE`, but the Governor quality-gate vocabulary is `NOT_TESTED / PARTIAL / PASSED / FAILED / BLOCKED`. The stabilization gate remains the active execution focus, while its evidence state is correctly `PARTIAL` until the full exact-head chain passes. No runtime behavior or maturity is changed by this correction.
-
-## 2026-09-22 - stabilization static-gate self-correction
-
-Pre-Unreal #747 correctly rejected the stabilization head because the new PG-121 contract required a `RUNTIME_SWEEP_SUMMARY` marker, while `runtime_smoke.py` had already removed fail-fast behavior but had not actually emitted the aggregate marker. The harness now emits attempted/expected/failed chapter summary after completing the sequential sweep. This is a QA-contract repair only; no engine/runtime maturity is promoted until the new exact head passes the full gate.
-
-## 2026-09-22 - architectural stabilization freeze / root-cause hardening
-
-Owner direction is now explicit: **do not continue feature expansion by patching individual symptoms**. The project is in `W00_ARCHITECTURAL_STABILIZATION`; validation builds are required evidence, but new gameplay/region/warehouse expansion is frozen until the stabilization gate is green.
-
-Last real engine evidence remains Unreal Build #547 on `a42679a4de808ce1f9bada7974ad87d52ee18fa9`: UE4.27.2 C++ build PASS, production import PASS, `ShireJourney.QA` 2/2 PASS, startup and P1C01-P1C04 headless audits PASS, then P1C05 failed with `no-blocking-ground`. The old runtime harness stopped at that first failure, so it provided no P1C06-P1C08 evidence.
-
-The P1C05 response has been converted from a chapter patch into a shared world contract. `ChapterWorldRouter::ResolveGroundedSpawnLocation` now probes a bounded deterministic ring around authored/restored positions, rejects steep surfaces, checks full pawn-capsule clearance, and chooses the nearest valid ground. The temporary P1C01 and P1C05 `RuntimeSpawnFoundation` support pads were removed; Project Guardian now rejects reintroduction of chapter-specific spawn pads.
-
-Runtime QA no longer stops at the first chapter failure. A single chapter sweep now attempts all P1C01-P1C08 sequentially on the low-RAM runner and emits `RUNTIME_SWEEP_SUMMARY`, so one engine build exposes the whole failure set instead of forcing serial red-build discovery.
-
-Character rig requests are also hardened. Missing future-production skeletal mesh / AnimBP packages are checked with `FPackageName::DoesPackageExist` before `RequestAsyncLoad`. Missing rigs remain on modular fallback without flooding Unreal with missing-package async-load errors; completed real rig handles still release after actor-owned handoff.
-
-Source-asset hygiene was repaired at the source, not hidden in importer logs. All 24 tracked BMP textures were converted to TGA, all MTL diffuse references were migrated, the importer now discovers PNG/TGA only, and Guardian rejects BMP. Seven project-owned OBJ files contained consecutive duplicate-position face vertices; 304 affected faces were normalized, and triangulation-risk faces are now strict asset-audit failures instead of warnings.
-
-Material persistence remains evidence-bounded rather than guessed. The importer already performs deterministic master/MTL synthesis, explicit pre/post material package saves, on-disk verification and import failure on missing material packages. Build #547 import passed, but the full warning-debt/material gate was not reached because the old chapter harness stopped at P1C05. Fresh exact-head proof is therefore still required.
-
-No post-#547 hardening change is called COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED yet. The next permitted activity is exact-head stabilization validation, not feature construction.
-
-## 2026-09-22 - W00 engine recovery reached runtime; P1C05 grounding gap repaired
-
-Unreal Build #547 on exact head `a42679a4de808ce1f9bada7974ad87d52ee18fa9` proved the runner recovery beyond the former ACL gate. UE4.27.2 C++ build succeeded, production asset import succeeded, both `ShireJourney.QA` Automation Framework tests passed, and headless startup plus P1C01-P1C04 chapter audits passed. The run then failed at P1C05 with `ShireStartupGrounding: FAIL chapter=P1C05 reason=no-blocking-ground requested=(-2400.0,0.0,130.0)`.
-
-Source inspection found a deterministic geometry gap: the broad P1C05 fallback ground centered at X=0 with X scale 46 ends near X=-2300, while the first route slab centered at X=-2600 ends near X=-2480. The authored chapter start at X=-2400 therefore sat between both collision surfaces. `BuildFellowshipRoad` now adds a small hidden Engine BasicShapes collision foundation under the exact P1C05 start, matching the deterministic support strategy already used for P1C01.
-
-This is a source fix pending fresh exact-head engine proof. The previous run is valid COMPILE evidence for `a42679a...`, but the new repair head is not yet COMPILE-TESTED/PIE-TESTED/DEVICE-TESTED/VISUALLY-ACCEPTED.
-
-## 2026-09-22 - runner ACL recovered; first real compile defect repaired
-
-Unreal Build #534 attempt 3 proved the Windows runner can now read UE4.27 Engine Content: the log reported `UE4_ACL_REMEDIATION_PASS action=none reason=already-readable`, UHT generated reflection code, and the exact head entered a 76-action `ShireJourneyEditor` C++ build. The runner/Engine Content ACL blocker is therefore no longer the immediate failure.
-
-The first real project compile failure was cross-module visibility: `ShireJourneyEditorTools/Private/Tests/ShireQAAutomationTests.cpp` could not include `ShireSaveGame.h` while the runtime module remains intentionally `FLAT_GUARDED`. The repair exports `Source/ShireJourney` as a temporary public include root in `ShireJourney.Build.cs`, avoiding a relative/private include hack and preserving the rule that the physical Public/Private migration remains a separate engine-tested maintenance change. The importer also replaces deprecated direct `UStaticMesh::StaticMaterials` access with `GetStaticMaterials()` to remove the two C4996 warnings observed in the same build.
-
-No COMPILE-TESTED claim is made until the new exact-head build completes successfully.
-
-## 2026-09-22 - PIE StaticMesh mobility warning source fix
-
-A live PIE screenshot showed repeated warnings of the form `SetStaticMesh ... but Mobility is Static` on runtime-generated `AStaticMeshActor` components. The source cause was confirmed in the Shire, Bree, Fellowship and Isengard runtime world-builder spawn helpers: each helper assigned the mesh first, then changed component mobility to Movable. Runtime-spawned `AStaticMeshActor` components begin as Static, so the mesh mutation generated warning spam.
-
-The four helpers now set mobility to Movable before `SetStaticMesh`, preserving their existing final mobility behavior while removing the invalid mutation order. A DeepProjectAudit guard now rejects reintroduction of the old ordering.
-
-This warning flood can contribute to editor log overhead/hitch perception, but it is not the GitHub runner ACL failure. The runner remains separately blocked because `NT AUTHORITY\\NETWORK SERVICE` cannot read UE4.27 Engine Content. No compile/PIE/device acceptance is claimed for this source fix until a fresh exact-head engine run is available.
-
-## 2026-09-22 - precise integration-gap source closure
-
-The deep audit findings were acted on immediately instead of being left as notes. The source branch now contains a committed-world NPC context bridge: ChapterWorldRouter publishes committed chapter/route/episode/revision on normal commit and rollback; regional mood/profile availability follows that committed identity; danger uses live quest state only while logical and committed world identity still match; and new bounded dialogue/film-context selection is suppressed during the async mismatch window rather than leaking destination context into the old visible world.
-
-Character-rig streaming remains asynchronous, but the completed per-character streamable handle is now released after the ready broadcast, when player/NPC components have taken their own UObject references. This removes the GameInstance-lifetime handle pinning identified by the audit while retaining active-character ownership and modular fallback behavior.
-
-The synchronous production-asset debt was also burned down at source level. Shire/Bree/Fellowship/Isengard world builders no longer directly LoadObject production meshes; they resolve only objects already resident in the async chapter bank. Black Rider, standard Fellowship enemies and mythic threats use resident-only production visual resolution, and the chapter streaming plan now includes the relevant enemy banks. Player/named-NPC production proxy pieces use resident-only soft resolution while their skeletal rig path remains asynchronous. ShireAudioSubsystem no longer synchronously LoadObject<USoundBase>; production sound must be resident through an async ownership path, otherwise subtitle/story/silent fallback remains safe.
-
-A continuous guard was added to deep_project_audit.py: non-/Engine/BasicShapes synchronous LoadObject is now rejected, as are regressions in committed NPC context publication, completed rig-handle release, synchronous audio load, builder ticking and existing social-scan bounds.
-
-These are source fixes only until the runner is restored. No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED promotion is claimed. The active priority remains W00 runner/exact-head unlock.
-
-## 2026-09-22 - deep organization and integration audit before runner repair
-
-A repository-wide source/governance audit was performed against PR #67 exact head `17689b194ddca281aa9881b9ac50594712a65df6` before touching the laptop runner. Three current workflow facts are now authoritative for this checkpoint: Pre-Unreal #685 failed only because the newly accepted third-person camera requirement was not yet mapped into MasterExecutionRoadmap; Unreal Build #520 again stopped before C++ compilation because `NT AUTHORITY\\NETWORK SERVICE` could not read `Engine/Content/EngineMaterials/WorldGridMaterial.uasset`; Warehouse #99 succeeded and the persistent inventory audit reported `payloadFiles=240 bytes=3816657674 receipts=8 receiptRecords=278 duplicateGroups=22`, with total footprint `files=249 bytes=3816866382`.
-
-The roadmap drift is repaired: REQ-CAMERA-001 is now assigned to the Part I gameplay bundle and the tracked unfinished-requirement snapshot is regenerated from the Governor. This was a management consistency defect, not a gameplay defect.
-
-The deeper integration simulation found two additional source risks worth carrying into W00/W01 rather than hiding them. First, `LivingWorldDirector` correctly waits for `ChapterWorldRouter` committed-world revision before switching active life/weather, but `UShireNPCContextSubsystem` independently reads the logical quest chapter/route for regional mood, profile availability, film-dialogue context and pressure. During asynchronous chapter load the quest can advance while old geometry is still visible, so old-world NPCs can transiently react using destination context. Second, asynchronous character-rig handles are retained per requested character for the GameInstance lifetime; this is safe functionally but needs measured chapter-cast residency/eviction on the ~2 GB VRAM target before full-cast skeletal rollout.
-
-The audit also corrected stale debt tracking: ambient NPC pooling is already source-implemented with bounded reuse and disabled pooled ticks; it is now pending engine/device proof rather than missing. Conversely, synchronous runtime asset debt is still real: the inspected exact head contains 77 direct `LoadObject` calls in `FellowshipChapterWorldBuilder`, 55 in `ShirePrototypeWorldBuilder`, 22 in Bree, 10 in Isengard, plus remaining player/named-NPC fallback loads. These must be burned down incrementally after the runner is restored, without deleting the two-phase async bank/fallback architecture.
-
-No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED status is promoted by this audit.
-
-## 2026-09-22 - final pre-runner warehouse saturation batch
-
-One final source-safe warehouse expansion is committed before runner repair becomes the active priority. Three official KayKit public-GitHub packs were source-checked as CC0 and added to the non-interactive staging lane: Restaurant Bits for food/kitchen/interior support, Halloween Bits for selectively filtered cemetery/crypt/dark-region props, and City Builder Bits only as a manually filtered source of period-neutral civic props. Their FBX/GLTF/OBJ source presence does not override the project rule that animated final characters are skeletal FBX and production textures are PNG/TGA/channel-packed.
-
-This commit authorizes staging only. Until Warehouse Stage emits actual receipts, these additions are not claimed STAGED. After receipt/audit, broad warehouse expansion pauses and W00 runner/Engine Content ACL repair becomes the next active production priority.
-
-## 2026-09-22 - whole-game completion wave map
-
-A durable finish map is now registered in `Data/CompletionWaveMapV1.json`. It treats the current whole-game planning position as approximately 40/100 and organizes the remaining 60 planning points into 12 production waves (W00-W11), from runner/exact-head unlock through Shire visible skeletal-character conversion, Part I production/acceptance, Part II/III runtime+production, and final trilogy integration.
-
-The execution unit is a major coherent production drop rather than an individual Git commit or raw file upload. The map currently estimates roughly 30-40 remaining major drops, with actual commit count allowed to be higher. These percentages/drop counts are planning estimates only; they do not alter any compile, PIE, device, performance or visual acceptance state.
-
-## 2026-09-22 - character visibility bridge and warehouse receipt hardening
-
-Owner priority is now explicit in the Governor and WORLD_DETAIL_LEDGER: warehouse growth must convert into visible humans/enemies, with P1C01 Shire still the first assembled benchmark. The official KayKit Skeletons 1.0 public GitHub package was source-checked as CC0 and documents fully rigged/animated characters, FBX/GLTF delivery and 90+ animations. It is registered strictly as technical enemy rig/import/retarget QA stock, not canonical LOTR enemy art or a visually accepted production character.
-
-The KayKit staging batch now includes that pack, and the warehouse inventory audit now recognizes archive-style receipt records in addition to legacy file records and verifies recorded license-snapshot hashes when present. This closes a bookkeeping blind spot where KayKit archives could contribute payload bytes without participating in receipt-record hash validation.
-
-Evidence boundary remains unchanged: the last proven engine run is still blocked before C++ compilation/import by the non-elevated NETWORK SERVICE runner lacking read access to UE4.27.2 Engine Content. These changes are source/warehouse preparation only. No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED claim is made.
-
-## 2026-09-22 - hourly continuation: non-interactive KayKit public-GitHub lane
-
-Exact-head inspection started from PR #67 head `d856a716d5bc270ce0ddc2d649acbb1656ae112c`. Pre-Unreal Validation #670 completed successfully and Warehouse Stage #80 completed successfully. Unreal Build Validation #505 stopped before C++ compilation: the runner identity was `NT AUTHORITY\\NETWORK SERVICE`; the guarded ACL remediation reported `UE4_ACL_REMEDIATION_DEFERRED reason=runner-not-elevated`; the unchanged UE4.27.2 preflight then failed six reads of `Engine/Content/EngineMaterials/WorldGridMaterial.uasset` with access denied. Build/import/Automation/startup/chapter/state steps were skipped. This is machine ACL evidence, not compile evidence, and this run does not retry the same elevated fix.
-
-Warehouse saturation now adds `Data/WarehouseKayKitGitHubAcquisitionBatchV1.json` and `Scripts/stage_kaykit_github_warehouse.ps1`. The lane uses only exact official public KayKit GitHub repositories/direct archives and license snapshots; it forbids login, purchase/name-your-price, OAuth, Patreon/Discord and other interactive routes. Per-pack and batch byte caps, CC0 license markers, SHA256 provenance and STAGED-only state are enforced. The Warehouse Stage workflow now executes this lane before inventory audit.
-
-The concrete KayKit support candidates cover low-spec medieval settlement/layout stock, dungeon/interior modules, rigged/animated background-character pipeline testing and furniture props. `TrilogyWorldFoundationPlanV1.json` maps them into Shire/Bree/Rivendell/Moria/Lothlorien/Rohan/Gondor/Osgiliath/Minas Morgul/Cirith Ungol/Paths of the Dead/Grey Havens support roles. P1C01 Shire remains the first assembled benchmark; later-film use is warehouse/preproduction only. Final animated characters still require real skeletal FBX rigs, skin/deformation review; repeated detail remains ISM/HISM-classed; heavy integrated assets remain soft/async through FStreamableManager.
-
-Integration-repair inspection found no new demonstrated source regression behind the green static gate. Runtime/compile progression remains blocked only by the already-demonstrated local Engine Content ACL condition. No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED claim is made for this wave.
-
-## 2026-09-22 - autonomous hourly lane: exact-head evidence + Quaternius saturation
-
-PR #67 exact head entering this iteration was `f41d5e91ac2a789387e987ff759b9e674cd86e10`. Exact-head Pre-Unreal Validation #667 succeeded, and Warehouse Stage #76 succeeded across Poly Haven, OpenGameArt, Quaternius, ambientCG base/trilogy batches, Kenney, inventory audit and footprint reporting. Unreal Build Validation #502 did not reach C++ compilation: the guarded Engine Content ACL remediation step completed, then the unchanged UE4.27.2 verification step failed; build, import, Automation Framework, startup, chapter and state audits were skipped. This remains a machine/Engine Content preflight blocker, not compile evidence, and the gate was not weakened.
-
-Warehouse saturation expanded `WarehouseQuaterniusAcquisitionBatchV1.json` and `TrilogyAssetCandidateQueue.json` with official-page CC0 lanes for additional modular background humans, creature rig/deformation pipeline stock, supporting textured buildings and dungeon/interior support. These remain CANDIDATE/AUTHORIZED_FOR_STAGING until actual staging receipts and intake checks exist. Canonical hero characters/creatures still require real skeletal FBX rigs, skin/deformation review and their own visual acceptance.
-
-`TrilogyWorldFoundationPlanV1.json` now maps the added stock into reusable regional-preproduction roles for Shire/Bree/Rivendell/Lothlorien, Moria, Rohan, Gondor/Osgiliath, Cirith Ungol, Paths of the Dead, Mordor and Grey Havens while preserving P1C01 Shire as the first assembled benchmark. Later-film mappings are warehouse/preproduction only and do not open Part II/III runtime chapters. Intake ordering reiterates SHA256/provenance retention, FBX rig requirements, PNG/TGA/channel-packed texture preference, ISM/HISM classification for repeated detail, and FStreamableManager soft/async ownership for heavy runtime content.
-
-Integration-repair inspection found no new demonstrated source regression on the green pre-Unreal head. The unresolved failure is still the local UE4 Engine Content preflight, so source/runtime gates remain fail-closed. No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED claim is made for this iteration.
-
-## 2026-09-22 - active wave: ACL repair attempt + trilogy material expansion
-
-The Unreal Build workflow now contains a guarded Engine Content ACL remediation step before the existing UE4.27.2 verification. It grants only read/execute to the runner service identity when the workflow has elevation; if the runner is not elevated, it records the exact required action and leaves the original verify gate unchanged. This does not weaken validation and does not create a compile-tested claim.
-
-Warehouse execution also expanded beyond Shire with `WarehouseAmbientCGTrilogyBatchV2.json`, targeting material families for Caradhras, Moria, Rohan, Gondor, Osgiliath/Ithilien, Mordor, Isengard, Bree/battlefields, Pelennor support and Shelob-lair support. The warehouse workflow now stages this batch in addition to the existing Shire/material/audio/Quaternius/Kenney lanes.
-
-No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED status is claimed by this wave.
-
-## 2026-09-22 - autonomous three-lane production iteration
-
-PR #67 exact head before this production batch was `0c8130a33f8df3648d270d8bd0ee6b24aee882fb`. Pre-Unreal Validation #653 completed successfully on that exact SHA. Unreal Build Validation #488 did **not** reach C++ compilation: the self-hosted `UE4-27-Windows` runner executed as `NT AUTHORITY\\NETWORK SERVICE` and was denied read access to `Engine/Content/EngineMaterials/WorldGridMaterial.uasset` on all six preflight probes. Build, import, Automation Framework, startup, chapter and state steps were therefore skipped. This remains an Engine Content ACL/environment blocker, not compile evidence.
-
-Warehouse saturation advanced without promoting asset maturity. `TrilogyAssetCandidateQueue.json` now includes concrete Quaternius animation/prop and Kenney world/fortification/nature/interior/UI support candidates already tied to official CC0 pack pages. `TrilogyAudioAssetCandidateQueue.json` now mirrors stage-authorized OpenGameArt CC0 prototype music/SFX candidates across Shire, Bree, Rohan and large-battle routing tests. `WarehouseAmbientCGAcquisitionBatchV1.json` is expanded into a trilogy-foundation material intake covering snow/ice, cave stone, wetland ground, white stone, volcanic/ash surfaces, industrial metal, Rohan pastoral surfaces, ruins and river/wet materials. AUTHORIZED_FOR_STAGING and STAGED remain distinct from READY_FOR_IMPORT / IMPORTED / INTEGRATED / ACCEPTED.
-
-Multi-region world-foundation preproduction is no longer a list of region names only. Every declared region from Shire through Grey Havens now carries explicit stock contracts for architecture, terrain/materials, vegetation/ecology, props, populations/factions, audio, lighting/atmosphere, VFX and traversal/collision, plus preferred warehouse source lanes. P1C01 remains the first assembled benchmark; later-film regions are explicitly PREPRODUCTION_ONLY and this work does not open Part II/III runtime chapters.
-
-Current code/runtime acceptance is unchanged by these warehouse/world-plan edits. No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED claim is made for the new head.
-
-## 2026-09-22 - failed-swap rollback transaction expanded to player-life state
-
-The integration repair wave now closes another source-level rollback gap. `ChapterWorldRouter` rollback snapshots already preserved quest, route/chapter/episode, NPC memory, exploration, progression, knowledge and player transform. They now also capture player health, stamina, resolve and supplies from `AShirePlayerCharacter`. During `RestoreCommittedWorldFromSnapshot`, those values are reapplied through `RestoreTransactionalPlayerState` after grounded placement succeeds and before world hold is released.
-
-Source-contract regression coverage now requires this full transaction ordering. This is still source/static work only: exact-head UE4.27 compile/runtime proof is required before the rollback requirement can be considered closed.
-
-No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED claim is made.
-
-## 2026-09-22 - world foundation work expanded beyond Shire
-
-P1C01 remains the first fully assembled visual benchmark, but production prework is no longer Shire-only. `Data/TrilogyWorldFoundationPlanV1.json` now tracks reusable world-foundation lanes for Bree, Weathertop, Rivendell, Caradhras, Moria, Lothlorien, Anduin/Amon Hen, Fangorn, Edoras/Meduseld, Helm's Deep, Isengard, Emyn Muil, Dead Marshes, Ithilien/Henneth Annun, Minas Tirith, Osgiliath, Minas Morgul, Cirith Ungol/Shelob's Lair, Pelennor, Paths of the Dead, Black Gate, Mordor/Gorgoroth, Mount Doom and Grey Havens.
-
-Each region has parallel architecture, terrain/material, vegetation/ecology, population/faction, audio, lighting/VFX and traversal/collision stock requirements. This is preproduction/warehouse foundation work only; it does not bypass runtime chapter gates for Part II/III.
-
-## 2026-09-22 - pooled visual fallback hardening
-
-The async living-world ownership wave now also resets every reused ambient actor to constructor-owned Engine primitive meshes before resolving role-specific production soft objects. This prevents a pooled NPC that changes regional role from retaining a stale Human/Elf/Hobbit mesh when a production asset is unavailable. Active density and streaming policy are unchanged. Exact-head CI/UE evidence remains required; no runtime verification claim is made.
-
-## 2026-09-22 - Resource Bible 09 operationalized into warehouse execution
-
-The project source `09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL` has now been converted into `Data/ResourceBibleSourceExpansionV1.json` and merged into `Data/GlobalWarehouseSourceRegistryV2.json`. Its source families now explicitly cover voice/TTS, music, SFX/field recording, visual/UI reference, 3D/models/scans, architecture, environments/materials, animation/mocap, LOTR-specific reference and AI creation tools. This preserves the Bible's own separation between personal-local candidate material, temporary/reference material and tools rather than flattening every website into an automatic production source.
-
-Concrete staging also widened beyond the previous Poly Haven/Quaternius/OpenGameArt lanes. ambientCG now has a public-API 2K-PNG material batch for timber, plaster, terrain, stone, bark, leather/fabric and roofing/cobble families, and Kenney now has an official-pack-page CC0 resolver for world/support stock such as fantasy town, castle, nature, furniture, building, dungeon, food, UI and background-character packs. Both are wired into the persistent Warehouse Stage workflow.
-
-These changes expand warehouse sourcing and STAGED stock only. They do not promote UE import, integration, visual/audio acceptance, or any COMPILE/PIE/device status.
-
-## 2026-09-22 - asynchronous living-world asset ownership
-
-The registered living-world synchronous production-load defect is now repaired at source level using the existing two-phase chapter streaming architecture rather than introducing another loader. `Data/ChapterAssetStreamingPlan.json` now explicitly places the ambient production surface, Hobbit/Human/Elf resident meshes, and chapter-used fauna meshes into the relevant soft chapter banks. Their lifetime is therefore owned by the resident `FStreamableHandle`, which remains alive until a replacement world successfully commits.
-
-`AShireAmbientNPC::ApplyVisualStyle` no longer synchronously `LoadObject`s production meshes or the production surface. It resolves only already-resident soft objects and keeps constructor-owned Engine primitive/material fallbacks when a production asset is unavailable. `LivingWorldDirector` likewise resolves its ambient motion production meshes from the resident bank instead of initiating synchronous package loads. This preserves the current async/no-game-thread-wait policy and does not increase active density.
-
-Exact-head static/CI validation is still required for this change. Runtime rendering and transition behavior remain unproven until matching UE4.27.2 evidence exists; no COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED claim is made.
-
-## 2026-09-22 - bounded ambient NPC pooling foundation
-
-The registered baseline SpawnActor/Destroy churn is now repaired at source level with lazy bounded reuse. `LivingWorldDirector` owns an ambient-NPC pool capped at 24 cached actors but does not preallocate it or change authored active-density targets. Baseline culling, chapter reset, and expired micro-events return ambient NPC actors to the cache when capacity is available; non-NPC event actors still destroy normally, and excess cached candidates are destroyed rather than growing memory without bound.
-
-`AShireAmbientNPC` now has an explicit deactivate/reactivate lifecycle that clears social/awareness/caption state, disables tick and visibility while cached, and fully reapplies routine role, prop, movement and lightweight needs state on reuse. Pooled actors are excluded from social-partner selection. This targets spawn/destroy churn while preserving the i7 Gen6 / 8 GB RAM / ~2 GB VRAM budget and does not increase world density.
-
-This remains source-only until exact-head validation runs. It is not COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
-
-## 2026-09-22 - ground-safe living-world ambient placement
-
-The next registered foundation defect is repaired at source level without increasing density. `LivingWorldDirector::SpawnAmbientActor` now proves blocking ground with a vertical visibility trace before spawning ground-bound ambient roles and separately grounds their routine endpoint. If the initial point has no blocking ground the spawn is rejected; if only the travel endpoint is unproven, the actor remains at its grounded start rather than walking toward an unsafe Z. Bird and butterfly roles retain their authored airborne placement, while rabbit and humanoid residents use the ground-safe path.
-
-This is a low-cost placement guard for the existing UE4.27.2 / low-spec architecture; it does not add navmesh cost or new population. Wall/obstacle avoidance and rendered placement quality still require runtime observation. Exact-head static validation must pass before the next lifecycle repair. No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED claim is made.
-
-## 2026-09-22 - failed world-swap rollback transaction repair
-
-The registered transition-persistence defect wave now includes a source-level rollback transaction repair. `ChapterWorldRouter` captures the last committed quest/route/world identity plus player transform after each successful world commit. If destination construction, grounding, or asset-bank commit fails, the pending request is cancelled, the prior logical state and builder are restored under a rollback guard, the player is grounded back at the committed transform, movement is released only after that succeeds, and a fresh `WorldRevision` is broadcast for the rebuilt committed world.
-
-This closes the known source-level gap where rollback rebuilt prior geometry but left movement held and logical/player state incoherent. It is **not** runtime closure yet: exact-head static validation is required next, and UE4.27 compile/PIE/device evidence remains separate. No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED claim is made.
-
-## 2026-09-22 - global warehouse source circle expanded and ranked
-
-The warehouse source registry is no longer a short-list. It now tracks a broader global source matrix with an explicit scoring/tiering policy so acquisition can widen without becoming chaotic. Newly added lanes include ambientCG, ShareTextures, KayKit, PolygonalMind CC0 releases, Poly Pizza, Gobkit, NASA 3D resources and supplemental HDRI sources. Tier A is reserved for clear, automatable, high-value sources; auth/marketplace sources are Tier B; supporting/niche sources are Tier C; ripped/unclear proprietary-port communities remain reference-only.
-
-The selection rule is intentionally not â€œdownload everything from every site.â€ For each warehouse slot, retain the best-fit one to three candidates based on visual fit, engine readiness, license clarity, format, performance, reuse breadth and source stability. This keeps the trilogy warehouse large but searchable and prevents duplicate low-value stock from consuming staging/storage time.
-
-## 2026-09-22 - warehouse runner execution-policy blocker repaired
-
-Warehouse Stage #18 reached the self-hosted runner and failed before any download because GitHub's `shell: powershell` wrapper attempted to dot-source its temporary script while the Windows service account has script execution disabled. The warehouse workflow now invokes each checked-in staging script from `cmd` using `powershell.exe -NoProfile -ExecutionPolicy Bypass -File`, matching the proven pattern already used elsewhere on the runner. This repairs the staging launcher only; actual staged-file counts remain pending the next exact-head Warehouse Stage run.
-
-Unreal Build #449 remains a separate pre-compile blocker: the same runner account is still denied read access to `WorldGridMaterial.uasset`. Pre-Unreal #614 succeeded on the same prior head. No compile/PIE/device/visual acceptance claim is made.
-
-## 2026-09-22 - multi-lane warehouse staging expanded
-
-Warehouse fill now runs as three concrete intake lanes on the integration train: Poly Haven CC0 environment/material stock, OpenGameArt CC0 music/foley stock, and Quaternius CC0 character/animation/fauna/world-kit discovery/staging. The audio lane contains direct OpenGameArt WAV/ZIP endpoints with source-page/license records and SHA256 receipt generation. The Quaternius lane resolves only public direct archives from official pack pages and records unresolved/store-only packs without fabricating download URLs.
-
-The warehouse workflow remains independent from UE4 compile/PIE. Staged assets remain STAGED until their category-specific intake validation passes; animated production characters still require real FBX rigs and hero-character visual acceptance is not implied by background/base packs.
-
-## 2026-09-22 - warehouse fill execution expanded beyond catalogue-only state
-
-The warehouse lane has moved into an actual staged-download implementation. `Data/WarehouseAcquisitionBatchV1.json` now contains a source-page-verified Poly Haven P1C01 material/prop batch covering wood interiors, dirt/path variants, plaster families, cobblestone, mossy stone and barrel props. `Scripts/stage_polyhaven_warehouse.ps1` now handles provider/API failures per asset instead of aborting the entire batch, records skipped reasons, and preserves successful downloads/receipts so one bad slug cannot stop warehouse growth.
-
-The dedicated `Warehouse Stage` self-hosted workflow remains separate from the UE4 build path. The current exact-head Pre-Unreal gate is green; runtime/PIE/device proof remains separate. No staged warehouse item is promoted to imported/integrated/accepted by this download infrastructure alone.
-
-## 2026-09-22 - persistent warehouse staging lane activated
-
-The asset warehouse is no longer catalogue-only. A dedicated `Warehouse Stage` workflow and `Scripts/stage_polyhaven_warehouse.ps1` now target a persistent self-hosted storage root at `C:\\actions-runner\\_warehouse\\ShireJourney`, independent from the blocked UE4 Engine Content build path. `Data/WarehouseAcquisitionBatchV1.json` defines the first CC0 Poly Haven material/prop batch with 2K intake and a hard byte cap; every staged file is intended to receive size/SHA256/source metadata in a local receipt before later import.
-
-The workflow listens to the integration branch, PR exact-head changes affecting the warehouse batch/scripts, and manual dispatch. Staging does not imply UE import, runtime integration or visual acceptance. Existing exact-head evidence remains: Pre-Unreal #603 succeeded on `2e7424c9c63c2bbdb419c4bed10e01ca5cbd282a`; the UE build path remains separately blocked by the self-hosted Windows account's Engine Content read permissions.
-
-No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED status is promoted by warehouse staging.
-
-## 2026-09-22 - Pre-Unreal #597 PG-078 warehouse-roadmap reconciliation
-
-Exact-head Pre-Unreal #597 on `f7ef04c4b36d6664bdb06324a9652f1572584f28` failed with four deterministic governance errors: `REQ-WAREHOUSE-001` and `WORK-PROD-011` were registered in ProjectGovernor but not yet assigned to the master roadmap, and the tracked unfinished/active snapshots were therefore stale. The warehouse requirement/work item is now assigned to B2 Characters & World Production and both snapshots are regenerated directly from the live Governor.
-
-Unreal Build #432 on that SHA again failed before C++ compilation because the self-hosted runner identity `NT AUTHORITY\\NETWORK SERVICE` was denied access to UE4.27.2 `WorldGridMaterial.uasset`. Warehouse catalogue/candidate/staging work continues independently under DEC-033; this runner blocker still prevents compile/PIE/device evidence.
-
-No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED status is claimed.
-
-## 2026-09-22 - warehouse testing boundary clarified
-
-The warehouse lane is now explicitly decoupled from runtime test availability. We do **not** wait for UE4 compile/PIE/device validation to discover, catalogue, download or stage trilogy assets. That work is intentionally parallel and may continue while the self-hosted runner is blocked.
-
-The engineering boundary is staged rather than test-free: raw stock must pass a lightweight intake gate before `READY_FOR_IMPORT` (file integrity, archive/malware hygiene, correct format, units/scale, naming, texture packing/dimensions, topology/UV/skeleton/animation sanity where relevant, plus provenance/metadata). UE4 import/build evidence begins at `IMPORTED`; runtime/PIE evidence begins at `INTEGRATED`; visual/audio/device acceptance is required only for `ACCEPTED`.
-
-This rule is durable as `DEC-033` and hard invariant `INV-WAREHOUSE-STAGING`. It prevents runner outages from starving the asset warehouse without turning the warehouse into an untrusted file dump.
-
-## 2026-09-22 - first concrete trilogy asset candidate queue seeded
-
-Warehouse-first production moved from catalogue-only planning into concrete sourcing. `Data/TrilogyAssetCandidateQueue.json` now contains the first official-source candidates: CC0 Quaternius rigged/background character, fantasy outfit, medieval village, modular ruins, nature and farm/animated-animal packs, plus Poly Haven high-fidelity barrel and wood/stone/mossy PBR material lanes. These are candidates, not automatic final hero art; low/stylized packs are explicitly limited to supporting/background/pipeline roles where appropriate.
-
-The next sourcing pass is deliberately aimed at the remaining high-value gaps: realistic hero humanoid bases, non-stylized rural/medieval architecture, photoreal biome libraries, rigged hero creatures, professional animation libraries and the approved audio-bank lanes. No candidate is called INTEGRATED or ACCEPTED until an actual asset is acquired/imported and earns the required evidence.
-
-## 2026-09-22 - trilogy warehouse-first production plan activated
-
-The owner explicitly changed the production emphasis: final-looking characters, world art and audio may no longer remain vague downstream gaps while backend/governance continues to grow. The project now has a machine-readable trilogy warehouse at `Data/TrilogyProductionAssetWarehouse.json` and a new Governor requirement `REQ-WAREHOUSE-001`, decision `DEC-032`, and active work item `WORK-PROD-011`.
-
-The first-pass catalogue spans all three films: major and supporting named characters, population/faction families, 28 major location slots with state variants, cultures, creatures/fauna, battles, weapons/artifacts, material families, architecture/props, animation families, audio, cinematic/VFX and UI support. The supporting-cast layer was seeded from the supplied trilogy screenplay speaker pass; the world/culture/creature layers were grounded in Sources 03/04/05 and Source 11.
-
-Important proof boundary: the catalogue is now broad enough to prevent forgotten categories, but this is not a claim that all final binary assets already exist. `CATALOGUED`, `READY`, `APPROVED`, `INTEGRATED` and `ACCEPTED` are intentionally separate states. The immediate production target is P1C01 as the first complete natural-looking vertical slice while Part II/III asset-bank preparation proceeds in parallel.
-
-No new COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED claim is made by the warehouse plan itself.
-
-## 2026-09-22 - cinematic audio sourcing directive registered
-
-The owner-forwarded audio-engineering message is now durable repository state. The project already has `UShireAudioSubsystem` routing, ambience/music crossfades, voice ducking and speaker-attachment rules in `Part1SonicWorldPlan`; the major missing layer is authored final audio content. `Data/AudioAssetSourcingWaveV2.json` now defines the offline bank strategy for voice, music, ambience/fauna, foley and creature/combat audio, plus 3D spatialization, concurrency and low-spec profiling requirements.
-
-ElevenLabs, BOOM Library and Pro Sound Effects are registered as candidate production sources subject to exact authorization/license/entitlement. LOTR Complete Recordings, Blu-ray center-channel dialogue and classic EA LOTR game audio are stored as reference-only unless separately cleared. This prevents source discovery from being lost while keeping the Approved bank deterministic and auditable.
-
-No final voice/music/SFX asset, mix acceptance, PIE/device audio acceptance or new COMPILE-TESTED claim follows from this registration.
-
-## 2026-09-22 - cinematic asset-source shortlist expanded
-
-The owner-forwarded asset-manager message has been registered rather than kept in chat memory. `Data/ExternalAssetManifest.json` now stores DeviantArt 3D/XNALara ports, SFMLab, Open3DLab, Nexus Mods and ArtStation Marketplace as additional cinematic-quality discovery/review sources, alongside the already tracked CGTrader, TurboSquid, Sketchfab, Quixel/Fab and legacy Unreal Marketplace paths.
-
-The private/non-distributed project intent and exact-film visual target are recorded, but discovery is not automatic approval: ripped/ported proprietary film or game assets still require explicit item-level reuse rights/provenance before entering `SourceAssets/ExternalLicensed/Approved`. The project should still aggressively search these sources for legal high-quality bases, original artist work, reusable marketplace items, commissions and environment/material packs so the visual warehouse can be filled without reverting to low-detail placeholders.
-
-## 2026-09-22 - Pre-Unreal #578 character-guard reconciliation
-
-Exact-head Pre-Unreal #578 passed its core structural phase, then reported four character handoff guard failures because PG-051/PG-089 still required the removed synchronous package-probe symbols inside ShirePlayerCharacter/ShireNPC. The V7 runtime now owns heavy rig paths in ShireChapterAssetStreamingSubsystem and requests them with FStreamableManager::RequestAsyncLoad.
-
-The guards are updated to protect the new architecture instead of restoring the obsolete LoadObject/FPackageName path: player/NPC fallback and motion symbols remain required; the streaming subsystem must expose RequestCharacterRig/ResolveCharacterRig, SK_/ABP naming and RequestAsyncLoad; and the player path is explicitly rejected if synchronous USkeletalMesh/UAnimInstance loading returns.
-
-This is a static-validator reconciliation only. No final character art is claimed and no COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED status is promoted.
-
-## 2026-09-22 - exact-head runner retest preparation: duplicate EndPlay regression fixed
-
-Pre-Unreal #576 on `c9a0eaafc273aeaa2fd1a0fb0aa0f41903a0c2a8` stopped in static validation with one concrete source error: `Unbalanced braces in ShirePlayerCharacter.cpp: balance=1`. Inspection found a duplicated `AShirePlayerCharacter::EndPlay` function signature introduced while wiring async character-rig delegates. The duplicate declaration/opening brace is removed; no intended gameplay behavior is changed by this correction.
-
-The same exact head's Unreal Build #411 proved the Windows self-hosted runner is online and executing the workflow, but it still stopped before C++ compilation because the runner identity `NT AUTHORITY\\NETWORK SERVICE` received access denied reading UE4.27.2 `WorldGridMaterial.uasset`. A new exact-head workflow run is required to determine whether the laptop-side permission state has changed since #411.
-
-No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED status is claimed by this source fix.
-
-## 2026-09-22 - persistence/world-commit repair wave started
-
-After Pre-Unreal #564 turned green on `685dc63ff94fec0a1f6b3d57d60fce3bffcde31d`, the integration train moved to the first registered runtime defect wave instead of opening new features. Transition checkpoint capture no longer clears and saves on the next player Tick unconditionally. It now waits until `ChapterWorldRouter::IsWorldCommitted` confirms the current chapter/route/episode identity, so an asynchronous preload cannot produce a destination chapter snapshot with a source-world transform.
-
-Cross-chapter save restore is also changed from immediate teleport to deferred committed-world placement. `AShirePlayerCharacter` stores the saved transform and identity, waits for the matching committed world, and asks `AChapterWorldRouter::PlacePlayerAtCommittedTransform` to ground the saved XY location against destination geometry before teleporting. The initial P1C01 checkpoint is routed through the same commit barrier.
-
-This is a source implementation wave only. It has not yet earned UE4.27 compile or runtime proof, and the failed-swap rollback transaction is still open. Unreal Build #399 is still expected to encounter the separate runner Engine Content permission blocker unless that machine permission changes. No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED claim is made.
-
-## 2026-09-22 - Pre-Unreal #562 stale streaming-cancellation test repaired
-
-Exact-head Pre-Unreal #562 on `830b986d36d2563d11d7b3ed18c94b64e6741090` passed the core validator, Project Governor and Deep Project Audit, then failed one source-contract unittest in `Scripts/test_streaming_cancellation_contract.py`. The test still expected `ResidentHandle = PendingHandle` inside `HandleAsyncLoadComplete`, which contradicts the integrated two-phase streaming contract: async completion only reports preload readiness, while resident promotion belongs to `CommitPendingRequest` after world construction and grounding succeed.
-
-The regression test is updated to require the stale-serial guard before the preload-ready broadcast, explicitly reject resident promotion inside the async callback, and require `ResidentHandle = PendingHandle` only inside `CommitPendingRequest` after its readiness guard. Runtime streaming code is unchanged by this correction.
-
-Unreal Build #397 on the same SHA again failed before C++ compilation because `NT AUTHORITY\\NETWORK SERVICE` could not read UE4.27.2 `WorldGridMaterial.uasset` across all six probes. No compile/runtime/PIE/device/visual status is promoted. The registered transition persistence/rollback/NPC lifecycle defects remain the next runtime repair wave once static validation is green on the exact new head.
-
-## 2026-09-22 - Pre-Unreal #561 deep-audit false regression isolated
-
-Exact-head Pre-Unreal #561 on `ed5af300852e6e2ce2264334c560af658250434b` reached `PRE-UNREAL CORE VALIDATION PASSED` and `PRE-UNREAL VALIDATION PASSED`, then failed in `Scripts/deep_project_audit.py` with one error: `async chapter streaming contract missing: FStreamableManager`. The streaming implementation is still asynchronous: `FStreamableManager` is declared in `ShireChapterAssetStreamingSubsystem.h`, while `FSoftObjectPath` and `RequestAsyncLoad` are used in the cpp. The audit had incorrectly required all three literal markers to appear in the cpp alone.
-
-The deep audit now validates the async contract across the subsystem header+cpp while still forbidding `LoadObject<` in the streaming cpp. This is a static-audit repair only; chapter streaming runtime behavior is unchanged. The Work-session persistence/rollback/NPC findings remain open and registered under `EXT-REV-2026-09-22-018`.
-
-Status remains **STATIC-PENDING** until a fresh exact-head workflow completes successfully. Unreal Build #396 is independent engine evidence and must be read on its own result. No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED claim is made by this audit change.
-
-## 2026-09-22 - Work-session playability audit reconciled and PG-117 guard repaired
-
-The owner-forwarded Work review was rechecked against integration head `170ebd857bece56a6d7f76f4928efe0eb3426af2` rather than copied into governance verbatim. The review identified current-source risks that remain open: next-Tick chapter checkpoint capture is not synchronized to asynchronous world commit; save restore may apply a saved transform before the matching world is committed; failed-swap rollback can rebuild the prior builder while leaving movement held and logical/player state un-restored as one transaction; ambient residents use approximate-Z placement with collisionless body meshes; and living baseline population still uses SpawnActor/Destroy plus direct LoadObject in ambient visual setup. These findings are now durable under `EXT-REV-2026-09-22-018`, and REQ-SAVE-001 is downgraded from IMPLEMENTED to PARTIAL until the transition/persistence contract is repaired.
-
-Two forwarded details were corrected rather than promoted: the indexed inventory reports 24 image files total, not 24 BMP files, with seven explicit Shire BMP paths visible in that inventory; and current Pre-Unreal diagnostics no longer stop at the historical #558 summary. Exact-head Pre-Unreal #560 on `170ebd857bece56a6d7f76f4928efe0eb3426af2` reported `PRE-UNREAL CORE VALIDATION PASSED` followed by one concrete failure: `PG-117 Part I visual current wave is not hero equipment V4`.
-
-That #560 failure is another stale historical guard, not evidence that the hero-equipment V4 assets disappeared. `Part1VisualProductionPass.current_wave` is now the V10 early-realm world/life wave, while the dedicated `hero_character_equipment_v4` historical block and CharacterProductionMatrix V4 character wave remain present. PG-117 is therefore changed to preserve the V4 historical asset contract without requiring V4 to remain the global current visual wave.
-
-This update changes governance/documentation and the static validator only; it does not yet modify the save/transition/NPC runtime defects above. Status remains **STATIC-PENDING** until a fresh exact-head Pre-Unreal run passes. Unreal Build #395 is a separate engine gate; no COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED claim is made here.
-
-## 2026-09-22 - PR #67 exact-head Pre-Unreal #558 failure isolated
-
-Exact-head Pre-Unreal run #558 on `809325a64547744f0cc4992d76c42fb7e0862d82` reached the project validator and reported exactly two static errors after validating 30 cpp files, 32 headers, 63 architecture entries, 32 quest definitions, 8 runtime chapters, 62 presentation cues and 50 dialogue sequences. Source inspection isolated both errors to the stale PG-111 guard: it still required the V9 world-life status and the old fixed half-density implementation marker after the integrated branch intentionally advanced to V10 chapter density profiles and `DangerPopulationFraction`.
-
-The repair updates PG-111 to protect the V10 plan identity/status, require bounded per-chapter density profiles, preserve the P1C05/P1C06 civilian-empty and P1C08 bird-only rules, and assert the chapter-driven danger-thinning runtime path rather than the removed fixed-halving string. This is a validator-contract repair; it does not change LivingWorldDirector runtime behavior.
-
-Unreal Build #393 on the same SHA failed earlier than compilation: the UE4.27.2 preflight ran as `NT AUTHORITY\\NETWORK SERVICE` and received access denied while opening `C:\\Program Files\\Epic Games\\UE_4.27\\Engine\\Content\\EngineMaterials\\WorldGridMaterial.uasset` on all six probes. The workflow remains fail-closed. This is not C++ compile evidence. Current integration status remains **STATIC-PENDING** until a new exact-head Pre-Unreal run passes, and it remains **NOT COMPILE-TESTED / NOT PIE-TESTED / NOT DEVICE-TESTED / NOT VISUALLY-ACCEPTED** until the engine-runner access blocker is repaired and the corresponding gates execute.
-
-## 2026-09-21 - continuous transition audit integrated
-
-The comprehensive integration branch now includes a same-session transition audit across P1C01-P1C08, FrodoMain/GandalfParallel route changes, committed-world/living-world revision agreement and a disk-save roundtrip. Separate chapter boot success is no longer accepted as evidence for continuous transition integrity. PG-124 protects the audit wiring while preserving the startup-grounding markers.
-
-This remains **IMPLEMENTED / STATIC-PENDING** until the exact integration head passes Pre-Unreal. UE4 engine execution remains a separate gate.
-
-## 2026-09-21 - comprehensive foundation integration train active
-
-The owner directed the project to stop accumulating isolated proposals/repair branches and resume coherent construction. The active convergence branch is now `integration/comprehensive-foundation-v1`, recorded by `REQ-INTEGRATION-001`, `DEC-031` and `WORK-INTEGRATION-001`.
-
-The branch currently integrates the startup-grounding/QA/performance stack with V10 regional living-world work and a stronger transactional transition model. Chapter asset streaming is now two-phase: preload completion does not replace the resident bank. `ChapterWorldRouter` freezes the player only at the swap boundary, constructs the destination, proves blocking-ground placement, commits the pending asset bank, then publishes a new `WorldRevision`. Failure does not publish a revision and attempts to restore the prior builder while keeping movement held.
-
-`LivingWorldDirector` now combines V10 chapter density/role profiles with committed-world synchronization. Quest state may move ahead while streaming, but destination residents/weather/context are not applied until the router publishes the matching committed revision.
-
-PG-123 statically protects the integrated two-phase asset/world/living-world contract. This is **IMPLEMENTED / STATIC-PENDING** on the newest integration code. It is not COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or visually accepted until exact-head gates run.
-
-## 2026-09-21 - visual-performance proposal adopted with measured guardrails
-
-A new programmer proposal for Witcher-class visual ambition with low-spec UE4.27 optimization was reviewed against the live architecture and promoted into durable project memory as `EXT-REV-2026-09-21-017`, `REQ-PERF-003`, `DEC-030` and `WORK-PERF-006`.
-
-Useful parts are active now: preserve soft/asynchronous heavy-asset ownership, HISM/ISM + explicit culling for repeated detail, non-ticking world builders, and no heavy synchronous work inside Tick. `Scripts/deep_project_audit.py` now protects those already-working architecture contracts and `Data/VisualPerformanceOptimizationPlan.json` records the staged optimization path.
-
-The proposal was not copied literally. Current generated chapter geometry makes blanket Lightmass inappropriate; Distance Field Shadows are not assumed cheaper on the ~2 GB VRAM target; World Composition will not replace the working ChapterWorldRouter/async-bank architecture without a measured topology need; LOD/material policies remain role- and profile-driven.
-
-This wave is **STATIC-PENDING** until the exact branch head passes Pre-Unreal. No FPS, VRAM, device, PIE or visual improvement is claimed yet.
-
-## 2026-09-21 - QA immune-system foundation implementation
-
-The first `REQ-QA-002` implementation wave is now in source on dependent branch `qa/automated-immune-system-v1`. `ShireJourneyEditorTools` contains two initial Unreal Automation Framework tests: `ShireJourney.QA.Save.DefaultState` and `ShireJourney.QA.Assets.StreamingBankPackages`. The first checks SaveGame schema/default invariants; the second checks that every soft-path package declared by `ChapterAssetStreamingPlan.json` exists after the production import step, without synchronously loading those heavy assets.
-
-`ci_run_project_automation.cmd` runs the suite through UE4Editor-Cmd and `parse_automation_report.py` rejects missing or failed required test results. The self-hosted workflow places this new engine-level layer after compile/import and before existing runtime startup/chapter/state audits.
-
-The P1C01 fall-through regression is also strengthened: placement now logs `PLACED`; CI only receives `ShireStartupGrounding: PASS` after two seconds with blocking ground, no falling movement mode, and bounded displacement. This prevents an immediate line trace from being mistaken for sustained grounding.
-
-Evidence boundary: **IMPLEMENTED / STATIC-PENDING** until Pre-Unreal runs on the exact head. No COMPILE-TESTED or PIE-TESTED claim is made.
-
-## 2026-09-21 - automated QA immune-system direction adopted
-
-The owner supplied a programmer proposal to expand CI into a broader automated QA immune system. The direction is adopted after live-repository review, with project-specific corrections recorded in `EXT-REV-2026-09-21-016`, `REQ-QA-002`, `DEC-029` and `WORK-QA-003`.
-
-The first implementation wave is deliberately dependent on the active startup-grounding repair rather than competing with it. It will add UE Automation Framework tests and an exact-head runner after compile/import, while preserving `runtime_smoke.py` as the end-to-end chapter/state layer. Deterministic authored probes replace random-point tests; target-device measurements will set memory/hitch thresholds; headless checks do not become visual acceptance.
-
-Status before code wave: **PLANNED / STATIC-PENDING**.
-
-## 2026-09-21 - deterministic P1C01 spawn support
-
-The startup-grounding repair now also removes imported-mesh collision from the first-frame dependency. P1C01 receives a hidden Engine BasicShapes collision pad centered at the authored start `(-2410,-120)` with its top at the authored road height. The larger hidden Shire collision foundation remains underneath the region. This means initial grounding can succeed even if the imported OBJ road/ground mesh has no usable generated simple collision.
-
-This remains a **FIX_CANDIDATE**. No claim is made that the owner-observed fall-through is resolved until exact-head engine validation and defect-specific P1C01 PIE observation pass.
-
-## 2026-09-21 - startup fall-through root cause and regression repair
-
-Owner reproduced a previously claimed startup fix as still broken: on first PIE launch the player can fall below the world. Source inspection identified the ordering defect. `AShireGameMode::BeginPlay` teleported the pawn to P1C01 coordinates immediately, while `AChapterWorldRouter` intentionally waits for asynchronous chapter asset streaming before spawning the Shire world. Raising the spawn Z did not close that race because there can still be no blocking ground under the pawn when gravity begins.
-
-The isolated repair branch `fix/startup-grounding-regression-v1` removes the GameMode pre-commit teleport. ChapterWorldRouter now holds initial character movement while the first bank streams, moves the pawn only after the builder commits, line-traces a blocking floor, places the capsule from the measured floor height, and releases movement only on success. Missing ground fails closed with `ShireStartupGrounding: FAIL` rather than allowing indefinite falling.
-
-Automation now requires a chapter-specific `ShireStartupGrounding: PASS` marker for normal startup, state audit and P1C01-P1C08 chapter audits. PG-121 rejects reintroduction of the old pre-commit GameMode teleport.
-
-Status is **FIX_CANDIDATE / STATIC-PENDING** until the exact branch head passes Pre-Unreal. It is not COMPILE-TESTED or PIE-verified. The self-hosted Unreal runner also has a separate local UE4 Engine Content file-access blocker that must be repaired before engine proof can complete.
-
-## 2026-09-21 - path cleanup before post-V5 production
-
-Authority remains `Data/ProjectGovernor.json`. The integration baseline is `develop` at `8d7247d229b5cd51e8aea5617e1e2030b38229bf`, green after PR #60 with Pre-Unreal #532 and Unreal Build #367. There is exactly one open production PR: #61, `production/chapter-streaming-v5`.
-
-The latest V5 code head before this cleanup is `b882b052a59c8d4e19437d7877dc30c9b1ea5daf`. Pre-Unreal #538 passed; Unreal Build #373 was pending when this reconciliation was written. Earlier V5 failures were narrowed to concrete UE4.27 issues and repaired: the `FStreamableHandle` declaration conflict (#370), invalid conditional `UE_LOG` verbosity (#371), and a stale async completion edge case after returning to an already resident world. This cleanup commit is newer than those checks and must earn fresh exact-head proof.
-
-The path is now explicit: finish V5 -> merge only after exact-head Pre-Unreal + full Unreal validation -> confirm develop returns green -> measure chapter seam hitch/streaming pool/resident memory on representative target hardware -> open the next short production branch. No V5 FPS/RAM/VRAM improvement is claimed from architecture alone.
-
-The next production branch is intentionally focused on visible world life rather than another mixed mega-branch: Shire, Bree, Rivendell and Lothlorien first for architecture density, culture-specific dressing, bounded NPC density, routines and ambient life. The character-quality lane advances through real skeleton/skin/Skeletal Mesh/AnimBP/animation work; OBJ-to-FBX container conversion alone is not treated as rigging.
-
-Repository hygiene was reconciled. PR54 and PR56-PR60 short branches are historical cleanup candidates after external-reference checks. `recovery/stached-charcter` and `repair/post-merge-unreal-339` are preserved. The scheduled "Develop 20-Min Validation" appearing under `main` is expected GitHub scheduler behavior because `main` is the default branch; that workflow explicitly checks out `develop` and does not change the rule that production work integrates through `develop`.
-
-## 2026-09-20 â€” V6 continuation and source/governor audit
-
-Authority remains `Data/ProjectGovernor.json`. Its previous handoff was stale at #303; the actual verified baseline is `cd58be1e1cea033295a163ef2a90985f30471c2b`, Pre-Unreal #484 and Unreal #319, including import/startup/eight chapters/state/save/warnings. V6 head `93092a82b95418552728c73e02d31c220a7457ac` passed Pre-Unreal #485. Unreal #320 attempt 1 was interrupted during UHT/build (Ctrl-C, -1073741510); this is not a demonstrated C++ code defect. The single rerun (attempt 2) was also interrupted, before compilation at the editor-wait step. The cancellation trigger is not established; no further blind reruns were requested.
-
-V6 refines original modular head/torso/hair geometry for nine Fellowship characters; it is not final skeletal animation or visual acceptance. Preserve that distinction.
-
-The Governor now validates exact SHA scope for baseline/current workflow evidence and prints when a checkout is not covered by the recorded snapshot. A successful ancestor cannot silently certify the current checkout. Six regression cases cover mixed SHA evidence, cancelled current runs, invalid green baselines and missing experiential boundaries.
-
-Uploaded source identities were verified against the reference index. Bible 09 now has its fingerprint. Targeted review of story, mission and visual-reference guidance confirms safe optional windows, explicit mission state/QA and the separation of visual inspiration from canon. The reference books' F1-xx identifiers do not equal runtime P1Cxx identifiers; numeric suffix matching is unsafe. Full scene-level provenance and rendered/device acceptance remain open. Green #319 still carries 132 unique near-zero-binormal identities under the existing 150 limit; passing the warning guard does not mean zero asset debt.
-
-## 2026-09-20 â€” final lightweight geometry-warning cleanup
-
-The green #302 baseline still carried 50 degenerate-tangent and 53 nearly-zero-binormal import identities. Inspection of representative production OBJ sources confirmed that these flat-color meshes have no `vt` texture-coordinate records. MikkTSpace therefore had no valid UV basis and was generating warning debt that did not improve the current material path.
-
-The production importer now detects untextured OBJ meshes and explicitly computes normals with UE4's built-in tangent generator while keeping MikkTSpace/default behavior available for any future OBJ that actually supplies texture UVs. The exact-head chain must prove the warnings are removed before the debt is marked fixed or warning ceilings are tightened.
-
-Two obsolete bootstrap/checkout PowerShell scripts are removed in the same cleanup because the workflow now bootstraps and checks out safely before repository scripts are available.
-
-## 2026-09-20 â€” warning evidence scope repair
-
-Run #300 confirmed the material persistence repair itself works: 225 authored material packages were explicitly saved with zero failures and the commandlet verified zero missing physical files. The warning gate remained red because import-time `LoadObject` existence probes intentionally asked for not-yet-created material packages, generating 216 warnings before synthesis.
-
-That is now corrected at both ends: importer probes use `FindObject` plus `FPackageName::DoesPackageExist` before any load, and missing-package debt is evaluated from runtime startup/chapter/state logs rather than the import log. Exact-head CI logs are also cleared before each run so stale evidence cannot contaminate a new SHA.
-
-The runtime missing-world-package ceiling is now zero. Any package that is genuinely absent after import will still fail the gate.
-
-## 2026-09-20 â€” exact-head material persistence final blocker
-
-Run #299 proved the entire machine chain through real UE4.27.2 build/import/startup, P1C01-P1C08 and isolated disk save/state roundtrip. The only failing gate is warning debt: 216 unique world material packages are referenced by imported meshes but are absent on disk.
-
-The importer already synthesizes the intended authored material instances. The repair now bypasses unreliable unattended editor save helpers for these packages and writes each package explicitly with `UPackage::SavePackage` to its deterministic `.uasset` path, then verifies physical file existence before the commandlet can report success.
-
-No threshold was raised and no debt was hidden. The next exact-head run must prove this repair.
-
-## 2026-09-20 â€” mega-wave runway repair
-
-The pre-production runway was repaired before the next mega build wave. REQ-AUDIT-001 is now represented in the master roadmap/tracked snapshot, PG-037 validates the new asynchronous checkpoint contract, and the Windows UE4 CI target now uses project-only clean intermediates, single-action compilation and CI-only disabled debug symbols to remove the recurring VS2019 D8050 debug-record failure mode. Local developer/editor builds retain normal debug symbols.
-
-This is preparation, not a green claim: the new exact head must still pass Pre-Unreal and the real UE4.27.2 compile/import/startup/eight-chapter/state/warning chain.
-
-## 2026-09-20 â€” deep exact-head validation reconciliation
-
-Exact head `c023a735e3e390b8d591e1f6df9d07aeaa054754` reached the strongest automated evidence chain so far: Pre-Unreal #450 passed, and Unreal Build Validation #285 passed the isolated MSVC probe, UE4.27.2 C++ build, production asset import, Python resolution, playable startup, every P1C01-P1C08 chapter audit, and the route/story/state audit with an actual isolated disk save/load roundtrip.
-
-The workflow failed only at warning-debt aggregation. Audit of the guard found a validation-harness defect: identical tangent/binormal warnings copied through multiple CI logs were counted repeatedly as separate debt. The guard now counts unique mesh/package identities and prints those identities. This does **not** waive real asset debt; it makes the next repair target exact instead of occurrence-inflated. The remaining world-package identities will be repaired from the next rerun.
-
-No rendered/PIE visual acceptance, FPS claim or Production 100 promotion is made from this machine evidence.
-
-## 2026-09-20 â€” MSVC execution blocker
-
-Runs 35500465321 and 35500597711 failed with MSVC D8050 (`failed to get command line into debug records`) across compilation actions, also on single-process retry. This has not yet tested the new disk-audit C++ code. The workflow now prepares a writable per-run TEMP/TMP and probes one-line C++ compilation with plain, /Z7 and /Zi settings before invoking UnrealBuildTool. These are job-local changes only; compiler failures remain failures and no debug verification is disabled.
-
-## 2026-09-20 â€” state fixture correction after eight chapter passes
-
-Run 35500242164 passed startup and all eight chapter audits. The state audit exposed an outdated test fixture: `StartExperience` correctly restores stored route progress, so calling it on the initial Frodo route did not advance to P1C03; the fixture also bypassed the activity reward entry point. The audit now explicitly starts P1C03, verifies the closed activity window rejects reward, opens `MidgewaterRoad`, verifies direct reward bypass is rejected, then completes the activity through its guarded API and verifies duplicate reward rejection. Required expected reward values remain unchanged. This fixes the test setup without weakening production story/reward guards. Full rerun remains required.
-
-## 2026-09-20 â€” close the disk persistence evidence gap
-
-The Python resolver repair passed on Windows and startup succeeded on `15e9d2228f6e7e5ceb1e8aed2aab8b698dba4cb8` ([run 35500242164](https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/35500242164)). Chapter/state checks were still running when this update was written.
-
-Source audit confirmed the existing route/state test did not write a save file. The new `disk-save-roundtrip` audit calls the production player snapshot/restore path, writes a unique CI save slot, mutates live quest/progression/knowledge/player values, loads from disk, verifies restored fields, and deletes only its own temporary slot. It checks health/stamina/resolve/supplies, transform, route/chapter/episode/character, quest stages, story beats, discoveries, progression and Chronicle/map knowledge. It is not yet full NPC-memory or cross-process migration coverage. The observer requires the disk marker for state success. CI runs cannot overwrite or load the owner's manual/checkpoint slots. Thirteen observer tests pass locally; real UE compilation and disk execution of this change remain pending.
-
-## 2026-09-20 â€” exact-head runtime validation repair
-
-Authority: `Data/ProjectGovernor.json`, including `session_handoff`.
-
-On `b0a4d2614e5744d8a0fa3b1c373c23a491274955`, Pre-Unreal #446 passed. Unreal run [35499375838](https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/35499375838) built UE4.27.2 C++ and imported production assets successfully. Runtime audits did **not** execute: Python discovery selected a Microsoft Store alias and exited 61.
-
-The repair validates local interpreter candidates, excludes WindowsApps aliases, checks installed/launcher/toolcache/UE-bundled interpreters, and supports Python 3.7 in the observer. It neither installs software nor modifies Windows settings. State audit now has a separate log from startup. Twelve observer regression tests pass locally; Windows execution and full runtime proof remain pending the new CI run.
-
-Next: complete exact-head startup, all eight chapters and actual save/load proof; only then resume visible production. No new visual, performance or gameplay acceptance is claimed.
-
-## PHYSICAL SIDE-ACTIVITY GAMEPLAY WAVE â€” 2026-09-20
-
-B1 now includes reusable physical challenge gameplay instead of relying entirely on proximity discovery triggers. `AShireTraversalChallenge` implements an ordered three-gate route, verifies opening/closing story beats, awards only the linked first-time Journey Discovery, and therefore feeds the existing Chronicle/map/progression systems without changing FILM_CORE.
-
-The Shire field race now uses the ordered route and completes `Side_SharedShireMemory` only after the route. Moria's `MORIA_ECHO_ROUTE` now uses the same mechanic for Follow the Echo before MoriaUnease closes the optional window. PG-081 guards both runtime placements.
-
-This is implementation evidence; exact-head UE4.27 compile, runtime placement and PIE pacing remain required.
-
-## CHRONICLE + MAP KNOWLEDGE + SIDE-ACTIVITY PROGRESSION MEGA-SLICE â€” 2026-09-20
-
-B1 expanded again from plan-only into persistent runtime. First-time Journey Discoveries now create main-film Chronicle entries and mark the current route/chapter as known map knowledge. Both collections persist through save schema v6. Book Chronicles remain explicitly separate and are not inserted into this main-film runtime registry.
-
-The C key now opens a Chronicle & Journey HUD panel showing recent Chronicle entries, known regions, Journey Insight and all seven progression tracks/ranks. Contextual side activities are also parsed at runtime: when a linked first-time discovery completes, its authored activity type adds bounded XP (for example CAMP_PREPARATION -> CAMPCRAFT, TRACKING/OBSERVATION -> PERCEPTION, SOCIAL_MEMORY -> FELLOWSHIP). Anti-farm behavior remains first-time-only.
-
-State automation now requires `ShireStateAudit: knowledge-core=PASS`, and PG-080 checks save/UI/input/continuity/side-activity wiring. Exact-head UE4.27 compile/import/startup/state evidence remains required before engine validation is claimed.
-
-## PLAYER-LIFE + PROGRESSION RUNTIME MEGA-SLICE â€” 2026-09-20
-
-B1 modern-game work is now runtime, not only planning. The player has lightweight Stamina, Ring-pressure-sensitive Resolve and capped travel Supplies alongside Health. Sprinting drains/rebuilds Stamina; damage and Ring pressure affect Resolve; R consumes one supply only when recovery is useful. No hunger/thirst timers, gear score or random rarity loop was introduced.
-
-Seven persistent progression tracks now exist: WAYFINDING, PERCEPTION, QUIET_STEP, CAMPCRAFT, FELLOWSHIP, LORE and RESOLVE. First-time Journey Discoveries award track XP by category, so repeated discovery cannot farm progression. Fellowship Bond is derived from the FELLOWSHIP track. Save schema v5 persists life state and ProgressionXP.
-
-PG-079 guards the full contract and state-mode automation requires `ShireStateAudit: progression-core=PASS`. Exact-head UE4.27 compile/import/startup/state proof is still required before this becomes engine-validated.
-
-## MASTER EXECUTION CONTROL â€” 2026-09-20
-
-The growing request set is now consolidated into `Data/MasterExecutionRoadmap.json` and the human board `Docs/MASTER_EXECUTION_BOARD.md`. The roadmap is subordinate to the Governor and maps every unfinished requirement plus every ACTIVE work item into large dependency-ordered production bundles. PG-078 makes orphan accepted work a static-validation failure.
-
-Execution order is now explicit: exact-head stability; Part I story/gameplay completeness; production characters/world; living-world/presentation; acceptance/merge; then source-verified Part II/III. Active work items have unique execution ranks/bundle labels so the project no longer behaves like a flat unordered list.
-
-## FILM SIDE-CONTENT MASTER AUDIT â€” 2026-09-20
-
-The owner supplied a programmer proposal covering trilogy-wide side play and asked for one reconciled, future-proof request set. `Data/FilmSideContentMasterPlan.json` is now the side-content master taxonomy: FILM_MOMENT = verified film action turned into gameplay; FILM_EXPANDED = small plausible play around an existing film scene/place; CHRONICLE = book-only/history/past-character content kept visibly separate from Film Main Canon.
-
-The audit also records continuity corrections: Fellowship does not literally begin at the birthday party; Weathertop fire cannot prevent the Nazgul attack; Prancing Pony attention cannot avoid the Ring incident; Moria's door is a guided canonical puzzle; Entmoot side play cannot replace the film decision causality; Oliphaunt observation does not grant a canon-breaking future weakness; Return of the King's beacon prototype centers on Pippin lighting the Minas Tirith beacon; Glorfindel/Scouring stay Chronicle-only.
-
-PG-077 guards taxonomy/canon separation. Runtime rollout remains behind the current exact-head UE4.27 validation gate.
-
-## SIDE-CONTENT CANON AUDIT â€” programmer proposal reconciled
-
-The programmer's trilogy proposal is retained but normalized into four continuity classes: FILM_CORE, FILM_EXPANDED, FILM_INTERSTITIAL and BOOK_CHRONICLE, with source-verification tracked separately. The audit corrects one important opening claim: Fellowship does not begin at Bilbo's party; the prologue and Bilbo/Frodo-Gandalf opening precede it.
-
-Part I and Part II entries are now source-audited against the supplied screenplays/project canon where available. Part III remains FUTURE_SOURCE_CHECK at scene level. Book-only Tom Bombadil/Barrow-downs, Glorfindel-at-the-Ford and Scouring content is explicitly isolated from main film continuity. PG-077 protects this separation.
-
-## ENSEMBLE FILM MISSIONS â€” 2026-09-20
-
-Frodo remains the Ring-quest center, but the film itself now decides who should be playable for each event. `Data/EnsembleFilmMissionPlan.json` maps Gandalf, Arwen, Aragorn, Boromir, Legolas, Gimli and later Merry/Pippin/Sam/Faramir/Eowyn opportunities. The design rule is film action first, character-specialty gameplay second, small original gap-fill last.
-
-Part III mission details remain source-check-only until exact film/script verification. PG-076 guards the ensemble contract.
-
-## ENSEMBLE FILM-MISSION RULE â€” 2026-09-20
-
-The owner clarified that the film itself already supplies many mission opportunities outside Frodo. Frodo remains the Ring-quest center but is no longer treated as the default controller for every event. `Data/EnsembleFilmMissionPlan.json` now prioritizes playable film actions for Gandalf, Arwen, Aragorn, Boromir, Legolas, Gimli, Merry/Pippin and later-film characters, then allows only small source-safe gap-fill around those verified scenes.
-
-Part I now explicitly identifies Gandalf Ring investigation/Isengard, Arwen at the Ford, Boromir training and Amon Hen defense, Legolas scouting, Gimli/Moria cultural gameplay and Aragorn scouting/leadership as viewpoint opportunities. Part II maps the Three Hunters, Merry/Pippin/Fangorn, Gandalf/Rohan and source-checked Faramir/Eowyn focused episodes. Part III remains FUTURE_SOURCE_CHECK at mission-detail level until exact film/script verification is available.
-
-PG-076 protects viewpoint/source/canon rules. This is a production/design contract; runtime mission handoffs and character-specific mechanics remain pending implementation and UE4.27 proof.
-
-## MODERN GAME LAYER LOCKED â€” 2026-09-20
-
-The owner explicitly requested a broad modern-game research pass and adoption of fitting game systems throughout the film-based experience. `Data/ModernGameLayerPlan.json` now locks the rule: mandatory Peter Jackson film anchors stay fixed, while optional play may expand only inside story-safe gaps.
-
-The plan adapts modern design patterns - meaningful exploration rewards, short world events, semi-open chapter hubs, companion dialogue during free play, earned map knowledge, environmental/traversal puzzles and reactive inhabitants - into original Middle-earth gameplay. Character life is also defined beyond a health bar through bounded Stamina, Resolve, Fellowship Bond and Supplies, with progression in Wayfinding, Perception, Quiet Step, Campcraft, Fellowship, Lore and Resolve. Survival micromanagement, gear-score grind, loot spam and canon-changing upgrades are explicitly excluded.
-
-P1C01-P1C08 plus P1G01 now each have chapter-specific optional activity families while fixed film outcomes remain mandatory. PG-075 guards this contract. Runtime rollout remains staged and exact-head UE4.27 evidence is still required before any implementation is called validated.
-
-## JOURNEY DISCOVERY RUNTIME MEGA-SLICE â€” 2026-09-20
-
-Journey Discovery has moved beyond a static design contract. The existing quest subsystem now owns a data-driven first-time discovery registry loaded from `Data/JourneyDiscoveryRewardPlan.json`; all 26 current Part I discoveries are wired into Shire, Bree, P1C03-P1C08 and Isengard world triggers with explicit opening/closing story-beat windows. Rewards derive Journey Insight, region-completion bonuses and milestones without changing required story state.
-
-Discovery IDs/Insight/milestones now persist through the existing save/load path with sanitation on restore. A dedicated HUD discovery card presents the first-time reward separately from combat/error alerts. State-mode automation also requires `ShireStateAudit: discovery-core=PASS`, proving a discovery cannot be farmed by repeat activation and survives the Frodo/Gandalf/Frodo route roundtrip in subsystem state.
-
-This remains implementation evidence until the exact current PR head passes real UE4.27 compile/import/startup/chapter/state validation.
-
-## MEGA-PASS RED-TO-GREEN REPAIR â€” current exact head
-
-Intermediate head `5699ef0` passed Pre-Unreal Validation #348. The previous Unreal engine attempt reached real compilation and exposed a UE4.27-specific incompatibility in the new non-destructive production importer: `IFileManager::CopyDirectoryTree` is not available there. The importer now keeps the same safety design but uses UE4.27-compatible `IPlatformFile::CopyDirectoryTree`.
-
-The current exact head is intentionally still pending validation. No merge, compile-success, import-success or visual acceptance is claimed until the new head completes the full gate.
-
-## MEGA PRODUCTION BATCH â€” RING / CHARACTERS / CINEMATIC WORLD â€” 2026-09-20
-
-The owner closed Unreal and ordered immediate large-scale continuation. This batch turns three previously discussed directions into durable production contracts. The One Ring is now a CRITICAL systemic axis with a runtime bearer/state/pressure API and a headless route-roundtrip audit requirement. The full Part I named cast is now tracked through a model â†’ material â†’ rig â†’ skin â†’ animation â†’ UE4 â†’ LOD pipeline with provenance rules and a custom-character fallback. Every active Part I region now has a cinematic hero-vista and layered foreground/midground/background target based on the owner's dense forest reference.
-
-New production authorities: `Data/TrilogyRingQuestPlan.json`, `Data/CharacterProductionMatrix.json`, `Data/CinematicWorldProductionMatrix.json`, and `Data/OwnerSourceReferenceIndex.json`. Static guards PG-070 through PG-073 protect the new contracts.
-
-Proof boundary remains strict: these are source/data/runtime implementation changes. They are not yet UE4.27-validated or visually accepted until the exact PR head passes Pre-Unreal and real engine validation.
-
-## WORLD BEAUTY BAR RAISED â€” 2026-09-20
-
-The owner rejected the earlier plain reference-image quality as the final target. The project now explicitly targets a more beautiful cinematic world: layered vistas, richer terrain/materials/vegetation, stronger water/fog/light atmosphere, hero landmark composition and region-specific visual identity. This does not relax the target-device budget; the visual strategy is selective hero detail plus LOD/instancing/culling so 720p Low-Medium / 30 FPS remains the floor target.
-
-## CONTEXTUAL SIDE-PLAY CONTRACT â€” film story stays fixed, game expands between scenes
-
-The owner reaffirmed the core rule: this remains the Peter Jackson film story. Original side content is allowed only as plausible off-camera gap-fill inside the same time, location, companions, knowledge and emotional/danger context. `Data/ContextualSideActivityPlan.json` now defines 18 optional mini-game/social/exploration activities across FrodoMain P1C01-P1C08 plus GandalfParallel P1C01.
-
-Examples include Shire party errands and a friendship race, Bree observation/tracking, Strider trail-reading, Rivendell map/memory moments, Fellowship camp practice, West Gate stone observation, Moria echo navigation, Lothlorien grief/boat preparation, Anduin river reading, Amon Hen tension observation and Orthanc prisoner observation. Every activity is bounded between exact film story anchors, forbids future knowledge, cannot advance a required anchor, and yields only the existing Journey Discovery/Chronicle/dialogue-memory rewards.
-
-PG-063 now guards those constraints statically. Runtime side-activity triggers, save/UI wiring and UE4.27 play validation remain pending; the exact-head merge gate is unchanged.
-
-## JOURNEY DISCOVERY SYSTEM â€” exploration now has persistent game rewards
-
-The owner requested the satisfying feeling of discovering a place and receiving a bonus, similar in spirit to exploration RPGs, but adapted to this world's tone. `Data/JourneyDiscoveryRewardPlan.json` now maps 26 declared optional discoveries to first-time Journey Insight rewards. Rewards prioritize Chronicle entries, map memory, lore/dialogue topics, companion memories and local hazard knowledge rather than generic combat-stat inflation.
-
-Four thematic tracks keep the system in-world: Road Wisdom, Peoples and Places, Fellowship Bonds and Peril Sense. Every active Part I exploration route/chapter also has a region-completion bonus. Milestones unlock subtle navigation/content benefits, never story skips or alternate canon outcomes. PG-062 enforces one-time rewards, complete discovery coverage, no canon mutation and packaging.
-
-Runtime trigger/save/HUD/Chronicle wiring is still pending; this commit is a static/game-design contract while Unreal remains busy. Full acceptance still requires UE4.27 and save/load automation on the exact final head.
-
-## PARALLEL NON-UNREAL MEGA-PASS â€” shader-compile time used productively
-
-While the target machine is busy compiling shaders, CP56 continues with work that does not require interrupting the editor. `Data/ExplorationEnvelopePlan.json` now defines safe free-roam windows, optional discoveries and return-to-main-story behavior for FrodoMain P1C01-P1C08 plus GandalfParallel P1C01. PG-060 checks that optional exploration cannot reorder, advance or replace mandatory film-story anchors.
-
-The source-grounded original dialogue bank has also expanded from 26 to 53 validated variants across Shire, Bree, wilderness, Rivendell, Fellowship travel, Moria, Lothlorien, Amon Hen and Isengard. PG-061 locks in the production-import hygiene fix: OBJ normalization/import must operate on an ignored `Saved/` working copy rather than dirtying tracked `SourceAssets`.
-
-This is productive parallel work, not a merge bypass. The final PR #53 exact head still must pass Pre-Unreal plus UE4.27 compile/import/startup/chapter/state/warning validation before integration into `develop`.
-
-## CP56 SOURCE-GROUNDED LIVING DIALOGUE MEGA-PASS - 2026-09-19
-
-The owner-supplied Fellowship and Two Towers screenplay PDFs are now durable story/dialogue reference sources. `Data/FilmDialogueSourceContext.json` stores only derived context: source identity/hash, scene windows, route/chapter/story-beat progression, tone, safe topics and future-knowledge blocks. Runtime dialogue remains original and offline; raw screenplay passages are not shipped.
-
-Part I contexts cover P1C01-P1C08 plus Gandalf's Isengard route. The Two Towers source is indexed into future Part II arc seeds for Frodo/Sam/Gollum, the Rohan hunters, Merry/Pippin/Ents, Gandalf/Rohan and Saruman/Isengard, without claiming Part II runtime completion.
-
-PR #53 still requires exact-head Pre-Unreal and UE4.27 validation before merge.
-
-## CP56 MEGA INTEGRATION ACTIVE â€” whole-game coherence pass
-
-PR #53 is the single continuation path above PR #52. The mega batch is tracked by `REQ-MEGA-001`, `WORK-MEGA-001`, `Data/CP56MegaIntegrationPlan.json` and `Data/GameCompletenessMatrix.json`.
-
-Current runtime expansion now reaches named-character behavior, not just data: companion spacing and catch-up respond to regional pressure, named profiles expose a personality-aware emotional state, free interactions choose mood-aware intents with deterministic greeting fallback, and authored regional dialogue covers Shire peace, Bree suspicion, pursued wilderness, Rivendell refuge, Fellowship pressure, Moria dread, Lothlorien grief/refuge, Anduin fracture and Isengard corruption. All shipped logic remains offline and subordinate to story, knowledge and memory gates.
-
-This does not claim final rigs, voice, materials, device performance, cinematic acceptance or trilogy completion. The merge gate is unchanged: the current PR #53 head must pass Pre-Unreal plus the complete UE4.27 compile/import/startup/chapter/warning chain before develop integration.
-
-## CP56 continuation â€” contextual companion dialogue, 2026-09-19
+YªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éíÛ]ûãDèµ©hºÚn¶X§zÍLŒ‹LLLMTËLˆÐSQTKQU’QSÑH“ÓÕPÐUTÑHT“ÈPÐQHÓÔ”‘PÕSÓŽˆ[œÜXÝY™YHXÝX[QMŒËŒˆLŽÌŒ‘ÜÈœ›ÛH[ˆÎMŒÌÌŒMÍ\Y˜XÝLNLŒNMML‹ÒLMˆšY]ÌÌLŽŒQMPMÎÌÐ‘QMPÐÑŽPQMPŒŒMÌÐŽLMÍŒÐPÐNLŒŽÈšY]ÌHQNLÌÍŽPŒMÎQNLQ‘LŒ‘LQLÍÍÌMÎNMQLQŒQÎLNQÌÎ‘‘HÈšY]Ìˆ‘Í‘MPMPLLNLÎÍÌLLÍQPŒŽÐŒÑPQÌPÍNLNPÎQLLŽÑPÐPŽKˆ™X[[XYÙ\ÈÚÝÈ™\ÝÜ™Y^\™\ËØÛÛÜˆ]Ý™\œÚ^™YÜ™Y[ˆ[Ý[™Y\È˜XØYK\È[œÙH›Ü™YÜ›Ý[™›ÞH™[˜Ù\ËÓ”ÜÎÈ›Èš\ÝX[XØÙ\[˜ÙKˆ›ØÝ\ÙYÊÊÈØ[™Y]HÚYÈÛ›H˜YÈ[™	ÜÈX\[Ý[™
+ÌŒÛH™Z[™]ÈÙ\ÝY˜XÚ[™È˜XØYK™YXÙ\ÈX\ÜËÚ]™\È\›È\™ˆ›Û˜›ØÚÚ[™ÈÛÛ\Ú[Û‹™]Z[œÈ^\Ý[™È›ØÚÚ[™È˜XØYKÜÝÜžH[˜ÚÜœË[™YÈH™XÛÙÛš^˜X›HÝËXÛÜÝÜ™Y[ˆ›Ý[™ÛÜˆÚ[ÝY]H[™Ý]XÈÛÝ\˜ÙH™YÜ™\ÜÚ[Û‹ˆ\È\ÈHØ[™Y]H[™[™È^XÝZXYZ[™]Èš\ÝX[[XYÙ\È[™™X[˜]™\œØ[ØÛÛ\Ú[Ûˆ]šY[˜ÙNÈ\ÚXØ[]]Ü™Y˜XØYHY\ÚÛX]\šX[[™\™Ù]Y]šXÙHÌ”ÈÝ[›ÝXØÙ\Yˆ›ÈTËLË‚‚ŒŒ‹LLLMTËLˆ’TÕPS‘PST•S•SQHQ‘PÕ‘TRTˆÐU‘Nˆ^XÝZXYˆÍÍÈ[ˆÎMŒMÌMÌL›Ý™YQMŒÈÊÊÈZ[LÛÝYLÎ™\ÝÜ™YX\ÜÙ]XÚØYÙ\Ë™YH]]ÛX][Ûˆ\ÝËXY\ÜÈÝ\\[[YHLŽÌŒ˜YÑ[™Y\™XÝYØÜ™Y[œÚÝÒLMˆPÍÑÎQNŒ‘ŽM‘ŽÌ‘‘MÑMÑÎÑQLŽŽLÑLÎMÌÑŒÌÌPNNLÍˆ[™L‹ÌLˆÜ›Ý[™Y˜YÈ[™ÛÝYLÎ›ÜËˆ[X[ˆ^[Z[˜][ÛˆÙˆXÝX[[XYÙH‘R‘PÕQš\ÝX[ˆ›ÝYÚÜ™^HZ[[™ÜËÝËY]Z[”ÜËX]š[HØØÛYY\›È˜XØYKˆHØÜ™Y[œÚÝÙÈ\™XÝHY[YšYYWÔ›ÙXÝ[Û‘›ÛXYÙHÚY\ˆY˜][˜[˜XÚÈYHÚ[\QÜ˜\ÜÕÚ[™™\]Z\™YY][Û˜[ÔÈZ\ÜÚ[™Ë[™›ÝWÔ›ÙXÝ[Û”Ý\™˜XÙKÓWÔ›ÙXÝ[Û‘›ÛXYÙH•\ÙYÚ][œÝ[˜ÙYÝ]XÓY\Ú\ÈZ\ÜÚ[™Ëˆ™\Z\ˆØ[™Y]H[ÙYšY\È^\Ý[™ÈQHY]Üˆ[\ÜX]\šX[X\Ý\œÈ
+[˜ÛY[™È\œÚ\ÝY\ÜÙ]ÊHÈYX[™]ÜžHY][Û˜[ÔÈ™\›È[œ][˜X›H[œÝ[˜ÙYX]\šX[\ØYÙKØ]™HÚ[™ÙYX\Ý\ˆX\ÜÙ]ÈØ\\™\È™YH˜YÈ[™[™Û\ÈÈ]›ÚYXØÙ\[™ÈHZ\ÛXY[™ÈØØÛ\Ú[Û‹ˆ\È™\Z\ˆ]\Ý™H™XÛÛ\[Y[™[œÜXÝYÛˆH‘UÈÚ[™ÝÜÈ[ŽÈ›Èš\ÝX[Ý˜]™\œØ[ÔQKÙ]šXÙHXØÙ\[˜ÙHÛZ[H[™TËLˆ™[XZ[œÈÔS‹‚‚ŒŒ‹LLLMTËLˆ“ÓÕPÐUTÑHÒH‘UTÕØ[™Y]NˆˆÍÍÈ^XÝZXYYŽYNÈ˜Z[Y™KU[œ™X[[ˆÎMŒMÌŽM]ËLMÌˆ™XØ]\ÙH™YHÚÞSYÚ™XØ\\™TÚÞJ
+HØ[Èš[Û]YH^\Ý[™È™XÚ\Ù[HÛËXØ[[˜\šX[ˆ›ÛÝXØ]\ÙHÚ[™ÙH[Ý™\ÈÝ\\™XØ\\™H^Û\Ú]™[HÈHY™\œ™YÛ™K\ÚÝÜÝ\ÚÞKZ[š][Y\‹™]Z[œÈH]]Ü™Y]Y\ÝÜÝÜžH™XØ\\™K™[[Ý™\È[[YYX]H\XØ]H[™YÈ^XÝÛÝ[™YÜ™\ÜÚ[ÛˆÈH›ØÝ\ÙYTÈÛÛ˜XÝ\Ýˆ›ÈØ]Hž\\ÜÎÈ™]\Ý™\]Z\™YˆQHZ[[ˆÎMŒMÌÌMLØ\ÈÝ[[ˆ›ÙÜ™\ÜÈ]XYÛ›ÜÚ\ËˆTËLˆÔS‹‚‚ŒŒ‹LLLMTËLˆ“ÓÕPÐUTÑHS‘ÐSQTKÓQÒS‘ÈÓÔ”‘PÕSÓˆÐS‘QUH
+PËTTËT“ÓÕLŒŒLM
+NˆÛÝ\˜ÙH]Y]Ùˆ]™[ÜÙŒØÌÈ›Ý[™š[ÜˆYÚ™\ÔÚÝ\ÙYHÜ™[˜\žH^Y\ˆšY]ÈÚ]Ý]Z[Z[™È]˜YÈ[™ÈH™XÙZ]™YLŽÌŒ[œ™X[[XYÙHÚÝÜÈ\šËÝ[œÛ\ÚY\˜Ú]XÝ\™H[™›ÈXØÙ\Y˜YÈ[™˜XØYKˆ\ÈØ]™HYÈÜZ[ˆ›ÛÙ‹[Û›H˜YÈ[™Ø[Y\˜KÙœ˜[Z[™ÈY\ˆ[[YHÛÜ›[š]X[^˜][Û‹[^YYØ\\™H[™ÝšXÝ‘ËÛÙËÙ[Y[œÚ[ÛˆÚXÚÜÎÈ˜Z\Ù\È˜\Ù[[™HÝ[‹ÜÚÞ[YÚÙ^ÜÝ\™H[™YÈY™\œ™YÚÞH™XØ\\™HÈY™\ÜÈ™[X]\™H[HÚÞH[[Z[˜][Û‹ˆHØ[Y\˜H\ÈØ]YžHTTÌ•š\ÝX[›ÛÙˆÝ]ÚYHÚ\[™È[™™]™\ˆ[Ý™\ÈHØ[Y\^H^Y\ˆÜˆÚ[™Ù\È]Y\Ý˜]‹”ÈÜˆØ]™HÝÛ™\œÚ\ˆ^XÝZXYÜÝYÝ]XË™X[QMŒËŒˆÊÊÈZ[[™H‘UÈØÜ™Y[œÚÝÝ˜]™\œØ[›ÛÙˆ]\ÝÝ[\ÜËˆ›È\ÚXØ[™]È–Ô‘ËÛX]\šX[[\Ü›Èš\ÝX[ÔQKÙ]šXÙKÝ˜]™\œØ[XØÙ\[˜ÙK[™›ÈØ]H‹ÍÈÛÜÝ\™H\™HÛZ[YYˆXÝ]™HTËLˆ™[XZ[œÈÔSŽÈÈ›ÝÜ[ˆTËLË‚‚ŒŒ‹LLLMTËLˆ’TÕPSU’QSÑHTSS‘HØ[™Y]NˆYYØÜš\ËØØ\\™WÜ\Ì—Ø˜Y×Ù[™Ýš\ÝX[œÌHÈ][˜Ú™X[QMY]ÜˆYØ[YHÚ[™ÝÙYLŽÌŒ[™™\]Y\ÝYÚ™\ÔÚÝ˜Z[YˆØÜ™Y[œÚÝZ\ÜÚ[™ÈÜˆÛ›H“TˆÛÛ›™XÝYÜ[Û˜[˜Z[\ØY™H][\[™ÙËÚ[XYÙHXÝ[ÛœÈ\Y˜XÝÈ›ØÝ\ÙYÚ[™ÝÜÈ[œ™X[ÛÜšÙ›ÝËˆ\ÈÙ\È“Õ\ÜÙ\™[™\™YÝXØÙ\ÜËQK˜]™[\ˆØ[Y\˜H[YÛ›Y[š\ÝX[XØÙ\[˜ÙHÜˆ˜]™\œØ[ÈØÜ™Y[œÚÝ™]šY]È[™XÝX[]šY[˜ÙH[™[™ËˆÛÜšÙ›ÝÈØ\\™H\ÈÛÛ[YK[Û‹Y\œ›ÜˆÈ]›ÚY›ØÚÚ[™È˜[Y]YÊÊÈÛˆXY\ÜÈ\Ü^H˜Z[\™NÈØÜ™Y[œÚÝXœÙ[˜ÙHÝ^\ÈTËLˆÔS‹‚‚ŒŒ‹LLLMTËLˆ˜YÈ[™^\š[Üˆ›ÛÝË]\ˆÛÝ\˜ÙKX˜XÚÙY›Ý[™YTÓH\œ˜Z[‹YYÙH™\ÜÚ[™È\Ú[™È^\Ý[™È™\ÚY[›ÙXÝ[Û•\™“[Ý[™Y\Ú[™›ÙXÝ[Û”›ØÚÓY\ÚˆˆØ\™[ˆÛÜHYXÙ\È[™ˆÝ]\ˆ›Ü\HÝÛ™\Ë[[[Û˜[HÙ™œÙ]œ›ÛHHØ[ØX›HÛÜ‹Ü›ØYÛÜœšYÜ‹™\›ÈÛÛ\Ú[Ûˆ[™›È™]È˜]ËXÛÛ\Û™[\ˆ›ÜˆYY[[YHX\šÙ\ˆTÌ—ÐQ×ÑS‘ÕT”RS—ÑQÑH
+XÝX[[œÝ[˜Ù\ÈÈ™H™\šYšYY[ˆQJKˆ^\Ý[™È˜XØYH\Ù\È›ÙXÝ[Û’Ø˜š]˜XØYSY\ÚÚ[ˆ™\ÚY[È›È™]È[\ÜY\˜Ú]XÝ\™HÜˆXÚÙYX]\šX[ÛZ[KˆQKÜØÜ™Y[œÚÝÝ˜]™\œØ[[™Ø]H‹ÍÈÝ[[™[™ÎÈTËLˆÔS‹‚‚ŒŒ‹LLLMTËLˆ[YÜ˜]Y^\š[ÜˆØ[™Y]Nˆ™]\ÙY^\Ý[™È™\ÚY[›ÙXÝ[Û‘›ÝÙ\›ÞY\ÚšXH›Ý[™Y›ËXÛÛ\Ú[Û‹Û›Ë]XÚÈUÛÜ›]Z[Û\Ý\ˆTÓKZYÚ™]ÈÜ˜ÚØ\›ØXÚÜÚ][ÛœÈÝ]ÚYHš[X\žH›ØYØ^KÚ]TÌ—ÐQ×ÑS‘ÔÔÒÑ“ÕÑT”Ø[[YH™XÙZ\È›ÈÞ[˜Ú›Û›Ý\ÈX]žHØYË›È™]È”ÈÜ]ÛœË›È[œØY™HœšYÙHÛÛ\Ú[Û‹ˆÝ\ˆ™]š[Ý\ÛHY\™ÙY˜YÈ[™Ø\™[ˆÛÝYLÎ™\ÜÚ[™È™[XZ[œÈ™\Ù[ˆ\È\ÈH[™ÚX›H^\š[Üˆ[™ØØ\[™ÈY][Û‹›Ý›ÛÙˆÙˆ[\ÜY™]È\˜Ú]XÝ\™KÜXÚÙY”ˆÜˆXØÙ\YØÜ™Y[œÚÝÝ˜]™\œØ[ˆ^XÝZXYQMÛÛ\[KÜÝ\\[™XÝX[š\ÝX[Ý˜]™\œØ[]šY[˜ÙHÝ]Ý[™[™ÎÈTËLˆÔS‹Ø]H‹ÍÈÔS‹‚‚ŒŒ‹LLLMTÈÓ‘HÓÓTUHUÒÓÓ•PÕˆ™Y›Ü™HXXÚTÈ™YÚ[œË[œÜXÝÝ\œ™[]™[ÜPQ›Ú™XÝÛÝ™\››Ü‹Ø]\ËÛÝ\˜ÙKÝØ\™ZÝ\ÙKÕ[œ™X[™XÙZ\È[™Ú\\ˆØ[›ÛŽÈ[[Y\˜]HH[˜[YYÙ\ÜÚ[Ûˆ[]™\˜X›H[™]È^XÝ\ÜÙ]ËÊÊÈÚ[™Ù\ËXÙ[Y[›ØÝ\ÙY\ÝÈ[™Þ[˜Ú›Ûš^™YØÝ[Y[Ëˆ™\\™HÛ™HÛÚ\Ú]™HÛÛ\]HÚ[™ÙHØ]™H[™Û™HˆÚ[™]™\ˆXÚšXØ[HÜÜÚX›K›ÝH\˜YHÙˆ\X[ZXÜ›ËTœÈ™\]Z\š[™ÈÝÛ™\ˆ	ØÛÛ[YIËˆY\ˆÜÝYÛÝ\˜ÙKÜÝ]XÈ[™™XÙ\ÜØ\žH[œ™X[ÛÛ\[KÚ[\ÜÜÝ\\[‹™\Z\ˆ™\šYšYY˜Z[\™\È[ˆ›Ý[™YÛÜœ™XÝ]™HÛÛ[Z]È[™™]\ÝÈ[]™\ˆHÚ[™ÛH]šY[˜ÙKX˜\ÙYÙ\ÜÚ[Ûˆ™\ÜˆÙY\Û™H[œ™X[Üš]\‹ÛÛ™HØ\™ZÝ\ÙHÜš]\ˆ[™›Èœ›ØY]Y]ËÜXÚØYÙH[[Ú\\ˆÛÜÙ[Ý]ˆYˆZ\ÜÚ[™ÈXÝX[ØÜ™Y[œÚÝÝ˜]™\œØ[ÔQKÙ]šXÙH]šY[˜ÙK™[XZ[ˆÔSˆ[™™\Ü›ØÚÙ\‹›Ý˜ZÙHÛÛ\][™\ÜËˆ›È]]ÛX]XÈÛ™ÛÚ[™È˜XÚÙÜ›Ý[™ÛÜšÈ›ÛZ\ÙH™^[Û™H]™H^XÝ][Û‹‚‚ŒŒ‹LLLMTËLˆQÈS‘VT’SÔˆXÝX[ÊÊÈØ[™Y]Nˆ\]YH^\Ý[™È\Þ[˜ÈÛÝYLÎTÓHØ\™[”[\ˆ[™Ú[™ÝÑ›ÝÙ\›Þ[˜ÚÜˆ\œ˜^\ÈÈÛÛ˜Ù[˜]HLˆØ\Y›Û‹XÛÛY[™È[œÝ[˜Ù\È\›Ý[™™]š[Ý\ÛH\ÝX›\ÚY˜YÈ[™Ø\™[ˆÛÛÜ™[˜]\ÎÈ™\Ù\™H[ÛÝYLÎ˜[Z[Y\ËX^[][HXÙ[Y[ËÛÙ™Y™\™[˜ÙH\Þ[˜ÈÝ™X[Z[™Ë\œ˜Z[ˆ˜XÚ[™È[™ÝY\YÜ›Ý[™™Z™XÝËˆYYTÌ—ÐQ×ÑS‘ÑVT’SÔ—ÑÐT‘S—Ñ‘TÔÒS‘ÈÜ›Ý[™YOˆ™\]Y\ÝYLLˆÜ›Ý\ÏLˆÛÛ\Ú[Û[›Û™H\Þ[˜ÏLHš\ÝX[\[™[™ØX\šÙ\ˆ›Üˆ^XÝZXYQM\Ý]šY[˜ÙKˆ\È\ÈØ\™[ˆ™\ÜÚ[™ÈÛ›K“Õ^\š[Üˆ\˜Ú]XÝ\™KÝ\œ˜Z[‹Ô”ˆÛÛ\][ÛŽÈÓÓTSKUTÕQ[™[™ÈÚ[™ÝÜÈÒK™[™\™YØÜ™Y[œÚÝ[™˜]™\œØXš[]H[™[™Ëˆ^\Ý[™ÈÛÛÙ[‘›ÛÝœšYÙH™[XZ[œÈU—ÔUPTS•S‘Q‚‚ŒŒ‹LLLM‘KUS”‘PS“ÐÕTÑQTÈÒS‘ÑH
+ˆØ[™Y]JNˆY˜][™K][œ™X[ÜÝYÚXÚÜÈ™]Z[ˆ^XÝZXYÛÝ\˜ÙHÚXÚÛÝ]Û\ÜÚYšY\ˆ™YÜ™\ÜÚ[Û‹Ú[™ÝÜÈXÚØYÚ[™ÈØY™]HÛÛ˜XÝÝÙ\”Ú[Þ[^›Ú™XÝÝXÝ\˜[˜[Y][Û‹›Ú™XÝÛÝ™\››Ü‹ÛÝ\˜ÙK]ËU[œ™X[”ˆ[YÜš]KÛÝ™\››ÜˆÛÜšË\Ý\[™Ù[X[XÜËÝšXÝ\ÜÙ]]X[]H]Y]ˆÍHœ›ØY\ˆÜ›ÜÜËXÚ\\‹\ÝÜšXØ[›ÝšY\‹Ú\›ËØ\™ZÝ\ÙH™YÜ™\ÜÚ[Û‹Y\]Y][™™\Ü[™È\ÝÝ\È\™HY™\œ™YÈ^XÚ]ÛÜšÙ›Ý×Ù\Ü]ÚÚ\\—ØÛÜÙ[Ý]Ø]Y]Ï]YKÚ]Ý]\ØX›[™ÈÚ]Xˆ[œ™X[›ØÝ\ÙYÛÛ\[KÚ[\ÜÜÝ\\ÜˆØ]H‹ÍËˆ\È\ÈÒHØÚY[[™ÈÛ›K›ÝHÛZ[HÙˆ”ËÝš\ÝX[XØÙ\[˜ÙK‚‚ŒŒ‹LLLM‘T’Q’QQÑTÔÒSÓˆS”ÒUSÓˆ
+ÝÛ™\ˆ]]Üš^™Y
+NˆTËLH\ÜÙ]™XÛÝ™\žH	ˆ[\ÜHÓÓTUH›Üˆ]È›Ý[™Y[\ÜX[™\XÙ[Y[[]™\˜X›HÛ›KÝ\ÜYžHÚ[™ÝÜÈ[ˆÎLŽŽMMÈÛˆ]™[ÜLXXØŽXMYŽMÌ™LŒYL™NMLMŒYÍØ™ŽÍÎˆQMŒËŒˆÚ\™R›Ý\›™^QY]ÜˆZ[ÕPÐÑTÔÎÈÓÕQLÎÕQWÔ‘TÕÔ‘QÔÒLM—ÔTÔÈš[\ÏNLž]\ÏLNLÎMŒÈUUÓPUSÓ—ÔÕRUWÔTÔÈ\ÝÏLÎÈPÌHXY\ÜÈÝ\\TÔÈÛÝYLÎ˜[Z[Y\ÏNÜ›Ý[™YMØ\MˆTËLHQOY˜[ÙK]šXÙOY˜[ÙKš\ÝX[ØXØÙ\YY˜[ÙKÚ\\ˆØ]H‹ÍÈ™[XZ[œÈÔSŽÈ›È”ÈÜˆ[X[ˆ™[™\ˆÛZ[KˆÝÛ™\ˆ^XÚ]HY™\œÈ[X[ˆš\ÝX[™]šY]ÈÈTËL‹ˆTËLˆ˜YÈ[™^\š[ÜˆHPÕU‘K“ÕÓÓTUNˆ\˜Ú]XÝ\™KÙØ\™[‹Ý\œ˜Z[‹ÜXÚÙYT”ˆ[™XÝX[ØÜ™Y[œÚÝÝ˜]™\œØ[\™H]È™\]Z\™Y[]™\˜X›K›Ý[[ÛœÝ˜]YY]ˆ^\Ý[™ÈÓWÔÚÛÛÙ[‘›ÛÝœšYÙH™[XZ[œÈU—ÔUPTS•S‘QÈ›È[œÝ\ÜY˜]™\œØ[ÛZ[\Ë‚‚ŒŒ‹LLLMTÈ“ÐÕTÑQÒS‘ÕÔÈVPÕUSÓŽˆš^™]š[Ý\ÈX[X[[ˆÎLMÌLM[˜ÛÜœ™XÝHÛ\ÜÚYšYYÝ]XØ[™ÚÚ\Y[œ™X[ˆ™]È^XÚ]HÝÛ™\‹X]]Üš^™YÛÜšÙ›Ý×Ù\Ü]Ú[œ]\×Ù›ØÝ\ÙYÝ[œ™X[]YXÚ][—ÜÙ[—ÚÜÝY]YX›Ü˜Ù\ÈÛ\ÜÚYšY\ˆÛÜ™X
+QMY]ÜˆÛÛ\[K[\Ü\‹\œÚ\ÝYÛÝYLÎ™\ÝÜ™K]]ÛX][Ûˆ[™PÌHXY\ÜÈÝ\\
+HÚ[HXÚØYÙWÝÚ[™ÝÜÏY˜[ÙX\WØÛÜÙ[Ý]Ø\›Ý™YY˜[ÙXÙY\ÈÛÛÚËÔXÚØYÙH[™œ›ØY[XÚ\\ˆ]Y]ÈÙ™‹ˆ[[YH]šY[˜ÙH\È›ÝHš\ÝX[ØÜ™Y[œÚÝÔQHÛZ[KˆÝ\œ™[TËLHÔSˆ[[ÜXÚYšXÈ]šY[˜ÙH›Ý™\È]ÈÛÜÝ\™K‚‚ŒŒ‹LLLMÕÓ‘TˆÒH“ÕQÒUÓPÖH
+[\[Y[][ÛˆØ[™Y]NÈTËLHÔSŠNˆÜ™[˜\žHTÈ[œÈ™]Z[ˆX[™]ÜžH^XÝZXYÜÝYÜÝ]XÈÝX\™Ë™\]Z\™YÚ[™ÙYPÊÊÈQHZ[\ÜÙ][\ÜÜ™[Ü[ˆ[™›ØÝ\ÙYÝ\\Û›KˆY™\œ™Y[[^XÚ]HÝÛ™\‹X\›Ý™Y\KØÚ\\ˆÛÜÙ[Ý]ˆ[Ú\\ˆ[[YHÝÙY\[›Ý]KÜÝÜžH›Ý[™š\ÛØ˜[Ø\›š[™ÈX[™Ú[™ÝÜÈÛÛÚËÔÝYÙKÔXÚØYÙKˆÛÜšÙ›ÝÈ›ÝÈ™\]Z\™\È“ÕXÚØYÙWÝÚ[™ÝÜÏ]YH[™\WØÛÜÙ[Ý]Ø\›Ý™Y]YNÈXØÚY[[XÚØYÙWÝÚ[™ÝÜÈ[Û™HØ[››ÝXÝ]˜]H\ÙH^[œÚ]™HÝYÙ\ËˆÙ\È›Ý[]HØ]H‹ÍËQK]šXÙKš\ÝX[ÈÜˆ›Ú™XÝXØÙ\[˜ÙHØ›YØ][ÛœËˆ›È™]È\ÜÙ]ÔQKÙ]šXÙHÛZ[K‚‚ŒŒ‹LLLMTËLHPÕU‘HSTSQS•USÓˆÐS‘QUNˆ^XÝ™]š[Ý\ÛH[\ÜYÛÝYLÎ›Û‹]Ø[ØX›H–˜[Z[Y\È\™HÛÙ\Ý™X[YY[ÈH^\Ý[™ÈPÌHÚ\™T›ÝÝ\UÛÜ›Z[\ˆ\ÈØ\Y›Û‹XÛÛY[™ÈTÓHÛÛ\Û™[È
+X^[][H[œÝ[˜Ù\ËÜ›Ý[™ÜÝY\\™Z™XÝY
+NÈ^\Ý[™ÈˆÒLMˆ\œÚ\Ý[L]X\ÜÙ]™XÙZ\\È™\ÝÜ™Y™Y›Ü™HXY\ÜÈ[[YHÝ\\[™™\]Z\™YÙÈX\šÙ\ˆPÌWÐÓÕQLÎÕÓÔ“Ô‘PQH\È]Y]YˆÓWÔÚÛÛÙ[‘›ÛÝœšYÙH™[XZ[œÈU—ÔUPTS•S‘Q[™[\™[H^ÛYYÈ›ÈØ[Ú[™Ë\Ý\™˜XÙHÛÛ\Ú[ÛˆXØÙ\[˜ÙH\È[\YYˆÛÛ[Z]ÜÛÝ\˜ÙH[YÜ˜][Ûˆ\È›Ý›ÛÙˆÙˆÝXØÙ\ÜÙ[[™Ú[™HZ[\œÚ\ÝYY]Üˆ™[Ü[ˆÛˆ\ÈPQXÝX[Ü›Ý[™Y[œÝ[˜Ù\Ë™[™\™Y[XYÙKQK]šXÙKØ]H‹ÍËÜˆš\ÝX[XØÙ\[˜ÙKˆTËLH™[XZ[œÈÔSˆ[[]šY[˜ÙK‚‚ŒŒ‹LLLMTÈ\™›Ü›X[˜ÙHÛXÞHÐS‘QUNˆÝÛ™\ˆ™\]Y\ÝY™[[Ý˜[Ùˆ™XÝ\œš[™È[Ú\\‹ÜÝÜžKÜÝ]KÝØ\›š[™ÈÝÙY\È[[Ú\\ˆÛÜÙ[Ý]ˆÒHÛÛ™][ÛœÈ›ÝÈY™\ˆ^XÝHÜÙHÈ^[œÚ]™H[[YH]Y]Ý\ÈÈX[X[ÝÛ™\ˆÛÜšÙ›Ý×Ù\Ü]ÚXÚØYÙWÝÚ[™ÝÜÏ]YKˆ™\Ù\™H]ZXÚÈ]™[ÜY[ÛÛ\[KÜÝ\\YXØ]Y[\Ü\‹Ü™[Ü[‹Ü\œÚ\Ý]šY[˜ÙH[™[Ø]H‹ÍÈXØÙ\[˜ÙKˆÛXÞHÚ[™ÙHÙ\È›Ý\ÝX›\Ú[\ÜY]ÛÜ›XÙ[Y[QK]šXÙHÜˆš\ÝX[]šY[˜ÙKˆ™\šYžHˆ^XÝZXYÜÝY\ÝÈ™Y›Ü™HY\™Ú[™Ë‚‚ŒŒ‹LLLMTËLH]X\˜[[™HØ[™Y]Nˆ\Ý^XÝZXYÚ[™ÝÜÈ[ˆÎÍLÎŽÍH›Ý[™Û›HÓWÔÚÛÛÙ[‘›ÛÝœšYÙHZ\ÜÚ[™È[\ÜYÚ[\HPÖÛÛ\Ú[Û‹ˆÈ]›ÚYH˜[ÙH›Þ›ÞHÜˆ˜Z[[™È\œÚ\Ý[˜ÙHÙˆÝ\Ú\ÙH[YÚX›H\ÜÙ]Ë[ÝÈÛ›H\È^XÝ]\ÈU—ÔUPTS•S‘Q[ˆ›ÝY]Üˆ[™œ™\Ú™[Ü[ˆ™XÙZ\ÎÈÈ›ÝÜ˜[]ÛÜ›\XÙ[Y[Üˆ˜]ˆ\›Ý˜[ˆX›Ü˜]Ú›ÜˆS–HÝ\ˆÜš]XØ[Z\ÜÚ[™ÈÛÛ\Ú[ÛŽÈÙY\QKÝš\ÝX[Ù]šXÙH[™Ø]H‹ÍÈ[˜Ú[™ÙYˆHÝXØÙ\ÜÙ[[\ÜÜ\œÚ\Ý™XÙZ\\È“Õš\ÝX[Ú\\ˆÛÛ\][Û‹ˆ\ÚXØ[\ÝÈÛˆ\È›ÜÜÙYØ[™Y]H\™H[™[™Ë‚‚”TËLH[ZÙH™\Üˆ™XÛÝ™\™YÛÝ\˜ÙHØ\™ZÝ\ÙHLÎ–[™Íˆ‘ÎÈQHÛÛ\Ú[Ûˆ[\Ü˜Z[\™\È›Ý[™ÛÜ‹ÝÛ™T][™ÛÛÙ[‘›ÛÝœšYÙK˜Z[XÛÜÙY[[QH[\ÜÜ™[Ü[‹Ü\œÚ\Ý[™ÛÜ›\XÙ[Y[›ÛÙ‹ˆŒ‹LLLMTËLH]\ÝÚ[™ÝÜÈ[ˆÎÌLNŒNLˆÛÝ\˜ÙH™XÙZ\[™Ø\™ZÝ\ÙHÝYÙH\ÜÙYY]Üˆ›ÛÝÝ\˜Z[Y›ÜˆÛÛÙ[‘›ÛÝœšYÙHZ\ÜÚ[™È[\ÜYPÖÛÛ\Ú[Û‹ˆ›Ý[™Y™XÛÝ™\žH›ÝÈ]Y]È[Üš]XØ[Z\ÜÚ[™ËXÛÛ\Ú[ÛˆY\Ú\È™Y›Ü™H™]\›š[™ÈH˜]Ú˜Z[\™K˜]\ˆ[ˆ™\]Z\š[™È™\X]Y][K[Z[]HÚ[™ÝÜÈ[œÈ›ÜˆXXÚ™^Ù™™[™\‹ˆÜ[ˆœšYÙH\È“ÕÚ]™[ˆ[˜XØÝ\˜]H“ÖÛÛ\Ú[Û‹ˆ›È™\ÝÜ™YÚ[\ÜY\œÚ\ÝY[œ™X[X\ÜÙ]ÛÝ[ÜˆXÙY]ÛÜ›ÛÝ[X^H™H›Û[ÝY[[œ™\ÚY]Üˆ™[Ü[ˆ[™\˜X›H™XÙZ\\ÈÛÜ›™\šYšXØ][Û‹ˆ\Èš^]Ù[ˆ\ÈXYÛ›ÜÝXÈ[™ÛÝ\˜ÙK[]™[Û›K‚‚ŒŒ‹LLLMTËLHØ[™Y]H›ÛÝË]\ˆÛÝYLÎÚ[™ÝÜÈ[\Ü[ˆÎÍŒÍH\ÜÙYÛÝ\˜ÙHÝYÙH[™Ø\™ZÝ\ÙHÜš]\ˆ]˜Z[YY]Üˆ[ÙHÛˆÓWÔÚÝÛ™T]Ú]ÓÕQLÎÕÐSÐP“WÕPÖÓ“ÕÒSTÔ•QˆØ[™Y]H›ÝÈ\›Z]È›Ý[™Y“ÖÛÛ\Ú[Ûˆ˜[˜XÚÈ›Üˆ\ÈÛ›ÝÛˆ›]Ø[ØX›HÛÝ\˜ÙH[Û™ÈÚ]™\œžS[™[™È[™ÛÜÙY›Ý[™ÛÜ‹Ú[H™\Ù\š[™ÈHÝX\™YØZ[œÝ\Z[™È]ÈÜ[ˆÛÛÙ[‘›ÛÝœšYÙH[™›ÛXYÙKˆ\È\ÈÛ›H[ˆ[\Ü\›ÞH™\Z\ŽÈ˜]™\œØ[ÛÜ›XÙ[Y[QKÙ]šXÙKÝš\ÝX[[™\œÚ\Ý[QHXÚØYÙHXØÙ\[˜ÙH™[XZ[ˆ[œ›Ý™[‹ˆ^XÝZXY™]˜[Y][Ûˆ™\]Z\™Y‚‚ŒŒ‹LLLM˜\ÝTÈÝÛ™\ˆXÚ\Ú[ÛˆÐS‘QUNˆ[ˆ™\ÜÛœÙHÈÛÛ™š\›YY™\X]Y^[œÚ]™HÚ[™ÝÜÈÛÜšÙ›ÝÜÈ[ˆTËLK›ÜÜÙYÛÝ™\››ÜˆÚ[™ÛK]Ø]™H]ÛZXÈ˜]Ú[™Ë^XÝZXYÚX\Yš\œÝ˜[Y][Û‹ÛÝ\˜ÙK]ÚYHY™XÝ[[Y\˜][Ûˆ™Y›Ü™HX]žH™]žH[™ØY™H]šY[˜ÙH™]\ÙKˆHTÈÝ\È[™Ø]H‹ÍÈ™[XZ[ˆ[˜Ú[™ÙYˆ\ÈYZ[š\Ý˜]]™HÚ[™ÙH[Û™H›ÙXÙ\È™\›ÈØ[YH\ÜÙ]ËQH[\ÜËXÙ[Y[QKÙ]šXÙHÜˆš\ÝX[›ÛÙ‹ˆ]™HˆÍŒÈ™[XZ[œÈH[™\[™[ÛÝYLÎÛÛ\Ú[Û‹Z[ZÙH™\Z\ˆ[™]\Ý›Ý™HY\™ÙYÛˆYZ[ˆ]šY[˜ÙK‚‚ŒŒ‹LLLLÈPÌHÙ™‹\[›™\ˆ]š[™Ë]ÛÜ›š[™[™È˜]ÚNˆYYH™X[Ý]XÈš[™[™ÈXÚÙ]Ù[™\˜]Üˆ›ÜˆHÚ\™H^Y\ˆ›Ý]HÚ]Ý]\Ú[™ÈÚ[™ÝÜÈ[›™\‹ˆÚ]X‹ZÜÝYÙ[™\˜][ÛˆšXHØÜš\ËÙÙ[™\˜]WÜXÌWÛ]š[™×ÝÛÜ›Øš[™[™×Ø˜]ÚKœX[Z]È]KÔPÌS]š[™ÕÛÜ›š[™[™Ð˜]ÚKšœÛÛ˜Ú]ÎHš[™[™È™XÛÜ™ÈXÜ›ÜÜÈLÈPÌH›Û™\È[™[Ü›š[™ËÛZY^KÙ]™[š[™È˜[™ËˆXXÚ™XÛÜ™X\ÈX]\šX[Ø[™Y]\ËÛÝ\˜ÙH]Y[ÈØ[™Y]\Ë›ÜY˜[Z[HØ[™Y]\È[™”È›ÛKØXÝ]š]H[[È\™›Ü›X[˜ÙHÛÛ˜XÝÈ™\]Z\š[™ÈTÓKÒTÓH›Üˆ™\X]Y›ÜËÛÙ™Y™\™[˜Ù\Ë›ÈÝ]XË\›ÜXÚÈ\[™[˜ÞK[™^XÚ]XÙZÛ\—ÛY\ÚØ[ÝÙYY˜[ÙX›Üˆ”ÈØ[™Y]\ËˆHXÚÙ]\ÈHÛÝ\˜ÙHš[™[™È[™Ù™ˆÛ›NˆØ\™ZÝ\ÙK[œ™X[[\ÜÛÜ›XÙ[Y[QK]šXÙH[™š\ÝX[Ø]Y[ÈXØÙ\[˜ÙH[™[XZ[ˆS‘S‘È[[[›™\ˆ]šY[˜ÙH^\ÝË——ŒŒ‹LLLLÈPÌHÙ™‹\[›™\ˆX]\šX[ÛÝ\˜ÙH˜]ÚNˆYYH™X[›Ú™XÝ[ÝÛ™Y›ØÙY\˜[”ˆ^\™HÛÝ\˜ÙHXÚÈØ[™Y]HÛˆÝ\œ™[]™[ÜÚ]Ý]\Ú[™ÈÚ[™ÝÜÈ[›™\‹ˆÚ]X‹ZÜÝYÙ[™\˜][ÛˆšXHØÜš\ËÙÙ[™\˜]WÜXÌWÛX]\šX[ÜÛÝ\˜ÙWØ˜]ÚKœX[Z]ÈÛÝ\˜ÙP\ÜÙ]ËÔ›ÙXÝ[Û‹ÓX]\šX[ËÔÚ\™KÐ˜]ÚSÙ™”[›™\‹ÔPÌWÓX]\šX[˜]ÚWÔ”•^\™\Ëžš\ÛÛZ[š[™ÈÚ\™HX]\šX[Ù]È[™Ìˆ‘ÈX\Îˆ˜\ÙPÛÛÜ‹XÚÙYÔ“H
+PSËÏT›ÝYÚ™\ÜËSY][XÊH[™›Ü›X[ˆÛÝ™\˜YÙH\™Ù]È˜YÈ[™Z[ØœšXÚËÚX\ÝÛÛÙØ\™[ˆÜ›Ý[™ÜÛÚ[Ø˜š]Ûˆ]ÚÜ\Ý\‹˜YÜÚÝ›ÝÈ™[˜ÙK\HšY[Ø[˜\ËÜšX˜›Û‹ØÙ\˜[ZXË›ØY\ÜX˜›\ËÛÛÙY\›ØY˜\šËÜ›ÛÝËZ[Û™[šËÜÝÛ™K™\œžHØÚËÜ›ÜKX\ÝšY[ÈÚX]ÛXY‹[™X\šÙ]]Ûš[™ËÝÚXÚÙ\ˆÝ\™˜XÙ\ËˆHÙ[™\˜]Y]KÔPÌSX]\šX[ÛÝ\˜ÙP˜]ÚSX[šY™\ÝšœÛÛ˜™XÛÜ™È\‹[X\ÒLM‹\™Ù]›Û™KÝ\™˜XÙH˜[Z[K”ˆÛÛ˜XÝ[™^XÚ]Ø\™ZÝ\ÙKÕ[œ™X[[\ÜÓX]\šX[[œÝ[˜ÙKÝÛÜ›š[™[™ÈHS‘S‘Ëˆ›ÈX\ÜÙ]X]\šX[[œÝ[˜ÙK[[YHš[™[™ËQK]šXÙKš\ÝX[XØÙ\[˜ÙK”ÈÜˆØ]H‹ÍÈÛÜÝ\™H\ÈÛZ[YY[[XÝ[ÛœÈ[™]\ˆ[œ™X[]šY[˜ÙH^\Ý——ŒŒ‹LLLLÈPÌHÙ™‹\[›™\ˆÛÝ\˜ÙH]Y[È˜]ÚNˆYYH™X[›Ú™XÝ[ÝÛ™Y›ØÙY\˜[ÐUˆÛÝ\˜ÙHXÚÈØ[™Y]HÛˆÝ\œ™[]™[ÜÚ]Ý]\Ú[™ÈÚ[™ÝÜÈ[›™\‹ˆÚ]X‹ZÜÝYÙ[™\˜][ÛˆšXHØÜš\ËÙÙ[™\˜]WÜXÌWØ]Y[×ÜÛÝ\˜ÙWØ˜]ÚKœX[Z]ÈÛÝ\˜ÙP\ÜÙ]ËÔ›ÙXÝ[Û‹Ð]Y[ËÔÚ\™KÐ˜]ÚSÙ™”[›™\‹ÔPÌWÐ]Y[Ð˜]ÚWÔÛÝ\˜ÙP]Y[Ëžš\ÛÛZ[š[™ÈÌˆ[Û›ÈM‹Xš]ÓHÐUˆÛ\È]ŒŒLˆ›Üˆ˜YÈ[™›ÛÛKÚX\ÙÛÜ‹ÛØš™XÝ›Û^KØ˜š]Ûˆ[™H[™Ý\ÙZÛ›Û^K\HšY[ÛÙÜ›ÝÙÛØš™XÝ]Z[ËÜ˜\ÜËÙ\›ÛÝÝ\ËÛÛÙY›ØY\ÝKØœ˜[˜ÚØš\™˜]\™KZ[Û™Ø]\‹ÝÚY[ÜØXÚËž]Ø]\ˆØ^\ÝÛ™KXÚÛX\žH™\œžHš]™\‹Ü›ÜKÙØÚËÛØ\ˆ[™X\ÝšY[ÈÚ[™ØÜ˜]HÛÝ[™ËˆHÙ[™\˜]Y]KÔPÌP]Y[ÔÛÝ\˜ÙP˜]ÚSX[šY™\ÝšœÛÛ˜™XÛÜ™È\‹XÛ\ÒLM‹\˜][Û‹œ˜[YHÛÝ[\™Ù]›Û™KØ]YÛÜžKÛÝ\˜ÙHXÙ[œÙH[™^XÚ][œ™X[[\ÜÔÛÝ[™ÝYKÝÛÜ›š[™[™ÈHS‘S‘Øˆ›ÈX\ÜÙ]ÛÝ[™ÝYK[[YHš[™[™ËQK]šXÙKš\ÝX[Ø]Y[ÈXØÙ\[˜ÙK”ÈÜˆØ]H‹ÍÈÛÜÝ\™H\ÈÛZ[YY[[XÝ[ÛœÈ[™]\ˆ[œ™X[]šY[˜ÙH^\Ý——ŒŒ‹LLLLÈPÌHÙ™‹\[›™\ˆÛÝ\˜ÙH\ÜÙ]˜]ÚÎˆYYH\™™X[›Ú™XÝ[ÝÛ™Y›ØÙY\˜[ÛÝ\˜ÙHXÚÈØ[™Y]HÛˆÝ\œ™[]™[ÜÚ]Ý]\Ú[™ÈÚ[™ÝÜÈ[›™\‹ˆÚ]X‹ZÜÝYÙ[™\˜][ÛˆšXHØÜš\ËÙÙ[™\˜]WÜXÌWÜÛÝ\˜ÙWØ\ÜÙ]Ø˜]ÚËœX[Z]ÈÛÝ\˜ÙP\ÜÙ]ËÔ›ÙXÝ[Û‹ÕÛÜ›ÔÚ\™KÐ˜]ÚÓÙ™”[›™\‹ÔPÌWÐ˜]Ú×ÔÛÝ\˜ÙP\ÜÙ]Ëžš\ÛÛZ[š[™ÈTÐÒRH–Ý]XÈY\Ú\È[™Mˆ‘È˜\ÙKXÛÛÜˆ^\™\È›ØÝ\ÙYÛˆ˜YÈ[™[\š[Ü‹Ù[žKÙØ\™[‹\HšY[›ÛÙÜÙ\šXÙH›ÜËZ[Û™][]H›ÜËXÚÛX\žH™\œžH[ÛÜš[™ËÙØÚËÜ\ÜÙ[™Ù\ˆ]Z[Ëž]Ø]\ˆ›ØYØ^Yš[™[™ËÜ[šÜËÛÛÙY›ØY›ÛÝÜÝ[\œ™XZÝ\[™X\ÝšY[È\™\ÝÛÛËˆHÙ[™\˜]Y]KÔPÌTÛÝ\˜ÙP\ÜÙ]˜]ÚÓX[šY™\ÝšœÛÛ˜™XÛÜ™È\‹X\ÜÙ]ÒLM‹\™Ù]›Û™KX]\šX[ÛÝ[Y[œÚ[ÛœËÛY\ÚÛÝ[ËÛÝ\˜ÙHXÙ[œÙH[™^XÚ][œ™X[[\ÜÝÛÜ›XÙ[Y[HS‘S‘Øˆ›ÈX\ÜÙ]QH[\ÜQK]šXÙKš\ÝX[XØÙ\[˜ÙK”ÈÜˆØ]H‹ÍÈÛÜÝ\™H\ÈÛZ[YY[[XÝ[ÛœÈ[™]\ˆ[œ™X[]šY[˜ÙH^\Ý‚‚ŒŒ‹LLLLÈPÌHÙ™‹\[›™\ˆÛÝ\˜ÙH\ÜÙ]˜]ÚŽˆÙ[™\˜]YHÙXÛÛ™™X[›Ú™XÝ[ÝÛ™Y›ØÙY\˜[ÛÝ\˜ÙHXÚÈÛˆÝ\œ™[]™[ÜÚ]Ý]\Ú[™ÈÚ[™ÝÜÈ[›™\‹ˆÚ]X‹ZÜÝYÛØØ[Ù[™\˜][ÛˆšXHØÜš\ËÙÙ[™\˜]WÜXÌWÜÛÝ\˜ÙWØ\ÜÙ]Ø˜]Ú‹œX[Z]ÈÛÝ\˜ÙP\ÜÙ]ËÔ›ÙXÝ[Û‹ÕÛÜ›ÔÚ\™KÐ˜]Ú“Ù™”[›™\‹ÔPÌWÐ˜]Ú—ÔÛÝ\˜ÙP\ÜÙ]Ëžš\ÛÛZ[š[™ÈTÐÒRH–Ý]XÈY\Ú\È[™Mˆ‘È˜\ÙKXÛÛÜˆ^\™\È›Üˆ˜YÈ[™˜YÈ[™Ø\™[‹˜YÜÚÝ›ÝËØ˜š]Û‹\HšY[Z[œšYÙKZ[Û™ž]Ø]\ˆ›ØYØ˜š]Ûˆ›ØYÛÛÙY›ØYXÚÛX\žH™\œžKX\ÝšY[È[™Ø˜š]ÛˆX\šÙ]™\ÜÚ[™ËˆHÙ[™\˜]Y]KÔPÌTÛÝ\˜ÙP\ÜÙ]˜]Ú“X[šY™\ÝšœÛÛ˜™XÛÜ™È\‹X\ÜÙ]ÒLM‹\™Ù]›Û™KX]\šX[ÛÝ[Y[œÚ[ÛœËÛY\ÚÛÝ[ËÛÝ\˜ÙHXÙ[œÙH[™^XÚ][œ™X[[\ÜÝÛÜ›XÙ[Y[HS‘S‘ØˆØØ[˜[Y]ÜˆÜ[™YH’T[™\ÜÙYPÌWÔÓÕTÑWÐTÔÑUÐUÒ—ÔÕUP×ÔTÔÈ˜žM™ÏLMˆ›Û™\ÏLLØˆ›ÈX\ÜÙ]QH[\ÜQK]šXÙKš\ÝX[XØÙ\[˜ÙK”ÈÜˆØ]H‹ÍÈÛÜÝ\™H\ÈÛZ[YY‚‚ŒŒ‹LLLLˆPÌHÙ™‹\[›™\ˆÛÝ\˜ÙH\ÜÙ]˜]ÚNˆÙ[™\˜]YH™X[›Ú™XÝ[ÝÛ™Y›ØÙY\˜[ÛÝ\˜ÙHXÚÈ›ÜˆPÌHÚ]Ý]\Ú[™ÈÚ[™ÝÜÈ[›™\‹ˆÛÝ\˜ÙP\ÜÙ]ËÔ›ÙXÝ[Û‹ÕÛÜ›ÔÚ\™KÐ˜]ÚSÙ™”[›™\‹ÔPÌWÐ˜]ÚWÔÛÝ\˜ÙP\ÜÙ]Ëžš\ÛÛZ[œÈÍˆTÐÒRH–Ý]XÈY\Ú\È[™H‘È˜\ÙKXÛÛÜˆ^\™\È›Üˆ˜YÈ[™Ø˜š]Û‹˜YÜÚÝ›ÝË\HšY[X\ÝšY[ËÛÛÙY›ØYZ[Û™X\šÙ][™XÚÛX\žH™\œžH™\ÜÚ[™Ëˆ]KÔPÌTÛÝ\˜ÙP\ÜÙ]˜]ÚSX[šY™\ÝšœÛÛ˜™XÛÜ™È\‹X\ÜÙ]ÒLM‹\™Ù]›Û™KX]\šX[ÛÝ[Y[œÚ[ÛœËÛY\ÚÛÝ[ËÛÝ\˜ÙHXÙ[œÙH[™^XÚ][œ™X[[\ÜÝÛÜ›XÙ[Y[HS‘S‘ØˆØØ[˜[Y]ÜˆÜ[™YH’T[™\ÜÙYPÌWÔÓÕTÑWÐTÔÑUÐUÒWÔÕUP×ÔTÔÈ˜žLÍˆ™ÏNH›Û™\ÏLLÈØØ[™WÝ[œ™X[Ý˜[Y]KœX\ÜÙYˆ›ÈX\ÜÙ]QH[\ÜQK]šXÙKš\ÝX[XØÙ\[˜ÙK”ÈÜˆØ]H‹ÍÈÛÜÝ\™H\ÈÛZ[YY‚‚ŒŒ‹LLLLˆÛÝYLÎÚ[™ÝÜÈØ\™ZÝ\ÙH[›™\ˆ›ØÚÙ\ˆ[™™XÛÝ™\žNˆ]™[ÜˆÍÌY\™ÙYN˜ØMHÚ]ÜÝYÝ]XÊÕ[œ™X[^XÝZXY˜[Y][ÛœÈÜ™Y[ŽÈš\œÝ\œÚ\Ý[˜[œÙ™\ˆ[ˆÎŽMNŽNH˜Z[Y™Y›Ü™HÝYÚ[™È]™\šYžHÛÝ™\››Üˆ[™\œÚ\Ý[›ÛÝ™XØ]\ÙHÜÚˆÛÛ[X[™›Ý›Ý[™ÛˆÙ[‹ZÜÝYÚ[™ÝÜÈXXÚ[™Kˆš^Ø[™Y]H\Ù\ÈH[œÝ[YÚ[™ÝÜÈÝÙ\”Ú[
+Ú[ˆÝÙ\œÚ[
+HÛˆ›ÝÚ[™ÝÜË[Û›HÝ\Ë™\Ù\š[™È^XÝ[›™Y\Y˜XÝÒKÐÔËÕPÖÓÑÜ›Ý™[˜[˜ÙHÚXÚÜËÛ™HÜš]\ˆ[™ÛÝ\˜ÙK[Û›H]šY[˜ÙH›Ý[™\žKˆ[[™\Z\ˆ[ˆ[Z]ÈÓÕQÕÒÓQÐSQWÔT”ÒTÕS•ÕÐT‘RÕTÑWÔTÔÈ[™H\œÚ\ÝY™XÙZ\˜[œÙ™\œ™Yš[HÛÝ[›ÜˆÛÝYLÎ™[XZ[œÈ“Õ‘S‹ˆQMÝ\œ™[\[ˆ]šY[˜ÙHÙ\È›ÝÙ\YžHÛÝYLÎ[\ÜQK]šXÙHÜˆš\ÝX[Ë‚‚ŒŒ‹LLLLˆPÌHÈŽ\™YÚ[ÛˆLÎQ–\ÚXØ[Ø\™ZÝ\ÙH˜[œÙ™\ˆØ[™Y]Nˆ^\Ý[™È™\šYšYYÛÝ\˜ÙH\Y˜XÝLMÍÌLMLÌˆœ›ÛH[ˆÎŽLŒMŒÎMÌXYYLYMXÎK\ÈˆÚ\™H–MˆÚÛKYØ[YH™YÚ[Û˜[–[™Íˆ^\Ý[™ÈXÚÙY‘Ëˆ™]È[›™YÚ[™ÛK]Üš]\ˆÚ[™ÝÜÈ˜[œÙ™\ˆÛÜšÙ›ÝÈÝÛ›ØYÈH™XÚ\ÙHÚ]Xˆ\Y˜XÝÛÛ\\™\ÈÜ˜\\ˆ[™[›™\ˆÒLM‹[œÜXÝÈMÍ\ÚXØ[^[ØYÈ[™ÈÛÝ\˜ÙH™XÙZ\Ë[™›Ü˜Ù\È–ÍÕPÖÕU‹ÓÑ™YÚ[ÛˆY[]H[™‘ÈÚYÛ˜]\™\Ë™Z™XÝÈ[œØY™H’TY[X™\œÚ\[™›Ü˜Ù\È™\Ù\™KÜš]\È]ÛZXØ[H[™™Z\Ú\È\œÚ\ÝYˆÝÜ˜YÙKˆ˜[œÙ™\ˆ\ÈÛÝ\˜ÙK[Û›NˆÙ\È“Õ[\ÜX\ÜÙ][ÈQM[ˆQK›Ùš[H\™Ù]”Ëš\ÝX[H\›Ý™KÜˆÛÜÙHPÌHØ]M‹ÍËˆ\È\ÈÛÝ\˜ÙHÛÙHÐS‘QUH[[ÜÝY\ÝÈ[™XÝX[Ú[™ÝÜÈ\œÚ\Ý[™XÙZ\\ÜËˆ›È™]È\ÚXØ[–Ù[™\˜]Y[ˆ\È[YÜ˜][ÛˆÝ\‚‚ŒŒ‹LLLLˆPËLLHÈÚÛKYØ[YHÛÝ\˜ÙHØ[™Y]Nˆš[ÜˆÛÝYÚ\™HˆÍŽ›ÙXÙYˆ\ÚXØ[H™\šYšYY–Ž[Ü™H[ˆš[ÜˆMˆ\ÈØ[™Y]H]]ÜœÈŽÜšYÚ[˜[™YÚ[ÛˆÝ\Ü˜[Z[Y\ÈÛÈÑÈHMˆ™]È–\™Ù][™È
+ÌL	H™][™]È›ÝYÚ]Ý™\ˆHš[Üˆ
+ÌŽˆÙ\\˜]H™YÚ[Û˜[ÛY\Ú\ËÈ™XÙZ\›[™\ˆ™Z[\ÜU‹PÖ[™\ÚXØ[ÒLMˆ[YÜš]H\™HX[™]ÜžKˆÍˆ^\Ý[™ÈXÚÙY‘ÜÈ™]\ÙYÚ]Ý]™Z[™ÈÛÝ[Y\È™]Ëˆ™\\˜][ÛˆÜ[œÈ^XÝHHŽØ[›ÛšXØ[ÛÜ›XÚÙ]Ë›Ýš[˜[Ú\\ˆ[[YHÜˆ\›È[™X\šÜÎÈPÌŠÈ[[YH™[XZ[œÈØ]YˆÛÝ\˜ÙHÛÜšÈ[™PËLLH\™HØ[™Y]\È[[^XÝZXYÚXÚÜÈ\ÜËˆ›È™]ÈØ\™ZÝ\ÙH\œÚ\Ý[˜ÙKQH[\ÜQK]šXÙKÑ”ÈÜˆš\ÝX[\›Ý˜[——ˆÈÈŒ‹LLLLˆHˆÚ\™HÜšYÚ[˜[–›ÙXÝ[ÛˆØ[™Y]B‚‘^[™ÈÛÝ\˜ÙHØ[™Y]Hœ›ÛHÜÝY\›Ý™[ˆM–ÈÈÚ\™H˜[Z[Y\È
+[ˆÎŽÌÍŒMJHÈH˜[Z[Y\ÈÈˆ–
+M™]È˜[Z[Y\ËŽY][Û˜[Ñš[\ÎÈLKŽIH\™Ù][˜Ü™X\ÙH[ˆÛÛ\\˜X›HÛÝ\˜ÙHÛÝ[
+Kˆ™]ÈÜšYÚ[˜[›ØÙY\˜[Ý]XÈ›ÜÎˆ™\œžT]Y]YP™[˜Ú™YY[\‹Ü˜Ú\™Ü˜]KX\šÙ]Ý[X\šÙ]˜\ÚÙ]\˜‘žZ[™Ô˜XÚË\ÝXÔÚYÛ‹Ü˜Z[”ØXÚÔÝXÚËÚ[™ÝÑ›ÝÙ\›ÞØ]S[\›‹œšYÙT˜Z[[™ËØ\™[•™[\Ë˜\›UÛÛ˜XÚË\TÙ\š[™ÐÛÝ[\‹ˆ›[™\ˆš[˜\žHÍ™Z[\ÜU‹ÕPÖÒH™XÙZ\È[™Ž\™YÚ[ÛˆX]\šX[\ÜÙ]È™[XZ[ˆØ]YžH^XÝZXYÚ]XˆXÝ[ÛœËˆ\È\È“Õ›ÛÙˆÙˆXÝX[ˆ\ÚXØ[–Y]ˆ›È]]ÛX]XÈØ\™ZÝ\ÙKÕQHÛÜ›™\ÚY[˜ÞKQK]šXÙH”ÈÜˆš\ÝX[XØÙ\[˜ÙHÛZ[Kˆ™\Ù\™HÚ[™ÛHØ\™ZÝ\ÙKÕQH[[YHÜš]\œÈ[™Ø]M‹ÍË‚‚‚ˆÈÈŒ‹LLLLˆHPËLLˆXØÛÝ[X›H\‹\Ù\ÜÚ[ÛˆÜ›ÝÝ[™[™\[™[[™Ú[™Y\ˆYÙ[Y[‚‹HÝÛ™\ˆ\È[ˆ[š›Þ[Y[Yš\œÝ^Y\ŽÈ[™\[™[XY\˜Ú]XÝXZÙ\È[™^Z[œÈ›Ù™\ÜÚ[Û˜[[™Ú[™Y\š[™ÈÚÚXÙ\È
+[˜ÛY[™ÈÛ]H\ØYÜ™Y[Y[
+KÚ[HÝÛ™\ˆ™]Z[œÈ›ÙXÝš\Ú[Û‹‚‹HXXÚÙ\ÜÚ[Ûˆ™\ÜÈ^XÝ˜\Ù[[™H[™™]ÈÝ[XœÛÛ]HÚ[™ÙKÛÛ\\˜X›H\˜Ù[YÙK]šY[˜ÙKØÛÛ[Z]Ô‹ÐXÝ[ÛœËš[˜Ú\[š\ÚÈ[™™XÛÛ[Y[™Y™^YÚ\^Y\‹]˜[YHXÝ[Û‹ˆH
+ÍL	HØZ[ˆ\ÈHÝ™]Ú\™Ù]
+Š›Û›JŠˆ›Üˆ[YÚX›K™\šYšYYZÙKY›Ü‹[ZÙH›ÙXÝ[ÛŽÈZ\ÜÚ[™È˜\Ù[[™HOˆ‹ÐK›È[™[Y\˜Ù[YÙ\Ë‚‹HÙY\\ÚXØ[ÛÝ\˜ÙKYÙ[™\˜]Y–Ô‘ËÕÐK
+Š[š\]YH\œÚ\ÝY
+ŠˆØ\™ZÝ\ÙK
+Šœ\œÚ\Ý[QHX\ÜÙ][\ÜY
+Š‹
+Š˜XÝX[ÛÜ›\XÙY
+Š‹[™^XX›KÔQKÙ]šXÙKÝš\ÝX[]šY[˜ÙH\ÈÙ\\˜]H[›™[ËˆÈ›Ý[™™\ˆÛ™Hœ›ÛH[›Ý\ˆÜˆÛÝ[\XØ]Y’TÛÝ\˜ÙHÛÛ[ÈÚXÙK‚‹H™\\™H[Ž™YÚ[ÛœÈ[™PÌKTPÌ›ÝYÚ\Èš]™HØY™H\˜[[ÛÝ\˜ÙH[™\È[™Û™H\œÚ\Ý[Ø\™ZÝ\ÙHÜš]\‹Ú[HÛ™H[[YHÜš]\ˆ™[XZ[œÈÛˆPÌH[[Ø]M‹ÍÎÈ]\™HÚ\\ˆ™\›ÙXÝ[Ûˆ\È›Ý[[YHXÝ]˜][Û‹‚‹H˜\Ù[[™H›ÜˆHÛÝYÚ\™HÛÝ\˜ÙHØ]™NˆˆÍˆÛÛ[Z]ØŒÍX‹Y\™ÙYŒÌYMNÈÜÝY[ˆÎŽÌÍŒMHÙ[™\˜]Y[™›[™\‹\™Z[\Ü]˜[Y]YMš[˜\žH–
+È˜[Z[Y\ÈˆÑ
+KÍˆ‘È[™[ˆXÝ[ÛœÈ\Y˜XÝLMÍLÍŒH
+KKMHÜ˜\\ˆž]\ÊKˆØ\ÈH
+œ™]š[Ý\È]]Ü™Y\™Ù]
+‹›Ý›ÛÙˆÙˆH™]š[Ý\ÈÛÛ\\˜X›H\ÚXØ[HÙ[™\˜]Y[‹ˆ›ÈØ\™ZÝ\ÙKÕQHÛÜ›ÔQKÙ]šXÙKÝš\ÝX[›Û[Ý[Ûˆœ›ÛH\È™XÙZ\‚‹H\ÈÛXÞK[Û›HÚ[™ÙHYÈ›ÈØ[YH\ÜÙ][\Ü\‹QH[[YHÜˆ™]ÈÒHÛÜšÙ›ÝËˆ^\Ý[™ÈZ[H™\Ü™[XZ[œÎÈ™]È
+Šœ\‹\Ù\ÜÚ[ÛŠŠˆ™\Ü\ÈY][Û˜[ˆ^XÝZXYÝ]XÈÒH\È™\]Z\™Y™Y›Ü™HY\™Ú[™È\ÈØ[™Y]K‚‚ŠŠŒŒ‹LLLLˆPÌH›Ý]KÜ\KÙ™\œžHÛÜÝ\™H\ÜÈ
+ÛÝ\˜ÙHØ[™Y]NÈ^XÝZXYÚXÚÜÈ[™[™ÊNŠŠˆYYH›Ý[™YTÚ\™T›ÝÝ\UÛÜ›Z[\ŽŽ”Ü]Û”PÌT›Ý]T\Q™\œžPÛÜÝ\™T\ÜÊ
+X[[YH^Y\ˆY\ˆHÚ\\‹Yš[š\ÚÛÜ›X\\ÜÈ[™™Y›Ü™HÙ][Y[ÛÛ\][Û‹ˆ]YÈš]™H›ËXÛÛ\Ú[Û‹Û›ËUXÚÈTÓHÛ\Ý\œÈ›Üˆ\HšY[›Ý[™\žH[\›œËÝ]\ˆÙX][™Ë™XYX›H›ØY]ËY™\œžHX\šÙ\œË™\œžH]Y]YH›ÜHÜÝÈ[™™\œžKX˜[šÈ™YYœ™XZÝ\\ÈZYÚ›Û‹X›ØÚÚ[™È›Ý]KÜ\KÙ™\œžH\›È›ÜËˆ]™]\Ù\È^\Ý[™È›ÙXÝ[ÛˆY\Ú\ÈÛ›KÙ\È›ÝÜ™X]HH™]È\ÜÙ]ÛØY[™ÈÞ\Ý[KÙ\È›ÝÜ]Ûˆ”ÜË[™ÙY\ÈPÌˆ[[YHÛÜÙYˆ\È\È›ÝQK]šXÙK”ÈÜˆš\ÝX[XØÙ\[˜ÙH[[Ú[™ÝÜËÕ[œ™X[]šY[˜ÙH^\ÝË‚‚ŠŠŒŒ‹LLLLˆPÌHÚ\\‹Yš[š\ÚÛÜ›\\ÜÈ
+ÛÝ\˜ÙHØ[™Y]NÈ^XÝZXYÚXÚÜÈ[™[™ÊNŠŠˆYYH›Ý[™YTÚ\™T›ÝÝ\UÛÜ›Z[\ŽŽ”Ü]Û”PÌPÚ\\‘š[š\ÚÛÜ›\\ÜÊ
+X[[YH^Y\ˆY\ˆH^\Ý[™Èš\ÝX[Yš[š\Ú\ÜÈ[™™Y›Ü™HÙ][Y[ÛÛ\][Û‹ˆ]YÈš]™H›ËXÛÛ\Ú[Û‹Û›ËUXÚÈTÓHÛ\Ý\œÈ›Üˆ˜YÈ[™Ø\™[ˆYÙ\ËØ˜š]ÛˆX\™›ÝÙ\ˆ›Þ\ËÛÜšÙYYšY[™[˜ÙHš]KÛÛÙY\›ØY[™\œÝÜžH[™™\œžH[™[™È™YYË\È[ˆ›Û‹X›ØÚÚ[™È\›È›ÜÈ\›Ý[™˜YÈ[™[™H™\œžKˆ]™]\Ù\È^\Ý[™È›ÙXÝ[ÛˆY\Ú\ÈÛ›KÙ\È›ÝÜ™X]HH™]È\ÜÙ]ÛØY[™ÈÞ\Ý[KÙ\È›ÝÜ]Ûˆ”ÜË[™ÙY\ÈPÌˆ[[YHÛÜÙYˆ\È\È›ÝQK]šXÙK”ÈÜˆš\ÝX[XØÙ\[˜ÙH[[Ú[™ÝÜËÕ[œ™X[]šY[˜ÙH^\ÝË‚‚ŠŠŒŒ‹LLLLˆPÌH[\ÜY]™YH[[YHš\ÚXš[]H]šY[˜ÙHØ[™Y]H
+ÕUPÈÛÝ\˜ÙH™Y›YÚÛ›NÈÚ[™ÝÜÈ^XÝZXY[™[™ÊNŠŠˆ^\Ý[™Èš[™KY˜[Z[H\Þ[˜ÈTÓHØ[˜XÚÈÙÜÈ™X[\‹Y˜[Z[H\ÜÙ]]XÝX[HÜ›Ý[™Y[œÝ[˜ÙHÛÝ[Z\ÜÚ[™ËÜÝY\™Z™XÝY˜XÙ\È[™Y\ÚX]\šX[ÛÝÛÝ[ˆ›È™]ÈØY[™Ë[œÝ[˜Ú[™Ë]]Üš[™Ë”Ë]Y\ÝÜˆÚ\\ˆ]]Üš]K›È^˜HÛÜšÙ›ÝÈÜˆ\‹UXÚÈÝ™\šXYˆ\ÈÛÜÙ\È[ˆ]šY[˜ÙH›[™ÜÝ›ÝHš\ÝX[Ø]Nˆ™X[[œ™X[ÙÜÈ]\Ý›Ý™HØYY\ÜÙ]ËÜXÙ[Y[ÈØÜ™Y[œÚÝÈ[™[X[ˆ™]šY]ÈÝ[™\]Z\™Yˆ^\Ý[™È™YÜ™\ÜÚ[Ûˆ\]YÈPÌHØ]H‹ÍÈ™[XZ[œÈÜ[‹‚‚ŠŠŒŒ‹LLLLˆØ[YK]ÚYHÝÛ™\‹]š\ÚX›H›ÙXÝ[Ûˆ]›Ý
+ÛXÞHØ[™Y]JNŠŠˆYÜPËLLÈ[ˆ]KÔ›Ú™XÝÛÝ™\››Ü‹šœÛÛŽˆš[Üš]^™H[\ÜY™[™\™YØÙ[™\žKÚÙ[][ØÛÛ[Ý[Û‹^XX›H]Y\ÝØ]Y[ËÜØ]™H›Ý]\ÈÝ™\ˆÜXÝ[]]™H™]ÈÒKÙØÜÎÈ\Èš]™H[™\[™[]\™KXÚ\\ˆ\ÜÙ]ÜÛÝ\˜ÙH™\[™\È[ˆÛÛ˜Ý\œ™[HÚ[HÛ™HØ\™ZÝ\ÙHÜš]\ˆ[™PÌK[Û›H[[YHÜš]\ˆ™[XZ[‹ˆ™\Ü	ÜÈ™\›ËQ–Û˜\ÚÝ\ÈÛ\ˆ[ˆÚ[™ÝÜÈ™XÙZ\Ú]Í–˜[Z[Y\ËÍˆÑÍŒÈ‘ËÌŒHRNÈXÝX[[‹]ÛÜ›™\ÚY[˜ÞKÛX]\šX[\X\˜[˜ÙKœ›ÙÈY›Ü›X][Û‹QK\™Ù]Y]šXÙH[™[X[ˆš\ÝX[™[XZ[ˆ[˜XØÙ\YˆÚ]YÛ›Ü™\ÈÛÛ[Ô›ÙXÝ[Û‹ÈX\ÜÙ]™\]Z\š[™È\œÚ\Ý[˜ÙH[™XÚØYÚ[™È]Y]ˆˆÍŒHÝ[[™[™È[œ™X[\ÝËˆPÌˆ[[YH™[XZ[œÈØ]M‹ÍÈ™YXÙ\ÜÛÜ‹YØ]Y‚‚ŠŠŒŒ‹LLLLˆPÌHÜšYÚ[˜[]™YHš\ÝX[›ÙXÝ[ÛˆØ[™Y]H
+ÕUPËUSQUQÛÝ\˜ÙHÛ›NÈQMÚ[™ÝÜÈ[™[™ÊNŠŠˆ^[™H^\Ý[™ÈÜ[Û˜[\Þ[˜Ë[ØYYÜšYÚ[˜[S˜]\™HTÓHÛÜ›œšYÙHœ›ÛHHÜ›Ý[™Y]Z[˜[Z[Y\È
+ŒXÙ[Y[ÊHÈH˜[Z[Y\ÈžHY[™ÈH›Ý\ˆ™]š[Ý\ÛHÛÝ\˜ÙKXÝ\˜]YÚ[\ÜY\K[KØZÈ[™Ú[ÝÈ–ÑY\Ú\È
+XÙ[Y[ÈXXÚX^[][HLˆÝ[
+Kˆ™]\ÙH™YH^\Ý[™ÈÚ\™H›Ý]KX\™XH[˜ÚÜœÈ\ˆ™YH˜[Z[KÙ™‹\]Ü›Ý[™˜XÙ\ËÛÛœÙ\˜]]™HZYÚ›Ü›X[^˜][Ûˆ[™™YK\ÜXÚYšXÈ\Ý[˜ÙHÝ[[™ËˆZ\ÜÚ[™ÈX\ÜÙ]XÚØYÙ\ÈØY™[HÚÚ\›È\™™Y™\™[˜ÙKÜÞ[˜Ú›Û›Ý\ÈØY›È™]ÈXÚËØ[Y\^HÛÛ\Ú[Û‹”ËÜ]Y\ÝÜØ]™HÝÛ™\œÚ\ÜˆPÌˆ[[YKˆ\]HH^\Ý[™È[[YHØœÙ\˜][Ûˆ[™™YÜ™\ÜÚ[Û‹›ÝH™]ÈÛÜšÙ›ÝËˆ[\Ü™XÙZ\È[™ÛÙHÈ›Ý›Ý™HXÝX[™[™\™Y™Y\Ë™\šYšYY™YHX]\šX[ÛÝËQK]šXÙH”Ëš\ÝX[ÈÜˆØ]H‹ÍÈXØÙ\[˜ÙK‚‚ŠŠŒŒ‹LLLLˆPÌH][K^›Û™HÝ\˜]Y˜]\™H›ÛÝË]›ÝYÚ
+Ø[™Y]NÈÚ[™ÝÜÈ^XÝZXYÚXÚÜÈ[™[™ÊNŠŠˆš]™H^\Ý[™ÈÜ[Û˜[\Þ[˜Ë[ØYY›Û‹XÛÛY[™ÈTÓH˜]\™H˜[Z[Y\È™]Z[ˆHÚ\™YX^[][HÙˆŒ[œÝ[˜Ù\ÎÈHØ[™Y]H\ÝšX]\ÈXXÚ˜[Z[H[[Û™È™YH™KY^\Ý[™ÈÚ\™HØØ][Ûˆ[˜ÚÜœË™Z™XÝÈÝY\Ü›Ý[™˜XÙ\ËÛÝ[ÈZ\ÜÚ[™ËÜÝY\˜XÙ\Ë[™^[™ÈXY\ÜÈ[[YH]šY[˜ÙHÚ]HXÝX[ØœÙ\™YØYYY˜[Z[KÙÜ›Ý[™YZ[œÝ[˜ÙHÛÝ[ÜˆÜ[Û˜[\XÚØYÙHXœÙ[˜ÙKˆ^XÝZXYÝ]XÈ\ÝØ\ÈÚ\™YÈ™KU[œ™X[ˆ›È™]ÈZ\ÜÚ[Û‹ÜÝÜžH]]Üš]KØ[Y\^HXÚËÞ[˜Ú›Û›Ý\ÈX]žHØY[™ËÜˆPÌˆ[\[Y[][Û‹ˆXÚØYÙHÝYÚ[™ËÔQK\™Ù]Y]šXÙH”Ëš\ÝX[\›Ý˜[[™Ø]H‹ÍÈ™[XZ[ˆ[™[™Ë‚‚ŠŠŒŒ‹LLLLˆPÌH[‹]ÛÜ›ÜšYÚ[˜[Y\Ú[YÜ˜][Ûˆ
+™]ÈÊÊÈØ[™Y]NÈÓÓTSKÔQKÑU’PÑKÝš\ÝX[[™[™ÊNŠŠˆY\ˆ™\šYšYYQMŒÈY]Üˆ[\ÜÍÜšYÚ[˜[Y\Ú˜[Z[Y\ËˆÚYXØ\ˆÑËŒÈXÚÙYX\ËŒHX]\šX[[œÝ[˜Ù\È[™È˜]\™HÚ[™ÛK\ÛÝš[™[™ÜÈ]Ú[™ÝÜÈ[ˆÎŒŽLÌËH^\Ý[™ÈTÚ\™T›ÝÝ\UÛÜ›Z[\˜™\]Y\ÝÈš]™HÝ\˜]YÛÙY\Ú]È\Ú[™È]ÈÝÛˆ\Þ[˜È”Ý™X[XX›SX[˜YÙ\˜ˆ]YÈš]™HØ\Y›Û‹XÛÛY[™ËÛ›ËUXÚÈTÓHÜ›Ý\È]™]š[Ý\ÛH^\Ý[™ÈÚ\™H[˜ÚÜœÈ
+LˆXÙ[Y[È\ˆÜ›Ý\X^Œ
+KÜ›Ý[™È[H\Ú[™ÈXÝX[ÛÜ›˜XÙH[™›Ü›X[^™\È›Ý[™ËX˜\ÙYØØ[KˆZ\ÜÚ[™ÈY]Ü‹[Û›HX\ÜÙ]XÚØYÙ\È\™H[\™[HÜ[Û˜[™]™\ˆ›ØÚÈÚ\\ˆ˜[šÎÈ[™[™È™\]Y\ÝØ[˜Ù[Y][™^Kˆ›ÈÚ[™Ù\ÈÈ]š[™ÕÛÜ›\™XÝÜ‹”ÐÛÛ^]Y\ÝÜØ]™KÜˆPÌˆ[[YKˆ›ÝÙ\ˆ][K[X]\šX[[œ™\ÛÛ™YÈ›ÈÝY\ÜÙYX]\šX[Ý™\Üš]KˆÝ]XÈ\ÝÈ™\šYžH]]Ü™YÛÛœÝ˜Z[È]›ÈÛÜ›š\ÝX[XØÙ\[˜ÙKÌŒ”ËQKÛÝ[™”ÈÚ\˜XÝ\ˆÛÛ\][Û‹ÜˆØ]H‹ÍÈ]šY[˜ÙH\ÈÛZ[YYˆ\™Ù]^XÝXY]\Ý\ÜÈQMÊÊÈZ[[™XÝX[[[YHXÙ[Y[]Y]‚‚ŠŠŒŒ‹LLLLˆ^XÝZXYQMŒÈ[ˆÎŒÍLÎŠŠˆŒH™]ÛHÝÛ™YÛÝ\˜ÙKZY[]HX]\šX[[œÝ[˜ÙPÛÛœÝ[\ÜÙ]ÈÚ][ŒÈ”ˆ^\™HÝ™\œšY\È\ÜÙY\‹Z[œÝ[˜ÙHÜÝ\Ø]™H™XY˜XÚË[ˆHš\œÝ›ÝÙ\—ÝÚ[Y\Ú˜Z[Y™XØ]\ÙH]È™X[[\ÜY–\È][\HX]\šX[ÛÝÈ
+›ÝH\ÜÝ[YYÚ[™ÛHÛÝ
+KˆÈ›Ý›[šÙ]\ÜÚYÛˆÛ™HX]\šX[ÈH[\™HY\Úˆ™]ÈØÛÜYš\ÝX[[ZÙH™\Ù\™\È[Í]]Ü™YÑ˜[Z[Y\ËÍˆÑÚYXØ\œËÍŒÈ‘ËÌŒHRHÚ[ˆX]\šX[ÛÝÛÝ[\È[XšYÝ[Ý\Ëš[™ÈÛ›H[HÚ[™ÛK\ÛÝÝ\™˜XÙ\ÈÜˆÛ™H^XÝH˜[YYÛÝ\˜ÙHÛÝ[Z]ÈH›Û‹XXØÙ\Y[œ™\ÛÛ™YÛ˜]\™WÜÛÝÛØœÙ\˜][ÛœØ\Ý[™XÝX[˜]\™WØ›Ý[™œÈ˜]\™WÚ[ÛÝ[Ëˆ\È[ÝÜÈ][\ÜÙ]\[[™H›ÙÜ™\ÜÈÚ]\ÛÛ]Y[œ™\ÛÛ™YÜÛÙÞH[™›ÈØ]H‹ÍÈ›Û[Ý[Û‹ˆÚ[™ÝÜÈ^XÝZXY[™XÝX[ÛÝØœÙ\˜][Ûˆ[™[™Ë‚‚ŠŠŒŒ‹LLLLˆPÌHXÝX[[œ™X[]ÛˆÙÈ[ˆÎŒŽÎŠŠˆÛÛ[X[™][\™Y
+PÌWÐÕTUQÑQUÔ—ÔUÓ—ÑS•T‘Q
+H[ˆ˜[Ù[KØXÝX[H™Z™XÝYš\œÝ^\™HÙ]\ŽˆPÌWÔ”—ÕVT‘WÔTSQUT—ÓRTÔÒS‘Î‹‹‹“RWÓ˜]\™WÕÔÚÐ˜\šÎ[™YÕ^\™Xˆ^\Ý[™ÈÊÊÈ™\šYšYYX\Ý\ˆÜXÚYšY\È^XÝH[™YÕ^\™K›Ü›X[^\™KÔ“U^\™Kˆ\™Ù]Y™[YYX][ÛŽˆÚXÚÈH™X[\™[Ù]Ý^\™WÜ\˜[Y]\—Û˜[Y\Ø™Yœ™\ÚRH[š\š][˜ÙKÙ]XXÚÝ™\œšYH[™YÙHžHÜÝ\Ø]™HÙ]ÛX]\šX[Ú[œÝ[˜ÙWÝ^\™WÜ\˜[Y]\—Ý˜[YX^XÝØš™XÝY[]K™]™\ˆÙ]\ˆ›ÛÛ[Û™NÈÝÜYˆÝ[HX\Ý\ˆXÚÜÈ]]Ü™Y\˜[Y]\ˆØÚ[XHÜˆ[žHÝ™\œšYH\ÈXœÙ[ˆÙ™›[™H™YÜ™\ÜÚ[ÛœÈÛÝ™\ˆÙ]\ˆ˜[ÙHÚ]\YY˜[YKXœÙ[˜[YKÝ[HX\Ý\‹ˆ›ÈXÝX[Ú[™ÝÜÈX]\šX[™XÙZ\QK]šXÙHÜˆš\ÝX[ÛZ[HY]‚‚ŠŠŒŒ‹LLLLˆXÝX[Ú[™ÝÜÈQMŒÈ[\Ü\Ý[ˆÎŒŒÌŽMNŠŠˆ^\Ý[™ÈÚ\™T›ÙXÝ[Û’[\ÜÛÛ[X[™]ÛÛ\]YLÍÈš[\Ë˜Z[\™\Ø
+ˆZ[›Üˆ[™Ù[Øš[›Ü›X[Ø\›š[™ÜÊK]QMY]Ü‹PÛYQ^XÝ]T]Û”ØÜš\›ÙXÙY›È]Ûˆ[žHÜˆÜÝZ[\Ü™XÙZ\È˜Z[™\ÜYPÌWÐÕTUQÑQUÔ—ÔÔÕSTÔ•Ô‘PÑRTÓRTÔÒS‘Øˆ›ÛÝÈ\XÈQMŒÈXY\ÜÈTNˆ\[\]ÛœØÜš\\ØÜš\Oš[O˜Ú]^XÚ]]]Üš^™Y[š\›Û›Y[[ž\Ú[ÝÝ]ØXœÛÙÈ[™\™Ù]Y˜Z[\™HZ[ˆ›ÈŒHRKÍˆÑÝXØÙ\ÜÈ\ÈÛZ[YY[[™^^XÝZXYÚ[™ÝÜÈ™XÙZ\ÈÛLÍØš[HÛÝ[\ÈHYØXÞHÛÛ[X[™][\ÜÛ›K›ÝQKÝš\ÝX[Ù]šXÙKÜØÙ[™HXØÙ\[˜ÙK‚‚ŠŠŒŒ‹LLLLˆQMŒÈX]\šX[[œÝ[˜ÙPÛÛœÝ[˜XÝÜžS™]ÈÛÛ\]Xš[]HÛÜœ™XÝ[ÛŽŠŠˆ\XÉÜÈQMŒÈ]ÛˆTHÙ\È›Ý^ÜÙH[š]X[Ü\™[\È[ˆY]Üˆ›Ü\HÛˆX]\šX[[œÝ[˜ÙPÛÛœÝ[˜XÝÜžS™]ËˆÈ›ÝÜš]H][œÝ\ÜY›Ü\NÈÜ™X]H[œÝ[˜ÙH›ÝYÚH˜XÝÜžH[™Ø[[œ™X[“X]\šX[Y][™ÓXœ˜\žKœÙ]ÛX]\šX[Ú[œÝ[˜ÙWÜ\™[
+[™XYHÝ\ÜY[™™]š[Ý\ÛH[\[Y[Y
+KˆÙ™›[™H[ØÚÙY˜XÝÜžH›ÝÈ™Z™XÝÈ[œÝ\ÜYY]Üˆ›Ü\HÙ]\œÈÈØ]Ú™Z[›ÙXÝ[Û‹ˆ^XÝZXYÚ[™ÝÜÈ[‹XÝX[RH\œÚ\ÝYš[™[™ÜÈ[™š\ÝX[ÔQKÙ]šXÙH›ÛÙœÈ™[XZ[ˆ[™[™Ë‚‚ŠŠŒŒ‹LLLLˆPÌH[‹\ÛÝ\˜ÙH[›™YTÒH[ZÙH[YÜ˜][ÛŽŠŠˆY\™ÙH]™[ÜŒ˜ŽY™˜LLÌÍŽ˜ÎLLX™˜˜ÍŒ˜NML
+ˆÍN
+H[ÈˆÍMKÙY\[™È^XÝZXY]]ÛX]XÈÝ\˜]YQMÜš]\‹ˆ[‹\ÛÝ\˜ÙHš]™H[™Ù\Ý[ÛˆX^H\ÙH™\šYšYYÛ˜\ÚÝÒLMˆÚ[ˆ™[[ÝHQH\È[˜]˜Z[X›KˆÜšYÚ[˜[[›XÙ[œÙYÛÝ\˜ÙH›Û[Ý[Û‹š[˜[QH[\ÜQKš\ÝX[[™]šXÙHXØÙ\[˜ÙH™[XZ[ˆØ]YžH™X[]šY[˜ÙNÈH]™[Ü˜[œÙ™\ˆ[ˆÎŒMLÌÌHØ\È][˜ÚY[™]È\ÚXØ[™\Ý[]\Ý™H™XY›Ý™\Ý[YY‚‚ŠŠŒŒ‹LLLLˆ]]ÛX]YÚ[™ÝÜËÑš]™H\[™[˜ÞH™\Z\ˆØ[™Y]NŠŠˆ^XÝZXY˜ŽXMŒ™YŒMÎMYŒÌLÍM™˜ØÌMÎNL™Í˜™KU[œ™X[[™š]™K[[™HÜÝYTÔÎÈÚ[™ÝÜÈ[›™\ˆX[TÔÈ
+[\˜XÝ]™HØ]ÚÙË\ÚÈM‹ŒQÐŠKˆXÝX[]]ÛX]XÈÝ\˜]Y[\ÜRSQPÌWÐÕTUQÕÐT‘RÕTÑWÐTÒU‘WÓRTÔÒS‘Ø
+[ˆÎNLNLÌJKˆØÚY[Yš]™H[ZÙHRSQX\›Y\ˆ’U‘WÓÐ’‘PÕÐÒPÒÔÕSWÓÔ—ÔUÒS•SQ™Y›Ü™H˜[œÙ™\ˆ
+[ˆÎNLMŒLM
+Kˆ\™Ù]Y™\Z\ˆXZÙ\ÈZ\ÜÚ[™ËSQH’TØ[™Y]\È]X\˜[[™Y[™]šYX[HÛÈÛ™H[œ™[]Y˜Y™[[ÝH™XÛÜ™Ø[››ÝX›Ü˜[Y\˜Ú]™HXÜ]Z\Ú][Û‹ˆ^XÝ[ˆ™\]Z\™YÛÝ\˜ÙH’TË\ÚXØ[QKÔÒKÐÔËXÙ[œÙK‘ÚPˆ™\Ù\™K[™ÛÝ\˜ÙKZ[\ÜØ]H™[XZ[ˆ˜Z[XÛÜÙYˆ›ÈX[X[\Ü]Ú›Èž\\ÜÈÙˆ[™Ú[™HÜˆØ]H‹ÍÈXØÙ\[˜ÙNÈœ™\Ú^XÝZXYÚXÚÜÈ[™[™Ë‚‚ŠŠŒŒ‹LLLLˆPÌHˆÍMHÝÛ™Y[X]\šX[ÜÝZ[\Ü™Yš[™[Y[
+Ø[™Y]KÕUPËUSQUQ[™[™Èœ™\Ú^XÝZXYÒJNŠŠˆ™]\ÙHH^\Ý[™ÈY]Ü‹XÜ™X]YWÔPÌU™\šYšYY”˜X\Ý\‹Ü™X]KÝ\]HŒHÛÝ\˜ÙKZY[]HX]\šX[[œÝ[˜ÙPÛÛœÝ[\ÜÙ]È[™Ù][ŒÈÜšYÚ[˜[˜\ÙPÛÛÜ‹Ó›Ü›X[ÓÔ“H\˜[Y]\œËˆÛ›H˜[YYÛÝ\˜ÙK[ÝÛ™YÚ[™ÛK\ÛÝ˜]\™HY\Ú˜[Z[Y\È\™H[YÚX›H›Üˆ]\›Z[š\ÝXÈš[™[™ÎÈ™Y\ËØ\˜Ú]XÝ\™H™]Z[ˆZ\ˆÛÝÈ[™[™È™\šYšYY][K\Ý\™˜XÙHX\Ëˆ™\]Z\™HXÝX[X\ÜÙ]XÚØYÙH^\Ý[˜ÙK™YÚ\ÝžHY[]KØ]™Y\™[Ü\˜[Y]\‹ÜÛÝ™\šYšXØ][ÛŽÈ˜Z[ÛÜÙYÚ]›ÈÝXØÙ\ÜÙ[™XÙZ\›ÜˆZ\ÜÚ[™ÈX\Ý\‹X\\˜[Y]\‹š[HÜˆ[XšYÝ[Ý\ÈÛÝˆY]Ü‹[Û›KÛÙ™›[™H™YÜ™\ÜÚ[ÛˆÙ\È“Õ›Ý™HÚ[™ÝÜÈQM[\ÜÛÜ›XÙ[Y[ÛÛ\Ú[Û‹Û˜]‹QKÌŒ”Ë[X[ˆš\ÝX[ÈÜˆØ]H‹ÍËˆLŒ^\›˜[‘È™[XZ[ˆšYÚËZ[ˆH^XÝÒH[™ÒH[ˆ]šY[˜ÙH]\Ý™H™XÛÜ™YY\ˆ\ÚÈ›È]]ÛX]XÈØ\™ZÝ\ÙHÜˆ[™Ú[™H\Ü]Ú‚‚ŠŠŒŒ‹LLLLˆPÌHÝ\˜]YY]Üˆ\ÜÙ]™YÚ\ÝžH˜Z[XÛÜÙY™Yš[™[Y[
+ˆÍMHØ[™Y]JNŠŠˆ›ÝÍ˜\ÙHY\Ú\È[™ŒÈÝÛ™Y‘È™\]Z\™HY]Ü\ÜÙ]Xœ˜\žH™YÚ\ÝžHš\ÚXš[]HY\ˆY]ÜˆØ]™NÈZ\ÜÚ[™È™YÚ\ÝžHØš™XÝÈX›ÜÚ]Ý][Z][™ÈXØÙ\[˜ÙH™XÙZ\ˆYYÙ™›[™H™YÜ™\ÜÚ[Û‹ˆ^XÝZXY[™Ú[™H[\Ü™X[X\ÜÙ]\œÚ\Ý[˜ÙKXÙYÙ[ÛY]žKÛÛ\Ú[ÛœËÔQKÙ]šXÙKÚ[X[ˆš\ÝX[™[XZ[ˆ[™[™Ë‚‚ŠŠŒŒ‹LLLLˆPÌHÝ\˜]YÜšYÚ[˜[QMY]ÜˆÑ
+ÜXÚÙY]^\™HœšYÙH
+Ó‘HØ[™Y]HØ]™NÈÕUPËUSQUQÓ“JNŠŠˆÍÝÛ™Y˜\ÙH–ˆ]]Ü™YÚYXØ\ˆÑÈ[™ŒÈÝÛ™Y‘È]™HH˜Z[XÛÜÙY[‹V’TUØ\™ZÝ\ÙKTPÈOˆ[›™Y\ÝYÙK\™XÙZ\Oˆ^\Ý[™ÈÚ\™T›ÙXÝ[Û’[\ÜOˆQMY]Ü”Ý]XÓY\ÚXœ˜\žHÜÝZ[\Ü]Ø^H
+ØÜš\ËÜ[—ÜXÌWØÝ\˜]YÝYMœÌJKˆÚ^ØØ[Ù™›[™H[ØÚÈ\ÝÈ\ÜÙYÈ^XÝZXY™KU[œ™X[QMŒËŒˆÛÛ\[KÙY]Üˆ[\ÜÑÝ^\™HX\ÜÙ]]šY[˜ÙKÛÛ\Ú[Û‹Û˜]‹XÙ[Y[QKXÚØYÙK\™Ù]Y]šXÙH”È[™[X[ˆš\ÝX[\›Ý˜[\™H“Õ\ÝX›\ÚYžH\ÈÚ[™ÙKˆ›ÈÝ]ÚYH”ˆ]]ÈXÙ[œÙH›Û[Ý[Û‹›ÈÛÜšÙ›ÝÈ]]È\Ü]ÚˆØ]H‹ÍÈ™[XZ[œÈÔS‹‚‚ŠŠŒŒ‹LLLLˆPÌHÚ\˜XÝ\‹Û]š[™Ë]ÛÜ›™X[]H›Ý[™\žNŠŠˆ›Ú™XÝX[˜YÙ\ˆš[\È›ÝÈ\Ý[™ÝZ\Ú[\ÜYÚXY\ÜË\[[YKYÜ™Y[ˆÚ\™H]šY[˜ÙHœ›ÛHš[˜[Ú\˜XÝ\ˆ™X[]Kˆœ›ÙÈ™[XZ[œÈHXÚšXØ[ÚÙ[][Ú[›™\‹›Ýš[˜[š\ÝX[[[YHXØÙ\[˜ÙNÈš[›ËØ[™[‹Ø[KY\œžK\[ˆ[™]š[™Ë]ÛÜ›ØÚY[KÙX[ÙÝYKÙ˜][˜H™Z]š[Üˆ™\]Z\™HYXØ]Y[[YKÔQKÙ]šXÙKÝš\ÝX[›ÛÙˆ™Y›Ü™HÚ\\ˆÛÜÙ[Ý]——ŠŠŒŒ‹LLLLˆPÌHÙ[‹ZÜÝYQM[\ÜÜ[[YH]šY[˜ÙH™XÛÜ™YŠŠˆÛÜšÙ›ÝÈ[ˆÎNŽÍŽXÛˆÛÛ[Z]LLYYL˜ØÙLŒÌØLXNL™ŒŒMÙŽŒŒÍ™™˜Î˜ÛÛ\]YHÚ[™ÝÜÈÙ[‹ZÜÝYQMŒÈ[™HÝXØÙ\ÜÙ[NˆZ[Ú\™R›Ý\›™^QY]Ü˜[\Ü›ÙXÝ[Ûˆ\ÜÙ]È[ˆQMŒËŒ˜]]ÛX][ÛˆPK^XX›HÝ\\Û[ÚÙKÚ\\ˆ[[YH]Y]›Ý]KÜÝÜžHÝ]H›Ý[™š\[™Ø\›š[™ËYXÝX\™[ÝXØÙYYYˆ[\Ü]šY[˜ÙH[˜ÛY\ÈÚ\™T›ÙXÝ[Û’[\Üˆš[\Ë˜Z[\™\ØMˆ™\šYšYY”ˆX]\šX[š[™ËMˆ™\šYšYY”ˆ[\ÜPÈ[™\ËMˆ\š]™Y–ÛÜšÚ[™ËXÛÜH[™\Ë[™™\›ÈØ\›š[™ÈX›ÜˆÛ[ÛÝ[™ËÝ[™Ù[ËÝÛÜ›XÚØYÙ\ËÙY˜][X]Ó”ÈÜ]ÛˆÛÛ\Ú[Û‹ˆÚ[™ÝÜÈXÚØYÙKQK\ÜXÚYšXÈ˜]™\œØ[\™Ù]Y]šXÙH›Ùš[[™Ë[™[X[ˆš\ÝX[XØÙ\[˜ÙH™[XZ[ˆ[™[™Ë——ŠŠŒŒ‹LLLLˆÚÛKYØ[YH™YÚ[ÛˆX]\šX[™XY[™\ÜÈÝX\™ŠŠˆYYHÚ]X‹ZÜÝY]Y]›ÜˆHŽ™YÚ[Ûˆ›ÙXÝ[ÛˆXÚÙ]È[™Ý\œ™[PÌHÝ\˜]YÛÝ\˜ÙHÝ\ÜˆHÝX\™™\šYšY\È[™YÚ[ÛˆXÚÙ]ÈÙY\™\]Z\™Y[]™\˜X›\ËÜÛÝ\˜Ú[™È[™\ËÛÛ™š\›\ÈHÚ\™KÐQ×ÑS‘ÛÝ\˜ÙH˜]ÚÝ[\ÈH^XÝY›ÛXYÙKÝ\™˜XÙK\˜Ú]XÝ\™K[™˜]\™HÑÛÝ™\˜YÙK[™™\Ù\™\ÈH[H]]\ˆ[[YH™[XZ[œÈØÚÙY[[PÌHØ]H‹ÍÈ]šY[˜ÙH^\ÝË——ŠŠŒŒ‹LLLLˆPÌHÝ\˜]Y[\Ü™XY[™\ÜÈÝX\™ŠŠˆYYHÛÝ\˜ÙK[Û›H]Y]›ÜˆHÝ\˜]YÚ\™HX]\šX[ËÛY\ÚÝYÙH™Y›Ü™H[œ™X[›Û[Ý[Û‹ˆ]™\šYšY\ÈHÍY\Ú˜[Z[Y\ËÑÚYXØ\ˆ[\ËŒH˜\ÙPÛÛÜ‹Ó›Ü›X[ÓÔ“Hš\]ËÛÛ\Ú[ÛˆÛXÞHÙ]TÓH˜]\™HØ[™Y]\Ë[™HLŒ[^\›˜[[XÙ[œÙHš[\ÈÛÈ˜YX]\šX[ÓÑ™\\˜][Ûˆ˜Z[È[ˆÚ]X‹ZÜÝYÚXÚÜÈ™Y›Ü™H\Ú[™ÈHÚ[™ÝÜÈ[›™\‹ˆ\ÈÙ\È›ÝÛZ[HQH[\ÜQK]šXÙKÜˆš\ÝX[XØÙ\[˜ÙK——ŠŠŒŒ‹LLLLˆQMÛÛ\[Hš^›Üˆ]š[™ÕÛÜ›[œÚ]H˜[˜XÚÎŠŠˆÙ[‹ZÜÝY[ˆÎNNÌŽMX™XXÚYQMŒÈÊÊÈZ[[™˜Z[Y[ˆ]š[™ÕÛÜ›\™XÝÜ‹˜Ü™XØ]\ÙHH™]È˜\ÙTÜ[][ÛŠ˜˜[˜XÚÈšY[ÈÙ\™HZ\ÝZÙ[›HXÛ\™Y[œÚYHÚ\\”Ü[][Û”›Ùš[X˜]\ˆ[ˆ\ÈS]š[™ÕÛÜ›\™XÝÜ˜Y[X™\œËˆ\Èš^[Ý™\ÈÜÙHšY[ÈÈHXÝÜˆY[X™\ˆ›ØÚÈ[™Ý™[™Ý[œÈHÝ]XÈ™YÜ™\ÜÚ[ÛˆÈ™Z™XÝH˜YXÙ[Y[™Y›Ü™H[›Ý\ˆQHZ[‚‚ŠŠŒŒ‹LLLLˆPÌH[YÜ˜]Y[[YH™YÜ™\ÜÚ[Ûˆ˜]ÚŠŠˆ™X˜\ÙYH›Û‹XÛÛ™›XÝ[™ÈÛÙHš^\Èœ›ÛHÜ[ˆˆÍ[™ˆÍHÛÈÝ\œ™[]™[Üˆ]š[™ÕÛÜ›[œÚ]H˜[˜XÚÈ›ÝÈ™\ÝÜ™\È˜\ÙHÛØ˜[Ü]Û‹Ü˜Y]\È˜[Y\ÈÚ[ˆHÚ\\ˆÝ™\œšYH\ÈXœÙ[[™HXY\ÜÈÚ\™PÒT[[YP]Y]›ÈÛ™Ù\ˆ[[Y\œÈ™Z™XÝY]]ÛX]XÈÚXÚÜÚ[™]šY\ÈÚ[H^XÚ]\ÚÈ›Ý[™š\\ÝÈ™[XZ[ˆ[XÝˆÝ]XÈ™YÜ™\ÜÚ[ÛœÈÙ\™HYYÈ^XÝZXYQMÛÛ\[KÔQH™[XZ[œÈ[™[™ÈX[X[ÛÜšÙ›Ý×Ù\Ü]Ú]šY[˜ÙK‚‚ŠŠŒŒ‹LLLLˆÙ™›[™H™\ÝÜ™H]Y\Ý\Ý]HØ[š]^˜][Ûˆš^ŠŠˆÛÝ\˜ÙH]Y]›Ý[™TÚ\™T]Y\ÝÝXœÞ\Ý[NŽ”™\ÝÜ™T]Y\ÝÝ]XÛÜYY™\ÝÜ™Y]Y\Ý\ÝYÙH[™ÛÛ\]Y\ÝÜžKX™X]ÛÛXÝ[ÛœÈ\™XÝHY\ˆY[]HØ[›ÛšXØ[^˜][Û‹ˆHš^›ÝÈ™XZ[È™\ÝÜ™Y]Y\ÝÝYÙ\Èœ›ÛH›Û‹Y[\H]Y\ÝYÈÛ›KÛ[\È™YØ]]™HÝYÙ\ÈÈ™\›Ë™XZ[ÈÛÛ\]YÝÜžH™X]Èœ›ÛH›Û‹Y[\H[š\]YHYË[™™\Ù\™\ÈH^\Ý[™È\œÚ\Ý[˜ÙK\™\ÝÜ™Hœ›ØYØ\ÝÝ\™\ÜÚ[Û‹ˆ\È\ÈÛÝ\˜ÙKÜÝ]XÈ˜[Y]YÛ›H[[H]]Üš^™YQMZ[ÔQH[›™\ˆ[ˆ›Ý™\ÈÛÛ\[H[™[[YH™Z]š[Ü‹‚‚ŠŠŒŒ‹LLLLˆPÌHÜšYÚ[˜[ÛÝ\˜ÙK]ËUQMÝYÚ[™ÈØ[™Y]NŠŠˆœ›ÛHH[™XYKXÝ\˜]Y[‹Qš]™KV’T˜]ÚHÝšXÝHÛÝ\˜ÙK[Û›HÛÛ™\\™\ÈÍÜšYÚ[˜[Ý]XÈ–Ñ˜[Z[Y\È
+Lˆ˜]\™KŒˆ\˜Ú]XÝ\™JH\Èˆ–ÑKÌˆÚYXØ\œÈÝ]ÚYHÛÝ\˜ÙP\ÜÙ]È[™ŒÈÜšYÚ[˜[‘ÈX\È
+ŒH˜\ÙPÛÛÜ‹Ó›Ü›X[ÓÔ“Hš\]ÊKˆÛÝ\˜ÙHš[\È[™[X™YYX[šY™\Ý\Ú\È\™H\ÚXØ[HÚXÚÙY˜Z[XÛÜÙY]\ØY™KY[\Ý[È\™\\HÐÌXÛZ[YYLŒ‘È\™H“Õ]]Ë[XÙ[œÙYÜˆ›Û[ÝYˆZYÚÙÚXØ[\ÜÙ]ÙØ[Y\^KÔPHÛÜšÜÝ™X[\È[ˆ[œÚYHH^\Ý[™È]]Üš^™Yš]™H›ÙXÙ\ˆ[™\Ë›ÝZYÚ[™\[™[Ú[™ÝÜÈÜš]\œËˆHMËYš[HÛÝ\˜ÙKÜÚYXØ\ˆÝYÙHØ\ÈÙ[™\˜]YØØ[H[ˆÚ]ÔÛÛZ[™\‹[™]ÛˆÙ™›[™H™YÜ™\ÜÚ[ÛœÈ\ÜÙYÈXÝX[ˆÝYÙKQH[\ÜÈX\ÜÙ]Ñš[™[™ËÛÛ\Ú[Û‹”ËÙØ[Y\^KQK]šXÙKš\ÝX[[™Ø]H‹ÍÈXØÙ\[˜ÙH™[XZ[ˆS”“Õ‘S‹ˆ™]ÈØÚY[YÝYÙH›ÛÝÜÈÝXØÙ\ÜÙ[^XÝ[‹V’TØ\™ZÝ\ÙH]\Ý][ÛˆÚ]Ý]Ú[™Ú[™È]ÈÛÛ˜Ý\œ™[˜ÞKÜØÚY[KÜ\›Z\ÜÚ[ÛœÈÜˆÜ™X][™È[›Ý\ˆ\œÚ\Ý[Üš]\‹ˆØ[™Y]H™\]Z\™\È^XÝZXY™KU[œ™X[Ñš]™HÒK‚‚ŠŠŒŒ‹LLLLˆ\ÚXØ[Ú\™HÛÝ\˜ÙHÝ\˜][Ûˆ
+ÐÐSPÓÓ•RS‘TˆÓ“NÈ^XÝ[ˆš]™H’TÊNŠŠˆ[™\[™[HÝÛ›ØYYLÝÛ™\ˆ’TÈÝ[[™ÈŒ‹MÌMHž]\Ë˜[Y]Y[\™HÛ‹Y\ÚÈ’TÒLM‹ÐÔÈ[™[X™YY\‹Yš[H™XÙZ\Ë[ˆÝ\˜]YŒÈ\ÜÙ]š[™[™ÜÈ[ÈŒÌÒK][š\]YH\ÚXØ[š[\È
+š[˜\žH–NÈ‘Èš[™[™ÜÈÚ]ÌÈÛÛ[[X\Ù\ÊHœ›ÛHLˆ˜]\™H˜[Z[Y\ÈÈÑŒˆ[Ù[\ˆ\˜Ú]XÝ\™H˜[Z[Y\ÈˆÑLˆÜšYÚ[˜[™YÚ[Û˜[”ˆ˜[Z[Y\Ëš[Üš]HÛH]™[ˆ”ˆÙ]È[™ÍˆÐÌ\™XÙZ\”ˆÙ]Ëˆ™[[Ý™YÍˆ\XØ]Hš[˜\žH–[™ÍˆYØXÞHTÐÒRH–È[[˜ÛÛ\]HÛÛÙ[—Ø˜\œ™[×ÌH[™H˜Z[[™ÈšYË]ÙZYÚØ[™Y]KˆØØ[H[Z]YÒT‘WÔPÌWÐÕTUQÔÓÕTÑWÌŒŒLL‹žš\
+NKÍŒŽHž]\ÎÈÒLMˆLY˜ŽØØŒØ˜™XYYXNMÍÙŒLY™ÍYLÍŽØÙLMŽXMXÌÌM™˜™ŒÎYXÙ™ÎYŠH\ÈÛÛ\]HX[šY™\ÝX]\šX[ÛÛXÝÚY][™Ù\\˜]HšYË\™]šY]È\˜Ú]™KˆÚ^ÛÝ\˜ÙK]ÛÛ\ÝÈ\ÜÙYØØ[NÈØÜš\ËØÝ\˜]WÜXÌWÙš]™WÜÛÝ\˜ÙKœH›ÝÈ™\›ÙXÙ\ÈHÒKXÚXÚÙYˆÝ\˜]Y˜]ÚÛ›HY\ˆ\ÚXØ[[‹V’TPËÚ]‘ÚPˆ™\Ù\™H[™[˜Ú[™ÙY]]Üš^™YØÚY[YšYÙÙ\‹ˆ\È\È“Õ›ÛÙˆÙˆˆ˜[œÙ™\ˆÜˆ[œ™X[[\ÜÑ[YÜ˜][Û‹ÛÛ\Ú[Û‹QK\™Ù]”Ë[X[ˆš\ÝX[ÜˆØ]H‹ÍÎÈ^\›˜[XÙ[œÙ\ÈÝ[™\]Z\™H™]šY]Ë‚‚ŠŠŒŒ‹LLLLˆÌHÛÝ\˜ÙK[Û›H\ÚXØ[Ø\™ZÝ\ÙHPÈØ[™Y]NŠŠˆ™]ÈØÜš\ËÝ™\šYžWÙš]™WÝØ\™ZÝ\ÙWÜ™XÙZ\ËœH™XYÈ[ˆ^XÝ\˜Ú]™YÛÝ\˜ÙHÒLMˆ˜[Y\Èœ›ÛH]KÑš]™TÛÝ\˜ÙSØØ[™Y›YÚŒŒLLKšœÛÛ‹™\šYšY\È]™\žHXÝX[ÝYÙYˆš[HÒLMˆ[™ÛÛ\]YQHYØZ[œÝH˜[œÙ™\ˆ™XÙZ\ØØ[œÈ’TÛÛ[Ë^ÜÙ\ÈY[X™\‹[]™[–Ô‘È\XØ]HÜ›Ý\Ë]X\˜[[™\ÈTÐÒRH–[™[˜ÛÛ\]H›ÝšY\ˆX]\šX[Ù]Ë[™Üš]\ÈH™XY[Û›H”ÓÓˆÛÝ\˜ÙH™\ÜÚ]š]™H^XÚ]H›ØÚÙY›ÙXÝ[ÛˆØ]™\Ëˆ[YÜ˜]YY\ˆH^\Ý[™È]]Üš^™Yš]™H[ZÙH›Ø‹Ú]Ý]Ú[™Ú[™È]ÈØÚY[KÝšYÙÙ\‹ÜÙXÝ\š]HY[]K[™Ú]š[™HÜÝY™YÜ™\ÜÚ[ÛœËˆØ[™Y]HÝ]\È\ÈÕUPËUSQUQÛ›HY\ˆ^XÝZXYÒH\ÜÙ\Ëˆ›È™X[™]Èˆ™XÙZ\QH[\ÜQKÙ]šXÙKÝš\ÝX[Ü\™›Ü›X[˜ÙHÜˆØ]H‹ÍÈTÔÈÛZ[YYÈXÙ[œÙ\È™[XZ[ˆX[X[[™[\Ü›ØÚÙY‚‚ŠŠŒŒ‹LLLLˆš]™H[›™\ˆU™YÜ™\ÜÚ[ÛˆØ[™Y]NŠŠˆX[X[š]™HÛÜšÙ›ÝÈ[ˆÎMÍLÍÍ™XXÚYÙ[‹ZÜÝYÚ[™ÝÜÈQMLËUÚ[™ÝÜØ]˜[œÙ™\ˆ˜Z[Y™Y›Ü™H[žHÛÜH]ÓÓ‘WÓRTÔÒS‘Ø\Ü]HÝÛ™\ˆ[\˜XÝ]™H˜ÛÛ™HÛÛ›™XÝ]š]H[™ÛÛ™šYÝ\˜][Û‹ˆØ[™Y]H™Yœ™\Ú\È\œÚ\ÝYXXÚ[™KÝ\Ù\ˆU[œÚYHH^\Ý[™ÈØ]ÚÙÈ›Ø‹™\ÛÛ™\È˜ÛÛ™K™^X[™]Û‹ÜHÚ]Ý][œÝ[[™ÈÜˆÚ[™Ú[™ÈH[›™\‹[ˆ\ÜÙ\È^XÚ]˜ÛÛ™H^XÝ]X›H]ÈHÛÝ\˜ÙK[Û›H[™Ù\ÝØÜš\ˆ›ÈÝXØÙ\ÜÙ[\ÚXØ[˜[œÙ™\‹’T™XÙZ\[œ™X[[\ÜQKÙ]šXÙKÝš\ÝX[ÜˆØ]H‹ÍÈÛZ[NÈ™\Ù\™H™XY[Û›Hš]™H[™˜Z[XÛÜÙY]][™[][ÛˆÝX\™Ë‚‚ŠŠŒŒ‹LLLLHPÌH[‹X[™H\ÚXØ[™Y›YÚ
+ÛÛZ[™\‹“ÕÚ[™ÝÜÊNŠŠˆ™]šY]™Y[LÝÛ™\ˆš]™H’TÈ[È\ÈÙ\ÜÚ[Ûˆ[™]Y]YŒ‹MÌMHž]\ÎÈ’TÔËÜØY™H]ËÛÝ\˜ÙH\Ú™XÙZ\Ë™\ÝYŽ\™YÚ[Ûˆ\˜Ú]™K–›Ü›X][™‘ÈXY\œÈ\ÜÙYLÌLˆÒKX›Ý[™ØØ[™XÙZ\ˆ]KÑš]™TÛÝ\˜ÙSØØ[™Y›YÚŒŒLLKšœÛÛ˜È\›X[™[™YÜ™\ÜÚ[ÛŽˆØÜš\ËÝ˜[Y]WÙš]™WÜÛÝ\˜ÙWØ[™\ËœX
+ÈØÜš\ËÝ\ÝÝ˜[Y]WÙš]™WÜÛÝ\˜ÙWØ[™\ËœX
+Ù™›[™H\ÝÈ\ÜÙY
+KˆÍˆš[˜\žHÚ\™H˜]\™H–\™H\XØ]Y™]ÙY[ˆÛÈXÚØYÙ\Ë\Ý[˜Ýœ›ÛHHÍˆÛTÐÒRHÛÝ\˜ÙH–È[Ù[\ˆ™\ÝYXÚÈÛÛZ[œÈš[˜\žH–[™Íˆ‘Ëˆ›Ý\ˆÛH]™[ˆÚ\™ÈÛÛZ[ˆÍˆÛÛ\]HÐÌ[X]\šX[š\]ÎÈÛÛÙ[—Ø˜\œ™[×ÌX™[XZ[™Y]X\˜[[™Y›ÜˆRTÔÒS‘×Ô‘TURT‘QÓPTËˆ\È\ÈÛÝ\˜ÙKZ[YÜš]H]šY[˜ÙHœ›ÛHÚ]ÔÛÛZ[™\ˆÛ›K“ÕHˆ[›™\ˆ˜[œÙ™\‹[œ™X[[\ÜQK]šXÙH\Ýš\ÝX[\›Ý˜[ÜˆØ]H‹ÍÈÛÜÝ\™K‚‚ŠŠŒŒ‹LLLLHˆÍˆÚ[™ÛHØ\™ZÝ\ÙHÜš]\ˆØY™]HÛÜœ™XÝ[ÛŽŠŠˆÛÛœÛÛY]Y\XØ]HÝ\›KÝÛËZÝ\ˆš]™H›ØœÈ[ÈHÚ[™ÛHØÚY[YÛÝ\˜ÙH[ZÙH[™™XÙZ\™YKYYØ]ÚÙÈÙ\ÜÚ[Ûˆ™\šYšXØ][Û‹^XÚ]H›ØÚÙY[˜][™Yš]™H[][ÛœÈ[™YÙÙYÝYÙY’TÈ\È[™\šYšYY›ÜˆXÙ[œÙKÚ[\Üˆ\È\ÈHÛÝ\˜ÙK[Û›HÛÜœ™XÝ[ÛŽÈ›È\ÚXØ[ˆ˜[œÙ™\‹[™Ú[™H[\ÜÜˆØ]H‹ÍÈTÔÈ\ÈÛZ[YY‚‚ŠŠŒŒ‹LLLLH]]Èš]™HØ\™ZÝ\ÙHØ[™Y]NŠŠˆYYÛËZÝ\ˆØÚY[YÚ[™ÝÜÈÛÝ\˜ÙH’T[ZÙH
+ØÜš\ËÙš]™WÝØ\™ZÝ\ÙWÜÞ[˜ËœJH[™˜\œ›ÝÈ^XÝRQÚ\ÚÚ[™\[™[X˜XÚÝ\ØXÝX[[\ÜY]šY[˜ÙHÛX[\ˆ\Ù\È\ÛÛ]Y[›™\ˆ[\ÛÝ\˜ÙH[™\œÚ\Ý[Ø\™ZÝ\ÙKˆÛ™K][YHš]˜]H˜ÛÛ™HÐ]]™\]Z\™YÈ›Èš\œÝ˜[œÙ™\‹[œ™X[[\ÜÜˆÛX[\\È™Y[ˆ›Ý™[‹ˆØ]H‹ÍÈ[˜Ú[™ÙYˆÜÝY™YÜ™\ÜÚ[ÛœÈ[™[™Ë‚‚ŠŠŒŒ‹LLLLH]]ÛX]XÈš]˜]Hš]™H[ZÙHØ[™Y]NŠŠˆ[›ÙXÙYØÜš\ËÜÞ[˜×Ùš]™WÝØ\™ZÝ\ÙKœX[™™Ú]X‹ÝÛÜšÙ›ÝÜËÜš]˜]KYš]™K]Ø\™ZÝ\ÙKZ[ZÙKž[[ÛˆYXØ]Y[™œ˜Hœ˜[˜ÚˆÝ\›HÙ[‹ZÜÝYØ\™ZÝ\ÙK[Û›HØÚY[K^XÝTÒH[\Ü˜\žHÚXÚÛÝ]\œÚ\Ý[—XÝ[ÛœË\[›™\—ÝØ\™ZÝ\ÙWÚ\™R›Ý\›™^WÙš]™WÚ[ZÙX[[]]X›HÒLMˆ™XÙZ\Ëš]™HQHX]Ú’TÔÈ[™]\ØY™]HÚXÚÜËZ[š[][HˆÚPˆœ™YKˆ\È
+Š™Ù\È›Ý
+ŠˆXZÙHš]™HÜ™Y[X[È]˜Z[X›HÛˆ[›™\Žˆ™\]Z\™\ÈÙ\\˜][HÛÛ™šYÝ\™YÒT‘WÑ’U‘WÔÓÓ‘WÐÓÓ‘’Q×Ð[™˜ÛÛ™H^XÝ]X›HÚ]š]˜]HÚ\™KYš]™N˜›ÛÝ™\ÝšXÝYÈH]]Üš^™Yš]™H›Û\‹ˆ›Èš]™H[][Ûˆ\È[\[Y[YÜˆ[ÝÙY[[[™\[™[˜XÚÝ\ØØ[[YÜš]H[™[\ÜÙ\ÜÜÚ][Ûˆ›ÛÙŽÈÈ›Ý\™ÙHÛÛHÛÝ\˜Ù\ËˆØ[™Y]HÛ›K›ÈXÝX[[›™\ˆÞ[˜ÈÜˆÝ]XÈÒH›ÛÙˆY]ÈPÌH[™Ú[™HØ]H[˜Ú[™ÙY‚‚ŠŠŒŒ‹LLLLHPÌHØ]™H™\ÝÜ™HÝ™\›\šYÙÙ\ˆØ[™Y]NŠŠˆQH[›™\ˆÌNMŽHØœÙ\™YPÌY\‹\›Ý]KXÚ[™ÙH™\ÝÜ™H˜Z[
+]Y\ÝÝYÙ\ËÜÝÜžH™X]ËÓ”ÈY[[ÜžKÜ›Ý]H›ÙÜ™\ÜÊKˆ™KXÛÛ[Z]Ý™\›\[™ÈšYÙÙ\ˆX^H]]]H™\ÝÜ™YÝÜžHÚ[HXÙ[Y[[™[™ËˆØ[™Y]HÙ]È[™[™ÈØ]™Y\^Y\ˆ˜[œÙ›Ü›H™Y›Ü™HÛÛ[Z]\œÚ\Ý[˜ÙT™\ÝÜ™H[™^[™È\ÑØ[Y\^UÛÜ›ÛÛ[Z]YÝX\™ˆÛÝ\˜ÙH™YÜ™\ÜÚ[ÛˆYYÈ^XÝZXYÒKQH˜[œÚ][Ûˆ]Y][™QH™[XZ[ˆ[™[™Ëˆ›ÈØ]H‹ÍÈ›Û[Ý[Û‹‚‚ŠŠŒŒ‹LLLLHÙ™›[™H]Y\ÝÝYÙHY[\Ý[˜ÞKÜ™\ÝÜ™HÝX\™š^ŠŠˆÛÝ\˜ÙH]Y]›Ý[™Ù]]Y\ÝÝYÙXœ›ØYØ\ÝÛ”]Y\ÝÝYÙPÚ[™ÙY]™[ˆÚ[ˆH™\]Y\ÝYÝYÙH[™XYHX]ÚYHÝÜ™YÝYÙK[™Y›ÝÝ\™\ÜÈÝYÙHœ›ØYØ\ÝÈ\š[™È\œÚ\Ý[˜ÙH™\ÝÜ™HÚ[H™[]YÝ\]Y\ÝÔÝ\Ú\\ˆ]ÈÙ\™H[™XYHÝX\™YˆHÙ]\ˆ\È›ÝÈY[\Ý[[™™\ÝÜ™K\Ý\™\ÜÙY™]™[[™È\XØ]HšYÙÙ\ˆ™Y]˜[X][Ûˆ[™[\›YYX]H™\ÝÜ™HX›XØ][Û‹ˆÜÝY™YÜ™\ÜÚ[ÛˆYYÈQKÔQH˜[Y][Ûˆ™[XZ[œÈ[™[™È[›™\ˆ]šY[˜ÙK——ŠŠŒŒ‹LLLLHÙ™›[™H”È[™Ù\ˆÛÛ[Z]YXÛÛ^ÝX\™š^ŠŠˆÛÝ\˜ÙH]Y]›Ý[™\Ñ[™Ù\”Ý]PXÝ]™J
+XÛÝ[™XY˜]È]Y\ÝÝ]H™Y›Ü™H[žHÛÛ[Z]YÛÜ›ÛÛ^^\ÝY[ÝÚ[™È\Ý[˜][Û‹Ù]\™H[™Ù\ˆÝ]HÈXZÈ[ÈÛÜ›Y˜XÚ[™È”ÈÜˆ[XšY[˜ÙHXÚ\Ú[ÛœËˆH[˜Ý[Ûˆ›ÝÈ˜Z[ÈÛÜÙY[[H›Ý]\‹Ó”ÈÛÛ[Z]YXÛÛ^œšYÙH\ÈX›\ÚYš\ÚX›HÛÜ›Y[]KˆÜÝY™YÜ™\ÜÚ[ÛˆYYÈQKÔQH˜[Y][Ûˆ™[XZ[œÈ[™[™È[›™\ˆ]šY[˜ÙK——ŠŠŒŒ‹LLLLHÙ™›[™H”ÈÛÛ^X\™ÝÛˆ™\Ù]š^ŠŠˆÛÝ\˜ÙH]Y]›Ý[™TÚ\™S”ÐÛÛ^ÝXœÞ\Ý[NŽ‘Z[š]X[^™J
+XÛX\™YØYY]H]YÛÛ[Z]YÛÜ›Y[]K]Y\ÝÛ˜\ÚÝ™]š\Ú[Ûˆ[™ÙX]\ˆÝ]H[XÝ[[Øš™XÝ\ÝXÝ[Û‹ˆHÝXœÞ\Ý[H›ÝÈ™\Ù]ÈÛÛ[Z]YXÛÛ^›YÜÈ[™ÙX]\ˆ™Y›Ü™HÝ\\ŽŽ‘Z[š]X[^™J
+X™]™[[™ÈÝ[H”ÈX[ÙÝYKÜØÚY[HÛÛ^œ›ÛHÝ\š]š[™ÈÝXœÞ\Ý[HX\™ÝÛ‹QH™\Ý\ÈÜˆÛÜ›™Z[š]X[^˜][Û‹ˆÜÝY™YÜ™\ÜÚ[ÛˆYYÈQKÔQH˜[Y][Ûˆ™[XZ[œÈ[›™\‹YØ]Y——ŠŠŒŒ‹LLLLHÙ™›[™H”ÈÛÛ[Z]YXÛÛ^™\›È™]š\Ú[Ûˆš^ŠŠˆÛÝ\˜ÙH]Y]›Ý[™TÚ\™S”ÐÛÛ^ÝXœÞ\Ý[NŽ”Ù]ÛÛ[Z]YÛÜ›ÛÛ^™Z™XÝYÛÜ›™]š\Ú[ÛˆOH]™[ˆÝYÚ™]š\Ú[ÛˆY[]H\È[ˆÜ™\š[™ÈÚÙ[ˆ[™ÛÛ[Z]˜[Y]H\È[™XYHØ\œšYYžHH^XÚ]ÛÜ›XÛÛ^Ø[[™›Û‹Y[\HÚ\\‹Ü›Ý]KÙ\\ÛÙKˆHÝX\™›ÝÈ™Z™XÝÈÛ›HZ\ÜÚ[™ÈÛÜ›Y[]KÝÜ™\È™]š\Ú[ÛˆÚ[ˆÝ\YY[™[ˆX\šÜÈHÛÛ^ÛÛ[Z]YˆYYÜÝY™YÜ™\ÜÚ[ÛˆÛÈš\œÝ\[ˆÜˆ›Û˜XÚÈÛÛ^ÈØ[››ÝÚ[[H˜[˜XÚÈÈ˜]È]Y\ÝÝ]KˆQKÔQKÙ]šXÙH˜[Y][Ûˆ™[XZ[œÈY™\œ™Y‚‚ŠŠŒŒ‹LLLLHÙ™›[™H]š[™ÕÛÜ›[š]X[ÛÛ[Z]Þ[˜Èš^ŠŠˆÛÝ\˜ÙH]Y]›Ý[™]S]š[™ÕÛÜ›\™XÝÜ˜[š]X[^™Y\YYÛÜ›™]š\Ú[Û˜ÈÛÈ[ˆ[š]X[ÛÛ[Z]YÛÜ›Ú]›Ý]\ˆ™]š\Ú[ÛˆÛÝ[ÚÚ\™\Ù]›ÜÝ\œ™[Ú\\Š
+X[™[^HÜ[][Û‹ÝÙX]\‹Ü›Ùš[HÙ]\[[H]\ˆÛÜ›˜[œÚ][Û‹ˆH\™XÝÜˆ›ÝÈÝ\ÈÚ]PVÝZ[Ì˜\È[ˆ[˜\YYÙ[[™[[™›ÈÛ™Ù\ˆ\ÜÚYÛœÈXÝ]™PÚ\\’Yœ›ÛH˜]È]Y\ÝÝ]H\š[™È™YÚ[”^XÈHXÝ]™HÚ\\ˆ\È\YYÛ›HY\ˆPÚ\\•ÛÜ››Ý]\ŽŽ’\ÕÛÜ›ÛÛ[Z]Y
+‹‹ŠXÛÛ™š\›\Èš\ÚX›HÙ[ÛY]žKˆYYÜÝYÝ]XÈ™YÜ™\ÜÚ[Û‹ˆ]šY[˜ÙH\™Ù]ˆÚ]X‹ZÜÝY™KU[œ™X[ÜÝ]XÈÛ›NÈQHÛÛ\[KÔQKÙ]šXÙKÝš\ÝX[]š[™Ë]ÛÜ›XØÙ\[˜ÙH™[XZ[œÈY™\œ™Y‚‚ŠŠŒŒ‹LLLLHÙ™›[™HÝ[H\ÜÙ]\™XYH›Û˜XÚÈš^ŠŠˆÛÝ\˜ÙK[Û›H[[YH]Y]›Ý[™H]™K[ØÚÈš\ÚÈ[ˆPÚ\\•ÛÜ››Ý]\ŽŽ’[™PÚ\\\ÜÙ]Ô™XYXˆYˆ]Y\ÝÜØ]™HÝ]HÚ[™ÙYÚ[H\Þ[˜ÈÚ\\ˆ\ÜÙ]ÈØYYH[™\ˆ™]\›™YÚ]Ý]ÛX\š[™È[™[™ÐÚ\\‹Ô›Ý]KÑ\\ÛÙXÜˆ™[X\Ú[™ËÜ›Û[™È˜XÚÈH^Y\ˆÛÜ›ÛˆYYHÚ\™Y[™[™ÈÛÜ›˜[œØXÝ[ÛˆÛX[\]Ý[K\™XYH›Û˜XÚË[™Ü›Ý[™[™ËX˜\œšY\ˆ[Y\ˆÛX[\ˆ]šY[˜ÙH\™Ù]ˆÚ]X‹ZÜÝY™KU[œ™X[ÜÝ]XÈ\ÝÈÛ›NÈQHÛÛ\[KÔQH™[XZ[œÈY™\œ™Y[ˆØÜËÑQ‘T”‘QÑS‘ÒS‘WÐPÐÑTSÑWÔUQUQWÌŒŒLLK›Y[[ÝÛ™\ˆ]]Üš^™\ÈH[›™\‹‚‚ŒŒ‹LLLLHÑ‘“S‘HPÌHQ‘T”‘Q‘TÕÔ‘HÕPT‘ˆÚ\™T^Y\Ú\˜XÝ\ˆ›ÝÈ›ØÚÜÈ[Ý™[Y[[\Üš[Ü›ÝXÚ[\˜XÝ[Û‹]XÚËÝ\Y\Ë]ZXÚÔØ]™KÔ]ZXÚÓØY[™]]ÛX]XÈÚXÚÜÚ[\Ü]ÚÚ[™]™\ˆ”[™[™ÔØ]™T™\ÝÜ™U˜[œÙ›Ü›H\ÈYKˆØ[Y\˜HÛÚÈ[™Ú[™[X]XÈÚÚ\™[XZ[ˆ]˜Z[X›NÈ›ÈÚ[™ÙHÈ]Y\ÝÝÛÜ›ÝÛ™\‹ˆÜÝYÛÝ\˜ÙH™YÜ™\ÜÚ[ÛˆYYˆÓÕTÑHÐS‘QUH[™[™È^XÝZXYÒNÈ›ÝQHÓÓTSKÔQKÑU’PÑKÕ’TÕPSXØÙ\YˆÚ[™ÝÜÈ[›™\ˆÝ^\ÈÑ‘‹‚‚ŒŒ‹LLLLHPÌH“ËQÔ“ÕS‘ÔUÓˆSPÒÈÓÕTÑHUÒˆÚ\\•ÛÜ››Ý]\ŽŽ“[Ý™T^Y\•ÐÚ\\”Ý\™]š[Ý\ÛH\™›Ü›YYÙ]XÝÜ“ØØ][Û[™›Ý][ÛŠ™\]Y\ÝYØØ][Û‹‹‹ŠH]™[ˆY\ˆ™\ÛÛ™QÜ›Ý[™YÜ]Û“ØØ][Ûˆ˜Z[Yˆ›ÝÈ™]Z[œÈ]Û‰ÜÈ\ÝÜÚ][Û‹Ù]ÈÛÜ›Û[™™]\›œÈ˜[ÙH›Üˆ^\Ý[™È˜[œØXÝ[Ûˆ›Û˜XÚÈÈ™XÛÝ™\‹ˆYY\ÝÛ›×ÙÜ›Ý[™Û™]™\—Ý[\Ü×Ý×Ý[˜[Y]YÜ™\]Y\ÝYÛØØ][Ûˆ[ˆÜÝYØÜš\ËÝ\ÝÛÙ™›[™WÜ[[YWÜØY™]KœNÈ^\Ý[™È™KU[œ™X[Ú\š[™È[œÈ]ˆ\È\ÈÓÕTÑHUÒS‘S‘ÈVPÕPQÕUPÈSQUSÓˆÛ›Kˆ›ÈQHÛÛ\[KQKU’PÑK”SHÜˆ’TÕPS]šY[˜ÙNÈÚ[™ÝÜÈÙ[‹RÜÝY[›™\ˆ›ÝXÝ]˜]Y‚‚ŒŒ‹LLLLHÑ‘“S‘HPÌHVQTˆ‘SPP’SUH’VTÈ8 %ÓÕTÑHÐS‘QUH
+^XÝZXYÒH[™[™ÊN‚‹H]]ÛX]XÈÚXÚÜÚ[\Ü]Ú›ÈÛ™Ù\ˆÜÙ\È[™[™ÈQÛˆ˜Z[Y™\]Y\ÝÈ[™[™È™\ÝÜ™H˜[œÙ›Ü›H›ØÚÜÈÚXÚÜÚ[Û˜\ÚÝË™Z™XÝYØ]™\È™]žH›È˜\Ý\ˆ[ˆÛ˜ÙH\ˆÙXÛÛ™ˆ\Þ[˜È\ÚÈÝXØÙ\ÜÈ™[XZ[œÈÙ\\˜]HØ[˜XÚÈ]šY[˜ÙK‚‹HÚ\\•ÛÜ››Ý]\ˆ›ÝÈ[™\ÈÙ]XÝÜ“ØØ][Û[™›Ý][Ûˆ™Z™XÝ[ÛˆÛˆ›ÝØ]™H™\ÝÜ™H[™Ú\\ˆÝ\ˆÈ›ÝÙÈPÑQÜˆ™]\›ˆYH›Üˆ™Z™XÝY[\Ü‚‹HÚ[™[X]Xø¡¤™Ø[Y\^H[\œ\È™[X\ÙH™\Ù[][ÛˆÛÛ›ÛØÚÈ[[YYX][NÈ\ØØ\HÚÚ\ÈHXÝ]™HÚ[™[X]XÈÚ]Ý]]]][™È]Y\ÝØØ[›ÛˆÝ]NÈ]ÛˆÜ™X]YZYXÚ[™[X]XÈYÜÈXÝ]™HØÚË‚‹H\Þ[˜ÈÑ–Ø[XšY[˜ÙKÛ]\ÚXËÝ›ÚXÙHØ[˜XÚÈX]Ú\ÈH[Û›ÝÛšXØ[H[˜Ü™X\Ú[™È™\]Y\ÝÚÙ[‹™]™[[™ÈÝ[HØ[˜Ù[YØ[˜XÚÈÛZ[Z[™È[ˆY[XØ[™]Ù\ˆÝYHÙ^K‚‹HÙ[‹ZÜÝY[œ™X[ÛÜšÙ›ÝÈ\È›ÝÈX[X[ÜZ[ˆÛ›H
+ÛÜšÙ›Ý×Ù\Ü]Ú[—ÜÙ[—ÚÜÝY]YJNÈ™KU[œ™X[ÜÝ]XÈ[™ÜÝYÛ\ÜÚYšXØ][Ûˆ™[XZ[ˆ]]ÛX]XËˆÛ\ˆ[™XYK\]Y]YY[œÈ]™HÙ\\˜]HØ[˜Ù[][ÛˆÝ]\È[™ÚÝ[›Ý™H\ÜÝ[YYØ[˜Ù[Y[[[œÜXÝY‚‹HYYØÜš\ËÝ\ÝÛÙ™›[™WÜ[[YWÜØY™]KœH[™Ú\™Y]\È\ÝÜ[™[™×ØÚXÚÜÚ[Ù\Ü]ÚœH[ÈÜÝY™KU[œ™X[˜[Y][Û‹ˆÛÝ\˜ÙK[]™[ÚXÚÜÈ\™H“ÕQMŒÈÓÓTSKQK]šXÙH”Ë[\ÜY\ÜÙ]ÈÜˆš\ÝX[XØÙ\[˜ÙKˆ[[YHPÌˆ™[XZ[œÈ[›Ü[™Y‚‚ŒŒ‹LLLLHPÌHÒPÒÔÒS•TÔUÒÕPT‘ÐS‘QUNˆ™\Z\™YH›Ý˜X›HÛÝ\˜ÙK[]™[ÜÝXÚXÚÜÚ[Y™XÝˆXÚÈ™]š[Ý\ÛHÛX\™Y[™[™ÐÚ\\ÚXÚÜÚ[Y™Y›Ü™HØ]™P]]ÛX]XÐÚXÚÜÚ[™]\›™YÚ[HÙÙÚ[™ÈÛÛ[Z]X˜\œšY\TTÔØ]™[ˆÛˆ™Z™XÝY\Ü]Úˆ›ÝÈ[™[™È\ÈÛX\™YÛ›HYˆ\Þ[˜ËÜ]Y]YY\Ü]ÚØ\ÈXØÙ\YÈ\ÚË\Ø]™HÛÛ\][Ûˆ™[XZ[œÈØ[˜XÚË[ÝÛ™YˆYYØÜš\ËÝ\ÝÜ[™[™×ØÚXÚÜÚ[Ù\Ü]ÚœH™YÜ™\ÜÚ[ÛˆÝX\™[™™YÚ\Ý\™Y›ÛÝØ]\ÙH[ˆÓÔ“ÑURSÓQÑT‹ˆÛÝ\˜ÙK[Û›HØ[™Y]H]ØZ][™È^XÝZXYÒH
+ÕUPËUSQUQÛ›HY\ˆ\ÜÚ[™ÊNÈ›ÈQHÛÛ\[KQK]šXÙK”ÈÜˆš\ÝX[XØÙ\[˜ÙKˆÚ[™ÝÜÈÙ[‹ZÜÝY[›™\ˆ™[XZ[œÈÙ™‹‚‚ŒŒ‹LLLLHÚ\™H˜]\™HÜÝY›[™\ˆ™YÜ™\ÜÚ[ÛŽˆ^XÝZXY[ˆÎMLŽLMŒHRSQ[ˆ\ÚXØ[–^Ü™XØ]\ÙHX[H›[™\ˆŒŒˆ–^Ü\ˆ˜Z\Ù\È[Ù[S›Ý›Ý[™\œ›ÜŽˆ›È[Ù[H˜[YY	Û[\IØ
+›ØˆLMLŒLLŒ
+NÈÛÝ\˜ÙHÙ[ÛY]žH^XÝ][Ûˆ™XXÚY^Ü\ˆ]™\›È˜[Y]Yš[˜\žH–\™HÜ™Y]Yˆ\]YÜÝYÛÜšÙ›ÝÈÈ[œÝ[]ÛŒË[[\X™\ÚYH›[™\‹ˆ™]È^XÝZXY™\[ˆ™\]Z\™Yˆ›ÈQH›ÛÙ‹‚‚ŒŒ‹LLLLHPÌHÚ\™H˜]\™H›[™\ˆ›ÙXÝ[ÛˆØ[™Y]NˆYYÛÛËÐÛÝY\ÜÙ]Z[Ø›[™\—Û˜]\™KœH[™ØÚY[YÔˆÜÝYÛÜšÙ›ÝÈXÌKZÜÝY[˜]\™K[ÙËž[[ˆ™]\Ù\ÈÙ[™H[™XYHYš[™Y˜]\™H˜[Z[Y\È[™›ÙXÙ\ÈÍˆ
+œ›ÜÜÙY
+ˆš[˜\žH–ÍÑÌKÌˆÚ]UŒ˜\ÚXÈX]\šX[ÛÝËÙ[XÝ]™HPÖ[šËÜ›ØÚÈÛÛ\Ú[ÛœË›[™\ˆ™Z[\Ü[™ÒLMˆ™XÙZ\Ëˆ›ÈÛÛ\]YÜÝY[ˆÜˆ™]Èš[˜\žHš[HX^H™HÜ™Y]Y™Y›Ü™H^XÝZXY˜[Y][Û‹ˆ^\Ý[™ÈÈ‘È[ˆš]™HÛÝ\˜ÙH˜]Ú\™H“Õ™\X›\ÚYžH\ÈÛÜšÙ›ÝÈ[™™\]Z\™HÙ\\˜]H[œ™X[X]\šX[š[™[™Ëˆ›ÈÚ[™ÝÜÈ[›™\‹ÕQMÛÛ\[KÚ[\ÜÔQKÙ]šXÙKÑ”ËÝš\ÝX[ÑØ]M‹ÍÈ›ÛÙ‹‚‚ŒŒ‹LLLLHÕÓ‘Tˆ’U‘HSTÔT–HÕQÒS‘ÈÓPÖNˆÛÝ™\››Üˆ›ÝÈYš[™\Èš]˜]HÛÛÙÛHš]™H\È[\Ü˜\žHÝYÚ[™ÈÛ›HÚ[H\Ü\ÈÙ™‹ˆ]]ÛX]XÈš]™H[][Ûˆ\È]]Üš^™YÓ“H›ÜˆX[˜YÙY˜]Ú\ÈÚ]\ÚXØ[ØØ[\œÚ\Ý[ÛÜH[™X]Ú[™ÈÒLMˆ\È˜[œÙ™\‹Ú[\Ü\ÜÜÚ][Ûˆ™XÙZ\ˆ›È[][ÛˆÙˆÛÛHÛÜY\Ë›È[][ÛˆÙˆ[œ™[]YÝÛ™\ˆš[\Ë›È]]È˜[œÙ™\ˆÛZ[H[[Ù\\˜]HÚ]XˆXÝ[ÛœÈÐ]]Ü˜ÛÛ™HÜ™Y[X[\ÈÛÛ™šYÝ\™Yˆ›ÈÚ[™ÝÜÈÙ[‹ZÜÝY[›™\ˆ]]Üš^™Yˆ\È\ÈÛXÞKÔÕUPËUSQUQÛ›NÈ›È]™HÞ[˜Ë˜[œÙ™\ˆÜˆ[][Ûˆ[ˆ]šY[˜ÙK‚‚ŠŠŒŒ‹LLLLHXÙ[œÙYÛÝYÝØÚÈ[ZÙHØ[™Y]NŠŠˆ^\Ý[™ÈÍÈÛH]™[ˆÐÌÛYÈ]]Üš]H\È›ÝÈ\ÙYÈ\ÚXØ[HÝÛ›ØYØÛÛ™\RÈ˜\ÙPÛÛÜ‹›Ü›X[[™XÚÙYÔ“H‘Èš[\ÈXÜ›ÜÜÈ›Ý\ˆ[™\[™[ÜÝYÚ\™ÎÈXXÚÚ\™Üš]\ÈÒLM‹Øž]KÜ›ÝšY\ˆT“ÜÛÝ\˜ÙH™XÙZ\[™]X\˜[[™\ÈZ\ÜÚ[™ÈX\ÈÚ]Ý][™[[™È\ÜÙ]ËˆÚ]X‹ZÜÝY\Y˜XÝÝØÚÈ\ÈH[\Ü˜\žH˜[œÙ™\ˆÛÝ\˜ÙK›ÝH\›X[™[Üš]HÈ—XÝ[ÛœË\[›™\—ÝØ\™ZÝ\ÙWÚ\™R›Ý\›™^KˆŽ\™YÚ[ÛˆXÚÙ][™^\È]˜Z[X›H›Üˆ™]\ÙK]Ž\™YÚ[Ûˆ[\ÜYÜ™[™\™YÛÛ\][Ûˆ\È“ÕÛZ[YYˆØØ[[ÝÈš^\™H™YÜ™\ÜÚ[ÛœÎˆH\ÜÙY™Y›Ü™HÚ]XˆØ[™Y]KˆÚ]Xˆ^XÝZXY›ÙXÝ[Ûˆ™\Ý[È[™[™Ëˆ›ÈÝÛ™\ˆÚ[™ÝÜÈ[›™\‹›ÈQH[\ÜQK]šXÙKš\ÝX[ÜˆØ]H‹ÍÈXØÙ\[˜ÙKˆ[[YHÚ\\ˆ™[XZ[œÈPÌHÛ›K‚‚ŠŠŒŒ‹LLLLHPÌHœ›ÙÈÜÝYØÛÛ[Ý[ÛˆÛÝ\˜ÙHØ[™Y]NŠŠˆ™YÚ\Ý\™Y[ˆÓÔ“ÑURSÓQÑTˆ[™YYÛÛËÐÛÝY\ÜÙ]Z[Ùœ›Ù×ÛØÛÛ[Ý[Û‹œH\ÈÜÝY[Û›HXÌKYœ›ÙË[ØÛÛ[Ý[Û‹ZÜÝYž[[ˆHØ[™Y]H[\ÜÈH›Ý™[˜[˜ÙKXÚXÚÙYÐÌœ›ÙÈ›Ü›X[^™Y˜\ÙH–š]™\Èš[]\˜[Y›Ü›H[Xˆ›Ý][ÛœÈXÜ›ÜÜÈÜšYÚ[˜[ÞXÛXÈYKÕØ[ËÔ[ˆÙ^YYXÝ[ÛœË\ÚXØ[H^ÜÈ™YHš[˜\žHÚÙ[][[š[X][Ûˆ–š[\È[™™Z[\ÜÈÈ]Y]Ý\™KÚÙ^H™\Ù[˜ÙH[™ÒLM‹ˆÛÝ\˜ÙK[Û›Nˆ›Èš[˜[œ›ÙÈš\ÝX[ZÙ[™\ÜËQH[\ÜRØÛÛ\[KQK]šXÙK”Ë[X[ˆš\ÝX[XØÙ\[˜ÙHÜˆØ]H‹ÍÈÜ™Y]ˆ^XÝZXYÜÝYÒH]šY[˜ÙH[™[™ÎÈÚ[™ÝÜËÜÙ[‹ZÜÝY[›™\ˆ\È›Ý[›ÚÙYˆ^\Ý[™È\Þ[˜È\›ÈÝ™X[HÝÛ™\ˆ[™ÛÛY”ÈÝÛ™\œÚ\[˜Ú[™ÙY‚‚ŠŠŒŒ‹LLLLHPÌH›[™\ˆ[‹X™]™[Ù[ÛY]žHÛÜœ™XÝ[ÛŽŠŠˆ^XÝZXYÜÝY[ˆÎMNMÌX]\šX[\ÝÈ[™[\ÚXØ[RÈ‘ÈÛÝ\˜ÙHPÈ\ÜÙYÈÚ]XˆXÝ[ÛœÈØXÚH^XÚ]HÙÙÙYØXÚHØ]™YÚ]Ù^NˆXÌKLŽ™YÚ[Û‹[ÜšYÚ[˜[[X]\šX[ËLZË]ŒKMØMÎLŒMMØYÌÍŽYŒŒYØL™ŽYM˜Ž™˜MÌŒYY˜Œ™MØL™M˜YXYL˜ØˆHØ[YH[‰ÜÈ–Ù[™\˜]Üˆ˜Z[YÛÜÙY]˜[YQ\œ›ÜŽˆQÑS‘TUWÑPÑH[ˆÓWÔÚÝÛ™T]ÓÑ™XØ]\ÙHHŒNHYÙH™]™[^ÙYYY[ˆHŒ[HÝ\[™ÈÝÛ™HXÚÛ™\ÜËˆ[š]™\œØ[›ÛÝš^Û[\ÈXXÚ›Þ	ÜÈ™]™[È][ÜÝM‰HÙˆ]È[›™\Ý[Y[œÚ[Û‹Ú]™YÜ™\ÜÚ[ÛˆÝX\™ˆ›ÈÛÝ[Ü™Y]›Üˆ–[[H™\XÙ[Y[^XÝZXY›[™\‹Ý˜[Y]Üˆ›Øˆ\ÈÕPÐÑTÔËˆœ›ÙËZÜÝY[™\[™[›ØˆYØZ[ˆÝXØÙYYYÈÝÛ™\ˆÙ[‹ZÜÝY[›™\ˆ[˜Ú[™ÙYÛÙ™‹‚‚ŠŠŒŒ‹LLLLHPÌHQ–Ø]™HÝ]XÈ›ÛÝÛÜœ™XÝ[ÛŽŠŠˆ^XÝÛÝ\˜ÙHXYMŒÌÍLÍ˜ØŒXÌ˜XYXŒÌM˜MØLMØXMŒXYÜÝY™KU[œ™X[[ˆÎMNLXÕPÐÑTÔÎÈÜÝY\ÜÙ][ˆÎMNLM˜RSQ\š[™È›[™\ˆ^ÜY\ˆÝXØÙ\ÜÙ[ÍˆRÈ‘ÈX]\šX[Ù[™\˜][Ûˆ[™X]\šX[\ÚÔ‘ÈPËˆÙÈ]šY[˜ÙNˆÙ^Q\œ›ÜŽˆ	ÜÚ\™WÙX\	Ø[ˆ›[™\—ÜÚ\™KœXSUH
+H™YÚ\Ý˜][ÛˆÛZ\ÜÚ[Û‹›ÝHœ›ÚÙ[ˆÛÝ\˜ÙH[XYÙJKˆš^YX\ÛÛÜˆ™YÚ\Ý˜][Ûˆ[™YY]Û‹PTÕ™YÜ™\ÜÚ[ÛˆÚXÚÚ[™È[]\˜[š[Z]]™HÝ\™˜XÙH˜[Z[Y\ÈYØZ[œÝ[]H
+˜™Y›Ü™Jˆ›[™\ˆ^XÝ][Û‹ˆÛÝ\˜ÙHØXÚH›ÝÈØ]™\ÈÛ›H\Ú]˜[Y]Y”ˆ[[YYX][HY\ˆPË[™\[™[HÙˆÝXœÙ\]Y[–˜Z[\™NÈØXÚH[šY\È]\Ý\ÜÈ™XÙZ\Ô‘ËÔÒH˜[Y][Ûˆ]™]\ÙKˆ™]È^XÝZXYÛÝY[ˆ™\]Z\™YÈÜ™Y]–˜YÈ[™Ü[ÛX\˜[˜ÙH[™\ÜÙ]\˜Ú]™Kˆ^\Ý[™È˜[Y]YŒ–ˆÌÎ™[XZ[ˆ[˜Y™™XÝYˆ›ÈÚ[™ÝÜÈ[›™\‹QH[\ÜQKÙ]šXÙKÑ”ËÝš\ÝX[ÑØ]M‹ÍÈ]šY[˜ÙK‚‚ˆÈÈŒ‹LLLLH8 %PÌH™X[˜YÈ[™Ô\HšY[\˜Ú]XÝ\™HÛÝ\˜ÙHØ]™KØ[™Y]B‚‹H
+Š‘^XÝš[Üˆ\ÚXØ[›ÛÙŠŠŽˆˆÌÎY\™ÙY[È]™[ÜÌÎY˜˜ŽYMŒ™X™™LÍYY˜ÎÌÌÎMÌØˆÛÝY\ÚXØ[[ˆÎMÎMŽMÎLXÕPÐÑTÔÈÛˆ^XÝÛÝ\˜ÙHÒHÍØL™™MØÍÌYLÍŒØ™™Í™MŽNMŽXŒÚ]ÙÜÈÒT‘WÐ’ST–WÑ–ÑÑS‘TUQ\ÜÙ]ÏLLš[\ÏLŒ›[™\MŒŒ˜[™ÓÕQÐTÔÑUÔÕUP×ÕSQUSÓ—ÔTÔÈX]\šX[ÏLLˆ^\™\ÏLÍˆ™YÚ[Û—Øš[™[™ÜÏLŽš[˜\žWÙ˜žLŒˆ™KU[œ™X[[ˆÎMÎMŽNØÕPÐÑTÔËˆÛÝ\˜ÙH\Y˜XÝLMÌÎLMÍLX
+KL‹ÌÍH\Y˜XÝž]\ÎÈ[\›˜[’TKL‹LLHž]\ÎÈÒLMˆM™XYXÙX˜MÎ™LÎÎMYMMYYM˜LÌÎML™ŒYMŽŒÙ™Œ™ŒØÌÌN
+K^\™\ÈŒ‹LLLNˆœ›ÙÈÐÌ
+Š˜˜\ÙHšYÊŠˆ™\ÕPÐÑTÔÈÚ]\Y˜XÝLMÌÎLŒLØÈ›Èš[˜[ZÙ[™\ÜËÜ™]\™Ù]‚‹H
+Š•\ÈÙ\\˜]HXÝ]™HPÌH\ÚXØ[›ÙXÝ[ÛˆØ[™Y]JŠˆ^[™ÈH^\Ý[™È[Ù[\ˆÝ]XÈ–Ù[™\˜]Üˆ
+›Ý[œ™X[[[YJHœ›ÛHLÈ
+ŠŒŒˆÜšYÚ[˜[ÛÝ\˜ÙHY\Ú˜[Z[Y\ÈÈš[˜\žH–ÑÓÑJŠŽˆ˜YÑ[™œ›ÛØ[
+Ù\\˜]HÜ[›ØÚÙ\œËØ[Ë]›ÝYÚØ\
+K›Ý[™›ÛÛUØ[\˜Ë›Ý[™›ÛÛQ›ÛÜ‹X\›ÛÚØØ\ÙKØ˜š]™YÛÛÙ[‘›ÛÝœšYÙH
+Ù\\˜]HØ[ÝØ^KÜ˜Z[ÊKZ[ÚY[
+Ý]XË[Û›HÛÝ\˜ÙK›Ý][Ûˆ[™[™ÊK\PØ[›ÜH
+Ü[ˆÛK[Û›HÛÛ\Ú[ÛŠKÝÛ™T][\›”ÜÝš[YÙUÙ[ˆ[\™HX[X[H]]Ü™Y›ØÙY\˜[ÐÈÛÝ\˜ÙH\Ë›Ýš[KY^XÝ™\XØ\Ëˆ\Ù\ÈÍˆÜšYÚ[˜[RÈ‘ÈXÜ›ÜÜÈŽÝ\Ü[X]\šX[™YÚ[Ûˆš[™[™ÜÈ[˜Ú[™ÙYˆ›[™\ˆÍš[˜\žH^Ü™X[™Z[\Ü[™ÒLMˆ›ÛÙœÈ\ÈPÖPPˆ™XÙZ\[™Ü[XÛX\˜[˜ÙHÛÝ\˜ÙHÝX\™ˆX]\šX[^[ØY\È›ÝÈ™]\ØX›HšXH^XÝÙ[™\˜]ÜŠÜ™YÚ[Û˜[XÚÙ]ÒKX›Ý[™Ú]X‹ZÜÝYØXÚNÈ[ˆ[˜Ú[™ÙYØXÚH]\ÝÝ[\ÜÈÛÛ\]Hš[H\ÚÔ‘ÈPËˆ[™]È\ÚXØ[Ý]]È™\]Z\™H
+™œ™\Ú^XÝZXYÜÝY›ÛÙŠˆ[™™[XZ[ˆ
+Šœ[™[™È[[Ú]XˆXÝ[ÛœÈÝXØÙ\ÜÊŠ‹‚‹H
+Š“[Ý™[Y[Ó”ËÙ[™Ú[™H›Ý[™\žJŠŽˆ\ÙH\È\™H[Ù[\ˆÛÝ\˜ÙK[Û›K›ÝHÛÛ\Ú[Û‹]\ÝY]™[ˆÛÝ\˜ÙK\ÜXÙHÜ[ÛX\˜[˜ÙHÚXÚÈÙ\È›Ý™\XÙH^Y\‹ØÛÛ\[š[Ûˆ˜]šYØ][ÛˆQK™X[X]\šX[Û]™[[\ÜÜˆÝÛ™\œÚ\[YÜ˜][Û‹ˆ”ÈÜ[][Ûˆ™[XZ[œÈÝÛ™YžH]š[™ÕÛÜ›\™XÝÜ‹\‹XÚ\˜XÝ\ˆÛÛ^[™ØÚY[\ÈžHÚ\™S”ÐÛÛ^ÝXœÞ\Ý[NÈÛ›HÛ™H[[YHÜš]\‹ˆ›È\Ù\ˆÚ[™ÝÜÈ[›™\‹X]žHÞ[˜Ú›Û›Ý\ÈØYËŽ\™YÚ[Ûˆ[œ™X[[\ÜYH[X[ˆš\ÝX[Ý\™Ù]”ËÜˆØ]M‹ÍÈXØÙ\[˜ÙHÛZ[YYˆPÌˆ[[YHÝ^\ÈØ]YÈ\ÚXØ[ÛÝ\˜ÙH›Üˆ]\ˆ™YÚ[ÛœÈX^H›ÙÜ™\ÜÈ[™\[™[K‚‚ˆÈÈŒ‹LLLLH8 %‘PSÓÕTÑHSU‘T–HÌÎÈ
+ÈÚ\™Hš[YÙKZÚ]^[œÚ[ÛˆØ[™Y]B‚‹H
+Š‘[]™\™YÈÜÝY\Y˜XÝÛˆ^XÝXY
+›Ý[œ™X[
+NŠŠˆˆÌÎÈY\™ÙHÎXÌ™ŒLM™Œ™XÎÎXŒ˜ÙNŒØ˜NM˜™ŒY˜È™KU[œ™X[ÎMÍNNLLÕPÐÑTÔÎÈÚ]X‹ZÜÝY\ÚXØ[\ÛÝ\˜ÙHÎMÍNNLMÕPÐÑTÔËˆLˆÜšYÚ[˜[™]\ØX›HÝ\Ü˜[Z[Y\È›ÙXÙY
+ŠŒÍˆXÝX[‘ÈL
+Š‹X\YÈ^XÝHHŽQÈ[ˆ]KÕÚÛQØ[YT™YÚ[Û”›ÙXÝ[Û”XÚÙ]ÕŒKšœÛÛ˜ˆ›[™\ˆŒŒˆ›ÙXÙY
+ŠŽš[˜\žH–Ý]XÈ\ÜÙ]ÊŠˆ
+˜[Z[Y\ËÑ
+ÓÑJH[™ÝXØÙ\ÜÙ[H™KZ[\ÜYØÚXÚÙYZ\ˆY\Ú\ËU‹PÖÛÛY\œÈ[™ÒLMˆ™XÙZ\ËˆXÝX[ÛÝ\˜ÙH’TKÌÌ‹ŽNž]\ËÒLMˆLÙNYX˜Í˜ØÎŽMŒ™LØ™NMÙXŽÎX˜ØÎMÌ˜ÙMØXÍŒ™ŒÍMØØÈXÝ[ÛœÈ\Y˜XÝLMÌÍÍÍŽ™]Z[™Y›ÝYÚŒ‹LLLNˆÛ™HÜšYÚ[˜[ÐÌœ›ÙÈ˜\ÙHšYÈÛÝ\˜ÙHØ[™Y]H\ÜÙYÜÝY™XY[™\ÜÈ
+SPS—ÕÐU‘L—ÒÔÕQÔTÔÈÙ[XÝYLXHY›Ü›H›Û™\ËMÎËÌŒŒŽHÙZYÚY™\XÙ\ÊNÈÙ\\˜]H\Y˜XÝLMÌÍÌŒMˆ\ÙH\™H™X[\ÚXØ[ÛÝ\˜ÙH\ÜÙ]Ë
+Š““Õ[œ™X[[\ÜY
+Š‹‚‹H
+Š•\È™]ÈÛÝ\˜ÙHØ[™Y]H^[™ÈPÌHÚ]ˆ[Ü™HÜšYÚ[˜[]]Ü™Y›ÜÙ›ÛXYÙH˜[Z[Y\ÎŠŠˆ›Ý[™Ú[™ÝËØ\™[’YÙKØZÕ™YKÝÜ˜YÙP˜\œ™[˜\›QØ]KØ\™[”[\ŽÈÙÙ]\ˆLÝ]XÈ[Ù[ÈˆÑHŒ–\™Ù]ËÙY\[™ÈÛÛ\Ú[Ûˆ[™UˆÝ]XÈPËˆHÚ^\™HÜ›Ý[™Y[ˆ^\Ý[™ÈØ˜š]Û‹Ð˜YÈ[™ÛY\ÝXËØÝ[\˜[ÜÙ][Y[™Y™\™[˜ÙH[™ÝXYÙK›ÝÛZ[YY\Èš[KY^XÝ™\XØ\ËˆÝ\œ™[^[œÚ[ÛˆÝ]]È\ÝÈ\™H[™[™È^XÝZXYÜÝY›ÛÙ‹[™Hš\œÝ˜[Y›Ý\ˆ˜[Z[Y\È]\Ý›Ý™H™K[X™[Y\È[ˆ[\ÜYš\ÝX[ÛÜ›‚‹H
+ŠÜš]XØ[Ù\\˜][ÛŽŠŠˆ›ÈÚ[™ÙHÈ[œ™X[[[YK][\^Y\‹Ü›ÝÙY™XÞXÛK[\˜XÝ[Û‹ØØ[›ÛˆØÚË\Þ[˜È™\ÚY[˜ÞKPÌˆØ]HÜˆÚ[™ÝÜÈÙ[‹ZÜÝYØÚY[[™ËˆHÚ\˜XÝ\ˆÛÝ\˜ÙHÚ]HšYÈ\È
+Š››Ý
+Šˆš[˜[œ›ÙÈ\X\˜[˜ÙK[š[X][Û‹™Z]š[Ü˜[PHÜˆXØÙ\YÚ\™HÚ\\‹ˆŽ\™YÚ[ÛˆX]\šX[š[™[™ÜÈ\™H›ÝŽ\™YÚ[Ûˆ[œ™X[X]\šX[[\ÜÈ›ÛÝÈ\ÜÙ]›Û[Ý[ÛˆØ]HÚ[ˆHÝÛ™\ˆ[›™\ˆ™]\›œËˆ™^X[X[]šY[˜ÙNˆPÌHÝ\œ™[™X[[\ÜÚ\˜XÝ\ˆY›Ü›X][Û‹Ü™]\™Ù]QKØ]™KÜ]Y\ÝÛœË]šXÙHÌŒÌ”Ë[X[ˆš\ÝX[ÜXÚ[™ÈØ]H‹ÍË‚‚ŠŠŒŒ‹LLLLHÛÝY›[™\ˆ–›ÛÝš^ŠŠˆÜÝY[ˆÎMÌÍÌXÙ[™\˜]Y[™˜[Y]YÍˆ\ÚXØ[L‘È›ÜˆLˆ˜[Z[Y\ÈÈŽ™YÚ[Ûˆš[™[™ÜÈ]›[™\ˆŒ™Z™XÝYHØœÛÛ]H–Ü\˜]Üˆ\™Ý[Y[™\œÚ[ÛXˆÝ]XÈÙ[ÛY]žHÛÛœÝXÝ[ÛˆÝXØÙYYYÛ›H[ˆY[[ÜžNÈ–™XÙZ\ÈXœÙ[ˆš^™[[Ý™\ÈH\™Ý[Y[\™XÝH™\šYšY\Èš[˜\žH–ÍXY\ˆ™\œÚ[Û‹[™\Ù\ÈK\]Û‹Y^]XÛÙHØÛÈ›[™\ˆØÜš\^Ù\[ÛœÈ˜Z[ÒKˆ™K\[ˆ^XÝZXY™\]Z\™Y™Y›Ü™HÛÝ[[™Èš[˜\žH–ˆ›ÈQKÔQKÙ]šXÙKÝš\ÝX[XØÙ\[˜ÙK‚‚ŠŠŒŒ‹LLLLHÛÝYÛÝ\˜ÙH\[[™H™YÜ™\ÜÚ[ÛŽŠŠˆÚ]X‹ZÜÝYÜšYÚ[˜[”‹Ñ–[ˆÎMÌNMÌÍØ[š]X[H˜Z[YÛ›H[ˆHœš]HÙ[‹ZÜÝY^Û\Ú[Ûˆ
+^
+ˆ\Ý
+]X]ÚYHÛÛ[Y[›ÝH[›™\ˆX™[
+NÈÙ\\˜]HÜÝYœ›ÙÈ›ØˆÕPÐÑTÔÈ[™X]\šX[[Y\šXØ[Ô”ˆ]\›Z[š\ÛH\ÝÈ‹ÌÈTÔËˆ˜\œ›ÝÙY™YÜ™\ÜÚ[ÛˆÈXÝX[PSS[›™\ˆXÛ\˜][ÛœËˆ\ÚXØ[ÛÜ›–[YÙ[™\˜][Ûˆ[™[\Ü™[XZ[ˆ[™[™È™^^XÝZXY[ŽÈ›ÈÚ[™ÝÜÈ[›™\ˆØ\È]Y]YY‚‚ŠŠŒŒ‹LLLLHÓÕTÑH“ÑPÕSÓˆÐS‘QUH8 %PÌH[™ÚÛKYØ[YH”ŽŠŠˆYY\ÛÛ]YÛÝY[Û›H™\›ÙXÚX›H\ÚXØ[\ÜÙ]Ù[™\˜]ÜœÎˆÜšYÚ[˜[Ú\™HÝ]XÈ›Ü˜[Z[Y\Èˆ–ÑÈÚ]PÖÕUˆPË[™LˆÜšYÚ[˜[RÈ”‹\Ý\ÜX]\šX[˜[Z[Y\ÈÈ‘ÈÚ[›™[ÈHÍˆ‘ËX\[™ÈÈH^XÝŽ™YÚ\Ý\™YÚÛKYØ[YH›ÙXÝ[ÛˆXÚÙ]Ëˆ[ˆÜ[Û˜[ÜÝYœ›ÙÈÛÝ\˜ÙH˜XÝÜžH™]\Ù\È^\Ý[™ÈÐÌ˜\Ù[[™HÚ]ÚÚ[‹\™XY[™\ÜÈ™XÙZ\È›ÝHÚ[™[X]XÈZÙ[™\ÜÈÜˆ›Û[ÝY[[YHÚ\˜XÝ\‹ˆ\Y˜XÝÈ]\ÝÝXØÙYYÛˆ^XÝÚ]X‹ZÜÝYPQ™Y›Ü™H[žHÙ[™\˜]YÝ]]X^H™HÛÝ[YˆH[œ™X[Z[ÛÜšÙ›ÝÈYÛ›Ü™\ÈÛ›HÛÛËÐÛÝY\ÜÙ]Z[ÊŠ˜[ˆ›Ýˆ[™]™[Ü]Ù]ÈÈ™]™[Ù[‹ZÜÝY[›™\ˆ›ÛÚÚ[™È›Üˆ\™HÙ[™\˜]ÜœËˆ›È[œ™X[\ÜÙ][\ÜZ[ØÙ[™KQK]šXÙKš\ÝX[”ÈÜˆØ]H‹ÍÈ]šY[˜ÙH\ÈÛZ[YYˆ™]ÈPÌˆ[[YH™[XZ[œÈØ]YÈŽ\™YÚ[Ûˆ[\ÜYÝ]\È™[XZ[œÈ˜[ÙK‚‚ŠŠŒŒ‹LLLLH]™H™XÛÝ™\žH]Y]
+ÛÝ\˜ÙK[Û›NÈˆØ[™Y]JNŠŠˆÚ]Xˆ]™[ÜŽM˜Ù™MÌÌMÙNXŒÍÌ™ÌÙM™˜ÍÎNMY˜˜MØY\ˆˆÌÎNÈÌH™YœÈÈLÈÜ[ˆœÈ][œÜXÝ[Û‹ˆˆÌÎXYYX™™LÙ˜Ì˜ÍÌŽÎXÍ˜YŽXLØŒY˜™[XZ[œÈÜ[ˆ˜Y]™\™ÙYžHÛ™H™]Ù\ˆ]™[ÜÛÛ[Z][™Y\™ÙKY\NÈ^XÝZXYÜÝY™KU[œ™X[[ˆÎMMŒÍÍXÕPÐÑTÔÈ][œ™X[[ˆÎMMŒÍŽX]Y]YYˆ›ÈÝÛ™\ˆÚ[™ÝÜÈ[›™\ˆØ\ÈÝ\YÜˆ]]Üš^™YžH\ÈØ]™KˆHÛ›H[œÜXÝY™\›ËXZXY›Û˜Ø[›ÛšXØ[™Yˆ\ÈØ[˜YÙKÜXÌKY˜\Ý\YKXÚKYÝX\™LŒŒLLXÈ[Ý\ˆ[œÜXÝYÛÜšÚ[™È™YœÈØ\œžH[š\]YHÛÛ[Z]È[™\™H™\Ù\™YˆZYÚÛH]™[ˆÐÌPÌH˜\ÙKXÛÛÜˆÚ]S”ÈÚ[\ˆÒQÈÛˆÙ[™\˜]YÜXÌK[X]\šX[\ÛÝ\˜ÙK]ŒXX]ÚZ\ˆÛÝ\˜ÙH™XÙZ\È™X[”ÈÛÛ[Ë[XYÙH™\ÛÛ][Û‹QH[\Ü[™™[™\™Y]X[]H™[XZ[ˆ[™\šYšYYˆÙYHØÜËÔ‘PÓÕ‘T–WÐÒPÒÔÒS•ÌŒ‹LLLLK›Yˆ›ÈQHÛÛ\[KQK”Ë]šXÙK[X[ˆš\ÝX[ÜˆØ]H‹ÍÈXØÙ\[˜ÙH[\YY‚‚ŠŠŒŒ‹LLLLHØÛÜY˜\ÝTQHØ[˜YÙHØ[™Y]NŠŠˆ™\Ù\™Y™YH\ÙY[ÛÝ\˜ÙHš[\Èœ›ÛHˆÌÍŒˆÒT‘WÑTÕÔQWÔ‘U’QUË˜˜]ØÜš\ËÝ\ÝÙ˜\ÝÜYWÜ™]šY]ËœXØÜËÑTÕÔQWÔ‘U’QU×ÐS‘Ô“ÑPÕSÓ—ÔÔQQ›Yˆ›ÈÛÛÜšÙ›ÝËØ]]Üš]Hš[\ÈÛÜYYˆ\È[\ˆÛ›H][˜Ú\È[ˆ[™XYKXZ[ØØ[QMY]ÜŽÈ›È]]ÛX]XÈZ[[\ÜQHÙ\ÜÚ[Û‹”Ë]šXÙKÝš\ÝX[ÑØ]H‹ÍÈ›ÛÙ‹ˆ^XÝZXYÜÝYÒH[™[™ÎÈœ˜[˜Ú]ØZ]ÈY\™ÙK‚‚ŠŠŒŒ‹LLLLHPÌH˜YÈ[™XˆÛÝ\˜ÙK[Û›H›ÙXÝ[ÛˆØ[™Y]NŠŠˆ]KÔPÌP˜YÑ[™X\ÜÙ[X›UŒKšœÛÛ˜YÈH]Z[YØ[›ÛšXØ[[\š[Üˆ\ÜÙ[X›H[™Ù™ˆ
+Ú[ÛY\ÝXÈ›ÜË[\˜XÝ]™H[˜ÚÜœË]Y[ËÛYÚ
+KÝ]H˜\šX[Ë˜]™\œØ[ØÛÛ\Ú[Û‹ÜÝ™X[Z[™ËÓ”ÈÝÛ™\œÚ\ÛÛ˜XÝÈ[™š]™K[[™H][K[]™[™XÙZ\\ÚÜËˆ›ÈÙ[ÛY]žHÙ[™\˜]YØ\™ZÝ\ÙHž]\ÈXÜ]Z\™Y[œ™X[[\ÜÛÛ\[KQK]šXÙKš\ÝX[ÜˆØ]H‹ÍÈ›ÛÙŽÈ^XÝZXYÜÝY˜[Y][Ûˆ[™[™Ëˆ^\Ý[™ÈPÌH[[YHØÛÜH[˜Ú[™ÙY‚‚ŠŠŒŒ‹LLLLHÚXÚÜÚ[™XÛÛ˜Ú[X][Ûˆ
+Ø[™Y]JNŠŠˆ]™HÚ]Xˆ[™[ÜžHØœÙ\™YÌœ˜[˜Ú\È[™MÜ[ˆœËˆÜ™X]YØÜËÔ‘PÓÕ‘T–WÐÒPÒÔÒS•ÌŒ‹LLLLK›YÛˆœ˜[˜ÚÜËØÚXÚÜÚ[Xœ˜[˜Ú\™XÛÛ˜Ú[X][Û‹LŒŒLLXÈÛÛ\\™YÌÍˆ
+ˆZXYÍH™Z[™
+KÌÍÈ
+HZXYÍH™Z[™
+KÌÍÍ
+ZXYÌNH™Z[™
+K[™Û\ˆÚXÚÜÚ[™XÛÝ™\žH
+HZXYÎMÈ™Z[™
+HYØZ[œÝ]™[Üˆ[]™\™Ù[ˆ™\Ù\™H[™[™ÈÙ[XÝ]™HØ[˜YÙH[™^XÝZXYÚXÚÜËˆ›ÈˆY\™ÙYœ˜[˜Ú[]YQHÛÛ\[KQK]šXÙK”Ëš\ÝX[ÜˆØ]H‹ÍÈ›ÛÙˆœ›ÛH\ÈÚXÚÜÚ[ˆ\È\È™\ÜÚ]ÜžK\ÛÝ\˜ÙHØÝ[Y[][ÛˆÛ›K[™[™È^XÝZXYÝ]XÈÒK‚‚ŠŠ”ËLMÌÛÛ˜XÝ[YÛ›Y[
+Œ‹LLLLJNŠŠˆ^XÝZXY™KU[œ™X[ÎLÍMÌMLØRSQ]Ý]]YÝ]XÈ\ÜÙ\[ÛœÈ›ÜˆYØXÞH	Ø‹\›ÝÈ\™Y™\™[˜ÙKˆH
+œ™X[
+ˆÝÙ\”Ú[\œ˜^HXÛÙ\ˆ™YÜ™\ÜÚ[ÛœÈ\ÜÙY
+›]L‹™\ÝYL‹Ú[™ÛOLK[\OL
+KˆØÜš\ËÜ™WÝ[œ™X[Ý˜[Y]KœX›ÝÈÚXÚÜÈHXÝX[	›ÝØÝX\™È[™Ù]SÜ[”[™YœØ™]\ÙH˜]\ˆ[ˆš[Üˆ˜\šXX›HÜ[[™Ëˆ™]È^XÝZXYÜÝYÒH[™[™ÎÈ›È[™Ú[™KÔQKÙ]šXÙH]šY[˜ÙK‚‚ˆÈÈŒ‹LLLLH8 %œ˜[˜ÚÛX[\]™K[Ü[‹Tˆ\œ˜^HXÛÙ\ˆ™YÜ™\ÜÚ[Ûˆ
+Ø[™Y]JB‚‹H[™\ÝYØ]YÜÝYÛX[\[ˆÎLÍLÍNMMXY\ˆÝXØÙ\ÜÙ[™]šY]ÙY™]\™[Y[ˆH[ˆÙÙÙYXÝ]™T’XYÏL]™[ˆÝYÚÚ]XˆYÜ[ˆœËˆ^XÝ\‹Xœ˜[˜Ú™XÚXÚÜÈ[™›Ûž™\›ËXZXY˜[˜XÚÈ™\Ù\™Y[š\]YHXYÈ[ˆ][‹][Èˆ›ÝXÝ[ÛˆØ\È›Ý™[XX›Hš\ÚX›K‚‹H›ÛÝXØ]\ÙHZ]YØ][ÛŽˆ›Ü›X[^™H›Ý›][™™\ÝYÚ[™ÝÜÈÝÙ\”Ú[[›ÚÙKT™\ÝY]Ùˆ”ÓÓˆ\œ˜^\ÈÚ]Ù]SÜ[”[™YœØÈ\ÙHHØ[YH›Ü›X[^™\ˆ›ÜˆH[š]X[XÝ]™KZXYÙ][™^XÝ\‹Xœ˜[˜Ú™XÚXÚËˆ™\Ù\™H˜Z[XÛÜÙYÒHX\ÙKÛÜÙYÜ™\XÙ[Y[Tˆ›ÛÙ‹\˜Ú]™KÑYÜ˜\È›ÝXÝ[ÛœÈ[™™\›ËXZXYÛXÞH[˜Ú[™ÙY‚‹HÜÝYÝÙ\”Ú[Û\ÜÚYšY\ˆ™YÜ™\ÜÚ[Ûˆ›ÝÈ^XÝ]\ÈHXÝX[[\ˆYØZ[œÝ›]ÝÛË[]™[ÜÚ[™ÛKÙ[\HˆØ[\\Ëˆ
+Š‘]šY[˜ÙHÝ]\ÎŠŠˆÛÝ\˜ÙHØ[™Y]H[™[™È^XÝZXY™KU[œ™X[Ñš]™KS[™NÈ™]š[Ý\ÈÌÍÌÈœ˜[˜Ú[][Ûˆ™[XZ[œÈ›Ý™[ˆ]ÎLÍLÍNMMXˆ›ÈQHÛÛ\[K–[\ÜQK]šXÙK”Ëš\ÝX[ÜˆØ]H‹ÍÈÛZ[K‚‚ˆÈÈŒ‹LLLLH8 %ÜÝHÌÍÌˆ™]šY]ÙYÝ[K\™Yˆ™]\™[Y[
+ˆØ[™Y]JB‚‹H
+Š”ÛXÞNŠŠˆPËLLˆ™XÛÛ˜Ú[YY\ˆY\™ÙYˆÌÍÌˆ
+Y\™ÙHLØ˜ÍÙŽXLÌŽLL™˜ÍYMNYLYŒLX
+HÚ]^XÝZXYÚ]X‹ZÜÝY™KU[œ™X[ÕPÐÑTÔÈÎLÍÍNX[™š]™KS[™HÕPÐÑTÔÈÎLÍÍÍMØˆÛ\ÜÚYšYY
+Š”ÕUPËUSQUQ
+Š‹ˆ[Ú[™ÝÜÓ›ÑY]ÜˆXÚØYÙ\È™[XZ[ˆÝÛ™\‹\™\]Y\ÝYÚ\\‹Ü™[X\ÙHÛÜÙ[Ý]Û›NÈ[™Ú[™HÛÛ\[KÔQKÙ]šXÙKÝš\ÝX[ÑØ]M‹ÍÈ™[XZ[œÈ[œ›Ý™[‹‚‹H
+Šœ˜[˜Ú™]šY]ÙY›Üˆ™]\™[Y[ŠŠˆÛXÞKØÛÝYYš\œÝ[›Ë\›Ý][™K]Ú[™ÝÜË\XÚØYÙKLŒŒLLX^XÝÒHXØØÍŒLŒÌÌLÎLÌÎLŽX˜ŽŒXÎYŒLÌXÛÜÙYÝ[›Y\™ÙYˆÌÍŽKˆ[š\]YH[HÛÛZ[œÈ›Ý\ˆÛXÞKÙØÜÈš[\ÎÈÛXÞH[[Ý\\œÙYYžHY\™ÙYˆÌÍÌ‹›ÝžHHÛZ[HÙˆY[XØ[Ú][˜Ù\ÝžK‚‹H
+Š”ØY™]H[\[Y[][ÛŽŠŠˆ]KÐœ˜[˜ÚÛX[\[‹šœÛÛ˜™YÚ\Ý\œÈ\È^XÝ™Y‹ÔÒKÛÜÙY‹™\XÙ[Y[ŠÛY\™ÙKˆØÜš\ËÜ[—Øœ˜[˜ÚØÛX[\œÌX›ÝÈ˜Z[XÛÜÙ\ÈÛˆ[Ý™YÒKXÝ]™H‹Z\ÜÚ[™È™\XÙ[Y[Z\ÜÚ[™ÈY\™ÙH[˜Ù\ÝžK[šÛ›ÝÛˆ[š\]YH™YœÈ[™\Ù\È]ÛZXÈÚ]KY›Ü˜ÙK]Ú][X\ÙX›Üˆ›Ý^XÚ][™‹ZXY™]\™[Y[‚‹H
+Š”™[XZ[š[™Èœ˜[˜Ú[NŠŠˆ]™\žHÝ\ˆ[œÜXÝY›Û˜Ø[›ÛšXØ[œ˜[˜ÚÝ[\È[š\]YHÛÛ[Z]ÈœÈ]™[Üˆ™\Ù\™H–Õ[™Ù[ËÔÚÙ[][Ô”‹Ü™]šY]ËÙÙ[™\˜]YX]\šX[ÑYÜ˜\ÈØ[™Y]\È[[Ù[XÝ]™H™XÛÛ˜Ú[X][Ûˆ[™›ÛÙ‹ˆÈ›Ý[]HžHYÙHÜˆœ˜[˜Ú]K‚‹H
+ŠÝ\œ™[]šY[˜ÙH›Ý[™\žNŠŠˆœ˜[˜ÚÌÍŽHÛX[\\È
+˜]]Üš^™Y[™[™ÈHÝXØÙ\ÜÙ[ÜÝYˆ[™XÝX[ÛX[\ÙËÜ™Y‹[›ÝY›Ý[™›ÛÙŠŽÈ›È™[[ÝH[][ÛˆÜˆ\™›Ü›X[˜ÙKÝš\ÝX[XØÙ\[˜ÙHÛZ[YYžH\È[žK‚‚ŠŠ”ËLMHÝ]XÈ™YÜ™\ÜÚ[ÛˆÛÜœ™XÝ[Ûˆ
+Œ‹LLLLJNŠŠˆ^XÝZXY™KU[œ™X[[ˆÎLÍÌŒÌŒ˜Z[YÛ›H]HÝ]]YÜÝY[œ™X[ÝX\™ÚÙ[ˆ™YYË˜Û\ÜÚYžK›Ý]]Ë›[ÙHOH	Ú[š\š]	ØY\ˆ™X[Û\ÜÚYšY\ˆØ\Ù\È[™XÚØYÚ[™ÈÛÛ˜XÝY[™XYH\ÜÙYˆ™\XÙY]Û^XÝ][ÛˆÚ]^XÚ][ØÛÜ™KØXØÙ\[˜ÙKÜXÚØYÙXÙ[XÝ[ÛˆX\šÙ\œÈ[™YYØÜš\ËÜ™WÝ[œ™X[Ý˜[Y]KœXÈH˜\œ›ÝÈÜÝY[Û›HÛXÞH[ÝÛ\Ýˆš]™KS[™H[ˆÎLÍÌŒÌÕPÐÑTÔÈÛˆ™]š[Ý\ÈXYÈ™]È^XÝZXY™Y›YÚ™[XZ[œÈ[™[™Ëˆ\È\ÈHÒH\ÝXÛÛ˜XÝš^“Õ™X[QHÛÛ\[KQK]šXÙHÜˆÚ\\ˆXØÙ\[˜ÙK‚‚ˆÈÈŒ‹LLLLH8 %X[X[[Û›HÚ[™ÝÜÈXÚØYÚ[™È
+ÈÜÝYÛXÞH™YÜ™\ÜÚ[Ûˆ
+ˆØ[™Y]JB‚‹HPËLLˆ›ÙXÝ[Ûˆ[\[Y[][ÛˆÛˆÝ\œ™[]™[ÜY\ˆˆÌÍÌˆÛÜšÙ›Ý×Ù\Ü]ÚXÚØYÙWÝÚ[™ÝÜÏ]YX^Û\Ú]™[H[˜X›\ÈÚ[™ÝÜÓ›ÑY]ÜˆÛÛÚË]H›ÛÙ‹XÚØYÙYÝ\\\™Ø\™HØ\\™H[™\™ÙH\Y˜XÝ\ØYˆÛÛ™šYËÐZ[˜ÜËÝ[šÛ›ÝÛ‹Ù˜Z[YXÛ\ÜÚYšY\ˆ]ÈÝ[ZÙHH\›ÜšX]HQHÛÛ\[KÚ[\ÜÜ[[YH[™HÚ[ˆHÝÛ™\ˆ[›™\ˆ\È]˜Z[X›K]™]™\ˆØ]\ÙHH›Ý][™HXÚØYÙK‚‹H˜\œ›ÝÈ^XÝ\][Û›HÝ]XØÛ\ÜÚYšXØ][Ûˆ›ÜˆÛÝ™\›˜[˜ÙKØÛ\ÜÚYšY\ˆÛÜšÙ›ÝËÑØÜÈ\]\È[œÈH™X[ÝÙ\”Ú[Û\ÜÚYšY\ˆ™YÜ™\ÜÚ[ÛˆÛˆÚ]X‹ZÜÝYÚ[™ÝÜÈÚ]Ý]™\Ù\š[™ÈHÝÛ™\‰ÜÈQH[›™\ˆÜˆ[\Z[™È[ˆ[š\š]Y[œ™X[Z[›ÛÙ‹ˆXØÙ\[˜ÙK[Û›HÚ[™Ù\ÈÚ]Ý]XÚØYÙY\Ý\\™\Ý[YH[ÛÈÝ^HÛˆÜÝY[Û›HÛ\ÜÚYšXØ][Û‹‚‹H™YÜ™\ÜÚ[ÛˆÛÝ™\œÈ™X[Ù]S[ÙHÝ]]XÜ›ÜÜÈ[™\]Y\ÝY˜][X[X[\Ü]Ú[™^XÚ]H™\]Y\ÝYÚ\\ˆXÚØYÙNÈÛÛ™šYËÝ[šÛ›ÝÛ‹Û›Ë\›ÛÙˆØ\Ù\È™[XZ[ˆÝšXÝHÛ\ÜÚYšYYˆÛÝ™\››Üˆ[™X^[][TØY™S[ÙH\]YÙÙ]\ŽÈPÌH[[YHØÛÜH[™Ø]H‹ÍÈ[˜Ú[™ÙY‚‹HYXØ]YPÌH™\šYšYY”ˆÛÜšÙ›ÝÈØ\ÈHÙ\\˜]HY[ˆ\XØ]HÙ[‹ZÜÝYˆšYÙÙ\‹ˆ]\È›ÝÈX[X[ÛÜšÙ›Ý×Ù\Ü]ÚÛ›NÈÜ[Û˜[XÚØYÙWÝÚ[™ÝÜØY˜][È˜[ÙK[™ÛÛÚË]KÜÝ\\ÚXÚÜÈ[™\Y˜XÝ\ØY™\]Z\™HYKˆHXÝX[–[\ÜÕQHPH™[XZ[œÈ]˜Z[X›HÛˆ[X™\˜]H\Ü]ÚÈ›È[\Ü]šY[˜ÙH\È[™[Y‚‹H
+Š‘]šY[˜ÙH›Ý[™\žNŠŠˆÛÝ\˜ÙHÛXÞHØ[™Y]Kˆ^XÝZXYÜÝYÒH™\Ý[È[™[™ÎÈ›È™]ÈQMÛÛ\[K–[\ÜQK]šXÙH”Ëš\ÝX[XØÙ\[˜ÙKÚ[™ÝÜÈXÚØYÙKÜˆØ]H‹ÍÈÜ™Y]‚‚ˆÈÈŒ‹LLLLH8 %ÌÍHÒH™YÜ™\ÜÚ[ÛˆÛÜœ™XÝ[Ûˆ
+Ø[™Y]JB‚‹H^XÝZXY™KU[œ™X[ÌÎLLÌÎH˜Z[Y[ˆÛÈÛÝ\˜ÙHÛÛ˜XÝ\ÜÙ\[ÛœÎˆÛ™HØœÛÛ]HX[X[[Û›HšYÙÙ\ˆ^XÝ][Ûˆ[™Û™H™]È\Ý\Ú[™È]\˜[\ØØ\Y™]Û[™\ËˆHYXØ]Y”ˆ[™H[[[Û˜[H[œÈÛˆˆ]™]™\ˆÛÛÚÜËÜXÚØYÙ\È^Ù\X[X[\Ü]ÚˆÛÜœ™XÝY\ÜÙ\[ÛœÈ[™YÚ[™YXÚØYÙHØ]\ÎÈ™\]Z\™\È™]È^XÝZXYÒHÝXØÙ\ÜËˆ›È[[YKÙ]šXÙKÝš\ÝX[XØÙ\[˜ÙK‚‚ˆÈÈŒ‹LLLLH8 %PÌH™\šYšYY”ˆ[\Ü\ˆ[YÜ˜][ÛˆÛˆˆÌÍH
+Ø[™Y]JB‚‹H\ÚXØ[›[™\ˆ–›Ü›X[^˜][Ûˆœ›ÛHÌÍMH\È›ÜØ\™\ÜY[ÈHXÝ]™HÌÍHÛÝ\˜ÙHÝYÙNˆÛÜYYœ›ÛHØ]™YÔPÌS›Ü›X[^™Y–[ÈYÛ›Ü™YØ]™YÔÚ\™T›ÙXÝ[Û’[\ÜÛÜšÚ[™ØÛ›NÈ˜XÚÙYØ\™ZÝ\ÙH–\È™]™\ˆ[\™YˆHÛÛ[X[™]™Z™XÝÈZ\ÜÚ[™È\š]˜]]™H™XÙZ\X[›Ü›YYÛÝ\˜ÙH^[Ý]ÜˆZ\ÜÚ[™È\š]™Y–‚‹H^\Ý[™È™X[QMX]\šX[\ÛÝÐ\ÜÙ]™YÚ\ÝžHÚXÚÜËÑØ[YKÔ›ÙXÝ[ÛˆXÚØYÙ\Ë[™Ú\\ˆ\Þ[˜ÈÛÜ›˜[šÈ™[XZ[ˆHXÝ]˜][Ûˆ]]Üš]Kˆ^XÝ\Ú˜[Y][Ûˆ[œÈ[ˆHYXØ]YÛÜšÙ›ÝÈ™Y›Ü™HHQH[\ÜÛÛ[X[™]ÈÛÝ\˜ÙK[Û›KÛ[ØÚÙY\ÝÈÈ›ÝÛZ[H[\ÜYÙ[ÛY]žK‚‹H–›Ü›X[^™\ˆ›ÈÛ™Ù\ˆÙ[ÈÛÚ[˜ÚY[™\XÙ\ÈXÜ›ÜÜÈ˜[YU‹Ú\™[›Ü›X[ÙX[\ËˆØXÚHÙ^\È[˜ÛYH^XÝÜšYÚ[˜[–\Ú\Ë›Ü›X[^˜][ÛˆØÜš\È[™[œÝ[Y›[™\ˆ™\œÚ[ÛŽÈHØXÚH]Ý[[œÈ™XÙZ\ÔÒLMˆ™\šYšXØ][Û‹ˆ›Ü›X[^™YÜ™]\ÙYÝ[È\™HÙÙÙY‚‹HYXØ]Y”ˆˆ\[[™HÝYÙ\ÈMˆÛÝ\˜ÙY–[œÈ›[™\‹[\ÜÈ[ÈQM]Y]ÈX]\šX[È[™\ÝÈXY\ÜÈÚ\™HXÙ[Y[ˆÚ[™ÝÜÈXÚØYÙKÝ\ØY\È^ÛYYœ›ÛHˆ[™]™[Ü\ÚÈš[˜[XÚØYÙH™\]Z\™\È^XÚ]\Ü]ÚˆÛ\ÜÚYšY\ˆ™X]È˜[YY”ˆÛÛÚZ[ˆÚ[™Ù\È\È[™Ú[™KZ[\XÝ[™È]›ÝÚ[™ÝÜË\XÚØYÚ[™ËXÜš]XØ[È[šÛ›ÝÛˆ]ÈÝ[˜Z[ÛÜÙY‚‹H]šY[˜ÙNˆˆÌÍH™]š[Ý\ÈÛÝ\˜ÙK[Û›HXYLMŽYM˜X\ÜÙY™KU[œ™X[[ˆÎLŒMˆ
+Š•\ÙH‘UÈ[\Ü\‹ÝÛÜšÙ›ÝÈY]È™\]Z\™Hœ™\Ú^XÝZXY™KU[œ™X[[™QKÔ”ˆ›ÛÙ‹ŠŠˆ›ÈQK]šXÙKš\ÝX[XÝX[”ËØ]H‹ÍÈXØÙ\[˜ÙHÜˆMË]Ø\›š[™È[[Z[˜][Ûˆ\ÈÛZ[YYÈÈ›ÝÜ[ˆPÌˆ[[YKˆ	XÝ[ÛœÈÙZ[[™È[˜Ú[™ÙY‚‚ˆÈÈŒ‹LLLLH8 %PÌH\š]™Y–\ÚXØXÚHÛÛ[™ÈØ[™Y]B‚‹H›ÜØ\™\ÜYH™\šYšYY›[™\ˆ›Ü›X[^˜][ÛˆØÜš\[™ÒLM‹X›Ý[™\š]™YQ–™Y›YÚœ›ÛHˆÌÍMHÛÈÝ\œ™[]™[Ü\ÈHÛÝ\˜ÙK[Û›H[YÜ˜][ÛˆØ[™Y]KÚ]^XÝZXY™KU[œ™X[™YÜ™\ÜÚ[Û‹ˆ\ÈÙ\È“ÕXÝ]˜]H™]È[[YH\ÜÙ]Ë[ÙYžHHXÝX[QH[\Ü\‹ÜˆÛÛ™H[MÈÛ[ÛÝ[™ÈØ\›š[™ÜÈÛˆ]™[ÜˆÜšYÚ[˜[ÐÌ–\È[[]]X›NÈÙ[™\˜]Y\š]˜]]™\È]™H[ˆYÛ›Ü™YØ]™YËˆH[\Ü\ˆÝ™\›^KÜ\ÚXØ[QHš[™[™ËQK]šXÙHÌ”Ë[^]›ÝYÚ[™Ø]M‹ÍÈ™[XZ[ˆ[˜XØÙ\YˆÚ[™ÝÜÈXÚØYÚ[™È\È›Ý™\]Y\ÝYÈ™\Ù\™HPËLLˆ[™	ÒHYÙ]ÙZ[[™Ë‚‚ˆÈÈŒ‹LLLLH8 %ÚÛKYØ[YH™YÚ[Û˜[ÐÌX]\šX[™XÙZ\ØXÚHÛÜœ™XÝ[Ûˆ
+Ø[™Y]JB‚‹H›ÛÝØ]\ÙNˆÝYÙWØ[XšY[Ù×ÝØ\™ZÝ\ÙKœÌX™]\ÙYH™]š[Ý\ÛHÜ™Y[ˆ˜]Ú™XÙZ\˜\ÙYÛˆ˜]ÚQ[™ÝÜ™Y’T\Ú\È[Û™Kˆ[ˆY]Y™YÚ[Û‹Ü]Y\žKÜ]X[]HX[šY™\ÝÚ]HÐSQH˜]ÚQÛÝ[Ú[[HÚÚ\H™]ÈÛÝ\˜ÙH[ZÙK™]™[[™ÈX]\šX[\]\ÈXÜ›ÜÜÈH]]Üš^™YÚÛKYØ[YH™YÚ[Ûˆ™\\˜][Û‹ˆH™\Z\ˆÜš]\ÈX[šY™\ÝÜÚLM˜È™]È™XÙZ\È[™™\]Z\™\È[ˆ^XÝX[šY™\Ý\ÚX]Ú›ÜˆX\›H™]\ÙNÈYØXÞH™XÙZ\È˜Z[ÛÜÙY[™\™H™KY]˜[X]YÚ]Ý]\Ý›ÞZ[™È˜[YØXÚY’Tž]\Ëˆ]™[ˆT™Yœ™\Ú›ÝÈÙY\ÈÝXÝ\˜[H˜[Y\˜Ú]™\È˜]\ˆ[ˆ]]ÛX]XØ[H[][™È[Kˆ^\Ý[™ÈÒLM‹Ö’TÙ\ÚÈ™\Ù\™KÐÐÌÚXÚÜÈ[™Ú[™ÛHØ\™ZÝ\ÙHÜš]\ˆ™[XZ[ˆXÝ]™KˆH™]ÛÜšËYœ™YHÝÙ\”Ú[™YÜ™\ÜÚ[Ûˆ^\˜Ú\Ù\È[˜Ú[™ÙYÚ[™ÙY[™YØXÞH™XÙZ\ÈÚ]H™X[[\Ü˜\žH’T[™ÚXÚÜÈ][˜[Y][™ÈH™XÙZ\Ù\È›Ý[]HH\˜Ú]™Kˆ\È\ÈÛÝ\˜ÙK[Û›H™\›ÙXÝ[Ûˆ›ÜˆH^\Ý[™ÈŽ\™YÚ[ÛˆXÚÙ]Ù]
+Ú\™H[˜ÛYY
+K›Ý›ÛÙˆÙˆ[\Ü[™ÈX]\šX[È[ÈÈÝ\ˆ[[YH™YÚ[ÛœËˆ™KU[œ™X[[™^XÝZXY]šY[˜ÙH[™[™ÎÈ›È[œ™X[ÔQKÙ]šXÙKÝš\ÝX[ÜˆØ]M‹ÍÈXØÙ\[˜ÙKˆ\Ù\ˆÚ]XˆXÝ[ÛœÈYÙ]ÙZ[[™È	\È[˜Ú[™ÙY‚‚ˆÈÈŒ‹LLLLH8 %PËLLˆÚÛKYØ[YHÚ[™ÝÜÈXÚØYÙHØY[˜ÙH
+ÒHØ[™Y]JB‚‹HÝÛ™\ˆ^XÚ]HØ[È›Û™\ÜÙ[X[™\X]Y[™Ú[™HÚXÚÜÈZ[š[Z^™YXÜ›ÜÜÈH
+Š™[\™HÚ\™H›Ý\›™^HØ[YJŠ‹›ÝPÌHÛ›NÈX]žHÚ[™ÝÜÈÛÛÚËÔXÚØYÙKÕÚ[™ÝÜÓ›ÑY]Üˆ\Y˜XÝ\ØYÚÝ[›Ü›X[H\[ˆ]Ú\\ˆÛÛ\][Û‹Ü™[X\ÙK›ÝXXÚÛÝ\˜ÙKØ\ÜÙ]ÙY][™ÈÚXÚÜÚ[ˆÛÛH]]Üš]H\È]KÔ›Ú™XÝÛÝ™\››Ü‹šœÛÛ˜PËLLˆ[™Ú\\—ØÛÜÙ[Ý]ÜXÚØYÙWÜÛXÞWÌŒ—ÌLÌLX[šÙYÈ‘TKT“ÑLLK‚‹H™X[š[ÜˆQHÒHÙÈÌN™XÛÜ™YÌÔPÒÐQÑWÔTÔÈ[\ÙYÙXÛÛ™ÏLŒLX[™Ú[™ÝÜÈØ[™Y]H\ØYŒMÈ›ÜˆÌÌŒÍŒŒMHž]\Ëˆ\ÙH\™H^\Ý[™È™Y™\™[˜ÙHÛÜÝË“ÕHYX\Ý\™YÜYY\‚‹HØÜš\ËØÛ\ÜÚYžWÝ[œ™X[Ý˜[Y][Û‹œÌX›ÝÈ[Z]ÈXÚØYÙO]YKÙ˜[ÙX[™\[™[Hœ›ÛH[ØÛÜ™KØ\ÜÙ]ØXØÙ\[˜ÙXˆ™Ú]X‹ÝÛÜšÙ›ÝÜËÝ[œ™X[XZ[]˜[Y][Û‹ž[[ÛÛœÝ[Y\È]Ý]]›ÜˆÛÛÚËXÚØYÙY”ÓÓ‹XÚØYÙY^XÝ]X›HÝ\\[™\ØYˆ^XÚ]ÛÜšÙ›Ý×Ù\Ü]ÚXÚØYÙWÝÚ[™ÝÜÏ]YX›Ü˜Ù\È[^XÝZXYZ[
+ÈXÚØYÚ[™ËˆHÝ[™\™[[[ÙH˜[˜XÚÈ›ÜˆÚ[™ÙYØ[YH[[YKÜÛÝ\˜ÙH
+Š™Ù\È›ÝXÚØYÙJŠˆÚ[ˆHÚ[™ÙY]\È[™XYHÛ›ÝÛˆ\È›Û‹\XÚØYÚ[™ËZ[\XÝ[™Ë‚‹HXÚØYÚ[™ËXÜš]XØ[ÛÛ™šYËÊŠ˜Z[˜ÜËÕ\™Ù]˜ÜËÝ™X[Z[™È˜[šËÛÛÚËÔXÚØYÙKÔ™[X\ÙH[™[šÛ›ÝÛˆÝ[X[H[\XÝ[™È]ÈÝ[™\]Z\™H[XÚØYÙH›ÛÙˆ[[YYX][NÈXÚØYÙKÜÝ\\˜[Y]ÜˆÚ[™Ù\È™\]Z\™HXÚØYÙH›ÛÙˆ[›\ÜÈØY™HØ[YKXÛÛ[›ÛÙˆØ[ˆ™H[š\š]YˆÝ\\[Û›H™]\Ý[™ÈÙ\È›Ý™Y[™[H\ØYH\™ÙHXÚØYÙK‚‹HØÜš\ËÝ\ÝÝ[œ™X[ØÛ\ÜÚYšY\‹œÌX[˜ÛY\ÈÚÛKYØ[YH^[\HØ\Ù\ÈÛÝ™\š[™ÈØY™HÛ›ÝÛˆ[[YHÚ[™Ù\Ë›Ë\›ÛÙˆ˜[˜XÚËX[X[ÛÜÙ[Ý]ÛÛ™šYËÜÝ™X[Z[™ËXÚØYÙK]ÛÛÚ[™Ù\Ë[™[šÛ›ÝÛˆ]ËˆØÜËÑØ]\È\]YÚ]Ý]Ú[™Ú[™ÈÛÙHØ[Y\^KØ[›Û‹Y[[ÜžHÜˆ™[™\™\‹ˆ›ÈÙXÛÛ™ÛÝ™\››Üˆ]]Üš]Hš[K‚‹H\ÈÒHÚ[™ÙH\È
+Š”ÓÕTÑHÐS‘QUHÈÕUPÈÒPÒÔÈS‘S‘ÊŠˆ[[^XÝZXY™KU[œ™X[ÈÛ\ÜÚYšY\ˆ™YÜ™\ÜÚ[ÛœÈ[™™X[[›™\ˆÛ\ÜÚYšXØ][ÛœËˆ›ÈQMÛÛ\[KXÚØYÙKQKU’PÑK’TÕPS”ÈÜˆØ]H‹ÍÈÜ™Y]›Üˆ\Èœ˜[˜ÚˆPÌH\ÈÝ[HÛÛHXÝ]™H[[YHÚ\\ŽÈ]\™HÚ\\œÈ™YYZ\ˆÝÛˆXØÙ\[˜ÙH]šY[˜ÙK‚‚ˆÈÈŒ‹LLLLH8 %PÌHÚ]XˆXÝ[ÛœÈKY\XØ][Ûˆ[™\Y˜XÝ˜[œÙ™\ˆY™šXÚY[˜ÞH
+Ø[™Y]JB‚‹HÝÛ™\‹\™\]Y\ÝYÒH›ÝYÚ]™\Z\‹›È™]ÈÚ\\‹ÙØ[Y\^H™X]\™KˆHÙ[™\šXÈ™Ú]X‹ÝÛÜšÙ›ÝÜËÝ[œ™X[XZ[]˜[Y][Û‹ž[[[™XYHÛÝ™\œÈY™™XÝYQH[[YHÛÝ\˜ÙH]ÎÈHÜXÚX[^™Y™Ú]X‹ÝÛÜšÙ›ÝÜËÜXÌK]™\šYšYY\œ‹\›ÙXÝ[Û‹ž[[[ÛÈ]]Ë\˜[ˆÛˆ]™[ÜÚ[™Ù\ÈÈHÚ\™HÛÜ›Z[\‹Ú[\ÜÛÛ[X[™]ØœšYÙKš\ÚÚ[™ÈHÙXÛÛ™ÛÛ\[KÚ[\ÜØÛÛÚËÜXÚØYÙHÛˆHØ[YH[Z]YÚ[™ÝÜÈÙ[‹ZÜÝY[›™\‹‚‹HHÜXÚX[^™YNK\ÛÝ\˜ÙH™\šYšYY”ˆ[\ÜÜXÚØYÙHÛÜšÙ›ÝÈ\È›ÝÈÛÜšÙ›Ý×Ù\Ü]ÚÛ›Nˆ]™[XZ[œÈ]˜Z[X›H›Üˆ[X™\˜]HPÌHš\ÝX[\ÜÙ]›Û[Ý[ÛˆÚ]ÚXÚÜÝ[H™XÙZ\Ë–Ô‘ÈÛÝ\˜ÙHÝYÚ[™ËXÝX[QM[\ÜX]\šX[\ÛÝÜ[[YK\™\Ù[˜ÙH\ÝËØ]™KÜ›Ý]H™\šYšXØ][Û‹ÛÛÚËÜXÚØYÙH[™^XÝ]X›HÝ\\ˆ\È\È›Ý\›Z\ÜÚ[ÛˆÈž\\ÜÈ]È]šY[˜ÙHÚ[ˆ›Û[Ý[™È™\šYšYY”ˆš\ÝX[ÈÜˆXZÚ[™ÈØ]H‹ÍÈÛZ[\Ë‚‹HXÝ[ÛœËÝ\ØYX\Y˜XÝ[ˆ]X[X[XÚØYÙYš[˜\žH[™H›ÝÈ\Ù\ÈÛÛ\™\ÜÚ[Û‹[]™[ˆX]Ú[™ÈH^\Ý[™ÈÙ[™\˜[[œ™X[XÚØYÙH\Y˜XÝÜ[Z^˜][ÛˆÈ™YXÙHÛÛ\™\ÜÚ[ÛˆÔH[YNÈ\ØYÛ™]ÛÜšÈÜYY[\›Ý™[Y[\È›ÝY]YX\Ý\™Y‚‹HYYØÜš\ËÝ\ÝÜXÌWÝ™\šYšYYÜœ—ØœšYÙKœX™YÜ™\ÜÚ[ÛˆÈ[œÝ\™H\Ü]Ú[Û›HšYÙÙ\‹\ØYÙ][™Ë[™™][[ÛˆÙˆ[\ÜÜ[[YHÚXÚÜËˆHÝ]XÈ\Ý]\È^ÛYYœ›ÛH›ÝÙ[™\˜[[œ™X[\ÚÔˆšYÙÙ\œÈ[™™[XZ[œÈÛÝ™\™YžH™KU[œ™X[˜[Y][Û‹‚‹HÛÝ\˜ÙKÐÒKXÛÛ™šYÈ™]šY]ÈÛ›HÛÈ˜\‹ˆ^XÝZXY™KU[œ™X[œ™\ÚQHÛÜšÙ›ÝÈ™Z]š[Ü‹˜[œÙ™\ˆ™[˜ÚX\šÜËQK\™Ù]Y]šXÙKš\ÝX[XØÙ\[˜ÙK”È[™Ø]H‹ÍÈ]šY[˜ÙH\™H
+Šœ[™[™ÊŠ‹ˆ^\Ý[™ÈÛÛ\[KÜ[[YHXØÙ\[˜ÙH\È›Ý[š\š]YXÜ›ÜÜÈ\ÈÚ[™ÙH[[™\šYšYYžHH›Ú™XÝ	ÜÈ›ÛÙˆÛ\ÜÚYšY\‹‚‚ˆÈÈŒ‹LLLLH8 %›ÛÝXØ]\ÙH™\Z\ˆÙˆØØ[QHÛ\ÜÚYšY\ˆ
+ˆÌÍNJB‚‹H™KU[œ™X[[ˆÌÎLÌŒÌLNMˆ˜Z[YYK\™]šY]Ë\ØY™K]Ú]\›ÛÙŽˆ^XÝY[š\š]ÛÝ[ˆHÛÈ^XÝ]È\X\™YÛ›H[ˆH˜[œÚ]]™HÛÜ™K\›ÛÙˆ[ÝÛ\Ý›Ý[ˆHXZ[ˆ	ØY™Q^XÝÙ]\ÙYžH	[[\XÝˆY[HÈHXÝX[^XÝ\]Û\ÜÚYšY\ˆ[™ÛÝ™\ˆÛÚØ[ZÙH˜[Y\ËZ^Y[[YH[™ÛÛ™šYÈÚ[™Ù\È[ˆH™X[Û\ÜÚYšY\ˆ™YÜ™\ÜÚ[Û‹ˆ\™[[™Ú[™H›ÛÙˆ™[XZ[œÈX[™]ÜžKÝ\Ú\ÙH[˜[Y][Û‹ˆˆÌÍN	ÜÈXÝX[™]šY]ÈÛÛ[X[™Ý\ÝÝ[™\]Z\™\È^XÝZXYÝ]XÈ^XÝ][Ûˆš[ÜˆÈY\™Ú[™ËˆØ[™Y]H]ØZ][™ÈÒNÈ›È™]È[œ™X[ÔQKÙ]šXÙKÝš\ÝX[Ñ”ÈXØÙ\[˜ÙK‚‚ˆÈÈŒ‹LLLLH8 %š^™Y[™[[QHZ[È›ÜˆØØ[QH][˜Ú\ˆÛÛ[™Â‚‹HÚ]Xˆ[›™\ˆÌÎLÍNLÌLHÛ\ÜÚYšYYH™]ÈÒT‘WÑTÕÔQWÔ‘U’QUË˜˜][™ØÜš\ËÝ\ÝÙ˜\ÝÜYWÜ™]šY]ËœX\È•SÕS”‘PSÑ’SXšYÙÙ\š[™È[ˆ^[œÚ]™H[[œ™X[[™H\Ü]H™Z[™ÈH][˜Ú\‹ÜÝ]XË]\Ý[Û›HÚ[™ÙKˆÛˆÜÙˆY\™ÙYˆÌÍMËHÛ\ÜÚYšY\ˆ›ÝÈ^XÚ]H™XÛÙÛš^™\ÈÛ›HÜÙHÛÈ]Y]YÛÝ\˜ÙH]È\ÈØY™HÛÝ\˜ÙKÝÛÛ[™È[œ]È[™[š\š]È[™Ú[™H›ÛÙˆÛÛ[HÚ[ˆH\™[[™XYH\ÈHÝXØÙ\ÜÙ[X]Ú[™ÈÚÛH[œ™X[ÛÜšÙ›ÝÎÈÝ\Ú\ÙH]˜[È˜XÚÈÈ[˜[Y][Û‹ˆÛÈ™YÜ™\ÜÚ[Ûˆ\ÝÈÛÝ™\ˆÜ™Y[‹\\™[[™›Ë\›ÛÙ‹ˆ\ÈÙ\È›Ý™[[Ý™HH™X[PÌH”ˆ[\ÜØ]]ÛX][Û‹Ù]šXÙHØ]H‹ÍÈ›ÜˆÛZ[HQHÜˆ™]ÈØ[YHš\ÝX[Ë‚‚ˆÈÈŒ‹LLLLH8 %\™Ù]Y]šXÙHXØÙ\[˜ÙK[Û›HÒH˜\Ý[™H
+Ø[™Y]JB‚‹H›ÛÝÈÝÛ™\ˆZ[š[][KXYZ[š\Ý˜][ÛˆÛXÞNˆÛ\ÜÚYžHØÜš\ËÙ]˜[X]WÜXÌWÙØ]M×Ù]šY[˜ÙKœX\È[ˆXØÙ\[˜ÙK[Û›HÚ[™ÙK›ÝH›[šÙ][œ™X[[[YKØÛÛ™šYËÜXÚØYÙHÚ[™ÙKˆH™X[[œ™X[Û\ÜÚYšY\ˆ[ˆˆÌÍMˆÙÙÙYSÔ‘SQS•SÔÓÕTÑWÓÓ“WÐ“ÐÒÑQš[OTØÜš\ËÙ]˜[X]WÜXÌWÙØ]M×Ù]šY[˜ÙKœX[™S”‘PSÕSQUSÓ—ÑPÒTÒSÓˆ[ÙOY[‹‹ˆ™X\ÛÛY[™Ú[™K\[[YKXÛÛ™šYË[Ü‹][˜Û\ÜÚYšYYY[XÛˆ[ˆÌÎLMN‹ˆ\ÈÚ[™ÙHÙ\È›ÝÜ˜[HÙ[™\˜[ž\\ÜÎˆXØÙ\[˜ÙH[ÙH™\]Z\™\È^\Ý[™ÈÜ™Y[ˆ\™[ÛÜ™H[™Ú[™H]šY[˜ÙKÝ\Ú\ÙH™[XZ[œÈ[Ù˜Z[XÛÜÙYÈPÌH[\ÜÊÊÈ[™Ú[™ÝÜÈ[[YHÚ[™Ù\ÈÛÛ[YH›Ü›X[Ø]\ËˆYYÛ\ÜÚYšY\ˆØ\Ù\È›Üˆ\™[›ÛÙˆ[™XœÙ[›ÛÙ‹ˆ›ÈQKÔQKÙ]šXÙKÝš\ÝX[XØÙ\[˜ÙHœ›ÛH\ÈÛÝ\˜ÙHÚ[™ÙK‚‚ˆÈÈŒ‹LLLLH8 %ÝÛ™\ˆXØÙ[\˜]Y[ZÙHÈ\™ÙHÚ\\ˆ˜]Ú
+ÓPÖHÓ“JB‚‹H™YÚ\Ý\™YÝÛ™\ˆ˜\Ý˜]Ú[ZÙH[ˆHÛÛHÛÝ™\››ÜŽˆ\›Z]]Ù[ÛÝ\˜ÙKY›Ü›X][ZÙH[™]]ÛX]XÈÛÜœ™XÝ[Û‹ØÛÛ™\œÚ[ÛˆÚ]Z[š[X[YZ[š\Ý˜]]™H™]šY]Ë™]\ÙH[XÝ™XÙZ\Ë\™Ù]YÚ[™ÙYZ[œ]ÚXÚÜË[˜[ZXÈ\™ÙHPÌH[YÜ˜][ÛˆØ]™\È[™š]™H™\\˜][Ûˆ[™\Ëˆ›ÈXÝX[\ÜÙ][\ÜY[[YHÛÙHÚ[™ÙY[œ™X[Z[^XÝ]YÜˆØ]H‹ÍÈÛÜÙY[ˆ\ÈÛXÞHØ[™Y]KˆˆÌÍLˆ›[™\‹Ô”ˆÛÜšÈÝ^\È[™\[™[ÈÈ›ÝØ[˜Ù[]™HÛÜšÙ›ÝÜËˆPÌˆ™[XZ[œÈÛÜÙY‚‚ˆÈÈŒ‹LLLL8 %ÝÛ™\ˆ]š[™ÈÛØÚX[[™ØØ\HÝ[™\™Ú\™KYš\œÝÈ[™YÚ[ÛœÈ
+\ÚYÛˆ™\]Z\™[Y[
+B‚‹HØÝ[Y[YHÝÛ™\‹\™\]Y\ÝY]š[™Ë\ÛØÚX[[[™ØØ\H›ÙXÝ[ÛˆÝ[™\™›ÜˆØ˜š]Ûˆ[™HÝ\ˆŽ[›™Y™YÚ[ÛœÈ\È\ÚYÛ‹ØXØÙ\[˜ÙHÜš]\šXH[ˆH^\Ý[™ÈÛÝ™\››Üˆ‘TKUÓÔ“LK]š[™ÈÛÜ››Y\š[Ù™X]\™H[‹[™ÓÔ“ÑURSÓQÑT‹ˆ›È[[YHÚ[™Ù\ËÛÝ\˜ÙHÝÛ›ØYË™]ÈÚ\\ˆ[›ØÚËQKÙ]šXÙKÝš\ÝX[XØÙ\[˜ÙHÜˆ”È]šY[˜ÙKˆ[™\[™[™\\˜]ÜžHÛÜšÈ™[XZ[œÈ[YÚX›H[™\ˆPËLLÚ[HPÌH[[YHØ\›š[™ÈXÈX]\šX[\ÛÝ›ÛÙˆ\™H›ØÚÙY[™[™ÈXÝX[™\Z\ˆ[™Ü™Y[ˆÚXÚÜË‚‚‚ˆÈÈŒ‹LLLL8 %ÚÛKYØ[YHÚ\˜XÝ\ˆÐÌÛÝ\˜ÙHØ[™Y]H™\ÙX\˜Ú
+™\\˜][ÛˆÛ›JB‚‹HÜ™X]Y]KÕÚÛQØ[YPÚ\˜XÝ\”ÛÝ\˜ÙPØ[™Y]\ÌŒŒLLšœÛÛ˜Ú]]X]\›š]\È[Ù[\ˆ˜[\ÞHÝ]š]Ë]X]\›š]\È”ÈÚ\˜XÝ\œÈ[™›[™\ˆ[X[ˆ˜\ÙHY\Ú\ÈØ[™Y]HÛÝ\˜Ù\È›Üˆš\ÝX[ÜšYÈ™\ÙX\˜ÚXÜ›ÜÜÈHŽ\™YÚ[Ûˆ›ÙXÝ[ÛˆØÛÜKˆ\È\ÈÛÝ\˜ÙKY\ØÛÝ™\žHY]Y]HÛ›NˆXÙ[œÙK\\‹YÝÛ›ØY^XÝ›Ü›X]ÒLM‹šYÈÛÛ\]Xš[]K›ÜÜ[ÛœËÑÈ[™™[™\‹Ø\XØÙ\[˜ÙH\™H[™[™Ëˆ›Èš[\ÈÝÛ›ØYYÈ\œÚ\Ý[Ø\™ZÝ\ÙK›È[œ™X[[\Ü›È™]È[[YHÚ\\‹›ÈPÌHØ]H‹ÍÈÜ™Y]‚‹HÛÛ[YHÛ›HÚ][ˆ^\Ý[™ÈÛÝ™\››Ü‹X\›Ý™YPÌKYš\œÝ[[YH
+È[™\[™[ÚÛKYØ[YH\ÜÙ]™\\˜][ÛˆÛXÞKˆÛ™HØ\™ZÝ\ÙHÜš]\‹›È\XØ]HÝÛ›ØYÎÈ›ÈÙ[™\šXÈ\™\\HY\Ú\ÈXØÙ\Y\ÈH˜[YYÛÚY[ˆ\›ÈÚ]Ý]ÜšYÚ[˜[Ú\˜XÝ\‹\ÜXÚYšXÈ\[™Ø[›Ûˆ™]šY]Ë‚‚ˆÈÈŒ‹LLLL8 %XÝX[[XšY[ÑÈØ\™ZÝ\ÙH™\Ý[[™œ›ÙÈØ]H[YÜ˜][Û‚‚‹HÚÛKYØ[YHØ\™ZÝ\ÙH[ˆÌÎMÎÍÌLÛˆ]™[ÜÛÝ\˜ÙHXYMLLLMÌNXÌÙXÍÎXYØYYYXÎNMYLLÎXÈÓÓTUQÕPÐÑTÔÎˆSP’QS•Ñ×ÕÐT‘RÕTÑWÔÕQÑWÔTÔÈš[\ÏLŒˆÚÚ\YLž]\ÏLLMÎÍMŒŽÈ‘QÒSÓ—ÔÓÕTÑWÔ‘PÑRTÐUQUÔTÔÈš[\ÏLŒˆÚÚ\YL™\Ù\™OLMÍLÎLLˆXÙ[œÙY\ÚYÛÝ\˜ÙK[Û›NÈ›ÝQKZ[\ÜY‚‹Hœ›ÙÈXÚšXØ[Y›Ü›X][ÛˆˆÌÍˆY\™ÙYÈ]™[Ü\ÈØŒŒØXÍYXØÙŒMNXŒŒLYŽLLL˜ÍMY\ˆ^XÝZXY™HÌÎNNLÎL‹[œ™X[ÌÎNNLÍK[™[X[ˆØ]™LˆÌÎNNLÌN[ÕPÐÑTÔËˆÛˆÌÍÈÌÍÈÛÜÙYˆ™X[Ú\˜XÝ\ˆØÛÛ[Ý[Û‹Ýš\ÝX[ÔQKÙ]šXÙKÑØ]H‹ÍÈ›ÝXØÙ\Y‚‚ˆÈÈŒ‹LLLL8 %PÌHXÝX[”ˆQH[\Ü[™XÚØYÙK[X[šY™\ÝZ\ÛX]ÚÛÜœ™XÝ[Ûˆ
+Ø[™Y]JB‚‹HÝšXÝ™]šY]È›Ý[™]XÌWÝ™\šYšYYÜœ—ØœšYÙKœX\[™Y[\ÜYÛÙ”ˆY\Ú\ÈÈHXÝ]™HPÌH˜[šÈ]™]Z[™YÝ[H]Y]Ý[Ý[š\]YWÜ›ÙXÝ[Û—ÜXÚØYÙ\Ø[™]Y]˜Ú\\—Ø˜[š×Ø\ÜÙ]ØÛÝ[Ë”PÌXˆH^\Ý[™ÈÚ[™ÝÜÈXÚØYÙH™Y›YÚ™\]Z\™\ÈÜÙHÛÝ[ÈÈX]Ú™X[[š\]YHXÚØYÙ\È[™ÛÝ[˜Z[Y\ˆHÝXØÙ\ÜÙ[QH[\Üˆ™XÛÛ\]H›Ýœ›ÛHXÝX[˜[šÈÛÛ[ÈÛ›HY\ˆÝXØÙ\ÜÙ[\ÜÙ]XÚØYÙH^\Ý[˜ÙHØ]\Ë™\Ù\š[™È^XÝÛÝ\˜ÙH[™Ø]™KÜÝ™X[Z[™ÈÝÛ™\œÚ\‚‹H^\Ý[™È™\šYžWÝ™\šYšYYÜÚ\™WÚ[\ÜœX\™Ù]Y[ˆ[\ÙY™XÙZ\˜[YH[™XœÙ[ÙÈX\šÙ\‹[ÝÚ[™È›È™X[[\Ù[XÝYX]\šX[\ÛÝ›ÛÙ‹ˆ™\Z\ˆ]È™\]Z\™HÛÝ\˜ÙWÜÝYÙWÜ™XÙZ\šœÛÛ˜›Û™[\HÝ\œ™[ÒKT›ÙXÝ[Û\ÜÙ][\Ü›ÙØ]™\žHÙ[XÝYÝ]XÈ–[™X]\šX[X\ÜÙ][™H[\Ü\ˆPÌWÕ‘T’Q’QQÔ”—ÒSTÔ•ÔPØX\šÙ\ˆ\ˆ^XÝÛYËÛX]\šX[ˆ˜Z[™Y›Ü™H[[YHXÝ]˜][ÛˆYˆ]™[ˆÛ™H\È[˜›Ý[™ˆYÙ™›[™H™YØ]]™KÜÜÚ]]™H™YÜ™\ÜÚ[ÛˆØ\Ù\ÎÈ™]Z[ˆXY\ÜÈPÌWÔ”—ÑPÓÔ—Ô•S•SQXØ]K‚‹HØ[™Y]HÛÙH]Y]YY™Z[™H[™XYH[‹\›ÙÜ™\ÜÈ^XÝZXY[œ™X[[ˆÈ]›ÚYØ[˜Ù[[™ÈHÛÜÝHZ[[™\ˆ‘TKT“ÑLLKˆ™]ÈÛÛ[Z]ÐÒH[™XÝX[QH[\ÜXÚØYÚ[™ËQKÙ]šXÙKÝš\ÝX[ÌÌ”ÈØ]H‹ÍÈXØÙ\[˜ÙH™[XZ[ˆÙ\\˜]H]šY[˜ÙK›Ý[\YY‚‚ˆÈÈŒ‹LLLL8 %PÌH™X[\[[YH[\ÜY”ˆ™\Ù[˜ÙHØ]H
+Ø[™Y]JB‚‹H[ˆ[™Ú[™HZ[X\ÜÙ]^\Ý[˜ÙH[™ÝXØÙ\ÜÙ[Ù[™\šXÈÝ\\È›Ý\ÝX›\Ú]Ú\™IÜÈ™\šYšYY”ˆØš™XÝÈ\™H™\ÚY[[™XÙYˆYØÜš\ËÝ™\šYžWÜXÌWÜœ—Ü[[YKœXÈH^\Ý[™ÈÛ™K]Üš]\ˆ”ˆÛÜšÙ›ÝÈY\ˆPÌHXY\ÜÈÝ\\[™™Y›Ü™HXÚØYÚ[™ÎÈ]˜Z[XÛÜÙ\ÈÛˆZ\ÜÚ[™ÈÙËZ\ÜÚ[™ÈÛÙ˜[šÈ[šY\Ë[˜]]Üš^™YXØÙ[[™[ÜžK™\›ËÜ\X[XÙ[Y[ÜˆÛZ]Ëˆ^\Ý[™ÈPÌWÔ”—ÑPÓÔ—Ô•S•SQXÙÈ\ÈH\ÚXØ[\ÜÙ\[Û‹›ÝH˜XœšXØ]Yš\ÝX[ØÜ™Y[œÚÝˆÙ™›[™H™YØ]]™H\ÝÈYYÈHÝ\œ™[^XÝZXY”ˆœšYÙHÝZ]Kˆœ™\ÚÒH[™YHQH[\ÜÜXÙ[Y[]šY[˜ÙHS‘S‘Ëˆ›ÈQK]šXÙKš\ÝX[ÜˆØ]H‹ÍÈXØÙ\[˜ÙK‚‚ˆÈÈŒ‹LLLL8 %PÌH[\ÜËLMŽH™YÜ™\ÜÚ[Ûˆ™\Z\‚‚‹H^XÝZXY™KU[œ™X[ÌÎLMMNLHRSQ]˜[Y]H›Ú™XÝÝXÝ\™NˆËLMŽHÌÈ[\[Y[][Ûˆ[˜\šX[Z\ÜÚ[™Îˆ\Ú\™YX]\šX[\™[H›ÙXÝ[Û“X]\šX[\™[ˆ›ÛÝØ]\ÙH\ÈH™\šYšYY”ˆX]\šX[\™[\›˜\žH™\XÚ[™È[ˆ^\Ý[™ÈÝšXÝ›ÛXYÙK\\™[[˜\šX[ˆ™\XÙY\›˜\žHÚ]H\›Ý™YY˜][\™[\ÜÚYÛ›Y[\È[ˆ^XÚ]”‹[Û›HÝ™\œšYK™\Ù\š[™È›ÛXYÙH[š\š][˜ÙKˆ™YÜ™\ÜÚ[Ûˆ™\[ˆ[™[™ÈÛˆ™]ÈØ[™Y]HPQˆ›È™]ÈQKÔQKÙ]šXÙKÝš\ÝX[XØÙ\[˜ÙHœ›ÛH\ÈÚ[™ÙK‚‚ˆÈÈŒ‹LLLL8 %PÌHÛÝ\˜ÙK]Ë]š\ÚX›HQM”ˆœšYÙH›ÙXÝ[Ûˆ
+Ø[™Y]JB‚‹H™]\ÙHÛÈ[[]]X›HÛH]™[ˆÐÌÎKÍŒÛÝ\˜ÙHØ]™\Ë˜[Y]HÒLMˆÜšYÚ[˜[™XÙZ\È[™\‹Yš[H\Ú\ËÚÛÜÙH][ÜÝMˆ]X[YšYYÚ[™ÛK[X]\šX[
+ŠœÝ]XÈ–
+Šˆ›ÜÈÚ][ˆHMZPˆÛÝ\˜ÙHØ\È[\ÜY^\™\È\™HRÈ‘Ëˆ]X\˜[[™KÚÛÝ™\œÚ^™Y[šÛ›ÝÛ‹[][K[X]\šX[[™[œÝ\ÜYš[\È\™H›Ý›Û[ÝYˆ›È™]ÈÛÝ\˜ÙK\›ÝšY\ˆÝÛ›ØYË‚‹HØÜš\ËÜXÌWÝ™\šYšYYÜœ—ØœšYÙKœHÝYÙ\ÈYÛ›Ü™YÙ[™\˜]YÛÝ\˜ÙH\ÜÙ]È[ÈÛÝ\˜ÙP\ÜÙ]ËÔ›ÙXÝ[Û‹ÕÛÜ›ÔÚ\™KÕ™\šYšYY”ŽÈH^\Ý[™ÈQMŒËŒˆ[\Ü\ˆÞ[\Ú^™\ÈHX]\šX[[œÝ[˜ÙH[™›ÝÈ˜Z[ÈÛˆZ\ÜÚ[™ËÝÜ›Û™ÈÚ[™ÛK[X]\šX[ÛÝÈ[™[˜[YY\ÚÙ[ÛY]žKˆÛ›HY\ˆX\ÜÙ]š[\È^\ÝÙ\ÈHœšYÙH\[™ÛÙ]ÈÈH^\Ý[™ÈPÌH\Þ[˜È˜[šÈ[™X]\šX[^™H]KÔPÌU™\šYšYYÛÜ›XÛÜ‹šœÛÛ‹‚‹HTÚ\™T›ÝÝ\UÛÜ›Z[\ˆ™[™\œÈ\ÈMˆÛX[ÛÜ›XØÙ[Èœ›ÛH™\ÚY[ÛÙØš™XÝÈÚ]Ý]ÛÛ\Ú[Û‹XÝÜˆXÚÚ[™Ë^˜H”ÈÝÛ™\œÚ\Ø[›ÛšXØ[›Ý]H˜[œÙ›Ü›\ÈÜˆ™]ÈÚ\\œËˆ™\šYšYYÝXœÙ]ÛÝ\˜ÙHX\È[˜ÛYH˜\ÙPÛÛÜ‹›Ü›X[[™XÚÙYÔ“NÈ˜\ÙPÛÛÜ‹[™Ù[›Ü›X[[™XÚÙYÔ“HÚ\š[™È\È™\Ù[[ˆÛÝ\˜ÙNÈXÝX[QH[\Ü[™š\ÝX[ÚY\ˆšY[]H™\]Z\™H]šY[˜ÙK‚‹H™Ú]X‹ÝÛÜšÙ›ÝÜËÜXÌK]™\šYšYY\œ‹\›ÙXÝ[Û‹ž[[ØÚY[\È™X[QHY]ÜˆZ[ÛÝ\˜ÙH[\ÜX\ÜÙ]™\šYšXØ][Û‹]]ÛX][Û‹Ý\\Ú\\‹ÜØ]™H›Ý[™]š\ÛÛ\™\ÜÙYÚ[™ÝÜÈXÚØYÙH[™XÚØYÙYÝ\\™Y›Ü™H\ØY[™ÈH\ÝZ[ˆ\ÈÛÜšÙ›ÝÈ\È›ÝHš]™K[[™H™XY[Û›H™\Ü‚‹H[]šY[˜ÙH
+Š”S‘S‘È^XÝZXYÒH[™[›™\ˆ^XÝ][ÛŠŠŽÈ›ÈQKUTÕQU’PÑKUTÕQ’TÕPSKPPÐÑTQÌ”ËÜˆØ]M‹ÍÈÛZ[\Ëˆ›È[Ý™HÈPÌˆ[[YK‚‚ˆÈÈŒ‹LLLL8 %PÌH\ÚXØ[ÐÌ”‹]ËUQMš\ÝX[›ÙXÝ[ÛˆœšYÙH
+Ø[™Y]K]šY[˜ÙH[™[™ÊB‚‹HX[˜YÙ\ˆ]]Üš]NˆPËLÎÌLÌLK‘TKT“ÑLLKÌKÔPÌHÛ›KˆXÝX[\œÚ\Ý[Ø\™ZÝ\ÙH[ˆÌÎLNLÌˆÛÛ\]YÕPÐÑTÔË›ÝšY[™È[[]]X›HÎJÍŒÛÝ\˜ÙH[™ÎJÍNH™\\™Y”ˆš[\ÎÈ\È\ÈÛÝ\˜ÙHÝÜ˜YÙH]šY[˜ÙK›Ý[™Ú[™KÜ™[™\ˆ]šY[˜ÙK‚‹H\ÈˆYÈ[ˆ^XÝÒLMˆÚXÚÙY›Ý[™Y
+\ÈMˆÝ]XÈ\ÜÙ]ÈÈMZPŠHÛÝ\˜ÙHœšYÙHœ›ÛHH\œÚ\Ý[ÛË]Ø]™HÐÌØ\™ZÝ\ÙH[ÈH^\Ý[™ÈÛÝ\˜ÙP\ÜÙ]ËÔ›ÙXÝ[Û‹ÕÛÜ›ÔÚ\™KÕ™\šYšYY”˜[\Ü\‹ˆ™Z™XÝ[ZY[]K[Xš[ÛYKÛÜœ\Y][[X\Û][K[X]\šX[[™›Û‹TÚ\™KÝ[œ™[]YØ[™Y]\Ëˆ]›ÚY›ÝšY\ˆ™YÝÛ›ØY\™[[YH™Y™\™[˜Ù\È[™[žHÚ\˜XÝ\ˆ–‚‹H[œ™X[[\Ü\ˆ›ÝÈš[™È™\šYšYYÚ[™ÛK[X]\šX[–ÈH™X[”ˆX\Ý\Žˆ˜\ÙPÛÛÜˆ
+È[™Ù[\ÜXÙH›Ü›X[
+ÈXÚÙYÔ“H
+[XšY[ØØÛ\Ú[Ûˆ‹›ÝYÚ™\ÜÈËY][XÈŠKÚ]›Û‹\Ô‘ÐˆXÚÙYÛ›Ü›X[[\ÜËˆ™\Ù\™H^\Ý[™ÈÐ’ˆ\ÜÙ]˜[šÈ[˜Ú[™ÙY‚‹H^\Ý[™ÈTÚ\™PÚ\\\ÜÙ]Ý™X[Z[™ÔÝXœÞ\Ý[X™[ØYÈÙ[XÝYÛÙ]ÈšXH]KÐÚ\\\ÜÙ]Ý™X[Z[™Ô[‹šœÛÛ˜ˆ^\Ý[™ÈTÚ\™T›ÝÝ\UÛÜ›Z[\˜YÈ][ÜÝMˆÜ[Û˜[›Û‹XÛÛY[™ËÝË\ÚYÝÈÝ]XÈXÛÜ˜]]™HYXÙ\ÈY\ˆÛÜ›ÛÛ[Z][™™]™\ˆÞ[˜Ú›Û›Ý\ÛHØYÈY\Ú\ËˆØ[›ÛšXØ[›Ý]KÜÝÜžKÜ]Y\ÝÝÛ™\œÚ\[™XÝÜˆÛÛ[™È™[XZ[ˆ[˜Ú[™ÙY‚‹HHYXØ]YÚ]X‹ZÜÝYÙ™›[™HÛÝ\˜ÙH\Ý
+ÈÙ\šX[^™YÚ[™ÝÜÈQMŒËŒˆÛÜšÙ›ÝÈ[œÈXÝX[ÛÝ\˜ÙHÝYÙKY]ÜˆZ[›ÙXÝ[Ûˆ[\ÜX\ÜÙ]™\Ù[˜ÙK]]ÛX][Û‹Ý\\[Ú\\œËÝ]H\œÚ\Ý[˜ÙKØ\›š[™ÈÝX\™ÛÛÚÈ[™XÚØYÙYÝ\\ˆÛ›HÝXØÙ\ÜÈØ[ˆX›\ÚH^XX›HÚ[™ÝÜÈ
+Š\ÝØ[™Y]JŠ‹ˆH™]Èš\ÝX[XÚÙ]\È“ÕXÛ\™YQK]šXÙK[X[ˆš\ÝX[ÜˆØ]H‹ÍÈXØÙ\Y‚‹H[[^XÝZXY\ÝÈ[‹\È\ÈHÛÝ\˜ÙH[\[Y[][ÛˆØ[™Y]Kˆš^ÛÛ\[KÚ[\ÜÜ[[YH˜Z[\™\ÈÛˆ\ÈØ[YHˆ™Y›Ü™HY\™ÙNÈ]›ÚY™]È™X]\™H[™\È[[XXÚ[™KYÜ™Y[‹ˆ›Èš[˜[Ú[™ÝÜÈ™[X\ÙH™\]Y\ÝY‚‚ˆÈÈŒ‹LLLL8 %]›ÚYÚ[\ÜÈ[œ™X[™XÛÛ\[\È›ÜˆÝ[™[Û™HØ\™ZÝ\ÙH™YÜ™\ÜÚ[Ûˆ\ÝÈ
+Ø[™Y]JB‚‹HØÜš\ËÝ\ÝÝØ\™ZÝ\ÙWÜ›ÝšY\—Þ™\›×Ü^[ØYÙ˜Z[ØÛÜÙYœÌX\ÈH™]ÛÜšËYœ™YH›ÝšY\‹Ø[XšY[ÑÈÝX\™›Ý[[YHÛÙKˆ]È™]ÈÛÝ\˜ÙK[Û›HÚXÚÜÈÚÝ[[ˆ[ˆ™KU[œ™X[Ú]Ý]™\Ù\š[™ÈHÛ™HQMŒÈXXÚ[™KˆYH^XÚ]\ÝØÜš\È›Ý\ÚÔˆ[œ™X[]ÛÜšÙ›ÝÈ]ËZYÛ›Ü™H\ÝÎÈH^\Ý[™ÈØÜš\ËÜÝYÙWÊØ\™ZÝ\ÙJ‹œÌX[H[™XYH^ÛY\ÈHØ\™ZÝ\ÙHY\\‹ˆXÝX[PÌH[[YHÛÜšÈ™[XZ[œÈÛˆ]ÈÝÛˆ^XÝZXYQHØ]Kˆ›ÈÛÛ\[HÛZ[H›Üˆ\ÈØ[™Y]K‚‚ˆÈÈŒ‹LLLL8 %[XšY[ÑÈÜ›ÜÜË[[™H\XØ]HÝÛ›ØY™YÜ™\ÜÚ[ÛˆÝX\™
+Ø[™Y]JB‚‹HØœÙ\™Y]™HØ\™ZÝ\ÙHÌÎMÎÍÌLÕPÐÑTÔÎˆSP’QS•Ñ×ÕÐT‘RÕTÑWÔÕQÑWÔTÔÈš[\ÏLŒˆÚÚ\YLž]\ÏLLMÎÍMŒ˜‘QÒSÓ—ÔÓÕTÑWÔ‘PÑRTÐUQUÔTÔÈš[\ÏLŒˆÚÚ\YL™\Ù\™OLMÍLÎLLˆ\ÙH\™HXÝX[ÒLM‹X]Y]YÛÝ\˜ÙK[Û›Hž]\Ë›Ý[œ™X[[\ÜË‚‹H›ÛÝXØ]\ÙH[ˆØÜš\ËÜÝYÙWØ[XšY[Ù×ÝØ\™ZÝ\ÙKœÌXˆ[ˆ™YÚ[Û˜[X]\šX[]Y\šY\ÈØ[ˆ™]\›ˆHØ[YH›ÝšY\ˆ\ÜÙ]Qˆ[ˆÙÜÈÚÝÈ™\X]YÝÛ›ØYÈÙˆ›ØÚÌÜ›Ý[™LLH[™]š[™ÔÝÛ™\ÌMLNÈš[ÜˆØÜš\Û›HÝX\™YY[XØ[\Ý[˜][Ûˆ]È[™Y›ÝY\XØ]HXÜ›ÜÜÈØ]YÛÜžH›Û\œËˆYXØÙ\YRQÙ]\]YÓ“HY\ˆÝXØÙ\ÜÙ[ÛÝ\˜ÙHÒLMˆ™XÙZ\ÈÚÚ\]\ˆ\XØ]HQÈ™Y›Ü™H™]ÛÜšÈ™\]Y\ÝËˆž]KXØ\˜Z[\™H]\Ý›Ý™[[Ý™H™]š[Ý\ÛH˜[YØXÚY\˜Ú]™NÈÈ›ÝšYÙÙ\ˆÜˆ™\X]HÛÛ\]Y˜]Úˆ^\Ý[™È]X]\›š]\È™\›Ë\^[ØY™KU[œ™X[Ý\[ÛÈÚXÚÜÈH[XšY[ÑÈY\ÛÙHÜ™\ˆÙ™›[™K‚‹HØ[™Y]H[[^XÝZXY™Y›YÚˆÛ™H\œÚ\Ý[Ø\™ZÝ\ÙHÜš]\ˆ[™ˆÚPˆ™\Ù\™H™]Z[™Yˆ›ÈPÌH[[YHÚ[™ÙKQK\™Ù]Y]šXÙH”Ëš\ÝX[ÜˆØ]M‹ÍÈÜ™Y]‚‚ˆÈÈŒ‹LLLL8 %]›ÚYÚ[\ÜÈ[œ™X[™XÛÛ\[\È›ÜˆÝ[™[Û™HØ\™ZÝ\ÙH™YÜ™\ÜÚ[Ûˆ\ÝÈ
+Ø[™Y]JB‚‹HØÜš\ËÝ\ÝÝØ\™ZÝ\ÙWÜ›ÝšY\—Þ™\›×Ü^[ØYÙ˜Z[ØÛÜÙYœÌX\ÈH™]ÛÜšËYœ™YH›ÝšY\‹Ø[XšY[ÑÈÝX\™›Ý[[YHÛÙKˆ]È™]ÈÛÝ\˜ÙK[Û›HÚXÚÜÈÚÝ[[ˆ[ˆ™KU[œ™X[Ú]Ý]™\Ù\š[™ÈHÛ™HQMŒÈXXÚ[™KˆYH^XÚ]\ÝØÜš\È›Ý\ÚÔˆ[œ™X[]ÛÜšÙ›ÝÈ]ËZYÛ›Ü™H\ÝÎÈH^\Ý[™ÈØÜš\ËÜÝYÙWÊØ\™ZÝ\ÙJ‹œÌX[H[™XYH^ÛY\ÈHØ\™ZÝ\ÙHY\\‹ˆXÝX[PÌH[[YHÛÜšÈ™[XZ[œÈÛˆ]ÈÝÛˆ^XÝZXYQHØ]Kˆ›ÈÛÛ\[HÛZ[H›Üˆ\ÈØ[™Y]K‚‚ˆÈÈŒ‹LLLL8 %[XšY[ÑÈÜ›ÜÜË[[™H\XØ]HÝÛ›ØY™YÜ™\ÜÚ[ÛˆÝX\™
+Ø[™Y]JB‚‹HØœÙ\™Y]™HØ\™ZÝ\ÙHÌÎMÎÍÌLÕPÐÑTÔÎˆSP’QS•Ñ×ÕÐT‘RÕTÑWÔÕQÑWÔTÔÈš[\ÏLŒˆÚÚ\YLž]\ÏLLMÎÍMŒ˜‘QÒSÓ—ÔÓÕTÑWÔ‘PÑRTÐUQUÔTÔÈš[\ÏLŒˆÚÚ\YL™\Ù\™OLMÍLÎLLˆ\ÙH\™HXÝX[ÒLM‹X]Y]YÛÝ\˜ÙK[Û›Hž]\Ë›Ý[œ™X[[\ÜË‚‹H›ÛÝXØ]\ÙH[ˆØÜš\ËÜÝYÙWØ[XšY[Ù×ÝØ\™ZÝ\ÙKœÌXˆ[ˆ™YÚ[Û˜[X]\šX[]Y\šY\ÈØ[ˆ™]\›ˆHØ[YH›ÝšY\ˆ\ÜÙ]Qˆ[ˆÙÜÈÚÝÈ™\X]YÝÛ›ØYÈÙˆ›ØÚÌÜ›Ý[™LLH[™]š[™ÔÝÛ™\ÌMLNÈš[ÜˆØÜš\Û›HÝX\™YY[XØ[\Ý[˜][Ûˆ]È[™Y›ÝY\XØ]HXÜ›ÜÜÈØ]YÛÜžH›Û\œËˆYXØÙ\YRQÙ]\]YÓ“HY\ˆÝXØÙ\ÜÙ[ÛÝ\˜ÙHÒLMˆ™XÙZ\ÈÚÚ\]\ˆ\XØ]HQÈ™Y›Ü™H™]ÛÜšÈ™\]Y\ÝËˆž]KXØ\˜Z[\™H]\Ý›Ý™[[Ý™H™]š[Ý\ÛH˜[YØXÚY\˜Ú]™NÈÈ›ÝšYÙÙ\ˆÜˆ™\X]HÛÛ\]Y˜]Úˆ^\Ý[™È]X]\›š]\È™\›Ë\^[ØY™KU[œ™X[Ý\[ÛÈÚXÚÜÈH[XšY[ÑÈY\ÛÙHÜ™\ˆÙ™›[™K‚‹HØ[™Y]H[[^XÝZXY™Y›YÚˆÛ™H\œÚ\Ý[Ø\™ZÝ\ÙHÜš]\ˆ[™ˆÚPˆ™\Ù\™H™]Z[™Yˆ›ÈPÌH[[YHÚ[™ÙKQK\™Ù]Y]šXÙH”Ëš\ÝX[ÜˆØ]M‹ÍÈÜ™Y]‚‚ˆÈÈŒ‹LLLL8 %œ›ÙÈY›Ü›X][ÛˆØ]H›ÜØ\™\ÜÛÈÝ\œ™[]™[Ü
+Ø[™Y]JB‚‹HˆÌÍÈ^XÝZXYÌÎMÍMMNLŽˆÜÝYÛÝ\˜ÙKÛ›Ü›X[^˜][Û‹QMŒËŒˆÚÙ[][XÚšXØ[Ø]K[™›[™\ˆY›Ü›X][Ûˆ›ØœÈÛÛ˜ÛYYÕPÐÑTÔÎÈ[œ™X[Z[ÌÎMÍMMLLH[™™KU[œ™X[ÌÎMÍMMLÌˆÛÛ˜ÛYYÕPÐÑTÔËˆX\›Y\ˆˆÌÍ[ˆÌÎMŽLLMˆ™XÛÜ™Y“S‘T—Ó•STWÔ‘PQXSPS—ÕÐU‘L×ÑQ“Ô“PUSÓ—ÔTÔØSPS—ÕÐU‘L×ÔÕUP×ÑQ“Ô“PUSÓ—Ô‘PÑRTÔTÔØˆˆÌÍÈÛÝ[›ÝY\™ÙHÛX[›HÚ]]›Û™Y]™[ÜÈ™\Ù\™H]È^XÝÛÙH[™ÛÛ˜XÝ™YÜ™\ÜÚ[ÛˆÛˆHœ™\Ú]™[ÜX˜\ÙYœ˜[˜ÚÚ]Ý]\XØ][™È]œ›ÛHÌÍ‚‹H^\Ý[™ÈÛÝ\˜ÙK[Û›Hš^[™›Ü˜Ù\ÈK\]Û‹Y^]XÛÙHLØ[TK[š\]YHÜÝYÕQM™XÙZ\Ë›Û™[\H™\Ý[[™ÕUP×ÑQ“Ô“PUSÓ—ÔÕ‘TÔ×ÔTÔØÚ]š\ÝX[Ü[[YHXØÙ\[˜ÙH^XÚ]H˜[ÙKˆ\È\ÈH›ÙXÝ[ÛˆØ[™Y]H[[]È™]È^XÝZXY\ÝÈ\ÜÎÈ›Èœ›ÙÈš[˜[\QKÙ]šXÙK\™Ù]”Ë’TÕPSÜˆØ]H‹ÍÈXØÙ\[˜ÙH\ÈÛZ[YYˆPÌˆ™[XZ[œÈÓÔÑQ‚‚ˆÈÈŒ‹LLLL8 %ÛÛ™š\›YYÚ]XˆY˜][œ˜[˜Ú\È]™[Ü‚‹H]™HÚ]Xˆ™\ÜÚ]ÜžHY]Y]H™\ÜÈY˜][Øœ˜[˜ÚY]™[ÜˆÝÛ™\ˆÛÛ™š\›\È]™[Ü\ÈØ[›ÛšXØ[Y˜][Ú[YÜ˜][Û‹Ü›ÙÜ˜[[Y\‹Z[™Ù™ŽÈXZ[˜™[XZ[œÈÝX›KÜ™[X\ÙHÛ›Kˆ\]Y^\Ý[™È]KÔ›Ú™XÝÛÝ™\››Ü‹šœÛÛ˜œ˜[˜ÚÝÛÜšÙ›ÝÈ›Ý\ÈÈ™[[Ý™HÝ[H\ÜÙ\[Ûˆ]XZ[ˆ\ÈY˜][È›È™]ÈÛÝ™\››Üˆ]]Üš]K›È[[YHÛÛ[Ú[™ÙK‚‹HÚÛKYØ[YH[XšY[ÑÈX]\šX[]Y\žHÛÜœ™XÝ[ÛˆˆÌÍY\™ÙYÈ]™[Ü\ÈÛÛ[Z]MLLLMÌNXÌÙXÍÎXYØYYYXÎNMYLLÎXØÈ^XÝZXY\ÚXØ[ÛÝ\˜ÙH[ZÙH™\Ý[Ý[[™[™ËˆHÝÛ™\ˆY›Ý]]Üš^™H^˜H[[YHÚ\\ŽÈPÌHÛ›KØ]H‹ÍÈ™[XZ[œÈ[˜XØÙ\Y‚‚ˆÈÈŒ‹LLLL8 %[XšY[ÑÈÚÛK\™YÚ[Ûˆ[ZÙH™\›Ë\™\Ý[ÛÜœ™XÝ[Ûˆ
+Ø[™Y]JB‚‹H™X[[ˆÌÎMÍLL™XXÚYÙ™šXÚX[[XšY[ÑÈTH[™™]\›™YSP’QS•Ñ×ÕÐT‘RÕTÑWÔÕQÑWÔTÔÈš[\ÏLÚÚ\YLž]\ÏLÈ\™™XÙZ\Ø]HÛÜœ™XÝHRSQÚ]‘QÒSÓ—ÒS•RÑWÖ‘T“×Õ‘T’Q’QQÑ’STØˆ][]ÛÜ™˜]\˜[[[™ÝXYÙHÙ^]ÛÜ™]Y\šY\È›Ý[™›È[YÚX›H’T™XÛÜ™Ëˆ™\XÙH[HÚ][ˆÛÛ˜Ú\ÙH\ÜÙ]Y˜[Z[H\›\ÈÚ[H™\Ù\š[™È™YÚ[ÛˆX\[™ËÐÌXÙ[œÙK’ËT‘ÈÛÝ\˜ÙHPËÚ[™ÛHÙ\šX[^™YØ\™ZÝ\ÙHÜš]\ˆ[™MˆÚPˆœ™YK\ÜXÙH™\Ù\™Kˆ]ØZ]^XÝZXY[™™X[ÝYÙYÒLMˆ]šY[˜ÙNÈ›Èš[\ÈÜˆš\ÝX[ÔQKÙ]šXÙHXØÙ\[˜ÙHÛZ[YY‚‚ˆÈÈŒ‹LLLL8 %ÚÛKYØ[YHØ\™ZÝ\ÙHÝÙ\”Ú[Ý[H^]ÛÙH™\Z\ˆ
+Ø[™Y]JB‚‹H™X[Ø\™ZÝ\ÙH[ˆÌÎMŽÍHRSQ[ˆX[˜YÙ\‹Ü[›™\ˆX[Ý\Y\ˆ]ÈÝÛˆ•S“‘T—ÒPSÔTÔØÙËˆ›ÛÝØ]\ÙNˆÚXÚÚ[™ÈÝ[H	TÕVUÓÑXY\ˆHÝÙ\”Ú[ØÜš\[›ØØ][Û‹ÚXÚÙ\È›ÝÝX\˜[YH™\Ù]Ùˆ]˜]]™HÛÛ[X[™^]˜\šXX›KˆÛÜœ™XÝÝ\ÝX\™ÈÈÚXÚÈ	Ø[[YYX][HY\ˆØÜš\Ø[ÎÈ™\Ù\™H›Ú™XÝÛÝ™\››Ü‹ÝYÙY™XÙZ\ÒLMˆ]Y][™ˆÚPˆ™\Ù\™Kˆ›È›ÝšY\ˆÝÛ›ØYÈØØÝ\œ™Y[ˆ˜Z[[™È[ŽÈÛÜœ™XÝ[Ûˆ]ØZ]È^XÝZXYÒH[™™\[‹‚‚ˆÈÈŒ‹LLLL8 %ÚÛKYØ[YHXÙ[œÙY[XšY[ÑÈ™YÚ[Û˜[[ZÙHŒÈ
+Ø[™Y]JB‚‹HYY[ˆ›Ý[™YX]\šX[ÙX\˜Ú[™\È›ÜˆMˆÛÝ\˜ÙKZ[™^Y™YÚ[Û˜[QÈ
+[˜ÛY[™ÈZ[˜\È\š][IÜÈY\YÜ˜\ËÜÙÚ[X]š]™[™[˜[™ÛÜ›‹\Ù[™Ø\™[[››Üˆ[™Ü™^H]™[œÊH\Ú[™È^\Ý[™ÈX›XÈ[XšY[ÑÈ’ËT‘ÈÐÌY\\‹›ÝH™]ÈX]\šX[Þ\Ý[Kˆ™YÚ\Ý\ˆÛÝ\˜ÙH]Y\šY\È[™][K\™YÚ[Ûˆ™]\ÙNÈ^XÝ›ÝšY\ˆ\ÜÙ]QÈ\™HÛ›H\ÜÚYÛ™YžH]™HTHÝYÚ[™Ë‚‹H™]ÈÙ\\˜]HÛÝ\˜ÙK[Û›H[ZÙHÛÜšÙ›ÝÈÚ\™\ÈH^\Ý[™ÈÙ\šX[^™YØ\™ZÝ\ÙK\ÝYÙHÛÛ˜Ý\œ™[˜ÞHÜ›Ý\™\]Z\™\È›Ú™XÝÛÝ™\››Üˆ[™Ú[™ÝÜÈ[›™\‹ÚXÚÜÈˆÚPˆ\ÚÈ›ÛÜˆ™Y›Ü™H[™Y\ˆÝYÙK™\]Z\™\ÈÒLMˆ™\šYšYY›Û™[\H™XÙZ\[™Ù\È›ÝXØÙ\ÜÈ[œ™X[ÛÛ[ÜˆÜ[ˆ[›Ý\ˆ[[YHÚ\\‹‚‹Hœ˜[˜ÚÜ™K[Y\™ÙHÝ]NˆPS’Q‘TÕÐS‘ÕÓÔ’Ñ“Õ×ÐÔ‘PUQÕQÒS‘×Ó“ÕÔ•SŽÈ›È™]ÈÝÛ›ØYË™\šYšYY[™[ÜžHY][ÛœË[œ™X[[YÜ˜][Û‹QK]šXÙKš\ÝX[ÜˆØ]H‹ÍÈXØÙ\[˜ÙKˆÛˆY\™ÙHÈ]™[ÜH]\ØÛÜY›ÙXÝ[ÛˆÛÜšÙ›ÝÈÚ[[ŽÈÚXÚÈ™XÙZ\™\Ý[È[™]X\˜[[™H˜Z[\™\È™Y›Ü™HXÛ\š[™È[ZÙHÝXØÙ\ÜË‚‚ˆÈÈŒ‹LLLL8 %PÌHX[™]ÜžH›Ú™XÝÛÝ™\››ÜˆÛÜšË\Ý\[™š]™K[[™H[™›Ü˜Ù[Y[‚‹HPËLL\È[™›Ü˜ÙY\ÈHX[™]ÜžH\ÚXØ[›ÙXÝ[Ûˆ[ž\Ú[ˆ^\Ý[™Èš]™K[[™H™XY[Û›H™Y›YÚ\È“Õ›ÛÙˆÙˆÙ[™\˜]Y\ÜÙ]ËˆØÜš\ËÙÛÝ™\››Ü—ÝÛÜš×ÜÝ\œH[œÈH[›Ú™XÝÛÝ™\››Üˆ[™ÚXÚÜÈPËLÎÌLÌLK‘TKT“ÑLLKXÝ]™HPÌHØ]KÛ™H[[YHÜš]\‹Û™HØ\™ZÝ\ÙHÜš]\‹ˆÚPˆ™\Ù\™H[™š]™H[™HY[]Y\È™Y›Ü™H›ÙXÝ[Û‹‚‹H›ÙXÝ[ÛˆÛÜšÙ›ÝÜÈ›Üˆ[œ™X[Ø\™ZÝ\ÙKÚÙ[][Ú\˜XÝ\œËš\ÝX[ÛÝ\˜ÙH[™Ú\\ˆÛÜÝ\™H›ÝÈ™\]Z\™HHX[˜YÙ\‹ˆ™KU[œ™X[™YÜ™\ÜÚ[Ûˆ\ÝÈ›Ü˜šYZ\ˆž\\ÜËˆÚ\\ˆÛÜÝ\™HÛÝ\˜ÙHÜš]\ˆÚ\™\ÈØ\™ZÝ\ÙK\ÝYÙHÛÛ˜Ý\œ™[˜ÞHÚ]\˜X›HÛÝ\˜ÙHÝYÚ[™Ë‚‹H]šY[˜ÙNˆÛÝ\˜ÙHÚ[™Ù\ÈÝX›Z]Y›Üˆ^XÝZXYÒKˆ›È™]È[œ™X[\ÜÙ][\ÜÚ\\ˆQK\™Ù]]šXÙHYX\Ý\™[Y[Üˆš\ÝX[XØÙ\[˜ÙH\È[™™\œ™YˆH^\Ý[™ÈØ\™ZÝ\ÙHÌÎLNLÌˆ\È[™\[™[[™›ÝØ[˜Ù[Y‚‚ˆÈÈŒ‹LLLL8 %Û™K\ÚÝPÌH\˜X›HNK\ÛÝ\˜ÙHØ\™ZÝ\ÙHXÝ]˜][ÛˆÛˆ]™[Ü
+S‘S‘ÊB‚‹H›ÛÝXØ]\ÙH]Y]ˆXÌKYš]™K[[™K[X^ØY™Kž[[Û›H[œÈš]™H™XY[Û›HY]Y]H™\ÜÎÈ›È\ÜÙ][\ÜÕ[œ™X[]]Üš[™ÈØØÝ\œÈ[ˆ\ÙH[™\ËˆHÛË]Ø]™H\˜X›HNKQ–Ø\™ZÝ\ÙHÛÜšÙ›ÝÈÛ›H\ÚY]]ÛX]XØ[HÛˆH›ÝË[Y\™ÙYÜËÜXÌKYš]™K[[™K[X^ØY™KLŒ‹LLLXÛÝ\˜ÙHœ˜[˜ÚÛÈH™]š[Ý\ÛH™\Z\™YÚ[™ÝÜÈ™\ÝY\]\ÜÝYHY›ÈÛÛ\]Y\œÚ\Ý[Ø\™ZÝ\ÙH™K\[ˆY\ˆY\™ÙK‚‹HÚ[™ÙNˆ™]Z[ˆÚ[™ÛHØ\™ZÝ\ÙHÜš]\‹[[]]X›H[›™YÚ]Xˆ\Y˜XÝËÒLMˆÚXÚÜÚ[ËˆÚPˆ™\Ù\™KØ]™LÎK][‹]Ø]™MŒ\˜Xš[]NÈ[˜X›HÛ™K][YH]™[Ü\ÚXÝ]˜][ÛˆšXHHÛÜšÙ›ÝËØXÝ]˜][ÛˆX[šY™\ÝˆÛ˜ÙHY\™ÙYHÛÜšÙ›ÝÈÚÝ[™H]Y]YY™Z[™[žH[›š[™ÈÙ[‹ZÜÝY[œ™X[ÛÜšË›Ý[ˆ[ˆ\˜[[ÛˆHØ[YH[›™\‹ˆ\È\ÈÛÝ\˜ÙK[Û›H[™Ù\È›Ý[\Ü[È[œ™X[‚‹H]šY[˜ÙH\È
+Š”S‘S‘ÊŠˆ[[[ˆXÝX[XÝ[ÛœÈ[ˆÚÝÜÈ™XÙZ\È›ÜˆÎJÍŒØ\™ZÝ\ÙH[™[ÜžH\ÜÙ\Ë[™[[YH[YÜ˜][ÛˆÝXœÙ\]Y[H›Ý™\ÈH\ÜÙ]È[ˆQKˆÈ›ÝX\šÈØ]M‹ÍËQK]šXÙHÜˆš\ÝX[XØÙ\[˜ÙHœ›ÛH\ÈÚ[™ÙK‚‚ˆÈÈŒ‹LLLL8 %ËLˆ™[X\ÙH\Y˜XÝ™\œÝ\È˜Z[\™K[ÙÜÈÛÛ˜XÝ‚‹H™KU[œ™X[ÌÎMNMŒˆ˜Z[YˆËLˆ˜Z[\™HÙÙÚ[™ÈX^H›Ý\[™Ûˆ\Y˜XÝ\ØY][ÝKˆÛˆ\ÛÛ]Yš^ˆÌÌÍ‹™[[Ý™Y[Ø^\Ê
+XÙÈ\Y˜XÝ\ØYÙ\ÛÛœÛÛH˜Z[\™HÙÜÈ[™[ÝÙYHÝXØÙ\ÜË[Û›HXÚØYÙYÚ[™ÝÜÈ^XX›HØ[™Y]KˆÝ]XÈ^XÝZXYÚXÚÜÈ[™QH™\Ý[È[™[™Ëˆ›ÈØ]M‹ÍÈÜ™Y]‚‚ˆÈÈŒ‹LLLL8 %PÌHØ\™ZÝ\ÙHÚ[™ÝÜÈ™\ÝY™[]]™K\]›ÛÝØ]\ÙH\ÛÛ]Y‚‹H™X[˜Z[\™H[ˆÌÎLMˆÛÝ\˜ÙLÎHNMMÎÌHˆ[™œŒÎHNMÌÍLÍÎˆ
+Š”ÒLMˆ™\šYšYY[™^˜XÝY
+ŠˆÛˆ\œÚ\Ý[Ø\™ZÝ\ÙNÈÝYÚ[™ÈØ]™LÎH[ˆ˜Z[YÝYÙQ\œ›ÜŽˆS”ÐQ‘WÔ‘SUU‘WÔU]ÝYÙWÜXÌWØY\]™WÜœ—ÝØ\™ZÝ\ÙKœNŒÍNÌÌÌXÛˆÚ[™ÝÜËˆ›ÈØ]™LÎH\›X[™[™XÙZ\Ø]™MŒ›ÝÝ\Y‚‹H›ÛÝØ]\ÙNˆÝŠØY™WÜ]
+‹‹ŠJX\Ù\ÈÚ[™ÝÜÈ˜XÚÜÛ\Ú\ÈÚ[ˆ™\ÝY›ÝšY\ˆ™XÙZ\]È
+K™Ëˆ^\™\ËÙØ]WÙY™—ÌZËœ™Ø
+H\™HÛÛ™\Y]ØY™WÜ]ÛÜœ™XÝH\Ø[ÝÜÈ˜XÚÜÛ\Ú\È[ˆ\˜X›H™XÙZ\Ù^\ËˆZ[š[X[]ÚÚ[™Ù\È˜[Y]Y™[]]™H]Ù\šX[^˜][ÛˆÈ˜\×ÜÜÚ^
+
+XÚ]H™\ÝY^\™H™X[š^\™H™YÜ™\ÜÚ[Û‹ˆ™\Ù\™HØXÚNÈÈ›ÝÝÛ›ØYÛÝ\˜ÙLÎKÜœŒÎHYØZ[‹‚‹HH^XÝZXYÚ[™ÝÜËÓ[^™YÜ™\ÜÚ[Ûˆ[™™X[\œÚ\Ý[Ø\™ZÝ\ÙH]šY[˜ÙH™[XZ[ˆ[™[™Ëˆ›ÈQKÔQKÙ]šXÙKÝš\ÝX[XØÙ\[˜ÙHÛZ[YYˆ\ÈÛÜšÈ]™\ÈÛˆ[ˆ\ÛÛ]Yš^œ˜[˜ÚÈ]›ÚYØ[˜Ù[[™ÈXÝ]™HˆÌÌÍHXÚØYÚ[™ÈÒK‚‚ˆÈÈŒ‹LLLL8 %PÌHš\œÝÝÛ›ØYX›H^XX›HØ[™Y]K˜Z[ÛÜÙY‚‹HÛˆHÝÛ™\‹X\›Ý™YPÌH[]™\žH[™K]ÚYHØ[YIÜÈY˜][Y]Ü‹ÙØ[YHX\XY\ÜÈ[[YHÛ[ÚÙKXÚØYÚ[™ÈÛÛÚÈX\[™XÚØYÙYÝ\\ØœÙ\˜][ÛˆÈÑ[™Ú[™KÓX\ËÑ[žXˆ\È›ÛÝÜÈ]KÔPÌSØØ[š\ÝX[›ÛÝÝ˜\ŒKšœÛÛ˜]Y[YšY\ÈH[™Ú[™H[\]WÑY˜][›ÛÜˆ\ÈHš\ÝX[X\ÚÚ[™ÈY™XÝ‚‹HH^\Ý[™È^XÝZXY[œ™X[Z[˜[Y][Û˜ÛÜšÙ›ÝÈ›ÝÈ[œÈØÜš\ËÝ\ÝÜXÌWÙ[]™\žWÙ[žWÛX\œXÛˆÜÝYÚ[™ÝÜÈ
+Š˜™Y›Ü™JŠˆHQH[›™\ˆ[™\ØYÈH™X[Ú[™ÝÜÓ›ÑY]Ü˜›Û\ˆ
+Š›Û›HY\ŠŠˆ[ØXØÙ\[˜ÙHXÚØYÙYÝ\\\ÜÙ\ËˆH\Y˜XÝ\ÈHÚ[™ÝÜÈ^XX›H
+Š˜Ø[™Y]JŠ‹›Ý]]ÛX]XØ[HHš[š\ÚYÜˆš\ÝX[H\›Ý™YÚ\\‹‚‹H^XÝZXYÒK’TØ\Y˜XÝ\ØY™\Ý[[YÜ˜][ÛˆÙˆØ\™ZÝ\ÙHÛH]™[ˆ”‹\›È[š[X][Û‹Ú\\‹\ÜXÚYšXÈQK\™Ù]ÌŒÌÌ”È[™[X[ˆš\ÝX[Ø]H‹ÍÈ
+Šœ™[XZ[ˆ[œ›Ý™[ˆ\ÈÙˆÛÛ[Z]]]Üš[™ÊŠ‹ˆØ\™ZÝ\ÙH[ˆÌÎLM™[XZ[œÈ[™\[™[HÚXÚÜÚ[YÈ›ÈÙXÛÛ™Ø\™ZÝ\ÙHÜš]\ˆ\È][˜ÚY‚‹H›ÈÊÊÈ[ÙYšXØ][ÛœÎÈY\ˆÒHH™^\Ù\‹]š\ÚX›H™\Ý[]\Ý™HHÛÜšÚ[™ÈÚ[™ÝÜÈØ[™Y]HÝÛ›ØYYˆ[™Û›HYˆÚ]XˆXÝ[ÛœÈÜ™X]Y]‚‚ˆÈÈŒ‹LLLL8 %Û™HÛÛÜ™[˜]YPÌHÛÝ\˜ÙHØ\™ZÝ\ÙH›ÙXÝ[Ûˆ˜]Ú
+NH–ÜšYÚ[˜[ÊB‚‹HÝÛ™\ˆ™\]Y\ÝYÛ™HÛÛ\][Ûˆ˜]Ú˜]\ˆ[ˆ™\X]YYZ[š\Ý˜]]™HØ]™\ËˆYY]KÔPÌUÛÕØ]™UØ\™ZÝ\ÙPXÝ]˜][Û•ŒKšœÛÛ˜[™\Ú]šYÙÙ\™Y™Ú]X‹ÝÛÜšÙ›ÝÜËÜXÌK]ÛË]Ø]™KXÚXÚÜÚ[]Ø\™ZÝ\ÙKž[[ˆ^XÝZXYÚ[™ÛK]Üš]\ˆÚ[™ÝÜÈ[›™\ˆ\Ù\È™]š[Ý\ÛH›ÙXÙY[›™YÚ]Xˆ\Y˜XÝËŒXØ\ÙH\ÈYØXÞHÙ™›[™H™YÜ™\ÜÚ[Ûˆ\ÝËZPˆÒLM‹ÙœÞ[˜È™XÛÝ™\žKØ]™LÎH\œÚ\ÝYØ]Y]Y™Y›Ü™HØ]™MŒ™YÚ[œË›ÈÙXÛÛ™›ÝšY\ˆÝÛ›ØYÜˆ›Û˜XÚÈÙˆØ]™LÎK‚‹H]šY[˜ÙHÝ]\ÈÛˆÛÛ[Z]Ü™X][ÛŽˆ
+Š”S‘S‘È™]ÈÛÜšÙ›ÝÈ[ŠŠ‹ˆØ]™LÎH[™Ø]™MŒ\œÚ\Ý[™XÙZ\ËØ]Y]È\™H™\]Z\™YÈš[ÜˆÛÝ\˜ÙHÛÛ™\œÚ[Ûˆ]šY[˜ÙH\È™]\ØX›K›ÝHÝXœÝ]]Kˆ›ÈQH[\Ü^Y\ˆšYËØ[š[X][Û‹Ú\\ˆQK]šXÙH”ÈÜˆ[X[ˆš\ÝX[XØÙ\[˜ÙH\ÈÛZ[YYˆ^\Ý[™ÈXØÙ\[˜ÙHØ]\È™[XZ[ˆ[˜Ú[™ÙY‚‹HØ[›Û‹ÜÛÝ\˜ÙH›Ý[™\žNˆÛÝ\˜ÙHÈŒKLHš\^KÜ\H[™š[™ÈÝ]ÛÛYNÈÝ\œ™[PÌH[˜ÛY\Èœ›ØY\ˆÚ\™KÜ›ØY[[YKÛÈÈ›Ý™[X™[]\ˆŒKL‹ÑŒKLÈÛÝ\˜ÙHÝ]ÛÛY\È\È[™\[™[HXØÙ\Y‚‚ˆÈÈŒ‹LLLL8 %PÌH™XÛÝ™\žHÛÛ™\™Ù[˜ÙHÛˆˆÌÌÍH
+ÛÝ\˜ÙK[Û›JB‚‹H™XÛÝ™\žHÛÝ\˜ÙH[™™]ÛÜšËYœ™YHŒXØ\ÙH˜][Z[š™XÝ[ÛˆÝZ]H\™H™]\ÙYœ›ÛH˜[Y]YÚYHœ˜[˜ÚÛÛ[Z]ÍXŒŽM˜™ÙÍYŒÍ˜ÙMN™XLMÍŒ
+š[Üˆ[^
+ÕÚ[™ÝÜÈÎ‹ËÙÚ]X‹˜ÛÛKÍ[ÝX˜X™YK]XÚÙ™[ÝÜÚ\\\œÛÛ˜[YØ[YKØXÝ[ÛœËÜ[œËÌÎÍMLÌLˆÕPÐÑTÔÊKˆ[ˆ^XÝ[Y\™ÙYZXY™\[ˆ\È
+Š”S‘S‘ÊŠŽÈ›Èœ™\Ú™\Ý[\È\ÜÙ\Y™Y›Ü™H]š[š\Ú\Ë‚‹HH[›™YÎKX\ÜÙ]Ø\™ZÝ\ÙHÛÜšÙ›ÝÈ›ÝÈ[œÈH™]ÛÜšËYœ™YHÝZ]H™Y›Ü™H[žHÚXÚÜÚ[ÝÛ›ØYÈ^\Ý[™ÈÚ[™ÛK]Üš]\ˆÛÛ˜Ý\œ™[˜ÞH[™HˆÚPˆÝÜ˜YÙH™\Ù\™H™[XZ[ˆ[˜Ú[™ÙYˆØ]™LÎHXÝX[\˜X›H[ZÙKØ]Y]\È
+Š““ÕQU“Õ‘SŠŠŽÈØ]™MŒÝ^\ÈÙ\\˜]H[™Ø]Y‚‹H›ÈQMÊÊËÜ[[YKØÛÛ[\ÜÙ]ÈÙ\™H[ÙYšYYžH\ÈÚ[™ÙNˆ›È™\X]Y[œ™X[Z[[\ÜQK]šXÙHÜˆš\ÝX[XØÙ\[˜ÙH\ÈÛZ[YYˆPÌH™[XZ[œÈÜ[‹Ø]H‹ÍÈ[™[™ËˆˆÌÌÍH›ÙXÝ[ÛˆY]Y]Hœ›ÛHš[ÜˆXY\È™\Ù\™Y‚‚ˆÈÈŒ‹LLLLPÌHÚXÚÜÚ[˜[œÜÜ[™ÛÝ\˜ÙK[Û›HQH]šY[˜ÙH™]\ÙHØ]B‚‹HÛˆˆÌÌÍH^XÝXYÙN˜XM™ÍŽŒLXŽŽMŒÙNXYXÙŽÍØÙLÍLY™KU[œ™X[ÌÎÌŒÌLÌÈÕPÐÑTÔËš]™KS[™HÌÎÌŒÌÌˆÕPÐÑTÔËQMÌÎÌŒÌLLHÕPÐÑTÔÈ[˜ÛY]Üˆ[™XÚØYÙNÈ›È™YYÈ™XZ[\ÈÛÝ\˜ÙH™]š\Ú[ÛˆY\™[HÈÝYÙH^\›˜[ÐÌ\Y˜XÝËˆÛÝ\˜ÙK[Û›H”ˆYÎKÌÎH[™NKÍŒÛÛ™\œÚ[ÛœÈ]›Ý™[ˆX\›Y\ˆ[œË›ÝQH[\ÜY‚‹HÛÝ\˜ÙK[Û›HÛÜœ™XÝ[ÛŽˆYYš[™HÞ[]XÈÝÙ\‹Û™]ÛÜšË[ÜÜËÛÜœ\XÚXÚÜÚ[ÒLM‹’TØY™]H[™™\Ý[YKÛ›ËYÝX›KY™]Ú\ÝÎÈ\ÝÈ]\Ý\ÜÈÜÝYÒH™Y›Ü™H˜[œÙ™\œš[™È\™ÙH\Y˜XÝËˆ™]ÛH\›Ý™YÛ\ÜÚYšY\ˆÚXÚÜÈÛ›H[[YYX]K\\™[[H›Üˆ[ˆ^XÚ]H™\ÝšXÝYÙ]ÙˆÛÝ\˜ÙK[Û›HØÜš\ËÝÛÜšÙ›ÝÜËÙÛÝ™\›˜[˜ÙHØÜË™\šYšY\È^XÝ\\™[[[œ™X[ÛÜšÙ›ÝÈÕPÐÑTÔÈšXHÚ]Xˆ[™ÚÛÜÙ\È[š\š]Û›HYˆ›Ý›Ý™HØY™Kˆ\È™]™[ÈÝ[][]]™HˆY™ˆœ›ÛH™XÛ\ÜÚYžZ[™ÈÝXØÙ\ÜÙ[ÛÝ\˜ÙK[Û›HÚ[™Ù\È\È™]È[QHÛÛ\[\Ëˆ[[YHÚ[™Ù\ÈÝ[ZÙH^\Ý[™È[ØÛÜ™H›Ý]\Ë‚‹H\œÚ\Ý[ÚXÚÜÚ[ÛÙH™[XZ[œÈ[œ›Ý™[ˆ[[H™X[Ú[™ÝÜÈ[›™\ˆÜš]\È[™™\šYšY\ÈZPˆÚ[šÜË[\Y˜XÝÒLM‹ÛÝ\˜ÙH™XÙZ\È[™M‘ÚPˆ™\Ù\™KˆX[X[Ú[™ÛK]Üš]\ˆØ]™LÎH\œÚ\ÝÈ™Y›Ü™H[žHØ]™MŒÈØ]M‹ÍÈPÌH›ÝXØÙ\YˆYˆÜÝY™YÜ™\ÜÚ[Ûˆ˜Z[Ë™\Z\ˆ]™Y›Ü™H\Ü]ÚÈÈ›Ý[ˆ[›Ý\ˆÍK[Z[]H[X\Y˜XÝÝÛ›ØY‚‚ˆÈÈŒ‹LLLL8 %\˜X›HZPˆ™\Ý\ÚXÚÜÚ[È[™›È™\X]Y^[œÚ]™H‹]ÚYHXÜ]Z\Ú][Û‚‚‹HÝÛ™\ˆØœÙ\™Y[XÝšXÚ]KÛ™]ÛÜšÈ[œÝXš[]H[™™Z™XÝY™\X]YÛ™ÈÝÛ›ØYËØZ[Ëˆ›ÛÝØ]\ÙNˆÚ]Xˆˆ]š[\œÈØ]È[\™HˆY™‹™]šYÙÙ\š[™È^[œÚ]™HÎKT”ˆÛÛ™\œÚ[Ûˆ[™Œ[[Ù[XÜ]Z\Ú][Ûˆ›ÜˆÛÝ™\›˜[˜ÙK[Û›HÛÛ[Z]ËˆÛÈ\XØ]YÙ[‹ZÜÝYØ\™ZÝ\ÙHÜš]\œÈ[ÛÈÛÛ[™Y›ÜˆÛ™H[›™\ŽÈÍK[Z[]HÝÛ›ØYØ[˜Ù[Y™Y›Ü™HÜš]\Ë‚‹HÛÜœ™XÝ]™HÛÝ\˜ÙK[Û›H˜[œÜÜØÜš\ËÜ™\Ý[YWÜXÌWØ\Y˜XÝØÚXÚÜÚ[œXˆ[›™YÛÝ\˜ÙHÚ]XˆXÝ[ÛœÈ\Y˜XÝQ^XÝ\˜Ú]™Hž]H[™Ý[™ÒLMŽÈZPˆ˜[™ÙH˜[œÙ™\œÈÚ]\‹XÚ[šÈÒLMˆ›Ý\›˜[[ˆ\›X[™[Ø\™ZÝ\ÙKœÞ[˜È[™]ÛZXÈÚXÚÜÚ[Üš]\Ëˆ™]\ÙHÛÛ\]YÚ[šÜË™KY™]Ú[˜ÛÛ[Z]YZ[Û›K˜Z[ÛÜÙYÛˆ[\\š[™Ë‘ÚPˆœ™YH™\Ù\™H[™[›™Y\˜Ú]™HÒLM‹ˆÚ][\ÝY’T[žH^˜XÝ[ÛˆÚ]]ÛZXÈÔËXÚXÚÙYš[\È[™\˜X›H^˜XÝY\Ý]H™XÙZ\ˆ›È›ÝšY\ˆ™KYÝÛ›ØYQM[\ÜÜˆš\ÝX[ÛZ[K‚‹H^XÝHÛ™HX[X[Ù\šX[^™YÛÝ\˜ÙK[Û›HØ\™ZÝ\ÙH›Øˆ›ÜˆØ]™LÎNˆÚXÚÈ^\Ý[™ÈÒLMˆš\œÝ™XÛÝ™\ˆÎHÛÝ\˜ÙH[™”ˆÚ[šÜË\œÚ\ÝÎH[™[ˆØ[›ÛšXØ[Ø\™ZÝ\ÙH]Y]ˆÙ\\˜]HŒØ]™H™\Ù\™Y›Üˆ[™\[™[›ÛÝË]\Y\ˆš\œÝÚXÚÜÚ[ˆ™[[Ý™Y]]ÛX]XÈ[Ü™\]Y\ÝšYÙÙ\œÈœ›ÛH^[œÚ]™H
+Š˜Y\]™HÎKT”ˆ[™Œ\ÛÝ\˜ÙJŠˆÛÜšÙ›ÝÜËÚ[Hš]™K[[™H
+œ™XY[Û›Jˆ™YÜ™\ÜÚ[Ûˆ™[XZ[œÈ[YÚX›Kˆ›È™KY^XÝ][ÛˆÙˆ^\Ý[™È^[œÚ]™HÝXØÙ\ÜÙ[ÛÜšÙ›ÝÜÈÛˆ[œ™[]YÚ[™Ù\Ë‚‹H
+ŠXØÙ\[˜ÙH›Ý[™\žNŠŠˆÛÜšÙ›ÝÈ\ÚYÛˆÚ[™ÙH[™X[šY™\ÝÛ›H[[XÝX[ÜÝY™YÜ™\ÜÚ[Ûˆ[™Ú[™ÝÜÈØ\™ZÝ\ÙHÙÜËˆ›È\›X[™[ÛÝ\˜ÙH›Û[Ý[ÛˆÜˆPÌHØ]M‹ÍÈXØÙ\[˜ÙHÛZ[YY‚‚ˆÈÈŒ‹LLLL8 %ÍK[Z[]HØ\™ZÝ\ÙH\Y˜XÝÝÛ›ØY˜Z[\™NÈ™[[Ý™H\XØ]HÜš]\ˆ[™Ü]\˜X›HÚXÚÜÚ[Â‚‹HÚ]XˆÌÍÎNLLLÌLˆÐSÑSQY\ˆÍHZ[]\ÎˆÛÝ\˜ÙHÎH\Y˜XÝÛÚÈŒ[NÈ”ŒÎHŒ‹[NÈÛÝ\˜ÙMŒŒN[NÈ”ŒŒKLKŽNXž]HÝÛ›ØY˜[ˆÛM\È™Y›Ü™HØ[˜Ù[][Û‹ˆHš\œÝ\œÚ\Ý[ÛÛ[Z][™[™[ÜžH]Y]Ù\™HÒÒTQˆ›È™]È\œÚ\Ý[\ÜÙ]ÛZ[Kˆ\™XØ][ÛˆØ\›š[™È\È›Ý\ÝX›\ÚYØ]\ÙK‚‹HÛÜœ™XÝY›ØÙ\ÜÎˆYXØ]YØ\™ZÝ\ÙHÜš]\ˆ\ÈX[X[H\Ü]ÚYÛ›H[™Ü\˜]\ÈÛˆÎK\ÛÝ\˜ÙHØ]™Hš\œÝˆ[ÒLMˆ^\Ý[™Ë]Ø]™HÚXÚÈÚÚ\È[™XYK\ÝÜ™Yš[\ÎÈÛÈ™XÙ\ÜØ\žH™\šYšYY\Y˜XÝÈ\™H™]ÚYÛ›HYˆZ\ÜÚ[™ÎÈÛÛ[Z]Ø]™LÎH[™[ˆØ\™ZÝ\ÙH[™[ÜžH]Y][[YYX][KˆÙ\\˜]HŒ\ÛÝ\˜ÙH›ÛÝÝ\Û›HY\ˆÝXØÙ\ÜÙ[\˜X›HØ]™LÎK›Ý\ÙˆÛ™È›Ý\‹YÝÛ›ØY›Ø‹ˆ™[[Ý™Y\XØ]HØ\™ZÝ\ÙHÜš]\ˆœ›ÛHš]™K[[™H™Y›YÚˆYÙ™›[™H›Ë[™]ÛÜšÈ™YÜ™\ÜÚ[Ûˆ\ÝÈ›ÜˆÝYÚ[™Ë™]\ÙKÛÝ\˜ÙKÜ™XÙZ\ÛÜœ\[Û‹[™]]XÚÜË‚‹H›ÛÝË]\Ú]Xˆ^XÝZXY\ÝÈS‘S‘ËˆH^\Ý[™ÈÛ™Ë\[ˆ˜Z[\™H\ÈÛÛ™š\›YYÈš[˜[Ø]M‹ÍÈ™[XZ[œÈSPÐÑTQPÌˆÓÔÑQ‚‚ˆÈÈŒ‹LLLH8 %\œÚ\Ý[ÛÝ\˜ÙHÜš]\ˆ]Ûˆ[›™\ˆU˜Z[\™H[™^XÝš^‚‹HÛÜšÙ›ÝÈÌÍÎNLÍÍÌˆ][\YÙ\šX[^™YÝYÙH]˜Z[Y
+Š˜™Y›Ü™HÝÛ›ØY[™ÈÜˆÜš][™È\ÜÙ]ÊŠŽˆXÝX[Ý\[™H]ÛˆØ\È›Ý›Ý[™È[ˆÚ]Ý]\™Ý[Y[ÈÈ[œÝ[œ›ÛHHZXÜ›ÜÛÙÝÜ™XÛˆÙ[‹ZÜÝYÚ[™ÝÜËˆHXXÚ[™IÜÈ™]š[Ý\ÈQH[ˆÌÍÎNMÍLÍÈ^ÜÙ\È[œÝ[YÛÛÚZ[ˆ—XÝ[ÛœË\[›™\—ÝÛÜš×ÝÛÛ]Û—ËŒLKŽW]Û‹™^XÈÜš]\ˆÛÜšÙ›ÝÈ]\Ý™\ÛÛ™HHÛ›ÝÛˆ^\Ý[™È]Ûˆš[˜\žH[™\œÚ\ÝH^XÝ]ÈÒUP—ÑS•‹›Ý\[™Ûˆ]Û˜\^XÝ][Ûˆ[X\ËˆÝ\ˆÛÝ\˜ÙK[Û›H™\ÛÛ[Y\È[™\[™[ˆ™^^XÝZXYÛÜšÙ›ÝÈ]\Ý[[ÛœÝ˜]H[™XÙZ\Ú\ÚÛÜH[™Ø\™ZÝ\ÙH[™[ÜžH]Y]È›È\œÚ\Ý[\ÝYÙHÝXØÙ\ÜÈÛZ[YYY]‚‚ˆÈÈŒ‹LLLH8 %NHÛÝ\˜ÙH–™XÛÝ™\žHØ]™KN”‹\™XYHÛÝ\˜ÙHÛÛ™\œÚ[ÛœÈ[™ÝX\™Y\œÚ\Ý[Ø\™ZÝ\ÙH[ZÙB‚‹H^XÝZXYˆÌÌÍHÎØÌØˆÛÝ\˜ÙHÌÍÎNMÍHÕPÐÑTÔÈPÌWÐQTU‘WÔÓÕTÑWÔÕQÑH[YÚX›OLNÈÝYÙYMŒš[\ÏLÌMHž]\ÏMLŽLÌMH]X\˜[[™OLLŒÎÈ“ÕÕQMÒSTÔ•QÈÛÛ™\œÚ[Ûˆ[ˆØ[YH[ˆÕPÐÑTÔÈ™\\™YMNH™ÏLŒLH]X\˜[[™YLH“ÕÕQMÒSTÔ•QˆHÝ\ˆÎH[Ù[È\™H™]\ÙYšXHš[Üˆ\Y˜XÝ›Ý™KYÝÛ›ØYY‚‹H™]š[Ý\ÈÎHÛÛ™\Y[ˆÌÍÎNMÍÌÕPÐÑTÔÎˆPÌWÐQTU‘WÔ”—ÔPÈ™\\™YLÎH™ÏLMˆ]X\˜[[™YL“ÕÕQMÒSTÔ•QˆH[^˜HžHY™\ÙH\ÈÛÝ\˜ÙK[Û›K›Ý[ˆ[™[Y›Ü›X[X\ˆÛÛXš[™YÜšYÚ[˜[[Ù[ÈNNÈ”‹\™\\™YNÈ]X\˜[[™HKˆ\Y˜XÝÈ^\™H[ˆÌ^\Ë‚‹H[œ™X[[ˆÌÍÎNMÍLÍÈÕPÐÑTÔÈ^XÝXYÈY]ÜˆÛÛ\[K^\Ý[™È›ÙXÝ[Ûˆ[\Ü]]ÛX][Û‹XY\ÜÈPÌHÝÙY\ÛÜ›\Ý]H›Ý[™š\XÚØYÚ[™ËÝ\\ˆÙÈÌÔPÒÐQÑWÔTÔØ[™ÌÔPÒÐQÑQÔÕT•TÔTÔØÈØ\›š[™ÈX\ÜÙYˆ\È[ˆÙ\È“Õ[\ÜH™]ÈNH^\›˜[ÛH]™[ˆ–‚‹HYØÜš\ËÜÝYÙWÜXÌWØY\]™WÜœ—ÝØ\™ZÝ\ÙKœX[™X[X[\Ü]Ú™Ú]X‹ÝÛÜšÙ›ÝÜËÜXÌK\\œÚ\Ý[]™\šYšYY\œ‹]Ø\™ZÝ\ÙKž[[ˆÛ™HÙ[‹ZÜÝYÜš]\ˆÝX\™YžHH^\Ý[™ÈØ\™ZÝ\ÙK\ÝYÙKXÛÛ˜Ý\œ™[˜ÞH˜[YKˆ™]\Ù\È[X™\™Y\Y˜XÝÈ[™ÚXÚÜÈÜšYÚ[˜[ÛÝ\˜ÙHXÙ[œÙKÜÛÝ\˜ÙK\YÙKš[H[™[ÜšY\Ë\‹Yš[HÚ^™KÓQKÔÒLM‹š[˜\žH–™\\™YRÈ‘È[Y[œÚ[ÛœËÚ\ÚX]Ú[™ÈÛÝ\˜ÙH™XÙZ\\Ú]X\˜[[™\È[™ÝX›K\ÝYÚ[™ËˆÛÜY\ÈÜšYÚ[˜[È[™Ù[™\˜]YÛÝ\˜Ù\ÈÈ˜[œØXÝ[Ûˆ\™XÝÜžKÜ™X]\ÈÒLM‹ÛXÙ[œÚ[™È™XÙZ\Ë™\Ù\™\ÈˆÚPˆœ™YK\ÜXÙH™\Ù\™K]ÛZXØ[H›Û[Ý\ÈØ[YK]›Û[YHÛÝ\˜ÙHØ]™H[™[œÈ^\Ý[™È[™[ÜžH]Y]ˆ›ÈZY\ÜÙ]Ë›È›ÝšY\ˆÝÛ›ØYË›È[][ÛˆÙˆ^\Ý[™È˜[YØ\™ZÝ\ÙHš[\Ë›ÈÛZ[YY[[YH[\ÜË‚‹H
+Š•[œ›Ý™[ˆ[[\Ü]ÚÙÜÊŠŽˆ\œÚ\Ý[Ø\™ZÝ\ÙHÜš]H[™]Y]ˆ™^™X[›ØÚÙ\ŽˆNH–™\]Z\™HU‹ÙÙ[ÛY]žKÝ[™Ù[ËØÛÛ\Ú[Û‹ÓÑÈ[™š\ÝX[X]Ú[™È™Y›Ü™HÛÝ\˜ÙK]Ë\[[YH[\ÜˆXZ›Üˆ\›ÈØ[™[‹Ðš[›ËÔØ[KÓY\œžKÔ\[ˆšYËÙš[˜[™\Ù[][Ûˆ[™[X[ˆPÌHLHÌŒÌ”ÈØ]H‹ÍÈ™[XZ[ˆÜ[‹ˆPÌˆ™[XZ[œÈÓÔÑQ‚‚ˆÈÈŒ‹LLLH8 %PÌHÎK\ÛÝ\˜ÙH[YÜš]H]Y]™]HžK[X\™XÛÝ™\žH[™›Ë\™YÝÛ›ØYØ]™HÛÂ‚‹H
+Š“ØœÙ\™Y^XÝZXY]šY[˜ÙNŠŠˆˆÌÌÍH˜XÍX˜˜MY˜XÍŒÌÙYNNYØYŒN˜ŒÙYÎMØˆÐÌÛÝ\˜ÙH[ˆÍÎNLNÌˆÕPÐÑTÔÈ
+\Y˜XÝLMÌÌMLÊNÈ”ˆ[ˆÍÎNLNLÈÕPÐÑTÔÈ
+\Y˜XÝLMNMMNÈPÌWÐQTU‘WÔ”—ÔPÈ™\\™YLÎ™ÏLMˆ]X\˜[[™YLH“ÕÕQMÒSTÔ•Q
+NÈš]™KS[™H™Y›YÚÍÎNLNŽMÈÕPÐÑTÔÎÈ™KU[œ™X[ÍÎNLNŽHÕPÐÑTÔÎÈQM[ˆÍÎNLNŽÈÕPÐÑTÔË[˜ÛY[™È^\Ý[™È›ÙXÝ[Ûˆ[\ÜY]ÜˆZ[]]ÛX][Û‹Ú[™ÝÜÈXÚØYÙH[™XÚØYÙYÝ\\‚‹H
+Š’[™\[™[™XY[Û›H’T]Y]ŠŠˆ[ŒLHš[\ÈÜ[›š[™ÈÎHÜšYÚ[˜[ÛH]™[ˆÐÌÛÝ\˜ÙH[Ù[ÈX]ÚYÚ^™KÓQKÔÒLMŽÈ[Mˆ™]š[Ý\ÛHÛÛ™\Y‘ÜÈX]ÚYÒLMˆ[™LLˆÜšYÚ[˜[™]WÜ[]X\˜[[™HØ\ÈØ]\ÙYžH™]WÜ[ÙžWÙY™—ÌZËœ™ØHÙXÛÛ™\žH˜\ÙPÛÛÜ‹[Û›H˜\šX][ÛˆÚ]›È[™\[™[›Ü›X[Ü›ÝYÚ™\ÜÎÈÛÝ\˜ÙH›Ü›X[È]\Ý™]™\ˆ™H[™[Y‚‹H
+Š‘›ÛÝË]\ÛÙHØ]™H8 %^XÝZXYÒH[™[™ÎŠŠˆÛÛ™\HÛÛ\]H™]Hš[X\žH”ˆÜ›Ý\™\Ù\™HHÜ[Û˜[žH˜\šX[\ÈHÙ\\˜]H‘ÈÚ]ÓÓPUT’PSÕT’PS•Ó“×ÒS‘TS‘S•Ó“Ô“PSÔ“ÕQÒ‘TÔØ[™ÛÝ\˜ÙHÒLMˆ
+›ÝQH[\ÜY[YÚX›JK™\]Z\™HÎKÌÎH™\\™Y[™™\›È]X\˜[[™YY\ˆ™]˜[Y][Û‹ˆ^[™H™^ÜÝYÛH]™[ˆÛÝ\˜ÙHÚ\™\È
+ŠZPˆÝ[ÈÌZPˆ\ˆÛÝ\˜ÙHš[HÈŒÙXÛÛ™ÊŠˆÚ]›È\˜š]˜\žH\ÜÙ]XÛÝ[Ø\\Ú]™\šYžHH^\Ý[™ÈÎHœ›ÛHš[ÜˆÚ]Xˆ\Y˜XÝ[™^XÚ]H^ÛYH[H™Y›Ü™H™]È›ÝšY\ˆ™\]Y\ÝËˆ™]ÈÚ\™ÛÛ™\œÚ[Ûˆ\È\[™[ÛˆÝXØÙ\ÜÙ[[ZÙKÚ[HÝ\ˆÜÝY˜XÚÜÈÝ^H[™\[™[‚‹H
+Š›Ý[™\šY\ÎŠŠˆ\È\ÈÙ[™\˜]Y
+ŠœÛÝ\˜ÙK[Û›JŠŽÈÚ]Xˆ\Y˜XÝÈ]™HÌY^H™][[Ûˆ[™\™H›Ý\œÚ\Ý[Ø\™ZÝ\ÙH™XÙZ\Ëˆ^XÝHÛ™H\œÚ\Ý[Ø\™ZÝ\ÙHÜš]\ˆ[™MˆÚPˆœ™YH™\Ù\™H™[XZ[ˆX[™]ÜžNÈ›Û™HÙˆ\ÙHØ[™Y]\È›Ý™\ÈQHÙ[ÛY]žKÕU‹ÓÑØÛÛ\Ú[Û‹\›ÈÚÙ[][[š[X][Û‹^XX›HØÙ[™\ËXÚ[™ËQK\™Ù]Y]šXÙHLHÌŒÌÌ”ÈÜˆ[X[ˆØ]H‹ÍÈXØÙ\[˜ÙKˆPÌˆ™[XZ[œÈÛÜÙY‚‚ˆÈÈŒ‹LLLH8 %^[™YPÌHÐÌ\ÜÙ]Ø]™NˆÎH™X[–›ÝÈÛÝ\˜ÙK[Û›H”ˆÛÛ™\œÚ[Û‚‚‹HÚ]XˆÜÝYY\]™HÛÝ\˜ÙHÝYÙHÌˆÍÎMÎLMŒÌLXÕPÐÑTÔÈ^XÝÒHMØXNLØ™˜ˆXÝX[ÙÈPÌWÐQTU‘WÔÓÕTÑWÔÕQÑH[YÚX›OLŒŒˆÝYÙYLÎHš[\ÏLŒLHž]\ÏLLMLÍÍŒÈ]X\˜[[™OLNÎÈ“ÕÕQMÒSTÔ•QˆÛÛ™š\›YY’T\Y˜XÝ
+ŠŒLMŒÍ
+Š‹KMMËÌHÛÛ\™\ÜÙYž]\ÎˆÎH–
+ÈMÌˆÜšYÚ[˜[V‹Ò”QËÔ‘È^\™\ËˆÙˆHNÈ›Û‹\ÝYÙY
+ŠŒMNH^ÙYYY\‹]Ø]™H™[XZ[š[™ÈYÙ][™Ù\™HY™\œ™YÈYHš[HŒÌZPŠŠ‹ˆ\ÙHÈ›Ý™\™\Ù[NÈ˜YÛÝ\˜ÙHš[\Ë‚‹H™]ÈØÜš\ËÜ™\\™WÜXÌWØY\]™WÜœ‹œXØÜš\ËÝ\ÝÜXÌWØY\]™WÜœ‹œX[™ÜÝY™Ú]X‹ÝÛÜšÙ›ÝÜËÜXÌKXY\]™K\œ‹\™\ž[[™]\ÙHH^XÝÝXØÙ\ÜÙ[\Y˜XÝ
+ŠÚ]Ý]›ÝšY\‹Û™]ÛÜšÈXÜ]Z\Ú][Û‹Ú]”ÈÜˆ[œ™X[
+ŠŽÈÛÝ\˜ÙHÒLM‹ÓQH[™[™[ÜžH]\ÝX]ÚH™XÙZ\ˆÛÛ™\RÈ˜\ÙPÛÛÜ‹\™XÝÜ™Y[‹Y›\Y›Ü›X[‹PSËÑË\›ÝYÚ™\ÜËÐ‹[Y][XÈX\ÚÜÈ\ÈM‹Xš]\ØY™H[HÚ\™H™\Ù[È‘ÎÈ™\Ù\™H–ž]\Ëˆ\‹X\ÜÙ]]X\˜[[™H™\Ù\™\ÈÛÝ\˜ÙK[Û›HXÚÙ][YÜš]K‚‹H›Ý\ˆ›Û‹TÚ\™H›ÜXØ[Ø[™Y]\È
+[\š][WØ›Ý[žWÌXØ[]XWÛÜ˜šY›ÛXWÌXY[WÜÜ[›ÜØXXÚ\˜WØ\]X]XØWÌX
+H^XÚ]Hš[ÛYKZ[ÈÛÈ[XšYÝ[Ý\ÈY[]Y\È[ˆÝ\ˆÛÝ\˜ÙHØ[™Y]\ÈÝ[™YYÝ]XÈ–Ù[ÛY]žKÕU‹ÜÛ[ÛÝ[™ËÝ[™Ù[ÑØÛÛ\Ú[Û‹X]\šX[[\Ü[™]X[]KÜ\™›Ü›X[˜ÙH™]šY]Ëˆ
+Š“›È™]ÈQH[\ÜÈÜˆš\ÝX[XØÙ\[˜ÙHÛZ[YY
+Š‹‚‹HÛÛ™\œÚ[ÛˆÜÝY^XÝZXY[‹Ý\Ý›ÛÙˆ
+Š”S‘S‘ÊŠˆY\ˆ\ÈÛÛ[Z]ˆ^\Ý[™Èš]™H\˜[[ÜÝY™Y›YÚÈ[™QMÌNŒH\™HÝXØÙ\ÜÙ[]›ÝPÌHØ]H‹ÍËÑU’PÑHXØÙ\[˜ÙKˆH^\Ý[™ÈÌÌŽH™[XZ[œÈÛÛH[[YH[YÜ˜][ÛŽÈ[]\™HXœ˜\žH™\\˜][ÛˆX^H[ˆ[™\[™[K‚‚ˆÈÈŒ‹LLLH8 %Y\]™HØ]™HZ[š[][K\™[XZ[š[™ËXž]HÝX\™ÛÜœ™XÝ[Û‚‚‹HÝ]XÈ™YÜ™\ÜÚ[Ûˆš^\™H›ÜˆH™]ÈY\]™HÛÝ\˜ÙHØ]™H\Ù\ÈLž]\ÈÙˆ]˜Z[X›HÝÜ˜YÙNÈÝX\™]\Ý›Ý\ÜÝ[YH]™\žHØ[™Y]HÛÛœÝ[Y\ÈLHZP‹ˆÛÜœ™XÝX\›K\ÝÜ›Ý[™ÈL™[XZ[š[™Èž]\ËX]š[™ÈH
+Š˜XÝX[\‹Yš[H›ÝšY\‹\Ú^™H[™Ý™\˜[ž]HØ\ÊŠˆ]]Üš]]]™Kˆ\Èš^\È^XÝÛÝ\˜ÙK[^Y\ˆØ][™È˜]\ˆ[ˆ™YXÚ[™È\Ý[™ÈÜˆ][\[™È[˜›Ý[™Y™]šY\Ë‚‹HHÜÝYÛÝ\˜ÙK[Û›HÛÜšÙ›ÝÈ™[XZ[œÈ™\]Z\™YÈ\ÜÈ]ÈÝÛˆ^XÝPQ™Y›Ü™H[žH™]ÈÝYÙY\ÜÙ]™XÙZ\ÈÛÝ[\È]šY[˜ÙNÈ›ÈQMZ[™\]Y\ÝYžH\ÈÛÜœ™XÝ]™HÛÛ[Z]‚‚ˆÈÈŒ‹LLLH8 %[˜[ZXÈÛÝ\˜ÙHXÜ]Z\Ú][Ûˆ™^[Û™š^Yš]™K[[Ù[[Ý‚‹H™]ÈÙ[XÝ]™[HÙX\˜ÚYPÌHYÚYšY[]H
+Š”ÛH]™[ˆÙ™šXÚX[ÐÌ
+ŠˆÛÝ\˜ÙK[Û›HÛÜšÙ›ÝÈ™Ú]X‹ÝÛÜšÙ›ÝÜËÜXÌKXY\]™KZYÚšY[]K\ÛÝ\˜ÙKž[[˜XÚÙYžHØÜš\ËÜÝYÙWÜXÌWÜÛZ]™[—ØY\]™KœX[™š]™H›Ë[™]ÛÜšÈ\ÝËˆÙ[XÝÈX]Ú[™ÈÚ\™HÝ]ÛÜ‹\ÝXÈ\˜Ú]XÝ\™K™YÙ]][Û‹ÝÛ™\ËØ\™[ˆ[™›Ü[Ù[Y]Y]Hœ›ÛH›ÝšY\‰ÜÈX›XÈTK^ÛY\Èš]™H™]š[Ý\ÛHÝYÙY[Ù[Ë[ˆXÜ]Z\™\ÈRÈ˜]]™HÝ]XÈ–[™ÜšYÚ[˜[^\™H\[™[˜ÚY\ËˆXXÚ\ÜÙ]™XÙZ]™\È›ÝšY\ˆQH™\šYšXØ][Ûˆ
+ÈÒLMˆ™XÙZ\È™Z™XÝÈ˜]™\œØ[[˜[Y^[œÚ[Û‹ÚÜÝX[›Ü›YYÛÝ\˜Ù\È[™Ý™\œÚ^™H^[ØYË‚‹H
+Š”™X[ØY™]KYš]™[ˆØØ[[™ÎŠŠˆ›È\˜š]˜\žHš]™KX\ÜÙ]ÛÝ\˜ÙH[Z]ÈÜÝYØ]™H[Z]YžH
+ŠŒZPˆÝ[ÛÝ\˜ÙHž]\ËÌZP‹Ùš[H[™ŒÙXÛÛ™ÊŠˆ
+\ÈÚ]XˆM[Z[]H›ØŠKÚ]\‹X\ÜÙ]]X\˜[[™H[™ÛÝ\˜ÙK[Û›H\Y˜XÝˆÛÝ[È\[™ÛˆXÝX[ÝZ]X›Hœ™YH›ÝšY\ˆÛÛ[[™Ø[››Ý™HÛZ[YY™Y›Ü™HH™]È[‹ˆ^ÙYY[™ÈÚ[™ÛK\Ú\™YÙ]Y™\œÈØ[™Y]\È˜]\ˆ[ˆÚ[[H›Û[Ý[™È[NÈ]\™HÝXØÙ\ÜÙ[Ø]™\ÈÚÝ[›ØÙ\ÜÈY™\œ™YØ[™Y]\ÈžH™\šYšYY™\Ý[YKÜÛÝ\˜ÙHÚXÚÜÝ[\Ë™]™\ˆ]]ÛX]XÈ›[™™YÝÛ›ØY‚‹HÜšYÚ[˜[ÈX^HÛÛZ[ˆ”QËÑVˆÛÝ\˜ÙH\[™[˜ÚY\ÎÈ\ÙH™[XZ[ˆÓÕTÑWÔÕQÑQÛ›H[™[™È‘ËÕÐHÛÛ™\œÚ[Ûˆ[™–Ù[ÛY]žKÕU‹ÜÛ[ÛÝ[™ËÓÑØÛÛ\Ú[Û‹Ú[\Ü™]šY]Ëˆ\ÈÛÜšÙ›ÝÈÙ\È“Õ\œÚ\Ý[H]]]HHÚ\™YØ\™ZÝ\ÙKÚ[™ÙHQHÛÛ[Ü[ˆPÌˆÜˆ\ÝX›\Ú\™Ù]Y]šXÙHÌ”Ëˆ™\ÜÚ]ÜžHÝ[\Ù\ÈHˆÚPˆÚ[™ÛK]Üš]\ˆØ\™ZÝ\ÙHœ™YK\ÜXÙHØY™]H™\Ù\™K‚‹Hš]™K[[™HÜÝYY]Y]H™Y›YÚÌHØ\ÈÝXØÙ\ÜÙ[ÈÛˆ\ÈÛÛ[Z]H™]ÈY\]™HXÜ]Z\Ú][Û‹ÝÛÜšÙ›ÝÈÝ]\È\È
+Š”S‘S‘ÊŠˆ[[Ú]Xˆ™]\›œÈXÝX[™XÙZ\Ø\Y˜XÝˆÓÕTÑHOH‘PQWÑ“Ô—ÒSTÔ•OH’TÕPSWÐPÐÑTQ‚‚ˆÈÈŒ‹LLLH8 %š]™HÜÝY˜XÚÜÈ]™K™XÚ\ÙHËLÎ›ÛÝ™\Z\‚‚‹H™]ÈÝÛ™\‹XÛÛ™š\›YYPËLLÈˆÌÌÍHš\œÝ^XÝZXY[ˆÙš]™K[[™HÌWJÎ‹ËÙÚ]X‹˜ÛÛKÍ[ÝX˜X™YK]XÚÙ™[ÝÜÚ\\\œÛÛ˜[YØ[YKØXÝ[ÛœËÜ[œËÌÍÎMÎNLÌL
+H
+Š”ÕPÐÑTÔÊŠˆÛˆLŒÍŽL˜ÌXLŒ˜NLÍÍYMÌYÙ˜ÍMMÍ˜XM˜ˆš]™H\Ý[˜ÝÜÝYX]š^›ØœÈÛÛ\]YÝXØÙ\ÜÙ[H[™X›\ÚYš]™HÛÝ\˜ÙK[Û›HY]Y]H™\ÜËÚ]Ý]Ú]”ËQMÜˆØ\™ZÝ\ÙH]]][Û‹‚‹HÛÛ˜Ý\œ™[™KU[œ™X[ÈÌŒŒWJÎ‹ËÙÚ]X‹˜ÛÛKÍ[ÝX˜X™YK]XÚÙ™[ÝÜÚ\\\œÛÛ˜[YØ[YKØXÝ[ÛœËÜ[œËÌÍÎMÎNLŒŽ
+H
+Š‘RSQ
+ŠˆËLÎ˜XÚÙY[™š[š\ÚY™\]Z\™[Y[Û˜\ÚÝ\ÈÝ[X™XØ]\ÙH‘TKT“ÑLLHØZ[™YHÛÛ˜Ü™]HZ\ÜÚ[™Ë]ÛÜšÈ˜XÚÚ[™È[žHÚ[H]KÓX\Ý\‘^XÝ][Û”›ØYX\šœÛÛ‹˜XÚÙYÝ[™š[š\ÚYÜ™\]Z\™[Y[ÚYØØ\È›ÝÞ[˜Ú›Ûš^™YˆH™\]Z\™[Y[Ø\È[™XYHX\YÈÓÓ•S•SÕT×ÓPVSUSWÔÐQ‘WÔ“ÑPÕSÓ˜È\ÈÛÛ[Z]™YÙ[™\˜]\ÈH˜XÚÙY[™š[š\ÚYRQÛ˜\ÚÝœ›ÛHH^XÝÛÝ™\››Üˆ
+Œ[šY\ÊKÚ]Ý]\ØX›[™ËÙXZÙ[š[™ÈÜˆÚ[™Ú[™È˜[Y]ÜˆÙ[X[XÜË‚‹H
+Š”™]˜[Y][Ûˆ[™[™ÊŠˆÛˆH™]È^XÝPQˆš]™K[[™HTÔÈ\ÈÛÝ\˜ÙKÜ™XY[Û›HÛÛÜ™[˜][Ûˆ›ÛÙ‹›Ýš[˜\žHØ\™ZÝ\ÙH\ØYÜˆš\ÝX[ÛÛ\][Û‹ˆÛ›HÙ\šX[^™Y˜[YÛÝ\˜ÙH[ZÙHX^HXÙH[YÚX›H™]Èš[\È[È\œÚ\Ý[Ø\™ZÝ\ÙK‚‚ˆÈÈŒ‹LLLH8 %ÝÛ™\‹XÛÛ™š\›YY\›X[™[š]™K[[™HX^[][K\ØY™H›ÝYÚ]‚‹H\™XÝ]™H]™[ÜÛÝ™\››Üˆ™]šY]È›Ý[™
+Š”‘TKT“ÑLLH[™PËLÎ[™XYHXÝ]™JŠŽˆ›ÝYÚ]]\Ý™HY\]™H[™X^[X[žHY˜][Ú]Ý]\\ˆÝÛ™\ˆ™[Z[™\œËˆ
+Š‘PËLL
+Šˆ^XÚ]HÜ›Ý\È^\Ý[™È™\\˜][ÛˆÛÜšÈ[Èš]™H[™\[™[Ü\˜][Û˜[˜XÚÜÎˆÙ\šX[^™YQM[[YNÈÙ\šX[^™Y\œÚ\Ý[Ø\™ZÝ\ÙH[™YØ[\ÜÙ][ZÙNÈÚÙ[][Ú\˜XÝ\œËØ[š[X][ÛŽÈ™X[\ÝXÈš\ÝX[Ú\™HÛÜ›È[™Ø[Y\^KÓ”ËÜ]Y\ÝÜØ]™KØ]Y[ËÐ\˜XšXÈ™\Ù[][Û‹‚‹HØ[™Y]Hœ˜[˜ÚYÈØÜš\ËÜXÌWÙš]™WÛ[™WÜ™Y›YÚœX[™š]™K]Ø^H\˜[[ÜÝY[›™\ˆÛÜšÙ›ÝÈ™Ú]X‹ÝÛÜšÙ›ÝÜËÜXÌKYš]™K[[™K[X^ØY™Kž[[ˆ[œÈ]™\žH[™HYØZ[œÝH^XÝˆÒHÚ]
+Š››ÈÚ]”Ë[œ™X[\œÚ\Ý[Ø\™ZÝ\ÙHÜš]KÙÚ[ˆž\\ÜËÜˆÞ[]XÈÛZ[\ÈÙˆ™]ÈÝÛ›ØYÊŠŽÈ[[YÚX›HY]Y]HØ[™Y]\È[™^\Ý[™ÈNš\ÝX[ÛÝÈ\™HØØ[›™Y[™š]™HÛÝ\˜ÙK[Û›H™XÙZ\\Y˜XÝÈX›\ÚYˆH^\Ý[™ÈÚ[™ÛHÙ\šX[^™YQH[™Ø\™ZÝ\ÙHÛÜšÙ›ÝÜÈ™[XZ[ˆ™\ÜÛœÚX›H›Üˆ]]][™ÈZ\ˆ™\ÛÝ\˜Ù\ÎÈ›È\XØ]H[›™\ˆÛÛ[[Û‹‚‹HX^[][Hš[H[ZÙH\È
+Š››Ý
+Šˆ[˜›Ý[™YÚ[™ÛKZ›Øˆ’TÕ”SKÜ™\ÚY[˜ÞNÈ›ÛÝÈ]KÓX^[][TØY™T›ÙXÝ[Û“[ÙUŒKšœÛÛ˜Ú]M‘ÚPˆØ\™ZÝ\ÙH™\Ù\™H[™YX\Ý\™Y\‹Yš[KÝØ]™KÛ™]ÛÜšËÜ›ÝšY\‹Ø\Y˜XÝYÙ]ËˆHØ\™ZÝ\ÙHÛÝ\˜ÙHØ][ÙÝYH[™^\Ý[™ÈYØ[ÛÝ\˜ÙH\[[™\È™[XZ[ˆHXÝX[XÜ]Z\Ú][Ûˆ]ˆÛÝ\˜ÙKÛXœ˜\žH[™[ÜžHØØ[\È[™\[™[Hœ›ÛHH‘Ðˆ”SH[[YHÛÜšÚ[™ÈÙ]‚‹H]]]Üš[™Ë^XÝZXYÜÝY›ÛÙˆ\È
+Š”S‘S‘ÊŠ‹ˆ\ÈØ]™H]Ù[ˆÙ\È›Ý[\Ü™]È–›ÙXÙH™]ÈÚ[™[X]XÈÛÛ[ÛÛ\]HHÚ\™KÜˆØ]\ÙžHØ]H‹ÍËˆÙY\PÌˆ[[YHÛÜÙYˆ^\Ý[™ÈˆÌÌŽH[œ™X[[™H[™ÌÌÌˆÝÜ™X[[ZÙH[™HÛÛ[YH[™\[™[K‚‚ˆÈÈŒ‹LLLHHÜš]XØ[YØ\™XÙZ\Ý\\œÙ\ÜÚ[Ûˆ\š]B‚‹HØ\™ZÝ\ÙHÌÌˆ]]™[ÜYXÌLÌØXMÍMÍY˜LLÎXÌŽŒLYYLŽL˜X›Ý™YHØ[›ÛšXØ[[™[ÜžH]Y]\ÈÛX[ŽˆNLH^[ØYš[\ÈÈ‹ÍKMŽNž]\ÈÈŒÎHXÝ]™H™XÙZ\™XÛÜ™ÈÈŽÝ\\œÙYYÈ™\›È\ÚZ\ÜÚ[™ËXÙ[œÙK[™Ù\›Ý\ËÜˆ\XØ]KZ\Ú˜Z[\™\Ë‚‹HH™^Üš]XØ[YØ\™Y›YÚÝ[™XY[\ÝÜšXØ[™XÙZ\›ÝÜÈ]\˜[H[™\™Y›Ü™H™K\™\ÜY™YH™]\™YÎ˜™XÛÜ™ÈY\ˆH]]Üš]]]™H]Y]YÝ\\œÙYY[K‚‹H›ÛÝš^ˆÜš]XØ[YØ\™\\˜][Ûˆ›ÝÈ\Y\ÈHØ[YHXÝ]™K\›ÛÝØ[›ÛšXØ[^˜][Ûˆ[™™]Ù\Ý\™XÙZ\\\‹[›Ü›X[^™Y\^[ØYÙ[XÝ[Ûˆ™Y›Ü™HÒLMˆ™\šYšXØ][Û‹ˆØ[YK\™XÙZ\\XØ]\È™[XZ[ˆÛÝ[YÙ\\˜][NÈÙ[Z[™H™]Ù\Ý\™XÛÜ™ÛÜœ\[Ûˆ™[XZ[œÈ˜Z[XÛÜÙY‚‹HÜÝY™YÜ™\ÜÚ[ÛˆÛÝ™\˜YÙH›ÝÈ^XÝ]\È›ÝH[™[ÜžH]Y][™Üš]XØ[YØ\™\\˜][ÛˆYØZ[œÝHØ[YH™X[Ú[™ÝÜÈZYÜ˜][Ûˆš^\™K‚‹HÝ]\Îˆ
+Š”ÓÕTÑKRSTSQS•QÈVPÕRPQ‘KUS”‘PS
+ÈÐT‘RÕTÑH“ÓÑˆS‘S‘ÊŠ‹ˆ›È^[ØY™Yœ™\Úœ›ÙËÑØ[™[ˆXØÙ\[˜ÙKQK]šXÙKš\ÝX[XÚ[™Ë\™›Ü›X[˜ÙKÜˆØ]H‹ÍÈÛZ[K‚‚ˆÈÈŒ‹LLLHHËLŒÈ™X[YØXÞK\]š^\™HÝX\™‚‹H^XÝZXY™KU[œ™X[ÛÜœ™XÝH™Z™XÝYH™X[Î—XÝ[ÛœË\[›™\˜ZYÜ˜][Ûˆš^\™H\ÈÝYÚ]Ù\™H]™H[›™\ˆÛÛ™šYÝ\˜][Û‹ˆ\ÈØ\ÈH˜[Y]Üˆ˜[ÙHÜÚ]]™HY\ˆHš^\™HØ\ÈÛÜœ™XÝYÈH™X[Ú[™ÝÜÈ]›Ü›K‚‹HËLŒÈ›ÝÈ\›Z]È^XÝHÛ™HÛ›ÝÛˆ\ÝÜšXØ[\]]\˜[[ˆHYXØ]Y™XÙZ\\Ý\\œÙ\ÜÚ[Ûˆ\Ý[™™\]Z\™\È]È™HHØ[›ÛšXØ[š^\™H\ÜÚYÛ›Y[ˆ[žHY][Û˜[ØØÝ\œ™[˜ÙK[žHY™™\™[\ÝÜØÜš\ØØÝ\œ™[˜ÙKÜˆ[žHÛÜšÙ›ÝËØÛÛ™šYÈØØÝ\œ™[˜ÙH™[XZ[œÈH˜Z[XÛÜÙY™]\™Y\›ÛÝš[Û][Û‹‚‹HÝ]\Îˆ
+Š”ÓÕTÑKRSTSQS•QÈVPÕRPQ‘KUS”‘PSS‘S‘ÊŠ‹ˆH\›ÛÝÜ\˜][Û˜[]]Üš]H\È[˜Ú[™ÙY‚‚ˆÈÈŒ‹LLLHHØ\™ZÝ\ÙH™X[Ú[™ÝÜÈ]Ø[›ÛšXØ[^˜][ÛˆÛÜœ™XÝ[Û‚‚‹HØ\™ZÝ\ÙHÌÌH›Ý™YHš[Üˆ›ÛÝ\™X˜\ÙH[\[Y[][ÛˆÝ[˜Z[Y›Üˆ™X[™XÙZ\]ÈÝXÚ\ÈÎ—XÝ[ÛœË\[›™\—ÝØ\™ZÝ\ÙWÚ\™R›Ý\›™^W‹‹˜ˆHÝÙ\”Ú[ÛÝ\˜ÙH\ÙYË\Ý[HÝX›Y˜XÚÜÛ\Ú\ËÚXÚ\™H]\˜[ÝX›HÚ\˜XÝ\œÈ[ˆÝÙ\”Ú[˜]\ˆ[ˆ[ˆ\ØØ\HÙ\]Y[˜ÙK‚‹H›ÛÝš^ˆ™XÙZ\›Ü›X[^˜][Ûˆ›ÝÈ\Ù\ÈÚ[™ÛHÚ[™ÝÜÈÙ\\˜]ÜœÈ[ˆ™\XÙ[Y[X\šÙ\ˆX]Ú[™Ëš[K[™›Ü›X[^™YZÙ^HÜ\˜][ÛœËˆH™YÜ™\ÜÚ[Ûˆš^\™H›ÝÈ\Ù\ÈH™X[Ú[™ÛKX˜XÚÜÛ\ÚÎ—XÝ[ÛœË\[›™\—‹‹˜›Ü›H™XÛÜ™YžHH[›™\‹‚‹HHÛÈY™™XÝY™XÛÜ™È\™H™\Ù\™Y›ÜˆH\™Ù]YØ[™Y]HØ]NˆZ\ÜÚ[™ÈÛ›Ý×ÌWÙY™—ÌšËœ™Ø[™\Ú[Z\ÛX]ÚY›ØÚ×ÌWØ\›WÌšËœ™Ø™[XZ[ˆ˜Z[XÛÜÙY[[H›Ý[™YÝYÚ[™È]™\Z\œÈÛ›H[K‚‹HÝ]\Îˆ
+Š”ÓÕTÑKRSTSQS•QÈVPÕRPQ‘KUS”‘PS
+ÈÐT‘RÕTÑH“ÓÑˆS‘S‘ÊŠ‹ˆ›È›[šÙ]™Yœ™\Ú[™›Èœ›ÙËÑØ[™[ˆÜˆ[X[‹Ù]šXÙHXØÙ\[˜ÙHÛZ[K‚‚ˆÈÈŒ‹LLLHHØ\™ZÝ\ÙHØ[™Y]HØ]HšYÙÙ\ˆ\™[š[™Â‚‹HÛÛ™š\›YY[YÜ˜][ÛˆY™XÝˆØ\™ZÝ\ÙHÝYÙHÌÌH]]™[ÜYNØŒXMMM™NŽXÌYYŒMÌL˜NLÌXÙMXNMY˜ÙXÚÚ\Y›Ý\™Ù]Y›Ý™[˜[˜ÙH™\Z\ˆ[™Hœ›ÙËÑØ[™[ˆØ[™Y]H™\Ü™XØ]\ÙHÚ]X‰ÜÈš[˜[Y\™ÙHÝXš™XÝY›Ý™]Z[ˆHš[ÜˆPÌWÑ”“Ñ×ÐÐS‘QUWÔPØ^X\šÙ\‹‚‹H›ÛÝš^ˆ]™\žH™[]˜[Ø\™ZÝ\ÙHÝYÙX\Ú›ÝÈ^XÝ]\ÈH›Ý[™Y\™Ù]Y›Ý™[˜[˜ÙH™\Z\ˆ[™^XÝZXYØ[™Y]K\™\Ü[™Kˆ\ÙHÜ\˜][ÛœÈ™]\ÙH™\šYšYY^[ØYË\™ÙHÛ›H\Ú[Z\ÛX]ÚY^[ØYË[™™]™\ˆ]]Üš^™HH›[šÙ]™Yœ™\Ú‚‹H\È™[[Ý™\ÈY\™ÙK\ÝXš™XÝÛÜ™[™È\ÈH[[YHÛÛ›Û[™HÚ[HÙY\[™ÈH^\Ý[™ÈŒ[Z[]H™\Z\ˆ›Ý[™ÒLMˆ™XÙZ\[™›Ü˜Ù[Y[˜Z[XÛÜÙYÛÜœ\[Ûˆ[™[™Ë[™\Y˜XÝ\ØY‚‹HÝ]\Îˆ
+Š”ÓÕTÑKRSTSQS•QÈVPÕRPQ‘KUS”‘PS
+ÈÐT‘RÕTÑH“ÓÑˆS‘S‘ÊŠ‹ˆ›Èœ›ÙËÑØ[™[ˆXØÙ\[˜ÙKQK]šXÙKš\ÝX[XÚ[™Ë\™›Ü›X[˜ÙKÜˆØ]H‹ÍÈÛZ[H\ÈXYK‚‚ˆÈÈŒ‹LLLHHØ\™ZÝ\ÙHZYÜ˜]Y\™XÙZ\›ÛÝ™X˜\Ú[™Â‚‹HØ\™ZÝ\ÙHÝYÙHÌÌÛˆ]™[ÜMÍXŒ™ŽLNMŒŽX˜MMÎMNNMMMŒØMØÎÙM˜ÍL˜›Ý™YHXÝ]™H^[ØY›ÛÝ\È—XÝ[ÛœË\[›™\—ÝØ\™ZÝ\ÙWÚ\™R›Ý\›™^X]ÛÈ™XÛÜ™È[œÚYHHZYÜ˜]YÛH]™[ˆŒÈ™XÙZ\Ý[˜[YYH™]\™YXœÛÛ]HÎ˜›ÛÝ‚‹HH[™[ÜžH]Y]›ÝÈØ[›ÛšXØ[^™\È[žH™XÙZ\][™\ˆ
+—XÝ[ÛœË\[›™\—ÝØ\™ZÝ\ÙWÚ\™R›Ý\›™^XÛÈH^XÚ]HÝ\YYXÝ]™HØ\™ZÝ\ÙH›ÛÝ™Y›Ü™H›Ý™[˜[˜ÙHÜ›Ý\[™ËÒLMˆ™\šYšXØ][Û‹[™XÙ[œÙK\Û˜\ÚÝ™\šYšXØ][Û‹‚‹H\È™\Ù\™\È^[ØYÈ[™]È™]Ù\ˆØ[YK\^[ØY™XÙZ\ÈÝ\\œÙYH\ÝÜšXØ[™XÛÜ™ÈXÜ›ÜÜÈ[›™\‹Yš]™HZYÜ˜][ÛŽÈ]Ù\È›ÝÝ\™\ÜÈÙ[Z[™HXÝ]™K\›ÛÝZ\ÜÚ[™Èš[\ÈÜˆ\ÚZ\ÛX]Ú\Ë‚‹HÜÝY™YÜ™\ÜÚ[ÛˆÛÝ™\˜YÙH[Ù[ÈHÝ[HÎ˜™XÙZ\YØZ[œÝHXÝ]™H›ÛÝ[™™]Z[œÈ˜Z[XÛÜÙY[™›Ü˜Ù[Y[›ÜˆH[\\™Y™]Ù\Ý™XÙZ\‚‹HÝ]\Îˆ
+Š”ÓÕTÑKRSTSQS•QÈVPÕRPQ‘KUS”‘PS
+ÈÐT‘RÕTÑH“ÓÑˆS‘S‘ÊŠ‹‚‹H›È[ÛH]™[ˆ™Yœ™\Ú\È]]Üš^™YžH\È™\Z\ŽÈ›ÈØ[Y\^KQK]šXÙKš\ÝX[XÚ[™Ë\™›Ü›X[˜ÙKÜˆœ›ÙËXØ[™Y]HXØÙ\[˜ÙH\ÈÛZ[YY‚‚ˆÈÈŒ‹LLLHHPÌHœ›ÙÈØ[™Y]HØ\™ZÝ\ÙH\™Ù]Y\™\Z\ˆ[™B‚‹HØ[›ÛšXØ[˜Z[\™HXYˆ]™[ÜŽÙYNLØÌMÌÙ˜ÌŒÍYÌ˜ØLL˜™LYMÌÌLXXÈØ\™ZÝ\ÙHÝYÙHÌÌˆ[™Y
+Š‘RST‘JŠˆ\š[™È™\Z\ˆØ[™Y]KYØ]HX]\šX[Ø\™ZÝ\ÙH›Ý™[˜[˜ÙXY\ˆ\›Þ[X][HMZ[]\ÈÙˆ›Øˆ^XÝ][Û‹‚‹HÚ]Xˆ™]Z[™YHXÝ]™HÝ\Ú]Ý]H\›Z[˜[Ý\ÛÛ˜Û\Ú[Ûˆ[™X›\ÚY™Z]\ˆ›ØˆÙÈ›ÜˆØ[™Y]H\Y˜XÝˆ\™Y›Ü™HH\›Z[˜[[›™\‹ÜÙ\šXÙHØ]\ÙH\È›ÝÛZ[YY[™›Èœ›ÙËÑØ[™[ˆØ[™Y]H™\Ý[^\ÝÈœ›ÛHÌÌ‹‚‹HÛÝ\˜ÙH[œÜXÝ[ÛˆÛÛ™š\›YYH˜Z[\™H[\YšY\ŽˆHØ[™Y]KYØ]H]\ÜÙYT™Yœ™\ÚÈH[ÛH]™[ˆ˜]Ú
+ÍÈX]\šX[Ü›ÜÛYÜË‹ˆÐˆž]HØ\
+K[][™È]™\žH[™XYK\ÝYÙY^[ØY]™[ˆÚ[ˆÛ›HÛ™H™XÙZ\\ÚØ\ÈÝ[K‚‹H›ÛÝYš^Ø[™Y]Nˆ™XÙZ\™]\ÙH›ÝÈ™\šYšY\È™XÛÜ™YÒLM‹\™Ù\ÈÛ›HHZ\ÛX]ÚY^[ØY[™]ÈH^\Ý[™ÈÝYÚ[™È]™YÝÛ›ØYÛ›HZ\ÜÚ[™ËØÛÜœ\š[\ËˆHØ[™Y]KYØ]H™\Z\ˆÝ\›ÈÛ™Ù\ˆ›Ü˜Ù\È[X˜]Ú™Yœ™\Ú[™\È[™\[™[H›Ý[™YÈŒZ[]\Ë‚‹H™YÜ™\ÜÚ[ÛˆÛÝ™\˜YÙH^\˜Ú\Ù\ÈHØ[YK\Ú^™HÛÛ[ÛÜœ\[ÛˆÛÈÚ^™K[Û›H˜[Y][ÛˆØ[››Ý™YÜ™\ÜË‚‹HÝ]\Îˆ
+Š”ÓÕTÑKRSTSQS•QÈVPÕRPQ‘KUS”‘PS
+ÈÐT‘RÕTÑH“ÓÑˆS‘S‘ÊŠ‹‚‹H›ÝÛZ[YYˆÓÓTSKUTÕQQKUTÕQU’PÑKUTÕQ’TÕPSKPPÐÑTQœ›ÙÈØ[™Y]HXØÙ\[˜ÙKÜˆ[[YH[YÜ˜][Û‹‚‚ˆÈÈŒ‹LLLHHPÌH“ÕS‘USÓ—ÐÓÔ”‘PÕSÓ”×ÕŒHXÝ]™B‚‹HØ[›ÛšXØ[˜\ÙNˆ]™[ÜÙXÌÙÌXØŒY™˜MÍŒ™LÍ™LÎMÎLŽ˜MMÌMÚXÚ\ÈXXÚ[™KYÜ™Y[ˆY\ˆˆÌŒÈ
+™KU[œ™X[[™[œ™X[Z[˜[Y][ÛˆÕPÐÑTÔÊK‚‹HÛÛ™š\›YY]š[™ÈÚ\™HY™XÝ™\Z\ŽˆZ[\‹X]]Ü™Y[X[›ÚY[XšY[™\ÚY[ÈÙ\™HÝ]ÚYH]š[™ÕÛÜ›\™XÝÜŽŽ‘Ø]\XÝ]™P[XšY[”ÜÓ™X\Š
+XØ[™Y]HÛÝ\˜Ù\ËˆH\™XÝÜˆ›ÝÈ\™›Ü›\ÈHÛÛ[Z]Y]ÛÜ›™XÛÛ˜Ú[X][Ûˆ\ÜËÙXZÛH™YÚ\Ý\œÈ\œÚ\Ý[ÛØÚX[XØ\X›H[XšY[™\ÚY[Ë^ÛY\È\™XÝÜ‹[X[˜YÙYÛÛYXÝÜœËÙ˜][˜K[™[˜ÛY\È]™YÚ\ÝžH[ˆH›Ý[™Y™X\˜žHÛØÚX[]Y\žHÚ]Ý]ZÚ[™ÈY™XÞXÛHÝÛ™\œÚ\‚‹HÝ\\[Ü™\ˆÛÛœÝ˜Z[\È™\Ù\™YˆPÚ\\•ÛÜ››Ý]\˜X^HÛÛ[Z]ØZ[™Y›Ü™HS]š[™ÕÛÜ›\™XÝÜ˜^\ÝËÛÈ™YÚ\Ý˜][Ûˆ\È\™XÝÜ‹[ÝÛ™Y]ÛÛ[Z]Y]ÛÜ›™XÛÛ˜Ú[X][Ûˆ˜]\ˆ[ˆ\ÚY[ÈXXÚZ[\ˆÜ]ÛˆÚ]K‚‹H›ÛÝÝ\›Ý[™][Ûˆ\™[š[™ÎˆY˜][[™Ú[™Kš[šXYš[™\ÈÜ˜\ÜËÑ\ÔÝÛ™KÕÛÛÙ\ÚXØ[Ý\™˜XÙH\\ÎÈTÚ\™Q›ÛÝÝ\ÛÛ\Û™[™Y™\œÈT\ÚXØ[X]\šX[Ž‘]\›Z[™TÝ\™˜XÙU\X[™™]Z[œÈH^\Ý[™ÈY[]H˜[˜XÚÈ›ÜˆYØXÞKÜ›ÞHX]\šX[Ë‚‹H\›ÈÚÙ[][[ZÙHÛXÞH›ÝÈ^XÚ]H™\]Z\™\ÈQMŒÈ–ŒNXÛÛ\]X›H^ÜËÙY\ÈÐ’ˆÚ\˜XÝ\ˆYXÙ\È\ÈÕUP×ÓSÑST—ÑSPÒ×ÓÓ“X[™[YÛœÈHš\ÝX[\™Ù]È
+Š˜[[˜ÙYYY][HÈÙ[XÝ]™HYÚ
+ŠˆÚ[H™]Z[š[™ÈHÌŒÌÌ”ÈÝË\ÜXÈ\™›Ü›X[˜ÙH›ÛÜ‹‚‹H›È˜][˜H[œÚ]H[˜Ü™X\ÙKšXYØ\˜H™]Üš]K\RH[[YH^[œÚ[Û‹Þ[˜Ú›Û›Ý\ÈX]žHØY\˜[[RKØ]Y[ÈÝÛ™\‹ÜˆÝÜžKØØ[›ÛˆÚ[™ÙH\È[›ÙXÙY‚‹HÝ\œ™[Ý]\Îˆ
+Š”ÓÕTÑKRSTSQS•QÈVPÕRPQ‘KUS”‘PS
+ÈQMŒËŒˆ“ÓÑˆS‘S‘ÊŠˆÛˆ\È™\Z\ˆœ˜[˜Ú‚‹H›ÝÛZ[YYˆQKUTÕQU’PÑKUTÕQ’TÕPSKPPÐÑTQPÒS‘ËPPÐÑTQÜˆT‘“Ô“PSÑKPPÐÑTQ‚‚ˆÈÈŒ‹LKLÌHPÌHÐU‘WÓÐQÓÓ‘×ÔÑTÔÒSÓˆXÝ]™B‚‹H™YXÙ\ÜÛÜˆÒT‘WÐUQS×ÒQS•UNˆ^XÝZXYXXÚ[™KYÜ™Y[ˆÛˆˆÌNNH]ÌNÙX™NYMMÍXÍMYXMÌMÍN˜ŽNN˜ÌØÚ]™KU[œ™X[ÌMˆÕPÐÑTÔÈ
+È[œ™X[Z[ÌLMNHÕPÐÑTÔÎÈY\™ÙY\ÈXÎM™NYMÙXØ™NLYMMŒÎŽY™XÌLXŒ‚‹HXÝ]™H[[YKÜ™[XXš[]HØ\ŽˆÐU‘WÓÐQÓÓ‘×ÔÑTÔÒSÓ‹‚‹H^\Ý[™È™\ÝÜ™H˜[œØXÝ[Û‹ÛÜ›\™]š\Ú[ÛˆÚXÚÜÚ[ÝX\™]Y]YYÛ˜\ÚÝÛØ[\ØÚ[™ËYØXÞHØ[›ÛšXØ[^˜][Ûˆ[™ÛÛ[Z]Y]ÛÜ›˜[œÙ›Ü›HÜ›Ý[™[™È™[XZ[ˆ]]Üš]]]™K‚‹H\ÈØ\ˆYÈ˜Z[XÛÜÙY›Ý[™YØ]™K\^[ØYYZ\ÜÚ[Ûˆ™Y›Ü™H™\ÝÜ™H]]][ÛˆÛÈÛ™ÈÙ\ÜÚ[ÛœËØÛÜœ\Ø]™\ÈØ[››Ý^[™\œÚ\Ý[˜ÙHÛÛZ[™\œÈÚ]Ý][Z]‚‹HÝ]\ÎˆÓÕTÑKRSTSQS•QÈVPÕRPQ‘KUS”‘PS
+ÈQMŒËŒˆ“ÓÑˆS‘S‘Ë‚‹H[X[ˆÛ™Ë\Ù\ÜÚ[ÛˆQK]šXÙHØ]™KÜ™\ÝÜ™H]Ú[™È[™\œÚ\Ý[˜ÙK\Ý™\ÜÈXØÙ\[˜ÙNˆS‘S‘ÈÈ“ÕÓRSQQ‚‚ˆÈÈŒ‹LKLÌHPÌHÒT‘WÐUQS×ÒQS•UHXÝ]™B‚‹H™YXÙ\ÜÛÜˆÒS‘SPUP×ÐÓÓ•“ÓÒS‘Ñ‘Žˆ^XÝZXYXXÚ[™KYÜ™Y[ˆÛˆˆÌNN]MY™XÙÌ˜LÙŒMŽNÎY™ŒXŒMÌYÍÎM˜Ú]™KU[œ™X[ÌMÕPÐÑTÔÈ
+È[œ™X[Z[ÌLMMÈÕPÐÑTÔÎÈY\™ÙY\ÈØŒÎŽNÌNXL™NŒŽMÎYÌÙŒL˜ÙŽMMÍ˜Ù˜‚‹HXÝ]™H[[YHØ\ŽˆÒT‘WÐUQS×ÒQS•UK‚‹HTÚ\™P]Y[ÔÝXœÞ\Ý[H™[XZ[œÈÛÛH[[YH]Y[ÈÝÛ™\‹‚‹HÚ\™HY[]H\™Ù]Îˆš\™Ëœ™Y^™KÚYÙ\Ë˜\›KÝÛÜšË\Ý[]YÚ\‹Ø\ËØ\›H[\š[ÜœËš\™KØÝ]\žK‚‹H[[YHÛÝ\˜ÙHYÈH›Ý[™YXÛÜ˜]]™HØØ[^™YTÑ–Ý\YÙ]Ú[H™\Ù\š[™ÈÝÜžKXÜš]XØ[ÝYHš[Üš]K\Þ[˜ÈØY[™ËÙXZÈØXÚ[™ËÚ\™Y][X][Û‹[XšY[˜ÙKÛ]\ÚXÈ˜Y\È[™›ÚXÙHXÚÚ[™Ë‚‹HÝ]\ÎˆÓÕTÑKRSTSQS•QÈVPÕRPQ‘KUS”‘PS
+ÈQMŒËŒˆ“ÓÑˆS‘S‘Ë‚‹Hš[˜[]Y[ËX˜[šÈ[\Ü^X˜XÚËÛ\Ý[š[™ËQKÙ]šXÙKÜXÚ[™ËÜ\™›Ü›X[˜ÙHXØÙ\[˜ÙNˆS‘S‘ÈÈ“ÕÓRSQQ‚‚ˆÈÈŒ‹LKLÌHPÌHÒS‘SPUP×ÐÓÓ•“ÓÒS‘Ñ‘ˆXÝ]™B‚‹H™YXÙ\ÜÛÜˆUQTÕÔÒQWÐPÕU’UWÐÓÒT‘SÑNˆ^XÝZXYXXÚ[™KYÜ™Y[ˆÛˆˆÌNMÈ]L˜LLXÍÙYYÍÌ™ØLŽXÌMÌÌXÌØXMMLŒ˜Ú]™KU[œ™X[ÌMHÕPÐÑTÔÈ
+È[œ™X[Z[ÌLMMÕPÐÑTÔÎÈY\™ÙY\ÈNLŽYŽLÌŽLŒÎY˜Y™˜ŒM™ŽYŽYX™NÙNL‚‹HXÝ]™H[[YHØ\ŽˆÒS‘SPUP×ÐÓÓ•“ÓÒS‘Ñ‘‹‚‹HTÚ\™TÝÜžT™\Ù[][Û”ÝXœÞ\Ý[H™[XZ[œÈ™\Ù[][Û‹\Ý]HÝÛ™\ŽÈTÝÜžT™\Ù[][Û‘\™XÝÜˆ™[XZ[œÈ˜[œÚY[Ø[Y\˜HÝÛ™\ŽÈ]Y\ÝÜØ]™KÝÛÜ›]ÝÛ™\œÚ\\È[˜Ú[™ÙY‚‹HØÛÜNˆ[šYžH[YY™[X\ÙHÈÚÚ\ÈÚ\\ˆ[™Ù™ˆÛÈÛ™H^]]ÛÈ˜[œÚY[™\Ù[][ÛˆØ[››ÝX]™HHÝ[HØ[Y\˜HÜˆ]]]HÝÜžHÝ]K‚‹HÝ]\ÎˆÓÕTÑKRSTSQS•QÈVPÕRPQ‘KUS”‘PS
+ÈQMŒËŒˆ“ÓÑˆS‘S‘Ë‚‹H›ÈQKÙ]šXÙKÝš\ÝX[ÜXÚ[™ËÜ\™›Ü›X[˜ÙHXØÙ\[˜ÙH\ÈÛZ[YY‚‚ˆÈÈŒ‹LKLÌHPÌHUQTÕÔÒQWÐPÕU’UWÐÓÒT‘SÑHXÝ]™B‚‹H™YXÙ\ÜÛÜˆU’S‘×ÔÒT‘Nˆ^XÝZXYXXÚ[™KYÜ™Y[ˆÛˆˆÌNMˆ]MXÎMMÌÌ˜Ø˜XÍŽMXŒŒXÍYØMYL™Œ™MÙX˜ØÚ]™KU[œ™X[ÌMÎÕPÐÑTÔÈ
+È[œ™X[Z[ÌLMLHÕPÐÑTÔÎÈY\™ÙY\ÈMÎLÍMNXXMŒXÎLÎÍÍØMMŒ™M˜MÍMÎYÍ˜‚‹HXÝ]™H[[YHØ\ŽˆUQTÕÔÒQWÐPÕU’UWÐÓÒT‘SÑK‚‹HTÚ\™T]Y\ÝÝXœÞ\Ý[H™[XZ[œÈÛÛH]Y\ÝÜÝÜžH]]Üš]K‚‹H[[YHÛÝ\˜ÙH›ÝÈYÈH›Ý[™YÝ\œ™[]Ú[™ÝÈXÝ]š]H›Ú™XÝ[Û‹PÌH\™Ù[˜ÞHÝ\™\ÜÚ[Ûˆ[™^XÚ]\XØ]KXÛÛ\][Ûˆ™Z™XÝ[Û‹‚‹HÝ]\ÎˆÓÕTÑKRSTSQS•QÈVPÕRPQ‘KUS”‘PS
+ÈQMŒËŒˆ“ÓÑˆS‘S‘Ë‚‹H›ÈQKÙ]šXÙKÝš\ÝX[ÜXÚ[™ËÜ\™›Ü›X[˜ÙHXØÙ\[˜ÙH\ÈÛZ[YY‚‚ˆÈÈŒ‹LKLÌHPÌHU’S‘×ÔÒT‘HÛÝ\˜ÙH[\[Y[][Û‚‚‹HÒTPÕT—Ô‘TÑS•USÓˆ™YXÙ\ÜÛÜˆÛÜÙYÛˆˆÌNMH^XÝXY™˜LŒÍMÍM˜MŒ™˜ŒM™LŒYMØØLŽMÌˆ™KU[œ™X[ÌMÍHÕPÐÑTÔË[œ™X[Z[ÌLMÕPÐÑTÔËY\™ÙY\È˜ØYŒMŽMMÙLXÌMÌXLYMÌYXYYMY˜‚‹H™YÚ\Ý\™YU’S‘×ÔÒT‘Hš\œÝ[ˆØÜËÕÓÔ“ÑURSÓQÑT‹›Y]KÔPÌS]š[™ÔÚ\™PÚ\\•ŒKšœÛÛ˜[™ÛÝ™\››ÜˆPËLMK‚‹HYY”Ú\™S”Ð™Z]š[Ü”Û˜\ÚÝÈZ[™Z]š[Ü”Û˜\ÚÝ
+
+XÛÈØÚY[Y[XšY[›Ý][™H™Yœ™\ÚÛØ[\ØÙ\È[™Ù\‹ÙX]\‹ØÚY[K[˜ÚÜ‹™YÚ[Û˜[[ÛÙ[™[[Ý[Û˜[Ý]H[œÝXYÙˆ™XZ[[™ÈÛÛ^›ÝYÚ™\X]Y[™\[™[]Y\šY\Ë‚‹H™\XÙY\‹S”È[]ÛÜ›XÝÜ’]\˜]ÜTÚ\™P[XšY[”Ï˜ÛØÚX[ØØ[œÈÚ]S]š[™ÕÛÜ›\™XÝÜŽŽ‘Ø]\XÝ]™P[XšY[”ÜÓ™X\Š
+X›Ý[™YÈ\™XÝÜ‹[X[˜YÙY˜\Ù[[™H[™XÝ]™HZXÜ›ËY]™[”ÜÈ[œÚYHH™\]Y\ÝY˜Y]\Ë‚‹HØYY[™[™›Ü˜ÙYH^\Ý[™ÈX^ØXÝ]™WÙ˜][˜WÙÜ›Ý\×Û™X\—Ü^Y\L˜YZ\ÜÚ[ÛˆYÙ]™Y›Ü™HUSHZXÜ›ËY]™[È\™HÙ[XÝY‚‹H^\Ý[™È[XšY[”ÈÈ[\˜XÝ[ÛˆÈ[XšY[[[Ý[ÛˆÛÛÈ™[XZ[ˆY™XÞXÛHÝÛ™\œÎÈ›È\˜[[RHœ˜Z[ˆÜˆÝ™X[Z[™ÈÝÛ™\ˆØ\ÈYY‚‹HPÌH[XšY[Ü[][Ûˆ\™Ù]™[XZ[œÈ
+ŠŒN
+Š‹ˆ›È[œÚ]H[˜Ü™X\ÙKÞ[˜Ú›Û›Ý\ÈX]žHØYÜˆ\‹Yœ˜[YHÛØ˜[ÛÛ^™XÛÛœÝXÝ[ÛˆØ\È[›ÙXÙY‚‹HÝ\œ™[Ý]\Îˆ
+Š”ÓÕTÑKRSTSQS•QÈVPÕRPQ‘KUS”‘PS
+ÈQMŒËŒˆ“ÓÑˆS‘S‘ÊŠ‹‚‹H›ÝÛZ[YYˆQKUTÕQU’PÑKUTÕQ’TÕPSKPPÐÑTQPÒS‘ËPPÐÑTQÜˆT‘“Ô“PSÑKPPÐÑTQ‚‚ˆÈÈŒ‹LKLÌHPÌHÒTPÕT—Ô‘TÑS•USÓˆÛÝ\˜ÙH[\[Y[][Û‚‚‹H™YXÙ\ÜÛÜˆT•WÐS‘ÔÓÐÒPSÓÓÔ\È^XÝZXYXXÚ[™KYÜ™Y[ŽˆˆÌNMXYYMMÎYŒ™XÎXXØÌØ˜YLÙŒÎNLÍ˜ÌMŒŒX™NYL\ÜÙY™KU[œ™X[ÌMÌˆ[™[œ™X[Z[ÌLMK[ˆY\™ÙYÈ]™[Ü\ÈNŽMLŒŒŽNLŽMXLÙÎYL˜ÍYŒØØÙMØÌ‚‹H™YÚ\Ý\™YÒTPÕT—Ô‘TÑS•USÓˆ™Y›Ü™H[[YHÛÙH[ˆ]KÔPÌPÚ\˜XÝ\”™\Ù[][ÛÚ\\•ŒKšœÛÛ˜[™ÓÔ“ÑURSÓQÑT‹‚‹HYYÝX›HTÚ\™S”ÎŽ”›ÙXÝ[ÛÚ\˜XÝ\’YÛÈ\›ÈšYËØ\ÜÙ]Y[]H›ÈÛ™Ù\ˆ\[™ÈÛˆØØ[^™Y\Ü^S˜[YXˆPÌHÝÜžHXÝÜœÈ^XÚ]Hš[™Ø[™[ˆ›ØYš[›ËØ[™[ˆ]˜YÈ[™[™Ø[HÈÝX›H›ÙXÝ[ÛˆQË‚‹H^\Ý[™ÈTÚ\™PÚ\\\ÜÙ]Ý™X[Z[™ÔÝXœÞ\Ý[X™[XZ[œÈHÛ›HÚÙ[][\šYÈ™\ÚY[˜ÞHÝÛ™\ŽˆÛÙ]È
+È”Ý™X[XX›SX[˜YÙ\ŽŽ”™\]Y\Ý\Þ[˜ÓØY›Ý[™YXÚØYÙH]˜Z[Xš[]H™]žK[Ù[\ˆ˜[˜XÚÈ[[Y\Ú
+È[š[P”™\ÛÛ™KT“È[™™[™\™Y[Û›HÜÙHXÚÚ[™Ë‚‹HYYÝÜžKX]Ø\™H^Y\ˆ\]Z\Y[™\Ù[][ÛŽˆœ›ÙÉÜÈ[Ù[\ˆ]\™HÝÛÜ™™\Ù[][Ûˆ\ÈÝ\™\ÜÙY[œÚYHPÌH˜]\ˆ[ˆXZÚ[™È]\ˆ˜[YYÙX\ˆ˜XÚÝØ\™[ÈHÚ\™HÚ\\‹‚‹H›ÈÜ[][Ûˆ[˜Ü™X\ÙK™]ÈRHœ˜Z[‹\‹Yœ˜[YH\ÜÙ]ØØ[‹Þ[˜Ú›Û›Ý\ÈX]žH›ÙXÝ[ÛˆØYÜˆÜ›ÝÙÜ]Û‹Ñ\Ý›ÞH]Ø\ÈYY‚‹HÝ\œ™[Ý]\Îˆ
+Š”ÓÕTÑKRSTSQS•QÈVPÕRPQ‘KUS”‘PS
+ÈQMŒËŒˆ“ÓÑˆS‘S‘ÊŠ‹‚‹H›ÝÛZ[YYˆQKUTÕQU’PÑKUTÕQ’TÕPSKPPÐÑTQQ“Ô“PUSÓ‹PPÐÑTQÜˆT‘“Ô“PSÑKPPÐÑTQ‚‚ˆÈÈŒ‹LKLÌHPÌHÒT‘WÕÓÔ“ÑS”ÒUH[[YHØ\ˆÛÝ\˜ÙH[\[Y[][Û‚‚‹H™YXÙ\ÜÛÜˆYYØH[YÜ˜][Ûˆ\ÈXXÚ[™KYÜ™Y[ŽˆˆÌNH^XÝXYÍŽXŒ™˜ML˜ÙX™ÙXÎM™XÌL™™ŽXMŒŒØØ\ÜÙY™KU[œ™X[ÌMH[™QMŒËŒˆ[œ™X[Z[ÌLLÎ[ˆY\™ÙYÈ]™[ÜÌÍLÌ˜MÍL˜MØÌÌYÌX˜ŽMÌ™MÍÌŒM˜‚‹H]š[™ÕÛÜ›Y[X™\‹[ØØ[Ý[[™È[™H[XšY[]Û‹XØXÚH™YÜ™\ÜÚ[ÛˆÝX\™\™Y›Ü™H]™H^XÝZXYXXÚ[™H›ÛÙˆÛˆ]‹ˆ\È\ÈÛÛ\[KÚXY\ÜË[XXÚ[™H]šY[˜ÙK›Ý[X[ˆQKÙ]šXÙKÝš\ÝX[Ü\™›Ü›X[˜ÙHXØÙ\[˜ÙK‚‹Hš\œÝÜÝ[YYØH[[YHØ\ŽˆÒT‘WÕÓÔ“ÑS”ÒUXˆ]YÈÛ›HÙ[ÛY]žKÙ™\ÜÚ[™È›ÝYÚÚ\™T›ÝÝ\UÛÜ›Z[\ŽŽ”Ü]Û•ÛÜ›[œÚ]Q]Z[\ÜÊ
+X[™^\Ý[™È™\›ËUXÚÈUÛÜ›]Z[Û\Ý\˜TÓHÝÛ™\œÚ\‚‹Hš^YYÙ]ˆ][ÜÝHÛ\Ý\ˆXÝÜœÈÈÌ›Û‹XÛÛ\Ú[Ûˆ[œÝ[˜Ù\ÈXÜ›ÜÜÈÛÛÙ[\Ë™\›œË™YYË]X\šÙ\œÈ[™˜[[ˆÙÜËˆZ\ÜÚ[™È›ÙXÝ[ÛˆY\Ú\È\™HÚÚ\YÈ›ÈÞ[˜Ú›Û›Ý\ÈØY\È[›ÙXÙY‚‹HÛÜ›Y™TØ]\˜][Û”[˜PÌH[XšY[Ü[][Ûˆ\™Ù]™[XZ[œÈ
+ŠŒN
+Š‹ˆ]š[™ÕÛÜ›\™XÝÜˆÝ[ÝÛœÈ[XšY[”ÈYÙ]ËÜÛÛ[™ÎÈÚ\™T]Y\ÝÝXœÞ\Ý[HÝ[ÝÛœÈÝÜžKÜ]Y\ÝÝ]K‚‹H›È]Y\ÝÛÛÜ™[˜]KÝÜžH[˜ÚÜ‹Ü›ÝÙØ\ÜˆÚ\\ˆÜÛÙÞH\ÈÚ[™ÙYžH\ÈØ\‹‚‹HÝ\œ™[Ø\ˆÝ]\Îˆ
+Š”ÓÕTÑKRSTSQS•QÈVPÕRPQ‘KUS”‘PS
+ÈQMŒËŒˆ“ÓÑˆS‘S‘ÊŠ‹‚‹HÝ[›ÝÛZ[YYˆQKUTÕQU’PÑKUTÕQ’TÕPSKPPÐÑTQPÒS‘ËPPÐÑTQÜˆT‘“Ô“PSÑKPPÐÑTQ‚‚ˆÈÈŒ‹LKLÌHÌ]]ÛX]YXXÚ[™HÛÜÝ\™H
+ÈPÌHX^[][K\ØY™HYYØH˜Z[ˆŒ‚‚‹HˆÌN^XÝXY˜ØNXXÌÙXLYLÍŒYMŒYMÎLŽ˜XYYY\ÜÙYÜÝY™KU[œ™X[ÌMÍH[™[QMŒËŒˆ[œ™X[Z[ÌLL[ˆY\™ÙYÈ]™[Ü˜ŒMY™™Ì™™MXL˜ÌŒØÌÙ˜ŒÌ˜ŽÌYYØ‚‹H^XÝXXÚ[™H]šY[˜ÙH[˜ÛY\ÈY]ÜˆZ[›ÙXÝ[Ûˆ[\Ü]]ÛX][Ûˆœ˜[Y]ÛÜšÈPKXY\ÜÈÝ\\Ú\\ˆ]Y]›Ý]KÜÝ]H›Ý[™š\Ø\›š[™ËYXÝX\™™X[Ú[™ÝÜÈXÚØYÙK[[YH]HÝYÚ[™È[™XÚØYÙYÝ\\‚‹HXÚØYÙY]H›ÛÙŽˆÌÔPÒÐQÑQÑUWÔTÔÈ^XÝYLÍÈ™\šYšYYLÍØ‚‹HXÚØYÙY[[YKXÛÛœÝ[\[Ûˆ›ÛÙŽˆÌÔPÒÐQÑQÔ•S•SQWÑUWÔ‘PQÔTÔÈX\šÙ\S”ÐÛÛ^ˆ™XYO^Y\Ø‚‹HXÚØYÙYÝ\\›ÛÙŽˆÌÔPÒÐQÑQÔÕT•TÔTÔÈØœÙ\™YMœØ‚‹H[›™\ˆ\™Ø\™HÛ˜\ÚÝˆ[[MËMNKMËMŒSHž]\Ëˆ\È\ÈH\™Ø\™HÛ˜\ÚÝÛ›H[™\È
+Š››ÝU’PÑKUTÕQ
+Šˆ™XØ]\ÙH™\™\Ù[]]™H”ËÙœ˜[YK][YKÕ”SHXØÙ\[˜ÙH\È›Ý™Y[ˆØ\\™Y‚‹H]]ÛX]YÌXXÚ[™HØ]\È\™H\™Y›Ü™HÛÜÙYÛˆH^XÝXØÙ\[˜ÙHXYˆ[X[ˆÚ\\ˆ˜]™\œØ[Ü™XYXš[]KÜXÚ[™Ë™X[]Y[È^X˜XÚËÛZ^[™\™Ù]Y]šXÙH\™›Ü›X[˜ÙKÝš\ÝX[]šY[˜ÙH™[XZ[ˆÙ\\˜]HØ]\Ë‚‹HPÌHYYØH˜Z[ˆŒˆ\È™XZ[œ›ÛHHY\™ÙYØ[›ÛšXØ[]™[Ü[œÝXYÙˆ™\ÛÛš[™ÈHÛÌNHÛÛ™›XÝÚÛ\Ø[Kˆ]Ù[XÝ]™[H™\Ù\™\ÈHÛÛ™š\›YY]š[™ÕÛÜ›Y[X™\‹[ØØ[Ý[™\Z\‹ËLŒÌŒKÌŒLÌŒLKÌŒLŠÈÝX\™ËÛÝ\˜ÙK]Ë\[[YH\ÜÜÚ][Û‹Ø]™K\ØÚ[XH]Y][™HL‹XØ\ˆX^[][K\ØY™H›ÙXÝ[Ûˆ›ÙÜ˜[K‚‹H›È™]È[[YH^[œÚ[ÛˆØ\ˆ\È›Û[ÝYÛÛ[HžHÌXXÚ[™HÛÜÝ\™NÈXXÚ\[™[Ø\ˆÝ[›ÛÝÜÈÛÝ™\››Üˆ™\™\]Z\Ú]\È[™]ÈÝÛˆ^XÝZXYQMÈ]\ˆØ]H‹ÍÈ]šY[˜ÙK‚‹H›È™]ÈQKUTÕQU’PÑKUTÕQÜˆ’TÕPSKPPÐÑTQÛZ[H\ÈXYHžH\È™XÛÜ™‚‚ˆÈÈŒ‹LKLÌHÌXÚØYÙY[[YH]K\™XY›ÛÙˆÝX\™‚‹H™[[ÝHœ˜[˜Ú\Ø[˜YÙHÛX[\\ÈÛÜÙYXXÚ[™K]Ú\ÙNˆHˆYØXÞHXYÈ\™H™XÛÝ™\˜X›Hœ›ÛH\˜Ú]™KÜ™KXZ[\Ø[˜YÙKLŒŒLÌ[™Hš[˜[ÛX[\\ÜÈ™YXÙY\œÚ\Ý[™YœÈÈ]™[ÜXZ[˜[™H™XÛÝ™\žK[Û›H\˜Ú]™H™Y›Ü™H\ÈÚÜ[]™Y˜[Y][Ûˆœ˜[˜ÚØ\ÈÜ[™Y‚‹HÛÛœÝXÝ[Ûˆ™\Ý[YH\È›ÛÝÚ[™ÈHÛÝ™\››Ü‰ÜÈÝ\œ™[ÌXØÙ\[˜ÙHÜ™\ˆ˜]\ˆ[ˆÜ[š[™ÈH™]ÈØ[Y\^H™X]\™H™[X]\™[K‚‹HØÜš\ËÝ™\šYžWÜXÚØYÙYÜÝ\\œÌX›ÝÈ™\]Z\™\ÈHXÚØYÙY^XÝ]X›HÈ[Z]”ÐÛÛ^ˆ™XYO^Y\Ø[ˆY][ÛˆÈÝ\\ÙÜ›Ý[™[™ËÜ›Ý]HX\šÙ\œËˆ\ÈÛÜÙ\ÈH]šY[˜ÙHØ\™]ÙY[ˆÝYÙYÜ\œÙXX›H[[YQ\[™[˜ÚY\È[™XÝX[[[YHÛÛœÝ[\[ÛˆžHTÚ\™S”ÐÛÛ^ÝXœÞ\Ý[X‚‹H]KÕÌš[˜[ÛÜÝ\™T[•ŒKšœÛÛ˜›ÝÈYš[™\ÈÌQUKLH\ÈÝYÚ[™È
+È”ÓÓˆÞ[^
+ÈXÚØYÙY[[YHÛÛœÝ[\[Û‹‚‹HÝ\œ™[Ý]\Îˆ
+Š”ÓÕTÑKRSTSQS•QÈVPÕRPQÒH“ÓÑˆS‘S‘ÊŠ‹ˆ›ÈQK]šXÙK”Ë]Y[Ë\^X˜XÚËXÚ[™ËÜˆš\ÝX[XØÙ\[˜ÙH\ÈÛZ[YYžH\ÈÚ[™ÙK‚‚ˆÈÈŒ‹LKLÌHš[˜[™\›ËXZXYXZ[[˜[˜ÙHÝÙY\™Y›Ü™HÛÛœÝXÝ[Ûˆ™\Ý[YB‚‹HˆÌNY\™ÙYH\ÝÜœ[‹\™YˆÛÜÙ[Ý]Y\ˆ^XÝZXYÜÝY™KU[œ™X[ÕPÐÑTÔË‚‹HH™[XZ[š[™È›Û‹XØ[›ÛšXØ[XZ[[˜[˜ÙH™YœÈ\™H›ÝÈ[Z]YÈHÝ\\œÙYYXZ[[˜[˜ÙKÙš[˜[\™XZ[Xœ˜[˜ÚXÛX[›Ý]]ŒX\È\ÈÚÜ[]™YÝÙY\œ˜[˜Ú‚‹H\ÈÝÙY\^XÚ]H]Y]Y\È›Ý™YœÈ›ÜˆÝX\™Y[][ÛŽÈHY\™ÙYÝÙY\XYÚ[[ÛÈ™H[]YžHPËL^XÝZXYÛÜÙ[Ý]‚‹H^XÝY\œÚ\Ý[™YœÈY\ˆœ˜[˜ÚÛX[\ˆ]™[ÜXZ[˜[™™XÛÝ™\žK[Û›H\˜Ú]™KÜ™KXZ[\Ø[˜YÙKLŒŒLÌ‚‹HY\ˆ]œ˜[˜ÚXÛX[\ÕPÐÑTÔË™\ÜÚ]ÜžHYÚY[™H\ÈÛÜÙY[™ÝXœÝ[]™HZ[ÛÜšÈ™\Ý[Y\Èœ›ÛHØ[›ÛšXØ[]™[Ü‚‹H]šY[˜ÙH›Ý[™\žNˆ™\ÜÚ]ÜžHYÚY[™HÛ›Kˆ›ÈÛÛ\[KÔQKÙ]šXÙKÝš\ÝX[Ü\™›Ü›X[˜ÙHXØÙ\[˜ÙH\ÈÛZ[YY‚‚ˆÈÈŒ‹LKLÌH\ÝÜœ[ˆXZ[[˜[˜ÙH™YˆÛÜÙ[Ý]‚‹HˆÌMÎY\™ÙYHš[˜[YØXÞK\™Yˆ™]\™[Y[ÛXÞH™Y›Ü™HˆÌMÎHÛÝ[Y\™ÙNÈˆÌMÎH\™Y›Ü™H™XØ[YHHÝ\\œÙYYXZ[[˜[˜ÙHœ˜[˜Ú˜]\ˆ[ˆ›ÙXÝ[ÛˆÛÜšË‚‹HˆÌMÎH^XÝXYM˜Ž˜ÌÌN™™N˜ÍØÌLÌ™XMYNŒ™YYMÍØÛÛ\]YH[ÜÝY™KU[œ™X[ÚZ[ˆÝXØÙ\ÜÙ[K[ˆØ\ÈÛÜÙY[›Y\™ÙYY\ˆÌMÎ[™Yš\œÝ‚‹Hœ˜[˜ÚÛX[\›ÜˆÌMÎÛÛ\]YÕPÐÑTÔÈ[™^XÚ]H[]Y[ˆ\˜Ú]™YYØXÞHÛÜšÚ[™È™YœÎÈ]ÈÙÈ[™YÚ][]Y^XÚ]L˜Ù\[š\]YOLX[”›ÝXÝYLØ‚‹HHÛ›H^˜H]™H™YˆY\ˆ]\ÜÈ\ÈXZ[[˜[˜ÙKÙš[˜[\™XZ[Xœ˜[˜ÚXÛX[›Ý]]ŒXÈ]\È›ÝÈ^XÚ]H]Y]YY›Üˆ[][ÛˆžH\Èš[˜[ÛÜÙ[Ý]‚‹H^XÝYš[˜[]™H™YœÎˆ]™[ÜXZ[˜[™™XÛÝ™\žK[Û›H\˜Ú]™KÜ™KXZ[\Ø[˜YÙKLŒŒLÌ‚‹H]šY[˜ÙH›Ý[™\žNˆ™\ÜÚ]ÜžHYÚY[™HÛ›Kˆ›ÈÛÛ\[KÔQKÙ]šXÙKÝš\ÝX[Ü\™›Ü›X[˜ÙHXØÙ\[˜ÙH\ÈÛZ[YY‚‚ˆÈÈŒ‹LKLÌHš[˜[YØXÞK\™Yˆ™]\™[Y[™Y›Ü™HZ[™\Ý[YB‚‹H™XÛÝ™\žH\˜Ú]™HÜ™X]Y]\˜Ú]™KÜ™KXZ[\Ø[˜YÙKLŒŒLÌMÙYMNYŒÌLÍLÍ™MÍÍÎY˜˜ÌXÌÎ™‚‹HH\˜Ú]™HÛÛ[Z]Ø\\™\È[
+ŠŒŠŠˆ™[XZ[š[™È›Û‹XØ[›ÛšXØ[YØXÞHœ˜[˜ÚXYÈ\ÈÛÛ[Z]\™[ÎÈ]\È™XÛÝ™\žK[Û›H[™]\Ý™]™\ˆ™XÛÛYH[ˆ^XÝ][Ûˆ[šË‚‹H[ˆØ\\™YYØXÞHÛÜšÚ[™È™YœÈ\™H›ÝÈ^XÚ]H]Y]YY›ÜˆÝX\™Y[][ÛˆY\ˆ\ÈXZ[[˜[˜ÙHY\™ÙK‚‹HØ[›ÛšXØ[Ý\š]›ÜœÈY\ˆÛX[\\™H]™[ÜXZ[˜[™H™XÛÝ™\žK[Û›H\˜Ú]™Hœ˜[˜Ú‚‹HZ[\™\Ý[YH[NˆÛ˜ÙHœ˜[˜ÚÛX[\™\ÜÈÝXØÙ\ÜÈ[™HØ[›ÛšXØ[Ø\˜Ú]™H™YœÈ™[XZ[ˆ™\Ù[œ˜[˜ÚÛX[\\ÈÛÛ\]H[™ÝXœÝ[]™HØ[YHÛÛœÝXÝ[Ûˆ™\Ý[Y\Èœ›ÛH]™[Ü‚‹H]šY[˜ÙH›Ý[™\žNˆ™\ÜÚ]ÜžKÜ›ØÙ\ÜÈYÚY[™HÛ›NÈ›ÈÛÛ\[KQK]šXÙKš\ÝX[Üˆ\™›Ü›X[˜ÙHXØÙ\[˜ÙH\ÈÛZ[YY‚‚ˆÈÈŒ‹LKLÌHš[˜[[›™\‹\][™œ˜[˜Ú[Y™XÞXÛH™XÛÛ˜Ú[X][Û‚‚‹HÝÛ™\‹\ÚYHÛX[\š[š\ÚYÚ]ÓÐ×Ô‘TÒQQWÑVTÕÏQ˜[ÙX[™Ô•S“‘T—ÑVTÕÏUYXÈHXÝ]™H\œÚ\Ý[[›™\ˆ]]Üš]H™[XZ[œÈ—XÝ[ÛœË\[›™\˜[™Ø\™ZÝ\ÙH]]Üš]H™[XZ[œÈ—XÝ[ÛœË\[›™\—ÝØ\™ZÝ\ÙWÚ\™R›Ý\›™^X‚‹H]ZXÚÈ™\ÜÚ]ÜžH]Y]ÛÛ™š\›YYÝ\œ™[[›™\‹ÝØ]ÚÙËÜÙ\šXÙKYÝX\™Y˜][ÈÚ[ÈØ\™ZÝ\ÙHÝYÙH™[XZ[œÈÙ[‹ZÜÝYÛˆHX˜XÚÙY\œÚ\Ý[Ø\™ZÝ\ÙK[™ÜÝY™KU[œ™X[Èœ˜[˜ÚÛX[\™[XZ[ˆÙ™ˆHQM]šXÙH[™K‚‹HÛÝ™\››ÜˆšY\È™XÛÛ˜Ú[Yˆ‘TKTÕP’SUKLÈÈPËLÈÈPËLÈ›ÝÈ\ØÜšX™HHÝ\œ™[ÜÝYÝ]XËØYZ[ˆ\˜Ú]XÝ\™H[œÝXYÙˆH™]\™YÙ[‹ZÜÝYÝ]XËØYZ[ˆ\ÚYÛ‹‚‹HPËLˆ\ÈÝ™[™Ý[™YžHPËLˆ]™\žHY\™ÙY[\Ü˜\žHœ˜[˜Ú\ÈÛÜÙYžH^XÝ™[[ÝKZXYÒH[][Ûˆš\œÝ[ˆÝX\™Y™\›ËXZXY[š[™ËˆYˆH™[[ÝHœ˜[˜Ú[Ý™YY\ˆY\™ÙK]\È™\Ù\™Y\È™]ÈÛÜšË‚‹HH™^ÛX[\[ˆ^XÚ]H™[[Ý™\ÈÝšXÝ[˜Ù\ÝÜ‹Ù^XÝZXY\XØ]H™YœÈÚ[H[š\]YH›ÙXÝ[Û‹Ü›Ý™[˜[˜ÙKÛX]\šX[ÙÜ˜\XÜÈœ˜[˜Ú\È™[XZ[ˆ™\Ù\™Y›ÜˆÙ[XÝ]™HØ[˜YÙK‚‹H]šY[˜ÙH›Ý[™\žNˆ[™œ˜\ÝXÝ\™H[™™\ÜÚ]ÜžHYÚY[™HÛ›Kˆ›ÈQKÙ]šXÙKÝš\ÝX[Ü\™›Ü›X[˜ÙHÜˆÚ\\ˆXØÙ\[˜ÙH\ÈÛZ[YY‚‚ˆÈÈŒ‹LKLÌHÙXÛÛ™œ˜[˜ÚZYÚY[™H\ÜÂ‚‹HZYÚÛX\›HÝ\\œÙYY™[[ÝHœ˜[˜Ú\È\™H\›Ý™Y›ÜˆÜÝ[Y\™ÙH[][ÛŽˆ\XØ]HXZ[‹Y[žHÛÜšÙ›ÝÈ^\š[Y[ËØœÛÛ]HØ\™ZÝ\ÙHXYÛ›ÜÝXËÜÝ\\œÙ\ÜÚ[Ûˆ™\Z\œËH™K\™XÛÛ˜Ú[X][Ûˆ\›ÈÚÙ[][Ø[™Y]Hœ˜[˜Ú[™™YHÝ[H™\Z\ˆœ˜[˜Ú\Ë‚‹H[š\]YH›ÙXÝ[Û‹Ø\Ü›Ý™[˜[˜ÙKÜÙ][™ÜÈœ˜[˜Ú\È\™H^XÚ]H›ÝXÝY[ˆ™\Ù\™WÜ[™[™×ÜØ[˜YÙXÈœ˜[˜ÚYÙH[Û™H\È›ÝH[][ÛˆÜš]\š[Û‹‚‹H]šY[˜ÙH›Ý[™\žNˆ™\ÜÚ]ÜžHYÚY[™HÛ›NÈ›ÈØ[Y\^KÔQKÙ]šXÙKÝš\ÝX[Ü\™›Ü›X[˜ÙHXØÙ\[˜ÙH\ÈÛZ[YY‚‚ˆÈÈŒ‹LKLÌHÝ[Hˆœ˜[˜ÚÛX[\]]Üš^˜][Û‚‚‹HÛÜÙYÝ[HœÈÌMÌKÌMŒËÌMËÌMMÌMNKÌMŒˆ[™ÌLHY\ˆ]™HÝ\\œÙ\ÜÚ[Û‹Ú[YÜ˜][Ûˆ™]šY]Ë‚‹Hœ˜[˜ÚÛX[\[ˆ›ÝÈ^XÚ]H]]Üš^™\È[][ÛˆÙˆZ\ˆ™[[ÝHXYÈY\ˆ\ÈXZ[[˜[˜ÙHY\™ÙK‚‹HˆÌLH[[YHÚ[™Ù\ÈÙ\™HÚXÚÙYžHÝ\œ™[\ÛÝ\˜ÙHÞ[X›ÛÈ™Y›Ü™HÛÜÝ\™Nˆ^Y\ˆ]ÛˆØXÚ[™ËÛÛYÛÜ›[\˜XÝ[ÛœËØ[XšY[[Ý[Û‹Ñ–™\X]ÝX\™[™›Ý[™YÚ\˜XÝ\‹\šYÈ]˜Z[Xš[]H™]žH\™H[™XYH™\Ù[Ûˆ]™[Ü‚‹HˆÌMM]\Ý\™XÙZ\ÜÝ\\œÙ\ÜÚ[Ûˆ™Z]š[Üˆ\È™\Ù[[ˆHÝ\œ™[Ø\™ZÝ\ÙH]Y][™™YÜ™\ÜÚ[Ûˆ\Ý‚‹H]šY[˜ÙH›Ý[™\žNˆ™\ÜÚ]ÜžKØœ˜[˜ÚYÚY[™HÛ›NÈ›ÈQKÙ]šXÙKÝš\ÝX[Ü\™›Ü›X[˜ÙHXØÙ\[˜ÙH\ÈÛZ[YY‚‚ˆÈÈŒ‹LKLÌH[›™\ˆ›ÛÝZYÜ˜][ÛˆÈOˆ‚‹H\œÚ\Ý[Ù[‹ZÜÝY[›™\ˆ]]Üš]H\È›ÝÈ—XÝ[ÛœË\[›™\˜È\œÚ\Ý[Ø\™ZÝ\ÙH]]Üš]H\È—XÝ[ÛœË\[›™\—ÝØ\™ZÝ\ÙWÚ\™R›Ý\›™^X‚‹H]™HÚ]Xˆ[›™\ˆ›ÛÙˆY\ˆH[Ý™H™\ÜY•S“‘T—ÒPSÕÓÔ’ÔÔPÑWÔTÔÈ[\Q—XÝ[ÛœË\[›™\—ÝÛÜš×Ý[\[™•S“‘T—ÒPSÔTÔØ[™\ˆH[\˜XÝ]™HØ]ÚÙË[ÝÛ™Y\Ù\ˆÙ\ÜÚ[Û‹‚‹H™\ÜÚ]ÜžH[›™\‹ÕØ\™ZÝ\ÙHY˜][ÈÙ\™HZYÜ˜]Y]Ø^Hœ›ÛHXÝ]™HÎ—XÝ[ÛœË\[›™\˜\ÜÝ[\[ÛœË[˜ÛY[™ÈÚ\\ˆÛÝ\˜ÙHØ]™\ËØ\™ZÝ\ÙH˜Z[œËØ]ÚÙËÜÙ\šXÙHÝX\™Y˜][Ë[™Ø\™ZÝ\ÙHÝYÙH^XÚ]]Ë‚‹HHÛË\ÚYH[›™\ˆ\È™]\™[Y[™\ÚYYHÛ›NÈ]X\˜[[™H™\Ù\™YH™K\™]\™[Y[˜\Ù[[™HÙˆŽLˆš[\ÈÈËŒNNKž]\È™Y›Ü™HÛX[\‚‹H]šY[˜ÙH›Ý[™\žNˆ•S“‘Tˆ“ÓÕÈÓÔ’ÔÔPÑHÈÔÓÑÖH•S‹T“Õ‘S‹ˆ›ÈQKXÚØYÙYØ[Y\^Kš\ÝX[\™Ù]Y]šXÙH\™›Ü›X[˜ÙKÜˆÚ\\ˆXØÙ\[˜ÙH\ÈÛZ[YY‚‚ˆÈÈŒ‹LKLŽHHPÌH\›ÈÚÙ[][Ø[™Y]HXYÛ›ÜÝXÈ™\Z\‚‚‹HÜÝ[Y\™ÙHPÌHœ›ÙËÑØ[™[ˆÚÙ[][Ø[™Y]HÛÜšÙ›ÝÈ[ˆÌH™XXÚYHØ[™Y]KXZ[Ý\[™˜Z[Y\™NÈÚXÚÛÝ][›™\ˆX[[™ÝÙ\”Ú[™Y›YÚ[\ÜÙY‚‹HHØ[™Y]H[›™\ˆ›ÝÈš[È›Ý[™YXYÛ›ÜÝXÈÛÝ[È[™[™[™ËØ›ØÚÙY™X\ÛÛœÈ™Y›Ü™H[™›Ü˜Ú[™ÈØ[™Y]HÛÝ™\˜YÙH™\ÚÛË‚‹H\ÈÚ[™ÙHÙ\È›ÝÙXZÙ[ˆØ[™Y]HPÈÜˆ›Û[ÝHÙ[™\šXÈ–š[\ÎÈ]Û›H^ÜÙ\ÈÚHH\œÚ\Ý[Ø\™ZÝ\ÙHY›ÝØ]\ÙžHHš\œÝØ[™Y]K\[ˆ™\ÚÛ‚‹H]šY[˜ÙH›Ý[™\žNˆPQÓ“ÔÕPÈÓÓS‘ÈÒS‘ÑHÈ^XÝZXYÝ]XÈ˜[Y][Ûˆ[™[™Ëˆ›ÈšYÈ[\ÜQK]šXÙKš\ÝX[Üˆ\™›Ü›X[˜ÙHXØÙ\[˜ÙH\ÈÛZ[YY‚‚‚ˆÈÈŒ‹LKLŽHHŒ‹L›ØY	ˆ[IÜÈY\™\X^[][KTØY™HÛÝ\˜ÙHŒB‚‹HŒ‹L\È›ÝÈ5×~øÒÚ$z{-®éÜj×contextual companion dialogue, 2026-09-19
 
 Recovered prior-session stopping point: CP56 head 3705fe4, PR52 awaiting Unreal. Its latest engine attempt failed during checkout, before compilation. Follow-up PR53 now includes the tracked-source checkout fix plus a correction to regional dialogue selection and 30 original Moria/Lothlorien companion lines. Actual engine build and gameplay validation remain pending. No new checkpoint or trilogy completion is declared.
 
@@ -4819,3 +1916,4 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Owner approved immediate real-character production preparation alongside PES-002; this is not opening PES-003, PES-009 or PES-010 runtime. Governor: `pes002_character_visual_pilot_2026_10_14`; source packet: `Data/P1C01CharacterVisualPilotV1.json`.
 - Existing Frodo technical rig basis and FBX Idle/Walk/Run exporter are reused. Source edit in `Tools/CloudAssetBuild/frodo_locomotion.py` handles DEF/Mixamo-style left/right bone naming and rejects differing reimported skeleton signatures between the three clips. New regression `Tools/CloudAssetBuild/test_frodo_locomotion.py` is wired to focused hosted workflow.
 - The last actual PES-002 runtime render still showed modular placeholders; `CharacterRigStreaming` reported packages-missing. No finished face/material, imported `SK_Frodo`, Animation Blueprint, deformation/retarget quality, PIE, device FPS, or rendered Frodo acceptance is asserted from this source edit. PES-002 remains OPEN, PES-003 LOCKED.
+2026-10-14 PES-002 DEDICATED BAG END HERO + FRODO GATE ROOT FIX CANDIDATE: Latest exact-head b326dc45 Unreal Run 38616982445 succeeded and Artifact 11919998697 supplied three real 1280x720 captures (archive SHA256 7788b5f860b835c38998fc1255b99d61299f8eabb7ca13af915472fc1b94f4fe; image SHA256 30a75afd..., 37d1a94a..., d43191f0...). Human review remains REJECTED: Bag End is a flat brown rectangular panel detached from the turf mass, village silhouettes remain crude and CharacterRigStreaming still reports packages-missing. This candidate adds a dedicated deterministic 960-face SM_ShBagEndHeroFacade OBJ with curved earth profile, stone plinth, stone/timber round entrance and paired round windows; streams it only in P1C01, moves/enlarges the existing turf mound behind it, and tightens the three proof views without moving the player or story anchors. Frodo Runs 38616982474/38616982492 produced a real UE4-registering 161-bone skeletal winner and three same-skeleton Idle/Walk/Run FBX files, but the first deformation receipt is invalidated because all five scenarios reported exactly zero vertex displacement. The deformation gate now ranks joints by actual vertex-group skin influence and requires non-zero evaluated motion. Runtime Frodo/AnimBP, PIE, traversal, device/FPS and visual acceptance remain pending; PES-002 OPEN and PES-003 LOCKED.

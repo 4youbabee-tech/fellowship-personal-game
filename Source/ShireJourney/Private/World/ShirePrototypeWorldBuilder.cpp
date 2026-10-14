@@ -323,6 +323,7 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     ProductionGrassClumpMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShGrassClump.SM_ShGrassClump"));
     ProductionFenceSegmentMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShFenceSegment.SM_ShFenceSegment"));
     ProductionHobbitFacadeMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShHobbitFacade.SM_ShHobbitFacade"));
+    ProductionBagEndHeroFacadeMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShBagEndHeroFacade.SM_ShBagEndHeroFacade"));
     ProductionCartMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShCart.SM_ShCart"));
     ProductionBenchMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShBench.SM_ShBench"));
     ProductionMillWheelMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShMillWheel.SM_ShMillWheel"));
@@ -445,8 +446,8 @@ void AShirePrototypeWorldBuilder::BeginPlay()
                     return;
                 }
                 // Bag End hero home at (-2210,-520), facade faces west (-X).
-                const FVector CameraPosition(-3110.0f, -580.0f, 280.0f);
-                const FVector LookAt(-2210.0f, -520.0f, 115.0f);
+                const FVector CameraPosition(-3030.0f, -560.0f, 285.0f);
+                const FVector LookAt(-2210.0f, -520.0f, 105.0f);
                 ACameraActor* ProofCamera = ProofWorld->SpawnActor<ACameraActor>(
                     CameraPosition, (LookAt - CameraPosition).Rotation());
                 if (!ProofCamera || !ProofCamera->GetCameraComponent())
@@ -454,7 +455,7 @@ void AShirePrototypeWorldBuilder::BeginPlay()
                     UE_LOG(LogTemp, Error, TEXT("PES002_CAPTURE_CAMERA_SPAWN_FAILED"));
                     return;
                 }
-                ProofCamera->GetCameraComponent()->SetFieldOfView(52.0f);
+                ProofCamera->GetCameraComponent()->SetFieldOfView(48.0f);
                 PC->SetViewTarget(ProofCamera);
                 UE_LOG(LogTemp, Display,
                     TEXT("PES002_CAPTURE_CAMERA_READY target=BagEnd x=-2210 y=-520 proofOnly=1 views=3"));
@@ -474,11 +475,11 @@ void AShirePrototypeWorldBuilder::BeginPlay()
                                 return;
                             }
                             const FVector Positions[] = {
-                                FVector(-3475.0f, -520.0f, 285.0f),
-                                FVector(-3290.0f, -1430.0f, 340.0f),
-                                FVector(-3310.0f, 390.0f, 330.0f)
+                                FVector(-3070.0f, -520.0f, 285.0f),
+                                FVector(-3000.0f, -1190.0f, 305.0f),
+                                FVector(-3020.0f, 170.0f, 300.0f)
                             };
-                            const FVector LookAt(-2210.0f, -520.0f, 115.0f);
+                            const FVector LookAt(-2210.0f, -520.0f, 105.0f);
                             WeakCamera->SetActorLocationAndRotation(
                                 Positions[ViewIndex], (LookAt - Positions[ViewIndex]).Rotation());
                             UE_LOG(LogTemp, Display,
@@ -1018,14 +1019,18 @@ void AShirePrototypeWorldBuilder::SpawnHobbitHole(const FVector& Location, float
             FVector::DistSquared2D(Location, FVector(-2210.0f, -520.0f, 0.0f))
                 < FMath::Square(25.0f);
         const FVector MoundOffset = bBagEndHero
-            ? FVector(360.0f, 0.0f, 22.0f * Scale)
+            ? FVector(200.0f, 0.0f, 14.0f * Scale)
             : FVector(0.0f, 0.0f, 30.0f * Scale);
         const FVector MoundScale = bBagEndHero
-            ? FVector(1.14f, 1.36f, 1.02f) * Scale
+            ? FVector(3.40f, 3.20f, 2.80f) * Scale
             : FVector(2.45f, 2.10f, 2.10f) * Scale;
         SpawnShape(ProductionTurfMoundMesh, Location + MoundOffset,
             MoundScale, Turf, FRotator::ZeroRotator, !bBagEndHero);
-        SpawnShape(ProductionHobbitFacadeMesh, Location + FVector(-88.0f * Scale, 0.0f, 0.0f),
+        UStaticMesh* FacadeMesh =
+            bBagEndHero && ProductionBagEndHeroFacadeMesh
+                ? ProductionBagEndHeroFacadeMesh
+                : ProductionHobbitFacadeMesh;
+        SpawnShape(FacadeMesh, Location + FVector(-88.0f * Scale, 0.0f, 0.0f),
             FVector(1.0f) * Scale, Earth, FRotator::ZeroRotator, true);
         if (bBagEndHero)
         {
@@ -1042,7 +1047,8 @@ void AShirePrototypeWorldBuilder::SpawnHobbitHole(const FVector& Location, float
                 FVector(0.045f) * Scale, FLinearColor(0.82f,0.65f,0.28f),
                 FRotator::ZeroRotator, false);
             UE_LOG(LogTemp, Display,
-                TEXT("PES002_BAG_END_HERO_FACADE layout=west-facing moundOffsetX=360 moundCollision=none door=green-round proof=pending; PES002_BAG_END_ROUND_FACADE_ORIENTATION=pitch90"));
+                TEXT("PES002_BAG_END_HERO_FACADE layout=west-facing asset=%s moundOffsetX=200 moundScale=3.4x3.2x2.8 moundCollision=none door=green-round proof=pending; PES002_BAG_END_ROUND_FACADE_ORIENTATION=pitch90"),
+                ProductionBagEndHeroFacadeMesh ? TEXT("dedicated-curved") : TEXT("generic-fallback"));
         }
     }
     else

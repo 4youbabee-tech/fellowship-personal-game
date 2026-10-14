@@ -1,3972 +1,928 @@
-2026-10-14 PES-002 CAMERA-EVIDENCE ROOT-CAUSE HERO FACADE CORRECTION: Inspected three actual UE4.27.2 1280x720 PNGs from Run 38563272174 artifact 11892194952, SHA256 view0 3128205E4EB4A7864C3BEE5CCFB9B65FA6AB26B1664BC3B8916763ACA80E0F28 / view1 1D58E33689BB179E890AFE2082F51D6A37717995D909DDF09DC92B59D7382FDE / view2 2BF76E5A5A040A19388771134F5EB0B87B3EBAF671C6585181C9DD51287ECAB9. Real images show restored textures/color but oversized green mound hides facade, plus dense foreground proxy fences/NPCs; no visual acceptance. Focused C++ candidate shifts only Bag End's earth mound +260cm behind its west-facing facade, reduces mass, gives hero turf nonblocking collision, retains existing blocking facade/story anchors, and adds a recognizable low-cost green round door silhouette and static source regression. This is a candidate pending exact-head build, new visual images and real traversal/collision evidence; physical authored facade mesh/material and target-device 30 FPS still not accepted. No PES-003.
-
-2026-10-14 PES-002 VISUAL REAL-RUNTIME DEFECT REPAIR WAVE: Exact-head PR #477 Run 38561717050 proved UE4.27 C++ build, 90 Cloud138 restored .uasset packages, three Automation tests, headless startup, runtime 1280x720 BagEnd-directed screenshot SHA256 EC7F6789E8B2F96F88BC0FFD417D857D787EE28F93D92C9640703F332AA98936 and 12/12 grounded Bag End Cloud138 props. Human examination of actual image REJECTED visual: rough grey buildings, low-detail NPCs, heavily occluded hero facade. The screenshot log directly identified M_ProductionFoliage shader default fallback due SimpleGrassWind required AdditionalWPO missing, and both M_ProductionSurface/M_ProductionFoliage bUsedWithInstancedStaticMeshes missing. Repair candidate modifies existing UE editor import material masters (including persisted assets) to add mandatory AdditionalWPO zero input, enable instanced material usage, save changed master .uasset; captures three Bag End angles to avoid accepting a misleading occlusion. This repair must be recompiled and inspected on a NEW Windows run; no visual/traversal/PIE/device acceptance claim and PES-002 remains OPEN.
-
-2026-10-14 PES-002 ROOT-CAUSE CI RETEST candidate: PR #477 exact-head af9e827 failed Pre-Unreal Run 38561472948 at PG-172 because three SkyLight RecaptureSky() calls violated the existing precisely two-call invariant. Root-cause change moves startup recapture exclusively to the deferred one-shot post-sky-init timer, retains the authored quest/story recapture, removes immediate duplicate and adds exact count regression to the focused PES contract test. No gate bypass; retest required. UE Build Run 38561473150 was still in progress at diagnosis. PES-002 OPEN.
-
-2026-10-14 PES-002 ROOT-CAUSE AND CAMERA/LIGHTING CORRECTION CANDIDATE (DEC-PES-ROOT-20261014): Source audit of develop@03df3c3 found prior HighResShot used the ordinary player view without aiming at Bag End; the received 1280x720 Unreal image shows dark/unpolished architecture and no accepted Bag End facade. This wave adds opt-in proof-only Bag End camera/framing after runtime world initialization, delayed capture and strict PNG/log/dimension checks; raises baseline sun/skylight/exposure and adds deferred sky recapture to address premature dim sky illumination. The camera is gated by -PES002VisualProof outside shipping and never moves the gameplay player or changes quest, nav, NPC or save ownership. Exact-head hosted static, real UE4.27.2 C++ build and a NEW screenshot/traversal proof must still pass. No physical new FBX/PNG/material import, no visual/PIE/device/traversal acceptance, and no Gate 6/7 closure are claimed. Active PES-002 remains OPEN; do not open PES-003.
-
-2026-10-14 PES-002 VISUAL EVIDENCE PIPELINE candidate: Added Scripts/capture_pes002_bag_end_visual.ps1 to launch real UE4Editor -game windowed 1280x720 and request HighResShot, fail if screenshot missing or only BMP. Connected optional fail-safe attempt and log/image Actions artifact to focused Windows Unreal workflow. This does NOT assert rendered success, PIE, traveler camera alignment, visual acceptance or traversal; screenshot review and actual evidence pending. Workflow capture is continue-on-error to avoid blocking validated C++ on headless display failure; screenshot absence stays PES-002 OPEN.
-
-2026-10-14 PES-002 Bag End Exterior follow-up: source-backed bounded HISM terrain-edge dressing using existing resident ProductionTurfMoundMesh and ProductionRockMesh: 6 garden slope pieces and 6 outer property stones, intentionally offset from the walkable door/road corridor, zero collision and no new draw-component per prop. Added runtime marker PES002_BAG_END_TERRAIN_EDGE (actual instances to be verified in UE). Existing facade uses ProductionHobbitFacadeMesh when resident; no new imported architecture or packed material claim. PIE/screenshot/traversal and Gate 6/7 still pending; PES-002 OPEN.
-
-2026-10-14 PES-002 integrated exterior candidate: reused existing resident `ProductionFlowerBoxMesh` via bounded no-collision/no-tick AWorldDetailCluster HISM, eight new porch/approach positions outside primary roadway, with `PES002_BAG_END_PORCH_FLOWERS` runtime receipt; no synchronous heavy loads, no new NPC spawns, no unsafe bridge collision. Other previously merged Bag End garden Cloud138 dressing remains present. This is a tangible exterior landscaping addition, not proof of imported new architecture/packed PBR or accepted screenshot/traversal. Exact-head UE4 compile/startup and actual visual/traversal evidence outstanding; PES-002 OPEN, Gate 6/7 OPEN.
-
-2026-10-14 PES ONE COMPLETE BATCH CONTRACT: Before each PES begins, inspect current develop HEAD, ProjectGovernor, gates, source/warehouse/Unreal receipts and chapter canon; enumerate the full named session deliverable and its exact assets, C++ changes, placement, focused tests and synchronized documents. Prepare one cohesive complete change wave and one PR whenever technically possible, not a parade of partial micro-PRs requiring owner 'continue'. After hosted source/static and necessary Unreal compile/import/startup run, repair verified failures in bounded corrective commits and retest; deliver a single evidence-based session report. Keep one Unreal writer/one Warehouse writer and no broad audits/package until chapter closeout. If missing actual screenshot/traversal/PIE/device evidence, remain OPEN and report blocker, not fake completeness. No automatic ongoing background work promise beyond a live execution.
-
-2026-10-14 PES-002 BAG END EXTERIOR actual C++ candidate: updated the existing async Cloud138 HISM GardenPlanter and WindowFlowerBox anchor arrays to concentrate 12 capped non-colliding instances around previously established Bag End garden coordinates; preserve all 8 Cloud138 families, maximum 48 placements, soft reference async streaming, terrain tracing and steep-ground rejects. Added `PES002_BAG_END_EXTERIOR_GARDEN_DRESSING grounded=<n> requested=12 groups=2 collision=none async=1 visual=pending` marker for exact-head UE4 test evidence. This is garden dressing only, NOT exterior architecture/terrain/PBR completion; COMPILE-TESTED pending Windows CI, rendered screenshot and traversability pending. Existing WoodenFootbridge remains NAV_QUARANTINED.
-
-2026-10-14 PRE-UNREAL FOCUSED PES CHANGE (PR candidate): default pre-unreal hosted checks retain exact-head source checkout, classifier regression, Windows packaging safety contract, PowerShell syntax, project structural validation, Project Governor, source-to-Unreal PBR integrity, Governor work-start and semantics, strict asset quality audit. 35 broader cross-chapter, historical provider/hero, warehouse regression, deep audit and reporting test steps are deferred to explicit workflow_dispatch chapter_closeout_audits=true, without disabling GitHub Unreal focused compile/import/startup or Gate 6/7. This is CI scheduling only, not a claim of FPS/visual acceptance.
-
-2026-10-14 VERIFIED SESSION TRANSITION (owner authorized): PES-001 Asset Recovery & Import = COMPLETE for its bounded import-and-placement deliverable only, supported by Windows Run 38526869417 on develop@e1acb85a5f972f521de2f5888a52561d77bf6877: UE4.27.2 ShireJourneyEditor build SUCCESS; CLOUD138_UE_RESTORED_SHA256_PASS files=90 bytes=19394460; AUTOMATION_SUITE_PASS tests=3; P1C01 headless startup PASS cloud138 families=8 grounded=48 cap=48. PES-001 PIE=false, device=false, visual_accepted=false, chapter Gate 6/7 remains OPEN; no FPS or human render claim. Owner explicitly defers human visual review to PES-002. PES-002 Bag End Exterior = ACTIVE, NOT COMPLETE: architecture/garden/terrain/packed-PBR and actual screenshot/traversal are its required deliverable, not demonstrated yet. Existing SM_ShWoodenFootbridge remains NAV_QUARANTINED; no unsupported traversal claims.
-
-2026-10-14 PES FOCUSED WINDOWS EXECUTION: fix previous manual Run 38525471144 incorrectly classified `static` and skipped Unreal. New explicitly owner-authorized workflow_dispatch input `pes_focused_unreal=true` with `run_self_hosted=true` forces classifier `core` (UE4 editor compile, importer, persisted Cloud138 restore, automation and P1C01 headless startup) while `package_windows=false`, `part1_closeout_approved=false` keeps Cook/Package and broad all-chapter audits off. Runtime evidence is not a visual screenshot/PIE claim. Current PES-001 OPEN until specific evidence proves its closure.
-
-2026-10-14 OWNER CI THROUGHPUT POLICY (implementation candidate; PES-001 OPEN): ordinary PES runs retain mandatory exact-head hosted/static guards, required changed-C++ UE build, asset import/reopen and focused startup only. Deferred until explicitly owner-approved Part I/chapter closeout: full chapter runtime sweep, full route/story roundtrip, global warning debt and Windows Cook/Stage/Package. Workflow now requires BOTH package_windows=true and part1_closeout_approved=true; accidental package_windows alone cannot activate these expensive stages. Does not delete Gate 6/7, PIE, device, visuals or project acceptance obligations. No new asset/PIE/device claim.
-
-2026-10-14 PES-001 ACTIVE IMPLEMENTATION CANDIDATE: 8 exact previously imported Cloud138 non-walkable FBX families are soft-streamed into the existing P1C01 ShirePrototypeWorldBuilder as 8 capped non-colliding HISM components (48 maximum instances, ground/steep-rejected); existing D: SHA256 persistent 90-uasset receipt is restored before headless runtime startup and required log marker P1C01_CLOUD138_WORLD_READY is audited. SM_ShWoodenFootbridge remains NAV_QUARANTINED and entirely excluded; no walking-surface collision acceptance is implied. Commit/source integration is not proof of successful engine build, persisted editor reopen on this HEAD, actual grounded instances, rendered image, PIE, device, Gate 6/7, or visual acceptance. PES-001 remains OPEN until evidence.
-
-2026-10-14 PES performance policy CANDIDATE: owner requested removal of recurring full chapter/story/state/warning sweeps until chapter closeout. CI conditions now defer exactly those 3 expensive runtime audit steps to manual owner workflow_dispatch package_windows=true. Preserve quick development compile/startup, dedicated importer/reopen/persist evidence and all Gate 6/7 acceptance. Policy change does not establish imported-world placement, PIE, device or visual evidence. Verify PR exact-head hosted tests before merging.
-
-2026-10-14 PES-001 quarantine candidate: last exact-head Windows Run 38475386875 found only SM_ShWoodenFootbridge missing imported simple UCX collision. To avoid a false box proxy or failing persistence of otherwise eligible assets, allow only this exact path as NAV_QUARANTINED in both editor and fresh reopen receipts; do not grant it world-placement or nav approval. Abort batch for ANY other critical missing collision; keep PIE/visual/device and Gate 6/7 unchanged. A successful import/persist receipt is NOT visual chapter completion. Physical tests on this proposed candidate are pending.
-
-PES-001 intake report: recovered source warehouse 138 FBX and 36 PNG; UE collision import failures RoundDoor, StonePath, and WoodenFootbridge, fail-closed until UE import/reopen/persist and world-placement proof. 2026-10-14 PES-001 latest Windows Run 38471186190: source receipt and warehouse stage passed, editor followup failed for WoodenFootbridge missing imported UCX collision. Bounded recovery now audits all critical missing-collision meshes before returning a batch failure, rather than requiring repeated multi-minute Windows runs for each next offender. Open bridge is NOT given inaccurate BOX collision. No restored/imported persisted Unreal uasset count or placed-world count may be promoted until fresh editor reopen and durable receipt plus world verification. This fix itself is diagnostic and source-level only.
-
-2026-10-14 PES-001 candidate follow-up: Cloud138 Windows import Run 38467646349 passed source stage and warehouse writer but failed editor mode on SM_ShStonePath with CLOUD138_WALKABLE_UCX_NOT_IMPORTED. Candidate now permits bounded BOX collision fallback for this known flat walkable source along with FerryLanding and closed RoundDoor, while preserving the guard against applying it to open WoodenFootbridge and foliage. This is only an import-proxy repair; traversal, world placement, PIE/device/visual and persistent UE package acceptance remain unproven. Exact-head revalidation required.
-
-## 2026-10-13 - P1C01 off-runner material source Batch 01\n\n| Area | Status | Evidence |\n|---|---|---|\n| Generated source material sets | CI CANDIDATE | 24 procedural Shire PBR material records generated by `Scripts/generate_p1c01_material_source_batch01.py`; per-map SHA256 and PBR contract in generated manifest |\n| Generated textures | CI CANDIDATE | 72 PNG members: BaseColor, packed ORM and Normal maps for each material set |\n| Surface coverage | CI CANDIDATE | Bag End, Bag End Interior/Garden, Hobbiton, Bagshot Row, Party Field, roads, Wooded Road, Mill Pond, Bucklebury Ferry, East Fields and Hobbiton Market |\n| Windows Runner | NOT USED | Batch created and validated off-runner; classifier routes this path to hosted static mode |\n| Warehouse / Unreal import / MaterialInstance setup | PENDING | No Content Browser import, material instance creation or warehouse persistence claimed |\n| Runtime/world binding | PENDING | No level, Blueprint, subsystem or world placement binding claimed for this batch yet |\n| PIE / device / visual / performance / Gate 6-7 | NOT ACCEPTED | Requires UE4 import, material binding, visual review and target-device evidence |\n\n## 2026-10-13 - P1C01 off-runner source audio Batch 01\n\n| Area | Status | Evidence |\n|---|---|---|\n| Generated source audio | CI CANDIDATE | 32 mono 16-bit PCM WAV members generated by `Scripts/generate_p1c01_audio_source_batch01.py`; per-member SHA256, frames and duration in generated manifest |\n| Audio coverage | CI CANDIDATE | Ambience, foley, footsteps, object sounds and nature cues across Bag End, Hobbiton, Party Field, roads, woods, Mill Pond, Ferry and East Fields |\n| Windows Runner | NOT USED | Batch created and validated off-runner; classifier routes this path to hosted static mode |\n| Unreal import / SoundCue setup | PENDING | No Content Browser audio import or SoundCue asset claimed |\n| Runtime/world binding | PENDING | No level, Blueprint, subsystem or world placement binding claimed for this batch yet |\n| PIE / device / audio acceptance / performance / Gate 6-7 | NOT ACCEPTED | Requires UE4 import, runtime binding, listening review and target-device evidence |\n\n## 2026-10-13 - P1C01 off-runner source asset Batch 03
-
-| Area | Status | Evidence |
-|---|---|---|
-| Generated source meshes | CI CANDIDATE | 48 FBX members generated by `Scripts/generate_p1c01_source_asset_batch03.py` into a workflow artifact ZIP; per-member SHA256 in generated manifest |
-| Generated textures | CI CANDIDATE | 16 PNG base-color members in the same source archive; 64x64 RGBA validation and SHA256 receipt |
-| Windows Runner | NOT USED | Batch created and validated off-runner; classifier routes this path to hosted static mode |
-| Unreal import / `.uasset` persistence | PENDING | No Content Browser import or `.uasset` persistence claimed |
-| World placement | PENDING | No saved level/World Builder placement claimed for this batch yet |
-| PIE / device / visual / performance / Gate 6-7 | NOT ACCEPTED | Requires UE4 import, runtime placement, visual review and target-device evidence |
-
-## 2026-10-13 - P1C01 off-runner source asset Batch 02
-
-| Area | Status | Evidence |
-|---|---|---|
-| Generated source meshes | STATIC-VALIDATED locally / CI pending | 48 FBX members emitted by `Scripts/generate_p1c01_source_asset_batch02.py` into the workflow artifact ZIP; per-member SHA256 in the generated manifest |
-| Generated textures | STATIC-VALIDATED locally / CI pending | 16 PNG base-color members in the same source archive; 64x64 RGBA validation and SHA256 receipt |
-| Windows Runner | NOT USED | Batch created and validated off-runner; classifier routes this path to hosted static mode |
-| Unreal import / `.uasset` persistence | PENDING | No Content Browser import or `.uasset` persistence claimed |
-| World placement | PENDING | No saved level/World Builder placement claimed for this batch yet |
-| PIE / device / visual / performance / Gate 6-7 | NOT ACCEPTED | Requires UE4 import, runtime placement, visual review and target-device evidence |
-
-## 2026-10-12 - P1C01 off-runner source asset Batch 01
-
-| Area | Status | Evidence |
-|---|---|---|
-| Generated source meshes | STATIC-VALIDATED locally / CI pending | 36 FBX members inside `SourceAssets/Production/World/Shire/Batch01OffRunner/P1C01_Batch01_SourceAssets.zip`; per-member SHA256 in `Data/P1C01SourceAssetBatch01Manifest.json` |
-| Generated textures | STATIC-VALIDATED locally / CI pending | 9 PNG base-color members in the same source archive; 64x64 RGBA validation and SHA256 receipt |
-| Windows Runner | NOT USED | Batch created and validated off-runner; classifier routes this path to hosted static mode |
-| Unreal import / `.uasset` persistence | PENDING | No Content Browser import or `.uasset` persistence claimed |
-| World placement | PENDING | No saved level/World Builder placement claimed for this batch yet |
-| PIE / device / visual / performance / Gate 6-7 | NOT ACCEPTED | Requires UE4 import, runtime placement, visual review and target-device evidence |
-
-2026-10-12 Cloud138 Windows warehouse runner blocker and recovery: develop PR #430 merged 9842ca5 with hosted static+Unreal exact-head validations green; first persistent transfer run 38294982859 failed before staging at Verify governor and persistent root because `pwsh: command not found` on self-hosted Windows machine. Fix candidate uses the installed Windows PowerShell (`shell: powershell`) on both Windows-only steps, preserving exact pinned artifact, SHA/CRC/UCX/LOD/provenance checks, one writer and source-only evidence boundary. Until repair run emits CLOUD_WHOLEGAME_PERSISTENT_WAREHOUSE_PASS and a persisted receipt, transferred file count for cloud138 remains 0 PROVEN. UE4 current-run evidence does not certify cloud138 import, PIE, device or visuals.
-
-2026-10-12 P1C01 / 28-region 138-FBX physical warehouse transfer candidate: Existing verified source Artifact 11767251532 from Run 38292163970, head 1e1e5c9, has 82 Shire FBX, 56 whole-game regional FBX and 36 existing packed PNG. New pinned single-writer Windows transfer workflow downloads the precise GitHub artifact, compares wrapper and inner SHA256, inspects 174 physical payloads and 3 source receipts, enforces FBX 7400/UCX/UV/LOD, region identity and PNG signatures, rejects unsafe ZIP membership, enforces reserve, writes atomically and rehashes persisted D: storage. Transfer is source-only: does NOT import .uasset into UE4, run PIE, profile target FPS, visually approve, or close P1C01 Gate6/7. This is source code CANDIDATE until hosted tests and actual Windows persistent receipt pass. No new physical FBX generated in this integration step.
-
-2026-10-12 DEC-109 / whole-game source candidate: Prior cloud Shire PR #428 produced 82 physically verified FBX, 28 more than prior 54. This candidate authors 28 original region support families x two LODs = 56 new FBX targeting +100% net-new throughput over the prior +28. Separate regional_meshes/ receipt, Blender reimport, UV, UCX and physical SHA256 integrity are mandatory. 36 existing packed PNGs reused without being counted as new. Preparation spans exactly the 28 canonical world packets, not final chapter runtime or hero landmarks; P1C02+ runtime remains gated. Source work and DEC-109 are candidates until exact-head checks pass. No new Warehouse persistence, UE import, PIE, device/FPS or visual approval.\n\n## 2026-10-12 - 82 Shire original FBX production candidate
-
-Expands source candidate from hosted-proven 54 FBX / 27 Shire families (Run 38288336015) to 41 families / 82 FBX (14 new families, 28 additional LOD files; 51.85% target increase in comparable source count). New original procedural static props: FerryQueueBench, ReedPlanter, OrchardCrate, MarketStall, MarketBasket, HerbDryingRack, RusticSign, GrainSackStack, WindowFlowerBox, GateLantern, BridgeRailing, GardenTrellis, FarmToolRack, PartyServingCounter. Blender binary 7400, reimport UV/UCX, SHA receipts and 28-region material assets remain gated by exact-head GitHub Actions. This is NOT proof of actual 82 physical FBX yet. No automatic Warehouse/UE world residency, PIE, device FPS or visual acceptance claim. Preserve single Warehouse/UE runtime writers and Gate6/7.
-
-
-## 2026-10-12 - DEC-108: accountable per-session growth and independent engineer judgement
-
-- Owner is an enjoyment-first player; independent Lead Architect makes and explains professional engineering choices (including polite disagreement), while owner retains product vision.
-- Each session reports exact baseline and new total, absolute change, comparable percentage, evidence/commit/PR/Actions, principal risk and recommended next high-player-value action. A +50% gain is a stretch target **only** for eligible, verified like-for-like production; missing baseline => N/A, no invented percentages.
-- Keep physical source-generated FBX/PNG/TGA, **unique persisted** warehouse, **persistent UE .uasset imported**, **actual world-placed**, and playable/PIE/device/visual evidence as separate funnels. Do not infer one from another or count duplicated ZIP source contents twice.
-- Prepare all 28 regions and P1C01-P1C08 through up to five safe parallel source lanes and one persistent warehouse writer, while one runtime writer remains on P1C01 until Gate6/7; future chapter preproduction is not runtime activation.
-- Baseline for the Cloud Shire source wave: PR #426 commit 407b35b, merged b309d149; hosted run 38288336015 generated and Blender-reimport-validated 54 binary FBX (27 families x 2 LOD), 36 PNG and an Actions artifact 11764013609 (9,841,895 wrapper bytes). 44 was the *previous authored target*, not proof of a previous comparable physically generated run. No warehouse/UE world/PIE/device/visual promotion from this receipt.
-- This policy-only change adds no game asset, importer, UE runtime or new CI workflow. Existing daily report remains; new **per-session** report is additional. Exact-head static CI is required before merging this candidate.
-
-**2026-10-12 P1C01 route/party/ferry closure pass (STATIC source candidate):** Added a second bounded visible-world layer in `ShirePrototypeWorldBuilder` using existing production meshes only: Party Field lantern boundary and outer seating, readable road-to-ferry path markers, ferry queue rope posts, ferry-bank reed breakup and eight non-blocking hero props around the party/route/ferry handoff. Evidence status remains STATIC candidate until exact-head Pre-Unreal and Windows UE4 compile/runtime logs prove it; no PIE, DEVICE, VISUAL, FPS or Gate 6/7 completion is claimed.
-
-**2026-10-12 P1C01 chapter-finish world art pass (STATIC source candidate):** Added a final bounded world-art layer in `ShirePrototypeWorldBuilder` using existing production meshes only: Bag End garden hedges, Hobbiton yard flower boxes, worked-field fence rhythm, wooded-road understory, ferry reeds and ten non-blocking hero props. Evidence status remains STATIC candidate until exact-head Pre-Unreal and Windows UE4 compile/runtime logs prove it; no PIE, DEVICE, VISUAL or Gate 6/7 completion is claimed.
-
-**2026-10-12 P1C01 imported-tree runtime visibility evidence candidate (STATIC source preflight only; Windows exact-head pending):** Existing nine-family async HISM callback logs real per-family asset path, actually grounded instance count, missing/steep rejected traces and mesh material slot count. No new loading, instancing, authoring, NPC, quest or chapter authority, no extra workflow or per-Tick overhead. This closes an evidence blind spot, not the visual gate: real Unreal logs must prove loaded assets/placement; screenshots and human review still required. Existing regression updated; P1C01 Gate 6/7 remains open.
-
-**2026-10-12 game-wide owner-visible production pivot (policy candidate):** Adopt DEC-107 in Data/ProjectGovernor.json: prioritize imported rendered scenery, skeletal locomotion, playable quest/audio/save routes over speculative new CI/docs; up to five independent future-chapter asset/source prep lanes run concurrently while one Warehouse writer and P1C01-only runtime writer remain. Report's zero-FBX snapshot is older than Windows receipt with 34 FBX families/46 LOD/63 PNG/21 MI; actual in-world residency/material appearance, Frodo deformation, PIE, target-device and human visual remain unaccepted. Git ignores Content/Production/ .uasset, requiring persistence and packaging audit. PR #421 still pending Unreal tests. P1C02 runtime remains Gate6/7 predecessor-gated.
-
-**2026-10-12 P1C01 original-tree visual production candidate (STATIC-VALIDATED source only; UE4 Windows pending):** Extend the existing optional async-loaded original-Nature HISM world bridge from 5 ground-detail families (60 placements) to 9 families by adding the four previously source-curated/imported apple, elm, oak and willow FBX LOD0 meshes (8 placements each, maximum 92 total). Reuse three existing Shire route-area anchors per tree family, off-path ground traces, conservative height normalization and tree-specific distance culling. Missing .uasset packages safely skip, no hard reference/synchronous load, no new Tick, gameplay collision, NPC/quest/save ownership or P1C02 runtime. Update the existing runtime observation and regression, not a new workflow. Import receipts and code do not prove actual rendered trees, verified tree material slots, PIE, device FPS, visuals or Gate 6/7 acceptance.
-
-**2026-10-12 P1C01 multi-zone curated nature follow-through (candidate; Windows exact-head checks pending):** Five existing optional async-loaded non-colliding HISM nature families retain the shared maximum of 60 instances; the candidate distributes each family among three pre-existing Shire location anchors, rejects steep ground traces, counts missing/steep traces, and extends headless runtime evidence with the actual observed loaded-family/grounded-instance count or optional-package absence. Exact-head static test was wired to Pre-Unreal. No new mission/story authority, gameplay Tick, synchronous heavy loading, or P1C02 implementation. Package staging/PIE, target-device FPS, visual approval and Gate 6/7 remain pending.
-
-**2026-10-12 P1C01 in-world original mesh integration (new C++ candidate; COMPILE/PIE/DEVICE/visual pending):** After verified UE4.27 editor import 34 original mesh families, 46 sidecar LODs, 63 packed maps, 21 Material Instances and 7 nature single-slot bindings at Windows run 38228452433, the existing `AShirePrototypeWorldBuilder` requests five curated soft mesh paths using its own async `FStreamableManager`. It adds five capped non-colliding/no-Tick HISM groups at previously existing Shire anchors (12 placements per group, max 60), grounds them using actual world trace and normalizes bounds-based scale. Missing editor-only `.uasset` packages are entirely optional, never block chapter bank; pending request canceled at EndPlay. No changes to LivingWorldDirector, NPCContext, quest/save, or P1C02 Runtime. Flower multi-material unresolved; no guessed material overwrite. Static tests verify authored constraints but no world visual acceptance, 720p FPS, PIE, sound, NPC character completion, or Gate 6/7 evidence is claimed. Target exact head must pass UE4 C++ build and actual runtime placement audit.
-
-**2026-10-12 exact-head UE4.27 Run 38227642493:** 21 newly owned source-identity MaterialInstanceConstant assets with all 63 PBR texture overrides passed per-instance post-save readback, then the first `flower_wild` mesh failed because its real imported FBX has multiple material slots (not the assumed single slot). Do not blanket assign one material to the entire mesh. New scoped visual intake preserves all 34 authored LOD families/46 LOD sidecars/63 PNG/21 MI when material slot count is ambiguous, binds only truly single-slot surfaces or one exactly named source slot, emits a non-accepted `unresolved_nature_slot_observations` list and actual `nature_bound` vs `nature_held` counts. This allows truthful asset pipeline progress with isolated unresolved topology and no Gate 6/7 promotion. Windows exact-head and actual slot observation pending.
-
-**2026-10-12 P1C01 actual Unreal Python log Run 38226844047:** Commandlet entered (`P1C01_CURATED_EDITOR_PYTHON_ENTERED`) then falsely/actually rejected first texture setter: `P1C01_PBR_TEXTURE_PARAMETER_MISSING:...MI_Nature_T_Sh_Bark:AlbedoTexture`. Existing C++ verified master specifies exactly AlbedoTexture, NormalTexture, ORMTexture. Targeted remediation: check the real parent `get_texture_parameter_names`, refresh MI inheritance, set each override and judge by post-save `get_material_instance_texture_parameter_value` exact object identity, never setter bool alone; stop if stale master lacks authored parameter schema or any override is absent. Offline regressions cover setter False with applied value, absent value, stale master. No actual Windows material receipt, PIE, device or visual claim yet.
-
-**2026-10-12 actual Windows UE4.27 import test Run 38226032895:** Existing ShireProductionImport commandlet completed `537 files, 0 failures` (2 minor tangent/binormal warnings), but `UE4Editor-Cmd -ExecutePythonScript` produced no Python entry or post-import receipt; fail reported `P1C01_CURATED_EDITOR_POSTIMPORT_RECEIPT_MISSING`. Follow Epic UE4.27 headless API: `-run=pythonscript -script=<file>` with explicit authorized environment entrypoint, stdout/abslog and targeted failure tail. No 21 MI/46 LOD success is claimed until next exact-head Windows receipt; old `537` file count is the legacy commandlet import only, not PIE/visual/device/scene acceptance.
-
-**2026-10-12 UE4.27 MaterialInstanceConstantFactoryNew compatibility correction:** Epic's UE4.27 Python API does not expose `initial_parent` as an editor property on MaterialInstanceConstantFactoryNew. Do not write that unsupported property; create instance through the factory and call `unreal.MaterialEditingLibrary.set_material_instance_parent` (already supported and previously implemented). Offline mocked factory now rejects unsupported editor property setters to catch reintroduction. Exact-head Windows run, actual MI persisted bindings and visual/PIE/device proofs remain pending.
-
-**2026-10-12 P1C01 ten-source pinned-SHA intake integration:** Merge `develop@ddf2b89dd06fa10c276886b6792411bfbc62a950` (PR #418) into PR #415, keeping exact-head automatic curated UE4 writer. Ten-source Drive ingestion may use verified snapshot SHA256 when remote MD5 is unavailable. Original unlicensed source promotion, final UE import, PIE, visual and device acceptance remain gated by real evidence; the develop transfer Run 38225413271 was launched and its physical result must be read, not presumed.
-
-**2026-10-12 automated Windows/Drive dependency repair candidate:** Exact-head `fb6685a62edf178895f2713548ffcc143990fd36` Pre-Unreal and five-lane hosted PASS; Windows runner health PASS (interactive watchdog, disk 16.1GB). Actual automatic curated import FAILED `P1C01_CURATED_WAREHOUSE_ARCHIVE_MISSING` (run 38190185325). Scheduled Drive intake FAILED earlier `DRIVE_OBJECT_CHECKSUM_OR_PATH_INVALID` before transfer (run 38191426114). Targeted repair makes missing-MD5 ZIP candidates quarantined individually so one unrelated bad remote record cannot abort valid archive acquisition. Exact ten required source ZIPs, physical MD5/SHA/CRC, license, 6GiB reserve, and source-import Gate remain fail-closed. No manual dispatch, no bypass of engine or Gate 6/7 acceptance; fresh exact-head checks pending.
-
-**2026-10-12 P1C01 PR #415 owned-material post-import refinement (candidate, STATIC-VALIDATED pending fresh exact-head CI):** Reuse the existing editor-created `M_P1C01VerifiedPBR` master, create/update 21 source-identity MaterialInstanceConstant assets and set all 63 original BaseColor/NormalDX/ORM parameters. Only 8 named, source-owned single-slot Nature mesh families are eligible for deterministic binding; trees/architecture retain their slots pending verified multi-surface maps. Require actual .uasset package existence, registry identity, saved parent/parameter/slot verification; fail closed with no successful receipt for missing master, map, parameter, file or ambiguous slot. Editor-only/offline regression does NOT prove Windows UE4 import, world placement, collision/nav, PIE, 720p FPS, human visuals or Gate 6/7. 120 external PNG remain rights-held. The exact SHA and CI run evidence must be recorded after push; no automatic warehouse or engine dispatch.
-
-**2026-10-12 P1C01 curated editor Asset Registry fail-closed refinement (PR #415 candidate):** Both 34 base meshes and 63 owned PNG require EditorAssetLibrary registry visibility after editor save; missing registry objects abort without emitting acceptance receipt. Added offline regression. Exact-head engine import, real .uasset persistence, placed geometry, collisions/PIE/device/human visual remain pending.
-
-**2026-10-12 P1C01 ORIGINAL-FBX LOD INTEGRATION CANDIDATE â€” STATIC-VALIDATED ONLY:** Source-only 34-family/46-authored-LOD/63-PNG import-postprocess scripts and fail-closed receipt verification added; no actual new Shire .uasset/presented world/NPC/PIE claim. Editor-only Python plugins require exact-head Windows UE4.27.2 test before promotion. All six offline mock tests passed. 120 outside license-uncertain PNG remain HELD. Runtime characters, collision/nav, P1C01 traversal/save-to-ferry, package, DX11 720p FPS and human acceptance unproven; Gate 6/7 OPEN.
-
-**2026-10-12 P1C01 character and Living Shire closeout contract:** Added a named-character/living-world evidence contract to prevent Gate 6/7 closure until Frodo/Bilbo/Gandalf/Sam/Merry/Pippin and NPC daily-life behavior have runtime presence, animation/material evidence, PIE/device profiling, and human visual acceptance.\n\n**2026-10-12 P1C01 engine/import/runtime evidence upgrade:** P1C01 is now COMPILE-TESTED for the recorded self-hosted run and has production import/headless runtime/state/warning-debt success evidence (`38182847685`, `a101ee2`). This does not close Gate 6/7: package artifact, PIE traversal, target-device 720p profiling, and human visual review remain open.\n\n**2026-10-12 whole-game region readiness audit:** The 28-region production packet set now has a source regression guard, and P1C01 curated warehouse readiness is checked against minimum lanes before Unreal import. This improves whole-map material preparation without claiming engine import, PIE, visual acceptance, or Gate 6/7 closure.\n\n**2026-10-12 P1C01 curated import readiness guard:** Source-stage material and mesh promotion now has an explicit fail-closed audit covering LOD0-vs-sidecar import intent, material compression/sRGB rules, external-license quarantine, collision policy, and proof flags. It prepares the existing Shire source batch for safer Unreal import without marking Gate 6/7 complete.\n\n**2026-10-12 self-hosted compile blocker fix:** Run `38181832965` proved current-head UE4 compile failure (`C2065 BasePopulation* undeclared`) after UHT succeeded. The fix rehomes the base density fallback members into `ALivingWorldDirector` and expands source tests. Await rerun for COMPILE-TESTED.
-
-**2026-10-12 P1C01 #400/#401 runtime regression integration:** NPC population profile fallback and CI-only checkpoint retry suppression are integrated on current develop with source regressions. This is not Gate 6/7 closure and does not claim current-head UE4 compile or PIE acceptance.
-
-**2026-10-12 P1C01 restore quest-state sanitization source fix:** `RestoreQuestState` now rejects empty restored quest/stage keys, clamps restored stage values to non-negative integers, and de-duplicates non-empty completed story beats before restoring active route/chapter/episode/player state. Regression coverage lives in `Scripts/test_offline_runtime_safety.py`; UE4 compile/PIE evidence remains pending a self-hosted run.
-
-**2026-10-12 P1C01 original source-to-UE4 staging candidate:** From the already-curated ten-Drive-ZIP batch, a strictly source-only tool prepares 34 original static FBX LOD0 families (12 nature, 22 architecture) plus 46 FBX LOD1/2 sidecars outside SourceAssets and 63 original PNG maps (21 BaseColor/NormalDX/ORM triplets). Source files and embedded manifest hashes are physically checked, fail-closed, path-safe, idempotent; third-party CC0-claimed 120 PNG are NOT auto-licensed or promoted. Eight logical asset/gameplay/QA workstreams run inside the existing authorized five producer lanes, not eight independent Windows writers. A 143-file source/sidecar stage was generated locally in ChatGPT container, and Python offline regressions passed; actual D: stage, UE import to .uasset, LOD binding, collision, NPC/gameplay, PIE, device, visual and Gate 6/7 acceptance remain UNPROVEN. New scheduled stage follows successful exact ten-ZIP Warehouse attestation without changing its concurrency/schedule/permissions or creating another persistent writer. Candidate requires exact-head Pre-Unreal/Drive CI.
-
-**2026-10-12 physical Shire source curation (LOCAL-CONTAINER ONLY; exact ten Drive ZIPs):** Independently downloaded 10 owner ZIPs totaling 206,148,715 bytes, validated entire on-disk ZIP SHA256/CRC and embedded per-file receipts, then curated 263 asset bindings into 230 SHA-unique physical files (80 binary FBX, 183 PNG bindings with 33 content aliases) from 12 nature families x3 LOD, 22 modular architecture families x2 LOD, 12 original regional PBR families, 4 priority Poly Haven PBR sets and 36 CC0-receipt PBR sets. Removed 36 duplicate binary FBX and 36 legacy ASCII FBX; held incomplete wooden_barrels_01 and a failing rig-weight candidate. Locally emitted SHIRE_P1C01_CURATED_SOURCE_20261012.zip (181,360,681 bytes; SHA256 e1fb6687cb047bbead4eea8d177f11fd75e368cce169a5c30e66fbf39ecfd79f) plus complete manifest, material contact sheet and separate rig-review archive. Six source-tool tests passed locally; Scripts/curate_p1c01_drive_source.py now reproduces a SHA-checked D: curated batch only after physical ten-ZIP QC, with 6GiB reserve and unchanged authorized scheduled trigger. This is NOT proof of D: transfer or Unreal import, LOD integration, collision, PIE, target FPS, human visual, or Gate 6/7; external licenses still require review.
-
-**2026-10-12 W01 source-only physical Warehouse QC candidate:** New Scripts/verify_drive_warehouse_receipts.py reads ten exact archived source SHA256 values from Data/DriveSourceLocalPreflight20261011.json, verifies every actual staged D: file SHA256 and computed MD5 against the transfer receipt, scans ZIP contents, exposes member-level FBX/PNG duplicate groups, quarantines ASCII FBX and incomplete provider material sets, and writes a read-only JSON source report with five explicitly blocked production waves. Integrated after the existing authorized Drive intake job, without changing its schedule/trigger/security identity, and with nine hosted regressions. Candidate status is STATIC-VALIDATED only after exact-head CI passes. No real new D: receipt, UE import, PIE/device/visual/performance or Gate 6/7 PASS claimed; licenses remain manual and import blocked.
-
-**2026-10-12 Drive runner PATH regression candidate:** Manual Drive workflow run `38176536748` reached self-hosted Windows `UE4-27-Windows` but transfer failed before any copy at `RCLONE_MISSING`, despite owner interactive rclone connectivity and configuration. Candidate refreshes persisted machine/user PATH inside the existing watchdog job, resolves `rclone.exe` and Python/py without installing or changing the runner, then passes explicit rclone executable path to the source-only ingest script. No successful physical transfer, ZIP receipt, Unreal import, PIE/device/visual or Gate 6/7 claim; preserve read-only Drive and fail-closed auth and deletion guards.
-
-**2026-10-11 P1C01 ten-bundle physical preflight (container, NOT Windows):** Retrieved all 10 owner Drive ZIPs into this session and audited 206,148,715 bytes; ZIP CRC/safe paths, source hash receipts, nested 28-region archive, FBX format and PNG headers passed 10/10. SHA-bound local receipt: `Data/DriveSourceLocalPreflight20261011.json`; permanent regression: `Scripts/validate_drive_source_bundles.py` + `Scripts/test_validate_drive_source_bundles.py` (8 offline tests passed). 36 binary Shire nature FBX are duplicated between two packages, distinct from the 36 old ASCII source FBX; modular nested pack contains 44 binary FBX and 36 PNG. Four Poly Haven shards contain 36 complete CC0-material triplets; `wooden_barrels_01` remained quarantined for MISSING_REQUIRED_MAPS. This is source-integrity evidence from ChatGPT container only, NOT a D: runner transfer, Unreal import, PIE, device test, visual approval or Gate 6/7 closure.
-
-**2026-10-11 PR #402 single warehouse writer safety correction:** Consolidated duplicate hourly/two-hour Drive jobs into a single scheduled source intake and receipt tree, added watchdog session verification, explicitly blocked unattended Drive deletions and tagged staged ZIPs as unverified for license/import. This is a source-only correction; no physical D: transfer, engine import or Gate 6/7 PASS is claimed.
-
-**2026-10-11 auto Drive warehouse candidate:** Added two-hour scheduled Windows source ZIP intake (Scripts/drive_warehouse_sync.py) and narrow exact-ID/hash/independent-backup/actual import-evidence cleanup. Uses isolated runner temp source and persistent D warehouse. One-time private rclone OAuth required; no first transfer, Unreal import or cleanup has been proven. Gate 6/7 unchanged. Hosted regressions pending.
-
-**2026-10-11 Automatic private Drive intake candidate:** Introduced `Scripts/sync_drive_warehouse.py` and `.github/workflows/private-drive-warehouse-intake.yml` on dedicated infra branch. Hourly self-hosted warehouse-only schedule, exact-SHA temporary checkout, persistent `D:\actions-runner\_warehouse\ShireJourney\_drive_intake`, immutable SHA256 receipts, Drive MD5 match, ZIP CRC and path-safety checks, minimum 6 GiB free. This **does not** make Drive credentials available on runner: requires separately configured `SHIRE_DRIVE_RCLONE_CONFIG_B64` and rclone executable with private `shire-drive:` root restricted to the authorized Drive folder. No Drive deletion is implemented or allowed until independent backup, local integrity and import/disposition proof; do not purge sole sources. Candidate only, no actual runner sync or static CI proof yet; P1C01 Engine gate unchanged.
-
-**2026-10-11 P1C01 save restore overlap trigger candidate:** UE runner #1969 observed P1C08 after-route-change restore fail (quest stages/story beats/NPC memory/route progress). Pre-commit overlapping trigger may mutate restored story while placement pending. Candidate sets pending saved-player transform before CommitPersistenceRestore and extends IsGameplayWorldCommitted guard. Source regression added; exact-head CI, UE transition audit and PIE remain pending. No Gate 6/7 promotion.
-
-**2026-10-11 P1C01 quest stage idempotency source fix:** `SetQuestStage` now returns without broadcast for unchanged stages and suppresses stage broadcasts during persistence restore. Static regression added; not UE COMPILE/PIE/DEVICE/VISUAL accepted.\n\n**2026-10-11 P1C01 NPC danger committed-context source fix:** `IsDangerStateActive()` now requires committed world context before reading quest danger identity, preventing pre-commit threat leakage into NPC/world logic. Static regression added; not UE COMPILE/PIE/DEVICE/VISUAL accepted.\n\n**2026-10-11 P1C01 NPC context teardown source fix:** Deinitialize now clears committed chapter/route/episode, quest snapshot, revision, commit flag and weather state. Static regression added; not UE COMPILE/PIE/DEVICE/VISUAL accepted.\n\n**2026-10-11 P1C01 NPC context revision guard source fix:** `SetCommittedWorldContext` no longer treats revision `0` as invalid; committed NPC dialogue/schedule context can be established from any explicit router commit revision while still rejecting missing chapter/route/episode identity. Static regression added; not UE COMPILE/PIE/DEVICE/VISUAL accepted.
-
-**2026-10-11 P1C01 LivingWorld initial commit sync source fix:** `ALivingWorldDirector` now fail-closes its first applied world revision with `MAX_uint32`, forcing the first committed router revision, including `0`, to run `ResetForCurrentChapter()` before population/event simulation. `BeginPlay` no longer trusts raw quest chapter as active world context before commit. Static regression added; not UE COMPILE/PIE/DEVICE/VISUAL accepted.
-
-**2026-10-11 offline stale asset-ready rollback fix:** Source-only runtime audit found a live-lock risk in `AChapterWorldRouter::HandleChapterAssetsReady`: if quest/save state changed while async chapter assets loaded, the handler returned without clearing `PendingChapter/Route/Episode` or releasing/rolling back the player world hold. Added a shared pending world transaction cleanup path, stale-ready rollback, and grounding-barrier timer cleanup. Evidence target: GitHub-hosted Pre-Unreal/static tests only; UE compile/PIE remains deferred in `Docs/DEFERRED_ENGINE_ACCEPTANCE_QUEUE_20261011.md` until owner authorizes the runner.
-
-2026-10-11 OFFLINE P1C01 DEFERRED RESTORE GUARD: ShirePlayerCharacter now blocks movement, jump, sprint, crouch, interaction, attack, supplies, QuickSave/QuickLoad and automatic checkpoint dispatch whenever bPendingSaveRestoreTransform is true. Camera look and cinematic skip remain available; no change to quest/world owner. Hosted source regression added. SOURCE CANDIDATE pending exact-head CI; not UE COMPILE/PIE/DEVICE/VISUAL accepted. Windows runner stays OFF.
-
-2026-10-11 P1C01 NO-GROUND SPAWN FALLBACK SOURCE PATCH: ChapterWorldRouter::MovePlayerToChapterStart previously performed SetActorLocationAndRotation(RequestedLocation,...) even after ResolveGroundedSpawnLocation failed. Now retains pawn's last position, sets world hold and returns false for existing transaction rollback to recover. Added test_no_ground_never_teleports_to_unvalidated_requested_location in hosted Scripts/test_offline_runtime_safety.py; existing Pre-Unreal wiring runs it. This is SOURCE PATCH PENDING EXACT HEAD STATIC VALIDATION only. No UE compile, PIE, DEVICE, VRAM or VISUAL evidence; Windows Self-Hosted Runner not activated.
-
-2026-10-11 OFFLINE P1C01 PLAYER RELIABILITY FIXES â€” SOURCE CANDIDATE (exact-head CI pending):
-- Automatic checkpoint dispatch no longer loses pending ID on failed request; pending restore transform blocks checkpoint snapshots, rejected saves retry no faster than once per second. Async disk success remains separate callback evidence.
-- ChapterWorldRouter now handles SetActorLocationAndRotation rejection on both save restore and chapter start: do not log PLACED or return true for rejected teleport.
-- Cinematicâ†’gameplay interrupts release presentation control lock immediately; Escape skips the active cinematic without mutating quest/canon state; pawn created mid-cinematic adopts active lock.
-- Async SFX/ambience/music/voice callback matches a monotonically increasing request token, preventing stale canceled callback claiming an identical newer cue key.
-- Self-hosted Unreal workflow is now manual opt-in only (workflow_dispatch run_self_hosted=true); Pre-Unreal/static and hosted classification remain automatic. Older already-queued runs have separate cancellation status and should not be assumed canceled until inspected.
-- Added Scripts/test_offline_runtime_safety.py and wired it plus test_pending_checkpoint_dispatch.py into hosted Pre-Unreal Validation. Source-level checks are NOT UE4.27 COMPILE, PIE, device FPS, imported assets or visual acceptance. Runtime P1C02 remains unopened.
-
-2026-10-11 P1C01 CHECKPOINT DISPATCH GUARD CANDIDATE: Repaired a provable source-level lost-checkpoint defect: Tick previously cleared PendingChapterCheckpointId before SaveAutomaticCheckpoint returned, while logging `commit-barrier=PASS` even on rejected dispatch. Now pending is cleared only if async/queued dispatch was accepted; disk-save completion remains callback-owned. Added Scripts/test_pending_checkpoint_dispatch.py regression guard and registered root cause in WORLD_DETAIL_LEDGER. Source-only candidate awaiting exact-head CI (STATIC-VALIDATED only after passing); no UE compile, PIE, device, FPS or visual acceptance. Windows self-hosted runner remains off.
-
-2026-10-11 Shire nature hosted Blender regression: exact-head Run 38150281161 FAILED in physical FBX export because Ubuntu Blender 4.0.2 FBX exporter raises `ModuleNotFoundError: No module named 'numpy'` (job 114502125020); source geometry execution reached exporter but zero validated binary FBX are credited. Updated hosted workflow to install `python3-numpy` beside Blender. New exact-head rerun required. No UE proof.
-
-2026-10-11 P1C01 Shire nature Blender production candidate: Added Tools/CloudAssetBuild/blender_nature.py and scheduled/PR hosted workflow p1c01-hosted-nature-lods.yml. Reuses twelve already defined nature families and produces 36 *proposed* binary FBX 7400 LOD0/1/2 with UV0, basic material slots, selective UCX trunk/rock collisions, Blender reimport and SHA256 receipts. No completed hosted run or new binary file may be credited before exact-head validation. Existing 27 PNG in Drive source batch are NOT republished by this workflow and require separate Unreal material binding. No Windows runner/UE4 compile/import/PIE/device/FPS/visual/Gate6/7 proof.
-
-2026-10-11 OWNER DRIVE TEMPORARY STAGING POLICY: Governor now defines private Google Drive as temporary staging only while laptop is off. Automatic Drive deletion is authorized ONLY for managed batches with physical local persistent copy and matching SHA256 plus transfer/import disposition receipt. No TTL deletion of sole copies, no deletion of unrelated owner files, no auto transfer claim until separate GitHub Actions OAuth/rclone credential is configured. No Windows self-hosted runner authorized. This is policy/STATIC-VALIDATED only; no live sync, transfer or deletion run evidence.
-
-**2026-10-11 licensed cloud stock intake candidate:** Existing 37 Poly Haven CC0 slug authority is now used to physically download/convert 1K BaseColor, NormalDX and packed ORM PNG files across four independent hosted shards; each shard writes SHA256/byte/provider URL/source receipt and quarantines missing maps without inventing assets. GitHub-hosted artifact stock is a temporary transfer source, not a permanent write to D:\\actions-runner\\_warehouse\\ShireJourney. 28-region packet index is available for reuse, but 28-region imported/rendered completion is NOT claimed. Local Pillow fixture regressions: 5 passed before GitHub candidate. GitHub exact-head production results pending. No owner Windows runner, no UE import, PIE, device, visual or Gate 6/7 acceptance. Runtime chapter remains P1C01 only.
-
-**2026-10-11 P1C01 Frodo hosted locomotion source candidate:** Registered in WORLD_DETAIL_LEDGER and added Tools/CloudAssetBuild/frodo_locomotion.py plus hosted-only p1c01-frodo-locomotion-hosted.yml. The candidate imports the provenance-checked CC0 Frodo normalized base FBX, drives bilateral deform limb rotations across original cyclic Idle/Walk/Run keyed actions, physically exports three binary skeletal animation FBX files and reimports to audit curve/key presence and SHA256. Source-only: no final Frodo visual likeness, UE import, UHT/compile, PIE, device, FPS, human visual acceptance or Gate 6/7 credit. Exact-head hosted CI evidence pending; Windows/self-hosted runner is not invoked. Existing async hero stream owner and pooled NPC ownership unchanged.
-
-**2026-10-11 P1C01 Blender thin-bevel geometry correction:** Exact-head hosted Run `38144899430` material tests and all physical 1K PNG source QC passed; GitHub Actions cache explicitly logged `Cache saved with key: p1c01-28region-original-materials-1k-v1-7a7920157b5d030369f21d7a2f85e6b86fa7209efb6242e7b506e6aeaddd812c`. The same run's FBX generator failed closed at `ValueError: DEGENERATE_FACE in SM_ShStonePath_LOD0` because the 0.018m edge bevel exceeded half the 0.025m stepping stone thickness. Universal root fix clamps each box's bevel to at most 16% of its thinnest dimension, with regression guard. No count credit for 44 FBX until the replacement exact-head Blender/validator job is SUCCESS. Frodo-hosted independent job again succeeded; owner self-hosted runner unchanged/off.
-
-**2026-10-11 P1C01 44-FBX wave static root correction:** Exact source head `48de633534bcb1c0f6ab5eb304256a7a0e7aa625` had hosted Pre-Unreal Run `38144645925` SUCCESS; hosted asset Run `38144645916` FAILED during Blender export after successful 36 1K PNG material generation and material hash/PNG QC. Log evidence: `KeyError: 'shire_earth'` in `blender_shire.py` PALETTE (a registration omission, not a broken source image). Fixed earth color registration and added Python-AST regression checking all literal primitive surface families against palette *before* Blender execution. Source cache now saves only hash-validated PBR immediately after QC, independently of subsequent FBX failure; cache entries must pass receipt/PNG/SHA validation at reuse. New exact-head cloud run required to credit 44 FBX, Bag End portal clearance and asset archive. Existing validated 20 FBX PR #384 remain unaffected. No Windows Runner, UE import, PIE/device/FPS/visual/Gate6/7 evidence.
-
-## 2026-10-11 â€” P1C01 real Bag End/Party Field architecture source wave, candidate
-
-- **Exact prior physical proof**: PR #384 merged into develop `338afbb8ae62d9bff48b65274aef6c8d270c3973`. Cloud physical Run `38143969791` SUCCESS on exact source SHA `c4cb4410bdbe7c71e34b27b6fdc6646e698969b0` with logs `SHIRE_BINARY_FBX_GENERATED assets=10 files=20 blender=4.0.2` and `CLOUD_ASSET_STATIC_VALIDATION_PASS materials=12 textures=36 region_bindings=28 binary_fbx=20`. Pre-Unreal Run `38143969807` SUCCESS. Source artifact `11703917651` (9,492,335 artifact bytes; internal ZIP 9,492,111 bytes; SHA256 `e6eaf5ceba4c86e3878948eda55eda6a339412f1e68023fd662df27c0d0c2658`), expires 2026-10-18. Frodo CC0 **base rig** prep SUCCESS with artifact `11703892613`; no final likeness/retarget.
-- **This separate active P1C01 physical production candidate** extends the existing modular static FBX generator (not Unreal runtime) from 10 to **22 original source mesh families / 44 binary FBX LOD0/LOD1**: BagEndFrontWall (separate portal blockers, walk-through gap), RoundRoomWallArc, RoundRoomFloor, Hearth, Bookcase, HobbitBed, WoodenFootbridge (separate walkway/rails), MillWheel (static-only source, rotation pending), PartyCanopy (open pole-only collision), StonePath, LanternPost, VillageWell. All are manually authored procedural DCC source parts, not film-exact replicas. Uses 36 original 1K PNG across 28 support-material region bindings unchanged. Blender 7400 binary export, real reimport and SHA256 proofs plus UCX AABB receipt and portal-clearance source guard. Material payload is now reusable via exact generator+regional packet SHA-bound GitHub-hosted cache; an unchanged cache must still pass complete file hash/PNG QC. All new physical outputs require *fresh exact-head hosted proof* and remain **pending until GitHub Actions success**.
-- **Movement/NPC/engine boundary**: These parts are modular source-only, not a collision-tested level. Source-space portal clearance check does not replace player/companion navigation PIE, real material/level import or ownership integration. NPC population remains owned by LivingWorldDirector, per-character context and schedules by ShireNPCContextSubsystem; only one runtime writer. No user Windows runner, heavy synchronous loads, 28-region Unreal import, true human visual/target FPS, or Gate6/7 acceptance claimed. P1C02 runtime stays gated; physical source for later regions may progress independently.
-
-## 2026-10-11 â€” REAL SOURCE DELIVERY #383 + Shire village-kit expansion candidate
-
-- **Delivered to hosted artifact on exact head (not Unreal):** PR #383 merge `8679c2f00e140d42f2ec8c9b2cf5863ba946bf1f`; Pre-Unreal `38143599104` SUCCESS; GitHub-hosted physical-source `38143599164` SUCCESS. 12 original reusable support families produced **36 actual PNG 1024px**, mapped to exactly the 28 IDs in `Data/WholeGameRegionProductionPacketsV1.json`. Blender 4.0.2 produced **8 binary FBX static assets** (4 families, LOD0+LOD1) and successfully re-imported/checked their meshes, UV, UCX colliders and SHA256 receipts. Actual source ZIP 9,332,298 bytes, SHA256 `a3e81ebc6b47c8b962d0de3be97df5b8785bcc8e72ce7b4489c462d444f0757c`; Actions artifact `11703677680`, retained through 2026-10-18. One original CC0 Frodo base rig source candidate passed hosted readiness (`HUMAN_WAVE2_HOSTED_PASS selected=1`, 89 deform bones, 1787/2229 weighted vertices); separate artifact `11703722494`. These are real physical source assets, **NOT Unreal imported**.
-- **This new source candidate expands P1C01 with 6 more original authored prop/foliage families:** RoundWindow, GardenHedge, OakTree, StorageBarrel, FarmGate, GardenPlanter; together 10 static models x 2 LOD = 20 FBX targets, keeping collision and UV static QC. The six are grounded in existing Hobbiton/Bag End domestic/cultural/settlement reference language, not claimed as film-exact replicas. Current expansion output / tests are pending exact-head hosted proof, and the first valid four families must not be re-labelled as an imported visual world.
-- **Critical separation:** No change to Unreal runtime, multiplayer, crowd lifecycle, interaction/canon lock, async residency, P1C02 gate or Windows self-hosted scheduling. A character source with a rig is **not** final Frodo appearance, animation, behavioral QA or accepted Shire chapter. 28-region material bindings are not 28-region Unreal material import; follow asset promotion gate when the owner runner returns. Next manual evidence: P1C01 current real import, character deformation/retarget, PIE, save/quest/npc, device 720p 30FPS, human visual/pacing Gate 6/7.
-
-**2026-10-11 cloud Blender FBX root fix:** Hosted Run `38143340309` generated and validated 36 physical 1024px PNG for 12 families / 28 region bindings but Blender 4.0 rejected the obsolete FBX operator argument `version=`. Static geometry construction succeeded only in memory; FBX receipts absent. Fix removes the argument, directly verifies binary FBX 7400 header version, and uses `--python-exit-code 3` so Blender script exceptions fail CI. Re-run exact-head required before counting binary FBX. No UE/PIE/device/visual acceptance.
-
-**2026-10-11 CI source test root-fix:** Hosted Run `38143197367` Frodo source preparation PASS (`HUMAN_WAVE2_HOSTED_PASS selected=1`, armature=1, deform_bones=89, weighted_vertices=1787/2229); static material tests generated two 128px scratch preview sets with 36 PNG each and passed determinism / 28 region binding assertions. Main job FAIL was solely overbroad `self-hosted` substring in test against a harmless comment. Corrected guard to inspect `runs-on` labels, rerun exact head required. No 1024px production pack or Blender FBX yet claimed.
-
-**2026-10-11 measurable asset wave (PREP CANDIDATE, not chapter completion):** Source code now targets physical delivery of 8 static binary FBX files (4 P1C01 families, LOD0/LOD1, Blender FBX reimport/UCX/UV) plus 36 PNG PBR channel-packed sources (12 reusable families; 28 exact region bindings), built via GitHub-hosted isolated source CI. All bytes and receipts are still **PENDING** until the exact-head workflow produces and checks them; this is not equivalent to 28-region Unreal import or character appearance. Frodo existing UE technical winner remains the only evidential character starting point: 161 bones in prior technical gate, deformation/animation/likeness/PIE incomplete. Optional hosted Frodo source acquisition will not reserve owner self-hosted Windows. Companion Gandalf next only after Frodo's proper stage. P1C01 still needs Bag End interiors/exteriors, Hobbiton houses, Party Field, road/river/vegetation, actual characters, contextual NPC behavior, quest flow, save/load, English VO/Arabic RTL, target DX11 720p 30FPS and human visual Gate 6/7 evidence. No new runtime acceptance label.
-
-**2026-10-11 live recovery audit (source-only; PR candidate):** GitHub develop `86966cfde730a7e9b3432d73da46fc67995d6ba7` after PR #381; 31 refs / 13 open PRs at inspection. PR #380 head `9f5b6fd53d6c004bc728b479c46af680ea0d3b1f` remains open draft, diverged by one newer develop commit and merge-dirty; exact-head hosted Pre-Unreal Run `38141627675` SUCCESS but Unreal Run `38141627681` queued. No owner Windows runner was started or authorized by this wave. The only inspected zero-ahead noncanonical ref is `salvage/p1c01-fast-pie-ci-guard-20261011`; all other inspected working refs carry unique commits and are preserved. Eight Poly Haven CC0 P1C01 base-color Git-LFS pointer OIDs on `generated/p1c01-material-source-v1` match their source receipt; real LFS contents, image resolution, UE import and rendered quality remain unverified. See `Docs/RECOVERY_CHECKPOINT_2026-10-11.md`. No UE compile, PIE, FPS, device, human visual or Gate 6/7 acceptance implied.
-
-**2026-10-11 fast preview salvage candidate:** PR #360 useful three-file launcher/test/guide ported to current develop candidate without stale workflow/governor merge; only source/tooling, not UE compile, PIE, device, visual or Gate 6/7 evidence. Exact-head CI pending.
-
-**2026-10-11 P1C01 Bag End hub source-only production candidate:** `Data/P1C01BagEndHubAssemblyV1.json` adds a detailed canonical interior assembly handoff (shell, domestic props, interactive anchors, audio/light), state variants, traversal/collision/streaming/NPC ownership contracts and five-lane item-level receipt tasks. No geometry generated, warehouse bytes acquired, Unreal import, compile, PIE, device, visual or Gate 6/7 proof; exact-head hosted validation pending. Existing P1C01 runtime scope unchanged.
-
-**2026-10-11 checkpoint reconciliation (candidate):** Live GitHub inventory observed 30 branches and 14 open PRs. Created `Docs/RECOVERY_CHECKPOINT_2026-10-11.md` on branch `ops/checkpoint-branch-reconciliation-20261011`; compared #366 (2 ahead/41 behind), #367 (1 ahead/41 behind), #374 (4 ahead/19 behind), and older checkpoint recovery (1 ahead/97 behind) against develop. All divergent: preserve pending selective salvage and exact-head checks. No PR merged, branch deleted, UE compile, PIE, device, FPS, visual or Gate 6/7 proof from this checkpoint. This is repository-source documentation only, pending exact-head static CI.
-
-**PG-170 contract alignment (2026-10-11):** exact-head Pre-Unreal `38135715043` FAILED at outdated static assertions for legacy `$_` PR-row dereference. The *real* PowerShell array decoder regressions passed (flat=2, nested=2, single=1, empty=0). `Scripts/pre_unreal_validate.py` now checks the actual `$row` guards and `Get-OpenPullRefs` reuse rather than prior variable spelling. New exact-head hosted CI pending; no engine/PIE/device evidence.
-
-## 2026-10-11 â€” Branch Cleanup live-open-PR array decoder regression (candidate)
-
-- Investigated hosted cleanup run `38135341955` after successful reviewed retirement. The run logged `activePrHeads=0` even though GitHub had open PRs. Exact per-branch rechecks and nonzero-ahead fallback preserved unique heads in that run, but bulk PR protection was not reliably visible.
-- Root-cause mitigation: normalize both flat and nested Windows PowerShell `Invoke-RestMethod` PR JSON arrays with `Get-OpenPullRefs`; use the same normalizer for the initial active-head set and exact per-branch recheck. Preserve fail-closed SHA lease, closed/replacement-PR proof, archive/Edoras protections and zero-ahead policy unchanged.
-- Hosted PowerShell classifier regression now executes the actual helper against flat/two-level/single/empty PR samples. **Evidence status:** source candidate pending exact-head Pre-Unreal/Five-Lane; previous #373 branch deletion remains proven at `38135341955`. No UE compile, FBX import, PIE, device, FPS, visual, or Gate 6/7 claim.
-
-## 2026-10-11 â€” Post-#372 reviewed stale-ref retirement (PR candidate)
-
-- **Policy:** DEC-106 reconciled after merged PR #372 (merge `a004d47b6c7d4681a328d88a12fc5de4819e1f11`) with exact-head GitHub-hosted Pre-Unreal SUCCESS `38134887589` and Five-Lane SUCCESS `38134887757`. Classified **STATIC-VALIDATED**. All WindowsNoEditor packages remain owner-requested chapter/release closeout only; engine compile/PIE/device/visual/Gate6/7 remains unproven.
-- **Branch reviewed for retirement:** `policy/cloud-first-no-routine-windows-package-20261011`, exact SHA `5ccc60523247138e324887929b6b8f1c85db0931`, closed/unmerged PR #369. Unique delta contains four policy/docs files; policy intent superseded by merged PR #372, not by a claim of identical Git ancestry.
-- **Safety implementation:** `Data/BranchCleanupPlan.json` registers this exact ref/SHA, closed PR, replacement PR+merge. `Scripts/run_branch_cleanup.ps1` now fail-closes on moved SHA, active PR, missing replacement, missing merge ancestry, unknown unique refs and uses atomic Git `--force-with-lease` for both explicit and PR-head retirement.
-- **Remaining branch rule:** every other inspected noncanonical branch still has unique commits vs develop. Preserve FBX/Tangents/Skeletal/PBR/preview/generated material/Edoras candidates until selective reconciliation and proof. Do not delete by age or branch title.
-- **Current evidence boundary:** branch #369 cleanup is *authorized pending a successful hosted PR and actual cleanup log/ref-not-found proof*; no remote deletion or performance/visual acceptance claimed by this entry.
-
-**PG-145 static regression correction (2026-10-11):** Exact-head Pre-Unreal run `38134722720` failed only at the outdated hosted Unreal guard token `needs.classify.outputs.mode != 'inherit'`, after real classifier cases and packaging contract had already passed. Replaced that old expectation with explicit `full/core/acceptance/package` selection markers and added `Scripts/pre_unreal_validate.py` to the narrow hosted-only policy allowlist. Five-Lane run `38134722700` SUCCESS on previous head; new exact-head preflight remains pending. This is a CI test-contract fix, NOT real UE compile, PIE, device or chapter acceptance.
-
-## 2026-10-11 â€” Manual-only Windows packaging + hosted policy regression (PR candidate)
-
-- DEC-106 production implementation on current develop after PR #370: `workflow_dispatch package_windows=true` exclusively enables WindowsNoEditor Cook, data proof, packaged startup, hardware capture and large artifact upload. Config/Build.cs/unknown/failed-classifier paths still take the appropriate UE compile/import/runtime lane when the owner runner is available, but never cause a routine package.
-- Narrow exact-path-only `static` classification for governance/classifier workflow/Docs updates runs the real PowerShell classifier regression on GitHub-hosted Windows without reserving the owner's UE runner or implying an inherited Unreal build proof. Acceptance-only changes without packaged-startup resume also stay on hosted-only classification.
-- Regression covers real Set-Mode output across pull request, default manual dispatch and explicitly requested chapter package; config/unknown/no-proof cases remain strictly classified. Governor and MaximumSafeMode updated together; P1C01 runtime scope and Gate 6/7 unchanged.
-- Dedicated P1C01 Verified PBR workflow was a separate hidden duplicate self-hosted PR trigger. It is now manual `workflow_dispatch` only; optional `package_windows` defaults false, and cook, data/startup checks and artifact upload require true. The actual FBX import/UE QA remains available on deliberate dispatch; no import evidence is invented.
-- **Evidence boundary:** Source policy candidate. Exact-head hosted CI results pending; no new UE4 compile, FBX import, PIE, device FPS, visual acceptance, Windows package, or Gate 6/7 credit.
-
-## 2026-10-11 â€” #365 CI regression correction (candidate)
-
-- Exact-head Pre-Unreal #38102533805 failed in two source contract assertions: one obsolete manual-only trigger expectation and one new test using literal escaped newlines. The dedicated PBR lane intentionally runs on PR but never cooks/packages except manual dispatch. Corrected assertions and tightened package gates; requires new exact-head CI success. No runtime/device/visual acceptance.
-
-## 2026-10-11 â€” P1C01 verified PBR importer integration on PR #365 (candidate)
-
-- Physical Blender FBX normalization from #355 is forward-ported into the active #365 source stage: copied from `Saved/P1C01NormalizedFBX` into ignored `Saved/ShireProductionImportWorking` only; tracked warehouse FBX is never altered. The commandlet rejects missing derivative receipt, malformed source layout, or missing derived FBX.
-- Existing real UE4 material-slot/Asset Registry checks, /Game/Production packages, and chapter async world bank remain the activation authority. Exact hash validation runs in the dedicated workflow before the UE import commandlet; source-only/mocked tests do not claim imported geometry.
-- FBX normalizer no longer welds coincident vertices across valid UV/hard-normal seams. Cache keys include exact original FBX hashes, normalization scripts and installed Blender version; a cache hit still runs receipt/SHA256 verification. Normalized/reused totals are logged.
-- Dedicated PBR PR pipeline stages 16 sourced FBX, runs Blender, imports into UE4, audits materials and tests headless Shire placement. Windows package/upload is excluded from PR and develop push; final package requires explicit dispatch. Classifier treats named PBR toolchain changes as engine-impacting but not Windows-packaging-critical; unknown paths still fail closed.
-- Evidence: PR #365 previous source-only head `90e69e6a` passed Pre-Unreal run `38102045664`. **These NEW importer/workflow edits require fresh exact-head Pre-Unreal and UE/PBR proof.** No PIE, device, visual, actual FPS, Gate 6/7 acceptance or 17-warning elimination is claimed; do not open P1C02 Runtime. $8 Actions ceiling unchanged.
-
-## 2026-10-11 â€” P1C01 derived FBX hash-cache tooling candidate
-
-- Forward-ported the verified Blender normalization script and SHA256-bound derived-FBX preflight from PR #355 onto current develop as a source-only integration candidate, with exact-head Pre-Unreal regression. This does NOT activate new runtime assets, modify the actual UE importer, or solve all 17 smoothing warnings on develop. Original CC0 FBX is immutable; generated derivatives live in ignored Saved/. The importer overlay/physical UE binding, PIE, device 30 FPS, full playthrough and Gate6/7 remain unaccepted. Windows packaging is not requested; preserve DEC-106 and $8 CI budget ceiling.
-
-## 2026-10-11 â€” Whole-game regional CC0 material receipt cache correction (candidate)
-
-- Root cause: `stage_ambientcg_warehouse.ps1` reused a previously green batch receipt based on batch ID and stored ZIP hashes alone. An edited region/query/quality manifest with the SAME batch ID could silently skip the new source intake, preventing material updates across the authorized whole-game region preparation. The repair writes `manifest_sha256` to new receipts and requires an exact manifest hash match for early reuse; legacy receipts fail closed and are re-evaluated without destroying valid cached ZIP bytes. Even `-Refresh` now keeps structurally valid archives rather than automatically deleting them. Existing SHA256/ZIP/disk reserve/CC0 checks and single warehouse writer remain active. A network-free PowerShell regression exercises unchanged, changed and legacy receipts with a real temporary ZIP, and checks that invalidating a receipt does not delete the archive. This is source-only preproduction for the existing 28-region packet set (Shire included), not proof of importing materials into 27 other runtime regions. Pre-Unreal and exact-head evidence pending; no Unreal/PIE/device/visual or Gate6/7 acceptance. User GitHub Actions budget ceiling $8 is unchanged.
-
-## 2026-10-11 â€” DEC-106 whole-game Windows package cadence (CI candidate)
-
-- Owner explicitly wants nonessential repeated engine checks minimized across the **entire Shire Journey game**, not P1C01 only; heavy Windows Cook/Package/WindowsNoEditor artifact upload should normally happen at chapter completion/release, not each source/asset/editing checkpoint. Sole authority is `Data/ProjectGovernor.json` DEC-106 and `chapter_closeout_package_policy_2026_10_11`, linked to REQ-PROD-011.
-- Real prior UE CI log #1884 recorded `W00_PACKAGE_PASS elapsedSeconds=211` and Windows candidate upload ~144 s for 332276215 bytes. These are existing reference costs, NOT a measured speedup.
-- `Scripts/classify_unreal_validation.ps1` now emits `package=true/false` independently from `full/core/asset/acceptance`. `.github/workflows/unreal-build-validation.yml` consumes that output for cook, packaged JSON, packaged executable startup and upload. Explicit `workflow_dispatch` `package_windows=true` forces full exact-head build + packaging. The standard full-mode fallback for changed game runtime/source **does not package** when the changed path is already known as non-packaging-impacting.
-- Packaging-critical `Config/**`, Build.cs/Target.cs, streaming bank, Cook/Package/Release and unknown potentially impacting paths still require full package proof immediately; package/startup validator changes require package proof unless safe same-content proof can be inherited. Startup-only retesting does not redundantly upload a large package.
-- `Scripts/test_unreal_classifier.ps1` includes whole-game example cases covering safe known runtime changes, no-proof fallback, manual closeout, config/streaming, package-tool changes, and unknown paths. Docs/Gates updated without changing code gameplay, canon, memory or renderer. No second Governor authority file.
-- This CI change is **SOURCE CANDIDATE / STATIC CHECKS PENDING** until exact-head Pre-Unreal / classifier regressions and real runner classifications. No UE4 compile, package, PIE, DEVICE, VISUAL, FPS or Gate 6/7 credit for this branch. P1C01 is still the sole active runtime chapter; future chapters need their own acceptance evidence.
-
-## 2026-10-11 â€” P1C01 GitHub Actions de-duplication and artifact transfer efficiency (candidate)
-
-- Owner-requested CI throughput repair, no new chapter/gameplay feature. The generic `.github/workflows/unreal-build-validation.yml` already covers affected UE runtime source paths; the specialized `.github/workflows/p1c01-verified-pbr-production.yml` also auto-ran on `develop` changes to the Shire world builder/import commandlet/bridge, risking a second compile/import/cook/package on the same limited Windows self-hosted runner.
-- The specialized 99-source Verified PBR import/package workflow is now `workflow_dispatch` only: it remains available for deliberate P1C01 visual asset promotion with checksum receipts, FBX/PNG source staging, actual UE4 import, material-slot/runtime-presence tests, save/route verification, cook/package and executable startup. This is not permission to bypass its evidence when promoting Verified PBR visuals or making Gate 6/7 claims.
-- `actions/upload-artifact@v4` in that manual packaged binary lane now uses `compression-level: 0`, matching the existing general Unreal package artifact optimization to reduce compression CPU time; upload/network speed improvement is not yet measured.
-- Added `Scripts/test_p1c01_verified_pbr_bridge.py` regression to ensure dispatch-only trigger, upload setting, and retention of import/runtime checks. The static test path is excluded from both general Unreal push/PR triggers and remains covered by Pre-Unreal Validation.
-- Source/CI-config review only so far. Exact-head Pre-Unreal, fresh UE workflow behavior, transfer benchmarks, PIE, target-device, visual acceptance, FPS and Gate 6/7 evidence are **pending**. Existing compile/runtime acceptance is not inherited across this change until verified by the project's proof classifier.
-
-## 2026-10-11 â€” Root-cause repair of local PIE classifier (PR #359)
-
-- Pre-Unreal Run #38093231196 failed `pie-preview-safe-with-proof: expected inherit, got full`: the two exact paths appeared only in the transitive core-proof allowlist, not in the main `$safeExact` set used by `$fullImpact`. Add them to the actual exact-path classifier and cover lookalike names, mixed runtime and Config changes in the real classifier regression. Parent engine proof remains mandatory, otherwise full validation. PR #358's actual preview command/test still requires exact-head static execution prior to merging. Candidate awaiting CI; no new Unreal/PIE/device/visual/FPS acceptance.
-
-## 2026-10-11 â€” Local PIE tooling CI reduction (proof-required)
-
-- Corrects classification of exactly `SHIRE_FAST_PIE_PREVIEW.bat` and `Scripts/test_fast_pie_preview.py`, allowing established green exact-parent engine evidence reuse and preventing repeated full UE builds for unchanged gameplay. Fails closed to full Unreal when inherited proof is missing. Evidence: #38092759311 classifier `FULL_UNREAL_FILE` for these two paths. No chapter progression, gameplay, asset, device, visual or FPS acceptance produced.
-
-## 2026-10-11 â€” Minimum redundant checks: device-evaluator CI classifier correction (candidate)
-
-- Corrected file classification for `Scripts/evaluate_p1c01_gate67_evidence.py`: acceptance-only with proven exact-parent core engine run can reuse that engine evidence; absent engine proof retains full validation. Regression cases added to `Scripts/test_unreal_classifier.ps1`. This does not build/alter Shire visuals, imported meshes, quests or any P1C02 runtime; P1C01 PERFORMANCE / PIE / DEVICE / VISUAL / Gate 6/7 remain unaccepted. Run #38091586642 previously classified the evaluator as `mode=full`; fresh exact-head static/regression proof is required before merging.
-
-## 2026-10-11 â€” Accelerated intake policy only, not content completion
-
-- Owner-approved operational direction: remove redundant administrative admission checks, fast-path lawful repairable candidates, keep real asset rights and technical acceptance, consolidate large P1C01 waves and prepare 28-region art/characters concurrently. **Status: policy registered; implementation and runtime output pending**. No increase in visual, PIE, device, FPS or Gate 6/7 completion.
-
-## 2026-10-10 â€” Owner living social landscape standard, Shire-first / all regions (design requirement)
-
-- Scope/requirements documentation candidate only: living social landscape first in P1C01, later region-specific adaptation (28-region design coverage). Status PLANNED/DEFERRED as appropriate; no new asset files, UE import, character art, measurable visual acceptance, performance credit or Gate 6/7 completion.
-
-
-## 2026-10-10 â€” Whole-game character CC0 source candidate research (preparation only)
-
-- Created `Data/WholeGameCharacterSourceCandidates20261010.json` with Quaternius Modular Fantasy Outfits, Quaternius RPG Characters and Blender Human Base Meshes candidate sources for visual/rig research across the 28-region production scope. This is source-discovery metadata only: license-per-download, exact format, SHA256, rig compatibility, proportions, LODs and render/art acceptance are pending. No files downloaded to persistent warehouse, no Unreal import, no new runtime chapter, no P1C01 Gate 6/7 credit.
-- Continue only within existing Governor-approved P1C01-first runtime + independent whole-game asset preparation policy. One warehouse writer, no duplicate downloads; no generic third-party mesh is accepted as a named Tolkien hero without original character-specific art and canon review.
-
-## 2026-10-10 â€” physical source intake and Frodo correction (observed)
-
-- Warehouse Run #38057877090 SUCCESS with real source result: AMBIENTCG_WAREHOUSE_STAGE_PASS files=22 skipped=24 bytes=1178435662 and REGION_SOURCE_RECEIPT_AUDIT_PASS files=22 skipped=24 reserve=175388110848. This is source QC only, not PBR imported into future regional runtime.
-- Frodo fail-closed deformation correction PR #346 MERGED commit 3b20cac4d01d1b7cf05581b211f4f88f510a2c54; three exact-head workflows #38058581392/#38058581341/#38058581318 succeeded. Technical-only; no finished skeletal locomotion, human-rendered visual or chapter Gate 6/7 acceptance.
-
-## 2026-10-10 â€” P1C01 package-audit and exact-material importer contract repair (candidate)
-
-- Observed static cross-file inconsistency: `ci_package_w00.ps1` compares the unique `/Game/Production` package count with `Data/ChapterAssetStreamingPlan.json.audit.total_unique_production_packages`, but the verified PBR activation appended asset paths without adjusting the audit. Candidate repair computes unique packages from all actual banks and updates P1C01 bank count idempotently, no hard references or eager loads.
-- Previously unused import verifier expected a receipt and log token the active PBR bridge never produces; replace with actual `HASHED_SOURCE_ONLY` receipt + exact importer `P1C01_VERIFIED_PBR_IMPORT_QC` proof for every selected FBX/material pair, and gate this before bank promotion. Offline suite covers missing/incorrect import log, unbound mesh, and stale package audit. Status PENDING exact-head workflow and real source/imported-package receipts; not PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED or 30FPS.
-
-## 2026-10-10 â€” P1C01 PBR runtime presence truth gate (candidate)
-
-- Closing a visual Shire requires actual world placement, not only FBX source QC, .uasset presence or `W00_PACKAGED_STARTUP_PASS`. PBR workflow now requires explicit non-zero full placement in `Saved/Logs/CI-PlayableStartup.log` with matching async P1C01 bank entries and no omitted assets, prior to packaging; emits `P1C01_PBR_RUNTIME_PRESENCE_PASS` only upon observed log evidence. Regression fixtures cover missing log, zero placement, absent streaming bank and UTF-16 log. This is source-candidate validation only until a real exact-head run; no P1C01 chapter visual, target FPS or human Gate 6/7 credit.
-
-## 2026-10-10 â€” P1C01 verified PBR material-parent regression (PG-169)
-
-- CI #38052565591 FAILED: original C3 foliage parent invariant `DesiredMaterialParent = ProductionMaterialParent` was displaced by conditional new PBR master selection. Restored original default assignment with explicit verified-PBR-only override, preserving foliage identity and preventing regression. Exact-head Pre-Unreal retest pending; no Unreal visual/P1C01 Gate6/7 proof yet.
-
-## 2026-10-10 â€” P1C01 source-to-visible UE4 PBR bridge production (candidate)
-
-- Reuse two immutable Poly Haven CC0 39/60 source waves, validate SHA256 original receipts and per-file hashes, choose at most 16 qualified single-material **static FBX** props within a 144 MiB source cap; imported textures are 1K PNG. Quarantine/hold, oversized, unknown-multi-material, and unsupported files are not promoted. No new source-provider downloads.
-- Scripts/p1c01_verified_pbr_bridge.py stages ignored generated source assets into SourceAssets/Production/World/Shire/VerifiedPBR; the existing UE4.27.2 importer synthesizes a material instance and now fails on missing/wrong single-material slots and invalid mesh geometry. Only after .uasset files exist does the bridge append soft paths to the existing P1C01 async bank and materialize Data/P1C01VerifiedWorldDecor.json.
-- AShirePrototypeWorldBuilder renders up to 16 small world accents from resident soft objects without collision, actor ticking, extra NPC ownership, canonical route transforms or new chapters. Verified subset source maps include BaseColor, NormalDX and packed ORM; BaseColor, tangent NormalDX and packed ORM wiring is present in source; actual UE import and visual shader fidelity require evidence.
-- .github/workflows/p1c01-verified-pbr-production.yml schedules real UE editor build, source import, uasset verification, Automation, startup, chapter/save round-trip, compressed Windows package and packaged startup before uploading a test build. This workflow is not a five-lane read-only report.
-- All evidence **PENDING exact-head CI and runner execution**; no PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, 30 FPS, or Gate6/7 claims. No move to P1C02 runtime.
-
-## 2026-10-10 â€” P1C01 physical CC0 PBR-to-UE4 visual production bridge (candidate, evidence pending)
-
-- Manager authority: DEC-078/104/105, REQ-PROD-011, W01/P1C01 only. Actual persistent warehouse Run #38049193046 completed SUCCESS, providing immutable 39+60 source and 39+59 prepared PBR files; this is source storage evidence, not engine/render evidence.
-- This PR adds an exact SHA256 checked, bounded (up to 16 static assets / 144 MiB) source bridge from the persistent two-wave CC0 warehouse into the existing `SourceAssets/Production/World/Shire/VerifiedPBR` importer. Reject held-identity, held-biome, corrupted, multimap/multi-material and non-Shire/unrelated candidates. Avoid provider redownload, hard runtime references and any character FBX.
-- Unreal importer now binds verified single-material FBX to a real PBR master: BaseColor + tangent-space NormalDX + packed ORM (ambient occlusion R, roughness G, metallic B), with non-sRGB packed/normal imports. Preserve existing OBJ asset bank unchanged.
-- Existing `UShireChapterAssetStreamingSubsystem` preloads selected soft paths via `Data/ChapterAssetStreamingPlan.json`. Existing `AShirePrototypeWorldBuilder` adds at most 16 optional, non-colliding, low-shadow static decorative pieces after world commit and never synchronously loads meshes. Canonical route/story/quest ownership and actor pooling remain unchanged.
-- A dedicated GitHub-hosted offline source test + serialized Windows UE4.27.2 workflow runs actual source stage, editor build, production import, `.uasset` presence, automation, startup, all chapters, state persistence, warning guard, cook and packaged startup. Only success can publish a playable Windows **test candidate**. The new visual packet is NOT declared PIE, device, human visual or Gate 6/7 accepted.
-- Until exact-head tests run, this is a source implementation candidate. Fix compile/import/runtime failures on this same PR before merge; avoid new feature lanes until machine-green. No final Windows release requested.
-
-## 2026-10-10 â€” avoid pointless Unreal recompiles for standalone warehouse regression tests (candidate)
-
-- `Scripts/test_warehouse_provider_zero_payload_fail_closed.ps1` is a network-free provider/ambientCG guard, not Runtime code. Its new source-only checks should run in Pre-Unreal without reserving the one UE4.27 machine. Add the explicit test script to both push/PR Unreal-workflow paths-ignore lists; the existing `Scripts/stage_*warehouse*.ps1` rule already excludes the warehouse adapter. Actual P1C01 runtime work remains on its own exact-head UE gate. No compile claim for this candidate.
-
-## 2026-10-10 â€” ambientCG cross-lane duplicate download regression guard (candidate)
-
-- Observed live warehouse #38057877090 SUCCESS: `AMBIENTCG_WAREHOUSE_STAGE_PASS files=22 skipped=24 bytes=1178435662`, `REGION_SOURCE_RECEIPT_AUDIT_PASS files=22 skipped=24 reserve=175388110848`. These are actual SHA256-audited source-only bytes, not Unreal imports.
-- Root-cause in `Scripts/stage_ambientcg_warehouse.ps1`: ten regional material queries can return the same provider asset ID. Run logs show repeated downloads of Rock064, Ground111 and PavingStones151; prior script only guarded identical destination paths and did not deduplicate across category folders. Add accepted-ID set updated ONLY after successful source SHA256 receipt; skip later duplicate IDs before network requests. Byte-cap failure must not remove previously valid cached archive; do not trigger or repeat the completed batch. Existing Quaternius zero-payload Pre-Unreal step also checks the ambientCG dedup code order offline.
-- Candidate until exact-head preflight. One persistent warehouse writer and 6 GiB reserve retained. No P1C01 runtime change, PIE, target-device FPS, visual or Gate6/7 credit.
-
-## 2026-10-10 â€” avoid pointless Unreal recompiles for standalone warehouse regression tests (candidate)
-
-- `Scripts/test_warehouse_provider_zero_payload_fail_closed.ps1` is a network-free provider/ambientCG guard, not Runtime code. Its new source-only checks should run in Pre-Unreal without reserving the one UE4.27 machine. Add the explicit test script to both push/PR Unreal-workflow paths-ignore lists; the existing `Scripts/stage_*warehouse*.ps1` rule already excludes the warehouse adapter. Actual P1C01 runtime work remains on its own exact-head UE gate. No compile claim for this candidate.
-
-## 2026-10-10 â€” ambientCG cross-lane duplicate download regression guard (candidate)
-
-- Observed live warehouse #38057877090 SUCCESS: `AMBIENTCG_WAREHOUSE_STAGE_PASS files=22 skipped=24 bytes=1178435662`, `REGION_SOURCE_RECEIPT_AUDIT_PASS files=22 skipped=24 reserve=175388110848`. These are actual SHA256-audited source-only bytes, not Unreal imports.
-- Root-cause in `Scripts/stage_ambientcg_warehouse.ps1`: ten regional material queries can return the same provider asset ID. Run logs show repeated downloads of Rock064, Ground111 and PavingStones151; prior script only guarded identical destination paths and did not deduplicate across category folders. Add accepted-ID set updated ONLY after successful source SHA256 receipt; skip later duplicate IDs before network requests. Byte-cap failure must not remove previously valid cached archive; do not trigger or repeat the completed batch. Existing Quaternius zero-payload Pre-Unreal step also checks the ambientCG dedup code order offline.
-- Candidate until exact-head preflight. One persistent warehouse writer and 6 GiB reserve retained. No P1C01 runtime change, PIE, target-device FPS, visual or Gate6/7 credit.
-
-## 2026-10-10 â€” Frodo deformation gate forward-port onto current develop (candidate)
-
-- PR #343 exact-head #38057554992: hosted source/normalization, UE4.27.2 skeletal technical gate, and Blender deformation jobs concluded SUCCESS; Unreal Build #38057555101 and Pre-Unreal #38057555072 concluded SUCCESS. Earlier PR #340 run #38056805116 recorded `BLENDER_NUMPY_READY`, `HUMAN_WAVE3_DEFORMATION_PASS`, `HUMAN_WAVE3_STATIC_DEFORMATION_RECEIPT_PASS`. PR #343 could not merge cleanly with evolved develop; preserve its exact code and contract regression on a fresh develop-based branch, without duplicating it from #340.
-- Existing source-only fix enforces `--python-exit-code 93`, NumPy, unique hosted/UE4 receipts, nonempty result and `STATIC_DEFORMATION_STRESS_PASS` with visual/runtime acceptance explicitly false. This is a production candidate until its new exact-head tests pass; no Frodo final art, PIE/device, target FPS, VISUAL or Gate 6/7 acceptance is claimed. P1C02 remains CLOSED.
-
-## 2026-10-10 â€” Confirmed GitHub default branch is develop
-
-- Live GitHub repository metadata reports `default_branch=develop`. Owner confirms develop is canonical default/integration/programmer-handoff; `main` remains stable/release only. Updated existing `Data/ProjectGovernor.json` branch_workflow notes to remove stale assertion that main is default; no new Governor authority, no runtime content change.
-- Whole-game ambientCG material query correction PR #344 merged to develop as commit `a50e117259c3f5b779af67adad9ec8f5855e139c`; exact-head physical source intake result still pending. The owner did not authorize extra runtime chapter; P1C01 only, Gate 6/7 remains unaccepted.
-
-## 2026-10-10 â€” ambientCG whole-region intake zero-result correction (candidate)
-
-- Real run #38057505000 reached official ambientCG API and returned `AMBIENTCG_WAREHOUSE_STAGE_PASS files=0 skipped=0 bytes=0`; hard receipt gate correctly FAILED with `REGION_INTAKE_ZERO_VERIFIED_FILES`. Multiword natural-language keyword queries found no eligible ZIP records. Replace them with ten concise asset-family terms while preserving region mapping, CC0 license, 2K-PNG source QC, single serialized warehouse writer and >=6 GiB free-space reserve. Await exact-head and real staged SHA256 evidence; no files or visual/PIE/device acceptance claimed.
-
-## 2026-10-10 â€” Whole-game warehouse PowerShell stale exit code repair (candidate)
-
-- Real warehouse run #38056824745 FAILED in manager/runner health step after its own `RUNNER_HEALTH_PASS` log. Root cause: checking stale `$LASTEXITCODE` after a PowerShell script invocation, which does not guarantee reset of that native command exit variable. Correct step guards to check `$?` immediately after script calls; preserve Project Governor, staged receipt SHA256 audit and 6 GiB reserve. No provider downloads occurred in failing run; correction awaits exact-head CI and rerun.
-
-## 2026-10-10 â€” Whole-game licensed ambientCG regional intake V3 (candidate)
-
-- Added ten bounded material search lanes for 16 source-indexed regional IDs (including Minas Tirith, Helm's Deep, Edoras, Osgiliath, Rivendell, Fangorn, Isengard, Pelennor and Grey Havens) using existing public ambientCG 2K-PNG CC0 adapter, not a new material system. Register source queries and multi-region reuse; exact provider asset IDs are only assigned by live API staging.
-- New separate source-only intake workflow shares the existing serialized warehouse-stage concurrency group, requires Project Governor and Windows runner, checks 6 GiB disk floor before and after stage, requires SHA256 verified nonempty receipt, and does not access Unreal Content or open another runtime chapter.
-- Branch/pre-merge state: MANIFEST_AND_WORKFLOW_CREATED, STAGING_NOT_RUN; no new downloads, verified inventory additions, Unreal integration, PIE, device, visual or Gate 6/7 acceptance. On merge to develop the path-scoped production workflow will run; check receipt results and quarantine failures before declaring intake success.
-
-## 2026-10-10 â€” P1C01 mandatory Project Governor work-start and five-lane enforcement
-
-- DEC-104 is enforced as a mandatory physical production entrypoint. Existing five-lane read-only preflight is NOT proof of generated assets. Scripts/governor_work_start.py runs the full Project Governor and checks DEC-078/104/105, REQ-PROD-011, active P1C01 gate, one runtime writer, one warehouse writer, 6 GiB reserve and five lane identities before production.
-- Production workflows for Unreal, warehouse, skeletal characters, visual source and chapter closure now require the manager. Pre-Unreal regression tests forbid their bypass. Chapter closure source writer shares warehouse-stage concurrency with durable source staging.
-- Evidence: source changes submitted for exact-head CI. No new Unreal asset import, chapter PIE, target device measurement or visual acceptance is inferred. The existing warehouse #38049193046 is independent and not cancelled.
-
-## 2026-10-10 â€” P1C01 production bottleneck: source-only five lanes vs blocked durable warehouse (PENDING)
-
-- Verified `five-lane` workflow is *five read-only preflight lanes*, not five concurrently writing Unreal production assets. The durable 99-asset warehouse workflow targeted a merged temporary source branch and required manual dispatch after merge, leaving real 39/60 receipt promotion unproven. This change targets a one-shot `develop` merge activation of the existing exact-head durable warehouse train with SHA256 cache reuse, serialized writer, and 6 GiB reserve.
-- Status: `SOURCE_PIPELINE_TRIGGER_PREPARED_NOT_YET_RUN`; `99_SOURCE_FBX_UNREAL_IMPORT=NOT_PROVEN`; `P1C01_GATE67=NOT_ACCEPTED`. A real durable warehouse success and separate authored runtime import/PIE/performance evidence remain required.
-
-## 2026-10-10 â€” PG-026 release artifact versus failure-logs contract
-
-- Pre-Unreal #38045489962 failed: PG-026 failure logging may not depend on artifact upload quota. On isolated fix PR #336, removed `always()` log artifact upload, kept console failure logs and allowed a success-only packaged Windows playable candidate. Static exact-head checks and UE results pending. No Gate6/7 credit.
-
-## 2026-10-10 â€” P1C01 warehouse Windows nested relative-path root cause isolated
-
-- Real failure Run #38042482514: source39 245957831 B and pbr39 197353784 B **SHA256 verified and extracted** on persistent warehouse; staging wave39 then failed `StageError: UNSAFE_RELATIVE_PATH` at `stage_p1c01_adaptive_pbr_warehouse.py:358/331` on Windows. No wave39 permanent receipt, wave60 not started.
-- Root cause: `str(safe_path(...))` uses Windows backslashes when nested provider receipt paths (e.g. `textures/gate_diff_1k.png`) are converted, but `safe_path` correctly disallows backslashes in durable receipt keys. Minimal patch changes validated relative path serialization to `.as_posix()`, with a nested texture real fixture regression. Preserve cache; do not download source39/pbr39 again.
-- The exact-head Windows/Linux regression and real persistent warehouse evidence remain pending. No UE/PIE/device/visual acceptance claimed. This work lives on an isolated fix branch to avoid canceling active PR #335 packaging CI.
-
-## 2026-10-10 â€” P1C01 first downloadable playable candidate, fail closed
-
-- On the owner-approved P1C01 delivery lane, patched the game's default editor/game map, headless runtime smoke, packaging cook map and packaged startup observation to `/Engine/Maps/Entry`. This follows `Data/P1C01LocalVisualBootstrapV1.json` that identifies the engine `Template_Default` floor as a visual masking defect.
-- The existing exact-head `Unreal Build Validation` workflow now runs `Scripts/test_p1c01_delivery_entry_map.py` on hosted Windows **before** the UE runner and uploads the real `WindowsNoEditor` folder **only after** full/acceptance packaged startup passes. The artifact is a Windows playable **candidate**, not automatically a finished or visually approved chapter.
-- Exact-head CI, ZIP/artifact upload result, integration of warehouse Poly Haven PBR, hero animation, chapter-specific PIE, target 720p/30 FPS and human visual Gate 6/7 **remain unproven as of commit authoring**. Warehouse Run #38042482514 remains independently checkpointed; no second warehouse writer is launched.
-- No C++ modifications; after CI the next user-visible result must be a working Windows candidate download if and only if GitHub Actions created it.
-
-## 2026-10-10 â€” one coordinated P1C01 source warehouse production batch (99 FBX originals)
-
-- Owner requested one completion batch rather than repeated administrative waves. Added `Data/P1C01TwoWaveWarehouseActivationV1.json` and push-triggered `.github/workflows/p1c01-two-wave-checkpoint-warehouse.yml`: exact-head single-writer Windows runner uses previously produced pinned GitHub Artifacts, 20-case plus legacy offline regression tests, 4 MiB SHA256/fsync recovery, wave39 persisted/audited before wave60 begins, no second provider download or rollback of wave39.
-- Evidence status on commit creation: **PENDING new workflow run**. Wave39 and wave60 persistent receipts/audits are required; prior source conversion evidence is reusable, not a substitute. No UE import, player rig/animation, chapter PIE, device FPS or human visual acceptance is claimed. Existing acceptance gates remain unchanged.
-- Canon/source boundary: Source 07 F1-01 birthday/party and Ring outcome; current P1C01 includes broader Shire/road runtime, so do not relabel later F1-02/F1-03 source outcomes as independently accepted.
-
-## 2026-10-10 â€” P1C01 recovery convergence on PR #335 (source-only)
-
-- Recovery source and network-free 20-case fault-injection suite are reused from validated side branch commit `8c5b296bd4cd024745f3666ce45802ea0e74f004` (prior Linux+Windows https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/38007549312 SUCCESS). An exact-merged-head rerun is **PENDING**; no fresh result is asserted before it finishes.
-- The pinned 39-asset warehouse workflow now runs the network-free suite before any checkpoint download; existing single-writer concurrency and the 6 GiB storage reserve remain unchanged. Wave39 actual durable intake/audit is **NOT YET PROVEN**; wave60 stays separate and gated.
-- No UE4 C++/runtime/content assets were modified by this change: no repeated Unreal build, import, PIE, device or visual acceptance is claimed. P1C01 remains open, Gate 6/7 pending. PR #335 production metadata from prior head is preserved.
-
-## 2026-10-10 P1C01 checkpoint transport and source-only UE evidence reuse gate
-
-- On PR #335 exact head `ce8faa666d368f11b868963e85aecf8c7cda351d`, Pre-Unreal #38003230133 SUCCESS, Five-Lane #38003230032 SUCCESS, UE4 #38003230111 SUCCESS incl Editor and package; no need to rebuild this source revision merely to stage external CC0 artifacts. Source-only PBR had 39/39 and 59/60 conversions at proven earlier runs, not UE imported.
-- Source-only correction: added nine synthetic power/network-loss, corrupt-checkpoint, SHA256, ZIP safety and resume/no-double-fetch tests; tests must pass hosted CI before transferring large artifacts. Newly approved classifier checks only immediate-parent delta for an explicitly restricted set of source-only scripts/workflows/governance docs, verifies exact-parent full Unreal workflow SUCCESS via GitHub and chooses `inherit` only if both prove safe. This prevents cumulative PR diff from reclassifying successful source-only changes as new full UE compiles. Runtime changes still take existing full/core routes.
-- Persistent checkpoint code remains unproven until the real Windows runner writes and verifies 4MiB chunks, full Artifact SHA256, source receipts and <=6GiB reserve. Manual single-writer wave39 persists before any wave60; Gate6/7 P1C01 not accepted. If hosted regression fails, repair it before dispatch; do not run another 75-minute all-artifact download.
-
-## 2026-10-10 â€” Durable 4MiB restart checkpoints and no repeated expensive PR-wide acquisition
-
-- Owner observed electricity/network instability and rejected repeated long downloads/builds. Root cause: GitHub PR path filters saw entire PR diff, retriggering expensive 39-PBR conversion and 60-model acquisition for governance-only commits. Two duplicated self-hosted warehouse writers also contended for one runner; 75-minute download canceled before writes.
-- Corrective source-only transport `Scripts/resume_p1c01_artifact_checkpoint.py`: pinned source GitHub Actions artifact ID, exact archive byte length and SHA256; 4 MiB range transfers with per-chunk SHA256 journal in permanent warehouse, fsync and atomic checkpoint writes. Reuse completed chunks, re-fetch uncommitted tail only, fail closed on tampering, 6GiB free reserve and pinned archive SHA256. Whitelisted ZIP entry extraction with atomic CRC-checked files and durable extracted-state receipt. No provider re-download, UE4 import or visual claim.
-- Exactly one manual serialized source-only warehouse job for wave39: check existing SHA256 first, recover 39 source and PBR chunks, persist 39 and run canonical warehouse audit. Separate 60 wave reserved for independent follow-up after first checkpoint. Removed automatic pull_request triggers from expensive **adaptive 39-PBR and 60-source** workflows, while five-lane *read-only* regression remains eligible. No re-execution of existing expensive successful workflows on unrelated changes.
-- **Acceptance boundary:** workflow design change and manifest only until actual hosted regression and Windows warehouse logs. No permanent source promotion or P1C01 Gate6/7 acceptance claimed.
-
-## 2026-10-10 â€” 75-minute warehouse Artifact download failure; remove duplicate writer and split durable checkpoints
-
-- GitHub #37990910312 CANCELLED after 75 minutes: source 39 artifact took ~25m; PBR39 ~2.5m; source60 ~19m; PBR60 421,901,298-byte download ran 27m45s before cancellation. The first persistent commit and inventory audit were SKIPPED. No new persistent asset claim. Deprecation warning is not established cause.
-- Corrected process: dedicated warehouse writer is manually dispatched only and operates on 39-source wave first. Full SHA256 existing-wave check skips already-stored files; two necessary verified artifacts are fetched only if missing; commit wave39 and run warehouse inventory audit immediately. Separate 60-source followup only after successful durable wave39, not part of long four-download job. Removed duplicate warehouse writer from five-lane preflight. Add offline no-network regression tests for staging, reuse, source/receipt corruption, and path attacks.
-- Follow-up GitHub exact-head tests PENDING. The existing long-run failure is confirmed; final Gate6/7 remains UNACCEPTED, P1C02 CLOSED.
-
-## 2026-10-09 â€” Persistent source writer Python Runner PATH failure and exact fix
-
-- Workflow #37990747432 attempted serialized stage but failed **before downloading or writing assets**: actual step line `Python was not found; run without arguments to install from the Microsoft Store` on self-hosted Windows. The machine's previous UE run #37988147537 exposes installed toolchain `D:\\actions-runner\\_work\\_tool\\Python\\3.11.9\\x64\\python.exe`; writer workflow must resolve a known existing Python binary and persist the exact path to GITHUB_ENV, not depend on `python` App Execution Alias. Other source-only prep continues independent. Next exact-head workflow must demonstrate full receipt/hash copy and warehouse inventory audit; no persistent-stage success claimed yet.
-
-## 2026-10-09 â€” 99 source FBX recovery wave, 98 PBR-ready source conversions and guarded persistent warehouse intake
-
-- Exact-head PR #335 @ `08787c07`: source #37988147489 SUCCESS `P1C01_ADAPTIVE_SOURCE_STAGE eligible=183 staged=60 files=315 bytes=502931425 quarantine=123; NOT_UE4_IMPORTED`; conversion in same run SUCCESS `prepared=59 png=211 quarantined=1 NOT_UE4_IMPORTED`. The other 39 models are reused via prior artifact, not re-downloaded.
-- Previous 39 converted in #37988147700 SUCCESS: `P1C01_ADAPTIVE_PBR_QC prepared=39 png=146 quarantined=0 NOT_UE4_IMPORTED`. The held extra dry diffuse is source-only, not an invented normal map. Combined original models 99; PBR-prepared 98; quarantine 1. Artifacts expire in 30 days.
-- Unreal run #37988147537 SUCCESS exact head; Editor compile, existing production import, automation, headless P1C01 sweep, world-state roundtrip, packaging, startup. Log `W00_PACKAGE_PASS` and `W00_PACKAGED_STARTUP_PASS`; warning debt passed. This run does NOT import the new 99 external Poly Haven FBX.
-- Add `Scripts/stage_p1c01_adaptive_pbr_warehouse.py` and manual dispatch `.github/workflows/p1c01-persistent-verified-pbr-warehouse.yml`: one self-hosted writer guarded by the existing `warehouse-stage-` concurrency name. Reuses 4 numbered Artifacts and checks original source license/source-page, file inventories, per-file size/MD5/SHA256, binary FBX, prepared 1K PNG dimensions/hash, matching source receipt hash, quarantines and double-staging. Copies originals and generated sources to transaction directory, creates SHA256/licensing receipts, preserves 6 GiB free-space reserve, atomically promotes same-volume source wave and runs existing inventory audit. No paid assets, no provider downloads, no deletion of existing valid warehouse files, no claimed runtime imports.
-- **Unproven until dispatch logs**: persistent warehouse write and audit. Next real blocker: 99 FBX require UV/geometry/tangents/collision/LODs and visual matching before source-to-runtime import. Major hero Gandalf/Bilbo/Sam/Merry/Pippin rig/final presentation and human P1C01 DX11 720p 30FPS Gate 6/7 remain open. P1C02 remains CLOSED.
-
-## 2026-10-09 â€” P1C01 39-source integrity audit, nettle dry-map recovery and no-redownload wave two
-
-- **Observed exact-head evidence:** PR #335 @ `fac5bba5fac633ed9989d3b5f180b46b3ed43817`: CC0 source run 37985180302 SUCCESS (artifact 11643315007); PBR run 37985180453 SUCCESS (artifact 11641884955; `P1C01_ADAPTIVE_PBR_QC prepared=38 png=142 quarantined=1 NOT_UE4_IMPORTED`); Five-Lane Preflight 37985180297 SUCCESS; Pre-Unreal 37985180289 SUCCESS; UE4 run 37985180287 SUCCESS, including existing production import, Editor build, Automation, Windows package and packaged startup.
-- **Independent read-only ZIP audit:** all 211 files spanning 39 original Poly Haven CC0 source models matched size/MD5/SHA256; all 142 previously converted PNGs matched SHA256 and 1024x1024. Original `nettle_plant` quarantine was caused by `nettle_plant_dry_diff_1k.png`, a secondary BaseColor-only variation with no independent normal/roughness; source normals must never be invented.
-- **Follow-up code wave â€” exact-head CI pending:** convert the complete nettle primary PBR group, preserve the optional dry variant as a separate PNG with `HOLD_MATERIAL_VARIANT_NO_INDEPENDENT_NORMAL_ROUGHNESS` and source SHA256 (not UE import-eligible), require 39/39 prepared and zero quarantined after revalidation. Expand the next hosted Poly Haven source shard up to **480 MiB total / 30 MiB per source file / 660 seconds** with no arbitrary asset-count cap, hash-verify the existing 39 from prior GitHub Artifact and explicitly exclude them before new provider requests. New shard conversion is dependent on successful intake, while other hosted tracks stay independent.
-- **Boundaries:** this is generated **source-only**; GitHub Artifacts have 30-day retention and are not persistent warehouse receipts. Exactly one persistent warehouse writer and >=6 GiB free reserve remain mandatory; none of these candidates proves UE geometry/UV/LOD/collision, hero skeletal animation, playable scenes, pacing, PIE, target-device DX11 720p/30 FPS or human Gate 6/7 acceptance. P1C02 remains closed.
-
-## 2026-10-09 â€” Expanded P1C01 CC0 asset wave: 39 real FBX, now source-only PBR conversion
-
-- GitHub hosted adaptive source stage #2 `37979256311` SUCCESS exact SHA `17aa93bf`. Actual log `P1C01_ADAPTIVE_SOURCE_STAGE eligible=222 staged=39 files=211 bytes=251537607 quarantine=183; NOT_UE4_IMPORTED`. Confirmed ZIP Artifact **11640236408**, 245,957,831 compressed bytes: 39 FBX + 172 original EXR/JPEG/PNG textures. Of the 183 non-staged, **159 exceeded per-wave remaining budget and were deferred; 24 had a file >30MiB**. These do not represent 183 bad source files.
-- New `Scripts/prepare_p1c01_adaptive_pbr.py`, `Scripts/test_p1c01_adaptive_pbr.py` and hosted `.github/workflows/p1c01-adaptive-pbr-prep.yml` reuse the exact successful artifact **without provider/network acquisition, Git LFS or Unreal**; source SHA256/MD5 and inventory must match the receipt. Convert 1K BaseColor, DirectX green-flipped normal, R-AO/G-roughness/B-metallic masks plus 16-bit-safe alpha where present to PNG; preserve FBX bytes. Per-asset quarantine preserves source-only packet integrity.
-- Four non-Shire tropical candidates (`anthurium_botany_01`, `calathea_orbifolia_01`, `didelta_spinosa`, `pachira_aquatica_01`) explicitly biome-held; two ambiguous identities held. Other source candidates still need static FBX geometry/UV/smoothing/tangent, LOD/collision, material import and quality/performance review. **No new UE imports or visual acceptance claimed**.
-- Conversion Hosted exact-head run/test proof **PENDING** after this commit. Existing five parallel hosted preflights and UE4 #1821 are successful but not P1C01 Gate 6/7/DEVICE acceptance. The existing #329 remains sole runtime integration; all future library preparation may run independently.
-
-## 2026-10-09 â€” Adaptive wave minimum-remaining-byte guard correction
-
-- Static regression fixture for the new adaptive source wave uses 100,000 bytes of available storage; guard must not assume every candidate consumes >=1 MiB. Correct early-stop bound to <1024 remaining bytes, leaving the **actual per-file provider-size and overall byte caps** authoritative. This fixes exact source-layer gating rather than reducing testing or attempting unbounded retries.
-- The hosted source-only workflow remains required to pass its own exact HEAD before any new staged asset receipts count as evidence; no UE4 build requested by this corrective commit.
-
-## 2026-10-09 â€” Dynamic source acquisition beyond fixed five-model pilot
-
-- New selectively searched P1C01 high-fidelity **Poly Haven official CC0** source-only workflow `.github/workflows/p1c01-adaptive-highfidelity-source.yml`, backed by `Scripts/stage_p1c01_polyhaven_adaptive.py` and five no-network tests. Selects matching Shire outdoor, rustic architecture, vegetation, stones, garden and prop model metadata from provider's public API, excludes five previously staged models, then acquires 1K native static FBX and original texture dependencies. Each asset receives provider MD5 verification + SHA256 receipt; rejects traversal, invalid extension/host, malformed sources and oversize payloads.
-- **Real safety-driven scaling:** no arbitrary five-asset source limit; hosted wave limited by **240 MiB total source bytes, 30 MiB/file and 420 seconds** (plus GitHub 14-minute job), with per-asset quarantine and source-only artifact. Counts depend on actual suitable free provider content and cannot be claimed before the new run. Exceeding single-shard budget defers candidates rather than silently promoting them; future successful waves should process deferred candidates by verified resume/source checksums, never automatic blind redownload.
-- Originals may contain JPEG/EXR source dependencies; these remain SOURCE_STAGED only pending PNG/TGA conversion and FBX geometry/UV/smoothing/LOD/collision/import review. This workflow does NOT persistently mutate the shared warehouse, change UE Content, open P1C02 or establish target-device 30 FPS. Repository still uses the 6 GiB single-writer warehouse free-space safety reserve.
-- Five-lane hosted metadata preflight #1 was successful; on this commit the new adaptive acquisition/workflow status is **PENDING** until GitHub returns actual receipt/artifact. SOURCE != READY_FOR_IMPORT != VISUALLY_ACCEPTED.
-
-## 2026-10-09 â€” Five hosted tracks live, precise PG-078 root repair
-
-- New owner-confirmed DEC-104 / PR #335 first exact-head run [five-lane #1](https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/37978590310) **SUCCESS** on `e22434b812b71a20ba9375e71d7fc54e74baa486`: five distinct hosted matrix jobs completed successfully and published five source-only metadata reports, without Git LFS, UE4 or warehouse mutation.
-- Concurrent Pre-Unreal [#2225](https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/37978590228) **FAILED** PG-078 `tracked unfinished requirement snapshot is stale` because REQ-PROD-011 gained a concrete missing-work tracking entry while `Data/MasterExecutionRoadmap.json.tracked_unfinished_requirement_ids` was not synchronized. The requirement was already mapped to `CONTINUOUS_MAXIMUM_SAFE_PRODUCTION`; this commit regenerates the tracked unfinished-ID snapshot from the exact Governor (60 entries), without disabling, weakening or changing validator semantics.
-- **Revalidation pending** on the new exact HEAD. Five-lane PASS is source/read-only coordination proof, not binary warehouse upload or visual completion. Only serialized valid source intake may place eligible new files into persistent warehouse.
-
-## 2026-10-09 â€” Owner-confirmed permanent five-lane maximum-safe throughput
-
-- Direct live `develop` Governor review found **REQ-PROD-011 and DEC-078 already active**: throughput must be adaptive and maximal by default without further owner reminders. **DEC-104** explicitly groups existing preparation work into five independent operational tracks: serialized UE4 runtime; serialized persistent warehouse and legal asset intake; skeletal characters/animation; realistic visual Shire world; and gameplay/NPC/quest/save/audio/Arabic presentation.
-- Candidate branch adds `Scripts/p1c01_five_lane_preflight.py` and five-way parallel hosted runner workflow `.github/workflows/p1c01-five-lane-maxsafe.yml`. Runs every lane against the exact PR SHA with **no Git LFS, Unreal, persistent warehouse write, login bypass, or synthetic claims of new downloads**; all eligible metadata candidates and existing 180 visual slots are scanned and five source-only receipt artifacts published. The existing single serialized UE and warehouse workflows remain responsible for mutating their resources; no duplicate runner contention.
-- Maximum file intake is **not** unbounded single-job ZIP/VRAM/residency; follow `Data/MaximumSafeProductionModeV1.json` with >=6GiB warehouse reserve and measured per-file/wave/network/provider/artifact budgets. The warehouse source catalogue and existing legal source pipelines remain the actual acquisition path. Source/library inventory scales independently from the 2GB VRAM runtime working set.
-- At authoring, exact-head hosted proof is **PENDING**. This wave itself does not import new FBX, produce new cinematic content, complete the Shire, or satisfy Gate 6/7. Keep P1C02 runtime closed. Existing PR #329 Unreal lane and #332 photoreal intake lane continue independently.
-
-## 2026-10-01 - Critical-gap receipt parity matrix
-
-| Area | Status | Evidence / boundary |
-|---|---|---|
-| Canonical Warehouse inventory | RUN-PROVEN CLEAN | #306: 18,925 payloads / 6,745,968,858 bytes / 239 active / 428 superseded / 0 integrity failures |
-| Critical-gap receipt selection | SOURCE-REPAIRED / EXACT-HEAD PROOF PENDING | Same canonical root and newest-receipt rule as inventory audit |
-| Same-receipt duplicates | PRESERVED | Counted separately from historical supersession |
-| Newest active receipt corruption | FAIL-CLOSED | SHA256/missing-file preflight remains blocking and regression-covered |
-| Runtime / Frodo / Gate 6-7 maturity | UNCHANGED | No human/device or visual acceptance supplied |
-
-## 2026-10-01 - PG-207 fixture boundary
-
-| Area | Status | Evidence / boundary |
-|---|---|---|
-| Operational runner / Warehouse root | D-root required | Any live C-root occurrence remains a validation failure |
-| Historical C-root test fixture | SOURCE-IMPLEMENTED | Exactly one canonical fixture literal permitted only in receipt-supersession test |
-| Broader C-root allowlist | FORBIDDEN | Scripts/workflows/configuration remain fail-closed |
-| Exact-head validation | PENDING | Requires re-run after validator correction |
-
-## 2026-10-01 - Warehouse real-path canonicalization correction
-
-| Area | Status | Evidence / boundary |
-|---|---|---|
-| Real `C:\actions-runner\...` receipt paths | SOURCE-REPAIRED / EXACT-HEAD PROOF PENDING | Single Windows separators now canonicalize to active `D:\actions-runner\_warehouse\ShireJourney` root |
-| Regression fixture | SOURCE-IMPLEMENTED | Uses real single-backslash Windows path, not a C-style doubled representation |
-| Missing snow / mismatched rock records | FAIL-CLOSED PENDING TARGETED REPAIR | Candidate staging may repair only those payloads |
-| Blanket material refresh | FORBIDDEN | Existing verified payloads preserved |
-| Gate 6-7 and human/device acceptance | NOT ACCEPTED | Separate evidence required |
-
-## 2026-10-01 - Warehouse candidate trigger hardening matrix
-
-| Area | Status | Evidence / boundary |
-|---|---|---|
-| Candidate gate activation | SOURCE-IMPLEMENTED / EXACT-HEAD PROOF PENDING | Relevant Warehouse push invokes bounded provenance repair and candidate report without merge-subject matching |
-| Receipt integrity and payload reuse | PRESERVED | SHA256 verification; only missing or mismatched payload is redownloaded |
-| Broad refresh | FORBIDDEN | No `-Refresh` in the candidate gate |
-| Frodo/Gandalf report and artifact | PENDING | Requires successful exact-head Warehouse execution |
-| PIE / device / visual / pacing / performance / Gate 6-7 | NOT ACCEPTED | Separate real evidence required |
-
-## 2026-10-01 - Warehouse migrated-receipt root repair matrix
-
-| Area | Status | Evidence / boundary |
-|---|---|---|
-| Active Warehouse root | RUN-PROVEN | Warehouse #304 used `D:\\actions-runner\\_warehouse\\ShireJourney` |
-| Historical absolute receipt paths | SOURCE-REPAIRED / EXACT-HEAD PROOF PENDING | Rebased to the explicit audit root before grouping and SHA256/license checks |
-| Valid payload preservation | REQUIRED / PRESERVED | No blanket refresh or deletion; newer receipts supersede migrated historical records |
-| Genuine active-root corruption | FAIL-CLOSED / REGRESSION-COVERED | Newest active receipt hash mismatch still exits with audit failure |
-| P1C01 runtime / Frodo candidate / Gate 6-7 | UNCHANGED | No runtime or human/device acceptance supplied by this CI repair |
-
-## 2026-10-01 - P1C01 FOUNDATION_CORRECTIONS_V1
-
-| Area | Status | Evidence / boundary |
-|---|---|---|
-| Canonical predecessor | MACHINE-GREEN | `develop@3ec3f725cb1dff42a762e36e39790b82a4801714`; post-#207 Pre-Unreal + Unreal Build SUCCESS |
-| Persistent ambient social registration | SOURCE-IMPLEMENTED / EXACT-HEAD CI PENDING | Director-owned committed-world reconciliation; weak registry; no lifecycle transfer; bounded nearby query includes persistent residents |
-| Per-NPC full-world social scan | FORBIDDEN / PRESERVED | No `TActorIterator` in `AShireAmbientNPC::UpdateSocialLife`; one reconciliation scan occurs only at committed-world synchronization |
-| Pool ownership | PRESERVED | LivingWorld-managed baseline/micro-event NPCs remain pooled under `ALivingWorldDirector`; persistent builder-authored residents are not pooled by this repair |
-| Footstep surface resolution | SOURCE-IMPLEMENTED / EXACT-HEAD CI PENDING | Grass/Dirt/Stone/Wood SurfaceTypes + physical-material-first resolution; legacy identity fallback retained |
-| Hero animated source policy | GOVERNOR-ALIGNED | UE4.27 FBX 2018-compatible skeletal intake; OBJ remains static modular fallback only |
-| Visual quality target | GOVERNOR-ALIGNED | Balanced Medium + selective High; 720p / 30 FPS low-spec floor retained |
-| PBR expansion | NOT IMPLEMENTED BY THIS REPAIR | Existing scalar PBR remains; selective Normal/channel-packed acquisitions stay future bounded material work |
-| Fauna/Niagara rewrite | NOT AUTHORIZED / NO EVIDENCE NEED | Existing bounded pooled fauna retained until profiling shows a bottleneck |
-| Part II runtime expansion | FROZEN | Source-preparation workflows remain non-runtime evidence; P1C01 remains active runtime lane |
-| PIE / device / visual / pacing / performance | NOT TESTED / NOT ACCEPTED | Requires separate exact-head human/device evidence |
-
-## 2026-09-30 - P1C01 SAVE_LOAD_LONG_SESSION car
-
-- SHIRE_AUDIO_IDENTITY predecessor: **EXACT-HEAD MACHINE-GREEN** on PR #199 / Pre-Unreal #1486 / Unreal Build #1159; merged as `ec96e9e487ecbe91d9563848f685df4bd5c11b0d`.
-- Long-session persistence hardening: **SOURCE-IMPLEMENTED / EXACT-HEAD CI PENDING**.
-- Production save/restore ownership: **UNCHANGED**.
-- Restore transaction + committed-world transform grounding + async checkpoint revision guards: **PRESERVED**.
-- Oversized/corrupt save payload admission: **FAIL-CLOSED BEFORE RESTORE MUTATION**.
-- Serialization schema version: **UNCHANGED (v6)**; this car does not invent undocumented v1/v2 history or force a migration.
-- Human long-session PIE, save/load stress, target-device hitch/memory behavior: **PENDING / NOT CLAIMED**.
-
-## 2026-09-30 - P1C01 SHIRE_AUDIO_IDENTITY car
-
-- CINEMATIC_CONTROL_HANDOFF predecessor: **EXACT-HEAD MACHINE-GREEN** on PR #198 / Pre-Unreal #1484 / Unreal Build #1157; merged as `3b38698c19a244fde8f2979d73f12cd829576b7f`.
-- Shire sonic-identity runtime implementation: **SOURCE-IMPLEMENTED / EXACT-HEAD CI PENDING**.
-- Runtime audio owner: **UNCHANGED â€” UShireAudioSubsystem**.
-- Heavy/nonresident audio: **SOFT-PATH + ASYNC FStreamableManager**.
-- Decorative localized SFX concurrency: **BOUNDED â€” max 6 starts / 0.25 s + existing 0.06 s per-cue repeat guard**.
-- Story-critical one-shot priority over decorative burst budget: **SOURCE-IMPLEMENTED**.
-- Final P1C01 WAV masters/import/listening/mix/master: **PENDING / NOT CLAIMED**.
-- PIE/device/audio-listening/pacing/performance acceptance: **PENDING / NOT CLAIMED**.
-
-## 2026-09-30 - P1C01 CINEMATIC_CONTROL_HANDOFF car
-
-- QUEST_SIDE_ACTIVITY_COHERENCE predecessor: **EXACT-HEAD MACHINE-GREEN** on PR #197 / Pre-Unreal #1481 / Unreal Build #1154; merged as `e926889f9328e238afaffb16f9f9dabf58ce9040`.
-- Cinematic control-handoff source implementation: **SOURCE-IMPLEMENTED / EXACT-HEAD CI PENDING**.
-- Presentation state owner: **UNCHANGED â€” UShireStoryPresentationSubsystem**.
-- Runtime camera owner: **UNCHANGED â€” AStoryPresentationDirector**.
-- Quest/save/world-commit mutation by presentation: **FORBIDDEN / UNCHANGED**.
-- Timed release, explicit skip and chapter-change release: **TARGETED TO ONE EXIT PATH**.
-- Stale transient runtime camera after presentation unlock: **FORBIDDEN**.
-- Authored external camera/Level Sequence ownership: **PRESERVED**.
-- PIE skip/return behavior, target-device performance and human visual/pacing review: **PENDING / NOT CLAIMED**.
-
-## 2026-09-30 - P1C01 QUEST_SIDE_ACTIVITY_COHERENCE car
-
-- LIVING_SHIRE predecessor: **EXACT-HEAD MACHINE-GREEN** on PR #196 / Pre-Unreal #1478 / Unreal Build #1151; merged as `a478127559ab54f0ec938377a4962e6a75479d36`.
-- Quest/side-activity coherence implementation: **SOURCE-IMPLEMENTED / EXACT-HEAD CI PENDING**.
-- Quest/story ownership: **UNCHANGED â€” UShireQuestSubsystem only**.
-- Safe-window projection: **SOURCE-IMPLEMENTED** through `GetAvailableSideActivityIdsForCurrentWindow()`.
-- P1C01 main-quest urgency suppression: **SOURCE-IMPLEMENTED** for RingSecret / LeavingHome / KeepOffRoad / FerryEscape.
-- Side-activity duplicate reward prevention: **SOURCE-IMPLEMENTED / explicit guard + existing discovery idempotence**.
-- Locked story outcomes / required anchors: **UNCHANGED**.
-- PIE optional-window pacing, save/load behavior, target-device performance and human review: **PENDING / NOT CLAIMED**.
-
-## 2026-09-30 - P1C01 LIVING_SHIRE
-
-| Area | Status | Evidence / boundary |
-|---|---|---|
-| Predecessor CHARACTER_PRESENTATION | EXACT-HEAD MACHINE-GREEN / MERGED | PR #195; head `24ffa0ddb35756a606fb166d010b1e7ca2940308`; Pre-Unreal #1475 SUCCESS; Unreal Build #1148 SUCCESS; merge `66caf6168157e0ec171a1e7249ead245e45d8b42` |
-| Bounded NPC context snapshot | SOURCE-IMPLEMENTED / EXACT-HEAD PROOF PENDING | `FShireNPCBehaviorSnapshot`, `UShireNPCContextSubsystem::BuildBehaviorSnapshot` |
-| Bounded social candidate query | SOURCE-IMPLEMENTED / EXACT-HEAD PROOF PENDING | `ALivingWorldDirector::GatherActiveAmbientNPCsNear`; no per-NPC full-world social iterator |
-| Fauna group admission cap | SOURCE-IMPLEMENTED / EXACT-HEAD PROOF PENDING | existing LivingWorldEventPlan cap 2 loaded/enforced before FAUNA event selection |
-| Pool ownership | PRESERVED IN SOURCE / EXACT-HEAD PROOF PENDING | AmbientNPC, interaction and ambient-motion pools remain under LivingWorldDirector |
-| P1C01 population | UNCHANGED | baseline target 18 |
-| Story/canon ownership | PRESERVED IN SOURCE | ShireQuestSubsystem remains progression truth; ambient behavior cannot own locked outcomes |
-| PIE / device / visual / pacing / performance | NOT TESTED / NOT ACCEPTED | Requires separate chapter-specific human/device evidence |
-
-## 2026-09-30 - P1C01 CHARACTER_PRESENTATION car
-
-- PARTY_AND_SOCIAL_LOOP predecessor: **STATIC-VALIDATED + UE4.27.2/headless machine-green** on PR #194 / Pre-Unreal #1472 / Unreal #1145.
-- Character presentation implementation: **SOURCE-IMPLEMENTED / EXACT-HEAD CI PENDING**.
-- Stable hero identity: **DATA/C++ WIRED** through `AShireNPC::ProductionCharacterId`; P1C01 Gandalf/Bilbo/Sam story actors no longer depend on display-name identity.
-- Player canon presentation: **P1C01 Frodo future named sword fallback hidden**; no locked story outcome changed.
-- Skeletal rig path: **EXISTING ASYNC OWNER RETAINED** via `UShireChapterAssetStreamingSubsystem` / `FStreamableManager`; modular fallback remains until complete mesh + AnimBP resolution.
-- Low-spec skeletal controls: **URO + OnlyTickPoseWhenRendered retained**.
-- Ambient AI population: **UNCHANGED at 18**.
-- New AI subsystem / per-frame asset scan / synchronous heavy production load / crowd Spawn-Destroy churn: **NONE**.
-- PIE silhouette/equipment continuity, skeletal deformation/animation, target-device FPS/frame-time/hitches/RAM/VRAM and human visual review: **PENDING / NOT CLAIMED**.
-
-## 2026-09-30 - P1C01 SHIRE_WORLD_DENSITY car
-
-- Predecessor PR #189 exact head `3680ab2fa52b7ebd7ec896ec10d2d2f9a60dd63c`: **STATIC-VALIDATED by Pre-Unreal #1465 + COMPILE/headless machine-green by Unreal Build #1138**.
-- LivingWorld member-local cull repair: **EXACT-HEAD MACHINE-GREEN on PR #189**.
-- SHIRE_WORLD_DENSITY source implementation: **SOURCE-IMPLEMENTED / EXACT-HEAD CI PENDING**.
-- AI population: **UNCHANGED at P1C01 target 18**.
-- Added density budget: **<=5 zero-Tick HISM clusters / <=70 non-collision decorative instances**; resident production meshes only; missing categories skip without load.
-- Story/quest topology: **UNCHANGED**.
-- PIE traversal/readability, target-device FPS/frame-time/hitches/RAM/VRAM, visual density and pacing: **PENDING / NOT CLAIMED**.
-
-## 2026-09-30 - W00 machine closure / P1C01 mega train V2
-
-- Exact acceptance head: `d6ca8aac03f5a1da07609e61e790ddf8faad8eed`.
-- Pre-Unreal #1435: **SUCCESS**.
-- UE4.27.2 Unreal Build #1108: **SUCCESS**, including C++ build, production import, Automation, startup, chapter audit, route/state roundtrip, warning debt, Windows package, packaged Data verification and packaged executable observation.
-- Runtime Data staging: **RUN-PROVEN 37/37**.
-- Packaged runtime Data consumption: **RUN-PROVEN** via `NPCContext: ready=yes`.
-- LivingWorld member-local cull repair in mega V2: **EXACT-HEAD MACHINE-GREEN on PR #189 / Pre-Unreal #1465 + Unreal #1138**.
-- P1C01 mega-build program: **REGISTERED / preparation active / dependent runtime cars remain Governor-gated**.
-- Target-device FPS/frame-time/VRAM, chapter-wide human PIE, audio listening/mix and visual acceptance: **PENDING / NOT CLAIMED**.
-
-## 2026-09-30 - W00 packaged runtime Data-read proof guard
-
-- Packaged RuntimeDependencies staging/JSON syntax guard: **IMPLEMENTED**.
-- Packaged executable Data-consumption guard: **SOURCE-IMPLEMENTED / EXACT-HEAD CI PENDING**, requiring `NPCContext: ready=yes` during packaged startup.
-- This is acceptance evidence hardening only; chapter production maturity is unchanged.
-- P1C01 PIE/device/performance/audio-listening/visual acceptance remains pending and is not promoted by this guard.
-
-## 2026-09-30 - Final zero-ahead maintenance sweep
-
-- Remaining maintenance refs before sweep: **2**.
-- Post-sweep expected persistent refs: **develop + main + recovery-only archive**.
-- Branch cleanup lifecycle: **EXACT MERGED-HEAD DELETE + EXPLICIT ORPHAN DELETE**.
-- Build resume after cleanup success: **AUTHORIZED FROM CANONICAL develop**.
-- Gameplay/compile/PIE/device/visual/performance maturity: **UNCHANGED / NOT CLAIMED**.
-
-## 2026-09-30 - Last orphan ref closeout
-
-- Legacy archived working refs: **26 / 26 DELETED by Branch Cleanup #178 closeout**.
-- Recovery anchor: **PRESERVED** at `archive/pre-build-salvage-20260930`.
-- Superseded PR #179 maintenance ref: **QUEUED FOR FINAL GUARDED DELETE**.
-- Expected branch set after this merge cleanup: **develop + main + one recovery-only archive ref**.
-- Gameplay/compile/PIE/device/visual/performance maturity: **UNCHANGED / NOT CLAIMED**.
-
-## 2026-09-30 - Final branch-hygiene gate before construction resume
-
-- Legacy branch histories captured in recovery archive: **26 / 26 heads captured**.
-- Recovery archive: **`archive/pre-build-salvage-20260930@a47eda59f31352676de44777845fbc01c38d2d0d`**.
-- Captured legacy working refs: **QUEUED FOR GUARDED POST-MERGE DELETE**.
-- Expected persistent refs after cleanup: **develop + main + recovery archive**.
-- Production/PIE/device/visual/performance maturity: **UNCHANGED / NOT CLAIMED**.
-
-## 2026-09-30 - Infrastructure hygiene closeout
-
-- Active runner root: **RUN-PROVEN on `D:\\actions-runner`** from prior GitHub health evidence; owner-side final cleanup reports old C runner residue absent.
-- Persistent Warehouse root: **`D:\\actions-runner\\_warehouse\\ShireJourney`**.
-- Hosted Pre-Unreal / Branch Cleanup routing: **SOURCE/GOVERNANCE RECONCILED** with current workflow truth.
-- Exact merged-head branch deletion + moved-head guard + zero-ahead prune: **SOURCE-IMPLEMENTED / exact-head CI proof pending on this maintenance wave**.
-- Gameplay/PIE/device/visual/performance maturity: **UNCHANGED / NOT CLAIMED**.
-
-## 2026-09-30 - Runner root migration evidence
-
-- Self-hosted runner root: **RUN-PROVEN on `D:\\actions-runner`**.
-- Warehouse default root: **MIGRATED to `D:\\actions-runner\\_warehouse\\ShireJourney`**.
-- Interactive watchdog/service-exclusion topology remains the required execution model.
-- GitHub health evidence includes `RUNNER_HEALTH_WORKSPACE_PASS temp=D:\\actions-runner\\_work\\_temp` and `RUNNER_HEALTH_PASS`.
-- This infrastructure evidence does not promote any gameplay, PIE, visual, device-performance, or chapter maturity status.
-
-## 2026-09-29 - Hero skeletal candidate diagnostic note
-
-- First post-merge candidate workflow failed during candidate construction after checkout/runner/preflight success.
-- Diagnostic output is added without relaxing FBX/provenance/skeleton/skin/retarget/deformation gates.
-- Character visual-completion status remains unchanged.
-
-
-## 2026-09-29 - F2-04 Road & Helm's Deep Prep source-preparation note
-
-- F2-04 has a maximum-safe source architecture with 36 categories / 19 landmarks / 9 banks and PG-206 protection.
-- This wave preserves refugee movement, fortress orientation, civilians, supplies and defense preparation while keeping F2-05 combat closed.
-- It does not promote Part II runtime chapter maturity or Gate 6/7 status.
-- Runtime ID remains NOT_ASSIGNED_DO_NOT_INVENT.
-- No PIE/device/visual/performance acceptance is added by this wave.
-
-## 2026-09-29 - P1C01 hero skeletal candidate preparation
-
-- Frodo/Gandalf real-character work advances from generic rig staging to an explicit ranked FBX candidate/QC wave.
-- This is not a visual-completion promotion: all candidates remain QC_REQUIRED and not READY_FOR_IMPORT by default.
-- P1C01 stays the sole runtime-changing chapter lane; candidate discovery stays preparation-only until an explicit bounded UE4 import/integration step.
-- No PIE/device/visual/performance acceptance is added by this wave.
-
-## 2026-09-29 - F2-03 Edoras source-preparation note
-
-- F2-03 has a maximum-safe source architecture with 32 categories / 20 landmarks / 8 banks and PG-204 protection.
-- This wave expands source preparation only. It does not promote Part II runtime chapter maturity or Gate 6/7 status.
-- The chapter is governed by the permanent no-story-shortcuts / zero-silent-omission contract.
-- Runtime ID remains NOT_ASSIGNED_DO_NOT_INVENT.
-- No PIE/device/visual/performance acceptance is added by this wave.
-
-## 2026-09-29 - F2-02 exact-head CI routing repair
-
-- The first reconciled Pre-Unreal run failed at PG-203 tooling-filter coverage, not at canon/runtime/source-content validation.
-- Unreal source-only filters are corrected for both push and PR paths.
-- No chapter completeness or runtime acceptance status changes.
-
-## 2026-09-29 - F2-02 reconciliation note
-
-- F2-02 source-preparation metadata/tooling is reconciled with the permanent story/source rules without changing runtime chapter maturity.
-- F2-02 remains SOURCE/PREPARATION ONLY and is not assigned a Part II runtime ID.
-- DEC-083 owns the F2-02 source wave after DEC-081/DEC-082 were assigned to permanent story/source and localization governance.
-- No production-completeness row is promoted to PIE/device/visual/performance accepted by this reconciliation.
-
-## 2026-09-29 â€” Story/source completeness and localization governance note
-
-- Story/source completeness definition is strengthened without promoting runtime maturity: chapter planning must route Timeline -> film/screenplay -> Tolkien narrative/Appendices -> Sources 02-11 and explicitly disposition meaningful discovered detail.
-- Compatible Tolkien book-only content may be real gameplay when it preserves required film outcomes; the Timeline is not a detail ceiling and Gate 6/7 is not permission to shorten planned story coverage.
-- Localization contract is now explicit: English VO, Arabic subtitles/UI/objectives, canonical English map location labels, correct RTL rendering.
-- This governance/onboarding wave changes **no chapter production status** in the matrix and supplies no new PIE/device/visual/performance evidence.
-
-## 2026-09-29 - F2-01 Three Hunters / Captives maximum-safe source wave
-
-- Canonical F2-01 scope: **REGISTERED**.
-- Part II runtime ID mapping: **UNASSIGNED / DO NOT INVENT**.
-- Mission/story/world source verification: **SOURCE-REVIEWED**.
-- F2-02 later-state exclusion: **PRESERVED**.
-- 38-category / 8-bank / 28,000-candidate manifest: **SOURCE-IMPLEMENTED**.
-- 17 configured landmark categories / minimum 14 ready: **SOURCE-IMPLEMENTED / EXECUTION PENDING**.
-- Minimum 7 of 8 banks ready: **SOURCE-IMPLEMENTED / EXECUTION PENDING**.
-- Fair-share candidate scheduling: **SOURCE-IMPLEMENTED**.
-- FBX-only animated candidates / PNG-TGA texture policy / BMP rejection: **SOURCE-IMPLEMENTED**.
-- Clean warehouse inventory + 6 GiB reserve gate: **SOURCE-IMPLEMENTED**.
-- Dedicated 180-minute source workflow: **SOURCE-IMPLEMENTED**.
-- PG-202 runtime-ID/source regression guard: **SOURCE-IMPLEMENTED**.
-- Part II runtime integration: **BLOCKED UNTIL EXPLICIT RUNTIME-ID MAPPING + EXISTING RUNTIME GATES**.
-- Exact-head Pre-Unreal: **PENDING**.
-- Heavy F2-01 source execution: **PENDING CLEAN-INVENTORY RUN**.
-- PIE/device/visual/pacing/performance acceptance: **NOT CLAIMED**.
-
-## 2026-09-29 - F1-08 Amon Hen / Breaking of the Fellowship maximum-safe source wave
-
-- Canonical F1-08 / P1C08 mapping: **REGISTERED / NO RUNTIME RENUMBERING**.
-- Mission/story/world/character source verification: **SOURCE-REVIEWED**.
-- Boromir tragic/redemptive guardrail: **PRESERVED**.
-- 34-category / 7-bank / 24,000-candidate manifest: **SOURCE-IMPLEMENTED**.
-- 18 configured landmark categories / minimum 14 ready: **SOURCE-IMPLEMENTED / EXECUTION PENDING**.
-- Minimum 6 of 7 banks ready: **SOURCE-IMPLEMENTED / EXECUTION PENDING**.
-- Fair-share candidate scheduling: **SOURCE-IMPLEMENTED**.
-- Multi-bank future runtime residency blueprint: **SOURCE-IMPLEMENTED / RUNTIME NOT OPEN**.
-- FBX-only animated candidates / PNG-TGA texture policy / BMP rejection: **SOURCE-IMPLEMENTED**.
-- Clean warehouse inventory + 6 GiB reserve gate: **SOURCE-IMPLEMENTED**.
-- Dedicated 180-minute source workflow: **SOURCE-IMPLEMENTED**.
-- PG-201 regression guard: **SOURCE-IMPLEMENTED**.
-- P1C08 runtime integration: **BLOCKED UNTIL P1C07 GATE 6/7 ACCEPTED**.
-- Exact-head Pre-Unreal: **PENDING**.
-- Heavy F1-08 source execution: **PENDING CLEAN-INVENTORY RUN**.
-- PIE/device/visual/pacing/performance acceptance: **NOT CLAIMED**.
-
-## 2026-09-29 - Adaptive Maximum Safe Production Mode V1
-
-- Maximum-safe production governance (`DEC-078` / `REQ-PROD-011`): **SOURCE-IMPLEMENTED**.
-- Machine-readable capacity/execution plan: **SOURCE-IMPLEMENTED**.
-- Whole-game queue maximum-safe mode: **SOURCE-IMPLEMENTED**.
-- Master roadmap stale W00 control-state reconciliation: **SOURCE-IMPLEMENTED**.
-- Parallel preparation lanes + single runtime lane: **GOVERNED**.
-- Persistent warehouse single-writer rule: **GOVERNED**.
-- Warehouse #286 active-receipt inventory audit: **PASS â€” 18,697 payload files / 6,688,457,009 bytes / 239 active / 428 superseded / 0 duplicate hash groups**.
-- Warehouse #286 full workflow: **FAILED AFTER CLEAN AUDIT â€” SATURATION REPORT STRICTMODE EMPTY-SUM DEFECT**.
-- Empty-safe saturation byte aggregation: **SOURCE-REPAIRED**.
-- Saturation empty-lane regression test in Pre-Unreal: **SOURCE-IMPLEMENTED / EXACT-HEAD EXECUTION PENDING**.
-- P1C01 Closure Pack continuation: **NEXT AFTER SELECTIVE WAREHOUSE TRAIN GREEN**.
-- F1-07 source architecture: **PARALLEL VALIDATION LANE**.
-- F1-08 maximum-safe mega source wave: **NEXT SOURCE PRODUCTION WAVE**.
-- Runtime Gate 6/7 / PIE / device / visual / pacing / performance acceptance: **UNCHANGED / NOT CLAIMED**.
-
-## 2026-09-29 - F1-07 LÃ³rien & Anduin landmark source preparation
-
-- Canonical F1-07 scope / P1C07 mapping: **REGISTERED**.
-- F1-08 Fellowship-break boundary: **EXPLICITLY PRESERVED**.
-- 26-category / 18,000-candidate shared source manifest: **SOURCE-IMPLEMENTED**.
-- 2,000/category ceiling / landmark score bonus 7: **SOURCE-IMPLEMENTED**.
-- Minimum 10 populated landmark categories: **SOURCE-IMPLEMENTED / EXECUTION PENDING**.
-- LothlÃ³rien vertical flet/canopy landmark identity: **SOURCE-IMPLEMENTED**.
-- Anduin river-axis/cliff/stone-monument/Amon Hen approach identity: **SOURCE-IMPLEMENTED**.
-- FBX-only animated candidate filter / BMP rejection: **SOURCE-IMPLEMENTED**.
-- Inventory-clean hard gate: **SOURCE-IMPLEMENTED**.
-- Dedicated 180-minute F1-07 workflow: **SOURCE-IMPLEMENTED**.
-- PG-200 regression coverage: **SOURCE-IMPLEMENTED**.
-- Heavy source workflow execution: **BLOCKED UNTIL WAREHOUSE INVENTORY CLEAN**.
-- P1C07 runtime integration: **BLOCKED UNTIL PREDECESSOR GATE ACCEPTED**.
-- Exact-head static validation: **PENDING**.
-- PIE/device/visual/pacing/performance acceptance: **NOT CLAIMED**.
-
-## 2026-09-29 - Warehouse active-provenance supersession repair
-
-- Historical receipt preservation: **RETAINED / NO RECEIPT REWRITE**.
-- Active provenance selection: **SOURCE-IMPLEMENTED â€” latest valid receipt per normalized payload path**.
-- Windows case/slash path coalescing: **SOURCE-IMPLEMENTED**.
-- Superseded historical hash records: **NON-FAILING HISTORY / REPORTED**.
-- Active latest-receipt hash mismatch: **HARD FAIL REMAINS ENFORCED**.
-- Synthetic V1 -> V2 supersession regression: **SOURCE-IMPLEMENTED / PRE-UNREAL EXECUTION PENDING**.
-- Persistent warehouse inventory clean state: **PENDING RERUN**.
-- P1C01 Closure Pack continuation: **BLOCKED UNTIL PERSISTENT AUDIT PASSES**.
-- Runtime/PIE/device/visual/pacing/performance acceptance: **UNCHANGED / NOT CLAIMED**.
-
-## 2026-09-29 - Interactive orchestration responsiveness
-
-- Repeated same-run interactive long polling: **PROHIBITED BY DEC-075**.
-- Bounded status checks + automation continuation: **GOVERNED**.
-- PR #153 exact-head Pre-Unreal #1379: **SUCCESS**.
-- PR #153 exact-head Unreal #1095: **SUCCESS**.
-- Gate 6/7 / PIE / device / visual / performance criteria: **UNCHANGED**.
-
-## 2026-09-29 - F1-06 landmark scoring priority
-
-- Configurable landmark score bonus (6): **SOURCE-IMPLEMENTED**.
-- PG-199 minimum landmark-score regression guard: **SOURCE-IMPLEMENTED**.
-- Duplicate PR #152: **CLOSED / NOT MERGED**.
-- PR #153 exact-head Pre-Unreal/Unreal after scoring update: **PENDING**.
-- Visual acceptance: **NOT CLAIMED**.
-
-## 2026-09-29 - PG-199 landmark/F1-06 guard
-
-- Part I landmark/F1-06 static regression guard: **SOURCE-IMPLEMENTED**.
-- Exact-head Pre-Unreal validation after PG-199: **PENDING**.
-- Visual/runtime acceptance: **NOT CLAIMED**.
-
-## 2026-09-29 - Part I landmark identity / F1-06 Caradhras-Moria source mega pack
-
-- Part I landmark identity plan: **SOURCE-IMPLEMENTED**.
-- Shire/Hobbiton + Bag End landmark anchors: **PLANNED / CURRENT-CHAPTER VISUAL ACCEPTANCE PENDING**.
-- Bree/Weathertop landmark anchors: **SOURCE-PREPARED / VISUAL ACCEPTANCE NOT CLAIMED**.
-- Rivendell landmark anchor: **SOURCE-ARCHITECTURE READY / HEAVY EXECUTION INVENTORY-GATED**.
-- Caradhras/Moria landmark anchors: **SOURCE-ARCHITECTURE READY / HEAVY EXECUTION INVENTORY-GATED**.
-- F1-06 24-category / 16,000-candidate manifest: **SOURCE-IMPLEMENTED**.
-- Landmark coverage report + minimum-source gate: **SOURCE-IMPLEMENTED**.
-- FBX-only animated candidate filter / BMP rejection: **SOURCE-IMPLEMENTED**.
-- Dedicated 180-minute F1-06 workflow: **SOURCE-IMPLEMENTED**.
-- P1C05/P1C06 runtime integration: **BLOCKED UNTIL PREDECESSOR GATE ACCEPTED**.
-- Exact-head static validation: **PENDING**.
-- PIE/device/visual/pacing/performance acceptance: **NOT CLAIMED**.
-
-## 2026-09-29 - Warehouse mismatch diagnostic hardening
-
-- P1C01 Closure Pack #2 inventory audit: **HARD STOP / hashMismatch=1**.
-- Exact hash-mismatch log evidence: **SOURCE-IMPLEMENTED**.
-- Exact license-hash/missing-reference log evidence: **SOURCE-IMPLEMENTED**.
-- Automatic deletion/quarantine/receipt rewrite: **NOT AUTHORIZED / NOT IMPLEMENTED**.
-- Mismatch record identification by rerun: **PENDING**.
-- Warehouse clean state: **NOT CLAIMED**.
-- P1C01 closure continuation: **BLOCKED UNTIL INVENTORY REPAIRED OR EVIDENCE-QUARANTINED**.
-
-## 2026-09-29 - F1-05 Rivendell & Fellowship mega source preparation
-
-- Canonical F1-05 source scope: **REGISTERED**.
-- Runtime consumer P1C04 mapping: **RECORDED**.
-- 20-category / 12,000-candidate shared source manifest: **SOURCE-IMPLEMENTED**.
-- Inventory-clean hard gate: **SOURCE-IMPLEMENTED**.
-- FBX-only animated candidate filter: **SOURCE-IMPLEMENTED**.
-- BMP texture rejection: **SOURCE-IMPLEMENTED**.
-- Dedicated 180-minute F1-05 workflow: **SOURCE-IMPLEMENTED**.
-- Heavy workflow execution: **BLOCKED UNTIL WAREHOUSE INVENTORY CLEAN**.
-- P1C04 runtime integration: **BLOCKED UNTIL PREDECESSOR GATE ACCEPTED**.
-- Exact-head static validation: **PENDING**.
-- PIE/device/visual/pacing/performance acceptance: **NOT CLAIMED**.
-
-## 2026-09-29 - F1-04 Bree & Weathertop mega source preparation
-
-- Canonical F1-04 source scope: **REGISTERED**.
-- Runtime consumers P1C02 + P1C03 mapping: **RECORDED / NO RUNTIME RENUMBERING**.
-- 16-category shared warehouse source manifest: **SOURCE-IMPLEMENTED**.
-- Shared-stock indexer with 9000 total candidate ceiling: **SOURCE-IMPLEMENTED**.
-- Animated candidate FBX-only filter: **SOURCE-IMPLEMENTED**.
-- BMP texture rejection: **SOURCE-IMPLEMENTED**.
-- Isolated 180-minute F1-04 preparation workflow: **SOURCE-IMPLEMENTED**.
-- Runtime integration P1C02/P1C03: **BLOCKED UNTIL PREDECESSOR GATE ACCEPTED**.
-- Exact-head Pre-Unreal validation: **PENDING**.
-- Source workflow execution on develop: **PENDING**.
-- PIE/device/visual/pacing/performance acceptance: **NOT CLAIMED**.
-
-## 2026-09-29 - Production train root-repair wave
-
-- develop Pre-Unreal #1363: **SUCCESS**.
-- develop Unreal #1085: **SUCCESS**.
-- P1C01 Chapter Closure Pack #1: **FAILED AFTER STORAGE PASS / TOOLING EXIT-STATE DEFECT**.
-- Warehouse #283 material intake: **8 PREPARED / LOCAL GENERATED COMMIT CREATED / REMOTE LOOKUP FAILED BEFORE PUBLISH**.
-- Part I Chapter Preparation Train #1: **FAILED DURING POWERSHELL 5.1 REPORT MATERIALIZATION**.
-- Sequential Chapter Queue #1: **SUCCESS / WAIT STATE HONORED / P1C02 RUNTIME NOT RELEASED**.
-- Deterministic closure child-process exit handling: **SOURCE-IMPLEMENTED**.
-- Generated-branch ls-remote retry/exit capture: **SOURCE-IMPLEMENTED**.
-- Part I generic-list ToArray serialization guard: **SOURCE-IMPLEMENTED**.
-- PG-196 static regression coverage: **SOURCE-IMPLEMENTED**.
-- Fresh exact-head validation/reruns: **PENDING**.
-- PIE/device/visual/pacing/performance acceptance: **NOT CLAIMED**.
-
-## 2026-09-29 - #1082 direct-PID/CIM recovery refinement
-
-- Pre-Unreal #1360 on prior exact head `98dcb4d...`: **SUCCESS**.
-- Unreal #1082: **FAILED AT STALE CI COMMANDLET RECOVERY** after `taskkill /T /F` could not terminate PID 14144.
-- Direct PID taskkill fallback: **SOURCE-IMPLEMENTED**.
-- CIM `Win32_Process.Terminate` fallback + return-value evidence: **SOURCE-IMPLEMENTED**.
-- Fresh exact-head Pre-Unreal: **PENDING**.
-- Fresh exact-head Unreal Build/import: **PENDING**.
-- P1C01 Chapter Closure Mega Pack: **NOT YET RELEASED; EXACT-HEAD UNREAL GATE STILL REQUIRED**.
-- PIE/device/visual/pacing/performance acceptance: **NOT CLAIMED**.
-
-## 2026-09-29 - #1358/#1080 stale commandlet recovery refinement
-
-- Pre-Unreal #1358: **FAILED ONLY AT LEGACY PG-015 WAITER SHAPE CHECK**.
-- Unreal #1080 blocker PID 14144: **CI COMMANDLET IDENTITY CAPTURED** (`UE4Editor-Cmd` / ShireJourney QA / same interactive owner / orphaned parent / >20 min old).
-- Bounded stale-commandlet process-tree recovery: **SOURCE-IMPLEMENTED**.
-- Interactive editor kill-by-name: **FORBIDDEN / NOT INTRODUCED**.
-- PG-015 + PG-195 static regression coverage: **SOURCE-UPDATED**.
-- Fresh exact-head Pre-Unreal: **PENDING**.
-- Fresh exact-head Unreal Build/import: **PENDING**.
-- P1C01 Chapter Closure Mega Pack execution: **BLOCKED UNTIL REQUIRED EXACT-HEAD GATES TURN GREEN**.
-- PIE/device/visual/pacing/performance acceptance: **NOT CLAIMED**.
-
-## 2026-09-29 - Continuous Part I preparation train / Unreal #1068 process ownership repair
-
-- Unreal Build #1068 Editor compile: **COMPILE STEP SUCCESS** on prior exact head `c76e521e...`.
-- Unreal Build #1068 production import: **BLOCKED BEFORE IMPORT** by `PRODUCTION_IMPORT_PREFLIGHT_EDITOR_RUNNING pids=14144`.
-- Editor/commandlet wait mismatch root repair (`DEC-066` / `PG-195`): **SOURCE-IMPLEMENTED**.
-- Fresh exact-head Pre-Unreal validation after repair: **PENDING**.
-- Fresh exact-head Unreal Build/import validation after repair: **PENDING**.
-- Part I canonical/runtime ID reconciliation (`DEC-067`): **REGISTERED**.
-- P1C02-P1C08 shared warehouse candidate indexing: **SOURCE-IMPLEMENTED / POST-MERGE EXECUTION PENDING**.
-- Downstream runtime integration: **SERIALIZED / BLOCKED UNTIL PREDECESSOR GATE ACCEPTED**.
-- Standing routine execution authorization (`DEC-068`): **RECORDED; DOES NOT WAIVE QUALITY GATES**.
-- PIE/device/visual/pacing/performance acceptance: **NOT CLAIMED**.
-
-## 2026-09-29 - Two-chapter queue + systemic living-world architecture registration
-
-- P1C01 -> P1C02 sequential queue governance (`DEC-064`): **SOURCE-IMPLEMENTED**.
-- P1C02 source/warehouse preparation before P1C01 acceptance: **AUTHORIZED WHEN QUEUED**.
-- P1C02 runtime integration before P1C01 Gate 6/7 acceptance: **BLOCKED BY CONTRACT**.
-- Core production direction / systemic environmental reactivity (`DEC-065`): **ARCHITECTURE REGISTERED**.
-- Existing LivingWorld/NPC context/memory/relationship/pooling systems: **REUSED; NO PARALLEL BRAIN AUTHORIZED**.
-- Generic bounded environmental reaction contract (trees/foliage, water, doors/tools/props, fauna/NPC observers): **PLANNED / RUNTIME NOT STARTED**.
-- Exact-head Pre-Unreal/Unreal evidence after these documentation/governance commits: **PENDING**.
-- PIE/device/visual/performance acceptance: **NOT CLAIMED**.
-
-## 2026-09-28 - Pre-Unreal #1332 root-fix matrix
-
-- PowerShell parser gate: **PASS on #1332 â€” 47 files / 0 parser errors**.
-- Watchdog service-guard contract: **SOURCE-REBUILT ON CLEAN SINGLE-BODY SCRIPT**.
-- Closure preflight Unreal exclusion: **SOURCE-FIXED**.
-- PG-193 workflow reference assertion: **SOURCE-FIXED**.
-- Unreal Build #1054: **SUCCESS on previous exact head 61d629c4...**.
-- Current exact-head static validation after commits `609c7eb...`, `c8271d8...`, `5f016df...`: **PENDING**.
-- P1C01 Closure Pack V2 Warehouse execution: **PENDING MERGE + DEDICATED WORKFLOW RUN**.
-- PIE/device/visual/performance acceptance: **NOT CLAIMED**.
-
-## 2026-09-28 - CI red-run root-cause closure
-
-- Pre-Unreal #1325 PowerShell parser gate: **PASS â€” files=45, errors=0**.
-- Pre-Unreal #1325 PG-168 failure: **ROOT CAUSE IDENTIFIED** â€” long-pack cancellation policy was incorrectly applied to the normal Warehouse workflow.
-- Normal Warehouse workflow: **RESTORED TO 60 MIN / cancel-in-progress=true**.
-- Dedicated P1C01 closure workflow: **SOURCE-IMPLEMENTED â€” 180 MIN / cancel-in-progress=false / isolated concurrency**.
-- Closure fast preflight: **SOURCE-IMPLEMENTED**.
-- Unreal Build #1047 editor compile: **COMPILE-TESTED SUCCESS for that exact run/head**.
-- Unreal Build #1047 production commandlet: **376 files processed / 0 commandlet import failures**, but workflow **FAILED** on `T_Cloth_Green.uasset` delete/save error.
-- UE production import destination preflight + bounded single retry: **SOURCE-IMPLEMENTED / EXACT-HEAD RE-RUN PENDING**.
-- PIE/device/visual/performance acceptance: **NOT CLAIMED**.
-
-## 2026-09-28 - PR #145 parser-gate findings and long-pack execution hardening
-
-- Pre-Unreal #1318: **FAILED AT POWERSHELL PARSER GATE**; merge correctly blocked.
-- `export_p1c01_material_source_branch.ps1` duplicated-tail corruption: **SOURCE-REPAIRED**.
-- `runner_watchdog.ps1` latent duplicated/corrupted source: **RESTORED FROM 1066cf022723fcdef9bfac66519f5b0f9c1e03a4** under DEC-060.
-- Repository-wide PowerShell parser prevention (DEC-059): **ACTIVE IN SOURCE / EXACT-HEAD GREEN RE-RUN PENDING**.
-- Warehouse large-pack timeout: **SOURCE-SET TO 180 MINUTES**.
-- Warehouse cancellation policy: **SOURCE-SET TO QUEUE NEW WORK, DO NOT CANCEL ACTIVE PACK**.
-- P1C01 Closure Pack V2 Warehouse execution: **PENDING**.
-- UE4.27 import/runtime binding/PIE/device/visual/performance acceptance: **NOT CLAIMED**.
-
-## 2026-09-28 - Warehouse #282 parser root-cause prevention
-
-- Pre-Unreal #1317: **SUCCESS**, but missing repository-wide PowerShell parse coverage.
-- Warehouse #282: **FAILED BEFORE MATERIAL EXECUTION** with a PowerShell `ParserError` in `export_p1c01_material_source_branch.ps1`.
-- Exporter publish block: **SOURCE-REPAIRED** on the active closure-pack branch.
-- DEC-059 repository-wide PowerShell parser gate: **SOURCE-IMPLEMENTED**.
-- `Scripts/test_powershell_syntax.ps1`: **SOURCE-IMPLEMENTED**.
-- Hosted Pre-Unreal parser step: **SOURCE-IMPLEMENTED / EXACT-HEAD RUN PENDING**.
-- Warehouse/material publish after repair: **PENDING RE-RUN**.
-- UE/PIE/device/visual/performance status: **UNCHANGED / NOT CLAIMED**.
-
-## 2026-09-28 - P1C01 maximum-throughput Chapter Closure Mega Pack V2
-
-- DEC-058 maximum-throughput chapter source pack: **SOURCE-IMPLEMENTED**.
-- Single Warehouse closure-pack trigger: **SOURCE-IMPLEMENTED**.
-- Provider/source capacity: **37 Poly Haven + 17 ambientCG lanes + 17 Quaternius + 12 Kenney + 8 KayKit + 17 OpenGameArt**.
-- Promotion selector ceiling: **187**.
-- Material closure wave: **26 requested materials**.
-- Material generated-branch budget: **48 MiB/source / 640 MiB/batch / minimum 18 exported**.
-- Storage guard: **6 GiB free-space reserve / no source deletion for space**.
-- Provider/asset/source blocker behavior: **QUARANTINE_AND_CONTINUE**.
-- Infrastructure/inventory/storage corruption: **HARD_FAILURE**.
-- UE4.27 import/runtime binding/PIE/device/visual/performance acceptance: **NOT CLAIMED**.
-
-## 2026-09-28 - Warehouse #281 generated-branch publish root cause
-
-- Pre-Unreal #1315: **SUCCESS**.
-- Material intake under DEC-056: **RUN-PROVEN** at `prepared=8 pending=8 manual=0`.
-- Local generated source commit: **CREATED** at `2474500` before publish.
-- Remote generated branch publish: **FAILED** with `stale info`; no UE import claim.
-- Root cause: **implicit --force-with-lease depended on stale/unfetched remote-tracking state** in the isolated Warehouse checkout.
-- DEC-057 explicit remote-SHA lease: **SOURCE-IMPLEMENTED**.
-- PG-191 regression guard: **SOURCE-IMPLEMENTED**.
-- Post-fix Warehouse publish: **PENDING RE-RUN**.
-- UE4.27 import/runtime binding/PIE/device/visual/performance acceptance: **NOT CLAIMED**.
-
-## 2026-09-28 - Warehouse #280 material-QC execution repair
-
-- Pre-Unreal #1313: **SUCCESS**.
-- Warehouse Stage #280: **FAILED BEFORE MATERIAL QC EXECUTION** at `prepare_p1c01_material_intake.ps1:122`.
-- Exact error: **Windows PowerShell 5.1 `CommandNotFoundException` for `return if(...)`**.
-- Selector control-flow repair: **SOURCE-FIXED**.
-- PG-190 compatibility guard: **SOURCE-IMPLEMENTED**.
-- Material provenance/albedo QC regeneration: **NOT YET RE-RUN**.
-- UE4.27 import/runtime binding/PIE/device/visual/performance acceptance: **NOT CLAIMED**.
-
-## 2026-09-28 - Warehouse #279 generated-material evidence and albedo-provenance hold
-
-- Pre-Unreal #1311: **SUCCESS**.
-- Warehouse Stage #279: **SUCCESS**.
-- Material intake: **RUN-PROVEN** at `prepared=8 pending=8 manual=0`.
-- Generated material branch: **RUN-PROVEN** at `537d9e72...`, 8 materials / 137,974,221 source bytes.
-- Old 16 MiB blocker: **CLEARED BY RUN EVIDENCE** under DEC-055 bounded 32/256 MiB policy.
-- Exact selected-file provenance: **QC DEFECT IDENTIFIED IN SOURCE**; first matching receipt row can differ from the file selected by `Select-BaseColor`.
-- Generated branch UE import: **HELD** until post-DEC-056 Warehouse regeneration proves explicit albedo semantics and exact selected-file provenance.
-- UE4.27 import/runtime binding/PIE/device/visual/performance acceptance: **NOT CLAIMED**.
-
-## 2026-09-28 - PR #141 static guard follow-up
-
-- Pre-Unreal #1309: **FAILED STATIC VALIDATION** on stale PG-184 text requirement `128 MB bounded limit`.
-- Exporter/runtime evidence: **NOT REACHED / NOT IMPLIED BY THIS FAILURE**.
-- Stale PG-184 literal: **SOURCE-FIXED** to validate `MaxBatchSourceBytes` while PG-188 owns the exact 32/256 MiB budget contract.
-- Next evidence: **EXACT-HEAD PRE-UNREAL RE-RUN PENDING**.
-
-## 2026-09-28 - Warehouse #278 Mega Chapter Pack evidence / larger bounded material source batch
-
-- PR #140 merge head `14d34d28...`: **PRE-UNREAL #1308 SUCCESS / WAREHOUSE #278 SUCCESS**.
-- Chapter-pack result: **RUN-PROVEN** at `passed=3 quarantined=1 hard=0`.
-- Inventory: **RUN-PROVEN** at 18,676 payload files / 6,622,954,088 bytes / 14 receipts / 667 receipt records / 215 duplicate groups.
-- Mega promotion: **RUN-PROVEN WITH MANUAL QUEUE** at `prepared=36 intakeQC=34 pending=3 manual=2 badReceipts=0`.
-- Material intake: **RUN-PROVEN** at `prepared=8 pending=8 manual=0`.
-- Old 16 MiB material source cap: **REAL BLOCKER OBSERVED** on SH_DIRT_SOIL base color.
-- DEC-055 revised source-promotion budget: **SOURCE-IMPLEMENTED** at 32 MiB/source + 256 MiB/batch + minimum six exported items.
-- Oversize behavior: **ITEM-LEVEL QUARANTINE SOURCE-IMPLEMENTED**; whole material car fails only if the post-quarantine export count falls below the manifest minimum.
-- Generated material branch after revised budget: **PENDING WAREHOUSE RE-RUN**.
-- UE4.27 import/runtime binding/PIE/device/visual/performance acceptance: **NOT CLAIMED**.
-
-## 2026-09-28 - P1C01 Mega Chapter Pack / workflow consolidation
-
-- Governor chapter-pack policy (DEC-054): **SOURCE-REGISTERED / OWNER-AUTHORIZED**.
-- One pack / four bounded internal cars: **SOURCE-IMPLEMENTED**.
-- Selector ceiling: **62 candidates** across materials / architecture-props / audio / fauna / character-animation support.
-- Legacy overlapping P1C01 Warehouse steps during pack execution: **SUPPRESSED IN SOURCE**.
-- Per-car quarantine + continue semantics: **SOURCE-IMPLEMENTED**.
-- Infrastructure fail-closed semantics: **SOURCE-IMPLEMENTED**.
-- TGA Git LFS migration: **DEFERRED TO FIRST BINARY PROMOTION WAVE** to avoid an unnecessary Unreal trigger here.
-- Exact-head Pre-Unreal / Warehouse execution result: **PENDING**.
-- UE import/integration/PIE/device/visual/performance acceptance: **NOT CLAIMED**.
-
-## 2026-09-28 - Unreal runner cost reduction for P1C01 material tooling
-
-- PR-triggered Unreal for P1C01 prepare/promote/run/export tooling-only changes: **PATH-FILTERED OUT IN SOURCE**.
-- Push-triggered Unreal for exporter-only changes: **PATH-FILTERED OUT IN SOURCE**.
-- Manual/mixed-safe classifier treatment for exporter tooling: **SAFE-INHERIT SOURCE RULE ADDED**.
-- Existing classifier regression coverage for material-tooling fast path: **SOURCE-UPDATED**.
-- Runtime/config/package-impacting validation behavior: **UNCHANGED**.
-- Exact CI policy proof on this branch: **PRE-UNREAL PENDING**.
-
-## 2026-09-28 - Warehouse #276 material-export unblock
-
-- Warehouse #276 exact develop head `f24480b3...`: **SELF-HOSTED EXECUTION REACHED FINAL MATERIAL EXPORT STEP**.
-- Inventory audit: **RUN-PROVEN** at 13,389 payload files / 5,590,510,073 bytes / 14 receipts / 667 receipt records / 215 duplicate groups.
-- P1C01 mega promotion: **RUN-PROVEN WITH MANUAL QUEUE** at `prepared=36 intakeQC=34 pending=3 manual=2 badReceipts=0`.
-- P1C01 material intake: **RUN-PROVEN** at `prepared=8 pending=8 manual=0`.
-- Root cause of final failure: **IDENTIFIED** as absolute `ManifestPath` being re-joined with `ProjectRoot` before `Get-Content`.
-- Rooted/relative manifest resolution repair: **SOURCE-FIXED**.
-- PG-184 regression guard for rooted-path handling: **SOURCE-IMPLEMENTED**.
-- Generated `generated/p1c01-material-source-v1` population after this repair: **PENDING WAREHOUSE RE-RUN**.
-- UE4.27 import/integration and PIE/device/visual/performance acceptance: **NOT CLAIMED**.
-
-## 2026-09-28 - P1C01 large material source promotion
-
-- Heterogeneous receipt + SHA256-gated material intake: **SOURCE-IMPLEMENTED**.
-- Bounded safe ZIP scan/extraction for selected material items: **SOURCE-IMPLEMENTED**.
-- Partial-good continuation with manual queue: **SOURCE-IMPLEMENTED**.
-- Generated source branch with 16 MB/file and 128 MB/batch caps: **SOURCE-IMPLEMENTED**.
-- Tracked source destination `SourceAssets/Production/Imported/P1C01Materials`: **SOURCE-IMPLEMENTED**.
-- Selective Warehouse phase `WH_RUN_P1C01_MATERIAL_EXPORT`: **SOURCE-IMPLEMENTED**.
-- Generated material branch population from persistent warehouse: **PENDING MACHINE EXECUTION**.
-- UE4.27 material import from generated branch: **PENDING EXACT-HEAD UNREAL RUN**.
-- PIE/device/visual/performance acceptance: **NOT CLAIMED**.
-
-## 2026-09-28 - P1C01 immediate large intake unfreeze
-
-- Warehouse #275 character-intake root cause (`PropertyNotFoundStrict` on heterogeneous receipt schema): **ROOT-CAUSE IDENTIFIED / SOURCE-FIXED**.
-- Character intake support for `file/sha256` and `archive/archive_sha256`: **SOURCE-IMPLEMENTED**.
-- Windows PowerShell `System.IO.Compression.FileSystem` load for P1C01 selected ZIP extraction: **SOURCE-IMPLEMENTED**.
-- Previously isolated P1C01 mega-promotion archives in #274: **28 candidates eligible for bounded retry after merge**.
-- Exact-head hosted static validation: **PENDING**.
-- Persistent Warehouse materialization/intake counts after repair: **PENDING**.
-- UE runtime/PIE/device/visual/performance acceptance: **UNCHANGED / NOT CLAIMED**.
-
-## 2026-09-28 - P1C01 runtime/character intake salvage v2
-
-- PR #133 original-head UE4.27.2 build/import evidence: **COMPILE/IMPORT RUN SUCCESS on `970a52f7...` via Unreal #1033**.
-- Rebased current-develop runtime source: **SOURCE-IMPLEMENTED / NEW EXACT-HEAD PROOF PENDING**.
-- Living World interaction + ambient-motion pooling and cached player lookup: **SOURCE-IMPLEMENTED**.
-- Audio SFX repeat guard and bounded rig-availability retry: **SOURCE-IMPLEMENTED**.
-- Quaternius four-pack character/animation intake and FBX/provenance gate: **SOURCE-IMPLEMENTED**.
-- Warehouse manual-queue continuation for isolated bad assets: **SOURCE-IMPLEMENTED**.
-- READY_FOR_IMPORT character rigs, PIE, device, visual and target-performance acceptance: **NOT CLAIMED**.
-
-## 2026-09-28 - P1C01 selective Warehouse promotion routing
-
-- P1C01 promotion workflow trigger paths: **SOURCE-IMPLEMENTED**.
-- Selective classifier flag `WH_RUN_P1C01_PROMOTION`: **SOURCE-IMPLEMENTED**.
-- Bounded inventory audit + P1C01 promotion phase only for this delta: **SOURCE-IMPLEMENTED**.
-- PG-184 regression coverage for the new promotion phase: **SOURCE-IMPLEMENTED**.
-- Exact-head hosted static validation: **PENDING**.
-- Persistent warehouse execution/counts: **PENDING**.
-- READY_FOR_IMPORT/UE import/integration/PIE/device/visual/performance: **UNCHANGED / NOT CLAIMED**.
-
-## 2026-09-28 - P1C01 mega warehouse promotion prep
-
-- Existing staged warehouse-first strategy: **SOURCE-IMPLEMENTED**.
-- Bounded P1C01 selection classes (surfaces, architecture/props, audio, fauna, character/animation support): **SOURCE-IMPLEMENTED**.
-- Receipt SHA256 verification + non-destructive selected extraction: **SOURCE-IMPLEMENTED**.
-- Dangerous/BMP rejection and FBX animated-class rule: **SOURCE-IMPLEMENTED**.
-- Blocker isolation/manual queue instead of whole-train stop: **SOURCE-IMPLEMENTED**.
-- READY_FOR_IMPORT/UE import/runtime integration: **NOT CLAIMED**.
-- Hosted exact-head static validation: **PENDING**.
-- Warehouse execution on persistent stock: **PENDING**.
-- UE4 compile/PIE/device/visual/performance maturity: **UNCHANGED**.
-
-## 2026-09-28 - PG-167 hosted administrative cleanup guard
-
-- Hosted Python fast path: **RUN-PROVEN** by Pre-Unreal #1289 (`PYTHON_FAST_PATH_PASS`, Python 3.12.10).
-- Branch Cleanup hosted-runner policy: **SOURCE-FIXED**.
-- Merged-PR-only cleanup trigger and exact-head safety contract: **UNCHANGED**.
-- Runtime/compile/PIE/device/visual/performance rules: **UNCHANGED**.
-- New exact-head static proof: **PENDING**.
-
-## 2026-09-28 - Lightweight administration / static-lane optimization
-
-- Material-change-only Governor requirement-ID rule: **SOURCE-IMPLEMENTED**.
-- Branch Cleanup off UE4 runner onto hosted Windows: **SOURCE-IMPLEMENTED**.
-- Pre-Unreal PATH-Python fast path with robust fallback retained: **SOURCE-IMPLEMENTED**.
-- Full static/governance/asset/deep-audit coverage: **UNCHANGED**.
-- Runtime/compile/PIE/device/visual/performance acceptance rules: **UNCHANGED**.
-- Exact-head static timing/proof after optimization: **PENDING**.
-
-## 2026-09-28 - CI/Warehouse root-repair release gate
-
-- Repair exact-head static validation: **STATIC-VALIDATED** by Pre-Unreal #1285 on `0bd0e6952161f1c3fa5bb603d25813400c330f24`.
-- Develop post-merge static validation: **STATIC-VALIDATED** by Pre-Unreal #1286 on `26ff8f8838b4c9680c793fea5d942a314ad29be4`.
-- Self-hosted runner health: **RUN-PROVEN** by Warehouse #272 with interactive user/watchdog topology.
-- Warehouse exact-source/selective classifier: **RUN-PROVEN** by #272, `mode=selective`, `phases=WH_RUN_AUDIT`.
-- Warehouse inventory audit: **RUN-PROVEN** by #272, 13,377 payload files / 5,426,414,977 bytes.
-- Redundant provider trains on control-plane merge: **NOT RUN** by design; all provider staging/saturation/prep/provider-resolution steps skipped.
-- Unreal routing for Warehouse/control-plane-only merge: **CORRECTLY NOT TRIGGERED**.
-- Production infrastructure freeze: **RELEASED**; existing W01 P1C01 production may resume under its existing gates.
-- UE4 compile/PIE/device/visual/performance maturity: **UNCHANGED** by this release.
-
-## 2026-09-28 - Warehouse control-plane proof routing hardening
-
-- Warehouse classifier post-merge trigger coverage: **SOURCE-FIXED**.
-- Workflow-control-plane delta routes to bounded `WH_RUN_AUDIT` instead of all acquisition/provider trains: **SOURCE-FIXED**.
-- Unrelated co-commit files no longer force Warehouse full mode: **SOURCE-FIXED**.
-- PG-184 regression coverage for exact-source + trigger + bounded control-plane proof: **SOURCE-FIXED**.
-- Hosted exact-head static proof and resulting post-merge self-hosted Warehouse proof: **PENDING**.
-- Runtime/PIE/device/visual/performance maturity: **UNCHANGED**.
-
-## 2026-09-28 - Warehouse #271 exact-source classifier repair
-
-- Self-hosted runner identity/topology/network/workspace health: **RUN-PROVEN** by Warehouse #271 on `542a6feef7e2985e40ed86f7242dd0a005be1395`.
-- Warehouse isolated exact-head checkout: **RUN-PROVEN** by `WAREHOUSE_CHECKOUT_PASS` on #271.
-- Warehouse classifier working-directory defect: **ROOT-CAUSE IDENTIFIED** from `fatal: bad object 542a6feef7e2985e40ed86f7242dd0a005be1395`.
-- Classifier binding to `SHIRE_WAREHOUSE_SOURCE` + bounded exact head/base fetch retry: **SOURCE-FIXED**.
-- Provider/archive execution on #271: **NOT RUN**; all provider/phase steps were skipped after classifier failure.
-- New exact-head static proof and post-merge warehouse proof: **PENDING**.
-- Runtime/PIE/device/visual/performance maturity: **UNCHANGED**.
-
-## 2026-09-28 - Pre-Unreal #1280 stale guard correction
-
-- Hosted exact-head checkout, Python resolution, and Unreal classifier tests: **RUN-PROVEN** by #1280 on `a8714aa3a1fb8ff0fb7be970d4bcfedb49139035`.
-- Core structural pass marker `PRE-UNREAL CORE VALIDATION PASSED`: **RUN-PROVEN** by #1280.
-- PG-145C conditional intermediate-reset policy assertion: **SOURCE-FIXED**.
-- PG-176 hosted ephemeral static-checkout policy assertion: **SOURCE-FIXED**.
-- New exact-head static result after the validator correction: **PENDING**.
-- Runtime/PIE/device/visual/performance maturity: **UNCHANGED**.
-
-## 2026-09-28 - Static-lane guard migration
-
-- Unreal classifier incremental/reset tests: **RUN-PROVEN** by hosted Pre-Unreal #1277.
-- Legacy PG-134 hosted-checkout migration: **SOURCE-IMPLEMENTED**.
-- Legacy PG-167 hosted static-lane migration: **SOURCE-IMPLEMENTED**.
-- PG-185 runner-token precision fix: **SOURCE-IMPLEMENTED**.
-- New exact-head static result: **PENDING**.
-- Runtime/PIE/device/visual/performance maturity: **UNCHANGED**.
-
-## 2026-09-28 - Warehouse cache self-repair hardening
-
-- Corrupt cached ZIP purge during receipt reuse: **SOURCE-IMPLEMENTED**.
-- Metadata-only archive contract in warehouse manifest: **SOURCE-IMPLEMENTED**.
-- PG-184 regression coverage for purge + metadata-only contract: **SOURCE-IMPLEMENTED**.
-- Exact-head static proof: **PENDING**.
-
-## 2026-09-28 - Hosted classifier repair
-
-- Hosted Windows Pre-Unreal lane boot/checkout/Python resolution: **RUN-PROVEN** by #1269.
-- Clean-compile flag initialization defect: **SOURCE-FIXED** after #1269.
-- New exact-head Pre-Unreal result: **PENDING**.
-- Runtime/PIE/device/visual/performance maturity: **UNCHANGED**.
-
-## 2026-09-28 - Zero-waste trigger routing
-
-- MasterExecutionRoadmap governance-only Unreal exclusion: **SOURCE-IMPLEMENTED**.
-- Receipt-integrity fail-fast before archive scan: **SOURCE-IMPLEMENTED**.
-- PG-184 preflight regression guard: **SOURCE-IMPLEMENTED**.
-- Repair-PR expected heavy-run count: **0 Warehouse / 0 Unreal**, hosted Pre-Unreal only.
-- Exact-head proof: **PENDING**.
-
-## 2026-09-28 - CI split-lane root repair
-
-- Hosted Pre-Unreal static/policy lane: **SOURCE-IMPLEMENTED**.
-- Warehouse pull-request churn removal: **SOURCE-IMPLEMENTED**.
-- Selective warehouse provider/phase classifier: **SOURCE-IMPLEMENTED**.
-- Metadata-only ZIP intake + corrupt-cache self-repair: **SOURCE-IMPLEMENTED**.
-- Warehouse-only Unreal trigger exclusion: **SOURCE-IMPLEMENTED**.
-- Conditional Unreal intermediate reset: **SOURCE-IMPLEMENTED**.
-- Bounded compiler-failure clean retry retained: **SOURCE-IMPLEMENTED**.
-- PG-184/PG-185 regression guards: **SOURCE-IMPLEMENTED**.
-- Exact-head hosted static validation: **PENDING**.
-- Selected machine validation before production unfreeze: **PENDING**.
-- Runtime/PIE/device/visual/performance maturity: **UNCHANGED**.
-
-## 2026-09-28 - CI/Warehouse root-repair freeze
-
-- Production train execution: **PAUSED BY OWNER**.
-- Repeated Warehouse PR-synchronize execution: **REMOVED IN REPAIR SOURCE**.
-- ZIP structural validation before receipt reuse: **SOURCE-IMPLEMENTED**.
-- Corrupt AmbientCG/KayKit cached ZIP self-repair: **SOURCE-IMPLEMENTED**.
-- Critical-gap metadata-only ZIP inventory (no repeated extraction): **SOURCE-IMPLEMENTED**.
-- Duplicate receipt suppression + exact blocker details: **SOURCE-IMPLEMENTED**.
-- PG-184 regression guard: **SOURCE-IMPLEMENTED**.
-- Exact-head static/machine validation: **PENDING**.
-- Runtime/PIE/device/visual/performance maturity: **UNCHANGED**.
-
-## 2026-09-27 - Runner single-path proof
-
-- Legacy service path absent: **MACHINE-PROVEN** on owner Windows state and Unreal #1021.
-- Watchdog interactive ownership: **MACHINE-PROVEN** (`IDEAPAD320\user`, session 1, PID 6192).
-- Broker listening / worker ownership / GitHub:443: **MACHINE-PROVEN** by Unreal #1021 runner-health lines.
-- Permanent service guard + continuous watchdog enforcement: **SOURCE-IMPLEMENTED**, exact-head Pre-Unreal rerun pending after PG-183 false-red correction.
-- Game/runtime maturity: **UNCHANGED**. #1021 skipped C++ build/import/PIE/package on governance fast path.
-
-## 2026-09-27 - Runner single-path ownership hardening
-
-- Legacy Windows service execution path removed by service guard: **SOURCE-IMPLEMENTED**.
-- Service state target: **ABSENT**, with **Stopped + Disabled** accepted only as transient pending-deletion state.
-- Continuous watchdog re-enforcement against recreated service mode: **SOURCE-IMPLEMENTED**.
-- Forbidden service identities (NETWORK SERVICE / LOCAL SERVICE / SYSTEM): **SOURCE-IMPLEMENTED**.
-- Exact-head static guard PG-145B updated: **SOURCE-IMPLEMENTED / CI PENDING**.
-- Physical Windows runner repair: **PENDING OWNER-SIDE ELEVATED INSTALLER RUN**.
-- Current proof: **ROOT-FIX SOURCE-IMPLEMENTED** only; no new COMPILE/PIE/DEVICE/VISUAL/PERFORMANCE acceptance.
-
-## 2026-09-27 - Permanent runner ownership hardening
-
-- Legacy service elimination guard: **SOURCE-IMPLEMENTED**.
-- Watchdog continuous anti-service self-heal: **SOURCE-IMPLEMENTED**.
-- Installer purge-before-watchdog behavior: **SOURCE-IMPLEMENTED**.
-- Health verifier absent-or-stopped-disabled service contract: **SOURCE-IMPLEMENTED**.
-- Static PG-183 regression guard: **SOURCE-IMPLEMENTED**.
-- Physical Windows runner repaired with new installer: **PENDING OWNER-SIDE ELEVATED APPLICATION**.
-- Current maturity: **SOURCE-IMPLEMENTED / exact-head static validation pending**.
-
-## 2026-09-27 - Runner ownership governance visibility
-
-- Interactive-user watchdog ownership hard invariant: **SOURCE-IMPLEMENTED**.
-- Legacy `actions.runner.*` service Stopped/Manual rule: **SOURCE-IMPLEMENTED**.
-- Forbidden NETWORK SERVICE/LOCAL SERVICE/SYSTEM identities: **SOURCE-IMPLEMENTED**.
-- README / Governor guide / onboarding visibility: **SOURCE-IMPLEMENTED**.
-- Live physical runner state: **NOT RE-VERIFIED BY THIS GOVERNANCE CHANGE**.
-- Current maturity: **SOURCE-IMPLEMENTED / exact-head static validation pending**.
-
-## 2026-09-27 - Developer handoff entry integrity
-
-- Develop-side canonical onboarding path: **SOURCE-IMPLEMENTED**.
-- Off-develop branch warning in one-command onboarding: **SOURCE-IMPLEMENTED**.
-- Stale copied next-drop prose removed from Governor guide: **SOURCE-IMPLEMENTED**.
-- GitHub default-branch `main` landing redirect: **PENDING SEPARATE MAIN-BRANCH DOC CHANGE**.
-- Current maturity: **SOURCE-IMPLEMENTED / static validation pending**. No gameplay or acceptance status changes.
-
-## 2026-09-27 - Provider-resolution train V3
-
-- 20 source-resolution cars cover characters, animation, fauna, creatures, architecture, vegetation, PBR, audio/music/voice, VFX, UI, terrain, enemies, battle support, regional kits and manual marketplace review.
-- Resolver chooses only staged or access-policy-compatible automatic providers; auth/review/manual/reference sources remain explicit human lanes.
-- Current maturity: **PREPARATION-IMPLEMENTED / exact-head validation pending**. No source-resolution result is READY_FOR_IMPORT.
-
-## 2026-09-27 - Quaternius critical-source license capture
-
-- 13 high-value Quaternius lanes now have explicit official-page CC0 capture in the acquisition manifest.
-- Access/download resolution is still a separate gate; no interactive/store bypass is authorized.
-- Current maturity: **AUTHORIZED_FOR_STAGING where public download can be resolved; receipt/QC pending**.
-
-## 2026-09-27 - Warehouse parser hardening after V1 staging evidence
-
-- Verified warehouse footprint from #265 before report failure: 247 payload files, 3.85 GB, 13 receipts and 667 receipt records; inventory audit PASS.
-- V1 failure class: report-parser StrictMode incompatibility with heterogeneous receipt schemas, not provider staging or hash-audit failure.
-- V1/V2 receipt parsing now uses optional-property-safe access while preserving SHA256 verification and promotion ceilings.
-- Current status: **SOURCE-IMPLEMENTED / fresh exact-head validation pending**.
-
-## 2026-09-27 - Critical warehouse gap train V2
-
-- 20 additional preparation cars now target conversion of staged warehouse stock into classified INTAKE_QC candidates.
-- Major gap lanes covered: hero character FBX candidates, humanoid animation, creatures/fauna, architecture/world kits, interiors/props, vegetation, PBR material sets, texture-format debt, WAV masters, ambience/foley, music/voice separation, VFX, UI/fonts/localization, terrain and 28-region mapping.
-- Security/evidence gates: receipt SHA256, ZIP-only approved extraction path, executable/BMP blocking, FBX animated-format rule, PNG/TGA production-texture rule, WAV-master rule.
-- Current maturity: **PREPARATION-IMPLEMENTED / exact-head validation pending**; no READY_FOR_IMPORT or runtime maturity promotion.
-
-## 2026-09-27 - Consolidated prep lanes into warehouse saturation train
-
-- Architecture/interiors/props, character rig/animation, Shire audio and fauna preparation are carried forward on the new post-#118 warehouse train.
-- Old stale-base preparation PRs are superseded; their substantive manifests/scripts are preserved.
-- No runtime maturity promotion is inferred from consolidation.
-
-## 2026-09-27 - 20-car warehouse saturation train
-
-- Warehouse preparation sequence expanded to 20 ordered cars spanning materials, architecture, characters, animation, audio/music/voice, vegetation, water, ruins, fortifications, enemies/creatures, battle assets, VFX, UI/localization, terrain, F2/F3 kits, props and coverage/dedupe.
-- Public/provider-compatible lanes reuse existing staging scripts and SHA256 receipts; manual/auth/purchase lanes stop at candidate preparation.
-- Runtime/import work remains serialized even while warehouse preparation is parallel.
-- Current maturity: **PREPARATION-IMPLEMENTED / exact-head validation pending**. No car is promoted by metadata alone.
-
-## 2026-09-27 - CI runner-health contract alignment
-
-- Repeated #118 Unreal failures were pre-build CI policy failures, not material compiler/import failures.
-- Watchdog installer and verifier now share the same accepted scheduled-task states: `Running` or `Ready`.
-- All live listener/worker ownership/session/network/workspace checks remain mandatory after the state check.
-- Status: **CI_INFRA / VALIDATOR_POLICY FIX CANDIDATE; exact-head validation pending**.
-
-## 2026-09-27 - Expanded P1C01 16-surface material intake train
-
-- Authorized material intake scope: 16/16 Poly Haven surface candidates from the P1C01 warehouse queue.
-- Preparation contract: PNG/TGA base color + scalar Roughness/Metallic/Specular + SHA256 receipt; BMP remains forbidden.
-- Pre-Unreal now fails closed on missing queue authority, duplicates, out-of-range scalars, incomplete low-spec bindings or missing intake guards.
-- Runtime-cost boundary remains unchanged: one albedo texture sample per prepared material, no density increase, no new synchronous heavy runtime loading.
-- Validation status: **SOURCE-IMPLEMENTED / exact-head UE4.27 build-import pending** because Unreal #915 is blocked before build by runner-health watchdog state, not by a compiler/import result.
-
-## 2026-09-27 - P1C01 Shire material surface-set production batch
-
-- Project-owned Shire material bank is now explicitly defined in `Data/P1C01ShireMaterialSurfaceSetV1.json`.
-- Import-time material response expands from Albedo/Color/Roughness/Metallic to include bounded Specular sourced from authored MTL `Ks`.
-- Runtime cost boundary for this batch: zero new texture samples, zero new heavy runtime asset loads, zero foliage-density increase.
-- Current maturity: **SOURCE-IMPLEMENTED / Pre-Unreal + UE4.27 build/import validation pending**.
-- Human visual quality, target-device FPS/VRAM and PIE acceptance remain open.
-
-## 2026-09-27 - P1C01 player-experience convergence batch
-
-- Story dialogue continuity, mouse-look frame independence, quick-load rejection feedback, event-driven quest-trigger re-evaluation and bounded subtitle wrapping are implemented on the active fix branch.
-- The trigger repair preserves `PrimaryActorTick.bCanEverTick = false`; no per-frame quest-trigger polling was introduced.
-- P1C01 maturity remains unchanged until exact-head UE4.27 validation. This batch is **SOURCE-IMPLEMENTED / validation pending**, not PIE/device/visual accepted.
-- Map/Chronicle interaction policy is intentionally excluded from this defect batch and remains a later UX decision.
-
-## 2026-09-27 - Import-fix validation infrastructure note
-
-- Unreal Build #896 did not reach production import on either attempt because stale MSVC intermediate metadata referenced a removed prior-run temp directory.
-- CI build recovery now includes the observed C1083/compiler-intermediate signature and performs one bounded project-intermediate reset/retry.
-- No P1C01 gameplay/visual/PIE/device maturity changes. Fresh exact-head compile/import proof remains pending.
-
-## 2026-09-27 - P1C01 production-import blocker status
-
-- Local one-click import produced concrete failure evidence on `WorldGridMaterial.uasset` because the importer dirtied a non-project Engine package.
-- The importer is now source-repaired to mutate/save material packages only when their package path begins with `/Game/Production/`.
-- P1C01 production maturity is unchanged by this repair. No PIE/device/visual/performance acceptance is promoted.
-- Validation state for this fix: **SOURCE-IMPLEMENTED / exact-head build+import pending**.
-
-## 2026-09-27 - Legacy unique-root consolidation before final branch cleanup
-
-- Live GitHub audit confirmed the branches still shown in the repository are real refs, not merely historical Actions filters. They were not deleted earlier because each had `ahead_by > 0` and the cleanup correctly refused to destroy unique commits without disposition.
-- The seven remaining legacy refs have now been reviewed individually. None is allowed to become a second trunk: old CI/report experiments are superseded; `MegaProductionBuildV2.json` is already identical on develop; onboarding improvements are already integrated on current develop; old localization/P1C01-prep branch snapshots remain backlog/preparation intent only and do not override the current production order; the old Mega Promotion audit is superseded by later Warehouse #264 evidence.
-- All seven are now explicitly scheduled for deletion after this consolidation merge: `ops/actions-budget-isolation-v1`, `ops/daily-project-manager-report-v1`, `ops/onboarding-handoff-v2`, `planning/mega-production-resume-v1`, `planning/w01-localization-prototype-v1`, `planning/w01-p1c01-mega-prep-v1`, `warehouse/p1c01-mega-promotion-audit-v1`.
-- Expected repository roots after post-merge cleanup: **develop + main only**.
-- Failure/safety boundary: no runtime/gameplay/source asset content is changed and no UE4 build is requested. This is ADMIN_GOVERNANCE repository hygiene.
-- Evidence boundary: **STATIC-VALIDATED CANDIDATE / FRESH PRE-UNREAL + POST-MERGE CLEANUP PENDING**.
-
-## 2026-09-27 - New-developer handoff made drift-proof
-
-- The canonical entry remains `README.md -> PROJECT_GOVERNOR -> ProjectGovernor.json -> CURRENT_PROJECT_STATE -> DEVELOPMENT_GATES -> PROJECT_GUARDIAN`.
-- The README no longer embeds a copied "next production drop" that can become stale after merges. It now directs every programmer to the one-command onboarding reader and the evidence-backed current-state handoff.
-- `Scripts/new_developer_onboarding.ps1` now prints Governor-derived **Current status**, **Current focus**, active lane/gate/benchmark and **Next allowed actions**, plus the checked-out Git branch/HEAD.
-- Live baseline before this change: `develop@6e3e33e16edf4660f05e130f8f05b9d043cea958`; Pre-Unreal #1122 completed SUCCESS and there were no open PRs targeting `develop`.
-- This is administrative/onboarding only. It changes no gameplay/runtime/source asset behavior and creates no PIE/device/visual/performance acceptance.
-- Evidence boundary: **SOURCE-IMPLEMENTED / FRESH EXACT-HEAD PRE-UNREAL PENDING**.
-
-## 2026-09-27 - Validator self-repair after cleanup-parser repair
-
-- Pre-Unreal #1120 failed before project validation because the newly-added PG-167 parser-regression guard itself was malformed by the same unsafe text-splice method used in the prior cleanup optimization.
-- Failure class: **VALIDATOR_POLICY / ADMIN_GOVERNANCE**. The restored cleanup PowerShell source remains the previously machine-proven implementation; no runtime/gameplay file changed.
-- To avoid compounding the failure with another ad-hoc validator mutation, `Scripts/pre_unreal_validate.py` is restored exactly to the last develop-proven version from `77f4c01b625b426c27c08958b1f6468412ec1eaf`.
-- The permanent policy still lives in DEC-042 and the merged post-merge cleanup workflow; this repair only restores validator integrity.
-- Evidence boundary: **SOURCE CORRECTED / FRESH EXACT-HEAD PRE-UNREAL PENDING**.
-
-## 2026-09-27 - Branch Cleanup parser regression closed before production resume
-
-- Post-merge Branch Cleanup #12 failed in `Scripts/run_branch_cleanup.ps1` before deleting any branch because the attempted remote-enumeration optimization accidentally spliced `function Remove-RemoteBranch` into the `refs/heads/(.+)$` regex and duplicated the function body.
-- Failure class: **CI_INFRA / ADMIN_GOVERNANCE**, not GAME_RUNTIME. The exact develop head still passed Pre-Unreal #1119.
-- The cleanup script is restored to the previously machine-proven implementation from develop@4844e484, which already produced Branch Cleanup #11 SUCCESS and deleted 8 zero-ahead refs.
-- The new post-merge trigger and empty historical delete backlog remain in force, so the restored script no longer pays the old 66-ref repeated-check cost.
-- PG-167 now additionally rejects duplicate `Remove-RemoteBranch` definitions, missing/duplicated remote-ref parser lines, and the exact corruption signature seen in #12.
-- Evidence boundary: **SOURCE CORRECTED / FRESH EXACT-HEAD PRE-UNREAL + POST-MERGE CLEANUP PROOF PENDING**. No runtime/PIE/device/visual/performance claim is created.
-
-## 2026-09-27 - Permanent branch closeout agreement + interconnected-systems reassessment
-
-- Owner direction is now a durable DEC-042 invariant: every completed temporary branch is exact-head validated, merged into `develop` immediately, then its remote ref is deleted. `develop` must not lag completed work. Only active PR heads or verified unique-unsalvaged branches may remain temporarily.
-- Branch Cleanup is machine-guarded to run on merged-PR closeout, not ordinary develop pushes; it targets the merge commit, performs one live remote enumeration, preserves active/protected/unique branches, and removes merged/zero-ahead refs.
-- Governor transport clutter was reduced: stale branch/PR snapshots are no longer execution inputs; GitHub owns live transport state while ProjectGovernor owns durable decisions, lane order and evidence boundaries.
-- Quick static cross-system review found the ownership chain coherent: `ChapterWorldRouter` owns commit/rollback; `ShireChapterAssetStreamingSubsystem` owns async pending/resident asset handles; `ShireNPCContextSubsystem` consumes only committed world context; `LivingWorldDirector` applies life only after committed revision and pools ambient NPCs; checkpoint writes guard stale callbacks by committed context/revision.
-- Build-file audit remains clean: no tracked generated Binaries/Intermediate/Saved/DerivedDataCache/.vs/StagedBuilds/PDB/log/tmp/cache debris. Production source assets are not deleted blindly; animated final promotion remains FBX-only.
-- No concrete cross-system ownership cycle or new build-blocking architecture defect was found in this quick static reassessment. Production remains the active lane; root/administrative repair reopens only on concrete regression evidence.
-- Evidence boundary: **STATIC-VALIDATED CANDIDATE / FRESH PRE-UNREAL PENDING**. No PIE/device/visual/performance acceptance is created.
-
-## 2026-09-27 - Dead-branch cleanup made automatic and non-repetitive
-
-- The remaining self-cleanup gap is closed: Branch Cleanup now triggers after every merged PR and runs only for `merged == true`; manual dispatch remains available.
-- The old 66-entry historical `delete_after_merge` backlog is cleared. Cleanup no longer spends time rechecking already-absent branches on every run.
-- The cleanup script now enumerates remote refs once per run and reuses that set for explicit and zero-ahead deletion instead of issuing a separate `git ls-remote` query for each historical branch.
-- Zero-ahead auto-prune, active-PR protection, protected/salvage preservation and unique-commit retention remain fail-closed.
-- This closes the concrete speed/cleanup regression discovered after PR #105 left its merged branch ref alive until another cleanup run.
-- Evidence boundary: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL + POST-MERGE CLEANUP PROOF PENDING**. No runtime/PIE/device/visual/performance claim is created.
-
-## 2026-09-27 - Post-D production resume gate
-
-- D is complete at the machine-validation level: `develop@1066cf022723fcdef9bfac66519f5b0f9c1e03a4` passed Pre-Unreal #1109 and Unreal Build #893.
-- The later cleanup/governance-only head `017c3bc26ecfa1dadc75f10398ead01b5fe0ca22` passed Branch Cleanup #11 and Pre-Unreal #1113. Branch Cleanup removed 8 dead refs and the repository now retains only `develop`, `main`, and six branches with unique commits preserved for selective salvage.
-- Warehouse #264 is SUCCESS after the cleanup-shell repair.
-- Repository-tree audit found no tracked generated build junk under Binaries/Intermediate/Saved/DerivedDataCache/.vs/StagedBuilds and no tracked PDB/log/tmp/cache artifacts. `SourceAssets/Production` remains source input and is not deleted blindly.
-- The Governor is advanced past D. The next production order is: bounded evidence-backed Mega Asset Promotion/import-integration, then character presentation/skeletal-animation coverage, then Living Shire motion/fauna + quest/audio polish, with target-device profiling before density/expensive presentation expansion.
-- Administrative/root-repair work is no longer the active lane and may reopen only on concrete regression evidence.
-- Evidence boundary: **READY_FOR_SUBSTANTIVE_BUILD / STATIC + UE4 MACHINE PROOF AVAILABLE**. This is not PIE/device/visual/performance acceptance.
-
-## 2026-09-27 - Dead-branch cleanup root cause fixed
-
-- Live GitHub audit found the real gap: cleanup depended on a historical static `delete_after_merge` list, so newer merged branches created after that list could remain indefinitely even though DEC-042 required self-cleanup.
-- Verified zero-ahead refs queued for permanent deletion are `ci/fix-pwsh-cleanup-shells-v1`, `fix/character-rig-callback-ownership`, `ops/new-developer-entry-v1`, `production/p1c01-c3-foliage-identity-v1`, `production/p1c01-c4-foliage-evidence-v1`, `production/p1c01-c4-foliage-lod-cull-v1`, and `production/p1c01-d-lighting-water-mega-promotion-v1`.
-- Branch Cleanup now enumerates live remote refs every run and auto-deletes only refs that are not protected, are not active PR heads, and GitHub reports as exactly `ahead_by == 0` versus `develop`. The historical explicit list is now only a supplemental deletion queue.
-- Divergent refs with unique commits are not destroyed blindly. Six currently have unique commits and are protected for selective salvage/supersession review: actions-budget (7 ahead), daily-project-manager (4), mega-production-resume (19), localization prototype (6), P1C01 mega-prep (2), and mega-promotion-audit (4).
-- This repair branch `maintenance/root-auto-prune-v1` is itself queued for post-merge deletion so the fix cannot leave another dead ref behind.
-- PG-167 now guards the automatic zero-ahead discovery markers to prevent regression to manual-only cleanup.
-- Evidence boundary: **STATIC-VALIDATED CANDIDATE / FRESH PRE-UNREAL + POST-MERGE BRANCH-CLEANUP EXECUTION PENDING**. No gameplay/runtime/PIE/device/visual/performance claim is created.
-
-## 2026-09-27 - Self-hosted cleanup shell false-red repair
-
-- Branch Cleanup #9 completed its real cleanup logic and printed `BRANCH_CLEANUP_PASS deletedPlanCount=58 activePrHeads=0 planProtected=4 canonical=develop stable=main`, then the job was marked failed only because the final cleanup step used `shell: pwsh` and this Windows runner does not expose a `pwsh` executable.
-- Warehouse Stage #263 successfully reused/staged all provider batches, passed `WAREHOUSE_INVENTORY_AUDIT_PASS payloadFiles=247 bytes=3851680492 receipts=13 receiptRecords=667 duplicateGroups=215`, and printed `WAREHOUSE_FOOTPRINT files=261 bytes=3852292570`; it likewise failed only at the final `pwsh` cleanup wrapper.
-- Runner Health used the same unsupported cleanup shell and is corrected in the same atomic administrative wave.
-- All three isolated-temp cleanup steps now use the workflow's native `cmd` shell with bounded `rmdir /S /Q`; no Unreal workspace, persistent warehouse payload, runtime/gameplay source, or validation acceptance criteria are changed.
-- Failure class: **CI_INFRA cleanup-wrapper defect**, not GAME_RUNTIME and not warehouse-content failure.
-- Evidence boundary: **SOURCE CORRECTED / FRESH ADMIN WORKFLOW EXECUTION PENDING**. No PIE/device/visual/performance acceptance is created.
-
-## 2026-09-27 - D branch reconciled with merged CI architecture
-
-- PR #102 is merged to `develop@0afcc3000b06179086215386fbc95247dff15d03`; its isolated/persistent CI architecture is retained as the new integration parent.
-- PR #101 D runtime/content changes are preserved without reverting the CI/governance fixes. The D branch is reconciled as a two-parent merge rather than force-rebased.
-- Historical D head `65f3c687f1f05d378431c206ce726f3a50652135` had Pre-Unreal #1079 SUCCESS and Unreal Build #884 SUCCESS, but that evidence does not certify the new reconciled head.
-- Fresh exact-head Pre-Unreal and the UE4.27.2 validation lane are required on the reconciled head before PR #101 can merge.
-- Mega Asset Promotion remains bounded to staging/intake QC unless item-level provenance, license/entitlement, local staging receipt, SHA256 and class-specific QC support further promotion.
-- Evidence boundary: **RECONCILED SOURCE CANDIDATE / FRESH EXACT-HEAD MACHINE PROOF PENDING**. No PIE/device/visual/pacing/performance acceptance is claimed.
-
-## 2026-09-26 - D exact-head guard/count correction after #1074/#879
-
-- Exact D head `093c4950802eb9f58813dc232c9fffa5f6103f02` reached UE4.27.2 build/import/runtime execution before two guard-only failures.
-- Pre-Unreal #1074 failed PG-172 because the new validator incorrectly required exactly one `RecaptureSky()` call. The existing P1C01 architecture has two bounded call sites: startup configuration plus event-driven authored story-atmosphere refresh. There is still no Actor Tick or free-running day/night recapture.
-- Unreal Build #879 compiled and imported successfully; production import reported `376 files, 0 failures`. Startup, P1C01-P1C08, state, transitions, faults, pending-transition and persistence-edge runtime sweeps all reported passed. Warning debt also passed with zero tracked production/runtime debt.
-- #879 failed only at the later package streaming preflight because the old script hard-coded 238 unique production packages while D correctly added `M_ProductionWater`, producing 239.
-- The package preflight now reads the explicit audited `audit.total_unique_production_packages` manifest field and compares the independently reconstructed unique package set against it. The recorded D value is **239**.
-- Evidence boundary: the failed runs provide concrete compile/import/runtime observations but do **not** make the D head accepted. Fresh exact-head Pre-Unreal + UE4.27.2 validation is required after these corrections; no device/visual/performance acceptance is claimed.
-
-## 2026-09-26 - P1C01 D implementation candidate + Mega Asset Promotion launch
-
-- D is now the sole runtime-changing W01/P1C01 lane on `production/p1c01-d-lighting-water-mega-promotion-v1`, based on merged C4 develop `2845071119d926defd6ba94c970f43729bc51674`.
-- The existing fixed-state lighting stack remains bounded and event-driven: one primary directional sun strategy, SkyAtmosphere, non-volumetric ExponentialHeightFog, one startup skylight recapture, and no Actor Tick/day-night loop.
-- A new project-owned `M_ProductionWater` is created by the editor import pipeline as a texture-free opaque DefaultLit material with color/roughness/metallic/specular parameters. It adds no WPO, translucency, scene capture or planar reflection path.
-- P1C01's async chapter bank now owns `/Game/Production/Materials/M_ProductionWater.M_ProductionWater`; `AShirePrototypeWorldBuilder` only resolves the committed resident object and retains the existing lightweight blue fallback if it is absent.
-- The two already-established water surfaces are upgraded without topology change: **The Water beside the Mill** and **the Brandywine at Bucklebury Ferry**. Both remain collision-free, cast no shadow, and add no per-frame CPU simulation.
-- Quest/save/story state, traversal anchors, LivingWorldDirector ambient ownership, NPC pooling, C2/C3/C4 foliage density/material identity/cull ownership, and broad Part I/II/III runtime scope are unchanged.
-- PG-172 guards D against synchronous runtime loading, repeated skylight recapture, Actor Tick, planar-reflection and scene-capture regressions. PG-173 guards Mega Asset Promotion against evidence-free promotion.
-- Mega Asset Promotion is **launched only for staging/intake QC** using the existing queue and promotion policy. No candidate state has been advanced by metadata alone; READY_FOR_IMPORT still requires provenance/license, local staging receipt, SHA256 and class-specific QC.
-- Prior C4 proof used to open this lane: exact candidate `bc1e04062d8079fef73eae64f68c81772b4fc56c` passed Pre-Unreal #1070 and Unreal Build #875 before merge.
-- Evidence boundary for this D candidate: **SOURCE-IMPLEMENTED / EXACT-HEAD MACHINE PROOF PENDING**. No new PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PACING-ACCEPTED or PERFORMANCE-ACCEPTED claim is made.
-
-## 2026-09-27 - Deep-audit command recognizer aligned to isolated Pre-Unreal
-
-- Pre-Unreal #1105 reached the new head `2bcec3528619f07bd8917385d818d7a9be384d4c` through the persistent isolated checkout; exact-head checkout, classifier tests, project-structure validation, Project Governor, strict asset audit and production-readiness audit all passed.
-- #1105 then failed only in `deep_project_audit.py` with `Pre-Unreal workflow does not fail closed on structural asset-quality defects`.
-- The strict audit command was actually executed successfully in the same run as `cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" Scripts\\asset_quality_audit.py --strict`; the shared recognizer still accepted only the pre-isolation slash-only command shape.
-- `source_contracts.has_strict_asset_audit_command` now recognizes the isolated cmd working-directory prefix and either slash direction while retaining full-line rejection of comments, echo wrappers and failure-masking suffixes. Regression tests cover the exact Windows isolated command and the `|| true` rejection.
-- This is VALIDATOR_POLICY only. No gameplay/runtime/import/cook/package code changed, and no Unreal build is requested for this repair.
-- Evidence boundary: **STATIC VALIDATOR REPAIR / FRESH PRE-UNREAL EXACT-HEAD RERUN PENDING**.
-
-## 2026-09-27 - PG-167 final queue-isolation guard repair
-
-- Live PR state showed the branch had already advanced to `95dcdad171eb36b1309dadf248f9b1f98f12a05c` with the first PG-134/PG-167 repair commit.
-- Pre-Unreal #1104 proved exact-head isolated persistent checkout and all classifier cases passed at that head.
-- #1104 then failed only in project-structure validation with the exact stale policy requirement: `PG-167 Unreal queue-isolation contract missing: ${{ startsWith(github.head_ref, 'acceptance/') || startsWith(github.head_ref, 'production/') }}`.
-- The remaining PG-167 queue-isolation guard now requires the adopted branch-scoped Unreal concurrency group plus `cancel-in-progress: ${{ github.event_name == 'pull_request' }}`, matching same-PR superseded-run cancellation.
-- This wave changes validator policy/docs only. It does not request C++/import/runtime/cook/package work and does not create PIE/device/visual/performance evidence.
-- Evidence boundary: **STATIC VALIDATOR PATCH / FRESH PRE-UNREAL EXACT-HEAD RERUN PENDING**.
-
-## 2026-09-27 - Validator contracts aligned to isolated CI architecture
-
-- Pre-Unreal #1103 proved the isolated persistent checkout path itself works and exact-head verification passes.
-- Its failure was VALIDATOR_POLICY only: PG-134/PG-167 still required pre-rearchitecture implementation details.
-- PG-134 now validates the stable invariant: strict asset audit runs from the isolated persistent static checkout and the Unreal workspace cannot be deleted.
-- PG-167 now requires Branch Cleanup isolation instead of the interactive UE4 runner-health probe, and recognizes branch-scoped same-PR Unreal cancellation.
-- No runtime/gameplay code, story, movement, save, streaming or package behavior changed.
-- Evidence boundary: **STATIC VALIDATOR REPAIR / FRESH PRE-UNREAL RUN PENDING**.
-
-## 2026-09-26 - Persistent isolated Pre-Unreal checkout refinement
-
-- Isolation protected the Unreal workspace, but a fresh temporary Git repository still repeats repository transfer on every static validation.
-- Pre-Unreal now keeps a dedicated source checkout at `C:\actions-runner\_ci\pre-unreal`, physically separate from the Unreal build workspace.
-- Every run still fetches the exact target SHA, hard-resets to it, verifies HEAD equality and reruns all static/governance/source-quality checks.
-- Only the static Git object database persists so unchanged objects can be reused; Unreal `Intermediate`, `Binaries` and engine acceptance evidence are not shared through this lane.
-- Authenticated remote URL is scrubbed after exact checkout and again in the always-run cleanup step.
-- Evidence boundary: **SOURCE IMPLEMENTED / FRESH TIMING MEASUREMENT PENDING**.
-
-## 2026-09-26 - CI architecture reassessment and lane isolation
-
-- Comprehensive review concluded that the project quality direction is correct, but CI ownership was causing self-inflicted rebuilds and misleading red runs.
-- Recent reviewed window: 31 Unreal runs = 11 success / 17 cancelled / 3 failure; 31 Pre-Unreal runs = 11 success / 16 cancelled / 4 failure.
-- Major root cause: Pre-Unreal, Runner Health and Branch Cleanup could delete the same self-hosted GITHUB_WORKSPACE used by Unreal; Warehouse could delete its root .git. This destroyed Git/UBT incremental continuity.
-- Architecture is now redefined so Unreal Build Validation exclusively owns the persistent project workspace. Pre-Unreal, Runner Health, Branch Cleanup and Warehouse source checkouts use isolated RUNNER_TEMP directories.
-- Pre-Unreal remains self-hosted to avoid hosted-runner billing/capacity dependency; hosted Windows was tested and failed before step execution, so it is not part of the production architecture.
-- Failure triage is standardized as GAME_RUNTIME / VALIDATOR_POLICY / CI_INFRA / ADMIN_GOVERNANCE before runtime code is changed.
-- Coherent waves should use one atomic multi-file commit when possible to reduce superseded workflow churn.
-- Full runtime/story/save/streaming/package gates remain intact for relevant deltas; no quality gate was removed.
-- Canonical review: `Docs/CI_ARCHITECTURE_REASSESSMENT_2026-09-26.md`.
-- Evidence boundary: **SOURCE/ARCHITECTURE REASSESSED; FRESH TIMING MEASUREMENT PENDING**. No PIE/device/visual/performance acceptance is implied.
-
-## 2026-09-26 - Unreal CI root acceleration implemented
-
-- Measured logs confirmed three independent sources of wasted time: #888 spent about 11 minutes in exact checkout before cancellation; administrative PR heads repeatedly entered FULL Unreal; and repeated editor builds recreated the UBT makefile and compiled 76 actions at roughly 238-252 seconds each.
-- Unreal PR concurrency is now branch-scoped. A newer SHA cancels only an older run from the same PR branch; it cannot cancel D/develop or another runtime PR.
-- Unreal Build Validation no longer triggers for README/onboarding/handoff/classifier-test administrative-only changes. Pre-Unreal still validates those files.
-- Exact checkout no longer deletes the repository .git metadata. It reuses the self-hosted workspace, fetches with a 1000 B/s for 20 s low-speed cutoff, limits attempts to three, hard-resets/checks out the exact TARGET_SHA, verifies HEAD equality, then scrubs the authenticated remote URL.
-- The validation classifier now supports exact Git-tree proof reuse. A merge SHA may inherit core proof only when its tree SHA exactly equals a parent tree SHA that has the required green Unreal proof. This addresses the real C4 case where merged develop and the proven C4 candidate have the same tree object but different commit SHAs.
-- Unreal workflow/classifier/pre-unreal orchestration changes are treated as validation-policy-only when no runtime delta exists. They exercise exact checkout/classification/Pre-Unreal but do not rebuild/import/package simply to validate CI policy.
-- Packaging scripts themselves remain acceptance-impacting. Config, Build.cs, Target.cs, chapter-streaming, cook/package/release and unknown-impact paths remain fail-safe FULL.
-- Compile parallelism remains MaxParallelActions=1 for now; no blind binary cache or RAM-risk increase is introduced. First measure gains from removing redundant work.
-- PG-175 guards the bounded fetch, preserved Git checkout, administrative trigger exclusions, same-PR cancellation and exact tree-equivalent proof markers.
-- Evidence boundary: **CI ARCHITECTURE IMPLEMENTED / FRESH MEASUREMENT PENDING**. No runtime, PIE, device, visual, pacing or performance acceptance is created by this optimization.
-
-## 2026-09-26 - Persistent work-session handoff
-
-- Owner requested that the current conversation state be preserved with the project so a later session can continue without rediscovering the same CI/production issues.
-- Canonical continuation note: `Docs/WORK_SESSION_HANDOFF_2026-09-26.md`.
-- It records the measured PR102 CI latency, unnecessary FULL Unreal classification root cause, the #888 stalled-checkout cause/cancellation, #1083 success, #889 pending corrected measurement, and the GAME vs VALIDATOR vs CI/INFRA vs ADMIN failure-classification rule.
-- It also records the architectural policy: remove duplicate truth and magic constants, derive mutable counts from authoritative manifests, keep runtime safety strict, and prevent trivial administration from repeatedly blocking D + Mega Asset Promotion.
-- Evidence boundary: documentation/handoff only; no new runtime, PIE, device, visual, pacing or performance acceptance is created.
-
-## 2026-09-26 - Single new-developer / AI-session entry path
-
-- `README.md` is now the single repository entry point for a new human programmer, a new AI session, or a developer returning after a long break.
-- The canonical reading path is: `README` â†’ `PROJECT_GOVERNOR` â†’ `ProjectGovernor.json` â†’ `CURRENT_PROJECT_STATE` â†’ `DEVELOPMENT_GATES` â†’ `PROJECT_GUARDIAN`.
-- Added `Scripts/new_developer_onboarding.ps1`. It reads current Governor + Git state and prints authority, branch/HEAD, active lane/gate, benchmark, next actions, target hardware, required reading and evidence boundary.
-- The onboarding script is read-only project guidance; it is not a second manager and does not copy live PR numbers into governance.
-- ProjectGovernor handoff/next-actions were reconciled from old C3/C4 wording to the current train: **D lighting/sky/fog/low-cost water next + Mega Asset Promotion in parallel**.
-- PG-174 now guards the README entry path and onboarding-script contract so later maintenance cannot silently remove the manager entrance.
-- Evidence boundary: onboarding/governance change only. It does not create new PIE/device/visual/performance acceptance.
-
-## 2026-09-26 - Historical foliage guards decoupled from mutable phase labels
-
-- Final C4 closure exposed a validator design defect: PG-165/166 still required the overall materials/vegetation plan to retain a C1/C2-era top-level status, so legitimate progress to C4 was rejected even though C1/C2 invariants remained intact.
-- PG-165 now validates the durable C1 albedo/master-surface contract instead of freezing the plan at an old phase label.
-- PG-166 now validates recorded C2 machine evidence plus wind/performance invariants instead of requiring the top-level plan status to remain `C2_FOLIAGE_WIND_EXACT_HEAD_GREEN_MERGED_C3_READY`.
-- PG-171 accepts the prepared state or any explicit `C4_...` state while still enforcing all C4 source/evidence invariants and forbidding premature far-parent binding.
-- This prevents future D/later phase progression from reopening old C1/C2 validation failures solely because the project advanced.
-- Evidence boundary: validator repair only; fresh exact-head Pre-Unreal is required after this change. Unreal #873 already succeeded on the immediately preceding closure head.
-
-## 2026-09-26 - P1C01 C4 machine closure / D next
-
-- C4 candidate machine evidence: Pre-Unreal #1064 SUCCESS + Unreal Build #869 SUCCESS on `e881b32da6ae9713ccc096e8f213056aeef6af76`.
-- UE4.27 production import completed with `376 files, 0 failures`; warning debt returned to `defaultMat references = 0`.
-- Concrete C4 foliage evidence: all five audited P1C01 foliage meshes expose `lodCount=1` only. Grass/Hedge/Shrub/TreeCanopy remain near/mid on `M_ProductionFoliage`; TreeTrunk remains on `M_ProductionSurface` with authored `Bark`.
-- Because no `lodIndex > 0` exists, C4 closes with **NO far-parent binding**. `M_ProductionFoliageFar` remains available but unused until a real far LOD asset/section exists.
-- Existing HISM/ISM cull bands and foliage density remain unchanged.
-- C4 does not establish target-device overdraw/FPS acceptance; that remains a later profiling gate.
-- Next production drop after merge: **D â€” fixed-state lighting / sky / fog / low-cost water**.
-- Evidence state: machine-green / COMPILE-TESTED and import-observed. No new PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PACING-ACCEPTED, or PERFORMANCE-ACCEPTED claim.
-
-## 2026-09-26 - C4 source-material debt repair
-
-- C4 engine evidence exposed a real existing source-asset defect rather than a C4 runtime regression: `SM_ShTreeCanopy.obj` and `SM_ShTreeTrunk.obj` had no authored `mtllib/usemtl` declarations, so UE4.27 imported their only material slot as `defaultMat` / WorldGridMaterial.
-- `SM_ShTreeCanopy.obj` now references `ShireMaterials.mtl` and uses authored material identity `Leaves`.
-- `SM_ShTreeTrunk.obj` now references `ShireMaterials.mtl` and uses authored material identity `Bark`.
-- The zero-tolerance warning-debt guard was not weakened or bypassed.
-- C4 still performs no far-parent rebind, no foliage density increase, and no gameplay/save/LivingWorld ownership change.
-- Evidence boundary: source repair is **STATIC-VALIDATED candidate** only until the refreshed exact-head Pre-Unreal and UE4.27.2 production import/build succeed.
-
-## 2026-09-26 - P1C01 C4 foliage LOD/cull/overdraw evidence capture implemented
-
-- Candidate branch `production/p1c01-c4-foliage-lod-cull-v1` starts C4 only after merged C3 and merged-develop exact-head machine proof.
-- UE4.27 production import now audits exact P1C01 foliage mesh identities after import: `SM_ShGrassClump`, `SM_ShHedge`, `SM_ShShrub`, `SM_ShTreeCanopy`, and `SM_ShTreeTrunk`.
-- For every imported foliage mesh LOD section, the commandlet emits `C4_FOLIAGE_EVIDENCE` with LOD count/index, section/material indices, authored material identity, current parent, proposed parent, decision and reason.
-- Only a real `lodIndex > 0` plus an approved foliage material identity can become `FAR_LOD_ELIGIBLE_FOR_REVIEW`.
-- This evidence-capture step performs no far-parent rebind. `M_ProductionFoliageFar` remains unused unless engine evidence proves a qualifying far LOD.
-- Existing HISM cull bands remain unchanged: grass 1200/5200, flowers 800/3200, shrubs 1500/6500, distant tree trunk/canopy 5000/19000; no density increase.
-- Gameplay IDs, save/quest state, LivingWorld ownership, collision ownership and deterministic asset paths are unchanged.
-- Evidence boundary: **STATIC-VALIDATED candidate implementation** only. Exact-head Pre-Unreal + UE4.27.2 production import evidence is still required. No PIE/device/visual/performance acceptance is claimed.
-
-## 2026-09-26 - Root administrative blocker removal / thread consolidation
-
-- Owner direction: stop recurring stale-Governor/old-PR/board mismatch failures at the root and reduce parallel administrative threads.
-- `Scripts/project_governor.py` no longer treats volatile PR numbers or candidate branch names as fail-closed Governor truth. GitHub is the live authority for PR/branch/open/mergeable/workflow transport state.
-- `Data/ProjectGovernor.json` remains authoritative for durable requirements, priorities, active lane/gate, decisions and evidence boundaries.
-- PG-150 now checks authority semantics instead of exact PR/branch mirroring across human-readable files.
-- New PG-170 regression guard rejects reintroduction of the old PR/branch mismatch failure strings and requires branch-cleanup empty/open-PR response hardening.
-- `Scripts/run_branch_cleanup.ps1` now safely handles API results that do not expose `head.ref` under PowerShell StrictMode.
-- Failure discipline is lane-scoped: a real runtime/integration failure blocks that affected lane, while unrelated safe source/PDF/warehouse/design preparation may continue.
-- W00 remains closed unless concrete regression evidence reopens it.
-- The 24-hour Project Manager report remains informational and never blocks production.
-- C3 foliage identity implementation remains the active runtime change on PR #98.
-- Evidence boundary: these governance/maintenance changes are source-level only until exact-head validation completes; no PIE/device/visual/performance acceptance is claimed.
-
-## 2026-09-26 - P1C01 C3 stable foliage identity implemented
-
-- Candidate branch `production/p1c01-c3-foliage-identity-v1` implements the prepared C3 contract in `ShireProductionImportCommandlet.cpp`.
-- Exact approved authored material identities are limited to `Grass`, `Leaves`, `LeafGreen`, and `LeafGold` after trimming.
-- Approved identities bind their deterministic material instances to `M_ProductionFoliage`; all other authored identities remain on `M_ProductionSurface`.
-- `M_ProductionFoliageFar` remains unassigned in C3 and stays reserved for C4 after mesh/LOD/cull evidence.
-- Existing material instance object paths, AlbedoTexture bindings, Color/Roughness/Metallic values, world ownership, HISM/ISM population and foliage density are unchanged.
-- Pre-Unreal PG-169 now guards the exact identity set and rejects broad `Contains("Leaf")` / `Contains("Grass")` classification and premature far-parent binding.
-- Evidence boundary: **STATIC-VALIDATED candidate implementation** only until exact-head Pre-Unreal and UE4.27.2 asset/editor validation succeed. No PIE/device/visual/performance acceptance is claimed.
-
-## 2026-09-26 - Post-C2 root cleanup and C3 launch gate
-- Governor stale-control reconciliation: historical PR #53/V6 repair wording and the already-completed Public/Private migration were removed from active/missing work; W00 stabilization and source migration are recorded closed, while real profiling/pooling/async-load audit debt remains open.
-- Classifier root fix: `Scripts/run_branch_cleanup.ps1` is now governance-safe when Unreal is otherwise awakened; cleanup-script maintenance may no longer force FULL/Cook/Package by falling through as an unclassified file.
-- Classifier contract unified: all 15 exact maintenance scripts excluded by the Unreal workflow are now safe in both main classification and transitive-core proof; co-changes can no longer promote them to FULL by omission.
-- PG-078 roadmap snapshot reconciled directly from current Governor after closing historical W00 stability work; the guard remains fail-closed against future active-work drift.
-
-
-
-
-
-- C2 final PR head `fd521dc308580fc44d0cdfdfed24273bacc37ff9` passed Pre-Unreal #1030 and Unreal Build #837.
-- C2 merged as `1d0580926299e4fac635bcb847343a49c444d4f1`; merged develop then passed Pre-Unreal #1031 and Unreal Build #838.
-- Evidence status: **COMPILE-TESTED + exact-head automated import/QA/startup machine green**. No PIE/device/visual/performance acceptance is claimed.
-- Root cleanup removes audited superseded CI/C2/warehouse refs and protects the two future-planning salvage branches that still contain content absent from develop.
-- C3 is prepared but runtime-not-started; it may begin only after Branch Cleanup succeeds and the survivor set is rechecked.
-
-## 2026-09-26 - C2 Governor handoff coherence correction
-
-- Pre-Unreal #1029 on `981996e62d3c595783bb80a43aee2352aeb65541` passed exact-head checkout, runner health, and PRE-UNREAL CORE VALIDATION, then failed `project_governor.py` with: `Legacy verified handoff must refer to the same last-green baseline`.
-- Root cause: the C2 rebase preparation incorrectly reused `session_handoff.source_head` for the current rebase parent. The Governor contract defines that legacy field as the last verified green baseline.
-- Correction: `session_handoff.source_head` is restored to `712a81cac150b7fdb338a4cf7554d4f27d4b5191`; the current C2 rebase parent remains correctly recorded in `integration_train.baseline=f4028a89f7d2c541cddcb987f43963be87e944e0`.
-- No C2 importer/material code changes are made by this correction. The branch remains one atomic C2 commit above hardened develop after the head rewrite.
-- Evidence boundary: **STATIC-VALIDATED CONTRACT CORRECTION; fresh exact-head Pre-Unreal and Fast Asset Lane required**. No PIE/device/visual/performance acceptance is claimed.
-
-## 2026-09-26 - C2 foliage wind rebased onto hardened develop
-
-- PR #87 remains the sole runtime-changing C2 lane and is rebuilt from `develop@f4028a89f7d2c541cddcb987f43963be87e944e0` rather than carrying its old infrastructure/governor snapshot.
-- C2 creates `M_ProductionFoliage` using UE4.27 SimpleGrassWind through `UMaterialExpressionMaterialFunctionCall` with `WindIntensity`, `WindSpeed`, and `WindWeight`.
-- `M_ProductionFoliageFar` intentionally has no WPO. Foliage density is unchanged and no Actor Tick is added.
-- C3 stable material identity and C4 LOD/cull/overdraw remain blocked until C2 exact-head Fast Asset Lane is green and C2 is merged.
-- The transplanted importer blob is exactly `66f12ff5926b96118f59fbc3cab893ebd01f6fff`, which has historical Pre-Unreal #924 + Unreal #759 evidence; this rebased PR head still requires fresh exact-head proof.
-- Evidence boundary: **STATIC-VALIDATED REBASE CANDIDATE; exact-head Pre-Unreal/Fast Asset Lane pending**. No PIE/device/visual/performance acceptance is claimed.
-
-## 2026-09-26 - Runner network health false-negative hardening
-
-- Pre-Unreal #1026 on `develop@8131166025fcceed7102e9a33844bd5e6f864cae` completed exact-head Git checkout and passed runner identity/service/watchdog/process ownership checks before one `github.com:443` probe returned false.
-- The runner network gate is now bounded and retrying: three TCP attempts to `github.com:443`, five seconds maximum per attempt, with a two-second delay between failed attempts.
-- The gate remains fail-closed: `RUNNER_HEALTH_FAIL github-443-unreachable` is emitted only after all three bounded attempts fail. Each attempt reports `RUNNER_HEALTH_NETWORK_ATTEMPT` and a success reports `RUNNER_HEALTH_NETWORK_PASS`.
-- PG-145B now guards the bounded TCP/retry markers rather than requiring the previous single `Test-NetConnection` call.
-- `Scripts/verify_runner_session.ps1` and `Scripts/pre_unreal_validate.py` remain excluded from the Unreal Build push/PR device lane, so this maintenance fix must not trigger FULL Unreal validation.
-- Evidence boundary: **STATIC-VALIDATED SOURCE CHANGE; fresh exact-head Pre-Unreal proof pending**. No PIE, device, visual or performance acceptance is claimed.
-
-## 2026-09-26 - Maintenance-only Unreal trigger closure
-
-- Added `Data/BranchCleanupPlan.json` and `Scripts/run_branch_cleanup.ps1` to both push and PR `paths-ignore` in Unreal Build Validation.
-- These branch-hygiene files are static/maintenance-only and must stay on Pre-Unreal; they must not consume the UE4 build device.
-- PG-167 now guards both exclusions so the heavy Unreal lane cannot be re-triggered by branch-cleanup maintenance.
-- Evidence boundary: **STATIC-VALIDATED SOURCE CHANGE; fresh Pre-Unreal proof pending**.
-
-## 2026-09-26 - Final CI/branch-hygiene hardening before production resumes
-
-- Removed the last known marketplace checkout dependencies from the self-hosted maintenance lanes: Branch Cleanup and Runner Health now use bounded local exact-head Git acquisition with three attempts and a 20-second low-speed cutoff.
-- Branch Cleanup no longer uses the implicit `shell: powershell`; it calls an explicit `-NoProfile -ExecutionPolicy Bypass` script after runner-health verification.
-- Added `Scripts/run_branch_cleanup.ps1`: cleanup now refuses protected refs, refuses any active PR head discovered from the GitHub API, treats already-absent approved refs as clean, hard-fails real deletion errors, and verifies `develop` plus `main` remain.
-- BranchCleanupPlan is synchronized to the current runtime lane: PR #87 / `production/w01-p1c01-foliage-wind-v3`. Identical stale `ci/validator-sync-v5` and PR #90's infrastructure branch are approved for deletion after integration.
-- PG-167 now guards these maintenance workflows against reintroducing marketplace checkout/raw PowerShell failure modes.
-- Pre-Unreal #1023 already passed exact-head checkout, runner health, Governor and all static audits on `c408c4c85d8bde3afbd805545401667442b6af34` in under one minute; this new maintenance hardening still requires its own fresh static pass before merge.
-- Evidence boundary: **STATIC-VALIDATED SOURCE CHANGE + prior exact-head Pre-Unreal success; fresh exact-head proof for this final hardening pending**. No PIE/device/visual/performance acceptance is claimed.
-
-## 2026-09-26 - PG-145B false-negative correction
-
-- Pre-Unreal #1020 proved runner session health and local Python resolution passed, then failed only because the static validator incorrectly searched `verify_runner_session.ps1` for three watchdog-only symbols: `WorkerIdleHangSeconds`, `Listening for Jobs`, and `stale-worker`.
-- PG-145B now validates session/ownership markers in `verify_runner_session.ps1` and stale-worker/broker-listening recovery markers in `runner_watchdog.ps1`, matching the actual system split.
-- This is a validator correction only; it does not weaken the runner health gate.
-- Evidence boundary: **STATIC-VALIDATED SOURCE CHANGE; fresh Pre-Unreal run pending**.
-
-## 2026-09-26 - Pre-Unreal checkout freeze root fix
-
-- Pre-Unreal #1019 was assigned to runner_id 21 but remained inside marketplace `actions/checkout@v4` until cancellation; no project validator or runner-health step executed.
-- Pre-Unreal now performs a bounded local exact-head Git checkout using the already installed Git client, the PR-head SHA, three fetch attempts, a 20-second Git low-speed cutoff, hard reset to the exact SHA, SHA verification, and `ShireJourney.uproject` presence verification.
-- The marketplace checkout dependency is removed from Pre-Unreal, so a stalled action download cannot consume the whole static-validation window.
-- PG-167 now fails static validation if marketplace checkout is reintroduced or the bounded exact-head checkout markers disappear.
-- Evidence boundary: **STATIC-VALIDATED SOURCE CHANGE; fresh Pre-Unreal machine run pending**. This infrastructure change does not imply PIE/device/visual/performance acceptance.
-
-## 2026-09-26 - Runner health owner normalization fix
-
-- Pre-Unreal #1017 proved the supervised job itself was running correctly on `UE4-27-Windows` as `IDEAPAD320\user` in session 1 with the legacy service stopped/manual, then the new health probe produced a false negative because Task Scheduler reported the same account as short-form `user`.
-- Runner health now compares the watchdog task owner by Windows SID rather than display-name string, so `user` and `IDEAPAD320\user` resolve to the same identity without weakening the ownership check.
-- Evidence boundary: source correction only until a fresh Pre-Unreal run reaches `RUNNER_HEALTH_PASS`.
-
-## 2026-09-26 - Fast production validation lane + stale-worker recovery
-
-- Root cause of the recurring 15-20 minute waste was split into runner acquisition/session failures and an overly broad Unreal validation lane.
-- Runner watchdog now verifies broker readiness with an actual `Listening for Jobs` log marker, not merely the existence of `Runner.Listener.exe`.
-- A stale `Runner.Worker` can no longer block the supervisor forever: after 300 seconds, it is recycled only when it has no descendant processes and its Worker diagnostic log has also been idle for the same window. Active build/cook/editor child processes remain protected.
-- Added a narrow `asset` Unreal mode for editor-tool/P1C01 material-authoring deltas. It still performs exact-head Editor build, production import, Automation QA and startup smoke, but skips unrelated chapter/state/warning-debt audits and never Cook/Packages.
-- CORE and ASSET runs no longer delete `Intermediate/Build/Win64` and `Binaries/Win64` before every build. UBT incremental dependency checking is used; the existing compiler-pressure retry still performs a clean project-intermediate reset if the build actually needs it. FULL validation remains clean-reset.
-- Runtime C++, Config, Build/Target, streaming/package/cook changes remain on CORE/FULL fail-closed paths. No gameplay/streaming/performance safety gate was waived.
-- The independent #1001 CRLF test defect is fixed by newline normalization and is not treated as a runner failure.
-- Evidence boundary: **STATIC-VALIDATED SOURCE CHANGE / fresh supervised exact-head run pending**. No PIE, device, visual or performance acceptance is claimed from this optimization.
-
-## 2026-09-26 - Runner health certification and false-failure separation
-
-- Added `Scripts/verify_runner_session.ps1` as a fail-fast machine/session probe for the supervised UE4 runner.
-- The probe rejects service identities (`NETWORK SERVICE` / `SYSTEM` / `LOCAL SERVICE`), session 0, missing same-session Explorer, wrong runner name, non-Manual/non-Stopped legacy runner service ownership, unhealthy watchdog ownership/state, duplicate/missing Listener, wrong Listener/Worker owner or session, GitHub:443 loss, unwritable runner temp, and missing GPU enumeration. It also reports free disk/RAM and monitor/GPU inventory.
-- Pre-Unreal, Unreal Build and Warehouse Stage now run this probe before expensive work. A dedicated manual `Runner Health Check` workflow provides a one-click, sub-minute runner-only diagnostic path.
-- This creates a clean fault boundary: if `RUNNER_HEALTH_PASS` occurs and a later Unreal/package step fails, the failure is no longer attributed to runner identity/session ownership without new evidence.
-- Fixed the independent Pre-Unreal #1001 failure by normalizing CRLF/CR newlines in decoded Unreal logs; the failure was `READY\r\n != READY\n`, not a runner fault.
-- Expanded Unreal path isolation so runner-health, runtime-smoke harness, and asset-audit maintenance remain on the fast Pre-Unreal lane and do not trigger a full UE4 build by themselves.
-- Corrected the PR-side mirror of the static-only ignore list so the same runner/CI maintenance paths are excluded consistently on both push and pull_request triggers.
-- Existing #823 evidence remains historical failure: the job ran as `NT AUTHORITY\NETWORK SERVICE` and packaged startup failed at D3D11 swap-chain creation `887A0022`. The newly installed watchdog/device state must produce a fresh runner-health pass before that cause is considered closed.
-- Evidence boundary: **STATIC-VALIDATED SOURCE CHANGE + OWNER DEVICE INSTALL OBSERVED; FRESH GITHUB RUNNER_HEALTH_PASS PENDING**. No PIE/device/performance acceptance is claimed yet.
-
-## 2026-09-26 - Targeted validation friction reduction and historical evidence reconciliation
-
-Owner requested immediate removal of unnecessary blockers without weakening game construction. Four explicit static-only Python audit/helper/test paths are excluded from automatic Unreal workflow triggers for both push and PR; Pre-Unreal still runs their checks. Mixed PRs and manual dispatch can still run Unreal. Runtime source, assets, configuration and package changes retain their existing gates. No error suppression or automatic acceptance was added.
-
-Governor REQ-SAVE-001, REQ-INTEGRATION-001 and REQ-STARTUP-001 now preserve their old missing-work lists as history and record successful machine stages from C2 head `2af6648209d8722247ca6f9a75b2b5082b6654d5`, run 36200615260. Their status remains PARTIAL. That run failed at rendered package startup (`CreateSwapChainResult`, `887A0022`, process identity NETWORK SERVICE); it does not prove current-head or human/device acceptance. Owner grounding evidence cited in active_gate still needs exact-SHA reconciliation before requirement promotion.
-
-Validation: targeted workflow filter checks only; no new engine/device proof. Existing run 36226722585 was left running. Current work remains W01/P1C01; remaining package-session/device and human acceptance work is not waived.
-
-## 2026-09-26 - Recurring CI failure: Python launcher contract
-
-Exact head `1e7be3da32a9d4f8cd85297260e5abce2e9492f2`, run 36226440287, passed structure, Governor, strict asset quality and readiness checks, then failed deep audit because it searched for a literal `python Scripts/asset_quality_audit.py --strict`. The workflow now correctly uses the resolved `"%PYTHON_EXE%"` interpreter. The guard recognizes supported direct one-line run commands without accepting comments, echoed commands, missing strict mode or masked shell failures.
-
-Validation: 11 local source-contract unit tests passed, including accepted launchers and negative command cases. Full exact-head Pre-Unreal remains pending. This changes static validation only; no runtime or performance acceptance. Governor handoff: `ci_recurrence_review_2026_09_26`. Packaged executable launch remains a separate open investigation.
-
-## 2026-09-26 - Runner supervision + fast core validation hardening
-
-- **Runner ownership:** interactive-user watchdog remains authoritative; legacy `actions.runner.*` service must be **Stopped / Manual**.
-- **Watchdog self-heal:** AtLogOn plus five-minute repeating relaunch trigger; `MultipleInstances IgnoreNew` prevents duplicates.
-- **Orphan-listener recovery:** on supervisor restart, an existing `Runner.Listener` is recycled only when no `Runner.Worker` is active; the existing 150-second acknowledged-job/no-worker recovery remains.
-- **Validation speed:** CORE runtime/asset changes may inherit the nearest green core proof through an explicitly preparation-only first-parent bridge, avoiding unnecessary Cook/Package repetition.
-- **Fail-closed boundary:** any unsafe intervening file blocks inheritance and forces FULL validation.
-- **Device-lane isolation:** classifier/watchdog/static-validator maintenance paths are excluded from Unreal Build triggering; Pre-Unreal remains the static gate.
-- **Pre-Unreal startup cost:** `actions/setup-python` removed from the supervised lane; the workflow resolves the existing local Python interpreter through `resolve_runtime_python.ps1` and runs commands under `cmd`, avoiding repeated downloads and Windows execution-policy setup failures.
-- **Warehouse PR repetition:** REMOVED; real staging is triggered only after merge/push to `develop` (or manual dispatch), not on every PR synchronization.
-- **Observed C2 evidence before hardening:** Unreal #821 on `2af6648209d8722247ca6f9a75b2b5082b6654d5` passed Editor build, production import, Automation QA, startup/chapter/state audits, warning guard, Cook and Runtime Data verification, then failed at packaged executable launch. The run is **not green**.
-- **Evidence state for this hardening change:** STATIC-VALIDATED SOURCE CHANGE / supervised-device reinstall and next-run proof pending. No PIE/DEVICE/VISUAL/PERFORMANCE acceptance is claimed.
-
-## 2026-09-26 - P1C01 warehouse material staging V4
-
-- **Poly Haven manifest:** V4 / all authorized slugs have source-page records.
-- **Resolution:** 2K staging target.
-- **High-poly/displacement:** excluded.
-- **Execution:** warehouse staging workflow queued by this manifest delta.
-- **Evidence:** AUTHORIZED_FOR_STAGING / QUEUED only; receipt required for STAGED.
-
-## 2026-09-26 - Warehouse staging execution repair
-
-- **REQ-STABILITY-004 / DEC-044:** IMPLEMENTED in workflow/source.
-- **Push lane:** develop.
-- **Hosted warehouse workers:** removed.
-- **Concurrency:** dedicated warehouse-stage group.
-- **Provider staging/audit:** preserved.
-- **Evidence:** STATIC configuration; real staging run pending.
-
-## 2026-09-26 - CI validator/policy synchronization
-
-- **PG-026:** synchronized with serialized production-lane preemption.
-- **PG-167:** added for self-hosted static/cleanup lanes and Unreal preparation isolation.
-- **Runtime impact:** none.
-- **Evidence state:** STATIC-VALIDATED SOURCE CHANGE; runner execution pending.
-
-## 2026-09-26 - CI zero-step bypass
-
-- **REQ-STABILITY-003 / DEC-043:** IMPLEMENTED in workflow/source configuration.
-- **GitHub-hosted static/cleanup dependency:** REMOVED.
-- **Periodic Pre-Unreal polling:** REMOVED.
-- **UE4 queue isolation:** PREPARATION/DOCS/CI-only deltas excluded.
-- **Local validation entry point:** ADDED.
-- **Evidence:** STATIC-VALIDATED CONFIGURATION ONLY; supervised-runner execution pending.
-
-## 2026-09-26 - Branch hygiene / immediate develop integration
-
-- **REQ-EXEC-002:** IMPLEMENTED.
-- **DEC-042:** ACCEPTED.
-- **Safe stale refs queued for deletion:** 7 including the finished stability branch after merge.
-- **Active runtime lane:** PR #80 only.
-- **Active preparation:** PR #81 + whole-game-production-prep-v2.
-- **Pending selective salvage:** foliage-wind-v1, localization-prototype-v1, p1c01-mega-prep-v1.
-- **Acceptance impact:** none; branch cleanup does not promote gameplay/visual/performance state.
-
-
-## 2026-09-26 - Source-to-production and local material execution path
-
-- **P1C01SourceExtractionV1:** PREPARED from supplied PDFs.
-- **P1C01SourceToProductionBridgeV1:** PREPARED.
-- **run_p1c01_material_pipeline.ps1:** IMPLEMENTED as local orchestration for Poly Haven/ambientCG staging -> warehouse audit -> intake -> optional UE4 import.
-- **Safety:** local execution does not disable hash/audit/format/import checks.
-- **Acceptance:** STATIC/PREPARATION only until a real material intake receipt + UE4 commandlet log is captured.
-
-## 2026-09-26 - High-throughput production / material intake
-
-- **REQ-PROD-011:** PARTIAL.
-- **DEC-041:** ACCEPTED.
-- **15 source PDFs:** HASHED/INDEXED with authority roles.
-- **P1C01 material wave:** 8 concrete Poly Haven CC0 candidates + ambientCG fallback at 2K intake scale.
-- **Material tooling:** IMPLEMENTED IN PREPARATION SCRIPTS; missing downloads are PENDING, technical defects remain blocking.
-- **Administrative relaxation:** naming/optional metadata/not-yet-downloaded candidates do not stop unrelated prep work.
-- **Technical hard stops:** dangerous/corrupt payloads, BMP, invalid final animated format, provider-access bypass, runtime dependency/streaming/memory/pooling/world-state defects remain blocking.
-- **Runtime lane:** unchanged; no second runtime-changing PR opened.
-- **Acceptance:** STATIC/PREPARATION only; no fresh COMPILE/PIE/DEVICE/VISUAL/PERFORMANCE claim.
-
-## 2026-09-26 - Global runtime-cost architecture preparation
-
-- **WholeGameAssetFamilyCoverageV1:** PREPARED; 9 shared family groups derived from 28 region packets.
-- **WholeGameStreamingResidencyPlanV1:** PREPARED_NOT_RUNTIME_STARTED.
-- **WholeGamePooledPopulationPlanV1:** PREPARED_NOT_RUNTIME_STARTED.
-- **System ownership:** LivingWorldDirector / ShireNPCContextSubsystem / ShireQuestSubsystem boundaries preserved; no parallel brain/world owner introduced.
-- **Evidence state:** preparation only; no new COMPILE/PIE/DEVICE/PERFORMANCE acceptance.
-
-## 2026-09-26 - P1C01 D-H + Gate 6/7 preparation
-
-- **D Environment Presentation:** PREPARED_NOT_RUNTIME_STARTED.
-- **E Character Presentation:** PREPARED_NOT_RUNTIME_STARTED.
-- **F Living Shire:** PREPARED_NOT_RUNTIME_STARTED; existing system ownership retained and bottleneck guards defined.
-- **G Quest/Cinematic/Audio Polish:** PREPARED_NOT_RUNTIME_STARTED.
-- **H Target Device Profiling:** PREPARED_NOT_RUNTIME_STARTED.
-- **Gate 6/7 checklist:** PREPARED_NOT_ACCEPTED.
-- **Evidence boundary:** preparation only; no new COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED or PERFORMANCE-ACCEPTED claim.
-
-## 2026-09-26 - Massive whole-game preparation batch
-
-- **28 region packets:** active preparation tracks created without runtime promotion beyond P1C01.
-- **9 production waves:** BPB-W1 through BPB-W9 remain active for surfaces, vegetation, characters/animation, architecture/interiors, VFX, audio, music, terrain/scanning and Arabic/UI.
-- **P1C01 concrete intake queue:** 28 registered candidates organized for staging/QC; blocked license items remain blocked.
-- **Production asset policy:** format/provenance/technical/performance contracts locked before READY_FOR_IMPORT.
-- **Runtime status:** unchanged; PR #80 C2 remains the sole runtime-changing lane.
-- **Acceptance status:** PREPARATION ONLY. No exact-head engine/PIE/device/visual/performance acceptance added by this batch.
-
-## 2026-09-25 - Region production packets
-
-- **Whole-game packets:** CREATED for every registered region.
-- **Sourcing families:** MAPPED to the global resource registry by discipline.
-- **Runtime state:** P1C01 active; later regions preparation-only until Gate 6/7.
-- **Acceptance:** NONE claimed from packet creation.
-
-## 2026-09-25 - Whole-game world build coverage
-
-- **Coverage map:** CREATED â€” all registered world locations now carry the full production-layer checklist.
-- **Global preparation:** ACTIVE â€” all regions may receive source/asset/design preparation in parallel.
-- **Runtime expansion:** SERIALIZED â€” P1C01 only until Gate 6/7.
-- **Cross-game layers:** REQUIRED â€” world streaming, save/load continuity, LivingWorld integration, weather/wind, accessibility and Arabic localization remain explicit build tracks.
-- **Acceptance:** REGION-SPECIFIC â€” no later region is accepted from preparation alone.
-
-## 2026-09-25 - Global external-resource production expansion
-
-- **Resource Bible review:** COMPLETE FIRST PASS â€” 68 pages / 225 classified sources audited as a production sourcing map.
-- **Governor:** DEC-039 ACCEPTED â€” whole-game sourcing authority, subordinate to canon/story rules.
-- **Global source registry:** EXPANDED â€” 102 -> 142 structured providers/tools in first pass.
-- **Legacy cleanup:** ACTIVE â€” Replica Studios disabled; old Marketplace/Texture Haven/CC0 Textures/ArmorLab/Terrain.party paths redirected or disabled.
-- **Big production launch:** READY â€” nine structured source/warehouse waves registered in `BigProductionBuildLaunchV1.json`.
-- **Performance contract:** PRESERVED â€” FBX animated production assets; PNG/TGA textures; 1K/2K default runtime texture target; async/soft heavy assets; pooling; HISM/LOD/culling.
-- **Runtime expansion:** NOT CLAIMED â€” warehouse/source preparation can scale globally, while runtime chapter expansion remains gated and P1C01 remains first assembled benchmark.
-- **Acceptance:** NOT CLAIMED â€” source registration is not download/import/integration/PIE/device/visual/audio acceptance.
-
-## 2026-09-25 - Playable-film interaction doctrine
-
-- **Governor decision:** DEC-038 ACCEPTED.
-- **Canon beats/outcomes:** LOCKED by Story/Timeline/Mission sources.
-- **Scope:** WHOLE GAME â€” every chapter and major playable region from beginning to final ending; P1C01 is only the first benchmark.
-- **Interactive safe windows:** REQUIRED around major beats when source chronology permits.
-- **Cutscene-only chapter design:** NOT ACCEPTABLE when meaningful interaction can exist without changing canon.
-- **Open-world divergence:** NOT ACCEPTABLE when it contradicts chronology or locked outcomes.
-- **Persistent consequence presentation:** REQUIRED before control returns after major canon transitions.
-- **Dialogue:** original project-authored text only; no verbatim Tolkien/film reproduction.
-- **Implementation proof:** chapter-specific; no chapter is called visually/pacing accepted until Gate 6/7 evidence exists.
-
-## 2026-09-25 - Private-offline asset isolation lane
-
-- **Owner decision:** RECORDED â€” DEC-037.
-- **Private offline intake:** READY â€” `PrivateOfflineAssetIntakeQueueV1.json` can accept bulk owner links/files without commercial-clearance uncertainty blocking local experimental classification.
-- **Isolation:** ACTIVE â€” `SourceAssets/PrivateOffline/` payloads are Git-ignored and excluded by policy from distributable Framework output.
-- **Framework clearance:** STRICT â€” private-only/unknown-license/editorial/ripped payloads cannot be promoted into distributable/commercial output without separate clearance.
-- **Provider access:** STRICT â€” no auth/paywall/DRM/anti-bot bypass.
-- **Technical acceptance:** UNCHANGED â€” private/offline classification does not imply import/runtime/PIE/device/visual/audio acceptance.
-
-## 2026-09-25 - Warehouse bulk-intake V2
-
-- **P1C01 environment materials:** EXPANDED FOR STAGING â€” additional verified CC0 Poly Haven ground/woodland families added at 2K intake scale.
-- **Shire support architecture:** EXPANDED FOR STAGING â€” page-licensed Quaternius Farm Buildings added with FBX requirement; unverified Quaternius pack licenses now fail closed.
-- **Reusable support kits:** EXPANDED FOR STAGING â€” Kenney cave/building support stock added under CC0.
-- **P1C01 ambience/foley:** EXPANDED FOR STAGING â€” CC0 multi-surface footsteps, fireplace, wood/metal interaction bank and bird ambience added to the OpenGameArt batch.
-- **Provenance safety:** HARDENED â€” Quaternius automatic staging requires per-pack license evidence; no blanket-provider assumption.
-- **Runtime integration:** UNCHANGED â€” this lane prepares/stages source assets only. No second runtime-changing PR is opened.
-- **Acceptance:** NOT CLAIMED â€” STAGED does not equal READY_FOR_IMPORT, INTEGRATED, PIE-tested, device-tested, visually accepted or audio accepted.
-
-## 2026-09-25 - PR #77 handoff status normalization
-
-- **Unreal #731:** SUCCESS on `3b2281c17...`.
-- **Pre-Unreal #896:** Governor metadata failure only; a descriptive non-schema status was used in the handoff snapshot.
-- **Root fix:** use canonical `FAILURE` status plus a separate explanatory note.
-- **Runtime conclusion:** Drop C1 engine/core implementation remains green on the corrected runtime head ancestry; fresh Pre-Unreal is still required. No PIE/device/visual promotion.
-
-## 2026-09-25 - PR #77 PG-165 resolver correction
-
-- **Pre-Unreal #895:** FAILED in validator path resolution only; PG-165 searched the runtime module for an EditorTools commandlet.
-- **Unreal #730:** SUCCESS on exact head `725ca991...`; Drop C1 compiled and completed the production-import/core validation path.
-- **Root fix:** add dedicated EditorTools source resolver and route PG-165 through it, so editor-module guards cannot regress to runtime-module lookup.
-- **Current proof boundary:** prior runtime head is COMPILE/ENGINE-CORE PROVEN; corrected validator head still requires fresh Pre-Unreal. No PIE/device/visual acceptance.
-
-## 2026-09-25 - W01 P1C01 Drop C1: material texture binding
-
-- **Shire authored albedo pipeline:** IMPLEMENTED IN SOURCE â€” MTL `map_Kd` is parsed and bound into deterministic `AlbedoTexture` material-instance parameters.
-- **Master material:** IMPLEMENTED IN SOURCE â€” BaseColor uses `AlbedoTexture * Color`; Roughness/Metallic contract remains intact.
-- **Gameplay/runtime ownership:** UNCHANGED â€” editor import pipeline only.
-- **Foliage wind/WPO:** NOT YET IMPLEMENTED; scheduled as C2 after C1 exact-head green.
-- **Validation:** STATIC-VALIDATED only until fresh Pre-Unreal + UE4.27.2 production import/core validation succeeds.
-
-## 2026-09-25 - PR #76 handoff-baseline coherence correction
-
-- **Pre-Unreal #890/#891/#892:** FAILED in Governor handoff coherence, not in architecture runtime.
-- **Root cause:** `session_handoff.source_head` pointed at the merged Drop A commit while `validation_snapshot.last_green` still pointed at an older baseline.
-- **Correction:** handoff source/baseline now consistently use `b9a312ce...` with #888/#723 SUCCESS; latest observed PR #76 evidence is tracked separately.
-- **Evidence boundary:** Drop B remains STATIC-VALIDATED until the corrected exact head passes Pre-Unreal and UE4.27.2 core validation.
-
-## 2026-09-25 - W01 P1C01 Drop B: Hobbiton + Bag End architecture
-
-- **Bag End exterior hierarchy:** IMPLEMENTED IN SOURCE â€” garden/property approach and landmark-supporting dressing added without moving story anchors.
-- **Hobbiton domestic architecture:** IMPLEMENTED IN SOURCE â€” garden/property clusters and village-common composition reinforce warm domestic scale.
-- **F1-01 Party Field architecture:** IMPLEMENTED IN SOURCE â€” canopy/produce dressing added to existing social destination.
-- **Canon presentation:** CORRECTED â€” The Green Dragon is no longer presented as a Hobbiton landmark; legacy internal discovery ID retained for save compatibility.
-- **Bag End production interior:** NOT YET IMPLEMENTED â€” dedicated interior shell/portal kit absent from current asset bank.
-- **Performance:** existing resident meshes only; no synchronous heavy-load path; target-device shadow/collision/HLOD measurement pending.
-- **Validation:** STATIC-VALIDATED only until exact-head Pre-Unreal + UE4.27.2 core green. No PIE/device/visual acceptance yet.
-
-## 2026-09-25 - PR #75 validation classification correction
-
-- **Exact-head core evidence on 5a58c8d3...:** COMPILE/ENGINE CORE PASSED â€” editor build, import, Automation, startup, chapter sweep, route/state and warning guard succeeded.
-- **Workflow red cause:** validation classifier lacked the PR base object and chose `full` via `delta-unavailable-fail-safe`; package helper then failed on staged DbgHelp ACL probing before cook.
-- **Policy applicability:** PR #75 contains C++/Data/docs/validator world-production changes, not Config/Build.cs/Target.cs/streaming/package/cook/release changes. Core validation is the required lane.
-- **Correction:** classifier now fetches the explicit PR base SHA and retries `git diff`, preventing shallow-checkout history from escalating normal runtime work to package/cook.
-- **Current status:** Drop A has prior exact-head core engine proof, but the corrected classifier head still needs a fresh green workflow before merge. No PIE/device/visual acceptance is inferred.
-
-## 2026-09-25 - W01 P1C01 Drop A: terrain/geography foundation
-
-- **Parent baseline:** `develop@ec320891...` = Pre-Unreal #885 SUCCESS + Unreal #720 SUCCESS.
-- **Terrain/geography runtime:** IMPLEMENTED IN SOURCE - repeated terraced hills, village slopes and river banks moved to dedicated HISM groups; route-framing geography expanded across the P1C01 Shire traversal.
-- **Performance contract:** IMPLEMENTED IN SOURCE - explicit HISM cull distances for foliage/scenic/geography groups; no new synchronous heavy-load path.
-- **Story/quest boundary:** PRESERVED - no quest IDs, chapter postconditions or stable story anchors moved.
-- **Grounding boundary:** PRESERVED - broad collision foundation and router grounding contract remain authoritative.
-- **Regression guard:** PG-163 checks the HISM geography/cull contract and rejects repeated geography actor spawning.
-- **Validation:** STATIC-VALIDATED only until PR #75 exact-head Pre-Unreal + UE4.27.2 core validation succeeds.
-- **Next production dependency:** Hobbiton / Bag End architecture.
-
-## 2026-09-25 - PR #74 governance-transition red diagnosis
-
-- **Pre-Unreal #882/#883:** FAILED in Project Governor coherence, not UE4 runtime.
-- **Failure family:** partial W00 -> W01 control-plane transition; old PR #73/branch/W00 mode/blocking-gate state remained beside new W01 focus.
-- **Runtime impact:** no runtime conclusion can be drawn because validation stopped before engine proof.
-- **Correction:** reconcile Governor active gate, development mode, branch workflow, session handoff, integration train and MASTER_EXECUTION_BOARD together in one atomic commit.
-- **Evidence state:** W01 Drop 1 remains STATIC-VALIDATED; fresh exact-head Pre-Unreal + UE4.27.2 core validation required.
-
-## 2026-09-25 - W01 validator reconciliation after #881
-
-- **Pre-Unreal #881:** FAILED on stale PG-035/PG-036/PG-111 assumptions tied to builder-owned Shire ambient life and the old saturation-plan status.
-- **Runtime conclusion:** no UE4 runtime failure is inferred from #881; the failure occurred in project-structure validation before Governor/deep/engine stages.
-- **Validator correction:** guards now validate director-owned role/prop mappings, data-owned P1C01 fauna coverage, explicit single-owner budget authority, and absence of direct Shire builder ambient spawning.
-- **Fresh proof:** `03e886a6...` has Pre-Unreal #882 running and Unreal #717 pending. Status remains STATIC-VALIDATED until those finish.
-
-## 2026-09-25 - W01 P1C01 drop 1: living-world ownership/budget convergence
-
-- **Ambient population ownership:** IMPLEMENTED in source â€” P1C01 builder duplicate `AShireAmbientNPC` spawning removed; `LivingWorldDirector` is the ambient crowd owner and uses the existing pool.
-- **Story ownership boundary:** PRESERVED â€” named/story NPCs, quest triggers and canonical postconditions remain outside ambient crowd ownership.
-- **Micro-event budget authority:** IMPLEMENTED â€” `LivingWorldEventPlan#region_budgets` is sole cap/cadence source; `WorldLifeSaturationPlan` no longer overrides those values.
-- **P1C01 playful life role:** PRESERVED through director-owned `PlayRunner` role.
-- **Validation state:** STATIC-VALIDATED only; Pre-Unreal/UE4.27 compile/runtime pending. Do not promote to COMPILE-TESTED/PIE-TESTED yet.
-- **Next W01 production stage after engine-green:** terrain/geography foundation, then Hobbiton/Bag End architecture, while sensory/reactive notes remain queued inside their ordered stages.
-
-## 2026-09-25 - W00 closure / W01 kickoff
-
-- **W00 repair lane:** CLOSED on `develop@809e56a9e1dc4b453e02a0b04b6875a71df21933`.
-- **Machine evidence:** Pre-Unreal #880 SUCCESS; Unreal #715 SUCCESS by safe validation-policy inheritance; prior full machine chain remains Unreal #704 on the safe ancestor.
-- **Owner PIE evidence:** P1C01 startup grounding PASS with `commitBarrier=yes stableSeconds=2.0 ground=yes drop=1.8 drift=0.0`; player remained on ground; same-session owner searches returned no `Mobility is Static` or `SetStaticMesh` matches.
-- **Evidence boundary:** startup-grounding/warning-tail is PIE-TESTED. Whole P1C01 remains not DEVICE-TESTED, not VISUALLY-ACCEPTED and not PERFORMANCE-ACCEPTED.
-- **W01 status:** STARTED AS PRODUCTION GOVERNANCE/LEDGER KICKOFF; runtime code is unchanged in this kickoff change.
-- **First implementation gates:** ambient ownership/pooling consolidation -> living-world event-budget authority reconciliation -> terrain/geography and the ordered P1C01 vertical-slice production stack.
-- **Sensory/reactive intake:** VERIFIED/PARTIALLY ACCEPTED. Spatial environmental audio/surface foley, performance-scaled vegetation motion and skeletal IK presentation are tracked; duplicate implementations of already-present NPC awareness/weather and audio fade/duck systems are explicitly rejected.
-
-## 2026-09-25 - W00 lessons-lock / current develop proof
-- **PG-161 follow-up:** #875 exposed a wrong textual anchor in the self-guard. Loop-anchored correction committed; exact-head rerun pending. No gameplay/acceptance status changed.
-- **PG-161 self-test:** #871 found a validator false positive; PG-164 correction committed. Exact-head Pre-Unreal rerun pending; no gameplay acceptance state changed.
-- **Current develop machine baseline:** `ed3587aa...` â€” Pre-Unreal #869 SUCCESS + Unreal #704 SUCCESS.
-- **Compile/import/runtime/package:** PROVEN on current canonical develop. #704 passed build/import/Automation/startup/P1C01-P1C08/route-state/warning/package/data/startup/hardware.
-- **Human PIE tail:** PENDING on the final canonical develop after lessons-lock merge; do not call full P1C01 PIE-TESTED yet.
-- **Validation-cost regression:** ROOT FIX COMMITTED. Safe governance/docs ancestry may inherit nearby green proof; runtime/assets/config/streaming/package changes still force core/full validation. Validation-policy-only changes no longer recook a green parent.
-- **Local launcher self-update regression:** FIX COMMITTED; immutable temp-copy execution is guarded by Pre-Unreal, local rerun pending.
-- **Branch hygiene:** develop + main only after cleanup; lessons-lock branch is temporary and registered for deletion after merge.
-- **W01 status:** NOT STARTED. First production work begins only after final P1C01 PIE warning/grounding tail is clean.
-
-## 2026-09-25 - Post-cleanup handoff state
-- **Branch hygiene:** PROVEN CLEAN. Branch Cleanup run #1 succeeded; live GitHub branch enumeration returned only `develop` and `main`.
-- **Programmer handoff:** canonical branch = `develop`; stable release = `main`. Historical feature/repair branches are no longer required for handoff.
-- **PR/governance metadata:** PR #72 is metadata-only reconciliation so the merged Governor/Execution Board no longer point at completed PR #70. It self-cleans after merge.
-- **Consolidated develop:** `3108b2dd6354b196d36406935057c25feab2fec2`; Pre-Unreal #865 SUCCESS. Do not infer a fresh UE compile/runtime result until the corresponding Unreal run is green.
-- **W00:** automated machine closure remains green from the prior exact evidence chain; the final human P1C01 grounding/mobility-warning tail remains unproven.
-
-## 2026-09-25 - Final consolidation / CI-cost / launcher hardening
-- **Final branch survivor set:** `develop` + `main` only. The generated-audio archive ref is also safe-delete after registry consolidation; no branch-only WAV/UE master asset was found in its changed-file set.
-- **Canonical handoff target:** `develop`; stable release lane: `main`.
-- **Branch consolidation:** FINAL DELETE SET RECORDED on PR #70. Post-merge cleanup preserves only develop/main; stale refs are removed automatically by the branch-cleanup workflow.
-- **Parallel consolidation PR #71:** SUPERSEDED after unique safe payload transfer into #70.
-- **Generated-audio registries:** CONSOLIDATED/SANITIZED; expiring signed delivery URLs removed; no UE playback/listening acceptance promoted.
-- **Local launcher self-update hazard:** FIX_COMMITTED for both update/build and PIE verification controllers; local rerun proof pending.
-- **Unreal validation classifier/workflow:** FIX_COMMITTED. Core runtime changes compile/test without package/cook; packaging-critical deltas retain full package validation; maintenance/docs can inherit green parent proof.
-- **W00:** AUTOMATED CLOSURE GREEN; remaining human P1C01 grounding/traversal + project-owned mobility-warning tail is still unproven on the final canonical post-maintenance head.
-
-## 2026-09-25 - Consolidation and validation-cost correction
-- Sanitized audio registry salvage: **DATA-CONSOLIDATED / RUNTIME-UNPROVEN**. Canonical develop receives the generated-audio/P1C01 bank metadata without signed external download URLs; WAV mastering, UE import, playback, lip-sync, listening and device acceptance remain pending.
-- Repository/branch hygiene: **IMPLEMENTED ON PR #70 / MERGE-PENDING**. Canonical runtime handoff target remains `develop`; stale feature/repair branches are not authoritative.
-- Local launcher self-update hazard: **FIX_COMMITTED / PROOF PENDING**. The running batch now uses a temp copy before pulling, preventing mid-execution mutation. No local rerun evidence is claimed yet.
-- Unreal classifier cost correction: **FIX_COMMITTED / CI PROOF PENDING**. PR classification uses the canonical base SHA, so ordinary C++/runtime/data/SourceAssets deltas use a core lane (build/import/Automation/runtime/warning) with no package/cook even when intermediate branch runs were cancelled. Packaging remains mandatory for Build.cs/Target.cs/Config/streaming/packaging-critical deltas.
-- W00 status remains **AUTOMATED_CLOSURE_GREEN_HUMAN_PIE_TAIL_PENDING**. Pre-Unreal #821 + Unreal #656 are machine evidence only; no new PIE/device/visual acceptance is claimed.
-- Branch consolidation salvages planning/recovery/source09 records into develop and consolidates the generated-audio registry evidence directly into the canonical lane; no separate archive branch is required.
-
-## 2026-09-25 - C4996 / SetStaticMesh warning-debt guards added
-
-The remaining visible warning families are now encoded as hard regression guards. Canonical `develop` already uses `GetStaticMaterials()` in the production importer, so the old C4996 source pattern is absent. PG-159 now rejects any return to direct `UStaticMesh::StaticMaterials` access.
-
-For the PIE `SetStaticMesh ... Mobility is Static` warning family, the current Shire/Bree/Fellowship/Isengard `SpawnShape` implementations already set `EComponentMobility::Movable` before assigning the mesh. PG-160 now locks that ordering.
-
-Status: **STATIC-VALIDATED / FRESH COMPILE + PIE WARNING LOG PROOF PENDING**. Do not claim zero warnings until the fresh exact-head UE4.27 build and PIE log confirm it.
-
-## 2026-09-25 - Final workflow repair batch committed to canonical develop
-
-A single canonical interactive lane is now enforced: `develop`.
-
-Root repairs in commit `09f89ab472832b8f03b56cf09eddb4ec7e268af9`:
-- `SHIRE_UPDATE_BUILD_LAUNCH.bat` updates/builds/imports only the already-selected `develop` branch and never performs a silent branch switch.
-- `SHIRE_PIE_VERIFY.bat` verifies only `develop` and refuses the GitHub Actions runner workspace.
-- interactive Unreal use under `C:\actions-runner\_work` is blocked; the Documents developer clone and runner workspace remain physically isolated.
-- `Scripts/verify_runtime_source_workspace.ps1` validates every tracked Source .h/.cpp/.cs immediately before UBT and restores a tracked file from exact HEAD if a persistent runner workspace is missing it.
-- Unreal workflow now executes that source-integrity gate immediately before `Build ShireJourneyEditor`.
-- the Unreal classifier recognizes governance-only green parents as transitive core proof, preventing evidence-only commits from needlessly returning to a full engine pass.
-
-This batch responds to two observed regressions: the local launch helper previously returned the owner from the grounding-proven acceptance branch to stale `develop`, and Unreal #653 later reported a missing `ShireAmbientNPC.cpp` from the persistent runner workspace even though that file exists in Git.
-
-Evidence status: **STATIC-VALIDATED / FRESH PRE-UNREAL + UE4 BUILD/PIE PROOF PENDING**. Existing #651 automated acceptance and the earlier real P1C01 grounding observation remain historical evidence; this new workflow batch itself is not yet COMPILE-TESTED or PIE-TESTED.
-
-## 2026-09-25 - Real PIE closes P1C01 startup-grounding regression
-
-Exact tested head: `2427e6594f5adb3ea81f143dc19d4ecede8eecc9`.
-
-Owner real-PIE observation: the P1C01 player remained on the ground and did not fall.
-
-Chapter-specific Output Log evidence from the owner-provided screenshot:
-- `ShireStartupGrounding: PLACED chapter=P1C01 source=chapter-start requestedZ=130.0 groundedZ=76.0`
-- `ShireStartupGrounding: PASS chapter=P1C01 commitBarrier=yes stableSeconds=2.0 ground=yes drop=1.0 drift=0.0`
-
-This closes the specific player-fall/startup-grounding repair. It does **not** promote the whole P1C01 chapter to PIE-TESTED and does not claim DEVICE-TESTED, VISUALLY-ACCEPTED or PERFORMANCE-ACCEPTED. Chapter-wide traversal/quest/save-load/pacing/visual review remains a separate human acceptance tail.
-
-Next action: final W00 branch ancestry/cleanup audit, then close the repair lane and open W01 under Gate 6/7.
-
-## 2026-09-25 - Automated W00 acceptance chain green on Unreal #651 Attempt 2
-
-Exact head `efdb2e291505472247fae921945b083b3cc1ce2c` is now machine-proven through the complete automated W00 chain: Pre-Unreal #816 SUCCESS, Warehouse #232 SUCCESS with no-delta self-hosted skip, and Unreal #651 Attempt 2 SUCCESS.
-
-Accepted automated evidence on this head:
-- UE4.27.2 Editor build and production import.
-- Automation QA, headless startup, P1C01-P1C08 runtime audit, route/story roundtrip and warning-debt guard.
-- Windows package: `W00_PACKAGE_PASS elapsedSeconds=182`.
-- Runtime JSON: `W00_PACKAGED_DATA_PASS expected=37 verified=37`.
-- Packaged startup: `W00_PACKAGED_STARTUP_PASS observed=6s`.
-- Runner hardware snapshot: PASS on i7-6498DU with 8.45 GB reported RAM.
-- Packaged startup also required `ShireStartupGrounding: PASS chapter=P1C01`.
-
-This closes the runner/package/data/startup proof debt for the current contract. It does **not** promote PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED or PERFORMANCE-ACCEPTED. Human PIE grounding/traversal remains the next acceptance boundary.
-
-## 2026-09-25 - Self-hosted runner pre-step failure isolated; warehouse contention removed; watchdog root mitigation added
-
-Live GitHub evidence on exact head `a69147e4e34869bc43abfbce517ba8023b6027c8` isolates the new failure boundary outside repository steps. Unreal #650 was assigned to runner `UE4-27-Windows` (runner id 21) at 21:22:36Z, recorded **zero steps**, and failed at 21:32:37Z. Warehouse #231 was then assigned to the same runner at 21:32:39Z, also recorded **zero steps**, and failed at 21:42:39Z. Pre-Unreal #815, which runs on GitHub-hosted Ubuntu, succeeded on the same head. The a69147 commit did not modify the Unreal workflow.
-
-The repository-side repair removes avoidable pressure on that machine: Warehouse now computes the synchronize delta on `ubuntu-latest` first and never schedules its self-hosted stage job unless the current update contains a real Warehouse staging input. Workflow-control-only changes stay on the hosted skip path. When real Warehouse staging is required, it shares the UE4 device concurrency group instead of competing independently.
-
-A machine-side supervisor is now versioned as `Scripts/runner_watchdog.ps1` with installer `Scripts/install_runner_watchdog.ps1`. It watches the runner diagnostic stream for an acknowledged job that fails to produce a `Runner.Worker` within 150 seconds, then restarts only the stalled `Runner.Listener`; it also restarts a missing listener. The installer deliberately uses the interactive Windows user and disables legacy auto-start of any `actions.runner.*` service so the project does not silently fall back to the earlier NETWORK SERVICE identity.
-
-Evidence status: **STATIC-VALIDATED / LOCAL WATCHDOG INSTALL + RUNNER PROOF PENDING**. This does not claim Package/Packaged Startup/PIE/device/visual success on the new head. After the local watchdog is installed, the next machine action is one acceptance run, not a broad rerun wave.
-
-## 2026-09-25 - Packaged production streaming cook root fix after Unreal #649
-
-Unreal #649 isolated the real packaged-runtime blocker. Package creation and all 37 Runtime Data JSON files passed, and the packaged executable launched. P1C01 then failed closed with `ChapterAssetStreaming: unresolved-bank-assets ... missing=82`.
-
-The count proves the cook omission: P1C01 declares 83 streaming assets, while the prior packaging configuration always cooked only `/Game/Production/Materials`; exactly one P1C01 asset is in that directory. Therefore `83 - 1 = 82`, exactly matching runtime. The full streaming plan contains 238 unique production packages, and all 238 have matching project-owned import sources. Unreal #649 production import reported 376 files and 0 failures.
-
-The repair always cooks the exact current streaming-bank directory set: Materials, World, Characters/Common, Characters/Hobbit, and Enemies. Static coverage before commit is 238/238 with zero uncovered streaming paths. The package wrapper now parses the streaming plan before UAT and requires all 238 generated `.uasset` files to exist, so missing imported content fails in seconds rather than after cook/startup. The classifier treats only this exact four-line packaging-config change as acceptance-safe and recognizes transitive acceptance proof so chained verifier/package fixes do not unnecessarily return to the full Unreal chain.
-
-Status: **STATIC-VALIDATED / RUNNER_PROOF_PENDING**. No packaged-startup success is claimed on this repair head yet.
-
-## 2026-09-24 - Unreal #648: Package + 37 Runtime Data proven; resume at packaged startup
-
-Unreal #648 on exact head `9689a65ade82af5e1a87b63e344ed491c27c4079` produced the first valid packaged-acceptance proof:
-
-- `W00_PACKAGE_EXITCODE source=cmd-sidecar exit=0`
-- `W00_PACKAGE_PASS elapsedSeconds=300`
-- `W00_PACKAGED_DATA_PASS expected=37 verified=37`
-
-These gates are now green evidence and must **not** be repeated for a packaged-startup-verifier-only fix.
-
-The next step failed before producing a game/runtime verdict. `verify_packaged_startup.ps1` read an existing but still-empty log with `Get-Content -Raw`; PowerShell returned `$null`, and line 58 called `$text.Contains($marker)`, raising `InvokeMethodOnNull`.
-
-Repair:
-- startup log polling initializes `$text` to `""` and only replaces it when the raw read is non-null;
-- Pre-Unreal now rejects regressions of this empty-log case;
-- the acceptance classifier can inherit parent Package + Runtime Data proof for startup-verifier-only deltas;
-- that resume path skips UE verification, editor wait, package and Data gates;
-- before launching the packaged executable, CI proves the persisted `ShireJourney.exe` and the successful 37-file packaged-data report are still present locally.
-
-Next intended execution:
-`Inherited package/data artifact check -> Packaged Startup -> Hardware Snapshot`.
-
-Status: **PACKAGE PASS / 37 JSON PASS / PACKAGED STARTUP PROOF PENDING**. No PIE, visual, device, or player-falling closure is claimed.
-
-## 2026-09-24 - Fast-path rule and package exit truth after Unreal #647
-
-Unreal #647 on exact head `6fb1c5edd81989de853fface5e406d8cddab0099` provides fresh successful Core Unreal proof through the warning-debt guard. Those successful gates are **not to be repeated** for a package-wrapper-only fix.
-
-The package step itself was still making forward progress after about 25 minutes: the last evidence was `Cooked packages 251 Packages Remain 12 Total 263` with shader compilation still active. No terminal UAT result was logged before `ci_package_w00.ps1` emitted `W00_PACKAGE_EXITCODE_FAIL exitCode=<null>` and exited 97. This is a wrapper-result failure, not proof of a UAT/package failure.
-
-Repair:
-- RunUAT is called synchronously by a dedicated `cmd.exe` wrapper.
-- The wrapper writes the actual post-CALL `%ERRORLEVEL%` to `CI-W00-Package-exitcode.txt`.
-- PowerShell keeps heartbeat and bounded timeout only; it no longer trusts `$proc.ExitCode` for UAT truth.
-- Missing/invalid sidecar results fail immediately with explicit diagnostic codes.
-- PG-026 rejects reintroduction of `$proc.ExitCode` as RunUAT result authority.
-
-Execution rule: the child commit is acceptance-only and must inherit #647's green Core Unreal proof. The intended next sequence is only:
-`Verify UE -> Package -> 37 Runtime JSON -> Packaged Startup -> Hardware`.
-If classification unexpectedly becomes `full`, stop rather than spend another full Core Unreal cycle.
-
-Status: **STATIC-VALIDATED / RUNNER_PROOF_PENDING**. No Package PASS or downstream packaged acceptance is claimed yet.
-
-## 2026-09-24 - Grounding guard reconciliation after real PIE fall regression
-
-The new two-phase grounding commit barrier exposed two stale/strict validation assumptions. PG-122 correctly required the established delayed stability proof, while the runtime barrier had been shortened to 0.35 seconds. The runtime now waits a real **2.0 seconds** before grounding finalization and logs `stableSeconds=2.0`.
-
-PG-128 was stale relative to the new architecture: normal world publication moved out of `CommitChapterWorld` and into `VerifyPlayerGroundingStability`. The runtime already publishes `OnWorldCommitted.Broadcast(WorldRevision)` before `SetPlayerWorldHold(false)`. The validator now inspects that finalization function directly and also rejects any movement release from the pre-finalization commit setup.
-
-Status: **STATIC-VALIDATED / RUNNER + PIE PROOF PENDING**. The player-falling issue remains open until fresh UE4.27 compile/runtime evidence and real PIE observation confirm stable grounding.
-
-## 2026-09-24 - Player falling / grounding commit barrier root fix
-
-Real PIE evidence showed the player can still fall despite the earlier grounding logic. Root review found that `ChapterWorldRouter` resolved a grounded placement, but published the world as committed and released movement before proving CharacterMovement had actually settled on blocking ground. The previous stability check was CI-only and log-only.
-
-Root fix applied:
-- world commit is now two-phase,
-- player remains transition-held while CharacterMovement settles,
-- grounding stability is checked before `WorldRevision` / `OnWorldCommitted` publication,
-- one bounded re-ground attempt is allowed,
-- persistent instability keeps the player held and triggers rollback instead of releasing the pawn into a fall,
-- successful stability is now the condition that publishes the world and releases movement.
-
-Changed files:
-- `Source/ShireJourney/Private/World/ChapterWorldRouter.cpp`
-- `Source/ShireJourney/Public/World/ChapterWorldRouter.h`
-
-Status: STATIC-VALIDATED / COMPILE-AND-PIE-PROOF-PENDING. Do not claim the falling issue is closed until a fresh UE4.27 compile and real PIE observation show stable grounding without falling.
-
-## 2026-09-24 - W00 package truth, DbgHelp policy, and PG-026 repair
-
-Live PR #69 head `d94b7fe7797e9ef417b7dad2abde26dfc279e700` produced three decisive signals:
-
-- Pre-Unreal #808 failed only at PG-026 because the validator still required literal `cancel-in-progress: false`.
-- Unreal #643 completed Editor build, production import, Automation QA, headless startup, P1C01-P1C08 runtime audit, route/story roundtrip, and warning-debt guard successfully.
-- The same Unreal #643 did **not** package successfully despite the GitHub package step being marked success: UAT reached NonUFS staging, repeatedly failed writing the destination `WindowsNoEditor/Engine/Binaries/ThirdParty/DbgHelp/dbghelp.dll` with Access denied, then logged `ExitCode=1` / `BUILD FAILED`. The runner context is NetworkService. The following 37/37 `MISSING_RUNTIME_DATA` result is therefore downstream of incomplete staging and is not accepted as a final Runtime Data verdict.
-
-This repair applies four bounded changes before another acceptance run:
-
-- CI Game TargetRules disable UE's bundled DbgHelp only when `SHIRE_CI_NO_DEBUGINFO=1`; normal local game builds keep the default policy.
-- `ci_package_w00.ps1` proves the DbgHelp source is readable and the exact nested destination is writable before UAT, then calls `WaitForExit` / `Refresh`, rejects a null exit code, and propagates the concrete UAT code.
-- PG-026 accepts cancellation only when the workflow uses the exact `acceptance/*` head-ref expression; unconditional or broader cancellation remains invalid.
-- The Unreal classifier treats the Game `Target.cs` as acceptance-only **only** when its entire diff is the CI DbgHelp guard. Any other Target.cs change remains `full`.
-
-Status: **STATIC-VALIDATED / RUNNER_PROOF_PENDING**. No PIE, device, visual, performance, packaged-startup, or Runtime-Data acceptance is claimed by this code change.
-
-## 2026-09-24 - Acceptance Fast-Path and superseded-run cancellation
-
-Implemented a three-mode Unreal validation classifier:
-
-- `full`: C++ / Build.cs / Config / runtime-contract changes run the complete UE4 validation chain.
-- `acceptance`: packaging/verifier/acceptance-only changes inherit proven parent **core Unreal** steps and run only package -> packaged Data JSON -> packaged startup -> hardware gates.
-- `inherit`: docs/governance-only changes inherit a green parent workflow.
-
-Parent core proof is accepted only when the prior run has successful Editor build, production import, Automation QA, startup, P1C01-P1C08 audit, route/story roundtrip and warning-debt guard. A run that later fails only at an acceptance gate may therefore still provide valid core-engine evidence for the next acceptance-only fix.
-
-On `acceptance/*` branches, newer commits now cancel superseded runs in the shared UE4-device concurrency group. Normal/full validation branches remain serialized. This prevents obsolete acceptance heads from consuming another 20-25 minute engine pass.
-
-Status: **IMPLEMENTED / RUNNER_PROOF_PENDING**. No acceptance result is claimed until a fresh run demonstrates the fast path and final package/data/startup/hardware gates.
-
-## 2026-09-24 - PG-147 validator reconciled with explicit NonUFS runtime staging
-
-After the runtime Data staging fix, Pre-Unreal #800 failed because PG-147 still matched only the legacy one-argument `RuntimeDependencies.Add("$(ProjectDir)/Data/...json")` spelling. That validator behavior was stale and incorrectly rejected the new explicit `StagedFileType.NonUFS` contract.
-
-Fix applied: `source_contracts.py` now exposes `has_nonufs_runtime_dependency`, PG-147 requires the explicit NonUFS form, and regression tests cover correct NonUFS, legacy untyped rejection, and wrong UFS-type rejection.
-
-Interpretation: this failure was a validation-contract mismatch, not a new runtime/game defect. The next exact-head run must prove both static validation and packaged runtime Data staging.
-
-Status: STATIC_VALIDATOR_FIX_APPLIED / RUNNER_PROOF_PENDING.
-
-## 2026-09-24 - Known failure: packaged runtime Data JSON missing after successful package
-
-Unreal packaging progressed past the previous dbghelp.dll blocker. The package gate succeeded far enough for the next acceptance step to run, then `Verify packaged Runtime Data JSON` failed with `MISSING_RUNTIME_DATA` for the 37 JSON files declared in `ShireJourney.Build.cs`.
-
-Repository inspection confirmed the runtime contract: systems including `LivingWorldDirector` and `ShireNPCContextSubsystem` read JSON via `FPaths::ProjectDir()/Data/...`. Therefore the acceptance package must preserve these files as loose project-relative data under `ShireJourney/Data`, not merely hide them inside a pak or move them to `Content/Data`.
-
-Fix applied: all 37 `RuntimeDependencies.Add("$(ProjectDir)/Data/...")` entries in `ShireJourney.Build.cs` now explicitly use `StagedFileType.NonUFS`, so UE4 staging is instructed to copy them as loose NonUFS runtime files compatible with the existing loader paths.
-
-Status: FIX_APPLIED / RUNNER_PROOF_PENDING. No packaged-data acceptance is claimed until a fresh runner execution proves all 37 files exist, parse as JSON, and the packaged executable reaches runtime startup successfully.
-
-## 2026-09-24 - Known failure: UE4 packaging dbghelp.dll ACL loop
-
-Repeated W00 packaging failures were traced to `Engine/Binaries/ThirdParty/DbgHelp/dbghelp.dll` staging under the self-hosted Windows service account. The game build, cook and UnrealPak were not the demonstrated failure point; prior run #627 completed cook/pak and then failed copying dbghelp.dll. Run #630 moved the failure to a fast preflight and reproduced the same permission denial within seconds.
-
-The earlier mitigation (unique staging + explicit dbghelp copy preflight) was diagnostic, not a permanent fix. The packaging policy is now changed to add UE4 BuildCookRun `-nodebuginfo`, so debug-file staging is intentionally omitted for this acceptance package. The preflight now checks only generic staging-directory writability. This incident must not be rediscovered/reworked as a new defect unless a later log proves a different failure mode.
-
-Status: FIX_APPLIED / RUNNER_PROOF_PENDING. No packaged-build acceptance is claimed until the new exact head passes package -> staged Data JSON -> packaged startup -> hardware gates.
-
-## 2026-09-24 - W00 packaging delay root cause and bounded retry fix
-
-Unreal #627 proved that compile/import/Automation/startup/chapter/state/warning gates remained green. The final package step ran for about 37 minutes and failed **after cook/pak succeeded**: UnrealPak added 1665 files and exited 0, then AutomationTool repeatedly failed to copy `Engine/Binaries/ThirdParty/DbgHelp/dbghelp.dll` into the staged build with Windows `Access denied`.
-
-This is a staging/ACL file-copy blocker, not a demonstrated gameplay/source compile regression.
-
-Added `Scripts/ci_package_w00.ps1` and routed `ci_package_w00.cmd` through it. New behavior:
-- unique staging directory per workflow run/attempt,
-- explicit DbgHelp copy preflight before any expensive cook,
-- 30-second progress heartbeat,
-- bounded internal package timeout,
-- reuse of Unreal/DDC/cook cache where available,
-- no broad repair-wave reopen.
-
-Governor integration baseline was restored to `develop`; the acceptance branch is tracked separately.
-
-Status remains **ACCEPTANCE_FIX_IN_PROGRESS** until the next runner execution proves the package/data/startup gates. No PACKAGE-TESTED/DEVICE-TESTED/PIE-TESTED claim is made yet.
-
-## 2026-09-24 - W00 final closure wave started on isolated acceptance branch
-
-Architectural/root repair remains closed on exact green head `31b6e1c9958b6121ec7a00c07e038fec4ab36408` (Pre #791 SUCCESS, Unreal #626 attempt 2 SUCCESS, Warehouse #207 SUCCESS).
-
-A dedicated branch `acceptance/w00-final-closure-v1` now carries the final automatable W00 acceptance wave. Added `Data/W00FinalClosurePlanV1.json` plus runner scripts for: real Windows BuildCookRun packaging, verification of every `RuntimeDependencies` JSON staged into the package, packaged executable startup/grounding observation, and CPU/RAM/GPU/OS runner snapshot. The Unreal validation workflow now executes these gates after the existing compile/import/Automation/startup/chapter/state/warning suite.
-
-This wave does not claim PIE/device/visual/audio acceptance. Human-only traversal/collision, visual composition, pacing/fun, NPC believability and final listening/mix remain separate evidence. Scripted/ambient voice source generation also remains distinct from UE audio acceptance.
-
-W01 opening rule: if the new automated closure gates are green, the Governor may open the deferred W01-W06 large Part I production program. Broad architectural repair may reopen only for a concrete regression.
-
-## 2026-09-24 - W00 CP-W00-156 bounded exact-checkout validator repair
-
-CP155 `3534e632...` passed Unreal #625 and Warehouse #206. Pre #790 failed only PG-026 because its static contract recognized `--depth=1` but not the new bounded `--depth=2` checkout used for direct-parent classification. CP156 accepts depth 1 or 2 while preserving hard reset + exact SHA verification.
-
-No production-completeness percentage changes. No gameplay/runtime change and no new acceptance claim.
-
-## 2026-09-24 - W00 CP-W00-155 final consolidated repair closure
-
-`f524a83c...` passed **Unreal #624** and **Warehouse #205**; Pre #789 failed only PG-078 stale roadmap tracking after REQ-ORG-001 became VALIDATED. CP155 reconciles that snapshot, adds dedicated resident-bank runtime evidence, and adds a fail-safe governance/docs-only Unreal fast path.
-
-No production-completeness percentage changes. Remaining W00 closure evidence is packaged Data JSON runtime proof, authored audio playback, target-device profiling and chapter-specific human PIE/pacing/visual review.
-
-## 2026-09-24 - W00 CP-W00-154 exact-head machine-green reconciliation
-
-Exact head `ab7889d6...` passed **Pre #788 + Unreal #623 + Warehouse #204**. The Public/Private migration is machine-accepted: static validation, UE4.27.2 compile/import and the exercised headless runtime suite are green on the same SHA.
-
-No production-completeness percentage changes. This does **not** promote PIE, device, visual, performance, packaged-runtime or real-audio acceptance. Remaining W00 closure evidence is packaged Data JSON runtime proof, authored audio playback, target-device profiling and chapter-specific human PIE/pacing/visual review.
-
-## 2026-09-24 - W00 CP-W00-153 migration integration repair
-
-CP152 `9acc72b1...` preserved the intended Public/Private Git tree, but Pre #786 failed on historical flat validator reads and Unreal #621 failed in UHT because the persistent runner retained old untracked flat headers. Warehouse #202 succeeded.
-
-CP153 makes validators/tests layout-aware and adds bounded cleanup of only architecture-mapped obsolete source paths on the self-hosted runner. No gameplay source behavior and no production-completeness percentage change. Exact-head proof is pending.
-
-## 2026-09-24 - W00 CP-W00-152 Public/Private source migration
-
-Exact CP151 head `92f6d3aa...` passed Pre #785, Unreal #620 and Warehouse #201. CP152 performs only the pre-recorded physical runtime-module migration: 62 .h/.cpp files move to `Public/<Domain>` and `Private/<Domain>`; Build.cs stops exporting the module root; validators become layout-aware and PG-154 forbids flat regression.
-
-No gameplay behavior or production-completeness percentage changes. CP152 is **SOURCE-LAYOUT-MIGRATED / EXACT-HEAD VALIDATION PENDING**.
-
-## 2026-09-24 - W00 CP-W00-151 handoff-lineage correction
-
-Exact CP150 head `2259242a...`: Unreal #619 SUCCESS + Warehouse #200 SUCCESS; Pre #784 passed core validation and then failed only because `session_handoff.source_head` no longer matched the recorded last-green baseline. CP151 restores the intended evidence lineage without weakening the validator.
-
-No production-completeness percentage changes. CP151 remains **SOURCE/DATA-REPAIRED / EXACT-HEAD VALIDATION PENDING**.
-
-## 2026-09-24 - W00 CP-W00-150 refactor-regression closure
-
-Exact CP149 head `e0b66dbc...`: Unreal #618 SUCCESS + Warehouse #199 SUCCESS; Pre #783 crashed at PG-056 with `NameError: governor_mode_id` before the remaining static chain. CP150 removes that orphan alias and preserves the single data-owned development-mode contract.
-
-No production-completeness percentage changes. CP150 is **SOURCE-REPAIRED / EXACT-HEAD VALIDATION PENDING**.
-
-## 2026-09-23 - W00 CP-W00-149 data-owned development-mode contract
-
-Parent `32af3140...`: Unreal #617 SUCCESS + Warehouse #198 SUCCESS; Pre #782 FAILURE only at the stale PG-033 development-mode/prose validator before the remaining static suite executed. CP-W00-149 replaces the hard-coded validator allowlist and wording heuristic with one structured Governor-owned contract shared by Pre-Unreal and project_governor.py, plus regression tests.
-
-No production-completeness percentage is increased. Child head remains **SOURCE-REPAIRED / EXACT-HEAD VALIDATION PENDING**.
-
-## 2026-09-23 - W00 CP-W00-148 governor execution-truth hardening
-
-Exact parent `96398e7cc48277324113c7879a8d28e3b659757e` passed Pre-Unreal #781, Warehouse #197 and Unreal #616. This promotes that **parent only** to STATIC-VALIDATED + COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED for the exercised machine suite; it does not promote PIE, device, audio playback, pacing or visual acceptance.
-
-The follow-up audit found stale management surfaces contradicting the active W00 freeze. CP-W00-148 centralizes executable-vs-frozen bundles in ProjectGovernor, reconciles branch/PR metadata and makes the Governor print current execution directives before backlog memory. No production percentage is increased. The governance child is **SOURCE-REPAIRED / EXACT-HEAD VALIDATION PENDING**.
-
-## 2026-09-23 - W00 CP-W00-147 preflight-vs-rollback semantics
-
-Pre #780 was a qualifier false positive in PG-136: nested `TargetExisting->CurrentChapterId` sanitation was mistaken for authoritative quest identity mutation. Unreal #614 separately showed the P1C99 request is now rejected before transaction publication; the old audit incorrectly demanded a rollback revision bump for a transaction that never began. CP-W00-147 makes source-order guards qualifier-aware and splits fault evidence into preflight rejection with revision unchanged versus real async streaming rollback with revision advanced. No production-completeness percentage is increased. Status: **SOURCE-REPAIRED / EXACT-HEAD VALIDATION PENDING**.
-
-## 2026-09-23 - W00 CP-W00-146 structural validator repair
-
-Head `333cbd0d...` produced Pre-Unreal #779 FAILURE on PG-136, but the production StartChapter source already publishes transition intent before authoritative identity mutation. Root cause: the guard hard-coded the old RHS spelling `CurrentChapterId = ChapterId;` and failed after canonicalization changed the assignment to `TargetChapterId`. CP-W00-146 replaces exact-spelling checks with reusable structural member-mutation ordering plus regression tests. No production percentage is increased. Status: **SOURCE-REPAIRED / EXACT-HEAD VALIDATION PENDING**.
-
-## 2026-09-23 - W00 CP-W00-145 large closure wave
-
-Parent `3ea40ce1...`: Pre-Unreal #778 SUCCESS and Unreal #613 SUCCESS; Warehouse #193 FAILURE before staging due Windows PowerShell execution policy, with separate #192 network/DNS checkout failure. CP-W00-145 repairs both warehouse infrastructure families and simultaneously closes source-level identity/persistence gaps: canonical Route/Chapter/Episode/PlayableCharacter validation, malformed-save/route-progress repair, real queued AsyncSaveGame cross-revision race evidence, and packaged-runtime JSON declaration guards. No production percentage is increased. New-head status: **SOURCE-REPAIRED / EXACT-HEAD VALIDATION PENDING**. W01 remains blocked.
-
-## 2026-09-23 - W00 CP-W00-144 warehouse resilience
-
-Parent `67ebc4ee...`: Pre-Unreal #777 SUCCESS, Unreal #612 SUCCESS, Warehouse #191 FAILURE at the still-in-progress Poly Haven step after 32m57s; no finalized job log blob exists. This is classified as warehouse acquisition/infrastructure debt, not a gameplay regression. CP-W00-144 adds current-update gating, persistent receipt reuse, bounded/retried provider I/O and atomic partial downloads. No production-completeness percentage is increased. New-head status: **SOURCE-REPAIRED / EXACT-HEAD VALIDATION PENDING**.
-
-## 2026-09-23 - W00 CP-W00-143 semantic validation-contract wave
-
-Parent `aa8f80c8...`: Unreal #611 SUCCESS, Warehouse #190 SUCCESS, Pre-Unreal #776 FAILURE on six legacy marker-location checks. No production-completeness percentage is increased. CP-W00-143 makes semantic evidence IDs the validation API and removes exact marker ownership from legacy Python consumers. New-head status: **SOURCE-REPAIRED / EXACT-HEAD VALIDATION PENDING**. W01 remains blocked.
-
-## 2026-09-23 - W00 CP-W00-142 validation-contract consolidation
-
-Parent `7636c777...`: Unreal #610 SUCCESS and Warehouse #189 SUCCESS; Pre-Unreal #775 FAILURE on one stale duplicated PG-140 marker template. No production percentage is increased. The repair is systemic: one runtime-audit registry now owns markers/modes/log names/source anchors, consumers import it, and regression tests forbid duplicated transaction marker text. New-head status: **SOURCE-REPAIRED / EXACT-HEAD VALIDATION PENDING**. W01 remains blocked.
-
-## 2026-09-23 - W00 CP-W00-141 validation-repair checkpoint
-
-Candidate `621ad861...` failed Pre-Unreal #774 at ProjectGovernor evidence validation and Unreal #609 at the first C++ compile error (conditional `UE_LOG` verbosity). No production-completeness percentage is increased. The repair restores exact last-green/latest-observed handoff records, replaces dynamic log verbosity with static branches, and adds PG-141 plus a handoff regression test. Status: **SOURCE-REPAIRED / EXACT-HEAD VALIDATION PENDING**. Last proven engine baseline remains `80fc54dc...` (#773/#608). W01 remains blocked.
-
-## 2026-09-23 - W00 CP-W00-140 closure wave
-
-Parent evidence boundary: `80fc54dc4e4571e57206bef28cc809e2dcb3ec62` is exact-head green on Pre-Unreal #773 / Warehouse #187 / Unreal #608, including compile/import, P1C01-P1C08, state, transitions, rollback/stream-failure faults, delayed pending authority and project warning-debt gates. No PIE/device/visual/performance/audio-playback promotion is made.
-
-New closure work is intentionally not counted as production-percentage progress. It fixes texture-pool scalability authority, broadens warning-debt runtime evidence, and adds PG-140 legacy-terminal/stale-checkpoint runtime regression coverage. Status for the new head is **SOURCE-REPAIRED / EXACT-HEAD VALIDATION PENDING**. W01 stays blocked.
-
-## 2026-09-23 - W00 failure-path expansion after Unreal #606
-
-#606 compiled/imported and passed all established runtime paths through continuous transitions, then the new rollback audit produced a false-negative on time-varying stamina/resolve despite engine logs proving the exact rollback state was applied. The audit now captures exact restore values at the rollback application boundary and checks stable post-release values separately.
-
-The source wave also extends the transaction contract to save-driven world restores, removes compatibility-success behavior for missing/failed chapter banks, adds explicit streaming failure rollback, and adds a deterministic delayed-ready audit for old-world authority during pending async transitions. These are stabilization changes only; no completion percentage advances until a fresh exact head passes PG-137/PG-138.
-
-## 2026-09-23 - PG-136 static-harness correction
-
-Pre-Unreal #771 rejected test-only literal chapter/quest identifiers and an over-broad snapshot/hold ordering check. The fault injection now creates the unsupported chapter dynamically while keeping authored quest identity, and the guard distinguishes the normal transition hold from the no-subsystem fail-safe hold. No production maturity is advanced.
-
-## 2026-09-23 - W00 #605 green baseline followed by rollback-freshness hardening
-
-Exact head `ddd0957d6201c8bf553825acd671c98a9be545ef` passed Pre-Unreal #770, Warehouse #184 and the full Unreal #605 chain: UE4.27.2 compile, production import, Automation, startup, P1C01-P1C08 aggregate runtime, persistence/state, continuous transitions and zero project warning debt. This is the current green technical baseline, not PIE/device/visual/performance acceptance.
-
-A subsequent source audit found that rollback snapshots were commit-time snapshots rather than guaranteed request-time snapshots, and unsupported destinations could return without atomic rollback. PG-136 adds a pre-mutation transition-request boundary, fresh origin snapshot capture, strict route/chapter pairing, rollback for unsupported requests and a real headless failure-injection audit. These changes are stabilization only; no CompletionWave or percentage advancement is granted until a newer exact head passes.
-
-## 2026-09-23 - W00 PG-135 queued checkpoint origin preservation
-
-Source simulation found that the existing async checkpoint callback guard protected completion side effects but an ID-only queued checkpoint could still be reconstructed from a later world after the first save completed. The queue now retains the actual save snapshot plus chapter/route/episode/world revision and serializes that captured snapshot directly. UPROPERTY ownership protects both in-flight and queued snapshot objects from GC. PG-135 prevents ID-only reconstruction from returning.
-
-Pre-Unreal #769 is static evidence for its parent head only; the PG-135 wave requires a newer exact-head validation. No completion percentage changes.
-
-## 2026-09-23 - W00 broad tangent-basis source normalization and strict asset CI
-
-Pre-Unreal #768 exposed 23 additional static OBJ assets with degenerate UV triangles and 7 with opposed normals. The whole exposed set is normalized in one source wave to triangulated face-local UV/normal bases. The Pre-Unreal asset-quality step is also changed from advisory execution to `--strict`, and PG-134/deep audit guard that fail-closed behavior.
-
-This is stabilization only. No CompletionWave or percentage credit is added until a fresh exact head passes strict source validation and the full UE4.27 zero-warning runtime chain.
-
-## 2026-09-23 - PG-134 validator diagnostics synchronization
-
-Pre-Unreal #767 failed because its PG-134 literal self-check did not match the wording already present in `asset_quality_audit.py`. The check now targets the real structural-error phrase and the early validator gate prints exact accumulated errors before exiting. No gameplay/content completion credit is added.
-
-## 2026-09-23 - W00 PG-134 tangent-space source repair after Unreal #601
-
-Unreal #601 on `34a9a2a8b2cf8f944ce4eae7e90fc7492809b9ab` passed C++ build, production import, Automation, startup, P1C01-P1C08 aggregate runtime, state and continuous transitions. The final zero-warning gate isolated the remaining import debt to exactly three meshes: `SM_Balrog_Wing`, `SM_Lurtz_Blade`, and `SM_Isengard_IndustrialPitRim`.
-
-The first two contained degenerate UV triangles; the rim contained authored normals opposing its geometric faces. Their project-owned procedural OBJ source data is repaired with face-local UV/normal bases, and `asset_quality_audit.py` now rejects these tangent-space source defects before engine import. PG-037 is also synchronized with the stronger async-checkpoint completion marker introduced by PG-133. No production-completeness percentage is advanced until a newer exact head reaches zero warning debt.
-
-## 2026-09-23 - W00 PG-133 request-time transaction closure
-
-Unreal #599 on `cb8c789aff25d2d1f53c0bc7e37f47fe92607eeb` failed at UE4.27.2 C++ compile because the named-NPC runtime called a private NPCContext committed-state query. The following source wave promotes that read-only query to the public API and hardens the transaction boundary further: request-time world hold, exact cancel-release, commit-bound NPC-memory pruning, origin-bound async checkpoint side effects, context-dependent NPC/enemy freeze during pending swaps, and a single ambient social actor scan.
-
-These changes do not advance CompletionWave progress. Fresh exact-head compile/import/startup/P1C01-P1C08/state/transitions/zero-warning evidence is required before technical W00 closure, followed by the separately evidence-bound packaged/device/audio/human gates.
-
-## 2026-09-23 - W00 restore-repair publication ordering
-
-Source audit identified a save migration/repair ordering risk: the legacy repair callback ran after restore broadcasts had already exposed the un-repaired identity. The persistence transaction now keeps broadcasts suppressed through legacy canonicalization and publishes only the final repaired state. Player-life restoration also precedes final publication so synchronous same-bank world commit cannot capture stale life values in rollback state.
-
-PG-132 guards the ordering. No CompletionWave or percentage advancement is granted until fresh exact-head engine evidence passes.
-
-## 2026-09-23 - CI harness correction after PG-131 expansion
-
-Pre-Unreal #762 failed because transition-unit tests had not been updated consistently after adding a second required transition marker. The correction changes only the regression harness semantics: imported `required_markers` is used directly and success requires the full transition marker list rather than the first marker alone. No production completion credit is added.
-
-## 2026-09-23 - W00 compile/root transaction barrier follow-up
-
-Unreal #596 on `02e4dfb81dc4dababb3c0085369cc628c4704bb3` did not reach import/runtime: UE4.27 C++ compile failed on an ambiguous `ObjectPathToPackageName(const TCHAR*)` call introduced by the stricter material preflight wave. That defect is fixed with explicit `FString` typing.
-
-The same audit wave adds a systemic gameplay-mutation barrier tied to ChapterWorldRouter's authoritative world hold. Physical gameplay mutation paths now require committed world identity, and transition CI checks the barrier while a destination request is still uncommitted. These are stabilization changes only; no completion percentage or CompletionWave status is advanced.
-
-## 2026-09-23 - W00 exact-head #595 green, followed by stricter import-quality closure
-
-On `a148d1afa919fa63725e3760684d6eed061c5e40`, Pre-Unreal #760, Warehouse #174 and Unreal #595 all passed. Unreal #595 completed compile, production import, Automation, startup, P1C01-P1C08 aggregate runtime, persistence state roundtrip, continuous route/chapter transitions and warning-debt analysis. This validates the prior persistence/transaction/streaming repair wave on that exact head.
-
-The build still reported 137 unique nearly-zero binormal import identities under a historical ceiling of 150. That ceiling is now removed rather than accepted as permanent debt. The next source wave generates deterministic UVs in the import working copy for UV-less static OBJ assets, preflights the project master material package, and enforces zero tangent/binormal/master-surface warning debt with PG-130. Production completeness percentage does not increase from cleanup alone; W00 remains the active gate until the stricter exact-head import run is green and device/human gates are handled separately.
-
-## 2026-09-23 - W00 persistence transaction and replay-safe async ownership
-
-Exact-head evidence entering this wave is Unreal #594 on `38c2c958121576b68a0bfaf4e276498d4fe89dad`: C++ build PASS, production import PASS, Automation PASS, startup PASS, P1C01-P1C08 aggregate sweep PASS, production character surface PASS, state persistence FAIL with write/load/restore successful but final field verification false.
-
-The repair does not advance production completeness. It adds atomic logical save restore, rollback publication after world reconstruction, fail-closed rollback identity invalidation, detailed disk/runtime field diagnostics including NPC memory and route progress, safe-ground transform semantics, already-resident chapter-bank commit support, and cancelled-audio callback ownership checks. W00 remains open until a fresh exact head passes persistence, continuous transitions and the warning/material chain; target-device performance and human play acceptance remain separate gates.
-
-## 2026-09-23 - W00 exact-head #593 diagnosis and systemic source repair
-
-PR #67 head `5840863632d04a5fac284b472fe9e5641cd522b8`: Pre-Unreal #758 PASS, Warehouse #172 PASS; Unreal #593 passed UE4.27.2 C++ compile, deterministic import, Automation 2/2, startup and P1C01-P1C08 aggregate runtime, then failed the state gate at the player production-surface residency audit. This is defect-specific engine evidence for that SHA, not acceptance of the new repair head.
-
-The repair is systemic: post-residency chapter-bank commit notification, committed-world-gated state/save audit, non-masking surface+disk audit, movement release only after committed-world broadcast, bounded async audio ownership with weak caches, and fail-closed PG-127/PG-128 guards. Whole-game planning remains approximately 40/100 and no completion wave is advanced by this cleanup.
-
-## 2026-09-23 - W00 systemic hardening status
-
-Current whole-game planning completion remains approximately 40/100. The active work is not a new feature wave; it is W00 architecture/build hardening so later waves do not inherit recurring defects. Unreal Build #588 reached C++ compilation and exposed a single importer-source text artifact, now repaired at source and guarded by Pre-Unreal. Production maturity does not advance until fresh exact-head engine proof succeeds.
-
-## 2026-09-22 - stabilization gate schema correction
-
-The architectural stabilization gate is the current execution focus but its quality status is correctly `PARTIAL`, not `ACTIVE`. This repairs Governor schema consistency only and does not promote compile, PIE, device, visual or whole-game completion status.
-
-## 2026-09-22 - stabilization guard correction
-
-Pre-Unreal #747 failed one intentional stabilization guard: the chapter harness was non-fail-fast but did not yet print the required aggregate `RUNTIME_SWEEP_SUMMARY`. The missing marker is now implemented. This does not change the 40/100 production estimate or promote compile/PIE/device/visual evidence.
-
-## 2026-09-22 - architectural stabilization gate
-
-Whole-game planning completion remains approximately **40/100**; this hardening wave does not manufacture production percentage from refactoring. Build #547 proved the recovered runner can compile/import and execute startup/P1C01-P1C04, but the exact hardening head has not yet passed engine validation.
-
-Source-level stabilization now includes: shared seam-tolerant spawn grounding with slope/capsule checks and no chapter-specific support pads; all-eight non-fail-fast chapter QA; skeletal-rig package preflight before async load; BMP-to-TGA migration with BMP prohibition; and cleanup of all 304 known duplicate-vertex triangulation-risk faces with strict regression failure.
-
-Status: **SOURCE HARDENED / EXACT-HEAD ENGINE PROOF PENDING**. No PIE/device/visual column is promoted. Feature expansion remains blocked by `REQ-STABILITY-001` until static, compile/import, P1C01-P1C08, state/transition and warning/material gates are green on one exact head.
-
-## 2026-09-22 - P1C05 grounding regression repair
-
-Exact-head `a42679a4de808ce1f9bada7974ad87d52ee18fa9` reached a successful UE4.27.2 C++ build, successful production import, successful two-test Automation Framework suite and successful headless startup/P1C01-P1C04 chapter audits. P1C05 failed before chapter readiness because its authored spawn at X=-2400 fell into a narrow gap between fallback ground and the first route slab. A hidden deterministic spawn-support pad is now added at that exact start. The repair head still requires fresh engine/headless proof and does not promote PIE/device/visual acceptance.
-
-## 2026-09-22 - runner recovery / compile repair boundary
-
-The self-hosted runner has crossed the former Engine Content ACL gate and reached real UE4.27.2 C++ compilation on Unreal Build #534 attempt 3. That attempt is not COMPILE-TESTED because it failed on an EditorTools-to-runtime header visibility defect. A source fix now exports the flat runtime module root temporarily for editor QA and removes the observed deprecated StaticMaterials access. Production maturity is unchanged until the new exact-head build turns green.
-
-## 2026-09-22 - runtime StaticMesh mobility warning
-
-A source-level warning fix is applied to the four runtime world builders: mobility is now changed before runtime `SetStaticMesh` assignment, matching the live PIE warning observed on the laptop. This is a warning/debt reduction only and does not promote gameplay completeness. Fresh exact-head UE4.27 compile/PIE proof is still blocked by W00 runner ACL until repaired.
-
-## 2026-09-22 - integration gap closure status
-
-Cross-system maturity improved at source level without changing the whole-game planning percentage. Three previously open architecture risks now have source fixes: committed-world NPC context synchronization, character-rig handle lifetime release, and removal of non-engine synchronous runtime LoadObject paths from world/character/enemy/audio production resolution. DeepProjectAudit now guards these invariants against regression.
-
-Status remains **SOURCE FIX / STATIC EVIDENCE PENDING FINAL HEAD**, not compile/runtime acceptance. The W00 runner ACL blocker still prevents UE4.27.2 compile, PIE, device and visual proof, so no production-completeness percentage is promoted from this repair alone.
-
-## 2026-09-22 - deep organization and integration audit
-
-Current production maturity is unchanged by this audit. Warehouse #99 is real staged/audited evidence (240 payload files / 3,816,657,674 bytes), but Pre-Unreal #685 is red from roadmap/governor drift and Unreal #520 remains blocked before compilation by the runner Engine Content ACL. The camera requirement mapping is repaired at source/governance level; engine proof is still pending.
-
-Cross-system review adds two tracked HIGH risks without promoting maturity: NPC regional/film context currently follows logical quest state rather than committed-world identity during async swaps, and character-rig async handles have no bounded inactive-cast eviction policy yet. Ambient NPC pooling is corrected from â€œmissingâ€ to â€œimplemented pending proof.â€ Remaining direct LoadObject concentration is still a scaling debt for W01+ after W00 restores engine validation.
-
-## 2026-09-22 - final pre-runner warehouse saturation batch
-
-Warehouse breadth gains three verified official KayKit CC0 public-GitHub support lanes: food/kitchen/interior props, selective dark/cemetery props, and manually filtered generic civic props. This is sourcing/staging maturity only. No UE import, compile, PIE, device, performance or visual maturity is promoted by this batch. The next major gate is W00 runner/exact-head unlock.
-
-## 2026-09-22 - character visibility warehouse bridge
-
-Character production remains PARTIAL, but the next visible bridge is now concrete rather than abstract. Official KayKit Skeletons 1.0 is registered as CC0 rigged/animated FBX/GLTF technical QA stock, while KayKit Adventurers remains staged background/retarget support. The warehouse audit now validates archive-style payload receipts and license-snapshot hashes, improving provenance integrity for these non-interactive public-GitHub lanes.
-
-This does not promote character maturity: no new skeletal asset has yet been imported into UE4.27.2 on the current head, no proxy has been replaced on screen by this change, and no compile/PIE/device/visual acceptance is claimed. The runner Engine Content ACL blocker still prevents the real import/runtime proof.
-
-## 2026-09-22 - KayKit public-GitHub warehouse/world-foundation increment
-
-Evidence entering this increment: PR #67 `d856a716d5bc270ce0ddc2d649acbb1656ae112c` had Pre-Unreal #670 SUCCESS and Warehouse Stage #80 SUCCESS. Unreal Build #505 did not execute C++ build/import/runtime because the non-elevated NETWORK SERVICE runner could not read UE4.27.2 `WorldGridMaterial.uasset` after the guarded remediation deferred. Therefore no compile, PIE, device, performance or visual maturity is promoted.
-
-The warehouse now has a non-interactive official-public-GitHub KayKit lane for supporting medieval/world layout, dungeon/interior layout, background rig/retarget QA and furniture props. Every successful download remains STAGED with source/license/hash evidence; READY_FOR_IMPORT and later states remain separate. Regional mappings are preproduction/shared-foundation support only where Part II/III runtime gates are closed. P1C01 remains the first assembled benchmark.
-
-## 2026-09-22 - hourly three-lane warehouse/world/integration continuation
-
-Exact-head evidence before this batch: PR #67 `f41d5e91ac2a789387e987ff759b9e674cd86e10` had Pre-Unreal #667 SUCCESS and Warehouse Stage #76 SUCCESS. Unreal Build #502 stopped at the unchanged UE4.27.2 Engine Content verification after the guarded ACL-remediation attempt; C++ build/import/Automation/startup/chapter/state steps did not execute. Therefore no compile, PIE, device, performance or visual maturity is promoted.
-
-The warehouse lane adds official Quaternius CC0 acquisition/candidate coverage for modular background humans, monster/creature pipeline testing, supporting buildings and dungeon/interior architecture. Their state is CANDIDATE or AUTHORIZED_FOR_STAGING only; final animated characters and creatures still require skeletal FBX with real rigs plus intake/deformation/visual review. The world-foundation lane assigns that stock to appropriate regions while retaining P1C01 as the first assembled benchmark and keeping Part II/III regions PREPRODUCTION_ONLY. Runtime architecture constraints remain soft/async heavy loading, ISM/HISM for repeated detail and bounded pooled populations.
-
-## 2026-09-22 - ACL remediation attempt and trilogy material stock expansion
-
-A safe read-only ACL remediation attempt now precedes the unchanged UE4 Engine Content preflight, and a second ambientCG batch adds non-Shire regional material stock across the trilogy. This advances integration readiness and warehouse breadth only; engine compile/runtime/visual acceptance remains pending.
-
-## 2026-09-22 - autonomous three-lane production iteration
-
-PR #67 exact head before this production batch was `0c8130a33f8df3648d270d8bd0ee6b24aee882fb`. Pre-Unreal Validation #653 completed successfully on that exact SHA. Unreal Build Validation #488 did **not** reach C++ compilation: the self-hosted `UE4-27-Windows` runner executed as `NT AUTHORITY\\NETWORK SERVICE` and was denied read access to `Engine/Content/EngineMaterials/WorldGridMaterial.uasset` on all six preflight probes. Build, import, Automation Framework, startup, chapter and state steps were therefore skipped. This remains an Engine Content ACL/environment blocker, not compile evidence.
-
-Warehouse saturation advanced without promoting asset maturity. `TrilogyAssetCandidateQueue.json` now includes concrete Quaternius animation/prop and Kenney world/fortification/nature/interior/UI support candidates already tied to official CC0 pack pages. `TrilogyAudioAssetCandidateQueue.json` now mirrors stage-authorized OpenGameArt CC0 prototype music/SFX candidates across Shire, Bree, Rohan and large-battle routing tests. `WarehouseAmbientCGAcquisitionBatchV1.json` is expanded into a trilogy-foundation material intake covering snow/ice, cave stone, wetland ground, white stone, volcanic/ash surfaces, industrial metal, Rohan pastoral surfaces, ruins and river/wet materials. AUTHORIZED_FOR_STAGING and STAGED remain distinct from READY_FOR_IMPORT / IMPORTED / INTEGRATED / ACCEPTED.
-
-Multi-region world-foundation preproduction is no longer a list of region names only. Every declared region from Shire through Grey Havens now carries explicit stock contracts for architecture, terrain/materials, vegetation/ecology, props, populations/factions, audio, lighting/atmosphere, VFX and traversal/collision, plus preferred warehouse source lanes. P1C01 remains the first assembled benchmark; later-film regions are explicitly PREPRODUCTION_ONLY and this work does not open Part II/III runtime chapters.
-
-Current code/runtime acceptance is unchanged by these warehouse/world-plan edits. No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED claim is made for the new head.
-
-## 2026-09-22 - failed-swap rollback transaction source repair
-
-Failed-swap rollback now restores player-life state (health, stamina, resolve, supplies) in addition to the previously restored world/quest/memory/progression/knowledge/player-transform state, and source-contract tests protect the ordering before movement release. Integration/save maturity remains PARTIAL until exact-head UE4.27 compile/runtime evidence exists.
-
-## 2026-09-22 - trilogy-wide world foundation parallelism
-
-World production planning is no longer Shire-only. Reusable foundations are now tracked across all major trilogy regions while P1C01 remains the first fully assembled benchmark. This advances preproduction and warehouse coverage only; it does not promote later chapters to runtime-ready status.
-
-## 2026-09-22 - Resource Bible 09 source expansion and new warehouse stagers
-
-Source 09 is now operational rather than passive documentation. Its broad resource families have been merged into the machine-readable global source registry, and concrete staging lanes now include ambientCG CC0 materials plus Kenney CC0 support/world kits in addition to the existing Poly Haven, Quaternius and OpenGameArt lanes. This advances warehouse source breadth and STAGED acquisition only; no UE import/runtime/visual/audio/device acceptance is promoted by this sourcing wave.
-
-## 2026-09-22 - pooled visual fallback hardening
-
-The async living-world ownership wave now also resets every reused ambient actor to constructor-owned Engine primitive meshes before resolving role-specific production soft objects. This prevents a pooled NPC that changes regional role from retaining a stale Human/Elf/Hobbit mesh when a production asset is unavailable. Active density and streaming policy are unchanged. Exact-head CI/UE evidence remains required; no runtime verification claim is made.
-
-## 2026-09-22 - asynchronous living-world asset ownership
-
-The registered living-world synchronous production-load defect is now repaired at source level using the existing two-phase chapter streaming architecture rather than introducing another loader. `Data/ChapterAssetStreamingPlan.json` now explicitly places the ambient production surface, Hobbit/Human/Elf resident meshes, and chapter-used fauna meshes into the relevant soft chapter banks. Their lifetime is therefore owned by the resident `FStreamableHandle`, which remains alive until a replacement world successfully commits.
-
-`AShireAmbientNPC::ApplyVisualStyle` no longer synchronously `LoadObject`s production meshes or the production surface. It resolves only already-resident soft objects and keeps constructor-owned Engine primitive/material fallbacks when a production asset is unavailable. `LivingWorldDirector` likewise resolves its ambient motion production meshes from the resident bank instead of initiating synchronous package loads. This preserves the current async/no-game-thread-wait policy and does not increase active density.
-
-Exact-head static/CI validation is still required for this change. Runtime rendering and transition behavior remain unproven until matching UE4.27.2 evidence exists; no COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED claim is made.
-
-## 2026-09-22 - bounded ambient NPC pooling foundation
-
-The registered baseline SpawnActor/Destroy churn is now repaired at source level with lazy bounded reuse. `LivingWorldDirector` owns an ambient-NPC pool capped at 24 cached actors but does not preallocate it or change authored active-density targets. Baseline culling, chapter reset, and expired micro-events return ambient NPC actors to the cache when capacity is available; non-NPC event actors still destroy normally, and excess cached candidates are destroyed rather than growing memory without bound.
-
-`AShireAmbientNPC` now has an explicit deactivate/reactivate lifecycle that clears social/awareness/caption state, disables tick and visibility while cached, and fully reapplies routine role, prop, movement and lightweight needs state on reuse. Pooled actors are excluded from social-partner selection. This targets spawn/destroy churn while preserving the i7 Gen6 / 8 GB RAM / ~2 GB VRAM budget and does not increase world density.
-
-This remains source-only until exact-head validation runs. It is not COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
-
-## 2026-09-22 - ground-safe living-world ambient placement
-
-The next registered foundation defect is repaired at source level without increasing density. `LivingWorldDirector::SpawnAmbientActor` now proves blocking ground with a vertical visibility trace before spawning ground-bound ambient roles and separately grounds their routine endpoint. If the initial point has no blocking ground the spawn is rejected; if only the travel endpoint is unproven, the actor remains at its grounded start rather than walking toward an unsafe Z. Bird and butterfly roles retain their authored airborne placement, while rabbit and humanoid residents use the ground-safe path.
-
-This is a low-cost placement guard for the existing UE4.27.2 / low-spec architecture; it does not add navmesh cost or new population. Wall/obstacle avoidance and rendered placement quality still require runtime observation. Exact-head static validation must pass before the next lifecycle repair. No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED claim is made.
-
-## 2026-09-22 - failed world-swap rollback transaction repair
-
-The registered transition-persistence defect wave now includes a source-level rollback transaction repair. `ChapterWorldRouter` captures the last committed quest/route/world identity plus player transform after each successful world commit. If destination construction, grounding, or asset-bank commit fails, the pending request is cancelled, the prior logical state and builder are restored under a rollback guard, the player is grounded back at the committed transform, movement is released only after that succeeds, and a fresh `WorldRevision` is broadcast for the rebuilt committed world.
-
-This closes the known source-level gap where rollback rebuilt prior geometry but left movement held and logical/player state incoherent. It is **not** runtime closure yet: exact-head static validation is required next, and UE4.27 compile/PIE/device evidence remains separate. No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED claim is made.
-
-# PRODUCTION COMPLETENESS MATRIX
-
-## 2026-09-22 - global source matrix expansion
-
-Warehouse sourcing now uses a ranked multi-provider matrix rather than a few favored sites. Clear public/CC0 sources are prioritized for automatic staging; account/marketplace sources remain explicit review lanes; niche/reference-only sources cannot silently enter Approved. This advances sourcing breadth and intake discipline only, not import/integration/visual acceptance.
-
-## 2026-09-22 - warehouse staging launcher repair
-
-Warehouse Stage #18 failed before acquisition because the runner's PowerShell execution policy blocked GitHub's temporary `shell: powershell` wrapper. The workflow now launches repository-owned staging scripts from cmd with `-ExecutionPolicy Bypass -File`. No warehouse file is promoted until the next run reports actual staged receipts.
-
-## 2026-09-22 - multi-lane warehouse acquisition
-
-The persistent warehouse now has concrete staging lanes for environment/materials (Poly Haven), music/foley (OpenGameArt), and character/animation/fauna/world-kit candidates (Quaternius). Direct-download lanes preserve source/license/hash receipts; unresolved interactive-store packs remain candidates rather than being misreported as staged. This advances warehouse stock acquisition only and does not promote UE import, runtime, visual or device acceptance.
-
-## 2026-09-22 - active warehouse fill execution
-
-Warehouse production is now executing real staged-download batches rather than only cataloguing candidates. The first Poly Haven batch has verified source pages, resilient per-asset staging and receipt/skipped-item accounting. This advances asset acquisition infrastructure and stock readiness only; UE import/runtime/visual acceptance remain later states.
-
-## 2026-09-22 - persistent asset warehouse staging
-
-The project now has a dedicated persistent warehouse staging workflow separate from UE runtime validation. The first CC0 Poly Haven batch is machine-defined and stages to a persistent self-hosted folder with receipt/hash intent. This advances warehouse acquisition infrastructure only; staged files are not imported, integrated or visually accepted by this change.
-
-## 2026-09-22 - warehouse roadmap reconciliation after Pre-Unreal #597
-
-The new trilogy warehouse requirement/work item is now explicitly assigned to the master execution roadmap and the roadmap's unfinished/active snapshots are regenerated from ProjectGovernor. This repairs governance consistency only; asset/runtime maturity is unchanged. Unreal #432 remains pre-compile blocked by local Engine Content permissions.
-
-## 2026-09-22 - trilogy warehouse-first production lane
-
-A trilogy-wide production warehouse is now explicitly tracked. This closes the planning/coverage problem where characters, world art, creatures, materials, animation and audio could remain unspecific late-stage gaps. The catalogue includes all major trilogy production families and exact first-pass slots, but actual final assets remain at mixed readiness states and are not promoted merely because their slots are catalogued.
-
-P1C01 remains the first full natural-character/world/audio benchmark. Part II/III warehouse sourcing and kit preparation may run in parallel without opening runtime chapter implementation ahead of the existing gates. No visual/audio/device acceptance column is promoted by this catalogue wave.
-
-## 2026-09-22 - cinematic audio warehouse V2 registered
-
-Audio production now has an explicit sourcing/warehouse plan covering voice, dynamic music, ambience/fauna, foley and creature/combat effects. Existing runtime routing remains intact; authored approved assets, spatial/concurrency listening review and target-device audio profiling are still pending, so Voice/Audio maturity is not promoted by this planning wave.
-
-## 2026-09-22 - V7 async character static-guard reconciliation
-
-Pre-Unreal #578 exposed four stale character-production assertions that still described the old synchronous rig probe. PG-051/PG-089 now validate the V7 FStreamableManager character-rig path and forbid synchronous skeletal-mesh/animation-class loading in the playable character handoff. Runtime behavior and visual acceptance are unchanged by this validator repair.
-
-## 2026-09-22 - async character wave static regression repair
-
-Pre-Unreal #576 identified one source-structure regression in the new async character-rig wave: a duplicated `AShirePlayerCharacter::EndPlay` signature left braces unbalanced. The duplicate is removed and the exact-head gates are being rerun. Unreal Build #411 had an online runner but stopped before compilation on the existing UE4 Engine Content read-permission failure, so compile/runtime maturity remains unchanged.
-
-## 2026-09-22 - commit-synchronized persistence implementation
-
-The first post-static-gate runtime repair now synchronizes automatic chapter checkpoint capture and saved-player transform restoration with `ChapterWorldRouter` committed chapter/route/episode identity. Saved transforms are grounded against committed destination geometry before placement. The initial P1C01 checkpoint uses the same barrier.
-
-This advances source implementation only. Save/load remains PARTIAL until exact-head UE4.27 compilation and runtime regression evidence exist, and coherent failed-swap rollback remains open. No compile, PIE, device, performance or visual column is promoted.
-
-## 2026-09-22 - Pre-Unreal #562 streaming regression-test repair
-
-Pre-Unreal #562 passed core validation, Project Governor and Deep Project Audit, then failed a stale source-contract test that still expected async-load completion to promote `ResidentHandle`. The current two-phase architecture intentionally promotes the resident bank only in `CommitPendingRequest` after world commit prerequisites succeed. The test is aligned to that contract without changing runtime code.
-
-Unreal Build #397 remains environment-blocked before compilation by UE4 Engine Content read permissions. No compile, PIE, device, performance or visual maturity is promoted by this change.
-
-## 2026-09-22 - Pre-Unreal #561 deep-audit contract repair
-
-On exact head `ed5af300852e6e2ce2264334c560af658250434b`, the core Pre-Unreal validator passed, but the subsequent deep audit failed because it searched only `ShireChapterAssetStreamingSubsystem.cpp` for the `FStreamableManager` type marker. The type is declared in the subsystem header while the cpp contains the async request path. The deep audit is corrected to validate the header+cpp contract together and still reject synchronous `LoadObject` in the streaming cpp.
-
-This changes static validation only. It does not close the registered checkpoint/save-restore/rollback or ambient-life findings and does not promote compile, PIE, device, performance or visual status.
-
-## 2026-09-22 - playability audit intake and PG-117 static-gate repair
-
-A source review of the owner-forwarded Work findings on `170ebd857bece56a6d7f76f4928efe0eb3426af2` confirms open persistence/transition and living-world risks: checkpoint capture is not world-commit synchronized, cross-chapter restore can apply a transform before world commit, rollback is not yet a coherent playable prior-state transaction, ambient placement lacks a ground-safe collision contract, and ambient population still has SpawnActor/Destroy plus direct LoadObject debt. These are registered repair work, not accepted runtime fixes.
-
-Pre-Unreal #560 reached and passed the core validation phase, then failed one stale PG-117 assertion because V10 world/life is now the global current visual wave. The guard is narrowed to preserve the historical hero-equipment V4 asset block without pinning the whole visual plan to V4. No chapter maturity, compile, PIE, device, performance or visual column is promoted by this static-guard correction.
-
-## 2026-09-22 - PR #67 validation-gate repair
-
-Pre-Unreal #558 on exact head `809325a64547744f0cc4992d76c42fb7e0862d82` failed with two static-guard errors caused by PG-111 still describing the V9 fixed-halving world-life contract. The integration branch already uses the V10 chapter density profile and `DangerPopulationFraction` model. PG-111 is being aligned to that existing V10 runtime/data contract without changing gameplay behavior.
-
-Unreal Build #393 on the same SHA did not reach C++ compilation. The self-hosted runner identity `NT AUTHORITY\\NETWORK SERVICE` was denied read access to UE4.27.2 `WorldGridMaterial.uasset` on six consecutive engine-content probes. Therefore this wave remains **STATIC-PENDING** and no COMPILE/PIE/device/visual column is promoted by this repair.
-
-## 2026-09-21 - continuous-session transition regression
-
-A new runtime audit now requires one live session to traverse all eight Part I chapter identities, route switching, committed-world/living-world revision synchronization and disk-save roundtrip. This is implementation coverage only; no chapter is promoted to PIE/device acceptance until exact-head engine and owner evidence exist.
-
-## 2026-09-21 - comprehensive foundation integration
-
-Startup grounding, QA/performance guardrails, V10 regional living-world behavior and transactional chapter commit coordination are now being consolidated on one integration branch. Asset preload and visible-world commit are separated; living-world chapter state follows committed world revision rather than requested quest state.
-
-Current status: **IMPLEMENTED / STATIC-PENDING** for the newest integration changes. No chapter validation column is promoted until exact-head Pre-Unreal, UE4 build/runtime and defect-specific PIE evidence exist.
-
-## 2026-09-21 - visual-performance architecture guardrails
-
-The project now tracks a measured visual-performance architecture contract: async/soft heavy assets, instanced+cull repeated detail, bounded Tick usage, role-appropriate LOD/material policy and evidence-driven lighting/shadow selection. Static guards protect the currently proven async/HISM/non-ticking-builder patterns.
-
-This does not promote any chapter's performance, PIE, device or visual status. Draw-call, frame-time, streaming-pool, resident-memory, LOD and lighting/shadow comparisons remain target-device work.
-
-## 2026-09-21 - engine Automation Framework QA wave
-
-The project now has an initial UE Automation Framework layer in addition to static validation and runtime smoke. The first tests cover SaveGame default/schema invariants and post-import existence of all streamed chapter packages. Startup grounding proof now waits two seconds before PASS. These are implementation changes only; engine execution and defect-specific PIE evidence remain pending.
-
-## 2026-09-21 - automated QA immune-system foundation
-
-A layered automated QA initiative is now tracked as `REQ-QA-002`. The first wave adds Unreal Automation Framework coverage and exact-head CI execution after compile/import. Later world/nav/animation/performance/memory suites remain pending measured implementation. This does not alter any PIE/device/visual acceptance status.
-
-## 2026-09-21 - deterministic P1C01 spawn collision support
-
-The startup repair adds a hidden Engine BasicShapes support pad at the P1C01 authored road start so initial collision no longer depends on imported OBJ simple-collision generation. This strengthens the fix candidate only; COMPILE/PIE/device/visual status remains unchanged until exact-head proof exists.
-
-## 2026-09-21 - startup grounding regression repair
-
-A P1C01 PIE fall-through remains an open runtime defect despite an earlier spawn-height/placement change. The isolated fix removes pre-world GameMode teleporting, holds initial gravity until world commit, resolves a blocking floor before release, and adds startup/chapter grounding regression markers.
-
-This is a **FIX_CANDIDATE**, not an accepted fix. No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED status is added until the exact fix head completes engine validation and the original owner-observed P1C01 symptom is rechecked.
-
-## Verification evidence correction and production continuation
-
-Historical machine baseline: `develop@f7c2b081e7b064fcf27bb4c80124b21f351331ab`.
-
-Pre-Unreal Validation #264 and Unreal Build Validation #99 passed on that baseline, including compile/import, startup, headless chapter audits and warning-debt checks. Those are valid machine checks, but they are **not** Real PIE/device visual-performance proof.
-
-A prior conversation-level owner confirmation was incorrectly promoted into `PIE_TESTED` for all eight chapters without chapter-specific FPS, screenshot/video, or chapter-specific notes. That promotion is withdrawn. The owner confirmation remains historical authorization to resume construction; it is not chapter-by-chapter verification evidence.
-
-Future `PIE_TESTED` / `PIE_TESTED_WITH_ISSUES` promotion requires an exact commit plus at least one chapter-specific signal: numeric FPS, screenshot/video evidence, or a concrete note unique to that chapter. Generic copied wording is rejected by PG-057.
-
-### Current Real PIE/device evidence
-
-| Chapter | Real PIE evidence | Stability | Crash | Target laptop perf | NPC routines | NPC-to-NPC | Named memory/context | Weather/atmosphere | Notes |
-|---|---|---|---|---|---|---|---|---|---|
-| P1C01 Shire | NOT_RUN | HEADLESS_ONLY | NO_HEADLESS_BLOCKER | NOT_MEASURED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | Re-establish as the chapter-specific visual/performance reference first |
-| P1C02 Bree | NOT_RUN | HEADLESS_ONLY | NO_HEADLESS_BLOCKER | NOT_MEASURED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | Await chapter-specific evidence |
-| P1C03 Weathertop/Ford | NOT_RUN | HEADLESS_ONLY | NO_HEADLESS_BLOCKER | NOT_MEASURED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | Await chapter-specific evidence |
-| P1C04 Rivendell | NOT_RUN | HEADLESS_ONLY | NO_HEADLESS_BLOCKER | NOT_MEASURED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | Await chapter-specific evidence |
-| P1C05 Road/Caradhras/West Gate | NOT_RUN | HEADLESS_ONLY | NO_HEADLESS_BLOCKER | NOT_MEASURED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | Await chapter-specific evidence |
-| P1C06 Moria | NOT_RUN | HEADLESS_ONLY | NO_HEADLESS_BLOCKER | NOT_MEASURED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | Civilian baseline remains intentionally zero; Real PIE evidence still required |
-| P1C07 Lothlorien | NOT_RUN | HEADLESS_ONLY | NO_HEADLESS_BLOCKER | NOT_MEASURED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | Await chapter-specific evidence |
-| P1C08 Anduin/Amon Hen | NOT_RUN | HEADLESS_ONLY | NO_HEADLESS_BLOCKER | NOT_MEASURED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | Await chapter-specific evidence |
-
-Engineering, source, asset-foundation and automated regression work may continue behind existing gates. Visual/performance acceptance and any `Production 100%` claim remain blocked until chapter-specific evidence exists.
-
-This file prevents major game pillars from depending on chat memory.
-
-A chapter is not complete because its quest path works. Every chapter must be checked across all production pillars.
-
-## Status
-NOT_STARTED / FOUNDATION / PROTOTYPE / FUNCTIONAL / POLISH_PENDING / ACCEPTED
-
-## Mandatory pillars
-1. Canon/story
-2. Main gameplay loop
-3. Exploration/side content
-4. Character visual identity
-5. Body animation
-6. Facial acting / gaze / lip-sync
-7. Spoken voice
-8. Subtitles/dialogue
-9. Music
-10. SFX/foley
-11. Ambience
-12. NPC routines/social life
-13. Enemy/creature AI
-14. Combat/stealth when story requires it
-15. Terrain/geography/scale
-16. Architecture/props
-17. Vegetation/biome
-18. Weather/time/atmosphere
-19. Cinematic presentation
-20. Save/load continuity
-21. Performance on target laptop
-22. Accessibility/readability
-23. Guardian/static validation
-24. UE4.27 compile
-25. PIE/device test
-
-| Chapter | Story | Gameplay | Exploration | Characters | Face/Anim | Voice | Audio | AI/Life | Combat | Geography | Atmosphere | Cinematic | Save | Perf | PIE |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| P1C01 Shire | FUNCTIONAL | FUNCTIONAL | FUNCTIONAL | PROTOTYPE | FOUNDATION | FOUNDATION | FOUNDATION | FUNCTIONAL | FUNCTIONAL stealth | FUNCTIONAL | FUNCTIONAL | PROTOTYPE | FUNCTIONAL | PROTOTYPE | PENDING |
-| P1C02 Bree | FUNCTIONAL | PROTOTYPE | PROTOTYPE | PROTOTYPE | FOUNDATION | FOUNDATION | FOUNDATION | PROTOTYPE | PROTOTYPE | PROTOTYPE | PROTOTYPE | PROTOTYPE | FOUNDATION | NOT_STARTED | PENDING |
-| P1C03 Weathertop/Ford | FUNCTIONAL | PROTOTYPE | PROTOTYPE | PROTOTYPE | FOUNDATION | FOUNDATION | FOUNDATION | PROTOTYPE | PROTOTYPE | PROTOTYPE | PROTOTYPE | PROTOTYPE | FOUNDATION | NOT_STARTED | PENDING |
-| P1C04 Rivendell | FUNCTIONAL | PROTOTYPE | PROTOTYPE | PROTOTYPE | FOUNDATION | FOUNDATION | FOUNDATION | PROTOTYPE | N/A | PROTOTYPE | PROTOTYPE | PROTOTYPE | FOUNDATION | NOT_STARTED | PENDING |
-| P1C05 Road/Caradhras/West Gate | FUNCTIONAL | PROTOTYPE | PROTOTYPE | PROTOTYPE | FOUNDATION | FOUNDATION | FOUNDATION | PROTOTYPE | PROTOTYPE | PROTOTYPE | PROTOTYPE | PROTOTYPE | FOUNDATION | NOT_STARTED | PENDING |
-| P1C06 Moria | FUNCTIONAL | PROTOTYPE | PROTOTYPE | PROTOTYPE | FOUNDATION | FOUNDATION | FOUNDATION | PROTOTYPE | PROTOTYPE | PROTOTYPE | PROTOTYPE | PROTOTYPE | FOUNDATION | NOT_STARTED | PENDING |
-| P1C07 Lothlorien | FUNCTIONAL | PROTOTYPE | PROTOTYPE | PROTOTYPE | FOUNDATION | FOUNDATION | FOUNDATION | PROTOTYPE | N/A | PROTOTYPE | PROTOTYPE | PROTOTYPE | FOUNDATION | NOT_STARTED | PENDING |
-| P1C08 Anduin/Amon Hen | FUNCTIONAL | PROTOTYPE | PROTOTYPE | PROTOTYPE | FOUNDATION | FOUNDATION | FOUNDATION | PROTOTYPE | PROTOTYPE | PROTOTYPE | PROTOTYPE | PROTOTYPE | FOUNDATION | NOT_STARTED | PENDING |
-
-## Validation evidence versus maturity
-
-The status table above describes **production maturity**. Validation proof is recorded separately so a successful compile/import is never confused with visual or gameplay acceptance.
-
-### P1C01 Shire production environment
-- CP28 introduced project-managed production source assets for Shire environment/props and runtime code now prefers imported production meshes while retaining BasicShapes as fallbacks.
-- The production asset pipeline is COMPILE-TESTED and ASSET-IMPORT-TESTED on UE4.27.2.
-- Validated baseline `e739ba6e364d0316cf5b7fe10c1f8ecaa13d417e` passed Pre-Unreal Validation #113 and Unreal Build Validation #11; the production importer reported `50 files, 0 failures`.
-- The newer Shire visual content is still pending focused PIE traversal, target-device performance review and VISUALLY-ACCEPTED status.
-- Character visual identity remains PROTOTYPE/FOUNDATION where the final rigged/animated/voiced production character standard is not yet satisfied.
-
-### Repository build gate
-- CP29 established a self-hosted Windows UE4.27.2 runner on the target laptop.
-- Every pushed `develop` commit is eligible for the exact-commit UE4.27.2 C++ build and production asset-import gate.
-- Green CI never substitutes for PIE, device or visual acceptance.
-
-### Source architecture / handoff
-- `Source/ShireJourney/README.md` is the code-level handoff entry point inside the runtime module.
-- `Data/SourceArchitecturePlan.json` assigns every runtime source file to its accepted Public/Private domain path; CP-W00-154 exact head `ab7889d6...` passed Pre #788, Unreal #623 and Warehouse #204 after the physical migration.
-- Project Guardian must reject untracked runtime source files so a new human or automated programmer cannot silently expand the module without updating the architecture map.
-
-## Voice rule
-Every runtime non-empty VO_* identifier must exist in Data/VoiceCuePlan.csv.
-Voice status remains FOUNDATION while required voice assets are ASSET_PENDING.
-
-## Update rule
-Whenever a chapter, route, enemy, biome, mechanic or major story beat changes:
-- update this matrix,
-- update the relevant story/audio plan,
-- add Guardian validation where machine-checkable,
-- do not mark ACCEPTED without real UE4.27/PIE evidence.
-## 2026-09-30 - P1C01 overnight preparation / save-history reconciliation
-
-This wave changes preparation contracts and static validation only; it does **not** promote any production-completeness acceptance column.
-
-W00 machine closure is inherited from PR #184 exact head `d6ca8aac03f5a1da07609e61e790ddf8faad8eed` (Pre-Unreal #1435 SUCCESS, Unreal Build #1108 SUCCESS including packaged Runtime Data verification and packaged executable observation). The current P1C01 successor PR must still satisfy its own current exact-head engine gate before merge or runtime-car expansion.
-
-The save audit now records only reachable, reviewable history: schema 3 introduced explicit version metadata; schema 4 added Journey Discovery fields; schema 5 added stamina/resolve/supplies/progression XP; schema 6 added Chronicle/map-knowledge fields. Explicit schema 1/2 semantics remain undocumented, so no compatibility or migration claim is promoted.
-
-Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/cinematic-skip postcondition equivalence and safe optional-window expiry. Runtime gameplay, target-device performance, human PIE, visual quality and audio listening remain gated and unaccepted.
-
-## 2026-09-30 - P1C01 BAG_END_LIVED_IN_PASS hero car
-
-- SHIRE_WORLD_DENSITY predecessor: **STATIC-VALIDATED + UE4.27.2/headless machine-green** on PR #192 / Pre-Unreal #1467 / Unreal #1140; merged develop #1468/#1141 also green.
-- Bag End hero source implementation: **SOURCE-IMPLEMENTED / EXACT-HEAD CI PENDING**.
-- Exterior hero budget: **3 HISM clusters / 34 non-collision instances + 8 static lived-in props**.
-- Quest-state variants: **5 Birthday props + 5 Departure props**, visibility-swapped from existing ShireQuestSubsystem delegate events; no Tick and no transition Spawn/Destroy churn.
-- AI population: **UNCHANGED at 18**.
-- Story anchors / locked F1-01/F1-02 outcomes: **UNCHANGED**.
-- Dedicated Bag End interior: **CONTENT_PENDING**; no production interior shell/kit exists in the repository and no completion claim is made.
-- PIE collision/readability, human visual acceptance and target-device performance: **PENDING / NOT CLAIMED**.
-
-## 2026-09-30 - P1C01 PARTY_AND_SOCIAL_LOOP car
-
-- BAG_END_LIVED_IN_PASS predecessor: **STATIC-VALIDATED + UE4.27.2/headless machine-green** on PR #193 / Pre-Unreal #1469 / Unreal #1142.
-- Party/social source implementation: **SOURCE-IMPLEMENTED / EXACT-HEAD CI PENDING**.
-- Visual budget: **4 HISM clusters / 48 non-collision decorative instances + 14 static party props + 8 state-variant props**.
-- Optional gameplay: **3 birthday-setup beats + 2 multi-step activities** (Fireworks Safety and Dragon Firework Mishap), all story-window gated and non-mandatory.
-- Progression/save: **DATA-WIRED** through existing side-activity/discovery first-time reward path; direct reward bypass remains rejected by ShireQuestSubsystem.
-- Ambient AI population: **UNCHANGED at 18**.
-- F1-01 locked outcome: **UNCHANGED**.
-- New gameplay subsystem / per-frame scan / synchronous heavy load: **NONE**.
-- PIE activity retry/window behavior, human party visual/pacing review and target-device performance: **PENDING / NOT CLAIMED**.
-
-## 2026-10-01 â€” Deep Audit V1 / visual-quality governance
-
-| Area | Current status | Evidence boundary |
-|---|---|---|
-| Balanced Medium visual target | GOVERNOR-LOCKED | Selective High for visually important content; no visual acceptance claimed |
-| Deep Audit R-01..R-10 | ADOPTED AS VALIDATION MATRIX | 0 confirmed defects; 10 hypotheses requiring source/runtime measurement |
-| Compound settlement-entry performance | MEASUREMENT REQUIRED | Target-device/standalone evidence pending |
-| Tail-frame telemetry | REQUIRED FOR ACCEPTANCE | p95/p99/max + Game/Draw/GPU; not yet accepted |
-| Long-session memory/save-load stability | SOURCE-GUARDED / DEVICE EVIDENCE PENDING | Existing bounded contracts retained |
-
-## 2026-10-01 - Gate 6/7 + local visual bootstrap reconciliation
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| SAVE_LOAD_LONG_SESSION predecessor | MERGED / machine-green | #200 merged at `7ad697ed146e356dea9e591ccf61a8268138bc3b` |
-| Gate 6/7 evidence evaluator | RECONCILED / FAIL-CLOSED | Device + human evidence still pending |
-| Visual quality target | GOVERNOR-LOCKED | Balanced Medium + selective High, 30 FPS floor retained |
-| Local production import/bootstrap | SOURCE-IMPLEMENTED | Local execution/rendered review pending |
-| Runtime ownership | UNCHANGED | Existing router/world/living-world/quest owners remain authoritative |
-| PIE / device / visual / pacing / performance | NOT ACCEPTED | Requires real matching evidence |
-
-## 2026-10-01 - Gate 6/7 + local visual bootstrap reconciliation
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| SAVE_LOAD_LONG_SESSION predecessor | MERGED / machine-green | #200 merged at `7ad697ed146e356dea9e591ccf61a8268138bc3b` |
-| Gate 6/7 evidence evaluator | RECONCILED / FAIL-CLOSED | Device + human evidence still pending |
-| Visual quality target | GOVERNOR-LOCKED | Balanced Medium + selective High, 30 FPS floor retained |
-| Local production import/bootstrap | SOURCE-IMPLEMENTED | Local execution/rendered review pending |
-| Runtime ownership | UNCHANGED | Existing router/world/living-world/quest owners remain authoritative |
-| PIE / device / visual / pacing / performance | NOT ACCEPTED | Requires real matching evidence |
-
-
-## 2026-10-01 - Frodo candidate warehouse targeted repair
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| Warehouse Stage #302 on `develop@b8cee93c` | FAILURE | Ended inside material-provenance repair; no terminal job log and no candidate artifact |
-| Exact terminal runner/service cause | UNKNOWN / FAIL-CLOSED | GitHub retained the active step without a terminal step conclusion; do not invent a cause |
-| Full Poly Haven `-Refresh` | REMOVED IN REPAIR CANDIDATE | Replaced by receipt SHA256 validation and targeted purge/redownload |
-| Repair-step duration | BOUNDED TO 20 MINUTES | Exact-head workflow proof pending |
-| Frodo/Gandalf candidate report | NOT PRODUCED | No character import, runtime promotion, visual acceptance, or Gate 6/7 closure |
-
-
-## 2026-10-01 - P1C01 hero-provider prerequisite repair candidate
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| Warehouse #307 on `develop@2363d3f9` | FAILURE | Inventory/critical-gap stages passed; hero candidate coverage failed |
-| Persistent inventory | CLEAN IN RUN #307 | `239` active verified records; `0` pending; `0` manual queue |
-| Frodo/Gandalf intake | BLOCKED BY MISSING STAGING | `prepared=0`, `pending=4`, `blocked=0`; both candidate pools were zero |
-| Quaternius hero prerequisite | SOURCE-IMPLEMENTED REPAIR CANDIDATE | Bounded to four authorized FBX/CC0 source packs; exact-head proof pending |
-| Regression guard | SOURCE-IMPLEMENTED | Pre-Unreal contract test requires exact pack parity and provider staging before candidate report |
-| Runtime character promotion | NOT STARTED | No READY_FOR_IMPORT, skeletal import or runtime replacement claim |
-| PIE / device / visual / pacing / performance | NOT ACCEPTED | Real matching evidence still required |
-
-
-## 2026-10-01 - P1C02 Bree preproduction opening
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| P1C02 Bree / The Prancing Pony source contract | SOURCE-IMPLEMENTED | `Data/P1C02BreePreproductionV1.json` |
-| F1-04 shared source superpack binding | SOURCE-IMPLEMENTED | Existing Bree/Weathertop pack reused; no duplicate payload lane |
-| Bree canon/world grammar | SOURCE-LOCKED | Project Bibles + Tolkien Book One IX-X |
-| Existing Bree source stock | QC REQUIRED | Static support stock only; no visual acceptance |
-| P1C02 runtime integration | PREDECESSOR-GATED / NOT STARTED | Requires P1C01 Gate 6/7 ACCEPTED |
-| P1C02 PIE / device / visual / pacing / performance | NOT ACCEPTED | Real matching evidence required after runtime activation |
-
-
-## 2026-10-01 - P1C03 Weathertop / Ford preproduction opening
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| P1C03 Weathertop / Ford source contract | SOURCE-IMPLEMENTED | `Data/P1C03WeathertopFordPreproductionV1.json` |
-| F1-04 Weathertop source binding | SOURCE-IMPLEMENTED | Existing shared pack reused; no duplicate payload lane |
-| Ford handoff boundary | SOURCE-LOCKED / PREPRODUCTION | Wounded pursuit / Ford crossing / Rivendell handoff only |
-| Existing Weathertop stock | QC REQUIRED | Static support stock only; no visual acceptance |
-| P1C03 runtime integration | PREDECESSOR-GATED / NOT STARTED | Requires P1C02 Gate 6/7 ACCEPTED |
-| P1C03 PIE / device / visual / pacing / performance | NOT ACCEPTED | Real matching evidence required after runtime activation |
-
-
-## 2026-10-01 - Whole-game resource coverage audit V2
-
-| Domain | Status | Evidence boundary |
-|---|---|---|
-| Generic PBR surfaces/materials | BROAD SOURCE COVERAGE | Poly Haven/ambientCG and existing warehouse lanes; runtime integration remains per-region |
-| Supporting static props/interiors | BROAD SOURCE COVERAGE | Kenney/KayKit/project stock; hero visual acceptance not implied |
-| Hero humanoid bases | CRITICAL GAP | Generic/support bases exist; final named-character skeletal FBX + deformation/art QC still required |
-| Canonical creature bases | CRITICAL GAP | Species-specific rigs/deformation/LOD still required |
-| Humanoid + creature animation | CRITICAL GAP | Manual/authenticated motion sources required; retarget QC per rig family |
-| Realistic hero architecture | HIGH GAP | Support kits exist; culture/region-specific hero silhouettes need higher-fidelity licensed/custom sources |
-| Biome-specific vegetation | HIGH GAP | Generic nature stock exists; ecology identity/LOD/overdraw QC still required |
-| Battle/siege support | HIGH GAP | Modular/background support needs expansion and canon-specific silhouette filtering |
-| Whole-game audio depth | HIGH GAP | Manual licensed libraries required for ambience/foley/creature/combat/weather breadth |
-| Weather/battle VFX | HIGH GAP | Baked/flipbook/UE4.27-compatible source acquisition still required |
-| Water/boats + mounted pipeline | MEDIUM GAP | Dedicated interaction/rig/source QC still required |
-| Quaternius automated staging | CORRECTED TO MANUAL | #308: `files=0 unresolved=4`; page reachability no longer counts as payload staging |
-| PIE / device / visual / performance acceptance | UNCHANGED | Source audit creates no runtime acceptance |
-
-
-### Resource-audit guard delta
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| Quaternius zero-payload staging | SOURCE-IMPLEMENTED FAIL-CLOSED | `files=0 && unresolved>0` now exits nonzero |
-| Zero-payload regression test | SOURCE-IMPLEMENTED | Pre-Unreal wiring added; exact-head result pending |
-| Provider access policy | SOURCE-IMPLEMENTED | Quaternius reclassified manual-clear-license |
-| Whole-game gap audit | SOURCE-IMPLEMENTED | 28 regions + cross-cutting characters/creatures/animation/audio/VFX/gameplay-support domains |
-
-## 2026-10-01 - Warehouse #309 manual-provider continuation repair
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| Quaternius support resolution | MANUAL QUEUE REQUIRED | #309: `files=0 unresolved=17`; no payload staged |
-| Default zero-payload behavior | FAIL-CLOSED RETAINED | Exit code 3 remains the default |
-| Workflow manual-provider handling | SOURCE-IMPLEMENTED REPAIR CANDIDATE | Explicit `-RecordManualQueue`; no staging PASS and no broad error suppression |
-| Persistent warehouse payloads | PRESERVED | No full Poly Haven rerun; valid staged files are untouched |
-| Frodo candidate artifact | REPAIR PENDING | Workflow must reach candidate report/upload on a fresh exact head |
-| Runtime / Gate 6/7 acceptance | UNCHANGED / NOT ACCEPTED | No character import or human/device evidence |
-
-
-## 2026-10-02 - Warehouse #310 generated-worktree caller-checkout repair
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| Persistent Warehouse inventory | RUN-PROVEN CLEAN | #310: 18,925 payload files / 6,745,967,498 bytes / 239 active / 428 superseded / 0 duplicate groups |
-| Poly Haven / ambientCG provenance | REUSE-PROVEN | 219 + 8 receipt-verified files reused; no blind refresh |
-| P1C01 mega promotion | RUN-PROVEN WITH MANUAL QUEUE | 36 prepared / 34 intake-QC / 3 pending / 2 manual |
-| Generated P1C01 materials | SOURCE BRANCH CREATED | 8 receipt-verified sources; runtime/visual acceptance not implied |
-| Caller-checkout survival | SOURCE-IMPLEMENTED REPAIR CANDIDATE | Bounded cleanup, overlap rejection, metadata prune, downstream script guard |
-| Frodo candidate evidence | BLOCKED BY #310 INFRASTRUCTURE FAILURE | Report did not run; artifact did not exist |
-| Runtime / Gate 6/7 acceptance | UNCHANGED / NOT ACCEPTED | No character import or human/device evidence |
-
-
-## 2026-10-02 - Warehouse #311 exact Frodo blocker and direct CC0 fallback
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| Caller checkout survival | RUN-PROVEN | #311 reached hero staging/report after generated material export |
-| Warehouse inventory | RUN-PROVEN CLEAN | 18,932 files / 6,808,598,106 bytes / 0 duplicate groups |
-| Candidate artifact | RUN-PROVEN / DIGEST MATCHED | SHA256 `37b7a51113d8d3ddc750522e8f7c68ac6b277424f4bf4269108d82f4b82c1dc2` |
-| Frodo / Gandalf candidates | TRUE BLOCKER | 0 FBX / 0 pools; four Quaternius manual-source packs pending |
-| OpenGameArt Quaternius fallback | SOURCE-IMPLEMENTED CANDIDATE | Direct CC0 archive, bounded ZIP scan, FBX gate, SHA reuse |
-| READY_FOR_IMPORT / runtime | NOT STARTED | Skeleton/skin/deformation/FBX-2018 QC still required |
-| Gate 6/7 | UNCHANGED / NOT ACCEPTED | No human/device evidence |
-
-
-## 2026-10-02 - P1C01 hero candidate file-level provenance guard
-
-- The hero intake now records a provenance row for every admitted FBX, binding candidate file path to provider, source asset ID, receipt, source payload and verified SHA256.
-- The exact-head hero candidate wave fails closed before ranking when any discovered FBX lacks exactly one provenance row; ranked rows now carry the provenance fields into the evidence artifact.
-- This closes the gap between `candidate_policy.require_provenance=true` and actual per-file candidate evidence without promoting any asset to READY_FOR_IMPORT.
-- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**. No skeleton, skin-weight, deformation, import, PIE, device, visual or performance acceptance is claimed.
-
-
-## 2026-10-02 â€” P1C01 warehouse-first world expansion V1
-
-- Added `Data/P1C01WarehouseWorldExpansionV1.json` and a hosted regression guard for a warehouse-first P1C01 asset/world expansion batch.
-- The batch maps approved acquisition lanes to Bag End, Hobbiton, Shire roads and Bucklebury/Ferry while preserving FBX/PNG-TGA, provenance, HISM/ISM/LOD/culling and soft/async heavy-asset rules.
-- Quaternius remains a manual provider blocker and does not block independent Poly Haven/ambientCG/licensed character-animation/audio/VFX lanes.
-- Status: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING**. No PIE/device/visual/performance acceptance claim.
-
-## 2026-10-02 - Frodo skeletal candidate semantic QC
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| Direct CC0 archive | RUN-PROVEN STAGED | 48,430,012 bytes; SHA256 `0295062cbc72da52ee804f39ac38694901a40458011f9b2638fc7ef13ed509da` |
-| FBX discovery | RUN-PROVEN | 52 FBX in Warehouse #312; receipt hash verified |
-| Old candidate ranking | REJECTED AS SEMANTICALLY UNSAFE | Substring collisions: Femaleâ†’male and Soldier/Goldenâ†’old |
-| Exact-token ranking repair | SOURCE-IMPLEMENTED | Filename-only tokens, identity filters, exclusions, bounded pools; PG-205 enforces the V2 state/order/policy |
-| Frodo static FBX structure probe | SOURCE-IMPLEMENTED | Header/version plus Geometry/Model/LimbNode/Deformer/Skin/Cluster markers |
-| UE4 skeletal import / deformation / likeness | NOT STARTED | Requires exact-head Unreal evidence and human visual review |
-| READY_FOR_IMPORT / Runtime / Gate 6/7 | NOT ACCEPTED | P1C01 remains active; P1C02 remains predecessor-gated |
-
-
-
-## 2026-10-02 - Warehouse #314 Frodo static-QC schema repair
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| Candidate artifact schema | RUN-PROVEN | Warehouse #314 artifact: schema v2, `characters` array present, 5 Frodo / 4 Gandalf candidates |
-| Frodo inspector crash | ROOT CAUSE ISOLATED | Strict property access failed before FBX marker inspection |
-| Schema parser hardening | SOURCE-IMPLEMENTED | Current v2 + bounded legacy/flat compatibility; explicit unsupported-schema diagnostic |
-| Regression fixture | SOURCE-IMPLEMENTED | Generated schema-v2 report is parsed by inspector self-test |
-| Static FBX marker QC | PENDING FRESH RUN | Warehouse #314 failed before marker pass/fail could be trusted |
-| UE4 import / deformation / likeness | NOT STARTED | Separate engine/human evidence required |
-
-
-## 2026-10-02 - P1C01 priority CC0 audio provenance refresh
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| Priority OpenGameArt audio pages | SOURCE-PROVENANCE RECORDED | 5/5 entries carry uploader, primary-page CC0 evidence and source file label |
-| Download/hash evidence | PENDING | No receipt SHA256 claimed by this metadata update |
-| Audio QC / WAV masters / UE import | PENDING | Separate intake and listening/import evidence required |
-| Runtime / device / performance | NOT ACCEPTED | No experiential evidence created by this source metadata change |
-
-
-## 2026-10-02 - Continuous Mega Wave Queue V2
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| Mega production queue | SOURCE-IMPLEMENTED | 64 waves / 18,890 target work-items |
-| P1C01 runtime waves | REGISTERED | 12 serialized runtime waves; Governor order remains authoritative |
-| Global source waves | REGISTERED | 12 source-only acquisition families |
-| Trilogy chapter packages | SOURCE-PREPARED | 23 chapter waves covering F1-01 through F3-07 |
-| Future chapter runtime | FORBIDDEN BY QUEUE | Every future chapter row carries `runtime_integration_allowed=false` |
-| Cross-cutting hardening | REGISTERED | 17 system/QA/streaming/performance waves |
-| Project Manager traceability | REGISTERED | `PMREQ_CONTINUOUS_MEGA_WAVE_QUEUE_V2_2026_10_02` |
-| Frodo static FBX structure | STATIC-VALIDATED | Warehouse #315: 5/5 allowlisted candidates, FBX v7400, skeleton/skin/cluster markers present |
-| Frodo UE4 skeletal import / deformation / likeness | PENDING | Separate engine and human visual evidence still required |
-| PIE / device / visual / performance acceptance | NOT ACCEPTED | Queue/source capacity does not create experiential evidence |
-
-## 2026-10-02 - P1C01 visible-world mega source execution
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| Bag End hero ring source priority | SOURCE-IMPLEMENTED | Materials/props/garden/fence support routed through existing warehouse-first pack; runtime/visual acceptance not implied |
-| Hobbiton village source priority | SOURCE-IMPLEMENTED | Paths/fences/farm/social-prop/vegetation support prioritized; runtime/visual acceptance not implied |
-| Shire road corridor source priority | SOURCE-IMPLEMENTED | Ground/path/hedge/tree/rock support prioritized; runtime/visual acceptance not implied |
-| Bucklebury/Ferry source priority | SOURCE-IMPLEMENTED | Riverbank/wood/vegetation/transition support prioritized; runtime/visual acceptance not implied |
-| Runtime mutation | NOT AUTHORIZED BY THIS PACK | PR #247 remains serialized Frodo runtime lane; P1C02+ runtime stays gated |
-| Exact-head validation | PENDING | Pre-Unreal required before merge to develop |
-| PIE / device / visual / performance acceptance | NOT ACCEPTED | Requires later matching runtime and human/device evidence |
-
-## 2026-10-02 - Visible proxy replacement inventory
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| Current Engine primitive fallbacks | STATIC-IDENTIFIED | Shire builder retains Cube/Sphere/Cylinder/Cone fallback paths |
-| Bag End replacement routing | SOURCE-IMPLEMENTED | Existing production identities + missing interior/hero-detail source needs recorded |
-| Hobbiton replacement routing | SOURCE-IMPLEMENTED | Existing village assets + remaining party/crop/log/clutter source needs recorded |
-| Shire road replacement routing | SOURCE-IMPLEMENTED | Existing road/hedge/tree/rock assets + remaining road-edge/variation source needs recorded |
-| Bucklebury/Ferry replacement routing | SOURCE-IMPLEMENTED | Riverbank/water exist; ferry/dock/mooring support remains source debt |
-| Runtime replacement | NOT STARTED IN THIS BRANCH | Serialized runtime lane remains PR #247 |
-| Exact-head static validation | PENDING | Pre-Unreal contract added |
-| Visual/device/performance acceptance | NOT ACCEPTED | Requires later runtime and human/device evidence |
-
-| Visible-world pack PG-187 compatibility | SOURCE-REPAIRED | Keep required `RUNNER_EXECUTION_READY` status; new priority carried by separate execution profile |
-
-## 2026-10-02 - Visible-world reuse-first correction
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| Ferry reusable production stock | STATIC-IDENTIFIED | River boat, footbridge, rope post/coil, reed cluster already present/imported |
-| Road reusable production stock | STATIC-IDENTIFIED | Fallen log, broadleaf tree and boulder cluster already present/imported |
-| New source acquisition | CONDITIONAL | Only after existing stock fails later composition/visual review |
-| Runtime binding | NOT STARTED HERE | Serialized runtime lane remains separate |
-| Visual/device/performance acceptance | NOT ACCEPTED | No matching evidence |
-
-## 2026-10-02 - Visible-world exact resident binding packet
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| Bucklebury/Ferry resident bindings | SOURCE-IMPLEMENTED | Exact production identities prepared for boat/footbridge/rope/reeds/boulder roles |
-| Shire road resident bindings | SOURCE-IMPLEMENTED | Exact production identities prepared for fallen-log/tree/boulder/fence/woodpile/fern roles |
-| New acquisition pressure | REDUCED | Existing production stock must be tried before new provider acquisition |
-| Runtime mutation | NOT STARTED IN THIS PACKET | Serialized P1C01 runtime lane remains separate |
-| PIE / device / visual / performance acceptance | NOT ACCEPTED | No matching runtime/human/device evidence |
-
-## 2026-10-02 - P1C01 Ferry / Wooded Road visible-runtime replacement
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| Wooded Road primitive obstacle | SOURCE-IMPLEMENTED | Resident fallen-log + boulder production meshes preferred; primitive fallback retained only if assets are not resident |
-| Bucklebury/Ferry landing/body/posts/detail | SOURCE-IMPLEMENTED | Footbridge/river-boat/rope/reeds/boulder resident production meshes preferred |
-| Heavy-asset loading policy | PRESERVED | Resident-only soft-path resolution; no synchronous heavy load added |
-| Quest/NPC/LivingWorld authority | UNCHANGED | No parallel state or crowd owner introduced |
-| Exact-head UE4 compile/runtime audit | PENDING | Required before merge |
-| PIE / device / visual / target performance acceptance | NOT ACCEPTED | Human/device evidence still required |
-
-## 2026-10-02 - Runner broker-stall recovery
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| Listener process | OBSERVED ALIVE | Local screenshot showed Runner.Listener PID present |
-| Worker process | OBSERVED ABSENT | No Runner.Worker process while Unreal jobs remained queued |
-| Broker transport | OBSERVED FAILED | Runner log showed SocketException 995 / aborted I/O |
-| Watchdog timestamp parser | ROOT CAUSE FIX SOURCE-IMPLEMENTED | Real `[yyyy-MM-dd HH:mm:ssZ INFO ...]` format now parsed; legacy form retained |
-| Stalled acquire recovery | SOURCE-IMPLEMENTED | Existing ack-without-worker recycle can now receive a real AckUtc |
-| Hosted regression | SOURCE-IMPLEMENTED | Pre-Unreal test covers real + legacy timestamp forms |
-| Local machine recovery | PENDING USER-SIDE WATCHDOG REINSTALL/RESTART | No claim of runner recovery until a queued job starts |
-
-| Runner manual recovery | RUN-PROVEN | Watchdog emitted `START` then `ONLINE ... brokerListening=true`; queued Unreal work resumed |
-| Broker transport-stall auto-recovery | SOURCE-IMPLEMENTED | Bounded recycle when transport error remains newer than healthy broker evidence, no worker is active, and github.com:443 is reachable |
-| Network outage behavior | SOURCE-IMPLEMENTED | Logs `NETWORK_BLOCKED`; avoids restart loop when GitHub control plane is unreachable |
-| Runner auto-recovery exact-head validation | PENDING | Fresh Pre-Unreal + subsequent machine deployment/restart required |
-
-| Runner PG-145 split-helper compatibility | SOURCE-FIXED | Validator now checks watchdog + timestamp helper as one contract; fresh exact-head Pre-Unreal pending |
-| Runner maintenance UE queue isolation | SOURCE-FIXED | New helper/test paths are maintenance-safe and path-filtered off Unreal push/PR triggers |
-
-## 2026-10-02 - P1C01 Party Field primitive-overlay suppression
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| Party Field large cube centerpiece | SOURCE-IMPLEMENTED | Suppressed when resident `SM_ShPicnicCanopy` is available; deterministic fallback retained |
-| Story / quest / NPC authority | UNCHANGED | No state or population ownership changes |
-| Runtime loading | UNCHANGED | Existing resident mesh pointer reused; no synchronous heavy load added |
-| Exact-head UE4 compile/runtime audit | PENDING | Required before merge |
-| PIE / device / visual / performance acceptance | NOT ACCEPTED | No matching evidence |
-
-| Party Field #1268 compile blocker | SOURCE-FIXED | Replaced undeclared `ProductionPicnicCanopyMesh` reference with shared resident `ProductionCommonMarketCanopyMesh`; exact-head UE4 build pending |
-
-## 2026-10-02 - Maximum-safe CI lane reservation acceleration
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| Hosted Unreal preflight classifier | SOURCE-IMPLEMENTED | Decides engine requirement before reserving UE4 machine |
-| Source/preproduction fast lanes | SOURCE-IMPLEMENTED | East Fields plan, KayKit/alternate source registration and whole-game packets stay hosted/static when parent proof is valid |
-| UE4 device lane reservation | SOURCE-IMPLEMENTED | Reserved only for full/core/asset/acceptance modes |
-| Classifier regression coverage | SOURCE-IMPLEMENTED | New source-only cases added to test_unreal_classifier.ps1 |
-| Exact-head static validation | PENDING | Fresh Pre-Unreal required before merge |
-| Runtime / PIE / device / visual / performance acceptance | NOT ACCEPTED | No matching evidence |
-
-| Hosted-classifier PG-145B reconciliation | SOURCE-FIXED | Validator recognizes hosted-preflight handoff while preserving runner-health-before-heavy-work invariant; fresh exact-head Pre-Unreal pending |
-
-| Hosted classifier exact-base diff | SOURCE-FIXED | Full hosted history required before Unreal impact classification; source-only work must not fail-safe to UE solely because PR ancestry exceeds shallow depth |
-
-| Hosted ancestor proof network avoidance | SOURCE-FIXED | Full local hosted history is consumed before any fallback fetch; private-repo credentials remain non-persistent and source-only UE reservations stay skipped |
-
-## 2026-10-02 - East Fields row replacement plan
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| Twelve cube crop-row strips | STATIC-IDENTIFIED | Current builder source |
-| Instanced production-row replacement | SOURCE-IMPLEMENTED PLAN | <=1 cluster / <=96 instances / no collision / no Tick |
-| Runtime implementation | PREDECESSOR-GATED | Wait for current Party Field runtime pass to merge green |
-| New acquisition | NOT REQUIRED BY DEFAULT | Reuse resident production vegetation first |
-| PIE / device / visual / performance acceptance | NOT ACCEPTED | No matching evidence |
-
-| East Fields 12 cube crop strips | SOURCE-REPLACED | Dedicated builder-owned HISM path; primitive rows fallback-only |
-| East Fields production row instances | SOURCE-IMPLEMENTED | 96 deterministic resident `SM_ShGrassClump` instances, no collision/no Tick/no shadow, cull 900-6500 cm |
-| East Fields exact-head UE4 compile/runtime audit | PENDING | Requires fresh current-develop ancestry after source registration merges |
-| East Fields PIE / device / visual / performance acceptance | NOT ACCEPTED | No matching human/device evidence |
-
-## 2026-10-02 - KayKit Adventurers alternate Frodo source family
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| KayKit Adventurers immutable source registration | SOURCE-IMPLEMENTED | Revision `672074b73ba276876a19e8816ecdc5241817ab47` |
-| Character-intake admission | SOURCE-IMPLEMENTED | `KAYKIT_ADVENTURERS_CC0` added to external candidate manifest |
-| Frodo static-QC source admission | SOURCE-IMPLEMENTED | Source asset ID allowlist updated |
-| Warehouse staging / UE4 skeletal import | PENDING | Separate exact-head execution required |
-| Runtime / deformation / visual acceptance | NOT ACCEPTED | No matching evidence |
-
-
-## 2026-10-03 - KayKit Knight V2 technical probe
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| Immutable candidate registration | SOURCE-IMPLEMENTED | KayKit revision `672074b73ba276876a19e8816ecdc5241817ab47`, `Knight.fbx` |
-| Source blob identity | SOURCE-IMPLEMENTED | Git blob `101848795913dea0d37ac3ec9352fdf9dd024010` |
-| Warehouse staging / payload SHA256 | PENDING | Must be produced by targeted staging |
-| Static FBX skeletal QC | PENDING | Must pass before UE runner reservation |
-| UE4.27.2 skeletal import | PENDING | Same smoothing/bind-pose/UV rejection gate as Rogue |
-| Runtime / likeness / deformation / retarget | NOT AUTHORIZED | Technical probe only |
-
-
-## 2026-10-03 - Closed-PR branch lifecycle enforcement
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| Root cause | IDENTIFIED | Cleanup job previously skipped closed-unmerged PRs |
-| Exact closed-head deletion | SOURCE-IMPLEMENTED | SHA-match + active-PR + canonical/protected guards retained |
-| Existing stale branch retirement | SOURCE-IMPLEMENTED | 19 verified superseded/orphan refs queued in cleanup plan |
-| Active PR protection | PRESERVED | Live open PR heads are excluded |
-| Hosted validation | PENDING | Fresh exact-head Pre-Unreal/cleanup evidence required |
-
-
-### 2026-10-03 - Branch lifecycle root-fix validation
-
-| Area | Status | Evidence |
-|---|---|---|
-| Pre-Unreal #1671 | FAILED / DIAGNOSTIC | PG-167 caught stale merged-head contract |
-| Workflow CLOSED_HEAD env | SOURCE-REPAIRED | exact close head + base/merge checkout distinction |
-| PG-167 contract | SOURCE-REPAIRED | validates closed-PR lifecycle markers |
-| Project Governor REQ-EXEC-002 | UPDATED | salvage/disposition-before-delete + live-ref audit rule |
-| Fresh exact-head validation | PENDING | new run required before merge |
-
-| Branch deletion active-PR safety recheck | SOURCE-HARDENED | Per-branch `head=owner:branch` API query before deletion; API failure blocks cleanup |
-
-
-## 2026-10-03 - Branch cleanup batch continuation
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| Branch Cleanup #138 | FAILED / DIAGNOSTIC | Active PR correctly protected; batch aborted |
-| Active PR deletion behavior | SOURCE-REPAIRED | Keep + continue instead of abort |
-| Canonical / moved-ref protection | PRESERVED | No relaxation |
-| Exact-head validation | PENDING | Fresh Pre-Unreal required |
-
-
-## 2026-10-03 - Empty active-PR query repair
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| Empty REST response handling | SOURCE-REPAIRED | Null-filter + exact `head.ref` match |
-| True active PR handling | PRESERVED | KEEP + CONTINUE |
-| API failure behavior | PRESERVED | Fatal / fail-closed |
-| Exact-head validation | PENDING | Fresh Pre-Unreal required |
-
-
-## 2026-10-03 - Stale branch retirement wave 2
-
-| Scope | Status | Evidence boundary |
-|---|---|---|
-| Additional disposed refs | 4 QUEUED | #268 head, #241, #246, #239 |
-| Active PR heads | EXCLUDED | none of the four has an open PR |
-| Cleanup execution | NOT STARTED | do not merge while #140 is running |
-| Hosted validation | PENDING | fresh Pre-Unreal required |
-
-
-## 2026-10-03 - Stale branch retirement wave 3
-
-| Scope | Status | Evidence boundary |
-|---|---|---|
-| Closed maintenance refs | 3 QUEUED | #270, #272, #273 heads |
-| Active PR heads | EXCLUDED | none of the three remains open |
-| Production/runtime content | UNCHANGED | maintenance-only retirement |
-| Hosted validation | PENDING | fresh Pre-Unreal required |
-
-
-## 2026-10-03 - Final branch cleanup wave
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| Live dead refs targeted | 4 | #270, #272, #273, #263 heads |
-| Active delete queue | COMPACTED 95 -> 4 | historical absent refs removed from execution queue |
-| Active PR heads | EXCLUDED | none of the four targets is open |
-| #263 runtime authority | SUPERSEDED | exact replacement support still import/QC pending; #267 remains bounded writer |
-| Exact-head validation | PENDING | fresh Pre-Unreal required |
-
-
-## 2026-10-03 - Final branch hygiene closeout
-
-| Live-ref class | Count | Status |
-|---|---:|---|
-| Canonical/recovery | 3 | PRESERVED |
-| Open PR heads | 9 | ACTIVE / PRESERVED |
-| Explicit pending salvage | 3 | UNIQUE CONTENT / PRESERVED |
-| Unexplained dead refs | 0 | CLEAN |
-| Active delete queue | 0 | COMPACTED |
-
-
-## 2026-10-03 - Bag End planted-entry shrub runtime refresh
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| Runtime writer | ACTIVE / SINGLE | fresh branch from `94ecdd6da09b4dbf9acc7ec7b99d18c696c64863` |
-| Entry sphere shrubs | SOURCE-REPLACED | resident `SM_ShShrub`; sphere remains no-asset fallback |
-| Actor / Tick / collision budget | UNCHANGED | two existing placements; no Tick/collision added |
-| Door/window/trim debt | PRESERVED | exact replacement remains import/QC gated |
-| Fresh exact-head Pre-Unreal | PENDING | new head required |
-| Fresh UE4.27.2 compile/build | PENDING | old #1305 does not validate refreshed head |
-
-## 2026-10-03 - Hosted classifier current-tree proof refresh
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| Local parent-object probe | SOURCE-IMPLEMENTED | fetch only if local object absent |
-| Bag End source packet allowlist | EXACT-PATH ONLY | no broad Data wildcard |
-| Parent tree evidence | AVAILABLE | `82d5...` vs `6e1b...`: zero file delta |
-| Prior engine proof | AVAILABLE | #277 Unreal Build #1310 SUCCESS on `6e1b...` |
-| Fresh classifier validation | PENDING | exact current head required |
-
-| Transitive governance ancestor proof | SOURCE-IMPLEMENTED | safe delta + direct green OR exact tree-equivalent core proof |
-| Broad safety relaxation | NONE | existing safe-file and tree-equality requirements preserved |
-| Fresh hosted validation | PENDING | exact-head Pre-Unreal required |
-
-## 2026-10-03 - Bag End hero trim source probe V3
-
-| Gate | Status |
-|---|---|
-| Current ancestry | `develop@071a0ed2632c4919ed9160b817a965ed3b1eb76c` |
-| Runtime integration | BLOCKED / false |
-| Exact modular FBX discovery | PENDING |
-| Immutable receipt/SHA256 | PENDING |
-| Static FBX UV/material/perf QC | PENDING |
-| Real UE4.27.2 static-mesh import | BLOCKED UNTIL STATIC GATES |
-| Visual acceptance | NOT CLAIMED |
-
-## 2026-10-03 - Bag End hero trim exact-file gate
-
-| Gate | Status | Evidence |
-|---|---|---|
-| Provider/license family | COMPLETE | official Kenney Building Kit / CC0 |
-| Exact FBX filenames | COMPLETE | round door/doorway/window candidates identified |
-| Discovery payload identities | COMPLETE-DISCOVERY | Git-LFS SHA256 + byte size pinned to mirror revision |
-| Official Kenney archive receipt | PENDING | production provenance not yet captured |
-| Binary static FBX QC | PENDING | no binary payload available in current execution environment |
-| UE4.27.2 import | BLOCKED | requires official receipt + static QC |
-| Runtime replacement | BLOCKED | exact import/QC evidence required first |
-
-
-## 2026-10-03 - Bag End hero trim source receipt progression
-
-| Gate | Status | Evidence boundary |
-|---|---|---|
-| Official provider page | RESOLVED | Kenney Building Kit / CC0 / 80 files |
-| Official direct ZIP URL | RESOLVED | recorded in `P1C01BagEndHeroTrimSourceProbeV1.json` |
-| Archive SHA256 + byte size | PENDING | warehouse receipt required |
-| Extracted candidate hash match | PENDING | must match discovery identities |
-| Static FBX QC / UE4.27.2 import | PENDING | no promotion/runtime binding yet |
-
-
-## 2026-10-03 - Interactive launcher / runner-root isolation
-
-| Control | Status | Evidence boundary |
-|---|---|---|
-| Retired C-runner message | REMOVED | launcher no longer names `C:\\actions-runner` as active authority |
-| Runner-root interactive guard | STRENGTHENED | rejects any `\\actions-runner\\` project root independent of drive letter |
-| Active self-hosted authority | UNCHANGED | `D:\\actions-runner` remains CI-only |
-| Manual Unreal clone | UNCHANGED | Documents developer clone only |
-
-
-## 2026-10-03 - Stale open source/preproduction reconciliation
-
-| Salvaged lane | Current ancestry disposition | Runtime boundary |
-|---|---|---|
-| 23 chapter production packets + asset demand matrix | SELECTIVELY SALVAGED | all rows runtime=false |
-| P1C01 Shire mega chapter pack | SELECTIVELY SALVAGED | source/preproduction only |
-| P1C01 180-slot visual mega wave | SELECTIVELY SALVAGED | candidate discovery only; provenance/QC required |
-| Daily manager report generator/test | SELECTIVELY SALVAGED | informational tooling only |
-| Old branch-local docs/workflow snapshots | NOT COPIED | current develop remains authority |
-| Fresh exact-head Pre-Unreal | PENDING | required before merge |
-
-
-## 2026-10-03 - Static FBX world intake reconciliation
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| Static world/prop FBX discovery/import | SOURCE-IMPLEMENTED | latest develop ancestry |
-| Characters/Rigs FBX | DEFERRED | dedicated skeletal QC lane |
-| Auto animation/material/texture import | DISABLED | deterministic bounded static intake |
-| Synchronous heavy LoadObject in FBX branch | GUARDED FORBIDDEN | hosted source contract |
-| Fresh UE4.27.2 compile | PENDING | required before merge |
-| PIE/device/visual/performance | NOT CLAIMED | separate gates |
-
-
-## 2026-10-03 - P1C01 garden visual replacement
-
-| Item | Status | Evidence boundary |
-|---|---|---|
-| Garden soil rows | production ground mesh preferred | source implemented |
-| Garden plants | existing shrub HISM, max 125 added instances | source implemented |
-| Primitive plant actors | fallback-only when production binding unavailable | source implemented |
-| Actor/Tick growth | none; production path reduces per-plant actors | source inspection |
-| Exact-head UE4.27.2 validation | PENDING | required before merge |
-| PIE/device/visual/performance | NOT CLAIMED | separate acceptance gates |
-
-
-## 2026-10-03 - Visible-game delivery authority
-
-| Direction | Status |
-|---|---|
-| Visible Shire first | ACTIVE AUTHORITY |
-| Frodo first real skeletal character | ACTIVE AUTHORITY |
-| One P1C01 runtime writer | REQUIRED |
-| UE5 migration / Nanite / MetaHuman Crowd / UE5 PCG | NOT CURRENT STACK |
-| Proposal adoption | VERIFY AGAINST LIVE DEVELOP + PROJECT SOURCES |
-| Durable repository memory | REQUIRED FOR EVERY ACCEPTED MAJOR DIRECTION |
-
-
-## 2026-10-03 - Frodo real-rig lane current-ancestry reconciliation
-
-| Item | Status | Evidence boundary |
-|---|---|---|
-| Opt-in UE4.27 skeletal FBX importer | SOURCE-IMPLEMENTED | exact-head build pending |
-| Direct FBX character staging | SOURCE-IMPLEMENTED | hosted contract pending |
-| Default character FBX behavior | DEFERRED unless explicit flag | preserved |
-| Nonzero skeleton/bone proof | IMPLEMENTED in import commandlet | candidate run pending |
-| Frodo deformation/retarget/AnimBP/runtime | NOT STARTED | requires clean technical candidate |
-
-
-## 2026-10-03 - CI build-speed lane split
-
-| Change class | Generic UE4 runner |
-|---|---|
-| Bag End hosted official receipt source-only delta | INHERIT/SKIP |
-| Frodo dedicated probe metadata/workflow-only delta | INHERIT/SKIP |
-| Runtime C++ / SourceAssets / engine config | REQUIRED |
-| Dedicated Frodo skeletal technical probe | OWN UE4 WORKFLOW REQUIRED |
-
-
-## 2026-10-03 - Bag End hero trim source receipt completion
-
-| Gate | Status |
-|---|---|
-| Official archive SHA256/size | PASS |
-| Exact door/frame/window payload identity | PASS |
-| Expected colormap payload identity | PASS |
-| Binary static FBX QC | NEXT |
-| UE4.27.2 static import | PENDING |
-| Runtime hero trim replacement | BLOCKED UNTIL IMPORT/QC |
-
-
-## 2026-10-03 - Bag End trim static QC
-
-| Gate | Status |
-|---|---|
-| Official exact payload receipt | PASS |
-| Hosted FBX static structure QC | ACTIVE |
-| UE4.27.2 import | PENDING |
-| Runtime replacement | PENDING |
-
-
-## 2026-10-03 - Bag End trim static QC result
-
-| Candidate | Static result |
-|---|---|
-| Kenney Building Kit round door | REJECTED: FBX 7700 |
-| UE4 self-hosted import | NOT SCHEDULED for rejected payload |
-| Next | compatible export/source family |
-
-
-## 2026-10-03 - Next Frodo candidate source lane
-
-| Gate | Status |
-|---|---|
-| Distinct CC0 humanoid source | REGISTERED |
-| Hosted archive/FBX inventory | ACTIVE |
-| UE4 runner reservation | BLOCKED UNTIL HOSTED STATIC PASS |
-| Final Frodo likeness/runtime | NOT CLAIMED |
-
-
-## 2026-10-03 - Frodo rejected-payload guard reconciled on current develop
-
-| Control | Status |
-|---|---|
-| Exact rejected payload hashes | DURABLY RECORDED |
-| Knight V2 UE4 skeletal registration | PASS, 51 bones |
-| Knight V2 smoothing groups | FAIL |
-| Knight V2 bind pose | FAIL |
-| Retry same exact payload | FORBIDDEN |
-| Distinct OGA Lowpoly Dummy family | SOURCE INVENTORY PASS ONLY; UE4 TECHNICAL PROBE NEXT |
-
-
-## 2026-10-03 - P1C01 visible Shire mega pass
-
-| Gate | Status |
-|---|---|
-| World-detail ledger registration | COMPLETE |
-| Runtime HISM mega-pass source | IMPLEMENTED |
-| Bag End/Hobbiton hedge enclosure | IMPLEMENTED IN SOURCE |
-| Field boundaries / shelterbelts | IMPLEMENTED IN SOURCE |
-| Wooded-road layered vegetation | IMPLEMENTED IN SOURCE |
-| Ferry-bank reeds / approach framing | IMPLEMENTED IN SOURCE |
-| New synchronous heavy loading | NONE ADDED |
-| New NPC lifecycle owner | NONE; LivingWorldDirector remains authoritative |
-| Exact-head Pre-Unreal | PENDING |
-| Exact-head UE4.27.2 build | PENDING |
-| PIE/device/rendered visual/FPS acceptance | NOT CLAIMED |
-
-
-## 2026-10-03 - Frodo OGA Lowpoly Dummy technical result
-
-| Gate | Status |
-|---|---|
-| Exact CC0 archive receipt | PASS |
-| Exact Idle FBX identity | PASS: `00177d777d324e2eb807f5f94b573026c94226c6574267900213863a0dc8014d` |
-| FBX version | PASS: 7400 |
-| UE4.27 skeletal registration | PASS |
-| Reference bone count | PASS: 41 |
-| Smoothing-group gate | FAIL |
-| Bind-pose gate | FAIL |
-| Technical candidate | REJECTED |
-| Retry same payload | FORBIDDEN |
-| Deformation / retarget / AnimBP | BLOCKED |
-| Runtime Frodo promotion | BLOCKED |
-
-
-## 2026-10-03 - P1C01 natural route mega pass
-
-| Gate / Visible Domain | Status |
-|---|---|
-| Strategy | MAXIMUM-SAFE VERTICAL-SLICE GROWTH |
-| Runtime chapter | P1C01 ONLY |
-| Runtime writer | AShirePrototypeWorldBuilder |
-| Bag End -> Hobbiton route breakup | IMPLEMENTED IN SOURCE |
-| Worked-field verge / horizon breakup | IMPLEMENTED IN SOURCE |
-| Wooded-road enclosure | IMPLEMENTED IN SOURCE |
-| Ferry river-edge density | IMPLEMENTED IN SOURCE |
-| Additional repeated detail budget | UP TO 1,758 HISM INSTANCES |
-| New synchronous heavy loads | NONE |
-| New per-instance Tick | NONE |
-| New NPC lifecycle owner | NONE |
-| P1C02 runtime expansion | NOT OPENED |
-| Exact-head Pre-Unreal | PENDING |
-| Exact-head UE4.27.2 validation | PENDING |
-| PIE/device/rendered visual/FPS acceptance | NOT CLAIMED |
-
-
-## 2026-10-04 - Lead engineering delivery method
-
-| Control | Status |
-|---|---|
-| Professional lead method stored in Governor | IMPLEMENTED IN GOVERNANCE BRANCH |
-| Routine technical decisions owned by Lead Architect | ENABLED WITH CANON/PROVENANCE/PERF/GATE BOUNDARIES |
-| Root-cause blocker research loop | REQUIRED |
-| Official UE4.27 + mature OSS/expert evidence review | REQUIRED FOR NONTRIVIAL BLOCKERS |
-| Broad legal/open asset discovery | REQUIRED WHEN CURRENT SOURCE IS INSUFFICIENT |
-| Repairable FBX export normalization path | AUTHORIZED WITH PROVENANCE + STRICT RE-VALIDATION |
-| Large coherent visible production packets | DEFAULT |
-| Avoidable micro-commit / superseded-CI churn | PROCESS DEFECT TO REDUCE |
-| Visible Shire + human characters | PRIMARY DELIVERY TARGET |
-| Low-spec DX11 / 720p / 30 FPS architecture constraints | UNCHANGED |
-| PIE/device/visual/FPS claims without direct evidence | FORBIDDEN |
-
-## 2026-10-04 - Authored Shire mega wave B
-
-| Visible domain | Status | Evidence boundary |
-|---|---|---|
-| World-detail ledger registration | COMPLETE BEFORE CODE | P1C01 AUTHORED_SHIRE_MEGA_WAVE_B |
-| Runtime writer | PRESERVED | AShirePrototypeWorldBuilder only |
-| Bag End earth/hill framing | SOURCE-IMPLEMENTED | 4 resident HISM landform placements |
-| Hobbiton terrain terraces | SOURCE-IMPLEMENTED | 8 resident HISM slope placements |
-| Worked-field outer ridges | SOURCE-IMPLEMENTED | 6 resident HISM hill placements |
-| Wooded-road enclosure shoulders | SOURCE-IMPLEMENTED | 8 resident HISM slope placements |
-| Ferry near/far bank framing | SOURCE-IMPLEMENTED | 8 resident HISM river-bank placements |
-| Ferry final-approach stones | SOURCE-IMPLEMENTED | 18 non-collision production HISM instances |
-| New synchronous heavy loading | NONE ADDED | resident meshes only |
-| New per-instance Tick | NONE | existing HISM architecture |
-| P1C02 runtime expansion | NOT OPENED | visual P1C01 only |
-| Exact-head Pre-Unreal | PENDING | branch validation required |
-| Exact-head UE4.27.2 build | PENDING | branch validation required |
-| PIE/device/visual/pacing/FPS | NOT ACCEPTED | direct evidence still required |
-
-## 2026-10-04 - Presentation composition wave C
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| Wave C ledger registration | COMPLETE BEFORE CODE | presentation/material/vegetation rules captured |
-| Cultivated Bag End/Hobbiton foreground | SOURCE-IMPLEMENTED | 28 shrub HISM instances |
-| Wooded-road threshold canopy | SOURCE-IMPLEMENTED | 20 broadleaf HISM instances |
-| Wooded-road understory | SOURCE-IMPLEMENTED | 40 fern HISM instances |
-| Ferry-bank vegetation framing | SOURCE-IMPLEMENTED | 32 reed HISM instances |
-| Imported material preservation | PRESERVED | no production-mesh color MID override |
-| Morning light/fog/exposure refinement | SOURCE-IMPLEMENTED | existing low-cost actors/settings only |
-| Volumetric fog | DISABLED | low-spec policy preserved |
-| Planar reflection / scene capture | NONE | low-cost water path preserved |
-| External PBR intake | NOT REQUIRED YET | only after visual review proves gap |
-| Exact-head Pre-Unreal / UE4 build | PENDING | branch not opened for validation yet |
-| PIE/device/visual/FPS | NOT ACCEPTED | direct evidence required |
-
-| Authored Shire B/C source regression guard | SOURCE-IMPLEMENTED | `test_source_contracts.py`; locks budgets, call order, no-sync-load, no duplicate authority and P1C01-only boundary |
-
-## 2026-10-04 - Hobbit facade production cleanup
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| Hobbit facade geometry grouping | STATIC-AUDITED | 228 faces; no mixed face groups |
-| Authored material assignment | SOURCE-REPAIRED | Earth 12 / Wood door 48 / DoorGreen 48 / Wood windows 96 / Stone sills 24 faces |
-| Production duplicate primitive door/frame/sills | SOURCE-REMOVED | fallback-only when production facade unavailable |
-| Warm glass / knob / chimney-step accents | RETAINED BOUNDED | non-structural presentation accents |
-| UE4.27 static import/build | PENDING EXACT-HEAD | PR validation required |
-| PIE/device/rendered visual/FPS | NOT ACCEPTED | direct evidence required |
-
-| Authored Shire B/C P1C02 guard false-positive | TEST-REPAIRED / REVALIDATION PENDING | #1817 failed on prose comment only; guard now targets `TEXT("P1C02")` runtime token |
-
-## 2026-10-04 - Hobbit facade production cleanup
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| Hobbit facade geometry grouping | STATIC-AUDITED | 228 faces; no mixed face groups |
-| Authored material assignment | SOURCE-REPAIRED | Earth 12 / Wood door 48 / DoorGreen 48 / Wood windows 96 / Stone sills 24 faces |
-| Production duplicate primitive door/frame/sills | SOURCE-REMOVED | fallback-only when production facade unavailable |
-| Warm glass / knob / chimney-step accents | RETAINED BOUNDED | non-structural presentation accents |
-| UE4.27 static import/build | PENDING EXACT-HEAD | PR validation required |
-| PIE/device/rendered visual/FPS | NOT ACCEPTED | direct evidence required |
-
-## 2026-10-04 - KayKit rig technical bridge
-
-| Area | Status | Evidence boundary |
-|---|---|---|
-| Ledger registration before code | COMPLETE | P1C01 KAYKIT_RIG_TECHNICAL_BRIDGE |
-| Source | AUTHORIZED | KayKit official GitHub, CC0 |
-| Final Frodo likeness | NOT CLAIMED | technical bridge only |
-| Candidate budget | LOCKED | max 2 UE4 probes |
-| Hosted direct-source/license/hash gate | SOURCE-IMPLEMENTED | exact GitHub URLs + CC0 + SHA256 |
-| ZIP/path/size safety | SOURCE-IMPLEMENTED | bounded extraction |
-| FBX static rig markers | SOURCE-IMPLEMENTED | version/Geometry/Model/LimbNode/Skin/Cluster/animation |
-| UE4 skeletal hard gate | SOURCE-IMPLEMENTED | registration/bones/assets + smoothing/bind/UV rejects |
-| Runtime hard reference | NONE ADDED | modular Frodo fallback preserved |
-| Sync heavy runtime load | NONE ADDED | later integration remains soft/async |
-| Deformation / locomotion / AnimBP | BLOCKED | clean technical winner required |
-| Exact-head Pre-Unreal / UE4 | PENDING | PR validation required |
-| PIE/device/rendered visual/FPS | NOT ACCEPTED | direct evidence required |
-
-| KayKit bridge source-contract regression guard | SOURCE-IMPLEMENTED | `test_source_contracts.py`; locks CC0/direct-source, max-two budget, hard rejection reasons and non-runtime boundary |
-
-## 2026-10-04 - KayKit hosted path-filter correction
-
-| Check | Status | Evidence boundary |
-|---|---|---|
-| Official KayKit archive download | REACHED | run #1 progressed to archive scan |
-| Preferred FBX discovery | TOOLING-FAILED BEFORE CANDIDATE QC | path selector returned zero |
-| Root-cause correction | SOURCE-IMPLEMENTED | lowercase normalized archive path + explicit leaf split |
-| KayKit asset technical disposition | UNCHANGED / UNTESTED | no FBX was judged by run #1 |
-| Exact-head hosted/UE4 rerun | PENDING | corrected head required |
-
-## 2026-10-04 - KayKit character discovery hardening
-
-| Check | Status | Evidence boundary |
-|---|---|---|
-| KayKit rerun #4 candidate judgment | NOT REACHED | discovery failed before FBX static QC |
-| Character FBX discovery | SOURCE-HARDENED | all `/Characters/*.fbx` first, ranking second |
-| Preferred candidate order | PRESERVED | Rogue -> RogueHooded -> Mage -> Barbarian -> Knight |
-| Fallback ranking | BOUNDED | smallest static-pass character FBX only |
-| UE4 probe cap | UNCHANGED | max 2 |
-| Exact-head rerun | PENDING | corrected head required |
-
-## 2026-10-04 - KayKit direct raw FBX source correction
-
-| Check | Status | Evidence boundary |
-|---|---|---|
-| GitHub source ZIP FBX availability | PROVEN ABSENT | repository `.gitattributes` export-ignore for FBX directories |
-| Root cause | PROVEN | hosted run #8 + official `.gitattributes` |
-| Source delivery | SOURCE-CORRECTED | exact official raw `Rogue.fbx` + `RogueHooded.fbx` |
-| License snapshot | REQUIRED | official raw CC0 LICENSE.txt |
-| Raw source allowlist | SOURCE-IMPLEMENTED | exact KayKit repository prefix only |
-| Candidate format | FBX ONLY | max 2 |
-| Exact payload SHA256/static QC | PENDING RERUN | hosted gate |
-| UE4 technical gate | PENDING | no candidate judgment yet |
-| Deformation / runtime / PIE / device / visual / FPS | BLOCKED / NOT ACCEPTED | technical winner required first |
-
-## 2026-10-04 - KayKit exact technical result / runner anti-churn
-
-| Check | Status | Evidence boundary |
-|---|---|---|
-| Prior exact head | COMPILE-TESTED | `30b0392aa9abe5223d6adfe0958c93cd9cf28631`; Pre-Unreal #1836 SUCCESS + Unreal Build #1433 SUCCESS |
-| Rogue raw FBX | REJECTED TECHNICAL | 48 bones; MISSING_BIND_POSE_BONES + MISSING_SMOOTHING_GROUPS |
-| RogueHooded raw FBX | REJECTED TECHNICAL | 48 bones; MISSING_BIND_POSE_BONES + MISSING_SMOOTHING_GROUPS |
-| Same exact payload retry | FORBIDDEN / AUTOMATICALLY EXCLUDED | known SHA256 registry |
-| Direct-raw receipt schema bug | SOURCE-FIXED | obsolete `archive_sha256` reference removed |
-| Known-rejection-only hosted result | SOURCE-IMPLEMENTED | controlled `STATIC_BRIDGE_EXHAUSTED_KNOWN_REJECTIONS` |
-| Self-hosted UE4 reservation on zero new candidates | SOURCE-BLOCKED | job-level selected_count gate |
-| Modular Frodo fallback | PRESERVED | no failed candidate runtime promotion |
-| Deformation / AnimBP | BLOCKED | no clean technical candidate |
-| New exact-head Pre-Unreal | PENDING | anti-churn packet revalidation |
-| New exact-head Unreal build | PENDING ONLY IF CI CLASSIFIER REQUIRES | no runtime C++/asset change in this packet |
-| PIE/device/rendered visual/FPS | NOT ACCEPTED | no matching evidence |
-| KayKit anti-churn source-contract import error | TOOLING-FIXED / REVALIDATION PENDING | #1837 IndentationError only; existing class method declaration indentation restored |
-
-## 2026-10-04 - P1C01 Visible Shire Mega Wave D
-
-| Visible domain | Status | Evidence boundary |
-|---|---|---|
-| Ledger registration before code | COMPLETE | P1C01 VISIBLE_SHIRE_MEGA_WAVE_D |
-| Runtime writer | PRESERVED | AShirePrototypeWorldBuilder only |
-| Bag End hero composition | SOURCE-IMPLEMENTED | 52 HISM instances |
-| Hobbiton settlement depth | SOURCE-IMPLEMENTED | 48 HISM instances |
-| Worked-field edge rhythm | SOURCE-IMPLEMENTED | 42 HISM instances |
-| Wooded-road enclosure | SOURCE-IMPLEMENTED | 64 HISM instances |
-| Ferry authored framing | SOURCE-IMPLEMENTED | 62 HISM instances |
-| Ferry limited hero landmarks | SOURCE-IMPLEMENTED | 12 actors: landing/boat/rope/lamp silhouettes |
-| Repeated horizon cleanup | SOURCE-IMPLEMENTED | deterministic multi-frequency tree-line offsets |
-| New world authority | NONE | existing writer preserved |
-| New synchronous heavy load | NONE | resident meshes only |
-| New per-instance Tick | NONE | HISM/ISM architecture |
-| Actor-per-prop density wave | NONE | only 12 bounded Ferry hero actors |
-| P1C02 runtime expansion | NOT OPENED | P1C01 visual scope only |
-| Static source regression | SOURCE-IMPLEMENTED | budget/authority/order/no-sync-load guard |
-| Exact-head Pre-Unreal | PENDING | PR validation required |
-| Exact-head UE4.27.2 build | PENDING | PR validation required |
-| PIE visual/pacing/device/FPS | NOT ACCEPTED | direct evidence still required |
-
-
-## 2026-10-04 - P1C01 Shire Visual Finish Wave
-
-| Visible domain | Status | Evidence boundary |
-|---|---|---|
-| Ledger registration before code | COMPLETE | P1C01 SHIRE_VISUAL_FINISH_WAVE |
-| Runtime writer | PRESERVED | AShirePrototypeWorldBuilder only |
-| Terrain silhouette refinement | SOURCE-IMPLEMENTED | 16 HISM route shoulders |
-| Bag End final framing | SOURCE-IMPLEMENTED | 40 HISM placements |
-| Hobbiton property identity | SOURCE-IMPLEMENTED | 24 HISM placements |
-| Road/verge breakup | SOURCE-IMPLEMENTED | 40 HISM placements |
-| Woodland layering | SOURCE-IMPLEMENTED | 48 HISM placements |
-| Ferry final framing | SOURCE-IMPLEMENTED | 44 HISM placements + 4 bounded hero actors |
-| New texture/material memory | NONE | geometry/verge breakup only |
-| New world authority | NONE | existing writer preserved |
-| New synchronous heavy load | NONE | resident meshes/components only |
-| New per-instance Tick | NONE | HISM architecture |
-| P1C02 runtime expansion | NOT OPENED | P1C01 only |
-| Exact-head Pre-Unreal | PENDING | PR validation required |
-| Exact-head UE4.27.2 build | PENDING | PR validation required |
-| PIE visual/pacing/device/FPS | NOT ACCEPTED | direct evidence required |
-
-
-## 2026-10-04 - Human Character Production Wave 2
-
-| Gate | Status | Evidence boundary |
-|---|---|---|
-| New source family | SOURCE-REGISTERED | OpenGameArt Character Base Model / CC0 |
-| Source page + archive provenance | SOURCE-IMPLEMENTED | page + archive SHA256 captured by hosted factory |
-| Animated final format | FBX ONLY | .blend permitted only as hosted authoring intermediate |
-| Blender normalization | SOURCE-IMPLEMENTED | smoothing/armature/animation bake + exact normalized SHA |
-| Hosted deformation readiness | SOURCE-IMPLEMENTED | bones/weights/UV/bounds/joint-name coverage; not visual acceptance |
-| Self-hosted candidate budget | LOCKED | max 2 |
-| UE4 registration/bones/smoothing/bind/UV gate | SOURCE-IMPLEMENTED | unchanged hard rejects |
-| Technical winner | PENDING | exact-head run required |
-| Deformation visual acceptance | BLOCKED | clean technical winner first |
-| Idle/Walk/Run retarget | BLOCKED | clean deformation readiness first |
-| AnimBP | BLOCKED | locomotion proof first |
-| Runtime Frodo promotion | BLOCKED | soft/async only after all gates |
-| Modular fallback | PRESERVED | current runtime remains safe |
-| PIE/device/rendered visual/FPS | NOT ACCEPTED | direct evidence required |
-
-## 2026-10-04 - Human Wave 2 deform-only + runner dedup
-
-| Gate | Status | Evidence boundary |
-|---|---|---|
-| Hosted source factory baseline | PASS | run #1 on `8afa53cdee648cef196b914c5123d3e38677fc2c`; archive/provenance + Blender artifact captured |
-| Baseline preferred source | NEEDS NORMALIZATION ROOT FIX | 443 total bones; 1,787 weighted / 442 zero-weight |
-| Baseline direct-FBX source | HOSTED QUALITY REJECT TARGET | 656 total bones; 24 weighted / 2,205 zero-weight |
-| Rigify control/mechanism bones | PROVEN PRESENT | ORG/MCH/DEF strings in normalized artifact |
-| Deform-only FBX export | SOURCE-IMPLEMENTED | `use_armature_deform_only=True`; leaf bones off |
-| Deform-bone count receipt | SOURCE-IMPLEMENTED | hosted readiness JSON |
-| Zero-weight ratio pre-UE4 gate | SOURCE-IMPLEMENTED | maximum 0.35 |
-| Duplicate generic Unreal runner reservation | SOURCE-FIXED | Wave2-only delta classifies `inherit`; dedicated job owns Editor build + UE4 gate |
-| Fresh hosted normalization | PENDING | new exact head required |
-| UE4 skeletal technical winner | PENDING | unchanged hard gates |
-| Deformation / locomotion / AnimBP | BLOCKED | clean technical winner required |
-| Runtime Frodo promotion | BLOCKED | existing soft/async subsystem only after all gates |
-| PIE/device/rendered visual/FPS | NOT ACCEPTED | direct evidence required |
-
-
-## 2026-10-04 - Human Wave 2 linked USkeleton probe correction
-
-| Gate | Status | Evidence boundary |
-|---|---|---|
-| Rebase onto current develop | COMPLETE | base `3d0990bec48be182b291e266d321408c5d9ea034` |
-| Prior skeletal registration | EVIDENCED / NOT YET WINNER | run #2: registered, 161 reference bones |
-| Prior smoothing/bind/UV warning gate | CLEAN IN RUN #2 | no matching hard-warning reasons reported |
-| Skeletal mesh package | EVIDENCED | `SK_FRODO.uasset` existed |
-| Linked USkeleton probe | SOURCE-FIXED | authoritative `USkeletalMesh::GetSkeleton()` path |
-| Guessed skeleton filename requirement | REMOVED | no `SK_FRODO_Skeleton.uasset` hard dependency |
-| PhysicsAsset | SEPARATE SANITY | not hard import failure; capsule owns runtime collision |
-| Fresh exact-head hosted + UE4 gate | PENDING | new SHA required |
-| Deformation / retarget / AnimBP | BLOCKED | clean technical winner first |
-| PIE/device/rendered visual/FPS | NOT ACCEPTED | direct evidence required |
-
-## 2026-10-04 - Human Wave 2 technical winner
-
-| Gate | Status | Evidence boundary |
-|---|---|---|
-| Exact-head Wave2 run #3 | SUCCESS | `c0ad882792ccef8c9e639e4eb1d7c3e9e6ce5e90` |
-| Normalized winner | TECHNICAL PASS | `eff0e79980f90d49deada0aa37ad8be5975a86330348e4ae6fa49d3171fad570` |
-| Skeletal registration | PASS | yes |
-| Reference bones | PASS | 161 |
-| Linked USkeleton | PASS | `/Game/Production/Characters/Rigs/FRODO/SK_FRODO_Skeleton.SK_FRODO_Skeleton` |
-| Import batch | PASS | 377 files / 0 failures |
-| Smoothing / bind / UV hard gates | PASS | no matching rejection reasons |
-| PhysicsAsset | SEPARATE SANITY | small-bone auto-generation warning; not skeletal rejection |
-| Dedicated trigger includes commandlet | SOURCE-HARDENED / EXACT-HEAD PENDING | prevents commandlet-only probe drift |
-| Transient cleanup | SOURCE-HARDENED / EXACT-HEAD PENDING | generated untracked Frodo uassets only |
-| Deformation + retarget | NEXT | technical predecessor now satisfied |
-| AnimBP / runtime promotion | BLOCKED | deformation/retarget evidence required first |
-| PIE/device/rendered visual/FPS | NOT ACCEPTED | no direct evidence |
-
-
-## 2026-10-04 - P1C01 Shire Settlement Completion Mega Packet
-
-| Settlement area | Status | Evidence boundary |
-|---|---|---|
-| Runtime writer | PRESERVED | `AShirePrototypeWorldBuilder` only |
-| Bagshot Row visual smials | SOURCE-IMPLEMENTED | 8 turf/facade pairs; visual clusters only |
-| Hobbiton property boundaries | SOURCE-IMPLEMENTED | hedge + fence HISM completion |
-| Domestic gardens / mail / laundry | SOURCE-IMPLEMENTED | garden arches, flower boxes, mailboxes, wash lines, shrubs |
-| Village lanes / verge breakup | SOURCE-IMPLEMENTED | path-stone + grass HISM |
-| Village common / market | SOURCE-IMPLEMENTED | market stalls, produce stands, wells, benches |
-| Party Field completion | SOURCE-IMPLEMENTED | 8 production picnic-table instances; existing Party Tree retained |
-| Orchard / farm work | SOURCE-IMPLEMENTED | 12 orchard trees + hay/plough/gate/ladder detail |
-| Water / mill landmark | SOURCE-IMPLEMENTED | bounded mill-wheel accent; existing mill/bridge preserved |
-| Lived-in clutter | SOURCE-IMPLEMENTED | barrels, crates, carts, loaded carts, lamps, signs |
-| Native HISM budget | 160 | existing components, explicit culling |
-| WorldDetailCluster instance budget | 185 | <=24 bounded cluster actors, no collision, zero Tick |
-| New per-prop actor density | NONE | cluster/HISM only |
-| New synchronous heavy load | NONE | resident production meshes only |
-| Population / NPC / quest authority | UNCHANGED | LivingWorldDirector / NPCContext / QuestSubsystem |
-| P1C02 runtime | NOT OPENED | P1C01 only |
-| Exact-head Pre-Unreal / UE4 compile | PENDING | PR validation required |
-| PIE visual walkthrough | NOT ACCEPTED | direct human evidence required |
-| Target-device 720p / 30 FPS | NOT ACCEPTED | measured device evidence required |
-
-
-## 2026-10-04 - P1C01 Shire Settlement Canon Finish B
-
-| Settlement canon detail | Status | Evidence boundary |
-|---|---|---|
-| #314 predecessor | COMPILE-TESTED / MERGED | head `3ee80ffe...`; Pre #1849 + Unreal #1446 SUCCESS; merge `b3f31134...` |
-| Ivy Bush roadside inn identity | SOURCE-IMPLEMENTED | bounded cottage + clustered sign/bench/barrels |
-| Number 3 Bagshot Row | SOURCE-IMPLEMENTED | visual turf/facade/mailbox anchor; quest anchors unchanged |
-| Party special entrance | SOURCE-IMPLEMENTED | 10 HISM step stones + setup/celebration gate variants |
-| Party open-air kitchen | SOURCE-IMPLEMENTED | cooking stand + table + canopy in setup/celebration state arrays |
-| Mill yard work detail | SOURCE-IMPLEMENTED | 12 clustered sacks/crates/barrels |
-| Bywater-road avenue | SOURCE-IMPLEMENTED | 12 trunk + 12 canopy cluster instances |
-| Green Dragon in Hobbiton | FORBIDDEN / NOT PLACED | canonical Bywater ownership preserved |
-| New synchronous heavy load | NONE | resident soft-path resolution only |
-| Per-instance Tick | NONE | existing HISM / WorldDetailCluster |
-| P1C02 runtime | NOT OPENED | P1C01 only |
-| Fresh exact-head Pre-Unreal | PENDING | PR validation required |
-| Fresh exact-head Unreal build/package | PENDING | PR validation required |
-| PIE/device/human visual/FPS | NOT ACCEPTED | direct evidence required |
-
-
-### Closed PR #315 selective salvage
-
-| Item | Disposition | Reason |
-|---|---|---|
-| Party Field boundary shell | RETAINED IN CANON FINISH B | unique source-grounded field read |
-| Water/mill reeds + stepping stones | RETAINED IN CANON FINISH B | unique mill/Water environmental read |
-| 3 Bywater-facing cottages | RETAINED IN CANON FINISH B | unique settlement-edge silhouette |
-| Duplicate Bagshot homes | SUPERSEDED | #314 + Number 3 anchor already stronger |
-| Duplicate clutter / lamps / mail / wash | SUPERSEDED | #314 already covers with clustered/limited detail |
-| Duplicate orchard/farm density | SUPERSEDED | avoid unnecessary low-spec density growth |
-| Canon Finish B visual budget | LOCKED MAX 153 | 96 HISM + 45 cluster + 4 landmarks + 8 state actors |
-| Fresh exact-head validation | PENDING | required after salvage commit |
-
-
-## 2026-10-04 - P1C01 Shire settlement source closure
-
-| Closure area | Status | Evidence boundary |
-|---|---|---|
-| Settlement Completion #314 | COMPILE-TESTED / MERGED | head `3ee80ffe...`; Pre #1849 SUCCESS; Unreal #1446 SUCCESS; merge `b3f31134...` |
-| Canon Finish B #318 | COMPILE-TESTED / MERGED | head `c9b27bde...`; Pre #1868 SUCCESS; Unreal #1465 SUCCESS; merge `437db07c...` |
-| Bag End / Hill | SOURCE-COMPLETE | hero composition + garden/property framing |
-| Bagshot Row / Number 3 | SOURCE-COMPLETE | row + dedicated Gamgee visual anchor |
-| Party Field | SOURCE-COMPLETE | Party Tree + boundary + special entrance + state-aware kitchen/social detail |
-| Hobbiton village common | SOURCE-COMPLETE | market/well/benches/produce/social space |
-| Ivy Bush | SOURCE-COMPLETE | bounded Bywater-road inn identity |
-| Water / mill / wheel / bridge | SOURCE-COMPLETE | landmark + working-yard + water-edge detail |
-| Gardens / hedges / household life | SOURCE-COMPLETE | clustered/HISM domestic detail |
-| Orchard / working-field transition | SOURCE-COMPLETE | trees, hay, ploughs, gates, ladders |
-| Bywater-road avenue / facing edge | SOURCE-COMPLETE | bounded road framing + three edge cottages |
-| Green Dragon in Hobbiton | NOT PLACED | Bywater ownership preserved |
-| World construction authority | PRESERVED | AShirePrototypeWorldBuilder only |
-| New synchronous heavy loading | NONE | resident/soft pipeline preserved |
-| P1C02 runtime | NOT OPENED | predecessor Gate 6/7 still required |
-| Local production bootstrap | REQUIRED | `Scripts/bootstrap_local_p1c01_visuals.cmd` |
-| Human PIE/rendered visual acceptance | PENDING | direct owner evidence required |
-| Target-device 720p / 30 FPS | PENDING | measured device evidence required |
-
-
-## 2026-10-04 - Frodo targeted animation intake Wave 3
-
-| Gate | Status | Evidence boundary |
-|---|---|---|
-| Frodo skeletal technical winner | PASS / PRESERVED | `eff0e799...`; 161 bones + linked USkeleton |
-| Hero-mesh hunting | CLOSED | do not reopen while technical winner remains valid |
-| Animation source | SOURCE-REGISTERED | Quaternius Universal Animation Library / CC0 |
-| Animation warehouse scope | BOUNDED | one pack only |
-| Warehouse classifier | SOURCE-IMPLEMENTED | `WH_STAGE_QUATERNIUS_ANIM` |
-| Broad Quaternius support staging | NOT REQUESTED BY TARGETED PATH | avoids unrelated pack churn |
-| Required initial clips | LOCKED | Idle / Walk / Run |
-| Receipt/SHA256/public-download proof | PENDING | Warehouse execution after merge |
-| FBX clip inventory | PENDING | staged archive required |
-| Retarget compatibility | BLOCKED | valid clip inventory first |
-| Deformation review | BLOCKED | technical winner + selected clips |
-| AnimBP locomotion | BLOCKED | retarget/deformation proof first |
-| Async runtime Frodo promotion | BLOCKED | AnimBP/rig bundle proof first |
-| PIE/device/rendered visual/FPS | NOT ACCEPTED | direct evidence required |
-
-
-## 2026-10-04 - Frodo static deformation stress gate
-
-| Gate | Status | Evidence boundary |
-|---|---|---|
-| Input candidate | EXACT-RUN UE4 WINNER ONLY | same workflow artifacts; no new mesh hunt |
-| Required limb joints | SOURCE-GATED | pelvis/spine/head + bilateral arm/hand/leg/foot families |
-| Limb hierarchy | SOURCE-GATED | descendant-chain sanity |
-| Shoulder stress | SOURCE-IMPLEMENTED | +/-45 degrees |
-| Elbow stress | SOURCE-IMPLEMENTED | 75 degrees |
-| Knee stress | SOURCE-IMPLEMENTED | 65 degrees |
-| Hand/foot stress | SOURCE-IMPLEMENTED | 20 degrees |
-| Locomotion combined stress | SOURCE-IMPLEMENTED | deterministic numerical pose |
-| Catastrophic deformation guard | SOURCE-IMPLEMENTED | finite vertices + bounds/displacement thresholds |
-| Human rendered deformation acceptance | NOT ACCEPTED | direct visual review required |
-| Idle/Walk/Run retarget | BLOCKED | targeted animation intake + compatibility proof |
-| AnimBP/runtime promotion | BLOCKED | retarget + visual deformation first |
-
-
-### 2026-10-04 - Wave3 zero-payload guard root fix
-
-| Guard | Status | Evidence boundary |
-|---|---|---|
-| Pre-Unreal #1872 | FAIL / ROOT-CAUSED | stale exact-count regression only |
-| Support Quaternius manual queue | REQUIRED | one explicit manifest call |
-| Animation-only manual queue | REQUIRED | one explicit targeted manifest call |
-| Hero-candidate manual queue | REQUIRED | one explicit manifest call |
-| Broad continue-on-error | FORBIDDEN / PRESERVED | fail-closed policy unchanged |
-| Fresh exact-head validation | PENDING | new PR head required |
-
-
-## 2026-10-04 - Light branch hygiene wave
-
-| Item | State |
-|---|---|
-| Reviewed dead refs queued | 6 |
-| Active P1C01 closeout branch | PRESERVED |
-| develop / main / archive | PRESERVED |
-| Edoras prep refs | PRESERVED |
-| Runtime or Gate 6/7 effect | NONE |
-
-
-## 2026-10-12 - P1C01 cloud-source 54 FBX candidate (source-only)
-
-- Current develop cloud source producer exports 22 modular static mesh families x LOD0/LOD1 = 44 binary FBX; target in this candidate is 27 x 2 = 54. The five newly prepared families are FerryLanding, MooringPost, WaymarkPost, PartyBannerFrame and GardenStoneBorder, bounded to the already-authorized Shire / Party Field / Bucklebury Ferry visual needs.
-- Use the existing CloudAssetBuild Blender generator, material receipt, 28-region original PNG/ORM pack, UCX collision and Blender FBX reimport; no new source manager or runtime owner. Open passage and walkable ferry deck retain narrowly scoped UCX collision geometry.
-- Fail closed on 54 distinct physical files, FBX binary version 7400, exact SHA256/bytes, real reimport geometry and UVs, and 27 x 2 identity coverage. This is a candidate until exact-head GitHub-hosted Blender job and artifact are observed.
-- Warehouse promotion, UE4 importer / Content/Production persistence, package/PIE, screenshots, DX11 device FPS, human visual and Gate 6/7 acceptance remain separate and UNPROVEN. One warehouse writer and one UE4 runtime writer remain authoritative. No P1C02 runtime activation.
-
-
-## 2026-10-12 â€” Cloud138 warehouse closed and P1C01 Unreal intake candidate
-- GitHub develop 71efe55668f065117f42d0959c2867f3dfe0eacc. Warehouse Run 38295455001 SUCCESS; log: CLOUD_WHOLEGAME_PERSISTENT_WAREHOUSE_PASS fbx=138 shire=82 regional=56 png=36 regions=28.
-- Exact receipt artifact 11767989049: 177 payload files (138 FBX + 36 PNG + 3 source receipts), summed payload 13,095,116 bytes, SHA-pinned against source artifact 11767251532. 28/28 canonical region support packs are source-only, not playable.
-- Cloud138 proposed Unreal bridge: 41 Shire LOD0 meshes + 41 LOD1 sidecars + 36 PNG are eligible; 56 regional FBX remain warehouse-only. Import via existing ShireProductionImport under isolated /Game/Production/World/Shire/Cloud138 and /Game/Production/Materials/Cloud138. A further UE4 editor post-import/second-process readback attempts 41 static mesh packages, 36 texture packages and 12 PBR instances (89 **TARGET**, not observed), plus one prior master-parent dependency, followed by hash-receipted D: persistence. Source identity is original project material, not external licensing.
-- LOCAL STATIC-VALIDATED only: genuine source archive + Warehouse SHA receipt reassembled offline and 118 source files staged (41 LOD0, 41 LOD1, 36 PNG; 0 regional runtime). Six isolated safety regression cases passed. NOT COMPILE-TESTED for the new bridge, NOT UE_IMPORTED_PERSISTED; 89 is a candidate target until exact-head Windows Unreal process and receipt demonstrate it.
-- No Cloud138 mesh is counted as world-placed; no current P1C01 screenshot, quest/collision/nav/PIE/device FPS evidence from the new batch. Gate 6/7 remains OPEN; no P1C02+ runtime. Maintain one warehouse writer and one UE runtime writer. Owner-facing source total stays 138 FBX, not 278; no new net FBX was produced this session.
-- Engineering decision: prioritize converting 41 finished Shire source families into durable UE4 packages and player-visible Bag End-to-Ferry placement before pursuing aspirational 140 extra FBX. Avoid creating a parallel importer or claiming regional visual progress.
-
-## 2026-10-12 â€” Whole-game 140-FBX original source wave (CANDIDATE)
-- Source-only hosted Blender wave proposes 70 distinct functional modular families across the 28 Governor-authorized production regions, each with authored LOD0/LOD1, UV and UCX FBX binary 7400; real Blender reimport plus independent SHA256 identity QC is required by `.github/workflows/cloud-wholegame-140-source.yml`.
-- This is NOT 140 produced FBX before exact-head hosted workflow and artifact receipt. Prior baseline remains 138 source FBX total; target 278 if all 140 are new unique and PASS. Previous session increment 56; prospective incremental growth +150%. Asset quality and Shire playable closure outrank the numeric target.
-- Warehouse transfer remains exclusively single writer; no second permanent-storage writer, no Unreal runtime promotion, no P1C02+ activation. External content rights unaffected (original procedural static source). P1C01 Gate 6/7 remains open; no new PIE/device/visual proof.
-- New gameplay/world ideas are not introduced by this wave; only support geometry categories (route, boundary, work, environment, wayfinding) constrained to existing regional production packets. Any physical world placement still requires source-to-runtime gate.
-
-## 2026-10-13 â€” Cloud-only CC0 Poly Haven material intake strengthening
-- Strengthened existing hosted Poly Haven 37 approved texture source lane; four independent hosted shards use documented Poly Haven API and verify real 1K PNG BaseColor, NormalDX, and packed ORM with SHA256 and CC0 source provenance. Network failures quarantine individual sources; no unverified files count.
-- Extra fail-closed QC demands complete triplets, individual original-map SHA/source URL, approved official CC0 attribution, and exact observed output count. PR run artifact required before any materials are counted as produced. Intended for existing 28-region source preparation, not runtime activation.
-- New Windows UE4 writer jobs: none. P1C01 Gate 6/7 open; .uasset count and visual placement unchanged by this source-only lane.
-
-## 2026-10-13 â€” P1C01 56-FBX detailed-route source wave (candidate until QC)
-- New hosted-only Blender batch proposes 28 distinct Shire support-detail families, dual LOD0/LOD1, actual binary FBX7400, authored UCX shape sidecars, UV+polygon reimport and hash QC, with permanent high-quality runtime asset admission still gated. Includes entry/door hardware, interiors, orchards/gardens, roads, mill and ferry. Does NOT implement or claim animated working doors, physics-walkable ferry or playable route; they require Unreal and PIE after Windows Runner returns.
-- Output target: 56 net-new FBX. 140 prior FBX + 108 new Poly Haven PNG already generated and QC-passed in different lanes; additive per-session growth is a source-pipeline goal and never a claim of visual completion.
-- Only accepted when GitHub exact-head `SHIRE_DETAIL_56_FBX_QC_PASS` and file artifact exist. Warehouse persistence, Content/Production `.uasset`, in-world placement, 720p 30FPS, Gate6/7 are separate and not proven here.
-
-## 2026-10-13 â€” Conflict-free FerryLanding collision source candidate (#435)
-- Reconciled #435 with develop using a non-force branch merge; carried only the scoped FerryLanding UE4.27 simple Box collision fallback and focused source regression. Excluded the duplicate world-event HUD change, which belongs exclusively to #455, to prevent competing edits.
-- Fail closed if the UE EditorStaticMeshLibrary.add_simple_collisions return index is negative, or if simple collision count remains zero. Only FerryLanding with zero imported simple collision in non-reopen editor mode may receive the fallback; other walkable assets retain strict required collision checks.
-- The repair path still requires actual UE4.27 Python commandlet execution, physical .uasset save/reopen/collision receipt, P1C01 ferry traversal/navigation, target-device DX11 720p FPS and human visual acceptance. No Gate 6/7 closure or fourth-expansion freeze.
-2026-10-14 PES-002 RENDER-REJECTED COMPOSITION ROOT-CAUSE REPAIR: Exact-head PR #477 Unreal Run 38599254268 succeeded for UE4.27.2 compile, import/rehydration, Automation, startup and three mandatory 1280x720 captures; artifact 11913641348 digest sha256:066d0e4addd738639f9681dff57ab9db25060b7a01c30541d6c0967fc63aec0b. Human inspection REJECTED all three images: Bag End remained a flat proxy facade, cameras were too close, dense repeated hedge/grass/prop layers obscured the entrance, and modular characters were obvious placeholders. Runtime log independently confirmed Frodo/Bilbo/Gandalf and other named rigs packages-missing with fallback=modular. Bounded repair moves the decorative mound farther behind and reduces it, widens all three proof views, reduces only Bag End hero detail/density layers while preserving quest anchors, blocking facade/step and population ownership, and adds exact source regression assertions. Character final-art remains blocked on real skeletal FBX packages and is not claimed fixed. STATIC-VALIDATED locally; exact-head UE rebuild/new screenshots/traversal required. PES-002 OPEN; PES-003 locked.\n\n
-
-## 2026-10-14 â€” PES-002 fresh real-render root-cause: west-facing round geometry (PR #477 follow-up)
-- Exact source observed: PR #477 head `c6f55835a4b82c52e765aee7ad247d1a5e67f51b`, Unreal Build Run [38604332835](https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/38604332835) SUCCESS (engine build/import/automation/headless startup/capture), real screenshot Artifact `11915428403`, archive SHA256 `9a0f79f1478f582aa14c8a9c8a2c48d2ae87486e9e4d626b04ad68aef78aaac7`. The 3 captured 1280Ã—720 PNG views were visually inspected: REJECTED due to flat/cluttered facade and simplistic terrain/NPCs. Image evidence alone does not prove traversal.
-- Root cause confirmed in `SpawnHobbitHole`: six CylinderMesh calls used yaw 90 around world Z; Engine cylinder has circular faces perpendicular to local Z, so yaw leaves doors/rings/glass horizontally oriented. Reorient ONLY six Hobbit-hole round details to pitch 90, making the circular fronts parallel to the west-facing YZ facade. No quest anchor, population controller, player collision or asset loading changed. Add focused source regression test.
-- Runtime log evidence: `CharacterRigStreaming: unavailable id=Frodo reason=packages-missing fallback=modular retry=bounded`; analogous lines for Bilbo/Gandalf and neighbors. This code fix does **not** manufacture rigged characters or close their asset-source/import/runtime chain.
-- Validation boundary: SOURCE PATCH / STATIC source-contract regression added; fresh exact-head UE4.27.2 build, renewed actual screenshots and traversal/collision, DX11 720p target FPS/VRAM and visual acceptance remain REQUIRED. PES-002 OPEN; PES-003 locked.
-
-## 2026-10-14 â€” Owner-started Frodo-first character source work (PES-002)
-- Owner approved immediate real-character production preparation alongside PES-002; this is not opening PES-003, PES-009 or PES-010 runtime. Governor: `pes002_character_visual_pilot_2026_10_14`; source packet: `Data/P1C01CharacterVisualPilotV1.json`.
-- Existing Frodo technical rig basis and FBX Idle/Walk/Run exporter are reused. Source edit in `Tools/CloudAssetBuild/frodo_locomotion.py` handles DEF/Mixamo-style left/right bone naming and rejects differing reimported skeleton signatures between the three clips. New regression `Tools/CloudAssetBuild/test_frodo_locomotion.py` is wired to focused hosted workflow.
-- The last actual PES-002 runtime render still showed modular placeholders; `CharacterRigStreaming` reported packages-missing. No finished face/material, imported `SK_Frodo`, Animation Blueprint, deformation/retarget quality, PIE, device FPS, or rendered Frodo acceptance is asserted from this source edit. PES-002 remains OPEN, PES-003 LOCKED.
+YªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éí×{÷Tèµ©hºÚn¶X§zÍLŒ‹LLLMTËLˆÐSQTKQU’QSÑH“ÓÕPÐUTÑHT“ÈPÐQHÓÔ”‘PÕSÓŽˆ[œÜXÝY™YHXÝX[QMŒËŒˆLŽÌŒ‘ÜÈœ›ÛH[ˆÎMŒÌÌŒMÍ\Y˜XÝLNLŒNMML‹ÒLMˆšY]ÌÌLŽŒQMPMÎÌÐ‘QMPÐÑŽPQMPŒŒMÌÐŽLMÍŒÐPÐNLŒŽÈšY]ÌHQNLÌÍŽPŒMÎQNLQ‘LŒ‘LQLÍÍÌMÎNMQLQŒQÎLNQÌÎ‘‘HÈšY]Ìˆ‘Í‘MPMPLLNLÎÍÌLLÍQPŒŽÐŒÑPQÌPÍNLNPÎQLLŽÑPÐPŽKˆ™X[[XYÙ\ÈÚÝÈ™\ÝÜ™Y^\™\ËØÛÛÜˆ]Ý™\œÚ^™YÜ™Y[ˆ[Ý[™Y\È˜XØYK\È[œÙH›Ü™YÜ›Ý[™›ÞH™[˜Ù\ËÓ”ÜÎÈ›Èš\ÝX[XØÙ\[˜ÙKˆ›ØÝ\ÙYÊÊÈØ[™Y]HÚYÈÛ›H˜YÈ[™	ÜÈX\[Ý[™
+ÌŒÛH™Z[™]ÈÙ\ÝY˜XÚ[™È˜XØYK™YXÙ\ÈX\ÜËÚ]™\È\›È\™ˆ›Û˜›ØÚÚ[™ÈÛÛ\Ú[Û‹™]Z[œÈ^\Ý[™È›ØÚÚ[™È˜XØYKÜÝÜžH[˜ÚÜœË[™YÈH™XÛÙÛš^˜X›HÝËXÛÜÝÜ™Y[ˆ›Ý[™ÛÜˆÚ[ÝY]H[™Ý]XÈÛÝ\˜ÙH™YÜ™\ÜÚ[Û‹ˆ\È\ÈHØ[™Y]H[™[™È^XÝZXYZ[™]Èš\ÝX[[XYÙ\È[™™X[˜]™\œØ[ØÛÛ\Ú[Ûˆ]šY[˜ÙNÈ\ÚXØ[]]Ü™Y˜XØYHY\ÚÛX]\šX[[™\™Ù]Y]šXÙHÌ”ÈÝ[›ÝXØÙ\Yˆ›ÈTËLË‚‚ŒŒ‹LLLMTËLˆ’TÕPS‘PST•S•SQHQ‘PÕ‘TRTˆÐU‘Nˆ^XÝZXYˆÍÍÈ[ˆÎMŒMÌMÌL›Ý™YQMŒÈÊÊÈZ[LÛÝYLÎ™\ÝÜ™YX\ÜÙ]XÚØYÙ\Ë™YH]]ÛX][Ûˆ\ÝËXY\ÜÈÝ\\[[YHLŽÌŒ˜YÑ[™Y\™XÝYØÜ™Y[œÚÝÒLMˆPÍÑÎQNŒ‘ŽM‘ŽÌ‘‘MÑMÑÎÑQLŽŽLÑLÎMÌÑŒÌÌPNNLÍˆ[™L‹ÌLˆÜ›Ý[™Y˜YÈ[™ÛÝYLÎ›ÜËˆ[X[ˆ^[Z[˜][ÛˆÙˆXÝX[[XYÙH‘R‘PÕQš\ÝX[ˆ›ÝYÚÜ™^HZ[[™ÜËÝËY]Z[”ÜËX]š[HØØÛYY\›È˜XØYKˆHØÜ™Y[œÚÝÙÈ\™XÝHY[YšYYWÔ›ÙXÝ[Û‘›ÛXYÙHÚY\ˆY˜][˜[˜XÚÈYHÚ[\QÜ˜\ÜÕÚ[™™\]Z\™YY][Û˜[ÔÈZ\ÜÚ[™Ë[™›ÝWÔ›ÙXÝ[Û”Ý\™˜XÙKÓWÔ›ÙXÝ[Û‘›ÛXYÙH•\ÙYÚ][œÝ[˜ÙYÝ]XÓY\Ú\ÈZ\ÜÚ[™Ëˆ™\Z\ˆØ[™Y]H[ÙYšY\È^\Ý[™ÈQHY]Üˆ[\ÜX]\šX[X\Ý\œÈ
+[˜ÛY[™È\œÚ\ÝY\ÜÙ]ÊHÈYX[™]ÜžHY][Û˜[ÔÈ™\›È[œ][˜X›H[œÝ[˜ÙYX]\šX[\ØYÙKØ]™HÚ[™ÙYX\Ý\ˆX\ÜÙ]ÈØ\\™\È™YH˜YÈ[™[™Û\ÈÈ]›ÚYXØÙ\[™ÈHZ\ÛXY[™ÈØØÛ\Ú[Û‹ˆ\È™\Z\ˆ]\Ý™H™XÛÛ\[Y[™[œÜXÝYÛˆH‘UÈÚ[™ÝÜÈ[ŽÈ›Èš\ÝX[Ý˜]™\œØ[ÔQKÙ]šXÙHXØÙ\[˜ÙHÛZ[H[™TËLˆ™[XZ[œÈÔS‹‚‚ŒŒ‹LLLMTËLˆ“ÓÕPÐUTÑHÒH‘UTÕØ[™Y]NˆˆÍÍÈ^XÝZXYYŽYNÈ˜Z[Y™KU[œ™X[[ˆÎMŒMÌŽM]ËLMÌˆ™XØ]\ÙH™YHÚÞSYÚ™XØ\\™TÚÞJ
+HØ[Èš[Û]YH^\Ý[™È™XÚ\Ù[HÛËXØ[[˜\šX[ˆ›ÛÝXØ]\ÙHÚ[™ÙH[Ý™\ÈÝ\\™XØ\\™H^Û\Ú]™[HÈHY™\œ™YÛ™K\ÚÝÜÝ\ÚÞKZ[š][Y\‹™]Z[œÈH]]Ü™Y]Y\ÝÜÝÜžH™XØ\\™K™[[Ý™\È[[YYX]H\XØ]H[™YÈ^XÝÛÝ[™YÜ™\ÜÚ[ÛˆÈH›ØÝ\ÙYTÈÛÛ˜XÝ\Ýˆ›ÈØ]Hž\\ÜÎÈ™]\Ý™\]Z\™YˆQHZ[[ˆÎMŒMÌÌMLØ\ÈÝ[[ˆ›ÙÜ™\ÜÈ]XYÛ›ÜÚ\ËˆTËLˆÔS‹‚‚ŒŒ‹LLLMTËLˆ“ÓÕPÐUTÑHS‘ÐSQTKÓQÒS‘ÈÓÔ”‘PÕSÓˆÐS‘QUH
+PËTTËT“ÓÕLŒŒLM
+NˆÛÝ\˜ÙH]Y]Ùˆ]™[ÜÙŒØÌÈ›Ý[™š[ÜˆYÚ™\ÔÚÝ\ÙYHÜ™[˜\žH^Y\ˆšY]ÈÚ]Ý]Z[Z[™È]˜YÈ[™ÈH™XÙZ]™YLŽÌŒ[œ™X[[XYÙHÚÝÜÈ\šËÝ[œÛ\ÚY\˜Ú]XÝ\™H[™›ÈXØÙ\Y˜YÈ[™˜XØYKˆ\ÈØ]™HYÈÜZ[ˆ›ÛÙ‹[Û›H˜YÈ[™Ø[Y\˜KÙœ˜[Z[™ÈY\ˆ[[YHÛÜ›[š]X[^˜][Û‹[^YYØ\\™H[™ÝšXÝ‘ËÛÙËÙ[Y[œÚ[ÛˆÚXÚÜÎÈ˜Z\Ù\È˜\Ù[[™HÝ[‹ÜÚÞ[YÚÙ^ÜÝ\™H[™YÈY™\œ™YÚÞH™XØ\\™HÈY™\ÜÈ™[X]\™H[HÚÞH[[Z[˜][Û‹ˆHØ[Y\˜H\ÈØ]YžHTTÌ•š\ÝX[›ÛÙˆÝ]ÚYHÚ\[™È[™™]™\ˆ[Ý™\ÈHØ[Y\^H^Y\ˆÜˆÚ[™Ù\È]Y\Ý˜]‹”ÈÜˆØ]™HÝÛ™\œÚ\ˆ^XÝZXYÜÝYÝ]XË™X[QMŒËŒˆÊÊÈZ[[™H‘UÈØÜ™Y[œÚÝÝ˜]™\œØ[›ÛÙˆ]\ÝÝ[\ÜËˆ›È\ÚXØ[™]È–Ô‘ËÛX]\šX[[\Ü›Èš\ÝX[ÔQKÙ]šXÙKÝ˜]™\œØ[XØÙ\[˜ÙK[™›ÈØ]H‹ÍÈÛÜÝ\™H\™HÛZ[YYˆXÝ]™HTËLˆ™[XZ[œÈÔSŽÈÈ›ÝÜ[ˆTËLË‚‚ŒŒ‹LLLMTËLˆ’TÕPSU’QSÑHTSS‘HØ[™Y]NˆYYØÜš\ËØØ\\™WÜ\Ì—Ø˜Y×Ù[™Ýš\ÝX[œÌHÈ][˜Ú™X[QMY]ÜˆYØ[YHÚ[™ÝÙYLŽÌŒ[™™\]Y\ÝYÚ™\ÔÚÝ˜Z[YˆØÜ™Y[œÚÝZ\ÜÚ[™ÈÜˆÛ›H“TˆÛÛ›™XÝYÜ[Û˜[˜Z[\ØY™H][\[™ÙËÚ[XYÙHXÝ[ÛœÈ\Y˜XÝÈ›ØÝ\ÙYÚ[™ÝÜÈ[œ™X[ÛÜšÙ›ÝËˆ\ÈÙ\È“Õ\ÜÙ\™[™\™YÝXØÙ\ÜËQK˜]™[\ˆØ[Y\˜H[YÛ›Y[š\ÝX[XØÙ\[˜ÙHÜˆ˜]™\œØ[ÈØÜ™Y[œÚÝ™]šY]È[™XÝX[]šY[˜ÙH[™[™ËˆÛÜšÙ›ÝÈØ\\™H\ÈÛÛ[YK[Û‹Y\œ›ÜˆÈ]›ÚY›ØÚÚ[™È˜[Y]YÊÊÈÛˆXY\ÜÈ\Ü^H˜Z[\™NÈØÜ™Y[œÚÝXœÙ[˜ÙHÝ^\ÈTËLˆÔS‹‚‚ŒŒ‹LLLMTËLˆ˜YÈ[™^\š[Üˆ›ÛÝË]\ˆÛÝ\˜ÙKX˜XÚÙY›Ý[™YTÓH\œ˜Z[‹YYÙH™\ÜÚ[™È\Ú[™È^\Ý[™È™\ÚY[›ÙXÝ[Û•\™“[Ý[™Y\Ú[™›ÙXÝ[Û”›ØÚÓY\ÚˆˆØ\™[ˆÛÜHYXÙ\È[™ˆÝ]\ˆ›Ü\HÝÛ™\Ë[[[Û˜[HÙ™œÙ]œ›ÛHHØ[ØX›HÛÜ‹Ü›ØYÛÜœšYÜ‹™\›ÈÛÛ\Ú[Ûˆ[™›È™]È˜]ËXÛÛ\Û™[\ˆ›ÜˆYY[[YHX\šÙ\ˆTÌ—ÐQ×ÑS‘ÕT”RS—ÑQÑH
+XÝX[[œÝ[˜Ù\ÈÈ™H™\šYšYY[ˆQJKˆ^\Ý[™È˜XØYH\Ù\È›ÙXÝ[Û’Ø˜š]˜XØYSY\ÚÚ[ˆ™\ÚY[È›È™]È[\ÜY\˜Ú]XÝ\™HÜˆXÚÙYX]\šX[ÛZ[KˆQKÜØÜ™Y[œÚÝÝ˜]™\œØ[[™Ø]H‹ÍÈÝ[[™[™ÎÈTËLˆÔS‹‚‚ŒŒ‹LLLMTËLˆ[YÜ˜]Y^\š[ÜˆØ[™Y]Nˆ™]\ÙY^\Ý[™È™\ÚY[›ÙXÝ[Û‘›ÝÙ\›ÞY\ÚšXH›Ý[™Y›ËXÛÛ\Ú[Û‹Û›Ë]XÚÈUÛÜ›]Z[Û\Ý\ˆTÓKZYÚ™]ÈÜ˜ÚØ\›ØXÚÜÚ][ÛœÈÝ]ÚYHš[X\žH›ØYØ^KÚ]TÌ—ÐQ×ÑS‘ÔÔÒÑ“ÕÑT”Ø[[YH™XÙZ\È›ÈÞ[˜Ú›Û›Ý\ÈX]žHØYË›È™]È”ÈÜ]ÛœË›È[œØY™HœšYÙHÛÛ\Ú[Û‹ˆÝ\ˆ™]š[Ý\ÛHY\™ÙY˜YÈ[™Ø\™[ˆÛÝYLÎ™\ÜÚ[™È™[XZ[œÈ™\Ù[ˆ\È\ÈH[™ÚX›H^\š[Üˆ[™ØØ\[™ÈY][Û‹›Ý›ÛÙˆÙˆ[\ÜY™]È\˜Ú]XÝ\™KÜXÚÙY”ˆÜˆXØÙ\YØÜ™Y[œÚÝÝ˜]™\œØ[ˆ^XÝZXYQMÛÛ\[KÜÝ\\[™XÝX[š\ÝX[Ý˜]™\œØ[]šY[˜ÙHÝ]Ý[™[™ÎÈTËLˆÔS‹Ø]H‹ÍÈÔS‹‚‚ŒŒ‹LLLMTÈÓ‘HÓÓTUHUÒÓÓ•PÕˆ™Y›Ü™HXXÚTÈ™YÚ[œË[œÜXÝÝ\œ™[]™[ÜPQ›Ú™XÝÛÝ™\››Ü‹Ø]\ËÛÝ\˜ÙKÝØ\™ZÝ\ÙKÕ[œ™X[™XÙZ\È[™Ú\\ˆØ[›ÛŽÈ[[Y\˜]HH[˜[YYÙ\ÜÚ[Ûˆ[]™\˜X›H[™]È^XÝ\ÜÙ]ËÊÊÈÚ[™Ù\ËXÙ[Y[›ØÝ\ÙY\ÝÈ[™Þ[˜Ú›Ûš^™YØÝ[Y[Ëˆ™\\™HÛ™HÛÚ\Ú]™HÛÛ\]HÚ[™ÙHØ]™H[™Û™HˆÚ[™]™\ˆXÚšXØ[HÜÜÚX›K›ÝH\˜YHÙˆ\X[ZXÜ›ËTœÈ™\]Z\š[™ÈÝÛ™\ˆ	ØÛÛ[YIËˆY\ˆÜÝYÛÝ\˜ÙKÜÝ]XÈ[™™XÙ\ÜØ\žH[œ™X[ÛÛ\[KÚ[\ÜÜÝ\\[‹™\Z\ˆ™\šYšYY˜Z[\™\È[ˆ›Ý[™YÛÜœ™XÝ]™HÛÛ[Z]È[™™]\ÝÈ[]™\ˆHÚ[™ÛH]šY[˜ÙKX˜\ÙYÙ\ÜÚ[Ûˆ™\ÜˆÙY\Û™H[œ™X[Üš]\‹ÛÛ™HØ\™ZÝ\ÙHÜš]\ˆ[™›Èœ›ØY]Y]ËÜXÚØYÙH[[Ú\\ˆÛÜÙ[Ý]ˆYˆZ\ÜÚ[™ÈXÝX[ØÜ™Y[œÚÝÝ˜]™\œØ[ÔQKÙ]šXÙH]šY[˜ÙK™[XZ[ˆÔSˆ[™™\Ü›ØÚÙ\‹›Ý˜ZÙHÛÛ\][™\ÜËˆ›È]]ÛX]XÈÛ™ÛÚ[™È˜XÚÙÜ›Ý[™ÛÜšÈ›ÛZ\ÙH™^[Û™H]™H^XÝ][Û‹‚‚ŒŒ‹LLLMTËLˆQÈS‘VT’SÔˆXÝX[ÊÊÈØ[™Y]Nˆ\]YH^\Ý[™È\Þ[˜ÈÛÝYLÎTÓHØ\™[”[\ˆ[™Ú[™ÝÑ›ÝÙ\›Þ[˜ÚÜˆ\œ˜^\ÈÈÛÛ˜Ù[˜]HLˆØ\Y›Û‹XÛÛY[™È[œÝ[˜Ù\È\›Ý[™™]š[Ý\ÛH\ÝX›\ÚY˜YÈ[™Ø\™[ˆÛÛÜ™[˜]\ÎÈ™\Ù\™H[ÛÝYLÎ˜[Z[Y\ËX^[][HXÙ[Y[ËÛÙ™Y™\™[˜ÙH\Þ[˜ÈÝ™X[Z[™Ë\œ˜Z[ˆ˜XÚ[™È[™ÝY\YÜ›Ý[™™Z™XÝËˆYYTÌ—ÐQ×ÑS‘ÑVT’SÔ—ÑÐT‘S—Ñ‘TÔÒS‘ÈÜ›Ý[™YOˆ™\]Y\ÝYLLˆÜ›Ý\ÏLˆÛÛ\Ú[Û[›Û™H\Þ[˜ÏLHš\ÝX[\[™[™ØX\šÙ\ˆ›Üˆ^XÝZXYQM\Ý]šY[˜ÙKˆ\È\ÈØ\™[ˆ™\ÜÚ[™ÈÛ›K“Õ^\š[Üˆ\˜Ú]XÝ\™KÝ\œ˜Z[‹Ô”ˆÛÛ\][ÛŽÈÓÓTSKUTÕQ[™[™ÈÚ[™ÝÜÈÒK™[™\™YØÜ™Y[œÚÝ[™˜]™\œØXš[]H[™[™Ëˆ^\Ý[™ÈÛÛÙ[‘›ÛÝœšYÙH™[XZ[œÈU—ÔUPTS•S‘Q‚‚ŒŒ‹LLLM‘KUS”‘PS“ÐÕTÑQTÈÒS‘ÑH
+ˆØ[™Y]JNˆY˜][™K][œ™X[ÜÝYÚXÚÜÈ™]Z[ˆ^XÝZXYÛÝ\˜ÙHÚXÚÛÝ]Û\ÜÚYšY\ˆ™YÜ™\ÜÚ[Û‹Ú[™ÝÜÈXÚØYÚ[™ÈØY™]HÛÛ˜XÝÝÙ\”Ú[Þ[^›Ú™XÝÝXÝ\˜[˜[Y][Û‹›Ú™XÝÛÝ™\››Ü‹ÛÝ\˜ÙK]ËU[œ™X[”ˆ[YÜš]KÛÝ™\››ÜˆÛÜšË\Ý\[™Ù[X[XÜËÝšXÝ\ÜÙ]]X[]H]Y]ˆÍHœ›ØY\ˆÜ›ÜÜËXÚ\\‹\ÝÜšXØ[›ÝšY\‹Ú\›ËØ\™ZÝ\ÙH™YÜ™\ÜÚ[Û‹Y\]Y][™™\Ü[™È\ÝÝ\È\™HY™\œ™YÈ^XÚ]ÛÜšÙ›Ý×Ù\Ü]ÚÚ\\—ØÛÜÙ[Ý]Ø]Y]Ï]YKÚ]Ý]\ØX›[™ÈÚ]Xˆ[œ™X[›ØÝ\ÙYÛÛ\[KÚ[\ÜÜÝ\\ÜˆØ]H‹ÍËˆ\È\ÈÒHØÚY[[™ÈÛ›K›ÝHÛZ[HÙˆ”ËÝš\ÝX[XØÙ\[˜ÙK‚‚ŒŒ‹LLLM‘T’Q’QQÑTÔÒSÓˆS”ÒUSÓˆ
+ÝÛ™\ˆ]]Üš^™Y
+NˆTËLH\ÜÙ]™XÛÝ™\žH	ˆ[\ÜHÓÓTUH›Üˆ]È›Ý[™Y[\ÜX[™\XÙ[Y[[]™\˜X›HÛ›KÝ\ÜYžHÚ[™ÝÜÈ[ˆÎLŽŽMMÈÛˆ]™[ÜLXXØŽXMYŽMÌ™LŒYL™NMLMŒYÍØ™ŽÍÎˆQMŒËŒˆÚ\™R›Ý\›™^QY]ÜˆZ[ÕPÐÑTÔÎÈÓÕQLÎÕQWÔ‘TÕÔ‘QÔÒLM—ÔTÔÈš[\ÏNLž]\ÏLNLÎMŒÈUUÓPUSÓ—ÔÕRUWÔTÔÈ\ÝÏLÎÈPÌHXY\ÜÈÝ\\TÔÈÛÝYLÎ˜[Z[Y\ÏNÜ›Ý[™YMØ\MˆTËLHQOY˜[ÙK]šXÙOY˜[ÙKš\ÝX[ØXØÙ\YY˜[ÙKÚ\\ˆØ]H‹ÍÈ™[XZ[œÈÔSŽÈ›È”ÈÜˆ[X[ˆ™[™\ˆÛZ[KˆÝÛ™\ˆ^XÚ]HY™\œÈ[X[ˆš\ÝX[™]šY]ÈÈTËL‹ˆTËLˆ˜YÈ[™^\š[ÜˆHPÕU‘K“ÕÓÓTUNˆ\˜Ú]XÝ\™KÙØ\™[‹Ý\œ˜Z[‹ÜXÚÙYT”ˆ[™XÝX[ØÜ™Y[œÚÝÝ˜]™\œØ[\™H]È™\]Z\™Y[]™\˜X›K›Ý[[ÛœÝ˜]YY]ˆ^\Ý[™ÈÓWÔÚÛÛÙ[‘›ÛÝœšYÙH™[XZ[œÈU—ÔUPTS•S‘QÈ›È[œÝ\ÜY˜]™\œØ[ÛZ[\Ë‚‚ŒŒ‹LLLMTÈ“ÐÕTÑQÒS‘ÕÔÈVPÕUSÓŽˆš^™]š[Ý\ÈX[X[[ˆÎLMÌLM[˜ÛÜœ™XÝHÛ\ÜÚYšYYÝ]XØ[™ÚÚ\Y[œ™X[ˆ™]È^XÚ]HÝÛ™\‹X]]Üš^™YÛÜšÙ›Ý×Ù\Ü]Ú[œ]\×Ù›ØÝ\ÙYÝ[œ™X[]YXÚ][—ÜÙ[—ÚÜÝY]YX›Ü˜Ù\ÈÛ\ÜÚYšY\ˆÛÜ™X
+QMY]ÜˆÛÛ\[K[\Ü\‹\œÚ\ÝYÛÝYLÎ™\ÝÜ™K]]ÛX][Ûˆ[™PÌHXY\ÜÈÝ\\
+HÚ[HXÚØYÙWÝÚ[™ÝÜÏY˜[ÙX\WØÛÜÙ[Ý]Ø\›Ý™YY˜[ÙXÙY\ÈÛÛÚËÔXÚØYÙH[™œ›ØY[XÚ\\ˆ]Y]ÈÙ™‹ˆ[[YH]šY[˜ÙH\È›ÝHš\ÝX[ØÜ™Y[œÚÝÔQHÛZ[KˆÝ\œ™[TËLHÔSˆ[[ÜXÚYšXÈ]šY[˜ÙH›Ý™\È]ÈÛÜÝ\™K‚‚ŒŒ‹LLLMÕÓ‘TˆÒH“ÕQÒUÓPÖH
+[\[Y[][ÛˆØ[™Y]NÈTËLHÔSŠNˆÜ™[˜\žHTÈ[œÈ™]Z[ˆX[™]ÜžH^XÝZXYÜÝYÜÝ]XÈÝX\™Ë™\]Z\™YÚ[™ÙYPÊÊÈQHZ[\ÜÙ][\ÜÜ™[Ü[ˆ[™›ØÝ\ÙYÝ\\Û›KˆY™\œ™Y[[^XÚ]HÝÛ™\‹X\›Ý™Y\KØÚ\\ˆÛÜÙ[Ý]ˆ[Ú\\ˆ[[YHÝÙY\[›Ý]KÜÝÜžH›Ý[™š\ÛØ˜[Ø\›š[™ÈX[™Ú[™ÝÜÈÛÛÚËÔÝYÙKÔXÚØYÙKˆÛÜšÙ›ÝÈ›ÝÈ™\]Z\™\È“ÕXÚØYÙWÝÚ[™ÝÜÏ]YH[™\WØÛÜÙ[Ý]Ø\›Ý™Y]YNÈXØÚY[[XÚØYÙWÝÚ[™ÝÜÈ[Û™HØ[››ÝXÝ]˜]H\ÙH^[œÚ]™HÝYÙ\ËˆÙ\È›Ý[]HØ]H‹ÍËQK]šXÙKš\ÝX[ÈÜˆ›Ú™XÝXØÙ\[˜ÙHØ›YØ][ÛœËˆ›È™]È\ÜÙ]ÔQKÙ]šXÙHÛZ[K‚‚ŒŒ‹LLLMTËLHPÕU‘HSTSQS•USÓˆÐS‘QUNˆ^XÝ™]š[Ý\ÛH[\ÜYÛÝYLÎ›Û‹]Ø[ØX›H–˜[Z[Y\È\™HÛÙ\Ý™X[YY[ÈH^\Ý[™ÈPÌHÚ\™T›ÝÝ\UÛÜ›Z[\ˆ\ÈØ\Y›Û‹XÛÛY[™ÈTÓHÛÛ\Û™[È
+X^[][H[œÝ[˜Ù\ËÜ›Ý[™ÜÝY\\™Z™XÝY
+NÈ^\Ý[™ÈˆÒLMˆ\œÚ\Ý[L]X\ÜÙ]™XÙZ\\È™\ÝÜ™Y™Y›Ü™HXY\ÜÈ[[YHÝ\\[™™\]Z\™YÙÈX\šÙ\ˆPÌWÐÓÕQLÎÕÓÔ“Ô‘PQH\È]Y]YˆÓWÔÚÛÛÙ[‘›ÛÝœšYÙH™[XZ[œÈU—ÔUPTS•S‘Q[™[\™[H^ÛYYÈ›ÈØ[Ú[™Ë\Ý\™˜XÙHÛÛ\Ú[ÛˆXØÙ\[˜ÙH\È[\YYˆÛÛ[Z]ÜÛÝ\˜ÙH[YÜ˜][Ûˆ\È›Ý›ÛÙˆÙˆÝXØÙ\ÜÙ[[™Ú[™HZ[\œÚ\ÝYY]Üˆ™[Ü[ˆÛˆ\ÈPQXÝX[Ü›Ý[™Y[œÝ[˜Ù\Ë™[™\™Y[XYÙKQK]šXÙKØ]H‹ÍËÜˆš\ÝX[XØÙ\[˜ÙKˆTËLH™[XZ[œÈÔSˆ[[]šY[˜ÙK‚‚ŒŒ‹LLLMTÈ\™›Ü›X[˜ÙHÛXÞHÐS‘QUNˆÝÛ™\ˆ™\]Y\ÝY™[[Ý˜[Ùˆ™XÝ\œš[™È[Ú\\‹ÜÝÜžKÜÝ]KÝØ\›š[™ÈÝÙY\È[[Ú\\ˆÛÜÙ[Ý]ˆÒHÛÛ™][ÛœÈ›ÝÈY™\ˆ^XÝHÜÙHÈ^[œÚ]™H[[YH]Y]Ý\ÈÈX[X[ÝÛ™\ˆÛÜšÙ›Ý×Ù\Ü]ÚXÚØYÙWÝÚ[™ÝÜÏ]YKˆ™\Ù\™H]ZXÚÈ]™[ÜY[ÛÛ\[KÜÝ\\YXØ]Y[\Ü\‹Ü™[Ü[‹Ü\œÚ\Ý]šY[˜ÙH[™[Ø]H‹ÍÈXØÙ\[˜ÙKˆÛXÞHÚ[™ÙHÙ\È›Ý\ÝX›\Ú[\ÜY]ÛÜ›XÙ[Y[QK]šXÙHÜˆš\ÝX[]šY[˜ÙKˆ™\šYžHˆ^XÝZXYÜÝY\ÝÈ™Y›Ü™HY\™Ú[™Ë‚‚ŒŒ‹LLLMTËLH]X\˜[[™HØ[™Y]Nˆ\Ý^XÝZXYÚ[™ÝÜÈ[ˆÎÍLÎŽÍH›Ý[™Û›HÓWÔÚÛÛÙ[‘›ÛÝœšYÙHZ\ÜÚ[™È[\ÜYÚ[\HPÖÛÛ\Ú[Û‹ˆÈ]›ÚYH˜[ÙH›Þ›ÞHÜˆ˜Z[[™È\œÚ\Ý[˜ÙHÙˆÝ\Ú\ÙH[YÚX›H\ÜÙ]Ë[ÝÈÛ›H\È^XÝ]\ÈU—ÔUPTS•S‘Q[ˆ›ÝY]Üˆ[™œ™\Ú™[Ü[ˆ™XÙZ\ÎÈÈ›ÝÜ˜[]ÛÜ›\XÙ[Y[Üˆ˜]ˆ\›Ý˜[ˆX›Ü˜]Ú›ÜˆS–HÝ\ˆÜš]XØ[Z\ÜÚ[™ÈÛÛ\Ú[ÛŽÈÙY\QKÝš\ÝX[Ù]šXÙH[™Ø]H‹ÍÈ[˜Ú[™ÙYˆHÝXØÙ\ÜÙ[[\ÜÜ\œÚ\Ý™XÙZ\\È“Õš\ÝX[Ú\\ˆÛÛ\][Û‹ˆ\ÚXØ[\ÝÈÛˆ\È›ÜÜÙYØ[™Y]H\™H[™[™Ë‚‚”TËLH[ZÙH™\Üˆ™XÛÝ™\™YÛÝ\˜ÙHØ\™ZÝ\ÙHLÎ–[™Íˆ‘ÎÈQHÛÛ\Ú[Ûˆ[\Ü˜Z[\™\È›Ý[™ÛÜ‹ÝÛ™T][™ÛÛÙ[‘›ÛÝœšYÙK˜Z[XÛÜÙY[[QH[\ÜÜ™[Ü[‹Ü\œÚ\Ý[™ÛÜ›\XÙ[Y[›ÛÙ‹ˆŒ‹LLLMTËLH]\ÝÚ[™ÝÜÈ[ˆÎÌLNŒNLˆÛÝ\˜ÙH™XÙZ\[™Ø\™ZÝ\ÙHÝYÙH\ÜÙYY]Üˆ›ÛÝÝ\˜Z[Y›ÜˆÛÛÙ[‘›ÛÝœšYÙHZ\ÜÚ[™È[\ÜYPÖÛÛ\Ú[Û‹ˆ›Ý[™Y™XÛÝ™\žH›ÝÈ]Y]È[Üš]XØ[Z\ÜÚ[™ËXÛÛ\Ú[ÛˆY\Ú\È™Y›Ü™H™]\›š[™ÈH˜]Ú˜Z[\™K˜]\ˆ[ˆ™\]Z\š[™È™\X]Y][K[Z[]HÚ[™ÝÜÈ[œÈ›ÜˆXXÚ™^Ù™™[™\‹ˆÜ[ˆœšYÙH\È“ÕÚ]™[ˆ[˜XØÝ\˜]H“ÖÛÛ\Ú[Û‹ˆ›È™\ÝÜ™YÚ[\ÜY\œÚ\ÝY[œ™X[X\ÜÙ]ÛÝ[ÜˆXÙY]ÛÜ›ÛÝ[X^H™H›Û[ÝY[[œ™\ÚY]Üˆ™[Ü[ˆ[™\˜X›H™XÙZ\\ÈÛÜ›™\šYšXØ][Û‹ˆ\Èš^]Ù[ˆ\ÈXYÛ›ÜÝXÈ[™ÛÝ\˜ÙK[]™[Û›K‚‚ŒŒ‹LLLMTËLHØ[™Y]H›ÛÝË]\ˆÛÝYLÎÚ[™ÝÜÈ[\Ü[ˆÎÍŒÍH\ÜÙYÛÝ\˜ÙHÝYÙH[™Ø\™ZÝ\ÙHÜš]\ˆ]˜Z[YY]Üˆ[ÙHÛˆÓWÔÚÝÛ™T]Ú]ÓÕQLÎÕÐSÐP“WÕPÖÓ“ÕÒSTÔ•QˆØ[™Y]H›ÝÈ\›Z]È›Ý[™Y“ÖÛÛ\Ú[Ûˆ˜[˜XÚÈ›Üˆ\ÈÛ›ÝÛˆ›]Ø[ØX›HÛÝ\˜ÙH[Û™ÈÚ]™\œžS[™[™È[™ÛÜÙY›Ý[™ÛÜ‹Ú[H™\Ù\š[™ÈHÝX\™YØZ[œÝ\Z[™È]ÈÜ[ˆÛÛÙ[‘›ÛÝœšYÙH[™›ÛXYÙKˆ\È\ÈÛ›H[ˆ[\Ü\›ÞH™\Z\ŽÈ˜]™\œØ[ÛÜ›XÙ[Y[QKÙ]šXÙKÝš\ÝX[[™\œÚ\Ý[QHXÚØYÙHXØÙ\[˜ÙH™[XZ[ˆ[œ›Ý™[‹ˆ^XÝZXY™]˜[Y][Ûˆ™\]Z\™Y‚‚ˆÈÈŒ‹LLLLÈHPÌHÙ™‹\[›™\ˆX]\šX[ÛÝ\˜ÙH˜]ÚW—Ÿ\™XHÝ]\È]šY[˜ÙHŸKK_KK_KK_ŸÙ[™\˜]YÛÝ\˜ÙHX]\šX[Ù]ÈÒHÐS‘QUH›ØÙY\˜[Ú\™H”ˆX]\šX[™XÛÜ™ÈÙ[™\˜]YžHØÜš\ËÙÙ[™\˜]WÜXÌWÛX]\šX[ÜÛÝ\˜ÙWØ˜]ÚKœXÈ\‹[X\ÒLMˆ[™”ˆÛÛ˜XÝ[ˆÙ[™\˜]YX[šY™\ÝŸÙ[™\˜]Y^\™\ÈÒHÐS‘QUHÌˆ‘ÈY[X™\œÎˆ˜\ÙPÛÛÜ‹XÚÙYÔ“H[™›Ü›X[X\È›ÜˆXXÚX]\šX[Ù]ŸÝ\™˜XÙHÛÝ™\˜YÙHÒHÐS‘QUH˜YÈ[™˜YÈ[™[\š[Ü‹ÑØ\™[‹Ø˜š]Û‹˜YÜÚÝ›ÝË\HšY[›ØYËÛÛÙY›ØYZ[Û™XÚÛX\žH™\œžKX\ÝšY[È[™Ø˜š]ÛˆX\šÙ]ŸÚ[™ÝÜÈ[›™\ˆ“ÕTÑQ˜]ÚÜ™X]Y[™˜[Y]YÙ™‹\[›™\ŽÈÛ\ÜÚYšY\ˆ›Ý]\È\È]ÈÜÝYÝ]XÈ[ÙHŸØ\™ZÝ\ÙHÈ[œ™X[[\ÜÈX]\šX[[œÝ[˜ÙHÙ]\S‘S‘È›ÈÛÛ[œ›ÝÜÙ\ˆ[\ÜX]\šX[[œÝ[˜ÙHÜ™X][ÛˆÜˆØ\™ZÝ\ÙH\œÚ\Ý[˜ÙHÛZ[YYŸ[[YKÝÛÜ›š[™[™ÈS‘S‘È›È]™[›Y\š[ÝXœÞ\Ý[HÜˆÛÜ›XÙ[Y[š[™[™ÈÛZ[YY›Üˆ\È˜]ÚY]ŸQHÈ]šXÙHÈš\ÝX[È\™›Ü›X[˜ÙHÈØ]H‹MÈ“ÕPÐÑTQ™\]Z\™\ÈQM[\ÜX]\šX[š[™[™Ëš\ÝX[™]šY]È[™\™Ù]Y]šXÙH]šY[˜ÙH—ˆÈÈŒ‹LLLLÈHPÌHÙ™‹\[›™\ˆÛÝ\˜ÙH]Y[È˜]ÚW—Ÿ\™XHÝ]\È]šY[˜ÙHŸKK_KK_KK_ŸÙ[™\˜]YÛÝ\˜ÙH]Y[ÈÒHÐS‘QUHÌˆ[Û›ÈM‹Xš]ÓHÐUˆY[X™\œÈÙ[™\˜]YžHØÜš\ËÙÙ[™\˜]WÜXÌWØ]Y[×ÜÛÝ\˜ÙWØ˜]ÚKœXÈ\‹[Y[X™\ˆÒLM‹œ˜[Y\È[™\˜][Ûˆ[ˆÙ[™\˜]YX[šY™\ÝŸ]Y[ÈÛÝ™\˜YÙHÒHÐS‘QUH[XšY[˜ÙK›Û^K›ÛÝÝ\ËØš™XÝÛÝ[™È[™˜]\™HÝY\ÈXÜ›ÜÜÈ˜YÈ[™Ø˜š]Û‹\HšY[›ØYËÛÛÙËZ[Û™™\œžH[™X\ÝšY[ÈŸÚ[™ÝÜÈ[›™\ˆ“ÕTÑQ˜]ÚÜ™X]Y[™˜[Y]YÙ™‹\[›™\ŽÈÛ\ÜÚYšY\ˆ›Ý]\È\È]ÈÜÝYÝ]XÈ[ÙHŸ[œ™X[[\ÜÈÛÝ[™ÝYHÙ]\S‘S‘È›ÈÛÛ[œ›ÝÜÙ\ˆ]Y[È[\ÜÜˆÛÝ[™ÝYH\ÜÙ]ÛZ[YYŸ[[YKÝÛÜ›š[™[™ÈS‘S‘È›È]™[›Y\š[ÝXœÞ\Ý[HÜˆÛÜ›XÙ[Y[š[™[™ÈÛZ[YY›Üˆ\È˜]ÚY]ŸQHÈ]šXÙHÈ]Y[ÈXØÙ\[˜ÙHÈ\™›Ü›X[˜ÙHÈØ]H‹MÈ“ÕPÐÑTQ™\]Z\™\ÈQM[\Ü[[YHš[™[™Ë\Ý[š[™È™]šY]È[™\™Ù]Y]šXÙH]šY[˜ÙH—ˆÈÈŒ‹LLLLÈHPÌHÙ™‹\[›™\ˆÛÝ\˜ÙH\ÜÙ]˜]ÚÂ‚Ÿ\™XHÝ]\È]šY[˜ÙHŸKK_KK_KK_ŸÙ[™\˜]YÛÝ\˜ÙHY\Ú\ÈÒHÐS‘QUH–Y[X™\œÈÙ[™\˜]YžHØÜš\ËÙÙ[™\˜]WÜXÌWÜÛÝ\˜ÙWØ\ÜÙ]Ø˜]ÚËœX[ÈHÛÜšÙ›ÝÈ\Y˜XÝ’TÈ\‹[Y[X™\ˆÒLMˆ[ˆÙ[™\˜]YX[šY™\ÝŸÙ[™\˜]Y^\™\ÈÒHÐS‘QUHMˆ‘È˜\ÙKXÛÛÜˆY[X™\œÈ[ˆHØ[YHÛÝ\˜ÙH\˜Ú]™NÈ‘ÐH˜[Y][Ûˆ[™ÒLMˆ™XÙZ\ŸÚ[™ÝÜÈ[›™\ˆ“ÕTÑQ˜]ÚÜ™X]Y[™˜[Y]YÙ™‹\[›™\ŽÈÛ\ÜÚYšY\ˆ›Ý]\È\È]ÈÜÝYÝ]XÈ[ÙHŸ[œ™X[[\ÜÈX\ÜÙ]\œÚ\Ý[˜ÙHS‘S‘È›ÈÛÛ[œ›ÝÜÙ\ˆ[\ÜÜˆX\ÜÙ]\œÚ\Ý[˜ÙHÛZ[YYŸÛÜ›XÙ[Y[S‘S‘È›ÈØ]™Y]™[ÕÛÜ›Z[\ˆXÙ[Y[ÛZ[YY›Üˆ\È˜]ÚY]ŸQHÈ]šXÙHÈš\ÝX[È\™›Ü›X[˜ÙHÈØ]H‹MÈ“ÕPÐÑTQ™\]Z\™\ÈQM[\Ü[[YHXÙ[Y[š\ÝX[™]šY]È[™\™Ù]Y]šXÙH]šY[˜ÙH‚ˆÈÈŒ‹LLLLÈHPÌHÙ™‹\[›™\ˆÛÝ\˜ÙH\ÜÙ]˜]Ú‚‚Ÿ\™XHÝ]\È]šY[˜ÙHŸKK_KK_KK_ŸÙ[™\˜]YÛÝ\˜ÙHY\Ú\ÈÕUPËUSQUQØØ[HÈÒH[™[™È–Y[X™\œÈ[Z]YžHØÜš\ËÙÙ[™\˜]WÜXÌWÜÛÝ\˜ÙWØ\ÜÙ]Ø˜]Ú‹œX[ÈHÛÜšÙ›ÝÈ\Y˜XÝ’TÈ\‹[Y[X™\ˆÒLMˆ[ˆHÙ[™\˜]YX[šY™\ÝŸÙ[™\˜]Y^\™\ÈÕUPËUSQUQØØ[HÈÒH[™[™ÈMˆ‘È˜\ÙKXÛÛÜˆY[X™\œÈ[ˆHØ[YHÛÝ\˜ÙH\˜Ú]™NÈ‘ÐH˜[Y][Ûˆ[™ÒLMˆ™XÙZ\ŸÚ[™ÝÜÈ[›™\ˆ“ÕTÑQ˜]ÚÜ™X]Y[™˜[Y]YÙ™‹\[›™\ŽÈÛ\ÜÚYšY\ˆ›Ý]\È\È]ÈÜÝYÝ]XÈ[ÙHŸ[œ™X[[\ÜÈX\ÜÙ]\œÚ\Ý[˜ÙHS‘S‘È›ÈÛÛ[œ›ÝÜÙ\ˆ[\ÜÜˆX\ÜÙ]\œÚ\Ý[˜ÙHÛZ[YYŸÛÜ›XÙ[Y[S‘S‘È›ÈØ]™Y]™[ÕÛÜ›Z[\ˆXÙ[Y[ÛZ[YY›Üˆ\È˜]ÚY]ŸQHÈ]šXÙHÈš\ÝX[È\™›Ü›X[˜ÙHÈØ]H‹MÈ“ÕPÐÑTQ™\]Z\™\ÈQM[\Ü[[YHXÙ[Y[š\ÝX[™]šY]È[™\™Ù]Y]šXÙH]šY[˜ÙH‚ˆÈÈŒ‹LLLLˆHPÌHÙ™‹\[›™\ˆÛÝ\˜ÙH\ÜÙ]˜]ÚB‚Ÿ\™XHÝ]\È]šY[˜ÙHŸKK_KK_KK_ŸÙ[™\˜]YÛÝ\˜ÙHY\Ú\ÈÕUPËUSQUQØØ[HÈÒH[™[™ÈÍˆ–Y[X™\œÈ[œÚYHÛÝ\˜ÙP\ÜÙ]ËÔ›ÙXÝ[Û‹ÕÛÜ›ÔÚ\™KÐ˜]ÚSÙ™”[›™\‹ÔPÌWÐ˜]ÚWÔÛÝ\˜ÙP\ÜÙ]Ëžš\È\‹[Y[X™\ˆÒLMˆ[ˆ]KÔPÌTÛÝ\˜ÙP\ÜÙ]˜]ÚSX[šY™\ÝšœÛÛ˜ŸÙ[™\˜]Y^\™\ÈÕUPËUSQUQØØ[HÈÒH[™[™ÈH‘È˜\ÙKXÛÛÜˆY[X™\œÈ[ˆHØ[YHÛÝ\˜ÙH\˜Ú]™NÈ‘ÐH˜[Y][Ûˆ[™ÒLMˆ™XÙZ\ŸÚ[™ÝÜÈ[›™\ˆ“ÕTÑQ˜]ÚÜ™X]Y[™˜[Y]YÙ™‹\[›™\ŽÈÛ\ÜÚYšY\ˆ›Ý]\È\È]ÈÜÝYÝ]XÈ[ÙHŸ[œ™X[[\ÜÈX\ÜÙ]\œÚ\Ý[˜ÙHS‘S‘È›ÈÛÛ[œ›ÝÜÙ\ˆ[\ÜÜˆX\ÜÙ]\œÚ\Ý[˜ÙHÛZ[YYŸÛÜ›XÙ[Y[S‘S‘È›ÈØ]™Y]™[ÕÛÜ›Z[\ˆXÙ[Y[ÛZ[YY›Üˆ\È˜]ÚY]ŸQHÈ]šXÙHÈš\ÝX[È\™›Ü›X[˜ÙHÈØ]H‹MÈ“ÕPÐÑTQ™\]Z\™\ÈQM[\Ü[[YHXÙ[Y[š\ÝX[™]šY]È[™\™Ù]Y]šXÙH]šY[˜ÙH‚ŒŒ‹LLLLˆÛÝYLÎÚ[™ÝÜÈØ\™ZÝ\ÙH[›™\ˆ›ØÚÙ\ˆ[™™XÛÝ™\žNˆ]™[ÜˆÍÌY\™ÙYN˜ØMHÚ]ÜÝYÝ]XÊÕ[œ™X[^XÝZXY˜[Y][ÛœÈÜ™Y[ŽÈš\œÝ\œÚ\Ý[˜[œÙ™\ˆ[ˆÎŽMNŽNH˜Z[Y™Y›Ü™HÝYÚ[™È]™\šYžHÛÝ™\››Üˆ[™\œÚ\Ý[›ÛÝ™XØ]\ÙHÜÚˆÛÛ[X[™›Ý›Ý[™ÛˆÙ[‹ZÜÝYÚ[™ÝÜÈXXÚ[™Kˆš^Ø[™Y]H\Ù\ÈH[œÝ[YÚ[™ÝÜÈÝÙ\”Ú[
+Ú[ˆÝÙ\œÚ[
+HÛˆ›ÝÚ[™ÝÜË[Û›HÝ\Ë™\Ù\š[™È^XÝ[›™Y\Y˜XÝÒKÐÔËÕPÖÓÑÜ›Ý™[˜[˜ÙHÚXÚÜËÛ™HÜš]\ˆ[™ÛÝ\˜ÙK[Û›H]šY[˜ÙH›Ý[™\žKˆ[[™\Z\ˆ[ˆ[Z]ÈÓÕQÕÒÓQÐSQWÔT”ÒTÕS•ÕÐT‘RÕTÑWÔTÔÈ[™H\œÚ\ÝY™XÙZ\˜[œÙ™\œ™Yš[HÛÝ[›ÜˆÛÝYLÎ™[XZ[œÈ“Õ‘S‹ˆQMÝ\œ™[\[ˆ]šY[˜ÙHÙ\È›ÝÙ\YžHÛÝYLÎ[\ÜQK]šXÙHÜˆš\ÝX[Ë‚‚ŒŒ‹LLLLˆPÌHÈŽ\™YÚ[ÛˆLÎQ–\ÚXØ[Ø\™ZÝ\ÙH˜[œÙ™\ˆØ[™Y]Nˆ^\Ý[™È™\šYšYYÛÝ\˜ÙH\Y˜XÝLMÍÌLMLÌˆœ›ÛH[ˆÎŽLŒMŒÎMÌXYYLYMXÎK\ÈˆÚ\™H–MˆÚÛKYØ[YH™YÚ[Û˜[–[™Íˆ^\Ý[™ÈXÚÙY‘Ëˆ™]È[›™YÚ[™ÛK]Üš]\ˆÚ[™ÝÜÈ˜[œÙ™\ˆÛÜšÙ›ÝÈÝÛ›ØYÈH™XÚ\ÙHÚ]Xˆ\Y˜XÝÛÛ\\™\ÈÜ˜\\ˆ[™[›™\ˆÒLM‹[œÜXÝÈMÍ\ÚXØ[^[ØYÈ[™ÈÛÝ\˜ÙH™XÙZ\Ë[™›Ü˜Ù\È–ÍÕPÖÕU‹ÓÑ™YÚ[ÛˆY[]H[™‘ÈÚYÛ˜]\™\Ë™Z™XÝÈ[œØY™H’TY[X™\œÚ\[™›Ü˜Ù\È™\Ù\™KÜš]\È]ÛZXØ[H[™™Z\Ú\È\œÚ\ÝYˆÝÜ˜YÙKˆ˜[œÙ™\ˆ\ÈÛÝ\˜ÙK[Û›NˆÙ\È“Õ[\ÜX\ÜÙ][ÈQM[ˆQK›Ùš[H\™Ù]”Ëš\ÝX[H\›Ý™KÜˆÛÜÙHPÌHØ]M‹ÍËˆ\È\ÈÛÝ\˜ÙHÛÙHÐS‘QUH[[ÜÝY\ÝÈ[™XÝX[Ú[™ÝÜÈ\œÚ\Ý[™XÙZ\\ÜËˆ›È™]È\ÚXØ[–Ù[™\˜]Y[ˆ\È[YÜ˜][ÛˆÝ\‚‚ŒŒ‹LLLLˆPËLLHÈÚÛKYØ[YHÛÝ\˜ÙHØ[™Y]Nˆš[ÜˆÛÝYÚ\™HˆÍŽ›ÙXÙYˆ\ÚXØ[H™\šYšYY–Ž[Ü™H[ˆš[ÜˆMˆ\ÈØ[™Y]H]]ÜœÈŽÜšYÚ[˜[™YÚ[ÛˆÝ\Ü˜[Z[Y\ÈÛÈÑÈHMˆ™]È–\™Ù][™È
+ÌL	H™][™]È›ÝYÚ]Ý™\ˆHš[Üˆ
+ÌŽˆÙ\\˜]H™YÚ[Û˜[ÛY\Ú\ËÈ™XÙZ\›[™\ˆ™Z[\ÜU‹PÖ[™\ÚXØ[ÒLMˆ[YÜš]H\™HX[™]ÜžKˆÍˆ^\Ý[™ÈXÚÙY‘ÜÈ™]\ÙYÚ]Ý]™Z[™ÈÛÝ[Y\È™]Ëˆ™\\˜][ÛˆÜ[œÈ^XÝHHŽØ[›ÛšXØ[ÛÜ›XÚÙ]Ë›Ýš[˜[Ú\\ˆ[[YHÜˆ\›È[™X\šÜÎÈPÌŠÈ[[YH™[XZ[œÈØ]YˆÛÝ\˜ÙHÛÜšÈ[™PËLLH\™HØ[™Y]\È[[^XÝZXYÚXÚÜÈ\ÜËˆ›È™]ÈØ\™ZÝ\ÙH\œÚ\Ý[˜ÙKQH[\ÜQK]šXÙKÑ”ÈÜˆš\ÝX[\›Ý˜[——ˆÈÈŒ‹LLLLˆHˆÚ\™HÜšYÚ[˜[–›ÙXÝ[ÛˆØ[™Y]B‚‘^[™ÈÛÝ\˜ÙHØ[™Y]Hœ›ÛHÜÝY\›Ý™[ˆM–ÈÈÚ\™H˜[Z[Y\È
+[ˆÎŽÌÍŒMJHÈH˜[Z[Y\ÈÈˆ–
+M™]È˜[Z[Y\ËŽY][Û˜[Ñš[\ÎÈLKŽIH\™Ù][˜Ü™X\ÙH[ˆÛÛ\\˜X›HÛÝ\˜ÙHÛÝ[
+Kˆ™]ÈÜšYÚ[˜[›ØÙY\˜[Ý]XÈ›ÜÎˆ™\œžT]Y]YP™[˜Ú™YY[\‹Ü˜Ú\™Ü˜]KX\šÙ]Ý[X\šÙ]˜\ÚÙ]\˜‘žZ[™Ô˜XÚË\ÝXÔÚYÛ‹Ü˜Z[”ØXÚÔÝXÚËÚ[™ÝÑ›ÝÙ\›ÞØ]S[\›‹œšYÙT˜Z[[™ËØ\™[•™[\Ë˜\›UÛÛ˜XÚË\TÙ\š[™ÐÛÝ[\‹ˆ›[™\ˆš[˜\žHÍ™Z[\ÜU‹ÕPÖÒH™XÙZ\È[™Ž\™YÚ[ÛˆX]\šX[\ÜÙ]È™[XZ[ˆØ]YžH^XÝZXYÚ]XˆXÝ[ÛœËˆ\È\È“Õ›ÛÙˆÙˆXÝX[ˆ\ÚXØ[–Y]ˆ›È]]ÛX]XÈØ\™ZÝ\ÙKÕQHÛÜ›™\ÚY[˜ÞKQK]šXÙH”ÈÜˆš\ÝX[XØÙ\[˜ÙHÛZ[Kˆ™\Ù\™HÚ[™ÛHØ\™ZÝ\ÙKÕQH[[YHÜš]\œÈ[™Ø]M‹ÍË‚‚‚ˆÈÈŒ‹LLLLˆHPËLLˆXØÛÝ[X›H\‹\Ù\ÜÚ[ÛˆÜ›ÝÝ[™[™\[™[[™Ú[™Y\ˆYÙ[Y[‚‹HÝÛ™\ˆ\È[ˆ[š›Þ[Y[Yš\œÝ^Y\ŽÈ[™\[™[XY\˜Ú]XÝXZÙ\È[™^Z[œÈ›Ù™\ÜÚ[Û˜[[™Ú[™Y\š[™ÈÚÚXÙ\È
+[˜ÛY[™ÈÛ]H\ØYÜ™Y[Y[
+KÚ[HÝÛ™\ˆ™]Z[œÈ›ÙXÝš\Ú[Û‹‚‹HXXÚÙ\ÜÚ[Ûˆ™\ÜÈ^XÝ˜\Ù[[™H[™™]ÈÝ[XœÛÛ]HÚ[™ÙKÛÛ\\˜X›H\˜Ù[YÙK]šY[˜ÙKØÛÛ[Z]Ô‹ÐXÝ[ÛœËš[˜Ú\[š\ÚÈ[™™XÛÛ[Y[™Y™^YÚ\^Y\‹]˜[YHXÝ[Û‹ˆH
+ÍL	HØZ[ˆ\ÈHÝ™]Ú\™Ù]
+Š›Û›JŠˆ›Üˆ[YÚX›K™\šYšYYZÙKY›Ü‹[ZÙH›ÙXÝ[ÛŽÈZ\ÜÚ[™È˜\Ù[[™HOˆ‹ÐK›È[™[Y\˜Ù[YÙ\Ë‚‹HÙY\\ÚXØ[ÛÝ\˜ÙKYÙ[™\˜]Y–Ô‘ËÕÐK
+Š[š\]YH\œÚ\ÝY
+ŠˆØ\™ZÝ\ÙK
+Šœ\œÚ\Ý[QHX\ÜÙ][\ÜY
+Š‹
+Š˜XÝX[ÛÜ›\XÙY
+Š‹[™^XX›KÔQKÙ]šXÙKÝš\ÝX[]šY[˜ÙH\ÈÙ\\˜]H[›™[ËˆÈ›Ý[™™\ˆÛ™Hœ›ÛH[›Ý\ˆÜˆÛÝ[\XØ]Y’TÛÝ\˜ÙHÛÛ[ÈÚXÙK‚‹H™\\™H[Ž™YÚ[ÛœÈ[™PÌKTPÌ›ÝYÚ\Èš]™HØY™H\˜[[ÛÝ\˜ÙH[™\È[™Û™H\œÚ\Ý[Ø\™ZÝ\ÙHÜš]\‹Ú[HÛ™H[[YHÜš]\ˆ™[XZ[œÈÛˆPÌH[[Ø]M‹ÍÎÈ]\™HÚ\\ˆ™\›ÙXÝ[Ûˆ\È›Ý[[YHXÝ]˜][Û‹‚‹H˜\Ù[[™H›ÜˆHÛÝYÚ\™HÛÝ\˜ÙHØ]™NˆˆÍˆÛÛ[Z]ØŒÍX‹Y\™ÙYŒÌYMNÈÜÝY[ˆÎŽÌÍŒMHÙ[™\˜]Y[™›[™\‹\™Z[\Ü]˜[Y]YMš[˜\žH–
+È˜[Z[Y\ÈˆÑ
+KÍˆ‘È[™[ˆXÝ[ÛœÈ\Y˜XÝLMÍLÍŒH
+KKMHÜ˜\\ˆž]\ÊKˆØ\ÈH
+œ™]š[Ý\È]]Ü™Y\™Ù]
+‹›Ý›ÛÙˆÙˆH™]š[Ý\ÈÛÛ\\˜X›H\ÚXØ[HÙ[™\˜]Y[‹ˆ›ÈØ\™ZÝ\ÙKÕQHÛÜ›ÔQKÙ]šXÙKÝš\ÝX[›Û[Ý[Ûˆœ›ÛH\È™XÙZ\‚‹H\ÈÛXÞK[Û›HÚ[™ÙHYÈ›ÈØ[YH\ÜÙ][\Ü\‹QH[[YHÜˆ™]ÈÒHÛÜšÙ›ÝËˆ^\Ý[™ÈZ[H™\Ü™[XZ[œÎÈ™]È
+Šœ\‹\Ù\ÜÚ[ÛŠŠˆ™\Ü\ÈY][Û˜[ˆ^XÝZXYÝ]XÈÒH\È™\]Z\™Y™Y›Ü™HY\™Ú[™È\ÈØ[™Y]K‚‚ŠŠŒŒ‹LLLLˆPÌH›Ý]KÜ\KÙ™\œžHÛÜÝ\™H\ÜÈ
+ÕUPÈÛÝ\˜ÙHØ[™Y]JNŠŠˆYYHÙXÛÛ™›Ý[™Yš\ÚX›K]ÛÜ›^Y\ˆ[ˆÚ\™T›ÝÝ\UÛÜ›Z[\˜\Ú[™È^\Ý[™È›ÙXÝ[ÛˆY\Ú\ÈÛ›Nˆ\HšY[[\›ˆ›Ý[™\žH[™Ý]\ˆÙX][™Ë™XYX›H›ØY]ËY™\œžH]X\šÙ\œË™\œžH]Y]YH›ÜHÜÝË™\œžKX˜[šÈ™YYœ™XZÝ\[™ZYÚ›Û‹X›ØÚÚ[™È\›È›ÜÈ\›Ý[™H\KÜ›Ý]KÙ™\œžH[™Ù™‹ˆ]šY[˜ÙHÝ]\È™[XZ[œÈÕUPÈØ[™Y]H[[^XÝZXY™KU[œ™X[[™Ú[™ÝÜÈQMÛÛ\[KÜ[[YHÙÜÈ›Ý™H]È›ÈQKU’PÑK’TÕPS”ÈÜˆØ]H‹ÍÈÛÛ\][Ûˆ\ÈÛZ[YY‚‚ŠŠŒŒ‹LLLLˆPÌHÚ\\‹Yš[š\ÚÛÜ›\\ÜÈ
+ÕUPÈÛÝ\˜ÙHØ[™Y]JNŠŠˆYYHš[˜[›Ý[™YÛÜ›X\^Y\ˆ[ˆÚ\™T›ÝÝ\UÛÜ›Z[\˜\Ú[™È^\Ý[™È›ÙXÝ[ÛˆY\Ú\ÈÛ›Nˆ˜YÈ[™Ø\™[ˆYÙ\ËØ˜š]ÛˆX\™›ÝÙ\ˆ›Þ\ËÛÜšÙYYšY[™[˜ÙHš]KÛÛÙY\›ØY[™\œÝÜžK™\œžH™YYÈ[™[ˆ›Û‹X›ØÚÚ[™È\›È›ÜËˆ]šY[˜ÙHÝ]\È™[XZ[œÈÕUPÈØ[™Y]H[[^XÝZXY™KU[œ™X[[™Ú[™ÝÜÈQMÛÛ\[KÜ[[YHÙÜÈ›Ý™H]È›ÈQKU’PÑK’TÕPSÜˆØ]H‹ÍÈÛÛ\][Ûˆ\ÈÛZ[YY‚‚ŠŠŒŒ‹LLLLˆPÌH[\ÜY]™YH[[YHš\ÚXš[]H]šY[˜ÙHØ[™Y]H
+ÕUPÈÛÝ\˜ÙH™Y›YÚÛ›NÈÚ[™ÝÜÈ^XÝZXY[™[™ÊNŠŠˆ^\Ý[™Èš[™KY˜[Z[H\Þ[˜ÈTÓHØ[˜XÚÈÙÜÈ™X[\‹Y˜[Z[H\ÜÙ]]XÝX[HÜ›Ý[™Y[œÝ[˜ÙHÛÝ[Z\ÜÚ[™ËÜÝY\™Z™XÝY˜XÙ\È[™Y\ÚX]\šX[ÛÝÛÝ[ˆ›È™]ÈØY[™Ë[œÝ[˜Ú[™Ë]]Üš[™Ë”Ë]Y\ÝÜˆÚ\\ˆ]]Üš]K›È^˜HÛÜšÙ›ÝÈÜˆ\‹UXÚÈÝ™\šXYˆ\ÈÛÜÙ\È[ˆ]šY[˜ÙH›[™ÜÝ›ÝHš\ÝX[Ø]Nˆ™X[[œ™X[ÙÜÈ]\Ý›Ý™HØYY\ÜÙ]ËÜXÙ[Y[ÈØÜ™Y[œÚÝÈ[™[X[ˆ™]šY]ÈÝ[™\]Z\™Yˆ^\Ý[™È™YÜ™\ÜÚ[Ûˆ\]YÈPÌHØ]H‹ÍÈ™[XZ[œÈÜ[‹‚‚ŠŠŒŒ‹LLLLˆØ[YK]ÚYHÝÛ™\‹]š\ÚX›H›ÙXÝ[Ûˆ]›Ý
+ÛXÞHØ[™Y]JNŠŠˆYÜPËLLÈ[ˆ]KÔ›Ú™XÝÛÝ™\››Ü‹šœÛÛŽˆš[Üš]^™H[\ÜY™[™\™YØÙ[™\žKÚÙ[][ØÛÛ[Ý[Û‹^XX›H]Y\ÝØ]Y[ËÜØ]™H›Ý]\ÈÝ™\ˆÜXÝ[]]™H™]ÈÒKÙØÜÎÈ\Èš]™H[™\[™[]\™KXÚ\\ˆ\ÜÙ]ÜÛÝ\˜ÙH™\[™\È[ˆÛÛ˜Ý\œ™[HÚ[HÛ™HØ\™ZÝ\ÙHÜš]\ˆ[™PÌK[Û›H[[YHÜš]\ˆ™[XZ[‹ˆ™\Ü	ÜÈ™\›ËQ–Û˜\ÚÝ\ÈÛ\ˆ[ˆÚ[™ÝÜÈ™XÙZ\Ú]Í–˜[Z[Y\ËÍˆÑÍŒÈ‘ËÌŒHRNÈXÝX[[‹]ÛÜ›™\ÚY[˜ÞKÛX]\šX[\X\˜[˜ÙKœ›ÙÈY›Ü›X][Û‹QK\™Ù]Y]šXÙH[™[X[ˆš\ÝX[™[XZ[ˆ[˜XØÙ\YˆÚ]YÛ›Ü™\ÈÛÛ[Ô›ÙXÝ[Û‹ÈX\ÜÙ]™\]Z\š[™È\œÚ\Ý[˜ÙH[™XÚØYÚ[™È]Y]ˆˆÍŒHÝ[[™[™È[œ™X[\ÝËˆPÌˆ[[YH™[XZ[œÈØ]M‹ÍÈ™YXÙ\ÜÛÜ‹YØ]Y‚‚ŠŠŒŒ‹LLLLˆPÌHÜšYÚ[˜[]™YHš\ÝX[›ÙXÝ[ÛˆØ[™Y]H
+ÕUPËUSQUQÛÝ\˜ÙHÛ›NÈQMÚ[™ÝÜÈ[™[™ÊNŠŠˆ^[™H^\Ý[™ÈÜ[Û˜[\Þ[˜Ë[ØYYÜšYÚ[˜[S˜]\™HTÓHÛÜ›œšYÙHœ›ÛHHÜ›Ý[™Y]Z[˜[Z[Y\È
+ŒXÙ[Y[ÊHÈH˜[Z[Y\ÈžHY[™ÈH›Ý\ˆ™]š[Ý\ÛHÛÝ\˜ÙKXÝ\˜]YÚ[\ÜY\K[KØZÈ[™Ú[ÝÈ–ÑY\Ú\È
+XÙ[Y[ÈXXÚX^[][HLˆÝ[
+Kˆ™]\ÙH™YH^\Ý[™ÈÚ\™H›Ý]KX\™XH[˜ÚÜœÈ\ˆ™YH˜[Z[KÙ™‹\]Ü›Ý[™˜XÙ\ËÛÛœÙ\˜]]™HZYÚ›Ü›X[^˜][Ûˆ[™™YK\ÜXÚYšXÈ\Ý[˜ÙHÝ[[™ËˆZ\ÜÚ[™ÈX\ÜÙ]XÚØYÙ\ÈØY™[HÚÚ\›È\™™Y™\™[˜ÙKÜÞ[˜Ú›Û›Ý\ÈØY›È™]ÈXÚËØ[Y\^HÛÛ\Ú[Û‹”ËÜ]Y\ÝÜØ]™HÝÛ™\œÚ\ÜˆPÌˆ[[YKˆ\]HH^\Ý[™È[[YHØœÙ\˜][Ûˆ[™™YÜ™\ÜÚ[Û‹›ÝH™]ÈÛÜšÙ›ÝËˆ[\Ü™XÙZ\È[™ÛÙHÈ›Ý›Ý™HXÝX[™[™\™Y™Y\Ë™\šYšYY™YHX]\šX[ÛÝËQK]šXÙH”Ëš\ÝX[ÈÜˆØ]H‹ÍÈXØÙ\[˜ÙK‚‚ŠŠŒŒ‹LLLLˆPÌH][K^›Û™HÝ\˜]Y˜]\™H›ÛÝË]›ÝYÚ
+Ø[™Y]NÈÚ[™ÝÜÈ^XÝZXYÚXÚÜÈ[™[™ÊNŠŠˆš]™H^\Ý[™ÈÜ[Û˜[\Þ[˜Ë[ØYY›Û‹XÛÛY[™ÈTÓH˜]\™H˜[Z[Y\È™]Z[ˆHÚ\™YX^[][HÙˆŒ[œÝ[˜Ù\ÎÈHØ[™Y]H\ÝšX]\ÈXXÚ˜[Z[H[[Û™È™YH™KY^\Ý[™ÈÚ\™HØØ][Ûˆ[˜ÚÜœË™Z™XÝÈÝY\Ü›Ý[™˜XÙ\ËÛÝ[ÈZ\ÜÚ[™ËÜÝY\˜XÙ\Ë[™^[™ÈXY\ÜÈ[[YH]šY[˜ÙHÚ]HXÝX[ØœÙ\™YØYYY˜[Z[KÙÜ›Ý[™YZ[œÝ[˜ÙHÛÝ[ÜˆÜ[Û˜[\XÚØYÙHXœÙ[˜ÙKˆ^XÝZXYÝ]XÈ\ÝØ\ÈÚ\™YÈ™KU[œ™X[ˆ›È™]ÈZ\ÜÚ[Û‹ÜÝÜžH]]Üš]KØ[Y\^HXÚËÞ[˜Ú›Û›Ý\ÈX]žHØY[™ËÜˆPÌˆ[\[Y[][Û‹ˆXÚØYÙHÝYÚ[™ËÔQK\™Ù]Y]šXÙH”Ëš\ÝX[\›Ý˜[[™Ø]H‹ÍÈ™[XZ[ˆ[™[™Ë‚‚ŠŠŒŒ‹LLLLˆPÌH[‹]ÛÜ›ÜšYÚ[˜[Y\Ú[YÜ˜][Ûˆ
+™]ÈÊÊÈØ[™Y]NÈÓÓTSKÔQKÑU’PÑKÝš\ÝX[[™[™ÊNŠŠˆY\ˆ™\šYšYYQMŒÈY]Üˆ[\ÜÍÜšYÚ[˜[Y\Ú˜[Z[Y\ËˆÚYXØ\ˆÑËŒÈXÚÙYX\ËŒHX]\šX[[œÝ[˜Ù\È[™È˜]\™HÚ[™ÛK\ÛÝš[™[™ÜÈ]Ú[™ÝÜÈ[ˆÎŒŽLÌËH^\Ý[™ÈTÚ\™T›ÝÝ\UÛÜ›Z[\˜™\]Y\ÝÈš]™HÝ\˜]YÛÙY\Ú]È\Ú[™È]ÈÝÛˆ\Þ[˜È”Ý™X[XX›SX[˜YÙ\˜ˆ]YÈš]™HØ\Y›Û‹XÛÛY[™ËÛ›ËUXÚÈTÓHÜ›Ý\È]™]š[Ý\ÛH^\Ý[™ÈÚ\™H[˜ÚÜœÈ
+LˆXÙ[Y[È\ˆÜ›Ý\X^Œ
+KÜ›Ý[™È[H\Ú[™ÈXÝX[ÛÜ›˜XÙH[™›Ü›X[^™\È›Ý[™ËX˜\ÙYØØ[KˆZ\ÜÚ[™ÈY]Ü‹[Û›HX\ÜÙ]XÚØYÙ\È\™H[\™[HÜ[Û˜[™]™\ˆ›ØÚÈÚ\\ˆ˜[šÎÈ[™[™È™\]Y\ÝØ[˜Ù[Y][™^Kˆ›ÈÚ[™Ù\ÈÈ]š[™ÕÛÜ›\™XÝÜ‹”ÐÛÛ^]Y\ÝÜØ]™KÜˆPÌˆ[[YKˆ›ÝÙ\ˆ][K[X]\šX[[œ™\ÛÛ™YÈ›ÈÝY\ÜÙYX]\šX[Ý™\Üš]KˆÝ]XÈ\ÝÈ™\šYžH]]Ü™YÛÛœÝ˜Z[È]›ÈÛÜ›š\ÝX[XØÙ\[˜ÙKÌŒ”ËQKÛÝ[™”ÈÚ\˜XÝ\ˆÛÛ\][Û‹ÜˆØ]H‹ÍÈ]šY[˜ÙH\ÈÛZ[YYˆ\™Ù]^XÝXY]\Ý\ÜÈQMÊÊÈZ[[™XÝX[[[YHXÙ[Y[]Y]‚‚ŠŠŒŒ‹LLLLˆ^XÝZXYQMŒÈ[ˆÎŒÍLÎŠŠˆŒH™]ÛHÝÛ™YÛÝ\˜ÙKZY[]HX]\šX[[œÝ[˜ÙPÛÛœÝ[\ÜÙ]ÈÚ][ŒÈ”ˆ^\™HÝ™\œšY\È\ÜÙY\‹Z[œÝ[˜ÙHÜÝ\Ø]™H™XY˜XÚË[ˆHš\œÝ›ÝÙ\—ÝÚ[Y\Ú˜Z[Y™XØ]\ÙH]È™X[[\ÜY–\È][\HX]\šX[ÛÝÈ
+›ÝH\ÜÝ[YYÚ[™ÛHÛÝ
+KˆÈ›Ý›[šÙ]\ÜÚYÛˆÛ™HX]\šX[ÈH[\™HY\Úˆ™]ÈØÛÜYš\ÝX[[ZÙH™\Ù\™\È[Í]]Ü™YÑ˜[Z[Y\ËÍˆÑÚYXØ\œËÍŒÈ‘ËÌŒHRHÚ[ˆX]\šX[ÛÝÛÝ[\È[XšYÝ[Ý\Ëš[™ÈÛ›H[HÚ[™ÛK\ÛÝÝ\™˜XÙ\ÈÜˆÛ™H^XÝH˜[YYÛÝ\˜ÙHÛÝ[Z]ÈH›Û‹XXØÙ\Y[œ™\ÛÛ™YÛ˜]\™WÜÛÝÛØœÙ\˜][ÛœØ\Ý[™XÝX[˜]\™WØ›Ý[™œÈ˜]\™WÚ[ÛÝ[Ëˆ\È[ÝÜÈ][\ÜÙ]\[[™H›ÙÜ™\ÜÈÚ]\ÛÛ]Y[œ™\ÛÛ™YÜÛÙÞH[™›ÈØ]H‹ÍÈ›Û[Ý[Û‹ˆÚ[™ÝÜÈ^XÝZXY[™XÝX[ÛÝØœÙ\˜][Ûˆ[™[™Ë‚‚ŠŠŒŒ‹LLLLˆPÌHXÝX[[œ™X[]ÛˆÙÈ[ˆÎŒŽÎŠŠˆÛÛ[X[™][\™Y
+PÌWÐÕTUQÑQUÔ—ÔUÓ—ÑS•T‘Q
+H[ˆ˜[Ù[KØXÝX[H™Z™XÝYš\œÝ^\™HÙ]\ŽˆPÌWÔ”—ÕVT‘WÔTSQUT—ÓRTÔÒS‘Î‹‹‹“RWÓ˜]\™WÕÔÚÐ˜\šÎ[™YÕ^\™Xˆ^\Ý[™ÈÊÊÈ™\šYšYYX\Ý\ˆÜXÚYšY\È^XÝH[™YÕ^\™K›Ü›X[^\™KÔ“U^\™Kˆ\™Ù]Y™[YYX][ÛŽˆÚXÚÈH™X[\™[Ù]Ý^\™WÜ\˜[Y]\—Û˜[Y\Ø™Yœ™\ÚRH[š\š][˜ÙKÙ]XXÚÝ™\œšYH[™YÙHžHÜÝ\Ø]™HÙ]ÛX]\šX[Ú[œÝ[˜ÙWÝ^\™WÜ\˜[Y]\—Ý˜[YX^XÝØš™XÝY[]K™]™\ˆÙ]\ˆ›ÛÛ[Û™NÈÝÜYˆÝ[HX\Ý\ˆXÚÜÈ]]Ü™Y\˜[Y]\ˆØÚ[XHÜˆ[žHÝ™\œšYH\ÈXœÙ[ˆÙ™›[™H™YÜ™\ÜÚ[ÛœÈÛÝ™\ˆÙ]\ˆ˜[ÙHÚ]\YY˜[YKXœÙ[˜[YKÝ[HX\Ý\‹ˆ›ÈXÝX[Ú[™ÝÜÈX]\šX[™XÙZ\QK]šXÙHÜˆš\ÝX[ÛZ[HY]‚‚ŠŠŒŒ‹LLLLˆXÝX[Ú[™ÝÜÈQMŒÈ[\Ü\Ý[ˆÎŒŒÌŽMNŠŠˆ^\Ý[™ÈÚ\™T›ÙXÝ[Û’[\ÜÛÛ[X[™]ÛÛ\]YLÍÈš[\Ë˜Z[\™\Ø
+ˆZ[›Üˆ[™Ù[Øš[›Ü›X[Ø\›š[™ÜÊK]QMY]Ü‹PÛYQ^XÝ]T]Û”ØÜš\›ÙXÙY›È]Ûˆ[žHÜˆÜÝZ[\Ü™XÙZ\È˜Z[™\ÜYPÌWÐÕTUQÑQUÔ—ÔÔÕSTÔ•Ô‘PÑRTÓRTÔÒS‘Øˆ›ÛÝÈ\XÈQMŒÈXY\ÜÈTNˆ\[\]ÛœØÜš\\ØÜš\Oš[O˜Ú]^XÚ]]]Üš^™Y[š\›Û›Y[[ž\Ú[ÝÝ]ØXœÛÙÈ[™\™Ù]Y˜Z[\™HZ[ˆ›ÈŒHRKÍˆÑÝXØÙ\ÜÈ\ÈÛZ[YY[[™^^XÝZXYÚ[™ÝÜÈ™XÙZ\ÈÛLÍØš[HÛÝ[\ÈHYØXÞHÛÛ[X[™][\ÜÛ›K›ÝQKÝš\ÝX[Ù]šXÙKÜØÙ[™HXØÙ\[˜ÙK‚‚ŠŠŒŒ‹LLLLˆQMŒÈX]\šX[[œÝ[˜ÙPÛÛœÝ[˜XÝÜžS™]ÈÛÛ\]Xš[]HÛÜœ™XÝ[ÛŽŠŠˆ\XÉÜÈQMŒÈ]ÛˆTHÙ\È›Ý^ÜÙH[š]X[Ü\™[\È[ˆY]Üˆ›Ü\HÛˆX]\šX[[œÝ[˜ÙPÛÛœÝ[˜XÝÜžS™]ËˆÈ›ÝÜš]H][œÝ\ÜY›Ü\NÈÜ™X]H[œÝ[˜ÙH›ÝYÚH˜XÝÜžH[™Ø[[œ™X[“X]\šX[Y][™ÓXœ˜\žKœÙ]ÛX]\šX[Ú[œÝ[˜ÙWÜ\™[
+[™XYHÝ\ÜY[™™]š[Ý\ÛH[\[Y[Y
+KˆÙ™›[™H[ØÚÙY˜XÝÜžH›ÝÈ™Z™XÝÈ[œÝ\ÜYY]Üˆ›Ü\HÙ]\œÈÈØ]Ú™Z[›ÙXÝ[Û‹ˆ^XÝZXYÚ[™ÝÜÈ[‹XÝX[RH\œÚ\ÝYš[™[™ÜÈ[™š\ÝX[ÔQKÙ]šXÙH›ÛÙœÈ™[XZ[ˆ[™[™Ë‚‚ŠŠŒŒ‹LLLLˆPÌH[‹\ÛÝ\˜ÙH[›™YTÒH[ZÙH[YÜ˜][ÛŽŠŠˆY\™ÙH]™[ÜŒ˜ŽY™˜LLÌÍŽ˜ÎLLX™˜˜ÍŒ˜NML
+ˆÍN
+H[ÈˆÍMKÙY\[™È^XÝZXY]]ÛX]XÈÝ\˜]YQMÜš]\‹ˆ[‹\ÛÝ\˜ÙHš]™H[™Ù\Ý[ÛˆX^H\ÙH™\šYšYYÛ˜\ÚÝÒLMˆÚ[ˆ™[[ÝHQH\È[˜]˜Z[X›KˆÜšYÚ[˜[[›XÙ[œÙYÛÝ\˜ÙH›Û[Ý[Û‹š[˜[QH[\ÜQKš\ÝX[[™]šXÙHXØÙ\[˜ÙH™[XZ[ˆØ]YžH™X[]šY[˜ÙNÈH]™[Ü˜[œÙ™\ˆ[ˆÎŒMLÌÌHØ\È][˜ÚY[™]È\ÚXØ[™\Ý[]\Ý™H™XY›Ý™\Ý[YY‚‚ŠŠŒŒ‹LLLLˆ]]ÛX]YÚ[™ÝÜËÑš]™H\[™[˜ÞH™\Z\ˆØ[™Y]NŠŠˆ^XÝZXY˜ŽXMŒ™YŒMÎMYŒÌLÍM™˜ØÌMÎNL™Í˜™KU[œ™X[[™š]™K[[™HÜÝYTÔÎÈÚ[™ÝÜÈ[›™\ˆX[TÔÈ
+[\˜XÝ]™HØ]ÚÙË\ÚÈM‹ŒQÐŠKˆXÝX[]]ÛX]XÈÝ\˜]Y[\ÜRSQPÌWÐÕTUQÕÐT‘RÕTÑWÐTÒU‘WÓRTÔÒS‘Ø
+[ˆÎNLNLÌJKˆØÚY[Yš]™H[ZÙHRSQX\›Y\ˆ’U‘WÓÐ’‘PÕÐÒPÒÔÕSWÓÔ—ÔUÒS•SQ™Y›Ü™H˜[œÙ™\ˆ
+[ˆÎNLMŒLM
+Kˆ\™Ù]Y™\Z\ˆXZÙ\ÈZ\ÜÚ[™ËSQH’TØ[™Y]\È]X\˜[[™Y[™]šYX[HÛÈÛ™H[œ™[]Y˜Y™[[ÝH™XÛÜ™Ø[››ÝX›Ü˜[Y\˜Ú]™HXÜ]Z\Ú][Û‹ˆ^XÝ[ˆ™\]Z\™YÛÝ\˜ÙH’TË\ÚXØ[QKÔÒKÐÔËXÙ[œÙK‘ÚPˆ™\Ù\™K[™ÛÝ\˜ÙKZ[\ÜØ]H™[XZ[ˆ˜Z[XÛÜÙYˆ›ÈX[X[\Ü]Ú›Èž\\ÜÈÙˆ[™Ú[™HÜˆØ]H‹ÍÈXØÙ\[˜ÙNÈœ™\Ú^XÝZXYÚXÚÜÈ[™[™Ë‚‚ŠŠŒŒ‹LLLLˆPÌHˆÍMHÝÛ™Y[X]\šX[ÜÝZ[\Ü™Yš[™[Y[
+Ø[™Y]KÕUPËUSQUQ[™[™Èœ™\Ú^XÝZXYÒJNŠŠˆ™]\ÙHH^\Ý[™ÈY]Ü‹XÜ™X]YWÔPÌU™\šYšYY”˜X\Ý\‹Ü™X]KÝ\]HŒHÛÝ\˜ÙKZY[]HX]\šX[[œÝ[˜ÙPÛÛœÝ[\ÜÙ]È[™Ù][ŒÈÜšYÚ[˜[˜\ÙPÛÛÜ‹Ó›Ü›X[ÓÔ“H\˜[Y]\œËˆÛ›H˜[YYÛÝ\˜ÙK[ÝÛ™YÚ[™ÛK\ÛÝ˜]\™HY\Ú˜[Z[Y\È\™H[YÚX›H›Üˆ]\›Z[š\ÝXÈš[™[™ÎÈ™Y\ËØ\˜Ú]XÝ\™H™]Z[ˆZ\ˆÛÝÈ[™[™È™\šYšYY][K\Ý\™˜XÙHX\Ëˆ™\]Z\™HXÝX[X\ÜÙ]XÚØYÙH^\Ý[˜ÙK™YÚ\ÝžHY[]KØ]™Y\™[Ü\˜[Y]\‹ÜÛÝ™\šYšXØ][ÛŽÈ˜Z[ÛÜÙYÚ]›ÈÝXØÙ\ÜÙ[™XÙZ\›ÜˆZ\ÜÚ[™ÈX\Ý\‹X\\˜[Y]\‹š[HÜˆ[XšYÝ[Ý\ÈÛÝˆY]Ü‹[Û›KÛÙ™›[™H™YÜ™\ÜÚ[ÛˆÙ\È“Õ›Ý™HÚ[™ÝÜÈQM[\ÜÛÜ›XÙ[Y[ÛÛ\Ú[Û‹Û˜]‹QKÌŒ”Ë[X[ˆš\ÝX[ÈÜˆØ]H‹ÍËˆLŒ^\›˜[‘È™[XZ[ˆšYÚËZ[ˆH^XÝÒH[™ÒH[ˆ]šY[˜ÙH]\Ý™H™XÛÜ™YY\ˆ\ÚÈ›È]]ÛX]XÈØ\™ZÝ\ÙHÜˆ[™Ú[™H\Ü]Ú‚‚ŠŠŒŒ‹LLLLˆPÌHÝ\˜]YY]Üˆ\ÜÙ]™YÚ\ÝžH˜Z[XÛÜÙY™Yš[™[Y[
+ˆÍMHØ[™Y]JNŠŠˆ›ÝÍ˜\ÙHY\Ú\È[™ŒÈÝÛ™Y‘È™\]Z\™HY]Ü\ÜÙ]Xœ˜\žH™YÚ\ÝžHš\ÚXš[]HY\ˆY]ÜˆØ]™NÈZ\ÜÚ[™È™YÚ\ÝžHØš™XÝÈX›ÜÚ]Ý][Z][™ÈXØÙ\[˜ÙH™XÙZ\ˆYYÙ™›[™H™YÜ™\ÜÚ[Û‹ˆ^XÝZXY[™Ú[™H[\Ü™X[X\ÜÙ]\œÚ\Ý[˜ÙKXÙYÙ[ÛY]žKÛÛ\Ú[ÛœËÔQKÙ]šXÙKÚ[X[ˆš\ÝX[™[XZ[ˆ[™[™Ë‚‚ŠŠŒŒ‹LLLLˆPÌHÔ’QÒSSQ–ÑS•QÔUSÓˆÐS‘QUH8 %ÕUPËUSQUQÓ“NŠŠˆÛÝ\˜ÙK[Û›HÍY˜[Z[KÍ‹X]]Ü™YSÑÍŒËT‘È[\Ü\ÜÝ›ØÙ\ÜÈØÜš\È[™˜Z[XÛÜÙY™XÙZ\™\šYšXØ][ÛˆYYÈ›ÈXÝX[™]ÈÚ\™HX\ÜÙ]Ü™\Ù[YÛÜ›Ó”ËÔQHÛZ[KˆY]Ü‹[Û›H]ÛˆYÚ[œÈ™\]Z\™H^XÝZXYÚ[™ÝÜÈQMŒËŒˆ\Ý™Y›Ü™H›Û[Ý[Û‹ˆ[Ú^Ù™›[™H[ØÚÈ\ÝÈ\ÜÙYˆLŒÝ]ÚYHXÙ[œÙK][˜Ù\Z[ˆ‘È™[XZ[ˆSˆ[[YHÚ\˜XÝ\œËÛÛ\Ú[Û‹Û˜]‹PÌH˜]™\œØ[ÜØ]™K]ËY™\œžKXÚØYÙKLHÌŒ”È[™[X[ˆXØÙ\[˜ÙH[œ›Ý™[ŽÈØ]H‹ÍÈÔS‹‚‚ŠŠŒŒ‹LLLLˆPÌHÚ\˜XÝ\ˆ[™]š[™ÈÚ\™HÛÜÙ[Ý]ÛÛ˜XÝŠŠˆYYH˜[YYXÚ\˜XÝ\‹Û]š[™Ë]ÛÜ›]šY[˜ÙHÛÛ˜XÝÈ™]™[Ø]H‹ÍÈÛÜÝ\™H[[œ›ÙËÐš[›ËÑØ[™[‹ÔØ[KÓY\œžKÔ\[ˆ[™”ÈZ[K[Y™H™Z]š[Üˆ]™H[[YH™\Ù[˜ÙK[š[X][Û‹ÛX]\šX[]šY[˜ÙKQKÙ]šXÙH›Ùš[[™Ë[™[X[ˆš\ÝX[XØÙ\[˜ÙK——ŠŠŒŒ‹LLLLˆPÌH[™Ú[™KÚ[\ÜÜ[[YH]šY[˜ÙH\Ü˜YNŠŠˆPÌH\È›ÝÈÓÓTSKUTÕQ›ÜˆH™XÛÜ™YÙ[‹ZÜÝY[ˆ[™\È›ÙXÝ[Ûˆ[\ÜÚXY\ÜÈ[[YKÜÝ]KÝØ\›š[™ËYXÝXØÙ\ÜÈ]šY[˜ÙH
+ÎNŽÍŽXLLYYL˜
+Kˆ\ÈÙ\È›ÝÛÜÙHØ]H‹ÍÎˆXÚØYÙH\Y˜XÝQH˜]™\œØ[\™Ù]Y]šXÙHÌŒ›Ùš[[™Ë[™[X[ˆš\ÝX[™]šY]È™[XZ[ˆÜ[‹——ŠŠŒŒ‹LLLLˆÚÛKYØ[YH™YÚ[Ûˆ™XY[™\ÜÈ]Y]ŠŠˆHŽ\™YÚ[Ûˆ›ÙXÝ[ÛˆXÚÙ]Ù]›ÝÈ\ÈHÛÝ\˜ÙH™YÜ™\ÜÚ[ÛˆÝX\™[™PÌHÝ\˜]YØ\™ZÝ\ÙH™XY[™\ÜÈ\ÈÚXÚÙYYØZ[œÝZ[š[][H[™\È™Y›Ü™H[œ™X[[\Üˆ\È[\›Ý™\ÈÚÛK[X\X]\šX[™\\˜][ÛˆÚ]Ý]ÛZ[Z[™È[™Ú[™H[\ÜQKš\ÝX[XØÙ\[˜ÙKÜˆØ]H‹ÍÈÛÜÝ\™K——ŠŠŒŒ‹LLLLˆPÌHÝ\˜]Y[\Ü™XY[™\ÜÈÝX\™ŠŠˆÛÝ\˜ÙK\ÝYÙHX]\šX[[™Y\Ú›Û[Ý[Ûˆ›ÝÈ\È[ˆ^XÚ]˜Z[XÛÜÙY]Y]ÛÝ™\š[™ÈÑ]œË\ÚYXØ\ˆ[\Ü[[X]\šX[ÛÛ\™\ÜÚ[Û‹ÜÔ‘Ðˆ[\Ë^\›˜[[XÙ[œÙH]X\˜[[™KÛÛ\Ú[ÛˆÛXÞK[™›ÛÙˆ›YÜËˆ]™\\™\ÈH^\Ý[™ÈÚ\™HÛÝ\˜ÙH˜]Ú›ÜˆØY™\ˆ[œ™X[[\ÜÚ]Ý]X\šÚ[™ÈØ]H‹ÍÈÛÛ\]K——ŠŠŒŒ‹LLLLˆÙ[‹ZÜÝYÛÛ\[H›ØÚÙ\ˆš^ŠŠˆ[ˆÎNNÌŽMX›Ý™YÝ\œ™[ZXYQMÛÛ\[H˜Z[\™H
+ÌŒH˜\ÙTÜ[][ÛŠˆ[™XÛ\™Y
+HY\ˆRÝXØÙYYYˆHš^™ZÛY\ÈH˜\ÙH[œÚ]H˜[˜XÚÈY[X™\œÈ[ÈS]š[™ÕÛÜ›\™XÝÜ˜[™^[™ÈÛÝ\˜ÙH\ÝËˆ]ØZ]™\[ˆ›ÜˆÓÓTSKUTÕQ‚‚ŠŠŒŒ‹LLLLˆPÌHÍÈÍH[[YH™YÜ™\ÜÚ[Ûˆ[YÜ˜][ÛŽŠŠˆ”ÈÜ[][Ûˆ›Ùš[H˜[˜XÚÈ[™ÒK[Û›HÚXÚÜÚ[™]žHÝ\™\ÜÚ[Ûˆ\™H[YÜ˜]YÛˆÝ\œ™[]™[ÜÚ]ÛÝ\˜ÙH™YÜ™\ÜÚ[ÛœËˆ\È\È›ÝØ]H‹ÍÈÛÜÝ\™H[™Ù\È›ÝÛZ[HÝ\œ™[ZXYQMÛÛ\[HÜˆQHXØÙ\[˜ÙK‚‚ŠŠŒŒ‹LLLLˆPÌH™\ÝÜ™H]Y\Ý\Ý]HØ[š]^˜][ÛˆÛÝ\˜ÙHš^ŠŠˆ™\ÝÜ™T]Y\ÝÝ]X›ÝÈ™Z™XÝÈ[\H™\ÝÜ™Y]Y\ÝÜÝYÙHÙ^\ËÛ[\È™\ÝÜ™YÝYÙH˜[Y\ÈÈ›Û‹[™YØ]]™H[YÙ\œË[™KY\XØ]\È›Û‹Y[\HÛÛ\]YÝÜžH™X]È™Y›Ü™H™\ÝÜš[™ÈXÝ]™H›Ý]KØÚ\\‹Ù\\ÛÙKÜ^Y\ˆÝ]Kˆ™YÜ™\ÜÚ[ÛˆÛÝ™\˜YÙH]™\È[ˆØÜš\ËÝ\ÝÛÙ™›[™WÜ[[YWÜØY™]KœXÈQMÛÛ\[KÔQH]šY[˜ÙH™[XZ[œÈ[™[™ÈHÙ[‹ZÜÝY[‹‚‚ŠŠŒŒ‹LLLLˆPÌHÜšYÚ[˜[ÛÝ\˜ÙK]ËUQMÝYÚ[™ÈØ[™Y]NŠŠˆœ›ÛHH[™XYKXÝ\˜]Y[‹Qš]™KV’T˜]ÚHÝšXÝHÛÝ\˜ÙK[Û›HÛÛ™\\™\ÈÍÜšYÚ[˜[Ý]XÈ–Ñ˜[Z[Y\È
+Lˆ˜]\™KŒˆ\˜Ú]XÝ\™JH\Èˆ–ÑKÌˆÚYXØ\œÈÝ]ÚYHÛÝ\˜ÙP\ÜÙ]È[™ŒÈÜšYÚ[˜[‘ÈX\È
+ŒH˜\ÙPÛÛÜ‹Ó›Ü›X[ÓÔ“Hš\]ÊKˆÛÝ\˜ÙHš[\È[™[X™YYX[šY™\Ý\Ú\È\™H\ÚXØ[HÚXÚÙY˜Z[XÛÜÙY]\ØY™KY[\Ý[È\™\\HÐÌXÛZ[YYLŒ‘È\™H“Õ]]Ë[XÙ[œÙYÜˆ›Û[ÝYˆZYÚÙÚXØ[\ÜÙ]ÙØ[Y\^KÔPHÛÜšÜÝ™X[\È[ˆ[œÚYHH^\Ý[™È]]Üš^™Yš]™H›ÙXÙ\ˆ[™\Ë›ÝZYÚ[™\[™[Ú[™ÝÜÈÜš]\œËˆHMËYš[HÛÝ\˜ÙKÜÚYXØ\ˆÝYÙHØ\ÈÙ[™\˜]YØØ[H[ˆÚ]ÔÛÛZ[™\‹[™]ÛˆÙ™›[™H™YÜ™\ÜÚ[ÛœÈ\ÜÙYÈXÝX[ˆÝYÙKQH[\ÜÈX\ÜÙ]Ñš[™[™ËÛÛ\Ú[Û‹”ËÙØ[Y\^KQK]šXÙKš\ÝX[[™Ø]H‹ÍÈXØÙ\[˜ÙH™[XZ[ˆS”“Õ‘S‹ˆ™]ÈØÚY[YÝYÙH›ÛÝÜÈÝXØÙ\ÜÙ[^XÝ[‹V’TØ\™ZÝ\ÙH]\Ý][ÛˆÚ]Ý]Ú[™Ú[™È]ÈÛÛ˜Ý\œ™[˜ÞKÜØÚY[KÜ\›Z\ÜÚ[ÛœÈÜˆÜ™X][™È[›Ý\ˆ\œÚ\Ý[Üš]\‹ˆØ[™Y]H™\]Z\™\È^XÝZXY™KU[œ™X[Ñš]™HÒK‚‚ŠŠŒŒ‹LLLLˆ\ÚXØ[Ú\™HÛÝ\˜ÙHÝ\˜][Ûˆ
+ÐÐSPÓÓ•RS‘TˆÓ“NÈ^XÝ[ˆš]™H’TÊNŠŠˆ[™\[™[HÝÛ›ØYYLÝÛ™\ˆ’TÈÝ[[™ÈŒ‹MÌMHž]\Ë˜[Y]Y[\™HÛ‹Y\ÚÈ’TÒLM‹ÐÔÈ[™[X™YY\‹Yš[H™XÙZ\Ë[ˆÝ\˜]YŒÈ\ÜÙ]š[™[™ÜÈ[ÈŒÌÒK][š\]YH\ÚXØ[š[\È
+š[˜\žH–NÈ‘Èš[™[™ÜÈÚ]ÌÈÛÛ[[X\Ù\ÊHœ›ÛHLˆ˜]\™H˜[Z[Y\ÈÈÑŒˆ[Ù[\ˆ\˜Ú]XÝ\™H˜[Z[Y\ÈˆÑLˆÜšYÚ[˜[™YÚ[Û˜[”ˆ˜[Z[Y\Ëš[Üš]HÛH]™[ˆ”ˆÙ]È[™ÍˆÐÌ\™XÙZ\”ˆÙ]Ëˆ™[[Ý™YÍˆ\XØ]Hš[˜\žH–[™ÍˆYØXÞHTÐÒRH–È[[˜ÛÛ\]HÛÛÙ[—Ø˜\œ™[×ÌH[™H˜Z[[™ÈšYË]ÙZYÚØ[™Y]KˆØØ[H[Z]YÒT‘WÔPÌWÐÕTUQÔÓÕTÑWÌŒŒLL‹žš\
+NKÍŒŽHž]\ÎÈÒLMˆLY˜ŽØØŒØ˜™XYYXNMÍÙŒLY™ÍYLÍŽØÙLMŽXMXÌÌM™˜™ŒÎYXÙ™ÎYŠH\ÈÛÛ\]HX[šY™\ÝX]\šX[ÛÛXÝÚY][™Ù\\˜]HšYË\™]šY]È\˜Ú]™KˆÚ^ÛÝ\˜ÙK]ÛÛ\ÝÈ\ÜÙYØØ[NÈØÜš\ËØÝ\˜]WÜXÌWÙš]™WÜÛÝ\˜ÙKœH›ÝÈ™\›ÙXÙ\ÈHÒKXÚXÚÙYˆÝ\˜]Y˜]ÚÛ›HY\ˆ\ÚXØ[[‹V’TPËÚ]‘ÚPˆ™\Ù\™H[™[˜Ú[™ÙY]]Üš^™YØÚY[YšYÙÙ\‹ˆ\È\È“Õ›ÛÙˆÙˆˆ˜[œÙ™\ˆÜˆ[œ™X[[\ÜÑ[YÜ˜][Û‹ÛÛ\Ú[Û‹QK\™Ù]”Ë[X[ˆš\ÝX[ÜˆØ]H‹ÍÎÈ^\›˜[XÙ[œÙ\ÈÝ[™\]Z\™H™]šY]Ë‚‚ŠŠŒŒ‹LLLLˆÌHÛÝ\˜ÙK[Û›H\ÚXØ[Ø\™ZÝ\ÙHPÈØ[™Y]NŠŠˆ™]ÈØÜš\ËÝ™\šYžWÙš]™WÝØ\™ZÝ\ÙWÜ™XÙZ\ËœH™XYÈ[ˆ^XÝ\˜Ú]™YÛÝ\˜ÙHÒLMˆ˜[Y\Èœ›ÛH]KÑš]™TÛÝ\˜ÙSØØ[™Y›YÚŒŒLLKšœÛÛ‹™\šYšY\È]™\žHXÝX[ÝYÙYˆš[HÒLMˆ[™ÛÛ\]YQHYØZ[œÝH˜[œÙ™\ˆ™XÙZ\ØØ[œÈ’TÛÛ[Ë^ÜÙ\ÈY[X™\‹[]™[–Ô‘È\XØ]HÜ›Ý\Ë]X\˜[[™\ÈTÐÒRH–[™[˜ÛÛ\]H›ÝšY\ˆX]\šX[Ù]Ë[™Üš]\ÈH™XY[Û›H”ÓÓˆÛÝ\˜ÙH™\ÜÚ]š]™H^XÚ]H›ØÚÙY›ÙXÝ[ÛˆØ]™\Ëˆ[YÜ˜]YY\ˆH^\Ý[™È]]Üš^™Yš]™H[ZÙH›Ø‹Ú]Ý]Ú[™Ú[™È]ÈØÚY[KÝšYÙÙ\‹ÜÙXÝ\š]HY[]K[™Ú]š[™HÜÝY™YÜ™\ÜÚ[ÛœËˆØ[™Y]HÝ]\È\ÈÕUPËUSQUQÛ›HY\ˆ^XÝZXYÒH\ÜÙ\Ëˆ›È™X[™]Èˆ™XÙZ\QH[\ÜQKÙ]šXÙKÝš\ÝX[Ü\™›Ü›X[˜ÙHÜˆØ]H‹ÍÈTÔÈÛZ[YYÈXÙ[œÙ\È™[XZ[ˆX[X[[™[\Ü›ØÚÙY‚‚ŠŠŒŒ‹LLLLˆš]™H[›™\ˆU™YÜ™\ÜÚ[ÛˆØ[™Y]NŠŠˆX[X[š]™HÛÜšÙ›ÝÈ[ˆÎMÍLÍÍ™XXÚYÙ[‹ZÜÝYÚ[™ÝÜÈQMLËUÚ[™ÝÜØ]˜[œÙ™\ˆ˜Z[Y™Y›Ü™H[žHÛÜH]ÓÓ‘WÓRTÔÒS‘Ø\Ü]HÝÛ™\ˆ[\˜XÝ]™H˜ÛÛ™HÛÛ›™XÝ]š]H[™ÛÛ™šYÝ\˜][Û‹ˆØ[™Y]H™Yœ™\Ú\È\œÚ\ÝYXXÚ[™KÝ\Ù\ˆU[œÚYHH^\Ý[™ÈØ]ÚÙÈ›Ø‹™\ÛÛ™\È˜ÛÛ™K™^X[™]Û‹ÜHÚ]Ý][œÝ[[™ÈÜˆÚ[™Ú[™ÈH[›™\‹[ˆ\ÜÙ\È^XÚ]˜ÛÛ™H^XÝ]X›H]ÈHÛÝ\˜ÙK[Û›H[™Ù\ÝØÜš\ˆ›ÈÝXØÙ\ÜÙ[\ÚXØ[˜[œÙ™\‹’T™XÙZ\[œ™X[[\ÜQKÙ]šXÙKÝš\ÝX[ÜˆØ]H‹ÍÈÛZ[NÈ™\Ù\™H™XY[Û›Hš]™H[™˜Z[XÛÜÙY]][™[][ÛˆÝX\™Ë‚‚ŠŠŒŒ‹LLLLHPÌH[‹X[™H\ÚXØ[™Y›YÚ
+ÛÛZ[™\‹“ÕÚ[™ÝÜÊNŠŠˆ™]šY]™Y[LÝÛ™\ˆš]™H’TÈ[È\ÈÙ\ÜÚ[Ûˆ[™]Y]YŒ‹MÌMHž]\ÎÈ’TÔËÜØY™H]ËÛÝ\˜ÙH\Ú™XÙZ\Ë™\ÝYŽ\™YÚ[Ûˆ\˜Ú]™K–›Ü›X][™‘ÈXY\œÈ\ÜÙYLÌLˆÒKX›Ý[™ØØ[™XÙZ\ˆ]KÑš]™TÛÝ\˜ÙSØØ[™Y›YÚŒŒLLKšœÛÛ˜È\›X[™[™YÜ™\ÜÚ[ÛŽˆØÜš\ËÝ˜[Y]WÙš]™WÜÛÝ\˜ÙWØ[™\ËœX
+ÈØÜš\ËÝ\ÝÝ˜[Y]WÙš]™WÜÛÝ\˜ÙWØ[™\ËœX
+Ù™›[™H\ÝÈ\ÜÙY
+KˆÍˆš[˜\žHÚ\™H˜]\™H–\™H\XØ]Y™]ÙY[ˆÛÈXÚØYÙ\Ë\Ý[˜Ýœ›ÛHHÍˆÛTÐÒRHÛÝ\˜ÙH–È[Ù[\ˆ™\ÝYXÚÈÛÛZ[œÈš[˜\žH–[™Íˆ‘Ëˆ›Ý\ˆÛH]™[ˆÚ\™ÈÛÛZ[ˆÍˆÛÛ\]HÐÌ[X]\šX[š\]ÎÈÛÛÙ[—Ø˜\œ™[×ÌX™[XZ[™Y]X\˜[[™Y›ÜˆRTÔÒS‘×Ô‘TURT‘QÓPTËˆ\È\ÈÛÝ\˜ÙKZ[YÜš]H]šY[˜ÙHœ›ÛHÚ]ÔÛÛZ[™\ˆÛ›K“ÕHˆ[›™\ˆ˜[œÙ™\‹[œ™X[[\ÜQK]šXÙH\Ýš\ÝX[\›Ý˜[ÜˆØ]H‹ÍÈÛÜÝ\™K‚‚ŠŠŒŒ‹LLLLHˆÍˆÚ[™ÛHØ\™ZÝ\ÙHÜš]\ˆØY™]HÛÜœ™XÝ[ÛŽŠŠˆÛÛœÛÛY]Y\XØ]HÝ\›KÝÛËZÝ\ˆš]™H›ØœÈ[ÈHÚ[™ÛHØÚY[YÛÝ\˜ÙH[ZÙH[™™XÙZ\™YKYYØ]ÚÙÈÙ\ÜÚ[Ûˆ™\šYšXØ][Û‹^XÚ]H›ØÚÙY[˜][™Yš]™H[][ÛœÈ[™YÙÙYÝYÙY’TÈ\È[™\šYšYY›ÜˆXÙ[œÙKÚ[\Üˆ\È\ÈHÛÝ\˜ÙK[Û›HÛÜœ™XÝ[ÛŽÈ›È\ÚXØ[ˆ˜[œÙ™\‹[™Ú[™H[\ÜÜˆØ]H‹ÍÈTÔÈ\ÈÛZ[YY‚‚ŠŠŒŒ‹LLLLH]]Èš]™HØ\™ZÝ\ÙHØ[™Y]NŠŠˆYYÛËZÝ\ˆØÚY[YÚ[™ÝÜÈÛÝ\˜ÙH’T[ZÙH
+ØÜš\ËÙš]™WÝØ\™ZÝ\ÙWÜÞ[˜ËœJH[™˜\œ›ÝÈ^XÝRQÚ\ÚÚ[™\[™[X˜XÚÝ\ØXÝX[[\ÜY]šY[˜ÙHÛX[\ˆ\Ù\È\ÛÛ]Y[›™\ˆ[\ÛÝ\˜ÙH[™\œÚ\Ý[Ø\™ZÝ\ÙKˆÛ™K][YHš]˜]H˜ÛÛ™HÐ]]™\]Z\™YÈ›Èš\œÝ˜[œÙ™\‹[œ™X[[\ÜÜˆÛX[\\È™Y[ˆ›Ý™[‹ˆØ]H‹ÍÈ[˜Ú[™ÙYˆÜÝY™YÜ™\ÜÚ[ÛœÈ[™[™Ë‚‚ŠŠŒŒ‹LLLLH]]ÛX]XÈš]˜]Hš]™H[ZÙHØ[™Y]NŠŠˆ[›ÙXÙYØÜš\ËÜÞ[˜×Ùš]™WÝØ\™ZÝ\ÙKœX[™™Ú]X‹ÝÛÜšÙ›ÝÜËÜš]˜]KYš]™K]Ø\™ZÝ\ÙKZ[ZÙKž[[ÛˆYXØ]Y[™œ˜Hœ˜[˜ÚˆÝ\›HÙ[‹ZÜÝYØ\™ZÝ\ÙK[Û›HØÚY[K^XÝTÒH[\Ü˜\žHÚXÚÛÝ]\œÚ\Ý[—XÝ[ÛœË\[›™\—ÝØ\™ZÝ\ÙWÚ\™R›Ý\›™^WÙš]™WÚ[ZÙX[[]]X›HÒLMˆ™XÙZ\Ëš]™HQHX]Ú’TÔÈ[™]\ØY™]HÚXÚÜËZ[š[][HˆÚPˆœ™YKˆ\È
+Š™Ù\È›Ý
+ŠˆXZÙHš]™HÜ™Y[X[È]˜Z[X›HÛˆ[›™\Žˆ™\]Z\™\ÈÙ\\˜][HÛÛ™šYÝ\™YÒT‘WÑ’U‘WÔÓÓ‘WÐÓÓ‘’Q×Ð[™˜ÛÛ™H^XÝ]X›HÚ]š]˜]HÚ\™KYš]™N˜›ÛÝ™\ÝšXÝYÈH]]Üš^™Yš]™H›Û\‹ˆ›Èš]™H[][Ûˆ\È[\[Y[YÜˆ[ÝÙY[[[™\[™[˜XÚÝ\ØØ[[YÜš]H[™[\ÜÙ\ÜÜÚ][Ûˆ›ÛÙŽÈÈ›Ý\™ÙHÛÛHÛÝ\˜Ù\ËˆØ[™Y]HÛ›K›ÈXÝX[[›™\ˆÞ[˜ÈÜˆÝ]XÈÒH›ÛÙˆY]ÈPÌH[™Ú[™HØ]H[˜Ú[™ÙY‚‚ŠŠŒŒ‹LLLLHPÌHØ]™H™\ÝÜ™HÝ™\›\šYÙÙ\ˆØ[™Y]NŠŠˆQH[›™\ˆÌNMŽHØœÙ\™YPÌY\‹\›Ý]KXÚ[™ÙH™\ÝÜ™H˜Z[
+]Y\ÝÝYÙ\ËÜÝÜžH™X]ËÓ”ÈY[[ÜžKÜ›Ý]H›ÙÜ™\ÜÊKˆ™KXÛÛ[Z]Ý™\›\[™ÈšYÙÙ\ˆX^H]]]H™\ÝÜ™YÝÜžHÚ[HXÙ[Y[[™[™ËˆØ[™Y]HÙ]È[™[™ÈØ]™Y\^Y\ˆ˜[œÙ›Ü›H™Y›Ü™HÛÛ[Z]\œÚ\Ý[˜ÙT™\ÝÜ™H[™^[™È\ÑØ[Y\^UÛÜ›ÛÛ[Z]YÝX\™ˆÛÝ\˜ÙH™YÜ™\ÜÚ[ÛˆYYÈ^XÝZXYÒKQH˜[œÚ][Ûˆ]Y][™QH™[XZ[ˆ[™[™Ëˆ›ÈØ]H‹ÍÈ›Û[Ý[Û‹‚‚ŠŠŒŒ‹LLLLHPÌH]Y\ÝÝYÙHY[\Ý[˜ÞHÛÝ\˜ÙHš^ŠŠˆÙ]]Y\ÝÝYÙX›ÝÈ™]\›œÈÚ]Ý]œ›ØYØ\Ý›Üˆ[˜Ú[™ÙYÝYÙ\È[™Ý\™\ÜÙ\ÈÝYÙHœ›ØYØ\ÝÈ\š[™È\œÚ\Ý[˜ÙH™\ÝÜ™KˆÝ]XÈ™YÜ™\ÜÚ[ÛˆYYÈ›ÝQHÓÓTSKÔQKÑU’PÑKÕ’TÕPSXØÙ\Y——ŠŠŒŒ‹LLLLHPÌH”È[™Ù\ˆÛÛ[Z]YXÛÛ^ÛÝ\˜ÙHš^ŠŠˆ\Ñ[™Ù\”Ý]PXÝ]™J
+X›ÝÈ™\]Z\™\ÈÛÛ[Z]YÛÜ›ÛÛ^™Y›Ü™H™XY[™È]Y\Ý[™Ù\ˆY[]K™]™[[™È™KXÛÛ[Z]™X]XZØYÙH[È”ËÝÛÜ›ÙÚXËˆÝ]XÈ™YÜ™\ÜÚ[ÛˆYYÈ›ÝQHÓÓTSKÔQKÑU’PÑKÕ’TÕPSXØÙ\Y——ŠŠŒŒ‹LLLLHPÌH”ÈÛÛ^X\™ÝÛˆÛÝ\˜ÙHš^ŠŠˆZ[š]X[^™H›ÝÈÛX\œÈÛÛ[Z]YÚ\\‹Ü›Ý]KÙ\\ÛÙK]Y\ÝÛ˜\ÚÝ™]š\Ú[Û‹ÛÛ[Z]›YÈ[™ÙX]\ˆÝ]KˆÝ]XÈ™YÜ™\ÜÚ[ÛˆYYÈ›ÝQHÓÓTSKÔQKÑU’PÑKÕ’TÕPSXØÙ\Y——ŠŠŒŒ‹LLLLHPÌH”ÈÛÛ^™]š\Ú[ÛˆÝX\™ÛÝ\˜ÙHš^ŠŠˆÙ]ÛÛ[Z]YÛÜ›ÛÛ^›ÈÛ™Ù\ˆ™X]È™]š\Ú[Ûˆ\È[˜[YÈÛÛ[Z]Y”ÈX[ÙÝYKÜØÚY[HÛÛ^Ø[ˆ™H\ÝX›\ÚYœ›ÛH[žH^XÚ]›Ý]\ˆÛÛ[Z]™]š\Ú[ÛˆÚ[HÝ[™Z™XÝ[™ÈZ\ÜÚ[™ÈÚ\\‹Ü›Ý]KÙ\\ÛÙHY[]KˆÝ]XÈ™YÜ™\ÜÚ[ÛˆYYÈ›ÝQHÓÓTSKÔQKÑU’PÑKÕ’TÕPSXØÙ\Y‚‚ŠŠŒŒ‹LLLLHPÌH]š[™ÕÛÜ›[š]X[ÛÛ[Z]Þ[˜ÈÛÝ\˜ÙHš^ŠŠˆS]š[™ÕÛÜ›\™XÝÜ˜›ÝÈ˜Z[XÛÜÙ\È]Èš\œÝ\YYÛÜ›™]š\Ú[ÛˆÚ]PVÝZ[Ì˜›Ü˜Ú[™ÈHš\œÝÛÛ[Z]Y›Ý]\ˆ™]š\Ú[Û‹[˜ÛY[™ÈÈ[ˆ™\Ù]›ÜÝ\œ™[Ú\\Š
+X™Y›Ü™HÜ[][Û‹Ù]™[Ú[][][Û‹ˆ™YÚ[”^X›ÈÛ™Ù\ˆ\ÝÈ˜]È]Y\ÝÚ\\ˆ\ÈXÝ]™HÛÜ›ÛÛ^™Y›Ü™HÛÛ[Z]ˆÝ]XÈ™YÜ™\ÜÚ[ÛˆYYÈ›ÝQHÓÓTSKÔQKÑU’PÑKÕ’TÕPSXØÙ\Y‚‚ŠŠŒŒ‹LLLLHÙ™›[™HÝ[H\ÜÙ]\™XYH›Û˜XÚÈš^ŠŠˆÛÝ\˜ÙK[Û›H[[YH]Y]›Ý[™H]™K[ØÚÈš\ÚÈ[ˆPÚ\\•ÛÜ››Ý]\ŽŽ’[™PÚ\\\ÜÙ]Ô™XYXˆYˆ]Y\ÝÜØ]™HÝ]HÚ[™ÙYÚ[H\Þ[˜ÈÚ\\ˆ\ÜÙ]ÈØYYH[™\ˆ™]\›™YÚ]Ý]ÛX\š[™È[™[™ÐÚ\\‹Ô›Ý]KÑ\\ÛÙXÜˆ™[X\Ú[™ËÜ›Û[™È˜XÚÈH^Y\ˆÛÜ›ÛˆYYHÚ\™Y[™[™ÈÛÜ›˜[œØXÝ[ÛˆÛX[\]Ý[K\™XYH›Û˜XÚË[™Ü›Ý[™[™ËX˜\œšY\ˆ[Y\ˆÛX[\ˆ]šY[˜ÙH\™Ù]ˆÚ]X‹ZÜÝY™KU[œ™X[ÜÝ]XÈ\ÝÈÛ›NÈQHÛÛ\[KÔQH™[XZ[œÈY™\œ™Y[ˆØÜËÑQ‘T”‘QÑS‘ÒS‘WÐPÐÑTSÑWÔUQUQWÌŒŒLLK›Y[[ÝÛ™\ˆ]]Üš^™\ÈH[›™\‹‚‚ŒŒ‹LLLLHÑ‘“S‘HPÌHQ‘T”‘Q‘TÕÔ‘HÕPT‘ˆÚ\™T^Y\Ú\˜XÝ\ˆ›ÝÈ›ØÚÜÈ[Ý™[Y[[\Üš[Ü›ÝXÚ[\˜XÝ[Û‹]XÚËÝ\Y\Ë]ZXÚÔØ]™KÔ]ZXÚÓØY[™]]ÛX]XÈÚXÚÜÚ[\Ü]ÚÚ[™]™\ˆ”[™[™ÔØ]™T™\ÝÜ™U˜[œÙ›Ü›H\ÈYKˆØ[Y\˜HÛÚÈ[™Ú[™[X]XÈÚÚ\™[XZ[ˆ]˜Z[X›NÈ›ÈÚ[™ÙHÈ]Y\ÝÝÛÜ›ÝÛ™\‹ˆÜÝYÛÝ\˜ÙH™YÜ™\ÜÚ[ÛˆYYˆÓÕTÑHÐS‘QUH[™[™È^XÝZXYÒNÈ›ÝQHÓÓTSKÔQKÑU’PÑKÕ’TÕPSXØÙ\YˆÚ[™ÝÜÈ[›™\ˆÝ^\ÈÑ‘‹‚‚ŒŒ‹LLLLHPÌH“ËQÔ“ÕS‘ÔUÓˆSPÒÈÓÕTÑHUÒˆÚ\\•ÛÜ››Ý]\ŽŽ“[Ý™T^Y\•ÐÚ\\”Ý\™]š[Ý\ÛH\™›Ü›YYÙ]XÝÜ“ØØ][Û[™›Ý][ÛŠ™\]Y\ÝYØØ][Û‹‹‹ŠH]™[ˆY\ˆ™\ÛÛ™QÜ›Ý[™YÜ]Û“ØØ][Ûˆ˜Z[Yˆ›ÝÈ™]Z[œÈ]Û‰ÜÈ\ÝÜÚ][Û‹Ù]ÈÛÜ›Û[™™]\›œÈ˜[ÙH›Üˆ^\Ý[™È˜[œØXÝ[Ûˆ›Û˜XÚÈÈ™XÛÝ™\‹ˆYY\ÝÛ›×ÙÜ›Ý[™Û™]™\—Ý[\Ü×Ý×Ý[˜[Y]YÜ™\]Y\ÝYÛØØ][Ûˆ[ˆÜÝYØÜš\ËÝ\ÝÛÙ™›[™WÜ[[YWÜØY™]KœNÈ^\Ý[™È™KU[œ™X[Ú\š[™È[œÈ]ˆ\È\ÈÓÕTÑHUÒS‘S‘ÈVPÕPQÕUPÈSQUSÓˆÛ›Kˆ›ÈQHÛÛ\[KQKU’PÑK”SHÜˆ’TÕPS]šY[˜ÙNÈÚ[™ÝÜÈÙ[‹RÜÝY[›™\ˆ›ÝXÝ]˜]Y‚‚ŒŒ‹LLLLHÑ‘“S‘HPÌHVQTˆ‘SPP’SUH’VTÈ8 %ÓÕTÑHÐS‘QUH
+^XÝZXYÒH[™[™ÊN‚‹H]]ÛX]XÈÚXÚÜÚ[\Ü]Ú›ÈÛ™Ù\ˆÜÙ\È[™[™ÈQÛˆ˜Z[Y™\]Y\ÝÈ[™[™È™\ÝÜ™H˜[œÙ›Ü›H›ØÚÜÈÚXÚÜÚ[Û˜\ÚÝË™Z™XÝYØ]™\È™]žH›È˜\Ý\ˆ[ˆÛ˜ÙH\ˆÙXÛÛ™ˆ\Þ[˜È\ÚÈÝXØÙ\ÜÈ™[XZ[œÈÙ\\˜]HØ[˜XÚÈ]šY[˜ÙK‚‹HÚ\\•ÛÜ››Ý]\ˆ›ÝÈ[™\ÈÙ]XÝÜ“ØØ][Û[™›Ý][Ûˆ™Z™XÝ[ÛˆÛˆ›ÝØ]™H™\ÝÜ™H[™Ú\\ˆÝ\ˆÈ›ÝÙÈPÑQÜˆ™]\›ˆYH›Üˆ™Z™XÝY[\Ü‚‹HÚ[™[X]Xø¡¤™Ø[Y\^H[\œ\È™[X\ÙH™\Ù[][ÛˆÛÛ›ÛØÚÈ[[YYX][NÈ\ØØ\HÚÚ\ÈHXÝ]™HÚ[™[X]XÈÚ]Ý]]]][™È]Y\ÝØØ[›ÛˆÝ]NÈ]ÛˆÜ™X]YZYXÚ[™[X]XÈYÜÈXÝ]™HØÚË‚‹H\Þ[˜ÈÑ–Ø[XšY[˜ÙKÛ]\ÚXËÝ›ÚXÙHØ[˜XÚÈX]Ú\ÈH[Û›ÝÛšXØ[H[˜Ü™X\Ú[™È™\]Y\ÝÚÙ[‹™]™[[™ÈÝ[HØ[˜Ù[YØ[˜XÚÈÛZ[Z[™È[ˆY[XØ[™]Ù\ˆÝYHÙ^K‚‹HÙ[‹ZÜÝY[œ™X[ÛÜšÙ›ÝÈ\È›ÝÈX[X[ÜZ[ˆÛ›H
+ÛÜšÙ›Ý×Ù\Ü]Ú[—ÜÙ[—ÚÜÝY]YJNÈ™KU[œ™X[ÜÝ]XÈ[™ÜÝYÛ\ÜÚYšXØ][Ûˆ™[XZ[ˆ]]ÛX]XËˆÛ\ˆ[™XYK\]Y]YY[œÈ]™HÙ\\˜]HØ[˜Ù[][ÛˆÝ]\È[™ÚÝ[›Ý™H\ÜÝ[YYØ[˜Ù[Y[[[œÜXÝY‚‹HYYØÜš\ËÝ\ÝÛÙ™›[™WÜ[[YWÜØY™]KœH[™Ú\™Y]\È\ÝÜ[™[™×ØÚXÚÜÚ[Ù\Ü]ÚœH[ÈÜÝY™KU[œ™X[˜[Y][Û‹ˆÛÝ\˜ÙK[]™[ÚXÚÜÈ\™H“ÕQMŒÈÓÓTSKQK]šXÙH”Ë[\ÜY\ÜÙ]ÈÜˆš\ÝX[XØÙ\[˜ÙKˆ[[YHPÌˆ™[XZ[œÈ[›Ü[™Y‚‚ŒŒ‹LLLLHPÌHÒPÒÔÒS•TÔUÒÕPT‘ÐS‘QUNˆ™\Z\™YH›Ý˜X›HÛÝ\˜ÙK[]™[ÜÝXÚXÚÜÚ[Y™XÝˆXÚÈ™]š[Ý\ÛHÛX\™Y[™[™ÐÚ\\ÚXÚÜÚ[Y™Y›Ü™HØ]™P]]ÛX]XÐÚXÚÜÚ[™]\›™YÚ[HÙÙÚ[™ÈÛÛ[Z]X˜\œšY\TTÔØ]™[ˆÛˆ™Z™XÝY\Ü]Úˆ›ÝÈ[™[™È\ÈÛX\™YÛ›HYˆ\Þ[˜ËÜ]Y]YY\Ü]ÚØ\ÈXØÙ\YÈ\ÚË\Ø]™HÛÛ\][Ûˆ™[XZ[œÈØ[˜XÚË[ÝÛ™YˆYYØÜš\ËÝ\ÝÜ[™[™×ØÚXÚÜÚ[Ù\Ü]ÚœH™YÜ™\ÜÚ[ÛˆÝX\™[™™YÚ\Ý\™Y›ÛÝØ]\ÙH[ˆÓÔ“ÑURSÓQÑT‹ˆÛÝ\˜ÙK[Û›HØ[™Y]H]ØZ][™È^XÝZXYÒH
+ÕUPËUSQUQÛ›HY\ˆ\ÜÚ[™ÊNÈ›ÈQHÛÛ\[KQK]šXÙK”ÈÜˆš\ÝX[XØÙ\[˜ÙKˆÚ[™ÝÜÈÙ[‹ZÜÝY[›™\ˆ™[XZ[œÈÙ™‹‚‚ŒŒ‹LLLLHÚ\™H˜]\™HÜÝY›[™\ˆ™YÜ™\ÜÚ[ÛŽˆ^XÝZXY[ˆÎMLŽLMŒHRSQ[ˆ\ÚXØ[–^Ü™XØ]\ÙHX[H›[™\ˆŒŒˆ–^Ü\ˆ˜Z\Ù\È[Ù[S›Ý›Ý[™\œ›ÜŽˆ›È[Ù[H˜[YY	Û[\IØ
+›ØˆLMLŒLLŒ
+NÈÛÝ\˜ÙHÙ[ÛY]žH^XÝ][Ûˆ™XXÚY^Ü\ˆ]™\›È˜[Y]Yš[˜\žH–\™HÜ™Y]Yˆ\]YÜÝYÛÜšÙ›ÝÈÈ[œÝ[]ÛŒË[[\X™\ÚYH›[™\‹ˆ™]È^XÝZXY™\[ˆ™\]Z\™Yˆ›ÈQH›ÛÙ‹‚‚ŒŒ‹LLLLHPÌHÚ\™H˜]\™H›[™\ˆ›ÙXÝ[ÛˆØ[™Y]NˆYYÛÛËÐÛÝY\ÜÙ]Z[Ø›[™\—Û˜]\™KœH[™ØÚY[YÔˆÜÝYÛÜšÙ›ÝÈXÌKZÜÝY[˜]\™K[ÙËž[[ˆ™]\Ù\ÈÙ[™H[™XYHYš[™Y˜]\™H˜[Z[Y\È[™›ÙXÙ\ÈÍˆ
+œ›ÜÜÙY
+ˆš[˜\žH–ÍÑÌKÌˆÚ]UŒ˜\ÚXÈX]\šX[ÛÝËÙ[XÝ]™HPÖ[šËÜ›ØÚÈÛÛ\Ú[ÛœË›[™\ˆ™Z[\Ü[™ÒLMˆ™XÙZ\Ëˆ›ÈÛÛ\]YÜÝY[ˆÜˆ™]Èš[˜\žHš[HX^H™HÜ™Y]Y™Y›Ü™H^XÝZXY˜[Y][Û‹ˆ^\Ý[™ÈÈ‘È[ˆš]™HÛÝ\˜ÙH˜]Ú\™H“Õ™\X›\ÚYžH\ÈÛÜšÙ›ÝÈ[™™\]Z\™HÙ\\˜]H[œ™X[X]\šX[š[™[™Ëˆ›ÈÚ[™ÝÜÈ[›™\‹ÕQMÛÛ\[KÚ[\ÜÔQKÙ]šXÙKÑ”ËÝš\ÝX[ÑØ]M‹ÍÈ›ÛÙ‹‚‚ŒŒ‹LLLLHÕÓ‘Tˆ’U‘HSTÔT–HÕQÒS‘ÈÓPÖNˆÛÝ™\››Üˆ›ÝÈYš[™\Èš]˜]HÛÛÙÛHš]™H\È[\Ü˜\žHÝYÚ[™ÈÛ›HÚ[H\Ü\ÈÙ™‹ˆ]]ÛX]XÈš]™H[][Ûˆ\È]]Üš^™YÓ“H›ÜˆX[˜YÙY˜]Ú\ÈÚ]\ÚXØ[ØØ[\œÚ\Ý[ÛÜH[™X]Ú[™ÈÒLMˆ\È˜[œÙ™\‹Ú[\Ü\ÜÜÚ][Ûˆ™XÙZ\ˆ›È[][ÛˆÙˆÛÛHÛÜY\Ë›È[][ÛˆÙˆ[œ™[]YÝÛ™\ˆš[\Ë›È]]È˜[œÙ™\ˆÛZ[H[[Ù\\˜]HÚ]XˆXÝ[ÛœÈÐ]]Ü˜ÛÛ™HÜ™Y[X[\ÈÛÛ™šYÝ\™Yˆ›ÈÚ[™ÝÜÈÙ[‹ZÜÝY[›™\ˆ]]Üš^™Yˆ\È\ÈÛXÞKÔÕUPËUSQUQÛ›NÈ›È]™HÞ[˜Ë˜[œÙ™\ˆÜˆ[][Ûˆ[ˆ]šY[˜ÙK‚‚ŠŠŒŒ‹LLLLHXÙ[œÙYÛÝYÝØÚÈ[ZÙHØ[™Y]NŠŠˆ^\Ý[™ÈÍÈÛH]™[ˆÐÌÛYÈ]]Üš]H\È›ÝÈ\ÙYÈ\ÚXØ[HÝÛ›ØYØÛÛ™\RÈ˜\ÙPÛÛÜ‹›Ü›X[[™XÚÙYÔ“H‘Èš[\ÈXÜ›ÜÜÈ›Ý\ˆ[™\[™[ÜÝYÚ\™ÎÈXXÚÚ\™Üš]\ÈÒLM‹Øž]KÜ›ÝšY\ˆT“ÜÛÝ\˜ÙH™XÙZ\[™]X\˜[[™\ÈZ\ÜÚ[™ÈX\ÈÚ]Ý][™[[™È\ÜÙ]ËˆÚ]X‹ZÜÝY\Y˜XÝÝØÚÈ\ÈH[\Ü˜\žH˜[œÙ™\ˆÛÝ\˜ÙK›ÝH\›X[™[Üš]HÈ—XÝ[ÛœË\[›™\—ÝØ\™ZÝ\ÙWÚ\™R›Ý\›™^KˆŽ\™YÚ[ÛˆXÚÙ][™^\È]˜Z[X›H›Üˆ™]\ÙK]Ž\™YÚ[Ûˆ[\ÜYÜ™[™\™YÛÛ\][Ûˆ\È“ÕÛZ[YYˆØØ[[ÝÈš^\™H™YÜ™\ÜÚ[ÛœÎˆH\ÜÙY™Y›Ü™HÚ]XˆØ[™Y]KˆÚ]Xˆ^XÝZXY›ÙXÝ[Ûˆ™\Ý[È[™[™Ëˆ›ÈÝÛ™\ˆÚ[™ÝÜÈ[›™\‹›ÈQH[\ÜQK]šXÙKš\ÝX[ÜˆØ]H‹ÍÈXØÙ\[˜ÙKˆ[[YHÚ\\ˆ™[XZ[œÈPÌHÛ›K‚‚ŠŠŒŒ‹LLLLHPÌHœ›ÙÈÜÝYØÛÛ[Ý[ÛˆÛÝ\˜ÙHØ[™Y]NŠŠˆ™YÚ\Ý\™Y[ˆÓÔ“ÑURSÓQÑTˆ[™YYÛÛËÐÛÝY\ÜÙ]Z[Ùœ›Ù×ÛØÛÛ[Ý[Û‹œH\ÈÜÝY[Û›HXÌKYœ›ÙË[ØÛÛ[Ý[Û‹ZÜÝYž[[ˆHØ[™Y]H[\ÜÈH›Ý™[˜[˜ÙKXÚXÚÙYÐÌœ›ÙÈ›Ü›X[^™Y˜\ÙH–š]™\Èš[]\˜[Y›Ü›H[Xˆ›Ý][ÛœÈXÜ›ÜÜÈÜšYÚ[˜[ÞXÛXÈYKÕØ[ËÔ[ˆÙ^YYXÝ[ÛœË\ÚXØ[H^ÜÈ™YHš[˜\žHÚÙ[][[š[X][Ûˆ–š[\È[™™Z[\ÜÈÈ]Y]Ý\™KÚÙ^H™\Ù[˜ÙH[™ÒLM‹ˆÛÝ\˜ÙK[Û›Nˆ›Èš[˜[œ›ÙÈš\ÝX[ZÙ[™\ÜËQH[\ÜRØÛÛ\[KQK]šXÙK”Ë[X[ˆš\ÝX[XØÙ\[˜ÙHÜˆØ]H‹ÍÈÜ™Y]ˆ^XÝZXYÜÝYÒH]šY[˜ÙH[™[™ÎÈÚ[™ÝÜËÜÙ[‹ZÜÝY[›™\ˆ\È›Ý[›ÚÙYˆ^\Ý[™È\Þ[˜È\›ÈÝ™X[HÝÛ™\ˆ[™ÛÛY”ÈÝÛ™\œÚ\[˜Ú[™ÙY‚‚ŠŠŒŒ‹LLLLHPÌH›[™\ˆ[‹X™]™[Ù[ÛY]žHÛÜœ™XÝ[ÛŽŠŠˆ^XÝZXYÜÝY[ˆÎMNMÌX]\šX[\ÝÈ[™[\ÚXØ[RÈ‘ÈÛÝ\˜ÙHPÈ\ÜÙYÈÚ]XˆXÝ[ÛœÈØXÚH^XÚ]HÙÙÙYØXÚHØ]™YÚ]Ù^NˆXÌKLŽ™YÚ[Û‹[ÜšYÚ[˜[[X]\šX[ËLZË]ŒKMØMÎLŒMMØYÌÍŽYŒŒYØL™ŽYM˜Ž™˜MÌŒYY˜Œ™MØL™M˜YXYL˜ØˆHØ[YH[‰ÜÈ–Ù[™\˜]Üˆ˜Z[YÛÜÙY]˜[YQ\œ›ÜŽˆQÑS‘TUWÑPÑH[ˆÓWÔÚÝÛ™T]ÓÑ™XØ]\ÙHHŒNHYÙH™]™[^ÙYYY[ˆHŒ[HÝ\[™ÈÝÛ™HXÚÛ™\ÜËˆ[š]™\œØ[›ÛÝš^Û[\ÈXXÚ›Þ	ÜÈ™]™[È][ÜÝM‰HÙˆ]È[›™\Ý[Y[œÚ[Û‹Ú]™YÜ™\ÜÚ[ÛˆÝX\™ˆ›ÈÛÝ[Ü™Y]›Üˆ–[[H™\XÙ[Y[^XÝZXY›[™\‹Ý˜[Y]Üˆ›Øˆ\ÈÕPÐÑTÔËˆœ›ÙËZÜÝY[™\[™[›ØˆYØZ[ˆÝXØÙYYYÈÝÛ™\ˆÙ[‹ZÜÝY[›™\ˆ[˜Ú[™ÙYÛÙ™‹‚‚ŠŠŒŒ‹LLLLHPÌHQ–Ø]™HÝ]XÈ›ÛÝÛÜœ™XÝ[ÛŽŠŠˆ^XÝÛÝ\˜ÙHXYMŒÌÍLÍ˜ØŒXÌ˜XYXŒÌM˜MØLMØXMŒXYÜÝY™KU[œ™X[[ˆÎMNLXÕPÐÑTÔÎÈÜÝY\ÜÙ][ˆÎMNLM˜RSQ\š[™È›[™\ˆ^ÜY\ˆÝXØÙ\ÜÙ[ÍˆRÈ‘ÈX]\šX[Ù[™\˜][Ûˆ[™X]\šX[\ÚÔ‘ÈPËˆÙÈ]šY[˜ÙNˆÙ^Q\œ›ÜŽˆ	ÜÚ\™WÙX\	Ø[ˆ›[™\—ÜÚ\™KœXSUH
+H™YÚ\Ý˜][ÛˆÛZ\ÜÚ[Û‹›ÝHœ›ÚÙ[ˆÛÝ\˜ÙH[XYÙJKˆš^YX\ÛÛÜˆ™YÚ\Ý˜][Ûˆ[™YY]Û‹PTÕ™YÜ™\ÜÚ[ÛˆÚXÚÚ[™È[]\˜[š[Z]]™HÝ\™˜XÙH˜[Z[Y\ÈYØZ[œÝ[]H
+˜™Y›Ü™Jˆ›[™\ˆ^XÝ][Û‹ˆÛÝ\˜ÙHØXÚH›ÝÈØ]™\ÈÛ›H\Ú]˜[Y]Y”ˆ[[YYX][HY\ˆPË[™\[™[HÙˆÝXœÙ\]Y[–˜Z[\™NÈØXÚH[šY\È]\Ý\ÜÈ™XÙZ\Ô‘ËÔÒH˜[Y][Ûˆ]™]\ÙKˆ™]È^XÝZXYÛÝY[ˆ™\]Z\™YÈÜ™Y]–˜YÈ[™Ü[ÛX\˜[˜ÙH[™\ÜÙ]\˜Ú]™Kˆ^\Ý[™È˜[Y]YŒ–ˆÌÎ™[XZ[ˆ[˜Y™™XÝYˆ›ÈÚ[™ÝÜÈ[›™\‹QH[\ÜQKÙ]šXÙKÑ”ËÝš\ÝX[ÑØ]M‹ÍÈ]šY[˜ÙK‚‚ˆÈÈŒ‹LLLLH8 %PÌH™X[˜YÈ[™Ô\HšY[\˜Ú]XÝ\™HÛÝ\˜ÙHØ]™KØ[™Y]B‚‹H
+Š‘^XÝš[Üˆ\ÚXØ[›ÛÙŠŠŽˆˆÌÎY\™ÙY[È]™[ÜÌÎY˜˜ŽYMŒ™X™™LÍYY˜ÎÌÌÎMÌØˆÛÝY\ÚXØ[[ˆÎMÎMŽMÎLXÕPÐÑTÔÈÛˆ^XÝÛÝ\˜ÙHÒHÍØL™™MØÍÌYLÍŒØ™™Í™MŽNMŽXŒÚ]ÙÜÈÒT‘WÐ’ST–WÑ–ÑÑS‘TUQ\ÜÙ]ÏLLš[\ÏLŒ›[™\MŒŒ˜[™ÓÕQÐTÔÑUÔÕUP×ÕSQUSÓ—ÔTÔÈX]\šX[ÏLLˆ^\™\ÏLÍˆ™YÚ[Û—Øš[™[™ÜÏLŽš[˜\žWÙ˜žLŒˆ™KU[œ™X[[ˆÎMÎMŽNØÕPÐÑTÔËˆÛÝ\˜ÙH\Y˜XÝLMÌÎLMÍLX
+KL‹ÌÍH\Y˜XÝž]\ÎÈ[\›˜[’TKL‹LLHž]\ÎÈÒLMˆM™XYXÙX˜MÎ™LÎÎMYMMYYM˜LÌÎML™ŒYMŽŒÙ™Œ™ŒØÌÌN
+K^\™\ÈŒ‹LLLNˆœ›ÙÈÐÌ
+Š˜˜\ÙHšYÊŠˆ™\ÕPÐÑTÔÈÚ]\Y˜XÝLMÌÎLŒLØÈ›Èš[˜[ZÙ[™\ÜËÜ™]\™Ù]‚‹H
+Š•\ÈÙ\\˜]HXÝ]™HPÌH\ÚXØ[›ÙXÝ[ÛˆØ[™Y]JŠˆ^[™ÈH^\Ý[™È[Ù[\ˆÝ]XÈ–Ù[™\˜]Üˆ
+›Ý[œ™X[[[YJHœ›ÛHLÈ
+ŠŒŒˆÜšYÚ[˜[ÛÝ\˜ÙHY\Ú˜[Z[Y\ÈÈš[˜\žH–ÑÓÑJŠŽˆ˜YÑ[™œ›ÛØ[
+Ù\\˜]HÜ[›ØÚÙ\œËØ[Ë]›ÝYÚØ\
+K›Ý[™›ÛÛUØ[\˜Ë›Ý[™›ÛÛQ›ÛÜ‹X\›ÛÚØØ\ÙKØ˜š]™YÛÛÙ[‘›ÛÝœšYÙH
+Ù\\˜]HØ[ÝØ^KÜ˜Z[ÊKZ[ÚY[
+Ý]XË[Û›HÛÝ\˜ÙK›Ý][Ûˆ[™[™ÊK\PØ[›ÜH
+Ü[ˆÛK[Û›HÛÛ\Ú[ÛŠKÝÛ™T][\›”ÜÝš[YÙUÙ[ˆ[\™HX[X[H]]Ü™Y›ØÙY\˜[ÐÈÛÝ\˜ÙH\Ë›Ýš[KY^XÝ™\XØ\Ëˆ\Ù\ÈÍˆÜšYÚ[˜[RÈ‘ÈXÜ›ÜÜÈŽÝ\Ü[X]\šX[™YÚ[Ûˆš[™[™ÜÈ[˜Ú[™ÙYˆ›[™\ˆÍš[˜\žH^Ü™X[™Z[\Ü[™ÒLMˆ›ÛÙœÈ\ÈPÖPPˆ™XÙZ\[™Ü[XÛX\˜[˜ÙHÛÝ\˜ÙHÝX\™ˆX]\šX[^[ØY\È›ÝÈ™]\ØX›HšXH^XÝÙ[™\˜]ÜŠÜ™YÚ[Û˜[XÚÙ]ÒKX›Ý[™Ú]X‹ZÜÝYØXÚNÈ[ˆ[˜Ú[™ÙYØXÚH]\ÝÝ[\ÜÈÛÛ\]Hš[H\ÚÔ‘ÈPËˆ[™]È\ÚXØ[Ý]]È™\]Z\™H
+™œ™\Ú^XÝZXYÜÝY›ÛÙŠˆ[™™[XZ[ˆ
+Šœ[™[™È[[Ú]XˆXÝ[ÛœÈÝXØÙ\ÜÊŠ‹‚‹H
+Š“[Ý™[Y[Ó”ËÙ[™Ú[™H›Ý[™\žJŠŽˆ\ÙH\È\™H[Ù[\ˆÛÝ\˜ÙK[Û›K›ÝHÛÛ\Ú[Û‹]\ÝY]™[ˆÛÝ\˜ÙK\ÜXÙHÜ[ÛX\˜[˜ÙHÚXÚÈÙ\È›Ý™\XÙH^Y\‹ØÛÛ\[š[Ûˆ˜]šYØ][ÛˆQK™X[X]\šX[Û]™[[\ÜÜˆÝÛ™\œÚ\[YÜ˜][Û‹ˆ”ÈÜ[][Ûˆ™[XZ[œÈÝÛ™YžH]š[™ÕÛÜ›\™XÝÜ‹\‹XÚ\˜XÝ\ˆÛÛ^[™ØÚY[\ÈžHÚ\™S”ÐÛÛ^ÝXœÞ\Ý[NÈÛ›HÛ™H[[YHÜš]\‹ˆ›È\Ù\ˆÚ[™ÝÜÈ[›™\‹X]žHÞ[˜Ú›Û›Ý\ÈØYËŽ\™YÚ[Ûˆ[œ™X[[\ÜYH[X[ˆš\ÝX[Ý\™Ù]”ËÜˆØ]M‹ÍÈXØÙ\[˜ÙHÛZ[YYˆPÌˆ[[YHÝ^\ÈØ]YÈ\ÚXØ[ÛÝ\˜ÙH›Üˆ]\ˆ™YÚ[ÛœÈX^H›ÙÜ™\ÜÈ[™\[™[K‚‚ˆÈÈŒ‹LLLLH8 %‘PSÓÕTÑHSU‘T–HÌÎÈ
+ÈÚ\™Hš[YÙKZÚ]^[œÚ[ÛˆØ[™Y]B‚‹H
+Š‘[]™\™YÈÜÝY\Y˜XÝÛˆ^XÝXY
+›Ý[œ™X[
+NŠŠˆˆÌÎÈY\™ÙHÎXÌ™ŒLM™Œ™XÎÎXŒ˜ÙNŒØ˜NM˜™ŒY˜È™KU[œ™X[ÎMÍNNLLÕPÐÑTÔÎÈÚ]X‹ZÜÝY\ÚXØ[\ÛÝ\˜ÙHÎMÍNNLMÕPÐÑTÔËˆLˆÜšYÚ[˜[™]\ØX›HÝ\Ü˜[Z[Y\È›ÙXÙY
+ŠŒÍˆXÝX[‘ÈL
+Š‹X\YÈ^XÝHHŽQÈ[ˆ]KÕÚÛQØ[YT™YÚ[Û”›ÙXÝ[Û”XÚÙ]ÕŒKšœÛÛ˜ˆ›[™\ˆŒŒˆ›ÙXÙY
+ŠŽš[˜\žH–Ý]XÈ\ÜÙ]ÊŠˆ
+˜[Z[Y\ËÑ
+ÓÑJH[™ÝXØÙ\ÜÙ[H™KZ[\ÜYØÚXÚÙYZ\ˆY\Ú\ËU‹PÖÛÛY\œÈ[™ÒLMˆ™XÙZ\ËˆXÝX[ÛÝ\˜ÙH’TKÌÌ‹ŽNž]\ËÒLMˆLÙNYX˜Í˜ØÎŽMŒ™LØ™NMÙXŽÎX˜ØÎMÌ˜ÙMØXÍŒ™ŒÍMØØÈXÝ[ÛœÈ\Y˜XÝLMÌÍÍÍŽ™]Z[™Y›ÝYÚŒ‹LLLNˆÛ™HÜšYÚ[˜[ÐÌœ›ÙÈ˜\ÙHšYÈÛÝ\˜ÙHØ[™Y]H\ÜÙYÜÝY™XY[™\ÜÈ
+SPS—ÕÐU‘L—ÒÔÕQÔTÔÈÙ[XÝYLXHY›Ü›H›Û™\ËMÎËÌŒŒŽHÙZYÚY™\XÙ\ÊNÈÙ\\˜]H\Y˜XÝLMÌÍÌŒMˆ\ÙH\™H™X[\ÚXØ[ÛÝ\˜ÙH\ÜÙ]Ë
+Š““Õ[œ™X[[\ÜY
+Š‹‚‹H
+Š•\È™]ÈÛÝ\˜ÙHØ[™Y]H^[™ÈPÌHÚ]ˆ[Ü™HÜšYÚ[˜[]]Ü™Y›ÜÙ›ÛXYÙH˜[Z[Y\ÎŠŠˆ›Ý[™Ú[™ÝËØ\™[’YÙKØZÕ™YKÝÜ˜YÙP˜\œ™[˜\›QØ]KØ\™[”[\ŽÈÙÙ]\ˆLÝ]XÈ[Ù[ÈˆÑHŒ–\™Ù]ËÙY\[™ÈÛÛ\Ú[Ûˆ[™UˆÝ]XÈPËˆHÚ^\™HÜ›Ý[™Y[ˆ^\Ý[™ÈØ˜š]Û‹Ð˜YÈ[™ÛY\ÝXËØÝ[\˜[ÜÙ][Y[™Y™\™[˜ÙH[™ÝXYÙK›ÝÛZ[YY\Èš[KY^XÝ™\XØ\ËˆÝ\œ™[^[œÚ[ÛˆÝ]]È\ÝÈ\™H[™[™È^XÝZXYÜÝY›ÛÙ‹[™Hš\œÝ˜[Y›Ý\ˆ˜[Z[Y\È]\Ý›Ý™H™K[X™[Y\È[ˆ[\ÜYš\ÝX[ÛÜ›‚‹H
+ŠÜš]XØ[Ù\\˜][ÛŽŠŠˆ›ÈÚ[™ÙHÈ[œ™X[[[YK][\^Y\‹Ü›ÝÙY™XÞXÛK[\˜XÝ[Û‹ØØ[›ÛˆØÚË\Þ[˜È™\ÚY[˜ÞKPÌˆØ]HÜˆÚ[™ÝÜÈÙ[‹ZÜÝYØÚY[[™ËˆHÚ\˜XÝ\ˆÛÝ\˜ÙHÚ]HšYÈ\È
+Š››Ý
+Šˆš[˜[œ›ÙÈ\X\˜[˜ÙK[š[X][Û‹™Z]š[Ü˜[PHÜˆXØÙ\YÚ\™HÚ\\‹ˆŽ\™YÚ[ÛˆX]\šX[š[™[™ÜÈ\™H›ÝŽ\™YÚ[Ûˆ[œ™X[X]\šX[[\ÜÈ›ÛÝÈ\ÜÙ]›Û[Ý[ÛˆØ]HÚ[ˆHÝÛ™\ˆ[›™\ˆ™]\›œËˆ™^X[X[]šY[˜ÙNˆPÌHÝ\œ™[™X[[\ÜÚ\˜XÝ\ˆY›Ü›X][Û‹Ü™]\™Ù]QKØ]™KÜ]Y\ÝÛœË]šXÙHÌŒÌ”Ë[X[ˆš\ÝX[ÜXÚ[™ÈØ]H‹ÍË‚‚ŠŠŒŒ‹LLLLHÛÝY›[™\ˆ–›ÛÝš^ŠŠˆÜÝY[ˆÎMÌÍÌXÙ[™\˜]Y[™˜[Y]YÍˆ\ÚXØ[L‘È›ÜˆLˆ˜[Z[Y\ÈÈŽ™YÚ[Ûˆš[™[™ÜÈ]›[™\ˆŒ™Z™XÝYHØœÛÛ]H–Ü\˜]Üˆ\™Ý[Y[™\œÚ[ÛXˆÝ]XÈÙ[ÛY]žHÛÛœÝXÝ[ÛˆÝXØÙYYYÛ›H[ˆY[[ÜžNÈ–™XÙZ\ÈXœÙ[ˆš^™[[Ý™\ÈH\™Ý[Y[\™XÝH™\šYšY\Èš[˜\žH–ÍXY\ˆ™\œÚ[Û‹[™\Ù\ÈK\]Û‹Y^]XÛÙHØÛÈ›[™\ˆØÜš\^Ù\[ÛœÈ˜Z[ÒKˆ™K\[ˆ^XÝZXY™\]Z\™Y™Y›Ü™HÛÝ[[™Èš[˜\žH–ˆ›ÈQKÔQKÙ]šXÙKÝš\ÝX[XØÙ\[˜ÙK‚‚ŠŠŒŒ‹LLLLHÒHÛÝ\˜ÙH\Ý›ÛÝYš^ŠŠˆÜÝY[ˆÎMÌNMÌÍØœ›ÙÈÛÝ\˜ÙH™\\˜][ÛˆTÔÈ
+SPS—ÕÐU‘L—ÒÔÕQÔTÔÈÙ[XÝYLX\›X]\™OLKY›Ü›WØ›Û™\ÏNKÙZYÚYÝ™\XÙ\ÏLMÎËÌŒŒŽJNÈÝ]XÈX]\šX[\ÝÈÙ[™\˜]YÛÈLŽØÜ˜]Ú™]šY]ÈÙ]ÈÚ]Íˆ‘ÈXXÚ[™\ÜÙY]\›Z[š\ÛHÈŽ™YÚ[Ûˆš[™[™È\ÜÙ\[ÛœËˆXZ[ˆ›ØˆRSØ\ÈÛÛ[HÝ™\˜œ›ØYÙ[‹ZÜÝYÝXœÝš[™È[ˆ\ÝYØZ[œÝH\›[\ÜÈÛÛ[Y[ˆÛÜœ™XÝYÝX\™È[œÜXÝ[œË[Û˜X™[Ë™\[ˆ^XÝXY™\]Z\™Yˆ›ÈL›ÙXÝ[ÛˆXÚÈÜˆ›[™\ˆ–Y]ÛZ[YY‚‚ŠŠŒŒ‹LLLLHYX\Ý\˜X›H\ÜÙ]Ø]™H
+‘TÐS‘QUK›ÝÚ\\ˆÛÛ\][ÛŠNŠŠˆÛÝ\˜ÙHÛÙH›ÝÈ\™Ù]È\ÚXØ[[]™\žHÙˆÝ]XÈš[˜\žH–š[\È
+PÌH˜[Z[Y\ËÑÓÑK›[™\ˆ–™Z[\ÜÕPÖÕUŠH\ÈÍˆ‘È”ˆÚ[›™[\XÚÙYÛÝ\˜Ù\È
+Lˆ™]\ØX›H˜[Z[Y\ÎÈŽ^XÝ™YÚ[Ûˆš[™[™ÜÊKZ[šXHÚ]X‹ZÜÝY\ÛÛ]YÛÝ\˜ÙHÒKˆ[ž]\È[™™XÙZ\È\™HÝ[
+Š”S‘S‘ÊŠˆ[[H^XÝZXYÛÜšÙ›ÝÈ›ÙXÙ\È[™ÚXÚÜÈ[NÈ\È\È›Ý\]Z]˜[[ÈŽ\™YÚ[Ûˆ[œ™X[[\ÜÜˆÚ\˜XÝ\ˆ\X\˜[˜ÙKˆœ›ÙÈ^\Ý[™ÈQHXÚšXØ[Ú[›™\ˆ™[XZ[œÈHÛ›H]šY[X[Ú\˜XÝ\ˆÝ\[™ÈÚ[ˆMŒH›Û™\È[ˆš[ÜˆXÚšXØ[Ø]KY›Ü›X][Û‹Ø[š[X][Û‹ÛZÙ[™\ÜËÔQH[˜ÛÛ\]KˆÜ[Û˜[ÜÝYœ›ÙÈÛÝ\˜ÙHXÜ]Z\Ú][ÛˆÚ[›Ý™\Ù\™HÝÛ™\ˆÙ[‹ZÜÝYÚ[™ÝÜËˆÛÛ\[š[ÛˆØ[™[ˆ™^Û›HY\ˆœ›ÙÉÜÈ›Ü\ˆÝYÙKˆPÌHÝ[™YYÈ˜YÈ[™[\š[ÜœËÙ^\š[ÜœËØ˜š]ÛˆÝ\Ù\Ë\HšY[›ØYÜš]™\‹Ý™YÙ]][Û‹XÝX[Ú\˜XÝ\œËÛÛ^X[”È™Z]š[Ü‹]Y\Ý›ÝËØ]™KÛØY[™Û\Ú“ËÐ\˜XšXÈ•\™Ù]LHÌŒÌ”È[™[X[ˆš\ÝX[Ø]H‹ÍÈ]šY[˜ÙKˆ›È™]È[[YHXØÙ\[˜ÙHX™[‚‚ŠŠŒŒ‹LLLLH]™H™XÛÝ™\žH]Y]
+ÛÝ\˜ÙK[Û›NÈˆØ[™Y]JNŠŠˆÚ]Xˆ]™[ÜŽM˜Ù™MÌÌMÙNXŒÍÌ™ÌÙM™˜ÍÎNMY˜˜MØY\ˆˆÌÎNÈÌH™YœÈÈLÈÜ[ˆœÈ][œÜXÝ[Û‹ˆˆÌÎXYYX™™LÙ˜Ì˜ÍÌŽÎXÍ˜YŽXLØŒY˜™[XZ[œÈÜ[ˆ˜Y]™\™ÙYžHÛ™H™]Ù\ˆ]™[ÜÛÛ[Z][™Y\™ÙKY\NÈ^XÝZXYÜÝY™KU[œ™X[[ˆÎMMŒÍÍXÕPÐÑTÔÈ][œ™X[[ˆÎMMŒÍŽX]Y]YYˆ›ÈÝÛ™\ˆÚ[™ÝÜÈ[›™\ˆØ\ÈÝ\YÜˆ]]Üš^™YžH\ÈØ]™KˆHÛ›H[œÜXÝY™\›ËXZXY›Û˜Ø[›ÛšXØ[™Yˆ\ÈØ[˜YÙKÜXÌKY˜\Ý\YKXÚKYÝX\™LŒŒLLXÈ[Ý\ˆ[œÜXÝYÛÜšÚ[™È™YœÈØ\œžH[š\]YHÛÛ[Z]È[™\™H™\Ù\™YˆZYÚÛH]™[ˆÐÌPÌH˜\ÙKXÛÛÜˆÚ]S”ÈÚ[\ˆÒQÈÛˆÙ[™\˜]YÜXÌK[X]\šX[\ÛÝ\˜ÙK]ŒXX]ÚZ\ˆÛÝ\˜ÙH™XÙZ\È™X[”ÈÛÛ[Ë[XYÙH™\ÛÛ][Û‹QH[\Ü[™™[™\™Y]X[]H™[XZ[ˆ[™\šYšYYˆÙYHØÜËÔ‘PÓÕ‘T–WÐÒPÒÔÒS•ÌŒ‹LLLLK›Yˆ›ÈQHÛÛ\[KQK”Ë]šXÙK[X[ˆš\ÝX[ÜˆØ]H‹ÍÈXØÙ\[˜ÙH[\YY‚‚ŠŠŒŒ‹LLLLH˜\Ý™]šY]ÈØ[˜YÙHØ[™Y]NŠŠˆˆÌÍŒ\ÙY[™YKYš[H][˜Ú\‹Ý\ÝÙÝZYHÜYÈÝ\œ™[]™[ÜØ[™Y]HÚ]Ý]Ý[HÛÜšÙ›ÝËÙÛÝ™\››ÜˆY\™ÙNÈÛ›HÛÝ\˜ÙKÝÛÛ[™Ë›ÝQHÛÛ\[KQK]šXÙKš\ÝX[ÜˆØ]H‹ÍÈ]šY[˜ÙKˆ^XÝZXYÒH[™[™Ë‚‚ŠŠŒŒ‹LLLLHPÌH˜YÈ[™XˆÛÝ\˜ÙK[Û›H›ÙXÝ[ÛˆØ[™Y]NŠŠˆ]KÔPÌP˜YÑ[™X\ÜÙ[X›UŒKšœÛÛ˜YÈH]Z[YØ[›ÛšXØ[[\š[Üˆ\ÜÙ[X›H[™Ù™ˆ
+Ú[ÛY\ÝXÈ›ÜË[\˜XÝ]™H[˜ÚÜœË]Y[ËÛYÚ
+KÝ]H˜\šX[Ë˜]™\œØ[ØÛÛ\Ú[Û‹ÜÝ™X[Z[™ËÓ”ÈÝÛ™\œÚ\ÛÛ˜XÝÈ[™š]™K[[™H][K[]™[™XÙZ\\ÚÜËˆ›ÈÙ[ÛY]žHÙ[™\˜]YØ\™ZÝ\ÙHž]\ÈXÜ]Z\™Y[œ™X[[\ÜÛÛ\[KQK]šXÙKš\ÝX[ÜˆØ]H‹ÍÈ›ÛÙŽÈ^XÝZXYÜÝY˜[Y][Ûˆ[™[™Ëˆ^\Ý[™ÈPÌH[[YHØÛÜH[˜Ú[™ÙY‚‚ŠŠŒŒ‹LLLLHÚXÚÜÚ[™XÛÛ˜Ú[X][Ûˆ
+Ø[™Y]JNŠŠˆ]™HÚ]Xˆ[™[ÜžHØœÙ\™YÌœ˜[˜Ú\È[™MÜ[ˆœËˆÜ™X]YØÜËÔ‘PÓÕ‘T–WÐÒPÒÔÒS•ÌŒ‹LLLLK›YÛˆœ˜[˜ÚÜËØÚXÚÜÚ[Xœ˜[˜Ú\™XÛÛ˜Ú[X][Û‹LŒŒLLXÈÛÛ\\™YÌÍˆ
+ˆZXYÍH™Z[™
+KÌÍÈ
+HZXYÍH™Z[™
+KÌÍÍ
+ZXYÌNH™Z[™
+K[™Û\ˆÚXÚÜÚ[™XÛÝ™\žH
+HZXYÎMÈ™Z[™
+HYØZ[œÝ]™[Üˆ[]™\™Ù[ˆ™\Ù\™H[™[™ÈÙ[XÝ]™HØ[˜YÙH[™^XÝZXYÚXÚÜËˆ›ÈˆY\™ÙYœ˜[˜Ú[]YQHÛÛ\[KQK]šXÙK”Ëš\ÝX[ÜˆØ]H‹ÍÈ›ÛÙˆœ›ÛH\ÈÚXÚÜÚ[ˆ\È\È™\ÜÚ]ÜžK\ÛÝ\˜ÙHØÝ[Y[][ÛˆÛ›K[™[™È^XÝZXYÝ]XÈÒK‚‚ŠŠ”ËLMÌÛÛ˜XÝ[YÛ›Y[
+Œ‹LLLLJNŠŠˆ^XÝZXY™KU[œ™X[ÎLÍMÌMLØRSQ]Ý]]YÝ]XÈ\ÜÙ\[ÛœÈ›ÜˆYØXÞH	Ø‹\›ÝÈ\™Y™\™[˜ÙKˆH
+œ™X[
+ˆÝÙ\”Ú[\œ˜^HXÛÙ\ˆ™YÜ™\ÜÚ[ÛœÈ\ÜÙY
+›]L‹™\ÝYL‹Ú[™ÛOLK[\OL
+KˆØÜš\ËÜ™WÝ[œ™X[Ý˜[Y]KœX›ÝÈÚXÚÜÈHXÝX[	›ÝØÝX\™È[™Ù]SÜ[”[™YœØ™]\ÙH˜]\ˆ[ˆš[Üˆ˜\šXX›HÜ[[™Ëˆ™]È^XÝZXYÜÝYÒH[™[™ÎÈ›È[™Ú[™KÔQKÙ]šXÙH]šY[˜ÙK‚‚ˆÈÈŒ‹LLLLH8 %œ˜[˜ÚÛX[\]™K[Ü[‹Tˆ\œ˜^HXÛÙ\ˆ™YÜ™\ÜÚ[Ûˆ
+Ø[™Y]JB‚‹H[™\ÝYØ]YÜÝYÛX[\[ˆÎLÍLÍNMMXY\ˆÝXØÙ\ÜÙ[™]šY]ÙY™]\™[Y[ˆH[ˆÙÙÙYXÝ]™T’XYÏL]™[ˆÝYÚÚ]XˆYÜ[ˆœËˆ^XÝ\‹Xœ˜[˜Ú™XÚXÚÜÈ[™›Ûž™\›ËXZXY˜[˜XÚÈ™\Ù\™Y[š\]YHXYÈ[ˆ][‹][Èˆ›ÝXÝ[ÛˆØ\È›Ý™[XX›Hš\ÚX›K‚‹H›ÛÝXØ]\ÙHZ]YØ][ÛŽˆ›Ü›X[^™H›Ý›][™™\ÝYÚ[™ÝÜÈÝÙ\”Ú[[›ÚÙKT™\ÝY]Ùˆ”ÓÓˆ\œ˜^\ÈÚ]Ù]SÜ[”[™YœØÈ\ÙHHØ[YH›Ü›X[^™\ˆ›ÜˆH[š]X[XÝ]™KZXYÙ][™^XÝ\‹Xœ˜[˜Ú™XÚXÚËˆ™\Ù\™H˜Z[XÛÜÙYÒHX\ÙKÛÜÙYÜ™\XÙ[Y[Tˆ›ÛÙ‹\˜Ú]™KÑYÜ˜\È›ÝXÝ[ÛœÈ[™™\›ËXZXYÛXÞH[˜Ú[™ÙY‚‹HÜÝYÝÙ\”Ú[Û\ÜÚYšY\ˆ™YÜ™\ÜÚ[Ûˆ›ÝÈ^XÝ]\ÈHXÝX[[\ˆYØZ[œÝ›]ÝÛË[]™[ÜÚ[™ÛKÙ[\HˆØ[\\Ëˆ
+Š‘]šY[˜ÙHÝ]\ÎŠŠˆÛÝ\˜ÙHØ[™Y]H[™[™È^XÝZXY™KU[œ™X[Ñš]™KS[™NÈ™]š[Ý\ÈÌÍÌÈœ˜[˜Ú[][Ûˆ™[XZ[œÈ›Ý™[ˆ]ÎLÍLÍNMMXˆ›ÈQHÛÛ\[K–[\ÜQK]šXÙK”Ëš\ÝX[ÜˆØ]H‹ÍÈÛZ[K‚‚ˆÈÈŒ‹LLLLH8 %ÜÝHÌÍÌˆ™]šY]ÙYÝ[K\™Yˆ™]\™[Y[
+ˆØ[™Y]JB‚‹H
+Š”ÛXÞNŠŠˆPËLLˆ™XÛÛ˜Ú[YY\ˆY\™ÙYˆÌÍÌˆ
+Y\™ÙHLØ˜ÍÙŽXLÌŽLL™˜ÍYMNYLYŒLX
+HÚ]^XÝZXYÚ]X‹ZÜÝY™KU[œ™X[ÕPÐÑTÔÈÎLÍÍNX[™š]™KS[™HÕPÐÑTÔÈÎLÍÍÍMØˆÛ\ÜÚYšYY
+Š”ÕUPËUSQUQ
+Š‹ˆ[Ú[™ÝÜÓ›ÑY]ÜˆXÚØYÙ\È™[XZ[ˆÝÛ™\‹\™\]Y\ÝYÚ\\‹Ü™[X\ÙHÛÜÙ[Ý]Û›NÈ[™Ú[™HÛÛ\[KÔQKÙ]šXÙKÝš\ÝX[ÑØ]M‹ÍÈ™[XZ[œÈ[œ›Ý™[‹‚‹H
+Šœ˜[˜Ú™]šY]ÙY›Üˆ™]\™[Y[ŠŠˆÛXÞKØÛÝYYš\œÝ[›Ë\›Ý][™K]Ú[™ÝÜË\XÚØYÙKLŒŒLLX^XÝÒHXØØÍŒLŒÌÌLÎLÌÎLŽX˜ŽŒXÎYŒLÌXÛÜÙYÝ[›Y\™ÙYˆÌÍŽKˆ[š\]YH[HÛÛZ[œÈ›Ý\ˆÛXÞKÙØÜÈš[\ÎÈÛXÞH[[Ý\\œÙYYžHY\™ÙYˆÌÍÌ‹›ÝžHHÛZ[HÙˆY[XØ[Ú][˜Ù\ÝžK‚‹H
+Š”ØY™]H[\[Y[][ÛŽŠŠˆ]KÐœ˜[˜ÚÛX[\[‹šœÛÛ˜™YÚ\Ý\œÈ\È^XÝ™Y‹ÔÒKÛÜÙY‹™\XÙ[Y[ŠÛY\™ÙKˆØÜš\ËÜ[—Øœ˜[˜ÚØÛX[\œÌX›ÝÈ˜Z[XÛÜÙ\ÈÛˆ[Ý™YÒKXÝ]™H‹Z\ÜÚ[™È™\XÙ[Y[Z\ÜÚ[™ÈY\™ÙH[˜Ù\ÝžK[šÛ›ÝÛˆ[š\]YH™YœÈ[™\Ù\È]ÛZXÈÚ]KY›Ü˜ÙK]Ú][X\ÙX›Üˆ›Ý^XÚ][™‹ZXY™]\™[Y[‚‹H
+Š”™[XZ[š[™Èœ˜[˜Ú[NŠŠˆ]™\žHÝ\ˆ[œÜXÝY›Û˜Ø[›ÛšXØ[œ˜[˜ÚÝ[\È[š\]YHÛÛ[Z]ÈœÈ]™[Üˆ™\Ù\™H–Õ[™Ù[ËÔÚÙ[][Ô”‹Ü™]šY]ËÙÙ[™\˜]YX]\šX[ÑYÜ˜\ÈØ[™Y]\È[[Ù[XÝ]™H™XÛÛ˜Ú[X][Ûˆ[™›ÛÙ‹ˆÈ›Ý[]HžHYÙHÜˆœ˜[˜Ú]K‚‹H
+ŠÝ\œ™[]šY[˜ÙH›Ý[™\žNŠŠˆœ˜[˜ÚÌÍŽHÛX[\\È
+˜]]Üš^™Y[™[™ÈHÝXØÙ\ÜÙ[ÜÝYˆ[™XÝX[ÛX[\ÙËÜ™Y‹[›ÝY›Ý[™›ÛÙŠŽÈ›È™[[ÝH[][ÛˆÜˆ\™›Ü›X[˜ÙKÝš\ÝX[XØÙ\[˜ÙHÛZ[YYžH\È[žK‚‚ŠŠ”ËLMHÝ]XÈ™YÜ™\ÜÚ[ÛˆÛÜœ™XÝ[Ûˆ
+Œ‹LLLLJNŠŠˆ^XÝZXY™KU[œ™X[[ˆÎLÍÌŒÌŒ˜Z[YÛ›H]HÝ]]YÜÝY[œ™X[ÝX\™ÚÙ[ˆ™YYË˜Û\ÜÚYžK›Ý]]Ë›[ÙHOH	Ú[š\š]	ØY\ˆ™X[Û\ÜÚYšY\ˆØ\Ù\È[™XÚØYÚ[™ÈÛÛ˜XÝY[™XYH\ÜÙYˆ™\XÙY]Û^XÝ][ÛˆÚ]^XÚ][ØÛÜ™KØXØÙ\[˜ÙKÜXÚØYÙXÙ[XÝ[ÛˆX\šÙ\œÈ[™YYØÜš\ËÜ™WÝ[œ™X[Ý˜[Y]KœXÈH˜\œ›ÝÈÜÝY[Û›HÛXÞH[ÝÛ\Ýˆš]™KS[™H[ˆÎLÍÌŒÌÕPÐÑTÔÈÛˆ™]š[Ý\ÈXYÈ™]È^XÝZXY™Y›YÚ™[XZ[œÈ[™[™Ëˆ\È\ÈHÒH\ÝXÛÛ˜XÝš^“Õ™X[QHÛÛ\[KQK]šXÙHÜˆÚ\\ˆXØÙ\[˜ÙK‚‚ˆÈÈŒ‹LLLLH8 %X[X[[Û›HÚ[™ÝÜÈXÚØYÚ[™È
+ÈÜÝYÛXÞH™YÜ™\ÜÚ[Ûˆ
+ˆØ[™Y]JB‚‹HPËLLˆ›ÙXÝ[Ûˆ[\[Y[][ÛˆÛˆÝ\œ™[]™[ÜY\ˆˆÌÍÌˆÛÜšÙ›Ý×Ù\Ü]ÚXÚØYÙWÝÚ[™ÝÜÏ]YX^Û\Ú]™[H[˜X›\ÈÚ[™ÝÜÓ›ÑY]ÜˆÛÛÚË]H›ÛÙ‹XÚØYÙYÝ\\\™Ø\™HØ\\™H[™\™ÙH\Y˜XÝ\ØYˆÛÛ™šYËÐZ[˜ÜËÝ[šÛ›ÝÛ‹Ù˜Z[YXÛ\ÜÚYšY\ˆ]ÈÝ[ZÙHH\›ÜšX]HQHÛÛ\[KÚ[\ÜÜ[[YH[™HÚ[ˆHÝÛ™\ˆ[›™\ˆ\È]˜Z[X›K]™]™\ˆØ]\ÙHH›Ý][™HXÚØYÙK‚‹H˜\œ›ÝÈ^XÝ\][Û›HÝ]XØÛ\ÜÚYšXØ][Ûˆ›ÜˆÛÝ™\›˜[˜ÙKØÛ\ÜÚYšY\ˆÛÜšÙ›ÝËÑØÜÈ\]\È[œÈH™X[ÝÙ\”Ú[Û\ÜÚYšY\ˆ™YÜ™\ÜÚ[ÛˆÛˆÚ]X‹ZÜÝYÚ[™ÝÜÈÚ]Ý]™\Ù\š[™ÈHÝÛ™\‰ÜÈQH[›™\ˆÜˆ[\Z[™È[ˆ[š\š]Y[œ™X[Z[›ÛÙ‹ˆXØÙ\[˜ÙK[Û›HÚ[™Ù\ÈÚ]Ý]XÚØYÙY\Ý\\™\Ý[YH[ÛÈÝ^HÛˆÜÝY[Û›HÛ\ÜÚYšXØ][Û‹‚‹H™YÜ™\ÜÚ[ÛˆÛÝ™\œÈ™X[Ù]S[ÙHÝ]]XÜ›ÜÜÈ[™\]Y\ÝY˜][X[X[\Ü]Ú[™^XÚ]H™\]Y\ÝYÚ\\ˆXÚØYÙNÈÛÛ™šYËÝ[šÛ›ÝÛ‹Û›Ë\›ÛÙˆØ\Ù\È™[XZ[ˆÝšXÝHÛ\ÜÚYšYYˆÛÝ™\››Üˆ[™X^[][TØY™S[ÙH\]YÙÙ]\ŽÈPÌH[[YHØÛÜH[™Ø]H‹ÍÈ[˜Ú[™ÙY‚‹HYXØ]YPÌH™\šYšYY”ˆÛÜšÙ›ÝÈØ\ÈHÙ\\˜]HY[ˆ\XØ]HÙ[‹ZÜÝYˆšYÙÙ\‹ˆ]\È›ÝÈX[X[ÛÜšÙ›Ý×Ù\Ü]ÚÛ›NÈÜ[Û˜[XÚØYÙWÝÚ[™ÝÜØY˜][È˜[ÙK[™ÛÛÚË]KÜÝ\\ÚXÚÜÈ[™\Y˜XÝ\ØY™\]Z\™HYKˆHXÝX[–[\ÜÕQHPH™[XZ[œÈ]˜Z[X›HÛˆ[X™\˜]H\Ü]ÚÈ›È[\Ü]šY[˜ÙH\È[™[Y‚‹H
+Š‘]šY[˜ÙH›Ý[™\žNŠŠˆÛÝ\˜ÙHÛXÞHØ[™Y]Kˆ^XÝZXYÜÝYÒH™\Ý[È[™[™ÎÈ›È™]ÈQMÛÛ\[K–[\ÜQK]šXÙH”Ëš\ÝX[XØÙ\[˜ÙKÚ[™ÝÜÈXÚØYÙKÜˆØ]H‹ÍÈÜ™Y]‚‚ˆÈÈŒ‹LLLLH8 %ÌÍHÒH™YÜ™\ÜÚ[ÛˆÛÜœ™XÝ[Ûˆ
+Ø[™Y]JB‚‹H^XÝZXY™KU[œ™X[ÌÎLLÌÎH˜Z[Y[ˆÛÈÛÝ\˜ÙHÛÛ˜XÝ\ÜÙ\[ÛœÎˆÛ™HØœÛÛ]HX[X[[Û›HšYÙÙ\ˆ^XÝ][Ûˆ[™Û™H™]È\Ý\Ú[™È]\˜[\ØØ\Y™]Û[™\ËˆHYXØ]Y”ˆ[™H[[[Û˜[H[œÈÛˆˆ]™]™\ˆÛÛÚÜËÜXÚØYÙ\È^Ù\X[X[\Ü]ÚˆÛÜœ™XÝY\ÜÙ\[ÛœÈ[™YÚ[™YXÚØYÙHØ]\ÎÈ™\]Z\™\È™]È^XÝZXYÒHÝXØÙ\ÜËˆ›È[[YKÙ]šXÙKÝš\ÝX[XØÙ\[˜ÙK‚‚ˆÈÈŒ‹LLLLH8 %PÌH™\šYšYY”ˆ[\Ü\ˆ[YÜ˜][ÛˆÛˆˆÌÍH
+Ø[™Y]JB‚‹H\ÚXØ[›[™\ˆ–›Ü›X[^˜][Ûˆœ›ÛHÌÍMH\È›ÜØ\™\ÜY[ÈHXÝ]™HÌÍHÛÝ\˜ÙHÝYÙNˆÛÜYYœ›ÛHØ]™YÔPÌS›Ü›X[^™Y–[ÈYÛ›Ü™YØ]™YÔÚ\™T›ÙXÝ[Û’[\ÜÛÜšÚ[™ØÛ›NÈ˜XÚÙYØ\™ZÝ\ÙH–\È™]™\ˆ[\™YˆHÛÛ[X[™]™Z™XÝÈZ\ÜÚ[™È\š]˜]]™H™XÙZ\X[›Ü›YYÛÝ\˜ÙH^[Ý]ÜˆZ\ÜÚ[™È\š]™Y–‚‹H^\Ý[™È™X[QMX]\šX[\ÛÝÐ\ÜÙ]™YÚ\ÝžHÚXÚÜËÑØ[YKÔ›ÙXÝ[ÛˆXÚØYÙ\Ë[™Ú\\ˆ\Þ[˜ÈÛÜ›˜[šÈ™[XZ[ˆHXÝ]˜][Ûˆ]]Üš]Kˆ^XÝ\Ú˜[Y][Ûˆ[œÈ[ˆHYXØ]YÛÜšÙ›ÝÈ™Y›Ü™HHQH[\ÜÛÛ[X[™]ÈÛÝ\˜ÙK[Û›KÛ[ØÚÙY\ÝÈÈ›ÝÛZ[H[\ÜYÙ[ÛY]žK‚‹H–›Ü›X[^™\ˆ›ÈÛ™Ù\ˆÙ[ÈÛÚ[˜ÚY[™\XÙ\ÈXÜ›ÜÜÈ˜[YU‹Ú\™[›Ü›X[ÙX[\ËˆØXÚHÙ^\È[˜ÛYH^XÝÜšYÚ[˜[–\Ú\Ë›Ü›X[^˜][ÛˆØÜš\È[™[œÝ[Y›[™\ˆ™\œÚ[ÛŽÈHØXÚH]Ý[[œÈ™XÙZ\ÔÒLMˆ™\šYšXØ][Û‹ˆ›Ü›X[^™YÜ™]\ÙYÝ[È\™HÙÙÙY‚‹HYXØ]Y”ˆˆ\[[™HÝYÙ\ÈMˆÛÝ\˜ÙY–[œÈ›[™\‹[\ÜÈ[ÈQM]Y]ÈX]\šX[È[™\ÝÈXY\ÜÈÚ\™HXÙ[Y[ˆÚ[™ÝÜÈXÚØYÙKÝ\ØY\È^ÛYYœ›ÛHˆ[™]™[Ü\ÚÈš[˜[XÚØYÙH™\]Z\™\È^XÚ]\Ü]ÚˆÛ\ÜÚYšY\ˆ™X]È˜[YY”ˆÛÛÚZ[ˆÚ[™Ù\È\È[™Ú[™KZ[\XÝ[™È]›ÝÚ[™ÝÜË\XÚØYÚ[™ËXÜš]XØ[È[šÛ›ÝÛˆ]ÈÝ[˜Z[ÛÜÙY‚‹H]šY[˜ÙNˆˆÌÍH™]š[Ý\ÈÛÝ\˜ÙK[Û›HXYLMŽYM˜X\ÜÙY™KU[œ™X[[ˆÎLŒMˆ
+Š•\ÙH‘UÈ[\Ü\‹ÝÛÜšÙ›ÝÈY]È™\]Z\™Hœ™\Ú^XÝZXY™KU[œ™X[[™QKÔ”ˆ›ÛÙ‹ŠŠˆ›ÈQK]šXÙKš\ÝX[XÝX[”ËØ]H‹ÍÈXØÙ\[˜ÙHÜˆMË]Ø\›š[™È[[Z[˜][Ûˆ\ÈÛZ[YYÈÈ›ÝÜ[ˆPÌˆ[[YKˆ	XÝ[ÛœÈÙZ[[™È[˜Ú[™ÙY‚‚ˆÈÈŒ‹LLLLH8 %PÌH\š]™Y–\ÚXØXÚHÛÛ[™ÈØ[™Y]B‚‹H›ÜØ\™\ÜYH™\šYšYY›[™\ˆ›Ü›X[^˜][ÛˆØÜš\[™ÒLM‹X›Ý[™\š]™YQ–™Y›YÚœ›ÛHˆÌÍMHÛÈÝ\œ™[]™[Ü\ÈHÛÝ\˜ÙK[Û›H[YÜ˜][ÛˆØ[™Y]KÚ]^XÝZXY™KU[œ™X[™YÜ™\ÜÚ[Û‹ˆ\ÈÙ\È“ÕXÝ]˜]H™]È[[YH\ÜÙ]Ë[ÙYžHHXÝX[QH[\Ü\‹ÜˆÛÛ™H[MÈÛ[ÛÝ[™ÈØ\›š[™ÜÈÛˆ]™[ÜˆÜšYÚ[˜[ÐÌ–\È[[]]X›NÈÙ[™\˜]Y\š]˜]]™\È]™H[ˆYÛ›Ü™YØ]™YËˆH[\Ü\ˆÝ™\›^KÜ\ÚXØ[QHš[™[™ËQK]šXÙHÌ”Ë[^]›ÝYÚ[™Ø]M‹ÍÈ™[XZ[ˆ[˜XØÙ\YˆÚ[™ÝÜÈXÚØYÚ[™È\È›Ý™\]Y\ÝYÈ™\Ù\™HPËLLˆ[™	ÒHYÙ]ÙZ[[™Ë‚‚ˆÈÈŒ‹LLLLH8 %ÚÛKYØ[YH™YÚ[Û˜[ÐÌX]\šX[™XÙZ\ØXÚHÛÜœ™XÝ[Ûˆ
+Ø[™Y]JB‚‹H›ÛÝØ]\ÙNˆÝYÙWØ[XšY[Ù×ÝØ\™ZÝ\ÙKœÌX™]\ÙYH™]š[Ý\ÛHÜ™Y[ˆ˜]Ú™XÙZ\˜\ÙYÛˆ˜]ÚQ[™ÝÜ™Y’T\Ú\È[Û™Kˆ[ˆY]Y™YÚ[Û‹Ü]Y\žKÜ]X[]HX[šY™\ÝÚ]HÐSQH˜]ÚQÛÝ[Ú[[HÚÚ\H™]ÈÛÝ\˜ÙH[ZÙK™]™[[™ÈX]\šX[\]\ÈXÜ›ÜÜÈH]]Üš^™YÚÛKYØ[YH™YÚ[Ûˆ™\\˜][Û‹ˆH™\Z\ˆÜš]\ÈX[šY™\ÝÜÚLM˜È™]È™XÙZ\È[™™\]Z\™\È[ˆ^XÝX[šY™\Ý\ÚX]Ú›ÜˆX\›H™]\ÙNÈYØXÞH™XÙZ\È˜Z[ÛÜÙY[™\™H™KY]˜[X]YÚ]Ý]\Ý›ÞZ[™È˜[YØXÚY’Tž]\Ëˆ]™[ˆT™Yœ™\Ú›ÝÈÙY\ÈÝXÝ\˜[H˜[Y\˜Ú]™\È˜]\ˆ[ˆ]]ÛX]XØ[H[][™È[Kˆ^\Ý[™ÈÒLM‹Ö’TÙ\ÚÈ™\Ù\™KÐÐÌÚXÚÜÈ[™Ú[™ÛHØ\™ZÝ\ÙHÜš]\ˆ™[XZ[ˆXÝ]™KˆH™]ÛÜšËYœ™YHÝÙ\”Ú[™YÜ™\ÜÚ[Ûˆ^\˜Ú\Ù\È[˜Ú[™ÙYÚ[™ÙY[™YØXÞH™XÙZ\ÈÚ]H™X[[\Ü˜\žH’T[™ÚXÚÜÈ][˜[Y][™ÈH™XÙZ\Ù\È›Ý[]HH\˜Ú]™Kˆ\È\ÈÛÝ\˜ÙK[Û›H™\›ÙXÝ[Ûˆ›ÜˆH^\Ý[™ÈŽ\™YÚ[ÛˆXÚÙ]Ù]
+Ú\™H[˜ÛYY
+K›Ý›ÛÙˆÙˆ[\Ü[™ÈX]\šX[È[ÈÈÝ\ˆ[[YH™YÚ[ÛœËˆ™KU[œ™X[[™^XÝZXY]šY[˜ÙH[™[™ÎÈ›È[œ™X[ÔQKÙ]šXÙKÝš\ÝX[ÜˆØ]M‹ÍÈXØÙ\[˜ÙKˆ\Ù\ˆÚ]XˆXÝ[ÛœÈYÙ]ÙZ[[™È	\È[˜Ú[™ÙY‚‚ˆÈÈŒ‹LLLLH8 %PËLLˆÚÛKYØ[YHÚ[™ÝÜÈXÚØYÙHØY[˜ÙH
+ÒHØ[™Y]JB‚‹HÝÛ™\ˆ^XÚ]HØ[È›Û™\ÜÙ[X[™\X]Y[™Ú[™HÚXÚÜÈZ[š[Z^™YXÜ›ÜÜÈH
+Š™[\™HÚ\™H›Ý\›™^HØ[YJŠ‹›ÝPÌHÛ›NÈX]žHÚ[™ÝÜÈÛÛÚËÔXÚØYÙKÕÚ[™ÝÜÓ›ÑY]Üˆ\Y˜XÝ\ØYÚÝ[›Ü›X[H\[ˆ]Ú\\ˆÛÛ\][Û‹Ü™[X\ÙK›ÝXXÚÛÝ\˜ÙKØ\ÜÙ]ÙY][™ÈÚXÚÜÚ[ˆÛÛH]]Üš]H\È]KÔ›Ú™XÝÛÝ™\››Ü‹šœÛÛ˜PËLLˆ[™Ú\\—ØÛÜÙ[Ý]ÜXÚØYÙWÜÛXÞWÌŒ—ÌLÌLX[šÙYÈ‘TKT“ÑLLK‚‹H™X[š[ÜˆQHÒHÙÈÌN™XÛÜ™YÌÔPÒÐQÑWÔTÔÈ[\ÙYÙXÛÛ™ÏLŒLX[™Ú[™ÝÜÈØ[™Y]H\ØYŒMÈ›ÜˆÌÌŒÍŒŒMHž]\Ëˆ\ÙH\™H^\Ý[™È™Y™\™[˜ÙHÛÜÝË“ÕHYX\Ý\™YÜYY\‚‹HØÜš\ËØÛ\ÜÚYžWÝ[œ™X[Ý˜[Y][Û‹œÌX›ÝÈ[Z]ÈXÚØYÙO]YKÙ˜[ÙX[™\[™[Hœ›ÛH[ØÛÜ™KØ\ÜÙ]ØXØÙ\[˜ÙXˆ™Ú]X‹ÝÛÜšÙ›ÝÜËÝ[œ™X[XZ[]˜[Y][Û‹ž[[ÛÛœÝ[Y\È]Ý]]›ÜˆÛÛÚËXÚØYÙY”ÓÓ‹XÚØYÙY^XÝ]X›HÝ\\[™\ØYˆ^XÚ]ÛÜšÙ›Ý×Ù\Ü]ÚXÚØYÙWÝÚ[™ÝÜÏ]YX›Ü˜Ù\È[^XÝZXYZ[
+ÈXÚØYÚ[™ËˆHÝ[™\™[[[ÙH˜[˜XÚÈ›ÜˆÚ[™ÙYØ[YH[[YKÜÛÝ\˜ÙH
+Š™Ù\È›ÝXÚØYÙJŠˆÚ[ˆHÚ[™ÙY]\È[™XYHÛ›ÝÛˆ\È›Û‹\XÚØYÚ[™ËZ[\XÝ[™Ë‚‹HXÚØYÚ[™ËXÜš]XØ[ÛÛ™šYËÊŠ˜Z[˜ÜËÕ\™Ù]˜ÜËÝ™X[Z[™È˜[šËÛÛÚËÔXÚØYÙKÔ™[X\ÙH[™[šÛ›ÝÛˆÝ[X[H[\XÝ[™È]ÈÝ[™\]Z\™H[XÚØYÙH›ÛÙˆ[[YYX][NÈXÚØYÙKÜÝ\\˜[Y]ÜˆÚ[™Ù\È™\]Z\™HXÚØYÙH›ÛÙˆ[›\ÜÈØY™HØ[YKXÛÛ[›ÛÙˆØ[ˆ™H[š\š]YˆÝ\\[Û›H™]\Ý[™ÈÙ\È›Ý™Y[™[H\ØYH\™ÙHXÚØYÙK‚‹HØÜš\ËÝ\ÝÝ[œ™X[ØÛ\ÜÚYšY\‹œÌX[˜ÛY\ÈÚÛKYØ[YH^[\HØ\Ù\ÈÛÝ™\š[™ÈØY™HÛ›ÝÛˆ[[YHÚ[™Ù\Ë›Ë\›ÛÙˆ˜[˜XÚËX[X[ÛÜÙ[Ý]ÛÛ™šYËÜÝ™X[Z[™ËXÚØYÙK]ÛÛÚ[™Ù\Ë[™[šÛ›ÝÛˆ]ËˆØÜËÑØ]\È\]YÚ]Ý]Ú[™Ú[™ÈÛÙHØ[Y\^KØ[›Û‹Y[[ÜžHÜˆ™[™\™\‹ˆ›ÈÙXÛÛ™ÛÝ™\››Üˆ]]Üš]Hš[K‚‹H\ÈÒHÚ[™ÙH\È
+Š”ÓÕTÑHÐS‘QUHÈÕUPÈÒPÒÔÈS‘S‘ÊŠˆ[[^XÝZXY™KU[œ™X[ÈÛ\ÜÚYšY\ˆ™YÜ™\ÜÚ[ÛœÈ[™™X[[›™\ˆÛ\ÜÚYšXØ][ÛœËˆ›ÈQMÛÛ\[KXÚØYÙKQKU’PÑK’TÕPS”ÈÜˆØ]H‹ÍÈÜ™Y]›Üˆ\Èœ˜[˜ÚˆPÌH\ÈÝ[HÛÛHXÝ]™H[[YHÚ\\ŽÈ]\™HÚ\\œÈ™YYZ\ˆÝÛˆXØÙ\[˜ÙH]šY[˜ÙK‚‚ˆÈÈŒ‹LLLLH8 %PÌHÚ]XˆXÝ[ÛœÈKY\XØ][Ûˆ[™\Y˜XÝ˜[œÙ™\ˆY™šXÚY[˜ÞH
+Ø[™Y]JB‚‹HÝÛ™\‹\™\]Y\ÝYÒH›ÝYÚ]™\Z\‹›È™]ÈÚ\\‹ÙØ[Y\^H™X]\™KˆHÙ[™\šXÈ™Ú]X‹ÝÛÜšÙ›ÝÜËÝ[œ™X[XZ[]˜[Y][Û‹ž[[[™XYHÛÝ™\œÈY™™XÝYQH[[YHÛÝ\˜ÙH]ÎÈHÜXÚX[^™Y™Ú]X‹ÝÛÜšÙ›ÝÜËÜXÌK]™\šYšYY\œ‹\›ÙXÝ[Û‹ž[[[ÛÈ]]Ë\˜[ˆÛˆ]™[ÜÚ[™Ù\ÈÈHÚ\™HÛÜ›Z[\‹Ú[\ÜÛÛ[X[™]ØœšYÙKš\ÚÚ[™ÈHÙXÛÛ™ÛÛ\[KÚ[\ÜØÛÛÚËÜXÚØYÙHÛˆHØ[YH[Z]YÚ[™ÝÜÈÙ[‹ZÜÝY[›™\‹‚‹HHÜXÚX[^™YNK\ÛÝ\˜ÙH™\šYšYY”ˆ[\ÜÜXÚØYÙHÛÜšÙ›ÝÈ\È›ÝÈÛÜšÙ›Ý×Ù\Ü]ÚÛ›Nˆ]™[XZ[œÈ]˜Z[X›H›Üˆ[X™\˜]HPÌHš\ÝX[\ÜÙ]›Û[Ý[ÛˆÚ]ÚXÚÜÝ[H™XÙZ\Ë–Ô‘ÈÛÝ\˜ÙHÝYÚ[™ËXÝX[QM[\ÜX]\šX[\ÛÝÜ[[YK\™\Ù[˜ÙH\ÝËØ]™KÜ›Ý]H™\šYšXØ][Û‹ÛÛÚËÜXÚØYÙH[™^XÝ]X›HÝ\\ˆ\È\È›Ý\›Z\ÜÚ[ÛˆÈž\\ÜÈ]È]šY[˜ÙHÚ[ˆ›Û[Ý[™È™\šYšYY”ˆš\ÝX[ÈÜˆXZÚ[™ÈØ]H‹ÍÈÛZ[\Ë‚‹HXÝ[ÛœËÝ\ØYX\Y˜XÝ[ˆ]X[X[XÚØYÙYš[˜\žH[™H›ÝÈ\Ù\ÈÛÛ\™\ÜÚ[Û‹[]™[ˆX]Ú[™ÈH^\Ý[™ÈÙ[™\˜[[œ™X[XÚØYÙH\Y˜XÝÜ[Z^˜][ÛˆÈ™YXÙHÛÛ\™\ÜÚ[ÛˆÔH[YNÈ\ØYÛ™]ÛÜšÈÜYY[\›Ý™[Y[\È›ÝY]YX\Ý\™Y‚‹HYYØÜš\ËÝ\ÝÜXÌWÝ™\šYšYYÜœ—ØœšYÙKœX™YÜ™\ÜÚ[ÛˆÈ[œÝ\™H\Ü]Ú[Û›HšYÙÙ\‹\ØYÙ][™Ë[™™][[ÛˆÙˆ[\ÜÜ[[YHÚXÚÜËˆHÝ]XÈ\Ý]\È^ÛYYœ›ÛH›ÝÙ[™\˜[[œ™X[\ÚÔˆšYÙÙ\œÈ[™™[XZ[œÈÛÝ™\™YžH™KU[œ™X[˜[Y][Û‹‚‹HÛÝ\˜ÙKÐÒKXÛÛ™šYÈ™]šY]ÈÛ›HÛÈ˜\‹ˆ^XÝZXY™KU[œ™X[œ™\ÚQHÛÜšÙ›ÝÈ™Z]š[Ü‹˜[œÙ™\ˆ™[˜ÚX\šÜËQK\™Ù]Y]šXÙKš\ÝX[XØÙ\[˜ÙK”È[™Ø]H‹ÍÈ]šY[˜ÙH\™H
+Šœ[™[™ÊŠ‹ˆ^\Ý[™ÈÛÛ\[KÜ[[YHXØÙ\[˜ÙH\È›Ý[š\š]YXÜ›ÜÜÈ\ÈÚ[™ÙH[[™\šYšYYžHH›Ú™XÝ	ÜÈ›ÛÙˆÛ\ÜÚYšY\‹‚‚ˆÈÈŒ‹LLLLH8 %›ÛÝXØ]\ÙH™\Z\ˆÙˆØØ[QHÛ\ÜÚYšY\ˆ
+ˆÌÍNJB‚‹H™KU[œ™X[[ˆÌÎLÌŒÌLNMˆ˜Z[YYK\™]šY]Ë\ØY™K]Ú]\›ÛÙŽˆ^XÝY[š\š]ÛÝ[ˆHÛÈ^XÝ]È\X\™YÛ›H[ˆH˜[œÚ]]™HÛÜ™K\›ÛÙˆ[ÝÛ\Ý›Ý[ˆHXZ[ˆ	ØY™Q^XÝÙ]\ÙYžH	[[\XÝˆY[HÈHXÝX[^XÝ\]Û\ÜÚYšY\ˆ[™ÛÝ™\ˆÛÚØ[ZÙH˜[Y\ËZ^Y[[YH[™ÛÛ™šYÈÚ[™Ù\È[ˆH™X[Û\ÜÚYšY\ˆ™YÜ™\ÜÚ[Û‹ˆ\™[[™Ú[™H›ÛÙˆ™[XZ[œÈX[™]ÜžKÝ\Ú\ÙH[˜[Y][Û‹ˆˆÌÍN	ÜÈXÝX[™]šY]ÈÛÛ[X[™Ý\ÝÝ[™\]Z\™\È^XÝZXYÝ]XÈ^XÝ][Ûˆš[ÜˆÈY\™Ú[™ËˆØ[™Y]H]ØZ][™ÈÒNÈ›È™]È[œ™X[ÔQKÙ]šXÙKÝš\ÝX[Ñ”ÈXØÙ\[˜ÙK‚‚ˆÈÈŒ‹LLLLH8 %ØØ[QHÛÛ[™ÈÒH™YXÝ[Ûˆ
+›ÛÙ‹\™\]Z\™Y
+B‚‹HÛÜœ™XÝÈÛ\ÜÚYšXØ][ÛˆÙˆ^XÝHÒT‘WÑTÕÔQWÔ‘U’QUË˜˜][™ØÜš\ËÝ\ÝÙ˜\ÝÜYWÜ™]šY]ËœX[ÝÚ[™È\ÝX›\ÚYÜ™Y[ˆ^XÝ\\™[[™Ú[™H]šY[˜ÙH™]\ÙH[™™]™[[™È™\X]Y[QHZ[È›Üˆ[˜Ú[™ÙYØ[Y\^Kˆ˜Z[ÈÛÜÙYÈ[[œ™X[Ú[ˆ[š\š]Y›ÛÙˆ\ÈZ\ÜÚ[™Ëˆ]šY[˜ÙNˆÌÎLÍNLÌLHÛ\ÜÚYšY\ˆ•SÕS”‘PSÑ’SX›Üˆ\ÙHÛÈ]Ëˆ›ÈÚ\\ˆ›ÙÜ™\ÜÚ[Û‹Ø[Y\^K\ÜÙ]]šXÙKš\ÝX[Üˆ”ÈXØÙ\[˜ÙH›ÙXÙY‚‚ˆÈÈŒ‹LLLLH8 %Z[š[][H™Y[™[ÚXÚÜÎˆ]šXÙKY]˜[X]ÜˆÒHÛ\ÜÚYšY\ˆÛÜœ™XÝ[Ûˆ
+Ø[™Y]JB‚‹HÛÜœ™XÝYš[HÛ\ÜÚYšXØ][Ûˆ›ÜˆØÜš\ËÙ]˜[X]WÜXÌWÙØ]M×Ù]šY[˜ÙKœXˆXØÙ\[˜ÙK[Û›HÚ]›Ý™[ˆ^XÝ\\™[ÛÜ™H[™Ú[™H[ˆØ[ˆ™]\ÙH][™Ú[™H]šY[˜ÙNÈXœÙ[[™Ú[™H›ÛÙˆ™]Z[œÈ[˜[Y][Û‹ˆ™YÜ™\ÜÚ[ÛˆØ\Ù\ÈYYÈØÜš\ËÝ\ÝÝ[œ™X[ØÛ\ÜÚYšY\‹œÌXˆ\ÈÙ\È›ÝZ[Ø[\ˆÚ\™Hš\ÝX[Ë[\ÜYY\Ú\Ë]Y\ÝÈÜˆ[žHPÌˆ[[YNÈPÌHT‘“Ô“PSÑHÈQHÈU’PÑHÈ’TÕPSÈØ]H‹ÍÈ™[XZ[ˆ[˜XØÙ\Yˆ[ˆÌÎLMNˆ™]š[Ý\ÛHÛ\ÜÚYšYYH]˜[X]Üˆ\È[ÙOY[Èœ™\Ú^XÝZXYÝ]XËÜ™YÜ™\ÜÚ[Ûˆ›ÛÙˆ\È™\]Z\™Y™Y›Ü™HY\™Ú[™Ë‚‚ˆÈÈŒ‹LLLLH8 %XØÙ[\˜]Y[ZÙHÛXÞHÛ›K›ÝÛÛ[ÛÛ\][Û‚‚‹HÝÛ™\‹X\›Ý™YÜ\˜][Û˜[\™XÝ[ÛŽˆ™[[Ý™H™Y[™[YZ[š\Ý˜]]™HYZ\ÜÚ[ÛˆÚXÚÜË˜\Ý\]]Ù[™\Z\˜X›HØ[™Y]\ËÙY\™X[\ÜÙ]šYÚÈ[™XÚšXØ[XØÙ\[˜ÙKÛÛœÛÛY]H\™ÙHPÌHØ]™\È[™™\\™HŽ\™YÚ[Ûˆ\ØÚ\˜XÝ\œÈÛÛ˜Ý\œ™[Kˆ
+Š”Ý]\ÎˆÛXÞH™YÚ\Ý\™YÈ[\[Y[][Ûˆ[™[[YHÝ]][™[™ÊŠ‹ˆ›È[˜Ü™X\ÙH[ˆš\ÝX[QK]šXÙK”ÈÜˆØ]H‹ÍÈÛÛ\][Û‹‚‚ˆÈÈŒ‹LLLL8 %ÝÛ™\ˆ]š[™ÈÛØÚX[[™ØØ\HÝ[™\™Ú\™KYš\œÝÈ[™YÚ[ÛœÈ
+\ÚYÛˆ™\]Z\™[Y[
+B‚‹HØÛÜKÜ™\]Z\™[Y[ÈØÝ[Y[][ÛˆØ[™Y]HÛ›Nˆ]š[™ÈÛØÚX[[™ØØ\Hš\œÝ[ˆPÌK]\ˆ™YÚ[Û‹\ÜXÚYšXÈY\][Ûˆ
+Ž\™YÚ[Ûˆ\ÚYÛˆÛÝ™\˜YÙJKˆÝ]\ÈS“‘QÑQ‘T”‘Q\È\›ÜšX]NÈ›È™]È\ÜÙ]š[\ËQH[\ÜÚ\˜XÝ\ˆ\YX\Ý\˜X›Hš\ÝX[XØÙ\[˜ÙK\™›Ü›X[˜ÙHÜ™Y]ÜˆØ]H‹ÍÈÛÛ\][Û‹‚‚‚ˆÈÈŒ‹LLLL8 %ÚÛKYØ[YHÚ\˜XÝ\ˆÐÌÛÝ\˜ÙHØ[™Y]H™\ÙX\˜Ú
+™\\˜][ÛˆÛ›JB‚‹HÜ™X]Y]KÕÚÛQØ[YPÚ\˜XÝ\”ÛÝ\˜ÙPØ[™Y]\ÌŒŒLLšœÛÛ˜Ú]]X]\›š]\È[Ù[\ˆ˜[\ÞHÝ]š]Ë]X]\›š]\È”ÈÚ\˜XÝ\œÈ[™›[™\ˆ[X[ˆ˜\ÙHY\Ú\ÈØ[™Y]HÛÝ\˜Ù\È›Üˆš\ÝX[ÜšYÈ™\ÙX\˜ÚXÜ›ÜÜÈHŽ\™YÚ[Ûˆ›ÙXÝ[ÛˆØÛÜKˆ\È\ÈÛÝ\˜ÙKY\ØÛÝ™\žHY]Y]HÛ›NˆXÙ[œÙK\\‹YÝÛ›ØY^XÝ›Ü›X]ÒLM‹šYÈÛÛ\]Xš[]K›ÜÜ[ÛœËÑÈ[™™[™\‹Ø\XØÙ\[˜ÙH\™H[™[™Ëˆ›Èš[\ÈÝÛ›ØYYÈ\œÚ\Ý[Ø\™ZÝ\ÙK›È[œ™X[[\Ü›È™]È[[YHÚ\\‹›ÈPÌHØ]H‹ÍÈÜ™Y]‚‹HÛÛ[YHÛ›HÚ][ˆ^\Ý[™ÈÛÝ™\››Ü‹X\›Ý™YPÌKYš\œÝ[[YH
+È[™\[™[ÚÛKYØ[YH\ÜÙ]™\\˜][ÛˆÛXÞKˆÛ™HØ\™ZÝ\ÙHÜš]\‹›È\XØ]HÝÛ›ØYÎÈ›ÈÙ[™\šXÈ\™\\HY\Ú\ÈXØÙ\Y\ÈH˜[YYÛÚY[ˆ\›ÈÚ]Ý]ÜšYÚ[˜[Ú\˜XÝ\‹\ÜXÚYšXÈ\[™Ø[›Ûˆ™]šY]Ë‚‚ˆÈÈŒ‹LLLL8 %\ÚXØ[ÛÝ\˜ÙH[ZÙH[™œ›ÙÈÛÜœ™XÝ[Ûˆ
+ØœÙ\™Y
+B‚‹HØ\™ZÝ\ÙH[ˆÌÎMÎÍÌLÕPÐÑTÔÈÚ]™X[ÛÝ\˜ÙH™\Ý[ˆSP’QS•Ñ×ÕÐT‘RÕTÑWÔÕQÑWÔTÔÈš[\ÏLŒˆÚÚ\YLž]\ÏLLMÎÍMŒˆ[™‘QÒSÓ—ÔÓÕTÑWÔ‘PÑRTÐUQUÔTÔÈš[\ÏLŒˆÚÚ\YL™\Ù\™OLMÍLÎLLˆ\È\ÈÛÝ\˜ÙHPÈÛ›K›Ý”ˆ[\ÜY[È]\™H™YÚ[Û˜[[[YK‚‹Hœ›ÙÈ˜Z[XÛÜÙYY›Ü›X][ÛˆÛÜœ™XÝ[ÛˆˆÌÍˆQT‘ÑQÛÛ[Z]ØŒŒØXÍYXØÙŒMNXŒŒLYŽLLL˜ÍMÈ™YH^XÝZXYÛÜšÙ›ÝÜÈÌÎNNLÎL‹ÈÌÎNNLÍKÈÌÎNNLÌNÝXØÙYYYˆXÚšXØ[[Û›NÈ›Èš[š\ÚYÚÙ[][ØÛÛ[Ý[Û‹[X[‹\™[™\™Yš\ÝX[ÜˆÚ\\ˆØ]H‹ÍÈXØÙ\[˜ÙK‚‚ˆÈÈŒ‹LLLL8 %PÌHXÚØYÙKX]Y][™^XÝ[X]\šX[[\Ü\ˆÛÛ˜XÝ™\Z\ˆ
+Ø[™Y]JB‚‹HØœÙ\™YÝ]XÈÜ›ÜÜËYš[H[˜ÛÛœÚ\Ý[˜ÞNˆÚWÜXÚØYÙWÝÌœÌXÛÛ\\™\ÈH[š\]YHÑØ[YKÔ›ÙXÝ[Û˜XÚØYÙHÛÝ[Ú]]KÐÚ\\\ÜÙ]Ý™X[Z[™Ô[‹šœÛÛ‹˜]Y]Ý[Ý[š\]YWÜ›ÙXÝ[Û—ÜXÚØYÙ\Ø]H™\šYšYY”ˆXÝ]˜][Ûˆ\[™Y\ÜÙ]]ÈÚ]Ý]Y\Ý[™ÈH]Y]ˆØ[™Y]H™\Z\ˆÛÛ\]\È[š\]YHXÚØYÙ\Èœ›ÛH[XÝX[˜[šÜÈ[™\]\ÈPÌH˜[šÈÛÝ[Y[\Ý[K›È\™™Y™\™[˜Ù\ÈÜˆXYÙ\ˆØYË‚‹H™]š[Ý\ÛH[\ÙY[\Ü™\šYšY\ˆ^XÝYH™XÙZ\[™ÙÈÚÙ[ˆHXÝ]™H”ˆœšYÙH™]™\ˆ›ÙXÙ\ÎÈ™\XÙHÚ]XÝX[TÒQÔÓÕTÑWÓÓ“X™XÙZ\
+È^XÝ[\Ü\ˆPÌWÕ‘T’Q’QQÔ”—ÒSTÔ•ÔPØ›ÛÙˆ›Üˆ]™\žHÙ[XÝY–ÛX]\šX[Z\‹[™Ø]H\È™Y›Ü™H˜[šÈ›Û[Ý[Û‹ˆÙ™›[™HÝZ]HÛÝ™\œÈZ\ÜÚ[™ËÚ[˜ÛÜœ™XÝ[\ÜÙË[˜›Ý[™Y\Ú[™Ý[HXÚØYÙH]Y]ˆÝ]\ÈS‘S‘È^XÝZXYÛÜšÙ›ÝÈ[™™X[ÛÝ\˜ÙKÚ[\ÜY\XÚØYÙH™XÙZ\ÎÈ›ÝQKUTÕQU’PÑKUTÕQ’TÕPSKPPÐÑTQÜˆÌ”Ë‚‚ˆÈÈŒ‹LLLL8 %PÌH”ˆ[[YH™\Ù[˜ÙH]Ø]H
+Ø[™Y]JB‚‹HÛÜÚ[™ÈHš\ÝX[Ú\™H™\]Z\™\ÈXÝX[ÛÜ›XÙ[Y[›ÝÛ›H–ÛÝ\˜ÙHPËX\ÜÙ]™\Ù[˜ÙHÜˆÌÔPÒÐQÑQÔÕT•TÔTÔØˆ”ˆÛÜšÙ›ÝÈ›ÝÈ™\]Z\™\È^XÚ]›Û‹^™\›È[XÙ[Y[[ˆØ]™YÓÙÜËÐÒKT^XX›TÝ\\›ÙØÚ]X]Ú[™È\Þ[˜ÈPÌH˜[šÈ[šY\È[™›ÈÛZ]Y\ÜÙ]Ëš[ÜˆÈXÚØYÚ[™ÎÈ[Z]ÈPÌWÔ”—Ô•S•SQWÔ‘TÑSÑWÔTÔØÛ›H\ÛˆØœÙ\™YÙÈ]šY[˜ÙKˆ™YÜ™\ÜÚ[Ûˆš^\™\ÈÛÝ™\ˆZ\ÜÚ[™ÈÙË™\›ÈXÙ[Y[XœÙ[Ý™X[Z[™È˜[šÈ[™U‹LMˆÙËˆ\È\ÈÛÝ\˜ÙKXØ[™Y]H˜[Y][ÛˆÛ›H[[H™X[^XÝZXY[ŽÈ›ÈPÌHÚ\\ˆš\ÝX[\™Ù]”ÈÜˆ[X[ˆØ]H‹ÍÈÜ™Y]‚‚ˆÈÈŒ‹LLLL8 %PÌH™\šYšYY”ˆX]\šX[\\™[™YÜ™\ÜÚ[Ûˆ
+ËLMŽJB‚‹HÒHÌÎLMMNLHRSQˆÜšYÚ[˜[ÌÈ›ÛXYÙH\™[[˜\šX[\Ú\™YX]\šX[\™[H›ÙXÝ[Û“X]\šX[\™[Ø\È\ÜXÙYžHÛÛ™][Û˜[™]È”ˆX\Ý\ˆÙ[XÝ[Û‹ˆ™\ÝÜ™YÜšYÚ[˜[Y˜][\ÜÚYÛ›Y[Ú]^XÚ]™\šYšYYT”‹[Û›HÝ™\œšYK™\Ù\š[™È›ÛXYÙHY[]H[™™]™[[™È™YÜ™\ÜÚ[Û‹ˆ^XÝZXY™KU[œ™X[™]\Ý[™[™ÎÈ›È[œ™X[š\ÝX[ÔPÌHØ]M‹ÍÈ›ÛÙˆY]‚‚ˆÈÈŒ‹LLLL8 %PÌHÛÝ\˜ÙK]Ë]š\ÚX›HQM”ˆœšYÙH›ÙXÝ[Ûˆ
+Ø[™Y]JB‚‹H™]\ÙHÛÈ[[]]X›HÛH]™[ˆÐÌÎKÍŒÛÝ\˜ÙHØ]™\Ë˜[Y]HÒLMˆÜšYÚ[˜[™XÙZ\È[™\‹Yš[H\Ú\ËÚÛÜÙH][ÜÝMˆ]X[YšYYÚ[™ÛK[X]\šX[
+ŠœÝ]XÈ–
+Šˆ›ÜÈÚ][ˆHMZPˆÛÝ\˜ÙHØ\È[\ÜY^\™\È\™HRÈ‘Ëˆ]X\˜[[™KÚÛÝ™\œÚ^™Y[šÛ›ÝÛ‹[][K[X]\šX[[™[œÝ\ÜYš[\È\™H›Ý›Û[ÝYˆ›È™]ÈÛÝ\˜ÙK\›ÝšY\ˆÝÛ›ØYË‚‹HØÜš\ËÜXÌWÝ™\šYšYYÜœ—ØœšYÙKœHÝYÙ\ÈYÛ›Ü™YÙ[™\˜]YÛÝ\˜ÙH\ÜÙ]È[ÈÛÝ\˜ÙP\ÜÙ]ËÔ›ÙXÝ[Û‹ÕÛÜ›ÔÚ\™KÕ™\šYšYY”ŽÈH^\Ý[™ÈQMŒËŒˆ[\Ü\ˆÞ[\Ú^™\ÈHX]\šX[[œÝ[˜ÙH[™›ÝÈ˜Z[ÈÛˆZ\ÜÚ[™ËÝÜ›Û™ÈÚ[™ÛK[X]\šX[ÛÝÈ[™[˜[YY\ÚÙ[ÛY]žKˆÛ›HY\ˆX\ÜÙ]š[\È^\ÝÙ\ÈHœšYÙH\[™ÛÙ]ÈÈH^\Ý[™ÈPÌH\Þ[˜È˜[šÈ[™X]\šX[^™H]KÔPÌU™\šYšYYÛÜ›XÛÜ‹šœÛÛ‹‚‹HTÚ\™T›ÝÝ\UÛÜ›Z[\ˆ™[™\œÈ\ÈMˆÛX[ÛÜ›XØÙ[Èœ›ÛH™\ÚY[ÛÙØš™XÝÈÚ]Ý]ÛÛ\Ú[Û‹XÝÜˆXÚÚ[™Ë^˜H”ÈÝÛ™\œÚ\Ø[›ÛšXØ[›Ý]H˜[œÙ›Ü›\ÈÜˆ™]ÈÚ\\œËˆ™\šYšYYÝXœÙ]ÛÝ\˜ÙHX\È[˜ÛYH˜\ÙPÛÛÜ‹›Ü›X[[™XÚÙYÔ“NÈ˜\ÙPÛÛÜ‹[™Ù[›Ü›X[[™XÚÙYÔ“HÚ\š[™È\È™\Ù[[ˆÛÝ\˜ÙNÈXÝX[QH[\Ü[™š\ÝX[ÚY\ˆšY[]H™\]Z\™H]šY[˜ÙK‚‹H™Ú]X‹ÝÛÜšÙ›ÝÜËÜXÌK]™\šYšYY\œ‹\›ÙXÝ[Û‹ž[[ØÚY[\È™X[QHY]ÜˆZ[ÛÝ\˜ÙH[\ÜX\ÜÙ]™\šYšXØ][Û‹]]ÛX][Û‹Ý\\Ú\\‹ÜØ]™H›Ý[™]š\ÛÛ\™\ÜÙYÚ[™ÝÜÈXÚØYÙH[™XÚØYÙYÝ\\™Y›Ü™H\ØY[™ÈH\ÝZ[ˆ\ÈÛÜšÙ›ÝÈ\È›ÝHš]™K[[™H™XY[Û›H™\Ü‚‹H[]šY[˜ÙH
+Š”S‘S‘È^XÝZXYÒH[™[›™\ˆ^XÝ][ÛŠŠŽÈ›ÈQKUTÕQU’PÑKUTÕQ’TÕPSKPPÐÑTQÌ”ËÜˆØ]M‹ÍÈÛZ[\Ëˆ›È[Ý™HÈPÌˆ[[YK‚‚ˆÈÈŒ‹LLLL8 %PÌH\ÚXØ[ÐÌ”‹]ËUQMš\ÝX[›ÙXÝ[ÛˆœšYÙH
+Ø[™Y]K]šY[˜ÙH[™[™ÊB‚‹HX[˜YÙ\ˆ]]Üš]NˆPËLÎÌLÌLK‘TKT“ÑLLKÌKÔPÌHÛ›KˆXÝX[\œÚ\Ý[Ø\™ZÝ\ÙH[ˆÌÎLNLÌˆÛÛ\]YÕPÐÑTÔË›ÝšY[™È[[]]X›HÎJÍŒÛÝ\˜ÙH[™ÎJÍNH™\\™Y”ˆš[\ÎÈ\È\ÈÛÝ\˜ÙHÝÜ˜YÙH]šY[˜ÙK›Ý[™Ú[™KÜ™[™\ˆ]šY[˜ÙK‚‹H\ÈˆYÈ[ˆ^XÝÒLMˆÚXÚÙY›Ý[™Y
+\ÈMˆÝ]XÈ\ÜÙ]ÈÈMZPŠHÛÝ\˜ÙHœšYÙHœ›ÛHH\œÚ\Ý[ÛË]Ø]™HÐÌØ\™ZÝ\ÙH[ÈH^\Ý[™ÈÛÝ\˜ÙP\ÜÙ]ËÔ›ÙXÝ[Û‹ÕÛÜ›ÔÚ\™KÕ™\šYšYY”˜[\Ü\‹ˆ™Z™XÝ[ZY[]K[Xš[ÛYKÛÜœ\Y][[X\Û][K[X]\šX[[™›Û‹TÚ\™KÝ[œ™[]YØ[™Y]\Ëˆ]›ÚY›ÝšY\ˆ™YÝÛ›ØY\™[[YH™Y™\™[˜Ù\È[™[žHÚ\˜XÝ\ˆ–‚‹H[œ™X[[\Ü\ˆ›ÝÈš[™È™\šYšYYÚ[™ÛK[X]\šX[–ÈH™X[”ˆX\Ý\Žˆ˜\ÙPÛÛÜˆ
+È[™Ù[\ÜXÙH›Ü›X[
+ÈXÚÙYÔ“H
+[XšY[ØØÛ\Ú[Ûˆ‹›ÝYÚ™\ÜÈËY][XÈŠKÚ]›Û‹\Ô‘ÐˆXÚÙYÛ›Ü›X[[\ÜËˆ™\Ù\™H^\Ý[™ÈÐ’ˆ\ÜÙ]˜[šÈ[˜Ú[™ÙY‚‹H^\Ý[™ÈTÚ\™PÚ\\\ÜÙ]Ý™X[Z[™ÔÝXœÞ\Ý[X™[ØYÈÙ[XÝYÛÙ]ÈšXH]KÐÚ\\\ÜÙ]Ý™X[Z[™Ô[‹šœÛÛ˜ˆ^\Ý[™ÈTÚ\™T›ÝÝ\UÛÜ›Z[\˜YÈ][ÜÝMˆÜ[Û˜[›Û‹XÛÛY[™ËÝË\ÚYÝÈÝ]XÈXÛÜ˜]]™HYXÙ\ÈY\ˆÛÜ›ÛÛ[Z][™™]™\ˆÞ[˜Ú›Û›Ý\ÛHØYÈY\Ú\ËˆØ[›ÛšXØ[›Ý]KÜÝÜžKÜ]Y\ÝÝÛ™\œÚ\[™XÝÜˆÛÛ[™È™[XZ[ˆ[˜Ú[™ÙY‚‹HHYXØ]YÚ]X‹ZÜÝYÙ™›[™HÛÝ\˜ÙH\Ý
+ÈÙ\šX[^™YÚ[™ÝÜÈQMŒËŒˆÛÜšÙ›ÝÈ[œÈXÝX[ÛÝ\˜ÙHÝYÙKY]ÜˆZ[›ÙXÝ[Ûˆ[\ÜX\ÜÙ]™\Ù[˜ÙK]]ÛX][Û‹Ý\\[Ú\\œËÝ]H\œÚ\Ý[˜ÙKØ\›š[™ÈÝX\™ÛÛÚÈ[™XÚØYÙYÝ\\ˆÛ›HÝXØÙ\ÜÈØ[ˆX›\ÚH^XX›HÚ[™ÝÜÈ
+Š\ÝØ[™Y]JŠ‹ˆH™]Èš\ÝX[XÚÙ]\È“ÕXÛ\™YQK]šXÙK[X[ˆš\ÝX[ÜˆØ]H‹ÍÈXØÙ\Y‚‹H[[^XÝZXY\ÝÈ[‹\È\ÈHÛÝ\˜ÙH[\[Y[][ÛˆØ[™Y]Kˆš^ÛÛ\[KÚ[\ÜÜ[[YH˜Z[\™\ÈÛˆ\ÈØ[YHˆ™Y›Ü™HY\™ÙNÈ]›ÚY™]È™X]\™H[™\È[[XXÚ[™KYÜ™Y[‹ˆ›Èš[˜[Ú[™ÝÜÈ™[X\ÙH™\]Y\ÝY‚‚ˆÈÈŒ‹LLLL8 %]›ÚYÚ[\ÜÈ[œ™X[™XÛÛ\[\È›ÜˆÝ[™[Û™HØ\™ZÝ\ÙH™YÜ™\ÜÚ[Ûˆ\ÝÈ
+Ø[™Y]JB‚‹HØÜš\ËÝ\ÝÝØ\™ZÝ\ÙWÜ›ÝšY\—Þ™\›×Ü^[ØYÙ˜Z[ØÛÜÙYœÌX\ÈH™]ÛÜšËYœ™YH›ÝšY\‹Ø[XšY[ÑÈÝX\™›Ý[[YHÛÙKˆ]È™]ÈÛÝ\˜ÙK[Û›HÚXÚÜÈÚÝ[[ˆ[ˆ™KU[œ™X[Ú]Ý]™\Ù\š[™ÈHÛ™HQMŒÈXXÚ[™KˆYH^XÚ]\ÝØÜš\È›Ý\ÚÔˆ[œ™X[]ÛÜšÙ›ÝÈ]ËZYÛ›Ü™H\ÝÎÈH^\Ý[™ÈØÜš\ËÜÝYÙWÊØ\™ZÝ\ÙJ‹œÌX[H[™XYH^ÛY\ÈHØ\™ZÝ\ÙHY\\‹ˆXÝX[PÌH[[YHÛÜšÈ™[XZ[œÈÛˆ]ÈÝÛˆ^XÝZXYQHØ]Kˆ›ÈÛÛ\[HÛZ[H›Üˆ\ÈØ[™Y]K‚‚ˆÈÈŒ‹LLLL8 %[XšY[ÑÈÜ›ÜÜË[[™H\XØ]HÝÛ›ØY™YÜ™\ÜÚ[ÛˆÝX\™
+Ø[™Y]JB‚‹HØœÙ\™Y]™HØ\™ZÝ\ÙHÌÎMÎÍÌLÕPÐÑTÔÎˆSP’QS•Ñ×ÕÐT‘RÕTÑWÔÕQÑWÔTÔÈš[\ÏLŒˆÚÚ\YLž]\ÏLLMÎÍMŒ˜‘QÒSÓ—ÔÓÕTÑWÔ‘PÑRTÐUQUÔTÔÈš[\ÏLŒˆÚÚ\YL™\Ù\™OLMÍLÎLLˆ\ÙH\™HXÝX[ÒLM‹X]Y]YÛÝ\˜ÙK[Û›Hž]\Ë›Ý[œ™X[[\ÜË‚‹H›ÛÝXØ]\ÙH[ˆØÜš\ËÜÝYÙWØ[XšY[Ù×ÝØ\™ZÝ\ÙKœÌXˆ[ˆ™YÚ[Û˜[X]\šX[]Y\šY\ÈØ[ˆ™]\›ˆHØ[YH›ÝšY\ˆ\ÜÙ]Qˆ[ˆÙÜÈÚÝÈ™\X]YÝÛ›ØYÈÙˆ›ØÚÌÜ›Ý[™LLH[™]š[™ÔÝÛ™\ÌMLNÈš[ÜˆØÜš\Û›HÝX\™YY[XØ[\Ý[˜][Ûˆ]È[™Y›ÝY\XØ]HXÜ›ÜÜÈØ]YÛÜžH›Û\œËˆYXØÙ\YRQÙ]\]YÓ“HY\ˆÝXØÙ\ÜÙ[ÛÝ\˜ÙHÒLMˆ™XÙZ\ÈÚÚ\]\ˆ\XØ]HQÈ™Y›Ü™H™]ÛÜšÈ™\]Y\ÝËˆž]KXØ\˜Z[\™H]\Ý›Ý™[[Ý™H™]š[Ý\ÛH˜[YØXÚY\˜Ú]™NÈÈ›ÝšYÙÙ\ˆÜˆ™\X]HÛÛ\]Y˜]Úˆ^\Ý[™È]X]\›š]\È™\›Ë\^[ØY™KU[œ™X[Ý\[ÛÈÚXÚÜÈH[XšY[ÑÈY\ÛÙHÜ™\ˆÙ™›[™K‚‹HØ[™Y]H[[^XÝZXY™Y›YÚˆÛ™H\œÚ\Ý[Ø\™ZÝ\ÙHÜš]\ˆ[™ˆÚPˆ™\Ù\™H™]Z[™Yˆ›ÈPÌH[[YHÚ[™ÙKQK\™Ù]Y]šXÙH”Ëš\ÝX[ÜˆØ]M‹ÍÈÜ™Y]‚‚ˆÈÈŒ‹LLLL8 %]›ÚYÚ[\ÜÈ[œ™X[™XÛÛ\[\È›ÜˆÝ[™[Û™HØ\™ZÝ\ÙH™YÜ™\ÜÚ[Ûˆ\ÝÈ
+Ø[™Y]JB‚‹HØÜš\ËÝ\ÝÝØ\™ZÝ\ÙWÜ›ÝšY\—Þ™\›×Ü^[ØYÙ˜Z[ØÛÜÙYœÌX\ÈH™]ÛÜšËYœ™YH›ÝšY\‹Ø[XšY[ÑÈÝX\™›Ý[[YHÛÙKˆ]È™]ÈÛÝ\˜ÙK[Û›HÚXÚÜÈÚÝ[[ˆ[ˆ™KU[œ™X[Ú]Ý]™\Ù\š[™ÈHÛ™HQMŒÈXXÚ[™KˆYH^XÚ]\ÝØÜš\È›Ý\ÚÔˆ[œ™X[]ÛÜšÙ›ÝÈ]ËZYÛ›Ü™H\ÝÎÈH^\Ý[™ÈØÜš\ËÜÝYÙWÊØ\™ZÝ\ÙJ‹œÌX[H[™XYH^ÛY\ÈHØ\™ZÝ\ÙHY\\‹ˆXÝX[PÌH[[YHÛÜšÈ™[XZ[œÈÛˆ]ÈÝÛˆ^XÝZXYQHØ]Kˆ›ÈÛÛ\[HÛZ[H›Üˆ\ÈØ[™Y]K‚‚ˆÈÈŒ‹LLLL8 %[XšY[ÑÈÜ›ÜÜË[[™H\XØ]HÝÛ›ØY™YÜ™\ÜÚ[ÛˆÝX\™
+Ø[™Y]JB‚‹HØœÙ\™Y]™HØ\™ZÝ\ÙHÌÎMÎÍÌLÕPÐÑTÔÎˆSP’QS•Ñ×ÕÐT‘RÕTÑWÔÕQÑWÔTÔÈš[\ÏLŒˆÚÚ\YLž]\ÏLLMÎÍMŒ˜‘QÒSÓ—ÔÓÕTÑWÔ‘PÑRTÐUQUÔTÔÈš[\ÏLŒˆÚÚ\YL™\Ù\™OLMÍLÎLLˆ\ÙH\™HXÝX[ÒLM‹X]Y]YÛÝ\˜ÙK[Û›Hž]\Ë›Ý[œ™X[[\ÜË‚‹H›ÛÝXØ]\ÙH[ˆØÜš\ËÜÝYÙWØ[XšY[Ù×ÝØ\™ZÝ\ÙKœÌXˆ[ˆ™YÚ[Û˜[X]\šX[]Y\šY\ÈØ[ˆ™]\›ˆHØ[YH›ÝšY\ˆ\ÜÙ]Qˆ[ˆÙÜÈÚÝÈ™\X]YÝÛ›ØYÈÙˆ›ØÚÌÜ›Ý[™LLH[™]š[™ÔÝÛ™\ÌMLNÈš[ÜˆØÜš\Û›HÝX\™YY[XØ[\Ý[˜][Ûˆ]È[™Y›ÝY\XØ]HXÜ›ÜÜÈØ]YÛÜžH›Û\œËˆYXØÙ\YRQÙ]\]YÓ“HY\ˆÝXØÙ\ÜÙ[ÛÝ\˜ÙHÒLMˆ™XÙZ\ÈÚÚ\]\ˆ\XØ]HQÈ™Y›Ü™H™]ÛÜšÈ™\]Y\ÝËˆž]KXØ\˜Z[\™H]\Ý›Ý™[[Ý™H™]š[Ý\ÛH˜[YØXÚY\˜Ú]™NÈÈ›ÝšYÙÙ\ˆÜˆ™\X]HÛÛ\]Y˜]Úˆ^\Ý[™È]X]\›š]\È™\›Ë\^[ØY™KU[œ™X[Ý\[ÛÈÚXÚÜÈH[XšY[ÑÈY\ÛÙHÜ™\ˆÙ™›[™K‚‹HØ[™Y]H[[^XÝZXY™Y›YÚˆÛ™H\œÚ\Ý[Ø\™ZÝ\ÙHÜš]\ˆ[™ˆÚPˆ™\Ù\™H™]Z[™Yˆ›ÈPÌH[[YHÚ[™ÙKQK\™Ù]Y]šXÙH”Ëš\ÝX[ÜˆØ]M‹ÍÈÜ™Y]‚‚ˆÈÈŒ‹LLLL8 %œ›ÙÈY›Ü›X][ÛˆØ]H›ÜØ\™\ÜÛÈÝ\œ™[]™[Ü
+Ø[™Y]JB‚‹HˆÌÍÈ^XÝZXYÌÎMÍMMNLŽˆÜÝYÛÝ\˜ÙKÛ›Ü›X[^˜][Û‹QMŒËŒˆÚÙ[][XÚšXØ[Ø]K[™›[™\ˆY›Ü›X][Ûˆ›ØœÈÛÛ˜ÛYYÕPÐÑTÔÎÈ[œ™X[Z[ÌÎMÍMMLLH[™™KU[œ™X[ÌÎMÍMMLÌˆÛÛ˜ÛYYÕPÐÑTÔËˆX\›Y\ˆˆÌÍ[ˆÌÎMŽLLMˆ™XÛÜ™Y“S‘T—Ó•STWÔ‘PQXSPS—ÕÐU‘L×ÑQ“Ô“PUSÓ—ÔTÔØSPS—ÕÐU‘L×ÔÕUP×ÑQ“Ô“PUSÓ—Ô‘PÑRTÔTÔØˆˆÌÍÈÛÝ[›ÝY\™ÙHÛX[›HÚ]]›Û™Y]™[ÜÈ™\Ù\™H]È^XÝÛÙH[™ÛÛ˜XÝ™YÜ™\ÜÚ[ÛˆÛˆHœ™\Ú]™[ÜX˜\ÙYœ˜[˜ÚÚ]Ý]\XØ][™È]œ›ÛHÌÍ‚‹H^\Ý[™ÈÛÝ\˜ÙK[Û›Hš^[™›Ü˜Ù\ÈK\]Û‹Y^]XÛÙHLØ[TK[š\]YHÜÝYÕQM™XÙZ\Ë›Û™[\H™\Ý[[™ÕUP×ÑQ“Ô“PUSÓ—ÔÕ‘TÔ×ÔTÔØÚ]š\ÝX[Ü[[YHXØÙ\[˜ÙH^XÚ]H˜[ÙKˆ\È\ÈH›ÙXÝ[ÛˆØ[™Y]H[[]È™]È^XÝZXY\ÝÈ\ÜÎÈ›Èœ›ÙÈš[˜[\QKÙ]šXÙK\™Ù]”Ë’TÕPSÜˆØ]H‹ÍÈXØÙ\[˜ÙH\ÈÛZ[YYˆPÌˆ™[XZ[œÈÓÔÑQ‚‚ˆÈÈŒ‹LLLL8 %ÛÛ™š\›YYÚ]XˆY˜][œ˜[˜Ú\È]™[Ü‚‹H]™HÚ]Xˆ™\ÜÚ]ÜžHY]Y]H™\ÜÈY˜][Øœ˜[˜ÚY]™[ÜˆÝÛ™\ˆÛÛ™š\›\È]™[Ü\ÈØ[›ÛšXØ[Y˜][Ú[YÜ˜][Û‹Ü›ÙÜ˜[[Y\‹Z[™Ù™ŽÈXZ[˜™[XZ[œÈÝX›KÜ™[X\ÙHÛ›Kˆ\]Y^\Ý[™È]KÔ›Ú™XÝÛÝ™\››Ü‹šœÛÛ˜œ˜[˜ÚÝÛÜšÙ›ÝÈ›Ý\ÈÈ™[[Ý™HÝ[H\ÜÙ\[Ûˆ]XZ[ˆ\ÈY˜][È›È™]ÈÛÝ™\››Üˆ]]Üš]K›È[[YHÛÛ[Ú[™ÙK‚‹HÚÛKYØ[YH[XšY[ÑÈX]\šX[]Y\žHÛÜœ™XÝ[ÛˆˆÌÍY\™ÙYÈ]™[Ü\ÈÛÛ[Z]MLLLMÌNXÌÙXÍÎXYØYYYXÎNMYLLÎXØÈ^XÝZXY\ÚXØ[ÛÝ\˜ÙH[ZÙH™\Ý[Ý[[™[™ËˆHÝÛ™\ˆY›Ý]]Üš^™H^˜H[[YHÚ\\ŽÈPÌHÛ›KØ]H‹ÍÈ™[XZ[œÈ[˜XØÙ\Y‚‚ˆÈÈŒ‹LLLL8 %[XšY[ÑÈÚÛK\™YÚ[Ûˆ[ZÙH™\›Ë\™\Ý[ÛÜœ™XÝ[Ûˆ
+Ø[™Y]JB‚‹H™X[[ˆÌÎMÍLL™XXÚYÙ™šXÚX[[XšY[ÑÈTH[™™]\›™YSP’QS•Ñ×ÕÐT‘RÕTÑWÔÕQÑWÔTÔÈš[\ÏLÚÚ\YLž]\ÏLÈ\™™XÙZ\Ø]HÛÜœ™XÝHRSQÚ]‘QÒSÓ—ÒS•RÑWÖ‘T“×Õ‘T’Q’QQÑ’STØˆ][]ÛÜ™˜]\˜[[[™ÝXYÙHÙ^]ÛÜ™]Y\šY\È›Ý[™›È[YÚX›H’T™XÛÜ™Ëˆ™\XÙH[HÚ][ˆÛÛ˜Ú\ÙH\ÜÙ]Y˜[Z[H\›\ÈÚ[H™\Ù\š[™È™YÚ[ÛˆX\[™ËÐÌXÙ[œÙK’ËT‘ÈÛÝ\˜ÙHPËÚ[™ÛHÙ\šX[^™YØ\™ZÝ\ÙHÜš]\ˆ[™MˆÚPˆœ™YK\ÜXÙH™\Ù\™Kˆ]ØZ]^XÝZXY[™™X[ÝYÙYÒLMˆ]šY[˜ÙNÈ›Èš[\ÈÜˆš\ÝX[ÔQKÙ]šXÙHXØÙ\[˜ÙHÛZ[YY‚‚ˆÈÈŒ‹LLLL8 %ÚÛKYØ[YHØ\™ZÝ\ÙHÝÙ\”Ú[Ý[H^]ÛÙH™\Z\ˆ
+Ø[™Y]JB‚‹H™X[Ø\™ZÝ\ÙH[ˆÌÎMŽÍHRSQ[ˆX[˜YÙ\‹Ü[›™\ˆX[Ý\Y\ˆ]ÈÝÛˆ•S“‘T—ÒPSÔTÔØÙËˆ›ÛÝØ]\ÙNˆÚXÚÚ[™ÈÝ[H	TÕVUÓÑXY\ˆHÝÙ\”Ú[ØÜš\[›ØØ][Û‹ÚXÚÙ\È›ÝÝX\˜[YH™\Ù]Ùˆ]˜]]™HÛÛ[X[™^]˜\šXX›KˆÛÜœ™XÝÝ\ÝX\™ÈÈÚXÚÈ	Ø[[YYX][HY\ˆØÜš\Ø[ÎÈ™\Ù\™H›Ú™XÝÛÝ™\››Ü‹ÝYÙY™XÙZ\ÒLMˆ]Y][™ˆÚPˆ™\Ù\™Kˆ›È›ÝšY\ˆÝÛ›ØYÈØØÝ\œ™Y[ˆ˜Z[[™È[ŽÈÛÜœ™XÝ[Ûˆ]ØZ]È^XÝZXYÒH[™™\[‹‚‚ˆÈÈŒ‹LLLL8 %ÚÛKYØ[YHXÙ[œÙY[XšY[ÑÈ™YÚ[Û˜[[ZÙHŒÈ
+Ø[™Y]JB‚‹HYY[ˆ›Ý[™YX]\šX[ÙX\˜Ú[™\È›ÜˆMˆÛÝ\˜ÙKZ[™^Y™YÚ[Û˜[QÈ
+[˜ÛY[™ÈZ[˜\È\š][IÜÈY\YÜ˜\ËÜÙÚ[X]š]™[™[˜[™ÛÜ›‹\Ù[™Ø\™[[››Üˆ[™Ü™^H]™[œÊH\Ú[™È^\Ý[™ÈX›XÈ[XšY[ÑÈ’ËT‘ÈÐÌY\\‹›ÝH™]ÈX]\šX[Þ\Ý[Kˆ™YÚ\Ý\ˆÛÝ\˜ÙH]Y\šY\È[™][K\™YÚ[Ûˆ™]\ÙNÈ^XÝ›ÝšY\ˆ\ÜÙ]QÈ\™HÛ›H\ÜÚYÛ™YžH]™HTHÝYÚ[™Ë‚‹H™]ÈÙ\\˜]HÛÝ\˜ÙK[Û›H[ZÙHÛÜšÙ›ÝÈÚ\™\ÈH^\Ý[™ÈÙ\šX[^™YØ\™ZÝ\ÙK\ÝYÙHÛÛ˜Ý\œ™[˜ÞHÜ›Ý\™\]Z\™\È›Ú™XÝÛÝ™\››Üˆ[™Ú[™ÝÜÈ[›™\‹ÚXÚÜÈˆÚPˆ\ÚÈ›ÛÜˆ™Y›Ü™H[™Y\ˆÝYÙK™\]Z\™\ÈÒLMˆ™\šYšYY›Û™[\H™XÙZ\[™Ù\È›ÝXØÙ\ÜÈ[œ™X[ÛÛ[ÜˆÜ[ˆ[›Ý\ˆ[[YHÚ\\‹‚‹Hœ˜[˜ÚÜ™K[Y\™ÙHÝ]NˆPS’Q‘TÕÐS‘ÕÓÔ’Ñ“Õ×ÐÔ‘PUQÕQÒS‘×Ó“ÕÔ•SŽÈ›È™]ÈÝÛ›ØYË™\šYšYY[™[ÜžHY][ÛœË[œ™X[[YÜ˜][Û‹QK]šXÙKš\ÝX[ÜˆØ]H‹ÍÈXØÙ\[˜ÙKˆÛˆY\™ÙHÈ]™[ÜH]\ØÛÜY›ÙXÝ[ÛˆÛÜšÙ›ÝÈÚ[[ŽÈÚXÚÈ™XÙZ\™\Ý[È[™]X\˜[[™H˜Z[\™\È™Y›Ü™HXÛ\š[™È[ZÙHÝXØÙ\ÜË‚‚ˆÈÈŒ‹LLLL8 %PÌHX[™]ÜžH›Ú™XÝÛÝ™\››ÜˆÛÜšË\Ý\[™š]™K[[™H[™›Ü˜Ù[Y[‚‹HPËLL\È[™›Ü˜ÙY\ÈHX[™]ÜžH\ÚXØ[›ÙXÝ[Ûˆ[ž\Ú[ˆ^\Ý[™Èš]™K[[™H™XY[Û›H™Y›YÚ\È“Õ›ÛÙˆÙˆÙ[™\˜]Y\ÜÙ]ËˆØÜš\ËÙÛÝ™\››Ü—ÝÛÜš×ÜÝ\œH[œÈH[›Ú™XÝÛÝ™\››Üˆ[™ÚXÚÜÈPËLÎÌLÌLK‘TKT“ÑLLKXÝ]™HPÌHØ]KÛ™H[[YHÜš]\‹Û™HØ\™ZÝ\ÙHÜš]\‹ˆÚPˆ™\Ù\™H[™š]™H[™HY[]Y\È™Y›Ü™H›ÙXÝ[Û‹‚‹H›ÙXÝ[ÛˆÛÜšÙ›ÝÜÈ›Üˆ[œ™X[Ø\™ZÝ\ÙKÚÙ[][Ú\˜XÝ\œËš\ÝX[ÛÝ\˜ÙH[™Ú\\ˆÛÜÝ\™H›ÝÈ™\]Z\™HHX[˜YÙ\‹ˆ™KU[œ™X[™YÜ™\ÜÚ[Ûˆ\ÝÈ›Ü˜šYZ\ˆž\\ÜËˆÚ\\ˆÛÜÝ\™HÛÝ\˜ÙHÜš]\ˆÚ\™\ÈØ\™ZÝ\ÙK\ÝYÙHÛÛ˜Ý\œ™[˜ÞHÚ]\˜X›HÛÝ\˜ÙHÝYÚ[™Ë‚‹H]šY[˜ÙNˆÛÝ\˜ÙHÚ[™Ù\ÈÝX›Z]Y›Üˆ^XÝZXYÒKˆ›È™]È[œ™X[\ÜÙ][\ÜÚ\\ˆQK\™Ù]]šXÙHYX\Ý\™[Y[Üˆš\ÝX[XØÙ\[˜ÙH\È[™™\œ™YˆH^\Ý[™ÈØ\™ZÝ\ÙHÌÎLNLÌˆ\È[™\[™[[™›ÝØ[˜Ù[Y‚‚ˆÈÈŒ‹LLLL8 %PÌH›ÙXÝ[Ûˆ›Ý[™XÚÎˆÛÝ\˜ÙK[Û›Hš]™H[™\ÈœÈ›ØÚÙY\˜X›HØ\™ZÝ\ÙH
+S‘S‘ÊB‚‹H™\šYšYYš]™K[[™XÛÜšÙ›ÝÈ\È
+™š]™H™XY[Û›H™Y›YÚ[™\Ê‹›Ýš]™HÛÛ˜Ý\œ™[HÜš][™È[œ™X[›ÙXÝ[Ûˆ\ÜÙ]ËˆH\˜X›HNKX\ÜÙ]Ø\™ZÝ\ÙHÛÜšÙ›ÝÈ\™Ù]YHY\™ÙY[\Ü˜\žHÛÝ\˜ÙHœ˜[˜Ú[™™\]Z\™YX[X[\Ü]ÚY\ˆY\™ÙKX]š[™È™X[ÎKÍŒ™XÙZ\›Û[Ý[Ûˆ[œ›Ý™[‹ˆ\ÈÚ[™ÙH\™Ù]ÈHÛ™K\ÚÝ]™[ÜY\™ÙHXÝ]˜][ÛˆÙˆH^\Ý[™È^XÝZXY\˜X›HØ\™ZÝ\ÙH˜Z[ˆÚ]ÒLMˆØXÚH™]\ÙKÙ\šX[^™YÜš]\‹[™ˆÚPˆ™\Ù\™K‚‹HÝ]\ÎˆÓÕTÑWÔTSS‘WÕ’QÑÑT—Ô‘TT‘QÓ“ÕÖQUÔ•S˜ÈNWÔÓÕTÑWÑ–ÕS”‘PSÒSTÔ•S“ÕÔ“Õ‘S˜ÈPÌWÑÐUMÏS“ÕÐPÐÑTQˆH™X[\˜X›HØ\™ZÝ\ÙHÝXØÙ\ÜÈ[™Ù\\˜]H]]Ü™Y[[YH[\ÜÔQKÜ\™›Ü›X[˜ÙH]šY[˜ÙH™[XZ[ˆ™\]Z\™Y‚‚ˆÈÈŒ‹LLLL8 %ËLˆ™[X\ÙH\Y˜XÝ™\œÝ\È˜Z[\™K[ÙÜÈÛÛ˜XÝ‚‹H™KU[œ™X[ÌÎMNMŒˆ˜Z[YˆËLˆ˜Z[\™HÙÙÚ[™ÈX^H›Ý\[™Ûˆ\Y˜XÝ\ØY][ÝKˆÛˆ\ÛÛ]Yš^ˆÌÌÍ‹™[[Ý™Y[Ø^\Ê
+XÙÈ\Y˜XÝ\ØYÙ\ÛÛœÛÛH˜Z[\™HÙÜÈ[™[ÝÙYHÝXØÙ\ÜË[Û›HXÚØYÙYÚ[™ÝÜÈ^XX›HØ[™Y]KˆÝ]XÈ^XÝZXYÚXÚÜÈ[™QH™\Ý[È[™[™Ëˆ›ÈØ]M‹ÍÈÜ™Y]‚‚ˆÈÈŒ‹LLLL8 %PÌHØ\™ZÝ\ÙHÚ[™ÝÜÈ™\ÝY™[]]™K\]›ÛÝØ]\ÙH\ÛÛ]Y‚‹H™X[˜Z[\™H[ˆÌÎLMˆÛÝ\˜ÙLÎHNMMÎÌHˆ[™œŒÎHNMÌÍLÍÎˆ
+Š”ÒLMˆ™\šYšYY[™^˜XÝY
+ŠˆÛˆ\œÚ\Ý[Ø\™ZÝ\ÙNÈÝYÚ[™ÈØ]™LÎH[ˆ˜Z[YÝYÙQ\œ›ÜŽˆS”ÐQ‘WÔ‘SUU‘WÔU]ÝYÙWÜXÌWØY\]™WÜœ—ÝØ\™ZÝ\ÙKœNŒÍNÌÌÌXÛˆÚ[™ÝÜËˆ›ÈØ]™LÎH\›X[™[™XÙZ\Ø]™MŒ›ÝÝ\Y‚‹H›ÛÝØ]\ÙNˆÝŠØY™WÜ]
+‹‹ŠJX\Ù\ÈÚ[™ÝÜÈ˜XÚÜÛ\Ú\ÈÚ[ˆ™\ÝY›ÝšY\ˆ™XÙZ\]È
+K™Ëˆ^\™\ËÙØ]WÙY™—ÌZËœ™Ø
+H\™HÛÛ™\Y]ØY™WÜ]ÛÜœ™XÝH\Ø[ÝÜÈ˜XÚÜÛ\Ú\È[ˆ\˜X›H™XÙZ\Ù^\ËˆZ[š[X[]ÚÚ[™Ù\È˜[Y]Y™[]]™H]Ù\šX[^˜][ÛˆÈ˜\×ÜÜÚ^
+
+XÚ]H™\ÝY^\™H™X[š^\™H™YÜ™\ÜÚ[Û‹ˆ™\Ù\™HØXÚNÈÈ›ÝÝÛ›ØYÛÝ\˜ÙLÎKÜœŒÎHYØZ[‹‚‹HH^XÝZXYÚ[™ÝÜËÓ[^™YÜ™\ÜÚ[Ûˆ[™™X[\œÚ\Ý[Ø\™ZÝ\ÙH]šY[˜ÙH™[XZ[ˆ[™[™Ëˆ›ÈQKÔQKÙ]šXÙKÝš\ÝX[XØÙ\[˜ÙHÛZ[YYˆ\ÈÛÜšÈ]™\ÈÛˆ[ˆ\ÛÛ]Yš^œ˜[˜ÚÈ]›ÚYØ[˜Ù[[™ÈXÝ]™HˆÌÌÍHXÚØYÚ[™ÈÒK‚‚ˆÈÈŒ‹LLLL8 %PÌHš\œÝÝÛ›ØYX›H^XX›HØ[™Y]K˜Z[ÛÜÙY‚‹HÛˆHÝÛ™\‹X\›Ý™YPÌH[]™\žH[™K]ÚYHØ[YIÜÈY˜][Y]Ü‹ÙØ[YHX\XY\ÜÈ[[YHÛ[ÚÙKXÚØYÚ[™ÈÛÛÚÈX\[™XÚØYÙYÝ\\ØœÙ\˜][ÛˆÈÑ[™Ú[™KÓX\ËÑ[žXˆ\È›ÛÝÜÈ]KÔPÌSØØ[š\ÝX[›ÛÝÝ˜\ŒKšœÛÛ˜]Y[YšY\ÈH[™Ú[™H[\]WÑY˜][›ÛÜˆ\ÈHš\ÝX[X\ÚÚ[™ÈY™XÝ‚‹HH^\Ý[™È^XÝZXY[œ™X[Z[˜[Y][Û˜ÛÜšÙ›ÝÈ›ÝÈ[œÈØÜš\ËÝ\ÝÜXÌWÙ[]™\žWÙ[žWÛX\œXÛˆÜÝYÚ[™ÝÜÈ
+Š˜™Y›Ü™JŠˆHQH[›™\ˆ[™\ØYÈH™X[Ú[™ÝÜÓ›ÑY]Ü˜›Û\ˆ
+Š›Û›HY\ŠŠˆ[ØXØÙ\[˜ÙHXÚØYÙYÝ\\\ÜÙ\ËˆH\Y˜XÝ\ÈHÚ[™ÝÜÈ^XX›H
+Š˜Ø[™Y]JŠ‹›Ý]]ÛX]XØ[HHš[š\ÚYÜˆš\ÝX[H\›Ý™YÚ\\‹‚‹H^XÝZXYÒK’TØ\Y˜XÝ\ØY™\Ý[[YÜ˜][ÛˆÙˆØ\™ZÝ\ÙHÛH]™[ˆ”‹\›È[š[X][Û‹Ú\\‹\ÜXÚYšXÈQK\™Ù]ÌŒÌÌ”È[™[X[ˆš\ÝX[Ø]H‹ÍÈ
+Šœ™[XZ[ˆ[œ›Ý™[ˆ\ÈÙˆÛÛ[Z]]]Üš[™ÊŠ‹ˆØ\™ZÝ\ÙH[ˆÌÎLM™[XZ[œÈ[™\[™[HÚXÚÜÚ[YÈ›ÈÙXÛÛ™Ø\™ZÝ\ÙHÜš]\ˆ\È][˜ÚY‚‹H›ÈÊÊÈ[ÙYšXØ][ÛœÎÈY\ˆÒHH™^\Ù\‹]š\ÚX›H™\Ý[]\Ý™HHÛÜšÚ[™ÈÚ[™ÝÜÈØ[™Y]HÝÛ›ØYYˆ[™Û›HYˆÚ]XˆXÝ[ÛœÈÜ™X]Y]‚‚ˆÈÈŒ‹LLLL8 %Û™HÛÛÜ™[˜]YPÌHÛÝ\˜ÙHØ\™ZÝ\ÙH›ÙXÝ[Ûˆ˜]Ú
+NH–ÜšYÚ[˜[ÊB‚‹HÝÛ™\ˆ™\]Y\ÝYÛ™HÛÛ\][Ûˆ˜]Ú˜]\ˆ[ˆ™\X]YYZ[š\Ý˜]]™HØ]™\ËˆYY]KÔPÌUÛÕØ]™UØ\™ZÝ\ÙPXÝ]˜][Û•ŒKšœÛÛ˜[™\Ú]šYÙÙ\™Y™Ú]X‹ÝÛÜšÙ›ÝÜËÜXÌK]ÛË]Ø]™KXÚXÚÜÚ[]Ø\™ZÝ\ÙKž[[ˆ^XÝZXYÚ[™ÛK]Üš]\ˆÚ[™ÝÜÈ[›™\ˆ\Ù\È™]š[Ý\ÛH›ÙXÙY[›™YÚ]Xˆ\Y˜XÝËŒXØ\ÙH\ÈYØXÞHÙ™›[™H™YÜ™\ÜÚ[Ûˆ\ÝËZPˆÒLM‹ÙœÞ[˜È™XÛÝ™\žKØ]™LÎH\œÚ\ÝYØ]Y]Y™Y›Ü™HØ]™MŒ™YÚ[œË›ÈÙXÛÛ™›ÝšY\ˆÝÛ›ØYÜˆ›Û˜XÚÈÙˆØ]™LÎK‚‹H]šY[˜ÙHÝ]\ÈÛˆÛÛ[Z]Ü™X][ÛŽˆ
+Š”S‘S‘È™]ÈÛÜšÙ›ÝÈ[ŠŠ‹ˆØ]™LÎH[™Ø]™MŒ\œÚ\Ý[™XÙZ\ËØ]Y]È\™H™\]Z\™YÈš[ÜˆÛÝ\˜ÙHÛÛ™\œÚ[Ûˆ]šY[˜ÙH\È™]\ØX›K›ÝHÝXœÝ]]Kˆ›ÈQH[\Ü^Y\ˆšYËØ[š[X][Û‹Ú\\ˆQK]šXÙH”ÈÜˆ[X[ˆš\ÝX[XØÙ\[˜ÙH\ÈÛZ[YYˆ^\Ý[™ÈXØÙ\[˜ÙHØ]\È™[XZ[ˆ[˜Ú[™ÙY‚‹HØ[›Û‹ÜÛÝ\˜ÙH›Ý[™\žNˆÛÝ\˜ÙHÈŒKLHš\^KÜ\H[™š[™ÈÝ]ÛÛYNÈÝ\œ™[PÌH[˜ÛY\Èœ›ØY\ˆÚ\™KÜ›ØY[[YKÛÈÈ›Ý™[X™[]\ˆŒKL‹ÑŒKLÈÛÝ\˜ÙHÝ]ÛÛY\È\È[™\[™[HXØÙ\Y‚‚ˆÈÈŒ‹LLLL8 %PÌH™XÛÝ™\žHÛÛ™\™Ù[˜ÙHÛˆˆÌÌÍH
+ÛÝ\˜ÙK[Û›JB‚‹H™XÛÝ™\žHÛÝ\˜ÙH[™™]ÛÜšËYœ™YHŒXØ\ÙH˜][Z[š™XÝ[ÛˆÝZ]H\™H™]\ÙYœ›ÛH˜[Y]YÚYHœ˜[˜ÚÛÛ[Z]ÍXŒŽM˜™ÙÍYŒÍ˜ÙMN™XLMÍŒ
+š[Üˆ[^
+ÕÚ[™ÝÜÈÎ‹ËÙÚ]X‹˜ÛÛKÍ[ÝX˜X™YK]XÚÙ™[ÝÜÚ\\\œÛÛ˜[YØ[YKØXÝ[ÛœËÜ[œËÌÎÍMLÌLˆÕPÐÑTÔÊKˆ[ˆ^XÝ[Y\™ÙYZXY™\[ˆ\È
+Š”S‘S‘ÊŠŽÈ›Èœ™\Ú™\Ý[\È\ÜÙ\Y™Y›Ü™H]š[š\Ú\Ë‚‹HH[›™YÎKX\ÜÙ]Ø\™ZÝ\ÙHÛÜšÙ›ÝÈ›ÝÈ[œÈH™]ÛÜšËYœ™YHÝZ]H™Y›Ü™H[žHÚXÚÜÚ[ÝÛ›ØYÈ^\Ý[™ÈÚ[™ÛK]Üš]\ˆÛÛ˜Ý\œ™[˜ÞH[™HˆÚPˆÝÜ˜YÙH™\Ù\™H™[XZ[ˆ[˜Ú[™ÙYˆØ]™LÎHXÝX[\˜X›H[ZÙKØ]Y]\È
+Š““ÕQU“Õ‘SŠŠŽÈØ]™MŒÝ^\ÈÙ\\˜]H[™Ø]Y‚‹H›ÈQMÊÊËÜ[[YKØÛÛ[\ÜÙ]ÈÙ\™H[ÙYšYYžH\ÈÚ[™ÙNˆ›È™\X]Y[œ™X[Z[[\ÜQK]šXÙHÜˆš\ÝX[XØÙ\[˜ÙH\ÈÛZ[YYˆPÌH™[XZ[œÈÜ[‹Ø]H‹ÍÈ[™[™ËˆˆÌÌÍH›ÙXÝ[ÛˆY]Y]Hœ›ÛHš[ÜˆXY\È™\Ù\™Y‚‚ˆÈÈŒ‹LLLLPÌHÚXÚÜÚ[˜[œÜÜ[™ÛÝ\˜ÙK[Û›HQH]šY[˜ÙH™]\ÙHØ]B‚‹HÛˆˆÌÌÍH^XÝXYÙN˜XM™ÍŽŒLXŽŽMŒÙNXYXÙŽÍØÙLÍLY™KU[œ™X[ÌÎÌŒÌLÌÈÕPÐÑTÔËš]™KS[™HÌÎÌŒÌÌˆÕPÐÑTÔËQMÌÎÌŒÌLLHÕPÐÑTÔÈ[˜ÛY]Üˆ[™XÚØYÙNÈ›È™YYÈ™XZ[\ÈÛÝ\˜ÙH™]š\Ú[ÛˆY\™[HÈÝYÙH^\›˜[ÐÌ\Y˜XÝËˆÛÝ\˜ÙK[Û›H”ˆYÎKÌÎH[™NKÍŒÛÛ™\œÚ[ÛœÈ]›Ý™[ˆX\›Y\ˆ[œË›ÝQH[\ÜY‚‹HÛÝ\˜ÙK[Û›HÛÜœ™XÝ[ÛŽˆYYš[™HÞ[]XÈÝÙ\‹Û™]ÛÜšË[ÜÜËÛÜœ\XÚXÚÜÚ[ÒLM‹’TØY™]H[™™\Ý[YKÛ›ËYÝX›KY™]Ú\ÝÎÈ\ÝÈ]\Ý\ÜÈÜÝYÒH™Y›Ü™H˜[œÙ™\œš[™È\™ÙH\Y˜XÝËˆ™]ÛH\›Ý™YÛ\ÜÚYšY\ˆÚXÚÜÈÛ›H[[YYX]K\\™[[H›Üˆ[ˆ^XÚ]H™\ÝšXÝYÙ]ÙˆÛÝ\˜ÙK[Û›HØÜš\ËÝÛÜšÙ›ÝÜËÙÛÝ™\›˜[˜ÙHØÜË™\šYšY\È^XÝ\\™[[[œ™X[ÛÜšÙ›ÝÈÕPÐÑTÔÈšXHÚ]Xˆ[™ÚÛÜÙ\È[š\š]Û›HYˆ›Ý›Ý™HØY™Kˆ\È™]™[ÈÝ[][]]™HˆY™ˆœ›ÛH™XÛ\ÜÚYžZ[™ÈÝXØÙ\ÜÙ[ÛÝ\˜ÙK[Û›HÚ[™Ù\È\È™]È[QHÛÛ\[\Ëˆ[[YHÚ[™Ù\ÈÝ[ZÙH^\Ý[™È[ØÛÜ™H›Ý]\Ë‚‹H\œÚ\Ý[ÚXÚÜÚ[ÛÙH™[XZ[œÈ[œ›Ý™[ˆ[[H™X[Ú[™ÝÜÈ[›™\ˆÜš]\È[™™\šYšY\ÈZPˆÚ[šÜË[\Y˜XÝÒLM‹ÛÝ\˜ÙH™XÙZ\È[™M‘ÚPˆ™\Ù\™KˆX[X[Ú[™ÛK]Üš]\ˆØ]™LÎH\œÚ\ÝÈ™Y›Ü™H[žHØ]™MŒÈØ]M‹ÍÈPÌH›ÝXØÙ\YˆYˆÜÝY™YÜ™\ÜÚ[Ûˆ˜Z[Ë™\Z\ˆ]™Y›Ü™H\Ü]ÚÈÈ›Ý[ˆ[›Ý\ˆÍK[Z[]H[X\Y˜XÝÝÛ›ØY‚‚ˆÈÈŒ‹LLLL8 %\˜X›HZPˆ™\Ý\ÚXÚÜÚ[È[™›È™\X]Y^[œÚ]™H‹]ÚYHXÜ]Z\Ú][Û‚‚‹HÝÛ™\ˆØœÙ\™Y[XÝšXÚ]KÛ™]ÛÜšÈ[œÝXš[]H[™™Z™XÝY™\X]YÛ™ÈÝÛ›ØYËØZ[Ëˆ›ÛÝØ]\ÙNˆÚ]Xˆˆ]š[\œÈØ]È[\™HˆY™‹™]šYÙÙ\š[™È^[œÚ]™HÎKT”ˆÛÛ™\œÚ[Ûˆ[™Œ[[Ù[XÜ]Z\Ú][Ûˆ›ÜˆÛÝ™\›˜[˜ÙK[Û›HÛÛ[Z]ËˆÛÈ\XØ]YÙ[‹ZÜÝYØ\™ZÝ\ÙHÜš]\œÈ[ÛÈÛÛ[™Y›ÜˆÛ™H[›™\ŽÈÍK[Z[]HÝÛ›ØYØ[˜Ù[Y™Y›Ü™HÜš]\Ë‚‹HÛÜœ™XÝ]™HÛÝ\˜ÙK[Û›H˜[œÜÜØÜš\ËÜ™\Ý[YWÜXÌWØ\Y˜XÝØÚXÚÜÚ[œXˆ[›™YÛÝ\˜ÙHÚ]XˆXÝ[ÛœÈ\Y˜XÝQ^XÝ\˜Ú]™Hž]H[™Ý[™ÒLMŽÈZPˆ˜[™ÙH˜[œÙ™\œÈÚ]\‹XÚ[šÈÒLMˆ›Ý\›˜[[ˆ\›X[™[Ø\™ZÝ\ÙKœÞ[˜È[™]ÛZXÈÚXÚÜÚ[Üš]\Ëˆ™]\ÙHÛÛ\]YÚ[šÜË™KY™]Ú[˜ÛÛ[Z]YZ[Û›K˜Z[ÛÜÙYÛˆ[\\š[™Ë‘ÚPˆœ™YH™\Ù\™H[™[›™Y\˜Ú]™HÒLM‹ˆÚ][\ÝY’T[žH^˜XÝ[ÛˆÚ]]ÛZXÈÔËXÚXÚÙYš[\È[™\˜X›H^˜XÝY\Ý]H™XÙZ\ˆ›È›ÝšY\ˆ™KYÝÛ›ØYQM[\ÜÜˆš\ÝX[ÛZ[K‚‹H^XÝHÛ™HX[X[Ù\šX[^™YÛÝ\˜ÙK[Û›HØ\™ZÝ\ÙH›Øˆ›ÜˆØ]™LÎNˆÚXÚÈ^\Ý[™ÈÒLMˆš\œÝ™XÛÝ™\ˆÎHÛÝ\˜ÙH[™”ˆÚ[šÜË\œÚ\ÝÎH[™[ˆØ[›ÛšXØ[Ø\™ZÝ\ÙH]Y]ˆÙ\\˜]HŒØ]™H™\Ù\™Y›Üˆ[™\[™[›ÛÝË]\Y\ˆš\œÝÚXÚÜÚ[ˆ™[[Ý™Y]]ÛX]XÈ[Ü™\]Y\ÝšYÙÙ\œÈœ›ÛH^[œÚ]™H
+Š˜Y\]™HÎKT”ˆ[™Œ\ÛÝ\˜ÙJŠˆÛÜšÙ›ÝÜËÚ[Hš]™K[[™H
+œ™XY[Û›Jˆ™YÜ™\ÜÚ[Ûˆ™[XZ[œÈ[YÚX›Kˆ›È™KY^XÝ][ÛˆÙˆ^\Ý[™È^[œÚ]™HÝXØÙ\ÜÙ[ÛÜšÙ›ÝÜÈÛˆ[œ™[]YÚ[™Ù\Ë‚‹H
+ŠXØÙ\[˜ÙH›Ý[™\žNŠŠˆÛÜšÙ›ÝÈ\ÚYÛˆÚ[™ÙH[™X[šY™\ÝÛ›H[[XÝX[ÜÝY™YÜ™\ÜÚ[Ûˆ[™Ú[™ÝÜÈØ\™ZÝ\ÙHÙÜËˆ›È\›X[™[ÛÝ\˜ÙH›Û[Ý[ÛˆÜˆPÌHØ]M‹ÍÈXØÙ\[˜ÙHÛZ[YY‚‚ˆÈÈŒ‹LLLL8 %ÍK[Z[]HØ\™ZÝ\ÙH\Y˜XÝÝÛ›ØY˜Z[\™NÈ™[[Ý™H\XØ]HÜš]\ˆ[™Ü]\˜X›HÚXÚÜÚ[Â‚‹HÚ]XˆÌÍÎNLLLÌLˆÐSÑSQY\ˆÍHZ[]\ÎˆÛÝ\˜ÙHÎH\Y˜XÝÛÚÈŒ[NÈ”ŒÎHŒ‹[NÈÛÝ\˜ÙMŒŒN[NÈ”ŒŒKLKŽNXž]HÝÛ›ØY˜[ˆÛM\È™Y›Ü™HØ[˜Ù[][Û‹ˆHš\œÝ\œÚ\Ý[ÛÛ[Z][™[™[ÜžH]Y]Ù\™HÒÒTQˆ›È™]È\œÚ\Ý[\ÜÙ]ÛZ[Kˆ\™XØ][ÛˆØ\›š[™È\È›Ý\ÝX›\ÚYØ]\ÙK‚‹HÛÜœ™XÝY›ØÙ\ÜÎˆYXØ]YØ\™ZÝ\ÙHÜš]\ˆ\ÈX[X[H\Ü]ÚYÛ›H[™Ü\˜]\ÈÛˆÎK\ÛÝ\˜ÙHØ]™Hš\œÝˆ[ÒLMˆ^\Ý[™Ë]Ø]™HÚXÚÈÚÚ\È[™XYK\ÝÜ™Yš[\ÎÈÛÈ™XÙ\ÜØ\žH™\šYšYY\Y˜XÝÈ\™H™]ÚYÛ›HYˆZ\ÜÚ[™ÎÈÛÛ[Z]Ø]™LÎH[™[ˆØ\™ZÝ\ÙH[™[ÜžH]Y][[YYX][KˆÙ\\˜]HŒ\ÛÝ\˜ÙH›ÛÝÝ\Û›HY\ˆÝXØÙ\ÜÙ[\˜X›HØ]™LÎK›Ý\ÙˆÛ™È›Ý\‹YÝÛ›ØY›Ø‹ˆ™[[Ý™Y\XØ]HØ\™ZÝ\ÙHÜš]\ˆœ›ÛHš]™K[[™H™Y›YÚˆYÙ™›[™H›Ë[™]ÛÜšÈ™YÜ™\ÜÚ[Ûˆ\ÝÈ›ÜˆÝYÚ[™Ë™]\ÙKÛÝ\˜ÙKÜ™XÙZ\ÛÜœ\[Û‹[™]]XÚÜË‚‹H›ÛÝË]\Ú]Xˆ^XÝZXY\ÝÈS‘S‘ËˆH^\Ý[™ÈÛ™Ë\[ˆ˜Z[\™H\ÈÛÛ™š\›YYÈš[˜[Ø]M‹ÍÈ™[XZ[œÈSPÐÑTQPÌˆÓÔÑQ‚‚ˆÈÈŒ‹LLLH8 %\œÚ\Ý[ÛÝ\˜ÙHÜš]\ˆ]Ûˆ[›™\ˆU˜Z[\™H[™^XÝš^‚‹HÛÜšÙ›ÝÈÌÍÎNLÍÍÌˆ][\YÙ\šX[^™YÝYÙH]˜Z[Y
+Š˜™Y›Ü™HÝÛ›ØY[™ÈÜˆÜš][™È\ÜÙ]ÊŠŽˆXÝX[Ý\[™H]ÛˆØ\È›Ý›Ý[™È[ˆÚ]Ý]\™Ý[Y[ÈÈ[œÝ[œ›ÛHHZXÜ›ÜÛÙÝÜ™XÛˆÙ[‹ZÜÝYÚ[™ÝÜËˆHXXÚ[™IÜÈ™]š[Ý\ÈQH[ˆÌÍÎNMÍLÍÈ^ÜÙ\È[œÝ[YÛÛÚZ[ˆ—XÝ[ÛœË\[›™\—ÝÛÜš×ÝÛÛ]Û—ËŒLKŽW]Û‹™^XÈÜš]\ˆÛÜšÙ›ÝÈ]\Ý™\ÛÛ™HHÛ›ÝÛˆ^\Ý[™È]Ûˆš[˜\žH[™\œÚ\ÝH^XÝ]ÈÒUP—ÑS•‹›Ý\[™Ûˆ]Û˜\^XÝ][Ûˆ[X\ËˆÝ\ˆÛÝ\˜ÙK[Û›H™\ÛÛ[Y\È[™\[™[ˆ™^^XÝZXYÛÜšÙ›ÝÈ]\Ý[[ÛœÝ˜]H[™XÙZ\Ú\ÚÛÜH[™Ø\™ZÝ\ÙH[™[ÜžH]Y]È›È\œÚ\Ý[\ÝYÙHÝXØÙ\ÜÈÛZ[YYY]‚‚ˆÈÈŒ‹LLLH8 %NHÛÝ\˜ÙH–™XÛÝ™\žHØ]™KN”‹\™XYHÛÝ\˜ÙHÛÛ™\œÚ[ÛœÈ[™ÝX\™Y\œÚ\Ý[Ø\™ZÝ\ÙH[ZÙB‚‹H^XÝZXYˆÌÌÍHÎØÌØˆÛÝ\˜ÙHÌÍÎNMÍHÕPÐÑTÔÈPÌWÐQTU‘WÔÓÕTÑWÔÕQÑH[YÚX›OLNÈÝYÙYMŒš[\ÏLÌMHž]\ÏMLŽLÌMH]X\˜[[™OLLŒÎÈ“ÕÕQMÒSTÔ•QÈÛÛ™\œÚ[Ûˆ[ˆØ[YH[ˆÕPÐÑTÔÈ™\\™YMNH™ÏLŒLH]X\˜[[™YLH“ÕÕQMÒSTÔ•QˆHÝ\ˆÎH[Ù[È\™H™]\ÙYšXHš[Üˆ\Y˜XÝ›Ý™KYÝÛ›ØYY‚‹H™]š[Ý\ÈÎHÛÛ™\Y[ˆÌÍÎNMÍÌÕPÐÑTÔÎˆPÌWÐQTU‘WÔ”—ÔPÈ™\\™YLÎH™ÏLMˆ]X\˜[[™YL“ÕÕQMÒSTÔ•QˆH[^˜HžHY™\ÙH\ÈÛÝ\˜ÙK[Û›K›Ý[ˆ[™[Y›Ü›X[X\ˆÛÛXš[™YÜšYÚ[˜[[Ù[ÈNNÈ”‹\™\\™YNÈ]X\˜[[™HKˆ\Y˜XÝÈ^\™H[ˆÌ^\Ë‚‹H[œ™X[[ˆÌÍÎNMÍLÍÈÕPÐÑTÔÈ^XÝXYÈY]ÜˆÛÛ\[K^\Ý[™È›ÙXÝ[Ûˆ[\Ü]]ÛX][Û‹XY\ÜÈPÌHÝÙY\ÛÜ›\Ý]H›Ý[™š\XÚØYÚ[™ËÝ\\ˆÙÈÌÔPÒÐQÑWÔTÔØ[™ÌÔPÒÐQÑQÔÕT•TÔTÔØÈØ\›š[™ÈX\ÜÙYˆ\È[ˆÙ\È“Õ[\ÜH™]ÈNH^\›˜[ÛH]™[ˆ–‚‹HYØÜš\ËÜÝYÙWÜXÌWØY\]™WÜœ—ÝØ\™ZÝ\ÙKœX[™X[X[\Ü]Ú™Ú]X‹ÝÛÜšÙ›ÝÜËÜXÌK\\œÚ\Ý[]™\šYšYY\œ‹]Ø\™ZÝ\ÙKž[[ˆÛ™HÙ[‹ZÜÝYÜš]\ˆÝX\™YžHH^\Ý[™ÈØ\™ZÝ\ÙK\ÝYÙKXÛÛ˜Ý\œ™[˜ÞH˜[YKˆ™]\Ù\È[X™\™Y\Y˜XÝÈ[™ÚXÚÜÈÜšYÚ[˜[ÛÝ\˜ÙHXÙ[œÙKÜÛÝ\˜ÙK\YÙKš[H[™[ÜšY\Ë\‹Yš[HÚ^™KÓQKÔÒLM‹š[˜\žH–™\\™YRÈ‘È[Y[œÚ[ÛœËÚ\ÚX]Ú[™ÈÛÝ\˜ÙH™XÙZ\\Ú]X\˜[[™\È[™ÝX›K\ÝYÚ[™ËˆÛÜY\ÈÜšYÚ[˜[È[™Ù[™\˜]YÛÝ\˜Ù\ÈÈ˜[œØXÝ[Ûˆ\™XÝÜžKÜ™X]\ÈÒLM‹ÛXÙ[œÚ[™È™XÙZ\Ë™\Ù\™\ÈˆÚPˆœ™YK\ÜXÙH™\Ù\™K]ÛZXØ[H›Û[Ý\ÈØ[YK]›Û[YHÛÝ\˜ÙHØ]™H[™[œÈ^\Ý[™È[™[ÜžH]Y]ˆ›ÈZY\ÜÙ]Ë›È›ÝšY\ˆÝÛ›ØYË›È[][ÛˆÙˆ^\Ý[™È˜[YØ\™ZÝ\ÙHš[\Ë›ÈÛZ[YY[[YH[\ÜË‚‹H
+Š•[œ›Ý™[ˆ[[\Ü]ÚÙÜÊŠŽˆ\œÚ\Ý[Ø\™ZÝ\ÙHÜš]H[™]Y]ˆ™^™X[›ØÚÙ\ŽˆNH–™\]Z\™HU‹ÙÙ[ÛY]žKÝ[™Ù[ËØÛÛ\Ú[Û‹ÓÑÈ[™š\ÝX[X]Ú[™È™Y›Ü™HÛÝ\˜ÙK]Ë\[[YH[\ÜˆXZ›Üˆ\›ÈØ[™[‹Ðš[›ËÔØ[KÓY\œžKÔ\[ˆšYËÙš[˜[™\Ù[][Ûˆ[™[X[ˆPÌHLHÌŒÌ”ÈØ]H‹ÍÈ™[XZ[ˆÜ[‹ˆPÌˆ™[XZ[œÈÓÔÑQ‚‚ˆÈÈŒ‹LLLH8 %PÌHÎK\ÛÝ\˜ÙH[YÜš]H]Y]™]HžK[X\™XÛÝ™\žH[™›Ë\™YÝÛ›ØYØ]™HÛÂ‚‹H
+Š“ØœÙ\™Y^XÝZXY]šY[˜ÙNŠŠˆˆÌÌÍH˜XÍX˜˜MY˜XÍŒÌÙYNNYØYŒN˜ŒÙYÎMØˆÐÌÛÝ\˜ÙH[ˆÍÎNLNÌˆÕPÐÑTÔÈ
+\Y˜XÝLMÌÌMLÊNÈ”ˆ[ˆÍÎNLNLÈÕPÐÑTÔÈ
+\Y˜XÝLMNMMNÈPÌWÐQTU‘WÔ”—ÔPÈ™\\™YLÎ™ÏLMˆ]X\˜[[™YLH“ÕÕQMÒSTÔ•Q
+NÈš]™KS[™H™Y›YÚÍÎNLNŽMÈÕPÐÑTÔÎÈ™KU[œ™X[ÍÎNLNŽHÕPÐÑTÔÎÈQM[ˆÍÎNLNŽÈÕPÐÑTÔË[˜ÛY[™È^\Ý[™È›ÙXÝ[Ûˆ[\ÜY]ÜˆZ[]]ÛX][Û‹Ú[™ÝÜÈXÚØYÙH[™XÚØYÙYÝ\\‚‹H
+Š’[™\[™[™XY[Û›H’T]Y]ŠŠˆ[ŒLHš[\ÈÜ[›š[™ÈÎHÜšYÚ[˜[ÛH]™[ˆÐÌÛÝ\˜ÙH[Ù[ÈX]ÚYÚ^™KÓQKÔÒLMŽÈ[Mˆ™]š[Ý\ÛHÛÛ™\Y‘ÜÈX]ÚYÒLMˆ[™LLˆÜšYÚ[˜[™]WÜ[]X\˜[[™HØ\ÈØ]\ÙYžH™]WÜ[ÙžWÙY™—ÌZËœ™ØHÙXÛÛ™\žH˜\ÙPÛÛÜ‹[Û›H˜\šX][ÛˆÚ]›È[™\[™[›Ü›X[Ü›ÝYÚ™\ÜÎÈÛÝ\˜ÙH›Ü›X[È]\Ý™]™\ˆ™H[™[Y‚‹H
+Š‘›ÛÝË]\ÛÙHØ]™H8 %^XÝZXYÒH[™[™ÎŠŠˆÛÛ™\HÛÛ\]H™]Hš[X\žH”ˆÜ›Ý\™\Ù\™HHÜ[Û˜[žH˜\šX[\ÈHÙ\\˜]H‘ÈÚ]ÓÓPUT’PSÕT’PS•Ó“×ÒS‘TS‘S•Ó“Ô“PSÔ“ÕQÒ‘TÔØ[™ÛÝ\˜ÙHÒLMˆ
+›ÝQH[\ÜY[YÚX›JK™\]Z\™HÎKÌÎH™\\™Y[™™\›È]X\˜[[™YY\ˆ™]˜[Y][Û‹ˆ^[™H™^ÜÝYÛH]™[ˆÛÝ\˜ÙHÚ\™\È
+ŠZPˆÝ[ÈÌZPˆ\ˆÛÝ\˜ÙHš[HÈŒÙXÛÛ™ÊŠˆÚ]›È\˜š]˜\žH\ÜÙ]XÛÝ[Ø\\Ú]™\šYžHH^\Ý[™ÈÎHœ›ÛHš[ÜˆÚ]Xˆ\Y˜XÝ[™^XÚ]H^ÛYH[H™Y›Ü™H™]È›ÝšY\ˆ™\]Y\ÝËˆ™]ÈÚ\™ÛÛ™\œÚ[Ûˆ\È\[™[ÛˆÝXØÙ\ÜÙ[[ZÙKÚ[HÝ\ˆÜÝY˜XÚÜÈÝ^H[™\[™[‚‹H
+Š›Ý[™\šY\ÎŠŠˆ\È\ÈÙ[™\˜]Y
+ŠœÛÝ\˜ÙK[Û›JŠŽÈÚ]Xˆ\Y˜XÝÈ]™HÌY^H™][[Ûˆ[™\™H›Ý\œÚ\Ý[Ø\™ZÝ\ÙH™XÙZ\Ëˆ^XÝHÛ™H\œÚ\Ý[Ø\™ZÝ\ÙHÜš]\ˆ[™MˆÚPˆœ™YH™\Ù\™H™[XZ[ˆX[™]ÜžNÈ›Û™HÙˆ\ÙHØ[™Y]\È›Ý™\ÈQHÙ[ÛY]žKÕU‹ÓÑØÛÛ\Ú[Û‹\›ÈÚÙ[][[š[X][Û‹^XX›HØÙ[™\ËXÚ[™ËQK\™Ù]Y]šXÙHLHÌŒÌÌ”ÈÜˆ[X[ˆØ]H‹ÍÈXØÙ\[˜ÙKˆPÌˆ™[XZ[œÈÛÜÙY‚‚ˆÈÈŒ‹LLLH8 %^[™YPÌHÐÌ\ÜÙ]Ø]™NˆÎH™X[–›ÝÈÛÝ\˜ÙK[Û›H”ˆÛÛ™\œÚ[Û‚‚‹HÚ]XˆÜÝYY\]™HÛÝ\˜ÙHÝYÙHÌˆÍÎMÎLMŒÌLXÕPÐÑTÔÈ^XÝÒHMØXNLØ™˜ˆXÝX[ÙÈPÌWÐQTU‘WÔÓÕTÑWÔÕQÑH[YÚX›OLŒŒˆÝYÙYLÎHš[\ÏLŒLHž]\ÏLLMLÍÍŒÈ]X\˜[[™OLNÎÈ“ÕÕQMÒSTÔ•QˆÛÛ™š\›YY’T\Y˜XÝ
+ŠŒLMŒÍ
+Š‹KMMËÌHÛÛ\™\ÜÙYž]\ÎˆÎH–
+ÈMÌˆÜšYÚ[˜[V‹Ò”QËÔ‘È^\™\ËˆÙˆHNÈ›Û‹\ÝYÙY
+ŠŒMNH^ÙYYY\‹]Ø]™H™[XZ[š[™ÈYÙ][™Ù\™HY™\œ™YÈYHš[HŒÌZPŠŠ‹ˆ\ÙHÈ›Ý™\™\Ù[NÈ˜YÛÝ\˜ÙHš[\Ë‚‹H™]ÈØÜš\ËÜ™\\™WÜXÌWØY\]™WÜœ‹œXØÜš\ËÝ\ÝÜXÌWØY\]™WÜœ‹œX[™ÜÝY™Ú]X‹ÝÛÜšÙ›ÝÜËÜXÌKXY\]™K\œ‹\™\ž[[™]\ÙHH^XÝÝXØÙ\ÜÙ[\Y˜XÝ
+ŠÚ]Ý]›ÝšY\‹Û™]ÛÜšÈXÜ]Z\Ú][Û‹Ú]”ÈÜˆ[œ™X[
+ŠŽÈÛÝ\˜ÙHÒLM‹ÓQH[™[™[ÜžH]\ÝX]ÚH™XÙZ\ˆÛÛ™\RÈ˜\ÙPÛÛÜ‹\™XÝÜ™Y[‹Y›\Y›Ü›X[‹PSËÑË\›ÝYÚ™\ÜËÐ‹[Y][XÈX\ÚÜÈ\ÈM‹Xš]\ØY™H[HÚ\™H™\Ù[È‘ÎÈ™\Ù\™H–ž]\Ëˆ\‹X\ÜÙ]]X\˜[[™H™\Ù\™\ÈÛÝ\˜ÙK[Û›HXÚÙ][YÜš]K‚‹H›Ý\ˆ›Û‹TÚ\™H›ÜXØ[Ø[™Y]\È
+[\š][WØ›Ý[žWÌXØ[]XWÛÜ˜šY›ÛXWÌXY[WÜÜ[›ÜØXXÚ\˜WØ\]X]XØWÌX
+H^XÚ]Hš[ÛYKZ[ÈÛÈ[XšYÝ[Ý\ÈY[]Y\È[ˆÝ\ˆÛÝ\˜ÙHØ[™Y]\ÈÝ[™YYÝ]XÈ–Ù[ÛY]žKÕU‹ÜÛ[ÛÝ[™ËÝ[™Ù[ÑØÛÛ\Ú[Û‹X]\šX[[\Ü[™]X[]KÜ\™›Ü›X[˜ÙH™]šY]Ëˆ
+Š“›È™]ÈQH[\ÜÈÜˆš\ÝX[XØÙ\[˜ÙHÛZ[YY
+Š‹‚‹HÛÛ™\œÚ[ÛˆÜÝY^XÝZXY[‹Ý\Ý›ÛÙˆ
+Š”S‘S‘ÊŠˆY\ˆ\ÈÛÛ[Z]ˆ^\Ý[™Èš]™H\˜[[ÜÝY™Y›YÚÈ[™QMÌNŒH\™HÝXØÙ\ÜÙ[]›ÝPÌHØ]H‹ÍËÑU’PÑHXØÙ\[˜ÙKˆH^\Ý[™ÈÌÌŽH™[XZ[œÈÛÛH[[YH[YÜ˜][ÛŽÈ[]\™HXœ˜\žH™\\˜][ÛˆX^H[ˆ[™\[™[K‚‚ˆÈÈŒ‹LLLH8 %Y\]™HØ]™HZ[š[][K\™[XZ[š[™ËXž]HÝX\™ÛÜœ™XÝ[Û‚‚‹HÝ]XÈ™YÜ™\ÜÚ[Ûˆš^\™H›ÜˆH™]ÈY\]™HÛÝ\˜ÙHØ]™H\Ù\ÈLž]\ÈÙˆ]˜Z[X›HÝÜ˜YÙNÈÝX\™]\Ý›Ý\ÜÝ[YH]™\žHØ[™Y]HÛÛœÝ[Y\ÈLHZP‹ˆÛÜœ™XÝX\›K\ÝÜ›Ý[™ÈL™[XZ[š[™Èž]\ËX]š[™ÈH
+Š˜XÝX[\‹Yš[H›ÝšY\‹\Ú^™H[™Ý™\˜[ž]HØ\ÊŠˆ]]Üš]]]™Kˆ\Èš^\È^XÝÛÝ\˜ÙK[^Y\ˆØ][™È˜]\ˆ[ˆ™YXÚ[™È\Ý[™ÈÜˆ][\[™È[˜›Ý[™Y™]šY\Ë‚‹HHÜÝYÛÝ\˜ÙK[Û›HÛÜšÙ›ÝÈ™[XZ[œÈ™\]Z\™YÈ\ÜÈ]ÈÝÛˆ^XÝPQ™Y›Ü™H[žH™]ÈÝYÙY\ÜÙ]™XÙZ\ÈÛÝ[\È]šY[˜ÙNÈ›ÈQMZ[™\]Y\ÝYžH\ÈÛÜœ™XÝ]™HÛÛ[Z]‚‚ˆÈÈŒ‹LLLH8 %[˜[ZXÈÛÝ\˜ÙHXÜ]Z\Ú][Ûˆ™^[Û™š^Yš]™K[[Ù[[Ý‚‹H™]ÈÙ[XÝ]™[HÙX\˜ÚYPÌHYÚYšY[]H
+Š”ÛH]™[ˆÙ™šXÚX[ÐÌ
+ŠˆÛÝ\˜ÙK[Û›HÛÜšÙ›ÝÈ™Ú]X‹ÝÛÜšÙ›ÝÜËÜXÌKXY\]™KZYÚšY[]K\ÛÝ\˜ÙKž[[˜XÚÙYžHØÜš\ËÜÝYÙWÜXÌWÜÛZ]™[—ØY\]™KœX[™š]™H›Ë[™]ÛÜšÈ\ÝËˆÙ[XÝÈX]Ú[™ÈÚ\™HÝ]ÛÜ‹\ÝXÈ\˜Ú]XÝ\™K™YÙ]][Û‹ÝÛ™\ËØ\™[ˆ[™›Ü[Ù[Y]Y]Hœ›ÛH›ÝšY\‰ÜÈX›XÈTK^ÛY\Èš]™H™]š[Ý\ÛHÝYÙY[Ù[Ë[ˆXÜ]Z\™\ÈRÈ˜]]™HÝ]XÈ–[™ÜšYÚ[˜[^\™H\[™[˜ÚY\ËˆXXÚ\ÜÙ]™XÙZ]™\È›ÝšY\ˆQH™\šYšXØ][Ûˆ
+ÈÒLMˆ™XÙZ\È™Z™XÝÈ˜]™\œØ[[˜[Y^[œÚ[Û‹ÚÜÝX[›Ü›YYÛÝ\˜Ù\È[™Ý™\œÚ^™H^[ØYË‚‹H
+Š”™X[ØY™]KYš]™[ˆØØ[[™ÎŠŠˆ›È\˜š]˜\žHš]™KX\ÜÙ]ÛÝ\˜ÙH[Z]ÈÜÝYØ]™H[Z]YžH
+ŠŒZPˆÝ[ÛÝ\˜ÙHž]\ËÌZP‹Ùš[H[™ŒÙXÛÛ™ÊŠˆ
+\ÈÚ]XˆM[Z[]H›ØŠKÚ]\‹X\ÜÙ]]X\˜[[™H[™ÛÝ\˜ÙK[Û›H\Y˜XÝˆÛÝ[È\[™ÛˆXÝX[ÝZ]X›Hœ™YH›ÝšY\ˆÛÛ[[™Ø[››Ý™HÛZ[YY™Y›Ü™HH™]È[‹ˆ^ÙYY[™ÈÚ[™ÛK\Ú\™YÙ]Y™\œÈØ[™Y]\È˜]\ˆ[ˆÚ[[H›Û[Ý[™È[NÈ]\™HÝXØÙ\ÜÙ[Ø]™\ÈÚÝ[›ØÙ\ÜÈY™\œ™YØ[™Y]\ÈžH™\šYšYY™\Ý[YKÜÛÝ\˜ÙHÚXÚÜÝ[\Ë™]™\ˆ]]ÛX]XÈ›[™™YÝÛ›ØY‚‹HÜšYÚ[˜[ÈX^HÛÛZ[ˆ”QËÑVˆÛÝ\˜ÙH\[™[˜ÚY\ÎÈ\ÙH™[XZ[ˆÓÕTÑWÔÕQÑQÛ›H[™[™È‘ËÕÐHÛÛ™\œÚ[Ûˆ[™–Ù[ÛY]žKÕU‹ÜÛ[ÛÝ[™ËÓÑØÛÛ\Ú[Û‹Ú[\Ü™]šY]Ëˆ\ÈÛÜšÙ›ÝÈÙ\È“Õ\œÚ\Ý[H]]]HHÚ\™YØ\™ZÝ\ÙKÚ[™ÙHQHÛÛ[Ü[ˆPÌˆÜˆ\ÝX›\Ú\™Ù]Y]šXÙHÌ”Ëˆ™\ÜÚ]ÜžHÝ[\Ù\ÈHˆÚPˆÚ[™ÛK]Üš]\ˆØ\™ZÝ\ÙHœ™YK\ÜXÙHØY™]H™\Ù\™K‚‹Hš]™K[[™HÜÝYY]Y]H™Y›YÚÌHØ\ÈÝXØÙ\ÜÙ[ÈÛˆ\ÈÛÛ[Z]H™]ÈY\]™HXÜ]Z\Ú][Û‹ÝÛÜšÙ›ÝÈÝ]\È\È
+Š”S‘S‘ÊŠˆ[[Ú]Xˆ™]\›œÈXÝX[™XÙZ\Ø\Y˜XÝˆÓÕTÑHOH‘PQWÑ“Ô—ÒSTÔ•OH’TÕPSWÐPÐÑTQ‚‚ˆÈÈŒ‹LLLH8 %š]™HÜÝY˜XÚÜÈ]™K™XÚ\ÙHËLÎ›ÛÝ™\Z\‚‚‹H™]ÈÝÛ™\‹XÛÛ™š\›YYPËLLÈˆÌÌÍHš\œÝ^XÝZXY[ˆÙš]™K[[™HÌWJÎ‹ËÙÚ]X‹˜ÛÛKÍ[ÝX˜X™YK]XÚÙ™[ÝÜÚ\\\œÛÛ˜[YØ[YKØXÝ[ÛœËÜ[œËÌÍÎMÎNLÌL
+H
+Š”ÕPÐÑTÔÊŠˆÛˆLŒÍŽL˜ÌXLŒ˜NLÍÍYMÌYÙ˜ÍMMÍ˜XM˜ˆš]™H\Ý[˜ÝÜÝYX]š^›ØœÈÛÛ\]YÝXØÙ\ÜÙ[H[™X›\ÚYš]™HÛÝ\˜ÙK[Û›HY]Y]H™\ÜËÚ]Ý]Ú]”ËQMÜˆØ\™ZÝ\ÙH]]][Û‹‚‹HÛÛ˜Ý\œ™[™KU[œ™X[ÈÌŒŒWJÎ‹ËÙÚ]X‹˜ÛÛKÍ[ÝX˜X™YK]XÚÙ™[ÝÜÚ\\\œÛÛ˜[YØ[YKØXÝ[ÛœËÜ[œËÌÍÎMÎNLŒŽ
+H
+Š‘RSQ
+ŠˆËLÎ˜XÚÙY[™š[š\ÚY™\]Z\™[Y[Û˜\ÚÝ\ÈÝ[X™XØ]\ÙH‘TKT“ÑLLHØZ[™YHÛÛ˜Ü™]HZ\ÜÚ[™Ë]ÛÜšÈ˜XÚÚ[™È[žHÚ[H]KÓX\Ý\‘^XÝ][Û”›ØYX\šœÛÛ‹˜XÚÙYÝ[™š[š\ÚYÜ™\]Z\™[Y[ÚYØØ\È›ÝÞ[˜Ú›Ûš^™YˆH™\]Z\™[Y[Ø\È[™XYHX\YÈÓÓ•S•SÕT×ÓPVSUSWÔÐQ‘WÔ“ÑPÕSÓ˜È\ÈÛÛ[Z]™YÙ[™\˜]\ÈH˜XÚÙY[™š[š\ÚYRQÛ˜\ÚÝœ›ÛHH^XÝÛÝ™\››Üˆ
+Œ[šY\ÊKÚ]Ý]\ØX›[™ËÙXZÙ[š[™ÈÜˆÚ[™Ú[™È˜[Y]ÜˆÙ[X[XÜË‚‹H
+Š”™]˜[Y][Ûˆ[™[™ÊŠˆÛˆH™]È^XÝPQˆš]™K[[™HTÔÈ\ÈÛÝ\˜ÙKÜ™XY[Û›HÛÛÜ™[˜][Ûˆ›ÛÙ‹›Ýš[˜\žHØ\™ZÝ\ÙH\ØYÜˆš\ÝX[ÛÛ\][Û‹ˆÛ›HÙ\šX[^™Y˜[YÛÝ\˜ÙH[ZÙHX^HXÙH[YÚX›H™]Èš[\È[È\œÚ\Ý[Ø\™ZÝ\ÙK‚‚ˆÈÈŒ‹LLLH8 %ÝÛ™\‹XÛÛ™š\›YY\›X[™[š]™K[[™HX^[][K\ØY™H›ÝYÚ]‚‹H\™XÝ]™H]™[ÜÛÝ™\››Üˆ™]šY]È›Ý[™
+Š”‘TKT“ÑLLH[™PËLÎ[™XYHXÝ]™JŠŽˆ›ÝYÚ]]\Ý™HY\]™H[™X^[X[žHY˜][Ú]Ý]\\ˆÝÛ™\ˆ™[Z[™\œËˆ
+Š‘PËLL
+Šˆ^XÚ]HÜ›Ý\È^\Ý[™È™\\˜][ÛˆÛÜšÈ[Èš]™H[™\[™[Ü\˜][Û˜[˜XÚÜÎˆÙ\šX[^™YQM[[YNÈÙ\šX[^™Y\œÚ\Ý[Ø\™ZÝ\ÙH[™YØ[\ÜÙ][ZÙNÈÚÙ[][Ú\˜XÝ\œËØ[š[X][ÛŽÈ™X[\ÝXÈš\ÝX[Ú\™HÛÜ›È[™Ø[Y\^KÓ”ËÜ]Y\ÝÜØ]™KØ]Y[ËÐ\˜XšXÈ™\Ù[][Û‹‚‹HØ[™Y]Hœ˜[˜ÚYÈØÜš\ËÜXÌWÙš]™WÛ[™WÜ™Y›YÚœX[™š]™K]Ø^H\˜[[ÜÝY[›™\ˆÛÜšÙ›ÝÈ™Ú]X‹ÝÛÜšÙ›ÝÜËÜXÌKYš]™K[[™K[X^ØY™Kž[[ˆ[œÈ]™\žH[™HYØZ[œÝH^XÝˆÒHÚ]
+Š››ÈÚ]”Ë[œ™X[\œÚ\Ý[Ø\™ZÝ\ÙHÜš]KÙÚ[ˆž\\ÜËÜˆÞ[]XÈÛZ[\ÈÙˆ™]ÈÝÛ›ØYÊŠŽÈ[[YÚX›HY]Y]HØ[™Y]\È[™^\Ý[™ÈNš\ÝX[ÛÝÈ\™HØØ[›™Y[™š]™HÛÝ\˜ÙK[Û›H™XÙZ\\Y˜XÝÈX›\ÚYˆH^\Ý[™ÈÚ[™ÛHÙ\šX[^™YQH[™Ø\™ZÝ\ÙHÛÜšÙ›ÝÜÈ™[XZ[ˆ™\ÜÛœÚX›H›Üˆ]]][™ÈZ\ˆ™\ÛÝ\˜Ù\ÎÈ›È\XØ]H[›™\ˆÛÛ[[Û‹‚‹HX^[][Hš[H[ZÙH\È
+Š››Ý
+Šˆ[˜›Ý[™YÚ[™ÛKZ›Øˆ’TÕ”SKÜ™\ÚY[˜ÞNÈ›ÛÝÈ]KÓX^[][TØY™T›ÙXÝ[Û“[ÙUŒKšœÛÛ˜Ú]M‘ÚPˆØ\™ZÝ\ÙH™\Ù\™H[™YX\Ý\™Y\‹Yš[KÝØ]™KÛ™]ÛÜšËÜ›ÝšY\‹Ø\Y˜XÝYÙ]ËˆHØ\™ZÝ\ÙHÛÝ\˜ÙHØ][ÙÝYH[™^\Ý[™ÈYØ[ÛÝ\˜ÙH\[[™\È™[XZ[ˆHXÝX[XÜ]Z\Ú][Ûˆ]ˆÛÝ\˜ÙKÛXœ˜\žH[™[ÜžHØØ[\È[™\[™[Hœ›ÛHH‘Ðˆ”SH[[YHÛÜšÚ[™ÈÙ]‚‹H]]]Üš[™Ë^XÝZXYÜÝY›ÛÙˆ\È
+Š”S‘S‘ÊŠ‹ˆ\ÈØ]™H]Ù[ˆÙ\È›Ý[\Ü™]È–›ÙXÙH™]ÈÚ[™[X]XÈÛÛ[ÛÛ\]HHÚ\™KÜˆØ]\ÙžHØ]H‹ÍËˆÙY\PÌˆ[[YHÛÜÙYˆ^\Ý[™ÈˆÌÌŽH[œ™X[[™H[™ÌÌÌˆÝÜ™X[[ZÙH[™HÛÛ[YH[™\[™[K‚‚ˆÈÈŒ‹LLLHHÜš]XØ[YØ\™XÙZ\\š]HX]š^‚Ÿ\™XHÝ]\È]šY[˜ÙHÈ›Ý[™\žHŸKK_KK_KK_ŸØ[›ÛšXØ[Ø\™ZÝ\ÙH[™[ÜžH•S‹T“Õ‘SˆÓPSˆÌÌŽˆNLH^[ØYÈÈ‹ÍKMŽNž]\ÈÈŒÎHXÝ]™HÈŽÝ\\œÙYYÈ[YÜš]H˜Z[\™\ÈŸÜš]XØ[YØ\™XÙZ\Ù[XÝ[ÛˆÓÕTÑKT‘TRT‘QÈVPÕRPQ“ÓÑˆS‘S‘ÈØ[YHØ[›ÛšXØ[›ÛÝ[™™]Ù\Ý\™XÙZ\[H\È[™[ÜžH]Y]ŸØ[YK\™XÙZ\\XØ]\È‘TÑT•‘QÛÝ[YÙ\\˜][Hœ›ÛH\ÝÜšXØ[Ý\\œÙ\ÜÚ[ÛˆŸ™]Ù\ÝXÝ]™H™XÙZ\ÛÜœ\[ÛˆRSPÓÔÑQÒLM‹ÛZ\ÜÚ[™ËYš[H™Y›YÚ™[XZ[œÈ›ØÚÚ[™È[™™YÜ™\ÜÚ[Û‹XÛÝ™\™YŸ[[YHÈœ›ÙÈÈØ]H‹MÈX]\š]HSÒS‘ÑQ›È[X[‹Ù]šXÙHÜˆš\ÝX[XØÙ\[˜ÙHÝ\YY‚ˆÈÈŒ‹LLLHHËLŒÈš^\™H›Ý[™\žB‚Ÿ\™XHÝ]\È]šY[˜ÙHÈ›Ý[™\žHŸKK_KK_KK_ŸÜ\˜][Û˜[[›™\ˆÈØ\™ZÝ\ÙH›ÛÝ\›ÛÝ™\]Z\™Y[žH]™HË\›ÛÝØØÝ\œ™[˜ÙH™[XZ[œÈH˜[Y][Ûˆ˜Z[\™HŸ\ÝÜšXØ[Ë\›ÛÝ\Ýš^\™HÓÕTÑKRSTSQS•Q^XÝHÛ™HØ[›ÛšXØ[š^\™H]\˜[\›Z]YÛ›H[ˆ™XÙZ\\Ý\\œÙ\ÜÚ[Ûˆ\ÝŸœ›ØY\ˆË\›ÛÝ[ÝÛ\Ý“Ô’QSˆØÜš\ËÝÛÜšÙ›ÝÜËØÛÛ™šYÝ\˜][Ûˆ™[XZ[ˆ˜Z[XÛÜÙYŸ^XÝZXY˜[Y][ÛˆS‘S‘È™\]Z\™\È™K\[ˆY\ˆ˜[Y]ÜˆÛÜœ™XÝ[Ûˆ‚ˆÈÈŒ‹LLLHHØ\™ZÝ\ÙH™X[\]Ø[›ÛšXØ[^˜][ÛˆÛÜœ™XÝ[Û‚‚Ÿ\™XHÝ]\È]šY[˜ÙHÈ›Ý[™\žHŸKK_KK_KK_Ÿ™X[Î—XÝ[ÛœË\[›™\—‹‹˜™XÙZ\]ÈÓÕTÑKT‘TRT‘QÈVPÕRPQ“ÓÑˆS‘S‘ÈÚ[™ÛHÚ[™ÝÜÈÙ\\˜]ÜœÈ›ÝÈØ[›ÛšXØ[^™HÈXÝ]™H—XÝ[ÛœË\[›™\—ÝØ\™ZÝ\ÙWÚ\™R›Ý\›™^X›ÛÝŸ™YÜ™\ÜÚ[Ûˆš^\™HÓÕTÑKRSTSQS•Q\Ù\È™X[Ú[™ÛKX˜XÚÜÛ\ÚÚ[™ÝÜÈ]›ÝHË\Ý[HÝX›Y™\™\Ù[][ÛˆŸZ\ÜÚ[™ÈÛ›ÝÈÈZ\ÛX]ÚY›ØÚÈ™XÛÜ™ÈRSPÓÔÑQS‘S‘ÈT‘ÑUQ‘TRTˆØ[™Y]HÝYÚ[™ÈX^H™\Z\ˆÛ›HÜÙH^[ØYÈŸ›[šÙ]X]\šX[™Yœ™\Ú“Ô’QSˆ^\Ý[™È™\šYšYY^[ØYÈ™\Ù\™YŸØ]H‹MÈ[™[X[‹Ù]šXÙHXØÙ\[˜ÙH“ÕPÐÑTQÙ\\˜]H]šY[˜ÙH™\]Z\™Y‚ˆÈÈŒ‹LLLHHØ\™ZÝ\ÙHØ[™Y]HšYÙÙ\ˆ\™[š[™ÈX]š^‚Ÿ\™XHÝ]\È]šY[˜ÙHÈ›Ý[™\žHŸKK_KK_KK_ŸØ[™Y]HØ]HXÝ]˜][ÛˆÓÕTÑKRSTSQS•QÈVPÕRPQ“ÓÑˆS‘S‘È™[]˜[Ø\™ZÝ\ÙH\Ú[›ÚÙ\È›Ý[™Y›Ý™[˜[˜ÙH™\Z\ˆ[™Ø[™Y]H™\ÜÚ]Ý]Y\™ÙK\ÝXš™XÝX]Ú[™ÈŸ™XÙZ\[YÜš]H[™^[ØY™]\ÙH‘TÑT•‘QÒLMˆ™\šYšXØ][ÛŽÈÛ›HZ\ÜÚ[™ÈÜˆZ\ÛX]ÚY^[ØY\È™YÝÛ›ØYYŸœ›ØY™Yœ™\Ú“Ô’QSˆ›ÈT™Yœ™\Ú[ˆHØ[™Y]HØ]HŸœ›ÙËÑØ[™[ˆ™\Ü[™\Y˜XÝS‘S‘È™\]Z\™\ÈÝXØÙ\ÜÙ[^XÝZXYØ\™ZÝ\ÙH^XÝ][ÛˆŸQHÈ]šXÙHÈš\ÝX[ÈXÚ[™ÈÈ\™›Ü›X[˜ÙHÈØ]H‹MÈ“ÕPÐÑTQÙ\\˜]H™X[]šY[˜ÙH™\]Z\™Y‚ˆÈÈŒ‹LLLHHØ\™ZÝ\ÙHZYÜ˜]Y\™XÙZ\›ÛÝ™\Z\ˆX]š^‚Ÿ\™XHÝ]\È]šY[˜ÙHÈ›Ý[™\žHŸKK_KK_KK_ŸXÝ]™HØ\™ZÝ\ÙH›ÛÝ•S‹T“Õ‘SˆØ\™ZÝ\ÙHÌÌ\ÙY—XÝ[ÛœË\[›™\—ÝØ\™ZÝ\ÙWÚ\™R›Ý\›™^XŸ\ÝÜšXØ[XœÛÛ]H™XÙZ\]ÈÓÕTÑKT‘TRT‘QÈVPÕRPQ“ÓÑˆS‘S‘È™X˜\ÙYÈH^XÚ]]Y]›ÛÝ™Y›Ü™HÜ›Ý\[™È[™ÒLM‹ÛXÙ[œÙHÚXÚÜÈŸ˜[Y^[ØY™\Ù\˜][Ûˆ‘TURT‘QÈ‘TÑT•‘Q›È›[šÙ]™Yœ™\ÚÜˆ[][ÛŽÈ™]Ù\ˆ™XÙZ\ÈÝ\\œÙYHZYÜ˜]Y\ÝÜšXØ[™XÛÜ™ÈŸÙ[Z[™HXÝ]™K\›ÛÝÛÜœ\[ÛˆRSPÓÔÑQÈ‘QÔ‘TÔÒSÓ‹PÓÕ‘T‘Q™]Ù\ÝXÝ]™H™XÙZ\\ÚZ\ÛX]ÚÝ[^]ÈÚ]]Y]˜Z[\™HŸPÌH[[YHÈœ›ÙÈØ[™Y]HÈØ]H‹MÈSÒS‘ÑQ›È[[YHÜˆ[X[‹Ù]šXÙHXØÙ\[˜ÙHÝ\YYžH\ÈÒH™\Z\ˆ‚ˆÈÈŒ‹LLLHHPÌH“ÕS‘USÓ—ÐÓÔ”‘PÕSÓ”×ÕŒB‚Ÿ\™XHÝ]\È]šY[˜ÙHÈ›Ý[™\žHŸKK_KK_KK_ŸØ[›ÛšXØ[™YXÙ\ÜÛÜˆPPÒS‘KQÔ‘QSˆ]™[ÜÙXÌÙÌXØŒY™˜MÍŒ™LÍ™LÎMÎLŽ˜MMÌMÈÜÝHÌŒÈ™KU[œ™X[
+È[œ™X[Z[ÕPÐÑTÔÈŸ\œÚ\Ý[[XšY[ÛØÚX[™YÚ\Ý˜][ÛˆÓÕTÑKRSTSQS•QÈVPÕRPQÒHS‘S‘È\™XÝÜ‹[ÝÛ™YÛÛ[Z]Y]ÛÜ›™XÛÛ˜Ú[X][ÛŽÈÙXZÈ™YÚ\ÝžNÈ›ÈY™XÞXÛH˜[œÙ™\ŽÈ›Ý[™Y™X\˜žH]Y\žH[˜ÛY\È\œÚ\Ý[™\ÚY[ÈŸ\‹S”È[]ÛÜ›ÛØÚX[ØØ[ˆ“Ô’QSˆÈ‘TÑT•‘Q›ÈXÝÜ’]\˜]Ü˜[ˆTÚ\™P[XšY[”ÎŽ•\]TÛØÚX[Y™XÈÛ™H™XÛÛ˜Ú[X][ÛˆØØ[ˆØØÝ\œÈÛ›H]ÛÛ[Z]Y]ÛÜ›Þ[˜Ú›Ûš^˜][ÛˆŸÛÛÝÛ™\œÚ\‘TÑT•‘Q]š[™ÕÛÜ›[X[˜YÙY˜\Ù[[™KÛZXÜ›ËY]™[”ÜÈ™[XZ[ˆÛÛY[™\ˆS]š[™ÕÛÜ›\™XÝÜ˜È\œÚ\Ý[Z[\‹X]]Ü™Y™\ÚY[È\™H›ÝÛÛYžH\È™\Z\ˆŸ›ÛÝÝ\Ý\™˜XÙH™\ÛÛ][ÛˆÓÕTÑKRSTSQS•QÈVPÕRPQÒHS‘S‘ÈÜ˜\ÜËÑ\ÔÝÛ™KÕÛÛÙÝ\™˜XÙU\\È
+È\ÚXØ[[X]\šX[Yš\œÝ™\ÛÛ][ÛŽÈYØXÞHY[]H˜[˜XÚÈ™]Z[™YŸ\›È[š[X]YÛÝ\˜ÙHÛXÞHÓÕ‘T““Ô‹PSQÓ‘QQMŒÈ–ŒNXÛÛ\]X›HÚÙ[][[ZÙNÈÐ’ˆ™[XZ[œÈÝ]XÈ[Ù[\ˆ˜[˜XÚÈÛ›HŸš\ÝX[]X[]H\™Ù]ÓÕ‘T““Ô‹PSQÓ‘Q˜[[˜ÙYYY][H
+ÈÙ[XÝ]™HYÚÈÌŒÈÌ”ÈÝË\ÜXÈ›ÛÜˆ™]Z[™YŸ”ˆ^[œÚ[Ûˆ“ÕSTSQS•Q–HTÈ‘TRTˆ^\Ý[™ÈØØ[\ˆ”ˆ™[XZ[œÎÈÙ[XÝ]™H›Ü›X[ØÚ[›™[\XÚÙYXÜ]Z\Ú][ÛœÈÝ^H]\™H›Ý[™YX]\šX[ÛÜšÈŸ˜][˜KÓšXYØ\˜H™]Üš]H“ÕUUÔ’V‘QÈ“ÈU’QSÑH‘QQ^\Ý[™È›Ý[™YÛÛY˜][˜H™]Z[™Y[[›Ùš[[™ÈÚÝÜÈH›Ý[™XÚÈŸ\RH[[YH^[œÚ[Ûˆ”“Ö‘SˆÛÝ\˜ÙK\™\\˜][ÛˆÛÜšÙ›ÝÜÈ™[XZ[ˆ›Û‹\[[YH]šY[˜ÙNÈPÌH™[XZ[œÈXÝ]™H[[YH[™HŸQHÈ]šXÙHÈš\ÝX[ÈXÚ[™ÈÈ\™›Ü›X[˜ÙH“ÕTÕQÈ“ÕPÐÑTQ™\]Z\™\ÈÙ\\˜]H^XÝZXY[X[‹Ù]šXÙH]šY[˜ÙH‚ˆÈÈŒ‹LKLÌHPÌHÐU‘WÓÐQÓÓ‘×ÔÑTÔÒSÓˆØ\‚‚‹HÒT‘WÐUQS×ÒQS•UH™YXÙ\ÜÛÜŽˆ
+Š‘VPÕRPQPPÒS‘KQÔ‘QSŠŠˆÛˆˆÌNNHÈ™KU[œ™X[ÌMˆÈ[œ™X[Z[ÌLMNNÈY\™ÙY\ÈXÎM™NYMÙXØ™NLYMMŒÎŽY™XÌLXŒ‚‹HÛ™Ë\Ù\ÜÚ[Ûˆ\œÚ\Ý[˜ÙH\™[š[™Îˆ
+Š”ÓÕTÑKRSTSQS•QÈVPÕRPQÒHS‘S‘ÊŠ‹‚‹H›ÙXÝ[ÛˆØ]™KÜ™\ÝÜ™HÝÛ™\œÚ\ˆ
+Š•SÒS‘ÑQ
+Š‹‚‹H™\ÝÜ™H˜[œØXÝ[Ûˆ
+ÈÛÛ[Z]Y]ÛÜ›˜[œÙ›Ü›HÜ›Ý[™[™È
+È\Þ[˜ÈÚXÚÜÚ[™]š\Ú[ÛˆÝX\™Îˆ
+Š”‘TÑT•‘Q
+Š‹‚‹HÝ™\œÚ^™YØÛÜœ\Ø]™H^[ØYYZ\ÜÚ[ÛŽˆ
+Š‘RSPÓÔÑQ‘Q“Ô‘H‘TÕÔ‘HUUUSÓŠŠ‹‚‹HÙ\šX[^˜][ÛˆØÚ[XH™\œÚ[ÛŽˆ
+Š•SÒS‘ÑQ
+ŠJŠŽÈ\ÈØ\ˆÙ\È›Ý[™[[™ØÝ[Y[YŒKÝŒˆ\ÝÜžHÜˆ›Ü˜ÙHHZYÜ˜][Û‹‚‹H[X[ˆÛ™Ë\Ù\ÜÚ[ÛˆQKØ]™KÛØYÝ™\ÜË\™Ù]Y]šXÙH]ÚÛY[[ÜžH™Z]š[ÜŽˆ
+Š”S‘S‘ÈÈ“ÕÓRSQQ
+Š‹‚‚ˆÈÈŒ‹LKLÌHPÌHÒT‘WÐUQS×ÒQS•UHØ\‚‚‹HÒS‘SPUP×ÐÓÓ•“ÓÒS‘Ñ‘ˆ™YXÙ\ÜÛÜŽˆ
+Š‘VPÕRPQPPÒS‘KQÔ‘QSŠŠˆÛˆˆÌNNÈ™KU[œ™X[ÌMÈ[œ™X[Z[ÌLMMÎÈY\™ÙY\ÈØŒÎŽNÌNXL™NŒŽMÎYÌÙŒL˜ÙŽMMÍ˜Ù˜‚‹HÚ\™HÛÛšXËZY[]H[[YH[\[Y[][ÛŽˆ
+Š”ÓÕTÑKRSTSQS•QÈVPÕRPQÒHS‘S‘ÊŠ‹‚‹H[[YH]Y[ÈÝÛ™\Žˆ
+Š•SÒS‘ÑQ8 %TÚ\™P]Y[ÔÝXœÞ\Ý[JŠ‹‚‹HX]žKÛ›Ûœ™\ÚY[]Y[Îˆ
+Š”ÓÑ•TU
+ÈTÖSÈ”Ý™X[XX›SX[˜YÙ\ŠŠ‹‚‹HXÛÜ˜]]™HØØ[^™YÑ–ÛÛ˜Ý\œ™[˜ÞNˆ
+Š“ÕS‘Q8 %X^ˆÝ\ÈÈŒHÈ
+È^\Ý[™ÈŒˆÈ\‹XÝYH™\X]ÝX\™
+Š‹‚‹HÝÜžKXÜš]XØ[Û™K\ÚÝš[Üš]HÝ™\ˆXÛÜ˜]]™H\œÝYÙ]ˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹Hš[˜[PÌHÐUˆX\Ý\œËÚ[\ÜÛ\Ý[š[™ËÛZ^ÛX\Ý\Žˆ
+Š”S‘S‘ÈÈ“ÕÓRSQQ
+Š‹‚‹HQKÙ]šXÙKØ]Y[Ë[\Ý[š[™ËÜXÚ[™ËÜ\™›Ü›X[˜ÙHXØÙ\[˜ÙNˆ
+Š”S‘S‘ÈÈ“ÕÓRSQQ
+Š‹‚‚ˆÈÈŒ‹LKLÌHPÌHÒS‘SPUP×ÐÓÓ•“ÓÒS‘Ñ‘ˆØ\‚‚‹HUQTÕÔÒQWÐPÕU’UWÐÓÒT‘SÑH™YXÙ\ÜÛÜŽˆ
+Š‘VPÕRPQPPÒS‘KQÔ‘QSŠŠˆÛˆˆÌNMÈÈ™KU[œ™X[ÌMHÈ[œ™X[Z[ÌLMMÈY\™ÙY\ÈNLŽYŽLÌŽLŒÎY˜Y™˜ŒM™ŽYŽYX™NÙNL‚‹HÚ[™[X]XÈÛÛ›ÛZ[™Ù™ˆÛÝ\˜ÙH[\[Y[][ÛŽˆ
+Š”ÓÕTÑKRSTSQS•QÈVPÕRPQÒHS‘S‘ÊŠ‹‚‹H™\Ù[][ÛˆÝ]HÝÛ™\Žˆ
+Š•SÒS‘ÑQ8 %TÚ\™TÝÜžT™\Ù[][Û”ÝXœÞ\Ý[JŠ‹‚‹H[[YHØ[Y\˜HÝÛ™\Žˆ
+Š•SÒS‘ÑQ8 %TÝÜžT™\Ù[][Û‘\™XÝÜŠŠ‹‚‹H]Y\ÝÜØ]™KÝÛÜ›XÛÛ[Z]]]][ÛˆžH™\Ù[][ÛŽˆ
+Š‘“Ô’QSˆÈSÒS‘ÑQ
+Š‹‚‹H[YY™[X\ÙK^XÚ]ÚÚ\[™Ú\\‹XÚ[™ÙH™[X\ÙNˆ
+Š•T‘ÑUQÈÓ‘HVUU
+Š‹‚‹HÝ[H˜[œÚY[[[YHØ[Y\˜HY\ˆ™\Ù[][Ûˆ[›ØÚÎˆ
+Š‘“Ô’QSŠŠ‹‚‹H]]Ü™Y^\›˜[Ø[Y\˜KÓ]™[Ù\]Y[˜ÙHÝÛ™\œÚ\ˆ
+Š”‘TÑT•‘Q
+Š‹‚‹HQHÚÚ\Ü™]\›ˆ™Z]š[Ü‹\™Ù]Y]šXÙH\™›Ü›X[˜ÙH[™[X[ˆš\ÝX[ÜXÚ[™È™]šY]Îˆ
+Š”S‘S‘ÈÈ“ÕÓRSQQ
+Š‹‚‚ˆÈÈŒ‹LKLÌHPÌHUQTÕÔÒQWÐPÕU’UWÐÓÒT‘SÑHØ\‚‚‹HU’S‘×ÔÒT‘H™YXÙ\ÜÛÜŽˆ
+Š‘VPÕRPQPPÒS‘KQÔ‘QSŠŠˆÛˆˆÌNMˆÈ™KU[œ™X[ÌMÎÈ[œ™X[Z[ÌLMLNÈY\™ÙY\ÈMÎLÍMNXXMŒXÎLÎÍÍØMMŒ™M˜MÍMÎYÍ˜‚‹H]Y\ÝÜÚYKXXÝ]š]HÛÚ\™[˜ÙH[\[Y[][ÛŽˆ
+Š”ÓÕTÑKRSTSQS•QÈVPÕRPQÒHS‘S‘ÊŠ‹‚‹H]Y\ÝÜÝÜžHÝÛ™\œÚ\ˆ
+Š•SÒS‘ÑQ8 %TÚ\™T]Y\ÝÝXœÞ\Ý[HÛ›JŠ‹‚‹HØY™K]Ú[™ÝÈ›Ú™XÝ[ÛŽˆ
+Š”ÓÕTÑKRSTSQS•Q
+Šˆ›ÝYÚÙ]]˜Z[X›TÚYPXÝ]š]RYÑ›ÜÝ\œ™[Ú[™ÝÊ
+X‚‹HPÌHXZ[‹\]Y\Ý\™Ù[˜ÞHÝ\™\ÜÚ[ÛŽˆ
+Š”ÓÕTÑKRSTSQS•Q
+Šˆ›Üˆš[™ÔÙXÜ™]ÈX]š[™ÒÛYHÈÙY\Ù™”›ØYÈ™\œžQ\ØØ\K‚‹HÚYKXXÝ]š]H\XØ]H™]Ø\™™]™[[ÛŽˆ
+Š”ÓÕTÑKRSTSQS•QÈ^XÚ]ÝX\™
+È^\Ý[™È\ØÛÝ™\žHY[\Ý[˜ÙJŠ‹‚‹HØÚÙYÝÜžHÝ]ÛÛY\ÈÈ™\]Z\™Y[˜ÚÜœÎˆ
+Š•SÒS‘ÑQ
+Š‹‚‹HQHÜ[Û˜[]Ú[™ÝÈXÚ[™ËØ]™KÛØY™Z]š[Ü‹\™Ù]Y]šXÙH\™›Ü›X[˜ÙH[™[X[ˆ™]šY]Îˆ
+Š”S‘S‘ÈÈ“ÕÓRSQQ
+Š‹‚‚ˆÈÈŒ‹LKLÌHPÌHU’S‘×ÔÒT‘B‚Ÿ\™XHÝ]\È]šY[˜ÙHÈ›Ý[™\žHŸKK_KK_KK_Ÿ™YXÙ\ÜÛÜˆÒTPÕT—Ô‘TÑS•USÓˆVPÕRPQPPÒS‘KQÔ‘QSˆÈQT‘ÑQˆÌNMNÈXY™˜LŒÍMÍM˜MŒ™˜ŒM™LŒYMØØLŽMÌÈ™KU[œ™X[ÌMÍHÕPÐÑTÔÎÈ[œ™X[Z[ÌLMÕPÐÑTÔÎÈY\™ÙH˜ØYŒMŽMMÙLXÌMÌXLYMÌYXYYMY˜Ÿ›Ý[™Y”ÈÛÛ^Û˜\ÚÝÓÕTÑKRSTSQS•QÈVPÕRPQ“ÓÑˆS‘S‘È”Ú\™S”Ð™Z]š[Ü”Û˜\ÚÝTÚ\™S”ÐÛÛ^ÝXœÞ\Ý[NŽZ[™Z]š[Ü”Û˜\ÚÝŸ›Ý[™YÛØÚX[Ø[™Y]H]Y\žHÓÕTÑKRSTSQS•QÈVPÕRPQ“ÓÑˆS‘S‘ÈS]š[™ÕÛÜ›\™XÝÜŽŽ‘Ø]\XÝ]™P[XšY[”ÜÓ™X\˜È›È\‹S”È[]ÛÜ›ÛØÚX[]\˜]ÜˆŸ˜][˜HÜ›Ý\YZ\ÜÚ[ÛˆØ\ÓÕTÑKRSTSQS•QÈVPÕRPQ“ÓÑˆS‘S‘È^\Ý[™È]š[™ÕÛÜ›]™[[ˆØ\ˆØYYÙ[™›Ü˜ÙY™Y›Ü™HUSH]™[Ù[XÝ[ÛˆŸÛÛÝÛ™\œÚ\‘TÑT•‘QSˆÓÕTÑHÈVPÕRPQ“ÓÑˆS‘S‘È[XšY[”Ë[\˜XÝ[Ûˆ[™[XšY[[[Ý[ÛˆÛÛÈ™[XZ[ˆ[™\ˆ]š[™ÕÛÜ›\™XÝÜˆŸPÌHÜ[][ÛˆSÒS‘ÑQ˜\Ù[[™H\™Ù]NŸÝÜžKØØ[›ÛˆÝÛ™\œÚ\‘TÑT•‘QSˆÓÕTÑHÚ\™T]Y\ÝÝXœÞ\Ý[H™[XZ[œÈ›ÙÜ™\ÜÚ[Ûˆ]È[XšY[™Z]š[ÜˆØ[››ÝÝÛˆØÚÙYÝ]ÛÛY\ÈŸQHÈ]šXÙHÈš\ÝX[ÈXÚ[™ÈÈ\™›Ü›X[˜ÙH“ÕTÕQÈ“ÕPÐÑTQ™\]Z\™\ÈÙ\\˜]HÚ\\‹\ÜXÚYšXÈ[X[‹Ù]šXÙH]šY[˜ÙH‚ˆÈÈŒ‹LKLÌHPÌHÒTPÕT—Ô‘TÑS•USÓˆØ\‚‚‹HT•WÐS‘ÔÓÐÒPSÓÓÔ™YXÙ\ÜÛÜŽˆ
+Š”ÕUPËUSQUQ
+ÈQMŒËŒ‹ÚXY\ÜÈXXÚ[™KYÜ™Y[ŠŠˆÛˆˆÌNMÈ™KU[œ™X[ÌMÌˆÈ[œ™X[ÌLMK‚‹HÚ\˜XÝ\ˆ™\Ù[][Ûˆ[\[Y[][ÛŽˆ
+Š”ÓÕTÑKRSTSQS•QÈVPÕRPQÒHS‘S‘ÊŠ‹‚‹HÝX›H\›ÈY[]Nˆ
+Š‘UKÐÊÊÈÒT‘Q
+Šˆ›ÝYÚTÚ\™S”ÎŽ”›ÙXÝ[ÛÚ\˜XÝ\’YÈPÌHØ[™[‹Ðš[›ËÔØ[HÝÜžHXÝÜœÈ›ÈÛ™Ù\ˆ\[™Ûˆ\Ü^K[˜[YHY[]K‚‹H^Y\ˆØ[›Ûˆ™\Ù[][ÛŽˆ
+Š”PÌHœ›ÙÈ]\™H˜[YYÝÛÜ™˜[˜XÚÈY[ŠŠŽÈ›ÈØÚÙYÝÜžHÝ]ÛÛYHÚ[™ÙY‚‹HÚÙ[][šYÈ]ˆ
+Š‘VTÕS‘ÈTÖSÈÕÓ‘Tˆ‘URS‘Q
+ŠˆšXHTÚ\™PÚ\\\ÜÙ]Ý™X[Z[™ÔÝXœÞ\Ý[XÈ”Ý™X[XX›SX[˜YÙ\˜È[Ù[\ˆ˜[˜XÚÈ™[XZ[œÈ[[ÛÛ\]HY\Ú
+È[š[P”™\ÛÛ][Û‹‚‹HÝË\ÜXÈÚÙ[][ÛÛ›ÛÎˆ
+Š•T“È
+ÈÛ›UXÚÔÜÙUÚ[”™[™\™Y™]Z[™Y
+Š‹‚‹H[XšY[RHÜ[][ÛŽˆ
+Š•SÒS‘ÑQ]N
+Š‹‚‹H™]ÈRHÝXœÞ\Ý[HÈ\‹Yœ˜[YH\ÜÙ]ØØ[ˆÈÞ[˜Ú›Û›Ý\ÈX]žH›ÙXÝ[ÛˆØYÈÜ›ÝÙÜ]Û‹Q\Ý›ÞHÚ\›Žˆ
+Š““Ó‘JŠ‹‚‹HQHÚ[ÝY]KÙ\]Z\Y[ÛÛ[Z]KÚÙ[][Y›Ü›X][Û‹Ø[š[X][Û‹\™Ù]Y]šXÙH”ËÙœ˜[YK][YKÚ]Ú\ËÔSKÕ”SH[™[X[ˆš\ÝX[™]šY]Îˆ
+Š”S‘S‘ÈÈ“ÕÓRSQQ
+Š‹‚‚ˆÈÈŒ‹LKLÌHPÌHÒT‘WÕÓÔ“ÑS”ÒUHØ\‚‚‹H™YXÙ\ÜÛÜˆˆÌNH^XÝXYÍŽXŒ™˜ML˜ÙX™ÙXÎM™XÌL™™ŽXMŒŒØØˆ
+Š”ÕUPËUSQUQžH™KU[œ™X[ÌMH
+ÈÓÓTSKÚXY\ÜÈXXÚ[™KYÜ™Y[ˆžH[œ™X[Z[ÌLLÎ
+Š‹‚‹H]š[™ÕÛÜ›Y[X™\‹[ØØ[Ý[™\Z\Žˆ
+Š‘VPÕRPQPPÒS‘KQÔ‘QSˆÛˆˆÌNJŠ‹‚‹HÒT‘WÕÓÔ“ÑS”ÒUHÛÝ\˜ÙH[\[Y[][ÛŽˆ
+Š”ÓÕTÑKRSTSQS•QÈVPÕRPQÒHS‘S‘ÊŠ‹‚‹HRHÜ[][ÛŽˆ
+Š•SÒS‘ÑQ]PÌH\™Ù]N
+Š‹‚‹HYY[œÚ]HYÙ]ˆ
+ŠMH™\›ËUXÚÈTÓHÛ\Ý\œÈÈMÌ›Û‹XÛÛ\Ú[ÛˆXÛÜ˜]]™H[œÝ[˜Ù\ÊŠŽÈ™\ÚY[›ÙXÝ[ÛˆY\Ú\ÈÛ›NÈZ\ÜÚ[™ÈØ]YÛÜšY\ÈÚÚ\Ú]Ý]ØY‚‹HÝÜžKÜ]Y\ÝÜÛÙÞNˆ
+Š•SÒS‘ÑQ
+Š‹‚‹HQH˜]™\œØ[Ü™XYXš[]K\™Ù]Y]šXÙH”ËÙœ˜[YK][YKÚ]Ú\ËÔSKÕ”SKš\ÝX[[œÚ]H[™XÚ[™Îˆ
+Š”S‘S‘ÈÈ“ÕÓRSQQ
+Š‹‚‚ˆÈÈŒ‹LKLÌHÌXXÚ[™HÛÜÝ\™HÈPÌHYYØH˜Z[ˆŒ‚‚‹H^XÝXØÙ\[˜ÙHXYˆ˜ØNXXÌÙXLYLÍŒYMŒYMÎLŽ˜XYYY‚‹H™KU[œ™X[ÌMÍNˆ
+Š”ÕPÐÑTÔÊŠ‹‚‹HQMŒËŒˆ[œ™X[Z[ÌLLˆ
+Š”ÕPÐÑTÔÊŠ‹[˜ÛY[™ÈÊÊÈZ[›ÙXÝ[Ûˆ[\Ü]]ÛX][Û‹Ý\\Ú\\ˆ]Y]›Ý]KÜÝ]H›Ý[™š\Ø\›š[™ÈXÚ[™ÝÜÈXÚØYÙKXÚØYÙY]H™\šYšXØ][Ûˆ[™XÚØYÙY^XÝ]X›HØœÙ\˜][Û‹‚‹H[[YH]HÝYÚ[™Îˆ
+Š”•S‹T“Õ‘SˆÍËÌÍÊŠ‹‚‹HXÚØYÙY[[YH]HÛÛœÝ[\[ÛŽˆ
+Š”•S‹T“Õ‘SŠŠˆšXH”ÐÛÛ^ˆ™XYO^Y\Ø‚‹H]š[™ÕÛÜ›Y[X™\‹[ØØ[Ý[™\Z\ˆ[ˆYYØHŒŽˆ
+Š‘VPÕRPQPPÒS‘KQÔ‘QSˆÛˆˆÌNHÈ™KU[œ™X[ÌMH
+È[œ™X[ÌLLÎ
+Š‹‚‹HPÌHYYØKXZ[›ÙÜ˜[Nˆ
+Š”‘QÒTÕT‘QÈ™\\˜][ÛˆXÝ]™HÈ\[™[[[YHØ\œÈ™[XZ[ˆÛÝ™\››Ü‹YØ]Y
+Š‹‚‹H\™Ù]Y]šXÙH”ËÙœ˜[YK][YKÕ”SKÚ\\‹]ÚYH[X[ˆQK]Y[È\Ý[š[™ËÛZ^[™š\ÝX[XØÙ\[˜ÙNˆ
+Š”S‘S‘ÈÈ“ÕÓRSQQ
+Š‹‚‚ˆÈÈŒ‹LKLÌHÌXÚØYÙY[[YH]K\™XY›ÛÙˆÝX\™‚‹HXÚØYÙY[[YQ\[™[˜ÚY\ÈÝYÚ[™ËÒ”ÓÓˆÞ[^ÝX\™ˆ
+Š’STSQS•Q
+Š‹‚‹HXÚØYÙY^XÝ]X›H]KXÛÛœÝ[\[ÛˆÝX\™ˆ
+Š”ÓÕTÑKRSTSQS•QÈVPÕRPQÒHS‘S‘ÊŠ‹™\]Z\š[™È”ÐÛÛ^ˆ™XYO^Y\Ø\š[™ÈXÚØYÙYÝ\\‚‹H\È\ÈXØÙ\[˜ÙH]šY[˜ÙH\™[š[™ÈÛ›NÈÚ\\ˆ›ÙXÝ[ÛˆX]\š]H\È[˜Ú[™ÙY‚‹HPÌHQKÙ]šXÙKÜ\™›Ü›X[˜ÙKØ]Y[Ë[\Ý[š[™ËÝš\ÝX[XØÙ\[˜ÙH™[XZ[œÈ[™[™È[™\È›Ý›Û[ÝYžH\ÈÝX\™‚‚ˆÈÈŒ‹LKLÌHš[˜[™\›ËXZXYXZ[[˜[˜ÙHÝÙY\‚‹H™[XZ[š[™ÈXZ[[˜[˜ÙH™YœÈ™Y›Ü™HÝÙY\ˆ
+ŠŒŠŠ‹‚‹HÜÝ\ÝÙY\^XÝY\œÚ\Ý[™YœÎˆ
+Š™]™[Ü
+ÈXZ[ˆ
+È™XÛÝ™\žK[Û›H\˜Ú]™JŠ‹‚‹Hœ˜[˜ÚÛX[\Y™XÞXÛNˆ
+Š‘VPÕQT‘ÑQRPQSUH
+ÈVPÒUÔ”SˆSUJŠ‹‚‹HZ[™\Ý[YHY\ˆÛX[\ÝXØÙ\ÜÎˆ
+ŠUUÔ’V‘Q”“ÓHÐS“Ó’PÐS]™[Ü
+Š‹‚‹HØ[Y\^KØÛÛ\[KÔQKÙ]šXÙKÝš\ÝX[Ü\™›Ü›X[˜ÙHX]\š]Nˆ
+Š•SÒS‘ÑQÈ“ÕÓRSQQ
+Š‹‚‚ˆÈÈŒ‹LKLÌH\ÝÜœ[ˆ™YˆÛÜÙ[Ý]‚‹HYØXÞH\˜Ú]™YÛÜšÚ[™È™YœÎˆ
+ŠŒˆÈˆSUQžHœ˜[˜ÚÛX[\ÌMÎÛÜÙ[Ý]
+Š‹‚‹H™XÛÝ™\žH[˜ÚÜŽˆ
+Š”‘TÑT•‘Q
+Šˆ]\˜Ú]™KÜ™KXZ[\Ø[˜YÙKLŒŒLÌ‚‹HÝ\\œÙYYˆÌMÎHXZ[[˜[˜ÙH™YŽˆ
+Š”UQUQQ“Ôˆ’SSÕPT‘QSUJŠ‹‚‹H^XÝYœ˜[˜ÚÙ]Y\ˆ\ÈY\™ÙHÛX[\ˆ
+Š™]™[Ü
+ÈXZ[ˆ
+ÈÛ™H™XÛÝ™\žK[Û›H\˜Ú]™H™YŠŠ‹‚‹HØ[Y\^KØÛÛ\[KÔQKÙ]šXÙKÝš\ÝX[Ü\™›Ü›X[˜ÙHX]\š]Nˆ
+Š•SÒS‘ÑQÈ“ÕÓRSQQ
+Š‹‚‚ˆÈÈŒ‹LKLÌHš[˜[œ˜[˜ÚZYÚY[™HØ]H™Y›Ü™HÛÛœÝXÝ[Ûˆ™\Ý[YB‚‹HYØXÞHœ˜[˜Ú\ÝÜšY\ÈØ\\™Y[ˆ™XÛÝ™\žH\˜Ú]™Nˆ
+ŠŒˆÈˆXYÈØ\\™Y
+Š‹‚‹H™XÛÝ™\žH\˜Ú]™Nˆ
+Š˜\˜Ú]™KÜ™KXZ[\Ø[˜YÙKLŒŒLÌMÙYMNYŒÌLÍLÍ™MÍÍÎY˜˜ÌXÌÎ™
+Š‹‚‹HØ\\™YYØXÞHÛÜšÚ[™È™YœÎˆ
+Š”UQUQQ“ÔˆÕPT‘QÔÕSQT‘ÑHSUJŠ‹‚‹H^XÝY\œÚ\Ý[™YœÈY\ˆÛX[\ˆ
+Š™]™[Ü
+ÈXZ[ˆ
+È™XÛÝ™\žH\˜Ú]™JŠ‹‚‹H›ÙXÝ[Û‹ÔQKÙ]šXÙKÝš\ÝX[Ü\™›Ü›X[˜ÙHX]\š]Nˆ
+Š•SÒS‘ÑQÈ“ÕÓRSQQ
+Š‹‚‚ˆÈÈŒ‹LKLÌH[™œ˜\ÝXÝ\™HYÚY[™HÛÜÙ[Ý]‚‹HXÝ]™H[›™\ˆ›ÛÝˆ
+Š”•S‹T“Õ‘SˆÛˆ—XÝ[ÛœË\[›™\˜
+Šˆœ›ÛHš[ÜˆÚ]XˆX[]šY[˜ÙNÈÝÛ™\‹\ÚYHš[˜[ÛX[\™\ÜÈÛÈ[›™\ˆ™\ÚYYHXœÙ[‚‹H\œÚ\Ý[Ø\™ZÝ\ÙH›ÛÝˆ
+Š˜—XÝ[ÛœË\[›™\—ÝØ\™ZÝ\ÙWÚ\™R›Ý\›™^X
+Š‹‚‹HÜÝY™KU[œ™X[Èœ˜[˜ÚÛX[\›Ý][™Îˆ
+Š”ÓÕTÑKÑÓÕ‘T“SÑH‘PÓÓÒSQ
+ŠˆÚ]Ý\œ™[ÛÜšÙ›ÝÈ]‚‹H^XÝY\™ÙYZXYœ˜[˜Ú[][Ûˆ
+È[Ý™YZXYÝX\™
+È™\›ËXZXY[™Nˆ
+Š”ÓÕTÑKRSTSQS•QÈ^XÝZXYÒH›ÛÙˆ[™[™ÈÛˆ\ÈXZ[[˜[˜ÙHØ]™JŠ‹‚‹HØ[Y\^KÔQKÙ]šXÙKÝš\ÝX[Ü\™›Ü›X[˜ÙHX]\š]Nˆ
+Š•SÒS‘ÑQÈ“ÕÓRSQQ
+Š‹‚‚ˆÈÈŒ‹LKLÌH[›™\ˆ›ÛÝZYÜ˜][Ûˆ]šY[˜ÙB‚‹HÙ[‹ZÜÝY[›™\ˆ›ÛÝˆ
+Š”•S‹T“Õ‘SˆÛˆ—XÝ[ÛœË\[›™\˜
+Š‹‚‹HØ\™ZÝ\ÙHY˜][›ÛÝˆ
+Š“RQÔUQÈ—XÝ[ÛœË\[›™\—ÝØ\™ZÝ\ÙWÚ\™R›Ý\›™^X
+Š‹‚‹H[\˜XÝ]™HØ]ÚÙËÜÙ\šXÙKY^Û\Ú[ÛˆÜÛÙÞH™[XZ[œÈH™\]Z\™Y^XÝ][Ûˆ[Ù[‚‹HÚ]XˆX[]šY[˜ÙH[˜ÛY\È•S“‘T—ÒPSÕÓÔ’ÔÔPÑWÔTÔÈ[\Q—XÝ[ÛœË\[›™\—ÝÛÜš×Ý[\[™•S“‘T—ÒPSÔTÔØ‚‹H\È[™œ˜\ÝXÝ\™H]šY[˜ÙHÙ\È›Ý›Û[ÝH[žHØ[Y\^KQKš\ÝX[]šXÙK\\™›Ü›X[˜ÙKÜˆÚ\\ˆX]\š]HÝ]\Ë‚‚ˆÈÈŒ‹LKLŽHH\›ÈÚÙ[][Ø[™Y]HXYÛ›ÜÝXÈ›ÝB‚‹Hš\œÝÜÝ[Y\™ÙHØ[™Y]HÛÜšÙ›ÝÈ˜Z[Y\š[™ÈØ[™Y]HÛÛœÝXÝ[ÛˆY\ˆÚXÚÛÝ]Ü[›™\‹Ü™Y›YÚÝXØÙ\ÜË‚‹HXYÛ›ÜÝXÈÝ]]\ÈYYÚ]Ý]™[^[™È–Ü›Ý™[˜[˜ÙKÜÚÙ[]Û‹ÜÚÚ[‹Ü™]\™Ù]ÙY›Ü›X][ÛˆØ]\Ë‚‹HÚ\˜XÝ\ˆš\ÝX[XÛÛ\][ÛˆÝ]\È™[XZ[œÈ[˜Ú[™ÙY‚‚‚ˆÈÈŒ‹LKLŽHHŒ‹L›ØY	ˆ[IÜÈY\™\ÛÝ\˜ÙK\™\\˜][Ûˆ›ÝB‚‹HŒ‹L\ÈHX^[][K\ØY™HÛÝ\˜ÙH\˜Ú]XÝ\™HÚ]ÍˆØ]YÛÜšY\ÈÈNH[™X\šÜÈÈH˜[šÜÈ[™ËLŒˆ›ÝXÝ[Û‹‚‹H\ÈØ]™H™\Ù\™\È™YYÙYH[Ý™[Y[›Ü™\ÜÈÜšY[][Û‹Ú]š[X[œËÝ\Y\È[™Y™[œÙH™\\˜][ÛˆÚ[HÙY\[™ÈŒ‹LHÛÛX˜]ÛÜÙY‚‹H]Ù\È›Ý›Û[ÝH\RH[[YHÚ\\ˆX]\š]HÜˆØ]H‹ÍÈÝ]\Ë‚‹H[[YHQ™[XZ[œÈ“ÕÐTÔÒQÓ‘QÑ×Ó“ÕÒS•‘S•‚‹H›ÈQKÙ]šXÙKÝš\ÝX[Ü\™›Ü›X[˜ÙHXØÙ\[˜ÙH\ÈYYžH\ÈØ]™K‚‚ˆÈÈŒ‹LKLŽHHPÌH\›ÈÚÙ[][Ø[™Y]H™\\˜][Û‚‚‹Hœ›ÙËÑØ[™[ˆ™X[XÚ\˜XÝ\ˆÛÜšÈY˜[˜Ù\Èœ›ÛHÙ[™\šXÈšYÈÝYÚ[™ÈÈ[ˆ^XÚ]˜[šÙY–Ø[™Y]KÔPÈØ]™K‚‹H\È\È›ÝHš\ÝX[XÛÛ\][Ûˆ›Û[Ý[ÛŽˆ[Ø[™Y]\È™[XZ[ˆP×Ô‘TURT‘Q[™›Ý‘PQWÑ“Ô—ÒSTÔ•žHY˜][‚‹HPÌHÝ^\ÈHÛÛH[[YKXÚ[™Ú[™ÈÚ\\ˆ[™NÈØ[™Y]H\ØÛÝ™\žHÝ^\È™\\˜][Û‹[Û›H[[[ˆ^XÚ]›Ý[™YQM[\ÜÚ[YÜ˜][ÛˆÝ\‚‹H›ÈQKÙ]šXÙKÝš\ÝX[Ü\™›Ü›X[˜ÙHXØÙ\[˜ÙH\ÈYYžH\ÈØ]™K‚‚ˆÈÈŒ‹LKLŽHHŒ‹LÈYÜ˜\ÈÛÝ\˜ÙK\™\\˜][Ûˆ›ÝB‚‹HŒ‹LÈ\ÈHX^[][K\ØY™HÛÝ\˜ÙH\˜Ú]XÝ\™HÚ]ÌˆØ]YÛÜšY\ÈÈŒ[™X\šÜÈÈ˜[šÜÈ[™ËLŒ›ÝXÝ[Û‹‚‹H\ÈØ]™H^[™ÈÛÝ\˜ÙH™\\˜][ÛˆÛ›Kˆ]Ù\È›Ý›Û[ÝH\RH[[YHÚ\\ˆX]\š]HÜˆØ]H‹ÍÈÝ]\Ë‚‹HHÚ\\ˆ\ÈÛÝ™\›™YžHH\›X[™[›Ë\ÝÜžK\ÚÜÝ]ÈÈ™\›Ë\Ú[[[ÛZ\ÜÚ[ÛˆÛÛ˜XÝ‚‹H[[YHQ™[XZ[œÈ“ÕÐTÔÒQÓ‘QÑ×Ó“ÕÒS•‘S•‚‹H›ÈQKÙ]šXÙKÝš\ÝX[Ü\™›Ü›X[˜ÙHXØÙ\[˜ÙH\ÈYYžH\ÈØ]™K‚‚ˆÈÈŒ‹LKLŽHHŒ‹Lˆ^XÝZXYÒH›Ý][™È™\Z\‚‚‹HHš\œÝ™XÛÛ˜Ú[Y™KU[œ™X[[ˆ˜Z[Y]ËLŒÈÛÛ[™ËYš[\ˆÛÝ™\˜YÙK›Ý]Ø[›Û‹Ü[[YKÜÛÝ\˜ÙKXÛÛ[˜[Y][Û‹‚‹H[œ™X[ÛÝ\˜ÙK[Û›Hš[\œÈ\™HÛÜœ™XÝY›Üˆ›Ý\Ú[™ˆ]Ë‚‹H›ÈÚ\\ˆÛÛ\][™\ÜÈÜˆ[[YHXØÙ\[˜ÙHÝ]\ÈÚ[™Ù\Ë‚‚ˆÈÈŒ‹LKLŽHHŒ‹Lˆ™XÛÛ˜Ú[X][Ûˆ›ÝB‚‹HŒ‹LˆÛÝ\˜ÙK\™\\˜][ÛˆY]Y]KÝÛÛ[™È\È™XÛÛ˜Ú[YÚ]H\›X[™[ÝÜžKÜÛÝ\˜ÙH[\ÈÚ]Ý]Ú[™Ú[™È[[YHÚ\\ˆX]\š]K‚‹HŒ‹Lˆ™[XZ[œÈÓÕTÑKÔ‘TTUSÓˆÓ“H[™\È›Ý\ÜÚYÛ™YH\RH[[YHQ‚‹HPËLÈÝÛœÈHŒ‹LˆÛÝ\˜ÙHØ]™HY\ˆPËLKÑPËLˆÙ\™H\ÜÚYÛ™YÈ\›X[™[ÝÜžKÜÛÝ\˜ÙH[™ØØ[^˜][ÛˆÛÝ™\›˜[˜ÙK‚‹H›È›ÙXÝ[Û‹XÛÛ\][™\ÜÈ›ÝÈ\È›Û[ÝYÈQKÙ]šXÙKÝš\ÝX[Ü\™›Ü›X[˜ÙHXØÙ\YžH\È™XÛÛ˜Ú[X][Û‹‚‚ˆÈÈŒ‹LKLŽH8 %ÝÜžKÜÛÝ\˜ÙHÛÛ\][™\ÜÈ[™ØØ[^˜][ÛˆÛÝ™\›˜[˜ÙH›ÝB‚‹HÝÜžKÜÛÝ\˜ÙHÛÛ\][™\ÜÈYš[š][Ûˆ\ÈÝ™[™Ý[™YÚ]Ý]›Û[Ý[™È[[YHX]\š]NˆÚ\\ˆ[›š[™È]\Ý›Ý]H[Y[[™HOˆš[KÜØÜ™Y[œ^HOˆÛÚY[ˆ˜\œ˜]]™KÐ\[™XÙ\ÈOˆÛÝ\˜Ù\È‹LLH[™^XÚ]H\ÜÜÚ][ÛˆYX[š[™Ù[\ØÛÝ™\™Y]Z[‚‹HÛÛ\]X›HÛÚY[ˆ›ÛÚË[Û›HÛÛ[X^H™H™X[Ø[Y\^HÚ[ˆ]™\Ù\™\È™\]Z\™Yš[HÝ]ÛÛY\ÎÈH[Y[[™H\È›ÝH]Z[ÙZ[[™È[™Ø]H‹ÍÈ\È›Ý\›Z\ÜÚ[ÛˆÈÚÜ[ˆ[›™YÝÜžHÛÝ™\˜YÙK‚‹HØØ[^˜][ÛˆÛÛ˜XÝ\È›ÝÈ^XÚ]ˆ[™Û\Ú“Ë\˜XšXÈÝX]\ËÕRKÛØš™XÝ]™\ËØ[›ÛšXØ[[™Û\ÚX\ØØ][ÛˆX™[ËÛÜœ™XÝ•™[™\š[™Ë‚‹H\ÈÛÝ™\›˜[˜ÙKÛÛ˜›Ø\™[™ÈØ]™HÚ[™Ù\È
+Š››ÈÚ\\ˆ›ÙXÝ[ÛˆÝ]\ÊŠˆ[ˆHX]š^[™Ý\Y\È›È™]ÈQKÙ]šXÙKÝš\ÝX[Ü\™›Ü›X[˜ÙH]šY[˜ÙK‚‚ˆÈÈŒ‹LKLŽHHŒ‹LH™YH[\œÈÈØ\]™\ÈX^[][K\ØY™HÛÝ\˜ÙHØ]™B‚‹HØ[›ÛšXØ[Œ‹LHØÛÜNˆ
+Š”‘QÒTÕT‘Q
+Š‹‚‹H\RH[[YHQX\[™Îˆ
+Š•STÔÒQÓ‘QÈÈ“ÕS•‘S•
+Š‹‚‹HZ\ÜÚ[Û‹ÜÝÜžKÝÛÜ›ÛÝ\˜ÙH™\šYšXØ][ÛŽˆ
+Š”ÓÕTÑKT‘U’QUÑQ
+Š‹‚‹HŒ‹Lˆ]\‹\Ý]H^Û\Ú[ÛŽˆ
+Š”‘TÑT•‘Q
+Š‹‚‹HÎXØ]YÛÜžHÈX˜[šÈÈŽXØ[™Y]HX[šY™\Ýˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹HMÈÛÛ™šYÝ\™Y[™X\šÈØ]YÛÜšY\ÈÈZ[š[][HM™XYNˆ
+Š”ÓÕTÑKRSTSQS•QÈVPÕUSÓˆS‘S‘ÊŠ‹‚‹HZ[š[][HÈÙˆ˜[šÜÈ™XYNˆ
+Š”ÓÕTÑKRSTSQS•QÈVPÕUSÓˆS‘S‘ÊŠ‹‚‹H˜Z\‹\Ú\™HØ[™Y]HØÚY[[™Îˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹H–[Û›H[š[X]YØ[™Y]\ÈÈ‘ËUÐH^\™HÛXÞHÈ“T™Z™XÝ[ÛŽˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹HÛX[ˆØ\™ZÝ\ÙH[™[ÜžH
+ÈˆÚPˆ™\Ù\™HØ]Nˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹HYXØ]YN[Z[]HÛÝ\˜ÙHÛÜšÙ›ÝÎˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹HËLŒˆ[[YKRQÜÛÝ\˜ÙH™YÜ™\ÜÚ[ÛˆÝX\™ˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹H\RH[[YH[YÜ˜][ÛŽˆ
+Š“ÐÒÑQS•SVPÒU•S•SQKRQPTS‘È
+ÈVTÕS‘È•S•SQHÐUTÊŠ‹‚‹H^XÝZXY™KU[œ™X[ˆ
+Š”S‘S‘ÊŠ‹‚‹HX]žHŒ‹LHÛÝ\˜ÙH^XÝ][ÛŽˆ
+Š”S‘S‘ÈÓPS‹RS•‘S•Ô–H•SŠŠ‹‚‹HQKÙ]šXÙKÝš\ÝX[ÜXÚ[™ËÜ\™›Ü›X[˜ÙHXØÙ\[˜ÙNˆ
+Š““ÕÓRSQQ
+Š‹‚‚ˆÈÈŒ‹LKLŽHHŒKL[[Ûˆ[ˆÈœ™XZÚ[™ÈÙˆH™[ÝÜÚ\X^[][K\ØY™HÛÝ\˜ÙHØ]™B‚‹HØ[›ÛšXØ[ŒKLÈPÌX\[™Îˆ
+Š”‘QÒTÕT‘QÈ“È•S•SQH‘S•SP‘T’S‘ÊŠ‹‚‹HZ\ÜÚ[Û‹ÜÝÜžKÝÛÜ›ØÚ\˜XÝ\ˆÛÝ\˜ÙH™\šYšXØ][ÛŽˆ
+Š”ÓÕTÑKT‘U’QUÑQ
+Š‹‚‹H›Ü›ÛZ\ˆ˜YÚXËÜ™Y[\]™HÝX\™˜Z[ˆ
+Š”‘TÑT•‘Q
+Š‹‚‹HÍXØ]YÛÜžHÈËX˜[šÈÈXØ[™Y]HX[šY™\Ýˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹HNÛÛ™šYÝ\™Y[™X\šÈØ]YÛÜšY\ÈÈZ[š[][HM™XYNˆ
+Š”ÓÕTÑKRSTSQS•QÈVPÕUSÓˆS‘S‘ÊŠ‹‚‹HZ[š[][HˆÙˆÈ˜[šÜÈ™XYNˆ
+Š”ÓÕTÑKRSTSQS•QÈVPÕUSÓˆS‘S‘ÊŠ‹‚‹H˜Z\‹\Ú\™HØ[™Y]HØÚY[[™Îˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹H][KX˜[šÈ]\™H[[YH™\ÚY[˜ÞH›Y\š[ˆ
+Š”ÓÕTÑKRSTSQS•QÈ•S•SQH“ÕÔSŠŠ‹‚‹H–[Û›H[š[X]YØ[™Y]\ÈÈ‘ËUÐH^\™HÛXÞHÈ“T™Z™XÝ[ÛŽˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹HÛX[ˆØ\™ZÝ\ÙH[™[ÜžH
+ÈˆÚPˆ™\Ù\™HØ]Nˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹HYXØ]YN[Z[]HÛÝ\˜ÙHÛÜšÙ›ÝÎˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹HËLŒH™YÜ™\ÜÚ[ÛˆÝX\™ˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹HPÌ[[YH[YÜ˜][ÛŽˆ
+Š“ÐÒÑQS•SPÌÈÐUH‹ÍÈPÐÑTQ
+Š‹‚‹H^XÝZXY™KU[œ™X[ˆ
+Š”S‘S‘ÊŠ‹‚‹HX]žHŒKLÛÝ\˜ÙH^XÝ][ÛŽˆ
+Š”S‘S‘ÈÓPS‹RS•‘S•Ô–H•SŠŠ‹‚‹HQKÙ]šXÙKÝš\ÝX[ÜXÚ[™ËÜ\™›Ü›X[˜ÙHXØÙ\[˜ÙNˆ
+Š““ÕÓRSQQ
+Š‹‚‚ˆÈÈŒ‹LKLŽHHY\]™HX^[][HØY™H›ÙXÝ[Ûˆ[ÙHŒB‚‹HX^[][K\ØY™H›ÙXÝ[ÛˆÛÝ™\›˜[˜ÙH
+PËLÎÈ‘TKT“ÑLLX
+Nˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹HXXÚ[™K\™XYX›HØ\XÚ]KÙ^XÝ][Ûˆ[Žˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹HÚÛKYØ[YH]Y]YHX^[][K\ØY™H[ÙNˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹HX\Ý\ˆ›ØYX\Ý[HÌÛÛ›Û\Ý]H™XÛÛ˜Ú[X][ÛŽˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹H\˜[[™\\˜][Ûˆ[™\È
+ÈÚ[™ÛH[[YH[™Nˆ
+Š‘ÓÕ‘T“‘Q
+Š‹‚‹H\œÚ\Ý[Ø\™ZÝ\ÙHÚ[™ÛK]Üš]\ˆ[Nˆ
+Š‘ÓÕ‘T“‘Q
+Š‹‚‹HØ\™ZÝ\ÙHÌŽˆXÝ]™K\™XÙZ\[™[ÜžH]Y]ˆ
+Š”TÔÈ8 %NŽMÈ^[ØYš[\ÈÈ‹ŽMËHž]\ÈÈŒÎHXÝ]™HÈŽÝ\\œÙYYÈ\XØ]H\ÚÜ›Ý\ÊŠ‹‚‹HØ\™ZÝ\ÙHÌŽˆ[ÛÜšÙ›ÝÎˆ
+Š‘RSQQ•TˆÓPSˆUQU8 %ÐUTUSÓˆ‘TÔ•Õ’PÕSÑHSTKTÕSHQ‘PÕ
+Š‹‚‹H[\K\ØY™HØ]\˜][Ûˆž]HYÙÜ™YØ][ÛŽˆ
+Š”ÓÕTÑKT‘TRT‘Q
+Š‹‚‹HØ]\˜][Ûˆ[\K[[™H™YÜ™\ÜÚ[Ûˆ\Ý[ˆ™KU[œ™X[ˆ
+Š”ÓÕTÑKRSTSQS•QÈVPÕRPQVPÕUSÓˆS‘S‘ÊŠ‹‚‹HPÌHÛÜÝ\™HXÚÈÛÛ[X][ÛŽˆ
+Š“‘VQ•TˆÑSPÕU‘HÐT‘RÕTÑHRSˆÔ‘QSŠŠ‹‚‹HŒKLÈÛÝ\˜ÙH\˜Ú]XÝ\™Nˆ
+Š”TSSSQUSÓˆS‘JŠ‹‚‹HŒKLX^[][K\ØY™HYYØHÛÝ\˜ÙHØ]™Nˆ
+Š“‘VÓÕTÑH“ÑPÕSÓˆÐU‘JŠ‹‚‹H[[YHØ]H‹ÍÈÈQHÈ]šXÙHÈš\ÝX[ÈXÚ[™ÈÈ\™›Ü›X[˜ÙHXØÙ\[˜ÙNˆ
+Š•SÒS‘ÑQÈ“ÕÓRSQQ
+Š‹‚‚ˆÈÈŒ‹LKLŽHHŒKLÈ0ìÜšY[ˆ	ˆ[™Z[ˆ[™X\šÈÛÝ\˜ÙH™\\˜][Û‚‚‹HØ[›ÛšXØ[ŒKLÈØÛÜHÈPÌÈX\[™Îˆ
+Š”‘QÒTÕT‘Q
+Š‹‚‹HŒKL™[ÝÜÚ\Xœ™XZÈ›Ý[™\žNˆ
+Š‘VPÒUH‘TÑT•‘Q
+Š‹‚‹H‹XØ]YÛÜžHÈNXØ[™Y]HÚ\™YÛÝ\˜ÙHX[šY™\Ýˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹H‹ØØ]YÛÜžHÙZ[[™ÈÈ[™X\šÈØÛÜ™H›Û\ÈÎˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹HZ[š[][HLÜ[]Y[™X\šÈØ]YÛÜšY\Îˆ
+Š”ÓÕTÑKRSTSQS•QÈVPÕUSÓˆS‘S‘ÊŠ‹‚‹HÝ0ìÜšY[ˆ™\XØ[›]ØØ[›ÜH[™X\šÈY[]Nˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹H[™Z[ˆš]™\‹X^\ËØÛY™‹ÜÝÛ™K[[Û[Y[Ð[[Ûˆ[ˆ\›ØXÚY[]Nˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹H–[Û›H[š[X]YØ[™Y]Hš[\ˆÈ“T™Z™XÝ[ÛŽˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹H[™[ÜžKXÛX[ˆ\™Ø]Nˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹HYXØ]YN[Z[]HŒKLÈÛÜšÙ›ÝÎˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹HËLŒ™YÜ™\ÜÚ[ÛˆÛÝ™\˜YÙNˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹HX]žHÛÝ\˜ÙHÛÜšÙ›ÝÈ^XÝ][ÛŽˆ
+Š“ÐÒÑQS•SÐT‘RÕTÑHS•‘S•Ô–HÓPSŠŠ‹‚‹HPÌÈ[[YH[YÜ˜][ÛŽˆ
+Š“ÐÒÑQS•S‘QPÑTÔÓÔˆÐUHPÐÑTQ
+Š‹‚‹H^XÝZXYÝ]XÈ˜[Y][ÛŽˆ
+Š”S‘S‘ÊŠ‹‚‹HQKÙ]šXÙKÝš\ÝX[ÜXÚ[™ËÜ\™›Ü›X[˜ÙHXØÙ\[˜ÙNˆ
+Š““ÕÓRSQQ
+Š‹‚‚ˆÈÈŒ‹LKLŽHHØ\™ZÝ\ÙHXÝ]™K\›Ý™[˜[˜ÙHÝ\\œÙ\ÜÚ[Ûˆ™\Z\‚‚‹H\ÝÜšXØ[™XÙZ\™\Ù\˜][ÛŽˆ
+Š”‘URS‘QÈ“È‘PÑRT‘UÔ’UJŠ‹‚‹HXÝ]™H›Ý™[˜[˜ÙHÙ[XÝ[ÛŽˆ
+Š”ÓÕTÑKRSTSQS•Q8 %]\Ý˜[Y™XÙZ\\ˆ›Ü›X[^™Y^[ØY]
+Š‹‚‹HÚ[™ÝÜÈØ\ÙKÜÛ\Ú]ÛØ[\ØÚ[™Îˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹HÝ\\œÙYY\ÝÜšXØ[\Ú™XÛÜ™Îˆ
+Š““Ó‹QRSS‘ÈTÕÔ–HÈ‘TÔ•Q
+Š‹‚‹HXÝ]™H]\Ý\™XÙZ\\ÚZ\ÛX]Úˆ
+Š’T‘RS‘SPRS”ÈS‘“ÔÑQ
+Š‹‚‹HÞ[]XÈŒHOˆŒˆÝ\\œÙ\ÜÚ[Ûˆ™YÜ™\ÜÚ[ÛŽˆ
+Š”ÓÕTÑKRSTSQS•QÈ‘KUS”‘PSVPÕUSÓˆS‘S‘ÊŠ‹‚‹H\œÚ\Ý[Ø\™ZÝ\ÙH[™[ÜžHÛX[ˆÝ]Nˆ
+Š”S‘S‘È‘T•SŠŠ‹‚‹HPÌHÛÜÝ\™HXÚÈÛÛ[X][ÛŽˆ
+Š“ÐÒÑQS•ST”ÒTÕS•UQUTÔÑTÊŠ‹‚‹H[[YKÔQKÙ]šXÙKÝš\ÝX[ÜXÚ[™ËÜ\™›Ü›X[˜ÙHXØÙ\[˜ÙNˆ
+Š•SÒS‘ÑQÈ“ÕÓRSQQ
+Š‹‚‚ˆÈÈŒ‹LKLŽHH[\˜XÝ]™HÜ˜Ú\Ý˜][Ûˆ™\ÜÛœÚ]™[™\ÜÂ‚‹H™\X]YØ[YK\[ˆ[\˜XÝ]™HÛ™ÈÛ[™Îˆ
+Š”“ÒP’UQ–HPËLÍJŠ‹‚‹H›Ý[™YÝ]\ÈÚXÚÜÈ
+È]]ÛX][ÛˆÛÛ[X][ÛŽˆ
+Š‘ÓÕ‘T“‘Q
+Š‹‚‹HˆÌMLÈ^XÝZXY™KU[œ™X[ÌLÍÎNˆ
+Š”ÕPÐÑTÔÊŠ‹‚‹HˆÌMLÈ^XÝZXY[œ™X[ÌLMNˆ
+Š”ÕPÐÑTÔÊŠ‹‚‹HØ]H‹ÍÈÈQHÈ]šXÙHÈš\ÝX[È\™›Ü›X[˜ÙHÜš]\šXNˆ
+Š•SÒS‘ÑQ
+Š‹‚‚ˆÈÈŒ‹LKLŽHHŒKLˆ[™X\šÈØÛÜš[™Èš[Üš]B‚‹HÛÛ™šYÝ\˜X›H[™X\šÈØÛÜ™H›Û\È
+ŠNˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹HËLNNHZ[š[][H[™X\šË\ØÛÜ™H™YÜ™\ÜÚ[ÛˆÝX\™ˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹H\XØ]HˆÌMLŽˆ
+ŠÓÔÑQÈ“ÕQT‘ÑQ
+Š‹‚‹HˆÌMLÈ^XÝZXY™KU[œ™X[Õ[œ™X[Y\ˆØÛÜš[™È\]Nˆ
+Š”S‘S‘ÊŠ‹‚‹Hš\ÝX[XØÙ\[˜ÙNˆ
+Š““ÕÓRSQQ
+Š‹‚‚ˆÈÈŒ‹LKLŽHHËLNNH[™X\šËÑŒKLˆÝX\™‚‹H\H[™X\šËÑŒKLˆÝ]XÈ™YÜ™\ÜÚ[ÛˆÝX\™ˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹H^XÝZXY™KU[œ™X[˜[Y][ÛˆY\ˆËLNNNˆ
+Š”S‘S‘ÊŠ‹‚‹Hš\ÝX[Ü[[YHXØÙ\[˜ÙNˆ
+Š““ÕÓRSQQ
+Š‹‚‚ˆÈÈŒ‹LKLŽHH\H[™X\šÈY[]HÈŒKLˆØ\˜Y˜\ËS[ÜšXHÛÝ\˜ÙHYYØHXÚÂ‚‹H\H[™X\šÈY[]H[Žˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹HÚ\™KÒØ˜š]Ûˆ
+È˜YÈ[™[™X\šÈ[˜ÚÜœÎˆ
+Š”S“‘QÈÕT”‘S•PÒTTˆ’TÕPSPÐÑTSÑHS‘S‘ÊŠ‹‚‹Hœ™YKÕÙX]\Ü[™X\šÈ[˜ÚÜœÎˆ
+Š”ÓÕTÑKT‘TT‘QÈ’TÕPSPÐÑTSÑH“ÕÓRSQQ
+Š‹‚‹Hš]™[™[[™X\šÈ[˜ÚÜŽˆ
+Š”ÓÕTÑKPTÒUPÕT‘H‘PQHÈPU–HVPÕUSÓˆS•‘S•Ô–KQÐUQ
+Š‹‚‹HØ\˜Y˜\ËÓ[ÜšXH[™X\šÈ[˜ÚÜœÎˆ
+Š”ÓÕTÑKPTÒUPÕT‘H‘PQHÈPU–HVPÕUSÓˆS•‘S•Ô–KQÐUQ
+Š‹‚‹HŒKLˆXØ]YÛÜžHÈM‹XØ[™Y]HX[šY™\Ýˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹H[™X\šÈÛÝ™\˜YÙH™\Ü
+ÈZ[š[][K\ÛÝ\˜ÙHØ]Nˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹H–[Û›H[š[X]YØ[™Y]Hš[\ˆÈ“T™Z™XÝ[ÛŽˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹HYXØ]YN[Z[]HŒKLˆÛÜšÙ›ÝÎˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹HPÌKÔPÌˆ[[YH[YÜ˜][ÛŽˆ
+Š“ÐÒÑQS•S‘QPÑTÔÓÔˆÐUHPÐÑTQ
+Š‹‚‹H^XÝZXYÝ]XÈ˜[Y][ÛŽˆ
+Š”S‘S‘ÊŠ‹‚‹HQKÙ]šXÙKÝš\ÝX[ÜXÚ[™ËÜ\™›Ü›X[˜ÙHXØÙ\[˜ÙNˆ
+Š““ÕÓRSQQ
+Š‹‚‚ˆÈÈŒ‹LKLŽHHØ\™ZÝ\ÙHZ\ÛX]ÚXYÛ›ÜÝXÈ\™[š[™Â‚‹HPÌHÛÜÝ\™HXÚÈÌˆ[™[ÜžH]Y]ˆ
+Š’T‘ÕÔÈ\ÚZ\ÛX]ÚLJŠ‹‚‹H^XÝ\Ú[Z\ÛX]ÚÙÈ]šY[˜ÙNˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹H^XÝXÙ[œÙKZ\ÚÛZ\ÜÚ[™Ë\™Y™\™[˜ÙHÙÈ]šY[˜ÙNˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹H]]ÛX]XÈ[][Û‹Ü]X\˜[[™KÜ™XÙZ\™]Üš]Nˆ
+Š““ÕUUÔ’V‘QÈ“ÕSTSQS•Q
+Š‹‚‹HZ\ÛX]Ú™XÛÜ™Y[YšXØ][ÛˆžH™\[Žˆ
+Š”S‘S‘ÊŠ‹‚‹HØ\™ZÝ\ÙHÛX[ˆÝ]Nˆ
+Š““ÕÓRSQQ
+Š‹‚‹HPÌHÛÜÝ\™HÛÛ[X][ÛŽˆ
+Š“ÐÒÑQS•SS•‘S•Ô–H‘TRT‘QÔˆU’QSÑKTUPTS•S‘Q
+Š‹‚‚ˆÈÈŒ‹LKLŽHHŒKLHš]™[™[	ˆ™[ÝÜÚ\YYØHÛÝ\˜ÙH™\\˜][Û‚‚‹HØ[›ÛšXØ[ŒKLHÛÝ\˜ÙHØÛÜNˆ
+Š”‘QÒTÕT‘Q
+Š‹‚‹H[[YHÛÛœÝ[Y\ˆPÌX\[™Îˆ
+Š”‘PÓÔ‘Q
+Š‹‚‹HŒXØ]YÛÜžHÈL‹XØ[™Y]HÚ\™YÛÝ\˜ÙHX[šY™\Ýˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹H[™[ÜžKXÛX[ˆ\™Ø]Nˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹H–[Û›H[š[X]YØ[™Y]Hš[\Žˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹H“T^\™H™Z™XÝ[ÛŽˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹HYXØ]YN[Z[]HŒKLHÛÜšÙ›ÝÎˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹HX]žHÛÜšÙ›ÝÈ^XÝ][ÛŽˆ
+Š“ÐÒÑQS•SÐT‘RÕTÑHS•‘S•Ô–HÓPSŠŠ‹‚‹HPÌ[[YH[YÜ˜][ÛŽˆ
+Š“ÐÒÑQS•S‘QPÑTÔÓÔˆÐUHPÐÑTQ
+Š‹‚‹H^XÝZXYÝ]XÈ˜[Y][ÛŽˆ
+Š”S‘S‘ÊŠ‹‚‹HQKÙ]šXÙKÝš\ÝX[ÜXÚ[™ËÜ\™›Ü›X[˜ÙHXØÙ\[˜ÙNˆ
+Š““ÕÓRSQQ
+Š‹‚‚ˆÈÈŒ‹LKLŽHHŒKLœ™YH	ˆÙX]\ÜYYØHÛÝ\˜ÙH™\\˜][Û‚‚‹HØ[›ÛšXØ[ŒKLÛÝ\˜ÙHØÛÜNˆ
+Š”‘QÒTÕT‘Q
+Š‹‚‹H[[YHÛÛœÝ[Y\œÈPÌˆ
+ÈPÌÈX\[™Îˆ
+Š”‘PÓÔ‘QÈ“È•S•SQH‘S•SP‘T’S‘ÊŠ‹‚‹HM‹XØ]YÛÜžHÚ\™YØ\™ZÝ\ÙHÛÝ\˜ÙHX[šY™\Ýˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹HÚ\™Y\ÝØÚÈ[™^\ˆÚ]LÝ[Ø[™Y]HÙZ[[™Îˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹H[š[X]YØ[™Y]H–[Û›Hš[\Žˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹H“T^\™H™Z™XÝ[ÛŽˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹H\ÛÛ]YN[Z[]HŒKL™\\˜][ÛˆÛÜšÙ›ÝÎˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹H[[YH[YÜ˜][ÛˆPÌ‹ÔPÌÎˆ
+Š“ÐÒÑQS•S‘QPÑTÔÓÔˆÐUHPÐÑTQ
+Š‹‚‹H^XÝZXY™KU[œ™X[˜[Y][ÛŽˆ
+Š”S‘S‘ÊŠ‹‚‹HÛÝ\˜ÙHÛÜšÙ›ÝÈ^XÝ][ÛˆÛˆ]™[Üˆ
+Š”S‘S‘ÊŠ‹‚‹HQKÙ]šXÙKÝš\ÝX[ÜXÚ[™ËÜ\™›Ü›X[˜ÙHXØÙ\[˜ÙNˆ
+Š““ÕÓRSQQ
+Š‹‚‚ˆÈÈŒ‹LKLŽHH›ÙXÝ[Ûˆ˜Z[ˆ›ÛÝ\™\Z\ˆØ]™B‚‹H]™[Ü™KU[œ™X[ÌLÍŒÎˆ
+Š”ÕPÐÑTÔÊŠ‹‚‹H]™[Ü[œ™X[ÌLNˆ
+Š”ÕPÐÑTÔÊŠ‹‚‹HPÌHÚ\\ˆÛÜÝ\™HXÚÈÌNˆ
+Š‘RSQQ•TˆÕÔQÑHTÔÈÈÓÓS‘ÈVUTÕUHQ‘PÕ
+Š‹‚‹HØ\™ZÝ\ÙHÌŽÈX]\šX[[ZÙNˆ
+ŠŽ‘TT‘QÈÐÐSÑS‘TUQÓÓSRUÔ‘PUQÈ‘SSÕHÓÒÕTRSQ‘Q“Ô‘HP“TÒ
+Š‹‚‹H\HÚ\\ˆ™\\˜][Ûˆ˜Z[ˆÌNˆ
+Š‘RSQT’S‘ÈÕÑT”ÒSKŒH‘TÔ•PUT’PSVUSÓŠŠ‹‚‹HÙ\]Y[X[Ú\\ˆ]Y]YHÌNˆ
+Š”ÕPÐÑTÔÈÈÐRUÕUHÓ“Ô‘QÈPÌˆ•S•SQH“Õ‘SPTÑQ
+Š‹‚‹H]\›Z[š\ÝXÈÛÜÝ\™HÚ[\›ØÙ\ÜÈ^][™[™Îˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹HÙ[™\˜]YXœ˜[˜ÚË\™[[ÝH™]žKÙ^]Ø\\™Nˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹H\HÙ[™\šXË[\ÝÐ\œ˜^HÙ\šX[^˜][ÛˆÝX\™ˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹HËLNMˆÝ]XÈ™YÜ™\ÜÚ[ÛˆÛÝ™\˜YÙNˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹Hœ™\Ú^XÝZXY˜[Y][Û‹Ü™\[œÎˆ
+Š”S‘S‘ÊŠ‹‚‹HQKÙ]šXÙKÝš\ÝX[ÜXÚ[™ËÜ\™›Ü›X[˜ÙHXØÙ\[˜ÙNˆ
+Š““ÕÓRSQQ
+Š‹‚‚ˆÈÈŒ‹LKLŽHHÌLˆ\™XÝTQÐÒSH™XÛÝ™\žH™Yš[™[Y[‚‹H™KU[œ™X[ÌLÍŒÛˆš[Üˆ^XÝXYNØ‹‹˜ˆ
+Š”ÕPÐÑTÔÊŠ‹‚‹H[œ™X[ÌLŽˆ
+Š‘RSQUÕSHÒHÓÓSPS‘U‘PÓÕ‘T–JŠˆY\ˆ\ÚÚÚ[ÕÑ˜ÛÝ[›Ý\›Z[˜]HQMM‚‹H\™XÝQ\ÚÚÚ[˜[˜XÚÎˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹HÒSHÚ[ŒÌ—Ô›ØÙ\ÜË•\›Z[˜]X˜[˜XÚÈ
+È™]\›‹]˜[YH]šY[˜ÙNˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹Hœ™\Ú^XÝZXY™KU[œ™X[ˆ
+Š”S‘S‘ÊŠ‹‚‹Hœ™\Ú^XÝZXY[œ™X[Z[Ú[\Üˆ
+Š”S‘S‘ÊŠ‹‚‹HPÌHÚ\\ˆÛÜÝ\™HYYØHXÚÎˆ
+Š““ÕQU‘SPTÑQÈVPÕRPQS”‘PSÐUHÕS‘TURT‘Q
+Š‹‚‹HQKÙ]šXÙKÝš\ÝX[ÜXÚ[™ËÜ\™›Ü›X[˜ÙHXØÙ\[˜ÙNˆ
+Š““ÕÓRSQQ
+Š‹‚‚ˆÈÈŒ‹LKLŽHHÌLÍNÈÌLÝ[HÛÛ[X[™]™XÛÝ™\žH™Yš[™[Y[‚‹H™KU[œ™X[ÌLÍNˆ
+Š‘RSQÓ“HUQÐPÖHËLMHÐRUTˆÒTHÒPÒÊŠ‹‚‹H[œ™X[ÌL›ØÚÙ\ˆQMMˆ
+ŠÒHÓÓSPS‘UQS•UHÐTT‘Q
+Šˆ
+QMY]Ü‹PÛYÈÚ\™R›Ý\›™^HPHÈØ[YH[\˜XÝ]™HÝÛ™\ˆÈÜœ[™Y\™[ÈŒŒZ[ˆÛ
+K‚‹H›Ý[™YÝ[KXÛÛ[X[™]›ØÙ\ÜË]™YH™XÛÝ™\žNˆ
+Š”ÓÕTÑKRSTSQS•Q
+Š‹‚‹H[\˜XÝ]™HY]ÜˆÚ[XžK[˜[YNˆ
+Š‘“Ô’QSˆÈ“ÕS•“ÑPÑQ
+Š‹‚‹HËLMH
+ÈËLNMHÝ]XÈ™YÜ™\ÜÚ[ÛˆÛÝ™\˜YÙNˆ
+Š”ÓÕTÑKUTUQ
+Š‹‚‹Hœ™\Ú^XÝZXY™KU[œ™X[ˆ
+Š”S‘S‘ÊŠ‹‚‹Hœ™\Ú^XÝZXY[œ™X[Z[Ú[\Üˆ
+Š”S‘S‘ÊŠ‹‚‹HPÌHÚ\\ˆÛÜÝ\™HYYØHXÚÈ^XÝ][ÛŽˆ
+Š“ÐÒÑQS•S‘TURT‘QVPÕRPQÐUTÈT“ˆÔ‘QSŠŠ‹‚‹HQKÙ]šXÙKÝš\ÝX[ÜXÚ[™ËÜ\™›Ü›X[˜ÙHXØÙ\[˜ÙNˆ
+Š““ÕÓRSQQ
+Š‹‚‚ˆÈÈŒ‹LKLŽHHÛÛ[[Ý\È\H™\\˜][Ûˆ˜Z[ˆÈ[œ™X[ÌLŽ›ØÙ\ÜÈÝÛ™\œÚ\™\Z\‚‚‹H[œ™X[Z[ÌLŽY]ÜˆÛÛ\[Nˆ
+ŠÓÓTSHÕTÕPÐÑTÔÊŠˆÛˆš[Üˆ^XÝXYÍÍ™MLŒYK‹‹˜‚‹H[œ™X[Z[ÌLŽ›ÙXÝ[Ûˆ[\Üˆ
+Š“ÐÒÑQ‘Q“Ô‘HSTÔ•
+ŠˆžH“ÑPÕSÓ—ÒSTÔ•Ô‘Q“QÒÑw÷¿u¶‰žËkºwµç[™[ÛÈ™Z™XÝÈ[žH[Ý™[Y[™[X\ÙHœ›ÛHH™KYš[˜[^˜][ÛˆÛÛ[Z]Ù]\‚‚”Ý]\Îˆ
+Š”ÕUPËUSQUQÈ•S“‘Tˆ
+ÈQH“ÓÑˆS‘S‘ÊŠ‹ˆH^Y\‹Y˜[[™È\ÜÝYH™[XZ[œÈÜ[ˆ[[œ™\ÚQMŒÈÛÛ\[KÜ[[YH]šY[˜ÙH[™™X[QHØœÙ\˜][ÛˆÛÛ™š\›HÝX›HÜ›Ý[™[™Ë‚‚ˆÈÈŒ‹LKLH^Y\ˆ˜[[™ÈÈÜ›Ý[™[™ÈÛÛ[Z]˜\œšY\ˆ›ÛÝš^‚”™X[QH]šY[˜ÙHÚÝÙYH^Y\ˆØ[ˆÝ[˜[\Ü]HHX\›Y\ˆÜ›Ý[™[™ÈÙÚXËˆ›ÛÝ™]šY]È›Ý[™]Ú\\•ÛÜ››Ý]\˜™\ÛÛ™YHÜ›Ý[™YXÙ[Y[]X›\ÚYHÛÜ›\ÈÛÛ[Z]Y[™™[X\ÙY[Ý™[Y[™Y›Ü™H›Ýš[™ÈÚ\˜XÝ\“[Ý™[Y[YXÝX[HÙ]YÛˆ›ØÚÚ[™ÈÜ›Ý[™ˆH™]š[Ý\ÈÝXš[]HÚXÚÈØ\ÈÒK[Û›H[™ÙË[Û›K‚‚”›ÛÝš^\YY‚‹HÛÜ›ÛÛ[Z]\È›ÝÈÛË\\ÙK‹H^Y\ˆ™[XZ[œÈ˜[œÚ][Û‹Z[Ú[HÚ\˜XÝ\“[Ý™[Y[Ù]\Ë‹HÜ›Ý[™[™ÈÝXš[]H\ÈÚXÚÙY™Y›Ü™HÛÜ›™]š\Ú[Û˜ÈÛ•ÛÜ›ÛÛ[Z]YX›XØ][Û‹‹HÛ™H›Ý[™Y™KYÜ›Ý[™][\\È[ÝÙY‹H\œÚ\Ý[[œÝXš[]HÙY\ÈH^Y\ˆ[[™šYÙÙ\œÈ›Û˜XÚÈ[œÝXYÙˆ™[X\Ú[™ÈH]Ûˆ[ÈH˜[‹HÝXØÙ\ÜÙ[ÝXš[]H\È›ÝÈHÛÛ™][Ûˆ]X›\Ú\ÈHÛÜ›[™™[X\Ù\È[Ý™[Y[‚‚Ú[™ÙYš[\Î‚‹HÛÝ\˜ÙKÔÚ\™R›Ý\›™^KÔš]˜]KÕÛÜ›ÐÚ\\•ÛÜ››Ý]\‹˜Ü‹HÛÝ\˜ÙKÔÚ\™R›Ý\›™^KÔX›XËÕÛÜ›ÐÚ\\•ÛÜ››Ý]\‹š‚”Ý]\ÎˆÕUPËUSQUQÈÓÓTSKPS‘TQKT“ÓÑ‹TS‘S‘ËˆÈ›ÝÛZ[HH˜[[™È\ÜÝYH\ÈÛÜÙY[[Hœ™\ÚQMŒÈÛÛ\[H[™™X[QHØœÙ\˜][ÛˆÚÝÈÝX›HÜ›Ý[™[™ÈÚ]Ý]˜[[™Ë‚‚ˆÈÈŒ‹LKLHÌXÚØYÙH]™Ò[ÛXÞK[™ËLˆ™\Z\‚‚“]™HˆÍŽHXYMÙ™MÍÎMÙNYYMØÙY˜X™L™˜ÌÎYMÌ›ÙXÙY™YHXÚ\Ú]™HÚYÛ˜[Î‚‚‹H™KU[œ™X[Î˜Z[YÛ›H]ËLˆ™XØ]\ÙHH˜[Y]ÜˆÝ[™\]Z\™Y]\˜[Ø[˜Ù[Z[‹\›ÙÜ™\ÜÎˆ˜[ÙX‚‹H[œ™X[ÍÈÛÛ\]YY]ÜˆZ[›ÙXÝ[Ûˆ[\Ü]]ÛX][ÛˆPKXY\ÜÈÝ\\PÌKTPÌ[[YH]Y]›Ý]KÜÝÜžH›Ý[™š\[™Ø\›š[™ËYXÝX\™ÝXØÙ\ÜÙ[K‚‹HHØ[YH[œ™X[ÍÈY
+Š››Ý
+ŠˆXÚØYÙHÝXØÙ\ÜÙ[H\Ü]HHÚ]XˆXÚØYÙHÝ\™Z[™ÈX\šÙYÝXØÙ\ÜÎˆPU™XXÚY›Û•Q”ÈÝYÚ[™Ë™\X]YH˜Z[YÜš][™ÈH\Ý[˜][ÛˆÚ[™ÝÜÓ›ÑY]Ü‹Ñ[™Ú[™KÐš[˜\šY\ËÕ\™\KÑ™Ò[Ù™Ú[™Ú]XØÙ\ÜÈ[šYY[ˆÙÙÙY^]ÛÙOLXÈ•RSRSQˆH[›™\ˆÛÛ^\È™]ÛÜšÔÙ\šXÙKˆH›ÛÝÚ[™ÈÍËÌÍÈRTÔÒS‘×Ô•S•SQWÑUX™\Ý[\È\™Y›Ü™HÝÛœÝ™X[HÙˆ[˜ÛÛ\]HÝYÚ[™È[™\È›ÝXØÙ\Y\ÈHš[˜[[[YH]H™\™XÝ‚‚•\È™\Z\ˆ\Y\È›Ý\ˆ›Ý[™YÚ[™Ù\È™Y›Ü™H[›Ý\ˆXØÙ\[˜ÙH[Ž‚‚‹HÒHØ[YH\™Ù][\È\ØX›HQIÜÈ[™Y™Ò[Û›HÚ[ˆÒT‘WÐÒWÓ“×ÑP•QÒS‘“ÏLXÈ›Ü›X[ØØ[Ø[YHZ[ÈÙY\HY˜][ÛXÞK‚‹HÚWÜXÚØYÙWÝÌœÌX›Ý™\ÈH™Ò[ÛÝ\˜ÙH\È™XYX›H[™H^XÝ™\ÝY\Ý[˜][Ûˆ\ÈÜš]X›H™Y›Ü™HPU[ˆØ[ÈØZ]›Ü‘^]È™Yœ™\Ú™Z™XÝÈH[^]ÛÙK[™›ÜYØ]\ÈHÛÛ˜Ü™]HPUÛÙK‚‹HËLˆXØÙ\ÈØ[˜Ù[][ÛˆÛ›HÚ[ˆHÛÜšÙ›ÝÈ\Ù\ÈH^XÝXØÙ\[˜ÙKÊ˜XY\™Yˆ^™\ÜÚ[ÛŽÈ[˜ÛÛ™][Û˜[Üˆœ›ØY\ˆØ[˜Ù[][Ûˆ™[XZ[œÈ[˜[Y‚‹HH[œ™X[Û\ÜÚYšY\ˆ™X]ÈHØ[YH\™Ù]˜ÜØ\ÈXØÙ\[˜ÙK[Û›H
+Š›Û›JŠˆÚ[ˆ]È[\™HY™ˆ\ÈHÒH™Ò[ÝX\™ˆ[žHÝ\ˆ\™Ù]˜ÜÈÚ[™ÙH™[XZ[œÈ[‚‚”Ý]\Îˆ
+Š”ÕUPËUSQUQÈ•S“‘T—Ô“ÓÑ—ÔS‘S‘ÊŠ‹ˆ›ÈQK]šXÙKš\ÝX[\™›Ü›X[˜ÙKXÚØYÙY\Ý\\Üˆ[[YKQ]HXØÙ\[˜ÙH\ÈÛZ[YYžH\ÈÛÙHÚ[™ÙK‚‚ˆÈÈŒ‹LKLHXØÙ\[˜ÙH˜\ÝT][™Ý\\œÙYY\[ˆØ[˜Ù[][Û‚‚’[\[Y[YH™YK[[ÙH[œ™X[˜[Y][ÛˆÛ\ÜÚYšY\Ž‚‚‹H[ˆÊÊÈÈZ[˜ÜÈÈÛÛ™šYÈÈ[[YKXÛÛ˜XÝÚ[™Ù\È[ˆHÛÛ\]HQM˜[Y][ÛˆÚZ[‹‚‹HXØÙ\[˜ÙXˆXÚØYÚ[™ËÝ™\šYšY\‹ØXØÙ\[˜ÙK[Û›HÚ[™Ù\È[š\š]›Ý™[ˆ\™[
+Š˜ÛÜ™H[œ™X[
+ŠˆÝ\È[™[ˆÛ›HXÚØYÙHOˆXÚØYÙY]H”ÓÓˆOˆXÚØYÙYÝ\\Oˆ\™Ø\™HØ]\Ë‚‹H[š\š]ˆØÜËÙÛÝ™\›˜[˜ÙK[Û›HÚ[™Ù\È[š\š]HÜ™Y[ˆ\™[ÛÜšÙ›ÝË‚‚”\™[ÛÜ™H›ÛÙˆ\ÈXØÙ\YÛ›HÚ[ˆHš[Üˆ[ˆ\ÈÝXØÙ\ÜÙ[Y]ÜˆZ[›ÙXÝ[Ûˆ[\Ü]]ÛX][ÛˆPKÝ\\PÌKTPÌ]Y]›Ý]KÜÝÜžH›Ý[™š\[™Ø\›š[™ËYXÝX\™ˆH[ˆ]]\ˆ˜Z[ÈÛ›H][ˆXØÙ\[˜ÙHØ]HX^H\™Y›Ü™HÝ[›ÝšYH˜[YÛÜ™KY[™Ú[™H]šY[˜ÙH›ÜˆH™^XØÙ\[˜ÙK[Û›Hš^‚‚“ÛˆXØÙ\[˜ÙKÊ˜œ˜[˜Ú\Ë™]Ù\ˆÛÛ[Z]È›ÝÈØ[˜Ù[Ý\\œÙYY[œÈ[ˆHÚ\™YQMY]šXÙHÛÛ˜Ý\œ™[˜ÞHÜ›Ý\ˆ›Ü›X[Ù[˜[Y][Ûˆœ˜[˜Ú\È™[XZ[ˆÙ\šX[^™Yˆ\È™]™[ÈØœÛÛ]HXØÙ\[˜ÙHXYÈœ›ÛHÛÛœÝ[Z[™È[›Ý\ˆŒLHZ[]H[™Ú[™H\ÜË‚‚”Ý]\Îˆ
+Š’STSQS•QÈ•S“‘T—Ô“ÓÑ—ÔS‘S‘ÊŠ‹ˆ›ÈXØÙ\[˜ÙH™\Ý[\ÈÛZ[YY[[Hœ™\Ú[ˆ[[ÛœÝ˜]\ÈH˜\Ý][™š[˜[XÚØYÙKÙ]KÜÝ\\Ú\™Ø\™HØ]\Ë‚‚ˆÈÈŒ‹LKLHËLMÈ˜[Y]Üˆ™XÛÛ˜Ú[YÚ]^XÚ]›Û•Q”È[[YHÝYÚ[™Â‚Y\ˆH[[YH]HÝYÚ[™Èš^™KU[œ™X[Î˜Z[Y™XØ]\ÙHËLMÈÝ[X]ÚYÛ›HHYØXÞHÛ™KX\™Ý[Y[[[YQ\[™[˜ÚY\ËY
+‰
+›Ú™XÝ\ŠKÑ]KË‹‹šœÛÛˆŠXÜ[[™Ëˆ]˜[Y]Üˆ™Z]š[ÜˆØ\ÈÝ[H[™[˜ÛÜœ™XÝH™Z™XÝYH™]È^XÚ]ÝYÙYš[U\K“›Û•Q”ØÛÛ˜XÝ‚‚‘š^\YYˆÛÝ\˜ÙWØÛÛ˜XÝËœX›ÝÈ^ÜÙ\È\×Û›ÛYœ×Ü[[YWÙ\[™[˜ÞXËLMÈ™\]Z\™\ÈH^XÚ]›Û•Q”È›Ü›K[™™YÜ™\ÜÚ[Ûˆ\ÝÈÛÝ™\ˆÛÜœ™XÝ›Û•Q”ËYØXÞH[\Y™Z™XÝ[Û‹[™Ü›Û™ÈQ”Ë]\H™Z™XÝ[Û‹‚‚’[\œ™]][ÛŽˆ\È˜Z[\™HØ\ÈH˜[Y][Û‹XÛÛ˜XÝZ\ÛX]Ú›ÝH™]È[[YKÙØ[YHY™XÝˆH™^^XÝZXY[ˆ]\Ý›Ý™H›ÝÝ]XÈ˜[Y][Ûˆ[™XÚØYÙY[[YH]HÝYÚ[™Ë‚‚”Ý]\ÎˆÕUP×ÕSQUÔ—Ñ’VÐTQQÈ•S“‘T—Ô“ÓÑ—ÔS‘S‘Ë‚‚ˆÈÈŒ‹LKLHÛ›ÝÛˆ˜Z[\™NˆXÚØYÙY[[YH]H”ÓÓˆZ\ÜÚ[™ÈY\ˆÝXØÙ\ÜÙ[XÚØYÙB‚•[œ™X[XÚØYÚ[™È›ÙÜ™\ÜÙY\ÝH™]š[Ý\È™Ú[™›ØÚÙ\‹ˆHXÚØYÙHØ]HÝXØÙYYY˜\ˆ[›ÝYÚ›ÜˆH™^XØÙ\[˜ÙHÝ\È[‹[ˆ™\šYžHXÚØYÙY[[YH]H”ÓÓ˜˜Z[YÚ]RTÔÒS‘×Ô•S•SQWÑUX›ÜˆHÍÈ”ÓÓˆš[\ÈXÛ\™Y[ˆÚ\™R›Ý\›™^KZ[˜ÜØ‚‚”™\ÜÚ]ÜžH[œÜXÝ[ÛˆÛÛ™š\›YYH[[YHÛÛ˜XÝˆÞ\Ý[\È[˜ÛY[™È]š[™ÕÛÜ›\™XÝÜ˜[™Ú\™S”ÐÛÛ^ÝXœÞ\Ý[X™XY”ÓÓˆšXH”]ÎŽ”›Ú™XÝ\Š
+KÑ]KË‹‹˜ˆ\™Y›Ü™HHXØÙ\[˜ÙHXÚØYÙH]\Ý™\Ù\™H\ÙHš[\È\ÈÛÜÙH›Ú™XÝ\™[]]™H]H[™\ˆÚ\™R›Ý\›™^KÑ]X›ÝY\™[HYH[H[œÚYHHZÈÜˆ[Ý™H[HÈÛÛ[Ñ]X‚‚‘š^\YYˆ[ÍÈ[[YQ\[™[˜ÚY\ËY
+‰
+›Ú™XÝ\ŠKÑ]KË‹‹ˆŠX[šY\È[ˆÚ\™R›Ý\›™^KZ[˜ÜØ›ÝÈ^XÚ]H\ÙHÝYÙYš[U\K“›Û•Q”ØÛÈQMÝYÚ[™È\È[œÝXÝYÈÛÜH[H\ÈÛÜÙH›Û•Q”È[[YHš[\ÈÛÛ\]X›HÚ]H^\Ý[™ÈØY\ˆ]Ë‚‚”Ý]\Îˆ’VÐTQQÈ•S“‘T—Ô“ÓÑ—ÔS‘S‘Ëˆ›ÈXÚØYÙYY]HXØÙ\[˜ÙH\ÈÛZ[YY[[Hœ™\Ú[›™\ˆ^XÝ][Ûˆ›Ý™\È[ÍÈš[\È^\Ý\œÙH\È”ÓÓ‹[™HXÚØYÙY^XÝ]X›H™XXÚ\È[[YHÝ\\ÝXØÙ\ÜÙ[K‚‚ˆÈÈŒ‹LKLHÛ›ÝÛˆ˜Z[\™NˆQMXÚØYÚ[™È™Ú[™PÓÛÜ‚”™\X]YÌXÚØYÚ[™È˜Z[\™\ÈÙ\™H˜XÙYÈ[™Ú[™KÐš[˜\šY\ËÕ\™\KÑ™Ò[Ù™Ú[™ÝYÚ[™È[™\ˆHÙ[‹ZÜÝYÚ[™ÝÜÈÙ\šXÙHXØÛÝ[ˆHØ[YHZ[ÛÛÚÈ[™[œ™X[ZÈÙ\™H›ÝH[[ÛœÝ˜]Y˜Z[\™HÚ[Èš[Üˆ[ˆÍŒÈÛÛ\]YÛÛÚËÜZÈ[™[ˆ˜Z[YÛÜZ[™È™Ú[™ˆ[ˆÍŒÌ[Ý™YH˜Z[\™HÈH˜\Ý™Y›YÚ[™™\›ÙXÙYHØ[YH\›Z\ÜÚ[Ûˆ[šX[Ú][ˆÙXÛÛ™Ë‚‚•HX\›Y\ˆZ]YØ][Ûˆ
+[š\]YHÝYÚ[™È
+È^XÚ]™Ú[ÛÜH™Y›YÚ
+HØ\ÈXYÛ›ÜÝXË›ÝH\›X[™[š^ˆHXÚØYÚ[™ÈÛXÞH\È›ÝÈÚ[™ÙYÈYQMZ[ÛÛÚÔ[ˆ[›ÙXYÚ[™›ØÛÈXYËYš[HÝYÚ[™È\È[[[Û˜[HÛZ]Y›Üˆ\ÈXØÙ\[˜ÙHXÚØYÙKˆH™Y›YÚ›ÝÈÚXÚÜÈÛ›HÙ[™\šXÈÝYÚ[™ËY\™XÝÜžHÜš]Xš[]Kˆ\È[˜ÚY[]\Ý›Ý™H™Y\ØÛÝ™\™YÜ™]ÛÜšÙY\ÈH™]ÈY™XÝ[›\ÜÈH]\ˆÙÈ›Ý™\ÈHY™™\™[˜Z[\™H[ÙK‚‚”Ý]\Îˆ’VÐTQQÈ•S“‘T—Ô“ÓÑ—ÔS‘S‘Ëˆ›ÈXÚØYÙYXZ[XØÙ\[˜ÙH\ÈÛZ[YY[[H™]È^XÝXY\ÜÙ\ÈXÚØYÙHOˆÝYÙY]H”ÓÓˆOˆXÚØYÙYÝ\\Oˆ\™Ø\™HØ]\Ë‚‚ˆÈÈŒ‹LKLHÌXÚØYÚ[™È[^H›ÛÝØ]\ÙH[™›Ý[™Y™]žHš^‚•[œ™X[ÍŒÈ›Ý™Y]ÛÛ\[KÚ[\ÜÐ]]ÛX][Û‹ÜÝ\\ØÚ\\‹ÜÝ]KÝØ\›š[™ÈØ]\È™[XZ[™YÜ™Y[‹ˆHš[˜[XÚØYÙHÝ\˜[ˆ›ÜˆX›Ý]ÍÈZ[]\È[™˜Z[Y
+Š˜Y\ˆÛÛÚËÜZÈÝXØÙYYY
+ŠŽˆ[œ™X[ZÈYYMHš[\È[™^]Y[ˆ]]ÛX][Û•ÛÛ™\X]YH˜Z[YÈÛÜH[™Ú[™KÐš[˜\šY\ËÕ\™\KÑ™Ò[Ù™Ú[™[ÈHÝYÙYZ[Ú]Ú[™ÝÜÈXØÙ\ÜÈ[šYY‚‚•\È\ÈHÝYÚ[™ËÐPÓš[KXÛÜH›ØÚÙ\‹›ÝH[[ÛœÝ˜]YØ[Y\^KÜÛÝ\˜ÙHÛÛ\[H™YÜ™\ÜÚ[Û‹‚‚YYØÜš\ËØÚWÜXÚØYÙWÝÌœÌX[™›Ý]YÚWÜXÚØYÙWÝÌ˜ÛY›ÝYÚ]ˆ™]È™Z]š[ÜŽ‚‹H[š\]YHÝYÚ[™È\™XÝÜžH\ˆÛÜšÙ›ÝÈ[‹Ø][\‹H^XÚ]™Ò[ÛÜH™Y›YÚ™Y›Ü™H[žH^[œÚ]™HÛÛÚË‹HÌ\ÙXÛÛ™›ÙÜ™\ÜÈX\™X]‹H›Ý[™Y[\›˜[XÚØYÙH[Y[Ý]‹H™]\ÙHÙˆ[œ™X[ÑËØÛÛÚÈØXÚHÚ\™H]˜Z[X›K‹H›Èœ›ØY™\Z\‹]Ø]™H™[Ü[‹‚‚‘ÛÝ™\››Üˆ[YÜ˜][Ûˆ˜\Ù[[™HØ\È™\ÝÜ™YÈ]™[ÜÈHXØÙ\[˜ÙHœ˜[˜Ú\È˜XÚÙYÙ\\˜][K‚‚”Ý]\È™[XZ[œÈ
+ŠPÐÑTSÑWÑ’VÒS—Ô“ÑÔ‘TÔÊŠˆ[[H™^[›™\ˆ^XÝ][Ûˆ›Ý™\ÈHXÚØYÙKÙ]KÜÝ\\Ø]\Ëˆ›ÈPÒÐQÑKUTÕQÑU’PÑKUTÕQÔQKUTÕQÛZ[H\ÈXYHY]‚‚ˆÈÈŒ‹LKLHÌš[˜[ÛÜÝ\™HØ]™HÝ\YÛˆ\ÛÛ]YXØÙ\[˜ÙHœ˜[˜Ú‚\˜Ú]XÝ\˜[Ü›ÛÝ™\Z\ˆ™[XZ[œÈÛÜÙYÛˆ^XÝÜ™Y[ˆXYÌX™LXÎNMNŒLŒYXÍØLÌÙLÎ™XÍXŒÍ
+™HÍÎLHÕPÐÑTÔË[œ™X[ÍŒˆ][\ˆÕPÐÑTÔËØ\™ZÝ\ÙHÌŒÈÕPÐÑTÔÊK‚‚HYXØ]Yœ˜[˜ÚXØÙ\[˜ÙKÝÌYš[˜[XÛÜÝ\™K]ŒX›ÝÈØ\œšY\ÈHš[˜[]]ÛX]X›HÌXØÙ\[˜ÙHØ]™KˆYY]KÕÌš[˜[ÛÜÝ\™T[•ŒKšœÛÛ˜\È[›™\ˆØÜš\È›ÜŽˆ™X[Ú[™ÝÜÈZ[ÛÛÚÔ[ˆXÚØYÚ[™Ë™\šYšXØ][ÛˆÙˆ]™\žH[[YQ\[™[˜ÚY\Ø”ÓÓˆÝYÙY[ÈHXÚØYÙKXÚØYÙY^XÝ]X›HÝ\\ÙÜ›Ý[™[™ÈØœÙ\˜][Û‹[™ÔKÔSKÑÔKÓÔÈ[›™\ˆÛ˜\ÚÝˆH[œ™X[˜[Y][ÛˆÛÜšÙ›ÝÈ›ÝÈ^XÝ]\È\ÙHØ]\ÈY\ˆH^\Ý[™ÈÛÛ\[KÚ[\ÜÐ]]ÛX][Û‹ÜÝ\\ØÚ\\‹ÜÝ]KÝØ\›š[™ÈÝZ]K‚‚•\ÈØ]™HÙ\È›ÝÛZ[HQKÙ]šXÙKÝš\ÝX[Ø]Y[ÈXØÙ\[˜ÙKˆ[X[‹[Û›H˜]™\œØ[ØÛÛ\Ú[Û‹š\ÝX[ÛÛ\ÜÚ][Û‹XÚ[™ËÙ[‹”È™[Y]˜Xš[]H[™š[˜[\Ý[š[™ËÛZ^™[XZ[ˆÙ\\˜]H]šY[˜ÙKˆØÜš\YØ[XšY[›ÚXÙHÛÝ\˜ÙHÙ[™\˜][Ûˆ[ÛÈ™[XZ[œÈ\Ý[˜Ýœ›ÛHQH]Y[ÈXØÙ\[˜ÙK‚‚•ÌHÜ[š[™È[NˆYˆH™]È]]ÛX]YÛÜÝ\™HØ]\È\™HÜ™Y[‹HÛÝ™\››ÜˆX^HÜ[ˆHY™\œ™YÌKUÌˆ\™ÙH\H›ÙXÝ[Ûˆ›ÙÜ˜[Kˆœ›ØY\˜Ú]XÝ\˜[™\Z\ˆX^H™[Ü[ˆÛ›H›ÜˆHÛÛ˜Ü™]H™YÜ™\ÜÚ[Û‹‚‚ˆÈÈŒ‹LKLHÌÔUÌLMMˆ›Ý[™Y^XÝXÚXÚÛÝ]˜[Y]Üˆ™\Z\‚‚ÔMMHÍLÍMŒÌ‹‹‹˜\ÜÙY[œ™X[ÍŒH[™Ø\™ZÝ\ÙHÌŒ‹ˆ™HÍÎL˜Z[YÛ›HËLˆ™XØ]\ÙH]ÈÝ]XÈÛÛ˜XÝ™XÛÙÛš^™YKY\LX]›ÝH™]È›Ý[™YKY\L˜ÚXÚÛÝ]\ÙY›Üˆ\™XÝ\\™[Û\ÜÚYšXØ][Û‹ˆÔMMˆXØÙ\È\HÜˆˆÚ[H™\Ù\š[™È\™™\Ù]
+È^XÝÒH™\šYšXØ][Û‹‚‚“›È›ÙXÝ[Û‹XÛÛ\][™\ÜÈ\˜Ù[YÙHÚ[™Ù\Ëˆ›ÈØ[Y\^KÜ[[YHÚ[™ÙH[™›È™]ÈXØÙ\[˜ÙHÛZ[K‚‚ˆÈÈŒ‹LKLHÌÔUÌLMMHš[˜[ÛÛœÛÛY]Y™\Z\ˆÛÜÝ\™B‚˜LNØË‹‹˜\ÜÙY
+Š•[œ™X[ÍŒ
+Šˆ[™
+Š•Ø\™ZÝ\ÙHÌŒJŠŽÈ™HÍÎH˜Z[YÛ›HËLÎÝ[H›ØYX\˜XÚÚ[™ÈY\ˆ‘TKSÔ‘ËLH™XØ[YHSQUQˆÔMMH™XÛÛ˜Ú[\È]Û˜\ÚÝYÈYXØ]Y™\ÚY[X˜[šÈ[[YH]šY[˜ÙK[™YÈH˜Z[\ØY™HÛÝ™\›˜[˜ÙKÙØÜË[Û›H[œ™X[˜\Ý]‚‚“›È›ÙXÝ[Û‹XÛÛ\][™\ÜÈ\˜Ù[YÙHÚ[™Ù\Ëˆ™[XZ[š[™ÈÌÛÜÝ\™H]šY[˜ÙH\ÈXÚØYÙY]H”ÓÓˆ[[YH›ÛÙ‹]]Ü™Y]Y[È^X˜XÚË\™Ù]Y]šXÙH›Ùš[[™È[™Ú\\‹\ÜXÚYšXÈ[X[ˆQKÜXÚ[™ËÝš\ÝX[™]šY]Ë‚‚ˆÈÈŒ‹LKLHÌÔUÌLMM^XÝZXYXXÚ[™KYÜ™Y[ˆ™XÛÛ˜Ú[X][Û‚‚‘^XÝXYXÎY‹‹‹˜\ÜÙY
+Š”™HÍÎ
+È[œ™X[ÍŒŒÈ
+ÈØ\™ZÝ\ÙHÌŒ
+Š‹ˆHX›XËÔš]˜]HZYÜ˜][Ûˆ\ÈXXÚ[™KXXØÙ\YˆÝ]XÈ˜[Y][Û‹QMŒËŒˆÛÛ\[KÚ[\Ü[™H^\˜Ú\ÙYXY\ÜÈ[[YHÝZ]H\™HÜ™Y[ˆÛˆHØ[YHÒK‚‚“›È›ÙXÝ[Û‹XÛÛ\][™\ÜÈ\˜Ù[YÙHÚ[™Ù\Ëˆ\ÈÙ\È
+Š››Ý
+Šˆ›Û[ÝHQK]šXÙKš\ÝX[\™›Ü›X[˜ÙKXÚØYÙY\[[YHÜˆ™X[X]Y[ÈXØÙ\[˜ÙKˆ™[XZ[š[™ÈÌÛÜÝ\™H]šY[˜ÙH\ÈXÚØYÙY]H”ÓÓˆ[[YH›ÛÙ‹]]Ü™Y]Y[È^X˜XÚË\™Ù]Y]šXÙH›Ùš[[™È[™Ú\\‹\ÜXÚYšXÈ[X[ˆQKÜXÚ[™ËÝš\ÝX[™]šY]Ë‚‚ˆÈÈŒ‹LKLHÌÔUÌLMLÈZYÜ˜][Ûˆ[YÜ˜][Ûˆ™\Z\‚‚ÔMLˆXXØÍÌ˜ŒK‹‹˜™\Ù\™YH[[™YX›XËÔš]˜]HÚ]™YK]™HÍÎˆ˜Z[YÛˆ\ÝÜšXØ[›]˜[Y]Üˆ™XYÈ[™[œ™X[ÍŒŒH˜Z[Y[ˆR™XØ]\ÙHH\œÚ\Ý[[›™\ˆ™]Z[™YÛ[˜XÚÙY›]XY\œËˆØ\™ZÝ\ÙHÌŒˆÝXØÙYYY‚‚ÔMLÈXZÙ\È˜[Y]ÜœËÝ\ÝÈ^[Ý]X]Ø\™H[™YÈ›Ý[™YÛX[\ÙˆÛ›H\˜Ú]XÝ\™K[X\YØœÛÛ]HÛÝ\˜ÙH]ÈÛˆHÙ[‹ZÜÝY[›™\‹ˆ›ÈØ[Y\^HÛÝ\˜ÙH™Z]š[Üˆ[™›È›ÙXÝ[Û‹XÛÛ\][™\ÜÈ\˜Ù[YÙHÚ[™ÙKˆ^XÝZXY›ÛÙˆ\È[™[™Ë‚‚ˆÈÈŒ‹LKLHÌÔUÌLMLˆX›XËÔš]˜]HÛÝ\˜ÙHZYÜ˜][Û‚‚‘^XÝÔMLHXYL™™ØXK‹‹˜\ÜÙY™HÍÎK[œ™X[ÍŒŒ[™Ø\™ZÝ\ÙHÌŒKˆÔMLˆ\™›Ü›\ÈÛ›HH™K\™XÛÜ™Y\ÚXØ[[[YK[[Ù[HZYÜ˜][ÛŽˆŒˆšË˜Üš[\È[Ý™HÈX›XËÏÛXZ[˜[™š]˜]KÏÛXZ[˜ÈZ[˜ÜÈÝÜÈ^Ü[™ÈH[Ù[H›ÛÝÈ˜[Y]ÜœÈ™XÛÛYH^[Ý]X]Ø\™H[™ËLMM›Ü˜šYÈ›]™YÜ™\ÜÚ[Û‹‚‚“›ÈØ[Y\^H™Z]š[ÜˆÜˆ›ÙXÝ[Û‹XÛÛ\][™\ÜÈ\˜Ù[YÙHÚ[™Ù\ËˆÔMLˆ\È
+Š”ÓÕTÑKSVSÕUSRQÔUQÈVPÕRPQSQUSÓˆS‘S‘ÊŠ‹‚‚ˆÈÈŒ‹LKLHÌÔUÌLMLH[™Ù™‹[[™XYÙHÛÜœ™XÝ[Û‚‚‘^XÝÔMLXYŒNL˜K‹‹˜ˆ[œ™X[ÍŒNHÕPÐÑTÔÈ
+ÈØ\™ZÝ\ÙHÌŒÕPÐÑTÔÎÈ™HÍÎ\ÜÙYÛÜ™H˜[Y][Ûˆ[™[ˆ˜Z[YÛ›H™XØ]\ÙHÙ\ÜÚ[Û—Ú[™Ù™‹œÛÝ\˜ÙWÚXY›ÈÛ™Ù\ˆX]ÚYH™XÛÜ™Y\ÝYÜ™Y[ˆ˜\Ù[[™KˆÔMLH™\ÝÜ™\ÈH[[™Y]šY[˜ÙH[™XYÙHÚ]Ý]ÙXZÙ[š[™ÈH˜[Y]Ü‹‚‚“›È›ÙXÝ[Û‹XÛÛ\][™\ÜÈ\˜Ù[YÙHÚ[™Ù\ËˆÔMLH™[XZ[œÈ
+Š”ÓÕTÑKÑUKT‘TRT‘QÈVPÕRPQSQUSÓˆS‘S‘ÊŠ‹‚‚ˆÈÈŒ‹LKLHÌÔUÌLML™Y˜XÝÜ‹\™YÜ™\ÜÚ[ÛˆÛÜÝ\™B‚‘^XÝÔMHXYL™˜Ë‹‹˜ˆ[œ™X[ÍŒNÕPÐÑTÔÈ
+ÈØ\™ZÝ\ÙHÌNNHÕPÐÑTÔÎÈ™HÍÎÈÜ˜\ÚY]ËLMˆÚ]˜[YQ\œ›ÜŽˆÛÝ™\››Ü—Û[ÙWÚY™Y›Ü™HH™[XZ[š[™ÈÝ]XÈÚZ[‹ˆÔML™[[Ý™\È]Üœ[ˆ[X\È[™™\Ù\™\ÈHÚ[™ÛH]K[ÝÛ™Y]™[ÜY[[[ÙHÛÛ˜XÝ‚‚“›È›ÙXÝ[Û‹XÛÛ\][™\ÜÈ\˜Ù[YÙHÚ[™Ù\ËˆÔML\È
+Š”ÓÕTÑKT‘TRT‘QÈVPÕRPQSQUSÓˆS‘S‘ÊŠ‹‚‚ˆÈÈŒ‹LKLŒÈHÌÔUÌLMH]K[ÝÛ™Y]™[ÜY[[[ÙHÛÛ˜XÝ‚”\™[Ì˜YŒÌM‹‹˜ˆ[œ™X[ÍŒMÈÕPÐÑTÔÈ
+ÈØ\™ZÝ\ÙHÌNNÕPÐÑTÔÎÈ™HÍÎˆRST‘HÛ›H]HÝ[HËLÌÈ]™[ÜY[[[ÙKÜ›ÜÙH˜[Y]Üˆ™Y›Ü™HH™[XZ[š[™ÈÝ]XÈÝZ]H^XÝ]YˆÔUÌLMH™\XÙ\ÈH\™XÛÙY˜[Y]Üˆ[ÝÛ\Ý[™ÛÜ™[™È]\š\ÝXÈÚ]Û™HÝXÝ\™YÛÝ™\››Ü‹[ÝÛ™YÛÛ˜XÝÚ\™YžH™KU[œ™X[[™›Ú™XÝÙÛÝ™\››Ü‹œK\È™YÜ™\ÜÚ[Ûˆ\ÝË‚‚“›È›ÙXÝ[Û‹XÛÛ\][™\ÜÈ\˜Ù[YÙH\È[˜Ü™X\ÙYˆÚ[XY™[XZ[œÈ
+Š”ÓÕTÑKT‘TRT‘QÈVPÕRPQSQUSÓˆS‘S‘ÊŠ‹‚‚ˆÈÈŒ‹LKLŒÈHÌÔUÌLMÛÝ™\››Üˆ^XÝ][Û‹]]\™[š[™Â‚‘^XÝ\™[MŒÎNMØØÍÍÌÌLLØÍÎÎXNŽLØNMÍMÙX\ÜÙY™KU[œ™X[ÍÎKØ\™ZÝ\ÙHÌNMÈ[™[œ™X[ÍŒM‹ˆ\È›Û[Ý\È]
+Šœ\™[Û›JŠˆÈÕUPËUSQUQ
+ÈÓÓTSKUTÕQ
+ÈPQTÔËT•S•SQKUSQUQ›ÜˆH^\˜Ú\ÙYXXÚ[™HÝZ]NÈ]Ù\È›Ý›Û[ÝHQK]šXÙK]Y[È^X˜XÚËXÚ[™ÈÜˆš\ÝX[XØÙ\[˜ÙK‚‚•H›ÛÝË]\]Y]›Ý[™Ý[HX[˜YÙ[Y[Ý\™˜XÙ\ÈÛÛ˜YXÝ[™ÈHXÝ]™HÌœ™Y^™KˆÔUÌLMÙ[˜[^™\È^XÝ]X›K]œËYœ›Þ™[ˆ[™\È[ˆ›Ú™XÝÛÝ™\››Ü‹™XÛÛ˜Ú[\Èœ˜[˜ÚÔˆY]Y]H[™XZÙ\ÈHÛÝ™\››Üˆš[Ý\œ™[^XÝ][Ûˆ\™XÝ]™\È™Y›Ü™H˜XÚÛÙÈY[[ÜžKˆ›È›ÙXÝ[Ûˆ\˜Ù[YÙH\È[˜Ü™X\ÙYˆHÛÝ™\›˜[˜ÙHÚ[\È
+Š”ÓÕTÑKT‘TRT‘QÈVPÕRPQSQUSÓˆS‘S‘ÊŠ‹‚‚ˆÈÈŒ‹LKLŒÈHÌÔUÌLMÈ™Y›YÚ]œË\›Û˜XÚÈÙ[X[XÜÂ‚”™HÍÎØ\ÈH]X[YšY\ˆ˜[ÙHÜÚ]]™H[ˆËLLÍŽˆ™\ÝY\™Ù]^\Ý[™ËOÝ\œ™[Ú\\’YØ[š]][ÛˆØ\ÈZ\ÝZÙ[ˆ›Üˆ]]Üš]]]™H]Y\ÝY[]H]]][Û‹ˆ[œ™X[ÍŒMÙ\\˜][HÚÝÙYHPÎNH™\]Y\Ý\È›ÝÈ™Z™XÝY™Y›Ü™H˜[œØXÝ[ÛˆX›XØ][ÛŽÈHÛ]Y][˜ÛÜœ™XÝH[X[™YH›Û˜XÚÈ™]š\Ú[Ûˆ[\›ÜˆH˜[œØXÝ[Ûˆ]™]™\ˆ™YØ[‹ˆÔUÌLMÈXZÙ\ÈÛÝ\˜ÙK[Ü™\ˆÝX\™È]X[YšY\‹X]Ø\™H[™Ü]È˜][]šY[˜ÙH[È™Y›YÚ™Z™XÝ[ÛˆÚ]™]š\Ú[Ûˆ[˜Ú[™ÙY™\œÝ\È™X[\Þ[˜ÈÝ™X[Z[™È›Û˜XÚÈÚ]™]š\Ú[ÛˆY˜[˜ÙYˆ›È›ÙXÝ[Û‹XÛÛ\][™\ÜÈ\˜Ù[YÙH\È[˜Ü™X\ÙYˆÝ]\Îˆ
+Š”ÓÕTÑKT‘TRT‘QÈVPÕRPQSQUSÓˆS‘S‘ÊŠ‹‚‚ˆÈÈŒ‹LKLŒÈHÌÔUÌLMˆÝXÝ\˜[˜[Y]Üˆ™\Z\‚‚’XYÌÌØØ™‹‹˜›ÙXÙY™KU[œ™X[ÍÍÎHRST‘HÛˆËLLÍ‹]H›ÙXÝ[ÛˆÝ\Ú\\ˆÛÝ\˜ÙH[™XYHX›\Ú\È˜[œÚ][Ûˆ[[™Y›Ü™H]]Üš]]]™HY[]H]]][Û‹ˆ›ÛÝØ]\ÙNˆHÝX\™\™XÛÙYHÛ’ÈÜ[[™ÈÝ\œ™[Ú\\’YHÚ\\’YØ[™˜Z[YY\ˆØ[›ÛšXØ[^˜][ÛˆÚ[™ÙYH\ÜÚYÛ›Y[È\™Ù]Ú\\’YˆÔUÌLMˆ™\XÙ\È^XÝ\Ü[[™ÈÚXÚÜÈÚ]™]\ØX›HÝXÝ\˜[Y[X™\‹[]]][ÛˆÜ™\š[™È\È™YÜ™\ÜÚ[Ûˆ\ÝËˆ›È›ÙXÝ[Ûˆ\˜Ù[YÙH\È[˜Ü™X\ÙYˆÝ]\Îˆ
+Š”ÓÕTÑKT‘TRT‘QÈVPÕRPQSQUSÓˆS‘S‘ÊŠ‹‚‚ˆÈÈŒ‹LKLŒÈHÌÔUÌLMH\™ÙHÛÜÝ\™HØ]™B‚”\™[ÙXMÙLK‹‹˜ˆ™KU[œ™X[ÍÍÎÕPÐÑTÔÈ[™[œ™X[ÍŒLÈÕPÐÑTÔÎÈØ\™ZÝ\ÙHÌNLÈRST‘H™Y›Ü™HÝYÚ[™ÈYHÚ[™ÝÜÈÝÙ\”Ú[^XÝ][ÛˆÛXÞKÚ]Ù\\˜]HÌNLˆ™]ÛÜšËÑ”ÈÚXÚÛÝ]˜Z[\™KˆÔUÌLMH™\Z\œÈ›ÝØ\™ZÝ\ÙH[™œ˜\ÝXÝ\™H˜[Z[Y\È[™Ú[][[™[Ý\ÛHÛÜÙ\ÈÛÝ\˜ÙK[]™[Y[]KÜ\œÚ\Ý[˜ÙHØ\ÎˆØ[›ÛšXØ[›Ý]KÐÚ\\‹Ñ\\ÛÙKÔ^XX›PÚ\˜XÝ\ˆ˜[Y][Û‹X[›Ü›YY\Ø]™KÜ›Ý]K\›ÙÜ™\ÜÈ™\Z\‹™X[]Y]YY\Þ[˜ÔØ]™QØ[YHÜ›ÜÜË\™]š\Ú[Ûˆ˜XÙH]šY[˜ÙK[™XÚØYÙY\[[YH”ÓÓˆXÛ\˜][ÛˆÝX\™Ëˆ›È›ÙXÝ[Ûˆ\˜Ù[YÙH\È[˜Ü™X\ÙYˆ™]ËZXYÝ]\Îˆ
+Š”ÓÕTÑKT‘TRT‘QÈVPÕRPQSQUSÓˆS‘S‘ÊŠ‹ˆÌH™[XZ[œÈ›ØÚÙY‚‚ˆÈÈŒ‹LKLŒÈHÌÔUÌLMØ\™ZÝ\ÙH™\Ú[Y[˜ÙB‚”\™[ÙX˜ÍYK‹‹˜ˆ™KU[œ™X[ÍÍÍÈÕPÐÑTÔË[œ™X[ÍŒLˆÕPÐÑTÔËØ\™ZÝ\ÙHÌNLHRST‘H]HÝ[Z[‹\›ÙÜ™\ÜÈÛH]™[ˆÝ\Y\ˆÌ›MMÜÎÈ›Èš[˜[^™Y›ØˆÙÈ›Øˆ^\ÝËˆ\È\ÈÛ\ÜÚYšYY\ÈØ\™ZÝ\ÙHXÜ]Z\Ú][Û‹Ú[™œ˜\ÝXÝ\™HX›ÝHØ[Y\^H™YÜ™\ÜÚ[Û‹ˆÔUÌLMYÈÝ\œ™[]\]HØ][™Ë\œÚ\Ý[™XÙZ\™]\ÙK›Ý[™YÜ™]šYY›ÝšY\ˆKÓÈ[™]ÛZXÈ\X[ÝÛ›ØYËˆ›È›ÙXÝ[Û‹XÛÛ\][™\ÜÈ\˜Ù[YÙH\È[˜Ü™X\ÙYˆ™]ËZXYÝ]\Îˆ
+Š”ÓÕTÑKT‘TRT‘QÈVPÕRPQSQUSÓˆS‘S‘ÊŠ‹‚‚ˆÈÈŒ‹LKLŒÈHÌÔUÌLMÈÙ[X[XÈ˜[Y][Û‹XÛÛ˜XÝØ]™B‚”\™[XNŽÎ‹‹˜ˆ[œ™X[ÍŒLHÕPÐÑTÔËØ\™ZÝ\ÙHÌNLÕPÐÑTÔË™KU[œ™X[ÍÍÍˆRST‘HÛˆÚ^YØXÞHX\šÙ\‹[ØØ][ÛˆÚXÚÜËˆ›È›ÙXÝ[Û‹XÛÛ\][™\ÜÈ\˜Ù[YÙH\È[˜Ü™X\ÙYˆÔUÌLMÈXZÙ\ÈÙ[X[XÈ]šY[˜ÙHQÈH˜[Y][ÛˆTH[™™[[Ý™\È^XÝX\šÙ\ˆÝÛ™\œÚ\œ›ÛHYØXÞH]ÛˆÛÛœÝ[Y\œËˆ™]ËZXYÝ]\Îˆ
+Š”ÓÕTÑKT‘TRT‘QÈVPÕRPQSQUSÓˆS‘S‘ÊŠ‹ˆÌH™[XZ[œÈ›ØÚÙY‚‚ˆÈÈŒ‹LKLŒÈHÌÔUÌLMˆ˜[Y][Û‹XÛÛ˜XÝÛÛœÛÛY][Û‚‚”\™[ÍŒÍ˜ÍÍÍË‹‹˜ˆ[œ™X[ÍŒLÕPÐÑTÔÈ[™Ø\™ZÝ\ÙHÌNHÕPÐÑTÔÎÈ™KU[œ™X[ÍÍÍHRST‘HÛˆÛ™HÝ[H\XØ]YËLMX\šÙ\ˆ[\]Kˆ›È›ÙXÝ[Ûˆ\˜Ù[YÙH\È[˜Ü™X\ÙYˆH™\Z\ˆ\ÈÞ\Ý[ZXÎˆÛ™H[[YKX]Y]™YÚ\ÝžH›ÝÈÝÛœÈX\šÙ\œËÛ[Ù\ËÛÙÈ˜[Y\ËÜÛÝ\˜ÙH[˜ÚÜœËÛÛœÝ[Y\œÈ[\Ü][™™YÜ™\ÜÚ[Ûˆ\ÝÈ›Ü˜šY\XØ]Y˜[œØXÝ[ÛˆX\šÙ\ˆ^ˆ™]ËZXYÝ]\Îˆ
+Š”ÓÕTÑKT‘TRT‘QÈVPÕRPQSQUSÓˆS‘S‘ÊŠ‹ˆÌH™[XZ[œÈ›ØÚÙY‚‚ˆÈÈŒ‹LKLŒÈHÌÔUÌLMH˜[Y][Û‹\™\Z\ˆÚXÚÜÚ[‚Ø[™Y]HŒŒXYŒK‹‹˜˜Z[Y™KU[œ™X[ÍÍÍ]›Ú™XÝÛÝ™\››Üˆ]šY[˜ÙH˜[Y][Ûˆ[™[œ™X[ÍŒH]Hš\œÝÊÊÈÛÛ\[H\œ›Üˆ
+ÛÛ™][Û˜[QWÓÑØ™\˜›ÜÚ]JKˆ›È›ÙXÝ[Û‹XÛÛ\][™\ÜÈ\˜Ù[YÙH\È[˜Ü™X\ÙYˆH™\Z\ˆ™\ÝÜ™\È^XÝ\ÝYÜ™Y[‹Û]\Ý[ØœÙ\™Y[™Ù™ˆ™XÛÜ™Ë™\XÙ\È[˜[ZXÈÙÈ™\˜›ÜÚ]HÚ]Ý]XÈœ˜[˜Ú\Ë[™YÈËLMH\ÈH[™Ù™ˆ™YÜ™\ÜÚ[Ûˆ\ÝˆÝ]\Îˆ
+Š”ÓÕTÑKT‘TRT‘QÈVPÕRPQSQUSÓˆS‘S‘ÊŠ‹ˆ\Ý›Ý™[ˆ[™Ú[™H˜\Ù[[™H™[XZ[œÈ˜ÍMË‹‹˜
+ÍÍÌËÈÍŒ
+KˆÌH™[XZ[œÈ›ØÚÙY‚‚ˆÈÈŒ‹LKLŒÈHÌÔUÌLMÛÜÝ\™HØ]™B‚”\™[]šY[˜ÙH›Ý[™\žNˆ˜ÍMÍMMÌYMMÌŒ˜™YŒŽØÎYL™ØŒÙXÍŒ˜\È^XÝZXYÜ™Y[ˆÛˆ™KU[œ™X[ÍÍÌÈÈØ\™ZÝ\ÙHÌNÈÈ[œ™X[ÍŒ[˜ÛY[™ÈÛÛ\[KÚ[\ÜPÌKTPÌÝ]K˜[œÚ][ÛœË›Û˜XÚËÜÝ™X[KY˜Z[\™H˜][Ë[^YY[™[™È]]Üš]H[™›Ú™XÝØ\›š[™ËYXØ]\Ëˆ›ÈQKÙ]šXÙKÝš\ÝX[Ü\™›Ü›X[˜ÙKØ]Y[Ë\^X˜XÚÈ›Û[Ý[Ûˆ\ÈXYK‚‚“™]ÈÛÜÝ\™HÛÜšÈ\È[[[Û˜[H›ÝÛÝ[Y\È›ÙXÝ[Û‹\\˜Ù[YÙH›ÙÜ™\ÜËˆ]š^\È^\™K\ÛÛØØ[Xš[]H]]Üš]Kœ›ØY[œÈØ\›š[™ËYX[[YH]šY[˜ÙK[™YÈËLMYØXÞK]\›Z[˜[ÜÝ[KXÚXÚÜÚ[[[YH™YÜ™\ÜÚ[ÛˆÛÝ™\˜YÙKˆÝ]\È›ÜˆH™]ÈXY\È
+Š”ÓÕTÑKT‘TRT‘QÈVPÕRPQSQUSÓˆS‘S‘ÊŠ‹ˆÌHÝ^\È›ØÚÙY‚‚ˆÈÈŒ‹LKLŒÈHÌ˜Z[\™K\]^[œÚ[ÛˆY\ˆ[œ™X[ÍŒ‚‚ˆÍŒˆÛÛ\[YÚ[\ÜY[™\ÜÙY[\ÝX›\ÚY[[YH]È›ÝYÚÛÛ[[Ý\È˜[œÚ][ÛœË[ˆH™]È›Û˜XÚÈ]Y]›ÙXÙYH˜[ÙK[™YØ]]™HÛˆ[YK]˜\žZ[™ÈÝ[Z[˜KÜ™\ÛÛ™H\Ü]H[™Ú[™HÙÜÈ›Ýš[™ÈH^XÝ›Û˜XÚÈÝ]HØ\È\YYˆH]Y]›ÝÈØ\\™\È^XÝ™\ÝÜ™H˜[Y\È]H›Û˜XÚÈ\XØ][Ûˆ›Ý[™\žH[™ÚXÚÜÈÝX›HÜÝ\™[X\ÙH˜[Y\ÈÙ\\˜][K‚‚•HÛÝ\˜ÙHØ]™H[ÛÈ^[™ÈH˜[œØXÝ[ÛˆÛÛ˜XÝÈØ]™KYš]™[ˆÛÜ›™\ÝÜ™\Ë™[[Ý™\ÈÛÛ\]Xš[]K\ÝXØÙ\ÜÈ™Z]š[Üˆ›ÜˆZ\ÜÚ[™ËÙ˜Z[YÚ\\ˆ˜[šÜËYÈ^XÚ]Ý™X[Z[™È˜Z[\™H›Û˜XÚË[™YÈH]\›Z[š\ÝXÈ[^YY\™XYH]Y]›ÜˆÛ]ÛÜ›]]Üš]H\š[™È[™[™È\Þ[˜È˜[œÚ][ÛœËˆ\ÙH\™HÝXš[^˜][ÛˆÚ[™Ù\ÈÛ›NÈ›ÈÛÛ\][Ûˆ\˜Ù[YÙHY˜[˜Ù\È[[Hœ™\Ú^XÝXY\ÜÙ\ÈËLLÍËÔËLLÎ‚‚ˆÈÈŒ‹LKLŒÈHËLLÍˆÝ]XËZ\›™\ÜÈÛÜœ™XÝ[Û‚‚”™KU[œ™X[ÍÍÌH™Z™XÝY\Ý[Û›H]\˜[Ú\\‹Ü]Y\ÝY[YšY\œÈ[™[ˆÝ™\‹Xœ›ØYÛ˜\ÚÝÚÛÜ™\š[™ÈÚXÚËˆH˜][[š™XÝ[Ûˆ›ÝÈÜ™X]\ÈH[œÝ\ÜYÚ\\ˆ[˜[ZXØ[HÚ[HÙY\[™È]]Ü™Y]Y\ÝY[]K[™HÝX\™\Ý[™ÝZ\Ú\ÈH›Ü›X[˜[œÚ][ÛˆÛœ›ÛHH›Ë\ÝXœÞ\Ý[H˜Z[\ØY™HÛˆ›È›ÙXÝ[ÛˆX]\š]H\ÈY˜[˜ÙY‚‚ˆÈÈŒ‹LKLŒÈHÌÍŒHÜ™Y[ˆ˜\Ù[[™H›ÛÝÙYžH›Û˜XÚËYœ™\Ú™\ÜÈ\™[š[™Â‚‘^XÝXYMMÙŒŒXÎ™MLÎXXÙÌXÎNNX™MMYY˜\ÜÙY™KU[œ™X[ÍÍÌØ\™ZÝ\ÙHÌN[™H[[œ™X[ÍŒHÚZ[ŽˆQMŒËŒˆÛÛ\[K›ÙXÝ[Ûˆ[\Ü]]ÛX][Û‹Ý\\PÌKTPÌYÙÜ™YØ]H[[YK\œÚ\Ý[˜ÙKÜÝ]KÛÛ[[Ý\È˜[œÚ][ÛœÈ[™™\›È›Ú™XÝØ\›š[™ÈXˆ\È\ÈHÝ\œ™[Ü™Y[ˆXÚšXØ[˜\Ù[[™K›ÝQKÙ]šXÙKÝš\ÝX[Ü\™›Ü›X[˜ÙHXØÙ\[˜ÙK‚‚HÝXœÙ\]Y[ÛÝ\˜ÙH]Y]›Ý[™]›Û˜XÚÈÛ˜\ÚÝÈÙ\™HÛÛ[Z]][YHÛ˜\ÚÝÈ˜]\ˆ[ˆÝX\˜[YY™\]Y\Ý][YHÛ˜\ÚÝË[™[œÝ\ÜY\Ý[˜][ÛœÈÛÝ[™]\›ˆÚ]Ý]]ÛZXÈ›Û˜XÚËˆËLLÍˆYÈH™K[]]][Ûˆ˜[œÚ][Û‹\™\]Y\Ý›Ý[™\žKœ™\ÚÜšYÚ[ˆÛ˜\ÚÝØ\\™KÝšXÝ›Ý]KØÚ\\ˆZ\š[™Ë›Û˜XÚÈ›Üˆ[œÝ\ÜY™\]Y\ÝÈ[™H™X[XY\ÜÈ˜Z[\™KZ[š™XÝ[Ûˆ]Y]ˆ\ÙHÚ[™Ù\È\™HÝXš[^˜][ÛˆÛ›NÈ›ÈÛÛ\][Û•Ø]™HÜˆ\˜Ù[YÙHY˜[˜Ù[Y[\ÈÜ˜[Y[[H™]Ù\ˆ^XÝXY\ÜÙ\Ë‚‚ˆÈÈŒ‹LKLŒÈHÌËLLÍH]Y]YYÚXÚÜÚ[ÜšYÚ[ˆ™\Ù\˜][Û‚‚”ÛÝ\˜ÙHÚ[][][Ûˆ›Ý[™]H^\Ý[™È\Þ[˜ÈÚXÚÜÚ[Ø[˜XÚÈÝX\™›ÝXÝYÛÛ\][ÛˆÚYHY™™XÝÈ][ˆQ[Û›H]Y]YYÚXÚÜÚ[ÛÝ[Ý[™H™XÛÛœÝXÝYœ›ÛHH]\ˆÛÜ›Y\ˆHš\œÝØ]™HÛÛ\]YˆH]Y]YH›ÝÈ™]Z[œÈHXÝX[Ø]™HÛ˜\ÚÝ\ÈÚ\\‹Ü›Ý]KÙ\\ÛÙKÝÛÜ›™]š\Ú[Ûˆ[™Ù\šX[^™\È]Ø\\™YÛ˜\ÚÝ\™XÝKˆT“ÔT•HÝÛ™\œÚ\›ÝXÝÈ›Ý[‹Y›YÚ[™]Y]YYÛ˜\ÚÝØš™XÝÈœ›ÛHÐËˆËLLÍH™]™[ÈQ[Û›H™XÛÛœÝXÝ[Ûˆœ›ÛH™]\›š[™Ë‚‚”™KU[œ™X[ÍÍŽH\ÈÝ]XÈ]šY[˜ÙH›Üˆ]È\™[XYÛ›NÈHËLLÍHØ]™H™\]Z\™\ÈH™]Ù\ˆ^XÝZXY˜[Y][Û‹ˆ›ÈÛÛ\][Ûˆ\˜Ù[YÙHÚ[™Ù\Ë‚‚ˆÈÈŒ‹LKLŒÈHÌœ›ØY[™Ù[X˜\Ú\ÈÛÝ\˜ÙH›Ü›X[^˜][Ûˆ[™ÝšXÝ\ÜÙ]ÒB‚”™KU[œ™X[ÍÍŽ^ÜÙYŒÈY][Û˜[Ý]XÈÐ’ˆ\ÜÙ]ÈÚ]YÙ[™\˜]HUˆšX[™Û\È[™ÈÚ]ÜÜÙY›Ü›X[ËˆHÚÛH^ÜÙYÙ]\È›Ü›X[^™Y[ˆÛ™HÛÝ\˜ÙHØ]™HÈšX[™Ý[]Y˜XÙK[ØØ[U‹Û›Ü›X[˜\Ù\ËˆH™KU[œ™X[\ÜÙ]\]X[]HÝ\\È[ÛÈÚ[™ÙYœ›ÛHYš\ÛÜžH^XÝ][ÛˆÈK\ÝšXÝ[™ËLLÍÙY\]Y]ÝX\™]˜Z[XÛÜÙY™Z]š[Ü‹‚‚•\È\ÈÝXš[^˜][ÛˆÛ›Kˆ›ÈÛÛ\][Û•Ø]™HÜˆ\˜Ù[YÙHÜ™Y]\ÈYY[[Hœ™\Ú^XÝXY\ÜÙ\ÈÝšXÝÛÝ\˜ÙH˜[Y][Ûˆ[™H[QMŒÈ™\›Ë]Ø\›š[™È[[YHÚZ[‹‚‚ˆÈÈŒ‹LKLŒÈHËLLÍ˜[Y]ÜˆXYÛ›ÜÝXÜÈÞ[˜Ú›Ûš^˜][Û‚‚”™KU[œ™X[ÍÍÈ˜Z[Y™XØ]\ÙH]ÈËLLÍ]\˜[Ù[‹XÚXÚÈY›ÝX]ÚHÛÜ™[™È[™XYH™\Ù[[ˆ\ÜÙ]Ü]X[]WØ]Y]œXˆHÚXÚÈ›ÝÈ\™Ù]ÈH™X[ÝXÝ\˜[Y\œ›Üˆ˜\ÙH[™HX\›H˜[Y]ÜˆØ]Hš[È^XÝXØÝ[][]Y\œ›ÜœÈ™Y›Ü™H^][™Ëˆ›ÈØ[Y\^KØÛÛ[ÛÛ\][ÛˆÜ™Y]\ÈYY‚‚ˆÈÈŒ‹LKLŒÈHÌËLLÍ[™Ù[\ÜXÙHÛÝ\˜ÙH™\Z\ˆY\ˆ[œ™X[ÍŒB‚•[œ™X[ÍŒHÛˆÍNXL˜NŒ˜ÙŽŽMÙMXYMÙNL˜ÍÍLŽXŽXX˜\ÜÙYÊÊÈZ[›ÙXÝ[Ûˆ[\Ü]]ÛX][Û‹Ý\\PÌKTPÌYÙÜ™YØ]H[[YKÝ]H[™ÛÛ[[Ý\È˜[œÚ][ÛœËˆHš[˜[™\›Ë]Ø\›š[™ÈØ]H\ÛÛ]YH™[XZ[š[™È[\ÜXÈ^XÝH™YHY\Ú\ÎˆÓWÐ˜[›Ù×ÕÚ[™ØÓWÓ\—Ð›YX[™ÓWÒ\Ù[™Ø\™Ò[™\ÝšX[]š[X‚‚•Hš\œÝÛÈÛÛZ[™YYÙ[™\˜]HUˆšX[™Û\ÎÈHš[HÛÛZ[™Y]]Ü™Y›Ü›X[ÈÜÜÚ[™È]ÈÙ[ÛY]šXÈ˜XÙ\ËˆZ\ˆ›Ú™XÝ[ÝÛ™Y›ØÙY\˜[Ð’ˆÛÝ\˜ÙH]H\È™\Z\™YÚ]˜XÙK[ØØ[U‹Û›Ü›X[˜\Ù\Ë[™\ÜÙ]Ü]X[]WØ]Y]œX›ÝÈ™Z™XÝÈ\ÙH[™Ù[\ÜXÙHÛÝ\˜ÙHY™XÝÈ™Y›Ü™H[™Ú[™H[\ÜˆËLÍÈ\È[ÛÈÞ[˜Ú›Ûš^™YÚ]HÝ›Û™Ù\ˆ\Þ[˜ËXÚXÚÜÚ[ÛÛ\][ÛˆX\šÙ\ˆ[›ÙXÙYžHËLLÌËˆ›È›ÙXÝ[Û‹XÛÛ\][™\ÜÈ\˜Ù[YÙH\ÈY˜[˜ÙY[[H™]Ù\ˆ^XÝXY™XXÚ\È™\›ÈØ\›š[™ÈX‚‚ˆÈÈŒ‹LKLŒÈHÌËLLÌÈ™\]Y\Ý][YH˜[œØXÝ[ÛˆÛÜÝ\™B‚•[œ™X[ÍNNHÛˆØŽÍÎXY™ŒY™YLØÌ˜ÍÙLÍÙÙ™NLŒÙYX˜˜Z[Y]QMŒËŒˆÊÊÈÛÛ\[H™XØ]\ÙHH˜[YYS”È[[YHØ[YHš]˜]H”ÐÛÛ^ÛÛ[Z]Y\Ý]H]Y\žKˆH›ÛÝÚ[™ÈÛÝ\˜ÙHØ]™H›Û[Ý\È]™XY[Û›H]Y\žHÈHX›XÈTH[™\™[œÈH˜[œØXÝ[Ûˆ›Ý[™\žH\\Žˆ™\]Y\Ý][YHÛÜ›Û^XÝØ[˜Ù[\™[X\ÙKÛÛ[Z]X›Ý[™”Ë[Y[[ÜžH[š[™ËÜšYÚ[‹X›Ý[™\Þ[˜ÈÚXÚÜÚ[ÚYHY™™XÝËÛÛ^Y\[™[”ËÙ[™[^Hœ™Y^™H\š[™È[™[™ÈÝØ\Ë[™HÚ[™ÛH[XšY[ÛØÚX[XÝÜˆØØ[‹‚‚•\ÙHÚ[™Ù\ÈÈ›ÝY˜[˜ÙHÛÛ\][Û•Ø]™H›ÙÜ™\ÜËˆœ™\Ú^XÝZXYÛÛ\[KÚ[\ÜÜÝ\\ÔPÌKTPÌÜÝ]KÝ˜[œÚ][ÛœËÞ™\›Ë]Ø\›š[™È]šY[˜ÙH\È™\]Z\™Y™Y›Ü™HXÚšXØ[ÌÛÜÝ\™K›ÛÝÙYžHHÙ\\˜][H]šY[˜ÙKX›Ý[™XÚØYÙYÙ]šXÙKØ]Y[ËÚ[X[ˆØ]\Ë‚‚ˆÈÈŒ‹LKLŒÈHÌ™\ÝÜ™K\™\Z\ˆX›XØ][ÛˆÜ™\š[™Â‚”ÛÝ\˜ÙH]Y]Y[YšYYHØ]™HZYÜ˜][Û‹Ü™\Z\ˆÜ™\š[™Èš\ÚÎˆHYØXÞH™\Z\ˆØ[˜XÚÈ˜[ˆY\ˆ™\ÝÜ™Hœ›ØYØ\ÝÈY[™XYH^ÜÙYH[‹\™\Z\™YY[]KˆH\œÚ\Ý[˜ÙH˜[œØXÝ[Ûˆ›ÝÈÙY\Èœ›ØYØ\ÝÈÝ\™\ÜÙY›ÝYÚYØXÞHØ[›ÛšXØ[^˜][Ûˆ[™X›\Ú\ÈÛ›HHš[˜[™\Z\™YÝ]Kˆ^Y\‹[Y™H™\ÝÜ˜][Ûˆ[ÛÈ™XÙY\Èš[˜[X›XØ][ÛˆÛÈÞ[˜Ú›Û›Ý\ÈØ[YKX˜[šÈÛÜ›ÛÛ[Z]Ø[››ÝØ\\™HÝ[HY™H˜[Y\È[ˆ›Û˜XÚÈÝ]K‚‚”ËLLÌˆÝX\™ÈHÜ™\š[™Ëˆ›ÈÛÛ\][Û•Ø]™HÜˆ\˜Ù[YÙHY˜[˜Ù[Y[\ÈÜ˜[Y[[œ™\Ú^XÝZXY[™Ú[™H]šY[˜ÙH\ÜÙ\Ë‚‚ˆÈÈŒ‹LKLŒÈHÒH\›™\ÜÈÛÜœ™XÝ[ÛˆY\ˆËLLÌH^[œÚ[Û‚‚”™KU[œ™X[ÍÍŒˆ˜Z[Y™XØ]\ÙH˜[œÚ][Û‹][š]\ÝÈY›Ý™Y[ˆ\]YÛÛœÚ\Ý[HY\ˆY[™ÈHÙXÛÛ™™\]Z\™Y˜[œÚ][ÛˆX\šÙ\‹ˆHÛÜœ™XÝ[ÛˆÚ[™Ù\ÈÛ›HH™YÜ™\ÜÚ[Ûˆ\›™\ÜÈÙ[X[XÜÎˆ[\ÜY™\]Z\™YÛX\šÙ\œØ\È\ÙY\™XÝH[™ÝXØÙ\ÜÈ™\]Z\™\ÈH[˜[œÚ][ÛˆX\šÙ\ˆ\Ý˜]\ˆ[ˆHš\œÝX\šÙ\ˆ[Û™Kˆ›È›ÙXÝ[ÛˆÛÛ\][ÛˆÜ™Y]\ÈYY‚‚ˆÈÈŒ‹LKLŒÈHÌÛÛ\[KÜ›ÛÝ˜[œØXÝ[Ûˆ˜\œšY\ˆ›ÛÝË]\‚•[œ™X[ÍNMˆÛˆ™M˜ŽYÍX˜X˜ŒØÌLÍŽXØÍŒŽÍÌ˜ŒØY›Ý™XXÚ[\ÜÜ[[YNˆQMŒÈÊÊÈÛÛ\[H˜Z[YÛˆ[ˆ[XšYÝ[Ý\ÈØš™XÝ]ÔXÚØYÙS˜[YJÛÛœÝÒTŠŠXØ[[›ÙXÙYžHHÝšXÝ\ˆX]\šX[™Y›YÚØ]™Kˆ]Y™XÝ\Èš^YÚ]^XÚ]”Ýš[™Ø\[™Ë‚‚•HØ[YH]Y]Ø]™HYÈHÞ\Ý[ZXÈØ[Y\^K[]]][Ûˆ˜\œšY\ˆYYÈÚ\\•ÛÜ››Ý]\‰ÜÈ]]Üš]]]™HÛÜ›Ûˆ\ÚXØ[Ø[Y\^H]]][Ûˆ]È›ÝÈ™\]Z\™HÛÛ[Z]YÛÜ›Y[]K[™˜[œÚ][ÛˆÒHÚXÚÜÈH˜\œšY\ˆÚ[HH\Ý[˜][Ûˆ™\]Y\Ý\ÈÝ[[˜ÛÛ[Z]Yˆ\ÙH\™HÝXš[^˜][ÛˆÚ[™Ù\ÈÛ›NÈ›ÈÛÛ\][Ûˆ\˜Ù[YÙHÜˆÛÛ\][Û•Ø]™HÝ]\È\ÈY˜[˜ÙY‚‚ˆÈÈŒ‹LKLŒÈHÌ^XÝZXYÍNMHÜ™Y[‹›ÛÝÙYžHÝšXÝ\ˆ[\Ü\]X[]HÛÜÝ\™B‚“ÛˆLMXY˜NLNY˜MŒÍÌYLÍÍŒŽ™YYŒXÍYM™KU[œ™X[ÍÍŒØ\™ZÝ\ÙHÌMÍ[™[œ™X[ÍNMH[\ÜÙYˆ[œ™X[ÍNMHÛÛ\]YÛÛ\[K›ÙXÝ[Ûˆ[\Ü]]ÛX][Û‹Ý\\PÌKTPÌYÙÜ™YØ]H[[YK\œÚ\Ý[˜ÙHÝ]H›Ý[™š\ÛÛ[[Ý\È›Ý]KØÚ\\ˆ˜[œÚ][ÛœÈ[™Ø\›š[™ËYX[˜[\Ú\Ëˆ\È˜[Y]\ÈHš[Üˆ\œÚ\Ý[˜ÙKÝ˜[œØXÝ[Û‹ÜÝ™X[Z[™È™\Z\ˆØ]™HÛˆ]^XÝXY‚‚•HZ[Ý[™\ÜYLÍÈ[š\]YH™X\›K^™\›Èš[›Ü›X[[\ÜY[]Y\È[™\ˆH\ÝÜšXØ[ÙZ[[™ÈÙˆMLˆ]ÙZ[[™È\È›ÝÈ™[[Ý™Y˜]\ˆ[ˆXØÙ\Y\È\›X[™[XˆH™^ÛÝ\˜ÙHØ]™HÙ[™\˜]\È]\›Z[š\ÝXÈUœÈ[ˆH[\ÜÛÜšÚ[™ÈÛÜH›ÜˆU‹[\ÜÈÝ]XÈÐ’ˆ\ÜÙ]Ë™Y›YÚÈH›Ú™XÝX\Ý\ˆX]\šX[XÚØYÙK[™[™›Ü˜Ù\È™\›È[™Ù[Øš[›Ü›X[ÛX\Ý\‹\Ý\™˜XÙHØ\›š[™ÈXÚ]ËLLÌˆ›ÙXÝ[ÛˆÛÛ\][™\ÜÈ\˜Ù[YÙHÙ\È›Ý[˜Ü™X\ÙHœ›ÛHÛX[\[Û™NÈÌ™[XZ[œÈHXÝ]™HØ]H[[HÝšXÝ\ˆ^XÝZXY[\Ü[ˆ\ÈÜ™Y[ˆ[™]šXÙKÚ[X[ˆØ]\È\™H[™YÙ\\˜][K‚‚ˆÈÈŒ‹LKLŒÈHÌ\œÚ\Ý[˜ÙH˜[œØXÝ[Ûˆ[™™\^K\ØY™H\Þ[˜ÈÝÛ™\œÚ\‚‘^XÝZXY]šY[˜ÙH[\š[™È\ÈØ]™H\È[œ™X[ÍNMÛˆÎÌ˜ÎMNLŒMMÍ˜ŽL™˜YLÍN™NYYˆÊÊÈZ[TÔË›ÙXÝ[Ûˆ[\ÜTÔË]]ÛX][ÛˆTÔËÝ\\TÔËPÌKTPÌYÙÜ™YØ]HÝÙY\TÔË›ÙXÝ[ÛˆÚ\˜XÝ\ˆÝ\™˜XÙHTÔËÝ]H\œÚ\Ý[˜ÙHRSÚ]Üš]KÛØYÜ™\ÝÜ™HÝXØÙ\ÜÙ[]š[˜[šY[™\šYšXØ][Ûˆ˜[ÙK‚‚•H™\Z\ˆÙ\È›ÝY˜[˜ÙH›ÙXÝ[ÛˆÛÛ\][™\ÜËˆ]YÈ]ÛZXÈÙÚXØ[Ø]™H™\ÝÜ™K›Û˜XÚÈX›XØ][ÛˆY\ˆÛÜ›™XÛÛœÝXÝ[Û‹˜Z[XÛÜÙY›Û˜XÚÈY[]H[˜[Y][Û‹]Z[Y\ÚËÜ[[YHšY[XYÛ›ÜÝXÜÈ[˜ÛY[™È”ÈY[[ÜžH[™›Ý]H›ÙÜ™\ÜËØY™KYÜ›Ý[™˜[œÙ›Ü›HÙ[X[XÜË[™XYK\™\ÚY[Ú\\‹X˜[šÈÛÛ[Z]Ý\Ü[™Ø[˜Ù[YX]Y[ÈØ[˜XÚÈÝÛ™\œÚ\ÚXÚÜËˆÌ™[XZ[œÈÜ[ˆ[[Hœ™\Ú^XÝXY\ÜÙ\È\œÚ\Ý[˜ÙKÛÛ[[Ý\È˜[œÚ][ÛœÈ[™HØ\›š[™ËÛX]\šX[ÚZ[ŽÈ\™Ù]Y]šXÙH\™›Ü›X[˜ÙH[™[X[ˆ^HXØÙ\[˜ÙH™[XZ[ˆÙ\\˜]HØ]\Ë‚‚ˆÈÈŒ‹LKLŒÈHÌ^XÝZXYÍNLÈXYÛ›ÜÚ\È[™Þ\Ý[ZXÈÛÝ\˜ÙH™\Z\‚‚”ˆÍÈXYNŒÍŒÌ™MY˜XÌŽÌ™™NYMMXÙLŒ˜Žˆ™KU[œ™X[ÍÍNTÔËØ\™ZÝ\ÙHÌMÌˆTÔÎÈ[œ™X[ÍNLÈ\ÜÙYQMŒËŒˆÊÊÈÛÛ\[K]\›Z[š\ÝXÈ[\Ü]]ÛX][Ûˆ‹Ì‹Ý\\[™PÌKTPÌYÙÜ™YØ]H[[YK[ˆ˜Z[YHÝ]HØ]H]H^Y\ˆ›ÙXÝ[Û‹\Ý\™˜XÙH™\ÚY[˜ÞH]Y]ˆ\È\ÈY™XÝ\ÜXÚYšXÈ[™Ú[™H]šY[˜ÙH›Üˆ]ÒK›ÝXØÙ\[˜ÙHÙˆH™]È™\Z\ˆXY‚‚•H™\Z\ˆ\ÈÞ\Ý[ZXÎˆÜÝ\™\ÚY[˜ÞHÚ\\‹X˜[šÈÛÛ[Z]›ÝYšXØ][Û‹ÛÛ[Z]Y]ÛÜ›YØ]YÝ]KÜØ]™H]Y]›Û‹[X\ÚÚ[™ÈÝ\™˜XÙJÙ\ÚÈ]Y][Ý™[Y[™[X\ÙHÛ›HY\ˆÛÛ[Z]Y]ÛÜ›œ›ØYØ\Ý›Ý[™Y\Þ[˜È]Y[ÈÝÛ™\œÚ\Ú]ÙXZÈØXÚ\Ë[™˜Z[XÛÜÙYËLLËÔËLLŽÝX\™ËˆÚÛKYØ[YH[›š[™È™[XZ[œÈ\›Þ[X][HÌL[™›ÈÛÛ\][ÛˆØ]™H\ÈY˜[˜ÙYžH\ÈÛX[\‚‚ˆÈÈŒ‹LKLŒÈHÌÞ\Ý[ZXÈ\™[š[™ÈÝ]\Â‚Ý\œ™[ÚÛKYØ[YH[›š[™ÈÛÛ\][Ûˆ™[XZ[œÈ\›Þ[X][HÌLˆHXÝ]™HÛÜšÈ\È›ÝH™]È™X]\™HØ]™NÈ]\ÈÌ\˜Ú]XÝ\™KØZ[\™[š[™ÈÛÈ]\ˆØ]™\ÈÈ›Ý[š\š]™XÝ\œš[™ÈY™XÝËˆ[œ™X[Z[ÍN™XXÚYÊÊÈÛÛ\[][Ûˆ[™^ÜÙYHÚ[™ÛH[\Ü\‹\ÛÝ\˜ÙH^\Y˜XÝ›ÝÈ™\Z\™Y]ÛÝ\˜ÙH[™ÝX\™YžH™KU[œ™X[ˆ›ÙXÝ[ÛˆX]\š]HÙ\È›ÝY˜[˜ÙH[[œ™\Ú^XÝZXY[™Ú[™H›ÛÙˆÝXØÙYYË‚‚ˆÈÈŒ‹LKLŒˆHÝXš[^˜][ÛˆØ]HØÚ[XHÛÜœ™XÝ[Û‚‚•H\˜Ú]XÝ\˜[ÝXš[^˜][ÛˆØ]H\ÈHÝ\œ™[^XÝ][Ûˆ›ØÝ\È]]È]X[]HÝ]\È\ÈÛÜœ™XÝHT•PS›ÝPÕU‘Xˆ\È™\Z\œÈÛÝ™\››ÜˆØÚ[XHÛÛœÚ\Ý[˜ÞHÛ›H[™Ù\È›Ý›Û[ÝHÛÛ\[KQK]šXÙKš\ÝX[ÜˆÚÛKYØ[YHÛÛ\][ÛˆÝ]\Ë‚‚ˆÈÈŒ‹LKLŒˆHÝXš[^˜][ÛˆÝX\™ÛÜœ™XÝ[Û‚‚”™KU[œ™X[ÍÍÈ˜Z[YÛ™H[[[Û˜[ÝXš[^˜][ÛˆÝX\™ˆHÚ\\ˆ\›™\ÜÈØ\È›Û‹Y˜Z[Y˜\Ý]Y›ÝY]š[H™\]Z\™YYÙÜ™YØ]H•S•SQWÔÕÑQTÔÕSSPT–XˆHZ\ÜÚ[™ÈX\šÙ\ˆ\È›ÝÈ[\[Y[Yˆ\ÈÙ\È›ÝÚ[™ÙHHÌL›ÙXÝ[Ûˆ\Ý[X]HÜˆ›Û[ÝHÛÛ\[KÔQKÙ]šXÙKÝš\ÝX[]šY[˜ÙK‚‚ˆÈÈŒ‹LKLŒˆH\˜Ú]XÝ\˜[ÝXš[^˜][ÛˆØ]B‚•ÚÛKYØ[YH[›š[™ÈÛÛ\][Ûˆ™[XZ[œÈ\›Þ[X][H
+ŠÌL
+ŠŽÈ\È\™[š[™ÈØ]™HÙ\È›ÝX[Y˜XÝ\™H›ÙXÝ[Ûˆ\˜Ù[YÙHœ›ÛH™Y˜XÝÜš[™ËˆZ[ÍMÈ›Ý™YH™XÛÝ™\™Y[›™\ˆØ[ˆÛÛ\[KÚ[\Ü[™^XÝ]HÝ\\ÔPÌKTPÌ]H^XÝ\™[š[™ÈXY\È›ÝY]\ÜÙY[™Ú[™H˜[Y][Û‹‚‚”ÛÝ\˜ÙK[]™[ÝXš[^˜][Ûˆ›ÝÈ[˜ÛY\ÎˆÚ\™YÙX[K]Û\˜[Ü]ÛˆÜ›Ý[™[™ÈÚ]ÛÜKØØ\Ý[HÚXÚÜÈ[™›ÈÚ\\‹\ÜXÚYšXÈÝ\ÜYÎÈ[YZYÚ›Û‹Y˜Z[Y˜\ÝÚ\\ˆPNÈÚÙ[][\šYÈXÚØYÙH™Y›YÚ™Y›Ü™H\Þ[˜ÈØYÈ“T]ËUÐHZYÜ˜][ÛˆÚ]“T›ÚXš][ÛŽÈ[™ÛX[\Ùˆ[ÌÛ›ÝÛˆ\XØ]K]™\^šX[™Ý[][Û‹\š\ÚÈ˜XÙ\ÈÚ]ÝšXÝ™YÜ™\ÜÚ[Ûˆ˜Z[\™K‚‚”Ý]\Îˆ
+Š”ÓÕTÑHT‘S‘QÈVPÕRPQS‘ÒS‘H“ÓÑˆS‘S‘ÊŠ‹ˆ›ÈQKÙ]šXÙKÝš\ÝX[ÛÛ[[ˆ\È›Û[ÝYˆ™X]\™H^[œÚ[Ûˆ™[XZ[œÈ›ØÚÙYžH‘TKTÕP’SUKLX[[Ý]XËÛÛ\[KÚ[\ÜPÌKTPÌÝ]KÝ˜[œÚ][Ûˆ[™Ø\›š[™ËÛX]\šX[Ø]\È\™HÜ™Y[ˆÛˆÛ™H^XÝXY‚‚ˆÈÈŒ‹LKLŒˆHPÌHÜ›Ý[™[™È™YÜ™\ÜÚ[Ûˆ™\Z\‚‚‘^XÝZXYMÎXMNÙLYŽX˜YMÎMÍYÙL™YLN˜NX™XXÚYHÝXØÙ\ÜÙ[QMŒËŒˆÊÊÈZ[ÝXØÙ\ÜÙ[›ÙXÝ[Ûˆ[\ÜÝXØÙ\ÜÙ[ÛË]\Ý]]ÛX][Ûˆœ˜[Y]ÛÜšÈÝZ]H[™ÝXØÙ\ÜÙ[XY\ÜÈÝ\\ÔPÌKTPÌÚ\\ˆ]Y]ËˆPÌH˜Z[Y™Y›Ü™HÚ\\ˆ™XY[™\ÜÈ™XØ]\ÙH]È]]Ü™YÜ]Ûˆ]KL™[[ÈH˜\œ›ÝÈØ\™]ÙY[ˆ˜[˜XÚÈÜ›Ý[™[™Hš\œÝ›Ý]HÛX‹ˆHY[ˆ]\›Z[š\ÝXÈÜ]Û‹\Ý\ÜY\È›ÝÈYY]]^XÝÝ\ˆH™\Z\ˆXYÝ[™\]Z\™\Èœ™\Ú[™Ú[™KÚXY\ÜÈ›ÛÙˆ[™Ù\È›Ý›Û[ÝHQKÙ]šXÙKÝš\ÝX[XØÙ\[˜ÙK‚‚ˆÈÈŒ‹LKLŒˆH[›™\ˆ™XÛÝ™\žHÈÛÛ\[H™\Z\ˆ›Ý[™\žB‚•HÙ[‹ZÜÝY[›™\ˆ\ÈÜ›ÜÜÙYH›Ü›Y\ˆ[™Ú[™HÛÛ[PÓØ]H[™™XXÚY™X[QMŒËŒˆÊÊÈÛÛ\[][ÛˆÛˆ[œ™X[Z[ÍLÍ][\Ëˆ]][\\È›ÝÓÓTSKUTÕQ™XØ]\ÙH]˜Z[YÛˆ[ˆY]Ü•ÛÛË]Ë\[[YHXY\ˆš\ÚXš[]HY™XÝˆHÛÝ\˜ÙHš^›ÝÈ^ÜÈH›][[YH[Ù[H›ÛÝ[\Ü˜\š[H›ÜˆY]ÜˆPH[™™[[Ý™\ÈHØœÙ\™Y\™XØ]YÝ]XÓX]\šX[ÈXØÙ\ÜËˆ›ÙXÝ[ÛˆX]\š]H\È[˜Ú[™ÙY[[H™]È^XÝZXYZ[\›œÈÜ™Y[‹‚‚ˆÈÈŒ‹LKLŒˆH[[YHÝ]XÓY\Ú[Øš[]HØ\›š[™Â‚HÛÝ\˜ÙK[]™[Ø\›š[™Èš^\È\YYÈH›Ý\ˆ[[YHÛÜ›Z[\œÎˆ[Øš[]H\È›ÝÈÚ[™ÙY™Y›Ü™H[[YHÙ]Ý]XÓY\Ú\ÜÚYÛ›Y[X]Ú[™ÈH]™HQHØ\›š[™ÈØœÙ\™YÛˆH\Üˆ\È\ÈHØ\›š[™ËÙX™YXÝ[ÛˆÛ›H[™Ù\È›Ý›Û[ÝHØ[Y\^HÛÛ\][™\ÜËˆœ™\Ú^XÝZXYQMŒÈÛÛ\[KÔQH›ÛÙˆ\ÈÝ[›ØÚÙYžHÌ[›™\ˆPÓ[[™\Z\™Y‚‚ˆÈÈŒ‹LKLŒˆH[YÜ˜][ÛˆØ\ÛÜÝ\™HÝ]\Â‚Ü›ÜÜË\Þ\Ý[HX]\š]H[\›Ý™Y]ÛÝ\˜ÙH]™[Ú]Ý]Ú[™Ú[™ÈHÚÛKYØ[YH[›š[™È\˜Ù[YÙKˆ™YH™]š[Ý\ÛHÜ[ˆ\˜Ú]XÝ\™Hš\ÚÜÈ›ÝÈ]™HÛÝ\˜ÙHš^\ÎˆÛÛ[Z]Y]ÛÜ›”ÈÛÛ^Þ[˜Ú›Ûš^˜][Û‹Ú\˜XÝ\‹\šYÈ[™HY™][YH™[X\ÙK[™™[[Ý˜[Ùˆ›Û‹Y[™Ú[™HÞ[˜Ú›Û›Ý\È[[YHØYØš™XÝ]Èœ›ÛHÛÜ›ØÚ\˜XÝ\‹Ù[™[^KØ]Y[È›ÙXÝ[Ûˆ™\ÛÛ][Û‹ˆY\›Ú™XÝ]Y]›ÝÈÝX\™È\ÙH[˜\šX[ÈYØZ[œÝ™YÜ™\ÜÚ[Û‹‚‚”Ý]\È™[XZ[œÈ
+Š”ÓÕTÑH’VÈÕUPÈU’QSÑHS‘S‘È’SSPQ
+Š‹›ÝÛÛ\[KÜ[[YHXØÙ\[˜ÙKˆHÌ[›™\ˆPÓ›ØÚÙ\ˆÝ[™]™[ÈQMŒËŒˆÛÛ\[KQK]šXÙH[™š\ÝX[›ÛÙ‹ÛÈ›È›ÙXÝ[Û‹XÛÛ\][™\ÜÈ\˜Ù[YÙH\È›Û[ÝYœ›ÛH\È™\Z\ˆ[Û™K‚‚ˆÈÈŒ‹LKLŒˆHY\Ü™Ø[š^˜][Ûˆ[™[YÜ˜][Ûˆ]Y]‚Ý\œ™[›ÙXÝ[ÛˆX]\š]H\È[˜Ú[™ÙYžH\È]Y]ˆØ\™ZÝ\ÙHÎNH\È™X[ÝYÙYØ]Y]Y]šY[˜ÙH
+^[ØYš[\ÈÈËM‹MËÍž]\ÊK]™KU[œ™X[ÍŽH\È™Yœ›ÛH›ØYX\ÙÛÝ™\››ÜˆšY[™[œ™X[ÍLŒ™[XZ[œÈ›ØÚÙY™Y›Ü™HÛÛ\[][ÛˆžHH[›™\ˆ[™Ú[™HÛÛ[PÓˆHØ[Y\˜H™\]Z\™[Y[X\[™È\È™\Z\™Y]ÛÝ\˜ÙKÙÛÝ™\›˜[˜ÙH]™[È[™Ú[™H›ÛÙˆ\ÈÝ[[™[™Ë‚‚Ü›ÜÜË\Þ\Ý[H™]šY]ÈYÈÛÈ˜XÚÙYQÒš\ÚÜÈÚ]Ý]›Û[Ý[™ÈX]\š]Nˆ”È™YÚ[Û˜[Ùš[HÛÛ^Ý\œ™[H›ÛÝÜÈÙÚXØ[]Y\ÝÝ]H˜]\ˆ[ˆÛÛ[Z]Y]ÛÜ›Y[]H\š[™È\Þ[˜ÈÝØ\Ë[™Ú\˜XÝ\‹\šYÈ\Þ[˜È[™\È]™H›È›Ý[™Y[˜XÝ]™KXØ\Ý]šXÝ[ÛˆÛXÞHY]ˆ[XšY[”ÈÛÛ[™È\ÈÛÜœ™XÝYœ›ÛH8 'Z\ÜÚ[™ø 'HÈ8 '[\[Y[Y[™[™È›ÛÙ‹¸ 'H™[XZ[š[™È\™XÝØYØš™XÝÛÛ˜Ù[˜][Ûˆ\ÈÝ[HØØ[[™ÈX›ÜˆÌJÈY\ˆÌ™\ÝÜ™\È[™Ú[™H˜[Y][Û‹‚‚ˆÈÈŒ‹LKLŒˆHš[˜[™K\[›™\ˆØ\™ZÝ\ÙHØ]\˜][Ûˆ˜]Ú‚•Ø\™ZÝ\ÙHœ™XYØZ[œÈ™YH™\šYšYYÙ™šXÚX[Ø^RÚ]ÐÌX›XËQÚ]XˆÝ\Ü[™\Îˆ›ÛÙÚÚ]Ú[‹Ú[\š[Üˆ›ÜËÙ[XÝ]™H\šËØÙ[Y]\žH›ÜË[™X[X[Hš[\™YÙ[™\šXÈÚ]šXÈ›ÜËˆ\È\ÈÛÝ\˜Ú[™ËÜÝYÚ[™ÈX]\š]HÛ›Kˆ›ÈQH[\ÜÛÛ\[KQK]šXÙK\™›Ü›X[˜ÙHÜˆš\ÝX[X]\š]H\È›Û[ÝYžH\È˜]ÚˆH™^XZ›ÜˆØ]H\ÈÌ[›™\‹Ù^XÝZXY[›ØÚË‚‚ˆÈÈŒ‹LKLŒˆHÚ\˜XÝ\ˆš\ÚXš[]HØ\™ZÝ\ÙHœšYÙB‚Ú\˜XÝ\ˆ›ÙXÝ[Ûˆ™[XZ[œÈT•PS]H™^š\ÚX›HœšYÙH\È›ÝÈÛÛ˜Ü™]H˜]\ˆ[ˆXœÝ˜XÝˆÙ™šXÚX[Ø^RÚ]ÚÙ[]ÛœÈKŒ\È™YÚ\Ý\™Y\ÈÐÌšYÙÙYØ[š[X]Y–ÑÓˆXÚšXØ[PHÝØÚËÚ[HØ^RÚ]Y™[\™\œÈ™[XZ[œÈÝYÙY˜XÚÙÜ›Ý[™Ü™]\™Ù]Ý\ÜˆHØ\™ZÝ\ÙH]Y]›ÝÈ˜[Y]\È\˜Ú]™K\Ý[H^[ØY™XÙZ\È[™XÙ[œÙK\Û˜\ÚÝ\Ú\Ë[\›Ýš[™È›Ý™[˜[˜ÙH[YÜš]H›Üˆ\ÙH›Û‹Z[\˜XÝ]™HX›XËQÚ]Xˆ[™\Ë‚‚•\ÈÙ\È›Ý›Û[ÝHÚ\˜XÝ\ˆX]\š]Nˆ›È™]ÈÚÙ[][\ÜÙ]\ÈY]™Y[ˆ[\ÜY[ÈQMŒËŒˆÛˆHÝ\œ™[XY›È›ÞH\È™Y[ˆ™\XÙYÛˆØÜ™Y[ˆžH\ÈÚ[™ÙK[™›ÈÛÛ\[KÔQKÙ]šXÙKÝš\ÝX[XØÙ\[˜ÙH\ÈÛZ[YYˆH[›™\ˆ[™Ú[™HÛÛ[PÓ›ØÚÙ\ˆÝ[™]™[ÈH™X[[\ÜÜ[[YH›ÛÙ‹‚‚ˆÈÈŒ‹LKLŒˆHØ^RÚ]X›XËQÚ]XˆØ\™ZÝ\ÙKÝÛÜ›Y›Ý[™][Ûˆ[˜Ü™[Y[‚‘]šY[˜ÙH[\š[™È\È[˜Ü™[Y[ˆˆÍÈM˜MÌM™X˜ÌÌÙLÌ™XXØ˜ŒMM˜YLLL˜ØY™KU[œ™X[ÍÌÕPÐÑTÔÈ[™Ø\™ZÝ\ÙHÝYÙHÎÕPÐÑTÔËˆ[œ™X[Z[ÍLHY›Ý^XÝ]HÊÊÈZ[Ú[\ÜÜ[[YH™XØ]\ÙHH›Û‹Y[]˜]Y‘UÓÔ’ÈÑT•’PÑH[›™\ˆÛÝ[›Ý™XYQMŒËŒˆÛÜ›ÜšYX]\šX[X\ÜÙ]Y\ˆHÝX\™Y™[YYX][ÛˆY™\œ™Yˆ\™Y›Ü™H›ÈÛÛ\[KQK]šXÙK\™›Ü›X[˜ÙHÜˆš\ÝX[X]\š]H\È›Û[ÝY‚‚•HØ\™ZÝ\ÙH›ÝÈ\ÈH›Û‹Z[\˜XÝ]™HÙ™šXÚX[\X›XËQÚ]XˆØ^RÚ][™H›ÜˆÝ\Ü[™ÈYYY]˜[ÝÛÜ›^[Ý][™Ù[Û‹Ú[\š[Üˆ^[Ý]˜XÚÙÜ›Ý[™šYËÜ™]\™Ù]PH[™\›š]\™H›ÜËˆ]™\žHÝXØÙ\ÜÙ[ÝÛ›ØY™[XZ[œÈÕQÑQÚ]ÛÝ\˜ÙKÛXÙ[œÙKÚ\Ú]šY[˜ÙNÈ‘PQWÑ“Ô—ÒSTÔ•[™]\ˆÝ]\È™[XZ[ˆÙ\\˜]Kˆ™YÚ[Û˜[X\[™ÜÈ\™H™\›ÙXÝ[Û‹ÜÚ\™YY›Ý[™][ÛˆÝ\ÜÛ›HÚ\™H\RKÒRRH[[YHØ]\È\™HÛÜÙYˆPÌH™[XZ[œÈHš\œÝ\ÜÙ[X›Y™[˜ÚX\šË‚‚ˆÈÈŒ‹LKLŒˆHÝ\›H™YK[[™HØ\™ZÝ\ÙKÝÛÜ›Ú[YÜ˜][ÛˆÛÛ[X][Û‚‚‘^XÝZXY]šY[˜ÙH™Y›Ü™H\È˜]ÚˆˆÍÈYYNLXXÌ˜MÎLÎÙNNÙ™ÍNXŽYMÍÙ™LLY™KU[œ™X[ÍÈÕPÐÑTÔÈ[™Ø\™ZÝ\ÙHÝYÙHÍÍˆÕPÐÑTÔËˆ[œ™X[Z[ÍLˆÝÜY]H[˜Ú[™ÙYQMŒËŒˆ[™Ú[™HÛÛ[™\šYšXØ][ÛˆY\ˆHÝX\™YPÓ\™[YYX][Ûˆ][\ÈÊÊÈZ[Ú[\ÜÐ]]ÛX][Û‹ÜÝ\\ØÚ\\‹ÜÝ]HÝ\ÈY›Ý^XÝ]Kˆ\™Y›Ü™H›ÈÛÛ\[KQK]šXÙK\™›Ü›X[˜ÙHÜˆš\ÝX[X]\š]H\È›Û[ÝY‚‚•HØ\™ZÝ\ÙH[™HYÈÙ™šXÚX[]X]\›š]\ÈÐÌXÜ]Z\Ú][Û‹ØØ[™Y]HÛÝ™\˜YÙH›Üˆ[Ù[\ˆ˜XÚÙÜ›Ý[™[X[œË[ÛœÝ\‹ØÜ™X]\™H\[[™H\Ý[™ËÝ\Ü[™ÈZ[[™ÜÈ[™[™Ù[Û‹Ú[\š[Üˆ\˜Ú]XÝ\™KˆZ\ˆÝ]H\ÈÐS‘QUHÜˆUUÔ’V‘QÑ“Ô—ÔÕQÒS‘ÈÛ›NÈš[˜[[š[X]YÚ\˜XÝ\œÈ[™Ü™X]\™\ÈÝ[™\]Z\™HÚÙ[][–Ú]™X[šYÜÈ\È[ZÙKÙY›Ü›X][Û‹Ýš\ÝX[™]šY]ËˆHÛÜ›Y›Ý[™][Ûˆ[™H\ÜÚYÛœÈ]ÝØÚÈÈ\›ÜšX]H™YÚ[ÛœÈÚ[H™]Z[š[™ÈPÌH\ÈHš\œÝ\ÜÙ[X›Y™[˜ÚX\šÈ[™ÙY\[™È\RKÒRRH™YÚ[ÛœÈ‘T“ÑPÕSÓ—ÓÓ“Kˆ[[YH\˜Ú]XÝ\™HÛÛœÝ˜Z[È™[XZ[ˆÛÙØ\Þ[˜ÈX]žHØY[™ËTÓKÒTÓH›Üˆ™\X]Y]Z[[™›Ý[™YÛÛYÜ[][ÛœË‚‚ˆÈÈŒ‹LKLŒˆHPÓ™[YYX][Ûˆ][\[™š[ÙÞHX]\šX[ÝØÚÈ^[œÚ[Û‚‚HØY™H™XY[Û›HPÓ™[YYX][Ûˆ][\›ÝÈ™XÙY\ÈH[˜Ú[™ÙYQM[™Ú[™HÛÛ[™Y›YÚ[™HÙXÛÛ™[XšY[ÑÈ˜]ÚYÈ›Û‹TÚ\™H™YÚ[Û˜[X]\šX[ÝØÚÈXÜ›ÜÜÈHš[ÙÞKˆ\ÈY˜[˜Ù\È[YÜ˜][Ûˆ™XY[™\ÜÈ[™Ø\™ZÝ\ÙHœ™XYÛ›NÈ[™Ú[™HÛÛ\[KÜ[[YKÝš\ÝX[XØÙ\[˜ÙH™[XZ[œÈ[™[™Ë‚‚ˆÈÈŒ‹LKLŒˆH]]Û›Û[Ý\È™YK[[™H›ÙXÝ[Ûˆ]\˜][Û‚‚”ˆÍÈ^XÝXY™Y›Ü™H\È›ÙXÝ[Ûˆ˜]ÚØ\ÈÎLÌLÌÙŽŒÍÌ™YM˜ŒYYN™˜˜ˆ™KU[œ™X[˜[Y][ÛˆÍLÈÛÛ\]YÝXØÙ\ÜÙ[HÛˆ]^XÝÒKˆ[œ™X[Z[˜[Y][ÛˆÍY
+Š››Ý
+Šˆ™XXÚÊÊÈÛÛ\[][ÛŽˆHÙ[‹ZÜÝYQMLËUÚ[™ÝÜØ[›™\ˆ^XÝ]Y\È•UUÔ’UW‘UÓÔ’ÈÑT•’PÑX[™Ø\È[šYY™XYXØÙ\ÜÈÈ[™Ú[™KÐÛÛ[Ñ[™Ú[™SX]\šX[ËÕÛÜ›ÜšYX]\šX[X\ÜÙ]Ûˆ[Ú^™Y›YÚ›Ø™\ËˆZ[[\Ü]]ÛX][Ûˆœ˜[Y]ÛÜšËÝ\\Ú\\ˆ[™Ý]HÝ\ÈÙ\™H\™Y›Ü™HÚÚ\Yˆ\È™[XZ[œÈ[ˆ[™Ú[™HÛÛ[PÓÙ[š\›Û›Y[›ØÚÙ\‹›ÝÛÛ\[H]šY[˜ÙK‚‚•Ø\™ZÝ\ÙHØ]\˜][ÛˆY˜[˜ÙYÚ]Ý]›Û[Ý[™È\ÜÙ]X]\š]Kˆš[ÙÞP\ÜÙ]Ø[™Y]T]Y]YKšœÛÛ˜›ÝÈ[˜ÛY\ÈÛÛ˜Ü™]H]X]\›š]\È[š[X][Û‹Ü›Ü[™Ù[›™^HÛÜ›Ù›ÜYšXØ][Û‹Û˜]\™KÚ[\š[Ü‹ÕRHÝ\ÜØ[™Y]\È[™XYHYYÈÙ™šXÚX[ÐÌXÚÈYÙ\Ëˆš[ÙÞP]Y[Ð\ÜÙ]Ø[™Y]T]Y]YKšœÛÛ˜›ÝÈZ\œ›ÜœÈÝYÙKX]]Üš^™YÜ[‘Ø[YP\ÐÌ›ÝÝ\H]\ÚXËÔÑ–Ø[™Y]\ÈXÜ›ÜÜÈÚ\™Kœ™YK›Ú[ˆ[™\™ÙKX˜]H›Ý][™È\ÝËˆØ\™ZÝ\ÙP[XšY[ÑÐXÜ]Z\Ú][Û˜]ÚŒKšœÛÛ˜\È^[™Y[ÈHš[ÙÞKY›Ý[™][ÛˆX]\šX[[ZÙHÛÝ™\š[™ÈÛ›ÝËÚXÙKØ]™HÝÛ™KÙ][™Ü›Ý[™Ú]HÝÛ™K›ÛØ[šXËØ\ÚÝ\™˜XÙ\Ë[™\ÝšX[Y][›Ú[ˆ\ÝÜ˜[Ý\™˜XÙ\ËZ[œÈ[™š]™\‹ÝÙ]X]\šX[ËˆUUÔ’V‘QÑ“Ô—ÔÕQÒS‘È[™ÕQÑQ™[XZ[ˆ\Ý[˜Ýœ›ÛH‘PQWÑ“Ô—ÒSTÔ•ÈSTÔ•QÈS•QÔUQÈPÐÑTQ‚‚“][K\™YÚ[ÛˆÛÜ›Y›Ý[™][Ûˆ™\›ÙXÝ[Ûˆ\È›ÈÛ™Ù\ˆH\ÝÙˆ™YÚ[Ûˆ˜[Y\ÈÛ›Kˆ]™\žHXÛ\™Y™YÚ[Ûˆœ›ÛHÚ\™H›ÝYÚÜ™^H]™[œÈ›ÝÈØ\œšY\È^XÚ]ÝØÚÈÛÛ˜XÝÈ›Üˆ\˜Ú]XÝ\™K\œ˜Z[‹ÛX]\šX[Ë™YÙ]][Û‹ÙXÛÛÙÞK›ÜËÜ[][ÛœËÙ˜XÝ[ÛœË]Y[ËYÚ[™ËØ][ÜÜ\™K‘–[™˜]™\œØ[ØÛÛ\Ú[Û‹\È™Y™\œ™YØ\™ZÝ\ÙHÛÝ\˜ÙH[™\ËˆPÌH™[XZ[œÈHš\œÝ\ÜÙ[X›Y™[˜ÚX\šÎÈ]\‹Yš[H™YÚ[ÛœÈ\™H^XÚ]H‘T“ÑPÕSÓ—ÓÓ“H[™\ÈÛÜšÈÙ\È›ÝÜ[ˆ\RKÒRRH[[YHÚ\\œË‚‚Ý\œ™[ÛÙKÜ[[YHXØÙ\[˜ÙH\È[˜Ú[™ÙYžH\ÙHØ\™ZÝ\ÙKÝÛÜ›\[ˆY]Ëˆ›ÈÓÓTSKUTÕQQKUTÕQU’PÑKUTÕQÜˆ’TÕPSKPPÐÑTQÛZ[H\ÈXYH›ÜˆH™]ÈXY‚‚ˆÈÈŒ‹LKLŒˆH˜Z[Y\ÝØ\›Û˜XÚÈ˜[œØXÝ[ÛˆÛÝ\˜ÙH™\Z\‚‚‘˜Z[Y\ÝØ\›Û˜XÚÈ›ÝÈ™\ÝÜ™\È^Y\‹[Y™HÝ]H
+X[Ý[Z[˜K™\ÛÛ™KÝ\Y\ÊH[ˆY][ÛˆÈH™]š[Ý\ÛH™\ÝÜ™YÛÜ›Ü]Y\ÝÛY[[ÜžKÜ›ÙÜ™\ÜÚ[Û‹ÚÛ›ÝÛYÙKÜ^Y\‹]˜[œÙ›Ü›HÝ]K[™ÛÝ\˜ÙKXÛÛ˜XÝ\ÝÈ›ÝXÝHÜ™\š[™È™Y›Ü™H[Ý™[Y[™[X\ÙKˆ[YÜ˜][Û‹ÜØ]™HX]\š]H™[XZ[œÈT•PS[[^XÝZXYQMŒÈÛÛ\[KÜ[[YH]šY[˜ÙH^\ÝË‚‚ˆÈÈŒ‹LKLŒˆHš[ÙÞK]ÚYHÛÜ››Ý[™][Ûˆ\˜[[\ÛB‚•ÛÜ››ÙXÝ[Ûˆ[›š[™È\È›ÈÛ™Ù\ˆÚ\™K[Û›Kˆ™]\ØX›H›Ý[™][ÛœÈ\™H›ÝÈ˜XÚÙYXÜ›ÜÜÈ[XZ›Üˆš[ÙÞH™YÚ[ÛœÈÚ[HPÌH™[XZ[œÈHš\œÝ[H\ÜÙ[X›Y™[˜ÚX\šËˆ\ÈY˜[˜Ù\È™\›ÙXÝ[Ûˆ[™Ø\™ZÝ\ÙHÛÝ™\˜YÙHÛ›NÈ]Ù\È›Ý›Û[ÝH]\ˆÚ\\œÈÈ[[YK\™XYHÝ]\Ë‚‚ˆÈÈŒ‹LKLŒˆH™\ÛÝ\˜ÙHšX›HHÛÝ\˜ÙH^[œÚ[Ûˆ[™™]ÈØ\™ZÝ\ÙHÝYÙ\œÂ‚”ÛÝ\˜ÙHH\È›ÝÈÜ\˜][Û˜[˜]\ˆ[ˆ\ÜÚ]™HØÝ[Y[][Û‹ˆ]Èœ›ØY™\ÛÝ\˜ÙH˜[Z[Y\È]™H™Y[ˆY\™ÙY[ÈHXXÚ[™K\™XYX›HÛØ˜[ÛÝ\˜ÙH™YÚ\ÝžK[™ÛÛ˜Ü™]HÝYÚ[™È[™\È›ÝÈ[˜ÛYH[XšY[ÑÈÐÌX]\šX[È\ÈÙ[›™^HÐÌÝ\ÜÝÛÜ›Ú]È[ˆY][ÛˆÈH^\Ý[™ÈÛH]™[‹]X]\›š]\È[™Ü[‘Ø[YP\[™\Ëˆ\ÈY˜[˜Ù\ÈØ\™ZÝ\ÙHÛÝ\˜ÙHœ™XY[™ÕQÑQXÜ]Z\Ú][ÛˆÛ›NÈ›ÈQH[\ÜÜ[[YKÝš\ÝX[Ø]Y[ËÙ]šXÙHXØÙ\[˜ÙH\È›Û[ÝYžH\ÈÛÝ\˜Ú[™ÈØ]™K‚‚ˆÈÈŒ‹LKLŒˆHÛÛYš\ÝX[˜[˜XÚÈ\™[š[™Â‚•H\Þ[˜È]š[™Ë]ÛÜ›ÝÛ™\œÚ\Ø]™H›ÝÈ[ÛÈ™\Ù]È]™\žH™]\ÙY[XšY[XÝÜˆÈÛÛœÝXÝÜ‹[ÝÛ™Y[™Ú[™Hš[Z]]™HY\Ú\È™Y›Ü™H™\ÛÛš[™È›ÛK\ÜXÚYšXÈ›ÙXÝ[ÛˆÛÙØš™XÝËˆ\È™]™[ÈHÛÛY”È]Ú[™Ù\È™YÚ[Û˜[›ÛHœ›ÛH™]Z[š[™ÈHÝ[H[X[‹Ñ[‹ÒØ˜š]Y\ÚÚ[ˆH›ÙXÝ[Ûˆ\ÜÙ]\È[˜]˜Z[X›KˆXÝ]™H[œÚ]H[™Ý™X[Z[™ÈÛXÞH\™H[˜Ú[™ÙYˆ^XÝZXYÒKÕQH]šY[˜ÙH™[XZ[œÈ™\]Z\™YÈ›È[[YH™\šYšXØ][ÛˆÛZ[H\ÈXYK‚‚ˆÈÈŒ‹LKLŒˆH\Þ[˜Ú›Û›Ý\È]š[™Ë]ÛÜ›\ÜÙ]ÝÛ™\œÚ\‚•H™YÚ\Ý\™Y]š[™Ë]ÛÜ›Þ[˜Ú›Û›Ý\È›ÙXÝ[Û‹[ØYY™XÝ\È›ÝÈ™\Z\™Y]ÛÝ\˜ÙH]™[\Ú[™ÈH^\Ý[™ÈÛË\\ÙHÚ\\ˆÝ™X[Z[™È\˜Ú]XÝ\™H˜]\ˆ[ˆ[›ÙXÚ[™È[›Ý\ˆØY\‹ˆ]KÐÚ\\\ÜÙ]Ý™X[Z[™Ô[‹šœÛÛ˜›ÝÈ^XÚ]HXÙ\ÈH[XšY[›ÙXÝ[ÛˆÝ\™˜XÙKØ˜š]Ò[X[‹Ñ[ˆ™\ÚY[Y\Ú\Ë[™Ú\\‹]\ÙY˜][˜HY\Ú\È[ÈH™[]˜[ÛÙÚ\\ˆ˜[šÜËˆZ\ˆY™][YH\È\™Y›Ü™HÝÛ™YžHH™\ÚY[”Ý™X[XX›R[™XÚXÚ™[XZ[œÈ[]™H[[H™\XÙ[Y[ÛÜ›ÝXØÙ\ÜÙ[HÛÛ[Z]Ë‚‚˜TÚ\™P[XšY[”ÎŽ\Uš\ÝX[Ý[X›ÈÛ™Ù\ˆÞ[˜Ú›Û›Ý\ÛHØYØš™XÝÈ›ÙXÝ[ÛˆY\Ú\ÈÜˆH›ÙXÝ[ÛˆÝ\™˜XÙKˆ]™\ÛÛ™\ÈÛ›H[™XYK\™\ÚY[ÛÙØš™XÝÈ[™ÙY\ÈÛÛœÝXÝÜ‹[ÝÛ™Y[™Ú[™Hš[Z]]™KÛX]\šX[˜[˜XÚÜÈÚ[ˆH›ÙXÝ[Ûˆ\ÜÙ]\È[˜]˜Z[X›Kˆ]š[™ÕÛÜ›\™XÝÜ˜ZÙ]Ú\ÙH™\ÛÛ™\È]È[XšY[[Ý[Ûˆ›ÙXÝ[ÛˆY\Ú\Èœ›ÛHH™\ÚY[˜[šÈ[œÝXYÙˆ[š]X][™ÈÞ[˜Ú›Û›Ý\ÈXÚØYÙHØYËˆ\È™\Ù\™\ÈHÝ\œ™[\Þ[˜ËÛ›ËYØ[YK]™XY]ØZ]ÛXÞH[™Ù\È›Ý[˜Ü™X\ÙHXÝ]™H[œÚ]K‚‚‘^XÝZXYÝ]XËÐÒH˜[Y][Ûˆ\ÈÝ[™\]Z\™Y›Üˆ\ÈÚ[™ÙKˆ[[YH™[™\š[™È[™˜[œÚ][Ûˆ™Z]š[Üˆ™[XZ[ˆ[œ›Ý™[ˆ[[X]Ú[™ÈQMŒËŒˆ]šY[˜ÙH^\ÝÎÈ›ÈÓÓTSKUTÕQQKUTÕQU’PÑKUTÕQÜˆ’TÕPSKPPÐÑTQÛZ[H\ÈXYK‚‚ˆÈÈŒ‹LKLŒˆH›Ý[™Y[XšY[”ÈÛÛ[™È›Ý[™][Û‚‚•H™YÚ\Ý\™Y˜\Ù[[™HÜ]ÛXÝÜ‹Ñ\Ý›ÞHÚ\›ˆ\È›ÝÈ™\Z\™Y]ÛÝ\˜ÙH]™[Ú]^žH›Ý[™Y™]\ÙKˆ]š[™ÕÛÜ›\™XÝÜ˜ÝÛœÈ[ˆ[XšY[S”ÈÛÛØ\Y]ØXÚYXÝÜœÈ]Ù\È›Ý™X[ØØ]H]ÜˆÚ[™ÙH]]Ü™YXÝ]™KY[œÚ]H\™Ù]Ëˆ˜\Ù[[™HÝ[[™ËÚ\\ˆ™\Ù][™^\™YZXÜ›ËY]™[È™]\›ˆ[XšY[”ÈXÝÜœÈÈHØXÚHÚ[ˆØ\XÚ]H\È]˜Z[X›NÈ›Û‹S”È]™[XÝÜœÈÝ[\Ý›ÞH›Ü›X[K[™^Ù\ÜÈØXÚYØ[™Y]\È\™H\Ý›ÞYY˜]\ˆ[ˆÜ›ÝÚ[™ÈY[[ÜžHÚ]Ý]›Ý[™‚‚˜TÚ\™P[XšY[”Ø›ÝÈ\È[ˆ^XÚ]XXÝ]˜]KÜ™XXÝ]˜]HY™XÞXÛH]ÛX\œÈÛØÚX[Ø]Ø\™[™\ÜËØØ\[ÛˆÝ]K\ØX›\ÈXÚÈ[™š\ÚXš[]HÚ[HØXÚY[™[H™X\Y\È›Ý][™H›ÛK›Ü[Ý™[Y[[™YÚÙZYÚ™YYÈÝ]HÛˆ™]\ÙKˆÛÛYXÝÜœÈ\™H^ÛYYœ›ÛHÛØÚX[\\™\ˆÙ[XÝ[Û‹ˆ\È\™Ù]ÈÜ]Û‹Ù\Ý›ÞHÚ\›ˆÚ[H™\Ù\š[™ÈHMÈÙ[ˆÈÐˆSHÈŒˆÐˆ”SHYÙ][™Ù\È›Ý[˜Ü™X\ÙHÛÜ›[œÚ]K‚‚•\È™[XZ[œÈÛÝ\˜ÙK[Û›H[[^XÝZXY˜[Y][Ûˆ[œËˆ]\È›ÝÓÓTSKUTÕQQKUTÕQU’PÑKUTÕQÜˆ’TÕPSKPPÐÑTQ‚‚ˆÈÈŒ‹LKLŒˆHÜ›Ý[™\ØY™H]š[™Ë]ÛÜ›[XšY[XÙ[Y[‚•H™^™YÚ\Ý\™Y›Ý[™][ÛˆY™XÝ\È™\Z\™Y]ÛÝ\˜ÙH]™[Ú]Ý][˜Ü™X\Ú[™È[œÚ]Kˆ]š[™ÕÛÜ›\™XÝÜŽŽ”Ü]Û[XšY[XÝÜ˜›ÝÈ›Ý™\È›ØÚÚ[™ÈÜ›Ý[™Ú]H™\XØ[š\ÚXš[]H˜XÙH™Y›Ü™HÜ]Ûš[™ÈÜ›Ý[™X›Ý[™[XšY[›Û\È[™Ù\\˜][HÜ›Ý[™ÈZ\ˆ›Ý][™H[™Ú[ˆYˆH[š]X[Ú[\È›È›ØÚÚ[™ÈÜ›Ý[™HÜ]Ûˆ\È™Z™XÝYÈYˆÛ›HH˜]™[[™Ú[\È[œ›Ý™[‹HXÝÜˆ™[XZ[œÈ]]ÈÜ›Ý[™YÝ\˜]\ˆ[ˆØ[Ú[™ÈÝØ\™[ˆ[œØY™H‹ˆš\™[™]\™›H›Û\È™]Z[ˆZ\ˆ]]Ü™YZ\˜›Ü›™HXÙ[Y[Ú[H˜X˜š][™[X[›ÚY™\ÚY[È\ÙHHÜ›Ý[™\ØY™H]‚‚•\È\ÈHÝËXÛÜÝXÙ[Y[ÝX\™›ÜˆH^\Ý[™ÈQMŒËŒˆÈÝË\ÜXÈ\˜Ú]XÝ\™NÈ]Ù\È›ÝY˜]›Y\ÚÛÜÝÜˆ™]ÈÜ[][Û‹ˆØ[ÛØœÝXÛH]›ÚY[˜ÙH[™™[™\™YXÙ[Y[]X[]HÝ[™\]Z\™H[[YHØœÙ\˜][Û‹ˆ^XÝZXYÝ]XÈ˜[Y][Ûˆ]\Ý\ÜÈ™Y›Ü™HH™^Y™XÞXÛH™\Z\‹ˆ›ÈÓÓTSKUTÕQQKUTÕQU’PÑKUTÕQÜˆ’TÕPSKPPÐÑTQÛZ[H\ÈXYK‚‚ˆÈÈŒ‹LKLŒˆH˜Z[YÛÜ›\ÝØ\›Û˜XÚÈ˜[œØXÝ[Ûˆ™\Z\‚‚•H™YÚ\Ý\™Y˜[œÚ][Û‹\\œÚ\Ý[˜ÙHY™XÝØ]™H›ÝÈ[˜ÛY\ÈHÛÝ\˜ÙK[]™[›Û˜XÚÈ˜[œØXÝ[Ûˆ™\Z\‹ˆÚ\\•ÛÜ››Ý]\˜Ø\\™\ÈH\ÝÛÛ[Z]Y]Y\ÝÜ›Ý]KÝÛÜ›Y[]H\È^Y\ˆ˜[œÙ›Ü›HY\ˆXXÚÝXØÙ\ÜÙ[ÛÜ›ÛÛ[Z]ˆYˆ\Ý[˜][ÛˆÛÛœÝXÝ[Û‹Ü›Ý[™[™ËÜˆ\ÜÙ]X˜[šÈÛÛ[Z]˜Z[ËH[™[™È™\]Y\Ý\ÈØ[˜Ù[YHš[ÜˆÙÚXØ[Ý]H[™Z[\ˆ\™H™\ÝÜ™Y[™\ˆH›Û˜XÚÈÝX\™H^Y\ˆ\ÈÜ›Ý[™Y˜XÚÈ]HÛÛ[Z]Y˜[œÙ›Ü›K[Ý™[Y[\È™[X\ÙYÛ›HY\ˆ]ÝXØÙYYË[™Hœ™\ÚÛÜ›™]š\Ú[Û˜\Èœ›ØYØ\Ý›ÜˆH™XZ[ÛÛ[Z]YÛÜ›‚‚•\ÈÛÜÙ\ÈHÛ›ÝÛˆÛÝ\˜ÙK[]™[Ø\Ú\™H›Û˜XÚÈ™XZ[š[ÜˆÙ[ÛY]žH]Y[Ý™[Y[[[™ÙÚXØ[Ü^Y\ˆÝ]H[˜ÛÚ\™[ˆ]\È
+Š››Ý
+Šˆ[[YHÛÜÝ\™HY]ˆ^XÝZXYÝ]XÈ˜[Y][Ûˆ\È™\]Z\™Y™^[™QMŒÈÛÛ\[KÔQKÙ]šXÙH]šY[˜ÙH™[XZ[œÈÙ\\˜]Kˆ›ÈÓÓTSKUTÕQQKUTÕQU’PÑKUTÕQÜˆ’TÕPSKPPÐÑTQÛZ[H\ÈXYK‚‚ˆÈ“ÑPÕSÓˆÓÓTUS‘TÔÈPU’V‚ˆÈÈŒ‹LKLŒˆHÛØ˜[ÛÝ\˜ÙHX]š^^[œÚ[Û‚‚•Ø\™ZÝ\ÙHÛÝ\˜Ú[™È›ÝÈ\Ù\ÈH˜[šÙY][K\›ÝšY\ˆX]š^˜]\ˆ[ˆH™]È˜]›Ü™YÚ]\ËˆÛX\ˆX›XËÐÐÌÛÝ\˜Ù\È\™Hš[Üš]^™Y›Üˆ]]ÛX]XÈÝYÚ[™ÎÈXØÛÝ[ÛX\šÙ]XÙHÛÝ\˜Ù\È™[XZ[ˆ^XÚ]™]šY]È[™\ÎÈšXÚKÜ™Y™\™[˜ÙK[Û›HÛÝ\˜Ù\ÈØ[››ÝÚ[[H[\ˆ\›Ý™Yˆ\ÈY˜[˜Ù\ÈÛÝ\˜Ú[™Èœ™XY[™[ZÙH\ØÚ\[™HÛ›K›Ý[\ÜÚ[YÜ˜][Û‹Ýš\ÝX[XØÙ\[˜ÙK‚‚ˆÈÈŒ‹LKLŒˆHØ\™ZÝ\ÙHÝYÚ[™È][˜Ú\ˆ™\Z\‚‚•Ø\™ZÝ\ÙHÝYÙHÌN˜Z[Y™Y›Ü™HXÜ]Z\Ú][Ûˆ™XØ]\ÙHH[›™\‰ÜÈÝÙ\”Ú[^XÝ][ÛˆÛXÞH›ØÚÙYÚ]X‰ÜÈ[\Ü˜\žHÚ[ˆÝÙ\œÚ[Ü˜\\‹ˆHÛÜšÙ›ÝÈ›ÝÈ][˜Ú\È™\ÜÚ]ÜžK[ÝÛ™YÝYÚ[™ÈØÜš\Èœ›ÛHÛYÚ]Q^XÝ][Û”ÛXÞHž\\ÜÈQš[Xˆ›ÈØ\™ZÝ\ÙHš[H\È›Û[ÝY[[H™^[ˆ™\ÜÈXÝX[ÝYÙY™XÙZ\Ë‚‚ˆÈÈŒ‹LKLŒˆH][K[[™HØ\™ZÝ\ÙHXÜ]Z\Ú][Û‚‚•H\œÚ\Ý[Ø\™ZÝ\ÙH›ÝÈ\ÈÛÛ˜Ü™]HÝYÚ[™È[™\È›Üˆ[š\›Û›Y[ÛX]\šX[È
+ÛH]™[ŠK]\ÚXËÙ›Û^H
+Ü[‘Ø[YP\
+K[™Ú\˜XÝ\‹Ø[š[X][Û‹Ù˜][˜KÝÛÜ›ZÚ]Ø[™Y]\È
+]X]\›š]\ÊKˆ\™XÝYÝÛ›ØY[™\È™\Ù\™HÛÝ\˜ÙKÛXÙ[œÙKÚ\Ú™XÙZ\ÎÈ[œ™\ÛÛ™Y[\˜XÝ]™K\ÝÜ™HXÚÜÈ™[XZ[ˆØ[™Y]\È˜]\ˆ[ˆ™Z[™ÈZ\Ü™\ÜY\ÈÝYÙYˆ\ÈY˜[˜Ù\ÈØ\™ZÝ\ÙHÝØÚÈXÜ]Z\Ú][ÛˆÛ›H[™Ù\È›Ý›Û[ÝHQH[\Ü[[YKš\ÝX[Üˆ]šXÙHXØÙ\[˜ÙK‚‚ˆÈÈŒ‹LKLŒˆHXÝ]™HØ\™ZÝ\ÙHš[^XÝ][Û‚‚•Ø\™ZÝ\ÙH›ÙXÝ[Ûˆ\È›ÝÈ^XÝ][™È™X[ÝYÙYYÝÛ›ØY˜]Ú\È˜]\ˆ[ˆÛ›HØ][ÙÝZ[™ÈØ[™Y]\ËˆHš\œÝÛH]™[ˆ˜]Ú\È™\šYšYYÛÝ\˜ÙHYÙ\Ë™\Ú[Y[\‹X\ÜÙ]ÝYÚ[™È[™™XÙZ\ÜÚÚ\YZ][HXØÛÝ[[™Ëˆ\ÈY˜[˜Ù\È\ÜÙ]XÜ]Z\Ú][Ûˆ[™œ˜\ÝXÝ\™H[™ÝØÚÈ™XY[™\ÜÈÛ›NÈQH[\ÜÜ[[YKÝš\ÝX[XØÙ\[˜ÙH™[XZ[ˆ]\ˆÝ]\Ë‚‚ˆÈÈŒ‹LKLŒˆH\œÚ\Ý[\ÜÙ]Ø\™ZÝ\ÙHÝYÚ[™Â‚•H›Ú™XÝ›ÝÈ\ÈHYXØ]Y\œÚ\Ý[Ø\™ZÝ\ÙHÝYÚ[™ÈÛÜšÙ›ÝÈÙ\\˜]Hœ›ÛHQH[[YH˜[Y][Û‹ˆHš\œÝÐÌÛH]™[ˆ˜]Ú\ÈXXÚ[™KYYš[™Y[™ÝYÙ\ÈÈH\œÚ\Ý[Ù[‹ZÜÝY›Û\ˆÚ]™XÙZ\Ú\Ú[[ˆ\ÈY˜[˜Ù\ÈØ\™ZÝ\ÙHXÜ]Z\Ú][Ûˆ[™œ˜\ÝXÝ\™HÛ›NÈÝYÙYš[\È\™H›Ý[\ÜY[YÜ˜]YÜˆš\ÝX[HXØÙ\YžH\ÈÚ[™ÙK‚‚ˆÈÈŒ‹LKLŒˆHØ\™ZÝ\ÙH›ØYX\™XÛÛ˜Ú[X][ÛˆY\ˆ™KU[œ™X[ÍNMÂ‚•H™]Èš[ÙÞHØ\™ZÝ\ÙH™\]Z\™[Y[ÝÛÜšÈ][H\È›ÝÈ^XÚ]H\ÜÚYÛ™YÈHX\Ý\ˆ^XÝ][Ûˆ›ØYX\[™H›ØYX\	ÜÈ[™š[š\ÚYØXÝ]™HÛ˜\ÚÝÈ\™H™YÙ[™\˜]Yœ›ÛH›Ú™XÝÛÝ™\››Ü‹ˆ\È™\Z\œÈÛÝ™\›˜[˜ÙHÛÛœÚ\Ý[˜ÞHÛ›NÈ\ÜÙ]Ü[[YHX]\š]H\È[˜Ú[™ÙYˆ[œ™X[ÍÌˆ™[XZ[œÈ™KXÛÛ\[H›ØÚÙYžHØØ[[™Ú[™HÛÛ[\›Z\ÜÚ[ÛœË‚‚ˆÈÈŒ‹LKLŒˆHš[ÙÞHØ\™ZÝ\ÙKYš\œÝ›ÙXÝ[Ûˆ[™B‚Hš[ÙÞK]ÚYH›ÙXÝ[ÛˆØ\™ZÝ\ÙH\È›ÝÈ^XÚ]H˜XÚÙYˆ\ÈÛÜÙ\ÈH[›š[™ËØÛÝ™\˜YÙH›Ø›[HÚ\™HÚ\˜XÝ\œËÛÜ›\Ü™X]\™\ËX]\šX[Ë[š[X][Ûˆ[™]Y[ÈÛÝ[™[XZ[ˆ[œÜXÚYšXÈ]K\ÝYÙHØ\ËˆHØ][ÙÝYH[˜ÛY\È[XZ›Üˆš[ÙÞH›ÙXÝ[Ûˆ˜[Z[Y\È[™^XÝš\œÝ\\ÜÈÛÝË]XÝX[š[˜[\ÜÙ]È™[XZ[ˆ]Z^Y™XY[™\ÜÈÝ]\È[™\™H›Ý›Û[ÝYY\™[H™XØ]\ÙHZ\ˆÛÝÈ\™HØ][ÙÝYY‚‚”PÌH™[XZ[œÈHš\œÝ[˜]\˜[XÚ\˜XÝ\‹ÝÛÜ›Ø]Y[È™[˜ÚX\šËˆ\RKÒRRHØ\™ZÝ\ÙHÛÝ\˜Ú[™È[™Ú]™\\˜][ÛˆX^H[ˆ[ˆ\˜[[Ú]Ý]Ü[š[™È[[YHÚ\\ˆ[\[Y[][ÛˆZXYÙˆH^\Ý[™ÈØ]\Ëˆ›Èš\ÝX[Ø]Y[ËÙ]šXÙHXØÙ\[˜ÙHÛÛ[[ˆ\È›Û[ÝYžH\ÈØ][ÙÝYHØ]™K‚‚ˆÈÈŒ‹LKLŒˆHÚ[™[X]XÈ]Y[ÈØ\™ZÝ\ÙHŒˆ™YÚ\Ý\™Y‚]Y[È›ÙXÝ[Ûˆ›ÝÈ\È[ˆ^XÚ]ÛÝ\˜Ú[™ËÝØ\™ZÝ\ÙH[ˆÛÝ™\š[™È›ÚXÙK[˜[ZXÈ]\ÚXË[XšY[˜ÙKÙ˜][˜K›Û^H[™Ü™X]\™KØÛÛX˜]Y™™XÝËˆ^\Ý[™È[[YH›Ý][™È™[XZ[œÈ[XÝÈ]]Ü™Y\›Ý™Y\ÜÙ]ËÜ]X[ØÛÛ˜Ý\œ™[˜ÞH\Ý[š[™È™]šY]È[™\™Ù]Y]šXÙH]Y[È›Ùš[[™È\™HÝ[[™[™ËÛÈ›ÚXÙKÐ]Y[ÈX]\š]H\È›Ý›Û[ÝYžH\È[›š[™ÈØ]™K‚‚ˆÈÈŒ‹LKLŒˆHÈ\Þ[˜ÈÚ\˜XÝ\ˆÝ]XËYÝX\™™XÛÛ˜Ú[X][Û‚‚”™KU[œ™X[ÍMÎ^ÜÙY›Ý\ˆÝ[HÚ\˜XÝ\‹\›ÙXÝ[Ûˆ\ÜÙ\[ÛœÈ]Ý[\ØÜšX™YHÛÞ[˜Ú›Û›Ý\ÈšYÈ›Ø™KˆËLLKÔËLH›ÝÈ˜[Y]HHÈ”Ý™X[XX›SX[˜YÙ\ˆÚ\˜XÝ\‹\šYÈ][™›Ü˜šYÞ[˜Ú›Û›Ý\ÈÚÙ[][[Y\ÚØ[š[X][Û‹XÛ\ÜÈØY[™È[ˆH^XX›HÚ\˜XÝ\ˆ[™Ù™‹ˆ[[YH™Z]š[Üˆ[™š\ÝX[XØÙ\[˜ÙH\™H[˜Ú[™ÙYžH\È˜[Y]Üˆ™\Z\‹‚‚ˆÈÈŒ‹LKLŒˆH\Þ[˜ÈÚ\˜XÝ\ˆØ]™HÝ]XÈ™YÜ™\ÜÚ[Ûˆ™\Z\‚‚”™KU[œ™X[ÍMÍˆY[YšYYÛ™HÛÝ\˜ÙK\ÝXÝ\™H™YÜ™\ÜÚ[Ûˆ[ˆH™]È\Þ[˜ÈÚ\˜XÝ\‹\šYÈØ]™NˆH\XØ]YTÚ\™T^Y\Ú\˜XÝ\ŽŽ‘[™^XÚYÛ˜]\™HYœ˜XÙ\È[˜˜[[˜ÙYˆH\XØ]H\È™[[Ý™Y[™H^XÝZXYØ]\È\™H™Z[™È™\[‹ˆ[œ™X[Z[ÍLHY[ˆÛ›[™H[›™\ˆ]ÝÜY™Y›Ü™HÛÛ\[][ÛˆÛˆH^\Ý[™ÈQM[™Ú[™HÛÛ[™XY\\›Z\ÜÚ[Ûˆ˜Z[\™KÛÈÛÛ\[KÜ[[YHX]\š]H™[XZ[œÈ[˜Ú[™ÙY‚‚ˆÈÈŒ‹LKLŒˆHÛÛ[Z]\Þ[˜Ú›Ûš^™Y\œÚ\Ý[˜ÙH[\[Y[][Û‚‚•Hš\œÝÜÝ\Ý]XËYØ]H[[YH™\Z\ˆ›ÝÈÞ[˜Ú›Ûš^™\È]]ÛX]XÈÚ\\ˆÚXÚÜÚ[Ø\\™H[™Ø]™Y\^Y\ˆ˜[œÙ›Ü›H™\ÝÜ˜][ÛˆÚ]Ú\\•ÛÜ››Ý]\˜ÛÛ[Z]YÚ\\‹Ü›Ý]KÙ\\ÛÙHY[]KˆØ]™Y˜[œÙ›Ü›\È\™HÜ›Ý[™YYØZ[œÝÛÛ[Z]Y\Ý[˜][ÛˆÙ[ÛY]žH™Y›Ü™HXÙ[Y[ˆH[š]X[PÌHÚXÚÜÚ[\Ù\ÈHØ[YH˜\œšY\‹‚‚•\ÈY˜[˜Ù\ÈÛÝ\˜ÙH[\[Y[][ÛˆÛ›KˆØ]™KÛØY™[XZ[œÈT•PS[[^XÝZXYQMŒÈÛÛ\[][Ûˆ[™[[YH™YÜ™\ÜÚ[Ûˆ]šY[˜ÙH^\Ý[™ÛÚ\™[˜Z[Y\ÝØ\›Û˜XÚÈ™[XZ[œÈÜ[‹ˆ›ÈÛÛ\[KQK]šXÙK\™›Ü›X[˜ÙHÜˆš\ÝX[ÛÛ[[ˆ\È›Û[ÝY‚‚ˆÈÈŒ‹LKLŒˆH™KU[œ™X[ÍMŒˆÝ™X[Z[™È™YÜ™\ÜÚ[Û‹]\Ý™\Z\‚‚”™KU[œ™X[ÍMŒˆ\ÜÙYÛÜ™H˜[Y][Û‹›Ú™XÝÛÝ™\››Üˆ[™Y\›Ú™XÝ]Y][ˆ˜Z[YHÝ[HÛÝ\˜ÙKXÛÛ˜XÝ\Ý]Ý[^XÝY\Þ[˜Ë[ØYÛÛ\][ÛˆÈ›Û[ÝH™\ÚY[[™XˆHÝ\œ™[ÛË\\ÙH\˜Ú]XÝ\™H[[[Û˜[H›Û[Ý\ÈH™\ÚY[˜[šÈÛ›H[ˆÛÛ[Z][™[™Ô™\]Y\ÝY\ˆÛÜ›ÛÛ[Z]™\™\]Z\Ú]\ÈÝXØÙYYˆH\Ý\È[YÛ™YÈ]ÛÛ˜XÝÚ]Ý]Ú[™Ú[™È[[YHÛÙK‚‚•[œ™X[Z[ÌÎMÈ™[XZ[œÈ[š\›Û›Y[X›ØÚÙY™Y›Ü™HÛÛ\[][ÛˆžHQM[™Ú[™HÛÛ[™XY\›Z\ÜÚ[ÛœËˆ›ÈÛÛ\[KQK]šXÙK\™›Ü›X[˜ÙHÜˆš\ÝX[X]\š]H\È›Û[ÝYžH\ÈÚ[™ÙK‚‚ˆÈÈŒ‹LKLŒˆH™KU[œ™X[ÍMŒHY\X]Y]ÛÛ˜XÝ™\Z\‚‚“Ûˆ^XÝXYYXYŒÌL™M™L˜ÙLŒÌÍÍMŒYNLÍ˜HÛÜ™H™KU[œ™X[˜[Y]Üˆ\ÜÙY]HÝXœÙ\]Y[Y\]Y]˜Z[Y™XØ]\ÙH]ÙX\˜ÚYÛ›HÚ\™PÚ\\\ÜÙ]Ý™X[Z[™ÔÝXœÞ\Ý[K˜Ü›ÜˆH”Ý™X[XX›SX[˜YÙ\˜\HX\šÙ\‹ˆH\H\ÈXÛ\™Y[ˆHÝXœÞ\Ý[HXY\ˆÚ[HHÜÛÛZ[œÈH\Þ[˜È™\]Y\Ý]ˆHY\]Y]\ÈÛÜœ™XÝYÈ˜[Y]HHXY\ŠØÜÛÛ˜XÝÙÙ]\ˆ[™Ý[™Z™XÝÞ[˜Ú›Û›Ý\ÈØYØš™XÝ[ˆHÝ™X[Z[™ÈÜ‚‚•\ÈÚ[™Ù\ÈÝ]XÈ˜[Y][ÛˆÛ›Kˆ]Ù\È›ÝÛÜÙHH™YÚ\Ý\™YÚXÚÜÚ[ÜØ]™K\™\ÝÜ™KÜ›Û˜XÚÈÜˆ[XšY[[Y™Hš[™[™ÜÈ[™Ù\È›Ý›Û[ÝHÛÛ\[KQK]šXÙK\™›Ü›X[˜ÙHÜˆš\ÝX[Ý]\Ë‚‚ˆÈÈŒ‹LKLŒˆH^XXš[]H]Y][ZÙH[™ËLLMÈÝ]XËYØ]H™\Z\‚‚HÛÝ\˜ÙH™]šY]ÈÙˆHÝÛ™\‹Y›ÜØ\™YÛÜšÈš[™[™ÜÈÛˆMÌX™MØ™XÙMM˜M™ÙÍ™LŽY™LXŒÍ˜YŒ˜ÛÛ™š\›\ÈÜ[ˆ\œÚ\Ý[˜ÙKÝ˜[œÚ][Ûˆ[™]š[™Ë]ÛÜ›š\ÚÜÎˆÚXÚÜÚ[Ø\\™H\È›ÝÛÜ›XÛÛ[Z]Þ[˜Ú›Ûš^™YÜ›ÜÜËXÚ\\ˆ™\ÝÜ™HØ[ˆ\HH˜[œÙ›Ü›H™Y›Ü™HÛÜ›ÛÛ[Z]›Û˜XÚÈ\È›ÝY]HÛÚ\™[^XX›Hš[Ü‹\Ý]H˜[œØXÝ[Û‹[XšY[XÙ[Y[XÚÜÈHÜ›Ý[™\ØY™HÛÛ\Ú[ÛˆÛÛ˜XÝ[™[XšY[Ü[][ÛˆÝ[\ÈÜ]ÛXÝÜ‹Ñ\Ý›ÞH\È\™XÝØYØš™XÝXˆ\ÙH\™H™YÚ\Ý\™Y™\Z\ˆÛÜšË›ÝXØÙ\Y[[YHš^\Ë‚‚”™KU[œ™X[ÍMŒ™XXÚY[™\ÜÙYHÛÜ™H˜[Y][Ûˆ\ÙK[ˆ˜Z[YÛ™HÝ[HËLLMÈ\ÜÙ\[Ûˆ™XØ]\ÙHŒLÛÜ›ÛY™H\È›ÝÈHÛØ˜[Ý\œ™[š\ÝX[Ø]™KˆHÝX\™\È˜\œ›ÝÙYÈ™\Ù\™HH\ÝÜšXØ[\›ËY\]Z\Y[\ÜÙ]›ØÚÈÚ]Ý][›š[™ÈHÚÛHš\ÝX[[ˆÈˆ›ÈÚ\\ˆX]\š]KÛÛ\[KQK]šXÙK\™›Ü›X[˜ÙHÜˆš\ÝX[ÛÛ[[ˆ\È›Û[ÝYžH\ÈÝ]XËYÝX\™ÛÜœ™XÝ[Û‹‚‚ˆÈÈŒ‹LKLŒˆHˆÍÈ˜[Y][Û‹YØ]H™\Z\‚‚”™KU[œ™X[ÍMNÛˆ^XÝXYLÌXMMÍÍŒØÍNL™Í˜Í™˜ÙLŒ™˜˜Z[YÚ]ÛÈÝ]XËYÝX\™\œ›ÜœÈØ]\ÙYžHËLLLHÝ[\ØÜšXš[™ÈHŽHš^YZ[š[™ÈÛÜ›[Y™HÛÛ˜XÝˆH[YÜ˜][Ûˆœ˜[˜Ú[™XYH\Ù\ÈHŒLÚ\\ˆ[œÚ]H›Ùš[H[™[™Ù\”Ü[][Û‘œ˜XÝ[Û˜[Ù[ˆËLLLH\È™Z[™È[YÛ™YÈ]^\Ý[™ÈŒL[[YKÙ]HÛÛ˜XÝÚ]Ý]Ú[™Ú[™ÈØ[Y\^H™Z]š[Ü‹‚‚•[œ™X[Z[ÌÎLÈÛˆHØ[YHÒHY›Ý™XXÚÊÊÈÛÛ\[][Û‹ˆHÙ[‹ZÜÝY[›™\ˆY[]H•UUÔ’UW‘UÓÔ’ÈÑT•’PÑXØ\È[šYY™XYXØÙ\ÜÈÈQMŒËŒˆÛÜ›ÜšYX]\šX[X\ÜÙ]ÛˆÚ^ÛÛœÙXÝ]]™H[™Ú[™KXÛÛ[›Ø™\Ëˆ\™Y›Ü™H\ÈØ]™H™[XZ[œÈ
+Š”ÕUPËTS‘S‘ÊŠˆ[™›ÈÓÓTSKÔQKÙ]šXÙKÝš\ÝX[ÛÛ[[ˆ\È›Û[ÝYžH\È™\Z\‹‚‚ˆÈÈŒ‹LKLŒHHÛÛ[[Ý\Ë\Ù\ÜÚ[Ûˆ˜[œÚ][Ûˆ™YÜ™\ÜÚ[Û‚‚H™]È[[YH]Y]›ÝÈ™\]Z\™\ÈÛ™H]™HÙ\ÜÚ[ÛˆÈ˜]™\œÙH[ZYÚ\HÚ\\ˆY[]Y\Ë›Ý]HÝÚ]Ú[™ËÛÛ[Z]Y]ÛÜ›Û]š[™Ë]ÛÜ›™]š\Ú[ÛˆÞ[˜Ú›Ûš^˜][Ûˆ[™\ÚË\Ø]™H›Ý[™š\ˆ\È\È[\[Y[][ÛˆÛÝ™\˜YÙHÛ›NÈ›ÈÚ\\ˆ\È›Û[ÝYÈQKÙ]šXÙHXØÙ\[˜ÙH[[^XÝZXY[™Ú[™H[™ÝÛ™\ˆ]šY[˜ÙH^\Ý‚‚ˆÈÈŒ‹LKLŒHHÛÛ\™Z[œÚ]™H›Ý[™][Ûˆ[YÜ˜][Û‚‚”Ý\\Ü›Ý[™[™ËPKÜ\™›Ü›X[˜ÙHÝX\™˜Z[ËŒL™YÚ[Û˜[]š[™Ë]ÛÜ›™Z]š[Üˆ[™˜[œØXÝ[Û˜[Ú\\ˆÛÛ[Z]ÛÛÜ™[˜][Ûˆ\™H›ÝÈ™Z[™ÈÛÛœÛÛY]YÛˆÛ™H[YÜ˜][Ûˆœ˜[˜Úˆ\ÜÙ]™[ØY[™š\ÚX›K]ÛÜ›ÛÛ[Z]\™HÙ\\˜]YÈ]š[™Ë]ÛÜ›Ú\\ˆÝ]H›ÛÝÜÈÛÛ[Z]YÛÜ›™]š\Ú[Ûˆ˜]\ˆ[ˆ™\]Y\ÝY]Y\ÝÝ]K‚‚Ý\œ™[Ý]\Îˆ
+Š’STSQS•QÈÕUPËTS‘S‘ÊŠˆ›ÜˆH™]Ù\Ý[YÜ˜][ÛˆÚ[™Ù\Ëˆ›ÈÚ\\ˆ˜[Y][ÛˆÛÛ[[ˆ\È›Û[ÝY[[^XÝZXY™KU[œ™X[QMZ[Ü[[YH[™Y™XÝ\ÜXÚYšXÈQH]šY[˜ÙH^\Ý‚‚ˆÈÈŒ‹LKLŒHHš\ÝX[\\™›Ü›X[˜ÙH\˜Ú]XÝ\™HÝX\™˜Z[Â‚•H›Ú™XÝ›ÝÈ˜XÚÜÈHYX\Ý\™Yš\ÝX[\\™›Ü›X[˜ÙH\˜Ú]XÝ\™HÛÛ˜XÝˆ\Þ[˜ËÜÛÙX]žH\ÜÙ]Ë[œÝ[˜ÙY
+ØÝ[™\X]Y]Z[›Ý[™YXÚÈ\ØYÙK›ÛKX\›ÜšX]HÑÛX]\šX[ÛXÞH[™]šY[˜ÙKYš]™[ˆYÚ[™ËÜÚYÝÈÙ[XÝ[Û‹ˆÝ]XÈÝX\™È›ÝXÝHÝ\œ™[H›Ý™[ˆ\Þ[˜ËÒTÓKÛ›Û‹]XÚÚ[™ËXZ[\ˆ]\›œË‚‚•\ÈÙ\È›Ý›Û[ÝH[žHÚ\\‰ÜÈ\™›Ü›X[˜ÙKQK]šXÙHÜˆš\ÝX[Ý]\Ëˆ˜]ËXØ[œ˜[YK][YKÝ™X[Z[™Ë\ÛÛ™\ÚY[[Y[[ÜžKÑ[™YÚ[™ËÜÚYÝÈÛÛ\\š\ÛÛœÈ™[XZ[ˆ\™Ù]Y]šXÙHÛÜšË‚‚ˆÈÈŒ‹LKLŒHH[™Ú[™H]]ÛX][Ûˆœ˜[Y]ÛÜšÈPHØ]™B‚•H›Ú™XÝ›ÝÈ\È[ˆ[š]X[QH]]ÛX][Ûˆœ˜[Y]ÛÜšÈ^Y\ˆ[ˆY][ÛˆÈÝ]XÈ˜[Y][Ûˆ[™[[YHÛ[ÚÙKˆHš\œÝ\ÝÈÛÝ™\ˆØ]™QØ[YHY˜][ÜØÚ[XH[˜\šX[È[™ÜÝZ[\Ü^\Ý[˜ÙHÙˆ[Ý™X[YYÚ\\ˆXÚØYÙ\ËˆÝ\\Ü›Ý[™[™È›ÛÙˆ›ÝÈØZ]ÈÛÈÙXÛÛ™È™Y›Ü™HTÔËˆ\ÙH\™H[\[Y[][ÛˆÚ[™Ù\ÈÛ›NÈ[™Ú[™H^XÝ][Ûˆ[™Y™XÝ\ÜXÚYšXÈQH]šY[˜ÙH™[XZ[ˆ[™[™Ë‚‚ˆÈÈŒ‹LKLŒHH]]ÛX]YPH[[][™K\Þ\Ý[H›Ý[™][Û‚‚H^Y\™Y]]ÛX]YPH[š]X]]™H\È›ÝÈ˜XÚÙY\È‘TKTPKL˜ˆHš\œÝØ]™HYÈ[œ™X[]]ÛX][Ûˆœ˜[Y]ÛÜšÈÛÝ™\˜YÙH[™^XÝZXYÒH^XÝ][ÛˆY\ˆÛÛ\[KÚ[\Üˆ]\ˆÛÜ›Û˜]‹Ø[š[X][Û‹Ü\™›Ü›X[˜ÙKÛY[[ÜžHÝZ]\È™[XZ[ˆ[™[™ÈYX\Ý\™Y[\[Y[][Û‹ˆ\ÈÙ\È›Ý[\ˆ[žHQKÙ]šXÙKÝš\ÝX[XØÙ\[˜ÙHÝ]\Ë‚‚ˆÈÈŒ‹LKLŒHH]\›Z[š\ÝXÈPÌHÜ]ÛˆÛÛ\Ú[ÛˆÝ\Ü‚•HÝ\\™\Z\ˆYÈHY[ˆ[™Ú[™H˜\ÚXÔÚ\\ÈÝ\ÜY]HPÌH]]Ü™Y›ØYÝ\ÛÈ[š]X[ÛÛ\Ú[Ûˆ›ÈÛ™Ù\ˆ\[™ÈÛˆ[\ÜYÐ’ˆÚ[\KXÛÛ\Ú[ÛˆÙ[™\˜][Û‹ˆ\ÈÝ™[™Ý[œÈHš^Ø[™Y]HÛ›NÈÓÓTSKÔQKÙ]šXÙKÝš\ÝX[Ý]\È™[XZ[œÈ[˜Ú[™ÙY[[^XÝZXY›ÛÙˆ^\ÝË‚‚ˆÈÈŒ‹LKLŒHHÝ\\Ü›Ý[™[™È™YÜ™\ÜÚ[Ûˆ™\Z\‚‚HPÌHQH˜[]›ÝYÚ™[XZ[œÈ[ˆÜ[ˆ[[YHY™XÝ\Ü]H[ˆX\›Y\ˆÜ]Û‹ZZYÚÜXÙ[Y[Ú[™ÙKˆH\ÛÛ]Yš^™[[Ý™\È™K]ÛÜ›Ø[YS[ÙH[\Ü[™ËÛÈ[š]X[Ü˜]š]H[[ÛÜ›ÛÛ[Z]™\ÛÛ™\ÈH›ØÚÚ[™È›ÛÜˆ™Y›Ü™H™[X\ÙK[™YÈÝ\\ØÚ\\ˆÜ›Ý[™[™È™YÜ™\ÜÚ[ÛˆX\šÙ\œË‚‚•\È\ÈH
+Š‘’VÐÐS‘QUJŠ‹›Ý[ˆXØÙ\Yš^ˆ›ÈÓÓTSKUTÕQQKUTÕQU’PÑKUTÕQÜˆ’TÕPSKPPÐÑTQÝ]\È\ÈYY[[H^XÝš^XYÛÛ\]\È[™Ú[™H˜[Y][Ûˆ[™HÜšYÚ[˜[ÝÛ™\‹[ØœÙ\™YPÌHÞ[\ÛH\È™XÚXÚÙY‚‚ˆÈÈ™\šYšXØ][Ûˆ]šY[˜ÙHÛÜœ™XÝ[Ûˆ[™›ÙXÝ[ÛˆÛÛ[X][Û‚‚’\ÝÜšXØ[XXÚ[™H˜\Ù[[™Nˆ]™[ÜØÌ˜ŒYMØŒ˜ÙŒØ˜ÎLŒŒYŒÍLLÌÌXX˜‚‚”™KU[œ™X[˜[Y][ÛˆÌ[™[œ™X[Z[˜[Y][ÛˆÎNH\ÜÙYÛˆ]˜\Ù[[™K[˜ÛY[™ÈÛÛ\[KÚ[\ÜÝ\\XY\ÜÈÚ\\ˆ]Y]È[™Ø\›š[™ËYXÚXÚÜËˆÜÙH\™H˜[YXXÚ[™HÚXÚÜË]^H\™H
+Š››Ý
+Šˆ™X[QKÙ]šXÙHš\ÝX[\\™›Ü›X[˜ÙH›ÛÙ‹‚‚Hš[ÜˆÛÛ™\œØ][Û‹[]™[ÝÛ™\ˆÛÛ™š\›X][ÛˆØ\È[˜ÛÜœ™XÝH›Û[ÝY[ÈQWÕTÕQ›Üˆ[ZYÚÚ\\œÈÚ]Ý]Ú\\‹\ÜXÚYšXÈ”ËØÜ™Y[œÚÝÝšY[ËÜˆÚ\\‹\ÜXÚYšXÈ›Ý\Ëˆ]›Û[Ý[Ûˆ\ÈÚ]˜]Û‹ˆHÝÛ™\ˆÛÛ™š\›X][Ûˆ™[XZ[œÈ\ÝÜšXØ[]]Üš^˜][ÛˆÈ™\Ý[YHÛÛœÝXÝ[ÛŽÈ]\È›ÝÚ\\‹XžKXÚ\\ˆ™\šYšXØ][Ûˆ]šY[˜ÙK‚‚‘]\™HQWÕTÕQÈQWÕTÕQÕÒUÒTÔÕQTØ›Û[Ý[Ûˆ™\]Z\™\È[ˆ^XÝÛÛ[Z]\È]X\ÝÛ™HÚ\\‹\ÜXÚYšXÈÚYÛ˜[ˆ[Y\šXÈ”ËØÜ™Y[œÚÝÝšY[È]šY[˜ÙKÜˆHÛÛ˜Ü™]H›ÝH[š\]YHÈ]Ú\\‹ˆÙ[™\šXÈÛÜYYÛÜ™[™È\È™Z™XÝYžHËLMË‚‚ˆÈÈÈÝ\œ™[™X[QKÙ]šXÙH]šY[˜ÙB‚ŸÚ\\ˆ™X[QH]šY[˜ÙHÝXš[]HÜ˜\Ú\™Ù]\Ü\™ˆ”È›Ý][™\È”Ë]ËS”È˜[YYY[[ÜžKØÛÛ^ÙX]\‹Ø][ÜÜ\™H›Ý\ÈŸKK_KK_KK_KK_KK_KK_KK_KK_KK_KK_ŸPÌHÚ\™H“ÕÔ•SˆPQTÔ×ÓÓ“H“×ÒPQTÔ×Ð“ÐÒÑTˆ“ÕÓQPTÕT‘Q“ÕÒSPS—Õ‘T’Q’QQ“ÕÒSPS—Õ‘T’Q’QQ“ÕÒSPS—Õ‘T’Q’QQ“ÕÒSPS—Õ‘T’Q’QQ™KY\ÝX›\Ú\ÈHÚ\\‹\ÜXÚYšXÈš\ÝX[Ü\™›Ü›X[˜ÙH™Y™\™[˜ÙHš\œÝŸPÌˆœ™YH“ÕÔ•SˆPQTÔ×ÓÓ“H“×ÒPQTÔ×Ð“ÐÒÑTˆ“ÕÓQPTÕT‘Q“ÕÒSPS—Õ‘T’Q’QQ“ÕÒSPS—Õ‘T’Q’QQ“ÕÒSPS—Õ‘T’Q’QQ“ÕÒSPS—Õ‘T’Q’QQ]ØZ]Ú\\‹\ÜXÚYšXÈ]šY[˜ÙHŸPÌÈÙX]\ÜÑ›Ü™“ÕÔ•SˆPQTÔ×ÓÓ“H“×ÒPQTÔ×Ð“ÐÒÑTˆ“ÕÓQPTÕT‘Q“ÕÒSPS—Õ‘T’Q’QQ“ÕÒSPS—Õ‘T’Q’QQ“ÕÒSPS—Õ‘T’Q’QQ“ÕÒSPS—Õ‘T’Q’QQ]ØZ]Ú\\‹\ÜXÚYšXÈ]šY[˜ÙHŸPÌš]™[™[“ÕÔ•SˆPQTÔ×ÓÓ“H“×ÒPQTÔ×Ð“ÐÒÑTˆ“ÕÓQPTÕT‘Q“ÕÒSPS—Õ‘T’Q’QQ“ÕÒSPS—Õ‘T’Q’QQ“ÕÒSPS—Õ‘T’Q’QQ“ÕÒSPS—Õ‘T’Q’QQ]ØZ]Ú\\‹\ÜXÚYšXÈ]šY[˜ÙHŸPÌH›ØYÐØ\˜Y˜\ËÕÙ\ÝØ]H“ÕÔ•SˆPQTÔ×ÓÓ“H“×ÒPQTÔ×Ð“ÐÒÑTˆ“ÕÓQPTÕT‘Q“ÕÒSPS—Õ‘T’Q’QQ“ÕÒSPS—Õ‘T’Q’QQ“ÕÒSPS—Õ‘T’Q’QQ“ÕÒSPS—Õ‘T’Q’QQ]ØZ]Ú\\‹\ÜXÚYšXÈ]šY[˜ÙHŸPÌˆ[ÜšXH“ÕÔ•SˆPQTÔ×ÓÓ“H“×ÒPQTÔ×Ð“ÐÒÑTˆ“ÕÓQPTÕT‘Q“ÕÒSPS—Õ‘T’Q’QQ“ÕÒSPS—Õ‘T’Q’QQ“ÕÒSPS—Õ‘T’Q’QQ“ÕÒSPS—Õ‘T’Q’QQÚ]š[X[ˆ˜\Ù[[™H™[XZ[œÈ[[[Û˜[H™\›ÎÈ™X[QH]šY[˜ÙHÝ[™\]Z\™YŸPÌÈÝÜšY[ˆ“ÕÔ•SˆPQTÔ×ÓÓ“H“×ÒPQTÔ×Ð“ÐÒÑTˆ“ÕÓQPTÕT‘Q“ÕÒSPS—Õ‘T’Q’QQ“ÕÒSPS—Õ‘T’Q’QQ“ÕÒSPS—Õ‘T’Q’QQ“ÕÒSPS—Õ‘T’Q’QQ]ØZ]Ú\\‹\ÜXÚYšXÈ]šY[˜ÙHŸPÌ[™Z[‹Ð[[Ûˆ[ˆ“ÕÔ•SˆPQTÔ×ÓÓ“H“×ÒPQTÔ×Ð“ÐÒÑTˆ“ÕÓQPTÕT‘Q“ÕÒSPS—Õ‘T’Q’QQ“ÕÒSPS—Õ‘T’Q’QQ“ÕÒSPS—Õ‘T’Q’QQ“ÕÒSPS—Õ‘T’Q’QQ]ØZ]Ú\\‹\ÜXÚYšXÈ]šY[˜ÙH‚‘[™Ú[™Y\š[™ËÛÝ\˜ÙK\ÜÙ]Y›Ý[™][Ûˆ[™]]ÛX]Y™YÜ™\ÜÚ[ÛˆÛÜšÈX^HÛÛ[YH™Z[™^\Ý[™ÈØ]\Ëˆš\ÝX[Ü\™›Ü›X[˜ÙHXØÙ\[˜ÙH[™[žH›ÙXÝ[ÛˆL	XÛZ[H™[XZ[ˆ›ØÚÙY[[Ú\\‹\ÜXÚYšXÈ]šY[˜ÙH^\ÝË‚‚•\Èš[H™]™[ÈXZ›ÜˆØ[YH[\œÈœ›ÛH\[™[™ÈÛˆÚ]Y[[ÜžK‚‚HÚ\\ˆ\È›ÝÛÛ\]H™XØ]\ÙH]È]Y\Ý]ÛÜšÜËˆ]™\žHÚ\\ˆ]\Ý™HÚXÚÙYXÜ›ÜÜÈ[›ÙXÝ[Ûˆ[\œË‚‚ˆÈÈÝ]\Â““ÕÔÕT•QÈ“ÕS‘USÓˆÈ“ÕÕTHÈ•SÕSÓSÈÓTÒÔS‘S‘ÈÈPÐÑTQ‚ˆÈÈX[™]ÜžH[\œÂŒKˆØ[›Û‹ÜÝÜžBŒ‹ˆXZ[ˆØ[Y\^HÛÜŒËˆ^Ü˜][Û‹ÜÚYHÛÛ[ˆÚ\˜XÝ\ˆš\ÝX[Y[]BKˆ›ÙH[š[X][Û‚‹ˆ˜XÚX[XÝ[™ÈÈØ^™HÈ\\Þ[˜ÂËˆÜÚÙ[ˆ›ÚXÙBŽˆÝX]\ËÙX[ÙÝYBŽKˆ]\ÚXÂŒLˆÑ–Ù›Û^BŒLKˆ[XšY[˜ÙBŒL‹ˆ”È›Ý][™\ËÜÛØÚX[Y™BŒLËˆ[™[^KØÜ™X]\™HRBŒMˆÛÛX˜]ÜÝX[Ú[ˆÝÜžH™\]Z\™\È]ŒMKˆ\œ˜Z[‹ÙÙ[ÙÜ˜\KÜØØ[BŒM‹ˆ\˜Ú]XÝ\™KÜ›ÜÂŒMËˆ™YÙ]][Û‹Øš[ÛYBŒNˆÙX]\‹Ý[YKØ][ÜÜ\™BŒNKˆÚ[™[X]XÈ™\Ù[][Û‚ŒŒˆØ]™KÛØYÛÛ[Z]BŒŒKˆ\™›Ü›X[˜ÙHÛˆ\™Ù]\ÜŒŒ‹ˆXØÙ\ÜÚXš[]KÜ™XYXš[]BŒŒËˆÝX\™X[‹ÜÝ]XÈ˜[Y][Û‚ŒˆQMŒÈÛÛ\[BŒKˆQKÙ]šXÙH\Ý‚ŸÚ\\ˆÝÜžHØ[Y\^H^Ü˜][ÛˆÚ\˜XÝ\œÈ˜XÙKÐ[š[H›ÚXÙH]Y[ÈRKÓY™HÛÛX˜]Ù[ÙÜ˜\H][ÜÜ\™HÚ[™[X]XÈØ]™H\™ˆQHŸKK_KK_KK_KK_KK_KK_KK_KK_KK_KK_KK_KK_KK_KK_KK_KK_ŸPÌHÚ\™H•SÕSÓS•SÕSÓS•SÕSÓS“ÕÕTH“ÕS‘USÓˆ“ÕS‘USÓˆ“ÕS‘USÓˆ•SÕSÓS•SÕSÓSÝX[•SÕSÓS•SÕSÓS“ÕÕTH•SÕSÓS“ÕÕTHS‘S‘ÈŸPÌˆœ™YH•SÕSÓS“ÕÕTH“ÕÕTH“ÕÕTH“ÕS‘USÓˆ“ÕS‘USÓˆ“ÕS‘USÓˆ“ÕÕTH“ÕÕTH“ÕÕTH“ÕÕTH“ÕÕTH“ÕS‘USÓˆ“ÕÔÕT•QS‘S‘ÈŸPÌÈÙX]\ÜÑ›Ü™•SÕSÓS“ÕÕTH“ÕÕTH“ÕÕTH“ÕS‘USÓˆ“ÕS‘USÓˆ“ÕS‘USÓˆ“ÕÕTH“ÕÕTH“ÕÕTH“ÕÕTH“ÕÕTH“ÕS‘USÓˆ“ÕÔÕT•QS‘S‘ÈŸPÌš]™[™[•SÕSÓS“ÕÕTH“ÕÕTH“ÕÕTH“ÕS‘USÓˆ“ÕS‘USÓˆ“ÕS‘USÓˆ“ÕÕTH‹ÐH“ÕÕTH“ÕÕTH“ÕÕTH“ÕS‘USÓˆ“ÕÔÕT•QS‘S‘ÈŸPÌH›ØYÐØ\˜Y˜\ËÕÙ\ÝØ]H•SÕSÓS“ÕÕTH“ÕÕTH“ÕÕTH“ÕS‘USÓˆ“ÕS‘USÓˆ“ÕS‘USÓˆ“ÕÕTH“ÕÕTH“ÕÕTH“ÕÕTH“ÕÕTH“ÕS‘USÓˆ“ÕÔÕT•QS‘S‘ÈŸPÌˆ[ÜšXH•SÕSÓS“ÕÕTH“ÕÕTH“ÕÕTH“ÕS‘USÓˆ“ÕS‘USÓˆ“ÕS‘USÓˆ“ÕÕTH“ÕÕTH“ÕÕTH“ÕÕTH“ÕÕTH“ÕS‘USÓˆ“ÕÔÕT•QS‘S‘ÈŸPÌÈÝÜšY[ˆ•SÕSÓS“ÕÕTH“ÕÕTH“ÕÕTH“ÕS‘USÓˆ“ÕS‘USÓˆ“ÕS‘USÓˆ“ÕÕTH‹ÐH“ÕÕTH“ÕÕTH“ÕÕTH“ÕS‘USÓˆ“ÕÔÕT•QS‘S‘ÈŸPÌ[™Z[‹Ð[[Ûˆ[ˆ•SÕSÓS“ÕÕTH“ÕÕTH“ÕÕTH“ÕS‘USÓˆ“ÕS‘USÓˆ“ÕS‘USÓˆ“ÕÕTH“ÕÕTH“ÕÕTH“ÕÕTH“ÕÕTH“ÕS‘USÓˆ“ÕÔÕT•QS‘S‘È‚ˆÈÈ˜[Y][Ûˆ]šY[˜ÙH™\œÝ\ÈX]\š]B‚•HÝ]\ÈX›HX›Ý™H\ØÜšX™\È
+Šœ›ÙXÝ[ÛˆX]\š]JŠ‹ˆ˜[Y][Ûˆ›ÛÙˆ\È™XÛÜ™YÙ\\˜][HÛÈHÝXØÙ\ÜÙ[ÛÛ\[KÚ[\Ü\È™]™\ˆÛÛ™\ÙYÚ]š\ÝX[ÜˆØ[Y\^HXØÙ\[˜ÙK‚‚ˆÈÈÈPÌHÚ\™H›ÙXÝ[Ûˆ[š\›Û›Y[‹HÔŽ[›ÙXÙY›Ú™XÝ[X[˜YÙY›ÙXÝ[ÛˆÛÝ\˜ÙH\ÜÙ]È›ÜˆÚ\™H[š\›Û›Y[Ü›ÜÈ[™[[YHÛÙH›ÝÈ™Y™\œÈ[\ÜY›ÙXÝ[ÛˆY\Ú\ÈÚ[H™]Z[š[™È˜\ÚXÔÚ\\È\È˜[˜XÚÜË‚‹HH›ÙXÝ[Ûˆ\ÜÙ]\[[™H\ÈÓÓTSKUTÕQ[™TÔÑURSTÔ•UTÕQÛˆQMŒËŒ‹‚‹H˜[Y]Y˜\Ù[[™HMÌÎX˜M™LÍÌM˜ÙXÙ™LLÌYŽXØXLLÙMÙX\ÜÙY™KU[œ™X[˜[Y][ÛˆÌLLÈ[™[œ™X[Z[˜[Y][ÛˆÌLNÈH›ÙXÝ[Ûˆ[\Ü\ˆ™\ÜYLš[\Ë˜Z[\™\Ø‚‹HH™]Ù\ˆÚ\™Hš\ÝX[ÛÛ[\ÈÝ[[™[™È›ØÝ\ÙYQH˜]™\œØ[\™Ù]Y]šXÙH\™›Ü›X[˜ÙH™]šY]È[™’TÕPSKPPÐÑTQÝ]\Ë‚‹HÚ\˜XÝ\ˆš\ÝX[Y[]H™[XZ[œÈ“ÕÕTKÑ“ÕS‘USÓˆÚ\™HHš[˜[šYÙÙYØ[š[X]YÝ›ÚXÙY›ÙXÝ[ÛˆÚ\˜XÝ\ˆÝ[™\™\È›ÝY]Ø]\ÙšYY‚‚ˆÈÈÈ™\ÜÚ]ÜžHZ[Ø]B‹HÔŽH\ÝX›\ÚYHÙ[‹ZÜÝYÚ[™ÝÜÈQMŒËŒˆ[›™\ˆÛˆH\™Ù]\Ü‚‹H]™\žH\ÚY]™[ÜÛÛ[Z]\È[YÚX›H›ÜˆH^XÝXÛÛ[Z]QMŒËŒˆÊÊÈZ[[™›ÙXÝ[Ûˆ\ÜÙ]Z[\ÜØ]K‚‹HÜ™Y[ˆÒH™]™\ˆÝXœÝ]]\È›ÜˆQK]šXÙHÜˆš\ÝX[XØÙ\[˜ÙK‚‚ˆÈÈÈÛÝ\˜ÙH\˜Ú]XÝ\™HÈ[™Ù™‚‹HÛÝ\˜ÙKÔÚ\™R›Ý\›™^KÔ‘PQQK›Y\ÈHÛÙK[]™[[™Ù™ˆ[žHÚ[[œÚYHH[[YH[Ù[K‚‹H]KÔÛÝ\˜ÙP\˜Ú]XÝ\™T[‹šœÛÛ˜\ÜÚYÛœÈ]™\žH[[YHÛÝ\˜ÙHš[HÈ]ÈXØÙ\YX›XËÔš]˜]HÛXZ[ˆ]ÈÔUÌLMM^XÝXYXÎY‹‹‹˜\ÜÙY™HÍÎ[œ™X[ÍŒŒÈ[™Ø\™ZÝ\ÙHÌŒY\ˆH\ÚXØ[ZYÜ˜][Û‹‚‹H›Ú™XÝÝX\™X[ˆ]\Ý™Z™XÝ[˜XÚÙY[[YHÛÝ\˜ÙHš[\ÈÛÈH™]È[X[ˆÜˆ]]ÛX]Y›ÙÜ˜[[Y\ˆØ[››ÝÚ[[H^[™H[Ù[HÚ]Ý]\][™ÈH\˜Ú]XÝ\™HX\‚‚ˆÈÈ›ÚXÙH[B‘]™\žH[[YH›Û‹Y[\H“×ÊˆY[YšY\ˆ]\Ý^\Ý[ˆ]KÕ›ÚXÙPÝYT[‹˜ÜÝ‹‚•›ÚXÙHÝ]\È™[XZ[œÈ“ÕS‘USÓˆÚ[H™\]Z\™Y›ÚXÙH\ÜÙ]È\™HTÔÑUÔS‘S‘Ë‚‚ˆÈÈ\]H[B•Ú[™]™\ˆHÚ\\‹›Ý]K[™[^Kš[ÛYKYXÚ[šXÈÜˆXZ›ÜˆÝÜžH™X]Ú[™Ù\Î‚‹H\]H\ÈX]š^‹H\]HH™[]˜[ÝÜžKØ]Y[È[‹‹HYÝX\™X[ˆ˜[Y][ÛˆÚ\™HXXÚ[™KXÚXÚØX›K‹HÈ›ÝX\šÈPÐÑTQÚ]Ý]™X[QMŒËÔQH]šY[˜ÙK‚ˆÈÈŒ‹LKLÌHPÌHÝ™\›šYÚ™\\˜][ÛˆÈØ]™KZ\ÝÜžH™XÛÛ˜Ú[X][Û‚‚•\ÈØ]™HÚ[™Ù\È™\\˜][ÛˆÛÛ˜XÝÈ[™Ý]XÈ˜[Y][ÛˆÛ›NÈ]Ù\È
+Š››Ý
+Šˆ›Û[ÝH[žH›ÙXÝ[Û‹XÛÛ\][™\ÜÈXØÙ\[˜ÙHÛÛ[[‹‚‚•ÌXXÚ[™HÛÜÝ\™H\È[š\š]Yœ›ÛHˆÌN^XÝXY˜ØNXXÌÙXLYLÍŒYMŒYMÎLŽ˜XYYY
+™KU[œ™X[ÌMÍHÕPÐÑTÔË[œ™X[Z[ÌLLÕPÐÑTÔÈ[˜ÛY[™ÈXÚØYÙY[[YH]H™\šYšXØ][Ûˆ[™XÚØYÙY^XÝ]X›HØœÙ\˜][ÛŠKˆHÝ\œ™[PÌHÝXØÙ\ÜÛÜˆˆ]\ÝÝ[Ø]\ÙžH]ÈÝÛˆÝ\œ™[^XÝZXY[™Ú[™HØ]H™Y›Ü™HY\™ÙHÜˆ[[YKXØ\ˆ^[œÚ[Û‹‚‚•HØ]™H]Y]›ÝÈ™XÛÜ™ÈÛ›H™XXÚX›K™]šY]ØX›H\ÝÜžNˆØÚ[XHÈ[›ÙXÙY^XÚ]™\œÚ[ÛˆY]Y]NÈØÚ[XHYY›Ý\›™^H\ØÛÝ™\žHšY[ÎÈØÚ[XHHYYÝ[Z[˜KÜ™\ÛÛ™KÜÝ\Y\ËÜ›ÙÜ™\ÜÚ[ÛˆÈØÚ[XHˆYYÚ›ÛšXÛKÛX\ZÛ›ÝÛYÙHšY[Ëˆ^XÚ]ØÚ[XHKÌˆÙ[X[XÜÈ™[XZ[ˆ[™ØÝ[Y[YÛÈ›ÈÛÛ\]Xš[]HÜˆZYÜ˜][ÛˆÛZ[H\È›Û[ÝY‚‚–™\›Ë\Ú[[[ÛZ\ÜÚ[Ûˆ™\\˜][Ûˆ›ÝÈ^XÚ]H˜XÚÜÈX[ÙÝYHÛ›ÝÛYÙH›YÜËØÚ[™[X]XË\ÚÚ\ÜÝÛÛ™][Ûˆ\]Z]˜[[˜ÙH[™ØY™HÜ[Û˜[]Ú[™ÝÈ^\žKˆ[[YHØ[Y\^K\™Ù]Y]šXÙH\™›Ü›X[˜ÙK[X[ˆQKš\ÝX[]X[]H[™]Y[È\Ý[š[™È™[XZ[ˆØ]Y[™[˜XØÙ\Y‚‚ˆÈÈŒ‹LKLÌHPÌHQ×ÑS‘ÓU‘QÒS—ÔTÔÈ\›ÈØ\‚‚‹HÒT‘WÕÓÔ“ÑS”ÒUH™YXÙ\ÜÛÜŽˆ
+Š”ÕUPËUSQUQ
+ÈQMŒËŒ‹ÚXY\ÜÈXXÚ[™KYÜ™Y[ŠŠˆÛˆˆÌNLˆÈ™KU[œ™X[ÌMÈÈ[œ™X[ÌLMÈY\™ÙY]™[ÜÌMŽÈÌLMH[ÛÈÜ™Y[‹‚‹H˜YÈ[™\›ÈÛÝ\˜ÙH[\[Y[][ÛŽˆ
+Š”ÓÕTÑKRSTSQS•QÈVPÕRPQÒHS‘S‘ÊŠ‹‚‹H^\š[Üˆ\›ÈYÙ]ˆ
+ŠŒÈTÓHÛ\Ý\œÈÈÍ›Û‹XÛÛ\Ú[Ûˆ[œÝ[˜Ù\È
+ÈÝ]XÈ]™YZ[ˆ›ÜÊŠ‹‚‹H]Y\Ý\Ý]H˜\šX[Îˆ
+ŠHš\^H›ÜÈ
+ÈH\\\™H›ÜÊŠ‹š\ÚXš[]K\ÝØ\Yœ›ÛH^\Ý[™ÈÚ\™T]Y\ÝÝXœÞ\Ý[H[YØ]H]™[ÎÈ›ÈXÚÈ[™›È˜[œÚ][ÛˆÜ]Û‹Ñ\Ý›ÞHÚ\›‹‚‹HRHÜ[][ÛŽˆ
+Š•SÒS‘ÑQ]N
+Š‹‚‹HÝÜžH[˜ÚÜœÈÈØÚÙYŒKLKÑŒKLˆÝ]ÛÛY\Îˆ
+Š•SÒS‘ÑQ
+Š‹‚‹HYXØ]Y˜YÈ[™[\š[ÜŽˆ
+ŠÓÓ•S•ÔS‘S‘ÊŠŽÈ›È›ÙXÝ[Ûˆ[\š[ÜˆÚ[ÚÚ]^\ÝÈ[ˆH™\ÜÚ]ÜžH[™›ÈÛÛ\][ÛˆÛZ[H\ÈXYK‚‹HQHÛÛ\Ú[Û‹Ü™XYXš[]K[X[ˆš\ÝX[XØÙ\[˜ÙH[™\™Ù]Y]šXÙH\™›Ü›X[˜ÙNˆ
+Š”S‘S‘ÈÈ“ÕÓRSQQ
+Š‹‚‚ˆÈÈŒ‹LKLÌHPÌHT•WÐS‘ÔÓÐÒPSÓÓÔØ\‚‚‹HQ×ÑS‘ÓU‘QÒS—ÔTÔÈ™YXÙ\ÜÛÜŽˆ
+Š”ÕUPËUSQUQ
+ÈQMŒËŒ‹ÚXY\ÜÈXXÚ[™KYÜ™Y[ŠŠˆÛˆˆÌNLÈÈ™KU[œ™X[ÌMŽHÈ[œ™X[ÌLM‹‚‹H\KÜÛØÚX[ÛÝ\˜ÙH[\[Y[][ÛŽˆ
+Š”ÓÕTÑKRSTSQS•QÈVPÕRPQÒHS‘S‘ÊŠ‹‚‹Hš\ÝX[YÙ]ˆ
+ŠTÓHÛ\Ý\œÈÈ›Û‹XÛÛ\Ú[ÛˆXÛÜ˜]]™H[œÝ[˜Ù\È
+ÈMÝ]XÈ\H›ÜÈ
+ÈÝ]K]˜\šX[›ÜÊŠ‹‚‹HÜ[Û˜[Ø[Y\^Nˆ
+ŠŒÈš\^K\Ù]\™X]È
+Èˆ][K\Ý\XÝ]š]Y\ÊŠˆ
+š\™]ÛÜšÜÈØY™]H[™˜YÛÛˆš\™]ÛÜšÈZ\Ú\
+K[ÝÜžK]Ú[™ÝÈØ]Y[™›Û‹[X[™]ÜžK‚‹H›ÙÜ™\ÜÚ[Û‹ÜØ]™Nˆ
+Š‘UKUÒT‘Q
+Šˆ›ÝYÚ^\Ý[™ÈÚYKXXÝ]š]KÙ\ØÛÝ™\žHš\œÝ][YH™]Ø\™]È\™XÝ™]Ø\™ž\\ÜÈ™[XZ[œÈ™Z™XÝYžHÚ\™T]Y\ÝÝXœÞ\Ý[K‚‹H[XšY[RHÜ[][ÛŽˆ
+Š•SÒS‘ÑQ]N
+Š‹‚‹HŒKLHØÚÙYÝ]ÛÛYNˆ
+Š•SÒS‘ÑQ
+Š‹‚‹H™]ÈØ[Y\^HÝXœÞ\Ý[HÈ\‹Yœ˜[YHØØ[ˆÈÞ[˜Ú›Û›Ý\ÈX]žHØYˆ
+Š““Ó‘JŠ‹‚‹HQHXÝ]š]H™]žKÝÚ[™ÝÈ™Z]š[Ü‹[X[ˆ\Hš\ÝX[ÜXÚ[™È™]šY]È[™\™Ù]Y]šXÙH\™›Ü›X[˜ÙNˆ
+Š”S‘S‘ÈÈ“ÕÓRSQQ
+Š‹‚‚ˆÈÈŒ‹LLLH8 %Y\]Y]ŒHÈš\ÝX[\]X[]HÛÝ™\›˜[˜ÙB‚Ÿ\™XHÝ\œ™[Ý]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_Ÿ˜[[˜ÙYYY][Hš\ÝX[\™Ù]ÓÕ‘T““Ô‹SÐÒÑQÙ[XÝ]™HYÚ›Üˆš\ÝX[H[\Ü[ÛÛ[È›Èš\ÝX[XØÙ\[˜ÙHÛZ[YYŸY\]Y]‹LK‹”‹LLQÔQTÈSQUSÓˆPU’VÛÛ™š\›YYY™XÝÎÈL\Ý\Ù\È™\]Z\š[™ÈÛÝ\˜ÙKÜ[[YHYX\Ý\™[Y[ŸÛÛ\Ý[™Ù][Y[Y[žH\™›Ü›X[˜ÙHQPTÕT‘SQS•‘TURT‘Q\™Ù]Y]šXÙKÜÝ[™[Û™H]šY[˜ÙH[™[™ÈŸZ[Yœ˜[YH[[Y]žH‘TURT‘Q“ÔˆPÐÑTSÑHMKÜNKÛX^
+ÈØ[YKÑ˜]ËÑÔNÈ›ÝY]XØÙ\YŸÛ™Ë\Ù\ÜÚ[ÛˆY[[ÜžKÜØ]™K[ØYÝXš[]HÓÕTÑKQÕPT‘QÈU’PÑHU’QSÑHS‘S‘È^\Ý[™È›Ý[™YÛÛ˜XÝÈ™]Z[™Y‚ˆÈÈŒ‹LLLHHØ]H‹ÍÈ
+ÈØØ[š\ÝX[›ÛÝÝ˜\™XÛÛ˜Ú[X][Û‚‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸÐU‘WÓÐQÓÓ‘×ÔÑTÔÒSÓˆ™YXÙ\ÜÛÜˆQT‘ÑQÈXXÚ[™KYÜ™Y[ˆÌŒY\™ÙY]ØYŽMÙYM™LÍM™XNYMNLXØÙŒXNŽLÎ˜ÌØ˜ŸØ]H‹ÍÈ]šY[˜ÙH]˜[X]Üˆ‘PÓÓÒSQÈRSPÓÔÑQ]šXÙH
+È[X[ˆ]šY[˜ÙHÝ[[™[™ÈŸš\ÝX[]X[]H\™Ù]ÓÕ‘T““Ô‹SÐÒÑQ˜[[˜ÙYYY][H
+ÈÙ[XÝ]™HYÚÌ”È›ÛÜˆ™]Z[™YŸØØ[›ÙXÝ[Ûˆ[\ÜØ›ÛÝÝ˜\ÓÕTÑKRSTSQS•QØØ[^XÝ][Û‹Ü™[™\™Y™]šY]È[™[™ÈŸ[[YHÝÛ™\œÚ\SÒS‘ÑQ^\Ý[™È›Ý]\‹ÝÛÜ›Û]š[™Ë]ÛÜ›Ü]Y\ÝÝÛ™\œÈ™[XZ[ˆ]]Üš]]]™HŸQHÈ]šXÙHÈš\ÝX[ÈXÚ[™ÈÈ\™›Ü›X[˜ÙH“ÕPÐÑTQ™\]Z\™\È™X[X]Ú[™È]šY[˜ÙH‚ˆÈÈŒ‹LLLHHØ]H‹ÍÈ
+ÈØØ[š\ÝX[›ÛÝÝ˜\™XÛÛ˜Ú[X][Û‚‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸÐU‘WÓÐQÓÓ‘×ÔÑTÔÒSÓˆ™YXÙ\ÜÛÜˆQT‘ÑQÈXXÚ[™KYÜ™Y[ˆÌŒY\™ÙY]ØYŽMÙYM™LÍM™XNYMNLXØÙŒXNŽLÎ˜ÌØ˜ŸØ]H‹ÍÈ]šY[˜ÙH]˜[X]Üˆ‘PÓÓÒSQÈRSPÓÔÑQ]šXÙH
+È[X[ˆ]šY[˜ÙHÝ[[™[™ÈŸš\ÝX[]X[]H\™Ù]ÓÕ‘T““Ô‹SÐÒÑQ˜[[˜ÙYYY][H
+ÈÙ[XÝ]™HYÚÌ”È›ÛÜˆ™]Z[™YŸØØ[›ÙXÝ[Ûˆ[\ÜØ›ÛÝÝ˜\ÓÕTÑKRSTSQS•QØØ[^XÝ][Û‹Ü™[™\™Y™]šY]È[™[™ÈŸ[[YHÝÛ™\œÚ\SÒS‘ÑQ^\Ý[™È›Ý]\‹ÝÛÜ›Û]š[™Ë]ÛÜ›Ü]Y\ÝÝÛ™\œÈ™[XZ[ˆ]]Üš]]]™HŸQHÈ]šXÙHÈš\ÝX[ÈXÚ[™ÈÈ\™›Ü›X[˜ÙH“ÕPÐÑTQ™\]Z\™\È™X[X]Ú[™È]šY[˜ÙH‚‚ˆÈÈŒ‹LLLHHœ›ÙÈØ[™Y]HØ\™ZÝ\ÙH\™Ù]Y™\Z\‚‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸØ\™ZÝ\ÙHÝYÙHÌÌˆÛˆ]™[ÜŽÙYNLØØRST‘H[™Y[œÚYHX]\šX[\›Ý™[˜[˜ÙH™\Z\ŽÈ›È\›Z[˜[›ØˆÙÈ[™›ÈØ[™Y]H\Y˜XÝŸ^XÝ\›Z[˜[[›™\‹ÜÙ\šXÙHØ]\ÙHS’Ó“ÕÓˆÈRSPÓÔÑQÚ]Xˆ™]Z[™YHXÝ]™HÝ\Ú]Ý]H\›Z[˜[Ý\ÛÛ˜Û\Ú[ÛŽÈÈ›Ý[™[HØ]\ÙHŸ[ÛH]™[ˆT™Yœ™\Ú‘SSÕ‘QSˆ‘TRTˆÐS‘QUH™\XÙYžH™XÙZ\ÒLMˆ˜[Y][Ûˆ[™\™Ù]Y\™ÙKÜ™YÝÛ›ØYŸ™\Z\‹\Ý\\˜][Ûˆ“ÕS‘QÈŒRS•UTÈ^XÝZXYÛÜšÙ›ÝÈ›ÛÙˆ[™[™ÈŸœ›ÙËÑØ[™[ˆØ[™Y]H™\Ü“Õ“ÑPÑQ›ÈÚ\˜XÝ\ˆ[\Ü[[YH›Û[Ý[Û‹š\ÝX[XØÙ\[˜ÙKÜˆØ]H‹ÍÈÛÜÝ\™H‚‚ˆÈÈŒ‹LLLHHPÌH\›Ë\›ÝšY\ˆ™\™\]Z\Ú]H™\Z\ˆØ[™Y]B‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸØ\™ZÝ\ÙHÌÌÈÛˆ]™[ÜŒÍŒÙÙŽXRST‘H[™[ÜžKØÜš]XØ[YØ\ÝYÙ\È\ÜÙYÈ\›ÈØ[™Y]HÛÝ™\˜YÙH˜Z[YŸ\œÚ\Ý[[™[ÜžHÓPSˆSˆ•SˆÌÌÈŒÎXXÝ]™H™\šYšYY™XÛÜ™ÎÈ[™[™ÎÈX[X[]Y]YHŸœ›ÙËÑØ[™[ˆ[ZÙH“ÐÒÑQ–HRTÔÒS‘ÈÕQÒS‘È™\\™YL[™[™ÏM›ØÚÙYLÈ›ÝØ[™Y]HÛÛÈÙ\™H™\›ÈŸ]X]\›š]\È\›È™\™\]Z\Ú]HÓÕTÑKRSTSQS•Q‘TRTˆÐS‘QUH›Ý[™YÈ›Ý\ˆ]]Üš^™Y–ÐÐÌÛÝ\˜ÙHXÚÜÎÈ^XÝZXY›ÛÙˆ[™[™ÈŸ™YÜ™\ÜÚ[ÛˆÝX\™ÓÕTÑKRSTSQS•Q™KU[œ™X[ÛÛ˜XÝ\Ý™\]Z\™\È^XÝXÚÈ\š]H[™›ÝšY\ˆÝYÚ[™È™Y›Ü™HØ[™Y]H™\ÜŸ[[YHÚ\˜XÝ\ˆ›Û[Ý[Ûˆ“ÕÕT•Q›È‘PQWÑ“Ô—ÒSTÔ•ÚÙ[][[\ÜÜˆ[[YH™\XÙ[Y[ÛZ[HŸQHÈ]šXÙHÈš\ÝX[ÈXÚ[™ÈÈ\™›Ü›X[˜ÙH“ÕPÐÑTQ™X[X]Ú[™È]šY[˜ÙHÝ[™\]Z\™Y‚‚ˆÈÈŒ‹LLLHHPÌˆœ™YH™\›ÙXÝ[ÛˆÜ[š[™Â‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸPÌˆœ™YHÈH˜[˜Ú[™ÈÛžHÛÝ\˜ÙHÛÛ˜XÝÓÕTÑKRSTSQS•Q]KÔPÌœ™YT™\›ÙXÝ[Û•ŒKšœÛÛ˜ŸŒKLÚ\™YÛÝ\˜ÙHÝ\\œXÚÈš[™[™ÈÓÕTÑKRSTSQS•Q^\Ý[™Èœ™YKÕÙX]\ÜXÚÈ™]\ÙYÈ›È\XØ]H^[ØY[™HŸœ™YHØ[›Û‹ÝÛÜ›Ü˜[[X\ˆÓÕTÑKSÐÒÑQ›Ú™XÝšX›\È
+ÈÛÚY[ˆ›ÛÚÈÛ™HVVŸ^\Ý[™Èœ™YHÛÝ\˜ÙHÝØÚÈPÈ‘TURT‘QÝ]XÈÝ\ÜÝØÚÈÛ›NÈ›Èš\ÝX[XØÙ\[˜ÙHŸPÌˆ[[YH[YÜ˜][Ûˆ‘QPÑTÔÓÔ‹QÐUQÈ“ÕÕT•Q™\]Z\™\ÈPÌHØ]H‹ÍÈPÐÑTQŸPÌˆQHÈ]šXÙHÈš\ÝX[ÈXÚ[™ÈÈ\™›Ü›X[˜ÙH“ÕPÐÑTQ™X[X]Ú[™È]šY[˜ÙH™\]Z\™YY\ˆ[[YHXÝ]˜][Ûˆ‚‚ˆÈÈŒ‹LLLHHPÌÈÙX]\ÜÈ›Ü™™\›ÙXÝ[ÛˆÜ[š[™Â‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸPÌÈÙX]\ÜÈ›Ü™ÛÝ\˜ÙHÛÛ˜XÝÓÕTÑKRSTSQS•Q]KÔPÌÕÙX]\Ü›Ü™™\›ÙXÝ[Û•ŒKšœÛÛ˜ŸŒKLÙX]\ÜÛÝ\˜ÙHš[™[™ÈÓÕTÑKRSTSQS•Q^\Ý[™ÈÚ\™YXÚÈ™]\ÙYÈ›È\XØ]H^[ØY[™HŸ›Ü™[™Ù™ˆ›Ý[™\žHÓÕTÑKSÐÒÑQÈ‘T“ÑPÕSÓˆÛÝ[™Y\œÝZ]È›Ü™Ü›ÜÜÚ[™ÈÈš]™[™[[™Ù™ˆÛ›HŸ^\Ý[™ÈÙX]\ÜÝØÚÈPÈ‘TURT‘QÝ]XÈÝ\ÜÝØÚÈÛ›NÈ›Èš\ÝX[XØÙ\[˜ÙHŸPÌÈ[[YH[YÜ˜][Ûˆ‘QPÑTÔÓÔ‹QÐUQÈ“ÕÕT•Q™\]Z\™\ÈPÌˆØ]H‹ÍÈPÐÑTQŸPÌÈQHÈ]šXÙHÈš\ÝX[ÈXÚ[™ÈÈ\™›Ü›X[˜ÙH“ÕPÐÑTQ™X[X]Ú[™È]šY[˜ÙH™\]Z\™YY\ˆ[[YHXÝ]˜][Ûˆ‚‚ˆÈÈŒ‹LLLHHÚÛKYØ[YH™\ÛÝ\˜ÙHÛÝ™\˜YÙH]Y]Œ‚‚ŸÛXZ[ˆÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸÙ[™\šXÈ”ˆÝ\™˜XÙ\ËÛX]\šX[È”“ÐQÓÕTÑHÓÕ‘TQÑHÛH]™[‹Ø[XšY[ÑÈ[™^\Ý[™ÈØ\™ZÝ\ÙH[™\ÎÈ[[YH[YÜ˜][Ûˆ™[XZ[œÈ\‹\™YÚ[ÛˆŸÝ\Ü[™ÈÝ]XÈ›ÜËÚ[\š[ÜœÈ”“ÐQÓÕTÑHÓÕ‘TQÑHÙ[›™^KÒØ^RÚ]Ü›Ú™XÝÝØÚÎÈ\›Èš\ÝX[XØÙ\[˜ÙH›Ý[\YYŸ\›È[X[›ÚY˜\Ù\ÈÔ’UPÐSÐTÙ[™\šXËÜÝ\Ü˜\Ù\È^\ÝÈš[˜[˜[YYXÚ\˜XÝ\ˆÚÙ[][–
+ÈY›Ü›X][Û‹Ø\PÈÝ[™\]Z\™YŸØ[›ÛšXØ[Ü™X]\™H˜\Ù\ÈÔ’UPÐSÐTÜXÚY\Ë\ÜXÚYšXÈšYÜËÙY›Ü›X][Û‹ÓÑÝ[™\]Z\™YŸ[X[›ÚY
+ÈÜ™X]\™H[š[X][ÛˆÔ’UPÐSÐTX[X[Ø]][XØ]Y[Ý[ÛˆÛÝ\˜Ù\È™\]Z\™YÈ™]\™Ù]PÈ\ˆšYÈ˜[Z[HŸ™X[\ÝXÈ\›È\˜Ú]XÝ\™HQÒÐTÝ\ÜÚ]È^\ÝÈÝ[\™KÜ™YÚ[Û‹\ÜXÚYšXÈ\›ÈÚ[ÝY]\È™YYYÚ\‹YšY[]HXÙ[œÙYØÝ\ÝÛHÛÝ\˜Ù\ÈŸš[ÛYK\ÜXÚYšXÈ™YÙ]][ÛˆQÒÐTÙ[™\šXÈ˜]\™HÝØÚÈ^\ÝÎÈXÛÛÙÞHY[]KÓÑÛÝ™\™˜]ÈPÈÝ[™\]Z\™YŸ˜]KÜÚYYÙHÝ\ÜQÒÐT[Ù[\‹Ø˜XÚÙÜ›Ý[™Ý\Ü™YYÈ^[œÚ[Ûˆ[™Ø[›Û‹\ÜXÚYšXÈÚ[ÝY]Hš[\š[™ÈŸÚÛKYØ[YH]Y[È\QÒÐTX[X[XÙ[œÙYXœ˜\šY\È™\]Z\™Y›Üˆ[XšY[˜ÙKÙ›Û^KØÜ™X]\™KØÛÛX˜]ÝÙX]\ˆœ™XYŸÙX]\‹Ø˜]H‘–QÒÐT˜ZÙYÙ›\›ÛÚËÕQMŒËXÛÛ\]X›HÛÝ\˜ÙHXÜ]Z\Ú][ÛˆÝ[™\]Z\™YŸØ]\‹Ø›Ø]È
+È[Ý[Y\[[™HQQUSHÐTYXØ]Y[\˜XÝ[Û‹ÜšYËÜÛÝ\˜ÙHPÈÝ[™\]Z\™YŸ]X]\›š]\È]]ÛX]YÝYÚ[™ÈÓÔ”‘PÕQÈPS•PSÌÌˆš[\ÏL[œ™\ÛÛ™YMÈYÙH™XXÚXš[]H›ÈÛ™Ù\ˆÛÝ[È\È^[ØYÝYÚ[™ÈŸQHÈ]šXÙHÈš\ÝX[È\™›Ü›X[˜ÙHXØÙ\[˜ÙHSÒS‘ÑQÛÝ\˜ÙH]Y]Ü™X]\È›È[[YHXØÙ\[˜ÙH‚‚ˆÈÈÈ™\ÛÝ\˜ÙKX]Y]ÝX\™[B‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_Ÿ]X]\›š]\È™\›Ë\^[ØYÝYÚ[™ÈÓÕTÑKRSTSQS•QRSPÓÔÑQš[\ÏL	‰ˆ[œ™\ÛÛ™YŒ›ÝÈ^]È›Ûž™\›ÈŸ™\›Ë\^[ØY™YÜ™\ÜÚ[Ûˆ\ÝÓÕTÑKRSTSQS•Q™KU[œ™X[Ú\š[™ÈYYÈ^XÝZXY™\Ý[[™[™ÈŸ›ÝšY\ˆXØÙ\ÜÈÛXÞHÓÕTÑKRSTSQS•Q]X]\›š]\È™XÛ\ÜÚYšYYX[X[XÛX\‹[XÙ[œÙHŸÚÛKYØ[YHØ\]Y]ÓÕTÑKRSTSQS•QŽ™YÚ[ÛœÈ
+ÈÜ›ÜÜËXÝ][™ÈÚ\˜XÝ\œËØÜ™X]\™\ËØ[š[X][Û‹Ø]Y[ËÕ‘–ÙØ[Y\^K\Ý\ÜÛXZ[œÈ‚ˆÈÈŒ‹LLLHHØ\™ZÝ\ÙHÌÌHX[X[\›ÝšY\ˆÛÛ[X][Ûˆ™\Z\‚‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_Ÿ]X]\›š]\ÈÝ\Ü™\ÛÛ][ÛˆPS•PSUQUQH‘TURT‘QÌÌNˆš[\ÏL[œ™\ÛÛ™YLMØÈ›È^[ØYÝYÙYŸY˜][™\›Ë\^[ØY™Z]š[ÜˆRSPÓÔÑQ‘URS‘Q^]ÛÙHÈ™[XZ[œÈHY˜][ŸÛÜšÙ›ÝÈX[X[\›ÝšY\ˆ[™[™ÈÓÕTÑKRSTSQS•Q‘TRTˆÐS‘QUH^XÚ]T™XÛÜ™X[X[]Y]YXÈ›ÈÝYÚ[™ÈTÔÈ[™›Èœ›ØY\œ›ÜˆÝ\™\ÜÚ[ÛˆŸ\œÚ\Ý[Ø\™ZÝ\ÙH^[ØYÈ‘TÑT•‘Q›È[ÛH]™[ˆ™\[ŽÈ˜[YÝYÙYš[\È\™H[ÝXÚYŸœ›ÙÈØ[™Y]H\Y˜XÝ‘TRTˆS‘S‘ÈÛÜšÙ›ÝÈ]\Ý™XXÚØ[™Y]H™\ÜÝ\ØYÛˆHœ™\Ú^XÝXYŸ[[YHÈØ]H‹ÍÈXØÙ\[˜ÙHSÒS‘ÑQÈ“ÕPÐÑTQ›ÈÚ\˜XÝ\ˆ[\ÜÜˆ[X[‹Ù]šXÙH]šY[˜ÙH‚‚ˆÈÈŒ‹LLLˆHØ\™ZÝ\ÙHÌÌLÙ[™\˜]Y]ÛÜšÝ™YHØ[\‹XÚXÚÛÝ]™\Z\‚‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_Ÿ\œÚ\Ý[Ø\™ZÝ\ÙH[™[ÜžH•S‹T“Õ‘SˆÓPSˆÌÌLˆNLH^[ØYš[\ÈÈ‹ÍKMËNž]\ÈÈŒÎHXÝ]™HÈŽÝ\\œÙYYÈ\XØ]HÜ›Ý\ÈŸÛH]™[ˆÈ[XšY[ÑÈ›Ý™[˜[˜ÙH‘UTÑKT“Õ‘SˆŒNH
+È™XÙZ\]™\šYšYYš[\È™]\ÙYÈ›È›[™™Yœ™\ÚŸPÌHYYØH›Û[Ý[Ûˆ•S‹T“Õ‘SˆÒUPS•PSUQUQHÍˆ™\\™YÈÍ[ZÙKTPÈÈÈ[™[™ÈÈˆX[X[ŸÙ[™\˜]YPÌHX]\šX[ÈÓÕTÑH”SÒÔ‘PUQ™XÙZ\]™\šYšYYÛÝ\˜Ù\ÎÈ[[YKÝš\ÝX[XØÙ\[˜ÙH›Ý[\YYŸØ[\‹XÚXÚÛÝ]Ý\š]˜[ÓÕTÑKRSTSQS•Q‘TRTˆÐS‘QUH›Ý[™YÛX[\Ý™\›\™Z™XÝ[Û‹Y]Y]H[™KÝÛœÝ™X[HØÜš\ÝX\™Ÿœ›ÙÈØ[™Y]H]šY[˜ÙH“ÐÒÑQ–HÌÌLS‘”TÕ•PÕT‘HRST‘H™\ÜY›Ý[ŽÈ\Y˜XÝY›Ý^\ÝŸ[[YHÈØ]H‹ÍÈXØÙ\[˜ÙHSÒS‘ÑQÈ“ÕPÐÑTQ›ÈÚ\˜XÝ\ˆ[\ÜÜˆ[X[‹Ù]šXÙH]šY[˜ÙH‚‚ˆÈÈŒ‹LLLˆHØ\™ZÝ\ÙHÌÌLH^XÝœ›ÙÈ›ØÚÙ\ˆ[™\™XÝÐÌ˜[˜XÚÂ‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸØ[\ˆÚXÚÛÝ]Ý\š]˜[•S‹T“Õ‘SˆÌÌLH™XXÚY\›ÈÝYÚ[™ËÜ™\ÜY\ˆÙ[™\˜]YX]\šX[^ÜŸØ\™ZÝ\ÙH[™[ÜžH•S‹T“Õ‘SˆÓPSˆNLÌˆš[\ÈÈ‹NNLˆž]\ÈÈ\XØ]HÜ›Ý\ÈŸØ[™Y]H\Y˜XÝ•S‹T“Õ‘SˆÈQÑTÕPUÒQÒLMˆÍØØMLLLLÙÙÍÍLLŒ™NØÍŽXÍ˜ŒÍÍ™ŽLL™Ž˜ÌYÌ˜Ÿœ›ÙÈÈØ[™[ˆØ[™Y]\È•QH“ÐÒÑTˆ–ÈÛÛÎÈ›Ý\ˆ]X]\›š]\ÈX[X[\ÛÝ\˜ÙHXÚÜÈ[™[™ÈŸÜ[‘Ø[YP\]X]\›š]\È˜[˜XÚÈÓÕTÑKRSTSQS•QÐS‘QUH\™XÝÐÌ\˜Ú]™K›Ý[™Y’TØØ[‹–Ø]KÒH™]\ÙHŸ‘PQWÑ“Ô—ÒSTÔ•È[[YH“ÕÕT•QÚÙ[]Û‹ÜÚÚ[‹ÙY›Ü›X][Û‹Ñ–LŒNPÈÝ[™\]Z\™YŸØ]H‹ÍÈSÒS‘ÑQÈ“ÕPÐÑTQ›È[X[‹Ù]šXÙH]šY[˜ÙH‚‚ˆÈÈŒ‹LLLˆHPÌH\›ÈØ[™Y]Hš[K[]™[›Ý™[˜[˜ÙHÝX\™‚‹HH\›È[ZÙH›ÝÈ™XÛÜ™ÈH›Ý™[˜[˜ÙH›ÝÈ›Üˆ]™\žHYZ]Y–š[™[™ÈØ[™Y]Hš[H]È›ÝšY\‹ÛÝ\˜ÙH\ÜÙ]Q™XÙZ\ÛÝ\˜ÙH^[ØY[™™\šYšYYÒLM‹‚‹HH^XÝZXY\›ÈØ[™Y]HØ]™H˜Z[ÈÛÜÙY™Y›Ü™H˜[šÚ[™ÈÚ[ˆ[žH\ØÛÝ™\™Y–XÚÜÈ^XÝHÛ™H›Ý™[˜[˜ÙH›ÝÎÈ˜[šÙY›ÝÜÈ›ÝÈØ\œžHH›Ý™[˜[˜ÙHšY[È[ÈH]šY[˜ÙH\Y˜XÝ‚‹H\ÈÛÜÙ\ÈHØ\™]ÙY[ˆØ[™Y]WÜÛXÞKœ™\]Z\™WÜ›Ý™[˜[˜ÙO]YX[™XÝX[\‹Yš[HØ[™Y]H]šY[˜ÙHÚ]Ý]›Û[Ý[™È[žH\ÜÙ]È‘PQWÑ“Ô—ÒSTÔ•‚‹HÝ]\Îˆ
+Š”ÓÕTÑKRSTSQS•QÈVPÕRPQSQUSÓˆS‘S‘ÊŠ‹ˆ›ÈÚÙ[]Û‹ÚÚ[‹]ÙZYÚY›Ü›X][Û‹[\ÜQK]šXÙKš\ÝX[Üˆ\™›Ü›X[˜ÙHXØÙ\[˜ÙH\ÈÛZ[YY‚‚‚ˆÈÈŒ‹LLLˆ8 %PÌHØ\™ZÝ\ÙKYš\œÝÛÜ›^[œÚ[ÛˆŒB‚‹HYY]KÔPÌUØ\™ZÝ\ÙUÛÜ›^[œÚ[Û•ŒKšœÛÛ˜[™HÜÝY™YÜ™\ÜÚ[ÛˆÝX\™›ÜˆHØ\™ZÝ\ÙKYš\œÝPÌH\ÜÙ]ÝÛÜ›^[œÚ[Ûˆ˜]Ú‚‹HH˜]ÚX\È\›Ý™YXÜ]Z\Ú][Ûˆ[™\ÈÈ˜YÈ[™Ø˜š]Û‹Ú\™H›ØYÈ[™XÚÛX\žKÑ™\œžHÚ[H™\Ù\š[™È–Ô‘ËUÐK›Ý™[˜[˜ÙKTÓKÒTÓKÓÑØÝ[[™È[™ÛÙØ\Þ[˜ÈX]žKX\ÜÙ][\Ë‚‹H]X]\›š]\È™[XZ[œÈHX[X[›ÝšY\ˆ›ØÚÙ\ˆ[™Ù\È›Ý›ØÚÈ[™\[™[ÛH]™[‹Ø[XšY[ÑËÛXÙ[œÙYÚ\˜XÝ\‹X[š[X][Û‹Ø]Y[ËÕ‘–[™\Ë‚‹HÝ]\Îˆ
+Š”ÓÕTÑKRSTSQS•QÈVPÕRPQÕUPÈSQUSÓˆS‘S‘ÊŠ‹ˆ›ÈQKÙ]šXÙKÝš\ÝX[Ü\™›Ü›X[˜ÙHXØÙ\[˜ÙHÛZ[K‚‚ˆÈÈŒ‹LLLˆHœ›ÙÈÚÙ[][Ø[™Y]HÙ[X[XÈPÂ‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_Ÿ\™XÝÐÌ\˜Ú]™H•S‹T“Õ‘SˆÕQÑQÌLˆž]\ÎÈÒLMˆŽMLŒ˜Ø˜ÍÌ™ML™YNŒÎXXÌÎŽMLXMNLYŽXŒŒÎ˜ÍÙYŒLÙYLYXŸ–\ØÛÝ™\žH•S‹T“Õ‘SˆLˆ–[ˆØ\™ZÝ\ÙHÌÌLŽÈ™XÙZ\\Ú™\šYšYYŸÛØ[™Y]H˜[šÚ[™È‘R‘PÕQTÈÑSPS•PÐSHS”ÐQ‘HÝXœÝš[™ÈÛÛ\Ú[ÛœÎˆ™[X[x¡¤›X[H[™ÛÛY\‹ÑÛÛ[¸¡¤›ÛŸ^XÝ]ÚÙ[ˆ˜[šÚ[™È™\Z\ˆÓÕTÑKRSTSQS•Qš[[˜[YK[Û›HÚÙ[œËY[]Hš[\œË^Û\Ú[ÛœË›Ý[™YÛÛÎÈËLŒH[™›Ü˜Ù\ÈHŒˆÝ]KÛÜ™\‹ÜÛXÞHŸœ›ÙÈÝ]XÈ–ÝXÝ\™H›Ø™HÓÕTÑKRSTSQS•QXY\‹Ý™\œÚ[Ûˆ\ÈÙ[ÛY]žKÓ[Ù[Ó[X“›ÙKÑY›Ü›Y\‹ÔÚÚ[‹ÐÛ\Ý\ˆX\šÙ\œÈŸQMÚÙ[][[\ÜÈY›Ü›X][ÛˆÈZÙ[™\ÜÈ“ÕÕT•Q™\]Z\™\È^XÝZXY[œ™X[]šY[˜ÙH[™[X[ˆš\ÝX[™]šY]ÈŸ‘PQWÑ“Ô—ÒSTÔ•È[[YHÈØ]H‹ÍÈ“ÕPÐÑTQPÌH™[XZ[œÈXÝ]™NÈPÌˆ™[XZ[œÈ™YXÙ\ÜÛÜ‹YØ]Y‚‚‚ˆÈÈŒ‹LLLˆHØ\™ZÝ\ÙHÌÌMœ›ÙÈÝ]XËTPÈØÚ[XH™\Z\‚‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸØ[™Y]H\Y˜XÝØÚ[XH•S‹T“Õ‘SˆØ\™ZÝ\ÙHÌÌM\Y˜XÝˆØÚ[XHŒ‹Ú\˜XÝ\œØ\œ˜^H™\Ù[Hœ›ÙÈÈØ[™[ˆØ[™Y]\ÈŸœ›ÙÈ[œÜXÝÜˆÜ˜\Ú“ÓÕÐUTÑHTÓÓUQÝšXÝ›Ü\HXØÙ\ÜÈ˜Z[Y™Y›Ü™H–X\šÙ\ˆ[œÜXÝ[ÛˆŸØÚ[XH\œÙ\ˆ\™[š[™ÈÓÕTÑKRSTSQS•QÝ\œ™[Œˆ
+È›Ý[™YYØXÞKÙ›]ÛÛ\]Xš[]NÈ^XÚ][œÝ\ÜY\ØÚ[XHXYÛ›ÜÝXÈŸ™YÜ™\ÜÚ[Ûˆš^\™HÓÕTÑKRSTSQS•QÙ[™\˜]YØÚ[XK]Œˆ™\Ü\È\œÙYžH[œÜXÝÜˆÙ[‹]\ÝŸÝ]XÈ–X\šÙ\ˆPÈS‘S‘È”‘TÒ•SˆØ\™ZÝ\ÙHÌÌM˜Z[Y™Y›Ü™HX\šÙ\ˆ\ÜËÙ˜Z[ÛÝ[™H\ÝYŸQM[\ÜÈY›Ü›X][ÛˆÈZÙ[™\ÜÈ“ÕÕT•QÙ\\˜]H[™Ú[™KÚ[X[ˆ]šY[˜ÙH™\]Z\™Y‚‚ˆÈÈŒ‹LLLˆHPÌHš[Üš]HÐÌ]Y[È›Ý™[˜[˜ÙH™Yœ™\Ú‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_Ÿš[Üš]HÜ[‘Ø[YP\]Y[ÈYÙ\ÈÓÕTÑKT“Õ‘SSÑH‘PÓÔ‘QKÍH[šY\ÈØ\œžH\ØY\‹š[X\žK\YÙHÐÌ]šY[˜ÙH[™ÛÝ\˜ÙHš[HX™[ŸÝÛ›ØYÚ\Ú]šY[˜ÙHS‘S‘È›È™XÙZ\ÒLMˆÛZ[YYžH\ÈY]Y]H\]HŸ]Y[ÈPÈÈÐUˆX\Ý\œÈÈQH[\ÜS‘S‘ÈÙ\\˜]H[ZÙH[™\Ý[š[™ËÚ[\Ü]šY[˜ÙH™\]Z\™YŸ[[YHÈ]šXÙHÈ\™›Ü›X[˜ÙH“ÕPÐÑTQ›È^\šY[X[]šY[˜ÙHÜ™X]YžH\ÈÛÝ\˜ÙHY]Y]HÚ[™ÙH‚‚ˆÈÈŒ‹LLLˆHÛÛ[[Ý\ÈYYØHØ]™H]Y]YHŒ‚‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸYYØH›ÙXÝ[Ûˆ]Y]YHÓÕTÑKRSTSQS•QØ]™\ÈÈNL\™Ù]ÛÜšËZ][\ÈŸPÌH[[YHØ]™\È‘QÒTÕT‘QLˆÙ\šX[^™Y[[YHØ]™\ÎÈÛÝ™\››ÜˆÜ™\ˆ™[XZ[œÈ]]Üš]]]™HŸÛØ˜[ÛÝ\˜ÙHØ]™\È‘QÒTÕT‘QLˆÛÝ\˜ÙK[Û›HXÜ]Z\Ú][Ûˆ˜[Z[Y\ÈŸš[ÙÞHÚ\\ˆXÚØYÙ\ÈÓÕTÑKT‘TT‘QŒÈÚ\\ˆØ]™\ÈÛÝ™\š[™ÈŒKLH›ÝYÚŒËLÈŸ]\™HÚ\\ˆ[[YH“Ô’QSˆ–HUQUQH]™\žH]\™HÚ\\ˆ›ÝÈØ\œšY\È[[YWÚ[YÜ˜][Û—Ø[ÝÙYY˜[ÙXŸÜ›ÜÜËXÝ][™È\™[š[™È‘QÒTÕT‘QMÈÞ\Ý[KÔPKÜÝ™X[Z[™ËÜ\™›Ü›X[˜ÙHØ]™\ÈŸ›Ú™XÝX[˜YÙ\ˆ˜XÙXXš[]H‘QÒTÕT‘QT‘TWÐÓÓ•S•SÕT×ÓQQÐWÕÐU‘WÔUQUQWÕŒ—ÌŒ—ÌLÌ˜Ÿœ›ÙÈÝ]XÈ–ÝXÝ\™HÕUPËUSQUQØ\™ZÝ\ÙHÌÌMNˆKÍH[ÝÛ\ÝYØ[™Y]\Ë–ÍÚÙ[]Û‹ÜÚÚ[‹ØÛ\Ý\ˆX\šÙ\œÈ™\Ù[Ÿœ›ÙÈQMÚÙ[][[\ÜÈY›Ü›X][ÛˆÈZÙ[™\ÜÈS‘S‘ÈÙ\\˜]H[™Ú[™H[™[X[ˆš\ÝX[]šY[˜ÙHÝ[™\]Z\™YŸQHÈ]šXÙHÈš\ÝX[È\™›Ü›X[˜ÙHXØÙ\[˜ÙH“ÕPÐÑTQ]Y]YKÜÛÝ\˜ÙHØ\XÚ]HÙ\È›ÝÜ™X]H^\šY[X[]šY[˜ÙH‚ˆÈÈŒ‹LLLˆHPÌHš\ÚX›K]ÛÜ›YYØHÛÝ\˜ÙH^XÝ][Û‚‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_Ÿ˜YÈ[™\›Èš[™ÈÛÝ\˜ÙHš[Üš]HÓÕTÑKRSTSQS•QX]\šX[ËÜ›ÜËÙØ\™[‹Ù™[˜ÙHÝ\Ü›Ý]Y›ÝYÚ^\Ý[™ÈØ\™ZÝ\ÙKYš\œÝXÚÎÈ[[YKÝš\ÝX[XØÙ\[˜ÙH›Ý[\YYŸØ˜š]Ûˆš[YÙHÛÝ\˜ÙHš[Üš]HÓÕTÑKRSTSQS•Q]ËÙ™[˜Ù\ËÙ˜\›KÜÛØÚX[\›ÜÝ™YÙ]][ÛˆÝ\Üš[Üš]^™YÈ[[YKÝš\ÝX[XØÙ\[˜ÙH›Ý[\YYŸÚ\™H›ØYÛÜœšYÜˆÛÝ\˜ÙHš[Üš]HÓÕTÑKRSTSQS•QÜ›Ý[™Ü]ÚYÙKÝ™YKÜ›ØÚÈÝ\Üš[Üš]^™YÈ[[YKÝš\ÝX[XØÙ\[˜ÙH›Ý[\YYŸXÚÛX\žKÑ™\œžHÛÝ\˜ÙHš[Üš]HÓÕTÑKRSTSQS•Qš]™\˜˜[šËÝÛÛÙÝ™YÙ]][Û‹Ý˜[œÚ][ÛˆÝ\Üš[Üš]^™YÈ[[YKÝš\ÝX[XØÙ\[˜ÙH›Ý[\YYŸ[[YH]]][Ûˆ“ÕUUÔ’V‘Q–HTÈPÒÈˆÌÈ™[XZ[œÈÙ\šX[^™Yœ›ÙÈ[[YH[™NÈPÌŠÈ[[YHÝ^\ÈØ]YŸ^XÝZXY˜[Y][ÛˆS‘S‘È™KU[œ™X[™\]Z\™Y™Y›Ü™HY\™ÙHÈ]™[ÜŸQHÈ]šXÙHÈš\ÝX[È\™›Ü›X[˜ÙHXØÙ\[˜ÙH“ÕPÐÑTQ™\]Z\™\È]\ˆX]Ú[™È[[YH[™[X[‹Ù]šXÙH]šY[˜ÙH‚ˆÈÈŒ‹LLLˆHš\ÚX›H›ÞH™\XÙ[Y[[™[ÜžB‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸÝ\œ™[[™Ú[™Hš[Z]]™H˜[˜XÚÜÈÕUPËRQS•Q’QQÚ\™HZ[\ˆ™]Z[œÈÝX™KÔÜ\™KÐÞ[[™\‹ÐÛÛ™H˜[˜XÚÈ]ÈŸ˜YÈ[™™\XÙ[Y[›Ý][™ÈÓÕTÑKRSTSQS•Q^\Ý[™È›ÙXÝ[ÛˆY[]Y\È
+ÈZ\ÜÚ[™È[\š[Ü‹Ú\›ËY]Z[ÛÝ\˜ÙH™YYÈ™XÛÜ™YŸØ˜š]Ûˆ™\XÙ[Y[›Ý][™ÈÓÕTÑKRSTSQS•Q^\Ý[™Èš[YÙH\ÜÙ]È
+È™[XZ[š[™È\KØÜ›ÜÛÙËØÛ]\ˆÛÝ\˜ÙH™YYÈ™XÛÜ™YŸÚ\™H›ØY™\XÙ[Y[›Ý][™ÈÓÕTÑKRSTSQS•Q^\Ý[™È›ØYÚYÙKÝ™YKÜ›ØÚÈ\ÜÙ]È
+È™[XZ[š[™È›ØYYYÙKÝ˜\šX][ÛˆÛÝ\˜ÙH™YYÈ™XÛÜ™YŸXÚÛX\žKÑ™\œžH™\XÙ[Y[›Ý][™ÈÓÕTÑKRSTSQS•Qš]™\˜˜[šËÝØ]\ˆ^\ÝÈ™\œžKÙØÚËÛ[ÛÜš[™ÈÝ\Ü™[XZ[œÈÛÝ\˜ÙHXŸ[[YH™\XÙ[Y[“ÕÕT•QSˆTÈ”SÒÙ\šX[^™Y[[YH[™H™[XZ[œÈˆÌÈŸ^XÝZXYÝ]XÈ˜[Y][ÛˆS‘S‘È™KU[œ™X[ÛÛ˜XÝYYŸš\ÝX[Ù]šXÙKÜ\™›Ü›X[˜ÙHXØÙ\[˜ÙH“ÕPÐÑTQ™\]Z\™\È]\ˆ[[YH[™[X[‹Ù]šXÙH]šY[˜ÙH‚Ÿš\ÚX›K]ÛÜ›XÚÈËLNÈÛÛ\]Xš[]HÓÕTÑKT‘TRT‘QÙY\™\]Z\™Y•S“‘T—ÑVPÕUSÓ—Ô‘PQXÝ]\ÎÈ™]Èš[Üš]HØ\œšYYžHÙ\\˜]H^XÝ][Ûˆ›Ùš[H‚ˆÈÈŒ‹LLLˆHš\ÚX›K]ÛÜ›™]\ÙKYš\œÝÛÜœ™XÝ[Û‚‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_Ÿ™\œžH™]\ØX›H›ÙXÝ[ÛˆÝØÚÈÕUPËRQS•Q’QQš]™\ˆ›Ø]›ÛÝœšYÙK›ÜHÜÝØÛÚ[™YYÛ\Ý\ˆ[™XYH™\Ù[Ú[\ÜYŸ›ØY™]\ØX›H›ÙXÝ[ÛˆÝØÚÈÕUPËRQS•Q’QQ˜[[ˆÙËœ›ØYXYˆ™YH[™›Ý[\ˆÛ\Ý\ˆ[™XYH™\Ù[Ú[\ÜYŸ™]ÈÛÝ\˜ÙHXÜ]Z\Ú][ÛˆÓÓ‘USÓSÛ›HY\ˆ^\Ý[™ÈÝØÚÈ˜Z[È]\ˆÛÛ\ÜÚ][Û‹Ýš\ÝX[™]šY]ÈŸ[[YHš[™[™È“ÕÕT•QT‘HÙ\šX[^™Y[[YH[™H™[XZ[œÈÙ\\˜]HŸš\ÝX[Ù]šXÙKÜ\™›Ü›X[˜ÙHXØÙ\[˜ÙH“ÕPÐÑTQ›ÈX]Ú[™È]šY[˜ÙH‚ˆÈÈŒ‹LLLˆHš\ÚX›K]ÛÜ›^XÝ™\ÚY[š[™[™ÈXÚÙ]‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸXÚÛX\žKÑ™\œžH™\ÚY[š[™[™ÜÈÓÕTÑKRSTSQS•Q^XÝ›ÙXÝ[ÛˆY[]Y\È™\\™Y›Üˆ›Ø]Ù›ÛÝœšYÙKÜ›ÜKÜ™YYËØ›Ý[\ˆ›Û\ÈŸÚ\™H›ØY™\ÚY[š[™[™ÜÈÓÕTÑKRSTSQS•Q^XÝ›ÙXÝ[ÛˆY[]Y\È™\\™Y›Üˆ˜[[‹[ÙËÝ™YKØ›Ý[\‹Ù™[˜ÙKÝÛÛÙ[KÙ™\›ˆ›Û\ÈŸ™]ÈXÜ]Z\Ú][Ûˆ™\ÜÝ\™H‘QPÑQ^\Ý[™È›ÙXÝ[ÛˆÝØÚÈ]\Ý™HšYY™Y›Ü™H™]È›ÝšY\ˆXÜ]Z\Ú][ÛˆŸ[[YH]]][Ûˆ“ÕÕT•QSˆTÈPÒÑUÙ\šX[^™YPÌH[[YH[™H™[XZ[œÈÙ\\˜]HŸQHÈ]šXÙHÈš\ÝX[È\™›Ü›X[˜ÙHXØÙ\[˜ÙH“ÕPÐÑTQ›ÈX]Ú[™È[[YKÚ[X[‹Ù]šXÙH]šY[˜ÙH‚ˆÈÈŒ‹LLLˆHPÌH™\œžHÈÛÛÙY›ØYš\ÚX›K\[[YH™\XÙ[Y[‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸÛÛÙY›ØYš[Z]]™HØœÝXÛHÓÕTÑKRSTSQS•Q™\ÚY[˜[[‹[ÙÈ
+È›Ý[\ˆ›ÙXÝ[ÛˆY\Ú\È™Y™\œ™YÈš[Z]]™H˜[˜XÚÈ™]Z[™YÛ›HYˆ\ÜÙ]È\™H›Ý™\ÚY[ŸXÚÛX\žKÑ™\œžH[™[™ËØ›ÙKÜÜÝËÙ]Z[ÓÕTÑKRSTSQS•Q›ÛÝœšYÙKÜš]™\‹X›Ø]Ü›ÜKÜ™YYËØ›Ý[\ˆ™\ÚY[›ÙXÝ[ÛˆY\Ú\È™Y™\œ™YŸX]žKX\ÜÙ]ØY[™ÈÛXÞH‘TÑT•‘Q™\ÚY[[Û›HÛÙ\]™\ÛÛ][ÛŽÈ›ÈÞ[˜Ú›Û›Ý\ÈX]žHØYYYŸ]Y\ÝÓ”ËÓ]š[™ÕÛÜ›]]Üš]HSÒS‘ÑQ›È\˜[[Ý]HÜˆÜ›ÝÙÝÛ™\ˆ[›ÙXÙYŸ^XÝZXYQMÛÛ\[KÜ[[YH]Y]S‘S‘È™\]Z\™Y™Y›Ü™HY\™ÙHŸQHÈ]šXÙHÈš\ÝX[È\™Ù]\™›Ü›X[˜ÙHXØÙ\[˜ÙH“ÕPÐÑTQ[X[‹Ù]šXÙH]šY[˜ÙHÝ[™\]Z\™Y‚ˆÈÈŒ‹LLLˆH[›™\ˆœ›ÚÙ\‹\Ý[™XÛÝ™\žB‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_Ÿ\Ý[™\ˆ›ØÙ\ÜÈÐ”ÑT•‘QSU‘HØØ[ØÜ™Y[œÚÝÚÝÙY[›™\‹“\Ý[™\ˆQ™\Ù[ŸÛÜšÙ\ˆ›ØÙ\ÜÈÐ”ÑT•‘QP”ÑS•›È[›™\‹•ÛÜšÙ\ˆ›ØÙ\ÜÈÚ[H[œ™X[›ØœÈ™[XZ[™Y]Y]YYŸœ›ÚÙ\ˆ˜[œÜÜÐ”ÑT•‘QRSQ[›™\ˆÙÈÚÝÙYÛØÚÙ]^Ù\[ÛˆNMHÈX›ÜYKÓÈŸØ]ÚÙÈ[Y\Ý[\\œÙ\ˆ“ÓÕÐUTÑH’VÓÕTÑKRSTSQS•Q™X[Þ^^^KSSKY›[NœÜÖˆS‘“È‹‹—X›Ü›X]›ÝÈ\œÙYÈYØXÞH›Ü›H™]Z[™YŸÝ[YXÜ]Z\™H™XÛÝ™\žHÓÕTÑKRSTSQS•Q^\Ý[™ÈXÚË]Ú]Ý]]ÛÜšÙ\ˆ™XÞXÛHØ[ˆ›ÝÈ™XÙZ]™HH™X[XÚÕ]ÈŸÜÝY™YÜ™\ÜÚ[ÛˆÓÕTÑKRSTSQS•Q™KU[œ™X[\ÝÛÝ™\œÈ™X[
+ÈYØXÞH[Y\Ý[\›Ü›\ÈŸØØ[XXÚ[™H™XÛÝ™\žHS‘S‘ÈTÑT‹TÒQHÐUÒÑÈ‘RS”ÕSÔ‘TÕT•›ÈÛZ[HÙˆ[›™\ˆ™XÛÝ™\žH[[H]Y]YY›ØˆÝ\È‚Ÿ[›™\ˆX[X[™XÛÝ™\žH•S‹T“Õ‘SˆØ]ÚÙÈ[Z]YÕT•[ˆÓ“S‘H‹‹ˆœ›ÚÙ\“\Ý[š[™Ï]YXÈ]Y]YY[œ™X[ÛÜšÈ™\Ý[YYŸœ›ÚÙ\ˆ˜[œÜÜ\Ý[]]Ë\™XÛÝ™\žHÓÕTÑKRSTSQS•Q›Ý[™Y™XÞXÛHÚ[ˆ˜[œÜÜ\œ›Üˆ™[XZ[œÈ™]Ù\ˆ[ˆX[Hœ›ÚÙ\ˆ]šY[˜ÙK›ÈÛÜšÙ\ˆ\ÈXÝ]™K[™Ú]X‹˜ÛÛNÈ\È™XXÚX›HŸ™]ÛÜšÈÝ]YÙH™Z]š[ÜˆÓÕTÑKRSTSQS•QÙÜÈ‘UÓÔ’×Ð“ÐÒÑQÈ]›ÚYÈ™\Ý\ÛÜÚ[ˆÚ]XˆÛÛ›Û[™H\È[œ™XXÚX›HŸ[›™\ˆ]]Ë\™XÛÝ™\žH^XÝZXY˜[Y][ÛˆS‘S‘Èœ™\Ú™KU[œ™X[
+ÈÝXœÙ\]Y[XXÚ[™H\Þ[Y[Ü™\Ý\™\]Z\™Y‚Ÿ[›™\ˆËLMHÜ]Z[\ˆÛÛ\]Xš[]HÓÕTÑKQ’VQ˜[Y]Üˆ›ÝÈÚXÚÜÈØ]ÚÙÈ
+È[Y\Ý[\[\ˆ\ÈÛ™HÛÛ˜XÝÈœ™\Ú^XÝZXY™KU[œ™X[[™[™ÈŸ[›™\ˆXZ[[˜[˜ÙHQH]Y]YH\ÛÛ][ÛˆÓÕTÑKQ’VQ™]È[\‹Ý\Ý]È\™HXZ[[˜[˜ÙK\ØY™H[™]Yš[\™YÙ™ˆ[œ™X[\ÚÔˆšYÙÙ\œÈ‚ˆÈÈŒ‹LLLˆHPÌH\HšY[š[Z]]™K[Ý™\›^HÝ\™\ÜÚ[Û‚‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_Ÿ\HšY[\™ÙHÝX™HÙ[\œYXÙHÓÕTÑKRSTSQS•QÝ\™\ÜÙYÚ[ˆ™\ÚY[ÓWÔÚXÛšXÐØ[›ÜX\È]˜Z[X›NÈ]\›Z[š\ÝXÈ˜[˜XÚÈ™]Z[™YŸÝÜžHÈ]Y\ÝÈ”È]]Üš]HSÒS‘ÑQ›ÈÝ]HÜˆÜ[][ÛˆÝÛ™\œÚ\Ú[™Ù\ÈŸ[[YHØY[™ÈSÒS‘ÑQ^\Ý[™È™\ÚY[Y\ÚÚ[\ˆ™]\ÙYÈ›ÈÞ[˜Ú›Û›Ý\ÈX]žHØYYYŸ^XÝZXYQMÛÛ\[KÜ[[YH]Y]S‘S‘È™\]Z\™Y™Y›Ü™HY\™ÙHŸQHÈ]šXÙHÈš\ÝX[È\™›Ü›X[˜ÙHXØÙ\[˜ÙH“ÕPÐÑTQ›ÈX]Ú[™È]šY[˜ÙH‚Ÿ\HšY[ÌLŽÛÛ\[H›ØÚÙ\ˆÓÕTÑKQ’VQ™\XÙY[™XÛ\™Y›ÙXÝ[Û”XÛšXÐØ[›ÜSY\Ú™Y™\™[˜ÙHÚ]Ú\™Y™\ÚY[›ÙXÝ[ÛÛÛ[[Û“X\šÙ]Ø[›ÜSY\ÚÈ^XÝZXYQMZ[[™[™È‚ˆÈÈŒ‹LLLˆHX^[][K\ØY™HÒH[™H™\Ù\˜][ÛˆXØÙ[\˜][Û‚‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸÜÝY[œ™X[™Y›YÚÛ\ÜÚYšY\ˆÓÕTÑKRSTSQS•QXÚY\È[™Ú[™H™\]Z\™[Y[™Y›Ü™H™\Ù\š[™ÈQMXXÚ[™HŸÛÝ\˜ÙKÜ™\›ÙXÝ[Ûˆ˜\Ý[™\ÈÓÕTÑKRSTSQS•QX\ÝšY[È[‹Ø^RÚ]Ø[\›˜]HÛÝ\˜ÙH™YÚ\Ý˜][Ûˆ[™ÚÛKYØ[YHXÚÙ]ÈÝ^HÜÝYÜÝ]XÈÚ[ˆ\™[›ÛÙˆ\È˜[YŸQM]šXÙH[™H™\Ù\˜][ÛˆÓÕTÑKRSTSQS•Q™\Ù\™YÛ›H›Üˆ[ØÛÜ™KØ\ÜÙ]ØXØÙ\[˜ÙH[Ù\ÈŸÛ\ÜÚYšY\ˆ™YÜ™\ÜÚ[ÛˆÛÝ™\˜YÙHÓÕTÑKRSTSQS•Q™]ÈÛÝ\˜ÙK[Û›HØ\Ù\ÈYYÈ\ÝÝ[œ™X[ØÛ\ÜÚYšY\‹œÌHŸ^XÝZXYÝ]XÈ˜[Y][ÛˆS‘S‘Èœ™\Ú™KU[œ™X[™\]Z\™Y™Y›Ü™HY\™ÙHŸ[[YHÈQHÈ]šXÙHÈš\ÝX[È\™›Ü›X[˜ÙHXØÙ\[˜ÙH“ÕPÐÑTQ›ÈX]Ú[™È]šY[˜ÙH‚ŸÜÝYXÛ\ÜÚYšY\ˆËLMPˆ™XÛÛ˜Ú[X][ÛˆÓÕTÑKQ’VQ˜[Y]Üˆ™XÛÙÛš^™\ÈÜÝY\™Y›YÚ[™Ù™ˆÚ[H™\Ù\š[™È[›™\‹ZX[X™Y›Ü™KZX]žK]ÛÜšÈ[˜\šX[Èœ™\Ú^XÝZXY™KU[œ™X[[™[™È‚ŸÜÝYÛ\ÜÚYšY\ˆ^XÝX˜\ÙHY™ˆÓÕTÑKQ’VQ[ÜÝY\ÝÜžH™\]Z\™Y™Y›Ü™H[œ™X[[\XÝÛ\ÜÚYšXØ][ÛŽÈÛÝ\˜ÙK[Û›HÛÜšÈ]\Ý›Ý˜Z[\ØY™HÈQHÛÛ[H™XØ]\ÙHˆ[˜Ù\ÝžH^ÙYYÈÚ[ÝÈ\‚ŸÜÝY[˜Ù\ÝÜˆ›ÛÙˆ™]ÛÜšÈ]›ÚY[˜ÙHÓÕTÑKQ’VQ[ØØ[ÜÝY\ÝÜžH\ÈÛÛœÝ[YY™Y›Ü™H[žH˜[˜XÚÈ™]ÚÈš]˜]K\™\ÈÜ™Y[X[È™[XZ[ˆ›Û‹\\œÚ\Ý[[™ÛÝ\˜ÙK[Û›HQH™\Ù\˜][ÛœÈÝ^HÚÚ\Y‚ˆÈÈŒ‹LLLˆHX\ÝšY[È›ÝÈ™\XÙ[Y[[‚‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸÙ[™HÝX™HÜ›Ü\›ÝÈÝš\ÈÕUPËRQS•Q’QQÝ\œ™[Z[\ˆÛÝ\˜ÙHŸ[œÝ[˜ÙY›ÙXÝ[Û‹\›ÝÈ™\XÙ[Y[ÓÕTÑKRSTSQS•QSˆLHÛ\Ý\ˆÈNMˆ[œÝ[˜Ù\ÈÈ›ÈÛÛ\Ú[ÛˆÈ›ÈXÚÈŸ[[YH[\[Y[][Ûˆ‘QPÑTÔÓÔ‹QÐUQØZ]›ÜˆÝ\œ™[\HšY[[[YH\ÜÈÈY\™ÙHÜ™Y[ˆŸ™]ÈXÜ]Z\Ú][Ûˆ“Õ‘TURT‘Q–HQUS™]\ÙH™\ÚY[›ÙXÝ[Ûˆ™YÙ]][Ûˆš\œÝŸQHÈ]šXÙHÈš\ÝX[È\™›Ü›X[˜ÙHXØÙ\[˜ÙH“ÕPÐÑTQ›ÈX]Ú[™È]šY[˜ÙH‚ŸX\ÝšY[ÈLˆÝX™HÜ›ÜÝš\ÈÓÕTÑKT‘TPÑQYXØ]YZ[\‹[ÝÛ™YTÓH]Èš[Z]]™H›ÝÜÈ˜[˜XÚË[Û›HŸX\ÝšY[È›ÙXÝ[Ûˆ›ÝÈ[œÝ[˜Ù\ÈÓÕTÑKRSTSQS•QMˆ]\›Z[š\ÝXÈ™\ÚY[ÓWÔÚÜ˜\ÜÐÛ[\[œÝ[˜Ù\Ë›ÈÛÛ\Ú[Û‹Û›ÈXÚËÛ›ÈÚYÝËÝ[LMLÛHŸX\ÝšY[È^XÝZXYQMÛÛ\[KÜ[[YH]Y]S‘S‘È™\]Z\™\Èœ™\ÚÝ\œ™[Y]™[Ü[˜Ù\ÝžHY\ˆÛÝ\˜ÙH™YÚ\Ý˜][ÛˆY\™Ù\ÈŸX\ÝšY[ÈQHÈ]šXÙHÈš\ÝX[È\™›Ü›X[˜ÙHXØÙ\[˜ÙH“ÕPÐÑTQ›ÈX]Ú[™È[X[‹Ù]šXÙH]šY[˜ÙH‚ˆÈÈŒ‹LLLˆHØ^RÚ]Y™[\™\œÈ[\›˜]Hœ›ÙÈÛÝ\˜ÙH˜[Z[B‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸØ^RÚ]Y™[\™\œÈ[[]]X›HÛÝ\˜ÙH™YÚ\Ý˜][ÛˆÓÕTÑKRSTSQS•Q™]š\Ú[ÛˆÌŒÍÌØ˜LÍŽÍ˜LNYNM™XÙÍLNMØXØŸÚ\˜XÝ\‹Z[ZÙHYZ\ÜÚ[ÛˆÓÕTÑKRSTSQS•QÐVRÒUÐQ‘S•T‘T”×ÐÐÌYYÈ^\›˜[Ø[™Y]HX[šY™\ÝŸœ›ÙÈÝ]XËTPÈÛÝ\˜ÙHYZ\ÜÚ[ÛˆÓÕTÑKRSTSQS•QÛÝ\˜ÙH\ÜÙ]Q[ÝÛ\Ý\]YŸØ\™ZÝ\ÙHÝYÚ[™ÈÈQMÚÙ[][[\ÜS‘S‘ÈÙ\\˜]H^XÝZXY^XÝ][Ûˆ™\]Z\™YŸ[[YHÈY›Ü›X][ÛˆÈš\ÝX[XØÙ\[˜ÙH“ÕPÐÑTQ›ÈX]Ú[™È]šY[˜ÙH‚‚ˆÈÈŒ‹LLLÈHØ^RÚ]ÛšYÚŒˆXÚšXØ[›Ø™B‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_Ÿ[[]]X›HØ[™Y]H™YÚ\Ý˜][ÛˆÓÕTÑKRSTSQS•QØ^RÚ]™]š\Ú[ÛˆÌŒÍÌØ˜LÍŽÍ˜LNYNM™XÙÍLNMØXØÛšYÚ™˜žŸÛÝ\˜ÙH›ØˆY[]HÓÕTÑKRSTSQS•QÚ]›ØˆLNÎMNLLÙXLÍØXÌÙXÎLÍL™™ŽYLŸØ\™ZÝ\ÙHÝYÚ[™ÈÈ^[ØYÒLMˆS‘S‘È]\Ý™H›ÙXÙYžH\™Ù]YÝYÚ[™ÈŸÝ]XÈ–ÚÙ[][PÈS‘S‘È]\Ý\ÜÈ™Y›Ü™HQH[›™\ˆ™\Ù\˜][ÛˆŸQMŒËŒˆÚÙ[][[\ÜS‘S‘ÈØ[YHÛ[ÛÝ[™ËØš[™\ÜÙKÕUˆ™Z™XÝ[ÛˆØ]H\È›ÙÝYHŸ[[YHÈZÙ[™\ÜÈÈY›Ü›X][ÛˆÈ™]\™Ù]“ÕUUÔ’V‘QXÚšXØ[›Ø™HÛ›H‚‚ˆÈÈŒ‹LLLÈHÛÜÙYTˆœ˜[˜ÚY™XÞXÛH[™›Ü˜Ù[Y[‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_Ÿ›ÛÝØ]\ÙHQS•Q’QQÛX[\›Øˆ™]š[Ý\ÛHÚÚ\YÛÜÙY][›Y\™ÙYœÈŸ^XÝÛÜÙYZXY[][ÛˆÓÕTÑKRSTSQS•QÒK[X]Ú
+ÈXÝ]™KTˆ
+ÈØ[›ÛšXØ[Ü›ÝXÝYÝX\™È™]Z[™YŸ^\Ý[™ÈÝ[Hœ˜[˜Ú™]\™[Y[ÓÕTÑKRSTSQS•QNH™\šYšYYÝ\\œÙYYÛÜœ[ˆ™YœÈ]Y]YY[ˆÛX[\[ˆŸXÝ]™Hˆ›ÝXÝ[Ûˆ‘TÑT•‘Q]™HÜ[ˆˆXYÈ\™H^ÛYYŸÜÝY˜[Y][ÛˆS‘S‘Èœ™\Ú^XÝZXY™KU[œ™X[ØÛX[\]šY[˜ÙH™\]Z\™Y‚‚ˆÈÈÈŒ‹LLLÈHœ˜[˜ÚY™XÞXÛH›ÛÝYš^˜[Y][Û‚‚Ÿ\™XHÝ]\È]šY[˜ÙHŸKK_KK_KK_Ÿ™KU[œ™X[ÌMÌHRSQÈPQÓ“ÔÕPÈËLMÈØ]YÚÝ[HY\™ÙYZXYÛÛ˜XÝŸÛÜšÙ›ÝÈÓÔÑQÒPQ[ˆÓÕTÑKT‘TRT‘Q^XÝÛÜÙHXY
+È˜\ÙKÛY\™ÙHÚXÚÛÝ]\Ý[˜Ý[ÛˆŸËLMÈÛÛ˜XÝÓÕTÑKT‘TRT‘Q˜[Y]\ÈÛÜÙYTˆY™XÞXÛHX\šÙ\œÈŸ›Ú™XÝÛÝ™\››Üˆ‘TKQVPËLˆTUQØ[˜YÙKÙ\ÜÜÚ][Û‹X™Y›Ü™KY[]H
+È]™K\™Yˆ]Y][HŸœ™\Ú^XÝZXY˜[Y][ÛˆS‘S‘È™]È[ˆ™\]Z\™Y™Y›Ü™HY\™ÙH‚Ÿœ˜[˜Ú[][ÛˆXÝ]™KTˆØY™]H™XÚXÚÈÓÕTÑKRT‘S‘Q\‹Xœ˜[˜ÚXY[ÝÛ™\Ž˜œ˜[˜ÚTH]Y\žH™Y›Ü™H[][ÛŽÈTH˜Z[\™H›ØÚÜÈÛX[\‚‚ˆÈÈŒ‹LLLÈHœ˜[˜ÚÛX[\˜]ÚÛÛ[X][Û‚‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_Ÿœ˜[˜ÚÛX[\ÌLÎRSQÈPQÓ“ÔÕPÈXÝ]™HˆÛÜœ™XÝH›ÝXÝYÈ˜]ÚX›ÜYŸXÝ]™Hˆ[][Ûˆ™Z]š[ÜˆÓÕTÑKT‘TRT‘QÙY\
+ÈÛÛ[YH[œÝXYÙˆX›ÜŸØ[›ÛšXØ[È[Ý™Y\™Yˆ›ÝXÝ[Ûˆ‘TÑT•‘Q›È™[^][ÛˆŸ^XÝZXY˜[Y][ÛˆS‘S‘Èœ™\Ú™KU[œ™X[™\]Z\™Y‚‚ˆÈÈŒ‹LLLÈH[\HXÝ]™KTˆ]Y\žH™\Z\‚‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_Ÿ[\H‘TÕ™\ÜÛœÙH[™[™ÈÓÕTÑKT‘TRT‘Q[Yš[\ˆ
+È^XÝXYœ™Y˜X]ÚŸYHXÝ]™Hˆ[™[™È‘TÑT•‘QÑQT
+ÈÓÓ•S•QHŸTH˜Z[\™H™Z]š[Üˆ‘TÑT•‘Q˜][È˜Z[XÛÜÙYŸ^XÝZXY˜[Y][ÛˆS‘S‘Èœ™\Ú™KU[œ™X[™\]Z\™Y‚‚ˆÈÈŒ‹LLLÈHÝ[Hœ˜[˜Ú™]\™[Y[Ø]™H‚‚ŸØÛÜHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸY][Û˜[\ÜÜÙY™YœÈUQUQQÌŽXYÌKÌ‹ÌŒÎHŸXÝ]™HˆXYÈVÓQQ›Û™HÙˆH›Ý\ˆ\È[ˆÜ[ˆˆŸÛX[\^XÝ][Ûˆ“ÕÕT•QÈ›ÝY\™ÙHÚ[HÌM\È[›š[™ÈŸÜÝY˜[Y][ÛˆS‘S‘Èœ™\Ú™KU[œ™X[™\]Z\™Y‚‚ˆÈÈŒ‹LLLÈHÝ[Hœ˜[˜Ú™]\™[Y[Ø]™HÂ‚ŸØÛÜHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸÛÜÙYXZ[[˜[˜ÙH™YœÈÈUQUQQÌÌÌÌ‹ÌÌÈXYÈŸXÝ]™HˆXYÈVÓQQ›Û™HÙˆH™YH™[XZ[œÈÜ[ˆŸ›ÙXÝ[Û‹Ü[[YHÛÛ[SÒS‘ÑQXZ[[˜[˜ÙK[Û›H™]\™[Y[ŸÜÝY˜[Y][ÛˆS‘S‘Èœ™\Ú™KU[œ™X[™\]Z\™Y‚‚ˆÈÈŒ‹LLLÈHš[˜[œ˜[˜ÚÛX[\Ø]™B‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_Ÿ]™HXY™YœÈ\™Ù]YÌÌÌÌ‹ÌÌËÌŒÈXYÈŸXÝ]™H[]H]Y]YHÓÓTPÕQMHOˆ\ÝÜšXØ[XœÙ[™YœÈ™[[Ý™Yœ›ÛH^XÝ][Ûˆ]Y]YHŸXÝ]™HˆXYÈVÓQQ›Û™HÙˆH›Ý\ˆ\™Ù]È\ÈÜ[ˆŸÌŒÈ[[YH]]Üš]HÕTT”ÑQQ^XÝ™\XÙ[Y[Ý\ÜÝ[[\ÜÔPÈ[™[™ÎÈÌÈ™[XZ[œÈ›Ý[™YÜš]\ˆŸ^XÝZXY˜[Y][ÛˆS‘S‘Èœ™\Ú™KU[œ™X[™\]Z\™Y‚‚ˆÈÈŒ‹LLLÈHš[˜[œ˜[˜ÚYÚY[™HÛÜÙ[Ý]‚Ÿ]™K\™YˆÛ\ÜÈÛÝ[Ý]\ÈŸKK_KKNŸKK_ŸØ[›ÛšXØ[Ü™XÛÝ™\žHÈ‘TÑT•‘QŸÜ[ˆˆXYÈHPÕU‘HÈ‘TÑT•‘QŸ^XÚ][™[™ÈØ[˜YÙHÈS’TUQHÓÓ•S•È‘TÑT•‘QŸ[™^Z[™YXY™YœÈÓPSˆŸXÝ]™H[]H]Y]YHÓÓTPÕQ‚‚ˆÈÈŒ‹LLLÈH˜YÈ[™[YY[žHÚXˆ[[YH™Yœ™\Ú‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_Ÿ[[YHÜš]\ˆPÕU‘HÈÒS‘ÓHœ™\Úœ˜[˜Úœ›ÛHMXÙ™LX™ŽXXØÍÙXÍØŽNYNÍŽM˜ÍŒØŸ[žHÜ\™HÚXœÈÓÕTÑKT‘TPÑQ™\ÚY[ÓWÔÚÚX˜ÈÜ\™H™[XZ[œÈ›ËX\ÜÙ]˜[˜XÚÈŸXÝÜˆÈXÚÈÈÛÛ\Ú[ÛˆYÙ]SÒS‘ÑQÛÈ^\Ý[™ÈXÙ[Y[ÎÈ›ÈXÚËØÛÛ\Ú[ÛˆYYŸÛÜ‹ÝÚ[™ÝËÝš[HX‘TÑT•‘Q^XÝ™\XÙ[Y[™[XZ[œÈ[\ÜÔPÈØ]YŸœ™\Ú^XÝZXY™KU[œ™X[S‘S‘È™]ÈXY™\]Z\™YŸœ™\ÚQMŒËŒˆÛÛ\[KØZ[S‘S‘ÈÛÌLÌHÙ\È›Ý˜[Y]H™Yœ™\ÚYXY‚ˆÈÈŒ‹LLLÈHÜÝYÛ\ÜÚYšY\ˆÝ\œ™[]™YH›ÛÙˆ™Yœ™\Ú‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸØØ[\™[[Øš™XÝ›Ø™HÓÕTÑKRSTSQS•Q™]ÚÛ›HYˆØØ[Øš™XÝXœÙ[Ÿ˜YÈ[™ÛÝ\˜ÙHXÚÙ][ÝÛ\ÝVPÕTUÓ“H›Èœ›ØY]HÚ[Ø\™Ÿ\™[™YH]šY[˜ÙHURSP“H™K‹‹˜œÈ™LX‹‹‹˜ˆ™\›Èš[H[HŸš[Üˆ[™Ú[™H›ÛÙˆURSP“HÌÍÈ[œ™X[Z[ÌLÌLÕPÐÑTÔÈÛˆ™LX‹‹‹˜Ÿœ™\ÚÛ\ÜÚYšY\ˆ˜[Y][ÛˆS‘S‘È^XÝÝ\œ™[XY™\]Z\™Y‚Ÿ˜[œÚ]]™HÛÝ™\›˜[˜ÙH[˜Ù\ÝÜˆ›ÛÙˆÓÕTÑKRSTSQS•QØY™H[H
+È\™XÝÜ™Y[ˆÔˆ^XÝ™YKY\]Z]˜[[ÛÜ™H›ÛÙˆŸœ›ØYØY™]H™[^][Ûˆ“Ó‘H^\Ý[™ÈØY™KYš[H[™™YKY\]X[]H™\]Z\™[Y[È™\Ù\™YŸœ™\ÚÜÝY˜[Y][ÛˆS‘S‘È^XÝZXY™KU[œ™X[™\]Z\™Y‚ˆÈÈŒ‹LLLÈH˜YÈ[™\›Èš[HÛÝ\˜ÙH›Ø™HŒÂ‚ŸØ]HÝ]\ÈŸKK_KK_ŸÝ\œ™[[˜Ù\ÝžH]™[ÜÌXLYŒÌ˜ÍLNYYLMŒŽMØNMYYØŒYXÍ˜ØŸ[[YH[YÜ˜][Ûˆ“ÐÒÑQÈ˜[ÙHŸ^XÝ[Ù[\ˆ–\ØÛÝ™\žHS‘S‘ÈŸ[[]]X›H™XÙZ\ÔÒLMˆS‘S‘ÈŸÝ]XÈ–U‹ÛX]\šX[Ü\™ˆPÈS‘S‘ÈŸ™X[QMŒËŒˆÝ]XË[Y\Ú[\Ü“ÐÒÑQS•SÕUPÈÐUTÈŸš\ÝX[XØÙ\[˜ÙH“ÕÓRSQQ‚ˆÈÈŒ‹LLLÈH˜YÈ[™\›Èš[H^XÝYš[HØ]B‚ŸØ]HÝ]\È]šY[˜ÙHŸKK_KK_KK_Ÿ›ÝšY\‹ÛXÙ[œÙH˜[Z[HÓÓTUHÙ™šXÚX[Ù[›™^HZ[[™ÈÚ]ÈÐÌŸ^XÝ–š[[˜[Y\ÈÓÓTUH›Ý[™ÛÜ‹ÙÛÜØ^KÝÚ[™ÝÈØ[™Y]\ÈY[YšYYŸ\ØÛÝ™\žH^[ØYY[]Y\ÈÓÓTUKQTÐÓÕ‘T–HÚ]S”ÈÒLMˆ
+Èž]HÚ^™H[›™YÈZ\œ›Üˆ™]š\Ú[ÛˆŸÙ™šXÚX[Ù[›™^H\˜Ú]™H™XÙZ\S‘S‘È›ÙXÝ[Ûˆ›Ý™[˜[˜ÙH›ÝY]Ø\\™YŸš[˜\žHÝ]XÈ–PÈS‘S‘È›Èš[˜\žH^[ØY]˜Z[X›H[ˆÝ\œ™[^XÝ][Ûˆ[š\›Û›Y[ŸQMŒËŒˆ[\Ü“ÐÒÑQ™\]Z\™\ÈÙ™šXÚX[™XÙZ\
+ÈÝ]XÈPÈŸ[[YH™\XÙ[Y[“ÐÒÑQ^XÝ[\ÜÔPÈ]šY[˜ÙH™\]Z\™Yš\œÝ‚‚ˆÈÈŒ‹LLLÈH˜YÈ[™\›Èš[HÛÝ\˜ÙH™XÙZ\›ÙÜ™\ÜÚ[Û‚‚ŸØ]HÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸÙ™šXÚX[›ÝšY\ˆYÙH‘TÓÓ‘QÙ[›™^HZ[[™ÈÚ]ÈÐÌÈš[\ÈŸÙ™šXÚX[\™XÝ’TT“‘TÓÓ‘Q™XÛÜ™Y[ˆPÌP˜YÑ[™\›Õš[TÛÝ\˜ÙT›Ø™UŒKšœÛÛ˜Ÿ\˜Ú]™HÒLMˆ
+Èž]HÚ^™HS‘S‘ÈØ\™ZÝ\ÙH™XÙZ\™\]Z\™YŸ^˜XÝYØ[™Y]H\ÚX]ÚS‘S‘È]\ÝX]Ú\ØÛÝ™\žHY[]Y\ÈŸÝ]XÈ–PÈÈQMŒËŒˆ[\ÜS‘S‘È›È›Û[Ý[Û‹Ü[[YHš[™[™ÈY]‚‚ˆÈÈŒ‹LLLÈH[\˜XÝ]™H][˜Ú\ˆÈ[›™\‹\›ÛÝ\ÛÛ][Û‚‚ŸÛÛ›ÛÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_Ÿ™]\™YË\[›™\ˆY\ÜØYÙH‘SSÕ‘Q][˜Ú\ˆ›ÈÛ™Ù\ˆ˜[Y\ÈÎ—XÝ[ÛœË\[›™\˜\ÈXÝ]™H]]Üš]HŸ[›™\‹\›ÛÝ[\˜XÝ]™HÝX\™Õ‘S‘ÕS‘Q™Z™XÝÈ[žHXÝ[ÛœË\[›™\—›Ú™XÝ›ÛÝ[™\[™[Ùˆš]™H]\ˆŸXÝ]™HÙ[‹ZÜÝY]]Üš]HSÒS‘ÑQ—XÝ[ÛœË\[›™\˜™[XZ[œÈÒK[Û›HŸX[X[[œ™X[ÛÛ™HSÒS‘ÑQØÝ[Y[È]™[Ü\ˆÛÛ™HÛ›H‚‚ˆÈÈŒ‹LLLÈHÝ[HÜ[ˆÛÝ\˜ÙKÜ™\›ÙXÝ[Ûˆ™XÛÛ˜Ú[X][Û‚‚ŸØ[˜YÙY[™HÝ\œ™[[˜Ù\ÝžH\ÜÜÚ][Ûˆ[[YH›Ý[™\žHŸKK_KK_KK_ŸŒÈÚ\\ˆ›ÙXÝ[ÛˆXÚÙ]È
+È\ÜÙ][X[™X]š^ÑSPÕU‘SHÐSQÑQ[›ÝÜÈ[[YOY˜[ÙHŸPÌHÚ\™HYYØHÚ\\ˆXÚÈÑSPÕU‘SHÐSQÑQÛÝ\˜ÙKÜ™\›ÙXÝ[ÛˆÛ›HŸPÌHN\ÛÝš\ÝX[YYØHØ]™HÑSPÕU‘SHÐSQÑQØ[™Y]H\ØÛÝ™\žHÛ›NÈ›Ý™[˜[˜ÙKÔPÈ™\]Z\™YŸZ[HX[˜YÙ\ˆ™\ÜÙ[™\˜]Ü‹Ý\ÝÑSPÕU‘SHÐSQÑQ[™›Ü›X][Û˜[ÛÛ[™ÈÛ›HŸÛœ˜[˜Ú[ØØ[ØÜËÝÛÜšÙ›ÝÈÛ˜\ÚÝÈ“ÕÓÔQQÝ\œ™[]™[Ü™[XZ[œÈ]]Üš]HŸœ™\Ú^XÝZXY™KU[œ™X[S‘S‘È™\]Z\™Y™Y›Ü™HY\™ÙH‚‚ˆÈÈŒ‹LLLÈHÝ]XÈ–ÛÜ›[ZÙH™XÛÛ˜Ú[X][Û‚‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸÝ]XÈÛÜ›Ü›Ü–\ØÛÝ™\žKÚ[\ÜÓÕTÑKRSTSQS•Q]\Ý]™[Ü[˜Ù\ÝžHŸÚ\˜XÝ\œËÔšYÜÈ–Q‘T”‘QYXØ]YÚÙ[][PÈ[™HŸ]]È[š[X][Û‹ÛX]\šX[Ý^\™H[\ÜTÐP“Q]\›Z[š\ÝXÈ›Ý[™YÝ]XÈ[ZÙHŸÞ[˜Ú›Û›Ý\ÈX]žHØYØš™XÝ[ˆ–œ˜[˜ÚÕPT‘Q“Ô’QSˆÜÝYÛÝ\˜ÙHÛÛ˜XÝŸœ™\ÚQMŒËŒˆÛÛ\[HS‘S‘È™\]Z\™Y™Y›Ü™HY\™ÙHŸQKÙ]šXÙKÝš\ÝX[Ü\™›Ü›X[˜ÙH“ÕÓRSQQÙ\\˜]HØ]\È‚‚ˆÈÈŒ‹LLLÈHPÌHØ\™[ˆš\ÝX[™\XÙ[Y[‚Ÿ][HÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸØ\™[ˆÛÚ[›ÝÜÈ›ÙXÝ[ÛˆÜ›Ý[™Y\Ú™Y™\œ™YÛÝ\˜ÙH[\[Y[YŸØ\™[ˆ[È^\Ý[™ÈÚXˆTÓKX^LHYY[œÝ[˜Ù\ÈÛÝ\˜ÙH[\[Y[YŸš[Z]]™H[XÝÜœÈ˜[˜XÚË[Û›HÚ[ˆ›ÙXÝ[Ûˆš[™[™È[˜]˜Z[X›HÛÝ\˜ÙH[\[Y[YŸXÝÜ‹ÕXÚÈÜ›ÝÝ›Û™NÈ›ÙXÝ[Ûˆ]™YXÙ\È\‹\[XÝÜœÈÛÝ\˜ÙH[œÜXÝ[ÛˆŸ^XÝZXYQMŒËŒˆ˜[Y][ÛˆS‘S‘È™\]Z\™Y™Y›Ü™HY\™ÙHŸQKÙ]šXÙKÝš\ÝX[Ü\™›Ü›X[˜ÙH“ÕÓRSQQÙ\\˜]HXØÙ\[˜ÙHØ]\È‚‚ˆÈÈŒ‹LLLÈHš\ÚX›KYØ[YH[]™\žH]]Üš]B‚Ÿ\™XÝ[ÛˆÝ]\ÈŸKK_KK_Ÿš\ÚX›HÚ\™Hš\œÝPÕU‘HUUÔ’UHŸœ›ÙÈš\œÝ™X[ÚÙ[][Ú\˜XÝ\ˆPÕU‘HUUÔ’UHŸÛ™HPÌH[[YHÜš]\ˆ‘TURT‘QŸQMHZYÜ˜][ÛˆÈ˜[š]HÈY]R[X[ˆÜ›ÝÙÈQMHÑÈ“ÕÕT”‘S•ÕPÒÈŸ›ÜÜØ[YÜ[Ûˆ‘T’Q–HQÐRS”ÕU‘HU‘SÔ
+È“Ò‘PÕÓÕTÑTÈŸ\˜X›H™\ÜÚ]ÜžHY[[ÜžH‘TURT‘Q“ÔˆU‘T–HPÐÑTQPR“ÔˆT‘PÕSÓˆ‚‚ˆÈÈŒ‹LLLÈHœ›ÙÈ™X[\šYÈ[™HÝ\œ™[X[˜Ù\ÝžH™XÛÛ˜Ú[X][Û‚‚Ÿ][HÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸÜZ[ˆQMŒÈÚÙ[][–[\Ü\ˆÓÕTÑKRSTSQS•Q^XÝZXYZ[[™[™ÈŸ\™XÝ–Ú\˜XÝ\ˆÝYÚ[™ÈÓÕTÑKRSTSQS•QÜÝYÛÛ˜XÝ[™[™ÈŸY˜][Ú\˜XÝ\ˆ–™Z]š[ÜˆQ‘T”‘Q[›\ÜÈ^XÚ]›YÈ™\Ù\™YŸ›Ûž™\›ÈÚÙ[]Û‹Ø›Û™H›ÛÙˆSTSQS•Q[ˆ[\ÜÛÛ[X[™]Ø[™Y]H[ˆ[™[™ÈŸœ›ÙÈY›Ü›X][Û‹Ü™]\™Ù]Ð[š[P”Ü[[YH“ÕÕT•Q™\]Z\™\ÈÛX[ˆXÚšXØ[Ø[™Y]H‚‚ˆÈÈŒ‹LLLÈHÒHZ[\ÜYY[™HÜ]‚ŸÚ[™ÙHÛ\ÜÈÙ[™\šXÈQM[›™\ˆŸKK_KK_Ÿ˜YÈ[™ÜÝYÙ™šXÚX[™XÙZ\ÛÝ\˜ÙK[Û›H[HS’T’UÔÒÒTŸœ›ÙÈYXØ]Y›Ø™HY]Y]KÝÛÜšÙ›ÝË[Û›H[HS’T’UÔÒÒTŸ[[YHÊÊÈÈÛÝ\˜ÙP\ÜÙ]ÈÈ[™Ú[™HÛÛ™šYÈ‘TURT‘QŸYXØ]Yœ›ÙÈÚÙ[][XÚšXØ[›Ø™HÕÓˆQMÓÔ’Ñ“ÕÈ‘TURT‘Q‚‚ˆÈÈŒ‹LLLÈH˜YÈ[™\›Èš[HÛÝ\˜ÙH™XÙZ\ÛÛ\][Û‚‚ŸØ]HÝ]\ÈŸKK_KK_ŸÙ™šXÚX[\˜Ú]™HÒLM‹ÜÚ^™HTÔÈŸ^XÝÛÜ‹Ùœ˜[YKÝÚ[™ÝÈ^[ØYY[]HTÔÈŸ^XÝYÛÛÜ›X\^[ØYY[]HTÔÈŸš[˜\žHÝ]XÈ–PÈ‘VŸQMŒËŒˆÝ]XÈ[\ÜS‘S‘ÈŸ[[YH\›Èš[H™\XÙ[Y[“ÐÒÑQS•SSTÔ•ÔPÈ‚‚ˆÈÈŒ‹LLLÈH˜YÈ[™š[HÝ]XÈPÂ‚ŸØ]HÝ]\ÈŸKK_KK_ŸÙ™šXÚX[^XÝ^[ØY™XÙZ\TÔÈŸÜÝY–Ý]XÈÝXÝ\™HPÈPÕU‘HŸQMŒËŒˆ[\ÜS‘S‘ÈŸ[[YH™\XÙ[Y[S‘S‘È‚‚ˆÈÈŒ‹LLLÈH˜YÈ[™š[HÝ]XÈPÈ™\Ý[‚ŸØ[™Y]HÝ]XÈ™\Ý[ŸKK_KK_ŸÙ[›™^HZ[[™ÈÚ]›Ý[™ÛÜˆ‘R‘PÕQˆ–ÍÌŸQMÙ[‹ZÜÝY[\Ü“ÕÐÒQSQ›Üˆ™Z™XÝY^[ØYŸ™^ÛÛ\]X›H^ÜÜÛÝ\˜ÙH˜[Z[H‚‚ˆÈÈŒ‹LLLÈH™^œ›ÙÈØ[™Y]HÛÝ\˜ÙH[™B‚ŸØ]HÝ]\ÈŸKK_KK_Ÿ\Ý[˜ÝÐÌ[X[›ÚYÛÝ\˜ÙH‘QÒTÕT‘QŸÜÝY\˜Ú]™KÑ–[™[ÜžHPÕU‘HŸQM[›™\ˆ™\Ù\˜][Ûˆ“ÐÒÑQS•SÔÕQÕUPÈTÔÈŸš[˜[œ›ÙÈZÙ[™\ÜËÜ[[YH“ÕÓRSQQ‚‚ˆÈÈŒ‹LLLÈHœ›ÙÈ™Z™XÝY\^[ØYÝX\™™XÛÛ˜Ú[YÛˆÝ\œ™[]™[Ü‚ŸÛÛ›ÛÝ]\ÈŸKK_KK_Ÿ^XÝ™Z™XÝY^[ØY\Ú\ÈTP“H‘PÓÔ‘QŸÛšYÚŒˆQMÚÙ[][™YÚ\Ý˜][ÛˆTÔËLH›Û™\ÈŸÛšYÚŒˆÛ[ÛÝ[™ÈÜ›Ý\ÈRSŸÛšYÚŒˆš[™ÜÙHRSŸ™]žHØ[YH^XÝ^[ØY“Ô’QSˆŸ\Ý[˜ÝÑÐHÝÜÛH[[^H˜[Z[HÓÕTÑHS•‘S•Ô–HTÔÈÓ“NÈQMPÒ’PÐS“Ð‘H‘V‚‚ˆÈÈŒ‹LLLÈHPÌHš\ÚX›HÚ\™HYYØH\ÜÂ‚ŸØ]HÝ]\ÈŸKK_KK_ŸÛÜ›Y]Z[YÙ\ˆ™YÚ\Ý˜][ÛˆÓÓTUHŸ[[YHTÓHYYØK\\ÜÈÛÝ\˜ÙHSTSQS•QŸ˜YÈ[™ÒØ˜š]ÛˆYÙH[˜ÛÜÝ\™HSTSQS•QSˆÓÕTÑHŸšY[›Ý[™\šY\ÈÈÚ[\˜™[ÈSTSQS•QSˆÓÕTÑHŸÛÛÙY\›ØY^Y\™Y™YÙ]][ÛˆSTSQS•QSˆÓÕTÑHŸ™\œžKX˜[šÈ™YYÈÈ\›ØXÚœ˜[Z[™ÈSTSQS•QSˆÓÕTÑHŸ™]ÈÞ[˜Ú›Û›Ý\ÈX]žHØY[™È“Ó‘HQQŸ™]È”ÈY™XÞXÛHÝÛ™\ˆ“Ó‘NÈ]š[™ÕÛÜ›\™XÝÜˆ™[XZ[œÈ]]Üš]]]™HŸ^XÝZXY™KU[œ™X[S‘S‘ÈŸ^XÝZXYQMŒËŒˆZ[S‘S‘ÈŸQKÙ]šXÙKÜ™[™\™Yš\ÝX[Ñ”ÈXØÙ\[˜ÙH“ÕÓRSQQ‚‚ˆÈÈŒ‹LLLÈHœ›ÙÈÑÐHÝÜÛH[[^HXÚšXØ[™\Ý[‚ŸØ]HÝ]\ÈŸKK_KK_Ÿ^XÝÐÌ\˜Ú]™H™XÙZ\TÔÈŸ^XÝYH–Y[]HTÔÎˆMÍÙÍÍÙÌL™XŽÙYŽMMÌÌ˜ÎMŒ˜ÍMÍÎLŒLÎŒØLÎMŸ–™\œÚ[ÛˆTÔÎˆÍŸQMŒÈÚÙ[][™YÚ\Ý˜][ÛˆTÔÈŸ™Y™\™[˜ÙH›Û™HÛÝ[TÔÎˆHŸÛ[ÛÝ[™ËYÜ›Ý\Ø]HRSŸš[™\ÜÙHØ]HRSŸXÚšXØ[Ø[™Y]H‘R‘PÕQŸ™]žHØ[YH^[ØY“Ô’QSˆŸY›Ü›X][ÛˆÈ™]\™Ù]È[š[P”“ÐÒÑQŸ[[YHœ›ÙÈ›Û[Ý[Ûˆ“ÐÒÑQ‚‚ˆÈÈŒ‹LLLÈHPÌH˜]\˜[›Ý]HYYØH\ÜÂ‚ŸØ]HÈš\ÚX›HÛXZ[ˆÝ]\ÈŸKK_KK_ŸÝ˜]YÞHPVSUSKTÐQ‘H‘T•PÐSTÓPÑHÔ“ÕÕŸ[[YHÚ\\ˆPÌHÓ“HŸ[[YHÜš]\ˆTÚ\™T›ÝÝ\UÛÜ›Z[\ˆŸ˜YÈ[™OˆØ˜š]Ûˆ›Ý]Hœ™XZÝ\STSQS•QSˆÓÕTÑHŸÛÜšÙYYšY[™\™ÙHÈÜš^›Ûˆœ™XZÝ\STSQS•QSˆÓÕTÑHŸÛÛÙY\›ØY[˜ÛÜÝ\™HSTSQS•QSˆÓÕTÑHŸ™\œžHš]™\‹YYÙH[œÚ]HSTSQS•QSˆÓÕTÑHŸY][Û˜[™\X]Y]Z[YÙ]TÈKÍNTÓHS”ÕSÑTÈŸ™]ÈÞ[˜Ú›Û›Ý\ÈX]žHØYÈ“Ó‘HŸ™]È\‹Z[œÝ[˜ÙHXÚÈ“Ó‘HŸ™]È”ÈY™XÞXÛHÝÛ™\ˆ“Ó‘HŸPÌˆ[[YH^[œÚ[Ûˆ“ÕÔS‘QŸ^XÝZXY™KU[œ™X[S‘S‘ÈŸ^XÝZXYQMŒËŒˆ˜[Y][ÛˆS‘S‘ÈŸQKÙ]šXÙKÜ™[™\™Yš\ÝX[Ñ”ÈXØÙ\[˜ÙH“ÕÓRSQQ‚‚ˆÈÈŒ‹LLLHXY[™Ú[™Y\š[™È[]™\žHY]Ù‚ŸÛÛ›ÛÝ]\ÈŸKK_KK_Ÿ›Ù™\ÜÚ[Û˜[XYY]ÙÝÜ™Y[ˆÛÝ™\››ÜˆSTSQS•QSˆÓÕ‘T“SÑH”SÒŸ›Ý][™HXÚšXØ[XÚ\Ú[ÛœÈÝÛ™YžHXY\˜Ú]XÝSP“QÒUÐS“Ó‹Ô“Õ‘SSÑKÔT‘‹ÑÐUH“ÕS‘T’QTÈŸ›ÛÝXØ]\ÙH›ØÚÙ\ˆ™\ÙX\˜ÚÛÜ‘TURT‘QŸÙ™šXÚX[QMŒÈ
+ÈX]\™HÔÔËÙ^\]šY[˜ÙH™]šY]È‘TURT‘Q“Ôˆ“Ó•’U’PS“ÐÒÑT”ÈŸœ›ØYYØ[ÛÜ[ˆ\ÜÙ]\ØÛÝ™\žH‘TURT‘QÒSˆÕT”‘S•ÓÕTÑHTÈS”ÕQ‘’PÒQS•Ÿ™\Z\˜X›H–^Ü›Ü›X[^˜][Ûˆ]UUÔ’V‘QÒU“Õ‘SSÑH
+ÈÕ’PÕ‘KUSQUSÓˆŸ\™ÙHÛÚ\™[š\ÚX›H›ÙXÝ[ÛˆXÚÙ]ÈQUSŸ]›ÚYX›HZXÜ›ËXÛÛ[Z]ÈÝ\\œÙYYPÒHÚ\›ˆ“ÐÑTÔÈQ‘PÕÈ‘QPÑHŸš\ÚX›HÚ\™H
+È[X[ˆÚ\˜XÝ\œÈ’SPT–HSU‘T–HT‘ÑUŸÝË\ÜXÈLHÈÌŒÈÌ”È\˜Ú]XÝ\™HÛÛœÝ˜Z[ÈSÒS‘ÑQŸQKÙ]šXÙKÝš\ÝX[Ñ”ÈÛZ[\ÈÚ]Ý]\™XÝ]šY[˜ÙH“Ô’QSˆ‚ˆÈÈŒ‹LLLH]]Ü™YÚ\™HYYØHØ]™H‚‚Ÿš\ÚX›HÛXZ[ˆÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸÛÜ›Y]Z[YÙ\ˆ™YÚ\Ý˜][ÛˆÓÓTUH‘Q“Ô‘HÓÑHPÌHUUÔ‘QÔÒT‘WÓQQÐWÕÐU‘WÐˆŸ[[YHÜš]\ˆ‘TÑT•‘QTÚ\™T›ÝÝ\UÛÜ›Z[\ˆÛ›HŸ˜YÈ[™X\Ú[œ˜[Z[™ÈÓÕTÑKRSTSQS•Q™\ÚY[TÓH[™›Ü›HXÙ[Y[ÈŸØ˜š]Ûˆ\œ˜Z[ˆ\œ˜XÙ\ÈÓÕTÑKRSTSQS•Q™\ÚY[TÓHÛÜHXÙ[Y[ÈŸÛÜšÙYYšY[Ý]\ˆšYÙ\ÈÓÕTÑKRSTSQS•Qˆ™\ÚY[TÓH[XÙ[Y[ÈŸÛÛÙY\›ØY[˜ÛÜÝ\™HÚÝ[\œÈÓÕTÑKRSTSQS•Q™\ÚY[TÓHÛÜHXÙ[Y[ÈŸ™\œžH™X\‹Ù˜\ˆ˜[šÈœ˜[Z[™ÈÓÕTÑKRSTSQS•Q™\ÚY[TÓHš]™\‹X˜[šÈXÙ[Y[ÈŸ™\œžHš[˜[X\›ØXÚÝÛ™\ÈÓÕTÑKRSTSQS•QN›Û‹XÛÛ\Ú[Ûˆ›ÙXÝ[ÛˆTÓH[œÝ[˜Ù\ÈŸ™]ÈÞ[˜Ú›Û›Ý\ÈX]žHØY[™È“Ó‘HQQ™\ÚY[Y\Ú\ÈÛ›HŸ™]È\‹Z[œÝ[˜ÙHXÚÈ“Ó‘H^\Ý[™ÈTÓH\˜Ú]XÝ\™HŸPÌˆ[[YH^[œÚ[Ûˆ“ÕÔS‘Qš\ÝX[PÌHÛ›HŸ^XÝZXY™KU[œ™X[S‘S‘Èœ˜[˜Ú˜[Y][Ûˆ™\]Z\™YŸ^XÝZXYQMŒËŒˆZ[S‘S‘Èœ˜[˜Ú˜[Y][Ûˆ™\]Z\™YŸQKÙ]šXÙKÝš\ÝX[ÜXÚ[™ËÑ”È“ÕPÐÑTQ\™XÝ]šY[˜ÙHÝ[™\]Z\™Y‚ˆÈÈŒ‹LLLH™\Ù[][ÛˆÛÛ\ÜÚ][ÛˆØ]™HÂ‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸØ]™HÈYÙ\ˆ™YÚ\Ý˜][ÛˆÓÓTUH‘Q“Ô‘HÓÑH™\Ù[][Û‹ÛX]\šX[Ý™YÙ]][Ûˆ[\ÈØ\\™YŸÝ[]˜]Y˜YÈ[™ÒØ˜š]Ûˆ›Ü™YÜ›Ý[™ÓÕTÑKRSTSQS•QŽÚXˆTÓH[œÝ[˜Ù\ÈŸÛÛÙY\›ØY™\ÚÛØ[›ÜHÓÕTÑKRSTSQS•QŒœ›ØYXYˆTÓH[œÝ[˜Ù\ÈŸÛÛÙY\›ØY[™\œÝÜžHÓÕTÑKRSTSQS•Q™\›ˆTÓH[œÝ[˜Ù\ÈŸ™\œžKX˜[šÈ™YÙ]][Ûˆœ˜[Z[™ÈÓÕTÑKRSTSQS•QÌˆ™YYTÓH[œÝ[˜Ù\ÈŸ[\ÜYX]\šX[™\Ù\˜][Ûˆ‘TÑT•‘Q›È›ÙXÝ[Û‹[Y\ÚÛÛÜˆRQÝ™\œšYHŸ[Ü›š[™ÈYÚÙ›ÙËÙ^ÜÝ\™H™Yš[™[Y[ÓÕTÑKRSTSQS•Q^\Ý[™ÈÝËXÛÜÝXÝÜœËÜÙ][™ÜÈÛ›HŸ›Û[Y]šXÈ›ÙÈTÐP“QÝË\ÜXÈÛXÞH™\Ù\™YŸ[˜\ˆ™Y›XÝ[ÛˆÈØÙ[™HØ\\™H“Ó‘HÝËXÛÜÝØ]\ˆ]™\Ù\™YŸ^\›˜[”ˆ[ZÙH“Õ‘TURT‘QQUÛ›HY\ˆš\ÝX[™]šY]È›Ý™\ÈØ\Ÿ^XÝZXY™KU[œ™X[ÈQMZ[S‘S‘Èœ˜[˜Ú›ÝÜ[™Y›Üˆ˜[Y][ÛˆY]ŸQKÙ]šXÙKÝš\ÝX[Ñ”È“ÕPÐÑTQ\™XÝ]šY[˜ÙH™\]Z\™Y‚Ÿ]]Ü™YÚ\™H‹ÐÈÛÝ\˜ÙH™YÜ™\ÜÚ[ÛˆÝX\™ÓÕTÑKRSTSQS•Q\ÝÜÛÝ\˜ÙWØÛÛ˜XÝËœXÈØÚÜÈYÙ]ËØ[Ü™\‹›Ë\Þ[˜Ë[ØY›È\XØ]H]]Üš]H[™PÌK[Û›H›Ý[™\žH‚ˆÈÈŒ‹LLLHØ˜š]˜XØYH›ÙXÝ[ÛˆÛX[\‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸØ˜š]˜XØYHÙ[ÛY]žHÜ›Ý\[™ÈÕUPËPUQUQŒŽ˜XÙ\ÎÈ›ÈZ^Y˜XÙHÜ›Ý\ÈŸ]]Ü™YX]\šX[\ÜÚYÛ›Y[ÓÕTÑKT‘TRT‘QX\LˆÈÛÛÙÛÜˆÈÛÜ‘Ü™Y[ˆÈÛÛÙÚ[™ÝÜÈMˆÈÝÛ™HÚ[È˜XÙ\ÈŸ›ÙXÝ[Ûˆ\XØ]Hš[Z]]™HÛÜ‹Ùœ˜[YKÜÚ[ÈÓÕTÑKT‘SSÕ‘Q˜[˜XÚË[Û›HÚ[ˆ›ÙXÝ[Ûˆ˜XØYH[˜]˜Z[X›HŸØ\›HÛ\ÜÈÈÛ›ØˆÈÚ[[™^K\Ý\XØÙ[È‘URS‘Q“ÕS‘Q›Û‹\ÝXÝ\˜[™\Ù[][ÛˆXØÙ[ÈŸQMŒÈÝ]XÈ[\ÜØZ[S‘S‘ÈVPÕRPQˆ˜[Y][Ûˆ™\]Z\™YŸQKÙ]šXÙKÜ™[™\™Yš\ÝX[Ñ”È“ÕPÐÑTQ\™XÝ]šY[˜ÙH™\]Z\™Y‚Ÿ]]Ü™YÚ\™H‹ÐÈPÌˆÝX\™˜[ÙK\ÜÚ]]™HTÕT‘TRT‘QÈ‘USQUSÓˆS‘S‘ÈÌNMÈ˜Z[YÛˆ›ÜÙHÛÛ[Y[Û›NÈÝX\™›ÝÈ\™Ù]ÈV
+”PÌˆŠX[[YHÚÙ[ˆ‚ˆÈÈŒ‹LLLHØ˜š]˜XØYH›ÙXÝ[ÛˆÛX[\‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸØ˜š]˜XØYHÙ[ÛY]žHÜ›Ý\[™ÈÕUPËPUQUQŒŽ˜XÙ\ÎÈ›ÈZ^Y˜XÙHÜ›Ý\ÈŸ]]Ü™YX]\šX[\ÜÚYÛ›Y[ÓÕTÑKT‘TRT‘QX\LˆÈÛÛÙÛÜˆÈÛÜ‘Ü™Y[ˆÈÛÛÙÚ[™ÝÜÈMˆÈÝÛ™HÚ[È˜XÙ\ÈŸ›ÙXÝ[Ûˆ\XØ]Hš[Z]]™HÛÜ‹Ùœ˜[YKÜÚ[ÈÓÕTÑKT‘SSÕ‘Q˜[˜XÚË[Û›HÚ[ˆ›ÙXÝ[Ûˆ˜XØYH[˜]˜Z[X›HŸØ\›HÛ\ÜÈÈÛ›ØˆÈÚ[[™^K\Ý\XØÙ[È‘URS‘Q“ÕS‘Q›Û‹\ÝXÝ\˜[™\Ù[][ÛˆXØÙ[ÈŸQMŒÈÝ]XÈ[\ÜØZ[S‘S‘ÈVPÕRPQˆ˜[Y][Ûˆ™\]Z\™YŸQKÙ]šXÙKÜ™[™\™Yš\ÝX[Ñ”È“ÕPÐÑTQ\™XÝ]šY[˜ÙH™\]Z\™Y‚ˆÈÈŒ‹LLLHØ^RÚ]šYÈXÚšXØ[œšYÙB‚Ÿ\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸYÙ\ˆ™YÚ\Ý˜][Ûˆ™Y›Ü™HÛÙHÓÓTUHPÌHÐVRÒUÔ’Q×ÕPÒ’PÐSÐ”’QÑHŸÛÝ\˜ÙHUUÔ’V‘QØ^RÚ]Ù™šXÚX[Ú]X‹ÐÌŸš[˜[œ›ÙÈZÙ[™\ÜÈ“ÕÓRSQQXÚšXØ[œšYÙHÛ›HŸØ[™Y]HYÙ]ÐÒÑQX^ˆQM›Ø™\ÈŸÜÝY\™XÝ\ÛÝ\˜ÙKÛXÙ[œÙKÚ\ÚØ]HÓÕTÑKRSTSQS•Q^XÝÚ]XˆT“È
+ÈÐÌ
+ÈÒLMˆŸ’TÜ]ÜÚ^™HØY™]HÓÕTÑKRSTSQS•Q›Ý[™Y^˜XÝ[ÛˆŸ–Ý]XÈšYÈX\šÙ\œÈÓÕTÑKRSTSQS•Q™\œÚ[Û‹ÑÙ[ÛY]žKÓ[Ù[Ó[X“›ÙKÔÚÚ[‹ÐÛ\Ý\‹Ø[š[X][ÛˆŸQMÚÙ[][\™Ø]HÓÕTÑKRSTSQS•Q™YÚ\Ý˜][Û‹Ø›Û™\ËØ\ÜÙ]È
+ÈÛ[ÛÝ[™ËØš[™ÕUˆ™Z™XÝÈŸ[[YH\™™Y™\™[˜ÙH“Ó‘HQQ[Ù[\ˆœ›ÙÈ˜[˜XÚÈ™\Ù\™YŸÞ[˜ÈX]žH[[YHØY“Ó‘HQQ]\ˆ[YÜ˜][Ûˆ™[XZ[œÈÛÙØ\Þ[˜ÈŸY›Ü›X][ÛˆÈØÛÛ[Ý[ÛˆÈ[š[P”“ÐÒÑQÛX[ˆXÚšXØ[Ú[›™\ˆ™\]Z\™YŸ^XÝZXY™KU[œ™X[ÈQMS‘S‘Èˆ˜[Y][Ûˆ™\]Z\™YŸQKÙ]šXÙKÜ™[™\™Yš\ÝX[Ñ”È“ÕPÐÑTQ\™XÝ]šY[˜ÙH™\]Z\™Y‚ŸØ^RÚ]œšYÙHÛÝ\˜ÙKXÛÛ˜XÝ™YÜ™\ÜÚ[ÛˆÝX\™ÓÕTÑKRSTSQS•Q\ÝÜÛÝ\˜ÙWØÛÛ˜XÝËœXÈØÚÜÈÐÌÙ\™XÝ\ÛÝ\˜ÙKX^]ÛÈYÙ]\™™Z™XÝ[Ûˆ™X\ÛÛœÈ[™›Û‹\[[YH›Ý[™\žH‚ˆÈÈŒ‹LLLHØ^RÚ]ÜÝY]Yš[\ˆÛÜœ™XÝ[Û‚‚ŸÚXÚÈÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸÙ™šXÚX[Ø^RÚ]\˜Ú]™HÝÛ›ØY‘PPÒQ[ˆÌH›ÙÜ™\ÜÙYÈ\˜Ú]™HØØ[ˆŸ™Y™\œ™Y–\ØÛÝ™\žHÓÓS‘ËQRSQ‘Q“Ô‘HÐS‘QUHPÈ]Ù[XÝÜˆ™]\›™Y™\›ÈŸ›ÛÝXØ]\ÙHÛÜœ™XÝ[ÛˆÓÕTÑKRSTSQS•QÝÙ\˜Ø\ÙH›Ü›X[^™Y\˜Ú]™H]
+È^XÚ]XYˆÜ]ŸØ^RÚ]\ÜÙ]XÚšXØ[\ÜÜÚ][ÛˆSÒS‘ÑQÈS•TÕQ›È–Ø\ÈYÙYžH[ˆÌHŸ^XÝZXYÜÝYÕQM™\[ˆS‘S‘ÈÛÜœ™XÝYXY™\]Z\™Y‚ˆÈÈŒ‹LLLHØ^RÚ]Ú\˜XÝ\ˆ\ØÛÝ™\žH\™[š[™Â‚ŸÚXÚÈÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸØ^RÚ]™\[ˆÍØ[™Y]HYÛY[“Õ‘PPÒQ\ØÛÝ™\žH˜Z[Y™Y›Ü™H–Ý]XÈPÈŸÚ\˜XÝ\ˆ–\ØÛÝ™\žHÓÕTÑKRT‘S‘Q[ÐÚ\˜XÝ\œËÊ‹™˜žš\œÝ˜[šÚ[™ÈÙXÛÛ™Ÿ™Y™\œ™YØ[™Y]HÜ™\ˆ‘TÑT•‘Q›ÙÝYHOˆ›ÙÝYRÛÙYOˆXYÙHOˆ˜\˜˜\šX[ˆOˆÛšYÚŸ˜[˜XÚÈ˜[šÚ[™È“ÕS‘QÛX[\ÝÝ]XË\\ÜÈÚ\˜XÝ\ˆ–Û›HŸQM›Ø™HØ\SÒS‘ÑQX^ˆŸ^XÝZXY™\[ˆS‘S‘ÈÛÜœ™XÝYXY™\]Z\™Y‚ˆÈÈŒ‹LLLHØ^RÚ]\™XÝ˜]È–ÛÝ\˜ÙHÛÜœ™XÝ[Û‚‚ŸÚXÚÈÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸÚ]XˆÛÝ\˜ÙH’T–]˜Z[Xš[]H“Õ‘SˆP”ÑS•™\ÜÚ]ÜžH™Ú]]šX]\Ø^ÜZYÛ›Ü™H›Üˆ–\™XÝÜšY\ÈŸ›ÛÝØ]\ÙH“Õ‘SˆÜÝY[ˆÎ
+ÈÙ™šXÚX[™Ú]]šX]\ØŸÛÝ\˜ÙH[]™\žHÓÕTÑKPÓÔ”‘PÕQ^XÝÙ™šXÚX[˜]È›ÙÝYK™˜ž
+È›ÙÝYRÛÙY™˜žŸXÙ[œÙHÛ˜\ÚÝ‘TURT‘QÙ™šXÚX[˜]ÈÐÌPÑS”ÑKŸ˜]ÈÛÝ\˜ÙH[ÝÛ\ÝÓÕTÑKRSTSQS•Q^XÝØ^RÚ]™\ÜÚ]ÜžH™Yš^Û›HŸØ[™Y]H›Ü›X]–Ó“HX^ˆŸ^XÝ^[ØYÒLM‹ÜÝ]XÈPÈS‘S‘È‘T•SˆÜÝYØ]HŸQMXÚšXØ[Ø]HS‘S‘È›ÈØ[™Y]HYÛY[Y]ŸY›Ü›X][ÛˆÈ[[YHÈQHÈ]šXÙHÈš\ÝX[È”È“ÐÒÑQÈ“ÕPÐÑTQXÚšXØ[Ú[›™\ˆ™\]Z\™Yš\œÝ‚ˆÈÈŒ‹LLLHØ^RÚ]^XÝXÚšXØ[™\Ý[È[›™\ˆ[KXÚ\›‚‚ŸÚXÚÈÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_Ÿš[Üˆ^XÝXYÓÓTSKUTÕQÌŒÎL˜XNXX™MLŒŒÙ˜Y™LMNÎLØÙXÙŒŽŒÌXÈ™KU[œ™X[ÌNÍˆÕPÐÑTÔÈ
+È[œ™X[Z[ÌMÌÈÕPÐÑTÔÈŸ›ÙÝYH˜]È–‘R‘PÕQPÒ’PÐS›Û™\ÎÈRTÔÒS‘×Ð’S‘ÔÔÑWÐ“Ó‘TÈ
+ÈRTÔÒS‘×ÔÓSÓÕS‘×ÑÔ“ÕTÈŸ›ÙÝYRÛÙY˜]È–‘R‘PÕQPÒ’PÐS›Û™\ÎÈRTÔÒS‘×Ð’S‘ÔÔÑWÐ“Ó‘TÈ
+ÈRTÔÒS‘×ÔÓSÓÕS‘×ÑÔ“ÕTÈŸØ[YH^XÝ^[ØY™]žH“Ô’QSˆÈUUÓPUPÐSHVÓQQÛ›ÝÛˆÒLMˆ™YÚ\ÝžHŸ\™XÝ\˜]È™XÙZ\ØÚ[XHYÈÓÕTÑKQ’VQØœÛÛ]H\˜Ú]™WÜÚLM˜™Y™\™[˜ÙH™[[Ý™YŸÛ›ÝÛ‹\™Z™XÝ[Û‹[Û›HÜÝY™\Ý[ÓÕTÑKRSTSQS•QÛÛ›ÛYÕUP×Ð”’QÑWÑVUTÕQÒÓ“ÕÓ—Ô‘R‘PÕSÓ”ØŸÙ[‹ZÜÝYQM™\Ù\˜][ÛˆÛˆ™\›È™]ÈØ[™Y]\ÈÓÕTÑKP“ÐÒÑQ›Ø‹[]™[Ù[XÝYØÛÝ[Ø]HŸ[Ù[\ˆœ›ÙÈ˜[˜XÚÈ‘TÑT•‘Q›È˜Z[YØ[™Y]H[[YH›Û[Ý[ÛˆŸY›Ü›X][ÛˆÈ[š[P”“ÐÒÑQ›ÈÛX[ˆXÚšXØ[Ø[™Y]HŸ™]È^XÝZXY™KU[œ™X[S‘S‘È[KXÚ\›ˆXÚÙ]™]˜[Y][ÛˆŸ™]È^XÝZXY[œ™X[Z[S‘S‘ÈÓ“HQˆÒHÓTÔÒQ’QTˆ‘TURT‘TÈ›È[[YHÊÊËØ\ÜÙ]Ú[™ÙH[ˆ\ÈXÚÙ]ŸQKÙ]šXÙKÜ™[™\™Yš\ÝX[Ñ”È“ÕPÐÑTQ›ÈX]Ú[™È]šY[˜ÙHŸØ^RÚ][KXÚ\›ˆÛÝ\˜ÙKXÛÛ˜XÝ[\Ü\œ›ÜˆÓÓS‘ËQ’VQÈ‘USQUSÓˆS‘S‘ÈÌNÍÈ[™[][Û‘\œ›ÜˆÛ›NÈ^\Ý[™ÈÛ\ÜÈY]ÙXÛ\˜][Ûˆ[™[][Ûˆ™\ÝÜ™Y‚ˆÈÈŒ‹LLLHPÌHš\ÚX›HÚ\™HYYØHØ]™H‚Ÿš\ÚX›HÛXZ[ˆÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸYÙ\ˆ™YÚ\Ý˜][Ûˆ™Y›Ü™HÛÙHÓÓTUHPÌH’TÒP“WÔÒT‘WÓQQÐWÕÐU‘WÑŸ[[YHÜš]\ˆ‘TÑT•‘QTÚ\™T›ÝÝ\UÛÜ›Z[\ˆÛ›HŸ˜YÈ[™\›ÈÛÛ\ÜÚ][ÛˆÓÕTÑKRSTSQS•QLˆTÓH[œÝ[˜Ù\ÈŸØ˜š]ÛˆÙ][Y[\ÓÕTÑKRSTSQS•QTÓH[œÝ[˜Ù\ÈŸÛÜšÙYYšY[YÙHš]HÓÕTÑKRSTSQS•QˆTÓH[œÝ[˜Ù\ÈŸÛÛÙY\›ØY[˜ÛÜÝ\™HÓÕTÑKRSTSQS•QTÓH[œÝ[˜Ù\ÈŸ™\œžH]]Ü™Yœ˜[Z[™ÈÓÕTÑKRSTSQS•QŒˆTÓH[œÝ[˜Ù\ÈŸ™\œžH[Z]Y\›È[™X\šÜÈÓÕTÑKRSTSQS•QLˆXÝÜœÎˆ[™[™ËØ›Ø]Ü›ÜKÛ[\Ú[ÝY]\ÈŸ™\X]YÜš^›ÛˆÛX[\ÓÕTÑKRSTSQS•Q]\›Z[š\ÝXÈ][KYœ™\]Y[˜ÞH™YK[[™HÙ™œÙ]ÈŸ™]ÈÛÜ›]]Üš]H“Ó‘H^\Ý[™ÈÜš]\ˆ™\Ù\™YŸ™]ÈÞ[˜Ú›Û›Ý\ÈX]žHØY“Ó‘H™\ÚY[Y\Ú\ÈÛ›HŸ™]È\‹Z[œÝ[˜ÙHXÚÈ“Ó‘HTÓKÒTÓH\˜Ú]XÝ\™HŸXÝÜ‹\\‹\›Ü[œÚ]HØ]™H“Ó‘HÛ›HLˆ›Ý[™Y™\œžH\›ÈXÝÜœÈŸPÌˆ[[YH^[œÚ[Ûˆ“ÕÔS‘QPÌHš\ÝX[ØÛÜHÛ›HŸÝ]XÈÛÝ\˜ÙH™YÜ™\ÜÚ[ÛˆÓÕTÑKRSTSQS•QYÙ]Ø]]Üš]KÛÜ™\‹Û›Ë\Þ[˜Ë[ØYÝX\™Ÿ^XÝZXY™KU[œ™X[S‘S‘Èˆ˜[Y][Ûˆ™\]Z\™YŸ^XÝZXYQMŒËŒˆZ[S‘S‘Èˆ˜[Y][Ûˆ™\]Z\™YŸQHš\ÝX[ÜXÚ[™ËÙ]šXÙKÑ”È“ÕPÐÑTQ\™XÝ]šY[˜ÙHÝ[™\]Z\™Y‚‚ˆÈÈŒ‹LLLHPÌHÚ\™Hš\ÝX[š[š\ÚØ]™B‚Ÿš\ÚX›HÛXZ[ˆÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸYÙ\ˆ™YÚ\Ý˜][Ûˆ™Y›Ü™HÛÙHÓÓTUHPÌHÒT‘WÕ’TÕPSÑ’S’TÒÕÐU‘HŸ[[YHÜš]\ˆ‘TÑT•‘QTÚ\™T›ÝÝ\UÛÜ›Z[\ˆÛ›HŸ\œ˜Z[ˆÚ[ÝY]H™Yš[™[Y[ÓÕTÑKRSTSQS•QMˆTÓH›Ý]HÚÝ[\œÈŸ˜YÈ[™š[˜[œ˜[Z[™ÈÓÕTÑKRSTSQS•QTÓHXÙ[Y[ÈŸØ˜š]Ûˆ›Ü\HY[]HÓÕTÑKRSTSQS•QTÓHXÙ[Y[ÈŸ›ØYÝ™\™ÙHœ™XZÝ\ÓÕTÑKRSTSQS•QTÓHXÙ[Y[ÈŸÛÛÙ[™^Y\š[™ÈÓÕTÑKRSTSQS•QTÓHXÙ[Y[ÈŸ™\œžHš[˜[œ˜[Z[™ÈÓÕTÑKRSTSQS•QTÓHXÙ[Y[È
+È›Ý[™Y\›ÈXÝÜœÈŸ™]È^\™KÛX]\šX[Y[[ÜžH“Ó‘HÙ[ÛY]žKÝ™\™ÙHœ™XZÝ\Û›HŸ™]ÈÛÜ›]]Üš]H“Ó‘H^\Ý[™ÈÜš]\ˆ™\Ù\™YŸ™]ÈÞ[˜Ú›Û›Ý\ÈX]žHØY“Ó‘H™\ÚY[Y\Ú\ËØÛÛ\Û™[ÈÛ›HŸ™]È\‹Z[œÝ[˜ÙHXÚÈ“Ó‘HTÓH\˜Ú]XÝ\™HŸPÌˆ[[YH^[œÚ[Ûˆ“ÕÔS‘QPÌHÛ›HŸ^XÝZXY™KU[œ™X[S‘S‘Èˆ˜[Y][Ûˆ™\]Z\™YŸ^XÝZXYQMŒËŒˆZ[S‘S‘Èˆ˜[Y][Ûˆ™\]Z\™YŸQHš\ÝX[ÜXÚ[™ËÙ]šXÙKÑ”È“ÕPÐÑTQ\™XÝ]šY[˜ÙH™\]Z\™Y‚‚ˆÈÈŒ‹LLLH[X[ˆÚ\˜XÝ\ˆ›ÙXÝ[ÛˆØ]™H‚‚ŸØ]HÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_Ÿ™]ÈÛÝ\˜ÙH˜[Z[HÓÕTÑKT‘QÒTÕT‘QÜ[‘Ø[YP\Ú\˜XÝ\ˆ˜\ÙH[Ù[ÈÐÌŸÛÝ\˜ÙHYÙH
+È\˜Ú]™H›Ý™[˜[˜ÙHÓÕTÑKRSTSQS•QYÙH
+È\˜Ú]™HÒLMˆØ\\™YžHÜÝY˜XÝÜžHŸ[š[X]Yš[˜[›Ü›X]–Ó“H˜›[™\›Z]YÛ›H\ÈÜÝY]]Üš[™È[\›YYX]HŸ›[™\ˆ›Ü›X[^˜][ÛˆÓÕTÑKRSTSQS•QÛ[ÛÝ[™ËØ\›X]\™KØ[š[X][Ûˆ˜ZÙH
+È^XÝ›Ü›X[^™YÒHŸÜÝYY›Ü›X][Ûˆ™XY[™\ÜÈÓÕTÑKRSTSQS•Q›Û™\ËÝÙZYÚËÕU‹Ø›Ý[™ËÚ›Ú[[˜[YHÛÝ™\˜YÙNÈ›Ýš\ÝX[XØÙ\[˜ÙHŸÙ[‹ZÜÝYØ[™Y]HYÙ]ÐÒÑQX^ˆŸQM™YÚ\Ý˜][Û‹Ø›Û™\ËÜÛ[ÛÝ[™ËØš[™ÕUˆØ]HÓÕTÑKRSTSQS•Q[˜Ú[™ÙY\™™Z™XÝÈŸXÚšXØ[Ú[›™\ˆS‘S‘È^XÝZXY[ˆ™\]Z\™YŸY›Ü›X][Ûˆš\ÝX[XØÙ\[˜ÙH“ÐÒÑQÛX[ˆXÚšXØ[Ú[›™\ˆš\œÝŸYKÕØ[ËÔ[ˆ™]\™Ù]“ÐÒÑQÛX[ˆY›Ü›X][Ûˆ™XY[™\ÜÈš\œÝŸ[š[P”“ÐÒÑQØÛÛ[Ý[Ûˆ›ÛÙˆš\œÝŸ[[YHœ›ÙÈ›Û[Ý[Ûˆ“ÐÒÑQÛÙØ\Þ[˜ÈÛ›HY\ˆ[Ø]\ÈŸ[Ù[\ˆ˜[˜XÚÈ‘TÑT•‘QÝ\œ™[[[YH™[XZ[œÈØY™HŸQKÙ]šXÙKÜ™[™\™Yš\ÝX[Ñ”È“ÕPÐÑTQ\™XÝ]šY[˜ÙH™\]Z\™Y‚ˆÈÈŒ‹LLLH[X[ˆØ]™HˆY›Ü›K[Û›H
+È[›™\ˆY\‚ŸØ]HÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸÜÝYÛÝ\˜ÙH˜XÝÜžH˜\Ù[[™HTÔÈ[ˆÌHÛˆY˜MLØÙYMÙYŒNM˜ŽLMÍLLŒÙÙLÎÍÙ˜Ì˜ØÈ\˜Ú]™KÜ›Ý™[˜[˜ÙH
+È›[™\ˆ\Y˜XÝØ\\™YŸ˜\Ù[[™H™Y™\œ™YÛÝ\˜ÙH‘QQÈ“Ô“PSVUSÓˆ“ÓÕ’VÈÝ[›Û™\ÎÈKÎÈÙZYÚYÈˆ™\›Ë]ÙZYÚŸ˜\Ù[[™H\™XÝQ–ÛÝ\˜ÙHÔÕQUPSUH‘R‘PÕT‘ÑUMˆÝ[›Û™\ÎÈÙZYÚYÈ‹ŒH™\›Ë]ÙZYÚŸšYÚYžHÛÛ›ÛÛYXÚ[š\ÛH›Û™\È“Õ‘Sˆ‘TÑS•Ô‘ËÓPÒÑQˆÝš[™ÜÈ[ˆ›Ü›X[^™Y\Y˜XÝŸY›Ü›K[Û›H–^ÜÓÕTÑKRSTSQS•Q\ÙWØ\›X]\™WÙY›Ü›WÛÛ›OUYXÈXYˆ›Û™\ÈÙ™ˆŸY›Ü›KX›Û™HÛÝ[™XÙZ\ÓÕTÑKRSTSQS•QÜÝY™XY[™\ÜÈ”ÓÓˆŸ™\›Ë]ÙZYÚ˜][È™KUQMØ]HÓÕTÑKRSTSQS•QX^[][HŒÍHŸ\XØ]HÙ[™\šXÈ[œ™X[[›™\ˆ™\Ù\˜][ÛˆÓÕTÑKQ’VQØ]™L‹[Û›H[HÛ\ÜÚYšY\È[š\š]ÈYXØ]Y›ØˆÝÛœÈY]ÜˆZ[
+ÈQMØ]HŸœ™\ÚÜÝY›Ü›X[^˜][ÛˆS‘S‘È™]È^XÝXY™\]Z\™YŸQMÚÙ[][XÚšXØ[Ú[›™\ˆS‘S‘È[˜Ú[™ÙY\™Ø]\ÈŸY›Ü›X][ÛˆÈØÛÛ[Ý[ÛˆÈ[š[P”“ÐÒÑQÛX[ˆXÚšXØ[Ú[›™\ˆ™\]Z\™YŸ[[YHœ›ÙÈ›Û[Ý[Ûˆ“ÐÒÑQ^\Ý[™ÈÛÙØ\Þ[˜ÈÝXœÞ\Ý[HÛ›HY\ˆ[Ø]\ÈŸQKÙ]šXÙKÜ™[™\™Yš\ÝX[Ñ”È“ÕPÐÑTQ\™XÝ]šY[˜ÙH™\]Z\™Y‚‚ˆÈÈŒ‹LLLH[X[ˆØ]™Hˆ[šÙYTÚÙ[]Ûˆ›Ø™HÛÜœ™XÝ[Û‚‚ŸØ]HÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_Ÿ™X˜\ÙHÛÈÝ\œ™[]™[ÜÓÓTUH˜\ÙHÙNL™XÍ™LN˜ŒŽLYL™ÌŒMÍYYXLÍŸš[ÜˆÚÙ[][™YÚ\Ý˜][ÛˆU’QSÑQÈ“ÕQUÒS“‘Tˆ[ˆÌŽˆ™YÚ\Ý\™YMŒH™Y™\™[˜ÙH›Û™\ÈŸš[ÜˆÛ[ÛÝ[™ËØš[™ÕUˆØ\›š[™ÈØ]HÓPSˆSˆ•SˆÌˆ›ÈX]Ú[™È\™]Ø\›š[™È™X\ÛÛœÈ™\ÜYŸÚÙ[][Y\ÚXÚØYÙHU’QSÑQÒ×Ñ”“ÑËX\ÜÙ]^\ÝYŸ[šÙYTÚÙ[]Ûˆ›Ø™HÓÕTÑKQ’VQ]]Üš]]]™HTÚÙ[][Y\ÚŽ‘Ù]ÚÙ[]ÛŠ
+X]ŸÝY\ÜÙYÚÙ[]Ûˆš[[˜[YH™\]Z\™[Y[‘SSÕ‘Q›ÈÒ×Ñ”“Ñ×ÔÚÙ[]Û‹X\ÜÙ]\™\[™[˜ÞHŸ\ÚXÜÐ\ÜÙ]ÑTTUHÐS’UH›Ý\™[\Ü˜Z[\™NÈØ\Ý[HÝÛœÈ[[YHÛÛ\Ú[ÛˆŸœ™\Ú^XÝZXYÜÝY
+ÈQMØ]HS‘S‘È™]ÈÒH™\]Z\™YŸY›Ü›X][ÛˆÈ™]\™Ù]È[š[P”“ÐÒÑQÛX[ˆXÚšXØ[Ú[›™\ˆš\œÝŸQKÙ]šXÙKÜ™[™\™Yš\ÝX[Ñ”È“ÕPÐÑTQ\™XÝ]šY[˜ÙH™\]Z\™Y‚ˆÈÈŒ‹LLLH[X[ˆØ]™HˆXÚšXØ[Ú[›™\‚‚ŸØ]HÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_Ÿ^XÝZXYØ]™Lˆ[ˆÌÈÕPÐÑTÔÈÌYÎL˜ØÙYŽÎYMŒÎYMXŒYØÌÙNYM˜ÙMYNLŸ›Ü›X[^™YÚ[›™\ˆPÒ’PÐSTÔÈY™ŒMÎNNŽLYXYLXLÍØY™MNMÍXNŒÌÌÍMYM™˜MYÌMÌY˜YMÌŸÚÙ[][™YÚ\Ý˜][ÛˆTÔÈY\ÈŸ™Y™\™[˜ÙH›Û™\ÈTÔÈMŒHŸ[šÙYTÚÙ[]ÛˆTÔÈÑØ[YKÔ›ÙXÝ[Û‹ÐÚ\˜XÝ\œËÔšYÜËÑ”“ÑËÔÒ×Ñ”“Ñ×ÔÚÙ[]Û‹”Ò×Ñ”“Ñ×ÔÚÙ[]Û˜Ÿ[\Ü˜]ÚTÔÈÍÍÈš[\ÈÈ˜Z[\™\ÈŸÛ[ÛÝ[™ÈÈš[™ÈUˆ\™Ø]\ÈTÔÈ›ÈX]Ú[™È™Z™XÝ[Ûˆ™X\ÛÛœÈŸ\ÚXÜÐ\ÜÙ]ÑTTUHÐS’UHÛX[X›Û™H]]ËYÙ[™\˜][ÛˆØ\›š[™ÎÈ›ÝÚÙ[][™Z™XÝ[ÛˆŸYXØ]YšYÙÙ\ˆ[˜ÛY\ÈÛÛ[X[™]ÓÕTÑKRT‘S‘QÈVPÕRPQS‘S‘È™]™[ÈÛÛ[X[™][Û›H›Ø™HšYŸ˜[œÚY[ÛX[\ÓÕTÑKRT‘S‘QÈVPÕRPQS‘S‘ÈÙ[™\˜]Y[˜XÚÙYœ›ÙÈX\ÜÙ]ÈÛ›HŸY›Ü›X][Ûˆ
+È™]\™Ù]‘VXÚšXØ[™YXÙ\ÜÛÜˆ›ÝÈØ]\ÙšYYŸ[š[P”È[[YH›Û[Ý[Ûˆ“ÐÒÑQY›Ü›X][Û‹Ü™]\™Ù]]šY[˜ÙH™\]Z\™Yš\œÝŸQKÙ]šXÙKÜ™[™\™Yš\ÝX[Ñ”È“ÕPÐÑTQ›È\™XÝ]šY[˜ÙH‚‚ˆÈÈŒ‹LLLHPÌHÚ\™HÙ][Y[ÛÛ\][ÛˆYYØHXÚÙ]‚ŸÙ][Y[\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_Ÿ[[YHÜš]\ˆ‘TÑT•‘QTÚ\™T›ÝÝ\UÛÜ›Z[\˜Û›HŸ˜YÜÚÝ›ÝÈš\ÝX[ÛZX[ÈÓÕTÑKRSTSQS•Q\™‹Ù˜XØYHZ\œÎÈš\ÝX[Û\Ý\œÈÛ›HŸØ˜š]Ûˆ›Ü\H›Ý[™\šY\ÈÓÕTÑKRSTSQS•QYÙH
+È™[˜ÙHTÓHÛÛ\][ÛˆŸÛY\ÝXÈØ\™[œÈÈXZ[È][™žHÓÕTÑKRSTSQS•QØ\™[ˆ\˜Ú\Ë›ÝÙ\ˆ›Þ\ËXZ[›Þ\ËØ\Ú[™\ËÚXœÈŸš[YÙH[™\ÈÈ™\™ÙHœ™XZÝ\ÓÕTÑKRSTSQS•Q]\ÝÛ™H
+ÈÜ˜\ÜÈTÓHŸš[YÙHÛÛ[[ÛˆÈX\šÙ]ÓÕTÑKRSTSQS•QX\šÙ]Ý[Ë›ÙXÙHÝ[™ËÙ[Ë™[˜Ú\ÈŸ\HšY[ÛÛ\][ÛˆÓÕTÑKRSTSQS•Q›ÙXÝ[ÛˆXÛšXË]X›H[œÝ[˜Ù\ÎÈ^\Ý[™È\H™YH™]Z[™YŸÜ˜Ú\™È˜\›HÛÜšÈÓÕTÑKRSTSQS•QLˆÜ˜Ú\™™Y\È
+È^KÜÝYÚÙØ]KÛY\ˆ]Z[ŸØ]\ˆÈZ[[™X\šÈÓÕTÑKRSTSQS•Q›Ý[™YZ[]ÚY[XØÙ[È^\Ý[™ÈZ[ØœšYÙH™\Ù\™YŸ]™YZ[ˆÛ]\ˆÓÕTÑKRSTSQS•Q˜\œ™[ËÜ˜]\ËØ\ËØYYØ\Ë[\ËÚYÛœÈŸ˜]]™HTÓHYÙ]MŒ^\Ý[™ÈÛÛ\Û™[Ë^XÚ]Ý[[™ÈŸÛÜ›]Z[Û\Ý\ˆ[œÝ[˜ÙHYÙ]NHL›Ý[™YÛ\Ý\ˆXÝÜœË›ÈÛÛ\Ú[Û‹™\›ÈXÚÈŸ™]È\‹\›ÜXÝÜˆ[œÚ]H“Ó‘HÛ\Ý\‹ÒTÓHÛ›HŸ™]ÈÞ[˜Ú›Û›Ý\ÈX]žHØY“Ó‘H™\ÚY[›ÙXÝ[ÛˆY\Ú\ÈÛ›HŸÜ[][ÛˆÈ”ÈÈ]Y\Ý]]Üš]HSÒS‘ÑQ]š[™ÕÛÜ›\™XÝÜˆÈ”ÐÛÛ^È]Y\ÝÝXœÞ\Ý[HŸPÌˆ[[YH“ÕÔS‘QPÌHÛ›HŸ^XÝZXY™KU[œ™X[ÈQMÛÛ\[HS‘S‘Èˆ˜[Y][Ûˆ™\]Z\™YŸQHš\ÝX[Ø[Ý›ÝYÚ“ÕPÐÑTQ\™XÝ[X[ˆ]šY[˜ÙH™\]Z\™YŸ\™Ù]Y]šXÙHÌŒÈÌ”È“ÕPÐÑTQYX\Ý\™Y]šXÙH]šY[˜ÙH™\]Z\™Y‚‚ˆÈÈŒ‹LLLHPÌHÚ\™HÙ][Y[Ø[›Ûˆš[š\Ú‚‚ŸÙ][Y[Ø[›Ûˆ]Z[Ý]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸÌÌM™YXÙ\ÜÛÜˆÓÓTSKUTÕQÈQT‘ÑQXYÙYN™™K‹‹˜È™HÌNH
+È[œ™X[ÌMˆÕPÐÑTÔÎÈY\™ÙHŒÙŒÌLLÍ‹‹˜Ÿ]žH\Ú›ØYÚYH[›ˆY[]HÓÕTÑKRSTSQS•Q›Ý[™YÛÝYÙH
+ÈÛ\Ý\™YÚYÛ‹Ø™[˜ÚØ˜\œ™[ÈŸ[X™\ˆÈ˜YÜÚÝ›ÝÈÓÕTÑKRSTSQS•Qš\ÝX[\™‹Ù˜XØYKÛXZ[›Þ[˜ÚÜŽÈ]Y\Ý[˜ÚÜœÈ[˜Ú[™ÙYŸ\HÜXÚX[[˜[˜ÙHÓÕTÑKRSTSQS•QLTÓHÝ\ÝÛ™\È
+ÈÙ]\ØÙ[Xœ˜][ÛˆØ]H˜\šX[ÈŸ\HÜ[‹XZ\ˆÚ]Ú[ˆÓÕTÑKRSTSQS•QÛÛÚÚ[™ÈÝ[™
+ÈX›H
+ÈØ[›ÜH[ˆÙ]\ØÙ[Xœ˜][ÛˆÝ]H\œ˜^\ÈŸZ[X\™ÛÜšÈ]Z[ÓÕTÑKRSTSQS•QLˆÛ\Ý\™YØXÚÜËØÜ˜]\ËØ˜\œ™[ÈŸž]Ø]\‹\›ØY]™[YHÓÕTÑKRSTSQS•QLˆ[šÈ
+ÈLˆØ[›ÜHÛ\Ý\ˆ[œÝ[˜Ù\ÈŸÜ™Y[ˆ˜YÛÛˆ[ˆØ˜š]Ûˆ“Ô’QSˆÈ“ÕPÑQØ[›ÛšXØ[ž]Ø]\ˆÝÛ™\œÚ\™\Ù\™YŸ™]ÈÞ[˜Ú›Û›Ý\ÈX]žHØY“Ó‘H™\ÚY[ÛÙ\]™\ÛÛ][ÛˆÛ›HŸ\‹Z[œÝ[˜ÙHXÚÈ“Ó‘H^\Ý[™ÈTÓHÈÛÜ›]Z[Û\Ý\ˆŸPÌˆ[[YH“ÕÔS‘QPÌHÛ›HŸœ™\Ú^XÝZXY™KU[œ™X[S‘S‘Èˆ˜[Y][Ûˆ™\]Z\™YŸœ™\Ú^XÝZXY[œ™X[Z[ÜXÚØYÙHS‘S‘Èˆ˜[Y][Ûˆ™\]Z\™YŸQKÙ]šXÙKÚ[X[ˆš\ÝX[Ñ”È“ÕPÐÑTQ\™XÝ]šY[˜ÙH™\]Z\™Y‚‚ˆÈÈÈÛÜÙYˆÌÌMHÙ[XÝ]™HØ[˜YÙB‚Ÿ][H\ÜÜÚ][Ûˆ™X\ÛÛˆŸKK_KK_KK_Ÿ\HšY[›Ý[™\žHÚ[‘URS‘QSˆÐS“Óˆ’S’TÒˆ[š\]YHÛÝ\˜ÙKYÜ›Ý[™YšY[™XYŸØ]\‹ÛZ[™YYÈ
+ÈÝ\[™ÈÝÛ™\È‘URS‘QSˆÐS“Óˆ’S’TÒˆ[š\]YHZ[ÕØ]\ˆ[š\›Û›Y[[™XYŸÈž]Ø]\‹Y˜XÚ[™ÈÛÝYÙ\È‘URS‘QSˆÐS“Óˆ’S’TÒˆ[š\]YHÙ][Y[YYÙHÚ[ÝY]HŸ\XØ]H˜YÜÚÝÛY\ÈÕTT”ÑQQÌÌM
+È[X™\ˆÈ[˜ÚÜˆ[™XYHÝ›Û™Ù\ˆŸ\XØ]HÛ]\ˆÈ[\ÈÈXZ[ÈØ\ÚÕTT”ÑQQÌÌM[™XYHÛÝ™\œÈÚ]Û\Ý\™YÛ[Z]Y]Z[Ÿ\XØ]HÜ˜Ú\™Ù˜\›H[œÚ]HÕTT”ÑQQ]›ÚY[›™XÙ\ÜØ\žHÝË\ÜXÈ[œÚ]HÜ›ÝÝŸØ[›Ûˆš[š\Úˆš\ÝX[YÙ]ÐÒÑQPVMLÈMˆTÓH
+ÈHÛ\Ý\ˆ
+È[™X\šÜÈ
+ÈÝ]HXÝÜœÈŸœ™\Ú^XÝZXY˜[Y][ÛˆS‘S‘È™\]Z\™YY\ˆØ[˜YÙHÛÛ[Z]‚‚ˆÈÈŒ‹LLLHPÌHÚ\™HÙ][Y[ÛÝ\˜ÙHÛÜÝ\™B‚ŸÛÜÝ\™H\™XHÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_ŸÙ][Y[ÛÛ\][ÛˆÌÌMÓÓTSKUTÕQÈQT‘ÑQXYÙYN™™K‹‹˜È™HÌNHÕPÐÑTÔÎÈ[œ™X[ÌMˆÕPÐÑTÔÎÈY\™ÙHŒÙŒÌLLÍ‹‹˜ŸØ[›Ûˆš[š\ÚˆÌÌNÓÓTSKUTÕQÈQT‘ÑQXYÎXŒØ™K‹‹˜È™HÌNŽÕPÐÑTÔÎÈ[œ™X[ÌMHÕPÐÑTÔÎÈY\™ÙHÍÙŒØË‹‹˜Ÿ˜YÈ[™È[ÓÕTÑKPÓÓTUH\›ÈÛÛ\ÜÚ][Ûˆ
+ÈØ\™[‹Ü›Ü\Hœ˜[Z[™ÈŸ˜YÜÚÝ›ÝÈÈ[X™\ˆÈÓÕTÑKPÓÓTUH›ÝÈ
+ÈYXØ]YØ[YÙYHš\ÝX[[˜ÚÜˆŸ\HšY[ÓÕTÑKPÓÓTUH\H™YH
+È›Ý[™\žH
+ÈÜXÚX[[˜[˜ÙH
+ÈÝ]KX]Ø\™HÚ]Ú[‹ÜÛØÚX[]Z[ŸØ˜š]Ûˆš[YÙHÛÛ[[ÛˆÓÕTÑKPÓÓTUHX\šÙ]ÝÙ[Ø™[˜Ú\ËÜ›ÙXÙKÜÛØÚX[ÜXÙHŸ]žH\ÚÓÕTÑKPÓÓTUH›Ý[™Yž]Ø]\‹\›ØY[›ˆY[]HŸØ]\ˆÈZ[ÈÚY[ÈœšYÙHÓÕTÑKPÓÓTUH[™X\šÈ
+ÈÛÜšÚ[™Ë^X\™
+ÈØ]\‹YYÙH]Z[ŸØ\™[œÈÈYÙ\ÈÈÝ\ÙZÛY™HÓÕTÑKPÓÓTUHÛ\Ý\™YÒTÓHÛY\ÝXÈ]Z[ŸÜ˜Ú\™ÈÛÜšÚ[™ËYšY[˜[œÚ][ÛˆÓÕTÑKPÓÓTUH™Y\Ë^KÝYÚËØ]\ËY\œÈŸž]Ø]\‹\›ØY]™[YHÈ˜XÚ[™ÈYÙHÓÕTÑKPÓÓTUH›Ý[™Y›ØYœ˜[Z[™È
+È™YHYÙHÛÝYÙ\ÈŸÜ™Y[ˆ˜YÛÛˆ[ˆØ˜š]Ûˆ“ÕPÑQž]Ø]\ˆÝÛ™\œÚ\™\Ù\™YŸÛÜ›ÛÛœÝXÝ[Ûˆ]]Üš]H‘TÑT•‘QTÚ\™T›ÝÝ\UÛÜ›Z[\ˆÛ›HŸ™]ÈÞ[˜Ú›Û›Ý\ÈX]žHØY[™È“Ó‘H™\ÚY[ÜÛÙ\[[™H™\Ù\™YŸPÌˆ[[YH“ÕÔS‘Q™YXÙ\ÜÛÜˆØ]H‹ÍÈÝ[™\]Z\™YŸØØ[›ÙXÝ[Ûˆ›ÛÝÝ˜\‘TURT‘QØÜš\ËØ›ÛÝÝ˜\ÛØØ[ÜXÌWÝš\ÝX[Ë˜ÛYŸ[X[ˆQKÜ™[™\™Yš\ÝX[XØÙ\[˜ÙHS‘S‘È\™XÝÝÛ™\ˆ]šY[˜ÙH™\]Z\™YŸ\™Ù]Y]šXÙHÌŒÈÌ”ÈS‘S‘ÈYX\Ý\™Y]šXÙH]šY[˜ÙH™\]Z\™Y‚‚ˆÈÈŒ‹LLLHœ›ÙÈ\™Ù]Y[š[X][Ûˆ[ZÙHØ]™HÂ‚ŸØ]HÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_Ÿœ›ÙÈÚÙ[][XÚšXØ[Ú[›™\ˆTÔÈÈ‘TÑT•‘QY™ŒMÎNK‹‹˜ÈMŒH›Û™\È
+È[šÙYTÚÙ[]ÛˆŸ\›Ë[Y\Ú[[™ÈÓÔÑQÈ›Ý™[Ü[ˆÚ[HXÚšXØ[Ú[›™\ˆ™[XZ[œÈ˜[YŸ[š[X][ÛˆÛÝ\˜ÙHÓÕTÑKT‘QÒTÕT‘Q]X]\›š]\È[š]™\œØ[[š[X][ÛˆXœ˜\žHÈÐÌŸ[š[X][ÛˆØ\™ZÝ\ÙHØÛÜH“ÕS‘QÛ™HXÚÈÛ›HŸØ\™ZÝ\ÙHÛ\ÜÚYšY\ˆÓÕTÑKRSTSQS•QÒÔÕQÑWÔUPUT“’UT×ÐS’SXŸœ›ØY]X]\›š]\ÈÝ\ÜÝYÚ[™È“Õ‘TUQTÕQ–HT‘ÑUQU]›ÚYÈ[œ™[]YXÚÈÚ\›ˆŸ™\]Z\™Y[š]X[Û\ÈÐÒÑQYHÈØ[ÈÈ[ˆŸ™XÙZ\ÔÒLM‹ÜX›XËYÝÛ›ØY›ÛÙˆS‘S‘ÈØ\™ZÝ\ÙH^XÝ][ÛˆY\ˆY\™ÙHŸ–Û\[™[ÜžHS‘S‘ÈÝYÙY\˜Ú]™H™\]Z\™YŸ™]\™Ù]ÛÛ\]Xš[]H“ÐÒÑQ˜[YÛ\[™[ÜžHš\œÝŸY›Ü›X][Ûˆ™]šY]È“ÐÒÑQXÚšXØ[Ú[›™\ˆ
+ÈÙ[XÝYÛ\ÈŸ[š[P”ØÛÛ[Ý[Ûˆ“ÐÒÑQ™]\™Ù]ÙY›Ü›X][Ûˆ›ÛÙˆš\œÝŸ\Þ[˜È[[YHœ›ÙÈ›Û[Ý[Ûˆ“ÐÒÑQ[š[P”ÜšYÈ[™H›ÛÙˆš\œÝŸQKÙ]šXÙKÜ™[™\™Yš\ÝX[Ñ”È“ÕPÐÑTQ\™XÝ]šY[˜ÙH™\]Z\™Y‚‚ˆÈÈŒ‹LLLHœ›ÙÈÝ]XÈY›Ü›X][ÛˆÝ™\ÜÈØ]B‚ŸØ]HÝ]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_Ÿ[œ]Ø[™Y]HVPÕT•SˆQMÒS“‘TˆÓ“HØ[YHÛÜšÙ›ÝÈ\Y˜XÝÎÈ›È™]ÈY\Ú[Ÿ™\]Z\™Y[Xˆ›Ú[ÈÓÕTÑKQÐUQ[š\ËÜÜ[™KÚXY
+Èš[]\˜[\›KÚ[™ÛYËÙ›ÛÝ˜[Z[Y\ÈŸ[XˆY\˜\˜ÚHÓÕTÑKQÐUQ\ØÙ[™[XÚZ[ˆØ[š]HŸÚÝ[\ˆÝ™\ÜÈÓÕTÑKRSTSQS•Q
+ËËMHYÜ™Y\ÈŸ[›ÝÈÝ™\ÜÈÓÕTÑKRSTSQS•QÍHYÜ™Y\ÈŸÛ™YHÝ™\ÜÈÓÕTÑKRSTSQS•QHYÜ™Y\ÈŸ[™Ù›ÛÝÝ™\ÜÈÓÕTÑKRSTSQS•QŒYÜ™Y\ÈŸØÛÛ[Ý[ÛˆÛÛXš[™YÝ™\ÜÈÓÕTÑKRSTSQS•Q]\›Z[š\ÝXÈ[Y\šXØ[ÜÙHŸØ]\Ý›ÜXÈY›Ü›X][ÛˆÝX\™ÓÕTÑKRSTSQS•Qš[š]H™\XÙ\È
+È›Ý[™ËÙ\ÜXÙ[Y[™\ÚÛÈŸ[X[ˆ™[™\™YY›Ü›X][ÛˆXØÙ\[˜ÙH“ÕPÐÑTQ\™XÝš\ÝX[™]šY]È™\]Z\™YŸYKÕØ[ËÔ[ˆ™]\™Ù]“ÐÒÑQ\™Ù]Y[š[X][Ûˆ[ZÙH
+ÈÛÛ\]Xš[]H›ÛÙˆŸ[š[P”Ü[[YH›Û[Ý[Ûˆ“ÐÒÑQ™]\™Ù]
+Èš\ÝX[Y›Ü›X][Ûˆš\œÝ‚‚ˆÈÈÈŒ‹LLLHØ]™LÈ™\›Ë\^[ØYÝX\™›ÛÝš^‚ŸÝX\™Ý]\È]šY[˜ÙH›Ý[™\žHŸKK_KK_KK_Ÿ™KU[œ™X[ÌNÌˆRSÈ“ÓÕPÐUTÑQÝ[H^XÝXÛÝ[™YÜ™\ÜÚ[ÛˆÛ›HŸÝ\Ü]X]\›š]\ÈX[X[]Y]YH‘TURT‘QÛ™H^XÚ]X[šY™\ÝØ[Ÿ[š[X][Û‹[Û›HX[X[]Y]YH‘TURT‘QÛ™H^XÚ]\™Ù]YX[šY™\ÝØ[Ÿ\›ËXØ[™Y]HX[X[]Y]YH‘TURT‘QÛ™H^XÚ]X[šY™\ÝØ[Ÿœ›ØYÛÛ[YK[Û‹Y\œ›Üˆ“Ô’QSˆÈ‘TÑT•‘Q˜Z[XÛÜÙYÛXÞH[˜Ú[™ÙYŸœ™\Ú^XÝZXY˜[Y][ÛˆS‘S‘È™]ÈˆXY™\]Z\™Y‚‚ˆÈÈŒ‹LLLHYÚœ˜[˜ÚYÚY[™HØ]™B‚Ÿ][HÝ]HŸKK_KK_Ÿ™]šY]ÙYXY™YœÈ]Y]YYˆŸXÝ]™HPÌHÛÜÙ[Ý]œ˜[˜Ú‘TÑT•‘QŸ]™[ÜÈXZ[ˆÈ\˜Ú]™H‘TÑT•‘QŸYÜ˜\È™\™YœÈ‘TÑT•‘QŸ[[YHÜˆØ]H‹ÍÈY™™XÝ“Ó‘H‚‚ˆÈÈŒ‹LLLLˆHPÌHÛÝY\ÛÝ\˜ÙHM–Ø[™Y]H
+ÛÝ\˜ÙK[Û›JB‚‹HÝ\œ™[]™[ÜÛÝYÛÝ\˜ÙH›ÙXÙ\ˆ^ÜÈŒˆ[Ù[\ˆÝ]XÈY\Ú˜[Z[Y\ÈÑÓÑHHš[˜\žH–È\™Ù][ˆ\ÈØ[™Y]H\ÈÈˆHMˆHš]™H™]ÛH™\\™Y˜[Z[Y\È\™H™\œžS[™[™Ë[ÛÜš[™ÔÜÝØ^[X\šÔÜÝ\P˜[›™\‘œ˜[YH[™Ø\™[”ÝÛ™P›Ü™\‹›Ý[™YÈH[™XYKX]]Üš^™YÚ\™HÈ\HšY[ÈXÚÛX\žH™\œžHš\ÝX[™YYË‚‹H\ÙHH^\Ý[™ÈÛÝY\ÜÙ]Z[›[™\ˆÙ[™\˜]Ü‹X]\šX[™XÙZ\Ž\™YÚ[ÛˆÜšYÚ[˜[‘ËÓÔ“HXÚËPÖÛÛ\Ú[Ûˆ[™›[™\ˆ–™Z[\ÜÈ›È™]ÈÛÝ\˜ÙHX[˜YÙ\ˆÜˆ[[YHÝÛ™\‹ˆÜ[ˆ\ÜØYÙH[™Ø[ØX›H™\œžHXÚÈ™]Z[ˆ˜\œ›ÝÛHØÛÜYPÖÛÛ\Ú[ÛˆÙ[ÛY]žK‚‹H˜Z[ÛÜÙYÛˆM\Ý[˜Ý\ÚXØ[š[\Ë–š[˜\žH™\œÚ[ÛˆÍ^XÝÒLM‹Øž]\Ë™X[™Z[\ÜÙ[ÛY]žH[™UœË[™ÈˆY[]HÛÝ™\˜YÙKˆ\È\ÈHØ[™Y]H[[^XÝZXYÚ]X‹ZÜÝY›[™\ˆ›Øˆ[™\Y˜XÝ\™HØœÙ\™Y‚‹HØ\™ZÝ\ÙH›Û[Ý[Û‹QM[\Ü\ˆÈÛÛ[Ô›ÙXÝ[Ûˆ\œÚ\Ý[˜ÙKXÚØYÙKÔQKØÜ™Y[œÚÝËLH]šXÙH”Ë[X[ˆš\ÝX[[™Ø]H‹ÍÈXØÙ\[˜ÙH™[XZ[ˆÙ\\˜]H[™S”“Õ‘S‹ˆÛ™HØ\™ZÝ\ÙHÜš]\ˆ[™Û™HQM[[YHÜš]\ˆ™[XZ[ˆ]]Üš]]]™Kˆ›ÈPÌˆ[[YHXÝ]˜][Û‹‚‚‚ˆÈÈŒ‹LLLLˆ8 %ÛÝYLÎØ\™ZÝ\ÙHÛÜÙY[™PÌH[œ™X[[ZÙHØ[™Y]B‹HÚ]Xˆ]™[ÜÌYY™MMMŽŒLLMÙ™MNXÌŽÙŒÙ™LXXØËˆØ\™ZÝ\ÙH[ˆÎŽMMMLHÕPÐÑTÔÎÈÙÎˆÓÕQÕÒÓQÐSQWÔT”ÒTÕS•ÕÐT‘RÕTÑWÔTÔÈ˜žLLÎÚ\™ONˆ™YÚ[Û˜[MMˆ™ÏLÍˆ™YÚ[ÛœÏLŽ‚‹H^XÝ™XÙZ\\Y˜XÝLMÍÎNLNˆMÍÈ^[ØYš[\È
+LÎ–
+ÈÍˆ‘È
+ÈÈÛÝ\˜ÙH™XÙZ\ÊKÝ[[YY^[ØYLËMKLMˆž]\ËÒK\[›™YYØZ[œÝÛÝ\˜ÙH\Y˜XÝLMÍÌLMLÌ‹ˆŽÌŽØ[›ÛšXØ[™YÚ[ÛˆÝ\ÜXÚÜÈ\™HÛÝ\˜ÙK[Û›K›Ý^XX›K‚‹HÛÝYLÎ›ÜÜÙY[œ™X[œšYÙNˆHÚ\™HÑY\Ú\È
+ÈHÑHÚYXØ\œÈ
+ÈÍˆ‘È\™H[YÚX›NÈMˆ™YÚ[Û˜[–™[XZ[ˆØ\™ZÝ\ÙK[Û›Kˆ[\ÜšXH^\Ý[™ÈÚ\™T›ÙXÝ[Û’[\Ü[™\ˆ\ÛÛ]YÑØ[YKÔ›ÙXÝ[Û‹ÕÛÜ›ÔÚ\™KÐÛÝYLÎ[™ÑØ[YKÔ›ÙXÝ[Û‹ÓX]\šX[ËÐÛÝYLÎˆH\\ˆQMY]ÜˆÜÝZ[\ÜÜÙXÛÛ™\›ØÙ\ÜÈ™XY˜XÚÈ][\ÈHÝ]XÈY\ÚXÚØYÙ\ËÍˆ^\™HXÚØYÙ\È[™Lˆ”ˆ[œÝ[˜Ù\È
+H
+Š•T‘ÑU
+Š‹›ÝØœÙ\™Y
+K\ÈÛ™Hš[ÜˆX\Ý\‹\\™[\[™[˜ÞK›ÛÝÙYžH\Ú\™XÙZ\Yˆ\œÚ\Ý[˜ÙKˆÛÝ\˜ÙHY[]H\ÈÜšYÚ[˜[›Ú™XÝX]\šX[›Ý^\›˜[XÙ[œÚ[™Ë‚‹HÐÐSÕUPËUSQUQÛ›NˆÙ[Z[™HÛÝ\˜ÙH\˜Ú]™H
+ÈØ\™ZÝ\ÙHÒH™XÙZ\™X\ÜÙ[X›YÙ™›[™H[™LNÛÝ\˜ÙHš[\ÈÝYÙY
+HÑHÑKÍˆ‘ÎÈ™YÚ[Û˜[[[YJKˆÚ^\ÛÛ]YØY™]H™YÜ™\ÜÚ[ÛˆØ\Ù\È\ÜÙYˆ“ÕÓÓTSKUTÕQ›ÜˆH™]ÈœšYÙK“ÕQWÒSTÔ•QÔT”ÒTÕQÈH\ÈHØ[™Y]H\™Ù][[^XÝZXYÚ[™ÝÜÈ[œ™X[›ØÙ\ÜÈ[™™XÙZ\[[ÛœÝ˜]H]‚‹H›ÈÛÝYLÎY\Ú\ÈÛÝ[Y\ÈÛÜ›\XÙYÈ›ÈÝ\œ™[PÌHØÜ™Y[œÚÝ]Y\ÝØÛÛ\Ú[Û‹Û˜]‹ÔQKÙ]šXÙH”È]šY[˜ÙHœ›ÛHH™]È˜]ÚˆØ]H‹ÍÈ™[XZ[œÈÔSŽÈ›ÈPÌŠÈ[[YKˆXZ[Z[ˆÛ™HØ\™ZÝ\ÙHÜš]\ˆ[™Û™HQH[[YHÜš]\‹ˆÝÛ™\‹Y˜XÚ[™ÈÛÝ\˜ÙHÝ[Ý^\ÈLÎ–›ÝÎÈ›È™]È™]–Ø\È›ÙXÙY\ÈÙ\ÜÚ[Û‹‚‹H[™Ú[™Y\š[™ÈXÚ\Ú[ÛŽˆš[Üš]^™HÛÛ™\[™ÈHš[š\ÚYÚ\™HÛÝ\˜ÙH˜[Z[Y\È[È\˜X›HQMXÚØYÙ\È[™^Y\‹]š\ÚX›H˜YÈ[™]ËQ™\œžHXÙ[Y[™Y›Ü™H\œÝZ[™È\Ü\˜][Û˜[M^˜H–ˆ]›ÚYÜ™X][™ÈH\˜[[[\Ü\ˆÜˆÛZ[Z[™È™YÚ[Û˜[š\ÝX[›ÙÜ™\ÜË‚‚ˆÈÈŒ‹LLLLˆ8 %ÚÛKYØ[YHMQ–ÜšYÚ[˜[ÛÝ\˜ÙHØ]™H
+ÐS‘QUJB‹HÛÝ\˜ÙK[Û›HÜÝY›[™\ˆØ]™H›ÜÜÙ\ÈÌ\Ý[˜Ý[˜Ý[Û˜[[Ù[\ˆ˜[Z[Y\ÈXÜ›ÜÜÈHŽÛÝ™\››Ü‹X]]Üš^™Y›ÙXÝ[Ûˆ™YÚ[ÛœËXXÚÚ]]]Ü™YÑÓÑKUˆ[™PÖ–š[˜\žHÍÈ™X[›[™\ˆ™Z[\Ü\È[™\[™[ÒLMˆY[]HPÈ\È™\]Z\™YžH™Ú]X‹ÝÛÜšÙ›ÝÜËØÛÝY]ÚÛYØ[YKLM\ÛÝ\˜ÙKž[[‚‹H\È\È“ÕM›ÙXÙY–™Y›Ü™H^XÝZXYÜÝYÛÜšÙ›ÝÈ[™\Y˜XÝ™XÙZ\ˆš[Üˆ˜\Ù[[™H™[XZ[œÈLÎÛÝ\˜ÙH–Ý[È\™Ù]ÎYˆ[M\™H™]È[š\]YH[™TÔËˆ™]š[Ý\ÈÙ\ÜÚ[Ûˆ[˜Ü™[Y[MŽÈ›ÜÜXÝ]™H[˜Ü™[Y[[Ü›ÝÝ
+ÌML	Kˆ\ÜÙ]]X[]H[™Ú\™H^XX›HÛÜÝ\™HÝ]˜[šÈH[Y\šXÈ\™Ù]‚‹HØ\™ZÝ\ÙH˜[œÙ™\ˆ™[XZ[œÈ^Û\Ú]™[HÚ[™ÛHÜš]\ŽÈ›ÈÙXÛÛ™\›X[™[\ÝÜ˜YÙHÜš]\‹›È[œ™X[[[YH›Û[Ý[Û‹›ÈPÌŠÈXÝ]˜][Û‹ˆ^\›˜[ÛÛ[šYÚÈ[˜Y™™XÝY
+ÜšYÚ[˜[›ØÙY\˜[Ý]XÈÛÝ\˜ÙJKˆPÌHØ]H‹ÍÈ™[XZ[œÈÜ[ŽÈ›È™]ÈQKÙ]šXÙKÝš\ÝX[›ÛÙ‹‚‹H™]ÈØ[Y\^KÝÛÜ›YX\È\™H›Ý[›ÙXÙYžH\ÈØ]™NÈÛ›HÝ\ÜÙ[ÛY]žHØ]YÛÜšY\È
+›Ý]K›Ý[™\žKÛÜšË[š\›Û›Y[Ø^Yš[™[™ÊHÛÛœÝ˜Z[™YÈ^\Ý[™È™YÚ[Û˜[›ÙXÝ[ÛˆXÚÙ]Ëˆ[žH\ÚXØ[ÛÜ›XÙ[Y[Ý[™\]Z\™\ÈÛÝ\˜ÙK]Ë\[[YHØ]K‚‚ˆÈÈŒ‹LLLLÈ8 %ÛÝY[Û›HÐÌÛH]™[ˆX]\šX[[ZÙHÝ™[™Ý[š[™Â‹HÝ™[™Ý[™Y^\Ý[™ÈÜÝYÛH]™[ˆÍÈ\›Ý™Y^\™HÛÝ\˜ÙH[™NÈ›Ý\ˆ[™\[™[ÜÝYÚ\™È\ÙHØÝ[Y[YÛH]™[ˆTH[™™\šYžH™X[RÈ‘È˜\ÙPÛÛÜ‹›Ü›X[[™XÚÙYÔ“HÚ]ÒLMˆ[™ÐÌÛÝ\˜ÙH›Ý™[˜[˜ÙKˆ™]ÛÜšÈ˜Z[\™\È]X\˜[[™H[™]šYX[ÛÝ\˜Ù\ÎÈ›È[™\šYšYYš[\ÈÛÝ[‚‹H^˜H˜Z[XÛÜÙYPÈ[X[™ÈÛÛ\]Hš\]Ë[™]šYX[ÜšYÚ[˜[[X\ÒKÜÛÝ\˜ÙHT“\›Ý™YÙ™šXÚX[ÐÌ]šX][Û‹[™^XÝØœÙ\™YÝ]]ÛÝ[ˆˆ[ˆ\Y˜XÝ™\]Z\™Y™Y›Ü™H[žHX]\šX[È\™HÛÝ[Y\È›ÙXÙYˆ[[™Y›Üˆ^\Ý[™ÈŽ\™YÚ[ÛˆÛÝ\˜ÙH™\\˜][Û‹›Ý[[YHXÝ]˜][Û‹‚‹H™]ÈÚ[™ÝÜÈQMÜš]\ˆ›ØœÎˆ›Û™KˆPÌHØ]H‹ÍÈÜ[ŽÈX\ÜÙ]ÛÝ[[™š\ÝX[XÙ[Y[[˜Ú[™ÙYžH\ÈÛÝ\˜ÙK[Û›H[™K‚‚ˆÈÈŒ‹LLLLÈ8 %PÌHM‹Q–]Z[Y\›Ý]HÛÝ\˜ÙHØ]™H
+Ø[™Y]H[[PÊB‹H™]ÈÜÝY[Û›H›[™\ˆ˜]Ú›ÜÜÙ\ÈŽ\Ý[˜ÝÚ\™HÝ\ÜY]Z[˜[Z[Y\ËX[ÑÓÑKXÝX[š[˜\žH–Í]]Ü™YPÖÚ\HÚYXØ\œËUŠÜÛYÛÛˆ™Z[\Ü[™\ÚPËÚ]\›X[™[YÚ\]X[]H[[YH\ÜÙ]YZ\ÜÚ[ÛˆÝ[Ø]Yˆ[˜ÛY\È[žKÙÛÜˆ\™Ø\™K[\š[ÜœËÜ˜Ú\™ËÙØ\™[œË›ØYËZ[[™™\œžKˆÙ\È“Õ[\[Y[ÜˆÛZ[H[š[X]YÛÜšÚ[™ÈÛÜœË\ÚXÜË]Ø[ØX›H™\œžHÜˆ^XX›H›Ý]NÈ^H™\]Z\™H[œ™X[[™QHY\ˆÚ[™ÝÜÈ[›™\ˆ™]\›œË‚‹HÝ]]\™Ù]ˆMˆ™][™]È–ˆMš[Üˆ–
+ÈL™]ÈÛH]™[ˆ‘È[™XYHÙ[™\˜]Y[™PË\\ÜÙY[ˆY™™\™[[™\ÎÈY]]™H\‹\Ù\ÜÚ[ÛˆÜ›ÝÝ\ÈHÛÝ\˜ÙK\\[[™HÛØ[[™™]™\ˆHÛZ[HÙˆš\ÝX[ÛÛ\][Û‹‚‹HÛ›HXØÙ\YÚ[ˆÚ]Xˆ^XÝZXYÒT‘WÑURSÍM—Ñ–ÔP×ÔTÔØ[™š[H\Y˜XÝ^\ÝˆØ\™ZÝ\ÙH\œÚ\Ý[˜ÙKÛÛ[Ô›ÙXÝ[ÛˆX\ÜÙ][‹]ÛÜ›XÙ[Y[ÌŒÌ”ËØ]M‹ÍÈ\™HÙ\\˜]H[™›Ý›Ý™[ˆ\™K‚‚ˆÈÈŒ‹LLLLÈ8 %ÛÛ™›XÝYœ™YH™\œžS[™[™ÈÛÛ\Ú[ÛˆÛÝ\˜ÙHØ[™Y]H
+ÍÍJB‹H™XÛÛ˜Ú[YÍÍHÚ]]™[Ü\Ú[™ÈH›Û‹Y›Ü˜ÙHœ˜[˜ÚY\™ÙNÈØ\œšYYÛ›HHØÛÜY™\œžS[™[™ÈQMŒÈÚ[\H›ÞÛÛ\Ú[Ûˆ˜[˜XÚÈ[™›ØÝ\ÙYÛÝ\˜ÙH™YÜ™\ÜÚ[Û‹ˆ^ÛYYH\XØ]HÛÜ›Y]™[QÚ[™ÙKÚXÚ™[Û™ÜÈ^Û\Ú]™[HÈÍMKÈ™]™[ÛÛ\][™ÈY]Ë‚‹H˜Z[ÛÜÙYYˆHQHY]Ü”Ý]XÓY\ÚXœ˜\žK˜YÜÚ[\WØÛÛ\Ú[ÛœÈ™]\›ˆ[™^\È™YØ]]™KÜˆYˆÚ[\HÛÛ\Ú[ÛˆÛÝ[™[XZ[œÈ™\›ËˆÛ›H™\œžS[™[™ÈÚ]™\›È[\ÜYÚ[\HÛÛ\Ú[Ûˆ[ˆ›Û‹\™[Ü[ˆY]Üˆ[ÙHX^H™XÙZ]™HH˜[˜XÚÎÈÝ\ˆØ[ØX›H\ÜÙ]È™]Z[ˆÝšXÝ™\]Z\™YÛÛ\Ú[ÛˆÚXÚÜË‚‹HH™\Z\ˆ]Ý[™\]Z\™\ÈXÝX[QMŒÈ]ÛˆÛÛ[X[™]^XÝ][Û‹\ÚXØ[X\ÜÙ]Ø]™KÜ™[Ü[‹ØÛÛ\Ú[Ûˆ™XÙZ\PÌH™\œžH˜]™\œØ[Û˜]šYØ][Û‹\™Ù]Y]šXÙHLHÌŒ”È[™[X[ˆš\ÝX[XØÙ\[˜ÙKˆ›ÈØ]H‹ÍÈÛÜÝ\™HÜˆ›Ý\Y^[œÚ[Ûˆœ™Y^™K‚ŒŒ‹LLLMTËLˆ‘S‘T‹T‘R‘PÕQÓÓTÔÒUSÓˆ“ÓÕPÐUTÑH‘TRTŽˆ^XÝZXYˆÍÍÈ[œ™X[[ˆÎNNLMŽÝXØÙYYY›ÜˆQMŒËŒˆÛÛ\[K[\ÜÜ™ZY˜][Û‹]]ÛX][Û‹Ý\\[™™YHX[™]ÜžHLŽÌŒØ\\™\ÎÈ\Y˜XÝLNLLÍLÍYÙ\ÝÚLMŽŒ™MYÌÎŒÎYŽMŽY™MØXŽYŒLŒØLXÌÌMY˜ÌMÙ˜ÍŒØYXÌ‹ˆ[X[ˆ[œÜXÝ[Ûˆ‘R‘PÕQ[™YH[XYÙ\Îˆ˜YÈ[™™[XZ[™YH›]›ÞH˜XØYKØ[Y\˜\ÈÙ\™HÛÈÛÜÙK[œÙH™\X]YYÙKÙÜ˜\ÜËÜ›Ü^Y\œÈØœØÝ\™YH[˜[˜ÙK[™[Ù[\ˆÚ\˜XÝ\œÈÙ\™HØš[Ý\ÈXÙZÛ\œËˆ[[YHÙÈ[™\[™[HÛÛ™š\›YYœ›ÙËÐš[›ËÑØ[™[ˆ[™Ý\ˆ˜[YYšYÜÈXÚØYÙ\Ë[Z\ÜÚ[™ÈÚ]˜[˜XÚÏ[[Ù[\‹ˆ›Ý[™Y™\Z\ˆ[Ý™\ÈHXÛÜ˜]]™H[Ý[™˜\\ˆ™Z[™[™™YXÙ\È]ÚY[œÈ[™YH›ÛÙˆšY]ÜË™YXÙ\ÈÛ›H˜YÈ[™\›È]Z[Ù[œÚ]H^Y\œÈÚ[H™\Ù\š[™È]Y\Ý[˜ÚÜœË›ØÚÚ[™È˜XØYKÜÝ\[™Ü[][ÛˆÝÛ™\œÚ\[™YÈ^XÝÛÝ\˜ÙH™YÜ™\ÜÚ[Ûˆ\ÜÙ\[ÛœËˆÚ\˜XÝ\ˆš[˜[X\™[XZ[œÈ›ØÚÙYÛˆ™X[ÚÙ[][–XÚØYÙ\È[™\È›ÝÛZ[YYš^YˆÕUPËUSQUQØØ[NÈ^XÝZXYQH™XZ[Û™]ÈØÜ™Y[œÚÝËÝ˜]™\œØ[™\]Z\™YˆTËLˆÔSŽÈTËLÈØÚÙY——‚‚ˆÈÈŒ‹LLLM8 %TËLˆœ™\Ú™X[\™[™\ˆ›ÛÝXØ]\ÙNˆÙ\ÝY˜XÚ[™È›Ý[™Ù[ÛY]žH
+ˆÍÍÈ›ÛÝË]\
+B‹H^XÝÛÝ\˜ÙHØœÙ\™YˆˆÍÍÈXYÍ™MNÍXMŽ˜ÍL™MÍXYYMØYÙXMYMÙLX˜[œ™X[Z[[ˆÌÎŒÌÌŽÍWJÎ‹ËÙÚ]X‹˜ÛÛKÍ[ÝX˜X™YK]XÚÙ™[ÝÜÚ\\\œÛÛ˜[YØ[YKØXÝ[ÛœËÜ[œËÌÎŒÌÌŽÍJHÕPÐÑTÔÈ
+[™Ú[™HZ[Ú[\ÜØ]]ÛX][Û‹ÚXY\ÜÈÝ\\ØØ\\™JK™X[ØÜ™Y[œÚÝ\Y˜XÝLNLMMŽØ\˜Ú]™HÒLMˆXLÎYŒMÎN˜XLMÎNXÎL˜Í˜YNÍ™NYMŒ˜ŒYŽYYÎXXXÍØˆHÈØ\\™YLŽ0åÍÌŒ‘ÈšY]ÜÈÙ\™Hš\ÝX[H[œÜXÝYˆ‘R‘PÕQYHÈ›]ØÛ]\™Y˜XØYH[™Ú[\\ÝXÈ\œ˜Z[‹Ó”ÜËˆ[XYÙH]šY[˜ÙH[Û™HÙ\È›Ý›Ý™H˜]™\œØ[‚‹H›ÛÝØ]\ÙHÛÛ™š\›YY[ˆÜ]Û’Ø˜š]ÛXˆÚ^Þ[[™\“Y\ÚØ[È\ÙYX]ÈL\›Ý[™ÛÜ›ŽÈ[™Ú[™HÞ[[™\ˆ\ÈÚ\˜Ý[\ˆ˜XÙ\È\œ[™XÝ[\ˆÈØØ[‹ÛÈX]ÈX]™\ÈÛÜœËÜš[™ÜËÙÛ\ÜÈÜš^›Û[HÜšY[Yˆ™[ÜšY[Ó“HÚ^Ø˜š]ZÛH›Ý[™]Z[ÈÈ]ÚLXZÚ[™ÈHÚ\˜Ý[\ˆœ›ÛÈ\˜[[ÈHÙ\ÝY˜XÚ[™ÈVˆ˜XØYKˆ›È]Y\Ý[˜ÚÜ‹Ü[][ÛˆÛÛ›Û\‹^Y\ˆÛÛ\Ú[ÛˆÜˆ\ÜÙ]ØY[™ÈÚ[™ÙYˆY›ØÝ\ÙYÛÝ\˜ÙH™YÜ™\ÜÚ[Ûˆ\Ý‚‹H[[YHÙÈ]šY[˜ÙNˆÚ\˜XÝ\”šYÔÝ™X[Z[™Îˆ[˜]˜Z[X›HYQœ›ÙÈ™X\ÛÛ\XÚØYÙ\Ë[Z\ÜÚ[™È˜[˜XÚÏ[[Ù[\ˆ™]žOX›Ý[™YÈ[˜[ÙÛÝ\È[™\È›Üˆš[›ËÑØ[™[ˆ[™™ZYÚ›ÜœËˆ\ÈÛÙHš^Ù\È
+Š››Ý
+ŠˆX[Y˜XÝ\™HšYÙÙYÚ\˜XÝ\œÈÜˆÛÜÙHZ\ˆ\ÜÙ]\ÛÝ\˜ÙKÚ[\ÜÜ[[YHÚZ[‹‚‹H˜[Y][Ûˆ›Ý[™\žNˆÓÕTÑHUÒÈÕUPÈÛÝ\˜ÙKXÛÛ˜XÝ™YÜ™\ÜÚ[ÛˆYYÈœ™\Ú^XÝZXYQMŒËŒˆZ[™[™]ÙYXÝX[ØÜ™Y[œÚÝÈ[™˜]™\œØ[ØÛÛ\Ú[Û‹LHÌŒ\™Ù]”ËÕ”SH[™š\ÝX[XØÙ\[˜ÙH™[XZ[ˆ‘TURT‘QˆTËLˆÔSŽÈTËLÈØÚÙY‚‚ˆÈÈŒ‹LLLM8 %ÝÛ™\‹\Ý\Yœ›ÙËYš\œÝÚ\˜XÝ\ˆÛÝ\˜ÙHÛÜšÈ
+TËLŠB‹HÝÛ™\ˆ\›Ý™Y[[YYX]H™X[XÚ\˜XÝ\ˆ›ÙXÝ[Ûˆ™\\˜][Ûˆ[Û™ÜÚYHTËLŽÈ\È\È›ÝÜ[š[™ÈTËLËTËLHÜˆTËLL[[YKˆÛÝ™\››ÜŽˆ\Ì—ØÚ\˜XÝ\—Ýš\ÝX[Ü[ÝÌŒ—ÌLÌMÈÛÝ\˜ÙHXÚÙ]ˆ]KÔPÌPÚ\˜XÝ\•š\ÝX[[ÝŒKšœÛÛ˜‚‹H^\Ý[™Èœ›ÙÈXÚšXØ[šYÈ˜\Ú\È[™–YKÕØ[ËÔ[ˆ^Ü\ˆ\™H™]\ÙYˆÛÝ\˜ÙHY][ˆÛÛËÐÛÝY\ÜÙ]Z[Ùœ›Ù×ÛØÛÛ[Ý[Û‹œX[™\ÈQ‹ÓZ^[[Ë\Ý[HYÜšYÚ›Û™H˜[Z[™È[™™Z™XÝÈY™™\š[™È™Z[\ÜYÚÙ[]ÛˆÚYÛ˜]\™\È™]ÙY[ˆH™YHÛ\Ëˆ™]È™YÜ™\ÜÚ[ÛˆÛÛËÐÛÝY\ÜÙ]Z[Ý\ÝÙœ›Ù×ÛØÛÛ[Ý[Û‹œX\ÈÚ\™YÈ›ØÝ\ÙYÜÝYÛÜšÙ›ÝË‚‹HH\ÝXÝX[TËLˆ[[YH™[™\ˆÝ[ÚÝÙY[Ù[\ˆXÙZÛ\œÎÈÚ\˜XÝ\”šYÔÝ™X[Z[™Ø™\ÜYXÚØYÙ\Ë[Z\ÜÚ[™Ëˆ›Èš[š\ÚY˜XÙKÛX]\šX[[\ÜYÒ×Ñœ›ÙØ[š[X][Ûˆ›Y\š[Y›Ü›X][Û‹Ü™]\™Ù]]X[]KQK]šXÙH”ËÜˆ™[™\™Yœ›ÙÈXØÙ\[˜ÙH\È\ÜÙ\Yœ›ÛH\ÈÛÝ\˜ÙHY]ˆTËLˆ™[XZ[œÈÔS‹TËLÈÐÒÑQ‚ŒŒ‹LLLMTËLˆT“ÈTÒUPÕT‘KÑ”“ÑÈÕUTÎˆÓÕTÑWÐURSP“H8 %YXØ]YÓWÔÚ˜YÑ[™\›Ñ˜XØYK›ØšˆÙ[™\˜]Y]\›Z[š\ÝXØ[H
+LŽ™\XÙ\ÈÈMŒ˜XÙ\ÎÈX\ÔÝÛ™KÕÛÛÙ]]Ü™YÛÝÊH[™Ú\™Y[ÈHPÌH\Þ[˜È˜[šÎÈQWÒSTÔ•QÕÓÔ“ÔPÑQÔ‘S‘T—ÓÐ”ÑT•‘Q\™H[™[™ÈH™^^XÝZXY[œ™X[[‹ˆ]\Ý™KXØ[™Y]H™[™\ˆŒÌ™ÍHÈ[ˆÎŒMŽNHÈ\Y˜XÝLNLNNNNŽMÈ\È‘R‘PÕQˆœ›ÙÈÓÕTÑWÐURSP“NˆQMXÚšXØ[Ú[›™\ˆÙŒXXØË‹‹ˆ
+MŒH™Y™\™[˜ÙH›Û™\ÊH[™YKÕØ[ËÔ[ˆ–™˜™L™‹‹‹ÙX™™NK‹‹‹ÌMŽYŽ˜K‹‹ˆœ›ÛH[œÈÎŒMŽNÍ[™ÎŒMŽNL‹ˆQH[[YH›Û[Ý[Ûˆ™[XZ[œÈ›Ü˜šY[Žˆ›È[š[P”[™H[š]X[Ý]XËYY›Ü›X][Ûˆ™XÙZ\˜[Ù[H\ÜÙY™\›ËY\ÜXÙ[Y[ÜÙ\ÎÈÛÜœ™XÝYÙZYÚYZ›Ú[Û›Ûž™\›ËY\ÜXÙ[Y[Ø]H]ØZ]È^XÝZXY™\[‹ˆÓÓTSKÔQKÑU’PÑKÕ’TÕPS[™[™Ë‚
