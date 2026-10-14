@@ -236,6 +236,11 @@ on:
         required: false
         type: boolean
         default: false
+      part1_closeout_approved:
+        description: 'Additional explicit owner approval: run expensive Part I/chapter closeout audits and packaging; NEVER enable during ordinary PES work'
+        required: false
+        type: boolean
+        default: false
       package_windows:
         description: 'Explicit Windows cook/package for chapter closeout or release; normal development skips it'
         required: false
@@ -247,6 +252,7 @@ permissions:
   actions: read
 
 concurrency:
+  # Expensive closeout requires BOTH package_windows and part1_closeout_approved; ordinary PES CI keeps fast safety gates.
   # Cancel only superseded runs from the same PR branch. Different PRs/develop stay
   # distinct here and are still physically serialized by the single self-hosted runner.
   group: unreal-build-${{ github.repository }}-${{ github.event_name == 'pull_request' && github.head_ref || 'develop' }}
@@ -260,7 +266,7 @@ jobs:
     env:
       TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
-      SHIRE_EXPLICIT_CHAPTER_PACKAGE: ${{ github.event_name == 'workflow_dispatch' && inputs.package_windows == true }}
+      SHIRE_EXPLICIT_CHAPTER_PACKAGE: ${{ github.event_name == 'workflow_dispatch' && inputs.package_windows == true && inputs.part1_closeout_approved == true }}
     outputs:
       mode: ${{ steps.classify.outputs.mode }}
       reason: ${{ steps.classify.outputs.reason }}
@@ -527,27 +533,27 @@ jobs:
 
       # Whole-chapter sweeps are owner-dispatched at Gate 6/7 closeout, not per commit.
       - name: Headless chapter-by-chapter runtime audit
-        if: github.event_name == 'workflow_dispatch' && inputs.package_windows == true && (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_CORE_UNREAL_REQUIRED == 'true' && env.SHIRE_ASSET_IMPORT_ONLY != 'true'))
+        if: github.event_name == 'workflow_dispatch' && inputs.package_windows == true && inputs.part1_closeout_approved == true && (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_CORE_UNREAL_REQUIRED == 'true' && env.SHIRE_ASSET_IMPORT_ONLY != 'true'))
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_runtime_chapters.cmd"'
 
       - name: Headless route/story state roundtrip audit
-        if: github.event_name == 'workflow_dispatch' && inputs.package_windows == true && (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_CORE_UNREAL_REQUIRED == 'true' && env.SHIRE_ASSET_IMPORT_ONLY != 'true'))
+        if: github.event_name == 'workflow_dispatch' && inputs.package_windows == true && inputs.part1_closeout_approved == true && (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_CORE_UNREAL_REQUIRED == 'true' && env.SHIRE_ASSET_IMPORT_ONLY != 'true'))
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_runtime_state.cmd"'
 
       - name: Summarize and guard runtime warning debt
-        if: github.event_name == 'workflow_dispatch' && inputs.package_windows == true && (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_CORE_UNREAL_REQUIRED == 'true' && env.SHIRE_ASSET_IMPORT_ONLY != 'true'))
+        if: github.event_name == 'workflow_dispatch' && inputs.package_windows == true && inputs.part1_closeout_approved == true && (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_CORE_UNREAL_REQUIRED == 'true' && env.SHIRE_ASSET_IMPORT_ONLY != 'true'))
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_warning_debt.cmd"'
 
       - name: Build cook stage and archive real Windows package
-        if: github.event_name == 'workflow_dispatch' && inputs.package_windows == true && env.SHIRE_PACKAGE_REQUIRED == 'true'
+        if: github.event_name == 'workflow_dispatch' && inputs.package_windows == true && inputs.part1_closeout_approved == true && env.SHIRE_PACKAGE_REQUIRED == 'true'
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_package_w00.cmd"'
 
       - name: Verify packaged Runtime Data JSON payload
-        if: github.event_name == 'workflow_dispatch' && inputs.package_windows == true && env.SHIRE_PACKAGE_REQUIRED == 'true'
+        if: github.event_name == 'workflow_dispatch' && inputs.package_windows == true && inputs.part1_closeout_approved == true && env.SHIRE_PACKAGE_REQUIRED == 'true'
         shell: cmd
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\verify_packaged_runtime_data.ps1"'
 
@@ -566,17 +572,17 @@ jobs:
           Write-Host ('W00_INHERITED_PACKAGE_DATA_PASS exe=' + $exe + ' verified=' + $j.verified_count)"
 
       - name: Launch and observe packaged executable
-        if: (github.event_name == 'workflow_dispatch' && inputs.package_windows == true && env.SHIRE_PACKAGE_REQUIRED == 'true') || (env.SHIRE_ACCEPTANCE_ONLY == 'true' && env.SHIRE_ACCEPTANCE_RESUME_STAGE == 'startup')
+        if: (github.event_name == 'workflow_dispatch' && inputs.package_windows == true && inputs.part1_closeout_approved == true && env.SHIRE_PACKAGE_REQUIRED == 'true') || (env.SHIRE_ACCEPTANCE_ONLY == 'true' && env.SHIRE_ACCEPTANCE_RESUME_STAGE == 'startup')
         shell: cmd
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\verify_packaged_startup.ps1"'
 
       - name: Capture runner hardware acceptance boundary
-        if: (github.event_name == 'workflow_dispatch' && inputs.package_windows == true && env.SHIRE_PACKAGE_REQUIRED == 'true') || (env.SHIRE_ACCEPTANCE_ONLY == 'true' && env.SHIRE_ACCEPTANCE_RESUME_STAGE == 'startup')
+        if: (github.event_name == 'workflow_dispatch' && inputs.package_windows == true && inputs.part1_closeout_approved == true && env.SHIRE_PACKAGE_REQUIRED == 'true') || (env.SHIRE_ACCEPTANCE_ONLY == 'true' && env.SHIRE_ACCEPTANCE_RESUME_STAGE == 'startup')
         shell: cmd
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\capture_runner_hardware.ps1"'
 
       - name: Upload P1C01 Windows playable candidate
-        if: success() && github.event_name == 'workflow_dispatch' && inputs.package_windows == true && env.SHIRE_PACKAGE_REQUIRED == 'true'
+        if: success() && github.event_name == 'workflow_dispatch' && inputs.package_windows == true && inputs.part1_closeout_approved == true && env.SHIRE_PACKAGE_REQUIRED == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: ShireJourney-P1C01-Windows-${{ env.TARGET_SHA }}
