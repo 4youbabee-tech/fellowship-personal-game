@@ -12,6 +12,12 @@ Status: **REGISTERED ON DEVELOP** (PR #462 merged 319e07c8). This file is a subo
 - For actual C++ deltas, update CURRENT_PROJECT_STATE and PRODUCTION_COMPLETENESS_MATRIX in the same PR; update WORLD_DETAIL_LEDGER when world/decision changes. Source .h under Public; .cpp under Private. Observe async soft refs, FStreamableManager, HISM/ISM, pooled NPC, FBX rigged, packed PNG/TGA and target 8GB/2GB DX11 720p 30FPS proof.
 
 
+## Owner-authorized expensive closeout switch (2026-10-14)
+
+2026-10-14 OWNER CI THROUGHPUT POLICY (implementation candidate; PES-001 OPEN): ordinary PES runs retain mandatory exact-head hosted/static guards, required changed-C++ UE build, asset import/reopen and focused startup only. Deferred until explicitly owner-approved Part I/chapter closeout: full chapter runtime sweep, full route/story roundtrip, global warning debt and Windows Cook/Stage/Package. Workflow now requires BOTH package_windows=true and part1_closeout_approved=true; accidental package_windows alone cannot activate these expensive stages. Does not delete Gate 6/7, PIE, device, visuals or project acceptance obligations. No new asset/PIE/device claim.
+
+Do not enable `part1_closeout_approved` during PES-001/PES-002 ordinary asset production. At Part I/chapter acceptance, explicitly approve closeout with both inputs and collect remaining PIE, target-device and human visual evidence separately.
+
 ## PES fast-batch operating protocol (PES_FAST_BATCH_2026_10_14)
 
 - **One accountable PES, one finalized candidate wave.** Diagnose read-only first, group the repair + regression + required docs and Governor updates in **one atomic multi-file commit** rather than one commit per file. Each push restarts relevant PR workflows, so avoid premature pushes.
