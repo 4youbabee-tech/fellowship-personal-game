@@ -33,6 +33,7 @@ class PES002VisualContract(unittest.TestCase):
         self.assertIn('SkyComponent->SetIntensity(1.12f);', cpp)
         self.assertIn('float SkyIntensity = 1.12f;', cpp)
         self.assertIn('PES002_DEFERRED_SKYLIGHT_RECAPTURE', cpp)
+        self.assertEqual(cpp.count('RecaptureSky()'), 2)  # PG-172 startup + authored story refresh
         self.assertIn('PostProcess->Settings.AutoExposureMaxBrightness = 1.35f;', cpp)
         gov = json.loads((ROOT / "Data/ProjectGovernor.json").read_text(encoding="utf-8"))
         self.assertEqual(gov['pes_immediate_root_cause_repair_protocol_2026_10_14']['status'], 'OWNER_MANDATED')

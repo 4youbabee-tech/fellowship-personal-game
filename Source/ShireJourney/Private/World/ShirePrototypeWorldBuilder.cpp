@@ -1402,7 +1402,8 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
             SkyComponent->SetMobility(EComponentMobility::Movable);
             SkyComponent->SetIntensity(1.12f);
             SkyComponent->bLowerHemisphereIsBlack = false;
-            SkyComponent->RecaptureSky();
+            // The startup sky is recaptured by the one-shot BeginPlay timer after
+            // SkyAtmosphere has had time to produce a usable scene; avoid double capture.
         }
     }
 
