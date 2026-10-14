@@ -537,10 +537,9 @@ jobs:
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_runtime_startup.cmd"'
 
-      # PES-002 screenshot capture is best-effort evidence, never a false visual PASS.
-      - name: Attempt actual P1C01 visual proof capture
+      # PES-002 screenshot proof is mandatory for this active exterior stage; fail closed.
+      - name: Capture Bag End targeted P1C01 visual proof
         if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
-        continue-on-error: true
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\capture_pes002_bag_end_visual.ps1"
 

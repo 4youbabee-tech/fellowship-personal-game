@@ -23,6 +23,8 @@
     "Deliver a visually strong, enjoyable image on the target laptop through selective quality budgeting rather than uniformly low settings; performance optimization must preserve the player's sense of beauty, atmosphere and authored world quality."
   ],
   "operating_rules": [
+    "PES mandatory execution loop: detect real failure, diagnose with evidence, repair root cause, rebuild or reimport affected layers, retest exact failure, inspect visual/traversal proof, then continue the active PES without asking the owner for another continue; never call a blocked stage complete.",
+    "Keep repairs within one cohesive PES PR whenever possible and add a focused regression guard; avoid reimporting verified successful assets or running unrelated chapter-wide tests. Do not bypass Gate 6/7, hide failed critical checks, or declare PIE/device/visual acceptance without matching real evidence.",
     "Owner-authorized PES focused UE verification must bypass static-only classification when workflow_dispatch pes_focused_unreal=true and run_self_hosted=true, execute existing UE4 compile/import/rehydration/startup checks without packaging; explicit chapter closeout gates remain separate and are not waived.",
     "During ordinary PES production keep exact-head hosted/static safety, changed-code UE compile, necessary importer/reopen/persistence and focused startup proof. Do not run whole-chapter, route/story roundtrip, global warning-debt sweeps or Cook/Stage/Package except at explicitly approved Part I/chapter closeout; the heavyweight workflow requires both package_windows and part1_closeout_approved. Never waive mandatory Gate 6/7 human, PIE, device or final acceptance evidence.",
     "Global project-management changes go through the single Governor and a validation branch/PR; workers must not create competing authority files.",
@@ -9178,5 +9180,15 @@
     "truth": "Session stays OPEN for missing required screenshot/traversal/visual even if an internal batch was merged",
     "active_session": "PES-002 Bag End Exterior",
     "owner_approval": "Engineering actions within connected permissions authorized without repeated approval"
+  }
+  ,"pes_immediate_root_cause_repair_protocol_2026_10_14": {
+    "id": "DEC-PES-ROOT-20261014",
+    "status": "OWNER_MANDATED",
+    "active_session": "PES-002",
+    "loop": ["DETECT", "DIAGNOSE", "ROOT_CAUSE_FIX", "REBUILD_OR_REIMPORT_WHEN_AFFECTED", "RETEST", "INSPECT_EVIDENCE", "ACCEPT_OR_REPEAT"],
+    "continuation": "Continue through the active PES automatically without additional owner prompts while tools and permissions permit. Bundle routine engineering corrections into one coherent PR.",
+    "validation": "Exact-head static plus changed-runtime UE compile; focused startup and screenshot/traversal when applicable; Gate 6/7 unchanged.",
+    "failure_rule": "A failed mandatory proof remains failed, is diagnosed and repaired, and never becomes success by continue-on-error or documents alone.",
+    "scope_rule": "Do not open PES-003 while PES-002 screenshot, lighting/material/architecture review and traversal acceptance remain open."
   }
 }

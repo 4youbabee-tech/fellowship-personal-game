@@ -189,6 +189,9 @@ jobs:
         if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_cloud138_world_binding.py" -v
 
+      - name: Test PES-002 camera and screenshot safety contract
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" Scripts\test_pes002_visual_contract.py
+
       - name: Test Governor semantic contracts
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_governance_contracts.py" -v
 

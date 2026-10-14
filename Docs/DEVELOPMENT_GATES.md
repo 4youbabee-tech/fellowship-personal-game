@@ -2,6 +2,9 @@
 
 These rules are mandatory project discipline, not optional advice.
 
+## PES mandatory root-cause continuation (DEC-PES-ROOT-20261014)
+For each defect in the active PES: **detect -> diagnose -> fix root cause -> affected rebuild/reimport -> exact retest -> inspect proof -> accept or repeat**. Do not stop at a defect report or require a new owner "continue" for ordinary engineering work. Preserve one cohesive PR when possible. A blocked runtime/visual/traversal gate stays OPEN and cannot be disguised with `continue-on-error`; defer unrelated historical audits and Cook/Package to explicit closeout. Only a real tool/permission/environment blocker justifies stopping without completion, with the failed evidence clearly recorded.
+
 ## Gate 0 — Branch safety
 - `develop` is the integration baseline; `main` is the stable release branch,
 - implement on a short-lived single-purpose candidate branch/PR targeting `develop` (or the one Governor-approved integration train),

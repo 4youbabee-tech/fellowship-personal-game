@@ -13,6 +13,8 @@
 #include "Misc/PackageName.h"
 #include "Serialization/JsonReader.h"
 #include "Serialization/JsonSerializer.h"
+#include "Camera/CameraActor.h"
+#include "Camera/CameraComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/DirectionalLightComponent.h"
 #include "Components/ExponentialHeightFogComponent.h"
@@ -23,6 +25,11 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "Engine/DirectionalLight.h"
+#include "GameFramework/PlayerController.h"
+#include "Misc/CommandLine.h"
+#include "Misc/Parse.h"
+#include "TimerManager.h"
+#include "UnrealClient.h"
 #include "Engine/ExponentialHeightFog.h"
 #include "Engine/PostProcessVolume.h"
 #include "Engine/SkyLight.h"
@@ -398,6 +405,78 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     ApplyStoryAtmosphere();
     ApplyBagEndStoryVariant();
     ApplyPartyStoryVariant();
+
+    // The first SkyLight recapture can happen before the runtime sky has rendered.
+    // One deferred recapture corrects that startup ordering; never recapture per Tick.
+    TWeakObjectPtr<AShirePrototypeWorldBuilder> WeakBuilder(this);
+    FTimerHandle DeferredSkyCapture;
+    GetWorldTimerManager().SetTimer(DeferredSkyCapture,
+        FTimerDelegate::CreateLambda([WeakBuilder]()
+        {
+            if (WeakBuilder.IsValid() && IsValid(WeakBuilder->RuntimeSky))
+            {
+                if (USkyLightComponent* SkyComp = Cast<USkyLightComponent>(
+                    WeakBuilder->RuntimeSky->GetLightComponent()))
+                {
+                    SkyComp->RecaptureSky();
+                    UE_LOG(LogTemp, Display, TEXT("PES002_DEFERRED_SKYLIGHT_RECAPTURE"));
+                }
+            }
+        }), 3.0f, false);
+
+#if !UE_BUILD_SHIPPING
+    // Evidence-only capture: camera is independent of the player, collision, NPC,
+    // quests and save. It is never used in ordinary gameplay or shipping.
+    if (FParse::Param(FCommandLine::Get(), TEXT("PES002VisualProof")))
+    {
+        FTimerHandle CameraTimer;
+        GetWorldTimerManager().SetTimer(CameraTimer,
+            FTimerDelegate::CreateLambda([WeakBuilder]()
+            {
+                if (!WeakBuilder.IsValid() || !WeakBuilder->GetWorld())
+                {
+                    return;
+                }
+                UWorld* ProofWorld = WeakBuilder->GetWorld();
+                APlayerController* PC = ProofWorld->GetFirstPlayerController();
+                if (!PC)
+                {
+                    UE_LOG(LogTemp, Error, TEXT("PES002_CAPTURE_NO_PLAYER_CONTROLLER"));
+                    return;
+                }
+                // Bag End hero home at (-2210,-520), facade faces west (-X).
+                const FVector CameraPosition(-3110.0f, -580.0f, 280.0f);
+                const FVector LookAt(-2210.0f, -520.0f, 115.0f);
+                ACameraActor* ProofCamera = ProofWorld->SpawnActor<ACameraActor>(
+                    CameraPosition, (LookAt - CameraPosition).Rotation());
+                if (!ProofCamera || !ProofCamera->GetCameraComponent())
+                {
+                    UE_LOG(LogTemp, Error, TEXT("PES002_CAPTURE_CAMERA_SPAWN_FAILED"));
+                    return;
+                }
+                ProofCamera->GetCameraComponent()->SetFieldOfView(67.0f);
+                PC->SetViewTarget(ProofCamera);
+                UE_LOG(LogTemp, Display,
+                    TEXT("PES002_CAPTURE_CAMERA_READY target=BagEnd x=-2210 y=-520 proofOnly=1"));
+
+                // Allow the view to render after async Shire meshes and camera settle.
+                FTimerHandle ShotTimer;
+                ProofWorld->GetTimerManager().SetTimer(ShotTimer,
+                    FTimerDelegate::CreateLambda([WeakBuilder]()
+                    {
+                        if (!WeakBuilder.IsValid())
+                        {
+                            return;
+                        }
+                        const FString Filename = FPaths::Combine(
+                            FPaths::ScreenShotDir(), TEXT("PES002_BagEnd_Runtime.png"));
+                        FScreenshotRequest::RequestScreenshot(Filename, false, false);
+                        UE_LOG(LogTemp, Display,
+                            TEXT("PES002_SCREENSHOT_REQUESTED target=BagEnd format=png"));
+                    }), 4.0f, false);
+            }), 13.0f, false);
+    }
+#endif
 }
 
 
@@ -1234,7 +1313,7 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
             // UE4.27 requires the light to be movable before changing the actor rotation in PIE.
             SunComponent->SetMobility(EComponentMobility::Movable);
             Sun->SetActorRotation(FRotator(-38.0f, -28.0f, 0.0f));
-            SunComponent->SetIntensity(2.45f);
+            SunComponent->SetIntensity(3.25f);
             SunComponent->SetLightColor(FLinearColor(1.0f, 0.90f, 0.78f));
             SunComponent->SetCastShadows(true);
             SunComponent->SetAtmosphereSunLight(true);
@@ -1321,7 +1400,7 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
         if (USkyLightComponent* SkyComponent = Cast<USkyLightComponent>(Sky->GetLightComponent()))
         {
             SkyComponent->SetMobility(EComponentMobility::Movable);
-            SkyComponent->SetIntensity(0.68f);
+            SkyComponent->SetIntensity(1.12f);
             SkyComponent->bLowerHemisphereIsBlack = false;
             SkyComponent->RecaptureSky();
         }
@@ -1355,11 +1434,11 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
         PostProcess->BlendWeight = 1.0f;
 
         PostProcess->Settings.bOverride_AutoExposureMinBrightness = true;
-        PostProcess->Settings.AutoExposureMinBrightness = 0.72f;
+        PostProcess->Settings.AutoExposureMinBrightness = 1.0f;
         PostProcess->Settings.bOverride_AutoExposureMaxBrightness = true;
-        PostProcess->Settings.AutoExposureMaxBrightness = 0.96f;
+        PostProcess->Settings.AutoExposureMaxBrightness = 1.35f;
         PostProcess->Settings.bOverride_AutoExposureBias = true;
-        PostProcess->Settings.AutoExposureBias = -0.08f;
+        PostProcess->Settings.AutoExposureBias = 0.16f;
 
         PostProcess->Settings.bOverride_BloomIntensity = true;
         PostProcess->Settings.BloomIntensity = 0.10f;
@@ -1489,10 +1568,10 @@ void AShirePrototypeWorldBuilder::ApplyStoryAtmosphere()
     const FName QuestId = QuestSubsystem->GetActiveQuestId();
 
     FRotator SunRotation(-38.0f, -28.0f, 0.0f);
-    float SunIntensity = 2.55f;
+    float SunIntensity = 3.25f;
     FLinearColor SunColor(1.0f, 0.86f, 0.70f);
-    float SkyIntensity = 0.60f;
-    float ExposureBias = -0.12f;
+    float SkyIntensity = 1.12f;
+    float ExposureBias = 0.16f;
     float Bloom = 0.16f;
     float Vignette = 0.17f;
 
@@ -1501,8 +1580,8 @@ void AShirePrototypeWorldBuilder::ApplyStoryAtmosphere()
         SunRotation = FRotator(-22.0f, -42.0f, 0.0f);
         SunIntensity = 2.05f;
         SunColor = FLinearColor(1.0f, 0.67f, 0.42f);
-        SkyIntensity = 0.56f;
-        ExposureBias = -0.10f;
+        SkyIntensity = 0.95f;
+        ExposureBias = 0.08f;
         Bloom = 0.34f;
         Vignette = 0.14f;
     }
