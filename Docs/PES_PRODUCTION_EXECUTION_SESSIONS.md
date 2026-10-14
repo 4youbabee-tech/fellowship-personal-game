@@ -1,3 +1,5 @@
+2026-10-14 VERIFIED SESSION TRANSITION (owner authorized): PES-001 Asset Recovery & Import = COMPLETE for its bounded import-and-placement deliverable only, supported by Windows Run 38526869417 on develop@e1acb85a5f972f521de2f5888a52561d77bf6877: UE4.27.2 ShireJourneyEditor build SUCCESS; CLOUD138_UE_RESTORED_SHA256_PASS files=90 bytes=19394460; AUTOMATION_SUITE_PASS tests=3; P1C01 headless startup PASS cloud138 families=8 grounded=48 cap=48. PES-001 PIE=false, device=false, visual_accepted=false, chapter Gate 6/7 remains OPEN; no FPS or human render claim. Owner explicitly defers human visual review to PES-002. PES-002 Bag End Exterior = ACTIVE, NOT COMPLETE: architecture/garden/terrain/packed-PBR and actual screenshot/traversal are its required deliverable, not demonstrated yet. Existing SM_ShWoodenFootbridge remains NAV_QUARANTINED; no unsupported traversal claims.
+
 # SHIRE JOURNEY — PES Production Execution Sessions (24)
 
 Status: **REGISTERED ON DEVELOP** (PR #462 merged 319e07c8). This file is a subordinate execution schedule; **Data/ProjectGovernor.json** and **Docs/DEVELOPMENT_GATES.md** govern all decisions and chapter gates.
