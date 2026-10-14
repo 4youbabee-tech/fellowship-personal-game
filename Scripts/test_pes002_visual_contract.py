@@ -35,11 +35,18 @@ class PES002VisualContract(unittest.TestCase):
     def test_bag_end_hero_exterior_keeps_entrance_visible(self):
         cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
         self.assertIn('PES002_BAG_END_HERO_FACADE', cpp)
-        self.assertIn('FVector(260.0f, 0.0f, 28.0f * Scale)', cpp)
-        self.assertIn('FVector(1.34f, 1.55f, 1.16f) * Scale', cpp)
+        self.assertIn('FVector(360.0f, 0.0f, 22.0f * Scale)', cpp)
+        self.assertIn('FVector(1.14f, 1.36f, 1.02f) * Scale', cpp)
         self.assertIn('FVector(0.57f, 0.57f, 0.06f) * Scale', cpp)
         self.assertIn('!bBagEndHero', cpp)
         self.assertIn('FVector(-2210.0f, -520.0f, 0.0f)', cpp)
+        self.assertIn('FVector(-3475.0f, -520.0f, 285.0f)', cpp)
+        self.assertIn('SetFieldOfView(52.0f)', cpp)
+        self.assertIn('ApproachStones.Reserve(10)', cpp)
+        self.assertIn('GardenPlanters.Reserve(6)', cpp)
+        self.assertIn('WoodPiles.Reserve(4)', cpp)
+        self.assertIn('cap=4 collision=none tick=none', cpp)
+        self.assertIn('cap=8 collision=none tick=none', cpp)
 
     def test_baseline_sky_is_not_overwritten_with_dark_values(self):
         cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
