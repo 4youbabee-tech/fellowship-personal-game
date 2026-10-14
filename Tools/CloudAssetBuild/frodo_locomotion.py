@@ -30,14 +30,24 @@ def main():
     for pb in arm.pose.bones:
         n=pb.name.lower()
         if n.startswith(("mch_","org_")): continue
-        side=("L" if n.endswith((".l","_l","left")) else "R" if n.endswith((".r","_r","right")) else None)
-        if not side: continue
+        # Accept named Mixamo/DEF limbs without misclassifying left/right.
+        import re
+        packed=re.sub(r"[^a-z0-9]", "", n)
+        left=(packed.startswith("left") or packed.endswith("left") or
+              re.search(r"(?:^|[.:_ -])l(?:$|[.:_ -])",n) is not None)
+        right=(packed.startswith("right") or packed.endswith("right") or
+               re.search(r"(?:^|[.:_ -])r(?:$|[.:_ -])",n) is not None)
+        if left==right: continue
+        side="L" if left else "R"
+        stem=packed.replace("left","").replace("right","")
         role=next((role for role,parts in {
+            "forearm":("forearm","lowerarm"),
             "thigh":("thigh","upleg","upperleg"),
             "shin":("shin","calf","lowerleg"),
-            "arm":("upper_arm","upperarm","uparm"),
-            "forearm":("forearm","lowerarm","lower_arm")}.items()
-            if any(v in n for v in parts)),None)
+            "arm":("upperarm","uparm")}.items()
+            if any(v in stem for v in parts)),None)
+        if role is None and stem.endswith("arm"): role="arm"
+        if role is None and stem.endswith("leg"): role="shin"
         if role:
             key=(role,side)
             score=(5 if n.startswith("def") else 0)+(3 if pb.bone.use_deform else 0)
@@ -96,6 +106,11 @@ def main():
             raise ValueError("FRODO_ANIMATION_REIMPORT_FAILED "+row["clip"])
         row["reimport_curves"]=curves
         row["reimport_keys"]=keys
+        row["reimport_skeleton_signature"]=hashlib.sha256(
+            "\n".join(sorted(b.name for b in bones[0].data.bones)).encode("utf-8")
+        ).hexdigest()
+    if len({row["reimport_skeleton_signature"] for row in rows})!=1:
+        raise ValueError("FRODO_ANIMATION_SKELETON_MISMATCH_ACROSS_CLIPS")
     receipt={"status":"SOURCE_ANIMATION_FBX_REIMPORTED","source_rig_sha256":digest(rig),
         "fps":30,"clips":rows,"unreal_imported":False,"pie_tested":False,
         "device_tested":False,"visually_accepted":False,"final_character":False}
