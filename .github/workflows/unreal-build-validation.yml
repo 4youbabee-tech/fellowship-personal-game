@@ -541,8 +541,8 @@ jobs:
       - name: Attempt actual P1C01 visual proof capture
         if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
         continue-on-error: true
-        shell: pwsh
-        run: '& "$env:GITHUB_WORKSPACE/Scripts/capture_pes002_bag_end_visual.ps1"'
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\capture_pes002_bag_end_visual.ps1"
 
       - name: Upload PES-002 screenshot evidence
         if: always() && (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
