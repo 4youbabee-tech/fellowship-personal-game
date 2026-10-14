@@ -1023,7 +1023,7 @@ void AShirePrototypeWorldBuilder::SpawnHobbitHole(const FVector& Location, float
             ? FVector(200.0f, 0.0f, 14.0f * Scale)
             : FVector(0.0f, 0.0f, 30.0f * Scale);
         const FVector MoundScale = bBagEndHero
-            ? FVector(3.40f, 3.20f, 2.80f) * Scale
+            ? FVector(2.92f, 2.85f, 2.34f) * Scale
             : FVector(2.45f, 2.10f, 2.10f) * Scale;
         SpawnShape(ProductionTurfMoundMesh, Location + MoundOffset,
             MoundScale, Turf, FRotator::ZeroRotator, !bBagEndHero);
@@ -1037,18 +1037,18 @@ void AShirePrototypeWorldBuilder::SpawnHobbitHole(const FVector& Location, float
         {
             // Original, inexpensive readable green round entrance in front of
             // imported facade. No animated door claim; story trigger unchanged.
-            const FVector DoorCentre = Location + FVector(-165.0f * Scale, 0.0f, 72.0f * Scale);
+            const FVector DoorCentre = Location + FVector(-155.0f * Scale, 0.0f, 72.0f * Scale);
             SpawnShape(CylinderMesh, DoorCentre,
-                FVector(0.68f, 0.68f, 0.055f) * Scale,
+                FVector(0.60f, 0.60f, 0.027f) * Scale,
                 Timber, FRotator(90.0f, 0.0f, 0.0f), false);
-            SpawnShape(CylinderMesh, DoorCentre + FVector(-7.0f * Scale, 0.0f, 0.0f),
-                FVector(0.57f, 0.57f, 0.06f) * Scale,
+            SpawnShape(CylinderMesh, DoorCentre + FVector(-3.5f * Scale, 0.0f, 0.0f),
+                FVector(0.53f, 0.53f, 0.025f) * Scale,
                 DoorGreen, FRotator(90.0f, 0.0f, 0.0f), false);
-            SpawnShape(SphereMesh, DoorCentre + FVector(-14.0f * Scale, 28.0f * Scale, -2.0f * Scale),
+            SpawnShape(SphereMesh, DoorCentre + FVector(-6.0f * Scale, 28.0f * Scale, -2.0f * Scale),
                 FVector(0.045f) * Scale, FLinearColor(0.82f,0.65f,0.28f),
                 FRotator::ZeroRotator, false);
             UE_LOG(LogTemp, Display,
-                TEXT("PES002_BAG_END_HERO_FACADE layout=west-facing asset=%s moundOffsetX=200 moundScale=3.4x3.2x2.8 moundCollision=none door=green-round proof=pending; PES002_BAG_END_ROUND_FACADE_ORIENTATION=pitch90"),
+                TEXT("PES002_BAG_END_HERO_FACADE layout=west-facing asset=%s moundOffsetX=200 moundScale=2.92x2.85x2.34 moundCollision=none door=thin-green-round proof=pending; PES002_BAG_END_ROUND_FACADE_ORIENTATION=pitch90"),
                 ProductionBagEndHeroFacadeMesh ? TEXT("dedicated-curved") : TEXT("generic-fallback"));
         }
     }
