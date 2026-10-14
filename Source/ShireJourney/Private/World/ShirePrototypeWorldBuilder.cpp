@@ -454,26 +454,53 @@ void AShirePrototypeWorldBuilder::BeginPlay()
                     UE_LOG(LogTemp, Error, TEXT("PES002_CAPTURE_CAMERA_SPAWN_FAILED"));
                     return;
                 }
-                ProofCamera->GetCameraComponent()->SetFieldOfView(67.0f);
+                ProofCamera->GetCameraComponent()->SetFieldOfView(60.0f);
                 PC->SetViewTarget(ProofCamera);
                 UE_LOG(LogTemp, Display,
-                    TEXT("PES002_CAPTURE_CAMERA_READY target=BagEnd x=-2210 y=-520 proofOnly=1"));
+                    TEXT("PES002_CAPTURE_CAMERA_READY target=BagEnd x=-2210 y=-520 proofOnly=1 views=3"));
 
-                // Allow the view to render after async Shire meshes and camera settle.
-                FTimerHandle ShotTimer;
-                ProofWorld->GetTimerManager().SetTimer(ShotTimer,
-                    FTimerDelegate::CreateLambda([WeakBuilder]()
-                    {
-                        if (!WeakBuilder.IsValid())
+                // Three independent perspectives prevent accepting an accidental
+                // fence/roof/terrain occlusion from a single static camera position.
+                // Never move the player, quest triggers or gameplay collision.
+                TWeakObjectPtr<ACameraActor> WeakCamera(ProofCamera);
+                for (int32 ViewIndex = 0; ViewIndex < 3; ++ViewIndex)
+                {
+                    FTimerHandle ReframeTimer;
+                    ProofWorld->GetTimerManager().SetTimer(ReframeTimer,
+                        FTimerDelegate::CreateLambda([WeakBuilder, WeakCamera, ViewIndex]()
                         {
-                            return;
-                        }
-                        const FString Filename = FPaths::Combine(
-                            FPaths::ScreenShotDir(), TEXT("PES002_BagEnd_Runtime.png"));
-                        FScreenshotRequest::RequestScreenshot(Filename, false, false);
-                        UE_LOG(LogTemp, Display,
-                            TEXT("PES002_SCREENSHOT_REQUESTED target=BagEnd format=png"));
-                    }), 4.0f, false);
+                            if (!WeakBuilder.IsValid() || !WeakCamera.IsValid())
+                            {
+                                return;
+                            }
+                            const FVector Positions[] = {
+                                FVector(-2670.0f, -530.0f, 215.0f),
+                                FVector(-2750.0f, -1050.0f, 290.0f),
+                                FVector(-2680.0f, 45.0f, 235.0f)
+                            };
+                            const FVector LookAt(-2210.0f, -520.0f, 115.0f);
+                            WeakCamera->SetActorLocationAndRotation(
+                                Positions[ViewIndex], (LookAt - Positions[ViewIndex]).Rotation());
+                            UE_LOG(LogTemp, Display,
+                                TEXT("PES002_CAPTURE_VIEW_READY view=%d target=BagEnd"), ViewIndex);
+                        }), 2.0f + 8.0f * ViewIndex, false);
+
+                    FTimerHandle ShotTimer;
+                    ProofWorld->GetTimerManager().SetTimer(ShotTimer,
+                        FTimerDelegate::CreateLambda([WeakBuilder, ViewIndex]()
+                        {
+                            if (!WeakBuilder.IsValid())
+                            {
+                                return;
+                            }
+                            const FString Filename = FPaths::Combine(
+                                FPaths::ScreenShotDir(),
+                                FString::Printf(TEXT("PES002_BagEnd_View%d.png"), ViewIndex));
+                            FScreenshotRequest::RequestScreenshot(Filename, false, false);
+                            UE_LOG(LogTemp, Display,
+                                TEXT("PES002_SCREENSHOT_REQUESTED target=BagEnd view=%d format=png"), ViewIndex);
+                        }), 6.0f + 8.0f * ViewIndex, false);
+                }
             }), 13.0f, false);
     }
 #endif

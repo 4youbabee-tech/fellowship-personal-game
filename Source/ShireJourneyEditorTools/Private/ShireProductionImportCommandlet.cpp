@@ -21,6 +21,7 @@
 #include "Misc/Parse.h"
 #include "Materials/Material.h"
 #include "Materials/MaterialExpressionScalarParameter.h"
+#include "Materials/MaterialExpressionConstant.h"
 #include "Materials/MaterialExpressionTextureSampleParameter2D.h"
 #include "Materials/MaterialExpressionMultiply.h"
 #include "Materials/MaterialExpressionComponentMask.h"
@@ -870,6 +871,73 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         }
     }
 
+
+    // PES-002 real Windows screenshot log: both production masters were compiled as
+    // default material for HISM/ISM, and SimpleGrassWind's required AdditionalWPO
+    // input was left unconnected. Repair persisted masters too (not just new assets).
+    // Editor-only import owns this migration, not gameplay or synchronous runtime loads.
+    auto RepairInstancedMaster = [&](UMaterialInterface* Parent, const TCHAR* Label)
+    {
+        UMaterial* Master = Cast<UMaterial>(Parent);
+        if (!Master)
+        {
+            ++Failed;
+            UE_LOG(LogTemp, Error,
+                TEXT("PES002_INSTANCED_MASTER_NOT_MATERIAL name=%s"), Label);
+            return;
+        }
+        bool bChanged = false;
+        if (!Master->bUsedWithInstancedStaticMeshes)
+        {
+            Master->Modify();
+            Master->bUsedWithInstancedStaticMeshes = true;
+            bChanged = true;
+        }
+        if (FString(Label).Equals(TEXT("M_ProductionFoliage")))
+        {
+            UMaterialExpressionMaterialFunctionCall* WindCall = nullptr;
+            for (UMaterialExpression* Expression : Master->Expressions)
+            {
+                UMaterialExpressionMaterialFunctionCall* Candidate =
+                    Cast<UMaterialExpressionMaterialFunctionCall>(Expression);
+                if (Candidate &&
+                    Candidate->MaterialFunction &&
+                    Candidate->MaterialFunction->GetName().Equals(TEXT("SimpleGrassWind")))
+                {
+                    WindCall = Candidate;
+                    break;
+                }
+            }
+            FExpressionInput* AdditionalWPO = WindCall ? WindCall->GetInput(3) : nullptr;
+            if (!AdditionalWPO)
+            {
+                ++Failed;
+                UE_LOG(LogTemp, Error,
+                    TEXT("PES002_FOLIAGE_WIND_INPUT_MISSING name=AdditionalWPO"));
+            }
+            else if (!AdditionalWPO->Expression)
+            {
+                UMaterialExpressionConstant* ZeroOffset =
+                    NewObject<UMaterialExpressionConstant>(Master);
+                ZeroOffset->R = 0.0f;
+                Master->Expressions.Add(ZeroOffset);
+                AdditionalWPO->Expression = ZeroOffset;
+                bChanged = true;
+            }
+        }
+        if (bChanged)
+        {
+            Master->PostEditChange();
+            Master->MarkPackageDirty();
+            ImportedMaterialPackages.AddUnique(Master->GetOutermost());
+        }
+        UE_LOG(LogTemp, Display,
+            TEXT("PES002_INSTANCED_MASTER_REPAIR name=%s changed=%d valid=%d"),
+            Label, bChanged ? 1 : 0,
+            Master->bUsedWithInstancedStaticMeshes ? 1 : 0);
+    };
+    RepairInstancedMaster(ProductionMaterialParent, TEXT("M_ProductionSurface"));
+    RepairInstancedMaster(ProductionFoliageParent, TEXT("M_ProductionFoliage"));
 
     // Far foliage uses a separate no-WPO master. C3/C4 will bind this to distant
     // LOD material slots so far vegetation removes wind vertex instructions entirely.
