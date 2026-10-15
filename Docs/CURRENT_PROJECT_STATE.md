@@ -1,3 +1,7 @@
+## 2026-10-16 programmer-handoff selective safety salvage — PR #456 logic port candidate
+- 2026-10-16 verified live develop after branch clean-up merge fe95cb82: archived PR #456 source patch was NOT merged. Direct comparison proved QuickSave/QuickLoad lacked bCinematicInputLocked, RestoreSaveSnapshot failed to reject non-finite saved pitch/yaw/roll, and route progress sanitization retained corrupt saved transforms. The original branch is 59+ commits behind develop; never merge its stale C++/docs wholesale.
+- This bounded forward-port adds the exact necessary finite-axis and cinematic guards to current canonical C++ files, without modifying story, chapter order, LivingWorldDirector, SaveGame disk format, route identity, player movements, or optional history. Add two focused source regressions to existing offline safety suite. Candidate requires fresh exact-head Pre-Unreal and real UE4.27.2 compile; manual corrupt-save PIE and full device acceptance are separate and NOT CLAIMED.
+
 ## 2026-10-16 owner-authorized GitHub branch consolidation for programmer develop handoff
 - VERIFIED: PR #477 PES-002 exact-head d473c234 CI Pre-Unreal 38818365177 SUCCESS, UE4 run 38818365146 SUCCESS, merged into canonical develop at 386a2968954ea6423ae37da011b35ef187f53849. Physical visual acceptance and target-device FPS still not claimed.
 - AUDITED: 49 initial remote refs (develop/main plus 47 feature/legacy), 24 initial open PRs; after existing cleanup 46 refs and 23 open PRs. Newer code/history across 43 divergent heads NOT safe for blind merging into develop.

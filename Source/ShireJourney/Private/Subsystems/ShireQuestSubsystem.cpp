@@ -589,6 +589,24 @@ void UShireQuestSubsystem::SanitizeRouteProgressMap(
         Progress->CurrentChapterId = ChapterId;
         Progress->EpisodeId = EpisodeId;
         Progress->PlayableCharacterId = CharacterId;
+
+        // A valid route can still carry a corrupt position or orientation.
+        // Discard only its per-route transform, preserving quest/story state.
+        if (Progress->bHasPlayerTransform &&
+            (!FMath::IsFinite(Progress->PlayerLocation.X) ||
+             !FMath::IsFinite(Progress->PlayerLocation.Y) ||
+             !FMath::IsFinite(Progress->PlayerLocation.Z) ||
+             !FMath::IsFinite(Progress->PlayerRotation.Pitch) ||
+             !FMath::IsFinite(Progress->PlayerRotation.Yaw) ||
+             !FMath::IsFinite(Progress->PlayerRotation.Roll)))
+        {
+            Progress->bHasPlayerTransform = false;
+            Progress->PlayerLocation = FVector::ZeroVector;
+            Progress->PlayerRotation = FRotator::ZeroRotator;
+            UE_LOG(LogTemp, Warning,
+                TEXT("ShireRouteProgress: corrupt saved transform discarded route=%s"),
+                *RouteId.ToString());
+        }
     }
 }
 

@@ -1,3 +1,11 @@
+## 2026-10-16 develop handoff — selective PR #456 safety forward-port
+| Scope | State |
+|---|---|
+| 43 outdated branch heads | SHA-archived, not automatically runtime-merged. Branch cleanup PR #478 merged as fe95cb82. |
+| Cinematic QuickSave / QuickLoad and saved rotation | Source fix CANDIDATE selectively ported to up-to-date ShirePlayerCharacter.cpp and ShireQuestSubsystem.cpp; two focused regressions introduced. Prior PR #456 closed as old-lineage, not source-integrated. |
+| Pre-Unreal and UE4.27 compile | PENDING fresh exact-head source candidate CI; do not substitute archival/legacy branch results. |
+| PIE corrupt-save / route integrity, 720p FPS and human visuals | NOT RUN / NOT ACCEPTED. PES-002 remains ACTIVE; PES-003 remains LOCKED. |
+
 ## 2026-10-16 GitHub branch hygiene and truthful develop programmer handoff
 | Gate | Actual outcome |
 |---|---|
