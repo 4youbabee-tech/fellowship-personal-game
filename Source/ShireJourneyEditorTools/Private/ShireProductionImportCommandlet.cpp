@@ -10,6 +10,8 @@
 #include "Factories/MaterialFactoryNew.h"
 #include "Engine/StaticMesh.h"
 #include "Engine/SkeletalMesh.h"
+#include "Rendering/SkeletalMeshLODRenderData.h"
+#include "Rendering/SkinWeightVertexBuffer.h"
 #include "Animation/Skeleton.h"
 #include "StaticMeshResources.h"
 #include "Engine/Texture2D.h"
@@ -470,6 +472,24 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                 Display,
                 TEXT("ShireProductionImport character FBX deferred to skeletal QC lane: %s"),
                 *CharacterFbx);
+        }
+    }
+
+    // Physical before/after ledger: only packages already visible to the UE4.27
+    // on-disk AssetRegistry count as present before this commandlet run.
+    TSet<FName> PreexistingProductionPackages;
+    {
+        FAssetRegistryModule& Registry =
+            FModuleManager::LoadModuleChecked<FAssetRegistryModule>(TEXT("AssetRegistry"));
+        TArray<FString> ScanPaths;
+        ScanPaths.Add(TEXT("/Game/Production"));
+        Registry.Get().ScanPathsSynchronous(ScanPaths, true);
+        TArray<FAssetData> BeforeAssets;
+        Registry.Get().GetAssetsByPath(FName(TEXT("/Game/Production")),
+            BeforeAssets, true, true);
+        for (const FAssetData& Data : BeforeAssets)
+        {
+            PreexistingProductionPackages.Add(Data.PackageName);
         }
     }
 
@@ -1436,9 +1456,11 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             UFbxImportUI* ImportOptions = NewObject<UFbxImportUI>();
             ImportOptions->MeshTypeToImport = EFBXImportType::FBXIT_SkeletalMesh;
             ImportOptions->bImportAsSkeletal = true;
+            // Rig FBX must bring its authored skin material and texture slots into UE.
+            // Locomotion AnimSequences/AnimBP remain an independent, required gate.
             ImportOptions->bImportAnimations = false;
-            ImportOptions->bImportMaterials = false;
-            ImportOptions->bImportTextures = false;
+            ImportOptions->bImportMaterials = true;
+            ImportOptions->bImportTextures = true;
             Task->Options = ImportOptions;
             UE_LOG(LogTemp, Display, TEXT("ShireProductionImport: skeletal FBX import file=%s destination=%s asset=%s"),
                 *Filename, *DestinationPath, *Task->DestinationName);
@@ -1449,8 +1471,14 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             ImportOptions->MeshTypeToImport = EFBXImportType::FBXIT_StaticMesh;
             ImportOptions->bImportAsSkeletal = false;
             ImportOptions->bImportAnimations = false;
-            ImportOptions->bImportMaterials = false;
-            ImportOptions->bImportTextures = false;
+            // Epic UE4.27 FBX imports diffuse/normal maps, NOT packed PBR ORM.
+            // Preserve the audited multi-channel VerifiedPBR/CuratedP1C01 bridge;
+            // other actual authored FBX imports retain their source material slots.
+            const bool bUsesAuditedPackedPBR =
+                Relative.StartsWith(TEXT("World/Shire/VerifiedPBR/"), ESearchCase::IgnoreCase) ||
+                Relative.StartsWith(TEXT("World/Shire/CuratedP1C01/"), ESearchCase::IgnoreCase);
+            ImportOptions->bImportMaterials = !bUsesAuditedPackedPBR;
+            ImportOptions->bImportTextures = !bUsesAuditedPackedPBR;
             if (ImportOptions->StaticMeshImportData)
             {
                 ImportOptions->StaticMeshImportData->bRemoveDegenerates = true;
@@ -1615,6 +1643,8 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         UObject* ImportedAsset = nullptr;
         bool bSkeletalAssetRegistered = false;
         int32 ImportedSkeletalBoneCount = 0;
+        int32 ImportedSkeletalVertexCount = 0;
+        int32 ImportedSkeletalBlendWeightedVertices = 0;
         bool bLinkedSkeletonValid = false;
         FString LinkedSkeletonPath = TEXT("NONE");
         if (bCharacterRigFbx)
@@ -1634,16 +1664,59 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                     bLinkedSkeletonValid = true;
                     LinkedSkeletonPath = LinkedSkeleton->GetPathName();
                 }
+                const FSkeletalMeshRenderData* RenderData =
+                    ImportedSkeletalMesh->GetResourceForRendering();
+                if (RenderData && RenderData->LODRenderData.Num() > 0)
+                {
+                    const FSkeletalMeshLODRenderData& LOD = RenderData->LODRenderData[0];
+                    const FSkinWeightVertexBuffer& Skin = LOD.SkinWeightVertexBuffer;
+                    ImportedSkeletalVertexCount = LOD.GetNumVertices();
+                    const uint32 InfluencesToInspect = FMath::Min<uint32>(
+                        Skin.GetMaxBoneInfluences(), 8u);
+                    for (int32 Vertex = 0; Vertex < ImportedSkeletalVertexCount; ++Vertex)
+                    {
+                        int32 PositiveInfluences = 0;
+                        for (uint32 Influence = 0; Influence < InfluencesToInspect; ++Influence)
+                        {
+                            if (Skin.GetBoneWeight(static_cast<uint32>(Vertex), Influence) > 0)
+                            {
+                                ++PositiveInfluences;
+                            }
+                        }
+                        if (PositiveInfluences >= 2)
+                        {
+                            ++ImportedSkeletalBlendWeightedVertices;
+                        }
+                    }
+                }
             }
+            // An FBX skeleton with 161 reference bones but no actual mesh skin
+            // deformation MUST NOT become a playable character by passing bone count.
+            // This is a weight-influence import gate; actual posed deformation and
+            // authored Idle/Walk/Run still require separate UE4 animation/PIE proof.
             bSkeletalAssetRegistered =
                 RigAssetData.IsValid() &&
                 RigAssetData.AssetClass == USkeletalMesh::StaticClass()->GetFName() &&
                 ImportedSkeletalMesh != nullptr &&
-                ImportedSkeletalBoneCount > 0;
+                bLinkedSkeletonValid &&
+                ImportedSkeletalBoneCount >= 8 &&
+                ImportedSkeletalVertexCount >= 256 &&
+                ImportedSkeletalBlendWeightedVertices >= 16 &&
+                ImportedSkeletalMesh->GetMaterials().Num() > 0 &&
+                ImportedSkeletalMesh->GetBounds().SphereRadius > 1.0f;
+            UE_LOG(LogTemp, Display,
+                TEXT("PES002_SKELETAL_WEIGHT_QC path=%s bones=%d vertices=%d blendedVertices=%d linkedSkeleton=%d materialSlots=%d eligible=%d deformationPIE=NOT_RUN"),
+                *ExpectedObjectPath, ImportedSkeletalBoneCount,
+                ImportedSkeletalVertexCount, ImportedSkeletalBlendWeightedVertices,
+                bLinkedSkeletonValid ? 1 : 0,
+                ImportedSkeletalMesh ? ImportedSkeletalMesh->GetMaterials().Num() : 0,
+                bSkeletalAssetRegistered ? 1 : 0);
             if (!bSkeletalAssetRegistered)
             {
-                UE_LOG(LogTemp, Error, TEXT("ShireProductionImport: skeletal FBX validation failed path=%s bones=%d"),
-                    *ExpectedObjectPath, ImportedSkeletalBoneCount);
+                UE_LOG(LogTemp, Error,
+                    TEXT("ShireProductionImport: skeletal FBX skinning validation FAILED path=%s bones=%d blendedVertices=%d"),
+                    *ExpectedObjectPath, ImportedSkeletalBoneCount,
+                    ImportedSkeletalBlendWeightedVertices);
             }
         }
         else
@@ -1997,6 +2070,7 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         }
         const bool bImported =
             bExactHeroPackageResolved &&
+            (!bCharacterRigFbx || bSkeletalAssetRegistered) &&
             (Task->ImportedObjectPaths.Num() > 0 ||
             Task->Result.Num() > 0 ||
             ImportedAsset != nullptr ||
@@ -2296,6 +2370,64 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         TEXT("ShireProductionImport material persistence verification: missing=%d tracked=%d"),
         MissingMaterialFiles,
         ImportedMaterialPackages.Num());
+
+    // Return the exact engine AssetRegistry identities backed by .uasset bytes on
+    // disk. A source FBX or a transient in-memory UObject is NEVER counted.
+    {
+        FAssetRegistryModule& Registry =
+            FModuleManager::LoadModuleChecked<FAssetRegistryModule>(TEXT("AssetRegistry"));
+        TArray<FString> ScanPaths;
+        ScanPaths.Add(TEXT("/Game/Production"));
+        Registry.Get().ScanPathsSynchronous(ScanPaths, true);
+        TArray<FAssetData> OnDiskAssets;
+        Registry.Get().GetAssetsByPath(FName(TEXT("/Game/Production")),
+            OnDiskAssets, true, true);
+        int32 StaticMeshCount = 0;
+        int32 SkeletalMeshCount = 0;
+        int32 MaterialCount = 0;
+        int32 TextureCount = 0;
+        int32 AnimationCount = 0;
+        int32 SoundCount = 0;
+        int32 PersistedCount = 0;
+        int32 NewOnThisRunner = 0;
+        for (const FAssetData& Data : OnDiskAssets)
+        {
+            const FString Package = Data.PackageName.ToString();
+            if (!Package.StartsWith(TEXT("/Game/Production/")))
+            {
+                continue;
+            }
+            const FString DiskFile = FPackageName::LongPackageNameToFilename(
+                Package, FPackageName::GetAssetPackageExtension());
+            const int64 Bytes = IFileManager::Get().FileSize(*DiskFile);
+            if (Bytes <= 0)
+            {
+                continue;
+            }
+            ++PersistedCount;
+            const bool bNewHere = !PreexistingProductionPackages.Contains(Data.PackageName);
+            if (bNewHere)
+            {
+                ++NewOnThisRunner;
+            }
+            const FName Class = Data.AssetClass;
+            if (Class == FName(TEXT("StaticMesh"))) ++StaticMeshCount;
+            else if (Class == FName(TEXT("SkeletalMesh"))) ++SkeletalMeshCount;
+            else if (Class == FName(TEXT("Texture2D"))) ++TextureCount;
+            else if (Class == FName(TEXT("Material")) ||
+                     Class == FName(TEXT("MaterialInstanceConstant"))) ++MaterialCount;
+            else if (Class == FName(TEXT("AnimSequence"))) ++AnimationCount;
+            else if (Class == FName(TEXT("SoundWave"))) ++SoundCount;
+            UE_LOG(LogTemp, Display,
+                TEXT("PES002_UASSET_ON_DISK class=%s package=%s bytes=%lld newOnThisRunner=%d"),
+                *Class.ToString(), *Package, Bytes, bNewHere ? 1 : 0);
+        }
+        UE_LOG(LogTemp, Display,
+            TEXT("PES002_UASSET_INVENTORY persisted=%d newOnThisRunner=%d staticMeshes=%d skeletalMeshes=%d materials=%d textures=%d animSequences=%d soundWaves=%d sourceFilesAreNotUassets=1"),
+            PersistedCount, NewOnThisRunner, StaticMeshCount,
+            SkeletalMeshCount, MaterialCount, TextureCount,
+            AnimationCount, SoundCount);
+    }
 
     UE_LOG(LogTemp, Display, TEXT("ShireProductionImport: %d files, %d failures"), SourceFiles.Num(), Failed);
 

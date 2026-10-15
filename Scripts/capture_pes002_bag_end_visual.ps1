@@ -91,6 +91,16 @@ for ($view = 0; $view -lt 4; $view++) {
     Write-Host "PES002_BAG_END_CAPTURE_PRESENT view=$view width=$width height=$height sha256=$hash image=$destination camera=BagEnd visualAccepted=false traversal=unproven"
 }
 
+# The editor is running the real game RHI and must emit actual frame and RAM
+# windows; a screenshot alone is not performance evidence. This CI machine is
+# not the target laptop, so no 30-FPS/device or VRAM acceptance is inferred.
+$runtimeSamples = @(Select-String -Path $log -SimpleMatch -Pattern 'PES002_RUNTIME_METRICS source=UE4-game-frame')
+if ($runtimeSamples.Count -lt 1) {
+    throw "PES002_RUNTIME_FRAME_METRICS_MISSING: inspect $log"
+}
+Write-Host "PES002_RUNTIME_SAMPLE_COUNT count=$($runtimeSamples.Count) deviceAccepted=false gpuVRAM=UNMEASURED"
+$runtimeSamples | Select-Object -Last 3 | ForEach-Object { Write-Host $_.Line.Trim() }
+
 # Preserve four PNGs before rejecting incorrect curated PBR runtime shaders.
 # A bright screenshot with default-grey instanced foliage is still a failure.
 if (Select-String -Path $log -SimpleMatch -Pattern 'P1C01_CURATED_NATURE_WORLD families=9' -Quiet) {

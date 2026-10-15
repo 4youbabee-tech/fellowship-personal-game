@@ -27,6 +27,7 @@
 #include "Engine/DirectionalLight.h"
 #include "GameFramework/PlayerController.h"
 #include "Misc/CommandLine.h"
+#include "HAL/PlatformMemory.h"
 #include "Misc/Parse.h"
 #include "TimerManager.h"
 #include "UnrealClient.h"
@@ -80,7 +81,8 @@ namespace
 
 AShirePrototypeWorldBuilder::AShirePrototypeWorldBuilder()
 {
-    PrimaryActorTick.bCanEverTick = false;
+    PrimaryActorTick.bCanEverTick = true;
+    PrimaryActorTick.bStartWithTickEnabled = false;
 
     RuntimeRoot = CreateDefaultSubobject<USceneComponent>(TEXT("RuntimeRoot"));
     RootComponent = RuntimeRoot;
@@ -430,6 +432,7 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     // quests and save. It is never used in ordinary gameplay or shipping.
     if (FParse::Param(FCommandLine::Get(), TEXT("PES002VisualProof")))
     {
+        SetActorTickEnabled(true);
         FTimerHandle CameraTimer;
         GetWorldTimerManager().SetTimer(CameraTimer,
             FTimerDelegate::CreateLambda([WeakBuilder]()
@@ -508,6 +511,41 @@ void AShirePrototypeWorldBuilder::BeginPlay()
 #endif
 }
 
+
+void AShirePrototypeWorldBuilder::Tick(float DeltaSeconds)
+{
+    Super::Tick(DeltaSeconds);
+#if !UE_BUILD_SHIPPING
+    if (!FMath::IsFinite(DeltaSeconds) || DeltaSeconds <= 0.0f)
+    {
+        return;
+    }
+    ProofElapsedSeconds += DeltaSeconds;
+    // Exclude editor shader warmup and initial asset loading from steady-state
+    // estimates, but report the actual measurement window and worst frame.
+    if (ProofElapsedSeconds < 10.0f)
+    {
+        return;
+    }
+    ProofFrameSeconds += DeltaSeconds;
+    ProofWorstFrameMs = FMath::Max(ProofWorstFrameMs, DeltaSeconds * 1000.0f);
+    ++ProofFrameCount;
+    if (ProofFrameSeconds >= 5.0f)
+    {
+        const FPlatformMemoryStats Memory = FPlatformMemory::GetStats();
+        const double UsedRamMiB = static_cast<double>(Memory.UsedPhysical) / 1048576.0;
+        const double PeakRamMiB = static_cast<double>(Memory.PeakUsedPhysical) / 1048576.0;
+        UE_LOG(LogTemp, Display,
+            TEXT("PES002_RUNTIME_METRICS source=UE4-game-frame runner=CI-not-target elapsedSec=%.2f windowSec=%.2f frames=%d fps=%.2f worstFrameMs=%.2f processRAMMiB=%.1f peakRAMMiB=%.1f gpuVRAM=UNMEASURED deviceAcceptance=false"),
+            ProofElapsedSeconds, ProofFrameSeconds, ProofFrameCount,
+            ProofFrameCount / FMath::Max(ProofFrameSeconds, KINDA_SMALL_NUMBER),
+            ProofWorstFrameMs, UsedRamMiB, PeakRamMiB);
+        ProofFrameSeconds = 0.0f;
+        ProofWorstFrameMs = 0.0f;
+        ProofFrameCount = 0;
+    }
+#endif
+}
 
 void AShirePrototypeWorldBuilder::SpawnVerifiedPBRDecor()
 {
@@ -719,8 +757,72 @@ void AShirePrototypeWorldBuilder::OnCuratedNatureLayerReady()
             SteepGround - FamilySteepGroundBefore,
             Mesh->GetStaticMaterials().Num());
     }
+    // PES-002: the physically imported FBX/packed-PBR HISM meshes also dress
+    // Bag End's two garden flanks, rather than adding more sphere/cube plants.
+    // Leave the west-facing doorway, walkable approach and quest anchors open.
+    // All additions remain non-colliding, traced and limited to 24 instances.
+    int32 BagEndGardenPlaced = 0;
+    const int32 GardenFamilies[] = {0, 2, 3, 4}; // grass, stone, gorse, hedge
+    const FVector GardenFlanks[] = {
+        FVector(-2410.0f, -885.0f, 0.0f),
+        FVector(-2370.0f, -155.0f, 0.0f)
+    };
+    for (int32 FamilyIndex = 0; FamilyIndex < UE_ARRAY_COUNT(GardenFamilies); ++FamilyIndex)
+    {
+        const int32 I = GardenFamilies[FamilyIndex];
+        UHierarchicalInstancedStaticMeshComponent* Group = CuratedNatureGroups[I];
+        UStaticMesh* Mesh = CuratedNatureSources[I].Get();
+        if (!Group || !Mesh || Group->GetStaticMesh() != Mesh)
+        {
+            continue;
+        }
+        const FBoxSphereBounds Bounds = Mesh->GetBounds();
+        if (Bounds.BoxExtent.Z <= 1.0f)
+        {
+            continue;
+        }
+        const float Scale = FMath::Clamp(
+            Heights[I] / (2.0f * Bounds.BoxExtent.Z), 0.05f, 3.0f);
+        for (int32 Flank = 0; Flank < UE_ARRAY_COUNT(GardenFlanks); ++Flank)
+        {
+            for (int32 Plant = 0; Plant < 3; ++Plant)
+            {
+                const float Yaw = static_cast<float>(
+                    (FamilyIndex * 73 + Flank * 41 + Plant * 59) % 360);
+                const float Angle = FMath::DegreesToRadians(Yaw);
+                const float Radius = 38.0f + 35.0f * static_cast<float>(Plant);
+                const FVector Candidate = GardenFlanks[Flank] + FVector(
+                    FMath::Cos(Angle) * Radius, FMath::Sin(Angle) * Radius, 0.0f);
+                // Conservative two-dimensional exclusion around the player approach.
+                if (FVector::DistSquared2D(Candidate,
+                    FVector(-2465.0f, -520.0f, 0.0f)) < FMath::Square(240.0f))
+                {
+                    continue;
+                }
+                FHitResult Hit;
+                FCollisionQueryParams Query(TEXT("PES002AuthoredGardenGround"), false, this);
+                if (!World->LineTraceSingleByChannel(Hit,
+                        Candidate + FVector(0, 0, 1200),
+                        Candidate - FVector(0, 0, 700), ECC_Visibility, Query) ||
+                    Hit.ImpactNormal.Z < 0.75f || FMath::Abs(Hit.Location.Z) > 130.0f)
+                {
+                    continue;
+                }
+                const float MeshBottom = Bounds.Origin.Z - Bounds.BoxExtent.Z;
+                Group->AddInstanceWorldSpace(FTransform(
+                    FRotator(0, Yaw, 0),
+                    Hit.Location - FVector(0, 0, MeshBottom * Scale),
+                    FVector(Scale * (0.92f + 0.06f * Plant))));
+                ++BagEndGardenPlaced;
+                ++Grounded;
+            }
+        }
+    }
     UE_LOG(LogTemp, Display,
-        TEXT("P1C01_CURATED_NATURE_WORLD families=%d grounded=%d max=92 collision=none async=1 missingGround=%d steepGround=%d PIE_device_visual=pending"),
+        TEXT("PES002_BAG_END_IMPORTED_GARDEN instances=%d max=24 collision=none source=actual-FBX-PBR worldPlaced=1 visual=pending"),
+        BagEndGardenPlaced);
+    UE_LOG(LogTemp, Display,
+        TEXT("P1C01_CURATED_NATURE_WORLD families=%d grounded=%d max=116 collision=none async=1 missingGround=%d steepGround=%d PIE_device_visual=pending"),
         Families, Grounded, MissingGround, SteepGround);
 }
 
