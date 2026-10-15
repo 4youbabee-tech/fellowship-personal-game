@@ -1,3 +1,16 @@
+## 2026-10-16 PES-002 bounded living-world terrain follow candidate
+| Requirement | Actual state / evidence |
+|---|---|
+| Live canonical baseline | develop 1f5173f4285dac63d3bd0b0a602c9025aee3ba0c; Pre 38821850890 SUCCESS, UE 38821850726 SUCCESS before this candidate |
+| Visual M0 input | Four actual UE4.27.2 1280x720 Bag End PNGs in artifact 12013596745: HERO RENDER_OBSERVED, human visuals NOT ACCEPTED |
+| Ground-trace source | Director probes start/end locations for managed resident routines, but existing ShireAmbientNPC walking path changed XY only; missing Z progression (source root cause) |
+| M1 patch | Resident-managed ground walk Z follows clamped ground-probed A/B endpoint gradient; no new assets, traces, collision, story anchors, quest logic, runtime owners |
+| Focused source regressions | Existing Scripts/test_pes002_visual_contract.py extended; candidate static and Unreal CI required |
+| Exact-head UE4.27 compile/import/render | NOT RUN for new candidate (do not substitute prior 38821850726) |
+| Real route/collision/NavMesh and full PIE | NOT RUN / NOT ACCEPTED |
+| 8 GB / 2 GB DX11 720p >=30 FPS, user visuals | NOT RUN / NOT ACCEPTED |
+| PES control | PES-002 ACTIVE, PES-003 LOCKED; Gate 6/7 OPEN |
+
 ## 2026-10-16 develop handoff — selective PR #456 safety forward-port
 | Scope | State |
 |---|---|

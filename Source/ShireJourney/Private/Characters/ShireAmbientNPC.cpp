@@ -1548,6 +1548,34 @@ void AShireAmbientNPC::Tick(float DeltaSeconds)
 
     const FVector Direction = ToTarget.GetSafeNormal2D();
     AddActorWorldOffset(Direction * WalkSpeed * DeltaSeconds, true);
+
+    // LivingWorldDirector already probes both route endpoints for terrain height.
+    // This actor's SceneComponent root has no collision: a planar-only offset
+    // otherwise leaves managed residents hovering between unequal elevations.
+    // Follow the validated endpoint gradient with zero extra trace/tick systems.
+    // Bird, butterfly and rabbit paths returned above; named quest NPCs are
+    // governed by their existing CharacterMovement/capsule paths, not this fix.
+    if (ActorHasTag(TEXT("LivingWorldManaged")) && LivingWorldDirector.IsValid())
+    {
+        const FVector Segment = RoutinePointB - RoutinePointA;
+        const float PlanarLengthSq = Segment.X * Segment.X + Segment.Y * Segment.Y;
+        if (PlanarLengthSq > KINDA_SMALL_NUMBER &&
+            FMath::IsFinite(RoutinePointA.Z) && FMath::IsFinite(RoutinePointB.Z))
+        {
+            const FVector Current = GetActorLocation();
+            const float Fraction = FMath::Clamp(
+                ((Current.X - RoutinePointA.X) * Segment.X +
+                 (Current.Y - RoutinePointA.Y) * Segment.Y) / PlanarLengthSq,
+                0.0f, 1.0f);
+            const float ExpectedZ = FMath::Lerp(RoutinePointA.Z, RoutinePointB.Z, Fraction);
+            if (FMath::IsFinite(ExpectedZ) && !FMath::IsNearlyEqual(Current.Z, ExpectedZ, 0.5f))
+            {
+                SetActorLocation(FVector(Current.X, Current.Y, ExpectedZ),
+                    false, nullptr, ETeleportType::TeleportPhysics);
+            }
+        }
+    }
+
     SetActorRotation(FMath::RInterpTo(GetActorRotation(), Direction.Rotation(), DeltaSeconds, 5.0f));
     UpdateWalkAnimation(DeltaSeconds, true);
 }
