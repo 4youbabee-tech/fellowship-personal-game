@@ -208,14 +208,27 @@ def make_game_deform_rig(source_armature, bound_meshes):
         eb.matrix = rest
         eb.length = length
         eb.use_deform = True
+    # Blender EditBone parent assignment recalculates local rest transforms.
+    # Assign hierarchy FIRST and then restore each source world-rest matrix in
+    # ancestor-to-descendant order; never relax the matrix equality guard.
     for name, parent in parents.items():
         if parent is not None:
-            eb = data.edit_bones[name]
-            eb.parent = data.edit_bones[parent]
-            eb.use_connect = False
-            rest, length = saved_rest[name]
-            eb.matrix = rest
-            eb.length = length
+            data.edit_bones[name].parent = data.edit_bones[parent]
+            data.edit_bones[name].use_connect = False
+    restored = set()
+    def restore_source_rest(name):
+        if name in restored:
+            return
+        parent = parents[name]
+        if parent is not None:
+            restore_source_rest(parent)
+        eb = data.edit_bones[name]
+        rest, length = saved_rest[name]
+        eb.matrix = rest
+        eb.length = length
+        restored.add(name)
+    for name in parents:
+        restore_source_rest(name)
     bpy.ops.object.mode_set(mode="OBJECT")
     bpy.context.view_layer.update()
     for name, (rest, length) in saved_rest.items():
