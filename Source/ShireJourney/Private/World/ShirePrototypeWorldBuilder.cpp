@@ -1027,29 +1027,44 @@ void AShirePrototypeWorldBuilder::SpawnHobbitHole(const FVector& Location, float
             : FVector(2.45f, 2.10f, 2.10f) * Scale;
         SpawnShape(ProductionTurfMoundMesh, Location + MoundOffset,
             MoundScale, Turf, FRotator::ZeroRotator, !bBagEndHero);
-        UStaticMesh* FacadeMesh =
-            bBagEndHero && ProductionBagEndHeroFacadeMesh
-                ? ProductionBagEndHeroFacadeMesh
-                : ProductionHobbitFacadeMesh;
-        SpawnShape(FacadeMesh, Location + FVector(-88.0f * Scale, 0.0f, 0.0f),
-            FVector(1.0f) * Scale, Earth, FRotator::ZeroRotator, true);
+        // The hero OBJ has no authored material package in the unattended UE4
+        // lane yet. Showing it as a large, single brown panel flattened the
+        // Bag End silhouette in the real proof captures. Keep it resident for
+        // the authored-material intake, but let the rounded turf shell carry
+        // the exterior until its material slots have real PBR assignments.
+        if (!bBagEndHero)
+        {
+            SpawnShape(ProductionHobbitFacadeMesh,
+                Location + FVector(-88.0f * Scale, 0.0f, 0.0f),
+                FVector(1.0f) * Scale, Earth, FRotator::ZeroRotator, true);
+        }
         if (bBagEndHero)
         {
-            // Original, inexpensive readable green round entrance in front of
-            // imported facade. No animated door claim; story trigger unchanged.
-            const FVector DoorCentre = Location + FVector(-155.0f * Scale, 0.0f, 72.0f * Scale);
+            // Build only the small readable entrance against the turf shell.
+            // This preserves the Bag End collision/quest anchor while avoiding
+            // an oversized, free-standing disk and a second actor hierarchy.
+            const FVector DoorCentre = Location + FVector(-138.0f * Scale, 0.0f, 62.0f * Scale);
             SpawnShape(CylinderMesh, DoorCentre,
-                FVector(0.60f, 0.60f, 0.027f) * Scale,
+                FVector(0.42f, 0.42f, 0.027f) * Scale,
                 Timber, FRotator(90.0f, 0.0f, 0.0f), false);
             SpawnShape(CylinderMesh, DoorCentre + FVector(-3.5f * Scale, 0.0f, 0.0f),
-                FVector(0.53f, 0.53f, 0.025f) * Scale,
+                FVector(0.365f, 0.365f, 0.025f) * Scale,
                 DoorGreen, FRotator(90.0f, 0.0f, 0.0f), false);
-            SpawnShape(SphereMesh, DoorCentre + FVector(-6.0f * Scale, 28.0f * Scale, -2.0f * Scale),
-                FVector(0.045f) * Scale, FLinearColor(0.82f,0.65f,0.28f),
+            SpawnShape(SphereMesh, DoorCentre + FVector(-6.0f * Scale, 18.0f * Scale, -2.0f * Scale),
+                FVector(0.034f) * Scale, FLinearColor(0.82f,0.65f,0.28f),
                 FRotator::ZeroRotator, false);
+            for (const float WindowY : {-84.0f, 84.0f})
+            {
+                const FVector WindowCentre = Location + FVector(-121.0f * Scale, WindowY * Scale, 78.0f * Scale);
+                SpawnShape(CylinderMesh, WindowCentre,
+                    FVector(0.205f, 0.205f, 0.022f) * Scale,
+                    Timber, FRotator(90.0f, 0.0f, 0.0f), false);
+                SpawnShape(CylinderMesh, WindowCentre + FVector(-2.8f * Scale, 0.0f, 0.0f),
+                    FVector(0.165f, 0.165f, 0.020f) * Scale,
+                    WarmGlass, FRotator(90.0f, 0.0f, 0.0f), false);
+            }
             UE_LOG(LogTemp, Display,
-                TEXT("PES002_BAG_END_HERO_FACADE layout=west-facing asset=%s moundOffsetX=200 moundScale=2.92x2.85x2.34 moundCollision=none door=thin-green-round proof=pending; PES002_BAG_END_ROUND_FACADE_ORIENTATION=pitch90"),
-                ProductionBagEndHeroFacadeMesh ? TEXT("dedicated-curved") : TEXT("generic-fallback"));
+                TEXT("PES002_BAG_END_HERO_FACADE layout=west-facing turf-shell=active heroObj=material-intake-pending moundOffsetX=200 moundScale=2.92x2.85x2.34 moundCollision=none door=proportioned-green-round windows=2 proof=pending; PES002_BAG_END_ROUND_FACADE_ORIENTATION=pitch90"));
         }
     }
     else

@@ -7,14 +7,17 @@ class HumanWave2ContractTests(unittest.TestCase):
     def test_source_rig_repair_is_strict_and_blender_code_parses(self):
         # Guards the actual embedded Blender program, not only a README claim.
         stage=(Path(__file__).resolve().parents[1]/"Scripts"/"stage_p1c01_human_wave2.ps1").read_text(encoding="utf-8")
-        blender_source=stage.split("\n@'\n",1)[1].split("\n'@\n",1)[0]
+        blender_source=stage.split("\n@'\n",1)[1].split("\n'@ | Set-Content",1)[0]
         compile(blender_source, "normalize_human_wave2_embedded.py", "exec")
         for marker in (
             'parent_set(type="ARMATURE_AUTO", keep_transform=True)',
             "HUMAN_WAVE2_SKIN_REPAIR_BONE_HEAT_FAILED",
+            "HUMAN_WAVE2_SKIN_REPAIR_BOUND_CHARACTER_TOO_SMALL",
             "HUMAN_WAVE2_SKIN_REPAIR_INSUFFICIENT_DEFORM_WEIGHTS",
             "HUMAN_WAVE2_SKIN_REPAIR_BINDING_MISSING",
             "HUMAN_WAVE2_EXPORTED_SKIN_QC",
+            "bound_vertex_count = sum(len(m.data.vertices) for m in bound_meshes)",
+            "HUMAN_WAVE2_AUTO_REBIND_BOUND_CHARACTER",
             "EXPORTED_LIMB_SKIN_INFLUENCE_MISSING",
             '"auto_skin_rebuilt":skin_rebuilt',
         ):

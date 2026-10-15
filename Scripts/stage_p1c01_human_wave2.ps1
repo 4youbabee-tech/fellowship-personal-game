@@ -108,39 +108,47 @@ bound_meshes = [m for m in meshes if any(
 )]
 if not bound_meshes:
     raise RuntimeError("HUMAN_WAVE2_SKIN_REPAIR_NO_BOUND_MESH")
-primary_mesh = max(bound_meshes, key=lambda m: len(m.data.vertices))
-if len(primary_mesh.data.vertices) < 100:
-    raise RuntimeError("HUMAN_WAVE2_SKIN_REPAIR_PRIMARY_MESH_TOO_SMALL")
+# This CC0 base model is deliberately split into several small, already-bound
+# body components. A per-component size gate misclassified that valid family
+# before the actual skin/deformation checks ever ran. Treat it as one
+# armature-bound character only when the aggregate geometry is substantial;
+# the later exported-FBX bilateral influence gate remains mandatory.
+bound_vertex_count = sum(len(m.data.vertices) for m in bound_meshes)
+if bound_vertex_count < 1000:
+    raise RuntimeError("HUMAN_WAVE2_SKIN_REPAIR_BOUND_CHARACTER_TOO_SMALL")
 
-def original_def_influence(mesh):
+def original_def_influence(mesh_group):
     deform = {bone.name for bone in source_armature.data.bones if bone.use_deform}
-    names = {group.index: group.name for group in mesh.vertex_groups}
     weighted = set()
-    for vertex in mesh.data.vertices:
-        for membership in vertex.groups:
-            name = names.get(membership.group)
-            if membership.weight > 0.00001 and name in deform:
-                weighted.add(name)
+    for mesh in mesh_group:
+        names = {group.index: group.name for group in mesh.vertex_groups}
+        for vertex in mesh.data.vertices:
+            for membership in vertex.groups:
+                name = names.get(membership.group)
+                if membership.weight > 0.00001 and name in deform:
+                    weighted.add(name)
     return weighted
 
-source_def_weights = original_def_influence(primary_mesh)
+source_def_weights = original_def_influence(bound_meshes)
 skin_rebuilt = False
 # The baseline CC0 hero FBX reimport had only four weighted bones. Rebuild
 # the principal humanoid skin from the *existing licensed geometry/skeleton*,
 # not a substitute dummy rig. Blender bone-heat failures remain hard failures.
 if len(source_def_weights) < 13:
-    original_world = primary_mesh.matrix_world.copy()
-    for modifier in list(primary_mesh.modifiers):
-        if modifier.type == "ARMATURE":
-            primary_mesh.modifiers.remove(modifier)
-    primary_mesh.vertex_groups.clear()
-    primary_mesh.parent = None
-    primary_mesh.matrix_world = original_world
+    original_worlds = {mesh: mesh.matrix_world.copy() for mesh in bound_meshes}
+    for mesh in bound_meshes:
+        for modifier in list(mesh.modifiers):
+            if modifier.type == "ARMATURE":
+                mesh.modifiers.remove(modifier)
+        mesh.vertex_groups.clear()
+        mesh.parent = None
+        mesh.matrix_world = original_worlds[mesh]
     bpy.ops.object.select_all(action="DESELECT")
     source_armature.hide_set(False)
     source_armature.select_set(True)
-    primary_mesh.hide_set(False)
-    primary_mesh.select_set(True)
+    for mesh in bound_meshes:
+        mesh.hide_set(False)
+        mesh.select_set(True)
     bpy.context.view_layer.objects.active = source_armature
     try:
         result = bpy.ops.object.parent_set(type="ARMATURE_AUTO", keep_transform=True)
@@ -148,14 +156,14 @@ if len(source_def_weights) < 13:
         raise RuntimeError("HUMAN_WAVE2_SKIN_REPAIR_BONE_HEAT_FAILED") from exc
     if "FINISHED" not in result:
         raise RuntimeError("HUMAN_WAVE2_SKIN_REPAIR_PARENT_FAILED")
-    if not any(mod.type == "ARMATURE" and mod.object == source_armature
-               for mod in primary_mesh.modifiers):
+    if not all(any(mod.type == "ARMATURE" and mod.object == source_armature
+                   for mod in mesh.modifiers) for mesh in bound_meshes):
         raise RuntimeError("HUMAN_WAVE2_SKIN_REPAIR_BINDING_MISSING")
-    if len(original_def_influence(primary_mesh)) < 13:
+    if len(original_def_influence(bound_meshes)) < 13:
         raise RuntimeError("HUMAN_WAVE2_SKIN_REPAIR_INSUFFICIENT_DEFORM_WEIGHTS")
     skin_rebuilt = True
-    print("HUMAN_WAVE2_AUTO_REBIND_PRIMARY vertices=" +
-          str(len(primary_mesh.data.vertices)), flush=True)
+    print("HUMAN_WAVE2_AUTO_REBIND_BOUND_CHARACTER meshes=" +
+          str(len(bound_meshes)) + " vertices=" + str(bound_vertex_count), flush=True)
 
 for o in bpy.context.scene.objects: o.select_set(False)
 for o in armatures + meshes:
@@ -261,6 +269,8 @@ receipt={
     "zero_weight_vertex_count":zero_weight,"uv_layer_count":uv_layers,
     "finite_bounds":finite_bounds,"joint_name_coverage":coverage,
     "source_kind":args.source_kind,
+    "bound_character_mesh_count":len(bound_meshes),
+    "bound_character_vertex_count":bound_vertex_count,
     "auto_skin_rebuilt":skin_rebuilt,
     "source_def_weighted_bones_before_repair":len(source_def_weights),
     "exported_weighted_bone_count":len(influence),

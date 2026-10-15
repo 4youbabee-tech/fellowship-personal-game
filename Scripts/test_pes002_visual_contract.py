@@ -43,13 +43,14 @@ class PES002VisualContract(unittest.TestCase):
     def test_bag_end_hero_exterior_keeps_entrance_visible(self):
         cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
         self.assertIn('PES002_BAG_END_HERO_FACADE', cpp)
-        self.assertIn('ProductionBagEndHeroFacadeMesh', cpp)
+        self.assertIn('heroObj=material-intake-pending', cpp)
+        self.assertIn('if (!bBagEndHero)', cpp)
         self.assertIn('FVector(200.0f, 0.0f, 14.0f * Scale)', cpp)
         self.assertIn('FVector(2.92f, 2.85f, 2.34f) * Scale', cpp)
-        self.assertIn('asset=%s moundOffsetX=200', cpp)
-        self.assertIn('FVector(0.53f, 0.53f, 0.025f) * Scale', cpp)
+        self.assertIn('turf-shell=active heroObj=material-intake-pending moundOffsetX=200', cpp)
+        self.assertIn('FVector(0.365f, 0.365f, 0.025f) * Scale', cpp)
         self.assertIn('moundScale=2.92x2.85x2.34', cpp)
-        self.assertIn('door=thin-green-round', cpp)
+        self.assertIn('door=proportioned-green-round windows=2', cpp)
         self.assertIn('!bBagEndHero', cpp)
         self.assertIn('FVector(-2210.0f, -520.0f, 0.0f)', cpp)
         self.assertIn('FVector(-3070.0f, -520.0f, 285.0f)', cpp)
@@ -100,7 +101,7 @@ class PES002VisualContract(unittest.TestCase):
         # UE4 Engine Cylinder uses local Z as its axis; yaw rotates in XY and
         # cannot turn an upward-facing circle into an entrance on the west wall.
         # Hero, fallback, timber rims and window glass all need pitch instead.
-        self.assertEqual(hobbit.count("FRotator(90.0f, 0.0f, 0.0f)"), 6)
+        self.assertEqual(hobbit.count("FRotator(90.0f, 0.0f, 0.0f)"), 8)
         self.assertNotIn("FRotator(0.0f, 90.0f, 0.0f)", hobbit)
         self.assertIn("PES002_BAG_END_ROUND_FACADE_ORIENTATION=pitch90", hobbit)
 
