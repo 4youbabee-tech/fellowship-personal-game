@@ -17,6 +17,7 @@ class HumanWave2ContractTests(unittest.TestCase):
             "HUMAN_WAVE2_SKIN_REPAIR_BINDING_MISSING",
             "HUMAN_WAVE2_EXPORTED_SKIN_QC",
             "bound_vertex_count = sum(len(m.data.vertices) for m in bound_meshes)",
+            "m.parent == source_armature",
             "HUMAN_WAVE2_AUTO_REBIND_BOUND_CHARACTER",
             "EXPORTED_LIMB_SKIN_INFLUENCE_MISSING",
             '"auto_skin_rebuilt":skin_rebuilt',

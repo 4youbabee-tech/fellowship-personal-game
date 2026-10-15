@@ -103,8 +103,9 @@ import re
 if len(armatures) != 1:
     raise RuntimeError("HUMAN_WAVE2_SKIN_REPAIR_MULTIPLE_ARMATURES")
 source_armature = armatures[0]
-bound_meshes = [m for m in meshes if any(
-    mod.type == "ARMATURE" and mod.object == source_armature for mod in m.modifiers
+bound_meshes = [m for m in meshes if (
+    m.parent == source_armature or
+    any(mod.type == "ARMATURE" and mod.object == source_armature for mod in m.modifiers)
 )]
 if not bound_meshes:
     raise RuntimeError("HUMAN_WAVE2_SKIN_REPAIR_NO_BOUND_MESH")
