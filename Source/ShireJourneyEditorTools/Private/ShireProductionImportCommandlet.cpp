@@ -1072,10 +1072,13 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                 TEXT("NormalTexture"),
                 TEXT("/Engine/EngineMaterials/DefaultNormal.DefaultNormal"),
                 SAMPLERTYPE_Normal);
+            // A WhiteSquare default is sRGB/TC_Default: LinearColor is INVALID
+            // for that engine texture and produces an SM5 default-material fallback.
+            // Importing the physical curated ORM later promotes it to TC_Masks.
             UMaterialExpressionTextureSampleParameter2D* ORM = AddSample(
                 TEXT("ORMTexture"),
                 TEXT("/Engine/EngineResources/WhiteSquareTexture.WhiteSquareTexture"),
-                SAMPLERTYPE_LinearColor);
+                SAMPLERTYPE_Color);
             auto Channel = [&](bool R, bool G, bool B) -> UMaterialExpressionComponentMask*
             {
                 UMaterialExpressionComponentMask* Mask =
@@ -2130,6 +2133,92 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             RegistryMaterialAssets,
             RecoveredMaterialBindings,
             ImportedMaterialPackages.Num());
+    }
+
+    // PES-002 exact-runtime root cause (run 38812432393): the verified PBR
+    // parent shipped with an sRGB WhiteSquare default on a LinearColor sampler,
+    // and lacked instanced-mesh usage. D3D SM5 substituted default grey for
+    // the newly imported 92 curated HISM instances. The real, licensed
+    // project-authored Bark ORM is available AFTER the source import loop.
+    // Repair both newly created and previously persisted masters before
+    // saving: proper Masks texture/sampler, instanced support and real package.
+    if (UMaterial* VerifiedMaster = Cast<UMaterial>(VerifiedPBRParent))
+    {
+        const TCHAR* CuratedDefaultORMPath =
+            TEXT("/Game/Production/World/Shire/CuratedP1C01/Nature/Textures/T_Sh_Bark_ORM.T_Sh_Bark_ORM");
+        UTexture2D* CuratedDefaultORM =
+            FindObject<UTexture2D>(nullptr, CuratedDefaultORMPath);
+        if (!CuratedDefaultORM)
+        {
+            CuratedDefaultORM =
+                LoadObject<UTexture2D>(nullptr, CuratedDefaultORMPath);
+        }
+        if (CuratedDefaultORM)
+        {
+            UMaterialExpressionTextureSampleParameter2D* ORMParameter = nullptr;
+            int32 ORMParameterCount = 0;
+            for (UMaterialExpression* Expression : VerifiedMaster->Expressions)
+            {
+                UMaterialExpressionTextureSampleParameter2D* Candidate =
+                    Cast<UMaterialExpressionTextureSampleParameter2D>(Expression);
+                if (Candidate &&
+                    Candidate->ParameterName == FName(TEXT("ORMTexture")))
+                {
+                    ORMParameter = Candidate;
+                    ++ORMParameterCount;
+                }
+            }
+            if (ORMParameterCount != 1 || !ORMParameter)
+            {
+                ++Failed;
+                UE_LOG(LogTemp, Error,
+                    TEXT("P1C01_CURATED_PBR_ORM_NODE_INVALID count=%d"),
+                    ORMParameterCount);
+            }
+            else
+            {
+                // Physical source contains packed AO/Roughness/Metallic, not
+                // gamma-corrected albedo. Both the texture and material sampler
+                // must be Masks; do not change the BaseColor sample semantics.
+                CuratedDefaultORM->Modify();
+                CuratedDefaultORM->SRGB = false;
+                CuratedDefaultORM->CompressionSettings = TC_Masks;
+                CuratedDefaultORM->PostEditChange();
+                CuratedDefaultORM->MarkPackageDirty();
+                ImportedMaterialPackages.AddUnique(
+                    CuratedDefaultORM->GetOutermost());
+
+                VerifiedMaster->Modify();
+                ORMParameter->Modify();
+                ORMParameter->Texture = CuratedDefaultORM;
+                ORMParameter->SamplerType = SAMPLERTYPE_Masks;
+                VerifiedMaster->bUsedWithInstancedStaticMeshes = true;
+                VerifiedMaster->PostEditChange();
+                VerifiedMaster->MarkPackageDirty();
+                ImportedMaterialPackages.AddUnique(
+                    VerifiedMaster->GetOutermost());
+                const bool bContract =
+                    ORMParameter->Texture == CuratedDefaultORM &&
+                    ORMParameter->SamplerType == SAMPLERTYPE_Masks &&
+                    !CuratedDefaultORM->SRGB &&
+                    CuratedDefaultORM->CompressionSettings == TC_Masks &&
+                    VerifiedMaster->bUsedWithInstancedStaticMeshes;
+                UE_LOG(LogTemp, Display,
+                    TEXT("P1C01_CURATED_PBR_MASTER_REPAIR ready=%d orm=masks srgb=0 instanced=1 path=%s"),
+                    bContract ? 1 : 0, CuratedDefaultORMPath);
+                if (!bContract)
+                {
+                    ++Failed;
+                    UE_LOG(LogTemp, Error,
+                        TEXT("P1C01_CURATED_PBR_MASTER_REPAIR_FAILED"));
+                }
+            }
+        }
+        else
+        {
+            UE_LOG(LogTemp, Display,
+                TEXT("P1C01_CURATED_PBR_MASTER_REPAIR_DEFERRED reason=source-orm-package-missing"));
+        }
     }
 
     // OBJ import may create secondary material packages that UE4.27 does not

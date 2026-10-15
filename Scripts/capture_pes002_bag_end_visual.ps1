@@ -90,3 +90,14 @@ for ($view = 0; $view -lt 4; $view++) {
     if ($mean -lt 35.0) { throw ("PES002_LUMINANCE_TOO_DARK view={0} mean={1:N2}" -f $view,$mean) }
     Write-Host "PES002_BAG_END_CAPTURE_PRESENT view=$view width=$width height=$height sha256=$hash image=$destination camera=BagEnd visualAccepted=false traversal=unproven"
 }
+
+# Preserve four PNGs before rejecting incorrect curated PBR runtime shaders.
+# A bright screenshot with default-grey instanced foliage is still a failure.
+if (Select-String -Path $log -SimpleMatch -Pattern 'P1C01_CURATED_NATURE_WORLD families=9' -Quiet) {
+    $shaderDefects = @(Select-String -Path $log -Pattern 'M_P1C01VerifiedPBR.*Failed to compile Material|M_P1C01VerifiedPBR.*missing bUsedWithInstancedStaticMeshes')
+    if ($shaderDefects.Count -gt 0) {
+        $issues = ($shaderDefects | ForEach-Object { $_.Line.Trim() }) -join ' | '
+        throw "PES002_CURATED_PBR_DEFAULT_SHADER_FALLBACK count=$($shaderDefects.Count) issues=$issues"
+    }
+    Write-Host "PES002_CURATED_PBR_RUNTIME_SHADER_NO_FALLBACK_PASS families=9"
+}

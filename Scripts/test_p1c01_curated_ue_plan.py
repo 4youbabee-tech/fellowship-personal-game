@@ -368,6 +368,28 @@ class CuratedPlanTests(unittest.TestCase):
                              {item['surface'] for item in tree['assignments']})
         self.assertFalse(result['visual_accepted'])
 
+    def test_blender_authored_green_leaf_and_bark_identity_is_proven(self):
+        # Exact exported names in Tools/CloudAssetBuild/blender_nature.py and
+        # actual 5943f38 UE4 import report: M_Sh_Bark / M_Sh_Leaf.
+        engine = MockEngine(self.root)
+        initial = engine.EditorAssetLibrary.load_asset
+        def load(path):
+            mesh = initial(path)
+            if '/Nature/Meshes/SM_Sh_tree_' in path and len(mesh.materials) == 1:
+                mesh.materials = [None, None]
+                mesh.get_editor_property = lambda key: (
+                    [MockSlot('M_Sh_Bark'), MockSlot('M_Sh_Leaf')]
+                    if key == 'static_materials' else None)
+            return mesh
+        engine.EditorAssetLibrary.load_asset = load
+        result = editor.editor_apply(engine, self.root)
+        self.assertEqual(4, result['tree_material_verified_families'])
+        self.assertEqual(0, result['tree_material_unresolved_families'])
+        self.assertTrue(all(len(row['assignments']) == 2
+                            for row in result['tree_material_assignments']))
+        self.assertFalse(result['visual_accepted'])
+        self.assertFalse(result['device_tested'])
+
     def test_unlabelled_tree_remains_held_without_pbr_overwrite(self):
         engine = MockEngine(self.root)
         initial = engine.EditorAssetLibrary.load_asset
