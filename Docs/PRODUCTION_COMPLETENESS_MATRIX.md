@@ -1,3 +1,16 @@
+## PES-002 Bag End unique surface-art funnel — baseline a92d3971
+
+| Deliverable | Baseline genuine evidence | This source-art candidate | Status |
+| --- | --- | --- | --- |
+| Roof-wall mesh / collision | Run 38789500278 import PASS, 2,780 triangles, 7 slots; collision/story anchors untouched | Same geometry and UVs; roof material rename Grass -> BagEndTurf; importer 7-slot hard gate updated | Static source candidate; new engine NOT RUN |
+| Authored facade albedos | Old flat plaster / global Grass and dark door in real four-view images | 512px original Plaster/Turf/Door/Glass PNG, fixed seed and reproducible generator, MTL textures bound by existing UE4 importer | SOURCE_AVAILABLE/local source QC; no new UE import |
+| Existing non-Bag-End Grass | Registered original MTL Grass and TX_ShGrass.tga | Left unchanged; unique BagEndTurf is hero-only | Preserved by source test |
+| Unreal machine acceptance | a92d397 Run 38789500278 PASS 4 pictures artifact 12001805029, VISUAL REJECTED | Must prove new map textures in UE actual MI and all four rendered views | NOT RUN |
+| Frodo human technical | Run 38789500373 ALL JOBS PASS; 90 bones / 5 hierarchy + 5 stress tests PASS | Separate source-only wave, not changed in art candidate | STATIC DEFORMATION PASS; no visual or runtime |
+| World traversal/PIE/nav/collision | No exact route proof | No modifications | NOT RUN |
+| DX11 720p >=30 FPS, RAM8GB VRAM~2GB | No measured device data | Worst-case four RGBA8 512px ~4MiB excluding mips; no claim of device FPS | NOT RUN |
+| Owner visual & PES closeout | Existing screenshots rejected | Requires new capture and review | NOT ACCEPTED; PES-002 OPEN / PES-003 LOCKED |
+
 ## 2026-10-15 targeted Blender source-root correction after ee64aab
 - Exact HEAD ee64aab, Pre-Unreal 38789083890 PASS (including six pure hierarchy tests). Hosted Human Wave2 38789084195 FAIL in Blender normalization before FBX: `GAME_RIG_REST_CHANGED DEF-hips` from `p1c01_game_deform_export.py` line 224; import/deformation steps SKIPPED. Actual log proves this is EDIT BONE parent / rest matrix sequencing, not a missing source or a reason to waive rest-pose protection. PowerShell downstream missing FBX is an effect, not the root cause.
 - Corrective source-only candidate: set the new deform hierarchy first and then restore exact source world rest matrices in parent-before-child order, retaining the strict per-bone matrix equality and max 1% vertex rest-skin displacement checks. Do not reduce tolerances, invent animations or repeat source FBX without changed code.

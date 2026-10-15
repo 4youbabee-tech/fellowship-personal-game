@@ -3148,8 +3148,8 @@ vt -0.150000 0.160000
 vt 0.100000 0.130000
 f 132/389 66/390 33/391
 f 132/389 33/391 99/392
-g hero_Grass
-usemtl Grass
+g hero_BagEndTurf
+usemtl BagEndTurf
 s 1
 vt -0.150000 0.160000
 vt 0.179167 0.140000

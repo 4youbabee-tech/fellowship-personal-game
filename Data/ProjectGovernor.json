@@ -9214,7 +9214,7 @@
       "restrictions": "PES-002 OPEN, PES-003 LOCKED; render-observed old asset is NOT visual accepted; no PIE/device/FPS proof for correction"
     },
     "current_repair_candidate": {
-      "stage": "LOCAL_SOURCE_TOPOLOGY_PASS_EXACT_HEAD_ENGINE_AND_VISUAL_PENDING",
+      "stage": "UE4_IMPORTED_AND_FOUR_VIEW_RENDER_OBSERVED_VISUALLY_REJECTED",
       "scope": "PR477 PES-002 Bag End wall/turf seam and roof apron root repair, no new PES runtime",
       "baseline_head": "8058f6a7025145e1e6bb98bb624e235d330e1d9b",
       "mesh_sha256": "0ff731e144f5b6667395a005dcd2c86585f780cb57b9f67bf11e7bdfa836e35d",
@@ -9231,7 +9231,19 @@
       "pie_traversal": "NOT_RUN",
       "target_device_720p_fps": "NOT_RUN",
       "rollback": "Revert one cohesive PR477 source/test/docs batch if verified engine import/visual breaks; preserve quest collisions and unrelated accepted assets",
-      "method_doc": "Docs/PES002_PROFESSIONAL_ASSET_PRODUCTION_METHOD.md"
+      "method_doc": "Docs/PES002_PROFESSIONAL_ASSET_PRODUCTION_METHOD.md",
+      "previous_source_stage": "LOCAL_SOURCE_TOPOLOGY_PASS_EXACT_HEAD_ENGINE_AND_VISUAL_PENDING",
+      "latest_exact_head_proof": {
+        "head": "a92d397150ce903ce330175ea3afa5bcb0a3b37e",
+        "ue_run": 38789500278,
+        "visual_artifact": 12001805029,
+        "cpp": "PASS",
+        "import": "PASS",
+        "four_1280x720_captures": "PASS",
+        "visual": "REJECTED",
+        "traversal": "NOT_RUN",
+        "target_device_performance": "NOT_RUN"
+      }
     },
     "previous_observed_render_2026_10_15": {
       "run_id": 38727751427,
@@ -9422,6 +9434,38 @@
       }
     ],
     "method_doc": "Docs/PES002_PRODUCTION_ACCELERATION_DECISIONS.md",
-    "evidence_boundary": "8058f6a had real UE build/import/startup and 4 images, but visually rejected; new wall/roof source patch is locally static-validated only. No new UE/PIE/device/visual acceptance."
+    "evidence_boundary": "8058f6a had real UE build/import/startup and 4 images, but visually rejected; new wall/roof source patch is locally static-validated only. No new UE/PIE/device/visual acceptance.",
+    "visual_surface_wave_2026_10_15": {
+      "stage": "ORIGINAL_ART_SOURCE_QC_COMPLETE_EXACT_HEAD_UNREAL_NOT_RUN",
+      "active_pes": "PES-002",
+      "integration_pr": 477,
+      "baseline_head": "a92d397150ce903ce330175ea3afa5bcb0a3b37e",
+      "goal": "Hero-only authored 512px PNG albedo for plaster/turf/door/glass without altering world shared Grass",
+      "source_files": [
+        "Tools/CloudAssetBuild/generate_bag_end_hero_materials.py",
+        "SourceAssets/Production/World/Shire/TX_BagEndPlaster.png",
+        "SourceAssets/Production/World/Shire/TX_BagEndTurf.png",
+        "SourceAssets/Production/World/Shire/TX_BagEndDoor.png",
+        "SourceAssets/Production/World/Shire/TX_BagEndGlass.png"
+      ],
+      "png_total_bytes": 851846,
+      "graphics_texture_count": 4,
+      "source_resolution_px": 512,
+      "material_slot_count": 7,
+      "material_identity_swap": "In Bag End hero facade only: Grass -> BagEndTurf",
+      "shared_world_grass_modified": false,
+      "source_qc": "Generator deterministic, four strict CRC PNGs, UV/material contract, local tests passed",
+      "import_and_render_for_new_source": "NOT_RUN",
+      "source_only_pbr_note": "Albedo maps plus original scalar roughness; not claimed packed NormalDX/ORM material acceptance",
+      "runtime_writers": "No extra writer or new runtime session",
+      "scope_guard": "No collision/anchors/nav/NPC/streaming change; no PES-003 until Gate6/7",
+      "acceptance_blockers": [
+        "new exact-head Unreal MTL/texture bind and 4-view visual proof",
+        "PES002 PIE/collision/NavMesh/traversal",
+        "DX11 720p target FPS>=30 and VRAM",
+        "owner visual signoff"
+      ],
+      "rollback": "One coherent PR477 source+docs batch revert on failed package/visual review"
+    }
   }
 }

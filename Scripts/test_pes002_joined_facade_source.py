@@ -28,7 +28,7 @@ def scan(path: Path):
             current = line.split()[1]
         elif line.startswith("s "):
             smooth = line.split()[1]
-            if current == "Grass" and smooth != "1":
+            if current == "BagEndTurf" and smooth != "1":
                 raise AssertionError("PES002_TURF_SMOOTHING_MISSING")
         elif line.startswith("f "):
             assert current is not None
@@ -55,14 +55,14 @@ class JoinedBagEndSourceTest(unittest.TestCase):
             subprocess.run([sys.executable,str(GENERATOR),"--output",str(output)],check=True)
             self.assertEqual(OBJ.read_bytes(),output.read_bytes())
         verts,faces = scan(OBJ)
-        self.assertEqual(set(faces), {"BagEndPlaster","Grass","Stone","Wood","BagEndDoor","BagEndBrass","BagEndGlass"})
+        self.assertEqual(set(faces), {"BagEndPlaster","BagEndTurf","Stone","Wood","BagEndDoor","BagEndBrass","BagEndGlass"})
         self.assertLessEqual(sum(map(len,faces.values())),3000)
         self.assertGreater(sum(map(len,faces.values())),1000)
         self.assertLessEqual(len(verts),3000)
 
     def test_continuous_facade_and_roof_share_exact_crown_vertices(self):
         verts, faces = scan(OBJ)
-        shared = set(i for f in faces["BagEndPlaster"] for i in f) & set(i for f in faces["Grass"] for i in f)
+        shared = set(i for f in faces["BagEndPlaster"] for i in f) & set(i for f in faces["BagEndTurf"] for i in f)
         crown = [i for i in range(1,len(verts)) if abs(verts[i][0]+15) < 1e-4 and
                  abs(verts[i][1]) <= 126.0001 and verts[i][2] >= 15.999]
         self.assertEqual(len(crown),33)
@@ -74,7 +74,7 @@ class JoinedBagEndSourceTest(unittest.TestCase):
                 if a in crown and b in crown:
                     front_edges.add(tuple(sorted((a,b))))
         roof_edges = set()
-        for f in faces["Grass"]:
+        for f in faces["BagEndTurf"]:
             for a,b in ((f[0],f[1]),(f[1],f[2]),(f[2],f[0])):
                 if a in crown and b in crown:
                     roof_edges.add(tuple(sorted((a,b))))
@@ -83,7 +83,7 @@ class JoinedBagEndSourceTest(unittest.TestCase):
 
     def test_lateral_aprons_buried_and_back_terminates_under_ground(self):
         verts, faces = scan(OBJ)
-        grass = faces["Grass"]
+        grass = faces["BagEndTurf"]
         gverts = {i for tri in grass for i in tri}
         buried_left = [i for i in gverts if verts[i][1] < -135 and verts[i][2] <= -11]
         buried_right = [i for i in gverts if verts[i][1] > 135 and verts[i][2] <= -11]

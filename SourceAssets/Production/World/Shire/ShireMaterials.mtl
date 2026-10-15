@@ -63,25 +63,34 @@ Ks 0.04 0.04 0.03
 Ns 14
 map_Kd TX_ShDoorGreen.tga
 
-# Original PES-002 finishes; reused production texture, no external asset rights.
+# Bag End unique, original project-authored albedos; all other Shire finishes untouched.
 newmtl BagEndPlaster
-Kd 0.66 0.52 0.34
+Kd 0.83 0.78 0.72
 Pr 0.91
 Pm 0.0
 Ks 0.03 0.03 0.03
+map_Kd TX_BagEndPlaster.png
+
+newmtl BagEndTurf
+Kd 0.78 0.88 0.72
+Pr 0.94
+Pm 0.0
+Ks 0.025 0.025 0.02
+map_Kd TX_BagEndTurf.png
 
 newmtl BagEndDoor
-Kd 0.055 0.20 0.085
-Pr 0.54
+Kd 0.63 0.77 0.62
+Pr 0.67
 Pm 0.0
 Ks 0.04 0.04 0.04
-map_Kd TX_ShWood.tga
+map_Kd TX_BagEndDoor.png
 
 newmtl BagEndGlass
-Kd 0.17 0.22 0.19
+Kd 0.52 0.56 0.62
 Pr 0.18
 Pm 0.0
 Ks 0.08 0.08 0.08
+map_Kd TX_BagEndGlass.png
 
 newmtl BagEndBrass
 Kd 0.65 0.43 0.14

@@ -1811,7 +1811,7 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                 // Exact package identity alone missed the earlier brown-panel defect.
                 // Every authored finish must survive import with a real material.
                 const TArray<FName> RequiredSlots = {
-                    TEXT("BagEndPlaster"), TEXT("Grass"), TEXT("Stone"), TEXT("Wood"),
+                    TEXT("BagEndPlaster"), TEXT("BagEndTurf"), TEXT("Stone"), TEXT("Wood"),
                     TEXT("BagEndDoor"), TEXT("BagEndBrass"), TEXT("BagEndGlass")
                 };
                 // UE4 reimport retains unused historical slots (Epic UE-60152).

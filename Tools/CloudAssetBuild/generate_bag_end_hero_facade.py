@@ -99,7 +99,7 @@ class Obj:
         for material, faces in grouped.items():
             # Smooth the continuous turf only; stone/wood/plaster retain sharp edges.
             lines.extend((f"g hero_{material}", f"usemtl {material}",
-                          "s 1" if material == "Grass" else "s off"))
+                          "s 1" if material == "BagEndTurf" else "s off"))
             for face in faces:
                 vertices = [self.vertices[i - 1] for i in face]
                 a, b, c = vertices[:3]
@@ -162,7 +162,7 @@ def build(path: Path) -> None:
     for j in range(12):
         grass_faces.append((rows[j][0], skirts[j][0], skirts[j+1][0], rows[j+1][0]))
         grass_faces.append((rows[j][-1], rows[j+1][-1], skirts[j+1][1], skirts[j][1]))
-    obj.add_group("Grass", grass_faces)
+    obj.add_group("BagEndTurf", grass_faces)
 
     obj.cuboid("Stone", -27, 18, -126, 126, 0, 14)
     obj.ring("Stone", 0, 62, 49, 57, -29, -14, 40)
