@@ -13,6 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'Scripts'))
 from p1c01_curated_ue_plan import build_plan
+from curated_tree_surface_contract import TREE_FAMILIES, TREE_SURFACE_GROUPS, resolve_tree_slots
 
 # Exact, source-authored, single-surface bindings only. Tree canopies/bark and
 # architecture must keep their existing slots until their slot identities are
@@ -180,7 +181,59 @@ def finish_materials(unreal, root, plan):
                       'material': assigned.get_path_name()})
     if len(bound) + len(held_slots) != 8:
         raise RuntimeError('P1C01_NATURE_SCOPE_MISMATCH')
-    return material_report, bound, held_slots
+
+    # Never guess tree canopy and trunk sections from list positions.
+    # Bind exactly source-named Bark + one Green/Autumn leaf finish per tree.
+    tree_bound, tree_held = [], []
+    for family in TREE_FAMILIES:
+        mesh_id = 'Nature/SM_Sh_' + family
+        matches = [m for m in plan['mesh_families'] if m['id'] == mesh_id]
+        if len(matches) != 1:
+            raise RuntimeError('P1C01_TREE_SOURCE_IDENTITY_MISSING:' + mesh_id)
+        mesh_path = matches[0]['asset_path']
+        mesh = unreal.EditorAssetLibrary.load_asset(mesh_path)
+        if not mesh or not isinstance(mesh, unreal.StaticMesh):
+            raise RuntimeError('P1C01_TREE_ASSET_MISSING:' + mesh_path)
+        original_slots = mesh.get_editor_property('static_materials')
+        count = unreal.EditorStaticMeshLibrary.get_number_materials(mesh)
+        if count < 1 or len(original_slots) != count:
+            raise RuntimeError('P1C01_TREE_SLOT_TABLE_INVALID:' + mesh_path)
+        labels = [{
+            'index': i,
+            'slot_name': str(slot.get_editor_property('material_slot_name')),
+            'imported_name': str(slot.get_editor_property('imported_material_slot_name')),
+        } for i, slot in enumerate(original_slots)]
+        resolved = resolve_tree_slots(labels)
+        if resolved is None:
+            tree_held.append({'mesh': mesh_path, 'reason': 'BARK_LEAF_SLOTS_UNPROVEN',
+                              'observed_slots': labels})
+            print('P1C01_TREE_PBR_HELD mesh=' + mesh_path +
+                  ' slots=' + json.dumps(labels, sort_keys=True), flush=True)
+            continue
+        assignments = []
+        for surface, index in sorted(resolved.items()):
+            group = TREE_SURFACE_GROUPS[surface]
+            material = instance_by_group.get(group)
+            if not material:
+                raise RuntimeError('P1C01_TREE_PBR_SOURCE_GROUP_MISSING:' + group)
+            mesh.set_material(index, material)
+            if (not mesh.get_material(index) or
+                    mesh.get_material(index).get_path_name() != material.get_path_name()):
+                raise RuntimeError('P1C01_TREE_PBR_ASSIGNMENT_FAILED:' + mesh_path + ':' + surface)
+            assignments.append({'surface': surface, 'slot': index,
+                                'material': material.get_path_name()})
+        if not unreal.EditorAssetLibrary.save_loaded_asset(mesh, only_if_is_dirty=False):
+            raise RuntimeError('P1C01_TREE_PBR_SAVE_FAILED:' + mesh_path)
+        require_real_package(unreal, mesh_path)
+        reloaded = unreal.EditorAssetLibrary.load_asset(mesh_path)
+        for item in assignments:
+            material = reloaded.get_material(item['slot'])
+            if not material or material.get_path_name() != item['material']:
+                raise RuntimeError('P1C01_TREE_PBR_NOT_PERSISTED:' + mesh_path + ':' + item['surface'])
+        tree_bound.append({'mesh': mesh_path, 'assignments': assignments})
+    if len(tree_bound) + len(tree_held) != len(TREE_FAMILIES):
+        raise RuntimeError('P1C01_TREE_PBR_CARDINALITY_MISMATCH')
+    return material_report, bound, held_slots, tree_bound, tree_held
 
 
 
@@ -258,7 +311,7 @@ def editor_apply(unreal, root=ROOT):
         require_real_package(unreal, row['asset'])
     for row in texture_rows:
         require_real_package(unreal, row['asset'])
-    material_rows, nature_bindings, held_nature_slots = finish_materials(unreal, root, plan)
+    material_rows, nature_bindings, held_nature_slots, tree_bindings, tree_held = finish_materials(unreal, root, plan)
     report = {
         'schema_version': 1,
         'chapter': 'P1C01', 'mode': 'UE4_EDITOR_CURATED_POSTIMPORT_OBSERVATION',
@@ -275,6 +328,11 @@ def editor_apply(unreal, root=ROOT):
         'unresolved_nature_slot_observations': held_nature_slots,
         'material_observations': material_rows,
         'nature_material_assignments': nature_bindings,
+        'tree_material_family_count': len(TREE_FAMILIES),
+        'tree_material_verified_families': len(tree_bindings),
+        'tree_material_unresolved_families': len(tree_held),
+        'tree_material_assignments': tree_bindings,
+        'tree_material_held_review': tree_held,
         'imported_authored_sidecar_lods': sum(x['lod_count'] - 1 for x in outcomes),
         'configured_packed_textures': len(texture_rows),
         'external_held_for_license': plan['counts']['license_held_external'],
@@ -290,11 +348,13 @@ def editor_apply(unreal, root=ROOT):
     }
     if (len(outcomes) != 34 or report['imported_authored_sidecar_lods'] != 46 or
         len(texture_rows) != 63 or len(material_rows) != 21 or
-        len(nature_bindings) + len(held_nature_slots) != 8):
+        len(nature_bindings) + len(held_nature_slots) != 8 or
+        len(tree_bindings) + len(tree_held) != 4):
         raise RuntimeError('P1C01_UNREAL_POSTIMPORT_COUNTS_UNEXPECTED')
     report_path.write_text(json.dumps(report, sort_keys=True, indent=2) + '\n', encoding='utf-8')
     print('P1C01_CURATED_EDITOR_POSTIMPORT_PASS meshes=34 authoredLods=46 textures=63 material_instances=21 nature_bound=%d nature_held=%d' %
           (len(nature_bindings), len(held_nature_slots)))
+    print('P1C01_CURATED_TREE_PBR_RESULT verified=%d held=%d' % (len(tree_bindings), len(tree_held)))
     print('P1C01_CURATED_EDITOR_POSTIMPORT_RECEIPT=' + str(report_path))
     print('BOUNDARY P1C01_EDITOR_ASSET_MATERIAL_ONLY_NOT_COLLISION_WORLD_PIE_DEVICE_VISUAL_ACCEPTANCE')
     return report

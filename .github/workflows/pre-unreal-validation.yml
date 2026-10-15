@@ -187,7 +187,6 @@ jobs:
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_source_contracts.py" -v
 
       - name: Verify curated Shire original LOD and packed texture bridge (offline mock only)
-        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_p1c01_curated_ue_plan.py" -v
       - name: Test P1C01 multi-zone curated nature runtime evidence contract
