@@ -15,7 +15,7 @@ _Last verified: 2026-10-15; source of truth: Data/ProjectGovernor.json; this fil
 - Bag End real screenshots historically reviewed and REJECTED. No current visual/traversal/PIE/device/30FPS acceptance. No saved terrain .umap proof.
 
 ## Immediate critical blockers
-1. Bag End image quality: primitive/occluded silhouettes, darkness diagnosis needs fixed Lit/BaseColor/WorldNormal evidence; no cause assumed without matched captures.
+1. Exact-head faaee053 Windows capture FAILED because fixed 86-second watcher killed UE4 during initial RHI/shader DDC start; candidate fail-closed readiness polling pending new engine proof. Bag End image quality: primitive/occluded silhouettes, darkness diagnosis needs fixed Lit/BaseColor/WorldNormal evidence; no cause assumed without matched captures.
 2. Frodo rig: insufficient exported bilateral limb/head skin influence and failed hosted source runs; preserve rigorous deformation guard, no premature promotion.
 3. P1C01: real saved/reopened .umap, geographic route, river crossing collision/NavMesh and 720p aerial screenshot NOT PROVEN.
 4. Low-spec profiling and 30 FPS are UNMEASURED on target hardware.

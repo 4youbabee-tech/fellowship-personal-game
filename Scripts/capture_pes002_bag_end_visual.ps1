@@ -1,4 +1,4 @@
-param([int]$WaitSeconds = 86)
+param([int]$StartupTimeoutSeconds = 240, [int]$CaptureSettleSeconds = 12)
 $ErrorActionPreference = "Stop"
 $root = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $exe = "C:\Program Files\Epic Games\UE_4.27\Engine\Binaries\Win64\UE4Editor.exe"
@@ -12,8 +12,29 @@ $log = Join-Path $proof "PES002VisualEditor.log"
 $arguments = @('"' + $project + '"', '-game', '-windowed', '-ResX=1280', '-ResY=720', '-NoSplash', '-log', '-PES002VisualProof', '-abslog="' + $log + '"')
 $proc = Start-Process -FilePath $exe -ArgumentList ($arguments -join ' ') -PassThru
 try {
-    Start-Sleep -Seconds $WaitSeconds
+    # UE4.27 may spend over a minute rebuilding its local shader/DDC state on
+    # the 8 GB runner. Wait for the last of FOUR real screenshot requests,
+    # not a hard-coded process lifetime; never fall back to an older PNG.
+    $deadline = (Get-Date).AddSeconds($StartupTimeoutSeconds)
+    $ready = $false
+    while ((Get-Date) -lt $deadline) {
+        $proc.Refresh()
+        if ($proc.HasExited) {
+            throw "PES002_EDITOR_EXITED_EARLY exitCode=$($proc.ExitCode); inspect $log"
+        }
+        if ((Test-Path -LiteralPath $log) -and
+            (Select-String -Path $log -SimpleMatch -Pattern 'PES002_SCREENSHOT_REQUESTED target=BagEnd view=3' -Quiet)) {
+            $ready = $true
+            break
+        }
+        Start-Sleep -Seconds 3
+    }
+    if (-not $ready) {
+        throw "PES002_CAPTURE_STARTUP_TIMEOUT seconds=$StartupTimeoutSeconds; inspect $log"
+    }
+    Start-Sleep -Seconds $CaptureSettleSeconds
 } finally {
+    $proc.Refresh()
     if (!$proc.HasExited) { Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue }
 }
 if (!(Test-Path $log) -or !(Select-String -Path $log -Pattern 'PES002_CAPTURE_CAMERA_READY target=BagEnd' -Quiet)) {
