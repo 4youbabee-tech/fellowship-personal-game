@@ -9177,6 +9177,14 @@
       "trigger_semantics": "GitHub paths-ignore skips ONLY if ALL changed files match docs/md filters; mixed changes still trigger CI",
       "full_audits": "workflow_dispatch chapter_closeout_audits=true remains available",
       "status": "CANDIDATE_PENDING_EXACT_HEAD"
+    },
+    "specialist_workflow_throttle_2026_10_15": {
+      "owner_authorized": true,
+      "status": "CANDIDATE_PENDING_GITHUB_VERIFICATION",
+      "root_cause": "GitHub pull_request paths evaluated the accumulated PR diff; old character and shared code files retrigger unrelated heavy workflows on every small PR push",
+      "changes": "Switch five specialist source/rig workflows to incremental push path filters on noncanonical branches; preserve manual dispatch for four source/rig workflows; limit cloud 28-region build to generator/region source paths, not all CloudAssetBuild; exclude shared C++ import path from dedicated rig workflows",
+      "safety": "Retain required Pre-Unreal and Unreal compile/import/visual/collision/PIE/device gates, one writer, Gate 6/7, exact SHA evidence, per-source owner gates at point of promotion",
+      "known_limit": "Changes on feature branch still require specialist manual dispatch if path-trigger cannot safely cover new dependency; branch pushes to develop/main remain standard canonical validation."
     }
   },
   "pes_single_cohesive_batch_policy_2026_10_14": {
