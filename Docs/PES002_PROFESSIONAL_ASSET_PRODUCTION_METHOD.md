@@ -1,3 +1,11 @@
+## 2026-10-15 source-topology repair follow-up — M0 and cheap proof
+
+- Newer exact-head 8058f6a: REAL 4-view UE4 images at artifact 11989868346, archive SHA256 `4c5a0ac5e7cd50c0a628281080f0baef7b88c58db130792388ff8a9a122d6895`, reveal a separate roof/earthen shell, exposed oblique side edges, and stair-stepped plaster/roof seam despite a green Unreal Build run. Prior section counts were Brass=48, Door=24, Glass=192, Plaster=384, Grass=552, Stone=752, Wood=752, sum 2704 triangles. Keep actual section-coverage verification.
+- Fixed topology method: one continuous profile sampled identically at roof/wall joint; share indexed vertex IDs (not just coincident XYZ), test all 32 crown edges, add tapered below-grade side apron skirts and rear underlay, preserve 7 material identities and deterministic authored planar UVs, enable grass-only smooth shading. One new generated OBJ = 2780 triangles; no new physical collision, actors, texture memory or quest anchor changes. Camera and light stay unchanged. Existing material import path is reused.
+- M0 input rights: original project-generated procedural OBJ/generator + seven existing materials, no restricted assets downloaded or shipped. Existing UE path unchanged. Local tests: `python -m unittest discover -s Scripts -p test_pes002_joined_facade_source.py -v` 3 PASS. CI source test is a focused cheap gate; UE4.27 import, all four rendered views, actual collision/PIE and target-device DX11/720p FPS+VRAM are still NOT RUN for this changed mesh.
+- Reference hierarchy: `Data/ProjectGovernor.json` > Gates/PES > supplied 03 World Locations and 10 visual atlas > Epic UE4.27 static mesh/material pipeline > Blender OBJ normals/smoothing. Rigify game-skeleton export must remain separate from decorative geometry; exact Wave 2 run 38765635822 static stress failure is not repaired by wall source changes.
+- Revert coordinated source/test/docs candidate if material section import, camera framing, roof/terrain integration or other production acceptance regresses. Screenshots are required, with owner visual judgment; luminance is not acceptance.
+
 # PES-002 — Professional asset production method (UE4.27.2)
 
 **Status:** professional reference applied to targeted source import repair; not a claim of rendered acceptance.

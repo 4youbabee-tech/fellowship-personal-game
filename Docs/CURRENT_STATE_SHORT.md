@@ -5,13 +5,18 @@ _Last verified: 2026-10-15; source of truth: Data/ProjectGovernor.json; this fil
 - Project: Shire Journey, UE 4.27.2 C++, Windows/DX11, 720p, i7 6th gen / 8 GB RAM / ~2 GB VRAM / target >=30 FPS.
 - Canonical integration: `develop` at `03df3c34a7a5faa47a69bf882edc0a7afd01000e` as checked 2026-10-15.
 - Active runtime: **PES-002 Bag End Exterior, OPEN**; PES-001 bounded import/placement complete, NOT visually accepted; PES-003+ runtime locked by Gate 6/7.
-- Active candidate: [PR #477](https://github.com/4youbabee-tech/fellowship-personal-game/pull/477), `fix/pes002-bag-end-lighting-20261014`, verified pre-update HEAD `c92e9404b92de1251646b0e6c71b411b2f5cb16f`.
+- Active candidate: [PR #477](https://github.com/4youbabee-tech/fellowship-personal-game/pull/477), `fix/pes002-bag-end-lighting-20261014`, verified pre-repair HEAD `8058f6a7025145e1e6bb98bb624e235d330e1d9b`.
 - One Unreal Writer, one Warehouse Writer, one active runtime PES, one coherent PES PR; do not auto-merge or cancel a running writer.
 
 ## Proven evidence (specific HEAD, never extrapolate to successor)
 - `d5f37b5e61722c4828170a729c5ae0f37aab1f58`: Pre-Unreal 38727751411 PASS; Windows Unreal 38727751427 PASS for build/import/automation/startup/four 720p captures; artifact 11969310933. All four inspected by assistant: visually rejected, not owner acceptance.
 - Latest c92e940: Frodo locomotion 38755223105 PASS; Wave2 38755222797 source + UE skeletal import PASS, hierarchy deformation FAIL. Unreal 38755222958 compile/import/startup PASS, capture FAIL; stale proof log race repair in current candidate. No accepted skin/deformation.
 - Historical 90 restored UE assets and 48 placed Cloud138 instances are PES-001 evidence only.
+
+## 2026-10-15 M0/M4 source-art patch currently pending GitHub exact-head validation
+- On baseline 8058f6a: Pre-Unreal 38765636036 PASS, Unreal 38765635848 PASS with real four views (artifact 11989868346), VISUAL REJECTED for roof side shell and stepped facade seam. Character Wave2 38765635822 FAIL static rig hierarchy after UE technical PASS.
+- New bounded source patch: joined roof/wall 33 shared crown vertices, 32 edges, buried turf side aprons, deterministic 2,780 triangles, 7 material finishes. Three local source tests PASS; new CI check prepared. No UE screenshot or target-device evidence for the changed mesh yet, NOT RUN.
+- Mesh repair retains quest, player collision, streaming, NPC/Save authority, and one active runtime writer; rollback as one cohesive batch on verified import/render regression.
 
 ## Immediate critical blockers
 1. Bag End authored mesh was suppressed; current candidate restores it with joined roof, recessed entrance and seven material finishes. Local source checks PASS; new exact-head engine evidence pending. See latest CURRENT_PROJECT_STATE entry.

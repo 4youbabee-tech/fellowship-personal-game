@@ -1,3 +1,17 @@
+## PES-002 2026-10-15 source repair stage matrix — baseline 8058f6a, new candidate exact-head pending
+
+| Deliverable | Existing prior evidence | This source candidate | Accepted |
+| --- | --- | --- | --- |
+| Bag End mesh source/UV/material identity | 7 drawn finishes, 2,704 tris, Unreal 38765635848 PASS on old mesh | New joined wall/turf/aprons, 2,780 tris, 7 finishes; deterministic/local 3 tests PASS | NO — new import/render pending |
+| Bag End UE package and world presence | Actual existing package, section bindings, runtime marker and 4 views at 8058f6a | NO new UE import or visual claim from local geometry work | NO |
+| Genuine images | Artifact 11989868346, all four 1280x720, visually REJECTED for shell/seam/terrain | Source-only preview, NOT a new Unreal render | NO |
+| Collision/NavMesh/traversal/PIE | Not proven at 8058f6a | Unchanged existing runtime anchors; no collision modification | NOT RUN |
+| DX11 720p target 8GB/~2GB FPS>=30 | Not measured | No new profiling claim; one source static asset, no extra runtime actors/texture | NOT RUN |
+| Frodo rig/animation | Run 38765635822 UE skeletal gate PASS, deformation hierarchy FAIL | Original skinned .blend preserved, no retest of rejected FBX | NO |
+| New source geometry regression | Old generator had independent wall strips and open roof edges | 33 shared crown vertices, 32 shared roof/wall edges, side apron underlay, exact output reproducibility; 3 local tests PASS | SOURCE-VALIDATED ONLY |
+
+PR #477 is still the one active PES runtime PR. Pre-Unreal new-HEAD / Windows new-HEAD Run IDs are NOT RUN before push. Do not open PES-003 or claim visual/PIE/device closure.
+
 2026-10-15 PES-002 exact-head 51c2ed1: Pre-Unreal Run 38762271198 PASS; UE4.27.2 C++ compilation PASS in Run 38762271397, importer FAILED `PES002_HERO_MATERIALS_REJECT slots=8 required=7`; no startup/new images credited. Source has 7 authored finishes; reimport backing array contains 8 entries. Do not assume an eighth rendered section or blindly delete a historical slot. Bounded repair validates every nonempty actual LOD0 section against the 7 required named, resolved materials, requires all seven finishes to be drawn, and logs names/triangle counts/material paths; any obsolete/unrecognized DRAWN finish remains a failure. Preserves source geometry, captures, binding requirements and acceptance gates. Fresh engine import/render still required. Epic UE-60152 documents historical unused-slot retention (4.19.2, Cannot Reproduce; precedent only, not proof about this UE4.27 asset). Current asset's actual unused-slot disposition will be proven by section logs. PES-002 OPEN, PES-003 locked.
 
 2026-10-15 continuation at c92e940: preserve newer source binding fixes. Frodo locomotion Run 38755223105 PASS; Wave2 source and UE skeletal gate PASS but deformation Run 38755222797 FAIL (hierarchy sanity, both arms/legs/spine-head). Unreal Run 38755222958 compile/import/startup PASS, capture FAIL after 13 seconds: stale prior log view=3 can satisfy polling before new process initializes, then the new log has no camera marker. Clear proof log/old delivered PNGs before launch, retain 240s readiness, four fresh screenshots and luminance tests; no threshold waived. Joined exterior candidate rebased onto this exact newer head; engine/render validation pending.

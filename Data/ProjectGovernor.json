@@ -9199,6 +9199,41 @@
     "failure_rule": "A failed mandatory proof remains failed, is diagnosed and repaired, and never becomes success by continue-on-error or documents alone.",
     "scope_rule": "Do not open PES-003 while PES-002 screenshot, lighting/material/architecture review and traversal acceptance remain open.",
     "last_observed_render": {
+      "run_id": 38765635848,
+      "head_sha": "8058f6a7025145e1e6bb98bb624e235d330e1d9b",
+      "artifact_id": 11989868346,
+      "archive_sha256": "4c5a0ac5e7cd50c0a628281080f0baef7b88c58db130792388ff8a9a122d6895",
+      "render_review": "ASSISTANT_REJECTED_OWNER_ACCEPTANCE_OUTSTANDING",
+      "concrete_defects": [
+        "Visible stepped roof/facade seam and exposed open turf-shell side edges in oblique Unreal 720p images",
+        "Procedural garden/ground and distant primitive trees",
+        "Modular NPC/hero character fallbacks with no accepted skin/deformation",
+        "Bag End full PIE traversal and device FPS/VRAM unproven"
+      ],
+      "followup": "Source correction shares 33 wall/roof crown vertices and 32 roof/wall edges, adds buried side/rear apron; 3 local source tests PASS. New-HEAD UE import, four-view screenshots, real traversal and hardware profiling pending.",
+      "restrictions": "PES-002 OPEN, PES-003 LOCKED; render-observed old asset is NOT visual accepted; no PIE/device/FPS proof for correction"
+    },
+    "current_repair_candidate": {
+      "stage": "LOCAL_SOURCE_TOPOLOGY_PASS_EXACT_HEAD_ENGINE_AND_VISUAL_PENDING",
+      "scope": "PR477 PES-002 Bag End wall/turf seam and roof apron root repair, no new PES runtime",
+      "baseline_head": "8058f6a7025145e1e6bb98bb624e235d330e1d9b",
+      "mesh_sha256": "0ff731e144f5b6667395a005dcd2c86585f780cb57b9f67bf11e7bdfa836e35d",
+      "generator_sha256": "ae1dd3d97b15eaaa67ad61f28474eda04aa236438bc3b410eadf7ec78cd73ab6",
+      "triangles": 2780,
+      "material_sections": 7,
+      "test": "3 local source regression tests PASS; new mandatory Pre-Unreal source check prepared",
+      "roof_wall_shared_vertices": 33,
+      "roof_wall_shared_edges": 32,
+      "import_package": "/Game/Production/World/Shire/SM_ShBagEndHeroFacade.SM_ShBagEndHeroFacade",
+      "no_new_runtime_pes": true,
+      "exact_head_unreal": "NOT_RUN_FOR_THIS_CANDIDATE",
+      "rendered_visual": "NOT_RUN_FOR_THIS_CANDIDATE",
+      "pie_traversal": "NOT_RUN",
+      "target_device_720p_fps": "NOT_RUN",
+      "rollback": "Revert one cohesive PR477 source/test/docs batch if verified engine import/visual breaks; preserve quest collisions and unrelated accepted assets",
+      "method_doc": "Docs/PES002_PROFESSIONAL_ASSET_PRODUCTION_METHOD.md"
+    },
+    "previous_observed_render_2026_10_15": {
       "run_id": 38727751427,
       "head_sha": "d5f37b5e61722c4828170a729c5ae0f37aab1f58",
       "artifact_id": 11969310933,
@@ -9212,7 +9247,7 @@
       "followup": "Existing hero source roof/entrance/7 named finishes, importer slot guard and runtime reuse candidate; exact-head engine proof required",
       "restrictions": "PES-002 OPEN, PES-003 LOCKED; no PIE/device/FPS/visual acceptance"
     },
-    "current_repair_candidate": {
+    "previous_repair_candidate_51c2ed1": {
       "stage": "COMPILE_TESTED_IMPORT_FAILED_REPAIR_PENDING",
       "scope": "Joined Bag End exterior on PR477",
       "mesh_sha256": "ad8019a44a2fb19e49e7b443e8fd33f0f5762c663171d3df9942614d9fb86048",
@@ -9362,7 +9397,7 @@
       {
         "id": "D",
         "scope": "four angle fixed Unreal capture and luminance threshold gate",
-        "status": "NOT_IMPLEMENTED"
+        "status": "FOUR_VIEWS_EXACT_HEAD_8058F6A_RENDER_OBSERVED_VISUAL_REJECTED"
       },
       {
         "id": "E",
@@ -9376,6 +9411,6 @@
       }
     ],
     "method_doc": "Docs/PES002_PRODUCTION_ACCELERATION_DECISIONS.md",
-    "evidence_boundary": "Source/admin only, not UE import/PIE/device/visual"
+    "evidence_boundary": "8058f6a had real UE build/import/startup and 4 images, but visually rejected; new wall/roof source patch is locally static-validated only. No new UE/PIE/device/visual acceptance."
   }
 }

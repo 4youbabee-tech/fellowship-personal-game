@@ -195,6 +195,9 @@ jobs:
       - name: Test PES-002 camera and screenshot safety contract
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" Scripts\test_pes002_visual_contract.py
 
+      - name: Guard PES-002 shared Bag End roof and wall topology before Unreal
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_pes002_joined_facade_source.py" -v
+
       - name: Test Governor semantic contracts
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_governance_contracts.py" -v
 
