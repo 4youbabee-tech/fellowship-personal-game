@@ -4,7 +4,7 @@
   "authority": "Data/ProjectGovernor.json",
   "canonical_branch": "develop",
   "stable_release_branch": "main",
-  "status": "REVIEWED_SUPERSEDED_REF_RETIREMENT_PENDING_EXACT_HEAD_CI",
+  "status": "OWNER_AUTHORIZED_IMMUTABLE_ARCHIVE_BRANCH_RETIREMENT_2026_10_16",
   "truth_boundary": "This plan records branch hygiene only. It does not claim PIE/device/visual acceptance.",
   "preserve": [
     {
@@ -56,14 +56,14 @@
     "Reviewed superseded divergent refs require an immutable expected remote SHA plus a closed historical PR and verified merged replacement SHA on develop before deletion; moved or unverifiable refs must be kept."
   ],
   "final_audit": {
-    "status": "FINAL_LEGACY_REF_RETIREMENT_AUTHORIZED",
+    "status": "OWNER_APPROVED_2026_10_16_LOSSLESS_ARCHIVE_CLEANUP_PENDING_TESTS",
     "rule": "After this maintenance merge, retire every captured legacy working ref. Their commit histories remain reachable through archive/pre-build-salvage-20260930. develop stays canonical and main stays stable; the archive is recovery-only and must never become an execution trunk.",
     "current_active_runtime_pr": "Volatile PR state is read live from GitHub and is not stored as cleanup truth.",
     "archive_branch": "archive/pre-build-salvage-20260930",
-    "archive_commit": "a47eda59f31352676de44777845fbc01c38d2d0d",
+    "archive_commit": "5ca617729e359249e09aa6acc05734e814c594c4",
     "captured_legacy_ref_count": 26,
     "physical_cleanup": "Branch Cleanup will delete the exact merged maintenance head, then delete all captured legacy refs from delete_after_merge. The archive branch is plan-protected.",
-    "truth_boundary": "Repository/process hygiene only; no PIE/device/visual/performance acceptance implied.",
+    "truth_boundary": "All unique old commits archived via parent ancestry, NOT merged into develop; only exact-HEAD verified PR #477 merged; selective runtime-source improvements require their own validation.",
     "expected_survivors": [
       "develop",
       "main",
@@ -75,16 +75,6 @@
     {
       "branch": "archive/pre-build-salvage-20260930",
       "reason": "non-execution recovery anchor containing the captured legacy branch heads as commit parents; preserve for selective forensic recovery only"
-    },
-    {
-      "branch": "prep/f2-03-edoras-mega-source-v1",
-      "head_sha": "46d2d26f17024057608447e0d8a69c1bfc27be1b",
-      "reason": "Unique F2-03 Edoras source-preproduction content remains and Data/F2_03EdorasMegaSourcePreproductionV1.json / its regression guard are absent from current develop. Preserve until selective reconciliation."
-    },
-    {
-      "branch": "prep/f2-03-edoras-mega-source-v2",
-      "head_sha": "d616be0c5f1178f1c5bf1997f1bb4b0b8b75b487",
-      "reason": "Independent later Edoras source-preparation lineage with unique commits not represented on current develop. Preserve until v1/v2 are reconciled selectively; do not bulk-merge."
     }
   ],
   "completed_integration_branches": [
@@ -622,5 +612,271 @@
       "prep/f2-03-edoras-mega-source-v2"
     ],
     "future_work": "Individually reconcile other branches for FBX, tangents, skeletal, materials, Preview, PBR; no age-only deletion."
+  },
+  "archived_retirement_2026_10_16": {
+    "archive_branch": "archive/pre-build-salvage-20260930",
+    "archive_head_sha": "5ca617729e359249e09aa6acc05734e814c594c4",
+    "source_heads_count": 43,
+    "cleanup_rule": "Exact archived commit direct-parent proof; only delete matching remote SHA and no open PR; unique work ARCHIVED, NOT IN DEVELOP.",
+    "refs": [
+      {
+        "branch": "docs/owner-target-r5-m330-win11-20261011",
+        "expected_head_sha": "aec3ab32c195205791f89ac577df0660865a12bb",
+        "open_pr_at_capture": 356,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "feat/p1c01-local-pie-fast-preview-20261011",
+        "expected_head_sha": "d5fabb247a003faf18c7745002efacf145d4abe2",
+        "open_pr_at_capture": null,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "feat/p1c01-pie-fast-preview-forward-port-20261011",
+        "expected_head_sha": "7b245b63ab4fee52b1b238950f3750e140e4449f",
+        "open_pr_at_capture": null,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "fix/cloud138-ferry-collision-rebased-20261012",
+        "expected_head_sha": "af6c81dbdcc2dc51989360458c75406b3f366f04",
+        "open_pr_at_capture": 435,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "fix/cloud138-ferry-landing-collision-20261012",
+        "expected_head_sha": "a39fde1b914f97844ff5cba2319ccd1a067b4576",
+        "open_pr_at_capture": null,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "fix/drive-curated-stage-isolation-20261012",
+        "expected_head_sha": "745697c2695fd5827608ae2ed1ec8f07574491d6",
+        "open_pr_at_capture": null,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "fix/p1c01-ci-checkpoint-audit-noise-20261011",
+        "expected_head_sha": "32a25c126e7baac55e9b7378b8b8d4d858ab36e8",
+        "open_pr_at_capture": null,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "fix/p1c01-cinematic-save-load-input-guard-20261013",
+        "expected_head_sha": "c384ae4464783ed4b0c378b4e75ad235fa6b08a5",
+        "open_pr_at_capture": 456,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "fix/p1c01-dialogue-queue-atomicity-20261013",
+        "expected_head_sha": "1b3df96a527c66e2e0e33e07c5b640555341e8c1",
+        "open_pr_at_capture": 454,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "fix/p1c01-fbx-smoothing-physical-normalization-20261010",
+        "expected_head_sha": "3fd807c69aab37797c23272d01de806a4083781e",
+        "open_pr_at_capture": 352,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "fix/p1c01-frodo-deformation-rebased-2026-10-10",
+        "expected_head_sha": "be4208f7ed17b1286536fff6785503fc6cf1e44c",
+        "open_pr_at_capture": null,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "fix/p1c01-frodo-deformation-receipt-2026-10-10",
+        "expected_head_sha": "ebc64aace058e86cd47d96f5ce901e37010a5cd5",
+        "open_pr_at_capture": null,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "fix/p1c01-living-event-feedback-20261013",
+        "expected_head_sha": "517f11fc865be304c9904d0b893a286adbd28109",
+        "open_pr_at_capture": null,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "fix/p1c01-livingworld-density-fallback-20261011",
+        "expected_head_sha": "256da738c96995f459ac3df2bb9ab5265ce44add",
+        "open_pr_at_capture": null,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "fix/p1c01-npc-visibility-interaction-20261013",
+        "expected_head_sha": "19c9b1005fa4ad5890795205bd5e418303b908db",
+        "open_pr_at_capture": 453,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "fix/p1c01-smoothing-warning-diagnostics-20261010",
+        "expected_head_sha": "f270674f408d8564739bed5f5d47b94eaf656b97",
+        "open_pr_at_capture": 350,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "fix/p1c01-world-event-hud-feedback-20261013",
+        "expected_head_sha": "16a82ffb897b5e0fc59498eb5280feeec81510e8",
+        "open_pr_at_capture": 455,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "generated/p1c01-chapter-closure-material-source-v2",
+        "expected_head_sha": "d24596c76c2cc2baaf23f3dc5d2acd64f0995f29",
+        "open_pr_at_capture": null,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "generated/p1c01-material-source-v1",
+        "expected_head_sha": "f90b607e9c81184c4f4746c713bb09c707f61f88",
+        "open_pr_at_capture": null,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "governance/cvbp-continuous-verified-build-2026-10-08",
+        "expected_head_sha": "cc698a1ed1be47b2591cbdf1585d006db7122a34",
+        "open_pr_at_capture": 331,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "governance/execution-first-owner-intent-20261013",
+        "expected_head_sha": "23946c6498a9542c407c6c75bc506ece335c602f",
+        "open_pr_at_capture": 444,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "governance/pes-checkpoint-handoff-20261014",
+        "expected_head_sha": "1c8cb6c0b1960fc2c0bc7fcc30fae67a6171ac69",
+        "open_pr_at_capture": 464,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "integration/p1c01-import-tangents-profile-fastpie-20261011",
+        "expected_head_sha": "8f93f5d5788bead79ce7df29ba5e145b99c59e92",
+        "open_pr_at_capture": 366,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "ops/p1c01-checkpoint-recovery-2026-10-10",
+        "expected_head_sha": "8c5b296bd4cd024745f3666ce45802ea0e74f004",
+        "open_pr_at_capture": null,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "perf/p1c01-import-phase-profiling-20261011",
+        "expected_head_sha": "cc3fb1de0179959d636176dacfcaf4a066a7af8b",
+        "open_pr_at_capture": 362,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "policy/owner-flexible-asset-intake-20261011",
+        "expected_head_sha": "d934386750432e2bcfd7368267972e2b70c19653",
+        "open_pr_at_capture": 353,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "prep/f2-03-edoras-mega-source-v1",
+        "expected_head_sha": "46d2d26f17024057608447e0d8a69c1bfc27be1b",
+        "open_pr_at_capture": null,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "prep/f2-03-edoras-mega-source-v2",
+        "expected_head_sha": "d616be0c5f1178f1c5bf1997f1bb4b0b8b75b487",
+        "open_pr_at_capture": null,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "prep/offrunner-5000-source-batch-20261013",
+        "expected_head_sha": "3a640a9afbb6730864b51f6123e08f9c92d41164",
+        "open_pr_at_capture": 446,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "prep/p1c01-global-content-intake-2026-10-08",
+        "expected_head_sha": "41766172c5bf4f5fe09caa5b92307f506576664b",
+        "open_pr_at_capture": 332,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "prep/1000-gated-production-tasks-20261013",
+        "expected_head_sha": "01bbc8bd7636ac5caffc0f33034a1412e929ff5a",
+        "open_pr_at_capture": 442,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "production/p1c01-bulk-smart-ci-governor-2026-10-09",
+        "expected_head_sha": "3ed721854ebc8894d8a3cd3e70cd83dc64192178",
+        "open_pr_at_capture": null,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "production/p1c01-cloud-source-wave-20261013",
+        "expected_head_sha": "929086a6051d77d61a0557902d27cf0ba7df9df8",
+        "open_pr_at_capture": 461,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "production/p1c01-definitive-chapter-closeout-2026-10-04",
+        "expected_head_sha": "4b0d026a48c3337d529eb5d531cc2c609a425f4f",
+        "open_pr_at_capture": 329,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "production/p1c01-fbx-uv-tangent-sourcefix-20261011",
+        "expected_head_sha": "363e1e7b7e70b0cd029e5374665bb4e2c47ca74a",
+        "open_pr_at_capture": 367,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "production/p1c01-final-pbr-closure-20261010",
+        "expected_head_sha": "7c3daaf74d0eb4398f1952a487a6dcc5f2eb8593",
+        "open_pr_at_capture": 355,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "production/p1c01-pbr-proof-forward-port-20261011",
+        "expected_head_sha": "7b245b63ab4fee52b1b238950f3750e140e4449f",
+        "open_pr_at_capture": null,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "production/p1c01-seven-family-vegetation-source-20261011",
+        "expected_head_sha": "f50433e8ff8cec7c39d2eca3d914e44944d30604",
+        "open_pr_at_capture": null,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "production/p1c01-verified-pbr-visible-world-2026-10-10",
+        "expected_head_sha": "14c33efad9e95c4d21778b022cc4997448c67031",
+        "open_pr_at_capture": 339,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "production/trilogy28-offline-support-pbr-20261011",
+        "expected_head_sha": "e0830d9936b1a5989da3b56192c409aa9b2c908f",
+        "open_pr_at_capture": null,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "repair/p1c01-stale-pbr-stage-3a17cc0-20261011",
+        "expected_head_sha": "3a17cc0b2cebd9e305f442a67d440fa9bb5f940f",
+        "open_pr_at_capture": null,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "repair/359-preview-classifier-evidence-20261011",
+        "expected_head_sha": "9c1a2d5ba5b7f8bb9e2b5a6a884c83b38613be36",
+        "open_pr_at_capture": null,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      },
+      {
+        "branch": "salvage/p1c01-final-closure-evidence-20261011",
+        "expected_head_sha": "9f5b6fd53d6c004bc728b479c46af680ea0d3b1f",
+        "open_pr_at_capture": 380,
+        "decision": "ARCHIVED_NOT_MERGED; audit and selective recovery from immutable SHA; NEVER claim integrated from archive alone"
+      }
+    ]
   }
 }

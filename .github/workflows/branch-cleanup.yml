@@ -20,7 +20,7 @@ jobs:
     # on canonical/protected refs, active PR heads, and refs whose SHA moved after closure.
     # Pure GitHub administration must not occupy the supervised UE4 machine.
     runs-on: windows-latest
-    timeout-minutes: 5
+    timeout-minutes: 15
     env:
       GH_TOKEN: ${{ github.token }}
       TARGET_SHA: ${{ github.event_name == 'pull_request' && (github.event.pull_request.merged == true && github.event.pull_request.merge_commit_sha || github.event.pull_request.base.sha) || github.sha }}

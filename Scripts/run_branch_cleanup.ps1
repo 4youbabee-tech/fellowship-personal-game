@@ -72,6 +72,37 @@ function Get-OpenPullRefs {
     return $refs.ToArray()
 }
 
+# Every archived head must be an exact direct parent of the pinned recovery commit.
+$archiveApproval = $plan.archived_retirement_2026_10_16
+$archiveParentShas = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
+if ($null -ne $archiveApproval) {
+    $archiveName = [string]$archiveApproval.archive_branch
+    $archiveSha = [string]$archiveApproval.archive_head_sha
+    if ($archiveName -ne "archive/pre-build-salvage-20260930" -or
+        $archiveSha -notmatch '^[0-9a-fA-F]{40}$') { throw "BRANCH_CLEANUP_ARCHIVE_AUTHORITY_INVALID" }
+    $anchorRef = Invoke-RestMethod -Method Get -Uri "https://api.github.com/repos/$Repository/git/ref/heads/$archiveName" -Headers $headers
+    if (-not ([string]$anchorRef.object.sha).Equals($archiveSha, [System.StringComparison]::OrdinalIgnoreCase)) {
+        throw "BRANCH_CLEANUP_ARCHIVE_HEAD_MOVED"
+    }
+    $anchor = Invoke-RestMethod -Method Get -Uri "https://api.github.com/repos/$Repository/git/commits/$archiveSha" -Headers $headers
+    foreach ($parent in @($anchor.parents)) { [void]$archiveParentShas.Add([string]$parent.sha) }
+    $rows = @($archiveApproval.refs)
+    if ($rows.Count -ne [int]$archiveApproval.source_heads_count -or $rows.Count -lt 1) {
+        throw "BRANCH_CLEANUP_ARCHIVE_ROW_COUNT_INVALID"
+    }
+    $seenNames = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
+    foreach ($item in $rows) {
+        $name = [string]$item.branch
+        $sha = [string]$item.expected_head_sha
+        if (-not $name -or $planProtectedBranches.Contains($name) -or
+            -not $seenNames.Add($name) -or $sha -notmatch '^[0-9a-fA-F]{40}$' -or
+            -not $archiveParentShas.Contains($sha)) {
+            throw "BRANCH_CLEANUP_ARCHIVED_SOURCE_NOT_PROVEN:$name"
+        }
+    }
+    Write-Host "BRANCH_CLEANUP_ARCHIVE_PROOF_PASS archive=$archiveSha refs=$($rows.Count) parentHashes=$($archiveParentShas.Count)"
+}
+
 $pullUri = "https://api.github.com/repos/$Repository/pulls?state=open&per_page=100"
 $openPulls = Invoke-RestMethod -Method Get -Uri $pullUri -Headers $headers
 $activeHeads = @(Get-OpenPullRefs -PullResponse $openPulls)
@@ -128,6 +159,20 @@ function Remove-RemoteBranch {
     }
 
     $remoteSha = (($existing[0] -split "\s+")[0]).Trim()
+    $archived = @($archiveApproval.refs | Where-Object {
+        $null -ne $_ -and ([string]$_.branch).Equals($Branch, [System.StringComparison]::Ordinal)
+    })
+    if ($archived.Count -gt 1) { throw "BRANCH_CLEANUP_DUPLICATE_ARCHIVED_REF:$Branch" }
+    if ($archived.Count -eq 1) {
+        $expectedArchivedSha = [string]$archived[0].expected_head_sha
+        if (-not $remoteSha.Equals($expectedArchivedSha, [System.StringComparison]::OrdinalIgnoreCase) -or
+            -not $archiveParentShas.Contains($expectedArchivedSha)) {
+            Write-Host "BRANCH_CLEANUP_ARCHIVED_HEAD_MOVED branch=$Branch current=$remoteSha expected=$expectedArchivedSha"
+            return $false
+        }
+        Write-Host "BRANCH_CLEANUP_ARCHIVED_PROOF_PASS branch=$Branch sha=$expectedArchivedSha"
+    }
+    else {
     $reviewed = @($plan.reviewed_superseded_refs_2026_10_11 | Where-Object {
         $null -ne $_ -and ([string]$_.branch).Equals($Branch, [System.StringComparison]::Ordinal)
     })
@@ -170,6 +215,7 @@ function Remove-RemoteBranch {
             return $false
         }
     }
+    } # archived direct-parent proof or legacy reviewed/zero-ahead proof
     Write-Host "BRANCH_CLEANUP_DELETE branch=$Branch reason=$Reason sha=$remoteSha"
     & git push "--force-with-lease=${remoteRef}:$remoteSha" origin ":$remoteRef"
     if ($LASTEXITCODE -ne 0) {
@@ -226,6 +272,13 @@ $deletedExplicit = 0
 foreach ($branch in $deleteBranches) {
     if (Remove-RemoteBranch -Branch $branch -Reason "explicit-plan") {
         ++$deletedExplicit
+    }
+}
+
+$deletedArchived = 0
+foreach ($record in @($archiveApproval.refs)) {
+    if (Remove-RemoteBranch -Branch ([string]$record.branch) -Reason "owner-approved-archive-parent-proven") {
+        ++$deletedArchived
     }
 }
 
@@ -297,4 +350,4 @@ foreach ($protected in @($planProtectedBranches | Where-Object { $_ -notin @("de
         throw "Plan-protected branch missing after cleanup: $protected"
     }
 }
-Write-Host ("BRANCH_CLEANUP_PASS closedHeadDeleted=" + $deletedClosedHead + " deletedPlanCount=" + $deleteBranches.Count + " deletedExplicit=" + $deletedExplicit + " deletedAutoZeroAhead=" + $deletedAuto + " keptUnique=" + $keptUnique + " activePrHeads=" + $activeHeads.Count + " planProtected=" + $planProtectedBranches.Count + " canonical=develop stable=main")
+Write-Host ("BRANCH_CLEANUP_PASS closedHeadDeleted=" + $deletedClosedHead + " deletedPlanCount=" + $deleteBranches.Count + " deletedExplicit=" + $deletedExplicit + " deletedAutoZeroAhead=" + $deletedAuto + " archivedUniqueDeleted=" + $deletedArchived + " keptUnique=" + $keptUnique + " activePrHeads=" + $activeHeads.Count + " planProtected=" + $planProtectedBranches.Count + " canonical=develop stable=main")

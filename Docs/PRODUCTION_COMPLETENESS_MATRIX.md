@@ -1,3 +1,13 @@
+## 2026-10-16 GitHub branch hygiene and truthful develop programmer handoff
+| Gate | Actual outcome |
+|---|---|
+| develop PES-002 | PR #477 merged SHA 386a2968954ea6423ae37da011b35ef187f53849; Pre 38818365177 PASS, Unreal 38818365146 PASS |
+| Remote ref inventory | 49 initial refs, 47 outside develop/main; first ordinary merge cleanup down to 46, 23 unmerged historical PRs |
+| Immutable recovery | 43 divergent working heads preserved as 42 distinct direct parents of archival commit 5ca617729e359249e09aa6acc05734e814c594c4, separate from develop |
+| Historical branch retirement | SHA + archive parent + no active PR guards prepared; hosted tests and physical deletion results PENDING |
+| Unique unmerged changes | Preserved in Git archive ONLY, not build-validated or accepted; selective forward-port needed before any later use |
+| UE4 PIE, device performance, human visuals | UNPROVEN / NOT RUN / NOT ACCEPTED; PES-002 ACTIVE, PES-003 LOCKED |
+
 ## 2026-10-16 PES-002 Cloud138 parent collision — strict evidence matrix
 | Requirement | State / evidence |
 |---|---|
