@@ -1,3 +1,8 @@
+## 2026-10-16 PES-002 bounded CI corrective candidate after 215cd6e
+- Pre-Unreal Run 38811960960 FAIL only at test_unreal_classifier.ps1; test demanded core when existing strict classifier correctly returned full for mixed C++/curated changes. Unreal Run 38811960729 hosted classifier likewise FAIL; UE4 Windows job SKIPPED. No new .uasset/screenshot/PIE proof or cancelled writer.
+- Fix preserves strict Full for C++/Config/unallowlisted deltas, corrects regression expectation, and permits at most TWO source-only/docs parent commits to reuse an existing green C++ engine proof only after exact path-diff audit. Current verified C++ boundary is 8982ca6 / UE4 Run 38803036724. Fresh imported LOD/PBR and 4-view proof remains mandatory on new exact HEAD. No relaxation of tests, Gate6/7, visual, PIE or device FPS.
+- Single bounded correction on PR #477; PES-002 OPEN; PES-003 LOCKED. Rebuild is conditional on the newly passing static/classifier gates and available Windows writer; never rerun identical failed head.
+
 ## 2026-10-16 PES-002 curated import production funnel — exact-parent source wave
 | Stage | Verified evidence / current boundary |
 | --- | --- |

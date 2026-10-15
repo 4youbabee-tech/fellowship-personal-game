@@ -127,10 +127,14 @@ function Test-IncrementalSourceOnlyHeadDelta([string]$GitExe, [string]$TargetSha
 # C++ build, but still MUST execute the UE4 importer, LOD/PBR QC and real render.
 # Unknown C++/config/runtime deltas fail closed to the normal engine classifier.
 function Test-ExactHeadCuratedDelta([string]$GitExe, [string]$TargetSha) {
+    # Reuse green engine code only across at most two source-only commits.
+    # Both combined delta and current HEAD must pass exact source contracts.
     $parent = (& $GitExe rev-parse "$TargetSha^").Trim()
     if ($LASTEXITCODE -ne 0 -or -not $parent) { return $false }
-    $delta = @(& $GitExe diff --name-only $parent $TargetSha)
-    if ($LASTEXITCODE -ne 0 -or $delta.Count -eq 0) { return $false }
+    $ancestor = (& $GitExe rev-parse "$parent^").Trim()
+    if ($LASTEXITCODE -ne 0) { $ancestor = "" }
+    $proofCandidates = @($parent)
+    if ($ancestor -and $ancestor -ne $parent) { $proofCandidates += $ancestor }
     $allowed = @(
         "Scripts/ue4_p1c01_curated_postimport.py",
         "Scripts/curated_tree_surface_contract.py",
@@ -141,17 +145,26 @@ function Test-ExactHeadCuratedDelta([string]$GitExe, [string]$TargetSha) {
         ".github/workflows/unreal-build-validation.yml",
         ".github/workflows/pre-unreal-validation.yml"
     )
-    $names = @($delta | ForEach-Object { $_ -replace "\\", "/" })
-    if ($names -notcontains "Scripts/ue4_p1c01_curated_postimport.py") { return $false }
-    foreach ($name in $names) {
-        if (-not ($name.StartsWith("Docs/") -or $allowed -contains $name)) {
-            Write-Host "P1C01_CURATED_EXACT_PARENT_BLOCKED file=$name"
-            return $false
+    foreach ($candidate in $proofCandidates) {
+        if (-not (Test-ParentWholeWorkflowGreen $candidate)) { continue }
+        $delta = @(& $GitExe diff --name-only $candidate $TargetSha)
+        if ($LASTEXITCODE -ne 0 -or $delta.Count -eq 0) { continue }
+        $names = @($delta | ForEach-Object { $_ -replace "\\", "/" })
+        if ($names -notcontains "Scripts/ue4_p1c01_curated_postimport.py") { continue }
+        $safe = $true
+        foreach ($name in $names) {
+            if (-not ($name.StartsWith("Docs/") -or $allowed -contains $name)) {
+                Write-Host "P1C01_CURATED_ANCESTOR_BLOCKED file=$name proof=$candidate"
+                $safe = $false
+                break
+            }
         }
+        if (-not $safe) { continue }
+        $script:CuratedProvenAncestor = $candidate
+        Write-Host "P1C01_CURATED_SOURCE_ONLY_ANCESTOR_PASS proof=$candidate maximumDistance=2"
+        return $true
     }
-    if (-not (Test-ParentWholeWorkflowGreen $parent)) { return $false }
-    Write-Host "P1C01_CURATED_EXACT_PARENT_GREEN sha=$parent changed=$($names.Count)"
-    return $true
+    return $false
 }
 
 function Test-ParentWholeWorkflowGreen([string]$ParentSha) {
@@ -575,8 +588,7 @@ if ($env:SHIRE_PES_FOCUSED_UNREAL -eq "true") {
 # material/LOD lane without re-compiling unchanged C++ or replaying PR history.
 # Parent proof is mandatory; no PIE/device/visual pass is inferred.
 if (Test-ExactHeadCuratedDelta $git $env:TARGET_SHA) {
-    $verifiedParent = (& $git rev-parse "$($env:TARGET_SHA)^").Trim()
-    Set-Mode "curated" "exact-parent-green-pes002-curated-original-unreal-import" $verifiedParent
+    Set-Mode "curated" "bounded-source-only-pes002-curated-original-unreal-import" $script:CuratedProvenAncestor
     exit 0
 }
 
