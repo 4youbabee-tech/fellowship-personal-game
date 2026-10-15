@@ -115,6 +115,32 @@ if not bound_meshes:
 # armature-bound character only when the aggregate geometry is substantial;
 # the later exported-FBX bilateral influence gate remains mandatory.
 bound_vertex_count = sum(len(m.data.vertices) for m in bound_meshes)
+# Fail with source-specific evidence, rather than weakening the geometry gate.
+# Enumerate ALL scene meshes to distinguish an incomplete armature binding
+# from a genuinely tiny or incorrectly imported source asset.
+mesh_diagnostics = [
+    {
+        "name": m.name,
+        "vertices": len(m.data.vertices),
+        "parent": m.parent.name if m.parent else None,
+        "armature_modifiers": [
+            mod.object.name if mod.object else None
+            for mod in m.modifiers if mod.type == "ARMATURE"
+        ],
+        "bound": m in bound_meshes,
+        "weighted_vertices": sum(1 for v in m.data.vertices if any(g.weight > 0.00001 for g in v.groups)),
+    }
+    for m in meshes
+]
+print("HUMAN_WAVE2_SKIN_SOURCE_DIAGNOSTIC " + json.dumps({
+    "source": os.path.basename(args.source),
+    "armature": source_armature.name,
+    "scene_mesh_count": len(meshes),
+    "bound_mesh_count": len(bound_meshes),
+    "total_scene_vertices": sum(len(m.data.vertices) for m in meshes),
+    "bound_vertices": bound_vertex_count,
+    "meshes": mesh_diagnostics,
+}, sort_keys=True), flush=True)
 if bound_vertex_count < 1000:
     raise RuntimeError("HUMAN_WAVE2_SKIN_REPAIR_BOUND_CHARACTER_TOO_SMALL")
 
