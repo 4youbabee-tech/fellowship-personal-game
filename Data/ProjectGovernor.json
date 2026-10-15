@@ -9168,7 +9168,16 @@
     "default": "Focused exact-head static, Governor and safety contracts; Unreal engine impacted paths still require normal classifier and runner C++/import/startup.",
     "deferred_tests": 35,
     "closeout": "Broad historical and cross-chapter static regressions via workflow_dispatch chapter_closeout_audits=true; no Gate 6/7 waiver",
-    "failsafe": "PowerShell syntax, Governor, project structure, classification, packaging safety and strict source asset quality run on ordinary PR/push"
+    "failsafe": "PowerShell syntax, Governor, project structure, classification, packaging safety and strict source asset quality run on ordinary PR/push",
+    "documentation_only_path_filter_2026_10_15": {
+      "authorization": "OWNER_REQUESTED",
+      "description": "Skip Pre-Unreal workflow for changes exclusively under Docs/ or *.md files. All code, assets, ProjectGovernor JSON, .github workflows, mission data and mixed documentation-plus-code PRs still receive unchanged Pre-Unreal safety tests.",
+      "implementation": ".github/workflows/pre-unreal-validation.yml paths-ignore on push/develop and PR/main/develop",
+      "scope": "workflow-trigger reduction only; no alteration of test scripts or waiver of Governor, PG-017 LFS, Unreal importer, Rigify deformation, visual/PIE/device acceptance.",
+      "trigger_semantics": "GitHub paths-ignore skips ONLY if ALL changed files match docs/md filters; mixed changes still trigger CI",
+      "full_audits": "workflow_dispatch chapter_closeout_audits=true remains available",
+      "status": "CANDIDATE_PENDING_EXACT_HEAD"
+    }
   },
   "pes_single_cohesive_batch_policy_2026_10_14": {
     "status": "OWNER_MANDATED",
