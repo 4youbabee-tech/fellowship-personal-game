@@ -8,6 +8,18 @@ set "PREFLIGHT=%GITHUB_WORKSPACE%\Scripts\preflight_production_asset_import.ps1"
 if not exist "%EDITORCMD%" exit /b 50
 if not exist "%PREFLIGHT%" exit /b 52
 if not exist "%LOGDIR%" mkdir "%LOGDIR%"
+rem Generate original Bag End authored albedo sources locally rather than violating
+rem PG-017 Git LFS binary asset policy. Fail closed before costly Unreal launch.
+set "HERO_ART=%GITHUB_WORKSPACE%\Tools\CloudAssetBuild\generate_bag_end_hero_materials.py"
+set "HERO_TEXTURES=%GITHUB_WORKSPACE%\SourceAssets\Production\World\Shire"
+if not exist "%HERO_ART%" exit /b 55
+set "HERO_PYTHON="
+for /f "delims=" %%P in ('where python.exe 2^>nul') do if not defined HERO_PYTHON set "HERO_PYTHON=%%P"
+if not defined HERO_PYTHON exit /b 56
+"%HERO_PYTHON%" "%HERO_ART%" --output-dir "%HERO_TEXTURES%"
+if errorlevel 1 exit /b 57
+echo PES002_HERO_ALBEDOS_GENERATED source=project-authored assets=4 path="%HERO_TEXTURES%"
+
 
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%PREFLIGHT%" -Workspace "%GITHUB_WORKSPACE%"
 if errorlevel 1 exit /b 53

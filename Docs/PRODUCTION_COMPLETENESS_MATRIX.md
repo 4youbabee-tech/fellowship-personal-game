@@ -1,3 +1,8 @@
+## 2026-10-15 PES-002 PG-017 source binary governance correction (after 7119991)
+- Actual exact-head Pre-Unreal Run 38795421128 FAIL at PG-017: four newly authored PNGs committed as raw blobs within LFS-controlled SourceAssets. This is a genuine content governance failure, not broken PNG/art material; no weakening/skip allowed. Subsequent Unreal run must not be promoted without fully green static validation.
+- Root correction: remove those four raw binary paths from Git tree; keep reproducible project-owned generator under Tools and strict source-to-MTL checks. The existing Windows `ci_import_production_assets.cmd` will generate all four PNG textures into transient local SourceAssets path BEFORE Unreal importer. No LFS pointer with unpersisted payload, no artificial Git LFS object and no shared warehouse writer. CI on clean checkout generates texture inputs, validates MTL and real UE4 binding; missing generator/python fails closed. Windows source outputs are disposable/reproducible, NOT permanent Warehouse persistence.
+- Regression updated: PNG byte checks operate on temporary output and do not require raw PNGs in Git; four PNG CRC/variation/size checks remain; no source-fidelity or visual standard lowered. Local focused source tests PASS 3/3 prior to this correction; exact new HEAD static/engine NOT RUN until push. No new PIE/device/owner visual acceptance; PES-002 OPEN, PES-003 LOCKED.
+
 ## PES-002 Bag End unique surface-art funnel — baseline a92d3971
 
 | Deliverable | Baseline genuine evidence | This source-art candidate | Status |
