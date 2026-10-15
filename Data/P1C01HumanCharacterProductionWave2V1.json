@@ -50,11 +50,16 @@
     "add_leaf_bones": false,
     "smoothing": "FACE",
     "tangent_space": true,
-    "animation_bake": true,
+    "animation_bake": false,
     "selection": "ARMATURE_MESH",
     "provenance": "source entry + source SHA256 + normalized SHA256 + Blender version",
     "export_deform_bones_only": true,
-    "control_rig_bones_excluded": true
+    "control_rig_bones_excluded": true,
+    "export_stage": "EXPORTED_GAME_DEFORM_ARMATURE_FROM_CC0_RIGIFY",
+    "source_rigify_controls_retained_for_authoring": true,
+    "game_bone_hierarchy_gate": "REIMPORTED_FBX_BILATERAL_FULL_LIMB_AND_SPINE",
+    "rest_skin_error_max_fraction_of_diagonal": 0.01,
+    "motion_clips_exported_in_this_wave": 0
   },
   "hosted_deformation_readiness": {
     "required": [
@@ -110,7 +115,7 @@
     "ram_gb": 8,
     "vram_gb_approx": 2
   },
-  "evidence_boundary": "Technical winner is exact-head UE4.27 evidenced on Wave2 run #3. Deformation/retarget/runtime/PIE/device/rendered-visual/FPS acceptance remains pending.",
+  "evidence_boundary": "Wave2 new game deform skeleton candidate; retains licensed mesh weights and restores direct game DEF hierarchy. Only exact-head host FBX/UE import/posed-stress tests can promote technical stages. No Idle/Walk, AnimBP, PIE, target device, visual or runtime acceptance.",
   "latest_hosted_baseline": {
     "workflow_run": 1,
     "exact_head": "8afa53cdee648cef196b914c5123d3e38677fc2c",

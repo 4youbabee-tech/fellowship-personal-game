@@ -198,6 +198,9 @@ jobs:
       - name: Guard PES-002 shared Bag End roof and wall topology before Unreal
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_pes002_joined_facade_source.py" -v
 
+      - name: Test Frodo game-only deform skeleton hierarchy and strict bindings
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_p1c01_game_deform_export.py" -v
+
       - name: Test Governor semantic contracts
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_governance_contracts.py" -v
 

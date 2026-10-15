@@ -6,6 +6,8 @@ on:
     paths:
       - 'Data/P1C01HumanCharacterProductionWave2V1.json'
       - 'Scripts/stage_p1c01_human_wave2.ps1'
+      - 'Scripts/p1c01_game_deform_export.py'
+      - 'Scripts/test_p1c01_game_deform_export.py'
       - 'Scripts/run_p1c01_human_wave2_ue4.ps1'
       - 'Scripts/run_p1c01_human_wave3_deformation.py'
       - 'Data/P1C01HumanDeformationGateV1.json'

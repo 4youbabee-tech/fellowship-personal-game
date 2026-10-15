@@ -67,6 +67,8 @@ $blenderVersionLines=@(& $blenderCommand.Source --version)
 if([int]$LASTEXITCODE -ne 0 -or $blenderVersionLines.Count -lt 1){ throw "HUMAN_WAVE2_BLENDER_UNAVAILABLE" }
 $blenderVersion=[string]$blenderVersionLines[0]
 
+$gameRigHelper=Join-Path $root "Scripts/p1c01_game_deform_export.py"
+if(-not (Test-Path -LiteralPath $gameRigHelper -PathType Leaf)){ throw "GAME_RIG_HELPER_MISSING path=$gameRigHelper" }
 $pythonPath=Join-Path $OutputRoot "normalize_human_wave2.py"
 @'
 import argparse, json, math, os, sys
@@ -80,6 +82,7 @@ p.add_argument("--source", required=True)
 p.add_argument("--source-kind", required=True)
 p.add_argument("--output", required=True)
 p.add_argument("--receipt", required=True)
+p.add_argument("--rig-helper", required=True)
 args=p.parse_args(argv)
 
 if args.source_kind == ".fbx":
@@ -216,6 +219,21 @@ if len(source_def_weights) < 13:
     print("HUMAN_WAVE2_AUTO_REBIND_BOUND_CHARACTER meshes=" +
           str(len(bound_meshes)) + " vertices=" + str(bound_vertex_count), flush=True)
 
+# Rigify's DEF -> ORG/MCH parenting creates a broken UE game hierarchy even
+# when the exported FBX has 87 actual weighted bones. Build an isolated
+# export-only deform skeleton; fail if the rest mesh changes by >1%.
+with open(args.rig_helper, "r", encoding="utf-8") as helper_file:
+    exec(compile(helper_file.read(), args.rig_helper, "exec"), globals())
+game_armature, game_export = make_game_deform_rig(source_armature, bound_meshes)
+armatures = [game_armature]
+meshes = list(bound_meshes)
+source_armature.hide_set(True)
+print("GAME_RIG_SOURCE_READY " + json.dumps({
+    "bones":game_export["game_bones"],
+    "weighted":game_export["weighted_game_bones"],
+    "rest_delta":game_export["max_rest_delta"],
+},sort_keys=True),flush=True)
+
 for o in bpy.context.scene.objects: o.select_set(False)
 for o in armatures + meshes:
     o.hide_set(False)
@@ -259,8 +277,7 @@ bpy.ops.export_scene.fbx(
     object_types={"ARMATURE","MESH"}, use_mesh_modifiers=True,
     add_leaf_bones=False, primary_bone_axis="Y", secondary_bone_axis="X",
     use_armature_deform_only=True, mesh_smooth_type="FACE", use_tspace=True,
-    bake_anim=True, bake_anim_use_all_bones=True, bake_anim_use_nla_strips=True,
-    bake_anim_use_all_actions=True, bake_anim_force_startend_keying=True,
+    bake_anim=False,
     path_mode="AUTO", embed_textures=False)
 if not os.path.isfile(args.output) or os.path.getsize(args.output) <= 0:
     raise RuntimeError("FBX export missing")
@@ -312,6 +329,33 @@ for bone in reimport_arm.data.bones:
 needed={"head"}|{side+"_"+role for side in ("L","R") for role in required_roles if role!="head"}
 missing_influence=sorted(needed-weighted_bone_roles)
 print("HUMAN_WAVE2_EXPORTED_SKIN_QC missing="+",".join(missing_influence)+" weighted_bones="+str(len(influence)),flush=True)
+# Game deformation parents must survive the actual binary FBX round-trip.
+# This check prevents the known Rigify hierarchy failure from launching UE4.
+post_roles=choose_roles(influence,[b.name for b in reimport_arm.data.bones if b.use_deform])
+def reimport_descendant(child,ancestor):
+    node=reimport_arm.data.bones[child].parent
+    seen=set()
+    while node and node.name not in seen:
+        if node.name==ancestor:return True
+        seen.add(node.name)
+        node=node.parent
+    return False
+exported_hierarchy={}
+for side in ("left","right"):
+    exported_hierarchy[side+"_arm"]=(
+        reimport_descendant(post_roles[side+"_forearm"],post_roles[side+"_upper_arm"])
+        and reimport_descendant(post_roles[side+"_hand"],post_roles[side+"_forearm"]))
+    exported_hierarchy[side+"_leg"]=(
+        reimport_descendant(post_roles[side+"_shin"],post_roles[side+"_thigh"])
+        and reimport_descendant(post_roles[side+"_foot"],post_roles[side+"_shin"]))
+exported_hierarchy["spine_head"]=reimport_descendant(post_roles["head"],post_roles["spine"])
+if not all(exported_hierarchy.values()):
+    raise RuntimeError("GAME_RIG_EXPORTED_HIERARCHY_REJECT " +
+                       ",".join(k for k,v in exported_hierarchy.items() if not v))
+if any(b.name.startswith(("ORG-","MCH-")) for b in reimport_arm.data.bones):
+    raise RuntimeError("GAME_RIG_CONTROL_BONES_LEAKED")
+print("GAME_RIG_EXPORTED_HIERARCHY_PASS " + json.dumps(exported_hierarchy,sort_keys=True),flush=True)
+
 
 receipt={
     "armature_count":len(armatures),"mesh_count":len(meshes),"bone_count":bone_count,
@@ -325,6 +369,9 @@ receipt={
     "auto_skin_rebuilt":skin_rebuilt,
     "source_def_weighted_bones_before_repair":len(source_def_weights),
     "exported_weighted_bone_count":len(influence),
+    "game_rig":{k:v for k,v in game_export.items() if k!="parent_map"},
+    "exported_hierarchy":exported_hierarchy,
+    "animated_action_clips_exported":0,
     "exported_missing_limb_influence":missing_influence}
 with open(args.receipt,"w",encoding="utf-8") as f: json.dump(receipt,f,indent=2,sort_keys=True)
 print("HUMAN_WAVE2_BLENDER_PASS",json.dumps(receipt,sort_keys=True))
@@ -356,9 +403,9 @@ foreach($src in $selectedSources){
   $outPath=Join-Path $normalizedRoot $outName
   $readinessPath=Join-Path $normalizedRoot ("candidate_{0:D2}_readiness.json" -f $index)
   if($src.extension -eq ".blend"){
-    & $blenderCommand.Source --background ([string]$src.extracted_path) --python $pythonPath -- --source ([string]$src.extracted_path) --source-kind ".blend" --output $outPath --receipt $readinessPath
+    & $blenderCommand.Source --background ([string]$src.extracted_path) --python $pythonPath -- --source ([string]$src.extracted_path) --source-kind ".blend" --output $outPath --receipt $readinessPath --rig-helper $gameRigHelper
   }else{
-    & $blenderCommand.Source --background --factory-startup --python $pythonPath -- --source ([string]$src.extracted_path) --source-kind ".fbx" --output $outPath --receipt $readinessPath
+    & $blenderCommand.Source --background --factory-startup --python $pythonPath -- --source ([string]$src.extracted_path) --source-kind ".fbx" --output $outPath --receipt $readinessPath --rig-helper $gameRigHelper
   }
   if([int]$LASTEXITCODE -ne 0){ throw "HUMAN_WAVE2_NORMALIZE_FAIL entry=$($src.entry)" }
 

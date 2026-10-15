@@ -9281,7 +9281,18 @@
       "Focused source animation QA and real FBX receipt",
       "UE4 import/animation binding once quality passes",
       "Rendered Frodo then Gandalf review, actual movement and device profiling"
-    ]
+    ],
+    "source_export_candidate": {
+      "status": "SOURCE_STATIC_VALIDATED_EXACT_HEAD_BLENDER_PENDING",
+      "baseline": "73b82f13832711cec8d0f95067c83c86cc2e37f2",
+      "prior_failure_run": 38781832030,
+      "repair": "Isolated deform-only game rig with retained exact source rest pose/skin influences; explicit .01/.02 game limb chains and exported FBX hierarchy hard gate",
+      "pure_unit_tests": "6 local PASS",
+      "real_blender": "NOT_RUN",
+      "unreal_import": "NOT_RUN_FOR_NEW_CANDIDATE",
+      "visual": "NOT_RUN",
+      "runtime_integration_allowed": false
+    }
   },
   "pes_professional_preproduction_gate_2026_10_14": {
     "status": "OWNER_MANDATED_PERMANENT",
