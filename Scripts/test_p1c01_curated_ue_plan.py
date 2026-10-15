@@ -253,6 +253,9 @@ class CuratedPlanTests(unittest.TestCase):
         self.assertTrue(outcome['nature_slot_bindings_verified'])
         self.assertEqual(118,outcome['physically_persisted_uasset_checks'])
         self.assertFalse(outcome['gate6_7_closed'])
+        self.assertEqual(4, outcome['tree_material_family_count'])
+        self.assertEqual(0, outcome['tree_material_verified_families'])
+        self.assertEqual(4, outcome['tree_material_unresolved_families'])
         self.assertFalse(outcome['collision_nav_verified'])
         self.assertEqual(34,len(outcome['collision_review_pending']))
 
@@ -343,6 +346,68 @@ class CuratedPlanTests(unittest.TestCase):
         self.assertEqual(report['exact_nature_single_slot_bindings'], 8)
         self.assertEqual(report['unresolved_nature_material_slots'], 0)
         self.assertEqual(report['nature_material_assignments'][0]['slot'], 0)
+
+    def test_tree_bark_leaf_exact_two_slot_materials_are_persisted(self):
+        engine = MockEngine(self.root)
+        initial = engine.EditorAssetLibrary.load_asset
+        def load(path):
+            mesh = initial(path)
+            if '/Nature/Meshes/SM_Sh_tree_' in path and len(mesh.materials) == 1:
+                mesh.materials = [None, None]
+                mesh.get_editor_property = lambda key: (
+                    [MockSlot('T_Sh_Bark'), MockSlot('LeafGreen')]
+                    if key == 'static_materials' else None)
+            return mesh
+        engine.EditorAssetLibrary.load_asset = load
+        result = editor.editor_apply(engine, self.root)
+        self.assertEqual(4, result['tree_material_verified_families'])
+        self.assertEqual(0, result['tree_material_unresolved_families'])
+        for tree in result['tree_material_assignments']:
+            self.assertEqual(2, len(tree['assignments']))
+            self.assertEqual({'Bark', 'LeafGreen'},
+                             {item['surface'] for item in tree['assignments']})
+        self.assertFalse(result['visual_accepted'])
+
+    def test_blender_authored_green_leaf_and_bark_identity_is_proven(self):
+        # Exact exported names in Tools/CloudAssetBuild/blender_nature.py and
+        # actual 5943f38 UE4 import report: M_Sh_Bark / M_Sh_Leaf.
+        engine = MockEngine(self.root)
+        initial = engine.EditorAssetLibrary.load_asset
+        def load(path):
+            mesh = initial(path)
+            if '/Nature/Meshes/SM_Sh_tree_' in path and len(mesh.materials) == 1:
+                mesh.materials = [None, None]
+                mesh.get_editor_property = lambda key: (
+                    [MockSlot('M_Sh_Bark'), MockSlot('M_Sh_Leaf')]
+                    if key == 'static_materials' else None)
+            return mesh
+        engine.EditorAssetLibrary.load_asset = load
+        result = editor.editor_apply(engine, self.root)
+        self.assertEqual(4, result['tree_material_verified_families'])
+        self.assertEqual(0, result['tree_material_unresolved_families'])
+        self.assertTrue(all(len(row['assignments']) == 2
+                            for row in result['tree_material_assignments']))
+        self.assertFalse(result['visual_accepted'])
+        self.assertFalse(result['device_tested'])
+
+    def test_unlabelled_tree_remains_held_without_pbr_overwrite(self):
+        engine = MockEngine(self.root)
+        initial = engine.EditorAssetLibrary.load_asset
+        def load(path):
+            mesh = initial(path)
+            if path.endswith('SM_Sh_tree_apple_LOD0') and len(mesh.materials) == 1:
+                mesh.materials = [None, None]
+                mesh.get_editor_property = lambda key: (
+                    [MockSlot('Material.001'), MockSlot('LeafGreen')]
+                    if key == 'static_materials' else None)
+            return mesh
+        engine.EditorAssetLibrary.load_asset = load
+        result = editor.editor_apply(engine, self.root)
+        self.assertEqual(0, result['tree_material_verified_families'])
+        self.assertEqual(4, result['tree_material_unresolved_families'])
+        self.assertEqual('BARK_LEAF_SLOTS_UNPROVEN',
+                         result['tree_material_held_review'][0]['reason'])
+        self.assertFalse(result['gate6_7_closed'])
 
     def test_missing_physical_uasset_fails_closed(self):
         engine = MockEngine(self.root)

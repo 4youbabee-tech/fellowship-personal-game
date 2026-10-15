@@ -4,10 +4,16 @@ on:
   push:
     branches:
       - develop
+    paths-ignore:
+      - 'Docs/**'
+      - '**/*.md'
   pull_request:
     branches:
       - main
       - develop
+    paths-ignore:
+      - 'Docs/**'
+      - '**/*.md'
   workflow_dispatch:
     inputs:
       chapter_closeout_audits:
@@ -129,6 +135,9 @@ jobs:
       - name: Validate project structure
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" Scripts\pre_unreal_validate.py
 
+      - name: Guard short M0 index and Governor acceleration policy
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_pes002_m0_quick_index.py" -v
+
       - name: Validate project governor
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" Scripts\project_governor.py
 
@@ -178,9 +187,15 @@ jobs:
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_source_contracts.py" -v
 
       - name: Verify curated Shire original LOD and packed texture bridge (offline mock only)
-        if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_p1c01_curated_ue_plan.py" -v
+
+      - name: Guard PES-002 imported PBR shader and true bark/leaf source identity
+        shell: cmd
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_pes002_curated_pbr_shader_contract.py" -v
+
+      - name: Guard Cloud138 shared shader parent ownership
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_restore_cloud138_parent_contract.py" -v
       - name: Test P1C01 multi-zone curated nature runtime evidence contract
         if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_p1c01_curated_world_runtime.py" -v
@@ -188,6 +203,18 @@ jobs:
       - name: Test PES-001 Cloud138 grounded world-binding source
         if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_cloud138_world_binding.py" -v
+
+      - name: Test PES-002 camera and screenshot safety contract
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" Scripts\test_pes002_visual_contract.py
+
+      - name: Guard PES-002 shared Bag End roof and wall topology before Unreal
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_pes002_joined_facade_source.py" -v
+
+      - name: Guard PES-002 unique Bag End albedo CRC, budget and MTL contracts
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_pes002_hero_texture_contract.py" -v
+
+      - name: Test Frodo game-only deform skeleton hierarchy and strict bindings
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_p1c01_game_deform_export.py" -v
 
       - name: Test Governor semantic contracts
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_governance_contracts.py" -v

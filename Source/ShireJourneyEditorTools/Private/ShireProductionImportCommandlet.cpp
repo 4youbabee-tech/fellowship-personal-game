@@ -21,6 +21,7 @@
 #include "Misc/Parse.h"
 #include "Materials/Material.h"
 #include "Materials/MaterialExpressionScalarParameter.h"
+#include "Materials/MaterialExpressionConstant.h"
 #include "Materials/MaterialExpressionTextureSampleParameter2D.h"
 #include "Materials/MaterialExpressionMultiply.h"
 #include "Materials/MaterialExpressionComponentMask.h"
@@ -871,6 +872,73 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
     }
 
 
+    // PES-002 real Windows screenshot log: both production masters were compiled as
+    // default material for HISM/ISM, and SimpleGrassWind's required AdditionalWPO
+    // input was left unconnected. Repair persisted masters too (not just new assets).
+    // Editor-only import owns this migration, not gameplay or synchronous runtime loads.
+    auto RepairInstancedMaster = [&](UMaterialInterface* Parent, const TCHAR* Label)
+    {
+        UMaterial* Master = Cast<UMaterial>(Parent);
+        if (!Master)
+        {
+            ++Failed;
+            UE_LOG(LogTemp, Error,
+                TEXT("PES002_INSTANCED_MASTER_NOT_MATERIAL name=%s"), Label);
+            return;
+        }
+        bool bChanged = false;
+        if (!Master->bUsedWithInstancedStaticMeshes)
+        {
+            Master->Modify();
+            Master->bUsedWithInstancedStaticMeshes = true;
+            bChanged = true;
+        }
+        if (FString(Label).Equals(TEXT("M_ProductionFoliage")))
+        {
+            UMaterialExpressionMaterialFunctionCall* WindCall = nullptr;
+            for (UMaterialExpression* Expression : Master->Expressions)
+            {
+                UMaterialExpressionMaterialFunctionCall* Candidate =
+                    Cast<UMaterialExpressionMaterialFunctionCall>(Expression);
+                if (Candidate &&
+                    Candidate->MaterialFunction &&
+                    Candidate->MaterialFunction->GetName().Equals(TEXT("SimpleGrassWind")))
+                {
+                    WindCall = Candidate;
+                    break;
+                }
+            }
+            FExpressionInput* AdditionalWPO = WindCall ? WindCall->GetInput(3) : nullptr;
+            if (!AdditionalWPO)
+            {
+                ++Failed;
+                UE_LOG(LogTemp, Error,
+                    TEXT("PES002_FOLIAGE_WIND_INPUT_MISSING name=AdditionalWPO"));
+            }
+            else if (!AdditionalWPO->Expression)
+            {
+                UMaterialExpressionConstant* ZeroOffset =
+                    NewObject<UMaterialExpressionConstant>(Master);
+                ZeroOffset->R = 0.0f;
+                Master->Expressions.Add(ZeroOffset);
+                AdditionalWPO->Expression = ZeroOffset;
+                bChanged = true;
+            }
+        }
+        if (bChanged)
+        {
+            Master->PostEditChange();
+            Master->MarkPackageDirty();
+            ImportedMaterialPackages.AddUnique(Master->GetOutermost());
+        }
+        UE_LOG(LogTemp, Display,
+            TEXT("PES002_INSTANCED_MASTER_REPAIR name=%s changed=%d valid=%d"),
+            Label, bChanged ? 1 : 0,
+            Master->bUsedWithInstancedStaticMeshes ? 1 : 0);
+    };
+    RepairInstancedMaster(ProductionMaterialParent, TEXT("M_ProductionSurface"));
+    RepairInstancedMaster(ProductionFoliageParent, TEXT("M_ProductionFoliage"));
+
     // Far foliage uses a separate no-WPO master. C3/C4 will bind this to distant
     // LOD material slots so far vegetation removes wind vertex instructions entirely.
     const TCHAR* ProductionFoliageFarPath =
@@ -1004,10 +1072,13 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                 TEXT("NormalTexture"),
                 TEXT("/Engine/EngineMaterials/DefaultNormal.DefaultNormal"),
                 SAMPLERTYPE_Normal);
+            // A WhiteSquare default is sRGB/TC_Default: LinearColor is INVALID
+            // for that engine texture and produces an SM5 default-material fallback.
+            // Importing the physical curated ORM later promotes it to TC_Masks.
             UMaterialExpressionTextureSampleParameter2D* ORM = AddSample(
                 TEXT("ORMTexture"),
                 TEXT("/Engine/EngineResources/WhiteSquareTexture.WhiteSquareTexture"),
-                SAMPLERTYPE_LinearColor);
+                SAMPLERTYPE_Color);
             auto Channel = [&](bool R, bool G, bool B) -> UMaterialExpressionComponentMask*
             {
                 UMaterialExpressionComponentMask* Mask =
@@ -1336,6 +1407,11 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         const FString DestinationPath = RelativeDir.IsEmpty()
             ? TEXT("/Game/Production")
             : FString::Printf(TEXT("/Game/Production/%s"), *RelativeDir);
+        // One authored Bag End facade contains many material sections, not
+        // independent buildings. Preserve a SINGLE expected package identity.
+        const bool bDedicatedBagEndFacade =
+            Relative.Equals(TEXT("World/Shire/SM_ShBagEndHeroFacade.obj"),
+                ESearchCase::IgnoreCase);
 
         UAssetImportTask* Task = NewObject<UAssetImportTask>();
         Task->Filename = Filename;
@@ -1489,6 +1565,16 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                 if (ImportOptions->StaticMeshImportData)
                 {
                     ImportOptions->StaticMeshImportData->bRemoveDegenerates = true;
+                    // Epic UE4.27 FbxStaticMeshImportData::bCombineMeshes:
+                    // prevent one authoring group per ring/sill from becoming
+                    // separate StaticMesh packages with no hero facade asset.
+                    // Scope strictly to the dedicated static facade; leave all
+                    // other imports, animated character rigs and materials alone.
+                    if (bDedicatedBagEndFacade)
+                    {
+                        ImportOptions->StaticMeshImportData->bCombineMeshes = true;
+                        ImportOptions->StaticMeshImportData->bAutoGenerateCollision = false;
+                    }
 
                     const bool bHasTextureCoordinates =
                         ShireProductionImport::HasObjTextureCoordinates(ObjSource);
@@ -1723,6 +1809,64 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                     ++MarkedMaterialPackages;
                 }
             }
+            if (bDedicatedBagEndFacade)
+            {
+                // Exact package identity alone missed the earlier brown-panel defect.
+                // Every authored finish must survive import with a real material.
+                const TArray<FName> RequiredSlots = {
+                    TEXT("BagEndPlaster"), TEXT("BagEndTurf"), TEXT("Stone"), TEXT("Wood"),
+                    TEXT("BagEndDoor"), TEXT("BagEndBrass"), TEXT("BagEndGlass")
+                };
+                // UE4 reimport retains unused historical slots (Epic UE-60152).
+                // Validate actual drawn sections rather than the backing array size.
+                bool bHeroMaterialsValid = true;
+                for (const FName& RequiredSlot : RequiredSlots)
+                {
+                    const FStaticMaterial* Found = StaticMaterials.FindByPredicate(
+                        [&RequiredSlot](const FStaticMaterial& Entry)
+                        { return Entry.MaterialSlotName == RequiredSlot; });
+                    bHeroMaterialsValid = bHeroMaterialsValid && Found && Found->MaterialInterface;
+                }
+                TSet<FName> DrawnFinishes;
+                const FStaticMeshRenderData* HeroRenderData = ImportedMesh->GetRenderData();
+                if (!HeroRenderData || HeroRenderData->LODResources.Num() == 0)
+                {
+                    bHeroMaterialsValid = false;
+                }
+                else
+                {
+                    for (const FStaticMeshSection& Section : HeroRenderData->LODResources[0].Sections)
+                    {
+                        if (Section.NumTriangles == 0) continue;
+                        if (!StaticMaterials.IsValidIndex(Section.MaterialIndex))
+                        {
+                            bHeroMaterialsValid = false;
+                            continue;
+                        }
+                        const FStaticMaterial& Drawn = StaticMaterials[Section.MaterialIndex];
+                        DrawnFinishes.Add(Drawn.MaterialSlotName);
+                        bHeroMaterialsValid = bHeroMaterialsValid &&
+                            RequiredSlots.Contains(Drawn.MaterialSlotName) && Drawn.MaterialInterface;
+                        UE_LOG(LogTemp, Display,
+                            TEXT("PES002_HERO_DRAWN_FINISH slot=%s triangles=%d material=%s"),
+                            *Drawn.MaterialSlotName.ToString(), Section.NumTriangles,
+                            *GetPathNameSafe(Drawn.MaterialInterface));
+                    }
+                }
+                bHeroMaterialsValid = bHeroMaterialsValid && DrawnFinishes.Num() == RequiredSlots.Num();
+                if (!bHeroMaterialsValid)
+                {
+                    ++Failed;
+                    UE_LOG(LogTemp, Error, TEXT("PES002_HERO_MATERIALS_REJECT slots=%d drawn=%d required=7"),
+                        StaticMaterials.Num(), DrawnFinishes.Num());
+                }
+                else
+                {
+                    UE_LOG(LogTemp, Display,
+                        TEXT("PES002_HERO_MATERIALS_READY drawn=7 slots=%d uv=authored visual=pending"),
+                        StaticMaterials.Num());
+                }
+            }
             if (ShireProductionImport::IsP1C01FoliageMeshAssetName(AssetName))
             {
                 const FStaticMeshRenderData* RenderData = ImportedMesh->GetRenderData();
@@ -1839,11 +1983,24 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         // UE4.27 import factories are not perfectly consistent about which result
         // collection they populate in unattended mode. Treat the import as successful
         // when any task result is reported or the expected asset can be resolved.
+        // The old importer reported SUCCESS for 30 split mesh paths even
+        // though /Game/Production/World/Shire/SM_ShBagEndHeroFacade was absent.
+        // The streaming plan and runtime need this exact named StaticMesh.
+        const bool bExactHeroPackageResolved =
+            !bDedicatedBagEndFacade ||
+            FindObject<UStaticMesh>(nullptr, *ExpectedObjectPath) != nullptr;
+        if (bDedicatedBagEndFacade && !bExactHeroPackageResolved)
+        {
+            UE_LOG(LogTemp, Error,
+                TEXT("PES002_HERO_FACADE_IMPORT_REJECT expected=%s paths=%d result=%d reason=exact-static-mesh-not-registered"),
+                *ExpectedObjectPath, Task->ImportedObjectPaths.Num(), Task->Result.Num());
+        }
         const bool bImported =
-            Task->ImportedObjectPaths.Num() > 0 ||
+            bExactHeroPackageResolved &&
+            (Task->ImportedObjectPaths.Num() > 0 ||
             Task->Result.Num() > 0 ||
             ImportedAsset != nullptr ||
-            bSkeletalAssetRegistered;
+            bSkeletalAssetRegistered);
 
         UE_LOG(
             LogTemp,
@@ -1976,6 +2133,92 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             RegistryMaterialAssets,
             RecoveredMaterialBindings,
             ImportedMaterialPackages.Num());
+    }
+
+    // PES-002 exact-runtime root cause (run 38812432393): the verified PBR
+    // parent shipped with an sRGB WhiteSquare default on a LinearColor sampler,
+    // and lacked instanced-mesh usage. D3D SM5 substituted default grey for
+    // the newly imported 92 curated HISM instances. The real, licensed
+    // project-authored Bark ORM is available AFTER the source import loop.
+    // Repair both newly created and previously persisted masters before
+    // saving: proper Masks texture/sampler, instanced support and real package.
+    if (UMaterial* VerifiedMaster = Cast<UMaterial>(VerifiedPBRParent))
+    {
+        const TCHAR* CuratedDefaultORMPath =
+            TEXT("/Game/Production/World/Shire/CuratedP1C01/Nature/Textures/T_Sh_Bark_ORM.T_Sh_Bark_ORM");
+        UTexture2D* CuratedDefaultORM =
+            FindObject<UTexture2D>(nullptr, CuratedDefaultORMPath);
+        if (!CuratedDefaultORM)
+        {
+            CuratedDefaultORM =
+                LoadObject<UTexture2D>(nullptr, CuratedDefaultORMPath);
+        }
+        if (CuratedDefaultORM)
+        {
+            UMaterialExpressionTextureSampleParameter2D* ORMParameter = nullptr;
+            int32 ORMParameterCount = 0;
+            for (UMaterialExpression* Expression : VerifiedMaster->Expressions)
+            {
+                UMaterialExpressionTextureSampleParameter2D* Candidate =
+                    Cast<UMaterialExpressionTextureSampleParameter2D>(Expression);
+                if (Candidate &&
+                    Candidate->ParameterName == FName(TEXT("ORMTexture")))
+                {
+                    ORMParameter = Candidate;
+                    ++ORMParameterCount;
+                }
+            }
+            if (ORMParameterCount != 1 || !ORMParameter)
+            {
+                ++Failed;
+                UE_LOG(LogTemp, Error,
+                    TEXT("P1C01_CURATED_PBR_ORM_NODE_INVALID count=%d"),
+                    ORMParameterCount);
+            }
+            else
+            {
+                // Physical source contains packed AO/Roughness/Metallic, not
+                // gamma-corrected albedo. Both the texture and material sampler
+                // must be Masks; do not change the BaseColor sample semantics.
+                CuratedDefaultORM->Modify();
+                CuratedDefaultORM->SRGB = false;
+                CuratedDefaultORM->CompressionSettings = TC_Masks;
+                CuratedDefaultORM->PostEditChange();
+                CuratedDefaultORM->MarkPackageDirty();
+                ImportedMaterialPackages.AddUnique(
+                    CuratedDefaultORM->GetOutermost());
+
+                VerifiedMaster->Modify();
+                ORMParameter->Modify();
+                ORMParameter->Texture = CuratedDefaultORM;
+                ORMParameter->SamplerType = SAMPLERTYPE_Masks;
+                VerifiedMaster->bUsedWithInstancedStaticMeshes = true;
+                VerifiedMaster->PostEditChange();
+                VerifiedMaster->MarkPackageDirty();
+                ImportedMaterialPackages.AddUnique(
+                    VerifiedMaster->GetOutermost());
+                const bool bContract =
+                    ORMParameter->Texture == CuratedDefaultORM &&
+                    ORMParameter->SamplerType == SAMPLERTYPE_Masks &&
+                    !CuratedDefaultORM->SRGB &&
+                    CuratedDefaultORM->CompressionSettings == TC_Masks &&
+                    VerifiedMaster->bUsedWithInstancedStaticMeshes;
+                UE_LOG(LogTemp, Display,
+                    TEXT("P1C01_CURATED_PBR_MASTER_REPAIR ready=%d orm=masks srgb=0 instanced=1 path=%s"),
+                    bContract ? 1 : 0, CuratedDefaultORMPath);
+                if (!bContract)
+                {
+                    ++Failed;
+                    UE_LOG(LogTemp, Error,
+                        TEXT("P1C01_CURATED_PBR_MASTER_REPAIR_FAILED"));
+                }
+            }
+        }
+        else
+        {
+            UE_LOG(LogTemp, Display,
+                TEXT("P1C01_CURATED_PBR_MASTER_REPAIR_DEFERRED reason=source-orm-package-missing"));
+        }
     }
 
     // OBJ import may create secondary material packages that UE4.27 does not

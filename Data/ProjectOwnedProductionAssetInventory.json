@@ -664,8 +664,8 @@
     },
     {
       "root": "SourceAssets/Production/World/Shire",
-      "file_count": 48,
-      "obj_count": 39,
+      "file_count": 49,
+      "obj_count": 40,
       "mtl_count": 2,
       "image_count": 7,
       "files": [
@@ -685,6 +685,7 @@
         "SourceAssets/Production/World/Shire/SM_ShHaystack.obj",
         "SourceAssets/Production/World/Shire/SM_ShHedge.obj",
         "SourceAssets/Production/World/Shire/SM_ShHobbitFacade.obj",
+        "SourceAssets/Production/World/Shire/SM_ShBagEndHeroFacade.obj",
         "SourceAssets/Production/World/Shire/SM_ShLampPost.obj",
         "SourceAssets/Production/World/Shire/SM_ShLantern.obj",
         "SourceAssets/Production/World/Shire/SM_ShMailbox.obj",
@@ -740,8 +741,8 @@
     }
   ],
   "totals": {
-    "production_files": 396,
-    "obj_files": 352,
+    "production_files": 397,
+    "obj_files": 353,
     "mtl_files": 19,
     "image_files": 24
   },

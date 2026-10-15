@@ -60,6 +60,23 @@ if not meshes:
     raise RuntimeError("no mesh objects")
 armature = armatures[0]
 
+# FBX may contain Rigify ORG/MCH controls after normalization even when the mesh
+# is actually skinned to DEF bones. Rotating an unweighted control after FBX
+# constraints were baked/stripped can leave every vertex stationary. The old
+# gate accepted that zero-displacement no-op because it only checked finite
+# bounds. Rank joints by real imported vertex-group influence and fail closed if
+# a stress scenario does not move the evaluated mesh.
+vertex_group_weight = {}
+for mesh in meshes:
+    index_to_name = {group.index: group.name for group in mesh.vertex_groups}
+    for vertex in mesh.data.vertices:
+        for membership in vertex.groups:
+            name = index_to_name.get(membership.group)
+            if name:
+                vertex_group_weight[name] = (
+                    vertex_group_weight.get(name, 0.0) + float(membership.weight)
+                )
+
 def compact(name):
     return re.sub(r"[^a-z0-9]+", "", name.lower())
 
@@ -80,8 +97,13 @@ def find_joint(tokens, side=None, exclude=()):
         if any(x in packed for x in exclude):
             continue
         if any(token in packed for token in tokens):
-            score = 0 if pb.bone.use_deform else 10
-            score += len(pb.name) * 0.001
+            weight = vertex_group_weight.get(pb.name, 0.0)
+            score = (
+                0 if weight > 1e-6 else 100,
+                0 if pb.bone.use_deform else 10,
+                -weight,
+                len(pb.name) * 0.001,
+            )
             matches.append((score, pb))
     if not matches:
         return None
@@ -108,6 +130,12 @@ joints = {
 missing = sorted([key for key, value in joints.items() if value is None])
 if missing:
     raise RuntimeError("required deformation joints missing: " + ",".join(missing))
+unweighted = sorted(
+    key for key, value in joints.items()
+    if vertex_group_weight.get(value.name, 0.0) <= 1e-6
+)
+if unweighted:
+    raise RuntimeError("required deformation joints have no skin influence: " + ",".join(unweighted))
 
 def is_descendant(child, parent):
     node = child.bone.parent
@@ -189,13 +217,19 @@ for name, rotations in scenarios:
             math.sqrt(sum((posed_points[i][axis] - rest_points[i][axis]) ** 2 for axis in range(3)))
             for i in range(len(rest_points)))
         ratio = posed["diag"] / rest["diag"] if rest["diag"] > 0 else 999.0
-        passed = posed["finite"] and 0.20 <= ratio <= 5.0 and max_displacement <= rest["diag"] * 5.0
+        minimum_displacement = rest["diag"] * 0.0025
+        passed = (
+            posed["finite"]
+            and 0.20 <= ratio <= 5.0
+            and minimum_displacement <= max_displacement <= rest["diag"] * 5.0
+        )
     scenario_results.append({
         "name": name,
         "passed": passed,
         "bounds": posed,
         "bounds_ratio": posed["diag"] / rest["diag"] if rest["diag"] > 0 else None,
         "max_vertex_displacement": max_displacement,
+        "minimum_required_displacement": rest["diag"] * 0.0025,
     })
 
 reset_pose()
@@ -215,6 +249,9 @@ receipt = {
     "source_entry": candidate.get("source_entry"),
     "source_sha256": candidate.get("source_sha256"),
     "joint_map": {key: value.name for key, value in joints.items()},
+    "joint_skin_influence": {
+        key: vertex_group_weight.get(value.name, 0.0) for key, value in joints.items()
+    },
     "hierarchy": hierarchy,
     "rest_bounds": rest,
     "scenarios": scenario_results,

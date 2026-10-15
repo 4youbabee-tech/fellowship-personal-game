@@ -23,6 +23,8 @@
     "Deliver a visually strong, enjoyable image on the target laptop through selective quality budgeting rather than uniformly low settings; performance optimization must preserve the player's sense of beauty, atmosphere and authored world quality."
   ],
   "operating_rules": [
+    "PES mandatory execution loop: detect real failure, diagnose with evidence, repair root cause, rebuild or reimport affected layers, retest exact failure, inspect visual/traversal proof, then continue the active PES without asking the owner for another continue; never call a blocked stage complete.",
+    "Keep repairs within one cohesive PES PR whenever possible and add a focused regression guard; avoid reimporting verified successful assets or running unrelated chapter-wide tests. Do not bypass Gate 6/7, hide failed critical checks, or declare PIE/device/visual acceptance without matching real evidence.",
     "Owner-authorized PES focused UE verification must bypass static-only classification when workflow_dispatch pes_focused_unreal=true and run_self_hosted=true, execute existing UE4 compile/import/rehydration/startup checks without packaging; explicit chapter closeout gates remain separate and are not waived.",
     "During ordinary PES production keep exact-head hosted/static safety, changed-code UE compile, necessary importer/reopen/persistence and focused startup proof. Do not run whole-chapter, route/story roundtrip, global warning-debt sweeps or Cook/Stage/Package except at explicitly approved Part I/chapter closeout; the heavyweight workflow requires both package_windows and part1_closeout_approved. Never waive mandatory Gate 6/7 human, PIE, device or final acceptance evidence.",
     "Global project-management changes go through the single Governor and a validation branch/PR; workers must not create competing authority files.",
@@ -9166,7 +9168,24 @@
     "default": "Focused exact-head static, Governor and safety contracts; Unreal engine impacted paths still require normal classifier and runner C++/import/startup.",
     "deferred_tests": 35,
     "closeout": "Broad historical and cross-chapter static regressions via workflow_dispatch chapter_closeout_audits=true; no Gate 6/7 waiver",
-    "failsafe": "PowerShell syntax, Governor, project structure, classification, packaging safety and strict source asset quality run on ordinary PR/push"
+    "failsafe": "PowerShell syntax, Governor, project structure, classification, packaging safety and strict source asset quality run on ordinary PR/push",
+    "documentation_only_path_filter_2026_10_15": {
+      "authorization": "OWNER_REQUESTED",
+      "description": "Skip Pre-Unreal workflow for changes exclusively under Docs/ or *.md files. All code, assets, ProjectGovernor JSON, .github workflows, mission data and mixed documentation-plus-code PRs still receive unchanged Pre-Unreal safety tests.",
+      "implementation": ".github/workflows/pre-unreal-validation.yml paths-ignore on push/develop and PR/main/develop",
+      "scope": "workflow-trigger reduction only; no alteration of test scripts or waiver of Governor, PG-017 LFS, Unreal importer, Rigify deformation, visual/PIE/device acceptance.",
+      "trigger_semantics": "GitHub paths-ignore skips ONLY if ALL changed files match docs/md filters; mixed changes still trigger CI",
+      "full_audits": "workflow_dispatch chapter_closeout_audits=true remains available",
+      "status": "CANDIDATE_PENDING_EXACT_HEAD"
+    },
+    "specialist_workflow_throttle_2026_10_15": {
+      "owner_authorized": true,
+      "status": "CANDIDATE_PENDING_GITHUB_VERIFICATION",
+      "root_cause": "GitHub pull_request paths evaluated the accumulated PR diff; old character and shared code files retrigger unrelated heavy workflows on every small PR push",
+      "changes": "Switch five specialist source/rig workflows to incremental push path filters on noncanonical branches; preserve manual dispatch for four source/rig workflows; limit cloud 28-region build to generator/region source paths, not all CloudAssetBuild; exclude shared C++ import path from dedicated rig workflows",
+      "safety": "Retain required Pre-Unreal and Unreal compile/import/visual/collision/PIE/device gates, one writer, Gate 6/7, exact SHA evidence, per-source owner gates at point of promotion",
+      "known_limit": "Changes on feature branch still require specialist manual dispatch if path-trigger cannot safely cover new dependency; branch pushes to develop/main remain standard canonical validation."
+    }
   },
   "pes_single_cohesive_batch_policy_2026_10_14": {
     "status": "OWNER_MANDATED",
@@ -9178,5 +9197,322 @@
     "truth": "Session stays OPEN for missing required screenshot/traversal/visual even if an internal batch was merged",
     "active_session": "PES-002 Bag End Exterior",
     "owner_approval": "Engineering actions within connected permissions authorized without repeated approval"
+  },
+  "pes_immediate_root_cause_repair_protocol_2026_10_14": {
+    "id": "DEC-PES-ROOT-20261014",
+    "status": "OWNER_MANDATED",
+    "active_session": "PES-002",
+    "loop": [
+      "DETECT",
+      "DIAGNOSE",
+      "ROOT_CAUSE_FIX",
+      "REBUILD_OR_REIMPORT_WHEN_AFFECTED",
+      "RETEST",
+      "INSPECT_EVIDENCE",
+      "ACCEPT_OR_REPEAT"
+    ],
+    "continuation": "Continue through the active PES automatically without additional owner prompts while tools and permissions permit. Bundle routine engineering corrections into one coherent PR.",
+    "validation": "Exact-head static plus changed-runtime UE compile; focused startup and screenshot/traversal when applicable; Gate 6/7 unchanged.",
+    "failure_rule": "A failed mandatory proof remains failed, is diagnosed and repaired, and never becomes success by continue-on-error or documents alone.",
+    "scope_rule": "Do not open PES-003 while PES-002 screenshot, lighting/material/architecture review and traversal acceptance remain open.",
+    "last_observed_render": {
+      "run_id": 38765635848,
+      "head_sha": "8058f6a7025145e1e6bb98bb624e235d330e1d9b",
+      "artifact_id": 11989868346,
+      "archive_sha256": "4c5a0ac5e7cd50c0a628281080f0baef7b88c58db130792388ff8a9a122d6895",
+      "render_review": "ASSISTANT_REJECTED_OWNER_ACCEPTANCE_OUTSTANDING",
+      "concrete_defects": [
+        "Visible stepped roof/facade seam and exposed open turf-shell side edges in oblique Unreal 720p images",
+        "Procedural garden/ground and distant primitive trees",
+        "Modular NPC/hero character fallbacks with no accepted skin/deformation",
+        "Bag End full PIE traversal and device FPS/VRAM unproven"
+      ],
+      "followup": "Source correction shares 33 wall/roof crown vertices and 32 roof/wall edges, adds buried side/rear apron; 3 local source tests PASS. New-HEAD UE import, four-view screenshots, real traversal and hardware profiling pending.",
+      "restrictions": "PES-002 OPEN, PES-003 LOCKED; render-observed old asset is NOT visual accepted; no PIE/device/FPS proof for correction"
+    },
+    "current_repair_candidate": {
+      "stage": "UE4_IMPORTED_AND_FOUR_VIEW_RENDER_OBSERVED_VISUALLY_REJECTED",
+      "scope": "PR477 PES-002 Bag End wall/turf seam and roof apron root repair, no new PES runtime",
+      "baseline_head": "8058f6a7025145e1e6bb98bb624e235d330e1d9b",
+      "mesh_sha256": "0ff731e144f5b6667395a005dcd2c86585f780cb57b9f67bf11e7bdfa836e35d",
+      "generator_sha256": "ae1dd3d97b15eaaa67ad61f28474eda04aa236438bc3b410eadf7ec78cd73ab6",
+      "triangles": 2780,
+      "material_sections": 7,
+      "test": "3 local source regression tests PASS; new mandatory Pre-Unreal source check prepared",
+      "roof_wall_shared_vertices": 33,
+      "roof_wall_shared_edges": 32,
+      "import_package": "/Game/Production/World/Shire/SM_ShBagEndHeroFacade.SM_ShBagEndHeroFacade",
+      "no_new_runtime_pes": true,
+      "exact_head_unreal": "NOT_RUN_FOR_THIS_CANDIDATE",
+      "rendered_visual": "NOT_RUN_FOR_THIS_CANDIDATE",
+      "pie_traversal": "NOT_RUN",
+      "target_device_720p_fps": "NOT_RUN",
+      "rollback": "Revert one cohesive PR477 source/test/docs batch if verified engine import/visual breaks; preserve quest collisions and unrelated accepted assets",
+      "method_doc": "Docs/PES002_PROFESSIONAL_ASSET_PRODUCTION_METHOD.md",
+      "previous_source_stage": "LOCAL_SOURCE_TOPOLOGY_PASS_EXACT_HEAD_ENGINE_AND_VISUAL_PENDING",
+      "latest_exact_head_proof": {
+        "head": "a92d397150ce903ce330175ea3afa5bcb0a3b37e",
+        "ue_run": 38789500278,
+        "visual_artifact": 12001805029,
+        "cpp": "PASS",
+        "import": "PASS",
+        "four_1280x720_captures": "PASS",
+        "visual": "REJECTED",
+        "traversal": "NOT_RUN",
+        "target_device_performance": "NOT_RUN"
+      }
+    },
+    "previous_observed_render_2026_10_15": {
+      "run_id": 38727751427,
+      "head_sha": "d5f37b5e61722c4828170a729c5ae0f37aab1f58",
+      "artifact_id": 11969310933,
+      "archive_sha256": "5b5d9c410f2ad4358d39ab7be4ffb5e7172ea1a8a3e57ce622029817ee004978",
+      "render_review": "ASSISTANT_REJECTED_OWNER_ACCEPTANCE_OUTSTANDING",
+      "concrete_defects": [
+        "Suppressed authored facade; floating door and duplicate glass against detached turf mound",
+        "Modular character fallbacks; source skin QC fails before FBX",
+        "No traversal/device acceptance"
+      ],
+      "followup": "Existing hero source roof/entrance/7 named finishes, importer slot guard and runtime reuse candidate; exact-head engine proof required",
+      "restrictions": "PES-002 OPEN, PES-003 LOCKED; no PIE/device/FPS/visual acceptance"
+    },
+    "previous_repair_candidate_51c2ed1": {
+      "stage": "COMPILE_TESTED_IMPORT_FAILED_REPAIR_PENDING",
+      "scope": "Joined Bag End exterior on PR477",
+      "mesh_sha256": "ad8019a44a2fb19e49e7b443e8fd33f0f5762c663171d3df9942614d9fb86048",
+      "triangles": 2704,
+      "material_sections": 7,
+      "method_doc": "Docs/PES002_PROFESSIONAL_ASSET_PRODUCTION_METHOD.md",
+      "no_new_runtime_pes": true,
+      "compile_evidence": {
+        "head_sha": "51c2ed1b1577dea50185dcf8f6fe01514c37d682",
+        "pre_unreal_run": 38762271198,
+        "unreal_run": 38762271397,
+        "cpp": "PASS",
+        "import": "FAIL slots=8 required=7",
+        "screenshots": "NOT_RUN"
+      },
+      "repair": "Validate all seven named bound finishes on actual nonempty LOD0 sections; reject unexpected drawn slots; retain unused-slot evidence without speculative deletion"
+    }
+  },
+  "pes002_character_visual_pilot_2026_10_14": {
+    "status": "OWNER_AUTHORIZED_SOURCE_PREPARATION_ACTIVE",
+    "active_pes": "PES-002",
+    "first_character": "Frodo",
+    "next_character": "Gandalf",
+    "policy": "Begin character production now in parallel source-preparation lane; preserve distinct PES runtime acceptance gates.",
+    "source_packet": "Data/P1C01CharacterVisualPilotV1.json",
+    "reason": "Bag End runtime render contains modular placeholders; character streaming reports packages-missing.",
+    "technical_path": "Use existing Frodo skeletal winner and source Idle/Walk/Run; require verified deformation, UE4.27 Skeleton/AnimBP, and human visual proof before promotion.",
+    "professional_reference": "Epic UE4.27 Animation Blueprints, BlendSpaces, retargeting and animation budget practices; tailor to 8GB RAM and 2GB VRAM.",
+    "scope_guard": "No new runtime PES, no premature Rig ACCEPTED state; PES-002 remains OPEN.",
+    "next_actions": [
+      "Focused source animation QA and real FBX receipt",
+      "UE4 import/animation binding once quality passes",
+      "Rendered Frodo then Gandalf review, actual movement and device profiling"
+    ],
+    "source_export_candidate": {
+      "status": "SOURCE_STATIC_VALIDATED_EXACT_HEAD_BLENDER_PENDING",
+      "baseline": "73b82f13832711cec8d0f95067c83c86cc2e37f2",
+      "prior_failure_run": 38781832030,
+      "repair": "Isolated deform-only game rig with retained exact source rest pose/skin influences; explicit .01/.02 game limb chains and exported FBX hierarchy hard gate",
+      "pure_unit_tests": "6 local PASS",
+      "real_blender": "NOT_RUN",
+      "unreal_import": "NOT_RUN_FOR_NEW_CANDIDATE",
+      "visual": "NOT_RUN",
+      "runtime_integration_allowed": false
+    }
+  },
+  "pes_professional_preproduction_gate_2026_10_14": {
+    "status": "OWNER_MANDATED_PERMANENT",
+    "applies_to": "Each of PES-001 through PES-024 and any production repair batches, subject to active PES and Governor Gate 6/7",
+    "sequence": [
+      "1. Confirm exact develop/active PR HEAD, Governor, chapter scope, lore and last real Unreal images/logs; inventory missing dependencies with status SOURCE_AVAILABLE/WAREHOUSE_PERSISTED/UE_IMPORTED/WORLD_PLACED/RENDER_OBSERVED/ACCEPTED.",
+      "2. Before writing assets/code, research the exact discipline: official Epic UE4.27 and Blender pipeline first, proven developer case studies and mature reproducible source code/issue discussions second; record versions, licensing and at least one concrete technique adapted to 8GB RAM/~2GB VRAM.",
+      "3. Character workflow must include silhouette/proportions, legal FBX, bone hierarchy, DEFORM skin vertex groups, exported-FBX per-limb influence, measured deformation, stable Skeleton and AnimBP/Idle-Walk-Run, collisions, live NPC presentation; refuse nondeforming rigs.",
+      "4. Building/world/terrain/water/foliage workflow must include reference art, dimensions and focal silhouette, deterministic UV/material slots, single expected mesh identity and package persistence, collision/NavMesh/traversal, instancing/LOD/culling where appropriate, lighting and actual render review.",
+      "5. Prepare all legal inputs, import/warehouse receipt, C++ bindings, art manifests, source QC, engine assertions, documentation and rollback plan OFFLINE before planned one cohesive commit and push. Respect one Unreal writer and one Warehouse writer.",
+      "6. Run cheapest source/static/license/FBX/UV/weights/asset path/contract checks first, then exact-head CI/UE4 import/automation/startup and real rendered screenshots on the same SHA; use actual profiling before claiming 30 FPS.",
+      "7. Failure: diagnose ALL related logs and source family, choose repair versus discard, consolidate one bounded root-cause batch, add prevention test, never retry unchanged failed payload. Do not suppress failures or lower thresholds.",
+      "8. Update current state and completeness matrix together with code, preserve project governor authority, record cited professional methods and decision, provide M1-M7 real-stage evidence and owner-readable progress."
+    ],
+    "required_preflight_record_fields": [
+      "session_id",
+      "scope_and_previous_gates",
+      "head_sha",
+      "visual_reference_and_lore",
+      "technical_professional_sources_versioned",
+      "asset_license_and_provenance",
+      "complete_missing_assets_and_dependencies",
+      "input_format_and_hash",
+      "import_package_identity",
+      "rig_skin_and_deformation_if_character",
+      "collision_navmesh_if_world",
+      "memory_drawcall_fps_budget",
+      "static_and_engine_tests",
+      "expected_visual_acceptance",
+      "owner_status_and_blockers"
+    ],
+    "precommit_no_go": [
+      "Any required source unavailable or rights unclear",
+      "Exported rig has no real limb/head skin influence",
+      "Referenced asset cannot persist as exact expected Unreal package",
+      "Unexpected placeholder shown as completed",
+      "Missing test/manifest/docs or active writer conflict"
+    ],
+    "single_push_goal": "One integrated session candidate push after a fully staged and locally preflighted packet; exception for failures only after material diagnosis and consolidated repair, never promise zero possible engine/device defects.",
+    "evidence_barrier": "Research or code/build success alone never equals PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED. Report true categories; do not open PES-003 while PES-002 remains OPEN.",
+    "fixed_targets": {
+      "engine": "Unreal Engine 4.27.2",
+      "cpu": "Intel i7 Gen6",
+      "ram_gb": 8,
+      "vram_gb_approx": 2,
+      "resolution": "1280x720",
+      "fps_goal": 30
+    },
+    "coordination": "One Governor, one canonical develop, one active runtime PES, one Unreal writer, one Warehouse writer; parallel independent preparation allowed only when approved."
+  },
+  "pes_asset_first_production_acceleration_policy_2026_10_14": {
+    "status": "OWNER_APPROVED_GOVERNOR_COMPATIBLE",
+    "priority": "Imported, world-placed, render-observed, accepted licensed assets and playable game systems over documentation volume.",
+    "rules": [
+      "Prefer properly licensed ready-made characters, trees, creatures, buildings and tools after license/provenance/UE4.27 compatibility and quality checks; procedural production remains allowed when justified, with no generic placeholder treated as final.",
+      "One concise owner-facing PES closure report; during work only short material blocker/decision updates, retaining M0-M7 evidence and any existing Governor-mandated stage reports.",
+      "Synchronize CURRENT_PROJECT_STATE and PRODUCTION_COMPLETENESS_MATRIX with each code-change batch, not merely at PES closure; this is an existing Governor requirement.",
+      "Avoid redundant CI workflows, scripts or plans; add or extend checks for documented defects, required acceptance evidence or Governor obligations.",
+      "Do not enforce arbitrary 50 percent game-code/assets line/file quotas; measure production value without padding or suppressing tests.",
+      "Use SHIRE_FAST_PIE_PREVIEW.bat for local iteration only if it exists and is verified; otherwise use existing valid UE4.27 preview route. Minimize full Windows builds to planned validation plus justified retests, without bypassing mandatory gates.",
+      "Provide 30-45 minute owner visual and traversal review checklist at PES closure.",
+      "While owner review pending, independently prepare next PES M0/warehouse sources only when Governor permits; no concurrent runtime PES.",
+      "Closure metrics: number of distinct UE_IMPORTED+WORLD_PLACED+RENDER_OBSERVED assets and accepted subset; net added game-code LOC excluding tests/docs/generated; chapter percentage computed from explicit gate denominator, or unknown if unavailable.",
+      "Secondary Windows build device/cloud service requires measured bottleneck, cost and owner authorization."
+    ],
+    "authority": "Supplement only; existing Governor, Gate 6/7, writer locks, evidence and documentation obligations prevail.",
+    "active_pes": "PES-002 OPEN; PES-003 LOCKED"
+  },
+  "pes002_owner_acceleration_2026_10_15": {
+    "status": "OWNER_APPROVED_SCOPE_REGISTERED_IMPLEMENTATION_PARTIAL",
+    "authority": "Data/ProjectGovernor.json",
+    "active_pes": "PES-002",
+    "integration_pr": 477,
+    "curated_ue4_import_evidence_2026_10_16": {
+      "tested_head": "5943f38f2288fe9575c44cc9712bf442bbad02bd",
+      "pre_unreal_run": 38812432387,
+      "pre_unreal": "PASS",
+      "unreal_run": 38812432393,
+      "unreal": "PASS (editor import/rehydration/automation/headless startup/four real captures; not PIE)",
+      "curated_import_artifact": 12010085236,
+      "imported_persisted_package_checks": 118,
+      "mesh_families": 34,
+      "lod_sidecars": 46,
+      "textures": 63,
+      "material_instances": 21,
+      "curated_nature_runtime_groups": 9,
+      "curated_nature_world_placed_instances": 92,
+      "render_artifact": 12009785712,
+      "real_screenshots_1280x720": 4,
+      "visual_status": "REJECTED",
+      "shader_root_defect": "M_P1C01VerifiedPBR ORM used linear sampler against sRGB WhiteSquare and lacked bUsedWithInstancedStaticMeshes, causing default shader for PCD3D_SM5 HISM nature",
+      "held_tree_material_families": 4,
+      "held_flower_material_families": 1,
+      "skin_runtime": "Frodo/core characters still packages-missing modular fallback; blender source deformation PASS is not UE character visual success",
+      "pie_traversal": "NOT_RUN",
+      "device_dx11_fps_vram": "NOT_RUN",
+      "owner_visual_acceptance": "NOT_ACCEPTED",
+      "active_session": "PES-002",
+      "pes003_status": "LOCKED",
+      "repair_batch_status": "CANDIDATE_SOURCE_PREPARED_NEW_EXACT_HEAD_UNREAL_NOT_RUN",
+      "source_path": "Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp",
+      "remedy": "Persist actual imported TC_Masks ORM sample in PBR master and correct instancing flag; source-authored M_Sh_Bark/M_Sh_Leaf binding, visual shader fallback gate; exact-head Windows retest required"
+    },
+    "operating_policy": {
+      "m0_quick_index": "Docs/CURRENT_STATE_SHORT.md",
+      "mandatory_source_of_truth": "live Governor + exact-HEAD + scoped evidence search",
+      "no_deleted_history": true,
+      "one_runtime_pes": true,
+      "one_pes_pr": true,
+      "one_unreal_writer": true,
+      "one_warehouse_writer": true
+    },
+    "source_priorities": [
+      "Epic Paragon asset-specific license and UE4.27/LOD measured",
+      "Adobe Mixamo actual per-item terms and UE4 retarget",
+      "Poly Haven CC0",
+      "Quixel Megascans/Fab asset-specific license manual UE4.27 import",
+      "Quaternius / KayKit / 100 Avatars per-asset terms",
+      "Sketchfab exact permissible personal/CC-BY-NC attribution"
+    ],
+    "hard_safety": [
+      "Never upload a source asset to a public repository without explicit asset-level redistribution rights; restricted sources live in private warehouse, public repo metadata only",
+      "No film/game extracted or leaked models",
+      "Five characters require real skeletal/Idle/Walk/screenshots, cannot claim from listing",
+      "Target hardware 8GB/2GB/720p DX11 >=30FPS measured before hero acceptance"
+    ],
+    "planned_implementation": [
+      {
+        "id": "A",
+        "scope": "short M0",
+        "status": "CANDIDATE_IMPLEMENTED_STATIC_PENDING"
+      },
+      {
+        "id": "B",
+        "scope": "data driven decoration with asynchronous resident-only asset validation",
+        "status": "NOT_IMPLEMENTED"
+      },
+      {
+        "id": "C",
+        "scope": "single active PES PR",
+        "status": "POLICY_ACCEPTED_PR477_CURRENT"
+      },
+      {
+        "id": "D",
+        "scope": "four angle fixed Unreal capture and luminance threshold gate",
+        "status": "FOUR_VIEWS_EXACT_HEAD_8058F6A_RENDER_OBSERVED_VISUAL_REJECTED"
+      },
+      {
+        "id": "E",
+        "scope": "Frodo Sam Merry Pippin Gandalf imported with skin Idle Walk",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "F",
+        "scope": "second Windows machine vs VM cost comparison",
+        "status": "PRELIMINARY_RELATIVE_COMPARISON_ONLY"
+      }
+    ],
+    "method_doc": "Docs/PES002_PRODUCTION_ACCELERATION_DECISIONS.md",
+    "evidence_boundary": "8058f6a had real UE build/import/startup and 4 images, but visually rejected; new wall/roof source patch is locally static-validated only. No new UE/PIE/device/visual acceptance.",
+    "visual_surface_wave_2026_10_15": {
+      "stage": "ORIGINAL_ART_SOURCE_QC_COMPLETE_EXACT_HEAD_UNREAL_NOT_RUN",
+      "active_pes": "PES-002",
+      "integration_pr": 477,
+      "baseline_head": "a92d397150ce903ce330175ea3afa5bcb0a3b37e",
+      "goal": "Hero-only authored 512px PNG albedo for plaster/turf/door/glass without altering world shared Grass",
+      "source_files": [
+        "Tools/CloudAssetBuild/generate_bag_end_hero_materials.py",
+        "SourceAssets/Production/World/Shire/TX_BagEndPlaster.png",
+        "SourceAssets/Production/World/Shire/TX_BagEndTurf.png",
+        "SourceAssets/Production/World/Shire/TX_BagEndDoor.png",
+        "SourceAssets/Production/World/Shire/TX_BagEndGlass.png"
+      ],
+      "png_total_bytes": 851846,
+      "graphics_texture_count": 4,
+      "source_resolution_px": 512,
+      "material_slot_count": 7,
+      "material_identity_swap": "In Bag End hero facade only: Grass -> BagEndTurf",
+      "shared_world_grass_modified": false,
+      "source_qc": "Generator deterministic, four strict CRC PNGs, UV/material contract, local tests passed",
+      "import_and_render_for_new_source": "NOT_RUN",
+      "source_only_pbr_note": "Albedo maps plus original scalar roughness; not claimed packed NormalDX/ORM material acceptance",
+      "runtime_writers": "No extra writer or new runtime session",
+      "scope_guard": "No collision/anchors/nav/NPC/streaming change; no PES-003 until Gate6/7",
+      "acceptance_blockers": [
+        "new exact-head Unreal MTL/texture bind and 4-view visual proof",
+        "PES002 PIE/collision/NavMesh/traversal",
+        "DX11 720p target FPS>=30 and VRAM",
+        "owner visual signoff"
+      ],
+      "rollback": "One coherent PR477 source+docs batch revert on failed package/visual review"
+    }
   }
 }

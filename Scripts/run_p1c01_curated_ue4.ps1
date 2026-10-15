@@ -71,9 +71,11 @@ try {
      $obs.created_or_updated_material_instances -ne 21 -or
      $obs.material_triplet_bindings -ne 63 -or
      ($obs.exact_nature_single_slot_bindings + $obs.unresolved_nature_material_slots) -ne 8 -or
+     $obs.tree_material_family_count -ne 4 -or
+     ($obs.tree_material_verified_families + $obs.tree_material_unresolved_families) -ne 4 -or
      $obs.physically_persisted_uasset_checks -ne 118 -or
      $obs.gate6_7_closed -ne $false) { throw 'P1C01_CURATED_EDITOR_POSTIMPORT_EVIDENCE_INVALID' }
-  Write-Host "P1C01_CURATED_AUTOMATIC_UE4_PASS sha=$ExpectedSha meshes=34 lods=46 textures=63 instances=21 nature_bound=$($obs.exact_nature_single_slot_bindings) nature_held=$($obs.unresolved_nature_material_slots) report=$postreport"
+  Write-Host "P1C01_CURATED_AUTOMATIC_UE4_PASS sha=$ExpectedSha meshes=34 lods=46 textures=63 instances=21 nature_bound=$($obs.exact_nature_single_slot_bindings) nature_held=$($obs.unresolved_nature_material_slots) tree_bound=$($obs.tree_material_verified_families) tree_held=$($obs.tree_material_unresolved_families) report=$postreport"
   Write-Host 'P1C01_GATE67_OPEN needs=unresolved-multislot-architecture-collision-world-placement-PIE-package-device-human-review'
 } finally {
   $env:GITHUB_WORKSPACE = $oldWorkspace

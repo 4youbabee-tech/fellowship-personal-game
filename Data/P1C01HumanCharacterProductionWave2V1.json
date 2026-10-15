@@ -35,7 +35,14 @@
       "TGA"
     ],
     "prefer_blend_source": true,
-    "max_zero_weight_ratio": 0.35
+    "max_zero_weight_ratio": 0.35,
+    "rejected_alternate_evidence": {
+      "source": "RiggedCharacterBase.fbx",
+      "run_id": 38742152786,
+      "head": "01fbb1c1a148e42faf7ebb5ee2d7a6806cef5ff2",
+      "reason": "FBX body and hair have 0 weighted vertices, unlike the licensed original .blend with 87 deform-weighted bones; do not select alternate while viable .blend exists",
+      "gate_policy": "No relaxed skinning or UE import checks; archive source retained in inventory"
+    }
   },
   "normalization_contract": {
     "tool": "Blender",
@@ -43,11 +50,16 @@
     "add_leaf_bones": false,
     "smoothing": "FACE",
     "tangent_space": true,
-    "animation_bake": true,
+    "animation_bake": false,
     "selection": "ARMATURE_MESH",
     "provenance": "source entry + source SHA256 + normalized SHA256 + Blender version",
     "export_deform_bones_only": true,
-    "control_rig_bones_excluded": true
+    "control_rig_bones_excluded": true,
+    "export_stage": "EXPORTED_GAME_DEFORM_ARMATURE_FROM_CC0_RIGIFY",
+    "source_rigify_controls_retained_for_authoring": true,
+    "game_bone_hierarchy_gate": "REIMPORTED_FBX_BILATERAL_FULL_LIMB_AND_SPINE",
+    "rest_skin_error_max_fraction_of_diagonal": 0.01,
+    "motion_clips_exported_in_this_wave": 0
   },
   "hosted_deformation_readiness": {
     "required": [
@@ -103,7 +115,7 @@
     "ram_gb": 8,
     "vram_gb_approx": 2
   },
-  "evidence_boundary": "Technical winner is exact-head UE4.27 evidenced on Wave2 run #3. Deformation/retarget/runtime/PIE/device/rendered-visual/FPS acceptance remains pending.",
+  "evidence_boundary": "Wave2 new game deform skeleton candidate; retains licensed mesh weights and restores direct game DEF hierarchy. Only exact-head host FBX/UE import/posed-stress tests can promote technical stages. No Idle/Walk, AnimBP, PIE, target device, visual or runtime acceptance.",
   "latest_hosted_baseline": {
     "workflow_run": 1,
     "exact_head": "8afa53cdee648cef196b914c5123d3e38677fc2c",

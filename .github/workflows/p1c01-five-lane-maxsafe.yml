@@ -1,21 +1,19 @@
 name: P1C01 Five-Lane Maximum Safe Source Preflight
 
 on:
-  pull_request:
-    branches: [develop]
+  push:
+    branches-ignore:
+      - develop
+      - main
     paths:
-      - 'Data/ProjectGovernor.json'
       - 'Data/MaximumSafeProductionModeV1.json'
       - 'Scripts/p1c01_five_lane_preflight.py'
       - 'Scripts/test_p1c01_five_lane_preflight.py'
-      - '.github/workflows/p1c01-five-lane-maxsafe.yml'
       - 'Scripts/stage_p1c01_adaptive_pbr_warehouse.py'
       - 'Scripts/test_p1c01_adaptive_pbr_warehouse.py'
       - 'Scripts/resume_p1c01_artifact_checkpoint.py'
       - 'Scripts/test_resume_p1c01_artifact_checkpoint.py'
-      - 'Scripts/classify_unreal_validation.ps1'
   workflow_dispatch:
-
 permissions:
   contents: read
   actions: read

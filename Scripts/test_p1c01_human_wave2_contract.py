@@ -4,6 +4,35 @@ from pathlib import Path
 
 
 class HumanWave2ContractTests(unittest.TestCase):
+    def test_source_rig_repair_is_strict_and_blender_code_parses(self):
+        # Guards the actual embedded Blender program, not only a README claim.
+        stage=(Path(__file__).resolve().parents[1]/"Scripts"/"stage_p1c01_human_wave2.ps1").read_text(encoding="utf-8")
+        blender_source=stage.split("\n@'\n",1)[1].split("\n'@ | Set-Content",1)[0]
+        compile(blender_source, "normalize_human_wave2_embedded.py", "exec")
+        for marker in (
+            'parent_set(type="ARMATURE_AUTO", keep_transform=True)',
+            "HUMAN_WAVE2_SKIN_REPAIR_BONE_HEAT_FAILED",
+            "HUMAN_WAVE2_SKIN_REPAIR_BOUND_CHARACTER_TOO_SMALL",
+            "HUMAN_WAVE2_SKIN_REPAIR_INSUFFICIENT_DEFORM_WEIGHTS",
+            "HUMAN_WAVE2_SKIN_REPAIR_BINDING_MISSING",
+            "HUMAN_WAVE2_EXPORTED_SKIN_QC",
+            "bound_vertex_count = sum(len(m.data.vertices) for m in bound_meshes)",
+            "HUMAN_WAVE2_SKIN_SOURCE_DIAGNOSTIC",
+            "HUMAN_WAVE2_SKIN_RECOVERED_SOURCE_BINDINGS",
+            "HUMAN_WAVE2_SKIN_RECOVERY_CONFLICTING_ARMATURE",
+            '"total_scene_vertices": sum(len(m.data.vertices) for m in meshes)',
+            '"bound_vertices": bound_vertex_count,',
+            "m.parent == source_armature",
+            "HUMAN_WAVE2_AUTO_REBIND_BOUND_CHARACTER",
+            "EXPORTED_LIMB_SKIN_INFLUENCE_MISSING",
+            '"auto_skin_rebuilt":skin_rebuilt',
+        ):
+            self.assertIn(marker, stage)
+        self.assertIn("if len(source_def_weights) < 13:", blender_source)
+        self.assertIn("HUMAN_WAVE2_SOURCE_SELECTION", stage)
+        self.assertIn("$blendSources=@($ranked | Where-Object { $_.extension -eq \".blend\" })", stage)
+        self.assertIn('if(@($readiness.exported_missing_limb_influence).Count -gt 0)', stage)
+
     def test_human_wave2_is_bounded_fbx_only_at_ue4_and_non_runtime(self):
         root=Path(__file__).resolve().parents[1]
         packet=json.loads((root/"Data"/"P1C01HumanCharacterProductionWave2V1.json").read_text(encoding="utf-8"))
@@ -75,6 +104,14 @@ class HumanWave2ContractTests(unittest.TestCase):
         deformation=(root/"Scripts"/"run_p1c01_human_wave3_deformation.py").read_text(encoding="utf-8")
         for token in ("shoulders","elbows","knees","hands_feet","locomotion_stress","visual_deformation_accepted","retarget_accepted"):
             self.assertIn(token,deformation)
+        for token in (
+            "vertex_group_weight",
+            "required deformation joints have no skin influence",
+            "minimum_required_displacement",
+            "rest[\"diag\"] * 0.0025",
+            "joint_skin_influence",
+        ):
+            self.assertIn(token, deformation)
         gate=json.loads((root/"Data"/"P1C01HumanDeformationGateV1.json").read_text(encoding="utf-8"))
         self.assertFalse(gate["runtime_contract"]["visual_deformation_accepted"])
         self.assertFalse(gate["runtime_contract"]["retarget_accepted"])

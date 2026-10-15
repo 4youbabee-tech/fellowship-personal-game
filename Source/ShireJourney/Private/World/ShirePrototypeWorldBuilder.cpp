@@ -13,6 +13,8 @@
 #include "Misc/PackageName.h"
 #include "Serialization/JsonReader.h"
 #include "Serialization/JsonSerializer.h"
+#include "Camera/CameraActor.h"
+#include "Camera/CameraComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/DirectionalLightComponent.h"
 #include "Components/ExponentialHeightFogComponent.h"
@@ -23,6 +25,11 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "Engine/DirectionalLight.h"
+#include "GameFramework/PlayerController.h"
+#include "Misc/CommandLine.h"
+#include "Misc/Parse.h"
+#include "TimerManager.h"
+#include "UnrealClient.h"
 #include "Engine/ExponentialHeightFog.h"
 #include "Engine/PostProcessVolume.h"
 #include "Engine/SkyLight.h"
@@ -316,6 +323,7 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     ProductionGrassClumpMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShGrassClump.SM_ShGrassClump"));
     ProductionFenceSegmentMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShFenceSegment.SM_ShFenceSegment"));
     ProductionHobbitFacadeMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShHobbitFacade.SM_ShHobbitFacade"));
+    ProductionBagEndHeroFacadeMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShBagEndHeroFacade.SM_ShBagEndHeroFacade"));
     ProductionCartMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShCart.SM_ShCart"));
     ProductionBenchMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShBench.SM_ShBench"));
     ProductionMillWheelMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShMillWheel.SM_ShMillWheel"));
@@ -398,6 +406,106 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     ApplyStoryAtmosphere();
     ApplyBagEndStoryVariant();
     ApplyPartyStoryVariant();
+
+    // The first SkyLight recapture can happen before the runtime sky has rendered.
+    // One deferred recapture corrects that startup ordering; never recapture per Tick.
+    TWeakObjectPtr<AShirePrototypeWorldBuilder> WeakBuilder(this);
+    FTimerHandle DeferredSkyCapture;
+    GetWorldTimerManager().SetTimer(DeferredSkyCapture,
+        FTimerDelegate::CreateLambda([WeakBuilder]()
+        {
+            if (WeakBuilder.IsValid() && IsValid(WeakBuilder->RuntimeSky))
+            {
+                if (USkyLightComponent* SkyComp = Cast<USkyLightComponent>(
+                    WeakBuilder->RuntimeSky->GetLightComponent()))
+                {
+                    SkyComp->RecaptureSky();
+                    UE_LOG(LogTemp, Display, TEXT("PES002_DEFERRED_SKYLIGHT_RECAPTURE"));
+                }
+            }
+        }), 3.0f, false);
+
+#if !UE_BUILD_SHIPPING
+    // Evidence-only capture: camera is independent of the player, collision, NPC,
+    // quests and save. It is never used in ordinary gameplay or shipping.
+    if (FParse::Param(FCommandLine::Get(), TEXT("PES002VisualProof")))
+    {
+        FTimerHandle CameraTimer;
+        GetWorldTimerManager().SetTimer(CameraTimer,
+            FTimerDelegate::CreateLambda([WeakBuilder]()
+            {
+                if (!WeakBuilder.IsValid() || !WeakBuilder->GetWorld())
+                {
+                    return;
+                }
+                UWorld* ProofWorld = WeakBuilder->GetWorld();
+                APlayerController* PC = ProofWorld->GetFirstPlayerController();
+                if (!PC)
+                {
+                    UE_LOG(LogTemp, Error, TEXT("PES002_CAPTURE_NO_PLAYER_CONTROLLER"));
+                    return;
+                }
+                // Bag End hero home at (-2210,-520), facade faces west (-X).
+                const FVector CameraPosition(-3030.0f, -560.0f, 285.0f);
+                const FVector LookAt(-2210.0f, -520.0f, 105.0f);
+                ACameraActor* ProofCamera = ProofWorld->SpawnActor<ACameraActor>(
+                    CameraPosition, (LookAt - CameraPosition).Rotation());
+                if (!ProofCamera || !ProofCamera->GetCameraComponent())
+                {
+                    UE_LOG(LogTemp, Error, TEXT("PES002_CAPTURE_CAMERA_SPAWN_FAILED"));
+                    return;
+                }
+                ProofCamera->GetCameraComponent()->SetFieldOfView(48.0f);
+                PC->SetViewTarget(ProofCamera);
+                UE_LOG(LogTemp, Display,
+                    TEXT("PES002_CAPTURE_CAMERA_READY target=BagEnd x=-2210 y=-520 proofOnly=1 views=4"));
+
+                // Three independent perspectives prevent accepting an accidental
+                // fence/roof/terrain occlusion from a single static camera position.
+                // Never move the player, quest triggers or gameplay collision.
+                TWeakObjectPtr<ACameraActor> WeakCamera(ProofCamera);
+                for (int32 ViewIndex = 0; ViewIndex < 4; ++ViewIndex)
+                {
+                    FTimerHandle ReframeTimer;
+                    ProofWorld->GetTimerManager().SetTimer(ReframeTimer,
+                        FTimerDelegate::CreateLambda([WeakBuilder, WeakCamera, ViewIndex]()
+                        {
+                            if (!WeakBuilder.IsValid() || !WeakCamera.IsValid())
+                            {
+                                return;
+                            }
+                            const FVector Positions[] = {
+                                FVector(-3070.0f, -520.0f, 285.0f),
+                                FVector(-3000.0f, -1190.0f, 305.0f),
+                                FVector(-3020.0f, 170.0f, 300.0f),
+                                FVector(-3220.0f, -520.0f, 520.0f)
+                            };
+                            const FVector LookAt(-2210.0f, -520.0f, 105.0f);
+                            WeakCamera->SetActorLocationAndRotation(
+                                Positions[ViewIndex], (LookAt - Positions[ViewIndex]).Rotation());
+                            UE_LOG(LogTemp, Display,
+                                TEXT("PES002_CAPTURE_VIEW_READY view=%d target=BagEnd"), ViewIndex);
+                        }), 2.0f + 8.0f * ViewIndex, false);
+
+                    FTimerHandle ShotTimer;
+                    ProofWorld->GetTimerManager().SetTimer(ShotTimer,
+                        FTimerDelegate::CreateLambda([WeakBuilder, ViewIndex]()
+                        {
+                            if (!WeakBuilder.IsValid())
+                            {
+                                return;
+                            }
+                            const FString Filename = FPaths::Combine(
+                                FPaths::ScreenShotDir(),
+                                FString::Printf(TEXT("PES002_BagEnd_View%d.png"), ViewIndex));
+                            FScreenshotRequest::RequestScreenshot(Filename, false, false);
+                            UE_LOG(LogTemp, Display,
+                                TEXT("PES002_SCREENSHOT_REQUESTED target=BagEnd view=%d format=png"), ViewIndex);
+                        }), 6.0f + 8.0f * ViewIndex, false);
+                }
+            }), 13.0f, false);
+    }
+#endif
 }
 
 
@@ -897,13 +1005,32 @@ void AShirePrototypeWorldBuilder::SpawnHobbitHole(const FVector& Location, float
     // Imported production mound/facade replace the toy-like primitive silhouette when
     // available. The facade owns the round timber/door/window/sill geometry; runtime
     // primitives are retained only when that authored facade is unavailable.
-    const bool bHasProductionFacade = ProductionTurfMoundMesh && ProductionHobbitFacadeMesh;
-    if (bHasProductionFacade)
+    // Engine/BasicShapes Cylinder has its disc normal along local Z. Pitch 90 degrees
+    // rotates the circular face into the YZ elevation of the west-facing (-X) facade.
+    // Yaw alone leaves the cylinders as horizontal discs (observed as green ovals).
+    const bool bBagEndHero =
+        FVector::DistSquared2D(Location, FVector(-2210.0f, -520.0f, 0.0f))
+            < FMath::Square(25.0f);
+    const bool bUseAuthoredHero = bBagEndHero && ProductionBagEndHeroFacadeMesh;
+    const bool bHasProductionFacade = bUseAuthoredHero ||
+        (ProductionTurfMoundMesh && ProductionHobbitFacadeMesh);
+    if (bUseAuthoredHero)
+    {
+        // One resident mesh contains joined turf, plaster, recessed door and glass.
+        // Match the existing west-facing anchor; decoration adds no new collision.
+        SpawnShape(ProductionBagEndHeroFacadeMesh,
+            Location + FVector(-88.0f * Scale, 0.0f, 0.0f),
+            FVector(Scale), Earth, FRotator::ZeroRotator, false);
+        UE_LOG(LogTemp, Display,
+            TEXT("PES002_BAG_END_HERO_FACADE layout=west-facing authored=1 roof=joined door=recessed windows=2 collision=none visual=pending"));
+    }
+    else if (bHasProductionFacade)
     {
         SpawnShape(ProductionTurfMoundMesh, Location + FVector(0.0f, 0.0f, 30.0f * Scale),
-            FVector(2.45f, 2.10f, 2.10f) * Scale, Turf, FRotator::ZeroRotator, true);
-        SpawnShape(ProductionHobbitFacadeMesh, Location + FVector(-88.0f * Scale, 0.0f, 0.0f),
-            FVector(1.0f) * Scale, Earth, FRotator::ZeroRotator, true);
+            FVector(2.45f, 2.10f, 2.10f) * Scale, Turf, FRotator::ZeroRotator, !bBagEndHero);
+        SpawnShape(ProductionHobbitFacadeMesh,
+            Location + FVector(-88.0f * Scale, 0.0f, 0.0f),
+            FVector(Scale), Earth, FRotator::ZeroRotator, !bBagEndHero);
     }
     else
     {
@@ -919,29 +1046,34 @@ void AShirePrototypeWorldBuilder::SpawnHobbitHole(const FVector& Location, float
     if (!bHasProductionFacade)
     {
         SpawnShape(CylinderMesh, Location + FVector(-83.0f * Scale, 0.0f, 55.0f * Scale),
-            FVector(0.51f, 0.51f, 0.075f) * Scale, Timber, FRotator(0.0f, 90.0f, 0.0f), false);
+            FVector(0.51f, 0.51f, 0.075f) * Scale, Timber, FRotator(90.0f, 0.0f, 0.0f), false);
         SpawnShape(CylinderMesh, Location + FVector(-88.0f * Scale, 0.0f, 55.0f * Scale),
-            FVector(0.43f, 0.43f, 0.050f) * Scale, DoorGreen, FRotator(0.0f, 90.0f, 0.0f), false);
+            FVector(0.43f, 0.43f, 0.050f) * Scale, DoorGreen, FRotator(90.0f, 0.0f, 0.0f), false);
 
         for (float Side : { -1.0f, 1.0f })
         {
             const FVector Window = Location + FVector(-88.0f * Scale, Side * 58.0f * Scale, 68.0f * Scale);
             SpawnShape(CylinderMesh, Window, FVector(0.22f, 0.22f, 0.035f) * Scale,
-                Timber, FRotator(0.0f, 90.0f, 0.0f), false);
+                Timber, FRotator(90.0f, 0.0f, 0.0f), false);
             SpawnShape(CubeMesh, Window + FVector(-2.0f * Scale, 0.0f, -27.0f * Scale),
                 FVector(0.10f, 0.30f, 0.045f) * Scale, Stone, FRotator::ZeroRotator, false);
         }
     }
 
-    // Small readable accents remain: the source facade has no warm-glass material and
-    // no knob detail. These do not duplicate its structural silhouette.
-    SpawnShape(SphereMesh, Location + FVector(-94.0f * Scale, 21.0f * Scale, 56.0f * Scale),
-        FVector(0.045f) * Scale, FLinearColor(0.74f, 0.55f, 0.18f), FRotator::ZeroRotator, false);
-    for (float Side : { -1.0f, 1.0f })
+    // The authored hero already owns its glass and knob; do not overlay fallback discs.
+    if (!bUseAuthoredHero)
     {
-        const FVector Window = Location + FVector(-92.0f * Scale, Side * 58.0f * Scale, 68.0f * Scale);
-        SpawnShape(CylinderMesh, Window, FVector(0.16f, 0.16f, 0.018f) * Scale,
-            WarmGlass, FRotator(0.0f, 90.0f, 0.0f), false);
+        // Small readable accents remain: the source facade has no warm-glass material and
+        // no knob detail. These do not duplicate its structural silhouette.
+        SpawnShape(SphereMesh, Location + FVector(-94.0f * Scale, 21.0f * Scale, 56.0f * Scale),
+            FVector(0.045f) * Scale, FLinearColor(0.74f, 0.55f, 0.18f), FRotator::ZeroRotator, false);
+        for (float Side : { -1.0f, 1.0f })
+        {
+            const FVector Window = Location + FVector(-92.0f * Scale, Side * 58.0f * Scale, 68.0f * Scale);
+            SpawnShape(CylinderMesh, Window, FVector(0.16f, 0.16f, 0.018f) * Scale,
+                WarmGlass, FRotator(90.0f, 0.0f, 0.0f), false);
+        }
+
     }
 
     // Chimney, doorstep and planted entry soften the generated silhouette.
@@ -1234,7 +1366,7 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
             // UE4.27 requires the light to be movable before changing the actor rotation in PIE.
             SunComponent->SetMobility(EComponentMobility::Movable);
             Sun->SetActorRotation(FRotator(-38.0f, -28.0f, 0.0f));
-            SunComponent->SetIntensity(2.45f);
+            SunComponent->SetIntensity(3.25f);
             SunComponent->SetLightColor(FLinearColor(1.0f, 0.90f, 0.78f));
             SunComponent->SetCastShadows(true);
             SunComponent->SetAtmosphereSunLight(true);
@@ -1321,9 +1453,10 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
         if (USkyLightComponent* SkyComponent = Cast<USkyLightComponent>(Sky->GetLightComponent()))
         {
             SkyComponent->SetMobility(EComponentMobility::Movable);
-            SkyComponent->SetIntensity(0.68f);
+            SkyComponent->SetIntensity(1.12f);
             SkyComponent->bLowerHemisphereIsBlack = false;
-            SkyComponent->RecaptureSky();
+            // The startup sky is recaptured by the one-shot BeginPlay timer after
+            // SkyAtmosphere has had time to produce a usable scene; avoid double capture.
         }
     }
 
@@ -1355,11 +1488,11 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
         PostProcess->BlendWeight = 1.0f;
 
         PostProcess->Settings.bOverride_AutoExposureMinBrightness = true;
-        PostProcess->Settings.AutoExposureMinBrightness = 0.72f;
+        PostProcess->Settings.AutoExposureMinBrightness = 1.0f;
         PostProcess->Settings.bOverride_AutoExposureMaxBrightness = true;
-        PostProcess->Settings.AutoExposureMaxBrightness = 0.96f;
+        PostProcess->Settings.AutoExposureMaxBrightness = 1.35f;
         PostProcess->Settings.bOverride_AutoExposureBias = true;
-        PostProcess->Settings.AutoExposureBias = -0.08f;
+        PostProcess->Settings.AutoExposureBias = 0.16f;
 
         PostProcess->Settings.bOverride_BloomIntensity = true;
         PostProcess->Settings.BloomIntensity = 0.10f;
@@ -1489,10 +1622,10 @@ void AShirePrototypeWorldBuilder::ApplyStoryAtmosphere()
     const FName QuestId = QuestSubsystem->GetActiveQuestId();
 
     FRotator SunRotation(-38.0f, -28.0f, 0.0f);
-    float SunIntensity = 2.55f;
+    float SunIntensity = 3.25f;
     FLinearColor SunColor(1.0f, 0.86f, 0.70f);
-    float SkyIntensity = 0.60f;
-    float ExposureBias = -0.12f;
+    float SkyIntensity = 1.12f;
+    float ExposureBias = 0.16f;
     float Bloom = 0.16f;
     float Vignette = 0.17f;
 
@@ -1501,8 +1634,8 @@ void AShirePrototypeWorldBuilder::ApplyStoryAtmosphere()
         SunRotation = FRotator(-22.0f, -42.0f, 0.0f);
         SunIntensity = 2.05f;
         SunColor = FLinearColor(1.0f, 0.67f, 0.42f);
-        SkyIntensity = 0.56f;
-        ExposureBias = -0.10f;
+        SkyIntensity = 0.95f;
+        ExposureBias = 0.08f;
         Bloom = 0.34f;
         Vignette = 0.14f;
     }
@@ -3167,10 +3300,10 @@ void AShirePrototypeWorldBuilder::SpawnBagEndHeroPass()
     };
 
     TArray<FTransform> ApproachStones;
-    ApproachStones.Reserve(14);
-    for (int32 Index = 0; Index < 14; ++Index)
+    ApproachStones.Reserve(10);
+    for (int32 Index = 0; Index < 10; ++Index)
     {
-        const float Alpha = static_cast<float>(Index) / 13.0f;
+        const float Alpha = static_cast<float>(Index) / 9.0f;
         const FVector Location = FMath::Lerp(
             FVector(-1710.0f, -355.0f, 5.0f),
             FVector(-2180.0f, -500.0f, 5.0f),
@@ -3184,12 +3317,10 @@ void AShirePrototypeWorldBuilder::SpawnBagEndHeroPass()
     SpawnDetailCluster(ProductionPathStoneMesh, TEXT("P1C01BagEndApproachStones"), 700, 3600, ApproachStones);
 
     TArray<FTransform> GardenPlanters;
-    GardenPlanters.Reserve(12);
+    GardenPlanters.Reserve(6);
     const FVector PlanterOffsets[] = {
-        FVector(-20,-245,0), FVector(45,-250,0), FVector(115,-238,0),
-        FVector(190,-222,0), FVector(-5,245,0), FVector(65,250,0),
-        FVector(140,238,0), FVector(215,218,0), FVector(300,-205,0),
-        FVector(345,-160,0), FVector(305,205,0), FVector(350,155,0)
+        FVector(45,-250,0), FVector(190,-222,0), FVector(65,250,0),
+        FVector(215,218,0), FVector(345,-160,0), FVector(350,155,0)
     };
     for (int32 Index = 0; Index < UE_ARRAY_COUNT(PlanterOffsets); ++Index)
     {
@@ -3201,10 +3332,10 @@ void AShirePrototypeWorldBuilder::SpawnBagEndHeroPass()
     SpawnDetailCluster(CommonFlowerPlanter, TEXT("P1C01BagEndGardenPlanters"), 600, 3000, GardenPlanters);
 
     TArray<FTransform> WoodPiles;
-    WoodPiles.Reserve(8);
+    WoodPiles.Reserve(4);
     const FVector WoodOffsets[] = {
-        FVector(-90,-300,0), FVector(5,-315,0), FVector(105,-302,0), FVector(205,-292,0),
-        FVector(-70,300,0), FVector(30,315,0), FVector(135,302,0), FVector(238,286,0)
+        FVector(5,-315,0), FVector(205,-292,0),
+        FVector(30,315,0), FVector(238,286,0)
     };
     for (int32 Index = 0; Index < UE_ARRAY_COUNT(WoodOffsets); ++Index)
     {
@@ -3229,11 +3360,8 @@ void AShirePrototypeWorldBuilder::SpawnBagEndHeroPass()
     };
 
     SpawnHeroProp(CommonWheelbarrow, BagEnd + FVector(355,-255,0), FVector(0.62f), FRotator(0,72,0));
-    SpawnHeroProp(CommonBucket, BagEnd + FVector(295,-105,0), FVector(0.60f), FRotator(0,-8,0));
-    SpawnHeroProp(CommonStorageChest, BagEnd + FVector(125,255,0), FVector(0.62f), FRotator(0,12,0));
-    SpawnHeroProp(CommonSackBale, BagEnd + FVector(210,275,0), FVector(0.58f), FRotator(0,-16,0));
+    SpawnHeroProp(CommonBucket, BagEnd + FVector(295,-185,0), FVector(0.60f), FRotator(0,-8,0));
     SpawnHeroProp(ProductionBarrelMesh, BagEnd + FVector(305,265,0), FVector(0.58f), FRotator(0,9,0));
-    SpawnHeroProp(ProductionCrateMesh, BagEnd + FVector(365,230,0), FVector(0.56f), FRotator(0,-11,0));
     SpawnHeroProp(ProductionLanternMesh, BagEnd + FVector(220,-170,18), FVector(0.56f), FRotator::ZeroRotator);
     SpawnHeroProp(ProductionFlowerBoxMesh, BagEnd + FVector(-25,185,0), FVector(0.62f), FRotator(0,-5,0));
 
@@ -4080,9 +4208,9 @@ void AShirePrototypeWorldBuilder::SpawnVisibleShireMegaWaveD()
         }
     }
 
-    for (int32 Index = 0; Index < 18; ++Index)
+    for (int32 Index = 0; Index < 8; ++Index)
     {
-        const float Angle = FMath::DegreesToRadians(-155.0f + static_cast<float>(Index) * 17.5f);
+        const float Angle = FMath::DegreesToRadians(-145.0f + static_cast<float>(Index) * 41.0f);
         const float Radius = 520.0f + 55.0f * static_cast<float>(Index % 3);
         const FVector P(
             -2210.0f + FMath::Cos(Angle) * Radius,
@@ -4096,9 +4224,9 @@ void AShirePrototypeWorldBuilder::SpawnVisibleShireMegaWaveD()
         }
     }
 
-    for (int32 Index = 0; Index < 20; ++Index)
+    for (int32 Index = 0; Index < 10; ++Index)
     {
-        const float Alpha = static_cast<float>(Index) / 19.0f;
+        const float Alpha = static_cast<float>(Index) / 9.0f;
         const FVector P = FMath::Lerp(
             FVector(-1670.0f,-335.0f,2.0f),
             FVector(-2155.0f,-493.0f,2.0f),
@@ -4436,9 +4564,9 @@ void AShirePrototypeWorldBuilder::SpawnShireVisualFinishWave()
             ++BagEndFinishInstances;
         }
     }
-    for (int32 Index = 0; Index < 16; ++Index)
+    for (int32 Index = 0; Index < 6; ++Index)
     {
-        const float Angle = FMath::DegreesToRadians(-150.0f + static_cast<float>(Index) * 19.0f);
+        const float Angle = FMath::DegreesToRadians(-140.0f + static_cast<float>(Index) * 54.0f);
         const float Radius = 690.0f + 65.0f * static_cast<float>(Index % 3);
         const FVector P(-2240.0f + FMath::Cos(Angle) * Radius, -470.0f + FMath::Sin(Angle) * Radius, 4.0f);
         const float S = 0.18f + 0.022f * static_cast<float>(Index % 4);
@@ -4447,9 +4575,9 @@ void AShirePrototypeWorldBuilder::SpawnShireVisualFinishWave()
             ++BagEndFinishInstances;
         }
     }
-    for (int32 Index = 0; Index < 16; ++Index)
+    for (int32 Index = 0; Index < 8; ++Index)
     {
-        const float Alpha = static_cast<float>(Index) / 15.0f;
+        const float Alpha = static_cast<float>(Index) / 7.0f;
         FVector P = FMath::Lerp(FVector(-1650.0f,-520.0f,3.0f), FVector(-2130.0f,-500.0f,3.0f), Alpha);
         P.Y += (Index % 2 == 0 ? -145.0f : 145.0f);
         const float S = 0.20f + 0.015f * static_cast<float>(Index % 5);
@@ -4683,17 +4811,11 @@ void AShirePrototypeWorldBuilder::SpawnP1C01ChapterFinishWorldArtPass()
     };
 
     const FFinishPlacement BagEndGardenEdges[] = {
-        { FVector(-2810,-690,2), FRotator(0,18,0), FVector(0.74f,0.62f,0.66f) },
-        { FVector(-2640,-790,2), FRotator(0,13,0), FVector(0.70f,0.60f,0.64f) },
-        { FVector(-2460,-845,2), FRotator(0,8,0), FVector(0.68f,0.58f,0.62f) },
-        { FVector(-2280,-870,2), FRotator(0,1,0), FVector(0.66f,0.58f,0.62f) },
-        { FVector(-1940,-795,2), FRotator(0,-12,0), FVector(0.70f,0.60f,0.64f) },
-        { FVector(-1770,-690,2), FRotator(0,-18,0), FVector(0.74f,0.62f,0.66f) },
-        { FVector(-2780,120,2), FRotator(0,-20,0), FVector(0.70f,0.60f,0.64f) },
-        { FVector(-2580,205,2), FRotator(0,-13,0), FVector(0.66f,0.58f,0.62f) },
-        { FVector(-2380,260,2), FRotator(0,-5,0), FVector(0.64f,0.56f,0.60f) },
+        { FVector(-2640,-910,2), FRotator(0,13,0), FVector(0.70f,0.60f,0.64f) },
+        { FVector(-2260,-930,2), FRotator(0,1,0), FVector(0.66f,0.58f,0.62f) },
+        { FVector(-1840,-850,2), FRotator(0,-18,0), FVector(0.74f,0.62f,0.66f) },
+        { FVector(-2600,210,2), FRotator(0,-13,0), FVector(0.66f,0.58f,0.62f) },
         { FVector(-2060,245,2), FRotator(0,9,0), FVector(0.66f,0.58f,0.62f) },
-        { FVector(-1870,165,2), FRotator(0,17,0), FVector(0.70f,0.60f,0.64f) },
         { FVector(-1700,40,2), FRotator(0,22,0), FVector(0.74f,0.62f,0.66f) }
     };
     SpawnFinishCluster(
@@ -4799,14 +4921,10 @@ void AShirePrototypeWorldBuilder::SpawnP1C01ChapterFinishWorldArtPass()
     // PES-002 Bag End exterior: bounded resident-source garden layering, kept away
     // from the round-door approach and existing road. Instanced, zero collision/tick.
     const FFinishPlacement BagEndPorchFlowers[] = {
-        { FVector(-2790,-470,5), FRotator(0, 12,0), FVector(0.52f) },
-        { FVector(-2660,-490,5), FRotator(0,-15,0), FVector(0.56f) },
-        { FVector(-2520,-520,5), FRotator(0, 18,0), FVector(0.54f) },
-        { FVector(-2370,-560,5), FRotator(0,-12,0), FVector(0.50f) },
-        { FVector(-2110,-520,5), FRotator(0, 24,0), FVector(0.56f) },
-        { FVector(-1980,-460,5), FRotator(0,-21,0), FVector(0.52f) },
-        { FVector(-1830,-340,5), FRotator(0,  9,0), FVector(0.54f) },
-        { FVector(-1680,-235,5), FRotator(0,-17,0), FVector(0.50f) }
+        { FVector(-2440,-760,5), FRotator(0, 18,0), FVector(0.52f) },
+        { FVector(-2140,-780,5), FRotator(0,-12,0), FVector(0.50f) },
+        { FVector(-2020,-250,5), FRotator(0,-21,0), FVector(0.52f) },
+        { FVector(-1770,-180,5), FRotator(0,-17,0), FVector(0.50f) }
     };
     const int32 BeforeBagEndClusters = ClusterCount;
     const int32 BeforeBagEndInstances = InstanceCount;
@@ -4814,7 +4932,7 @@ void AShirePrototypeWorldBuilder::SpawnP1C01ChapterFinishWorldArtPass()
         ProductionFlowerBoxMesh, TEXT("PES002BagEndPorchFlowers"), 600, 3900,
         BagEndPorchFlowers, UE_ARRAY_COUNT(BagEndPorchFlowers));
     UE_LOG(LogTemp, Display,
-        TEXT("PES002_BAG_END_PORCH_FLOWERS clusters=%d instances=%d cap=8 collision=none tick=none visual=pending"),
+        TEXT("PES002_BAG_END_PORCH_FLOWERS clusters=%d instances=%d cap=4 collision=none tick=none visual=pending"),
         ClusterCount - BeforeBagEndClusters, InstanceCount - BeforeBagEndInstances);
 
     // PES-002: existing approved turf and stone assets provide a small bounded
@@ -4822,9 +4940,7 @@ void AShirePrototypeWorldBuilder::SpawnP1C01ChapterFinishWorldArtPass()
     // ground collision is inferred and the walkable door corridor remains clear.
     const FFinishPlacement BagEndSlopeTurf[] = {
         { FVector(-2910,-950,12), FRotator(0, 14,0), FVector(0.82f,0.70f,0.26f) },
-        { FVector(-2700,-1040,12), FRotator(0,  7,0), FVector(0.88f,0.68f,0.24f) },
         { FVector(-2490,-1110,12), FRotator(0,  0,0), FVector(0.86f,0.70f,0.25f) },
-        { FVector(-2270,-1080,12), FRotator(0,-12,0), FVector(0.82f,0.66f,0.24f) },
         { FVector(-2060,-990,12), FRotator(0,-18,0), FVector(0.84f,0.68f,0.26f) },
         { FVector(-1810,-890,12), FRotator(0,-25,0), FVector(0.80f,0.67f,0.23f) }
     };
@@ -4833,21 +4949,18 @@ void AShirePrototypeWorldBuilder::SpawnP1C01ChapterFinishWorldArtPass()
         1400, 7400, BagEndSlopeTurf, UE_ARRAY_COUNT(BagEndSlopeTurf));
     const FFinishPlacement BagEndStoneEdge[] = {
         { FVector(-2890,-1140,8), FRotator(0,  12,0), FVector(0.46f,0.36f,0.26f) },
-        { FVector(-2630,-1190,8), FRotator(0,   8,0), FVector(0.48f,0.38f,0.25f) },
         { FVector(-2380,-1200,8), FRotator(0,  -2,0), FVector(0.44f,0.37f,0.26f) },
-        { FVector(-2120,-1170,8), FRotator(0, -10,0), FVector(0.47f,0.38f,0.25f) },
         { FVector(-1880,-1070,8), FRotator(0, -18,0), FVector(0.45f,0.36f,0.25f) },
         { FVector(-1610,-940,8), FRotator(0, -25,0), FVector(0.46f,0.38f,0.24f) }
     };
     SpawnFinishCluster(ProductionRockMesh, TEXT("PES002BagEndStonePropertyEdge"),
         1300, 6800, BagEndStoneEdge, UE_ARRAY_COUNT(BagEndStoneEdge));
     UE_LOG(LogTemp, Display,
-        TEXT("PES002_BAG_END_TERRAIN_EDGE instances=%d cap=12 collision=none tick=none material=resident visual=pending"),
+        TEXT("PES002_BAG_END_TERRAIN_EDGE instances=%d cap=8 collision=none tick=none material=resident visual=pending"),
         InstanceCount - BagEndSlopeBefore);
 
     const FVector BagEndProps[] = {
-        FVector(-2520,-615,0), FVector(-2360,-645,0), FVector(-1910,-520,0),
-        FVector(-1760,-380,0)
+        FVector(-2360,-805,0), FVector(-1810,-250,0)
     };
     for (int32 Index = 0; Index < UE_ARRAY_COUNT(BagEndProps); ++Index)
     {

@@ -123,6 +123,50 @@ function Test-IncrementalSourceOnlyHeadDelta([string]$GitExe, [string]$TargetSha
     return $true
 }
 
+# A narrowed PES-002 curated asset-only diff may reuse the exact-parent green
+# C++ build, but still MUST execute the UE4 importer, LOD/PBR QC and real render.
+# Unknown C++/config/runtime deltas fail closed to the normal engine classifier.
+function Test-ExactHeadCuratedDelta([string]$GitExe, [string]$TargetSha) {
+    # Reuse green engine code only across at most two source-only commits.
+    # Both combined delta and current HEAD must pass exact source contracts.
+    $parent = (& $GitExe rev-parse "$TargetSha^").Trim()
+    if ($LASTEXITCODE -ne 0 -or -not $parent) { return $false }
+    $ancestor = (& $GitExe rev-parse "$parent^").Trim()
+    if ($LASTEXITCODE -ne 0) { $ancestor = "" }
+    $proofCandidates = @($parent)
+    if ($ancestor -and $ancestor -ne $parent) { $proofCandidates += $ancestor }
+    $allowed = @(
+        "Scripts/ue4_p1c01_curated_postimport.py",
+        "Scripts/curated_tree_surface_contract.py",
+        "Scripts/test_p1c01_curated_ue_plan.py",
+        "Scripts/run_p1c01_curated_ue4.ps1",
+        "Scripts/classify_unreal_validation.ps1",
+        "Scripts/test_unreal_classifier.ps1",
+        ".github/workflows/unreal-build-validation.yml",
+        ".github/workflows/pre-unreal-validation.yml"
+    )
+    foreach ($candidate in $proofCandidates) {
+        if (-not (Test-ParentWholeWorkflowGreen $candidate)) { continue }
+        $delta = @(& $GitExe diff --name-only $candidate $TargetSha)
+        if ($LASTEXITCODE -ne 0 -or $delta.Count -eq 0) { continue }
+        $names = @($delta | ForEach-Object { $_ -replace "\\", "/" })
+        if ($names -notcontains "Scripts/ue4_p1c01_curated_postimport.py") { continue }
+        $safe = $true
+        foreach ($name in $names) {
+            if (-not ($name.StartsWith("Docs/") -or $allowed -contains $name)) {
+                Write-Host "P1C01_CURATED_ANCESTOR_BLOCKED file=$name proof=$candidate"
+                $safe = $false
+                break
+            }
+        }
+        if (-not $safe) { continue }
+        $script:CuratedProvenAncestor = $candidate
+        Write-Host "P1C01_CURATED_SOURCE_ONLY_ANCESTOR_PASS proof=$candidate maximumDistance=2"
+        return $true
+    }
+    return $false
+}
+
 function Test-ParentWholeWorkflowGreen([string]$ParentSha) {
     if (-not $env:GH_TOKEN) { return $false }
     try {
@@ -540,6 +584,14 @@ if ($env:SHIRE_PES_FOCUSED_UNREAL -eq "true") {
     exit 0
 }
 
+# An already-verified curated archive can now enter the exact-head UE4.27
+# material/LOD lane without re-compiling unchanged C++ or replaying PR history.
+# Parent proof is mandatory; no PIE/device/visual pass is inferred.
+if (Test-ExactHeadCuratedDelta $git $env:TARGET_SHA) {
+    Set-Mode "curated" "bounded-source-only-pes002-curated-original-unreal-import" $script:CuratedProvenAncestor
+    exit 0
+}
+
 # Check incremental edits before the accumulated PR diff. A full, exact-parent
 # green UE run is required; otherwise fall through to the existing strict paths.
 if (Test-IncrementalSourceOnlyHeadDelta $git $env:TARGET_SHA) {
@@ -593,6 +645,12 @@ $curatedOnly = $curatedChanged.Count -gt 0 -and
     ($curatedChanged -contains "Scripts/ue4_p1c01_curated_postimport.py") -and
     @($curatedChanged | Where-Object { $curatedAllowed -notcontains $_ }).Count -eq 0
 if ($curatedOnly) {
+    # Avoid upgrading any curated editor source on a stale/unproven C++ parent.
+    # Earlier classifier skipped this prerequisite for narrow PR diffs.
+    if (-not (Test-ParentWholeWorkflowGreen $parentSha)) {
+        Set-Mode "full" "curated-exact-parent-engine-proof-missing" $parentSha "none" $false $false
+        exit 0
+    }
     $curatedChanged | ForEach-Object { Write-Host "CURATED_EDITOR_SOURCE_FILE $_" }
     Set-Mode "curated" "owner-authorized-auto-windows-single-editor-curated-source" $parentSha
     exit 0

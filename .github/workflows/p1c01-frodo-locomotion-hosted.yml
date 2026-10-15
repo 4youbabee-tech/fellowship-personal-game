@@ -1,10 +1,15 @@
 name: P1C01 Hosted Frodo Source Locomotion
 on:
-  pull_request:
-    branches: [develop]
+  push:
+    branches-ignore:
+      - develop
+      - main
     paths:
       - 'Tools/CloudAssetBuild/frodo_locomotion.py'
-      - '.github/workflows/p1c01-frodo-locomotion-hosted.yml'
+      - 'Tools/CloudAssetBuild/test_frodo_locomotion.py'
+      - 'Scripts/stage_p1c01_human_wave2.ps1'
+      - 'Data/P1C01HumanCharacterProductionWave2V1.json'
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
@@ -12,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 40
     env:
-      TARGET_SHA: ${{ github.event.pull_request.head.sha }}
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -22,6 +27,8 @@ jobs:
         run: |
           test "$(git rev-parse HEAD)" = "$TARGET_SHA"
           python3 Scripts/governor_work_start.py --lane SKELETAL_CHARACTER_PREP
+      - name: Guard Frodo naming and source-skeleton contract
+        run: python3 Tools/CloudAssetBuild/test_frodo_locomotion.py
       - name: Install Blender
         run: |
           sudo apt-get update -qq

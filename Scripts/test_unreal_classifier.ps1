@@ -12,13 +12,13 @@ function Test-Git {
     switch ($args[0]) {
         'fetch' { return }
         'diff' { return $script:Case.Paths }
-        'rev-parse' { return 'candidate-parent' }
+        'rev-parse' { if ($args[1] -eq 'candidate-parent^') { return 'candidate-grandparent' }; return 'candidate-parent' }
         'rev-list' { return @('candidate-parent') }
         default { throw "Unexpected Git call: $args" }
     }
 }
 function Test-ParentWholeWorkflowGreen([string]$ParentSha) {
-    return $script:Case.Proof -and $ParentSha -eq 'candidate-parent'
+    return (($script:Case.Proof -and $ParentSha -eq 'candidate-parent') -or ($script:Case.GrandProof -and $ParentSha -eq 'candidate-grandparent'))
 }
 function Test-ParentCoreUnrealGreen([string]$ParentSha) { return [bool]$script:Case.Proof }
 function Test-ParentAcceptanceDataGreen([string]$ParentSha) { return [bool]$script:Case.PackageProof }
@@ -33,6 +33,11 @@ $marker = 'Set-Location $env:GITHUB_WORKSPACE'
 if (-not $source.Contains($marker)) { throw 'Classifier entry point missing' }
 $program = [scriptblock]::Create($source.Replace($marker, $mocks + [Environment]::NewLine + $marker).Replace('exit 0', 'return'))
 $cases = @(
+    @{Name='pes002-curated-exact-parent'; Paths=@('Scripts/ue4_p1c01_curated_postimport.py','Scripts/curated_tree_surface_contract.py','Scripts/test_p1c01_curated_ue_plan.py','Scripts/run_p1c01_curated_ue4.ps1','Scripts/classify_unreal_validation.ps1','Scripts/test_unreal_classifier.ps1','.github/workflows/unreal-build-validation.yml','.github/workflows/pre-unreal-validation.yml','Docs/CURRENT_PROJECT_STATE.md','Docs/PRODUCTION_COMPLETENESS_MATRIX.md','Docs/WORLD_DETAIL_LEDGER.md','Docs/PROJECT_GUARDIAN.md'); Proof=$true; Mode='curated'; TreeProof=$false},
+    @{Name='pes002-curated-bounded-source-repair'; Paths=@('Scripts/ue4_p1c01_curated_postimport.py','Scripts/curated_tree_surface_contract.py','Scripts/test_p1c01_curated_ue_plan.py','Scripts/run_p1c01_curated_ue4.ps1','Scripts/classify_unreal_validation.ps1','Scripts/test_unreal_classifier.ps1','.github/workflows/unreal-build-validation.yml','.github/workflows/pre-unreal-validation.yml','Docs/CURRENT_PROJECT_STATE.md','Docs/PRODUCTION_COMPLETENESS_MATRIX.md','Docs/PROJECT_GUARDIAN.md'); Proof=$false; GrandProof=$true; Mode='curated'; TreeProof=$false},
+    @{Name='pes002-curated-bounded-unsafe-runtime'; Paths=@('Scripts/ue4_p1c01_curated_postimport.py','Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp'); Proof=$false; GrandProof=$true; Mode='full'; TreeProof=$false},
+    @{Name='pes002-curated-parent-not-green'; Paths=@('Scripts/ue4_p1c01_curated_postimport.py','Docs/CURRENT_PROJECT_STATE.md'); Proof=$false; Mode='full'; TreeProof=$false},
+    @{Name='pes002-curated-mixed-runtime-requires-full'; Paths=@('Scripts/ue4_p1c01_curated_postimport.py','Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp'); Proof=$true; Mode='full'; TreeProof=$false},
     @{Name='cloud-first-shire-assembly'; Paths=@('Data/ProjectGovernor.json','Data/MaximumSafeProductionModeV1.json','Data/OfflineFastProductionQueueV1.json','Data/P1C01CloudShireAssemblyPlanV1.json','Data/SourceGroundedProductionPacketsV1.json','Data/P1C01CloudAssetProductionManifestsV1.json','Scripts/offline_production_classifier.py','Scripts/test_offline_production_classifier.py','Scripts/validate_p1c01_cloud_assembly.py','Scripts/test_validate_p1c01_cloud_assembly.py','Scripts/validate_source_grounded_production_packets.py','Scripts/test_validate_source_grounded_production_packets.py','Scripts/validate_p1c01_cloud_asset_manifests.py','Scripts/test_validate_p1c01_cloud_asset_manifests.py','Docs/OFFLINE_FAST_PRODUCTION_PROTOCOL.md'); Proof=$true; Mode='inherit'; TreeProof=$false},
     @{Name='onboarding'; Paths=@('README.md','Scripts/new_developer_onboarding.ps1','Scripts/pre_unreal_validate.py'); Proof=$true; Mode='inherit'; TreeProof=$false},
     @{Name='handoff'; Paths=@('Scripts/governor_handoff.py','Scripts/test_governor_handoff.py'); Proof=$true; Mode='inherit'; TreeProof=$false},

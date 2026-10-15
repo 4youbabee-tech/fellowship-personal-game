@@ -1,12 +1,19 @@
 name: Cloud Shire Physical FBX and 28-Region PBR Source Build
 
 on:
-  pull_request:
-    branches: [develop]
+  push:
+    branches-ignore:
+      - develop
+      - main
     paths:
-      - 'Tools/CloudAssetBuild/**'
-      - '.github/workflows/cloud-p1c01-asset-production.yml'
-
+      - 'Tools/CloudAssetBuild/materials.py'
+      - 'Tools/CloudAssetBuild/blender_shire.py'
+      - 'Tools/CloudAssetBuild/blender_regions.py'
+      - 'Tools/CloudAssetBuild/validate_bundle.py'
+      - 'Tools/CloudAssetBuild/validate_region_bundle.py'
+      - 'Tools/CloudAssetBuild/test_assets.py'
+      - 'Tools/CloudAssetBuild/test_region_bundle.py'
+      - 'Data/WholeGameRegionProductionPacketsV1.json'
 permissions:
   contents: read
 
@@ -21,7 +28,7 @@ jobs:
     timeout-minutes: 35
     env:
       ASSET_OUT: ${{ github.workspace }}/_BuildArtifacts/shire-cloud-original-assets
-      TARGET_SHA: ${{ github.event.pull_request.head.sha }}
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
       - name: Checkout exact PR source HEAD
         uses: actions/checkout@v4
@@ -124,7 +131,7 @@ jobs:
     continue-on-error: true
     timeout-minutes: 35
     env:
-      TARGET_SHA: ${{ github.event.pull_request.head.sha }}
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       RIG_OUT: ${{ github.workspace }}/_BuildArtifacts/shire-cloud-frodo-source
     steps:
       - name: Checkout exact PR head

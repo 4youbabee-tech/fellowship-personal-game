@@ -1,17 +1,16 @@
 name: P1C01 KayKit Rig Technical Bridge
 
 on:
-  pull_request:
-    branches: [develop]
+  push:
+    branches-ignore:
+      - develop
+      - main
     paths:
       - 'Data/P1C01KayKitRigTechnicalBridgeV1.json'
       - 'Data/WarehouseKayKitGitHubAcquisitionBatchV1.json'
       - 'Scripts/stage_p1c01_kaykit_rig_bridge.ps1'
       - 'Scripts/run_p1c01_kaykit_rig_bridge_ue4.ps1'
-      - 'Scripts/ci_import_production_assets.cmd'
-      - 'Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp'
-      - '.github/workflows/p1c01-kaykit-rig-bridge.yml'
-
+  workflow_dispatch:
 permissions:
   contents: read
 

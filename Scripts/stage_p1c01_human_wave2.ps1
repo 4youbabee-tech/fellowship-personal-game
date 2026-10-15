@@ -67,6 +67,8 @@ $blenderVersionLines=@(& $blenderCommand.Source --version)
 if([int]$LASTEXITCODE -ne 0 -or $blenderVersionLines.Count -lt 1){ throw "HUMAN_WAVE2_BLENDER_UNAVAILABLE" }
 $blenderVersion=[string]$blenderVersionLines[0]
 
+$gameRigHelper=Join-Path $root "Scripts/p1c01_game_deform_export.py"
+if(-not (Test-Path -LiteralPath $gameRigHelper -PathType Leaf)){ throw "GAME_RIG_HELPER_MISSING path=$gameRigHelper" }
 $pythonPath=Join-Path $OutputRoot "normalize_human_wave2.py"
 @'
 import argparse, json, math, os, sys
@@ -80,6 +82,7 @@ p.add_argument("--source", required=True)
 p.add_argument("--source-kind", required=True)
 p.add_argument("--output", required=True)
 p.add_argument("--receipt", required=True)
+p.add_argument("--rig-helper", required=True)
 args=p.parse_args(argv)
 
 if args.source_kind == ".fbx":
@@ -96,6 +99,140 @@ armatures=[o for o in bpy.context.scene.objects if o.type=="ARMATURE"]
 meshes=[o for o in bpy.context.scene.objects if o.type=="MESH"]
 if not armatures: raise RuntimeError("no armature")
 if not meshes: raise RuntimeError("no mesh")
+
+# Recover skinning only when the public source is missing real DEF limb weights.
+# Never treat a Rigify control or a mesh-parent relationship as deformation proof.
+import re
+if len(armatures) != 1:
+    raise RuntimeError("HUMAN_WAVE2_SKIN_REPAIR_MULTIPLE_ARMATURES")
+source_armature = armatures[0]
+bound_meshes = [m for m in meshes if (
+    m.parent == source_armature or
+    any(mod.type == "ARMATURE" and mod.object == source_armature for mod in m.modifiers)
+)]
+if not bound_meshes:
+    raise RuntimeError("HUMAN_WAVE2_SKIN_REPAIR_NO_BOUND_MESH")
+# This CC0 base model is deliberately split into several small, already-bound
+# body components. A per-component size gate misclassified that valid family
+# before the actual skin/deformation checks ever ran. Treat it as one
+# armature-bound character only when the aggregate geometry is substantial;
+# the later exported-FBX bilateral influence gate remains mandatory.
+# Blender import can preserve deform groups while dropping the armature modifier
+# on the primary body/hair. Reattach only weighted, substantial mesh parts;
+# do not bind unweighted props or lower the minimum vertex gate.
+recovered_meshes = []
+deform_bone_names = {bone.name for bone in source_armature.data.bones if bone.use_deform}
+for candidate in meshes:
+    if candidate in bound_meshes or len(candidate.data.vertices) < 100:
+        continue
+    groups = {group.index: group.name for group in candidate.vertex_groups}
+    has_deform_weights = any(
+        membership.weight > 0.00001 and groups.get(membership.group) in deform_bone_names
+        for vertex in candidate.data.vertices for membership in vertex.groups
+    )
+    if not has_deform_weights:
+        continue
+    existing_targets = [mod.object for mod in candidate.modifiers if mod.type == "ARMATURE" and mod.object]
+    if existing_targets and source_armature not in existing_targets:
+        raise RuntimeError("HUMAN_WAVE2_SKIN_RECOVERY_CONFLICTING_ARMATURE")
+    if not existing_targets:
+        modifier = candidate.modifiers.new(name="RecoveredSourceArmature", type="ARMATURE")
+        modifier.object = source_armature
+    bound_meshes.append(candidate)
+    recovered_meshes.append(candidate.name)
+print("HUMAN_WAVE2_SKIN_RECOVERED_SOURCE_BINDINGS " + json.dumps(recovered_meshes), flush=True)
+bound_vertex_count = sum(len(m.data.vertices) for m in bound_meshes)
+# Fail with source-specific evidence, rather than weakening the geometry gate.
+# Enumerate ALL scene meshes to distinguish an incomplete armature binding
+# from a genuinely tiny or incorrectly imported source asset.
+mesh_diagnostics = [
+    {
+        "name": m.name,
+        "vertices": len(m.data.vertices),
+        "parent": m.parent.name if m.parent else None,
+        "armature_modifiers": [
+            mod.object.name if mod.object else None
+            for mod in m.modifiers if mod.type == "ARMATURE"
+        ],
+        "bound": m in bound_meshes,
+        "weighted_vertices": sum(1 for v in m.data.vertices if any(g.weight > 0.00001 for g in v.groups)),
+    }
+    for m in meshes
+]
+print("HUMAN_WAVE2_SKIN_SOURCE_DIAGNOSTIC " + json.dumps({
+    "source": os.path.basename(args.source),
+    "armature": source_armature.name,
+    "scene_mesh_count": len(meshes),
+    "bound_mesh_count": len(bound_meshes),
+    "total_scene_vertices": sum(len(m.data.vertices) for m in meshes),
+    "bound_vertices": bound_vertex_count,
+    "meshes": mesh_diagnostics,
+}, sort_keys=True), flush=True)
+if bound_vertex_count < 1000:
+    raise RuntimeError("HUMAN_WAVE2_SKIN_REPAIR_BOUND_CHARACTER_TOO_SMALL")
+
+def original_def_influence(mesh_group):
+    deform = {bone.name for bone in source_armature.data.bones if bone.use_deform}
+    weighted = set()
+    for mesh in mesh_group:
+        names = {group.index: group.name for group in mesh.vertex_groups}
+        for vertex in mesh.data.vertices:
+            for membership in vertex.groups:
+                name = names.get(membership.group)
+                if membership.weight > 0.00001 and name in deform:
+                    weighted.add(name)
+    return weighted
+
+source_def_weights = original_def_influence(bound_meshes)
+skin_rebuilt = False
+# The baseline CC0 hero FBX reimport had only four weighted bones. Rebuild
+# the principal humanoid skin from the *existing licensed geometry/skeleton*,
+# not a substitute dummy rig. Blender bone-heat failures remain hard failures.
+if len(source_def_weights) < 13:
+    original_worlds = {mesh: mesh.matrix_world.copy() for mesh in bound_meshes}
+    for mesh in bound_meshes:
+        for modifier in list(mesh.modifiers):
+            if modifier.type == "ARMATURE":
+                mesh.modifiers.remove(modifier)
+        mesh.vertex_groups.clear()
+        mesh.parent = None
+        mesh.matrix_world = original_worlds[mesh]
+    bpy.ops.object.select_all(action="DESELECT")
+    source_armature.hide_set(False)
+    source_armature.select_set(True)
+    for mesh in bound_meshes:
+        mesh.hide_set(False)
+        mesh.select_set(True)
+    bpy.context.view_layer.objects.active = source_armature
+    try:
+        result = bpy.ops.object.parent_set(type="ARMATURE_AUTO", keep_transform=True)
+    except RuntimeError as exc:
+        raise RuntimeError("HUMAN_WAVE2_SKIN_REPAIR_BONE_HEAT_FAILED") from exc
+    if "FINISHED" not in result:
+        raise RuntimeError("HUMAN_WAVE2_SKIN_REPAIR_PARENT_FAILED")
+    if not all(any(mod.type == "ARMATURE" and mod.object == source_armature
+                   for mod in mesh.modifiers) for mesh in bound_meshes):
+        raise RuntimeError("HUMAN_WAVE2_SKIN_REPAIR_BINDING_MISSING")
+    if len(original_def_influence(bound_meshes)) < 13:
+        raise RuntimeError("HUMAN_WAVE2_SKIN_REPAIR_INSUFFICIENT_DEFORM_WEIGHTS")
+    skin_rebuilt = True
+    print("HUMAN_WAVE2_AUTO_REBIND_BOUND_CHARACTER meshes=" +
+          str(len(bound_meshes)) + " vertices=" + str(bound_vertex_count), flush=True)
+
+# Rigify's DEF -> ORG/MCH parenting creates a broken UE game hierarchy even
+# when the exported FBX has 87 actual weighted bones. Build an isolated
+# export-only deform skeleton; fail if the rest mesh changes by >1%.
+with open(args.rig_helper, "r", encoding="utf-8") as helper_file:
+    exec(compile(helper_file.read(), args.rig_helper, "exec"), globals())
+game_armature, game_export = make_game_deform_rig(source_armature, bound_meshes)
+armatures = [game_armature]
+meshes = list(bound_meshes)
+source_armature.hide_set(True)
+print("GAME_RIG_SOURCE_READY " + json.dumps({
+    "bones":game_export["game_bones"],
+    "weighted":game_export["weighted_game_bones"],
+    "rest_delta":game_export["max_rest_delta"],
+},sort_keys=True),flush=True)
 
 for o in bpy.context.scene.objects: o.select_set(False)
 for o in armatures + meshes:
@@ -140,11 +277,85 @@ bpy.ops.export_scene.fbx(
     object_types={"ARMATURE","MESH"}, use_mesh_modifiers=True,
     add_leaf_bones=False, primary_bone_axis="Y", secondary_bone_axis="X",
     use_armature_deform_only=True, mesh_smooth_type="FACE", use_tspace=True,
-    bake_anim=True, bake_anim_use_all_bones=True, bake_anim_use_nla_strips=True,
-    bake_anim_use_all_actions=True, bake_anim_force_startend_keying=True,
+    bake_anim=False,
     path_mode="AUTO", embed_textures=False)
 if not os.path.isfile(args.output) or os.path.getsize(args.output) <= 0:
     raise RuntimeError("FBX export missing")
+
+# Audit the EXPORTED FBX, not just the original .blend: Rigify control
+# weights may disappear during deform-only export while total weighted
+# vertices still looks healthy. A technical winner must move real limbs.
+import re
+bpy.ops.wm.read_factory_settings(use_empty=True)
+if "FINISHED" not in bpy.ops.import_scene.fbx(filepath=args.output):
+    raise RuntimeError("normalized FBX reimport failed")
+post_armatures=[o for o in bpy.context.scene.objects if o.type=="ARMATURE"]
+post_meshes=[o for o in bpy.context.scene.objects if o.type=="MESH"]
+if len(post_armatures)!=1:
+    raise RuntimeError("normalized FBX armature cardinality invalid")
+reimport_arm=post_armatures[0]
+influence={}
+for m in post_meshes:
+    if not any(mod.type=="ARMATURE" and mod.object==reimport_arm for mod in m.modifiers):
+        continue
+    by_index={g.index:g.name for g in m.vertex_groups}
+    for v in m.data.vertices:
+        for g in v.groups:
+            if g.weight>0.00001 and g.group in by_index:
+                name=by_index[g.group]
+                influence[name]=influence.get(name,0.0)+float(g.weight)
+required_roles=("upperarm","forearm","thigh","shin","foot","hand","head")
+def role_of(name):
+    stem=re.sub(r"[^a-z0-9]","",name.lower())
+    if "forearm" in stem or "lowerarm" in stem:return "forearm"
+    if "upperarm" in stem or "uparm" in stem:return "upperarm"
+    if "thigh" in stem or "upleg" in stem:return "thigh"
+    if "shin" in stem or "calf" in stem or "lowerleg" in stem:return "shin"
+    if "foot" in stem:return "foot"
+    if "hand" in stem:return "hand"
+    if "head" in stem:return "head"
+    return None
+weighted_bone_roles=set()
+for bone in reimport_arm.data.bones:
+    if influence.get(bone.name,0.0)<=1e-6:continue
+    role=role_of(bone.name)
+    if not role:continue
+    name=bone.name.lower()
+    side=("L" if re.search(r"(?:^|[.:_ -])(?:l|left)(?:$|[.:_ -])",name) or "left" in name
+          else "R" if re.search(r"(?:^|[.:_ -])(?:r|right)(?:$|[.:_ -])",name) or "right" in name
+          else None)
+    if role=="head":weighted_bone_roles.add("head")
+    elif side:weighted_bone_roles.add(side+"_"+role)
+needed={"head"}|{side+"_"+role for side in ("L","R") for role in required_roles if role!="head"}
+missing_influence=sorted(needed-weighted_bone_roles)
+print("HUMAN_WAVE2_EXPORTED_SKIN_QC missing="+",".join(missing_influence)+" weighted_bones="+str(len(influence)),flush=True)
+# Game deformation parents must survive the actual binary FBX round-trip.
+# This check prevents the known Rigify hierarchy failure from launching UE4.
+post_roles=choose_roles(influence,[b.name for b in reimport_arm.data.bones if b.use_deform])
+def reimport_descendant(child,ancestor):
+    node=reimport_arm.data.bones[child].parent
+    seen=set()
+    while node and node.name not in seen:
+        if node.name==ancestor:return True
+        seen.add(node.name)
+        node=node.parent
+    return False
+exported_hierarchy={}
+for side in ("left","right"):
+    exported_hierarchy[side+"_arm"]=(
+        reimport_descendant(post_roles[side+"_forearm"],post_roles[side+"_upper_arm"])
+        and reimport_descendant(post_roles[side+"_hand"],post_roles[side+"_forearm"]))
+    exported_hierarchy[side+"_leg"]=(
+        reimport_descendant(post_roles[side+"_shin"],post_roles[side+"_thigh"])
+        and reimport_descendant(post_roles[side+"_foot"],post_roles[side+"_shin"]))
+exported_hierarchy["spine_head"]=reimport_descendant(post_roles["head"],post_roles["spine"])
+if not all(exported_hierarchy.values()):
+    raise RuntimeError("GAME_RIG_EXPORTED_HIERARCHY_REJECT " +
+                       ",".join(k for k,v in exported_hierarchy.items() if not v))
+if any(b.name.startswith(("ORG-","MCH-")) for b in reimport_arm.data.bones):
+    raise RuntimeError("GAME_RIG_CONTROL_BONES_LEAKED")
+print("GAME_RIG_EXPORTED_HIERARCHY_PASS " + json.dumps(exported_hierarchy,sort_keys=True),flush=True)
+
 
 receipt={
     "armature_count":len(armatures),"mesh_count":len(meshes),"bone_count":bone_count,
@@ -152,7 +363,16 @@ receipt={
     "vertex_count":vertex_count,"weighted_vertex_count":weighted,
     "zero_weight_vertex_count":zero_weight,"uv_layer_count":uv_layers,
     "finite_bounds":finite_bounds,"joint_name_coverage":coverage,
-    "source_kind":args.source_kind}
+    "source_kind":args.source_kind,
+    "bound_character_mesh_count":len(bound_meshes),
+    "bound_character_vertex_count":bound_vertex_count,
+    "auto_skin_rebuilt":skin_rebuilt,
+    "source_def_weighted_bones_before_repair":len(source_def_weights),
+    "exported_weighted_bone_count":len(influence),
+    "game_rig":{k:v for k,v in game_export.items() if k!="parent_map"},
+    "exported_hierarchy":exported_hierarchy,
+    "animated_action_clips_exported":0,
+    "exported_missing_limb_influence":missing_influence}
 with open(args.receipt,"w",encoding="utf-8") as f: json.dump(receipt,f,indent=2,sort_keys=True)
 print("HUMAN_WAVE2_BLENDER_PASS",json.dumps(receipt,sort_keys=True))
 '@ | Set-Content -LiteralPath $pythonPath -Encoding UTF8
@@ -166,7 +386,16 @@ function Get-FbxBinaryVersion([string]$Path){
 }
 
 $ranked=@($characterSources | Sort-Object @{Expression={if($_.extension -eq ".blend"){0}else{1}}}, @{Expression={$_.bytes}})
-$selectedSources=@($ranked | Select-Object -First ([int]$manifest.source_policy.max_ue4_candidates))
+# Prefer the original .blend when present: exact-head 01fbb1c1 proved that
+# Hero@BaseModel.blend retains 87 weighted deform bones, while the sibling
+# RiggedCharacterBase.fbx has 0 weighted body/hair vertices. Treat that FBX
+# as a rejected alternate, not a mandatory second production candidate.
+# Preserve the archive inventory and provenance for audit; never waive the
+# Blender/UE skeletal, deformation, or zero-weight gates.
+$blendSources=@($ranked | Where-Object { $_.extension -eq ".blend" })
+$productionPool=if($blendSources.Count -gt 0){ @($blendSources) }else{ @($ranked) }
+$selectedSources=@($productionPool | Select-Object -First ([int]$manifest.source_policy.max_ue4_candidates))
+Write-Host "HUMAN_WAVE2_SOURCE_SELECTION selected=$($selectedSources.Count) blend_available=$($blendSources.Count) archived_candidates=$($ranked.Count)"
 $normalized=@(); $index=0
 foreach($src in $selectedSources){
   $index++
@@ -174,9 +403,9 @@ foreach($src in $selectedSources){
   $outPath=Join-Path $normalizedRoot $outName
   $readinessPath=Join-Path $normalizedRoot ("candidate_{0:D2}_readiness.json" -f $index)
   if($src.extension -eq ".blend"){
-    & $blenderCommand.Source --background ([string]$src.extracted_path) --python $pythonPath -- --source ([string]$src.extracted_path) --source-kind ".blend" --output $outPath --receipt $readinessPath
+    & $blenderCommand.Source --background ([string]$src.extracted_path) --python $pythonPath -- --source ([string]$src.extracted_path) --source-kind ".blend" --output $outPath --receipt $readinessPath --rig-helper $gameRigHelper
   }else{
-    & $blenderCommand.Source --background --factory-startup --python $pythonPath -- --source ([string]$src.extracted_path) --source-kind ".fbx" --output $outPath --receipt $readinessPath
+    & $blenderCommand.Source --background --factory-startup --python $pythonPath -- --source ([string]$src.extracted_path) --source-kind ".fbx" --output $outPath --receipt $readinessPath --rig-helper $gameRigHelper
   }
   if([int]$LASTEXITCODE -ne 0){ throw "HUMAN_WAVE2_NORMALIZE_FAIL entry=$($src.entry)" }
 
@@ -194,6 +423,7 @@ foreach($src in $selectedSources){
   if([int]$readiness.uv_layer_count -le 0){ $qualityReasons+="MISSING_UV_LAYER" }
   if(-not [bool]$readiness.finite_bounds){ $qualityReasons+="NONFINITE_BOUNDS" }
   if($zeroWeightRatio -gt [double]$manifest.source_policy.max_zero_weight_ratio){ $qualityReasons+="EXCESS_ZERO_WEIGHT_RATIO" }
+  if(@($readiness.exported_missing_limb_influence).Count -gt 0){ $qualityReasons+="EXPORTED_LIMB_SKIN_INFLUENCE_MISSING" }
   $qualityPass=$qualityReasons.Count -eq 0
   $normalized += [pscustomobject]@{
     source_entry=[string]$src.entry; source_kind=[string]$src.extension; source_sha256=[string]$src.sha256; source_bytes=[int64]$src.bytes;
