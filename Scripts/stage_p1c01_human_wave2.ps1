@@ -114,6 +114,30 @@ if not bound_meshes:
 # before the actual skin/deformation checks ever ran. Treat it as one
 # armature-bound character only when the aggregate geometry is substantial;
 # the later exported-FBX bilateral influence gate remains mandatory.
+# Blender import can preserve deform groups while dropping the armature modifier
+# on the primary body/hair. Reattach only weighted, substantial mesh parts;
+# do not bind unweighted props or lower the minimum vertex gate.
+recovered_meshes = []
+deform_bone_names = {bone.name for bone in source_armature.data.bones if bone.use_deform}
+for candidate in meshes:
+    if candidate in bound_meshes or len(candidate.data.vertices) < 100:
+        continue
+    groups = {group.index: group.name for group in candidate.vertex_groups}
+    has_deform_weights = any(
+        membership.weight > 0.00001 and groups.get(membership.group) in deform_bone_names
+        for vertex in candidate.data.vertices for membership in vertex.groups
+    )
+    if not has_deform_weights:
+        continue
+    existing_targets = [mod.object for mod in candidate.modifiers if mod.type == "ARMATURE" and mod.object]
+    if existing_targets and source_armature not in existing_targets:
+        raise RuntimeError("HUMAN_WAVE2_SKIN_RECOVERY_CONFLICTING_ARMATURE")
+    if not existing_targets:
+        modifier = candidate.modifiers.new(name="RecoveredSourceArmature", type="ARMATURE")
+        modifier.object = source_armature
+    bound_meshes.append(candidate)
+    recovered_meshes.append(candidate.name)
+print("HUMAN_WAVE2_SKIN_RECOVERED_SOURCE_BINDINGS " + json.dumps(recovered_meshes), flush=True)
 bound_vertex_count = sum(len(m.data.vertices) for m in bound_meshes)
 # Fail with source-specific evidence, rather than weakening the geometry gate.
 # Enumerate ALL scene meshes to distinguish an incomplete armature binding

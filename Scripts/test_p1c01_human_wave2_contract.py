@@ -18,6 +18,8 @@ class HumanWave2ContractTests(unittest.TestCase):
             "HUMAN_WAVE2_EXPORTED_SKIN_QC",
             "bound_vertex_count = sum(len(m.data.vertices) for m in bound_meshes)",
             "HUMAN_WAVE2_SKIN_SOURCE_DIAGNOSTIC",
+            "HUMAN_WAVE2_SKIN_RECOVERED_SOURCE_BINDINGS",
+            "HUMAN_WAVE2_SKIN_RECOVERY_CONFLICTING_ARMATURE",
             '"total_scene_vertices": sum(len(m.data.vertices) for m in meshes)',
             '"bound_vertices": bound_vertex_count,',
             "m.parent == source_armature",

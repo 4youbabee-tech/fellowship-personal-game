@@ -19,13 +19,13 @@ try {
     $ready = $false
     while ((Get-Date) -lt $deadline) {
         $proc.Refresh()
-        if ($proc.HasExited) {
-            throw "PES002_EDITOR_EXITED_EARLY exitCode=$($proc.ExitCode); inspect $log"
-        }
         if ((Test-Path -LiteralPath $log) -and
             (Select-String -Path $log -SimpleMatch -Pattern 'PES002_SCREENSHOT_REQUESTED target=BagEnd view=3' -Quiet)) {
             $ready = $true
             break
+        }
+        if ($proc.HasExited) {
+            throw "PES002_EDITOR_EXITED_EARLY exitCode=$($proc.ExitCode); inspect $log"
         }
         Start-Sleep -Seconds 3
     }
