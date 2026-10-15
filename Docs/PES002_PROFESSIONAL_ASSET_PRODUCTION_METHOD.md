@@ -46,3 +46,6 @@
 - Budget: 2704 triangles, 7 material sections, one existing resident hero mesh actor instead of hero mound plus disc/rim/knob actors; no extra textures, ticking actors, blocking geometry or physics. Actual draw calls/memory/FPS must still be measured.
 - Acceptance: legible integrated doorway, paired recessed windows, roof joining facade, all four angles inspected; luminance >=35 is only screening. Owner visual/traversal/device acceptance still needed.
 - Rollback: revert this bounded candidate as one change on PR477 if import/build/render regresses; never merge failing head, never overwrite active writer, no force push. Do not revert unrelated character source work.
+
+### Observed engine repair 51c2ed1
+Run 38762271397 compiled but rejected eight stored material entries versus seven source finishes. Epic historical issue https://issues.unrealengine.com/issue/UE-60152 describes unused slot retention on reimport (4.19.2, Cannot Reproduce); it does not itself prove the current asset's mapping. Validate real LOD0 sections and all seven active material identities, log each drawn finish and reject any unknown active section. Do not drop the material-binding check or delete indexed slots speculatively. The repair changes the test subject from storage-array cardinality to actual rendered material coverage. Exact-head engine retest required.

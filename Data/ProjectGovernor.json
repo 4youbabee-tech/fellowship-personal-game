@@ -9213,13 +9213,22 @@
       "restrictions": "PES-002 OPEN, PES-003 LOCKED; no PIE/device/FPS/visual acceptance"
     },
     "current_repair_candidate": {
-      "stage": "SOURCE_STATIC_VALIDATED_ENGINE_PENDING",
+      "stage": "COMPILE_TESTED_IMPORT_FAILED_REPAIR_PENDING",
       "scope": "Joined Bag End exterior on PR477",
       "mesh_sha256": "ad8019a44a2fb19e49e7b443e8fd33f0f5762c663171d3df9942614d9fb86048",
       "triangles": 2704,
       "material_sections": 7,
       "method_doc": "Docs/PES002_PROFESSIONAL_ASSET_PRODUCTION_METHOD.md",
-      "no_new_runtime_pes": true
+      "no_new_runtime_pes": true,
+      "compile_evidence": {
+        "head_sha": "51c2ed1b1577dea50185dcf8f6fe01514c37d682",
+        "pre_unreal_run": 38762271198,
+        "unreal_run": 38762271397,
+        "cpp": "PASS",
+        "import": "FAIL slots=8 required=7",
+        "screenshots": "NOT_RUN"
+      },
+      "repair": "Validate all seven named bound finishes on actual nonempty LOD0 sections; reject unexpected drawn slots; retain unused-slot evidence without speculative deletion"
     }
   },
   "pes002_character_visual_pilot_2026_10_14": {

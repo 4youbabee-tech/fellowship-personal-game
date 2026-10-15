@@ -109,6 +109,10 @@ class PES002VisualContract(unittest.TestCase):
         src = (ROOT / "Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp").read_text()
         self.assertIn('PES002_HERO_MATERIALS_REJECT', src)
         self.assertIn('Found && Found->MaterialInterface', src)
+        self.assertIn('HeroRenderData->LODResources[0].Sections', src)
+        self.assertIn('RequiredSlots.Contains(Drawn.MaterialSlotName) && Drawn.MaterialInterface', src)
+        self.assertIn('DrawnFinishes.Num() == RequiredSlots.Num()', src)
+        self.assertNotIn('StaticMaterials.Num() == RequiredSlots.Num()', src)
 
     def test_hero_facade_import_is_single_named_package_not_split_groups(self):
         src = (ROOT / "Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp").read_text(encoding="utf-8")

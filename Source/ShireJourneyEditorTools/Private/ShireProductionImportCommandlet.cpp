@@ -1814,7 +1814,9 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                     TEXT("BagEndPlaster"), TEXT("Grass"), TEXT("Stone"), TEXT("Wood"),
                     TEXT("BagEndDoor"), TEXT("BagEndBrass"), TEXT("BagEndGlass")
                 };
-                bool bHeroMaterialsValid = StaticMaterials.Num() == RequiredSlots.Num();
+                // UE4 reimport retains unused historical slots (Epic UE-60152).
+                // Validate actual drawn sections rather than the backing array size.
+                bool bHeroMaterialsValid = true;
                 for (const FName& RequiredSlot : RequiredSlots)
                 {
                     const FStaticMaterial* Found = StaticMaterials.FindByPredicate(
@@ -1822,14 +1824,44 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                         { return Entry.MaterialSlotName == RequiredSlot; });
                     bHeroMaterialsValid = bHeroMaterialsValid && Found && Found->MaterialInterface;
                 }
-                if (!bHeroMaterialsValid)
+                TSet<FName> DrawnFinishes;
+                const FStaticMeshRenderData* HeroRenderData = ImportedMesh->GetRenderData();
+                if (!HeroRenderData || HeroRenderData->LODResources.Num() == 0)
                 {
-                    ++Failed;
-                    UE_LOG(LogTemp, Error, TEXT("PES002_HERO_MATERIALS_REJECT slots=%d required=7"), StaticMaterials.Num());
+                    bHeroMaterialsValid = false;
                 }
                 else
                 {
-                    UE_LOG(LogTemp, Display, TEXT("PES002_HERO_MATERIALS_READY slots=7 uv=authored visual=pending"));
+                    for (const FStaticMeshSection& Section : HeroRenderData->LODResources[0].Sections)
+                    {
+                        if (Section.NumTriangles == 0) continue;
+                        if (!StaticMaterials.IsValidIndex(Section.MaterialIndex))
+                        {
+                            bHeroMaterialsValid = false;
+                            continue;
+                        }
+                        const FStaticMaterial& Drawn = StaticMaterials[Section.MaterialIndex];
+                        DrawnFinishes.Add(Drawn.MaterialSlotName);
+                        bHeroMaterialsValid = bHeroMaterialsValid &&
+                            RequiredSlots.Contains(Drawn.MaterialSlotName) && Drawn.MaterialInterface;
+                        UE_LOG(LogTemp, Display,
+                            TEXT("PES002_HERO_DRAWN_FINISH slot=%s triangles=%d material=%s"),
+                            *Drawn.MaterialSlotName.ToString(), Section.NumTriangles,
+                            *GetPathNameSafe(Drawn.MaterialInterface));
+                    }
+                }
+                bHeroMaterialsValid = bHeroMaterialsValid && DrawnFinishes.Num() == RequiredSlots.Num();
+                if (!bHeroMaterialsValid)
+                {
+                    ++Failed;
+                    UE_LOG(LogTemp, Error, TEXT("PES002_HERO_MATERIALS_REJECT slots=%d drawn=%d required=7"),
+                        StaticMaterials.Num(), DrawnFinishes.Num());
+                }
+                else
+                {
+                    UE_LOG(LogTemp, Display,
+                        TEXT("PES002_HERO_MATERIALS_READY drawn=7 slots=%d uv=authored visual=pending"),
+                        StaticMaterials.Num());
                 }
             }
             if (ShireProductionImport::IsP1C01FoliageMeshAssetName(AssetName))
