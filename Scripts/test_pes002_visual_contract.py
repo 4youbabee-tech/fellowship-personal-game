@@ -41,6 +41,27 @@ class PES002VisualContract(unittest.TestCase):
         section = workflow.split("      - name: Capture Bag End targeted P1C01 visual proof", 1)[1].split("      - name:", 1)[0]
         self.assertNotIn('continue-on-error: true', section)
 
+    def test_managed_resident_path_follows_ground_probed_endpoint_elevations(self):
+        # M1 source regression only; actual 4.27.2 traversal/visual FPS remain separate.
+        director = (ROOT / "Source/ShireJourney/Private/World/LivingWorldDirector.cpp").read_text(encoding="utf-8")
+        npc = (ROOT / "Source/ShireJourney/Private/Characters/ShireAmbientNPC.cpp").read_text(encoding="utf-8")
+        self.assertIn("ResolveGroundedAmbientPoint(Location, SpawnLocation)", director)
+        self.assertIn("ResolveGroundedAmbientPoint(RoutineEnd, GroundedRoutineEnd)", director)
+        self.assertIn('NPC->Tags.AddUnique(TEXT("LivingWorldManaged"))', director)
+        # Flyers/fauna never enter the last, ground-bound walking branch.
+        movement = npc.rsplit("const FVector Direction = ToTarget.GetSafeNormal2D();", 1)[1]
+        self.assertIn('ActorHasTag(TEXT("LivingWorldManaged")) && LivingWorldDirector.IsValid()', movement)
+        self.assertIn("const float PlanarLengthSq = Segment.X * Segment.X + Segment.Y * Segment.Y;", movement)
+        self.assertIn("PlanarLengthSq > KINDA_SMALL_NUMBER", movement)
+        self.assertIn("FMath::IsFinite(RoutinePointA.Z)", movement)
+        self.assertIn("FMath::IsFinite(RoutinePointB.Z)", movement)
+        self.assertIn("FMath::Clamp(", movement)
+        self.assertIn("FMath::Lerp(RoutinePointA.Z, RoutinePointB.Z, Fraction)", movement)
+        self.assertIn("FVector(Current.X, Current.Y, ExpectedZ)", movement)
+        self.assertNotIn("LineTraceSingleByChannel", movement)
+        self.assertNotIn("SetActorEnableCollision(true)", movement)
+        self.assertNotIn("GetPlayerPawnCached()", movement)
+
     def test_bag_end_hero_exterior_keeps_entrance_visible(self):
         cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
         self.assertIn('PES002_BAG_END_HERO_FACADE', cpp)
