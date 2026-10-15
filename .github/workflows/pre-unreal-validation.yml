@@ -193,6 +193,9 @@ jobs:
       - name: Guard PES-002 imported PBR shader and true bark/leaf source identity
         shell: cmd
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_pes002_curated_pbr_shader_contract.py" -v
+
+      - name: Guard Cloud138 shared shader parent ownership
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_restore_cloud138_parent_contract.py" -v
       - name: Test P1C01 multi-zone curated nature runtime evidence contract
         if: github.event_name == 'workflow_dispatch' && inputs.chapter_closeout_audits == true
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_p1c01_curated_world_runtime.py" -v

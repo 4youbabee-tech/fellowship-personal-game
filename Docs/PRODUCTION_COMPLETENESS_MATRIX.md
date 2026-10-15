@@ -1,3 +1,12 @@
+## 2026-10-16 PES-002 Cloud138 parent collision — strict evidence matrix
+| Requirement | State / evidence |
+|---|---|
+| ROOT-CAUSE | CONFIRMED SOURCE ORDER: 90 archived Cloud138 .uassets include `/Game/Production/Materials/M_P1C01VerifiedPBR` shared parent; restoration ran after UE4 curated importer material repair, replacing master with archived copy. Runtime at 3b288ea logged SM5 fallback and missing instancing flag. |
+| SOURCE / STATIC | Root-cause fix candidate: SHA-validate 90 archived, restore 89 owned, preserve 1 current shared master, fail closed for stale/missing/corrupt and verify parent checksum; focused regression tests introduced. Exact-head static CI PENDING. |
+| COMPILE / UE4 RENDER | Previous 38814182452 compiled/imported/started but strict shader guard FAIL. Next commit compile and shader validation PENDING. |
+| RENDER OBSERVED | 4 PNG real runtime artifact 12010491255 with default shader fallback; NOT ACCEPTED. |
+| PIE / DEVICE / VISUAL / FPS | NOT RUN / NOT RUN / NOT ACCEPTED / NOT MEASURED, Gate 6/7 OPEN, PES-002 ACTIVE, PES-003 LOCKED. |
+
 ## 2026-10-16 PES-002 actual curated funnel and shader blocker
 | Stage | Exact-run evidence / acceptance |
 |---|---|
