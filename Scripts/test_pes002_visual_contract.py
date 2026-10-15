@@ -29,6 +29,7 @@ class PES002VisualContract(unittest.TestCase):
         self.assertIn('PES002_BAG_END_SCREENSHOT_MISSING', ps)
         self.assertIn('PES002_CAPTURE_VIEW_NOT_READY', ps)
         self.assertIn('PES002_CAPTURE_STARTUP_TIMEOUT', ps)
+        self.assertLess(ps.index('Remove-Item -LiteralPath $log'), ps.index('$proc = Start-Process'))
         self.assertIn('PES002_EDITOR_EXITED_EARLY', ps)
         self.assertIn('PES002_SCREENSHOT_REQUESTED target=BagEnd view=3', ps)
         self.assertIn('for ($view = 0; $view -lt 4; $view++)', ps)
@@ -43,15 +44,13 @@ class PES002VisualContract(unittest.TestCase):
     def test_bag_end_hero_exterior_keeps_entrance_visible(self):
         cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
         self.assertIn('PES002_BAG_END_HERO_FACADE', cpp)
-        self.assertIn('heroObj=material-intake-pending', cpp)
-        self.assertIn('if (!bBagEndHero)', cpp)
-        self.assertIn('FVector(200.0f, 0.0f, 14.0f * Scale)', cpp)
-        self.assertIn('FVector(2.92f, 2.85f, 2.34f) * Scale', cpp)
-        self.assertIn('turf-shell=active heroObj=material-intake-pending moundOffsetX=200', cpp)
-        self.assertIn('FVector(0.365f, 0.365f, 0.025f) * Scale', cpp)
-        self.assertIn('moundScale=2.92x2.85x2.34', cpp)
-        self.assertIn('door=proportioned-green-round windows=2', cpp)
-        self.assertIn('!bBagEndHero', cpp)
+        self.assertIn('bUseAuthoredHero = bBagEndHero && ProductionBagEndHeroFacadeMesh', cpp)
+        self.assertIn('roof=joined door=recessed windows=2 collision=none', cpp)
+        hero = cpp.split('if (bUseAuthoredHero)', 1)[1].split('else if (bHasProductionFacade)', 1)[0]
+        self.assertIn('SpawnShape(ProductionBagEndHeroFacadeMesh', hero)
+        self.assertNotIn('CylinderMesh', hero)
+        self.assertNotIn('ProductionTurfMoundMesh', hero)
+        self.assertIn('if (!bUseAuthoredHero)', cpp)
         self.assertIn('FVector(-2210.0f, -520.0f, 0.0f)', cpp)
         self.assertIn('FVector(-3070.0f, -520.0f, 285.0f)', cpp)
         self.assertIn('SetFieldOfView(48.0f)', cpp)
@@ -74,14 +73,42 @@ class PES002VisualContract(unittest.TestCase):
             self.assertEqual(generated.read_bytes(), tracked.read_bytes())
         text = tracked.read_text(encoding="utf-8")
         self.assertIn("o SM_ShBagEndHeroFacade", text)
-        self.assertGreaterEqual(text.count("usemtl Stone"), 4)
-        self.assertGreaterEqual(text.count("usemtl Wood"), 4)
+        self.assertEqual(text.count("usemtl Stone"), 1)
+        self.assertEqual(text.count("usemtl Wood"), 1)
         self.assertGreater(text.count("\nf "), 500)
         plan = json.loads((ROOT / "Data/ChapterAssetStreamingPlan.json").read_text(encoding="utf-8"))
         self.assertIn(
             "/Game/Production/World/Shire/SM_ShBagEndHeroFacade.SM_ShBagEndHeroFacade",
             plan["banks"]["P1C01"]["assets"],
         )
+
+    def test_hero_geometry_has_uvs_valid_triangles_and_bound_finishes(self):
+        text = (ROOT / "SourceAssets/Production/World/Shire/SM_ShBagEndHeroFacade.obj").read_text()
+        vertices = [tuple(map(float, line.split()[1:])) for line in text.splitlines() if line.startswith('v ')]
+        uvs = [line for line in text.splitlines() if line.startswith('vt ')]
+        faces = [line.split()[1:] for line in text.splitlines() if line.startswith('f ')]
+        materials = {line.split()[1] for line in text.splitlines() if line.startswith('usemtl ')}
+        mtl = (ROOT / 'SourceAssets/Production/World/Shire/ShireMaterials.mtl').read_text()
+        self.assertEqual(len(materials), 7)
+        self.assertLess(len(faces), 3000)  # a single bounded hero asset, not a scenery rebuild
+        for name in materials:
+            self.assertIn('newmtl ' + name + '\n', mtl)
+        for face in faces:
+            self.assertEqual(len(face), 3)
+            coords = []
+            for ref in face:
+                v, uv = map(int, ref.split('/'))
+                self.assertTrue(1 <= v <= len(vertices))
+                self.assertTrue(1 <= uv <= len(uvs))
+                coords.append(vertices[v-1])
+            a,b,c = coords
+            u = [b[i]-a[i] for i in range(3)]
+            v = [c[i]-a[i] for i in range(3)]
+            cross = (u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0])
+            self.assertGreater(sum(x*x for x in cross), 1e-10)
+        src = (ROOT / "Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp").read_text()
+        self.assertIn('PES002_HERO_MATERIALS_REJECT', src)
+        self.assertIn('Found && Found->MaterialInterface', src)
 
     def test_hero_facade_import_is_single_named_package_not_split_groups(self):
         src = (ROOT / "Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp").read_text(encoding="utf-8")
@@ -101,9 +128,9 @@ class PES002VisualContract(unittest.TestCase):
         # UE4 Engine Cylinder uses local Z as its axis; yaw rotates in XY and
         # cannot turn an upward-facing circle into an entrance on the west wall.
         # Hero, fallback, timber rims and window glass all need pitch instead.
-        self.assertEqual(hobbit.count("FRotator(90.0f, 0.0f, 0.0f)"), 8)
+        self.assertEqual(hobbit.count("FRotator(90.0f, 0.0f, 0.0f)"), 4)
         self.assertNotIn("FRotator(0.0f, 90.0f, 0.0f)", hobbit)
-        self.assertIn("PES002_BAG_END_ROUND_FACADE_ORIENTATION=pitch90", hobbit)
+        self.assertIn("door=recessed windows=2", hobbit)
 
     def test_baseline_sky_is_not_overwritten_with_dark_values(self):
         cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")

@@ -9199,18 +9199,27 @@
     "failure_rule": "A failed mandatory proof remains failed, is diagnosed and repaired, and never becomes success by continue-on-error or documents alone.",
     "scope_rule": "Do not open PES-003 while PES-002 screenshot, lighting/material/architecture review and traversal acceptance remain open.",
     "last_observed_render": {
-      "run_id": 38604332835,
-      "head_sha": "c6f55835a4b82c52e765aee7ad247d1a5e67f51b",
-      "artifact_id": 11915428403,
-      "archive_sha256": "9a0f79f1478f582aa14c8a9c8a2c48d2ae87486e9e4d626b04ad68aef78aaac7",
-      "render_review": "REJECTED",
+      "run_id": 38727751427,
+      "head_sha": "d5f37b5e61722c4828170a729c5ae0f37aab1f58",
+      "artifact_id": 11969310933,
+      "archive_sha256": "5b5d9c410f2ad4358d39ab7be4ffb5e7172ea1a8a3e57ce622029817ee004978",
+      "render_review": "ASSISTANT_REJECTED_OWNER_ACCEPTANCE_OUTSTANDING",
       "concrete_defects": [
-        "Bag End green cylinder door and circular glazing rendered as horizontal ovals due to yaw-only rotation about local Z",
-        "Visible modular/fallback named NPC bodies; actual render log CharacterRigStreaming unavailable packages-missing for Frodo/Bilbo/Gandalf and others",
-        "Flat/cluttered facade and terrain/architecture composition lack PES-002 visual acceptance"
+        "Suppressed authored facade; floating door and duplicate glass against detached turf mound",
+        "Modular character fallbacks; source skin QC fails before FBX",
+        "No traversal/device acceptance"
       ],
-      "followup": "Surgical cylinder-pitch fix authored on PR #477, compile and fresh three-view Unreal screenshots mandatory; rig assets and traversal remain blocked/unproven.",
-      "restrictions": "No P1C02/PES-003; no visual/PIE/device/FPS acceptance from CI-only results"
+      "followup": "Existing hero source roof/entrance/7 named finishes, importer slot guard and runtime reuse candidate; exact-head engine proof required",
+      "restrictions": "PES-002 OPEN, PES-003 LOCKED; no PIE/device/FPS/visual acceptance"
+    },
+    "current_repair_candidate": {
+      "stage": "SOURCE_STATIC_VALIDATED_ENGINE_PENDING",
+      "scope": "Joined Bag End exterior on PR477",
+      "mesh_sha256": "ad8019a44a2fb19e49e7b443e8fd33f0f5762c663171d3df9942614d9fb86048",
+      "triangles": 2704,
+      "material_sections": 7,
+      "method_doc": "Docs/PES002_PROFESSIONAL_ASSET_PRODUCTION_METHOD.md",
+      "no_new_runtime_pes": true
     }
   },
   "pes002_character_visual_pilot_2026_10_14": {
@@ -9296,8 +9305,8 @@
     ],
     "authority": "Supplement only; existing Governor, Gate 6/7, writer locks, evidence and documentation obligations prevail.",
     "active_pes": "PES-002 OPEN; PES-003 LOCKED"
-  }
-  ,"pes002_owner_acceleration_2026_10_15": {
+  },
+  "pes002_owner_acceleration_2026_10_15": {
     "status": "OWNER_APPROVED_SCOPE_REGISTERED_IMPLEMENTATION_PARTIAL",
     "authority": "Data/ProjectGovernor.json",
     "active_pes": "PES-002",

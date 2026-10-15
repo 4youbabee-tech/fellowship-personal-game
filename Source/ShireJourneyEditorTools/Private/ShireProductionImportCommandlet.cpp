@@ -1806,6 +1806,32 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                     ++MarkedMaterialPackages;
                 }
             }
+            if (bDedicatedBagEndFacade)
+            {
+                // Exact package identity alone missed the earlier brown-panel defect.
+                // Every authored finish must survive import with a real material.
+                const TArray<FName> RequiredSlots = {
+                    TEXT("BagEndPlaster"), TEXT("Grass"), TEXT("Stone"), TEXT("Wood"),
+                    TEXT("BagEndDoor"), TEXT("BagEndBrass"), TEXT("BagEndGlass")
+                };
+                bool bHeroMaterialsValid = StaticMaterials.Num() == RequiredSlots.Num();
+                for (const FName& RequiredSlot : RequiredSlots)
+                {
+                    const FStaticMaterial* Found = StaticMaterials.FindByPredicate(
+                        [&RequiredSlot](const FStaticMaterial& Entry)
+                        { return Entry.MaterialSlotName == RequiredSlot; });
+                    bHeroMaterialsValid = bHeroMaterialsValid && Found && Found->MaterialInterface;
+                }
+                if (!bHeroMaterialsValid)
+                {
+                    ++Failed;
+                    UE_LOG(LogTemp, Error, TEXT("PES002_HERO_MATERIALS_REJECT slots=%d required=7"), StaticMaterials.Num());
+                }
+                else
+                {
+                    UE_LOG(LogTemp, Display, TEXT("PES002_HERO_MATERIALS_READY slots=7 uv=authored visual=pending"));
+                }
+            }
             if (ShireProductionImport::IsP1C01FoliageMeshAssetName(AssetName))
             {
                 const FStaticMeshRenderData* RenderData = ImportedMesh->GetRenderData();

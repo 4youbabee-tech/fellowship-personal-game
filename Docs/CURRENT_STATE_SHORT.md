@@ -5,20 +5,19 @@ _Last verified: 2026-10-15; source of truth: Data/ProjectGovernor.json; this fil
 - Project: Shire Journey, UE 4.27.2 C++, Windows/DX11, 720p, i7 6th gen / 8 GB RAM / ~2 GB VRAM / target >=30 FPS.
 - Canonical integration: `develop` at `03df3c34a7a5faa47a69bf882edc0a7afd01000e` as checked 2026-10-15.
 - Active runtime: **PES-002 Bag End Exterior, OPEN**; PES-001 bounded import/placement complete, NOT visually accepted; PES-003+ runtime locked by Gate 6/7.
-- Active candidate: [PR #477](https://github.com/4youbabee-tech/fellowship-personal-game/pull/477), `fix/pes002-bag-end-lighting-20261014`, verified pre-update HEAD `85cfda35c24f2a574f768cff806ddbfdfd0c1381`.
+- Active candidate: [PR #477](https://github.com/4youbabee-tech/fellowship-personal-game/pull/477), `fix/pes002-bag-end-lighting-20261014`, verified pre-update HEAD `c92e9404b92de1251646b0e6c71b411b2f5cb16f`.
 - One Unreal Writer, one Warehouse Writer, one active runtime PES, one coherent PES PR; do not auto-merge or cancel a running writer.
 
 ## Proven evidence (specific HEAD, never extrapolate to successor)
-- On `f7ae873...`: Pre-Unreal 38638641156 PASS, hosted Unreal classifier 38638641056 PASS but Windows UE job SKIPPED; Frodo source FAILED. Earlier Unreal builds do not validate later changed C++.
-- Human Character Wave 2 Run 38634791736 FAIL and Frodo Locomotion Run 38634791700 FAIL. No real five-character rig/motion acceptance.
-- Historical 90 restored UE assets and 48 placed Cloud138 instances proven for PES-001 only (Run 38526869417).
-- Bag End real screenshots historically reviewed and REJECTED. No current visual/traversal/PIE/device/30FPS acceptance. No saved terrain .umap proof.
+- `d5f37b5e61722c4828170a729c5ae0f37aab1f58`: Pre-Unreal 38727751411 PASS; Windows Unreal 38727751427 PASS for build/import/automation/startup/four 720p captures; artifact 11969310933. All four inspected by assistant: visually rejected, not owner acceptance.
+- Latest c92e940: Frodo locomotion 38755223105 PASS; Wave2 38755222797 source + UE skeletal import PASS, hierarchy deformation FAIL. Unreal 38755222958 compile/import/startup PASS, capture FAIL; stale proof log race repair in current candidate. No accepted skin/deformation.
+- Historical 90 restored UE assets and 48 placed Cloud138 instances are PES-001 evidence only.
 
 ## Immediate critical blockers
-1. Exact-head faaee053 Windows capture FAILED because fixed 86-second watcher killed UE4 during initial RHI/shader DDC start; candidate fail-closed readiness polling pending new engine proof. Bag End image quality: primitive/occluded silhouettes, darkness diagnosis needs fixed Lit/BaseColor/WorldNormal evidence; no cause assumed without matched captures.
-2. Frodo rig: insufficient exported bilateral limb/head skin influence and failed hosted source runs; preserve rigorous deformation guard, no premature promotion.
-3. P1C01: real saved/reopened .umap, geographic route, river crossing collision/NavMesh and 720p aerial screenshot NOT PROVEN.
-4. Low-spec profiling and 30 FPS are UNMEASURED on target hardware.
+1. Bag End authored mesh was suppressed; current candidate restores it with joined roof, recessed entrance and seven material finishes. Local source checks PASS; new exact-head engine evidence pending. See latest CURRENT_PROJECT_STATE entry.
+2. Frodo hierarchy deformation fails after source and UE import; inspect bone chains before repair. No rig promotion.
+3. Saved/reopened geographic .umap, playable route/collision/NavMesh and target-device DX11 720p >=30 FPS/VRAM not proven.
+4. Owner visual/traversal acceptance missing. PES-002 OPEN; no PES-003 runtime.
 
 ## Owner-approved acceleration decisions — status distinctions
 - M0 reads this short index **plus live Governor/HEAD/Gates and targeted source excerpts**; historical ledgers are referenced by keyword, never discarded.

@@ -44,7 +44,7 @@ class Obj:
             (-15, y0, h0), (10, y0, h0), (10, y1, h1), (-15, y1, h1),
         ])
         a, b, c, d, e, f, g, h = ids
-        self.add_group("Earth", [
+        self.add_group("BagEndPlaster", [
             (a, d, c, b), (e, f, g, h), (a, b, f, e),
             (b, c, g, f), (c, d, h, g), (d, a, e, h),
         ])
@@ -65,8 +65,8 @@ class Obj:
             f0, f1, f2, f3, b0, b1, b2, b3 = ids
             faces.extend([
                 (f0, f3, f2, f1), (b0, b1, b2, b3),
-                (f0, f1, b1, b0), (f1, f2, b2, b1),
-                (f2, f3, b3, b2), (f3, f0, b0, b3),
+                (f1, f2, b2, b1),
+                (f3, f0, b0, b3),
             ])
         self.add_group(material, faces)
 
@@ -78,35 +78,85 @@ class Obj:
             "o SM_ShBagEndHeroFacade",
         ]
         lines.extend(f"v {x:.4f} {y:.4f} {z:.4f}" for x, y, z in self.vertices)
-        for index, (material, faces) in enumerate(self.groups):
-            lines.append(f"g hero_{index:03d}_{material}")
-            lines.append(f"usemtl {material}")
-            lines.extend("f " + " ".join(str(v) for v in face) for face in faces)
+        # Consolidate by material: one render section per finish, not per plank.
+        grouped = {}
+        for material, faces in self.groups:
+            grouped.setdefault(material, []).extend(faces)
+        uv_index = 1
+        for material, faces in grouped.items():
+            lines.extend((f"g hero_{material}", f"usemtl {material}", "s off"))
+            for face in faces:
+                vertices = [self.vertices[i - 1] for i in face]
+                a, b, c = vertices[:3]
+                ab = [b[i] - a[i] for i in range(3)]
+                ac = [c[i] - a[i] for i in range(3)]
+                normal = (ab[1]*ac[2]-ab[2]*ac[1], ab[2]*ac[0]-ab[0]*ac[2], ab[0]*ac[1]-ab[1]*ac[0])
+                axis = max(range(3), key=lambda i: abs(normal[i]))
+                axes = [i for i in range(3) if i != axis]
+                # Planar 100 cm texel scale; no stretched full texture per sliver.
+                for v in vertices:
+                    lines.append(f"vt {v[axes[0]] / 100:.6f} {v[axes[1]] / 100:.6f}")
+                refs = [f"{v}/{uv_index+i}" for i, v in enumerate(face)]
+                for i in range(1, len(face)-1):
+                    triangle = (vertices[0], vertices[i], vertices[i+1])
+                    u = [triangle[1][k]-triangle[0][k] for k in range(3)]
+                    v = [triangle[2][k]-triangle[0][k] for k in range(3)]
+                    cross = (u[1]*v[2]-u[2]*v[1], u[2]*v[0]-u[0]*v[2], u[0]*v[1]-u[1]*v[0])
+                    if sum(c*c for c in cross) > 1e-12:
+                        lines.append(f"f {refs[0]} {refs[i]} {refs[i+1]}")
+                uv_index += len(face)
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 def build(path: Path) -> None:
     obj = Obj()
-    steps = 16
-    ys = [-120.0 + 240.0 * i / steps for i in range(steps + 1)]
-    heights = [108.0 + 52.0 * (1.0 - (abs(y) / 120.0) ** 1.65) for y in ys]
+    steps = 32
+    ys = [-126.0 + 252.0 * i / steps for i in range(steps + 1)]
+    heights = [16.0 + 132.0 * math.sqrt(max(0, 1-(y/126)**2)) for y in ys]
     for i in range(steps):
-        obj.facade_slice(ys[i], ys[i + 1], heights[i], heights[i + 1])
+        obj.facade_slice(ys[i], ys[i+1], heights[i], heights[i+1])
+
+    # Earth-covered roof joins the same front profile, spreads into the hillside,
+    # then meets the ground behind the house. No detached spherical mound.
+    rows = []
+    for j in range(13):
+        t = j / 12
+        x = -10 + 390*t
+        width = 126*(1-t) + 125*math.sin(math.pi*t)
+        height = 132*(1-t)**0.65
+        rows.append(obj.add_vertices([(x, -width*math.cos(math.pi*i/24),
+            16*(1-t) + height*math.sin(math.pi*i/24)) for i in range(25)]))
+    for j in range(12):
+        for i in range(24):
+            if j == 11:
+                face = (rows[j][i], rows[j][i+1], rows[j+1][i])
+            else:
+                face = (rows[j][i], rows[j][i+1], rows[j+1][i+1], rows[j+1][i])
+            obj.add_group("Grass", [tuple(reversed(face))])
 
     obj.cuboid("Stone", -27, 18, -126, 126, 0, 14)
-    obj.ring("Stone", 0, 66, 57, 70, -30, -17, 28)
-    obj.ring("Wood", 0, 66, 50, 57, -34, -28, 28)
-    for side in (-1.0, 1.0):
-        window_y = 84.0 * side
-        obj.ring("Stone", window_y, 78, 24, 31, -28, -17, 20)
-        obj.ring("Wood", window_y, 78, 19, 24, -32, -26, 20)
-        obj.cuboid("Wood", -35, -24, window_y - 34, window_y + 34, 43, 48)
-        obj.cuboid("Wood", -35, -24, window_y - 34, window_y + 34, 108, 113)
-
-    obj.cuboid("Wood", -29, -17, -118, -110, 12, 112)
-    obj.cuboid("Wood", -29, -17, 110, 118, 12, 112)
-    obj.cuboid("Stone", -38, -20, -55, 55, 8, 16)
+    obj.ring("Stone", 0, 62, 49, 57, -29, -14, 40)
+    obj.ring("Wood", 0, 62, 45, 49, -33, -26, 40)
+    # A recessed closed door made of fitted planks, with a central brass knob.
+    # Slot-based finishes persist with the imported mesh; no emissive discs.
+    for i in range(12):
+        y0, y1 = -45 + i*7.5 + .12, -45 + (i+1)*7.5 - .12
+        z0 = math.sqrt(max(0, 45**2-y0**2))
+        z1 = math.sqrt(max(0, 45**2-y1**2))
+        ids = obj.add_vertices([(-31,y0,62-z0),(-31,y1,62-z1),
+            (-31,y1,62+z1),(-31,y0,62+z0)])
+        obj.add_group("BagEndDoor", [tuple(reversed(ids))])
+    obj.ring("BagEndBrass", 0, 62, 0, 2.4, -35, -31, 12)
+    for side in (-1, 1):
+        y = 87*side
+        obj.ring("Stone", y, 66, 20, 26, -28, -14, 24)
+        obj.ring("Wood", y, 66, 17, 20, -32, -26, 24)
+        obj.ring("BagEndGlass", y, 66, 0, 17, -30, -28, 24)
+        obj.cuboid("Wood", -33,-29,y-.8,y+.8,49,83)
+        obj.cuboid("Wood", -33,-29,y-17,y+17,65.2,66.8)
+        obj.cuboid("Stone", -38,-14,y-28,y+28,38,43)
+    obj.cuboid("Stone", -38,-20,-55,55,8,16)
     obj.write(path)
 
 

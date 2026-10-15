@@ -1008,64 +1008,29 @@ void AShirePrototypeWorldBuilder::SpawnHobbitHole(const FVector& Location, float
     // Engine/BasicShapes Cylinder has its disc normal along local Z. Pitch 90 degrees
     // rotates the circular face into the YZ elevation of the west-facing (-X) facade.
     // Yaw alone leaves the cylinders as horizontal discs (observed as green ovals).
-    const bool bHasProductionFacade = ProductionTurfMoundMesh && ProductionHobbitFacadeMesh;
-    if (bHasProductionFacade)
+    const bool bBagEndHero =
+        FVector::DistSquared2D(Location, FVector(-2210.0f, -520.0f, 0.0f))
+            < FMath::Square(25.0f);
+    const bool bUseAuthoredHero = bBagEndHero && ProductionBagEndHeroFacadeMesh;
+    const bool bHasProductionFacade = bUseAuthoredHero ||
+        (ProductionTurfMoundMesh && ProductionHobbitFacadeMesh);
+    if (bUseAuthoredHero)
     {
-        // P1C01 Bag End is the first (1.25x) home at a fixed canon/story anchor.
-        // Three actual 720p Unreal screenshots showed its 2.45x mound occluding
-        // the entire front elevation. Move ONLY this earth silhouette backward
-        // (+X, opposite the west-facing entrance), reduce its scale and remove
-        // its decorative collision. Keep the facade/doorstep blocking.
-        const bool bBagEndHero =
-            FVector::DistSquared2D(Location, FVector(-2210.0f, -520.0f, 0.0f))
-                < FMath::Square(25.0f);
-        const FVector MoundOffset = bBagEndHero
-            ? FVector(200.0f, 0.0f, 14.0f * Scale)
-            : FVector(0.0f, 0.0f, 30.0f * Scale);
-        const FVector MoundScale = bBagEndHero
-            ? FVector(2.92f, 2.85f, 2.34f) * Scale
-            : FVector(2.45f, 2.10f, 2.10f) * Scale;
-        SpawnShape(ProductionTurfMoundMesh, Location + MoundOffset,
-            MoundScale, Turf, FRotator::ZeroRotator, !bBagEndHero);
-        // The hero OBJ has no authored material package in the unattended UE4
-        // lane yet. Showing it as a large, single brown panel flattened the
-        // Bag End silhouette in the real proof captures. Keep it resident for
-        // the authored-material intake, but let the rounded turf shell carry
-        // the exterior until its material slots have real PBR assignments.
-        if (!bBagEndHero)
-        {
-            SpawnShape(ProductionHobbitFacadeMesh,
-                Location + FVector(-88.0f * Scale, 0.0f, 0.0f),
-                FVector(1.0f) * Scale, Earth, FRotator::ZeroRotator, true);
-        }
-        if (bBagEndHero)
-        {
-            // Build only the small readable entrance against the turf shell.
-            // This preserves the Bag End collision/quest anchor while avoiding
-            // an oversized, free-standing disk and a second actor hierarchy.
-            const FVector DoorCentre = Location + FVector(-138.0f * Scale, 0.0f, 62.0f * Scale);
-            SpawnShape(CylinderMesh, DoorCentre,
-                FVector(0.42f, 0.42f, 0.027f) * Scale,
-                Timber, FRotator(90.0f, 0.0f, 0.0f), false);
-            SpawnShape(CylinderMesh, DoorCentre + FVector(-3.5f * Scale, 0.0f, 0.0f),
-                FVector(0.365f, 0.365f, 0.025f) * Scale,
-                DoorGreen, FRotator(90.0f, 0.0f, 0.0f), false);
-            SpawnShape(SphereMesh, DoorCentre + FVector(-6.0f * Scale, 18.0f * Scale, -2.0f * Scale),
-                FVector(0.034f) * Scale, FLinearColor(0.82f,0.65f,0.28f),
-                FRotator::ZeroRotator, false);
-            for (const float WindowY : {-84.0f, 84.0f})
-            {
-                const FVector WindowCentre = Location + FVector(-121.0f * Scale, WindowY * Scale, 78.0f * Scale);
-                SpawnShape(CylinderMesh, WindowCentre,
-                    FVector(0.205f, 0.205f, 0.022f) * Scale,
-                    Timber, FRotator(90.0f, 0.0f, 0.0f), false);
-                SpawnShape(CylinderMesh, WindowCentre + FVector(-2.8f * Scale, 0.0f, 0.0f),
-                    FVector(0.165f, 0.165f, 0.020f) * Scale,
-                    WarmGlass, FRotator(90.0f, 0.0f, 0.0f), false);
-            }
-            UE_LOG(LogTemp, Display,
-                TEXT("PES002_BAG_END_HERO_FACADE layout=west-facing turf-shell=active heroObj=material-intake-pending moundOffsetX=200 moundScale=2.92x2.85x2.34 moundCollision=none door=proportioned-green-round windows=2 proof=pending; PES002_BAG_END_ROUND_FACADE_ORIENTATION=pitch90"));
-        }
+        // One resident mesh contains joined turf, plaster, recessed door and glass.
+        // Match the existing west-facing anchor; decoration adds no new collision.
+        SpawnShape(ProductionBagEndHeroFacadeMesh,
+            Location + FVector(-88.0f * Scale, 0.0f, 0.0f),
+            FVector(Scale), Earth, FRotator::ZeroRotator, false);
+        UE_LOG(LogTemp, Display,
+            TEXT("PES002_BAG_END_HERO_FACADE layout=west-facing authored=1 roof=joined door=recessed windows=2 collision=none visual=pending"));
+    }
+    else if (bHasProductionFacade)
+    {
+        SpawnShape(ProductionTurfMoundMesh, Location + FVector(0.0f, 0.0f, 30.0f * Scale),
+            FVector(2.45f, 2.10f, 2.10f) * Scale, Turf, FRotator::ZeroRotator, !bBagEndHero);
+        SpawnShape(ProductionHobbitFacadeMesh,
+            Location + FVector(-88.0f * Scale, 0.0f, 0.0f),
+            FVector(Scale), Earth, FRotator::ZeroRotator, !bBagEndHero);
     }
     else
     {
@@ -1095,15 +1060,20 @@ void AShirePrototypeWorldBuilder::SpawnHobbitHole(const FVector& Location, float
         }
     }
 
-    // Small readable accents remain: the source facade has no warm-glass material and
-    // no knob detail. These do not duplicate its structural silhouette.
-    SpawnShape(SphereMesh, Location + FVector(-94.0f * Scale, 21.0f * Scale, 56.0f * Scale),
-        FVector(0.045f) * Scale, FLinearColor(0.74f, 0.55f, 0.18f), FRotator::ZeroRotator, false);
-    for (float Side : { -1.0f, 1.0f })
+    // The authored hero already owns its glass and knob; do not overlay fallback discs.
+    if (!bUseAuthoredHero)
     {
-        const FVector Window = Location + FVector(-92.0f * Scale, Side * 58.0f * Scale, 68.0f * Scale);
-        SpawnShape(CylinderMesh, Window, FVector(0.16f, 0.16f, 0.018f) * Scale,
-            WarmGlass, FRotator(90.0f, 0.0f, 0.0f), false);
+        // Small readable accents remain: the source facade has no warm-glass material and
+        // no knob detail. These do not duplicate its structural silhouette.
+        SpawnShape(SphereMesh, Location + FVector(-94.0f * Scale, 21.0f * Scale, 56.0f * Scale),
+            FVector(0.045f) * Scale, FLinearColor(0.74f, 0.55f, 0.18f), FRotator::ZeroRotator, false);
+        for (float Side : { -1.0f, 1.0f })
+        {
+            const FVector Window = Location + FVector(-92.0f * Scale, Side * 58.0f * Scale, 68.0f * Scale);
+            SpawnShape(CylinderMesh, Window, FVector(0.16f, 0.16f, 0.018f) * Scale,
+                WarmGlass, FRotator(90.0f, 0.0f, 0.0f), false);
+        }
+
     }
 
     // Chimney, doorstep and planted entry soften the generated silhouette.

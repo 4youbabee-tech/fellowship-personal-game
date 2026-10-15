@@ -9,6 +9,11 @@ New-Item -ItemType Directory -Force -Path $proof | Out-Null
 if (!(Test-Path $exe) -or !(Test-Path $project)) { throw "PES002_EDITOR_OR_PROJECT_MISSING" }
 $started = Get-Date
 $log = Join-Path $proof "PES002VisualEditor.log"
+# A previous run's view=3 marker can be observed before UE truncates its log.
+# Clear only this proof's stale files before launch; never kill another writer.
+Remove-Item -LiteralPath $log -Force -ErrorAction SilentlyContinue
+Get-ChildItem -LiteralPath $proof -Filter 'BagEnd-P1C01-view*-actual-runtime.png' -File |
+    Remove-Item -Force
 $arguments = @('"' + $project + '"', '-game', '-windowed', '-ResX=1280', '-ResY=720', '-NoSplash', '-log', '-PES002VisualProof', '-abslog="' + $log + '"')
 $proc = Start-Process -FilePath $exe -ArgumentList ($arguments -join ' ') -PassThru
 try {
