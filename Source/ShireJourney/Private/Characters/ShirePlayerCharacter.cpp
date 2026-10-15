@@ -1861,7 +1861,10 @@ bool AShirePlayerCharacter::RestoreSaveSnapshot(
         !FMath::IsFinite(Save->PlayerLocation.Z) ||
         !FMath::IsFinite(Save->PlayerHealth) ||
         !FMath::IsFinite(Save->PlayerStamina) ||
-        !FMath::IsFinite(Save->PlayerResolve))
+        !FMath::IsFinite(Save->PlayerResolve) ||
+        !FMath::IsFinite(Save->PlayerRotation.Pitch) ||
+        !FMath::IsFinite(Save->PlayerRotation.Yaw) ||
+        !FMath::IsFinite(Save->PlayerRotation.Roll))
     {
         UE_LOG(LogTemp, Error, TEXT("Save snapshot rejected: invalid numeric state."));
         return false;
@@ -2836,7 +2839,7 @@ bool AShirePlayerCharacter::RunSaveRoundtripAudit()
 void AShirePlayerCharacter::QuickSave()
 {
     if (FParse::Param(FCommandLine::Get(), TEXT("ShireCIRuntimeAudit"))) return;
-    if (bWorldTransitionHeld || bPendingSaveRestoreTransform || !IsCurrentWorldCommitted()) return;
+    if (bCinematicInputLocked || bWorldTransitionHeld || bPendingSaveRestoreTransform || !IsCurrentWorldCommitted()) return;
     UShireSaveGame* Save = CreateSaveSnapshot(NAME_None, false);
     const bool bSaved = Save && UGameplayStatics::SaveGameToSlot(
         Save,
@@ -2857,7 +2860,7 @@ void AShirePlayerCharacter::QuickSave()
 void AShirePlayerCharacter::QuickLoad()
 {
     if (FParse::Param(FCommandLine::Get(), TEXT("ShireCIRuntimeAudit"))) return;
-    if (bWorldTransitionHeld || bPendingSaveRestoreTransform) return;
+    if (bCinematicInputLocked || bWorldTransitionHeld || bPendingSaveRestoreTransform) return;
     if (!UGameplayStatics::DoesSaveGameExist(
         ShireSaveConstants::SlotName,
         ShireSaveConstants::UserIndex))

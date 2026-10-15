@@ -50,6 +50,19 @@ class OfflineRuntimeSafetyTests(unittest.TestCase):
         self.assertIn("Presentation->RequestSkipActivePresentation();", skip)
         self.assertNotIn("TriggerStoryBeat", skip)
 
+    def test_cinematic_lock_guards_save_load_without_blocking_skip(self):
+        cpp = source(PLAYER_CPP)
+        save = body_between(cpp, "void AShirePlayerCharacter::QuickSave()",
+                            "void AShirePlayerCharacter::QuickLoad()")
+        load = body_between(cpp, "void AShirePlayerCharacter::QuickLoad()",
+                            "void AShirePlayerCharacter::DebugToggleParallelRoute()")
+        for name, body in (("QuickSave", save), ("QuickLoad", load)):
+            with self.subTest(name=name):
+                self.assertIn("bCinematicInputLocked || bWorldTransitionHeld || bPendingSaveRestoreTransform", body)
+        skip = body_between(cpp, "void AShirePlayerCharacter::SkipActiveCinematic()",
+                            "void AShirePlayerCharacter::HandleCinematicStateChanged(")
+        self.assertIn("Presentation->RequestSkipActivePresentation();", skip)
+
     def test_spawn_during_cinematic_inherits_lock(self):
         cpp = source(PLAYER_CPP)
         start = body_between(cpp, "void AShirePlayerCharacter::BeginPlay()",
@@ -194,6 +207,27 @@ class OfflineRuntimeSafetyTests(unittest.TestCase):
         self.assertIn("CompletedStoryBeats.AddUnique(StoryBeatId);", restore)
         self.assertLess(restore.index("QuestStages.Empty();"), restore.index("ActiveQuestId = InActiveQuestId;"))
         self.assertLess(restore.index("CompletedStoryBeats.Empty();"), restore.index("ActiveQuestId = InActiveQuestId;"))
+
+    def test_reject_bad_rotation_and_discard_only_corrupt_route_transform(self):
+        player = source(PLAYER_CPP)
+        restore = body_between(player, "bool AShirePlayerCharacter::RestoreSaveSnapshot(",
+                               "#if !UE_BUILD_SHIPPING")
+        for axis in ("Pitch", "Yaw", "Roll"):
+            self.assertIn("!FMath::IsFinite(Save->PlayerRotation." + axis + ")", restore)
+        self.assertLess(restore.index("!FMath::IsFinite(Save->PlayerRotation.Pitch)"),
+                        restore.index("BeginPersistenceRestore()"))
+        quest = source("Source/ShireJourney/Private/Subsystems/ShireQuestSubsystem.cpp")
+        sanitize = body_between(quest, "void UShireQuestSubsystem::SanitizeRouteProgressMap(",
+                                "bool UShireQuestSubsystem::CanonicalizeRestoredExperienceIdentity(")
+        self.assertIn("if (Progress->bHasPlayerTransform &&", sanitize)
+        for axis in ("X", "Y", "Z"):
+            self.assertIn("!FMath::IsFinite(Progress->PlayerLocation." + axis + ")", sanitize)
+        for axis in ("Pitch", "Yaw", "Roll"):
+            self.assertIn("!FMath::IsFinite(Progress->PlayerRotation." + axis + ")", sanitize)
+        for token in ("Progress->bHasPlayerTransform = false;",
+                      "Progress->PlayerLocation = FVector::ZeroVector;",
+                      "Progress->PlayerRotation = FRotator::ZeroRotator;"):
+            self.assertIn(token, sanitize)
 
     def test_self_hosted_requires_manual_opt_in(self):
         workflow = source(".github/workflows/unreal-build-validation.yml")
