@@ -28,6 +28,8 @@
 #include "GameFramework/PlayerController.h"
 #include "Misc/CommandLine.h"
 #include "HAL/PlatformMemory.h"
+#include "Misc/CoreDelegates.h"
+#include "HAL/PlatformTime.h"
 #include "Misc/Parse.h"
 #include "TimerManager.h"
 #include "UnrealClient.h"
@@ -81,8 +83,7 @@ namespace
 
 AShirePrototypeWorldBuilder::AShirePrototypeWorldBuilder()
 {
-    PrimaryActorTick.bCanEverTick = true;
-    PrimaryActorTick.bStartWithTickEnabled = false;
+    PrimaryActorTick.bCanEverTick = false;
 
     RuntimeRoot = CreateDefaultSubobject<USceneComponent>(TEXT("RuntimeRoot"));
     RootComponent = RuntimeRoot;
@@ -432,7 +433,11 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     // quests and save. It is never used in ordinary gameplay or shipping.
     if (FParse::Param(FCommandLine::Get(), TEXT("PES002VisualProof")))
     {
-        SetActorTickEnabled(true);
+        // UE4 core frame callback provides actual frame intervals without adding
+        // forbidden WorldBuilder ActorTick or any always-on gameplay cost.
+        ProofLastFrameTimestamp = FPlatformTime::Seconds();
+        FCoreDelegates::OnEndFrame.AddUObject(this,
+            &AShirePrototypeWorldBuilder::SampleProofFrame);
         FTimerHandle CameraTimer;
         GetWorldTimerManager().SetTimer(CameraTimer,
             FTimerDelegate::CreateLambda([WeakBuilder]()
@@ -512,10 +517,12 @@ void AShirePrototypeWorldBuilder::BeginPlay()
 }
 
 
-void AShirePrototypeWorldBuilder::Tick(float DeltaSeconds)
+void AShirePrototypeWorldBuilder::SampleProofFrame()
 {
-    Super::Tick(DeltaSeconds);
 #if !UE_BUILD_SHIPPING
+    const double NowSeconds = FPlatformTime::Seconds();
+    const float DeltaSeconds = static_cast<float>(NowSeconds - ProofLastFrameTimestamp);
+    ProofLastFrameTimestamp = NowSeconds;
     if (!FMath::IsFinite(DeltaSeconds) || DeltaSeconds <= 0.0f)
     {
         return;
@@ -935,6 +942,7 @@ void AShirePrototypeWorldBuilder::OnCloud138Ready()
 
 void AShirePrototypeWorldBuilder::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
+    FCoreDelegates::OnEndFrame.RemoveAll(this);
     if (Cloud138Handle.IsValid())
     {
         Cloud138Handle->CancelHandle();
