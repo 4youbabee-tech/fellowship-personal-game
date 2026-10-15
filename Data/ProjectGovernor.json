@@ -9514,5 +9514,27 @@
       ],
       "rollback": "One coherent PR477 source+docs batch revert on failed package/visual review"
     }
+  },
+  "owner_branch_hygiene_2026_10_16": {
+    "origin": "Owner explicitly requests immediate audit, safe integration, and elimination of obsolete GitHub branch/PR clutter before programmer develop handoff.",
+    "authority": "Data/ProjectGovernor.json and Docs/DEVELOPMENT_GATES.md",
+    "active_runtime": "PES-002 Bag End Exterior; PES-003 LOCKED",
+    "confirmed_merge": {
+      "pr": 477,
+      "merge_sha": "386a2968954ea6423ae37da011b35ef187f53849",
+      "pre_unreal_run": 38818365177,
+      "unreal_run": 38818365146,
+      "passed": true
+    },
+    "recovery_anchor": {
+      "branch": "archive/pre-build-salvage-20260930",
+      "sha": "5ca617729e359249e09aa6acc05734e814c594c4",
+      "historic_head_references": 43,
+      "direct_parent_count": 43,
+      "meaning": "Git ancestry/history saved ONLY; NOT merged into develop or UE4 accepted"
+    },
+    "cleanup_source": "Data/BranchCleanupPlan.json",
+    "safety": "Delete old ref only when its SHA is unchanged, directly parented in immutable archive anchor, and its PR is no longer open. Never delete develop/main/archive, never force-merge stale divergent sources or treat archival as acceptance.",
+    "pending_reconciliation": "Unique old runtime C++ and source-only patches not integrated by PR #477 stay available in archive for selective engineering review. No new PES unlocked. Reopen only exact SHA with real scope+tests."
   }
 }
