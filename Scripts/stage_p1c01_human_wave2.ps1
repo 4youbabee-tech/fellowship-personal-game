@@ -339,7 +339,16 @@ function Get-FbxBinaryVersion([string]$Path){
 }
 
 $ranked=@($characterSources | Sort-Object @{Expression={if($_.extension -eq ".blend"){0}else{1}}}, @{Expression={$_.bytes}})
-$selectedSources=@($ranked | Select-Object -First ([int]$manifest.source_policy.max_ue4_candidates))
+# Prefer the original .blend when present: exact-head 01fbb1c1 proved that
+# Hero@BaseModel.blend retains 87 weighted deform bones, while the sibling
+# RiggedCharacterBase.fbx has 0 weighted body/hair vertices. Treat that FBX
+# as a rejected alternate, not a mandatory second production candidate.
+# Preserve the archive inventory and provenance for audit; never waive the
+# Blender/UE skeletal, deformation, or zero-weight gates.
+$blendSources=@($ranked | Where-Object { $_.extension -eq ".blend" })
+$productionPool=if($blendSources.Count -gt 0){ @($blendSources) }else{ @($ranked) }
+$selectedSources=@($productionPool | Select-Object -First ([int]$manifest.source_policy.max_ue4_candidates))
+Write-Host "HUMAN_WAVE2_SOURCE_SELECTION selected=$($selectedSources.Count) blend_available=$($blendSources.Count) archived_candidates=$($ranked.Count)"
 $normalized=@(); $index=0
 foreach($src in $selectedSources){
   $index++

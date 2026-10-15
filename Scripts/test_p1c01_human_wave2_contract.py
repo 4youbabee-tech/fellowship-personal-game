@@ -29,6 +29,8 @@ class HumanWave2ContractTests(unittest.TestCase):
         ):
             self.assertIn(marker, stage)
         self.assertIn("if len(source_def_weights) < 13:", blender_source)
+        self.assertIn("HUMAN_WAVE2_SOURCE_SELECTION", stage)
+        self.assertIn("$blendSources=@($ranked | Where-Object { $_.extension -eq \".blend\" })", stage)
         self.assertIn('if(@($readiness.exported_missing_limb_influence).Count -gt 0)', stage)
 
     def test_human_wave2_is_bounded_fbx_only_at_ue4_and_non_runtime(self):

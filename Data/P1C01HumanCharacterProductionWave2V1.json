@@ -35,7 +35,14 @@
       "TGA"
     ],
     "prefer_blend_source": true,
-    "max_zero_weight_ratio": 0.35
+    "max_zero_weight_ratio": 0.35,
+    "rejected_alternate_evidence": {
+      "source": "RiggedCharacterBase.fbx",
+      "run_id": 38742152786,
+      "head": "01fbb1c1a148e42faf7ebb5ee2d7a6806cef5ff2",
+      "reason": "FBX body and hair have 0 weighted vertices, unlike the licensed original .blend with 87 deform-weighted bones; do not select alternate while viable .blend exists",
+      "gate_policy": "No relaxed skinning or UE import checks; archive source retained in inventory"
+    }
   },
   "normalization_contract": {
     "tool": "Blender",
