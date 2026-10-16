@@ -1,3 +1,8 @@
+## 2026-10-16 PES-002 data-driven garden and resident variation candidate
+- Baseline develop 2e190d6: engine build/import/PIE pass with 5 skeletal shared residents, 21 tree replacements and 4 screenshots. Full visual and performance gates OPEN.
+- Candidate: 25 explicit garden data rows in existing Data/P1C01VerifiedWorldDecor.json, checked against actual UE-imported PBR FBX nature mesh packages. Candidate runtime evidence markers PES002_BAG_END_DATA_GARDEN and PES002_RESIDENT_PRESENTATION_SNAPSHOT; 5 proportional resident variants and optional safe authored-material tint.
+- New candidate UE build/PIE screenshots and counts PENDING; named canonical cast 4 different rigs NOT PRODUCED; target Windows/DX11/720p minimum 30FPS NOT DEVICE-TESTED; PES-002 ACTIVE/PES-003 LOCKED.
+
 ## 2026-10-16 PES-002 in-engine import and runtime-evidence candidate (not a completed gate)
 - Active PES-002 only: UE4 C++ FBX authored material/texture path + packed PBR exception, skeletal blend-weight QC and fail-closed import result, after-save actual Content/Production .uasset class/path/bytes ledger; runtime Bag End grounded authored-FBX HISM garden up to 24; capture-only 5-second FPS and RAM sampling. All statuses pending exact-HEAD CI and rendered review.
 - SOURCE_AVAILABLE: existing curated FBX/PBR; WAREHOUSE_PERSISTED: existing receipts; UE_IMPORTED and WORLD_PLACED: require new on-disk UE4 ledger and runtime markers; RENDER_OBSERVED: require new 4 actual UE screenshots; ACCEPTED/PIE/DEVICE/PERFORMANCE: NO. Skeletal animation/AnimBP and approved deformed characters: NO.

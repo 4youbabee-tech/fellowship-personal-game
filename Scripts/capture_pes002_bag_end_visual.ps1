@@ -187,6 +187,21 @@ if ($runtimeSamples.Count -lt 1) {
 Write-Host "PES002_RUNTIME_SAMPLE_COUNT count=$($runtimeSamples.Count) deviceAccepted=false gpuVRAM=UNMEASURED"
 $runtimeSamples | Select-Object -Last 3 | ForEach-Object { Write-Host $_.Line.Trim() }
 
+# The current PES-002 deliverable is a real data-driven Bag End garden and a
+# count of skinned residents. Fail from real PIE log evidence, not a JSON test.
+$garden = @(Select-String -Path $log -Pattern 'PES002_BAG_END_DATA_GARDEN loaded=(\d+) placed=(\d+) rejected=(\d+)')
+if ($garden.Count -lt 1) { throw 'PES002_GARDEN_PIE_EVIDENCE_MISSING' }
+$gardenLine = $garden[-1].Line
+$gardenMatch = [regex]::Match($gardenLine, 'PES002_BAG_END_DATA_GARDEN loaded=(\d+) placed=(\d+) rejected=(\d+)')
+if (!$gardenMatch.Success -or [int]$gardenMatch.Groups[1].Value -ne 25 -or
+    [int]$gardenMatch.Groups[2].Value -lt 1) {
+    throw "PES002_GARDEN_WORLD_PLACEMENT_REJECT source=$gardenLine"
+}
+Write-Host "PES002_REAL_GARDEN_EVIDENCE $($gardenMatch.Value) world=PIE"
+$residents = @(Select-String -Path $log -Pattern 'PES002_RESIDENT_PRESENTATION_SNAPSHOT localManaged=(\d+) skeletal=(\d+) modular=(\d+)')
+if ($residents.Count -lt 1) { throw 'PES002_RESIDENT_PIE_COUNT_MISSING' }
+Write-Host "PES002_REAL_RESIDENT_EVIDENCE $($residents[-1].Line.Trim())"
+
 # Preserve four PNGs before rejecting incorrect curated PBR runtime shaders.
 # A bright screenshot with default-grey instanced foliage is still a failure.
 if (Select-String -Path $log -SimpleMatch -Pattern 'P1C01_CURATED_NATURE_WORLD families=9' -Quiet) {
