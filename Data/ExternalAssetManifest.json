@@ -367,6 +367,12 @@
         "UNKNOWN"
       ],
       "notes": "Do not assume a blanket provider license. Capture the exact license shown for each pack at acquisition time. Automated warehouse staging must skip packs without per-pack license evidence."
+    },
+    {
+      "id": "3DEXPORT",
+      "mode": "REVIEW_REQUIRED",
+      "allowed_license_classes": [],
+      "notes": "Discovery-only original medieval/game asset candidate source. Per-item license/creator rights and UE4.27 FBX/PBR compatibility are unverified; no downloads enter Approved without explicit recorded evidence. Do not rely on generic UE5/Unity compatibility badges."
     }
   ],
   "assets": [],
