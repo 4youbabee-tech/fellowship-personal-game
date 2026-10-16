@@ -530,9 +530,35 @@ void AShirePrototypeWorldBuilder::BeginPlay()
                             const FString Filename = FPaths::Combine(
                                 FPaths::ScreenShotDir(),
                                 FString::Printf(TEXT("PES002_BagEnd_View%d.png"), ViewIndex));
-                            FScreenshotRequest::RequestScreenshot(Filename, false, false);
+                            // A floating PIE editor window can be fitted to the
+                            // Windows work area: its actual draw viewport may be
+                            // 1270x638 even when NewWindowWidth/Height are 1280x720.
+                            // Epic UE4.27 HighResShot requests genuine new pixels
+                            // from the PIE scene at 1280x720, not a resized PNG.
+                            const bool bPIE = WeakBuilder->GetWorld() &&
+                                WeakBuilder->GetWorld()->WorldType == EWorldType::PIE;
+                            if (bPIE)
+                            {
+                                APlayerController* ProofPC =
+                                    WeakBuilder->GetWorld()->GetFirstPlayerController();
+                                if (!ProofPC)
+                                {
+                                    UE_LOG(LogTemp, Error,
+                                        TEXT("PES002_PIE_HIRES_NO_PLAYER_CONTROLLER view=%d"),
+                                        ViewIndex);
+                                    return;
+                                }
+                                const FString HiResCmd = FString::Printf(
+                                    TEXT("HighResShot 1280x720 filename=%s"), *Filename);
+                                ProofPC->ConsoleCommand(HiResCmd, false);
+                            }
+                            else
+                            {
+                                FScreenshotRequest::RequestScreenshot(Filename, false, false);
+                            }
                             UE_LOG(LogTemp, Display,
-                                TEXT("PES002_SCREENSHOT_REQUESTED target=BagEnd view=%d format=png"), ViewIndex);
+                                TEXT("PES002_SCREENSHOT_REQUESTED target=BagEnd view=%d format=png mode=%s pixelSource=UE4"),
+                                ViewIndex, bPIE ? TEXT("PIE-HighResShot-1280x720") : TEXT("GameViewport"));
                         }), 6.0f + 8.0f * ViewIndex, false);
                 }
             }), 13.0f, false);
