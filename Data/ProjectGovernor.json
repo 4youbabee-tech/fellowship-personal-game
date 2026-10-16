@@ -830,7 +830,8 @@
       "implementation_refs": [
         "production Frodo/Gandalf modular meshes are imported under /Game/Production/Characters",
         "playable route already switches between Frodo and Gandalf",
-        "character motion pass adds gait, sprint lean, crouch pose, airborne pose, foot lift, accessory sway and attack motion"
+        "character motion pass adds gait, sprint lean, crouch pose, airborne pose, foot lift, accessory sway and attack motion",
+        "2026-10-17 owner no-stop blocker-resolution mandate: Governor.owner_blocker_resolution_mandate_2026_10_17; trial legally CC0 MPFB2/MakeHuman GameEngine source character production using existing Blender/Unreal import pipeline."
       ],
       "missing_work": [
         "UE4.27.2 compile/import validation for the character motion pass",
@@ -838,7 +839,8 @@
         "PIE visual review of Gandalf route and staff motion",
         "future skeletal/rigged animation pipeline for production-grade character deformation and facial/body animation",
         "target-device performance and visual acceptance",
-        "Replace Frodo/Gandalf modular proxy body with the first accepted V7 skeletal FBX rigs before visual acceptance."
+        "Replace Frodo/Gandalf modular proxy body with the first accepted V7 skeletal FBX rigs before visual acceptance.",
+        "Generate and inspect physically skinned, UV-textured original Hobbit pilot using pinned MPFB2/MakeHuman core system asset pack; use actual Blender/UE4 deformation, character screenshots, and license provenance before replacement; do not declare hero acceptance from generated mesh alone."
       ],
       "acceptance_criteria": [
         "Frodo production mesh loads and remains visually coherent during idle/walk/sprint/crouch/jump/attack",
@@ -9632,5 +9634,39 @@
     "developer_start": "For PES-002 first inspect Fab, CGTrader and Sketchfab original non-franchise cottages; obtain matching CC0 Poly Haven PBR textures; do not replace established accepted assets without real quality/technical improvement.",
     "blocked_shortcuts": "No direct Steam Workshop/Nexus ripped assets, fan franchise likenesses, STL-print meshes as assumed game-ready, or unapproved social/Patreon ports. They remain reference/research only until exact independent rights are proven.",
     "acceptance_boundary": "Discovery is not acquisition, persisted warehouse, UE import, world placement, rendered observation, PIE, device performance or visual acceptance. Preserve UE4.27.2, 8GB RAM, ~2GB VRAM, DX11 720p >=30FPS."
+  },
+  "owner_blocker_resolution_mandate_2026_10_17": {
+    "status": "OWNER_DIRECTIVE_ACTIVE",
+    "origin": "Owner 2026-10-17: encountering a defect or absent visual production asset requires a solution search, technically viable fallback selection, practical implementation and true validation, not an end-of-turn blocker summary.",
+    "mandatory_loop": [
+      "Inspect exact HEAD, latest true-run logs/screenshots and active PES scope",
+      "Detect and identify root cause and missing rights/technical dependencies",
+      "Research official compatible docs, mature OSS repositories, expert cases and exact licensing",
+      "Rank credible solutions by quality, implementation feasibility and low-spec hardware cost; select a concrete workable option",
+      "Execute the best safe bounded solution immediately using available tools and permission; if unavailable, switch to a genuinely independent viable source-only preparation task",
+      "Preserve one Unreal writer and one Warehouse writer, group source/engine modifications as one candidate, retest only changed inputs",
+      "Record measurable results and genuine evidence in the existing project documentation; do not mistake asset search or static code for imported/deformed/visual-accepted assets",
+      "Continue next permitted production step without needing owner to repeat Continue between ordinary stages; explicitly identify an actual missing permission/environment/rights gate where no honest execution path exists"
+    ],
+    "research_solution_priority": [
+      "Existing owned/imported warehouse assets and project-approved work",
+      "Official Epic UE4.27 and Blender documentation",
+      "Free core CC0 MakeHuman/MPFB2 game-engine character generation and verified per-pack clothes/hair/skin",
+      "Adobe Mixamo for authorized game-use humanoid animation and optional Blender retarget",
+      "Item-specific licensed Fab/CGTrader/Sketchfab before paid requests",
+      "Reject unsupported UE5-only generation, unlicensed franchise rips, STL-only or UV/weights-free meshes as finished characters"
+    ],
+    "current_pes": "PES-002 only; PES-003 remains locked; source-only future prep allowed",
+    "chosen_character_source_prototype": "Docs/PES002_PROFESSIONAL_ASSET_PRODUCTION_METHOD.md + Tools/CloudAssetBuild/prepare_mpfb_hobbit_candidate.py + Data/PES002MakeHumanCharacterPilot.json",
+    "verified_reference_urls": [
+      "https://github.com/makehumancommunity/mpfb2/blob/master/LICENSE.md",
+      "https://github.com/makehumancommunity/mpfb2/blob/master/script_samples/10_complete_character_export_fbx.py",
+      "https://static.makehumancommunity.org/mpfb/docs/characters/rig.html",
+      "https://helpx.adobe.com/creative-cloud/faq/mixamo-faq.html",
+      "https://dev.epicgames.com/documentation/en-us/unreal-engine/fbx-animation-pipeline?application_version=4.27",
+      "https://forums.unrealengine.com/t/metahuman-creator-web-application-is-being-discontinued/2695297"
+    ],
+    "proven_scope": "Professional-source/license research; no MakeHuman binary downloaded, Blender execution, asset acquisition, UE4 import, deformation, visual or target-device acceptance yet.",
+    "active_next_gate": "Execute source-only MPFB pilot on licensed installed system asset pack in Blender, confirm weighted and textured FBX and true pose deformation; compare to KayKit on actual same Bag End camera and target performance before runtime promotion."
   }
 }

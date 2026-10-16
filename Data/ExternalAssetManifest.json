@@ -373,6 +373,14 @@
       "mode": "REVIEW_REQUIRED",
       "allowed_license_classes": [],
       "notes": "Discovery-only original medieval/game asset candidate source. Per-item license/creator rights and UE4.27 FBX/PBR compatibility are unverified; no downloads enter Approved without explicit recorded evidence. Do not rely on generic UE5/Unity compatibility badges."
+    },
+    {
+      "id": "MAKEHUMAN_MPFB2",
+      "mode": "APPROVED_CORE_CC0_ONLY_WITH_ITEM_EVIDENCE",
+      "allowed_license_classes": [
+        "CC0"
+      ],
+      "notes": "MPFB2 and bundled core/system assets are CC0 under official MakeHuman licensing; executable GPLv3 is not included in the game. Community/third-party skin/clothes/hair packs may use different licenses and require individual review; output must be technically and visually accepted before runtime promotion."
     }
   ],
   "assets": [],

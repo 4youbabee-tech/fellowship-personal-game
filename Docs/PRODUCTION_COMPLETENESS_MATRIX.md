@@ -1,3 +1,13 @@
+## 2026-10-17 PES-002 blocker resolution and character production track
+| Proof | State |
+|---|---|
+| Registered Owner no-stop mandate in single Governor | SOURCE REGISTERED |
+| MakeHuman/MPFB2 official CC0 core/system asset legal and compatible rig research | SOURCE RESEARCH COMPLETE |
+| Blender generator file + explicit recipe config committed in source-only candidate | STATIC SOURCE PREPARED |
+| Executed MPFB2/Blender and exported physically usable FBX with textures/weights | **NOT RUN** |
+| UE4.27 actual import, game-deformation and PIE + human visual acceptance of replacement | **NOT RUN** |
+| PES-002 / PES-003 | **ACTIVE / LOCKED** |
+
 ## 2026-10-16 PES-002 data-driven garden and resident variation candidate
 - Baseline develop 2e190d6: engine build/import/PIE pass with 5 skeletal shared residents, 21 tree replacements and 4 screenshots. Full visual and performance gates OPEN.
 - Candidate: 25 explicit garden data rows in existing Data/P1C01VerifiedWorldDecor.json, checked against actual UE-imported PBR FBX nature mesh packages. Candidate runtime evidence markers PES002_BAG_END_DATA_GARDEN and PES002_RESIDENT_PRESENTATION_SNAPSHOT; 5 proportional resident variants and optional safe authored-material tint.
