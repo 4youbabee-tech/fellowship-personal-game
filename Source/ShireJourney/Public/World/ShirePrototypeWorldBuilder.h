@@ -56,6 +56,10 @@ private:
     UPROPERTY() UStaticMesh* ProductionMillWheelMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionLanternMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionCottageHouseMesh = nullptr;
+    // Shared authored Bagshot Row cottage pair and hero-near mature oak.
+    UPROPERTY() UStaticMesh* ProductionBagshotThatchedCottageMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionBagshotTimberCottageMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionShireMatureOakMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionMillHouseMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionStoneBridgeMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionWellMesh = nullptr;

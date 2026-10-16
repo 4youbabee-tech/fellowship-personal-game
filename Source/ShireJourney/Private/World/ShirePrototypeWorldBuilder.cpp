@@ -362,6 +362,9 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     ProductionMillWheelMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShMillWheel.SM_ShMillWheel"));
     ProductionLanternMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShLantern.SM_ShLantern"));
     ProductionCottageHouseMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShCottageHouse.SM_ShCottageHouse"));
+    ProductionBagshotThatchedCottageMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShBagshotThatchedCottage.SM_ShBagshotThatchedCottage"));
+    ProductionBagshotTimberCottageMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShBagshotTimberCottage.SM_ShBagshotTimberCottage"));
+    ProductionShireMatureOakMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShShireMatureOak.SM_ShShireMatureOak"));
     ProductionMillHouseMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShMillHouse.SM_ShMillHouse"));
     ProductionStoneBridgeMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShStoneBridge.SM_ShStoneBridge"));
     ProductionWellMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShWell.SM_ShWell"));
@@ -2772,7 +2775,8 @@ void AShirePrototypeWorldBuilder::SpawnSideStories()
         Hamfast->DisplayName=FText::FromString(TEXT("Hamfast Gamgee"));
         Hamfast->DialogueLines={
             FText::FromString(TEXT("Frodo, if you have a moment, take a look along the lower garden fence. The party traffic has everyone cutting across the beds.")),
-            FText::FromString(TEXT("Good soil asks for patience. Folk are much the same, if you ask me."))
+            FText::FromString(TEXT("Good soil asks for patience. Folk are much the same, if you ask me.")),
+            FText::FromString(TEXT("The new hedgerow looks promising. Give the roots space and mind the stone edging."))
         };
         Hamfast->SideStoryBeatAfterInteraction=TEXT("Side_GardenHelpStarted");
         Hamfast->SideStoryStartMessage=FText::FromString(TEXT("Optional: Walk the lower Bag End garden and check the fence."));
@@ -2791,7 +2795,8 @@ void AShirePrototypeWorldBuilder::SpawnSideStories()
         Rosie->DisplayName=FText::FromString(TEXT("Rosie Cotton"));
         Rosie->DialogueLines={
             FText::FromString(TEXT("Half of Hobbiton seems to be carrying supper into that field. If you pass the party tables, make sure the far row has not been forgotten.")),
-            FText::FromString(TEXT("Everyone says Bilbo planned too much. I think they will change their minds once the food arrives."))
+            FText::FromString(TEXT("Everyone says Bilbo planned too much. I think they will change their minds once the food arrives.")),
+            FText::FromString(TEXT("I can hear the first music from here. Someone still needs to check those benches."))
         };
         Rosie->SideStoryBeatAfterInteraction=TEXT("Side_PartyTablesStarted");
         Rosie->SideStoryStartMessage=FText::FromString(TEXT("Optional: Check the far party tables before meeting Bilbo."));
@@ -3862,6 +3867,69 @@ void AShirePrototypeWorldBuilder::SpawnBagEndHeroPass()
             FVector(0.54f + 0.04f * static_cast<float>(Index % 2)));
     }
     SpawnDetailCluster(ProductionCommonWoodPileMesh, TEXT("P1C01BagEndWoodPiles"), 900, 4200, WoodPiles);
+
+    // Near-hero oaks are a true geometry REPLACEMENT, not a second dense tree
+    // canopy draw layer. Use a single existing AWorldDetailCluster (HISM) for
+    // up to six unique mature trees and only remove proxies on a flat ground hit.
+    int32 AuthoredOaks = 0;
+    if (ProductionShireMatureOakMesh &&
+        ProductionShireMatureOakMesh->GetStaticMaterials().Num() >= 2 &&
+        DistantTreeTrunkInstances && DistantTreeCanopyInstances &&
+        DistantTreeTrunkInstances->GetInstanceCount() ==
+            DistantTreeCanopyInstances->GetInstanceCount())
+    {
+        AWorldDetailCluster* Oaks = GetWorld()->SpawnActor<AWorldDetailCluster>();
+        if (Oaks)
+        {
+            Oaks->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
+            Oaks->Tags.AddUnique(TEXT("PES002BagEndAuthoredOak"));
+            Oaks->Configure(ProductionShireMatureOakMesh, false, 1350, 9000);
+            TArray<int32> Replaced;
+            for (int32 Index = 0;
+                Index < DistantTreeTrunkInstances->GetInstanceCount() &&
+                Replaced.Num() < 6; ++Index)
+            {
+                FTransform Trunk;
+                if (!DistantTreeTrunkInstances->GetInstanceTransform(Index, Trunk, true))
+                    continue;
+                const FVector At = Trunk.GetLocation();
+                const float RadiusSq = FVector::DistSquared2D(
+                    At, FVector(-2210.0f, -520.0f, 0.0f));
+                if (RadiusSq < FMath::Square(850.0f) ||
+                    RadiusSq > FMath::Square(3900.0f))
+                    continue;
+                FHitResult Ground;
+                FCollisionQueryParams Trace(TEXT("PES002MatureOakTerrain"), false, this);
+                if (!GetWorld()->LineTraceSingleByChannel(
+                        Ground, At + FVector(0, 0, 1250.0f),
+                        At - FVector(0, 0, 900.0f),
+                        ECC_Visibility, Trace) ||
+                    Ground.ImpactNormal.Z < 0.78f ||
+                    FMath::Abs(Ground.Location.Z) > 210.0f)
+                    continue;
+                const FBoxSphereBounds Bounds = ProductionShireMatureOakMesh->GetBounds();
+                const float Scale = FMath::Clamp(
+                    (390.0f + 24.0f * (Index % 3)) /
+                    (2.0f * Bounds.BoxExtent.Z), 0.05f, 2.5f);
+                Oaks->AddDetailInstance(
+                    Ground.Location - FVector(0.0f, 0.0f,
+                        (Bounds.Origin.Z - Bounds.BoxExtent.Z) * Scale),
+                    FRotator(0.0f, float((Index * 73) % 360), 0.0f),
+                    FVector(Scale));
+                Replaced.Add(Index);
+            }
+            for (int32 J = Replaced.Num() - 1; J >= 0; --J)
+            {
+                DistantTreeTrunkInstances->RemoveInstance(Replaced[J]);
+                DistantTreeCanopyInstances->RemoveInstance(Replaced[J]);
+            }
+            AuthoredOaks = Replaced.Num();
+            if (AuthoredOaks == 0) Oaks->Destroy();
+        }
+    }
+    UE_LOG(LogTemp, Display,
+        TEXT("PES002_BAG_END_MATURE_OAKS converted=%d max=6 materialFamilies=2 collision=none originalTreeProxyRemovedOnSuccess=1"),
+        AuthoredOaks);
 
     int32 StaticPropCount = 0;
     auto SpawnHeroProp = [this, &StaticPropCount](
@@ -5840,7 +5908,36 @@ void AShirePrototypeWorldBuilder::SpawnShireSettlementCompletionPass()
             BagshotCenters[Index] + FVector(-105.0f,0.0f,34.0f),
             FVector(0.74f + 0.025f * static_cast<float>(Index % 3)));
     }
-    SpawnCluster(ProductionHobbitFacadeMesh, TEXT("BagshotRowFacades"), 1600, 8500, P);
+    // The original, visually flat facade cluster remains the fall-back if an
+    // imported home is missing. Once both houses are resident, one varied
+    // authored cottage per existing Bagshot Row address replaces it, not stacks
+    // on top. Source houses are decorative; story and collision anchors remain.
+    if (ProductionBagshotThatchedCottageMesh && ProductionBagshotTimberCottageMesh)
+    {
+        TArray<FTransform> Thatched, Timber;
+        for (int32 Index = 0; Index < UE_ARRAY_COUNT(BagshotCenters); ++Index)
+        {
+            const float Yaw = -2.0f + static_cast<float>(Index % 3) * 2.0f;
+            const FTransform Placement(
+                FRotator(0.0f, Yaw, 0.0f),
+                BagshotCenters[Index] + FVector(-105.0f, 0.0f, 34.0f),
+                FVector(0.65f + 0.025f * static_cast<float>(Index % 3)));
+            if ((Index & 1) == 0) Thatched.Add(Placement);
+            else Timber.Add(Placement);
+        }
+        SpawnCluster(ProductionBagshotThatchedCottageMesh,
+            TEXT("PES002BagshotRowAuthoredThatch"), 1600, 8500, Thatched);
+        SpawnCluster(ProductionBagshotTimberCottageMesh,
+            TEXT("PES002BagshotRowAuthoredTimber"), 1600, 8500, Timber);
+        UE_LOG(LogTemp, Display,
+            TEXT("PES002_BAGSHOT_COTTAGES authoredFamilies=2 replacedFacades=8 collisions=preserved visual=pending"));
+    }
+    else
+    {
+        SpawnCluster(ProductionHobbitFacadeMesh, TEXT("BagshotRowFacades"), 1600, 8500, P);
+        UE_LOG(LogTemp, Display,
+            TEXT("PES002_BAGSHOT_COTTAGES authoredFamilies=0 fallback=legacy reason=missing-import"));
+    }
 
     auto FillVillageScatter = [&P](
         int32 Count,

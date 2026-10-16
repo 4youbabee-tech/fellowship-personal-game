@@ -1,3 +1,16 @@
+## 2026-10-16 single coherent PES-002 village/audio candidate
+| Deliverable | Exact honest state |
+|---|---|
+| Source geometry | 2 different original Bagshot cottages (each 1148 UV faces), one original mature oak (2792 UV faces), actual OBJ bytes added; compatible with existing UE4 static OBJ commandlet, common Shire MTL |
+| Source audio | 4 original WAV PCM 16-bit 22.05 kHz, procedural draft only; actual bytes added, no field-recording/voice claim |
+| Runtime architecture | Replace eight existing Bagshot Row visual-only facades with two 4-house HISM-style WorldDetailCluster groups conditional on existing resident bank; fallback retains original |
+| Runtime trees | One WorldDetailCluster converts at most 6 proximate pairs of tree meshes on flat ground only; old instances removed only after successful placement |
+| Character/dialogue | Existing 5 shared-skinned local resident render path untouched, two existing side-mission conversation contexts extended; distinct named hero rigs absent |
+| Sound | Existing ShireAudioSubsystem receives /Game/Audio/Ambience and SFX uasset paths from commandlet, no synchronous game loading |
+| Interior / Chapter | Runtime PES-003 NOT OPEN; Shire houses NOT ENTERABLE; full chapter NOT FINISHED |
+| Static/Unreal/Render/Device | New candidate **NOT RUN**, no new accepted uassets/PIE/screenshot/FPS; prior baseline 7061a10 UE4 Run 38947458354 success ~25-28 runner FPS, target 30+ unproven |
+| Gate 6/7 | OPEN pending human quality + target hardware |
+
 ## PES-002 original cobblestone walk source + existing asset pipeline, candidate
 | Layer | Actual status |
 |---|---|

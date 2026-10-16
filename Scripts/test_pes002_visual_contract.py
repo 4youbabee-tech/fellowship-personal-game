@@ -2,6 +2,7 @@
 import json
 import subprocess
 import tempfile
+import wave
 import unittest
 from pathlib import Path
 
@@ -113,6 +114,54 @@ class PES002VisualContract(unittest.TestCase):
         self.assertIn("ProductionBagEndCobbledWalkMesh", cpp)
         self.assertIn('PathActor->GetStaticMeshComponent()->SetCastShadow(false)', cpp)
         self.assertIn("/Game/Production/World/Shire/SM_ShBagEndCobbledWalk.SM_ShBagEndCobbledWalk", plan["banks"]["P1C01"]["assets"])
+
+    def test_one_cohesive_shire_houses_trees_sound_and_dialogue_batch(self):
+        builder = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        importer = (ROOT / "Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp").read_text(encoding="utf-8")
+        bank = json.loads((ROOT / "Data/ChapterAssetStreamingPlan.json").read_text(encoding="utf-8"))
+        for name in ("SM_ShBagshotThatchedCottage",
+                     "SM_ShBagshotTimberCottage", "SM_ShShireMatureOak"):
+            obj = ROOT / "SourceAssets/Production/World/Shire" / (name + ".obj")
+            source = obj.read_text(encoding="utf-8")
+            vertices = [line for line in source.splitlines() if line.startswith("v ")]
+            uv = [line for line in source.splitlines() if line.startswith("vt ")]
+            faces = [line for line in source.splitlines() if line.startswith("f ")]
+            self.assertGreater(len(faces), 1000, name)
+            self.assertEqual(len(vertices), len(faces) * 3, name)
+            self.assertEqual(len(uv), len(vertices), name)
+            self.assertIn("mtllib ShireMaterials.mtl", source)
+            self.assertIn("usemtl ", source)
+            self.assertIn(
+                "/Game/Production/World/Shire/" + name + "." + name,
+                bank["banks"]["P1C01"]["assets"],
+            )
+            for face in faces:
+                for vertex in face.split()[1:]:
+                    vi, ti = (int(s) for s in vertex.split("/"))
+                    self.assertTrue(1 <= vi <= len(vertices))
+                    self.assertTrue(1 <= ti <= len(uv))
+        for group, cue in [
+            ("Ambience", "Amb_ShireMorning"),
+            ("Ambience", "Amb_ShireRoad"),
+            ("Ambience", "Amb_PartyField"),
+            ("SFX", "Sfx_WagonDistant"),
+        ]:
+            source = ROOT / "SourceAssets/Production/Audio/Shire" / group / (cue + ".wav")
+            with wave.open(str(source), "rb") as sound:
+                self.assertEqual(sound.getnchannels(), 1)
+                self.assertEqual(sound.getsampwidth(), 2)
+                self.assertEqual(sound.getframerate(), 22050)
+                self.assertGreater(sound.getnframes(), 22000)
+            self.assertIn(cue, (ROOT / "Source/ShireJourney/Private/Subsystems/ShireStoryPresentationSubsystem.cpp").read_text(encoding="utf-8"))
+        self.assertIn("P1C01_AUDIO_UASSET_SAVED", importer)
+        self.assertIn("P1C01_AUDIO_BATCH_PERSISTED", importer)
+        self.assertIn('TEXT("/Game/Audio/Ambience")', importer)
+        self.assertIn("USoundWave* ImportedSound", importer)
+        self.assertIn("PES002_BAGSHOT_COTTAGES", builder)
+        self.assertIn("PES002_BAG_END_MATURE_OAKS", builder)
+        self.assertIn("Side_GardenHelpStarted", builder)
+        self.assertIn("Side_PartyTablesStarted", builder)
+        self.assertIn("PES002MatureOakTerrain", builder)
 
     def test_incident_captures_real_window_focus_and_ue4_native_stat_file(self):
         proof = (ROOT / "Scripts/capture_pes002_bag_end_visual.ps1").read_text(encoding="utf-8")

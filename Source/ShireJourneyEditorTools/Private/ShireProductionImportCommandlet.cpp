@@ -30,6 +30,7 @@
 #include "Characters/ShireLocomotionAnimInstance.h"
 #include "StaticMeshResources.h"
 #include "Engine/Texture2D.h"
+#include "Sound/SoundWave.h"
 #include "HAL/FileManager.h"
 #include "HAL/PlatformFilemanager.h"
 #include "Misc/FileHelper.h"
@@ -2494,6 +2495,97 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                 TEXT("P1C01_CURATED_PBR_MASTER_REPAIR_DEFERRED reason=source-orm-package-missing"));
         }
     }
+
+    // P1C01 REAL PCM WAV -> UE SoundWave in the existing ShireAudioSubsystem
+    // package namespace, not merely an unused source ZIP. The runtime already
+    // requests Amb_ShireMorning/Amb_ShireRoad/Amb_PartyField/Sfx_WagonDistant.
+    // One small, bounded audio import lane; this does not create a new audio
+    // subsystem or force sound loading during the game.
+    const FString ShireAudioRoot = FPaths::Combine(
+        WorkingRoot, TEXT("Audio/Shire"));
+    TArray<FString> ShireAudioWavs;
+    IFileManager::Get().FindFilesRecursive(
+        ShireAudioWavs, *ShireAudioRoot, TEXT("*.wav"), true, false, false);
+    ShireAudioWavs.Sort();
+    int32 P1C01ImportedSounds = 0;
+    for (const FString& Wav : ShireAudioWavs)
+    {
+        FString Relative = Wav;
+        FPaths::MakePathRelativeTo(Relative, *(ShireAudioRoot / TEXT("")));
+        Relative.ReplaceInline(TEXT("\\"), TEXT("/"));
+        const bool bAmbience = Relative.StartsWith(
+            TEXT("Ambience/"), ESearchCase::CaseSensitive);
+        const bool bSfx = Relative.StartsWith(
+            TEXT("SFX/"), ESearchCase::CaseSensitive);
+        const FString CueName = FPaths::GetBaseFilename(Wav);
+        if ((!bAmbience && !bSfx) ||
+            (bAmbience && !CueName.StartsWith(TEXT("Amb_"))) ||
+            (bSfx && !CueName.StartsWith(TEXT("Sfx_"))) ||
+            IFileManager::Get().FileSize(*Wav) < 64)
+        {
+            ++Failed;
+            UE_LOG(LogTemp, Error,
+                TEXT("P1C01_AUDIO_SOURCE_REJECTED source=%s"), *Relative);
+            continue;
+        }
+        const FString DestinationPath = bAmbience
+            ? TEXT("/Game/Audio/Ambience")
+            : TEXT("/Game/Audio/SFX");
+        UAssetImportTask* AudioTask = NewObject<UAssetImportTask>();
+        AudioTask->Filename = Wav;
+        AudioTask->DestinationPath = DestinationPath;
+        AudioTask->DestinationName = CueName;
+        AudioTask->bAutomated = true;
+        AudioTask->bSave = false;
+        AudioTask->bReplaceExisting = true;
+        TArray<UAssetImportTask*> Tasks;
+        Tasks.Add(AudioTask);
+        AssetTools.Get().ImportAssetTasks(Tasks);
+        const FString ObjectPath = FString::Printf(TEXT("%s/%s.%s"),
+            *DestinationPath, *CueName, *CueName);
+        USoundWave* ImportedSound = FindObject<USoundWave>(
+            nullptr, *ObjectPath);
+        if (!ImportedSound)
+        {
+            ImportedSound = LoadObject<USoundWave>(nullptr, *ObjectPath);
+        }
+        if (!ImportedSound || ImportedSound->NumChannels != 1 ||
+            ImportedSound->Duration <= 0.1f)
+        {
+            ++Failed;
+            UE_LOG(LogTemp, Error,
+                TEXT("P1C01_AUDIO_IMPORT_REJECTED path=%s channels=%d"),
+                *ObjectPath, ImportedSound ? ImportedSound->NumChannels : 0);
+            continue;
+        }
+        // A short seamless prototype ambience loops; one-shot story foley does not.
+        ImportedSound->bLooping = bAmbience;
+        ImportedSound->MarkPackageDirty();
+        UPackage* AudioPackage = ImportedSound->GetOutermost();
+        const FString Disk = FPackageName::LongPackageNameToFilename(
+            AudioPackage->GetName(), FPackageName::GetAssetPackageExtension());
+        IFileManager::Get().MakeDirectory(*FPaths::GetPath(Disk), true);
+        const bool bSaved = UPackage::SavePackage(
+            AudioPackage, ImportedSound, RF_Public | RF_Standalone, *Disk,
+            GError, nullptr, false, true, SAVE_NoError);
+        const int64 Bytes = IFileManager::Get().FileSize(*Disk);
+        if (!bSaved || Bytes <= 0)
+        {
+            ++Failed;
+            UE_LOG(LogTemp, Error,
+                TEXT("P1C01_AUDIO_UASSET_SAVE_FAILED path=%s"), *ObjectPath);
+            continue;
+        }
+        ++P1C01ImportedSounds;
+        UE_LOG(LogTemp, Display,
+            TEXT("P1C01_AUDIO_UASSET_SAVED cue=%s category=%s seconds=%.2f bytes=%lld looping=%d"),
+            *CueName, bAmbience ? TEXT("Ambience") : TEXT("SFX"),
+            ImportedSound->Duration, Bytes, bAmbience ? 1 : 0);
+    }
+    UE_LOG(LogTemp, Display,
+        TEXT("P1C01_AUDIO_BATCH_PERSISTED requested=%d saved=%d failed=%d namespace=ShireAudioSubsystem"),
+        ShireAudioWavs.Num(), P1C01ImportedSounds,
+        ShireAudioWavs.Num() - P1C01ImportedSounds);
 
     // OBJ import may create secondary material packages that UE4.27 does not
     // consistently include in UAssetImportTask::ImportedObjectPaths. Save those exact
