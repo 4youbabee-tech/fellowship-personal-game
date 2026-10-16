@@ -1,0 +1,81 @@
+"""Enable official MPFB2 as Blender extension; install only the verified CC0 system pack."""
+import argparse
+import importlib
+from pathlib import Path, PurePosixPath
+import runpy
+import shutil
+import sys
+import zipfile
+
+import bpy
+
+
+def main():
+    if "--" not in sys.argv:
+        raise RuntimeError("MPFB_HOSTED_BLENDER_ARGS_MISSING")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--extension", type=Path, required=True)
+    parser.add_argument("--system-pack", type=Path, required=True)
+    parser.add_argument("--spec", type=Path, required=True)
+    parser.add_argument("--out", type=Path, required=True)
+    cfg = parser.parse_args(sys.argv[sys.argv.index("--") + 1:])
+    for key in ("extension", "system_pack", "spec"):
+        if not getattr(cfg, key).is_file():
+            raise RuntimeError("MPFB_INPUT_MISSING_" + key)
+    ret = bpy.ops.extensions.package_install_files(
+        filepath=str(cfg.extension.resolve()), enable_on_install=True)
+    if "FINISHED" not in ret:
+        raise RuntimeError("MPFB2_OFFICIAL_EXTENSION_INSTALL_FAILED")
+    matches = [k for k in bpy.context.preferences.addons.keys()
+               if k.endswith(".mpfb") or k == "mpfb"]
+    if len(matches) != 1:
+        raise RuntimeError("MPFB2_EXTENSION_ENABLE_MISSING " + repr(matches))
+    module = matches[0]
+    loc = importlib.import_module(module + ".services.locationservice").LocationService
+    destination = Path(loc.get_user_data()).resolve()
+    destination.mkdir(parents=True, exist_ok=True)
+    asset_dirs = {"skins", "clothes", "hair", "eyes", "eyebrows",
+                  "eyelashes", "tongue", "teeth", "proxymeshes",
+                  "expressions", "poses", "rigs", "targets", "materials"}
+    written = 0
+    total_bytes = 0
+    with zipfile.ZipFile(cfg.system_pack.resolve()) as archive:
+        for record in archive.infolist():
+            if record.is_dir():
+                continue
+            pieces = PurePosixPath(record.filename).parts
+            if ".." in pieces or record.filename.startswith("/"):
+                raise RuntimeError("MPFB_ZIP_TRAVERSAL")
+            offsets = [i for i, v in enumerate(pieces) if v in asset_dirs]
+            if not offsets:
+                continue
+            relative = Path(*pieces[offsets[0]:])
+            target = (destination / relative).resolve()
+            if not target.is_relative_to(destination):
+                raise RuntimeError("MPFB_UNSAFE_ZIP_TARGET")
+            total_bytes += record.file_size
+            if record.file_size > 100_000_000 or total_bytes > 1_000_000_000:
+                raise RuntimeError("MPFB_ZIP_SIZE_LIMIT")
+            target.parent.mkdir(parents=True, exist_ok=True)
+            with archive.open(record) as src, target.open("wb") as dst:
+                shutil.copyfileobj(src, dst)
+            written += 1
+    for sub, name in (
+        ("skins", "young_caucasian_male.mhmat"),
+        ("eyes", "low-poly.mhclo"),
+        ("hair", "short01.mhclo"),
+        ("clothes", "male_casualsuit01.mhclo"),
+    ):
+        if not (destination / sub / name).is_file():
+            raise RuntimeError("MPFB_CORE_ASSET_PACK_MISSING " + sub + "/" + name)
+    if written < 50:
+        raise RuntimeError("MPFB_INCOMPLETE_SYSTEM_ASSET_PACK")
+    print("MPFB2_HOSTED_BLENDER_VERIFIED addon=" + module +
+          " files=" + str(written), flush=True)
+    script = Path(__file__).with_name("prepare_mpfb_hobbit_candidate.py").resolve()
+    sys.argv = [str(script), "--", "--spec", str(cfg.spec), "--out", str(cfg.out)]
+    runpy.run_path(str(script), run_name="__main__")
+
+
+if __name__ == "__main__":
+    main()

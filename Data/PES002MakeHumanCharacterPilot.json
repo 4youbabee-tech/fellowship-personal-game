@@ -46,5 +46,16 @@
     "Manually inspect realistic face/eyes, proportions, skin shaders/PBR maps, LOD1/2 and material draw calls"
   ],
   "invocation": "blender --background --python Tools/CloudAssetBuild/prepare_mpfb_hobbit_candidate.py -- --spec Data/PES002MakeHumanCharacterPilot.json --out <NEW_EMPTY_OUTPUT_DIR>",
-  "evidence_boundary": "Recipe only, no downloaded source binary or generated FBX/UE/PIE/visual acceptance."
+  "evidence_boundary": "Recipe only, no downloaded source binary or generated FBX/UE/PIE/visual acceptance.",
+  "hosted_execution_2026_10_17": {
+    "status": "PRODUCTION_RUN_PENDING",
+    "single_pipeline": "unreal-build-validation.yml character-source Linux job",
+    "blender": "Blender 4.2.23 LTS official SHA256 verified",
+    "addon": "MPFB2 pinned v2.0.18 source",
+    "asset_pack": "https://files2.makehumancommunity.org/asset_packs/makehuman_system_assets/makehuman_system_assets_cc0.zip",
+    "license": "Core asset pack CC0, MPFB addon tool GPL not incorporated as game asset",
+    "artifact": "pes002-mpfb-source-candidate-${HEAD_SHA}",
+    "safety": "Source-only, independent of the existing KayKit runtime packet and single Windows writer",
+    "next_gate": "Download artifact; inspect true Blender FBX and preview, then approved existing UE4 import and PIE. Unstyled base outfit cannot pass hero visual gate."
+  }
 }
