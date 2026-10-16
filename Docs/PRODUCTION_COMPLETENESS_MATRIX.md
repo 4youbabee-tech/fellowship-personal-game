@@ -1,3 +1,14 @@
+## 2026-10-16 PES-002 source root repair — UE verification pending
+| Stage | Evidence |
+|---|---|
+| Baseline exact run | 6ec6bb3 / Windows 38954012510 PASS; 3 new static .uassets, 4 native Unreal PIE screenshots artifact 12070612656, 8 Bagshot cottage facades replaced, 6 original oak instances replaced |
+| Reproduced geometry defect | Thatched 312 collapsed UV triangles; Timber 312 collapsed UV triangles; Oak 520 zero-geometry leaf faces and 360 other collapsed UV triangles; importer warned MikkTSpace tangent degeneracy |
+| Source correction | Both cottages retain all 1148 triangles and original material families, UV determinants fixed; mature oak 2792 -> 2272 real triangles, Bark/Leaves preserved, remaining UVs corrected |
+| Regression test | Existing PES-002 source contract extended with every-face 3D cross product and 2D UV determinant preflight; GitHub and new Engine run PENDING |
+| Prior runtime | 25 garden elements, 5 skeletal and 13 modular resident visuals, 4 USoundWave .uassets under /Game/Audio, sound playback NOT PROVEN |
+| Performance | CI Runner 24.65-27.90 late game FPS; visual REJECTED, owner 2GB VRAM / >=30 FPS DEVICE NOT TESTED |
+| Required acceptance | New source static, UE4.27 real importer/reopen + no tangent warnings, four new 1280x720 PIE images, frame proof and human visual/traversal review; Gate 6/7 OPEN |
+
 ## 2026-10-16 single coherent PES-002 village/audio candidate
 | Deliverable | Exact honest state |
 |---|---|

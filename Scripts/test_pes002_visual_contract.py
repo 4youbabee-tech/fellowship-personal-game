@@ -115,6 +115,38 @@ class PES002VisualContract(unittest.TestCase):
         self.assertIn('PathActor->GetStaticMeshComponent()->SetCastShadow(false)', cpp)
         self.assertIn("/Game/Production/World/Shire/SM_ShBagEndCobbledWalk.SM_ShBagEndCobbledWalk", plan["banks"]["P1C01"]["assets"])
 
+    def test_pes002_authored_cottages_and_oaks_have_valid_triangle_uv_tangents(self):
+        """Reject true zero-area geometry or UV triangles before costly Unreal import."""
+        for name in ("SM_ShBagshotThatchedCottage",
+                     "SM_ShBagshotTimberCottage", "SM_ShShireMatureOak"):
+            source = (ROOT / "SourceAssets/Production/World/Shire" /
+                      (name + ".obj")).read_text(encoding="utf-8")
+            vertices = [tuple(map(float, line.split()[1:]))
+                        for line in source.splitlines() if line.startswith("v ")]
+            uv = [tuple(map(float, line.split()[1:]))
+                  for line in source.splitlines() if line.startswith("vt ")]
+            faces = [line.split()[1:] for line in source.splitlines()
+                     if line.startswith("f ")]
+            self.assertGreater(len(faces), 1000, name)
+            self.assertEqual(len(vertices), 3 * len(faces), name)
+            self.assertEqual(len(uv), len(vertices), name)
+            for face_number, face in enumerate(faces, 1):
+                self.assertEqual(len(face), 3, (name, face_number))
+                ids = [tuple(map(int, entry.split("/"))) for entry in face]
+                p = [vertices[vi - 1] for vi, _ in ids]
+                t = [uv[ti - 1] for _, ti in ids]
+                e = [p[1][j] - p[0][j] for j in range(3)]
+                f = [p[2][j] - p[0][j] for j in range(3)]
+                cross = (e[1] * f[2] - e[2] * f[1],
+                         e[2] * f[0] - e[0] * f[2],
+                         e[0] * f[1] - e[1] * f[0])
+                self.assertGreater(sum(c * c for c in cross), 1e-12,
+                                   (name, face_number, "zero geometric area"))
+                uv_area = ((t[1][0] - t[0][0]) * (t[2][1] - t[0][1]) -
+                           (t[1][1] - t[0][1]) * (t[2][0] - t[0][0]))
+                self.assertGreater(abs(uv_area), 1e-9,
+                                   (name, face_number, "zero UV tangent basis"))
+
     def test_one_cohesive_shire_houses_trees_sound_and_dialogue_batch(self):
         builder = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
         importer = (ROOT / "Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp").read_text(encoding="utf-8")
