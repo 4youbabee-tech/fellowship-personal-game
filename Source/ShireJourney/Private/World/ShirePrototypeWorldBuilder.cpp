@@ -443,6 +443,41 @@ void AShirePrototypeWorldBuilder::BeginPlay()
         ProofLastFrameTimestamp = FPlatformTime::Seconds();
         FCoreDelegates::OnEndFrame.AddUObject(this,
             &AShirePrototypeWorldBuilder::SampleProofFrame);
+        // Real 3-FPS incident: GPU Total ~44 ms, RenderThread EventWait ~251ms.
+        // Do not speculate about PBR/VRAM until a bounded native UE4.27 trace.
+        if (FParse::Param(FCommandLine::Get(), TEXT("PES002PerformanceIncident")))
+        {
+            FTimerHandle StatsTimer;
+            GetWorldTimerManager().SetTimer(StatsTimer,
+                FTimerDelegate::CreateLambda([WeakBuilder]()
+                {
+                    if (!WeakBuilder.IsValid() || !WeakBuilder->GetWorld()) return;
+                    if (APlayerController* PC = WeakBuilder->GetWorld()->GetFirstPlayerController())
+                    {
+                        PC->ConsoleCommand(TEXT("stat unit"), false);
+                        PC->ConsoleCommand(TEXT("stat rhi"), false);
+                        PC->ConsoleCommand(TEXT("stat streaming"), false);
+                        UE_LOG(LogTemp, Display, TEXT("PES002_INCIDENT_STATS unit=1 rhi=1 streaming=1"));
+                    }
+                }), 12.0f, false);
+            for (int32 StatPhase = 0; StatPhase < 2; ++StatPhase)
+            {
+                FTimerHandle StatCaptureTimer;
+                GetWorldTimerManager().SetTimer(StatCaptureTimer,
+                    FTimerDelegate::CreateLambda([WeakBuilder, StatPhase]()
+                    {
+                        if (!WeakBuilder.IsValid() || !WeakBuilder->GetWorld()) return;
+                        if (APlayerController* PC = WeakBuilder->GetWorld()->GetFirstPlayerController())
+                        {
+                            PC->ConsoleCommand(StatPhase == 0
+                                ? TEXT("stat startfile") : TEXT("stat stopfile"), false);
+                            UE_LOG(LogTemp, Display,
+                                TEXT("PES002_INCIDENT_STATFILE phase=%s ue4stats=1"),
+                                StatPhase == 0 ? TEXT("start") : TEXT("stop"));
+                        }
+                    }), StatPhase == 0 ? 31.0f : 42.0f, false);
+            }
+        }
         // Actual UE4.27 CPU/render/GPU CSV instrumentation, opt-in only.
         // Stop before the native PIE session ends so the engine flushes its data.
         for (int32 ProfilePhase = 0; ProfilePhase < 2; ++ProfilePhase)

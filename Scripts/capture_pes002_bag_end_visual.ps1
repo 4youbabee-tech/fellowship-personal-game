@@ -40,6 +40,24 @@ bThrottleCPUWhenNotForeground=False
     [System.IO.File]::AppendAllText($proofEditorSettings, $unthrottledProof)
     Write-Host 'PES002_EDITOR_BACKGROUND_THROTTLE_DISABLED proofOnly=true expectedNo3FPSCap=true'
 }
+# A background PIE window can be capped near 3 FPS independently of the GPU.
+# The editor preference was already being written but its effect never proved.
+# Capture the actual foreground process, and activate only our owned editor.
+$focusSamples = 0
+$focusConfirmed = 0
+$focusRequests = 0
+if ($PIE) {
+    Add-Type -TypeDefinition @'
+using System;
+using System.Runtime.InteropServices;
+public static class ShirePES002WindowFocus {
+    [DllImport("user32.dll")] public static extern IntPtr GetForegroundWindow();
+    [DllImport("user32.dll")] public static extern uint GetWindowThreadProcessId(IntPtr handle, out uint processId);
+    [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr handle);
+    [DllImport("user32.dll")] public static extern bool ShowWindowAsync(IntPtr handle, int command);
+}
+'@
+}
 if ($PIE) {
     $preview = Join-Path $root 'SHIRE_FAST_PIE_PREVIEW.bat'
     if (!(Test-Path -LiteralPath $preview)) { throw 'PES002_PIE_PREVIEW_BATCH_MISSING' }
@@ -63,6 +81,37 @@ try {
             $child = Get-CimInstance Win32_Process -Filter "ParentProcessId=$($proc.Id)" -ErrorAction SilentlyContinue |
                 Where-Object { $_.Name -eq 'UE4Editor.exe' } | Select-Object -First 1
             if ($child) { $editorPid = [int]$child.ProcessId }
+        }
+        if ($PIE -and $editorPid -gt 0 -and $focusRequests -lt 20) {
+            try {
+                $editorProcess = Get-Process -Id $editorPid -ErrorAction Stop
+                $handle = $editorProcess.MainWindowHandle
+                if ($handle -ne [IntPtr]::Zero) {
+                    $focusRequests++
+                    $foregroundPid = [uint32]0
+                    [void][ShirePES002WindowFocus]::GetWindowThreadProcessId(
+                        [ShirePES002WindowFocus]::GetForegroundWindow(), [ref]$foregroundPid)
+                    if ($foregroundPid -ne [uint32]$editorPid) {
+                        [void][ShirePES002WindowFocus]::ShowWindowAsync($handle, 9)
+                        [void][ShirePES002WindowFocus]::SetForegroundWindow($handle)
+                        try {
+                            $shell = New-Object -ComObject WScript.Shell
+                            [void]$shell.AppActivate([int]$editorPid)
+                            [void][System.Runtime.InteropServices.Marshal]::ReleaseComObject($shell)
+                        } catch {
+                            Write-Host "PES002_APPACTIVATE_UNAVAILABLE type=$($_.Exception.GetType().Name)"
+                        }
+                    }
+                    $afterPid = [uint32]0
+                    [void][ShirePES002WindowFocus]::GetWindowThreadProcessId(
+                        [ShirePES002WindowFocus]::GetForegroundWindow(), [ref]$afterPid)
+                    $focusSamples++
+                    if ($afterPid -eq [uint32]$editorPid) { $focusConfirmed++ }
+                    Write-Host "PES002_WINDOW_FOCUS sample=$focusSamples foregroundPid=$afterPid editorPid=$editorPid active=$($afterPid -eq [uint32]$editorPid)"
+                }
+            } catch {
+                Write-Host "PES002_WINDOW_FOCUS_PROBE_ERROR type=$($_.Exception.GetType().Name)"
+            }
         }
         if ($editorPid -gt 0 -and -not $gpuCounterUnavailable) {
             try {
@@ -108,6 +157,13 @@ try {
         Write-Host 'PES002_EDITOR_BACKGROUND_THROTTLE_RESTORED proofOnly=true'
     }
 }
+if ($PIE) {
+    Write-Host "PES002_WINDOW_FOCUS_SUMMARY samples=$focusSamples confirmed=$focusConfirmed requests=$focusRequests"
+    if ($focusSamples -eq 0) { throw 'PES002_PERF_INCONCLUSIVE_NO_FOREGROUND_HANDLE' }
+    if ($focusConfirmed -eq 0) {
+        throw 'PES002_PERF_INCONCLUSIVE_BACKGROUND_THROTTLE: renderer FPS cannot be judged without an active window'
+    }
+}
 if ($gpuSamples.Count -gt 0) {
     $gpuSamples | Export-Csv -NoTypeInformation -LiteralPath (Join-Path $proof 'GPUProcessMemory.csv')
     $peakDedicated = ($gpuSamples | Measure-Object dedicatedBytes -Maximum).Maximum / 1048576.0
@@ -123,6 +179,15 @@ $csvCaptures = @(Get-ChildItem -Path (Join-Path $root 'Saved/Profiling/CSV') -Fi
 foreach ($capture in $csvCaptures) {
     Copy-Item -LiteralPath $capture.FullName -Destination (Join-Path $proof ('CPU-GPU-' + $capture.Name)) -Force
     Write-Host "PES002_ENGINE_CSV_PROFILE source=$($capture.FullName) bytes=$($capture.Length) actualCapture=true targetDeviceAccepted=false"
+}
+if ($PIE) {
+    $stats = @(Get-ChildItem -Path (Join-Path $root 'Saved/Profiling/UnrealStats') -Filter '*.ue4stats' -File -Recurse -ErrorAction SilentlyContinue |
+        Where-Object { $_.LastWriteTime -ge $started.AddSeconds(-2) } |
+        Sort-Object LastWriteTime -Descending | Select-Object -First 1)
+    foreach ($statFile in $stats) {
+        Copy-Item -LiteralPath $statFile.FullName -Destination (Join-Path $proof 'PES002-incident.ue4stats') -Force
+        Write-Host "PES002_INCIDENT_STATFILE_ARCHIVED bytes=$($statFile.Length)"
+    }
 }
 if (!(Test-Path $log) -or !(Select-String -Path $log -Pattern 'PES002_CAPTURE_CAMERA_READY target=BagEnd' -Quiet)) {
     throw "PES002_CAPTURE_CAMERA_NOT_CONFIRMED; inspect $log"

@@ -1,3 +1,6 @@
+## 2026-10-16 PES-002 PR484 foreground and render-wait incident evidence
+- PR484: Verified baseline also stalled near 3FPS before recovering later; branch persistent 3FPS with ~251ms render thread EventWait and GPU ~44ms. Instrument owned PIE foreground and 11s native UE4 stat file; source PBR and HISM untouched until controlled evidence demonstrates renderer issue. Exact-head Windows test NOT RUN; Gate 6/7 remain open.
+
 ## 2026-10-16 PES-002 imported village tree overdraw investigation
 - Windows 38905549201 with initial dense woodland conversion SUCCESS technically; actual PIE runtime 67 / 67 converted and 4 x 1280x720 screenshots artifact 12048517139. Visual REJECTED: hard-edged dark crowns overwhelm rural hillside. Steady FPS ~3 (previous ~25-28) during capture, while GPU/Total mean ~44.1 ms (before ~36.3), GPU visibility ~8.9ms (before ~1ms), and RHI draws ~731 vs ~667. Disparity between reported game frame and measured GPU pass must be investigated, not claimed as proven sole material root.
 - One corrective sparse-mesh candidate selects every 4th woodland silhouette, maximum 12 converted, retaining original visible scenery elsewhere and all collisions, quest anchors and world ownership; requires new exact-HEAD real UE build and render/FPS evidence. Reject rather than merge if fail persists.

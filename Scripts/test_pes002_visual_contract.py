@@ -78,6 +78,20 @@ class PES002VisualContract(unittest.TestCase):
         self.assertNotIn("SetCollisionEnabled", section)
         self.assertNotIn("SetActorLocation", section)
 
+    def test_incident_captures_real_window_focus_and_ue4_native_stat_file(self):
+        proof = (ROOT / "Scripts/capture_pes002_bag_end_visual.ps1").read_text(encoding="utf-8")
+        preview = (ROOT / "SHIRE_FAST_PIE_PREVIEW.bat").read_text(encoding="utf-8")
+        cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        self.assertIn("GetForegroundWindow", proof)
+        self.assertIn("GetWindowThreadProcessId", proof)
+        self.assertIn("PES002_WINDOW_FOCUS_SUMMARY", proof)
+        self.assertIn("PES002_PERF_INCONCLUSIVE_BACKGROUND_THROTTLE", proof)
+        self.assertIn("PES002_INCIDENT_STATFILE_ARCHIVED", proof)
+        self.assertIn("-PES002PerformanceIncident", preview)
+        for stat in ("stat unit", "stat rhi", "stat streaming", "stat startfile", "stat stopfile"):
+            self.assertIn('TEXT("' + stat + '")', cpp)
+        self.assertNotIn('TEXT("stat renderfile")', cpp)
+
     def test_bag_end_hero_exterior_keeps_entrance_visible(self):
         cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
         self.assertIn('PES002_BAG_END_HERO_FACADE', cpp)
