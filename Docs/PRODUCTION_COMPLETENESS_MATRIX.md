@@ -1,3 +1,6 @@
+## 2026-10-16 PES-002 old two-part trees versus real FBX whole tree (candidate)
+- Current develop baseline 3b9d90d real engine proof PASS but full visuals FAIL acceptance. New source-only candidate: tag and replace up to 64 old actor trees near Bag End only when the UE4 curated PBR FBX tree is already resident; preserve invisible old blocking trunk colliders and existing nav/story anchors. Compile/UE_IMPORT/PIE/RENDER_OBSERVED candidate NOT RUN, exact-head evidence pending. Owner 720p DX11 30 FPS and device tests NOT RUN.
+
 ## 2026-10-16 PES-002 data-driven garden and resident variation candidate
 - Baseline develop 2e190d6: engine build/import/PIE pass with 5 skeletal shared residents, 21 tree replacements and 4 screenshots. Full visual and performance gates OPEN.
 - Candidate: 25 explicit garden data rows in existing Data/P1C01VerifiedWorldDecor.json, checked against actual UE-imported PBR FBX nature mesh packages. Candidate runtime evidence markers PES002_BAG_END_DATA_GARDEN and PES002_RESIDENT_PRESENTATION_SNAPSHOT; 5 proportional resident variants and optional safe authored-material tint.

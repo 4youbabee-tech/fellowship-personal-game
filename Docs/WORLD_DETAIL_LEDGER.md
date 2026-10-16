@@ -1,3 +1,6 @@
+## 2026-10-16 PES-002 Bag End exterior visual substitution candidate
+- Former SpawnTree actor-pair trunk/crown meshes near Bag End were not eligible for the earlier HISM replacement. Tag those actors at creation and after asynchronous imported PBR tree availability, replace the rendered pair with one imported tree HISM; preserve the old invisible trunk collision and keep the walkable entrance clear. At most 64 pairs and at most 4200cm from Bag End. No broad-world actor replacements, region gate changes or unverified new art. Accept visually only after four fresh PIE shots and owner review.
+
 ## 2026-10-16 Bag End exterior only, candidate
 - Physically imported CuratedP1C01 nature HISM uses a new garden-position array in EXISTING Data/P1C01VerifiedWorldDecor.json: 25 entries (24 migrated, one garden meadow grass), bounded at 36 positions, only validated 0/2/3/4 family indices, tracing onto gently sloped terrain, keeping west entrance and collision unchanged. No changes to world regions, authored quests, active world directors or blocked off-Chapter runtime.
 - Generic local LivingWorld residents: at most 5 skinned actors, share previously imported mesh+4 clips+ABP but now vary stature/proportions and optional vector-color parameter if source material supports it. Not the true distinct heroes. Source runtime evidence still pending visual acceptance.

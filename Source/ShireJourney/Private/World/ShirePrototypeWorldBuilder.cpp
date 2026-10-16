@@ -999,6 +999,88 @@ void AShirePrototypeWorldBuilder::OnCuratedNatureLayerReady()
     UE_LOG(LogTemp, Display,
         TEXT("PES002_IMPORTED_TREE_REPLACEMENT converted=%d max=80 FBX=1 visual=pending"),
         Replaced);
+
+    // A second near-Bag-End cleanup: some legacy tree actors were not HISM
+    // instances, so they survived the earlier 21-instance replacement.
+    // Pair visible crowns with their original blocking trunk by XY proximity.
+    // Only promote an actor when a physically imported PBR tree is already
+    // loaded and ground-traced. Keep collision on the hidden trunk component,
+    // do not change nav mesh, story anchors or distant-region tree actors.
+    int32 ReplacedActorTrees = 0;
+    int32 PreservedTrunkCollisions = 0;
+    const FVector BagEndCenter(-2210.0f, -520.0f, 0.0f);
+    for (TActorIterator<AStaticMeshActor> It(World); It && ReplacedActorTrees < 64; ++It)
+    {
+        AStaticMeshActor* Trunk = *It;
+        if (!Trunk || !Trunk->ActorHasTag(TEXT("PES002ReplaceableTreeTrunk")) ||
+            FVector::DistSquared2D(Trunk->GetActorLocation(), BagEndCenter) >
+                FMath::Square(4200.0f) ||
+            FVector::DistSquared2D(Trunk->GetActorLocation(), BagEndCenter) <
+                FMath::Square(440.0f))
+        {
+            continue;
+        }
+        const int32 Family = 5 + (ReplacedActorTrees % 3);
+        UHierarchicalInstancedStaticMeshComponent* Group = CuratedNatureGroups[Family];
+        UStaticMesh* Mesh = CuratedNatureSources[Family].Get();
+        UStaticMeshComponent* OldTrunk = Trunk->GetStaticMeshComponent();
+        if (!Group || !Mesh || Group->GetStaticMesh() != Mesh ||
+            !OldTrunk || Mesh->GetBounds().BoxExtent.Z <= 1.0f)
+        {
+            continue;
+        }
+        AStaticMeshActor* Crown = nullptr;
+        for (TActorIterator<AStaticMeshActor> CrownIt(World); CrownIt; ++CrownIt)
+        {
+            AStaticMeshActor* Candidate = *CrownIt;
+            if (Candidate && Candidate->ActorHasTag(TEXT("PES002ReplaceableTreeCrown")) &&
+                Candidate->GetStaticMeshComponent() &&
+                Candidate->GetStaticMeshComponent()->IsVisible() &&
+                FVector::DistSquared2D(
+                    Candidate->GetActorLocation(), Trunk->GetActorLocation()) <
+                    FMath::Square(55.0f))
+            {
+                Crown = Candidate;
+                break;
+            }
+        }
+        if (!Crown)
+        {
+            continue;
+        }
+        const FVector CandidatePosition = Trunk->GetActorLocation();
+        FHitResult Hit;
+        FCollisionQueryParams Query(TEXT("PES002TreeActorGround"), false, this);
+        Query.AddIgnoredActor(Trunk);
+        Query.AddIgnoredActor(Crown);
+        if (!World->LineTraceSingleByChannel(
+                Hit, CandidatePosition + FVector(0,0,1200),
+                CandidatePosition - FVector(0,0,800), ECC_Visibility, Query) ||
+            Hit.ImpactNormal.Z < 0.78f ||
+            FMath::Abs(Hit.Location.Z) > 220.0f)
+        {
+            continue;
+        }
+        const FBoxSphereBounds Bounds = Mesh->GetBounds();
+        const float TargetHeight = 390.0f * Trunk->GetActorScale3D().Z;
+        const float NewScale = FMath::Clamp(
+            TargetHeight / (2.0f * Bounds.BoxExtent.Z), 0.05f, 3.0f);
+        Group->AddInstanceWorldSpace(FTransform(
+            Trunk->GetActorRotation(),
+            Hit.Location - FVector(
+                0, 0, (Bounds.Origin.Z - Bounds.BoxExtent.Z) * NewScale),
+            FVector(NewScale)));
+        // Hide the old faceted geometry, not the blocking collision object.
+        OldTrunk->SetVisibility(false, true);
+        OldTrunk->SetCastShadow(false);
+        Crown->GetStaticMeshComponent()->SetVisibility(false, true);
+        Crown->GetStaticMeshComponent()->SetCastShadow(false);
+        ++PreservedTrunkCollisions;
+        ++ReplacedActorTrees;
+    }
+    UE_LOG(LogTemp, Display,
+        TEXT("PES002_FBX_TREE_ACTOR_REPLACEMENT replaced=%d max=64 trunkCollisionPreserved=%d source=curated-FBX-PBR visuals=PIE-pending"),
+        ReplacedActorTrees, PreservedTrunkCollisions);
 }
 
 
@@ -1254,10 +1336,23 @@ void AShirePrototypeWorldBuilder::SpawnTree(const FVector& Location, float Scale
 
     if (ProductionTreeTrunkMesh && ProductionTreeCanopyMesh)
     {
-        SpawnShape(ProductionTreeTrunkMesh, Location, FVector(Scale), Bark, FRotator::ZeroRotator, true);
-        SpawnShape(ProductionTreeCanopyMesh, Location + FVector(0.0f, 0.0f, 205.0f * Scale),
-            FVector(Scale), LeafMid,
-            FRotator(0.0f, FMath::Fmod(Location.X * 0.011f - Location.Y * 0.019f, 360.0f), 0.0f), false);
+        // A matching imported FBX tree replaces the *visible* two-part proxy
+        // only after its asynchronously loaded PBR mesh is ready. Keep the
+        // original blocking trunk component for existing traversal collisions.
+        if (AStaticMeshActor* Trunk = SpawnShape(
+                ProductionTreeTrunkMesh, Location, FVector(Scale),
+                Bark, FRotator::ZeroRotator, true))
+        {
+            Trunk->Tags.AddUnique(TEXT("PES002ReplaceableTreeTrunk"));
+        }
+        if (AStaticMeshActor* Crown = SpawnShape(
+                ProductionTreeCanopyMesh,
+                Location + FVector(0.0f, 0.0f, 205.0f * Scale),
+                FVector(Scale), LeafMid,
+                FRotator(0.0f, FMath::Fmod(Location.X * 0.011f - Location.Y * 0.019f, 360.0f), 0.0f), false))
+        {
+            Crown->Tags.AddUnique(TEXT("PES002ReplaceableTreeCrown"));
+        }
         return;
     }
 
