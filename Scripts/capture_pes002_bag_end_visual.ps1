@@ -15,6 +15,7 @@ Remove-Item -LiteralPath $log -Force -ErrorAction SilentlyContinue
 Remove-Item -LiteralPath (Join-Path $proof 'GPUProcessMemory.csv') -Force -ErrorAction SilentlyContinue
 Get-ChildItem -LiteralPath $proof -Filter 'BagEnd-P1C01-view*-actual-runtime.png' -File |
     Remove-Item -Force
+Get-ChildItem -LiteralPath $proof -Filter 'PES002_BagEnd_View*.png' -File | Remove-Item -Force
 $arguments = @('"' + $project + '"', '-game', '-windowed', '-ResX=1280', '-ResY=720', '-NoSplash', '-log', '-PES002VisualProof', '-abslog="' + $log + '"')
 if ($PIE) {
     $preview = Join-Path $root 'SHIRE_FAST_PIE_PREVIEW.bat'
@@ -95,6 +96,10 @@ foreach ($capture in $csvCaptures) {
 if (!(Test-Path $log) -or !(Select-String -Path $log -Pattern 'PES002_CAPTURE_CAMERA_READY target=BagEnd' -Quiet)) {
     throw "PES002_CAPTURE_CAMERA_NOT_CONFIRMED; inspect $log"
 }
+# Retain original engine pixels even when resolution/acceptance rejects them.
+Get-ChildItem -Path $shotDir -Filter 'PES002_BagEnd_View*.png' -File -Recurse -ErrorAction SilentlyContinue |
+    Where-Object { $_.LastWriteTime -ge $started.AddSeconds(-2) } |
+    ForEach-Object { Copy-Item -LiteralPath $_.FullName -Destination (Join-Path $proof $_.Name) -Force }
 for ($view = 0; $view -lt 4; $view++) {
     if (!(Select-String -Path $log -SimpleMatch -Pattern "PES002_CAPTURE_VIEW_READY view=$view target=BagEnd" -Quiet)) {
         throw "PES002_CAPTURE_VIEW_NOT_READY view=$view"

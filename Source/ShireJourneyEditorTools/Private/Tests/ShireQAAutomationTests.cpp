@@ -16,6 +16,9 @@
 #include "Editor.h"
 #include "PlayInEditorDataTypes.h"
 #include "Engine/World.h"
+#include "Engine/GameViewportClient.h"
+#include "UnrealClient.h"
+#include "Slate/SceneViewport.h"
 #include "EngineUtils.h"
 #include "ShirePrototypeWorldBuilder.h"
 #include "GameFramework/PlayerController.h"
@@ -57,6 +60,11 @@ public:
             if (!bObservedPIE)
             {
                 bObservedPIE = true;
+                // Windows work-area fitting can shrink a requested PIE window.
+                // Resize the actual rendering viewport, not the outer Editor.
+                UGameViewportClient* ViewportClient = World->GetGameViewport();
+                if (ViewportClient && ViewportClient->GetGameViewport())
+                    ViewportClient->GetGameViewport()->ResizeFrame(1280, 720, EWindowMode::Windowed);
                 UE_LOG(LogTemp, Display,
                     TEXT("PES002_PIE_SESSION_ACTUAL world=%s worldType=PIE pawn=%s"),
                     *World->GetName(), *PC->GetPawn()->GetName());
