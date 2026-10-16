@@ -55,7 +55,8 @@ try {
             }
         }
         if ((Test-Path -LiteralPath $log) -and
-            (Select-String -Path $log -SimpleMatch -Pattern 'PES002_SCREENSHOT_REQUESTED target=BagEnd view=3' -Quiet)) {
+            (Select-String -Path $log -SimpleMatch -Pattern 'PES002_SCREENSHOT_REQUESTED target=BagEnd view=3' -Quiet) -and
+            (!$PIE -or (Select-String -Path $log -SimpleMatch -Pattern 'PES002_PIE_SESSION_ENDED active=0' -Quiet))) {
             $ready = $true
             break
         }

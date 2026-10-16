@@ -14,6 +14,7 @@
 #include "Serialization/JsonSerializer.h"
 #include "UObject/UObjectGlobals.h"
 #include "Editor.h"
+#include "PlayInEditorDataTypes.h"
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/Pawn.h"
@@ -25,6 +26,20 @@
 
 // Opt-in editor integration evidence. This deliberately runs a real PIE world;
 // ordinary QA runs neither enter PIE nor produce visual acceptance claims.
+class FShirePES002StartFloatingPIE : public IAutomationLatentCommand
+{
+public:
+    virtual bool Update() override
+    {
+        // UE4.27: an explicitly empty destination selects a separate PIE
+        // viewport; FStartPIECommand instead forces the active editor viewport.
+        FRequestPlaySessionParams Params;
+        Params.DestinationSlateViewport = nullptr;
+        GEditor->RequestPlaySession(Params);
+        return true;
+    }
+};
+
 class FShirePES002WaitForVisualPIE : public IAutomationLatentCommand
 {
 public:
@@ -75,10 +90,16 @@ private:
 class FShirePES002RestorePIESettings : public IAutomationLatentCommand
 {
 public:
-    FShirePES002RestorePIESettings(int32 InWidth, int32 InHeight)
-        : Width(InWidth), Height(InHeight) {}
+    FShirePES002RestorePIESettings(FAutomationTestBase* InTest, int32 InWidth, int32 InHeight)
+        : Test(InTest), Width(InWidth), Height(InHeight) {}
     virtual bool Update() override
     {
+        if (GEditor && GEditor->PlayWorld)
+        {
+            if (EndedAt == 0.0) EndedAt = FPlatformTime::Seconds();
+            if (FPlatformTime::Seconds() - EndedAt < 30.0) return false;
+            Test->AddError(TEXT("PIE teardown did not complete within 30 seconds"));
+        }
         ULevelEditorPlaySettings* Settings = GetMutableDefault<ULevelEditorPlaySettings>();
         Settings->NewWindowWidth = Width;
         Settings->NewWindowHeight = Height;
@@ -87,6 +108,8 @@ public:
         return true;
     }
 private:
+    FAutomationTestBase* Test;
+    double EndedAt = 0.0;
     int32 Width;
     int32 Height;
 };
@@ -114,10 +137,10 @@ bool FShirePES002VisualPIETest::RunTest(const FString& Parameters)
     Settings->NewWindowWidth = 1280;
     Settings->NewWindowHeight = 720;
     ADD_LATENT_AUTOMATION_COMMAND(FEditorLoadMap(TEXT("/Engine/Maps/Entry")));
-    ADD_LATENT_AUTOMATION_COMMAND(FStartPIECommand(false));
+    ADD_LATENT_AUTOMATION_COMMAND(FShirePES002StartFloatingPIE());
     ADD_LATENT_AUTOMATION_COMMAND(FShirePES002WaitForVisualPIE(this));
     ADD_LATENT_AUTOMATION_COMMAND(FEndPlayMapCommand());
-    ADD_LATENT_AUTOMATION_COMMAND(FShirePES002RestorePIESettings(PreviousWidth, PreviousHeight));
+    ADD_LATENT_AUTOMATION_COMMAND(FShirePES002RestorePIESettings(this, PreviousWidth, PreviousHeight));
     return true;
 }
 

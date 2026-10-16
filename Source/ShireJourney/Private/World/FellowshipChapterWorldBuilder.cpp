@@ -35,7 +35,7 @@ namespace FellowshipVisual
 
 namespace
 {
-    UStaticMesh* ResolveResidentStaticMesh(const TCHAR* AssetPath)
+    UStaticMesh* FellowshipChapterWorldBuilderResolveResidentStaticMesh(const TCHAR* AssetPath)
     {
         return AssetPath
             ? Cast<UStaticMesh>(FSoftObjectPath(AssetPath).ResolveObject())
@@ -421,76 +421,76 @@ void AFellowshipChapterWorldBuilder::EnsureProductionMeshes(FName ChapterId)
     // Anduin together even when only one chapter was active.
     if (ChapterId == TEXT("P1C03"))
     {
-        WeathertopArchMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Weathertop/SM_WeathertopRuinedArch.SM_WeathertopRuinedArch"));
-        WeathertopPillarMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Weathertop/SM_WeathertopBrokenPillar.SM_WeathertopBrokenPillar"));
-        WeathertopCampRingMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Weathertop/SM_WeathertopCampRing.SM_WeathertopCampRing"));
+        WeathertopArchMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Weathertop/SM_WeathertopRuinedArch.SM_WeathertopRuinedArch"));
+        WeathertopPillarMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Weathertop/SM_WeathertopBrokenPillar.SM_WeathertopBrokenPillar"));
+        WeathertopCampRingMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Weathertop/SM_WeathertopCampRing.SM_WeathertopCampRing"));
     }
     else if (ChapterId == TEXT("P1C04"))
     {
-        RivendellPavilionMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Rivendell/SM_RivendellPavilion.SM_RivendellPavilion"));
-        RivendellArchMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Rivendell/SM_RivendellArch.SM_RivendellArch"));
-        RivendellBridgeMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Rivendell/SM_RivendellBridge.SM_RivendellBridge"));
-        RivendellLanternMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Rivendell/SM_RivendellLantern.SM_RivendellLantern"));
+        RivendellPavilionMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Rivendell/SM_RivendellPavilion.SM_RivendellPavilion"));
+        RivendellArchMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Rivendell/SM_RivendellArch.SM_RivendellArch"));
+        RivendellBridgeMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Rivendell/SM_RivendellBridge.SM_RivendellBridge"));
+        RivendellLanternMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Rivendell/SM_RivendellLantern.SM_RivendellLantern"));
     }
     else if (ChapterId == TEXT("P1C05"))
     {
-        RoadCampTentMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Road/SM_RoadCampTent.SM_RoadCampTent"));
-        RoadSupplyRackMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Road/SM_RoadSupplyRack.SM_RoadSupplyRack"));
-        CaradhrasRockMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Road/SM_CaradhrasRock.SM_CaradhrasRock"));
+        RoadCampTentMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Road/SM_RoadCampTent.SM_RoadCampTent"));
+        RoadSupplyRackMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Road/SM_RoadSupplyRack.SM_RoadSupplyRack"));
+        CaradhrasRockMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Road/SM_CaradhrasRock.SM_CaradhrasRock"));
     }
     else if (ChapterId == TEXT("P1C06"))
     {
-        MoriaPillarMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaPillar.SM_MoriaPillar"));
-        MoriaDoorMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaDoor.SM_MoriaDoor"));
-        MoriaBrazierMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaBrazier.SM_MoriaBrazier"));
-        MoriaBridgeMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaBridgeSegment.SM_MoriaBridgeSegment"));
-        MoriaWallPanelMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaWallPanel.SM_MoriaWallPanel"));
-        MoriaFloorSlabMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaFloorSlab.SM_MoriaFloorSlab"));
-        MoriaArchMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaArch.SM_MoriaArch"));
-        MoriaCeilingRibMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaCeilingRib.SM_MoriaCeilingRib"));
-        MoriaBridgePierMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaBridgePier.SM_MoriaBridgePier"));
-        MoriaTombDaisMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaTombDais.SM_MoriaTombDais"));
-        MoriaReliefPanelMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaReliefPanel.SM_MoriaReliefPanel"));
-        MoriaMineRailMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaMineRail.SM_MoriaMineRail"));
-        MoriaOreCrateMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaOreCrate.SM_MoriaOreCrate"));
-        MoriaCollapsedBeamMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaCollapsedBeam.SM_MoriaCollapsedBeam"));
-        MoriaTorchNicheMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaTorchNiche.SM_MoriaTorchNiche"));
-        MoriaChasmButtressMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaChasmButtress.SM_MoriaChasmButtress"));
-        MoriaSideDoorMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaSideDoor.SM_MoriaSideDoor"));
-        MoriaDebrisClusterMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaDebrisCluster.SM_MoriaDebrisCluster"));
+        MoriaPillarMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaPillar.SM_MoriaPillar"));
+        MoriaDoorMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaDoor.SM_MoriaDoor"));
+        MoriaBrazierMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaBrazier.SM_MoriaBrazier"));
+        MoriaBridgeMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaBridgeSegment.SM_MoriaBridgeSegment"));
+        MoriaWallPanelMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaWallPanel.SM_MoriaWallPanel"));
+        MoriaFloorSlabMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaFloorSlab.SM_MoriaFloorSlab"));
+        MoriaArchMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaArch.SM_MoriaArch"));
+        MoriaCeilingRibMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaCeilingRib.SM_MoriaCeilingRib"));
+        MoriaBridgePierMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaBridgePier.SM_MoriaBridgePier"));
+        MoriaTombDaisMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaTombDais.SM_MoriaTombDais"));
+        MoriaReliefPanelMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaReliefPanel.SM_MoriaReliefPanel"));
+        MoriaMineRailMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaMineRail.SM_MoriaMineRail"));
+        MoriaOreCrateMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaOreCrate.SM_MoriaOreCrate"));
+        MoriaCollapsedBeamMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaCollapsedBeam.SM_MoriaCollapsedBeam"));
+        MoriaTorchNicheMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaTorchNiche.SM_MoriaTorchNiche"));
+        MoriaChasmButtressMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaChasmButtress.SM_MoriaChasmButtress"));
+        MoriaSideDoorMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaSideDoor.SM_MoriaSideDoor"));
+        MoriaDebrisClusterMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaDebrisCluster.SM_MoriaDebrisCluster"));
     }
     else if (ChapterId == TEXT("P1C07"))
     {
-        LorienTalanMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Lothlorien/SM_LorienTalan.SM_LorienTalan"));
-        LorienLanternMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Lothlorien/SM_LorienLantern.SM_LorienLantern"));
-        LorienMirrorMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Lothlorien/SM_LorienMirror.SM_LorienMirror"));
+        LorienTalanMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Lothlorien/SM_LorienTalan.SM_LorienTalan"));
+        LorienLanternMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Lothlorien/SM_LorienLantern.SM_LorienLantern"));
+        LorienMirrorMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Lothlorien/SM_LorienMirror.SM_LorienMirror"));
     }
     else if (ChapterId == TEXT("P1C08"))
     {
-        AnduinBoatMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Anduin/SM_AnduinBoat.SM_AnduinBoat"));
-        AmonHenStairMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Anduin/SM_AmonHenStair.SM_AmonHenStair"));
-        AmonHenRuinMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Anduin/SM_AmonHenRuin.SM_AmonHenRuin"));
-        ArgonathSentinelMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Anduin/SM_ArgonathSentinel.SM_ArgonathSentinel"));
+        AnduinBoatMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Anduin/SM_AnduinBoat.SM_AnduinBoat"));
+        AmonHenStairMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Anduin/SM_AmonHenStair.SM_AmonHenStair"));
+        AmonHenRuinMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Anduin/SM_AmonHenRuin.SM_AmonHenRuin"));
+        ArgonathSentinelMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Anduin/SM_ArgonathSentinel.SM_ArgonathSentinel"));
     }
 
     // Shared production vocabulary remains available to each Fellowship chapter.
-    CommonMountainRidgeMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonMountainRidge.SM_CommonMountainRidge"));
-    CommonCliffWallMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonCliffWall.SM_CommonCliffWall"));
-    CommonTerracedHillMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonTerracedHill.SM_CommonTerracedHill"));
-    CommonRiverBankMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonRiverBank.SM_CommonRiverBank"));
-    CommonBoulderClusterMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonBoulderCluster.SM_CommonBoulderCluster"));
-    CommonPineTreeMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonPineTree.SM_CommonPineTree"));
-    CommonBroadleafTreeMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonBroadleafTree.SM_CommonBroadleafTree"));
-    CommonGoldenTreeMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonGoldenTree.SM_CommonGoldenTree"));
-    CommonFallenLogMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonFallenLog.SM_CommonFallenLog"));
-    CommonDryStoneWallMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonDryStoneWall.SM_CommonDryStoneWall"));
-    CommonPathMarkerMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonPathMarker.SM_CommonPathMarker"));
-    CommonVillageFenceMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonVillageFence.SM_CommonVillageFence"));
-    CommonWoodPileMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonWoodPile.SM_CommonWoodPile"));
-    CommonFernClumpMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonFernClump.SM_CommonFernClump"));
-    CommonReedClusterMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonReedCluster.SM_CommonReedCluster"));
-    CommonRuinSlabMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonRuinSlab.SM_CommonRuinSlab"));
-    CommonFootbridgeMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonFootbridge.SM_CommonFootbridge"));
+    CommonMountainRidgeMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonMountainRidge.SM_CommonMountainRidge"));
+    CommonCliffWallMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonCliffWall.SM_CommonCliffWall"));
+    CommonTerracedHillMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonTerracedHill.SM_CommonTerracedHill"));
+    CommonRiverBankMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonRiverBank.SM_CommonRiverBank"));
+    CommonBoulderClusterMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonBoulderCluster.SM_CommonBoulderCluster"));
+    CommonPineTreeMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonPineTree.SM_CommonPineTree"));
+    CommonBroadleafTreeMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonBroadleafTree.SM_CommonBroadleafTree"));
+    CommonGoldenTreeMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonGoldenTree.SM_CommonGoldenTree"));
+    CommonFallenLogMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonFallenLog.SM_CommonFallenLog"));
+    CommonDryStoneWallMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonDryStoneWall.SM_CommonDryStoneWall"));
+    CommonPathMarkerMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonPathMarker.SM_CommonPathMarker"));
+    CommonVillageFenceMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonVillageFence.SM_CommonVillageFence"));
+    CommonWoodPileMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonWoodPile.SM_CommonWoodPile"));
+    CommonFernClumpMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonFernClump.SM_CommonFernClump"));
+    CommonReedClusterMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonReedCluster.SM_CommonReedCluster"));
+    CommonRuinSlabMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonRuinSlab.SM_CommonRuinSlab"));
+    CommonFootbridgeMesh = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonFootbridge.SM_CommonFootbridge"));
 }
 
 void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId)
@@ -691,12 +691,12 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
 
         // Source-grounded Moria production dressing: monumental broken circulation,
         // chain anchors and layered braziers reinforce scale without moving quest anchors.
-        UStaticMesh* MoriaBrokenStair = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaBrokenStair.SM_MoriaBrokenStair"));
-        UStaticMesh* MoriaChainAnchor = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaChainAnchor.SM_MoriaChainAnchor"));
-        UStaticMesh* MoriaGateSegment = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaGateSegment.SM_MoriaGateSegment"));
-        UStaticMesh* MoriaRubblePillar = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaRubblePillar.SM_MoriaRubblePillar"));
-        UStaticMesh* MoriaTallBrazier = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaTallBrazier.SM_MoriaTallBrazier"));
-        UStaticMesh* MoriaMineCart = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaMineCart.SM_MoriaMineCart"));
+        UStaticMesh* MoriaBrokenStair = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaBrokenStair.SM_MoriaBrokenStair"));
+        UStaticMesh* MoriaChainAnchor = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaChainAnchor.SM_MoriaChainAnchor"));
+        UStaticMesh* MoriaGateSegment = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaGateSegment.SM_MoriaGateSegment"));
+        UStaticMesh* MoriaRubblePillar = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaRubblePillar.SM_MoriaRubblePillar"));
+        UStaticMesh* MoriaTallBrazier = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaTallBrazier.SM_MoriaTallBrazier"));
+        UStaticMesh* MoriaMineCart = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Moria/SM_MoriaMineCart.SM_MoriaMineCart"));
         SpawnProd(MoriaGateSegment, FVector(-1980,-520,0), FVector(0.86f), FRotator(0,7,0), true);
         SpawnProd(MoriaGateSegment, FVector(-1980,520,0), FVector(0.86f), FRotator(0,-7,0), true);
         SpawnProd(MoriaBrokenStair, FVector(520,-650,0), FVector(0.84f), FRotator(0,18,0), true);
@@ -810,12 +810,12 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
 
         // River-to-battle visual handoff: travel gear and shoreline traces thin out
         // toward Amon Hen, where broken woodland/ruin silhouettes take over.
-        UStaticMesh* AnduinBoatRack = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Anduin/SM_AnduinBoatRack.SM_AnduinBoatRack"));
-        UStaticMesh* AnduinCampRack = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Anduin/SM_AnduinCampRack.SM_AnduinCampRack"));
-        UStaticMesh* AnduinCargoPile = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Anduin/SM_AnduinCargoPile.SM_AnduinCargoPile"));
-        UStaticMesh* AnduinFishingFrame = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Anduin/SM_AnduinFishingFrame.SM_AnduinFishingFrame"));
-        UStaticMesh* AnduinRiverMarker = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Anduin/SM_AnduinRiverMarker.SM_AnduinRiverMarker"));
-        UStaticMesh* AnduinDockPier = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Anduin/SM_AnduinDockPier.SM_AnduinDockPier"));
+        UStaticMesh* AnduinBoatRack = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Anduin/SM_AnduinBoatRack.SM_AnduinBoatRack"));
+        UStaticMesh* AnduinCampRack = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Anduin/SM_AnduinCampRack.SM_AnduinCampRack"));
+        UStaticMesh* AnduinCargoPile = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Anduin/SM_AnduinCargoPile.SM_AnduinCargoPile"));
+        UStaticMesh* AnduinFishingFrame = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Anduin/SM_AnduinFishingFrame.SM_AnduinFishingFrame"));
+        UStaticMesh* AnduinRiverMarker = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Anduin/SM_AnduinRiverMarker.SM_AnduinRiverMarker"));
+        UStaticMesh* AnduinDockPier = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Anduin/SM_AnduinDockPier.SM_AnduinDockPier"));
         SpawnProd(AnduinBoatRack, FVector(-1740,430,0), FVector(0.74f), FRotator(0,12,0), false);
         SpawnProd(AnduinCampRack, FVector(-920,-500,0), FVector(0.72f), FRotator(0,-18,0), false);
         SpawnProd(AnduinCargoPile, FVector(-760,520,0), FVector(0.68f), FRotator(0,24,0), false);
@@ -897,18 +897,18 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
 
     // CP53 imported common-prop flood. Assets are project-owned low-poly source meshes
     // and are used regionally so each chapter gains visible human/elf/camp history.
-    UStaticMesh* CommonBarrel53 = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonBarrel.SM_CommonBarrel"));
-    UStaticMesh* CommonCargoCrate53 = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonCargoCrate.SM_CommonCargoCrate"));
-    UStaticMesh* CommonSackBale53 = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonSackBale.SM_CommonSackBale"));
-    UStaticMesh* CommonLongBench53 = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonLongBench.SM_CommonLongBench"));
-    UStaticMesh* CommonCampTent53 = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonCampTent.SM_CommonCampTent"));
-    UStaticMesh* CommonStoneArch53 = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonStoneArch.SM_CommonStoneArch"));
-    UStaticMesh* CommonBrokenColumn53 = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonBrokenColumn.SM_CommonBrokenColumn"));
-    UStaticMesh* CommonBrazier53 = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonBrazier.SM_CommonBrazier"));
-    UStaticMesh* CommonRiverBoat53 = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonRiverBoat.SM_CommonRiverBoat"));
-    UStaticMesh* CommonCairn53 = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonCairn.SM_CommonCairn"));
-    UStaticMesh* CommonTreeStump53 = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonTreeStump.SM_CommonTreeStump"));
-    UStaticMesh* CommonMushrooms53 = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonMushroomCluster.SM_CommonMushroomCluster"));
+    UStaticMesh* CommonBarrel53 = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonBarrel.SM_CommonBarrel"));
+    UStaticMesh* CommonCargoCrate53 = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonCargoCrate.SM_CommonCargoCrate"));
+    UStaticMesh* CommonSackBale53 = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonSackBale.SM_CommonSackBale"));
+    UStaticMesh* CommonLongBench53 = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonLongBench.SM_CommonLongBench"));
+    UStaticMesh* CommonCampTent53 = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonCampTent.SM_CommonCampTent"));
+    UStaticMesh* CommonStoneArch53 = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonStoneArch.SM_CommonStoneArch"));
+    UStaticMesh* CommonBrokenColumn53 = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonBrokenColumn.SM_CommonBrokenColumn"));
+    UStaticMesh* CommonBrazier53 = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonBrazier.SM_CommonBrazier"));
+    UStaticMesh* CommonRiverBoat53 = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonRiverBoat.SM_CommonRiverBoat"));
+    UStaticMesh* CommonCairn53 = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonCairn.SM_CommonCairn"));
+    UStaticMesh* CommonTreeStump53 = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonTreeStump.SM_CommonTreeStump"));
+    UStaticMesh* CommonMushrooms53 = FellowshipChapterWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonMushroomCluster.SM_CommonMushroomCluster"));
 
     if (ChapterId == TEXT("P1C03"))
     {
@@ -958,7 +958,7 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
         SpawnScatter(CommonCairn53, FVector(1400,0,0), 7, FVector(900,700,0), FVector(0.62f), 47.0f, 4.0f);
     }
     // CP54 region inventory flood: chapter-specific landmarks, camps and lived-in activity props.
-    auto LoadCP54 = [](const TCHAR* Path) -> UStaticMesh* { return ResolveResidentStaticMesh(Path); };
+    auto LoadCP54 = [](const TCHAR* Path) -> UStaticMesh* { return FellowshipChapterWorldBuilderResolveResidentStaticMesh(Path); };
     if (ChapterId == TEXT("P1C03"))
     {
         UStaticMesh* Wall = LoadCP54(TEXT("/Game/Production/World/Weathertop/SM_WeathertopRuinWall.SM_WeathertopRuinWall"));
