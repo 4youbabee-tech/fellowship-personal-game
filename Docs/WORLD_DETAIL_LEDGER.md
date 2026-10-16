@@ -1,3 +1,7 @@
+## 2026-10-16 Bag End physically imported garden evidence and near-field polish
+- Run 38938627683 at PR484 d07df57c proved 5 UE4 FBX architecture source families (cart, planter, hedge, lantern, stone path) 19 placed/1 rejected; all new families render in 4 real screenshots artifact 12063330802 but scene still visually rejected. Actual current runner frame ~25-28 FPS with owning PIE foreground focus confirmed; GPU allocation ~556 MiB, not target device or full VRAM proof.
+- Correction candidate replaces up to 18 non-colliding polygonal garden shrubs only near Bag End using already imported PBR gorse/hedge; protect west doorway corridor, preserve fallback if trace/material/residency fails. Reposition existing five architecture group props toward visible west-facing garden frontage; soften distant silhouettes with restrained non-volumetric fog while keeping 2GB renderer target. No new art warehouse writer, story relocation, NPC manager or movement changes. New screenshots/quality approval needed.
+
 ## 2026-10-16 Bag End real FBX garden architecture
 - Existing physically imported curated garden cart, planter, hedge, lantern and walkway FBX/PBR assets are reused in a bounded 20-instance async HISM landscape pass, with ground traces and no player collision modifications. Previously rejected PR484 extra woodland replacements are removed; keep baseline established PBR vegetation. Real PIE placement, aesthetic and FPS evidence pending.
 

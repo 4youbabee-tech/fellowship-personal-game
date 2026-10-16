@@ -1,3 +1,13 @@
+## 2026-10-16 PES-002 Bag End final source candidate / real prior run
+| Stage | Evidence |
+|---|---|
+| Baseline previous commit | d07df57c; UE4 Run 38938627683 PASS, four 1280x720 PIE PNG artifact 12063330802; 19/20 existing imported architectural FBX props actually placed, 25/25 garden items |
+| Performance state | Foreground PID 15/15 confirmed; CI late 5s ~25–28 FPS and process GPU dedicated ~556 MiB; target laptop NOT TESTED, required ≥30 FPS unmet |
+| New candidate | Existing HISM PBR curated gorse/hedge replace max 18 near hero low-poly no-collision shrub instances; reframe 20 imported cart/planter/hedge/lantern/stone props, minor non-volumetric fog distance adjustment |
+| Scene fidelity | Previously dark generic shrubs, distant lowpoly trees and modular NPCs make visual gate FAIL |
+| New code exact-HEAD UE4 and screenshots | NOT RUN until CI, accept only actual package, world placement and render |
+| Governance | PES-002 active, PES-003 locked; visual/PIE/traversal/device Gate 6/7 OPEN |
+
 ## 2026-10-16 PR #484 Bag End imported architecture candidate
 | Item | State |
 |---|---|

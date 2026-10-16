@@ -1062,6 +1062,67 @@ void AShirePrototypeWorldBuilder::OnCuratedNatureLayerReady()
         TEXT("PES002_IMPORTED_TREE_REPLACEMENT converted=%d max=80 FBX=1 visual=pending"),
         Replaced);
 
+    // Bag End close-up: swap sparse non-colliding generic shrubs with the
+    // physically imported PBR gorse/hedge family instead of stacking more actors.
+    // West entrance and the existing central walk remain completely clear.
+    int32 EligibleShrubs = 0, ConvertedShrubs = 0, DeferredShrubs = 0;
+    if (ShrubInstances && ProductionShrubMesh &&
+        ShrubInstances->GetStaticMesh() == ProductionShrubMesh &&
+        CuratedNatureGroups.Num() >= 5 && CuratedNatureSources.Num() >= 5)
+    {
+        TArray<int32> ConvertedIndices;
+        const FVector Hero(-2210.0f,-520.0f,0.0f);
+        const int32 OriginalCount = ShrubInstances->GetInstanceCount();
+        for (int32 Index=0;
+             Index<OriginalCount && ConvertedIndices.Num()<18; ++Index)
+        {
+            if ((Index%2)!=0) continue;
+            FTransform Original;
+            if (!ShrubInstances->GetInstanceTransform(Index,Original,true)) continue;
+            const FVector At = Original.GetLocation();
+            const float D2 = FVector::DistSquared2D(At,Hero);
+            if (D2>FMath::Square(900.0f) || D2<FMath::Square(215.0f) ||
+                (At.X<-2320.0f && FMath::Abs(At.Y+520.0f)<205.0f))
+                continue;
+            ++EligibleShrubs;
+            const int32 Family=3+(Index/2)%2;
+            UStaticMesh* Replacement=CuratedNatureSources[Family].Get();
+            UHierarchicalInstancedStaticMeshComponent* Target=CuratedNatureGroups[Family];
+            if (!Replacement || !Target ||
+                Target->GetStaticMesh()!=Replacement ||
+                Replacement->GetBounds().BoxExtent.Z<=1.0f)
+            {
+                ++DeferredShrubs;
+                continue;
+            }
+            FHitResult Ground;
+            FCollisionQueryParams Query(TEXT("PES002BagEndPBRGardenGround"),false,this);
+            if (!World->LineTraceSingleByChannel(
+                    Ground,At+FVector(0,0,900),At-FVector(0,0,600),
+                    ECC_Visibility,Query) ||
+                Ground.ImpactNormal.Z<0.79f ||
+                FMath::Abs(Ground.Location.Z)>180.0f)
+            {
+                ++DeferredShrubs;
+                continue;
+            }
+            const FBoxSphereBounds B=Replacement->GetBounds();
+            const float H=70.0f+10.0f*(Index%4);
+            const float S=FMath::Clamp(H/(2.0f*B.BoxExtent.Z),0.05f,2.5f);
+            Target->AddInstanceWorldSpace(FTransform(
+                Original.Rotator(),
+                Ground.Location-FVector(0,0,(B.Origin.Z-B.BoxExtent.Z)*S),
+                FVector(S)));
+            ConvertedIndices.Add(Index);
+        }
+        for (int32 J=ConvertedIndices.Num()-1;J>=0;--J)
+            ShrubInstances->RemoveInstance(ConvertedIndices[J]);
+        ConvertedShrubs=ConvertedIndices.Num();
+    }
+    UE_LOG(LogTemp,Display,
+        TEXT("PES002_BAG_END_PBR_SHRUBS eligible=%d converted=%d deferred=%d cap=18 failed=preserve-proxy collision=none visual=pending"),
+        EligibleShrubs,ConvertedShrubs,DeferredShrubs);
+
     // PR484 additional canopy replacement rejected in prior real PIE:
     // preserve existing landscape and keep the already imported base vegetation.
 }
@@ -1096,14 +1157,14 @@ void AShirePrototypeWorldBuilder::OnBagEndArchitectureReady()
     if (!World || IsActorBeingDestroyed()) return;
     // Do not change the story doorway, player collision, navmesh, or actor counts.
     static const FVector Placement[5][6] = {
-        { FVector(-1820,-1370,0), FVector(-1600,650,0), FVector(-3000,-1250,0) },
-        { FVector(-2410,-1080,0), FVector(-2100,-1150,0), FVector(-2330,190,0),
-          FVector(-1950,350,0), FVector(-1700,-1150,0) },
-        { FVector(-2860,-1320,0), FVector(-2460,-1390,0),
-          FVector(-1920,-1390,0), FVector(-1720,790,0) },
-        { FVector(-2920,-980,0), FVector(-2940,120,0) },
-        { FVector(-3060,-520,0), FVector(-2940,-520,0), FVector(-2820,-520,0),
-          FVector(-2700,-520,0), FVector(-2580,-520,0), FVector(-2460,-520,0) }
+        { FVector(-2830,-1050,0), FVector(-2740,130,0), FVector(-1800,-1380,0) },
+        { FVector(-2485,-865,0), FVector(-2465,-190,0), FVector(-2620,-970,0),
+          FVector(-2580,100,0), FVector(-1810,-1160,0) },
+        { FVector(-2730,-1200,0), FVector(-2680,230,0),
+          FVector(-2900,-1100,0), FVector(-2860,80,0) },
+        { FVector(-2860,-825,0), FVector(-2850,-180,0) },
+        { FVector(-2950,-520,0), FVector(-2840,-535,0), FVector(-2745,-500,0),
+          FVector(-2635,-525,0), FVector(-2530,-495,0), FVector(-2425,-520,0) }
     };
     const int32 Counts[5] = {3,5,4,2,6};
     const float Height[5] = {140.0f,85.0f,100.0f,245.0f,14.0f};
@@ -1858,11 +1919,11 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
     {
         if (UExponentialHeightFogComponent* FogComponent = HeightFog->GetComponent())
         {
-            FogComponent->SetFogDensity(0.0070f);
+            FogComponent->SetFogDensity(0.0090f);
             FogComponent->SetFogHeightFalloff(0.20f);
             FogComponent->SetFogInscatteringColor(FLinearColor(0.70f, 0.76f, 0.68f));
             FogComponent->SetDirectionalInscatteringColor(FLinearColor(0.95f, 0.84f, 0.68f));
-            FogComponent->SetStartDistance(1000.0f);
+            FogComponent->SetStartDistance(850.0f);
             FogComponent->SetFogMaxOpacity(0.62f);
             FogComponent->SetVolumetricFog(false);
         }

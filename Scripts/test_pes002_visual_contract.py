@@ -78,6 +78,19 @@ class PES002VisualContract(unittest.TestCase):
             self.assertIn(name, cpp)
         self.assertNotIn("PES002_BAG_END_WOODLAND_FBX_REPLACEMENT", cpp)
 
+    def test_bag_end_curated_pbr_shrub_swap_preserves_entrance(self):
+        cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        section = cpp.split("// Bag End close-up: swap sparse", 1)[1].split(
+            "// PR484 additional canopy replacement", 1)[0]
+        self.assertIn("PES002_BAG_END_PBR_SHRUBS", section)
+        self.assertIn("CuratedNatureSources[Family].Get()", section)
+        self.assertIn("Target->GetStaticMesh()!=Replacement", section)
+        self.assertIn("PES002BagEndPBRGardenGround", section)
+        self.assertIn("ConvertedIndices.Num()<18", section)
+        self.assertIn("FMath::Abs(At.Y+520.0f)<205.0f", section)
+        self.assertIn("ShrubInstances->RemoveInstance(ConvertedIndices[J]);", section)
+        self.assertNotIn("SetCollisionEnabled", section)
+
     def test_incident_captures_real_window_focus_and_ue4_native_stat_file(self):
         proof = (ROOT / "Scripts/capture_pes002_bag_end_visual.ps1").read_text(encoding="utf-8")
         preview = (ROOT / "SHIRE_FAST_PIE_PREVIEW.bat").read_text(encoding="utf-8")
