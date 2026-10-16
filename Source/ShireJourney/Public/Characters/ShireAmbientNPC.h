@@ -34,6 +34,12 @@ public:
     void SetLivingWorldDirector(ALivingWorldDirector* InDirector);
     bool IsInLivingWorldPool() const { return bInLivingWorldPool; }
     bool IsUsingUnifiedResident() const { return bUnifiedResidentActive && !bInLivingWorldPool; }
+    // Read-only conversation state; the existing living-world and NPC-context
+    // systems continue to own decisions, memory, schedules and social behavior.
+    bool IsPerformingAmbientConversation() const
+    {
+        return bSocializing && !bInLivingWorldPool;
+    }
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Routine")
     FVector RoutinePointA = FVector::ZeroVector;

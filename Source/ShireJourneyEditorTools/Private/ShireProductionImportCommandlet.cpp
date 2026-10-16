@@ -214,8 +214,11 @@ namespace ShireProductionImport
 
         UEdGraphPin* LocomotionPose = Player->FindPin(TEXT("Pose"));
         UEdGraphPin* TalkPose = TalkPlayer->FindPin(TEXT("Pose"));
-        UEdGraphPin* BlendFalsePose = TalkBlend->FindPin(TEXT("BlendPose_0"));
-        UEdGraphPin* BlendTruePose = TalkBlend->FindPin(TEXT("BlendPose_1"));
+        // UE4.27 pin identity is confirmed in the official Animation Sharing
+        // graph export: BlendPose_0 is the TRUE pose, BlendPose_1 is FALSE.
+        // Invert neither branch: real locomotion when not conversing.
+        UEdGraphPin* BlendTruePose = TalkBlend->FindPin(TEXT("BlendPose_0"));
+        UEdGraphPin* BlendFalsePose = TalkBlend->FindPin(TEXT("BlendPose_1"));
         UEdGraphPin* BlendActiveValue = TalkBlend->FindPin(TEXT("bActiveValue"));
         UEdGraphPin* BlendOutput = TalkBlend->FindPin(TEXT("Pose"));
         UEdGraphPin* Result = Root->FindPin(TEXT("Result"));

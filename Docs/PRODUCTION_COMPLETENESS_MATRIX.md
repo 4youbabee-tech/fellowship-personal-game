@@ -1,3 +1,11 @@
+## 2026-10-17 PES-002 exact-head compiler regression and pose pin fix
+| Test | Proven result |
+|---|---|
+| Candidate c07dc8 / Run 38972462036 | FAIL at MSVC C2039 in ShireLocomotionAnimInstance.cpp(46): public conversation getter absent from final shipped header; UHT PASS, no import/PIE from this SHA |
+| Root corrected | Final header merges conversation getter AND deferred modular-bank refresh fields; UE4.27 true/false pose pins corrected using official Epic exported node order |
+| Corrected SHA test | NOT RUN until new engine automation finishes; do not infer correct pose graph from code alone |
+| Chapter gates | PES-002 ACTIVE, PES-003 LOCKED, visuals/device 30 FPS NOT ACCEPTED |
+
 ## 2026-10-17 PES-002 integrated citizen-character and interior source wave
 | Item | Candidate implemented source | Missing real evidence |
 |---|---|---|
