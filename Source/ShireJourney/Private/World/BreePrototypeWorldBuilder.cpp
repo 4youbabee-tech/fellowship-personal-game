@@ -21,7 +21,7 @@ namespace BreeVisual
 
 namespace
 {
-    UStaticMesh* ResolveResidentStaticMesh(const TCHAR* AssetPath)
+    UStaticMesh* BreePrototypeWorldBuilderResolveResidentStaticMesh(const TCHAR* AssetPath)
     {
         return AssetPath
             ? Cast<UStaticMesh>(FSoftObjectPath(AssetPath).ResolveObject())
@@ -50,21 +50,21 @@ void ABreePrototypeWorldBuilder::BeginPlay()
 {
     Super::BeginPlay();
 
-    ProductionHouseMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Bree/SM_BreeHouse.SM_BreeHouse"));
-    ProductionInnMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Bree/SM_BreeInn.SM_BreeInn"));
-    ProductionGateMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Bree/SM_BreeGate.SM_BreeGate"));
-    ProductionStallMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Bree/SM_BreeStall.SM_BreeStall"));
-    ProductionLanternMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Bree/SM_BreeLantern.SM_BreeLantern"));
-    ProductionHitchingPostMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Bree/SM_BreeHitchingPost.SM_BreeHitchingPost"));
-    ProductionTableMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Bree/SM_BreeTable.SM_BreeTable"));
-    ProductionCrateStackMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Bree/SM_BreeCrateStack.SM_BreeCrateStack"));
-    CommonBroadleafTreeMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonBroadleafTree.SM_CommonBroadleafTree"));
-    CommonFallenLogMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonFallenLog.SM_CommonFallenLog"));
-    CommonDryStoneWallMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonDryStoneWall.SM_CommonDryStoneWall"));
-    CommonPathMarkerMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonPathMarker.SM_CommonPathMarker"));
-    CommonVillageFenceMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonVillageFence.SM_CommonVillageFence"));
-    CommonWoodPileMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonWoodPile.SM_CommonWoodPile"));
-    CommonFernClumpMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonFernClump.SM_CommonFernClump"));
+    ProductionHouseMesh = BreePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Bree/SM_BreeHouse.SM_BreeHouse"));
+    ProductionInnMesh = BreePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Bree/SM_BreeInn.SM_BreeInn"));
+    ProductionGateMesh = BreePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Bree/SM_BreeGate.SM_BreeGate"));
+    ProductionStallMesh = BreePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Bree/SM_BreeStall.SM_BreeStall"));
+    ProductionLanternMesh = BreePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Bree/SM_BreeLantern.SM_BreeLantern"));
+    ProductionHitchingPostMesh = BreePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Bree/SM_BreeHitchingPost.SM_BreeHitchingPost"));
+    ProductionTableMesh = BreePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Bree/SM_BreeTable.SM_BreeTable"));
+    ProductionCrateStackMesh = BreePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Bree/SM_BreeCrateStack.SM_BreeCrateStack"));
+    CommonBroadleafTreeMesh = BreePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonBroadleafTree.SM_CommonBroadleafTree"));
+    CommonFallenLogMesh = BreePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonFallenLog.SM_CommonFallenLog"));
+    CommonDryStoneWallMesh = BreePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonDryStoneWall.SM_CommonDryStoneWall"));
+    CommonPathMarkerMesh = BreePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonPathMarker.SM_CommonPathMarker"));
+    CommonVillageFenceMesh = BreePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonVillageFence.SM_CommonVillageFence"));
+    CommonWoodPileMesh = BreePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonWoodPile.SM_CommonWoodPile"));
+    CommonFernClumpMesh = BreePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonFernClump.SM_CommonFernClump"));
 
     BuildPrototypeWorld();
 }
@@ -471,12 +471,12 @@ void ABreePrototypeWorldBuilder::SpawnProductionBreeDetailLayer()
 
     // CP53 dense town-life dressing: more imported clutter, seating and trade goods
     // around streets and the inn, with collision disabled on decorative pieces.
-    UStaticMesh* CommonBarrel = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonBarrel.SM_CommonBarrel"));
-    UStaticMesh* CommonCargoCrate = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonCargoCrate.SM_CommonCargoCrate"));
-    UStaticMesh* CommonSackBale = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonSackBale.SM_CommonSackBale"));
-    UStaticMesh* CommonLongBench = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonLongBench.SM_CommonLongBench"));
-    UStaticMesh* CommonRopePost = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonRopePost.SM_CommonRopePost"));
-    UStaticMesh* CommonMarketCanopy = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonMarketCanopy.SM_CommonMarketCanopy"));
+    UStaticMesh* CommonBarrel = BreePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonBarrel.SM_CommonBarrel"));
+    UStaticMesh* CommonCargoCrate = BreePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonCargoCrate.SM_CommonCargoCrate"));
+    UStaticMesh* CommonSackBale = BreePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonSackBale.SM_CommonSackBale"));
+    UStaticMesh* CommonLongBench = BreePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonLongBench.SM_CommonLongBench"));
+    UStaticMesh* CommonRopePost = BreePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonRopePost.SM_CommonRopePost"));
+    UStaticMesh* CommonMarketCanopy = BreePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonMarketCanopy.SM_CommonMarketCanopy"));
 
     const FVector StreetGoods[] = {
         FVector(-700,-250,0), FVector(-510,280,0), FVector(-240,-310,0), FVector(-40,300,0),
@@ -512,7 +512,7 @@ void ABreePrototypeWorldBuilder::SpawnProductionBreeDetailLayer()
         SpawnProd(CommonRopePost, P, FVector(0.72f), FRotator::ZeroRotator, false);
     }
     // CP54 mega inventory pass: tavern, stable, market and alley clutter.
-    auto LoadCP54 = [](const TCHAR* Path) -> UStaticMesh* { return ResolveResidentStaticMesh(Path); };
+    auto LoadCP54 = [](const TCHAR* Path) -> UStaticMesh* { return BreePrototypeWorldBuilderResolveResidentStaticMesh(Path); };
     UStaticMesh* CP54Table = LoadCP54(TEXT("/Game/Production/World/Common/SM_CommonMarketTable.SM_CommonMarketTable"));
     UStaticMesh* CP54Stool = LoadCP54(TEXT("/Game/Production/World/Common/SM_CommonStool.SM_CommonStool"));
     UStaticMesh* CP54Rack = LoadCP54(TEXT("/Game/Production/World/Common/SM_CommonToolRack.SM_CommonToolRack"));

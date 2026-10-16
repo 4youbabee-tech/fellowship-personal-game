@@ -6,6 +6,7 @@
 #include "ShireHUD.h"
 #include "ShirePlayerCharacter.h"
 #include "Animation/AnimInstance.h"
+#include "ShireLocomotionAnimInstance.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/StaticMeshComponent.h"
@@ -171,6 +172,14 @@ bool AShireNPC::TryApplyProductionRig(const FString& RigFolder)
     }
 
     GetMesh()->SetSkeletalMesh(SkeletalMesh);
+    if (AnimClass->IsChildOf(UShireLocomotionAnimInstance::StaticClass()) &&
+        !UShireLocomotionAnimInstance::AlignMeshToCapsule(
+            GetMesh(), GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight()))
+    {
+        UE_LOG(LogTemp, Error, TEXT("SHIRE_SKELETAL_PRESENTATION_REJECT npc=%s reason=invalid-bounds"), *GetName());
+        return false;
+    }
+    GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
     GetMesh()->SetAnimInstanceClass(AnimClass);
     GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     GetMesh()->bEnableUpdateRateOptimizations = true;

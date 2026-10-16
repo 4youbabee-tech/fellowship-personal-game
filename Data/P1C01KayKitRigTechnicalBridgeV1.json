@@ -124,5 +124,25 @@
     "ue4_candidate_result": "BOTH_REJECTED_TECHNICAL",
     "tooling_defect": "UE4 receipt writer referenced archive_sha256 although direct-raw schema has no archive_sha256",
     "runtime_integration_allowed": false
+  },
+  "production_normalization": {
+    "status": "CORRECTED_SOURCE_PREPARED_ENGINE_VALIDATION_PENDING",
+    "source_commit": "672074b73ba276876a19e8816ecdc5241817ab47",
+    "source_sha256": "93a9ee0a67ae69b2d815050234acad2004c3b8af7d294b916e52609c8195eb71",
+    "texture_sha256": "a4032e877c3b91939f5cdbb630349c1998fdbc3211bbd587c111125500fe4cc5",
+    "license_sha256": "ae322141814056dda0deea7540d74c41d87aee1da319977cd1bd84ee5a923629",
+    "correction": "Normalize actual existing artist mesh and skin; unify six body meshes and cape; exclude weapons; export explicit face smoothing and complete bind pose; preserve artist Idle/Walking_A/Running_A/Interact. Raw known rejections remain excluded.",
+    "source_proof": {
+      "vertices": 2265,
+      "triangles": 4347,
+      "bones": 41,
+      "max_influences": 4,
+      "zero_weight_vertices": 0,
+      "authored_clip_pose_samples": 16,
+      "max_reimport_geometry_error": 1.35e-06
+    },
+    "final_likeness": false,
+    "runtime_acceptance": false,
+    "production_prep_script": "Tools/CloudAssetBuild/prepare_kaykit_character.py"
   }
 }

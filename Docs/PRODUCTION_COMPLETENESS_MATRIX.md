@@ -1,3 +1,7 @@
+## 2026-10-16 PES-002 in-engine import and runtime-evidence candidate (not a completed gate)
+- Active PES-002 only: UE4 C++ FBX authored material/texture path + packed PBR exception, skeletal blend-weight QC and fail-closed import result, after-save actual Content/Production .uasset class/path/bytes ledger; runtime Bag End grounded authored-FBX HISM garden up to 24; capture-only 5-second FPS and RAM sampling. All statuses pending exact-HEAD CI and rendered review.
+- SOURCE_AVAILABLE: existing curated FBX/PBR; WAREHOUSE_PERSISTED: existing receipts; UE_IMPORTED and WORLD_PLACED: require new on-disk UE4 ledger and runtime markers; RENDER_OBSERVED: require new 4 actual UE screenshots; ACCEPTED/PIE/DEVICE/PERFORMANCE: NO. Skeletal animation/AnimBP and approved deformed characters: NO.
+
 ## 2026-10-16 PES-002 bounded living-world terrain follow candidate
 | Requirement | Actual state / evidence |
 |---|---|

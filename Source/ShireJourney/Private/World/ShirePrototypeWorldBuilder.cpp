@@ -27,6 +27,11 @@
 #include "Engine/DirectionalLight.h"
 #include "GameFramework/PlayerController.h"
 #include "Misc/CommandLine.h"
+#include "HAL/PlatformMemory.h"
+#include "DynamicRHI.h"
+#include "RHI.h"
+#include "Misc/CoreDelegates.h"
+#include "HAL/PlatformTime.h"
 #include "Misc/Parse.h"
 #include "TimerManager.h"
 #include "UnrealClient.h"
@@ -63,7 +68,7 @@ namespace ShireLayout
 
 namespace
 {
-    UStaticMesh* ResolveResidentStaticMesh(const TCHAR* AssetPath)
+    UStaticMesh* ShirePrototypeWorldBuilderResolveResidentStaticMesh(const TCHAR* AssetPath)
     {
         return AssetPath
             ? Cast<UStaticMesh>(FSoftObjectPath(AssetPath).ResolveObject())
@@ -308,55 +313,55 @@ void AShirePrototypeWorldBuilder::BeginPlay()
 {
     Super::BeginPlay();
 
-    ProductionTreeTrunkMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShTreeTrunk.SM_ShTreeTrunk"));
-    ProductionTreeCanopyMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShTreeCanopy.SM_ShTreeCanopy"));
-    ProductionRockMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShRock.SM_ShRock"));
-    ProductionCrateMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShCrate.SM_ShCrate"));
-    ProductionSignpostMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShSignpost.SM_ShSignpost"));
-    ProductionBarrelMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShBarrel.SM_ShBarrel"));
-    ProductionGroundBlockMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShGroundBlock.SM_ShGroundBlock"));
-    ProductionRoadBlockMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShRoadBlock.SM_ShRoadBlock"));
-    ProductionTurfMoundMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShTurfMound.SM_ShTurfMound"));
-    ProductionHedgeMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShHedge.SM_ShHedge"));
-    ProductionShrubMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShShrub.SM_ShShrub"));
-    ProductionPathStoneMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShPathStone.SM_ShPathStone"));
-    ProductionGrassClumpMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShGrassClump.SM_ShGrassClump"));
-    ProductionFenceSegmentMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShFenceSegment.SM_ShFenceSegment"));
-    ProductionHobbitFacadeMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShHobbitFacade.SM_ShHobbitFacade"));
-    ProductionBagEndHeroFacadeMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShBagEndHeroFacade.SM_ShBagEndHeroFacade"));
-    ProductionCartMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShCart.SM_ShCart"));
-    ProductionBenchMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShBench.SM_ShBench"));
-    ProductionMillWheelMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShMillWheel.SM_ShMillWheel"));
-    ProductionLanternMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShLantern.SM_ShLantern"));
-    ProductionCottageHouseMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShCottageHouse.SM_ShCottageHouse"));
-    ProductionMillHouseMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShMillHouse.SM_ShMillHouse"));
-    ProductionStoneBridgeMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShStoneBridge.SM_ShStoneBridge"));
-    ProductionWellMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShWell.SM_ShWell"));
-    ProductionMarketStallMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShMarketStall.SM_ShMarketStall"));
-    ProductionStoneWallMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShStoneWall.SM_ShStoneWall"));
-    ProductionFarmGateMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShFarmGate.SM_ShFarmGate"));
-    ProductionHaystackMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShHaystack.SM_ShHaystack"));
-    ProductionFlowerBoxMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShFlowerBox.SM_ShFlowerBox"));
-    ProductionLampPostMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShLampPost.SM_ShLampPost"));
-    ProductionPicnicTableMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShPicnicTable.SM_ShPicnicTable"));
-    ProductionLoadedCartMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShCartLoaded.SM_ShCartLoaded"));
-    ProductionCommonTerracedHillMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonTerracedHill.SM_CommonTerracedHill"));
-    ProductionCommonVillageSlopeMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonVillageSlope.SM_CommonVillageSlope"));
-    ProductionCommonRiverBankMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonRiverBank.SM_CommonRiverBank"));
-    ProductionCommonBoulderClusterMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonBoulderCluster.SM_CommonBoulderCluster"));
-    ProductionCommonBroadleafTreeMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonBroadleafTree.SM_CommonBroadleafTree"));
-    ProductionCommonFallenLogMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonFallenLog.SM_CommonFallenLog"));
-    ProductionCommonDryStoneWallMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonDryStoneWall.SM_CommonDryStoneWall"));
-    ProductionCommonPathMarkerMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonPathMarker.SM_CommonPathMarker"));
-    ProductionCommonVillageFenceMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonVillageFence.SM_CommonVillageFence"));
-    ProductionCommonWoodPileMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonWoodPile.SM_CommonWoodPile"));
-    ProductionCommonFernClumpMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonFernClump.SM_CommonFernClump"));
-    ProductionCommonReedClusterMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonReedCluster.SM_CommonReedCluster"));
-    ProductionCommonFootbridgeMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonFootbridge.SM_CommonFootbridge"));
-    ProductionCommonRiverBoatMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonRiverBoat.SM_CommonRiverBoat"));
-    ProductionCommonRopePostMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonRopePost.SM_CommonRopePost"));
-    ProductionCommonRopeCoilMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonRopeCoil.SM_CommonRopeCoil"));
-    ProductionCommonMarketCanopyMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonMarketCanopy.SM_CommonMarketCanopy"));
+    ProductionTreeTrunkMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShTreeTrunk.SM_ShTreeTrunk"));
+    ProductionTreeCanopyMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShTreeCanopy.SM_ShTreeCanopy"));
+    ProductionRockMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShRock.SM_ShRock"));
+    ProductionCrateMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShCrate.SM_ShCrate"));
+    ProductionSignpostMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShSignpost.SM_ShSignpost"));
+    ProductionBarrelMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShBarrel.SM_ShBarrel"));
+    ProductionGroundBlockMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShGroundBlock.SM_ShGroundBlock"));
+    ProductionRoadBlockMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShRoadBlock.SM_ShRoadBlock"));
+    ProductionTurfMoundMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShTurfMound.SM_ShTurfMound"));
+    ProductionHedgeMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShHedge.SM_ShHedge"));
+    ProductionShrubMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShShrub.SM_ShShrub"));
+    ProductionPathStoneMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShPathStone.SM_ShPathStone"));
+    ProductionGrassClumpMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShGrassClump.SM_ShGrassClump"));
+    ProductionFenceSegmentMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShFenceSegment.SM_ShFenceSegment"));
+    ProductionHobbitFacadeMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShHobbitFacade.SM_ShHobbitFacade"));
+    ProductionBagEndHeroFacadeMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShBagEndHeroFacade.SM_ShBagEndHeroFacade"));
+    ProductionCartMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShCart.SM_ShCart"));
+    ProductionBenchMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShBench.SM_ShBench"));
+    ProductionMillWheelMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShMillWheel.SM_ShMillWheel"));
+    ProductionLanternMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShLantern.SM_ShLantern"));
+    ProductionCottageHouseMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShCottageHouse.SM_ShCottageHouse"));
+    ProductionMillHouseMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShMillHouse.SM_ShMillHouse"));
+    ProductionStoneBridgeMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShStoneBridge.SM_ShStoneBridge"));
+    ProductionWellMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShWell.SM_ShWell"));
+    ProductionMarketStallMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShMarketStall.SM_ShMarketStall"));
+    ProductionStoneWallMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShStoneWall.SM_ShStoneWall"));
+    ProductionFarmGateMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShFarmGate.SM_ShFarmGate"));
+    ProductionHaystackMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShHaystack.SM_ShHaystack"));
+    ProductionFlowerBoxMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShFlowerBox.SM_ShFlowerBox"));
+    ProductionLampPostMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShLampPost.SM_ShLampPost"));
+    ProductionPicnicTableMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShPicnicTable.SM_ShPicnicTable"));
+    ProductionLoadedCartMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShCartLoaded.SM_ShCartLoaded"));
+    ProductionCommonTerracedHillMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonTerracedHill.SM_CommonTerracedHill"));
+    ProductionCommonVillageSlopeMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonVillageSlope.SM_CommonVillageSlope"));
+    ProductionCommonRiverBankMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonRiverBank.SM_CommonRiverBank"));
+    ProductionCommonBoulderClusterMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonBoulderCluster.SM_CommonBoulderCluster"));
+    ProductionCommonBroadleafTreeMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonBroadleafTree.SM_CommonBroadleafTree"));
+    ProductionCommonFallenLogMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonFallenLog.SM_CommonFallenLog"));
+    ProductionCommonDryStoneWallMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonDryStoneWall.SM_CommonDryStoneWall"));
+    ProductionCommonPathMarkerMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonPathMarker.SM_CommonPathMarker"));
+    ProductionCommonVillageFenceMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonVillageFence.SM_CommonVillageFence"));
+    ProductionCommonWoodPileMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonWoodPile.SM_CommonWoodPile"));
+    ProductionCommonFernClumpMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonFernClump.SM_CommonFernClump"));
+    ProductionCommonReedClusterMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonReedCluster.SM_CommonReedCluster"));
+    ProductionCommonFootbridgeMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonFootbridge.SM_CommonFootbridge"));
+    ProductionCommonRiverBoatMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonRiverBoat.SM_CommonRiverBoat"));
+    ProductionCommonRopePostMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonRopePost.SM_CommonRopePost"));
+    ProductionCommonRopeCoilMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonRopeCoil.SM_CommonRopeCoil"));
+    ProductionCommonMarketCanopyMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonMarketCanopy.SM_CommonMarketCanopy"));
     ProductionWaterMaterial = ResolveResidentMaterial(
         TEXT("/Game/Production/Materials/M_ProductionWater.M_ProductionWater"));
 
@@ -430,6 +435,33 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     // quests and save. It is never used in ordinary gameplay or shipping.
     if (FParse::Param(FCommandLine::Get(), TEXT("PES002VisualProof")))
     {
+        UE_LOG(LogTemp, Display, TEXT("PES002_CAPTURE_WORLD mode=%s"),
+            GetWorld()->WorldType == EWorldType::PIE ? TEXT("PIE") : TEXT("GAME"));
+        // UE4 core frame callback provides actual frame intervals without adding
+        // forbidden WorldBuilder ActorTick or any always-on gameplay cost.
+        ProofLastFrameTimestamp = FPlatformTime::Seconds();
+        FCoreDelegates::OnEndFrame.AddUObject(this,
+            &AShirePrototypeWorldBuilder::SampleProofFrame);
+        // Actual UE4.27 CPU/render/GPU CSV instrumentation, opt-in only.
+        // Stop before the native PIE session ends so the engine flushes its data.
+        for (int32 ProfilePhase = 0; ProfilePhase < 2; ++ProfilePhase)
+        {
+            FTimerHandle ProfileTimer;
+            GetWorldTimerManager().SetTimer(ProfileTimer,
+                FTimerDelegate::CreateLambda([WeakBuilder, ProfilePhase]()
+                {
+                    if (WeakBuilder.IsValid())
+                    {
+                        APlayerController* PC = WeakBuilder->GetWorld()->GetFirstPlayerController();
+                        if (PC)
+                        {
+                            PC->ConsoleCommand(ProfilePhase == 0 ? TEXT("csvprofile start") : TEXT("csvprofile stop"), false);
+                            UE_LOG(LogTemp, Display, TEXT("PES002_CSV_PROFILE phase=%s source=actual-UE4.27 profilerOverhead=true"),
+                                ProfilePhase == 0 ? TEXT("start") : TEXT("stop"));
+                        }
+                    }
+                }), ProfilePhase == 0 ? 10.0f : 47.0f, false);
+        }
         FTimerHandle CameraTimer;
         GetWorldTimerManager().SetTimer(CameraTimer,
             FTimerDelegate::CreateLambda([WeakBuilder]()
@@ -498,9 +530,35 @@ void AShirePrototypeWorldBuilder::BeginPlay()
                             const FString Filename = FPaths::Combine(
                                 FPaths::ScreenShotDir(),
                                 FString::Printf(TEXT("PES002_BagEnd_View%d.png"), ViewIndex));
-                            FScreenshotRequest::RequestScreenshot(Filename, false, false);
+                            // A floating PIE editor window can be fitted to the
+                            // Windows work area: its actual draw viewport may be
+                            // 1270x638 even when NewWindowWidth/Height are 1280x720.
+                            // Epic UE4.27 HighResShot requests genuine new pixels
+                            // from the PIE scene at 1280x720, not a resized PNG.
+                            const bool bPIE = WeakBuilder->GetWorld() &&
+                                WeakBuilder->GetWorld()->WorldType == EWorldType::PIE;
+                            if (bPIE)
+                            {
+                                APlayerController* ProofPC =
+                                    WeakBuilder->GetWorld()->GetFirstPlayerController();
+                                if (!ProofPC)
+                                {
+                                    UE_LOG(LogTemp, Error,
+                                        TEXT("PES002_PIE_HIRES_NO_PLAYER_CONTROLLER view=%d"),
+                                        ViewIndex);
+                                    return;
+                                }
+                                const FString HiResCmd = FString::Printf(
+                                    TEXT("HighResShot 1280x720 filename=%s"), *Filename);
+                                ProofPC->ConsoleCommand(HiResCmd, false);
+                            }
+                            else
+                            {
+                                FScreenshotRequest::RequestScreenshot(Filename, false, false);
+                            }
                             UE_LOG(LogTemp, Display,
-                                TEXT("PES002_SCREENSHOT_REQUESTED target=BagEnd view=%d format=png"), ViewIndex);
+                                TEXT("PES002_SCREENSHOT_REQUESTED target=BagEnd view=%d format=png mode=%s pixelSource=UE4"),
+                                ViewIndex, bPIE ? TEXT("PIE-HighResShot-1280x720") : TEXT("GameViewport"));
                         }), 6.0f + 8.0f * ViewIndex, false);
                 }
             }), 13.0f, false);
@@ -508,6 +566,57 @@ void AShirePrototypeWorldBuilder::BeginPlay()
 #endif
 }
 
+
+void AShirePrototypeWorldBuilder::SampleProofFrame()
+{
+#if !UE_BUILD_SHIPPING
+    const double NowSeconds = FPlatformTime::Seconds();
+    const float DeltaSeconds = static_cast<float>(NowSeconds - ProofLastFrameTimestamp);
+    ProofLastFrameTimestamp = NowSeconds;
+    if (!FMath::IsFinite(DeltaSeconds) || DeltaSeconds <= 0.0f)
+    {
+        return;
+    }
+    ProofElapsedSeconds += DeltaSeconds;
+    // Exclude editor shader warmup and initial asset loading from steady-state
+    // estimates, but report the actual measurement window and worst frame.
+    if (ProofElapsedSeconds < 10.0f)
+    {
+        return;
+    }
+    ProofFrameSeconds += DeltaSeconds;
+    ProofWorstFrameMs = FMath::Max(ProofWorstFrameMs, DeltaSeconds * 1000.0f);
+    ++ProofFrameCount;
+    if (ProofFrameSeconds >= 5.0f)
+    {
+        const FPlatformMemoryStats Memory = FPlatformMemory::GetStats();
+        const double UsedRamMiB = static_cast<double>(Memory.UsedPhysical) / 1048576.0;
+        const double PeakRamMiB = static_cast<double>(Memory.PeakUsedPhysical) / 1048576.0;
+        // UE4.27 RHI texture counters are safe on the main thread. Hardware
+        // capacity and texture allocations are deliberately separate from total
+        // process VRAM, which the Windows capture records through GPU counters.
+        if (GDynamicRHI)
+        {
+            FTextureMemoryStats TextureMemory;
+            GDynamicRHI->RHIGetTextureMemoryStats(TextureMemory);
+            UE_LOG(LogTemp, Display,
+                TEXT("PES002_RHI_MEMORY source=UE4.27-RHI adapter=%s hardwareStatsValid=%d dedicatedCapacityMiB=%.1f allocatedTexturesMiB=%.1f texturePoolMiB=%.1f totalProcessVRAM=SEPARATE_OS_COUNTER"),
+                *GRHIAdapterName, TextureMemory.AreHardwareStatsValid() ? 1 : 0,
+                TextureMemory.DedicatedVideoMemory < 0 ? -1.0 : TextureMemory.DedicatedVideoMemory / 1048576.0,
+                TextureMemory.AllocatedMemorySize / 1048576.0,
+                TextureMemory.TexturePoolSize / 1048576.0);
+        }
+        UE_LOG(LogTemp, Display,
+            TEXT("PES002_RUNTIME_METRICS source=UE4-game-frame runner=CI-not-target elapsedSec=%.2f windowSec=%.2f frames=%d fps=%.2f worstFrameMs=%.2f processRAMMiB=%.1f peakRAMMiB=%.1f gpuVRAM=UNMEASURED deviceAcceptance=false"),
+            ProofElapsedSeconds, ProofFrameSeconds, ProofFrameCount,
+            ProofFrameCount / FMath::Max(ProofFrameSeconds, KINDA_SMALL_NUMBER),
+            ProofWorstFrameMs, UsedRamMiB, PeakRamMiB);
+        ProofFrameSeconds = 0.0f;
+        ProofWorstFrameMs = 0.0f;
+        ProofFrameCount = 0;
+    }
+#endif
+}
 
 void AShirePrototypeWorldBuilder::SpawnVerifiedPBRDecor()
 {
@@ -559,7 +668,7 @@ void AShirePrototypeWorldBuilder::SpawnVerifiedPBRDecor()
             ++Omitted;
             continue;
         }
-        UStaticMesh* Mesh = ResolveResidentStaticMesh(*AssetPath);
+        UStaticMesh* Mesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(*AssetPath);
         if (!Mesh || Mesh->GetBounds().SphereRadius < 1.0f)
         {
             ++Omitted;
@@ -719,8 +828,72 @@ void AShirePrototypeWorldBuilder::OnCuratedNatureLayerReady()
             SteepGround - FamilySteepGroundBefore,
             Mesh->GetStaticMaterials().Num());
     }
+    // PES-002: the physically imported FBX/packed-PBR HISM meshes also dress
+    // Bag End's two garden flanks, rather than adding more sphere/cube plants.
+    // Leave the west-facing doorway, walkable approach and quest anchors open.
+    // All additions remain non-colliding, traced and limited to 24 instances.
+    int32 BagEndGardenPlaced = 0;
+    const int32 GardenFamilies[] = {0, 2, 3, 4}; // grass, stone, gorse, hedge
+    const FVector GardenFlanks[] = {
+        FVector(-2410.0f, -885.0f, 0.0f),
+        FVector(-2370.0f, -155.0f, 0.0f)
+    };
+    for (int32 FamilyIndex = 0; FamilyIndex < UE_ARRAY_COUNT(GardenFamilies); ++FamilyIndex)
+    {
+        const int32 I = GardenFamilies[FamilyIndex];
+        UHierarchicalInstancedStaticMeshComponent* Group = CuratedNatureGroups[I];
+        UStaticMesh* Mesh = CuratedNatureSources[I].Get();
+        if (!Group || !Mesh || Group->GetStaticMesh() != Mesh)
+        {
+            continue;
+        }
+        const FBoxSphereBounds Bounds = Mesh->GetBounds();
+        if (Bounds.BoxExtent.Z <= 1.0f)
+        {
+            continue;
+        }
+        const float Scale = FMath::Clamp(
+            Heights[I] / (2.0f * Bounds.BoxExtent.Z), 0.05f, 3.0f);
+        for (int32 Flank = 0; Flank < UE_ARRAY_COUNT(GardenFlanks); ++Flank)
+        {
+            for (int32 Plant = 0; Plant < 3; ++Plant)
+            {
+                const float Yaw = static_cast<float>(
+                    (FamilyIndex * 73 + Flank * 41 + Plant * 59) % 360);
+                const float Angle = FMath::DegreesToRadians(Yaw);
+                const float Radius = 38.0f + 35.0f * static_cast<float>(Plant);
+                const FVector Candidate = GardenFlanks[Flank] + FVector(
+                    FMath::Cos(Angle) * Radius, FMath::Sin(Angle) * Radius, 0.0f);
+                // Conservative two-dimensional exclusion around the player approach.
+                if (FVector::DistSquared2D(Candidate,
+                    FVector(-2465.0f, -520.0f, 0.0f)) < FMath::Square(240.0f))
+                {
+                    continue;
+                }
+                FHitResult Hit;
+                FCollisionQueryParams Query(TEXT("PES002AuthoredGardenGround"), false, this);
+                if (!World->LineTraceSingleByChannel(Hit,
+                        Candidate + FVector(0, 0, 1200),
+                        Candidate - FVector(0, 0, 700), ECC_Visibility, Query) ||
+                    Hit.ImpactNormal.Z < 0.75f || FMath::Abs(Hit.Location.Z) > 130.0f)
+                {
+                    continue;
+                }
+                const float MeshBottom = Bounds.Origin.Z - Bounds.BoxExtent.Z;
+                Group->AddInstanceWorldSpace(FTransform(
+                    FRotator(0, Yaw, 0),
+                    Hit.Location - FVector(0, 0, MeshBottom * Scale),
+                    FVector(Scale * (0.92f + 0.06f * Plant))));
+                ++BagEndGardenPlaced;
+                ++Grounded;
+            }
+        }
+    }
     UE_LOG(LogTemp, Display,
-        TEXT("P1C01_CURATED_NATURE_WORLD families=%d grounded=%d max=92 collision=none async=1 missingGround=%d steepGround=%d PIE_device_visual=pending"),
+        TEXT("PES002_BAG_END_IMPORTED_GARDEN instances=%d max=24 collision=none source=actual-FBX-PBR worldPlaced=1 visual=pending"),
+        BagEndGardenPlaced);
+    UE_LOG(LogTemp, Display,
+        TEXT("P1C01_CURATED_NATURE_WORLD families=%d grounded=%d max=116 collision=none async=1 missingGround=%d steepGround=%d PIE_device_visual=pending"),
         Families, Grounded, MissingGround, SteepGround);
 }
 
@@ -833,6 +1006,7 @@ void AShirePrototypeWorldBuilder::OnCloud138Ready()
 
 void AShirePrototypeWorldBuilder::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
+    FCoreDelegates::OnEndFrame.RemoveAll(this);
     if (Cloud138Handle.IsValid())
     {
         Cloud138Handle->CancelHandle();
@@ -2111,20 +2285,20 @@ void AShirePrototypeWorldBuilder::SpawnPartySocialLoopPass()
     }
 
     const FVector PartyCenter(280.0f, 1320.0f, 0.0f);
-    UStaticMesh* CommonSackBale = ResolveResidentStaticMesh(
+    UStaticMesh* CommonSackBale = ShirePrototypeWorldBuilderResolveResidentStaticMesh(
         TEXT("/Game/Production/World/Common/SM_CommonSackBale.SM_CommonSackBale"));
-    UStaticMesh* CommonCargoCrate = ResolveResidentStaticMesh(
+    UStaticMesh* CommonCargoCrate = ShirePrototypeWorldBuilderResolveResidentStaticMesh(
         TEXT("/Game/Production/World/Common/SM_CommonCargoCrate.SM_CommonCargoCrate"));
-    UStaticMesh* CommonFlowerPlanter = ResolveResidentStaticMesh(
+    UStaticMesh* CommonFlowerPlanter = ShirePrototypeWorldBuilderResolveResidentStaticMesh(
         TEXT("/Game/Production/World/Common/SM_CommonFlowerPlanter.SM_CommonFlowerPlanter"));
-    UStaticMesh* CommonLongBench = ResolveResidentStaticMesh(
+    UStaticMesh* CommonLongBench = ShirePrototypeWorldBuilderResolveResidentStaticMesh(
         TEXT("/Game/Production/World/Common/SM_CommonLongBench.SM_CommonLongBench"));
-    UStaticMesh* CommonMarketTable = ResolveResidentStaticMesh(
+    UStaticMesh* CommonMarketTable = ShirePrototypeWorldBuilderResolveResidentStaticMesh(
         TEXT("/Game/Production/World/Common/SM_CommonMarketTable.SM_CommonMarketTable"));
     UStaticMesh* CommonMarketCanopy = ProductionCommonMarketCanopyMesh;
-    UStaticMesh* CommonWheelbarrow = ResolveResidentStaticMesh(
+    UStaticMesh* CommonWheelbarrow = ShirePrototypeWorldBuilderResolveResidentStaticMesh(
         TEXT("/Game/Production/World/Common/SM_CommonWheelbarrow.SM_CommonWheelbarrow"));
-    UStaticMesh* CommonBarrel = ResolveResidentStaticMesh(
+    UStaticMesh* CommonBarrel = ShirePrototypeWorldBuilderResolveResidentStaticMesh(
         TEXT("/Game/Production/World/Common/SM_CommonBarrel.SM_CommonBarrel"));
 
     int32 ClusterCount = 0;
@@ -2943,7 +3117,7 @@ void AShirePrototypeWorldBuilder::SpawnHobbitonArchitecturePass()
     // simply remove dressing; they never trigger synchronous runtime loads.
     auto ResolveShire = [](const TCHAR* Path) -> UStaticMesh*
     {
-        return ResolveResidentStaticMesh(Path);
+        return ShirePrototypeWorldBuilderResolveResidentStaticMesh(Path);
     };
 
     auto SpawnProd = [this](UStaticMesh* Mesh, const FVector& Location, const FVector& Scale,
@@ -3191,7 +3365,7 @@ void AShirePrototypeWorldBuilder::SpawnProductionVillageDetailLayer()
         SpawnProd(ProductionLampPostMesh, Lamp, FVector(0.76f), FRotator::ZeroRotator, false);
     }
     // CP54 mega inventory pass: dense farm, market, river and household activity props.
-    auto LoadCP54 = [](const TCHAR* Path) -> UStaticMesh* { return ResolveResidentStaticMesh(Path); };
+    auto LoadCP54 = [](const TCHAR* Path) -> UStaticMesh* { return ShirePrototypeWorldBuilderResolveResidentStaticMesh(Path); };
     UStaticMesh* CP54Bucket = LoadCP54(TEXT("/Game/Production/World/Common/SM_CommonBucket.SM_CommonBucket"));
     UStaticMesh* CP54Wheelbarrow = LoadCP54(TEXT("/Game/Production/World/Common/SM_CommonWheelbarrow.SM_CommonWheelbarrow"));
     UStaticMesh* CP54Table = LoadCP54(TEXT("/Game/Production/World/Common/SM_CommonMarketTable.SM_CommonMarketTable"));
@@ -3252,15 +3426,15 @@ void AShirePrototypeWorldBuilder::SpawnBagEndHeroPass()
 
     const FVector BagEnd(-2210.0f, -520.0f, 0.0f);
 
-    UStaticMesh* CommonFlowerPlanter = ResolveResidentStaticMesh(
+    UStaticMesh* CommonFlowerPlanter = ShirePrototypeWorldBuilderResolveResidentStaticMesh(
         TEXT("/Game/Production/World/Common/SM_CommonFlowerPlanter.SM_CommonFlowerPlanter"));
-    UStaticMesh* CommonBucket = ResolveResidentStaticMesh(
+    UStaticMesh* CommonBucket = ShirePrototypeWorldBuilderResolveResidentStaticMesh(
         TEXT("/Game/Production/World/Common/SM_CommonBucket.SM_CommonBucket"));
-    UStaticMesh* CommonStorageChest = ResolveResidentStaticMesh(
+    UStaticMesh* CommonStorageChest = ShirePrototypeWorldBuilderResolveResidentStaticMesh(
         TEXT("/Game/Production/World/Common/SM_CommonStorageChest.SM_CommonStorageChest"));
-    UStaticMesh* CommonSackBale = ResolveResidentStaticMesh(
+    UStaticMesh* CommonSackBale = ShirePrototypeWorldBuilderResolveResidentStaticMesh(
         TEXT("/Game/Production/World/Common/SM_CommonSackBale.SM_CommonSackBale"));
-    UStaticMesh* CommonWheelbarrow = ResolveResidentStaticMesh(
+    UStaticMesh* CommonWheelbarrow = ShirePrototypeWorldBuilderResolveResidentStaticMesh(
         TEXT("/Game/Production/World/Common/SM_CommonWheelbarrow.SM_CommonWheelbarrow"));
 
     int32 ClusterCount = 0;
@@ -5412,13 +5586,13 @@ void AShirePrototypeWorldBuilder::SpawnShireSettlementCompletionPass()
     }
     SpawnCluster(ProductionTreeCanopyMesh, TEXT("VillageOrchardCanopies"), 2500, 12000, P);
 
-    UStaticMesh* GardenArch = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShGardenArch.SM_ShGardenArch"));
-    UStaticMesh* Mailbox = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShMailbox.SM_ShMailbox"));
-    UStaticMesh* WashLine = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShWashLine.SM_ShWashLine"));
-    UStaticMesh* FarmPlough = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShFarmPlough.SM_ShFarmPlough"));
-    UStaticMesh* OrchardLadder = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShOrchardLadder.SM_ShOrchardLadder"));
-    UStaticMesh* ProduceStand = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShProduceStand.SM_ShProduceStand"));
-    UStaticMesh* PumpWell = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShPumpWell.SM_ShPumpWell"));
+    UStaticMesh* GardenArch = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShGardenArch.SM_ShGardenArch"));
+    UStaticMesh* Mailbox = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShMailbox.SM_ShMailbox"));
+    UStaticMesh* WashLine = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShWashLine.SM_ShWashLine"));
+    UStaticMesh* FarmPlough = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShFarmPlough.SM_ShFarmPlough"));
+    UStaticMesh* OrchardLadder = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShOrchardLadder.SM_ShOrchardLadder"));
+    UStaticMesh* ProduceStand = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShProduceStand.SM_ShProduceStand"));
+    UStaticMesh* PumpWell = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShPumpWell.SM_ShPumpWell"));
 
     FillVillageScatter(6, FVector(-1650,-640,0), FVector(1200,620,0), FVector(0.58f), 0.06f, 17.0f);
     SpawnCluster(GardenArch, TEXT("VillageGardenArches"), 1000, 5600, P);
@@ -5524,21 +5698,21 @@ void AShirePrototypeWorldBuilder::SpawnShireSettlementCanonFinishPass()
         DetailClusterInstances += Cluster->GetDetailCount();
     };
 
-    UStaticMesh* CommonSignBoard = ResolveResidentStaticMesh(
+    UStaticMesh* CommonSignBoard = ShirePrototypeWorldBuilderResolveResidentStaticMesh(
         TEXT("/Game/Production/World/Common/SM_CommonSignBoard.SM_CommonSignBoard"));
-    UStaticMesh* CommonLongBench = ResolveResidentStaticMesh(
+    UStaticMesh* CommonLongBench = ShirePrototypeWorldBuilderResolveResidentStaticMesh(
         TEXT("/Game/Production/World/Common/SM_CommonLongBench.SM_CommonLongBench"));
-    UStaticMesh* CommonBarrel = ResolveResidentStaticMesh(
+    UStaticMesh* CommonBarrel = ShirePrototypeWorldBuilderResolveResidentStaticMesh(
         TEXT("/Game/Production/World/Common/SM_CommonBarrel.SM_CommonBarrel"));
-    UStaticMesh* CommonSackBale = ResolveResidentStaticMesh(
+    UStaticMesh* CommonSackBale = ShirePrototypeWorldBuilderResolveResidentStaticMesh(
         TEXT("/Game/Production/World/Common/SM_CommonSackBale.SM_CommonSackBale"));
-    UStaticMesh* CommonCargoCrate = ResolveResidentStaticMesh(
+    UStaticMesh* CommonCargoCrate = ShirePrototypeWorldBuilderResolveResidentStaticMesh(
         TEXT("/Game/Production/World/Common/SM_CommonCargoCrate.SM_CommonCargoCrate"));
-    UStaticMesh* CommonCookingStand = ResolveResidentStaticMesh(
+    UStaticMesh* CommonCookingStand = ShirePrototypeWorldBuilderResolveResidentStaticMesh(
         TEXT("/Game/Production/World/Common/SM_CommonCookingStand.SM_CommonCookingStand"));
-    UStaticMesh* CommonMarketTable = ResolveResidentStaticMesh(
+    UStaticMesh* CommonMarketTable = ShirePrototypeWorldBuilderResolveResidentStaticMesh(
         TEXT("/Game/Production/World/Common/SM_CommonMarketTable.SM_CommonMarketTable"));
-    UStaticMesh* CommonMarketCanopy = ResolveResidentStaticMesh(
+    UStaticMesh* CommonMarketCanopy = ShirePrototypeWorldBuilderResolveResidentStaticMesh(
         TEXT("/Game/Production/World/Common/SM_CommonMarketCanopy.SM_CommonMarketCanopy"));
     UMaterialInterface* ProductionSurface = ResolveResidentMaterial(
         TEXT("/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface"));
@@ -5585,7 +5759,7 @@ void AShirePrototypeWorldBuilder::SpawnShireSettlementCanonFinishPass()
     P.Emplace(FRotator(0.0f,2.0f,0.0f), Number3Center + FVector(-86.0f,0.0f,34.0f), FVector(0.66f));
     SpawnCluster(ProductionHobbitFacadeMesh, TEXT("Number3BagshotRowFacade"), 1400, 7600, P);
 
-    UStaticMesh* Mailbox = ResolveResidentStaticMesh(
+    UStaticMesh* Mailbox = ShirePrototypeWorldBuilderResolveResidentStaticMesh(
         TEXT("/Game/Production/World/Shire/SM_ShMailbox.SM_ShMailbox"));
     P.Reset();
     P.Emplace(FRotator(0.0f,80.0f,0.0f), Number3Center + FVector(170.0f,-110.0f,28.0f), FVector(0.48f));
@@ -6320,16 +6494,16 @@ void AShirePrototypeWorldBuilder::SpawnScenicDetailPass()
 
     // CP53 resource flood: imported project-owned clutter makes every Shire zone read as worked,
     // travelled and inhabited without touching quest anchors.
-    UStaticMesh* CommonBarrel = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonBarrel.SM_CommonBarrel"));
-    UStaticMesh* CommonCargoCrate = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonCargoCrate.SM_CommonCargoCrate"));
-    UStaticMesh* CommonSackBale = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonSackBale.SM_CommonSackBale"));
-    UStaticMesh* CommonLongBench = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonLongBench.SM_CommonLongBench"));
-    UStaticMesh* CommonHayBale = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonHayBale.SM_CommonHayBale"));
-    UStaticMesh* CommonRopePost = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonRopePost.SM_CommonRopePost"));
-    UStaticMesh* CommonMarketCanopy = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonMarketCanopy.SM_CommonMarketCanopy"));
-    UStaticMesh* CommonRiverBoat = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonRiverBoat.SM_CommonRiverBoat"));
-    UStaticMesh* CommonTreeStump = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonTreeStump.SM_CommonTreeStump"));
-    UStaticMesh* CommonMushrooms = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonMushroomCluster.SM_CommonMushroomCluster"));
+    UStaticMesh* CommonBarrel = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonBarrel.SM_CommonBarrel"));
+    UStaticMesh* CommonCargoCrate = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonCargoCrate.SM_CommonCargoCrate"));
+    UStaticMesh* CommonSackBale = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonSackBale.SM_CommonSackBale"));
+    UStaticMesh* CommonLongBench = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonLongBench.SM_CommonLongBench"));
+    UStaticMesh* CommonHayBale = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonHayBale.SM_CommonHayBale"));
+    UStaticMesh* CommonRopePost = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonRopePost.SM_CommonRopePost"));
+    UStaticMesh* CommonMarketCanopy = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonMarketCanopy.SM_CommonMarketCanopy"));
+    UStaticMesh* CommonRiverBoat = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonRiverBoat.SM_CommonRiverBoat"));
+    UStaticMesh* CommonTreeStump = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonTreeStump.SM_CommonTreeStump"));
+    UStaticMesh* CommonMushrooms = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonMushroomCluster.SM_CommonMushroomCluster"));
 
     const FVector FarmGoods[] = {
         FVector(3880,-1120,0), FVector(4200,-1060,0), FVector(4550,-1140,0),

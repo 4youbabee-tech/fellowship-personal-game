@@ -30,7 +30,7 @@ namespace IsengardVisual
 
 namespace
 {
-    UStaticMesh* ResolveResidentStaticMesh(const TCHAR* AssetPath)
+    UStaticMesh* IsengardPrototypeWorldBuilderResolveResidentStaticMesh(const TCHAR* AssetPath)
     {
         return AssetPath
             ? Cast<UStaticMesh>(FSoftObjectPath(AssetPath).ResolveObject())
@@ -186,8 +186,8 @@ void AIsengardPrototypeWorldBuilder::BuildIsengard()
             FVector(2.0f, 0.82f, 0.08f), FLinearColor(0.20f, 0.18f, 0.14f), FRotator::ZeroRotator, true);
     }
 
-    UStaticMesh* OrthancCore = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Isengard/SM_Isengard_OrthancCore.SM_Isengard_OrthancCore"));
-    UStaticMesh* OrthancSpire = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Isengard/SM_Isengard_OrthancSpire.SM_Isengard_OrthancSpire"));
+    UStaticMesh* OrthancCore = IsengardPrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Isengard/SM_Isengard_OrthancCore.SM_Isengard_OrthancCore"));
+    UStaticMesh* OrthancSpire = IsengardPrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Isengard/SM_Isengard_OrthancSpire.SM_Isengard_OrthancSpire"));
     if (OrthancCore && OrthancSpire)
     {
         SpawnShape(OrthancCore, FVector(900, 0, -75), FVector(1.0f),
@@ -218,14 +218,14 @@ void AIsengardPrototypeWorldBuilder::BuildIsengard()
     }
     SpawnLabel(TEXT("Orthanc"), FVector(900, 0, 1450), FLinearColor(0.72f, 0.74f, 0.76f));
 
-    UStaticMesh* PitRim = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Isengard/SM_Isengard_IndustrialPitRim.SM_Isengard_IndustrialPitRim"));
-    UStaticMesh* FurnaceStack = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Isengard/SM_Isengard_FurnaceStack.SM_Isengard_FurnaceStack"));
-    UStaticMesh* FelledTrunk = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Isengard/SM_Isengard_FelledTrunk.SM_Isengard_FelledTrunk"));
-    UStaticMesh* ParapetSlab = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Isengard/SM_Isengard_ParapetSlab.SM_Isengard_ParapetSlab"));
-    UStaticMesh* HoistFrame = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Isengard/SM_IsengardHoistFrame.SM_IsengardHoistFrame"));
-    UStaticMesh* SlagCart = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Isengard/SM_IsengardSlagCart.SM_IsengardSlagCart"));
-    UStaticMesh* TrenchGrate = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Isengard/SM_IsengardTrenchGrate.SM_IsengardTrenchGrate"));
-    UStaticMesh* WaterGate = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Isengard/SM_IsengardWaterGate.SM_IsengardWaterGate"));
+    UStaticMesh* PitRim = IsengardPrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Isengard/SM_Isengard_IndustrialPitRim.SM_Isengard_IndustrialPitRim"));
+    UStaticMesh* FurnaceStack = IsengardPrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Isengard/SM_Isengard_FurnaceStack.SM_Isengard_FurnaceStack"));
+    UStaticMesh* FelledTrunk = IsengardPrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Isengard/SM_Isengard_FelledTrunk.SM_Isengard_FelledTrunk"));
+    UStaticMesh* ParapetSlab = IsengardPrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Isengard/SM_Isengard_ParapetSlab.SM_Isengard_ParapetSlab"));
+    UStaticMesh* HoistFrame = IsengardPrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Isengard/SM_IsengardHoistFrame.SM_IsengardHoistFrame"));
+    UStaticMesh* SlagCart = IsengardPrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Isengard/SM_IsengardSlagCart.SM_IsengardSlagCart"));
+    UStaticMesh* TrenchGrate = IsengardPrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Isengard/SM_IsengardTrenchGrate.SM_IsengardTrenchGrate"));
+    UStaticMesh* WaterGate = IsengardPrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Isengard/SM_IsengardWaterGate.SM_IsengardWaterGate"));
     for (int32 I = 0; I < 8; ++I)
     {
         const FVector Pit(-200.0f + I * 260.0f, 720.0f + (I % 2) * 180.0f, 10.0f);

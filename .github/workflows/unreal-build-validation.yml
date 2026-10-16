@@ -316,13 +316,44 @@ jobs:
           & "$env:GITHUB_WORKSPACE\Scripts\classify_unreal_validation.ps1"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
-  unreal-build:
+
+  character-source:
+    name: Prepare actual CC0 unified skin and authored locomotion
     needs: classify
+    if: needs.classify.outputs.full == 'true' || needs.classify.outputs.core == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          persist-credentials: false
+      - name: Install Blender for real FBX normalization
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y blender python3-numpy
+      - name: Prepare pinned licensed character and actual authored clips
+        shell: pwsh
+        run: |
+          ./Scripts/stage_p1c01_kaykit_rig_bridge.ps1 -ProductionPacket -OutputRoot "$env:RUNNER_TEMP/kaykit-character-production" -BlenderExecutable blender
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kaykit-character-source-${{ env.TARGET_SHA }}
+          path: ${{ runner.temp }}/kaykit-character-production/packet
+          if-no-files-found: error
+          retention-days: 14
+
+  unreal-build:
+    needs: [classify, character-source]
     # Owner-authorized automatic exact-head Windows integration.
     # Classification keeps docs/source-only edits on hosted CI; the single
     # UE4-27 runner serializes only engine-impacting or curated importer work.
     if: >-
-      ${{ (github.event_name == 'pull_request' || github.event_name == 'push' ||
+      ${{ always() && needs.classify.result == 'success' &&
+          (needs.character-source.result == 'success' || needs.character-source.result == 'skipped') &&
+          (github.event_name == 'pull_request' || github.event_name == 'push' ||
             (github.event_name == 'workflow_dispatch' && inputs.run_self_hosted == true)) &&
           (needs.classify.outputs.curated == 'true' ||
            needs.classify.outputs.full == 'true' || needs.classify.outputs.core == 'true' ||
@@ -510,10 +541,35 @@ jobs:
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_build_unreal.cmd"'
 
+      - name: Download exact-head unified character and authored clips
+        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
+        uses: actions/download-artifact@v4
+        with:
+          name: kaykit-character-source-${{ env.TARGET_SHA }}
+          path: ${{ github.workspace }}/SourceAssets/Production/Characters/Rigs/Frodo
+
+      - name: Persist and verify the exact character packet in the existing warehouse
+        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
+        shell: powershell
+        run: |
+          $source = Join-Path $env:GITHUB_WORKSPACE 'SourceAssets/Production/Characters/Rigs/Frodo'
+          $receipt = Get-Content (Join-Path $source 'source_receipt.json') -Raw | ConvertFrom-Json
+          if ($receipt.status -ne 'NORMALIZED_KAYKIT_CHARACTER_SOURCE_PASS') { throw 'CHARACTER_PACKET_RECEIPT_REJECT' }
+          $destination = Join-Path 'D:/actions-runner/_warehouse/ShireJourney/KayKit/_normalized_unified' $env:TARGET_SHA
+          New-Item -ItemType Directory -Force -Path $destination | Out-Null
+          foreach ($file in $receipt.files.PSObject.Properties) {
+            $inputFile = Join-Path $source $file.Name
+            if ((Get-FileHash $inputFile -Algorithm SHA256).Hash.ToLowerInvariant() -ne [string]$file.Value) { throw "CHARACTER_PACKET_SOURCE_HASH_REJECT $($file.Name)" }
+            Copy-Item -LiteralPath $inputFile -Destination (Join-Path $destination $file.Name) -Force
+            if ((Get-FileHash (Join-Path $destination $file.Name) -Algorithm SHA256).Hash.ToLowerInvariant() -ne [string]$file.Value) { throw "CHARACTER_PACKET_WAREHOUSE_HASH_REJECT $($file.Name)" }
+          }
+          Copy-Item -LiteralPath (Join-Path $source 'source_receipt.json') -Destination $destination -Force
+          Write-Host "PES002_CHARACTER_WAREHOUSE_PERSISTED path=$destination files=$($receipt.files.PSObject.Properties.Count) head=$env:TARGET_SHA license=CC0"
+
       - name: Import production assets in UE4.27.2
         if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
         shell: cmd
-        run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_import_production_assets.cmd"'
+        run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_import_production_assets.cmd" -EnableCharacterRigImport -CharacterPacket=Frodo'
 
       - name: Rehydrate exact SHA256 Cloud138 Unreal packages
         if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true' || env.SHIRE_CURATED_REQUIRED == 'true')
@@ -541,7 +597,7 @@ jobs:
       - name: Capture Bag End targeted P1C01 visual proof
         if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true' || env.SHIRE_CURATED_REQUIRED == 'true')
         shell: cmd
-        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\capture_pes002_bag_end_visual.ps1"
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\capture_pes002_bag_end_visual.ps1" -PIE
 
       - name: Upload PES-002 screenshot evidence
         if: (always() && (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')) || (success() && env.SHIRE_CURATED_REQUIRED == 'true')

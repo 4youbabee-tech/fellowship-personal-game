@@ -9,6 +9,10 @@ public class ShireJourneyEditorTools : ModuleRules
         PrivateDependencyModuleNames.AddRange(new string[]
         {
             "UnrealEd",
+            "AnimGraph",
+            "AnimGraphRuntime",
+            "BlueprintGraph",
+            "KismetCompiler",
             "AssetTools",
             "AssetRegistry",
             "ShireJourney",

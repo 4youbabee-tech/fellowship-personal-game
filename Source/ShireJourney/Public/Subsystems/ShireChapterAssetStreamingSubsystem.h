@@ -83,7 +83,6 @@ private:
 
     TMap<FName, FChapterBankRuntime> Banks;
     TMap<FName, FCharacterRigRuntime> CharacterRigRequests;
-    FStreamableManager StreamableManager;
     TSharedPtr<FStreamableHandle> ResidentHandle;
     TSharedPtr<FStreamableHandle> PendingHandle;
 

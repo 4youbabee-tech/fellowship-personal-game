@@ -20,7 +20,9 @@ echo Building exact commit: %TARGET_SHA%
 call "%BUILDBAT%" ShireJourneyEditor Win64 Development "%PROJECT%" -WaitMutex -NoHotReloadFromIDE -MaxParallelActions=1 > "%BUILDLOG%" 2>&1
 set "BUILD_EXIT=!ERRORLEVEL!"
 if not "!BUILD_EXIT!"=="0" (
-  findstr /I /C:"error C3859" /C:"fatal error C1076" /C:"error D8050" /C:"Command line error D8050" /C:"fatal error C1083" /C:"Cannot open compiler intermediate file" "%BUILDLOG%" >nul
+  rem A missing source header (C1083) is a code defect, not resource pressure.
+  rem Retrying it unchanged deleted all intermediates and repeated the failure.
+  findstr /I /C:"error C3859" /C:"fatal error C1076" /C:"error D8050" /C:"Command line error D8050" /C:"Cannot open compiler intermediate file" "%BUILDLOG%" >nul
   if not errorlevel 1 (
     echo.>>"%BUILDLOG%"
     echo CI_BUILD_RETRY: MSVC compiler resource/process pressure detected; clearing project intermediates and retrying once.>>"%BUILDLOG%"

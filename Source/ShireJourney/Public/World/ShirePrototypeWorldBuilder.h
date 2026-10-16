@@ -124,6 +124,13 @@ private:
     UPROPERTY() TArray<AStaticMeshActor*> PartyCelebrationVariantActors;
 
     bool bBuilt = false;
+    // Disabled in ordinary gameplay; populated only by -PES002VisualProof.
+    void SampleProofFrame();
+    double ProofLastFrameTimestamp = 0.0;
+    float ProofElapsedSeconds = 0.0f;
+    float ProofFrameSeconds = 0.0f;
+    float ProofWorstFrameMs = 0.0f;
+    int32 ProofFrameCount = 0;
 
     AStaticMeshActor* SpawnShape(UStaticMesh* Mesh, const FVector& Location, const FVector& Scale,
         const FLinearColor& Color, const FRotator& Rotation = FRotator::ZeroRotator, bool bCollision = true);
