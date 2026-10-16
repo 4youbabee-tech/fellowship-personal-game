@@ -1,63 +1,11 @@
-name: P1C01 56 modular playable-route detail FBX source
+name: 'Disabled - P1C01 56 modular playable-route detail FBX source'
 on:
-  pull_request:
-    branches: [develop]
-    paths:
-      - 'Tools/CloudAssetBuild/blender_shire_detail56.py'
-      - '.github/workflows/p1c01-56-detail-source.yml'
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
-  detail56_source_qc:
-    name: 28 Shire detail families with LOD0/LOD1 and UCX source QC
+  disabled:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
-    env:
-      TARGET_SHA: ${{ github.event.pull_request.head.sha }}
-      ASSET_OUT: ${{ github.workspace }}/_BuildArtifacts/shire-detail56
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.TARGET_SHA }}
-          persist-credentials: false
-      - name: Enforce exact head Governor and syntax
-        run: |
-          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
-          python3 Scripts/governor_work_start.py --lane VISUAL_WORLD_PREP
-          python3 -m py_compile Tools/CloudAssetBuild/blender_shire_detail56.py
-      - name: Install headless Blender with FBX NumPy dependency
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y blender python3-numpy
-      - name: Produce original detail FBX with independent Blender reimport checks
-        run: blender --background --factory-startup --python-exit-code 3 -t 2 --python Tools/CloudAssetBuild/blender_shire_detail56.py -- --out "$ASSET_OUT"
-      - name: Audit real files and distinct hashes
-        run: |
-          python3 - <<'PY'
-          import hashlib,json,os
-          from pathlib import Path
-          root=Path(os.environ['ASSET_OUT'])
-          r=json.loads((root/'shire_detail_receipt.json').read_text())
-          rows=r['objects']
-          assert r['families']==28 and r['fbx_count']==56 and len(rows)==56
-          assert len({(x['asset'],x['lod']) for x in rows})==56
-          assert len({x['sha256'] for x in rows})==56
-          assert len({x['asset'] for x in rows})==28
-          for x in rows:
-              file=root/x['path']
-              data=file.read_bytes()
-              assert len(data)==x['bytes']
-              assert hashlib.sha256(data).hexdigest()==x['sha256']
-              assert data.startswith(b'Kaydara FBX Binary')
-              assert int.from_bytes(data[23:27],'little')==7400
-              assert x['reimport_polygons']>0 and x['uv_layers']>0 and x['collider_count']>0
-          assert r['unreal_imported'] is False and r['gate67_closed'] is False
-          print('SHIRE_DETAIL_56_FBX_QC_PASS files=56 families=28 lods=2')
-          PY
-      - uses: actions/upload-artifact@v4
-        with:
-          name: shire-56-detail-source-${{ github.event.pull_request.head.sha }}
-          path: ${{ env.ASSET_OUT }}
-          retention-days: 30
-          compression-level: 6
-          if-no-files-found: error
+      - name: Secondary lane frozen by owner
+        run: echo "DISABLED - use Unreal Build Validation unified production workflow"

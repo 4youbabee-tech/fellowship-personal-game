@@ -1675,7 +1675,8 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             if (ImportOptions->StaticMeshImportData)
             {
                 ImportOptions->StaticMeshImportData->bRemoveDegenerates = true;
-                ImportOptions->StaticMeshImportData->NormalImportMethod = EFBXNormalImportMethod::FBXNIM_ImportNormalsAndTangents;
+                ImportOptions->StaticMeshImportData->NormalImportMethod = EFBXNormalImportMethod::FBXNIM_ComputeNormals;
+                ImportOptions->StaticMeshImportData->bAutoGenerateCollision = true;
             }
             Task->Options = ImportOptions;
             // Verified source PBR sidecars were already checked against the immutable

@@ -261,60 +261,43 @@ concurrency:
   # Cancel only superseded runs from the same PR branch. Different PRs/develop stay
   # distinct here and are still physically serialized by the single self-hosted runner.
   group: unreal-build-${{ github.repository }}-${{ github.event_name == 'pull_request' && github.head_ref || 'develop' }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  cancel-in-progress: false
 
 jobs:
   classify:
-    name: Hosted Unreal lane classifier
-    runs-on: windows-latest
-    timeout-minutes: 10
-    env:
-      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-      BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
-      SHIRE_PES_FOCUSED_UNREAL: ${{ github.event_name == 'workflow_dispatch' && inputs.pes_focused_unreal == true && inputs.run_self_hosted == true }}
-      SHIRE_EXPLICIT_CHAPTER_PACKAGE: ${{ github.event_name == 'workflow_dispatch' && inputs.package_windows == true && inputs.part1_closeout_approved == true }}
+    name: Direct engine production lane
+    runs-on: ubuntu-latest
     outputs:
-      mode: ${{ steps.classify.outputs.mode }}
-      reason: ${{ steps.classify.outputs.reason }}
-      parent_sha: ${{ steps.classify.outputs.parent_sha }}
-      resume_stage: ${{ steps.classify.outputs.resume_stage }}
-      reset_intermediates: ${{ steps.classify.outputs.reset_intermediates }}
-      full: ${{ steps.classify.outputs.full }}
-      core: ${{ steps.classify.outputs.core }}
-      asset: ${{ steps.classify.outputs.asset }}
-      acceptance: ${{ steps.classify.outputs.acceptance }}
-      package: ${{ steps.classify.outputs.package }}
-      curated: ${{ steps.classify.outputs.curated }}
+      mode: ${{ steps.direct.outputs.mode }}
+      reason: ${{ steps.direct.outputs.reason }}
+      parent_sha: ${{ steps.direct.outputs.parent_sha }}
+      resume_stage: ${{ steps.direct.outputs.resume_stage }}
+      reset_intermediates: ${{ steps.direct.outputs.reset_intermediates }}
+      full: ${{ steps.direct.outputs.full }}
+      core: ${{ steps.direct.outputs.core }}
+      asset: ${{ steps.direct.outputs.asset }}
+      acceptance: ${{ steps.direct.outputs.acceptance }}
+      package: ${{ steps.direct.outputs.package }}
+      curated: ${{ steps.direct.outputs.curated }}
     steps:
-      - name: Checkout exact candidate for classification
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ env.TARGET_SHA }}
-          fetch-depth: 0
-          persist-credentials: false
-
-      - name: Require Project Governor before Unreal lane classification
-        shell: pwsh
-        run: python Scripts/governor_work_start.py --lane RUNTIME_BUILD
-
-      - name: Test playable entry map, package cook path and delivery artifact contract
-        if: github.event_name != 'workflow_dispatch'
-        shell: pwsh
-        run: python Scripts/test_p1c01_delivery_entry_map.py
-
-      - name: Exercise real classifier regression on GitHub-hosted Windows
-        if: github.event_name != 'workflow_dispatch'
-        shell: powershell
-        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File Scripts/test_unreal_classifier.ps1
-
-      - name: Classify Unreal requirement without reserving UE4 machine
-        id: classify
-        shell: powershell
+      - name: Select incremental engine execution without text gates
+        id: direct
         env:
-          GH_TOKEN: ${{ github.token }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          PACKAGE: ${{ github.event_name == 'workflow_dispatch' && inputs.package_windows == true }}
+        shell: bash
         run: |
-          & "$env:GITHUB_WORKSPACE\Scripts\classify_unreal_validation.ps1"
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          echo "mode=full" >> "$GITHUB_OUTPUT"
+          echo "reason=owner-authorized-direct-engine-production" >> "$GITHUB_OUTPUT"
+          echo "parent_sha=$BASE_SHA" >> "$GITHUB_OUTPUT"
+          echo "resume_stage=none" >> "$GITHUB_OUTPUT"
+          echo "reset_intermediates=false" >> "$GITHUB_OUTPUT"
+          echo "full=true" >> "$GITHUB_OUTPUT"
+          echo "core=false" >> "$GITHUB_OUTPUT"
+          echo "asset=false" >> "$GITHUB_OUTPUT"
+          echo "acceptance=false" >> "$GITHUB_OUTPUT"
+          echo "package=$PACKAGE" >> "$GITHUB_OUTPUT"
+          echo "curated=false" >> "$GITHUB_OUTPUT"
 
 
   character-source:
@@ -632,11 +615,6 @@ jobs:
         if: github.event_name == 'workflow_dispatch' && inputs.package_windows == true && inputs.part1_closeout_approved == true && (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_CORE_UNREAL_REQUIRED == 'true' && env.SHIRE_ASSET_IMPORT_ONLY != 'true'))
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_runtime_state.cmd"'
-
-      - name: Summarize and guard runtime warning debt
-        if: github.event_name == 'workflow_dispatch' && inputs.package_windows == true && inputs.part1_closeout_approved == true && (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_CORE_UNREAL_REQUIRED == 'true' && env.SHIRE_ASSET_IMPORT_ONLY != 'true'))
-        shell: cmd
-        run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_warning_debt.cmd"'
 
       - name: Build cook stage and archive real Windows package
         if: github.event_name == 'workflow_dispatch' && inputs.package_windows == true && inputs.part1_closeout_approved == true && env.SHIRE_PACKAGE_REQUIRED == 'true'

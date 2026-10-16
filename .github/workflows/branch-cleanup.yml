@@ -1,72 +1,11 @@
-name: Branch Cleanup
-
+name: 'Disabled - Branch Cleanup Disabled'
 on:
-  pull_request:
-    types:
-      - closed
   workflow_dispatch:
-
 permissions:
-  contents: write
-  pull-requests: read
-
-concurrency:
-  group: branch-cleanup-${{ github.repository }}
-  cancel-in-progress: true
-
+  contents: read
 jobs:
-  cleanup:
-    # Every closed PR ends that exact head lifecycle. The cleanup script still fails closed
-    # on canonical/protected refs, active PR heads, and refs whose SHA moved after closure.
-    # Pure GitHub administration must not occupy the supervised UE4 machine.
-    runs-on: windows-latest
-    timeout-minutes: 15
-    env:
-      GH_TOKEN: ${{ github.token }}
-      TARGET_SHA: ${{ github.event_name == 'pull_request' && (github.event.pull_request.merged == true && github.event.pull_request.merge_commit_sha || github.event.pull_request.base.sha) || github.sha }}
-      CLOSED_HEAD_REF: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || '' }}
-      CLOSED_HEAD_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || '' }}
-    defaults:
-      run:
-        shell: cmd
-
+  disabled:
+    runs-on: ubuntu-latest
     steps:
-      - name: Isolated exact-head administration checkout
-        run: |
-          @echo off
-          setlocal EnableExtensions EnableDelayedExpansion
-          set "GITEXE="
-          for /f "delims=" %%G in ('where git.exe 2^>nul') do if not defined GITEXE set "GITEXE=%%G"
-          if not defined GITEXE if exist "C:\Program Files\Git\cmd\git.exe" set "GITEXE=C:\Program Files\Git\cmd\git.exe"
-          if not defined GITEXE if exist "C:\Program Files (x86)\Git\cmd\git.exe" set "GITEXE=C:\Program Files (x86)\Git\cmd\git.exe"
-          if not defined GITEXE exit /b 70
-
-          set "CLEANUP_ROOT=%RUNNER_TEMP%\shire-branch-cleanup-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
-          if exist "!CLEANUP_ROOT!" rmdir /S /Q "!CLEANUP_ROOT!"
-          mkdir "!CLEANUP_ROOT!"
-          cd /d "!CLEANUP_ROOT!"
-
-          "!GITEXE!" init
-          if errorlevel 1 exit /b 72
-          "!GITEXE!" remote add origin "https://x-access-token:%GH_TOKEN%@github.com/%GITHUB_REPOSITORY%.git"
-          if errorlevel 1 exit /b 73
-          "!GITEXE!" -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=20 fetch --no-tags --depth=2 origin %TARGET_SHA%
-          if errorlevel 1 exit /b 74
-          "!GITEXE!" checkout -f FETCH_HEAD
-          if errorlevel 1 exit /b 75
-          for /f "delims=" %%S in ('"!GITEXE!" rev-parse HEAD') do set "CHECKED_SHA=%%S"
-          if /I not "!CHECKED_SHA!"=="%TARGET_SHA%" exit /b 77
-          if not exist "Data\BranchCleanupPlan.json" exit /b 78
-          echo SHIRE_CLEANUP_ROOT=!CLEANUP_ROOT!>>"%GITHUB_ENV%"
-          echo BRANCH_CLEANUP_EXACT_CHECKOUT_PASS sha=!CHECKED_SHA! isolated=true hosted=true
-
-      - name: Delete approved stale branches safely
-        run: cd /d "%SHIRE_CLEANUP_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\run_branch_cleanup.ps1"
-
-      - name: Remove isolated administration checkout
-        if: always()
-        shell: cmd
-        run: |
-          @echo off
-          if defined SHIRE_CLEANUP_ROOT if exist "%SHIRE_CLEANUP_ROOT%" rmdir /S /Q "%SHIRE_CLEANUP_ROOT%"
-          exit /b 0
+      - name: Secondary lane frozen by owner
+        run: echo "DISABLED - use Unreal Build Validation unified production workflow"

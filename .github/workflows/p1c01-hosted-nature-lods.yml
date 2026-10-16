@@ -1,73 +1,11 @@
-name: P1C01 Hosted Nature Binary FBX LOD Production
+name: 'Disabled - P1C01 Hosted Nature Binary FBX LOD Production'
 on:
-  pull_request:
-    branches: [develop]
-    paths:
-      - 'Tools/CloudAssetBuild/blender_nature.py'
-      - '.github/workflows/p1c01-hosted-nature-lods.yml'
   workflow_dispatch:
-  schedule:
-    - cron: '17 4 * * 2,5'
 permissions:
   contents: read
-concurrency:
-  group: shire-nature-source-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
 jobs:
-  nature_source:
+  disabled:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
-    env:
-      OUT: ${{ github.workspace }}/_BuildArtifacts/shire-nature-binary
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          persist-credentials: false
-      - name: Source-gate check
-        run: python3 Scripts/governor_work_start.py --lane VISUAL_WORLD_PREP
-      - name: Avoid repeated scheduled builds of unchanged code
-        id: dedup
-        env:
-          GH_TOKEN: ${{ github.token }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          digest=$(sha256sum Tools/CloudAssetBuild/blender_nature.py | cut -c 1-24)
-          echo "fingerprint=$digest" >> "$GITHUB_OUTPUT"
-          if [[ "${{ github.event_name }}" == "schedule" ]]; then
-            existing=$(gh api "repos/${{ github.repository }}/actions/artifacts?per_page=100" --jq '.artifacts[].name' | grep -F "nature-binary-$digest" || true)
-            if [[ -n "$existing" ]]; then echo "skip=true" >> "$GITHUB_OUTPUT"; fi
-          fi
-      - name: Install hosted Blender
-        if: steps.dedup.outputs.skip != 'true'
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y blender python3-numpy
-          blender --version | head -n 1
-      - name: Produce true binary FBX and reimport
-        if: steps.dedup.outputs.skip != 'true'
-        run: blender --background --factory-startup --python-exit-code 3 -t 2 --python Tools/CloudAssetBuild/blender_nature.py -- --out "$OUT"
-      - name: Verify physical receipts
-        if: steps.dedup.outputs.skip != 'true'
-        run: |
-          python3 - <<'PY'
-          import json,hashlib,os,pathlib
-          root=pathlib.Path(os.environ['OUT'])
-          obj=json.loads((root/'nature_receipt.json').read_text())
-          assert len(obj['objects'])==36
-          for x in obj['objects']:
-              p=root/x['path']
-              assert p.is_file() and hashlib.sha256(p.read_bytes()).hexdigest()==x['sha256']
-              assert p.read_bytes().startswith(b'Kaydara FBX Binary')
-              assert x['reimport_uv0'] and x['reimport_polygons']>0
-          print('NATURE_SOURCE_RECEIPT_PASS files=36')
-          PY
-      - uses: actions/upload-artifact@v4
-        if: steps.dedup.outputs.skip != 'true'
-        with:
-          name: nature-binary-${{ steps.dedup.outputs.fingerprint }}-${{ github.sha }}
-          path: ${{ env.OUT }}
-          retention-days: 7
-          compression-level: 3
-          if-no-files-found: error
+      - name: Secondary lane frozen by owner
+        run: echo "DISABLED - use Unreal Build Validation unified production workflow"

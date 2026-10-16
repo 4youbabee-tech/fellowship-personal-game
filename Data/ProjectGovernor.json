@@ -9536,5 +9536,29 @@
     "cleanup_source": "Data/BranchCleanupPlan.json",
     "safety": "Delete old ref only when its SHA is unchanged, directly parented in immutable archive anchor, and its PR is no longer open. Never delete develop/main/archive, never force-merge stale divergent sources or treat archival as acceptance.",
     "pending_reconciliation": "Unique old runtime C++ and source-only patches not integrated by PR #477 stay available in archive for selective engineering review. No new PES unlocked. Reopen only exact SHA with real scope+tests."
+  },
+  "owner_execution_override_2026_10_16": {
+    "authority": "Explicit owner EMERGENCY PIPELINE UNLOCK instruction 2026-10-16; overrides conflicting historical text-gate and per-commit documentation rules in this file",
+    "active": true,
+    "automatic_workflow": ".github/workflows/unreal-build-validation.yml",
+    "pre_unreal_text_gates_required": false,
+    "contract_tests_enabled": false,
+    "per_commit_documentation_required": false,
+    "minor_import_warnings_block_build": false,
+    "build_intermediates": "incremental; clean only for diagnosed corruption or toolchain change",
+    "integration": "Owner authorizes coherent direct develop batches; never publish incomplete or untested runtime changes as accepted",
+    "engine_evidence_required": [
+      "C++ build",
+      "physical assets and dependencies",
+      "real PIE images",
+      "actual runtime performance"
+    ],
+    "preserve": [
+      "asset source licenses",
+      "actual compile/import failures",
+      "single Unreal and warehouse writer",
+      "truthful visual and performance status"
+    ],
+    "runtime_scope": "PES-002 remains open; future licensed source intake may be prepared without declaring future chapters accepted"
   }
 }

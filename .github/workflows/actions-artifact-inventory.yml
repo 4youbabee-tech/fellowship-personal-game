@@ -1,15 +1,11 @@
-name: Actions artifact size inventory
+name: 'Disabled - Actions artifact size inventory'
 on:
   workflow_dispatch:
 permissions:
-  actions: read
   contents: read
 jobs:
-  inventory:
+  disabled:
     runs-on: ubuntu-latest
     steps:
-      - name: Largest artifacts by size
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh api --paginate "repos/${{ github.repository }}/actions/artifacts?per_page=100" --jq '.artifacts[] | [.size_in_bytes, .name, .created_at, .id] | @tsv' | sort -nr | head -40
+      - name: Secondary lane frozen by owner
+        run: echo "DISABLED - use Unreal Build Validation unified production workflow"

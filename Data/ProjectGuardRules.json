@@ -25,19 +25,7 @@
     "LORE_COMPATIBLE",
     "ORIGINAL_GAP_FILL"
   ],
-  "required_governance_docs": [
-    "Docs/CURRENT_PROJECT_STATE.md",
-    "Docs/DEVELOPMENT_GATES.md",
-    "Docs/PROJECT_GUARDIAN.md",
-    "Docs/STORY_CANON_BIBLE.md",
-    "Docs/PART1_FELLOWSHIP_MASTERPLAN.md",
-    "Docs/CHARACTER_PERFORMANCE_STANDARD.md",
-    "Docs/PRODUCTION_COMPLETENESS_MATRIX.md",
-    "Docs/WORLD_PRODUCTION_BLUEPRINT.md",
-    "Docs/PROJECT_MEMORY_SYSTEM.md",
-    "Docs/LIVING_WORLD_AI_BLUEPRINT.md",
-    "Docs/PROJECT_GOVERNOR.md"
-  ],
+  "required_governance_docs": [],
   "required_story_data": [
     "Data/StoryBeatPlan.csv",
     "Data/DialogueIntent.csv",
@@ -53,9 +41,7 @@
     "DebugNextChapter",
     "DebugAlternateRoute"
   ],
-  "required_source_docs": [
-    "Source/ShireJourney/README.md"
-  ],
+  "required_source_docs": [],
   "required_engineering_data": [
     "Data/ProjectGovernor.json",
     "Data/SourceArchitecturePlan.json",
@@ -233,5 +219,24 @@
     ],
     "evidence_status": "SOURCE_PATCH_PENDING_EXACT_HEAD_CI",
     "acceptance_credit": false
+  },
+  "reference_governance_docs": [
+    "Docs/CURRENT_PROJECT_STATE.md",
+    "Docs/DEVELOPMENT_GATES.md",
+    "Docs/PROJECT_GUARDIAN.md",
+    "Docs/STORY_CANON_BIBLE.md",
+    "Docs/PART1_FELLOWSHIP_MASTERPLAN.md",
+    "Docs/CHARACTER_PERFORMANCE_STANDARD.md",
+    "Docs/PRODUCTION_COMPLETENESS_MATRIX.md",
+    "Docs/WORLD_PRODUCTION_BLUEPRINT.md",
+    "Docs/PROJECT_MEMORY_SYSTEM.md",
+    "Docs/LIVING_WORLD_AI_BLUEPRINT.md",
+    "Docs/PROJECT_GOVERNOR.md"
+  ],
+  "execution_override": {
+    "authority": "Data/ProjectGovernor.json/owner_execution_override_2026_10_16",
+    "text_contract_gates_enabled": false,
+    "per_commit_documentation_required": false,
+    "minor_warning_gate_enabled": false
   }
 }

@@ -1,68 +1,11 @@
-name: Runner Health Check
-
+name: 'Disabled - Runner Health Check'
 on:
   workflow_dispatch:
-
 permissions:
   contents: read
-
-concurrency:
-  group: runner-health-${{ github.repository }}
-  cancel-in-progress: true
-
 jobs:
-  health:
-    name: Verify UE4 runner health
-    runs-on:
-      - self-hosted
-      - Windows
-      - X64
-      - ue4-27
-    timeout-minutes: 3
-    env:
-      TARGET_SHA: ${{ github.sha }}
-      GH_TOKEN: ${{ github.token }}
-    defaults:
-      run:
-        shell: cmd
-
+  disabled:
+    runs-on: ubuntu-latest
     steps:
-      - name: Fetch health scripts into isolated temp checkout
-        run: |
-          @echo off
-          setlocal EnableExtensions EnableDelayedExpansion
-          set "GITEXE="
-          for /f "delims=" %%G in ('where git.exe 2^>nul') do if not defined GITEXE set "GITEXE=%%G"
-          if not defined GITEXE if exist "C:\Program Files\Git\cmd\git.exe" set "GITEXE=C:\Program Files\Git\cmd\git.exe"
-          if not defined GITEXE if exist "C:\Program Files (x86)\Git\cmd\git.exe" set "GITEXE=C:\Program Files (x86)\Git\cmd\git.exe"
-          if not defined GITEXE exit /b 70
-
-          set "HEALTH_ROOT=%RUNNER_TEMP%\shire-runner-health-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
-          if exist "!HEALTH_ROOT!" rmdir /S /Q "!HEALTH_ROOT!"
-          mkdir "!HEALTH_ROOT!"
-          cd /d "!HEALTH_ROOT!"
-
-          "!GITEXE!" init
-          if errorlevel 1 exit /b 72
-          "!GITEXE!" remote add origin "https://x-access-token:%GH_TOKEN%@github.com/%GITHUB_REPOSITORY%.git"
-          if errorlevel 1 exit /b 73
-          "!GITEXE!" -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=20 fetch --no-tags --depth=1 origin %TARGET_SHA%
-          if errorlevel 1 exit /b 74
-          "!GITEXE!" checkout -f FETCH_HEAD
-          if errorlevel 1 exit /b 75
-          for /f "delims=" %%S in ('"!GITEXE!" rev-parse HEAD') do set "CHECKED_SHA=%%S"
-          if /I not "!CHECKED_SHA!"=="%TARGET_SHA%" exit /b 77
-          if not exist "Scripts\verify_runner_session.ps1" exit /b 78
-          echo SHIRE_HEALTH_ROOT=!HEALTH_ROOT!>>"%GITHUB_ENV%"
-          echo RUNNER_HEALTH_EXACT_CHECKOUT_PASS sha=!CHECKED_SHA! isolated=true
-
-      - name: Verify runner session health
-        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_HEALTH_ROOT%\Scripts\verify_runner_session.ps1"
-
-      - name: Remove isolated health checkout
-        if: always()
-        shell: cmd
-        run: |
-          @echo off
-          if defined SHIRE_HEALTH_ROOT if exist "%SHIRE_HEALTH_ROOT%" rmdir /S /Q "%SHIRE_HEALTH_ROOT%"
-          exit /b 0
+      - name: Secondary lane frozen by owner
+        run: echo "DISABLED - use Unreal Build Validation unified production workflow"

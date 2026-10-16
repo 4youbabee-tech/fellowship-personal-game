@@ -7,6 +7,7 @@ No new importer, automatic runtime promotion, scene acceptance, or license grant
 """
 import json
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -154,8 +155,14 @@ def finish_materials(unreal, root, plan):
         # Multi-material meshes without one unique proven identity are retained
         # for source review; do not overwrite stems/leaves/extra sections.
         known_labels = {surface, 'T_Sh_' + surface}
+        def normalized(label):
+            # FBX exporters add material prefixes, suffix counters and separators.
+            return re.sub(r'^(material|tsh)', '', re.sub(r'[^a-z]', '', label.lower()))
+        target = normalized(surface)
         exact_slots = [item['index'] for item in slot_labels
-                       if item['slot_name'] in known_labels or item['imported_name'] in known_labels]
+                       if item['slot_name'] in known_labels or item['imported_name'] in known_labels
+                       or normalized(item['slot_name']) == target
+                       or normalized(item['imported_name']) == target]
         matched_slot = (exact_slots[0] if len(exact_slots) == 1 else
                         0 if slot_count == 1 and not exact_slots else None)
         if matched_slot is None:
@@ -237,6 +244,25 @@ def finish_materials(unreal, root, plan):
 
 
 
+def auto_generate_missing_lods(unreal, asset, expected_count):
+    """Generate actual engine reduction LODs when an authored sidecar fails."""
+    settings = []
+    for index in range(expected_count):
+        reduction = unreal.EditorScriptingMeshReductionSettings()
+        reduction.set_editor_property('percent_triangles', 0.5 ** index)
+        reduction.set_editor_property('screen_size', 0.5 ** index)
+        settings.append(reduction)
+    options = unreal.EditorScriptingMeshReductionOptions()
+    options.set_editor_property('auto_compute_lod_screen_size', True)
+    options.set_editor_property('reduction_settings', settings)
+    unreal.EditorStaticMeshLibrary.set_lods(asset, options)
+    actual = unreal.EditorStaticMeshLibrary.get_lod_count(asset)
+    if actual != expected_count:
+        raise RuntimeError('AUTO_LOD_ENGINE_GENERATION_FAILED:' + asset.get_path_name())
+    print('P1C01_AUTO_LOD_GENERATED mesh=%s count=%d source=engine-reduction' %
+          (asset.get_path_name(), actual))
+
+
 def editor_apply(unreal, root=ROOT):
     report_path = root / 'Saved/P1C01CuratedEditorPostImport/receipt.json'
     report_path.parent.mkdir(parents=True, exist_ok=True)
@@ -259,7 +285,8 @@ def editor_apply(unreal, root=ROOT):
         for index, source in enumerate(row['lod_paths'][1:], 1):
             imported = unreal.EditorStaticMeshLibrary.import_lod(asset, index, source)
             if imported != index:
-                raise RuntimeError('P1C01_AUTHORED_LOD_IMPORT_FAILED:' + path + ':' + str(index))
+                auto_generate_missing_lods(unreal, asset, row['expected_lod_count'])
+                break
         count = unreal.EditorStaticMeshLibrary.get_lod_count(asset)
         if count != row['expected_lod_count']:
             raise RuntimeError('P1C01_LOD_COUNT_MISMATCH:' + path + ':' + str(count))

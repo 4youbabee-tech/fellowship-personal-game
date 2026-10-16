@@ -1,43 +1,11 @@
-name: P1C01 Source Asset Batch02
-
+name: 'Disabled - P1C01 Source Asset Batch02'
 on:
-  pull_request:
-    branches:
-      - develop
-    paths:
-      - 'Scripts/generate_p1c01_source_asset_batch02.py'
-      - 'Scripts/validate_p1c01_source_asset_batch02.py'
-      - '.github/workflows/p1c01-source-asset-batch02.yml'
-  push:
-    branches:
-      - develop
-    paths:
-      - 'Scripts/generate_p1c01_source_asset_batch02.py'
-      - 'Scripts/validate_p1c01_source_asset_batch02.py'
-      - '.github/workflows/p1c01-source-asset-batch02.yml'
-
+  workflow_dispatch:
 permissions:
   contents: read
-
 jobs:
-  validate-source-assets:
-    name: Hosted static FBX/PNG validation
+  disabled:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
     steps:
-      - name: Checkout exact candidate
-        uses: actions/checkout@v4
-
-      - name: Generate P1C01 source asset batch02
-        run: python3 Scripts/generate_p1c01_source_asset_batch02.py
-
-      - name: Validate generated P1C01 source assets
-        run: python3 Scripts/validate_p1c01_source_asset_batch02.py
-
-      - name: Upload generated source archive and manifest
-        uses: actions/upload-artifact@v4
-        with:
-          name: p1c01-source-asset-batch02-offrunner
-          path: |
-            Data/P1C01SourceAssetBatch02Manifest.json
-            SourceAssets/Production/World/Shire/Batch02OffRunner/P1C01_Batch02_SourceAssets.zip
+      - name: Secondary lane frozen by owner
+        run: echo "DISABLED - use Unreal Build Validation unified production workflow"

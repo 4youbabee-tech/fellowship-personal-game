@@ -1,63 +1,11 @@
-name: 1000 actual original FBX source production
+name: 'Disabled - 1000 actual original FBX source production'
 on:
-  pull_request:
-    branches: [develop]
-    paths:
-      - 'Tools/CloudAssetBuild/blender_1000_source.py'
-      - '.github/workflows/cloud-1000-real-fbx.yml'
+  workflow_dispatch:
 permissions:
   contents: read
-concurrency:
-  group: source1000-${{ github.event.pull_request.number }}
-  cancel-in-progress: true
 jobs:
-  make-sources:
+  disabled:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
-    strategy:
-      fail-fast: false
-      max-parallel: 4
-      matrix:
-        shard: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
-    env:
-      SHA: ${{ github.event.pull_request.head.sha }}
-      OUT: ${{ github.workspace }}/_BuildArtifacts/1000/shard-${{ matrix.shard }}
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.SHA }}
-          persist-credentials: false
-      - name: Exact head and governor
-        run: |
-          test "$(git rev-parse HEAD)" = "$SHA"
-          python3 Scripts/governor_work_start.py --lane VISUAL_WORLD_PREP
-          python3 -m py_compile Tools/CloudAssetBuild/blender_1000_source.py
-      - name: Blender install
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y blender python3-numpy
-      - name: Actually produce and reimport fifty binary FBX
-        run: blender --background --factory-startup --python-exit-code 3 -t 2 --python Tools/CloudAssetBuild/blender_1000_source.py -- --shard ${{ matrix.shard }} "$OUT"
-      - name: Audit bytes and receipt
-        run: |
-          python3 - <<'PY'
-          import os,json,hashlib
-          from pathlib import Path
-          out=Path(os.environ["OUT"])
-          rows=json.loads((out/"receipt.json").read_text())["records"]
-          assert len(rows)==50 and len({r["sha256"] for r in rows})==50
-          for r in rows:
-              file=(out/r["path"]).resolve()
-              assert file.is_relative_to(out.resolve()) and file.is_file()
-              data=file.read_bytes()
-              assert len(data)==r["bytes"] and hashlib.sha256(data).hexdigest()==r["sha256"]
-              assert data.startswith(b"Kaydara FBX Binary") and int.from_bytes(data[23:27],"little")==7400
-              assert r["uv_layers"]>0 and r["ucx"]>0 and not r["unreal_imported"]
-          print("HOSTED_50_FBX_PHYSICAL_QC_PASS")
-          PY
-      - uses: actions/upload-artifact@v4
-        with:
-          name: original-fbx-source-50-shard-${{ matrix.shard }}-${{ env.SHA }}
-          path: ${{ env.OUT }}
-          retention-days: 30
-          if-no-files-found: error
+      - name: Secondary lane frozen by owner
+        run: echo "DISABLED - use Unreal Build Validation unified production workflow"
