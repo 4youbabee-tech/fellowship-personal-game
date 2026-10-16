@@ -40,7 +40,14 @@ echo.
 echo Fast Editor preview: click Play after project opens.
 echo WARNING: This does NOT update GitHub branch or compile changed C++/UHT code.
 echo WARNING: This does NOT prove that current local assets match a GitHub PR.
+if /I "%~1"=="--proof" goto automated_pie_proof
 start "" "%UE_EDITOR%" "%PROJECT%" -d3d11 -ResX=1280 -ResY=720 -log
 if errorlevel 1 exit /b 13
 echo SHIRE_PIE_FAST_PREVIEW_LAUNCH_REQUESTED head=%GIT_SHA%
 exit /b 0
+
+:automated_pie_proof
+rem Native editor automation starts a real PIE world, never a -game substitute.
+if not exist "%ROOT%Saved\PES002VisualProof" mkdir "%ROOT%Saved\PES002VisualProof"
+"%UE_EDITOR%" "%PROJECT%" -d3d11 -windowed -ResX=1280 -ResY=720 -NoSplash -PES002VisualProof -ExecCmds="Automation RunTests ShireJourney.PES002.VisualPIE" -abslog="%ROOT%Saved\PES002VisualProof\PES002VisualEditor.log"
+exit /b %ERRORLEVEL%

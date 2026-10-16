@@ -13,6 +13,113 @@
 #include "Serialization/JsonReader.h"
 #include "Serialization/JsonSerializer.h"
 #include "UObject/UObjectGlobals.h"
+#include "Editor.h"
+#include "Engine/World.h"
+#include "GameFramework/PlayerController.h"
+#include "GameFramework/Pawn.h"
+#include "HAL/PlatformTime.h"
+#include "Misc/CommandLine.h"
+#include "Misc/Parse.h"
+#include "Settings/LevelEditorPlaySettings.h"
+#include "Tests/AutomationEditorCommon.h"
+
+// Opt-in editor integration evidence. This deliberately runs a real PIE world;
+// ordinary QA runs neither enter PIE nor produce visual acceptance claims.
+class FShirePES002WaitForVisualPIE : public IAutomationLatentCommand
+{
+public:
+    explicit FShirePES002WaitForVisualPIE(FAutomationTestBase* InTest)
+        : Test(InTest), StartedAt(FPlatformTime::Seconds()) {}
+
+    virtual bool Update() override
+    {
+        UWorld* World = GEditor ? GEditor->PlayWorld : nullptr;
+        APlayerController* PC = World ? World->GetFirstPlayerController() : nullptr;
+        if (World && World->WorldType == EWorldType::PIE && PC && PC->GetPawn())
+        {
+            if (!bObservedPIE)
+            {
+                bObservedPIE = true;
+                UE_LOG(LogTemp, Display,
+                    TEXT("PES002_PIE_SESSION_ACTUAL world=%s worldType=PIE pawn=%s"),
+                    *World->GetName(), *PC->GetPawn()->GetName());
+            }
+            // Existing world-builder timers capture the fourth angle at ~43s.
+            // Use actual ticking world time, not an assumed wall-clock delay.
+            if (World->GetTimeSeconds() >= 50.0f)
+            {
+                UE_LOG(LogTemp, Display,
+                    TEXT("PES002_PIE_CAPTURE_WINDOW_COMPLETE worldType=PIE worldSeconds=%.2f visualAcceptance=pending"),
+                    World->GetTimeSeconds());
+                return true;
+            }
+        }
+        else if (bObservedPIE)
+        {
+            Test->AddError(TEXT("Actual PIE world/player pawn disappeared before the capture window completed"));
+            return true;
+        }
+        if (FPlatformTime::Seconds() - StartedAt > 180.0)
+        {
+            Test->AddError(TEXT("Timed out waiting for actual PIE world, player pawn and 50 seconds of world ticks"));
+            return true;
+        }
+        return false;
+    }
+private:
+    FAutomationTestBase* Test;
+    double StartedAt;
+    bool bObservedPIE = false;
+};
+
+class FShirePES002RestorePIESettings : public IAutomationLatentCommand
+{
+public:
+    FShirePES002RestorePIESettings(int32 InWidth, int32 InHeight)
+        : Width(InWidth), Height(InHeight) {}
+    virtual bool Update() override
+    {
+        ULevelEditorPlaySettings* Settings = GetMutableDefault<ULevelEditorPlaySettings>();
+        Settings->NewWindowWidth = Width;
+        Settings->NewWindowHeight = Height;
+        UE_LOG(LogTemp, Display, TEXT("PES002_PIE_SESSION_ENDED active=%d"),
+            GEditor && GEditor->PlayWorld ? 1 : 0);
+        return true;
+    }
+private:
+    int32 Width;
+    int32 Height;
+};
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(
+    FShirePES002VisualPIETest,
+    "ShireJourney.PES002.VisualPIE",
+    EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FShirePES002VisualPIETest::RunTest(const FString& Parameters)
+{
+    if (!FParse::Param(FCommandLine::Get(), TEXT("PES002VisualProof")))
+    {
+        AddWarning(TEXT("VisualPIE requires explicit -PES002VisualProof; no PIE evidence produced"));
+        return true;
+    }
+    if (!GEditor || GEditor->PlayWorld)
+    {
+        AddError(TEXT("VisualPIE requires an idle Unreal Editor; will not replace an active PIE session"));
+        return false;
+    }
+    ULevelEditorPlaySettings* Settings = GetMutableDefault<ULevelEditorPlaySettings>();
+    const int32 PreviousWidth = Settings->NewWindowWidth;
+    const int32 PreviousHeight = Settings->NewWindowHeight;
+    Settings->NewWindowWidth = 1280;
+    Settings->NewWindowHeight = 720;
+    ADD_LATENT_AUTOMATION_COMMAND(FEditorLoadMap(TEXT("/Engine/Maps/Entry")));
+    ADD_LATENT_AUTOMATION_COMMAND(FStartPIECommand(false));
+    ADD_LATENT_AUTOMATION_COMMAND(FShirePES002WaitForVisualPIE(this));
+    ADD_LATENT_AUTOMATION_COMMAND(FEndPlayMapCommand());
+    ADD_LATENT_AUTOMATION_COMMAND(FShirePES002RestorePIESettings(PreviousWidth, PreviousHeight));
+    return true;
+}
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(
     FShireQASaveDefaultStateTest,

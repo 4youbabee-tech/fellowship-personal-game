@@ -2420,8 +2420,8 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             else if (Class == FName(TEXT("AnimSequence"))) ++AnimationCount;
             else if (Class == FName(TEXT("SoundWave"))) ++SoundCount;
             UE_LOG(LogTemp, Display,
-                TEXT("PES002_UASSET_ON_DISK class=%s package=%s bytes=%lld newOnThisRunner=%d"),
-                *Class.ToString(), *Package, Bytes, bNewHere ? 1 : 0);
+                TEXT("PES002_UASSET_ON_DISK class=%s package=%s file=%s bytes=%lld newOnThisRunner=%d"),
+                *Class.ToString(), *Package, *DiskFile, Bytes, bNewHere ? 1 : 0);
         }
         UE_LOG(LogTemp, Display,
             TEXT("PES002_UASSET_INVENTORY persisted=%d newOnThisRunner=%d staticMeshes=%d skeletalMeshes=%d materials=%d textures=%d animSequences=%d soundWaves=%d sourceFilesAreNotUassets=1"),

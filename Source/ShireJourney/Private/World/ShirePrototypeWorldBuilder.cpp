@@ -28,6 +28,9 @@
 #include "GameFramework/PlayerController.h"
 #include "Misc/CommandLine.h"
 #include "HAL/PlatformMemory.h"
+#include "DynamicRHI.h"
+#include "RHI.h"
+#include "RHIStats.h"
 #include "Misc/CoreDelegates.h"
 #include "HAL/PlatformTime.h"
 #include "Misc/Parse.h"
@@ -433,6 +436,8 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     // quests and save. It is never used in ordinary gameplay or shipping.
     if (FParse::Param(FCommandLine::Get(), TEXT("PES002VisualProof")))
     {
+        UE_LOG(LogTemp, Display, TEXT("PES002_CAPTURE_WORLD mode=%s"),
+            GetWorld()->WorldType == EWorldType::PIE ? TEXT("PIE") : TEXT("GAME"));
         // UE4 core frame callback provides actual frame intervals without adding
         // forbidden WorldBuilder ActorTick or any always-on gameplay cost.
         ProofLastFrameTimestamp = FPlatformTime::Seconds();
@@ -542,6 +547,21 @@ void AShirePrototypeWorldBuilder::SampleProofFrame()
         const FPlatformMemoryStats Memory = FPlatformMemory::GetStats();
         const double UsedRamMiB = static_cast<double>(Memory.UsedPhysical) / 1048576.0;
         const double PeakRamMiB = static_cast<double>(Memory.PeakUsedPhysical) / 1048576.0;
+        // UE4.27 RHI texture counters are safe on the main thread. Hardware
+        // capacity and texture allocations are deliberately separate from total
+        // process VRAM, which the Windows capture records through GPU counters.
+        if (GDynamicRHI)
+        {
+            FTextureMemoryStats TextureMemory;
+            GDynamicRHI->RHIGetTextureMemoryStats(TextureMemory);
+            UE_LOG(LogTemp, Display,
+                TEXT("PES002_RHI_MEMORY source=UE4.27-RHI adapter=%s hardwareStatsValid=%d dedicatedCapacityMiB=%.1f streamingTexturesMiB=%.1f nonStreamingTexturesMiB=%.1f texturePoolMiB=%.1f totalProcessVRAM=SEPARATE_OS_COUNTER"),
+                *GRHIAdapterName, TextureMemory.AreHardwareStatsValid() ? 1 : 0,
+                TextureMemory.DedicatedVideoMemory < 0 ? -1.0 : TextureMemory.DedicatedVideoMemory / 1048576.0,
+                TextureMemory.StreamingMemorySize / 1048576.0,
+                TextureMemory.NonStreamingMemorySize / 1048576.0,
+                TextureMemory.TexturePoolSize / 1048576.0);
+        }
         UE_LOG(LogTemp, Display,
             TEXT("PES002_RUNTIME_METRICS source=UE4-game-frame runner=CI-not-target elapsedSec=%.2f windowSec=%.2f frames=%d fps=%.2f worstFrameMs=%.2f processRAMMiB=%.1f peakRAMMiB=%.1f gpuVRAM=UNMEASURED deviceAcceptance=false"),
             ProofElapsedSeconds, ProofFrameSeconds, ProofFrameCount,

@@ -1,4 +1,4 @@
-param([int]$StartupTimeoutSeconds = 240, [int]$CaptureSettleSeconds = 12)
+param([int]$StartupTimeoutSeconds = 240, [int]$CaptureSettleSeconds = 12, [switch]$PIE)
 $ErrorActionPreference = "Stop"
 $root = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $exe = "C:\Program Files\Epic Games\UE_4.27\Engine\Binaries\Win64\UE4Editor.exe"
@@ -12,10 +12,21 @@ $log = Join-Path $proof "PES002VisualEditor.log"
 # A previous run's view=3 marker can be observed before UE truncates its log.
 # Clear only this proof's stale files before launch; never kill another writer.
 Remove-Item -LiteralPath $log -Force -ErrorAction SilentlyContinue
+Remove-Item -LiteralPath (Join-Path $proof 'GPUProcessMemory.csv') -Force -ErrorAction SilentlyContinue
 Get-ChildItem -LiteralPath $proof -Filter 'BagEnd-P1C01-view*-actual-runtime.png' -File |
     Remove-Item -Force
 $arguments = @('"' + $project + '"', '-game', '-windowed', '-ResX=1280', '-ResY=720', '-NoSplash', '-log', '-PES002VisualProof', '-abslog="' + $log + '"')
-$proc = Start-Process -FilePath $exe -ArgumentList ($arguments -join ' ') -PassThru
+if ($PIE) {
+    $preview = Join-Path $root 'SHIRE_FAST_PIE_PREVIEW.bat'
+    if (!(Test-Path -LiteralPath $preview)) { throw 'PES002_PIE_PREVIEW_BATCH_MISSING' }
+    # Own the wrapper and its editor child; never terminate unrelated writers.
+    $proc = Start-Process -FilePath $env:ComSpec -ArgumentList ('/d /s /c ""' + $preview + '" --proof"') -PassThru
+} else {
+    $proc = Start-Process -FilePath $exe -ArgumentList ($arguments -join ' ') -PassThru
+}
+$gpuSamples = @()
+$gpuCounterUnavailable = $false
+$editorPid = if ($PIE) { 0 } else { $proc.Id }
 try {
     # UE4.27 may spend over a minute rebuilding its local shader/DDC state on
     # the 8 GB runner. Wait for the last of FOUR real screenshot requests,
@@ -24,6 +35,25 @@ try {
     $ready = $false
     while ((Get-Date) -lt $deadline) {
         $proc.Refresh()
+        if ($PIE -and $editorPid -eq 0) {
+            $child = Get-CimInstance Win32_Process -Filter "ParentProcessId=$($proc.Id)" -ErrorAction SilentlyContinue |
+                Where-Object { $_.Name -eq 'UE4Editor.exe' } | Select-Object -First 1
+            if ($child) { $editorPid = [int]$child.ProcessId }
+        }
+        if ($editorPid -gt 0 -and -not $gpuCounterUnavailable) {
+            try {
+                $counter = Get-Counter -Counter '\GPU Process Memory(*)\Dedicated Usage','\GPU Process Memory(*)\Shared Usage' -ErrorAction Stop
+                $owned = @($counter.CounterSamples | Where-Object { $_.InstanceName -like "pid_${editorPid}_*" -and $_.Status -eq 0 })
+                if ($owned.Count -gt 0) {
+                    $dedicated = ($owned | Where-Object { $_.Path -like '*\Dedicated Usage' } | Measure-Object CookedValue -Sum).Sum
+                    $shared = ($owned | Where-Object { $_.Path -like '*\Shared Usage' } | Measure-Object CookedValue -Sum).Sum
+                    $gpuSamples += [pscustomobject]@{ utc=(Get-Date).ToUniversalTime().ToString('o'); pid=$editorPid; dedicatedBytes=[int64]$dedicated; sharedBytes=[int64]$shared }
+                }
+            } catch {
+                $gpuCounterUnavailable = $true
+                Write-Host "PES002_GPU_PROCESS_MEMORY_UNAVAILABLE reason=$($_.Exception.Message)"
+            }
+        }
         if ((Test-Path -LiteralPath $log) -and
             (Select-String -Path $log -SimpleMatch -Pattern 'PES002_SCREENSHOT_REQUESTED target=BagEnd view=3' -Quiet)) {
             $ready = $true
@@ -40,7 +70,20 @@ try {
     Start-Sleep -Seconds $CaptureSettleSeconds
 } finally {
     $proc.Refresh()
-    if (!$proc.HasExited) { Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue }
+    if (!$proc.HasExited) {
+        if ($PIE) { & taskkill.exe /PID $proc.Id /T /F | Out-Null }
+        else { Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue }
+    }
+}
+if ($gpuSamples.Count -gt 0) {
+    $gpuSamples | Export-Csv -NoTypeInformation -LiteralPath (Join-Path $proof 'GPUProcessMemory.csv')
+    $peakDedicated = ($gpuSamples | Measure-Object dedicatedBytes -Maximum).Maximum / 1048576.0
+    $peakShared = ($gpuSamples | Measure-Object sharedBytes -Maximum).Maximum / 1048576.0
+    Write-Host ("PES002_GPU_PROCESS_MEMORY source=Windows-GPU-Process-Memory pid={0} samples={1} peakDedicatedMiB={2:N2} peakSharedMiB={3:N2} targetDeviceAccepted=false" -f $editorPid,$gpuSamples.Count,$peakDedicated,$peakShared)
+}
+if ($PIE -and (!(Select-String -Path $log -SimpleMatch -Pattern 'PES002_CAPTURE_WORLD mode=PIE' -Quiet) -or
+    !(Select-String -Path $log -SimpleMatch -Pattern 'PES002_PIE_CAPTURE_WINDOW_COMPLETE worldType=PIE' -Quiet))) {
+    throw 'PES002_REAL_PIE_WORLD_NOT_PROVEN'
 }
 if (!(Test-Path $log) -or !(Select-String -Path $log -Pattern 'PES002_CAPTURE_CAMERA_READY target=BagEnd' -Quiet)) {
     throw "PES002_CAPTURE_CAMERA_NOT_CONFIRMED; inspect $log"

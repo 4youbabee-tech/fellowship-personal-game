@@ -541,7 +541,7 @@ jobs:
       - name: Capture Bag End targeted P1C01 visual proof
         if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true' || env.SHIRE_CURATED_REQUIRED == 'true')
         shell: cmd
-        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\capture_pes002_bag_end_visual.ps1"
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\capture_pes002_bag_end_visual.ps1" -PIE
 
       - name: Upload PES-002 screenshot evidence
         if: (always() && (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')) || (success() && env.SHIRE_CURATED_REQUIRED == 'true')

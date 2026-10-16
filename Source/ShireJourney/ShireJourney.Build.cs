@@ -33,7 +33,8 @@ public class ShireJourney : ModuleRules
 
         PrivateDependencyModuleNames.AddRange(new string[]
         {
-            "PhysicsCore"
+            "PhysicsCore",
+            "RHI"
         });
 
         RuntimeDependencies.Add("$(ProjectDir)/Data/NPCSocialModel.json", StagedFileType.NonUFS);

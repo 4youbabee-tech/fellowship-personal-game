@@ -30,7 +30,10 @@ if exist "%IMPORTLOG%" del /F /Q "%IMPORTLOG%" >nul 2>nul
 echo PRODUCTION_IMPORT_ATTEMPT attempt=!ATTEMPT!/2
 "%EDITORCMD%" "%PROJECT%" -run=ShireProductionImport %* -unattended -nop4 -nosplash -NoSound -abslog="%IMPORTLOG%"
 set "IMPORT_EXIT=!ERRORLEVEL!"
-if exist "%IMPORTLOG%" findstr /I /C:"ShireProductionImport:" /C:"ShireProductionImport FAILED" /C:"Error:" /C:"Warning:" "%IMPORTLOG%"
+if exist "%IMPORTLOG%" findstr /I /C:"ShireProductionImport:" /C:"ShireProductionImport FAILED" /C:"PES002_UASSET_" /C:"PES002_SKELETAL_WEIGHT_QC" /C:"Error:" /C:"Warning:" "%IMPORTLOG%"
+rem Retain the actual commandlet log even on rejection, alongside PNG evidence.
+if not exist "%GITHUB_WORKSPACE%\Saved\PES002VisualProof" mkdir "%GITHUB_WORKSPACE%\Saved\PES002VisualProof"
+if exist "%IMPORTLOG%" copy /Y "%IMPORTLOG%" "%GITHUB_WORKSPACE%\Saved\PES002VisualProof\PES002ProductionImport.log" >nul
 
 if "!IMPORT_EXIT!"=="0" goto verify_success
 if !ATTEMPT! GEQ 2 exit /b !IMPORT_EXIT!
