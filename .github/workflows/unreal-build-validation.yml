@@ -383,6 +383,9 @@ jobs:
           "$BIN" --version | head -n 2
           git clone --depth 1 --branch v2.0.18 https://github.com/makehumancommunity/mpfb2.git "$WORK/mpfb2"
           (cd "$WORK/mpfb2/src/mpfb" && zip -qr "$WORK/mpfb-addon.zip" .)
+          # Fail fast against the real Blender RNA API before fetching 267 MiB.
+          "$BIN" -b -t 2 --python-exit-code 94 --python Tools/CloudAssetBuild/mpfb_hosted_bootstrap.py -- \
+            --extension "$WORK/mpfb-addon.zip" --probe-only
           curl -fL --retry 3 --retry-delay 5 \
             https://files2.makehumancommunity.org/asset_packs/makehuman_system_assets/makehuman_system_assets_cc0.zip \
             -o "$WORK/makehuman_system_assets_cc0.zip"
