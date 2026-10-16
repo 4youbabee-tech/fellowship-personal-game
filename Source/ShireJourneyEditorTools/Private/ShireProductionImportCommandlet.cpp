@@ -50,6 +50,7 @@
 #include "Modules/ModuleManager.h"
 #include "UObject/Package.h"
 #include "UObject/UObjectGlobals.h"
+#include "UObject/UObjectIterator.h"
 
 namespace ShireProductionImport
 {
@@ -2515,6 +2516,36 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             Display,
             TEXT("ShireProductionImport explicit material package save: %d packages"),
             ImportedMaterialPackages.Num());
+    }
+
+    // FBX creates dependent Skeleton, PhysicsAsset and atlas packages outside
+    // ImportedObjectPaths. Commandlet SaveDirtyPackages does not reliably flush
+    // these new secondary packages. Persist every loaded rig package explicitly;
+    // a separate editor process must then resolve the saved references.
+    TArray<UPackage*> RigPackages;
+    for (TObjectIterator<UPackage> It; It; ++It)
+    {
+        UPackage* Package = *It;
+        if (Package != GetTransientPackage() &&
+            Package->GetName().StartsWith(TEXT("/Game/Production/Characters/Rigs/"), ESearchCase::IgnoreCase))
+            RigPackages.AddUnique(Package);
+    }
+    for (UPackage* Package : RigPackages)
+    {
+        const FString Filename = FPackageName::LongPackageNameToFilename(
+            Package->GetName(), FPackageName::GetAssetPackageExtension());
+        IFileManager::Get().MakeDirectory(*FPaths::GetPath(Filename), true);
+        const bool bSaved = UPackage::SavePackage(Package, nullptr,
+            RF_Public | RF_Standalone, *Filename, GError, nullptr, false, true, SAVE_NoError);
+        const int64 Bytes = IFileManager::Get().FileSize(*Filename);
+        if (!bSaved || Bytes <= 0)
+        {
+            ++Failed;
+            UE_LOG(LogTemp, Error, TEXT("PES002_RIG_DEPENDENCY_SAVE_FAILED package=%s"), *Package->GetName());
+        }
+        else
+            UE_LOG(LogTemp, Display, TEXT("PES002_RIG_DEPENDENCY_SAVED package=%s bytes=%lld"),
+                *Package->GetName(), Bytes);
     }
 
     // Keep the broad pass for imported meshes/textures and any other secondary assets.

@@ -16,6 +16,8 @@
 #include "Editor.h"
 #include "PlayInEditorDataTypes.h"
 #include "Engine/World.h"
+#include "EngineUtils.h"
+#include "ShirePrototypeWorldBuilder.h"
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/Pawn.h"
 #include "HAL/PlatformTime.h"
@@ -59,9 +61,12 @@ public:
                     TEXT("PES002_PIE_SESSION_ACTUAL world=%s worldType=PIE pawn=%s"),
                     *World->GetName(), *PC->GetPawn()->GetName());
             }
-            // Existing world-builder timers capture the fourth angle at ~43s.
-            // Use actual ticking world time, not an assumed wall-clock delay.
-            if (World->GetTimeSeconds() >= 50.0f)
+            // Chapter streaming can finish long after PIE starts. Capture and
+            // CSV timers begin when the actual Shire builder is created.
+            bool bCaptureWindowComplete = false;
+            for (TActorIterator<AShirePrototypeWorldBuilder> It(World); It; ++It)
+                bCaptureWindowComplete |= It->GetGameTimeSinceCreation() >= 50.0f;
+            if (bCaptureWindowComplete)
             {
                 UE_LOG(LogTemp, Display,
                     TEXT("PES002_PIE_CAPTURE_WINDOW_COMPLETE worldType=PIE worldSeconds=%.2f visualAcceptance=pending"),
