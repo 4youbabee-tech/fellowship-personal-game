@@ -1,3 +1,12 @@
+## 2026-10-17 PES-002 source-first warehouse reuse wave
+| Asset family | Existing real provenance | Candidate scope and acceptance |
+|---|---|---|
+| Original cottages | /Game/Production/World/Shire/SM_ShCottageHouse (71 triangles), two successfully imported Bagshot cottages (1148 triangles each) | Reuse up to four authored near Bag End visually; original blocking collider unchanged; exact-head Unreal screenshots and collision/route evidence pending |
+| Garden planters | Previously imported /Game/Production/World/Shire/CuratedP1C01/Architecture/meshes/SM_ShGardenPlanter_LOD0; current BagEndArchGroups[1] HISM | Up to four additional safe exterior ground-traced instances, no new assets/downloads; real UE placement count pending |
+| Nature | 9 actual imported curated FBX families, 117 grounded, 15 trees swapped, 18 shrubs swapped, 25/25 source garden placed on last green SHA | Reused without redundant source retrieval; no additional runtime canopy density |
+| Poly Haven Painted Wooden Bench | CC0 provider page license verified, provider model visible, FILE NOT DOWNLOADED | Existing ExternalAssetManifest holds candidate; source SHA/Warehouse/UE/world/render statuses false |
+| Full gameplay/visual acceptance | Last 9bfbe696 Run 38964276675 PASS, 4 native PIE frames; 26.06-29.49 runner FPS, not target PC | New exact-head run/4 screenshots/traversal/device/human Gate 6/7 OPEN; PES-002 active / PES-003 locked |
+
 ## 2026-10-16 Shire PES-002 exterior audiovisual + legal rig source prep
 | Deliverable | Stage before next exact SHA CI |
 |---|---|

@@ -1246,6 +1246,54 @@ void AShirePrototypeWorldBuilder::OnBagEndArchitectureReady()
             I, *Mesh->GetPathName(), Group->GetInstanceCount(),
             Mesh->GetStaticMaterials().Num());
     }
+    // Reuse one native imported FBX planter HISM family in the existing bank.
+    // Extra plants frame the FRONT SIDE GARDENS, never the west-facing doorway,
+    // and are grounded only after an unobstructed terrain query.
+    int32 ReusedPlanters = 0;
+    if (BagEndArchGroups.Num() > 1 && BagEndArchSources.Num() > 1)
+    {
+        UHierarchicalInstancedStaticMeshComponent* PlanterGroup = BagEndArchGroups[1];
+        UStaticMesh* PlanterMesh = BagEndArchSources[1].Get();
+        if (PlanterGroup && PlanterMesh &&
+            PlanterGroup->GetStaticMesh() == PlanterMesh &&
+            PlanterMesh->GetStaticMaterials().Num() > 0 &&
+            PlanterMesh->GetBounds().BoxExtent.Z > 1.0f)
+        {
+            const FVector PlanterPoints[] = {
+                FVector(-2750.0f,-780.0f,0.0f),
+                FVector(-2750.0f,-230.0f,0.0f),
+                FVector(-1910.0f,-865.0f,0.0f),
+                FVector(-1910.0f,-175.0f,0.0f)
+            };
+            const FBoxSphereBounds PlanterBounds = PlanterMesh->GetBounds();
+            const float Scale = FMath::Clamp(
+                85.0f / (2.0f * PlanterBounds.BoxExtent.Z), 0.08f, 2.5f);
+            for (int32 I = 0; I < UE_ARRAY_COUNT(PlanterPoints); ++I)
+            {
+                const FVector At = PlanterPoints[I];
+                // Explicit access buffer: no decorations on Bag End's front walk.
+                if (At.X < -2330.0f && FMath::Abs(At.Y + 520.0f) < 210.0f)
+                    continue;
+                FHitResult Ground;
+                FCollisionQueryParams Trace(TEXT("PES002ReusedWarehousePlanterGround"),false,this);
+                if (!World->LineTraceSingleByChannel(
+                        Ground, At + FVector(0,0,1150),
+                        At - FVector(0,0,700), ECC_Visibility, Trace) ||
+                    Ground.ImpactNormal.Z < 0.77f ||
+                    FMath::Abs(Ground.Location.Z) > 180.0f)
+                    continue;
+                PlanterGroup->AddInstanceWorldSpace(FTransform(
+                    FRotator(0.0f, float((I * 67) % 360), 0.0f),
+                    Ground.Location - FVector(0,0,
+                        (PlanterBounds.Origin.Z - PlanterBounds.BoxExtent.Z) * Scale),
+                    FVector(Scale)));
+                ++ReusedPlanters;
+            }
+        }
+    }
+    UE_LOG(LogTemp, Display,
+        TEXT("PES002_REUSED_WAREHOUSE_PLANTERS added=%d cap=4 source=existingCuratedFBXHISM collision=none pathway=preserved"),
+        ReusedPlanters);
     UE_LOG(LogTemp, Display,
         TEXT("PES002_ARCH_GARDEN importedFamilies=%d placed=%d rejected=%d max=20 collision=none visual=pending"),
         Families, Placed, Rejected);
@@ -3678,17 +3726,82 @@ void AShirePrototypeWorldBuilder::SpawnProductionVillageDetailLayer()
         { FVector(840, -420, 0), 0.76f, 18.0f },
         { FVector(1540, 520, 0), 0.70f, -28.0f }
     };
-    for (const FCottagePlacement& P : Cottages)
+    // PES-002 near Bag End: REUSE two already imported, authored, round-window
+    // cottage meshes (1148 triangles each) instead of stacking them on top of
+    // grey 71-triangle cottage shells. Crucially the original actor is still the
+    // SAME collision owner, at its previous position, rotation and scale.
+    // A missing mesh/failed spawn keeps the old visible appearance safely.
+    int32 BagEndStyledCottages = 0;
+    auto ReplaceExteriorVisualOnly = [this, &BagEndStyledCottages](
+        UStaticMesh* Original, UStaticMesh* Authored,
+        const FVector& At, const FVector& Scale, const FRotator& Rotation) -> bool
     {
-        SpawnProd(ProductionCottageHouseMesh, P.Location, FVector(P.Scale),
-            FRotator(0.0f, P.Yaw, 0.0f), true);
-        SpawnProd(ProductionFlowerBoxMesh, P.Location + FVector(-55.0f, -155.0f, 0.0f),
-            FVector(P.Scale * 0.65f), FRotator(0.0f, P.Yaw, 0.0f), false);
+        if (!Original || !Authored || Authored->GetStaticMaterials().Num() < 2)
+        {
+            return false;
+        }
+        AStaticMeshActor* OriginalCollision = SpawnShape(
+            Original, At, Scale, FLinearColor::White, Rotation, true);
+        if (!OriginalCollision)
+        {
+            return false;
+        }
+        AStaticMeshActor* StyledVisual = SpawnShape(
+            Authored, At, Scale, FLinearColor::White, Rotation, false);
+        if (!StyledVisual)
+        {
+            // The already-spawned original stays visible and blocking.
+            return true;
+        }
+        if (UStaticMeshComponent* OriginalComponent =
+                OriginalCollision->GetStaticMeshComponent())
+        {
+            OriginalComponent->SetVisibility(false, true);
+            OriginalComponent->SetCastShadow(false);
+            OriginalCollision->Tags.AddUnique(TEXT("PES002PreservedCottageCollision"));
+            StyledVisual->Tags.AddUnique(TEXT("PES002AuthoredNearCottageVisual"));
+            StyledVisual->SetActorEnableCollision(false);
+            ++BagEndStyledCottages;
+        }
+        return true;
+    };
+
+    for (int32 HouseIndex = 0; HouseIndex < UE_ARRAY_COUNT(Cottages); ++HouseIndex)
+    {
+        const FCottagePlacement& P = Cottages[HouseIndex];
+        const FRotator Yaw(0.0f, P.Yaw, 0.0f);
+        const bool bNearBagEnd = FVector::DistSquared2D(
+            P.Location, FVector(-2210.0f, -520.0f, 0.0f)) < FMath::Square(2050.0f);
+        UStaticMesh* Authored = (HouseIndex % 2 == 0)
+            ? ProductionBagshotThatchedCottageMesh
+            : ProductionBagshotTimberCottageMesh;
+        if (!bNearBagEnd || !ReplaceExteriorVisualOnly(
+                ProductionCottageHouseMesh, Authored,
+                P.Location, FVector(P.Scale), Yaw))
+        {
+            SpawnProd(ProductionCottageHouseMesh, P.Location,
+                FVector(P.Scale), Yaw, true);
+        }
+        SpawnProd(ProductionFlowerBoxMesh,
+            P.Location + FVector(-55.0f, -155.0f, 0.0f),
+            FVector(P.Scale * 0.65f), Yaw, false);
     }
 
-    // Hobbiton village-common visual shell and social yard.
-    SpawnProd(ProductionCottageHouseMesh, FVector(-520, 360, 0), FVector(1.28f, 1.15f, 1.18f),
-        FRotator(0.0f, -8.0f, 0.0f), true);
+    // Same swap for the visible village-common backdrop: the production
+    // collider is never moved, resized, removed or assigned to the new mesh.
+    const FVector CommonHouseAt(-520.0f, 360.0f, 0.0f);
+    const FVector CommonHouseScale(1.28f, 1.15f, 1.18f);
+    const FRotator CommonHouseYaw(0.0f, -8.0f, 0.0f);
+    if (!ReplaceExteriorVisualOnly(ProductionCottageHouseMesh,
+            ProductionBagshotTimberCottageMesh,
+            CommonHouseAt, CommonHouseScale, CommonHouseYaw))
+    {
+        SpawnProd(ProductionCottageHouseMesh, CommonHouseAt,
+            CommonHouseScale, CommonHouseYaw, true);
+    }
+    UE_LOG(LogTemp, Display,
+        TEXT("PES002_REUSED_WAREHOUSE_HOUSES styled=%d originalCollisionRetained=1 doubleFacades=0 authoredFamilies=2 cap=4"),
+        BagEndStyledCottages);
     SpawnProd(ProductionWellMesh, FVector(-120, 300, 0), FVector(0.82f), FRotator::ZeroRotator, true);
 
     const FVector Market[] = {
