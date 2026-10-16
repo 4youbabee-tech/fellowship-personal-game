@@ -109,6 +109,12 @@ private:
     FStreamableManager CuratedNatureLoader;
     TSharedPtr<FStreamableHandle> CuratedNatureLoadHandle;
     bool bCuratedNatureRequested = false;
+    // Five already-imported FBX architecture meshes: Bag End exterior only.
+    UPROPERTY() TArray<UHierarchicalInstancedStaticMeshComponent*> BagEndArchGroups;
+    UPROPERTY() TArray<TSoftObjectPtr<UStaticMesh>> BagEndArchSources;
+    FStreamableManager BagEndArchLoader;
+    TSharedPtr<FStreamableHandle> BagEndArchHandle;
+    bool bBagEndArchRequested = false;
     UPROPERTY() TArray<UHierarchicalInstancedStaticMeshComponent*> Cloud138Groups;
     UPROPERTY() TArray<TSoftObjectPtr<UStaticMesh>> Cloud138Sources;
     FStreamableManager Cloud138Loader;
@@ -146,6 +152,8 @@ private:
     void SpawnFoliagePass();
     void RequestCuratedNatureLayer();
     void OnCuratedNatureLayerReady();
+    void RequestBagEndArchitecture();
+    void OnBagEndArchitectureReady();
     void RequestCloud138Layer();
     void OnCloud138Ready();
     void SpawnScenicDetailPass();

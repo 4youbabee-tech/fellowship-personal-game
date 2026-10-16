@@ -1,3 +1,11 @@
+## 2026-10-16 PR #484 Bag End imported architecture candidate
+| Item | State |
+|---|---|
+| Scope | PES-002 exterior, 5 UE4 imported static FBX families, maximum 20 HISM decor instances |
+| Code | Existing async loader, traced ground, no collision, no new manager; old rejected extra woodland swap removed |
+| Runtime family/placed proof and 4 screenshots | NOT RUN on new head |
+| Target device and visual acceptance | NOT RUN / NOT ACCEPTED; Gate 6/7 OPEN |
+
 ## 2026-10-16 PES-002 PR484 foreground and render-wait incident evidence
 - PR484 incident diagnosis candidate, NOT ACCEPTED. Baseline early 3FPS late 25-28FPS; branch 3FPS exact despite only 12 trees. GPU ~44ms vs ~251ms render EventWait. Root discriminator: confirm owned PIE editor foreground PID, reject inconclusive if focus unproven; record bounded native UnrealStats .ue4stats. No new assets, texture import, cull changes, or FPS claim; exact-head Windows Run and target-device test PENDING. PES-002 active / PES-003 locked.
 

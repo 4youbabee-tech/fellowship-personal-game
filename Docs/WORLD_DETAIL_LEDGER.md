@@ -1,3 +1,6 @@
+## 2026-10-16 Bag End real FBX garden architecture
+- Existing physically imported curated garden cart, planter, hedge, lantern and walkway FBX/PBR assets are reused in a bounded 20-instance async HISM landscape pass, with ground traces and no player collision modifications. Previously rejected PR484 extra woodland replacements are removed; keep baseline established PBR vegetation. Real PIE placement, aesthetic and FPS evidence pending.
+
 ## 2026-10-16 PES-002 PR484 foreground and render-wait incident evidence
 - PR484: Verified baseline also stalled near 3FPS before recovering later; branch persistent 3FPS with ~251ms render thread EventWait and GPU ~44ms. Instrument owned PIE foreground and 11s native UE4 stat file; source PBR and HISM untouched until controlled evidence demonstrates renderer issue. Exact-head Windows test NOT RUN; Gate 6/7 remain open.
 

@@ -258,6 +258,32 @@ AShirePrototypeWorldBuilder::AShirePrototypeWorldBuilder()
         Cloud138Sources.Add(TSoftObjectPtr<UStaticMesh>(FSoftObjectPath(Cloud138MeshPaths[I])));
     }
 
+    // Physically imported architecture assets in the existing UE4 warehouse.
+    const TCHAR* ArchPaths[] = {
+        TEXT("/Game/Production/World/Shire/CuratedP1C01/Architecture/meshes/SM_ShGardenCart_LOD0.SM_ShGardenCart_LOD0"),
+        TEXT("/Game/Production/World/Shire/CuratedP1C01/Architecture/meshes/SM_ShGardenPlanter_LOD0.SM_ShGardenPlanter_LOD0"),
+        TEXT("/Game/Production/World/Shire/CuratedP1C01/Architecture/meshes/SM_ShGardenHedge_LOD0.SM_ShGardenHedge_LOD0"),
+        TEXT("/Game/Production/World/Shire/CuratedP1C01/Architecture/meshes/SM_ShLanternPost_LOD0.SM_ShLanternPost_LOD0"),
+        TEXT("/Game/Production/World/Shire/CuratedP1C01/Architecture/meshes/SM_ShStonePath_LOD0.SM_ShStonePath_LOD0")
+    };
+    const TCHAR* ArchNames[] = {
+        TEXT("BagEndFBXCart"), TEXT("BagEndFBXPlanter"), TEXT("BagEndFBXHedge"),
+        TEXT("BagEndFBXLantern"), TEXT("BagEndFBXWalkway")
+    };
+    for (int32 I = 0; I < UE_ARRAY_COUNT(ArchPaths); ++I)
+    {
+        UHierarchicalInstancedStaticMeshComponent* Group =
+            CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(ArchNames[I]);
+        Group->SetupAttachment(RuntimeRoot);
+        Group->SetMobility(EComponentMobility::Movable);
+        Group->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+        Group->SetGenerateOverlapEvents(false);
+        Group->SetCastShadow(false);
+        Group->SetCullDistances(I == 4 ? 250 : 500, I == 4 ? 4000 : 5200);
+        BagEndArchGroups.Add(Group);
+        BagEndArchSources.Add(TSoftObjectPtr<UStaticMesh>(FSoftObjectPath(ArchPaths[I])));
+    }
+
     // Explicit cull bands keep the first production world pass bounded on the
     // i7/8 GB/~2 GB VRAM target. These are starting budgets, not acceptance proof.
     GrassInstances->SetCullDistances(1200, 5200);
@@ -396,6 +422,7 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     BuildPrototypeWorld();
     SpawnVerifiedPBRDecor();
     RequestCuratedNatureLayer();
+    RequestBagEndArchitecture();
     RequestCloud138Layer();
 
     if (UGameInstance* GI = GetGameInstance())
@@ -1035,85 +1062,100 @@ void AShirePrototypeWorldBuilder::OnCuratedNatureLayerReady()
         TEXT("PES002_IMPORTED_TREE_REPLACEMENT converted=%d max=80 FBX=1 visual=pending"),
         Replaced);
 
-    // The village tree bands are a SECOND source of conspicuous proxy silhouettes.
-    // Replace their existing non-colliding instances only after the actual imported
-    // FBX tree family is resident. Never hide a fallback when a package or the ground
-    // trace is unavailable; no story trees, player collision, or NavMesh are touched.
-    int32 WoodlandEligible = 0;
-    int32 WoodlandReplaced = 0;
-    int32 WoodlandDeferred = 0;
-    if (WoodlandTreeInstances && WoodlandTreeInstances->GetStaticMesh())
-    {
-        TArray<int32> WoodlandReplacementIndices;
-        const FVector BagEndCenter(-2210.0f, -520.0f, 0.0f);
-        const int32 OriginalCount = WoodlandTreeInstances->GetInstanceCount();
-        for (int32 Index = 0;
-             Index < OriginalCount && WoodlandReplacementIndices.Num() < 12; ++Index)
-        {
-            // Avoid costly dense overlapping PBR tree canopies on a ~2GB GPU.
-            // Sparse, deterministic selection covers both side bands; untouched
-            // originals remain visible at their authored locations.
-            if (Index % 4 != 0)
-            {
-                continue;
-            }
-            FTransform Original;
-            if (!WoodlandTreeInstances->GetInstanceTransform(Index, Original, true) ||
-                FVector::DistSquared2D(Original.GetLocation(), BagEndCenter) >
-                    FMath::Square(5700.0f) ||
-                FVector::DistSquared2D(Original.GetLocation(), BagEndCenter) <
-                    FMath::Square(550.0f))
-            {
-                continue;
-            }
-            ++WoodlandEligible;
-            const int32 Family = 5 + (Index % 3);
-            UHierarchicalInstancedStaticMeshComponent* ImportedGroup =
-                CuratedNatureGroups[Family];
-            UStaticMesh* ImportedTree = CuratedNatureSources[Family].Get();
-            if (!ImportedGroup || !ImportedTree ||
-                ImportedGroup->GetStaticMesh() != ImportedTree ||
-                ImportedTree->GetBounds().BoxExtent.Z <= 1.0f)
-            {
-                ++WoodlandDeferred;
-                continue;
-            }
-            const FVector At = Original.GetLocation();
-            FHitResult Ground;
-            FCollisionQueryParams Trace(TEXT("PES002WoodlandFBXGround"), false, this);
-            if (!World->LineTraceSingleByChannel(
-                    Ground, At + FVector(0, 0, 1250.0f),
-                    At - FVector(0, 0, 900.0f), ECC_Visibility, Trace) ||
-                Ground.ImpactNormal.Z < 0.78f ||
-                FMath::Abs(Ground.Location.Z) > 210.0f)
-            {
-                ++WoodlandDeferred;
-                continue;
-            }
-            const FBoxSphereBounds Bounds = ImportedTree->GetBounds();
-            const float Height = 460.0f + 45.0f * (Index % 4);
-            const float Scale = FMath::Clamp(
-                Height / (2.0f * Bounds.BoxExtent.Z), 0.05f, 3.0f);
-            ImportedGroup->AddInstanceWorldSpace(FTransform(
-                Original.GetRotation().Rotator(),
-                Ground.Location - FVector(
-                    0.0f, 0.0f,
-                    (Bounds.Origin.Z - Bounds.BoxExtent.Z) * Scale),
-                FVector(Scale)));
-            WoodlandReplacementIndices.Add(Index);
-        }
-        // HISM removal changes subsequent indices; remove in descending order.
-        for (int32 J = WoodlandReplacementIndices.Num() - 1; J >= 0; --J)
-        {
-            WoodlandTreeInstances->RemoveInstance(WoodlandReplacementIndices[J]);
-        }
-        WoodlandReplaced = WoodlandReplacementIndices.Num();
-    }
-    UE_LOG(LogTemp, Display,
-        TEXT("PES002_BAG_END_WOODLAND_FBX_REPLACEMENT eligible=%d converted=%d deferred=%d max=12 fallback=preserved collision=unchanged visual=pending"),
-        WoodlandEligible, WoodlandReplaced, WoodlandDeferred);
+    // PR484 additional canopy replacement rejected in prior real PIE:
+    // preserve existing landscape and keep the already imported base vegetation.
 }
 
+
+
+void AShirePrototypeWorldBuilder::RequestBagEndArchitecture()
+{
+    if (bBagEndArchRequested || !GetWorld() ||
+        BagEndArchGroups.Num() != 5 || BagEndArchSources.Num() != 5) return;
+    bBagEndArchRequested = true;
+    TArray<FSoftObjectPath> Paths;
+    for (const TSoftObjectPtr<UStaticMesh>& Asset : BagEndArchSources)
+    {
+        const FSoftObjectPath Path = Asset.ToSoftObjectPath();
+        if (Path.IsValid() && FPackageName::DoesPackageExist(Path.GetLongPackageName()))
+            Paths.Add(Path);
+    }
+    if (Paths.Num() == 0)
+    {
+        UE_LOG(LogTemp, Display, TEXT("PES002_ARCH_GARDEN deferred=5 imported-packages-unavailable"));
+        return;
+    }
+    BagEndArchHandle = BagEndArchLoader.RequestAsyncLoad(
+        Paths, FStreamableDelegate::CreateUObject(this,
+            &AShirePrototypeWorldBuilder::OnBagEndArchitectureReady));
+}
+
+void AShirePrototypeWorldBuilder::OnBagEndArchitectureReady()
+{
+    UWorld* World = GetWorld();
+    if (!World || IsActorBeingDestroyed()) return;
+    // Do not change the story doorway, player collision, navmesh, or actor counts.
+    static const FVector Placement[5][6] = {
+        { FVector(-1820,-1370,0), FVector(-1600,650,0), FVector(-3000,-1250,0) },
+        { FVector(-2410,-1080,0), FVector(-2100,-1150,0), FVector(-2330,190,0),
+          FVector(-1950,350,0), FVector(-1700,-1150,0) },
+        { FVector(-2860,-1320,0), FVector(-2460,-1390,0),
+          FVector(-1920,-1390,0), FVector(-1720,790,0) },
+        { FVector(-2920,-980,0), FVector(-2940,120,0) },
+        { FVector(-3060,-520,0), FVector(-2940,-520,0), FVector(-2820,-520,0),
+          FVector(-2700,-520,0), FVector(-2580,-520,0), FVector(-2460,-520,0) }
+    };
+    const int32 Counts[5] = {3,5,4,2,6};
+    const float Height[5] = {140.0f,85.0f,100.0f,245.0f,14.0f};
+    int32 Families = 0, Placed = 0, Rejected = 0;
+    for (int32 I = 0; I < 5; ++I)
+    {
+        UStaticMesh* Mesh = BagEndArchSources[I].Get();
+        UHierarchicalInstancedStaticMeshComponent* Group = BagEndArchGroups[I];
+        if (!Mesh || !Group || Mesh->GetBounds().BoxExtent.Z <= 0.1f ||
+            Mesh->GetStaticMaterials().Num() == 0)
+        {
+            Rejected += Counts[I];
+            continue;
+        }
+        Group->SetStaticMesh(Mesh);
+        ++Families;
+        const FBoxSphereBounds B = Mesh->GetBounds();
+        const float Scale = FMath::Clamp(Height[I] / (2.0f * B.BoxExtent.Z), 0.08f, 2.5f);
+        for (int32 J = 0; J < Counts[I]; ++J)
+        {
+            const FVector At = Placement[I][J];
+            if (I != 4 &&
+                FVector::DistSquared2D(At,FVector(-2465,-520,0)) < FMath::Square(330.0f))
+            {
+                ++Rejected;
+                continue;
+            }
+            FHitResult Hit;
+            FCollisionQueryParams Trace(TEXT("PES002BagEndImportedFBXGround"),false,this);
+            if (!World->LineTraceSingleByChannel(
+                    Hit, At + FVector(0,0,1150),
+                    At - FVector(0,0,700), ECC_Visibility, Trace) ||
+                Hit.ImpactNormal.Z < 0.77f || FMath::Abs(Hit.Location.Z) > 180.0f)
+            {
+                ++Rejected;
+                continue;
+            }
+            Group->AddInstanceWorldSpace(FTransform(
+                FRotator(0.0f, I == 4 ? 0.0f : float((I * 59 + J * 47) % 360), 0.0f),
+                Hit.Location - FVector(0,0,(B.Origin.Z-B.BoxExtent.Z)*Scale),
+                FVector(Scale)));
+            ++Placed;
+        }
+        UE_LOG(LogTemp, Display,
+            TEXT("PES002_ARCH_GARDEN_FAMILY index=%d package=%s placed=%d slots=%d"),
+            I, *Mesh->GetPathName(), Group->GetInstanceCount(),
+            Mesh->GetStaticMaterials().Num());
+    }
+    UE_LOG(LogTemp, Display,
+        TEXT("PES002_ARCH_GARDEN importedFamilies=%d placed=%d rejected=%d max=20 collision=none visual=pending"),
+        Families, Placed, Rejected);
+}
 
 void AShirePrototypeWorldBuilder::RequestCloud138Layer()
 {
@@ -1224,6 +1266,11 @@ void AShirePrototypeWorldBuilder::OnCloud138Ready()
 void AShirePrototypeWorldBuilder::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
     FCoreDelegates::OnEndFrame.RemoveAll(this);
+    if (BagEndArchHandle.IsValid())
+    {
+        BagEndArchHandle->CancelHandle();
+        BagEndArchHandle.Reset();
+    }
     if (Cloud138Handle.IsValid())
     {
         Cloud138Handle->CancelHandle();

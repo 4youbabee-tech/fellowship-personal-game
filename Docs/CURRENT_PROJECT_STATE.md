@@ -1,3 +1,7 @@
+## 2026-10-16 PES-002 tangible Bag End FBX architectural dressing candidate (PR #484)
+- Five already UE4-imported CuratedP1C01 architecture families (GardenCart, GardenPlanter, GardenHedge, LanternPost, StonePath) are assigned to one bounded 20-instance asynchronous no-collision HISM exterior placement at ground-traced Bag End side gardens and approach. No new asset importer, manager, story/collision change or chapter. Previously visually rejected extra woodland replacement has been withdrawn.
+- On the new exact HEAD, compile, placement counts, 4 real images, FPS and target-device tests are NOT RUN until CI. Gate 6/7 OPEN.
+
 ## 2026-10-16 PES-002 PR484 foreground and render-wait incident evidence
 - 2026-10-16 PR484 controlled performance incident capture: Real 4.27 CSV on 0d63726 shows ~251ms RenderThread EventWait, ~44ms GPU Total and ~281ms GameThread, while original develop 3b9d90d also began near 3 FPS (15-25s) before recovering to ~25-28 FPS after 35s. Thus branch FPS is not conclusive evidence of VRAM, foliage shading, or draw calls; 589MiB OS dedicated GPU counters also cannot prove absence of paging. Existing proof set bThrottleCPUWhenNotForeground=False without verifying actual foreground. Candidate implements owned-editor HWND/foreground PID verification, best-effort activation, fail-inconclusive on no confirmed focus, and bounded UE4.27 native stat unit/rhi/streaming, stat startfile/stopfile capture. No material/LOD/collision changes. UE exact-head and target-device NOT RUN; visual gate OPEN.
 

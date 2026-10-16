@@ -62,21 +62,21 @@ class PES002VisualContract(unittest.TestCase):
         self.assertNotIn("SetActorEnableCollision(true)", movement)
         self.assertNotIn("GetPlayerPawnCached()", movement)
 
-    def test_bag_end_woodland_proxy_replacement_is_real_asset_gated(self):
+    def test_bag_end_imported_fbx_architecture_is_world_placed_safely(self):
         cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
-        section = cpp.split("// The village tree bands are a SECOND source", 1)[1].split(
-            "void AShirePrototypeWorldBuilder::RequestCloud138Layer", 1)[0]
-        self.assertIn("PES002_BAG_END_WOODLAND_FBX_REPLACEMENT", section)
-        self.assertIn("WoodlandTreeInstances->GetInstanceTransform(Index, Original, true)", section)
-        self.assertIn("ImportedGroup->GetStaticMesh() != ImportedTree", section)
-        self.assertIn("WoodlandReplacementIndices.Num() < 12", section)
-        self.assertIn("if (Index % 4 != 0)", section)
-        self.assertIn("World->LineTraceSingleByChannel(", section)
-        self.assertIn("ImportedGroup->AddInstanceWorldSpace(", section)
-        self.assertIn("WoodlandTreeInstances->RemoveInstance(WoodlandReplacementIndices[J])", section)
-        self.assertIn("for (int32 J = WoodlandReplacementIndices.Num() - 1; J >= 0; --J)", section)
-        self.assertNotIn("SetCollisionEnabled", section)
-        self.assertNotIn("SetActorLocation", section)
+        header = (ROOT / "Source/ShireJourney/Public/World/ShirePrototypeWorldBuilder.h").read_text(encoding="utf-8")
+        self.assertIn("RequestBagEndArchitecture();", cpp)
+        self.assertIn("BagEndArchLoader.RequestAsyncLoad(", cpp)
+        self.assertIn("OnBagEndArchitectureReady()", cpp)
+        self.assertIn("PES002_ARCH_GARDEN importedFamilies=", cpp)
+        self.assertIn("PES002BagEndImportedFBXGround", cpp)
+        self.assertIn("Group->AddInstanceWorldSpace(", cpp)
+        self.assertIn("BagEndArchHandle->CancelHandle();", cpp)
+        self.assertIn("BagEndArchSources", header)
+        for name in ("SM_ShGardenCart_LOD0", "SM_ShGardenPlanter_LOD0",
+                     "SM_ShGardenHedge_LOD0", "SM_ShLanternPost_LOD0", "SM_ShStonePath_LOD0"):
+            self.assertIn(name, cpp)
+        self.assertNotIn("PES002_BAG_END_WOODLAND_FBX_REPLACEMENT", cpp)
 
     def test_incident_captures_real_window_focus_and_ue4_native_stat_file(self):
         proof = (ROOT / "Scripts/capture_pes002_bag_end_visual.ps1").read_text(encoding="utf-8")
