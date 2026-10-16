@@ -313,14 +313,46 @@ jobs:
         with:
           ref: ${{ env.TARGET_SHA }}
           persist-credentials: false
-      - name: Install Blender for real FBX normalization
+      # Reuse only a packet produced from identical pinned source, Blender
+      # normalization and manifest inputs. A cache hit never skips hash/skin
+      # validation or UE4 import; it only avoids re-downloading tools and raw FBX.
+      - name: Restore verified CC0 normalized character packet
+        id: rig-cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/kaykit-character-production/packet
+          key: shire-ue427-kaykit-cc0-v1-${{ hashFiles('Data/P1C01KayKitRigTechnicalBridgeV1.json', 'Scripts/stage_p1c01_kaykit_rig_bridge.ps1', 'Tools/CloudAssetBuild/prepare_kaykit_character.py') }}
+      - name: Install Blender only when the licensed character input changes
+        if: steps.rig-cache.outputs.cache-hit != 'true'
         run: |
           sudo apt-get update
           sudo apt-get install -y blender python3-numpy
       - name: Prepare pinned licensed character and actual authored clips
+        if: steps.rig-cache.outputs.cache-hit != 'true'
         shell: pwsh
         run: |
           ./Scripts/stage_p1c01_kaykit_rig_bridge.ps1 -ProductionPacket -OutputRoot "$env:RUNNER_TEMP/kaykit-character-production" -BlenderExecutable blender
+      - name: Physically verify cached or freshly generated character packet
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $packet = Join-Path $env:RUNNER_TEMP 'kaykit-character-production/packet'
+          $receiptFile = Join-Path $packet 'source_receipt.json'
+          if (!(Test-Path -LiteralPath $receiptFile -PathType Leaf)) { throw 'KAYKIT_CHARACTER_PACKET_RECEIPT_MISSING' }
+          $receipt = Get-Content -LiteralPath $receiptFile -Raw | ConvertFrom-Json
+          if ($receipt.status -ne 'NORMALIZED_KAYKIT_CHARACTER_SOURCE_PASS' -or
+              $receipt.mesh.vertex_count -lt 2000 -or $receipt.mesh.bone_count -lt 20 -or
+              $receipt.mesh.max_influences -gt 4 -or $receipt.mesh.zero_weight_vertices -ne 0) {
+            throw 'KAYKIT_CHARACTER_PACKET_SKIN_ORIGIN_REJECT'
+          }
+          foreach ($f in $receipt.files.PSObject.Properties) {
+            $path = Join-Path $packet $f.Name
+            if (!(Test-Path -LiteralPath $path -PathType Leaf)) { throw "KAYKIT_CHARACTER_PACKET_FILE_MISSING file=$($f.Name)" }
+            if ((Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant() -ne [string]$f.Value) {
+              throw "KAYKIT_CHARACTER_PACKET_HASH_MISMATCH file=$($f.Name)"
+            }
+          }
+          Write-Host "PES002_KAYKIT_PACKET_REUSED cacheHit=${{ steps.rig-cache.outputs.cache-hit }} files=$($receipt.files.PSObject.Properties.Count) license=CC0 skinQC=pass"
       - uses: actions/upload-artifact@v4
         with:
           name: kaykit-character-source-${{ env.TARGET_SHA }}
