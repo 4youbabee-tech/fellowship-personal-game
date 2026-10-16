@@ -895,6 +895,56 @@ void AShirePrototypeWorldBuilder::OnCuratedNatureLayerReady()
     UE_LOG(LogTemp, Display,
         TEXT("P1C01_CURATED_NATURE_WORLD families=%d grounded=%d max=116 collision=none async=1 missingGround=%d steepGround=%d PIE_device_visual=pending"),
         Families, Grounded, MissingGround, SteepGround);
+
+    // Replace only matched decorative trunk/canopy proxies around Bag End
+    // with already-imported complete FBX trees. Preserve collision and routes.
+    int32 Replaced = 0;
+    if (DistantTreeTrunkInstances && DistantTreeCanopyInstances &&
+        DistantTreeTrunkInstances->GetInstanceCount() ==
+        DistantTreeCanopyInstances->GetInstanceCount())
+    {
+        TArray<int32> ReplaceIndices;
+        const int32 Count = DistantTreeTrunkInstances->GetInstanceCount();
+        const FVector BagEnd(-2210.0f, -520.0f, 0.0f);
+        for (int32 I = 0; I < Count && ReplaceIndices.Num() < 80; ++I)
+        {
+            FTransform Original;
+            if (!DistantTreeTrunkInstances->GetInstanceTransform(I, Original, true) ||
+                FVector::DistSquared2D(Original.GetLocation(), BagEnd) > FMath::Square(5700.0f) ||
+                FVector::DistSquared2D(Original.GetLocation(), BagEnd) < FMath::Square(430.0f))
+                continue;
+            const int32 Family = 5 + (I % 3);
+            UHierarchicalInstancedStaticMeshComponent* Group = CuratedNatureGroups[Family];
+            UStaticMesh* Mesh = CuratedNatureSources[Family].Get();
+            if (!Group || !Mesh || Group->GetStaticMesh() != Mesh ||
+                Mesh->GetBounds().BoxExtent.Z <= 1.0f) continue;
+            FHitResult Hit;
+            const FVector At = Original.GetLocation();
+            FCollisionQueryParams Trace(TEXT("PES002RealTreeGround"), false, this);
+            if (!World->LineTraceSingleByChannel(Hit, At + FVector(0,0,1250),
+                  At - FVector(0,0,900), ECC_Visibility, Trace) ||
+                Hit.ImpactNormal.Z < 0.78f || FMath::Abs(Hit.Location.Z) > 210.0f)
+                continue;
+            const FBoxSphereBounds Bounds = Mesh->GetBounds();
+            const float Scale = FMath::Clamp((420.0f + 65.0f * (I % 4)) /
+                (2.0f * Bounds.BoxExtent.Z), 0.05f, 3.0f);
+            Group->AddInstanceWorldSpace(FTransform(
+                FRotator(0, static_cast<float>((I*71)%360), 0),
+                Hit.Location - FVector(0, 0,
+                    (Bounds.Origin.Z - Bounds.BoxExtent.Z) * Scale),
+                FVector(Scale)));
+            ReplaceIndices.Add(I);
+        }
+        for (int32 J = ReplaceIndices.Num() - 1; J >= 0; --J)
+        {
+            DistantTreeTrunkInstances->RemoveInstance(ReplaceIndices[J]);
+            DistantTreeCanopyInstances->RemoveInstance(ReplaceIndices[J]);
+        }
+        Replaced = ReplaceIndices.Num();
+    }
+    UE_LOG(LogTemp, Display,
+        TEXT("PES002_IMPORTED_TREE_REPLACEMENT converted=%d max=80 FBX=1 visual=pending"),
+        Replaced);
 }
 
 
