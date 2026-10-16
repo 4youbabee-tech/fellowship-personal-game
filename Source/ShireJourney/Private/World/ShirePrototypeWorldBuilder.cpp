@@ -1013,8 +1013,15 @@ void AShirePrototypeWorldBuilder::OnCuratedNatureLayerReady()
         const FVector BagEndCenter(-2210.0f, -520.0f, 0.0f);
         const int32 OriginalCount = WoodlandTreeInstances->GetInstanceCount();
         for (int32 Index = 0;
-             Index < OriginalCount && WoodlandReplacementIndices.Num() < 96; ++Index)
+             Index < OriginalCount && WoodlandReplacementIndices.Num() < 12; ++Index)
         {
+            // Avoid costly dense overlapping PBR tree canopies on a ~2GB GPU.
+            // Sparse, deterministic selection covers both side bands; untouched
+            // originals remain visible at their authored locations.
+            if (Index % 4 != 0)
+            {
+                continue;
+            }
             FTransform Original;
             if (!WoodlandTreeInstances->GetInstanceTransform(Index, Original, true) ||
                 FVector::DistSquared2D(Original.GetLocation(), BagEndCenter) >
@@ -1068,7 +1075,7 @@ void AShirePrototypeWorldBuilder::OnCuratedNatureLayerReady()
         WoodlandReplaced = WoodlandReplacementIndices.Num();
     }
     UE_LOG(LogTemp, Display,
-        TEXT("PES002_BAG_END_WOODLAND_FBX_REPLACEMENT eligible=%d converted=%d deferred=%d max=96 fallback=preserved collision=unchanged visual=pending"),
+        TEXT("PES002_BAG_END_WOODLAND_FBX_REPLACEMENT eligible=%d converted=%d deferred=%d max=12 fallback=preserved collision=unchanged visual=pending"),
         WoodlandEligible, WoodlandReplaced, WoodlandDeferred);
 }
 

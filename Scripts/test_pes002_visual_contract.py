@@ -69,6 +69,8 @@ class PES002VisualContract(unittest.TestCase):
         self.assertIn("PES002_BAG_END_WOODLAND_FBX_REPLACEMENT", section)
         self.assertIn("WoodlandTreeInstances->GetInstanceTransform(Index, Original, true)", section)
         self.assertIn("ImportedGroup->GetStaticMesh() != ImportedTree", section)
+        self.assertIn("WoodlandReplacementIndices.Num() < 12", section)
+        self.assertIn("if (Index % 4 != 0)", section)
         self.assertIn("World->LineTraceSingleByChannel(", section)
         self.assertIn("ImportedGroup->AddInstanceWorldSpace(", section)
         self.assertIn("WoodlandTreeInstances->RemoveInstance(WoodlandReplacementIndices[J])", section)

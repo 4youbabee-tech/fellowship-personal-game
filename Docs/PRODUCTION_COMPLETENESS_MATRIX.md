@@ -1,3 +1,14 @@
+## 2026-10-16 PR #484 PBR woodland regression and bounded corrective retest
+| Evidence | Result |
+|---|---|
+| First branch head bef5eefa257da222f49120adb47fc7929cc8bd94 | UE4.27 CI Run 38905549201 SUCCESS, 4 PIE shots artifact 12048517139 |
+| Actual converted woodland tree actors | 67 (separate from earlier 21 matched proxies); source meshes physically imported from existing curated set |
+| Game-frame FPS on Runner during proof | ~3.0 FPS at 15-50s in capture vs prior 25-28 steady; FAIL |
+| GPU profiler mean / draw calls | ~44.1 ms / 731 vs baseline ~36.3 ms / 667; suspected heavy visible foliage contribution, not verified unique root |
+| Windows OS dedicated GPU memory peak | ~589 MiB, comparable to baseline ~592 MiB; no device proof |
+| Correction prepared | 12-per-scene sparse selection, deterministic 1/4 thinning, 67-replacement candidate NOT ACCEPTED |
+| New exact-HEAD compile/PIE/FPS/visual | PENDING, Gate 6/7 OPEN; PES-002 ACTIVE, PES-003 LOCKED |
+
 ## 2026-10-16 PES-002 Bag End village-band tree replacement candidate
 | Layer | Status |
 |---|---|
