@@ -1462,7 +1462,7 @@ bool AShireAmbientNPC::TryEnableUnifiedShireResident()
     UnifiedResident->SetAnimationMode(EAnimationMode::AnimationBlueprint);
     UnifiedResident->SetAnimInstanceClass(AnimClass);
     bool bMaterialTintApplied = false;
-    if (UMaterialInterface* SourceMaterial = Mesh->GetMaterial(0))
+    if (UMaterialInterface* SourceMaterial = UnifiedResident->GetMaterial(0))
     {
         const FName TintParameters[] = { TEXT("BaseColorTint"), TEXT("Color"), TEXT("Tint") };
         for (const FName Parameter : TintParameters)
