@@ -932,7 +932,8 @@
         "Programmer-supplied future sourcing shortlist is persisted in Data/ExternalAssetManifest.json by category",
         "Production importer now copies tracked SourceAssets into Saved/ShireProductionImportWorking with UE4.27-compatible IPlatformFile::CopyDirectoryTree before any OBJ normalization/import.",
         "ExternalAssetManifest now stores the owner-supplied 2026-09-22 cinematic discovery shortlist, including DeviantArt 3D ports, SFMLab, Open3DLab, Nexus Mods and a separate ArtStation Marketplace review path.",
-        "Audio provider registry expanded with ElevenLabs, BOOM Library and Pro Sound Effects plus reference-only film soundtrack/dialogue/game-audio sources."
+        "Audio provider registry expanded with ElevenLabs, BOOM Library and Pro Sound Effects plus reference-only film soundtrack/dialogue/game-audio sources.",
+        "2026-10-17 owner-approved high-quality 3D source quick access: ProjectGovernor.asset_source_navigation_2026_10_17 -> Docs/EXTERNAL_ASSET_SOURCING.md -> Data/ExternalAssetManifest.json (discovery only; existing per-asset gates unchanged)."
       ],
       "missing_work": [
         "Acquire specific assets only when entitlement/license evidence is available",
@@ -1285,7 +1286,8 @@
         "ExternalAssetManifest stores providers by production category and approval/review mode",
         "ProjectGovernor records the persistence requirement as project memory",
         "External sourcing policy defines the item-level provenance/license/import workflow",
-        "Project source library completeness and authority hierarchy are recorded in ProjectGovernor.project_source_library and Data/OwnerSourceReferenceIndex.json."
+        "Project source library completeness and authority hierarchy are recorded in ProjectGovernor.project_source_library and Data/OwnerSourceReferenceIndex.json.",
+        "2026-10-17 owner-approved high-quality 3D source quick access: ProjectGovernor.asset_source_navigation_2026_10_17 -> Docs/EXTERNAL_ASSET_SOURCING.md -> Data/ExternalAssetManifest.json (discovery only; existing per-asset gates unchanged)."
       ],
       "missing_work": [
         "Continue appending newly requested useful sources and production requests as they arise",
@@ -9560,5 +9562,75 @@
       "truthful visual and performance status"
     ],
     "runtime_scope": "PES-002 remains open; future licensed source intake may be prepared without declaring future chapters accepted"
+  },
+  "asset_source_navigation_2026_10_17": {
+    "status": "CURATED_DISCOVERY_ONLY_NOT_ASSET_APPROVAL",
+    "owner_instruction": "Make useful high-quality 3D sourcing websites immediately accessible to a zero-context programmer through the single ProjectGovernor and existing sourcing document, without parallel managers, unlicensed imports or delaying active PES-002.",
+    "one_click_directory": "Docs/EXTERNAL_ASSET_SOURCING.md",
+    "per_asset_license_and_receipts": "Data/ExternalAssetManifest.json",
+    "existing_source_strategy": "Data/MasterExternalResourceBibleAdoptionV1.json",
+    "scope": "Current P1C01 PES-002 Bag End Exterior first; later PES mappings are preparation-only until their gates.",
+    "checked_on": "2026-10-17",
+    "sources": [
+      {
+        "id": "FAB",
+        "priority": "A",
+        "use": "PES-002/003/004/005/006: realistic modular cottages, furniture, vegetation and props",
+        "url": "https://www.fab.com/search?q=medieval%20cottage",
+        "license": "Fab Standard/per-listing review; check UE4.27 support, Launcher acquisition"
+      },
+      {
+        "id": "CGTRADER",
+        "priority": "A",
+        "use": "PES-002/004: hero cottage/architecture candidates; later original rigged characters",
+        "url": "https://www.cgtrader.com/3d-models?keywords=medieval%20cottage",
+        "license": "Exact model license and actual FBX/PBR required; no editorial/franchise copies"
+      },
+      {
+        "id": "SKETCHFAB",
+        "priority": "A",
+        "use": "PES-002/004/005: downloadable environment/prop source candidates",
+        "url": "https://sketchfab.com/search?q=medieval%20cottage&type=models&features=downloadable",
+        "license": "Per-model CC0/CC BY or valid game-use license; check creator/IP, attribution and downloadable format"
+      },
+      {
+        "id": "POLY_HAVEN",
+        "priority": "A",
+        "use": "PES-002/006: CC0 PBR terrain, bark, foliage-adjacent props and realistic surface textures",
+        "url": "https://polyhaven.com/textures",
+        "license": "CC0 official license; optimize texture resolution and format"
+      },
+      {
+        "id": "MIXAMO",
+        "priority": "A",
+        "use": "PES-009/010/011 source-only prep: humanoid auto-rig and locomotion clips",
+        "url": "https://www.mixamo.com/",
+        "license": "Adobe ID/manual access; humanoid biped only; UE4 rig/skin/deformation test"
+      },
+      {
+        "id": "MESHY_AI",
+        "priority": "B",
+        "use": "PES-002/003/004/005: original props, trims, furniture after manual retopology/UV/PBR QC",
+        "url": "https://www.meshy.ai/",
+        "license": "Capture output plan and rights: free CC BY 4.0 attribution vs paid rights; no protected LOTR replicas"
+      },
+      {
+        "id": "QUATERNIUS",
+        "priority": "B_SUPPORT_ONLY",
+        "use": "NPC/animation prep or distant low-cost background; not automatic hero art",
+        "url": "https://quaternius.com/",
+        "license": "Verify each pack's current CC0 vs QAL 1.0; many packs are stylized"
+      },
+      {
+        "id": "3DEXPORT",
+        "priority": "B_REVIEW",
+        "use": "Fallback for original medieval modular building, furniture and object assets",
+        "url": "https://3dexport.com/3d-models?search=medieval%20house",
+        "license": "Per-item game-use and redistribution rights NOT verified; licensing review mandatory"
+      }
+    ],
+    "developer_start": "For PES-002 first inspect Fab, CGTrader and Sketchfab original non-franchise cottages; obtain matching CC0 Poly Haven PBR textures; do not replace established accepted assets without real quality/technical improvement.",
+    "blocked_shortcuts": "No direct Steam Workshop/Nexus ripped assets, fan franchise likenesses, STL-print meshes as assumed game-ready, or unapproved social/Patreon ports. They remain reference/research only until exact independent rights are proven.",
+    "acceptance_boundary": "Discovery is not acquisition, persisted warehouse, UE import, world placement, rendered observation, PIE, device performance or visual acceptance. Preserve UE4.27.2, 8GB RAM, ~2GB VRAM, DX11 720p >=30FPS."
   }
 }
