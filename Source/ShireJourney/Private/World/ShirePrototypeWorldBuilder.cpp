@@ -999,6 +999,78 @@ void AShirePrototypeWorldBuilder::OnCuratedNatureLayerReady()
     UE_LOG(LogTemp, Display,
         TEXT("PES002_IMPORTED_TREE_REPLACEMENT converted=%d max=80 FBX=1 visual=pending"),
         Replaced);
+
+    // The village tree bands are a SECOND source of conspicuous proxy silhouettes.
+    // Replace their existing non-colliding instances only after the actual imported
+    // FBX tree family is resident. Never hide a fallback when a package or the ground
+    // trace is unavailable; no story trees, player collision, or NavMesh are touched.
+    int32 WoodlandEligible = 0;
+    int32 WoodlandReplaced = 0;
+    int32 WoodlandDeferred = 0;
+    if (WoodlandTreeInstances && WoodlandTreeInstances->GetStaticMesh())
+    {
+        TArray<int32> WoodlandReplacementIndices;
+        const FVector BagEndCenter(-2210.0f, -520.0f, 0.0f);
+        const int32 OriginalCount = WoodlandTreeInstances->GetInstanceCount();
+        for (int32 Index = 0;
+             Index < OriginalCount && WoodlandReplacementIndices.Num() < 96; ++Index)
+        {
+            FTransform Original;
+            if (!WoodlandTreeInstances->GetInstanceTransform(Index, Original, true) ||
+                FVector::DistSquared2D(Original.GetLocation(), BagEndCenter) >
+                    FMath::Square(5700.0f) ||
+                FVector::DistSquared2D(Original.GetLocation(), BagEndCenter) <
+                    FMath::Square(550.0f))
+            {
+                continue;
+            }
+            ++WoodlandEligible;
+            const int32 Family = 5 + (Index % 3);
+            UHierarchicalInstancedStaticMeshComponent* ImportedGroup =
+                CuratedNatureGroups[Family];
+            UStaticMesh* ImportedTree = CuratedNatureSources[Family].Get();
+            if (!ImportedGroup || !ImportedTree ||
+                ImportedGroup->GetStaticMesh() != ImportedTree ||
+                ImportedTree->GetBounds().BoxExtent.Z <= 1.0f)
+            {
+                ++WoodlandDeferred;
+                continue;
+            }
+            const FVector At = Original.GetLocation();
+            FHitResult Ground;
+            FCollisionQueryParams Trace(TEXT("PES002WoodlandFBXGround"), false, this);
+            if (!World->LineTraceSingleByChannel(
+                    Ground, At + FVector(0, 0, 1250.0f),
+                    At - FVector(0, 0, 900.0f), ECC_Visibility, Trace) ||
+                Ground.ImpactNormal.Z < 0.78f ||
+                FMath::Abs(Ground.Location.Z) > 210.0f)
+            {
+                ++WoodlandDeferred;
+                continue;
+            }
+            const FBoxSphereBounds Bounds = ImportedTree->GetBounds();
+            const float Height = 460.0f + 45.0f * (Index % 4);
+            const float Scale = FMath::Clamp(
+                Height / (2.0f * Bounds.BoxExtent.Z), 0.05f, 3.0f);
+            ImportedGroup->AddInstanceWorldSpace(FTransform(
+                Original.GetRotation().Rotator(),
+                Ground.Location - FVector(
+                    0.0f, 0.0f,
+                    (Bounds.Origin.Z - Bounds.BoxExtent.Z) * Scale),
+                FVector(Scale)));
+            WoodlandReplacementIndices.Add(Index);
+        }
+        // HISM removal changes subsequent indices; remove in descending order.
+        for (int32 J = WoodlandReplacementIndices.Num() - 1; J >= 0; --J)
+        {
+            WoodlandTreeInstances->RemoveInstance(WoodlandReplacementIndices[J]);
+        }
+        WoodlandReplaced = WoodlandReplacementIndices.Num();
+    }
+    UE_LOG(LogTemp, Display,
+        TEXT("PES002_BAG_END_WOODLAND_FBX_REPLACEMENT eligible=%d converted=%d deferred=%d max=96 fallback=preserved collision=unchanged visual=pending"),
+        WoodlandEligible, WoodlandReplaced, WoodlandDeferred);
+}
 }
 
 

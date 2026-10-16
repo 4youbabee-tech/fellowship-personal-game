@@ -1,3 +1,15 @@
+## 2026-10-16 PES-002 Bag End village-band tree replacement candidate
+| Layer | Status |
+|---|---|
+| BASE | develop 3b9d90d5667b64ce46ec5613e6c6462ebf0cbac3; PR #482/#483 integrated |
+| SOURCE | Real curated tree FBX/PBR package families already handled by existing async loader; no new external license claim |
+| CODE | Candidate: replace up to 96 local non-colliding WoodlandTreeInstances proxy silhouettes with existing tree HISM only on package and ground success, preserving fallback otherwise |
+| STATIC | Focused regression in existing Scripts/test_pes002_visual_contract.py; new candidate CI not yet run |
+| UE4 COMPILE / REIMPORT | NOT RUN at new candidate SHA |
+| WORLD_PLACED / RENDER_OBSERVED | Need actual PES002_BAG_END_WOODLAND_FBX_REPLACEMENT runtime counts and four new native UE4 1280x720 screenshots |
+| DEVICE / FPS / VRAM / HUMAN VISUAL | NOT RUN / NOT ACCEPTED; Gate 6/7 OPEN |
+| GOVERNANCE | PES-002 ACTIVE, PES-003 LOCKED; no other regions or writer ownership changed |
+
 ## 2026-10-16 PES-002 data-driven garden and resident variation candidate
 - Baseline develop 2e190d6: engine build/import/PIE pass with 5 skeletal shared residents, 21 tree replacements and 4 screenshots. Full visual and performance gates OPEN.
 - Candidate: 25 explicit garden data rows in existing Data/P1C01VerifiedWorldDecor.json, checked against actual UE-imported PBR FBX nature mesh packages. Candidate runtime evidence markers PES002_BAG_END_DATA_GARDEN and PES002_RESIDENT_PRESENTATION_SNAPSHOT; 5 proportional resident variants and optional safe authored-material tint.

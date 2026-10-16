@@ -62,6 +62,20 @@ class PES002VisualContract(unittest.TestCase):
         self.assertNotIn("SetActorEnableCollision(true)", movement)
         self.assertNotIn("GetPlayerPawnCached()", movement)
 
+    def test_bag_end_woodland_proxy_replacement_is_real_asset_gated(self):
+        cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        section = cpp.split("// The village tree bands are a SECOND source", 1)[1].split(
+            "void AShirePrototypeWorldBuilder::RequestCloud138Layer", 1)[0]
+        self.assertIn("PES002_BAG_END_WOODLAND_FBX_REPLACEMENT", section)
+        self.assertIn("WoodlandTreeInstances->GetInstanceTransform(Index, Original, true)", section)
+        self.assertIn("ImportedGroup->GetStaticMesh() != ImportedTree", section)
+        self.assertIn("World->LineTraceSingleByChannel(", section)
+        self.assertIn("ImportedGroup->AddInstanceWorldSpace(", section)
+        self.assertIn("WoodlandTreeInstances->RemoveInstance(WoodlandReplacementIndices[J])", section)
+        self.assertIn("for (int32 J = WoodlandReplacementIndices.Num() - 1; J >= 0; --J)", section)
+        self.assertNotIn("SetCollisionEnabled", section)
+        self.assertNotIn("SetActorLocation", section)
+
     def test_bag_end_hero_exterior_keeps_entrance_visible(self):
         cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
         self.assertIn('PES002_BAG_END_HERO_FACADE', cpp)
