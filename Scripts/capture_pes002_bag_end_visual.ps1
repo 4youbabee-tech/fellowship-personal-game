@@ -17,6 +17,29 @@ Get-ChildItem -LiteralPath $proof -Filter 'BagEnd-P1C01-view*-actual-runtime.png
     Remove-Item -Force
 Get-ChildItem -LiteralPath $proof -Filter 'PES002_BagEnd_View*.png' -File | Remove-Item -Force
 $arguments = @('"' + $project + '"', '-game', '-windowed', '-ResX=1280', '-ResY=720', '-NoSplash', '-log', '-PES002VisualProof', '-abslog="' + $log + '"')
+# UE4.27 editor throttles an unfocused PIE/editor window to exactly 3 FPS.
+# Our last run showed 15 frames per 5-second window and ~251ms render-thread
+# EventWait although GPU/Total was only ~44ms. For this disposable proof
+# process ONLY, disable editor background throttling in its project-local
+# user preferences. Restore the original preference file on exit; never
+# change the owner's interactive editor performance settings permanently.
+$proofEditorSettings = Join-Path $root 'Saved\Config\Windows\EditorPerProjectUserSettings.ini'
+$hadProofSettings = Test-Path -LiteralPath $proofEditorSettings
+$originalProofSettings = if ($hadProofSettings) {
+    [System.IO.File]::ReadAllText($proofEditorSettings)
+} else { $null }
+if ($PIE) {
+    New-Item -ItemType Directory -Force -Path (Split-Path $proofEditorSettings) | Out-Null
+    $unthrottledProof = @"
+
+[/Script/UnrealEd.EditorPerformanceSettings]
+bThrottleCPUWhenNotForeground=False
+[/Script/UnrealEd.EditorPerProjectUserSettings]
+bThrottleCPUWhenNotForeground=False
+"@
+    [System.IO.File]::AppendAllText($proofEditorSettings, $unthrottledProof)
+    Write-Host 'PES002_EDITOR_BACKGROUND_THROTTLE_DISABLED proofOnly=true expectedNo3FPSCap=true'
+}
 if ($PIE) {
     $preview = Join-Path $root 'SHIRE_FAST_PIE_PREVIEW.bat'
     if (!(Test-Path -LiteralPath $preview)) { throw 'PES002_PIE_PREVIEW_BATCH_MISSING' }
@@ -75,6 +98,14 @@ try {
     if (!$proc.HasExited) {
         if ($PIE) { & taskkill.exe /PID $proc.Id /T /F | Out-Null }
         else { Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue }
+    }
+    if ($PIE) {
+        if ($hadProofSettings) {
+            [System.IO.File]::WriteAllText($proofEditorSettings, $originalProofSettings)
+        } else {
+            Remove-Item -LiteralPath $proofEditorSettings -Force -ErrorAction SilentlyContinue
+        }
+        Write-Host 'PES002_EDITOR_BACKGROUND_THROTTLE_RESTORED proofOnly=true'
     }
 }
 if ($gpuSamples.Count -gt 0) {
