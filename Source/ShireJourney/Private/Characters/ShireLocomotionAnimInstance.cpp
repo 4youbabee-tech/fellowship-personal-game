@@ -16,7 +16,8 @@ void UShireLocomotionAnimInstance::NativeInitializeAnimation()
 void UShireLocomotionAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
     Super::NativeUpdateAnimation(DeltaSeconds);
-    APawn* Owner = TryGetPawnOwner();
+    // Support the authored locomotion graph on AActor ambient residents too.
+    AActor* Owner = GetOwningActor();
     if (!Owner || !FMath::IsFinite(DeltaSeconds) || DeltaSeconds <= KINDA_SMALL_NUMBER)
     {
         GroundSpeed = 0.0f;

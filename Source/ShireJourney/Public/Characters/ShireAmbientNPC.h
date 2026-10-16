@@ -6,6 +6,7 @@
 
 class USceneComponent;
 class UStaticMeshComponent;
+class USkeletalMeshComponent;
 class UTextRenderComponent;
 class UMaterialInterface;
 class UStaticMesh;
@@ -32,6 +33,7 @@ public:
     void DeactivateForLivingWorldPool();
     void SetLivingWorldDirector(ALivingWorldDirector* InDirector);
     bool IsInLivingWorldPool() const { return bInLivingWorldPool; }
+    bool IsUsingUnifiedResident() const { return bUnifiedResidentActive && !bInLivingWorldPool; }
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Routine")
     FVector RoutinePointA = FVector::ZeroVector;
@@ -109,6 +111,9 @@ private:
     UStaticMeshComponent* ActivityProp;
 
     UPROPERTY()
+    USkeletalMeshComponent* UnifiedResident = nullptr;
+
+    UPROPERTY()
     UTextRenderComponent* SocialCaption;
 
     UPROPERTY()
@@ -153,6 +158,8 @@ private:
     FName RuntimeGoal = TEXT("ROUTINE");
     bool bSocializing = false;
     bool bInLivingWorldPool = false;
+    bool bUnifiedResidentActive = false;
+    float ResidentRigCheckSeconds = 0.0f;
     bool bCachedDangerContext = false;
     bool bCachedInclementContext = false;
     TWeakObjectPtr<ALivingWorldDirector> LivingWorldDirector;
@@ -169,6 +176,7 @@ private:
     FRandomStream Random;
 
     void ApplyVisualStyle();
+    bool TryEnableUnifiedShireResident();
     void UpdateWalkAnimation(float DeltaSeconds, bool bMoving);
     void UpdateAwareness(float DeltaSeconds);
     void UpdateSocialLife(float DeltaSeconds);

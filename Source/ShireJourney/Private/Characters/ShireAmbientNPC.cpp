@@ -2,6 +2,11 @@
 #include "ShireNPCContextSubsystem.h"
 #include "ShirePlayerCharacter.h"
 #include "LivingWorldDirector.h"
+#include "ShireChapterAssetStreamingSubsystem.h"
+#include "ShireLocomotionAnimInstance.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "Engine/SkeletalMesh.h"
+#include "Engine/GameInstance.h"
 #include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/TextRenderComponent.h"
@@ -64,6 +69,14 @@ AShireAmbientNPC::AShireAmbientNPC()
     ActivityProp->SetupAttachment(Root);
     ActivityProp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     ActivityProp->SetVisibility(false);
+
+    UnifiedResident = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("UnifiedResident"));
+    UnifiedResident->SetupAttachment(Root);
+    UnifiedResident->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    UnifiedResident->SetVisibility(false);
+    UnifiedResident->SetCastShadow(false);
+    UnifiedResident->bEnableUpdateRateOptimizations = true;
+    UnifiedResident->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::OnlyTickPoseWhenRendered;
 
     SocialCaption = CreateDefaultSubobject<UTextRenderComponent>(TEXT("SocialCaption"));
     SocialCaption->SetupAttachment(Root);
@@ -626,6 +639,9 @@ void AShireAmbientNPC::ConfigureLivingWorldRoutine(
     BaseWalkSpeed = FMath::Max(1.0f, WalkSpeed);
 
     bInLivingWorldPool = false;
+    bUnifiedResidentActive = false;
+    ResidentRigCheckSeconds = 0.0f;
+    if (UnifiedResident) UnifiedResident->SetVisibility(false);
     bHeadingToB = true;
     bObservingPlayer = false;
     bSocializing = false;
@@ -687,6 +703,8 @@ void AShireAmbientNPC::DeactivateForLivingWorldPool()
     }
 
     bInLivingWorldPool = true;
+    bUnifiedResidentActive = false;
+    if (UnifiedResident) UnifiedResident->SetVisibility(false);
     bObservingPlayer = false;
     bSocializing = false;
     ObservedPlayer.Reset();
@@ -1376,6 +1394,66 @@ void AShireAmbientNPC::UpdateSocialLife(float DeltaSeconds)
     }
 }
 
+bool AShireAmbientNPC::TryEnableUnifiedShireResident()
+{
+    if (!UnifiedResident || bInLivingWorldPool ||
+        !ActorHasTag(TEXT("LivingWorldManaged")) || !LivingWorldDirector.IsValid())
+    {
+        return false;
+    }
+    const bool bLocalShireResident = RoutineRole == TEXT("Villager") ||
+        RoutineRole == TEXT("Gardener") || RoutineRole == TEXT("FieldWorker") ||
+        RoutineRole == TEXT("MarketVendor") || RoutineRole == TEXT("PartyGuest");
+    const FVector BagEnd(-2210.0f, -520.0f, 0.0f);
+    APawn* Player = GetPlayerPawnCached();
+    if (!bLocalShireResident || !Player ||
+        FVector::DistSquared2D(GetActorLocation(), BagEnd) > FMath::Square(2900.0f) ||
+        FVector::DistSquared2D(GetActorLocation(), Player->GetActorLocation()) >
+            FMath::Square(1850.0f))
+    {
+        return false;
+    }
+    TArray<AShireAmbientNPC*> Nearby;
+    LivingWorldDirector->GatherActiveAmbientNPCsNear(BagEnd, 3100.0f, Nearby);
+    int32 ActiveRigs = 0;
+    for (const AShireAmbientNPC* Resident : Nearby)
+    {
+        if (Resident && Resident != this && Resident->IsUsingUnifiedResident()) ++ActiveRigs;
+    }
+    if (ActiveRigs >= 5) return false;
+
+    UGameInstance* GI = GetGameInstance();
+    UShireChapterAssetStreamingSubsystem* Streaming =
+        GI ? GI->GetSubsystem<UShireChapterAssetStreamingSubsystem>() : nullptr;
+    if (!Streaming) return false;
+    USkeletalMesh* Mesh = nullptr;
+    UClass* AnimClass = nullptr;
+    if (!Streaming->ResolveCharacterRig(TEXT("Frodo"), Mesh, AnimClass))
+    {
+        Streaming->RequestCharacterRig(TEXT("Frodo"));
+        return false;
+    }
+    if (!Mesh || !AnimClass ||
+        !AnimClass->IsChildOf(UShireLocomotionAnimInstance::StaticClass())) return false;
+    const FBoxSphereBounds Bounds = Mesh->GetBounds();
+    if (!FMath::IsFinite(Bounds.BoxExtent.Z) || Bounds.BoxExtent.Z < 1.0f) return false;
+    const float Scale = FMath::Clamp(142.0f / (2.0f * Bounds.BoxExtent.Z), 0.1f, 3.0f);
+    UnifiedResident->SetSkeletalMesh(Mesh);
+    UnifiedResident->SetRelativeScale3D(FVector(Scale));
+    UnifiedResident->SetRelativeLocation(FVector(0, 0,
+        -(Bounds.Origin.Z - Bounds.BoxExtent.Z) * Scale));
+    UnifiedResident->SetAnimationMode(EAnimationMode::AnimationBlueprint);
+    UnifiedResident->SetAnimInstanceClass(AnimClass);
+    UnifiedResident->SetVisibility(true);
+    UStaticMeshComponent* Parts[] = {Torso, Head, Hair, LeftArm, RightArm, LeftLeg, RightLeg};
+    for (UStaticMeshComponent* Part : Parts) if (Part) Part->SetVisibility(false);
+    bUnifiedResidentActive = true;
+    UE_LOG(LogTemp, Display,
+        TEXT("PES002_UNIFIED_RESIDENT_VISIBLE role=%s rig=shared-CC0 source=UE-SkeletalMesh countLimit=5 visualAccepted=0"),
+        *RoutineRole.ToString());
+    return true;
+}
+
 void AShireAmbientNPC::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
@@ -1399,7 +1477,15 @@ void AShireAmbientNPC::Tick(float DeltaSeconds)
 
     if (AppliedVisualRole != RoutineRole)
     {
+        bUnifiedResidentActive = false;
+        if (UnifiedResident) UnifiedResident->SetVisibility(false);
         ApplyVisualStyle();
+    }
+    ResidentRigCheckSeconds -= DeltaSeconds;
+    if (!bUnifiedResidentActive && ResidentRigCheckSeconds <= 0.0f && PlayerPawn)
+    {
+        ResidentRigCheckSeconds = 2.25f;
+        TryEnableUnifiedShireResident();
     }
 
     if (PlayerPawn)
