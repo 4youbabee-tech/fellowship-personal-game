@@ -6,6 +6,8 @@
 #include "FileHelpers.h"
 #include "Factories/FbxImportUI.h"
 #include "Factories/FbxStaticMeshImportData.h"
+#include "Factories/FbxSkeletalMeshImportData.h"
+#include "Factories/FbxAnimSequenceImportData.h"
 #include "Factories/MaterialInstanceConstantFactoryNew.h"
 #include "Factories/MaterialFactoryNew.h"
 #include "Engine/StaticMesh.h"
@@ -14,6 +16,19 @@
 #include "Rendering/SkeletalMeshLODRenderData.h"
 #include "Rendering/SkinWeightVertexBuffer.h"
 #include "Animation/Skeleton.h"
+#include "Animation/AnimSequence.h"
+#include "Animation/BlendSpace1D.h"
+#include "Animation/AnimBlueprint.h"
+#include "Factories/AnimBlueprintFactory.h"
+#include "AnimGraphNode_BlendSpacePlayer.h"
+#include "AnimGraphNode_Root.h"
+#include "EdGraph/EdGraph.h"
+#include "EdGraph/EdGraphNodeUtils.h"
+#include "EdGraph/EdGraphSchema.h"
+#include "K2Node_VariableGet.h"
+#include "Kismet2/BlueprintEditorUtils.h"
+#include "Kismet2/KismetEditorUtilities.h"
+#include "Characters/ShireLocomotionAnimInstance.h"
 #include "StaticMeshResources.h"
 #include "Engine/Texture2D.h"
 #include "HAL/FileManager.h"
@@ -39,6 +54,158 @@
 
 namespace ShireProductionImport
 {
+    // Dedicated artist-authored packet only. No generic rig synthesis or retargeting.
+    static bool ImportFrodoLocomotion(const FString& WorkingRoot)
+    {
+        const FString SourceDir = WorkingRoot / TEXT("Characters/Rigs/Frodo");
+        if (!FPaths::FileExists(SourceDir / TEXT("SK_Frodo.fbx"))) return true;
+        const FString Destination = TEXT("/Game/Production/Characters/Rigs/Frodo");
+        USkeletalMesh* Mesh = LoadObject<USkeletalMesh>(nullptr,
+            *(Destination / TEXT("SK_Frodo.SK_Frodo")));
+        USkeleton* Skeleton = Mesh ? Mesh->GetSkeleton() : nullptr;
+        if (!Skeleton || Mesh->GetRefSkeleton().GetNum() < 8)
+        {
+            UE_LOG(LogTemp, Error, TEXT("FRODO_LOCOMOTION_INVALID_IMPORTED_SKELETON"));
+            return false;
+        }
+        FAssetToolsModule& Tools = FModuleManager::LoadModuleChecked<FAssetToolsModule>(TEXT("AssetTools"));
+        const TCHAR* ClipNames[] = { TEXT("AN_Frodo_Idle"), TEXT("AN_Frodo_Walk"), TEXT("AN_Frodo_Run"), TEXT("AN_Frodo_Talk") };
+        UAnimSequence* Clips[4] = {};
+        for (int32 Index = 0; Index < 4; ++Index)
+        {
+            const FString Name(ClipNames[Index]);
+            const FString Filename = SourceDir / (Name + TEXT(".fbx"));
+            if (!FPaths::FileExists(Filename))
+            {
+                UE_LOG(LogTemp, Error, TEXT("FRODO_LOCOMOTION_REQUIRED_CLIP_MISSING source=%s"), *Filename);
+                return false;
+            }
+            UAssetImportTask* Task = NewObject<UAssetImportTask>();
+            Task->Filename = Filename;
+            Task->DestinationPath = Destination;
+            Task->DestinationName = Name;
+            Task->bAutomated = true;
+            Task->bReplaceExisting = true;
+            Task->bSave = true;
+            UFbxImportUI* Options = NewObject<UFbxImportUI>();
+            Options->bAutomatedImportShouldDetectType = false;
+            Options->MeshTypeToImport = EFBXImportType::FBXIT_Animation;
+            Options->bImportAsSkeletal = true;
+            Options->bImportMesh = false;
+            Options->bImportAnimations = true;
+            Options->bImportMaterials = false;
+            Options->bImportTextures = false;
+            Options->Skeleton = Skeleton;
+            Options->OverrideAnimationName = Name;
+            Options->AnimSequenceImportData->bForceFrontXAxis = true;
+            Task->Options = Options;
+            TArray<UAssetImportTask*> Tasks;
+            Tasks.Add(Task);
+            Tools.Get().ImportAssetTasks(Tasks);
+            const FString ExpectedPath = Destination / (Name + TEXT(".") + Name);
+            Clips[Index] = LoadObject<UAnimSequence>(nullptr, *ExpectedPath);
+            bool bHasAuthoredKeys = false;
+            if (Clips[Index])
+                for (const FRawAnimSequenceTrack& Track : Clips[Index]->GetRawAnimationData())
+                    bHasAuthoredKeys |= Track.PosKeys.Num() > 1 || Track.RotKeys.Num() > 1;
+            if (!Task->ImportedObjectPaths.Contains(ExpectedPath) || !Clips[Index] ||
+                Clips[Index]->GetSkeleton() != Skeleton || !bHasAuthoredKeys ||
+                Clips[Index]->GetNumberOfFrames() < 2 ||
+                Clips[Index]->GetRawAnimationData().Num() == 0)
+            {
+                UE_LOG(LogTemp, Error, TEXT("FRODO_LOCOMOTION_CLIP_INVALID asset=%s skeletonOrKeysInvalid=1"), *Name);
+                return false;
+            }
+            UE_LOG(LogTemp, Display, TEXT("FRODO_LOCOMOTION_CLIP_IMPORTED asset=%s skeleton=%s frames=%d tracks=%d"),
+                *Clips[Index]->GetPathName(), *Skeleton->GetPathName(),
+                Clips[Index]->GetNumberOfFrames(), Clips[Index]->GetRawAnimationData().Num());
+        }
+        auto SaveAsset = [](UObject* Asset)
+        {
+            UPackage* Package = Asset->GetOutermost();
+            const FString Filename = FPackageName::LongPackageNameToFilename(
+                Package->GetName(), FPackageName::GetAssetPackageExtension());
+            IFileManager::Get().MakeDirectory(*FPaths::GetPath(Filename), true);
+            Asset->MarkPackageDirty();
+            return UPackage::SavePackage(Package, Asset, RF_Public | RF_Standalone,
+                *Filename, GError, nullptr, false, true, SAVE_NoError) && FPaths::FileExists(Filename);
+        };
+        const FString BlendName = TEXT("BS_Frodo_Locomotion");
+        UPackage* BlendPackage = CreatePackage(*(Destination / BlendName));
+        UBlendSpace1D* Blend = LoadObject<UBlendSpace1D>(nullptr,
+            *(Destination / (BlendName + TEXT(".") + BlendName)));
+        if (!Blend)
+        {
+            Blend = NewObject<UBlendSpace1D>(BlendPackage, *BlendName, RF_Public | RF_Standalone);
+            FAssetRegistryModule::AssetCreated(Blend);
+        }
+        Blend->SetSkeleton(Skeleton);
+        FBlendParameter& Speed = const_cast<FBlendParameter&>(Blend->GetBlendParameter(0));
+        Speed.DisplayName = TEXT("GroundSpeed");
+        Speed.Min = 0.0f;
+        Speed.Max = 300.0f;
+        Speed.GridNum = 5;
+        while (Blend->GetNumberOfBlendSamples() > 0)
+            Blend->DeleteSample(Blend->GetNumberOfBlendSamples() - 1);
+        const float Speeds[] = { 0.0f, 120.0f, 300.0f };
+        for (int32 Index = 0; Index < 3; ++Index)
+        {
+            if (!Blend->AddSample(Clips[Index], FVector(Speeds[Index], 0.0f, 0.0f))) return false;
+        }
+        Blend->ValidateSampleData();
+        Blend->PostEditChange();
+        if (Blend->GetNumberOfBlendSamples() != 3 || !SaveAsset(Blend)) return false;
+
+        const FString BPName = TEXT("ABP_Frodo_Locomotion");
+        UPackage* BPPackage = CreatePackage(*(Destination / BPName));
+        UAnimBlueprint* BP = LoadObject<UAnimBlueprint>(nullptr,
+            *(Destination / (BPName + TEXT(".") + BPName)));
+        if (!BP)
+        {
+            UAnimBlueprintFactory* Factory = NewObject<UAnimBlueprintFactory>();
+            Factory->ParentClass = UShireLocomotionAnimInstance::StaticClass();
+            Factory->TargetSkeleton = Skeleton;
+            BP = Cast<UAnimBlueprint>(Factory->FactoryCreateNew(UAnimBlueprint::StaticClass(),
+                BPPackage, *BPName, RF_Public | RF_Standalone, nullptr, GWarn));
+            if (!BP) return false;
+            FAssetRegistryModule::AssetCreated(BP);
+        }
+        if (BP->ParentClass != UShireLocomotionAnimInstance::StaticClass() || BP->TargetSkeleton != Skeleton)
+            return false;
+        UEdGraph* Graph = nullptr;
+        for (UEdGraph* Candidate : BP->FunctionGraphs)
+            if (Candidate && Candidate->GetFName() == TEXT("AnimGraph")) Graph = Candidate;
+        if (!Graph) return false;
+        UAnimGraphNode_Root* Root = nullptr;
+        const TArray<UEdGraphNode*> PreviousNodes = Graph->Nodes;
+        for (UEdGraphNode* Node : PreviousNodes)
+        {
+            if (UAnimGraphNode_Root* ExistingRoot = Cast<UAnimGraphNode_Root>(Node)) Root = ExistingRoot;
+            else FBlueprintEditorUtils::RemoveNode(BP, Node, true);
+        }
+        if (!Root) return false;
+        FGraphNodeCreator<UAnimGraphNode_BlendSpacePlayer> PlayerCreator(*Graph);
+        UAnimGraphNode_BlendSpacePlayer* Player = PlayerCreator.CreateNode();
+        Player->Node.BlendSpace = Blend;
+        PlayerCreator.Finalize();
+        FGraphNodeCreator<UK2Node_VariableGet> SpeedCreator(*Graph);
+        UK2Node_VariableGet* SpeedNode = SpeedCreator.CreateNode();
+        SpeedNode->VariableReference.SetSelfMember(TEXT("GroundSpeed"));
+        SpeedCreator.Finalize();
+        UEdGraphPin* Pose = Player->FindPin(TEXT("Pose"));
+        UEdGraphPin* Result = Root->FindPin(TEXT("Result"));
+        UEdGraphPin* X = Player->FindPin(TEXT("X"));
+        UEdGraphPin* SpeedValue = SpeedNode->FindPin(TEXT("GroundSpeed"));
+        if (!Pose || !Result || !X || !SpeedValue ||
+            !Graph->GetSchema()->TryCreateConnection(Pose, Result) ||
+            !Graph->GetSchema()->TryCreateConnection(SpeedValue, X)) return false;
+        FBlueprintEditorUtils::MarkBlueprintAsStructurallyModified(BP);
+        FKismetEditorUtilities::CompileBlueprint(BP);
+        if (!BP->GeneratedClass || BP->Status == BS_Error || !SaveAsset(BP)) return false;
+        UE_LOG(LogTemp, Display, TEXT("FRODO_LOCOMOTION_PACKET_SAVED blend=%s blueprint=%s skeleton=%s samples=3 runtimeAcceptance=pending"),
+            *Blend->GetPathName(), *BP->GetPathName(), *Skeleton->GetPathName());
+        return true;
+    }
     static bool IsApprovedFoliageMaterialIdentity(const FString& AuthoredMaterialName)
     {
         const FString NormalizedIdentity = AuthoredMaterialName.TrimStartAndEnd();
@@ -340,6 +507,13 @@ UShireProductionImportCommandlet::UShireProductionImportCommandlet()
 int32 UShireProductionImportCommandlet::Main(const FString& Params)
 {
     const bool bEnableCharacterRigImport = FParse::Param(*Params, TEXT("EnableCharacterRigImport"));
+    FString CharacterPacket;
+    FParse::Value(*Params, TEXT("CharacterPacket="), CharacterPacket);
+    if (!CharacterPacket.IsEmpty() && !CharacterPacket.Equals(TEXT("Frodo"), ESearchCase::IgnoreCase))
+    {
+        UE_LOG(LogTemp, Error, TEXT("ShireProductionImport: unsupported authored character packet %s"), *CharacterPacket);
+        return 5;
+    }
     UE_LOG(
         LogTemp,
         Display,
@@ -425,8 +599,22 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         FString RelativeFbx = FbxFile;
         FPaths::MakePathRelativeTo(RelativeFbx, *(WorkingRoot / TEXT("")));
         RelativeFbx.ReplaceInline(TEXT("\\"), TEXT("/"));
+        if (RelativeFbx.Equals(TEXT("Characters/Rigs/Frodo/AN_Frodo_Idle.fbx"), ESearchCase::IgnoreCase) ||
+            RelativeFbx.Equals(TEXT("Characters/Rigs/Frodo/AN_Frodo_Walk.fbx"), ESearchCase::IgnoreCase) ||
+            RelativeFbx.Equals(TEXT("Characters/Rigs/Frodo/AN_Frodo_Run.fbx"), ESearchCase::IgnoreCase) ||
+            RelativeFbx.Equals(TEXT("Characters/Rigs/Frodo/AN_Frodo_Talk.fbx"), ESearchCase::IgnoreCase))
+        {
+            // Authored clips are animation-only, after the exact mesh Skeleton exists.
+            continue;
+        }
         if (RelativeFbx.StartsWith(TEXT("Characters/Rigs/"), ESearchCase::IgnoreCase))
         {
+            if (!CharacterPacket.IsEmpty() &&
+                !RelativeFbx.StartsWith(TEXT("Characters/Rigs/Frodo/"), ESearchCase::IgnoreCase))
+            {
+                UE_LOG(LogTemp, Display, TEXT("ShireProductionImport: unrelated character source deferred %s"), *RelativeFbx);
+                continue;
+            }
             CharacterFbxFiles.Add(FbxFile);
         }
         else
@@ -1462,6 +1650,10 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             ImportOptions->bImportAnimations = false;
             ImportOptions->bImportMaterials = true;
             ImportOptions->bImportTextures = true;
+            if (Relative.Equals(TEXT("Characters/Rigs/Frodo/SK_Frodo.fbx"), ESearchCase::IgnoreCase))
+            {
+                ImportOptions->SkeletalMeshImportData->bForceFrontXAxis = true;
+            }
             Task->Options = ImportOptions;
             UE_LOG(LogTemp, Display, TEXT("ShireProductionImport: skeletal FBX import file=%s destination=%s asset=%s"),
                 *Filename, *DestinationPath, *Task->DestinationName);
@@ -2105,6 +2297,12 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         {
             UE_LOG(LogTemp, Display, TEXT("ShireProductionImport imported: %s"), *Filename);
         }
+    }
+
+    if (bEnableCharacterRigImport && !ShireProductionImport::ImportFrodoLocomotion(WorkingRoot))
+    {
+        ++Failed;
+        UE_LOG(LogTemp, Error, TEXT("FRODO_LOCOMOTION_PACKET_FAILED noRuntimeAcceptance=1"));
     }
 
     int32 BoundAlbedoTextures = 0;

@@ -85,6 +85,12 @@ if ($PIE -and (!(Select-String -Path $log -SimpleMatch -Pattern 'PES002_CAPTURE_
     !(Select-String -Path $log -SimpleMatch -Pattern 'PES002_PIE_CAPTURE_WINDOW_COMPLETE worldType=PIE' -Quiet))) {
     throw 'PES002_REAL_PIE_WORLD_NOT_PROVEN'
 }
+$csvCaptures = @(Get-ChildItem -Path (Join-Path $root 'Saved/Profiling/CSV') -Filter '*.csv' -File -Recurse -ErrorAction SilentlyContinue |
+    Where-Object { $_.LastWriteTime -ge $started.AddSeconds(-2) })
+foreach ($capture in $csvCaptures) {
+    Copy-Item -LiteralPath $capture.FullName -Destination (Join-Path $proof ('CPU-GPU-' + $capture.Name)) -Force
+    Write-Host "PES002_ENGINE_CSV_PROFILE source=$($capture.FullName) bytes=$($capture.Length) actualCapture=true targetDeviceAccepted=false"
+}
 if (!(Test-Path $log) -or !(Select-String -Path $log -Pattern 'PES002_CAPTURE_CAMERA_READY target=BagEnd' -Quiet)) {
     throw "PES002_CAPTURE_CAMERA_NOT_CONFIRMED; inspect $log"
 }

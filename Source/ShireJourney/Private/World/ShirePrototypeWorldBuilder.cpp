@@ -30,7 +30,6 @@
 #include "HAL/PlatformMemory.h"
 #include "DynamicRHI.h"
 #include "RHI.h"
-#include "RHIStats.h"
 #include "Misc/CoreDelegates.h"
 #include "HAL/PlatformTime.h"
 #include "Misc/Parse.h"
@@ -443,6 +442,26 @@ void AShirePrototypeWorldBuilder::BeginPlay()
         ProofLastFrameTimestamp = FPlatformTime::Seconds();
         FCoreDelegates::OnEndFrame.AddUObject(this,
             &AShirePrototypeWorldBuilder::SampleProofFrame);
+        // Actual UE4.27 CPU/render/GPU CSV instrumentation, opt-in only.
+        // Stop before the native PIE session ends so the engine flushes its data.
+        for (int32 ProfilePhase = 0; ProfilePhase < 2; ++ProfilePhase)
+        {
+            FTimerHandle ProfileTimer;
+            GetWorldTimerManager().SetTimer(ProfileTimer,
+                FTimerDelegate::CreateLambda([WeakBuilder, ProfilePhase]()
+                {
+                    if (WeakBuilder.IsValid())
+                    {
+                        APlayerController* PC = WeakBuilder->GetWorld()->GetFirstPlayerController();
+                        if (PC)
+                        {
+                            PC->ConsoleCommand(ProfilePhase == 0 ? TEXT("csvprofile start") : TEXT("csvprofile stop"), false);
+                            UE_LOG(LogTemp, Display, TEXT("PES002_CSV_PROFILE phase=%s source=actual-UE4.27 profilerOverhead=true"),
+                                ProfilePhase == 0 ? TEXT("start") : TEXT("stop"));
+                        }
+                    }
+                }), ProfilePhase == 0 ? 10.0f : 47.0f, false);
+        }
         FTimerHandle CameraTimer;
         GetWorldTimerManager().SetTimer(CameraTimer,
             FTimerDelegate::CreateLambda([WeakBuilder]()

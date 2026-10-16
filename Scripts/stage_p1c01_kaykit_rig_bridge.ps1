@@ -1,6 +1,8 @@
 param(
   [string]$ManifestPath = "Data/P1C01KayKitRigTechnicalBridgeV1.json",
-  [string]$OutputRoot = ""
+  [string]$OutputRoot = "",
+  [switch]$ProductionPacket,
+  [string]$BlenderExecutable = "blender"
 )
 
 Set-StrictMode -Version Latest
@@ -14,6 +16,40 @@ $manifest = Get-Content -LiteralPath $ManifestPath -Raw | ConvertFrom-Json
 if(([string]$manifest.source.license).ToUpperInvariant() -ne "CC0-1.0"){ throw "KAYKIT_RIG_LICENSE_POLICY_FAIL" }
 if(([string]$manifest.source.required_final_format).ToUpperInvariant() -ne "FBX"){ throw "KAYKIT_RIG_FORMAT_POLICY_FAIL" }
 if(([string]$manifest.source.delivery_mode) -ne "DIRECT_OFFICIAL_RAW_FBX"){ throw "KAYKIT_RIG_DELIVERY_MODE_FAIL" }
+
+if($ProductionPacket){
+  # Correct the two observed raw-FBX failures before UE: complete bind pose and
+  # explicit smoothing. Never resubmit the byte-identical rejected source.
+  $policy=$manifest.production_normalization
+  if(-not $policy){ throw "KAYKIT_PRODUCTION_NORMALIZATION_POLICY_MISSING" }
+  if([string]::IsNullOrWhiteSpace($OutputRoot)){ $OutputRoot=Join-Path $env:RUNNER_TEMP "shire-kaykit-production" }
+  $original=Join-Path $OutputRoot "original"
+  $packet=Join-Path $OutputRoot "packet"
+  New-Item -ItemType Directory -Force -Path $original,$packet | Out-Null
+  $source=$manifest.source.direct_candidates[0]
+  $revision=[string]$policy.source_commit
+  if($revision -notmatch '^[a-f0-9]{40}$'){ throw "KAYKIT_PRODUCTION_REVISION_INVALID" }
+  $inputs=@(
+    @{url=([string]$source.url).Replace('/main/',"/$revision/");name='Rogue.fbx';sha=[string]$policy.source_sha256},
+    @{url=([string]$source.texture_url).Replace('/main/',"/$revision/");name='rogue_texture.png';sha=[string]$policy.texture_sha256},
+    @{url=([string]$manifest.source.license_url).Replace('/main/',"/$revision/");name='LICENSE.txt';sha=[string]$policy.license_sha256}
+  )
+  foreach($inputFile in $inputs){
+    $path=Join-Path $original $inputFile.name
+    Invoke-WebRequest -UseBasicParsing -Uri $inputFile.url -OutFile $path
+    if((Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant() -ne $inputFile.sha){ throw "KAYKIT_PRODUCTION_INPUT_HASH_REJECT file=$($inputFile.name)" }
+  }
+  if((Get-Content (Join-Path $original 'LICENSE.txt') -Raw) -notmatch 'Creative Commons Zero|CC0'){ throw "KAYKIT_PRODUCTION_LICENSE_REJECT" }
+  & $BlenderExecutable --background --factory-startup --python-exit-code 93 --python (Join-Path $root 'Tools/CloudAssetBuild/prepare_kaykit_character.py') -- --source-fbx (Join-Path $original 'Rogue.fbx') --texture (Join-Path $original 'rogue_texture.png') --license (Join-Path $original 'LICENSE.txt') --out $packet
+  if($LASTEXITCODE -ne 0){ throw "KAYKIT_PRODUCTION_BLENDER_REJECT" }
+  $proof=Get-Content (Join-Path $packet 'source_receipt.json') -Raw | ConvertFrom-Json
+  if($proof.status -ne 'NORMALIZED_KAYKIT_CHARACTER_SOURCE_PASS' -or $proof.mesh.vertex_count -lt 2000 -or $proof.mesh.bone_count -lt 20 -or $proof.mesh.max_influences -gt 4 -or $proof.mesh.zero_weight_vertices -ne 0){ throw "KAYKIT_PRODUCTION_SKIN_REJECT" }
+  foreach($file in $proof.files.PSObject.Properties){
+    if((Get-FileHash -LiteralPath (Join-Path $packet $file.Name) -Algorithm SHA256).Hash.ToLowerInvariant() -ne [string]$file.Value){ throw "KAYKIT_PRODUCTION_PACKET_HASH_REJECT file=$($file.Name)" }
+  }
+  Write-Host "KAYKIT_PRODUCTION_PACKET_READY path=$packet license=CC0 unified=1 bones=$($proof.mesh.bone_count) maxInfluences=$($proof.mesh.max_influences) sourceOnly=true UnrealImportPending=true finalLikeness=false"
+  exit 0
+}
 
 if([string]::IsNullOrWhiteSpace($OutputRoot)){ $OutputRoot = Join-Path $env:RUNNER_TEMP "shire-kaykit-rig-bridge" }
 if(Test-Path -LiteralPath $OutputRoot){ Remove-Item -LiteralPath $OutputRoot -Recurse -Force }

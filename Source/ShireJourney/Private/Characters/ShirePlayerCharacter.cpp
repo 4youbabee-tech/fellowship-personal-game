@@ -9,6 +9,7 @@
 #include "ShireStoryPresentationSubsystem.h"
 #include "FellowshipEnemyPrototype.h"
 #include "Animation/AnimInstance.h"
+#include "ShireLocomotionAnimInstance.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -235,6 +236,14 @@ bool AShirePlayerCharacter::TryApplyProductionRig(const FString& RigFolder)
     }
 
     GetMesh()->SetSkeletalMesh(SkeletalMesh);
+    if (AnimClass->IsChildOf(UShireLocomotionAnimInstance::StaticClass()) &&
+        !UShireLocomotionAnimInstance::AlignMeshToCapsule(
+            GetMesh(), GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight()))
+    {
+        UE_LOG(LogTemp, Error, TEXT("SHIRE_SKELETAL_PRESENTATION_REJECT player=%s reason=invalid-bounds"), *GetName());
+        return false;
+    }
+    GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
     GetMesh()->SetAnimInstanceClass(AnimClass);
     GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     GetMesh()->bEnableUpdateRateOptimizations = true;

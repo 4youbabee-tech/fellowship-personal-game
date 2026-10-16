@@ -2,7 +2,9 @@
 
 #include "Dom/JsonObject.h"
 #include "Engine/GameInstance.h"
+#include "Engine/AssetManager.h"
 #include "Engine/SkeletalMesh.h"
+#include "Animation/AnimInstance.h"
 #include "Engine/World.h"
 #include "HAL/FileManager.h"
 #include "HAL/PlatformTime.h"
@@ -291,6 +293,7 @@ void UShireChapterAssetStreamingSubsystem::RequestChapterAssets(
         *RouteId.ToString(),
         Bank->Assets.Num());
 
+    FStreamableManager& StreamableManager = UAssetManager::GetStreamableManager();
     PendingHandle = StreamableManager.RequestAsyncLoad(
         Bank->Assets,
         FStreamableDelegate::CreateUObject(
@@ -320,7 +323,8 @@ bool UShireChapterAssetStreamingSubsystem::ResolveCharacterRig(
 
     OutSkeletalMesh = Cast<USkeletalMesh>(Rig->SkeletalMeshPath.ResolveObject());
     OutAnimClass = Cast<UClass>(Rig->AnimClassPath.ResolveObject());
-    return OutSkeletalMesh != nullptr && OutAnimClass != nullptr;
+    return OutSkeletalMesh != nullptr && OutSkeletalMesh->GetSkeleton() != nullptr &&
+        OutAnimClass != nullptr && OutAnimClass->IsChildOf(UAnimInstance::StaticClass());
 }
 
 void UShireChapterAssetStreamingSubsystem::RequestCharacterRig(FName CharacterId)
@@ -406,6 +410,7 @@ void UShireChapterAssetStreamingSubsystem::RequestCharacterRig(FName CharacterId
     Assets.Add(Rig.SkeletalMeshPath);
     Assets.Add(Rig.AnimClassPath);
 
+    FStreamableManager& StreamableManager = UAssetManager::GetStreamableManager();
     Rig.Handle = StreamableManager.RequestAsyncLoad(
         Assets,
         FStreamableDelegate::CreateUObject(
