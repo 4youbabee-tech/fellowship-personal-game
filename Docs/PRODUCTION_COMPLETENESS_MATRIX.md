@@ -1,3 +1,15 @@
+## 2026-10-16 Shire PES-002 exterior audiovisual + legal rig source prep
+| Deliverable | Stage before next exact SHA CI |
+|---|---|
+| Warm cinematic color | SOURCE IMPLEMENTED in existing PostProcessVolume (ACES color grading, bounded AO/SSR, motion blur off); screenshot/720p FPS STILL NOT VERIFIED on new candidate |
+| Positional outdoors audio | SOURCE IMPLEMENTED in existing UShireAudioSubsystem: 3 anchored outside cue IDs, one async-loaded 3D looping SoundWave at a time, 1.1s fade on transitions; actual listening NOT TESTED |
+| GLB to FBX | SOURCE-ONLY Blender script enforces CC0 provenance, SHA256, armature, per-vertex skin weights <=4, UVs, <=65k tris and 2k textures; NO authorized GLB downloaded/imported |
+| Named high-quality characters | NOT PRODUCED; 5 existing skeletal/13 modular local residents remain |
+| Interiors | PES-003 LOCKED; not enterable, no world placement |
+| Missions/memory | Existing Quest/NPCContext/Save unchanged, no new story beat accepted |
+| Real Unreal device proof | Latest baseline 38960898925 PASS only at prior SHA; new SHA needed |
+| GATE 6/7 | OPEN |
+
 ## 2026-10-16 PES-002 source root repair — UE verification pending
 | Stage | Evidence |
 |---|---|

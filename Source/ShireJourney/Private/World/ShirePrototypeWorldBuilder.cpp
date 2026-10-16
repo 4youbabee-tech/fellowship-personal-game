@@ -4,6 +4,10 @@
 #include "ShireNPC.h"
 #include "ShireAmbientNPC.h"
 #include "ShireQuestSubsystem.h"
+#include "ShireAudioSubsystem.h"
+#include "Engine/GameInstance.h"
+#include "GameFramework/Pawn.h"
+#include "Kismet/GameplayStatics.h"
 #include "ShireQuestTrigger.h"
 #include "ShireTraversalChallenge.h"
 #include "WorldDetailCluster.h"
@@ -443,6 +447,31 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     ApplyStoryAtmosphere();
     ApplyBagEndStoryVariant();
     ApplyPartyStoryVariant();
+
+    // One P1C01-only low-frequency soundscape poll. The EXISTING audio
+    // subsystem owns all async loads, playback, fade/cleanup and story
+    // ambience. This world builder remains tick-free and gameplay anchors stay.
+    TWeakObjectPtr<AShirePrototypeWorldBuilder> WeakAudioBuilder(this);
+    FTimerHandle OutdoorSoundTimer;
+    GetWorldTimerManager().SetTimer(OutdoorSoundTimer,
+        FTimerDelegate::CreateLambda([WeakAudioBuilder]()
+        {
+            if (!WeakAudioBuilder.IsValid() || !WeakAudioBuilder->GetWorld())
+            {
+                return;
+            }
+            APlayerController* PC = UGameplayStatics::GetPlayerController(
+                WeakAudioBuilder.Get(), 0);
+            UGameInstance* GI = WeakAudioBuilder->GetGameInstance();
+            if (PC && PC->GetPawn() && GI)
+            {
+                if (UShireAudioSubsystem* Audio = GI->GetSubsystem<UShireAudioSubsystem>())
+                {
+                    Audio->UpdateShireEnvironmentSoundscape(
+                        PC->GetPawn()->GetActorLocation());
+                }
+            }
+        }), 1.6f, true, 0.8f);
 
     // The first SkyLight recapture can happen before the runtime sky has rendered.
     // One deferred recapture corrects that startup ordering; never recapture per Tick.
@@ -2018,6 +2047,23 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
         PostProcess->Settings.BloomIntensity = 0.10f;
         PostProcess->Settings.bOverride_VignetteIntensity = true;
         PostProcess->Settings.VignetteIntensity = 0.12f;
+
+        // UE4.27 ACES filmic color: detail in timber/plaster and grass shadows
+        // without cinematic DOF, motion blur or unsupported UE5 lighting.
+        PostProcess->Settings.bOverride_ColorContrast = true;
+        PostProcess->Settings.ColorContrast = FVector4(1.055f, 1.05f, 1.045f, 1.0f);
+        PostProcess->Settings.bOverride_ColorSaturation = true;
+        PostProcess->Settings.ColorSaturation = FVector4(1.045f, 1.025f, 1.0f, 1.0f);
+        PostProcess->Settings.bOverride_AmbientOcclusionIntensity = true;
+        PostProcess->Settings.AmbientOcclusionIntensity = 0.32f;
+        PostProcess->Settings.bOverride_AmbientOcclusionRadius = true;
+        PostProcess->Settings.AmbientOcclusionRadius = 58.0f;
+        PostProcess->Settings.bOverride_MotionBlurAmount = true;
+        PostProcess->Settings.MotionBlurAmount = 0.0f;
+        PostProcess->Settings.bOverride_ScreenSpaceReflectionIntensity = true;
+        PostProcess->Settings.ScreenSpaceReflectionIntensity = 0.12f;
+        UE_LOG(LogTemp, Display,
+            TEXT("PES002_SHIRE_FILMIC_GRADE contrast=1.05 saturation=1.03 ao=0.32 blur=0 ssr=0.12 ue427=1 visual=pending"));
     }
 }
 

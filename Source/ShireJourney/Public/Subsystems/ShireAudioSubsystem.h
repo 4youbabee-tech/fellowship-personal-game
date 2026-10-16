@@ -44,6 +44,10 @@ public:
     UFUNCTION(BlueprintCallable, Category="Audio")
     void SetMusicCue(FName CueId);
 
+    // Exterior zone beds reuse existing asynchronously loaded /Game/Audio assets.
+    // This does not replace story-controlled SetAmbienceCue.
+    void UpdateShireEnvironmentSoundscape(const FVector& ListenerLocation);
+
     UFUNCTION(BlueprintCallable, Category="Audio")
     void PlaySfxCue(FName CueId);
 
@@ -83,6 +87,15 @@ private:
 
     UPROPERTY(Transient)
     UAudioComponent* ActiveMusicComponent = nullptr;
+
+    UPROPERTY(Transient)
+    UAudioComponent* ActiveEnvironmentComponent = nullptr;
+
+    UPROPERTY(Transient)
+    USoundAttenuation* EnvironmentAttenuation = nullptr;
+
+    FName ActiveEnvironmentCue = NAME_None;
+    FVector ActiveEnvironmentOrigin = FVector::ZeroVector;
 
     UPROPERTY(Transient)
     USoundAttenuation* SpatialSfxAttenuation = nullptr;
@@ -133,6 +146,7 @@ private:
     bool CanPlaySfxNow(FName CueId, bool bStoryCritical);
     void StartVoicePlayback(FName CueId, USoundBase* Sound);
     void ApplyMusicDuck(bool bDuck);
+    void StartEnvironmentLoopIfReady(FName CueId, USoundBase* Sound);
     AActor* ResolveVoiceSpeakerActor(FName CueId) const;
 
     UFUNCTION()
