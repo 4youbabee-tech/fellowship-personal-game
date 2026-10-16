@@ -1071,7 +1071,6 @@ void AShirePrototypeWorldBuilder::OnCuratedNatureLayerReady()
         TEXT("PES002_BAG_END_WOODLAND_FBX_REPLACEMENT eligible=%d converted=%d deferred=%d max=96 fallback=preserved collision=unchanged visual=pending"),
         WoodlandEligible, WoodlandReplaced, WoodlandDeferred);
 }
-}
 
 
 void AShirePrototypeWorldBuilder::RequestCloud138Layer()
