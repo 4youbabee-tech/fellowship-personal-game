@@ -17,6 +17,9 @@ from pathlib import Path
 
 import bpy
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from mpfb_pose_qc import inspect_deform_and_pose
+
 
 def mpfb_api(suffix: str, symbol: str):
     for name in list(sys.modules):
@@ -55,6 +58,17 @@ def main() -> None:
         raise RuntimeError("UNSUPPORTED_MPFB_RIG")
     if not spec.get("skin") or not spec.get("parts"):
         raise RuntimeError("SKIN_AND_EQUIPPED_BODY_PARTS_REQUIRED")
+
+    if bpy.app.version < (4, 2, 0):
+        raise RuntimeError("MPFB2_REQUIRES_BLENDER_4_2_OR_NEWER")
+    # MPFB2 is a Blender extension; headless sessions may have it installed but disabled.
+    if not any(name.endswith("mpfb.services.humanservice") for name in sys.modules):
+        import addon_utils
+        candidates = [module.__name__ for module in addon_utils.modules(refresh=True)
+                      if module.__name__.split(".")[-1] == "mpfb"]
+        if len(candidates) != 1:
+            raise RuntimeError("MPFB2_EXTENSION_NOT_INSTALLED_OR_AMBIGUOUS")
+        addon_utils.enable(candidates[0], default_set=False, persistent=False)
 
     HumanService = mpfb_api("mpfb.services.humanservice", "HumanService")
     AssetService = mpfb_api("mpfb.services.assetservice", "AssetService")
@@ -110,11 +124,9 @@ def main() -> None:
         raise RuntimeError("MPFB_EXPORT_RIG_OR_EQUIPMENT_MISSING")
     if not all(len(m.data.uv_layers) for m in meshes):
         raise RuntimeError("MPFB_EXPORTED_UV_MISSING")
-    weighted = sum(
-        1 for vert in body.data.vertices
-        if any(group.weight > 0 for group in vert.groups))
-    if weighted < max(256, len(body.data.vertices) // 2):
-        raise RuntimeError("MPFB_SKIN_WEIGHTS_MISSING_OR_SPARSE")
+    # Inspect the actual exported deform-bone vertex groups, not helper weights;
+    # bend both a lower arm and lower leg and measure real evaluated mesh motion.
+    weighted, pose_deformation = inspect_deform_and_pose(body, bones[0])
     vertices = sum(len(m.data.vertices) for m in meshes)
     faces = sum(len(m.data.polygons) for m in meshes)
 
@@ -145,6 +157,9 @@ def main() -> None:
                 image.filepath = str(dest)
                 textures.append({"name": dest.name, "sha256": digest})
 
+    if not textures:
+        raise RuntimeError("MPFB_NO_PORTABLE_AUTHOR_SKIN_OR_COSTUME_TEXTURE_SIDECARS")
+
     bpy.ops.object.select_all(action="DESELECT")
     for obj in relatives:
         obj.select_set(True)
@@ -171,6 +186,8 @@ def main() -> None:
         "vertices": vertices,
         "faces_not_triangulated": faces,
         "weighted_body_vertices": weighted,
+        "blender_joint_deformation": pose_deformation,
+        "blender_joint_deformation_evidence": "POSED_EVALUATED_MESH_LOCAL_ONLY_NOT_UE4",
         "texture_sidecars": textures,
         "ue_import": "NOT_RUN",
         "pie_deformation": "NOT_RUN",
