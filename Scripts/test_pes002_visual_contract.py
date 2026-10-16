@@ -91,6 +91,29 @@ class PES002VisualContract(unittest.TestCase):
         self.assertIn("ShrubInstances->RemoveInstance(ConvertedIndices[J]);", section)
         self.assertNotIn("SetCollisionEnabled", section)
 
+    def test_new_bag_end_cobbled_approach_is_original_uv_mapped_and_streamed(self):
+        source = (ROOT / "SourceAssets/Production/World/Shire/SM_ShBagEndCobbledWalk.obj").read_text()
+        faces = [line for line in source.splitlines() if line.startswith("f ")]
+        vertices = [line for line in source.splitlines() if line.startswith("v ")]
+        uv = [line for line in source.splitlines() if line.startswith("vt ")]
+        self.assertIn("o SM_ShBagEndCobbledWalk", source)
+        self.assertIn("mtllib ShireMaterials.mtl", source)
+        self.assertIn("usemtl Stone", source)
+        self.assertEqual(len(faces), 1440)
+        self.assertEqual(len(vertices), 1008)
+        self.assertEqual(len(uv), 1008)
+        for triangle in faces:
+            for ref in triangle.split()[1:]:
+                v, tex = map(int, ref.split("/"))
+                self.assertTrue(1 <= v <= len(vertices))
+                self.assertTrue(1 <= tex <= len(uv))
+        cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text()
+        plan = json.loads((ROOT / "Data/ChapterAssetStreamingPlan.json").read_text())
+        self.assertIn("PES002_BAG_END_COBBLED_WALK", cpp)
+        self.assertIn("ProductionBagEndCobbledWalkMesh", cpp)
+        self.assertIn('PathActor->GetStaticMeshComponent()->SetCastShadow(false)', cpp)
+        self.assertIn("/Game/Production/World/Shire/SM_ShBagEndCobbledWalk.SM_ShBagEndCobbledWalk", plan["banks"]["P1C01"]["assets"])
+
     def test_incident_captures_real_window_focus_and_ue4_native_stat_file(self):
         proof = (ROOT / "Scripts/capture_pes002_bag_end_visual.ps1").read_text(encoding="utf-8")
         preview = (ROOT / "SHIRE_FAST_PIE_PREVIEW.bat").read_text(encoding="utf-8")

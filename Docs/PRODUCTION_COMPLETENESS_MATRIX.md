@@ -1,3 +1,13 @@
+## PES-002 original cobblestone walk source + existing asset pipeline, candidate
+| Layer | Actual status |
+|---|---|
+| SOURCE_AVAILABLE | 48-stone original authored OBJ; 1008 vertex/UV pairs, 1440 UV triangles, shared Shire Stone material/TGA; candidate committed as source only |
+| UE Imported | NEW package NOT YET RUN at candidate SHA; existing commandlet processes Shire .obj via source working copy |
+| Runtime residency | New path registered inside current P1C01 bank; resident-only resolve at builder start |
+| World placement | Conditional non-colliding static decoration for west-facing Bag End garden approach; actor marker not observed until exact-head PIE |
+| Last accepted engine source | 006e3fce, 38941528153 PASS compile/PIE, 18 real imported shrubs converted, 20/20 garden architecture placed; visual gate remains OPEN |
+| RENDER / FPS / DEVICE | Native 4 screenshots, fresh performance, target device and human visual gate NOT RUN for new source; no 30 FPS claim |
+
 ## 2026-10-16 PES-002 Bag End final source candidate / real prior run
 | Stage | Evidence |
 |---|---|

@@ -356,6 +356,7 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     ProductionFenceSegmentMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShFenceSegment.SM_ShFenceSegment"));
     ProductionHobbitFacadeMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShHobbitFacade.SM_ShHobbitFacade"));
     ProductionBagEndHeroFacadeMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShBagEndHeroFacade.SM_ShBagEndHeroFacade"));
+    ProductionBagEndCobbledWalkMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShBagEndCobbledWalk.SM_ShBagEndCobbledWalk"));
     ProductionCartMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShCart.SM_ShCart"));
     ProductionBenchMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShBench.SM_ShBench"));
     ProductionMillWheelMesh = ShirePrototypeWorldBuilderResolveResidentStaticMesh(TEXT("/Game/Production/World/Shire/SM_ShMillWheel.SM_ShMillWheel"));
@@ -1522,6 +1523,23 @@ void AShirePrototypeWorldBuilder::SpawnHobbitHole(const FVector& Location, float
             FVector(Scale), Earth, FRotator::ZeroRotator, false);
         UE_LOG(LogTemp, Display,
             TEXT("PES002_BAG_END_HERO_FACADE layout=west-facing authored=1 roof=joined door=recessed windows=2 collision=none visual=pending"));
+        // Original 48-stone UV-mapped hero walkway, 1440 triangles, shared Stone
+        // texture (no new material family or runtime mesh generator). Raw OBJ
+        // local X starts at 21 cm; a -2985 cm origin leaves the west door clear.
+        if (ProductionBagEndCobbledWalkMesh)
+        {
+            AStaticMeshActor* PathActor = SpawnShape(
+                ProductionBagEndCobbledWalkMesh,
+                FVector(-2985.0f, -520.0f, -2.0f),
+                FVector(1.0f), FLinearColor::White, FRotator::ZeroRotator, false);
+            if (PathActor && PathActor->GetStaticMeshComponent())
+            {
+                PathActor->GetStaticMeshComponent()->SetCastShadow(false);
+                PathActor->Tags.AddUnique(TEXT("PES002AuthoredCobbledApproach"));
+                UE_LOG(LogTemp, Display,
+                    TEXT("PES002_BAG_END_COBBLED_WALK mesh=SM_ShBagEndCobbledWalk stones=48 tris=1440 collision=none visual=pending"));
+            }
+        }
     }
     else if (bHasProductionFacade)
     {
