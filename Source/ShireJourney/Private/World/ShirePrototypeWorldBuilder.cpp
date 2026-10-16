@@ -2,6 +2,7 @@
 
 #include "BlackRiderPrototype.h"
 #include "ShireNPC.h"
+#include "ShireAmbientNPC.h"
 #include "ShireQuestSubsystem.h"
 #include "ShireQuestTrigger.h"
 #include "ShireTraversalChallenge.h"
@@ -515,6 +516,30 @@ void AShirePrototypeWorldBuilder::BeginPlay()
                             const FVector LookAt(-2210.0f, -520.0f, 105.0f);
                             WeakCamera->SetActorLocationAndRotation(
                                 Positions[ViewIndex], (LookAt - Positions[ViewIndex]).Rotation());
+                            if (ViewIndex == 3 && WeakBuilder->GetWorld())
+                            {
+                                int32 LocalManaged = 0;
+                                int32 RealSkeletal = 0;
+                                int32 ModularFallback = 0;
+                                const FVector Center(-2210.0f, -520.0f, 0.0f);
+                                for (TActorIterator<AShireAmbientNPC> It(WeakBuilder->GetWorld()); It; ++It)
+                                {
+                                    AShireAmbientNPC* Resident = *It;
+                                    if (!Resident || Resident->IsInLivingWorldPool() ||
+                                        !Resident->ActorHasTag(TEXT("LivingWorldManaged")) ||
+                                        FVector::DistSquared2D(Resident->GetActorLocation(), Center) >
+                                            FMath::Square(3100.0f))
+                                    {
+                                        continue;
+                                    }
+                                    ++LocalManaged;
+                                    if (Resident->IsUsingUnifiedResident()) ++RealSkeletal;
+                                    else ++ModularFallback;
+                                }
+                                UE_LOG(LogTemp, Display,
+                                    TEXT("PES002_RESIDENT_PRESENTATION_SNAPSHOT localManaged=%d skeletal=%d modular=%d scope=BagEnd visualAccepted=0"),
+                                    LocalManaged, RealSkeletal, ModularFallback);
+                            }
                             UE_LOG(LogTemp, Display,
                                 TEXT("PES002_CAPTURE_VIEW_READY view=%d target=BagEnd"), ViewIndex);
                         }), 2.0f + 8.0f * ViewIndex, false);
@@ -828,72 +853,101 @@ void AShirePrototypeWorldBuilder::OnCuratedNatureLayerReady()
             SteepGround - FamilySteepGroundBefore,
             Mesh->GetStaticMaterials().Num());
     }
-    // PES-002: the physically imported FBX/packed-PBR HISM meshes also dress
-    // Bag End's two garden flanks, rather than adding more sphere/cube plants.
-    // Leave the west-facing doorway, walkable approach and quest anchors open.
-    // All additions remain non-colliding, traced and limited to 24 instances.
-    int32 BagEndGardenPlaced = 0;
-    const int32 GardenFamilies[] = {0, 2, 3, 4}; // grass, stone, gorse, hedge
-    const FVector GardenFlanks[] = {
-        FVector(-2410.0f, -885.0f, 0.0f),
-        FVector(-2370.0f, -155.0f, 0.0f)
-    };
-    for (int32 FamilyIndex = 0; FamilyIndex < UE_ARRAY_COUNT(GardenFamilies); ++FamilyIndex)
+    // Outdoor Bag End editor/runtime-authored garden data; a new position
+    // requires only editing JSON and restarting PIE, never rebuilding C++.
+    // Other unimported P1C01VerifiedWorldDecor "accents" stay quarantined.
+    int32 GardenPlaced = 0;
+    int32 GardenRejected = 0;
+    int32 GardenInputs = 0;
+    FString GardenSource;
+    TSharedPtr<FJsonObject> GardenRoot;
+    const TArray<TSharedPtr<FJsonValue>>* GardenData = nullptr;
+    const FString GardenFile = FPaths::Combine(
+        FPaths::ProjectDir(), TEXT("Data/P1C01VerifiedWorldDecor.json"));
+    if (FFileHelper::LoadFileToString(GardenSource, *GardenFile) &&
+        FJsonSerializer::Deserialize(
+            TJsonReaderFactory<>::Create(GardenSource), GardenRoot) &&
+        GardenRoot.IsValid() &&
+        GardenRoot->GetStringField(TEXT("bag_end_garden_status")) ==
+            TEXT("UE_IMPORTED_CURATED_P1C01_ONLY") &&
+        GardenRoot->TryGetArrayField(TEXT("bag_end_garden"), GardenData) &&
+        GardenData)
     {
-        const int32 I = GardenFamilies[FamilyIndex];
-        UHierarchicalInstancedStaticMeshComponent* Group = CuratedNatureGroups[I];
-        UStaticMesh* Mesh = CuratedNatureSources[I].Get();
-        if (!Group || !Mesh || Group->GetStaticMesh() != Mesh)
+        GardenInputs = GardenData->Num();
+        for (int32 Index = 0; Index < GardenData->Num() && Index < 36; ++Index)
         {
-            continue;
-        }
-        const FBoxSphereBounds Bounds = Mesh->GetBounds();
-        if (Bounds.BoxExtent.Z <= 1.0f)
-        {
-            continue;
-        }
-        const float Scale = FMath::Clamp(
-            Heights[I] / (2.0f * Bounds.BoxExtent.Z), 0.05f, 3.0f);
-        for (int32 Flank = 0; Flank < UE_ARRAY_COUNT(GardenFlanks); ++Flank)
-        {
-            for (int32 Plant = 0; Plant < 3; ++Plant)
+            const TSharedPtr<FJsonObject> Row =
+                (*GardenData)[Index].IsValid() ? (*GardenData)[Index]->AsObject() : nullptr;
+            double FamilyN = -1.0, X = 0.0, Y = 0.0, Yaw = 0.0, Size = 0.0;
+            if (!Row.IsValid() ||
+                !Row->TryGetNumberField(TEXT("family"), FamilyN) ||
+                !Row->TryGetNumberField(TEXT("x"), X) ||
+                !Row->TryGetNumberField(TEXT("y"), Y) ||
+                !Row->TryGetNumberField(TEXT("yaw"), Yaw) ||
+                !Row->TryGetNumberField(TEXT("size_scale"), Size) ||
+                !FMath::IsFinite(FamilyN) || !FMath::IsFinite(X) ||
+                !FMath::IsFinite(Y) || !FMath::IsFinite(Yaw) ||
+                !FMath::IsFinite(Size))
             {
-                const float Yaw = static_cast<float>(
-                    (FamilyIndex * 73 + Flank * 41 + Plant * 59) % 360);
-                const float Angle = FMath::DegreesToRadians(Yaw);
-                const float Radius = 38.0f + 35.0f * static_cast<float>(Plant);
-                const FVector Candidate = GardenFlanks[Flank] + FVector(
-                    FMath::Cos(Angle) * Radius, FMath::Sin(Angle) * Radius, 0.0f);
-                // Conservative two-dimensional exclusion around the player approach.
-                if (FVector::DistSquared2D(Candidate,
-                    FVector(-2465.0f, -520.0f, 0.0f)) < FMath::Square(240.0f))
-                {
-                    continue;
-                }
-                FHitResult Hit;
-                FCollisionQueryParams Query(TEXT("PES002AuthoredGardenGround"), false, this);
-                if (!World->LineTraceSingleByChannel(Hit,
-                        Candidate + FVector(0, 0, 1200),
-                        Candidate - FVector(0, 0, 700), ECC_Visibility, Query) ||
-                    Hit.ImpactNormal.Z < 0.75f || FMath::Abs(Hit.Location.Z) > 130.0f)
-                {
-                    continue;
-                }
-                const float MeshBottom = Bounds.Origin.Z - Bounds.BoxExtent.Z;
-                Group->AddInstanceWorldSpace(FTransform(
-                    FRotator(0, Yaw, 0),
-                    Hit.Location - FVector(0, 0, MeshBottom * Scale),
-                    FVector(Scale * (0.92f + 0.06f * Plant))));
-                ++BagEndGardenPlaced;
-                ++Grounded;
+                ++GardenRejected;
+                continue;
             }
+            const int32 Family = static_cast<int32>(FamilyN);
+            if ((Family != 0 && Family != 2 && Family != 3 && Family != 4) ||
+                FamilyN != static_cast<double>(Family) ||
+                X < -3700.0 || X > -1100.0 ||
+                Y < -1600.0 || Y > 850.0 || Size < 0.65 || Size > 1.25)
+            {
+                ++GardenRejected;
+                continue;
+            }
+            const FVector Candidate(static_cast<float>(X), static_cast<float>(Y), 0.0f);
+            if (FVector::DistSquared2D(Candidate,
+                    FVector(-2465.0f, -520.0f, 0.0f)) < FMath::Square(240.0f))
+            {
+                ++GardenRejected;
+                continue;
+            }
+            UHierarchicalInstancedStaticMeshComponent* Group = CuratedNatureGroups[Family];
+            UStaticMesh* Mesh = CuratedNatureSources[Family].Get();
+            if (!Group || !Mesh || Group->GetStaticMesh() != Mesh ||
+                Mesh->GetBounds().BoxExtent.Z <= 1.0f ||
+                !FPackageName::DoesPackageExist(
+                    CuratedNatureSources[Family].ToSoftObjectPath().GetLongPackageName()))
+            {
+                ++GardenRejected;
+                continue;
+            }
+            const FBoxSphereBounds Bounds = Mesh->GetBounds();
+            const float Scale = FMath::Clamp(
+                Heights[Family] / (2.0f * Bounds.BoxExtent.Z), 0.05f, 3.0f) *
+                static_cast<float>(Size);
+            FHitResult Hit;
+            FCollisionQueryParams Query(TEXT("PES002AuthoredGardenGround"), false, this);
+            if (!World->LineTraceSingleByChannel(
+                    Hit, Candidate + FVector(0, 0, 1200),
+                    Candidate - FVector(0, 0, 700), ECC_Visibility, Query) ||
+                Hit.ImpactNormal.Z < 0.75f ||
+                FMath::Abs(Hit.Location.Z) > 130.0f)
+            {
+                ++GardenRejected;
+                continue;
+            }
+            const float MeshBottom = Bounds.Origin.Z - Bounds.BoxExtent.Z;
+            Group->AddInstanceWorldSpace(FTransform(
+                FRotator(0, static_cast<float>(Yaw), 0),
+                Hit.Location - FVector(0, 0, MeshBottom * Scale),
+                FVector(Scale)));
+            ++GardenPlaced;
+            ++Grounded;
         }
+        GardenRejected += FMath::Max(0, GardenData->Num() - 36);
     }
     UE_LOG(LogTemp, Display,
-        TEXT("PES002_BAG_END_IMPORTED_GARDEN instances=%d max=24 collision=none source=actual-FBX-PBR worldPlaced=1 visual=pending"),
-        BagEndGardenPlaced);
+        TEXT("PES002_BAG_END_DATA_GARDEN loaded=%d placed=%d rejected=%d dataOnlyReposition=1 importedFBX=1"),
+        GardenInputs, GardenPlaced, GardenRejected);
     UE_LOG(LogTemp, Display,
-        TEXT("P1C01_CURATED_NATURE_WORLD families=%d grounded=%d max=116 collision=none async=1 missingGround=%d steepGround=%d PIE_device_visual=pending"),
+        TEXT("P1C01_CURATED_NATURE_WORLD families=%d grounded=%d max=128 collision=none async=1 missingGround=%d steepGround=%d PIE_device_visual=pending"),
         Families, Grounded, MissingGround, SteepGround);
 
     // Replace only matched decorative trunk/canopy proxies around Bag End

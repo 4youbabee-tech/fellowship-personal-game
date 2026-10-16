@@ -3,5 +3,184 @@
   "chapter": "P1C01",
   "status": "SOURCE_NOT_IMPORTED",
   "accents": [],
-  "evidence_boundary": "Source warehouse stock not yet imported; no runtime decoration or PIE/visual/device/Gate6/7 acceptance."
+  "evidence_boundary": "Source warehouse stock not yet imported; no runtime decoration or PIE/visual/device/Gate6/7 acceptance.",
+  "bag_end_garden_status": "UE_IMPORTED_CURATED_P1C01_ONLY",
+  "bag_end_garden": [
+    {
+      "family": 0,
+      "x": -2372,
+      "y": -885,
+      "yaw": 0,
+      "size_scale": 0.92
+    },
+    {
+      "family": 0,
+      "x": -2372.4,
+      "y": -822.4,
+      "yaw": 59,
+      "size_scale": 0.98
+    },
+    {
+      "family": 0,
+      "x": -2460.7,
+      "y": -789.6,
+      "yaw": 118,
+      "size_scale": 1.04
+    },
+    {
+      "family": 0,
+      "x": -2341.3,
+      "y": -130.1,
+      "yaw": 41,
+      "size_scale": 0.92
+    },
+    {
+      "family": 0,
+      "x": -2382.7,
+      "y": -83.1,
+      "yaw": 100,
+      "size_scale": 0.98
+    },
+    {
+      "family": 0,
+      "x": -2470.8,
+      "y": -116.3,
+      "yaw": 159,
+      "size_scale": 1.04
+    },
+    {
+      "family": 2,
+      "x": -2398.9,
+      "y": -848.7,
+      "yaw": 73,
+      "size_scale": 0.92
+    },
+    {
+      "family": 2,
+      "x": -2458.8,
+      "y": -830.8,
+      "yaw": 132,
+      "size_scale": 0.98
+    },
+    {
+      "family": 2,
+      "x": -2516,
+      "y": -905.6,
+      "yaw": 191,
+      "size_scale": 1.04
+    },
+    {
+      "family": 2,
+      "x": -2385.5,
+      "y": -120.3,
+      "yaw": 114,
+      "size_scale": 0.92
+    },
+    {
+      "family": 2,
+      "x": -2442.5,
+      "y": -146.1,
+      "yaw": 173,
+      "size_scale": 0.98
+    },
+    {
+      "family": 2,
+      "x": -2436.5,
+      "y": -240.1,
+      "yaw": 232,
+      "size_scale": 1.04
+    },
+    {
+      "family": 3,
+      "x": -2441.5,
+      "y": -863.8,
+      "yaw": 146,
+      "size_scale": 0.92
+    },
+    {
+      "family": 3,
+      "x": -2476.2,
+      "y": -915.9,
+      "yaw": 205,
+      "size_scale": 0.98
+    },
+    {
+      "family": 3,
+      "x": -2421.3,
+      "y": -992.4,
+      "yaw": 264,
+      "size_scale": 1.04
+    },
+    {
+      "family": 3,
+      "x": -2407.7,
+      "y": -159.6,
+      "yaw": 187,
+      "size_scale": 0.92
+    },
+    {
+      "family": 3,
+      "x": -2399.7,
+      "y": -221.7,
+      "yaw": 246,
+      "size_scale": 0.98
+    },
+    {
+      "family": 3,
+      "x": -2308.1,
+      "y": -243.5,
+      "yaw": 305,
+      "size_scale": 1.04
+    },
+    {
+      "family": 4,
+      "x": -2439.5,
+      "y": -908.9,
+      "yaw": 219,
+      "size_scale": 0.92
+    },
+    {
+      "family": 4,
+      "x": -2399.8,
+      "y": -957.3,
+      "yaw": 278,
+      "size_scale": 0.98
+    },
+    {
+      "family": 4,
+      "x": -2310.6,
+      "y": -927.2,
+      "yaw": 337,
+      "size_scale": 1.04
+    },
+    {
+      "family": 4,
+      "x": -2376.6,
+      "y": -192.4,
+      "yaw": 260,
+      "size_scale": 0.92
+    },
+    {
+      "family": 4,
+      "x": -2314.9,
+      "y": -202.9,
+      "yaw": 319,
+      "size_scale": 0.98
+    },
+    {
+      "family": 4,
+      "x": -2267.3,
+      "y": -121.6,
+      "yaw": 18,
+      "size_scale": 1.04
+    },
+    {
+      "family": 0,
+      "x": -2315,
+      "y": -1025,
+      "yaw": 119,
+      "size_scale": 0.9
+    }
+  ],
+  "bag_end_garden_provenance": "CuratedP1C01 imported FBX nature families indexed by existing engine soft references. Coordinates are editor/runtime nonblocking outdoor ground-traced garden accents."
 }

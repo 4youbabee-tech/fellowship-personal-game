@@ -1437,20 +1437,59 @@ bool AShireAmbientNPC::TryEnableUnifiedShireResident()
         !AnimClass->IsChildOf(UShireLocomotionAnimInstance::StaticClass())) return false;
     const FBoxSphereBounds Bounds = Mesh->GetBounds();
     if (!FMath::IsFinite(Bounds.BoxExtent.Z) || Bounds.BoxExtent.Z < 1.0f) return false;
-    const float Scale = FMath::Clamp(142.0f / (2.0f * Bounds.BoxExtent.Z), 0.1f, 3.0f);
+    // First five live, pooled residents receive distinct size/proportion
+    // profiles, not five renamed Frodo story actors. Minor material tint is
+    // applied only if the imported skeletal material actually exposes an
+    // authored vector parameter. Never replace the licensed albedo material
+    // with a flat or default checker simply to get a different colour.
+    const int32 Variant = FMath::Clamp(ActiveRigs, 0, 4);
+    const float HeightsCm[5] = { 134.0f, 146.0f, 139.0f, 151.0f, 141.0f };
+    const float WidthProfiles[5] = { 0.96f, 1.03f, 1.0f, 0.98f, 1.05f };
+    const FLinearColor Tints[5] = {
+        FLinearColor(0.94f, 1.00f, 0.90f),
+        FLinearColor(1.02f, 0.92f, 0.89f),
+        FLinearColor(0.90f, 0.96f, 1.04f),
+        FLinearColor(1.02f, 1.01f, 0.89f),
+        FLinearColor(0.98f, 0.91f, 1.02f)
+    };
+    const float Scale = FMath::Clamp(
+        HeightsCm[Variant] / (2.0f * Bounds.BoxExtent.Z), 0.1f, 3.0f);
     UnifiedResident->SetSkeletalMesh(Mesh);
-    UnifiedResident->SetRelativeScale3D(FVector(Scale));
+    UnifiedResident->SetRelativeScale3D(
+        FVector(Scale * WidthProfiles[Variant], Scale * WidthProfiles[Variant], Scale));
     UnifiedResident->SetRelativeLocation(FVector(0, 0,
         -(Bounds.Origin.Z - Bounds.BoxExtent.Z) * Scale));
     UnifiedResident->SetAnimationMode(EAnimationMode::AnimationBlueprint);
     UnifiedResident->SetAnimInstanceClass(AnimClass);
+    bool bMaterialTintApplied = false;
+    if (UMaterialInterface* SourceMaterial = Mesh->GetMaterial(0))
+    {
+        const FName TintParameters[] = { TEXT("BaseColorTint"), TEXT("Color"), TEXT("Tint") };
+        for (const FName Parameter : TintParameters)
+        {
+            FLinearColor OriginalValue;
+            if (SourceMaterial->GetVectorParameterValue(
+                    FMaterialParameterInfo(Parameter), OriginalValue))
+            {
+                if (UMaterialInstanceDynamic* VariantMaterial =
+                        UnifiedResident->CreateDynamicMaterialInstance(0, SourceMaterial))
+                {
+                    VariantMaterial->SetVectorParameterValue(
+                        Parameter, OriginalValue * Tints[Variant]);
+                    bMaterialTintApplied = true;
+                }
+                break;
+            }
+        }
+    }
     UnifiedResident->SetVisibility(true);
     UStaticMeshComponent* Parts[] = {Torso, Head, Hair, LeftArm, RightArm, LeftLeg, RightLeg};
     for (UStaticMeshComponent* Part : Parts) if (Part) Part->SetVisibility(false);
     bUnifiedResidentActive = true;
     UE_LOG(LogTemp, Display,
-        TEXT("PES002_UNIFIED_RESIDENT_VISIBLE role=%s rig=shared-CC0 source=UE-SkeletalMesh countLimit=5 visualAccepted=0"),
-        *RoutineRole.ToString());
+        TEXT("PES002_UNIFIED_RESIDENT_VISIBLE role=%s rig=resolved source=UE-SkeletalMesh anim=ABP asset=%s variant=%d heightCm=%.1f width=%.2f tintApplied=%d countLimit=5 visualAccepted=0"),
+        *RoutineRole.ToString(), *Mesh->GetPathName(), Variant,
+        HeightsCm[Variant], WidthProfiles[Variant], bMaterialTintApplied ? 1 : 0);
     return true;
 }
 
