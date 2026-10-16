@@ -48,7 +48,7 @@
   "invocation": "blender --background --python Tools/CloudAssetBuild/prepare_mpfb_hobbit_candidate.py -- --spec Data/PES002MakeHumanCharacterPilot.json --out <NEW_EMPTY_OUTPUT_DIR>",
   "evidence_boundary": "Recipe only, no downloaded source binary or generated FBX/UE/PIE/visual acceptance.",
   "hosted_execution_2026_10_17": {
-    "status": "PRODUCTION_RUN_PENDING",
+    "status": "SOURCE_PACK_NESTED_PATH_ROOT_FIX_CANDIDATE_NOT_HOSTED_VALIDATED",
     "single_pipeline": "unreal-build-validation.yml character-source Linux job",
     "blender": "Blender 4.2.23 LTS official SHA256 verified",
     "addon": "MPFB2 pinned v2.0.18 source",
@@ -56,6 +56,8 @@
     "license": "Core asset pack CC0, MPFB addon tool GPL not incorporated as game asset",
     "artifact": "pes002-mpfb-source-candidate-${HEAD_SHA}",
     "safety": "Source-only, independent of the existing KayKit runtime packet and single Windows writer",
-    "next_gate": "Download artifact; inspect true Blender FBX and preview, then approved existing UE4 import and PIE. Unstyled base outfit cannot pass hero visual gate."
+    "next_gate": "Download artifact; inspect true Blender FBX and preview, then approved existing UE4 import and PIE. Unstyled base outfit cannot pass hero visual gate.",
+    "asset_layout": "Preserve original category/asset-name/filename subdirectories, require unique skin/part basenames and MPFB AssetService resolution before any Blender FBX export. Local synthetic ZIP tests 6 PASS; real 267MiB official pack not yet validated on this SHA.",
+    "previous_failure": "Run 38980771861 on 34e31478: MPFB addon API READY, then flat path check failed at skins/young_caucasian_male.mhmat despite documented named subdirectories. Windows UE skipped."
   }
 }

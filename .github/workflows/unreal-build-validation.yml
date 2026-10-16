@@ -368,6 +368,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          # Source-only fast gate: no Blender download or Windows runner.
+          python3 -m unittest discover -s Tools/CloudAssetBuild -p 'test_mpfb_pack_intake.py' -v
           WORK="$RUNNER_TEMP/pes002-mpfb-producer"
           mkdir -p "$WORK" "$RUNNER_TEMP/mpfb-hobbit-output"
           VERSION=4.2.23
@@ -390,6 +392,7 @@ jobs:
             https://files2.makehumancommunity.org/asset_packs/makehuman_system_assets/makehuman_system_assets_cc0.zip \
             -o "$WORK/makehuman_system_assets_cc0.zip"
           unzip -tq "$WORK/makehuman_system_assets_cc0.zip" > /dev/null
+          sha256sum "$WORK/makehuman_system_assets_cc0.zip" | awk '{print "PES002_OFFICIAL_CC0_PACK_SHA256 "$1}'
           "$BIN" -b -t 2 --python-exit-code 94 --python Tools/CloudAssetBuild/mpfb_hosted_bootstrap.py -- \
             --extension "$WORK/mpfb-addon.zip" \
             --system-pack "$WORK/makehuman_system_assets_cc0.zip" \

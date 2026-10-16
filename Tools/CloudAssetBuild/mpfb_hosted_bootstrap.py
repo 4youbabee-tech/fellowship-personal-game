@@ -1,13 +1,14 @@
 """Enable official MPFB2 as Blender extension; install only the verified CC0 system pack."""
 import argparse
 import importlib
-from pathlib import Path, PurePosixPath
+from pathlib import Path
 import runpy
-import shutil
 import sys
-import zipfile
 
 import bpy
+
+from mpfb_pack_intake import extract_verified_pack
+import json
 
 
 def main():
@@ -58,42 +59,25 @@ def main():
     loc = importlib.import_module(module + ".services.locationservice").LocationService
     destination = Path(loc.get_user_data()).resolve()
     destination.mkdir(parents=True, exist_ok=True)
-    asset_dirs = {"skins", "clothes", "hair", "eyes", "eyebrows",
-                  "eyelashes", "tongue", "teeth", "proxymeshes",
-                  "expressions", "poses", "rigs", "targets", "materials"}
-    written = 0
-    total_bytes = 0
-    with zipfile.ZipFile(cfg.system_pack.resolve()) as archive:
-        for record in archive.infolist():
-            if record.is_dir():
-                continue
-            pieces = PurePosixPath(record.filename).parts
-            if ".." in pieces or record.filename.startswith("/"):
-                raise RuntimeError("MPFB_ZIP_TRAVERSAL")
-            offsets = [i for i, v in enumerate(pieces) if v in asset_dirs]
-            if not offsets:
-                continue
-            relative = Path(*pieces[offsets[0]:])
-            target = (destination / relative).resolve()
-            if not target.is_relative_to(destination):
-                raise RuntimeError("MPFB_UNSAFE_ZIP_TARGET")
-            total_bytes += record.file_size
-            if record.file_size > 100_000_000 or total_bytes > 1_000_000_000:
-                raise RuntimeError("MPFB_ZIP_SIZE_LIMIT")
-            target.parent.mkdir(parents=True, exist_ok=True)
-            with archive.open(record) as src, target.open("wb") as dst:
-                shutil.copyfileobj(src, dst)
-            written += 1
-    for sub, name in (
-        ("skins", "young_caucasian_male.mhmat"),
-        ("eyes", "low-poly.mhclo"),
-        ("hair", "short01.mhclo"),
-        ("clothes", "male_casualsuit01.mhclo"),
-    ):
-        if not (destination / sub / name).is_file():
-            raise RuntimeError("MPFB_CORE_ASSET_PACK_MISSING " + sub + "/" + name)
-    if written < 50:
-        raise RuntimeError("MPFB_INCOMPLETE_SYSTEM_ASSET_PACK")
+    # The official pack stores skins and meshes in named subdirectories:
+    # skins/young_caucasian_male/young_caucasian_male.mhmat, not skins/file.
+    # Keep those directories intact so MHMAT and MHCLO texture references work.
+    spec = json.loads(cfg.spec.read_text(encoding="utf-8"))
+    required = [("skins", spec["skin"])]
+    required.extend((part["subdir"], part["name"]) for part in spec["parts"])
+    written, total_bytes = extract_verified_pack(
+        cfg.system_pack.resolve(), destination, required)
+    AssetService = importlib.import_module(
+        module + ".services.assetservice").AssetService
+    for sub, name in required:
+        resolved = AssetService.find_asset_absolute_path(name, asset_subdir=sub)
+        if not resolved or not Path(resolved).is_file():
+            raise RuntimeError("MPFB_SERVICE_CANNOT_RESOLVE_REQUIRED_ASSET " + sub + "/" + name)
+        if not Path(resolved).resolve().is_relative_to(destination):
+            raise RuntimeError("MPFB_ASSET_RESOLVED_OUTSIDE_APPROVED_PACK " + sub + "/" + name)
+    print("PES002_MPFB_CORE_PACK_TREE_READY files=" + str(written) +
+          " uncompressed_bytes=" + str(total_bytes) +
+          " required=" + str(len(required)), flush=True)
     print("MPFB2_HOSTED_BLENDER_VERIFIED addon=" + module +
           " files=" + str(written), flush=True)
     script = Path(__file__).with_name("prepare_mpfb_hobbit_candidate.py").resolve()
