@@ -22,8 +22,23 @@ def main():
     for key in ("extension", "system_pack", "spec"):
         if not getattr(cfg, key).is_file():
             raise RuntimeError("MPFB_INPUT_MISSING_" + key)
+    # Blender 4.2 background sessions have no extension repository selected.
+    # This is the actual root cause of Run #38979644601: "Repository not set".
+    # Create one local-only repo for this ephemeral hosted worker (no remote sync).
+    repos = bpy.context.preferences.extensions.repos
+    matches_local = [r for r in repos if r.type == "LOCAL" and r.name == "Shire MPFB Offline"]
+    if not matches_local:
+        created = bpy.ops.preferences.extension_repo_add(
+            name="Shire MPFB Offline", type="LOCAL", use_sync_on_startup=False)
+        if "FINISHED" not in created:
+            raise RuntimeError("MPFB_LOCAL_EXTENSION_REPOSITORY_CREATE_FAILED")
+        matches_local = [r for r in repos if r.type == "LOCAL" and r.name == "Shire MPFB Offline"]
+    if len(matches_local) != 1 or not matches_local[0].module:
+        raise RuntimeError("MPFB_LOCAL_EXTENSION_REPOSITORY_UNRESOLVED")
+    repo_id = matches_local[0].module
+    print("PES002_MPFB_LOCAL_REPOSITORY_READY id=" + repo_id, flush=True)
     ret = bpy.ops.extensions.package_install_files(
-        filepath=str(cfg.extension.resolve()), enable_on_install=True)
+        filepath=str(cfg.extension.resolve()), repo=repo_id, enable_on_install=True)
     if "FINISHED" not in ret:
         raise RuntimeError("MPFB2_OFFICIAL_EXTENSION_INSTALL_FAILED")
     matches = [k for k in bpy.context.preferences.addons.keys()

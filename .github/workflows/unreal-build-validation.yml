@@ -287,12 +287,21 @@ jobs:
           PACKAGE: ${{ github.event_name == 'workflow_dispatch' && inputs.package_windows == true }}
         shell: bash
         run: |
-          echo "mode=full" >> "$GITHUB_OUTPUT"
+          # Pure hosted Blender pilot on PR #486: do NOT run unchanged Windows Unreal.
+          if [ "${GITHUB_HEAD_REF:-}" = "source/pes002-mpfb-real-human-pilot-20261017" ]; then
+            echo "mode=source" >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=full" >> "$GITHUB_OUTPUT"
+          fi
           echo "reason=owner-authorized-direct-engine-production" >> "$GITHUB_OUTPUT"
           echo "parent_sha=$BASE_SHA" >> "$GITHUB_OUTPUT"
           echo "resume_stage=none" >> "$GITHUB_OUTPUT"
           echo "reset_intermediates=false" >> "$GITHUB_OUTPUT"
-          echo "full=true" >> "$GITHUB_OUTPUT"
+          if [ "${GITHUB_HEAD_REF:-}" = "source/pes002-mpfb-real-human-pilot-20261017" ]; then
+            echo "full=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "full=true" >> "$GITHUB_OUTPUT"
+          fi
           echo "core=false" >> "$GITHUB_OUTPUT"
           echo "asset=false" >> "$GITHUB_OUTPUT"
           echo "acceptance=false" >> "$GITHUB_OUTPUT"
@@ -303,7 +312,7 @@ jobs:
   character-source:
     name: Prepare actual CC0 unified skin and authored locomotion
     needs: classify
-    if: needs.classify.outputs.full == 'true' || needs.classify.outputs.core == 'true'
+    if: needs.classify.outputs.mode == 'source' || needs.classify.outputs.full == 'true' || needs.classify.outputs.core == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 35
     env:
