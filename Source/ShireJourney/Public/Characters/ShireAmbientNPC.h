@@ -158,6 +158,12 @@ private:
     FName RuntimeGoal = TEXT("ROUTINE");
     bool bSocializing = false;
     bool bInLivingWorldPool = false;
+
+    // The P1C01 chapter bank may finish streaming after actor BeginPlay.
+    // Retry the real imported modular Hobbit meshes once when bank residency
+    // is proven; no synchronous load or new asset/AI manager.
+    bool bPendingAuthoredHobbitVisual = false;
+    float AuthoredHobbitRefreshSeconds = 2.0f;
     bool bUnifiedResidentActive = false;
     float ResidentRigCheckSeconds = 0.0f;
     bool bCachedDangerContext = false;

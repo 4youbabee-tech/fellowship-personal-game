@@ -21,6 +21,8 @@
 #include "Animation/AnimBlueprint.h"
 #include "Factories/AnimBlueprintFactory.h"
 #include "AnimGraphNode_BlendSpacePlayer.h"
+#include "AnimGraphNode_BlendListByBool.h"
+#include "AnimGraphNode_SequencePlayer.h"
 #include "AnimGraphNode_Root.h"
 #include "EdGraph/EdGraph.h"
 #include "EdGraph/EdGraphSchema.h"
@@ -193,18 +195,53 @@ namespace ShireProductionImport
         UK2Node_VariableGet* SpeedNode = SpeedCreator.CreateNode();
         SpeedNode->VariableReference.SetSelfMember(TEXT("GroundSpeed"));
         SpeedCreator.Finalize();
-        UEdGraphPin* Pose = Player->FindPin(TEXT("Pose"));
+        // One real resident interaction pose: the fourth already-imported
+        // authored clip was previously persisted but UNUSED by the graph.
+        // Blend locomotion Idle/Walk/Run with Talk only while the existing NPC
+        // social system owns an active conversation. Never add an animation
+        // manager, extra character rig, per-frame dynamic load or runtime actor.
+        FGraphNodeCreator<UAnimGraphNode_SequencePlayer> TalkCreator(*Graph);
+        UAnimGraphNode_SequencePlayer* TalkPlayer = TalkCreator.CreateNode();
+        TalkPlayer->Node.Sequence = Clips[3];
+        TalkCreator.Finalize();
+        FGraphNodeCreator<UAnimGraphNode_BlendListByBool> TalkBlendCreator(*Graph);
+        UAnimGraphNode_BlendListByBool* TalkBlend = TalkBlendCreator.CreateNode();
+        TalkBlendCreator.Finalize();
+        FGraphNodeCreator<UK2Node_VariableGet> ConversationCreator(*Graph);
+        UK2Node_VariableGet* ConversationVar = ConversationCreator.CreateNode();
+        ConversationVar->VariableReference.SetSelfMember(TEXT("bIsConversing"));
+        ConversationCreator.Finalize();
+
+        UEdGraphPin* LocomotionPose = Player->FindPin(TEXT("Pose"));
+        UEdGraphPin* TalkPose = TalkPlayer->FindPin(TEXT("Pose"));
+        UEdGraphPin* BlendFalsePose = TalkBlend->FindPin(TEXT("BlendPose_0"));
+        UEdGraphPin* BlendTruePose = TalkBlend->FindPin(TEXT("BlendPose_1"));
+        UEdGraphPin* BlendActiveValue = TalkBlend->FindPin(TEXT("bActiveValue"));
+        UEdGraphPin* BlendOutput = TalkBlend->FindPin(TEXT("Pose"));
         UEdGraphPin* Result = Root->FindPin(TEXT("Result"));
         UEdGraphPin* X = Player->FindPin(TEXT("X"));
         UEdGraphPin* SpeedValue = SpeedNode->FindPin(TEXT("GroundSpeed"));
-        if (!Pose || !Result || !X || !SpeedValue ||
-            !Graph->GetSchema()->TryCreateConnection(Pose, Result) ||
-            !Graph->GetSchema()->TryCreateConnection(SpeedValue, X)) return false;
+        UEdGraphPin* ConversationValue = ConversationVar->FindPin(TEXT("bIsConversing"));
+        if (!LocomotionPose || !TalkPose || !BlendFalsePose || !BlendTruePose ||
+            !BlendActiveValue || !BlendOutput || !Result || !X || !SpeedValue ||
+            !ConversationValue ||
+            !Graph->GetSchema()->TryCreateConnection(LocomotionPose, BlendFalsePose) ||
+            !Graph->GetSchema()->TryCreateConnection(TalkPose, BlendTruePose) ||
+            !Graph->GetSchema()->TryCreateConnection(ConversationValue, BlendActiveValue) ||
+            !Graph->GetSchema()->TryCreateConnection(BlendOutput, Result) ||
+            !Graph->GetSchema()->TryCreateConnection(SpeedValue, X))
+        {
+            UE_LOG(LogTemp, Error,
+                TEXT("FRODO_TALK_ANIM_GRAPH_INVALID expected=bool-blend-locomotion-talk fail-closed"));
+            return false;
+        }
         FBlueprintEditorUtils::MarkBlueprintAsStructurallyModified(BP);
         FKismetEditorUtilities::CompileBlueprint(BP);
         if (!BP->GeneratedClass || BP->Status == BS_Error || !SaveAsset(BP)) return false;
         UE_LOG(LogTemp, Display, TEXT("FRODO_LOCOMOTION_PACKET_SAVED blend=%s blueprint=%s skeleton=%s samples=3 runtimeAcceptance=pending"),
             *Blend->GetPathName(), *BP->GetPathName(), *Skeleton->GetPathName());
+        UE_LOG(LogTemp, Display,
+            TEXT("PES002_REAL_TALK_ANIMATION_BRIDGE authored=AN_Frodo_Talk locomotion=BS_Frodo_Locomotion conversationBool=ShireAmbientNPC scope=existing-frodo-rig acceptance=pending"));
         return true;
     }
     static bool IsApprovedFoliageMaterialIdentity(const FString& AuthoredMaterialName)

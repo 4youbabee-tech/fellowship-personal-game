@@ -1,3 +1,12 @@
+## 2026-10-17 PES-002 integrated citizen-character and interior source wave
+| Item | Candidate implemented source | Missing real evidence |
+|---|---|---|
+| NPC modular visuals | Late asynchronous chapter-bank rebind of actual Hobbit mesh parts within 2600 cm, one attempt per visible actor, no synchronous disk loading | Engine PIE log/readback and screenshot visual quality |
+| Real skeletal interaction | Fourth previously imported AN_Frodo_Talk connected via existing ABP boolean pose blend to real NPC social state, retains 5-rig cap | Strict UE4.27 editor graph regeneration, actual social Pose deformation visual and FPS |
+| Memory dialogue | Original Hamfast/Rosie/Maggot remembered greetings gated by PLAYER_INTERACTED and existing NPCContext | UI/voice absence; memory persistence and interaction test |
+| Interior | 5 planned spaces, 15 candidate placements from 10 project-owned existing bank identities | SOURCE ONLY, PES-003 LOCKED; no rooms/level/world evidence |
+| Performance and acceptance | 0505aef / UE4 Run 38969074730 was SUCCESS on prior content | New-head Unreal + PIE, collision/traversal, >=30FPS owner laptop, human Gate6/7 pending |
+
 ## 2026-10-17 PES-002 source-first warehouse reuse wave
 | Asset family | Existing real provenance | Candidate scope and acceptance |
 |---|---|---|

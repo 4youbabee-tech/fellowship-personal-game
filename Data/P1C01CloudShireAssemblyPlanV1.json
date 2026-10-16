@@ -352,5 +352,236 @@
     "import": "440 files, 0 failures",
     "runtime_audit": "success",
     "warning_debt_zero": true
+  },
+  "bag_end_interior_source_packet_2026_10_17": {
+    "stage": "SOURCE_ONLY_PREPRODUCTION",
+    "future_session": "PES-003",
+    "runtime_placement_allowed": false,
+    "map_role": "Bag End hub; Bilbo occupied / Frodo departure / epilogue state variants, visual grammar: lived-in round rooms",
+    "authority": "Existing Data/ProjectGovernor.json governs any later activation; this is not an alternate gate.",
+    "existing_mesh_reuse": {
+      "chapter_bank": "P1C01",
+      "soft_object_paths": [
+        "/Game/Production/World/Common/SM_CommonLongBench.SM_CommonLongBench",
+        "/Game/Production/World/Common/SM_CommonMarketTable.SM_CommonMarketTable",
+        "/Game/Production/World/Common/SM_CommonStorageChest.SM_CommonStorageChest",
+        "/Game/Production/World/Common/SM_CommonBarrel.SM_CommonBarrel",
+        "/Game/Production/World/Common/SM_CommonBucket.SM_CommonBucket",
+        "/Game/Production/World/Common/SM_CommonSackBale.SM_CommonSackBale",
+        "/Game/Production/World/Shire/SM_ShLantern.SM_ShLantern",
+        "/Game/Production/World/Shire/SM_ShPicnicTable.SM_ShPicnicTable",
+        "/Game/Production/World/Common/SM_CommonCargoCrate.SM_CommonCargoCrate",
+        "/Game/Production/World/Common/SM_CommonFlowerPlanter.SM_CommonFlowerPlanter"
+      ]
+    },
+    "coordinate_system": "Candidate local design-space cm from future entry anchor; no actual UE world transform, ground Z=0",
+    "room_modules": [
+      {
+        "id": "ROUND_ENTRY",
+        "description": "Round entry vestibule and circulation to sitting room",
+        "radius_cm": 180,
+        "door_clear_radius_cm": 95,
+        "set_dressing": [
+          {
+            "mesh": "/Game/Production/World/Common/SM_CommonStorageChest.SM_CommonStorageChest",
+            "x": -125,
+            "y": 85,
+            "z": 0,
+            "yaw": 35,
+            "scale": 0.62
+          },
+          {
+            "mesh": "/Game/Production/World/Shire/SM_ShLantern.SM_ShLantern",
+            "x": 135,
+            "y": 92,
+            "z": 12,
+            "yaw": 0,
+            "scale": 0.5
+          }
+        ]
+      },
+      {
+        "id": "SITTING_ROOM",
+        "description": "Warm central table, fireside seating and guest circulation",
+        "radius_cm": 300,
+        "door_clear_radius_cm": 100,
+        "set_dressing": [
+          {
+            "mesh": "/Game/Production/World/Common/SM_CommonMarketTable.SM_CommonMarketTable",
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "yaw": 12,
+            "scale": 0.64
+          },
+          {
+            "mesh": "/Game/Production/World/Common/SM_CommonLongBench.SM_CommonLongBench",
+            "x": -175,
+            "y": 60,
+            "z": 0,
+            "yaw": 24,
+            "scale": 0.58
+          },
+          {
+            "mesh": "/Game/Production/World/Common/SM_CommonLongBench.SM_CommonLongBench",
+            "x": 150,
+            "y": -85,
+            "z": 0,
+            "yaw": -20,
+            "scale": 0.58
+          },
+          {
+            "mesh": "/Game/Production/World/Common/SM_CommonSackBale.SM_CommonSackBale",
+            "x": 210,
+            "y": 155,
+            "z": 0,
+            "yaw": 42,
+            "scale": 0.42
+          }
+        ]
+      },
+      {
+        "id": "WRITING_ROOM",
+        "description": "Bilbo's travel notes/books/map study (source-ready furniture, missing actual books)",
+        "radius_cm": 230,
+        "door_clear_radius_cm": 90,
+        "set_dressing": [
+          {
+            "mesh": "/Game/Production/World/Common/SM_CommonMarketTable.SM_CommonMarketTable",
+            "x": 0,
+            "y": 100,
+            "z": 0,
+            "yaw": 0,
+            "scale": 0.55
+          },
+          {
+            "mesh": "/Game/Production/World/Common/SM_CommonStorageChest.SM_CommonStorageChest",
+            "x": 125,
+            "y": -40,
+            "z": 0,
+            "yaw": -12,
+            "scale": 0.65
+          },
+          {
+            "mesh": "/Game/Production/World/Shire/SM_ShLantern.SM_ShLantern",
+            "x": -110,
+            "y": 90,
+            "z": 28,
+            "yaw": 0,
+            "scale": 0.48
+          }
+        ]
+      },
+      {
+        "id": "KITCHEN_PANTRY",
+        "description": "Cooking and pantry room props as source-only arrangement, hearth and crockery outstanding",
+        "radius_cm": 255,
+        "door_clear_radius_cm": 85,
+        "set_dressing": [
+          {
+            "mesh": "/Game/Production/World/Common/SM_CommonMarketTable.SM_CommonMarketTable",
+            "x": -55,
+            "y": 65,
+            "z": 0,
+            "yaw": 15,
+            "scale": 0.52
+          },
+          {
+            "mesh": "/Game/Production/World/Common/SM_CommonBarrel.SM_CommonBarrel",
+            "x": 152,
+            "y": 135,
+            "z": 0,
+            "yaw": -12,
+            "scale": 0.42
+          },
+          {
+            "mesh": "/Game/Production/World/Common/SM_CommonBucket.SM_CommonBucket",
+            "x": 105,
+            "y": -105,
+            "z": 0,
+            "yaw": 40,
+            "scale": 0.36
+          },
+          {
+            "mesh": "/Game/Production/World/Common/SM_CommonCargoCrate.SM_CommonCargoCrate",
+            "x": -158,
+            "y": -72,
+            "z": 0,
+            "yaw": -18,
+            "scale": 0.4
+          }
+        ]
+      },
+      {
+        "id": "BEDROOM",
+        "description": "Private bedroom; bed, textiles and storage remain absent and blocked",
+        "radius_cm": 220,
+        "door_clear_radius_cm": 85,
+        "set_dressing": [
+          {
+            "mesh": "/Game/Production/World/Common/SM_CommonStorageChest.SM_CommonStorageChest",
+            "x": 135,
+            "y": 110,
+            "z": 0,
+            "yaw": 0,
+            "scale": 0.58
+          },
+          {
+            "mesh": "/Game/Production/World/Common/SM_CommonLongBench.SM_CommonLongBench",
+            "x": -100,
+            "y": 85,
+            "z": 0,
+            "yaw": 90,
+            "scale": 0.46
+          }
+        ]
+      }
+    ],
+    "story_variants": [
+      {
+        "id": "BILBO_OCCUPIED",
+        "allowed_features": [
+          "books-on-desk",
+          "warm-hearth",
+          "birthday-clutter"
+        ],
+        "not_yet_physically_sourced": [
+          "hero writing-desk",
+          "books-and-maps",
+          "round timber room set",
+          "lit practical lamp mesh"
+        ]
+      },
+      {
+        "id": "FRODO_DEPARTURE",
+        "allowed_features": [
+          "packed-storage-chests",
+          "travel-items"
+        ],
+        "not_yet_physically_sourced": [
+          "real travel-pack mesh",
+          "departing-prop overlays"
+        ]
+      },
+      {
+        "id": "EPILOGUE",
+        "allowed_features": [
+          "quiet-room",
+          "weathered-domestic-props"
+        ],
+        "not_yet_physically_sourced": [
+          "aged textiles",
+          "changed garden views"
+        ]
+      }
+    ],
+    "technical_rules": [
+      "No rooms or actors spawned while PES-003 locked.",
+      "Exact original story door and location remain unchanged.",
+      "No BSP cube interiors marked as final.",
+      "All walls/door frames, collision, NavMesh and bed/desk/books require approved physical meshes and PIE navigation tests.",
+      "Lights use UE4.27 baked/static if appropriate; no UE5 Lumen/VT-heavy fake performance promises.",
+      "New assets require licence/source receipts/UE import/render/device proof."
+    ]
   }
 }
