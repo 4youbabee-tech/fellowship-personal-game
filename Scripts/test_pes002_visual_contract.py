@@ -24,9 +24,17 @@ class PES002VisualContract(unittest.TestCase):
         self.assertIn("PES002_RIVER_CLEARANCE", world)
         self.assertIn("PES002_REGIONAL_SUPPORT_IMPORT", cmd)
         # UE_LOG control-flow macro needs braces around if AND else.
-        self.assertIn("if (bStoryGroundSupportProven)\\n        {\\n            UE_LOG", npc)
-        self.assertIn("}\\n        else\\n        {\\n            UE_LOG", npc)
+        self.assertIn("if (bStoryGroundSupportProven)\n        {\n            UE_LOG", npc)
+        self.assertIn("}\n        else\n        {\n            UE_LOG", npc)
         self.assertIn("bUsedWithSkeletalMesh", cmd)
+        workflow = (ROOT / ".github/workflows/unreal-build-validation.yml").read_text(encoding="utf-8")
+        downloader = (ROOT / "Scripts/fetch_ci_artifact_gh_api.ps1").read_text(encoding="utf-8")
+        self.assertNotIn("uses: actions/download-artifact@v4", workflow)
+        self.assertEqual(workflow.count("fetch_ci_artifact_gh_api.ps1"), 2)
+        self.assertIn("CI_ARTIFACT_REST_VERIFIED", downloader)
+        self.assertIn("$req.AllowAutoRedirect = $false", downloader)
+        self.assertIn("PES002_REGIONAL_UE_IMPORT_PHYSICAL_PASS", (ROOT / "Scripts/prepare_wholegame_regional_import.py").read_text(encoding="utf-8"))
+
 
 
     def test_story_npc_capsule_floor_and_rig_evidence_are_independent(self):
