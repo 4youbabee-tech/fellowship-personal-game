@@ -965,3 +965,10 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 - **Root cause:** the push-path classifier compared only the latest commit. A validation-only follow-up commit therefore hid the earlier unvalidated C++ resident change from runtime selection.
 - **Guard:** for feature-branch pushes, compare target SHA against its merge base with canonical `develop`; if the cumulative PR delta contains runtime/config/import/production paths, select the exact-head Unreal lane. Missing merge base fails closed.
 - **Proof boundary:** candidate until an exact-head run shows the classifier output and the UE4.27.2 job executes.
+
+
+## 2026-10-17 PES-002 selective CSM budget candidate — exact-head retest pending
+- Baseline evidence: Run 39022384250 at `5655bb97dc683466723ac1bc45adb2933b2ce34c` produced four active-window PIE views and CPU/GPU CSV; CI measured 21.39–28.27 FPS with hitches to 362.15 ms. Owner-device performance remains unmeasured.
+- Candidate caps movable-sun CSM distance at 12,000 cm/two cascades, sets CSM resolution to 1024, lowers shadow distance scale to 0.60, and AA quality to 2. AO, cast shadows, sunlight, translucency and authored PBR remain enabled.
+- Source regression added; exact-head Pre-Unreal, UE4.27.2 build/import/startup and four-view PIE with new GPU/FPS readings are pending. No performance, visual, or device acceptance is claimed.
+- The 17 remaining blockout residents are not force-assigned Frodo's rig: PR #486 is a rejected source study with no UE deformation/animation acceptance.

@@ -137,3 +137,10 @@ Read `Docs/CURRENT_STATE_SHORT.md` first for current *orientation only*. Then in
 - Exact-head Windows CI passed build/import/automation/startup and produced four real PIE PNGs; 16/16 foreground samples confirmed the editor active. Artifact 12096524213 carries four 1280x720 views, a fresh CPU/GPU CSV and incident stats.
 - Captured FPS windows were 21.39–28.27, with hitches up to 362.15 ms. Dedicated/shared per-process memory peaked at 534.71/102.82 MiB; target-device acceptance remains false.
 - Visual inspection rejects final Shire acceptance due to conspicuously angular/primitive vegetation and props, repetitive density, and unresolved terrain/ground composition. Continue bounded PES-002 art correction; Gate 6/7 remains open.
+
+
+## 2026-10-17 PES-002 selective CSM budget candidate — exact-head retest pending
+- Baseline evidence: Run 39022384250 at `5655bb97dc683466723ac1bc45adb2933b2ce34c` produced four active-window PIE views and CPU/GPU CSV; CI measured 21.39–28.27 FPS with hitches to 362.15 ms. Owner-device performance remains unmeasured.
+- Candidate caps movable-sun CSM distance at 12,000 cm/two cascades, sets CSM resolution to 1024, lowers shadow distance scale to 0.60, and AA quality to 2. AO, cast shadows, sunlight, translucency and authored PBR remain enabled.
+- Source regression added; exact-head Pre-Unreal, UE4.27.2 build/import/startup and four-view PIE with new GPU/FPS readings are pending. No performance, visual, or device acceptance is claimed.
+- The 17 remaining blockout residents are not force-assigned Frodo's rig: PR #486 is a rejected source study with no UE deformation/animation acceptance.

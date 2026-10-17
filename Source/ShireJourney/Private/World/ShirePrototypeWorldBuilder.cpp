@@ -1966,6 +1966,9 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
             SunComponent->SetIntensity(3.25f);
             SunComponent->SetLightColor(FLinearColor(1.0f, 0.90f, 0.78f));
             SunComponent->SetCastShadows(true);
+            // Keep hero-scale shadows crisp while bounding distant CSM work on the 720p target.
+            SunComponent->DynamicShadowDistanceMovableLight = 12000.0f;
+            SunComponent->NumDynamicShadowCascades = 2;
             SunComponent->SetAtmosphereSunLight(true);
             SunComponent->SetAtmosphereSunLightIndex(0);
         }

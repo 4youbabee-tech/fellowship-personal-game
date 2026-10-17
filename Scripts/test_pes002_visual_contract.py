@@ -384,5 +384,21 @@ class PES002VisualContract(unittest.TestCase):
                 self.assertTrue(1 <= vertex <= len(vertices))
                 self.assertTrue(1 <= uv <= len(uvs))
 
+class PES002ShadowBudgetContract(unittest.TestCase):
+    def test_movable_sun_csm_is_bounded_without_disabling_shadows(self):
+        cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        ini = (ROOT / "Config/DefaultEngine.ini").read_text(encoding="utf-8")
+        self.assertIn("SunComponent->SetCastShadows(true);", cpp)
+        self.assertIn("SunComponent->DynamicShadowDistanceMovableLight = 12000.0f;", cpp)
+        self.assertIn("SunComponent->NumDynamicShadowCascades = 2;", cpp)
+        self.assertIn("r.Shadow.CSM.MaxCascades=2", ini)
+        self.assertIn("r.Shadow.MaxCSMResolution=1024", ini)
+        self.assertIn("r.Shadow.DistanceScale=0.60", ini)
+        self.assertIn("r.AmbientOcclusionLevels=1", ini)
+        self.assertIn("r.PostProcessAAQuality=2", ini)
+        self.assertNotIn("r.ShadowQuality=0", ini)
+        self.assertNotIn("r.AmbientOcclusionLevels=0", ini)
+
+
 if __name__ == "__main__":
     unittest.main()

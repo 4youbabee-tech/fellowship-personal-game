@@ -1890,3 +1890,10 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 2026-10-17 retry 39021746348 / #2237 passed build/import/automation/startup but the recovery candidate had a bad native DLL declaration and timed out before screenshot requests. Corrected `GetCurrentThreadId` to `kernel32.dll`; fresh PIE images and visual review remain pending, so no world-placement or Gate 6/7 acceptance changes.
 
 2026-10-17: Run 39022384250 at exact head 5655bb97dc683466723ac1bc45adb2933b2ce34c produced four fresh 1280x720 PIE views after 16/16 focus confirmations; artifact 12096524213. Visual review rejects final Shire quality for angular vegetation/props, repetition and unfinished ground. Measured CI windows: 21.39–28.27 FPS, worst hitch 362.15 ms; target-device VRAM/FPS acceptance remains false. Source/capture/runtime proof is not Gate 6/7 closure.
+
+
+## 2026-10-17 PES-002 selective CSM budget candidate — exact-head retest pending
+- Baseline evidence: Run 39022384250 at `5655bb97dc683466723ac1bc45adb2933b2ce34c` produced four active-window PIE views and CPU/GPU CSV; CI measured 21.39–28.27 FPS with hitches to 362.15 ms. Owner-device performance remains unmeasured.
+- Candidate caps movable-sun CSM distance at 12,000 cm/two cascades, sets CSM resolution to 1024, lowers shadow distance scale to 0.60, and AA quality to 2. AO, cast shadows, sunlight, translucency and authored PBR remain enabled.
+- Source regression added; exact-head Pre-Unreal, UE4.27.2 build/import/startup and four-view PIE with new GPU/FPS readings are pending. No performance, visual, or device acceptance is claimed.
+- The 17 remaining blockout residents are not force-assigned Frodo's rig: PR #486 is a rejected source study with no UE deformation/animation acceptance.
