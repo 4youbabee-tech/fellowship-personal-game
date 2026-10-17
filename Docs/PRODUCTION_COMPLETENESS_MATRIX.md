@@ -4271,3 +4271,11 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 - Exact-head UE4.27 Run 38973795568 on `b29dc61` passed build/import/automation and produced four real 1280x720 PIE views; human review still rejects the settlement. Runtime log confirms 9 curated nature families and 117 grounded HISM placements, but the repeated distant canopy source remains a primitive-like cone with one LOD.
 - Replaced only the original project-owned canopy geometry source with a deterministic five-lobe, broadleaf crown (285 UV-mapped vertices, 500 triangles); no instance count, anchor, collision, density, shadow or runtime ownership changes. A source regression runs the generator and checks topology/bounds/material UV coverage.
 - Exact-head UE4.27.2 Run 38987764356 on `e8a0239ddc9ae699989929332123a33650b9fae8` succeeded: C++ build, production asset import, Automation QA, startup smoke, and four native 1280×720 PIE captures. The generated canopy package imported; no explicit world-placement acceptance is claimed. Screenshot artifact `12083962547` remains visually REJECTED for final Shire quality. CI windows: 25.39, 27.10, 25.95, 27.14, 28.82, 25.55 FPS; worst frames up to 353.99 ms; process RAM peak 1111.4 MiB; VRAM unmeasured. Owner-device performance is NOT RUN; target 30 FPS is not proven.
+
+## 2026-10-17 PR #484 capture blocker follow-up
+
+| Deliverable | State | Current exact evidence | Remaining acceptance |
+|---|---|---|---|
+| Bag End runtime build/import/startup | PASS on PR head `cc577de119aab12fec3495c52c8539e4846b9db6`; runs 39019099042 and 39020520026 | UE4.27.2 C++ build, production import, Automation QA, startup; PIE log requested four views | None for these bounded stages |
+| Bag End fresh PIE images | BLOCKED / candidate recovery added | Both runs report 20/20 inactive window samples; artifact 12096323695 contains no PNG | New exact-head 1280x720 PNGs + review |
+| Device performance / Gate 6/7 | OPEN | No valid foreground FPS capture or target-owner-device data | Fresh active-window capture, target device run and human acceptance |

@@ -53,8 +53,13 @@ using System.Runtime.InteropServices;
 public static class ShirePES002WindowFocus {
     [DllImport("user32.dll")] public static extern IntPtr GetForegroundWindow();
     [DllImport("user32.dll")] public static extern uint GetWindowThreadProcessId(IntPtr handle, out uint processId);
+    [DllImport("user32.dll")] public static extern uint GetCurrentThreadId();
+    [DllImport("user32.dll")] public static extern bool AttachThreadInput(uint attach, uint attachTo, bool value);
     [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr handle);
     [DllImport("user32.dll")] public static extern bool ShowWindowAsync(IntPtr handle, int command);
+    [DllImport("user32.dll")] public static extern bool BringWindowToTop(IntPtr handle);
+    [DllImport("user32.dll")] public static extern IntPtr SetActiveWindow(IntPtr handle);
+    [DllImport("user32.dll")] public static extern IntPtr SetFocus(IntPtr handle);
 }
 '@
 }
@@ -88,18 +93,44 @@ try {
                 $handle = $editorProcess.MainWindowHandle
                 if ($handle -ne [IntPtr]::Zero) {
                     $focusRequests++
+                    $currentThread = [ShirePES002WindowFocus]::GetCurrentThreadId()
+                    $targetPid = [uint32]0
+                    $targetThread = [ShirePES002WindowFocus]::GetWindowThreadProcessId($handle, [ref]$targetPid)
+                    $foregroundHandle = [ShirePES002WindowFocus]::GetForegroundWindow()
                     $foregroundPid = [uint32]0
-                    [void][ShirePES002WindowFocus]::GetWindowThreadProcessId(
-                        [ShirePES002WindowFocus]::GetForegroundWindow(), [ref]$foregroundPid)
-                    if ($foregroundPid -ne [uint32]$editorPid) {
+                    [void][ShirePES002WindowFocus]::GetWindowThreadProcessId($foregroundHandle, [ref]$foregroundPid)
+                    $foregroundThread = if ($foregroundHandle -ne [IntPtr]::Zero) {
+                        [ShirePES002WindowFocus]::GetWindowThreadProcessId($foregroundHandle, [ref]$foregroundPid)
+                    } else { [uint32]0 }
+                    $attachedTarget = $false
+                    $attachedForeground = $false
+                    try {
+                        # SetForegroundWindow alone is routinely denied to a child of a
+                        # background Actions worker. Temporarily join the input queues of
+                        # this worker, the owned editor and the current foreground thread;
+                        # restore both queues in finally on every retry.
+                        if ($targetThread -ne 0 -and $targetThread -ne $currentThread) {
+                            $attachedTarget = [ShirePES002WindowFocus]::AttachThreadInput(
+                                $currentThread, $targetThread, $true)
+                        }
+                        if ($foregroundThread -ne 0 -and $foregroundThread -ne $currentThread -and
+                            $foregroundThread -ne $targetThread) {
+                            $attachedForeground = [ShirePES002WindowFocus]::AttachThreadInput(
+                                $currentThread, $foregroundThread, $true)
+                        }
                         [void][ShirePES002WindowFocus]::ShowWindowAsync($handle, 9)
+                        [void][ShirePES002WindowFocus]::BringWindowToTop($handle)
                         [void][ShirePES002WindowFocus]::SetForegroundWindow($handle)
-                        try {
-                            $shell = New-Object -ComObject WScript.Shell
-                            [void]$shell.AppActivate([int]$editorPid)
-                            [void][System.Runtime.InteropServices.Marshal]::ReleaseComObject($shell)
-                        } catch {
-                            Write-Host "PES002_APPACTIVATE_UNAVAILABLE type=$($_.Exception.GetType().Name)"
+                        [void][ShirePES002WindowFocus]::SetActiveWindow($handle)
+                        [void][ShirePES002WindowFocus]::SetFocus($handle)
+                    } finally {
+                        if ($attachedForeground) {
+                            [void][ShirePES002WindowFocus]::AttachThreadInput(
+                                $currentThread, $foregroundThread, $false)
+                        }
+                        if ($attachedTarget) {
+                            [void][ShirePES002WindowFocus]::AttachThreadInput(
+                                $currentThread, $targetThread, $false)
                         }
                     }
                     $afterPid = [uint32]0
