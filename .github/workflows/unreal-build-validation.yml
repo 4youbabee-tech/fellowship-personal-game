@@ -369,7 +369,7 @@ jobs:
         run: |
           set -euo pipefail
           # Source-only fast gate: no Blender download or Windows runner.
-          python3 -m unittest discover -s Tools/CloudAssetBuild -p 'test_mpfb_pack_intake.py' -v
+          python3 -m unittest discover -s Tools/CloudAssetBuild -p 'test_mpfb_*.py' -v
           WORK="$RUNNER_TEMP/pes002-mpfb-producer"
           mkdir -p "$WORK" "$RUNNER_TEMP/mpfb-hobbit-output"
           VERSION=4.2.23

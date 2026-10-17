@@ -5,10 +5,14 @@ from pathlib import Path
 import runpy
 import sys
 
-import bpy
+# Blender --python does not add this file's directory to sys.path.
+# Resolve siblings from the script, independently of the working directory.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from mpfb_pack_intake import extract_verified_pack
 import json
+
+import bpy
 
 
 def main():
