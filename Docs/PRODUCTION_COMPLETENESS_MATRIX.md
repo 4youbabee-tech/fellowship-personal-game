@@ -4258,3 +4258,11 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Root correction | CANDIDATE | Keep torso-bound crop planes, eliminate center seam cuts and face deletion that expose slit triangles; six local wardrobe tests pass |
 | UE4.27.2 | SKIPPED | Source QC failed; do not import character or claim acceptance |
 | PES/Gates | OPEN | PES-002 ACTIVE, PES-003 LOCKED, Gate 6/7 OPEN |
+
+
+## 2026-10-17 PES-002 waistcoat placket source iteration
+| Output | State | Evidence / remaining work |
+|---|---|---|
+| Closed waistcoat study | SOURCE / TECHNICAL PASS, VISUAL REJECT | Run 39029904611; artifact 12100425640; FBX SHA `e53ba0c4957f4029ef7e2d3b7c62d89d6668575bb17269239fa922eb20caf72b`; 53 bones, 59,162 triangles, 8 bilateral stress poses |
+| Remaining visible seam | OPEN | Blender preview shows a narrow exposed-skin strip; a spine-weighted wool placket and five visible fasteners are the next hosted source candidate |
+| UE / animation | NOT RUN | UE4.27.2 skipped; no locomotion, PIE, world placement or acceptance |

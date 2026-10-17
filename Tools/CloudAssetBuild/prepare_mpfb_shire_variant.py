@@ -115,6 +115,15 @@ def main():
     bm.to_mesh(vest.data);bm.free()
     vest.data.materials.clear();vest.data.materials.append(vestmat)
     for f in vest.data.polygons:f.material_index=0
+    # The source suit has an open central placket. Fill that visible seam with
+    # a narrow wool panel, then put the fasteners on top of it.
+    placket=bmesh.new();placket.from_mesh(vest.data)
+    patch=[vest.matrix_world.inverted()@Vector(c) for c in [
+        (-.010,-.091,.895),(.030,-.091,.895),(.030,-.091,1.175),(-.010,-.091,1.175)]]
+    pv=[placket.verts.new(v) for v in patch]
+    placket.faces.new(pv)
+    placket.normal_update();placket.to_mesh(vest.data);placket.free();vest.data.update()
+    for f in vest.data.polygons:f.material_index=0
     for v in vest.data.vertices:
         v.co+=v.normal*.004
     # A thin applied shell gives the garment a readable hem and cloth thickness.
@@ -130,13 +139,13 @@ def main():
     buttons = bmesh.new(); buttons.from_mesh(vest.data)
     for index in range(5):
         z = .925 + index * .046
-        center = vest.matrix_world.inverted() @ Vector((.042, -.081, z))
+        center = vest.matrix_world.inverted() @ Vector((.010, -.101, z))
         # Blender versions do not consistently return a `faces` key from
         # create_uvsphere; snapshot the BMFace collection so operator result
         # schema cannot abort source export after building the sphere.
         old_faces = set(buttons.faces)
         bmesh.ops.create_uvsphere(
-            buttons, u_segments=8, v_segments=6, radius=.006,
+            buttons, u_segments=10, v_segments=8, radius=.008,
             matrix=Matrix.Translation(center))
         for face in set(buttons.faces) - old_faces:
             face.smooth = True
@@ -145,7 +154,7 @@ def main():
     for face in vest.data.polygons:
         # Button centers are close to the front seam and below the collar.
         c = sum((vest.matrix_world @ vest.data.vertices[i].co for i in face.vertices), Vector()) / len(face.vertices)
-        if abs(c.x - .042) < .008 and c.y < -.073 and .91 < c.z < 1.16:
+        if abs(c.x - .010) < .010 and c.y < -.095 and .91 < c.z < 1.16:
             face.material_index = 1
     upper_torso = next((name for name in ('spine_03', 'spine_02', 'spine_01')
                         if vest.vertex_groups.get(name)), None)
@@ -157,7 +166,7 @@ def main():
                    vest.vertex_groups[binding.group].name in ('spine_03', 'spine_02', 'spine_01')
                    and binding.weight > 0 for binding in vertex.groups):
             world = vest.matrix_world @ vertex.co
-            if .90 < world.z < 1.16 and world.y < -.073 and abs(world.x - .042) < .012:
+            if .89 < world.z < 1.18 and world.y < -.085 and abs(world.x - .010) < .025:
                 upper_group.add([vertex.index], 1.0, 'REPLACE')
     meshes.append(vest)
     # Head-weighted cascading ringlets replace the flat short-hair crest. The
@@ -241,7 +250,7 @@ def main():
     output=out/'PES002_Shira_WardrobeStudy.fbx'
     bpy.ops.export_scene.fbx(filepath=str(output),use_selection=True,add_leaf_bones=False,bake_anim=False,path_mode='RELATIVE')
     bpy.ops.wm.save_as_mainfile(filepath=str(out/'Shira_WardrobeStudy.blend'))
-    result={'status':'SOURCE_WARDROBE_STUDY_NOT_UE_IMPORTED','curly_hair_locks':curls,'curl_geometry':'24 tapered six-sided cascading ringlet tubes integrated into the head-weighted hair mesh','waistcoat_button_count':5,'waistcoat_shell_thickness_m':.006,'license':'CC0','source_fbx_sha256':digest,'fbx_sha256':hashlib.file_digest(output.open('rb'),'sha256').hexdigest(),'source_spec_sha256':receipt['spec_sha256'],'source_gender':'female (upstream gender=0); original supporting resident, not named cast','weighted_body_vertices':weighted,'pose':pose,'max_deform_influences':4,'animation':'NOT_AUTHORED','visual':'PENDING','ue_import':'NOT_RUN','known_open_items':['Manual hair silhouette/face review','Waistcoat fit/closure/hem review','Full bilateral shoulder/knee visual stress','LODs and material section budget','Authored locomotion and UE4 deformation']}
+    result={'status':'SOURCE_WARDROBE_STUDY_NOT_UE_IMPORTED','curly_hair_locks':curls,'curl_geometry':'24 tapered six-sided cascading ringlet tubes integrated into the head-weighted hair mesh','waistcoat_button_count':5,'waistcoat_front_placket':'closed skinned wool panel','waistcoat_shell_thickness_m':.006,'license':'CC0','source_fbx_sha256':digest,'fbx_sha256':hashlib.file_digest(output.open('rb'),'sha256').hexdigest(),'source_spec_sha256':receipt['spec_sha256'],'source_gender':'female (upstream gender=0); original supporting resident, not named cast','weighted_body_vertices':weighted,'pose':pose,'max_deform_influences':4,'animation':'NOT_AUTHORED','visual':'PENDING','ue_import':'NOT_RUN','known_open_items':['Manual hair silhouette/face review','Waistcoat fit/closure/hem review','Full bilateral shoulder/knee visual stress','LODs and material section budget','Authored locomotion and UE4 deformation']}
     (out/'variant_receipt.json').write_text(json.dumps(result,indent=2)+'\n')
     print('SHIRE_WARDROBE_STUDY_EXPORTED '+json.dumps(result),flush=True)
 
