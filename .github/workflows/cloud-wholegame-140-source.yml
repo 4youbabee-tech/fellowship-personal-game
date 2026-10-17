@@ -1,11 +1,55 @@
-name: 'Disabled - Whole-game 140 distinct original FBX source wave'
+name: Whole-game verified source preparation
+
 on:
+  push:
+    branches:
+      - develop
+    paths:
+      - '.github/workflows/cloud-wholegame-140-source.yml'
+      - 'Tools/CloudAssetBuild/package_wholegame_regions.py'
   workflow_dispatch:
+
 permissions:
   contents: read
+  actions: read
+
+concurrency:
+  group: whole-game-source-preparation-${{ github.repository }}
+  cancel-in-progress: false
+
 jobs:
-  disabled:
+  physical-source-packages:
+    name: Source-only 28 regions and F104-F204 pack preparation
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
-      - name: Secondary lane frozen by owner
-        run: echo "DISABLED - use Unreal Build Validation unified production workflow"
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Python compile
+        run: |
+          python3 -m py_compile Scripts/stage_cloud_wholegame_source.py
+          python3 -m py_compile Tools/CloudAssetBuild/package_wholegame_regions.py
+      - name: Verify pinned whole-game physical source in isolated temporary scratch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/physical-wholegame"
+          python3 Scripts/stage_cloud_wholegame_source.py \
+            --manifest Data/CloudWholeGameSourceArtifactPinV1.json \
+            --warehouse-root "$RUNNER_TEMP/physical-wholegame"
+      - name: Package real region meshes and PBR maps into chapter source archives
+        run: |
+          python3 Tools/CloudAssetBuild/package_wholegame_regions.py \
+            --warehouse-root "$RUNNER_TEMP/physical-wholegame" \
+            --pin Data/CloudWholeGameSourceArtifactPinV1.json \
+            --output-root "$RUNNER_TEMP/wholegame-source-packs"
+          test "$(find "$RUNNER_TEMP/wholegame-source-packs" -maxdepth 1 -name '*.zip' | wc -l)" -eq 11
+          test -s "$RUNNER_TEMP/wholegame-source-packs/index.json"
+      - name: Upload physical source candidates with SHA256 receipts, no Unreal claims
+        uses: actions/upload-artifact@v4
+        with:
+          name: whole-game-original-support-source-${{ github.sha }}
+          path: ${{ runner.temp }}/wholegame-source-packs/*
+          if-no-files-found: error
+          retention-days: 21
