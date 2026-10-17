@@ -9,13 +9,15 @@ class CurlShapeTests(unittest.TestCase):
 
     def test_tuft_is_elongated_along_scalp_tangent(self):
         x, y, z = remap_curl_offset(1.0, 0.0, 0.0, 0.0)
-        self.assertAlmostEqual(x, 0.78)
+        self.assertAlmostEqual(x, 0.58)
         self.assertAlmostEqual(y, 0.0)
         self.assertAlmostEqual(z, 0.0)
         x, y, z = remap_curl_offset(0.0, 1.0, 0.0, 0.0)
         self.assertAlmostEqual(x, 0.0)
-        self.assertAlmostEqual(y, 1.12)
+        self.assertAlmostEqual(y, 1.45)
         self.assertAlmostEqual(z, 0.0)
+        x, y, z = remap_curl_offset(0.0, 0.0, 1.0, 0.0)
+        self.assertAlmostEqual(z, 1.45)
 
     def test_rotated_frames_preserve_shape_budget_and_finite_vertices(self):
         for index in range(24):
