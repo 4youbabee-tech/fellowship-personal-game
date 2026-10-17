@@ -1,5 +1,8 @@
 # Parallel whole-game SOURCE_QC lane - October 17, 2026
 
+**2026-10-17 exact-branch CI activation:** The first source-only PR #489 SHA `965f3f094a8aa388c9f539cc4895a723b8bb1814` did not schedule a run because its new workflow only matched `push: develop` (no source-branch check). The corrective commit adds the isolated `source/wholegame-*` push pattern so the same one-job Linux preparation runs against exact source PR HEAD before merge. The workflow is never an Unreal importer or canonical Warehouse Writer. A successful source-pack job validates physical source hashes and ZIPs only; visual/art acceptance, named actors and future-region Runtime remain gated.
+
+
 Source-only, no active second Unreal writer. PES-002 / P1C01 remains the sole runtime chapter under Data/ProjectGovernor.json. Earlier cloud-wholegame-140-source workflow was disabled; this change restores precisely ONE GitHub-hosted Ubuntu source-only production job and does not activate the old disabled F104-F204 writer stubs.
 
 This job reuses pinned GitHub artifact 11767251532 from Run 38292163970, exact source commit 1e1e5c9df5aeee75e130eed7891fdfb7b129c9fc. Scripts/stage_cloud_wholegame_source.py validates the entire physical archive and individual SHA256s; Tools/CloudAssetBuild/package_wholegame_regions.py constructs ten chapter/F3 support-source ZIP archives plus one full 28-region pack, each with actual LOD0/LOD1 FBX, PBR PNG, SHA256 receipts and machine-readable index.

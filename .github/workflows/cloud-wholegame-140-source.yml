@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+      - 'source/wholegame-*'
     paths:
       - '.github/workflows/cloud-wholegame-140-source.yml'
       - 'Tools/CloudAssetBuild/package_wholegame_regions.py'
