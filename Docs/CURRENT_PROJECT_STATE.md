@@ -5013,3 +5013,8 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Exact-head Run 38985891593 regenerated the source FBX in Blender and passed reimported bilateral skin stress, but direct preview review rejected the smooth cropped hair and ragged waistcoat opening.
 - Candidate repair adds 29 joined head-weighted curl clumps, symmetric bisected vest edges, an applied 6 mm cloth shell, and an exact exported-FBX cap of 60,000 triangles. It preserves the 53-bone rig, seven mesh objects and CC0 provenance.
 - Blender regeneration/reimport/render on the new exact head is pending. No UE import, animation, runtime placement or visual acceptance is claimed.
+
+
+## 2026-10-17 MPFB hair silhouette iteration 2
+- Artifact from exact-head Run 38986831627 visually showed the first 29 curl clumps read as large beads; source skin and waistcoat edges passed technical checks, but the hairstyle still failed art review.
+- Follow-up candidate reduces clump radius by about half, distributes 58 head-weighted clumps across five overlapping cap rows, and raises the exported hair minimum to 8,000 triangles while keeping the full character under 60,000 triangles. This remains a source-only artist iteration; exact-head rendered review is required before UE.

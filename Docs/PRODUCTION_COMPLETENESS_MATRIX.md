@@ -4210,3 +4210,8 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 - `bca242c` exact-head Run 38985891593 proves genuine Blender/MPFB source production and eight bilateral limb stress poses; rendered review identifies flat hair and torn waistcoat edges, so the character remains source-only and visually rejected.
 - New source-only iteration adds joined head-weighted curls, clean bmesh-cut vest boundaries and a 6 mm applied cloth shell. The exported-FBX inspector retains the four-weight/zero-unweighted/UV/hierarchy gates and adds hair plus 60k total triangle checks.
 - Exact-head Blender proof pending; UE4 import/animation/PIE remain unrun.
+
+
+## 2026-10-17 MPFB hair silhouette iteration 2
+- Artifact from exact-head Run 38986831627 visually showed the first 29 curl clumps read as large beads; source skin and waistcoat edges passed technical checks, but the hairstyle still failed art review.
+- Follow-up candidate reduces clump radius by about half, distributes 58 head-weighted clumps across five overlapping cap rows, and raises the exported hair minimum to 8,000 triangles while keeping the full character under 60,000 triangles. This remains a source-only artist iteration; exact-head rendered review is required before UE.

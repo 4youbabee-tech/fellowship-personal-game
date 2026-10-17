@@ -156,17 +156,22 @@ def main():
     start_curl_vertex=len(hair.data.vertices)
     curls=0
     curl_bm=bmesh.new();curl_bm.from_mesh(hair.data)
-    for ring,count,lower,radius in ((0,14,.026,.034),(1,10,.071,.031),(2,5,.012,.037)):
+    # Smaller clumps and overlapping rows read as curls rather than beads.
+    for ring,count,lower,radius in (
+        (0,16,.018,.0185),(1,14,.038,.018),(2,12,.058,.0165),
+        (3,10,.078,.015),(4,6,.004,.017),
+    ):
         for i in range(count):
-            angle=(2*math.pi*i/count)+(ring*.19)
-            if ring==2:
-                x=hc.x+rx*.42*math.cos(angle);y=hc.y+ry*.35*math.sin(angle)
+            angle=(2*math.pi*i/count)+(ring*.13)
+            if ring==4:
+                x=hc.x+rx*.26*math.cos(angle);y=hc.y+ry*.22*math.sin(angle)
             else:
-                x=hc.x+rx*(.92 if ring==0 else .72)*math.cos(angle)
-                y=hc.y+ry*(.92 if ring==0 else .72)*math.sin(angle)
-            z=hhi.z-lower+(.012*math.cos(angle*2) if ring<2 else 0)
+                radial=(.91,.82,.68,.49)[ring]
+                x=hc.x+rx*radial*math.cos(angle)
+                y=hc.y+ry*radial*math.sin(angle)
+            z=hhi.z-lower+(.006*math.cos(angle*3) if ring<4 else 0)
             local=hair.matrix_world.inverted()@Vector((x,y,z))
-            size=radius*(1+.13*math.sin(i*2.17+ring))
+            size=radius*(.91+.12*math.sin(i*2.17+ring))
             bmesh.ops.create_icosphere(curl_bm,subdivisions=2,radius=size,matrix=Matrix.Translation(local))
             curls+=1
     curl_bm.normal_update();curl_bm.to_mesh(hair.data);curl_bm.free();hair.data.update()
