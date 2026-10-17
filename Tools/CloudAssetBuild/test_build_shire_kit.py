@@ -52,6 +52,7 @@ class ShireKitManifestTests(unittest.TestCase):
         digest = kit.sha256(source)
         receipt = source_root / "source_receipt.json"
         receipt.write_text(json.dumps({
+            "schema_version": 1,
             "status": "CC0_POLYHAVEN_FBX_SOURCE_ACQUIRED",
             "license": "CC0", "asset_id": "painted_wooden_bench",
             "files": [{"path": source.name, "sha256": digest}],
@@ -59,6 +60,7 @@ class ShireKitManifestTests(unittest.TestCase):
         row = dict(self.row, source={
             "path": source.relative_to(self.root).as_posix(),
             "asset_id": "painted_wooden_bench",
+            "receipt_schema_version": 1,
             "receipt_path": receipt.relative_to(self.root).as_posix(),
         })
         good, rejected = kit.preflight({"assets": [row]}, self.root)

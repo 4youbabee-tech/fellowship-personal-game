@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+      - feat/pes002-bag-end-woodland-real-fbx-20261016
     paths-ignore:
       - '.github/workflows/**'
       - 'Data/F107LorienAnduinLandmarkMegaSourceSuperpackV1.json'
@@ -287,7 +288,8 @@ jobs:
           PACKAGE: ${{ github.event_name == 'workflow_dispatch' && inputs.package_windows == true }}
         shell: bash
         run: |
-          if [ "${GITHUB_HEAD_REF:-}" = "feat/pes002-bag-end-woodland-real-fbx-20261016" ]; then
+          TARGET_BRANCH="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME:-}}"
+          if [ "$TARGET_BRANCH" = "feat/pes002-bag-end-woodland-real-fbx-20261016" ]; then
             echo "mode=shire-kit-source" >> "$GITHUB_OUTPUT"
             echo "reason=owner-directed-batch-a-source-before-runtime" >> "$GITHUB_OUTPUT"
             echo "full=false" >> "$GITHUB_OUTPUT"
@@ -369,7 +371,9 @@ jobs:
   shire-kit-source:
     name: Batch A licensed Shire source and Blender FBX QC
     needs: classify
-    if: github.event_name == 'pull_request' && github.head_ref == 'feat/pes002-bag-end-woodland-real-fbx-20261016'
+    if: >-
+      ${{ (github.event_name == 'pull_request' && github.head_ref == 'feat/pes002-bag-end-woodland-real-fbx-20261016') ||
+          (github.event_name == 'push' && github.ref_name == 'feat/pes002-bag-end-woodland-real-fbx-20261016') }}
     runs-on: ubuntu-latest
     timeout-minutes: 35
     env:

@@ -5054,3 +5054,9 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Added an offline-tested intake for the reviewed Poly Haven Painted Wooden Bench: official API metadata, 2K then 1K FBX choice, provider MD5 checks, retained nested dependencies and a SHA256/CC0 source receipt. The manifest now binds the physical FBX and its receipt; the Blender factory rejects missing or mismatched provenance.
 - The existing validation workflow now has an exact PR #484 source-only mode: 15 offline tests run before any downloads, then checksum-verified Blender 4.2.23 builds and reimports the FBX/LOD/collision packet. The Windows Unreal writer remains skipped until Batch A closes.
 - Local Python compilation and workflow YAML parse PASS. GitHub hosted acquisition/Blender execution is pending this exact head; the asset remains NOT ACQUIRED until its source and output artifact pass.
+
+
+## 2026-10-17 — PES-002 Batch A source-runner routing correction (SOURCE RUN PENDING)
+- Run 39031870188 / #2251 on predecessor code head b9a27dd completed the existing Windows Unreal lane (C++/asset import/Automation/PIE PASS); this was an unintended pre-closeout launch before the source-only route was committed. It produced no licensed Shire kit FBX and is not Batch A evidence.
+- Run 39032201614 / #2252 on 0db966f had no jobs and failed because the feature branch was absent from the push trigger. The existing workflow now explicitly triggers that branch and resolves both PR and push refs to the same source-only mode; Unreal stays skipped.
+- Fifteen offline factory/intake tests, Python compilation, and YAML parse pass. Exact hosted acquisition and Blender execution remain pending; no model bytes are promoted yet.

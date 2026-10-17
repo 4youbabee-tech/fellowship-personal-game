@@ -73,6 +73,7 @@ def validate_row(row: object, root: Path) -> tuple[Path, list[str]]:
                     receipt_source_path = source.relative_to(receipt_path.parent).as_posix()
                     model_record = next((item for item in rows if item.get("path") == receipt_source_path), None)
                     if (receipt.get("status") != "CC0_POLYHAVEN_FBX_SOURCE_ACQUIRED" or
+                            receipt.get("schema_version") != source_info.get("receipt_schema_version", 1) or
                             receipt.get("license") != "CC0" or
                             receipt.get("asset_id") != source_info.get("asset_id") or
                             not model_record or model_record.get("sha256", "").lower() != sha256(source).lower()):
