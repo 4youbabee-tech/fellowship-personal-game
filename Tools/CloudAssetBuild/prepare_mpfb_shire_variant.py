@@ -13,7 +13,7 @@ import sys
 
 import bpy
 import bmesh
-from mathutils import Vector
+from mathutils import Matrix, Vector
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from mpfb_pose_qc import inspect_deform_and_pose
@@ -114,9 +114,18 @@ def main():
             plane_no=vest.matrix_world.to_3x3().transposed()@Vector(normal),
             clear_inner=True,dist=1e-6)
     remove=[]
+    # Bisect both opening edges first so removing the front panel leaves clean seams.
+    for x in (-.052, .052):
+        bmesh.ops.bisect_plane(
+            bm,
+            geom=list(bm.verts)+list(bm.edges)+list(bm.faces),
+            plane_co=vest.matrix_world.inverted() @ Vector((x, 0, 0)),
+            plane_no=vest.matrix_world.to_3x3().transposed() @ Vector((1, 0, 0)),
+            dist=1e-6,
+        )
     for f in bm.faces:
         c=sum((vest.matrix_world@v.co for v in f.verts),Vector())/len(f.verts)
-        if c.y<-.065 and abs(c.x)<.035:remove.append(f)
+        if c.y<-.065 and abs(c.x)<.052:remove.append(f)
     bmesh.ops.delete(bm,geom=remove,context='FACES')
     bm.normal_update()
     for v in bm.verts:
@@ -127,9 +136,41 @@ def main():
         v.co+=v.normal*.004
     bm.to_mesh(vest.data);bm.free();vest.data.materials.clear();vest.data.materials.append(vestmat)
     for f in vest.data.polygons:f.material_index=0
+    # A thin applied shell gives the cut lapels and hem real cloth edge thickness.
+    bpy.context.view_layer.objects.active=vest
+    vest.select_set(True)
+    shell=vest.modifiers.new('Shire_Waistcoat_Cloth_Edge','SOLIDIFY')
+    shell.thickness=.006;shell.offset=0.0;shell.use_rim=True
+    bpy.ops.object.modifier_apply(modifier=shell.name)
     meshes.append(vest)
-    # Lift the hair's dated vertical crest into a compact rounded dark cap.
-    hair.data.materials.clear();hair.data.materials.append(material('Shire_Chestnut_Hair',(.035,.017,.008)))
+    # Joined, head-weighted low-poly curls replace the flat short-hair crest.
+    hair.data.materials.clear();hair.data.materials.append(material('Shire_Chestnut_Hair',(.055,.024,.012)))
+    head_name=next((n for n in ('head','Head') if rig.data.bones.get(n)),None)
+    if head_name is None:raise RuntimeError('SHIRE_CURL_HEAD_BONE_MISSING')
+    head_group=hair.vertex_groups.get(head_name) or hair.vertex_groups.new(name=head_name)
+    hbox=[hair.matrix_world@Vector(c) for c in hair.bound_box]
+    hlo=Vector(tuple(min(v[i] for v in hbox) for i in range(3)))
+    hhi=Vector(tuple(max(v[i] for v in hbox) for i in range(3)))
+    hc=(hlo+hhi)*.5
+    rx=max((hhi.x-hlo.x)*.43,.025);ry=max((hhi.y-hlo.y)*.43,.025)
+    start_curl_vertex=len(hair.data.vertices)
+    curls=0
+    curl_bm=bmesh.new();curl_bm.from_mesh(hair.data)
+    for ring,count,lower,radius in ((0,14,.026,.034),(1,10,.071,.031),(2,5,.012,.037)):
+        for i in range(count):
+            angle=(2*math.pi*i/count)+(ring*.19)
+            if ring==2:
+                x=hc.x+rx*.42*math.cos(angle);y=hc.y+ry*.35*math.sin(angle)
+            else:
+                x=hc.x+rx*(.92 if ring==0 else .72)*math.cos(angle)
+                y=hc.y+ry*(.92 if ring==0 else .72)*math.sin(angle)
+            z=hhi.z-lower+(.012*math.cos(angle*2) if ring<2 else 0)
+            local=hair.matrix_world.inverted()@Vector((x,y,z))
+            size=radius*(1+.13*math.sin(i*2.17+ring))
+            bmesh.ops.create_icosphere(curl_bm,subdivisions=2,radius=size,matrix=Matrix.Translation(local))
+            curls+=1
+    curl_bm.normal_update();curl_bm.to_mesh(hair.data);curl_bm.free();hair.data.update()
+    head_group.add(list(range(start_curl_vertex,len(hair.data.vertices))),1.0,'REPLACE')
     # Shorter, broader silhouette. Scale the root only; all bound parts follow.
     rig.scale.x*=.84;rig.scale.y*=.88;rig.scale.z*=.70
     bpy.ops.object.select_all(action='DESELECT')
@@ -159,7 +200,7 @@ def main():
     output=out/'PES002_Shira_WardrobeStudy.fbx'
     bpy.ops.export_scene.fbx(filepath=str(output),use_selection=True,add_leaf_bones=False,bake_anim=False,path_mode='RELATIVE')
     bpy.ops.wm.save_as_mainfile(filepath=str(out/'Shira_WardrobeStudy.blend'))
-    result={'status':'SOURCE_WARDROBE_STUDY_NOT_UE_IMPORTED','license':'CC0','source_fbx_sha256':digest,'fbx_sha256':hashlib.file_digest(output.open('rb'),'sha256').hexdigest(),'source_spec_sha256':receipt['spec_sha256'],'source_gender':'female (upstream gender=0); original supporting resident, not named cast','weighted_body_vertices':weighted,'pose':pose,'max_deform_influences':4,'animation':'NOT_AUTHORED','visual':'PENDING','ue_import':'NOT_RUN','known_open_items':['Hair curls/strands','Waistcoat edge/closure and hem finishing','Full bilateral shoulder/knee visual stress','LODs and material section budget','Authored locomotion and UE4 deformation']}
+    result={'status':'SOURCE_WARDROBE_STUDY_NOT_UE_IMPORTED','curly_hair_clumps':curls,'waistcoat_shell_thickness_m':.006,'license':'CC0','source_fbx_sha256':digest,'fbx_sha256':hashlib.file_digest(output.open('rb'),'sha256').hexdigest(),'source_spec_sha256':receipt['spec_sha256'],'source_gender':'female (upstream gender=0); original supporting resident, not named cast','weighted_body_vertices':weighted,'pose':pose,'max_deform_influences':4,'animation':'NOT_AUTHORED','visual':'PENDING','ue_import':'NOT_RUN','known_open_items':['Manual hair silhouette/face review','Waistcoat fit/closure/hem review','Full bilateral shoulder/knee visual stress','LODs and material section budget','Authored locomotion and UE4 deformation']}
     (out/'variant_receipt.json').write_text(json.dumps(result,indent=2)+'\n')
     print('SHIRE_WARDROBE_STUDY_EXPORTED '+json.dumps(result),flush=True)
 

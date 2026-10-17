@@ -941,3 +941,8 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 ## 2026-10-17 MPFB wardrobe masking and skin-budget follow-up
 - Real exported pilot (Run 38984957949 artifact 12082820816) has 5 body/6 clothing influences and calves deleted underneath the modern outfit. Shortening trousers alone exposes missing legs. Do not accept skeleton/FBX/one-arm motion as complete art or skin proof.
 - Separate variant regenerates the original female base from pinned MPFB2 CC0 geometry before binding it to the same 53-bone skeleton, preserves the portable skin material, and normalizes top four deform weights. Existing runtime/collision is untouched. Reimported source must prove zero unweighted vertices, UVs, exact hierarchy, eight bilateral joint stresses; visual preview remains mandatory and source study remains unpromoted while overlap/hem/hair/LODs/locomotion remain unresolved.
+
+
+## 2026-10-17 PG-PES002-MPFB-ART-02 — measured render requires source geometry repair
+- Direct review of exact-head Run 38985891593 artifact shows two visible source defects: flat cropped hairstyle and ragged overlapping waistcoat edges. A passing rig and skin test is not a character-quality pass.
+- New source candidate uses 29 joined curls weighted to the actual head bone, symmetric bmesh-cut vest opening and an applied 6 mm cloth shell. Keep CC0, 53 bones, <=4 deform influences, seven mesh objects and <=60,000 aggregate triangles. Require exact-head Blender export/reimport/pose stress and a new rendered review before any UE import.

@@ -19,11 +19,17 @@ from mpfb_pose_qc import inspect_deform_and_pose
 body=max(meshes,key=lambda o:len(o.data.vertices))
 weighted,pose=inspect_deform_and_pose(body,rig)
 report={'bones':len(rig.data.bones),'meshes':[{'name':o.name,'vertices':len(o.data.vertices),'triangles':sum(len(p.vertices)-2 for p in o.data.polygons),'materials':len(o.data.materials),'unweighted':sum(not any(g.weight>0 and o.vertex_groups[g.group].name in rig.data.bones for g in v.groups) for v in o.data.vertices),'max_influences':max(len([g for g in v.groups if g.weight>0 and o.vertex_groups[g.group].name in rig.data.bones]) for v in o.data.vertices)} for o in meshes],'weighted_body':weighted,'reimport_pose':pose}
+report['total_triangles']=sum(m['triangles'] for m in report['meshes'])
+hair=next((o for o in meshes if 'short01' in o.name),None)
+if hair is None:raise RuntimeError('SHIRE_EXPORTED_HAIR_MESH_MISSING')
+report['hair_triangles']=sum(len(p.vertices)-2 for p in hair.data.polygons)
 # Fail closed on the exported bytes, rather than trusting a pre-export receipt.
 if any(m['unweighted'] or m['max_influences']>4 for m in report['meshes']):
     raise RuntimeError('SHIRE_EXPORTED_SKIN_BUDGET_FAILED')
 if len(rig.data.bones)!=53 or len(meshes)!=7 or body.dimensions.z<.9:
     raise RuntimeError('SHIRE_EXPORTED_HIERARCHY_OR_BODY_FAILED')
+if report['hair_triangles']<5000 or report['total_triangles']>60000:
+    raise RuntimeError('SHIRE_HAIR_OR_CHARACTER_TRIANGLE_BUDGET_FAILED')
 if any(not m.data.uv_layers for m in meshes):
     raise RuntimeError('SHIRE_EXPORTED_UVS_MISSING')
 # Stress both shoulders, elbows, hips and knees on reimported skin.
