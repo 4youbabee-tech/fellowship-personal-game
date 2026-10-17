@@ -22,7 +22,7 @@ class WardrobeQualityContractTests(unittest.TestCase):
 
     def test_reimport_gate_measures_new_hair_and_caps_total_triangles(self):
         source = (ROOT / "inspect_mpfb_shire_variant.py").read_text(encoding="utf-8")
-        self.assertIn("report['hair_triangles']<10000", source)
+        self.assertIn("report['hair_triangles']<6000", source)
         self.assertIn("report['total_triangles']>60000", source)
 
 
