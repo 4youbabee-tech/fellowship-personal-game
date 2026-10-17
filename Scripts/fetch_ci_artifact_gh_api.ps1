@@ -40,6 +40,9 @@ for ($attempt = 1; $attempt -le 3 -and -not $success; $attempt++) {
     # Never forward the bearer token to the redirect's Azure blob URL.
     $req = [Net.HttpWebRequest][Net.WebRequest]::Create($downloadEndpoint)
     $req.Method = "GET"
+    # GitHub REST rejects requests without a nonempty User-Agent (HTTP 403).
+    $req.UserAgent = "ShireJourney-CI-Artifact-Intake"
+    $req.Headers["X-GitHub-Api-Version"] = "2022-11-28"
     $req.Accept = "application/vnd.github+json"
     $req.Headers["Authorization"] = "Bearer $token"
     $req.AllowAutoRedirect = $false

@@ -1,3 +1,5 @@
+PES-002 artifact intake repair candidate: exact HEAD 9834e1f Run 39071877399 compiled UE4 successfully but import/PIE never ran: fetch_ci_artifact_gh_api.ps1:58 received HTTP 403 on all three attempts. Manual HttpWebRequest omitted GitHub-required User-Agent; add explicit product User-Agent and REST API version, preserving exact-name pin, token-free redirect and ZIP checks. Candidate execution pending; no new screenshots/FPS or asset acceptance. Gate 6/7 OPEN.
+
 ## 2026-10-18 PES-002 Bag End source correctness repair candidate
 - Verified PR488 previous HEAD a964b653; Run 39068568628 UE4 C++ PASS but artifact REST 403 prevented import/PIE. No imported or device evidence on this candidate.
 - The producer already has a deterministic four-PNG Bag End generator, invoked before the importer from ci_import_production_assets.cmd. Fix the local launcher workspace default, reject missing MTL-relative authored PNG source and remove unsuitable generic grass/stone/wood substitutes. Guard optional curated Bark ORM loading until its exact package exists; a staged curated source still needs real import validation.
