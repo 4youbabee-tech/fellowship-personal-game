@@ -400,6 +400,23 @@ jobs:
             --out "$RUNNER_TEMP/mpfb-hobbit-output/candidate"
           python3 Tools/CloudAssetBuild/verify_mpfb_pilot_receipt.py \
             "$RUNNER_TEMP/mpfb-hobbit-output/candidate"
+          # Separate unpromoted wardrobe study; never replace the runtime packet.
+          "$BIN" -b -t 2 --python-exit-code 94 --python Tools/CloudAssetBuild/prepare_mpfb_shire_variant.py -- \
+            --source "$RUNNER_TEMP/mpfb-hobbit-output/candidate" \
+            --extension "$WORK/mpfb-addon.zip" \
+            --out "$RUNNER_TEMP/mpfb-hobbit-output/shire-study"
+          "$BIN" -b -t 2 --python-exit-code 94 --python Tools/CloudAssetBuild/inspect_mpfb_shire_variant.py -- \
+            --root "$RUNNER_TEMP/mpfb-hobbit-output/shire-study"
+      - name: Upload original Shire source study and exported deformation proof
+        if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'source/pes002-mpfb-real-human-pilot')
+        uses: actions/upload-artifact@v4
+        with:
+          name: pes002-shire-wardrobe-study-${{ env.TARGET_SHA }}
+          path: |
+            ${{ runner.temp }}/mpfb-hobbit-output/shire-study
+            !${{ runner.temp }}/mpfb-hobbit-output/shire-study/*.blend*
+          if-no-files-found: error
+          retention-days: 14
       - name: Upload CC0 MPFB source FBX pilot and hashes
         if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'source/pes002-mpfb-real-human-pilot')
         uses: actions/upload-artifact@v4
