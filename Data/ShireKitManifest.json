@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "authority_id": "P1C01_SHIRE_KIT_MANIFEST_V1",
+  "engine": "Unreal Engine 4.27.2",
+  "assets": [
+    {
+      "id": "PolyHaven_PaintedWoodenBench",
+      "source": {
+        "provider": "POLY_HAVEN",
+        "source_url": "https://polyhaven.com/a/painted_wooden_bench",
+        "path": "SourceAssets/ExternalLicensed/Inbox/painted_wooden_bench/SOURCE_NOT_ACQUIRED.fbx",
+        "source_sha256": null
+      },
+      "license": {
+        "class": "CC0",
+        "status": "VERIFIED",
+        "evidence_url": "https://polyhaven.com/license",
+        "creator": "Kirill Sannikov"
+      },
+      "target_tris": 630,
+      "lods": [1.0, 0.5, 0.25],
+      "dimensions_m": [1.2, 0.55, 0.85],
+      "collision": "convex_hull",
+      "material_groups": ["wood", "paint", "metal"],
+      "status": "SOURCE_CANDIDATE_NOT_ACQUIRED"
+    }
+  ]
+}

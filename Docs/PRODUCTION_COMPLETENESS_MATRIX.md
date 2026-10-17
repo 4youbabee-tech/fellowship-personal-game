@@ -4291,3 +4291,12 @@ Follow-up run 39021746348 (#2237) passed build/import/automation/startup but exp
 | Shire visual finish | REJECTED | Four-view review: angular vegetation/props, repetition and unfinished ground composition remain |
 | Performance target | NOT MET / not accepted | CI windows 21.39–28.27 FPS; hitches up to 362.15 ms; VRAM target acceptance false |
 | Chapter Gate 6/7 | OPEN | Target-device 720p/30 FPS and human visual approval remain outstanding |
+
+
+## 2026-10-17 — PES-002 Batch A Shire kit factory pilot
+| Gate / output | State | Evidence / remaining work |
+|---|---|---|
+| Manifest-driven Blender factory and per-row quarantine | SOURCE TOOL IMPLEMENTED | `build_shire_kit.py`; 5 local tests and `--preflight-only` PASS; Blender export/reimport NOT RUN |
+| Licensed Shire source models | BLOCKED / NOT ACQUIRED | Bench CC0 page recorded; source bytes absent, so receipt is `loaded=1 placed=0 rejected=1` |
+| FBX LOD/collision/material production and UE import | NOT RUN | Await physical sources, hosted Blender execution, then serialized UE4.27 validation |
+| PES-002 and Gate 6/7 | OPEN | No visual, traversal, performance, or owner-device acceptance implied |

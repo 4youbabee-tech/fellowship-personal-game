@@ -5036,3 +5036,9 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Exact head 5655bb97dc683466723ac1bc45adb2933b2ce34c: UE4.27.2 C++ build, production import, Automation QA, playable startup and the strict PIE capture job all PASS. The Win32 activation fix produced PES002_WINDOW_FOCUS_SUMMARY samples=16 confirmed=16 and four fresh 1280x720 Unreal PNGs in artifact 12096524213.
 - Real PIE frame windows ranged 21.39–28.27 FPS; worst frames reached 362.15 ms; peak process RAM 1109.2 MiB. Windows per-process counter peaked at 534.71 MiB dedicated + 102.82 MiB shared; UE RHI reports 2039.2 MiB adapter capacity and 94.6 MiB allocated textures. Device acceptance remains false; this is not 30 FPS target-device proof.
 - Visual review REJECTS the settlement as a finished Shire: primitive/angular vegetation and props, repeated crowded housing, and unfinished ground composition remain conspicuous across the four views. Bag End is now visible in four real views, but human visual acceptance and Gate 6/7 remain OPEN.
+
+
+## 2026-10-17 — PES-002 Batch A Shire kit factory pilot (SOURCE ONLY / OPEN)
+- Added a manifest-driven Blender intake/export tool with per-row quarantine, UV0 and convex-collision checks, three decimated FBX LODs, SHA256 receipts, and FBX reimport validation; no Unreal run was started.
+- Five source tests and Python syntax checks pass. Preflight on the current licensed bench candidate reports `loaded=1 placed=0 rejected=1`: the Poly Haven CC0 page is documented, but the physical model file is not acquired; no asset is promoted.
+- This is production tooling only, not a completed asset batch. Blender execution, Shire model source intake, full kit production and UE import remain open; PES-002 active, PES-003 locked, Gate 6/7 open.
