@@ -5070,3 +5070,8 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Exact Blender Run 39030620954 on `263b497d33869c2ba6285eafe7d46bf7c9b0a690` completed source export/reimport PASS; UE4.27.2 SKIPPED. Wardrobe artifact `12100042274`; FBX SHA256 `6a98174fbd1d9c2699af9de1cb245764956e1b87f7a2192d9d0c87f45ea1bdfa`.
 - Reimport: 53 bones, 7 meshes, 59,498 triangles, 13,380 weighted body vertices, all vertices weighted, max 4 influences, 8 bilateral arm/leg stress deltas. Actual render shows continuous vest front with visible beige placket and buttons; still a rigid A-pose wardrobe study, not final resident art; animation NOT AUTHORED and UE import NOT RUN.
 - Current source edit lengthens the existing 24 head-weighted ringlets without increasing strand count or triangle budget. Six local wardrobe tests + syntax/diff checks PASS; exact-head Blender render pending before visual verdict.
+
+
+## 2026-10-17 PES-002 final hosted source iteration — hair silhouette remains rejected
+- Exact Run 39031037739 on `8f0ecc5f46d275a13cbf8bbd6c552ecb4fe3a439` completed Blender source PASS; UE4.27.2 SKIPPED. Wardrobe artifact `12099289999`; exported CC0 FBX SHA256 `08683cd20c3495fa4752c803cb66019febcf9e664f17e604b802e5090d81a1c5`.
+- Reimport: 53 bones, 59,498 triangles, 13,380 weighted body vertices, max 4 influences, 8 bilateral stress poses. Longer ringlets did not produce a visibly different accepted silhouette in the actual Blender preview. This remains a SOURCE / VISUAL REJECT; no animation, UE import or world placement.

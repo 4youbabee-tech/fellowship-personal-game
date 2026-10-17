@@ -4282,3 +4282,11 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | CC0 Shire wardrobe FBX | SOURCE / TECHNICAL PASS | Run 39030620954; artifact 12100042274; SHA `6a98174fbd1d9c2699af9de1cb245764956e1b87f7a2192d9d0c87f45ea1bdfa`; 53 bones/59,498 triangles/max 4 influences/8 bilateral stress poses |
 | Render | IMPROVED / NOT FINAL | Vest gap is covered by sampled placket and buttons; character remains a rigid A-pose, hairstyle short, no facial/visual owner acceptance |
 | Animation / Unreal | NOT RUN | No locomotion, UE import, PIE deformation, world placement or target-device FPS proof |
+
+
+## 2026-10-17 PES-002 longer-ringlet review
+| Output | State | Evidence / remaining work |
+|---|---|---|
+| Longer-ringlet CC0 wardrobe source | TECHNICAL PASS / VISUAL REJECT | Run 39031037739; artifact 12099289999; FBX SHA `08683cd20c3495fa4752c803cb66019febcf9e664f17e604b802e5090d81a1c5`; 53 bones/59,498 triangles/8 bilateral stress tests |
+| Hairstyle | NO ACCEPTANCE | Actual Blender preview remains a tight cap; changed lock length did not materially improve appearance |
+| Runtime | NOT RUN | UE4.27.2 skipped; no locomotion, UE deformation, P1C01 placement or device FPS claim |
