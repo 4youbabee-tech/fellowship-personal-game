@@ -15,7 +15,7 @@ class WardrobeQualityContractTests(unittest.TestCase):
         self.assertIn("curl_steps=9", source)
         self.assertIn("curl_sides=5", source)
         self.assertIn("for step,center in enumerate(centers):\n            t=step/(curl_steps-1)", source)
-        self.assertIn("radius=.0052*(1.0-.58*t)", source)
+        self.assertIn("radius=.0070*(1.0-.52*t)", source)
         self.assertIn("head_group.add(list(range(start_curl_vertex", source)
         self.assertNotIn("create_icosphere", source)
 
