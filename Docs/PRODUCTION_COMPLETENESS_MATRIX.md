@@ -1,3 +1,12 @@
+## 2026-10-17 PES-002 exact-head evidence — PR #484 / Run 39019099042
+| Area | Result at `75176532cf77e3236fa5ff5be04cd406bb3e56b8` | Status / missing acceptance |
+|---|---|---|
+| C++ / asset import | UE4.27.2 build PASS; 484 production files imported, 0 failures; 7 house actors styled through two HISM families, collisions retained | TECHNICAL PASS; image/placement review pending |
+| Automation / startup | ShireJourney Automation QA PASS; playable startup PASS | TECHNICAL PASS; gameplay review pending |
+| UE capture / performance | Foreground focus false in 20/20 samples; capture correctly failed closed; no current-head images | NOT RUN / INCONCLUSIVE; requires active visible editor/device session |
+| MPFB resident | Source PR #486 head `0baa4fe`; Blender/CC0 source pipeline PASS; exported study is visually rejected and has no animation/UE proof | SOURCE ONLY; no production import |
+| Chapter Gates | PES-002 ACTIVE; PES-003 LOCKED | Gate 6/7 OPEN; Shire not complete |
+
 ## 2026-10-17 PES-002 exact-head compiler regression and pose pin fix
 | Test | Proven result |
 |---|---|

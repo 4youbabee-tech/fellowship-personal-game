@@ -1,3 +1,8 @@
+## 2026-10-17 PES-002 capture guard incident — do not accept background-throttled metrics
+- Run 39019099042 exact PR #484 SHA `75176532cf77e3236fa5ff5be04cd406bb3e56b8`: all 20 Unreal foreground checks were `active=False`. The capture script restored editor background-throttle settings and exited with `PES002_PERF_INCONCLUSIVE_BACKGROUND_THROTTLE`; no PNG evidence was produced. Preserve this fail-closed behavior. Never relabel a background 2–3 FPS sample as a gameplay result or bypass the active-window requirement.
+- The first artifact download attempt also returned `ENOTFOUND` from the Windows runner; retry passed without changing SHA. Treat this as a transient runner networking fault, not an asset/import defect.
+- Verified exact-head boundaries: C++ build, production import (484 files/0 failures), Automation QA and playable startup pass; screenshot, current-head visual review and target-device performance remain open.
+
 ## 2026-10-17 PG-PES002-MERGED-HEADER-POSE-PIN — real MSVC C2039 corrected, retest pending
 - Detect: Run 38972462036 exact c07dc8 FAILS C++ compilation at ShireLocomotionAnimInstance.cpp:46 IsPerformingAmbientConversation absent from AShireAmbientNPC. Root cause: two independently prepared changed header blobs, one erased the other getter during batch assembly. UHT passed; editor C++ importer compiled but was never run.
 - Prevention: unified header must retain both public conversation getter and bank-refresh fields in final tree; Unreal exact-head compile is mandatory. Compare TRUE/FALSE pins to Epic UE4.27 real exported BoolBlend node: BlendPose_0 TRUE, BlendPose_1 FALSE. Consolidate corrections in ONE new SHA and re-run once, not unchanged failed input. Never treat C++ PASS as character social pose or visual acceptance.
