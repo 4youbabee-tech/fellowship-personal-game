@@ -5088,3 +5088,10 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Candidate caps movable-sun CSM distance at 12,000 cm/two cascades, sets CSM resolution to 1024, lowers shadow distance scale to 0.60, and AA quality to 2. AO, cast shadows, sunlight, translucency and authored PBR remain enabled.
 - Source regression added; exact-head Pre-Unreal, UE4.27.2 build/import/startup and four-view PIE with new GPU/FPS readings are pending. No performance, visual, or device acceptance is claimed.
 - The 17 remaining blockout residents are not force-assigned Frodo's rig: PR #486 is a rejected source study with no UE deformation/animation acceptance.
+
+
+## 2026-10-17 PES-002 exact-head run disposition — 4b93b8b
+- Run 39035603774 was created for exact commit `4b93b8bfd911eed8284acc11c0338187260797c5` and ended `failure` at 13:12:23Z. GitHub returned zero workflow jobs and zero check runs; no Unreal classifier, C++ build, import, startup, PIE capture, or FPS measurement executed.
+- Do not rerun this unchanged SHA. The GitHub Plugin exposes no job log or failure diagnosis because no job/check exists. The failure cause is unresolved and needs Actions-side investigation; this is NOT a UE compile failure and NOT a validation pass.
+- Candidate shadow/AA settings remain STATIC SOURCE ONLY. The previous valid renderer evidence is Run 39022384250 on 5655bb9 (21.39–28.27 CI FPS, worst hitch 362.15 ms); it is baseline-only and does not validate the new settings or owner-device performance.
+- PES-002 stays ACTIVE, PES-003 LOCKED, Gate 6/7 OPEN. New screenshots, GPU timings, visual review, target-device FPS/VRAM remain NOT RUN.
