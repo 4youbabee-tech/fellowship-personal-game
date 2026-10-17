@@ -49,5 +49,5 @@ exit /b 0
 :automated_pie_proof
 rem Native editor automation starts a real PIE world, never a -game substitute.
 if not exist "%ROOT%Saved\PES002VisualProof" mkdir "%ROOT%Saved\PES002VisualProof"
-"%UE_EDITOR%" "%PROJECT%" -d3d11 -windowed -ResX=1280 -ResY=720 -NoSplash -nosound -csvGpuStats -PES002VisualProof -ExecCmds="Automation RunTests ShireJourney.PES002.VisualPIE" -abslog="%ROOT%Saved\PES002VisualProof\PES002VisualEditor.log"
+"%UE_EDITOR%" "%PROJECT%" -d3d11 -windowed -ResX=1280 -ResY=720 -NoSplash -nosound -csvGpuStats -PES002VisualProof -P1C01FullShireProof -PES002PerformanceIncident -ExecCmds="Automation RunTests ShireJourney.PES002.VisualPIE" -abslog="%ROOT%Saved\PES002VisualProof\PES002VisualEditor.log"
 exit /b %ERRORLEVEL%

@@ -2,6 +2,7 @@
 import json
 import subprocess
 import tempfile
+import wave
 import unittest
 from pathlib import Path
 
@@ -9,6 +10,74 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class PES002VisualContract(unittest.TestCase):
+    def test_bagend_requires_exact_authored_png_not_generic_proxy(self):
+        cpp = (ROOT / "Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp").read_text(encoding="utf-8")
+        self.assertIn("PES002_BAGEND_AUTHORED_ALBEDO_MISSING", cpp)
+        self.assertIn("PES002_MTL_SOURCE_MISSING", cpp)
+        self.assertNotIn("PES002_BAGEND_ALBEDO_RESOLVE", cpp)
+        self.assertIn('FPackageName::DoesPackageExist(TEXT("/Game/Production/World/Shire/CuratedP1C01/Nature/Textures/T_Sh_Bark_ORM"))', cpp)
+
+    def test_pes002_named_shared_technical_rig_and_riverside_clearance(self):
+        npc = (ROOT / "Source/ShireJourney/Private/Characters/ShireNPC.cpp").read_text(encoding="utf-8")
+        head = (ROOT / "Source/ShireJourney/Public/Characters/ShireNPC.h").read_text(encoding="utf-8")
+        world = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        cmd = (ROOT / "Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp").read_text(encoding="utf-8")
+        self.assertIn('GetCurrentChapterId() == TEXT("P1C01")', npc)
+        self.assertIn('ResolveCharacterRig(TEXT("Frodo"), SkeletalMesh, AnimClass)', npc)
+        self.assertIn("for (int32 Ring = 0; Ring <= 3", npc)
+        self.assertIn("SetHiddenInGame(true, true)", npc)
+        self.assertIn("bUsingSharedTechnicalRig", head)
+        self.assertIn("PES002_STORY_NPC_UNIQUE_ART_CHECK", world)
+        self.assertIn("PES002_RIVER_CLEARANCE", world)
+        self.assertIn("PES002_REGIONAL_SUPPORT_IMPORT", cmd)
+        # UE_LOG control-flow macro needs braces around if AND else.
+        self.assertIn("if (bStoryGroundSupportProven)\n        {\n            UE_LOG", npc)
+        self.assertIn("}\n        else\n        {\n            UE_LOG", npc)
+        self.assertIn("bUsedWithSkeletalMesh", cmd)
+        workflow = (ROOT / ".github/workflows/unreal-build-validation.yml").read_text(encoding="utf-8")
+        downloader = (ROOT / "Scripts/fetch_ci_artifact_gh_api.ps1").read_text(encoding="utf-8")
+        self.assertNotIn("uses: actions/download-artifact@v4", workflow)
+        self.assertEqual(workflow.count("fetch_ci_artifact_gh_api.ps1"), 2)
+        self.assertIn("CI_ARTIFACT_REST_VERIFIED", downloader)
+        self.assertIn("$req.AllowAutoRedirect = $false", downloader)
+        self.assertIn("PES002_REGIONAL_UE_IMPORT_PHYSICAL_PASS", (ROOT / "Scripts/prepare_wholegame_regional_import.py").read_text(encoding="utf-8"))
+
+
+
+    def test_story_npc_capsule_floor_and_rig_evidence_are_independent(self):
+        cpp = (ROOT / "Source/ShireJourney/Private/Characters/ShireNPC.cpp").read_text(encoding="utf-8")
+        hdr = (ROOT / "Source/ShireJourney/Public/Characters/ShireNPC.h").read_text(encoding="utf-8")
+        world = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        proof = (ROOT / "Scripts/capture_pes002_bag_end_visual.ps1").read_text(encoding="utf-8")
+        self.assertIn("ShireStoryGrounding::FindFloor(", cpp)
+        self.assertIn("LineTraceMultiByObjectType(", cpp)
+        self.assertIn("ObjectTypes.AddObjectTypesToQuery(ECC_WorldStatic)", cpp)
+        self.assertIn("Hit.ImpactNormal.Z < 0.72f", cpp)
+        self.assertIn("Delta < -350.0f || Delta > 160.0f", cpp)
+        self.assertIn("GetScaledCapsuleHalfHeight()", cpp)
+        self.assertIn("OverlapBlockingTestByChannel(", cpp)
+        self.assertIn("PES002_STORY_NPC_GROUND_REJECT", cpp)
+        self.assertNotIn("LineTraceSingleByChannel(", cpp.split("namespace ShireStoryGrounding", 1)[1].split("bool AShireNPC::TryApplyProductionRig(", 1)[0])
+        self.assertIn("IsUsingSkeletalProductionRig() const", hdr)
+        self.assertIn("IsStoryGroundSupportProven() const", hdr)
+        self.assertIn("PES002_STORY_NPC_SNAPSHOT", world)
+        self.assertIn("TActorIterator<AShireNPC>", world)
+        self.assertIn("PES002_STORY_NPC_EVIDENCE", proof)
+        self.assertIn("PES002_STORY_NPC_PRESENTATION_INCOMPLETE", proof)
+        # License/skin/rig evidence is independent of actor/camera counts.
+        self.assertNotIn("22/22", cpp)
+        self.assertIn("const bool bStoryRig", cpp)
+
+    def test_prototype_materials_use_verified_resident_parameter_master(self):
+        cpp = (ROOT / "Source/ShireJourney/Private/Characters/ShireNPC.cpp").read_text(encoding="utf-8")
+        self.assertIn('M_ProductionSurface.M_ProductionSurface', cpp)
+        self.assertIn('UMaterialInterface* Parent = ProductionSurfaceMaterial ?', cpp)
+        self.assertIn('bUsingSkeletalProductionRig = TryApplyProductionRig(RigFolder)', cpp)
+        self.assertIn("if (!bStoryRig)", cpp)
+        self.assertIn("PES002_NAMED_NPC_MATERIAL_PARENT", cpp)
+        self.assertNotIn("CreateAndSetMaterialInstanceDynamicFromMaterial", cpp)
+
+
     def test_evidence_camera_is_opt_in_and_no_player_teleport(self):
         cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
         self.assertIn('#if !UE_BUILD_SHIPPING', cpp)
@@ -16,6 +85,10 @@ class PES002VisualContract(unittest.TestCase):
         self.assertIn('PC->SetViewTarget(ProofCamera);', cpp)
         self.assertIn('const FVector LookAt(-2210.0f, -520.0f, 105.0f);', cpp)
         self.assertIn('PES002_CAPTURE_CAMERA_READY target=BagEnd', cpp)
+        # Artifact 12115753345 shows roof-occluded bridge observer 0.
+        self.assertIn("ViewIndex == 3 && Candidate == 0", cpp)
+        self.assertIn("PES002_BRIDGE_OBSERVER_REJECTED", cpp)
+        self.assertIn('if ($mean -lt 35.0)', (ROOT / "Scripts/capture_pes002_bag_end_visual.ps1").read_text(encoding="utf-8"))
         self.assertIn('FScreenshotRequest::RequestScreenshot(Filename, false, false);', cpp)
         self.assertIn('PES002_CAPTURE_VIEW_READY view=%d', cpp)
         self.assertIn('PES002_BagEnd_View%d.png', cpp)
@@ -33,6 +106,14 @@ class PES002VisualContract(unittest.TestCase):
         self.assertIn('PES002_EDITOR_EXITED_EARLY', ps)
         self.assertIn('PES002_SCREENSHOT_REQUESTED target=BagEnd view=3', ps)
         self.assertIn('for ($view = 0; $view -lt 4; $view++)', ps)
+        self.assertIn('AttachThreadInput', ps)
+        self.assertIn('[DllImport("kernel32.dll")] public static extern uint GetCurrentThreadId();', ps)
+        self.assertNotIn('[DllImport("user32.dll")] public static extern uint GetCurrentThreadId();', ps)
+        self.assertIn('BringWindowToTop', ps)
+        self.assertIn('SetActiveWindow($handle)', ps)
+        self.assertIn('SetFocus($handle)', ps)
+        self.assertIn('if ($attachedForeground)', ps)
+        self.assertIn('if ($attachedTarget)', ps)
         self.assertIn('PES002_LUMINANCE_TOO_DARK', ps)
         self.assertIn('PES002_LUMINANCE_METRIC', ps)
         self.assertIn('proofOnly=1 views=4', (ROOT / 'Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp').read_text(encoding='utf-8'))
@@ -40,6 +121,51 @@ class PES002VisualContract(unittest.TestCase):
         workflow = (ROOT / ".github/workflows/unreal-build-validation.yml").read_text(encoding="utf-8")
         section = workflow.split("      - name: Capture Bag End targeted P1C01 visual proof", 1)[1].split("      - name:", 1)[0]
         self.assertNotIn('continue-on-error: true', section)
+
+    def test_pes002_preserves_population_evidence_for_owner_80_percent_review(self):
+        # Source protects truthful census and genuine 4-view capture; 22/22/0 is
+        # a production goal, not an excuse to discard diagnostic screenshots.
+        npc = (ROOT / "Source/ShireJourney/Private/Characters/ShireAmbientNPC.cpp").read_text(encoding="utf-8")
+        capture = (ROOT / "Scripts/capture_pes002_bag_end_visual.ps1").read_text(encoding="utf-8")
+        self.assertIn("if (ActiveRigs >= 22) return false;", npc)
+        self.assertIn("ApplyHobbitVisualVariation(static_cast<int32>(PositionSeed));", npc)
+        self.assertIn("UnifiedResident->bEnableUpdateRateOptimizations = true;", npc)
+        self.assertIn("countLimit=22 visualAccepted=0", npc)
+        self.assertNotIn("if (ActiveRigs >= 5) return false;", npc)
+        self.assertIn("PES002_RESIDENT_RUNTIME_INVALID", capture)
+        self.assertIn("$skeletal + $modular -ne $humanoids", capture)
+        self.assertIn("$humanoids + $fauna -ne $localManaged", capture)
+        self.assertIn("PES002_HUMANOID_SKELETAL_COVERAGE_PASS", capture)
+        self.assertIn("PES002_HUMANOID_SKELETAL_GAP", capture)
+        self.assertIn("targetHumanoids=22", capture)
+        self.assertIn("PES002_RESIDENT_POPULATION_INCOMPLETE", capture)
+        self.assertIn("PES002_RESIDENT_POPULATION_PASS", capture)
+        self.assertIn("PES002_SHARED_STORY_RIG_SAMPLES", capture)
+        self.assertIn("ownerVisualTarget=approximately80percent", capture)
+        self.assertNotIn('throw "PES002_RESIDENT_POPULATION_INCOMPLETE', capture)
+        workflow = (ROOT / ".github/workflows/unreal-build-validation.yml").read_text(encoding="utf-8")
+        self.assertIn("needs: [classify, character-source]", workflow)
+        self.assertIn("name: UE4.27.2 C++ Build", workflow)
+        self.assertIn("UE4.27 source-symbol micro-preflight", workflow)
+        self.assertIn("TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}", workflow)
+
+
+    def test_world_static_multi_trace_selects_ground_below_roofs(self):
+        # Static contract only: the genuine rooftop/feet test must run in PIE.
+        director = (ROOT / "Source/ShireJourney/Private/World/LivingWorldDirector.cpp").read_text(encoding="utf-8")
+        probe = director.split("bool ALivingWorldDirector::ResolveGroundedAmbientPoint(", 1)[1].split(
+            "AShireAmbientNPC* ALivingWorldDirector::SpawnAmbientActor(", 1)[0]
+        self.assertIn("LineTraceMultiByObjectType(", probe)
+        self.assertIn("GroundObjects.AddObjectTypesToQuery(ECC_WorldStatic)", probe)
+        self.assertIn("Hit.ImpactNormal.Z < 0.72f", probe)
+        self.assertIn("OffsetCm < -350.0f || OffsetCm > 160.0f", probe)
+        self.assertIn("Hit.ImpactPoint.Z < LowestGroundZ", probe)
+        self.assertIn("if (!bFoundWalkableGround)", probe)
+        self.assertIn("OutGroundedPoint.Z = LowestGroundZ + 2.0f", probe)
+        self.assertNotIn("LineTraceSingleByChannel(", probe)
+        spawn = director.split("AShireAmbientNPC* ALivingWorldDirector::SpawnAmbientActor(", 1)[1]
+        self.assertIn("if (!ResolveGroundedAmbientPoint(Location, SpawnLocation))", spawn)
+        self.assertIn("ResolveGroundedAmbientPoint(RoutineEnd, GroundedRoutineEnd)", spawn)
 
     def test_managed_resident_path_follows_ground_probed_endpoint_elevations(self):
         # M1 source regression only; actual 4.27.2 traversal/visual FPS remain separate.
@@ -62,6 +188,152 @@ class PES002VisualContract(unittest.TestCase):
         self.assertNotIn("SetActorEnableCollision(true)", movement)
         self.assertNotIn("GetPlayerPawnCached()", movement)
 
+    def test_bag_end_imported_fbx_architecture_is_world_placed_safely(self):
+        cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        header = (ROOT / "Source/ShireJourney/Public/World/ShirePrototypeWorldBuilder.h").read_text(encoding="utf-8")
+        self.assertIn("RequestBagEndArchitecture();", cpp)
+        self.assertIn("BagEndArchLoader.RequestAsyncLoad(", cpp)
+        self.assertIn("OnBagEndArchitectureReady()", cpp)
+        self.assertIn("PES002_ARCH_GARDEN importedFamilies=", cpp)
+        self.assertIn("PES002BagEndImportedFBXGround", cpp)
+        self.assertIn("Group->AddInstanceWorldSpace(", cpp)
+        self.assertIn("BagEndArchHandle->CancelHandle();", cpp)
+        self.assertIn("BagEndArchSources", header)
+        for name in ("SM_ShGardenCart_LOD0", "SM_ShGardenPlanter_LOD0",
+                     "SM_ShGardenHedge_LOD0", "SM_ShLanternPost_LOD0", "SM_ShStonePath_LOD0"):
+            self.assertIn(name, cpp)
+        self.assertNotIn("PES002_BAG_END_WOODLAND_FBX_REPLACEMENT", cpp)
+
+    def test_bag_end_curated_pbr_shrub_swap_preserves_entrance(self):
+        cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        section = cpp.split("// Bag End close-up: swap sparse", 1)[1].split(
+            "// PR484 additional canopy replacement", 1)[0]
+        self.assertIn("PES002_BAG_END_PBR_SHRUBS", section)
+        self.assertIn("CuratedNatureSources[Family].Get()", section)
+        self.assertIn("Target->GetStaticMesh()!=Replacement", section)
+        self.assertIn("PES002BagEndPBRGardenGround", section)
+        self.assertIn("ConvertedIndices.Num()<18", section)
+        self.assertIn("FMath::Abs(At.Y+520.0f)<205.0f", section)
+        self.assertIn("ShrubInstances->RemoveInstance(ConvertedIndices[J]);", section)
+        self.assertNotIn("SetCollisionEnabled", section)
+
+    def test_new_bag_end_cobbled_approach_is_original_uv_mapped_and_streamed(self):
+        source = (ROOT / "SourceAssets/Production/World/Shire/SM_ShBagEndCobbledWalk.obj").read_text()
+        faces = [line for line in source.splitlines() if line.startswith("f ")]
+        vertices = [line for line in source.splitlines() if line.startswith("v ")]
+        uv = [line for line in source.splitlines() if line.startswith("vt ")]
+        self.assertIn("o SM_ShBagEndCobbledWalk", source)
+        self.assertIn("mtllib ShireMaterials.mtl", source)
+        self.assertIn("usemtl Stone", source)
+        self.assertEqual(len(faces), 1440)
+        self.assertEqual(len(vertices), 1008)
+        self.assertEqual(len(uv), 1008)
+        for triangle in faces:
+            for ref in triangle.split()[1:]:
+                v, tex = map(int, ref.split("/"))
+                self.assertTrue(1 <= v <= len(vertices))
+                self.assertTrue(1 <= tex <= len(uv))
+        cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text()
+        plan = json.loads((ROOT / "Data/ChapterAssetStreamingPlan.json").read_text())
+        self.assertIn("PES002_BAG_END_COBBLED_WALK", cpp)
+        self.assertIn("ProductionBagEndCobbledWalkMesh", cpp)
+        self.assertIn('PathActor->GetStaticMeshComponent()->SetCastShadow(false)', cpp)
+        self.assertIn("/Game/Production/World/Shire/SM_ShBagEndCobbledWalk.SM_ShBagEndCobbledWalk", plan["banks"]["P1C01"]["assets"])
+
+    def test_pes002_authored_cottages_and_oaks_have_valid_triangle_uv_tangents(self):
+        """Reject true zero-area geometry or UV triangles before costly Unreal import."""
+        for name in ("SM_ShBagshotThatchedCottage",
+                     "SM_ShBagshotTimberCottage", "SM_ShShireMatureOak"):
+            source = (ROOT / "SourceAssets/Production/World/Shire" /
+                      (name + ".obj")).read_text(encoding="utf-8")
+            vertices = [tuple(map(float, line.split()[1:]))
+                        for line in source.splitlines() if line.startswith("v ")]
+            uv = [tuple(map(float, line.split()[1:]))
+                  for line in source.splitlines() if line.startswith("vt ")]
+            faces = [line.split()[1:] for line in source.splitlines()
+                     if line.startswith("f ")]
+            self.assertGreater(len(faces), 1000, name)
+            self.assertEqual(len(vertices), 3 * len(faces), name)
+            self.assertEqual(len(uv), len(vertices), name)
+            for face_number, face in enumerate(faces, 1):
+                self.assertEqual(len(face), 3, (name, face_number))
+                ids = [tuple(map(int, entry.split("/"))) for entry in face]
+                p = [vertices[vi - 1] for vi, _ in ids]
+                t = [uv[ti - 1] for _, ti in ids]
+                e = [p[1][j] - p[0][j] for j in range(3)]
+                f = [p[2][j] - p[0][j] for j in range(3)]
+                cross = (e[1] * f[2] - e[2] * f[1],
+                         e[2] * f[0] - e[0] * f[2],
+                         e[0] * f[1] - e[1] * f[0])
+                self.assertGreater(sum(c * c for c in cross), 1e-12,
+                                   (name, face_number, "zero geometric area"))
+                uv_area = ((t[1][0] - t[0][0]) * (t[2][1] - t[0][1]) -
+                           (t[1][1] - t[0][1]) * (t[2][0] - t[0][0]))
+                self.assertGreater(abs(uv_area), 1e-9,
+                                   (name, face_number, "zero UV tangent basis"))
+
+    def test_one_cohesive_shire_houses_trees_sound_and_dialogue_batch(self):
+        builder = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        importer = (ROOT / "Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp").read_text(encoding="utf-8")
+        bank = json.loads((ROOT / "Data/ChapterAssetStreamingPlan.json").read_text(encoding="utf-8"))
+        for name in ("SM_ShBagshotThatchedCottage",
+                     "SM_ShBagshotTimberCottage", "SM_ShShireMatureOak"):
+            obj = ROOT / "SourceAssets/Production/World/Shire" / (name + ".obj")
+            source = obj.read_text(encoding="utf-8")
+            vertices = [line for line in source.splitlines() if line.startswith("v ")]
+            uv = [line for line in source.splitlines() if line.startswith("vt ")]
+            faces = [line for line in source.splitlines() if line.startswith("f ")]
+            self.assertGreater(len(faces), 1000, name)
+            self.assertEqual(len(vertices), len(faces) * 3, name)
+            self.assertEqual(len(uv), len(vertices), name)
+            self.assertIn("mtllib ShireMaterials.mtl", source)
+            self.assertIn("usemtl ", source)
+            self.assertIn(
+                "/Game/Production/World/Shire/" + name + "." + name,
+                bank["banks"]["P1C01"]["assets"],
+            )
+            for face in faces:
+                for vertex in face.split()[1:]:
+                    vi, ti = (int(s) for s in vertex.split("/"))
+                    self.assertTrue(1 <= vi <= len(vertices))
+                    self.assertTrue(1 <= ti <= len(uv))
+        for group, cue in [
+            ("Ambience", "Amb_ShireMorning"),
+            ("Ambience", "Amb_ShireRoad"),
+            ("Ambience", "Amb_PartyField"),
+            ("SFX", "Sfx_WagonDistant"),
+        ]:
+            source = ROOT / "SourceAssets/Production/Audio/Shire" / group / (cue + ".wav")
+            with wave.open(str(source), "rb") as sound:
+                self.assertEqual(sound.getnchannels(), 1)
+                self.assertEqual(sound.getsampwidth(), 2)
+                self.assertEqual(sound.getframerate(), 22050)
+                self.assertGreater(sound.getnframes(), 22000)
+            self.assertIn(cue, (ROOT / "Source/ShireJourney/Private/Subsystems/ShireStoryPresentationSubsystem.cpp").read_text(encoding="utf-8"))
+        self.assertIn("P1C01_AUDIO_UASSET_SAVED", importer)
+        self.assertIn("P1C01_AUDIO_BATCH_PERSISTED", importer)
+        self.assertIn('TEXT("/Game/Audio/Ambience")', importer)
+        self.assertIn("USoundWave* ImportedSound", importer)
+        self.assertIn("PES002_BAGSHOT_COTTAGES", builder)
+        self.assertIn("PES002_BAG_END_MATURE_OAKS", builder)
+        self.assertIn("Side_GardenHelpStarted", builder)
+        self.assertIn("Side_PartyTablesStarted", builder)
+        self.assertIn("PES002MatureOakTerrain", builder)
+
+    def test_incident_captures_real_window_focus_and_ue4_native_stat_file(self):
+        proof = (ROOT / "Scripts/capture_pes002_bag_end_visual.ps1").read_text(encoding="utf-8")
+        preview = (ROOT / "SHIRE_FAST_PIE_PREVIEW.bat").read_text(encoding="utf-8")
+        cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        self.assertIn("GetForegroundWindow", proof)
+        self.assertIn("GetWindowThreadProcessId", proof)
+        self.assertIn("PES002_WINDOW_FOCUS_SUMMARY", proof)
+        self.assertIn("PES002_PERF_INCONCLUSIVE_BACKGROUND_THROTTLE", proof)
+        self.assertIn("PES002_INCIDENT_STATFILE_ARCHIVED", proof)
+        self.assertIn("-PES002PerformanceIncident", preview)
+        for stat in ("stat unit", "stat rhi", "stat streaming", "stat startfile", "stat stopfile"):
+            self.assertIn('TEXT("' + stat + '")', cpp)
+        self.assertNotIn('TEXT("stat renderfile")', cpp)
+
     def test_bag_end_hero_exterior_keeps_entrance_visible(self):
         cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
         self.assertIn('PES002_BAG_END_HERO_FACADE', cpp)
@@ -79,6 +351,21 @@ class PES002VisualContract(unittest.TestCase):
         self.assertIn('GardenPlanters.Reserve(6)', cpp)
         self.assertIn('WoodPiles.Reserve(4)', cpp)
         self.assertIn('cap=4 collision=none tick=none', cpp)
+
+    def test_p1c01_settlement_houses_use_batched_authored_visuals(self):
+        cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        section = cpp.split("// Above-ground cottages make Hobbiton read", 1)[1].split(
+            "SpawnProd(ProductionWellMesh", 1)[0]
+        self.assertIn("SpawnCottageVisualCluster", section)
+        self.assertIn("Configure(Mesh, false, 1600, 8500)", section)
+        self.assertIn("AuthoredVisuals->AddDetailInstance(At, Rotation, Scale)", section)
+        self.assertIn('OriginalComponent->SetVisibility(false, true)', section)
+        self.assertIn('PES002PreservedCottageCollision', section)
+        self.assertIn("ProductionBagshotThatchedCottageMesh", section)
+        self.assertIn("ProductionBagshotTimberCottageMesh", section)
+        self.assertNotIn("bNearBagEnd", section)
+        self.assertIn("max=7 visualHISM=2", section)
+
         self.assertIn('cap=8 collision=none tick=none', cpp)
 
     def test_dedicated_bag_end_facade_is_deterministic_curved_authored_mesh(self):
@@ -166,6 +453,141 @@ class PES002VisualContract(unittest.TestCase):
         self.assertIn('PostProcess->Settings.AutoExposureMaxBrightness = 1.35f;', cpp)
         gov = json.loads((ROOT / "Data/ProjectGovernor.json").read_text(encoding="utf-8"))
         self.assertEqual(gov['pes_immediate_root_cause_repair_protocol_2026_10_14']['status'], 'OWNER_MANDATED')
+
+
+    def test_project_owned_shire_canopy_has_broad_lobed_uv_geometry(self):
+        generator = ROOT / "Tools/CloudAssetBuild/generate_shire_tree_canopy.py"
+        tracked = ROOT / "SourceAssets/Production/World/Shire/SM_ShTreeCanopy.obj"
+        with tempfile.TemporaryDirectory() as tmp:
+            generated = Path(tmp) / tracked.name
+            subprocess.run(["python3", str(generator), "--output", str(generated)], check=True, cwd=ROOT)
+            self.assertEqual(generated.read_bytes(), tracked.read_bytes())
+        source = tracked.read_text(encoding="utf-8")
+        vertices = [tuple(map(float, line.split()[1:])) for line in source.splitlines() if line.startswith("v ")]
+        uvs = [line for line in source.splitlines() if line.startswith("vt ")]
+        faces = [line.split()[1:] for line in source.splitlines() if line.startswith("f ")]
+        self.assertIn("five overlapped, UV-mapped foliage lobes", source)
+        self.assertEqual(len(vertices), 285)
+        self.assertEqual(len(uvs), len(vertices))
+        self.assertEqual(len(faces), 500)
+        bounds = [max(v[i] for v in vertices) - min(v[i] for v in vertices) for i in range(3)]
+        self.assertGreater(bounds[0] / bounds[2], 1.10)
+        self.assertGreater(bounds[1] / bounds[2], 1.00)
+        for face in faces:
+            self.assertEqual(len(face), 3)
+            for ref in face:
+                vertex, uv = map(int, ref.split("/"))
+                self.assertTrue(1 <= vertex <= len(vertices))
+                self.assertTrue(1 <= uv <= len(uvs))
+
+class PES002IntegratedShireContract(unittest.TestCase):
+    def test_authorised_oak_hism_keeps_original_trunk_collision(self):
+        cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        header = (ROOT / "Source/ShireJourney/Public/World/ShirePrototypeWorldBuilder.h").read_text(encoding="utf-8")
+        self.assertIn("VillageMatureOakInstances->AddInstanceWorldSpace(", cpp)
+        self.assertIn("PES002InvisibleTrunkCollision", cpp)
+        self.assertIn("Trunk->GetStaticMeshComponent()->SetVisibility(false, true);", cpp)
+        self.assertIn("VillageMatureOakInstances->SetCollisionEnabled(ECollisionEnabled::NoCollision);", cpp)
+        self.assertIn("VillageMatureOakInstances", header)
+
+    def test_seeded_resident_variation_preserves_imported_material_slots(self):
+        cpp = (ROOT / "Source/ShireJourney/Private/Characters/ShireAmbientNPC.cpp").read_text(encoding="utf-8")
+        self.assertIn("ApplyHobbitVisualVariation(static_cast<int32>(PositionSeed))", cpp)
+        self.assertIn('TEXT("ShireResidentA")', cpp)
+        self.assertIn("sharedHeroFallback=%d", cpp)
+        self.assertIn("OriginalMaterial->GetVectorParameterValue(", cpp)
+        self.assertIn("countLimit=22 visualAccepted=0", cpp)
+
+    def test_organic_smoothing_and_blender_foliage_topology(self):
+        post = (ROOT / "Scripts/ue4_p1c01_curated_postimport.py").read_text(encoding="utf-8")
+        nature = (ROOT / "Tools/CloudAssetBuild/blender_nature.py").read_text(encoding="utf-8")
+        self.assertIn("get_lod_build_settings(", post)
+        self.assertIn("set_lod_build_settings(", post)
+        self.assertIn("'compute_weighted_normals', True", post)
+        self.assertIn("P1C01_ORGANIC_WEIGHTED_NORMALS_NOT_PERSISTED", post)
+        self.assertIn("('tree_', 'shrub_')", post)
+        self.assertIn("primitive_uv_sphere_add(", nature)
+        self.assertIn('create("FoliageCluster","foliage"', nature)
+        self.assertIn('create("BushCluster","foliage"', nature)
+        self.assertNotIn('create("FoliageCluster","ico"', nature)
+        self.assertIn("TRIS_LIMIT=(11000,5500,2600)", nature)
+
+    def test_curated_texture_mip_caps_require_persistence_receipt(self):
+        code = (ROOT / "Scripts/ue4_p1c01_curated_postimport.py").read_text(encoding="utf-8")
+        self.assertIn("set_editor_property('max_texture_size', max_size)", code)
+        self.assertIn("P1C01_TEXTURE_MIP_CAP_NOT_PERSISTED", code)
+
+
+class PES002CinematicHobbitonContract(unittest.TestCase):
+    def test_existing_road_ferry_play_residents_can_use_skeletal_bank(self):
+        npc = (ROOT / "Source/ShireJourney/Private/Characters/ShireAmbientNPC.cpp").read_text(encoding="utf-8")
+        conversion = npc.split("bool AShireAmbientNPC::TryEnableUnifiedShireResident()", 1)[1].split("void AShireAmbientNPC::Tick(", 1)[0]
+        for role in ("Villager", "Gardener", "FieldWorker", "MarketVendor",
+                     "PartyGuest", "RoadWalker", "FerryWorker", "PlayRunner"):
+            self.assertIn('RoutineRole == TEXT("' + role + '")', conversion)
+        self.assertIn('ActorHasTag(TEXT("LivingWorldManaged"))', conversion)
+        self.assertIn("if (ActiveRigs >= 22) return false;", conversion)
+        self.assertIn('Streaming->ResolveCharacterRig(UsedRig, Mesh, AnimClass)', conversion)
+        self.assertIn("FMath::Square(3300.0f)", conversion)
+        self.assertNotIn("5500.0f", conversion)
+        self.assertIn("GlobalAnimRateScale = Stream.FRandRange(0.90f, 1.10f)", npc)
+        world = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        self.assertIn("PES002_MODULAR_RESIDENT_EVIDENCE", world)
+        self.assertIn("PES002_RESIDENT_PRESENTATION_SNAPSHOT localManaged=%d humanoids=%d skeletal=%d modular=%d fauna=%d", world)
+        self.assertIn('LocalRole == TEXT("Bird")', world)
+        self.assertIn('LocalRole == TEXT("Rabbit")', world)
+        self.assertIn('LocalRole == TEXT("Butterfly")', world)
+        self.assertIn("++LocalFauna;", world)
+        self.assertIn("++HumanoidResidents;", world)
+        self.assertIn("VillageMatureOakInstances->SetCullDistances(1000, 6500);", world)
+
+    def test_chapter_landmarks_use_existing_world_and_director_ownership(self):
+        cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        hdr = (ROOT / "Source/ShireJourney/Public/World/ShirePrototypeWorldBuilder.h").read_text(encoding="utf-8")
+        self.assertIn("BuildCompleteHobbitonWorld();", cpp)
+        self.assertIn("P1C01_CINEMATIC_TREELINE", cpp)
+        self.assertIn("VillageMatureOakInstances->AddInstanceWorldSpace(", cpp)
+        self.assertNotIn("SpawnActor<AShireAmbientNPC>", cpp)
+        self.assertIn("void BuildCompleteHobbitonWorld();", hdr)
+        self.assertIn("SetupCinematicHobbitonLighting();", cpp)
+        self.assertIn("Sun->SetDynamicShadowCascades(2);", cpp)
+
+    def test_real_pie_targets_are_bag_end_hobbiton_mill_and_bridge(self):
+        cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        ps1 = (ROOT / "Scripts/capture_pes002_bag_end_visual.ps1").read_text(encoding="utf-8")
+        bat = (ROOT / "SHIRE_FAST_PIE_PREVIEW.bat").read_text(encoding="utf-8")
+        self.assertIn("P1C01FullShireProof", cpp)
+        self.assertIn("TEXT(\"WaterMill\"), TEXT(\"StoneBridge\")", cpp)
+        self.assertIn("P1C01-$target-view$view-actual-runtime.png", ps1)
+        self.assertIn("-P1C01FullShireProof", bat)
+        self.assertIn("1280", ps1)
+        self.assertIn("720", ps1)
+        self.assertIn("if (bChapterCoverage && ViewIndex > 0)", cpp)
+        self.assertIn("PES002_LANDMARK_CAMERA_SIGHT", cpp)
+        self.assertIn('TEXT("PES002LandmarkEvidenceSight")', cpp)
+        self.assertIn("LineTraceSingleByChannel(SightHit, Eye, Aim", cpp)
+        self.assertIn("for (int32 Candidate = 0;", cpp)
+        self.assertIn("Candidate <= static_cast<int32>(", cpp)
+        self.assertIn("ObserverOffsets[Candidate - 1]", cpp)
+        self.assertNotIn("for (int32 Candidate = -1;", cpp)
+        self.assertIn("WeakCamera->SetActorLocationAndRotation(", cpp)
+
+
+class PES002ShadowBudgetContract(unittest.TestCase):
+    def test_movable_sun_csm_is_bounded_without_disabling_shadows(self):
+        cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        ini = (ROOT / "Config/DefaultEngine.ini").read_text(encoding="utf-8")
+        self.assertIn("SunComponent->SetCastShadows(true);", cpp)
+        self.assertIn("SunComponent->DynamicShadowDistanceMovableLight = 12000.0f;", cpp)
+        self.assertIn("SunComponent->SetDynamicShadowCascades(2);", cpp)
+        self.assertNotIn("SunComponent->NumDynamicShadowCascades", cpp)
+        self.assertIn("r.Shadow.CSM.MaxCascades=2", ini)
+        self.assertIn("r.Shadow.MaxCSMResolution=1024", ini)
+        self.assertIn("r.Shadow.DistanceScale=0.60", ini)
+        self.assertIn("r.AmbientOcclusionLevels=1", ini)
+        self.assertIn("r.PostProcessAAQuality=2", ini)
+        self.assertNotIn("r.ShadowQuality=0", ini)
+        self.assertNotIn("r.AmbientOcclusionLevels=0", ini)
 
 
 if __name__ == "__main__":

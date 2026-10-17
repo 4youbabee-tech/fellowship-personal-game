@@ -313,6 +313,14 @@ jobs:
         with:
           ref: ${{ env.TARGET_SHA }}
           persist-credentials: false
+      # Prevent a repeat of Run 39040962447's UE4.27 C2039 without a new
+      # Windows compilation. This narrow 2-class check is not a paperwork gate.
+      - name: UE4.27 source-symbol micro-preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile Scripts/test_pes002_visual_contract.py Scripts/ue4_p1c01_curated_postimport.py Scripts/prepare_wholegame_regional_import.py
+          python3 -m unittest -v Scripts.test_pes002_visual_contract.PES002ShadowBudgetContract Scripts.test_pes002_visual_contract.PES002IntegratedShireContract
       # Reuse only a packet produced from identical pinned source, Blender
       # normalization and manifest inputs. A cache hit never skips hash/skin
       # validation or UE4 import; it only avoids re-downloading tools and raw FBX.
@@ -558,10 +566,11 @@ jobs:
 
       - name: Download exact-head unified character and authored clips
         if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
-        uses: actions/download-artifact@v4
-        with:
-          name: kaykit-character-source-${{ env.TARGET_SHA }}
-          path: ${{ github.workspace }}/SourceAssets/Production/Characters/Rigs/Frodo
+        shell: powershell
+        env:
+          GH_ARTIFACT_TOKEN: ${{ github.token }}
+        run: |
+          & "$env:GITHUB_WORKSPACE/Scripts/fetch_ci_artifact_gh_api.ps1" -RunId $env:GITHUB_RUN_ID -ArtifactName "kaykit-character-source-$env:TARGET_SHA" -Destination "$env:GITHUB_WORKSPACE/SourceAssets/Production/Characters/Rigs/Frodo"
 
       - name: Persist and verify the exact character packet in the existing warehouse
         if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
@@ -581,10 +590,33 @@ jobs:
           Copy-Item -LiteralPath (Join-Path $source 'source_receipt.json') -Destination $destination -Force
           Write-Host "PES002_CHARACTER_WAREHOUSE_PERSISTED path=$destination files=$($receipt.files.PSObject.Properties.Count) head=$env:TARGET_SHA license=CC0"
 
+      # Same single Unreal writer; later regions remain source/import-only.
+      - name: Fetch SHA-pinned 28-region physical source archive
+        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
+        shell: powershell
+        env:
+          GH_ARTIFACT_TOKEN: ${{ github.token }}
+        run: |
+          & "$env:GITHUB_WORKSPACE/Scripts/fetch_ci_artifact_gh_api.ps1" -RunId 39059107842 -ArtifactName "whole-game-original-support-source-eb685cbeab7fa7572150172abd9314a7047db8f8" -Destination "$env:RUNNER_TEMP/regional-import-candidate"
+
+      - name: Stage 56 FBX and 36 PBR PNG from verified source
+        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
+        shell: powershell
+        run: |
+          python Scripts/prepare_wholegame_regional_import.py --mode stage --project "$env:GITHUB_WORKSPACE" --artifact "$env:RUNNER_TEMP/regional-import-candidate" --pin Data/CloudWholeGameSourceArtifactPinV1.json
+          if ($LASTEXITCODE -ne 0) { throw "REGIONAL_STAGE_FAILED" }
+
       - name: Import production assets in UE4.27.2
         if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_import_production_assets.cmd" -EnableCharacterRigImport -CharacterPacket=Frodo'
+
+      - name: Validate imported 92 UE4 objects and persist one canonical warehouse receipt
+        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
+        shell: powershell
+        run: |
+          python Scripts/prepare_wholegame_regional_import.py --mode persist --project "$env:GITHUB_WORKSPACE" --warehouse 'D:/actions-runner/_warehouse/ShireJourney'
+          if ($LASTEXITCODE -ne 0) { throw "REGIONAL_UE_PERSIST_FAILED" }
 
       - name: Rehydrate exact SHA256 Cloud138 Unreal packages
         if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true' || env.SHIRE_CURATED_REQUIRED == 'true')

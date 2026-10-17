@@ -1227,20 +1227,44 @@ bool ALivingWorldDirector::ResolveGroundedAmbientPoint(
         QueryParams.AddIgnoredActor(Player);
     }
 
-    FHitResult GroundHit;
-    if (!GetWorld()->LineTraceSingleByChannel(
-            GroundHit,
-            TraceStart,
-            TraceEnd,
-            ECC_Visibility,
-            QueryParams) ||
-        !GroundHit.bBlockingHit)
+    // A single top-down channel trace returns the FIRST blocking surface: often
+    // a Hobbit roof rather than the terrain underneath it. UE4.27 multi-object
+    // traces retain every WorldStatic hit, including ground below a roof.
+    FCollisionObjectQueryParams GroundObjects;
+    GroundObjects.AddObjectTypesToQuery(ECC_WorldStatic);
+    TArray<FHitResult> Hits;
+    if (!GetWorld()->LineTraceMultiByObjectType(
+            Hits, TraceStart, TraceEnd, GroundObjects, QueryParams))
+    {
+        return false;
+    }
+
+    bool bFoundWalkableGround = false;
+    float LowestGroundZ = 0.0f;
+    for (const FHitResult& Hit : Hits)
+    {
+        const float OffsetCm = Hit.ImpactPoint.Z - Candidate.Z;
+        // Never promote elevated roofs, steep walls or deeply buried surfaces
+        // into a walking route. Reject unknown ground instead of floating an NPC.
+        if (Hit.bStartPenetrating || !FMath::IsFinite(OffsetCm) ||
+            Hit.ImpactNormal.Z < 0.72f ||
+            OffsetCm < -350.0f || OffsetCm > 160.0f)
+        {
+            continue;
+        }
+        if (!bFoundWalkableGround || Hit.ImpactPoint.Z < LowestGroundZ)
+        {
+            bFoundWalkableGround = true;
+            LowestGroundZ = Hit.ImpactPoint.Z;
+        }
+    }
+    if (!bFoundWalkableGround)
     {
         return false;
     }
 
     OutGroundedPoint = Candidate;
-    OutGroundedPoint.Z = GroundHit.ImpactPoint.Z + 2.0f;
+    OutGroundedPoint.Z = LowestGroundZ + 2.0f;
     return true;
 }
 

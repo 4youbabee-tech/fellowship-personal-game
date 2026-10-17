@@ -290,6 +290,22 @@ def editor_apply(unreal, root=ROOT):
         count = unreal.EditorStaticMeshLibrary.get_lod_count(asset)
         if count != row['expected_lod_count']:
             raise RuntimeError('P1C01_LOD_COUNT_MISMATCH:' + path + ':' + str(count))
+        # UE4.27: preserve hard edges on buildings and stone.
+        organic = '/Nature/meshes/SM_Sh_' in path and any(
+            family in path.lower() for family in ('tree_', 'shrub_'))
+        if organic:
+            for lod_index in range(count):
+                settings = unreal.EditorStaticMeshLibrary.get_lod_build_settings(asset, lod_index)
+                settings.set_editor_property('recompute_normals', True)
+                settings.set_editor_property('compute_weighted_normals', True)
+                unreal.EditorStaticMeshLibrary.set_lod_build_settings(asset, lod_index, settings)
+                verified = unreal.EditorStaticMeshLibrary.get_lod_build_settings(asset, lod_index)
+                if not verified.get_editor_property('compute_weighted_normals') or not \
+                        verified.get_editor_property('recompute_normals'):
+                    raise RuntimeError('P1C01_ORGANIC_WEIGHTED_NORMALS_NOT_PERSISTED:' +
+                                       path + ':' + str(lod_index))
+            print('P1C01_ORGANIC_WEIGHTED_NORMALS asset=%s lods=%d' %
+                  (path, count), flush=True)
         for index in range(1, count):
             verts = unreal.EditorStaticMeshLibrary.get_number_verts(asset, index)
             if verts <= 0:
@@ -325,6 +341,16 @@ def editor_apply(unreal, root=ROOT):
         texture.set_editor_property('srgb', row['kind'] == 'BaseColor')
         texture.set_editor_property('compression_settings', mapping[row['kind']])
         texture.set_editor_property('never_stream', False)
+        # UE4.27 P1C01 visual-tier mip caps; physical .uasset read-back below.
+        # Do not claim a performance gain before measuring active-window GPU.
+        low_path = path.lower()
+        if any(k in low_path for k in ('grass_', 'flower_', 'reed_', 'fern_')):
+            max_size = 512
+        elif any(k in low_path for k in ('bagend', 'bag_end', 'hero', 'bagshot')):
+            max_size = 2048
+        else:
+            max_size = 1024
+        texture.set_editor_property('max_texture_size', max_size)
         if not unreal.EditorAssetLibrary.save_loaded_asset(texture, only_if_is_dirty=False):
             raise RuntimeError('P1C01_TEXTURE_PACKAGE_SAVE_FAILED:' + path)
         if not unreal.EditorAssetLibrary.does_asset_exist(path):
@@ -332,7 +358,10 @@ def editor_apply(unreal, root=ROOT):
         if texture.get_editor_property('srgb') != (row['kind'] == 'BaseColor') or \
            texture.get_editor_property('compression_settings') != mapping[row['kind']]:
             raise RuntimeError('P1C01_TEXTURE_RELOADED_SETTINGS_MISMATCH:' + path)
-        texture_rows.append({'asset': path, 'map_kind': row['kind']})
+        if texture.get_editor_property('max_texture_size') != max_size:
+            raise RuntimeError('P1C01_TEXTURE_MIP_CAP_NOT_PERSISTED ' + path)
+        texture_rows.append({'asset': path, 'map_kind': row['kind'],
+                             'max_texture_size': max_size})
     # A successful receipt requires physical .uasset packages, not only Registry entries.
     for row in outcomes:
         require_real_package(unreal, row['asset'])

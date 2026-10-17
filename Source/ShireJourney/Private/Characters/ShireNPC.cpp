@@ -12,6 +12,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Engine/SkeletalMesh.h"
 #include "Engine/GameInstance.h"
+#include "Engine/World.h"
 #include "EngineUtils.h"
 #include "GameFramework/PlayerController.h"
 #include "Materials/MaterialInstanceDynamic.h"
@@ -145,15 +146,54 @@ AShireNPC::AShireNPC()
     }
 }
 
+
+namespace ShireStoryGrounding
+{
+    // ACharacter's actor Z is the CAPSULE CENTER, not the hobbit's foot.
+    // Reject overhead roofs and use WorldStatic multi hits to resolve the
+    // expected floor without touching the AI, dialogue or quest systems.
+    static bool FindFloor(UWorld* World, const FVector& ExpectedFoot,
+                          const AActor* IgnoreActor, float& OutFloorZ)
+    {
+        if (!World) return false;
+        FCollisionQueryParams Query(TEXT("PES002StoryNPCFloor"), false, IgnoreActor);
+        FCollisionObjectQueryParams ObjectTypes;
+        ObjectTypes.AddObjectTypesToQuery(ECC_WorldStatic);
+        TArray<FHitResult> Hits;
+        if (!World->LineTraceMultiByObjectType(
+                Hits, ExpectedFoot + FVector(0.0f, 0.0f, 900.0f),
+                ExpectedFoot - FVector(0.0f, 0.0f, 2200.0f),
+                ObjectTypes, Query)) return false;
+        bool bFound = false;
+        float LowestZ = 0.0f;
+        for (const FHitResult& Hit : Hits)
+        {
+            const float Delta = Hit.ImpactPoint.Z - ExpectedFoot.Z;
+            if (Hit.bStartPenetrating || !FMath::IsFinite(Delta) ||
+                Hit.ImpactNormal.Z < 0.72f ||
+                Delta < -350.0f || Delta > 160.0f)
+            {
+                continue;
+            }
+            if (!bFound || Hit.ImpactPoint.Z < LowestZ)
+            {
+                bFound = true;
+                LowestZ = Hit.ImpactPoint.Z;
+            }
+        }
+        if (bFound) OutFloorZ = LowestZ;
+        return bFound;
+    }
+}
+
 bool AShireNPC::TryApplyProductionRig(const FString& RigFolder)
 {
-    if (RigFolder.IsEmpty() || !GetMesh())
-    {
-        return false;
-    }
-
-    RequestedProductionRigId = FName(*RigFolder);
+    if (!GetMesh()) return false;
     UGameInstance* GI = GetGameInstance();
+    UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    const bool bShire = Quests && Quests->GetCurrentChapterId() == TEXT("P1C01");
+    if (RigFolder.IsEmpty() && !bShire) return false;
+    RequestedProductionRigId = RigFolder.IsEmpty() ? FName(TEXT("Frodo")) : FName(*RigFolder);
     UShireChapterAssetStreamingSubsystem* Streaming =
         GI ? GI->GetSubsystem<UShireChapterAssetStreamingSubsystem>() : nullptr;
     if (!Streaming)
@@ -164,16 +204,34 @@ bool AShireNPC::TryApplyProductionRig(const FString& RigFolder)
 
     USkeletalMesh* SkeletalMesh = nullptr;
     UClass* AnimClass = nullptr;
+    bUsingSharedTechnicalRig = false;
     if (!Streaming->ResolveCharacterRig(RequestedProductionRigId, SkeletalMesh, AnimClass))
     {
         Streaming->RequestCharacterRig(RequestedProductionRigId);
-        GetMesh()->SetVisibility(false, true);
+        // In P1C01 only, a physical already-resident technical Frodo rig is
+        // better than disconnected box limbs; it is NOT unique named art.
+        if (!bShire || RequestedProductionRigId == TEXT("Frodo") ||
+            !Streaming->ResolveCharacterRig(TEXT("Frodo"), SkeletalMesh, AnimClass))
+        {
+            if (bShire && RequestedProductionRigId != TEXT("Frodo"))
+                Streaming->RequestCharacterRig(TEXT("Frodo"));
+            GetMesh()->SetVisibility(false, true);
+            return false;
+        }
+        bUsingSharedTechnicalRig = true;
+    }
+    else if (RigFolder.IsEmpty()) bUsingSharedTechnicalRig = true;
+
+    const bool bStoryRig = SkeletalMesh && AnimClass &&
+        AnimClass->IsChildOf(UShireLocomotionAnimInstance::StaticClass());
+    if (!bStoryRig)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("PES002_NAMED_RIG_NOT_READY id=%s mesh=%d anim=%d"),
+            *RigFolder, SkeletalMesh ? 1 : 0, AnimClass ? 1 : 0);
         return false;
     }
-
     GetMesh()->SetSkeletalMesh(SkeletalMesh);
-    if (AnimClass->IsChildOf(UShireLocomotionAnimInstance::StaticClass()) &&
-        !UShireLocomotionAnimInstance::AlignMeshToCapsule(
+    if (!UShireLocomotionAnimInstance::AlignMeshToCapsule(
             GetMesh(), GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight()))
     {
         UE_LOG(LogTemp, Error, TEXT("SHIRE_SKELETAL_PRESENTATION_REJECT npc=%s reason=invalid-bounds"), *GetName());
@@ -186,6 +244,53 @@ bool AShireNPC::TryApplyProductionRig(const FString& RigFolder)
     GetMesh()->VisibilityBasedAnimTickOption =
         EVisibilityBasedAnimTickOption::OnlyTickPoseWhenRendered;
     GetMesh()->SetVisibility(true, true);
+    int32 EmptyMaterialSlots = 0;
+    for (int32 Slot = 0; Slot < GetMesh()->GetNumMaterials(); ++Slot)
+    {
+        if (!GetMesh()->GetMaterial(Slot)) ++EmptyMaterialSlots;
+    }
+    int32 TintCount = 0;
+    if (bUsingSharedTechnicalRig)
+    {
+        const FString Identity = ResolveProductionCharacterId().ToString();
+        FLinearColor Dye(0.30f, 0.34f, 0.16f);
+        if (Identity.Equals(TEXT("Gandalf"), ESearchCase::IgnoreCase))
+            Dye = FLinearColor(0.27f, 0.31f, 0.41f);
+        else if (Identity.Equals(TEXT("Rosie Cotton"), ESearchCase::IgnoreCase))
+            Dye = FLinearColor(0.48f, 0.24f, 0.22f);
+        else if (Identity.Equals(TEXT("Bilbo"), ESearchCase::IgnoreCase))
+            Dye = FLinearColor(0.48f, 0.23f, 0.13f);
+        else if (Identity.Equals(TEXT("Hamfast Gamgee"), ESearchCase::IgnoreCase))
+            Dye = FLinearColor(0.35f, 0.26f, 0.16f);
+        else if (Identity.Equals(TEXT("Sam"), ESearchCase::IgnoreCase))
+            Dye = FLinearColor(0.25f, 0.32f, 0.13f);
+        else
+        {
+            const FLinearColor Palette[] = {
+                FLinearColor(0.36f, 0.25f, 0.14f),
+                FLinearColor(0.30f, 0.37f, 0.21f),
+                FLinearColor(0.46f, 0.36f, 0.20f),
+                FLinearColor(0.38f, 0.21f, 0.19f)};
+            Dye = Palette[GetTypeHash(ResolveProductionCharacterId()) % UE_ARRAY_COUNT(Palette)];
+        }
+        UMaterialInterface* ShireDyeMaster = Cast<UMaterialInterface>(
+            FSoftObjectPath(TEXT("/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface")).ResolveObject());
+        for (int32 Slot = 0; Slot < GetMesh()->GetNumMaterials(); ++Slot)
+        {
+            if (!ShireDyeMaster) break;
+            if (UMaterialInstanceDynamic* MID = GetMesh()->CreateDynamicMaterialInstance(Slot, ShireDyeMaster))
+            {
+                MID->SetVectorParameterValue(TEXT("Color"), Dye);
+                MID->SetScalarParameterValue(TEXT("Roughness"), 0.85f);
+                MID->SetScalarParameterValue(TEXT("Metallic"), 0.0f);
+                ++TintCount;
+            }
+        }
+    }
+    UE_LOG(LogTemp, Display,
+        TEXT("PES002_NAMED_NPC_SKELETAL_MATERIALS id=%s slots=%d empty=%d tint=%d sharedTechnical=%d"),
+        *RequestedProductionRigId.ToString(), GetMesh()->GetNumMaterials(),
+        EmptyMaterialSlots, TintCount, bUsingSharedTechnicalRig ? 1 : 0);
 
     UE_LOG(LogTemp, Display,
         TEXT("ProductionRig: npc=%s characterId=%s rig=%s async=yes URO=on visibilityTick=rendered"),
@@ -203,17 +308,29 @@ bool AShireNPC::TryApplyProductionRig(const FString& RigFolder)
         if (Piece)
         {
             Piece->SetVisibility(false, true);
+            Piece->SetHiddenInGame(true, true);
+            Piece->SetCollisionEnabled(ECollisionEnabled::NoCollision);
         }
     }
-
+    UE_LOG(LogTemp, Display,
+        TEXT("PES002_STORY_SKELETAL_VISIBLE actor=%s rig=%s sharedTechnical=%d prototypeVisible=0"),
+        *DisplayName.ToString(), *SkeletalMesh->GetPathName(),
+        bUsingSharedTechnicalRig ? 1 : 0);
     return true;
 }
 
 void AShireNPC::ApplyPrototypeStyle()
 {
-    UMaterialInterface* BasicMaterial = LoadObject<UMaterialInterface>(
-        nullptr, TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
-    UMaterialInterface* ProductionSurfaceMaterial = Cast<UMaterialInterface>(FSoftObjectPath(TEXT("/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface")).ResolveObject());
+    // Already imported and streamed: the verified master exposes Color and
+    // Roughness parameters. BasicShapeMaterial does not guarantee either.
+    UMaterialInterface* ProductionSurfaceMaterial = Cast<UMaterialInterface>(
+        FSoftObjectPath(TEXT("/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface")).ResolveObject());
+    UMaterialInterface* BasicMaterial = ProductionSurfaceMaterial ? nullptr :
+        Cast<UMaterialInterface>(
+            FSoftObjectPath(TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial")).ResolveObject());
+    UE_LOG(LogTemp, Display,
+        TEXT("PES002_NAMED_NPC_MATERIAL_PARENT owner=AShireNPC authoredColor=%d basicFallback=%d synchronousLoad=0"),
+        ProductionSurfaceMaterial ? 1 : 0, BasicMaterial ? 1 : 0);
     if (!BasicMaterial && !ProductionSurfaceMaterial)
     {
         bVisualStyleApplied = true;
@@ -627,7 +744,7 @@ void AShireNPC::ApplyPrototypeStyle()
         PrototypeMouth->SetRelativeScale3D(FVector(0.012f, 0.050f, 0.010f));
     }
 
-    auto ApplySurface = [this, BasicMaterial, ProductionSurfaceMaterial, bProductionVisual](
+    auto ApplySurface = [this, BasicMaterial, ProductionSurfaceMaterial](
         UStaticMeshComponent* Component,
         const FLinearColor& Color,
         float Roughness,
@@ -638,10 +755,8 @@ void AShireNPC::ApplyPrototypeStyle()
             return;
         }
 
-        UMaterialInterface* Parent =
-            (bProductionVisual && ProductionSurfaceMaterial)
-                ? ProductionSurfaceMaterial
-                : BasicMaterial;
+        UMaterialInterface* Parent = ProductionSurfaceMaterial ?
+            ProductionSurfaceMaterial : BasicMaterial;
         if (!Parent)
         {
             return;
@@ -1539,6 +1654,65 @@ void AShireNPC::BeginPlay()
 {
     Super::BeginPlay();
 
+    // Foot-safe authored spawn snap: one original probe, then bounded
+    // 150/300/450cm rings. No quest trigger, route or authoring transform moves.
+    if (GetWorld() && GetCapsuleComponent())
+    {
+        const FVector Initial = GetActorLocation();
+        const float HalfHeight = GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+        const FCollisionShape Capsule = FCollisionShape::MakeCapsule(
+            GetCapsuleComponent()->GetScaledCapsuleRadius(), HalfHeight);
+        FCollisionQueryParams ClearQuery(TEXT("PES002StoryNPCBodyClear"), false, this);
+        int32 Probes = 0;
+        float ChosenDistance = -1.0f;
+        float ChosenFloor = 0.0f;
+        for (int32 Ring = 0; Ring <= 3 && !bStoryGroundSupportProven; ++Ring)
+        {
+            const int32 Directions = Ring == 0 ? 1 : 8;
+            const float Radius = 150.0f * Ring;
+            for (int32 AngleIndex = 0; AngleIndex < Directions; ++AngleIndex)
+            {
+                const float Angle = 2.0f * PI * AngleIndex / Directions;
+                const FVector Offset = Ring == 0 ? FVector::ZeroVector :
+                    FVector(FMath::Cos(Angle) * Radius, FMath::Sin(Angle) * Radius, 0.0f);
+                const FVector Probe = Initial + Offset - FVector(0.0f, 0.0f, HalfHeight);
+                float FloorZ = 0.0f;
+                ++Probes;
+                if (!ShireStoryGrounding::FindFloor(GetWorld(), Probe, this, FloorZ)) continue;
+                const FVector Target(Initial.X + Offset.X, Initial.Y + Offset.Y,
+                                     FloorZ + HalfHeight + 2.0f);
+                if (GetWorld()->OverlapBlockingTestByChannel(
+                        Target, FQuat::Identity, ECC_Pawn, Capsule, ClearQuery)) continue;
+                if (!Initial.Equals(Target, 0.5f))
+                    SetActorLocation(Target, false, nullptr, ETeleportType::TeleportPhysics);
+                const FVector Actual = GetActorLocation();
+                bStoryGroundSupportProven = FVector::DistSquared2D(Actual, Target) < 1.0f &&
+                    FMath::Abs(Actual.Z - HalfHeight - (FloorZ + 2.0f)) < 3.0f;
+                if (bStoryGroundSupportProven)
+                {
+                    ChosenDistance = Radius;
+                    ChosenFloor = FloorZ;
+                    break;
+                }
+            }
+        }
+        // UE_LOG is a macro that expands into control flow in UE4.27.
+        // Brace both arms: Run 39061598934 failed C2181 at this else.
+        if (bStoryGroundSupportProven)
+        {
+            UE_LOG(LogTemp, Display,
+                TEXT("PES002_STORY_NPC_GROUND npc=%s floorZ=%.1f beforeFootZ=%.1f afterFootZ=%.1f radialCm=%.1f probes=%d grounded=1"),
+                *GetName(), ChosenFloor, Initial.Z - HalfHeight,
+                GetActorLocation().Z - HalfHeight, ChosenDistance, Probes);
+        }
+        else
+        {
+            UE_LOG(LogTemp, Warning,
+                TEXT("PES002_STORY_NPC_GROUND_REJECT npc=%s expectedFootZ=%.1f probes=%d reason=no-clear-support-within-450"),
+                *GetName(), Initial.Z - HalfHeight, Probes);
+        }
+    }
+
     if (UGameInstance* GI = GetGameInstance())
     {
         if (UShireChapterAssetStreamingSubsystem* Streaming =
@@ -1567,13 +1741,13 @@ void AShireNPC::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 void AShireNPC::HandleProductionRigReady(FName CharacterId)
 {
-    if (RequestedProductionRigId.IsNone() || CharacterId != RequestedProductionRigId)
-    {
+    if (RequestedProductionRigId.IsNone() ||
+        (CharacterId != RequestedProductionRigId &&
+         !(CharacterId == TEXT("Frodo") && !bUsingSkeletalProductionRig)))
         return;
-    }
-
+    // Avoid recursion when already-resident bundles broadcast synchronously.
+    // The next Tick performs the one final binding after the async callback.
     bVisualStyleApplied = false;
-    ApplyPrototypeStyle();
 }
 
 void AShireNPC::Tick(float DeltaSeconds)

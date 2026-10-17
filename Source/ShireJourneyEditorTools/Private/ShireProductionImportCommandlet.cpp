@@ -21,6 +21,8 @@
 #include "Animation/AnimBlueprint.h"
 #include "Factories/AnimBlueprintFactory.h"
 #include "AnimGraphNode_BlendSpacePlayer.h"
+#include "AnimGraphNode_BlendListByBool.h"
+#include "AnimGraphNode_SequencePlayer.h"
 #include "AnimGraphNode_Root.h"
 #include "EdGraph/EdGraph.h"
 #include "EdGraph/EdGraphSchema.h"
@@ -30,6 +32,7 @@
 #include "Characters/ShireLocomotionAnimInstance.h"
 #include "StaticMeshResources.h"
 #include "Engine/Texture2D.h"
+#include "Sound/SoundWave.h"
 #include "HAL/FileManager.h"
 #include "HAL/PlatformFilemanager.h"
 #include "Misc/FileHelper.h"
@@ -192,18 +195,56 @@ namespace ShireProductionImport
         UK2Node_VariableGet* SpeedNode = SpeedCreator.CreateNode();
         SpeedNode->VariableReference.SetSelfMember(TEXT("GroundSpeed"));
         SpeedCreator.Finalize();
-        UEdGraphPin* Pose = Player->FindPin(TEXT("Pose"));
+        // One real resident interaction pose: the fourth already-imported
+        // authored clip was previously persisted but UNUSED by the graph.
+        // Blend locomotion Idle/Walk/Run with Talk only while the existing NPC
+        // social system owns an active conversation. Never add an animation
+        // manager, extra character rig, per-frame dynamic load or runtime actor.
+        FGraphNodeCreator<UAnimGraphNode_SequencePlayer> TalkCreator(*Graph);
+        UAnimGraphNode_SequencePlayer* TalkPlayer = TalkCreator.CreateNode();
+        TalkPlayer->Node.Sequence = Clips[3];
+        TalkCreator.Finalize();
+        FGraphNodeCreator<UAnimGraphNode_BlendListByBool> TalkBlendCreator(*Graph);
+        UAnimGraphNode_BlendListByBool* TalkBlend = TalkBlendCreator.CreateNode();
+        TalkBlendCreator.Finalize();
+        FGraphNodeCreator<UK2Node_VariableGet> ConversationCreator(*Graph);
+        UK2Node_VariableGet* ConversationVar = ConversationCreator.CreateNode();
+        ConversationVar->VariableReference.SetSelfMember(TEXT("bIsConversing"));
+        ConversationCreator.Finalize();
+
+        UEdGraphPin* LocomotionPose = Player->FindPin(TEXT("Pose"));
+        UEdGraphPin* TalkPose = TalkPlayer->FindPin(TEXT("Pose"));
+        // UE4.27 pin identity is confirmed in the official Animation Sharing
+        // graph export: BlendPose_0 is the TRUE pose, BlendPose_1 is FALSE.
+        // Invert neither branch: real locomotion when not conversing.
+        UEdGraphPin* BlendTruePose = TalkBlend->FindPin(TEXT("BlendPose_0"));
+        UEdGraphPin* BlendFalsePose = TalkBlend->FindPin(TEXT("BlendPose_1"));
+        UEdGraphPin* BlendActiveValue = TalkBlend->FindPin(TEXT("bActiveValue"));
+        UEdGraphPin* BlendOutput = TalkBlend->FindPin(TEXT("Pose"));
         UEdGraphPin* Result = Root->FindPin(TEXT("Result"));
         UEdGraphPin* X = Player->FindPin(TEXT("X"));
         UEdGraphPin* SpeedValue = SpeedNode->FindPin(TEXT("GroundSpeed"));
-        if (!Pose || !Result || !X || !SpeedValue ||
-            !Graph->GetSchema()->TryCreateConnection(Pose, Result) ||
-            !Graph->GetSchema()->TryCreateConnection(SpeedValue, X)) return false;
+        UEdGraphPin* ConversationValue = ConversationVar->FindPin(TEXT("bIsConversing"));
+        if (!LocomotionPose || !TalkPose || !BlendFalsePose || !BlendTruePose ||
+            !BlendActiveValue || !BlendOutput || !Result || !X || !SpeedValue ||
+            !ConversationValue ||
+            !Graph->GetSchema()->TryCreateConnection(LocomotionPose, BlendFalsePose) ||
+            !Graph->GetSchema()->TryCreateConnection(TalkPose, BlendTruePose) ||
+            !Graph->GetSchema()->TryCreateConnection(ConversationValue, BlendActiveValue) ||
+            !Graph->GetSchema()->TryCreateConnection(BlendOutput, Result) ||
+            !Graph->GetSchema()->TryCreateConnection(SpeedValue, X))
+        {
+            UE_LOG(LogTemp, Error,
+                TEXT("FRODO_TALK_ANIM_GRAPH_INVALID expected=bool-blend-locomotion-talk fail-closed"));
+            return false;
+        }
         FBlueprintEditorUtils::MarkBlueprintAsStructurallyModified(BP);
         FKismetEditorUtilities::CompileBlueprint(BP);
         if (!BP->GeneratedClass || BP->Status == BS_Error || !SaveAsset(BP)) return false;
         UE_LOG(LogTemp, Display, TEXT("FRODO_LOCOMOTION_PACKET_SAVED blend=%s blueprint=%s skeleton=%s samples=3 runtimeAcceptance=pending"),
             *Blend->GetPathName(), *BP->GetPathName(), *Skeleton->GetPathName());
+        UE_LOG(LogTemp, Display,
+            TEXT("PES002_REAL_TALK_ANIMATION_BRIDGE authored=AN_Frodo_Talk locomotion=BS_Frodo_Locomotion conversationBool=ShireAmbientNPC scope=existing-frodo-rig acceptance=pending"));
         return true;
     }
     static bool IsApprovedFoliageMaterialIdentity(const FString& AuthoredMaterialName)
@@ -1102,6 +1143,13 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             Master->bUsedWithInstancedStaticMeshes = true;
             bChanged = true;
         }
+        if (FString(Label).Equals(TEXT("M_ProductionSurface")) &&
+            !Master->bUsedWithSkeletalMesh)
+        {
+            Master->Modify();
+            Master->bUsedWithSkeletalMesh = true;
+            bChanged = true;
+        }
         if (FString(Label).Equals(TEXT("M_ProductionFoliage")))
         {
             UMaterialExpressionMaterialFunctionCall* WindCall = nullptr;
@@ -1437,6 +1485,11 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                         FString AlbedoSourcePath = FPaths::ConvertRelativePathToFull(
                             FPaths::Combine(FPaths::GetPath(MtlFilename), CurrentAlbedoMap));
                         FPaths::NormalizeFilename(AlbedoSourcePath);
+                        if (!FPaths::FileExists(AlbedoSourcePath))
+                        {
+                            ++Failed;
+                            UE_LOG(LogTemp, Error, TEXT("PES002_MTL_SOURCE_MISSING material=%s source=%s"), *CurrentMaterialName, *AlbedoSourcePath);
+                        }
 
                         FString RelativeTexturePath = AlbedoSourcePath;
                         FPaths::MakePathRelativeTo(RelativeTexturePath, *(WorkingRoot / TEXT("")));
@@ -1918,10 +1971,39 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             ImportedAsset = LoadObject<UObject>(nullptr, *ExpectedObjectPath);
         }
 
+        if (Relative.Contains(TEXT("RegionalSupport/"), ESearchCase::IgnoreCase))
+        {
+            const bool bFBXSupport = SourceExtension == TEXT("fbx");
+            const bool bValidClass = bFBXSupport ?
+                Cast<UStaticMesh>(ImportedAsset) != nullptr :
+                Cast<UTexture2D>(ImportedAsset) != nullptr;
+            UE_LOG(LogTemp, Display,
+                TEXT("PES002_REGIONAL_SUPPORT_IMPORT path=%s class=%s validated=%d sourceOnly=1"),
+                *ExpectedObjectPath,
+                bFBXSupport ? TEXT("StaticMesh") : TEXT("Texture2D"),
+                bValidClass ? 1 : 0);
+            if (!bValidClass) ++Failed;
+        }
         // Packed grayscale channels must never be gamma corrected. DirectX
         // tangent-space normal is a normal map, not sRGB albedo.
         if (UTexture2D* ImportedTexture = Cast<UTexture2D>(ImportedAsset))
         {
+            if (Relative.Contains(TEXT("RegionalSupport/Materials/"), ESearchCase::IgnoreCase))
+            {
+                if (AssetName.EndsWith(TEXT("_ORM")))
+                {
+                    ImportedTexture->CompressionSettings = TC_Masks;
+                    ImportedTexture->SRGB = false;
+                }
+                else if (AssetName.EndsWith(TEXT("_NormalDX")))
+                {
+                    ImportedTexture->CompressionSettings = TC_Normalmap;
+                    ImportedTexture->SRGB = false;
+                }
+                ImportedTexture->MaxTextureSize = 1024;
+                ImportedTexture->PostEditChange();
+                ImportedTexture->MarkPackageDirty();
+            }
             if (Relative.StartsWith(TEXT("World/Shire/VerifiedPBR/")))
             {
                 if (AssetName.EndsWith(TEXT("_ORM")))
@@ -2328,6 +2410,15 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                 *Binding.TextureObjectPath);
         }
 
+        // Missing authored Bag End albedos are not interchangeable with Shire textures.
+        // A material instance on disk is not proof of an imported Texture2D.
+        if (!Texture && Binding.TextureObjectPath.Contains(TEXT("/TX_BagEnd"), ESearchCase::IgnoreCase))
+        {
+            UE_LOG(LogTemp, Error,
+                TEXT("PES002_BAGEND_AUTHORED_ALBEDO_MISSING material=%s texture=%s"),
+                *Binding.MaterialObjectPath, *Binding.TextureObjectPath);
+        }
+
         if (Instance && Texture)
         {
             Instance->SetTextureParameterValueEditorOnly(
@@ -2422,10 +2513,9 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             TEXT("/Game/Production/World/Shire/CuratedP1C01/Nature/Textures/T_Sh_Bark_ORM.T_Sh_Bark_ORM");
         UTexture2D* CuratedDefaultORM =
             FindObject<UTexture2D>(nullptr, CuratedDefaultORMPath);
-        if (!CuratedDefaultORM)
+        if (!CuratedDefaultORM && FPackageName::DoesPackageExist(TEXT("/Game/Production/World/Shire/CuratedP1C01/Nature/Textures/T_Sh_Bark_ORM")))
         {
-            CuratedDefaultORM =
-                LoadObject<UTexture2D>(nullptr, CuratedDefaultORMPath);
+            CuratedDefaultORM = LoadObject<UTexture2D>(nullptr, CuratedDefaultORMPath);
         }
         if (CuratedDefaultORM)
         {
@@ -2494,6 +2584,97 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                 TEXT("P1C01_CURATED_PBR_MASTER_REPAIR_DEFERRED reason=source-orm-package-missing"));
         }
     }
+
+    // P1C01 REAL PCM WAV -> UE SoundWave in the existing ShireAudioSubsystem
+    // package namespace, not merely an unused source ZIP. The runtime already
+    // requests Amb_ShireMorning/Amb_ShireRoad/Amb_PartyField/Sfx_WagonDistant.
+    // One small, bounded audio import lane; this does not create a new audio
+    // subsystem or force sound loading during the game.
+    const FString ShireAudioRoot = FPaths::Combine(
+        WorkingRoot, TEXT("Audio/Shire"));
+    TArray<FString> ShireAudioWavs;
+    IFileManager::Get().FindFilesRecursive(
+        ShireAudioWavs, *ShireAudioRoot, TEXT("*.wav"), true, false, false);
+    ShireAudioWavs.Sort();
+    int32 P1C01ImportedSounds = 0;
+    for (const FString& Wav : ShireAudioWavs)
+    {
+        FString Relative = Wav;
+        FPaths::MakePathRelativeTo(Relative, *(ShireAudioRoot / TEXT("")));
+        Relative.ReplaceInline(TEXT("\\"), TEXT("/"));
+        const bool bAmbience = Relative.StartsWith(
+            TEXT("Ambience/"), ESearchCase::CaseSensitive);
+        const bool bSfx = Relative.StartsWith(
+            TEXT("SFX/"), ESearchCase::CaseSensitive);
+        const FString CueName = FPaths::GetBaseFilename(Wav);
+        if ((!bAmbience && !bSfx) ||
+            (bAmbience && !CueName.StartsWith(TEXT("Amb_"))) ||
+            (bSfx && !CueName.StartsWith(TEXT("Sfx_"))) ||
+            IFileManager::Get().FileSize(*Wav) < 64)
+        {
+            ++Failed;
+            UE_LOG(LogTemp, Error,
+                TEXT("P1C01_AUDIO_SOURCE_REJECTED source=%s"), *Relative);
+            continue;
+        }
+        const FString DestinationPath = bAmbience
+            ? TEXT("/Game/Audio/Ambience")
+            : TEXT("/Game/Audio/SFX");
+        UAssetImportTask* AudioTask = NewObject<UAssetImportTask>();
+        AudioTask->Filename = Wav;
+        AudioTask->DestinationPath = DestinationPath;
+        AudioTask->DestinationName = CueName;
+        AudioTask->bAutomated = true;
+        AudioTask->bSave = false;
+        AudioTask->bReplaceExisting = true;
+        TArray<UAssetImportTask*> Tasks;
+        Tasks.Add(AudioTask);
+        AssetTools.Get().ImportAssetTasks(Tasks);
+        const FString ObjectPath = FString::Printf(TEXT("%s/%s.%s"),
+            *DestinationPath, *CueName, *CueName);
+        USoundWave* ImportedSound = FindObject<USoundWave>(
+            nullptr, *ObjectPath);
+        if (!ImportedSound)
+        {
+            ImportedSound = LoadObject<USoundWave>(nullptr, *ObjectPath);
+        }
+        if (!ImportedSound || ImportedSound->NumChannels != 1 ||
+            ImportedSound->Duration <= 0.1f)
+        {
+            ++Failed;
+            UE_LOG(LogTemp, Error,
+                TEXT("P1C01_AUDIO_IMPORT_REJECTED path=%s channels=%d"),
+                *ObjectPath, ImportedSound ? ImportedSound->NumChannels : 0);
+            continue;
+        }
+        // A short seamless prototype ambience loops; one-shot story foley does not.
+        ImportedSound->bLooping = bAmbience;
+        ImportedSound->MarkPackageDirty();
+        UPackage* AudioPackage = ImportedSound->GetOutermost();
+        const FString Disk = FPackageName::LongPackageNameToFilename(
+            AudioPackage->GetName(), FPackageName::GetAssetPackageExtension());
+        IFileManager::Get().MakeDirectory(*FPaths::GetPath(Disk), true);
+        const bool bSaved = UPackage::SavePackage(
+            AudioPackage, ImportedSound, RF_Public | RF_Standalone, *Disk,
+            GError, nullptr, false, true, SAVE_NoError);
+        const int64 Bytes = IFileManager::Get().FileSize(*Disk);
+        if (!bSaved || Bytes <= 0)
+        {
+            ++Failed;
+            UE_LOG(LogTemp, Error,
+                TEXT("P1C01_AUDIO_UASSET_SAVE_FAILED path=%s"), *ObjectPath);
+            continue;
+        }
+        ++P1C01ImportedSounds;
+        UE_LOG(LogTemp, Display,
+            TEXT("P1C01_AUDIO_UASSET_SAVED cue=%s category=%s seconds=%.2f bytes=%lld looping=%d"),
+            *CueName, bAmbience ? TEXT("Ambience") : TEXT("SFX"),
+            ImportedSound->Duration, Bytes, bAmbience ? 1 : 0);
+    }
+    UE_LOG(LogTemp, Display,
+        TEXT("P1C01_AUDIO_BATCH_PERSISTED requested=%d saved=%d failed=%d namespace=ShireAudioSubsystem"),
+        ShireAudioWavs.Num(), P1C01ImportedSounds,
+        ShireAudioWavs.Num() - P1C01ImportedSounds);
 
     // OBJ import may create secondary material packages that UE4.27 does not
     // consistently include in UAssetImportTask::ImportedObjectPaths. Save those exact

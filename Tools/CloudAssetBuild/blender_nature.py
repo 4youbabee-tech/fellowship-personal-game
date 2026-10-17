@@ -10,9 +10,14 @@ def material(n,color):
  m=bpy.data.materials.get(n) or bpy.data.materials.new(n); m.diffuse_color=(*color,1);return m
 def create(name,typ,location,scale,mat,vertices=8):
  if typ=="cyl": bpy.ops.mesh.primitive_cone_add(vertices=vertices,radius1=1,radius2=0.6,depth=1,location=location)
+ elif typ=="foliage":
+  bpy.ops.mesh.primitive_uv_sphere_add(segments=max(8,vertices),ring_count=max(5,vertices//2),radius=1,location=location)
  elif typ=="ico": bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=1,radius=1,location=location)
  else: bpy.ops.mesh.primitive_cube_add(size=1,location=location)
- ob=bpy.context.object;ob.name=name;ob.scale=scale;ob.data.materials.append(mat);return ob
+ ob=bpy.context.object;ob.name=name;ob.scale=scale;ob.data.materials.append(mat)
+ if typ=="foliage":
+  for poly in ob.data.polygons:poly.use_smooth=True
+ return ob
 def branch(a,b,r,mat,steps=7):
  mid=(Vector(a)+Vector(b))/2; direction=Vector(b)-Vector(a)
  ob=create("NaturalBranch","cyl",mid,(r,r,direction.length),mat,steps)
@@ -38,12 +43,12 @@ def build(family,lod,out):
    x=rad*math.cos(a);y=rad*math.sin(a);z=ht*(.68+.15*rng.random())
    if family=="tree_willow":z-=rad*.22
    scale=(spread*.38,spread*.30,ht*(.17 if family!="tree_willow" else .23))
-   parts.append(create("FoliageCluster","ico",(x,y,z),scale,leaf))
+   parts.append(create("FoliageCluster","foliage",(x,y,z),scale,leaf,14 if lod==0 else 10 if lod==1 else 8))
  elif family.startswith("shrub"):
   for i in range(max(3,round(13*nfactor))):
    a=i*2.39996;rad=(i%6)/6*1.08
    x=rad*math.cos(a);y=rad*math.sin(a);z=.52+rng.uniform(-.13,.15)
-   parts.append(create("BushCluster","ico",(x,y,z),(.5,.47,.49),leaf if family!="shrub_gorse" else dry))
+   parts.append(create("BushCluster","foliage",(x,y,z),(.5,.47,.49),leaf if family!="shrub_gorse" else dry,12 if lod==0 else 10 if lod==1 else 8))
  elif family.startswith("rock"):
   for i in range(max(1,round(5*nfactor))):
    x=rng.uniform(-1,1);y=rng.uniform(-.75,.75);h=rng.uniform(.3,.6)

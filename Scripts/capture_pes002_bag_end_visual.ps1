@@ -13,10 +13,11 @@ $log = Join-Path $proof "PES002VisualEditor.log"
 # Clear only this proof's stale files before launch; never kill another writer.
 Remove-Item -LiteralPath $log -Force -ErrorAction SilentlyContinue
 Remove-Item -LiteralPath (Join-Path $proof 'GPUProcessMemory.csv') -Force -ErrorAction SilentlyContinue
-Get-ChildItem -LiteralPath $proof -Filter 'BagEnd-P1C01-view*-actual-runtime.png' -File |
+Get-ChildItem -LiteralPath $proof -Filter '*P1C01*view*-actual-runtime.png' -File |
     Remove-Item -Force
 Get-ChildItem -LiteralPath $proof -Filter 'PES002_BagEnd_View*.png' -File | Remove-Item -Force
 $arguments = @('"' + $project + '"', '-game', '-windowed', '-ResX=1280', '-ResY=720', '-NoSplash', '-log', '-PES002VisualProof', '-abslog="' + $log + '"')
+$viewTargets = if ($PIE) { @('BagEnd', 'Hobbiton', 'WaterMill', 'StoneBridge') } else { @('BagEnd', 'BagEnd', 'BagEnd', 'BagEnd') }
 # UE4.27 editor throttles an unfocused PIE/editor window to exactly 3 FPS.
 # Our last run showed 15 frames per 5-second window and ~251ms render-thread
 # EventWait although GPU/Total was only ~44ms. For this disposable proof
@@ -39,6 +40,29 @@ bThrottleCPUWhenNotForeground=False
 "@
     [System.IO.File]::AppendAllText($proofEditorSettings, $unthrottledProof)
     Write-Host 'PES002_EDITOR_BACKGROUND_THROTTLE_DISABLED proofOnly=true expectedNo3FPSCap=true'
+}
+# A background PIE window can be capped near 3 FPS independently of the GPU.
+# The editor preference was already being written but its effect never proved.
+# Capture the actual foreground process, and activate only our owned editor.
+$focusSamples = 0
+$focusConfirmed = 0
+$focusRequests = 0
+if ($PIE) {
+    Add-Type -TypeDefinition @'
+using System;
+using System.Runtime.InteropServices;
+public static class ShirePES002WindowFocus {
+    [DllImport("user32.dll")] public static extern IntPtr GetForegroundWindow();
+    [DllImport("user32.dll")] public static extern uint GetWindowThreadProcessId(IntPtr handle, out uint processId);
+    [DllImport("kernel32.dll")] public static extern uint GetCurrentThreadId();
+    [DllImport("user32.dll")] public static extern bool AttachThreadInput(uint attach, uint attachTo, bool value);
+    [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr handle);
+    [DllImport("user32.dll")] public static extern bool ShowWindowAsync(IntPtr handle, int command);
+    [DllImport("user32.dll")] public static extern bool BringWindowToTop(IntPtr handle);
+    [DllImport("user32.dll")] public static extern IntPtr SetActiveWindow(IntPtr handle);
+    [DllImport("user32.dll")] public static extern IntPtr SetFocus(IntPtr handle);
+}
+'@
 }
 if ($PIE) {
     $preview = Join-Path $root 'SHIRE_FAST_PIE_PREVIEW.bat'
@@ -64,6 +88,64 @@ try {
                 Where-Object { $_.Name -eq 'UE4Editor.exe' } | Select-Object -First 1
             if ($child) { $editorPid = [int]$child.ProcessId }
         }
+        if ($PIE -and $editorPid -gt 0 -and $focusRequests -lt 20) {
+            try {
+                $editorProcess = Get-Process -Id $editorPid -ErrorAction Stop
+                $handle = $editorProcess.MainWindowHandle
+                if ($handle -ne [IntPtr]::Zero) {
+                    $focusRequests++
+                    $currentThread = [ShirePES002WindowFocus]::GetCurrentThreadId()
+                    $targetPid = [uint32]0
+                    $targetThread = [ShirePES002WindowFocus]::GetWindowThreadProcessId($handle, [ref]$targetPid)
+                    $foregroundHandle = [ShirePES002WindowFocus]::GetForegroundWindow()
+                    $foregroundPid = [uint32]0
+                    [void][ShirePES002WindowFocus]::GetWindowThreadProcessId($foregroundHandle, [ref]$foregroundPid)
+                    $foregroundThread = if ($foregroundHandle -ne [IntPtr]::Zero) {
+                        [ShirePES002WindowFocus]::GetWindowThreadProcessId($foregroundHandle, [ref]$foregroundPid)
+                    } else { [uint32]0 }
+                    $attachedTarget = $false
+                    $attachedForeground = $false
+                    try {
+                        # SetForegroundWindow alone is routinely denied to a child of a
+                        # background Actions worker. Temporarily join the input queues of
+                        # this worker, the owned editor and the current foreground thread;
+                        # restore both queues in finally on every retry.
+                        if ($targetThread -ne 0 -and $targetThread -ne $currentThread) {
+                            $attachedTarget = [ShirePES002WindowFocus]::AttachThreadInput(
+                                $currentThread, $targetThread, $true)
+                        }
+                        if ($foregroundThread -ne 0 -and $foregroundThread -ne $currentThread -and
+                            $foregroundThread -ne $targetThread) {
+                            $attachedForeground = [ShirePES002WindowFocus]::AttachThreadInput(
+                                $currentThread, $foregroundThread, $true)
+                        }
+                        [void][ShirePES002WindowFocus]::ShowWindowAsync($handle, 9)
+                        [void][ShirePES002WindowFocus]::BringWindowToTop($handle)
+                        [void][ShirePES002WindowFocus]::SetForegroundWindow($handle)
+                        [void][ShirePES002WindowFocus]::SetActiveWindow($handle)
+                        [void][ShirePES002WindowFocus]::SetFocus($handle)
+                    } finally {
+                        if ($attachedForeground) {
+                            [void][ShirePES002WindowFocus]::AttachThreadInput(
+                                $currentThread, $foregroundThread, $false)
+                        }
+                        if ($attachedTarget) {
+                            [void][ShirePES002WindowFocus]::AttachThreadInput(
+                                $currentThread, $targetThread, $false)
+                        }
+                    }
+                    $afterPid = [uint32]0
+                    [void][ShirePES002WindowFocus]::GetWindowThreadProcessId(
+                        [ShirePES002WindowFocus]::GetForegroundWindow(), [ref]$afterPid)
+                    $focusSamples++
+                    if ($afterPid -eq [uint32]$editorPid) { $focusConfirmed++ }
+                    Write-Host "PES002_WINDOW_FOCUS sample=$focusSamples foregroundPid=$afterPid editorPid=$editorPid active=$($afterPid -eq [uint32]$editorPid)"
+                }
+            } catch {
+                $focusError = if ($_.Exception.InnerException) { $_.Exception.InnerException } else { $_.Exception }
+                Write-Host "PES002_WINDOW_FOCUS_PROBE_ERROR type=$($focusError.GetType().Name) reason=$($focusError.Message)"
+            }
+        }
         if ($editorPid -gt 0 -and -not $gpuCounterUnavailable) {
             try {
                 $counter = Get-Counter -Counter '\GPU Process Memory(*)\Dedicated Usage','\GPU Process Memory(*)\Shared Usage' -ErrorAction Stop
@@ -79,7 +161,7 @@ try {
             }
         }
         if ((Test-Path -LiteralPath $log) -and
-            (Select-String -Path $log -SimpleMatch -Pattern 'PES002_SCREENSHOT_REQUESTED target=BagEnd view=3' -Quiet) -and
+            (Select-String -Path $log -SimpleMatch -Pattern "PES002_SCREENSHOT_REQUESTED target=$($viewTargets[3]) view=3" -Quiet) -and
             (!$PIE -or (Select-String -Path $log -SimpleMatch -Pattern 'PES002_PIE_SESSION_ENDED active=0' -Quiet))) {
             $ready = $true
             break
@@ -108,6 +190,13 @@ try {
         Write-Host 'PES002_EDITOR_BACKGROUND_THROTTLE_RESTORED proofOnly=true'
     }
 }
+if ($PIE) {
+    Write-Host "PES002_WINDOW_FOCUS_SUMMARY samples=$focusSamples confirmed=$focusConfirmed requests=$focusRequests"
+    if ($focusSamples -eq 0) { throw 'PES002_PERF_INCONCLUSIVE_NO_FOREGROUND_HANDLE' }
+    if ($focusConfirmed -eq 0) {
+        throw 'PES002_PERF_INCONCLUSIVE_BACKGROUND_THROTTLE: renderer FPS cannot be judged without an active window'
+    }
+}
 if ($gpuSamples.Count -gt 0) {
     $gpuSamples | Export-Csv -NoTypeInformation -LiteralPath (Join-Path $proof 'GPUProcessMemory.csv')
     $peakDedicated = ($gpuSamples | Measure-Object dedicatedBytes -Maximum).Maximum / 1048576.0
@@ -124,6 +213,15 @@ foreach ($capture in $csvCaptures) {
     Copy-Item -LiteralPath $capture.FullName -Destination (Join-Path $proof ('CPU-GPU-' + $capture.Name)) -Force
     Write-Host "PES002_ENGINE_CSV_PROFILE source=$($capture.FullName) bytes=$($capture.Length) actualCapture=true targetDeviceAccepted=false"
 }
+if ($PIE) {
+    $stats = @(Get-ChildItem -Path (Join-Path $root 'Saved/Profiling/UnrealStats') -Filter '*.ue4stats' -File -Recurse -ErrorAction SilentlyContinue |
+        Where-Object { $_.LastWriteTime -ge $started.AddSeconds(-2) } |
+        Sort-Object LastWriteTime -Descending | Select-Object -First 1)
+    foreach ($statFile in $stats) {
+        Copy-Item -LiteralPath $statFile.FullName -Destination (Join-Path $proof 'PES002-incident.ue4stats') -Force
+        Write-Host "PES002_INCIDENT_STATFILE_ARCHIVED bytes=$($statFile.Length)"
+    }
+}
 if (!(Test-Path $log) -or !(Select-String -Path $log -Pattern 'PES002_CAPTURE_CAMERA_READY target=BagEnd' -Quiet)) {
     throw "PES002_CAPTURE_CAMERA_NOT_CONFIRMED; inspect $log"
 }
@@ -132,10 +230,11 @@ Get-ChildItem -Path $shotDir -Filter 'PES002_BagEnd_View*.png' -File -Recurse -E
     Where-Object { $_.LastWriteTime -ge $started.AddSeconds(-2) } |
     ForEach-Object { Copy-Item -LiteralPath $_.FullName -Destination (Join-Path $proof $_.Name) -Force }
 for ($view = 0; $view -lt 4; $view++) {
-    if (!(Select-String -Path $log -SimpleMatch -Pattern "PES002_CAPTURE_VIEW_READY view=$view target=BagEnd" -Quiet)) {
+    $target = $viewTargets[$view]
+    if (!(Select-String -Path $log -SimpleMatch -Pattern "PES002_CAPTURE_VIEW_READY view=$view target=$target" -Quiet)) {
         throw "PES002_CAPTURE_VIEW_NOT_READY view=$view"
     }
-    if (!(Select-String -Path $log -SimpleMatch -Pattern "PES002_SCREENSHOT_REQUESTED target=BagEnd view=$view" -Quiet)) {
+    if (!(Select-String -Path $log -SimpleMatch -Pattern "PES002_SCREENSHOT_REQUESTED target=$target view=$view" -Quiet)) {
         throw "PES002_CAPTURE_SCREENSHOT_REQUEST_NOT_CONFIRMED view=$view"
     }
     $shots = @(Get-ChildItem -Path $shotDir -File -ErrorAction SilentlyContinue |
@@ -150,7 +249,11 @@ for ($view = 0; $view -lt 4; $view++) {
     $width = [int]($bytes[16] * 16777216 + $bytes[17] * 65536 + $bytes[18] * 256 + $bytes[19])
     $height = [int]($bytes[20] * 16777216 + $bytes[21] * 65536 + $bytes[22] * 256 + $bytes[23])
     if ($width -ne 1280 -or $height -ne 720) { throw "PES002_SCREENSHOT_WRONG_DIMENSIONS view=$view width=$width height=$height" }
-    $destination = Join-Path $proof "BagEnd-P1C01-view$view-actual-runtime.png"
+    $destination = if ($PIE) {
+        Join-Path $proof "P1C01-$target-view$view-actual-runtime.png"
+    } else {
+        Join-Path $proof "BagEnd-P1C01-view$view-actual-runtime.png"
+    }
     Copy-Item $source $destination -Force
     $hash = (Get-FileHash $destination -Algorithm SHA256).Hash
     # Use actual RGB pixels, not file size or success code. Sample only the
@@ -174,7 +277,7 @@ for ($view = 0; $view -lt 4; $view++) {
     }
     Write-Host ("PES002_LUMINANCE_METRIC view={0} mean={1:N2} threshold=35.0 samples={2}" -f $view,$mean,$count)
     if ($mean -lt 35.0) { throw ("PES002_LUMINANCE_TOO_DARK view={0} mean={1:N2}" -f $view,$mean) }
-    Write-Host "PES002_BAG_END_CAPTURE_PRESENT view=$view width=$width height=$height sha256=$hash image=$destination camera=BagEnd visualAccepted=false traversal=unproven"
+    Write-Host "PES002_BAG_END_CAPTURE_PRESENT view=$view width=$width height=$height sha256=$hash image=$destination camera=$target visualAccepted=false traversal=unproven"
 }
 
 # The editor is running the real game RHI and must emit actual frame and RAM
@@ -198,9 +301,57 @@ if (!$gardenMatch.Success -or [int]$gardenMatch.Groups[1].Value -ne 25 -or
     throw "PES002_GARDEN_WORLD_PLACEMENT_REJECT source=$gardenLine"
 }
 Write-Host "PES002_REAL_GARDEN_EVIDENCE $($gardenMatch.Value) world=PIE"
-$residents = @(Select-String -Path $log -Pattern 'PES002_RESIDENT_PRESENTATION_SNAPSHOT localManaged=(\d+) skeletal=(\d+) modular=(\d+)')
+$residents = @(Select-String -Path $log -Pattern 'PES002_RESIDENT_PRESENTATION_SNAPSHOT localManaged=(\d+) humanoids=(\d+) skeletal=(\d+) modular=(\d+) fauna=(\d+)')
 if ($residents.Count -lt 1) { throw 'PES002_RESIDENT_PIE_COUNT_MISSING' }
 Write-Host "PES002_REAL_RESIDENT_EVIDENCE $($residents[-1].Line.Trim())"
+$residentMatch = $residents[-1].Matches[0]
+$localManaged = [int]$residentMatch.Groups[1].Value
+$humanoids = [int]$residentMatch.Groups[2].Value
+$skeletal = [int]$residentMatch.Groups[3].Value
+$modular = [int]$residentMatch.Groups[4].Value
+$fauna = [int]$residentMatch.Groups[5].Value
+# Wildlife uses fauna meshes, never Frodo bones. The human art goal is separate.
+if ($localManaged -lt 1 -or $humanoids -lt 1 -or $skeletal -lt 1 -or
+    ($skeletal + $modular -ne $humanoids) -or
+    ($humanoids + $fauna -ne $localManaged)) {
+    throw "PES002_RESIDENT_RUNTIME_INVALID local=$localManaged humanoids=$humanoids skeletal=$skeletal modular=$modular fauna=$fauna"
+}
+if ($modular -eq 0) {
+    Write-Host "PES002_HUMANOID_SKELETAL_COVERAGE_PASS humanoids=$humanoids skeletal=$skeletal modular=$modular faunaSeparate=$fauna"
+} else {
+    Write-Warning "PES002_HUMANOID_SKELETAL_GAP humanoids=$humanoids skeletal=$skeletal modular=$modular"
+}
+if ($humanoids -ne 22 -or $skeletal -ne 22 -or $modular -ne 0) {
+    Write-Warning "PES002_RESIDENT_POPULATION_INCOMPLETE targetHumanoids=22 actualHumanoids=$humanoids skeletal=$skeletal modular=$modular fauna=$fauna visualAccepted=false"
+} else {
+    Write-Host "PES002_RESIDENT_POPULATION_PASS humanoids=$humanoids skeletal=$skeletal modular=$modular fauna=$fauna"
+}
+$sharedSamples = @(Select-String -Path $log -Pattern 'PES002_UNIFIED_RESIDENT_VISIBLE .*sharedHeroFallback=1')
+Write-Host "PES002_SHARED_STORY_RIG_SAMPLES count=$($sharedSamples.Count) finalCharacterArtAccepted=false"
+$story = @(Select-String -Path $log -Pattern 'PES002_STORY_NPC_SNAPSHOT localNamed=(\d+) skeletal=(\d+) prototype=(\d+) groundSupported=(\d+) uniqueNamedRigs=(\d+) ambientHumanoids=(\d+) ambientSkeletal=(\d+) faunaSeparate=(\d+)')
+if ($PIE) {
+    if ($story.Count -lt 1) { throw 'PES002_STORY_NPC_CENSUS_MISSING' }
+    $storyLine = $story[-1].Matches[0]
+    $named = [int]$storyLine.Groups[1].Value
+    $skinned = [int]$storyLine.Groups[2].Value
+    $fallback = [int]$storyLine.Groups[3].Value
+    $namedGrounded = [int]$storyLine.Groups[4].Value
+    $namedRigs = [int]$storyLine.Groups[5].Value
+    if ($named -ne ($skinned + $fallback) -or $namedGrounded -gt $named -or
+        $skinned -gt 0 -and $namedRigs -lt 1) {
+        throw "PES002_STORY_NPC_CENSUS_INVALID source=$($storyLine.Value)"
+    }
+    Write-Host "PES002_STORY_NPC_EVIDENCE $($storyLine.Value)"
+    if ($fallback -ne 0 -or $namedGrounded -ne $named) {
+        Write-Warning "PES002_STORY_NPC_PRESENTATION_INCOMPLETE named=$named skeletal=$skinned prototype=$fallback groundSupported=$namedGrounded distinctNamedRigMeshes=$namedRigs"
+    }
+    # This arithmetic describes two systems in one region, NOT 22 unique
+    # supporting Hobbit bodies or accepted facial/deformation art.
+    Write-Host "PES002_COMBINED_HUMANOID_CENSUS ambient=$humanoids named=$named combined=$($humanoids+$named) namedRigs=$namedRigs uniqueArtAccepted=false"
+}
+
+Write-Host 'PES002_OWNER_VISUAL_REVIEW ownerVisualTarget=approximately80percent autoScored=false visualAccepted=false'
+
 
 # Preserve four PNGs before rejecting incorrect curated PBR runtime shaders.
 # A bright screenshot with default-grey instanced foliage is still a failure.
