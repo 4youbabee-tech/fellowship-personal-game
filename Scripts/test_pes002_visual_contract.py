@@ -35,6 +35,8 @@ class PES002VisualContract(unittest.TestCase):
         self.assertIn('PES002_SCREENSHOT_REQUESTED target=BagEnd view=3', ps)
         self.assertIn('for ($view = 0; $view -lt 4; $view++)', ps)
         self.assertIn('AttachThreadInput', ps)
+        self.assertIn('[DllImport("kernel32.dll")] public static extern uint GetCurrentThreadId();', ps)
+        self.assertNotIn('[DllImport("user32.dll")] public static extern uint GetCurrentThreadId();', ps)
         self.assertIn('BringWindowToTop', ps)
         self.assertIn('SetActiveWindow($handle)', ps)
         self.assertIn('SetFocus($handle)', ps)

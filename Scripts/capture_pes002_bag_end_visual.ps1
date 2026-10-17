@@ -53,7 +53,7 @@ using System.Runtime.InteropServices;
 public static class ShirePES002WindowFocus {
     [DllImport("user32.dll")] public static extern IntPtr GetForegroundWindow();
     [DllImport("user32.dll")] public static extern uint GetWindowThreadProcessId(IntPtr handle, out uint processId);
-    [DllImport("user32.dll")] public static extern uint GetCurrentThreadId();
+    [DllImport("kernel32.dll")] public static extern uint GetCurrentThreadId();
     [DllImport("user32.dll")] public static extern bool AttachThreadInput(uint attach, uint attachTo, bool value);
     [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr handle);
     [DllImport("user32.dll")] public static extern bool ShowWindowAsync(IntPtr handle, int command);
@@ -141,7 +141,8 @@ try {
                     Write-Host "PES002_WINDOW_FOCUS sample=$focusSamples foregroundPid=$afterPid editorPid=$editorPid active=$($afterPid -eq [uint32]$editorPid)"
                 }
             } catch {
-                Write-Host "PES002_WINDOW_FOCUS_PROBE_ERROR type=$($_.Exception.GetType().Name)"
+                $focusError = if ($_.Exception.InnerException) { $_.Exception.InnerException } else { $_.Exception }
+                Write-Host "PES002_WINDOW_FOCUS_PROBE_ERROR type=$($focusError.GetType().Name) reason=$($focusError.Message)"
             }
         }
         if ($editorPid -gt 0 -and -not $gpuCounterUnavailable) {

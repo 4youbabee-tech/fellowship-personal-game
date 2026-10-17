@@ -4279,3 +4279,5 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Bag End runtime build/import/startup | PASS on PR head `cc577de119aab12fec3495c52c8539e4846b9db6`; runs 39019099042 and 39020520026 | UE4.27.2 C++ build, production import, Automation QA, startup; PIE log requested four views | None for these bounded stages |
 | Bag End fresh PIE images | BLOCKED / candidate recovery added | Both runs report 20/20 inactive window samples; artifact 12096323695 contains no PNG | New exact-head 1280x720 PNGs + review |
 | Device performance / Gate 6/7 | OPEN | No valid foreground FPS capture or target-owner-device data | Fresh active-window capture, target device run and human acceptance |
+
+Follow-up run 39021746348 (#2237) passed build/import/automation/startup but exposed a recovery-code defect: `GetCurrentThreadId` was imported from `user32.dll`, causing `MethodInvocationException` before any screenshot request. Corrected to `kernel32.dll`; exact-head revalidation pending. No PNG or FPS evidence.
