@@ -66,6 +66,8 @@ class PES002VisualContract(unittest.TestCase):
         self.assertIn("source_only: ${{ steps.direct.outputs.source_only }}", workflow)
         self.assertIn("Source/ShireJourney/|Source/ShireJourneyEditorTools/|Config/", workflow)
         self.assertIn("needs.classify.outputs.source_only == 'true'", workflow)
+        self.assertIn('git merge-base "$TARGET_SHA" origin/develop', workflow)
+        self.assertIn('PES002_CLASSIFIER_DELTA_BASE=', workflow)
         self.assertIn('REASON=pes002_runtime_or_production_asset_delta', workflow)
 
 

@@ -5076,3 +5076,8 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Run 39033962961 / #2255 on `b9328af5921058fb70fc27f4eee893f236795784` failed before jobs: GitHub Actions returned zero job records, so no C++ build, import, or PIE ran.
 - Root cause in the branch classifier: every push on the PES-002 feature branch was hard-routed to the Batch A source-only lane, even when the changed files were runtime C++. Replaced it with changed-path classification: runtime/production deltas select the normal Unreal lane; only declared Batch A acquisition paths select source-only.
 - Added a focused regression assertion. Fresh exact-head hosted test, UE4.27.2 build/import, four PIE images and resident counts are pending. No acceptance is inferred from the failed no-job run.
+
+## 2026-10-17 — PES-002 runtime delta selection correction
+- Run 39034134246 / #2256 on `6d38348b6cbbbcc89342b901b74679825d536a94` also failed before jobs; no UE steps ran.
+- The first path-aware fix compared a push only with its immediate parent. That push carried the classifier repair, while the earlier resident C++ change was already in the branch history; the classifier therefore had no runtime path in its delta.
+- Push events now compare the branch against its merge base with `origin/develop`, so the full PR runtime delta selects Unreal validation. Exact-head rerun is still pending; no prior run counts for the candidate.

@@ -9591,5 +9591,15 @@
     "repair": "Changed-path classification selects full Unreal validation for runtime/config/content/production deltas and source-only only for declared Batch A acquisition paths.",
     "proof_boundary": "Exact-head workflow job selection and UE4.27.2 run pending; no PIE/device/visual/FPS acceptance follows from source changes."
   }
+,
+  "owner_pes002_push_delta_classifier_2026_10_17": {
+    "status": "CANDIDATE_PENDING_EXACT_HEAD",
+    "observed_run": 39034134246,
+    "observed_sha": "6d38348b6cbbbcc89342b901b74679825d536a94",
+    "failure": "GitHub Actions completed with zero job records; no Unreal work ran.",
+    "verified_classifier_gap": "Push classifier diff used only github.event.before, so a workflow/docs-only follow-up commit hid the earlier unvalidated runtime candidate.",
+    "repair": "Compare feature branch target against merge-base with origin/develop, fail closed if unavailable, and classify the cumulative PR delta.",
+    "proof_boundary": "Still pending until exact-head job selection, UE4.27.2 build/import and PIE evidence succeed."
+  }
 
 }

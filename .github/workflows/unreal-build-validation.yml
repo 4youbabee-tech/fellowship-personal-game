@@ -291,6 +291,7 @@ jobs:
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
           TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          EVENT_NAME: ${{ github.event_name }}
           PACKAGE: ${{ github.event_name == 'workflow_dispatch' && inputs.package_windows == true }}
         shell: bash
         run: |
@@ -301,11 +302,17 @@ jobs:
           MODE=full
           REASON=owner-authorized-direct-engine-production
           if [ "$TARGET_BRANCH" = "feat/pes002-bag-end-woodland-real-fbx-20261016" ]; then
+            if [ "$EVENT_NAME" != "pull_request" ]; then
+              git fetch origin develop --no-tags --quiet
+              BASE_SHA="$(git merge-base "$TARGET_SHA" origin/develop)"
+            fi
             if [ -n "$BASE_SHA" ] && git cat-file -e "$BASE_SHA^{commit}" 2>/dev/null; then
               CHANGED_PATHS="$(git diff --name-only "$BASE_SHA" "$TARGET_SHA")"
             else
-              CHANGED_PATHS="$(git diff-tree --no-commit-id --name-only -r "$TARGET_SHA")"
+              echo "PES002_CLASSIFIER_BASE_SHA_MISSING" >&2
+              exit 87
             fi
+            echo "PES002_CLASSIFIER_DELTA_BASE=$BASE_SHA target=$TARGET_SHA"
             if printf '%s\n' "$CHANGED_PATHS" | grep -Eq '^(Source/ShireJourney/|Source/ShireJourneyEditorTools/|Config/|Content/|SourceAssets/Production/|Data/(ChapterAssetStreamingPlan|P1C01WorldBuildIntakePacketV1|P1C01CloudShireAssemblyPlanV1)\.json$)'; then
               FULL=true
               MODE=full

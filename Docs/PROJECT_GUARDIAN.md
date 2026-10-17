@@ -959,3 +959,9 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 - **Root cause:** the active feature branch was unconditionally classified as `shire-kit-source`, including commits that changed `Source/ShireJourney` runtime code. The source acquisition job's branch guard and the Unreal job's `full` requirement were therefore inconsistent with the requested runtime proof.
 - **Guard:** classify changed paths. Runtime, Config, Content, importer and production-asset changes select the full PES Unreal lane; only explicit Batch A source-acquisition paths select the source-only lane. Keep a regression test for this routing.
 - **Proof boundary:** this workflow correction remains candidate until exact-head Pre-Unreal and a fresh UE4.27.2 run demonstrate the expected job selection. A failed no-job run is not a build.
+
+### PG-169 — Push classification must include earlier PR runtime deltas
+- **Observed:** PES-002 run 39034134246 / #2256 on `6d38348b6cbbbcc89342b901b74679825d536a94` failed before jobs; no UE steps were listed.
+- **Root cause:** the push-path classifier compared only the latest commit. A validation-only follow-up commit therefore hid the earlier unvalidated C++ resident change from runtime selection.
+- **Guard:** for feature-branch pushes, compare target SHA against its merge base with canonical `develop`; if the cumulative PR delta contains runtime/config/import/production paths, select the exact-head Unreal lane. Missing merge base fails closed.
+- **Proof boundary:** candidate until an exact-head run shows the classifier output and the UE4.27.2 job executes.
