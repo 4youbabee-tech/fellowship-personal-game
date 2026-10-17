@@ -5058,3 +5058,9 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Exact Run 39029904611 on `3370ff57e463a78477c26db97f76944fed5739a0` completed hosted Blender source PASS; UE4.27.2 SKIPPED. Artifact `12100425640`, CC0 wardrobe-study FBX SHA256 `e53ba0c4957f4029ef7e2d3b7c62d89d6668575bb17269239fa922eb20caf72b`.
 - Reimport measured 53 bones, 7 meshes, 59,162 triangles (hair 6,558), 13,380 weighted body vertices, zero unweighted vertices, max 4 influences, and 8 bilateral arm/leg stress deformations. The exact Blender render still exposes a narrow skin strip through the vest, so it remains **SOURCE / VISUAL REJECT**; no animation authored or UE import.
 - Next source candidate adds a skinned wool placket panel and fasteners to cover the gap. Six focused wardrobe tests and Python syntax checks PASS locally; exact-head Blender rerun pending.
+
+
+## 2026-10-17 PES-002 surface-fit placket iteration — hosted source pass, visual reject
+- Exact Run 39030248055 on `b9f0865fc84e97ac86f801743df81556f971990b` completed Blender PASS; UE4.27.2 SKIPPED. Wardrobe artifact `12100071706`; CC0 FBX SHA256 `d63b8ffb7072c23b2d70f2179a934413b8ffc6dc32d54cc6691971d9da8c8983`.
+- Reimport measured 53 bones, 59,474 triangles, 13,380 weighted body vertices and valid bounded influence/deformation checks. Render inspection still shows exposed skin along the vest front: **NOT VISUALLY ACCEPTED**; no animation or Unreal import.
+- Current source candidate fits a skinned wool placket to samples from the garment front surface (rather than a fixed Y offset), positions fasteners from that fit, and records missing-surface failure. Six local wardrobe tests, syntax and diff checks PASS; next exact-head Blender run pending.

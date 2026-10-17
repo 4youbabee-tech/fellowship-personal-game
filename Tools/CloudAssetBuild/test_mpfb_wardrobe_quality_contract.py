@@ -38,8 +38,11 @@ class WardrobeQualityContractTests(unittest.TestCase):
         self.assertNotIn("for x in (-.052, .052)", garment)
         self.assertIn("# torso bounds; never duplicate the full clothing object", garment)
         self.assertEqual(garment.count("bmesh.ops.bisect_plane"), 1)
-        self.assertIn("# a narrow wool panel", garment)
-        self.assertIn("placket.faces.new(pv)", garment)
+        self.assertIn("# The source suit has an open central placket", garment)
+        self.assertIn("placket.faces.new((lower[0],lower[1],upper[1],upper[0]))", garment)
+        self.assertIn("surface_samples=[]", garment)
+        self.assertIn("placket_front_y(z)", garment)
+        self.assertIn("SHIRE_WAISTCOAT_PLACKET_SURFACE_MISSING", garment)
         self.assertIn("waistcoat_front_placket", source)
         self.assertIn("v.co+=v.normal*.004", garment)
 
