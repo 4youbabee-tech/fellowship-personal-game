@@ -4308,3 +4308,11 @@ Follow-up run 39021746348 (#2237) passed build/import/automation/startup but exp
 | Per-row factory isolation and quarantine receipt integrity | SOURCE TOOL REPAIR PASS | 9 offline tests; malformed rows, unique safe quarantine paths, pinned SHA-256 and dimensions checked before Blender |
 | Blender production and licensed Shire mesh bytes | NOT RUN / NOT ACQUIRED | No source file in the intake root; requires real Poly Haven model download and exact Blender build/reimport |
 | Batch A and PES-002 | OPEN | Source tooling improvement only; no Blender export, UE import, world placement, visual or performance acceptance |
+
+
+## 2026-10-17 — PES-002 Batch A official CC0 model intake lane
+| Gate / output | State | Evidence / remaining work |
+|---|---|---|
+| Poly Haven source intake and SHA/license provenance | IMPLEMENTED / HOST RUN PENDING | Offline API-shape, resolution, dependency-path, host allowlist, no-overwrite and receipt tests pass; 2K preferred with 1K fallback |
+| Batch A source-only lane and Windows Unreal suppression | IMPLEMENTED / HOST RUN PENDING | Existing workflow routes this exact PR head to source-only; no Unreal writer before Batch A closeout |
+| Physical source, Blender FBX/LOD/UCX and source artifact | NOT ACQUIRED / NOT RUN | Await exact-head GitHub Action; candidate status does not advance until output bytes, reimport checks and receipt are reviewed |

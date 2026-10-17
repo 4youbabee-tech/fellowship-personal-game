@@ -56,6 +56,29 @@ def validate_row(row: object, root: Path) -> tuple[Path, list[str]]:
             errors.append("INVALID_SOURCE_SHA256")
         elif source.is_file() and sha256(source).lower() != expected_hash.lower():
             errors.append("SOURCE_SHA256_MISMATCH")
+    receipt_rel = source_info.get("receipt_path")
+    if receipt_rel is not None:
+        if not isinstance(receipt_rel, str) or not receipt_rel.strip():
+            errors.append("SOURCE_RECEIPT_PATH_INVALID")
+        else:
+            receipt_path_rel = Path(receipt_rel)
+            receipt_path = (root / receipt_path_rel).resolve()
+            if (receipt_path_rel.is_absolute() or root not in receipt_path.parents or
+                    not receipt_path.is_file()):
+                errors.append("SOURCE_RECEIPT_MISSING_OR_ESCAPES_ROOT")
+            elif source.is_file():
+                try:
+                    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+                    rows = receipt.get("files", [])
+                    receipt_source_path = source.relative_to(receipt_path.parent).as_posix()
+                    model_record = next((item for item in rows if item.get("path") == receipt_source_path), None)
+                    if (receipt.get("status") != "CC0_POLYHAVEN_FBX_SOURCE_ACQUIRED" or
+                            receipt.get("license") != "CC0" or
+                            receipt.get("asset_id") != source_info.get("asset_id") or
+                            not model_record or model_record.get("sha256", "").lower() != sha256(source).lower()):
+                        errors.append("SOURCE_RECEIPT_PROVENANCE_MISMATCH")
+                except (OSError, ValueError, TypeError, AttributeError):
+                    errors.append("SOURCE_RECEIPT_INVALID")
     if not isinstance(row["target_tris"], int) or isinstance(row["target_tris"], bool) or row["target_tris"] < 12:
         errors.append("INVALID_TRIANGLE_BUDGET")
     lods = row["lods"]

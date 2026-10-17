@@ -5048,3 +5048,9 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Hardened `build_shire_kit.py`: malformed manifest rows are isolated, unsafe/duplicate identifiers receive unique contained quarantine receipts, and pinned source SHA-256 plus dimensions are validated before Blender.
 - Nine offline factory tests and Python compilation PASS. No Blender or Unreal run was started; the Poly Haven bench model bytes remain absent, so no source asset is promoted.
 - This closes a factory reliability defect only. Batch A remains open pending real licensed source downloads, Blender FBX/LOD/collision/material checks and a produced asset receipt.
+
+
+## 2026-10-17 — PES-002 Batch A official CC0 model intake lane (SOURCE RUN PENDING)
+- Added an offline-tested intake for the reviewed Poly Haven Painted Wooden Bench: official API metadata, 2K then 1K FBX choice, provider MD5 checks, retained nested dependencies and a SHA256/CC0 source receipt. The manifest now binds the physical FBX and its receipt; the Blender factory rejects missing or mismatched provenance.
+- The existing validation workflow now has an exact PR #484 source-only mode: 15 offline tests run before any downloads, then checksum-verified Blender 4.2.23 builds and reimports the FBX/LOD/collision packet. The Windows Unreal writer remains skipped until Batch A closes.
+- Local Python compilation and workflow YAML parse PASS. GitHub hosted acquisition/Blender execution is pending this exact head; the asset remains NOT ACQUIRED until its source and output artifact pass.

@@ -44,6 +44,30 @@ class ShireKitManifestTests(unittest.TestCase):
         self.assertEqual([x["id"] for x in good], ["Bench"])
         self.assertIn("SOURCE_SHA256_MISMATCH", rejected[0]["errors"])
 
+    def test_provider_receipt_hash_is_bound_to_physical_source(self):
+        source_root = self.root / "SourceAssets" / "ExternalLicensed" / "Inbox" / "painted_wooden_bench"
+        source_root.mkdir(parents=True)
+        source = source_root / "painted_wooden_bench.fbx"
+        source.write_bytes(b"licensed FBX bytes")
+        digest = kit.sha256(source)
+        receipt = source_root / "source_receipt.json"
+        receipt.write_text(json.dumps({
+            "status": "CC0_POLYHAVEN_FBX_SOURCE_ACQUIRED",
+            "license": "CC0", "asset_id": "painted_wooden_bench",
+            "files": [{"path": source.name, "sha256": digest}],
+        }), encoding="utf-8")
+        row = dict(self.row, source={
+            "path": source.relative_to(self.root).as_posix(),
+            "asset_id": "painted_wooden_bench",
+            "receipt_path": receipt.relative_to(self.root).as_posix(),
+        })
+        good, rejected = kit.preflight({"assets": [row]}, self.root)
+        self.assertEqual([x["id"] for x in good], ["Bench"])
+        self.assertEqual(rejected, [])
+        receipt.write_text("{}", encoding="utf-8")
+        _, rejected = kit.preflight({"assets": [row]}, self.root)
+        self.assertIn("SOURCE_RECEIPT_PROVENANCE_MISMATCH", rejected[0]["errors"])
+
     def test_malformed_and_unsafe_rows_are_quarantined_without_stopping_batch(self):
         malformed = dict(self.row, id="../../outside", source=None)
         good, rejected = kit.preflight({"assets": [None, malformed, self.row]}, self.root)

@@ -8,8 +8,12 @@
       "source": {
         "provider": "POLY_HAVEN",
         "source_url": "https://polyhaven.com/a/painted_wooden_bench",
-        "path": "SourceAssets/ExternalLicensed/Inbox/painted_wooden_bench/SOURCE_NOT_ACQUIRED.fbx",
-        "source_sha256": null
+        "asset_id": "painted_wooden_bench",
+        "api_files_url": "https://api.polyhaven.com/files/painted_wooden_bench",
+        "path": "SourceAssets/ExternalLicensed/Inbox/painted_wooden_bench/painted_wooden_bench.fbx",
+        "receipt_path": "SourceAssets/ExternalLicensed/Inbox/painted_wooden_bench/source_receipt.json",
+        "source_sha256": null,
+        "resolution_preference": ["2k", "1k"]
       },
       "license": {
         "class": "CC0",
@@ -22,7 +26,7 @@
       "dimensions_m": [1.2, 0.55, 0.85],
       "collision": "convex_hull",
       "material_groups": ["wood", "paint", "metal"],
-      "status": "SOURCE_CANDIDATE_NOT_ACQUIRED"
+      "status": "ACQUIRE_ON_BATCH_A_SOURCE_RUN"
     }
   ]
 }
