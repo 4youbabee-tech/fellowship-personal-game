@@ -447,6 +447,10 @@ class PES002CinematicHobbitonContract(unittest.TestCase):
         self.assertIn("PES002_LANDMARK_CAMERA_SIGHT", cpp)
         self.assertIn('TEXT("PES002LandmarkEvidenceSight")', cpp)
         self.assertIn("LineTraceSingleByChannel(SightHit, Eye, Aim", cpp)
+        self.assertIn("for (int32 Candidate = 0;", cpp)
+        self.assertIn("Candidate <= static_cast<int32>(", cpp)
+        self.assertIn("ObserverOffsets[Candidate - 1]", cpp)
+        self.assertNotIn("for (int32 Candidate = -1;", cpp)
         self.assertIn("WeakCamera->SetActorLocationAndRotation(", cpp)
 
 

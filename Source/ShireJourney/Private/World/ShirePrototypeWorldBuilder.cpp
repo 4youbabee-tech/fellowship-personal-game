@@ -663,13 +663,18 @@ void AShirePrototypeWorldBuilder::BeginPlay()
                                     WeakBuilder.Get());
                                 float BestScore = -1000000.0f;
                                 int32 Selected = INDEX_NONE;
-                                for (int32 Candidate = -1;
-                                     Candidate < UE_ARRAY_COUNT(ObserverOffsets);
+                                // UE_ARRAY_COUNT may be unsigned. Starting at
+                                // -1 silently skips the entire search by signed
+                                // integer promotion. Index zero is the fixed
+                                // view; indices 1..N are the authored options.
+                                for (int32 Candidate = 0;
+                                     Candidate <= static_cast<int32>(
+                                         UE_ARRAY_COUNT(ObserverOffsets));
                                      ++Candidate)
                                 {
-                                    const FVector Eye = Candidate == -1
-                                        ? ViewPosition
-                                        : LookAt + ObserverOffsets[Candidate];
+                                    const FVector Eye = Candidate == 0
+                                        ? ChapterPositions[ViewIndex]
+                                        : LookAt + ObserverOffsets[Candidate - 1];
                                     float Score = -0.04f * FVector::Dist(Eye, LookAt);
                                     for (const FVector& Aim : SightTargets)
                                     {
