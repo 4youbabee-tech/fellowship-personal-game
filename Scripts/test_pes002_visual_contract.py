@@ -10,23 +10,12 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class PES002VisualContract(unittest.TestCase):
-    def test_bagend_albedo_fallback_resolves_existing_shire_textures_only(self):
+    def test_bagend_requires_exact_authored_png_not_generic_proxy(self):
         cpp = (ROOT / "Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp").read_text(encoding="utf-8")
-        self.assertIn("PES002_BAGEND_ALBEDO_RESOLVE", cpp)
-        self.assertNotIn("UE_LOG(LogTemp, Texture ? Display : Error", cpp)
-        self.assertIn("if (Texture)\n                {\n                    UE_LOG(LogTemp, Display,", cpp)
-        self.assertIn("else\n                {\n                    UE_LOG(LogTemp, Error,", cpp)
-        self.assertIn('TEXT("TX_ShGrass")', cpp)
-        self.assertIn('TEXT("TX_ShWood")', cpp)
-        self.assertIn('TEXT("TX_ShStone")', cpp)
-        self.assertIn('TEXT("TX_ShDoorGreen")', cpp)
-        self.assertIn('Binding.ParameterName == FName(TEXT("AlbedoTexture"))', cpp)
-        self.assertIn('Binding.TextureObjectPath.Contains(', cpp)
-        self.assertIn('if (Instance && Texture)', cpp)
-        self.assertIn('++Failed;', cpp)
-        # Never reinterpret roughness, ORM or normal maps as base color.
-        self.assertIn('TEXT("AlbedoTexture")', cpp)
-
+        self.assertIn("PES002_BAGEND_AUTHORED_ALBEDO_MISSING", cpp)
+        self.assertIn("PES002_MTL_SOURCE_MISSING", cpp)
+        self.assertNotIn("PES002_BAGEND_ALBEDO_RESOLVE", cpp)
+        self.assertIn('FPackageName::DoesPackageExist(TEXT("/Game/Production/World/Shire/CuratedP1C01/Nature/Textures/T_Sh_Bark_ORM"))', cpp)
 
     def test_pes002_named_shared_technical_rig_and_riverside_clearance(self):
         npc = (ROOT / "Source/ShireJourney/Private/Characters/ShireNPC.cpp").read_text(encoding="utf-8")

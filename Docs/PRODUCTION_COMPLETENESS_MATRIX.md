@@ -1,3 +1,8 @@
+## 2026-10-18 PES-002 Bag End source correctness repair candidate
+- Verified PR488 previous HEAD a964b653; Run 39068568628 UE4 C++ PASS but artifact REST 403 prevented import/PIE. No imported or device evidence on this candidate.
+- The producer already has a deterministic four-PNG Bag End generator, invoked before the importer from ci_import_production_assets.cmd. Fix the local launcher workspace default, reject missing MTL-relative authored PNG source and remove unsuitable generic grass/stone/wood substitutes. Guard optional curated Bark ORM loading until its exact package exists; a staged curated source still needs real import validation.
+- Static source tests and exact-head Windows importer, Bark ORM, screenshots, collision, skeletal deformation and target-device performance remain REQUIRED. PES-002 ACTIVE, Gate6/7 OPEN, no merge authorized.
+
 ## 2026-10-17 PES-002 exact Windows MSVC failure follow-up (Run 39068218620)
 - Exact 5bc46bd4fb180adc4fe2414eb46570e5fbfa4a64 UE Windows compile FAILED `ShireProductionImportCommandlet.cpp(2443)` because `UE_LOG` verbosity parameter is a compile-time macro token, not conditional expression (`Texture ? Display : Error`); subsequent C++ parser errors cascaded. Replace with two explicit verbosity branches; add regression assertions preserving diagnostic logging on both outcomes. No import or four-view capture ran on failed HEAD, so no visual or source acceptance can be claimed. Prior texture role substitution remains provisional, and ORM sidecar missing remains a distinct problem. Windows rebuild must run on exact amended HEAD and produce genuine output before any acceptance.
 

@@ -1485,6 +1485,11 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                         FString AlbedoSourcePath = FPaths::ConvertRelativePathToFull(
                             FPaths::Combine(FPaths::GetPath(MtlFilename), CurrentAlbedoMap));
                         FPaths::NormalizeFilename(AlbedoSourcePath);
+                        if (!FPaths::FileExists(AlbedoSourcePath))
+                        {
+                            ++Failed;
+                            UE_LOG(LogTemp, Error, TEXT("PES002_MTL_SOURCE_MISSING material=%s source=%s"), *CurrentMaterialName, *AlbedoSourcePath);
+                        }
 
                         FString RelativeTexturePath = AlbedoSourcePath;
                         FPaths::MakePathRelativeTo(RelativeTexturePath, *(WorkingRoot / TEXT("")));
@@ -2405,54 +2410,13 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                 *Binding.TextureObjectPath);
         }
 
-        // Some local installs persist Bag End MTL instances but not their
-        // TX_BagEnd*.png inputs. Prefer the exact authored albedo whenever it
-        // exists. A curated, ALREADY IMPORTED Shire Texture2D is an explicit
-        // fallback only for original Bag End diffuse (never Normal/ORM).
-        if (Instance && !Texture &&
-            Binding.ParameterName == FName(TEXT("AlbedoTexture")) &&
-            Binding.MaterialObjectPath.StartsWith(
-                TEXT("/Game/Production/World/Shire/"), ESearchCase::IgnoreCase) &&
-            Binding.TextureObjectPath.Contains(
-                TEXT("/TX_BagEnd"), ESearchCase::IgnoreCase))
+        // Missing authored Bag End albedos are not interchangeable with Shire textures.
+        // A material instance on disk is not proof of an imported Texture2D.
+        if (!Texture && Binding.TextureObjectPath.Contains(TEXT("/TX_BagEnd"), ESearchCase::IgnoreCase))
         {
-            FString FallbackName;
-            if (Binding.MaterialObjectPath.Contains(TEXT("BagEndTurf")) ||
-                Binding.MaterialObjectPath.Contains(TEXT("Grass")))
-                FallbackName = TEXT("TX_ShGrass");
-            else if (Binding.MaterialObjectPath.Contains(TEXT("BagEndDoor")) ||
-                     Binding.MaterialObjectPath.Contains(TEXT("Wood")))
-                FallbackName = TEXT("TX_ShWood");
-            else if (Binding.MaterialObjectPath.Contains(TEXT("BagEndGlass")))
-                FallbackName = TEXT("TX_ShDoorGreen");
-            else if (Binding.MaterialObjectPath.Contains(TEXT("BagEndPlaster")) ||
-                     Binding.MaterialObjectPath.Contains(TEXT("Stone")))
-                FallbackName = TEXT("TX_ShStone");
-            else if (Binding.MaterialObjectPath.Contains(TEXT("BagEndBrass")))
-                FallbackName = TEXT("TX_ShWood");
-            if (!FallbackName.IsEmpty())
-            {
-                const FString FallbackObject = FString::Printf(
-                    TEXT("/Game/Production/World/Shire/%s.%s"),
-                    *FallbackName, *FallbackName);
-                Texture = FindObject<UTexture2D>(nullptr, *FallbackObject);
-                if (!Texture)
-                {
-                    Texture = LoadObject<UTexture2D>(nullptr, *FallbackObject);
-                }
-                if (Texture)
-                {
-                    UE_LOG(LogTemp, Display,
-                        TEXT("PES002_BAGEND_ALBEDO_RESOLVE material=%s authored=%s substitute=%s resolved=1 source=imported-Shire-Texture2D"),
-                        *Binding.MaterialObjectPath, *Binding.TextureObjectPath, *FallbackObject);
-                }
-                else
-                {
-                    UE_LOG(LogTemp, Error,
-                        TEXT("PES002_BAGEND_ALBEDO_RESOLVE material=%s authored=%s substitute=%s resolved=0 source=imported-Shire-Texture2D"),
-                        *Binding.MaterialObjectPath, *Binding.TextureObjectPath, *FallbackObject);
-                }
-            }
+            UE_LOG(LogTemp, Error,
+                TEXT("PES002_BAGEND_AUTHORED_ALBEDO_MISSING material=%s texture=%s"),
+                *Binding.MaterialObjectPath, *Binding.TextureObjectPath);
         }
 
         if (Instance && Texture)
@@ -2549,10 +2513,9 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             TEXT("/Game/Production/World/Shire/CuratedP1C01/Nature/Textures/T_Sh_Bark_ORM.T_Sh_Bark_ORM");
         UTexture2D* CuratedDefaultORM =
             FindObject<UTexture2D>(nullptr, CuratedDefaultORMPath);
-        if (!CuratedDefaultORM)
+        if (!CuratedDefaultORM && FPackageName::DoesPackageExist(TEXT("/Game/Production/World/Shire/CuratedP1C01/Nature/Textures/T_Sh_Bark_ORM")))
         {
-            CuratedDefaultORM =
-                LoadObject<UTexture2D>(nullptr, CuratedDefaultORMPath);
+            CuratedDefaultORM = LoadObject<UTexture2D>(nullptr, CuratedDefaultORMPath);
         }
         if (CuratedDefaultORM)
         {

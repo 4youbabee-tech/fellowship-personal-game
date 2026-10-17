@@ -1,5 +1,6 @@
 @echo off
 setlocal EnableExtensions EnableDelayedExpansion
+if not defined GITHUB_WORKSPACE for %%I in ("%~dp0..") do set "GITHUB_WORKSPACE=%%~fI"
 set "PROJECT=%GITHUB_WORKSPACE%\ShireJourney.uproject"
 set "EDITORCMD=C:\Program Files\Epic Games\UE_4.27\Engine\Binaries\Win64\UE4Editor-Cmd.exe"
 set "LOGDIR=%GITHUB_WORKSPACE%\Saved\Logs"
