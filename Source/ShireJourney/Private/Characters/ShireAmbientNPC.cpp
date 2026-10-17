@@ -654,7 +654,11 @@ void AShireAmbientNPC::ConfigureLivingWorldRoutine(
     bInLivingWorldPool = false;
     bUnifiedResidentActive = false;
     ResidentRigCheckSeconds = 0.0f;
-    if (UnifiedResident) UnifiedResident->SetVisibility(false);
+    if (UnifiedResident)
+    {
+        UnifiedResident->SetVisibility(false);
+        UnifiedResident->GlobalAnimRateScale = 1.0f;
+    }
     bHeadingToB = true;
     bObservingPlayer = false;
     bSocializing = false;
@@ -1415,6 +1419,8 @@ void AShireAmbientNPC::ApplyHobbitVisualVariation(int32 VariantSeed)
     ResidentVisualVariant = Stream.RandRange(0, 7);
     ResidentHeightCm = Stream.FRandRange(131.0f, 153.0f);
     ResidentWidthFactor = Stream.FRandRange(0.91f, 1.09f);
+    // Per-resident playback speed varies without fabricating animation clips.
+    UnifiedResident->GlobalAnimRateScale = Stream.FRandRange(0.90f, 1.10f);
     const FBoxSphereBounds Bounds = UnifiedResident->SkeletalMesh->GetBounds();
     const float HeightScale = FMath::Clamp(
         ResidentHeightCm / (2.0f * Bounds.BoxExtent.Z), 0.1f, 3.0f);
@@ -1472,10 +1478,15 @@ bool AShireAmbientNPC::TryEnableUnifiedShireResident()
         RoutineRole == TEXT("PlayRunner");
     const FVector BagEnd(-2210.0f, -520.0f, 0.0f);
     APawn* Player = GetPlayerPawnCached();
+    // Local Bag End census includes residents on the far side of the player.
+    // Only extend presentation while the player is in this chapter region.
+    const float PlayerRangeCm = Player &&
+        FVector::DistSquared2D(Player->GetActorLocation(), BagEnd) <=
+            FMath::Square(2600.0f) ? 5500.0f : 3300.0f;
     if (!bLocalShireResident || !Player ||
         FVector::DistSquared2D(GetActorLocation(), BagEnd) > FMath::Square(3100.0f) ||
         FVector::DistSquared2D(GetActorLocation(), Player->GetActorLocation()) >
-            FMath::Square(3300.0f))
+            FMath::Square(PlayerRangeCm))
     {
         return false;
     }
@@ -1531,6 +1542,10 @@ bool AShireAmbientNPC::TryEnableUnifiedShireResident()
         *RoutineRole.ToString(), *Mesh->GetPathName(), *UsedRig.ToString(),
         bSharedStoryRigFallback ? 1 : 0, ResidentVisualVariant,
         ResidentHeightCm, ResidentWidthFactor, bResidentTintApplied ? 1 : 0);
+    UE_LOG(LogTemp, Display,
+        TEXT("PES002_RESIDENT_ACTUAL_ANIM_RATE role=%s rate=%.3f sharedRig=%d authoredNewClips=0"),
+        *RoutineRole.ToString(), UnifiedResident->GlobalAnimRateScale,
+        bSharedStoryRigFallback ? 1 : 0);
     return true;
 }
 

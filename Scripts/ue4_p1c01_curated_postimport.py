@@ -290,6 +290,22 @@ def editor_apply(unreal, root=ROOT):
         count = unreal.EditorStaticMeshLibrary.get_lod_count(asset)
         if count != row['expected_lod_count']:
             raise RuntimeError('P1C01_LOD_COUNT_MISMATCH:' + path + ':' + str(count))
+        # UE4.27: preserve hard edges on buildings and stone.
+        organic = '/Nature/meshes/SM_Sh_' in path and any(
+            family in path.lower() for family in ('tree_', 'shrub_'))
+        if organic:
+            for lod_index in range(count):
+                settings = unreal.EditorStaticMeshLibrary.get_lod_build_settings(asset, lod_index)
+                settings.set_editor_property('recompute_normals', True)
+                settings.set_editor_property('compute_weighted_normals', True)
+                unreal.EditorStaticMeshLibrary.set_lod_build_settings(asset, lod_index, settings)
+                verified = unreal.EditorStaticMeshLibrary.get_lod_build_settings(asset, lod_index)
+                if not verified.get_editor_property('compute_weighted_normals') or not \
+                        verified.get_editor_property('recompute_normals'):
+                    raise RuntimeError('P1C01_ORGANIC_WEIGHTED_NORMALS_NOT_PERSISTED:' +
+                                       path + ':' + str(lod_index))
+            print('P1C01_ORGANIC_WEIGHTED_NORMALS asset=%s lods=%d' %
+                  (path, count), flush=True)
         for index in range(1, count):
             verts = unreal.EditorStaticMeshLibrary.get_number_verts(asset, index)
             if verts <= 0:

@@ -138,7 +138,7 @@ AShirePrototypeWorldBuilder::AShirePrototypeWorldBuilder()
     VillageMatureOakInstances->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     VillageMatureOakInstances->SetGenerateOverlapEvents(false);
     VillageMatureOakInstances->SetCastShadow(false);
-    VillageMatureOakInstances->SetCullDistances(1200, 9500);
+    VillageMatureOakInstances->SetCullDistances(1000, 6500);
 
     RockInstances = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("RockInstances"));
     RockInstances->SetupAttachment(RuntimeRoot);
@@ -729,7 +729,20 @@ void AShirePrototypeWorldBuilder::BeginPlay()
                                     }
                                     ++LocalManaged;
                                     if (Resident->IsUsingUnifiedResident()) ++RealSkeletal;
-                                    else ++ModularFallback;
+                                    else
+                                    {
+                                        ++ModularFallback;
+                                        const APlayerController* ProofPC =
+                                            WeakBuilder->GetWorld()->GetFirstPlayerController();
+                                        const APawn* ProofPlayer = ProofPC ? ProofPC->GetPawn() : nullptr;
+                                        const float PlayerDistance = ProofPlayer
+                                            ? FVector::Dist2D(Resident->GetActorLocation(),
+                                                ProofPlayer->GetActorLocation()) : -1.0f;
+                                        UE_LOG(LogTemp, Warning,
+                                            TEXT("PES002_MODULAR_RESIDENT_EVIDENCE role=%s distToPlayer=%.0f distToBagEnd=%.0f reason=inspect-eligibility-or-rig"),
+                                            *Resident->RoutineRole.ToString(), PlayerDistance,
+                                            FVector::Dist2D(Resident->GetActorLocation(), Center));
+                                    }
                                 }
                                 UE_LOG(LogTemp, Display,
                                     TEXT("PES002_RESIDENT_PRESENTATION_SNAPSHOT localManaged=%d skeletal=%d modular=%d scope=BagEnd visualAccepted=0"),

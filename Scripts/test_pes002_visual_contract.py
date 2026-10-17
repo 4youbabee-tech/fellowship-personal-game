@@ -405,6 +405,20 @@ class PES002IntegratedShireContract(unittest.TestCase):
         self.assertIn("OriginalMaterial->GetVectorParameterValue(", cpp)
         self.assertIn("countLimit=22 visualAccepted=0", cpp)
 
+    def test_organic_smoothing_and_blender_foliage_topology(self):
+        post = (ROOT / "Scripts/ue4_p1c01_curated_postimport.py").read_text(encoding="utf-8")
+        nature = (ROOT / "Tools/CloudAssetBuild/blender_nature.py").read_text(encoding="utf-8")
+        self.assertIn("get_lod_build_settings(", post)
+        self.assertIn("set_lod_build_settings(", post)
+        self.assertIn("'compute_weighted_normals', True", post)
+        self.assertIn("P1C01_ORGANIC_WEIGHTED_NORMALS_NOT_PERSISTED", post)
+        self.assertIn("('tree_', 'shrub_')", post)
+        self.assertIn("primitive_uv_sphere_add(", nature)
+        self.assertIn('create("FoliageCluster","foliage"', nature)
+        self.assertIn('create("BushCluster","foliage"', nature)
+        self.assertNotIn('create("FoliageCluster","ico"', nature)
+        self.assertIn("TRIS_LIMIT=(11000,5500,2600)", nature)
+
     def test_curated_texture_mip_caps_require_persistence_receipt(self):
         code = (ROOT / "Scripts/ue4_p1c01_curated_postimport.py").read_text(encoding="utf-8")
         self.assertIn("set_editor_property('max_texture_size', max_size)", code)
@@ -421,6 +435,12 @@ class PES002CinematicHobbitonContract(unittest.TestCase):
         self.assertIn('ActorHasTag(TEXT("LivingWorldManaged"))', conversion)
         self.assertIn("if (ActiveRigs >= 22) return false;", conversion)
         self.assertIn('Streaming->ResolveCharacterRig(UsedRig, Mesh, AnimClass)', conversion)
+        self.assertIn("? 5500.0f : 3300.0f;", conversion)
+        self.assertIn("FMath::Square(PlayerRangeCm)", conversion)
+        self.assertIn("GlobalAnimRateScale = Stream.FRandRange(0.90f, 1.10f)", npc)
+        world = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        self.assertIn("PES002_MODULAR_RESIDENT_EVIDENCE", world)
+        self.assertIn("VillageMatureOakInstances->SetCullDistances(1000, 6500);", world)
 
     def test_chapter_landmarks_use_existing_world_and_director_ownership(self):
         cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
