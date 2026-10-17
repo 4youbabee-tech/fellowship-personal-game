@@ -5079,3 +5079,6 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 ## 2026-10-17 PES-002 source-character silhouette repair candidate
 - Inspected the exact source-preview artifact from Run 39031346183 at `5355bd0afd69eada46dd0f832eaaf7d36bdaa530`: the body/wardrobe still reads generic, the head silhouette remains a cropped cap, and there is no footwear; source receipt records 59,498 triangles and no authored animation. This is a visual rejection, not an Unreal import.
 - Candidate change moves 24 tapered ringlets outside the scalp and reduces each to 9 centerline samples × 5 sides to target <6,000 hair triangles while preserving the source rig. Exact-head Blender artifact and visual review remain pending; no runtime promotion.
+
+## 2026-10-17 PES-002 Blender hair-budget gate repair
+- Exact Blender Run 39037324617 exported the candidate, then failed `SHIRE_HAIR_OR_CHARACTER_TRIANGLE_BUDGET_FAILED`. Diagnosis: `inspect_mpfb_shire_variant.py` rejected hair counts below 6,000, opposite the quality contract and test wording. Corrected the comparator to reject counts above 6,000 and updated the regression contract. The exact-head corrected Blender render and silhouette review are pending; source-only, no UE promotion.
