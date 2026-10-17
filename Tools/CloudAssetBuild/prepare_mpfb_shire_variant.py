@@ -150,10 +150,14 @@ def main():
     for index in range(5):
         z = .925 + index * .046
         center = vest.matrix_world.inverted() @ Vector((.042, -.081, z))
-        created = bmesh.ops.create_uvsphere(
+        # Blender versions do not consistently return a `faces` key from
+        # create_uvsphere; snapshot the BMFace collection so operator result
+        # schema cannot abort source export after building the sphere.
+        old_faces = set(buttons.faces)
+        bmesh.ops.create_uvsphere(
             buttons, u_segments=8, v_segments=6, radius=.006,
             matrix=Matrix.Translation(center))
-        for face in created['faces']:
+        for face in set(buttons.faces) - old_faces:
             face.smooth = True
     buttons.to_mesh(vest.data); buttons.free(); vest.data.update()
     vest.data.materials.append(material('Shire_Aged_Brass_Fasteners', (.29, .19, .07)))

@@ -25,6 +25,12 @@ class WardrobeQualityContractTests(unittest.TestCase):
         self.assertIn("report['hair_triangles']<6000", source)
         self.assertIn("report['total_triangles']>60000", source)
 
+    def test_uv_sphere_faces_are_discovered_without_operator_result_key(self):
+        source = (ROOT / "prepare_mpfb_shire_variant.py").read_text(encoding="utf-8")
+        self.assertIn("old_faces = set(buttons.faces)", source)
+        self.assertIn("set(buttons.faces) - old_faces", source)
+        self.assertNotIn("created['faces']", source)
+
 
 if __name__ == "__main__":
     unittest.main()
