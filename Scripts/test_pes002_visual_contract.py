@@ -315,5 +315,30 @@ class PES002VisualContract(unittest.TestCase):
         self.assertEqual(gov['pes_immediate_root_cause_repair_protocol_2026_10_14']['status'], 'OWNER_MANDATED')
 
 
+    def test_project_owned_shire_canopy_has_broad_lobed_uv_geometry(self):
+        generator = ROOT / "Tools/CloudAssetBuild/generate_shire_tree_canopy.py"
+        tracked = ROOT / "SourceAssets/Production/World/Shire/SM_ShTreeCanopy.obj"
+        with tempfile.TemporaryDirectory() as tmp:
+            generated = Path(tmp) / tracked.name
+            subprocess.run(["python3", str(generator), "--output", str(generated)], check=True, cwd=ROOT)
+            self.assertEqual(generated.read_bytes(), tracked.read_bytes())
+        source = tracked.read_text(encoding="utf-8")
+        vertices = [tuple(map(float, line.split()[1:])) for line in source.splitlines() if line.startswith("v ")]
+        uvs = [line for line in source.splitlines() if line.startswith("vt ")]
+        faces = [line.split()[1:] for line in source.splitlines() if line.startswith("f ")]
+        self.assertIn("five overlapped, UV-mapped foliage lobes", source)
+        self.assertEqual(len(vertices), 285)
+        self.assertEqual(len(uvs), len(vertices))
+        self.assertEqual(len(faces), 500)
+        bounds = [max(v[i] for v in vertices) - min(v[i] for v in vertices) for i in range(3)]
+        self.assertGreater(bounds[0] / bounds[2], 1.10)
+        self.assertGreater(bounds[1] / bounds[2], 1.00)
+        for face in faces:
+            self.assertEqual(len(face), 3)
+            for ref in face:
+                vertex, uv = map(int, ref.split("/"))
+                self.assertTrue(1 <= vertex <= len(vertices))
+                self.assertTrue(1 <= uv <= len(uvs))
+
 if __name__ == "__main__":
     unittest.main()

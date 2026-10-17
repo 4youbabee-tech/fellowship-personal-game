@@ -1868,3 +1868,9 @@ Status: **SOURCE PREPRODUCTION OPEN / RUNTIME PREDECESSOR-GATED / NO PIE-DEVICE-
 
 2026-10-14: Owner-approved asset-first acceleration added to Governor. Count real imported/placed/rendered assets, net gameplay LOC and gate-derived completion; prefer verified fast PIE and one owner-facing closure report. No new asset acceptance or PES closure claimed.
 2026-10-15 Bag End exact-head composition decision: Four true UE4.27 views in Artifact 11960756267 show the resolved capture timing but reject the visual composition—an unmaterialed dedicated facade renders as a dominant brown slab and the foreground green disk reads as a loose oversized door. Until a proper material-slot import is proven, Bag End uses the existing rounded turf mound as the hero silhouette, a reduced west-facing green circular door and exactly two small warm round windows. This adds no ticking actors, no synchronous loads, no decorative collision, and does not move the Bag End quest/collision anchors. Fresh UE4 screenshot and traversal evidence required; not accepted.
+
+
+## 2026-10-17 Bag End exact-head foliage silhouette repair candidate
+- Exact-head UE4.27 Run 38973795568 on `b29dc61` passed build/import/automation and produced four real 1280x720 PIE views; human review still rejects the settlement. Runtime log confirms 9 curated nature families and 117 grounded HISM placements, but the repeated distant canopy source remains a primitive-like cone with one LOD.
+- Replaced only the original project-owned canopy geometry source with a deterministic five-lobe, broadleaf crown (285 UV-mapped vertices, 500 triangles); no instance count, anchor, collision, density, shadow or runtime ownership changes. A source regression runs the generator and checks topology/bounds/material UV coverage.
+- Exact-head UE4 import and new images are pending; the candidate is not visually accepted, and frame-time/device gates remain open.
