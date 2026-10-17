@@ -1478,15 +1478,12 @@ bool AShireAmbientNPC::TryEnableUnifiedShireResident()
         RoutineRole == TEXT("PlayRunner");
     const FVector BagEnd(-2210.0f, -520.0f, 0.0f);
     APawn* Player = GetPlayerPawnCached();
-    // Local Bag End census includes residents on the far side of the player.
-    // Only extend presentation while the player is in this chapter region.
-    const float PlayerRangeCm = Player &&
-        FVector::DistSquared2D(Player->GetActorLocation(), BagEnd) <=
-            FMath::Square(2600.0f) ? 5500.0f : 3300.0f;
+    // Exact-head PIE identified the four supposed missing humans as fauna.
+    // Restore the smaller proven 3300cm near-player skeletal presentation bound.
     if (!bLocalShireResident || !Player ||
         FVector::DistSquared2D(GetActorLocation(), BagEnd) > FMath::Square(3100.0f) ||
         FVector::DistSquared2D(GetActorLocation(), Player->GetActorLocation()) >
-            FMath::Square(PlayerRangeCm))
+            FMath::Square(3300.0f))
     {
         return false;
     }

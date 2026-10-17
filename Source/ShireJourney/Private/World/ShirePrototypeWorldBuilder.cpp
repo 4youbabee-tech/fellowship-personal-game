@@ -713,7 +713,11 @@ void AShirePrototypeWorldBuilder::BeginPlay()
                                 ViewPosition, (LookAt - ViewPosition).Rotation());
                             if (ViewIndex == 3 && WeakBuilder->GetWorld())
                             {
+                                // Class-aware census: fauna must not be called
+                                // missing Hobbit skeletons or human placeholders.
                                 int32 LocalManaged = 0;
+                                int32 HumanoidResidents = 0;
+                                int32 LocalFauna = 0;
                                 int32 RealSkeletal = 0;
                                 int32 ModularFallback = 0;
                                 const FVector Center(-2210.0f, -520.0f, 0.0f);
@@ -728,6 +732,15 @@ void AShirePrototypeWorldBuilder::BeginPlay()
                                         continue;
                                     }
                                     ++LocalManaged;
+                                    const FName LocalRole = Resident->RoutineRole;
+                                    if (LocalRole == TEXT("Bird") ||
+                                        LocalRole == TEXT("Rabbit") ||
+                                        LocalRole == TEXT("Butterfly"))
+                                    {
+                                        ++LocalFauna;
+                                        continue;
+                                    }
+                                    ++HumanoidResidents;
                                     if (Resident->IsUsingUnifiedResident()) ++RealSkeletal;
                                     else
                                     {
@@ -745,8 +758,9 @@ void AShirePrototypeWorldBuilder::BeginPlay()
                                     }
                                 }
                                 UE_LOG(LogTemp, Display,
-                                    TEXT("PES002_RESIDENT_PRESENTATION_SNAPSHOT localManaged=%d skeletal=%d modular=%d scope=BagEnd visualAccepted=0"),
-                                    LocalManaged, RealSkeletal, ModularFallback);
+                                    TEXT("PES002_RESIDENT_PRESENTATION_SNAPSHOT localManaged=%d humanoids=%d skeletal=%d modular=%d fauna=%d scope=BagEnd visualAccepted=0"),
+                                    LocalManaged, HumanoidResidents, RealSkeletal,
+                                    ModularFallback, LocalFauna);
                             }
                             UE_LOG(LogTemp, Display,
                                 TEXT("PES002_CAPTURE_VIEW_READY view=%d target=%s"), ViewIndex,

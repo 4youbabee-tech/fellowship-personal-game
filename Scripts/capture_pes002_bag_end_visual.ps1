@@ -301,23 +301,30 @@ if (!$gardenMatch.Success -or [int]$gardenMatch.Groups[1].Value -ne 25 -or
     throw "PES002_GARDEN_WORLD_PLACEMENT_REJECT source=$gardenLine"
 }
 Write-Host "PES002_REAL_GARDEN_EVIDENCE $($gardenMatch.Value) world=PIE"
-$residents = @(Select-String -Path $log -Pattern 'PES002_RESIDENT_PRESENTATION_SNAPSHOT localManaged=(\d+) skeletal=(\d+) modular=(\d+)')
+$residents = @(Select-String -Path $log -Pattern 'PES002_RESIDENT_PRESENTATION_SNAPSHOT localManaged=(\d+) humanoids=(\d+) skeletal=(\d+) modular=(\d+) fauna=(\d+)')
 if ($residents.Count -lt 1) { throw 'PES002_RESIDENT_PIE_COUNT_MISSING' }
 Write-Host "PES002_REAL_RESIDENT_EVIDENCE $($residents[-1].Line.Trim())"
 $residentMatch = $residents[-1].Matches[0]
 $localManaged = [int]$residentMatch.Groups[1].Value
-$skeletal = [int]$residentMatch.Groups[2].Value
-$modular = [int]$residentMatch.Groups[3].Value
-# A broken census/no real skeletal resident is a runtime failure. Fewer
-# than 22 complete appearances is a measured art gap, not permission to
-# discard the four real diagnostic PNGs before owner review.
-if ($localManaged -lt 1 -or $skeletal -lt 1 -or ($skeletal + $modular -ne $localManaged)) {
-    throw "PES002_RESIDENT_RUNTIME_INVALID actual=$localManaged/$skeletal/$modular"
+$humanoids = [int]$residentMatch.Groups[2].Value
+$skeletal = [int]$residentMatch.Groups[3].Value
+$modular = [int]$residentMatch.Groups[4].Value
+$fauna = [int]$residentMatch.Groups[5].Value
+# Wildlife uses fauna meshes, never Frodo bones. The human art goal is separate.
+if ($localManaged -lt 1 -or $humanoids -lt 1 -or $skeletal -lt 1 -or
+    ($skeletal + $modular -ne $humanoids) -or
+    ($humanoids + $fauna -ne $localManaged)) {
+    throw "PES002_RESIDENT_RUNTIME_INVALID local=$localManaged humanoids=$humanoids skeletal=$skeletal modular=$modular fauna=$fauna"
 }
-if ($localManaged -ne 22 -or $skeletal -ne 22 -or $modular -ne 0) {
-    Write-Warning "PES002_RESIDENT_POPULATION_INCOMPLETE target=22/22/0 actual=$localManaged/$skeletal/$modular visualAccepted=false"
+if ($modular -eq 0) {
+    Write-Host "PES002_HUMANOID_SKELETAL_COVERAGE_PASS humanoids=$humanoids skeletal=$skeletal modular=$modular faunaSeparate=$fauna"
 } else {
-    Write-Host "PES002_RESIDENT_POPULATION_PASS localManaged=$localManaged skeletal=$skeletal modular=$modular"
+    Write-Warning "PES002_HUMANOID_SKELETAL_GAP humanoids=$humanoids skeletal=$skeletal modular=$modular"
+}
+if ($humanoids -ne 22 -or $skeletal -ne 22 -or $modular -ne 0) {
+    Write-Warning "PES002_RESIDENT_POPULATION_INCOMPLETE targetHumanoids=22 actualHumanoids=$humanoids skeletal=$skeletal modular=$modular fauna=$fauna visualAccepted=false"
+} else {
+    Write-Host "PES002_RESIDENT_POPULATION_PASS humanoids=$humanoids skeletal=$skeletal modular=$modular fauna=$fauna"
 }
 $sharedSamples = @(Select-String -Path $log -Pattern 'PES002_UNIFIED_RESIDENT_VISIBLE .*sharedHeroFallback=1')
 Write-Host "PES002_SHARED_STORY_RIG_SAMPLES count=$($sharedSamples.Count) finalCharacterArtAccepted=false"
