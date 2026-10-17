@@ -132,3 +132,8 @@ Read `Docs/CURRENT_STATE_SHORT.md` first for current *orientation only*. Then in
 - Scope remains existing PES-002 / P1C01. No new runtime PES, no gate waiver.
 
 - Follow-up run 39021746348 showed the first activation recovery had a P/Invoke defect: `GetCurrentThreadId` belongs to `kernel32.dll`, not `user32.dll`; the job timed out before requesting any screenshot. Correct the import and emit the inner exception in any future probe error. Validate once on exact head; if still blocked, stop repeated retries and repair the interactive desktop owner-side.
+
+## 2026-10-17 — Run 39022384250/#2238 visual and runtime evidence
+- Exact-head Windows CI passed build/import/automation/startup and produced four real PIE PNGs; 16/16 foreground samples confirmed the editor active. Artifact 12096524213 carries four 1280x720 views, a fresh CPU/GPU CSV and incident stats.
+- Captured FPS windows were 21.39–28.27, with hitches up to 362.15 ms. Dedicated/shared per-process memory peaked at 534.71/102.82 MiB; target-device acceptance remains false.
+- Visual inspection rejects final Shire acceptance due to conspicuously angular/primitive vegetation and props, repetitive density, and unresolved terrain/ground composition. Continue bounded PES-002 art correction; Gate 6/7 remains open.

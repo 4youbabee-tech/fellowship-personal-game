@@ -4281,3 +4281,13 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Device performance / Gate 6/7 | OPEN | No valid foreground FPS capture or target-owner-device data | Fresh active-window capture, target device run and human acceptance |
 
 Follow-up run 39021746348 (#2237) passed build/import/automation/startup but exposed a recovery-code defect: `GetCurrentThreadId` was imported from `user32.dll`, causing `MethodInvocationException` before any screenshot request. Corrected to `kernel32.dll`; exact-head revalidation pending. No PNG or FPS evidence.
+
+## 2026-10-17 Run #2238 acceptance boundary
+
+| Deliverable | State | Evidence |
+|---|---|---|
+| UE4.27.2 compile/import/automation/startup | PASS | Run 39022384250 at 5655bb97dc683466723ac1bc45adb2933b2ce34c |
+| Fresh PIE visual proof | PASS, 4 captures | Artifact 12096524213, 1280x720, 16/16 active-window samples |
+| Shire visual finish | REJECTED | Four-view review: angular vegetation/props, repetition and unfinished ground composition remain |
+| Performance target | NOT MET / not accepted | CI windows 21.39–28.27 FPS; hitches up to 362.15 ms; VRAM target acceptance false |
+| Chapter Gate 6/7 | OPEN | Target-device 720p/30 FPS and human visual approval remain outstanding |
