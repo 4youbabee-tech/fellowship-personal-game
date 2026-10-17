@@ -114,3 +114,8 @@ Governor key: `pes_asset_first_production_acceleration_policy_2026_10_14`. Prior
 
 ## 2026-10-15 M0 focused reference intake (supplement, no gate waiver)
 Read `Docs/CURRENT_STATE_SHORT.md` first for current *orientation only*. Then inspect live `Data/ProjectGovernor.json` and PR HEAD/Gate 6/7, existing source/test data, actual Unreal screenshots/warehouse rights and use targeted search into existing long historical ledgers. Short index NEVER replaces the Governor, Stage M0 evidence obligations, or exact-HEAD verification; historical ledgers stay intact. One runtime PES and one coherent PR, tracked under Governor key `pes002_owner_acceleration_2026_10_15`.
+
+## 2026-10-17 PES-002 settlement cottage visual replacement candidate
+- This is a continuation inside active PES-002 / W01 P1C01, not a new PES or a second runtime owner. M0 reviewed current `develop@6c5261a`, Governor W01 `PARTIAL`, Gate 6/7 open, the existing PR #484 runtime lane and the latest four-view Unreal evidence.
+- The observed six-cottage backdrop still mixed authored and 71-triangle prototype shells. Candidate batches the two already-imported 1,148-triangle cottage families in two no-collision HISM clusters across the six existing domestic placements and village-common backdrop. Original blocking meshes and all positions/rotations/scales remain unchanged.
+- Focused local source tests passed: `test_pes002_visual_contract.py` (17), `test_pes002_curated_pbr_shader_contract.py` (3), `test_pes002_joined_facade_source.py` (3), and `test_pes002_hero_texture_contract.py` (3). Exact-head UE4.27 compile/import/PIE and rendered review are still required; session remains OPEN.

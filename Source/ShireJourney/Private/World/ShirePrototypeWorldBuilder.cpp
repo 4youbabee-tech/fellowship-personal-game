@@ -3726,17 +3726,44 @@ void AShirePrototypeWorldBuilder::SpawnProductionVillageDetailLayer()
         { FVector(840, -420, 0), 0.76f, 18.0f },
         { FVector(1540, 520, 0), 0.70f, -28.0f }
     };
-    // PES-002 near Bag End: REUSE two already imported, authored, round-window
-    // cottage meshes (1148 triangles each) instead of stacking them on top of
-    // grey 71-triangle cottage shells. Crucially the original actor is still the
-    // SAME collision owner, at its previous position, rotation and scale.
-    // A missing mesh/failed spawn keeps the old visible appearance safely.
+    // Reuse the two already imported, authored, round-window cottage meshes
+    // (1148 triangles each) throughout the existing P1C01 settlement instead of
+    // leaving grey 71-triangle cottage shells as the visible homes. Keep the
+    // original actors as collision owners at their exact transforms, and batch
+    // replacement visuals by family in two non-colliding HISM clusters.
+    auto SpawnCottageVisualCluster = [this](UStaticMesh* Mesh, const TCHAR* Name)
+        -> AWorldDetailCluster*
+    {
+        if (!Mesh || Mesh->GetStaticMaterials().Num() < 2)
+        {
+            return nullptr;
+        }
+        FActorSpawnParameters Params;
+        Params.Owner = this;
+        Params.SpawnCollisionHandlingOverride =
+            ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+        AWorldDetailCluster* Cluster = GetWorld()->SpawnActor<AWorldDetailCluster>(
+            FVector::ZeroVector, FRotator::ZeroRotator, Params);
+        if (!Cluster)
+        {
+            return nullptr;
+        }
+        Cluster->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
+        Cluster->Tags.AddUnique(TEXT("PES002AuthoredCottageVisuals"));
+        Cluster->Tags.AddUnique(FName(Name));
+        Cluster->Configure(Mesh, false, 1600, 8500);
+        return Cluster;
+    };
+    AWorldDetailCluster* ThatchedCottageVisuals = SpawnCottageVisualCluster(
+        ProductionBagshotThatchedCottageMesh, TEXT("PES002ThatchedCottageHISM"));
+    AWorldDetailCluster* TimberCottageVisuals = SpawnCottageVisualCluster(
+        ProductionBagshotTimberCottageMesh, TEXT("PES002TimberCottageHISM"));
     int32 BagEndStyledCottages = 0;
     auto ReplaceExteriorVisualOnly = [this, &BagEndStyledCottages](
-        UStaticMesh* Original, UStaticMesh* Authored,
+        UStaticMesh* Original, AWorldDetailCluster* AuthoredVisuals,
         const FVector& At, const FVector& Scale, const FRotator& Rotation) -> bool
     {
-        if (!Original || !Authored || Authored->GetStaticMaterials().Num() < 2)
+        if (!Original || !AuthoredVisuals)
         {
             return false;
         }
@@ -3746,23 +3773,22 @@ void AShirePrototypeWorldBuilder::SpawnProductionVillageDetailLayer()
         {
             return false;
         }
-        AStaticMeshActor* StyledVisual = SpawnShape(
-            Authored, At, Scale, FLinearColor::White, Rotation, false);
-        if (!StyledVisual)
+        UStaticMeshComponent* OriginalComponent =
+            OriginalCollision->GetStaticMeshComponent();
+        if (!OriginalComponent)
         {
-            // The already-spawned original stays visible and blocking.
             return true;
         }
-        if (UStaticMeshComponent* OriginalComponent =
-                OriginalCollision->GetStaticMeshComponent())
+        const int32 Before = AuthoredVisuals->GetDetailCount();
+        AuthoredVisuals->AddDetailInstance(At, Rotation, Scale);
+        if (AuthoredVisuals->GetDetailCount() <= Before)
         {
-            OriginalComponent->SetVisibility(false, true);
-            OriginalComponent->SetCastShadow(false);
-            OriginalCollision->Tags.AddUnique(TEXT("PES002PreservedCottageCollision"));
-            StyledVisual->Tags.AddUnique(TEXT("PES002AuthoredNearCottageVisual"));
-            StyledVisual->SetActorEnableCollision(false);
-            ++BagEndStyledCottages;
+            return true;
         }
+        OriginalComponent->SetVisibility(false, true);
+        OriginalComponent->SetCastShadow(false);
+        OriginalCollision->Tags.AddUnique(TEXT("PES002PreservedCottageCollision"));
+        ++BagEndStyledCottages;
         return true;
     };
 
@@ -3770,13 +3796,11 @@ void AShirePrototypeWorldBuilder::SpawnProductionVillageDetailLayer()
     {
         const FCottagePlacement& P = Cottages[HouseIndex];
         const FRotator Yaw(0.0f, P.Yaw, 0.0f);
-        const bool bNearBagEnd = FVector::DistSquared2D(
-            P.Location, FVector(-2210.0f, -520.0f, 0.0f)) < FMath::Square(2050.0f);
-        UStaticMesh* Authored = (HouseIndex % 2 == 0)
-            ? ProductionBagshotThatchedCottageMesh
-            : ProductionBagshotTimberCottageMesh;
-        if (!bNearBagEnd || !ReplaceExteriorVisualOnly(
-                ProductionCottageHouseMesh, Authored,
+        AWorldDetailCluster* AuthoredVisuals = (HouseIndex % 2 == 0)
+            ? ThatchedCottageVisuals
+            : TimberCottageVisuals;
+        if (!ReplaceExteriorVisualOnly(
+                ProductionCottageHouseMesh, AuthoredVisuals,
                 P.Location, FVector(P.Scale), Yaw))
         {
             SpawnProd(ProductionCottageHouseMesh, P.Location,
@@ -3793,14 +3817,14 @@ void AShirePrototypeWorldBuilder::SpawnProductionVillageDetailLayer()
     const FVector CommonHouseScale(1.28f, 1.15f, 1.18f);
     const FRotator CommonHouseYaw(0.0f, -8.0f, 0.0f);
     if (!ReplaceExteriorVisualOnly(ProductionCottageHouseMesh,
-            ProductionBagshotTimberCottageMesh,
+            TimberCottageVisuals,
             CommonHouseAt, CommonHouseScale, CommonHouseYaw))
     {
         SpawnProd(ProductionCottageHouseMesh, CommonHouseAt,
             CommonHouseScale, CommonHouseYaw, true);
     }
     UE_LOG(LogTemp, Display,
-        TEXT("PES002_REUSED_WAREHOUSE_HOUSES styled=%d originalCollisionRetained=1 doubleFacades=0 authoredFamilies=2 cap=4"),
+        TEXT("PES002_REUSED_WAREHOUSE_HOUSES styled=%d originalCollisionRetained=1 doubleFacades=0 authoredFamilies=2 max=7 visualHISM=2"),
         BagEndStyledCottages);
     SpawnProd(ProductionWellMesh, FVector(-120, 300, 0), FVector(0.82f), FRotator::ZeroRotator, true);
 

@@ -226,6 +226,21 @@ class PES002VisualContract(unittest.TestCase):
         self.assertIn('GardenPlanters.Reserve(6)', cpp)
         self.assertIn('WoodPiles.Reserve(4)', cpp)
         self.assertIn('cap=4 collision=none tick=none', cpp)
+
+    def test_p1c01_settlement_houses_use_batched_authored_visuals(self):
+        cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        section = cpp.split("// Above-ground cottages make Hobbiton read", 1)[1].split(
+            "SpawnProd(ProductionWellMesh", 1)[0]
+        self.assertIn("SpawnCottageVisualCluster", section)
+        self.assertIn("Configure(Mesh, false, 1600, 8500)", section)
+        self.assertIn("AuthoredVisuals->AddDetailInstance(At, Rotation, Scale)", section)
+        self.assertIn('OriginalComponent->SetVisibility(false, true)', section)
+        self.assertIn('PES002PreservedCottageCollision', section)
+        self.assertIn("ProductionBagshotThatchedCottageMesh", section)
+        self.assertIn("ProductionBagshotTimberCottageMesh", section)
+        self.assertNotIn("bNearBagEnd", section)
+        self.assertIn("max=7 visualHISM=2", section)
+
         self.assertIn('cap=8 collision=none tick=none', cpp)
 
     def test_dedicated_bag_end_facade_is_deterministic_curved_authored_mesh(self):
