@@ -14,6 +14,11 @@ public:
     UPROPERTY(Transient, BlueprintReadOnly, Category="Locomotion")
     float GroundSpeed = 0.0f;
 
+    // Controls a real authored AN_Frodo_Talk branch in the existing UE4.27
+    // AnimBlueprint. Never claims a new voice, character or animation asset.
+    UPROPERTY(Transient, BlueprintReadOnly, Category="Locomotion")
+    bool bIsConversing = false;
+
     virtual void NativeInitializeAnimation() override;
     virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 

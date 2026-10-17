@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+      - feat/pes002-bag-end-woodland-real-fbx-20261016
     paths-ignore:
       - '.github/workflows/**'
       - 'Data/F107LorienAnduinLandmarkMegaSourceSuperpackV1.json'
@@ -287,12 +288,19 @@ jobs:
           PACKAGE: ${{ github.event_name == 'workflow_dispatch' && inputs.package_windows == true }}
         shell: bash
         run: |
-          echo "mode=full" >> "$GITHUB_OUTPUT"
-          echo "reason=owner-authorized-direct-engine-production" >> "$GITHUB_OUTPUT"
+          TARGET_BRANCH="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME:-}}"
+          if [ "$TARGET_BRANCH" = "feat/pes002-bag-end-woodland-real-fbx-20261016" ]; then
+            echo "mode=shire-kit-source" >> "$GITHUB_OUTPUT"
+            echo "reason=owner-directed-batch-a-source-before-runtime" >> "$GITHUB_OUTPUT"
+            echo "full=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=full" >> "$GITHUB_OUTPUT"
+            echo "reason=owner-authorized-direct-engine-production" >> "$GITHUB_OUTPUT"
+            echo "full=true" >> "$GITHUB_OUTPUT"
+          fi
           echo "parent_sha=$BASE_SHA" >> "$GITHUB_OUTPUT"
           echo "resume_stage=none" >> "$GITHUB_OUTPUT"
           echo "reset_intermediates=false" >> "$GITHUB_OUTPUT"
-          echo "full=true" >> "$GITHUB_OUTPUT"
           echo "core=false" >> "$GITHUB_OUTPUT"
           echo "asset=false" >> "$GITHUB_OUTPUT"
           echo "acceptance=false" >> "$GITHUB_OUTPUT"
@@ -359,6 +367,74 @@ jobs:
           path: ${{ runner.temp }}/kaykit-character-production/packet
           if-no-files-found: error
           retention-days: 14
+
+  shire-kit-source:
+    name: Batch A licensed Shire source and Blender FBX QC
+    needs: classify
+    if: >-
+      ${{ (github.event_name == 'pull_request' && github.head_ref == 'feat/pes002-bag-end-woodland-real-fbx-20261016') ||
+          (github.event_name == 'push' && github.ref_name == 'feat/pes002-bag-end-woodland-real-fbx-20261016') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      SOURCE_ROOT: SourceAssets/ExternalLicensed/Inbox/painted_wooden_bench
+      BUILD_ROOT: ${{ runner.temp }}/shire-kit-build
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          persist-credentials: false
+      - name: Run offline source and factory regressions before downloads
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m unittest discover -s Tools/CloudAssetBuild -p 'test_build_shire_kit.py' -v
+          python3 -m unittest discover -s Tools/CloudAssetBuild -p 'test_acquire_polyhaven_fbx.py' -v
+          python3 -m py_compile Tools/CloudAssetBuild/build_shire_kit.py Tools/CloudAssetBuild/acquire_polyhaven_fbx.py
+      - name: Acquire reviewed Poly Haven CC0 FBX and dependency maps
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 Tools/CloudAssetBuild/acquire_polyhaven_fbx.py --asset-id painted_wooden_bench \
+            --out "$GITHUB_WORKSPACE/$SOURCE_ROOT" --primary-name painted_wooden_bench.fbx
+          python3 Tools/CloudAssetBuild/build_shire_kit.py --manifest Data/ShireKitManifest.json \
+            --root "$GITHUB_WORKSPACE" --out "$RUNNER_TEMP/shire-kit-preflight" --preflight-only
+      - name: Install checksum-verified Blender 4.2.23 and produce three FBX LODs
+        shell: bash
+        run: |
+          set -euo pipefail
+          WORK="$RUNNER_TEMP/shire-kit-blender"
+          mkdir -p "$WORK"
+          VERSION=4.2.23
+          FILE="blender-$VERSION-linux-x64.tar.xz"
+          URL=https://download.blender.org/release/Blender4.2
+          curl -fL --retry 3 --retry-delay 4 "$URL/$FILE" -o "$WORK/$FILE"
+          curl -fL --retry 3 --retry-delay 4 "$URL/blender-$VERSION.sha256" -o "$WORK/checksums.sha256"
+          EXPECTED=$(grep -F "$FILE" "$WORK/checksums.sha256" | head -1 | awk '{print $1}')
+          if [ -z "$EXPECTED" ]; then echo "BLENDER_OFFICIAL_HASH_MISSING"; exit 90; fi
+          printf '%s  %s\n' "$EXPECTED" "$WORK/$FILE" | sha256sum --check
+          tar -xJf "$WORK/$FILE" -C "$WORK"
+          BIN="$WORK/blender-$VERSION-linux-x64/blender"
+          "$BIN" -b -t 2 --python-exit-code 94 --python Tools/CloudAssetBuild/build_shire_kit.py -- \
+            --manifest Data/ShireKitManifest.json --root "$GITHUB_WORKSPACE" --out "$BUILD_ROOT"
+          python3 - "$BUILD_ROOT/shire_kit_receipt.json" <<'PY'
+          import json,sys
+          r=json.load(open(sys.argv[1],encoding='utf-8'))
+          print(f"SHIRE_KIT_BUILD_RESULT loaded={r['loaded']} placed={r['placed']} rejected={r['rejected']}")
+          if r['placed'] < 1 or r['rejected'] != 0:
+              raise SystemExit('SHIRE_KIT_NO_QUALIFIED_FBXS')
+          PY
+      - name: Upload source bytes, Blender outputs, and hash receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pes002-batch-a-shire-kit-${{ env.TARGET_SHA }}
+          path: |
+            ${{ env.SOURCE_ROOT }}
+            ${{ env.BUILD_ROOT }}
+          if-no-files-found: ignore
+          retention-days: 90
 
   unreal-build:
     needs: [classify, character-source]

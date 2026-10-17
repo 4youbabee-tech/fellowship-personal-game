@@ -375,7 +375,40 @@
       "notes": "Discovery-only original medieval/game asset candidate source. Per-item license/creator rights and UE4.27 FBX/PBR compatibility are unverified; no downloads enter Approved without explicit recorded evidence. Do not rely on generic UE5/Unity compatibility badges."
     }
   ],
-  "assets": [],
+  "assets": [
+    {
+      "id": "POLYHAVEN_painted_wooden_bench",
+      "provider_id": "POLY_HAVEN",
+      "title": "Painted Wooden Bench",
+      "source_url": "https://polyhaven.com/a/painted_wooden_bench",
+      "source_author": "Kirill Sannikov",
+      "license_class": "CC0",
+      "license_url": "https://polyhaven.com/license",
+      "target_pes": "PES-002",
+      "suggested_application": "One low-cost originally modeled worn timber exterior bench at Bag End after real source intake and visual comparison",
+      "triangles_provider_reported": 630,
+      "geometry_format_offered": [
+        "FBX",
+        "glTF",
+        "BLEND"
+      ],
+      "approval_status": "SOURCE_CANDIDATE_NOT_ACQUIRED",
+      "acquisition_status": "PENDING_PHYSICAL_DOWNLOAD",
+      "license_evidence": "Provider's model page and its CC0 site-wide license; source binary/hash not obtained",
+      "source_sha256": null,
+      "warehouse_persisted": false,
+      "ue_imported": false,
+      "world_placed": false,
+      "render_observed": false,
+      "accepted": false,
+      "quality_blockers": [
+        "No physical model or source SHA available via current tools",
+        "No 1K/2K source maps examined",
+        "No physical import or in-game quality evidence",
+        "No authored collision or target-device evaluation"
+      ]
+    }
+  ],
   "discovery_sources_from_programmer_message_2026_09_19": {
     "status": "STORED_FOR_FUTURE_USE",
     "purpose": "Persistent shortlist of asset/tool sources supplied by the project owner for future world, character, animation, audio, music and UI production.",

@@ -1,3 +1,128 @@
+## 2026-10-17 PES-002 exact-head evidence — PR #484 / Run 39019099042
+| Area | Result at `75176532cf77e3236fa5ff5be04cd406bb3e56b8` | Status / missing acceptance |
+|---|---|---|
+| C++ / asset import | UE4.27.2 build PASS; 484 production files imported, 0 failures; 7 house actors styled through two HISM families, collisions retained | TECHNICAL PASS; image/placement review pending |
+| Automation / startup | ShireJourney Automation QA PASS; playable startup PASS | TECHNICAL PASS; gameplay review pending |
+| UE capture / performance | Foreground focus false in 20/20 samples; capture correctly failed closed; no current-head images | NOT RUN / INCONCLUSIVE; requires active visible editor/device session |
+| MPFB resident | Source PR #486 head `0baa4fe`; Blender/CC0 source pipeline PASS; exported study is visually rejected and has no animation/UE proof | SOURCE ONLY; no production import |
+| Chapter Gates | PES-002 ACTIVE; PES-003 LOCKED | Gate 6/7 OPEN; Shire not complete |
+
+## 2026-10-17 PES-002 exact-head compiler regression and pose pin fix
+| Test | Proven result |
+|---|---|
+| Candidate c07dc8 / Run 38972462036 | FAIL at MSVC C2039 in ShireLocomotionAnimInstance.cpp(46): public conversation getter absent from final shipped header; UHT PASS, no import/PIE from this SHA |
+| Root corrected | Final header merges conversation getter AND deferred modular-bank refresh fields; UE4.27 true/false pose pins corrected using official Epic exported node order |
+| Corrected SHA test | NOT RUN until new engine automation finishes; do not infer correct pose graph from code alone |
+| Chapter gates | PES-002 ACTIVE, PES-003 LOCKED, visuals/device 30 FPS NOT ACCEPTED |
+
+## 2026-10-17 PES-002 integrated citizen-character and interior source wave
+| Item | Candidate implemented source | Missing real evidence |
+|---|---|---|
+| NPC modular visuals | Late asynchronous chapter-bank rebind of actual Hobbit mesh parts within 2600 cm, one attempt per visible actor, no synchronous disk loading | Engine PIE log/readback and screenshot visual quality |
+| Real skeletal interaction | Fourth previously imported AN_Frodo_Talk connected via existing ABP boolean pose blend to real NPC social state, retains 5-rig cap | Strict UE4.27 editor graph regeneration, actual social Pose deformation visual and FPS |
+| Memory dialogue | Original Hamfast/Rosie/Maggot remembered greetings gated by PLAYER_INTERACTED and existing NPCContext | UI/voice absence; memory persistence and interaction test |
+| Interior | 5 planned spaces, 15 candidate placements from 10 project-owned existing bank identities | SOURCE ONLY, PES-003 LOCKED; no rooms/level/world evidence |
+| Performance and acceptance | 0505aef / UE4 Run 38969074730 was SUCCESS on prior content | New-head Unreal + PIE, collision/traversal, >=30FPS owner laptop, human Gate6/7 pending |
+
+## 2026-10-17 PES-002 source-first warehouse reuse wave
+| Asset family | Existing real provenance | Candidate scope and acceptance |
+|---|---|---|
+| Original cottages | /Game/Production/World/Shire/SM_ShCottageHouse (71 triangles), two successfully imported Bagshot cottages (1148 triangles each) | Candidate: replace six domestic cottages plus one village-common visual through two no-collision HISM families; retain each original collision owner and transform; exact-head PIE count/import, images and route evidence pending |
+| Garden planters | Previously imported /Game/Production/World/Shire/CuratedP1C01/Architecture/meshes/SM_ShGardenPlanter_LOD0; current BagEndArchGroups[1] HISM | Up to four additional safe exterior ground-traced instances, no new assets/downloads; real UE placement count pending |
+| Nature | 9 actual imported curated FBX families, 117 grounded, 15 trees swapped, 18 shrubs swapped, 25/25 source garden placed on last green SHA | Reused without redundant source retrieval; no additional runtime canopy density |
+| Poly Haven Painted Wooden Bench | CC0 provider page license verified, provider model visible, FILE NOT DOWNLOADED | Existing ExternalAssetManifest holds candidate; source SHA/Warehouse/UE/world/render statuses false |
+| Full gameplay/visual acceptance | Last 9bfbe696 Run 38964276675 PASS, 4 native PIE frames; 26.06-29.49 runner FPS, not target PC | New exact-head run/4 screenshots/traversal/device/human Gate 6/7 OPEN; PES-002 active / PES-003 locked |
+
+## 2026-10-16 Shire PES-002 exterior audiovisual + legal rig source prep
+| Deliverable | Stage before next exact SHA CI |
+|---|---|
+| Warm cinematic color | SOURCE IMPLEMENTED in existing PostProcessVolume (ACES color grading, bounded AO/SSR, motion blur off); screenshot/720p FPS STILL NOT VERIFIED on new candidate |
+| Positional outdoors audio | SOURCE IMPLEMENTED in existing UShireAudioSubsystem: 3 anchored outside cue IDs, one async-loaded 3D looping SoundWave at a time, 1.1s fade on transitions; actual listening NOT TESTED |
+| GLB to FBX | SOURCE-ONLY Blender script enforces CC0 provenance, SHA256, armature, per-vertex skin weights <=4, UVs, <=65k tris and 2k textures; NO authorized GLB downloaded/imported |
+| Named high-quality characters | NOT PRODUCED; 5 existing skeletal/13 modular local residents remain |
+| Interiors | PES-003 LOCKED; not enterable, no world placement |
+| Missions/memory | Existing Quest/NPCContext/Save unchanged, no new story beat accepted |
+| Real Unreal device proof | Latest baseline 38960898925 PASS only at prior SHA; new SHA needed |
+| GATE 6/7 | OPEN |
+
+## 2026-10-16 PES-002 source root repair — UE verification pending
+| Stage | Evidence |
+|---|---|
+| Baseline exact run | 6ec6bb3 / Windows 38954012510 PASS; 3 new static .uassets, 4 native Unreal PIE screenshots artifact 12070612656, 8 Bagshot cottage facades replaced, 6 original oak instances replaced |
+| Reproduced geometry defect | Thatched 312 collapsed UV triangles; Timber 312 collapsed UV triangles; Oak 520 zero-geometry leaf faces and 360 other collapsed UV triangles; importer warned MikkTSpace tangent degeneracy |
+| Source correction | Both cottages retain all 1148 triangles and original material families, UV determinants fixed; mature oak 2792 -> 2272 real triangles, Bark/Leaves preserved, remaining UVs corrected |
+| Regression test | Existing PES-002 source contract extended with every-face 3D cross product and 2D UV determinant preflight; GitHub and new Engine run PENDING |
+| Prior runtime | 25 garden elements, 5 skeletal and 13 modular resident visuals, 4 USoundWave .uassets under /Game/Audio, sound playback NOT PROVEN |
+| Performance | CI Runner 24.65-27.90 late game FPS; visual REJECTED, owner 2GB VRAM / >=30 FPS DEVICE NOT TESTED |
+| Required acceptance | New source static, UE4.27 real importer/reopen + no tangent warnings, four new 1280x720 PIE images, frame proof and human visual/traversal review; Gate 6/7 OPEN |
+
+## 2026-10-16 single coherent PES-002 village/audio candidate
+| Deliverable | Exact honest state |
+|---|---|
+| Source geometry | 2 different original Bagshot cottages (each 1148 UV faces), one original mature oak (2792 UV faces), actual OBJ bytes added; compatible with existing UE4 static OBJ commandlet, common Shire MTL |
+| Source audio | 4 original WAV PCM 16-bit 22.05 kHz, procedural draft only; actual bytes added, no field-recording/voice claim |
+| Runtime architecture | Replace eight existing Bagshot Row visual-only facades with two 4-house HISM-style WorldDetailCluster groups conditional on existing resident bank; fallback retains original |
+| Runtime trees | One WorldDetailCluster converts at most 6 proximate pairs of tree meshes on flat ground only; old instances removed only after successful placement |
+| Character/dialogue | Existing 5 shared-skinned local resident render path untouched, two existing side-mission conversation contexts extended; distinct named hero rigs absent |
+| Sound | Existing ShireAudioSubsystem receives /Game/Audio/Ambience and SFX uasset paths from commandlet, no synchronous game loading |
+| Interior / Chapter | Runtime PES-003 NOT OPEN; Shire houses NOT ENTERABLE; full chapter NOT FINISHED |
+| Static/Unreal/Render/Device | New candidate **NOT RUN**, no new accepted uassets/PIE/screenshot/FPS; prior baseline 7061a10 UE4 Run 38947458354 success ~25-28 runner FPS, target 30+ unproven |
+| Gate 6/7 | OPEN pending human quality + target hardware |
+
+## PES-002 original cobblestone walk source + existing asset pipeline, candidate
+| Layer | Actual status |
+|---|---|
+| SOURCE_AVAILABLE | 48-stone original authored OBJ; 1008 vertex/UV pairs, 1440 UV triangles, shared Shire Stone material/TGA; candidate committed as source only |
+| UE Imported | NEW package NOT YET RUN at candidate SHA; existing commandlet processes Shire .obj via source working copy |
+| Runtime residency | New path registered inside current P1C01 bank; resident-only resolve at builder start |
+| World placement | Conditional non-colliding static decoration for west-facing Bag End garden approach; actor marker not observed until exact-head PIE |
+| Last accepted engine source | 006e3fce, 38941528153 PASS compile/PIE, 18 real imported shrubs converted, 20/20 garden architecture placed; visual gate remains OPEN |
+| RENDER / FPS / DEVICE | Native 4 screenshots, fresh performance, target device and human visual gate NOT RUN for new source; no 30 FPS claim |
+
+## 2026-10-16 PES-002 Bag End final source candidate / real prior run
+| Stage | Evidence |
+|---|---|
+| Baseline previous commit | d07df57c; UE4 Run 38938627683 PASS, four 1280x720 PIE PNG artifact 12063330802; 19/20 existing imported architectural FBX props actually placed, 25/25 garden items |
+| Performance state | Foreground PID 15/15 confirmed; CI late 5s ~25–28 FPS and process GPU dedicated ~556 MiB; target laptop NOT TESTED, required ≥30 FPS unmet |
+| New candidate | Existing HISM PBR curated gorse/hedge replace max 18 near hero low-poly no-collision shrub instances; reframe 20 imported cart/planter/hedge/lantern/stone props, minor non-volumetric fog distance adjustment |
+| Scene fidelity | Previously dark generic shrubs, distant lowpoly trees and modular NPCs make visual gate FAIL |
+| New code exact-HEAD UE4 and screenshots | NOT RUN until CI, accept only actual package, world placement and render |
+| Governance | PES-002 active, PES-003 locked; visual/PIE/traversal/device Gate 6/7 OPEN |
+
+## 2026-10-16 PR #484 Bag End imported architecture candidate
+| Item | State |
+|---|---|
+| Scope | PES-002 exterior, 5 UE4 imported static FBX families, maximum 20 HISM decor instances |
+| Code | Existing async loader, traced ground, no collision, no new manager; old rejected extra woodland swap removed |
+| Runtime family/placed proof and 4 screenshots | NOT RUN on new head |
+| Target device and visual acceptance | NOT RUN / NOT ACCEPTED; Gate 6/7 OPEN |
+
+## 2026-10-16 PES-002 PR484 foreground and render-wait incident evidence
+- PR484 incident diagnosis candidate, NOT ACCEPTED. Baseline early 3FPS late 25-28FPS; branch 3FPS exact despite only 12 trees. GPU ~44ms vs ~251ms render EventWait. Root discriminator: confirm owned PIE editor foreground PID, reject inconclusive if focus unproven; record bounded native UnrealStats .ue4stats. No new assets, texture import, cull changes, or FPS claim; exact-head Windows Run and target-device test PENDING. PES-002 active / PES-003 locked.
+
+## 2026-10-16 PR #484 PBR woodland regression and bounded corrective retest
+| Evidence | Result |
+|---|---|
+| First branch head bef5eefa257da222f49120adb47fc7929cc8bd94 | UE4.27 CI Run 38905549201 SUCCESS, 4 PIE shots artifact 12048517139 |
+| Actual converted woodland tree actors | 67 (separate from earlier 21 matched proxies); source meshes physically imported from existing curated set |
+| Game-frame FPS on Runner during proof | ~3.0 FPS at 15-50s in capture vs prior 25-28 steady; FAIL |
+| GPU profiler mean / draw calls | ~44.1 ms / 731 vs baseline ~36.3 ms / 667; suspected heavy visible foliage contribution, not verified unique root |
+| Windows OS dedicated GPU memory peak | ~589 MiB, comparable to baseline ~592 MiB; no device proof |
+| Correction prepared | 12-per-scene sparse selection, deterministic 1/4 thinning, 67-replacement candidate NOT ACCEPTED |
+| New exact-HEAD compile/PIE/FPS/visual | PENDING, Gate 6/7 OPEN; PES-002 ACTIVE, PES-003 LOCKED |
+
+## 2026-10-16 PES-002 Bag End village-band tree replacement candidate
+| Layer | Status |
+|---|---|
+| BASE | develop 3b9d90d5667b64ce46ec5613e6c6462ebf0cbac3; PR #482/#483 integrated |
+| SOURCE | Real curated tree FBX/PBR package families already handled by existing async loader; no new external license claim |
+| CODE | Candidate: replace up to 96 local non-colliding WoodlandTreeInstances proxy silhouettes with existing tree HISM only on package and ground success, preserving fallback otherwise |
+| STATIC | Focused regression in existing Scripts/test_pes002_visual_contract.py; new candidate CI not yet run |
+| UE4 COMPILE / REIMPORT | NOT RUN at new candidate SHA |
+| WORLD_PLACED / RENDER_OBSERVED | Need actual PES002_BAG_END_WOODLAND_FBX_REPLACEMENT runtime counts and four new native UE4 1280x720 screenshots |
+| DEVICE / FPS / VRAM / HUMAN VISUAL | NOT RUN / NOT ACCEPTED; Gate 6/7 OPEN |
+| GOVERNANCE | PES-002 ACTIVE, PES-003 LOCKED; no other regions or writer ownership changed |
+
 ## 2026-10-16 PES-002 data-driven garden and resident variation candidate
 - Baseline develop 2e190d6: engine build/import/PIE pass with 5 skeletal shared residents, 21 tree replacements and 4 screenshots. Full visual and performance gates OPEN.
 - Candidate: 25 explicit garden data rows in existing Data/P1C01VerifiedWorldDecor.json, checked against actual UE-imported PBR FBX nature mesh packages. Candidate runtime evidence markers PES002_BAG_END_DATA_GARDEN and PES002_RESIDENT_PRESENTATION_SNAPSHOT; 5 proportional resident variants and optional safe authored-material tint.
@@ -4140,3 +4265,70 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 - Candidate-level source test added for single named Bag End package. Fresh exact-head UE4 build/asset import/streaming package test/screenshots required to validate. Target hardware FPS and VRAM unmeasured, traversal/PIE unverified; PES-002 OPEN; PES-003 locked.
 2026-10-15 PES-002 candidate status: `RENDER_OBSERVED` for Bag End at Run 38710725850/Artifact 11960756267, but `VISUALLY-ACCEPTED=NO` after direct four-view review; compile/import/automation/startup are PASS and traversal/PIE/device/performance remain NOT RUN. Frodo source is `SOURCE_AVAILABLE` but `WAREHOUSE_PERSISTED/UE_IMPORTED/WORLD_PLACED/RENDER_OBSERVED/ACCEPTED=NO`; Wave 2 and locomotion both reject pre-export at `HUMAN_WAVE2_SKIN_REPAIR_PRIMARY_MESH_TOO_SMALL`. Candidate root fix changes only group-level source selection/rebinding plus strict exported limb influence receipt; hosted re-run required. PES-002 remains OPEN and PES-003 LOCKED.
 2026-10-15 Exact-head `093ab4f`: Pre-Unreal PASS; UE4.27 compile/import/automation/startup PASS; screenshot capture FAIL `PES002_CAPTURE_CAMERA_NOT_CONFIRMED`; Human Wave 2/Frodo locomotion FAIL before FBX at aggregate bound-character selection. Parent-bound relation correction is STATIC-VALIDATED only. No new `UE_IMPORTED`, `WORLD_PLACED`, `RENDER_OBSERVED`, PIE, device, performance, or acceptance state.
+
+
+## 2026-10-17 Bag End exact-head foliage silhouette repair candidate
+- Exact-head UE4.27 Run 38973795568 on `b29dc61` passed build/import/automation and produced four real 1280x720 PIE views; human review still rejects the settlement. Runtime log confirms 9 curated nature families and 117 grounded HISM placements, but the repeated distant canopy source remains a primitive-like cone with one LOD.
+- Replaced only the original project-owned canopy geometry source with a deterministic five-lobe, broadleaf crown (285 UV-mapped vertices, 500 triangles); no instance count, anchor, collision, density, shadow or runtime ownership changes. A source regression runs the generator and checks topology/bounds/material UV coverage.
+- Exact-head UE4.27.2 Run 38987764356 on `e8a0239ddc9ae699989929332123a33650b9fae8` succeeded: C++ build, production asset import, Automation QA, startup smoke, and four native 1280×720 PIE captures. The generated canopy package imported; no explicit world-placement acceptance is claimed. Screenshot artifact `12083962547` remains visually REJECTED for final Shire quality. CI windows: 25.39, 27.10, 25.95, 27.14, 28.82, 25.55 FPS; worst frames up to 353.99 ms; process RAM peak 1111.4 MiB; VRAM unmeasured. Owner-device performance is NOT RUN; target 30 FPS is not proven.
+
+## 2026-10-17 PR #484 capture blocker follow-up
+
+| Deliverable | State | Current exact evidence | Remaining acceptance |
+|---|---|---|---|
+| Bag End runtime build/import/startup | PASS on PR head `cc577de119aab12fec3495c52c8539e4846b9db6`; runs 39019099042 and 39020520026 | UE4.27.2 C++ build, production import, Automation QA, startup; PIE log requested four views | None for these bounded stages |
+| Bag End fresh PIE images | BLOCKED / candidate recovery added | Both runs report 20/20 inactive window samples; artifact 12096323695 contains no PNG | New exact-head 1280x720 PNGs + review |
+| Device performance / Gate 6/7 | OPEN | No valid foreground FPS capture or target-owner-device data | Fresh active-window capture, target device run and human acceptance |
+
+Follow-up run 39021746348 (#2237) passed build/import/automation/startup but exposed a recovery-code defect: `GetCurrentThreadId` was imported from `user32.dll`, causing `MethodInvocationException` before any screenshot request. Corrected to `kernel32.dll`; exact-head revalidation pending. No PNG or FPS evidence.
+
+## 2026-10-17 Run #2238 acceptance boundary
+
+| Deliverable | State | Evidence |
+|---|---|---|
+| UE4.27.2 compile/import/automation/startup | PASS | Run 39022384250 at 5655bb97dc683466723ac1bc45adb2933b2ce34c |
+| Fresh PIE visual proof | PASS, 4 captures | Artifact 12096524213, 1280x720, 16/16 active-window samples |
+| Shire visual finish | REJECTED | Four-view review: angular vegetation/props, repetition and unfinished ground composition remain |
+| Performance target | NOT MET / not accepted | CI windows 21.39–28.27 FPS; hitches up to 362.15 ms; VRAM target acceptance false |
+| Chapter Gate 6/7 | OPEN | Target-device 720p/30 FPS and human visual approval remain outstanding |
+
+
+## 2026-10-17 — PES-002 Batch A Shire kit factory pilot
+| Gate / output | State | Evidence / remaining work |
+|---|---|---|
+| Manifest-driven Blender factory and per-row quarantine | SOURCE TOOL IMPLEMENTED | `build_shire_kit.py`; 5 local tests and `--preflight-only` PASS; Blender export/reimport NOT RUN |
+| Licensed Shire source models | BLOCKED / NOT ACQUIRED | Bench CC0 page recorded; source bytes absent, so receipt is `loaded=1 placed=0 rejected=1` |
+| FBX LOD/collision/material production and UE import | NOT RUN | Await physical sources, hosted Blender execution, then serialized UE4.27 validation |
+| PES-002 and Gate 6/7 | OPEN | No visual, traversal, performance, or owner-device acceptance implied |
+
+
+## 2026-10-17 — PES-002 Batch A factory quarantine integrity repair
+| Gate / output | State | Evidence / remaining work |
+|---|---|---|
+| Per-row factory isolation and quarantine receipt integrity | SOURCE TOOL REPAIR PASS | 9 offline tests; malformed rows, unique safe quarantine paths, pinned SHA-256 and dimensions checked before Blender |
+| Blender production and licensed Shire mesh bytes | NOT RUN / NOT ACQUIRED | No source file in the intake root; requires real Poly Haven model download and exact Blender build/reimport |
+| Batch A and PES-002 | OPEN | Source tooling improvement only; no Blender export, UE import, world placement, visual or performance acceptance |
+
+
+## 2026-10-17 — PES-002 Batch A official CC0 model intake lane
+| Gate / output | State | Evidence / remaining work |
+|---|---|---|
+| Poly Haven source intake and SHA/license provenance | IMPLEMENTED / HOST RUN PENDING | Offline API-shape, resolution, dependency-path, host allowlist, no-overwrite and receipt tests pass; 2K preferred with 1K fallback |
+| Batch A source-only lane and Windows Unreal suppression | IMPLEMENTED / HOST RUN PENDING | Existing workflow routes this exact PR head to source-only; no Unreal writer before Batch A closeout |
+| Physical source, Blender FBX/LOD/UCX and source artifact | NOT ACQUIRED / NOT RUN | Await exact-head GitHub Action; candidate status does not advance until output bytes, reimport checks and receipt are reviewed |
+
+
+## 2026-10-17 — PES-002 Batch A source-runner routing correction
+| Gate / output | State | Evidence / remaining work |
+|---|---|---|
+| Previous accidental Windows Unreal run | PASS / NOT BATCH A | Run 39031870188 #2251 on predecessor head built/imported/PIE-tested existing project only; it did not acquire or build the Shire kit source |
+| Source-only push trigger and runtime suppression | IMPLEMENTED / LOCAL YAML PARSE PASS | Feature branch added to existing workflow trigger; classifier reads PR head or push ref and sets full=false; source job accepts either event |
+| Source asset and Blender packet | NOT ACQUIRED / NOT RUN | Fifteen offline tests PASS; wait for the exact feature-branch push run to download CC0 FBX/maps and export/reimport LODs |
+
+
+## 2026-10-17 — PES-002 Batch A hosted source lane execution blocker
+| Gate / output | State | Evidence / remaining work |
+|---|---|---|
+| Exact-head source-only GitHub execution | BLOCKED BEFORE JOBS | Runs 39032201614 #2252 and 39032407070 #2253 show failure with zero jobs and no logs/artifacts |
+| Previous unintended Unreal run | PASS / OUT OF SEQUENCE | Run 39031870188 #2251 C++/import/Automation/PIE PASS on the predecessor, before source-only routing; not Batch A evidence |
+| Poly Haven source FBX and Blender output | NOT ACQUIRED / NOT RUN | Local offline tests pass; no physical source receipt, LOD/UCX exports or Blender render exist |

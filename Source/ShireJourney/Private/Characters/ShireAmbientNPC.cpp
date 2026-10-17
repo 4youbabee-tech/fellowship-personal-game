@@ -426,6 +426,19 @@ void AShireAmbientNPC::ApplyVisualStyle()
     }
 
     const bool bProductionHumanoid = bProductionHobbit || bProductionRegional;
+    // A first-frame ResolveObject may fail even for valid imported Hobbit
+    // packages because the chapter FStreamableHandle has not committed yet.
+    // This would otherwise leave permanent Engine cube/cylinder proxies.
+    bPendingAuthoredHobbitVisual = bHobbitResident && !bProductionHobbit;
+    if (bProductionHobbit)
+    {
+        UE_LOG(LogTemp, Display,
+            TEXT("PES002_AUTHORED_HOBBIT_MODULAR_RESOLVED role=%s torso=%s head=%s hair=%s source=ProductionCharacters bank=async"),
+            *RoutineRole.ToString(),
+            *GetNameSafe(Torso ? Torso->GetStaticMesh() : nullptr),
+            *GetNameSafe(Head ? Head->GetStaticMesh() : nullptr),
+            *GetNameSafe(Hair ? Hair->GetStaticMesh() : nullptr));
+    }
     auto ApplySurface = [this, BasicMaterial, ProductionSurfaceMaterial, bProductionHumanoid](
         UStaticMeshComponent* Component,
         const FLinearColor& Color,
@@ -1519,6 +1532,36 @@ void AShireAmbientNPC::Tick(float DeltaSeconds)
         bUnifiedResidentActive = false;
         if (UnifiedResident) UnifiedResident->SetVisibility(false);
         ApplyVisualStyle();
+    }
+
+    // Refresh after the EXISTING P1C01 soft-reference bank is ready, and only
+    // for visible nearby residents. No extra per-frame resolver or requests.
+    if (bPendingAuthoredHobbitVisual && !bUnifiedResidentActive && PlayerPawn)
+    {
+        AuthoredHobbitRefreshSeconds -= DeltaSeconds;
+        if (AuthoredHobbitRefreshSeconds <= 0.0f)
+        {
+            AuthoredHobbitRefreshSeconds = 2.5f;
+            const float DistSq = FVector::DistSquared2D(
+                PlayerPawn->GetActorLocation(), GetActorLocation());
+            UGameInstance* GI = GetGameInstance();
+            UShireChapterAssetStreamingSubsystem* Streaming =
+                GI ? GI->GetSubsystem<UShireChapterAssetStreamingSubsystem>() : nullptr;
+            if (Streaming && DistSq < FMath::Square(2600.0f) &&
+                Streaming->IsChapterBankReady(TEXT("P1C01"), TEXT("FrodoMain")))
+            {
+                // Bank is already resident. ResolveObject is now cheap; if an
+                // optional source mesh is truly missing, retain safe fallback.
+                bPendingAuthoredHobbitVisual = false;
+                ApplyVisualStyle();
+                const bool bUpgraded = !bPendingAuthoredHobbitVisual;
+                bPendingAuthoredHobbitVisual = false; // One bounded retry only.
+                UE_LOG(LogTemp, Display,
+                    TEXT("PES002_AUTHORED_HOBBIT_POST_STREAM upgrade=%d role=%s source=chapter-bank reuseOnly=1"),
+                    bUpgraded ? 1 : 0,
+                    *RoutineRole.ToString());
+            }
+        }
     }
     ResidentRigCheckSeconds -= DeltaSeconds;
     if (!bUnifiedResidentActive && ResidentRigCheckSeconds <= 0.0f && PlayerPawn)

@@ -682,6 +682,11 @@ void UShireNPCContextSubsystem::BuildDialogueVariantLibrary()
     AddDialogueVariant(TEXT("NPC_HAMFAST_GAMGEE"), TEXT("LOCAL_NEWS"), TEXT("HAMFAST_NEWS_01"),
         TEXT("More folk are taking the lane today. I would keep an eye on who comes back."),
         TEXT("VO_News_Hamfast_01"));
+    // Existing long-term NPC memory: remembered greetings take priority only
+    // after a real player interaction. Original written-only text, no fake VO.
+    AddDialogueVariant(TEXT("NPC_HAMFAST_GAMGEE"), TEXT("GREETING"), TEXT("HAMFAST_REMEMBERED_01"),
+        TEXT("You noticed the new shoots last time. Come by in the morning and see how they have taken."),
+        NAME_None, NAME_None, TEXT("PLAYER_INTERACTED"));
 
     AddDialogueVariant(TEXT("NPC_ROSIE_COTTON"), TEXT("GREETING"), TEXT("ROSIE_GREETING_01"),
         TEXT("If you are staying, make yourself useful. If you are leaving, at least eat first."),
@@ -689,6 +694,9 @@ void UShireNPCContextSubsystem::BuildDialogueVariantLibrary()
     AddDialogueVariant(TEXT("NPC_ROSIE_COTTON"), TEXT("LOCAL_NEWS"), TEXT("ROSIE_NEWS_01"),
         TEXT("Everyone hears something different, but they all agree the roads feel busier."),
         TEXT("VO_News_Rosie_01"));
+    AddDialogueVariant(TEXT("NPC_ROSIE_COTTON"), TEXT("GREETING"), TEXT("ROSIE_REMEMBERED_01"),
+        TEXT("Back again? I remember you promised to eat before taking that long road."),
+        NAME_None, NAME_None, TEXT("PLAYER_INTERACTED"));
 
     AddDialogueVariant(TEXT("NPC_FARMER_MAGGOT"), TEXT("GREETING"), TEXT("MAGGOT_GREETING_01"),
         TEXT("Keep to the path and leave the fields as you found them, and we will get along."),
@@ -696,6 +704,9 @@ void UShireNPCContextSubsystem::BuildDialogueVariantLibrary()
     AddDialogueVariant(TEXT("NPC_FARMER_MAGGOT"), TEXT("LOCAL_NEWS"), TEXT("MAGGOT_NEWS_01"),
         TEXT("Strangers have passed nearby. Quiet ones. That usually worries me more than loud ones."),
         TEXT("VO_News_Maggot_01"));
+    AddDialogueVariant(TEXT("NPC_FARMER_MAGGOT"), TEXT("GREETING"), TEXT("MAGGOT_REMEMBERED_01"),
+        TEXT("I remember you keeping to the path. Good manners are always welcome on my land."),
+        NAME_None, NAME_None, TEXT("PLAYER_INTERACTED"));
 
     AddDialogueVariant(TEXT("NPC_BARLIMAN_BUTTERBUR"), TEXT("LOCAL_NEWS"), TEXT("BUTTERBUR_NEWS_01"),
         TEXT("Half the room has a rumor and the other half has already improved it."),
