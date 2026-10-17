@@ -679,6 +679,16 @@ void AShirePrototypeWorldBuilder::BeginPlay()
                                          UE_ARRAY_COUNT(ObserverOffsets));
                                      ++Candidate)
                                 {
+                                    // Exact-head PIE 3518264, screenshot view=3:
+                                    // the fixed eye sits behind dark roof clutter.
+                                    // Reject only that proof observer; leave world
+                                    // actors, quests, and runtime lighting untouched.
+                                    if (ViewIndex == 3 && Candidate == 0)
+                                    {
+                                        UE_LOG(LogTemp, Warning,
+                                            TEXT("PES002_BRIDGE_OBSERVER_REJECTED candidate=0 reason=roof-occlusion proofOnly=1"));
+                                        continue;
+                                    }
                                     const FVector Eye = Candidate == 0
                                         ? ChapterPositions[ViewIndex]
                                         : LookAt + ObserverOffsets[Candidate - 1];

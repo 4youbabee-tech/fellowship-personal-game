@@ -85,6 +85,10 @@ class PES002VisualContract(unittest.TestCase):
         self.assertIn('PC->SetViewTarget(ProofCamera);', cpp)
         self.assertIn('const FVector LookAt(-2210.0f, -520.0f, 105.0f);', cpp)
         self.assertIn('PES002_CAPTURE_CAMERA_READY target=BagEnd', cpp)
+        # Artifact 12115753345 shows roof-occluded bridge observer 0.
+        self.assertIn("ViewIndex == 3 && Candidate == 0", cpp)
+        self.assertIn("PES002_BRIDGE_OBSERVER_REJECTED", cpp)
+        self.assertIn('if ($mean -lt 35.0)', (ROOT / "Scripts/capture_pes002_bag_end_visual.ps1").read_text(encoding="utf-8"))
         self.assertIn('FScreenshotRequest::RequestScreenshot(Filename, false, false);', cpp)
         self.assertIn('PES002_CAPTURE_VIEW_READY view=%d', cpp)
         self.assertIn('PES002_BagEnd_View%d.png', cpp)

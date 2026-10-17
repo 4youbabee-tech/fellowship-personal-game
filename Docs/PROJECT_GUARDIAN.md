@@ -1,3 +1,8 @@
+## 2026-10-18 PES-002 exact-frame StoneBridge camera composition fix candidate
+- [Run 39072936658](https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/39072936658) on PR488 SHA 3518264a7c9be72e806c858b5bbe48df24464f2a: UE4.27.2 C++ PASS, import 576 files/0 failures PASS, 92 regional objects imported, Automation QA and startup PASS.
+- Genuine 1280x720 screenshots at [artifact 12115753345](https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/39072936658/artifacts/12115753345). Bridge view 3 from observer candidate 0 shows a near dark roof occluding the bridge; measured central luminance 30.52, below threshold 35.0. Other views: 89.47, 48.68, 41.50. Proof stage FAILED. Gate6/7 and visual/device acceptance remain OPEN.
+- Proof-camera-only fix rejects the known-bad fixed StoneBridge eye and scores existing ray-traced alternatives. No world mesh, actor, quest, collision, save, light or player changes. Keep threshold. Verify with new exact-HEAD PIE/screenshots plus human pixel review. Art is still prototype/low-poly; this does NOT establish AAA quality.
+
 PES-002 artifact intake repair candidate: exact HEAD 9834e1f Run 39071877399 compiled UE4 successfully but import/PIE never ran: fetch_ci_artifact_gh_api.ps1:58 received HTTP 403 on all three attempts. Manual HttpWebRequest omitted GitHub-required User-Agent; add explicit product User-Agent and REST API version, preserving exact-name pin, token-free redirect and ZIP checks. Candidate execution pending; no new screenshots/FPS or asset acceptance. Gate 6/7 OPEN.
 
 ## 2026-10-17 PES-002 exact Windows MSVC failure follow-up (Run 39068218620)
