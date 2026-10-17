@@ -5071,3 +5071,8 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Baseline: Run 39022384250 / code SHA `5655bb97dc683466723ac1bc45adb2933b2ce34c` recorded 22 locally managed residents, 5 skeletal and 17 modular; CI windows measured 23.94–26.87 FPS with worst frames up to 342.36 ms. This is CI evidence, not owner-device acceptance.
 - Candidate on PR #484 raises the existing nearby skeletal-resident cap to 22 and cycles five tested proportions/material-tint profiles; it reuses the current asynchronous Frodo rig path and its existing update-rate optimization. Capture now fails unless PIE reports exactly `localManaged=22 skeletal=22 modular=0`.
 - Exact-head static tests, UE4.27.2 build/import, four fresh PIE captures and new performance samples are PENDING. Visual acceptance, traversal and target-device DX11/720p FPS/VRAM remain OPEN; no claim that the 30 FPS floor is met.
+
+## 2026-10-17 — PES-002 exact-head run routing repair
+- Run 39033962961 / #2255 on `b9328af5921058fb70fc27f4eee893f236795784` failed before jobs: GitHub Actions returned zero job records, so no C++ build, import, or PIE ran.
+- Root cause in the branch classifier: every push on the PES-002 feature branch was hard-routed to the Batch A source-only lane, even when the changed files were runtime C++. Replaced it with changed-path classification: runtime/production deltas select the normal Unreal lane; only declared Batch A acquisition paths select source-only.
+- Added a focused regression assertion. Fresh exact-head hosted test, UE4.27.2 build/import, four PIE images and resident counts are pending. No acceptance is inferred from the failed no-job run.

@@ -953,3 +953,9 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 - Runs 39032201614 and 39032407070 on the PES-002 source branch both completed as failures with zero job records and no logs. Do not infer Blender or asset production ran. Root cause is unresolved from the Actions API evidence.
 - Run 39031870188 executed the Windows Unreal lane on the predecessor before the source-only branch classifier landed. Keep the PR branch source-only and do not use that run as a reason to launch another runtime writer before Batch A closeout.
 - Local checks remain useful only for code contracts; source bytes, Blender export/reimport, visual review and Unreal promotion remain separate gates.
+
+### PG-168 — PES-002 source-only classifier must not suppress runtime validation
+- **Observed:** Run 39033962961 / #2255 on `b9328af5921058fb70fc27f4eee893f236795784` failed with zero job records. No Unreal steps ran.
+- **Root cause:** the active feature branch was unconditionally classified as `shire-kit-source`, including commits that changed `Source/ShireJourney` runtime code. The source acquisition job's branch guard and the Unreal job's `full` requirement were therefore inconsistent with the requested runtime proof.
+- **Guard:** classify changed paths. Runtime, Config, Content, importer and production-asset changes select the full PES Unreal lane; only explicit Batch A source-acquisition paths select the source-only lane. Keep a regression test for this routing.
+- **Proof boundary:** this workflow correction remains candidate until exact-head Pre-Unreal and a fresh UE4.27.2 run demonstrate the expected job selection. A failed no-job run is not a build.

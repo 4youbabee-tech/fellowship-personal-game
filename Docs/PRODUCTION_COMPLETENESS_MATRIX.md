@@ -4341,3 +4341,10 @@ Follow-up run 39021746348 (#2237) passed build/import/automation/startup but exp
 | UE4.27.2 build/import + four PIE views | NOT RUN | Run after this exact PR head; capture fails closed on any modular resident |
 | CI performance | BASELINE BELOW TARGET | Run 39022384250: 23.94–26.87 FPS, worst 342.36 ms; new exact-head comparison pending |
 | Owner-device / human visual acceptance | OPEN | DX11 720p 30 FPS and 8 GB/2 GB device proof and owner review remain required |
+
+## 2026-10-17 — PES-002 runtime validation routing repair
+| Gate / output | State | Evidence / remaining work |
+|---|---|---|
+| Prior exact-head run | FAILED BEFORE JOBS | Run 39033962961 / #2255 had zero job records; no UE work ran |
+| Runtime versus source-only classification | CANDIDATE IMPLEMENTED | Runtime/production paths select Unreal; only declared source acquisition paths use Batch A source-only |
+| Exact-head tests and UE4.27.2 build/PIE | PENDING | New head must execute static checks, C++/import/startup and four views |

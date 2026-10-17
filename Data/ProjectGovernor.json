@@ -9581,5 +9581,15 @@
     },
     "validation_boundary": "Fresh exact-head source tests, UE4.27.2 build/import, PIE images and CI frame metrics are required. CI metrics are not owner-device acceptance. Gate 6/7 remains open."
   }
+,
+  "owner_pes002_runtime_validation_routing_2026_10_17": {
+    "status": "ROOT_CAUSE_REPAIR_CANDIDATE_PENDING_EXACT_HEAD",
+    "observed_run": 39033962961,
+    "observed_sha": "b9328af5921058fb70fc27f4eee893f236795784",
+    "failure": "Workflow completed before jobs; UE4.27.2 build/import/PIE did not run.",
+    "root_cause": "PES-002 feature branch was hard-routed to source-only mode regardless of changed runtime paths.",
+    "repair": "Changed-path classification selects full Unreal validation for runtime/config/content/production deltas and source-only only for declared Batch A acquisition paths.",
+    "proof_boundary": "Exact-head workflow job selection and UE4.27.2 run pending; no PIE/device/visual/FPS acceptance follows from source changes."
+  }
 
 }

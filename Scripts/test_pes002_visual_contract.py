@@ -62,6 +62,12 @@ class PES002VisualContract(unittest.TestCase):
         self.assertIn("PES002_RESIDENT_POPULATION_INCOMPLETE", capture)
         self.assertIn("$localManaged -ne 22 -or $skeletal -ne 22 -or $modular -ne 0", capture)
         self.assertIn("PES002_RESIDENT_POPULATION_PASS", capture)
+        workflow = (ROOT / ".github/workflows/unreal-build-validation.yml").read_text(encoding="utf-8")
+        self.assertIn("source_only: ${{ steps.direct.outputs.source_only }}", workflow)
+        self.assertIn("Source/ShireJourney/|Source/ShireJourneyEditorTools/|Config/", workflow)
+        self.assertIn("needs.classify.outputs.source_only == 'true'", workflow)
+        self.assertIn('REASON=pes002_runtime_or_production_asset_delta', workflow)
+
 
     def test_managed_resident_path_follows_ground_probed_endpoint_elevations(self):
         # M1 source regression only; actual 4.27.2 traversal/visual FPS remain separate.

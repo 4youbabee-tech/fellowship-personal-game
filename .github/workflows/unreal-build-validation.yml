@@ -280,24 +280,51 @@ jobs:
       acceptance: ${{ steps.direct.outputs.acceptance }}
       package: ${{ steps.direct.outputs.package }}
       curated: ${{ steps.direct.outputs.curated }}
+      source_only: ${{ steps.direct.outputs.source_only }}
     steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
       - name: Select incremental engine execution without text gates
         id: direct
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
           PACKAGE: ${{ github.event_name == 'workflow_dispatch' && inputs.package_windows == true }}
         shell: bash
         run: |
+          set -euo pipefail
           TARGET_BRANCH="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME:-}}"
+          FULL=false
+          SOURCE_ONLY=false
+          MODE=full
+          REASON=owner-authorized-direct-engine-production
           if [ "$TARGET_BRANCH" = "feat/pes002-bag-end-woodland-real-fbx-20261016" ]; then
-            echo "mode=shire-kit-source" >> "$GITHUB_OUTPUT"
-            echo "reason=owner-directed-batch-a-source-before-runtime" >> "$GITHUB_OUTPUT"
-            echo "full=false" >> "$GITHUB_OUTPUT"
+            if [ -n "$BASE_SHA" ] && git cat-file -e "$BASE_SHA^{commit}" 2>/dev/null; then
+              CHANGED_PATHS="$(git diff --name-only "$BASE_SHA" "$TARGET_SHA")"
+            else
+              CHANGED_PATHS="$(git diff-tree --no-commit-id --name-only -r "$TARGET_SHA")"
+            fi
+            if printf '%s\n' "$CHANGED_PATHS" | grep -Eq '^(Source/ShireJourney/|Source/ShireJourneyEditorTools/|Config/|Content/|SourceAssets/Production/|Data/(ChapterAssetStreamingPlan|P1C01WorldBuildIntakePacketV1|P1C01CloudShireAssemblyPlanV1)\.json$)'; then
+              FULL=true
+              MODE=full
+              REASON=pes002_runtime_or_production_asset_delta
+            elif printf '%s\n' "$CHANGED_PATHS" | grep -Eq '^(Tools/CloudAssetBuild/|Data/ShireKitManifest\.json$|SourceAssets/ExternalLicensed/Inbox/)'; then
+              SOURCE_ONLY=true
+              MODE=shire-kit-source
+              REASON=owner-directed-batch-a-source-before-runtime
+            else
+              MODE=static-only
+              REASON=pes002_non_runtime_delta
+            fi
           else
-            echo "mode=full" >> "$GITHUB_OUTPUT"
-            echo "reason=owner-authorized-direct-engine-production" >> "$GITHUB_OUTPUT"
-            echo "full=true" >> "$GITHUB_OUTPUT"
+            FULL=true
           fi
+          echo "mode=$MODE" >> "$GITHUB_OUTPUT"
+          echo "reason=$REASON" >> "$GITHUB_OUTPUT"
+          echo "full=$FULL" >> "$GITHUB_OUTPUT"
+          echo "source_only=$SOURCE_ONLY" >> "$GITHUB_OUTPUT"
           echo "parent_sha=$BASE_SHA" >> "$GITHUB_OUTPUT"
           echo "resume_stage=none" >> "$GITHUB_OUTPUT"
           echo "reset_intermediates=false" >> "$GITHUB_OUTPUT"
@@ -371,9 +398,7 @@ jobs:
   shire-kit-source:
     name: Batch A licensed Shire source and Blender FBX QC
     needs: classify
-    if: >-
-      ${{ (github.event_name == 'pull_request' && github.head_ref == 'feat/pes002-bag-end-woodland-real-fbx-20261016') ||
-          (github.event_name == 'push' && github.ref_name == 'feat/pes002-bag-end-woodland-real-fbx-20261016') }}
+    if: needs.classify.outputs.source_only == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 35
     env:
