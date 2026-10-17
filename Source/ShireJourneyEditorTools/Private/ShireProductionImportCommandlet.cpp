@@ -2440,10 +2440,18 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                 {
                     Texture = LoadObject<UTexture2D>(nullptr, *FallbackObject);
                 }
-                UE_LOG(LogTemp, Texture ? Display : Error,
-                    TEXT("PES002_BAGEND_ALBEDO_RESOLVE material=%s authored=%s substitute=%s resolved=%d source=imported-Shire-Texture2D"),
-                    *Binding.MaterialObjectPath, *Binding.TextureObjectPath,
-                    *FallbackObject, Texture ? 1 : 0);
+                if (Texture)
+                {
+                    UE_LOG(LogTemp, Display,
+                        TEXT("PES002_BAGEND_ALBEDO_RESOLVE material=%s authored=%s substitute=%s resolved=1 source=imported-Shire-Texture2D"),
+                        *Binding.MaterialObjectPath, *Binding.TextureObjectPath, *FallbackObject);
+                }
+                else
+                {
+                    UE_LOG(LogTemp, Error,
+                        TEXT("PES002_BAGEND_ALBEDO_RESOLVE material=%s authored=%s substitute=%s resolved=0 source=imported-Shire-Texture2D"),
+                        *Binding.MaterialObjectPath, *Binding.TextureObjectPath, *FallbackObject);
+                }
             }
         }
 

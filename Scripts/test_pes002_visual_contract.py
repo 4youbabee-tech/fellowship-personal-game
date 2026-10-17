@@ -13,6 +13,9 @@ class PES002VisualContract(unittest.TestCase):
     def test_bagend_albedo_fallback_resolves_existing_shire_textures_only(self):
         cpp = (ROOT / "Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp").read_text(encoding="utf-8")
         self.assertIn("PES002_BAGEND_ALBEDO_RESOLVE", cpp)
+        self.assertNotIn("UE_LOG(LogTemp, Texture ? Display : Error", cpp)
+        self.assertIn("if (Texture)\n                {\n                    UE_LOG(LogTemp, Display,", cpp)
+        self.assertIn("else\n                {\n                    UE_LOG(LogTemp, Error,", cpp)
         self.assertIn('TEXT("TX_ShGrass")', cpp)
         self.assertIn('TEXT("TX_ShWood")', cpp)
         self.assertIn('TEXT("TX_ShStone")', cpp)
