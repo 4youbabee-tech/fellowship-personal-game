@@ -78,6 +78,23 @@ class PES002VisualContract(unittest.TestCase):
         self.assertIn("TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}", workflow)
 
 
+    def test_world_static_multi_trace_selects_ground_below_roofs(self):
+        # Static contract only: the genuine rooftop/feet test must run in PIE.
+        director = (ROOT / "Source/ShireJourney/Private/World/LivingWorldDirector.cpp").read_text(encoding="utf-8")
+        probe = director.split("bool ALivingWorldDirector::ResolveGroundedAmbientPoint(", 1)[1].split(
+            "AShireAmbientNPC* ALivingWorldDirector::SpawnAmbientActor(", 1)[0]
+        self.assertIn("LineTraceMultiByObjectType(", probe)
+        self.assertIn("GroundObjects.AddObjectTypesToQuery(ECC_WorldStatic)", probe)
+        self.assertIn("Hit.ImpactNormal.Z < 0.72f", probe)
+        self.assertIn("OffsetCm < -350.0f || OffsetCm > 160.0f", probe)
+        self.assertIn("Hit.ImpactPoint.Z < LowestGroundZ", probe)
+        self.assertIn("if (!bFoundWalkableGround)", probe)
+        self.assertIn("OutGroundedPoint.Z = LowestGroundZ + 2.0f", probe)
+        self.assertNotIn("LineTraceSingleByChannel(", probe)
+        spawn = director.split("AShireAmbientNPC* ALivingWorldDirector::SpawnAmbientActor(", 1)[1]
+        self.assertIn("if (!ResolveGroundedAmbientPoint(Location, SpawnLocation))", spawn)
+        self.assertIn("ResolveGroundedAmbientPoint(RoutineEnd, GroundedRoutineEnd)", spawn)
+
     def test_managed_resident_path_follows_ground_probed_endpoint_elevations(self):
         # M1 source regression only; actual 4.27.2 traversal/visual FPS remain separate.
         director = (ROOT / "Source/ShireJourney/Private/World/LivingWorldDirector.cpp").read_text(encoding="utf-8")
