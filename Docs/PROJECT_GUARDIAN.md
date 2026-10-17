@@ -1,3 +1,12 @@
+## 2026-10-17 PES-002 hosted Shire wardrobe source study — verified, not promoted
+- Exact source head `306684b9ae263cc75fca90b43e1559e4e1f58a5d`; Actions Run [#38985544689](https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/38985544689), Linux source job `117256068939` PASS; engine lane classifier PASS only; UE4.27.2 build SKIPPED by source-only policy.
+- Artifact `12082069523` ZIP SHA256 `800b69a661e5c2df426d666d6d488fa2204ccac95cc7fd724be67ca4f6889f3b`; downloaded and digest verified. FBX SHA256 `deb2f06ec98525df8795a952e424bcbfa6b62f86ca4b2868981a27e3820e3f5b`.
+- Blender 4.2.23 reimport PASS: 53 bones, 7 meshes, 13,380 weighted body vertices, zero unweighted vertices, maximum 4 deform influences, eight bilateral upper/lower-arm and thigh/calf stress poses. Actual Blender preview PNG produced and inspected.
+- Source preview is RENDER_OBSERVED in Blender, but visual review REJECTS promotion: waistcoat front/edge overlap is visibly unfinished; hair is basic. LODs and authored locomotion are absent. Supporting-resident wardrobe study only; no named character or accepted Shire resident.
+- State: SOURCE_AVAILABLE / WAREHOUSE_PERSISTED NOT RUN / UE_IMPORTED NOT RUN / WORLD_PLACED NOT RUN / Unreal RENDER_OBSERVED NOT RUN / ACCEPTED NO. No Unreal, PIE, target-device performance, audio, collision, or quest evidence. PR #484 runtime untouched. PES-002 ACTIVE; PES-003 LOCKED; Gate 6/7 OPEN.
+- Next source pass: repair vest opening/hem, select a more suitable CC0 hairstyle, author Idle/Walk/Run, then re-render and inspect before any UE4 promotion.
+
+
 ## 2026-10-17 PES-002 MPFB official core-pack nested-path correction — HOSTED VERIFICATION PENDING
 - Verified blocking failure: PR #486 SHA `34e31478e2acac9c1a8fbff6f551367837d32b77` Actions `38980771861` Linux Blender 4.2.23 loaded MPFB2 and its APIs, then `MPFB_CORE_ASSET_PACK_MISSING skins/young_caucasian_male.mhmat`; Windows Unreal job SKIPPED, no FBX or accepted character.
 - Root-cause correction candidate: preserve official `skins/<asset>/<file>`, `hair/<asset>/<file>`, `clothes/<asset>/<file>` paths and relative textures; verify required spec assets from ZIP before any writing, unique normalized destinations, archive zip-slip/symlink/size bounds and real MPFB AssetService resolution. Previously the installer checked only category-root filenames. Six local synthetic pack tests PASS, real 267MiB pack/Blender output NOT YET RETESTED.
