@@ -9,6 +9,20 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class PES002VisualContract(unittest.TestCase):
+    def test_local_interactive_import_generates_authored_bagend_albedos(self):
+        local = (ROOT / "SHIRE_UPDATE_BUILD_LAUNCH.bat").read_text(encoding="utf-8")
+        ci = (ROOT / "Scripts/ci_import_production_assets.cmd").read_text(encoding="utf-8")
+        for token in ("generate_bag_end_hero_materials.py", "TX_BagEndPlaster",
+                      "TX_BagEndTurf", "TX_BagEndDoor", "TX_BagEndGlass"):
+            self.assertIn(token, local)
+        self.assertIn("generate_bag_end_hero_materials.py", ci)
+        self.assertLess(local.index("PES002_LOCAL_BAGEND_ALBEDO_SOURCE_READY"),
+                        local.index('"-run=ShireProductionImport')) if '"-run=ShireProductionImport' in local else self.assertLess(local.index("PES002_LOCAL_BAGEND_ALBEDO_SOURCE_READY"),
+                                                                                                 local.index("-run=ShireProductionImport"))
+        self.assertIn("BAGEND_AUTHORED_SOURCE_MISSING", local)
+        self.assertNotIn("git reset --hard", local)
+
+
     def test_evidence_camera_is_opt_in_and_no_player_teleport(self):
         cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
         self.assertIn('#if !UE_BUILD_SHIPPING', cpp)

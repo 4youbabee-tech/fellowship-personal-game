@@ -107,6 +107,37 @@ if errorlevel 1 goto :build_failed
 
 echo.
 echo [3/4] Importing production assets...
+rem The local developer helper must obey the SAME hero-source preimport
+rem contract as Scripts/ci_import_production_assets.cmd. Without this,
+rem MTL map_Kd points to TX_BagEnd*.png never created on owner laptops.
+set "HERO_GENERATOR=%ROOT%\Tools\CloudAssetBuild\generate_bag_end_hero_materials.py"
+set "HERO_SOURCE=%ROOT%\SourceAssets\Production\World\Shire"
+if not exist "!HERO_GENERATOR!" (
+  echo ERROR: BAGEND_SOURCE_GENERATOR_MISSING
+  pause
+  exit /b 41
+)
+set "HERO_PYTHON="
+for /f "delims=" %%P in ('where python.exe 2^>NUL') do if not defined HERO_PYTHON set "HERO_PYTHON=%%P"
+if not defined HERO_PYTHON (
+  echo ERROR: PYTHON_REQUIRED_FOR_AUTHORED_BAGEND_TEXTURES
+  pause
+  exit /b 42
+)
+"!HERO_PYTHON!" "!HERO_GENERATOR!" --output-dir "!HERO_SOURCE!"
+if errorlevel 1 (
+  echo ERROR: BAGEND_AUTHORED_ALBEDO_GENERATION_FAILED
+  pause
+  exit /b 43
+)
+for %%T in (TX_BagEndPlaster TX_BagEndTurf TX_BagEndDoor TX_BagEndGlass) do (
+  if not exist "!HERO_SOURCE!\%%T.png" (
+    echo ERROR: BAGEND_AUTHORED_SOURCE_MISSING %%T
+    pause
+    exit /b 44
+  )
+)
+echo PES002_LOCAL_BAGEND_ALBEDO_SOURCE_READY count=4
 if not exist "%ROOT%\Saved\Logs" mkdir "%ROOT%\Saved\Logs"
 if exist "%IMPORT_LOG%" del /Q "%IMPORT_LOG%" >NUL 2>NUL
 "%EDITOR_CMD_EXE%" "%PROJECT%" -run=ShireProductionImport -unattended -nop4 -nosplash -NoSound -abslog="%IMPORT_LOG%"
