@@ -481,7 +481,9 @@
       "intent": "Use the established film chronology, major characters, locations, conflicts and required outcomes as the primary narrative blueprint. The game may enrich gaps but must not replace the film story with a different one.",
       "evidence": [
         "Docs/STORY_CANON_BIBLE.md",
+        "Docs/FULL_GAME_SCENARIO_BIBLE.md",
         "Docs/PART1_FELLOWSHIP_MASTERPLAN.md",
+        "Data/FilmExperiencePlan.json",
         "Data/StoryBeatPlan.csv",
         "Docs/AUTOMATION_FIRST_DELIVERY.md"
       ],
@@ -492,13 +494,16 @@
         "Owner reaffirmed on 2026-09-20 that exact film scenario order/character presence/outcomes are non-negotiable; FILM_CORE changes must be source-checked rather than recalled from memory.",
         "The Story & Timeline Bible is the trilogy-wide navigation spine, not a ceiling on playable story/world detail.",
         "Compatible Tolkien book-only events and journey detail may become real gameplay when they preserve required film chronology/outcomes.",
-        "Meaningful source-backed detail discovered during chapter review uses explicit disposition tracking rather than silent omission."
+        "Meaningful source-backed detail discovered during chapter review uses explicit disposition tracking rather than silent omission.",
+        "Docs/FULL_GAME_SCENARIO_BIBLE.md",
+        "Data/FilmExperiencePlan.json",
+        "Data/StoryBeatPlan.csv"
       ],
       "missing_work": [
-        "Continue chapter-by-chapter implementation and acceptance against the existing FilmExperiencePlan",
-        "Part II and Part III remain roadmap/design rather than production-complete",
-        "Build and maintain the F1-01 through F3-07 timeline-to-screenplay-to-Tolkien-to-domain-source chapter crosswalk/source packets.",
-        "Audit meaningful book-only compatible events/details for playable treatment instead of automatic compression or omission."
+        "Complete scene-level scenario cards across F1-01 through F3-07, with Shire F1-01/F1-02/F1-03 as the first authored and reviewable package.",
+        "Crosswalk every chapter card to the supplied film/screenplay, Tolkien chapter/appendix detail and Sources 02-11; explicitly disposition meaningful compatible details and film/book differences.",
+        "Author original dialogue-intent and playable objective/optional-window/knowledge-state/handoff details for all chapters; ROTK screenplay verification remains blocked until a screenplay source is supplied.",
+        "Runtime implementation and acceptance remain serialized behind the current Governor active gate and PES/Gate 6/7 requirements; scenario coverage is not runtime acceptance."
       ],
       "acceptance_criteria": [
         "Every major implemented story beat maps to film continuity or an explicitly tagged compatible gap-fill",
@@ -513,7 +518,7 @@
       ],
       "dependencies": [],
       "checkpoint": "FILM_EXPERIENCE_CONTRACT",
-      "notes": "Film continuity remains the mandatory main-story spine. The owner explicitly wants the journey experienced in depth rather than summarized: Tolkien-compatible book-only events/details should enrich playable exploration when safe, with no silent omission."
+      "notes": "The owner explicitly wants the entire film trilogy's story/scenario authored while Shire F1-01/F1-02/F1-03 is the first detailed closeout package. The Timeline -> screenplay -> Tolkien -> Sources 02-11 contract and original non-verbatim dialogue rule remain mandatory. Part II/III scenario preparation does not open runtime production."
     },
     {
       "id": "REQ-EXP-001",
@@ -6540,27 +6545,7 @@
       "plan": "REQ-STABILITY-001"
     }
   ],
-  "last_reconciliation": {
-    "date": "2026-09-24",
-    "reason": "Pre #790 exposed one concrete validator-drift mismatch after CP155: PG-026 hard-coded depth=1 even though the new fail-safe classifier needs depth=2 to inspect HEAD^ while exact SHA verification remains unchanged.",
-    "exact_reviewed_head": "3534e632e2085351149648aa7ec2d9b88d0badf1",
-    "latest_exact_head_evidence": {
-      "pre_unreal": "#790 FAILURE PG-026 only",
-      "unreal": "#625 SUCCESS",
-      "warehouse": "#206 SUCCESS"
-    },
-    "reconciled_findings": [
-      "The runner still resets hard to TARGET_SHA, rev-parses HEAD, compares exact SHA, writes .ci-source-sha and fails on mismatch.",
-      "Allowing only bounded shallow depth 1 or 2 preserves exact-head safety while supporting direct-parent classification.",
-      "No new validator/Governor cleanup lane is opened; this is the concrete CP155 regression and its narrow correction."
-    ],
-    "next_priority": "W01_P1C01_AMBIENT_OWNERSHIP_AND_BUDGET_AUTHORITY",
-    "truth_boundary": "Once CP156 static validation is green, machine repair is closed unless a new concrete regression appears. Remaining W00 work is packaged Data, real audio, target-device profiling and human PIE/pacing/visual acceptance.",
-    "stabilization_wave": {
-      "status": "FINAL_STATIC_REPAIR_PENDING_PROOF",
-      "invariant": "No gameplay/content changes."
-    }
-  },
+  "last_reconciliation": "2026-10-17: captured owner request for complete trilogy scenario authoring, prioritizing the full Shire opening/escape. Added a scene-treatment package and extended film-experience/story-beat coverage; no story runtime or new PES is opened. Remaining source crosswalk, original dialogue polish, scene playtests and all Gate 6/7 evidence remain open.",
   "development_mode": {
     "id": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
     "status": "ACTIVE",

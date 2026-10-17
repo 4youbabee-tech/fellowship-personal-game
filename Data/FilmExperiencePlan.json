@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "plan_id": "PART1_FILM_EXPERIENCE_PLAN_V1",
-  "purpose": "Machine-readable coverage of high-level film story anchors and intended player treatment. This is not screenplay text and does not imply implementation/acceptance.",
+  "plan_id": "TRILOGY_FILM_EXPERIENCE_PLAN_V2",
+  "purpose": "Machine-readable coverage of the complete trilogy film anchors and intended player treatment. Scene treatment is a design/source-coverage artifact and never implies runtime implementation or acceptance.",
   "canon_policy": "Peter Jackson film continuity is the primary Part I story spine; Extended Edition may enrich without contradicting the theatrical core; lore-compatible and original gap-fill content may not alter required film outcomes.",
   "treatment_values": [
     "PLAYABLE",
@@ -572,7 +572,709 @@
           "coverage": "PARTIAL"
         }
       ]
+    },
+    {
+      "chapter": "P2C01",
+      "timeline_id": "F2-01",
+      "route": "RohanHuntersAndCaptives",
+      "region": "Rohan / Fangorn edge",
+      "anchors": [
+        {
+          "id": "F2-01_HUNTERS_TRACK",
+          "label": "The Three Hunters read signs and pursue the Uruk-hai across changing terrain",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "EXPLORATION"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F2-01_CAPTIVES_ESCAPE",
+          "label": "Merry and Pippin use a lapse in the captors' formation to escape",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "STEALTH"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F2-01_ROHAN_CONTACT",
+          "label": "The hunters encounter the Rohirrim and learn the pursuit's new stakes",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "SOCIAL_INTERACTIVE"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F2-01_FANGORN_HANDOFF",
+          "label": "The captives enter Fangorn while the hunters continue the chase",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "PLANNED"
+        }
+      ]
+    },
+    {
+      "chapter": "P2C02",
+      "timeline_id": "F2-02",
+      "route": "FangornAndReturnedGandalf",
+      "region": "Fangorn",
+      "anchors": [
+        {
+          "id": "F2-02_TREEBEARD_MEETING",
+          "label": "Merry and Pippin meet Treebeard and learn the forest's boundaries",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "SOCIAL_INTERACTIVE",
+            "EXPLORATION"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F2-02_FANGORN_TRAVERSE",
+          "label": "The Hobbits navigate a living forest without turning Ents into combat units",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "EXPLORATION"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F2-02_ENTMOOT_DECISION",
+          "label": "The Ents debate whether the war concerns them",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "SOCIAL_INTERACTIVE",
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F2-02_GANDALF_RETURN",
+          "label": "Gandalf returns changed and reconnects the hunters' route to Rohan",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "PLANNED"
+        }
+      ]
+    },
+    {
+      "chapter": "P2C03",
+      "timeline_id": "F2-03",
+      "route": "EdorasAndTheoden",
+      "region": "Edoras",
+      "anchors": [
+        {
+          "id": "F2-03_EDORAS_ARRIVAL",
+          "label": "The party reaches Meduseld and encounters a court under Wormtongue's influence",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "SOCIAL_INTERACTIVE"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F2-03_THEODEN_RESTORED",
+          "label": "Gandalf breaks the spell of despair and Théoden takes up leadership",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F2-03_ROHAN_COUNCIL",
+          "label": "The court weighs the threat and the cost of leaving its homes",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "SOCIAL_INTERACTIVE"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F2-03_ROHAN_DEPARTURE",
+          "label": "The people begin the evacuation toward Helm's Deep",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "AMBIENT_WORLD"
+          ],
+          "coverage": "PLANNED"
+        }
+      ]
+    },
+    {
+      "chapter": "P2C04",
+      "timeline_id": "F2-04",
+      "route": "RoadAndHelmsDeepPreparation",
+      "region": "Rohan / Helm's Deep",
+      "anchors": [
+        {
+          "id": "F2-04_EVACUATION_ROUTE",
+          "label": "The player helps civilians move along a threatened road",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "EXPLORATION"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F2-04_CIVILIAN_ASSISTS",
+          "label": "Optional rescue and provisioning improve local readiness without changing the siege result",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "SOCIAL_INTERACTIVE"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F2-04_DEFENSE_PREP",
+          "label": "The defenders place supplies, learn routes and prepare accessible fallback positions",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "EXPLORATION"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F2-04_URUK_HORIZON",
+          "label": "The approaching army turns preparation into immediate defense",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "CINEMATIC",
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "PLANNED"
+        }
+      ]
+    },
+    {
+      "chapter": "P2C05",
+      "timeline_id": "F2-05",
+      "route": "BattleOfHelmsDeep",
+      "region": "Helm's Deep",
+      "anchors": [
+        {
+          "id": "F2-05_WALL_DEFENSE",
+          "label": "The defenders hold the outer wall through readable, bounded combat phases",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "COMBAT",
+            "PLAYABLE"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F2-05_BREACH_RESPONSE",
+          "label": "The breach forces a retreat and a new defense of the keep",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "COMBAT",
+            "PLAYABLE"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F2-05_KEEP_HOLD",
+          "label": "Companions protect civilians and maintain a route through the keep",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "COMBAT",
+            "EXPLORATION"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F2-05_DAWN_COUNTERATTACK",
+          "label": "The dawn arrival turns the defense into the Rohirrim's counterattack",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "INTERACTIVE_CINEMATIC",
+            "COMBAT"
+          ],
+          "coverage": "PLANNED"
+        }
+      ]
+    },
+    {
+      "chapter": "P2C06",
+      "timeline_id": "F2-06",
+      "route": "FrodoSamAndGollum",
+      "region": "Emyn Muil / Dead Marshes",
+      "anchors": [
+        {
+          "id": "F2-06_GOLLUM_CAPTURE",
+          "label": "Frodo and Sam capture Gollum; the player establishes rules for trust and restraint",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "SOCIAL_INTERACTIVE"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F2-06_EMYN_MUIL_ROUTE",
+          "label": "The trio navigates broken terrain while Gollum offers a dangerous guide route",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "EXPLORATION"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F2-06_DEAD_MARSHES",
+          "label": "The marsh crossing uses light, sound and footing to show the Ring's pressure",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "STEALTH",
+            "PLAYABLE"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F2-06_BLACK_GATE_REVEAL",
+          "label": "The Black Gate closes the direct route and forces a change of plan",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "PLANNED"
+        }
+      ]
+    },
+    {
+      "chapter": "P2C07",
+      "timeline_id": "F2-07",
+      "route": "IthilienAndFaramir",
+      "region": "Ithilien / Henneth Annûn / Osgiliath",
+      "anchors": [
+        {
+          "id": "F2-07_RANGER_CAPTURE",
+          "label": "Faramir's Rangers take the Hobbits into custody and separate Gollum",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "STEALTH",
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F2-07_ITHILIEN_OBSERVATION",
+          "label": "The player observes the war's passage through Ithilien without altering its outcome",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "EXPLORATION",
+            "STEALTH"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F2-07_FARAMIR_TRIAL",
+          "label": "Faramir tests the Ring-bearer's truth and chooses restraint over seizing the Ring",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "SOCIAL_INTERACTIVE"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F2-07_OSGILIATH_ESCAPE",
+          "label": "The Osgiliath danger exposes the Ring to the war before the Hobbits resume their route",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "PLANNED"
+        }
+      ]
+    },
+    {
+      "chapter": "P2C08",
+      "timeline_id": "F2-08",
+      "route": "EntsAndIsengard",
+      "region": "Fangorn / Isengard",
+      "anchors": [
+        {
+          "id": "F2-08_ENTMOOT_REVISIT",
+          "label": "Merry and Pippin connect the forest's losses to the choice before the Ents",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "SOCIAL_INTERACTIVE"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F2-08_ENT_MARCH",
+          "label": "The Ents march toward Isengard, changing traversal scale and route safety",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "EXPLORATION"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F2-08_ISENGARD_ASSAULT",
+          "label": "The Ents break Saruman's war infrastructure through environmental action",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "COMBAT"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F2-08_ISENGARD_FLOOD",
+          "label": "Water destroys the industrial base and fixes the post-battle world state",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "PLANNED"
+        }
+      ]
+    },
+    {
+      "chapter": "P3C01",
+      "timeline_id": "F3-01",
+      "route": "IsengardAftermathAndPalantir",
+      "region": "Isengard / Rohan road",
+      "anchors": [
+        {
+          "id": "F3-01_ISENGARD_AFTERCARE",
+          "label": "The parties explore the aftermath and reconnect across previously separated routes",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "EXPLORATION",
+            "SOCIAL_INTERACTIVE"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F3-01_PALANTIR_REVEAL",
+          "label": "Pippin's contact with the Palantír creates urgent new knowledge",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F3-01_GANDALF_CHOICE",
+          "label": "Gandalf decides to take Pippin to Minas Tirith while the others continue their tasks",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "SOCIAL_INTERACTIVE"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F3-01_ROHAN_REJOIN",
+          "label": "The remaining route reconnects with Théoden's forces and prepares the next campaign lane",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE"
+          ],
+          "coverage": "PLANNED"
+        }
+      ]
+    },
+    {
+      "chapter": "P3C02",
+      "timeline_id": "F3-02",
+      "route": "MinasTirithAndMuster",
+      "region": "Minas Tirith / Rohan",
+      "anchors": [
+        {
+          "id": "F3-02_WHITE_CITY_ENTRY",
+          "label": "Pippin and Gandalf enter Minas Tirith and encounter its layered civic life",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "EXPLORATION"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F3-02_DENETHOR_AUDIENCE",
+          "label": "Denethor's grief and command create a constrained political encounter",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "SOCIAL_INTERACTIVE"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F3-02_BEACON_CHAIN",
+          "label": "The beacons signal the need for aid across the mountain realm",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "INTERACTIVE_CINEMATIC",
+            "PLAYABLE"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F3-02_ROHAN_MUSTER",
+          "label": "Rohan gathers its riders while Merry and Éowyn face their own decisions",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "SOCIAL_INTERACTIVE"
+          ],
+          "coverage": "PLANNED"
+        }
+      ]
+    },
+    {
+      "chapter": "P3C03",
+      "timeline_id": "F3-03",
+      "route": "PathsOfTheDead",
+      "region": "Dunharrow / Paths of the Dead",
+      "anchors": [
+        {
+          "id": "F3-03_DUNHARROW_GATHERING",
+          "label": "Aragorn accepts the cost of claiming the road to the Dead",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "SOCIAL_INTERACTIVE"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F3-03_HAUNTED_PASSAGE",
+          "label": "The party traverses the Paths through fear, sound and environmental puzzles",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "EXPLORATION"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F3-03_OATH_CONFRONTATION",
+          "label": "Aragorn invokes the oath and the Dead answer the call",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F3-03_SOUTHERN_ROUTE",
+          "label": "The newly won force turns toward the southern conflict",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE"
+          ],
+          "coverage": "PLANNED"
+        }
+      ]
+    },
+    {
+      "chapter": "P3C04",
+      "timeline_id": "F3-04",
+      "route": "SiegeAndPelennor",
+      "region": "Minas Tirith / Pelennor",
+      "anchors": [
+        {
+          "id": "F3-04_CITY_SIEGE",
+          "label": "The defense moves from city walls into a siege crisis with civilians at risk",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "COMBAT"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F3-04_ROHAN_ARRIVAL",
+          "label": "The Rohirrim reach the field and change the balance of the battle",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "INTERACTIVE_CINEMATIC",
+            "COMBAT"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F3-04_THEODEN_FALL",
+          "label": "Théoden's fatal charge closes his leadership arc",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F3-04_WITCHKING_CONFRONTATION",
+          "label": "Éowyn and Merry confront the Witch-king and survive the cost of the encounter",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "COMBAT",
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "PLANNED"
+        }
+      ]
+    },
+    {
+      "chapter": "P3C05",
+      "timeline_id": "F3-05",
+      "route": "CirithUngolAndMordor",
+      "region": "Cirith Ungol / Mordor",
+      "anchors": [
+        {
+          "id": "F3-05_STAIR_APPROACH",
+          "label": "Frodo and Sam approach Minas Morgul and begin the difficult stair climb",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "STEALTH"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F3-05_SHELOB_TRAP",
+          "label": "Shelob's lair tests perception and escape under isolation",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "STEALTH",
+            "PLAYABLE"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F3-05_TOWER_RESCUE",
+          "label": "Sam enters the tower and finds the means to free Frodo",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "EXPLORATION"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F3-05_MORDOR_DISGUISE",
+          "label": "The Hobbits cross Mordor using disguise, endurance and short safe rests",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "STEALTH"
+          ],
+          "coverage": "PLANNED"
+        }
+      ]
+    },
+    {
+      "chapter": "P3C06",
+      "timeline_id": "F3-06",
+      "route": "BlackGateAndMountDoom",
+      "region": "Mordor / Black Gate / Mount Doom",
+      "anchors": [
+        {
+          "id": "F3-06_BLACK_GATE_DIVERSION",
+          "label": "The armies draw Sauron's attention away from the Ring-bearer",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "COMBAT",
+            "PARALLEL_PLAYABLE"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F3-06_MOUNT_DOOM_ASCENT",
+          "label": "Frodo and Sam reach the final ascent under mounting Ring pressure",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "EXPLORATION"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F3-06_RING_CRISIS",
+          "label": "Frodo fails to surrender the Ring; the final outcome depends on the established causal chain",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F3-06_SAURON_FALL",
+          "label": "The Ring is destroyed and the allied storylines converge on survival and consequence",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "PLANNED"
+        }
+      ]
+    },
+    {
+      "chapter": "P3C07",
+      "timeline_id": "F3-07",
+      "route": "ReturnAndFarewell",
+      "region": "Minas Tirith / Shire / Grey Havens",
+      "anchors": [
+        {
+          "id": "F3-07_CORONATION",
+          "label": "Aragorn is crowned and the surviving fellowship witnesses the new order",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "CINEMATIC",
+            "SOCIAL_INTERACTIVE"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F3-07_HOMECOMING",
+          "label": "The Hobbits return to a peaceful Shire in the film continuity",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "EXPLORATION"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F3-07_SHIRE_REUNION",
+          "label": "The homecoming closes relationship threads through local meetings and quiet routines",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "SOCIAL_INTERACTIVE",
+            "AMBIENT_WORLD"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "F3-07_GREY_HAVENS",
+          "label": "Frodo departs for the Grey Havens and Sam returns to his family",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "CINEMATIC"
+          ],
+          "coverage": "PLANNED"
+        }
+      ]
     }
   ],
-  "cp56_expansion": "Data/FellowshipExperienceMegaPassCP56.json"
+  "cp56_expansion": "Data/FellowshipExperienceMegaPassCP56.json",
+  "scope": "F1-01 through F3-07. The Shire F1-01/F1-02/F1-03 sequence is authored first; later parts remain scenario-design coverage only.",
+  "source_warning": "F3-01 through F3-07 are film/master-summary scenario treatments because the supplied library contains no Return of the King screenplay. Do not mark them SCRIPT_VERIFIED without a matching screenplay source."
 }
