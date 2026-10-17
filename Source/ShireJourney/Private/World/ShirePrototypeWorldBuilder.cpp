@@ -645,6 +645,13 @@ void AShirePrototypeWorldBuilder::BeginPlay()
                             if (bChapterCoverage && ViewIndex > 0)
                             {
                                 const FVector ObserverOffsets[] = {
+                                    // Plausible street/river-bank sightlines first; the
+                                    // earlier six high-angle views obscured mill and bridge.
+                                    FVector(960.0f, -760.0f, 320.0f),
+                                    FVector(-850.0f, 880.0f, 320.0f),
+                                    FVector(750.0f, 730.0f, 300.0f),
+                                    FVector(-1100.0f, -560.0f, 340.0f),
+                                    FVector(1300.0f, 160.0f, 300.0f),
                                     FVector(-1050.0f, -750.0f, 620.0f),
                                     FVector(-1220.0f, 650.0f, 690.0f),
                                     FVector(750.0f, -1080.0f, 740.0f),
@@ -676,6 +683,10 @@ void AShirePrototypeWorldBuilder::BeginPlay()
                                         ? ChapterPositions[ViewIndex]
                                         : LookAt + ObserverOffsets[Candidate - 1];
                                     float Score = -0.04f * FVector::Dist(Eye, LookAt);
+                                    // Oblique street views beat bird-eye roof views
+                                    // when visibility is comparably good.
+                                    if (Eye.Z - LookAt.Z > 440.0f)
+                                        Score -= (Eye.Z - LookAt.Z - 440.0f) * 1.2f;
                                     for (const FVector& Aim : SightTargets)
                                     {
                                         FHitResult SightHit;
@@ -761,6 +772,47 @@ void AShirePrototypeWorldBuilder::BeginPlay()
                                     TEXT("PES002_RESIDENT_PRESENTATION_SNAPSHOT localManaged=%d humanoids=%d skeletal=%d modular=%d fauna=%d scope=BagEnd visualAccepted=0"),
                                     LocalManaged, HumanoidResidents, RealSkeletal,
                                     ModularFallback, LocalFauna);
+
+                                // Independent named-interaction actor census:
+                                // ambient 18/4 fauna must never be conflated
+                                // with story actors or distinct authored rigs.
+                                int32 NamedHumanoids = 0;
+                                int32 NamedSkeletal = 0;
+                                int32 NamedPrototype = 0;
+                                int32 NamedGrounded = 0;
+                                TSet<FString> NamedRigPaths;
+                                for (TActorIterator<AShireNPC> StoryIt(WeakBuilder->GetWorld());
+                                     StoryIt; ++StoryIt)
+                                {
+                                    const AShireNPC* StoryNPC = *StoryIt;
+                                    if (!StoryNPC ||
+                                        FVector::DistSquared2D(StoryNPC->GetActorLocation(), Center) >
+                                            FMath::Square(3100.0f)) continue;
+                                    ++NamedHumanoids;
+                                    if (StoryNPC->IsUsingSkeletalProductionRig())
+                                    {
+                                        ++NamedSkeletal;
+                                        if (StoryNPC->GetMesh() && StoryNPC->GetMesh()->SkeletalMesh)
+                                        {
+                                            NamedRigPaths.Add(StoryNPC->GetMesh()->SkeletalMesh->GetPathName());
+                                        }
+                                    }
+                                    else ++NamedPrototype;
+                                    if (StoryNPC->IsStoryGroundSupportProven()) ++NamedGrounded;
+                                    UE_LOG(LogTemp, Display,
+                                        TEXT("PES002_STORY_NPC_DETAIL name=%s skeletal=%d groundSupported=%d x=%.0f y=%.0f z=%.0f"),
+                                        *StoryNPC->DisplayName.ToString(),
+                                        StoryNPC->IsUsingSkeletalProductionRig() ? 1 : 0,
+                                        StoryNPC->IsStoryGroundSupportProven() ? 1 : 0,
+                                        StoryNPC->GetActorLocation().X, StoryNPC->GetActorLocation().Y,
+                                        StoryNPC->GetActorLocation().Z);
+                                }
+                                UE_LOG(LogTemp, Display,
+                                    TEXT("PES002_STORY_NPC_SNAPSHOT localNamed=%d skeletal=%d prototype=%d groundSupported=%d uniqueNamedRigs=%d ambientHumanoids=%d ambientSkeletal=%d faunaSeparate=%d"),
+                                    NamedHumanoids, NamedSkeletal, NamedPrototype,
+                                    NamedGrounded, NamedRigPaths.Num(), HumanoidResidents,
+                                    RealSkeletal, LocalFauna);
+
                             }
                             UE_LOG(LogTemp, Display,
                                 TEXT("PES002_CAPTURE_VIEW_READY view=%d target=%s"), ViewIndex,

@@ -12,6 +12,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Engine/SkeletalMesh.h"
 #include "Engine/GameInstance.h"
+#include "Engine/World.h"
 #include "EngineUtils.h"
 #include "GameFramework/PlayerController.h"
 #include "Materials/MaterialInstanceDynamic.h"
@@ -145,6 +146,46 @@ AShireNPC::AShireNPC()
     }
 }
 
+
+namespace ShireStoryGrounding
+{
+    // ACharacter's actor Z is the CAPSULE CENTER, not the hobbit's foot.
+    // Reject overhead roofs and use WorldStatic multi hits to resolve the
+    // expected floor without touching the AI, dialogue or quest systems.
+    static bool FindFloor(UWorld* World, const FVector& ExpectedFoot,
+                          const AActor* IgnoreActor, float& OutFloorZ)
+    {
+        if (!World) return false;
+        FCollisionQueryParams Query(TEXT("PES002StoryNPCFloor"), false, IgnoreActor);
+        FCollisionObjectQueryParams ObjectTypes;
+        ObjectTypes.AddObjectTypesToQuery(ECC_WorldStatic);
+        TArray<FHitResult> Hits;
+        if (!World->LineTraceMultiByObjectType(
+                Hits, ExpectedFoot + FVector(0.0f, 0.0f, 900.0f),
+                ExpectedFoot - FVector(0.0f, 0.0f, 2200.0f),
+                ObjectTypes, Query)) return false;
+        bool bFound = false;
+        float LowestZ = 0.0f;
+        for (const FHitResult& Hit : Hits)
+        {
+            const float Delta = Hit.ImpactPoint.Z - ExpectedFoot.Z;
+            if (Hit.bStartPenetrating || !FMath::IsFinite(Delta) ||
+                Hit.ImpactNormal.Z < 0.72f ||
+                Delta < -350.0f || Delta > 160.0f)
+            {
+                continue;
+            }
+            if (!bFound || Hit.ImpactPoint.Z < LowestZ)
+            {
+                bFound = true;
+                LowestZ = Hit.ImpactPoint.Z;
+            }
+        }
+        if (bFound) OutFloorZ = LowestZ;
+        return bFound;
+    }
+}
+
 bool AShireNPC::TryApplyProductionRig(const FString& RigFolder)
 {
     if (RigFolder.IsEmpty() || !GetMesh())
@@ -171,9 +212,16 @@ bool AShireNPC::TryApplyProductionRig(const FString& RigFolder)
         return false;
     }
 
+    const bool bStoryRig = SkeletalMesh && AnimClass &&
+        AnimClass->IsChildOf(UShireLocomotionAnimInstance::StaticClass());
+    if (!bStoryRig)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("PES002_NAMED_RIG_NOT_READY id=%s mesh=%d anim=%d"),
+            *RigFolder, SkeletalMesh ? 1 : 0, AnimClass ? 1 : 0);
+        return false;
+    }
     GetMesh()->SetSkeletalMesh(SkeletalMesh);
-    if (AnimClass->IsChildOf(UShireLocomotionAnimInstance::StaticClass()) &&
-        !UShireLocomotionAnimInstance::AlignMeshToCapsule(
+    if (!UShireLocomotionAnimInstance::AlignMeshToCapsule(
             GetMesh(), GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight()))
     {
         UE_LOG(LogTemp, Error, TEXT("SHIRE_SKELETAL_PRESENTATION_REJECT npc=%s reason=invalid-bounds"), *GetName());
@@ -186,6 +234,14 @@ bool AShireNPC::TryApplyProductionRig(const FString& RigFolder)
     GetMesh()->VisibilityBasedAnimTickOption =
         EVisibilityBasedAnimTickOption::OnlyTickPoseWhenRendered;
     GetMesh()->SetVisibility(true, true);
+    int32 EmptyMaterialSlots = 0;
+    for (int32 Slot = 0; Slot < GetMesh()->GetNumMaterials(); ++Slot)
+    {
+        if (!GetMesh()->GetMaterial(Slot)) ++EmptyMaterialSlots;
+    }
+    UE_LOG(LogTemp, Display,
+        TEXT("PES002_NAMED_NPC_SKELETAL_MATERIALS id=%s slots=%d empty=%d"),
+        *RigFolder, GetMesh()->GetNumMaterials(), EmptyMaterialSlots);
 
     UE_LOG(LogTemp, Display,
         TEXT("ProductionRig: npc=%s characterId=%s rig=%s async=yes URO=on visibilityTick=rendered"),
@@ -211,9 +267,16 @@ bool AShireNPC::TryApplyProductionRig(const FString& RigFolder)
 
 void AShireNPC::ApplyPrototypeStyle()
 {
-    UMaterialInterface* BasicMaterial = LoadObject<UMaterialInterface>(
-        nullptr, TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
-    UMaterialInterface* ProductionSurfaceMaterial = Cast<UMaterialInterface>(FSoftObjectPath(TEXT("/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface")).ResolveObject());
+    // Already imported and streamed: the verified master exposes Color and
+    // Roughness parameters. BasicShapeMaterial does not guarantee either.
+    UMaterialInterface* ProductionSurfaceMaterial = Cast<UMaterialInterface>(
+        FSoftObjectPath(TEXT("/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface")).ResolveObject());
+    UMaterialInterface* BasicMaterial = ProductionSurfaceMaterial ? nullptr :
+        Cast<UMaterialInterface>(
+            FSoftObjectPath(TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial")).ResolveObject());
+    UE_LOG(LogTemp, Display,
+        TEXT("PES002_NAMED_NPC_MATERIAL_PARENT owner=AShireNPC authoredColor=%d basicFallback=%d synchronousLoad=0"),
+        ProductionSurfaceMaterial ? 1 : 0, BasicMaterial ? 1 : 0);
     if (!BasicMaterial && !ProductionSurfaceMaterial)
     {
         bVisualStyleApplied = true;
@@ -627,7 +690,7 @@ void AShireNPC::ApplyPrototypeStyle()
         PrototypeMouth->SetRelativeScale3D(FVector(0.012f, 0.050f, 0.010f));
     }
 
-    auto ApplySurface = [this, BasicMaterial, ProductionSurfaceMaterial, bProductionVisual](
+    auto ApplySurface = [this, BasicMaterial, ProductionSurfaceMaterial](
         UStaticMeshComponent* Component,
         const FLinearColor& Color,
         float Roughness,
@@ -638,10 +701,8 @@ void AShireNPC::ApplyPrototypeStyle()
             return;
         }
 
-        UMaterialInterface* Parent =
-            (bProductionVisual && ProductionSurfaceMaterial)
-                ? ProductionSurfaceMaterial
-                : BasicMaterial;
+        UMaterialInterface* Parent = ProductionSurfaceMaterial ?
+            ProductionSurfaceMaterial : BasicMaterial;
         if (!Parent)
         {
             return;
@@ -1538,6 +1599,47 @@ void AShireNPC::UpdateCompanionBanter(float DeltaSeconds)
 void AShireNPC::BeginPlay()
 {
     Super::BeginPlay();
+
+    // WorldBuilder creates named story actors after the static village.
+    // Do the snap only once, when collision is registered; OnConstruction
+    // can run before the village exists and must not mutate authored maps.
+    if (GetWorld() && GetCapsuleComponent())
+    {
+        const FVector Initial = GetActorLocation();
+        const float HalfHeight = GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+        const FVector ExpectedFoot = Initial - FVector(0.0f, 0.0f, HalfHeight);
+        float FloorZ = 0.0f;
+        if (ShireStoryGrounding::FindFloor(GetWorld(), ExpectedFoot, this, FloorZ))
+        {
+            const FVector Snapped(Initial.X, Initial.Y, FloorZ + HalfHeight + 2.0f);
+            FCollisionQueryParams BodyQuery(TEXT("PES002StoryNPCBodyClear"), false, this);
+            const FCollisionShape Body = FCollisionShape::MakeCapsule(
+                GetCapsuleComponent()->GetScaledCapsuleRadius(), HalfHeight);
+            const bool bBodyBlocked = GetWorld()->OverlapBlockingTestByChannel(
+                Snapped, FQuat::Identity, ECC_Pawn, Body, BodyQuery);
+            if (!bBodyBlocked)
+            {
+                if (!Initial.Equals(Snapped, 0.5f))
+                {
+                    SetActorLocation(Snapped, false, nullptr, ETeleportType::TeleportPhysics);
+                }
+                bStoryGroundSupportProven =
+                    FMath::Abs((GetActorLocation().Z - HalfHeight) - (FloorZ + 2.0f)) < 3.0f;
+            }
+            UE_LOG(LogTemp, Display,
+                TEXT("PES002_STORY_NPC_GROUND npc=%s floorZ=%.1f beforeFootZ=%.1f afterFootZ=%.1f bodyBlocked=%d grounded=%d"),
+                *GetName(), FloorZ, ExpectedFoot.Z,
+                GetActorLocation().Z - HalfHeight, bBodyBlocked ? 1 : 0,
+                bStoryGroundSupportProven ? 1 : 0);
+        }
+        else
+        {
+            UE_LOG(LogTemp, Warning,
+                TEXT("PES002_STORY_NPC_GROUND_REJECT npc=%s expectedFootZ=%.1f reason=no-safe-worldstatic-floor"),
+                *GetName(), ExpectedFoot.Z);
+        }
+    }
+
 
     if (UGameInstance* GI = GetGameInstance())
     {

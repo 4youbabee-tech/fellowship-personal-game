@@ -328,6 +328,28 @@ if ($humanoids -ne 22 -or $skeletal -ne 22 -or $modular -ne 0) {
 }
 $sharedSamples = @(Select-String -Path $log -Pattern 'PES002_UNIFIED_RESIDENT_VISIBLE .*sharedHeroFallback=1')
 Write-Host "PES002_SHARED_STORY_RIG_SAMPLES count=$($sharedSamples.Count) finalCharacterArtAccepted=false"
+$story = @(Select-String -Path $log -Pattern 'PES002_STORY_NPC_SNAPSHOT localNamed=(\d+) skeletal=(\d+) prototype=(\d+) groundSupported=(\d+) uniqueNamedRigs=(\d+) ambientHumanoids=(\d+) ambientSkeletal=(\d+) faunaSeparate=(\d+)')
+if ($PIE) {
+    if ($story.Count -lt 1) { throw 'PES002_STORY_NPC_CENSUS_MISSING' }
+    $storyLine = $story[-1].Matches[0]
+    $named = [int]$storyLine.Groups[1].Value
+    $skinned = [int]$storyLine.Groups[2].Value
+    $fallback = [int]$storyLine.Groups[3].Value
+    $namedGrounded = [int]$storyLine.Groups[4].Value
+    $namedRigs = [int]$storyLine.Groups[5].Value
+    if ($named -ne ($skinned + $fallback) -or $namedGrounded -gt $named -or
+        $skinned -gt 0 -and $namedRigs -lt 1) {
+        throw "PES002_STORY_NPC_CENSUS_INVALID source=$($storyLine.Value)"
+    }
+    Write-Host "PES002_STORY_NPC_EVIDENCE $($storyLine.Value)"
+    if ($fallback -ne 0 -or $namedGrounded -ne $named) {
+        Write-Warning "PES002_STORY_NPC_PRESENTATION_INCOMPLETE named=$named skeletal=$skinned prototype=$fallback groundSupported=$namedGrounded distinctNamedRigMeshes=$namedRigs"
+    }
+    # This arithmetic describes two systems in one region, NOT 22 unique
+    # supporting Hobbit bodies or accepted facial/deformation art.
+    Write-Host "PES002_COMBINED_HUMANOID_CENSUS ambient=$humanoids named=$named combined=$($humanoids+$named) namedRigs=$namedRigs uniqueArtAccepted=false"
+}
+
 Write-Host 'PES002_OWNER_VISUAL_REVIEW ownerVisualTarget=approximately80percent autoScored=false visualAccepted=false'
 
 

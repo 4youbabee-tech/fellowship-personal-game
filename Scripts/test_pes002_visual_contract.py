@@ -10,6 +10,40 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class PES002VisualContract(unittest.TestCase):
+    def test_story_npc_capsule_floor_and_rig_evidence_are_independent(self):
+        cpp = (ROOT / "Source/ShireJourney/Private/Characters/ShireNPC.cpp").read_text(encoding="utf-8")
+        hdr = (ROOT / "Source/ShireJourney/Public/Characters/ShireNPC.h").read_text(encoding="utf-8")
+        world = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        proof = (ROOT / "Scripts/capture_pes002_bag_end_visual.ps1").read_text(encoding="utf-8")
+        self.assertIn("ShireStoryGrounding::FindFloor(", cpp)
+        self.assertIn("LineTraceMultiByObjectType(", cpp)
+        self.assertIn("ObjectTypes.AddObjectTypesToQuery(ECC_WorldStatic)", cpp)
+        self.assertIn("Hit.ImpactNormal.Z < 0.72f", cpp)
+        self.assertIn("Delta < -350.0f || Delta > 160.0f", cpp)
+        self.assertIn("GetScaledCapsuleHalfHeight()", cpp)
+        self.assertIn("OverlapBlockingTestByChannel(", cpp)
+        self.assertIn("PES002_STORY_NPC_GROUND_REJECT", cpp)
+        self.assertNotIn("LineTraceSingleByChannel(", cpp.split("namespace ShireStoryGrounding", 1)[1].split("bool AShireNPC::TryApplyProductionRig(", 1)[0])
+        self.assertIn("IsUsingSkeletalProductionRig() const", hdr)
+        self.assertIn("IsStoryGroundSupportProven() const", hdr)
+        self.assertIn("PES002_STORY_NPC_SNAPSHOT", world)
+        self.assertIn("TActorIterator<AShireNPC>", world)
+        self.assertIn("PES002_STORY_NPC_EVIDENCE", proof)
+        self.assertIn("PES002_STORY_NPC_PRESENTATION_INCOMPLETE", proof)
+        # License/skin/rig evidence is independent of actor/camera counts.
+        self.assertNotIn("22/22", cpp)
+        self.assertIn("const bool bStoryRig", cpp)
+
+    def test_prototype_materials_use_verified_resident_parameter_master(self):
+        cpp = (ROOT / "Source/ShireJourney/Private/Characters/ShireNPC.cpp").read_text(encoding="utf-8")
+        self.assertIn('M_ProductionSurface.M_ProductionSurface', cpp)
+        self.assertIn('UMaterialInterface* Parent = ProductionSurfaceMaterial ?', cpp)
+        self.assertIn('bUsingSkeletalProductionRig = TryApplyProductionRig(RigFolder)', cpp)
+        self.assertIn("if (!bStoryRig)", cpp)
+        self.assertIn("PES002_NAMED_NPC_MATERIAL_PARENT", cpp)
+        self.assertNotIn("CreateAndSetMaterialInstanceDynamicFromMaterial", cpp)
+
+
     def test_evidence_camera_is_opt_in_and_no_player_teleport(self):
         cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
         self.assertIn('#if !UE_BUILD_SHIPPING', cpp)
