@@ -780,6 +780,7 @@ void AShirePrototypeWorldBuilder::BeginPlay()
                                 int32 NamedSkeletal = 0;
                                 int32 NamedPrototype = 0;
                                 int32 NamedGrounded = 0;
+                                int32 NamedSharedRig = 0;
                                 TSet<FString> NamedRigPaths;
                                 for (TActorIterator<AShireNPC> StoryIt(WeakBuilder->GetWorld());
                                      StoryIt; ++StoryIt)
@@ -799,6 +800,7 @@ void AShirePrototypeWorldBuilder::BeginPlay()
                                     }
                                     else ++NamedPrototype;
                                     if (StoryNPC->IsStoryGroundSupportProven()) ++NamedGrounded;
+                                    if (StoryNPC->IsUsingSharedTechnicalRig()) ++NamedSharedRig;
                                     UE_LOG(LogTemp, Display,
                                         TEXT("PES002_STORY_NPC_DETAIL name=%s skeletal=%d groundSupported=%d x=%.0f y=%.0f z=%.0f"),
                                         *StoryNPC->DisplayName.ToString(),
@@ -812,6 +814,9 @@ void AShirePrototypeWorldBuilder::BeginPlay()
                                     NamedHumanoids, NamedSkeletal, NamedPrototype,
                                     NamedGrounded, NamedRigPaths.Num(), HumanoidResidents,
                                     RealSkeletal, LocalFauna);
+                                UE_LOG(LogTemp, Display,
+                                    TEXT("PES002_STORY_NPC_UNIQUE_ART_CHECK localNamed=%d sharedFrodoTechnical=%d uniqueNamedRigs=%d distinctNamedModelsAccepted=0"),
+                                    NamedHumanoids, NamedSharedRig, NamedRigPaths.Num());
 
                             }
                             UE_LOG(LogTemp, Display,
@@ -2703,7 +2708,7 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
 
     // Hobbiton homes spread across the Hill instead of sitting in one row.
     const FVector Homes[] = {
-        FVector(-2210,-520,0), FVector(-1780,-720,0), FVector(-1680,620,0), FVector(-1320,820,0),
+        FVector(-2210,-520,0), FVector(-1780,-720,0), FVector(-2820,990,0), FVector(-2190,1680,0),
         FVector(-1180,-760,0), FVector(-760,-620,0), FVector(-520,760,0), FVector(-120,-680,0),
         FVector(260,780,0), FVector(560,-720,0), FVector(920,700,0), FVector(1180,-620,0),
         FVector(1380,820,0), FVector(-2050,1120,0), FVector(-1450,1320,0), FVector(-820,1280,0)
@@ -3982,9 +3987,9 @@ void AShirePrototypeWorldBuilder::SpawnProductionVillageDetailLayer()
         float Scale;
         float Yaw;
     } Cottages[] = {
-        { FVector(-1840, 420, 0), 0.72f, 12.0f },
-        { FVector(-1320, -330, 0), 0.78f, -18.0f },
-        { FVector(-760, 760, 0), 0.66f, 25.0f },
+        { FVector(-2870, 870, 0), 0.72f, 12.0f }, // riverside clearance: decorative cottage+collider
+        { FVector(-1650, -1260, 0), 0.78f, -18.0f },
+        { FVector(-250, 1900, 0), 0.66f, 25.0f },
         { FVector(120, 540, 0), 0.72f, -12.0f },
         { FVector(840, -420, 0), 0.76f, 18.0f },
         { FVector(1540, 520, 0), 0.70f, -28.0f }
@@ -4077,7 +4082,7 @@ void AShirePrototypeWorldBuilder::SpawnProductionVillageDetailLayer()
     // Same swap for the visible village-common backdrop: the production
     // collider is never moved, resized, removed or assigned to the new mesh.
     const FVector CommonHouseAt(-520.0f, 360.0f, 0.0f);
-    const FVector CommonHouseScale(1.28f, 1.15f, 1.18f);
+    const FVector CommonHouseScale(0.94f, 0.88f, 0.90f); // keep the narrative village-common anchor
     const FRotator CommonHouseYaw(0.0f, -8.0f, 0.0f);
     if (!ReplaceExteriorVisualOnly(ProductionCottageHouseMesh,
             TimberCottageVisuals,
@@ -4089,6 +4094,8 @@ void AShirePrototypeWorldBuilder::SpawnProductionVillageDetailLayer()
     UE_LOG(LogTemp, Display,
         TEXT("PES002_REUSED_WAREHOUSE_HOUSES styled=%d originalCollisionRetained=1 doubleFacades=0 authoredFamilies=2 max=7 visualHISM=2"),
         BagEndStyledCottages);
+    UE_LOG(LogTemp, Display,
+        TEXT("PES002_RIVER_CLEARANCE decorativeCottagesMoved=3 hillsideHolesMoved=2 questAnchorsMoved=0 millX=-1250 bridgeX=-1050 pendingPIE=1"));
     SpawnProd(ProductionWellMesh, FVector(-120, 300, 0), FVector(0.82f), FRotator::ZeroRotator, true);
 
     const FVector Market[] = {

@@ -10,6 +10,22 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class PES002VisualContract(unittest.TestCase):
+    def test_pes002_named_shared_technical_rig_and_riverside_clearance(self):
+        npc = (ROOT / "Source/ShireJourney/Private/Characters/ShireNPC.cpp").read_text(encoding="utf-8")
+        head = (ROOT / "Source/ShireJourney/Public/Characters/ShireNPC.h").read_text(encoding="utf-8")
+        world = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        cmd = (ROOT / "Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp").read_text(encoding="utf-8")
+        self.assertIn('GetCurrentChapterId() == TEXT("P1C01")', npc)
+        self.assertIn('ResolveCharacterRig(TEXT("Frodo"), SkeletalMesh, AnimClass)', npc)
+        self.assertIn("for (int32 Ring = 0; Ring <= 3", npc)
+        self.assertIn("SetHiddenInGame(true, true)", npc)
+        self.assertIn("bUsingSharedTechnicalRig", head)
+        self.assertIn("PES002_STORY_NPC_UNIQUE_ART_CHECK", world)
+        self.assertIn("PES002_RIVER_CLEARANCE", world)
+        self.assertIn("PES002_REGIONAL_SUPPORT_IMPORT", cmd)
+        self.assertIn("bUsedWithSkeletalMesh", cmd)
+
+
     def test_story_npc_capsule_floor_and_rig_evidence_are_independent(self):
         cpp = (ROOT / "Source/ShireJourney/Private/Characters/ShireNPC.cpp").read_text(encoding="utf-8")
         hdr = (ROOT / "Source/ShireJourney/Public/Characters/ShireNPC.h").read_text(encoding="utf-8")

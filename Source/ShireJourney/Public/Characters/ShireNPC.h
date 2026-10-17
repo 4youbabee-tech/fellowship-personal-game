@@ -40,6 +40,7 @@ public:
     virtual void Tick(float DeltaSeconds) override;
     bool IsUsingSkeletalProductionRig() const { return bUsingSkeletalProductionRig; }
     bool IsStoryGroundSupportProven() const { return bStoryGroundSupportProven; }
+    bool IsUsingSharedTechnicalRig() const { return bUsingSharedTechnicalRig; }
 
 protected:
     virtual void BeginPlay() override;
@@ -187,6 +188,7 @@ private:
     bool bUsingProductionVisual = false;
     bool bUsingSkeletalProductionRig = false;
     bool bStoryGroundSupportProven = false;
+    bool bUsingSharedTechnicalRig = false;
     float PrototypeWalkPhase = 0.0f;
     float PrototypeIdlePhase = 0.0f;
     float PrototypeMovementCadenceScale = 1.0f;

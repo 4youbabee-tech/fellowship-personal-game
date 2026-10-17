@@ -319,7 +319,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 -m py_compile Scripts/test_pes002_visual_contract.py Scripts/ue4_p1c01_curated_postimport.py
+          python3 -m py_compile Scripts/test_pes002_visual_contract.py Scripts/ue4_p1c01_curated_postimport.py Scripts/prepare_wholegame_regional_import.py
           python3 -m unittest -v Scripts.test_pes002_visual_contract.PES002ShadowBudgetContract Scripts.test_pes002_visual_contract.PES002IntegratedShireContract
       # Reuse only a packet produced from identical pinned source, Blender
       # normalization and manifest inputs. A cache hit never skips hash/skin
@@ -589,10 +589,34 @@ jobs:
           Copy-Item -LiteralPath (Join-Path $source 'source_receipt.json') -Destination $destination -Force
           Write-Host "PES002_CHARACTER_WAREHOUSE_PERSISTED path=$destination files=$($receipt.files.PSObject.Properties.Count) head=$env:TARGET_SHA license=CC0"
 
+      # Same single Unreal writer; later regions remain source/import-only.
+      - name: Fetch SHA-pinned 28-region physical source archive
+        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
+        uses: actions/download-artifact@v4
+        with:
+          name: whole-game-original-support-source-eb685cbeab7fa7572150172abd9314a7047db8f8
+          run-id: 39059107842
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/regional-import-candidate
+
+      - name: Stage 56 FBX and 36 PBR PNG from verified source
+        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
+        shell: powershell
+        run: |
+          python Scripts/prepare_wholegame_regional_import.py --mode stage --project "$env:GITHUB_WORKSPACE" --artifact "$env:RUNNER_TEMP/regional-import-candidate" --pin Data/CloudWholeGameSourceArtifactPinV1.json
+          if ($LASTEXITCODE -ne 0) { throw "REGIONAL_STAGE_FAILED" }
+
       - name: Import production assets in UE4.27.2
         if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_import_production_assets.cmd" -EnableCharacterRigImport -CharacterPacket=Frodo'
+
+      - name: Validate imported 92 UE4 objects and persist one canonical warehouse receipt
+        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
+        shell: powershell
+        run: |
+          python Scripts/prepare_wholegame_regional_import.py --mode persist --project "$env:GITHUB_WORKSPACE" --warehouse 'D:/actions-runner/_warehouse/ShireJourney'
+          if ($LASTEXITCODE -ne 0) { throw "REGIONAL_UE_PERSIST_FAILED" }
 
       - name: Rehydrate exact SHA256 Cloud138 Unreal packages
         if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true' || env.SHIRE_CURATED_REQUIRED == 'true')

@@ -1143,6 +1143,13 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             Master->bUsedWithInstancedStaticMeshes = true;
             bChanged = true;
         }
+        if (FString(Label).Equals(TEXT("M_ProductionSurface")) &&
+            !Master->bUsedWithSkeletalMesh)
+        {
+            Master->Modify();
+            Master->bUsedWithSkeletalMesh = true;
+            bChanged = true;
+        }
         if (FString(Label).Equals(TEXT("M_ProductionFoliage")))
         {
             UMaterialExpressionMaterialFunctionCall* WindCall = nullptr;
@@ -1959,10 +1966,39 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             ImportedAsset = LoadObject<UObject>(nullptr, *ExpectedObjectPath);
         }
 
+        if (Relative.Contains(TEXT("RegionalSupport/"), ESearchCase::IgnoreCase))
+        {
+            const bool bFBXSupport = SourceExtension == TEXT("fbx");
+            const bool bValidClass = bFBXSupport ?
+                Cast<UStaticMesh>(ImportedAsset) != nullptr :
+                Cast<UTexture2D>(ImportedAsset) != nullptr;
+            UE_LOG(LogTemp, Display,
+                TEXT("PES002_REGIONAL_SUPPORT_IMPORT path=%s class=%s validated=%d sourceOnly=1"),
+                *ExpectedObjectPath,
+                bFBXSupport ? TEXT("StaticMesh") : TEXT("Texture2D"),
+                bValidClass ? 1 : 0);
+            if (!bValidClass) ++Failed;
+        }
         // Packed grayscale channels must never be gamma corrected. DirectX
         // tangent-space normal is a normal map, not sRGB albedo.
         if (UTexture2D* ImportedTexture = Cast<UTexture2D>(ImportedAsset))
         {
+            if (Relative.Contains(TEXT("RegionalSupport/Materials/"), ESearchCase::IgnoreCase))
+            {
+                if (AssetName.EndsWith(TEXT("_ORM")))
+                {
+                    ImportedTexture->CompressionSettings = TC_Masks;
+                    ImportedTexture->SRGB = false;
+                }
+                else if (AssetName.EndsWith(TEXT("_NormalDX")))
+                {
+                    ImportedTexture->CompressionSettings = TC_Normalmap;
+                    ImportedTexture->SRGB = false;
+                }
+                ImportedTexture->MaxTextureSize = 1024;
+                ImportedTexture->PostEditChange();
+                ImportedTexture->MarkPackageDirty();
+            }
             if (Relative.StartsWith(TEXT("World/Shire/VerifiedPBR/")))
             {
                 if (AssetName.EndsWith(TEXT("_ORM")))
