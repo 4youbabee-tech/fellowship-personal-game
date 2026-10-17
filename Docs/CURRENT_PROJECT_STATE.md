@@ -5029,3 +5029,9 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Exact hosted [Run 38989404509](https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/38989404509) SUCCESS on `5fcdd2188e52de08e15429b63463cd061e3795db`; artifact `12084607370` has an exported CC0 FBX and actual Blender preview. FBX SHA256 `c1af19a3fcae384d81664f1ca070f8458116156b0340d931a6be9a10c91b0bb6`. Reimport technical checks retained 53 bones / 54,090 triangles / 13,380 weighted body vertices / 0 unweighted / max 4 influences / 8 nonzero bilateral deformation tests.
 - Image review: tangent shaping at 1.12 / 0.78 / 1.25 was too subtle; hairstyle still reads bead-like. Do not accept the mathematical shape test as visual proof and do not promote to UE.
 - Next source iteration increases the same per-tuft anisotropy to tangent 1.45, radial .58, vertical 1.45. Each tuft retains the same 80 faces and existing head bone weights; target is a clearly visible but bounded curl shape. Exact-head Blender preview and reimported FBX review pending.
+
+
+## 2026-10-17 MPFB curl silhouette iteration — exact Blender result
+- Exact-head hosted [Run 38989791591](https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/38989791591) on `8dd1c7ec185e490377e0fc1a92ffce2d09411228`: Blender source SUCCESS; Windows UE4.27.2 SKIPPED. Wardrobe artifact `12084667030`; FBX SHA256 `4656046ca2c22c5cb1917681b9d8ee56aed83434effd2fcedc08f72ffe5cbede`.
+- Reimported exported FBX: 53 bones, 7 meshes, 54,090 triangles (hair 8,318), all vertices weighted, maximum 4 deform influences, and 8 bilateral arm/leg stress tests with nonzero movement. No animation was authored; UE import/world/PIE/device validation not run.
+- Render review shows stronger wavy texture than the prior output, with the same triangle budget. Still a compact row of clumps and the face/costume remain a prototype: **NOT VISUALLY ACCEPTED**. Continue source art work before UE reservation.
