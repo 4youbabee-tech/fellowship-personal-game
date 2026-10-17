@@ -412,6 +412,16 @@ class PES002IntegratedShireContract(unittest.TestCase):
 
 
 class PES002CinematicHobbitonContract(unittest.TestCase):
+    def test_existing_road_ferry_play_residents_can_use_skeletal_bank(self):
+        npc = (ROOT / "Source/ShireJourney/Private/Characters/ShireAmbientNPC.cpp").read_text(encoding="utf-8")
+        conversion = npc.split("bool AShireAmbientNPC::TryEnableUnifiedShireResident()", 1)[1].split("void AShireAmbientNPC::Tick(", 1)[0]
+        for role in ("Villager", "Gardener", "FieldWorker", "MarketVendor",
+                     "PartyGuest", "RoadWalker", "FerryWorker", "PlayRunner"):
+            self.assertIn('RoutineRole == TEXT("' + role + '")', conversion)
+        self.assertIn('ActorHasTag(TEXT("LivingWorldManaged"))', conversion)
+        self.assertIn("if (ActiveRigs >= 22) return false;", conversion)
+        self.assertIn('Streaming->ResolveCharacterRig(UsedRig, Mesh, AnimClass)', conversion)
+
     def test_chapter_landmarks_use_existing_world_and_director_ownership(self):
         cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
         hdr = (ROOT / "Source/ShireJourney/Public/World/ShirePrototypeWorldBuilder.h").read_text(encoding="utf-8")
@@ -433,6 +443,11 @@ class PES002CinematicHobbitonContract(unittest.TestCase):
         self.assertIn("-P1C01FullShireProof", bat)
         self.assertIn("1280", ps1)
         self.assertIn("720", ps1)
+        self.assertIn("if (bChapterCoverage && ViewIndex > 0)", cpp)
+        self.assertIn("PES002_LANDMARK_CAMERA_SIGHT", cpp)
+        self.assertIn('TEXT("PES002LandmarkEvidenceSight")', cpp)
+        self.assertIn("LineTraceSingleByChannel(SightHit, Eye, Aim", cpp)
+        self.assertIn("WeakCamera->SetActorLocationAndRotation(", cpp)
 
 
 class PES002ShadowBudgetContract(unittest.TestCase):

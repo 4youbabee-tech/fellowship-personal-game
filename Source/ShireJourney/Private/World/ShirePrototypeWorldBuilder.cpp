@@ -634,10 +634,76 @@ void AShirePrototypeWorldBuilder::BeginPlay()
                                 TEXT("WaterMill"), TEXT("StoneBridge")
                             };
                             const FVector LegacyLookAt(-2210.0f, -520.0f, 105.0f);
-                            const FVector ViewPosition = bChapterCoverage
+                            FVector ViewPosition = bChapterCoverage
                                 ? ChapterPositions[ViewIndex] : Positions[ViewIndex];
                             const FVector LookAt = bChapterCoverage
                                 ? ChapterLookAt[ViewIndex] : LegacyLookAt;
+                            // The real prior landmark captures were blocked by
+                            // nearby roofs. Select evidence-only observer views
+                            // using UE4.27 visibility traces, preserving all
+                            // world/player/quest/collision actor transforms.
+                            if (bChapterCoverage && ViewIndex > 0)
+                            {
+                                const FVector ObserverOffsets[] = {
+                                    FVector(-1050.0f, -750.0f, 620.0f),
+                                    FVector(-1220.0f, 650.0f, 690.0f),
+                                    FVector(750.0f, -1080.0f, 740.0f),
+                                    FVector(990.0f, 760.0f, 790.0f),
+                                    FVector(-500.0f, 1340.0f, 800.0f),
+                                    FVector(-1530.0f, -170.0f, 950.0f)
+                                };
+                                const FVector SightTargets[] = {
+                                    LookAt,
+                                    LookAt + FVector(0.0f, 0.0f, 170.0f),
+                                    LookAt + FVector(0.0f, 220.0f, 80.0f),
+                                    LookAt + FVector(0.0f, -220.0f, 80.0f)
+                                };
+                                const FCollisionQueryParams SightQuery(
+                                    TEXT("PES002LandmarkEvidenceSight"), false,
+                                    WeakBuilder.Get());
+                                float BestScore = -1000000.0f;
+                                int32 Selected = INDEX_NONE;
+                                for (int32 Candidate = -1;
+                                     Candidate < UE_ARRAY_COUNT(ObserverOffsets);
+                                     ++Candidate)
+                                {
+                                    const FVector Eye = Candidate == -1
+                                        ? ViewPosition
+                                        : LookAt + ObserverOffsets[Candidate];
+                                    float Score = -0.04f * FVector::Dist(Eye, LookAt);
+                                    for (const FVector& Aim : SightTargets)
+                                    {
+                                        FHitResult SightHit;
+                                        const bool bHit = WeakBuilder->GetWorld()->
+                                            LineTraceSingleByChannel(SightHit, Eye, Aim,
+                                                ECC_Visibility, SightQuery);
+                                        const float Separation = bHit
+                                            ? FVector::Dist(SightHit.ImpactPoint, Aim) : 0.0f;
+                                        if (!bHit || Separation < 260.0f)
+                                        {
+                                            Score += 500.0f;
+                                        }
+                                        else
+                                        {
+                                            Score -= FMath::Min(Separation, 2000.0f) * 0.3f;
+                                        }
+                                        if (bHit && FVector::Dist(
+                                                SightHit.ImpactPoint, Eye) < 180.0f)
+                                        {
+                                            Score -= 800.0f;
+                                        }
+                                    }
+                                    if (Score > BestScore)
+                                    {
+                                        BestScore = Score;
+                                        Selected = Candidate;
+                                        ViewPosition = Eye;
+                                    }
+                                }
+                                UE_LOG(LogTemp, Display,
+                                    TEXT("PES002_LANDMARK_CAMERA_SIGHT view=%d candidate=%d score=%.1f proofOnly=1"),
+                                    ViewIndex, Selected, BestScore);
+                            }
                             WeakCamera->SetActorLocationAndRotation(
                                 ViewPosition, (LookAt - ViewPosition).Rotation());
                             if (ViewIndex == 3 && WeakBuilder->GetWorld())

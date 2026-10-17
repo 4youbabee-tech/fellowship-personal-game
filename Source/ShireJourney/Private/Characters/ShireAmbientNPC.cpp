@@ -1462,9 +1462,14 @@ bool AShireAmbientNPC::TryEnableUnifiedShireResident()
     {
         return false;
     }
+    // Existing LivingWorldDirector road/ferry/play actors are authentic Shire
+    // residents too. Prior exclusions stranded them in modular presentation.
+    // Keep the original near-player soft bank and capped pooled actor ownership.
     const bool bLocalShireResident = RoutineRole == TEXT("Villager") ||
         RoutineRole == TEXT("Gardener") || RoutineRole == TEXT("FieldWorker") ||
-        RoutineRole == TEXT("MarketVendor") || RoutineRole == TEXT("PartyGuest");
+        RoutineRole == TEXT("MarketVendor") || RoutineRole == TEXT("PartyGuest") ||
+        RoutineRole == TEXT("RoadWalker") || RoutineRole == TEXT("FerryWorker") ||
+        RoutineRole == TEXT("PlayRunner");
     const FVector BagEnd(-2210.0f, -520.0f, 0.0f);
     APawn* Player = GetPlayerPawnCached();
     if (!bLocalShireResident || !Player ||
