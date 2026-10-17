@@ -5075,3 +5075,7 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 ## 2026-10-17 PES-002 final hosted source iteration — hair silhouette remains rejected
 - Exact Run 39031037739 on `8f0ecc5f46d275a13cbf8bbd6c552ecb4fe3a439` completed Blender source PASS; UE4.27.2 SKIPPED. Wardrobe artifact `12099289999`; exported CC0 FBX SHA256 `08683cd20c3495fa4752c803cb66019febcf9e664f17e604b802e5090d81a1c5`.
 - Reimport: 53 bones, 59,498 triangles, 13,380 weighted body vertices, max 4 influences, 8 bilateral stress poses. Longer ringlets did not produce a visibly different accepted silhouette in the actual Blender preview. This remains a SOURCE / VISUAL REJECT; no animation, UE import or world placement.
+
+## 2026-10-17 PES-002 source-character silhouette repair candidate
+- Inspected the exact source-preview artifact from Run 39031346183 at `5355bd0afd69eada46dd0f832eaaf7d36bdaa530`: the body/wardrobe still reads generic, the head silhouette remains a cropped cap, and there is no footwear; source receipt records 59,498 triangles and no authored animation. This is a visual rejection, not an Unreal import.
+- Candidate change moves 24 tapered ringlets outside the scalp and reduces each to 9 centerline samples × 5 sides to target <6,000 hair triangles while preserving the source rig. Exact-head Blender artifact and visual review remain pending; no runtime promotion.

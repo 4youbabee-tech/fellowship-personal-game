@@ -197,8 +197,8 @@ def main():
     start_curl_vertex=len(hair.data.vertices)
     curls=0
     curl_bm=bmesh.new();curl_bm.from_mesh(hair.data)
-    # Form tapered, scalp-following tubes. 12 strands per side/back profile,
-    # 10 centerline samples and six-sided rings keep the extra geometry modest.
+    # Form visible tapered ringlets just outside the scalp. Nine centerline samples
+    # and five-sided rings keep all 24 locks below the 6k hair-triangle budget.
     for i in range(24):
         angle = 2 * math.pi * i / 24 + .035 * math.sin(i * 1.7)
         # Forehead-facing strands stay close to the cap; the temples and nape
@@ -206,33 +206,35 @@ def main():
         side_weight = abs(math.sin(angle))
         # Longer side ringlets break the cropped-cap silhouette while retaining
         # the same 24-strand topology and triangle budget.
-        length = .070 + .095 * side_weight
-        radial = .82 + .06 * math.cos(i * 2.41)
+        length = .075 + .115 * side_weight
+        radial = 1.04 + .035 * math.cos(i * 2.41)
         phase = i * 1.91
         centers=[]
-        for step in range(11):
-            t=step/10
-            wave=math.sin(t * math.tau * 1.35 + phase) * (.003 + .004*t)
+        curl_steps=9
+        curl_sides=5
+        for step in range(curl_steps):
+            t=step/(curl_steps-1)
+            wave=math.sin(t * math.tau * 1.35 + phase) * (.004 + .006*t)
             x=hc.x+(rx*radial + wave)*math.cos(angle)
             y=hc.y+(ry*radial + wave)*math.sin(angle)
             z=hhi.z-.014-length*t
             centers.append(hair.matrix_world.inverted() @ Vector((x,y,z)))
         strand_vertices=[]
         for step,center in enumerate(centers):
-            tangent=(centers[min(step+1,10)]-centers[max(step-1,0)]).normalized()
+            tangent=(centers[min(step+1,curl_steps-1)]-centers[max(step-1,0)]).normalized()
             radial_axis=Vector((math.cos(angle),math.sin(angle),0))
             side_axis=tangent.cross(radial_axis).normalized()
-            radius=.0052*(1.0-.58*(step/10))
+            radius=.0052*(1.0-.58*t)
             ring=[]
-            for side in range(6):
-                phi=math.tau*side/6
+            for side in range(curl_sides):
+                phi=math.tau*side/curl_sides
                 point=center + radius*(radial_axis*math.cos(phi)+side_axis*math.sin(phi))
                 ring.append(curl_bm.verts.new(point))
             strand_vertices.append(ring)
-        for step in range(10):
+        for step in range(curl_steps-1):
             a=strand_vertices[step];b=strand_vertices[step+1]
-            for side in range(6):
-                curl_bm.faces.new((a[side],a[(side+1)%6],b[(side+1)%6],b[side]))
+            for side in range(curl_sides):
+                curl_bm.faces.new((a[side],a[(side+1)%curl_sides],b[(side+1)%curl_sides],b[side]))
         curls+=1
     curl_bm.normal_update();curl_bm.to_mesh(hair.data);curl_bm.free();hair.data.update()
     head_group.add(list(range(start_curl_vertex,len(hair.data.vertices))),1.0,'REPLACE')

@@ -4290,3 +4290,7 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Longer-ringlet CC0 wardrobe source | TECHNICAL PASS / VISUAL REJECT | Run 39031037739; artifact 12099289999; FBX SHA `08683cd20c3495fa4752c803cb66019febcf9e664f17e604b802e5090d81a1c5`; 53 bones/59,498 triangles/8 bilateral stress tests |
 | Hairstyle | NO ACCEPTANCE | Actual Blender preview remains a tight cap; changed lock length did not materially improve appearance |
 | Runtime | NOT RUN | UE4.27.2 skipped; no locomotion, UE deformation, P1C01 placement or device FPS claim |
+
+## 2026-10-17 PES-002 source-character silhouette repair candidate
+- Inspected the exact source-preview artifact from Run 39031346183 at `5355bd0afd69eada46dd0f832eaaf7d36bdaa530`: the body/wardrobe still reads generic, the head silhouette remains a cropped cap, and there is no footwear; source receipt records 59,498 triangles and no authored animation. This is a visual rejection, not an Unreal import.
+- Candidate change moves 24 tapered ringlets outside the scalp and reduces each to 9 centerline samples × 5 sides to target <6,000 hair triangles while preserving the source rig. Exact-head Blender artifact and visual review remain pending; no runtime promotion.

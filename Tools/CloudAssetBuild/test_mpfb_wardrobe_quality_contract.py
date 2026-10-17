@@ -11,6 +11,9 @@ class WardrobeQualityContractTests(unittest.TestCase):
         source = (ROOT / "prepare_mpfb_shire_variant.py").read_text(encoding="utf-8")
         self.assertIn("for i in range(24):", source)
         self.assertIn("centers.append(hair.matrix_world.inverted()", source)
+        self.assertIn("radial = 1.04 + .035", source)
+        self.assertIn("curl_steps=9", source)
+        self.assertIn("curl_sides=5", source)
         self.assertIn("head_group.add(list(range(start_curl_vertex", source)
         self.assertNotIn("create_icosphere", source)
 
