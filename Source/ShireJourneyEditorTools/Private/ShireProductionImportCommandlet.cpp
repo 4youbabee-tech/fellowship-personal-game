@@ -2405,6 +2405,48 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                 *Binding.TextureObjectPath);
         }
 
+        // Some local installs persist Bag End MTL instances but not their
+        // TX_BagEnd*.png inputs. Prefer the exact authored albedo whenever it
+        // exists. A curated, ALREADY IMPORTED Shire Texture2D is an explicit
+        // fallback only for original Bag End diffuse (never Normal/ORM).
+        if (Instance && !Texture &&
+            Binding.ParameterName == FName(TEXT("AlbedoTexture")) &&
+            Binding.MaterialObjectPath.StartsWith(
+                TEXT("/Game/Production/World/Shire/"), ESearchCase::IgnoreCase) &&
+            Binding.TextureObjectPath.Contains(
+                TEXT("/TX_BagEnd"), ESearchCase::IgnoreCase))
+        {
+            FString FallbackName;
+            if (Binding.MaterialObjectPath.Contains(TEXT("BagEndTurf")) ||
+                Binding.MaterialObjectPath.Contains(TEXT("Grass")))
+                FallbackName = TEXT("TX_ShGrass");
+            else if (Binding.MaterialObjectPath.Contains(TEXT("BagEndDoor")) ||
+                     Binding.MaterialObjectPath.Contains(TEXT("Wood")))
+                FallbackName = TEXT("TX_ShWood");
+            else if (Binding.MaterialObjectPath.Contains(TEXT("BagEndGlass")))
+                FallbackName = TEXT("TX_ShDoorGreen");
+            else if (Binding.MaterialObjectPath.Contains(TEXT("BagEndPlaster")) ||
+                     Binding.MaterialObjectPath.Contains(TEXT("Stone")))
+                FallbackName = TEXT("TX_ShStone");
+            else if (Binding.MaterialObjectPath.Contains(TEXT("BagEndBrass")))
+                FallbackName = TEXT("TX_ShWood");
+            if (!FallbackName.IsEmpty())
+            {
+                const FString FallbackObject = FString::Printf(
+                    TEXT("/Game/Production/World/Shire/%s.%s"),
+                    *FallbackName, *FallbackName);
+                Texture = FindObject<UTexture2D>(nullptr, *FallbackObject);
+                if (!Texture)
+                {
+                    Texture = LoadObject<UTexture2D>(nullptr, *FallbackObject);
+                }
+                UE_LOG(LogTemp, Texture ? Display : Error,
+                    TEXT("PES002_BAGEND_ALBEDO_RESOLVE material=%s authored=%s substitute=%s resolved=%d source=imported-Shire-Texture2D"),
+                    *Binding.MaterialObjectPath, *Binding.TextureObjectPath,
+                    *FallbackObject, Texture ? 1 : 0);
+            }
+        }
+
         if (Instance && Texture)
         {
             Instance->SetTextureParameterValueEditorOnly(

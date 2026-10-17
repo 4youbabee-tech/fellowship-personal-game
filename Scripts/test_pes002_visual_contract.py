@@ -10,6 +10,21 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class PES002VisualContract(unittest.TestCase):
+    def test_bagend_albedo_fallback_resolves_existing_shire_textures_only(self):
+        cpp = (ROOT / "Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp").read_text(encoding="utf-8")
+        self.assertIn("PES002_BAGEND_ALBEDO_RESOLVE", cpp)
+        self.assertIn('TEXT("TX_ShGrass")', cpp)
+        self.assertIn('TEXT("TX_ShWood")', cpp)
+        self.assertIn('TEXT("TX_ShStone")', cpp)
+        self.assertIn('TEXT("TX_ShDoorGreen")', cpp)
+        self.assertIn('Binding.ParameterName == FName(TEXT("AlbedoTexture"))', cpp)
+        self.assertIn('Binding.TextureObjectPath.Contains(', cpp)
+        self.assertIn('if (Instance && Texture)', cpp)
+        self.assertIn('++Failed;', cpp)
+        # Never reinterpret roughness, ORM or normal maps as base color.
+        self.assertIn('TEXT("AlbedoTexture")', cpp)
+
+
     def test_pes002_named_shared_technical_rig_and_riverside_clearance(self):
         npc = (ROOT / "Source/ShireJourney/Private/Characters/ShireNPC.cpp").read_text(encoding="utf-8")
         head = (ROOT / "Source/ShireJourney/Public/Characters/ShireNPC.h").read_text(encoding="utf-8")
