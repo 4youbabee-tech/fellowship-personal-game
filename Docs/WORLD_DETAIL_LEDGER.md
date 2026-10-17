@@ -1,3 +1,8 @@
+## 2026-10-17 owner pragmatic Shire visual stop-rule
+- For P1C01 homes, trees, residents and atmosphere, ~80% of the owner's desired resemblance is enough to proceed to the remaining Shire gameplay once **actual** UE4 screenshots show a convincing whole. Do not require exact 100% face/hair, optional props or arbitrary matching visual instance counts to collect evidence.
+- Keep authentic Tolkien-inspired original characters, source rights, stable collision/pathing/NavMesh and world anchors, deformation and animation for claimed skeletal characters, DX11 low-memory performance, distinct hero identity and real visual signoff. KayKit technical rig cannot become approved hero art merely because source QC passes.
+- Incomplete but sane resident census remains inspectable and transparent. UE4.27 compiler API compatibility is a hard functional gate; the current broken NumDynamicShadowCascades UI-field name is replaced with engine setter rather than weakening compiler gates.
+
 ## 2026-10-17 P1C01 whole-chapter Shire source candidate
 - Scene scope authorised for a single PES-002 candidate: Bag End, Bagshot Row, Hobbiton, Party Field, rural roads and Bucklebury Ferry. Do not change existing quest anchors, route/NavMesh, player collision, or streaming/save ownership.
 - Authored PR #484 house/oak/ambient audio source overlay combined with PR #486 human/kit preproduction. New VillageMatureOakInstances HISM substitutes visible primitive tree canopy/trunk at original SpawnTree coordinates only after real mature oak mesh residency and material-slot checks; native hidden capsule-like trunk mesh retains existing collision.

@@ -2010,7 +2010,8 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
             SunComponent->SetCastShadows(true);
             // Keep hero-scale shadows crisp while bounding distant CSM work on the 720p target.
             SunComponent->DynamicShadowDistanceMovableLight = 12000.0f;
-            SunComponent->NumDynamicShadowCascades = 2;
+            // UE4.27 C++ API (the editor calls this "Num Dynamic Shadow Cascades").
+            SunComponent->SetDynamicShadowCascades(2);
             SunComponent->SetAtmosphereSunLight(true);
             SunComponent->SetAtmosphereSunLightIndex(0);
         }

@@ -9635,7 +9635,7 @@
   },
   "owner_p1c01_integrated_production_order_2026_10_17": {
     "authority": "Owner explicit P1C01 one-shot integrated source and runtime order on 2026-10-17",
-    "status": "OWNER_APPROVED_INTEGRATED_CANDIDATE_EXACT_HEAD_VALIDATION_PENDING",
+    "status": "OWNER_APPROVED_CANDIDATE_COMPILE_ROOT_CAUSE_REPAIR_PENDING",
     "active_pes": "PES-002",
     "runtime_writer": "P1C01_ONLY",
     "chapter_scope": [
@@ -9651,9 +9651,34 @@
       "PR #486 MPFB supporting-Hobbit and Shire Kit source-only intake"
     ],
     "scope_policy": "One cohesive P1C01 candidate against develop. Respect all 24 PES IDs, one Unreal writer, one Warehouse writer, world/quest/save/nav/scene positions and licensing. Do not mark later runtime PES accepted or completed.",
-    "character_gate": "22 skeletal residents and 0 blockout is an unproven acceptance target, not accomplished by raising a count cap or using one Frodo rig. Original ShireResidentA-E real licensed imports and deforming animation still required.",
-    "performance_gate": "Texture mip ceilings/CSM are experiments and cannot promise 14ms saved or >=30 FPS until measured on target-class DX11.",
-    "visual_gate": "No new candidate UE4.27 compile, PIE, import, 4 genuine 1280x720 screenshot or owner-device performance evidence yet.",
+    "character_gate": "22 skeletal residents and 0 primitives remains a recorded aspirational visual count. The owner accepts approximately 80% human-rated coherent presentation; do not withhold genuine PIE capture due to exact cosmetics. Skeletal/import claims must remain factual; no low-quality KayKit art accepted as final.",
+    "performance_gate": "Real 720p DX11 30 FPS minimum target and memory budget remain strict performance objectives, independently measured; no guaranteed GPU ms from console tweaks.",
+    "visual_gate": "Four real new UE4 PIE angles mandatory for diagnosis and owner review; owner can accept aesthetically at ~80% of desired quality, without demanding 100% likeness. CI capture should fail on missing genuine images/shader fallback/invalid census, not optional exact 22.",
     "rollback": "Revert integrated commit as one coherent unit if import, C++ compile, collision, visual or source gates reject."
+  },
+  "owner_80_percent_visual_progression_2026_10_17": {
+    "authority": "Owner explicit playable-before-perfection decision, 2026-10-17",
+    "status": "ACCEPTED_FOR_P1C01_PRODUCTION_ASSESSMENT",
+    "visual_target": "Approximately 80% similarity to the desired Shire visual style is enough to continue; this is an owner/human evaluation, not an invented numerical confidence or automated likeness score.",
+    "no_polish_blockers": [
+      "Minor face/hair/clothing differences",
+      "Nonessential material or foliage minutiae",
+      "Missing optional accessory variations",
+      "Incomplete 22/22/0 cosmetic census when runtime presentation can be safely inspected"
+    ],
+    "preserve": [
+      "Working characters and traversable routes",
+      "Real asset package provenance and right-to-use",
+      "UE4.27.2 C++ UHT/compile",
+      "No placeholder passed off as final attractive art",
+      "Actual animation/skin deformation for claimed working skeletal figures",
+      "No gameplay/save/NPC/collision/quest breakage",
+      "Target device 720p DX11 minimum 30 FPS and memory validation",
+      "Actual screenshot evidence and explicit user art review",
+      "24 PES IDs and one runtime writer"
+    ],
+    "workflow": "Favor one complete coherent source candidate plus cheap targeted UE4-symbol/python/source QC before one Windows build; investigate the first actual failure's root cause and repair tests at the same time; do not create duplicate administration work or make aesthetic cosmetic counts a capture blocker.",
+    "runtime_population_goal": "22 skeletal and 0 primitive remains a measured aspirational P1C01 polish target, not a prerequisite for screenshots or a false claim of 22 distinct meshes.",
+    "current_failure": "PR488@0b705ff UE4.27 Run 39040962447 reached Build ShireJourneyEditor and failed C2039 NumDynamicShadowCascades; targeted correction uses UE4.27 documented SetDynamicShadowCascades(2) and repairs the stale asserting test; same run had cached KayKit CC0 source packet PASS but this is technical-only, not final appearance."
   }
 }

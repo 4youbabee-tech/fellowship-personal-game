@@ -50,25 +50,28 @@ class PES002VisualContract(unittest.TestCase):
         section = workflow.split("      - name: Capture Bag End targeted P1C01 visual proof", 1)[1].split("      - name:", 1)[0]
         self.assertNotIn('continue-on-error: true', section)
 
-    def test_pes002_uses_skeletal_residents_for_full_local_population(self):
-        # M1 contract only; exact-head PIE must report all 22 as skeletal.
+    def test_pes002_preserves_population_evidence_for_owner_80_percent_review(self):
+        # Source protects truthful census and genuine 4-view capture; 22/22/0 is
+        # a production goal, not an excuse to discard diagnostic screenshots.
         npc = (ROOT / "Source/ShireJourney/Private/Characters/ShireAmbientNPC.cpp").read_text(encoding="utf-8")
         capture = (ROOT / "Scripts/capture_pes002_bag_end_visual.ps1").read_text(encoding="utf-8")
         self.assertIn("if (ActiveRigs >= 22) return false;", npc)
-        self.assertIn("const int32 Variant = ActiveRigs % 5;", npc)
+        self.assertIn("ApplyHobbitVisualVariation(static_cast<int32>(PositionSeed));", npc)
         self.assertIn("UnifiedResident->bEnableUpdateRateOptimizations = true;", npc)
         self.assertIn("countLimit=22 visualAccepted=0", npc)
         self.assertNotIn("if (ActiveRigs >= 5) return false;", npc)
+        self.assertIn("PES002_RESIDENT_RUNTIME_INVALID", capture)
+        self.assertIn("$skeletal + $modular -ne $localManaged", capture)
         self.assertIn("PES002_RESIDENT_POPULATION_INCOMPLETE", capture)
-        self.assertIn("$localManaged -ne 22 -or $skeletal -ne 22 -or $modular -ne 0", capture)
         self.assertIn("PES002_RESIDENT_POPULATION_PASS", capture)
+        self.assertIn("PES002_SHARED_STORY_RIG_SAMPLES", capture)
+        self.assertIn("ownerVisualTarget=approximately80percent", capture)
+        self.assertNotIn('throw "PES002_RESIDENT_POPULATION_INCOMPLETE', capture)
         workflow = (ROOT / ".github/workflows/unreal-build-validation.yml").read_text(encoding="utf-8")
-        self.assertIn("source_only: ${{ steps.direct.outputs.source_only }}", workflow)
-        self.assertIn("Source/ShireJourney/|Source/ShireJourneyEditorTools/|Config/", workflow)
-        self.assertIn("needs.classify.outputs.source_only == 'true'", workflow)
-        self.assertIn('git merge-base "$TARGET_SHA" origin/develop', workflow)
-        self.assertIn('PES002_CLASSIFIER_DELTA_BASE=', workflow)
-        self.assertIn('REASON=pes002_runtime_or_production_asset_delta', workflow)
+        self.assertIn("needs: [classify, character-source]", workflow)
+        self.assertIn("name: UE4.27.2 C++ Build", workflow)
+        self.assertIn("UE4.27 source-symbol micro-preflight", workflow)
+        self.assertIn("TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}", workflow)
 
 
     def test_managed_resident_path_follows_ground_probed_endpoint_elevations(self):
@@ -414,7 +417,8 @@ class PES002ShadowBudgetContract(unittest.TestCase):
         ini = (ROOT / "Config/DefaultEngine.ini").read_text(encoding="utf-8")
         self.assertIn("SunComponent->SetCastShadows(true);", cpp)
         self.assertIn("SunComponent->DynamicShadowDistanceMovableLight = 12000.0f;", cpp)
-        self.assertIn("SunComponent->NumDynamicShadowCascades = 2;", cpp)
+        self.assertIn("SunComponent->SetDynamicShadowCascades(2);", cpp)
+        self.assertNotIn("SunComponent->NumDynamicShadowCascades", cpp)
         self.assertIn("r.Shadow.CSM.MaxCascades=2", ini)
         self.assertIn("r.Shadow.MaxCSMResolution=1024", ini)
         self.assertIn("r.Shadow.DistanceScale=0.60", ini)

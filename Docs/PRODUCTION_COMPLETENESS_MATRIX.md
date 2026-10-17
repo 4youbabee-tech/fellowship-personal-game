@@ -1,3 +1,13 @@
+## 2026-10-17 PES-002 root-fix acceptance matrix — 80% visual quality owner-approved
+| Item | Evidence | Gate decision |
+|---|---|---|
+| UE4.27 C++ compile | Run 39040962447 FAIL C2039: unsupported NumDynamicShadowCascades member | FIXED IN SOURCE CANDIDATE via SetDynamicShadowCascades; exact new-HEAD build NOT RUN |
+| Obsolete source tests | Test required same wrong member and stale population/branch-classifier expectations | ROOT-CAUSE TEST REPAIR CANDIDATE; targeted Linux unit preflight introduced |
+| 22 skeletal/0 primitive | Full count NOT proven; shared Frodo fallback and KayKit test fixture remain | Cosmetic target, not capture hard-stop; truthful census plus user ~80% visual acceptance |
+| Real PIE images | No new images produced after compile failure | Require four genuine 1280x720 photographs from Unreal for human review; not optional |
+| GPU FPS / VRAM | No new successful before/after device measurement | >=30FPS DX11 720p on target hardware remains objective; no fabricated 14ms |
+| PES Gate 6/7 | OPEN | Strict playable/compile/asset rights/traversal/save/performance; nonessential art perfection removed as a blocker |
+
 ## 2026-10-17 integrated P1C01 source candidate (exact-head engine proof pending)
 | Capability | Proven for new candidate | Next acceptance criterion |
 |---|---|---|

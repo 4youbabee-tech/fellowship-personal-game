@@ -313,6 +313,14 @@ jobs:
         with:
           ref: ${{ env.TARGET_SHA }}
           persist-credentials: false
+      # Prevent a repeat of Run 39040962447's UE4.27 C2039 without a new
+      # Windows compilation. This narrow 2-class check is not a paperwork gate.
+      - name: UE4.27 source-symbol micro-preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile Scripts/test_pes002_visual_contract.py Scripts/ue4_p1c01_curated_postimport.py
+          python3 -m unittest -v Scripts.test_pes002_visual_contract.PES002ShadowBudgetContract Scripts.test_pes002_visual_contract.PES002IntegratedShireContract
       # Reuse only a packet produced from identical pinned source, Blender
       # normalization and manifest inputs. A cache hit never skips hash/skin
       # validation or UE4 import; it only avoids re-downloading tools and raw FBX.
