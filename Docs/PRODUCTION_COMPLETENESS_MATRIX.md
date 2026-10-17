@@ -4324,3 +4324,11 @@ Follow-up run 39021746348 (#2237) passed build/import/automation/startup but exp
 | Previous accidental Windows Unreal run | PASS / NOT BATCH A | Run 39031870188 #2251 on predecessor head built/imported/PIE-tested existing project only; it did not acquire or build the Shire kit source |
 | Source-only push trigger and runtime suppression | IMPLEMENTED / LOCAL YAML PARSE PASS | Feature branch added to existing workflow trigger; classifier reads PR head or push ref and sets full=false; source job accepts either event |
 | Source asset and Blender packet | NOT ACQUIRED / NOT RUN | Fifteen offline tests PASS; wait for the exact feature-branch push run to download CC0 FBX/maps and export/reimport LODs |
+
+
+## 2026-10-17 — PES-002 Batch A hosted source lane execution blocker
+| Gate / output | State | Evidence / remaining work |
+|---|---|---|
+| Exact-head source-only GitHub execution | BLOCKED BEFORE JOBS | Runs 39032201614 #2252 and 39032407070 #2253 show failure with zero jobs and no logs/artifacts |
+| Previous unintended Unreal run | PASS / OUT OF SEQUENCE | Run 39031870188 #2251 C++/import/Automation/PIE PASS on the predecessor, before source-only routing; not Batch A evidence |
+| Poly Haven source FBX and Blender output | NOT ACQUIRED / NOT RUN | Local offline tests pass; no physical source receipt, LOD/UCX exports or Blender render exist |

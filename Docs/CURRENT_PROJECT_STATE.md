@@ -5060,3 +5060,9 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Run 39031870188 / #2251 on predecessor code head b9a27dd completed the existing Windows Unreal lane (C++/asset import/Automation/PIE PASS); this was an unintended pre-closeout launch before the source-only route was committed. It produced no licensed Shire kit FBX and is not Batch A evidence.
 - Run 39032201614 / #2252 on 0db966f had no jobs and failed because the feature branch was absent from the push trigger. The existing workflow now explicitly triggers that branch and resolves both PR and push refs to the same source-only mode; Unreal stays skipped.
 - Fifteen offline factory/intake tests, Python compilation, and YAML parse pass. Exact hosted acquisition and Blender execution remain pending; no model bytes are promoted yet.
+
+
+## 2026-10-17 — PES-002 Batch A hosted source lane execution blocker
+- Exact head `01cc8c7bec8c138eb55d7303f7506e594494d123`: Run 39032407070 / #2253 completed `failure` with zero jobs; predecessor Run 39032201614 / #2252 also had zero jobs. No Blender/source logs or artifacts exist, so the workflow route has not produced a mesh.
+- Predecessor Run 39031870188 / #2251 ran the full Windows Unreal lane before the source-only correction (C++/import/Automation/PIE PASS). This was out of the Batch A sequence and is not source-kit, visual, or owner-device acceptance evidence.
+- Local factory/intake tests: 15 PASS; Python compile and YAML parse PASS. Poly Haven bench physical bytes remain NOT ACQUIRED; Blender build NOT RUN; Batch A remains OPEN.

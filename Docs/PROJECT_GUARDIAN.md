@@ -947,3 +947,9 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 ## 2026-10-17 — PG-PES002-FOREGROUND-01 resolution evidence and remaining art debt
 - Run 39022384250 (#2238) verifies the recovery candidate: 16/16 foreground probes active; fresh 1280x720 PIE PNGs uploaded in artifact 12096524213. The first recovery P/Invoke defect (GetCurrentThreadId imported from user32) was corrected to kernel32 and guarded by the source test. Keep the active-window and fresh-PNG checks fail-closed.
 - This closes only the capture automation incident. Visual acceptance remains REJECTED: the four views still show angular/primitive foliage and props, repetitive settlement clutter and unfinished ground composition. Performance is below target in CI windows (21.39–28.27 FPS, worst 362.15 ms); hardware VRAM/device acceptance is not proven. Gate 6/7 stays OPEN.
+
+
+## 2026-10-17 — repeated hosted source-lane no-job failure
+- Runs 39032201614 and 39032407070 on the PES-002 source branch both completed as failures with zero job records and no logs. Do not infer Blender or asset production ran. Root cause is unresolved from the Actions API evidence.
+- Run 39031870188 executed the Windows Unreal lane on the predecessor before the source-only branch classifier landed. Keep the PR branch source-only and do not use that run as a reason to launch another runtime writer before Batch A closeout.
+- Local checks remain useful only for code contracts; source bytes, Blender export/reimport, visual review and Unreal promotion remain separate gates.
