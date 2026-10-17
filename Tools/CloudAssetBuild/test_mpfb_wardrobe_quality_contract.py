@@ -35,7 +35,9 @@ class WardrobeQualityContractTests(unittest.TestCase):
         )[0]
         self.assertIn("Keep the fitted source garment closed across the front", garment)
         self.assertNotIn("bmesh.ops.delete", garment)
-        self.assertNotIn("bisect_plane", garment)
+        self.assertNotIn("for x in (-.052, .052)", garment)
+        self.assertIn("# torso bounds; never duplicate the full clothing object", garment)
+        self.assertEqual(garment.count("bmesh.ops.bisect_plane"), 1)
         self.assertIn("v.co+=v.normal*.004", garment)
 
     def test_reimport_gate_measures_new_hair_and_caps_total_triangles(self):

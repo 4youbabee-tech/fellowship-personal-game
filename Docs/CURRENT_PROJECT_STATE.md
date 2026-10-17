@@ -5046,3 +5046,9 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Actual Blender Run 39027545092 produced full-length trousers and an FBX that reimported with 53 bones, 7 meshes, 57,874 triangles, zero unweighted vertices, max 4 influences, and bilateral arm/leg pose deltas. This remains a source-only study; no locomotion or UE character import.
 - Human review of artifact 12098822918 still found triangular vest-front gaps. The next source-only edit removes the destructive waistcoat front cuts and keeps a closed skinned shell; 6 focused local wardrobe contract tests pass. Exact-head Blender preview is pending; no promotion until visual review.
 - PR #484 Run 39027307675 was auto-triggered by source tooling pushed to that PR. The UE4.27.2 compile/startup/PIE capture steps succeeded and produced 4 runtime views, but the captured Shire is visually rejected; no chapter completion or target-device 30 FPS claim. No additional Unreal run is initiated by this character edit.
+
+
+## 2026-10-17 PES-002 waistcoat-budget rerun — source correction queued
+- Exact Blender Run 39029681409 on `976834413dcc6cb34fec8ab15c935df7b42fbf52` successfully installed Blender 4.2.23/MPFB2, verified/extracted the CC0 pack (421 files), exported source + wardrobe FBX, then failed reimport QC at `SHIRE_HAIR_OR_CHARACTER_TRIANGLE_BUDGET_FAILED`; no artifact was uploaded and UE4.27.2 was skipped.
+- Root cause: closing the vest by removing all cuts copied the full clothing object instead of only torso bounds, exceeding the existing triangle budget. Candidate retains the four torso-bound cuts, removes the central-front cut/delete that created render slits, and adds a focused regression. Six local wardrobe contract tests PASS; hosted exact-head rerun pending.
+- No character promotion, locomotion, UE import, or Shire visual acceptance. PES-002 remains active; PES-003 locked; Gate 6/7 open.

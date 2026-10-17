@@ -4249,3 +4249,12 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Waistcoat front | VISUAL REJECT | Actual render retained triangular gaps; closed-shell source correction pending hosted Blender rerun |
 | Unreal Shire runtime | PIE RENDER_OBSERVED / VISUAL REJECT | Auto-triggered Run 39027307675; four actual runtime views show primitive-heavy houses/trees/residents; compile/startup/capture pass, target-device FPS/acceptance not proven |
 | Promotion | NOT PROMOTED | No locomotion authoring, UE character import, world placement or visual acceptance; PES-002 ACTIVE, PES-003 LOCKED, Gate 6/7 OPEN |
+
+
+## 2026-10-17 PES-002 waistcoat budget correction — SOURCE RERUN PENDING
+| Output | State | Evidence / remaining work |
+|---|---|---|
+| Hosted Blender source export | FAILED QC / NO ARTIFACT | Run 39029681409, exact SHA `976834413dcc6cb34fec8ab15c935df7b42fbf52`; MPFB/CC0 install and export passed; reimport rejected existing hair/total triangle gate |
+| Root correction | CANDIDATE | Keep torso-bound crop planes, eliminate center seam cuts and face deletion that expose slit triangles; six local wardrobe tests pass |
+| UE4.27.2 | SKIPPED | Source QC failed; do not import character or claim acceptance |
+| PES/Gates | OPEN | PES-002 ACTIVE, PES-003 LOCKED, Gate 6/7 OPEN |

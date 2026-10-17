@@ -102,8 +102,17 @@ def main():
     vest=clothes.copy(); vest.data=clothes.data.copy(); bpy.context.collection.objects.link(vest);vest.name='Shire_Authored_Waistcoat'
     # Keep the fitted source garment closed across the front. The earlier
     # hand-cut opening sliced through irregular suit topology and exposed
-    # triangular body patches in the Blender render; a continuous overlaid
-    # wool waistcoat plus fasteners reads cleanly while remaining skinned.
+    # triangular body patches in the Blender render. Retain only the four
+    # torso bounds; never duplicate the full clothing object into the vest.
+    bm=bmesh.new();bm.from_mesh(vest.data)
+    for co,normal in [((0,0,.865),(0,0,1)),((0,0,1.285),(0,0,-1)),
+                      ((-.177,0,0),(1,0,0)),((.177,0,0),(-1,0,0))]:
+        bmesh.ops.bisect_plane(bm,geom=list(bm.verts)+list(bm.edges)+list(bm.faces),
+            plane_co=vest.matrix_world.inverted()@Vector(co),
+            plane_no=vest.matrix_world.to_3x3().transposed()@Vector(normal),
+            clear_inner=True,dist=1e-6)
+    bm.normal_update()
+    bm.to_mesh(vest.data);bm.free()
     vest.data.materials.clear();vest.data.materials.append(vestmat)
     for f in vest.data.polygons:f.material_index=0
     for v in vest.data.vertices:
