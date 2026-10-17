@@ -37,6 +37,8 @@ void UShireAudioSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 
     ActiveAmbienceCue = NAME_None;
     ActiveMusicCue = NAME_None;
+    ActiveEnvironmentCue = NAME_None;
+    ActiveEnvironmentComponent = nullptr;
     PendingVoiceCue = NAME_None;
     PendingAudioLoads.Empty();
     PendingAudioRequestTokens.Empty();
@@ -54,6 +56,19 @@ void UShireAudioSubsystem::Initialize(FSubsystemCollectionBase& Collection)
         Settings.AttenuationShape = EAttenuationShape::Sphere;
         Settings.AttenuationShapeExtents = FVector(110.0f, 0.0f, 0.0f);
         Settings.FalloffDistance = 850.0f;
+    }
+
+    // Exterior ambience shares the existing streaming/cue architecture.
+    EnvironmentAttenuation = NewObject<USoundAttenuation>(this);
+    if (EnvironmentAttenuation)
+    {
+        FSoundAttenuationSettings& Zone = EnvironmentAttenuation->Attenuation;
+        Zone.bAttenuate = true;
+        Zone.bSpatialize = true;
+        Zone.DistanceAlgorithm = EAttenuationDistanceModel::NaturalSound;
+        Zone.AttenuationShape = EAttenuationShape::Sphere;
+        Zone.AttenuationShapeExtents = FVector(280.0f, 0.0f, 0.0f);
+        Zone.FalloffDistance = 2000.0f;
     }
 
     if (UGameInstance* GI = GetGameInstance())
@@ -116,6 +131,7 @@ void UShireAudioSubsystem::Deinitialize()
     SfxCache.Empty();
 
     ClearPersistentAudio();
+    EnvironmentAttenuation = nullptr;
     Super::Deinitialize();
 }
 
@@ -278,6 +294,10 @@ void UShireAudioSubsystem::HandleAsyncAudioReady(
                 ActiveAmbienceComponent->FadeIn(0.55f, 1.0f);
             }
         }
+        if (ActiveEnvironmentCue == CueId && !ActiveEnvironmentComponent)
+        {
+            StartEnvironmentLoopIfReady(CueId, Sound);
+        }
     }
     else if (Category == ShireAudioAssetPaths::MusicCategory)
     {
@@ -417,6 +437,109 @@ void UShireAudioSubsystem::SetAmbienceCue(FName CueId)
             {
                 ActiveAmbienceComponent->FadeIn(0.55f, 1.0f);
             }
+        }
+    }
+}
+
+
+void UShireAudioSubsystem::StartEnvironmentLoopIfReady(FName CueId, USoundBase* Sound)
+{
+    if (!GetWorld() || !EnvironmentAttenuation || !Sound ||
+        CueId == NAME_None || CueId != ActiveEnvironmentCue ||
+        ActiveEnvironmentComponent)
+    {
+        return;
+    }
+
+    // Four original SoundWaves are already imported with looping on ambience
+    // cues. This single 3D component is intentionally quieter than narrative
+    // dialogue/music and uses a shared attenuation object.
+    ActiveEnvironmentComponent = UGameplayStatics::SpawnSoundAtLocation(
+        this, Sound, ActiveEnvironmentOrigin, FRotator::ZeroRotator,
+        0.0f, 1.0f, 0.0f, EnvironmentAttenuation, nullptr, true);
+    if (ActiveEnvironmentComponent)
+    {
+        ActiveEnvironmentComponent->FadeIn(1.45f, 0.23f);
+        UE_LOG(LogTemp, Display,
+            TEXT("PES002_ENV_ZONE_PLAY cue=%s x=%.0f y=%.0f soft=1 spatial=1"),
+            *CueId.ToString(), ActiveEnvironmentOrigin.X, ActiveEnvironmentOrigin.Y);
+    }
+}
+
+void UShireAudioSubsystem::UpdateShireEnvironmentSoundscape(
+    const FVector& ListenerLocation)
+{
+    if (!GetWorld() || !EnvironmentAttenuation ||
+        !FMath::IsFinite(ListenerLocation.X) ||
+        !FMath::IsFinite(ListenerLocation.Y) ||
+        !FMath::IsFinite(ListenerLocation.Z))
+    {
+        return;
+    }
+
+    // P1C01 exterior map coordinates only. No new audio hierarchy and no
+    // PES-003 interior or future-story runtime lanes are opened.
+    const FVector2D Listener(ListenerLocation.X, ListenerLocation.Y);
+    const FVector2D Garden(-2210.0f, -520.0f);
+    const FVector2D Party(280.0f, 1320.0f);
+    const FVector2D Village(90.0f, 110.0f);
+
+    FName NextCue = NAME_None;
+    FVector NextOrigin = FVector::ZeroVector;
+    if (FVector2D::DistSquared(Listener, Garden) < FMath::Square(1100.0f))
+    {
+        NextCue = TEXT("Amb_ShireMorning");
+        NextOrigin = FVector(-2260.0f, -610.0f, 85.0f);
+    }
+    else if (FVector2D::DistSquared(Listener, Party) < FMath::Square(1180.0f))
+    {
+        NextCue = TEXT("Amb_PartyField");
+        NextOrigin = FVector(280.0f, 1320.0f, 85.0f);
+    }
+    else if (FVector2D::DistSquared(Listener, Village) < FMath::Square(3100.0f))
+    {
+        NextCue = TEXT("Amb_ShireRoad");
+        NextOrigin = FVector(140.0f, 100.0f, 85.0f);
+    }
+
+    if (NextCue == ActiveEnvironmentCue)
+    {
+        // Narrative ambience changes can cancel an in-flight shared-category
+        // load. A later position poll safely retries the same zone in that case.
+        if (NextCue != NAME_None && !ActiveEnvironmentComponent)
+        {
+            if (USoundBase* Sound = ResolveCategorizedAsset(
+                    NextCue, ShireAudioAssetPaths::Ambience,
+                    AmbienceCache, ShireAudioAssetPaths::AmbienceCategory))
+            {
+                StartEnvironmentLoopIfReady(NextCue, Sound);
+            }
+        }
+        return;
+    }
+
+    if (ActiveEnvironmentComponent)
+    {
+        UAudioComponent* Previous = ActiveEnvironmentComponent;
+        ActiveEnvironmentComponent = nullptr;
+        Previous->FadeOut(1.1f, 0.0f);
+    }
+
+    const FName PreviousCue = ActiveEnvironmentCue;
+    ActiveEnvironmentCue = NextCue;
+    ActiveEnvironmentOrigin = NextOrigin;
+    UE_LOG(LogTemp, Display,
+        TEXT("PES002_ENV_SOUND_ZONE previous=%s current=%s x=%.0f y=%.0f existing_subsystem=1"),
+        *PreviousCue.ToString(), *NextCue.ToString(),
+        ListenerLocation.X, ListenerLocation.Y);
+
+    if (NextCue != NAME_None)
+    {
+        if (USoundBase* Sound = ResolveCategorizedAsset(
+                NextCue, ShireAudioAssetPaths::Ambience,
+                AmbienceCache, ShireAudioAssetPaths::AmbienceCategory))
+        {
+            StartEnvironmentLoopIfReady(NextCue, Sound);
         }
     }
 }
@@ -714,6 +837,12 @@ void UShireAudioSubsystem::PlayVoiceCue(FName CueId)
 
 void UShireAudioSubsystem::ClearPersistentAudio()
 {
+    if (ActiveEnvironmentComponent)
+    {
+        ActiveEnvironmentComponent->FadeOut(0.4f, 0.0f);
+        ActiveEnvironmentComponent = nullptr;
+    }
+    ActiveEnvironmentCue = NAME_None;
     SetAmbienceCue(NAME_None);
     SetMusicCue(NAME_None);
 }

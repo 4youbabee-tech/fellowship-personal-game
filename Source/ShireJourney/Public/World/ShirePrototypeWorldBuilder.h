@@ -50,11 +50,16 @@ private:
     UPROPERTY() UStaticMesh* ProductionFenceSegmentMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionHobbitFacadeMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionBagEndHeroFacadeMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionBagEndCobbledWalkMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionCartMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionBenchMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionMillWheelMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionLanternMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionCottageHouseMesh = nullptr;
+    // Shared authored Bagshot Row cottage pair and hero-near mature oak.
+    UPROPERTY() UStaticMesh* ProductionBagshotThatchedCottageMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionBagshotTimberCottageMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionShireMatureOakMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionMillHouseMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionStoneBridgeMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionWellMesh = nullptr;
@@ -93,6 +98,7 @@ private:
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* ShrubInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* DistantTreeTrunkInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* DistantTreeCanopyInstances;
+    UPROPERTY() UHierarchicalInstancedStaticMeshComponent* VillageMatureOakInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* RockInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* PathStoneInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* GeographyHillInstances;
@@ -109,6 +115,12 @@ private:
     FStreamableManager CuratedNatureLoader;
     TSharedPtr<FStreamableHandle> CuratedNatureLoadHandle;
     bool bCuratedNatureRequested = false;
+    // Five already-imported FBX architecture meshes: Bag End exterior only.
+    UPROPERTY() TArray<UHierarchicalInstancedStaticMeshComponent*> BagEndArchGroups;
+    UPROPERTY() TArray<TSoftObjectPtr<UStaticMesh>> BagEndArchSources;
+    FStreamableManager BagEndArchLoader;
+    TSharedPtr<FStreamableHandle> BagEndArchHandle;
+    bool bBagEndArchRequested = false;
     UPROPERTY() TArray<UHierarchicalInstancedStaticMeshComponent*> Cloud138Groups;
     UPROPERTY() TArray<TSoftObjectPtr<UStaticMesh>> Cloud138Sources;
     FStreamableManager Cloud138Loader;
@@ -146,6 +158,8 @@ private:
     void SpawnFoliagePass();
     void RequestCuratedNatureLayer();
     void OnCuratedNatureLayerReady();
+    void RequestBagEndArchitecture();
+    void OnBagEndArchitectureReady();
     void RequestCloud138Layer();
     void OnCloud138Ready();
     void SpawnScenicDetailPass();

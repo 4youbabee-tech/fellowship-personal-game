@@ -34,6 +34,12 @@ public:
     void SetLivingWorldDirector(ALivingWorldDirector* InDirector);
     bool IsInLivingWorldPool() const { return bInLivingWorldPool; }
     bool IsUsingUnifiedResident() const { return bUnifiedResidentActive && !bInLivingWorldPool; }
+    // Read-only conversation state; the existing living-world and NPC-context
+    // systems continue to own decisions, memory, schedules and social behavior.
+    bool IsPerformingAmbientConversation() const
+    {
+        return bSocializing && !bInLivingWorldPool;
+    }
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Routine")
     FVector RoutinePointA = FVector::ZeroVector;
@@ -158,7 +164,18 @@ private:
     FName RuntimeGoal = TEXT("ROUTINE");
     bool bSocializing = false;
     bool bInLivingWorldPool = false;
+
+    // The P1C01 chapter bank may finish streaming after actor BeginPlay.
+    // Retry the real imported modular Hobbit meshes once when bank residency
+    // is proven; no synchronous load or new asset/AI manager.
+    bool bPendingAuthoredHobbitVisual = false;
+    float AuthoredHobbitRefreshSeconds = 2.0f;
     bool bUnifiedResidentActive = false;
+    void ApplyHobbitVisualVariation(int32 VariantSeed);
+    int32 ResidentVisualVariant = 0;
+    float ResidentHeightCm = 140.0f;
+    float ResidentWidthFactor = 1.0f;
+    bool bResidentTintApplied = false;
     float ResidentRigCheckSeconds = 0.0f;
     bool bCachedDangerContext = false;
     bool bCachedInclementContext = false;

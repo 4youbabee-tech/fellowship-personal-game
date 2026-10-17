@@ -1,3 +1,14 @@
+## 2026-10-17 integrated P1C01 source candidate (exact-head engine proof pending)
+| Capability | Proven for new candidate | Next acceptance criterion |
+|---|---|---|
+| Authored housing, landscapes, HISM | Source overlay & static source checks planned; previous PR #484 4-view UE visuals rejected | Exact-head UE4 imported/reopened material slots, placement, collision/traversal, visual owner review |
+| Resident skeletal presentation | Original five possible IDs + deterministic profile source authored; shared Frodo remains explicit fallback | 22 genuinely visible animated skeletal residents, 0 blocks; separately inspect shared rig similarity |
+| MPFB/Poly Haven source kit | PR #486 candidate recipes/manifest only, item receipts pending | Licensed source FBX/UV/skin & deform QC, warehouse, UE import, world/PIE visual |
+| Renderer / curated textures | Source mip ceilings 512/1024/2048 by category; PR #484 CSM settings | Before/after active-window FPS/Frame/Game/Draw/GPU, VRAM owner device, >=30 FPS target |
+| CI / compile | PR #484 older UE4 39022384250 pass, latest f997888 39036250962 0-job fail | Fresh integrated exact-HEAD static+UE4 build+import+PIE |
+| Gate 6/7 | OPEN / NOT ACCEPTED | Human device traversal, visuals, audio, gameplay, pacing, save, performance |
+- STATUS: SOURCE-CANDIDATE ONLY. No created blob/tree/commit in GitHub implies runtime validation or accepted imported assets.
+
 ## 2026-10-16 PES-002 data-driven garden and resident variation candidate
 - Baseline develop 2e190d6: engine build/import/PIE pass with 5 skeletal shared residents, 21 tree replacements and 4 screenshots. Full visual and performance gates OPEN.
 - Candidate: 25 explicit garden data rows in existing Data/P1C01VerifiedWorldDecor.json, checked against actual UE-imported PBR FBX nature mesh packages. Candidate runtime evidence markers PES002_BAG_END_DATA_GARDEN and PES002_RESIDENT_PRESENTATION_SNAPSHOT; 5 proportional resident variants and optional safe authored-material tint.

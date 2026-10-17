@@ -426,6 +426,19 @@ void AShireAmbientNPC::ApplyVisualStyle()
     }
 
     const bool bProductionHumanoid = bProductionHobbit || bProductionRegional;
+    // A first-frame ResolveObject may fail even for valid imported Hobbit
+    // packages because the chapter FStreamableHandle has not committed yet.
+    // This would otherwise leave permanent Engine cube/cylinder proxies.
+    bPendingAuthoredHobbitVisual = bHobbitResident && !bProductionHobbit;
+    if (bProductionHobbit)
+    {
+        UE_LOG(LogTemp, Display,
+            TEXT("PES002_AUTHORED_HOBBIT_MODULAR_RESOLVED role=%s torso=%s head=%s hair=%s source=ProductionCharacters bank=async"),
+            *RoutineRole.ToString(),
+            *GetNameSafe(Torso ? Torso->GetStaticMesh() : nullptr),
+            *GetNameSafe(Head ? Head->GetStaticMesh() : nullptr),
+            *GetNameSafe(Hair ? Hair->GetStaticMesh() : nullptr));
+    }
     auto ApplySurface = [this, BasicMaterial, ProductionSurfaceMaterial, bProductionHumanoid](
         UStaticMeshComponent* Component,
         const FLinearColor& Color,
@@ -1394,6 +1407,54 @@ void AShireAmbientNPC::UpdateSocialLife(float DeltaSeconds)
     }
 }
 
+void AShireAmbientNPC::ApplyHobbitVisualVariation(int32 VariantSeed)
+{
+    if (!UnifiedResident || !UnifiedResident->SkeletalMesh) return;
+    // Stable variation within the existing pooled living-world actor; not a new AI manager.
+    FRandomStream Stream(VariantSeed);
+    ResidentVisualVariant = Stream.RandRange(0, 7);
+    ResidentHeightCm = Stream.FRandRange(131.0f, 153.0f);
+    ResidentWidthFactor = Stream.FRandRange(0.91f, 1.09f);
+    const FBoxSphereBounds Bounds = UnifiedResident->SkeletalMesh->GetBounds();
+    const float HeightScale = FMath::Clamp(
+        ResidentHeightCm / (2.0f * Bounds.BoxExtent.Z), 0.1f, 3.0f);
+    UnifiedResident->SetRelativeScale3D(FVector(
+        HeightScale * ResidentWidthFactor,
+        HeightScale * ResidentWidthFactor, HeightScale));
+    UnifiedResident->SetRelativeLocation(FVector(0.0f, 0.0f,
+        -(Bounds.Origin.Z - Bounds.BoxExtent.Z) * HeightScale));
+    static const FLinearColor Palette[] = {
+        FLinearColor(0.93f, 1.02f, 0.89f),
+        FLinearColor(1.03f, 0.95f, 0.86f),
+        FLinearColor(0.99f, 0.96f, 0.85f),
+        FLinearColor(1.04f, 0.91f, 0.93f),
+        FLinearColor(0.89f, 0.95f, 1.02f),
+        FLinearColor(0.95f, 1.01f, 0.95f),
+        FLinearColor(1.01f, 0.94f, 0.96f),
+        FLinearColor(0.92f, 0.99f, 1.02f)
+    };
+    bResidentTintApplied = false;
+    for (int32 Slot = 0; Slot < UnifiedResident->GetNumMaterials(); ++Slot)
+    {
+        UMaterialInterface* OriginalMaterial = UnifiedResident->GetMaterial(Slot);
+        if (!OriginalMaterial) continue;
+        for (const FName Parameter : {FName(TEXT("BaseColorTint")),
+                                       FName(TEXT("Color")), FName(TEXT("Tint"))})
+        {
+            FLinearColor Original;
+            if (!OriginalMaterial->GetVectorParameterValue(
+                    FMaterialParameterInfo(Parameter), Original)) continue;
+            if (UMaterialInstanceDynamic* MID =
+                    UnifiedResident->CreateDynamicMaterialInstance(Slot, OriginalMaterial))
+            {
+                MID->SetVectorParameterValue(Parameter, Original * Palette[ResidentVisualVariant]);
+                bResidentTintApplied = true;
+            }
+            break;
+        }
+    }
+}
+
 bool AShireAmbientNPC::TryEnableUnifiedShireResident()
 {
     if (!UnifiedResident || bInLivingWorldPool ||
@@ -1420,76 +1481,51 @@ bool AShireAmbientNPC::TryEnableUnifiedShireResident()
     {
         if (Resident && Resident != this && Resident->IsUsingUnifiedResident()) ++ActiveRigs;
     }
-    if (ActiveRigs >= 5) return false;
+    if (ActiveRigs >= 22) return false;
 
     UGameInstance* GI = GetGameInstance();
     UShireChapterAssetStreamingSubsystem* Streaming =
         GI ? GI->GetSubsystem<UShireChapterAssetStreamingSubsystem>() : nullptr;
     if (!Streaming) return false;
+    // Prefer future original supporting-Hobbit rigs; never count Frodo as distinct art.
+    const uint32 PositionSeed = HashCombine(
+        HashCombine(GetTypeHash(RoutineRole),
+                    GetTypeHash(FMath::RoundToInt(GetActorLocation().X / 10.0f))),
+        GetTypeHash(FMath::RoundToInt(GetActorLocation().Y / 10.0f)));
+    const FName SupportingRigs[] = {TEXT("ShireResidentA"), TEXT("ShireResidentB"),
+        TEXT("ShireResidentC"), TEXT("ShireResidentD"), TEXT("ShireResidentE")};
+    FName UsedRig = SupportingRigs[PositionSeed % UE_ARRAY_COUNT(SupportingRigs)];
     USkeletalMesh* Mesh = nullptr;
     UClass* AnimClass = nullptr;
-    if (!Streaming->ResolveCharacterRig(TEXT("Frodo"), Mesh, AnimClass))
+    bool bSharedStoryRigFallback = false;
+    if (!Streaming->ResolveCharacterRig(UsedRig, Mesh, AnimClass))
     {
-        Streaming->RequestCharacterRig(TEXT("Frodo"));
-        return false;
+        Streaming->RequestCharacterRig(UsedRig);
+        UsedRig = TEXT("Frodo");
+        bSharedStoryRigFallback = true;
+        if (!Streaming->ResolveCharacterRig(UsedRig, Mesh, AnimClass))
+        {
+            Streaming->RequestCharacterRig(UsedRig);
+            return false;
+        }
     }
     if (!Mesh || !AnimClass ||
         !AnimClass->IsChildOf(UShireLocomotionAnimInstance::StaticClass())) return false;
     const FBoxSphereBounds Bounds = Mesh->GetBounds();
     if (!FMath::IsFinite(Bounds.BoxExtent.Z) || Bounds.BoxExtent.Z < 1.0f) return false;
-    // First five live, pooled residents receive distinct size/proportion
-    // profiles, not five renamed Frodo story actors. Minor material tint is
-    // applied only if the imported skeletal material actually exposes an
-    // authored vector parameter. Never replace the licensed albedo material
-    // with a flat or default checker simply to get a different colour.
-    const int32 Variant = FMath::Clamp(ActiveRigs, 0, 4);
-    const float HeightsCm[5] = { 134.0f, 146.0f, 139.0f, 151.0f, 141.0f };
-    const float WidthProfiles[5] = { 0.96f, 1.03f, 1.0f, 0.98f, 1.05f };
-    const FLinearColor Tints[5] = {
-        FLinearColor(0.94f, 1.00f, 0.90f),
-        FLinearColor(1.02f, 0.92f, 0.89f),
-        FLinearColor(0.90f, 0.96f, 1.04f),
-        FLinearColor(1.02f, 1.01f, 0.89f),
-        FLinearColor(0.98f, 0.91f, 1.02f)
-    };
-    const float Scale = FMath::Clamp(
-        HeightsCm[Variant] / (2.0f * Bounds.BoxExtent.Z), 0.1f, 3.0f);
     UnifiedResident->SetSkeletalMesh(Mesh);
-    UnifiedResident->SetRelativeScale3D(
-        FVector(Scale * WidthProfiles[Variant], Scale * WidthProfiles[Variant], Scale));
-    UnifiedResident->SetRelativeLocation(FVector(0, 0,
-        -(Bounds.Origin.Z - Bounds.BoxExtent.Z) * Scale));
     UnifiedResident->SetAnimationMode(EAnimationMode::AnimationBlueprint);
     UnifiedResident->SetAnimInstanceClass(AnimClass);
-    bool bMaterialTintApplied = false;
-    if (UMaterialInterface* SourceMaterial = UnifiedResident->GetMaterial(0))
-    {
-        const FName TintParameters[] = { TEXT("BaseColorTint"), TEXT("Color"), TEXT("Tint") };
-        for (const FName Parameter : TintParameters)
-        {
-            FLinearColor OriginalValue;
-            if (SourceMaterial->GetVectorParameterValue(
-                    FMaterialParameterInfo(Parameter), OriginalValue))
-            {
-                if (UMaterialInstanceDynamic* VariantMaterial =
-                        UnifiedResident->CreateDynamicMaterialInstance(0, SourceMaterial))
-                {
-                    VariantMaterial->SetVectorParameterValue(
-                        Parameter, OriginalValue * Tints[Variant]);
-                    bMaterialTintApplied = true;
-                }
-                break;
-            }
-        }
-    }
+    ApplyHobbitVisualVariation(static_cast<int32>(PositionSeed));
     UnifiedResident->SetVisibility(true);
     UStaticMeshComponent* Parts[] = {Torso, Head, Hair, LeftArm, RightArm, LeftLeg, RightLeg};
     for (UStaticMeshComponent* Part : Parts) if (Part) Part->SetVisibility(false);
     bUnifiedResidentActive = true;
     UE_LOG(LogTemp, Display,
-        TEXT("PES002_UNIFIED_RESIDENT_VISIBLE role=%s rig=resolved source=UE-SkeletalMesh anim=ABP asset=%s variant=%d heightCm=%.1f width=%.2f tintApplied=%d countLimit=5 visualAccepted=0"),
-        *RoutineRole.ToString(), *Mesh->GetPathName(), Variant,
-        HeightsCm[Variant], WidthProfiles[Variant], bMaterialTintApplied ? 1 : 0);
+        TEXT("PES002_UNIFIED_RESIDENT_VISIBLE role=%s rig=resolved source=UE-SkeletalMesh anim=ABP asset=%s rigId=%s sharedHeroFallback=%d variant=%d heightCm=%.1f width=%.2f tintApplied=%d countLimit=22 visualAccepted=0"),
+        *RoutineRole.ToString(), *Mesh->GetPathName(), *UsedRig.ToString(),
+        bSharedStoryRigFallback ? 1 : 0, ResidentVisualVariant,
+        ResidentHeightCm, ResidentWidthFactor, bResidentTintApplied ? 1 : 0);
     return true;
 }
 
@@ -1519,6 +1555,36 @@ void AShireAmbientNPC::Tick(float DeltaSeconds)
         bUnifiedResidentActive = false;
         if (UnifiedResident) UnifiedResident->SetVisibility(false);
         ApplyVisualStyle();
+    }
+
+    // Refresh after the EXISTING P1C01 soft-reference bank is ready, and only
+    // for visible nearby residents. No extra per-frame resolver or requests.
+    if (bPendingAuthoredHobbitVisual && !bUnifiedResidentActive && PlayerPawn)
+    {
+        AuthoredHobbitRefreshSeconds -= DeltaSeconds;
+        if (AuthoredHobbitRefreshSeconds <= 0.0f)
+        {
+            AuthoredHobbitRefreshSeconds = 2.5f;
+            const float DistSq = FVector::DistSquared2D(
+                PlayerPawn->GetActorLocation(), GetActorLocation());
+            UGameInstance* GI = GetGameInstance();
+            UShireChapterAssetStreamingSubsystem* Streaming =
+                GI ? GI->GetSubsystem<UShireChapterAssetStreamingSubsystem>() : nullptr;
+            if (Streaming && DistSq < FMath::Square(2600.0f) &&
+                Streaming->IsChapterBankReady(TEXT("P1C01"), TEXT("FrodoMain")))
+            {
+                // Bank is already resident. ResolveObject is now cheap; if an
+                // optional source mesh is truly missing, retain safe fallback.
+                bPendingAuthoredHobbitVisual = false;
+                ApplyVisualStyle();
+                const bool bUpgraded = !bPendingAuthoredHobbitVisual;
+                bPendingAuthoredHobbitVisual = false; // One bounded retry only.
+                UE_LOG(LogTemp, Display,
+                    TEXT("PES002_AUTHORED_HOBBIT_POST_STREAM upgrade=%d role=%s source=chapter-bank reuseOnly=1"),
+                    bUpgraded ? 1 : 0,
+                    *RoutineRole.ToString());
+            }
+        }
     }
     ResidentRigCheckSeconds -= DeltaSeconds;
     if (!bUnifiedResidentActive && ResidentRigCheckSeconds <= 0.0f && PlayerPawn)

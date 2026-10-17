@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "chapter": "P1C01",
+  "authority": "Data/ProjectGovernor.json",
+  "status": "SOURCE_CANDIDATES_PENDING_ITEM_RECEIPT",
+  "source_root": "SourceAssets/ExternalLicensed",
+  "approved_root": "SourceAssets/ExternalLicensed/Approved",
+  "quarantine_root": "SourceAssets/ExternalLicensed/Quarantine/ShireKit",
+  "output_root": "SourceAssets/Production/World/Shire/Kit",
+  "texture_policy": {
+    "max_px": 2048,
+    "packed_maps": [
+      "AO",
+      "Roughness",
+      "Metallic"
+    ],
+    "note": "Use existing Poly Haven material intake and curated Unreal importer."
+  },
+  "target_inventory": {
+    "hobbit_houses_modular_pieces": 12,
+    "bag_end_interior": 25,
+    "roads_market": 20,
+    "vegetation": 18,
+    "farm_assets": 10,
+    "river_bridge_ferry": 8
+  },
+  "assets": [
+    {
+      "id": "PH_TREE_SMALL_02",
+      "source": "Approved/PH_TREE_SMALL_02/source.fbx",
+      "source_url": "https://polyhaven.com/a/tree_small_02",
+      "provider": "POLY_HAVEN",
+      "license": "CC0",
+      "license_evidence": "https://polyhaven.com/license",
+      "external_asset_id": "PH_TREE_SMALL_02",
+      "target_tris": 11000,
+      "lods": [
+        1.0,
+        0.5,
+        0.25
+      ],
+      "collision": {
+        "mode": "convex"
+      },
+      "material_group": "Nature/TreeCanopyBark",
+      "target_height_m": 4.6,
+      "texture_max_px": 2048,
+      "status": "PENDING_SOURCE",
+      "title": "Tree Small 02",
+      "selection_note": "CC0 catalog candidate; exact file not downloaded, source hash and item receipt pending."
+    },
+    {
+      "id": "PH_JACARANDA_TREE",
+      "source": "Approved/PH_JACARANDA_TREE/source.fbx",
+      "source_url": "https://polyhaven.com/a/jacaranda_tree",
+      "provider": "POLY_HAVEN",
+      "license": "CC0",
+      "license_evidence": "https://polyhaven.com/license",
+      "external_asset_id": "PH_JACARANDA_TREE",
+      "target_tris": 14000,
+      "lods": [
+        1.0,
+        0.5,
+        0.25
+      ],
+      "collision": {
+        "mode": "convex"
+      },
+      "material_group": "Nature/TreeCanopyBark",
+      "target_height_m": 9.0,
+      "texture_max_px": 2048,
+      "status": "PENDING_SOURCE",
+      "title": "Jacaranda Tree",
+      "selection_note": "CC0 catalog candidate; exact file not downloaded, source hash and item receipt pending."
+    },
+    {
+      "id": "PH_FIR_TREE_01",
+      "source": "Approved/PH_FIR_TREE_01/source.fbx",
+      "source_url": "https://polyhaven.com/a/fir_tree_01",
+      "provider": "POLY_HAVEN",
+      "license": "CC0",
+      "license_evidence": "https://polyhaven.com/license",
+      "external_asset_id": "PH_FIR_TREE_01",
+      "target_tris": 12000,
+      "lods": [
+        1.0,
+        0.5,
+        0.25
+      ],
+      "collision": {
+        "mode": "convex"
+      },
+      "material_group": "Nature/TreeCanopyBark",
+      "target_height_m": 9.0,
+      "texture_max_px": 2048,
+      "status": "PENDING_SOURCE",
+      "title": "Fir Tree 01",
+      "selection_note": "CC0 catalog candidate; exact file not downloaded, source hash and item receipt pending."
+    },
+    {
+      "id": "PH_ISLAND_TREE_02",
+      "source": "Approved/PH_ISLAND_TREE_02/source.fbx",
+      "source_url": "https://polyhaven.com/a/island_tree_02",
+      "provider": "POLY_HAVEN",
+      "license": "CC0",
+      "license_evidence": "https://polyhaven.com/license",
+      "external_asset_id": "PH_ISLAND_TREE_02",
+      "target_tris": 11000,
+      "lods": [
+        1.0,
+        0.5,
+        0.25
+      ],
+      "collision": {
+        "mode": "convex"
+      },
+      "material_group": "Nature/TreeCanopyBark",
+      "target_height_m": 6.0,
+      "texture_max_px": 2048,
+      "status": "PENDING_SOURCE",
+      "title": "Island Tree 02",
+      "selection_note": "CC0 catalog candidate; exact file not downloaded, source hash and item receipt pending."
+    },
+    {
+      "id": "PH_PINE_TREE_01",
+      "source": "Approved/PH_PINE_TREE_01/source.fbx",
+      "source_url": "https://polyhaven.com/a/pine_tree_01",
+      "provider": "POLY_HAVEN",
+      "license": "CC0",
+      "license_evidence": "https://polyhaven.com/license",
+      "external_asset_id": "PH_PINE_TREE_01",
+      "target_tris": 12000,
+      "lods": [
+        1.0,
+        0.5,
+        0.25
+      ],
+      "collision": {
+        "mode": "convex"
+      },
+      "material_group": "Nature/TreeCanopyBark",
+      "target_height_m": 8.0,
+      "texture_max_px": 2048,
+      "status": "PENDING_SOURCE",
+      "title": "Pine Tree 01",
+      "selection_note": "CC0 catalog candidate; exact file not downloaded, source hash and item receipt pending."
+    }
+  ]
+}

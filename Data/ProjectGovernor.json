@@ -9632,5 +9632,28 @@
     "developer_start": "For PES-002 first inspect Fab, CGTrader and Sketchfab original non-franchise cottages; obtain matching CC0 Poly Haven PBR textures; do not replace established accepted assets without real quality/technical improvement.",
     "blocked_shortcuts": "No direct Steam Workshop/Nexus ripped assets, fan franchise likenesses, STL-print meshes as assumed game-ready, or unapproved social/Patreon ports. They remain reference/research only until exact independent rights are proven.",
     "acceptance_boundary": "Discovery is not acquisition, persisted warehouse, UE import, world placement, rendered observation, PIE, device performance or visual acceptance. Preserve UE4.27.2, 8GB RAM, ~2GB VRAM, DX11 720p >=30FPS."
+  },
+  "owner_p1c01_integrated_production_order_2026_10_17": {
+    "authority": "Owner explicit P1C01 one-shot integrated source and runtime order on 2026-10-17",
+    "status": "OWNER_APPROVED_INTEGRATED_CANDIDATE_EXACT_HEAD_VALIDATION_PENDING",
+    "active_pes": "PES-002",
+    "runtime_writer": "P1C01_ONLY",
+    "chapter_scope": [
+      "Bag End",
+      "Bagshot Row",
+      "Hobbiton",
+      "Party Field",
+      "Shire Roads",
+      "Bucklebury Ferry"
+    ],
+    "sources": [
+      "PR #484 latest authored P1C01 runtime/world candidate",
+      "PR #486 MPFB supporting-Hobbit and Shire Kit source-only intake"
+    ],
+    "scope_policy": "One cohesive P1C01 candidate against develop. Respect all 24 PES IDs, one Unreal writer, one Warehouse writer, world/quest/save/nav/scene positions and licensing. Do not mark later runtime PES accepted or completed.",
+    "character_gate": "22 skeletal residents and 0 blockout is an unproven acceptance target, not accomplished by raising a count cap or using one Frodo rig. Original ShireResidentA-E real licensed imports and deforming animation still required.",
+    "performance_gate": "Texture mip ceilings/CSM are experiments and cannot promise 14ms saved or >=30 FPS until measured on target-class DX11.",
+    "visual_gate": "No new candidate UE4.27 compile, PIE, import, 4 genuine 1280x720 screenshot or owner-device performance evidence yet.",
+    "rollback": "Revert integrated commit as one coherent unit if import, C++ compile, collision, visual or source gates reject."
   }
 }

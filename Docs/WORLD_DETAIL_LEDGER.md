@@ -1,3 +1,9 @@
+## 2026-10-17 P1C01 whole-chapter Shire source candidate
+- Scene scope authorised for a single PES-002 candidate: Bag End, Bagshot Row, Hobbiton, Party Field, rural roads and Bucklebury Ferry. Do not change existing quest anchors, route/NavMesh, player collision, or streaming/save ownership.
+- Authored PR #484 house/oak/ambient audio source overlay combined with PR #486 human/kit preproduction. New VillageMatureOakInstances HISM substitutes visible primitive tree canopy/trunk at original SpawnTree coordinates only after real mature oak mesh residency and material-slot checks; native hidden capsule-like trunk mesh retains existing collision.
+- Five original supporting-character rig identities are soft-requested before transparent Frodo skeletal fallback. Supporting MPFB output not promoted to production. Visual tint is only applied to imported materials whose parameter exists; physical costume, skinning, animation and actual silhouettes still require imported rig evidence.
+- Texture mip ceiling policy is source-side; never claim 30 FPS, visual quality or imported asset status based solely on code.
+
 ## 2026-10-16 Bag End exterior only, candidate
 - Physically imported CuratedP1C01 nature HISM uses a new garden-position array in EXISTING Data/P1C01VerifiedWorldDecor.json: 25 entries (24 migrated, one garden meadow grass), bounded at 36 positions, only validated 0/2/3/4 family indices, tracing onto gently sloped terrain, keeping west entrance and collision unchanged. No changes to world regions, authored quests, active world directors or blocked off-Chapter runtime.
 - Generic local LivingWorld residents: at most 5 skinned actors, share previously imported mesh+4 clips+ABP but now vary stature/proportions and optional vector-color parameter if source material supports it. Not the true distinct heroes. Source runtime evidence still pending visual acceptance.
