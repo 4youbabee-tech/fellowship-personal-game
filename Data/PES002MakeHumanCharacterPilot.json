@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "pilot_id": "PES002_MPFB_ORIGINAL_HOBBIT_HUMAN_PILOT",
+  "status": "SOURCE_RECIPE_NOT_EXECUTED",
+  "engine": "Unreal Engine 4.27.2",
+  "project_scope": "PES-002 original non-franchise supporting Hobbit resident source only, not a Frodo film likeness; keep current runtime unchanged until visual comparison.",
+  "producer": "MakeHuman Community MPFB2 inside Blender",
+  "required_asset_pack": "makehuman_system_assets",
+  "pack_license": "CC0",
+  "pack_license_evidence": "https://github.com/makehumancommunity/mpfb2/blob/master/LICENSE.md",
+  "skin": "young_caucasian_male.mhmat",
+  "rig": "game_engine",
+  "phenotype": {
+    "gender": 0
+  },
+  "parts": [
+    {
+      "subdir": "eyes",
+      "name": "low-poly.mhclo",
+      "asset_type": "Eyes"
+    },
+    {
+      "subdir": "eyebrows",
+      "name": "eyebrow001.mhclo",
+      "asset_type": "Eyebrows"
+    },
+    {
+      "subdir": "eyelashes",
+      "name": "eyelashes01.mhclo",
+      "asset_type": "Eyelashes"
+    },
+    {
+      "subdir": "hair",
+      "name": "short01.mhclo",
+      "asset_type": "Hair"
+    },
+    {
+      "subdir": "clothes",
+      "name": "male_casualsuit01.mhclo",
+      "asset_type": "Clothes"
+    }
+  ],
+  "missing_art_direction": [
+    "Replace contemporary base outfit with separately licensed Shire period linen/vest/short-trouser wardrobe and credible hair; do not approve prototype as named cast",
+    "Scale short Hobbit body to intended actor capsule in Unreal without changing collision, story anchors or world",
+    "Manually inspect realistic face/eyes, proportions, skin shaders/PBR maps, LOD1/2 and material draw calls"
+  ],
+  "invocation": "blender --background --python Tools/CloudAssetBuild/prepare_mpfb_hobbit_candidate.py -- --spec Data/PES002MakeHumanCharacterPilot.json --out <NEW_EMPTY_OUTPUT_DIR>",
+  "evidence_boundary": "Recipe only, no downloaded source binary or generated FBX/UE/PIE/visual acceptance.",
+  "hosted_execution_2026_10_17": {
+    "status": "SOURCE_PACK_NESTED_PATH_ROOT_FIX_CANDIDATE_NOT_HOSTED_VALIDATED",
+    "single_pipeline": "unreal-build-validation.yml character-source Linux job",
+    "blender": "Blender 4.2.23 LTS official SHA256 verified",
+    "addon": "MPFB2 pinned v2.0.18 source",
+    "asset_pack": "https://files2.makehumancommunity.org/asset_packs/makehuman_system_assets/makehuman_system_assets_cc0.zip",
+    "license": "Core asset pack CC0, MPFB addon tool GPL not incorporated as game asset",
+    "artifact": "pes002-mpfb-source-candidate-${HEAD_SHA}",
+    "safety": "Source-only, independent of the existing KayKit runtime packet and single Windows writer",
+    "next_gate": "Download artifact; inspect true Blender FBX and preview, then approved existing UE4 import and PIE. Unstyled base outfit cannot pass hero visual gate.",
+    "asset_layout": "Preserve original category/asset-name/filename subdirectories, require unique skin/part basenames and MPFB AssetService resolution before any Blender FBX export. Local synthetic ZIP tests 6 PASS; real 267MiB official pack not yet validated on this SHA.",
+    "previous_failure": "Run 38980771861 on 34e31478: MPFB addon API READY, then flat path check failed at skins/young_caucasian_male.mhmat despite documented named subdirectories. Windows UE skipped."
+  }
+}

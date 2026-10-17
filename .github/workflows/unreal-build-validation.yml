@@ -287,12 +287,21 @@ jobs:
           PACKAGE: ${{ github.event_name == 'workflow_dispatch' && inputs.package_windows == true }}
         shell: bash
         run: |
-          echo "mode=full" >> "$GITHUB_OUTPUT"
+          # Pure hosted Blender pilot on PR #486: do NOT run unchanged Windows Unreal.
+          if [ "${GITHUB_HEAD_REF:-}" = "source/pes002-mpfb-real-human-pilot-20261017" ]; then
+            echo "mode=source" >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=full" >> "$GITHUB_OUTPUT"
+          fi
           echo "reason=owner-authorized-direct-engine-production" >> "$GITHUB_OUTPUT"
           echo "parent_sha=$BASE_SHA" >> "$GITHUB_OUTPUT"
           echo "resume_stage=none" >> "$GITHUB_OUTPUT"
           echo "reset_intermediates=false" >> "$GITHUB_OUTPUT"
-          echo "full=true" >> "$GITHUB_OUTPUT"
+          if [ "${GITHUB_HEAD_REF:-}" = "source/pes002-mpfb-real-human-pilot-20261017" ]; then
+            echo "full=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "full=true" >> "$GITHUB_OUTPUT"
+          fi
           echo "core=false" >> "$GITHUB_OUTPUT"
           echo "asset=false" >> "$GITHUB_OUTPUT"
           echo "acceptance=false" >> "$GITHUB_OUTPUT"
@@ -303,9 +312,9 @@ jobs:
   character-source:
     name: Prepare actual CC0 unified skin and authored locomotion
     needs: classify
-    if: needs.classify.outputs.full == 'true' || needs.classify.outputs.core == 'true'
+    if: needs.classify.outputs.mode == 'source' || needs.classify.outputs.full == 'true' || needs.classify.outputs.core == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 35
     env:
       TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
@@ -353,6 +362,69 @@ jobs:
             }
           }
           Write-Host "PES002_KAYKIT_PACKET_REUSED cacheHit=${{ steps.rig-cache.outputs.cache-hit }} files=$($receipt.files.PSObject.Properties.Count) license=CC0 skinQC=pass"
+      # Same canonical source-production job; MPFB output is a separate unpromoted artifact.
+      - name: Prepare original CC0 Hobbit pilot with hosted Blender
+        if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'source/pes002-mpfb-real-human-pilot')
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Source-only fast gate: no Blender download or Windows runner.
+          python3 -m unittest discover -s Tools/CloudAssetBuild -p 'test_mpfb_*.py' -v
+          WORK="$RUNNER_TEMP/pes002-mpfb-producer"
+          mkdir -p "$WORK" "$RUNNER_TEMP/mpfb-hobbit-output"
+          VERSION=4.2.23
+          FILE="blender-$VERSION-linux-x64.tar.xz"
+          URL=https://download.blender.org/release/Blender4.2
+          curl -fL --retry 3 --retry-delay 4 "$URL/$FILE" -o "$WORK/$FILE"
+          curl -fL --retry 3 --retry-delay 4 "$URL/blender-$VERSION.sha256" -o "$WORK/checksums.sha256"
+          EXPECTED=$(grep -F "$FILE" "$WORK/checksums.sha256" | head -1 | awk '{print $1}')
+          if [ -z "$EXPECTED" ]; then echo "BLENDER_OFFICIAL_HASH_MISSING"; exit 90; fi
+          printf '%s  %s\n' "$EXPECTED" "$WORK/$FILE" | sha256sum --check
+          tar -xJf "$WORK/$FILE" -C "$WORK"
+          BIN="$WORK/blender-$VERSION-linux-x64/blender"
+          "$BIN" --version | head -n 2
+          git clone --depth 1 --branch v2.0.18 https://github.com/makehumancommunity/mpfb2.git "$WORK/mpfb2"
+          (cd "$WORK/mpfb2/src/mpfb" && zip -qr "$WORK/mpfb-addon.zip" .)
+          # Fail fast against the real Blender RNA API before fetching 267 MiB.
+          "$BIN" -b -t 2 --python-exit-code 94 --python Tools/CloudAssetBuild/mpfb_hosted_bootstrap.py -- \
+            --extension "$WORK/mpfb-addon.zip" --probe-only
+          curl -fL --retry 3 --retry-delay 5 \
+            https://files2.makehumancommunity.org/asset_packs/makehuman_system_assets/makehuman_system_assets_cc0.zip \
+            -o "$WORK/makehuman_system_assets_cc0.zip"
+          unzip -tq "$WORK/makehuman_system_assets_cc0.zip" > /dev/null
+          sha256sum "$WORK/makehuman_system_assets_cc0.zip" | awk '{print "PES002_OFFICIAL_CC0_PACK_SHA256 "$1}'
+          "$BIN" -b -t 2 --python-exit-code 94 --python Tools/CloudAssetBuild/mpfb_hosted_bootstrap.py -- \
+            --extension "$WORK/mpfb-addon.zip" \
+            --system-pack "$WORK/makehuman_system_assets_cc0.zip" \
+            --spec Data/PES002MakeHumanCharacterPilot.json \
+            --out "$RUNNER_TEMP/mpfb-hobbit-output/candidate"
+          python3 Tools/CloudAssetBuild/verify_mpfb_pilot_receipt.py \
+            "$RUNNER_TEMP/mpfb-hobbit-output/candidate"
+          # Separate unpromoted wardrobe study; never replace the runtime packet.
+          "$BIN" -b -t 2 --python-exit-code 94 --python Tools/CloudAssetBuild/prepare_mpfb_shire_variant.py -- \
+            --source "$RUNNER_TEMP/mpfb-hobbit-output/candidate" \
+            --extension "$WORK/mpfb-addon.zip" \
+            --out "$RUNNER_TEMP/mpfb-hobbit-output/shire-study"
+          "$BIN" -b -t 2 --python-exit-code 94 --python Tools/CloudAssetBuild/inspect_mpfb_shire_variant.py -- \
+            --root "$RUNNER_TEMP/mpfb-hobbit-output/shire-study"
+      - name: Upload original Shire source study and exported deformation proof
+        if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'source/pes002-mpfb-real-human-pilot')
+        uses: actions/upload-artifact@v4
+        with:
+          name: pes002-shire-wardrobe-study-${{ env.TARGET_SHA }}
+          path: |
+            ${{ runner.temp }}/mpfb-hobbit-output/shire-study
+            !${{ runner.temp }}/mpfb-hobbit-output/shire-study/*.blend*
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload CC0 MPFB source FBX pilot and hashes
+        if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'source/pes002-mpfb-real-human-pilot')
+        uses: actions/upload-artifact@v4
+        with:
+          name: pes002-mpfb-source-candidate-${{ env.TARGET_SHA }}
+          path: ${{ runner.temp }}/mpfb-hobbit-output/candidate
+          if-no-files-found: error
+          retention-days: 14
       - uses: actions/upload-artifact@v4
         with:
           name: kaykit-character-source-${{ env.TARGET_SHA }}

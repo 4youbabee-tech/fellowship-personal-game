@@ -1,3 +1,67 @@
+## 2026-10-17 PES-002 hosted Shire wardrobe source study — verified, not promoted
+- Exact source head `306684b9ae263cc75fca90b43e1559e4e1f58a5d`; Actions Run [#38985544689](https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/38985544689), Linux source job `117256068939` PASS; engine lane classifier PASS only; UE4.27.2 build SKIPPED by source-only policy.
+- Artifact `12082069523` ZIP SHA256 `800b69a661e5c2df426d666d6d488fa2204ccac95cc7fd724be67ca4f6889f3b`; downloaded and digest verified. FBX SHA256 `deb2f06ec98525df8795a952e424bcbfa6b62f86ca4b2868981a27e3820e3f5b`.
+- Blender 4.2.23 reimport PASS: 53 bones, 7 meshes, 13,380 weighted body vertices, zero unweighted vertices, maximum 4 deform influences, eight bilateral upper/lower-arm and thigh/calf stress poses. Actual Blender preview PNG produced and inspected.
+- Source preview is RENDER_OBSERVED in Blender, but visual review REJECTS promotion: waistcoat front/edge overlap is visibly unfinished; hair is basic. LODs and authored locomotion are absent. Supporting-resident wardrobe study only; no named character or accepted Shire resident.
+- State: SOURCE_AVAILABLE / WAREHOUSE_PERSISTED NOT RUN / UE_IMPORTED NOT RUN / WORLD_PLACED NOT RUN / Unreal RENDER_OBSERVED NOT RUN / ACCEPTED NO. No Unreal, PIE, target-device performance, audio, collision, or quest evidence. PR #484 runtime untouched. PES-002 ACTIVE; PES-003 LOCKED; Gate 6/7 OPEN.
+- Next source pass: repair vest opening/hem, select a more suitable CC0 hairstyle, author Idle/Walk/Run, then re-render and inspect before any UE4 promotion.
+
+
+## 2026-10-17 PES-002 MPFB official core-pack nested-path correction — HOSTED VERIFICATION PENDING
+
+## 2026-10-17 PES-002 M2 source production and exported-FBX inspection
+- Import repair exact SHA `3b7bf0f9f04609259a0b9efc22065879350aa50c` Run `38984957949` SUCCESS, source job `117254167662` SUCCESS, Windows SKIPPED. 10 hosted tests PASS. Official CC0 archive SHA256 `b542127a8e25547c7c29c19f2d1d2adb9a664c80396ecd694095dbc8028a0107`; 421 extracted files/298739872 bytes, all 6 required asset paths resolved. Artifact `12082820816` ZIP SHA256 `4631d06270ae28f1cac1834aaca5c17c4f2396cb903d42ce238948bd23a28281` downloaded and hash verified locally.
+- PHYSICAL SOURCE_AVAILABLE baseline: FBX `d69cd76d216c10a1fff95bf744871d11f564fafcc1d59a93072a33f354d2807a`, 53 bones/6 meshes/7 portable texture maps/10086 weighted body vertices. Real reimport reproduced arm/calf movement. Blender render rejects modern shirt/jeans as Shire final art; exported skin max=5 body/6 outfit exceeds chosen four-influence source budget. Upstream gender=0 is female, not male; no named-cast identity claimed.
+- New separate original supporting-resident SOURCE WARDROBE STUDY: `prepare_mpfb_shire_variant.py` preserves baseline, regenerates complete CC0 body without the original clothing-mask calf holes, authors short trousers/linen and fitted waistcoat, shortens/broadens root, normalizes four deform weights. `inspect_mpfb_shire_variant.py` reimports the actual FBX, requires UVs/53 bones/7 bound meshes/zero unweighted/max4, measures eight bilateral shoulder/elbow/hip/knee stress cases and produces a real Blender preview. Local export/reimport/render PASS; still SOURCE STUDY, NOT visual acceptance. Workflow produces its own separate artifact and never replaces KayKit or reserves Windows.
+- Study local FBX `77f6ef24c8c055c0fdf670bf9a4cf29c4bd1cd89a3b4e0dacd7cffa1dfcdb8de`; 13380 complete weighted body vertices, 45837 aggregate triangles, 8 material sections. Actual preview still shows unfinished waistcoat/front overlap, basic hair and face; reject final-art promotion until repaired and reviewed. Locomotion NOT AUTHORED, LODs NOT PRODUCED; no Unreal, Warehouse or world placement credit. Next exact-head hosted study verification required after this batch.
+- Rollback: revert only the separate variant producer/inspector/workflow additions if source checks fail; retain proven import repair. Active PES-002, PES-003 LOCKED, Gate 6/7 OPEN. PR #484 untouched; target-device performance, playable motion, traversal/audio still untested for any MPFB character.
+
+## 2026-10-17 PES-002 M0/M1 Blender sibling-import root repair
+- Live handoff verified: PR #486 `42f3d88d99b821cb77e07a79b455991d1542a261`; PR #484 `b29dc61403ab097775a87d6da30f0774d85c2c81`. Actual Run `38983399666`, job `117249235149`: `ModuleNotFoundError: No module named 'mpfb_pack_intake'` before addon probe; Windows skipped.
+- Bootstrap now adds its resolved script directory before importing sibling modules. New isolated subprocess test runs from an external temporary cwd with `python -I`, stubs only bpy, loads the complete bootstrap with runpy, and asserts exact local module provenance. Test reproduced the original failure against unpatched HEAD and passes against candidate. Hosted pre-download gate now discovers all `test_mpfb_*.py`: 10 local PASS (import 1, pack 6, pose 3).
+- REAL LOCAL BLENDER PROBE PASS: Blender 4.2.23 official archive SHA256 `bea0eb3146be13eae6225409a117b215184f41b7f79e799f97cb3abb8f6dc404`; MPFB2 v2.0.18 `d0a32e57a7f915cb2f2b95410e2117648c7bbb7e`; extension installation and HumanService/ExportService imports passed, `PES002_MPFB_INSTALL_PROBE_PASS`. Full pack download locally severely bandwidth limited; exact-head hosted full producer pending. No FBX, UE import, placement, animation or visual acceptance claimed.
+- M0 dependencies: existing pilot/spec/pose QC and official core CC0 pack only, tool GPL is separate from output assets; source-only PR branch retains full=false and does not reserve the Windows or Warehouse writer. Existing runtime systems/quest/collision unchanged. Pilot's contemporary clothing remains explicitly unsuitable for final Shire art acceptance.
+- Acceptance: cheap import regression, official Blender extension probe, then actual pack integrity/AssetService/skin/pose/FBX receipt, then visual and exported-FBX checks before any UE promotion. Rollback: revert this coherent source/test/workflow/docs batch; preserve PR #484 runtime. PES-002 ACTIVE, PES-003 LOCKED, Gate 6/7 OPEN.
+- Verified blocking failure: PR #486 SHA `34e31478e2acac9c1a8fbff6f551367837d32b77` Actions `38980771861` Linux Blender 4.2.23 loaded MPFB2 and its APIs, then `MPFB_CORE_ASSET_PACK_MISSING skins/young_caucasian_male.mhmat`; Windows Unreal job SKIPPED, no FBX or accepted character.
+- Root-cause correction candidate: preserve official `skins/<asset>/<file>`, `hair/<asset>/<file>`, `clothes/<asset>/<file>` paths and relative textures; verify required spec assets from ZIP before any writing, unique normalized destinations, archive zip-slip/symlink/size bounds and real MPFB AssetService resolution. Previously the installer checked only category-root filenames. Six local synthetic pack tests PASS, real 267MiB pack/Blender output NOT YET RETESTED.
+- Scope: source-only PR #486 Blender preparation; PR #484 exact-head UE4 runtime remains untouched and last green, PES-002 ACTIVE, PES-003 LOCKED, Gate 6/7 OPEN. No new .fbx, Warehouse artifact, .uasset, PIE, audible sound or device FPS claim. Retest once on exact PR #486 SHA and inspect real source artifact; quarantine on failure without triggering Windows Unreal.
+- Method evidence: official MakeHuman system pack CC0 and MPFB2 nested preset paths; license and runtime are not inferred from local tests. No new asset download/source binary committed.
+
+## 2026-10-17 PG-PES002-MPFB-BLENDER-RNA-ROOT-01 — official Blender API used incorrectly
+- Actual failure: PR #486 head `bd585d28f5d6b577dac262979bf5a5f10cee50b3`, Actions Run `38980232156`, Linux `character-source` FAILURE; Windows UE SKIPPED. Blender 4.2.23 official SHA256 downloaded and checked; MPFB2 cloned; 267MiB CC0 pack downloaded; Blender died before export with `AttributeError: 'UserExtensionRepo' object has no attribute 'type'` from `r.type == 'LOCAL'`.
+- Root cause: code confused the `bpy.ops.preferences.extension_repo_add(type='LOCAL')` **operator parameter** with fields on a returned `UserExtensionRepo` object, which has `name` and `module` but no `type`. The previous attempted patch introduced a new root-level API mismatch instead of validating the actual 4.2 RNA.
+- Root correction: compare the locally generated repo's unique `name`, preserve `type='LOCAL'` only on the operator, pass the actual repo `module` to package installation. Add a real Blender `--probe-only` that installs the pinned MPFB2 extension and imports Human/Export services BEFORE downloading the 267MiB CC0 pack. This is a genuine compatibility/provenance preflight, not an unrelated text gate.
+- References: https://docs.blender.org/api/4.2/bpy.ops.preferences.html ; https://docs.blender.org/api/4.2/bpy.ops.extensions.html ; https://docs.blender.org/api/main/bpy.types.UserExtensionRepo.html .
+- Future status requires a new exact-HEAD Blender run; no generated FBX, UE import, deformed PIE or visual acceptance can be claimed from these failed attempts. PES-002 ACTIVE, PES-003 LOCKED.
+
+## 2026-10-17 Blender root-cause fix after REAL failed Run #38979644601
+- Exact PR #486 head `7f48099bede38f43e41922c08aff0809495eae6a`: `character-source` failed after successful **Blender 4.2.23 download/checksum**, successful source clone and official MakeHuman 267MiB zip transfer; the exact real traceback in `mpfb_hosted_bootstrap.py` was `RuntimeError: Error: Repository not set` at `bpy.ops.extensions.package_install_files`. Windows job was correctly SKIPPED. No generated FBX or Unreal visual acceptance.
+- Fix root cause inside existing bootstrap: create Blender 4.2 `LOCAL` extension repo `Shire MPFB Offline` with `bpy.ops.preferences.extension_repo_add(type='LOCAL')`, locate its actual `.module` ID and pass `repo=repo_id` into `bpy.ops.extensions.package_install_files`. No network extension provider is configured. Official docs: https://docs.blender.org/api/4.2/bpy.ops.preferences.html and https://docs.blender.org/api/4.2/bpy.ops.extensions.html .
+- Production-cost fix: on exact `source/pes002-mpfb-real-human-pilot-20261017` PR branch only, classify mode `source` sets `full=false`, still runs existing hosted `character-source` and its extra MPFB pilot, but prevents costly unchanged self-hosted Windows UE job. This does not disable UE import/compile in normal runtime branches and does not bypass Gate 6/7. A real MPFB source output must be uploaded and hash-verified before changing the Unreal writer.
+- Evidence boundary: this is an untested repair candidate until its new exact-head GitHub Actions run finishes. The unstyled source model is not a finished Frodo; no acceptance, no PES transition.
+
+## 2026-10-17 owner-authorized run of Blender via existing GitHub Actions source lane
+- Local machine has neither `blender` nor `game-dev`. This candidate therefore adds a **single** MPFB2 source-only generation step INSIDE the existing unified character-source Linux job (no new parallel production workflow). It downloads official SHA256-checked Blender 4.2.23 LTS, pinned MPFB2 v2.0.18, and the MakeHuman official system CC0 pack. The source-only artifact contains actual Blender FBX, textures, SHA256 and joint bend receipt only *if* its job passes. No runtime/actor promotion before a genuine subsequent Unreal visual/deformation decision.
+- `Tools/CloudAssetBuild/mpfb_hosted_bootstrap.py` installs an MPFB addon using the official Blender extension operator; extracts core pack safely into the extension asset folder. `verify_mpfb_pilot_receipt.py` checks real output bytes/hashes. No extra Windows writer, no sourced ripped assets and no claim that this command has already completed.
+- PES-002 ACTIVE, PES-003 LOCKED, source-only preparation does not accept game chapter. Reference: https://docs.blender.org/api/4.2/bpy.ops.extensions.html ; https://static.makehumancommunity.org/assets/assetpacks/makehuman_system_assets.html
+
+## 2026-10-17 PES-002 M0 source-producer root-fix — deform QC before output, NOT UE4 acceptance
+- Compared the prior MPFB2 pilot with the upstream official `script_samples/10_complete_character_export_fbx.py` and exact source rig names in `rig.game_engine.json` and `rig.mixamo.json`. Corrected the pipeline by adding a dedicated `mpfb_pose_qc.py` Blender evaluated-mesh stress test: validate the actual Armature modifier and deform-bone vertex weights, bend real forearm and calf 25 degrees, verify geometric vertex displacement, restore original pose, and reject missing movement or unstable vertex topology.
+- Producer now attempts to activate an installed MPFB2 extension in a Blender 4.2+ headless session, refuses missing exported texture sidecars, and records per-joint deformation evidence in the source receipt; existing source-only status remains truthful, no Unreal/PIE/device evidence invented. Adds one focused mocked regression with 3 cases (arm+leg movement, absent modifier, nondeforming weighted mesh) instead of broad administrative tests.
+- Latest source-only PR #486 candidate has NO imported characters, nor generated FBX proof from this environment (Blender and game-dev unavailable). After actual Blender host run, inspect clothing/eye hair skin, legal exact asset pack, then existing UE4.27 import/PIE deformation and visual P1C01 runtime.
+- Official upstream references: https://github.com/makehumancommunity/mpfb2/blob/master/script_samples/10_complete_character_export_fbx.py ; https://github.com/makehumancommunity/mpfb2/blob/master/src/mpfb/data/rigs/standard/rig.game_engine.json ; https://github.com/makehumancommunity/mpfb2/blob/master/src/mpfb/data/rigs/standard/rig.mixamo.json ; https://static.makehumancommunity.org/assets/assetpacks/makehuman_system_assets.html .
+- No new Windows UE validation triggered by this source-only code. PES-002 active, PES-003 locked. Original 2026-10-16 run #38973795568 remains the most recent verified engine proof on separate PR #484 commit b29dc614.
+
+## 2026-10-17 PES-002 blocker resolution and character production track
+| Proof | State |
+|---|---|
+| Registered Owner no-stop mandate in single Governor | SOURCE REGISTERED |
+| MakeHuman/MPFB2 official CC0 core/system asset legal and compatible rig research | SOURCE RESEARCH COMPLETE |
+| Blender generator file + explicit recipe config committed in source-only candidate | STATIC SOURCE PREPARED |
+| Executed MPFB2/Blender and exported physically usable FBX with textures/weights | **NOT RUN** |
+| UE4.27 actual import, game-deformation and PIE + human visual acceptance of replacement | **NOT RUN** |
+| PES-002 / PES-003 | **ACTIVE / LOCKED** |
+
 ## 2026-10-16 PES-002 data-driven garden and resident variation candidate
 - Baseline develop 2e190d6: engine build/import/PIE pass with 5 skeletal shared residents, 21 tree replacements and 4 screenshots. Full visual and performance gates OPEN.
 - Candidate: 25 explicit garden data rows in existing Data/P1C01VerifiedWorldDecor.json, checked against actual UE-imported PBR FBX nature mesh packages. Candidate runtime evidence markers PES002_BAG_END_DATA_GARDEN and PES002_RESIDENT_PRESENTATION_SNAPSHOT; 5 proportional resident variants and optional safe authored-material tint.
@@ -4140,3 +4204,100 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 - Candidate-level source test added for single named Bag End package. Fresh exact-head UE4 build/asset import/streaming package test/screenshots required to validate. Target hardware FPS and VRAM unmeasured, traversal/PIE unverified; PES-002 OPEN; PES-003 locked.
 2026-10-15 PES-002 candidate status: `RENDER_OBSERVED` for Bag End at Run 38710725850/Artifact 11960756267, but `VISUALLY-ACCEPTED=NO` after direct four-view review; compile/import/automation/startup are PASS and traversal/PIE/device/performance remain NOT RUN. Frodo source is `SOURCE_AVAILABLE` but `WAREHOUSE_PERSISTED/UE_IMPORTED/WORLD_PLACED/RENDER_OBSERVED/ACCEPTED=NO`; Wave 2 and locomotion both reject pre-export at `HUMAN_WAVE2_SKIN_REPAIR_PRIMARY_MESH_TOO_SMALL`. Candidate root fix changes only group-level source selection/rebinding plus strict exported limb influence receipt; hosted re-run required. PES-002 remains OPEN and PES-003 LOCKED.
 2026-10-15 Exact-head `093ab4f`: Pre-Unreal PASS; UE4.27 compile/import/automation/startup PASS; screenshot capture FAIL `PES002_CAPTURE_CAMERA_NOT_CONFIRMED`; Human Wave 2/Frodo locomotion FAIL before FBX at aggregate bound-character selection. Parent-bound relation correction is STATIC-VALIDATED only. No new `UE_IMPORTED`, `WORLD_PLACED`, `RENDER_OBSERVED`, PIE, device, performance, or acceptance state.
+
+
+## 2026-10-17 MPFB Shire wardrobe study — source art candidate
+- `bca242c` exact-head Run 38985891593 proves genuine Blender/MPFB source production and eight bilateral limb stress poses; rendered review identifies flat hair and torn waistcoat edges, so the character remains source-only and visually rejected.
+- New source-only iteration adds joined head-weighted curls, clean bmesh-cut vest boundaries and a 6 mm applied cloth shell. The exported-FBX inspector retains the four-weight/zero-unweighted/UV/hierarchy gates and adds hair plus 60k total triangle checks.
+- Exact-head Blender proof pending; UE4 import/animation/PIE remain unrun.
+
+
+## 2026-10-17 MPFB hair silhouette iteration 2
+- Artifact from exact-head Run 38986831627 visually showed the first 29 curl clumps read as large beads; source skin and waistcoat edges passed technical checks, but the hairstyle still failed art review.
+- Follow-up candidate reduces clump radius by about half, distributes 58 head-weighted clumps across five overlapping cap rows, and raises the exported hair minimum to 8,000 triangles while keeping the full character under 60,000 triangles. This remains a source-only artist iteration; exact-head rendered review is required before UE.
+
+
+## 2026-10-17 Shire wardrobe source iteration — tangent-shaped curl study
+- Visual review of hosted Blender artifact `12083836272` rejected the 58 round curl clumps as bead-like. Keep the same 58 subdivision-2 tuft topology (4,640 faces), but remap each tuft into a soft tangent-aligned, radially compressed and slightly raised curl; each added vertex remains weighted to the existing head bone. This changes silhouette shape, not hair triangle count or runtime materials/actors.
+- Added pure-Python geometry regression `test_mpfb_curl_shape.py`; workflow discovery includes `test_mpfb_*.py`. Exact-head Blender generation, FBX re-imported QC, receipt and preview are pending. No UE import, movement, visual approval or animation claim.
+
+
+## 2026-10-17 Blender curl silhouette review — first shape transform visually insufficient
+- Exact hosted [Run 38989404509](https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/38989404509) SUCCESS on `5fcdd2188e52de08e15429b63463cd061e3795db`; artifact `12084607370` has an exported CC0 FBX and actual Blender preview. FBX SHA256 `c1af19a3fcae384d81664f1ca070f8458116156b0340d931a6be9a10c91b0bb6`. Reimport technical checks retained 53 bones / 54,090 triangles / 13,380 weighted body vertices / 0 unweighted / max 4 influences / 8 nonzero bilateral deformation tests.
+- Image review: tangent shaping at 1.12 / 0.78 / 1.25 was too subtle; hairstyle still reads bead-like. Do not accept the mathematical shape test as visual proof and do not promote to UE.
+- Next source iteration increases the same per-tuft anisotropy to tangent 1.45, radial .58, vertical 1.45. Each tuft retains the same 80 faces and existing head bone weights; target is a clearly visible but bounded curl shape. Exact-head Blender preview and reimported FBX review pending.
+
+
+## 2026-10-17 MPFB curl silhouette iteration — exact Blender result
+- Exact-head hosted [Run 38989791591](https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/38989791591) on `8dd1c7ec185e490377e0fc1a92ffce2d09411228`: Blender source SUCCESS; Windows UE4.27.2 SKIPPED. Wardrobe artifact `12084667030`; FBX SHA256 `4656046ca2c22c5cb1917681b9d8ee56aed83434effd2fcedc08f72ffe5cbede`.
+- Reimported exported FBX: 53 bones, 7 meshes, 54,090 triangles (hair 8,318), all vertices weighted, maximum 4 deform influences, and 8 bilateral arm/leg stress tests with nonzero movement. No animation was authored; UE import/world/PIE/device validation not run.
+- Render review shows stronger wavy texture than the prior output, with the same triangle budget. Still a compact row of clumps and the face/costume remain a prototype: **NOT VISUALLY ACCEPTED**. Continue source art work before UE reservation.
+
+
+## 2026-10-17 — PES-002 character source iteration
+| Output | State | Evidence / remaining work |
+|---|---|---|
+| CC0 MPFB pilot source FBX | SOURCE / TECHNICAL PASS | Run 39026430313; SHA `9384bc08141f17bfff39b6d8fdc434d1d5dbdebb5404b04d9c64000000d75a5e`; 53 bones; UE import NOT RUN |
+| Wardrobe-study preview | VISUAL REJECT | Artifact 12098991974; modern short-trouser silhouette and vest gaps remain |
+| Corrected Shire wardrobe | PENDING | Full-length trouser source edit and exact-head Blender preview rerun; animation/UE import/PIE deformation NOT RUN |
+
+
+## 2026-10-17 PES-002 wardrobe-front repair — SOURCE CANDIDATE
+| Output | State | Evidence / remaining work |
+|---|---|---|
+| Full-length trousers and weighted wardrobe study | SOURCE / TECHNICAL PASS | Blender Run 39027545092; artifact 12098822918; 53 bones, 57,874 triangles, max 4 influences, bilateral pose movement |
+| Waistcoat front | VISUAL REJECT | Actual render retained triangular gaps; closed-shell source correction pending hosted Blender rerun |
+| Unreal Shire runtime | PIE RENDER_OBSERVED / VISUAL REJECT | Auto-triggered Run 39027307675; four actual runtime views show primitive-heavy houses/trees/residents; compile/startup/capture pass, target-device FPS/acceptance not proven |
+| Promotion | NOT PROMOTED | No locomotion authoring, UE character import, world placement or visual acceptance; PES-002 ACTIVE, PES-003 LOCKED, Gate 6/7 OPEN |
+
+
+## 2026-10-17 PES-002 waistcoat budget correction — SOURCE RERUN PENDING
+| Output | State | Evidence / remaining work |
+|---|---|---|
+| Hosted Blender source export | FAILED QC / NO ARTIFACT | Run 39029681409, exact SHA `976834413dcc6cb34fec8ab15c935df7b42fbf52`; MPFB/CC0 install and export passed; reimport rejected existing hair/total triangle gate |
+| Root correction | CANDIDATE | Keep torso-bound crop planes, eliminate center seam cuts and face deletion that expose slit triangles; six local wardrobe tests pass |
+| UE4.27.2 | SKIPPED | Source QC failed; do not import character or claim acceptance |
+| PES/Gates | OPEN | PES-002 ACTIVE, PES-003 LOCKED, Gate 6/7 OPEN |
+
+
+## 2026-10-17 PES-002 waistcoat placket source iteration
+| Output | State | Evidence / remaining work |
+|---|---|---|
+| Closed waistcoat study | SOURCE / TECHNICAL PASS, VISUAL REJECT | Run 39029904611; artifact 12100425640; FBX SHA `e53ba0c4957f4029ef7e2d3b7c62d89d6668575bb17269239fa922eb20caf72b`; 53 bones, 59,162 triangles, 8 bilateral stress poses |
+| Remaining visible seam | OPEN | Blender preview shows a narrow exposed-skin strip; a spine-weighted wool placket and five visible fasteners are the next hosted source candidate |
+| UE / animation | NOT RUN | UE4.27.2 skipped; no locomotion, PIE, world placement or acceptance |
+
+
+## 2026-10-17 PES-002 surface-fitted vest placket — NEXT BLENDER ITERATION
+| Output | State | Evidence / remaining work |
+|---|---|---|
+| Closed-shell source wardrobe | SOURCE / TECHNICAL PASS, VISUAL REJECT | Run 39030248055; artifact 12100071706; FBX SHA `d63b8ffb7072c23b2d70f2179a934413b8ffc6dc32d54cc6691971d9da8c8983`; 53 bones/59,474 triangles |
+| Vest seam | OPEN | Preview still shows a visible skin strip; next candidate samples the actual garment surface for a weighted placket and fastener depth |
+| Character integration | NOT RUN | No animation, UE import, PIE movement or world placement; PES-002 ACTIVE, PES-003 LOCKED, Gate 6/7 OPEN |
+
+
+## 2026-10-17 PES-002 garment-front repair — SOURCE PASS, CHARACTER NOT ACCEPTED
+| Output | State | Evidence / remaining work |
+|---|---|---|
+| CC0 Shire wardrobe FBX | SOURCE / TECHNICAL PASS | Run 39030620954; artifact 12100042274; SHA `6a98174fbd1d9c2699af9de1cb245764956e1b87f7a2192d9d0c87f45ea1bdfa`; 53 bones/59,498 triangles/max 4 influences/8 bilateral stress poses |
+| Render | IMPROVED / NOT FINAL | Vest gap is covered by sampled placket and buttons; character remains a rigid A-pose, hairstyle short, no facial/visual owner acceptance |
+| Animation / Unreal | NOT RUN | No locomotion, UE import, PIE deformation, world placement or target-device FPS proof |
+
+
+## 2026-10-17 PES-002 longer-ringlet review
+| Output | State | Evidence / remaining work |
+|---|---|---|
+| Longer-ringlet CC0 wardrobe source | TECHNICAL PASS / VISUAL REJECT | Run 39031037739; artifact 12099289999; FBX SHA `08683cd20c3495fa4752c803cb66019febcf9e664f17e604b802e5090d81a1c5`; 53 bones/59,498 triangles/8 bilateral stress tests |
+| Hairstyle | NO ACCEPTANCE | Actual Blender preview remains a tight cap; changed lock length did not materially improve appearance |
+| Runtime | NOT RUN | UE4.27.2 skipped; no locomotion, UE deformation, P1C01 placement or device FPS claim |
+
+## 2026-10-17 PES-002 source-character silhouette repair candidate
+- Inspected the exact source-preview artifact from Run 39031346183 at `5355bd0afd69eada46dd0f832eaaf7d36bdaa530`: the body/wardrobe still reads generic, the head silhouette remains a cropped cap, and there is no footwear; source receipt records 59,498 triangles and no authored animation. This is a visual rejection, not an Unreal import.
+- Candidate change moves 24 tapered ringlets outside the scalp and reduces each to 9 centerline samples × 5 sides to target <6,000 hair triangles while preserving the source rig. Exact-head Blender artifact and visual review remain pending; no runtime promotion.
+
+## 2026-10-17 PES-002 Blender hair-budget gate repair
+- Exact Blender Run 39037324617 exported the candidate, then failed `SHIRE_HAIR_OR_CHARACTER_TRIANGLE_BUDGET_FAILED`. Diagnosis: `inspect_mpfb_shire_variant.py` rejected hair counts below 6,000, opposite the quality contract and test wording. Corrected the comparator to reject counts above 6,000 and updated the regression contract. The exact-head corrected Blender render and silhouette review are pending; source-only, no UE promotion.
+
+## 2026-10-17 PES-002 Shira source-study follow-up
+- Exact source run 39037560668 at `64689c13c1b8b36f628bae57acb2af7f0999a984` passed Blender reimport and bilateral deformation inspection: hair 5,598 triangles; full study 58,538 triangles. The resulting source preview still reads generic and barefoot, so it remains visually rejected and unpromoted.
+- Next candidate adds two low-poly, foot-bone-skinned leather slippers and a more legible ringlet silhouette; inspector now expects the two extra weighted meshes. Blender/preview review pending; no UE import, animation, or runtime claim.
