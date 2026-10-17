@@ -25,6 +25,14 @@ class WardrobeQualityContractTests(unittest.TestCase):
         self.assertIn("SHIRE_WAISTCOAT_UPPER_TORSO_WEIGHT_GROUP_MISSING", source)
         self.assertIn("'waistcoat_button_count':5", source)
 
+    def test_leather_slippers_are_skinned_to_both_real_foot_bones(self):
+        source = (ROOT / "prepare_mpfb_shire_variant.py").read_text(encoding="utf-8")
+        inspector = (ROOT / "inspect_mpfb_shire_variant.py").read_text(encoding="utf-8")
+        self.assertIn("foot_name='foot_'+side", source)
+        self.assertIn("Shire_LeatherSlipper_", source)
+        self.assertIn("group.add(list(range(len(shoe.data.vertices))),1.0,'REPLACE')", source)
+        self.assertIn("len(meshes)!=9", inspector)
+
     def test_wardrobe_keeps_full_length_shire_trousers(self):
         source = (ROOT / "prepare_mpfb_shire_variant.py").read_text(encoding="utf-8")
         garment = source.split("# Keep the source trousers full length.", 1)[1].split(

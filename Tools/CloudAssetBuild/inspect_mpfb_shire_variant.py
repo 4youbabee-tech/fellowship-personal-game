@@ -26,7 +26,7 @@ report['hair_triangles']=sum(len(p.vertices)-2 for p in hair.data.polygons)
 # Fail closed on the exported bytes, rather than trusting a pre-export receipt.
 if any(m['unweighted'] or m['max_influences']>4 for m in report['meshes']):
     raise RuntimeError('SHIRE_EXPORTED_SKIN_BUDGET_FAILED')
-if len(rig.data.bones)!=53 or len(meshes)!=7 or body.dimensions.z<.9:
+if len(rig.data.bones)!=53 or len(meshes)!=9 or body.dimensions.z<.9:
     raise RuntimeError('SHIRE_EXPORTED_HIERARCHY_OR_BODY_FAILED')
 if report['hair_triangles']>6000 or report['total_triangles']>60000:
     raise RuntimeError('SHIRE_HAIR_OR_CHARACTER_TRIANGLE_BUDGET_FAILED')

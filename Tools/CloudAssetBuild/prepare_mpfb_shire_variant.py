@@ -206,8 +206,8 @@ def main():
         side_weight = abs(math.sin(angle))
         # Longer side ringlets break the cropped-cap silhouette while retaining
         # the same 24-strand topology and triangle budget.
-        length = .075 + .115 * side_weight
-        radial = 1.04 + .035 * math.cos(i * 2.41)
+        length = .095 + .130 * side_weight
+        radial = 1.17 + .040 * math.cos(i * 2.41)
         phase = i * 1.91
         centers=[]
         curl_steps=9
@@ -225,7 +225,7 @@ def main():
             tangent=(centers[min(step+1,curl_steps-1)]-centers[max(step-1,0)]).normalized()
             radial_axis=Vector((math.cos(angle),math.sin(angle),0))
             side_axis=tangent.cross(radial_axis).normalized()
-            radius=.0052*(1.0-.58*t)
+            radius=.0070*(1.0-.52*t)
             ring=[]
             for side in range(curl_sides):
                 phi=math.tau*side/curl_sides
@@ -239,6 +239,49 @@ def main():
         curls+=1
     curl_bm.normal_update();curl_bm.to_mesh(hair.data);curl_bm.free();hair.data.update()
     head_group.add(list(range(start_curl_vertex,len(hair.data.vertices))),1.0,'REPLACE')
+    # Add low-profile, skinned leather slippers over the bare source feet.
+    footwear = material('Shire_Worn_Leather_Footwear', (.075,.035,.018))
+    outsole = material('Shire_Dark_Leather_Sole', (.025,.016,.010))
+    for side in ('l','r'):
+        foot_name='foot_'+side
+        foot_group=body.vertex_groups.get(foot_name)
+        if foot_group is None or rig.data.bones.get(foot_name) is None:
+            raise RuntimeError('SHIRE_FOOTWEAR_DEFORM_BONE_MISSING '+foot_name)
+        foot_points=[v.co.copy() for v in body.data.vertices
+                     if any(g.group==foot_group.index and g.weight>.05 for g in v.groups)]
+        if len(foot_points)<8:
+            raise RuntimeError('SHIRE_FOOTWEAR_WEIGHTED_FOOT_SPARSE '+foot_name)
+        lo=Vector(tuple(min(p[i] for p in foot_points) for i in range(3)))
+        hi=Vector(tuple(max(p[i] for p in foot_points) for i in range(3)))
+        rx=max((hi.x-lo.x)*.78,.040);ry=max((hi.y-lo.y)*.72,.065)
+        rz=max((hi.z-lo.z)*.48,.018)
+        center=Vector(((lo.x+hi.x)*.5,(lo.y+hi.y)*.5-.010,lo.z+rz*.85))
+        bm=bmesh.new()
+        def add_ellipsoid(location,radii,material_index):
+            old_verts=set(bm.verts);old_faces=set(bm.faces)
+            bmesh.ops.create_uvsphere(bm,u_segments=12,v_segments=8,radius=1.0,
+                                      matrix=Matrix.Translation(location))
+            added=set(bm.verts)-old_verts
+            for vertex in added:
+                delta=vertex.co-location
+                vertex.co=location+Vector((delta.x*radii[0],delta.y*radii[1],delta.z*radii[2]))
+            for face in set(bm.faces)-old_faces:face.material_index=material_index
+            return added
+        upper_vertices=add_ellipsoid(center,(rx,ry,rz),0)
+        add_ellipsoid(Vector((center.x,center.y,lo.z-.003)),(rx*1.05,ry*1.05,.008),1)
+        shoe_data=bpy.data.meshes.new('Shire_LeatherSlipper_'+side+'_Mesh')
+        bm.to_mesh(shoe_data);bm.free();shoe_data.update()
+        shoe_data.uv_layers.new(name='UVMap')
+        shoe=bpy.data.objects.new('Shire_LeatherSlipper_'+side,shoe_data)
+        bpy.context.collection.objects.link(shoe)
+        shoe.parent=rig;shoe.matrix_parent_inverse=body.matrix_parent_inverse.copy()
+        shoe.matrix_basis=body.matrix_basis.copy()
+        shoe.data.materials.append(footwear);shoe.data.materials.append(outsole)
+        group=shoe.vertex_groups.new(name=foot_name)
+        group.add(list(range(len(shoe.data.vertices))),1.0,'REPLACE')
+        armature=shoe.modifiers.new('Shire_Footwear_Skin','ARMATURE');armature.object=rig
+        for poly in shoe.data.polygons:poly.use_smooth=True
+        meshes.append(shoe)
     # Shorter, broader silhouette. Scale the root only; all bound parts follow.
     rig.scale.x*=.84;rig.scale.y*=.88;rig.scale.z*=.70
     bpy.ops.object.select_all(action='DESELECT')

@@ -5082,3 +5082,7 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 
 ## 2026-10-17 PES-002 Blender hair-budget gate repair
 - Exact Blender Run 39037324617 exported the candidate, then failed `SHIRE_HAIR_OR_CHARACTER_TRIANGLE_BUDGET_FAILED`. Diagnosis: `inspect_mpfb_shire_variant.py` rejected hair counts below 6,000, opposite the quality contract and test wording. Corrected the comparator to reject counts above 6,000 and updated the regression contract. The exact-head corrected Blender render and silhouette review are pending; source-only, no UE promotion.
+
+## 2026-10-17 PES-002 Shira source-study follow-up
+- Exact source run 39037560668 at `64689c13c1b8b36f628bae57acb2af7f0999a984` passed Blender reimport and bilateral deformation inspection: hair 5,598 triangles; full study 58,538 triangles. The resulting source preview still reads generic and barefoot, so it remains visually rejected and unpromoted.
+- Next candidate adds two low-poly, foot-bone-skinned leather slippers and a more legible ringlet silhouette; inspector now expects the two extra weighted meshes. Blender/preview review pending; no UE import, animation, or runtime claim.
