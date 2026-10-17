@@ -4215,3 +4215,8 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 ## 2026-10-17 MPFB hair silhouette iteration 2
 - Artifact from exact-head Run 38986831627 visually showed the first 29 curl clumps read as large beads; source skin and waistcoat edges passed technical checks, but the hairstyle still failed art review.
 - Follow-up candidate reduces clump radius by about half, distributes 58 head-weighted clumps across five overlapping cap rows, and raises the exported hair minimum to 8,000 triangles while keeping the full character under 60,000 triangles. This remains a source-only artist iteration; exact-head rendered review is required before UE.
+
+
+## 2026-10-17 Shire wardrobe source iteration — tangent-shaped curl study
+- Visual review of hosted Blender artifact `12083836272` rejected the 58 round curl clumps as bead-like. Keep the same 58 subdivision-2 tuft topology (4,640 faces), but remap each tuft into a soft tangent-aligned, radially compressed and slightly raised curl; each added vertex remains weighted to the existing head bone. This changes silhouette shape, not hair triangle count or runtime materials/actors.
+- Added pure-Python geometry regression `test_mpfb_curl_shape.py`; workflow discovery includes `test_mpfb_*.py`. Exact-head Blender generation, FBX re-imported QC, receipt and preview are pending. No UE import, movement, visual approval or animation claim.

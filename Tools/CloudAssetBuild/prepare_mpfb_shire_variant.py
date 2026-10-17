@@ -17,6 +17,7 @@ from mathutils import Matrix, Vector
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from mpfb_pose_qc import inspect_deform_and_pose
+from mpfb_curl_shape import remap_curl_offset
 
 
 def material(name, color):
@@ -172,7 +173,16 @@ def main():
             z=hhi.z-lower+(.006*math.cos(angle*3) if ring<4 else 0)
             local=hair.matrix_world.inverted()@Vector((x,y,z))
             size=radius*(.91+.12*math.sin(i*2.17+ring))
-            bmesh.ops.create_icosphere(curl_bm,subdivisions=2,radius=size,matrix=Matrix.Translation(local))
+            created = bmesh.ops.create_icosphere(
+                curl_bm, subdivisions=2, radius=size,
+                matrix=Matrix.Translation(local))
+            # Form soft ringlet tufts along the scalp tangent instead of round beads.
+            # Vertex count and triangles stay unchanged; every new vertex remains
+            # head-weighted below and follows the shared game skeleton.
+            for vertex in created["verts"]:
+                delta = vertex.co - local
+                shaped = remap_curl_offset(delta.x, delta.y, delta.z, angle)
+                vertex.co = local + Vector(shaped)
             curls+=1
     curl_bm.normal_update();curl_bm.to_mesh(hair.data);curl_bm.free();hair.data.update()
     head_group.add(list(range(start_curl_vertex,len(hair.data.vertices))),1.0,'REPLACE')
@@ -205,7 +215,7 @@ def main():
     output=out/'PES002_Shira_WardrobeStudy.fbx'
     bpy.ops.export_scene.fbx(filepath=str(output),use_selection=True,add_leaf_bones=False,bake_anim=False,path_mode='RELATIVE')
     bpy.ops.wm.save_as_mainfile(filepath=str(out/'Shira_WardrobeStudy.blend'))
-    result={'status':'SOURCE_WARDROBE_STUDY_NOT_UE_IMPORTED','curly_hair_clumps':curls,'waistcoat_shell_thickness_m':.006,'license':'CC0','source_fbx_sha256':digest,'fbx_sha256':hashlib.file_digest(output.open('rb'),'sha256').hexdigest(),'source_spec_sha256':receipt['spec_sha256'],'source_gender':'female (upstream gender=0); original supporting resident, not named cast','weighted_body_vertices':weighted,'pose':pose,'max_deform_influences':4,'animation':'NOT_AUTHORED','visual':'PENDING','ue_import':'NOT_RUN','known_open_items':['Manual hair silhouette/face review','Waistcoat fit/closure/hem review','Full bilateral shoulder/knee visual stress','LODs and material section budget','Authored locomotion and UE4 deformation']}
+    result={'status':'SOURCE_WARDROBE_STUDY_NOT_UE_IMPORTED','curly_hair_clumps':curls,'curl_geometry':'tangent-formed non-spherical ringlet tufts; same per-tuft topology','waistcoat_shell_thickness_m':.006,'license':'CC0','source_fbx_sha256':digest,'fbx_sha256':hashlib.file_digest(output.open('rb'),'sha256').hexdigest(),'source_spec_sha256':receipt['spec_sha256'],'source_gender':'female (upstream gender=0); original supporting resident, not named cast','weighted_body_vertices':weighted,'pose':pose,'max_deform_influences':4,'animation':'NOT_AUTHORED','visual':'PENDING','ue_import':'NOT_RUN','known_open_items':['Manual hair silhouette/face review','Waistcoat fit/closure/hem review','Full bilateral shoulder/knee visual stress','LODs and material section budget','Authored locomotion and UE4 deformation']}
     (out/'variant_receipt.json').write_text(json.dumps(result,indent=2)+'\n')
     print('SHIRE_WARDROBE_STUDY_EXPORTED '+json.dumps(result),flush=True)
 
