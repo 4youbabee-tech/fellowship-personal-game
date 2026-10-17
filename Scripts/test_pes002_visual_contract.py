@@ -23,6 +23,9 @@ class PES002VisualContract(unittest.TestCase):
         self.assertIn("PES002_STORY_NPC_UNIQUE_ART_CHECK", world)
         self.assertIn("PES002_RIVER_CLEARANCE", world)
         self.assertIn("PES002_REGIONAL_SUPPORT_IMPORT", cmd)
+        # UE_LOG control-flow macro needs braces around if AND else.
+        self.assertIn("if (bStoryGroundSupportProven)\\n        {\\n            UE_LOG", npc)
+        self.assertIn("}\\n        else\\n        {\\n            UE_LOG", npc)
         self.assertIn("bUsedWithSkeletalMesh", cmd)
 
 

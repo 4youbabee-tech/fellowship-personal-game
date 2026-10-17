@@ -1696,15 +1696,21 @@ void AShireNPC::BeginPlay()
                 }
             }
         }
+        // UE_LOG is a macro that expands into control flow in UE4.27.
+        // Brace both arms: Run 39061598934 failed C2181 at this else.
         if (bStoryGroundSupportProven)
+        {
             UE_LOG(LogTemp, Display,
                 TEXT("PES002_STORY_NPC_GROUND npc=%s floorZ=%.1f beforeFootZ=%.1f afterFootZ=%.1f radialCm=%.1f probes=%d grounded=1"),
                 *GetName(), ChosenFloor, Initial.Z - HalfHeight,
                 GetActorLocation().Z - HalfHeight, ChosenDistance, Probes);
+        }
         else
+        {
             UE_LOG(LogTemp, Warning,
                 TEXT("PES002_STORY_NPC_GROUND_REJECT npc=%s expectedFootZ=%.1f probes=%d reason=no-clear-support-within-450"),
                 *GetName(), Initial.Z - HalfHeight, Probes);
+        }
     }
 
     if (UGameInstance* GI = GetGameInstance())
