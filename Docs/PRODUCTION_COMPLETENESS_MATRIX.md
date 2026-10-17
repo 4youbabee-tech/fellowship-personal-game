@@ -4240,3 +4240,12 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | CC0 MPFB pilot source FBX | SOURCE / TECHNICAL PASS | Run 39026430313; SHA `9384bc08141f17bfff39b6d8fdc434d1d5dbdebb5404b04d9c64000000d75a5e`; 53 bones; UE import NOT RUN |
 | Wardrobe-study preview | VISUAL REJECT | Artifact 12098991974; modern short-trouser silhouette and vest gaps remain |
 | Corrected Shire wardrobe | PENDING | Full-length trouser source edit and exact-head Blender preview rerun; animation/UE import/PIE deformation NOT RUN |
+
+
+## 2026-10-17 PES-002 wardrobe-front repair — SOURCE CANDIDATE
+| Output | State | Evidence / remaining work |
+|---|---|---|
+| Full-length trousers and weighted wardrobe study | SOURCE / TECHNICAL PASS | Blender Run 39027545092; artifact 12098822918; 53 bones, 57,874 triangles, max 4 influences, bilateral pose movement |
+| Waistcoat front | VISUAL REJECT | Actual render retained triangular gaps; closed-shell source correction pending hosted Blender rerun |
+| Unreal Shire runtime | PIE RENDER_OBSERVED / VISUAL REJECT | Auto-triggered Run 39027307675; four actual runtime views show primitive-heavy houses/trees/residents; compile/startup/capture pass, target-device FPS/acceptance not proven |
+| Promotion | NOT PROMOTED | No locomotion authoring, UE character import, world placement or visual acceptance; PES-002 ACTIVE, PES-003 LOCKED, Gate 6/7 OPEN |

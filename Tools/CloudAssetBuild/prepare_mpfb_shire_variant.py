@@ -100,37 +100,15 @@ def main():
         face.material_index=0 if z>.87 else 1
     # Duplicate fitted upper garment as a sleeveless, open-front waistcoat.
     vest=clothes.copy(); vest.data=clothes.data.copy(); bpy.context.collection.objects.link(vest);vest.name='Shire_Authored_Waistcoat'
-    bm=bmesh.new();bm.from_mesh(vest.data)
-    for co,normal in [((0,0,.865),(0,0,1)),((0,0,1.285),(0,0,-1)),
-                      ((-.177,0,0),(1,0,0)),((.177,0,0),(-1,0,0))]:
-        bmesh.ops.bisect_plane(bm,geom=list(bm.verts)+list(bm.edges)+list(bm.faces),
-            plane_co=vest.matrix_world.inverted()@Vector(co),
-            plane_no=vest.matrix_world.to_3x3().transposed()@Vector(normal),
-            clear_inner=True,dist=1e-6)
-    remove=[]
-    # Bisect both opening edges first so removing the front panel leaves clean seams.
-    for x in (-.052, .052):
-        bmesh.ops.bisect_plane(
-            bm,
-            geom=list(bm.verts)+list(bm.edges)+list(bm.faces),
-            plane_co=vest.matrix_world.inverted() @ Vector((x, 0, 0)),
-            plane_no=vest.matrix_world.to_3x3().transposed() @ Vector((1, 0, 0)),
-            dist=1e-6,
-        )
-    for f in bm.faces:
-        c=sum((vest.matrix_world@v.co for v in f.verts),Vector())/len(f.verts)
-        if c.y<-.065 and abs(c.x)<.052:remove.append(f)
-    bmesh.ops.delete(bm,geom=remove,context='FACES')
-    bm.normal_update()
-    for v in bm.verts:
-        c=vest.matrix_world@v.co
-        if c.y<-.065 and abs(c.x)<.06:
-            c.x=math.copysign(.035,c.x)
-            v.co=vest.matrix_world.inverted()@c
-        v.co+=v.normal*.004
-    bm.to_mesh(vest.data);bm.free();vest.data.materials.clear();vest.data.materials.append(vestmat)
+    # Keep the fitted source garment closed across the front. The earlier
+    # hand-cut opening sliced through irregular suit topology and exposed
+    # triangular body patches in the Blender render; a continuous overlaid
+    # wool waistcoat plus fasteners reads cleanly while remaining skinned.
+    vest.data.materials.clear();vest.data.materials.append(vestmat)
     for f in vest.data.polygons:f.material_index=0
-    # A thin applied shell gives the cut lapels and hem real cloth edge thickness.
+    for v in vest.data.vertices:
+        v.co+=v.normal*.004
+    # A thin applied shell gives the garment a readable hem and cloth thickness.
     bpy.context.view_layer.objects.active=vest
     vest.select_set(True)
     shell=vest.modifiers.new('Shire_Waistcoat_Cloth_Edge','SOLIDIFY')

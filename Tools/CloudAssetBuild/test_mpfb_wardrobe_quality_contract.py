@@ -28,6 +28,16 @@ class WardrobeQualityContractTests(unittest.TestCase):
         self.assertNotIn("bisect_plane", garment)
         self.assertIn("dark wool", garment)
 
+    def test_waistcoat_front_stays_closed_to_prevent_topology_slits(self):
+        source = (ROOT / "prepare_mpfb_shire_variant.py").read_text(encoding="utf-8")
+        garment = source.split("# Duplicate fitted upper garment", 1)[1].split(
+            "# A thin applied shell", 1
+        )[0]
+        self.assertIn("Keep the fitted source garment closed across the front", garment)
+        self.assertNotIn("bmesh.ops.delete", garment)
+        self.assertNotIn("bisect_plane", garment)
+        self.assertIn("v.co+=v.normal*.004", garment)
+
     def test_reimport_gate_measures_new_hair_and_caps_total_triangles(self):
         source = (ROOT / "inspect_mpfb_shire_variant.py").read_text(encoding="utf-8")
         self.assertIn("report['hair_triangles']<6000", source)

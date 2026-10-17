@@ -5040,3 +5040,9 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 ## 2026-10-17 — PES-002 character source iteration (SOURCE ONLY / VISUAL REJECT)
 - Blender 4.2.23 Run 39026430313 completed the CC0 MakeHuman/MPFB2 source lane after fixing local-module bootstrap and the `create_uvsphere` return-value assumption. The source FBX reimported with 53 bones, 21,966 vertices, seven texture sidecars and bilateral arm/leg pose deltas; no Unreal import or locomotion was performed.
 - The separate wardrobe preview still shows a modern short-trouser silhouette and vest gaps, so it is rejected as a game-ready Shire resident. A source-only correction retains full-length trousers; its exact-head Blender rerun is pending. Keep the source packet unpromoted, PES-002 open, PES-003 locked, Gate 6/7 open.
+
+
+## 2026-10-17 PES-002 Shire wardrobe seam repair — source rerun pending
+- Actual Blender Run 39027545092 produced full-length trousers and an FBX that reimported with 53 bones, 7 meshes, 57,874 triangles, zero unweighted vertices, max 4 influences, and bilateral arm/leg pose deltas. This remains a source-only study; no locomotion or UE character import.
+- Human review of artifact 12098822918 still found triangular vest-front gaps. The next source-only edit removes the destructive waistcoat front cuts and keeps a closed skinned shell; 6 focused local wardrobe contract tests pass. Exact-head Blender preview is pending; no promotion until visual review.
+- PR #484 Run 39027307675 was auto-triggered by source tooling pushed to that PR. The UE4.27.2 compile/startup/PIE capture steps succeeded and produced 4 runtime views, but the captured Shire is visually rejected; no chapter completion or target-device 30 FPS claim. No additional Unreal run is initiated by this character edit.
