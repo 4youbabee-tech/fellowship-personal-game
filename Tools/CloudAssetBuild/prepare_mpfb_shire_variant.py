@@ -17,7 +17,6 @@ from mathutils import Matrix, Vector
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from mpfb_pose_qc import inspect_deform_and_pose
-from mpfb_curl_shape import remap_curl_offset
 
 
 def material(name, color):
@@ -143,8 +142,42 @@ def main():
     shell=vest.modifiers.new('Shire_Waistcoat_Cloth_Edge','SOLIDIFY')
     shell.thickness=.006;shell.offset=0.0;shell.use_rim=True
     bpy.ops.object.modifier_apply(modifier=shell.name)
+    # Add a small, attached row of wooden/brass-toned buttons to make the vest
+    # closure read as authored clothing instead of an unfastened proxy shell.
+    # The detail stays inside the character texture/material budget: one
+    # additional low-triangle material and five small smooth buttons.
+    buttons = bmesh.new(); buttons.from_mesh(vest.data)
+    for index in range(5):
+        z = .925 + index * .046
+        center = vest.matrix_world.inverted() @ Vector((.042, -.081, z))
+        created = bmesh.ops.create_uvsphere(
+            buttons, u_segments=8, v_segments=6, radius=.006,
+            matrix=Matrix.Translation(center))
+        for face in created['faces']:
+            face.smooth = True
+    buttons.to_mesh(vest.data); buttons.free(); vest.data.update()
+    vest.data.materials.append(material('Shire_Aged_Brass_Fasteners', (.29, .19, .07)))
+    for face in vest.data.polygons:
+        # Button centers are close to the front seam and below the collar.
+        c = sum((vest.matrix_world @ vest.data.vertices[i].co for i in face.vertices), Vector()) / len(face.vertices)
+        if abs(c.x - .042) < .008 and c.y < -.073 and .91 < c.z < 1.16:
+            face.material_index = 1
+    upper_torso = next((name for name in ('spine_03', 'spine_02', 'spine_01')
+                        if vest.vertex_groups.get(name)), None)
+    if upper_torso is None:
+        raise RuntimeError('SHIRE_WAISTCOAT_UPPER_TORSO_WEIGHT_GROUP_MISSING')
+    upper_group = vest.vertex_groups[upper_torso]
+    for vertex in vest.data.vertices:
+        if not any(binding.group < len(vest.vertex_groups) and
+                   vest.vertex_groups[binding.group].name in ('spine_03', 'spine_02', 'spine_01')
+                   and binding.weight > 0 for binding in vertex.groups):
+            world = vest.matrix_world @ vertex.co
+            if .90 < world.z < 1.16 and world.y < -.073 and abs(world.x - .042) < .012:
+                upper_group.add([vertex.index], 1.0, 'REPLACE')
     meshes.append(vest)
-    # Joined, head-weighted low-poly curls replace the flat short-hair crest.
+    # Head-weighted cascading ringlets replace the flat short-hair crest. The
+    # source preview rejected the old stack of tiny sphere clumps; tapered tube
+    # locks form a softer silhouette around the temples and back of the head.
     hair.data.materials.clear();hair.data.materials.append(material('Shire_Chestnut_Hair',(.055,.024,.012)))
     head_name=next((n for n in ('head','Head') if rig.data.bones.get(n)),None)
     if head_name is None:raise RuntimeError('SHIRE_CURL_HEAD_BONE_MISSING')
@@ -157,33 +190,41 @@ def main():
     start_curl_vertex=len(hair.data.vertices)
     curls=0
     curl_bm=bmesh.new();curl_bm.from_mesh(hair.data)
-    # Smaller clumps and overlapping rows read as curls rather than beads.
-    for ring,count,lower,radius in (
-        (0,16,.018,.0185),(1,14,.038,.018),(2,12,.058,.0165),
-        (3,10,.078,.015),(4,6,.004,.017),
-    ):
-        for i in range(count):
-            angle=(2*math.pi*i/count)+(ring*.13)
-            if ring==4:
-                x=hc.x+rx*.26*math.cos(angle);y=hc.y+ry*.22*math.sin(angle)
-            else:
-                radial=(.91,.82,.68,.49)[ring]
-                x=hc.x+rx*radial*math.cos(angle)
-                y=hc.y+ry*radial*math.sin(angle)
-            z=hhi.z-lower+(.006*math.cos(angle*3) if ring<4 else 0)
-            local=hair.matrix_world.inverted()@Vector((x,y,z))
-            size=radius*(.91+.12*math.sin(i*2.17+ring))
-            created = bmesh.ops.create_icosphere(
-                curl_bm, subdivisions=2, radius=size,
-                matrix=Matrix.Translation(local))
-            # Form soft ringlet tufts along the scalp tangent instead of round beads.
-            # Vertex count and triangles stay unchanged; every new vertex remains
-            # head-weighted below and follows the shared game skeleton.
-            for vertex in created["verts"]:
-                delta = vertex.co - local
-                shaped = remap_curl_offset(delta.x, delta.y, delta.z, angle)
-                vertex.co = local + Vector(shaped)
-            curls+=1
+    # Form tapered, scalp-following tubes. 12 strands per side/back profile,
+    # 10 centerline samples and six-sided rings keep the extra geometry modest.
+    for i in range(24):
+        angle = 2 * math.pi * i / 24 + .035 * math.sin(i * 1.7)
+        # Forehead-facing strands stay close to the cap; the temples and nape
+        # receive longer locks so the silhouette reads as naturally curly hair.
+        side_weight = abs(math.sin(angle))
+        length = .038 + .052 * side_weight
+        radial = .82 + .06 * math.cos(i * 2.41)
+        phase = i * 1.91
+        centers=[]
+        for step in range(11):
+            t=step/10
+            wave=math.sin(t * math.tau * 1.35 + phase) * (.003 + .004*t)
+            x=hc.x+(rx*radial + wave)*math.cos(angle)
+            y=hc.y+(ry*radial + wave)*math.sin(angle)
+            z=hhi.z-.014-length*t
+            centers.append(hair.matrix_world.inverted() @ Vector((x,y,z)))
+        strand_vertices=[]
+        for step,center in enumerate(centers):
+            tangent=(centers[min(step+1,10)]-centers[max(step-1,0)]).normalized()
+            radial_axis=Vector((math.cos(angle),math.sin(angle),0))
+            side_axis=tangent.cross(radial_axis).normalized()
+            radius=.0052*(1.0-.58*(step/10))
+            ring=[]
+            for side in range(6):
+                phi=math.tau*side/6
+                point=center + radius*(radial_axis*math.cos(phi)+side_axis*math.sin(phi))
+                ring.append(curl_bm.verts.new(point))
+            strand_vertices.append(ring)
+        for step in range(10):
+            a=strand_vertices[step];b=strand_vertices[step+1]
+            for side in range(6):
+                curl_bm.faces.new((a[side],a[(side+1)%6],b[(side+1)%6],b[side]))
+        curls+=1
     curl_bm.normal_update();curl_bm.to_mesh(hair.data);curl_bm.free();hair.data.update()
     head_group.add(list(range(start_curl_vertex,len(hair.data.vertices))),1.0,'REPLACE')
     # Shorter, broader silhouette. Scale the root only; all bound parts follow.
@@ -215,7 +256,7 @@ def main():
     output=out/'PES002_Shira_WardrobeStudy.fbx'
     bpy.ops.export_scene.fbx(filepath=str(output),use_selection=True,add_leaf_bones=False,bake_anim=False,path_mode='RELATIVE')
     bpy.ops.wm.save_as_mainfile(filepath=str(out/'Shira_WardrobeStudy.blend'))
-    result={'status':'SOURCE_WARDROBE_STUDY_NOT_UE_IMPORTED','curly_hair_clumps':curls,'curl_geometry':'tangent-formed non-spherical ringlet tufts; same per-tuft topology','waistcoat_shell_thickness_m':.006,'license':'CC0','source_fbx_sha256':digest,'fbx_sha256':hashlib.file_digest(output.open('rb'),'sha256').hexdigest(),'source_spec_sha256':receipt['spec_sha256'],'source_gender':'female (upstream gender=0); original supporting resident, not named cast','weighted_body_vertices':weighted,'pose':pose,'max_deform_influences':4,'animation':'NOT_AUTHORED','visual':'PENDING','ue_import':'NOT_RUN','known_open_items':['Manual hair silhouette/face review','Waistcoat fit/closure/hem review','Full bilateral shoulder/knee visual stress','LODs and material section budget','Authored locomotion and UE4 deformation']}
+    result={'status':'SOURCE_WARDROBE_STUDY_NOT_UE_IMPORTED','curly_hair_locks':curls,'curl_geometry':'24 tapered six-sided cascading ringlet tubes integrated into the head-weighted hair mesh','waistcoat_button_count':5,'waistcoat_shell_thickness_m':.006,'license':'CC0','source_fbx_sha256':digest,'fbx_sha256':hashlib.file_digest(output.open('rb'),'sha256').hexdigest(),'source_spec_sha256':receipt['spec_sha256'],'source_gender':'female (upstream gender=0); original supporting resident, not named cast','weighted_body_vertices':weighted,'pose':pose,'max_deform_influences':4,'animation':'NOT_AUTHORED','visual':'PENDING','ue_import':'NOT_RUN','known_open_items':['Manual hair silhouette/face review','Waistcoat fit/closure/hem review','Full bilateral shoulder/knee visual stress','LODs and material section budget','Authored locomotion and UE4 deformation']}
     (out/'variant_receipt.json').write_text(json.dumps(result,indent=2)+'\n')
     print('SHIRE_WARDROBE_STUDY_EXPORTED '+json.dumps(result),flush=True)
 
