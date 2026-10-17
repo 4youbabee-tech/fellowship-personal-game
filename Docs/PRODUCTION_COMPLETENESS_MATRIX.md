@@ -4332,3 +4332,12 @@ Follow-up run 39021746348 (#2237) passed build/import/automation/startup but exp
 | Exact-head source-only GitHub execution | BLOCKED BEFORE JOBS | Runs 39032201614 #2252 and 39032407070 #2253 show failure with zero jobs and no logs/artifacts |
 | Previous unintended Unreal run | PASS / OUT OF SEQUENCE | Run 39031870188 #2251 C++/import/Automation/PIE PASS on the predecessor, before source-only routing; not Batch A evidence |
 | Poly Haven source FBX and Blender output | NOT ACQUIRED / NOT RUN | Local offline tests pass; no physical source receipt, LOD/UCX exports or Blender render exist |
+
+## 2026-10-17 — PES-002 full local resident conversion candidate
+| Gate / output | State | Evidence / remaining work |
+|---|---|---|
+| Local resident population | CANDIDATE IMPLEMENTED / EXACT-HEAD PENDING | Source cap raised from 5 to 22; five appearance profiles cycle; PIE script requires 22 skeletal and 0 modular |
+| Static regression | CANDIDATE IMPLEMENTED / NOT RUN | Focused source-contract test added |
+| UE4.27.2 build/import + four PIE views | NOT RUN | Run after this exact PR head; capture fails closed on any modular resident |
+| CI performance | BASELINE BELOW TARGET | Run 39022384250: 23.94–26.87 FPS, worst 342.36 ms; new exact-head comparison pending |
+| Owner-device / human visual acceptance | OPEN | DX11 720p 30 FPS and 8 GB/2 GB device proof and owner review remain required |

@@ -5066,3 +5066,8 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Exact head `01cc8c7bec8c138eb55d7303f7506e594494d123`: Run 39032407070 / #2253 completed `failure` with zero jobs; predecessor Run 39032201614 / #2252 also had zero jobs. No Blender/source logs or artifacts exist, so the workflow route has not produced a mesh.
 - Predecessor Run 39031870188 / #2251 ran the full Windows Unreal lane before the source-only correction (C++/import/Automation/PIE PASS). This was out of the Batch A sequence and is not source-kit, visual, or owner-device acceptance evidence.
 - Local factory/intake tests: 15 PASS; Python compile and YAML parse PASS. Poly Haven bench physical bytes remain NOT ACQUIRED; Blender build NOT RUN; Batch A remains OPEN.
+
+## 2026-10-17 — PES-002 resident population replacement candidate
+- Baseline: Run 39022384250 / code SHA `5655bb97dc683466723ac1bc45adb2933b2ce34c` recorded 22 locally managed residents, 5 skeletal and 17 modular; CI windows measured 23.94–26.87 FPS with worst frames up to 342.36 ms. This is CI evidence, not owner-device acceptance.
+- Candidate on PR #484 raises the existing nearby skeletal-resident cap to 22 and cycles five tested proportions/material-tint profiles; it reuses the current asynchronous Frodo rig path and its existing update-rate optimization. Capture now fails unless PIE reports exactly `localManaged=22 skeletal=22 modular=0`.
+- Exact-head static tests, UE4.27.2 build/import, four fresh PIE captures and new performance samples are PENDING. Visual acceptance, traversal and target-device DX11/720p FPS/VRAM remain OPEN; no claim that the 30 FPS floor is met.

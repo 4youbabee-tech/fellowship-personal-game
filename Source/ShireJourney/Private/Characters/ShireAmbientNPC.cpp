@@ -1433,7 +1433,7 @@ bool AShireAmbientNPC::TryEnableUnifiedShireResident()
     {
         if (Resident && Resident != this && Resident->IsUsingUnifiedResident()) ++ActiveRigs;
     }
-    if (ActiveRigs >= 5) return false;
+    if (ActiveRigs >= 22) return false;
 
     UGameInstance* GI = GetGameInstance();
     UShireChapterAssetStreamingSubsystem* Streaming =
@@ -1450,12 +1450,12 @@ bool AShireAmbientNPC::TryEnableUnifiedShireResident()
         !AnimClass->IsChildOf(UShireLocomotionAnimInstance::StaticClass())) return false;
     const FBoxSphereBounds Bounds = Mesh->GetBounds();
     if (!FMath::IsFinite(Bounds.BoxExtent.Z) || Bounds.BoxExtent.Z < 1.0f) return false;
-    // First five live, pooled residents receive distinct size/proportion
-    // profiles, not five renamed Frodo story actors. Minor material tint is
+    // Up to 22 live, pooled residents reuse five bounded size/proportion
+    // profiles; these remain generic residents, not renamed Frodo story actors. Minor material tint is
     // applied only if the imported skeletal material actually exposes an
     // authored vector parameter. Never replace the licensed albedo material
     // with a flat or default checker simply to get a different colour.
-    const int32 Variant = FMath::Clamp(ActiveRigs, 0, 4);
+    const int32 Variant = ActiveRigs % 5;
     const float HeightsCm[5] = { 134.0f, 146.0f, 139.0f, 151.0f, 141.0f };
     const float WidthProfiles[5] = { 0.96f, 1.03f, 1.0f, 0.98f, 1.05f };
     const FLinearColor Tints[5] = {
@@ -1500,7 +1500,7 @@ bool AShireAmbientNPC::TryEnableUnifiedShireResident()
     for (UStaticMeshComponent* Part : Parts) if (Part) Part->SetVisibility(false);
     bUnifiedResidentActive = true;
     UE_LOG(LogTemp, Display,
-        TEXT("PES002_UNIFIED_RESIDENT_VISIBLE role=%s rig=resolved source=UE-SkeletalMesh anim=ABP asset=%s variant=%d heightCm=%.1f width=%.2f tintApplied=%d countLimit=5 visualAccepted=0"),
+        TEXT("PES002_UNIFIED_RESIDENT_VISIBLE role=%s rig=resolved source=UE-SkeletalMesh anim=ABP asset=%s variant=%d heightCm=%.1f width=%.2f tintApplied=%d countLimit=22 visualAccepted=0"),
         *RoutineRole.ToString(), *Mesh->GetPathName(), Variant,
         HeightsCm[Variant], WidthProfiles[Variant], bMaterialTintApplied ? 1 : 0);
     return true;

@@ -298,6 +298,15 @@ Write-Host "PES002_REAL_GARDEN_EVIDENCE $($gardenMatch.Value) world=PIE"
 $residents = @(Select-String -Path $log -Pattern 'PES002_RESIDENT_PRESENTATION_SNAPSHOT localManaged=(\d+) skeletal=(\d+) modular=(\d+)')
 if ($residents.Count -lt 1) { throw 'PES002_RESIDENT_PIE_COUNT_MISSING' }
 Write-Host "PES002_REAL_RESIDENT_EVIDENCE $($residents[-1].Line.Trim())"
+$residentMatch = $residents[-1].Matches[0]
+$localManaged = [int]$residentMatch.Groups[1].Value
+$skeletal = [int]$residentMatch.Groups[2].Value
+$modular = [int]$residentMatch.Groups[3].Value
+if ($localManaged -ne 22 -or $skeletal -ne 22 -or $modular -ne 0) {
+    throw "PES002_RESIDENT_POPULATION_INCOMPLETE expected=22/22/0 actual=$localManaged/$skeletal/$modular"
+}
+Write-Host "PES002_RESIDENT_POPULATION_PASS localManaged=$localManaged skeletal=$skeletal modular=$modular"
+
 
 # Preserve four PNGs before rejecting incorrect curated PBR runtime shaders.
 # A bright screenshot with default-grey instanced foliage is still a failure.

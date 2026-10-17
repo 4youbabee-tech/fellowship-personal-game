@@ -50,6 +50,19 @@ class PES002VisualContract(unittest.TestCase):
         section = workflow.split("      - name: Capture Bag End targeted P1C01 visual proof", 1)[1].split("      - name:", 1)[0]
         self.assertNotIn('continue-on-error: true', section)
 
+    def test_pes002_uses_skeletal_residents_for_full_local_population(self):
+        # M1 contract only; exact-head PIE must report all 22 as skeletal.
+        npc = (ROOT / "Source/ShireJourney/Private/Characters/ShireAmbientNPC.cpp").read_text(encoding="utf-8")
+        capture = (ROOT / "Scripts/capture_pes002_bag_end_visual.ps1").read_text(encoding="utf-8")
+        self.assertIn("if (ActiveRigs >= 22) return false;", npc)
+        self.assertIn("const int32 Variant = ActiveRigs % 5;", npc)
+        self.assertIn("UnifiedResident->bEnableUpdateRateOptimizations = true;", npc)
+        self.assertIn("countLimit=22 visualAccepted=0", npc)
+        self.assertNotIn("if (ActiveRigs >= 5) return false;", npc)
+        self.assertIn("PES002_RESIDENT_POPULATION_INCOMPLETE", capture)
+        self.assertIn("$localManaged -ne 22 -or $skeletal -ne 22 -or $modular -ne 0", capture)
+        self.assertIn("PES002_RESIDENT_POPULATION_PASS", capture)
+
     def test_managed_resident_path_follows_ground_probed_endpoint_elevations(self):
         # M1 source regression only; actual 4.27.2 traversal/visual FPS remain separate.
         director = (ROOT / "Source/ShireJourney/Private/World/LivingWorldDirector.cpp").read_text(encoding="utf-8")

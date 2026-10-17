@@ -9560,5 +9560,26 @@
       "truthful visual and performance status"
     ],
     "runtime_scope": "PES-002 remains open; future licensed source intake may be prepared without declaring future chapters accepted"
+  },
+  "owner_resident_visual_batch_2026_10_17": {
+    "status": "OWNER_DIRECTED_CANDIDATE_PENDING_EXACT_HEAD_VALIDATION",
+    "active_pes": "PES-002",
+    "baseline": {
+      "source_head": "5655bb97dc683466723ac1bc45adb2933b2ce34c",
+      "run_id": 39022384250,
+      "local_managed_residents": 22,
+      "skeletal_residents": 5,
+      "modular_residents": 17,
+      "ci_fps_windows": [23.94, 26.87],
+      "worst_frame_ms": 342.36
+    },
+    "implementation_candidate": {
+      "max_local_skeletal_residents": 22,
+      "appearance_profiles": 5,
+      "profile_policy": "Reuse the five existing generic-resident profiles; do not present them as 22 unique authored outfits.",
+      "runtime_gate": "Fresh Bag End PIE capture must report localManaged=22 skeletal=22 modular=0."
+    },
+    "validation_boundary": "Fresh exact-head source tests, UE4.27.2 build/import, PIE images and CI frame metrics are required. CI metrics are not owner-device acceptance. Gate 6/7 remains open."
   }
+
 }
