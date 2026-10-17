@@ -221,6 +221,7 @@ def main():
             centers.append(hair.matrix_world.inverted() @ Vector((x,y,z)))
         strand_vertices=[]
         for step,center in enumerate(centers):
+            t=step/(curl_steps-1)
             tangent=(centers[min(step+1,curl_steps-1)]-centers[max(step-1,0)]).normalized()
             radial_axis=Vector((math.cos(angle),math.sin(angle),0))
             side_axis=tangent.cross(radial_axis).normalized()
