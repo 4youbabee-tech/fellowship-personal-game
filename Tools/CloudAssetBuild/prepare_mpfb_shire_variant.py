@@ -87,16 +87,10 @@ def main():
     meshes.remove(body);bpy.data.objects.remove(body,do_unlink=True)
     bpy.data.objects.remove(temporary_rig,do_unlink=True)
     body=newbody;body.name='Human_shire_export';meshes.append(body)
-    # Existing garment topology keeps sleeves/collar. Remove jeans below knees;
-    # preserve the full skinned body underneath and all gameplay collision.
-    bm = bmesh.new(); bm.from_mesh(clothes.data)
-    co=clothes.matrix_world.inverted()@Vector((0,0,.47))
-    normal=clothes.matrix_world.to_3x3().transposed()@Vector((0,0,1))
-    bmesh.ops.bisect_plane(bm,geom=list(bm.verts)+list(bm.edges)+list(bm.faces),
-                          plane_co=co,plane_no=normal,clear_inner=True,dist=1e-6)
-    bm.normal_update()
-    for v in bm.verts:v.co+=v.normal*.003
-    bm.to_mesh(clothes.data); bm.free(); clothes.data.update()
+    # Keep the source trousers full length. The previous knee cut read as
+    # modern shorts in the actual Blender render and broke the Shire silhouette.
+    # The fitted source trousers remain skinned to the same rig and are recolored
+    # as dark wool below; the body underneath stays intact.
     linen = material('Shire_Undyed_Linen', (.56,.45,.29))
     wool = material('Shire_Walnut_Wool', (.075,.043,.021))
     vestmat = material('Shire_Moss_Waistcoat', (.055,.095,.042))

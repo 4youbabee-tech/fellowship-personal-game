@@ -20,6 +20,14 @@ class WardrobeQualityContractTests(unittest.TestCase):
         self.assertIn("SHIRE_WAISTCOAT_UPPER_TORSO_WEIGHT_GROUP_MISSING", source)
         self.assertIn("'waistcoat_button_count':5", source)
 
+    def test_wardrobe_keeps_full_length_shire_trousers(self):
+        source = (ROOT / "prepare_mpfb_shire_variant.py").read_text(encoding="utf-8")
+        garment = source.split("# Keep the source trousers full length.", 1)[1].split(
+            "# Duplicate fitted upper garment", 1
+        )[0]
+        self.assertNotIn("bisect_plane", garment)
+        self.assertIn("dark wool", garment)
+
     def test_reimport_gate_measures_new_hair_and_caps_total_triangles(self):
         source = (ROOT / "inspect_mpfb_shire_variant.py").read_text(encoding="utf-8")
         self.assertIn("report['hair_triangles']<6000", source)

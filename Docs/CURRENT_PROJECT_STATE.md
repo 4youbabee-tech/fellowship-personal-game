@@ -5035,3 +5035,8 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Exact-head hosted [Run 38989791591](https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/38989791591) on `8dd1c7ec185e490377e0fc1a92ffce2d09411228`: Blender source SUCCESS; Windows UE4.27.2 SKIPPED. Wardrobe artifact `12084667030`; FBX SHA256 `4656046ca2c22c5cb1917681b9d8ee56aed83434effd2fcedc08f72ffe5cbede`.
 - Reimported exported FBX: 53 bones, 7 meshes, 54,090 triangles (hair 8,318), all vertices weighted, maximum 4 deform influences, and 8 bilateral arm/leg stress tests with nonzero movement. No animation was authored; UE import/world/PIE/device validation not run.
 - Render review shows stronger wavy texture than the prior output, with the same triangle budget. Still a compact row of clumps and the face/costume remain a prototype: **NOT VISUALLY ACCEPTED**. Continue source art work before UE reservation.
+
+
+## 2026-10-17 — PES-002 character source iteration (SOURCE ONLY / VISUAL REJECT)
+- Blender 4.2.23 Run 39026430313 completed the CC0 MakeHuman/MPFB2 source lane after fixing local-module bootstrap and the `create_uvsphere` return-value assumption. The source FBX reimported with 53 bones, 21,966 vertices, seven texture sidecars and bilateral arm/leg pose deltas; no Unreal import or locomotion was performed.
+- The separate wardrobe preview still shows a modern short-trouser silhouette and vest gaps, so it is rejected as a game-ready Shire resident. A source-only correction retains full-length trousers; its exact-head Blender rerun is pending. Keep the source packet unpromoted, PES-002 open, PES-003 locked, Gate 6/7 open.

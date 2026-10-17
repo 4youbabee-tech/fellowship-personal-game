@@ -4232,3 +4232,11 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 - Exact-head hosted [Run 38989791591](https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/38989791591) on `8dd1c7ec185e490377e0fc1a92ffce2d09411228`: Blender source SUCCESS; Windows UE4.27.2 SKIPPED. Wardrobe artifact `12084667030`; FBX SHA256 `4656046ca2c22c5cb1917681b9d8ee56aed83434effd2fcedc08f72ffe5cbede`.
 - Reimported exported FBX: 53 bones, 7 meshes, 54,090 triangles (hair 8,318), all vertices weighted, maximum 4 deform influences, and 8 bilateral arm/leg stress tests with nonzero movement. No animation was authored; UE import/world/PIE/device validation not run.
 - Render review shows stronger wavy texture than the prior output, with the same triangle budget. Still a compact row of clumps and the face/costume remain a prototype: **NOT VISUALLY ACCEPTED**. Continue source art work before UE reservation.
+
+
+## 2026-10-17 — PES-002 character source iteration
+| Output | State | Evidence / remaining work |
+|---|---|---|
+| CC0 MPFB pilot source FBX | SOURCE / TECHNICAL PASS | Run 39026430313; SHA `9384bc08141f17bfff39b6d8fdc434d1d5dbdebb5404b04d9c64000000d75a5e`; 53 bones; UE import NOT RUN |
+| Wardrobe-study preview | VISUAL REJECT | Artifact 12098991974; modern short-trouser silhouette and vest gaps remain |
+| Corrected Shire wardrobe | PENDING | Full-length trouser source edit and exact-head Blender preview rerun; animation/UE import/PIE deformation NOT RUN |
