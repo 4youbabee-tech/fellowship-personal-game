@@ -204,7 +204,9 @@ def main():
         # Forehead-facing strands stay close to the cap; the temples and nape
         # receive longer locks so the silhouette reads as naturally curly hair.
         side_weight = abs(math.sin(angle))
-        length = .038 + .052 * side_weight
+        # Longer side ringlets break the cropped-cap silhouette while retaining
+        # the same 24-strand topology and triangle budget.
+        length = .070 + .095 * side_weight
         radial = .82 + .06 * math.cos(i * 2.41)
         phase = i * 1.91
         centers=[]

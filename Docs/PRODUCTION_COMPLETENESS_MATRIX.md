@@ -4274,3 +4274,11 @@ Zero-silent-omission preparation now explicitly tracks dialogue knowledge flags/
 | Closed-shell source wardrobe | SOURCE / TECHNICAL PASS, VISUAL REJECT | Run 39030248055; artifact 12100071706; FBX SHA `d63b8ffb7072c23b2d70f2179a934413b8ffc6dc32d54cc6691971d9da8c8983`; 53 bones/59,474 triangles |
 | Vest seam | OPEN | Preview still shows a visible skin strip; next candidate samples the actual garment surface for a weighted placket and fastener depth |
 | Character integration | NOT RUN | No animation, UE import, PIE movement or world placement; PES-002 ACTIVE, PES-003 LOCKED, Gate 6/7 OPEN |
+
+
+## 2026-10-17 PES-002 garment-front repair — SOURCE PASS, CHARACTER NOT ACCEPTED
+| Output | State | Evidence / remaining work |
+|---|---|---|
+| CC0 Shire wardrobe FBX | SOURCE / TECHNICAL PASS | Run 39030620954; artifact 12100042274; SHA `6a98174fbd1d9c2699af9de1cb245764956e1b87f7a2192d9d0c87f45ea1bdfa`; 53 bones/59,498 triangles/max 4 influences/8 bilateral stress poses |
+| Render | IMPROVED / NOT FINAL | Vest gap is covered by sampled placket and buttons; character remains a rigid A-pose, hairstyle short, no facial/visual owner acceptance |
+| Animation / Unreal | NOT RUN | No locomotion, UE import, PIE deformation, world placement or target-device FPS proof |

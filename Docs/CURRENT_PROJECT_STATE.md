@@ -5064,3 +5064,9 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Exact Run 39030248055 on `b9f0865fc84e97ac86f801743df81556f971990b` completed Blender PASS; UE4.27.2 SKIPPED. Wardrobe artifact `12100071706`; CC0 FBX SHA256 `d63b8ffb7072c23b2d70f2179a934413b8ffc6dc32d54cc6691971d9da8c8983`.
 - Reimport measured 53 bones, 59,474 triangles, 13,380 weighted body vertices and valid bounded influence/deformation checks. Render inspection still shows exposed skin along the vest front: **NOT VISUALLY ACCEPTED**; no animation or Unreal import.
 - Current source candidate fits a skinned wool placket to samples from the garment front surface (rather than a fixed Y offset), positions fasteners from that fit, and records missing-surface failure. Six local wardrobe tests, syntax and diff checks PASS; next exact-head Blender run pending.
+
+
+## 2026-10-17 PES-002 surface-fitted vest result and hair silhouette iteration
+- Exact Blender Run 39030620954 on `263b497d33869c2ba6285eafe7d46bf7c9b0a690` completed source export/reimport PASS; UE4.27.2 SKIPPED. Wardrobe artifact `12100042274`; FBX SHA256 `6a98174fbd1d9c2699af9de1cb245764956e1b87f7a2192d9d0c87f45ea1bdfa`.
+- Reimport: 53 bones, 7 meshes, 59,498 triangles, 13,380 weighted body vertices, all vertices weighted, max 4 influences, 8 bilateral arm/leg stress deltas. Actual render shows continuous vest front with visible beige placket and buttons; still a rigid A-pose wardrobe study, not final resident art; animation NOT AUTHORED and UE import NOT RUN.
+- Current source edit lengthens the existing 24 head-weighted ringlets without increasing strand count or triangle budget. Six local wardrobe tests + syntax/diff checks PASS; exact-head Blender render pending before visual verdict.
