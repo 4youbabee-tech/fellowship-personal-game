@@ -4300,3 +4300,11 @@ Follow-up run 39021746348 (#2237) passed build/import/automation/startup but exp
 | Licensed Shire source models | BLOCKED / NOT ACQUIRED | Bench CC0 page recorded; source bytes absent, so receipt is `loaded=1 placed=0 rejected=1` |
 | FBX LOD/collision/material production and UE import | NOT RUN | Await physical sources, hosted Blender execution, then serialized UE4.27 validation |
 | PES-002 and Gate 6/7 | OPEN | No visual, traversal, performance, or owner-device acceptance implied |
+
+
+## 2026-10-17 — PES-002 Batch A factory quarantine integrity repair
+| Gate / output | State | Evidence / remaining work |
+|---|---|---|
+| Per-row factory isolation and quarantine receipt integrity | SOURCE TOOL REPAIR PASS | 9 offline tests; malformed rows, unique safe quarantine paths, pinned SHA-256 and dimensions checked before Blender |
+| Blender production and licensed Shire mesh bytes | NOT RUN / NOT ACQUIRED | No source file in the intake root; requires real Poly Haven model download and exact Blender build/reimport |
+| Batch A and PES-002 | OPEN | Source tooling improvement only; no Blender export, UE import, world placement, visual or performance acceptance |

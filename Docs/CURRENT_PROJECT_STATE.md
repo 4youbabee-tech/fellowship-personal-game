@@ -5042,3 +5042,9 @@ Status: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL PENDING**. No gameplay acceptanc
 - Added a manifest-driven Blender intake/export tool with per-row quarantine, UV0 and convex-collision checks, three decimated FBX LODs, SHA256 receipts, and FBX reimport validation; no Unreal run was started.
 - Five source tests and Python syntax checks pass. Preflight on the current licensed bench candidate reports `loaded=1 placed=0 rejected=1`: the Poly Haven CC0 page is documented, but the physical model file is not acquired; no asset is promoted.
 - This is production tooling only, not a completed asset batch. Blender execution, Shire model source intake, full kit production and UE import remain open; PES-002 active, PES-003 locked, Gate 6/7 open.
+
+
+## 2026-10-17 — PES-002 Batch A factory quarantine integrity repair (SOURCE TOOLING / BATCH OPEN)
+- Hardened `build_shire_kit.py`: malformed manifest rows are isolated, unsafe/duplicate identifiers receive unique contained quarantine receipts, and pinned source SHA-256 plus dimensions are validated before Blender.
+- Nine offline factory tests and Python compilation PASS. No Blender or Unreal run was started; the Poly Haven bench model bytes remain absent, so no source asset is promoted.
+- This closes a factory reliability defect only. Batch A remains open pending real licensed source downloads, Blender FBX/LOD/collision/material checks and a produced asset receipt.

@@ -10,6 +10,8 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
+import re
 import sys
 import traceback
 from pathlib import Path
@@ -23,29 +25,52 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def validate_row(row: dict, root: Path) -> tuple[Path, list[str]]:
+def validate_row(row: object, root: Path) -> tuple[Path, list[str]]:
+    root = root.resolve()
+    if not isinstance(row, dict):
+        return root, ["ROW_NOT_OBJECT"]
     errors: list[str] = []
     for key in ("id", "source", "license", "target_tris", "lods", "collision", "material_groups"):
         if key not in row:
             errors.append(f"MISSING_{key.upper()}")
     if errors:
         return root, errors
-    if not row["id"].replace("_", "").isalnum():
+    ident = row["id"]
+    if not isinstance(ident, str) or not ident.replace("_", "").isalnum():
         errors.append("INVALID_ID")
-    if row["license"].get("status") != "VERIFIED" or not row["license"].get("evidence_url"):
+    license_info = row["license"]
+    if not isinstance(license_info, dict) or license_info.get("status") != "VERIFIED" or not license_info.get("evidence_url"):
         errors.append("LICENSE_NOT_VERIFIED")
-    source_rel = Path(row["source"].get("path", ""))
+    source_info = row["source"]
+    if not isinstance(source_info, dict) or not isinstance(source_info.get("path"), str) or not source_info["path"].strip():
+        return root, errors + ["SOURCE_PATH_MISSING"]
+    source_rel = Path(source_info["path"])
     source = (root / source_rel).resolve()
-    if source_rel.is_absolute() or root.resolve() not in source.parents:
+    if source_rel.is_absolute() or (source != root and root not in source.parents):
         errors.append("SOURCE_PATH_ESCAPES_ROOT")
     if not source.is_file():
         errors.append("SOURCE_FILE_MISSING")
-    if not isinstance(row["target_tris"], int) or row["target_tris"] < 12:
+    expected_hash = source_info.get("source_sha256")
+    if expected_hash is not None:
+        if not isinstance(expected_hash, str) or not re.fullmatch(r"[0-9a-fA-F]{64}", expected_hash):
+            errors.append("INVALID_SOURCE_SHA256")
+        elif source.is_file() and sha256(source).lower() != expected_hash.lower():
+            errors.append("SOURCE_SHA256_MISMATCH")
+    if not isinstance(row["target_tris"], int) or isinstance(row["target_tris"], bool) or row["target_tris"] < 12:
         errors.append("INVALID_TRIANGLE_BUDGET")
-    if row["lods"] != [1.0, 0.5, 0.25]:
+    lods = row["lods"]
+    if not isinstance(lods, list) or lods != [1.0, 0.5, 0.25]:
         errors.append("EXPECTED_THREE_LOD_RATIOS")
     if row["collision"] not in ("convex_hull", "none"):
         errors.append("INVALID_COLLISION_POLICY")
+    dims = row.get("dimensions_m")
+    if (not isinstance(dims, list) or len(dims) != 3 or
+            any(not isinstance(value, (int, float)) or isinstance(value, bool) or
+                not math.isfinite(value) or value <= 0 for value in dims)):
+        errors.append("INVALID_DIMENSIONS_M")
+    groups = row["material_groups"]
+    if not isinstance(groups, list) or any(not isinstance(value, str) or not value.strip() for value in groups):
+        errors.append("INVALID_MATERIAL_GROUPS")
     return source, errors
 
 
@@ -55,15 +80,18 @@ def preflight(manifest: dict, root: Path) -> tuple[list[dict], list[dict]]:
     if not isinstance(rows, list):
         raise ValueError("manifest.assets must be an array")
     seen: set[str] = set()
-    for row in rows:
-        ident = row.get("id", "<missing-id>")
+    for row_number, row in enumerate(rows, start=1):
+        raw_ident = row.get("id") if isinstance(row, dict) else None
+        ident = raw_ident if isinstance(raw_ident, str) else f"<row-{row_number}>"
         errors = []
-        if ident in seen:
+        if isinstance(raw_ident, str) and raw_ident in seen:
             errors.append("DUPLICATE_ID")
-        seen.add(ident)
+        if isinstance(raw_ident, str):
+            seen.add(raw_ident)
         source, row_errors = validate_row(row, root)
         errors.extend(row_errors)
-        entry = {"id": ident, "source": source, "row": row}
+        entry = {"id": ident, "row_number": row_number, "source": source,
+                 "row": row if isinstance(row, dict) else {}}
         (rejected if errors else good).append({**entry, "errors": errors} if errors else entry)
     return good, rejected
 
@@ -216,11 +244,13 @@ def main() -> int:
     receipt = {"schema_version": 1, "loaded": len(manifest["assets"]), "placed": 0,
         "rejected": len(rejected), "assets": [], "quarantine": []}
     for item in rejected:
-        row = {"id": item["id"], "errors": item["errors"]}
+        row = {"id": item["id"], "row_number": item["row_number"], "errors": item["errors"]}
         receipt["quarantine"].append(row)
         qdir = args.out / "quarantine"
         qdir.mkdir(exist_ok=True)
-        (qdir / f"{item['id']}.json").write_text(json.dumps(row, indent=2) + "\n", encoding="utf-8")
+        safe_id = re.sub(r"[^A-Za-z0-9_-]", "_", item["id"]).strip("_") or "invalid"
+        (qdir / f"{safe_id[:80]}__row_{item['row_number']:04d}.json").write_text(
+            json.dumps(row, indent=2) + "\n", encoding="utf-8")
     if not args.preflight_only:
         for item in good:
             try:
@@ -231,7 +261,9 @@ def main() -> int:
                 row = {"id": item["id"], "errors": [str(exc)], "traceback": traceback.format_exc()}
                 receipt["quarantine"].append(row)
                 receipt["rejected"] += 1
-                (args.out / "quarantine" / f"{item['id']}.json").write_text(json.dumps(row, indent=2) + "\n", encoding="utf-8")
+                safe_id = re.sub(r"[^A-Za-z0-9_-]", "_", item["id"]).strip("_") or "invalid"
+                (args.out / "quarantine" / f"{safe_id[:80]}__row_{item['row_number']:04d}.json").write_text(
+                    json.dumps(row, indent=2) + "\n", encoding="utf-8")
     (args.out / "shire_kit_receipt.json").write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
     print(f"SHIRE_KIT_PREFLIGHT loaded={receipt['loaded']} placed={receipt['placed']} rejected={receipt['rejected']}")
     return 0

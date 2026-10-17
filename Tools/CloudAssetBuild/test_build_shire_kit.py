@@ -20,6 +20,7 @@ class ShireKitManifestTests(unittest.TestCase):
             "license": {"status": "VERIFIED", "evidence_url": "https://example.test/license"},
             "target_tris": 630,
             "lods": [1.0, 0.5, 0.25],
+            "dimensions_m": [1.2, 0.55, 0.85],
             "collision": "convex_hull",
             "material_groups": ["wood"],
         }
@@ -31,6 +32,31 @@ class ShireKitManifestTests(unittest.TestCase):
         good, rejected = kit.preflight({"assets": [self.row]}, self.root)
         self.assertEqual([x["id"] for x in good], ["Bench"])
         self.assertEqual(rejected, [])
+
+    def test_source_sha256_is_checked_when_manifest_pins_a_digest(self):
+        digest = kit.sha256(self.root / "source.obj")
+        row = dict(self.row, source={"path": "source.obj", "source_sha256": digest})
+        good, rejected = kit.preflight({"assets": [row]}, self.root)
+        self.assertEqual([x["id"] for x in good], ["Bench"])
+        self.assertEqual(rejected, [])
+        row = dict(row, id="WrongHash", source={"path": "source.obj", "source_sha256": "0" * 64})
+        good, rejected = kit.preflight({"assets": [row, self.row]}, self.root)
+        self.assertEqual([x["id"] for x in good], ["Bench"])
+        self.assertIn("SOURCE_SHA256_MISMATCH", rejected[0]["errors"])
+
+    def test_malformed_and_unsafe_rows_are_quarantined_without_stopping_batch(self):
+        malformed = dict(self.row, id="../../outside", source=None)
+        good, rejected = kit.preflight({"assets": [None, malformed, self.row]}, self.root)
+        self.assertEqual([x["id"] for x in good], ["Bench"])
+        self.assertEqual(rejected[0]["errors"], ["ROW_NOT_OBJECT"])
+        self.assertIn("INVALID_ID", rejected[1]["errors"])
+        self.assertIn("SOURCE_PATH_MISSING", rejected[1]["errors"])
+
+    def test_dimension_validation_fails_before_blender(self):
+        bad_dimensions = dict(self.row, id="BadDimensions", dimensions_m=[1.2, "wide", 0.85])
+        good, rejected = kit.preflight({"assets": [bad_dimensions, self.row]}, self.root)
+        self.assertEqual([x["id"] for x in good], ["Bench"])
+        self.assertIn("INVALID_DIMENSIONS_M", rejected[0]["errors"])
 
     def test_missing_source_is_quarantined_without_stopping_other_rows(self):
         missing = dict(self.row, id="Missing", source={"path": "absent.fbx"})
@@ -59,7 +85,20 @@ class ShireKitManifestTests(unittest.TestCase):
         self.assertIn("SHIRE_KIT_PREFLIGHT loaded=1 placed=0 rejected=1", result.stdout)
         receipt = json.loads((out / "shire_kit_receipt.json").read_text(encoding="utf-8"))
         self.assertEqual(receipt["quarantine"][0]["errors"], ["SOURCE_FILE_MISSING"])
-        self.assertTrue((out / "quarantine" / "Bench.json").is_file())
+        self.assertTrue((out / "quarantine" / "Bench__row_0001.json").is_file())
+
+    def test_quarantine_paths_are_unique_and_cannot_escape_output(self):
+        manifest = self.root / "manifest.json"
+        out = self.root / "out"
+        bad = dict(self.row, id="../../escape", source={"path": "missing.fbx"})
+        manifest.write_text(json.dumps({"assets": [bad, bad]}), encoding="utf-8")
+        script = Path(kit.__file__).resolve()
+        subprocess.run([sys.executable, str(script), "--manifest", str(manifest), "--root",
+            str(self.root), "--out", str(out), "--preflight-only"], capture_output=True, text=True, check=True)
+        files = sorted((out / "quarantine").glob("*.json"))
+        self.assertEqual([path.name for path in files], [
+            "escape__row_0001.json", "escape__row_0002.json"])
+        self.assertFalse((self.root / "escape.json").exists())
 
 
 if __name__ == "__main__":
