@@ -596,15 +596,16 @@ void AShirePrototypeWorldBuilder::BeginPlay()
                 UE_LOG(LogTemp, Display,
                     TEXT("PES002_CAPTURE_CAMERA_READY target=BagEnd x=-2210 y=-520 proofOnly=1 views=4"));
 
-                // Three independent perspectives prevent accepting an accidental
-                // fence/roof/terrain occlusion from a single static camera position.
-                // Never move the player, quest triggers or gameplay collision.
+                // The same real UE4 camera can take either four Bag End close-ups
+                // or four chapter landmarks. Proof-only; never move the player.
+                const bool bChapterCoverage =
+                    FParse::Param(FCommandLine::Get(), TEXT("P1C01FullShireProof"));
                 TWeakObjectPtr<ACameraActor> WeakCamera(ProofCamera);
                 for (int32 ViewIndex = 0; ViewIndex < 4; ++ViewIndex)
                 {
                     FTimerHandle ReframeTimer;
                     ProofWorld->GetTimerManager().SetTimer(ReframeTimer,
-                        FTimerDelegate::CreateLambda([WeakBuilder, WeakCamera, ViewIndex]()
+                        FTimerDelegate::CreateLambda([WeakBuilder, WeakCamera, ViewIndex, bChapterCoverage]()
                         {
                             if (!WeakBuilder.IsValid() || !WeakCamera.IsValid())
                             {
@@ -616,9 +617,29 @@ void AShirePrototypeWorldBuilder::BeginPlay()
                                 FVector(-3020.0f, 170.0f, 300.0f),
                                 FVector(-3220.0f, -520.0f, 520.0f)
                             };
-                            const FVector LookAt(-2210.0f, -520.0f, 105.0f);
+                            const FVector ChapterPositions[] = {
+                                FVector(-3070.0f, -520.0f, 285.0f),
+                                FVector(-1630.0f, 80.0f, 650.0f),
+                                FVector(-2050.0f, 850.0f, 490.0f),
+                                FVector(-1690.0f, -540.0f, 390.0f)
+                            };
+                            const FVector ChapterLookAt[] = {
+                                FVector(-2210.0f, -520.0f, 105.0f),
+                                FVector(-520.0f, 360.0f, 120.0f),
+                                FVector(-1250.0f, 330.0f, 130.0f),
+                                FVector(-1050.0f, 90.0f, 75.0f)
+                            };
+                            const TCHAR* ChapterNames[] = {
+                                TEXT("BagEnd"), TEXT("Hobbiton"),
+                                TEXT("WaterMill"), TEXT("StoneBridge")
+                            };
+                            const FVector LegacyLookAt(-2210.0f, -520.0f, 105.0f);
+                            const FVector ViewPosition = bChapterCoverage
+                                ? ChapterPositions[ViewIndex] : Positions[ViewIndex];
+                            const FVector LookAt = bChapterCoverage
+                                ? ChapterLookAt[ViewIndex] : LegacyLookAt;
                             WeakCamera->SetActorLocationAndRotation(
-                                Positions[ViewIndex], (LookAt - Positions[ViewIndex]).Rotation());
+                                ViewPosition, (LookAt - ViewPosition).Rotation());
                             if (ViewIndex == 3 && WeakBuilder->GetWorld())
                             {
                                 int32 LocalManaged = 0;
@@ -644,12 +665,13 @@ void AShirePrototypeWorldBuilder::BeginPlay()
                                     LocalManaged, RealSkeletal, ModularFallback);
                             }
                             UE_LOG(LogTemp, Display,
-                                TEXT("PES002_CAPTURE_VIEW_READY view=%d target=BagEnd"), ViewIndex);
+                                TEXT("PES002_CAPTURE_VIEW_READY view=%d target=%s"), ViewIndex,
+                                bChapterCoverage ? ChapterNames[ViewIndex] : TEXT("BagEnd"));
                         }), 2.0f + 8.0f * ViewIndex, false);
 
                     FTimerHandle ShotTimer;
                     ProofWorld->GetTimerManager().SetTimer(ShotTimer,
-                        FTimerDelegate::CreateLambda([WeakBuilder, ViewIndex]()
+                        FTimerDelegate::CreateLambda([WeakBuilder, ViewIndex, bChapterCoverage]()
                         {
                             if (!WeakBuilder.IsValid())
                             {
@@ -685,7 +707,11 @@ void AShirePrototypeWorldBuilder::BeginPlay()
                                 FScreenshotRequest::RequestScreenshot(Filename, false, false);
                             }
                             UE_LOG(LogTemp, Display,
-                                TEXT("PES002_SCREENSHOT_REQUESTED target=BagEnd view=%d format=png mode=%s pixelSource=UE4"),
+                                TEXT("PES002_SCREENSHOT_REQUESTED target=%s view=%d format=png mode=%s pixelSource=UE4"),
+                                bChapterCoverage ? (ViewIndex == 0 ? TEXT("BagEnd") :
+                                    ViewIndex == 1 ? TEXT("Hobbiton") :
+                                    ViewIndex == 2 ? TEXT("WaterMill") : TEXT("StoneBridge")) :
+                                    TEXT("BagEnd"),
                                 ViewIndex, bPIE ? TEXT("PIE-HighResShot-1280x720") : TEXT("GameViewport"));
                         }), 6.0f + 8.0f * ViewIndex, false);
                 }
@@ -2159,6 +2185,47 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
         UE_LOG(LogTemp, Display,
             TEXT("PES002_SHIRE_FILMIC_GRADE contrast=1.05 saturation=1.03 ao=0.32 blur=0 ssr=0.12 ue427=1 visual=pending"));
     }
+    SetupCinematicHobbitonLighting();
+}
+
+void AShirePrototypeWorldBuilder::SetupCinematicHobbitonLighting()
+{
+    // One pre-existing movable sun and one non-volumetric height fog: cinematic
+    // warmth without a second sun, heavy volumetric GPU passes, or UE5 features.
+    if (RuntimeSun)
+    {
+        if (UDirectionalLightComponent* Sun =
+                Cast<UDirectionalLightComponent>(RuntimeSun->GetLightComponent()))
+        {
+            RuntimeSun->SetActorRotation(FRotator(-32.0f, -50.0f, 0.0f));
+            Sun->SetIntensity(4.1f);
+            Sun->SetLightColor(FLinearColor(1.0f, 0.89f, 0.74f));
+            Sun->SetCastShadows(true);
+            Sun->SetDynamicShadowCascades(2);
+        }
+    }
+    for (TActorIterator<AExponentialHeightFog> It(GetWorld()); It; ++It)
+    {
+        if (UExponentialHeightFogComponent* Fog = It->GetComponent())
+        {
+            Fog->SetFogDensity(0.011f);
+            Fog->SetFogHeightFalloff(0.20f);
+            Fog->SetFogInscatteringColor(FLinearColor(0.71f, 0.79f, 0.87f));
+            Fog->SetDirectionalInscatteringColor(FLinearColor(0.98f, 0.85f, 0.67f));
+            Fog->SetStartDistance(1100.0f);
+            Fog->SetVolumetricFog(false);
+        }
+        break;
+    }
+    if (RuntimePostProcess)
+    {
+        RuntimePostProcess->Settings.bOverride_BloomIntensity = true;
+        RuntimePostProcess->Settings.BloomIntensity = 0.16f;
+        RuntimePostProcess->Settings.bOverride_VignetteIntensity = true;
+        RuntimePostProcess->Settings.VignetteIntensity = 0.08f;
+    }
+    UE_LOG(LogTemp, Display,
+        TEXT("P1C01_CINEMATIC_GOLDEN_HOUR originalSun=1 fog=nonvolumetric cascades=2 quality=preview"));
 }
 
 
@@ -2281,10 +2348,10 @@ void AShirePrototypeWorldBuilder::ApplyStoryAtmosphere()
 
     const FName QuestId = QuestSubsystem->GetActiveQuestId();
 
-    FRotator SunRotation(-38.0f, -28.0f, 0.0f);
-    float SunIntensity = 3.25f;
-    FLinearColor SunColor(1.0f, 0.86f, 0.70f);
-    float SkyIntensity = 1.12f;
+    FRotator SunRotation(-32.0f, -50.0f, 0.0f);
+    float SunIntensity = 4.1f;
+    FLinearColor SunColor(1.0f, 0.89f, 0.74f);
+    float SkyIntensity = 1.02f;
     float ExposureBias = 0.16f;
     float Bloom = 0.16f;
     float Vignette = 0.17f;
@@ -7221,6 +7288,86 @@ void AShirePrototypeWorldBuilder::SpawnScenicDetailPass()
     }
 }
 
+
+void AShirePrototypeWorldBuilder::BuildCompleteHobbitonWorld()
+{
+    // Cohesive, collision-neutral *enhancement* to existing P1C01 world writers.
+    // The proposed GetHISMForAsset() API is not a project function and spawning
+    // 22 more AmbientNPCs here would duplicate LivingWorldDirector ownership.
+    // All new instances reuse one already-resident imported, two-material oak.
+    if (!GetWorld() || !ProductionShireMatureOakMesh || !VillageMatureOakInstances ||
+        VillageMatureOakInstances->GetStaticMesh() != ProductionShireMatureOakMesh ||
+        ProductionShireMatureOakMesh->GetStaticMaterials().Num() < 2)
+    {
+        UE_LOG(LogTemp, Display, TEXT("P1C01_CINEMATIC_TREELINE deferred=1 reason=imported-oak-not-resident"));
+        return;
+    }
+
+    struct FForestRim
+    {
+        FVector Center;
+        float RadiusCm;
+        int32 NumTrees;
+    };
+    // Exterior rims only: preserve Bag End steps, the village street, mill
+    // bridge, party field, collision, NavMesh, quests and original settlement.
+    const FForestRim Rims[] = {
+        { FVector(-2210.0f, -520.0f, 0.0f), 2150.0f, 9 },
+        { FVector(-470.0f, 330.0f, 0.0f), 2600.0f, 8 },
+        { FVector(280.0f, 1320.0f, 0.0f), 2100.0f, 7 },
+        { FVector(-1250.0f, 330.0f, 0.0f), 1950.0f, 8 }
+    };
+    const FBoxSphereBounds Bounds = ProductionShireMatureOakMesh->GetBounds();
+    if (Bounds.BoxExtent.Z < 1.0f) return;
+    int32 Added = 0;
+    int32 Rejected = 0;
+    for (int32 RimIndex = 0; RimIndex < UE_ARRAY_COUNT(Rims); ++RimIndex)
+    {
+        const FForestRim& Rim = Rims[RimIndex];
+        for (int32 I = 0; I < Rim.NumTrees; ++I)
+        {
+            const float Angle = 2.0f * PI * static_cast<float>(I) /
+                static_cast<float>(Rim.NumTrees) + 0.19f * RimIndex;
+            const float Radius = Rim.RadiusCm + 135.0f * static_cast<float>((I % 3) - 1);
+            const FVector At = Rim.Center + FVector(
+                Radius * FMath::Cos(Angle), Radius * FMath::Sin(Angle), 0.0f);
+            // Keep the entrance corridor and main central road visually clear.
+            if (FVector::DistSquared2D(At, FVector(-2210.0f,-520.0f,0.0f)) <
+                    FMath::Square(920.0f) ||
+                (At.X > -1750.0f && At.X < 1500.0f && FMath::Abs(At.Y) < 520.0f))
+            {
+                ++Rejected;
+                continue;
+            }
+            FHitResult Ground;
+            FCollisionQueryParams Query(TEXT("P1C01CinematicForestRim"), false, this);
+            if (!GetWorld()->LineTraceSingleByChannel(
+                    Ground, At + FVector(0.0f,0.0f,1250.0f),
+                    At - FVector(0.0f,0.0f,1000.0f), ECC_Visibility, Query) ||
+                Ground.ImpactNormal.Z < 0.78f ||
+                FMath::Abs(Ground.Location.Z) > 260.0f)
+            {
+                ++Rejected;
+                continue;
+            }
+            const float DesiredHeightCm = 385.0f + 22.0f * static_cast<float>((I+RimIndex) % 4);
+            const float Scale = FMath::Clamp(
+                DesiredHeightCm / (2.0f * Bounds.BoxExtent.Z), 0.06f, 2.2f);
+            const FVector Origin = Ground.Location - FVector(0.0f,0.0f,
+                (Bounds.Origin.Z - Bounds.BoxExtent.Z) * Scale);
+            if (VillageMatureOakInstances->AddInstanceWorldSpace(FTransform(
+                    FRotator(0.0f, static_cast<float>((I*49 + RimIndex*83) % 360), 0.0f),
+                    Origin, FVector(Scale))) != INDEX_NONE)
+            {
+                ++Added;
+            }
+        }
+    }
+    UE_LOG(LogTemp, Display,
+        TEXT("P1C01_CINEMATIC_TREELINE rimInstances=%d rejected=%d cap=32 source=imported-oak HISM=1 collision=none nav=preserved fps=unverified"),
+        Added, Rejected);
+}
+
 void AShirePrototypeWorldBuilder::BuildPrototypeWorld()
 {
     if (bBuilt || !GetWorld())
@@ -7248,6 +7395,7 @@ void AShirePrototypeWorldBuilder::BuildPrototypeWorld()
     SpawnShireSettlementCompletionPass();
     SpawnShireSettlementCanonFinishPass();
     SpawnWorldDensityDetailPass();
+    BuildCompleteHobbitonWorld();
     SpawnBagEndHeroPass();
     SpawnPartySocialLoopPass();
     SpawnSideStories();

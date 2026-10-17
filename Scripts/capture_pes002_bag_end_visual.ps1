@@ -13,10 +13,11 @@ $log = Join-Path $proof "PES002VisualEditor.log"
 # Clear only this proof's stale files before launch; never kill another writer.
 Remove-Item -LiteralPath $log -Force -ErrorAction SilentlyContinue
 Remove-Item -LiteralPath (Join-Path $proof 'GPUProcessMemory.csv') -Force -ErrorAction SilentlyContinue
-Get-ChildItem -LiteralPath $proof -Filter 'BagEnd-P1C01-view*-actual-runtime.png' -File |
+Get-ChildItem -LiteralPath $proof -Filter '*P1C01*view*-actual-runtime.png' -File |
     Remove-Item -Force
 Get-ChildItem -LiteralPath $proof -Filter 'PES002_BagEnd_View*.png' -File | Remove-Item -Force
 $arguments = @('"' + $project + '"', '-game', '-windowed', '-ResX=1280', '-ResY=720', '-NoSplash', '-log', '-PES002VisualProof', '-abslog="' + $log + '"')
+$viewTargets = if ($PIE) { @('BagEnd', 'Hobbiton', 'WaterMill', 'StoneBridge') } else { @('BagEnd', 'BagEnd', 'BagEnd', 'BagEnd') }
 # UE4.27 editor throttles an unfocused PIE/editor window to exactly 3 FPS.
 # Our last run showed 15 frames per 5-second window and ~251ms render-thread
 # EventWait although GPU/Total was only ~44ms. For this disposable proof
@@ -160,7 +161,7 @@ try {
             }
         }
         if ((Test-Path -LiteralPath $log) -and
-            (Select-String -Path $log -SimpleMatch -Pattern 'PES002_SCREENSHOT_REQUESTED target=BagEnd view=3' -Quiet) -and
+            (Select-String -Path $log -SimpleMatch -Pattern "PES002_SCREENSHOT_REQUESTED target=$($viewTargets[3]) view=3" -Quiet) -and
             (!$PIE -or (Select-String -Path $log -SimpleMatch -Pattern 'PES002_PIE_SESSION_ENDED active=0' -Quiet))) {
             $ready = $true
             break
@@ -229,10 +230,11 @@ Get-ChildItem -Path $shotDir -Filter 'PES002_BagEnd_View*.png' -File -Recurse -E
     Where-Object { $_.LastWriteTime -ge $started.AddSeconds(-2) } |
     ForEach-Object { Copy-Item -LiteralPath $_.FullName -Destination (Join-Path $proof $_.Name) -Force }
 for ($view = 0; $view -lt 4; $view++) {
-    if (!(Select-String -Path $log -SimpleMatch -Pattern "PES002_CAPTURE_VIEW_READY view=$view target=BagEnd" -Quiet)) {
+    $target = $viewTargets[$view]
+    if (!(Select-String -Path $log -SimpleMatch -Pattern "PES002_CAPTURE_VIEW_READY view=$view target=$target" -Quiet)) {
         throw "PES002_CAPTURE_VIEW_NOT_READY view=$view"
     }
-    if (!(Select-String -Path $log -SimpleMatch -Pattern "PES002_SCREENSHOT_REQUESTED target=BagEnd view=$view" -Quiet)) {
+    if (!(Select-String -Path $log -SimpleMatch -Pattern "PES002_SCREENSHOT_REQUESTED target=$target view=$view" -Quiet)) {
         throw "PES002_CAPTURE_SCREENSHOT_REQUEST_NOT_CONFIRMED view=$view"
     }
     $shots = @(Get-ChildItem -Path $shotDir -File -ErrorAction SilentlyContinue |
@@ -247,7 +249,11 @@ for ($view = 0; $view -lt 4; $view++) {
     $width = [int]($bytes[16] * 16777216 + $bytes[17] * 65536 + $bytes[18] * 256 + $bytes[19])
     $height = [int]($bytes[20] * 16777216 + $bytes[21] * 65536 + $bytes[22] * 256 + $bytes[23])
     if ($width -ne 1280 -or $height -ne 720) { throw "PES002_SCREENSHOT_WRONG_DIMENSIONS view=$view width=$width height=$height" }
-    $destination = Join-Path $proof "BagEnd-P1C01-view$view-actual-runtime.png"
+    $destination = if ($PIE) {
+        Join-Path $proof "P1C01-$target-view$view-actual-runtime.png"
+    } else {
+        Join-Path $proof "BagEnd-P1C01-view$view-actual-runtime.png"
+    }
     Copy-Item $source $destination -Force
     $hash = (Get-FileHash $destination -Algorithm SHA256).Hash
     # Use actual RGB pixels, not file size or success code. Sample only the
@@ -271,7 +277,7 @@ for ($view = 0; $view -lt 4; $view++) {
     }
     Write-Host ("PES002_LUMINANCE_METRIC view={0} mean={1:N2} threshold=35.0 samples={2}" -f $view,$mean,$count)
     if ($mean -lt 35.0) { throw ("PES002_LUMINANCE_TOO_DARK view={0} mean={1:N2}" -f $view,$mean) }
-    Write-Host "PES002_BAG_END_CAPTURE_PRESENT view=$view width=$width height=$height sha256=$hash image=$destination camera=BagEnd visualAccepted=false traversal=unproven"
+    Write-Host "PES002_BAG_END_CAPTURE_PRESENT view=$view width=$width height=$height sha256=$hash image=$destination camera=$target visualAccepted=false traversal=unproven"
 }
 
 # The editor is running the real game RHI and must emit actual frame and RAM

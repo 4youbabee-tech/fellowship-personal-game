@@ -1,3 +1,10 @@
+## 2026-10-17 P1C01 cinematic Hobbiton candidate — exact-head engine acceptance pending
+- Owner required cinematic Shire atmosphere, correct four-target real UE4.27 PIE pictures, final goal 22 skeletal/0 blockout and 30 FPS on 720p DX11; owner accepts approximately 80% actual visual fidelity instead of perfection.
+- Source implementation reuses existing mature-oak HISM and no-collision 32-tree peripheral upper budget with ground normal/road/Bag End doorway exclusions, no duplicate spawn manager. Improves golden-hour existing sun/nonvolumetric fog and low-spec streaming cvars.
+- Existing LivingWorldDirector owns all NPC lifecycle/pool. Nearby skeletal conversion checks widened to 3300cm and uses existing soft imported genuine rigs; no fabricated guarantee for 22 visible, licenses, animation or skinned diversity. Production script is not authorised to claim KayKit as final character art.
+- PIE camera rotates among actual Bag End, Hobbiton, Water Mill, Stone Bridge anchors without touching player/traversal/collision, validating 4 true 1280x720 engine captures. These are capture points; image quality, camera occlusion and observed detail NOT ACCEPTED until new exact-HEAD screenshots inspected.
+- Prior accepted exact head e7b1adbd: Run 39042478860 PASS, actual 7 skeletal/15 modular, 4 Bag End views, 30.02–33.87 CI FPS, GPU ms and target-device 30FPS not demonstrated. New candidate: static source pending suite, UE build/PIE/performance NOT RUN, Gate 6/7 OPEN.
+
 ## 2026-10-17 PES-002 root-fix acceptance matrix — 80% visual quality owner-approved
 | Item | Evidence | Gate decision |
 |---|---|---|

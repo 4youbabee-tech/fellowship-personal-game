@@ -1,3 +1,9 @@
+## 2026-10-17 cinematic P1C01 guard
+- Reject user-proposed GetHISMForAsset, SpawnLocation and SunLightComponent undefined symbols; do not paste noncompiling pseudocode. Reuse existing UObject pointers and verified UE4.27 methods.
+- Reject spawning 22 new AmbientNPCs inside WorldBuilder: ALivingWorldDirector already owns pooled population. Prefer existing rig requests and proof census; no fake 22/22/0.
+- Do not paste duplicate [/Script/Engine.RendererSettings] and s.UseBackgroundLevelStreaming=True into DefaultEngine.ini. Keep 720p DX11 shader/material/texture budgets and limit pool to 896 MiB pending measured profile. No magic GPU-ms claims.
+- Photographic proof must use original UE4 HighResShot pixels at 1280x720, one view each Bag End/Hobbiton/Mill/StoneBridge; do not mislabel previous Bag End-only pictures as new city shots. Limit extra candidate trees to imported material-verified HISM, no NavMesh or quest anchor edits.
+
 ## 2026-10-17 PG-PES002-UE427-C2039-AND-OBSOLETE-EXPECTATION
 - Detect: PR #488@0b705ff Run 39040962447, UE4.27.2 ShireJourneyEditor compilation FAIL: Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp(2013) error C2039: UDirectionalLightComponent has no NumDynamicShadowCascades member.
 - Root cause: copied UI/display label into C++ public field instead of using UE4.27 API SetDynamicShadowCascades(int32); existing source test incorrectly insisted on the broken field, making test green meaningless for engine compatibility. Official UE4.27 UDirectionalLightComponent API: https://dev.epicgames.com/documentation/en-us/unreal-engine/python-api/class/DirectionalLightComponent?application_version=4.27 documents set_dynamic_shadow_cascades(new_value); use C++ SetDynamicShadowCascades(2).

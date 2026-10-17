@@ -1468,9 +1468,9 @@ bool AShireAmbientNPC::TryEnableUnifiedShireResident()
     const FVector BagEnd(-2210.0f, -520.0f, 0.0f);
     APawn* Player = GetPlayerPawnCached();
     if (!bLocalShireResident || !Player ||
-        FVector::DistSquared2D(GetActorLocation(), BagEnd) > FMath::Square(2900.0f) ||
+        FVector::DistSquared2D(GetActorLocation(), BagEnd) > FMath::Square(3100.0f) ||
         FVector::DistSquared2D(GetActorLocation(), Player->GetActorLocation()) >
-            FMath::Square(1850.0f))
+            FMath::Square(3300.0f))
     {
         return false;
     }

@@ -154,6 +154,8 @@ private:
     void SpawnFenceLine(const FVector& Start, const FVector& End, int32 Sections);
     void SpawnGardenPatch(const FVector& Center, float Scale = 1.0f);
     void ConfigureMorningAtmosphere();
+    void SetupCinematicHobbitonLighting();
+    void BuildCompleteHobbitonWorld();
     void ConfigureFoliageInstances();
     void SpawnFoliagePass();
     void RequestCuratedNatureLayer();

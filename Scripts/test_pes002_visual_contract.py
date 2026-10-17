@@ -411,6 +411,30 @@ class PES002IntegratedShireContract(unittest.TestCase):
         self.assertIn("P1C01_TEXTURE_MIP_CAP_NOT_PERSISTED", code)
 
 
+class PES002CinematicHobbitonContract(unittest.TestCase):
+    def test_chapter_landmarks_use_existing_world_and_director_ownership(self):
+        cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        hdr = (ROOT / "Source/ShireJourney/Public/World/ShirePrototypeWorldBuilder.h").read_text(encoding="utf-8")
+        self.assertIn("BuildCompleteHobbitonWorld();", cpp)
+        self.assertIn("P1C01_CINEMATIC_TREELINE", cpp)
+        self.assertIn("VillageMatureOakInstances->AddInstanceWorldSpace(", cpp)
+        self.assertNotIn("SpawnActor<AShireAmbientNPC>", cpp)
+        self.assertIn("void BuildCompleteHobbitonWorld();", hdr)
+        self.assertIn("SetupCinematicHobbitonLighting();", cpp)
+        self.assertIn("Sun->SetDynamicShadowCascades(2);", cpp)
+
+    def test_real_pie_targets_are_bag_end_hobbiton_mill_and_bridge(self):
+        cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
+        ps1 = (ROOT / "Scripts/capture_pes002_bag_end_visual.ps1").read_text(encoding="utf-8")
+        bat = (ROOT / "SHIRE_FAST_PIE_PREVIEW.bat").read_text(encoding="utf-8")
+        self.assertIn("P1C01FullShireProof", cpp)
+        self.assertIn("TEXT(\"WaterMill\"), TEXT(\"StoneBridge\")", cpp)
+        self.assertIn("P1C01-$target-view$view-actual-runtime.png", ps1)
+        self.assertIn("-P1C01FullShireProof", bat)
+        self.assertIn("1280", ps1)
+        self.assertIn("720", ps1)
+
+
 class PES002ShadowBudgetContract(unittest.TestCase):
     def test_movable_sun_csm_is_bounded_without_disabling_shadows(self):
         cpp = (ROOT / "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp").read_text(encoding="utf-8")
